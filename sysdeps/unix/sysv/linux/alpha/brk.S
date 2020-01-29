@@ -21,8 +21,7 @@
    break value (instead of the new, requested one).  */
 
 #include <sysdep.h>
-#define _ERRNO_H
-#include <bits/errno.h>
+#include <errno.h>
 
 #ifdef PIC
 .section .bss

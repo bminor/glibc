@@ -95,6 +95,7 @@
 
 /* We don't want the label for the error handler to be visible in the symbol
    table when we define it here.  */
+#undef SYSCALL_ERROR_LABEL
 #define SYSCALL_ERROR_LABEL __syscall_error
 
 #undef PSEUDO
@@ -231,28 +232,8 @@
 
 #endif /* !IA64_USE_NEW_STUB */
 
-# undef INLINE_SYSCALL
-# define INLINE_SYSCALL(name, nr, args...)				\
-  ({ unsigned long _sys_result = INTERNAL_SYSCALL (name, , nr, args);	\
-     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_sys_result, ), 0))\
-       {								\
-	 __set_errno (INTERNAL_SYSCALL_ERRNO (_sys_result, ));		\
-	 _sys_result = (unsigned long) -1;				\
-       }								\
-     (long) _sys_result; })
-
-# undef INTERNAL_SYSCALL_DECL
-# define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
 #define INTERNAL_SYSCALL(name, err, nr, args...)	\
   INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
-
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned long int) (val) > -4096UL)
-
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define LOAD_ARGS_0()
 #define LOAD_REGS_0

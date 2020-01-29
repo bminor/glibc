@@ -25,11 +25,6 @@
 
 #include <tls.h>
 
-/* In order to get __set_errno() definition in INLINE_SYSCALL.  */
-#ifndef __ASSEMBLER__
-#include <errno.h>
-#endif
-
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
    of the kernel.  But these symbols do not follow the SYS_* syntax
@@ -42,33 +37,11 @@
 /* We don't want the label for the error handler to be visible in the symbol
    table when we define it here.  */
 #ifdef __PIC__
+# undef SYSCALL_ERROR_LABEL
 # define SYSCALL_ERROR_LABEL 99b
 #endif
 
 #else   /* ! __ASSEMBLER__ */
-
-/* Define a macro which expands into the inline wrapper code for a system
-   call.  */
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)                               \
-  ({ INTERNAL_SYSCALL_DECL (_sc_err);					\
-     long int result_var = INTERNAL_SYSCALL (name, _sc_err, nr, args);	\
-     if ( INTERNAL_SYSCALL_ERROR_P (result_var, _sc_err) )		\
-       {								\
-	 __set_errno (INTERNAL_SYSCALL_ERRNO (result_var, _sc_err));	\
-	 result_var = -1L;						\
-       }								\
-     result_var; })
-
-#undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned long int) (val) > -4096UL)
-
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)     (-(val))
 
 /* Note that the original Linux syscall restart convention required the
    instruction immediately preceding SYSCALL to initialize $v0 with the

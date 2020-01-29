@@ -60,6 +60,7 @@
 
 /* We don't want the label for the error handler to be visible in the symbol
    table when we define it here.  */
+# undef SYSCALL_ERROR_LABEL
 # ifdef PIC
 #  define SYSCALL_ERROR_LABEL 0f
 # else
@@ -163,23 +164,6 @@ SYSCALL_ERROR_LABEL_DCL:                            \
 
 #else /* not __ASSEMBLER__ */
 
-/* Define a macro which expands into the inline wrapper code for a system
-   call.  */
-# undef INLINE_SYSCALL
-# define INLINE_SYSCALL(name, nr, args...)                           \
-({  INTERNAL_SYSCALL_DECL(err);                                      \
-    unsigned long resultvar = INTERNAL_SYSCALL(name, err, nr, args); \
-    if (INTERNAL_SYSCALL_ERROR_P (resultvar, err))                   \
-       {                                                             \
-        __set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, err));       \
-        resultvar = (unsigned long) -1;                              \
-       }                                                             \
-    (long) resultvar;                                                \
-})
-
-# undef INTERNAL_SYSCALL_DECL
-# define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
 /* Define a macro which expands inline into the wrapper code for a system
    call.  This use is for internal calls that do not need to handle errors
    normally.  It will never touch errno.  This returns just what the kernel
@@ -191,13 +175,6 @@ SYSCALL_ERROR_LABEL_DCL:                            \
 # undef INTERNAL_SYSCALL_NCS
 # define INTERNAL_SYSCALL_NCS(name, err, nr, args...)                \
   inline_syscall##nr(name, args)
-
-# undef INTERNAL_SYSCALL_ERROR_P
-# define INTERNAL_SYSCALL_ERROR_P(val, err)                          \
-  ((unsigned int) (val) >= -4095U)
-
-# undef INTERNAL_SYSCALL_ERRNO
-# define INTERNAL_SYSCALL_ERRNO(val, err)    (-(val))
 
 # define SYSCALL_CLOBBERS_6 "r11", "r4", "memory"
 # define SYSCALL_CLOBBERS_5 "r10", SYSCALL_CLOBBERS_6

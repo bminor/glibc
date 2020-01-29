@@ -67,6 +67,7 @@
 
 /* We don't want the label for the error handle to be global when we define
    it here.  */
+#undef SYSCALL_ERROR_LABEL
 #define SYSCALL_ERROR_LABEL __syscall_error
 
 #undef	PSEUDO
@@ -280,35 +281,6 @@ struct libc_do_syscall_args
 };
 #endif
 
-/* Define a macro which expands inline into the wrapper code for a system
-   call.  */
-#undef INLINE_SYSCALL
-#if IS_IN (libc)
-# define INLINE_SYSCALL(name, nr, args...) \
-  ({									      \
-    unsigned int resultvar = INTERNAL_SYSCALL (name, , nr, args);	      \
-    __glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (resultvar, ))		      \
-    ? __syscall_error (-INTERNAL_SYSCALL_ERRNO (resultvar, ))		      \
-    : (int) resultvar; })
-#else
-# define INLINE_SYSCALL(name, nr, args...) \
-  ({									      \
-    unsigned int resultvar = INTERNAL_SYSCALL (name, , nr, args);	      \
-    if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (resultvar, )))	      \
-      {									      \
-	__set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, ));		      \
-	resultvar = 0xffffffff;						      \
-      }									      \
-    (int) resultvar; })
-#endif
-
-/* Set error number and return -1.  Return the internal function,
-   __syscall_error, which sets errno from the negative error number
-   and returns -1, to avoid PIC.  */
-#undef INLINE_SYSCALL_ERROR_RETURN_VALUE
-#define INLINE_SYSCALL_ERROR_RETURN_VALUE(resultvar) \
-  __syscall_error (-(resultvar))
-
 # define VDSO_NAME  "LINUX_2.6"
 # define VDSO_HASH  61765110
 
@@ -489,16 +461,6 @@ struct libc_do_syscall_args
     (int) resultvar; })
 # endif /* GCC 5  */
 #endif
-
-#undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned int) (val) >= 0xfffff001u)
-
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define LOADARGS_0
 #ifdef __PIC__

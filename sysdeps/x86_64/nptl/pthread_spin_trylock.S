@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <pthread-errnos.h>
 #include <sysdep.h>
+#include <errno.h>
 
 
 #ifdef UP

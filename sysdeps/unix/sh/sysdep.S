@@ -16,8 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#define _ERRNO_H
-#include <bits/errno.h>
+#include <errno.h>
 
 ENTRY(__syscall_error)
 #if defined (EWOULDBLOCK_sys) && EWOULDBLOCK_sys != EAGAIN

@@ -92,6 +92,7 @@
 # define USEPV_PROF	no
 #endif
 
+#undef SYSCALL_ERROR_LABEL
 #if RTLD_PRIVATE_ERRNO
 # define SYSCALL_ERROR_LABEL	$syscall_error
 # define SYSCALL_ERROR_HANDLER			\
@@ -169,41 +170,17 @@ __LABEL(name)						\
 
 #else /* !ASSEMBLER */
 
-/* In order to get __set_errno() definition in INLINE_SYSCALL.  */
-#include <errno.h>
-
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)				\
-({									\
-	INTERNAL_SYSCALL_DECL (_sc_err);				\
-	long int _sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, args);	\
-	if (INTERNAL_SYSCALL_ERROR_P (_sc_ret, _sc_err))		\
-	  {								\
-	    __set_errno (INTERNAL_SYSCALL_ERRNO (_sc_ret, _sc_err));	\
-	    _sc_ret = -1L;						\
-	  }								\
-	_sc_ret;							\
-})
-
 #define INTERNAL_SYSCALL(name, err_out, nr, args...) \
 	internal_syscall##nr(__NR_##name, args)
 
 #define INTERNAL_SYSCALL_NCS(name, err_out, nr, args...) \
 	internal_syscall##nr(name, args)
 
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
 /* The normal Alpha calling convention sign-extends 32-bit quantties
    no matter what the "real" sign of the 32-bit type.  We want to
    preserve that when filling in values for the kernel.  */
 #define syscall_promote(arg) \
   (sizeof (arg) == 4 ? (long int)(int)(long int)(arg) : (long int)(arg))
-
-/* Make sure and "use" the variable that we're not returning,
-   in order to suppress unused variable warnings.  */
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
-	((unsigned long) (val) > -4096UL)
-#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define internal_syscall_clobbers				\
 	"$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8",	\

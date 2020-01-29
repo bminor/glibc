@@ -130,26 +130,6 @@
 # define HAVE_GETTIMEOFDAY_VSYSCALL	"__vdso_gettimeofday"
 # define HAVE_GETCPU_VSYSCALL		"__vdso_getcpu"
 
-/* Define a macro which expands into the inline wrapper code for a system
-   call.  */
-# undef INLINE_SYSCALL
-# define INLINE_SYSCALL(name, nr, args...)				\
-  ({ INTERNAL_SYSCALL_DECL (err);					\
-     long int __sys_result = INTERNAL_SYSCALL (name, err, nr, args);	\
-     if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (__sys_result, )))  \
-       {								\
-         __set_errno (INTERNAL_SYSCALL_ERRNO (__sys_result, ));		\
-	 __sys_result = (unsigned long) -1;				\
-       }								\
-     __sys_result; })
-
-# define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
-# define INTERNAL_SYSCALL_ERROR_P(val, err) \
-        ((unsigned long int) (val) > -4096UL)
-
-# define INTERNAL_SYSCALL_ERRNO(val, err)     (-val)
-
 # define INTERNAL_SYSCALL(name, err, nr, args...) \
 	internal_syscall##nr (SYS_ify (name), err, args)
 

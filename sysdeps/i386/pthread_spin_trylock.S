@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <pthread-errnos.h>
+#include <errno.h>
 
 
 #ifdef UP

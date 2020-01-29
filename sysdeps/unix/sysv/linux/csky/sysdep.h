@@ -293,28 +293,6 @@ __local_syscall_error:				\
 
 #else /* not __ASSEMBLER__ */
 
-/* Define a macro which expands into the inline wrapper code for a system
-   call.  */
-# undef INLINE_SYSCALL
-# define INLINE_SYSCALL(name, nr, args...)				\
-  ({ unsigned int _sys_result = INTERNAL_SYSCALL (name, , nr, args);	\
-     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_sys_result,), 0))	\
-       {								\
-	 __set_errno (INTERNAL_SYSCALL_ERRNO (_sys_result, ));		\
-	 _sys_result = (unsigned int) -1;				\
-       }								\
-     (int) _sys_result; })
-
-# undef INTERNAL_SYSCALL_DECL
-# define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
-# undef INTERNAL_SYSCALL_ERROR_P
-# define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned int) (val) >= 0xffffff01u)
-
-# undef INTERNAL_SYSCALL_ERRNO
-# define INTERNAL_SYSCALL_ERRNO(val, err) (-(val))
-
 # undef INTERNAL_SYSCALL_RAW
 #  define INTERNAL_SYSCALL_RAW0(name, err, dummy...)			\
   ({unsigned int __sys_result;						\

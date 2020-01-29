@@ -44,6 +44,7 @@
 
 /* We don't want the label for the error handler to be visible in the symbol
    table when we define it here.  */
+#undef SYSCALL_ERROR_LABEL
 #ifdef PIC
 #define SYSCALL_ERROR_LABEL .Lsyscall_error
 #else
@@ -221,21 +222,6 @@ SYSCALL_ERROR_LABEL:							      \
 
 #else /* not __ASSEMBLER__ */
 
-/* Define a macro which expands into the inline wrapper code for a system
-   call.  */
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)				\
-  ({ unsigned int _sys_result = INTERNAL_SYSCALL (name, , nr, args);	\
-     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_sys_result, ), 0))\
-       {								\
-	 __set_errno (INTERNAL_SYSCALL_ERRNO (_sys_result, ));		\
-	 _sys_result = (unsigned int) -1;				\
-       }								\
-     (int) _sys_result; })
-
-#undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
 /* Define a macro which expands inline into the wrapper code for a system
    call.  This use is for internal calls that do not need to handle errors
    normally.  It will never touch errno.  This returns just what the kernel
@@ -259,13 +245,6 @@ SYSCALL_ERROR_LABEL:							      \
      (int) _sys_result; })
 #define INTERNAL_SYSCALL(name, err, nr, args...)	\
   INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
-
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err)		\
-  ((unsigned int) (val) >= -4095U)
-
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define LOAD_ARGS_0()
 #define LOAD_REGS_0

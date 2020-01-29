@@ -64,26 +64,6 @@
 #define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		\
   INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, long int, nr, args)
 
-/* This version is for kernels that implement system calls that
-   behave like function calls as far as register saving.  */
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)				\
-  ({									\
-    INTERNAL_SYSCALL_DECL (sc_err);					\
-    long int sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, args);	\
-    if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			\
-      {									\
-        __set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		\
-        sc_ret = -1L;							\
-      }									\
-    sc_ret;								\
-  })
-
-/* Define a macro which expands inline into the wrapper code for a system
-   call. This use is for internal calls that do not need to handle errors
-   normally. It will never touch errno. This returns just what the kernel
-   gave back in the non-error (CR0.SO cleared) case, otherwise (CR0.SO set)
-   the negation of the return value in the kernel gets reverted.  */
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
@@ -110,16 +90,6 @@
   })
 #define INTERNAL_SYSCALL(name, err, nr, args...)			\
   INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, args)
-
-#undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned long int) (val) > -4096UL)
-
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)     (-(val))
 
 #if defined(__PPC64__) || defined(__powerpc64__)
 # define SYSCALL_ARG_SIZE 8

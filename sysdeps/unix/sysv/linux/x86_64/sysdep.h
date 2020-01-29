@@ -55,6 +55,7 @@
 
 /* We don't want the label for the error handle to be global when we define
    it here.  */
+# undef SYSCALL_ERROR_LABEL
 # ifdef PIC
 #  define SYSCALL_ERROR_LABEL 0f
 # else
@@ -177,35 +178,6 @@
 # define DOARGS_6 DOARGS_5
 
 #else	/* !__ASSEMBLER__ */
-/* Define a macro which expands inline into the wrapper code for a system
-   call.  */
-# undef INLINE_SYSCALL
-# define INLINE_SYSCALL(name, nr, args...) \
-  ({									      \
-    unsigned long int resultvar = INTERNAL_SYSCALL (name, , nr, args);	      \
-    if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (resultvar, )))	      \
-      {									      \
-	__set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, ));		      \
-	resultvar = (unsigned long int) -1;				      \
-      }									      \
-    (long int) resultvar; })
-
-/* Define a macro with explicit types for arguments, which expands inline
-   into the wrapper code for a system call.  It should be used when size
-   of any argument > size of long int.  */
-# undef INLINE_SYSCALL_TYPES
-# define INLINE_SYSCALL_TYPES(name, nr, args...) \
-  ({									      \
-    unsigned long int resultvar = INTERNAL_SYSCALL_TYPES (name, , nr, args);  \
-    if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (resultvar, )))	      \
-      {									      \
-	__set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, ));		      \
-	resultvar = (unsigned long int) -1;				      \
-      }									      \
-    (long int) resultvar; })
-
-# undef INTERNAL_SYSCALL_DECL
-# define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
 /* Registers clobbered by syscall.  */
 # define REGISTERS_CLOBBERED_BY_SYSCALL "cc", "r11", "cx"
@@ -353,12 +325,6 @@
     (long int) resultvar;						\
 })
 
-# undef INTERNAL_SYSCALL_ERROR_P
-# define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned long int) (long int) (val) >= -4095L)
-
-# undef INTERNAL_SYSCALL_ERRNO
-# define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 # define VDSO_NAME  "LINUX_2.6"
 # define VDSO_HASH  61765110

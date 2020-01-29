@@ -15,7 +15,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <pthread-errnos.h>
+#include <errno.h>
 
 	.globl	pthread_spin_trylock
 	.type	pthread_spin_trylock,@function

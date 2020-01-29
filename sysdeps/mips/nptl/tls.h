@@ -35,7 +35,7 @@
 # define READ_THREAD_POINTER() (__builtin_thread_pointer ())
 #else
 /* Note: rd must be $v1 to be ABI-conformant.  */
-# if __mips_isa_rev >= 2
+# if defined (__mips_isa_rev) &&  __mips_isa_rev >= 2
 #  define READ_THREAD_POINTER() \
      ({ void *__result;							      \
         asm volatile ("rdhwr\t%0, $29" : "=v" (__result));	      	      \

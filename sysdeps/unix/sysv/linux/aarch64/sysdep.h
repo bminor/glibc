@@ -170,21 +170,6 @@
 
 # define SINGLE_THREAD_BY_GLOBAL		1
 
-/* Define a macro which expands into the inline wrapper code for a system
-   call.  */
-# undef INLINE_SYSCALL
-# define INLINE_SYSCALL(name, nr, args...)				\
-  ({ unsigned long _sys_result = INTERNAL_SYSCALL (name, , nr, args);	\
-     if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (_sys_result, ), 0))\
-       {								\
-	 __set_errno (INTERNAL_SYSCALL_ERRNO (_sys_result, ));		\
-	 _sys_result = (unsigned long) -1;				\
-       }								\
-     (long) _sys_result; })
-
-# undef INTERNAL_SYSCALL_DECL
-# define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
 # undef INTERNAL_SYSCALL_RAW
 # define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
   ({ long _sys_result;						\
@@ -204,13 +189,6 @@
 # undef INTERNAL_SYSCALL_AARCH64
 # define INTERNAL_SYSCALL_AARCH64(name, err, nr, args...)	\
 	INTERNAL_SYSCALL_RAW(__ARM_NR_##name, err, nr, args)
-
-# undef INTERNAL_SYSCALL_ERROR_P
-# define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned long) (val) >= (unsigned long) -4095)
-
-# undef INTERNAL_SYSCALL_ERRNO
-# define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 # define LOAD_ARGS_0()				\
   register long _x0 asm ("x0");

@@ -17,8 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#define _ERRNO_H
-#include <bits/errno.h>
+#include <errno.h>
 #include <sys/asm.h>
 
 	.set	nomips16

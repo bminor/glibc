@@ -37,6 +37,7 @@
 
 #ifdef __ASSEMBLER__
 
+#undef SYSCALL_ERROR_LABEL
 #define SYSCALL_ERROR_LABEL __local_syscall_error
 
 #undef PSEUDO
@@ -142,29 +143,6 @@
 /* Previously Nios2 used the generic version without the libc_hidden_def
    which lead in a non existent __send symbol in libc.so.  */
 # undef HAVE_INTERNAL_SEND_SYMBOL
-
-/* Define a macro which expands into the inline wrapper code for a system
-   call.  */
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)                               \
-  ({ INTERNAL_SYSCALL_DECL(err);					\
-     unsigned int result_var = INTERNAL_SYSCALL (name, err, nr, args);	\
-     if ( INTERNAL_SYSCALL_ERROR_P (result_var, err) )			\
-       {								\
-	 __set_errno (INTERNAL_SYSCALL_ERRNO (result_var, err));	\
-	 result_var = -1L;						\
-       }								\
-     (int) result_var; })
-
-#undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned long int) (val) > -4096UL)
-
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)     (-(val))
 
 #undef INTERNAL_SYSCALL_RAW
 #define INTERNAL_SYSCALL_RAW(name, err, nr, args...)            \

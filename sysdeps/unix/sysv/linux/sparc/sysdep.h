@@ -45,21 +45,6 @@
 # endif
 # define HAVE_GETTIMEOFDAY_VSYSCALL	"__vdso_gettimeofday"
 
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...) 				\
-({	INTERNAL_SYSCALL_DECL(err);  					\
-	unsigned long resultvar = INTERNAL_SYSCALL(name, err, nr, args);\
-	if (INTERNAL_SYSCALL_ERROR_P (resultvar, err))			\
-	  {		     			       		   	\
-	    __set_errno (INTERNAL_SYSCALL_ERRNO (resultvar, err));	\
-	    resultvar = (unsigned long) -1;				\
-	  } 	      							\
-	(long) resultvar;						\
-})
-
-#undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...) \
   internal_syscall##nr(__SYSCALL_STRING, err, __NR_##name, args)
@@ -67,13 +52,6 @@
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
   internal_syscall##nr(__SYSCALL_STRING, err, name, args)
-
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned long int) (val) > -4096UL)
-
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
 
 #define internal_syscall0(string,err,name,dummy...)			\
 ({									\

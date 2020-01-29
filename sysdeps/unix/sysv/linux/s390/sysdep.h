@@ -21,20 +21,6 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)				      \
-  ({									      \
-    long int _ret = INTERNAL_SYSCALL (name, , nr, args);		      \
-    if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (_ret, )))		      \
-     {									      \
-       __set_errno (INTERNAL_SYSCALL_ERRNO (_ret, ));			      \
-       _ret = -1;							      \
-     }									      \
-    _ret; })
-
-#undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
 #undef INTERNAL_SYSCALL_DIRECT
 #define INTERNAL_SYSCALL_DIRECT(name, err, nr, args...)			      \
   ({									      \
@@ -79,13 +65,6 @@
   (((__NR_##name) < 256)						      \
    ? INTERNAL_SYSCALL_DIRECT(name, nr, args)				      \
    : INTERNAL_SYSCALL_SVC0(name, nr, args))
-
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err)                                    \
-  ((unsigned long int) (val) > -4096UL)
-
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)        (-(val))
 
 #define DECLARGS_0()
 #define DECLARGS_1(arg1) \

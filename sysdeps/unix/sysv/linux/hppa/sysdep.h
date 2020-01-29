@@ -360,36 +360,6 @@ L(pre_end):					ASM_LINE_SEP	\
 #define CALL_CLOB_REGS	"%r1", "%r2", CLOB_TREG \
 			"%r20", "%r29", "%r31"
 
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)				\
-({									\
-    long __sys_res = INTERNAL_SYSCALL (name, , nr, args);		\
-    if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (__sys_res, )))	\
-      {									\
-	__set_errno (INTERNAL_SYSCALL_ERRNO (__sys_res, ));		\
-	__sys_res = -1;							\
-      }									\
-    __sys_res;								\
-})
-
-/* INTERNAL_SYSCALL_DECL - Allows us to setup some function static
-   value to use within the context of the syscall
-   INTERNAL_SYSCALL_ERROR_P - Returns 0 if it wasn't an error, 1 otherwise
-   You are allowed to use the syscall result (val) and the DECL error
-   variable to determine what went wrong.
-   INTERLAL_SYSCALL_ERRNO - Munges the val/err pair into the error number.
-   In our case we just flip the sign. */
-
-#undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err)
-
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
-	((val < 0) && (val > -4095))
-
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err) (-(val))
-
 /* Similar to INLINE_SYSCALL but we don't set errno */
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...)			\

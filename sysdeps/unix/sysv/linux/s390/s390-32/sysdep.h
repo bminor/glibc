@@ -26,11 +26,6 @@
 #include <dl-sysdep.h>	/* For RTLD_PRIVATE_ERRNO.  */
 #include <tls.h>
 
-/* Define __set_errno() for INLINE_SYSCALL macro below.  */
-#ifndef __ASSEMBLER__
-#include <errno.h>
-#endif
-
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
    of the kernel.  But these symbols do not follow the SYS_* syntax
@@ -85,6 +80,7 @@
 #define PSEUDO_END_ERRVAL(name)						      \
   END (name)
 
+#undef SYSCALL_ERROR_LABEL
 #ifndef PIC
 # define SYSCALL_ERROR_LABEL 0f
 # define SYSCALL_ERROR_HANDLER \
