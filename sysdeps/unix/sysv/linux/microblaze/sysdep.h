@@ -169,11 +169,11 @@ SYSCALL_ERROR_LABEL_DCL:                            \
    normally.  It will never touch errno.  This returns just what the kernel
    gave back.  */
 # undef INTERNAL_SYSCALL
-# define INTERNAL_SYSCALL(name, err, nr, args...)                    \
+# define INTERNAL_SYSCALL(name, nr, args...)                    \
   inline_syscall##nr(SYS_ify(name), args)
 
 # undef INTERNAL_SYSCALL_NCS
-# define INTERNAL_SYSCALL_NCS(name, err, nr, args...)                \
+# define INTERNAL_SYSCALL_NCS(name, nr, args...)                \
   inline_syscall##nr(name, args)
 
 # define SYSCALL_CLOBBERS_6 "r11", "r4", "memory"

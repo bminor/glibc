@@ -36,7 +36,6 @@ void ____longjmp_chk (__jmp_buf env, int val)
 {
   void *this_frame = __builtin_frame_address (0);
   void *saved_frame = JB_FRAME_ADDRESS (env);
-  INTERNAL_SYSCALL_DECL (err);
   stack_t ss;
 
   /* If "env" is from a frame that called us, we're all set.  */
@@ -44,7 +43,7 @@ void ____longjmp_chk (__jmp_buf env, int val)
     __longjmp (env, val);
 
   /* If we can't get the current stack state, give up and do the longjmp. */
-  if (INTERNAL_SYSCALL (sigaltstack, err, 2, NULL, &ss) != 0)
+  if (INTERNAL_SYSCALL_CALL (sigaltstack, NULL, &ss) != 0)
     __longjmp (env, val);
 
   /* If we we are executing on the alternate stack and within the

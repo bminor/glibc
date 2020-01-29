@@ -65,8 +65,7 @@ __close_nocancel_nostatus (int fd)
 static inline void
 __writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL_CALL (writev, err, fd, iov, iovcnt);
+  INTERNAL_SYSCALL_CALL (writev, fd, iov, iovcnt);
 }
 
 /* Uncancelable fcntl.  */

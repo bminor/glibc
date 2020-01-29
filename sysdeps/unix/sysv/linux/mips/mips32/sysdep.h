@@ -95,10 +95,10 @@ union __mips_syscall_return
 
 # include <mips16-syscall.h>
 
-# define INTERNAL_SYSCALL(name, err, nr, args...)			\
-	INTERNAL_SYSCALL_NCS (SYS_ify (name), err, nr, args)
+# define INTERNAL_SYSCALL(name, nr, args...)				\
+	INTERNAL_SYSCALL_NCS (SYS_ify (name), nr, args)
 
-# define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
+# define INTERNAL_SYSCALL_NCS(number, nr, args...)			\
 ({									\
 	union __mips_syscall_return _sc_ret;				\
 	_sc_ret.val = __mips16_syscall##nr (args, number);		\
@@ -111,12 +111,12 @@ union __mips_syscall_return
 			      number, err, args)
 
 #else /* !__mips16 */
-# define INTERNAL_SYSCALL(name, err, nr, args...)			\
+# define INTERNAL_SYSCALL(name, nr, args...)				\
 	internal_syscall##nr ("li\t%0, %2\t\t\t# " #name "\n\t",	\
 			      "IK" (SYS_ify (name)),			\
 			      SYS_ify (name), err, args)
 
-# define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
+# define INTERNAL_SYSCALL_NCS(number, nr, args...)			\
 	internal_syscall##nr (MOVE32 "\t%0, %2\n\t",			\
 			      "r" (__s0),				\
 			      number, err, args)

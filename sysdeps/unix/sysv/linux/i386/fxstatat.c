@@ -38,13 +38,11 @@ int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
   int result;
-  INTERNAL_SYSCALL_DECL (err);
   struct stat64 st64;
 
-  result = INTERNAL_SYSCALL (fstatat64, err, 4, fd, file, &st64, flag);
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result,
-								      err));
+  result = INTERNAL_SYSCALL_CALL (fstatat64, fd, file, &st64, flag);
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result)))
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result));
   else
     return __xstat32_conv (vers, &st64, st);
 }

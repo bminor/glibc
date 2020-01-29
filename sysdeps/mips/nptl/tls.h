@@ -120,11 +120,10 @@ typedef struct
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(tcbp) \
-  ({ INTERNAL_SYSCALL_DECL (err);					\
-     long result_var;							\
-     result_var = INTERNAL_SYSCALL (set_thread_area, err, 1,		\
+  ({ long int result_var;						\
+     result_var = INTERNAL_SYSCALL_CALL (set_thread_area, 		\
 				    (char *) (tcbp) + TLS_TCB_OFFSET);	\
-     INTERNAL_SYSCALL_ERROR_P (result_var, err)				\
+     INTERNAL_SYSCALL_ERROR_P (result_var)				\
        ? "unknown error" : NULL; })
 
 /* Value passed to 'clone' for initialization of the thread register.  */

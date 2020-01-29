@@ -38,7 +38,7 @@
    gave back in the non-error (CR0.SO cleared) case, otherwise (CR0.SO set)
    the negation of the return value in the kernel gets reverted.  */
 
-#define INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, type, nr, args...)    \
+#define INTERNAL_VSYSCALL_CALL_TYPE(funcptr, type, nr, args...)         \
   ({									\
     register void *r0  __asm__ ("r0");					\
     register long int r3  __asm__ ("r3");				\
@@ -61,12 +61,12 @@
     (long int) r0 & (1 << 28) ? -rval : rval;				\
   })
 
-#define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		\
-  INTERNAL_VSYSCALL_CALL_TYPE(funcptr, err, long int, nr, args)
+#define INTERNAL_VSYSCALL_CALL(funcptr, nr, args...)			\
+  INTERNAL_VSYSCALL_CALL_TYPE(funcptr, long int, nr, args)
 
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+#define INTERNAL_SYSCALL_NCS(name, nr, args...) \
   ({									\
     register long int r0  __asm__ ("r0");				\
     register long int r3  __asm__ ("r3");				\
@@ -88,8 +88,8 @@
          "cr0", "ctr", "memory");					\
     r0 & (1 << 28) ? -r3 : r3;						\
   })
-#define INTERNAL_SYSCALL(name, err, nr, args...)			\
-  INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, args)
+#define INTERNAL_SYSCALL(name, nr, args...)				\
+  INTERNAL_SYSCALL_NCS (__NR_##name, nr, args)
 
 #if defined(__PPC64__) || defined(__powerpc64__)
 # define SYSCALL_ARG_SIZE 8

@@ -48,12 +48,10 @@ __pthread_kill (pthread_t threadid, int signo)
     return EINVAL;
 
   /* We have a special syscall to do the work.  */
-  INTERNAL_SYSCALL_DECL (err);
-
   pid_t pid = __getpid ();
 
-  int val = INTERNAL_SYSCALL_CALL (tgkill, err, pid, tid, signo);
-  return (INTERNAL_SYSCALL_ERROR_P (val, err)
-	  ? INTERNAL_SYSCALL_ERRNO (val, err) : 0);
+  int val = INTERNAL_SYSCALL_CALL (tgkill, pid, tid, signo);
+  return (INTERNAL_SYSCALL_ERROR_P (val)
+	  ? INTERNAL_SYSCALL_ERRNO (val) : 0);
 }
 strong_alias (__pthread_kill, pthread_kill)

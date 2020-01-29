@@ -39,16 +39,11 @@ pthread_sigmask (int how, const sigset_t *newmask, sigset_t *oldmask)
       newmask = &local_newmask;
     }
 
-#ifdef INTERNAL_SYSCALL
   /* We know that realtime signals are available if NPTL is used.  */
-  INTERNAL_SYSCALL_DECL (err);
-  int result = INTERNAL_SYSCALL (rt_sigprocmask, err, 4, how, newmask,
-				 oldmask, _NSIG / 8);
+  int result = INTERNAL_SYSCALL_CALL (rt_sigprocmask, how, newmask,
+				      oldmask, _NSIG / 8);
 
-  return (INTERNAL_SYSCALL_ERROR_P (result, err)
-	  ? INTERNAL_SYSCALL_ERRNO (result, err)
+  return (INTERNAL_SYSCALL_ERROR_P (result)
+	  ? INTERNAL_SYSCALL_ERRNO (result)
 	  : 0);
-#else
-  return sigprocmask (how, newmask, oldmask) == -1 ? errno : 0;
-#endif
 }

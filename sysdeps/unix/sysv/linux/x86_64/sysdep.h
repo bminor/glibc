@@ -57,8 +57,10 @@
    it here.  */
 # undef SYSCALL_ERROR_LABEL
 # ifdef PIC
+#  undef SYSCALL_ERROR_LABEL
 #  define SYSCALL_ERROR_LABEL 0f
 # else
+#  undef SYSCALL_ERROR_LABEL
 #  define SYSCALL_ERROR_LABEL syscall_error
 # endif
 
@@ -190,15 +192,15 @@
 #define ARGIFY(X) ((__typeof__ ((X) - (X))) (X))
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...)			\
-	internal_syscall##nr (SYS_ify (name), err, args)
+#define INTERNAL_SYSCALL(name, nr, args...)				\
+	internal_syscall##nr (SYS_ify (name), args)
 
 #undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
-	internal_syscall##nr (number, err, args)
+#define INTERNAL_SYSCALL_NCS(number, nr, args...)			\
+	internal_syscall##nr (number, args)
 
 #undef internal_syscall0
-#define internal_syscall0(number, err, dummy...)			\
+#define internal_syscall0(number, dummy...)				\
 ({									\
     unsigned long int resultvar;					\
     asm volatile (							\
@@ -210,7 +212,7 @@
 })
 
 #undef internal_syscall1
-#define internal_syscall1(number, err, arg1)				\
+#define internal_syscall1(number, arg1)					\
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
@@ -224,7 +226,7 @@
 })
 
 #undef internal_syscall2
-#define internal_syscall2(number, err, arg1, arg2)			\
+#define internal_syscall2(number, arg1, arg2)				\
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
@@ -240,7 +242,7 @@
 })
 
 #undef internal_syscall3
-#define internal_syscall3(number, err, arg1, arg2, arg3)		\
+#define internal_syscall3(number, arg1, arg2, arg3)			\
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
@@ -258,7 +260,7 @@
 })
 
 #undef internal_syscall4
-#define internal_syscall4(number, err, arg1, arg2, arg3, arg4)		\
+#define internal_syscall4(number, arg1, arg2, arg3, arg4)		\
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
@@ -278,7 +280,7 @@
 })
 
 #undef internal_syscall5
-#define internal_syscall5(number, err, arg1, arg2, arg3, arg4, arg5)	\
+#define internal_syscall5(number, arg1, arg2, arg3, arg4, arg5)	\
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg5, __arg5) = ARGIFY (arg5);			 	\
@@ -301,7 +303,7 @@
 })
 
 #undef internal_syscall6
-#define internal_syscall6(number, err, arg1, arg2, arg3, arg4, arg5, arg6) \
+#define internal_syscall6(number, arg1, arg2, arg3, arg4, arg5, arg6) \
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg6, __arg6) = ARGIFY (arg6);			 	\

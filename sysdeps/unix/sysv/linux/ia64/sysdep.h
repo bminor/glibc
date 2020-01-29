@@ -192,7 +192,7 @@
 
 #ifdef IA64_USE_NEW_STUB
 
-# define INTERNAL_SYSCALL_NCS(name, err, nr, args...)			      \
+# define INTERNAL_SYSCALL_NCS(name, nr, args...)			      \
 ({									      \
     LOAD_ARGS_##nr (args)						      \
     register long _r8 __asm ("r8");					      \
@@ -215,7 +215,7 @@
 
 #else /* !IA64_USE_NEW_STUB */
 
-# define INTERNAL_SYSCALL_NCS(name, err, nr, args...)		\
+# define INTERNAL_SYSCALL_NCS(name, nr, args...)		\
 ({								\
     LOAD_ARGS_##nr (args)					\
     register long _r8 asm ("r8");				\
@@ -232,8 +232,8 @@
 
 #endif /* !IA64_USE_NEW_STUB */
 
-#define INTERNAL_SYSCALL(name, err, nr, args...)	\
-  INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
+#define INTERNAL_SYSCALL(name, nr, args...)	\
+  INTERNAL_SYSCALL_NCS (__NR_##name, nr, ##args)
 
 #define LOAD_ARGS_0()
 #define LOAD_REGS_0

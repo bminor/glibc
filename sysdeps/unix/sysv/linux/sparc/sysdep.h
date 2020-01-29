@@ -46,14 +46,14 @@
 # define HAVE_GETTIMEOFDAY_VSYSCALL	"__vdso_gettimeofday"
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...) \
-  internal_syscall##nr(__SYSCALL_STRING, err, __NR_##name, args)
+#define INTERNAL_SYSCALL(name, nr, args...) \
+  internal_syscall##nr(__SYSCALL_STRING, __NR_##name, args)
 
 #undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
-  internal_syscall##nr(__SYSCALL_STRING, err, name, args)
+#define INTERNAL_SYSCALL_NCS(name, nr, args...) \
+  internal_syscall##nr(__SYSCALL_STRING, name, args)
 
-#define internal_syscall0(string,err,name,dummy...)			\
+#define internal_syscall0(string,name,dummy...)			\
 ({									\
 	register long int __g1 __asm__ ("g1") = (name);			\
 	register long __o0 __asm__ ("o0");				\
@@ -63,7 +63,7 @@
 	__o0;								\
 })
 
-#define internal_syscall1(string,err,name,arg1)				\
+#define internal_syscall1(string,name,arg1)				\
 ({									\
 	long int _arg1 = (long int) (arg1);				\
 	register long int __g1 __asm__("g1") = (name);			\
@@ -74,7 +74,7 @@
 	__o0;								\
 })
 
-#define internal_syscall2(string,err,name,arg1,arg2)			\
+#define internal_syscall2(string,name,arg1,arg2)			\
 ({									\
 	long int _arg1 = (long int) (arg1);				\
 	long int _arg2 = (long int) (arg2);				\
@@ -87,7 +87,7 @@
 	__o0;								\
 })
 
-#define internal_syscall3(string,err,name,arg1,arg2,arg3)		\
+#define internal_syscall3(string,name,arg1,arg2,arg3)			\
 ({									\
 	long int _arg1 = (long int) (arg1);				\
 	long int _arg2 = (long int) (arg2);				\
@@ -103,7 +103,7 @@
 	__o0;								\
 })
 
-#define internal_syscall4(string,err,name,arg1,arg2,arg3,arg4)		\
+#define internal_syscall4(string,name,arg1,arg2,arg3,arg4)		\
 ({									\
 	long int _arg1 = (long int) (arg1);				\
 	long int _arg2 = (long int) (arg2);				\
@@ -121,7 +121,7 @@
 	__o0;								\
 })
 
-#define internal_syscall5(string,err,name,arg1,arg2,arg3,arg4,arg5)	\
+#define internal_syscall5(string,name,arg1,arg2,arg3,arg4,arg5)		\
 ({									\
 	long int _arg1 = (long int) (arg1);				\
 	long int _arg2 = (long int) (arg2);				\
@@ -141,7 +141,7 @@
 	__o0;								\
 })
 
-#define internal_syscall6(string,err,name,arg1,arg2,arg3,arg4,arg5,arg6)\
+#define internal_syscall6(string,name,arg1,arg2,arg3,arg4,arg5,arg6)	\
 ({									\
 	long int _arg1 = (long int) (arg1);				\
 	long int _arg2 = (long int) (arg2);				\

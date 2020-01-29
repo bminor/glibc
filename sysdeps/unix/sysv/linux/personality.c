@@ -35,15 +35,14 @@ __personality (unsigned long persona)
   persona = (unsigned int) persona;
 #endif
 
-  INTERNAL_SYSCALL_DECL (err);
-  long ret = INTERNAL_SYSCALL (personality, err, 1, persona);
+  long int ret = INTERNAL_SYSCALL_CALL (personality, persona);
 
   /* Starting with kernel commit v2.6.29-6609-g11d06b2, the personality syscall
      never fails.  However, 32-bit kernels might flag valid values as errors, so
      we need to reverse the error setting.  We can't use the raw result as some
      arches split the return/error values.  */
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (ret, err)))
-    ret = -INTERNAL_SYSCALL_ERRNO (ret, err);
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (ret)))
+    ret = -INTERNAL_SYSCALL_ERRNO (ret);
   return ret;
 }
 weak_alias (__personality, personality)

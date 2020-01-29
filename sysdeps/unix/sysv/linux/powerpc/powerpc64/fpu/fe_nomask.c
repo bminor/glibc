@@ -27,8 +27,7 @@ const fenv_t *
 __fe_nomask_env_priv (void)
 {
 #if defined PR_SET_FPEXC && defined PR_FP_EXC_PRECISE
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (prctl, err, 2, PR_SET_FPEXC, PR_FP_EXC_PRECISE);
+  INTERNAL_SYSCALL_CALL (prctl, PR_SET_FPEXC, PR_FP_EXC_PRECISE);
 #else
   __set_errno (ENOSYS);
 #endif

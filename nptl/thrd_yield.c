@@ -21,6 +21,5 @@
 void
 thrd_yield (void)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL_CALL (sched_yield, err);
+  INTERNAL_SYSCALL_CALL (sched_yield);
 }

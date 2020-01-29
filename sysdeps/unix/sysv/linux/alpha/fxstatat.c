@@ -33,7 +33,6 @@
 int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
-  INTERNAL_SYSCALL_DECL (err);
   int result, errno_out;
 
   /* ??? The __fxstatat entry point is new enough that it must be using
@@ -41,10 +40,10 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
      cannot actually check this, lest the compiler not optimize the rest
      of the function away.  */
 
-  result = INTERNAL_SYSCALL (fstatat64, err, 4, fd, file, st, flag);
-  if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+  result = INTERNAL_SYSCALL_CALL (fstatat64, fd, file, st, flag);
+  if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result)))
     return result;
-  errno_out = INTERNAL_SYSCALL_ERRNO (result, err);
+  errno_out = INTERNAL_SYSCALL_ERRNO (result);
   __set_errno (errno_out);
   return -1;
 }

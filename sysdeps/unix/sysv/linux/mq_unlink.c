@@ -28,14 +28,13 @@ mq_unlink (const char *name)
   if (name[0] != '/')
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
-  INTERNAL_SYSCALL_DECL (err);
-  int ret = INTERNAL_SYSCALL (mq_unlink, err, 1, name + 1);
+  int ret = INTERNAL_SYSCALL_CALL (mq_unlink, name + 1);
 
   /* While unlink can return either EPERM or EACCES, mq_unlink should
      return just EACCES.  */
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (ret, err)))
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (ret)))
     {
-      ret = INTERNAL_SYSCALL_ERRNO (ret, err);
+      ret = INTERNAL_SYSCALL_ERRNO (ret);
       if (ret == EPERM)
 	ret = EACCES;
       return INLINE_SYSCALL_ERROR_RETURN_VALUE (ret);

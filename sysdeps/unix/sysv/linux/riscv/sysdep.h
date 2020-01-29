@@ -130,13 +130,13 @@
 # define HAVE_GETTIMEOFDAY_VSYSCALL	"__vdso_gettimeofday"
 # define HAVE_GETCPU_VSYSCALL		"__vdso_getcpu"
 
-# define INTERNAL_SYSCALL(name, err, nr, args...) \
-	internal_syscall##nr (SYS_ify (name), err, args)
+# define INTERNAL_SYSCALL(name, nr, args...) \
+	internal_syscall##nr (SYS_ify (name), args)
 
-# define INTERNAL_SYSCALL_NCS(number, err, nr, args...) \
-	internal_syscall##nr (number, err, args)
+# define INTERNAL_SYSCALL_NCS(number, nr, args...) \
+	internal_syscall##nr (number, args)
 
-# define internal_syscall0(number, err, dummy...)			\
+# define internal_syscall0(number, dummy...)			\
 ({ 									\
 	long int _sys_result;						\
 									\
@@ -153,7 +153,7 @@
 	_sys_result;							\
 })
 
-# define internal_syscall1(number, err, arg0)				\
+# define internal_syscall1(number, arg0)				\
 ({ 									\
 	long int _sys_result;						\
 	long int _arg0 = (long int) (arg0);				\
@@ -171,7 +171,7 @@
 	_sys_result;							\
 })
 
-# define internal_syscall2(number, err, arg0, arg1)	    		\
+# define internal_syscall2(number, arg0, arg1)	    		\
 ({ 									\
 	long int _sys_result;						\
 	long int _arg0 = (long int) (arg0);				\
@@ -191,7 +191,7 @@
 	_sys_result;							\
 })
 
-# define internal_syscall3(number, err, arg0, arg1, arg2)      		\
+# define internal_syscall3(number, arg0, arg1, arg2)      		\
 ({ 									\
 	long int _sys_result;						\
 	long int _arg0 = (long int) (arg0);				\
@@ -213,7 +213,7 @@
 	_sys_result;							\
 })
 
-# define internal_syscall4(number, err, arg0, arg1, arg2, arg3)	  \
+# define internal_syscall4(number, arg0, arg1, arg2, arg3)	  \
 ({ 									\
 	long int _sys_result;						\
 	long int _arg0 = (long int) (arg0);				\
@@ -237,7 +237,7 @@
 	_sys_result;							\
 })
 
-# define internal_syscall5(number, err, arg0, arg1, arg2, arg3, arg4)   \
+# define internal_syscall5(number, arg0, arg1, arg2, arg3, arg4)   \
 ({ 									\
 	long int _sys_result;						\
 	long int _arg0 = (long int) (arg0);				\
@@ -263,7 +263,7 @@
 	_sys_result;							\
 })
 
-# define internal_syscall6(number, err, arg0, arg1, arg2, arg3, arg4, arg5) \
+# define internal_syscall6(number, arg0, arg1, arg2, arg3, arg4, arg5) \
 ({ 									\
 	long int _sys_result;						\
 	long int _arg0 = (long int) (arg0);				\
@@ -292,7 +292,7 @@
 	_sys_result;							\
 })
 
-# define internal_syscall7(number, err, arg0, arg1, arg2, arg3, arg4, arg5, arg6) \
+# define internal_syscall7(number, arg0, arg1, arg2, arg3, arg4, arg5, arg6) \
 ({ 									\
 	long int _sys_result;						\
 	long int _arg0 = (long int) (arg0);				\

@@ -37,15 +37,14 @@ int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
   int result;
-  INTERNAL_SYSCALL_DECL (err);
 #ifdef STAT_IS_KERNEL_STAT
 # define kst (*st)
 #else
   struct kernel_stat kst;
 #endif
 
-  result = INTERNAL_SYSCALL (newfstatat, err, 4, fd, file, &kst, flag);
-  if (!__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+  result = INTERNAL_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);
+  if (!__glibc_likely (INTERNAL_SYSCALL_ERROR_P (result)))
     {
 #ifdef STAT_IS_KERNEL_STAT
       return 0;
@@ -53,9 +52,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
       return __xstat_conv (vers, &kst, st);
 #endif
     }
-  else
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result,
-								      err));
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result));
 }
 libc_hidden_def (__fxstatat)
 #if XSTAT_IS_XSTAT64

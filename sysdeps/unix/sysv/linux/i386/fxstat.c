@@ -42,11 +42,9 @@ __fxstat (int vers, int fd, struct stat *buf)
   {
     struct stat64 buf64;
 
-    INTERNAL_SYSCALL_DECL (err);
-    result = INTERNAL_SYSCALL (fstat64, err, 2, fd, &buf64);
-    if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-      return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result,
-									err));
+    result = INTERNAL_SYSCALL_CALL (fstat64, fd, &buf64);
+    if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result)))
+      return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result));
     else
       return __xstat32_conv (vers, &buf64, buf);
   }

@@ -394,11 +394,10 @@ START_THREAD_DEFN
   if (__set_robust_list_avail >= 0)
 # endif
     {
-      INTERNAL_SYSCALL_DECL (err);
       /* This call should never fail because the initial call in init.c
 	 succeeded.  */
-      INTERNAL_SYSCALL (set_robust_list, err, 2, &pd->robust_head,
-			sizeof (struct robust_list_head));
+      INTERNAL_SYSCALL_CALL (set_robust_list, &pd->robust_head,
+			     sizeof (struct robust_list_head));
     }
 #endif
 
@@ -407,12 +406,11 @@ START_THREAD_DEFN
      cancellation signal mask.  */
   if (__glibc_unlikely (pd->parent_cancelhandling & CANCELING_BITMASK))
     {
-      INTERNAL_SYSCALL_DECL (err);
       sigset_t mask;
       __sigemptyset (&mask);
       __sigaddset (&mask, SIGCANCEL);
-      (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &mask,
-			       NULL, _NSIG / 8);
+      INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_UNBLOCK, &mask,
+			     NULL, _NSIG / 8);
     }
 
   /* This is where the try/finally block should be created.  For

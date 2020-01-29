@@ -22,7 +22,7 @@
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
 #undef INTERNAL_SYSCALL_DIRECT
-#define INTERNAL_SYSCALL_DIRECT(name, err, nr, args...)			      \
+#define INTERNAL_SYSCALL_DIRECT(name, nr, args...)			      \
   ({									      \
     DECLARGS_##nr(args)							      \
     register long int _ret __asm__("2");				      \
@@ -34,7 +34,7 @@
     _ret; })
 
 #undef INTERNAL_SYSCALL_SVC0
-#define INTERNAL_SYSCALL_SVC0(name, err, nr, args...)			      \
+#define INTERNAL_SYSCALL_SVC0(name, nr, args...)			      \
   ({									      \
     DECLARGS_##nr(args)							      \
     register unsigned long int _nr __asm__("1") =			      \
@@ -48,7 +48,7 @@
     _ret; })
 
 #undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(no, err, nr, args...)			      \
+#define INTERNAL_SYSCALL_NCS(no, nr, args...)				      \
   ({									      \
     DECLARGS_##nr(args)							      \
     register unsigned long int _nr __asm__("1") = (unsigned long int)(no);    \

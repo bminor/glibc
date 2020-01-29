@@ -51,14 +51,13 @@ __fcntl64_nocancel_adjusted (int fd, int cmd, void *arg)
 {
   if (cmd == F_GETOWN)
     {
-      INTERNAL_SYSCALL_DECL (err);
       struct f_owner_ex fex;
-      int res = INTERNAL_SYSCALL_CALL (fcntl64, err, fd, F_GETOWN_EX, &fex);
-      if (!INTERNAL_SYSCALL_ERROR_P (res, err))
+      int res = INTERNAL_SYSCALL_CALL (fcntl64, fd, F_GETOWN_EX, &fex);
+      if (!INTERNAL_SYSCALL_ERROR_P (res))
 	return fex.type == F_OWNER_GID ? -fex.pid : fex.pid;
 
       return INLINE_SYSCALL_ERROR_RETURN_VALUE
-        (INTERNAL_SYSCALL_ERRNO (res, err));
+        (INTERNAL_SYSCALL_ERRNO (res));
     }
 
   return INLINE_SYSCALL_CALL (fcntl64, fd, cmd, (void *) arg);

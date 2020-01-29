@@ -170,10 +170,10 @@ __LABEL(name)						\
 
 #else /* !ASSEMBLER */
 
-#define INTERNAL_SYSCALL(name, err_out, nr, args...) \
+#define INTERNAL_SYSCALL(name, nr, args...) \
 	internal_syscall##nr(__NR_##name, args)
 
-#define INTERNAL_SYSCALL_NCS(name, err_out, nr, args...) \
+#define INTERNAL_SYSCALL_NCS(name, nr, args...) \
 	internal_syscall##nr(name, args)
 
 /* The normal Alpha calling convention sign-extends 32-bit quantties

@@ -62,8 +62,7 @@ static const sigset_t sigall_set = {
 static inline void
 __libc_signal_block_all (sigset_t *set)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, err, SIG_BLOCK, &sigall_set, set,
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_BLOCK, &sigall_set, set,
 			 _NSIG / 8);
 }
 
@@ -73,8 +72,7 @@ __libc_signal_block_app (sigset_t *set)
 {
   sigset_t allset = sigall_set;
   __clear_internal_signals (&allset);
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, err, SIG_BLOCK, &allset, set,
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_BLOCK, &allset, set,
 			 _NSIG / 8);
 }
 
@@ -82,8 +80,7 @@ __libc_signal_block_app (sigset_t *set)
 static inline void
 __libc_signal_restore_set (const sigset_t *set)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, err, SIG_SETMASK, set, NULL,
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, set, NULL,
 			 _NSIG / 8);
 }
 

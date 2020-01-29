@@ -25,9 +25,8 @@
     if ((unsigned long) (sp) < this_sp)					      \
       {									      \
 	stack_t oss;							      \
-	INTERNAL_SYSCALL_DECL (err);					      \
-	int result = INTERNAL_SYSCALL (sigaltstack, err, 2, NULL, &oss);      \
-	if (!INTERNAL_SYSCALL_ERROR_P (result, err)			      \
+	int result = INTERNAL_SYSCALL_CALL (sigaltstack, NULL, &oss);         \
+	if (!INTERNAL_SYSCALL_ERROR_P (result)				      \
 	    && ((oss.ss_flags & SS_ONSTACK) == 0			      \
 		|| ((unsigned long) oss.ss_sp + oss.ss_size		      \
 		    - (unsigned long) (sp)) < oss.ss_size))		      \

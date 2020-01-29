@@ -32,8 +32,7 @@ __brk (void *addr)
 {
   void *newbrk;
 
-  INTERNAL_SYSCALL_DECL (err);
-  newbrk = (void *) INTERNAL_SYSCALL (brk, err, 1, addr);
+  newbrk = (void *) INTERNAL_SYSCALL_CALL (brk, addr);
   __curbrk = newbrk;
 
   if (newbrk < addr)

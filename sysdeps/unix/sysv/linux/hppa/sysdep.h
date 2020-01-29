@@ -362,7 +362,7 @@ L(pre_end):					ASM_LINE_SEP	\
 
 /* Similar to INLINE_SYSCALL but we don't set errno */
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...)			\
+#define INTERNAL_SYSCALL(name, nr, args...)				\
 ({									\
 	long __sys_res;							\
 	{								\
@@ -388,7 +388,7 @@ L(pre_end):					ASM_LINE_SEP	\
 
 /* The _NCS variant allows non-constant syscall numbers.  */
 #undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(name, err, nr, args...)			\
+#define INTERNAL_SYSCALL_NCS(name, nr, args...)				\
 ({									\
 	long __sys_res;							\
 	{								\

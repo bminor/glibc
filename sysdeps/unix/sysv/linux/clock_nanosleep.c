@@ -39,23 +39,21 @@ __clock_nanosleep_time64 (clockid_t clock_id, int flags, const struct __timespec
 
   /* If the call is interrupted by a signal handler or encounters an error,
      it returns a positive value similar to errno.  */
-  INTERNAL_SYSCALL_DECL (err);
-
 #ifdef __ASSUME_TIME64_SYSCALLS
 # ifndef __NR_clock_nanosleep_time64
 #  define __NR_clock_nanosleep_time64 __NR_clock_nanosleep
 # endif
-  r = INTERNAL_SYSCALL_CANCEL (clock_nanosleep_time64, err, clock_id,
+  r = INTERNAL_SYSCALL_CANCEL (clock_nanosleep_time64, clock_id,
                                flags, req, rem);
 #else
 # ifdef __NR_clock_nanosleep_time64
-  r = INTERNAL_SYSCALL_CANCEL (clock_nanosleep_time64, err, clock_id,
+  r = INTERNAL_SYSCALL_CANCEL (clock_nanosleep_time64, clock_id,
                                flags, req, rem);
 
-  if (! INTERNAL_SYSCALL_ERROR_P (r, err))
+  if (! INTERNAL_SYSCALL_ERROR_P (r))
     return 0;
-  if (INTERNAL_SYSCALL_ERRNO (r, err) != ENOSYS)
-    return INTERNAL_SYSCALL_ERRNO (r, err);
+  if (INTERNAL_SYSCALL_ERRNO (r) != ENOSYS)
+    return INTERNAL_SYSCALL_ERRNO (r);
 # endif /* __NR_clock_nanosleep_time64 */
 
   if (! in_time_t_range (req->tv_sec))
@@ -66,18 +64,18 @@ __clock_nanosleep_time64 (clockid_t clock_id, int flags, const struct __timespec
 
   struct timespec tr32;
   struct timespec ts32 = valid_timespec64_to_timespec (*req);
-  r = INTERNAL_SYSCALL_CANCEL (clock_nanosleep, err, clock_id, flags,
+  r = INTERNAL_SYSCALL_CANCEL (clock_nanosleep, clock_id, flags,
                                &ts32, &tr32);
-  if (INTERNAL_SYSCALL_ERROR_P (r, err))
+  if (INTERNAL_SYSCALL_ERROR_P (r))
     {
-      if (INTERNAL_SYSCALL_ERRNO (r, err) == EINTR && rem != NULL
+      if (INTERNAL_SYSCALL_ERRNO (r) == EINTR && rem != NULL
 	  && (flags & TIMER_ABSTIME) == 0)
 	*rem = valid_timespec_to_timespec64 (tr32);
     }
 #endif /* __ASSUME_TIME64_SYSCALLS */
 
-  return (INTERNAL_SYSCALL_ERROR_P (r, err)
-	  ? INTERNAL_SYSCALL_ERRNO (r, err) : 0);
+  return (INTERNAL_SYSCALL_ERROR_P (r)
+	  ? INTERNAL_SYSCALL_ERRNO (r) : 0);
 }
 
 #if __TIMESIZE != 64

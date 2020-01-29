@@ -145,7 +145,7 @@
 # undef HAVE_INTERNAL_SEND_SYMBOL
 
 #undef INTERNAL_SYSCALL_RAW
-#define INTERNAL_SYSCALL_RAW(name, err, nr, args...)            \
+#define INTERNAL_SYSCALL_RAW(name, nr, args...)                 \
   ({ unsigned int _sys_result;                                  \
      {                                                          \
        /* Load argument values in temporary variables
@@ -164,12 +164,12 @@
      (int) _sys_result; })
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...) \
-	INTERNAL_SYSCALL_RAW(SYS_ify(name), err, nr, args)
+#define INTERNAL_SYSCALL(name, nr, args...) \
+	INTERNAL_SYSCALL_RAW(SYS_ify(name), nr, args)
 
 #undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(number, err, nr, args...) \
-	INTERNAL_SYSCALL_RAW(number, err, nr, args)
+#define INTERNAL_SYSCALL_NCS(number, nr, args...) \
+	INTERNAL_SYSCALL_RAW(number, nr, args)
 
 #define LOAD_ARGS_0()
 #define LOAD_REGS_0

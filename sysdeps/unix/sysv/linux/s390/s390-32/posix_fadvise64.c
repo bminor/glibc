@@ -37,16 +37,15 @@ int
 __posix_fadvise64_l64 (int fd, off64_t offset, off64_t len, int advise)
 {
   struct fadvise64_64_layout parameters;
-  INTERNAL_SYSCALL_DECL (err);
 
   parameters.fd = fd;
   parameters.offset = offset;
   parameters.len = len;
   parameters.advise = advise;
-  int ret = INTERNAL_SYSCALL (fadvise64_64, err, 1, &parameters);
-  if (!INTERNAL_SYSCALL_ERROR_P (ret, err))
+  int ret = INTERNAL_SYSCALL_CALL (fadvise64_64, &parameters);
+  if (!INTERNAL_SYSCALL_ERROR_P (ret))
     return 0;
-  return INTERNAL_SYSCALL_ERRNO (ret, err);
+  return INTERNAL_SYSCALL_ERRNO (ret);
 }
 
 #include <shlib-compat.h>

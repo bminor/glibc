@@ -22,7 +22,7 @@
 #include <ldsodefs.h>
 
 #ifndef INTERNAL_VSYSCALL_CALL
-# define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		      \
+# define INTERNAL_VSYSCALL_CALL(funcptr, nr, args...)		      	      \
      funcptr (args)
 #endif
 
@@ -30,24 +30,23 @@
   ({									      \
     __label__ out;							      \
     __label__ iserr;							      \
-    INTERNAL_SYSCALL_DECL (sc_err);					      \
     long int sc_ret;							      \
 									      \
     __typeof (GLRO(dl_vdso_##name)) vdsop = GLRO(dl_vdso_##name);	      \
     if (vdsop != NULL)							      \
       {									      \
-	sc_ret = INTERNAL_VSYSCALL_CALL (vdsop, sc_err, nr, ##args);	      \
-	if (!INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
+	sc_ret = INTERNAL_VSYSCALL_CALL (vdsop, nr, ##args);	      	      \
+	if (!INTERNAL_SYSCALL_ERROR_P (sc_ret))			      	      \
 	  goto out;							      \
-	if (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err) != ENOSYS)		      \
+	if (INTERNAL_SYSCALL_ERRNO (sc_ret) != ENOSYS)		      	      \
 	  goto iserr;							      \
       }									      \
 									      \
-    sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, ##args);		      \
-    if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			      \
+    sc_ret = INTERNAL_SYSCALL_CALL (name, ##args);		      	      \
+    if (INTERNAL_SYSCALL_ERROR_P (sc_ret))			      	      \
       {									      \
       iserr:								      \
-        __set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		      \
+        __set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret));		      	      \
         sc_ret = -1L;							      \
       }									      \
   out:									      \

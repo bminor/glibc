@@ -244,8 +244,7 @@ void
 __netlink_close (struct netlink_handle *h)
 {
   /* Don't modify errno.  */
-  INTERNAL_SYSCALL_DECL (err);
-  (void) INTERNAL_SYSCALL (close, err, 1, h->fd);
+  INTERNAL_SYSCALL_CALL (close, h->fd);
 }
 
 

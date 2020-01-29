@@ -79,18 +79,18 @@ typedef long int __syscall_arg_t;
 #endif
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...)			\
+#define INTERNAL_SYSCALL(name, nr, args...)			\
 	internal_syscall##nr ("li\t%0, %2\t\t\t# " #name "\n\t",	\
 			      "IK" (SYS_ify (name)),			\
-			      0, err, args)
+			      0, args)
 
 #undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
+#define INTERNAL_SYSCALL_NCS(number, nr, args...)			\
 	internal_syscall##nr (MOVE32 "\t%0, %2\n\t",			\
 			      "r" (__s0),				\
-			      number, err, args)
+			      number, args)
 
-#define internal_syscall0(v0_init, input, number, err, dummy...)	\
+#define internal_syscall0(v0_init, input, number, dummy...)	\
 ({									\
 	long int _sys_result;						\
 									\
@@ -112,7 +112,7 @@ typedef long int __syscall_arg_t;
 	_sys_result;							\
 })
 
-#define internal_syscall1(v0_init, input, number, err, arg1)		\
+#define internal_syscall1(v0_init, input, number, arg1)		\
 ({									\
 	long int _sys_result;						\
 									\
@@ -136,7 +136,7 @@ typedef long int __syscall_arg_t;
 	_sys_result;							\
 })
 
-#define internal_syscall2(v0_init, input, number, err, arg1, arg2)	\
+#define internal_syscall2(v0_init, input, number, arg1, arg2)	\
 ({									\
 	long int _sys_result;						\
 									\
@@ -162,8 +162,7 @@ typedef long int __syscall_arg_t;
 	_sys_result;							\
 })
 
-#define internal_syscall3(v0_init, input, number, err,			\
-			  arg1, arg2, arg3)				\
+#define internal_syscall3(v0_init, input, number, arg1, arg2, arg3)	\
 ({									\
 	long int _sys_result;						\
 									\
@@ -191,8 +190,8 @@ typedef long int __syscall_arg_t;
 	_sys_result;							\
 })
 
-#define internal_syscall4(v0_init, input, number, err,			\
-			  arg1, arg2, arg3, arg4)			\
+#define internal_syscall4(v0_init, input, number, arg1, arg2, arg3, 	\
+			  arg4)						\
 ({									\
 	long int _sys_result;						\
 									\
@@ -221,8 +220,8 @@ typedef long int __syscall_arg_t;
 	_sys_result;							\
 })
 
-#define internal_syscall5(v0_init, input, number, err,			\
-			  arg1, arg2, arg3, arg4, arg5)			\
+#define internal_syscall5(v0_init, input, number, arg1, arg2, arg3, 	\
+			  arg4, arg5)					\
 ({									\
 	long int _sys_result;						\
 									\
@@ -253,8 +252,8 @@ typedef long int __syscall_arg_t;
 	_sys_result;							\
 })
 
-#define internal_syscall6(v0_init, input, number, err,			\
-			  arg1, arg2, arg3, arg4, arg5, arg6)		\
+#define internal_syscall6(v0_init, input, number, arg1, arg2, arg3, 	\
+			  arg4, arg5, arg6)				\
 ({									\
 	long int _sys_result;						\
 									\

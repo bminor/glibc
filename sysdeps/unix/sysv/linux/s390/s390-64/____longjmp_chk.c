@@ -39,9 +39,8 @@
       if (new_sp < cur_sp)						\
 	{								\
 	  stack_t oss;							\
-	  INTERNAL_SYSCALL_DECL (err);					\
-	  int res = INTERNAL_SYSCALL (sigaltstack, err, 2, NULL, &oss);	\
-	  if (!INTERNAL_SYSCALL_ERROR_P (res, err))			\
+	  int res = INTERNAL_SYSCALL_CALL (sigaltstack, NULL, &oss);	\
+	  if (!INTERNAL_SYSCALL_ERROR_P (res))				\
 	    {								\
 	      if ((oss.ss_flags & SS_ONSTACK) == 0			\
 		  || ((uintptr_t) (oss.ss_sp + oss.ss_size) - new_sp	\

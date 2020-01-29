@@ -35,10 +35,9 @@ setup_thread (struct database_dyn *db)
   /* Do not try this at home, kids.  We play with the SETTID address
      even thought the process is multi-threaded.  This can only work
      since none of the threads ever terminates.  */
-  INTERNAL_SYSCALL_DECL (err);
-  int r = INTERNAL_SYSCALL (set_tid_address, err, 1,
-			    &db->head->nscd_certainly_running);
-  if (!INTERNAL_SYSCALL_ERROR_P (r, err))
+  int r = INTERNAL_SYSCALL_CALL (set_tid_address,
+				 &db->head->nscd_certainly_running);
+  if (!INTERNAL_SYSCALL_ERROR_P (r))
     /* We know the kernel can reset this field when nscd terminates.
        So, set the field to a nonzero value which indicates that nscd
        is certainly running and clients can skip the test.  */

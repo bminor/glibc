@@ -20,7 +20,7 @@
 
 /* Linux times system call returns 64-bit integer.  */
 #undef internal_syscall1
-#define internal_syscall1(number, err, arg1)				\
+#define internal_syscall1(number, arg1)				\
 ({									\
     unsigned long long int resultvar;					\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
@@ -34,7 +34,7 @@
 })
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+#define INTERNAL_SYSCALL_ERROR_P(val) \
   ((unsigned long long int) (val) >= -4095LL)
 
 #include <sysdeps/unix/sysv/linux/times.c>

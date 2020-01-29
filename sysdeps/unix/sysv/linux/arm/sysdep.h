@@ -328,7 +328,7 @@ __local_syscall_error:						\
    then unwinding will fail higher up the stack.  So we move the
    syscall out of line and provide its own unwind information.  */
 # undef INTERNAL_SYSCALL_RAW
-# define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
+# define INTERNAL_SYSCALL_RAW(name, nr, args...)		\
   ({								\
       register int _a1 asm ("a1");				\
       int _nametmp = name;					\
@@ -341,7 +341,7 @@ __local_syscall_error:						\
       _a1; })
 #else /* ARM */
 # undef INTERNAL_SYSCALL_RAW
-# define INTERNAL_SYSCALL_RAW(name, err, nr, args...)		\
+# define INTERNAL_SYSCALL_RAW(name, nr, args...)		\
   ({								\
        register int _a1 asm ("r0"), _nr asm ("r7");		\
        LOAD_ARGS_##nr (args)					\
@@ -354,8 +354,8 @@ __local_syscall_error:						\
 #endif
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...)		\
-	INTERNAL_SYSCALL_RAW(SYS_ify(name), err, nr, args)
+#define INTERNAL_SYSCALL(name, nr, args...)			\
+	INTERNAL_SYSCALL_RAW(SYS_ify(name), nr, args)
 
 #define VDSO_NAME  "LINUX_2.6"
 #define VDSO_HASH  61765110
@@ -407,8 +407,8 @@ __local_syscall_error:						\
 
 /* For EABI, non-constant syscalls are actually pretty easy...  */
 #undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(number, err, nr, args...)          \
-  INTERNAL_SYSCALL_RAW (number, err, nr, args)
+#define INTERNAL_SYSCALL_NCS(number, nr, args...)              \
+  INTERNAL_SYSCALL_RAW (number, nr, args)
 
 #define SINGLE_THREAD_BY_GLOBAL	1
 

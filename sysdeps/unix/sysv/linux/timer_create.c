@@ -148,11 +148,10 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 	    ._sigev_un = { ._pad = { [0] = __helper_tid } } };
 
 	/* Create the timer.  */
-	INTERNAL_SYSCALL_DECL (err);
 	int res;
-	res = INTERNAL_SYSCALL (timer_create, err, 3,
-				syscall_clockid, &sev, &newp->ktimerid);
-	if (! INTERNAL_SYSCALL_ERROR_P (res, err))
+	res = INTERNAL_SYSCALL_CALL (timer_create,
+				     syscall_clockid, &sev, &newp->ktimerid);
+	if (! INTERNAL_SYSCALL_ERROR_P (res))
 	  {
 	    /* Add to the queue of active timers with thread
 	       delivery.  */
@@ -168,7 +167,7 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 	/* Free the resources.  */
 	free (newp);
 
-	__set_errno (INTERNAL_SYSCALL_ERRNO (res, err));
+	__set_errno (INTERNAL_SYSCALL_ERRNO (res));
 
 	return -1;
       }

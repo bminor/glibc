@@ -37,22 +37,19 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
   int result;
-  INTERNAL_SYSCALL_DECL (err);
 
 #ifdef __NR_fstatat64
-  result = INTERNAL_SYSCALL (fstatat64, err, 4, fd, file, st, flag);
+  result = INTERNAL_SYSCALL_CALL (fstatat64, fd, file, st, flag);
 #else
   struct statx tmp;
 
-  result = INTERNAL_SYSCALL (statx, err, 5, fd, file, AT_NO_AUTOMOUNT | flag,
-                             STATX_BASIC_STATS, &tmp);
+  result = INTERNAL_SYSCALL_CALL (statx, fd, file, AT_NO_AUTOMOUNT | flag,
+				  STATX_BASIC_STATS, &tmp);
   if (result == 0)
     __cp_stat64_statx (st, &tmp);
 #endif
-  if (!__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+  if (!__glibc_likely (INTERNAL_SYSCALL_ERROR_P (result)))
     return 0;
-  else
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result,
-								      err));
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result));
 }
 libc_hidden_def (__fxstatat64)

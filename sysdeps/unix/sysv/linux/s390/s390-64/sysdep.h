@@ -96,10 +96,12 @@
 
 #undef SYSCALL_ERROR_LABEL
 #ifndef PIC
+# undef SYSCALL_ERROR_LABEL
 # define SYSCALL_ERROR_LABEL syscall_error
 # define SYSCALL_ERROR_HANDLER
 #else
 # if RTLD_PRIVATE_ERRNO
+#  undef SYSCALL_ERROR_LABEL
 #  define SYSCALL_ERROR_LABEL 0f
 #  define SYSCALL_ERROR_HANDLER \
 0:  larl  %r1,rtld_errno;						      \
@@ -113,6 +115,7 @@
 #  else
 #   define SYSCALL_ERROR_ERRNO errno
 #  endif
+#  undef SYSCALL_ERROR_LABEL
 #  define SYSCALL_ERROR_LABEL 0f
 #  define SYSCALL_ERROR_HANDLER \
 0:  lcr   %r0,%r2;							      \
@@ -125,6 +128,7 @@
     lghi   %r2,-1;							      \
     br    %r14
 # else
+#  undef SYSCALL_ERROR_LABEL
 #  define SYSCALL_ERROR_LABEL 0f
 #  define SYSCALL_ERROR_HANDLER \
 0:  larl  %r1,_GLOBAL_OFFSET_TABLE_;					      \

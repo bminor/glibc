@@ -294,7 +294,7 @@ __local_syscall_error:				\
 #else /* not __ASSEMBLER__ */
 
 # undef INTERNAL_SYSCALL_RAW
-#  define INTERNAL_SYSCALL_RAW0(name, err, dummy...)			\
+#  define INTERNAL_SYSCALL_RAW0(name, dummy...)				\
   ({unsigned int __sys_result;						\
      {									\
        register int _a1 __asm__ ("a0"), _nr __asm__ ("r7");		\
@@ -307,7 +307,7 @@ __local_syscall_error:				\
      }									\
      (int) __sys_result; })
 
-#  define INTERNAL_SYSCALL_RAW1(name, err, arg1)			\
+#  define INTERNAL_SYSCALL_RAW1(name, arg1)				\
   ({unsigned int __sys_result;						\
     register int _tmp_arg1 = (int)(arg1);				\
      {									\
@@ -322,7 +322,7 @@ __local_syscall_error:				\
      }									\
      (int) __sys_result; })
 
-#  define INTERNAL_SYSCALL_RAW2(name, err, arg1, arg2)			\
+#  define INTERNAL_SYSCALL_RAW2(name, arg1, arg2)			\
   ({unsigned int __sys_result;						\
     register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);	\
      {									\
@@ -338,7 +338,7 @@ __local_syscall_error:				\
      }									\
      (int) __sys_result; })
 
-#  define INTERNAL_SYSCALL_RAW3(name, err, arg1, arg2, arg3)		\
+#  define INTERNAL_SYSCALL_RAW3(name, arg1, arg2, arg3)			\
   ({unsigned int __sys_result;						\
     register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);	\
     register int _tmp_arg3 = (int)(arg3);				\
@@ -359,7 +359,7 @@ __local_syscall_error:				\
      }									\
      (int) __sys_result; })
 
-#  define INTERNAL_SYSCALL_RAW4(name, err, arg1, arg2, arg3, arg4)	\
+#  define INTERNAL_SYSCALL_RAW4(name, arg1, arg2, arg3, arg4)		\
   ({unsigned int __sys_result;						\
     register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);	\
     register int _tmp_arg3 = (int)(arg3), _tmp_arg4 = (int)(arg4);	\
@@ -379,7 +379,7 @@ __local_syscall_error:				\
      }									\
      (int) __sys_result; })
 
-#  define INTERNAL_SYSCALL_RAW5(name, err, arg1, arg2, arg3, arg4,	\
+#  define INTERNAL_SYSCALL_RAW5(name, arg1, arg2, arg3, arg4,		\
 			      arg5)					\
   ({unsigned int __sys_result;						\
     register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);	\
@@ -402,7 +402,7 @@ __local_syscall_error:				\
      }									\
      (int) __sys_result; })
 
-#  define INTERNAL_SYSCALL_RAW6(name, err, arg1, arg2, arg3, arg4,	\
+#  define INTERNAL_SYSCALL_RAW6(name, arg1, arg2, arg3, arg4,		\
 			      arg5, arg6)				\
   ({unsigned int __sys_result;						\
     register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);	\
@@ -426,7 +426,7 @@ __local_syscall_error:				\
      }									\
      (int) __sys_result; })
 
-#  define INTERNAL_SYSCALL_RAW7(name, err, arg1, arg2, arg3, arg4,	\
+#  define INTERNAL_SYSCALL_RAW7(name, arg1, arg2, arg3, arg4,		\
 			      arg5, arg6, arg7)				\
   ({unsigned int __sys_result;						\
     register int _tmp_arg1 = (int)(arg1), _tmp_arg2 = (int)(arg2);	\
@@ -454,12 +454,12 @@ __local_syscall_error:				\
      (int) __sys_result; })
 
 # undef INTERNAL_SYSCALL
-# define INTERNAL_SYSCALL(name, err, nr, args...)		\
-  INTERNAL_SYSCALL_RAW##nr(SYS_ify(name), err, args)
+# define INTERNAL_SYSCALL(name, nr, args...)			\
+  INTERNAL_SYSCALL_RAW##nr(SYS_ify(name), args)
 
 # undef INTERNAL_SYSCALL_NCS
-# define INTERNAL_SYSCALL_NCS(number, err, nr, args...)		\
-  INTERNAL_SYSCALL_RAW##nr (number, err, args)
+# define INTERNAL_SYSCALL_NCS(number, nr, args...)		\
+  INTERNAL_SYSCALL_RAW##nr (number, args)
 
 #endif /* __ASSEMBLER__ */
 

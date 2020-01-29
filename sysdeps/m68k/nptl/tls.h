@@ -95,12 +95,11 @@ typedef struct
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(tcbp)						\
   ({									\
-    INTERNAL_SYSCALL_DECL (err);					\
     int _sys_result;							\
 									\
-    _sys_result = INTERNAL_SYSCALL (set_thread_area, err, 1,		\
+    _sys_result = INTERNAL_SYSCALL_CALL (set_thread_area, 		\
 				    ((void *) (tcbp)) + TLS_TCB_OFFSET); \
-    INTERNAL_SYSCALL_ERROR_P (_sys_result, err) ? "unknown error" : NULL; })
+    INTERNAL_SYSCALL_ERROR_P (_sys_result) ? "unknown error" : NULL; })
 
 # define TLS_DEFINE_INIT_TP(tp, pd) \
   void *tp = (void *) (pd) + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE

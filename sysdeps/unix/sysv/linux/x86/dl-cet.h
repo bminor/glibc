@@ -22,14 +22,13 @@ static inline int __attribute__ ((always_inline))
 dl_cet_allocate_legacy_bitmap (unsigned long *legacy_bitmap)
 {
   /* Allocate legacy bitmap.  */
-  INTERNAL_SYSCALL_DECL (err);
 #ifdef __LP64__
-  return (int) INTERNAL_SYSCALL (arch_prctl, err, 2,
-				 ARCH_CET_LEGACY_BITMAP, legacy_bitmap);
+  return (int) INTERNAL_SYSCALL_CALL (arch_prctl,
+				      ARCH_CET_LEGACY_BITMAP, legacy_bitmap);
 #else
   unsigned long long legacy_bitmap_u64[2];
-  int res = INTERNAL_SYSCALL (arch_prctl, err, 2,
-			      ARCH_CET_LEGACY_BITMAP, legacy_bitmap_u64);
+  int res = INTERNAL_SYSCALL_CALL (arch_prctl,
+				   ARCH_CET_LEGACY_BITMAP, legacy_bitmap_u64);
   if (res == 0)
     {
       legacy_bitmap[0] = legacy_bitmap_u64[0];
@@ -42,14 +41,12 @@ dl_cet_allocate_legacy_bitmap (unsigned long *legacy_bitmap)
 static inline int __attribute__ ((always_inline))
 dl_cet_disable_cet (unsigned int cet_feature)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  return (int) INTERNAL_SYSCALL (arch_prctl, err, 2, ARCH_CET_DISABLE,
-				 cet_feature);
+  return (int) INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_CET_DISABLE,
+				      cet_feature);
 }
 
 static inline int __attribute__ ((always_inline))
 dl_cet_lock_cet (void)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  return (int) INTERNAL_SYSCALL (arch_prctl, err, 2, ARCH_CET_LOCK, 0);
+  return (int) INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_CET_LOCK, 0);
 }

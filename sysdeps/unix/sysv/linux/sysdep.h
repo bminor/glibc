@@ -22,11 +22,8 @@
 #include <kernel-features.h>
 #include <errno.h>
 
-#undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+#define INTERNAL_SYSCALL_ERROR_P(val) \
   ((unsigned long int) (val) > -4096UL)
 
 #ifndef SYSCALL_ERROR_LABEL
@@ -43,15 +40,14 @@
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)				\
   ({									\
-    INTERNAL_SYSCALL_DECL (sc_err);					\
-    long int sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, args);	\
-    __glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))	\
-    ? SYSCALL_ERROR_LABEL (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err))	\
+    long int sc_ret = INTERNAL_SYSCALL (name, nr, args);		\
+    __glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (sc_ret))		\
+    ? SYSCALL_ERROR_LABEL (INTERNAL_SYSCALL_ERRNO (sc_ret))		\
     : sc_ret;								\
   })
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)     (-(val))
+#define INTERNAL_SYSCALL_ERRNO(val)     (-(val))
 
 /* Set error number and return -1.  A target may choose to return the
    internal function, __syscall_error, which sets errno and returns -1.

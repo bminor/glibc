@@ -288,7 +288,7 @@
 	register long int r2 asm ("%r2") = (long int) (_arg7)
 
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...) \
+#define INTERNAL_SYSCALL(name, nr, args...) \
   ({									      \
     unsigned long int resultvar;					      \
     register long int r3 asm ("%r3") = SYS_ify (name);			      \
@@ -302,7 +302,7 @@
     (int) resultvar; })
 
 /* The _NCS variant allows non-constant syscall numbers.  */
-#define INTERNAL_SYSCALL_NCS(name, err, nr, args...) \
+#define INTERNAL_SYSCALL_NCS(name, nr, args...) \
   ({									      \
     unsigned long int resultvar;					      \
     register long int r3 asm ("%r3") = (name);				      \

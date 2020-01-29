@@ -28,15 +28,14 @@
     if ((unsigned long) (sp) > this_sp)					\
       {									\
         stack_t oss;							\
-        INTERNAL_SYSCALL_DECL (err);					\
-        int result = INTERNAL_SYSCALL (sigaltstack, err, 2, NULL, &oss);\
+        int result = INTERNAL_SYSCALL_CALL (sigaltstack, NULL, &oss);\
 	/* If we aren't using an alternate stack then we have already	\
 	   shown that we are jumping to a frame that doesn't exist so	\
 	   error out. If we are using an alternate stack we must prove	\
 	   that we are jumping *out* of the alternate stack. Note that	\
 	   the check for that is the same as that for _STACK_GROWS_UP	\
 	   as for _STACK_GROWS_DOWN.  */				\
-        if (!INTERNAL_SYSCALL_ERROR_P (result, err)			\
+        if (!INTERNAL_SYSCALL_ERROR_P (result)				\
             && ((oss.ss_flags & SS_ONSTACK) == 0			\
                 || ((unsigned long) oss.ss_sp + oss.ss_size		\
                     - (unsigned long) (sp)) < oss.ss_size))		\

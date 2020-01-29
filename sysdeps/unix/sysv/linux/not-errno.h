@@ -26,14 +26,13 @@ static inline int
 __access_noerrno (const char *pathname, int mode)
 {
   int res;
-  INTERNAL_SYSCALL_DECL (err);
 #ifdef __NR_access
-  res = INTERNAL_SYSCALL_CALL (access, err, pathname, mode);
+  res = INTERNAL_SYSCALL_CALL (access, pathname, mode);
 #else
-  res = INTERNAL_SYSCALL_CALL (faccessat, err, AT_FDCWD, pathname, mode);
+  res = INTERNAL_SYSCALL_CALL (faccessat, AT_FDCWD, pathname, mode);
 #endif
-  if (INTERNAL_SYSCALL_ERROR_P (res, err))
-    return INTERNAL_SYSCALL_ERRNO (res, err);
+  if (INTERNAL_SYSCALL_ERROR_P (res))
+    return INTERNAL_SYSCALL_ERRNO (res);
   return 0;
 }
 
@@ -41,9 +40,8 @@ static inline int
 __kill_noerrno (pid_t pid, int sig)
 {
   int res;
-  INTERNAL_SYSCALL_DECL (err);
-  res = INTERNAL_SYSCALL_CALL (kill, err, pid, sig);
-  if (INTERNAL_SYSCALL_ERROR_P (res, err))
-    return INTERNAL_SYSCALL_ERRNO (res, err);
+  res = INTERNAL_SYSCALL_CALL (kill, pid, sig);
+  if (INTERNAL_SYSCALL_ERROR_P (res))
+    return INTERNAL_SYSCALL_ERRNO (res);
   return 0;
 }

@@ -130,9 +130,8 @@ void
 __nptl_set_robust (struct pthread *self)
 {
 #ifdef __NR_set_robust_list
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (set_robust_list, err, 2, &self->robust_head,
-		    sizeof (struct robust_list_head));
+  INTERNAL_SYSCALL_CALL (set_robust_list, &self->robust_head,
+			 sizeof (struct robust_list_head));
 #endif
 }
 
@@ -203,12 +202,11 @@ sighandler_setxid (int sig, siginfo_t *si, void *ctx)
       || si->si_code != SI_TKILL)
     return;
 
-  INTERNAL_SYSCALL_DECL (err);
-  result = INTERNAL_SYSCALL_NCS (__xidcmd->syscall_no, err, 3, __xidcmd->id[0],
+  result = INTERNAL_SYSCALL_NCS (__xidcmd->syscall_no, 3, __xidcmd->id[0],
 				 __xidcmd->id[1], __xidcmd->id[2]);
   int error = 0;
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result, err)))
-    error = INTERNAL_SYSCALL_ERRNO (result, err);
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result)))
+    error = INTERNAL_SYSCALL_ERRNO (result);
   __nptl_setxid_error (__xidcmd, error);
 
   /* Reset the SETXID flag.  */
@@ -258,10 +256,9 @@ __pthread_initialize_minimal_internal (void)
     pd->robust_head.futex_offset = (offsetof (pthread_mutex_t, __data.__lock)
 				    - offsetof (pthread_mutex_t,
 						__data.__list.__next));
-    INTERNAL_SYSCALL_DECL (err);
-    int res = INTERNAL_SYSCALL (set_robust_list, err, 2, &pd->robust_head,
-				sizeof (struct robust_list_head));
-    if (INTERNAL_SYSCALL_ERROR_P (res, err))
+    int res = INTERNAL_SYSCALL_CALL (set_robust_list, &pd->robust_head,
+				     sizeof (struct robust_list_head));
+    if (INTERNAL_SYSCALL_ERROR_P (res))
 #endif
       set_robust_list_not_avail ();
   }
@@ -299,11 +296,8 @@ __pthread_initialize_minimal_internal (void)
      structure.  It is already cleared.  */
   __sigaddset (&sa.sa_mask, SIGCANCEL);
   __sigaddset (&sa.sa_mask, SIGSETXID);
-  {
-    INTERNAL_SYSCALL_DECL (err);
-    (void) INTERNAL_SYSCALL (rt_sigprocmask, err, 4, SIG_UNBLOCK, &sa.sa_mask,
-			     NULL, _NSIG / 8);
-  }
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_UNBLOCK, &sa.sa_mask,
+			 NULL, _NSIG / 8);
 
   /* Get the size of the static and alignment requirements for the TLS
      block.  */

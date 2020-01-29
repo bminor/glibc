@@ -21,6 +21,5 @@
 void *
 __m68k_read_tp (void)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  return (void*) INTERNAL_SYSCALL_CALL (get_thread_area, err);
+  return (void*) INTERNAL_SYSCALL_CALL (get_thread_area);
 }

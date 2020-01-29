@@ -33,23 +33,22 @@
 int
 __lxstat (int vers, const char *name, struct stat *buf)
 {
-  INTERNAL_SYSCALL_DECL (err);
   int result;
   struct kernel_stat kbuf;
 
   if (vers == _STAT_VER_KERNEL64)
     {
-      result = INTERNAL_SYSCALL (lstat64, err, 2, name, buf);
-      if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+      result = INTERNAL_SYSCALL_CALL (lstat64, name, buf);
+      if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result)))
 	return result;
-      __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
+      __set_errno (INTERNAL_SYSCALL_ERRNO (result));
       return -1;
     }
 
-  result = INTERNAL_SYSCALL (lstat, err, 2, name, &kbuf);
-  if (__builtin_expect (!INTERNAL_SYSCALL_ERROR_P (result, err), 1))
+  result = INTERNAL_SYSCALL_CALL (lstat, name, &kbuf);
+  if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result)))
     return __xstat_conv (vers, &kbuf, buf);
-  __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
+  __set_errno (INTERNAL_SYSCALL_ERRNO (result));
   return -1;
 }
 hidden_def (__lxstat)

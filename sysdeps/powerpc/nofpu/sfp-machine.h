@@ -67,11 +67,10 @@ libc_hidden_proto (__feraiseexcept_soft)
   do									\
     {									\
       int _r;								\
-      INTERNAL_SYSCALL_DECL (_err);					\
 									\
       _spefscr = fegetenv_register ();					\
-      _r = INTERNAL_SYSCALL (prctl, _err, 2, PR_GET_FPEXC, &_ftrapex);	\
-      if (INTERNAL_SYSCALL_ERROR_P (_r, _err))				\
+      _r = INTERNAL_SYSCALL_CALL (prctl, PR_GET_FPEXC, &_ftrapex);	\
+      if (INTERNAL_SYSCALL_ERROR_P (_r))				\
 	_ftrapex = 0;							\
     }									\
   while (0)

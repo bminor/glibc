@@ -23,10 +23,9 @@
 clock_t
 __times (struct tms *buf)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  clock_t ret = INTERNAL_SYSCALL (times, err, 1, buf);
-  if (INTERNAL_SYSCALL_ERROR_P (ret, err)
-      && __builtin_expect (INTERNAL_SYSCALL_ERRNO (ret, err) == EFAULT, 0)
+  clock_t ret = INTERNAL_SYSCALL_CALL (times, buf);
+  if (INTERNAL_SYSCALL_ERROR_P (ret)
+      && __glibc_unlikely (INTERNAL_SYSCALL_ERRNO (ret) == EFAULT)
       && buf)
     {
       /* This might be an error or not.  For architectures which have no

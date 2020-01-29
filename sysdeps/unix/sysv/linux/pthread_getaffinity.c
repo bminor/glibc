@@ -31,11 +31,10 @@ __pthread_getaffinity_new (pthread_t th, size_t cpusetsize, cpu_set_t *cpuset)
 {
   const struct pthread *pd = (const struct pthread *) th;
 
-  INTERNAL_SYSCALL_DECL (err);
-  int res = INTERNAL_SYSCALL (sched_getaffinity, err, 3, pd->tid,
-			      MIN (INT_MAX, cpusetsize), cpuset);
-  if (INTERNAL_SYSCALL_ERROR_P (res, err))
-    return INTERNAL_SYSCALL_ERRNO (res, err);
+  int res = INTERNAL_SYSCALL_CALL (sched_getaffinity, pd->tid,
+				   MIN (INT_MAX, cpusetsize), cpuset);
+  if (INTERNAL_SYSCALL_ERROR_P (res))
+    return INTERNAL_SYSCALL_ERRNO (res);
 
   /* Clean the rest of the memory the kernel didn't do.  */
   memset ((char *) cpuset + res, '\0', cpusetsize - res);

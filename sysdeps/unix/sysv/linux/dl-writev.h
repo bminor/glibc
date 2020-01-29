@@ -33,6 +33,5 @@
 static inline void
 _dl_writev (int fd, const struct iovec *iov, size_t niov)
 {
-  INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (writev, err, 3, fd, iov, niov);
+  INTERNAL_SYSCALL_CALL (writev, fd, iov, niov);
 }

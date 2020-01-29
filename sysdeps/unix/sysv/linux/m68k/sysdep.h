@@ -227,7 +227,7 @@ SYSCALL_ERROR_LABEL:							      \
    normally.  It will never touch errno.  This returns just what the kernel
    gave back.  */
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL_NCS(name, err, nr, args...)	\
+#define INTERNAL_SYSCALL_NCS(name, nr, args...)	\
   ({ unsigned int _sys_result;				\
      {							\
        /* Load argument values in temporary variables
@@ -243,8 +243,8 @@ SYSCALL_ERROR_LABEL:							      \
        _sys_result = _d0;				\
      }							\
      (int) _sys_result; })
-#define INTERNAL_SYSCALL(name, err, nr, args...)	\
-  INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
+#define INTERNAL_SYSCALL(name, nr, args...)	\
+  INTERNAL_SYSCALL_NCS (__NR_##name, nr, ##args)
 
 #define LOAD_ARGS_0()
 #define LOAD_REGS_0

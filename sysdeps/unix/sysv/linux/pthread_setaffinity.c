@@ -28,19 +28,18 @@ __pthread_setaffinity_new (pthread_t th, size_t cpusetsize,
 			   const cpu_set_t *cpuset)
 {
   const struct pthread *pd = (const struct pthread *) th;
-  INTERNAL_SYSCALL_DECL (err);
   int res;
 
-  res = INTERNAL_SYSCALL (sched_setaffinity, err, 3, pd->tid, cpusetsize,
-			  cpuset);
+  res = INTERNAL_SYSCALL_CALL (sched_setaffinity, pd->tid, cpusetsize,
+			       cpuset);
 
 #ifdef RESET_VGETCPU_CACHE
-  if (!INTERNAL_SYSCALL_ERROR_P (res, err))
+  if (!INTERNAL_SYSCALL_ERROR_P (res))
     RESET_VGETCPU_CACHE ();
 #endif
 
-  return (INTERNAL_SYSCALL_ERROR_P (res, err)
-	  ? INTERNAL_SYSCALL_ERRNO (res, err)
+  return (INTERNAL_SYSCALL_ERROR_P (res)
+	  ? INTERNAL_SYSCALL_ERRNO (res)
 	  : 0);
 }
 versioned_symbol (libpthread, __pthread_setaffinity_new,
