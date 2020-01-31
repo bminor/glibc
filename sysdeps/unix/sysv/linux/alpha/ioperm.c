@@ -196,12 +196,7 @@ stl_mb(unsigned int val, unsigned long addr)
 static inline void
 __sethae(unsigned long value)
 {
-  register unsigned long r16 __asm__("$16") = value;
-  register unsigned long r0 __asm__("$0") = __NR_sethae;
-  __asm__ __volatile__ ("callsys"
-			: "=r"(r0)
-			: "0"(r0), "r" (r16)
-			: inline_syscall_clobbers, "$19");
+  INLINE_SYSCALL_CALL (sethae, value);
 }
 
 extern long __pciconfig_iobase(enum __pciconfig_iobase_which __which,
