@@ -1,0 +1,2422 @@
+# Portuguese (Portugal) Translation for the libc Package.
+# Copyright (C) 2019 Free Software Foundation, Inc.
+# This file is distributed under the same license as the glibc package.
+# Pedro Albuquerque <palbuquerque73@gmail.com>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libc 2.29.9000\n"
+"POT-Creation-Date: 2020-01-02 20:08+0530\n"
+"PO-Revision-Date: 2019-11-26 07:50+0000\n"
+"Last-Translator: Pedro Albuquerque <palbuquerque73@gmail.com>\n"
+"Language-Team: Portuguese <translation-team-pt@lists.sourceforge.net>\n"
+"Language: pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.7\n"
+
+#: argp/argp-help.c:227
+#, c-format
+msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
+msgstr "%.*s: o parâmetro ARGP_HELP_FMT requer um valor"
+
+#: argp/argp-help.c:237
+#, c-format
+msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
+msgstr "%.*s: parâmetro ARGP_HELP_FMT desconhecido"
+
+#: argp/argp-help.c:250
+#, c-format
+msgid "Garbage in ARGP_HELP_FMT: %s"
+msgstr "Lixo em ARGP_HELP_FMT: %s"
+
+#: argp/argp-help.c:1214
+msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
+msgstr "Argumentos obrigatórios ou opcionais para opções longas são igualmente obrigatórios ou opcionais para opções curtas correspondentes"
+
+#: argp/argp-help.c:1600
+msgid "Usage:"
+msgstr "Uso:"
+
+#: argp/argp-help.c:1604
+msgid "  or: "
+msgstr "  ou: "
+
+#: argp/argp-help.c:1616
+msgid " [OPTION...]"
+msgstr " [OPÇÃO...]"
+
+#: argp/argp-help.c:1643
+#, c-format
+msgid "Try `%s --help' or `%s --usage' for more information.\n"
+msgstr "Tente \"%s --help\" ou \"%s --usage\" para mais informação.\n"
+
+#: argp/argp-help.c:1671
+#, c-format
+msgid "Report bugs to %s.\n"
+msgstr "Reportar erros a %s.\n"
+
+#: argp/argp-parse.c:101
+msgid "Give this help list"
+msgstr "mostrar esta lista de ajuda"
+
+#: argp/argp-parse.c:102
+msgid "Give a short usage message"
+msgstr "mostrar mensagem curta de uso"
+
+#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105 nss/makedb.c:120
+msgid "NAME"
+msgstr "NOME"
+
+#: argp/argp-parse.c:104
+msgid "Set the program name"
+msgstr "Definir o nome do programa"
+
+#: argp/argp-parse.c:105
+msgid "SECS"
+msgstr "SEGS"
+
+#: argp/argp-parse.c:106
+msgid "Hang for SECS seconds (default 3600)"
+msgstr "esperar SEGS segundos (predefinição 3600)"
+
+#: argp/argp-parse.c:167
+msgid "Print program version"
+msgstr "mostrar versão do programa"
+
+#: argp/argp-parse.c:183
+msgid "(PROGRAM ERROR) No version known!?"
+msgstr "(ERRO DO PROGRAMA) Sem versão conhecida!?"
+
+#: argp/argp-parse.c:623
+#, c-format
+msgid "%s: Too many arguments\n"
+msgstr "%s: demasiados argumentos\n"
+
+#: argp/argp-parse.c:766
+msgid "(PROGRAM ERROR) Option should have been recognized!?"
+msgstr "(ERRO DO PROGRAMA) A opção devia ter sido reconhecida!?"
+
+#: assert/assert-perr.c:35
+#, c-format
+msgid ""
+"%s%s%s:%u: %s%sUnexpected error: %s.\n"
+"%n"
+msgstr ""
+"%s%s%s:%u: %s%serro inesperado: %s.\n"
+"%n"
+
+#: assert/assert.c:101
+#, c-format
+msgid ""
+"%s%s%s:%u: %s%sAssertion `%s' failed.\n"
+"%n"
+msgstr ""
+"%s%s%s:%u: %s%sa asserção \"%s\" falhou.\n"
+"%n"
+
+#: catgets/gencat.c:110
+msgid "Create C header file NAME containing symbol definitions"
+msgstr "Criar ficheiro de cabeçalho C NOME contendo as definições de símbolo"
+
+#: catgets/gencat.c:112
+msgid "Do not use existing catalog, force new output file"
+msgstr "não usar catálogo existente, forçar novo ficheiro de saída"
+
+#: catgets/gencat.c:113 nss/makedb.c:120
+msgid "Write output to file NAME"
+msgstr "escrever saída em ficheiro NOME"
+
+#: catgets/gencat.c:118
+msgid ""
+"Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
+"is -, output is written to standard output.\n"
+msgstr ""
+"gerar catálogo de mensagens.\vSe FICH-ENTRADA for -, a entrada é lida da entrada padrão. Se FICH-SAÍDA\n"
+"for -, a saída é escrita na saída padrão.\n"
+
+#: catgets/gencat.c:123
+msgid ""
+"-o OUTPUT-FILE [INPUT-FILE]...\n"
+"[OUTPUT-FILE [INPUT-FILE]...]"
+msgstr ""
+"-o FICH-SAÍDA [FICH-ENTRADA]...\n"
+"[FICH-SAÍDA [FICH-ENTRADA]...]"
+
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
+#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
+#: iconv/iconvconfig.c:379 locale/programs/locale.c:276
+#: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
+#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
+#: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
+#, c-format
+msgid ""
+"For bug reporting instructions, please see:\n"
+"%s.\n"
+msgstr ""
+"Para instruções sobre relatórios de erros, por favor veja:\n"
+"%s.\n"
+
+#: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
+#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
+#: locale/programs/locale.c:293 locale/programs/localedef.c:463
+#: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
+#: nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: sysdeps/unix/sysv/linux/lddlibc4.c:68
+#, c-format
+msgid ""
+"Copyright (C) %s Free Software Foundation, Inc.\n"
+"This is free software; see the source for copying conditions.  There is NO\n"
+"warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+msgstr ""
+"Copyright (C) %s Free Software Foundation, Inc.\n"
+"Este é um programa gratuito; veja a fonte para condições de cópia. NÃO há\n"
+"QUALQUER garantia; nem mesmo para COMERCIALIZAÇÃO ou ADEQUAÇÃO A UM PROPÓSITO\n"
+"PARTICULAR.\n"
+
+#: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
+#: elf/ldconfig.c:329 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:427
+#: iconv/iconvconfig.c:401 locale/programs/locale.c:298
+#: locale/programs/localedef.c:468 malloc/memusage.sh:75
+#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:93 nss/makedb.c:390
+#: posix/getconf.c:490
+#, c-format
+msgid "Written by %s.\n"
+msgstr "Escrito por %s.\n"
+
+#: catgets/gencat.c:281
+msgid "*standard input*"
+msgstr "*entrada padrão*"
+
+#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:290
+#: nss/makedb.c:246
+#, c-format
+msgid "cannot open input file `%s'"
+msgstr "impossível abrir o ficheiro de entrada \"%s\""
+
+#: catgets/gencat.c:416 catgets/gencat.c:491
+msgid "illegal set number"
+msgstr "número de conjunto ilegal"
+
+#: catgets/gencat.c:443
+msgid "duplicate set definition"
+msgstr "definição de conjunto duplicada"
+
+#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
+msgid "this is the first definition"
+msgstr "esta é a primeira definição"
+
+#: catgets/gencat.c:516
+#, c-format
+msgid "unknown set `%s'"
+msgstr "conjunto \"%s\" desconhecido"
+
+#: catgets/gencat.c:557
+msgid "invalid quote character"
+msgstr "carácter de aspas inválido"
+
+#: catgets/gencat.c:570
+#, c-format
+msgid "unknown directive `%s': line ignored"
+msgstr "directiva \"%s\" desconhecida: linha ignorada"
+
+#: catgets/gencat.c:615
+msgid "duplicated message number"
+msgstr "número de mensagem duplicado"
+
+#: catgets/gencat.c:666
+msgid "duplicated message identifier"
+msgstr "identificador de mensagem duplicado"
+
+#: catgets/gencat.c:723
+msgid "invalid character: message ignored"
+msgstr "carácter inválido: mensagem ignorada"
+
+#: catgets/gencat.c:766
+msgid "invalid line"
+msgstr "linha inválida"
+
+#: catgets/gencat.c:820
+msgid "malformed line ignored"
+msgstr "linha mal formada ignorada"
+
+#: catgets/gencat.c:984 catgets/gencat.c:1025
+#, c-format
+msgid "cannot open output file `%s'"
+msgstr "Impossível abrir ficheiro de saída \"%s\""
+
+#: catgets/gencat.c:1187 locale/programs/linereader.c:560
+msgid "invalid escape sequence"
+msgstr "sequência de escape inválida"
+
+#: catgets/gencat.c:1211
+msgid "unterminated message"
+msgstr "mensagem não terminada"
+
+#: catgets/gencat.c:1235
+#, c-format
+msgid "while opening old catalog file"
+msgstr "ao abrir ficheiro-catálogo antigo"
+
+#: catgets/gencat.c:1326
+#, c-format
+msgid "conversion modules not available"
+msgstr "módulos de conversão não disponíveis"
+
+#: catgets/gencat.c:1352
+#, c-format
+msgid "cannot determine escape character"
+msgstr "impossível determinar carácter de escape"
+
+#: debug/pcprofiledump.c:53
+msgid "Don't buffer output"
+msgstr "não armazenar saída"
+
+#: debug/pcprofiledump.c:58
+msgid "Dump information generated by PC profiling."
+msgstr "Despejar informação gerada pela criação de perfil do PC"
+
+#: debug/pcprofiledump.c:61
+msgid "[FILE]"
+msgstr "[FICHEIRO]"
+
+#: debug/pcprofiledump.c:108
+#, c-format
+msgid "cannot open input file"
+msgstr "impossível abrir o ficheiro de entrada"
+
+#: debug/pcprofiledump.c:115
+#, c-format
+msgid "cannot read header"
+msgstr "Impossível ler cabeçalho"
+
+#: debug/pcprofiledump.c:179
+#, c-format
+msgid "invalid pointer size"
+msgstr "tamanho de ponteiro inválido"
+
+#: debug/xtrace.sh:26 debug/xtrace.sh:44
+msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
+msgstr "Uso: xtrace [OPÇÃO]... PROGRAMA [OPÇÃOPROGRAMA]...\\n"
+
+#: debug/xtrace.sh:32 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
+#: malloc/memusage.sh:26
+msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
+msgstr "Tente \\\"%s --help\" ou \\\"%s --usage\" para mais informação.\\n"
+
+#: debug/xtrace.sh:38
+msgid "%s: option '%s' requires an argument.\\n"
+msgstr "%s: a opção \"%s\" requer um argumento.\\n"
+
+#: debug/xtrace.sh:45
+msgid ""
+"Trace execution of program by printing currently executed function.\n"
+"\n"
+"     --data=FILE          Don't run the program, just print the data from FILE.\n"
+"\n"
+"   -?,--help              Print this help and exit\n"
+"      --usage             Give a short usage message\n"
+"   -V,--version           Print version information and exit\n"
+"\n"
+"Mandatory arguments to long options are also mandatory for any corresponding\n"
+"short options.\n"
+"\n"
+msgstr ""
+"Seguir a execução do programa imprimindo a função actualmente em curso.\n"
+"\n"
+"     --data=FICHEIRO      não executar o programa, imprimir só os dados de FICHEIRO\n"
+"\n"
+"   -?,--help              imprimir esta ajuda e sair\n"
+"      --usage             dar uma mensagem curta de uso\n"
+"   -V,--version           imprimir informação da versão e sair\n"
+"\n"
+"Argumentos obrigatórios para opções longas também são obrigatórios para as correspondentes opções curtas.\n"
+"\n"
+
+#: debug/xtrace.sh:57 elf/ldd.bash.in:55 elf/sotruss.sh:49
+#: malloc/memusage.sh:64
+msgid "For bug reporting instructions, please see:\\\\n%s.\\\\n"
+msgstr "Para instruções sobre relatórios de erros, por favor veja:\\\\n%s.\\\\n"
+
+#: debug/xtrace.sh:125
+msgid "xtrace: unrecognized option \\`$1'\\n"
+msgstr "xtrace: opção \\\"$1\"\\n não reconhecida"
+
+#: debug/xtrace.sh:138
+msgid "No program name given\\n"
+msgstr "Nenhum nome de programa indicado\\n"
+
+#: debug/xtrace.sh:146
+#, sh-format
+msgid "executable \\`$program' not found\\n"
+msgstr "\\\"$program\" execytável não encontrado\\n"
+
+#: debug/xtrace.sh:150
+#, sh-format
+msgid "\\`$program' is no executable\\n"
+msgstr "\\\"$program\" não é executável\\n"
+
+#: dlfcn/dlinfo.c:53
+msgid "unsupported dlinfo request"
+msgstr "pedido dlinfo não suportado"
+
+#: dlfcn/dlmopen.c:63
+msgid "invalid namespace"
+msgstr "espaço de nome inválido"
+
+#: dlfcn/dlmopen.c:68
+msgid "invalid mode"
+msgstr "modo inválido"
+
+#: dlfcn/dlopen.c:64
+msgid "invalid mode parameter"
+msgstr "parâmetro de modo inválido"
+
+#: elf/cache.c:69
+msgid "unknown"
+msgstr "desconhecido"
+
+#: elf/cache.c:141
+msgid "Unknown OS"
+msgstr "SO desconhecido"
+
+#: elf/cache.c:146
+#, c-format
+msgid ", OS ABI: %s %d.%d.%d"
+msgstr ", SO ABI: %s %d.%d.%d"
+
+#: elf/cache.c:163 elf/ldconfig.c:1334
+#, c-format
+msgid "Can't open cache file %s\n"
+msgstr "Impossível abrir ficheiro de cache %s\n"
+
+#: elf/cache.c:177
+#, c-format
+msgid "mmap of cache file failed.\n"
+msgstr "mmap do ficheiro de cache falhou.\n"
+
+#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
+#, c-format
+msgid "File is not a cache file.\n"
+msgstr "Não é um ficheiro de cache.\n"
+
+#: elf/cache.c:233 elf/cache.c:243
+#, c-format
+msgid "%d libs found in cache `%s'\n"
+msgstr "%d libs encontradas na cache \"%s\"\n"
+
+#: elf/cache.c:437
+#, c-format
+msgid "Can't create temporary cache file %s"
+msgstr "Impossível criar ficheiro de cache %s temporário"
+
+#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
+#: elf/cache.c:473
+#, c-format
+msgid "Writing of cache data failed"
+msgstr "Falha ao escrever dados da cache"
+
+#: elf/cache.c:468
+#, c-format
+msgid "Changing access rights of %s to %#o failed"
+msgstr "Falha ao alterar direitos de accesso de %s a %#o"
+
+#: elf/cache.c:477
+#, c-format
+msgid "Renaming of %s to %s failed"
+msgstr "Falha ao renomear %s para %s"
+
+#: elf/dl-close.c:406 elf/dl-open.c:285
+msgid "cannot create scope list"
+msgstr "impossível criar lista de âmbito"
+
+#: elf/dl-close.c:852
+msgid "shared object not open"
+msgstr "objecto partilhado não aberto"
+
+#: elf/dl-deps.c:112
+msgid "DST not allowed in SUID/SGID programs"
+msgstr "DST não permitido em programas SUID/SGID"
+
+#: elf/dl-deps.c:125
+msgid "empty dynamic string token substitution"
+msgstr "substituição de símbolo de cadeia dinâmica vazia"
+
+#: elf/dl-deps.c:131
+#, c-format
+msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
+msgstr "impossível carregar \"%s\" auxiliar devido a substituição de símbolo de cadeia dinâmica vazia\n"
+
+#: elf/dl-deps.c:220
+msgid "cannot allocate dependency buffer"
+msgstr "impossível alocar buffer de dependência"
+
+#: elf/dl-deps.c:443
+msgid "cannot allocate dependency list"
+msgstr "impossível alocar lista de dependência"
+
+#: elf/dl-deps.c:483 elf/dl-deps.c:543
+msgid "cannot allocate symbol search list"
+msgstr "impossível alocar lista de procura de símbolo"
+
+#: elf/dl-deps.c:523
+msgid "Filters not supported with LD_TRACE_PRELINKING"
+msgstr "Filtros não suportados com LD_TRACE_PRELINKING"
+
+#: elf/dl-error-skeleton.c:80
+msgid "error while loading shared libraries"
+msgstr "erro ao carregar bibliotecas partilhadas"
+
+#: elf/dl-error-skeleton.c:113
+msgid "DYNAMIC LINKER BUG!!!"
+msgstr "ERRO NO LINKER DINÂMICO!!!"
+
+#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:95
+msgid "cannot map pages for fdesc table"
+msgstr "impossível mapear páginas para tabela fdesc"
+
+#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:213
+msgid "cannot map pages for fptr table"
+msgstr "impossível mapear páginas para tabela fptr"
+
+#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:242
+msgid "internal error: symidx out of range of fptr table"
+msgstr "erro interno: symidx fora de alcance da tabela fptr"
+
+#: elf/dl-hwcaps.c:202 elf/dl-hwcaps.c:214
+msgid "cannot create capability list"
+msgstr "impossível criar lista de capacidade"
+
+#: elf/dl-load.c:427
+msgid "cannot allocate name record"
+msgstr "impossível alocar registo de nome"
+
+#: elf/dl-load.c:513 elf/dl-load.c:626 elf/dl-load.c:715 elf/dl-load.c:811
+msgid "cannot create cache for search path"
+msgstr "impossível criar cache para caminho de procura"
+
+#: elf/dl-load.c:609
+msgid "cannot create RUNPATH/RPATH copy"
+msgstr "impossível criar cópia de RUNPATH/RPATH"
+
+#: elf/dl-load.c:702
+msgid "cannot create search path array"
+msgstr "impossível criar matriz de caminho de procura"
+
+#: elf/dl-load.c:892
+msgid "cannot stat shared object"
+msgstr "impossível avaliar objecto partilhado"
+
+#: elf/dl-load.c:1003 elf/dl-load.c:2191
+msgid "cannot create shared object descriptor"
+msgstr "impossível criar descritor de objecto partilhado"
+
+#: elf/dl-load.c:1022 elf/dl-load.c:1571 elf/dl-load.c:1672
+msgid "cannot read file data"
+msgstr "impossível ler dados do ficheiro"
+
+#: elf/dl-load.c:1068
+msgid "ELF load command alignment not page-aligned"
+msgstr "alinhamento do comando de carregamento ELF não alinhado à página"
+
+#: elf/dl-load.c:1075
+msgid "ELF load command address/offset not properly aligned"
+msgstr "endereço/desvio do comando de carregamento ELF inadequadamente alinhado"
+
+#: elf/dl-load.c:1151
+msgid "cannot process note segment"
+msgstr "impossível processar segmento de nota"
+
+#: elf/dl-load.c:1162
+msgid "object file has no loadable segments"
+msgstr "o ficheiro objecto não tem segmentos carregáveis"
+
+#: elf/dl-load.c:1175
+msgid "cannot dynamically load executable"
+msgstr "impossível carregar dinamicamente o executável"
+
+#: elf/dl-load.c:1196
+msgid "object file has no dynamic section"
+msgstr "o ficheiro objecto não tem secção dinâmica"
+
+#: elf/dl-load.c:1223
+msgid "cannot dynamically load position-independent executable"
+msgstr "impossível carregar dinamicamente executável independente da posição"
+
+#: elf/dl-load.c:1225
+msgid "shared object cannot be dlopen()ed"
+msgstr "o objecto partilhado não pode ser dlopen()"
+
+#: elf/dl-load.c:1238
+msgid "cannot allocate memory for program header"
+msgstr "impossível alocar memória para o cabeçalho do programa"
+
+#: elf/dl-load.c:1271 elf/dl-load.h:130
+msgid "cannot change memory protections"
+msgstr "impossível alterar as protecções da memória"
+
+#: elf/dl-load.c:1291
+msgid "cannot enable executable stack as shared object requires"
+msgstr "impossível activar a pilha do executável como o objecto partilhado requer"
+
+#: elf/dl-load.c:1304
+msgid "cannot close file descriptor"
+msgstr "impossível fechar o descritor do ficheiro"
+
+#: elf/dl-load.c:1571
+msgid "file too short"
+msgstr "ficheiro muito curto"
+
+#: elf/dl-load.c:1606
+msgid "invalid ELF header"
+msgstr "cabeçalho ELF inválido"
+
+#: elf/dl-load.c:1618
+msgid "ELF file data encoding not big-endian"
+msgstr "codificação de dados do ficheiro ELF não é big-endian"
+
+#: elf/dl-load.c:1620
+msgid "ELF file data encoding not little-endian"
+msgstr "codificação de dados do ficheiro ELF não é little-endian"
+
+#: elf/dl-load.c:1624
+msgid "ELF file version ident does not match current one"
+msgstr "identidade da versão do ficheiro ELF não corresponde ao actual"
+
+#: elf/dl-load.c:1628
+msgid "ELF file OS ABI invalid"
+msgstr "OS ABI do ficheiro ELF inválida"
+
+#: elf/dl-load.c:1631
+msgid "ELF file ABI version invalid"
+msgstr "versão ABI do ficheiro ELF inválida"
+
+#: elf/dl-load.c:1634
+msgid "nonzero padding in e_ident"
+msgstr "espaço não-zero em e_ident"
+
+#: elf/dl-load.c:1637
+msgid "internal error"
+msgstr "erro interno"
+
+#: elf/dl-load.c:1644
+msgid "ELF file version does not match current one"
+msgstr "versão do ficheiro ELF não corresponde ao actual"
+
+#: elf/dl-load.c:1652
+msgid "only ET_DYN and ET_EXEC can be loaded"
+msgstr "só ET_DYN e ET_EXEC podem ser carregados"
+
+#: elf/dl-load.c:1657
+msgid "ELF file's phentsize not the expected size"
+msgstr "phentsize do ficheiro ELF não tem o tamanho esperado"
+
+#: elf/dl-load.c:2210
+msgid "wrong ELF class: ELFCLASS64"
+msgstr "classe ELF errada: ELFCLASS64"
+
+#: elf/dl-load.c:2211
+msgid "wrong ELF class: ELFCLASS32"
+msgstr "classe ELF errada: ELFCLASS32"
+
+#: elf/dl-load.c:2214
+msgid "cannot open shared object file"
+msgstr "impossível abrir ficheiro-objecto partilhado"
+
+#: elf/dl-load.h:128
+msgid "failed to map segment from shared object"
+msgstr "falha ao mapear segmento de objecto partilhado"
+
+#: elf/dl-load.h:132
+msgid "cannot map zero-fill pages"
+msgstr "impossível mapear páginas de recheio zero"
+
+#: elf/dl-lookup.c:882
+msgid "symbol lookup error"
+msgstr "erro de procura de símbolo"
+
+#: elf/dl-open.c:71
+msgid "cannot extend global scope"
+msgstr "impossível estender âmbito global"
+
+#: elf/dl-open.c:391
+msgid "TLS generation counter wrapped!  Please report this."
+msgstr "Contador de gerações TLS embrulhado! Por favor, reporte isto."
+
+#: elf/dl-open.c:783
+msgid "invalid mode for dlopen()"
+msgstr "modo inválido para dlopen()"
+
+#: elf/dl-open.c:800
+msgid "no more namespaces available for dlmopen()"
+msgstr "não há espaços de nome disponíveis para dlmopen()"
+
+#: elf/dl-open.c:824
+msgid "invalid target namespace in dlmopen()"
+msgstr "espaço de nome destino inválido em dlmopen()"
+
+#: elf/dl-reloc.c:120
+msgid "cannot allocate memory in static TLS block"
+msgstr "impossível alocar memória em bloco TLS estático"
+
+#: elf/dl-reloc.c:213
+msgid "cannot make segment writable for relocation"
+msgstr "impossível permitir escrita no segmento para relocalização"
+
+#: elf/dl-reloc.c:273
+#, c-format
+msgid "%s: out of memory to store relocation results for %s\n"
+msgstr "%s: sem memória para armazenar resultados da relocalização de %s\n"
+
+#: elf/dl-reloc.c:289
+msgid "cannot restore segment prot after reloc"
+msgstr "impossível restaurar protecção do segmento após relocalização"
+
+#: elf/dl-reloc.c:320
+msgid "cannot apply additional memory protection after relocation"
+msgstr "impossível aplicar protecção adicional de memória após relocalização"
+
+#: elf/dl-sym.c:150
+msgid "RTLD_NEXT used in code not dynamically loaded"
+msgstr "RTLD_NEXT usado no código não foi carregado dinamicamente"
+
+#: elf/dl-tls.c:931
+msgid "cannot create TLS data structures"
+msgstr "impossível criar estruturas de dados TLS"
+
+#: elf/dl-version.c:148
+msgid "version lookup error"
+msgstr "erro de procura da versão"
+
+#: elf/dl-version.c:279
+msgid "cannot allocate version reference table"
+msgstr "impossível alocar tabela de referência da versão"
+
+#: elf/ldconfig.c:142
+msgid "Print cache"
+msgstr "imprimir a cache"
+
+#: elf/ldconfig.c:143
+msgid "Generate verbose messages"
+msgstr "gerar mensagens verbosas"
+
+#: elf/ldconfig.c:144
+msgid "Don't build cache"
+msgstr "não construir cache"
+
+#: elf/ldconfig.c:145
+msgid "Don't update symbolic links"
+msgstr "não actualizar ligações simbólicas"
+
+#: elf/ldconfig.c:146
+msgid "Change to and use ROOT as root directory"
+msgstr "mudar para e usar RAIZ como pasta raiz"
+
+#: elf/ldconfig.c:146
+msgid "ROOT"
+msgstr "RAIZ"
+
+#: elf/ldconfig.c:147
+msgid "CACHE"
+msgstr "CACHE"
+
+#: elf/ldconfig.c:147
+msgid "Use CACHE as cache file"
+msgstr "usar CACHE como ficheiro de cache"
+
+#: elf/ldconfig.c:148
+msgid "CONF"
+msgstr "CONF"
+
+#: elf/ldconfig.c:148
+msgid "Use CONF as configuration file"
+msgstr "usar CONF como ficheiro de configuração"
+
+#: elf/ldconfig.c:149
+msgid "Only process directories specified on the command line.  Don't build cache."
+msgstr "processar só pastas especificadas na linha de comando. Não construir cache"
+
+#: elf/ldconfig.c:150
+msgid "Manually link individual libraries."
+msgstr "ligar manualmente bibliotecas individuais"
+
+#: elf/ldconfig.c:151
+msgid "FORMAT"
+msgstr "FORMATO"
+
+#: elf/ldconfig.c:151
+msgid "Format to use: new, old or compat (default)"
+msgstr "formato a usar: new, old ou compat (predefinição)"
+
+#: elf/ldconfig.c:152
+msgid "Ignore auxiliary cache file"
+msgstr "ignorar ficheiro de cache auxiliar"
+
+#: elf/ldconfig.c:160
+msgid "Configure Dynamic Linker Run Time Bindings."
+msgstr "configurar vínculos de execução do linker dinâmicos "
+
+#: elf/ldconfig.c:347
+#, c-format
+msgid "Path `%s' given more than once"
+msgstr "Caminho \"%s\" com mais uma oportunidade"
+
+#: elf/ldconfig.c:387
+#, c-format
+msgid "%s is not a known library type"
+msgstr "%s não é um tipo de biblioteca conhecido"
+
+#: elf/ldconfig.c:415
+#, c-format
+msgid "Can't stat %s"
+msgstr "impossível analisar %s"
+
+#: elf/ldconfig.c:489
+#, c-format
+msgid "Can't stat %s\n"
+msgstr "impossível analisar %s\n"
+
+#: elf/ldconfig.c:499
+#, c-format
+msgid "%s is not a symbolic link\n"
+msgstr "%s não é ligação simbólica\n"
+
+#: elf/ldconfig.c:518
+#, c-format
+msgid "Can't unlink %s"
+msgstr "impossível desligar %s"
+
+#: elf/ldconfig.c:524
+#, c-format
+msgid "Can't link %s to %s"
+msgstr "impossível ligar %s a %s"
+
+#: elf/ldconfig.c:530
+msgid " (changed)\n"
+msgstr " (alterado)\n"
+
+#: elf/ldconfig.c:532
+msgid " (SKIPPED)\n"
+msgstr " (SALTADO)\n"
+
+#: elf/ldconfig.c:587
+#, c-format
+msgid "Can't find %s"
+msgstr "impossível encontrar %s"
+
+#: elf/ldconfig.c:603 elf/ldconfig.c:769 elf/ldconfig.c:825 elf/ldconfig.c:857
+#, c-format
+msgid "Cannot lstat %s"
+msgstr "impossível lstat %s"
+
+#: elf/ldconfig.c:610
+#, c-format
+msgid "Ignored file %s since it is not a regular file."
+msgstr "ficheiro %s ignorado por não ser um ficheiro normal"
+
+#: elf/ldconfig.c:619
+#, c-format
+msgid "No link created since soname could not be found for %s"
+msgstr "nenhuma ligação criada por soname não se ter encontrado para %s"
+
+#: elf/ldconfig.c:702
+#, c-format
+msgid "Can't open directory %s"
+msgstr "impossível abrir a pasta %s"
+
+#: elf/ldconfig.c:787 elf/ldconfig.c:845 elf/readlib.c:97
+#, c-format
+msgid "Input file %s not found.\n"
+msgstr "ficheiro de entrada %s não encontrado\n"
+
+#: elf/ldconfig.c:794
+#, c-format
+msgid "Cannot stat %s"
+msgstr "Impossível analisar %s"
+
+#: elf/ldconfig.c:939
+#, c-format
+msgid "libc5 library %s in wrong directory"
+msgstr "biblioteca libc5 %s na pasta errada"
+
+#: elf/ldconfig.c:942
+#, c-format
+msgid "libc6 library %s in wrong directory"
+msgstr "biblioteca libc6 %s na pasta errada"
+
+#: elf/ldconfig.c:945
+#, c-format
+msgid "libc4 library %s in wrong directory"
+msgstr "biblioteca libc4 %s na pasta errada"
+
+#: elf/ldconfig.c:973
+#, c-format
+msgid "libraries %s and %s in directory %s have same soname but different type."
+msgstr "bibliotecas %s e %s na pasta %s têm o mesmo soname mas tipos diferentes"
+
+#: elf/ldconfig.c:1083
+#, c-format
+msgid "Warning: ignoring configuration file that cannot be opened: %s"
+msgstr "Aviso: a ignorar ficheiro de configuração que não pode ser aberto: %s"
+
+#: elf/ldconfig.c:1149
+#, c-format
+msgid "%s:%u: bad syntax in hwcap line"
+msgstr "%s:%u: má sintaxe em linha hwcap"
+
+#: elf/ldconfig.c:1155
+#, c-format
+msgid "%s:%u: hwcap index %lu above maximum %u"
+msgstr "%s:%u: índice hwcap %lu acima do máximo %u"
+
+#: elf/ldconfig.c:1162 elf/ldconfig.c:1170
+#, c-format
+msgid "%s:%u: hwcap index %lu already defined as %s"
+msgstr "%s:%u: índice hwcap %lu já definido como %s"
+
+#: elf/ldconfig.c:1173
+#, c-format
+msgid "%s:%u: duplicate hwcap %lu %s"
+msgstr "%s:%u: hwcap duplicado %lu %s"
+
+#: elf/ldconfig.c:1195
+#, c-format
+msgid "need absolute file name for configuration file when using -r"
+msgstr "nome de ficheiro absoluto requerido para ficheiro de configuração se usar -r"
+
+#: elf/ldconfig.c:1202 locale/programs/xmalloc.c:63 malloc/obstack.c:416
+#: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
+#, c-format
+msgid "memory exhausted"
+msgstr "memória esgotada"
+
+#: elf/ldconfig.c:1235
+#, c-format
+msgid "%s:%u: cannot read directory %s"
+msgstr "%s:%u: impossível ler a pasta %s"
+
+#: elf/ldconfig.c:1283
+#, c-format
+msgid "relative path `%s' used to build cache"
+msgstr "caminho relativo \"%s\" usado para construir a cache"
+
+#: elf/ldconfig.c:1313
+#, c-format
+msgid "Can't chdir to /"
+msgstr "impossível mudar para /"
+
+#: elf/ldconfig.c:1354
+#, c-format
+msgid "Can't open cache file directory %s\n"
+msgstr "impossível abrir a pasta do ficheiro de cache %s\n"
+
+#: elf/ldd.bash.in:42
+msgid "Written by %s and %s.\n"
+msgstr "Escrito por %s e %s.\n"
+
+#: elf/ldd.bash.in:47
+msgid ""
+"Usage: ldd [OPTION]... FILE...\n"
+"      --help              print this help and exit\n"
+"      --version           print version information and exit\n"
+"  -d, --data-relocs       process data relocations\n"
+"  -r, --function-relocs   process data and function relocations\n"
+"  -u, --unused            print unused direct dependencies\n"
+"  -v, --verbose           print all information\n"
+msgstr ""
+"Uso: ldd [OPÇÃO]... FICHEIRO...\n"
+"      --help              imprimir esta ajuda e sair\n"
+"      --version           imprimir informação da versão e sair\n"
+"  -d, --data-relocs       processar relocalizações de dados\n"
+"  -r, --function-relocs   processar relocalizações de dados e função\n"
+"  -u, --unused            imprimir dependências directas não usadas\n"
+"  -v, --verbose           imprimir toda a informação\n"
+
+#: elf/ldd.bash.in:80
+msgid "ldd: option \\`$1' is ambiguous"
+msgstr "ldd: a opção \"$1\" é ambígua"
+
+#: elf/ldd.bash.in:87
+msgid "unrecognized option"
+msgstr "opção não reconhecida"
+
+#: elf/ldd.bash.in:88 elf/ldd.bash.in:125
+msgid "Try \\`ldd --help' for more information."
+msgstr "Tente \"ldd --help\" para mais informação."
+
+#: elf/ldd.bash.in:124
+msgid "missing file arguments"
+msgstr "argumentos de ficheiro em falta"
+
+#. TRANS This is a ``file doesn't exist'' error
+#. TRANS for ordinary files that are referenced in contexts where they are
+#. TRANS expected to already exist.
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:37
+msgid "No such file or directory"
+msgstr "Ficheiro ou pasta inexistente"
+
+#: elf/ldd.bash.in:150 inet/rcmd.c:480
+msgid "not regular file"
+msgstr "não é um ficheiro normal"
+
+#: elf/ldd.bash.in:153
+msgid "warning: you do not have execution permission for"
+msgstr "aviso: não tem permissão de execução para"
+
+#: elf/ldd.bash.in:170
+msgid "\tnot a dynamic executable"
+msgstr "\tnão é um executável dinâmico"
+
+#: elf/ldd.bash.in:178
+msgid "exited with unknown exit code"
+msgstr "saiu com código desconhecido"
+
+#: elf/ldd.bash.in:183
+msgid "error: you do not have read permission for"
+msgstr "erro: não tem permissão de leitura para"
+
+#: elf/pldd-xx.c:102
+#, c-format
+msgid "cannot find program header of process"
+msgstr "impossível encontrar cabeçalho do programa do processo"
+
+#: elf/pldd-xx.c:106
+#, c-format
+msgid "cannot read program header"
+msgstr "impossível ler cabeçalho do programa"
+
+#: elf/pldd-xx.c:128
+#, c-format
+msgid "cannot read dynamic section"
+msgstr "impossível ler secção dinâmica"
+
+#: elf/pldd-xx.c:137
+#, c-format
+msgid "cannot read r_debug"
+msgstr "impossível ler r_debug"
+
+#: elf/pldd-xx.c:154
+#, c-format
+msgid "cannot read program interpreter"
+msgstr "impossível ler interpretador do programa"
+
+#: elf/pldd-xx.c:183
+#, c-format
+msgid "cannot read link map"
+msgstr "impossível ler mapa de ligações"
+
+#: elf/pldd-xx.c:190
+#, c-format
+msgid "cannot read object name"
+msgstr "impossível ler nome do objecto"
+
+#: elf/pldd-xx.c:197
+#, c-format
+msgid "cannot allocate buffer for object name"
+msgstr "impossível alocar buffer para o nome do objecto"
+
+#: elf/pldd.c:58
+msgid "List dynamic shared objects loaded into process."
+msgstr "listar objectos dinâmicos partilhados carregados para o processo"
+
+#: elf/pldd.c:62
+msgid "PID"
+msgstr "PID"
+
+#: elf/pldd.c:89
+#, c-format
+msgid "Exactly one parameter with process ID required.\n"
+msgstr "requerido exactamente um parâmetro com a ID do processo\n"
+
+#: elf/pldd.c:103
+#, c-format
+msgid "invalid process ID '%s'"
+msgstr "ID de processo \"%s\" inválida"
+
+#: elf/pldd.c:111
+#, c-format
+msgid "cannot open %s"
+msgstr "impossível abrir %s"
+
+#: elf/pldd.c:142
+#, c-format
+msgid "cannot open %s/task"
+msgstr "impossível abrir %s/tarefa"
+
+#: elf/pldd.c:145
+#, c-format
+msgid "cannot prepare reading %s/task"
+msgstr "impossível preparar leitura de %s/tarefa"
+
+#: elf/pldd.c:158
+#, c-format
+msgid "invalid thread ID '%s'"
+msgstr "ID de tópico \"%s\" inválida"
+
+#: elf/pldd.c:169
+#, c-format
+msgid "cannot attach to process %lu"
+msgstr "impossível anexar ao processo %lu"
+
+#: elf/pldd.c:184
+#, c-format
+msgid "no valid %s/task entries"
+msgstr "nenhuma entrada %s/tarefa válida"
+
+#: elf/pldd.c:290
+#, c-format
+msgid "cannot get information about process %lu"
+msgstr "impossível obter informação do processo %lu"
+
+#: elf/pldd.c:303
+#, c-format
+msgid "process %lu is no ELF program"
+msgstr "o processo %lu não é um programa ELF"
+
+#: elf/readelflib.c:34
+#, c-format
+msgid "file %s is truncated\n"
+msgstr "ficheiro \"%s\"truncado\n"
+
+#: elf/readelflib.c:65
+#, c-format
+msgid "%s is a 32 bit ELF file.\n"
+msgstr "%s é um ficheiro ELF 32 bit\n"
+
+#: elf/readelflib.c:67
+#, c-format
+msgid "%s is a 64 bit ELF file.\n"
+msgstr "%s é um ficheiro ELF 64 bit\n"
+
+#: elf/readelflib.c:69
+#, c-format
+msgid "Unknown ELFCLASS in file %s.\n"
+msgstr "ELFCLASS desconhecida no ficheiro %s\n"
+
+#: elf/readelflib.c:76
+#, c-format
+msgid "%s is not a shared object file (Type: %d).\n"
+msgstr "%s não é um ficheiro de objecto partilhado (tipo: %d).\n"
+
+#: elf/readelflib.c:101
+#, c-format
+msgid "more than one dynamic segment\n"
+msgstr "mais de um segmento dinâmico\n"
+
+#: elf/readlib.c:103
+#, c-format
+msgid "Cannot fstat file %s.\n"
+msgstr "impossível fstat %s.\n"
+
+#: elf/readlib.c:114
+#, c-format
+msgid "File %s is empty, not checked."
+msgstr "o ficheiro %s está vazio, não verificado"
+
+#: elf/readlib.c:120
+#, c-format
+msgid "File %s is too small, not checked."
+msgstr "o ficheiro %s é muito pequeno, não verificado"
+
+#: elf/readlib.c:130
+#, c-format
+msgid "Cannot mmap file %s.\n"
+msgstr "impossível mapear o ficheiro %s\n"
+
+#: elf/readlib.c:169
+#, c-format
+msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
+msgstr "%s não é um ficheiro ELF - tem os bytes mágicos iniciais errados\n"
+
+#: elf/sln.c:76
+#, c-format
+msgid ""
+"Usage: sln src dest|file\n"
+"\n"
+msgstr ""
+"Uso: sln fnt dest|fich\n"
+"\n"
+
+#: elf/sln.c:97
+#, c-format
+msgid "%s: file open error: %m\n"
+msgstr "%s: erro ao abrir o ficheiro: %m\n"
+
+#: elf/sln.c:134
+#, c-format
+msgid "No target in line %d\n"
+msgstr "sem alvo na linha %d\n"
+
+#: elf/sln.c:164
+#, c-format
+msgid "%s: destination must not be a directory\n"
+msgstr "%s: o destino não pode ser uma pasta\n"
+
+#: elf/sln.c:170
+#, c-format
+msgid "%s: failed to remove the old destination\n"
+msgstr "%s: falha ao remover o destino antigo\n"
+
+#: elf/sln.c:178
+#, c-format
+msgid "%s: invalid destination: %s\n"
+msgstr "%s: destino inválido: %s\n"
+
+#: elf/sln.c:189 elf/sln.c:198
+#, c-format
+msgid "Invalid link from \"%s\" to \"%s\": %s\n"
+msgstr "Ligação inválida de \"%s\" para \"%s\": %s\n"
+
+#: elf/sotruss.sh:32
+#, sh-format
+msgid ""
+"Usage: sotruss [OPTION...] [--] EXECUTABLE [EXECUTABLE-OPTION...]\n"
+"  -F, --from FROMLIST     Trace calls from objects on FROMLIST\n"
+"  -T, --to TOLIST         Trace calls to objects on TOLIST\n"
+"\n"
+"  -e, --exit              Also show exits from the function calls\n"
+"  -f, --follow            Trace child processes\n"
+"  -o, --output FILENAME   Write output to FILENAME (or FILENAME.$PID in case\n"
+"\t\t\t  -f is also used) instead of standard error\n"
+"\n"
+"  -?, --help              Give this help list\n"
+"      --usage             Give a short usage message\n"
+"      --version           Print program version"
+msgstr ""
+"Uso: sotruss [OPÇÃO...] [--] EXECUTÁVEL [OPÇÃO-EXECUTÁVEL...]\n"
+"  -F, --from DELISTA      seguir chamadas de objectos em DELISTA\n"
+"  -T, --to PARALISTA      seguir chamadas a objectos em PARALISTA\n"
+"\n"
+"  -e, --exit              mostrar também saídas das chamadas à função\n"
+"  -f, --follow            seguir processos-filho\n"
+"  -o, --output NOMEFICH   escrever saída em NOMEFICH (ou NOMEFICH.$PID caso\n"
+"\t\t\t  -f também seja usada) em vez de stderr\n"
+"\n"
+"  -?, --help              imprimir esta mensagem de ajuda\n"
+"      --usage             imprimir uma mensagem curta de ajuda\n"
+"      --version           imprimir a versão do programa"
+
+#: elf/sotruss.sh:46
+msgid "Mandatory arguments to long options are also mandatory for any corresponding\\nshort options.\\n"
+msgstr "Argumentos obrigatórios para opções longas são igualmente obrigatórios para as opções\\ncurtas correspondentes.\\n"
+
+#: elf/sotruss.sh:55
+msgid "%s: option requires an argument -- '%s'\\n"
+msgstr "%s: a opção requer um argumento -- \"%s\"\\n"
+
+#: elf/sotruss.sh:61
+msgid "%s: option is ambiguous; possibilities:"
+msgstr "%s: a opção é ambígua; possibilidades:"
+
+#: elf/sotruss.sh:79
+msgid "Written by %s.\\n"
+msgstr "Escrito por %s.\\n"
+
+#: elf/sotruss.sh:86
+msgid ""
+"Usage: %s [-ef] [-F FROMLIST] [-o FILENAME] [-T TOLIST] [--exit]\n"
+"\t    [--follow] [--from FROMLIST] [--output FILENAME] [--to TOLIST]\n"
+"\t    [--help] [--usage] [--version] [--]\n"
+"\t    EXECUTABLE [EXECUTABLE-OPTION...]\\n"
+msgstr ""
+"Uso: %s [-ef] [-F DELISTA] [-o NOMEFICH] [-T PARALISTA] [--exit]\n"
+"\t    [--follow] [--from DELISTA] [--output NOMEFICH] [--to PARALISTA]\n"
+"\t    [--help] [--usage] [--version] [--]\n"
+"\t    EXECUTÁVEL [OPÇÃO-EXECUTÁVEL\t...]\\n"
+
+#: elf/sotruss.sh:134
+msgid "%s: unrecognized option '%c%s'\\n"
+msgstr "%s: opção não reconhecida \"%c%s\"\\n"
+
+#: elf/sprof.c:77
+msgid "Output selection:"
+msgstr "Selecção de saída:"
+
+#: elf/sprof.c:79
+msgid "print list of count paths and their number of use"
+msgstr "imprimir lista de caminhos de contagem e seu número de utilizações"
+
+#: elf/sprof.c:81
+msgid "generate flat profile with counts and ticks"
+msgstr "gerar perfil plano com contagens e tiques"
+
+#: elf/sprof.c:82
+msgid "generate call graph"
+msgstr "gerar gráfico de chamadas"
+
+#: elf/sprof.c:89
+msgid "Read and display shared object profiling data."
+msgstr "ler e mostrar dados de perfil do objecto partilhado"
+
+#: elf/sprof.c:94
+msgid "SHOBJ [PROFDATA]"
+msgstr "OBJPT [DADOSPERF]"
+
+#: elf/sprof.c:433
+#, c-format
+msgid "failed to load shared object `%s'"
+msgstr "falha ao carregar objecto partilhado \"%s\""
+
+#: elf/sprof.c:442 elf/sprof.c:825 elf/sprof.c:923
+#, c-format
+msgid "cannot create internal descriptor"
+msgstr "impossível criar descritor interno"
+
+#: elf/sprof.c:554
+#, c-format
+msgid "Reopening shared object `%s' failed"
+msgstr "falha ao reabrir objecto partilhado \"%s\""
+
+#: elf/sprof.c:561 elf/sprof.c:656
+#, c-format
+msgid "reading of section headers failed"
+msgstr "falha ao ler cabeçalhos da secção"
+
+#: elf/sprof.c:569 elf/sprof.c:664
+#, c-format
+msgid "reading of section header string table failed"
+msgstr "falha ao ler tabela de cadeias do cabeçalho da secção"
+
+#: elf/sprof.c:595
+#, c-format
+msgid "*** Cannot read debuginfo file name: %m\n"
+msgstr "*** impossível ler o nome do ficheiro debuginfo: %m\n"
+
+#: elf/sprof.c:616
+#, c-format
+msgid "cannot determine file name"
+msgstr "impossível determinar o nome do ficheiro"
+
+#: elf/sprof.c:649
+#, c-format
+msgid "reading of ELF header failed"
+msgstr "falha ao ler cabeçalho ELF"
+
+#: elf/sprof.c:685
+#, c-format
+msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
+msgstr "*** o ficheiro \"%s\" está despido: nenhuma análise detalhada possível\n"
+
+#: elf/sprof.c:715
+#, c-format
+msgid "failed to load symbol data"
+msgstr "falha ao carregar dados do símbolo"
+
+#: elf/sprof.c:780
+#, c-format
+msgid "cannot load profiling data"
+msgstr "impossível carregar dados do perfil"
+
+#: elf/sprof.c:789
+#, c-format
+msgid "while stat'ing profiling data file"
+msgstr "ao analisar ficheiro de dados do perfil"
+
+#: elf/sprof.c:797
+#, c-format
+msgid "profiling data file `%s' does not match shared object `%s'"
+msgstr "ficheiro de dados do perfil \"%s\" não corresponde ao objecto partilhado \"%s\""
+
+#: elf/sprof.c:808
+#, c-format
+msgid "failed to mmap the profiling data file"
+msgstr "falha ao mapear ficheiro de dados do perfil"
+
+#: elf/sprof.c:816
+#, c-format
+msgid "error while closing the profiling data file"
+msgstr "erro ao fechar ficheiro de dados do perfil"
+
+#: elf/sprof.c:899
+#, c-format
+msgid "`%s' is no correct profile data file for `%s'"
+msgstr "\"%s\" não é um ficheiro de dados do perfil correcto para \"%s\""
+
+#: elf/sprof.c:1080 elf/sprof.c:1138
+#, c-format
+msgid "cannot allocate symbol data"
+msgstr "impossível alocar dados do símbolo"
+
+#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:445
+#, c-format
+msgid "cannot open output file"
+msgstr "impossível abrir ficheiro de saída"
+
+#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:308
+#, c-format
+msgid "error while closing input `%s'"
+msgstr "erro ao fechar a entrada \"%s\""
+
+#: iconv/iconv_charmap.c:435
+#, c-format
+msgid "illegal input sequence at position %Zd"
+msgstr "sequência de entrada ilegal na posição %Zd"
+
+#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:536
+#, c-format
+msgid "incomplete character or shift sequence at end of buffer"
+msgstr "sequência de caracteres ou troca incompleta no fim do buffer"
+
+#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:579
+#: iconv/iconv_prog.c:615
+#, c-format
+msgid "error while reading the input"
+msgstr "erro ao ler a entrada"
+
+#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:597
+#, c-format
+msgid "unable to allocate buffer for input"
+msgstr "impossível alocar buffer para entrada"
+
+#: iconv/iconv_prog.c:59
+msgid "Input/Output format specification:"
+msgstr "Especificação de formato de entrada/saída:"
+
+#: iconv/iconv_prog.c:60
+msgid "encoding of original text"
+msgstr "codificação do texto original"
+
+#: iconv/iconv_prog.c:61
+msgid "encoding for output"
+msgstr "codificação de saída"
+
+#: iconv/iconv_prog.c:62
+msgid "Information:"
+msgstr "Informação:"
+
+#: iconv/iconv_prog.c:63
+msgid "list all known coded character sets"
+msgstr "listar todos os conjuntos de caracteres conhecidos"
+
+#: iconv/iconv_prog.c:64 locale/programs/localedef.c:124
+msgid "Output control:"
+msgstr "Controlo de saída:"
+
+#: iconv/iconv_prog.c:65
+msgid "omit invalid characters from output"
+msgstr "omitir caracteres inválidos da saída"
+
+#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: locale/programs/localedef.c:117 locale/programs/localedef.c:119
+#: locale/programs/localedef.c:121 locale/programs/localedef.c:150
+#: malloc/memusagestat.c:56
+msgid "FILE"
+msgstr "FICHEIRO"
+
+#: iconv/iconv_prog.c:66
+msgid "output file"
+msgstr "ficheiro de saída"
+
+#: iconv/iconv_prog.c:67
+msgid "suppress warnings"
+msgstr "suprimir avisos"
+
+#: iconv/iconv_prog.c:68
+msgid "print progress information"
+msgstr "imprimir informação de progresso"
+
+#: iconv/iconv_prog.c:73
+msgid "Convert encoding of given files from one encoding to another."
+msgstr "converter codificação dos ficheiros indicados para outra"
+
+#: iconv/iconv_prog.c:77
+msgid "[FILE...]"
+msgstr "[FICHEIRO...]"
+
+#: iconv/iconv_prog.c:230
+#, c-format
+msgid "conversions from `%s' and to `%s' are not supported"
+msgstr "as conversões de \"%s\" e para \"%s\" não são suportadas"
+
+#: iconv/iconv_prog.c:235
+#, c-format
+msgid "conversion from `%s' is not supported"
+msgstr "a conversão de \"%s\" não é suportada"
+
+#: iconv/iconv_prog.c:242
+#, c-format
+msgid "conversion to `%s' is not supported"
+msgstr "a conversão para \"%s\" não é suportada"
+
+#: iconv/iconv_prog.c:246
+#, c-format
+msgid "conversion from `%s' to `%s' is not supported"
+msgstr "a conversão de \"%s\" para \"%s\" não é suportada"
+
+#: iconv/iconv_prog.c:256
+#, c-format
+msgid "failed to start conversion processing"
+msgstr "falha ao iniciar o processo de conversão"
+
+#: iconv/iconv_prog.c:354
+#, c-format
+msgid "error while closing output file"
+msgstr "erro ao fechar o ficheiro de saída"
+
+#: iconv/iconv_prog.c:455
+#, c-format
+msgid "conversion stopped due to problem in writing the output"
+msgstr "a conversão parou devido a problemas em escrever a saída"
+
+#: iconv/iconv_prog.c:532
+#, c-format
+msgid "illegal input sequence at position %ld"
+msgstr "sequência de entrada ilegal na posição %ld"
+
+#: iconv/iconv_prog.c:540
+#, c-format
+msgid "internal error (illegal descriptor)"
+msgstr "erro interno (descritor ilegal)"
+
+#: iconv/iconv_prog.c:543
+#, c-format
+msgid "unknown iconv() error %d"
+msgstr "erro iconv() %d desconhecido"
+
+#: iconv/iconv_prog.c:786
+msgid ""
+"The following list contains all the coded character sets known.  This does\n"
+"not necessarily mean that all combinations of these names can be used for\n"
+"the FROM and TO command line parameters.  One coded character set can be\n"
+"listed with several different names (aliases).\n"
+"\n"
+"  "
+msgstr ""
+"A lista seguinte contém todos os conjuntos de caracteres codificados conhecidos.\n"
+"Não significa forçosamente que se possam usar todas as combinações destes nomes\n"
+"para os parâmetros da linha de comando DE e PARA. Um mesmo conjunto pode ser\n"
+"listado com vários nomes diferentes (aliás).\n"
+"  "
+
+#: iconv/iconvconfig.c:109
+msgid "Create fastloading iconv module configuration file."
+msgstr "criar ficheiro de configuração de carregamento rápido do módulo iconv"
+
+#: iconv/iconvconfig.c:113
+msgid "[DIR...]"
+msgstr "[PST...]"
+
+#: iconv/iconvconfig.c:126 locale/programs/localedef.c:129
+msgid "PATH"
+msgstr "CAMINHO"
+
+#: iconv/iconvconfig.c:127
+msgid "Prefix used for all file accesses"
+msgstr "prefixo usado para todos os acessos ao ficheiro"
+
+#: iconv/iconvconfig.c:128
+msgid "Put output in FILE instead of installed location (--prefix does not apply to FILE)"
+msgstr "Pôr a saída em FICHEIRO em vez da localização instalada (--prefix não se aplica a FICHEIRO)"
+
+#: iconv/iconvconfig.c:132
+msgid "Do not search standard directories, only those on the command line"
+msgstr "não procurar em  pastas padrão, só nas da linha de comando"
+
+#: iconv/iconvconfig.c:299
+#, c-format
+msgid "Directory arguments required when using --nostdlib"
+msgstr "requeridos argumentos de pasta ao usar --nostdlib"
+
+#: iconv/iconvconfig.c:341
+#, c-format
+msgid "no output file produced because warnings were issued"
+msgstr "nenhum ficheiro de saída produzido, há avisos emitidos"
+
+#: iconv/iconvconfig.c:430
+#, c-format
+msgid "while inserting in search tree"
+msgstr "ao inserir na árvore de procura"
+
+#: iconv/iconvconfig.c:1238
+#, c-format
+msgid "cannot generate output file"
+msgstr "impossível gerar ficheiro de saída"
+
+#: inet/rcmd.c:157
+msgid "rcmd: Cannot allocate memory\n"
+msgstr "rcmd: impossível alocar memória\n"
+
+#: inet/rcmd.c:174
+msgid "rcmd: socket: All ports in use\n"
+msgstr "rcmd: socket: todas as portas em uso\n"
+
+#: inet/rcmd.c:202
+#, c-format
+msgid "connect to address %s: "
+msgstr "ligar ao endereço %s: "
+
+#: inet/rcmd.c:215
+#, c-format
+msgid "Trying %s...\n"
+msgstr "A tentar %s...\n"
+
+#: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
+#: sysdeps/gnu/errlist.c:21
+msgid "Success"
+msgstr "Sucesso"
+
+#. TRANS The file permissions do not allow the attempted operation.
+#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.c:158
+msgid "Permission denied"
+msgstr "Permissão recusada"
+
+#. TRANS There is no process reading from the other end of a pipe.
+#. TRANS Every library function that returns this error code also generates a
+#. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
+#. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
+#. TRANS unless it has handled or blocked @code{SIGPIPE}.
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.c:360
+msgid "Broken pipe"
+msgstr "Túnel quebrado"
+
+#. TRANS Only the owner of the file (or other resource)
+#. TRANS or processes with special privileges can perform the operation.
+#: sysdeps/gnu/errlist.c:26
+msgid "Operation not permitted"
+msgstr "Operação não permitida"
+
+#. TRANS No process matches the specified process ID.
+#: sysdeps/gnu/errlist.c:46
+msgid "No such process"
+msgstr "Processo inexistente"
+
+#. TRANS An asynchronous signal occurred and prevented
+#. TRANS completion of the call.  When this happens, you should try the call
+#. TRANS again.
+#. TRANS
+#. TRANS You can choose to have functions resume after a signal that is handled,
+#. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
+#. TRANS Primitives}.
+#: sysdeps/gnu/errlist.c:61
+msgid "Interrupted system call"
+msgstr "Chamada de sistema interrompida"
+
+#. TRANS Usually used for physical read or write errors.
+#: sysdeps/gnu/errlist.c:70
+msgid "Input/output error"
+msgstr "Erro de entrada/saída"
+
+#. TRANS The system tried to use the device
+#. TRANS represented by a file you specified, and it couldn't find the device.
+#. TRANS This can mean that the device file was installed incorrectly, or that
+#. TRANS the physical device is missing or not correctly attached to the
+#. TRANS computer.
+#: sysdeps/gnu/errlist.c:83
+msgid "No such device or address"
+msgstr "Dispositivo ou endereço inexistente"
+
+#. TRANS Used when the arguments passed to a new program
+#. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
+#. TRANS File}) occupy too much memory space.  This condition never arises on
+#. TRANS @gnuhurdsystems{}.
+#: sysdeps/gnu/errlist.c:95
+msgid "Argument list too long"
+msgstr "Lista de argumentos muito longa"
+
+#. TRANS Invalid executable file format.  This condition is detected by the
+#. TRANS @code{exec} functions; see @ref{Executing a File}.
+#: sysdeps/gnu/errlist.c:105
+msgid "Exec format error"
+msgstr "Erro de formato do executável"
+
+#. TRANS For example, I/O on a descriptor that has been
+#. TRANS closed or reading from a descriptor open only for writing (or vice
+#. TRANS versa).
+#: sysdeps/gnu/errlist.c:116
+msgid "Bad file descriptor"
+msgstr "Mau descritor de ficheiro"
+
+#. TRANS This error happens on operations that are
+#. TRANS supposed to manipulate child processes, when there aren't any processes
+#. TRANS to manipulate.
+#: sysdeps/gnu/errlist.c:127
+msgid "No child processes"
+msgstr "Sem processos-filho"
+
+#. TRANS Allocating a system resource would have resulted in a
+#. TRANS deadlock situation.  The system does not guarantee that it will notice
+#. TRANS all such situations.  This error means you got lucky and the system
+#. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
+#: sysdeps/gnu/errlist.c:139
+msgid "Resource deadlock avoided"
+msgstr "Impasse de recursos evitado"
+
+#. TRANS The system cannot allocate more virtual memory
+#. TRANS because its capacity is full.
+#: sysdeps/gnu/errlist.c:149
+msgid "Cannot allocate memory"
+msgstr "Impossível alocar memória"
+
+#. TRANS An invalid pointer was detected.
+#. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
+#: sysdeps/gnu/errlist.c:168
+msgid "Bad address"
+msgstr "Mau endereço"
+
+#. TRANS A file that isn't a block special file was given in a situation that
+#. TRANS requires one.  For example, trying to mount an ordinary file as a file
+#. TRANS system in Unix gives this error.
+#: sysdeps/gnu/errlist.c:179
+msgid "Block device required"
+msgstr "Dispositivo de bloqueio requerido"
+
+#. TRANS A system resource that can't be shared is already in use.
+#. TRANS For example, if you try to delete a file that is the root of a currently
+#. TRANS mounted filesystem, you get this error.
+#: sysdeps/gnu/errlist.c:190
+msgid "Device or resource busy"
+msgstr "Dispositivo ou recurso ocupado"
+
+#. TRANS An existing file was specified in a context where it only
+#. TRANS makes sense to specify a new file.
+#: sysdeps/gnu/errlist.c:200
+msgid "File exists"
+msgstr "O ficheiro existe"
+
+#. TRANS An attempt to make an improper link across file systems was detected.
+#. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
+#. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
+#: sysdeps/gnu/errlist.c:211
+msgid "Invalid cross-device link"
+msgstr "Ligação entre dispositivos inválida"
+
+#. TRANS The wrong type of device was given to a function that expects a
+#. TRANS particular sort of device.
+#: sysdeps/gnu/errlist.c:221
+msgid "No such device"
+msgstr "Dispositivo inexistente"
+
+#. TRANS A file that isn't a directory was specified when a directory is required.
+#: sysdeps/gnu/errlist.c:230
+msgid "Not a directory"
+msgstr "Não é pasta"
+
+#. TRANS You cannot open a directory for writing,
+#. TRANS or create or remove hard links to it.
+#: sysdeps/gnu/errlist.c:240
+msgid "Is a directory"
+msgstr "É pasta"
+
+#. TRANS This is used to indicate various kinds of problems
+#. TRANS with passing the wrong argument to a library function.
+#: sysdeps/gnu/errlist.c:250
+msgid "Invalid argument"
+msgstr "Argumento inválido"
+
+#. TRANS The current process has too many files open and can't open any more.
+#. TRANS Duplicate descriptors do count toward this limit.
+#. TRANS
+#. TRANS In BSD and GNU, the number of open files is controlled by a resource
+#. TRANS limit that can usually be increased.  If you get this error, you might
+#. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
+#. TRANS @pxref{Limits on Resources}.
+#: sysdeps/gnu/errlist.c:265
+msgid "Too many open files"
+msgstr "Demasiados ficheiros abertos"
+
+#. TRANS There are too many distinct file openings in the entire system.  Note
+#. TRANS that any number of linked channels count as just one file opening; see
+#. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
+#: sysdeps/gnu/errlist.c:276
+msgid "Too many open files in system"
+msgstr "Demasiados ficheiros abertos no sistema"
+
+#. TRANS Inappropriate I/O control operation, such as trying to set terminal
+#. TRANS modes on an ordinary file.
+#: sysdeps/gnu/errlist.c:286
+msgid "Inappropriate ioctl for device"
+msgstr "Controlo de E/S inapropriado para o dispositivo"
+
+#. TRANS An attempt to execute a file that is currently open for writing, or
+#. TRANS write to a file that is currently being executed.  Often using a
+#. TRANS debugger to run a program is considered having it open for writing and
+#. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
+#. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
+#: sysdeps/gnu/errlist.c:299
+msgid "Text file busy"
+msgstr "Ficheiro de texto ocupado"
+
+#. TRANS The size of a file would be larger than allowed by the system.
+#: sysdeps/gnu/errlist.c:308
+msgid "File too large"
+msgstr "Ficheiro muito grande"
+
+#. TRANS Write operation on a file failed because the
+#. TRANS disk is full.
+#: sysdeps/gnu/errlist.c:318
+msgid "No space left on device"
+msgstr "Sem espaço livre no dispositivo"
+
+#. TRANS Invalid seek operation (such as on a pipe).
+#: sysdeps/gnu/errlist.c:327
+msgid "Illegal seek"
+msgstr "Procura ilegal"
+
+#. TRANS An attempt was made to modify something on a read-only file system.
+#: sysdeps/gnu/errlist.c:336
+msgid "Read-only file system"
+msgstr "Sistema de ficheiros só de leitura"
+
+#. TRANS The link count of a single file would become too large.
+#. TRANS @code{rename} can cause this error if the file being renamed already has
+#. TRANS as many links as it can take (@pxref{Renaming Files}).
+#: sysdeps/gnu/errlist.c:347
+msgid "Too many links"
+msgstr "Demasiadas ligações"
+
+#. TRANS Used by mathematical functions when an argument value does
+#. TRANS not fall into the domain over which the function is defined.
+#: sysdeps/gnu/errlist.c:370
+msgid "Numerical argument out of domain"
+msgstr "Argumento numérico fora do domínio"
+
+#. TRANS Used by mathematical functions when the result value is
+#. TRANS not representable because of overflow or underflow.
+#: sysdeps/gnu/errlist.c:380
+msgid "Numerical result out of range"
+msgstr "Resultado numérico fora do intervalo"
+
+#. TRANS The call might work if you try again
+#. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
+#. TRANS they are always the same in @theglibc{}.
+#. TRANS
+#. TRANS This error can happen in a few different situations:
+#. TRANS
+#. TRANS @itemize @bullet
+#. TRANS @item
+#. TRANS An operation that would block was attempted on an object that has
+#. TRANS non-blocking mode selected.  Trying the same operation again will block
+#. TRANS until some external condition makes it possible to read, write, or
+#. TRANS connect (whatever the operation).  You can use @code{select} to find out
+#. TRANS when the operation will be possible; @pxref{Waiting for I/O}.
+#. TRANS
+#. TRANS @strong{Portability Note:} In many older Unix systems, this condition
+#. TRANS was indicated by @code{EWOULDBLOCK}, which was a distinct error code
+#. TRANS different from @code{EAGAIN}.  To make your program portable, you should
+#. TRANS check for both codes and treat them the same.
+#. TRANS
+#. TRANS @item
+#. TRANS A temporary resource shortage made an operation impossible.  @code{fork}
+#. TRANS can return this error.  It indicates that the shortage is expected to
+#. TRANS pass, so your program can try the call again later and it may succeed.
+#. TRANS It is probably a good idea to delay for a few seconds before trying it
+#. TRANS again, to allow time for other processes to release scarce resources.
+#. TRANS Such shortages are usually fairly serious and affect the whole system,
+#. TRANS so usually an interactive program should report the error to the user
+#. TRANS and return to its command loop.
+#. TRANS @end itemize
+#: sysdeps/gnu/errlist.c:417
+msgid "Resource temporarily unavailable"
+msgstr "Recurso temporariamente indisponível"
+
+#. TRANS In @theglibc{}, this is another name for @code{EAGAIN} (above).
+#. TRANS The values are always the same, on every operating system.
+#. TRANS
+#. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
+#. TRANS separate error code.
+#: sysdeps/gnu/errlist.c:430
+msgid "Operation would block"
+msgstr "A operação bloquearia"
+
+#. TRANS An operation that cannot complete immediately was initiated on an object
+#. TRANS that has non-blocking mode selected.  Some functions that must always
+#. TRANS block (such as @code{connect}; @pxref{Connecting}) never return
+#. TRANS @code{EAGAIN}.  Instead, they return @code{EINPROGRESS} to indicate that
+#. TRANS the operation has begun and will take some time.  Attempts to manipulate
+#. TRANS the object before the call completes return @code{EALREADY}.  You can
+#. TRANS use the @code{select} function to find out when the pending operation
+#. TRANS has completed; @pxref{Waiting for I/O}.
+#: sysdeps/gnu/errlist.c:446
+msgid "Operation now in progress"
+msgstr "Operação agora em curso"
+
+#. TRANS An operation is already in progress on an object that has non-blocking
+#. TRANS mode selected.
+#: sysdeps/gnu/errlist.c:456
+msgid "Operation already in progress"
+msgstr "Operação já em curso"
+
+#. TRANS A file that isn't a socket was specified when a socket is required.
+#: sysdeps/gnu/errlist.c:465
+msgid "Socket operation on non-socket"
+msgstr "Operação de socket em não-socket"
+
+#. TRANS The size of a message sent on a socket was larger than the supported
+#. TRANS maximum size.
+#: sysdeps/gnu/errlist.c:475
+msgid "Message too long"
+msgstr "Mensagem muito grande"
+
+#. TRANS The socket type does not support the requested communications protocol.
+#: sysdeps/gnu/errlist.c:484
+msgid "Protocol wrong type for socket"
+msgstr "Tipo de protocolo errado para o socket"
+
+#. TRANS You specified a socket option that doesn't make sense for the
+#. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
+#: sysdeps/gnu/errlist.c:494
+msgid "Protocol not available"
+msgstr "Protocolo indisponível"
+
+#. TRANS The socket domain does not support the requested communications protocol
+#. TRANS (perhaps because the requested protocol is completely invalid).
+#. TRANS @xref{Creating a Socket}.
+#: sysdeps/gnu/errlist.c:505
+msgid "Protocol not supported"
+msgstr "Protocolo não suportado"
+
+#. TRANS The socket type is not supported.
+#: sysdeps/gnu/errlist.c:514
+msgid "Socket type not supported"
+msgstr "Tipo de socket não suportado"
+
+#. TRANS The operation you requested is not supported.  Some socket functions
+#. TRANS don't make sense for all types of sockets, and others may not be
+#. TRANS implemented for all communications protocols.  On @gnuhurdsystems{}, this
+#. TRANS error can happen for many calls when the object does not support the
+#. TRANS particular operation; it is a generic indication that the server knows
+#. TRANS nothing to do for that call.
+#: sysdeps/gnu/errlist.c:528
+msgid "Operation not supported"
+msgstr "Operação não suportada"
+
+#. TRANS The socket communications protocol family you requested is not supported.
+#: sysdeps/gnu/errlist.c:537
+msgid "Protocol family not supported"
+msgstr "Família de protoclos não suportada"
+
+#. TRANS The address family specified for a socket is not supported; it is
+#. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
+#: sysdeps/gnu/errlist.c:547
+msgid "Address family not supported by protocol"
+msgstr "Família de endereços não suportada pelo protocolo"
+
+#. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
+#: sysdeps/gnu/errlist.c:556
+msgid "Address already in use"
+msgstr "Endereço já em uso"
+
+#. TRANS The requested socket address is not available; for example, you tried
+#. TRANS to give a socket a name that doesn't match the local host name.
+#. TRANS @xref{Socket Addresses}.
+#: sysdeps/gnu/errlist.c:567
+msgid "Cannot assign requested address"
+msgstr "Impossível atribuir o endereço pedido"
+
+#. TRANS A socket operation failed because the network was down.
+#: sysdeps/gnu/errlist.c:576
+msgid "Network is down"
+msgstr "A rede está em baixo"
+
+#. TRANS A socket operation failed because the subnet containing the remote host
+#. TRANS was unreachable.
+#: sysdeps/gnu/errlist.c:586
+msgid "Network is unreachable"
+msgstr "Rede inacessível"
+
+#. TRANS A network connection was reset because the remote host crashed.
+#: sysdeps/gnu/errlist.c:595
+msgid "Network dropped connection on reset"
+msgstr "A rede repôs a ligação ao reiniciar"
+
+#. TRANS A network connection was aborted locally.
+#: sysdeps/gnu/errlist.c:604
+msgid "Software caused connection abort"
+msgstr "O programa abortou a ligação"
+
+#. TRANS A network connection was closed for reasons outside the control of the
+#. TRANS local host, such as by the remote machine rebooting or an unrecoverable
+#. TRANS protocol violation.
+#: sysdeps/gnu/errlist.c:615
+msgid "Connection reset by peer"
+msgstr "Ligação reposta pelo peer"
+
+#. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
+#. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
+#. TRANS other from network operations.
+#: sysdeps/gnu/errlist.c:626
+msgid "No buffer space available"
+msgstr "Sem espaço disponível no buffer"
+
+#. TRANS You tried to connect a socket that is already connected.
+#. TRANS @xref{Connecting}.
+#: sysdeps/gnu/errlist.c:636
+msgid "Transport endpoint is already connected"
+msgstr "Ponto final do transporte já está ligado"
+
+#. TRANS The socket is not connected to anything.  You get this error when you
+#. TRANS try to transmit data over a socket, without first specifying a
+#. TRANS destination for the data.  For a connectionless socket (for datagram
+#. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
+#: sysdeps/gnu/errlist.c:648
+msgid "Transport endpoint is not connected"
+msgstr "Ponto final do transporte não está ligado"
+
+#. TRANS No default destination address was set for the socket.  You get this
+#. TRANS error when you try to transmit data over a connectionless socket,
+#. TRANS without first specifying a destination for the data with @code{connect}.
+#: sysdeps/gnu/errlist.c:659
+msgid "Destination address required"
+msgstr "Endereço destino requerido"
+
+#. TRANS The socket has already been shut down.
+#: sysdeps/gnu/errlist.c:668
+msgid "Cannot send after transport endpoint shutdown"
+msgstr "Impossível enviar após encerramento do ponto final do transporte"
+
+#: sysdeps/gnu/errlist.c:676
+msgid "Too many references: cannot splice"
+msgstr "Demasiadas referências: impossível unir"
+
+#. TRANS A socket operation with a specified timeout received no response during
+#. TRANS the timeout period.
+#: sysdeps/gnu/errlist.c:686
+msgid "Connection timed out"
+msgstr "Ligação expirada"
+
+#. TRANS A remote host refused to allow the network connection (typically because
+#. TRANS it is not running the requested service).
+#: sysdeps/gnu/errlist.c:696
+msgid "Connection refused"
+msgstr "Ligação recusada"
+
+#. TRANS Too many levels of symbolic links were encountered in looking up a file name.
+#. TRANS This often indicates a cycle of symbolic links.
+#: sysdeps/gnu/errlist.c:706
+msgid "Too many levels of symbolic links"
+msgstr "Demasiados níveis de ligações simbólicas"
+
+#. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
+#. TRANS Files}) or host name too long (in @code{gethostname} or
+#. TRANS @code{sethostname}; @pxref{Host Identification}).
+#: sysdeps/gnu/errlist.c:717
+msgid "File name too long"
+msgstr "Nome de ficheiro muito grande"
+
+#. TRANS The remote host for a requested network connection is down.
+#: sysdeps/gnu/errlist.c:726
+msgid "Host is down"
+msgstr "O anfitrião está em baixo"
+
+#. TRANS The remote host for a requested network connection is not reachable.
+#: sysdeps/gnu/errlist.c:735
+msgid "No route to host"
+msgstr "Sem caminho para o anfitrião"
+
+#. TRANS Directory not empty, where an empty directory was expected.  Typically,
+#. TRANS this error occurs when you are trying to delete a directory.
+#: sysdeps/gnu/errlist.c:745
+msgid "Directory not empty"
+msgstr "A pasta não está vazia"
+
+#. TRANS This means that the per-user limit on new process would be exceeded by
+#. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
+#. TRANS the @code{RLIMIT_NPROC} limit.
+#: sysdeps/gnu/errlist.c:756
+msgid "Too many processes"
+msgstr "Demasiados processos"
+
+#. TRANS The file quota system is confused because there are too many users.
+#. TRANS @c This can probably happen in a GNU system when using NFS.
+#: sysdeps/gnu/errlist.c:766
+msgid "Too many users"
+msgstr "Demasiados utilizadores"
+
+#. TRANS The user's disk quota was exceeded.
+#: sysdeps/gnu/errlist.c:775
+msgid "Disk quota exceeded"
+msgstr "Quota do disco excedida"
+
+#. TRANS This indicates an internal confusion in the
+#. TRANS file system which is due to file system rearrangements on the server host
+#. TRANS for NFS file systems or corruption in other file systems.
+#. TRANS Repairing this condition usually requires unmounting, possibly repairing
+#. TRANS and remounting the file system.
+#: sysdeps/gnu/errlist.c:788
+msgid "Stale file handle"
+msgstr "Gestão de ficheiro obsoleto"
+
+#. TRANS An attempt was made to NFS-mount a remote file system with a file name that
+#. TRANS already specifies an NFS-mounted file.
+#. TRANS (This is an error on some operating systems, but we expect it to work
+#. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
+#: sysdeps/gnu/errlist.c:800
+msgid "Object is remote"
+msgstr "O objecto é remoto"
+
+#: sysdeps/gnu/errlist.c:808
+msgid "RPC struct is bad"
+msgstr "A estrutura RPC é errada"
+
+#: sysdeps/gnu/errlist.c:816
+msgid "RPC version wrong"
+msgstr "Versão RPC errada"
+
+#: sysdeps/gnu/errlist.c:824
+msgid "RPC program not available"
+msgstr "Programa RPC indisponível"
+
+#: sysdeps/gnu/errlist.c:832
+msgid "RPC program version wrong"
+msgstr "Versão do programa RPC errada"
+
+#: sysdeps/gnu/errlist.c:840
+msgid "RPC bad procedure for program"
+msgstr "Mau procedimento RPC para o programa"
+
+#. TRANS This is used by the file locking facilities; see
+#. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
+#. TRANS it can result from an operation to an NFS server running another
+#. TRANS operating system.
+#: sysdeps/gnu/errlist.c:852
+msgid "No locks available"
+msgstr "Sem bloqueios disponíveis"
+
+#. TRANS The file was the wrong type for the
+#. TRANS operation, or a data file had the wrong format.
+#. TRANS
+#. TRANS On some systems @code{chmod} returns this error if you try to set the
+#. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
+#: sysdeps/gnu/errlist.c:865
+msgid "Inappropriate file type or format"
+msgstr "Tipo ou formato de ficheiro inapropriado"
+
+#: sysdeps/gnu/errlist.c:873
+msgid "Authentication error"
+msgstr "Erro de autenticação"
+
+#: sysdeps/gnu/errlist.c:881
+msgid "Need authenticator"
+msgstr "Necessita de autenticação"
+
+#. TRANS This indicates that the function called is
+#. TRANS not implemented at all, either in the C library itself or in the
+#. TRANS operating system.  When you get this error, you can be sure that this
+#. TRANS particular function will always fail with @code{ENOSYS} unless you
+#. TRANS install a new version of the C library or the operating system.
+#: sysdeps/gnu/errlist.c:894
+msgid "Function not implemented"
+msgstr "Função não implementada"
+
+#. TRANS A function returns this error when certain parameter
+#. TRANS values are valid, but the functionality they request is not available.
+#. TRANS This can mean that the function does not implement a particular command
+#. TRANS or option value or flag bit at all.  For functions that operate on some
+#. TRANS object given in a parameter, such as a file descriptor or a port, it
+#. TRANS might instead mean that only @emph{that specific object} (file
+#. TRANS descriptor, port, etc.) is unable to support the other parameters given;
+#. TRANS different file descriptors might support different ranges of parameter
+#. TRANS values.
+#. TRANS
+#. TRANS If the entire function is not available at all in the implementation,
+#. TRANS it returns @code{ENOSYS} instead.
+#: sysdeps/gnu/errlist.c:914
+msgid "Not supported"
+msgstr "Não suportado"
+
+#. TRANS While decoding a multibyte character the function came along an invalid
+#. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
+#: sysdeps/gnu/errlist.c:924
+msgid "Invalid or incomplete multibyte or wide character"
+msgstr "Carácter largo ou multi-byte inválido ou incompleto"
+
+#. TRANS On @gnuhurdsystems{}, servers supporting the @code{term} protocol return
+#. TRANS this error for certain operations when the caller is not in the
+#. TRANS foreground process group of the terminal.  Users do not usually see this
+#. TRANS error because functions such as @code{read} and @code{write} translate
+#. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
+#. TRANS for information on process groups and these signals.
+#: sysdeps/gnu/errlist.c:938
+msgid "Inappropriate operation for background process"
+msgstr "Operação inapropriada para processo de 2º plano"
+
+#. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
+#. TRANS translated by a program and the translator program dies while starting
+#. TRANS up, before it has connected to the file.
+#: sysdeps/gnu/errlist.c:949
+msgid "Translator died"
+msgstr "O tradutor morreu"
+
+#. TRANS The experienced user will know what is wrong.
+#. TRANS @c This error code is a joke.  Its perror text is part of the joke.
+#. TRANS @c Don't change it.
+#: sysdeps/gnu/errlist.c:960
+msgid "?"
+msgstr "?"
+
+#. TRANS You did @strong{what}?
+#: sysdeps/gnu/errlist.c:969
+msgid "You really blew it this time"
+msgstr "Desta vez estragou tudo"
+
+#. TRANS Go home and have a glass of warm, dairy-fresh milk.
+#. TRANS @c Okay.  Since you are dying to know, I'll tell you.
+#. TRANS @c This is a joke, obviously.  There is a children's song which begins,
+#. TRANS @c "Old McDonald had a farm, e-i-e-i-o."  Every time I see the (real)
+#. TRANS @c errno macro EIO, I think about that song.  Probably most of my
+#. TRANS @c compatriots who program on Unix do, too.  One of them must have stayed
+#. TRANS @c up a little too late one night and decided to add it to Hurd or Glibc.
+#. TRANS @c Whoever did it should be castigated, but it made me laugh.
+#. TRANS @c  --jtobey@channel1.com
+#. TRANS @c
+#. TRANS @c "bought the farm" means "died".  -jtobey
+#. TRANS @c
+#. TRANS @c Translators, please do not translate this litteraly, translate it into
+#. TRANS @c an idiomatic funny way of saying that the computer died.
+#: sysdeps/gnu/errlist.c:991
+msgid "Computer bought the farm"
+msgstr "O computador morreu"
+
+#. TRANS This error code has no purpose.
+#: sysdeps/gnu/errlist.c:1000
+msgid "Gratuitous error"
+msgstr "Erro gratuito"
+
+#: sysdeps/gnu/errlist.c:1008
+msgid "Bad message"
+msgstr "Má mensagem"
+
+#: sysdeps/gnu/errlist.c:1016
+msgid "Identifier removed"
+msgstr "Identificador removido"
+
+#: sysdeps/gnu/errlist.c:1024
+msgid "Multihop attempted"
+msgstr "Multihop tentado"
+
+#: sysdeps/gnu/errlist.c:1032
+msgid "No data available"
+msgstr "Sem dados disponíveis"
+
+#: sysdeps/gnu/errlist.c:1040
+msgid "Link has been severed"
+msgstr "A ligação foi cortada"
+
+#: sysdeps/gnu/errlist.c:1048
+msgid "No message of desired type"
+msgstr "Sem mensagens do tipo desejado"
+
+#: sysdeps/gnu/errlist.c:1056
+msgid "Out of streams resources"
+msgstr "Sem recursos de fluxos"
+
+#: sysdeps/gnu/errlist.c:1064
+msgid "Device not a stream"
+msgstr "O dispositivo não é um fluxo"
+
+#: sysdeps/gnu/errlist.c:1072
+msgid "Value too large for defined data type"
+msgstr "Valor muito grande para o tipo de dados definido"
+
+#: sysdeps/gnu/errlist.c:1080
+msgid "Protocol error"
+msgstr "Erro de protocolo"
+
+#: sysdeps/gnu/errlist.c:1088
+msgid "Timer expired"
+msgstr "Temporizador expirado"
+
+#. TRANS An asynchronous operation was canceled before it
+#. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
+#. TRANS the normal result is for the operations affected to complete with this
+#. TRANS error; @pxref{Cancel AIO Operations}.
+#: sysdeps/gnu/errlist.c:1100
+msgid "Operation canceled"
+msgstr "Operação cancelada"
+
+#: sysdeps/gnu/errlist.c:1108
+msgid "Owner died"
+msgstr "O proprietário faleceu"
+
+#: sysdeps/gnu/errlist.c:1116
+msgid "State not recoverable"
+msgstr "Estado não recuperável"
+
+#: sysdeps/gnu/errlist.c:1124
+msgid "Interrupted system call should be restarted"
+msgstr "A chamada de sistema interrompida devia ser reiniciada"
+
+#: sysdeps/gnu/errlist.c:1132
+msgid "Channel number out of range"
+msgstr "Número de canal fora do intervalo"
+
+#: sysdeps/gnu/errlist.c:1140
+msgid "Level 2 not synchronized"
+msgstr "Nível 2 não sincronizado"
+
+#: sysdeps/gnu/errlist.c:1148
+msgid "Level 3 halted"
+msgstr "Nível 3 parado"
+
+#: sysdeps/gnu/errlist.c:1156
+msgid "Level 3 reset"
+msgstr "Nível 3 reiniciado"
+
+#: sysdeps/gnu/errlist.c:1164
+msgid "Link number out of range"
+msgstr "Número de ligação fora do intervalo"
+
+#: sysdeps/gnu/errlist.c:1172
+msgid "Protocol driver not attached"
+msgstr "Controlador de protocolo não anexado"
+
+#: sysdeps/gnu/errlist.c:1180
+msgid "No CSI structure available"
+msgstr "Sem estrutura CSI disponível"
+
+#: sysdeps/gnu/errlist.c:1188
+msgid "Level 2 halted"
+msgstr "Nível 2 parado"
+
+#: sysdeps/gnu/errlist.c:1196
+msgid "Invalid exchange"
+msgstr "Troca inválida"
+
+#: sysdeps/gnu/errlist.c:1204
+msgid "Invalid request descriptor"
+msgstr "Descritor de pedido inválido"
+
+#: sysdeps/gnu/errlist.c:1212
+msgid "Exchange full"
+msgstr "Troca completa"
+
+#: sysdeps/gnu/errlist.c:1220
+msgid "No anode"
+msgstr "Sem ânodo"
+
+#: sysdeps/gnu/errlist.c:1228
+msgid "Invalid request code"
+msgstr "Código de pedido inválido"
+
+#: sysdeps/gnu/errlist.c:1236
+msgid "Invalid slot"
+msgstr "Ranhura inválida"
+
+#: sysdeps/gnu/errlist.c:1244
+msgid "File locking deadlock error"
+msgstr "Erro de bloqueio de ficheiro"
+
+#: sysdeps/gnu/errlist.c:1252
+msgid "Bad font file format"
+msgstr "Mau formato de ficheiro de letra"
+
+#: sysdeps/gnu/errlist.c:1260
+msgid "Machine is not on the network"
+msgstr "A máquina não está na rede"
+
+#: sysdeps/gnu/errlist.c:1268
+msgid "Package not installed"
+msgstr "Pacote não instalado"
+
+#: sysdeps/gnu/errlist.c:1276
+msgid "Advertise error"
+msgstr "Erro de anúncio"
+
+#: sysdeps/gnu/errlist.c:1284
+msgid "Srmount error"
+msgstr "Erro de srmount"
+
+#: sysdeps/gnu/errlist.c:1292
+msgid "Communication error on send"
+msgstr "Erro de comunicação ao enviar"
+
+#: sysdeps/gnu/errlist.c:1300
+msgid "RFS specific error"
+msgstr "Erro específico de RFS"
+
+#: sysdeps/gnu/errlist.c:1308
+msgid "Name not unique on network"
+msgstr "Nome não exclusivo na rede"
+
+#: sysdeps/gnu/errlist.c:1316
+msgid "File descriptor in bad state"
+msgstr "Descritor de ficheiro em mau estado"
+
+#: sysdeps/gnu/errlist.c:1324
+msgid "Remote address changed"
+msgstr "Endereço remoto alterado"
+
+#: sysdeps/gnu/errlist.c:1332
+msgid "Can not access a needed shared library"
+msgstr "Impossível aceder a uma biblioteca partilhada necessária"
+
+#: sysdeps/gnu/errlist.c:1340
+msgid "Accessing a corrupted shared library"
+msgstr "A aceder a uma biblioteca partilhada corrompida"
+
+#: sysdeps/gnu/errlist.c:1348
+msgid ".lib section in a.out corrupted"
+msgstr "Secção .lib num .out corrompida"
+
+#: sysdeps/gnu/errlist.c:1356
+msgid "Attempting to link in too many shared libraries"
+msgstr "Tentativa de ligar a demasiadas bibliotecas partilhadas"
+
+#: sysdeps/gnu/errlist.c:1364
+msgid "Cannot exec a shared library directly"
+msgstr "Impossível executar uma biblioteca partilhada directamente"
+
+#: sysdeps/gnu/errlist.c:1372
+msgid "Streams pipe error"
+msgstr "Erro de túnel de fluxos"
+
+#: sysdeps/gnu/errlist.c:1380
+msgid "Structure needs cleaning"
+msgstr "A estrutura necessita de limpeza"
+
+#: sysdeps/gnu/errlist.c:1388
+msgid "Not a XENIX named type file"
+msgstr "Não é um ficheiro de tipo XENIX"
+
+#: sysdeps/gnu/errlist.c:1396
+msgid "No XENIX semaphores available"
+msgstr "Sem semáforos XENIX disponíveis"
+
+#: sysdeps/gnu/errlist.c:1404
+msgid "Is a named type file"
+msgstr "É um ficheiro de tipo nomeado"
+
+#: sysdeps/gnu/errlist.c:1412
+msgid "Remote I/O error"
+msgstr "Erro de E/S remoto"
+
+#: sysdeps/gnu/errlist.c:1420
+msgid "No medium found"
+msgstr "Sem meio encontrado"
+
+#: sysdeps/gnu/errlist.c:1428
+msgid "Wrong medium type"
+msgstr "Tipo de meio errado"
+
+#: sysdeps/gnu/errlist.c:1436
+msgid "Required key not available"
+msgstr "Chave requerida indisponível"
+
+#: sysdeps/gnu/errlist.c:1444
+msgid "Key has expired"
+msgstr "Chave expirada"
+
+#: sysdeps/gnu/errlist.c:1452
+msgid "Key has been revoked"
+msgstr "Chave revogada"
+
+#: sysdeps/gnu/errlist.c:1460
+msgid "Key was rejected by service"
+msgstr "Chave rejeitada pelo serviço"
+
+#: sysdeps/gnu/errlist.c:1468
+msgid "Operation not possible due to RF-kill"
+msgstr "Operação impossível devido a RF-kill"
+
+#: sysdeps/gnu/errlist.c:1476
+msgid "Memory page has hardware error"
+msgstr "A página de memória tem um erro de equipamento"
+
+#: sysdeps/mach/_strerror.c:56
+msgid "Error in unknown error system: "
+msgstr "Erro em sistema de erro desconhecido: "
