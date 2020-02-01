@@ -91,6 +91,7 @@ L(oop):	movl	(%esi),%eax
 	movl	8(%esi),%eax
 	sbbl	8(%edx),%eax
 	movl	%eax,8(%edi)
+	_CET_ENDBR
 	movl	12(%esi),%eax
 	sbbl	12(%edx),%eax
 	movl	%eax,12(%edi)
