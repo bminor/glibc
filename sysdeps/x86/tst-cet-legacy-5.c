@@ -38,7 +38,7 @@ do_test_1 (const char *modname, bool fail)
 	  if (strstr (err, "shadow stack isn't enabled") == NULL)
 	    {
 	      printf ("incorrect dlopen '%s' error: %s\n", modname,
-		      dlerror ());
+		      err);
 	      exit (1);
 	    }
 
