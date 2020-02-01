@@ -30,6 +30,7 @@
 	.type C_SYMBOL_NAME(_mcount), @function
 	.align ALIGNARG(4)
 C_LABEL(_mcount)
+	_CET_ENDBR
 	/* Save the caller-clobbered registers.  */
 	pushl %eax
 	pushl %ecx
@@ -58,6 +59,7 @@ weak_alias (_mcount, mcount)
 	.type C_SYMBOL_NAME(__fentry__), @function
 	.align ALIGNARG(4)
 C_LABEL(__fentry__)
+	_CET_ENDBR
 	/* Save the caller-clobbered registers.  */
 	pushl %eax
 	pushl %ecx
