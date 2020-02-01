@@ -15,12 +15,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <sysdep.h>
 #include <lowlevellock.h>
 
-	.globl	pthread_spin_lock
-	.type	pthread_spin_lock,@function
-	.align	16
-pthread_spin_lock:
+ENTRY (pthread_spin_lock)
 	mov	4(%esp), %eax
 1:	LOCK
 	decl	0(%eax)
@@ -34,4 +32,4 @@ pthread_spin_lock:
 	cmpl	$0, 0(%eax)
 	jg	1b
 	jmp	2b
-	.size	pthread_spin_lock,.-pthread_spin_lock
+END (pthread_spin_lock)

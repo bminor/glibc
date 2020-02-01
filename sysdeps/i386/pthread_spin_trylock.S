@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <sysdep.h>
 #include <pthread-errnos.h>
 
 
@@ -25,10 +26,7 @@
 # define LOCK lock
 #endif
 
-	.globl	pthread_spin_trylock
-	.type	pthread_spin_trylock,@function
-	.align	16
-pthread_spin_trylock:
+ENTRY (pthread_spin_trylock)
 	movl	4(%esp), %edx
 	movl	$1, %eax
 	xorl	%ecx, %ecx
@@ -43,4 +41,4 @@ pthread_spin_trylock:
 0:
 #endif
 	ret
-	.size	pthread_spin_trylock,.-pthread_spin_trylock
+END (pthread_spin_trylock)

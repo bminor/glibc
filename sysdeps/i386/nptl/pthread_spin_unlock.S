@@ -16,15 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-	.globl	pthread_spin_unlock
-	.type	pthread_spin_unlock,@function
-	.align	16
-pthread_spin_unlock:
+#include <sysdep.h>
+
+ENTRY (pthread_spin_unlock)
 	movl	4(%esp), %eax
 	movl	$1, (%eax)
 	xorl	%eax, %eax
 	ret
-	.size	pthread_spin_unlock,.-pthread_spin_unlock
+END (pthread_spin_unlock)
 
 	/* The implementation of pthread_spin_init is identical.  */
 	.globl	pthread_spin_init
