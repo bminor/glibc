@@ -134,7 +134,8 @@ Deprecated and removed features, and other changes affecting compatibility:
 Changes to build and runtime requirements:
 
 * It is no longer necessary to have recent Linux kernel headers to build
-  working (non-stub) system call wrappers.
+  working (non-stub) system call wrappers on all architectures except 64-bit
+  RISC-V.  64-bit RISC-V requires a minimum kernel headers version of 5.0.
 
 * The ChangeLog file is no longer present in the toplevel directory of the
   source tree.  ChangeLog files are located in the ChangeLog.old directory as
