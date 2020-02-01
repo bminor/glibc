@@ -79,6 +79,9 @@ Rogerio Alves Cardoso for various fixes to PowerPC.
 Paul Clarke for optimized functions on PowerPC.
 
 @item
+Mike Crowe for various fixes.
+
+@item
 Palmer Dabbelt for contributing the port to Linux/RISC-V.
 
 @item
@@ -141,6 +144,9 @@ Olaf Flebbe and Ralf B@"achle for contributing
 @file{sysdeps/mips/fpu_control.h}.
 
 @item
+Alistair Francis for Y2038 related fixes.
+
+@item
 Mike Frysinger for his maintaining of the IA64 architecture and for
 testing and bug fixing.
 
@@ -172,6 +178,9 @@ and malloc checking functions like @code{mcheck}.
 @item
 Bruno Haible for his improvements to the @code{iconv} and locale
 implementations.
+
+@item
+Mao Han for the C-SKY port.
 
 @item
 Richard Henderson for the port to Linux on Alpha
@@ -280,6 +289,9 @@ Luis Machado for optimized functions on PowerPC.
 @item
 David J. MacKenzie for his contribution to the @code{getopt}
 function and writing the @file{tar.h} header.
+
+@item
+Lukasz Majewski for Y2038 related fixes.
 
 @item
 Greg McGary for adding runtime support for bounds checking.
@@ -429,6 +441,9 @@ Arjun Shankar for testing and bug fixing.
 Marcus Shawcroft for contributing the AArch64 port.
 
 @item
+TAMUKI Shoichi for various fixes.
+
+@item
 Franz Sirl for various fixes.
 
 @item
@@ -484,6 +499,9 @@ Eric Youngdale for implementing versioning of objects on the symbol level.
 @item
 Adhemerval Zanella for optimized functions on PowerPC, ISO C threads support
 and various fixes.
+
+@item
+Xuelei Zhang for optimized functions on AArch64.
 
 @end itemize
 
