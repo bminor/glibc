@@ -26,13 +26,7 @@ ENTRY(__swapcontext)
 	/* Load address of the context data structure we save in.  */
 	movl	4(%esp), %eax
 
-	/* Return value of swapcontext.  EAX is the only register whose
-	   value is not preserved.  */
-	movl	$0, oEAX(%eax)
-
-	/* Save the 32-bit register values and the return address.  */
-	movl	%ecx, oECX(%eax)
-	movl	%edx, oEDX(%eax)
+	/* Save the preserved register values and the return address.  */
 	movl	%edi, oEDI(%eax)
 	movl	%esi, oESI(%eax)
 	movl	%ebp, oEBP(%eax)
@@ -91,15 +85,14 @@ ENTRY(__swapcontext)
 	/* Push the return address on the new stack so we can return there.  */
 	pushl	%ecx
 
-	/* Load the values of all the 32-bit registers (except ESP).
-	   Since we are loading from EAX, it must be last.  */
+	/* Load the values of all the preserved registers (except ESP).  */
 	movl	oEDI(%eax), %edi
 	movl	oESI(%eax), %esi
 	movl	oEBP(%eax), %ebp
 	movl	oEBX(%eax), %ebx
-	movl	oEDX(%eax), %edx
-	movl	oECX(%eax), %ecx
-	movl	oEAX(%eax), %eax
+
+	/* All done, return 0 for success.  */
+	xorl	%eax, %eax
 
 	/* The following 'ret' will pop the address of the code and jump
 	   to it.  */
