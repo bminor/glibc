@@ -57,9 +57,8 @@
        : "+r" (r0), "+r" (r3), "+r" (r4), "+r" (r5),  "+r" (r6),        \
          "+r" (r7), "+r" (r8)						\
        : : "r9", "r10", "r11", "r12", "cr0", "ctr", "lr", "memory");	\
-    err = (long int) r0;						\
     __asm__ __volatile__ ("" : "=r" (rval) : "r" (r3));		        \
-    rval;								\
+    (long int) r0 & (1 << 28) ? -rval : rval;				\
   })
 
 #define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		\
@@ -107,21 +106,20 @@
        : ASM_INPUT_##nr							\
        : "r9", "r10", "r11", "r12",					\
          "cr0", "ctr", "memory");					\
-	  err = r0;  \
-    r3;  \
+    r0 & (1 << 28) ? -r3 : r3;						\
   })
 #define INTERNAL_SYSCALL(name, err, nr, args...)			\
   INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, args)
 
 #undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) long int err __attribute__ ((unused))
+#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((void) (val), __builtin_expect ((err) & (1 << 28), 0))
+  ((unsigned long int) (val) > -4096UL)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)     (val)
+#define INTERNAL_SYSCALL_ERRNO(val, err)     (-(val))
 
 #if defined(__PPC64__) || defined(__powerpc64__)
 # define SYSCALL_ARG_SIZE 8
