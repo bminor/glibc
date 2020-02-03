@@ -19,6 +19,7 @@
 #include <sysdeps/unix/mips/sysdep.h>
 
 #ifdef __ASSEMBLER__
+#include <sys/asm.h>
 
 /* Note that while it's better structurally, going back to call __syscall_error
    can make things confusing if you're debugging---it looks like it's jumping
@@ -33,7 +34,7 @@
   .cpsetup t9, $1, name;						      \
   cfi_register (gp, $1);						      \
   .set at;								      \
-  dla t9,__syscall_error;						      \
+  PTR_LA t9,__syscall_error;						      \
   .cpreturn;								      \
   cfi_restore (gp);							      \
   jr t9;								      \

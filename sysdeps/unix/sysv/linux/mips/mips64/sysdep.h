@@ -21,7 +21,7 @@
 /* There is some commonality.  */
 #include <sysdeps/unix/sysv/linux/mips/sysdep.h>
 #include <sysdeps/unix/sysv/linux/sysdep.h>
-#include <sysdeps/unix/mips/mips64/n64/sysdep.h>
+#include <sysdeps/unix/mips/mips64/sysdep.h>
 
 #include <tls.h>
 
@@ -44,6 +44,16 @@
 # define SYSCALL_ERROR_LABEL 99b
 
 #else   /* ! __ASSEMBLER__ */
+
+#if _MIPS_SIM == _ABIN32
+/* Convert X to a long long, without losing any bits if it is one
+   already or warning if it is a 32-bit pointer.  */
+# define ARGIFY(X) ((long long int) (__typeof__ ((X) - (X))) (X))
+typedef long long int __syscall_arg_t;
+#else
+# define ARGIFY(X) ((long int) (X))
+typedef long int __syscall_arg_t;
+#endif
 
 /* Define a macro which expands into the inline wrapper code for a system
    call.  */
@@ -111,10 +121,10 @@
 	long int _sys_result;						\
 									\
 	{								\
-	register long int __s0 asm ("$16") __attribute__ ((unused))	\
+	register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
 	  = (number);							\
-	register long int __v0 asm ("$2");				\
-	register long int __a3 asm ("$7");				\
+	register __syscall_arg_t __v0 asm ("$2");			\
+	register __syscall_arg_t __a3 asm ("$7");			\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -134,12 +144,12 @@
 	long int _sys_result;						\
 									\
 	{								\
-	long int _arg1 = (long int) (arg1);				\
-	register long int __s0 asm ("$16") __attribute__ ((unused))	\
+	__syscall_arg_t _arg1 = ARGIFY (arg1);				\
+	register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
 	  = (number);							\
-	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = _arg1;			\
-	register long int __a3 asm ("$7");				\
+	register __syscall_arg_t __v0 asm ("$2");			\
+	register __syscall_arg_t __a0 asm ("$4") = _arg1;		\
+	register __syscall_arg_t __a3 asm ("$7");			\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -159,14 +169,14 @@
 	long int _sys_result;						\
 									\
 	{								\
-	long int _arg1 = (long int) (arg1);				\
-	long int _arg2 = (long int) (arg2);				\
-	register long int __s0 asm ("$16") __attribute__ ((unused))	\
+	__syscall_arg_t _arg1 = ARGIFY (arg1);				\
+	__syscall_arg_t _arg2 = ARGIFY (arg2);				\
+	register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
 	  = (number);							\
-	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = _arg1;			\
-	register long int __a1 asm ("$5") = _arg2;			\
-	register long int __a3 asm ("$7");				\
+	register __syscall_arg_t __v0 asm ("$2");			\
+	register __syscall_arg_t __a0 asm ("$4") = _arg1;		\
+	register __syscall_arg_t __a1 asm ("$5") = _arg2;		\
+	register __syscall_arg_t __a3 asm ("$7");			\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -187,16 +197,16 @@
 	long int _sys_result;						\
 									\
 	{								\
-	long int _arg1 = (long int) (arg1);				\
-	long int _arg2 = (long int) (arg2);				\
-	long int _arg3 = (long int) (arg3);				\
-	register long int __s0 asm ("$16") __attribute__ ((unused))	\
+	__syscall_arg_t _arg1 = ARGIFY (arg1);				\
+	__syscall_arg_t _arg2 = ARGIFY (arg2);				\
+	__syscall_arg_t _arg3 = ARGIFY (arg3);				\
+	register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
 	  = (number);							\
-	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = _arg1;			\
-	register long int __a1 asm ("$5") = _arg2;			\
-	register long int __a2 asm ("$6") = _arg3;			\
-	register long int __a3 asm ("$7");				\
+	register __syscall_arg_t __v0 asm ("$2");			\
+	register __syscall_arg_t __a0 asm ("$4") = _arg1;		\
+	register __syscall_arg_t __a1 asm ("$5") = _arg2;		\
+	register __syscall_arg_t __a2 asm ("$6") = _arg3;		\
+	register __syscall_arg_t __a3 asm ("$7");			\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -217,17 +227,17 @@
 	long int _sys_result;						\
 									\
 	{								\
-	long int _arg1 = (long int) (arg1);				\
-	long int _arg2 = (long int) (arg2);				\
-	long int _arg3 = (long int) (arg3);				\
-	long int _arg4 = (long int) (arg4);				\
-	register long int __s0 asm ("$16") __attribute__ ((unused))	\
+	__syscall_arg_t _arg1 = ARGIFY (arg1);				\
+	__syscall_arg_t _arg2 = ARGIFY (arg2);				\
+	__syscall_arg_t _arg3 = ARGIFY (arg3);				\
+	__syscall_arg_t _arg4 = ARGIFY (arg4);				\
+	register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
 	  = (number);							\
-	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = _arg1;			\
-	register long int __a1 asm ("$5") = _arg2;			\
-	register long int __a2 asm ("$6") = _arg3;			\
-	register long int __a3 asm ("$7") = _arg4;			\
+	register __syscall_arg_t __v0 asm ("$2");			\
+	register __syscall_arg_t __a0 asm ("$4") = _arg1;		\
+	register __syscall_arg_t __a1 asm ("$5") = _arg2;		\
+	register __syscall_arg_t __a2 asm ("$6") = _arg3;		\
+	register __syscall_arg_t __a3 asm ("$7") = _arg4;		\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -248,19 +258,19 @@
 	long int _sys_result;						\
 									\
 	{								\
-	long int _arg1 = (long int) (arg1);				\
-	long int _arg2 = (long int) (arg2);				\
-	long int _arg3 = (long int) (arg3);				\
-	long int _arg4 = (long int) (arg4);				\
-	long int _arg5 = (long int) (arg5);				\
-	register long int __s0 asm ("$16") __attribute__ ((unused))	\
+	__syscall_arg_t _arg1 = ARGIFY (arg1);				\
+	__syscall_arg_t _arg2 = ARGIFY (arg2);				\
+	__syscall_arg_t _arg3 = ARGIFY (arg3);				\
+	__syscall_arg_t _arg4 = ARGIFY (arg4);				\
+	__syscall_arg_t _arg5 = ARGIFY (arg5);				\
+	register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
 	  = (number);							\
-	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = _arg1;			\
-	register long int __a1 asm ("$5") = _arg2;			\
-	register long int __a2 asm ("$6") = _arg3;			\
-	register long int __a3 asm ("$7") = _arg4;			\
-	register long int __a4 asm ("$8") = _arg5;			\
+	register __syscall_arg_t __v0 asm ("$2");			\
+	register __syscall_arg_t __a0 asm ("$4") = _arg1;		\
+	register __syscall_arg_t __a1 asm ("$5") = _arg2;		\
+	register __syscall_arg_t __a2 asm ("$6") = _arg3;		\
+	register __syscall_arg_t __a3 asm ("$7") = _arg4;		\
+	register __syscall_arg_t __a4 asm ("$8") = _arg5;		\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -281,21 +291,21 @@
 	long int _sys_result;						\
 									\
 	{								\
-	long int _arg1 = (long int) (arg1);				\
-	long int _arg2 = (long int) (arg2);				\
-	long int _arg3 = (long int) (arg3);				\
-	long int _arg4 = (long int) (arg4);				\
-	long int _arg5 = (long int) (arg5);				\
-	long int _arg6 = (long int) (arg6);				\
-	register long int __s0 asm ("$16") __attribute__ ((unused))	\
+	__syscall_arg_t _arg1 = ARGIFY (arg1);				\
+	__syscall_arg_t _arg2 = ARGIFY (arg2);				\
+	__syscall_arg_t _arg3 = ARGIFY (arg3);				\
+	__syscall_arg_t _arg4 = ARGIFY (arg4);				\
+	__syscall_arg_t _arg5 = ARGIFY (arg5);				\
+	__syscall_arg_t _arg6 = ARGIFY (arg6);				\
+	register __syscall_arg_t __s0 asm ("$16") __attribute__ ((unused))\
 	  = (number);							\
-	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = _arg1;			\
-	register long int __a1 asm ("$5") = _arg2;			\
-	register long int __a2 asm ("$6") = _arg3;			\
-	register long int __a3 asm ("$7") = _arg4;			\
-	register long int __a4 asm ("$8") = _arg5;			\
-	register long int __a5 asm ("$9") = _arg6;			\
+	register __syscall_arg_t __v0 asm ("$2");			\
+	register __syscall_arg_t __a0 asm ("$4") = _arg1;		\
+	register __syscall_arg_t __a1 asm ("$5") = _arg2;		\
+	register __syscall_arg_t __a2 asm ("$6") = _arg3;		\
+	register __syscall_arg_t __a3 asm ("$7") = _arg4;		\
+	register __syscall_arg_t __a4 asm ("$8") = _arg5;		\
+	register __syscall_arg_t __a5 asm ("$9") = _arg6;		\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
