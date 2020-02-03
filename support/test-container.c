@@ -95,6 +95,8 @@ int verbose = 0;
          mv FILE FILE
 	 cp FILE FILE
 	 rm FILE
+	 cwd PATH
+	 exec FILE
 	 FILE must start with $B/, $S/, $I/, $L/, or /
 	  (expands to build dir, source dir, install dir, library dir
 	   (in container), or container's root)
@@ -104,6 +106,8 @@ int verbose = 0;
          - 'mv': A minimal move files command.
          - 'cp': A minimal copy files command.
          - 'rm': A minimal remove files command.
+	 - 'cwd': set test working directory
+	 - 'exec': change test binary location (may end in /)
    * mytest.root/postclean.req causes fresh rsync (with delete) after
      test if present
 
@@ -147,7 +151,7 @@ maybe_xmkdir (const char *path, mode_t mode)
 }
 
 /* Temporarily concatenate multiple strings into one.  Allows up to 10
-   temporary results; use strdup () if you need them to be
+   temporary results; use xstrdup () if you need them to be
    permanent.  */
 static char *
 concat (const char *str, ...)
@@ -670,11 +674,13 @@ main (int argc, char **argv)
   char *new_objdir_path;
   char *new_srcdir_path;
   char **new_child_proc;
+  char *new_child_exec;
   char *command_root;
   char *command_base;
   char *command_basename;
   char *so_base;
   int do_postclean = 0;
+  char *change_cwd = NULL;
 
   int pipes[2];
   char pid_buf[20];
@@ -701,7 +707,7 @@ main (int argc, char **argv)
 
   if (argc < 2)
     {
-      fprintf (stderr, "Usage: containerize <program to run> <args...>\n");
+      fprintf (stderr, "Usage: test-container <program to run> <args...>\n");
       exit (1);
     }
 
@@ -746,12 +752,13 @@ main (int argc, char **argv)
 	}
     }
 
-  pristine_root_path = strdup (concat (support_objdir_root,
+  pristine_root_path = xstrdup (concat (support_objdir_root,
 				       "/testroot.pristine", NULL));
-  new_root_path = strdup (concat (support_objdir_root,
+  new_root_path = xstrdup (concat (support_objdir_root,
 				  "/testroot.root", NULL));
   new_cwd_path = get_current_dir_name ();
   new_child_proc = argv + 1;
+  new_child_exec = argv[1];
 
   lock_fd = open (concat (pristine_root_path, "/lock.fd", NULL),
 		 O_CREAT | O_TRUNC | O_RDWR, 0666);
@@ -778,10 +785,10 @@ main (int argc, char **argv)
     command_root = concat (support_srcdir_root,
 			   argv[1] + strlen (support_objdir_root),
 			   ".root", NULL);
-  command_root = strdup (command_root);
+  command_root = xstrdup (command_root);
 
   /* This cuts off the ".root" we appended above.  */
-  command_base = strdup (command_root);
+  command_base = xstrdup (command_root);
   command_base[strlen (command_base) - 5] = 0;
 
   /* This is the basename of the test we're running.  */
@@ -792,7 +799,7 @@ main (int argc, char **argv)
     ++command_basename;
 
   /* Shared object base directory.  */
-  so_base = strdup (argv[1]);
+  so_base = xstrdup (argv[1]);
   if (strrchr (so_base, '/') != NULL)
     strrchr (so_base, '/')[1] = 0;
 
@@ -806,9 +813,9 @@ main (int argc, char **argv)
       && S_ISDIR (st.st_mode))
     rsync (command_root, new_root_path, 0);
 
-  new_objdir_path = strdup (concat (new_root_path,
+  new_objdir_path = xstrdup (concat (new_root_path,
 				    support_objdir_root, NULL));
-  new_srcdir_path = strdup (concat (new_root_path,
+  new_srcdir_path = xstrdup (concat (new_root_path,
 				    support_srcdir_root, NULL));
 
   /* new_cwd_path starts with '/' so no "/" needed between the two.  */
@@ -868,7 +875,10 @@ main (int argc, char **argv)
 		  the_words[i] = concat (new_root_path,
 					 support_libdir_prefix,
 					 the_words[i] + 2, NULL);
-		else if (the_words[i][0] == '/')
+		/* "exec" and "cwd" use inside-root paths.  */
+		else if (strcmp (the_words[0], "exec") != 0
+			 && strcmp (the_words[0], "cwd") != 0
+			 && the_words[i][0] == '/')
 		  the_words[i] = concat (new_root_path,
 					 the_words[i], NULL);
 	      }
@@ -912,13 +922,49 @@ main (int argc, char **argv)
 	      {
 		maybe_xunlink (the_words[1]);
 	      }
+	    else if (nt >= 2 && strcmp (the_words[0], "exec") == 0)
+	      {
+		/* The first argument is the desired location and name
+		   of the test binary as we wish to exec it; we will
+		   copy the binary there.  The second (optional)
+		   argument is the value to pass as argv[0], it
+		   defaults to the same as the first argument.  */
+		char *new_exec_path = the_words[1];
+
+		/* If the new exec path ends with a slash, that's the
+		 * directory, and use the old test base name.  */
+		if (new_exec_path [strlen(new_exec_path) - 1] == '/')
+		    new_exec_path = concat (new_exec_path,
+					    basename (new_child_proc[0]),
+					    NULL);
+
+
+		/* new_child_proc is in the build tree, so has the
+		   same path inside the chroot as outside.  The new
+		   exec path is, by definition, relative to the
+		   chroot.  */
+		copy_one_file (new_child_proc[0],  concat (new_root_path,
+							   new_exec_path,
+							   NULL));
+
+		new_child_exec =  xstrdup (new_exec_path);
+		if (the_words[2])
+		  new_child_proc[0] = xstrdup (the_words[2]);
+		else
+		  new_child_proc[0] = new_child_exec;
+	      }
+	    else if (nt == 2 && strcmp (the_words[0], "cwd") == 0)
+	      {
+		change_cwd = xstrdup (the_words[1]);
+	      }
 	    else if (nt == 1 && strcmp (the_words[0], "su") == 0)
 	      {
 		be_su = 1;
 	      }
 	    else if (nt > 0 && the_words[0][0] != '#')
 	      {
-		printf ("\033[31minvalid [%s]\033[0m\n", the_words[0]);
+		fprintf (stderr, "\033[31minvalid [%s]\033[0m\n", the_words[0]);
+		exit (1);
 	      }
 	  }
 	fclose (f);
@@ -1089,11 +1135,17 @@ main (int argc, char **argv)
   write (GMAP, tmp, strlen (tmp));
   xclose (GMAP);
 
+  if (change_cwd)
+    {
+      if (chdir (change_cwd) < 0)
+	FAIL_EXIT1 ("Can't cd to %s inside container - ", change_cwd);
+    }
+
   /* Now run the child.  */
-  execvp (new_child_proc[0], new_child_proc);
+  execvp (new_child_exec, new_child_proc);
 
   /* Or don't run the child?  */
-  FAIL_EXIT1 ("Unable to exec %s\n", new_child_proc[0]);
+  FAIL_EXIT1 ("Unable to exec %s\n", new_child_exec);
 
   /* Because gcc won't know error () never returns...  */
   exit (EXIT_UNSUPPORTED);
