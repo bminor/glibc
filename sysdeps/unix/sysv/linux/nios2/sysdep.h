@@ -157,13 +157,14 @@
      (int) result_var; })
 
 #undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) unsigned int err __attribute__((unused))
+#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) ((void) (val), (unsigned int) (err))
+#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+  ((unsigned long int) (val) > -4096UL)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)   ((void) (err), val)
+#define INTERNAL_SYSCALL_ERRNO(val, err)     (-(val))
 
 #undef INTERNAL_SYSCALL_RAW
 #define INTERNAL_SYSCALL_RAW(name, err, nr, args...)            \
@@ -180,8 +181,7 @@
                      : "+r" (_r2), "=r" (_err)                  \
                      : ASM_ARGS_##nr				\
                      : __SYSCALL_CLOBBERS);                     \
-       _sys_result = _r2;                                       \
-       err = _err;                                              \
+       _sys_result = _err != 0 ? -_r2 : -_r2;                   \
      }                                                          \
      (int) _sys_result; })
 
