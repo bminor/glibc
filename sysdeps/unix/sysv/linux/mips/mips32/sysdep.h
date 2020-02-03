@@ -61,13 +61,14 @@
      result_var; })
 
 #undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) long int err __attribute__ ((unused))
+#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err)   ((void) (val), (long int) (err))
+#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+  ((unsigned long int) (val) > -4096UL)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)     ((void) (err), val)
+#define INTERNAL_SYSCALL_ERRNO(val, err)     (-(val))
 
 /* Note that the original Linux syscall restart convention required the
    instruction immediately preceding SYSCALL to initialize $v0 with the
@@ -128,7 +129,6 @@ union __mips_syscall_return
 ({									\
 	union __mips_syscall_return _sc_ret;				\
 	_sc_ret.val = __mips16_syscall##nr (args, number);		\
-	err = _sc_ret.reg.v1;						\
 	_sc_ret.reg.v0;							\
 })
 
@@ -167,8 +167,7 @@ union __mips_syscall_return
 	: "=r" (__v0), "=r" (__a3)					\
 	: input								\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
@@ -192,8 +191,7 @@ union __mips_syscall_return
 	: "=r" (__v0), "=r" (__a3)					\
 	: input, "r" (__a0)						\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
@@ -219,8 +217,7 @@ union __mips_syscall_return
 	: "=r" (__v0), "=r" (__a3)					\
 	: input, "r" (__a0), "r" (__a1)					\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
@@ -249,8 +246,7 @@ union __mips_syscall_return
 	: "=r" (__v0), "=r" (__a3)					\
 	: input, "r" (__a0), "r" (__a1), "r" (__a2)			\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
@@ -280,8 +276,7 @@ union __mips_syscall_return
 	: "=r" (__v0), "+r" (__a3)					\
 	: input, "r" (__a0), "r" (__a1), "r" (__a2)			\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
@@ -311,8 +306,7 @@ libc_hidden_proto (__mips_syscall5, nomips16)
 				       (long int) (arg4),		\
 				       (long int) (arg5),		\
 				       (long int) (number));		\
-	err = _sc_ret.reg.v1;						\
-	_sc_ret.reg.v0;							\
+	_sc_ret.reg.v1 != 0 ? -_sc_ret.reg.v0 : _sc_ret.reg.v0;		\
 })
 
 long long int __nomips16 __mips_syscall6 (long int arg1, long int arg2,
@@ -332,8 +326,7 @@ libc_hidden_proto (__mips_syscall6, nomips16)
 				       (long int) (arg5),		\
 				       (long int) (arg6),		\
 				       (long int) (number));		\
-	err = _sc_ret.reg.v1;						\
-	_sc_ret.reg.v0;							\
+	_sc_ret.reg.v1 != 0 ? -_sc_ret.reg.v0 : _sc_ret.reg.v0;		\
 })
 
 long long int __nomips16 __mips_syscall7 (long int arg1, long int arg2,
@@ -355,8 +348,7 @@ libc_hidden_proto (__mips_syscall7, nomips16)
 				       (long int) (arg6),		\
 				       (long int) (arg7),		\
 				       (long int) (number));		\
-	err = _sc_ret.reg.v1;						\
-	_sc_ret.reg.v0;							\
+	_sc_ret.reg.v1 != 0 ? -_sc_ret.reg.v0 : _sc_ret.reg.v0;		\
 })
 
 #if __mips_isa_rev >= 6

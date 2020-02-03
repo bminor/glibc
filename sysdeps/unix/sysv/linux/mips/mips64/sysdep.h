@@ -69,13 +69,14 @@ typedef long int __syscall_arg_t;
      result_var; })
 
 #undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) long int err __attribute__ ((unused))
+#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err)   ((void) (val), (long int) (err))
+#define INTERNAL_SYSCALL_ERROR_P(val, err) \
+  ((unsigned long int) (val) > -4096UL)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)     ((void) (err), val)
+#define INTERNAL_SYSCALL_ERRNO(val, err)     (-(val))
 
 /* Note that the original Linux syscall restart convention required the
    instruction immediately preceding SYSCALL to initialize $v0 with the
@@ -133,8 +134,7 @@ typedef long int __syscall_arg_t;
 	: "=r" (__v0), "=r" (__a3)					\
 	: input								\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
@@ -158,8 +158,7 @@ typedef long int __syscall_arg_t;
 	: "=r" (__v0), "=r" (__a3)					\
 	: input, "r" (__a0)						\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
@@ -185,8 +184,7 @@ typedef long int __syscall_arg_t;
 	: "=r" (__v0), "=r" (__a3)					\
 	: input, "r" (__a0), "r" (__a1)					\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
@@ -215,8 +213,7 @@ typedef long int __syscall_arg_t;
 	: "=r" (__v0), "=r" (__a3)					\
 	: input, "r" (__a0), "r" (__a1), "r" (__a2)			\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
@@ -246,8 +243,7 @@ typedef long int __syscall_arg_t;
 	: "=r" (__v0), "+r" (__a3)					\
 	: input, "r" (__a0), "r" (__a1), "r" (__a2)			\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
@@ -279,8 +275,7 @@ typedef long int __syscall_arg_t;
 	: "=r" (__v0), "+r" (__a3)					\
 	: input, "r" (__a0), "r" (__a1), "r" (__a2), "r" (__a4)		\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
@@ -315,8 +310,7 @@ typedef long int __syscall_arg_t;
 	: input, "r" (__a0), "r" (__a1), "r" (__a2), "r" (__a4),	\
 	  "r" (__a5)							\
 	: __SYSCALL_CLOBBERS);						\
-	err = __a3;							\
-	_sys_result = __v0;						\
+	_sys_result = __a3 != 0 ? -__v0 : __v0;				\
 	}								\
 	_sys_result;							\
 })
