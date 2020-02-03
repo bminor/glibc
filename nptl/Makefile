@@ -296,7 +296,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-exec1 tst-exec2 tst-exec3 tst-exec4 tst-exec5 \
 	tst-exit1 tst-exit2 tst-exit3 \
 	tst-stdio1 tst-stdio2 \
-	tst-stack1 tst-stack2 tst-stack3 tst-stack4 tst-pthread-getattr \
+	tst-stack1 tst-stack2 tst-stack3 tst-stack4 \
 	tst-pthread-attr-affinity tst-pthread-mutexattr \
 	tst-unload \
 	tst-dlsym1 \
@@ -325,6 +325,8 @@ tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
 	tst-rwlock-pwn \
 	tst-rwlock-tryrdlock-stall tst-rwlock-trywrlock-stall \
 	tst-unwind-thread
+
+tests-container =  tst-pthread-getattr
 
 tests-internal := tst-rwlock19 tst-rwlock20 \
 		  tst-sem11 tst-sem12 tst-sem13 \
@@ -642,7 +644,7 @@ ifeq ($(build-shared),yes)
 $(addprefix $(objpfx), \
   $(filter-out $(tests-static) $(xtests-static) $(tests-reverse) \
     $(tests-nolibpthread), \
-    $(tests) $(tests-internal) $(xtests) $(test-srcs))): \
+    $(tests) $(tests-internal) $(xtests) $(test-srcs) $(tests-container))): \
 	$(objpfx)libpthread.so
 $(objpfx)tst-unload: $(libdl)
 # $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
