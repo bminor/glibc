@@ -30,6 +30,10 @@ ___ieee128_sprintf_chk (char *s, int flag, size_t slen,
   if (flag > 0)
     mode |= PRINTF_FORTIFY;
 
+  /* Regardless of the value of flag, let __vsprintf_internal know that
+     this is a call from *printf_chk.  */
+  mode |= PRINTF_CHK;
+
   if (slen == 0)
     __chk_fail ();
 
