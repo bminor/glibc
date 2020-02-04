@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <sys/time.h>
+#include <stddef.h>
 #include <sysdep.h>
 
 /* Set the system-wide timezone.

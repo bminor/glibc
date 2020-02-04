@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <stddef.h>
 #include <shlib-compat.h>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_32)

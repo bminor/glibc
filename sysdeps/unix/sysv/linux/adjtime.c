@@ -19,6 +19,7 @@
 #include <limits.h>
 #include <sys/time.h>
 #include <sys/timex.h>
+#include <sysdep.h>
 
 #define MAX_SEC	(INT_MAX / 1000000L - 2)
 #define MIN_SEC	(INT_MIN / 1000000L + 2)

@@ -23,6 +23,7 @@
 
 # include <unistd.h>
 # include <errno.h>
+# include <sys/types.h>
 
 struct ustat
  {

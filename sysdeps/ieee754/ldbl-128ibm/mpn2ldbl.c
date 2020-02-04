@@ -20,9 +20,6 @@
 #include <float.h>
 #include <math.h>
 
-/* Need to set this when including gmp headers after system headers.  */
-#define HAVE_ALLOCA 1
-
 #include "gmp.h"
 #include "gmp-impl.h"
 

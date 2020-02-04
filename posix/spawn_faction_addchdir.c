@@ -19,7 +19,7 @@
 #include <errno.h>
 #include <spawn.h>
 #include <string.h>
-
+#include <stdlib.h>
 #include "spawn_int.h"
 
 int

@@ -22,8 +22,6 @@ extern int rtld_errno attribute_hidden;
 
 # elif IS_IN_LIB && !IS_IN (rtld)
 
-#  include <tls.h>
-
 #  undef  errno
 #  if IS_IN (libc)
 #   define errno __libc_errno

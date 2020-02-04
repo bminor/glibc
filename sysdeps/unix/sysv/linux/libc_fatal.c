@@ -18,6 +18,8 @@
 
 #include <errno.h>
 #include <sys/uio.h>
+#include <stdbool.h>
+#include <sysdep.h>
 
 static bool
 writev_for_fatal (int fd, const struct iovec *iov, size_t niov, size_t total)

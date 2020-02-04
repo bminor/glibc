@@ -19,7 +19,7 @@
 #include <sys/types.h>
 #include <utmp.h>
 #include <errno.h>
-#include <libc-symbols.h>
+#include <stdlib.h>
 
 #include "utmp32.h"
 #include "utmp-convert.h"

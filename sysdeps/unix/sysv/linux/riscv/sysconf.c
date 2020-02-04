@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/auxv.h>
+#include <stdbool.h>
 
 static long int linux_sysconf (int name);
 

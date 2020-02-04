@@ -17,6 +17,7 @@
 
 #include <sys/stat.h>
 #include <errno.h>
+#include <sysdep.h>
 #include <shlib-compat.h>
 
 #if SHLIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)

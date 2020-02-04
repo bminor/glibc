@@ -17,6 +17,7 @@
    not, see <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <stdlib.h>
 #include <malloc.h>
 
 void *

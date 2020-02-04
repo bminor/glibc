@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <sigsetops.h>
+#include <stddef.h>
 
 /* Clear all signals from SET.  */
 int

@@ -23,6 +23,7 @@
 #include <sigsetops.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <stddef.h>
 #include <sysdep.h>
 
 /* The signal used for asynchronous cancelation.  */

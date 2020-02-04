@@ -16,9 +16,8 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <sys/resource.h>
-#include <sys/types.h>
+#include <sysdep.h>
 #include <shlib-compat.h>
 
 #if !__RLIM_T_MATCHES_RLIM64_T

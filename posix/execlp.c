@@ -19,6 +19,7 @@
 #include <stdarg.h>
 #include <errno.h>
 #include <sys/param.h>
+#include <stddef.h>
 
 /* Execute FILE, searching in the `PATH' environment variable if
    it contains no slashes, with all arguments after FILE until a

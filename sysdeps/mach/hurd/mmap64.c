@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <sys/mman.h>
 #include <sys/types.h>
+#include <mach/port.h>
 
 /* Map addresses starting near ADDR and extending for LEN bytes.  From
    OFFSET into the file FD describes according to PROT and FLAGS.  If ADDR

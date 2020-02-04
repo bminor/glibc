@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <sys/types.h>
+#include <sysdep.h>
 #include <shlib-compat.h>
 
 /* Add this redirection so the strong_alias for __RLIM_T_MATCHES_RLIM64_T

@@ -17,7 +17,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/sendfile.h>
+#include <stddef.h>
 #include <errno.h>
+#include <sysdep.h>
 
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
    descriptor OUT_FD.  */

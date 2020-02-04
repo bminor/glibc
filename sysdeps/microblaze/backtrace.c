@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sysdep.h>
 #include <signal.h>

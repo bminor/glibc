@@ -20,6 +20,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sysdep.h>
 
 /* Write LENGTH bytes of randomness starting at BUFFER.  Return 0 on
    success and -1 on failure.  */

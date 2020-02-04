@@ -19,7 +19,7 @@
 #include <stddef.h>
 #include <errno.h>
 #include <termios.h>
-
+#include <sysdep.h>
 
 /* This is a gross hack around a kernel bug.  If the cfsetispeed functions
    is called with the SPEED argument set to zero this means use the same

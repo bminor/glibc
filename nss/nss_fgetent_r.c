@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <nss_files.h>
+#include <stdbool.h>
 
 int
 __nss_fgetent_r (FILE *fp, void *result, char *buffer, size_t buffer_length,

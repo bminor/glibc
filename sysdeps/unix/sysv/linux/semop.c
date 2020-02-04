@@ -17,9 +17,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/sem.h>
+#include <stddef.h>
 #include <ipc_priv.h>
 #include <sysdep.h>
-#include <errno.h>
 
 /* Perform user-defined atomical operation of array of semaphores.  */
 

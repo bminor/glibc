@@ -23,6 +23,7 @@
 #include <sys/time.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <lowlevellock-futex.h>
 #include <libc-diag.h>
 
 /* This file defines futex operations used internally in glibc.  A futex

@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fcntl.h>
-#include <errno.h>
+#include <sys/types.h>
 #include <sysdep.h>
 
 ssize_t

@@ -20,6 +20,7 @@
 #include <time.h>
 #include <unistd.h>
 #include "kernel-posix-cpu-timers.h"
+#include <sysdep.h>
 #include <shlib-compat.h>
 
 int

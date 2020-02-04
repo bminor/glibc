@@ -16,11 +16,9 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stddef.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/types.h>
+#include <sysdep.h>
 
 /* Change the owner and group of FILE.  */
 int

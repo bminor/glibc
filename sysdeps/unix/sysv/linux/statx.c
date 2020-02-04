@@ -18,7 +18,7 @@
 
 #include <errno.h>
 #include <sys/stat.h>
-
+#include <sysdep.h>
 #include "statx_generic.c"
 
 int

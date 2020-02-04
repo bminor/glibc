@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <sys/socket.h>
 
 #include "netlinkaccess.h"

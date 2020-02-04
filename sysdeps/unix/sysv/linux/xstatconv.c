@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <kernel_stat.h>
+#include <sysdep.h>
 
 #if STAT_IS_KERNEL_STAT
 

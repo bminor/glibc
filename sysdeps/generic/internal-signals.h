@@ -22,6 +22,7 @@
 #include <signal.h>
 #include <sigsetops.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 static inline bool
 __is_internal_signal (int sig)

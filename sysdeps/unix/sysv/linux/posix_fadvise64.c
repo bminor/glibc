@@ -17,6 +17,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <sysdep.h>
 #include <shlib-compat.h>
 
 int __posix_fadvise64_l64 (int fd, off64_t offset, off64_t len, int advise);

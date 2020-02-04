@@ -17,7 +17,6 @@
 
 #include <unistd.h>
 #include <sysdep.h>
-#include <errno.h>
 
 #ifndef __NR_truncate64
 # define __NR_truncate64 __NR_truncate

@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <pwd.h>
+#include <stdlib.h>
 #include <nss.h>
 
 #define _S(x)	x ?: ""

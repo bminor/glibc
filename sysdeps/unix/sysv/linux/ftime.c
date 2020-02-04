@@ -18,6 +18,7 @@
 
 #include <features.h>
 #include <sys/timeb.h>
+#include <time.h>
 #include <errno.h>
 
 int

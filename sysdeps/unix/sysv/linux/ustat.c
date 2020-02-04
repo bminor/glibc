@@ -23,7 +23,7 @@
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_28)
 
 # include <sysdep.h>
-# include <errno.h>
+# include <sys/types.h>
 
 # ifndef DEV_TO_KDEV
 #  define DEV_TO_KDEV(__dev)					\

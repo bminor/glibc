@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <stdarg.h>
 #include <sys/param.h>
+#include <stddef.h>
 
 /* Execute PATH with all arguments after PATH until
    a NULL pointer and environment from `environ'.  */

@@ -16,10 +16,9 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <fcntl.h>
-#include <limits.h>
 #include <unistd.h>
+#include <sysdep.h>
 
 /* Duplicate FD to FD2, closing the old FD2 and making FD2 be
    open the same file as FD is.  Return FD2 or -1.  */

@@ -20,6 +20,7 @@
 
 #include <bits/wordsize.h>
 #include <kernel-features.h>
+#include <endian.h>
 #include <errno.h>
 
 #undef INTERNAL_SYSCALL_ERROR_P

@@ -19,6 +19,8 @@
 #ifndef _SYS_SOCKETCALL_H
 #define _SYS_SOCKETCALL_H	1
 
+#include <sysdep.h>
+
 /* Define unique numbers for the operations permitted on socket.  Linux
    uses a single system call for all these functions.  The relevant code
    file is /usr/include/linux/net.h.

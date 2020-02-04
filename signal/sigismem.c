@@ -17,6 +17,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <stddef.h>
 #include <sigsetops.h>
 
 /* Return 1 if SIGNO is in SET, 0 if not.  */

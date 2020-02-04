@@ -19,7 +19,7 @@
 #include <errno.h>
 #include <sys/statfs.h>
 #include <kernel_stat.h>
-#include <stddef.h>
+#include <sysdep.h>
 
 #if !STATFS_IS_STATFS64
 #include "overflow.h"

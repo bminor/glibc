@@ -16,14 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <fcntl.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <alloca.h>
+#include <sys/stat.h>
 #include <sysdep.h>
 
 

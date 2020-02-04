@@ -26,6 +26,8 @@
 /* Defines RTLD_PRIVATE_ERRNO.  */
 #include <dl-sysdep.h>
 
+#include <tls.h>
+
 /* In order to get __set_errno() definition in INLINE_SYSCALL.  */
 #ifndef __ASSEMBLER__
 # include <errno.h>

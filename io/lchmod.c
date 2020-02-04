@@ -16,10 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <fcntl.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include <sys/stat.h>
 
 /* Change the protections of FILE to MODE.  */
 int

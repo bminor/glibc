@@ -16,10 +16,9 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stddef.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sysdep.h>
 
 /* Make a link to FROM called TO.  */
 int

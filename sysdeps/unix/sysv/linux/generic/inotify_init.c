@@ -16,11 +16,8 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
-#include <errno.h>
-#include <unistd.h>
-#include <sys/types.h>
 #include <sys/inotify.h>
+#include <sysdep.h>
 
 libc_hidden_proto (inotify_init)
 

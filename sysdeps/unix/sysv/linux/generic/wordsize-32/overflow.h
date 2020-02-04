@@ -19,6 +19,7 @@
 
 #include <sys/stat.h>
 #include <sys/statfs.h>
+#include <sys/types.h>
 
 /* Test for overflows of structures where we ask the kernel to fill them
    in with standard 64-bit syscalls but return them through APIs that
