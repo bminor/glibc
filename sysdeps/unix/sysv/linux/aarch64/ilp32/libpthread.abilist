@@ -10,7 +10,6 @@ GLIBC_2.27 __libc_allocate_rtsig F
 GLIBC_2.27 __libc_current_sigrtmax F
 GLIBC_2.27 __libc_current_sigrtmin F
 GLIBC_2.27 __lseek F
-GLIBC_2.27 __nanosleep F
 GLIBC_2.27 __open F
 GLIBC_2.27 __open64 F
 GLIBC_2.27 __pread64 F
@@ -44,7 +43,6 @@ GLIBC_2.27 __read F
 GLIBC_2.27 __res_state F
 GLIBC_2.27 __send F
 GLIBC_2.27 __sigaction F
-GLIBC_2.27 __wait F
 GLIBC_2.27 __write F
 GLIBC_2.27 _pthread_cleanup_pop F
 GLIBC_2.27 _pthread_cleanup_pop_restore F
@@ -61,29 +59,20 @@ GLIBC_2.27 funlockfile F
 GLIBC_2.27 lseek F
 GLIBC_2.27 lseek64 F
 GLIBC_2.27 msync F
-GLIBC_2.27 nanosleep F
 GLIBC_2.27 open F
 GLIBC_2.27 open64 F
 GLIBC_2.27 pause F
 GLIBC_2.27 pread F
 GLIBC_2.27 pread64 F
-GLIBC_2.27 pthread_attr_destroy F
 GLIBC_2.27 pthread_attr_getaffinity_np F
-GLIBC_2.27 pthread_attr_getdetachstate F
 GLIBC_2.27 pthread_attr_getguardsize F
-GLIBC_2.27 pthread_attr_getinheritsched F
-GLIBC_2.27 pthread_attr_getschedparam F
 GLIBC_2.27 pthread_attr_getschedpolicy F
 GLIBC_2.27 pthread_attr_getscope F
 GLIBC_2.27 pthread_attr_getstack F
 GLIBC_2.27 pthread_attr_getstackaddr F
 GLIBC_2.27 pthread_attr_getstacksize F
-GLIBC_2.27 pthread_attr_init F
 GLIBC_2.27 pthread_attr_setaffinity_np F
-GLIBC_2.27 pthread_attr_setdetachstate F
 GLIBC_2.27 pthread_attr_setguardsize F
-GLIBC_2.27 pthread_attr_setinheritsched F
-GLIBC_2.27 pthread_attr_setschedparam F
 GLIBC_2.27 pthread_attr_setschedpolicy F
 GLIBC_2.27 pthread_attr_setscope F
 GLIBC_2.27 pthread_attr_setstack F
@@ -111,7 +100,6 @@ GLIBC_2.27 pthread_condattr_setclock F
 GLIBC_2.27 pthread_condattr_setpshared F
 GLIBC_2.27 pthread_create F
 GLIBC_2.27 pthread_detach F
-GLIBC_2.27 pthread_equal F
 GLIBC_2.27 pthread_exit F
 GLIBC_2.27 pthread_getaffinity_np F
 GLIBC_2.27 pthread_getattr_default_np F
@@ -211,8 +199,6 @@ GLIBC_2.27 sendto F
 GLIBC_2.27 sigaction F
 GLIBC_2.27 sigwait F
 GLIBC_2.27 tcdrain F
-GLIBC_2.27 wait F
-GLIBC_2.27 waitpid F
 GLIBC_2.27 write F
 GLIBC_2.28 call_once F
 GLIBC_2.28 cnd_broadcast F
@@ -240,3 +226,4 @@ GLIBC_2.30 pthread_mutex_clocklock F
 GLIBC_2.30 pthread_rwlock_clockrdlock F
 GLIBC_2.30 pthread_rwlock_clockwrlock F
 GLIBC_2.30 sem_clockwait F
+GLIBC_2.31 pthread_clockjoin_np F
