@@ -649,7 +649,7 @@ if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
 	    -o conftest conftest.S 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
   # Do a link to see if the backend supports IFUNC relocs.
   $READELF -r conftest 1>&AS_MESSAGE_LOG_FD
-  LC_ALL=C $READELF -r conftest | grep 'no relocations' >/dev/null || {
+  LC_ALL=C $READELF -Wr conftest | grep -q 'IRELATIVE\|R_SPARC_JMP_IREL' && {
     libc_cv_ld_gnu_indirect_function=yes
   }
 fi
