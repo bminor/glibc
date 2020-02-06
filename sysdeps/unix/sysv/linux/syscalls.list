@@ -65,7 +65,6 @@ swapon		-	swapon		i:si	__swapon	swapon
 swapoff		-	swapoff		i:s	__swapoff	swapoff
 unshare		EXTRA	unshare		i:i	unshare
 uselib		EXTRA	uselib		i:s	__compat_uselib	uselib@GLIBC_2.0:GLIBC_2.23
-utime		-	utime		i:sP	utime
 
 chown		-	chown		i:sii	__libc_chown	__chown chown
 
