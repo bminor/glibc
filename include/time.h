@@ -109,6 +109,18 @@ struct __timeval64
 #endif
 
 #if __TIMESIZE == 64
+# define __utimbuf64 utimbuf
+#else
+/* The glibc Y2038-proof struct __utimbuf64 structure for file's access
+   and modification time values.  */
+struct __utimbuf64
+{
+  __time64_t actime;		/* Access time.  */
+  __time64_t modtime;		/* Modification time.  */
+};
+#endif
+
+#if __TIMESIZE == 64
 # define __ctime64 ctime
 #else
 extern char *__ctime64 (const __time64_t *__timer) __THROW;
