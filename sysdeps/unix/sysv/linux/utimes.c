@@ -16,22 +16,37 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stddef.h>
-#include <utime.h>
-#include <sys/time.h>
-#include <sysdep.h>
+#include <time.h>
 
+int
+__utimes64 (const char *file, const struct __timeval64 tvp[2])
+{
+  struct __timespec64 ts64[2];
 
-/* Consider moving to syscalls.list.  */
+  if (tvp != NULL)
+    {
+      ts64[0] = timeval64_to_timespec64 (tvp[0]);
+      ts64[1] = timeval64_to_timespec64 (tvp[1]);
+    }
 
-/* Change the access time of FILE to TVP[0] and
-   the modification time of FILE to TVP[1].  */
+  return __utimensat64_helper (0, file, tvp ? ts64 : NULL, 0);
+}
+
+#if __TIMESIZE != 64
+libc_hidden_def (__utimes64)
+
 int
 __utimes (const char *file, const struct timeval tvp[2])
 {
-  /* Avoid implicit array coercion in syscall macros.  */
-  return INLINE_SYSCALL (utimes, 2, file, &tvp[0]);
-}
+  struct __timeval64 tv64[2];
 
+  if (tvp != NULL)
+    {
+      tv64[0] = valid_timeval_to_timeval64 (tvp[0]);
+      tv64[1] = valid_timeval_to_timeval64 (tvp[1]);
+    }
+
+  return __utimes64 (file, tvp ? tv64 : NULL);
+}
+#endif
 weak_alias (__utimes, utimes)

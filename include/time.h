@@ -188,8 +188,11 @@ libc_hidden_proto (__clock_getres64);
 #endif
 
 #if __TIMESIZE == 64
+# define __utimes64 __utimes
 # define __utimensat64 __utimensat
 #else
+extern int __utimes64 (const char *file, const struct __timeval64 tvp[2]);
+libc_hidden_proto (__utimes64)
 extern int __utimensat64 (int fd, const char *file,
                           const struct __timespec64 tsp[2], int flags);
 libc_hidden_proto (__utimensat64);
