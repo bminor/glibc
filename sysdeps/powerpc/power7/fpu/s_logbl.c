@@ -46,19 +46,11 @@ __logbl (long double x)
   ldbl_unpack (x, &xh, &xl);
   EXTRACT_WORDS64 (hx, xh);
   /* ret = x & 0x7ff0000000000000;  */
-#if !defined __clang__
   asm (
     "xxland %x0,%x1,%x2\n"
     "fcfid  %0,%0"
     : "=f" (ret)
     : "f" (xh), "f" (mask.d));
-#else
-  /* TODO(rtenneti): This is wrong. Handle double */
-  int64_t inum;
-  GET_FLOAT_WORD(inum, x);
-  inum = (inum & 0x7ff0000000000000);
-  SET_FLOAT_WORD(ret, inum);
-#endif
   /* ret = (ret >> 52) - 1023.0;  */
   ret = (ret * two1div52) + two10m1;
   if (__builtin_expect (ret > -two10m1, 0))
