@@ -147,7 +147,11 @@ do_test (void)
 
   /* Alias declaration for asprintf, to avoid the format string
      attribute and the associated warning.  */
+#if __LONG_DOUBLE_USES_FLOAT128 == 1
+  extern int asprintf_alias (char **, const char *, ...) __asm__ ("__asprintfieee128");
+#else
   extern int asprintf_alias (char **, const char *, ...) __asm__ ("asprintf");
+#endif
   TEST_VERIFY (asprintf_alias == asprintf);
   char *str = NULL;
   TEST_VERIFY (asprintf_alias (&str, "[[%P]]", 123L, 456.0) >= 0);
