@@ -219,8 +219,9 @@ response (const struct resolv_response_context *ctx,
     }
   if (with_idn_cname)
     {
+      const char *previous_name = next_name;
       next_name = ANDERES_NAEMCHEN_IDNA ".example";
-      resolv_response_open_record (b, qname, C_IN, T_CNAME, 0);
+      resolv_response_open_record (b, previous_name, C_IN, T_CNAME, 0);
       resolv_response_add_name (b, next_name);
       resolv_response_close_record (b);
     }
