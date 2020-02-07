@@ -318,6 +318,15 @@ CFLAGS-test-strfrom-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
 $(objpfx)test-strfrom-ieee128: gnulib-tests += $(f128-loader-link)
 endif
 
+ifeq ($(subdir),math)
+# The totalorder{,mag} compatibility tests were added prior to this
+# support.  Thus, they can only correctly be used with ibm128.
+CFLAGS-test-ldouble-compat_totalorder.c += -mabi=ibmlongdouble
+CFLAGS-test-ldouble-compat_totalordermag.c += -mabi=ibmlongdouble
+CFLAGS-test-ildouble-compat_totalorder.c += -mabi=ibmlongdouble
+CFLAGS-test-ildouble-compat_totalordermag.c += -mabi=ibmlongdouble
+endif
+
 # Add IEEE binary128 files as make targets.
 routines += $(foreach r,$(ldbl-extra-routines),ieee128-$(r))
 
