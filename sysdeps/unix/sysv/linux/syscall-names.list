@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 5.4.
-kernel 5.4
+# The list of system calls is current as of Linux 5.5.
+kernel 5.5
 
 FAST_atomic_update
 FAST_cmpxchg
