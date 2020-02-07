@@ -1,9 +1,21 @@
 ifeq ($(subdir),libio)
 ldbl-extra-routines += fwscanf \
+		       fwprintf \
+		       obprintf \
 		       swscanf \
+		       swprintf \
 		       wscanf \
+		       vasprintf \
+		       vdprintf \
+		       vscanf \
+		       vsprintf \
+		       vsnprintf \
+		       vsscanf \
+		       vswprintf \
 		       vswscanf \
-		       vwscanf
+		       vwprintf \
+		       vwscanf \
+		       wprintf
 endif
 
 ifeq ($(subdir),wcsmbs)
@@ -29,28 +41,14 @@ ldbl-extra-routines += printf_size \
 		       printf \
 		       snprintf \
 		       sprintf \
-		       vasprintf \
-		       vdprintf \
 		       vfprintf \
 		       vprintf \
-		       vsnprintf \
-		       vsprintf \
-		       fwprintf \
-		       swprintf \
-		       wprintf \
 		       vfwprintf \
-		       vswprintf \
-		       vwprintf \
 		       fscanf \
 		       scanf \
 		       sscanf \
 		       vfscanf \
-		       vscanf \
-		       vsscanf \
 		       vfwscanf \
-		       obprintf \
-		       obstack_chk \
-		       vobstack_chk \
 		       isoc99_fscanf \
 		       isoc99_scanf \
 		       isoc99_sscanf \
@@ -211,7 +209,9 @@ ldbl-extra-routines += asprintf_chk \
 		       wprintf_chk \
 		       vfwprintf_chk \
 		       vswprintf_chk \
-		       vwprintf_chk
+		       vwprintf_chk \
+		       obstack_chk \
+		       vobstack_chk
 
 tests-internal += test-printf-chk-ieee128 test-printf-chk-ibm128
 CFLAGS-test-printf-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
