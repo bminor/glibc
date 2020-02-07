@@ -140,3 +140,14 @@ $(foreach suf,$(all-object-suffixes), $(ldbl-ibm128-files)) \
 	  $(foreach r,$(ldbl-128ibm-routines) $(ldbl-tests), \
 		    $(objpfx)$(r)$(suf)): \
   sysdep-CFLAGS := $(filter-out -mabi=ieeelongdouble,$(sysdep-CFLAGS))
+
+# TODO: a bug in stdc++ will fail if -mabi=ieeelongdouble and -mfloat128
+# are both enabled.  The latter is enabled by default in GCC 8+.  This is
+# tracked via GCC BZ 94080.
+ifeq ($(subdir),support)
+CFLAGS-links-dso-program.cc += -mno-float128
+endif
+ifeq ($(subdir),nptl)
+CFLAGS-tst-thread_local1.cc += -mno-float128
+CFLAGS-tst-minstack-throw.cc += -mno-float128
+endif
