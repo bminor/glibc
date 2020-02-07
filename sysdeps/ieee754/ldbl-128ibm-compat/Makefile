@@ -338,6 +338,17 @@ ldbl-ibm128-files := $(objpfx)test-%-ibm128^ \
 		     $(objpfx)iovswscanf^ \
 		     $(objpfx)iovfscanf^ \
 		     $(objpfx)iovfwscanf^ \
+		     $(objpfx)mpn2ldbl^ \
+		     $(objpfx)ldbl2mpn^ \
+		     $(objpfx)strtold_nan^ \
+		     $(objpfx)strtold_l^ \
+		     $(objpfx)strtold^ \
+		     $(objpfx)strfroml^ \
+		     $(objpfx)wcstold_nan^ \
+		     $(objpfx)wcstold_l^ \
+		     $(objpfx)wcstold^ \
+		     $(objpfx)printf_fphex^ \
+		     $(objpfx)printf_fp^ \
 		     $(foreach r,$(ldbl-extra-routines),$(objpfx)$(r)^) \
 		     $(foreach r,$(ldbl-extra-routines),$(objpfx)$(r)-internal^)
 obj-suf-foreach = $(foreach suf,$(all-object-suffixes),$(subst ^,$(suf),$(1)))
