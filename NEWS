@@ -32,7 +32,8 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* powerpc64le requires GCC 7.4 or newer.  This is required for supporting
+  long double redirects.
 
 Security related changes:
 

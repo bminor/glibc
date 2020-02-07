@@ -32,4 +32,63 @@ if test "$libc_cv_target_power8_ok" != "yes"; then :
 fi
 CFLAGS="$OLD_CFLAGS"
 
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -mno-gnu-attribute"
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if the compiler supports -mno-gnu-attribute" >&5
+$as_echo_n "checking if the compiler supports -mno-gnu-attribute... " >&6; }
+if ${libc_cv_no_gnu_attr_ok+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_cv_no_gnu_attr_ok=yes
+else
+  libc_cv_no_gnu_attr_ok=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_no_gnu_attr_ok" >&5
+$as_echo "$libc_cv_no_gnu_attr_ok" >&6; }
+if test "$libc_cv_no_gnu_attr_ok" != "yes"; then :
+  critic_missing="$critic_missing A compiler with -mno-gnu-attribute is required on powerpc64le."
+fi
+CFLAGS="$OLD_CFLAGS"
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if $CC compiles signbit with 128-bit floating point type" >&5
+$as_echo_n "checking if $CC compiles signbit with 128-bit floating point type... " >&6; }
+if ${libc_cv_compiler_powerpc64le_ice+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  save_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -mabi=ieeelongdouble -Wno-psabi"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int sbr (long double a) { return __builtin_signbit (a); }
+int sbm (long double *a) { return __builtin_signbit (*a); }
+int sbo (long double *a) { return __builtin_signbit (a[4]); }
+int sbi (long double *a, unsigned long n) { return __builtin_signbit (a[n]); }
+void sbs (int *p, long double a) { *p = __builtin_signbit (a); }
+
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_cv_compiler_powerpc64le_ice=yes
+else
+  libc_cv_compiler_powerpc64le_ice=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+CFLAGS="$save_CFLAGS"
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_compiler_powerpc64le_ice" >&5
+$as_echo "$libc_cv_compiler_powerpc64le_ice" >&6; }
+if test "$libc_cv_compiler_powerpc64le_ice" != "yes"; then :
+  critic_missing="$critic_missing __builtin_signbit is broken.  GCC 7.4 or newer is required to resolve (PR83862)."
+fi
+
+
 test -n "$critic_missing" && as_fn_error $? "*** $critic_missing" "$LINENO" 5
