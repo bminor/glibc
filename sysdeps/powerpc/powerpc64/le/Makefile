@@ -6,7 +6,8 @@
 type-ldouble-CFLAGS =
 no-gnu-attribute-CFLAGS =
 ifeq ($(ibm128-fcts),yes)
-type-ldouble-CFLAGS += -mabi=ibmlongdouble
+ibm128-abi-CFLAGS := -mabi=ibmlongdouble
+type-ldouble-CFLAGS += $(ibm128-abi-CFLAGS)
 no-gnu-attribute-CFLAGS = -mno-gnu-attribute
 endif
 
