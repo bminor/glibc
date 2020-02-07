@@ -24,3 +24,4 @@ ___ieee128_vfprintf (FILE *fp, const char *format, va_list ap)
   return __vfprintf_internal (fp, format, ap, PRINTF_LDBL_USES_FLOAT128);
 }
 strong_alias (___ieee128_vfprintf, __vfprintfieee128)
+hidden_def (___ieee128_vfprintf)

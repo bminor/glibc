@@ -37,3 +37,4 @@ ___ieee128_isoc99_sscanf (const char *string, const char *format, ...)
   return done;
 }
 strong_alias (___ieee128_isoc99_sscanf, __isoc99_sscanfieee128)
+hidden_def (___ieee128_isoc99_sscanf)

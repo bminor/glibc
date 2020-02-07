@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <libio/libioP.h>
+#include <stdio.h>
 
 extern int
 ___ieee128_isoc99_vfscanf (FILE *fp, const char *format, va_list ap)
@@ -25,3 +26,4 @@ ___ieee128_isoc99_vfscanf (FILE *fp, const char *format, va_list ap)
   return __vfscanf_internal (fp, format, ap, mode_flags);
 }
 strong_alias (___ieee128_isoc99_vfscanf, __isoc99_vfscanfieee128)
+hidden_def (___ieee128_isoc99_vfscanf)

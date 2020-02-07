@@ -28,3 +28,4 @@ ___ieee128_isoc99_vsscanf (const char *string, const char *format, va_list ap)
   return __vfscanf_internal (fp, format, ap, mode_flags);
 }
 strong_alias (___ieee128_isoc99_vsscanf, __isoc99_vsscanfieee128)
+hidden_def (___ieee128_isoc99_vsscanf)

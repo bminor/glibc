@@ -32,3 +32,4 @@ ___ieee128_dprintf (int d, const char *format, ...)
   return done;
 }
 strong_alias (___ieee128_dprintf, __dprintfieee128)
+hidden_def (___ieee128_dprintf);

@@ -32,3 +32,4 @@ ___ieee128_fprintf (FILE *fp, const char *format, ...)
   return done;
 }
 strong_alias (___ieee128_fprintf, __fprintfieee128)
+hidden_def (___ieee128_fprintf)

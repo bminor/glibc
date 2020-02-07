@@ -30,6 +30,7 @@ ___ieee128_syslog (int pri, const char *fmt, ...)
   va_end (ap);
 }
 strong_alias (___ieee128_syslog, __syslogieee128)
+hidden_def (___ieee128_syslog)
 
 void
 ___ieee128_vsyslog (int pri, const char *fmt, va_list ap)

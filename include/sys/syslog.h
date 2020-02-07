@@ -3,7 +3,7 @@
 #include <misc/sys/syslog.h>
 #ifndef _ISOMAC
 
-libc_hidden_proto (syslog)
+libc_hidden_ldbl_proto (syslog)
 
 /* __vsyslog_internal uses the same mode_flags bits as
    __v*printf_internal; see libio/libioP.h.  */

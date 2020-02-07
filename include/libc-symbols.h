@@ -885,6 +885,8 @@ for linking")
 #define libc_hidden_builtin_def(name) libc_hidden_def (name)
 #define libc_hidden_builtin_weak(name) libc_hidden_weak (name)
 #define libc_hidden_builtin_ver(local, name) libc_hidden_ver (local, name)
+
+#define libc_hidden_ldbl_proto(name, attrs...) libc_hidden_proto (name, ##attrs)
 #ifdef __ASSEMBLER__
 # define HIDDEN_BUILTIN_JUMPTARGET(name) HIDDEN_JUMPTARGET(name)
 #endif

@@ -33,3 +33,4 @@ ___ieee128_sprintf (char *s, const char *format, ...)
   return done;
 }
 strong_alias (___ieee128_sprintf, __sprintfieee128)
+hidden_def (___ieee128_sprintf)
