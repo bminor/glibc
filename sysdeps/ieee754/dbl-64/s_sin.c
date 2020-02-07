@@ -192,8 +192,8 @@ do_sincos (double a, double da, int4 n)
 
 
 /*******************************************************************/
-/* An ultimate sin routine. Given an IEEE double machine number x   */
-/* it computes the correctly rounded (to nearest) value of sin(x)  */
+/* An ultimate sin routine. Given an IEEE double machine number x  */
+/* it computes the rounded value of sin(x).			   */
 /*******************************************************************/
 #ifndef IN_SINCOS
 double
@@ -256,8 +256,8 @@ __sin (double x)
 
 
 /*******************************************************************/
-/* An ultimate cos routine. Given an IEEE double machine number x   */
-/* it computes the correctly rounded (to nearest) value of cos(x)  */
+/* An ultimate cos routine. Given an IEEE double machine number x  */
+/* it computes the rounded value of cos(x).			   */
 /*******************************************************************/
 
 double
