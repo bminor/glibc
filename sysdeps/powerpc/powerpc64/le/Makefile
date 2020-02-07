@@ -1,5 +1,6 @@
 # When building float128 we need to ensure -mfloat128 is
 # passed to all such object files.
+type-float128-CFLAGS := -mfloat128
 
 # Bootstrapping code for enabling IEEE 128.  This can be removed and
 # any indirections simplified once IEEE 128 long double is enabled.
@@ -11,28 +12,33 @@ type-ldouble-CFLAGS += $(ibm128-abi-CFLAGS)
 no-gnu-attribute-CFLAGS = -mno-gnu-attribute
 endif
 
+# All _Float128 files should be built assuming an ibm128 long double.
+# Likewise, this avoids some old GCC 7 compiler bugs whereby calls
+# to __mulkc3 are swapped with __multc3, or worse.  This is noted in
+# GCC BZ 84914, and marked as will-not-fix.
+type-float128-CFLAGS += $(type-ldouble-CFLAGS)
+
 ifeq ($(subdir),math)
 # sqrtf128 requires emulation before POWER9.
 CPPFLAGS += -I../soft-fp
 
 # float128 requires adding a handful of extra flags.
 # Similarly, disable
-$(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
-$(foreach suf,$(all-object-suffixes),%f128_r$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
-$(foreach suf,$(all-object-suffixes),$(objpfx)test-float128%$(suf)): CFLAGS += -mfloat128
-$(foreach suf,$(all-object-suffixes),$(objpfx)test-float64x%$(suf)): CFLAGS += -mfloat128
+$(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += $(type-float128-CFLAGS) $(no-gnu-attribute-CFLAGS)
+$(foreach suf,$(all-object-suffixes),%f128_r$(suf)): CFLAGS += $(type-float128-CFLAGS) $(no-gnu-attribute-CFLAGS)
+$(foreach suf,$(all-object-suffixes),$(objpfx)test-float128%$(suf)): CFLAGS += $(type-float128-CFLAGS)
+$(foreach suf,$(all-object-suffixes),$(objpfx)test-float64x%$(suf)): CFLAGS += $(type-float128-CFLAGS)
 # Pairs of types with _Float128 / _Float64x as the wider type but not
 # the narrower one.
 f128-pairs = float32-float64x float32-float128 float64-float64x \
 	     float64-float128 float32x-float64x float32x-float128
-$(foreach suf,$(all-object-suffixes),$(foreach pair,$(f128-pairs),$(objpfx)test-$(pair)%$(suf))): CFLAGS += -mfloat128
-
-CFLAGS-libm-test-support-float128.c += -mfloat128
-CFLAGS-libm-test-support-float64x.c += -mfloat128
-CFLAGS-test-math-iscanonical.cc += -mfloat128
-CFLAGS-test-math-iseqsig.cc += -mfloat128
-CFLAGS-test-math-issignaling.cc += -mfloat128
-CFLAGS-test-math-iszero.cc += -mfloat128
+$(foreach suf,$(all-object-suffixes),$(foreach pair,$(f128-pairs),$(objpfx)test-$(pair)%$(suf))): CFLAGS += $(type-float128-CFLAGS)
+CFLAGS-libm-test-support-float128.c += $(type-float128-CFLAGS)
+CFLAGS-libm-test-support-float64x.c += $(type-float128-CFLAGS)
+CFLAGS-test-math-iscanonical.cc += $(type-float128-CFLAGS)
+CFLAGS-test-math-iseqsig.cc += $(type-float128-CFLAGS)
+CFLAGS-test-math-issignaling.cc += $(type-float128-CFLAGS)
+CFLAGS-test-math-iszero.cc += $(type-float128-CFLAGS)
 
 CFLAGS-s_logbl-power7.c += $(type-ldouble-CFLAGS)
 CFLAGS-s_logbl-ppc64.c += $(type-ldouble-CFLAGS)
@@ -71,45 +77,49 @@ $(foreach suf,$(all-object-suffixes),\
          ): sysdep-CFLAGS := $(filter-out -mabi=ieeelongdouble,$(sysdep-CFLAGS))
 endif
 
+
 # Append flags to string <-> _Float128 routines.
 ifneq ($(filter $(subdir),wcsmbs stdlib),)
-$(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
-$(foreach suf,$(all-object-suffixes),%f128_l$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
-$(foreach suf,$(all-object-suffixes),%f128_nan$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
-$(foreach suf,$(all-object-suffixes),%float1282mpn$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
-$(foreach suf,$(all-object-suffixes),%mpn2float128$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
-CFLAGS-bug-strtod.c += -mfloat128
-CFLAGS-bug-strtod2.c += -mfloat128
-CFLAGS-tst-strtod-round.c += -mfloat128
-CFLAGS-tst-wcstod-round.c += -mfloat128
-CFLAGS-tst-strtod-nan-locale.c += -mfloat128
-CFLAGS-tst-wcstod-nan-locale.c += -mfloat128
-CFLAGS-tst-strtod6.c += -mfloat128
-CFLAGS-tst-strfrom.c += -mfloat128
-CFLAGS-tst-strfrom-locale.c += -mfloat128
-CFLAGS-strfrom-skeleton.c += -mfloat128
-CFLAGS-tst-strtod-nan-sign.c += -mfloat128
-CFLAGS-tst-wcstod-nan-sign.c += -mfloat128
+$(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += $(type-float128-CFLAGS) $(no-gnu-attribute-CFLAGS)
+$(foreach suf,$(all-object-suffixes),%f128_l$(suf)): CFLAGS += $(type-float128-CFLAGS) $(no-gnu-attribute-CFLAGS)
+$(foreach suf,$(all-object-suffixes),%f128_nan$(suf)): CFLAGS += $(type-float128-CFLAGS) $(no-gnu-attribute-CFLAGS)
+$(foreach suf,$(all-object-suffixes),%float1282mpn$(suf)): CFLAGS += $(type-float128-CFLAGS) $(no-gnu-attribute-CFLAGS)
+$(foreach suf,$(all-object-suffixes),%mpn2float128$(suf)): CFLAGS += $(type-float128-CFLAGS) $(no-gnu-attribute-CFLAGS)
+CFLAGS-bug-strtod.c += $(type-float128-CFLAGS)
+CFLAGS-bug-strtod2.c += $(type-float128-CFLAGS)
+CFLAGS-tst-strtod-round.c += $(type-float128-CFLAGS)
+CFLAGS-tst-wcstod-round.c += $(type-float128-CFLAGS)
+CFLAGS-tst-strtod-nan-locale.c += $(type-float128-CFLAGS)
+CFLAGS-tst-wcstod-nan-locale.c += $(type-float128-CFLAGS)
+CFLAGS-tst-strtod6.c += $(type-float128-CFLAGS)
+CFLAGS-tst-strfrom.c += $(type-float128-CFLAGS)
+CFLAGS-tst-strfrom-locale.c += $(type-float128-CFLAGS)
+CFLAGS-strfrom-skeleton.c += $(type-float128-CFLAGS)
+CFLAGS-tst-strtod-nan-sign.c += $(type-float128-CFLAGS)
+CFLAGS-tst-wcstod-nan-sign.c += $(type-float128-CFLAGS)
 
 # When building glibc with support for _Float128, the powers of ten tables in
 # fpioconst.c and in the string conversion functions must be extended.  Some
 # Makefiles (e.g.: wcsmbs/Makefile) override CFLAGS defined by the Makefiles in
 # sysdeps.  This is avoided with the use sysdep-CFLAGS instead of CFLAGS.
 sysdep-CFLAGS += $(sysdep-CFLAGS-$(<F))
-sysdep-CFLAGS-fpioconst.c += -mfloat128
-sysdep-CFLAGS-strtod_l.c += -mfloat128
-sysdep-CFLAGS-strtof_l.c += -mfloat128
-sysdep-CFLAGS-strtold_l.c += -mfloat128
-sysdep-CFLAGS-wcstod_l.c += -mfloat128
-sysdep-CFLAGS-wcstof_l.c += -mfloat128
-sysdep-CFLAGS-wcstold_l.c += -mfloat128
+sysdep-CFLAGS-fpioconst.c += $(type-float128-CFLAGS)
+sysdep-CFLAGS-strtod_l.c += $(type-float128-CFLAGS)
+sysdep-CFLAGS-strtof_l.c += $(type-float128-CFLAGS)
+sysdep-CFLAGS-strtold_l.c += $(type-float128-CFLAGS)
+sysdep-CFLAGS-wcstod_l.c += $(type-float128-CFLAGS)
+sysdep-CFLAGS-wcstof_l.c += $(type-float128-CFLAGS)
+sysdep-CFLAGS-wcstold_l.c += $(type-float128-CFLAGS)
+
+# Build any ibm128 specific stdlib tests with ibm128 ABI.
+$(foreach suf,$(all-object-suffixes),%128ibm$(suf)): CFLAGS += $(type-ldouble-CFLAGS)
 endif
 
 # Append flags to printf routines.
 ifeq ($(subdir),stdio-common)
-CFLAGS-printf_fp.c = -mfloat128
-CFLAGS-printf_fphex.c = -mfloat128
-CFLAGS-printf_size.c = -mfloat128
+CFLAGS-printf_fp.c = $(type-float128-CFLAGS)
+CFLAGS-printf_fphex.c = $(type-float128-CFLAGS)
+CFLAGS-printf_size.c = $(type-float128-CFLAGS)
 endif
 
 # Disable linker noise on files using ieee128 long double internally
