@@ -484,21 +484,25 @@ $(objpfx)dl-allobjs.os: $(all-rtld-routines:%=$(objpfx)%.os)
 # are compiled with special flags, and puts these modules into rtld-libc.a
 # for us.  Then we do the real link using rtld-libc.a instead of libc_pic.a.
 
-# If the compiler can do SSP, build the mapfile with dummy __stack_chk_fail
-# and __stack_chk_fail_local symbols defined, to prevent the real things
-# being dragged into rtld even though rtld is never built with stack-
-# protection.
+# These symbols need to be stubbed out during symbol discovery because
+# their implementation is provided differently in rtld, and the symbol
+# discovery mechanism is not compatible with the libc implementation
+# when compiled for libc.
+rtld-stubbed-symbols =
+
+# The GCC arguments that implement $(rtld-stubbed-symbols).
+rtld-stubbed-symbols-args = \
+  $(patsubst %,-Wl$(comma)--defsym=%=0, $(rtld-stubbed-symbols))
 
 ifeq ($(have-ssp),yes)
-dummy-stack-chk-fail := -Wl,--defsym='__stack_chk_fail=0' \
-			-Wl,--defsym='__stack_chk_fail_local=0'
-else
-dummy-stack-chk-fail :=
+# rtld is not built with the stack protector, so these references will
+# go away in the rebuilds.
+rtld-stubbed-symbols += __stack_chk_fail __stack_chk_fail_local
 endif
 
 $(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 	@-rm -f $@T
-	$(reloc-link) -o $@.o $(dummy-stack-chk-fail) \
+	$(reloc-link) -o $@.o $(rtld-stubbed-symbols-args) \
 		'-Wl,-(' $^ -lgcc '-Wl,-)' -Wl,-Map,$@T
 	rm -f $@.o
 	mv -f $@T $@
