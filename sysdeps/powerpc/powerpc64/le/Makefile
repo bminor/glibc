@@ -4,8 +4,10 @@
 # Bootstrapping code for enabling IEEE 128.  This can be removed and
 # any indirections simplified once IEEE 128 long double is enabled.
 type-ldouble-CFLAGS =
+no-gnu-attribute-CFLAGS =
 ifeq ($(ibm128-fcts),yes)
 type-ldouble-CFLAGS += -mabi=ibmlongdouble
+no-gnu-attribute-CFLAGS = -mno-gnu-attribute
 endif
 
 ifeq ($(subdir),math)
@@ -13,8 +15,9 @@ ifeq ($(subdir),math)
 CPPFLAGS += -I../soft-fp
 
 # float128 requires adding a handful of extra flags.
-$(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += -mfloat128
-$(foreach suf,$(all-object-suffixes),%f128_r$(suf)): CFLAGS += -mfloat128
+# Similarly, disable
+$(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
+$(foreach suf,$(all-object-suffixes),%f128_r$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-float128%$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-float64x%$(suf)): CFLAGS += -mfloat128
 # Pairs of types with _Float128 / _Float64x as the wider type but not
@@ -69,11 +72,11 @@ endif
 
 # Append flags to string <-> _Float128 routines.
 ifneq ($(filter $(subdir),wcsmbs stdlib),)
-$(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += -mfloat128
-$(foreach suf,$(all-object-suffixes),%f128_l$(suf)): CFLAGS += -mfloat128
-$(foreach suf,$(all-object-suffixes),%f128_nan$(suf)): CFLAGS += -mfloat128
-$(foreach suf,$(all-object-suffixes),%float1282mpn$(suf)): CFLAGS += -mfloat128
-$(foreach suf,$(all-object-suffixes),%mpn2float128$(suf)): CFLAGS += -mfloat128
+$(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
+$(foreach suf,$(all-object-suffixes),%f128_l$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
+$(foreach suf,$(all-object-suffixes),%f128_nan$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
+$(foreach suf,$(all-object-suffixes),%float1282mpn$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
+$(foreach suf,$(all-object-suffixes),%mpn2float128$(suf)): CFLAGS += -mfloat128 $(no-gnu-attribute-CFLAGS)
 CFLAGS-bug-strtod.c += -mfloat128
 CFLAGS-bug-strtod2.c += -mfloat128
 CFLAGS-tst-strtod-round.c += -mfloat128
@@ -108,6 +111,10 @@ CFLAGS-printf_fphex.c = -mfloat128
 CFLAGS-printf_size.c = -mfloat128
 endif
 
+# Disable linker noise on files using ieee128 long double internally
+ifeq ($(subdir),time)
+CFLAGS-difftime.c += $(no-gnu-attribute-CFLAGS)
+endif
 
 $(foreach suf,$(all-object-suffixes),$(objpfx)nldbl-%$(suf)): \
   CFLAGS += $(type-ldouble-CFLAGS)
