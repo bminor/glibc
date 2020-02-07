@@ -30,7 +30,6 @@ tests-internal += test-wcstold-ibm128 test-wcstold-ieee128
 CFLAGS-test-wcstold-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-test-wcstold-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
 
-$(objpfx)test-wcstold-ieee128: gnulib-tests += $(f128-loader-link)
 endif
 
 ifeq ($(subdir),stdio-common)
@@ -89,25 +88,17 @@ tests-internal += test-scanf-ieee128 test-scanf-ibm128
 CFLAGS-test-scanf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi -std=c89 -D_GNU_SOURCE
 CFLAGS-test-scanf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi -std=c89 -D_GNU_SOURCE
 
-$(objpfx)test-scanf-ieee128: gnulib-tests += $(f128-loader-link)
-
 tests-internal += test-wscanf-ieee128 test-wscanf-ibm128
 CFLAGS-test-wscanf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi -std=c89 -D_GNU_SOURCE
 CFLAGS-test-wscanf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi -std=c89 -D_GNU_SOURCE
-
-$(objpfx)test-wscanf-ieee128: gnulib-tests += $(f128-loader-link)
 
 tests-internal += test-isoc99-scanf-ieee128 test-isoc99-scanf-ibm128
 CFLAGS-test-isoc99-scanf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi -std=c99
 CFLAGS-test-isoc99-scanf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi -std=c99
 
-$(objpfx)test-isoc99-scanf-ieee128: gnulib-tests += $(f128-loader-link)
-
 tests-internal += test-isoc99-wscanf-ieee128 test-isoc99-wscanf-ibm128
 CFLAGS-test-isoc99-wscanf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi -std=c99
 CFLAGS-test-isoc99-wscanf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi -std=c99
-
-$(objpfx)test-isoc99-wscanf-ieee128: gnulib-tests += $(f128-loader-link)
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)test-scanf-ieee128.out
@@ -269,9 +260,6 @@ tests-internal += tst-ibm128-warn tst-ieee128-warn
 tests-internal += tst-ibm128-error tst-ieee128-error
 tests-internal += tst-ibm128-efgcvt tst-ieee128-efgcvt
 
-$(objpfx)tst-ieee128-efgcvt: gnulib-tests += $(f128-loader-link)
-$(objpfx)tst-ldbl-efgcvt: gnulib-tests += $(f128-loader-link)
-
 $(objpfx)tst-ibm128-%.c: tst-ldbl-%.c
 	cp $< $@
 
@@ -316,7 +304,6 @@ tests-internal += test-strfrom-ibm128 test-strfrom-ieee128
 CFLAGS-test-strfrom-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-test-strfrom-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
 
-$(objpfx)test-strfrom-ieee128: gnulib-tests += $(f128-loader-link)
 endif
 
 ifeq ($(subdir),math)

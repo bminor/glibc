@@ -564,13 +564,13 @@ else
 link-libc-tests-rpath-link = $(link-libc-rpath-link)
 endif  # build-hardcoded-path-in-tests
 
-link-libc-before-gnulib = $(common-objpfx)libc.so$(libc.so-version) \
-			  $(common-objpfx)$(patsubst %,$(libtype.oS),c) \
-			  -Wl,--as-needed $(elf-objpfx)ld.so \
-			  -Wl,--no-as-needed
-link-libc = $(link-libc-before-gnulib) $(gnulib)
+link-libc-between-gnulib = $(common-objpfx)libc.so$(libc.so-version) \
+			   $(common-objpfx)$(patsubst %,$(libtype.oS),c) \
+			   -Wl,--as-needed $(elf-objpfx)ld.so \
+			   -Wl,--no-as-needed
+link-libc = $(link-libc-between-gnulib) $(gnulib)
 
-link-libc-tests-after-rpath-link = $(link-libc-before-gnulib) $(gnulib-tests)
+link-libc-tests-after-rpath-link = $(gnulib-tests) $(link-libc-between-gnulib) $(gnulib-tests)
 link-libc-tests = $(link-libc-tests-rpath-link) \
 		  $(link-libc-tests-after-rpath-link)
 # Pretty printer test programs always require rpath instead of rpath-link.

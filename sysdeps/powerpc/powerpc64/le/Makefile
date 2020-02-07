@@ -1,11 +1,6 @@
 # When building float128 we need to ensure -mfloat128 is
 # passed to all such object files.
 
-# libgcc requires __tcb_parse_hwcap_and_convert_at_platform when built with
-# a binary128 type.  That symbol is provided by the loader on dynamically
-# linked executables, forcing to link the loader after libgcc link.
-f128-loader-link = -Wl,--as-needed $(elf-objpfx)ld.so -Wl,--no-as-needed
-
 # Bootstrapping code for enabling IEEE 128.  This can be removed and
 # any indirections simplified once IEEE 128 long double is enabled.
 type-ldouble-CFLAGS =
@@ -27,19 +22,13 @@ $(foreach suf,$(all-object-suffixes),$(objpfx)test-float64x%$(suf)): CFLAGS += -
 f128-pairs = float32-float64x float32-float128 float64-float64x \
 	     float64-float128 float32x-float64x float32x-float128
 $(foreach suf,$(all-object-suffixes),$(foreach pair,$(f128-pairs),$(objpfx)test-$(pair)%$(suf))): CFLAGS += -mfloat128
+
 CFLAGS-libm-test-support-float128.c += -mfloat128
 CFLAGS-libm-test-support-float64x.c += -mfloat128
 CFLAGS-test-math-iscanonical.cc += -mfloat128
 CFLAGS-test-math-iseqsig.cc += -mfloat128
 CFLAGS-test-math-issignaling.cc += -mfloat128
 CFLAGS-test-math-iszero.cc += -mfloat128
-$(foreach test, \
-	  test-float128% test-float64x% \
-	  $(foreach pair,$(f128-pairs),test-$(pair)%) \
-	  test-math-iscanonical test-math-iseqsig test-math-issignaling \
-	  test-math-iszero, \
-	  $(objpfx)$(test)): \
-  gnulib-tests += $(f128-loader-link)
 
 CFLAGS-s_logbl-power7.c += $(type-ldouble-CFLAGS)
 CFLAGS-s_logbl-ppc64.c += $(type-ldouble-CFLAGS)
@@ -97,11 +86,6 @@ CFLAGS-tst-strfrom-locale.c += -mfloat128
 CFLAGS-strfrom-skeleton.c += -mfloat128
 CFLAGS-tst-strtod-nan-sign.c += -mfloat128
 CFLAGS-tst-wcstod-nan-sign.c += -mfloat128
-$(foreach test,bug-strtod bug-strtod2 bug-strtod2 tst-strtod-round \
-tst-wcstod-round tst-strtod6 tst-strrom tst-strfrom-locale \
-tst-strtod-nan-locale tst-wcstod-nan-locale \
-strfrom-skeleton tst-strtod-nan-sign tst-wcstod-nan-sign, \
-$(objpfx)$(test)): gnulib-tests += $(f128-loader-link)
 
 # When building glibc with support for _Float128, the powers of ten tables in
 # fpioconst.c and in the string conversion functions must be extended.  Some
