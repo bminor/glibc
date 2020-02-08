@@ -35,9 +35,6 @@ libc {
 
 ld {
   GLIBC_2.0 {
-    # Functions which are interposed from libc.so.
-    calloc; free; malloc; realloc;
-
     _r_debug;
   }
   GLIBC_2.1 {

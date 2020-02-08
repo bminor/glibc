@@ -26,10 +26,86 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <ldsodefs.h>
+#include <dl-irel.h>
+#include <dl-hash.h>
+#include <dl-sym-post.h>
 #include <_itoa.h>
 #include <malloc/malloc-internal.h>
 
 #include <assert.h>
+
+/* The rtld startup code calls __rtld_malloc_init_stubs after the
+  first self-relocation to adjust the pointers to the minimal
+  implementation below.  Before the final relocation,
+  __rtld_malloc_init_real is called to replace the pointers with the
+  real implementation.  */
+__typeof (calloc) *__rtld_calloc;
+__typeof (free) *__rtld_free;
+__typeof (malloc) *__rtld_malloc;
+__typeof (realloc) *__rtld_realloc;
+
+/* Defined below.  */
+static __typeof (calloc) rtld_calloc attribute_relro;
+static __typeof (free) rtld_free attribute_relro;
+static __typeof (malloc) rtld_malloc attribute_relro;
+static __typeof (realloc) rtld_realloc attribute_relro;
+
+void
+__rtld_malloc_init_stubs (void)
+{
+  __rtld_calloc = &rtld_calloc;
+  __rtld_free = &rtld_free;
+  __rtld_malloc = &rtld_malloc;
+  __rtld_realloc = &rtld_realloc;
+}
+
+/* Lookup NAME at VERSION in the scope of MATCH.  */
+static void *
+lookup_malloc_symbol (struct link_map *main_map, const char *name,
+		      struct r_found_version *version)
+{
+
+  const ElfW(Sym) *ref = NULL;
+  lookup_t result = _dl_lookup_symbol_x (name, main_map, &ref,
+					 main_map->l_scope,
+					 version, 0, 0, NULL);
+
+  assert (ELFW(ST_TYPE) (ref->st_info) != STT_TLS);
+  void *value = DL_SYMBOL_ADDRESS (result, ref);
+
+  return _dl_sym_post (result, ref, value, 0, main_map);
+}
+
+void
+__rtld_malloc_init_real (struct link_map *main_map)
+{
+  /* We cannot use relocations and initializers for this because the
+     changes made by __rtld_malloc_init_stubs break REL-style
+     (non-RELA) relocations that depend on the previous pointer
+     contents.  Also avoid direct relocation depedencies for the
+     malloc symbols so this function can be called before the final
+     rtld relocation (which enables RELRO, after which the pointer
+     variables cannot be written to).  */
+
+  struct r_found_version version;
+  version.name = symbol_version_string (libc, GLIBC_2_0);
+  version.hidden = 0;
+  version.hash = _dl_elf_hash (version.name);
+  version.filename = NULL;
+
+  void *new_calloc = lookup_malloc_symbol (main_map, "calloc", &version);
+  void *new_free = lookup_malloc_symbol (main_map, "free", &version);
+  void *new_malloc = lookup_malloc_symbol (main_map, "malloc", &version);
+  void *new_realloc = lookup_malloc_symbol (main_map, "realloc", &version);
+
+  /* Update the pointers in one go, so that any internal allocations
+     performed by lookup_malloc_symbol see a consistent
+     implementation.  */
+  __rtld_calloc = new_calloc;
+  __rtld_free = new_free;
+  __rtld_malloc = new_malloc;
+  __rtld_realloc = new_realloc;
+}
 
 /* Minimal malloc allocator for used during initial link.  After the
    initial link, a full malloc implementation is interposed, either
@@ -38,14 +114,9 @@
 
 static void *alloc_ptr, *alloc_end, *alloc_last_block;
 
-/* Declarations of global functions.  */
-extern void weak_function free (void *ptr);
-extern void * weak_function realloc (void *ptr, size_t n);
-
-
 /* Allocate an aligned memory block.  */
-void * weak_function
-malloc (size_t n)
+static void *
+rtld_malloc (size_t n)
 {
   if (alloc_end == 0)
     {
@@ -87,8 +158,8 @@ malloc (size_t n)
 /* We use this function occasionally since the real implementation may
    be optimized when it can assume the memory it returns already is
    set to NUL.  */
-void * weak_function
-calloc (size_t nmemb, size_t size)
+static void *
+rtld_calloc (size_t nmemb, size_t size)
 {
   /* New memory from the trivial malloc above is always already cleared.
      (We make sure that's true in the rare occasion it might not be,
@@ -104,8 +175,8 @@ calloc (size_t nmemb, size_t size)
 }
 
 /* This will rarely be called.  */
-void weak_function
-free (void *ptr)
+void
+rtld_free (void *ptr)
 {
   /* We can free only the last block allocated.  */
   if (ptr == alloc_last_block)
@@ -118,8 +189,8 @@ free (void *ptr)
 }
 
 /* This is only called with the most recent block returned by malloc.  */
-void * weak_function
-realloc (void *ptr, size_t n)
+void *
+rtld_realloc (void *ptr, size_t n)
 {
   if (ptr == NULL)
     return malloc (n);

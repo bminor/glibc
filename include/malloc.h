@@ -1,7 +1,9 @@
 #ifndef _MALLOC_H
+
 #include <malloc/malloc.h>
 
 # ifndef _ISOMAC
+#  include <rtld-malloc.h>
 
 /* In the GNU libc we rename the global variable
    `__malloc_initialized' to `__libc_malloc_initialized'.  */

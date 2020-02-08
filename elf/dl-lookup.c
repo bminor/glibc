@@ -291,7 +291,7 @@ do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
 	  tab->size = newsize;
 	  size = newsize;
 	  entries = tab->entries = newentries;
-	  tab->free = free;
+	  tab->free = __rtld_free;
 	}
     }
   else
@@ -322,7 +322,7 @@ do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
 
       tab->entries = entries;
       tab->size = size;
-      tab->free = free;
+      tab->free = __rtld_free;
     }
 
   if ((type_class & ELF_RTYPE_CLASS_COPY) != 0)

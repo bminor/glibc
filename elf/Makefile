@@ -488,7 +488,11 @@ $(objpfx)dl-allobjs.os: $(all-rtld-routines:%=$(objpfx)%.os)
 # their implementation is provided differently in rtld, and the symbol
 # discovery mechanism is not compatible with the libc implementation
 # when compiled for libc.
-rtld-stubbed-symbols =
+rtld-stubbed-symbols = \
+  calloc \
+  free \
+  malloc \
+  realloc \
 
 # The GCC arguments that implement $(rtld-stubbed-symbols).
 rtld-stubbed-symbols-args = \

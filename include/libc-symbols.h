@@ -421,7 +421,14 @@ for linking")
 #  define _default_symbol_version(real, name, version) \
      __asm__ (".symver " #real "," #name "@@" #version)
 # endif
-#else
+
+/* Evalutes to a string literal for VERSION in LIB.  */
+# define symbol_version_string(lib, version) \
+  _symbol_version_stringify_1 (VERSION_##lib##_##version)
+# define _symbol_version_stringify_1(arg) _symbol_version_stringify_2 (arg)
+# define _symbol_version_stringify_2(arg) #arg
+
+#else /* !SHARED */
 # define symbol_version(real, name, version)
 # define default_symbol_version(real, name, version) \
   strong_alias(real, name)

@@ -534,6 +534,9 @@ _dl_start (void *arg)
      header table in core.  Put the rest of _dl_start into a separate
      function, that way the compiler cannot put accesses to the GOT
      before ELF_DYNAMIC_RELOCATE.  */
+
+  __rtld_malloc_init_stubs ();
+
   {
 #ifdef DONT_USE_BOOTSTRAP_MAP
     ElfW(Addr) entry = _dl_start_final (arg);
@@ -2210,6 +2213,10 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
 	  rtld_timer_stop (&relocate_time, start);
 	}
 
+      /* The library defining malloc has already been relocated due to
+	 prelinking.  Resolve the malloc symbols for the dynamic
+	 loader.  */
+      __rtld_malloc_init_real (main_map);
 
       /* Mark all the objects so we know they have been already relocated.  */
       for (struct link_map *l = main_map; l != NULL; l = l->l_next)
@@ -2309,6 +2316,11 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
 	 We must do this after TLS initialization in case after this
 	 re-relocation, we might call a user-supplied function
 	 (e.g. calloc from _dl_relocate_object) that uses TLS data.  */
+
+      /* The malloc implementation has been relocated, so resolving
+	 its symbols (and potentially calling IFUNC resolvers) is safe
+	 at this point.  */
+      __rtld_malloc_init_real (main_map);
 
       RTLD_TIMING_VAR (start);
       rtld_timer_start (&start);

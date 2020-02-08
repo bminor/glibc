@@ -51,7 +51,7 @@ htab_create (void)
     return NULL;
   ht->size = 3;
   ht->entries = malloc (sizeof (void *) * ht->size);
-  ht->free = free;
+  ht->free = __rtld_free;
   if (! ht->entries)
     {
       free (ht);
@@ -167,7 +167,7 @@ htab_expand (struct hashtab *htab, int (*hash_fn) (void *))
 
   /* Use the free() corresponding to the malloc() above to free this
      up.  */
-  htab->free = free;
+  htab->free = __rtld_free;
 
   return 1;
 }

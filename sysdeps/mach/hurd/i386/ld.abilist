@@ -16,10 +16,6 @@ GLIBC_2.2.6 _dl_mcount F
 GLIBC_2.2.6 _hurd_intr_rpc_mach_msg F
 GLIBC_2.2.6 _r_debug D 0x14
 GLIBC_2.2.6 abort F
-GLIBC_2.2.6 calloc F
-GLIBC_2.2.6 free F
-GLIBC_2.2.6 malloc F
-GLIBC_2.2.6 realloc F
 GLIBC_2.3 ___tls_get_addr F
 GLIBC_2.3 __tls_get_addr F
 GLIBC_2.4 __stack_chk_guard D 0x4

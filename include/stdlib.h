@@ -9,6 +9,8 @@
 #if !defined _ISOMAC
 # include <sys/stat.h>
 
+# include <rtld-malloc.h>
+
 extern __typeof (strtol_l) __strtol_l;
 extern __typeof (strtoul_l) __strtoul_l;
 extern __typeof (strtoll_l) __strtoll_l;
