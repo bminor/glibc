@@ -14,13 +14,6 @@ GLIBC_2.12 _cthread_init_routine D 0x4
 GLIBC_2.12 _cthreads_flockfile F
 GLIBC_2.12 _cthreads_ftrylockfile F
 GLIBC_2.12 _cthreads_funlockfile F
-GLIBC_2.12 _pthread_mutex_destroy F
-GLIBC_2.12 _pthread_mutex_init F
-GLIBC_2.12 _pthread_mutex_lock F
-GLIBC_2.12 _pthread_mutex_trylock F
-GLIBC_2.12 _pthread_mutex_unlock F
-GLIBC_2.12 _pthread_rwlock_destroy F
-GLIBC_2.12 _pthread_rwlock_init F
 GLIBC_2.12 _pthread_spin_lock F
 GLIBC_2.12 cthread_detach F
 GLIBC_2.12 cthread_fork F
