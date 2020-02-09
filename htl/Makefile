@@ -207,3 +207,5 @@ $(addprefix $(objpfx), \
     $(tests-nolibpthread), \
     $(tests) $(xtests) $(test-srcs))): $(objpfx)libpthread.so
 endif
+
+$(addprefix $(objpfx),$(tests-static) $(xtests-static)): $(objpfx)libpthread.a
