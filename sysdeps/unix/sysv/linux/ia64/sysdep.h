@@ -46,12 +46,6 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
-/* This is to help the old kernel headers where __NR_semtimedop is not
-   available.  */
-#ifndef __NR_semtimedop
-# define __NR_semtimedop 1247
-#endif
-
 #if defined USE_DL_SYSINFO \
 	&& (IS_IN (libc) \
 	    || IS_IN (libpthread) || IS_IN (librt))
