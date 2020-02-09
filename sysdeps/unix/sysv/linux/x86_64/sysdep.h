@@ -33,13 +33,6 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
-/* This is to help the old kernel headers where __NR_semtimedop is not
-   available.  */
-#ifndef __NR_semtimedop
-# define __NR_semtimedop 220
-#endif
-
-
 #ifdef __ASSEMBLER__
 
 /* Linux uses a negative return value to indicate syscall errors,
