@@ -34,7 +34,6 @@ __getdents64 (int fd, void *buf, size_t nbytes)
   if (nbytes > INT_MAX)
     nbytes = INT_MAX;
 
-#ifdef __NR_getdents64
   static int getdents64_supported = true;
   if (atomic_load_relaxed (&getdents64_supported))
     {
@@ -44,7 +43,6 @@ __getdents64 (int fd, void *buf, size_t nbytes)
 
       atomic_store_relaxed (&getdents64_supported, false);
     }
-#endif
 
   /* Unfortunately getdents64 was only wire-up for MIPS n64 on Linux 3.10.
      If the syscall is not available it need to fallback to the non-LFS one.
