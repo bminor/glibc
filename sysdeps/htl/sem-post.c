@@ -30,6 +30,13 @@ __sem_post (sem_t *sem)
   if (sem->__value > 0)
     /* Do a quick up.  */
     {
+      if (sem->__value == SEM_VALUE_MAX)
+	{
+	  __pthread_spin_unlock (&sem->__lock);
+	  errno = EOVERFLOW;
+	  return -1;
+	}
+
       assert (sem->__queue == NULL);
       sem->__value++;
       __pthread_spin_unlock (&sem->__lock);

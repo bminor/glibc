@@ -41,3 +41,6 @@
 
 /* The number of threads per process.  */
 #define _POSIX_THREAD_THREADS_MAX	64
+
+/* Maximum value the semaphore can have.  */
+#define SEM_VALUE_MAX   (2147483647)
