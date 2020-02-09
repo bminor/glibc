@@ -31,8 +31,6 @@
 #include <nptl/pthreadP.h>
 
 
-#ifdef __NR_mq_notify
-
 /* Defined in the kernel headers: */
 #define NOTIFY_COOKIE_LEN	32	/* Length of the cookie used.  */
 #define NOTIFY_WOKENUP		1	/* Code for notifcation.  */
@@ -276,7 +274,3 @@ mq_notify (mqd_t mqdes, const struct sigevent *notification)
 
   return retval;
 }
-
-#else
-# include <rt/mq_notify.c>
-#endif

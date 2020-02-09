@@ -22,8 +22,6 @@
 #include <stdio.h>
 #include <sysdep.h>
 
-#ifdef __NR_mq_open
-
 /* Establish connection between a process and a message queue NAME and
    return message queue descriptor or (mqd_t) -1 on error.  OFLAG determines
    the type of access used.  If O_CREAT is on OFLAG, the third argument is
@@ -61,6 +59,3 @@ __mq_open_2 (const char *name, int oflag)
 
   return __mq_open (name, oflag);
 }
-#else
-# include <rt/mq_open.c>
-#endif

@@ -19,8 +19,6 @@
 #include <mqueue.h>
 #include <sysdep.h>
 
-#ifdef __NR_mq_open
-
 /* Removes the association between message queue descriptor MQDES and its
    message queue.  */
 int
@@ -28,7 +26,3 @@ mq_close (mqd_t mqdes)
 {
   return INLINE_SYSCALL (close, 1, mqdes);
 }
-
-#else
-# include <rt/mq_close.c>
-#endif

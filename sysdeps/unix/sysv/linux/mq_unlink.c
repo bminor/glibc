@@ -19,8 +19,6 @@
 #include <mqueue.h>
 #include <sysdep.h>
 
-#ifdef __NR_mq_unlink
-
 /* Remove message queue named NAME.  */
 int
 mq_unlink (const char *name)
@@ -43,7 +41,3 @@ mq_unlink (const char *name)
 
   return ret;
 }
-
-#else
-# include <rt/mq_unlink.c>
-#endif

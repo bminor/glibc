@@ -20,8 +20,6 @@
 #include <stddef.h>
 #include <sysdep.h>
 
-#ifdef __NR_mq_timedsend
-
 /* Add message pointed by MSG_PTR to message queue MQDES.  */
 int
 mq_send (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
@@ -29,7 +27,3 @@ mq_send (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
 {
   return __mq_timedsend (mqdes, msg_ptr, msg_len, msg_prio, NULL);
 }
-
-#else
-# include <rt/mq_send.c>
-#endif

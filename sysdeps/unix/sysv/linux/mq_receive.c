@@ -20,8 +20,6 @@
 #include <stddef.h>
 #include <sysdep.h>
 
-#ifdef __NR_mq_timedreceive
-
 /* Receive the oldest from highest priority messages in message queue
    MQDES.  */
 ssize_t
@@ -30,7 +28,3 @@ mq_receive (mqd_t mqdes, char *msg_ptr, size_t msg_len,
 {
   return __mq_timedreceive (mqdes, msg_ptr, msg_len, msg_prio, NULL);
 }
-
-#else
-# include <rt/mq_receive.c>
-#endif
