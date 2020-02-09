@@ -19,20 +19,15 @@
 #include <sys/uio.h>
 #include <sysdep-cancel.h>
 
-#if !defined(__NR_pwritev64v2) && defined(__NR_pwritev2)
-# define __NR_pwritev64v2 __NR_pwritev2
-#endif
-
 ssize_t
 pwritev64v2 (int fd, const struct iovec *vector, int count, off64_t offset,
 	     int flags)
 {
-#ifdef __NR_pwritev64v2
-  ssize_t result = SYSCALL_CANCEL (pwritev64v2, fd, vector, count,
+  ssize_t result = SYSCALL_CANCEL (pwritev2, fd, vector, count,
 				   LO_HI_LONG (offset), flags);
   if (result >= 0 || errno != ENOSYS)
     return result;
-#endif
+
   /* Trying to emulate the pwritev2 syscall flags is troublesome:
 
      * We can not temporary change the file state of the O_DSYNC and O_SYNC
