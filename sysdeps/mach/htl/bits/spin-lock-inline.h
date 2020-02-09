@@ -67,7 +67,7 @@ __PT_SPIN_INLINE int __pthread_spin_lock (__pthread_spinlock_t *__lock);
 __PT_SPIN_INLINE int
 __pthread_spin_lock (__pthread_spinlock_t *__lock)
 {
-  __spin_lock ((__spin_lock_t *) __lock);
+  __spin_lock_solid ((__spin_lock_t *) __lock);
   return 0;
 }
 
