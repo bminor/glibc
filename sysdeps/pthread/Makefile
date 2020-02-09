@@ -44,6 +44,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-mtx-recursive tst-tss-basic tst-call-once tst-mtx-timedlock \
 	 tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	 tst-basic7 \
-	 tst-spin1 tst-spin2 tst-spin3 tst-spin4 \
+	 tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex6 tst-mutex10 \
+	 tst-spin1 tst-spin2 tst-spin3 tst-spin4
 
 endif

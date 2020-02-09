@@ -101,6 +101,11 @@ ifeq ($(subdir),mach)
 test-xfail-check-abi-libmachuser = yes
 endif
 
+# For bug 25521
+ifeq ($(subdir),htl)
+test-xfail-tst-mutex4 = yes
+endif
+
 ifeq ($(subdir),elf)
 # We do use nested functions involving creation of trampolines, notably for
 # callbacks whose parameters don't permit to get the context parameters.
