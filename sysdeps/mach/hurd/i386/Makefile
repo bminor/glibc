@@ -109,6 +109,8 @@ test-xfail-tst-cond6 = yes
 test-xfail-tst-cond12 = yes
 test-xfail-tst-cond13 = yes
 test-xfail-tst-cond23 = yes
+test-xfail-tst-rwlock4 = yes
+test-xfail-tst-rwlock12 = yes
 endif
 
 # For bug 25522
