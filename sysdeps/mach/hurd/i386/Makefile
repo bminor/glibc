@@ -104,6 +104,17 @@ endif
 # For bug 25521
 ifeq ($(subdir),htl)
 test-xfail-tst-mutex4 = yes
+test-xfail-tst-cond4 = yes
+test-xfail-tst-cond6 = yes
+test-xfail-tst-cond12 = yes
+test-xfail-tst-cond13 = yes
+test-xfail-tst-cond23 = yes
+endif
+
+# For bug 25522
+ifeq ($(subdir),htl)
+test-xfail-tst-cond24 = yes
+test-xfail-tst-cond25 = yes
 endif
 
 ifeq ($(subdir),elf)

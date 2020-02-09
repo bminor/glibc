@@ -239,12 +239,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutex7robust tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 \
 	tst-mutexpi5 tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a \
 	tst-mutexpi9 \
-	tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
-	tst-cond8 tst-cond9 tst-cond10 tst-cond11 tst-cond12 tst-cond13 \
-	tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
-	tst-cond20 tst-cond21 tst-cond22 tst-cond23 tst-cond24 tst-cond25 \
-	tst-cond26 tst-cond27 \
-	tst-cond-except \
+	tst-cond11 tst-cond20 tst-cond21 tst-cond22 tst-cond26 tst-cond27 \
 	tst-robust1 tst-robust2 tst-robust3 tst-robust4 tst-robust5 \
 	tst-robust6 tst-robust7 tst-robust8 tst-robust9 \
 	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 tst-robustpi5 \
@@ -450,12 +445,12 @@ link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a
 
 tests-static += tst-locale1 tst-locale2 tst-stackguard1-static \
-		tst-cancel21-static tst-cancel24-static tst-cond8-static \
+		tst-cancel21-static tst-cancel24-static \
 		tst-mutex8-static tst-mutexpi8-static tst-sem11-static \
 		tst-sem12-static tst-cond11-static
 
 tests += tst-cancel21-static tst-cancel24-static \
-	 tst-cond8-static tst-cond11-static
+	 tst-cond11-static
 tests-internal += tst-sem11-static tst-sem12-static tst-stackguard1-static
 xtests-static += tst-setuid1-static
 

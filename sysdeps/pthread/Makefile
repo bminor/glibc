@@ -45,7 +45,17 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-attr1 \
 	 tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	 tst-basic7 \
+	 tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
+	 tst-cond8 tst-cond9 tst-cond10 tst-cond12 tst-cond13 \
+	 tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
+	 tst-cond23 tst-cond24 tst-cond25 \
+	 tst-cond-except \
 	 tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex6 tst-mutex10 \
 	 tst-spin1 tst-spin2 tst-spin3 tst-spin4
+
+ifeq ($(build-shared),yes)
+tests-static += tst-cond8-static
+tests += tst-cond8-static
+endif
 
 endif

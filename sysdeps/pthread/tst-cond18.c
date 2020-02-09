@@ -18,69 +18,84 @@
 
 #include <errno.h>
 #include <limits.h>
+#include <fcntl.h>
 #include <pthread.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 
 pthread_cond_t cv = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
-bool n, exiting;
-FILE *f;
+bool exiting;
+int fd, spins, nn;
 enum { count = 8 };		/* Number of worker threads.  */
 
 void *
-tf (void *dummy)
+tf (void *id)
 {
-  bool loop = true;
+  pthread_mutex_lock (&lock);
 
-  while (loop)
+  if ((long) id == 0)
     {
-      pthread_mutex_lock (&lock);
-      while (n && !exiting)
-	pthread_cond_wait (&cv, &lock);
-      n = true;
-      pthread_mutex_unlock (&lock);
+      while (!exiting)
+	{
+	  if ((spins++ % 1000) == 0)
+	    write (fd, ".", 1);
+	  pthread_mutex_unlock (&lock);
 
-      fputs (".", f);
+	  pthread_mutex_lock (&lock);
+	  int njobs = rand () % (count + 1);
+	  nn = njobs;
+	  if ((rand () % 30) == 0)
+	    pthread_cond_broadcast (&cv);
+	  else
+	    while (njobs--)
+	      pthread_cond_signal (&cv);
+	}
 
-      pthread_mutex_lock (&lock);
-      n = false;
-      if (exiting)
-	loop = false;
-#ifdef UNLOCK_AFTER_BROADCAST
       pthread_cond_broadcast (&cv);
-      pthread_mutex_unlock (&lock);
-#else
-      pthread_mutex_unlock (&lock);
-      pthread_cond_broadcast (&cv);
-#endif
+    }
+  else
+    {
+      while (!exiting)
+	{
+	  while (!nn && !exiting)
+	    pthread_cond_wait (&cv, &lock);
+	  --nn;
+	  pthread_mutex_unlock (&lock);
+
+	  pthread_mutex_lock (&lock);
+	}
     }
 
+  pthread_mutex_unlock (&lock);
   return NULL;
 }
 
 int
 do_test (void)
 {
-  f = fopen ("/dev/null", "w");
-  if (f == NULL)
+  fd = open ("/dev/null", O_WRONLY);
+  if (fd < 0)
     {
       printf ("couldn't open /dev/null, %m\n");
       return 1;
     }
 
-  pthread_t th[count];
+  pthread_t th[count + 1];
   pthread_attr_t attr;
   int i, ret, sz;
   pthread_attr_init (&attr);
   sz = sysconf (_SC_PAGESIZE);
+#ifdef PTHREAD_STACK_MIN
   if (sz < PTHREAD_STACK_MIN)
 	  sz = PTHREAD_STACK_MIN;
+#endif
   pthread_attr_setstacksize (&attr, sz);
-  for (i = 0; i < count; ++i)
-    if ((ret = pthread_create (&th[i], &attr, tf, NULL)) != 0)
+
+  for (i = 0; i <= count; ++i)
+    if ((ret = pthread_create (&th[i], &attr, tf, (void *) (long) i)) != 0)
       {
 	errno = ret;
 	printf ("pthread_create %d failed: %m\n", i);
@@ -97,7 +112,7 @@ do_test (void)
   for (i = 0; i < count; ++i)
     pthread_join (th[i], NULL);
 
-  fclose (f);
+  close (fd);
   return 0;
 }
 
