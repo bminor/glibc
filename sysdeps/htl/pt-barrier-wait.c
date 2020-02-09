@@ -29,7 +29,9 @@ pthread_barrier_wait (pthread_barrier_t *barrier)
     {
       barrier->__pending = barrier->__count;
 
-      if (barrier->__count > 1)
+      if (barrier->__count == 1)
+	__pthread_spin_unlock (&barrier->__lock);
+      else
 	{
 	  struct __pthread *wakeup;
 	  unsigned n = 0;
