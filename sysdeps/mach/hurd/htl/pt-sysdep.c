@@ -78,6 +78,10 @@ _init_routine (void *stack)
      valid if the main thread terminates.  */
   thread->stack = 0;
 
+#ifndef PAGESIZE
+  __pthread_default_attr.__guardsize = __vm_page_size;
+#endif
+
   ___pthread_self = thread;
 
   /* Decrease the number of threads, to take into account that the

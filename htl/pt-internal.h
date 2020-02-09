@@ -304,7 +304,7 @@ extern error_t __pthread_sigstate (struct __pthread *__restrict thread, int how,
 
 
 /* Default thread attributes.  */
-extern const struct __pthread_attr __pthread_default_attr;
+extern struct __pthread_attr __pthread_default_attr;
 
 /* Default barrier attributes.  */
 extern const struct __pthread_barrierattr __pthread_default_barrierattr;
