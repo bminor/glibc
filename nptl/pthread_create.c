@@ -389,17 +389,15 @@ START_THREAD_DEFN
   if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0) == -2))
     futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
 
-#ifdef __NR_set_robust_list
-# ifndef __ASSUME_SET_ROBUST_LIST
+#ifndef __ASSUME_SET_ROBUST_LIST
   if (__set_robust_list_avail >= 0)
-# endif
+#endif
     {
       /* This call should never fail because the initial call in init.c
 	 succeeded.  */
       INTERNAL_SYSCALL_CALL (set_robust_list, &pd->robust_head,
 			     sizeof (struct robust_list_head));
     }
-#endif
 
   /* If the parent was running cancellation handlers while creating
      the thread the new thread inherited the signal mask.  Reset the
