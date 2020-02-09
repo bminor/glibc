@@ -21,7 +21,6 @@
 #include <errno.h>
 #include <unistd.h>
 
-#ifdef __NR_getrandom
 /* Write LENGTH bytes of randomness starting at BUFFER.  Return 0 on
    success and -1 on failure.  */
 int
@@ -63,11 +62,3 @@ getentropy (void *buffer, size_t length)
     }
   return 0;
 }
-#else
-int
-getentropy (void *buffer, size_t length)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-#endif
