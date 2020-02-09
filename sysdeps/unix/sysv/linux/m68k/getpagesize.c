@@ -28,20 +28,16 @@
 int
 __getpagesize (void)
 {
-#ifdef __NR_getpagesize
   int result;
-#endif
 
   if (GLRO(dl_pagesize) != 0)
     return GLRO(dl_pagesize);
 
-#ifdef __NR_getpagesize
   INTERNAL_SYSCALL_DECL (err);
   result = INTERNAL_SYSCALL (getpagesize, err, 0);
   /* The only possible error is ENOSYS.  */
   if (!INTERNAL_SYSCALL_ERROR_P (result, err))
     return result;
-#endif
 
   return 4096;
 }
