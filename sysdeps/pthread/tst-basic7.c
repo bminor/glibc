@@ -55,7 +55,11 @@ do_test (void)
   pthread_t tid;
 
   /* Allocate the memory needed for the stack.  */
+#ifdef PTHREAD_STACK_MIN
   use_stack_ptr (PTHREAD_STACK_MIN);
+#else
+  use_stack_ptr (4 * getpagesize ());
+#endif
 
   use_up_memory ();
 

@@ -41,5 +41,8 @@ libpthread-routines += thrd_create thrd_detach thrd_exit thrd_join \
 
 tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-cnd-timedwait tst-thrd-detach tst-mtx-basic tst-thrd-sleep \
-	 tst-mtx-recursive tst-tss-basic tst-call-once tst-mtx-timedlock
+	 tst-mtx-recursive tst-tss-basic tst-call-once tst-mtx-timedlock \
+	 tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
+	 tst-basic7 \
+
 endif
