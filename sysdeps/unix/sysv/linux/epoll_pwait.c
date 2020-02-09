@@ -23,8 +23,6 @@
 #include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
-#ifdef __NR_epoll_pwait
-
 /* Wait for events on an epoll instance "epfd". Returns the number of
    triggered events returned in "events" buffer. Or -1 in case of
    error with the "errno" variable set to the specific error code. The
@@ -42,18 +40,4 @@ int epoll_pwait (int epfd, struct epoll_event *events,
   return SYSCALL_CANCEL (epoll_pwait, epfd, events, maxevents,
 			 timeout, set, _NSIG / 8);
 }
-
-#else
-
-int epoll_pwait (int epfd, struct epoll_event *events,
-		 int maxevents, int timeout,
-		 const sigset_t *set)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-stub_warning (epoll_pwait)
-
-#endif
-
 libc_hidden_def (epoll_pwait)
