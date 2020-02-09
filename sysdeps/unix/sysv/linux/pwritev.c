@@ -22,10 +22,6 @@
 
 # ifdef __ASSUME_PREADV
 
-#  ifndef __NR_pwritev
-#   define __NR_pwritev __NR_pwritev64
-#  endif
-
 ssize_t
 pwritev (int fd, const struct iovec *vector, int count, off_t offset)
 {
@@ -37,12 +33,10 @@ static ssize_t __atomic_pwritev_replacement (int, const struct iovec *,
 ssize_t
 pwritev (int fd, const struct iovec *vector, int count, off_t offset)
 {
-#  ifdef __NR_pwritev
   ssize_t result = SYSCALL_CANCEL (pwritev, fd, vector, count,
 				   LO_HI_LONG (offset));
   if (result >= 0 || errno != ENOSYS)
     return result;
-#  endif
   return __atomic_pwritev_replacement (fd, vector, count, offset);
 }
 #  define PWRITEV static __atomic_pwritev_replacement
