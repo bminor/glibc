@@ -78,6 +78,10 @@ __pthread_cond_timedwait_internal (pthread_cond_t *cond,
   if (abstime && ! valid_nanoseconds (abstime->tv_nsec))
     return EINVAL;
 
+  err = __pthread_mutex_checklocked (mutex);
+  if (err)
+    return err;
+
   struct __pthread *self = _pthread_self ();
   struct cancel_ctx ctx;
   ctx.wakeup = self;

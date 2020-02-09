@@ -301,6 +301,9 @@ extern error_t __pthread_sigstate (struct __pthread *__restrict thread, int how,
 				   const sigset_t *__restrict set,
 				   sigset_t *__restrict oset,
 				   int clear_pending);
+
+/* If supported, check that MUTEX is locked by the caller.  */
+extern int __pthread_mutex_checklocked (pthread_mutex_t *mtx);
 
 
 /* Default thread attributes.  */
