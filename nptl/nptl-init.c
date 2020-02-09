@@ -129,11 +129,9 @@ static
 void
 __nptl_set_robust (struct pthread *self)
 {
-#ifdef __NR_set_robust_list
   INTERNAL_SYSCALL_DECL (err);
   INTERNAL_SYSCALL (set_robust_list, err, 2, &self->robust_head,
 		    sizeof (struct robust_list_head));
-#endif
 }
 
 
@@ -254,7 +252,6 @@ __pthread_initialize_minimal_internal (void)
     pd->robust_prev = &pd->robust_head;
 #endif
     pd->robust_head.list = &pd->robust_head;
-#ifdef __NR_set_robust_list
     pd->robust_head.futex_offset = (offsetof (pthread_mutex_t, __data.__lock)
 				    - offsetof (pthread_mutex_t,
 						__data.__list.__next));
@@ -262,7 +259,6 @@ __pthread_initialize_minimal_internal (void)
     int res = INTERNAL_SYSCALL (set_robust_list, err, 2, &pd->robust_head,
 				sizeof (struct robust_list_head));
     if (INTERNAL_SYSCALL_ERROR_P (res, err))
-#endif
       set_robust_list_not_avail ();
   }
 

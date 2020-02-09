@@ -83,7 +83,6 @@ __libc_fork (void)
       if (__fork_generation_pointer != NULL)
 	*__fork_generation_pointer += __PTHREAD_ONCE_FORK_GEN_INCR;
 
-#ifdef __NR_set_robust_list
       /* Initialize the robust mutex list setting in the kernel which has
 	 been reset during the fork.  We do not check for errors because if
 	 it fails here, it must have failed at process startup as well and
@@ -94,19 +93,18 @@ __libc_fork (void)
 	 inherit the correct value from the parent.  We do not need to clear
 	 the pending operation because it must have been zero when fork was
 	 called.  */
-# if __PTHREAD_MUTEX_HAVE_PREV
+#if __PTHREAD_MUTEX_HAVE_PREV
       self->robust_prev = &self->robust_head;
-# endif
+#endif
       self->robust_head.list = &self->robust_head;
-# ifdef SHARED
+#ifdef SHARED
       if (__builtin_expect (__libc_pthread_functions_init, 0))
 	PTHFCT_CALL (ptr_set_robust, (self));
-# else
+#else
       extern __typeof (__nptl_set_robust) __nptl_set_robust
 	__attribute__((weak));
       if (__builtin_expect (__nptl_set_robust != NULL, 0))
 	__nptl_set_robust (self);
-# endif
 #endif
 
       /* Reset the lock state in the multi-threaded case.  */
