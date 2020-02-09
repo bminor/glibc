@@ -21,14 +21,10 @@
 
 #ifndef __OFF_T_MATCHES_OFF64_T
 
-# ifndef __NR_pwrite
-#  define __NR_pwrite __NR_pwrite64
-# endif
-
 ssize_t
 __libc_pwrite (int fd, const void *buf, size_t count, off_t offset)
 {
-  return SYSCALL_CANCEL (pwrite, fd, buf, count, SYSCALL_LL_PRW (offset));
+  return SYSCALL_CANCEL (pwrite64, fd, buf, count, SYSCALL_LL_PRW (offset));
 }
 
 strong_alias (__libc_pwrite, __pwrite)

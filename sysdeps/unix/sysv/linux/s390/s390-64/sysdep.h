@@ -34,16 +34,8 @@
 /* In newer 2.1 kernels __NR_syscall is missing so we define it here.  */
 #define __NR_syscall 0
 
-/*
- * Newer kernel versions redefined __NR_pread and __NR_pwrite to
- * __NR_pread64 and __NR_pwrite64.
- */
-#ifndef __NR_pread
-# define __NR_pread __NR_pread64
-#endif
-#ifndef __NR_pwrite
-# define __NR_pwrite __NR_pwrite64
-#endif
+#undef SYS_ify
+#define SYS_ify(syscall_name)	__NR_##syscall_name
 
 #ifdef __ASSEMBLER__
 
