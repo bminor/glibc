@@ -234,7 +234,7 @@ LDLIBS-tst-thread-exit-clobber = -lstdc++
 CFLAGS-tst-minstack-throw.o = -std=gnu++11
 LDLIBS-tst-minstack-throw = -lstdc++
 
-tests = tst-attr1 tst-attr2 tst-attr3 tst-default-attr \
+tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutex5 tst-mutex7 tst-mutex9 tst-mutex11 tst-mutex5a tst-mutex7a \
 	tst-mutex7robust tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 \
 	tst-mutexpi5 tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a \
