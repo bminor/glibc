@@ -98,6 +98,7 @@ libsupport-routines = \
   xgetsockname \
   xlisten \
   xlseek \
+  xlstat \
   xmalloc \
   xmemstream \
   xmkdir \

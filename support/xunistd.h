@@ -36,6 +36,7 @@ void xpipe (int[2]);
 void xdup2 (int, int);
 int xopen (const char *path, int flags, mode_t);
 void xstat (const char *path, struct stat64 *);
+void xlstat (const char *path, struct stat64 *);
 void xfstat (int fd, struct stat64 *);
 void xmkdir (const char *path, mode_t);
 void xchroot (const char *path);
