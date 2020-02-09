@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <posix-timer.h>
 #include <shlib-compat.h>
+#include <sysdep-cancel.h>
 
 static int
 nanosleep_call (const struct timespec *req, struct timespec *rem)
@@ -39,9 +40,13 @@ nanosleep_call (const struct timespec *req, struct timespec *rem)
   if (rem != NULL)
     __clock_gettime (CLOCK_REALTIME, &before);
 
+  int cancel_oldtype = LIBC_CANCEL_ASYNC();
   err = __mach_msg (NULL, MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
                     0, 0, recv, ms, MACH_PORT_NULL);
+  LIBC_CANCEL_RESET (cancel_oldtype);
+
   __mach_port_destroy (mach_task_self (), recv);
+
   if (err == EMACH_RCV_INTERRUPTED)
     {
       if (rem != NULL)
