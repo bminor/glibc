@@ -1,5 +1,5 @@
-/* Add an explicit cancelation point.
-   Copyright (C) 2002-2020 Free Software Foundation, Inc.
+/* Set the cancel type during blocking calls.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,21 +17,29 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthread.h>
-
-#include <pt-internal.h>
 #include <pthreadP.h>
+#include <pt-internal.h>
 
-void
-__pthread_testcancel (void)
+int __pthread_enable_asynccancel (void)
 {
   struct __pthread *p = _pthread_self ();
-  int cancelled;
+  int oldtype;
 
   __pthread_mutex_lock (&p->cancel_lock);
-  cancelled = (p->cancel_state == PTHREAD_CANCEL_ENABLE) && p->cancel_pending;
+  oldtype = p->cancel_type;
+  p->cancel_type = PTHREAD_CANCEL_ASYNCHRONOUS;
   __pthread_mutex_unlock (&p->cancel_lock);
 
-  if (cancelled)
-    __pthread_exit (PTHREAD_CANCELED);
+  __pthread_testcancel ();
+
+  return oldtype;
 }
-strong_alias (__pthread_testcancel, pthread_testcancel)
+
+void __pthread_disable_asynccancel (int oldtype)
+{
+  struct __pthread *p = _pthread_self ();
+
+  __pthread_mutex_lock (&p->cancel_lock);
+  p->cancel_type = oldtype;
+  __pthread_mutex_unlock (&p->cancel_lock);
+}

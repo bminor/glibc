@@ -132,6 +132,7 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 									    \
 	shm-directory							    \
 									    \
+	cancellation							    \
 	cthreads-compat							    \
 	herrno								    \
 	$(SYSDEPS)
