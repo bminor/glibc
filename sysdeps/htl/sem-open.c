@@ -24,7 +24,7 @@
 sem_t *
 __sem_open (const char *name, int open_flags, ...)
 {
-  errno = EOPNOTSUPP;
+  errno = ENOSYS;
   return SEM_FAILED;
 }
 
