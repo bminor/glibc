@@ -306,9 +306,6 @@ extern const struct __pthread_attr __pthread_default_attr;
 /* Default barrier attributes.  */
 extern const struct __pthread_barrierattr __pthread_default_barrierattr;
 
-/* Default mutex attributes.  */
-extern const struct __pthread_mutexattr __pthread_default_mutexattr;
-
 /* Default rdlock attributes.  */
 extern const struct __pthread_rwlockattr __pthread_default_rwlockattr;
 

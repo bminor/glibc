@@ -32,8 +32,6 @@ libpthread {
     __errno_location; __h_errno_location;
   }
   GLIBC_2.12 {
-    __pthread_errorcheck_mutexattr; __pthread_recursive_mutexattr;
-
     __pthread_get_cleanup_stack;
 
     __pthread_mutex_transfer_np;

@@ -61,7 +61,6 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 	pt-testcancel							    \
 	pt-cancel							    \
 									    \
-	pt-mutexattr							    \
 	pt-mutexattr-destroy pt-mutexattr-init				    \
 	pt-mutexattr-getprioceiling pt-mutexattr-getprotocol		    \
 	pt-mutexattr-getpshared pt-mutexattr-gettype			    \

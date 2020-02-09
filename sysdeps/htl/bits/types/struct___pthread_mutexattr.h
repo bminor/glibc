@@ -33,8 +33,4 @@ struct __pthread_mutexattr
   enum __pthread_mutex_type __mutex_type;
 };
 
-/* Attributes for a recursive mutex.  */
-extern const struct __pthread_mutexattr __pthread_errorcheck_mutexattr;
-extern const struct __pthread_mutexattr __pthread_recursive_mutexattr;
-
 #endif /* bits/types/struct___pthread_mutexattr.h */
