@@ -55,6 +55,8 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-once1 tst-once2 tst-once3 tst-once4 \
 	 tst-rwlock1 tst-rwlock4 tst-rwlock5 tst-rwlock13 tst-rwlock16 \
 	 tst-rwlock-tryrdlock-stall tst-rwlock-trywrlock-stall \
+	 tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem6 tst-sem7 \
+	 tst-sem8 tst-sem9 tst-sem10 tst-sem14 tst-sem15 tst-sem16 \
 	 tst-spin1 tst-spin2 tst-spin3 tst-spin4
 
 tests += tst-oncex3 tst-oncex4

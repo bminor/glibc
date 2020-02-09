@@ -249,9 +249,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-rwlock9 tst-rwlock10 tst-rwlock11 tst-rwlock12 \
 	tst-rwlock14 tst-rwlock15 tst-rwlock17 tst-rwlock18 \
 	tst-once5 \
-	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
-	tst-sem8 tst-sem9 tst-sem10 tst-sem14 \
-	tst-sem15 tst-sem16 tst-sem17 \
+	tst-sem5 tst-sem17 \
 	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
 	tst-align tst-align3 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \

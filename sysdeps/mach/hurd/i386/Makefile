@@ -111,12 +111,21 @@ test-xfail-tst-cond13 = yes
 test-xfail-tst-cond23 = yes
 test-xfail-tst-rwlock4 = yes
 test-xfail-tst-rwlock12 = yes
+test-xfail-tst-sem3 = yes
 endif
 
 # For bug 25522
 ifeq ($(subdir),htl)
 test-xfail-tst-cond24 = yes
 test-xfail-tst-cond25 = yes
+endif
+
+# For bug 25524
+ifeq ($(subdir),htl)
+test-xfail-tst-sem4 = yes
+test-xfail-tst-sem7 = yes
+test-xfail-tst-sem8 = yes
+test-xfail-tst-sem9 = yes
 endif
 
 ifeq ($(subdir),elf)
