@@ -248,7 +248,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-rwlock4 tst-rwlock5 tst-rwlock6 tst-rwlock7 tst-rwlock8 \
 	tst-rwlock9 tst-rwlock10 tst-rwlock11 tst-rwlock12 tst-rwlock13 \
 	tst-rwlock14 tst-rwlock15 tst-rwlock16 tst-rwlock17 tst-rwlock18 \
-	tst-once1 tst-once2 tst-once3 tst-once4 tst-once5 \
+	tst-once5 \
 	tst-key1 tst-key2 tst-key3 tst-key4 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
 	tst-sem8 tst-sem9 tst-sem10 tst-sem14 \
@@ -375,8 +375,7 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-cancelx6 tst-cancelx7 tst-cancelx8 tst-cancelx9 tst-cancelx10 \
 	 tst-cancelx11 tst-cancelx12 tst-cancelx13 tst-cancelx14 tst-cancelx15 \
 	 tst-cancelx16 tst-cancelx17 tst-cancelx18 tst-cancelx20 tst-cancelx21 \
-	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3 tst-cleanupx4 \
-	 tst-oncex3 tst-oncex4
+	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3 tst-cleanupx4
 ifeq ($(build-shared),yes)
 tests += tst-atfork2 tst-tls4 tst-_res1 tst-fini1 tst-compat-forwarder \
 	 tst-audit-threads
@@ -516,8 +515,6 @@ CFLAGS-tst-cleanupx2.c += -fexceptions
 CFLAGS-tst-cleanupx3.c += -fexceptions
 CFLAGS-tst-cleanupx4.c += -fexceptions
 CFLAGS-tst-cleanupx4aux.c += -fexceptions
-CFLAGS-tst-oncex3.c += -fexceptions
-CFLAGS-tst-oncex4.c += -fexceptions
 CFLAGS-tst-align.c += $(stack-align-test-flags)
 CFLAGS-tst-align3.c += $(stack-align-test-flags)
 CFLAGS-tst-initializers1.c += -W -Wall -Werror

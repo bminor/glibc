@@ -51,11 +51,17 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-cond23 tst-cond24 tst-cond25 \
 	 tst-cond-except \
 	 tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex6 tst-mutex10 \
+	 tst-once1 tst-once2 tst-once3 tst-once4 \
 	 tst-spin1 tst-spin2 tst-spin3 tst-spin4
+
+tests += tst-oncex3 tst-oncex4
 
 ifeq ($(build-shared),yes)
 tests-static += tst-cond8-static
 tests += tst-cond8-static
 endif
+
+CFLAGS-tst-oncex3.c += -fexceptions
+CFLAGS-tst-oncex4.c += -fexceptions
 
 endif
