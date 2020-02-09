@@ -112,6 +112,7 @@ test-xfail-tst-cond23 = yes
 test-xfail-tst-rwlock4 = yes
 test-xfail-tst-rwlock12 = yes
 test-xfail-tst-sem3 = yes
+test-xfail-tst-barrier2 = yes
 endif
 
 # For bug 25522

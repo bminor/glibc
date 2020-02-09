@@ -43,6 +43,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-cnd-timedwait tst-thrd-detach tst-mtx-basic tst-thrd-sleep \
 	 tst-mtx-recursive tst-tss-basic tst-call-once tst-mtx-timedlock \
 	 tst-attr1 \
+	 tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
 	 tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	 tst-basic7 \
 	 tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
