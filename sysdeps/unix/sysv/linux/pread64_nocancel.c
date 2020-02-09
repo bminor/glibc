@@ -20,10 +20,6 @@
 #include <sysdep-cancel.h>
 #include <not-cancel.h>
 
-#ifndef __NR_pread64
-# define __NR_pread64 __NR_pread
-#endif
-
 ssize_t
 __pread64_nocancel (int fd, void *buf, size_t count, off64_t offset)
 {

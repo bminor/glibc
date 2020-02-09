@@ -25,11 +25,3 @@
 #ifdef __NR_llseek
 # define __NR__llseek __NR_llseek
 #endif
-
-#if __WORDSIZE == 64
-/* By defining the older names, glibc will build syscall wrappers for
-   both pread and pread64; sysdeps/unix/sysv/linux/wordsize-64/pread64.c
-   will suppress generating any separate code for pread64.c.  */
-#define __NR_pread __NR_pread64
-#define __NR_pwrite __NR_pwrite64
-#endif
