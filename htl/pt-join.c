@@ -22,8 +22,6 @@
 
 #include <pt-internal.h>
 
-#define __pthread_get_cleanup_stack ___pthread_get_cleanup_stack
-
 /* Make calling thread wait for termination of thread THREAD.  Return
    the exit status of the thread in *STATUS.  */
 int
