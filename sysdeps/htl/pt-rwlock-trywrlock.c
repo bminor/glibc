@@ -25,7 +25,7 @@
 int
 pthread_rwlock_trywrlock (struct __pthread_rwlock *rwlock)
 {
-  __pthread_spin_lock (&rwlock->__lock);
+  __pthread_spin_wait (&rwlock->__lock);
   if (__pthread_spin_trylock (&rwlock->__held) == 0)
     /* Successfully acquired the lock.  */
     {

@@ -71,6 +71,15 @@ __pthread_spin_lock (__pthread_spinlock_t *__lock)
   return 0;
 }
 
+__PT_SPIN_INLINE int __pthread_spin_wait (__pthread_spinlock_t *__lock);
+
+__PT_SPIN_INLINE int
+__pthread_spin_wait (__pthread_spinlock_t *__lock)
+{
+  __spin_lock ((__spin_lock_t *) __lock);
+  return 0;
+}
+
 __PT_SPIN_INLINE int __pthread_spin_unlock (__pthread_spinlock_t *__lock);
 
 __PT_SPIN_INLINE int

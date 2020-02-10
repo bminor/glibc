@@ -26,7 +26,7 @@ __sem_post (sem_t *sem)
 {
   struct __pthread *wakeup;
 
-  __pthread_spin_lock (&sem->__lock);
+  __pthread_spin_wait (&sem->__lock);
   if (sem->__value > 0)
     /* Do a quick up.  */
     {

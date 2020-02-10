@@ -56,7 +56,7 @@ __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,
   {
     int unblock;
 
-    __pthread_spin_lock (&cond->__lock);
+    __pthread_spin_wait (&cond->__lock);
     /* The thread only needs to be awaken if it's blocking or about to block.
        If it was already unblocked, it's not queued any more.  */
     unblock = self->prevp != NULL;
@@ -81,7 +81,7 @@ __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,
      the condition variable's lock.  */
 
   __spin_lock (&ss->lock);
-  __pthread_spin_lock (&cond->__lock);
+  __pthread_spin_wait (&cond->__lock);
   cancel = ss->cancel;
   if (cancel)
     /* We were cancelled before doing anything.  Don't block at all.  */
@@ -123,7 +123,7 @@ __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,
       /* As it was done when enqueueing, prevent hurd_thread_cancel from
          suspending us while the condition lock is held.  */
       __spin_lock (&ss->lock);
-      __pthread_spin_lock (&cond->__lock);
+      __pthread_spin_wait (&cond->__lock);
       if (self->prevp == NULL)
 	/* Another thread removed us from the list of waiters, which means
 	   a wakeup message has been sent.  It was either consumed while

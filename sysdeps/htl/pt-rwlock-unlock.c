@@ -28,7 +28,7 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 {
   struct __pthread *wakeup;
 
-  __pthread_spin_lock (&rwlock->__lock);
+  __pthread_spin_wait (&rwlock->__lock);
 
   assert (__pthread_spin_trylock (&rwlock->__held) == EBUSY);
 

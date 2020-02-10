@@ -50,7 +50,7 @@ cancel_hook (void *arg)
   pthread_cond_t *cond = ctx->cond;
   int unblock;
 
-  __pthread_spin_lock (&cond->__lock);
+  __pthread_spin_wait (&cond->__lock);
   /* The thread only needs to be awaken if it's blocking or about to block.
      If it was already unblocked, it's not queued any more.  */
   unblock = wakeup->prevp != NULL;
@@ -112,7 +112,7 @@ __pthread_cond_timedwait_internal (pthread_cond_t *cond,
          the cancellation hook to simplify the cancellation procedure, i.e.
          if the thread is queued, it can be cancelled, otherwise it is
          already unblocked, progressing on the return path.  */
-      __pthread_spin_lock (&cond->__lock);
+      __pthread_spin_wait (&cond->__lock);
       __pthread_enqueue (&cond->__queue, self);
       if (cond->__attr != NULL)
 	clock_id = cond->__attr->__clock;
@@ -135,7 +135,7 @@ __pthread_cond_timedwait_internal (pthread_cond_t *cond,
       __pthread_block (self);
     }
 
-  __pthread_spin_lock (&cond->__lock);
+  __pthread_spin_wait (&cond->__lock);
   if (self->prevp == NULL)
     {
       /* Another thread removed us from the list of waiters, which means a

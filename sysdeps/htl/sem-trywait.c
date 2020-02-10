@@ -24,7 +24,7 @@
 int
 __sem_trywait (sem_t *sem)
 {
-  __pthread_spin_lock (&sem->__lock);
+  __pthread_spin_wait (&sem->__lock);
   if (sem->__value > 0)
     /* Successful down.  */
     {

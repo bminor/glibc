@@ -36,7 +36,7 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
   atomic_full_barrier ();
   if (once_control->__run == 0)
     {
-      __pthread_spin_lock (&once_control->__lock);
+      __pthread_spin_wait (&once_control->__lock);
 
       if (once_control->__run == 0)
 	{

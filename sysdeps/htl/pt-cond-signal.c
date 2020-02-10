@@ -27,7 +27,7 @@ __pthread_cond_signal (pthread_cond_t *cond)
 {
   struct __pthread *wakeup;
 
-  __pthread_spin_lock (&cond->__lock);
+  __pthread_spin_wait (&cond->__lock);
   wakeup = cond->__queue;
   if (wakeup != NULL)
     __pthread_dequeue (wakeup);

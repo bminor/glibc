@@ -24,7 +24,7 @@
 int
 pthread_barrier_wait (pthread_barrier_t *barrier)
 {
-  __pthread_spin_lock (&barrier->__lock);
+  __pthread_spin_wait (&barrier->__lock);
   if (--barrier->__pending == 0)
     {
       barrier->__pending = barrier->__count;

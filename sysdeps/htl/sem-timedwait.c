@@ -32,7 +32,7 @@ __sem_timedwait_internal (sem_t *restrict sem,
   struct __pthread *self;
   clockid_t clock_id = CLOCK_REALTIME;
 
-  __pthread_spin_lock (&sem->__lock);
+  __pthread_spin_wait (&sem->__lock);
   if (sem->__value > 0)
     /* Successful down.  */
     {
@@ -59,7 +59,7 @@ __sem_timedwait_internal (sem_t *restrict sem,
   else
     err = __pthread_block_intr (self);
 
-  __pthread_spin_lock (&sem->__lock);
+  __pthread_spin_wait (&sem->__lock);
   if (self->prevp == NULL)
     /* Another thread removed us from the queue, which means a wakeup message
        has been sent.  It was either consumed while we were blocking, or

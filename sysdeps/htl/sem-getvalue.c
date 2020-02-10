@@ -22,7 +22,7 @@
 int
 __sem_getvalue (sem_t *restrict sem, int *restrict value)
 {
-  __pthread_spin_lock (&sem->__lock);
+  __pthread_spin_wait (&sem->__lock);
   *value = sem->__value;
   __pthread_spin_unlock (&sem->__lock);
 

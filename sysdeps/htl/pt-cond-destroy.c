@@ -24,7 +24,7 @@ __pthread_cond_destroy (pthread_cond_t *cond)
 {
   int ret = 0;
 
-  __pthread_spin_lock (&cond->__lock);
+  __pthread_spin_wait (&cond->__lock);
   if (cond->__queue)
     ret = EBUSY;
   __pthread_spin_unlock (&cond->__lock);
