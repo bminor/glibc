@@ -270,6 +270,14 @@ extern error_t __pthread_timedblock (struct __pthread *__restrict thread,
 				     const struct timespec *__restrict abstime,
 				     clockid_t clock_id);
 
+/* Block THREAD with interrupts.  */
+extern error_t __pthread_block_intr (struct __pthread *thread);
+
+/* Block THREAD until *ABSTIME is reached, with interrupts.  */
+extern error_t __pthread_timedblock_intr (struct __pthread *__restrict thread,
+					  const struct timespec *__restrict abstime,
+					  clockid_t clock_id);
+
 /* Wakeup THREAD.  */
 extern void __pthread_wakeup (struct __pthread *thread);
 

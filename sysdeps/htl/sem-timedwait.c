@@ -30,6 +30,7 @@ __sem_timedwait_internal (sem_t *restrict sem,
   error_t err;
   int drain;
   struct __pthread *self;
+  clockid_t clock_id = CLOCK_REALTIME;
 
   __pthread_spin_lock (&sem->__lock);
   if (sem->__value > 0)
@@ -54,12 +55,9 @@ __sem_timedwait_internal (sem_t *restrict sem,
 
   /* Block the thread.  */
   if (timeout != NULL)
-    err = __pthread_timedblock (self, timeout, CLOCK_REALTIME);
+    err = __pthread_timedblock_intr (self, timeout, clock_id);
   else
-    {
-      err = 0;
-      __pthread_block (self);
-    }
+    err = __pthread_block_intr (self);
 
   __pthread_spin_lock (&sem->__lock);
   if (self->prevp == NULL)
@@ -82,7 +80,7 @@ __sem_timedwait_internal (sem_t *restrict sem,
 
   if (err)
     {
-      assert (err == ETIMEDOUT);
+      assert (err == ETIMEDOUT || err == EINTR);
       errno = err;
       return -1;
     }
