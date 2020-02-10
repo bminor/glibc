@@ -50,6 +50,7 @@ routines = \
   pthread_attr_setschedpolicy \
   pthread_attr_setscope \
   pthread_condattr_destroy \
+  pthread_condattr_init \
   pthread_equal \
   pthread_self \
   register-atfork \
@@ -107,7 +108,6 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      old_pthread_cond_init old_pthread_cond_destroy \
 		      old_pthread_cond_wait old_pthread_cond_timedwait \
 		      old_pthread_cond_signal old_pthread_cond_broadcast \
-		      pthread_condattr_init \
 		      pthread_condattr_getpshared pthread_condattr_setpshared \
 		      pthread_condattr_getclock pthread_condattr_setclock \
 		      pthread_spin_init pthread_spin_destroy \

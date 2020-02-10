@@ -58,8 +58,6 @@ libpthread {
     pthread_cond_wait; pthread_cond_timedwait;
     pthread_cond_signal; pthread_cond_broadcast;
 
-    pthread_condattr_init;
-
     pthread_cancel; pthread_testcancel;
     pthread_setcancelstate; pthread_setcanceltype;
 

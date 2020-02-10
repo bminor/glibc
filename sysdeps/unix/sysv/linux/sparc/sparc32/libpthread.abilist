@@ -51,7 +51,6 @@ GLIBC_2.0 pthread_cond_init F
 GLIBC_2.0 pthread_cond_signal F
 GLIBC_2.0 pthread_cond_timedwait F
 GLIBC_2.0 pthread_cond_wait F
-GLIBC_2.0 pthread_condattr_init F
 GLIBC_2.0 pthread_create F
 GLIBC_2.0 pthread_detach F
 GLIBC_2.0 pthread_exit F

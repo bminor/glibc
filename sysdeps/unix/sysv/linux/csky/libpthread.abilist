@@ -101,7 +101,6 @@ GLIBC_2.29 pthread_cond_timedwait F
 GLIBC_2.29 pthread_cond_wait F
 GLIBC_2.29 pthread_condattr_getclock F
 GLIBC_2.29 pthread_condattr_getpshared F
-GLIBC_2.29 pthread_condattr_init F
 GLIBC_2.29 pthread_condattr_setclock F
 GLIBC_2.29 pthread_condattr_setpshared F
 GLIBC_2.29 pthread_create F
