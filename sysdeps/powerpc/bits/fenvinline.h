@@ -51,25 +51,34 @@
 # define fegetround() __fegetround ()
 
 # ifndef __NO_MATH_INLINES
+
+/* Builtins to mtfsb0 and mtfsb1 was introduced on GCC 9.  */
+#  if !__GNUC_PREREQ(9, 0)
 /* The weird 'i#*X' constraints on the following suppress a gcc
    warning when __excepts is not a constant.  Otherwise, they mean the
-   same as just plain 'i'.  */
+   same as just plain 'i'.  This warning only happens in old GCC
+   versions (gcc 3 or less).  Otherwise plain 'i' works fine.  */
+#   define __MTFSB0(__b) __asm__ __volatile__ ("mtfsb0 %0" : : "i#*X" (__b))
+#   define __MTFSB1(__b) __asm__ __volatile__ ("mtfsb1 %0" : : "i#*X" (__b))
+#  else
+#   define __MTFSB0(__b) __builtin_mtfsb0 (__b)
+#   define __MTFSB1(__b) __builtin_mtfsb1 (__b)
+#  endif
 
 #  if __GNUC_PREREQ(3, 4)
+
+#include <sys/param.h>
 
 /* Inline definition for feraiseexcept.  */
 #   define feraiseexcept(__excepts) \
   (__extension__  ({ 							      \
     int __e = __excepts;						      \
-    int __ret;								      \
+    int __ret = 0;							      \
     if (__builtin_constant_p (__e)					      \
-        && (__e & (__e - 1)) == 0					      \
+        && powerof2 (__e)						      \
         && __e != FE_INVALID)						      \
       {									      \
-	if (__e != 0)							      \
-	  __asm__ __volatile__ ("mtfsb1 %0"				      \
-				: : "i#*X" (__builtin_clz (__e)));	      \
-        __ret = 0;							      \
+	__MTFSB1 ((__builtin_clz (__e)));				      \
       }									      \
     else								      \
       __ret = feraiseexcept (__e);					      \
@@ -80,15 +89,12 @@
 #   define feclearexcept(__excepts) \
   (__extension__  ({ 							      \
     int __e = __excepts;						      \
-    int __ret;								      \
+    int __ret = 0;							      \
     if (__builtin_constant_p (__e)					      \
-        && (__e & (__e - 1)) == 0					      \
+        && powerof2 (__e)						      \
         && __e != FE_INVALID)						      \
       {									      \
-	if (__e != 0)							      \
-	  __asm__ __volatile__ ("mtfsb0 %0"				      \
-				: : "i#*X" (__builtin_clz (__e)));	      \
-        __ret = 0;							      \
+	__MTFSB0 ((__builtin_clz (__e)));				      \
       }									      \
     else								      \
       __ret = feclearexcept (__e);					      \
