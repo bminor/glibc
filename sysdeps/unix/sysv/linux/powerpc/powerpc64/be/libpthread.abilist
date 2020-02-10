@@ -91,7 +91,6 @@ GLIBC_2.3 pause F
 GLIBC_2.3 pread F
 GLIBC_2.3 pread64 F
 GLIBC_2.3 pthread_attr_getguardsize F
-GLIBC_2.3 pthread_attr_getscope F
 GLIBC_2.3 pthread_attr_getstack F
 GLIBC_2.3 pthread_attr_getstackaddr F
 GLIBC_2.3 pthread_attr_getstacksize F

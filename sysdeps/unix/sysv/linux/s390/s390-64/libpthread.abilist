@@ -73,7 +73,6 @@ GLIBC_2.2 pread F
 GLIBC_2.2 pread64 F
 GLIBC_2.2 pthread_atfork F
 GLIBC_2.2 pthread_attr_getguardsize F
-GLIBC_2.2 pthread_attr_getscope F
 GLIBC_2.2 pthread_attr_getstack F
 GLIBC_2.2 pthread_attr_getstackaddr F
 GLIBC_2.2 pthread_attr_getstacksize F
