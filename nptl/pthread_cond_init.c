@@ -49,5 +49,6 @@ __pthread_cond_init (pthread_cond_t *cond, const pthread_condattr_t *cond_attr)
 
   return 0;
 }
-versioned_symbol (libpthread, __pthread_cond_init,
+libc_hidden_def (__pthread_cond_init)
+versioned_symbol (libc, __pthread_cond_init,
 		  pthread_cond_init, GLIBC_2_3_2);

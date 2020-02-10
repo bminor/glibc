@@ -37,6 +37,7 @@ routines = \
   libc_multiple_threads \
   libc_pthread_init \
   old_pthread_cond_destroy \
+  old_pthread_cond_init \
   pthread_atfork \
   pthread_attr_destroy \
   pthread_attr_getdetachstate \
@@ -51,6 +52,7 @@ routines = \
   pthread_attr_setschedpolicy \
   pthread_attr_setscope \
   pthread_cond_destroy \
+  pthread_cond_init \
   pthread_condattr_destroy \
   pthread_condattr_init \
   pthread_equal \
@@ -104,10 +106,8 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_rwlockattr_setpshared \
 		      pthread_rwlockattr_getkind_np \
 		      pthread_rwlockattr_setkind_np \
-		      pthread_cond_init \
 		      pthread_cond_wait \
 		      pthread_cond_signal pthread_cond_broadcast \
-		      old_pthread_cond_init \
 		      old_pthread_cond_wait old_pthread_cond_timedwait \
 		      old_pthread_cond_signal old_pthread_cond_broadcast \
 		      pthread_condattr_getpshared pthread_condattr_setpshared \
