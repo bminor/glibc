@@ -327,8 +327,7 @@ test-xfail-tst-once5 = yes
 # Files which must not be linked with libpthread.
 tests-nolibpthread = tst-unload
 
-gen-as-const-headers = pthread-errnos.sym \
-		       unwindbuf.sym \
+gen-as-const-headers = unwindbuf.sym \
 		       pthread-pi-defines.sym
 
 gen-py-const-headers := nptl_lock_constants.pysym
