@@ -53,4 +53,4 @@ __pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
 
   return 0;
 }
-strong_alias (__pthread_once, pthread_once);
+weak_alias (__pthread_once, pthread_once);

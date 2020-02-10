@@ -35,4 +35,4 @@ __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)
   return __pthread_cond_timedwait_internal (cond, mutex, 0);
 }
 
-strong_alias (__pthread_cond_wait, pthread_cond_wait);
+weak_alias (__pthread_cond_wait, pthread_cond_wait);

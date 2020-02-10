@@ -26,4 +26,4 @@ __pthread_attr_getscope (const pthread_attr_t *attr, int *contentionscope)
   return 0;
 }
 
-strong_alias (__pthread_attr_getscope, pthread_attr_getscope);
+weak_alias (__pthread_attr_getscope, pthread_attr_getscope);

@@ -87,10 +87,6 @@ test-xfail-XOPEN2K8/sys/socket.h/conform = yes
 test-xfail-XOPEN2K8/sys/types.h/conform = yes
 test-xfail-XOPEN2K8/stdlib.h/conform = yes
 test-xfail-XOPEN2K8/arpa/inet.h/conform = yes
-
-# For bug 23819
-test-xfail-ISO11/threads.h/linknamespace = yes
-test-xfail-ISO11/threads.h/conform = yes
 endif
 
 # For bug 23286

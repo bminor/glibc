@@ -43,4 +43,4 @@ __pthread_setcancelstate (int state, int *oldstate)
   return 0;
 }
 
-strong_alias (__pthread_setcancelstate, pthread_setcancelstate);
+weak_alias (__pthread_setcancelstate, pthread_setcancelstate);

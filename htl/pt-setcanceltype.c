@@ -43,4 +43,4 @@ __pthread_setcanceltype (int type, int *oldtype)
   return 0;
 }
 
-strong_alias (__pthread_setcanceltype, pthread_setcanceltype);
+weak_alias (__pthread_setcanceltype, pthread_setcanceltype);

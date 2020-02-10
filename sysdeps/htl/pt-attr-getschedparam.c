@@ -30,4 +30,4 @@ __pthread_attr_getschedparam (const pthread_attr_t *attr,
   return 0;
 }
 
-strong_alias (__pthread_attr_getschedparam, pthread_attr_getschedparam);
+weak_alias (__pthread_attr_getschedparam, pthread_attr_getschedparam);

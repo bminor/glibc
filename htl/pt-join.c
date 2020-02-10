@@ -76,4 +76,4 @@ __pthread_join (pthread_t thread, void **status)
 
   return err;
 }
-strong_alias (__pthread_join, pthread_join);
+weak_alias (__pthread_join, pthread_join);

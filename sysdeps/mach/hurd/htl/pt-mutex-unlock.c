@@ -88,4 +88,4 @@ __pthread_mutex_unlock (pthread_mutex_t *mtxp)
 }
 
 strong_alias (__pthread_mutex_unlock, _pthread_mutex_unlock)
-strong_alias (__pthread_mutex_unlock, pthread_mutex_unlock)
+weak_alias (__pthread_mutex_unlock, pthread_mutex_unlock)

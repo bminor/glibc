@@ -41,4 +41,4 @@ __pthread_cond_broadcast (pthread_cond_t *cond)
   return 0;
 }
 
-strong_alias (__pthread_cond_broadcast, pthread_cond_broadcast);
+weak_alias (__pthread_cond_broadcast, pthread_cond_broadcast);

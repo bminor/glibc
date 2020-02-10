@@ -34,5 +34,5 @@ __pthread_mutex_destroy (pthread_mutex_t *mtxp)
   return 0;
 }
 
-strong_alias (__pthread_mutex_destroy, pthread_mutex_destroy)
+weak_alias (__pthread_mutex_destroy, pthread_mutex_destroy)
 hidden_def (__pthread_mutex_destroy)

@@ -109,4 +109,4 @@ __pthread_exit (void *status)
   abort ();
 }
 
-strong_alias (__pthread_exit, pthread_exit);
+weak_alias (__pthread_exit, pthread_exit);

@@ -28,4 +28,4 @@ __pthread_getschedparam (pthread_t thread, int *policy,
   return 0;
 }
 
-strong_alias (__pthread_getschedparam, pthread_getschedparam);
+weak_alias (__pthread_getschedparam, pthread_getschedparam);

@@ -61,4 +61,4 @@ __pthread_key_delete (pthread_key_t key)
 
   return err;
 }
-strong_alias (__pthread_key_delete, pthread_key_delete)
+weak_alias (__pthread_key_delete, pthread_key_delete)

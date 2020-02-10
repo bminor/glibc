@@ -38,4 +38,4 @@ __pthread_attr_setscope (pthread_attr_t *attr, int contentionscope)
     }
 }
 
-strong_alias (__pthread_attr_setscope, pthread_attr_setscope);
+weak_alias (__pthread_attr_setscope, pthread_attr_setscope);

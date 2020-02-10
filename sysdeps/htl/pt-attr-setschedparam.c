@@ -35,4 +35,4 @@ __pthread_attr_setschedparam (pthread_attr_t *attr,
   return ENOTSUP;
 }
 
-strong_alias (__pthread_attr_setschedparam, pthread_attr_setschedparam);
+weak_alias (__pthread_attr_setschedparam, pthread_attr_setschedparam);

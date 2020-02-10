@@ -106,5 +106,5 @@ do_search:
   __pthread_mutex_unlock (&__pthread_key_lock);
   return 0;
 }
-strong_alias (__pthread_key_create, pthread_key_create)
+weak_alias (__pthread_key_create, pthread_key_create)
 hidden_def (__pthread_key_create)

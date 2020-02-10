@@ -27,4 +27,4 @@ __pthread_attr_init (pthread_attr_t *attr)
   *attr = __pthread_default_attr;
   return 0;
 }
-strong_alias (__pthread_attr_init, pthread_attr_init);
+weak_alias (__pthread_attr_init, pthread_attr_init);

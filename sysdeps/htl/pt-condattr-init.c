@@ -28,4 +28,4 @@ __pthread_condattr_init (pthread_condattr_t *attr)
   return 0;
 }
 
-strong_alias (__pthread_condattr_init, pthread_condattr_init);
+weak_alias (__pthread_condattr_init, pthread_condattr_init);

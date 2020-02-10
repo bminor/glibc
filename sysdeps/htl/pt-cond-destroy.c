@@ -32,4 +32,4 @@ __pthread_cond_destroy (pthread_cond_t *cond)
   return ret;
 }
 
-strong_alias (__pthread_cond_destroy, pthread_cond_destroy);
+weak_alias (__pthread_cond_destroy, pthread_cond_destroy);

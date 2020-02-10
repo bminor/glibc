@@ -34,7 +34,7 @@ __pthread_cond_timedwait (pthread_cond_t *cond,
   return __pthread_cond_timedwait_internal (cond, mutex, abstime);
 }
 
-strong_alias (__pthread_cond_timedwait, pthread_cond_timedwait);
+weak_alias (__pthread_cond_timedwait, pthread_cond_timedwait);
 
 struct cancel_ctx
 {

@@ -30,4 +30,4 @@ __pthread_self (void)
   return self->thread;
 }
 
-strong_alias (__pthread_self, pthread_self);
+weak_alias (__pthread_self, pthread_self);

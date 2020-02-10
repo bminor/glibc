@@ -27,4 +27,4 @@ __pthread_equal (pthread_t __t1, pthread_t __t2)
   return __t1 == __t2;
 }
 
-strong_alias (__pthread_equal, pthread_equal);
+weak_alias (__pthread_equal, pthread_equal);
