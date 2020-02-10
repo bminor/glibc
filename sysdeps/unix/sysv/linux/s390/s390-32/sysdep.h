@@ -38,9 +38,6 @@
 /* in newer 2.1 kernels __NR_syscall is missing so we define it here */
 #define __NR_syscall 0
 
-#undef SYS_ify
-#define SYS_ify(syscall_name)	__NR_##syscall_name
-
 #ifdef __ASSEMBLER__
 
 /* Linux uses a negative return value to indicate syscall errors, unlike
@@ -179,98 +176,6 @@
     br      14
 
 #endif /* __ASSEMBLER__ */
-
-#undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)				      \
-  ({									      \
-    unsigned int _ret = INTERNAL_SYSCALL (name, , nr, args);		      \
-    if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (_ret, )))		      \
-     {									      \
-       __set_errno (INTERNAL_SYSCALL_ERRNO (_ret, ));			      \
-       _ret = 0xffffffff;						      \
-     }									      \
-    (int) _ret; })
-
-#undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) do { } while (0)
-
-#undef INTERNAL_SYSCALL_DIRECT
-#define INTERNAL_SYSCALL_DIRECT(name, err, nr, args...)			      \
-  ({									      \
-    DECLARGS_##nr(args)							      \
-    register int _ret __asm__("2");					      \
-    __asm__ __volatile__ (						      \
-			  "svc    %b1\n\t"				      \
-			  : "=d" (_ret)					      \
-			  : "i" (__NR_##name) ASMFMT_##nr		      \
-			  : "memory" );					      \
-    _ret; })
-
-#undef INTERNAL_SYSCALL_SVC0
-#define INTERNAL_SYSCALL_SVC0(name, err, nr, args...)			      \
-  ({									      \
-    DECLARGS_##nr(args)							      \
-    register unsigned long _nr __asm__("1") = (unsigned long)(__NR_##name);   \
-    register int _ret __asm__("2");					      \
-    __asm__ __volatile__ (						      \
-			  "svc    0\n\t"				      \
-			  : "=d" (_ret)					      \
-			  : "d" (_nr) ASMFMT_##nr			      \
-			  : "memory" );					      \
-    _ret; })
-
-#undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(no, err, nr, args...)			      \
-  ({									      \
-    DECLARGS_##nr(args)							      \
-    register unsigned long _nr __asm__("1") = (unsigned long)(no);	      \
-    register int _ret __asm__("2");					      \
-    __asm__ __volatile__ (						      \
-			  "svc    0\n\t"				      \
-			  : "=d" (_ret)					      \
-			  : "d" (_nr) ASMFMT_##nr			      \
-			  : "memory" );					      \
-    _ret; })
-
-#undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...)			      \
-  (((__NR_##name) < 256)						      \
-   ? INTERNAL_SYSCALL_DIRECT(name, err, nr, args)			      \
-   : INTERNAL_SYSCALL_SVC0(name, err,nr, args))
-
-#undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err)				      \
-  ((unsigned int) (val) >= 0xfffff001u)
-
-#undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
-
-#define DECLARGS_0()
-#define DECLARGS_1(arg1) \
-	register unsigned long gpr2 __asm__ ("2") = (unsigned long)(arg1);
-#define DECLARGS_2(arg1, arg2) \
-	DECLARGS_1(arg1) \
-	register unsigned long gpr3 __asm__ ("3") = (unsigned long)(arg2);
-#define DECLARGS_3(arg1, arg2, arg3) \
-	DECLARGS_2(arg1, arg2) \
-	register unsigned long gpr4 __asm__ ("4") = (unsigned long)(arg3);
-#define DECLARGS_4(arg1, arg2, arg3, arg4) \
-	DECLARGS_3(arg1, arg2, arg3) \
-	register unsigned long gpr5 __asm__ ("5") = (unsigned long)(arg4);
-#define DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
-	DECLARGS_4(arg1, arg2, arg3, arg4) \
-	register unsigned long gpr6 __asm__ ("6") = (unsigned long)(arg5);
-#define DECLARGS_6(arg1, arg2, arg3, arg4, arg5, arg6) \
-	DECLARGS_5(arg1, arg2, arg3, arg4, arg5) \
-	register unsigned long gpr7 __asm__ ("7") = (unsigned long)(arg6);
-
-#define ASMFMT_0
-#define ASMFMT_1 , "0" (gpr2)
-#define ASMFMT_2 , "0" (gpr2), "d" (gpr3)
-#define ASMFMT_3 , "0" (gpr2), "d" (gpr3), "d" (gpr4)
-#define ASMFMT_4 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5)
-#define ASMFMT_5 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6)
-#define ASMFMT_6 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6), "d" (gpr7)
 
 /* Pointer mangling support.  */
 #if IS_IN (rtld)
