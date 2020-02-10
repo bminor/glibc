@@ -17,4 +17,4 @@
    <http://www.gnu.org/licenses/>.  */
 
 #define USE_PTHREAD_CLOCKJOIN_NP_REALTIME 1
-#include <nptl/tst-join5.c>
+#include <sysdeps/pthread/tst-join5.c>

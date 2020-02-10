@@ -51,6 +51,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
 	 tst-cond23 tst-cond24 tst-cond25 \
 	 tst-cond-except \
+	 tst-join1 tst-join4 tst-join5 tst-join6 tst-join7 \
 	 tst-key1 tst-key2 tst-key3 tst-key4 \
 	 tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex6 tst-mutex10 \
 	 tst-once1 tst-once2 tst-once3 tst-once4 \
@@ -62,6 +63,8 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 
 tests += tst-oncex3 tst-oncex4
 
+modules-names += tst-join7mod
+
 ifeq ($(build-shared),yes)
 tests-static += tst-cond8-static
 tests += tst-cond8-static
@@ -69,5 +72,10 @@ endif
 
 CFLAGS-tst-oncex3.c += -fexceptions
 CFLAGS-tst-oncex4.c += -fexceptions
+
+$(objpfx)tst-join7: $(libdl) $(shared-thread-library)
+$(objpfx)tst-join7.out: $(objpfx)tst-join7mod.so
+$(objpfx)tst-join7mod.so: $(shared-thread-library)
+LDFLAGS-tst-join7mod.so = -Wl,-soname,tst-join7mod.so
 
 endif

@@ -18,4 +18,4 @@
 
 #define USE_PTHREAD_TIMEDJOIN_NP 1
 #define WAIT_IN_CHILD 1
-#include <nptl/tst-join5.c>
+#include <sysdeps/pthread/tst-join5.c>
