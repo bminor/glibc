@@ -117,7 +117,6 @@ GLIBC_2.3 pthread_exit F
 GLIBC_2.3 pthread_getattr_np F
 GLIBC_2.3 pthread_getconcurrency F
 GLIBC_2.3 pthread_getcpuclockid F
-GLIBC_2.3 pthread_getschedparam F
 GLIBC_2.3 pthread_getspecific F
 GLIBC_2.3 pthread_join F
 GLIBC_2.3 pthread_key_create F

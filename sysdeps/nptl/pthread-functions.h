@@ -42,7 +42,6 @@ struct pthread_functions
 					   pthread_mutex_t *,
 					   const struct timespec *);
   void (*ptr___pthread_exit) (void *) __attribute__ ((__noreturn__));
-  int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);
   int (*ptr_pthread_setschedparam) (pthread_t, int,
 				    const struct sched_param *);
   int (*ptr_pthread_mutex_destroy) (pthread_mutex_t *);

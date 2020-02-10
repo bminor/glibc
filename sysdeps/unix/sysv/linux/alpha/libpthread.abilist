@@ -52,7 +52,6 @@ GLIBC_2.0 pthread_cond_wait F
 GLIBC_2.0 pthread_create F
 GLIBC_2.0 pthread_detach F
 GLIBC_2.0 pthread_exit F
-GLIBC_2.0 pthread_getschedparam F
 GLIBC_2.0 pthread_getspecific F
 GLIBC_2.0 pthread_join F
 GLIBC_2.0 pthread_key_create F
