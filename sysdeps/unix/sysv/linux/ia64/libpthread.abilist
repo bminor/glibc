@@ -76,7 +76,6 @@ GLIBC_2.2 pthread_attr_getstack F
 GLIBC_2.2 pthread_attr_getstackaddr F
 GLIBC_2.2 pthread_attr_getstacksize F
 GLIBC_2.2 pthread_attr_setguardsize F
-GLIBC_2.2 pthread_attr_setschedpolicy F
 GLIBC_2.2 pthread_attr_setscope F
 GLIBC_2.2 pthread_attr_setstack F
 GLIBC_2.2 pthread_attr_setstackaddr F

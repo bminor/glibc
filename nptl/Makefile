@@ -46,6 +46,7 @@ routines = \
   pthread_attr_setdetachstate \
   pthread_attr_setinheritsched \
   pthread_attr_setschedparam \
+  pthread_attr_setschedpolicy \
   pthread_equal \
   pthread_self \
   register-atfork \
@@ -73,7 +74,6 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_getschedparam pthread_setschedparam \
 		      pthread_setschedprio \
 		      pthread_attr_getguardsize pthread_attr_setguardsize \
-		      pthread_attr_setschedpolicy \
 		      pthread_attr_getscope pthread_attr_setscope \
 		      pthread_attr_getstackaddr pthread_attr_setstackaddr \
 		      pthread_attr_getstacksize pthread_attr_setstacksize \

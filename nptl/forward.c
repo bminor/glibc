@@ -56,9 +56,6 @@ name decl								      \
   FORWARD2 (name, int, decl, params, return defretval)
 
 
-FORWARD (pthread_attr_setschedpolicy, (pthread_attr_t *attr, int policy),
-	 (attr, policy), 0)
-
 FORWARD (pthread_attr_getscope,
 	 (const pthread_attr_t *attr, int *scope), (attr, scope), 0)
 FORWARD (pthread_attr_setscope, (pthread_attr_t *attr, int scope),
