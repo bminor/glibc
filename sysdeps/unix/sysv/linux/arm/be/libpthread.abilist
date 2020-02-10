@@ -121,7 +121,6 @@ GLIBC_2.4 pthread_barrierattr_init F
 GLIBC_2.4 pthread_barrierattr_setpshared F
 GLIBC_2.4 pthread_cancel F
 GLIBC_2.4 pthread_cond_broadcast F
-GLIBC_2.4 pthread_cond_destroy F
 GLIBC_2.4 pthread_cond_init F
 GLIBC_2.4 pthread_cond_signal F
 GLIBC_2.4 pthread_cond_timedwait F

@@ -67,16 +67,6 @@ versioned_symbol (libc, __pthread_cond_broadcast, pthread_cond_broadcast,
 		  GLIBC_2_3_2);
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
-FORWARD2 (__pthread_cond_destroy_2_0, int attribute_compat_text_section,
-	  (pthread_cond_2_0_t *cond), (cond), return 0)
-compat_symbol (libc, __pthread_cond_destroy_2_0, pthread_cond_destroy,
-	       GLIBC_2_0);
-#endif
-FORWARD (__pthread_cond_destroy, (pthread_cond_t *cond), (cond), 0)
-versioned_symbol (libc, __pthread_cond_destroy, pthread_cond_destroy,
-		  GLIBC_2_3_2);
-
-#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
 FORWARD2 (__pthread_cond_init_2_0, int attribute_compat_text_section,
 	  (pthread_cond_2_0_t *cond, const pthread_condattr_t *cond_attr),
 	  (cond, cond_attr), return 0)

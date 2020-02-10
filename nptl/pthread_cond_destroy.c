@@ -58,5 +58,6 @@ __pthread_cond_destroy (pthread_cond_t *cond)
   /* The memory the condvar occupies can now be reused.  */
   return 0;
 }
-versioned_symbol (libpthread, __pthread_cond_destroy,
+libc_hidden_def (__pthread_cond_destroy)
+versioned_symbol (libc, __pthread_cond_destroy,
 		  pthread_cond_destroy, GLIBC_2_3_2);

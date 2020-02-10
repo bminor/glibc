@@ -444,6 +444,7 @@ extern int __pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_cond_broadcast (pthread_cond_t *cond);
 extern int __pthread_cond_destroy (pthread_cond_t *cond);
+libc_hidden_proto (__pthread_cond_destroy)
 extern int __pthread_cond_init (pthread_cond_t *cond,
 				const pthread_condattr_t *cond_attr);
 extern int __pthread_cond_signal (pthread_cond_t *cond);

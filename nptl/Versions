@@ -39,6 +39,8 @@ libc {
     __libc_pthread_init;
     __libc_current_sigrtmin_private; __libc_current_sigrtmax_private;
     __libc_allocate_rtsig_private;
+    # Used by the C11 threads implementation.
+    __pthread_cond_destroy;
   }
 }
 
@@ -54,7 +56,7 @@ libpthread {
 
     pthread_mutexattr_init; pthread_mutexattr_destroy;
 
-    pthread_cond_init; pthread_cond_destroy;
+    pthread_cond_init;
     pthread_cond_wait; pthread_cond_timedwait;
     pthread_cond_signal; pthread_cond_broadcast;
 
@@ -193,7 +195,7 @@ libpthread {
 
   GLIBC_2.3.2 {
     # Changed pthread_cond_t.
-    pthread_cond_init; pthread_cond_destroy;
+    pthread_cond_init;
     pthread_cond_wait; pthread_cond_timedwait;
     pthread_cond_signal; pthread_cond_broadcast;
   }
