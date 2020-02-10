@@ -87,8 +87,9 @@
 
 #define internal_syscall1(string,err,name,arg1)				\
 ({									\
+	long int _arg1 = (long int) (arg1);				\
 	register long int __g1 __asm__("g1") = (name);			\
-	register long __o0 __asm__ ("o0") = (long)(arg1);		\
+	register long int  __o0 __asm__ ("o0") = _arg1;			\
 	__asm __volatile (string : "=r" (__o0) :			\
 			  "r" (__g1), "0" (__o0) :			\
 			  __SYSCALL_CLOBBERS);				\
@@ -97,9 +98,11 @@
 
 #define internal_syscall2(string,err,name,arg1,arg2)			\
 ({									\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
 	register long int __g1 __asm__("g1") = (name);			\
-	register long __o0 __asm__ ("o0") = (long)(arg1);		\
-	register long __o1 __asm__ ("o1") = (long)(arg2);		\
+	register long int __o0 __asm__ ("o0") = _arg1;			\
+	register long int __o1 __asm__ ("o1") = _arg2;			\
 	__asm __volatile (string : "=r" (__o0) :			\
 			  "r" (__g1), "0" (__o0), "r" (__o1) :		\
 			  __SYSCALL_CLOBBERS);				\
@@ -108,10 +111,13 @@
 
 #define internal_syscall3(string,err,name,arg1,arg2,arg3)		\
 ({									\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
 	register long int __g1 __asm__("g1") = (name);			\
-	register long __o0 __asm__ ("o0") = (long)(arg1);		\
-	register long __o1 __asm__ ("o1") = (long)(arg2);		\
-	register long __o2 __asm__ ("o2") = (long)(arg3);		\
+	register long int __o0 __asm__ ("o0") = _arg1;			\
+	register long int __o1 __asm__ ("o1") = _arg2;			\
+	register long int __o2 __asm__ ("o2") = _arg3;			\
 	__asm __volatile (string : "=r" (__o0) :			\
 			  "r" (__g1), "0" (__o0), "r" (__o1),		\
 			  "r" (__o2) :					\
@@ -121,11 +127,15 @@
 
 #define internal_syscall4(string,err,name,arg1,arg2,arg3,arg4)		\
 ({									\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
+	long int _arg4 = (long int) (arg4);				\
 	register long int __g1 __asm__("g1") = (name);			\
-	register long __o0 __asm__ ("o0") = (long)(arg1);		\
-	register long __o1 __asm__ ("o1") = (long)(arg2);		\
-	register long __o2 __asm__ ("o2") = (long)(arg3);		\
-	register long __o3 __asm__ ("o3") = (long)(arg4);		\
+	register long int __o0 __asm__ ("o0") = _arg1;			\
+	register long int __o1 __asm__ ("o1") = _arg2;			\
+	register long int __o2 __asm__ ("o2") = _arg3;			\
+	register long int __o3 __asm__ ("o3") = _arg4;			\
 	__asm __volatile (string : "=r" (__o0) :			\
 			  "r" (__g1), "0" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3) :			\
@@ -135,12 +145,17 @@
 
 #define internal_syscall5(string,err,name,arg1,arg2,arg3,arg4,arg5)	\
 ({									\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
+	long int _arg4 = (long int) (arg4);				\
+	long int _arg5 = (long int) (arg5);				\
 	register long int __g1 __asm__("g1") = (name);			\
-	register long __o0 __asm__ ("o0") = (long)(arg1);		\
-	register long __o1 __asm__ ("o1") = (long)(arg2);		\
-	register long __o2 __asm__ ("o2") = (long)(arg3);		\
-	register long __o3 __asm__ ("o3") = (long)(arg4);		\
-	register long __o4 __asm__ ("o4") = (long)(arg5);		\
+	register long int __o0 __asm__ ("o0") = _arg1;			\
+	register long int __o1 __asm__ ("o1") = _arg2;			\
+	register long int __o2 __asm__ ("o2") = _arg3;			\
+	register long int __o3 __asm__ ("o3") = _arg4;			\
+	register long int __o4 __asm__ ("o4") = _arg5;			\
 	__asm __volatile (string : "=r" (__o0) :			\
 			  "r" (__g1), "0" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3), "r" (__o4) :		\
@@ -150,13 +165,19 @@
 
 #define internal_syscall6(string,err,name,arg1,arg2,arg3,arg4,arg5,arg6)\
 ({									\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
+	long int _arg4 = (long int) (arg4);				\
+	long int _arg5 = (long int) (arg5);				\
+	long int _arg6 = (long int) (arg6);				\
 	register long int __g1 __asm__("g1") = (name);			\
-	register long __o0 __asm__ ("o0") = (long)(arg1);		\
-	register long __o1 __asm__ ("o1") = (long)(arg2);		\
-	register long __o2 __asm__ ("o2") = (long)(arg3);		\
-	register long __o3 __asm__ ("o3") = (long)(arg4);		\
-	register long __o4 __asm__ ("o4") = (long)(arg5);		\
-	register long __o5 __asm__ ("o5") = (long)(arg6);		\
+	register long int __o0 __asm__ ("o0") = _arg1;			\
+	register long int __o1 __asm__ ("o1") = _arg2;			\
+	register long int __o2 __asm__ ("o2") = _arg3;			\
+	register long int __o3 __asm__ ("o3") = _arg4;			\
+	register long int __o4 __asm__ ("o4") = _arg5;			\
+	register long int __o5 __asm__ ("o5") = _arg6;			\
 	__asm __volatile (string : "=r" (__o0) :			\
 			  "r" (__g1), "0" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3), "r" (__o4),		\
@@ -167,12 +188,17 @@
 
 #define INLINE_CLONE_SYSCALL(arg1,arg2,arg3,arg4,arg5)			\
 ({									\
-	register long __o0 __asm__ ("o0") = (long)(arg1);		\
-	register long __o1 __asm__ ("o1") = (long)(arg2);		\
-	register long __o2 __asm__ ("o2") = (long)(arg3);		\
-	register long __o3 __asm__ ("o3") = (long)(arg4);		\
-	register long __o4 __asm__ ("o4") = (long)(arg5);		\
-	register long __g1 __asm__ ("g1") = __NR_clone;			\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
+	long int _arg4 = (long int) (arg4);				\
+	long int _arg5 = (long int) (arg5);				\
+	register long int __o0 __asm__ ("o0") = _arg1;			\
+	register long int __o1 __asm__ ("o1") = _arg2;			\
+	register long int __o2 __asm__ ("o2") = _arg3;			\
+	register long int __o3 __asm__ ("o3") = _arg4;			\
+	register long int __o4 __asm__ ("o4") = _arg5;			\
+	register long int __g1 __asm__ ("g1") = __NR_clone;		\
 	__asm __volatile (__SYSCALL_STRING :				\
 			  "=r" (__o0), "=r" (__o1) :			\
 			  "r" (__g1), "0" (__o0), "1" (__o1),		\
