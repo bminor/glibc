@@ -16,61 +16,85 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define MIN_PAGE_SIZE 131072
+#define MIN_PAGE_SIZE (512*1024+4096)
 #define TEST_MAIN
 #define TEST_NAME "memcpy"
 #include "bench-string.h"
 #include <assert.h>
 #include "json-lib.h"
 
+#define MAX_COPIES 8192
+
 IMPL (memcpy, 1)
 
-#define NUM_COPIES 4096
-
 typedef struct { uint16_t size; uint16_t freq; } freq_data_t;
-typedef struct { uint8_t align; uint8_t freq; } align_data_t;
+typedef struct { uint8_t align; uint16_t freq; } align_data_t;
 
-#define SIZE_NUM 1024
+#define SIZE_NUM 65536
 #define SIZE_MASK (SIZE_NUM-1)
 static uint8_t size_arr[SIZE_NUM];
 
-/* Frequency data for memcpy of less than 256 bytes based on SPEC2006.  */
+/* Frequency data for memcpy of less than 4096 bytes based on SPEC2017.  */
 static freq_data_t size_freq[] =
 {
-  {  8, 576}, {104,  94}, { 24,  78}, { 48,  58}, { 32,  48}, { 16,  46},
-  {  1,  30}, { 96,  12}, { 72,  11}, {216,  11}, {192,   8}, { 12,   7},
-  {144,   5}, {  2,   4}, { 64,   4}, {120,   4}, {  4,   3}, { 40,   2},
-  {  7,   2}, {168,   2}, {160,   2}, {128,   1}, {  3,   1}, {  9,   1},
-  {176,   1}, {240,   1}, { 11,   1}, {  0,   1}, {  5,   1}, {  6,   1},
-  { 80,   1}, { 52,   1}, {152,   1}, { 10,   1}, { 56,   1}, { 51,   1},
-  { 14,   1}, {208,   1}, {  0,   0}
+{ 32, 22320}, { 16, 9554}, {  8, 8915}, {152, 5327}, {  4, 2159}, {292, 2035},
+{ 12, 1608}, { 24, 1343}, {1152, 895}, {144, 813}, {884, 733}, {284, 721},
+{120, 661}, {  2, 649}, {882, 550}, {  5, 475}, {  7, 461}, {108, 460},
+{ 10, 361}, {  9, 361}, {  6, 334}, {  3, 326}, {464, 308}, {2048, 303},
+{  1, 298}, { 64, 250}, { 11, 197}, {296, 194}, { 68, 187}, { 15, 185},
+{192, 184}, {1764, 183}, { 13, 173}, {560, 126}, {160, 115}, {288,  96},
+{104,  96}, {1144,  83}, { 18,  80}, { 23,  78}, { 40,  77}, { 19,  68},
+{ 48,  63}, { 17,  57}, { 72,  54}, {1280,  51}, { 20,  49}, { 28,  47},
+{ 22,  46}, {640,  45}, { 25,  41}, { 14,  40}, { 56,  37}, { 27,  35},
+{ 35,  33}, {384,  33}, { 29,  32}, { 80,  30}, {4095,  22}, {232,  22},
+{ 36,  19}, {184,  17}, { 21,  17}, {256,  16}, { 44,  15}, { 26,  15},
+{ 31,  14}, { 88,  14}, {176,  13}, { 33,  12}, {1024,  12}, {208,  11},
+{ 62,  11}, {128,  10}, {704,  10}, {324,  10}, { 96,  10}, { 60,   9},
+{136,   9}, {124,   9}, { 34,   8}, { 30,   8}, {480,   8}, {1344,   8},
+{273,   7}, {520,   7}, {112,   6}, { 52,   6}, {344,   6}, {336,   6},
+{504,   5}, {168,   5}, {424,   5}, {  0,   4}, { 76,   3}, {200,   3},
+{512,   3}, {312,   3}, {240,   3}, {960,   3}, {264,   2}, {672,   2},
+{ 38,   2}, {328,   2}, { 84,   2}, { 39,   2}, {216,   2}, { 42,   2},
+{ 37,   2}, {1608,   2}, { 70,   2}, { 46,   2}, {536,   2}, {280,   1},
+{248,   1}, { 47,   1}, {1088,   1}, {1288,   1}, {224,   1}, { 41,   1},
+{ 50,   1}, { 49,   1}, {808,   1}, {360,   1}, {440,   1}, { 43,   1},
+{ 45,   1}, { 78,   1}, {968,   1}, {392,   1}, { 54,   1}, { 53,   1},
+{ 59,   1}, {376,   1}, {664,   1}, { 58,   1}, {272,   1}, { 66,   1},
+{2688,   1}, {472,   1}, {568,   1}, {720,   1}, { 51,   1}, { 63,   1},
+{ 86,   1}, {496,   1}, {776,   1}, { 57,   1}, {680,   1}, {792,   1},
+{122,   1}, {760,   1}, {824,   1}, {552,   1}, { 67,   1}, {456,   1},
+{984,   1}, { 74,   1}, {408,   1}, { 75,   1}, { 92,   1}, {576,   1},
+{116,   1}, { 65,   1}, {117,   1}, { 82,   1}, {352,   1}, { 55,   1},
+{100,   1}, { 90,   1}, {696,   1}, {111,   1}, {880,   1}, { 79,   1},
+{488,   1}, { 61,   1}, {114,   1}, { 94,   1}, {1032,   1}, { 98,   1},
+{ 87,   1}, {584,   1}, { 85,   1}, {648,   1}, {0, 0}
 };
 
-#define ALIGN_NUM 256
+#define ALIGN_NUM 1024
 #define ALIGN_MASK (ALIGN_NUM-1)
 static uint8_t src_align_arr[ALIGN_NUM];
 static uint8_t dst_align_arr[ALIGN_NUM];
 
-/* Source alignment frequency for memcpy based on SPEC2006.  */
+/* Source alignment frequency for memcpy based on SPEC2017.  */
 static align_data_t src_align_freq[] =
 {
-  {16, 144}, {8, 86}, {3, 23}, {1, 3}, {0, 0}
+  {8, 300}, {16, 292}, {32, 168}, {64, 153}, {4, 79}, {2, 14}, {1, 18}, {0, 0}
 };
 
-/* Destination alignment frequency for memcpy based on SPEC2006.  */
+/* Destination alignment frequency for memcpy based on SPEC2017.  */
 static align_data_t dst_align_freq[] =
 {
-  {16, 197}, {8, 30}, {3, 23}, {1, 6}, {0, 0}
+  {8, 265}, {16, 263}, {64, 209}, {32, 174}, {4, 90}, {2, 10}, {1, 13}, {0, 0}
 };
 
 typedef struct
 {
-  uint16_t src;
-  uint16_t dst;
-  uint16_t len;
+  uint64_t src : 24;
+  uint64_t dst : 24;
+  uint64_t len : 16;
 } copy_t;
 
-static copy_t copy[NUM_COPIES];
+static copy_t copy[MAX_COPIES];
 
 typedef char *(*proto_t) (char *, const char *, size_t);
 
@@ -103,6 +127,9 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, char *src,
   timing_t start, stop, cur;
   size_t iters = INNER_LOOP_ITERS_MEDIUM;
 
+  for (int j = 0; j < n; j++)
+    CALL (impl, dst + copy[j].dst, src + copy[j].src, copy[j].len);
+
   TIMING_NOW (start);
   for (int i = 0; i < iters; ++i)
     for (int j = 0; j < n; j++)
@@ -117,16 +144,17 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, char *src,
 static void
 do_test (json_ctx_t *json_ctx, size_t max_size)
 {
-  for (int i = 0; i < max_size; i++)
-    buf1[i] = i * 3;
+  int i;
+
+  memset (buf1, 1, max_size);
 
   /* Create a random set of copies with the given size and alignment
      distributions.  */
-  for (int i = 0; i < NUM_COPIES; i++)
+  for (i = 0; i < MAX_COPIES; i++)
     {
-      copy[i].dst = (rand () & (max_size - 1)) | 1;
+      copy[i].dst = (rand () & (max_size - 1));
       copy[i].dst &= ~dst_align_arr[rand () & ALIGN_MASK];
-      copy[i].src = (rand () & (max_size - 1)) | 3;
+      copy[i].src = (rand () & (max_size - 1));
       copy[i].src &= ~src_align_arr[rand () & ALIGN_MASK];
       copy[i].len = size_arr[rand () & SIZE_MASK];
     }
@@ -136,7 +164,7 @@ do_test (json_ctx_t *json_ctx, size_t max_size)
   json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (json_ctx, impl, (char *) buf2, (char *) buf1, copy, NUM_COPIES);
+    do_one_test (json_ctx, impl, (char *) buf2, (char *) buf1, copy, i);
 
   json_array_end (json_ctx);
   json_element_object_end (json_ctx);
@@ -165,7 +193,7 @@ test_main (void)
   json_array_end (&json_ctx);
 
   json_array_begin (&json_ctx, "results");
-  for (int i = 4; i <= 64; i = i * 2)
+  for (int i = 4; i <= 512; i = i * 2)
     do_test (&json_ctx, i * 1024);
 
   json_array_end (&json_ctx);
