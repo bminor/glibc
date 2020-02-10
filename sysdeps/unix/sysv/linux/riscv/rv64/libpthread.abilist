@@ -88,7 +88,6 @@ GLIBC_2.27 pthread_cond_init F
 GLIBC_2.27 pthread_cond_signal F
 GLIBC_2.27 pthread_cond_timedwait F
 GLIBC_2.27 pthread_cond_wait F
-GLIBC_2.27 pthread_condattr_destroy F
 GLIBC_2.27 pthread_condattr_getclock F
 GLIBC_2.27 pthread_condattr_getpshared F
 GLIBC_2.27 pthread_condattr_init F

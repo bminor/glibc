@@ -56,7 +56,6 @@ name decl								      \
   FORWARD2 (name, int, decl, params, return defretval)
 
 
-FORWARD (pthread_condattr_destroy, (pthread_condattr_t *attr), (attr), 0)
 FORWARD (pthread_condattr_init, (pthread_condattr_t *attr), (attr), 0)
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
