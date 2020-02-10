@@ -28,13 +28,27 @@ headers := pthread.h semaphore.h bits/semaphore.h \
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)
 
-routines = alloca_cutoff forward libc-lowlevellock libc-cancellation \
-	   libc-cleanup libc_pthread_init libc_multiple_threads \
-	   register-atfork pthread_atfork pthread_self pthread_equal \
-	   pthread_attr_destroy pthread_attr_init pthread_attr_getdetachstate \
-	   pthread_attr_setdetachstate pthread_attr_getinheritsched \
-	   pthread_attr_setinheritsched pthread_attr_getschedparam \
-	   pthread_attr_setschedparam
+routines = \
+  alloca_cutoff \
+  forward \
+  libc-cancellation \
+  libc-cleanup \
+  libc-lowlevellock \
+  libc_multiple_threads \
+  libc_pthread_init \
+  pthread_atfork \
+  pthread_attr_destroy \
+  pthread_attr_getdetachstate \
+  pthread_attr_getinheritsched \
+  pthread_attr_getschedparam \
+  pthread_attr_init \
+  pthread_attr_setdetachstate \
+  pthread_attr_setinheritsched \
+  pthread_attr_setschedparam \
+  pthread_equal \
+  pthread_self \
+  register-atfork \
+
 shared-only-routines = forward
 static-only-routines = pthread_atfork
 
