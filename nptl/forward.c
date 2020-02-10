@@ -108,11 +108,6 @@ FORWARD_NORETURN (__pthread_exit, void, (void *retval), (retval),
 strong_alias (__pthread_exit, pthread_exit);
 
 
-FORWARD (pthread_setschedparam,
-	 (pthread_t target_thread, int policy,
-	  const struct sched_param *param), (target_thread, policy, param), 0)
-
-
 FORWARD (pthread_mutex_destroy, (pthread_mutex_t *mutex), (mutex), 0)
 
 FORWARD (pthread_mutex_init,

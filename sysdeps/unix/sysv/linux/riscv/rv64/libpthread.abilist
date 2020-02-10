@@ -153,7 +153,6 @@ GLIBC_2.27 pthread_setcancelstate F
 GLIBC_2.27 pthread_setcanceltype F
 GLIBC_2.27 pthread_setconcurrency F
 GLIBC_2.27 pthread_setname_np F
-GLIBC_2.27 pthread_setschedparam F
 GLIBC_2.27 pthread_setschedprio F
 GLIBC_2.27 pthread_setspecific F
 GLIBC_2.27 pthread_sigmask F

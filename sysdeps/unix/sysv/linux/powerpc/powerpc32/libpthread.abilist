@@ -70,7 +70,6 @@ GLIBC_2.0 pthread_mutexattr_setkind_np F
 GLIBC_2.0 pthread_once F
 GLIBC_2.0 pthread_setcancelstate F
 GLIBC_2.0 pthread_setcanceltype F
-GLIBC_2.0 pthread_setschedparam F
 GLIBC_2.0 pthread_setspecific F
 GLIBC_2.0 pthread_sigmask F
 GLIBC_2.0 pthread_testcancel F

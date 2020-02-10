@@ -58,6 +58,7 @@ routines = \
   pthread_equal \
   pthread_getschedparam \
   pthread_self \
+  pthread_setschedparam \
   register-atfork \
 
 shared-only-routines = forward
@@ -80,7 +81,6 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_join pthread_tryjoin pthread_timedjoin \
 		      pthread_clockjoin pthread_join_common pthread_yield \
 		      pthread_getconcurrency pthread_setconcurrency \
-		      pthread_setschedparam \
 		      pthread_setschedprio \
 		      pthread_attr_getguardsize pthread_attr_setguardsize \
 		      pthread_attr_getstackaddr pthread_attr_setstackaddr \

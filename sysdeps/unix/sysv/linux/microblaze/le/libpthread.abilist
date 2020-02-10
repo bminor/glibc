@@ -156,7 +156,6 @@ GLIBC_2.18 pthread_setcancelstate F
 GLIBC_2.18 pthread_setcanceltype F
 GLIBC_2.18 pthread_setconcurrency F
 GLIBC_2.18 pthread_setname_np F
-GLIBC_2.18 pthread_setschedparam F
 GLIBC_2.18 pthread_setschedprio F
 GLIBC_2.18 pthread_setspecific F
 GLIBC_2.18 pthread_sigmask F
