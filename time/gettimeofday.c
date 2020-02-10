@@ -36,11 +36,5 @@ ___gettimeofday (struct timeval *restrict tv, void *restrict tz)
   return 0;
 }
 
-#ifdef VERSION_gettimeofday
-weak_alias (___gettimeofday, __wgettimeofday);
-default_symbol_version (___gettimeofday, __gettimeofday, VERSION_gettimeofday);
-default_symbol_version (__wgettimeofday,   gettimeofday, VERSION_gettimeofday);
-#else
 strong_alias (___gettimeofday, __gettimeofday)
 weak_alias (___gettimeofday, gettimeofday)
-#endif
