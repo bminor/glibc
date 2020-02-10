@@ -30,13 +30,13 @@ __pthread_join (pthread_t thread, void **status)
   struct __pthread *pthread;
   int err = 0;
 
-  if (thread == pthread_self ())
-    return EDEADLK;
-
   /* Lookup the thread structure for THREAD.  */
   pthread = __pthread_getid (thread);
   if (pthread == NULL)
     return ESRCH;
+
+  if (pthread == _pthread_self ())
+    return EDEADLK;
 
   __pthread_mutex_lock (&pthread->state_lock);
   pthread_cleanup_push ((void (*)(void *)) __pthread_mutex_unlock,
