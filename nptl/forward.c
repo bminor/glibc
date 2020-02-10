@@ -56,10 +56,6 @@ name decl								      \
   FORWARD2 (name, int, decl, params, return defretval)
 
 
-FORWARD (pthread_attr_setscope, (pthread_attr_t *attr, int scope),
-	 (attr, scope), 0)
-
-
 FORWARD (pthread_condattr_destroy, (pthread_condattr_t *attr), (attr), 0)
 FORWARD (pthread_condattr_init, (pthread_condattr_t *attr), (attr), 0)
 
