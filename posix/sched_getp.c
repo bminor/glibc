@@ -27,6 +27,7 @@ __sched_getparam (pid_t pid, struct sched_param *param)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__sched_getparam)
 stub_warning (sched_getparam)
 
 weak_alias (__sched_getparam, sched_getparam)
