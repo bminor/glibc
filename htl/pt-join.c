@@ -30,6 +30,9 @@ __pthread_join (pthread_t thread, void **status)
   struct __pthread *pthread;
   int err = 0;
 
+  if (thread == pthread_self ())
+    return EDEADLK;
+
   /* Lookup the thread structure for THREAD.  */
   pthread = __pthread_getid (thread);
   if (pthread == NULL)
