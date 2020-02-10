@@ -72,7 +72,6 @@ void __nptl_set_robust (struct pthread *);
 #ifdef SHARED
 static const struct pthread_functions pthread_functions =
   {
-    .ptr_pthread_attr_getschedpolicy = __pthread_attr_getschedpolicy,
     .ptr_pthread_attr_setschedpolicy = __pthread_attr_setschedpolicy,
     .ptr_pthread_attr_getscope = __pthread_attr_getscope,
     .ptr_pthread_attr_setscope = __pthread_attr_setscope,

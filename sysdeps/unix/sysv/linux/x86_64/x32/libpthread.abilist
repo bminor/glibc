@@ -69,7 +69,6 @@ GLIBC_2.16 pread F
 GLIBC_2.16 pread64 F
 GLIBC_2.16 pthread_attr_getaffinity_np F
 GLIBC_2.16 pthread_attr_getguardsize F
-GLIBC_2.16 pthread_attr_getschedpolicy F
 GLIBC_2.16 pthread_attr_getscope F
 GLIBC_2.16 pthread_attr_getstack F
 GLIBC_2.16 pthread_attr_getstackaddr F
