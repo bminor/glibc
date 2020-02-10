@@ -22,13 +22,56 @@
 /* Receive the oldest from highest priority messages in message queue
    MQDES, stop waiting if ABS_TIMEOUT expires.  */
 ssize_t
-__mq_timedreceive (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
-		   unsigned int *__restrict msg_prio,
-		   const struct timespec *__restrict abs_timeout)
+__mq_timedreceive_time64 (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
+                          unsigned int *__restrict msg_prio,
+                          const struct __timespec64 *__restrict abs_timeout)
 {
+#ifdef __ASSUME_TIME64_SYSCALLS
+# ifndef __NR_mq_timedreceive_time64
+#  define __NR_mq_timedreceive_time64 __NR_mq_timedreceive
+# endif
+  return SYSCALL_CANCEL (mq_timedreceive_time64, mqdes, msg_ptr, msg_len,
+                         msg_prio, abs_timeout);
+#else
+  int ret = SYSCALL_CANCEL (mq_timedreceive_time64, mqdes, msg_ptr, msg_len,
+                            msg_prio, abs_timeout);
+  if (ret == 0 || errno != ENOSYS)
+    return ret;
+
+  struct timespec ts32;
+  if (abs_timeout != NULL)
+    {
+      if (! in_time_t_range (abs_timeout->tv_sec))
+        {
+          __set_errno (EOVERFLOW);
+          return -1;
+        }
+
+      ts32 = valid_timespec64_to_timespec (*abs_timeout);
+    }
+
   return SYSCALL_CANCEL (mq_timedreceive, mqdes, msg_ptr, msg_len, msg_prio,
-			 abs_timeout);
+                         abs_timeout != NULL ? &ts32 : NULL);
+#endif
 }
+
+#if __TIMESIZE != 64
+librt_hidden_def (__mq_timedreceive_time64)
+
+ssize_t
+__mq_timedreceive (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
+                   unsigned int *__restrict msg_prio,
+                   const struct timespec *__restrict abs_timeout)
+{
+  struct __timespec64 ts64;
+  if (abs_timeout != NULL)
+    ts64 = valid_timespec_to_timespec64 (*abs_timeout);
+
+  return __mq_timedreceive_time64 (mqdes, msg_ptr, msg_len, msg_prio,
+                                   abs_timeout != NULL ? &ts64 : NULL);
+}
+#endif
+
 hidden_def (__mq_timedreceive)
 weak_alias (__mq_timedreceive, mq_timedreceive)
 hidden_weak (mq_timedreceive)
