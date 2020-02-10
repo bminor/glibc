@@ -1290,6 +1290,7 @@ class Config(object):
         cmdlist.use_path(self.bindir)
         self.build_cross_tool(cmdlist, 'binutils', 'binutils',
                               ['--disable-gdb',
+                               '--disable-gdbserver',
                                '--disable-libdecnumber',
                                '--disable-readline',
                                '--disable-sim'])
