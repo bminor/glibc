@@ -74,7 +74,7 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-posix_fallocate tst-posix_fallocate64 \
 		   tst-fts tst-fts-lfs tst-open-tmpfile \
 		   tst-copy_file_range tst-getcwd-abspath tst-lockf \
-		   tst-ftw-lnk
+		   tst-ftw-lnk tst-file_change_detection
 
 # Likewise for statx, but we do not need static linking here.
 tests-internal += tst-statx
