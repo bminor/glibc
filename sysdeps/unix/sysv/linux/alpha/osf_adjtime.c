@@ -20,9 +20,10 @@
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
+#include <time.h>
 #include <sys/time.h>
 #include <sys/timex.h>
-#include <alpha-tv32-compat.h>
+#include <string.h>
 
 struct timex32 {
 	unsigned int modes;	/* mode selector */
@@ -36,7 +37,7 @@ struct timex32 {
 	long tolerance;		/* clock frequency tolerance (ppm)
 				 * (read only)
 				 */
-	struct timeval32 time;	/* (read only) */
+	struct __timeval32 time;	/* (read only) */
 	long tick;		/* (modified) usecs between clock ticks */
 
 	long ppsfreq;           /* pps frequency (scaled ppm) (ro) */
@@ -55,15 +56,15 @@ struct timex32 {
 
 int
 attribute_compat_text_section
-__adjtime_tv32 (const struct timeval32 *itv, struct timeval32 *otv)
+__adjtime_tv32 (const struct __timeval32 *itv, struct __timeval32 *otv)
 {
-  struct timeval itv64 = alpha_valid_timeval32_to_timeval (*itv);
+  struct timeval itv64 = valid_timeval32_to_timeval (*itv);
   struct timeval otv64;
 
   if (__adjtime (&itv64, &otv64) == -1)
     return -1;
 
-  *otv = alpha_valid_timeval_to_timeval32 (otv64);
+  *otv = valid_timeval_to_timeval32 (otv64);
   return 0;
 }
 
@@ -91,7 +92,7 @@ __adjtimex_tv32 (struct timex32 *tx)
   tx64.calcnt    = tx->calcnt;
   tx64.errcnt    = tx->errcnt;
   tx64.stbcnt    = tx->stbcnt;
-  tx64.time      = alpha_valid_timeval32_to_timeval (tx->time);
+  tx64.time      = valid_timeval32_to_timeval (tx->time);
 
   int status = __adjtimex (&tx64);
   if (status < 0)
@@ -116,7 +117,7 @@ __adjtimex_tv32 (struct timex32 *tx)
   tx->calcnt    = tx64.calcnt;
   tx->errcnt    = tx64.errcnt;
   tx->stbcnt    = tx64.stbcnt;
-  tx->time      = alpha_valid_timeval_to_timeval32 (tx64.time);
+  tx->time      = valid_timeval_to_timeval32 (tx64.time);
 
   return status;
 }

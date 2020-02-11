@@ -75,4 +75,30 @@ rusage32_to_rusage64 (const struct __rusage32 *restrict r32,
   r64->ru_nivcsw   = r32->ru_nivcsw;
 }
 
+static inline void
+rusage64_to_rusage32 (const struct __rusage64 *restrict r64,
+                    struct __rusage32 *restrict r32)
+{
+  /* Make sure the entire output structure is cleared, including
+     padding and reserved fields.  */
+  memset (r32, 0, sizeof *r32);
+
+  r32->ru_utime    = valid_timeval64_to_timeval32 (r64->ru_utime);
+  r32->ru_stime    = valid_timeval64_to_timeval32 (r64->ru_stime);
+  r32->ru_maxrss   = r64->ru_maxrss;
+  r32->ru_ixrss    = r64->ru_ixrss;
+  r32->ru_idrss    = r64->ru_idrss;
+  r32->ru_isrss    = r64->ru_isrss;
+  r32->ru_minflt   = r64->ru_minflt;
+  r32->ru_majflt   = r64->ru_majflt;
+  r32->ru_nswap    = r64->ru_nswap;
+  r32->ru_inblock  = r64->ru_inblock;
+  r32->ru_oublock  = r64->ru_oublock;
+  r32->ru_msgsnd   = r64->ru_msgsnd;
+  r32->ru_msgrcv   = r64->ru_msgrcv;
+  r32->ru_nsignals = r64->ru_nsignals;
+  r32->ru_nvcsw    = r64->ru_nvcsw;
+  r32->ru_nivcsw   = r64->ru_nivcsw;
+}
+
 #endif /* tv32-compat.h */

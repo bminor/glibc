@@ -20,17 +20,17 @@
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
+#include <time.h>
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
-#include <alpha-tv32-compat.h>
 
 /* Get the current time of day and timezone information putting it
    into *TV and *TZ.  */
 
 int
 attribute_compat_text_section
-__gettimeofday_tv32 (struct timeval32 *restrict tv32, void *restrict tz)
+__gettimeofday_tv32 (struct __timeval32 *restrict tv32, void *restrict tz)
 {
   if (__glibc_unlikely (tz != 0))
     memset (tz, 0, sizeof (struct timezone));
@@ -38,7 +38,7 @@ __gettimeofday_tv32 (struct timeval32 *restrict tv32, void *restrict tz)
   struct timespec ts;
   __clock_gettime (CLOCK_REALTIME, &ts);
 
-  *tv32 = alpha_valid_timespec_to_timeval32 (ts);
+  *tv32 = valid_timespec_to_timeval32 (ts);
   return 0;
 }
 

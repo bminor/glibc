@@ -20,16 +20,16 @@
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 
+#include <time.h>
 #include <sys/time.h>
-#include <alpha-tv32-compat.h>
 
 int
 attribute_compat_text_section
-__utimes_tv32 (const char *filename, const struct timeval32 times32[2])
+__utimes_tv32 (const char *filename, const struct __timeval32 times32[2])
 {
   struct timeval times[2];
-  times[0] = alpha_valid_timeval32_to_timeval (times32[0]);
-  times[1] = alpha_valid_timeval32_to_timeval (times32[1]);
+  times[0] = valid_timeval32_to_timeval (times32[0]);
+  times[1] = valid_timeval32_to_timeval (times32[1]);
   return __utimes (filename, times);
 }
 
