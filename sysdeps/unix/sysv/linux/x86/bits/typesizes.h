@@ -88,10 +88,15 @@
 
 /* And for fsblkcnt_t, fsblkcnt64_t, fsfilcnt_t and fsfilcnt64_t.  */
 # define __STATFS_MATCHES_STATFS64  1
+
+/* And for getitimer, setitimer and rusage  */
+# define __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64 1
 #else
 # define __RLIM_T_MATCHES_RLIM64_T	0
 
 # define __STATFS_MATCHES_STATFS64  0
+
+# define __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64 0
 #endif
 
 /* Number of descriptors that can fit in an `fd_set'.  */
