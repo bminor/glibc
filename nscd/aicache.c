@@ -33,19 +33,6 @@
 #include "nscd.h"
 
 
-typedef enum nss_status (*nss_gethostbyname4_r)
-  (const char *name, struct gaih_addrtuple **pat,
-   char *buffer, size_t buflen, int *errnop,
-   int *h_errnop, int32_t *ttlp);
-typedef enum nss_status (*nss_gethostbyname3_r)
-  (const char *name, int af, struct hostent *host,
-   char *buffer, size_t buflen, int *errnop,
-   int *h_errnop, int32_t *, char **);
-typedef enum nss_status (*nss_getcanonname_r)
-  (const char *name, char *buffer, size_t buflen, char **result,
-   int *errnop, int *h_errnop);
-
-
 static const ai_response_header notfound =
 {
   .version = NSCD_VERSION,
@@ -127,8 +114,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
       char *canon = NULL;
       size_t canonlen;
 
-      nss_gethostbyname4_r fct4 = __nss_lookup_function (nip,
-							 "gethostbyname4_r");
+      nss_gethostbyname4_r *fct4 = __nss_lookup_function (nip,
+							  "gethostbyname4_r");
       if (fct4 != NULL)
 	{
 	  struct gaih_addrtuple atmem;
@@ -212,8 +199,8 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	{
 	  /* Prefer the function which also returns the TTL and
 	     canonical name.  */
-	  nss_gethostbyname3_r fct = __nss_lookup_function (nip,
-							    "gethostbyname3_r");
+	  nss_gethostbyname3_r *fct
+	    = __nss_lookup_function (nip, "gethostbyname3_r");
 	  if (fct == NULL)
 	    fct = __nss_lookup_function (nip, "gethostbyname2_r");
 
@@ -279,7 +266,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
 	  if (canon == NULL)
 	    {
 	      /* Determine the canonical name.  */
-	      nss_getcanonname_r cfct;
+	      nss_getcanonname_r *cfct;
 	      cfct = __nss_lookup_function (nip, "getcanonname_r");
 	      if (cfct != NULL)
 		{
