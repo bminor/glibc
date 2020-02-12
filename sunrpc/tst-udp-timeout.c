@@ -29,6 +29,9 @@
 #include <sys/socket.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdlib.h>
+
+static pid_t server_pid;
 
 /* Test data serialization and deserialization.   */
 
@@ -175,6 +178,14 @@ server_dispatch (struct svc_req *request, SVCXPRT *transport)
       FAIL_EXIT1 ("invalid rq_proc value: %lu", request->rq_proc);
       break;
     }
+}
+
+/* Function to be called before exit to make sure the
+   server process is properly killed.  */
+static void
+kill_server (void)
+{
+  kill (server_pid, SIGTERM);
 }
 
 /* Implementation of the test client.  */
@@ -381,16 +392,17 @@ do_test (void)
   TEST_VERIFY_EXIT (transport != NULL);
   TEST_VERIFY (svc_register (transport, PROGNUM, VERSNUM, server_dispatch, 0));
 
-  pid_t pid = xfork ();
-  if (pid == 0)
+  server_pid = xfork ();
+  if (server_pid == 0)
     {
       svc_run ();
       FAIL_EXIT1 ("supposed to be unreachable");
     }
+  atexit (kill_server);
   test_udp_server (transport->xp_port);
 
   int status;
-  xwaitpid (pid, &status, 0);
+  xwaitpid (server_pid, &status, 0);
   TEST_VERIFY (WIFEXITED (status) && WEXITSTATUS (status) == EXIT_MARKER);
 
   SVC_DESTROY (transport);
