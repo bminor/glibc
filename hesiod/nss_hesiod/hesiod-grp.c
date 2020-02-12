@@ -26,6 +26,8 @@
 #include <string.h>
 #include <sys/param.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (hesiod)
+
 /* Get the declaration of the parser function.  */
 #define ENTNAME grent
 #define STRUCTURE group

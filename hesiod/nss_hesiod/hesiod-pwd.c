@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (hesiod)
+
 /* Get the declaration of the parser function.  */
 #define ENTNAME pwent
 #define STRUCTURE passwd
