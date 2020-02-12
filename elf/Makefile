@@ -201,7 +201,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-unwind-ctor tst-unwind-main tst-audit13 \
 	 tst-sonamemove-link tst-sonamemove-dlopen tst-dlopen-tlsmodid \
 	 tst-dlopen-self tst-auditmany tst-initfinilazyfail tst-dlopenfail \
-	 tst-dlopenfail-2
+	 tst-dlopenfail-2 \
+	 tst-filterobj tst-filterobj-dlopen tst-auxobj tst-auxobj-dlopen
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -312,7 +313,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-auditmanymod7 tst-auditmanymod8 tst-auditmanymod9 \
 		tst-initlazyfailmod tst-finilazyfailmod \
 		tst-dlopenfailmod1 tst-dlopenfaillinkmod tst-dlopenfailmod2 \
-		tst-dlopenfailmod3 tst-ldconfig-ld-mod
+		tst-dlopenfailmod3 tst-ldconfig-ld-mod \
+		tst-filterobj-flt tst-filterobj-aux tst-filterobj-filtee
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
 modules-names-tests = $(filter-out ifuncmod% tst-libc_dlvsym-dso tst-tlsmod%,\
@@ -1699,3 +1701,15 @@ LDFLAGS-tst-dlopen-nodelete-reloc-mod17.so = -Wl,--no-as-needed
 
 $(objpfx)tst-ldconfig-ld_so_conf-update.out: $(objpfx)tst-ldconfig-ld-mod.so
 $(objpfx)tst-ldconfig-ld_so_conf-update: $(libdl)
+
+LDFLAGS-tst-filterobj-flt.so = -Wl,--filter=$(objpfx)tst-filterobj-filtee.so
+$(objpfx)tst-filterobj: $(objpfx)tst-filterobj-flt.so
+$(objpfx)tst-filterobj-dlopen: $(libdl)
+$(objpfx)tst-filterobj.out: $(objpfx)tst-filterobj-filtee.so
+$(objpfx)tst-filterobj-dlopen.out: $(objpfx)tst-filterobj-filtee.so
+
+LDFLAGS-tst-filterobj-aux.so = -Wl,--auxiliary=$(objpfx)tst-filterobj-filtee.so
+$(objpfx)tst-auxobj: $(objpfx)tst-filterobj-aux.so
+$(objpfx)tst-auxobj-dlopen: $(libdl)
+$(objpfx)tst-auxobj.out: $(objpfx)tst-filterobj-filtee.so
+$(objpfx)tst-auxobj-dlopen.out: $(objpfx)tst-filterobj-filtee.so

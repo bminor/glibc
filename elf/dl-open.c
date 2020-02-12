@@ -621,22 +621,25 @@ dl_open_worker (void *a)
      allows IFUNC relocations to work and it also means copy
      relocation of dependencies are if necessary overwritten.  */
   unsigned int nmaps = 0;
-  struct link_map *l = new;
+  unsigned int j = 0;
+  struct link_map *l = new->l_initfini[0];
   do
     {
       if (! l->l_real->l_relocated)
 	++nmaps;
-      l = l->l_next;
+      l = new->l_initfini[++j];
     }
   while (l != NULL);
+  /* Stack allocation is limited by the number of loaded objects.  */
   struct link_map *maps[nmaps];
   nmaps = 0;
-  l = new;
+  j = 0;
+  l = new->l_initfini[0];
   do
     {
       if (! l->l_real->l_relocated)
 	maps[nmaps++] = l;
-      l = l->l_next;
+      l = new->l_initfini[++j];
     }
   while (l != NULL);
   _dl_sort_maps (maps, nmaps, NULL, false);

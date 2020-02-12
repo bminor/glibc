@@ -485,14 +485,18 @@ _dl_map_object_deps (struct link_map *map,
 
   map->l_searchlist.r_list = &l_initfini[nlist + 1];
   map->l_searchlist.r_nlist = nlist;
+  unsigned int map_index = UINT_MAX;
 
   for (nlist = 0, runp = known; runp; runp = runp->next)
     {
       if (__builtin_expect (trace_mode, 0) && runp->map->l_faked)
 	/* This can happen when we trace the loading.  */
 	--map->l_searchlist.r_nlist;
-      else
+      else {
+	if (runp->map == map)
+	  map_index = nlist;
 	map->l_searchlist.r_list[nlist++] = runp->map;
+      }
 
       /* Now clear all the mark bits we set in the objects on the search list
 	 to avoid duplicates, so the next call starts fresh.  */
@@ -550,13 +554,14 @@ Filters not supported with LD_TRACE_PRELINKING"));
     }
 
   /* Maybe we can remove some relocation dependencies now.  */
-  assert (map->l_searchlist.r_list[0] == map);
   struct link_map_reldeps *l_reldeps = NULL;
   if (map->l_reldeps != NULL)
     {
-      for (i = 1; i < nlist; ++i)
+      for (i = 0; i < nlist; ++i)
 	map->l_searchlist.r_list[i]->l_reserved = 1;
 
+      /* Avoid removing relocation dependencies of the main binary.  */
+      map->l_reserved = 0;
       struct link_map **list = &map->l_reldeps->list[0];
       for (i = 0; i < map->l_reldeps->act; ++i)
 	if (list[i]->l_reserved)
@@ -581,16 +586,30 @@ Filters not supported with LD_TRACE_PRELINKING"));
 	      }
 	  }
 
-      for (i = 1; i < nlist; ++i)
+      for (i = 0; i < nlist; ++i)
 	map->l_searchlist.r_list[i]->l_reserved = 0;
     }
 
-  /* Sort the initializer list to take dependencies into account.  The binary
-     itself will always be initialize last.  */
-  memcpy (l_initfini, map->l_searchlist.r_list,
-	  nlist * sizeof (struct link_map *));
-  /* We can skip looking for the binary itself which is at the front of
-     the search list.  */
+  /* Sort the initializer list to take dependencies into account.  Always
+     initialize the binary itself last.  */
+  assert (map_index < nlist);
+  if (map_index > 0)
+    {
+      /* Copy the binary into position 0.  */
+      l_initfini[0] = map->l_searchlist.r_list[map_index];
+
+      /* Copy the filtees.  */
+      for (i = 0; i < map_index; ++i)
+	l_initfini[i+1] = map->l_searchlist.r_list[i];
+
+      /* Copy the remainder.  */
+      for (i = map_index + 1; i < nlist; ++i)
+	l_initfini[i] = map->l_searchlist.r_list[i];
+    }
+  else
+    memcpy (l_initfini, map->l_searchlist.r_list,
+	    nlist * sizeof (struct link_map *));
+
   _dl_sort_maps (&l_initfini[1], nlist - 1, NULL, false);
 
   /* Terminate the list of dependencies.  */
