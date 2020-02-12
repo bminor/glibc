@@ -70,6 +70,8 @@
 #include <resolv/resolv-internal.h>
 #include <resolv/resolv_context.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (dns)
+
 /* Maximum number of aliases we allow.  */
 #define MAX_NR_ALIASES	48
 
