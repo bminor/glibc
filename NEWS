@@ -35,6 +35,7 @@ The following bugs are resolved with this release:
   [25225] ld.so fails to link on x86 if GCC defaults to -fcf-protection
   [25232] No const correctness for strchr et al. for Clang++
   [25401] Remove incorrect alloc_size attribute from pvalloc
+  [25487] sinl() stack corruption from crafted input (CVE-2020-10029)
   [25523] MIPS/Linux inline syscall template is miscompiled
 
 
