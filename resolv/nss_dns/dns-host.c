@@ -90,6 +90,8 @@
 #include <resolv/mapv4v6addr.h>
 #include <resolv/mapv4v6hostent.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (dns)
+
 #define RESOLVSORT
 
 #if PACKETSZ > 65536

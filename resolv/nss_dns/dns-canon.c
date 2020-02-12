@@ -26,6 +26,8 @@
 #include <resolv/resolv_context.h>
 #include <resolv/resolv-internal.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (dns)
+
 #if PACKETSZ > 65536
 # define MAXPACKET	PACKETSZ
 #else
