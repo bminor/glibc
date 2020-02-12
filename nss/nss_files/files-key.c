@@ -24,6 +24,8 @@
 #include <rpc/des_crypt.h>
 #include "nsswitch.h"
 
+NSS_DECLARE_MODULE_FUNCTIONS (files)
+
 #define DATAFILE "/etc/publickey"
 
 

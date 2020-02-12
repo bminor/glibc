@@ -17,7 +17,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <rpc/netdb.h>
+#include <nss.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (files)
 
 #define ENTNAME		rpcent
 #define DATABASE	"rpc"

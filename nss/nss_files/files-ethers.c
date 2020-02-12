@@ -18,6 +18,9 @@
 #include <string.h>
 #include <netinet/ether.h>
 #include <netinet/if_ether.h>
+#include <nss.h>
+
+NSS_DECLARE_MODULE_FUNCTIONS (files)
 
 struct etherent_data {};
 

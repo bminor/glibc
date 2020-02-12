@@ -24,7 +24,9 @@
 #include <resolv/resolv-internal.h>
 #include <scratch_buffer.h>
 #include <alloc_buffer.h>
+#include <nss.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (files)
 
 /* Get implementation for some internal functions.  */
 #include "../resolv/res_hconf.h"

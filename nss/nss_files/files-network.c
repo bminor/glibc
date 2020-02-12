@@ -20,6 +20,9 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <stdint.h>
+#include <nss.h>
+
+NSS_DECLARE_MODULE_FUNCTIONS (files)
 
 #define ENTNAME		netent
 #define DATABASE	"networks"
