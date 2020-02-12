@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (hesiod)
+
 /* Hesiod uses a format for service entries that differs from the
    traditional format.  We therefore declare our own parser.  */
 

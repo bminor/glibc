@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (hesiod)
+
 /* Declare a parser for Hesiod protocol entries.  Although the format
    of the entries is identical to those in /etc/protocols, here is no
    predefined parser for us to use.  */
