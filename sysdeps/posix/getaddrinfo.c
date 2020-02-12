@@ -300,18 +300,6 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
  }
 
 
-typedef enum nss_status (*nss_gethostbyname4_r)
-  (const char *name, struct gaih_addrtuple **pat,
-   char *buffer, size_t buflen, int *errnop,
-   int *h_errnop, int32_t *ttlp);
-typedef enum nss_status (*nss_gethostbyname3_r)
-  (const char *name, int af, struct hostent *host,
-   char *buffer, size_t buflen, int *errnop,
-   int *h_errnop, int32_t *ttlp, char **canonp);
-typedef enum nss_status (*nss_getcanonname_r)
-  (const char *name, char *buffer, size_t buflen, char **result,
-   int *errnop, int *h_errnop);
-
 /* This function is called if a canonical name is requested, but if
    the service function did not provide it.  It tries to obtain the
    name using getcanonname_r from the same service NIP.  If the name
@@ -321,7 +309,7 @@ typedef enum nss_status (*nss_getcanonname_r)
 static char *
 getcanonname (service_user *nip, struct gaih_addrtuple *at, const char *name)
 {
-  nss_getcanonname_r cfct = __nss_lookup_function (nip, "getcanonname_r");
+  nss_getcanonname_r *cfct = __nss_lookup_function (nip, "getcanonname_r");
   char *s = (char *) name;
   if (cfct != NULL)
     {
@@ -751,7 +739,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  while (!no_more)
 	    {
 	      no_data = 0;
-	      nss_gethostbyname4_r fct4 = NULL;
+	      nss_gethostbyname4_r *fct4 = NULL;
 
 	      /* gethostbyname4_r sends out parallel A and AAAA queries and
 		 is thus only suitable for PF_UNSPEC.  */
@@ -827,7 +815,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		}
 	      else
 		{
-		  nss_gethostbyname3_r fct = NULL;
+		  nss_gethostbyname3_r *fct = NULL;
 		  if (req->ai_flags & AI_CANONNAME)
 		    /* No need to use this function if we do not look for
 		       the canonical name.  The function does not exist in
