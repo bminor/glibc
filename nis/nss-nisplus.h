@@ -23,6 +23,7 @@
 
 #include "nsswitch.h"
 
+NSS_DECLARE_MODULE_FUNCTIONS (nisplus)
 
 /* Convert NIS+ error number to NSS error number.  */
 extern const enum nss_status __niserr2nss_tab[] attribute_hidden;
