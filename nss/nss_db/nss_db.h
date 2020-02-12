@@ -23,6 +23,7 @@
 #include <stdint.h>
 #include <libc-lock.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (db)
 
 /* String table index type.  */
 typedef uint32_t stridx_t;
