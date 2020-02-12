@@ -20,7 +20,7 @@
 #include <sys/asm.h>
 
 /* Usage:
-   long syscall (syscall_number, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+   long int syscall (syscall_number, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 
    We need to do some arg shifting, syscall_number will be in v0.  */
 

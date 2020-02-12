@@ -36,8 +36,8 @@
    the INTERNAL_SYSCALL_{ERROR_P,ERRNO} macros work correctly.  */
 #define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		\
   ({									\
-    long _ret = funcptr (args);						\
-    err = ((unsigned long) (_ret) >= (unsigned long) -4095L);		\
+    long int _ret = funcptr (args);					\
+    err = ((unsigned long int) (_ret) >= (unsigned long int) -4095L);	\
     if (err)								\
       _ret = -_ret;							\
     _ret;								\
