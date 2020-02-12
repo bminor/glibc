@@ -167,6 +167,7 @@ The following bugs are resolved with this release:
   [25232] No const correctness for strchr et al. for Clang++
   [25414] 'glob' use-after-free bug (CVE-2020-1752)
   [25423] Array overflow in backtrace on powerpc
+  [25487] sinl() stack corruption from crafted input (CVE-2020-10029)
   [25620] libc: Signed comparison vulnerability in the ARMv7 memcpy() (CVE-2020-6096)
 
 
