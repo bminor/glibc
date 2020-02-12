@@ -30,6 +30,8 @@
 
 #include "nsswitch.h"
 
+NSS_DECLARE_MODULE_FUNCTIONS (files)
+
 /* Locks the static variables in this file.  */
 __libc_lock_define_initialized (static, lock)
 

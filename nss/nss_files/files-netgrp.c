@@ -27,6 +27,8 @@
 #include "nsswitch.h"
 #include "netgroup.h"
 
+NSS_DECLARE_MODULE_FUNCTIONS (files)
+
 #define DATAFILE	"/etc/netgroup"
 
 libnss_files_hidden_proto (_nss_files_endnetgrent)

@@ -25,6 +25,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <scratch_buffer.h>
+#include <nss.h>
+
+NSS_DECLARE_MODULE_FUNCTIONS (files)
 
 enum nss_status
 _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,

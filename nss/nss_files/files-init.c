@@ -20,6 +20,9 @@
 
 #include <string.h>
 #include <nscd/nscd.h>
+#include <nss.h>
+
+NSS_DECLARE_MODULE_FUNCTIONS (files)
 
 #define PWD_FILENAME "/etc/passwd"
 define_traced_file (pwd, PWD_FILENAME);

@@ -18,7 +18,9 @@
 
 #include <netinet/in.h>
 #include <netdb.h>
+#include <nss.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (files)
 
 #define ENTNAME		servent
 #define DATABASE	"services"
