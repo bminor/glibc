@@ -210,6 +210,18 @@ __ieee754_rem_pio2l (long double x, long double *y)
       return 0;
     }
 
+  if ((i0 & 0x80000000) == 0)
+    {
+      /* Pseudo-zero and unnormal representations are not valid
+	 representations of long double.  We need to avoid stack
+	 corruption in __kernel_rem_pio2, which expects input in a
+	 particular normal form, but those representations do not need
+	 to be consistently handled like any particular floating-point
+	 value.  */
+      y[1] = y[0] = __builtin_nanl ("");
+      return 0;
+    }
+
   /* Split the 64 bits of the mantissa into three 24-bit integers
      stored in a double array.  */
   exp = j0 - 23;
