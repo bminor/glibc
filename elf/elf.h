@@ -3946,8 +3946,9 @@ enum
 #define R_RISCV_SET16		55
 #define R_RISCV_SET32		56
 #define R_RISCV_32_PCREL	57
+#define R_RISCV_IRELATIVE	58
 
-#define R_RISCV_NUM		58
+#define R_RISCV_NUM		59
 
 /* BPF specific declarations.  */
 
