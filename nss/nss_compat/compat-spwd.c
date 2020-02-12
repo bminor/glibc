@@ -32,13 +32,13 @@
 #include "nisdomain.h"
 
 static service_user *ni;
-static enum nss_status (*nss_setspent) (int stayopen);
-static enum nss_status (*nss_getspnam_r) (const char *name, struct spwd * sp,
-					  char *buffer, size_t buflen,
-					  int *errnop);
-static enum nss_status (*nss_getspent_r) (struct spwd * sp, char *buffer,
-					  size_t buflen, int *errnop);
-static enum nss_status (*nss_endspent) (void);
+static enum nss_status (*setspent_impl) (int stayopen);
+static enum nss_status (*getspnam_r_impl) (const char *name, struct spwd * sp,
+					   char *buffer, size_t buflen,
+					   int *errnop);
+static enum nss_status (*getspent_r_impl) (struct spwd * sp, char *buffer,
+					   size_t buflen, int *errnop);
+static enum nss_status (*endspent_impl) (void);
 
 /* Get the declaration of the parser function.  */
 #define ENTNAME spent
@@ -88,10 +88,10 @@ init_nss_interface (void)
   if (__nss_database_lookup2 ("shadow_compat", "passwd_compat",
 			      "nis", &ni) >= 0)
     {
-      nss_setspent = __nss_lookup_function (ni, "setspent");
-      nss_getspnam_r = __nss_lookup_function (ni, "getspnam_r");
-      nss_getspent_r = __nss_lookup_function (ni, "getspent_r");
-      nss_endspent = __nss_lookup_function (ni, "endspent");
+      setspent_impl = __nss_lookup_function (ni, "setspent");
+      getspnam_r_impl = __nss_lookup_function (ni, "getspnam_r");
+      getspent_r_impl = __nss_lookup_function (ni, "getspent_r");
+      endspent_impl = __nss_lookup_function (ni, "endspent");
     }
 }
 
@@ -190,8 +190,8 @@ internal_setspent (ent_t *ent, int stayopen, int needent)
 
   give_spwd_free (&ent->pwd);
 
-  if (needent && status == NSS_STATUS_SUCCESS && nss_setspent)
-    ent->setent_status = nss_setspent (stayopen);
+  if (needent && status == NSS_STATUS_SUCCESS && setspent_impl)
+    ent->setent_status = setspent_impl (stayopen);
 
   return status;
 }
@@ -251,8 +251,8 @@ _nss_compat_endspent (void)
 
   __libc_lock_lock (lock);
 
-  if (nss_endspent)
-    nss_endspent ();
+  if (endspent_impl)
+    endspent_impl ();
 
   result = internal_endspent (&ext_ent);
 
@@ -270,7 +270,7 @@ getspent_next_nss_netgr (const char *name, struct spwd *result, ent_t *ent,
   char *curdomain = NULL, *host, *user, *domain, *p2;
   size_t p2len;
 
-  if (!nss_getspnam_r)
+  if (!getspnam_r_impl)
     return NSS_STATUS_UNAVAIL;
 
   /* If the setpwent call failed, say so.  */
@@ -330,7 +330,7 @@ getspent_next_nss_netgr (const char *name, struct spwd *result, ent_t *ent,
       p2 = buffer + (buflen - p2len);
       buflen -= p2len;
 
-      if (nss_getspnam_r (user, result, buffer, buflen, errnop)
+      if (getspnam_r_impl (user, result, buffer, buflen, errnop)
 	  != NSS_STATUS_SUCCESS)
 	continue;
 
@@ -356,7 +356,7 @@ getspent_next_nss (struct spwd *result, ent_t *ent,
   char *p2;
   size_t p2len;
 
-  if (!nss_getspent_r)
+  if (!getspent_r_impl)
     return NSS_STATUS_UNAVAIL;
 
   p2len = spwd_need_buflen (&ent->pwd);
@@ -369,7 +369,7 @@ getspent_next_nss (struct spwd *result, ent_t *ent,
   buflen -= p2len;
   do
     {
-      if ((status = nss_getspent_r (result, buffer, buflen, errnop))
+      if ((status = getspent_r_impl (result, buffer, buflen, errnop))
 	  != NSS_STATUS_SUCCESS)
 	return status;
     }
@@ -386,7 +386,7 @@ static enum nss_status
 getspnam_plususer (const char *name, struct spwd *result, ent_t *ent,
 		   char *buffer, size_t buflen, int *errnop)
 {
-  if (!nss_getspnam_r)
+  if (!getspnam_r_impl)
     return NSS_STATUS_UNAVAIL;
 
   struct spwd pwd;
@@ -407,8 +407,8 @@ getspnam_plususer (const char *name, struct spwd *result, ent_t *ent,
   char *p = buffer + (buflen - plen);
   buflen -= plen;
 
-  enum nss_status status = nss_getspnam_r (name, result, buffer, buflen,
-					   errnop);
+  enum nss_status status = getspnam_r_impl (name, result, buffer, buflen,
+					    errnop);
   if (status != NSS_STATUS_SUCCESS)
     return status;
 

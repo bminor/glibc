@@ -28,16 +28,16 @@
 #include <kernel-features.h>
 
 static service_user *ni;
-static enum nss_status (*nss_setgrent) (int stayopen);
-static enum nss_status (*nss_getgrnam_r) (const char *name,
-					  struct group * grp, char *buffer,
-					  size_t buflen, int *errnop);
-static enum nss_status (*nss_getgrgid_r) (gid_t gid, struct group * grp,
-					  char *buffer, size_t buflen,
-					  int *errnop);
-static enum nss_status (*nss_getgrent_r) (struct group * grp, char *buffer,
-					  size_t buflen, int *errnop);
-static enum nss_status (*nss_endgrent) (void);
+static enum nss_status (*setgrent_impl) (int stayopen);
+static enum nss_status (*getgrnam_r_impl) (const char *name,
+					   struct group * grp, char *buffer,
+					   size_t buflen, int *errnop);
+static enum nss_status (*getgrgid_r_impl) (gid_t gid, struct group * grp,
+					   char *buffer, size_t buflen,
+					   int *errnop);
+static enum nss_status (*getgrent_r_impl) (struct group * grp, char *buffer,
+					   size_t buflen, int *errnop);
+static enum nss_status (*endgrent_impl) (void);
 
 /* Get the declaration of the parser function.  */
 #define ENTNAME grent
@@ -80,11 +80,11 @@ init_nss_interface (void)
 {
   if (__nss_database_lookup2 ("group_compat", NULL, "nis", &ni) >= 0)
     {
-      nss_setgrent = __nss_lookup_function (ni, "setgrent");
-      nss_getgrnam_r = __nss_lookup_function (ni, "getgrnam_r");
-      nss_getgrgid_r = __nss_lookup_function (ni, "getgrgid_r");
-      nss_getgrent_r = __nss_lookup_function (ni, "getgrent_r");
-      nss_endgrent = __nss_lookup_function (ni, "endgrent");
+      setgrent_impl = __nss_lookup_function (ni, "setgrent");
+      getgrnam_r_impl = __nss_lookup_function (ni, "getgrnam_r");
+      getgrgid_r_impl = __nss_lookup_function (ni, "getgrgid_r");
+      getgrent_r_impl = __nss_lookup_function (ni, "getgrent_r");
+      endgrent_impl = __nss_lookup_function (ni, "endgrent");
     }
 }
 
@@ -117,8 +117,8 @@ internal_setgrent (ent_t *ent, int stayopen, int needent)
   else
     rewind (ent->stream);
 
-  if (needent && status == NSS_STATUS_SUCCESS && nss_setgrent)
-    ent->setent_status = nss_setgrent (stayopen);
+  if (needent && status == NSS_STATUS_SUCCESS && setgrent_impl)
+    ent->setent_status = setgrent_impl (stayopen);
 
   return status;
 }
@@ -170,8 +170,8 @@ _nss_compat_endgrent (void)
 
   __libc_lock_lock (lock);
 
-  if (nss_endgrent)
-    nss_endgrent ();
+  if (endgrent_impl)
+    endgrent_impl ();
 
   result = internal_endgrent (&ext_ent);
 
@@ -185,7 +185,7 @@ static enum nss_status
 getgrent_next_nss (struct group *result, ent_t *ent, char *buffer,
 		   size_t buflen, int *errnop)
 {
-  if (!nss_getgrent_r)
+  if (!getgrent_r_impl)
     return NSS_STATUS_UNAVAIL;
 
   /* If the setgrent call failed, say so.  */
@@ -196,7 +196,7 @@ getgrent_next_nss (struct group *result, ent_t *ent, char *buffer,
     {
       enum nss_status status;
 
-      if ((status = nss_getgrent_r (result, buffer, buflen, errnop))
+      if ((status = getgrent_r_impl (result, buffer, buflen, errnop))
 	  != NSS_STATUS_SUCCESS)
 	return status;
     }
@@ -210,11 +210,11 @@ static enum nss_status
 getgrnam_plusgroup (const char *name, struct group *result, ent_t *ent,
 		    char *buffer, size_t buflen, int *errnop)
 {
-  if (!nss_getgrnam_r)
+  if (!getgrnam_r_impl)
     return NSS_STATUS_UNAVAIL;
 
-  enum nss_status status = nss_getgrnam_r (name, result, buffer, buflen,
-					   errnop);
+  enum nss_status status = getgrnam_r_impl (name, result, buffer, buflen,
+					    errnop);
   if (status != NSS_STATUS_SUCCESS)
     return status;
 
@@ -578,11 +578,11 @@ internal_getgrgid_r (gid_t gid, struct group *result, ent_t *ent,
       /* +:... */
       if (result->gr_name[0] == '+' && result->gr_name[1] == '\0')
 	{
-	  if (!nss_getgrgid_r)
+	  if (!getgrgid_r_impl)
 	    return NSS_STATUS_UNAVAIL;
 
-	  enum nss_status status = nss_getgrgid_r (gid, result, buffer, buflen,
-						   errnop);
+	  enum nss_status status = getgrgid_r_impl (gid, result,
+						    buffer, buflen, errnop);
 	  if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
 	    return NSS_STATUS_NOTFOUND;
 	  else
