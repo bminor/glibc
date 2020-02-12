@@ -31,20 +31,19 @@
 #include <scratch_buffer.h>
 
 static service_user *ni;
-/* Type of the lookup function.  */
-static enum nss_status (*nss_initgroups_dyn) (const char *, gid_t,
-					      long int *, long int *,
-					      gid_t **, long int, int *);
-static enum nss_status (*nss_getgrnam_r) (const char *name,
-					  struct group * grp, char *buffer,
-					  size_t buflen, int *errnop);
-static enum nss_status (*nss_getgrgid_r) (gid_t gid, struct group * grp,
-					  char *buffer, size_t buflen,
-					  int *errnop);
-static enum nss_status (*nss_setgrent) (int stayopen);
-static enum nss_status (*nss_getgrent_r) (struct group * grp, char *buffer,
-					  size_t buflen, int *errnop);
-static enum nss_status (*nss_endgrent) (void);
+static enum nss_status (*initgroups_dyn_impl) (const char *, gid_t,
+					       long int *, long int *,
+					       gid_t **, long int, int *);
+static enum nss_status (*getgrnam_r_impl) (const char *name,
+					   struct group * grp, char *buffer,
+					   size_t buflen, int *errnop);
+static enum nss_status (*getgrgid_r_impl) (gid_t gid, struct group * grp,
+					   char *buffer, size_t buflen,
+					   int *errnop);
+static enum nss_status (*setgrent_impl) (int stayopen);
+static enum nss_status (*getgrent_r_impl) (struct group * grp, char *buffer,
+					   size_t buflen, int *errnop);
+static enum nss_status (*endgrent_impl) (void);
 
 /* Protect global state against multiple changers.  */
 __libc_lock_define_initialized (static, lock)
@@ -91,12 +90,12 @@ init_nss_interface (void)
   if (ni == NULL
       && __nss_database_lookup2 ("group_compat", NULL, "nis", &ni) >= 0)
     {
-      nss_initgroups_dyn = __nss_lookup_function (ni, "initgroups_dyn");
-      nss_getgrnam_r = __nss_lookup_function (ni, "getgrnam_r");
-      nss_getgrgid_r = __nss_lookup_function (ni, "getgrgid_r");
-      nss_setgrent = __nss_lookup_function (ni, "setgrent");
-      nss_getgrent_r = __nss_lookup_function (ni, "getgrent_r");
-      nss_endgrent = __nss_lookup_function (ni, "endgrent");
+      initgroups_dyn_impl = __nss_lookup_function (ni, "initgroups_dyn");
+      getgrnam_r_impl = __nss_lookup_function (ni, "getgrnam_r");
+      getgrgid_r_impl = __nss_lookup_function (ni, "getgrgid_r");
+      setgrent_impl = __nss_lookup_function (ni, "setgrent");
+      getgrent_r_impl = __nss_lookup_function (ni, "getgrent_r");
+      endgrent_impl = __nss_lookup_function (ni, "endgrent");
     }
 
   __libc_lock_unlock (lock);
@@ -151,8 +150,8 @@ internal_endgrent (ent_t *ent)
   else
     ent->blacklist.current = 0;
 
-  if (ent->need_endgrent && nss_endgrent != NULL)
-    nss_endgrent ();
+  if (ent->need_endgrent && endgrent_impl != NULL)
+    endgrent_impl ();
 
   return NSS_STATUS_SUCCESS;
 }
@@ -244,8 +243,8 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 	 getgrent_r through the whole group database. But for large
 	 group databases this is faster, since the user can only be
 	 in a limited number of groups.  */
-      if (nss_initgroups_dyn (user, group, &mystart, &mysize, &mygroups,
-			      limit, errnop) == NSS_STATUS_SUCCESS)
+      if (initgroups_dyn_impl (user, group, &mystart, &mysize, &mygroups,
+			       limit, errnop) == NSS_STATUS_SUCCESS)
 	{
 	  status = NSS_STATUS_NOTFOUND;
 
@@ -264,8 +263,8 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 
 	      for (int i = 0; i < mystart; i++)
 		{
-		  while ((status = nss_getgrgid_r (mygroups[i], &grpbuf,
-						   tmpbuf, tmplen, errnop))
+		  while ((status = getgrgid_r_impl (mygroups[i], &grpbuf,
+						    tmpbuf, tmplen, errnop))
 			 == NSS_STATUS_TRYAGAIN
 			 && *errnop == ERANGE)
                     {
@@ -301,9 +300,9 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 			  && check_and_add_group (user, group, start, size,
 						  groupsp, limit, &grpbuf))
 			{
-			  if (nss_setgrent != NULL)
+			  if (setgrent_impl != NULL)
 			    {
-			      nss_setgrent (1);
+			      setgrent_impl (1);
 			      ent->need_endgrent = true;
 			    }
 			  ent->skip_initgroups_dyn = true;
@@ -334,7 +333,7 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
  iter:
   do
     {
-      if ((status = nss_getgrent_r (&grpbuf, buffer, buflen, errnop))
+      if ((status = getgrent_r_impl (&grpbuf, buffer, buflen, errnop))
 	  != NSS_STATUS_SUCCESS)
 	break;
     }
@@ -426,10 +425,10 @@ internal_getgrent_r (ent_t *ent, char *buffer, size_t buflen, const char *user,
 	  /* Store the group in the blacklist for the "+" at the end of
 	     /etc/group */
 	  blacklist_store_name (&grpbuf.gr_name[1], ent);
-	  if (nss_getgrnam_r == NULL)
+	  if (getgrnam_r_impl == NULL)
 	    return NSS_STATUS_UNAVAIL;
-	  else if (nss_getgrnam_r (&grpbuf.gr_name[1], &grpbuf, buffer,
-				   buflen, errnop) != NSS_STATUS_SUCCESS)
+	  else if (getgrnam_r_impl (&grpbuf.gr_name[1], &grpbuf, buffer,
+				    buflen, errnop) != NSS_STATUS_SUCCESS)
 	    continue;
 
 	  check_and_add_group (user, group, start, size, groupsp,
@@ -444,16 +443,16 @@ internal_getgrent_r (ent_t *ent, char *buffer, size_t buflen, const char *user,
 	  /* If the selected module does not support getgrent_r or
 	     initgroups_dyn, abort. We cannot find the needed group
 	     entries.  */
-	  if (nss_initgroups_dyn == NULL || nss_getgrgid_r == NULL)
+	  if (initgroups_dyn_impl == NULL || getgrgid_r_impl == NULL)
 	    {
-	      if (nss_setgrent != NULL)
+	      if (setgrent_impl != NULL)
 		{
-		  nss_setgrent (1);
+		  setgrent_impl (1);
 		  ent->need_endgrent = true;
 		}
 	      ent->skip_initgroups_dyn = true;
 
-	      if (nss_getgrent_r == NULL)
+	      if (getgrent_r_impl == NULL)
 		return NSS_STATUS_UNAVAIL;
 	    }
 
