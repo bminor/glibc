@@ -22,6 +22,8 @@
 #include <nscd/nscd.h>
 #include <string.h>
 
+#include "nss_db.h"
+
 #define PWD_FILENAME (_PATH_VARDB "passwd.db")
 define_traced_file (pwd, PWD_FILENAME);
 

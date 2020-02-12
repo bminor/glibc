@@ -32,7 +32,6 @@
 /* The hashing function we use.  */
 #include "../intl/hash-string.h"
 
-
 enum nss_status
 _nss_db_initgroups_dyn (const char *user, gid_t group, long int *start,
 			long int *size, gid_t **groupsp, long int limit,
