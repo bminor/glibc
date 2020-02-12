@@ -134,10 +134,11 @@
 	long int _sys_result;						\
 									\
 	{								\
+	long int _arg1 = (long int) (arg1);				\
 	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
 	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = (long int) (arg1);		\
+	register long int __a0 asm ("$4") = _arg1;			\
 	register long int __a3 asm ("$7");				\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
@@ -158,11 +159,13 @@
 	long int _sys_result;						\
 									\
 	{								\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
 	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
 	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = (long int) (arg1);		\
-	register long int __a1 asm ("$5") = (long int) (arg2);		\
+	register long int __a0 asm ("$4") = _arg1;			\
+	register long int __a1 asm ("$5") = _arg2;			\
 	register long int __a3 asm ("$7");				\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
@@ -184,12 +187,15 @@
 	long int _sys_result;						\
 									\
 	{								\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
 	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
 	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = (long int) (arg1);		\
-	register long int __a1 asm ("$5") = (long int) (arg2);		\
-	register long int __a2 asm ("$6") = (long int) (arg3);		\
+	register long int __a0 asm ("$4") = _arg1;			\
+	register long int __a1 asm ("$5") = _arg2;			\
+	register long int __a2 asm ("$6") = _arg3;			\
 	register long int __a3 asm ("$7");				\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
@@ -211,13 +217,17 @@
 	long int _sys_result;						\
 									\
 	{								\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
+	long int _arg4 = (long int) (arg4);				\
 	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
 	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = (long int) (arg1);		\
-	register long int __a1 asm ("$5") = (long int) (arg2);		\
-	register long int __a2 asm ("$6") = (long int) (arg3);		\
-	register long int __a3 asm ("$7") = (long int) (arg4);		\
+	register long int __a0 asm ("$4") = _arg1;			\
+	register long int __a1 asm ("$5") = _arg2;			\
+	register long int __a2 asm ("$6") = _arg3;			\
+	register long int __a3 asm ("$7") = _arg4;			\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -238,14 +248,19 @@
 	long int _sys_result;						\
 									\
 	{								\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
+	long int _arg4 = (long int) (arg4);				\
+	long int _arg5 = (long int) (arg5);				\
 	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
 	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = (long int) (arg1);		\
-	register long int __a1 asm ("$5") = (long int) (arg2);		\
-	register long int __a2 asm ("$6") = (long int) (arg3);		\
-	register long int __a3 asm ("$7") = (long int) (arg4);		\
-	register long int __a4 asm ("$8") = (long int) (arg5);		\
+	register long int __a0 asm ("$4") = _arg1;			\
+	register long int __a1 asm ("$5") = _arg2;			\
+	register long int __a2 asm ("$6") = _arg3;			\
+	register long int __a3 asm ("$7") = _arg4;			\
+	register long int __a4 asm ("$8") = _arg5;			\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -266,15 +281,21 @@
 	long int _sys_result;						\
 									\
 	{								\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
+	long int _arg4 = (long int) (arg4);				\
+	long int _arg5 = (long int) (arg5);				\
+	long int _arg6 = (long int) (arg6);				\
 	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
 	register long int __v0 asm ("$2");				\
-	register long int __a0 asm ("$4") = (long int) (arg1);		\
-	register long int __a1 asm ("$5") = (long int) (arg2);		\
-	register long int __a2 asm ("$6") = (long int) (arg3);		\
-	register long int __a3 asm ("$7") = (long int) (arg4);		\
-	register long int __a4 asm ("$8") = (long int) (arg5);		\
-	register long int __a5 asm ("$9") = (long int) (arg6);		\
+	register long int __a0 asm ("$4") = _arg1;			\
+	register long int __a1 asm ("$5") = _arg2;			\
+	register long int __a2 asm ("$6") = _arg3;			\
+	register long int __a3 asm ("$7") = _arg4;			\
+	register long int __a4 asm ("$8") = _arg5;			\
+	register long int __a5 asm ("$9") = _arg6;			\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
