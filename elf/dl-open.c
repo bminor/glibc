@@ -621,25 +621,18 @@ dl_open_worker (void *a)
      This allows IFUNC relocations to work and it also means copy
      relocation of dependencies are if necessary overwritten.
      __dl_map_object_deps has already sorted l_initfini for us.  */
-  unsigned int nmaps = 0;
+  unsigned int first = UINT_MAX;
+  unsigned int last = 0;
   unsigned int j = 0;
   struct link_map *l = new->l_initfini[0];
   do
     {
       if (! l->l_real->l_relocated)
-	++nmaps;
-      l = new->l_initfini[++j];
-    }
-  while (l != NULL);
-  /* Stack allocation is limited by the number of loaded objects.  */
-  struct link_map *maps[nmaps];
-  nmaps = 0;
-  j = 0;
-  l = new->l_initfini[0];
-  do
-    {
-      if (! l->l_real->l_relocated)
-	maps[nmaps++] = l;
+	{
+	  if (first == UINT_MAX)
+	    first = j;
+	  last = j + 1;
+	}
       l = new->l_initfini[++j];
     }
   while (l != NULL);
@@ -654,9 +647,12 @@ dl_open_worker (void *a)
      them.  However, such relocation dependencies in IFUNC resolvers
      are undefined anyway, so this is not a problem.  */
 
-  for (unsigned int i = nmaps; i-- > 0; )
+  for (unsigned int i = last; i-- > first; )
     {
-      l = maps[i];
+      l = new->l_initfini[i];
+
+      if (l->l_real->l_relocated)
+	continue;
 
       if (! relocation_in_progress)
 	{
