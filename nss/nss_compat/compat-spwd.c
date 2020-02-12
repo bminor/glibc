@@ -31,6 +31,8 @@
 #include "netgroup.h"
 #include "nisdomain.h"
 
+NSS_DECLARE_MODULE_FUNCTIONS (compat)
+
 static service_user *ni;
 static enum nss_status (*setspent_impl) (int stayopen);
 static enum nss_status (*getspnam_r_impl) (const char *name, struct spwd * sp,

@@ -27,6 +27,8 @@
 #include <libc-lock.h>
 #include <kernel-features.h>
 
+NSS_DECLARE_MODULE_FUNCTIONS (compat)
+
 static service_user *ni;
 static enum nss_status (*setgrent_impl) (int stayopen);
 static enum nss_status (*getgrnam_r_impl) (const char *name,
