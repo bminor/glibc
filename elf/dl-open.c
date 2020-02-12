@@ -617,9 +617,10 @@ dl_open_worker (void *a)
   if (GLRO(dl_lazy))
     reloc_mode |= mode & RTLD_LAZY;
 
-  /* Sort the objects by dependency for the relocation process.  This
-     allows IFUNC relocations to work and it also means copy
-     relocation of dependencies are if necessary overwritten.  */
+  /* Objects must be sorted by dependency for the relocation process.
+     This allows IFUNC relocations to work and it also means copy
+     relocation of dependencies are if necessary overwritten.
+     __dl_map_object_deps has already sorted l_initfini for us.  */
   unsigned int nmaps = 0;
   unsigned int j = 0;
   struct link_map *l = new->l_initfini[0];
@@ -642,7 +643,6 @@ dl_open_worker (void *a)
       l = new->l_initfini[++j];
     }
   while (l != NULL);
-  _dl_sort_maps (maps, nmaps, NULL, false);
 
   int relocation_in_progress = 0;
 
