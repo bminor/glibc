@@ -20,8 +20,8 @@
 
 #undef __mips16_syscall0
 
-long long __nomips16
-__mips16_syscall0 (long number)
+long long int __nomips16
+__mips16_syscall0 (long int number)
 {
   union __mips_syscall_return ret;
   ret.reg.v0 = INTERNAL_SYSCALL_MIPS16 (number, ret.reg.v1, 0);
