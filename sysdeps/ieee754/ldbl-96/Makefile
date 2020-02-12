@@ -17,5 +17,6 @@
 # <https://www.gnu.org/licenses/>.
 
 ifeq ($(subdir),math)
-tests += test-canonical-ldbl-96 test-totalorderl-ldbl-96
+tests += test-canonical-ldbl-96 test-totalorderl-ldbl-96 test-sinl-pseudo
+CFLAGS-test-sinl-pseudo.c += -fstack-protector-all
 endif
