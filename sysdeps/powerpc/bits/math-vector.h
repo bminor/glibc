@@ -36,6 +36,12 @@
 # ifdef __DECL_SIMD_PPC64
 #  undef __DECL_SIMD_cos
 #  define __DECL_SIMD_cos __DECL_SIMD_PPC64
+#  undef __DECL_SIMD_cosf
+#  define __DECL_SIMD_cosf __DECL_SIMD_PPC64
+#  undef __DECL_SIMD_sin
+#  define __DECL_SIMD_sin __DECL_SIMD_PPC64
+#  undef __DECL_SIMD_sinf
+#  define __DECL_SIMD_sinf __DECL_SIMD_PPC64
 #  undef __DECL_SIMD_log
 #  define __DECL_SIMD_log __DECL_SIMD_PPC64
 #  undef __DECL_SIMD_logf
