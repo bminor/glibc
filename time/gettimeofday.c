@@ -35,6 +35,8 @@ ___gettimeofday (struct timeval *restrict tv, void *restrict tz)
   TIMESPEC_TO_TIMEVAL (tv, &ts);
   return 0;
 }
-
+/* Define to override default symbol version.  */
+#ifndef SET_VERSION
 strong_alias (___gettimeofday, __gettimeofday)
 weak_alias (___gettimeofday, gettimeofday)
+#endif
