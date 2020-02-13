@@ -123,7 +123,8 @@ $expanded_lib_mode
 #include <$header>
 int avoid_empty_translation_unit;
 EOF
-            if $cc_cmd -fsyntax-only $lang_mode "$cih_test_c" 2>&1
+            if $cc_cmd -finput-charset=ascii -fsyntax-only $lang_mode \
+		       "$cih_test_c" 2>&1
             then :
             else failed=1
             fi
