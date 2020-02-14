@@ -662,4 +662,9 @@ struct libc_do_syscall_args
 # endif
 #endif
 
+/* Each shadow stack slot takes 4 bytes.  Assuming that each stack
+   frame takes 128 bytes, this is used to compute shadow stack size
+   from stack size.  */
+#define STACK_SIZE_TO_SHADOW_STACK_SIZE_SHIFT 5
+
 #endif /* linux/i386/sysdep.h */

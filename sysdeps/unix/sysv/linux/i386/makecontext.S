@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <asm/prctl.h>
 
 #include "ucontext_i.h"
 
@@ -67,6 +68,127 @@ ENTRY(__makecontext)
 	decl	%ecx
 	jnz	1b
 2:
+
+#if SHSTK_ENABLED
+	/* Check if Shadow Stack is enabled.  */
+	testl	$X86_FEATURE_1_SHSTK, %gs:FEATURE_1_OFFSET
+	jz	L(skip_ssp)
+
+	/* Reload the pointer to ucontext.  */
+	movl	4(%esp), %eax
+
+	/* Shadow stack is enabled.  We need to allocate a new shadow
+	   stack.  */
+	subl	oSS_SP(%eax), %edx
+	shrl	$STACK_SIZE_TO_SHADOW_STACK_SIZE_SHIFT, %edx
+
+	/* Align shadow stack size to 8 bytes.  */
+	addl	$7, %edx
+	andl	$-8, %edx
+
+	/* Store shadow stack size in __ssp[2].  */
+	movl	%edx, (oSSP + 8)(%eax)
+
+	/* Save ESI in the second scratch register slot.  */
+	movl	%esi, oSCRATCH2(%eax)
+	/* Save EDI in the third scratch register slot.  */
+	movl	%edi, oSCRATCH3(%eax)
+
+	/* Save the pointer to ucontext.  */
+	movl	%eax, %edi
+
+	/* Get the original shadow stack pointer.  */
+	rdsspd	%esi
+
+	/* Align the saved original shadow stack pointer to the next
+	   8 byte aligned boundary.  */
+	andl	$-8, %esi
+
+	/* Load the top of the new stack into EDX.  */
+	movl	oESP(%eax), %edx
+
+	/* We need to terminate the FDE here because the unwinder looks
+	   at ra-1 for unwind information.  */
+	cfi_endproc
+
+	/* Swap the original stack pointer with the top of the new
+	   stack.  */
+	xchgl	%esp, %edx
+
+	/* Add 4 bytes since CALL will push the 4-byte return address
+	   onto stack.  */
+	addl	$4, %esp
+
+	/* Allocate the new shadow stack.  Save EBX in the first scratch
+	   register slot.  */
+	movl	%ebx, oSCRATCH1(%eax)
+
+	/* CET syscall takes 64-bit sizes.  */
+	subl	$16, %esp
+	movl	(oSSP + 8)(%eax), %ecx
+	movl	%ecx, (%esp)
+	movl	$0, 4(%esp)
+	movl	%ecx, 8(%esp)
+	movl	$0, 12(%esp)
+	movl	%esp, %ecx
+
+	movl	$ARCH_CET_ALLOC_SHSTK, %ebx
+	movl	$__NR_arch_prctl, %eax
+	ENTER_KERNEL
+	testl	%eax, %eax
+	jne	L(hlt)		/* This should never happen.  */
+
+	/* Copy the base address of the new shadow stack to __ssp[1].  */
+	movl	(%esp), %eax
+	movl	%eax, (oSSP + 4)(%edi)
+
+	addl	$16, %esp
+
+	/* Restore EBX from the first scratch register slot.  */
+	movl	oSCRATCH1(%edi), %ebx
+
+	/* Get the size of the new shadow stack.  */
+	movl	(oSSP + 8)(%edi), %ecx
+
+	/* Use the restore stoken to restore the new shadow stack.  */
+	rstorssp -8(%eax, %ecx)
+
+	/* Save the restore token at the next 8 byte aligned boundary
+	   on the original shadow stack.  */
+	saveprevssp
+
+	/* Push the address of "jmp exitcode" onto the new stack as
+	   well as the new shadow stack.  */
+	call	1f
+	jmp	L(exitcode)
+1:
+
+	/* Get the new shadow stack pointer.  */
+	rdsspd	%eax
+
+	/* Use the restore stoken to restore the original shadow stack.  */
+	rstorssp -8(%esi)
+
+	/* Save the restore token on the new shadow stack.  */
+	saveprevssp
+
+	/* Store the new shadow stack pointer in __ssp[0].  */
+	movl	%eax, oSSP(%edi)
+
+	/* Restore the original stack.  */
+	mov	%edx, %esp
+
+	cfi_startproc
+
+	/* Restore ESI from the second scratch register slot.  */
+	movl	oSCRATCH2(%edi), %esi
+	/* Restore EDI from the third scratch register slot.  */
+	movl	oSCRATCH3(%edi), %edi
+
+	ret
+
+L(skip_ssp):
+#endif
 
 	/* If the function we call returns we must continue with the
 	   context which is given in the uc_link element.  To do this
@@ -123,6 +245,7 @@ L(call_exit):
 	call	HIDDEN_JUMPTARGET(exit)
 	/* The 'exit' call should never return.  In case it does cause
 	   the process to terminate.  */
+L(hlt):
 	hlt
 	cfi_startproc
 END(__makecontext)

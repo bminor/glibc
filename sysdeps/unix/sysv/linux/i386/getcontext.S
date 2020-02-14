@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <asm/prctl.h>
 
 #include "ucontext_i.h"
 
@@ -42,6 +43,61 @@ ENTRY(__getcontext)
 	movw	%fs, %dx
 	movl	%edx, oFS(%eax)
 
+#if SHSTK_ENABLED
+	/* Check if shadow stack is enabled.  */
+	testl	$X86_FEATURE_1_SHSTK, %gs:FEATURE_1_OFFSET
+	jz	L(no_shstk)
+
+	/* Save EAX in EDX.  */
+	movl	%eax, %edx
+
+	xorl	%eax, %eax
+	cmpl	%gs:SSP_BASE_OFFSET, %eax
+	jnz	L(shadow_stack_bound_recorded)
+
+	/* Save EBX in the first scratch register slot.  */
+	movl	%ebx, oSCRATCH1(%edx)
+
+	/* Get the base address and size of the default shadow stack
+	   which must be the current shadow stack since nothing has
+	   been recorded yet.  */
+	sub	$24, %esp
+	mov	%esp, %ecx
+	movl	$ARCH_CET_STATUS, %ebx
+	movl	$__NR_arch_prctl, %eax
+	ENTER_KERNEL
+	testl	%eax, %eax
+	jz	L(continue_no_err)
+
+	/* This should never happen.  */
+	hlt
+
+L(continue_no_err):
+	/* Restore EBX from the first scratch register slot.  */
+	movl	oSCRATCH1(%edx), %ebx
+
+	/* Record the base of the current shadow stack.  */
+	movl	8(%esp), %eax
+	movl	%eax, %gs:SSP_BASE_OFFSET
+	add	$24, %esp
+
+L(shadow_stack_bound_recorded):
+	/* Load address of the context data structure.  */
+	movl	4(%esp), %eax
+
+	/* Get the current shadow stack pointer.  */
+	rdsspd	%edx
+	/* NB: Save the caller's shadow stack so that we can jump back
+	   to the caller directly.  */
+	addl	$4, %edx
+	movl	%edx, oSSP(%eax)
+
+	/* Save the current shadow stack base in ucontext.  */
+	movl	%gs:SSP_BASE_OFFSET, %edx
+	movl	%edx, (oSSP + 4)(%eax)
+
+L(no_shstk):
+#endif
 	/* We have separate floating-point register content memory on the
 	   stack.  We use the __fpregs_mem block in the context.  Set the
 	   links up correctly.  */
