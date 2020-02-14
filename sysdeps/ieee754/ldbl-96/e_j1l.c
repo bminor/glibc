@@ -138,7 +138,7 @@ __ieee754_j1l (long double x)
        * j1(x) = 1/sqrt(pi) * (P(1,x)*cc - Q(1,x)*ss) / sqrt(x)
        * y1(x) = 1/sqrt(pi) * (P(1,x)*ss + Q(1,x)*cc) / sqrt(x)
        */
-      if (__glibc_unlikely (ix > 0x4080))
+      if (__glibc_unlikely (ix > 0x408e))
 	z = (invsqrtpi * cc) / sqrtl (y);
       else
 	{
@@ -232,7 +232,7 @@ __ieee754_y1l (long double x)
        *              sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
        * to compute the worse one.
        */
-      if (__glibc_unlikely (ix > 0x4080))
+      if (__glibc_unlikely (ix > 0x408e))
 	z = (invsqrtpi * ss) / sqrtl (x);
       else
 	{

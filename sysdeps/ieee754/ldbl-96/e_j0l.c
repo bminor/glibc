@@ -134,7 +134,7 @@ __ieee754_j0l (long double x)
        * j0(x) = 1/sqrt(pi) * (P(0,x)*cc - Q(0,x)*ss) / sqrt(x)
        * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
        */
-      if (__glibc_unlikely (ix > 0x4080))      	/* 2^129 */
+      if (__glibc_unlikely (ix > 0x408e))      	/* 2^143 */
 	z = (invsqrtpi * cc) / sqrtl (x);
       else
 	{
@@ -236,7 +236,7 @@ __ieee754_y0l (long double x)
 	  else
 	    ss = z / cc;
 	}
-      if (__glibc_unlikely (ix > 0x4080))      	/* 1e39 */
+      if (__glibc_unlikely (ix > 0x408e))      	/* 2^143 */
 	z = (invsqrtpi * ss) / sqrtl (x);
       else
 	{
