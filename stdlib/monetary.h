@@ -51,7 +51,7 @@ extern ssize_t strfmon_l (char *__restrict __s, size_t __maxsize,
 #endif
 
 #include <bits/floatn.h>
-#if defined __LDBL_COMPAT || __LONG_DOUBLE_USES_FLOAT128 == 1
+#if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 # include <bits/monetary-ldbl.h>
 #endif
 

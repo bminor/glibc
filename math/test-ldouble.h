@@ -29,7 +29,7 @@
 /* On architectures which redirect long double to _Float128 ABI, we must
    choose the float128 ulps.  Similarly, on such architectures, the ABI
    used may be dependent on how the compiler was invoked.  */
-#elif __LONG_DOUBLE_USES_FLOAT128 == 1
+#elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 # define TYPE_STR "float128"
 # define ULP_IDX ULP_FLT128
 #else

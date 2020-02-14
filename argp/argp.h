@@ -555,7 +555,7 @@ __NTH (__option_is_end (const struct argp_option *__opt))
 #endif /* Use extern inlines.  */
 
 #include <bits/floatn.h>
-#if defined __LDBL_COMPAT || __LONG_DOUBLE_USES_FLOAT128 == 1
+#if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 # include <bits/argp-ldbl.h>
 #endif
 

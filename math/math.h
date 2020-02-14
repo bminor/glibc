@@ -343,7 +343,7 @@ extern long double __REDIRECT_NTH (nexttowardl,
 #   define __MATHDECL_1(type, function,suffix, args) \
   __MATHREDIR(type, function, suffix, args, __CONCAT(function,suffix))
 
-#  elif __LONG_DOUBLE_USES_FLOAT128 == 1
+#  elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #   ifdef __REDIRECT_NTH
 #    ifdef __USE_ISOC99
 extern float __REDIRECT_NTH (nexttowardf, (float __x, long double __y),
@@ -390,7 +390,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #  undef __MATH_DECLARING_FLOATN
 
 #  if defined __LDBL_COMPAT \
-      || __LONG_DOUBLE_USES_FLOAT128 == 1
+      || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #   undef __REDIRTO
 #   undef __REDIRTO_ALT
 #   undef __MATHDECL_1
@@ -562,7 +562,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_REDIR (func, redir, nargs)
-# elif __LONG_DOUBLE_USES_FLOAT128 == 1
+# elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  define __MATHCALL_REDIR_NAME(name) __ ## f32 ## name ## ieee128
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
@@ -573,7 +573,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # undef _Marg_
 # undef __MATHCALL_NAME
 # if defined __LDBL_COMPAT \
-     || __LONG_DOUBLE_USES_FLOAT128 == 1
+     || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  undef __MATHCALL_REDIR_NAME
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
@@ -588,7 +588,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_REDIR (func, redir, nargs)
-# elif __LONG_DOUBLE_USES_FLOAT128 == 1
+# elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  define __MATHCALL_REDIR_NAME(name) __ ## f64 ## name ## ieee128
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
@@ -599,7 +599,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # undef _Marg_
 # undef __MATHCALL_NAME
 # if defined __LDBL_COMPAT \
-     || __LONG_DOUBLE_USES_FLOAT128 == 1
+     || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  undef __MATHCALL_REDIR_NAME
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \

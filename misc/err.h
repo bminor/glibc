@@ -53,7 +53,7 @@ extern void verrx (int __status, const char *, __gnuc_va_list)
      __attribute__ ((__noreturn__, __format__ (__printf__, 2, 0)));
 
 #include <bits/floatn.h>
-#if defined __LDBL_COMPAT || __LONG_DOUBLE_USES_FLOAT128 == 1
+#if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 # include <bits/err-ldbl.h>
 #endif
 

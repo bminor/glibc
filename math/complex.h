@@ -126,7 +126,7 @@ __BEGIN_DECLS
 #  undef __MATHDECL_1
 #  define __MATHDECL_1(type, function, args) \
   extern type __REDIRECT_NTH(__MATH_PRECNAME(function), args, function)
-# elif __LONG_DOUBLE_USES_FLOAT128 == 1
+# elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  undef __MATHDECL_1
 #  undef __MATHDECL
 #  define __REDIR_TO(function) \
@@ -142,7 +142,7 @@ __BEGIN_DECLS
 # define __MATH_PRECNAME(name)	name##l
 # include <bits/cmathcalls.h>
 # if defined __LDBL_COMPAT \
-     || __LONG_DOUBLE_USES_FLOAT128 == 1
+     || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  undef __REDIR_TO
 #  undef __MATHDECL_1
 #  undef __MATHDECL

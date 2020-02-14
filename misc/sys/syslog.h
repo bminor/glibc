@@ -208,7 +208,7 @@ extern void vsyslog (int __pri, const char *__fmt, __gnuc_va_list __ap)
 #endif
 
 #include <bits/floatn.h>
-#if defined __LDBL_COMPAT || __LONG_DOUBLE_USES_FLOAT128 == 1
+#if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 # include <bits/syslog-ldbl.h>
 #endif
 

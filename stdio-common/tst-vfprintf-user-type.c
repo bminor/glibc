@@ -147,7 +147,7 @@ do_test (void)
 
   /* Alias declaration for asprintf, to avoid the format string
      attribute and the associated warning.  */
-#if __LONG_DOUBLE_USES_FLOAT128 == 1
+#if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
   extern int asprintf_alias (char **, const char *, ...) __asm__ ("__asprintfieee128");
 #else
   extern int asprintf_alias (char **, const char *, ...) __asm__ ("asprintf");

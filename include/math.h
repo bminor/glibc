@@ -19,7 +19,7 @@ hidden_proto (__isinff)
 hidden_proto (__isnanf)
 
 #  if !defined __NO_LONG_DOUBLE_MATH \
-      && __LONG_DOUBLE_USES_FLOAT128 == 0
+      && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0
 hidden_proto (__finitel)
 hidden_proto (__isinfl)
 hidden_proto (__isnanl)
@@ -42,7 +42,7 @@ libm_hidden_proto (__expf)
 libm_hidden_proto (__roundeven)
 
 #  if !defined __NO_LONG_DOUBLE_MATH \
-      && __LONG_DOUBLE_USES_FLOAT128 == 0
+      && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0
 libm_hidden_proto (__fpclassifyl)
 libm_hidden_proto (__issignalingl)
 libm_hidden_proto (__expl)
@@ -143,7 +143,7 @@ fabsf128 (_Float128 x)
   MATH_REDIRECT_LDBL (FUNC, PREFIX, ARGS)			\
   MATH_REDIRECT_F128 (FUNC, PREFIX, ARGS)
 #   if defined __NO_LONG_DOUBLE_MATH 				\
-       || __LONG_DOUBLE_USES_FLOAT128 == 1
+       || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #    define MATH_REDIRECT_LDBL(FUNC, PREFIX, ARGS)
 #   else
 #    define MATH_REDIRECT_LDBL(FUNC, PREFIX, ARGS)			\

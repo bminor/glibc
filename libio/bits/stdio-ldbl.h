@@ -31,7 +31,7 @@ __LDBL_REDIR_DECL (vsprintf)
 __LDBL_REDIR1_DECL (fscanf, __nldbl___isoc99_fscanf)
 __LDBL_REDIR1_DECL (scanf, __nldbl___isoc99_scanf)
 __LDBL_REDIR1_DECL (sscanf, __nldbl___isoc99_sscanf)
-# elif __LONG_DOUBLE_USES_FLOAT128 == 1
+# elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 __LDBL_REDIR1_DECL (fscanf, __isoc99_fscanfieee128)
 __LDBL_REDIR1_DECL (scanf, __isoc99_scanfieee128)
 __LDBL_REDIR1_DECL (sscanf, __isoc99_sscanfieee128)
@@ -55,7 +55,7 @@ __LDBL_REDIR_DECL (vsnprintf)
 __LDBL_REDIR1_DECL (vfscanf, __nldbl___isoc99_vfscanf)
 __LDBL_REDIR1_DECL (vscanf, __nldbl___isoc99_vscanf)
 __LDBL_REDIR1_DECL (vsscanf, __nldbl___isoc99_vsscanf)
-#  elif __LONG_DOUBLE_USES_FLOAT128 == 1
+#  elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 __LDBL_REDIR1_DECL (vfscanf, __isoc99_vfscanfieee128)
 __LDBL_REDIR1_DECL (vscanf, __isoc99_vscanfieee128)
 __LDBL_REDIR1_DECL (vsscanf, __isoc99_vsscanfieee128)

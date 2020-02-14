@@ -112,7 +112,7 @@ union ieee754_double
 #define IEEE754_DOUBLE_BIAS	0x3ff /* Added to exponent.  */
 
 
-#if __LONG_DOUBLE_USES_FLOAT128 == 1
+#if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 /* long double is IEEE 128 bit */
 union ieee854_long_double
   {
@@ -170,7 +170,7 @@ union ieee854_long_double
 #endif
 
 
-#if __LONG_DOUBLE_USES_FLOAT128 == 0 || __GNUC_PREREQ (7, 0)
+#if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0 || __GNUC_PREREQ (7, 0)
 /* IBM extended format for long double.
 
    Each long double is made up of two IEEE doubles.  The value of the
@@ -183,7 +183,7 @@ union ieee854_long_double
    NaN is don't-care.  */
 union ibm_extended_long_double
   {
-# if __LONG_DOUBLE_USES_FLOAT128 == 1 && __GNUC_PREREQ (7, 0)
+# if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1 && __GNUC_PREREQ (7, 0)
    __ibm128 ld;
 # else
    long double ld;

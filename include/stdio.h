@@ -5,7 +5,7 @@
 
 /* Workaround PR90731 with GCC 9 when using ldbl redirects in C++.  */
 # include <bits/floatn.h>
-# if defined __cplusplus && __LONG_DOUBLE_USES_FLOAT128 == 1
+# if defined __cplusplus && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  if __GNUC_PREREQ (9, 0) && !__GNUC_PREREQ (9, 3)
 #    pragma GCC system_header
 #  endif
@@ -22,10 +22,10 @@
 /*  Some libc_hidden_ldbl_proto's do not map to a unique symbol when
     redirecting ldouble to _Float128 variants.  We can therefore safely
     directly alias them to their internal name.  */
-# if __LONG_DOUBLE_USES_FLOAT128 == 1 && IS_IN (libc)
+# if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1 && IS_IN (libc)
 #  define stdio_hidden_ldbl_proto(p, f) \
   extern __typeof (p ## f) p ## f __asm (__ASMNAME ("___ieee128_" #f));
-# elif __LONG_DOUBLE_USES_FLOAT128 == 1
+# elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  define stdio_hidden_ldbl_proto(p,f) __LDBL_REDIR1_DECL (p ## f, p ## f ## ieee128)
 # else
 #  define stdio_hidden_ldbl_proto(p,f) libc_hidden_proto (p ## f)
@@ -101,7 +101,7 @@ libc_hidden_proto (__isoc99_vfscanf)
 #   define sscanf __isoc99_sscanf
 #  endif
 
-#  if __LONG_DOUBLE_USES_FLOAT128 == 1  && IS_IN (libc)
+#  if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1  && IS_IN (libc)
 /* These are implemented as redirects to other public API.
    Therefore, the usual redirection fails to avoid PLT.  */
 extern __typeof (__isoc99_sscanf) ___ieee128_isoc99_sscanf __THROW;

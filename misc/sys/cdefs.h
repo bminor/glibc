@@ -452,7 +452,7 @@
 #include <bits/wordsize.h>
 #include <bits/long-double.h>
 
-#if __LONG_DOUBLE_USES_FLOAT128 == 1
+#if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 # ifdef __REDIRECT
 
 /* Alias name defined automatically.  */
@@ -503,7 +503,7 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
   __LDBL_REDIR1_NTH (name, proto, __nldbl_##alias)
 # endif
 #endif
-#if (!defined __LDBL_COMPAT && __LONG_DOUBLE_USES_FLOAT128 == 0) \
+#if (!defined __LDBL_COMPAT && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0) \
     || !defined __REDIRECT
 # define __LDBL_REDIR1(name, proto, alias) name proto
 # define __LDBL_REDIR(name, proto) name proto

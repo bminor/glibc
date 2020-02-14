@@ -23,7 +23,7 @@
 
 /* Trampoline in the ldbl-128ibm headers if building against the
    old abi.  Otherwise, we have nothing to add. */
-#if __LONG_DOUBLE_USES_FLOAT128 == 0
+#if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0
 #include_next <math_ldbl.h>
 #endif
 

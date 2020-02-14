@@ -22,8 +22,5 @@
 #  define __NO_LONG_DOUBLE_MATH		1
 # endif
 #endif
-/* On platforms that reuse the _Float128 implementation for IEEE long
-   double, access to the correct long double functions is selected based
-   on the long double mode being used during the compilation.  On
-   powerpc64le, this is true when -mabi=ieeelongdouble is in use.  */
-#define __LONG_DOUBLE_USES_FLOAT128 (__LDBL_MANT_DIG__ == 113)
+
+#define __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI (__LDBL_MANT_DIG__ == 113)

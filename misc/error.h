@@ -48,7 +48,7 @@ extern unsigned int error_message_count;
 extern int error_one_per_line;
 
 #include <bits/floatn.h>
-#if defined __LDBL_COMPAT || __LONG_DOUBLE_USES_FLOAT128 == 1
+#if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 # include <bits/error-ldbl.h>
 #else
 /* Do not inline error and error_at_line when long double has the same

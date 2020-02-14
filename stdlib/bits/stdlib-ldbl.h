@@ -51,7 +51,7 @@ __LDBL_REDIR1_DECL (qfcvt, fcvt)
 __LDBL_REDIR1_DECL (qgcvt, gcvt)
 __LDBL_REDIR1_DECL (qecvt_r, ecvt_r)
 __LDBL_REDIR1_DECL (qfcvt_r, fcvt_r)
-# elif __LONG_DOUBLE_USES_FLOAT128 == 1
+# elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 __LDBL_REDIR1_DECL (qecvt, __qecvtieee128)
 __LDBL_REDIR1_DECL (qfcvt, __qfcvtieee128)
 __LDBL_REDIR1_DECL (qgcvt, __qgcvtieee128)

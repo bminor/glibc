@@ -15,7 +15,7 @@ do_test (void)
   if (i.dli_sname == NULL)
     return 1;
 
-#if __LONG_DOUBLE_USES_FLOAT128 == 1
+#if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
   /* On architectures which redirect long double to
      _Float128 (e.g powerpc64le), printf will resolve
      to __printfieee128 due to header redirects.  There

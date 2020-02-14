@@ -16,7 +16,7 @@ rtld_hidden_proto (__chk_fail)
 /* If we are using redirects internally to support long double,
    we need to tweak some macros to ensure the PLT bypass tricks
    continue to work in libc. */
-#if __LONG_DOUBLE_USES_FLOAT128 == 1 && IS_IN (libc) && defined SHARED
+#if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1 && IS_IN (libc) && defined SHARED
 
 # undef __LDBL_REDIR_DECL
 # define __LDBL_REDIR_DECL(func) \
