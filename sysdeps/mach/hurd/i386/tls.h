@@ -44,8 +44,8 @@ typedef struct
   /* GCC split stack support.  */
   void *__private_ss;
 
-  /* Keep this field last, so fields above can continue being compatible with
-     the Linux version. */
+  /* Keep these fields last, so offsets of fields above can continue being
+     compatible with the i386 Linux version.  */
   mach_port_t reply_port;      /* This thread's reply port.  */
   struct hurd_sigstate *_hurd_sigstate;
 } tcbhead_t;
