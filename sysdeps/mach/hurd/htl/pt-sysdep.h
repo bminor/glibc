@@ -32,6 +32,7 @@
   mach_msg_header_t wakeupmsg;
 
 extern __thread struct __pthread *___pthread_self;
+#ifdef DEBUG
 #define _pthread_self()                                            \
 	({                                                         \
 	  struct __pthread *thread;                                \
@@ -46,6 +47,9 @@ extern __thread struct __pthread *___pthread_self;
                      ok; }));                                      \
           thread;                                                  \
          })
+#else
+#define _pthread_self() ___pthread_self
+#endif
 
 extern inline void
 __attribute__ ((__always_inline__))
