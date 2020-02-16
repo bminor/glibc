@@ -273,6 +273,7 @@ extern pthread_t pthread_self (void) __THROW;
 #ifdef __USE_XOPEN2K
 # define PTHREAD_MUTEX_STALLED __PTHREAD_MUTEX_STALLED
 # define PTHREAD_MUTEX_ROBUST __PTHREAD_MUTEX_ROBUST
+# define PTHREAD_MUTEX_ROBUST_NP __PTHREAD_MUTEX_ROBUST
 #endif
 
 #include <bits/types/struct___pthread_mutexattr.h>

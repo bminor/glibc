@@ -155,6 +155,12 @@ GLIBC_2.32 mtx_lock F
 GLIBC_2.32 mtx_timedlock F
 GLIBC_2.32 mtx_trylock F
 GLIBC_2.32 mtx_unlock F
+GLIBC_2.32 pthread_mutex_consistent F
+GLIBC_2.32 pthread_mutex_consistent_np F
+GLIBC_2.32 pthread_mutexattr_getrobust F
+GLIBC_2.32 pthread_mutexattr_getrobust_np F
+GLIBC_2.32 pthread_mutexattr_setrobust F
+GLIBC_2.32 pthread_mutexattr_setrobust_np F
 GLIBC_2.32 thrd_create F
 GLIBC_2.32 thrd_detach F
 GLIBC_2.32 thrd_exit F
