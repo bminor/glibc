@@ -208,7 +208,7 @@ ifeq (yes,$(build-shared))
 $(addprefix $(objpfx), \
   $(filter-out $(tests-static) $(xtests-static) $(tests-reverse) \
     $(tests-nolibpthread), \
-    $(tests) $(xtests) $(test-srcs))): $(objpfx)libpthread.so
+    $(tests) $(tests-internal) $(xtests) $(test-srcs))): $(objpfx)libpthread.so
 endif
 
 $(addprefix $(objpfx),$(tests-static) $(xtests-static)): $(objpfx)libpthread.a
