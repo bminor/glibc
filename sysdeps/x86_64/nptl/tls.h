@@ -199,6 +199,9 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 /* Read member of the thread descriptor directly.  */
 # define THREAD_GETMEM(descr, member) \
   ({ __typeof (descr->member) __value;					      \
+     _Static_assert (sizeof (__value) == 1				      \
+		  || sizeof (__value) == 4				      \
+		  || sizeof (__value) == 8);				      \
      if (sizeof (__value) == 1)						      \
        asm volatile ("movb %%fs:%P2,%b0"				      \
 		     : "=q" (__value)					      \
@@ -207,13 +210,8 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
        asm volatile ("movl %%fs:%P1,%0"					      \
 		     : "=r" (__value)					      \
 		     : "i" (offsetof (struct pthread, member)));	      \
-     else								      \
+     else /* 8 */								      \
        {								      \
-	 if (sizeof (__value) != 8)					      \
-	   /* There should not be any value with a size other than 1,	      \
-	      4 or 8.  */						      \
-	   abort ();							      \
-									      \
 	 asm volatile ("movq %%fs:%P1,%q0"				      \
 		       : "=r" (__value)					      \
 		       : "i" (offsetof (struct pthread, member)));	      \
@@ -224,6 +222,9 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 /* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
 # define THREAD_GETMEM_NC(descr, member, idx) \
   ({ __typeof (descr->member[0]) __value;				      \
+     _Static_assert (sizeof (__value) == 1				      \
+		  || sizeof (__value) == 4				      \
+		  || sizeof (__value) == 8);				      \
      if (sizeof (__value) == 1)						      \
        asm volatile ("movb %%fs:%P2(%q3),%b0"				      \
 		     : "=q" (__value)					      \
@@ -233,13 +234,8 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
        asm volatile ("movl %%fs:%P1(,%q2,4),%0"				      \
 		     : "=r" (__value)					      \
 		     : "i" (offsetof (struct pthread, member[0])), "r" (idx));\
-     else								      \
+     else /* 8 */							      \
        {								      \
-	 if (sizeof (__value) != 8)					      \
-	   /* There should not be any value with a size other than 1,	      \
-	      4 or 8.  */						      \
-	   abort ();							      \
-									      \
 	 asm volatile ("movq %%fs:%P1(,%q2,8),%q0"			      \
 		       : "=r" (__value)					      \
 		       : "i" (offsetof (struct pthread, member[0])),	      \
@@ -259,7 +255,11 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 
 /* Set member of the thread descriptor directly.  */
 # define THREAD_SETMEM(descr, member, value) \
-  ({ if (sizeof (descr->member) == 1)					      \
+  ({									      \
+     _Static_assert (sizeof (descr->member) == 1			      \
+		  || sizeof (descr->member) == 4			      \
+		  || sizeof (descr->member) == 8);			      \
+     if (sizeof (descr->member) == 1)					      \
        asm volatile ("movb %b0,%%fs:%P1" :				      \
 		     : "iq" (value),					      \
 		       "i" (offsetof (struct pthread, member)));	      \
@@ -267,13 +267,8 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
        asm volatile ("movl %0,%%fs:%P1" :				      \
 		     : IMM_MODE (value),				      \
 		       "i" (offsetof (struct pthread, member)));	      \
-     else								      \
+     else /* 8 */							      \
        {								      \
-	 if (sizeof (descr->member) != 8)				      \
-	   /* There should not be any value with a size other than 1,	      \
-	      4 or 8.  */						      \
-	   abort ();							      \
-									      \
 	 asm volatile ("movq %q0,%%fs:%P1" :				      \
 		       : IMM_MODE ((uint64_t) cast_to_integer (value)),	      \
 			 "i" (offsetof (struct pthread, member)));	      \
@@ -282,7 +277,11 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 # define THREAD_SETMEM_NC(descr, member, idx, value) \
-  ({ if (sizeof (descr->member[0]) == 1)				      \
+  ({									      \
+     _Static_assert (sizeof (descr->member[0]) == 1			      \
+		  || sizeof (descr->member[0]) == 4			      \
+		  || sizeof (descr->member[0]) == 8);			      \
+     if (sizeof (descr->member[0]) == 1)				      \
        asm volatile ("movb %b0,%%fs:%P1(%q2)" :				      \
 		     : "iq" (value),					      \
 		       "i" (offsetof (struct pthread, member[0])),	      \
@@ -292,13 +291,8 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 		     : IMM_MODE (value),				      \
 		       "i" (offsetof (struct pthread, member[0])),	      \
 		       "r" (idx));					      \
-     else								      \
+     else /* 8 */							      \
        {								      \
-	 if (sizeof (descr->member[0]) != 8)				      \
-	   /* There should not be any value with a size other than 1,	      \
-	      4 or 8.  */						      \
-	   abort ();							      \
-									      \
 	 asm volatile ("movq %q0,%%fs:%P1(,%q2,8)" :			      \
 		       : IMM_MODE ((uint64_t) cast_to_integer (value)),	      \
 			 "i" (offsetof (struct pthread, member[0])),	      \
