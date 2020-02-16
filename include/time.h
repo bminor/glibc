@@ -207,10 +207,13 @@ libc_hidden_proto (__utimensat64_helper);
 
 #if __TIMESIZE == 64
 # define __futimes64 __futimes
+# define __lutimes64 __lutimes
 # define __futimens64 __futimens
 #else
 extern int __futimes64 (int fd, const struct __timeval64 tvp64[2]);
 libc_hidden_proto (__futimes64);
+extern int __lutimes64 (const char *file, const struct __timeval64 tvp64[2]);
+libc_hidden_proto (__lutimes64);
 extern int __futimens64 (int fd, const struct __timespec64 tsp[2]);
 libc_hidden_proto (__futimens64);
 #endif

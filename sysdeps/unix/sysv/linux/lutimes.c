@@ -20,25 +20,36 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <time.h>
-#include <sys/time.h>
-#include <sysdep.h>
-
 
 int
-lutimes (const char *file, const struct timeval tvp[2])
+__lutimes64 (const char *file, const struct __timeval64 tvp64[2])
 {
-  /* The system call espects timespec, not timeval.  */
-  struct timespec ts[2];
-  if (tvp != NULL)
+  struct __timespec64 ts64[2];
+  if (tvp64 != NULL)
     {
-      if (tvp[0].tv_usec < 0 || tvp[0].tv_usec >= 1000000
-          || tvp[1].tv_usec < 0 || tvp[1].tv_usec >= 1000000)
-	return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-
-      TIMEVAL_TO_TIMESPEC (&tvp[0], &ts[0]);
-      TIMEVAL_TO_TIMESPEC (&tvp[1], &ts[1]);
+      ts64[0] = timeval64_to_timespec64 (tvp64[0]);
+      ts64[1] = timeval64_to_timespec64 (tvp64[1]);
     }
 
-  return INLINE_SYSCALL (utimensat, 4, AT_FDCWD, file, tvp ? ts : NULL,
-			 AT_SYMLINK_NOFOLLOW);
+  return __utimensat64_helper (AT_FDCWD, file, tvp64 ? &ts64[0] : NULL,
+                               AT_SYMLINK_NOFOLLOW);
 }
+
+#if __TIMESIZE != 64
+libc_hidden_def (__lutimes64)
+
+int
+__lutimes (const char *file, const struct timeval tvp[2])
+{
+  struct __timeval64 tv64[2];
+
+  if (tvp != NULL)
+    {
+      tv64[0] = valid_timeval_to_timeval64 (tvp[0]);
+      tv64[1] = valid_timeval_to_timeval64 (tvp[1]);
+    }
+
+  return __lutimes64 (file, tvp ? &tv64[0] : NULL);
+}
+#endif
+weak_alias (__lutimes, lutimes)
