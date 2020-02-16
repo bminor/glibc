@@ -32,4 +32,3 @@ pthread_mutexattr_setpshared (pthread_mutexattr_t *attrp, int pshared)
   attrp->__pshared = pshared;
   return 0;
 }
-stub_warning (pthread_mutexattr_setpshared)
