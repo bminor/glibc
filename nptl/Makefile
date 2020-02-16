@@ -241,7 +241,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutexpi9 \
 	tst-cond11 tst-cond20 tst-cond21 tst-cond22 tst-cond26 tst-cond27 \
 	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 tst-robustpi5 \
-	tst-robustpi6 tst-robustpi7 tst-robustpi8 tst-robustpi9 \
+	tst-robustpi6 tst-robustpi7 tst-robustpi9 \
 	tst-rwlock2 tst-rwlock2a tst-rwlock2b tst-rwlock3 \
 	tst-rwlock6 tst-rwlock7 tst-rwlock8 \
 	tst-rwlock9 tst-rwlock10 tst-rwlock11 tst-rwlock12 \
@@ -304,7 +304,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 
 tests-container =  tst-pthread-getattr
 
-tests-internal := tst-rwlock19 tst-rwlock20 \
+tests-internal := tst-robustpi8 tst-rwlock19 tst-rwlock20 \
 		  tst-sem11 tst-sem12 tst-sem13 \
 		  tst-barrier5 tst-signal7 tst-mutex8 tst-mutex8-static \
 		  tst-mutexpi8 tst-mutexpi8-static tst-cancel25
