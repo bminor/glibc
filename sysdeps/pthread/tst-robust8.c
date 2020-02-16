@@ -8,6 +8,7 @@
 #include <sys/mman.h>
 #include <sys/wait.h>
 
+#include <pthreadP.h>
 
 
 
@@ -252,7 +253,9 @@ do_test (void)
 	    {
 	      printf ("mutex_destroy %d in round %d failed with %d\n",
 		      n + 1, round, e);
+#ifdef __PTHREAD_NPTL
 	      printf("nusers = %d\n", (int) map[n].__data.__nusers);
+#endif
 	      return 1;
 	    }
 	}

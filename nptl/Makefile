@@ -240,8 +240,6 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutexpi5 tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a \
 	tst-mutexpi9 \
 	tst-cond11 tst-cond20 tst-cond21 tst-cond22 tst-cond26 tst-cond27 \
-	tst-robust1 tst-robust2 tst-robust3 tst-robust4 tst-robust5 \
-	tst-robust6 tst-robust7 tst-robust8 tst-robust9 \
 	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 tst-robustpi5 \
 	tst-robustpi6 tst-robustpi7 tst-robustpi8 tst-robustpi9 \
 	tst-rwlock2 tst-rwlock2a tst-rwlock2b tst-rwlock3 \
@@ -297,7 +295,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-initializers1 $(addprefix tst-initializers1-,\
 			    c89 gnu89 c99 gnu99 c11 gnu11) \
 	tst-bad-schedattr \
-	tst-thread_local1 tst-mutex-errorcheck tst-robust10 \
+	tst-thread_local1 tst-mutex-errorcheck \
 	tst-robust-fork tst-create-detached tst-memstream \
 	tst-thread-exit-clobber tst-minstack-cancel tst-minstack-exit \
 	tst-minstack-throw \

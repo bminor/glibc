@@ -19,6 +19,8 @@
 #ifndef _PTHREADP_H
 #define _PTHREADP_H	1
 
+#define __PTHREAD_HTL
+
 #include <pthread.h>
 
 /* Attribute to indicate thread creation was issued from C11 thrd_create.  */

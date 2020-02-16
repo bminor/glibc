@@ -97,8 +97,8 @@ ifeq ($(subdir),mach)
 test-xfail-check-abi-libmachuser = yes
 endif
 
-# For bug 25521
 ifeq ($(subdir),htl)
+# For bug 25521
 test-xfail-tst-mutex4 = yes
 test-xfail-tst-cond4 = yes
 test-xfail-tst-cond6 = yes
@@ -109,20 +109,26 @@ test-xfail-tst-rwlock4 = yes
 test-xfail-tst-rwlock12 = yes
 test-xfail-tst-sem3 = yes
 test-xfail-tst-barrier2 = yes
-endif
 
 # For bug 25522
-ifeq ($(subdir),htl)
 test-xfail-tst-cond24 = yes
 test-xfail-tst-cond25 = yes
-endif
 
 # For bug 25524
-ifeq ($(subdir),htl)
 test-xfail-tst-sem4 = yes
 test-xfail-tst-sem7 = yes
 test-xfail-tst-sem8 = yes
 test-xfail-tst-sem9 = yes
+
+# For bug 25563
+test-xfail-tst-robust1 = yes
+test-xfail-tst-robust2 = yes
+test-xfail-tst-robust3 = yes
+test-xfail-tst-robust4 = yes
+test-xfail-tst-robust5 = yes
+test-xfail-tst-robust6 = yes
+test-xfail-tst-robust7 = yes
+test-xfail-tst-robust9 = yes
 endif
 
 ifeq ($(subdir),elf)
