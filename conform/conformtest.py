@@ -633,12 +633,11 @@ class HeaderTests(object):
                     bad_tokens.discard(match.group(1))
                     continue
                 # Tokenize the line and check identifiers found.  The
-                # handling of strings does not allow for escaped
-                # quotes, no allowance is made for character
-                # constants, and hex floats may be wrongly split into
-                # tokens including identifiers, but this is sufficient
-                # in practice and matches the old perl script.
-                line = re.sub(r'"[^"]*"', '', line)
+                # handling of strings and character constants does not
+                # allow for escaped quotes, and hex floats may be
+                # wrongly split into tokens including identifiers, but
+                # this is sufficient in practice.
+                line = re.sub(r'(?:\bL)?(?:"[^"]*"|\'[^\']*\')', '', line)
                 line = line.strip()
                 for token in re.split(r'[^A-Za-z0-9_]+', line):
                     if re.match(r'[A-Za-z_]', token):
