@@ -256,8 +256,9 @@ tls_fill_user_desc (union user_desc_init *desc,
 # define THREAD_GETMEM(descr, member) \
   ({ __typeof (descr->member) __value;					      \
      _Static_assert (sizeof (__value) == 1				      \
-		  || sizeof (__value) == 4				      \
-		  || sizeof (__value) == 8);				      \
+		     || sizeof (__value) == 4				      \
+		     || sizeof (__value) == 8,				      \
+		     "size of per-thread data");			      \
      if (sizeof (__value) == 1)						      \
        asm volatile ("movb %%gs:%P2,%b0"				      \
 		     : "=q" (__value)					      \
@@ -281,8 +282,9 @@ tls_fill_user_desc (union user_desc_init *desc,
 # define THREAD_GETMEM_NC(descr, member, idx) \
   ({ __typeof (descr->member[0]) __value;				      \
      _Static_assert (sizeof (__value) == 1				      \
-		  || sizeof (__value) == 4				      \
-		  || sizeof (__value) == 8);				      \
+		     || sizeof (__value) == 4				      \
+		     || sizeof (__value) == 8,				      \
+		     "size of per-thread data");			      \
      if (sizeof (__value) == 1)						      \
        asm volatile ("movb %%gs:%P2(%3),%b0"				      \
 		     : "=q" (__value)					      \
@@ -309,8 +311,9 @@ tls_fill_user_desc (union user_desc_init *desc,
 # define THREAD_SETMEM(descr, member, value) \
   ({									      \
      _Static_assert (sizeof (descr->member) == 1			      \
-		  || sizeof (descr->member) == 4			      \
-		  || sizeof (descr->member) == 8);			      \
+		     || sizeof (descr->member) == 4			      \
+		     || sizeof (descr->member) == 8,			      \
+		     "size of per-thread data");			      \
      if (sizeof (descr->member) == 1)					      \
        asm volatile ("movb %b0,%%gs:%P1" :				      \
 		     : "iq" (value),					      \
@@ -333,8 +336,9 @@ tls_fill_user_desc (union user_desc_init *desc,
 # define THREAD_SETMEM_NC(descr, member, idx, value) \
   ({									      \
      _Static_assert (sizeof (descr->member[0]) == 1			      \
-		  || sizeof (descr->member[0]) == 4			      \
-		  || sizeof (descr->member[0]) == 8);			      \
+		     || sizeof (descr->member[0]) == 4			      \
+		     || sizeof (descr->member[0]) == 8,			      \
+		     "size of per-thread data");			      \
      if (sizeof (descr->member[0]) == 1)				      \
        asm volatile ("movb %b0,%%gs:%P1(%2)" :				      \
 		     : "iq" (value),					      \
