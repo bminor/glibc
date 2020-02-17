@@ -202,7 +202,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-sonamemove-link tst-sonamemove-dlopen tst-dlopen-tlsmodid \
 	 tst-dlopen-self tst-auditmany tst-initfinilazyfail tst-dlopenfail \
 	 tst-dlopenfail-2 \
-	 tst-filterobj tst-filterobj-dlopen tst-auxobj tst-auxobj-dlopen
+	 tst-filterobj tst-filterobj-dlopen tst-auxobj tst-auxobj-dlopen \
+	 tst-audit14 tst-audit15 tst-audit16
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -314,7 +315,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-initlazyfailmod tst-finilazyfailmod \
 		tst-dlopenfailmod1 tst-dlopenfaillinkmod tst-dlopenfailmod2 \
 		tst-dlopenfailmod3 tst-ldconfig-ld-mod \
-		tst-filterobj-flt tst-filterobj-aux tst-filterobj-filtee
+		tst-filterobj-flt tst-filterobj-aux tst-filterobj-filtee \
+		tst-auditlogmod-1 tst-auditlogmod-2 tst-auditlogmod-3
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
 modules-names-tests = $(filter-out ifuncmod% tst-libc_dlvsym-dso tst-tlsmod%,\
@@ -1497,6 +1499,22 @@ $(objpfx)tst-auditmany.out: $(objpfx)tst-auditmanymod1.so \
   $(objpfx)tst-auditmanymod8.so	$(objpfx)tst-auditmanymod9.so
 tst-auditmany-ENV = \
   LD_AUDIT=tst-auditmanymod1.so:tst-auditmanymod2.so:tst-auditmanymod3.so:tst-auditmanymod4.so:tst-auditmanymod5.so:tst-auditmanymod6.so:tst-auditmanymod7.so:tst-auditmanymod8.so:tst-auditmanymod9.so
+
+LDFLAGS-tst-audit14 = -Wl,--audit=tst-auditlogmod-1.so
+$(objpfx)tst-auditlogmod-1.so: $(libsupport)
+$(objpfx)tst-audit14.out: $(objpfx)tst-auditlogmod-1.so
+LDFLAGS-tst-audit15 = \
+  -Wl,--audit=tst-auditlogmod-1.so,--depaudit=tst-auditlogmod-2.so
+$(objpfx)tst-auditlogmod-2.so: $(libsupport)
+$(objpfx)tst-audit15.out: \
+  $(objpfx)tst-auditlogmod-1.so $(objpfx)tst-auditlogmod-2.so
+LDFLAGS-tst-audit16 = \
+  -Wl,--audit=tst-auditlogmod-1.so:tst-auditlogmod-2.so \
+  -Wl,--depaudit=tst-auditlogmod-3.so
+$(objpfx)tst-auditlogmod-3.so: $(libsupport)
+$(objpfx)tst-audit16.out: \
+  $(objpfx)tst-auditlogmod-1.so $(objpfx)tst-auditlogmod-2.so \
+  $(objpfx)tst-auditlogmod-3.so
 
 # tst-sonamemove links against an older implementation of the library.
 LDFLAGS-tst-sonamemove-linkmod1.so = \

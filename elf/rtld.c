@@ -153,9 +153,17 @@ static void audit_list_init (struct audit_list *);
    not be called after audit_list_next.  */
 static void audit_list_add_string (struct audit_list *, const char *);
 
+/* Add the audit strings from the link map, found in the dynamic
+   segment at TG (either DT_AUDIT and DT_DEPAUDIT).  Must be called
+   before audit_list_next.  */
+static void audit_list_add_dynamic_tag (struct audit_list *,
+					struct link_map *,
+					unsigned int tag);
+
 /* Extract the next audit module from the audit list.  Only modules
    for which dso_name_valid_for_suid is true are returned.  Must be
-   called after all the audit_list_add_string calls.  */
+   called after all the audit_list_add_string,
+   audit_list_add_dynamic_tags calls.  */
 static const char *audit_list_next (struct audit_list *);
 
 /* This is a list of all the modes the dynamic loader can be in.  */
@@ -233,6 +241,16 @@ audit_list_add_string (struct audit_list *list, const char *string)
      audit_list_next.  */
   if (list->length == 1)
     list->current_tail = string;
+}
+
+static void
+audit_list_add_dynamic_tag (struct audit_list *list, struct link_map *main_map,
+			    unsigned int tag)
+{
+  ElfW(Dyn) *info = main_map->l_info[ADDRIDX (tag)];
+  const char *strtab = (const char *) D_PTR (main_map, l_info[DT_STRTAB]);
+  if (info != NULL)
+    audit_list_add_string (list, strtab + info->d_un.d_val);
 }
 
 static const char *
@@ -1636,6 +1654,9 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
   if (GL(dl_rtld_map).l_tls_blocksize != 0)
     /* Assign a module ID.  Do this before loading any audit modules.  */
     GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
+
+  audit_list_add_dynamic_tag (&audit_list, main_map, DT_AUDIT);
+  audit_list_add_dynamic_tag (&audit_list, main_map, DT_DEPAUDIT);
 
   /* If we have auditing DSOs to load, do it now.  */
   bool need_security_init = true;

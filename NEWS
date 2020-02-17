@@ -11,6 +11,9 @@ Major new features:
 
   * New locale added: ckb_IQ (Kurdish/Sorani spoken in Iraq)
 
+* The GNU C Library now loads audit modules listed in the DT_AUDIT and
+  DT_DEPAUDIT dynamic section entries of the main executable.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]
@@ -3815,7 +3818,7 @@ Version 2.16
 * Support for the x32 ABI on x86-64 added.  The x32 target is selected by
   configuring glibc with:
 	BUILD_CC='gcc' CC='gcc -mx32' CXX='g++ -mx32'
-  Visit <http://sites.google.com/site/x32abi/> for more x32 ABI info.
+  Visit <https://sites.google.com/site/x32abi/> for more x32 ABI info.
   Implemented by H.J. Lu.
 
 * ISO C11 support:
