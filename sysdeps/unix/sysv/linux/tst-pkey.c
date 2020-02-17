@@ -37,7 +37,7 @@ static pthread_barrier_t barrier;
 
 /* The keys used for testing.  These have been allocated with access
    rights set based on their array index.  */
-enum { key_count = 4 };
+enum { key_count = 3 };
 static int keys[key_count];
 static volatile int *pages[key_count];
 
@@ -111,14 +111,16 @@ check_page_access (int page, bool write)
 }
 
 static volatile sig_atomic_t sigusr1_handler_ran;
-
-/* Used to check that access is revoked in signal handlers.  */
+/* Used to check the behavior in signal handlers.  In x86 all access are
+   revoked during signal handling.  In PowerPC the key permissions are
+   inherited by the interrupted thread. This test accept both approaches.  */
 static void
 sigusr1_handler (int signum)
 {
   TEST_COMPARE (signum, SIGUSR1);
   for (int i = 0; i < key_count; ++i)
-    TEST_COMPARE (pkey_get (keys[i]), PKEY_DISABLE_ACCESS);
+    TEST_VERIFY (pkey_get (keys[i]) == PKEY_DISABLE_ACCESS
+                 || pkey_get (keys[i]) == i);
   sigusr1_handler_ran = 1;
 }
 
