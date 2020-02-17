@@ -23,6 +23,7 @@
 #include <gnu/lib-names.h>
 #include <stdlib.h>
 #include <unwind.h>
+#include <unwind-arch.h>
 
 struct trace_arg
 {
@@ -78,6 +79,10 @@ backtrace_helper (struct _Unwind_Context *ctx, void *a)
   if (arg->cnt != -1)
     {
       arg->array[arg->cnt] = (void *) unwind_getip (ctx);
+      if (arg->cnt > 0)
+	arg->array[arg->cnt]
+	  = unwind_arch_adjustment (arg->array[arg->cnt - 1],
+				    arg->array[arg->cnt]);
 
       /* Check whether we make any progress.  */
       _Unwind_Word cfa = unwind_getcfa (ctx);
