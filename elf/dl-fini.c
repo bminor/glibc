@@ -19,6 +19,7 @@
 #include <assert.h>
 #include <string.h>
 #include <ldsodefs.h>
+#include <elf-initfini.h>
 
 
 /* Type of the constructor functions.  */
@@ -117,7 +118,7 @@ _dl_fini (void)
 
 		  /* Is there a destructor function?  */
 		  if (l->l_info[DT_FINI_ARRAY] != NULL
-		      || l->l_info[DT_FINI] != NULL)
+		      || (ELF_INITFINI && l->l_info[DT_FINI] != NULL))
 		    {
 		      /* When debugging print a message first.  */
 		      if (__builtin_expect (GLRO(dl_debug_mask)
@@ -139,7 +140,7 @@ _dl_fini (void)
 			}
 
 		      /* Next try the old-style destructor.  */
-		      if (l->l_info[DT_FINI] != NULL)
+		      if (ELF_INITFINI && l->l_info[DT_FINI] != NULL)
 			DL_CALL_DT_FINI
 			  (l, l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr);
 		    }

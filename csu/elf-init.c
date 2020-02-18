@@ -34,6 +34,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stddef.h>
+#include <elf-initfini.h>
 
 
 /* These magic symbols are provided by the linker.  */
@@ -49,7 +50,7 @@ extern void (*__fini_array_start []) (void) attribute_hidden;
 extern void (*__fini_array_end []) (void) attribute_hidden;
 
 
-#ifndef NO_INITFINI
+#if ELF_INITFINI
 /* These function symbols are provided for the .init/.fini section entry
    points automagically by the linker.  */
 extern void _init (void);
@@ -79,7 +80,7 @@ __libc_csu_init (int argc, char **argv, char **envp)
   }
 #endif
 
-#ifndef NO_INITFINI
+#if ELF_INITFINI
   _init ();
 #endif
 
@@ -99,7 +100,7 @@ __libc_csu_fini (void)
   while (i-- > 0)
     (*__fini_array_start [i]) ();
 
-# ifndef NO_INITFINI
+# if ELF_INITFINI
   _fini ();
 # endif
 #endif

@@ -33,11 +33,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <elf-initfini.h>
+
 /* Arrange for __pthread_initialize_minimal_internal to be called at
    libpthread startup, instead of conditionally calling
    __gmon_start__.  */
 
-#define PREINIT_FUNCTION __pthread_initialize_minimal_internal
-#define PREINIT_FUNCTION_WEAK 0
+#if ELF_INITFINI
+# define PREINIT_FUNCTION __pthread_initialize_minimal_internal
+# define PREINIT_FUNCTION_WEAK 0
 
-#include <crti.S>
+# include <crti.S>
+#else
+	.section .init_array,"a",%init_array
+	.dc.a __pthread_initialize_minimal_internal
+#endif

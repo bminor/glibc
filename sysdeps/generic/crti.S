@@ -12,11 +12,17 @@
    toolchains without .init_array support can use this to avoid the
    superfluous .init and .fini boilerplate code.  */
 
+#include <elf-initfini.h>
+
+#if ELF_INITFINI
+# error Cannot use default crti.S because it lacks _init code
+#endif
+
 #ifdef PREINIT_FUNCTION
 
-#if PREINIT_FUNCTION_WEAK
-# error PREINIT_FUNCTION_WEAK is unsupported
-#endif
+# if PREINIT_FUNCTION_WEAK
+#  error PREINIT_FUNCTION_WEAK is unsupported
+# endif
 
 /* This arranges for PREINIT_FUNCTION to be called upon loading a library that
    contains crti.o.  */

@@ -37,6 +37,7 @@
 #include <sys/gmon.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <elf-initfini.h>
 #define __ASSEMBLY__
 #include <entry.h>
 
@@ -57,6 +58,13 @@ extern char etext[];
 # else
 #  define TEXT_START &ENTRY_POINT
 # endif
+#endif
+
+#if !ELF_INITFINI
+/* Instead of defining __gmon_start__ globally in gcrt1.o, we make it
+   static and just put a pointer to it into the .preinit_array
+   section.  */
+# define GMON_START_ARRAY_SECTION ".preinit_array"
 #endif
 
 #ifdef GMON_START_ARRAY_SECTION

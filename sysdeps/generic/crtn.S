@@ -11,3 +11,9 @@
    But new configurations without compatibility concerns for
    toolchains without .init_array support can use this to avoid the
    superfluous .init and .fini boilerplate code.  */
+
+#include <elf-initfini.h>
+
+#if ELF_INITFINI
+# error Cannot use genetric crtn.S because it lacks _fini code
+#endif

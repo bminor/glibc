@@ -1,5 +1,5 @@
-/* Special initializer support for libpthread.
-   Copyright (C) 2015-2020 Free Software Foundation, Inc.
+/* Determine DT_INIT/DT_FINI support in the dynamic loader.  SH version.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +16,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* This arranges for libpthread.so's special initializer to be called as
-   soon as the library is loaded.  */
-
-	.section .init_array,"a",%init_array
-	.dc.a __pthread_initialize_minimal_internal
+/* Enable DT_INIT/DT_FINI support.  */
+#define ELF_INITFINI 1

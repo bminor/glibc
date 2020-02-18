@@ -1,4 +1,3 @@
-init_array
 wordsize-32
 # C-SKY uses IEEE 754 floating point.
 ieee754/flt-32
