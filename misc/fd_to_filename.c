@@ -1,5 +1,5 @@
-/* Query filename corresponding to an open FD.  Linux version.
-   Copyright (C) 2001-2020 Free Software Foundation, Inc.
+/* Construct a pathname under /proc/self/fd (or /dev/fd for Hurd).
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,23 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/stat.h>
+#include <fd_to_filename.h>
+
+#include <assert.h>
 #include <string.h>
-#include <_itoa.h>
 
-#define FD_TO_FILENAME_SIZE ((sizeof ("/proc/self/fd/") - 1) \
-			     + (sizeof ("4294967295") - 1) + 1)
-
-static inline const char *
-fd_to_filename (unsigned int fd, char *buf)
+char *
+__fd_to_filename (int descriptor, struct fd_to_filename *storage)
 {
-  *_fitoa_word (fd, __stpcpy (buf, "/proc/self/fd/"), 10, 0) = '\0';
+  assert (descriptor >= 0);
 
-  /* We must make sure the file exists.  */
-  struct stat64 st;
-  if (__lxstat64 (_STAT_VER, buf, &st) < 0)
-    /* /proc is not mounted or something else happened.  */
-    return NULL;
-  return buf;
+  char *p = mempcpy (storage->buffer, FD_TO_FILENAME_PREFIX,
+                     strlen (FD_TO_FILENAME_PREFIX));
+
+  for (int d = descriptor; p++, (d /= 10) != 0; )
+    continue;
+  *p = '\0';
+  for (int d = descriptor; *--p = '0' + d % 10, (d /= 10) != 0; )
+    continue;
+  return storage->buffer;
 }

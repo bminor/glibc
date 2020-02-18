@@ -36,7 +36,7 @@ FILE *
 freopen64 (const char *filename, const char *mode, FILE *fp)
 {
   FILE *result = NULL;
-  char fdfilename[FD_TO_FILENAME_SIZE];
+  struct fd_to_filename fdfilename;
 
   CHECK_FILE (fp, NULL);
 
@@ -49,7 +49,7 @@ freopen64 (const char *filename, const char *mode, FILE *fp)
 
   int fd = _IO_fileno (fp);
   const char *gfilename
-    = filename != NULL ? filename : fd_to_filename (fd, fdfilename);
+    = filename != NULL ? filename : __fd_to_filename (fd, &fdfilename);
 
   fp->_flags2 |= _IO_FLAGS2_NOCLOSE;
   _IO_file_close_it (fp);

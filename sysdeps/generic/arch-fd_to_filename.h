@@ -1,5 +1,5 @@
-/* Query filename corresponding to an open FD.
-   Copyright (C) 2001-2020 Free Software Foundation, Inc.
+/* Query filename corresponding to an open FD.  Generic stub.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,22 +16,4 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _FD_TO_FILENAME_H
-#define _FD_TO_FILENAME_H
-
-#include <arch-fd_to_filename.h>
-#include <intprops.h>
-
-struct fd_to_filename
-{
-  /* A positive int value has at most 10 decimal digits.  */
-  char buffer[sizeof (FD_TO_FILENAME_PREFIX) + INT_STRLEN_BOUND (int)];
-};
-
-/* Writes a /proc/self/fd-style path for DESCRIPTOR to *STORAGE and
-   returns a pointer to the start of the string.  DESCRIPTOR must be
-   non-negative.  */
-char *__fd_to_filename (int descriptor, struct fd_to_filename *storage)
-  attribute_hidden;
-
-#endif /* _FD_TO_FILENAME_H */
+#error "<arch-fd_to_filename.h> must be ported to this architecture"

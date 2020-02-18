@@ -72,7 +72,7 @@ routines := brk sbrk sstk ioctl \
 	    fgetxattr flistxattr fremovexattr fsetxattr getxattr \
 	    listxattr lgetxattr llistxattr lremovexattr lsetxattr \
 	    removexattr setxattr getauxval ifunc-impl-list makedev \
-	    allocate_once
+	    allocate_once fd_to_filename
 
 generated += tst-error1.mtrace tst-error1-mem.out \
   tst-allocate_once.mtrace tst-allocate_once-mem.out
@@ -96,6 +96,10 @@ endif
 
 tests-internal := tst-atomic tst-atomic-long tst-allocate_once
 tests-static := tst-empty
+
+# Test for the internal, non-exported __fd_to_filename function.
+tests-internal += tst-fd_to_filename
+tests-static += tst-fd_to_filename
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-error1-mem.out \
