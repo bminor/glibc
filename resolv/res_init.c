@@ -583,7 +583,7 @@ __resolv_conf_load (struct __res_state *preinit,
   if (ok && change != NULL)
     /* Update the file change information if the configuration was
        loaded successfully.  */
-    ok = file_change_detection_for_fp (change, fp);
+    ok = __file_change_detection_for_fp (change, fp);
 
   if (ok)
     {

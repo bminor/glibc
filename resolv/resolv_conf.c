@@ -121,7 +121,7 @@ struct resolv_conf *
 __resolv_conf_get_current (void)
 {
   struct file_change_detection initial;
-  if (!file_change_detection_for_path (&initial, _PATH_RESCONF))
+  if (!__file_change_detection_for_path (&initial, _PATH_RESCONF))
     return NULL;
 
   struct resolv_conf_global *global_copy = get_locked_global ();
@@ -129,7 +129,7 @@ __resolv_conf_get_current (void)
     return NULL;
   struct resolv_conf *conf;
   if (global_copy->conf_current != NULL
-      && file_is_unchanged (&initial, &global_copy->file_resolve_conf))
+      && __file_is_unchanged (&initial, &global_copy->file_resolve_conf))
     /* We can reuse the cached configuration object.  */
     conf = global_copy->conf_current;
   else
@@ -149,7 +149,7 @@ __resolv_conf_get_current (void)
              /etc/resolv.conf is temporarily replaced while the file
              is read (after the initial measurement), and restored to
              the initial version later.  */
-          if (file_is_unchanged (&initial, &after_load))
+          if (__file_is_unchanged (&initial, &after_load))
             global_copy->file_resolve_conf = after_load;
           else
             /* If there is a discrepancy, trigger a reload during the

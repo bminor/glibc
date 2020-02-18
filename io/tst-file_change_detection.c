@@ -16,10 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* The header uses the internal __fileno symbol, which is not
-   available outside of libc (even to internal tests).  */
-#define __fileno(fp) fileno (fp)
-
 #include <file_change_detection.h>
 
 #include <array_length.h>
@@ -40,7 +36,7 @@ all_same (struct file_change_detection *array, size_t length)
       {
         if (test_verbose > 0)
           printf ("info: comparing %zu and %zu\n", i, j);
-        TEST_VERIFY (file_is_unchanged (array + i, array + j));
+        TEST_VERIFY (__file_is_unchanged (array + i, array + j));
       }
 }
 
@@ -54,7 +50,7 @@ all_different (struct file_change_detection *array, size_t length)
           continue;
         if (test_verbose > 0)
           printf ("info: comparing %zu and %zu\n", i, j);
-        TEST_VERIFY (!file_is_unchanged (array + i, array + j));
+        TEST_VERIFY (!__file_is_unchanged (array + i, array + j));
       }
 }
 
@@ -105,24 +101,24 @@ do_test (void)
     struct file_change_detection fcd[10];
     int i = 0;
     /* Two empty files always have the same contents.  */
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_empty1));
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_empty2));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_empty1));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_empty2));
     /* So does a missing file (which is treated as empty).  */
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++],
-                                                 path_does_not_exist));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++],
+                                                   path_does_not_exist));
     /* And a symbolic link loop.  */
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_loop));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_loop));
     /* And a dangling symbolic link.  */
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_dangling));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_dangling));
     /* And a directory.  */
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], tempdir));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], tempdir));
     /* And a symbolic link to an empty file.  */
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_to_empty1));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_to_empty1));
     /* Likewise for access the file via a FILE *.  */
-    TEST_VERIFY (file_change_detection_for_fp (&fcd[i++], fp_empty1));
-    TEST_VERIFY (file_change_detection_for_fp (&fcd[i++], fp_empty2));
+    TEST_VERIFY (__file_change_detection_for_fp (&fcd[i++], fp_empty1));
+    TEST_VERIFY (__file_change_detection_for_fp (&fcd[i++], fp_empty2));
     /* And a NULL FILE * (missing file).  */
-    TEST_VERIFY (file_change_detection_for_fp (&fcd[i++], NULL));
+    TEST_VERIFY (__file_change_detection_for_fp (&fcd[i++], NULL));
     TEST_COMPARE (i, array_length (fcd));
 
     all_same (fcd, array_length (fcd));
@@ -132,9 +128,9 @@ do_test (void)
   {
     struct file_change_detection fcd[3];
     int i = 0;
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_file1));
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_to_file1));
-    TEST_VERIFY (file_change_detection_for_fp (&fcd[i++], fp_file1));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_file1));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_to_file1));
+    TEST_VERIFY (__file_change_detection_for_fp (&fcd[i++], fp_file1));
     TEST_COMPARE (i, array_length (fcd));
     all_same (fcd, array_length (fcd));
   }
@@ -144,20 +140,20 @@ do_test (void)
     struct file_change_detection fcd[5];
     int i = 0;
     /* The other files are not empty.  */
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_empty1));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_empty1));
     /* These two files have the same contents, but have different file
        identity.  */
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_file1));
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_file2));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_file1));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_file2));
     /* FIFOs are always different, even with themselves.  */
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_fifo));
-    TEST_VERIFY (file_change_detection_for_path (&fcd[i++], path_fifo));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_fifo));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[i++], path_fifo));
     TEST_COMPARE (i, array_length (fcd));
     all_different (fcd, array_length (fcd));
 
     /* Replacing the file with its symbolic link does not make a
        difference.  */
-    TEST_VERIFY (file_change_detection_for_path (&fcd[1], path_to_file1));
+    TEST_VERIFY (__file_change_detection_for_path (&fcd[1], path_to_file1));
     all_different (fcd, array_length (fcd));
   }
 
@@ -166,16 +162,17 @@ do_test (void)
   for (int use_stdio = 0; use_stdio < 2; ++use_stdio)
     {
       struct file_change_detection initial;
-      TEST_VERIFY (file_change_detection_for_path (&initial, path_file1));
+      TEST_VERIFY (__file_change_detection_for_path (&initial, path_file1));
       while (true)
         {
           support_write_file_string (path_file1, "line\n");
           struct file_change_detection current;
           if (use_stdio)
-            TEST_VERIFY (file_change_detection_for_fp (&current, fp_file1));
+            TEST_VERIFY (__file_change_detection_for_fp (&current, fp_file1));
           else
-            TEST_VERIFY (file_change_detection_for_path (&current, path_file1));
-          if (!file_is_unchanged (&initial, &current))
+            TEST_VERIFY (__file_change_detection_for_path
+                         (&current, path_file1));
+          if (!__file_is_unchanged (&initial, &current))
             break;
           /* Wait for a bit to reduce system load.  */
           usleep (100 * 1000);

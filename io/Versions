@@ -137,5 +137,9 @@ libc {
     __fcntl_nocancel;
     __open64_nocancel;
     __write_nocancel;
+    __file_is_unchanged;
+    __file_change_detection_for_stat;
+    __file_change_detection_for_path;
+    __file_change_detection_for_fp;
   }
 }

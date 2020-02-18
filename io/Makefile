@@ -55,7 +55,7 @@ routines :=								\
 	posix_fadvise posix_fadvise64					\
 	posix_fallocate posix_fallocate64				\
 	sendfile sendfile64 copy_file_range 				\
-	utimensat futimens
+	utimensat futimens file_change_detection
 
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive

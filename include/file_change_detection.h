@@ -16,9 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
+#ifndef _FILE_CHANGE_DETECTION_H
+#define _FILE_CHANGE_DETECTION_H
+
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -38,103 +39,32 @@ struct file_change_detection
 
 /* Returns true if *LEFT and *RIGHT describe the same version of the
    same file.  */
-static bool __attribute__ ((unused))
-file_is_unchanged (const struct file_change_detection *left,
-                   const struct file_change_detection *right)
-{
-  if (left->size < 0 || right->size < 0)
-    /* Negative sizes are used as markers and never match.  */
-    return false;
-  else if (left->size == 0 && right->size == 0)
-    /* Both files are empty or do not exist, so they have the same
-       content, no matter what the other fields indicate.  */
-    return true;
-  else
-    return left->size == right->size
-      && left->ino == right->ino
-      && left->mtime.tv_sec == right->mtime.tv_sec
-      && left->mtime.tv_nsec == right->mtime.tv_nsec
-      && left->ctime.tv_sec == right->ctime.tv_sec
-      && left->ctime.tv_nsec == right->ctime.tv_nsec;
-}
+bool __file_is_unchanged (const struct file_change_detection *left,
+                          const struct file_change_detection *right);
 
 /* Extract file change information to *FILE from the stat buffer
    *ST.  */
-static void __attribute__ ((unused))
-file_change_detection_for_stat (struct file_change_detection *file,
-                                const struct stat64 *st)
-{
-  if (S_ISDIR (st->st_mode))
-    /* Treat as empty file.  */
-    file->size = 0;
-  else if (!S_ISREG (st->st_mode))
-    /* Non-regular files cannot be cached.  */
-    file->size = -1;
-  else
-    {
-      file->size = st->st_size;
-      file->ino = st->st_ino;
-      file->mtime = st->st_mtim;
-      file->ctime = st->st_ctim;
-    }
-}
+void __file_change_detection_for_stat (struct file_change_detection *file,
+                                       const struct stat64 *st);
 
 /* Writes file change information for PATH to *FILE.  Returns true on
    success.  For benign errors, *FILE is cleared, and true is
    returned.  For errors indicating resource outages and the like,
    false is returned.  */
-static bool __attribute__ ((unused))
-file_change_detection_for_path (struct file_change_detection *file,
-                                const char *path)
-{
-  struct stat64 st;
-  if (stat64 (path, &st) != 0)
-    switch (errno)
-      {
-      case EACCES:
-      case EISDIR:
-      case ELOOP:
-      case ENOENT:
-      case ENOTDIR:
-      case EPERM:
-        /* Ignore errors due to file system contents.  Instead, treat
-           the file as empty.  */
-        file->size = 0;
-        return true;
-      default:
-        /* Other errors are fatal.  */
-        return false;
-      }
-  else /* stat64 was successfull.  */
-    {
-      file_change_detection_for_stat (file, &st);
-      return true;
-    }
-}
+bool __file_change_detection_for_path (struct file_change_detection *file,
+                                       const char *path);
 
 /* Writes file change information for the stream FP to *FILE.  Returns
    ture on success, false on failure.  If FP is NULL, treat the file
    as non-existing.  */
-static bool __attribute__ ((unused))
-file_change_detection_for_fp (struct file_change_detection *file,
-                              FILE *fp)
-{
-  if (fp == NULL)
-    {
-      /* The file does not exist.  */
-      file->size = 0;
-      return true;
-    }
-  else
-    {
-      struct stat64 st;
-      if (fstat64 (__fileno (fp), &st) != 0)
-        /* If we already have a file descriptor, all errors are fatal.  */
-        return false;
-      else
-        {
-          file_change_detection_for_stat (file, &st);
-          return true;
-        }
-    }
-}
+bool __file_change_detection_for_fp (struct file_change_detection *file,
+                                     FILE *fp);
+
+#ifndef _ISOMAC
+libc_hidden_proto (__file_is_unchanged)
+libc_hidden_proto (__file_change_detection_for_stat)
+libc_hidden_proto (__file_change_detection_for_path)
+libc_hidden_proto (__file_change_detection_for_fp)
+#endif
+
+#endif /* _FILE_CHANGE_DETECTION_H */
