@@ -45,6 +45,30 @@ fchmodat (int fd, const char *file, mode_t mode, int flag)
 	   caller can treat them as temporary if necessary.  */
 	return pathfd;
 
+      /* Use fstatat because fstat does not work on O_PATH descriptors
+	 before Linux 3.6.  */
+      struct stat64 st;
+      if (fstatat64 (pathfd, "", &st, AT_EMPTY_PATH) != 0)
+	{
+	  __close_nocancel (pathfd);
+	  return -1;
+	}
+
+      /* Some Linux versions with some file systems can actually
+	 change symbolic link permissions via /proc, but this is not
+	 intentional, and it gives inconsistent results (e.g., error
+	 return despite mode change).  The expected behavior is that
+	 symbolic link modes cannot be changed at all, and this check
+	 enforces that.  */
+      if (S_ISLNK (st.st_mode))
+	{
+	  __close_nocancel (pathfd);
+	  __set_errno (EOPNOTSUPP);
+	  return -1;
+	}
+
+      /* For most file systems, fchmod does not operate on O_PATH
+	 descriptors, so go through /proc.  */
       char buf[32];
       if (__snprintf (buf, sizeof (buf), "/proc/self/fd/%d", pathfd) < 0)
 	{
@@ -54,10 +78,6 @@ fchmodat (int fd, const char *file, mode_t mode, int flag)
 	  return -1;
 	}
 
-      /* This operates directly on the symbolic link if it is one.
-	 /proc/self/fd files look like symbolic links, but they are
-	 not.  (fchmod and fchmodat do not work on O_PATH descriptors,
-	 similar to fstat before Linux 3.6.)  */
       int ret = __chmod (buf, mode);
       if (ret != 0)
 	{

@@ -102,68 +102,39 @@ test_1 (bool do_relative_path, int (*chmod_func) (int fd, const char *, mode_t, 
   TEST_VERIFY ((st.st_mode & 0777) != 2);
   mode_t original_symlink_mode = st.st_mode;
 
-  /* Set to true if AT_SYMLINK_NOFOLLOW is supported.  */
-  bool nofollow;
-
   /* We should be able to change the mode of a file, including through
      the symbolic link to-file.  */
   const char *arg = select_path (do_relative_path, path_file, "file");
   TEST_COMPARE (chmod_func (fd, arg, 1, 0), 0);
   xstat (path_file, &st);
   TEST_COMPARE (st.st_mode & 0777, 1);
-  int ret = chmod_func (fd, path_file, 2, AT_SYMLINK_NOFOLLOW);
-  if (ret == 0)
-    {
-      printf ("info: AT_SYMLINK_NOFOLLOW support in %s\n", tempdir);
-      nofollow = true;
-    }
-  else
-    {
-      printf ("info: no AT_SYMLINK_NOFOLLOW support in %s\n", tempdir);
-      nofollow = false;
-
-      /* Set up things for the code below.  */
-      TEST_COMPARE (chmod_func (fd, path_file, 2, 0), 0);
-    }
+  arg = select_path (do_relative_path, path_to_file, "to-file");
+  TEST_COMPARE (chmod_func (fd, arg, 2, 0), 0);
   xstat (path_file, &st);
   TEST_COMPARE (st.st_mode & 0777, 2);
-  arg = select_path (do_relative_path, path_to_file, "to-file");
-  TEST_COMPARE (chmod_func (fd, path_to_file, 1, 0), 0);
+  xlstat (path_to_file, &st);
+  TEST_COMPARE (original_symlink_mode, st.st_mode);
+  arg = select_path (do_relative_path, path_file, "file");
+  TEST_COMPARE (chmod_func (fd, arg, 1, 0), 0);
   xstat (path_file, &st);
   TEST_COMPARE (st.st_mode & 0777, 1);
   xlstat (path_to_file, &st);
   TEST_COMPARE (original_symlink_mode, st.st_mode);
 
-  /* Changing the mode of a symbolic link may fail.  */
+  /* Changing the mode of a symbolic link should fail.  */
   arg = select_path (do_relative_path, path_to_file, "to-file");
-  ret = chmod_func (fd, arg, 2, AT_SYMLINK_NOFOLLOW);
-  if (nofollow)
-    {
-      TEST_COMPARE (ret, 0);
+  int ret = chmod_func (fd, arg, 2, AT_SYMLINK_NOFOLLOW);
+  TEST_COMPARE (ret, -1);
+  TEST_COMPARE (errno, EOPNOTSUPP);
 
-      /* The mode of the link changed.  */
-      xlstat (path_to_file, &st);
-      TEST_COMPARE (st.st_mode & 0777, 2);
+  /* The modes should remain unchanged.  */
+  xstat (path_file, &st);
+  TEST_COMPARE (st.st_mode & 0777, 1);
+  xlstat (path_to_file, &st);
+  TEST_COMPARE (original_symlink_mode, st.st_mode);
 
-      /* But the mode of the file is unchanged.  */
-      xstat (path_file, &st);
-      TEST_COMPARE (st.st_mode & 0777, 1);
-
-    }
-  else
-    {
-      TEST_COMPARE (ret, -1);
-      TEST_COMPARE (errno, EOPNOTSUPP);
-
-      /* The modes should remain unchanged.  */
-      xstat (path_file, &st);
-      TEST_COMPARE (st.st_mode & 0777, 1);
-      xlstat (path_to_file, &st);
-      TEST_COMPARE (original_symlink_mode, st.st_mode);
-    }
-
-  /* If we have NOFOLLOW support, we should be able to change the mode
-     of a dangling symbolic link or a symbolic link loop.  */
+  /* Likewise, changing dangling and looping symbolic links must
+     fail.  */
   const char *paths[] = { path_dangling, path_loop };
   for (size_t i = 0; i < array_length (paths); ++i)
     {
@@ -178,19 +149,10 @@ test_1 (bool do_relative_path, int (*chmod_func) (int fd, const char *, mode_t, 
       original_symlink_mode = st.st_mode;
       arg = select_path (do_relative_path, path, filename);
       ret = chmod_func (fd, arg, new_mode, AT_SYMLINK_NOFOLLOW);
-      if (nofollow)
-        {
-          TEST_COMPARE (ret, 0);
-          xlstat (path, &st);
-          TEST_COMPARE (st.st_mode & 0777, new_mode);
-        }
-      else /* !nofollow.  */
-        {
-          TEST_COMPARE (ret, -1);
-          TEST_COMPARE (errno, EOPNOTSUPP);
-          xlstat (path, &st);
-          TEST_COMPARE (st.st_mode, original_symlink_mode);
-        }
+      TEST_COMPARE (ret, -1);
+      TEST_COMPARE (errno, EOPNOTSUPP);
+      xlstat (path, &st);
+      TEST_COMPARE (st.st_mode, original_symlink_mode);
     }
 
    /* A missing file should always result in ENOENT.  The presence of
