@@ -364,6 +364,8 @@ extern void gc (struct database_dyn *db);
 /* nscd_setup_thread.c */
 extern int setup_thread (struct database_dyn *db);
 
+/* cachedumper.c */
+extern void nscd_print_cache (const char *name);
 
 /* Special version of TEMP_FAILURE_RETRY for functions returning error
    values.  */

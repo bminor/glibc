@@ -77,6 +77,8 @@ static run_modes run_mode = RUN_DAEMONIZE;
 
 static const char *conffile = _PATH_NSCDCONF;
 
+static const char *print_cache = NULL;
+
 time_t start_time;
 
 uintptr_t pagesize_m1;
@@ -106,6 +108,8 @@ static const struct argp_option options[] =
     N_("Read configuration data from NAME") },
   { "debug", 'd', NULL, 0,
     N_("Do not fork and display messages on the current tty") },
+  { "print", 'p', N_("NAME"), 0,
+    N_("Print contents of the offline cache file NAME") },
   { "foreground", 'F', NULL, 0,
     N_("Do not fork, but otherwise behave like a daemon") },
   { "nthreads", 't', N_("NUMBER"), 0, N_("Start NUMBER threads") },
@@ -156,6 +160,11 @@ main (int argc, char **argv)
       argp_help (&argp, stdout, ARGP_HELP_SEE, program_invocation_short_name);
       exit (1);
     }
+
+  /* Print the contents of the indicated cache file.  */
+  if (print_cache != NULL)
+    /* Does not return.  */
+    nscd_print_cache (print_cache);
 
   /* Read the configuration file.  */
   if (nscd_parse_file (conffile, dbs) != 0)
@@ -402,6 +411,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'd':
       ++debug_level;
       run_mode = RUN_DEBUG;
+      break;
+
+    case 'p':
+      print_cache = arg;
       break;
 
     case 'F':

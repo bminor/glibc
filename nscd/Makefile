@@ -36,7 +36,7 @@ nscd-modules := nscd connections pwdcache getpwnam_r getpwuid_r grpcache \
 		getsrvbynm_r getsrvbypt_r servicescache \
 		dbg_log nscd_conf nscd_stat cache mem nscd_setup_thread \
 		xmalloc xstrdup aicache initgrcache gai res_hconf \
-		netgroupcache
+		netgroupcache cachedumper
 
 ifeq ($(build-nscd)$(have-thread-library),yesyes)
 
