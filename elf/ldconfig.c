@@ -79,6 +79,8 @@ struct dir_entry
   int flag;
   ino64_t ino;
   dev_t dev;
+  const char *from_file;
+  int from_line;
   struct dir_entry *next;
 };
 
@@ -344,7 +346,12 @@ add_single_dir (struct dir_entry *entry, int verbose)
       if (ptr->ino == entry->ino && ptr->dev == entry->dev)
 	{
 	  if (opt_verbose && verbose)
-	    error (0, 0, _("Path `%s' given more than once"), entry->path);
+	    {
+	      error (0, 0, _("Path `%s' given more than once"), entry->path);
+	      fprintf (stderr, _("(from %s:%d and %s:%d)\n"),
+		       entry->from_file, entry->from_line,
+		       ptr->from_file, ptr->from_line);
+	    }
 	  /* Use the newer information.  */
 	  ptr->flag = entry->flag;
 	  free (entry->path);
@@ -363,11 +370,14 @@ add_single_dir (struct dir_entry *entry, int verbose)
 
 /* Add one directory to the list of directories to process.  */
 static void
-add_dir (const char *line)
+add_dir_1 (const char *line, const char *from_file, int from_line)
 {
   unsigned int i;
   struct dir_entry *entry = xmalloc (sizeof (struct dir_entry));
   entry->next = NULL;
+
+  entry->from_file = strdup (from_file);
+  entry->from_line = from_line;
 
   /* Search for an '=' sign.  */
   entry->path = xstrdup (line);
@@ -428,6 +438,11 @@ add_dir (const char *line)
     free (path);
 }
 
+static void
+add_dir (const char *line)
+{
+  add_dir_1 (line, "<builtin>", 0);
+}
 
 static int
 chroot_stat (const char *real_path, const char *path, struct stat64 *st)
@@ -672,9 +687,10 @@ search_dir (const struct dir_entry *entry)
   if (opt_verbose)
     {
       if (hwcap != 0)
-	printf ("%s: (hwcap: %#.16" PRIx64 ")\n", entry->path, hwcap);
+	printf ("%s: (hwcap: %#.16" PRIx64 ")", entry->path, hwcap);
       else
-	printf ("%s:\n", entry->path);
+	printf ("%s:", entry->path);
+      printf (_(" (from %s:%d)\n"), entry->from_file, entry->from_line);
     }
 
   char *dir_name;
@@ -815,6 +831,8 @@ search_dir (const struct dir_entry *entry)
 	  struct dir_entry *new_entry;
 
 	  new_entry = xmalloc (sizeof (struct dir_entry));
+	  new_entry->from_file = entry->from_file;
+	  new_entry->from_line = entry->from_line;
 	  new_entry->path = xstrdup (file_name);
 	  new_entry->flag = entry->flag;
 	  new_entry->next = NULL;
@@ -1175,7 +1193,7 @@ Warning: ignoring configuration file that cannot be opened: %s"),
 	    }
 	}
       else
-	add_dir (cp);
+	add_dir_1 (cp, filename, lineno);
     }
   while (!feof_unlocked (file));
 
@@ -1283,7 +1301,7 @@ main (int argc, char **argv)
 		 _("relative path `%s' used to build cache"),
 		 argv[i]);
 	else
-	  add_dir (argv[i]);
+	  add_dir_1 (argv[i], "<cmdline>", 0);
     }
 
   /* The last entry in hwcap_extra is reserved for the "tls" pseudo-hwcap which
