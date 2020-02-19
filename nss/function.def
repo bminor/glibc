@@ -1,4 +1,4 @@
-/* List of functions defined for static NSS in GNU C Library.
+/* List of all functions defined for the NSS in GNU C Library.
    Copyright (C) 1996-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,63 +16,69 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/*
-  This is a minimal config.  Only services `files' and `dns' are supported.
-*/
+/* This list must be kept sorted!!!  */
 
-/* aliases */
-DEFINE_ENT (files, alias)
-DEFINE_GETBY (files, alias, name)
-
-/* ethers */
-DEFINE_ENT (files, ether)
-
-/* group */
-DEFINE_ENT (files, gr)
-DEFINE_GET (files, grgid)
-DEFINE_GET (files, grnam)
-
-/* hosts */
-DEFINE_ENT (files, host)
-DEFINE_GETBY (files, host, addr)
-DEFINE_GETBY (files, host, name)
-DEFINE_GETBY (files, host, name2)
-DEFINE_GET (files, hostton)
-DEFINE_GET (files, ntohost)
-DEFINE_GETBY (dns, host, addr)
-DEFINE_GETBY (dns, host, name)
-DEFINE_GETBY (dns, host, name2)
-
-/* netgroup */
-DEFINE_ENT (files, netgr)
-
-/* networks */
-DEFINE_ENT (files, net)
-DEFINE_GETBY (files, net, name)
-DEFINE_GETBY (files, net, addr)
-DEFINE_GETBY (dns, net, name)
-DEFINE_GETBY (dns, net, addr)
-
-/* protocols */
-DEFINE_ENT (files, proto)
-DEFINE_GETBY (files, proto, name)
-DEFINE_GETBY (files, proto, number)
-
-/* passwd */
-DEFINE_ENT (files, pw)
-DEFINE_GET (files, pwnam)
-DEFINE_GET (files, pwuid)
-
-/* rpc */
-DEFINE_ENT (files, rpc)
-DEFINE_GETBY (files, rpc, name)
-DEFINE_GETBY (files, rpc, number)
-
-/* services */
-DEFINE_ENT (files, serv)
-DEFINE_GETBY (files, serv, name)
-DEFINE_GETBY (files, serv, port)
-
-/* shadow */
-DEFINE_ENT (files, sp)
-DEFINE_GET (files, spnam)
+DEFINE_NSS_FUNCTION (endaliasent)
+DEFINE_NSS_FUNCTION (endetherent)
+DEFINE_NSS_FUNCTION (endgrent)
+DEFINE_NSS_FUNCTION (endhostent)
+DEFINE_NSS_FUNCTION (endnetent)
+DEFINE_NSS_FUNCTION (endnetgrent)
+DEFINE_NSS_FUNCTION (endprotoent)
+DEFINE_NSS_FUNCTION (endpwent)
+DEFINE_NSS_FUNCTION (endrpcent)
+DEFINE_NSS_FUNCTION (endservent)
+DEFINE_NSS_FUNCTION (endsgent)
+DEFINE_NSS_FUNCTION (endspent)
+DEFINE_NSS_FUNCTION (getaliasbyname_r)
+DEFINE_NSS_FUNCTION (getaliasent_r)
+DEFINE_NSS_FUNCTION (getcanonname_r)
+DEFINE_NSS_FUNCTION (getetherent_r)
+DEFINE_NSS_FUNCTION (getgrent_r)
+DEFINE_NSS_FUNCTION (getgrgid_r)
+DEFINE_NSS_FUNCTION (getgrnam_r)
+DEFINE_NSS_FUNCTION (gethostbyaddr2_r)
+DEFINE_NSS_FUNCTION (gethostbyaddr_r)
+DEFINE_NSS_FUNCTION (gethostbyname2_r)
+DEFINE_NSS_FUNCTION (gethostbyname3_r)
+DEFINE_NSS_FUNCTION (gethostbyname4_r)
+DEFINE_NSS_FUNCTION (gethostbyname_r)
+DEFINE_NSS_FUNCTION (gethostent_r)
+DEFINE_NSS_FUNCTION (gethostton_r)
+DEFINE_NSS_FUNCTION (getnetbyaddr_r)
+DEFINE_NSS_FUNCTION (getnetbyname_r)
+DEFINE_NSS_FUNCTION (getnetent_r)
+DEFINE_NSS_FUNCTION (getnetgrent_r)
+DEFINE_NSS_FUNCTION (getntohost_r)
+DEFINE_NSS_FUNCTION (getprotobyname_r)
+DEFINE_NSS_FUNCTION (getprotobynumber_r)
+DEFINE_NSS_FUNCTION (getprotoent_r)
+DEFINE_NSS_FUNCTION (getpublickey)
+DEFINE_NSS_FUNCTION (getpwent_r)
+DEFINE_NSS_FUNCTION (getpwnam_r)
+DEFINE_NSS_FUNCTION (getpwuid_r)
+DEFINE_NSS_FUNCTION (getrpcbyname_r)
+DEFINE_NSS_FUNCTION (getrpcbynumber_r)
+DEFINE_NSS_FUNCTION (getrpcent_r)
+DEFINE_NSS_FUNCTION (getsecretkey)
+DEFINE_NSS_FUNCTION (getservbyname_r)
+DEFINE_NSS_FUNCTION (getservbyport_r)
+DEFINE_NSS_FUNCTION (getservent_r)
+DEFINE_NSS_FUNCTION (getsgent_r)
+DEFINE_NSS_FUNCTION (getsgnam_r)
+DEFINE_NSS_FUNCTION (getspent_r)
+DEFINE_NSS_FUNCTION (getspnam_r)
+DEFINE_NSS_FUNCTION (initgroups_dyn)
+DEFINE_NSS_FUNCTION (netname2user)
+DEFINE_NSS_FUNCTION (setaliasent)
+DEFINE_NSS_FUNCTION (setetherent)
+DEFINE_NSS_FUNCTION (setgrent)
+DEFINE_NSS_FUNCTION (sethostent)
+DEFINE_NSS_FUNCTION (setnetent)
+DEFINE_NSS_FUNCTION (setnetgrent)
+DEFINE_NSS_FUNCTION (setprotoent)
+DEFINE_NSS_FUNCTION (setpwent)
+DEFINE_NSS_FUNCTION (setrpcent)
+DEFINE_NSS_FUNCTION (setservent)
+DEFINE_NSS_FUNCTION (setsgent)
+DEFINE_NSS_FUNCTION (setspent)
