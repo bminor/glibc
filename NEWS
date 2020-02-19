@@ -394,6 +394,9 @@ Security related changes:
 * A use-after-free vulnerability in clntudp_call in the Sun RPC system has been
   fixed (CVE-2017-12133).
 
+* A use-after-free vulnerability in the glob function when expanding ~user has
+  been fixed (CVE-2020-1752).
+
 The following bugs are resolved with this release:
 
   [984] network: Respond to changed resolv.conf in gethostbyname
@@ -621,6 +624,7 @@ The following bugs are resolved with this release:
   [21839] localedata: Fix LC_MONETARY for ta_LK
   [21844] localedata: Fix Latin characters and Months Sequence.
   [21848] localedata: Fix mai_NP Title Name
+  [25414] 'glob' use-after-free bug (CVE-2020-1752)
 
 
 Version 2.25
