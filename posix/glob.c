@@ -827,30 +827,31 @@ __glob (const char *pattern, int flags, int (*errfunc) (const char *, int),
 	      {
 		size_t home_len = strlen (p->pw_dir);
 		size_t rest_len = end_name == NULL ? 0 : strlen (end_name);
-		char *d;
+		char *d, *newp;
+		bool use_alloca = glob_use_alloca (alloca_used,
+						   home_len + rest_len + 1);
 
-		if (__glibc_unlikely (malloc_dirname))
-		  free (dirname);
-		malloc_dirname = 0;
-
-		if (glob_use_alloca (alloca_used, home_len + rest_len + 1))
-		  dirname = alloca_account (home_len + rest_len + 1,
-					    alloca_used);
+		if (use_alloca)
+		  newp = alloca_account (home_len + rest_len + 1, alloca_used);
 		else
 		  {
-		    dirname = malloc (home_len + rest_len + 1);
-		    if (dirname == NULL)
+		    newp = malloc (home_len + rest_len + 1);
+		    if (newp == NULL)
 		      {
 			scratch_buffer_free (&pwtmpbuf);
 			retval = GLOB_NOSPACE;
 			goto out;
 		      }
-		    malloc_dirname = 1;
 		  }
-		d = mempcpy (dirname, p->pw_dir, home_len);
+		d = mempcpy (newp, p->pw_dir, home_len);
 		if (end_name != NULL)
 		  d = mempcpy (d, end_name, rest_len);
 		*d = '\0';
+
+		if (__glibc_unlikely (malloc_dirname))
+		  free (dirname);
+		dirname = newp;
+		malloc_dirname = !use_alloca;
 
 		dirlen = home_len + rest_len;
 		dirname_modified = 1;
