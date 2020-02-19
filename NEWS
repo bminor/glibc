@@ -73,6 +73,7 @@ The following bugs are resolved with this release:
   [25204] Ignore LD_PREFER_MAP_32BIT_EXEC for SUID programs
   [25225] ld.so fails to link on x86 if GCC defaults to -fcf-protection
   [25232] No const correctness for strchr et al. for Clang++
+  [25414] 'glob' use-after-free bug (CVE-2020-1752)
   [25423] Array overflow in backtrace on powerpc
 
 Security related changes:
@@ -108,6 +109,9 @@ Security related changes:
   transition, allowing local attackers to restrict the possible mapping
   addresses for loaded libraries and thus bypass ASLR for a setuid
   program.  Reported by Marcin Kościelnicki.
+
+  CVE-2020-1752: A use-after-free vulnerability in the glob function when
+  expanding ~user has been fixed.
 
 
 Version 2.28
