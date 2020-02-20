@@ -28,6 +28,7 @@
 #include "hurdmalloc.h"		/* XXX */
 #include <tls.h>
 #include <malloc/malloc-internal.h>
+#include <nss/nss_database.h>
 
 #undef __fork
 
@@ -68,6 +69,7 @@ __fork (void)
   size_t i;
   error_t err;
   struct hurd_sigstate *volatile ss;
+  struct nss_database_data nss_database_data;
 
   RUN_HOOK (_hurd_atfork_prepare_hook, ());
 
@@ -108,6 +110,9 @@ __fork (void)
 
       /* Run things that prepare for forking before we create the task.  */
       RUN_HOOK (_hurd_fork_prepare_hook, ());
+
+      call_function_static_weak (__nss_database_fork_prepare_parent,
+				 &nss_database_data);
 
       /* Lock things that want to be locked before we fork.  */
       {
@@ -665,6 +670,9 @@ __fork (void)
       /* Release malloc locks.  */
       _hurd_malloc_fork_child ();
       call_function_static_weak (__malloc_fork_unlock_child);
+
+      call_function_static_weak (__nss_database_fork_subprocess,
+				 &nss_database_data);
 
       /* Run things that want to run in the child task to set up.  */
       RUN_HOOK (_hurd_fork_child_hook, ());
