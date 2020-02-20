@@ -159,7 +159,7 @@
                      : "+r" (_r2), "=r" (_err)                  \
                      : ASM_ARGS_##nr				\
                      : __SYSCALL_CLOBBERS);                     \
-       _sys_result = _err != 0 ? -_r2 : -_r2;                   \
+       _sys_result = _err != 0 ? -_r2 : _r2;                    \
      }                                                          \
      (int) _sys_result; })
 
