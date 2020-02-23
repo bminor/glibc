@@ -1,7 +1,7 @@
 /* The `struct utmp' type, describing entries in the utmp file.
    Linux/AArch64 version.
 
-   Copyright (C) 2017 Free Software Foundation, Inc.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
 #ifndef _UTMP_H
 # error "Never include <bits/utmp.h> directly; use <utmp.h> instead."
@@ -63,7 +63,8 @@ struct utmp
   pid_t ut_pid;			/* Process ID of login process.  */
   char ut_line[UT_LINESIZE]
      __attribute_nonstring__;	/* Devicename.  */
-  char ut_id[4];		/* Inittab ID.  */
+  char ut_id[4]
+     __attribute_nonstring__;	/* Inittab ID.  */
   char ut_user[UT_NAMESIZE]
      __attribute_nonstring__;	/* Username.  */
   char ut_host[UT_HOSTSIZE]
