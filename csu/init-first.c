@@ -43,12 +43,11 @@ void
 __libc_init_first (int argc, char **argv, char **envp)
 {
 #ifdef SHARED
-  /* For DSOs we do not need __libc_init_first but instead _init.  */
+  /* For DSOs we do not need __libc_init_first but an ELF constructor.  */
 }
 
-void
-attribute_hidden
-_init (int argc, char **argv, char **envp)
+static void __attribute__ ((constructor))
+_init_first (int argc, char **argv, char **envp)
 {
 #endif
 
@@ -86,8 +85,9 @@ _init (int argc, char **argv, char **envp)
 
 /* This function is defined here so that if this file ever gets into
    ld.so we will get a link error.  Having this file silently included
-   in ld.so causes disaster, because the _init definition above will
-   cause ld.so to gain an init function, which is not a cool thing. */
+   in ld.so causes disaster, because the _init_first definition above
+   will cause ld.so to gain an ELF constructor, which is not a cool
+   thing. */
 
 extern void _dl_start (void) __attribute__ ((noreturn));
 

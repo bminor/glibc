@@ -24,7 +24,7 @@
 /* Initialize the `__libc_enable_secure' flag.  */
 extern void __libc_init_secure (void);
 
-/* This function will be called from _init in init-first.c.  */
+/* This function will be called from _init_first in init-first.c.  */
 extern void __libc_global_ctors (void);
 
 /* Discover the tick frequency of the machine if something goes wrong,

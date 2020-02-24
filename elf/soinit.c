@@ -20,7 +20,7 @@ run_hooks (void (*const list[]) (void))
     (**list) ();
 }
 
-/* This function will be called from _init in init-first.c.  */
+/* This function will be called from _init_first in init-first.c.  */
 void
 __libc_global_ctors (void)
 {
