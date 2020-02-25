@@ -167,6 +167,8 @@ tests-special += $(objpfx)mtrace-tst-leaks.out
 endif
 endif
 endif
+tests-container = \
+			tst-localedef-hardlinks
 
 # Files to install.
 ifeq ($(INSTALL_UNCOMPRESSED),yes)
