@@ -19,11 +19,7 @@
 #include <assert.h>
 #include <nss.h>
 #include <ctype.h>
-/* The following is an ugly trick to avoid a prototype declaration for
-   _nss_nis_endgrent.  */
-#define _nss_nis_endhostent _nss_nis_endhostent_XXX
 #include <netdb.h>
-#undef _nss_nis_endhostent
 #include <string.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -90,9 +86,14 @@ static bool_t new_start = 1;
 static char *oldkey = NULL;
 static int oldkeylen = 0;
 
-
 enum nss_status
 _nss_nis_sethostent (int stayopen)
+{
+  return _nss_nis_endhostent ();
+}
+
+enum nss_status
+_nss_nis_endhostent (void)
 {
   __libc_lock_lock (lock);
 
@@ -108,11 +109,7 @@ _nss_nis_sethostent (int stayopen)
 
   return NSS_STATUS_SUCCESS;
 }
-/* Make _nss_nis_endhostent an alias of _nss_nis_sethostent.  We do this
-   even though the prototypes don't match.  The argument of sethostent
-   is used so this makes no difference.  */
-strong_alias (_nss_nis_sethostent, _nss_nis_endhostent)
-
+libnss_nis_hidden_def (_nss_nis_endhostent)
 
 /* The calling function always need to get a lock first. */
 static enum nss_status

@@ -835,6 +835,29 @@ for linking")
 # define libnsl_hidden_data_ver(local, name)
 #endif
 
+#if IS_IN (libnss_nis)
+# define libnss_nis_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
+# define libnss_nis_hidden_tls_proto(name, attrs...) \
+  hidden_tls_proto (name, ##attrs)
+# define libnss_nis_hidden_def(name) hidden_def (name)
+# define libnss_nis_hidden_weak(name) hidden_weak (name)
+# define libnss_nis_hidden_ver(local, name) hidden_ver (local, name)
+# define libnss_nis_hidden_data_def(name) hidden_data_def (name)
+# define libnss_nis_hidden_tls_def(name) hidden_tls_def (name)
+# define libnss_nis_hidden_data_weak(name) hidden_data_weak (name)
+# define libnss_nis_hidden_data_ver(local, name) hidden_data_ver (local, name)
+#else
+# define libnss_nis_hidden_proto(name, attrs...)
+# define libnss_nis_hidden_tls_proto(name, attrs...)
+# define libnss_nis_hidden_def(name)
+# define libnss_nis_hidden_weak(name)
+# define libnss_nis_hidden_ver(local, name)
+# define libnss_nis_hidden_data_def(name)
+# define libnss_nis_hidden_tls_def(name)
+# define libnss_nis_hidden_data_weak(name)
+# define libnss_nis_hidden_data_ver(local, name)
+#endif
+
 #if IS_IN (libnss_nisplus)
 # define libnss_nisplus_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define libnss_nisplus_hidden_tls_proto(name, attrs...) \

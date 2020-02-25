@@ -17,11 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <nss.h>
-/* The following is an ugly trick to avoid a prototype declaration for
-   _nss_nis_endgrent.  */
-#define _nss_nis_endnetent _nss_nis_endnetent_XXX
 #include <netdb.h>
-#undef _nss_nis_endnetent
 #include <ctype.h>
 #include <errno.h>
 #include <stdint.h>
@@ -48,7 +44,13 @@ static int oldkeylen;
 enum nss_status
 _nss_nis_setnetent (int stayopen)
 {
-  __libc_lock_lock (lock);
+  return _nss_nis_endnetent ();
+}
+
+enum nss_status
+_nss_nis_endnetent (void)
+{
+__libc_lock_lock (lock);
 
   new_start = 1;
   if (oldkey != NULL)
@@ -62,10 +64,7 @@ _nss_nis_setnetent (int stayopen)
 
   return NSS_STATUS_SUCCESS;
 }
-/* Make _nss_nis_endnetent an alias of _nss_nis_setnetent.  We do this
-   even though the prototypes don't match.  The argument of setnetent
-   is not used so this makes no difference.  */
-strong_alias (_nss_nis_setnetent, _nss_nis_endnetent)
+libnss_nis_hidden_def (_nss_nis_endnetent)
 
 static enum nss_status
 internal_nis_getnetent_r (struct netent *net, char *buffer, size_t buflen,

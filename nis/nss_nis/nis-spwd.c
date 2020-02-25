@@ -20,14 +20,11 @@
 #include <ctype.h>
 #include <errno.h>
 #include <string.h>
-/* The following is an ugly trick to avoid a prototype declaration for
-   _nss_nis_endspent.  */
-#define _nss_nis_endspent _nss_nis_endspent_XXX
 #include <shadow.h>
-#undef _nss_nis_endspent
 #include <libc-lock.h>
 #include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
+#include <netdb.h>
 
 #include "nss-nis.h"
 #include <libnsl.h>
@@ -49,6 +46,12 @@ static int oldkeylen;
 enum nss_status
 _nss_nis_setspent (int stayopen)
 {
+  return _nss_nis_endspent ();
+}
+
+enum nss_status
+_nss_nis_endspent (void)
+{
   __libc_lock_lock (lock);
 
   new_start = true;
@@ -61,10 +64,7 @@ _nss_nis_setspent (int stayopen)
 
   return NSS_STATUS_SUCCESS;
 }
-/* Make _nss_nis_endspent an alias of _nss_nis_setspent.  We do this
-   even though the prototypes don't match.  The argument of setspent
-   is not used so this makes no difference.  */
-strong_alias (_nss_nis_setspent, _nss_nis_endspent)
+libnss_nis_hidden_def (_nss_nis_endspent)
 
 static enum nss_status
 internal_nis_getspent_r (struct spwd *sp, char *buffer, size_t buflen,

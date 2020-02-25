@@ -279,7 +279,8 @@ extern enum nss_status _nss_ ## service ## _getnetbyname_r		      \
 extern enum nss_status _nss_ ## service ## _getnetbyaddr_r		      \
 		       (uint32_t addr, int type, struct netent *net,	      \
 			char *buffer, size_t buflen, int *errnop,	      \
-			int *herrnop);
+			int *herrnop);					      \
+extern enum nss_status _nss_ ## service ## _endspent (void);
 
 DECLARE_NSS_PROTOTYPES (compat)
 DECLARE_NSS_PROTOTYPES (dns)
@@ -289,6 +290,11 @@ DECLARE_NSS_PROTOTYPES (nis)
 DECLARE_NSS_PROTOTYPES (nisplus)
 
 #undef DECLARE_NSS_PROTOTYPES
+
+libnss_nis_hidden_proto (_nss_nis_endhostent)
+libnss_nis_hidden_proto (_nss_nis_endnetent)
+libnss_nis_hidden_proto (_nss_nis_endspent)
+
 #endif
 
 #endif /* !_NETDB_H */

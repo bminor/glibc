@@ -22,6 +22,7 @@
 
 #include "nsswitch.h"
 
+NSS_DECLARE_MODULE_FUNCTIONS (nis)
 
 /* Convert YP error number to NSS error number.  */
 extern const enum nss_status __yperr2nss_tab[] attribute_hidden;
