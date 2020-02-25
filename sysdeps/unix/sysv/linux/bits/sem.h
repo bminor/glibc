@@ -20,7 +20,7 @@
 #endif
 
 #include <sys/types.h>
-#include <bits/sem-pad.h>
+#include <bits/timesize.h>
 #include <bits/types/struct_semid_ds.h>
 
 /* Flags for `semop'.  */
