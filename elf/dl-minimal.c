@@ -39,16 +39,16 @@
   implementation below.  Before the final relocation,
   __rtld_malloc_init_real is called to replace the pointers with the
   real implementation.  */
-__typeof (calloc) *__rtld_calloc;
-__typeof (free) *__rtld_free;
-__typeof (malloc) *__rtld_malloc;
-__typeof (realloc) *__rtld_realloc;
+__typeof (calloc) *__rtld_calloc attribute_relro;
+__typeof (free) *__rtld_free attribute_relro;
+__typeof (malloc) *__rtld_malloc attribute_relro;
+__typeof (realloc) *__rtld_realloc attribute_relro;
 
 /* Defined below.  */
-static __typeof (calloc) rtld_calloc attribute_relro;
-static __typeof (free) rtld_free attribute_relro;
-static __typeof (malloc) rtld_malloc attribute_relro;
-static __typeof (realloc) rtld_realloc attribute_relro;
+static __typeof (calloc) rtld_calloc;
+static __typeof (free) rtld_free;
+static __typeof (malloc) rtld_malloc;
+static __typeof (realloc) rtld_realloc;
 
 void
 __rtld_malloc_init_stubs (void)
