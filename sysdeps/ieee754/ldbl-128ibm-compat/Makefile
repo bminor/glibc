@@ -270,6 +270,7 @@ tests-internal += tst-ibm128-error tst-ieee128-error
 tests-internal += tst-ibm128-efgcvt tst-ieee128-efgcvt
 
 $(objpfx)tst-ieee128-efgcvt: gnulib-tests += $(f128-loader-link)
+$(objpfx)tst-ldbl-efgcvt: gnulib-tests += $(f128-loader-link)
 
 $(objpfx)tst-ibm128-%.c: tst-ldbl-%.c
 	cp $< $@
