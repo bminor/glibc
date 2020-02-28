@@ -24,6 +24,7 @@ CVE-2020-1752: A use-after-free vulnerability in the glob function when
 
 The following bugs are resolved with this release:
 
+  [20543] Please move from .gnu.linkonce to comdat
   [23518] login: Remove utmp backend jump tables
   [24682] localedata: zh_CN first weekday should be Monday per GB/T
     7408-2005
