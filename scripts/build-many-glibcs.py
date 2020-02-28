@@ -80,7 +80,7 @@ class Context(object):
     """The global state associated with builds in a given directory."""
 
     def __init__(self, topdir, parallelism, keep, replace_sources, strip,
-                 full_gcc, action):
+                 full_gcc, action, shallow=False):
         """Initialize the context."""
         self.topdir = topdir
         self.parallelism = parallelism
@@ -88,6 +88,7 @@ class Context(object):
         self.replace_sources = replace_sources
         self.strip = strip
         self.full_gcc = full_gcc
+        self.shallow = shallow
         self.srcdir = os.path.join(topdir, 'src')
         self.versions_json = os.path.join(self.srcdir, 'versions.json')
         self.build_state_json = os.path.join(topdir, 'build-state.json')
@@ -852,7 +853,12 @@ class Context(object):
             subprocess.run(['git', 'pull', '-q'],
                            cwd=self.component_srcdir(component), check=True)
         else:
-            subprocess.run(['git', 'clone', '-q', '-b', git_branch, git_url,
+            if self.shallow:
+                depth_arg = ('--depth', '1')
+            else:
+                depth_arg = ()
+            subprocess.run(['git', 'clone', '-q', '-b', git_branch,
+                            *depth_arg, git_url,
                             self.component_srcdir(component)], check=True)
         r = subprocess.run(['git', 'rev-parse', 'HEAD'],
                            cwd=self.component_srcdir(component),
@@ -1771,6 +1777,8 @@ def get_parser():
                         help='Strip installed glibc libraries')
     parser.add_argument('--full-gcc', action='store_true',
                         help='Build GCC with all languages and libsanitizer')
+    parser.add_argument('--shallow', action='store_true',
+                        help='Do not download Git history during checkout')
     parser.add_argument('topdir',
                         help='Toplevel working directory')
     parser.add_argument('action',
@@ -1790,7 +1798,8 @@ def main(argv):
     opts = parser.parse_args(argv)
     topdir = os.path.abspath(opts.topdir)
     ctx = Context(topdir, opts.parallelism, opts.keep, opts.replace_sources,
-                  opts.strip, opts.full_gcc, opts.action)
+                  opts.strip, opts.full_gcc, opts.action,
+                  shallow=opts.shallow)
     ctx.run_builds(opts.action, opts.configs)
 
 
