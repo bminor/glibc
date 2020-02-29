@@ -32,6 +32,12 @@ check out (<component>-<version), for 'checkout', or, for actions
 other than 'checkout' and 'bot-cycle', name configurations for which
 compilers or glibc are to be built.
 
+The 'list-compilers' command prints the name of each available
+compiler configuration, without building anything.  The 'list-glibcs'
+command prints the name of each glibc compiler configuration, followed
+by the space, followed by the name of the compiler configuration used
+for building this glibc variant.
+
 """
 
 import argparse
@@ -103,7 +109,7 @@ class Context(object):
         self.wrapper = os.path.join(self.builddir, 'wrapper')
         self.save_logs = os.path.join(self.builddir, 'save-logs')
         self.script_text = self.get_script_text()
-        if action != 'checkout':
+        if action not in ('checkout', 'list-compilers', 'list-glibcs'):
             self.build_triplet = self.get_build_triplet()
             self.glibc_version = self.get_glibc_version()
         self.configs = {}
@@ -478,9 +484,19 @@ class Context(object):
                 exit(1)
             self.bot()
             return
-        if action == 'host-libraries' and configs:
-            print('error: configurations specified for host-libraries')
+        if action in ('host-libraries', 'list-compilers',
+                      'list-glibcs') and configs:
+            print('error: configurations specified for ' + action)
             exit(1)
+        if action == 'list-compilers':
+            for name in sorted(self.configs.keys()):
+                print(name)
+            return
+        if action == 'list-glibcs':
+            for config in sorted(self.glibc_configs.values(),
+                                 key=lambda c: c.name):
+                print(config.name, config.compiler.name)
+            return
         self.clear_last_build_state(action)
         build_time = datetime.datetime.utcnow()
         if action == 'host-libraries':
@@ -1785,7 +1801,8 @@ def get_parser():
                         help='What to do',
                         choices=('checkout', 'bot-cycle', 'bot',
                                  'host-libraries', 'compilers', 'glibcs',
-                                 'update-syscalls'))
+                                 'update-syscalls', 'list-compilers',
+                                 'list-glibcs'))
     parser.add_argument('configs',
                         help='Versions to check out or configurations to build',
                         nargs='*')
