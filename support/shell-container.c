@@ -228,7 +228,7 @@ run_command_array (char **argv)
       if (new_stderr != 2)
 	{
 	  dup2 (new_stderr, 2);
-	  close (new_stdout);
+	  close (new_stderr);
 	}
 
       if (builtin_func != NULL)
