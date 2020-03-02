@@ -76,6 +76,8 @@ __utimensat64 (int fd, const char *file, const struct __timespec64 tsp64[2],
 }
 
 #if __TIMESIZE != 64
+libc_hidden_def (__utimensat64)
+
 int
 __utimensat (int fd, const char *file, const struct timespec tsp[2],
              int flags)
