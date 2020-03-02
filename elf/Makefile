@@ -402,6 +402,7 @@ tests-special += $(objpfx)tst-pathopt.out $(objpfx)tst-rtld-load-self.out \
 		 $(objpfx)tst-rtld-preload.out
 endif
 tests-special += $(objpfx)check-textrel.out $(objpfx)check-execstack.out \
+		 $(objpfx)check-wx-segment.out \
 		 $(objpfx)check-localplt.out $(objpfx)check-initfini.out
 endif
 
@@ -1179,6 +1180,12 @@ $(objpfx)check-execstack.out: $(..)scripts/check-execstack.awk \
 	LC_ALL=C $(AWK) -v "xfail=$(check-execstack-xfail)" -f $^ > $@; \
 	$(evaluate-test)
 generated += check-execstack.out
+
+$(objpfx)check-wx-segment.out: $(..)scripts/check-wx-segment.py \
+			      $(all-built-dso:=.phdr)
+	$(PYTHON) $^ --xfail="$(check-wx-segment-xfail)" > $@; \
+	$(evaluate-test)
+generated += check-wx-segment.out
 
 $(objpfx)tst-dlmodcount: $(libdl)
 $(objpfx)tst-dlmodcount.out: $(test-modules)
