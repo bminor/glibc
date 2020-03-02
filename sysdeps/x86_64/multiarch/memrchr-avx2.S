@@ -32,10 +32,10 @@ ENTRY (__memrchr_avx2)
 	vmovd	%esi, %xmm0
 	vpbroadcastb %xmm0, %ymm0
 
-	subq	$VEC_SIZE, %rdx
+	sub	$VEC_SIZE, %RDX_LP
 	jbe	L(last_vec_or_less)
 
-	addq	%rdx, %rdi
+	add	%RDX_LP, %RDI_LP
 
 	/* Check the last VEC_SIZE bytes.  */
 	vpcmpeqb (%rdi), %ymm0, %ymm1

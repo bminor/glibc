@@ -58,9 +58,12 @@
 	.section .text.avx,"ax",@progbits
 ENTRY (MEMCMP)
 # ifdef USE_AS_WMEMCMP
-	shl	$2, %rdx
+	shl	$2, %RDX_LP
+# elif defined __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
 # endif
-	cmpq	$VEC_SIZE, %rdx
+	cmp	$VEC_SIZE, %RDX_LP
 	jb	L(less_vec)
 
 	/* From VEC to 2 * VEC.  No branch when size == VEC_SIZE.  */

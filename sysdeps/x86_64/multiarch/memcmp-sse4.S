@@ -42,13 +42,16 @@
 	.section .text.sse4.1,"ax",@progbits
 ENTRY (MEMCMP)
 # ifdef USE_AS_WMEMCMP
-	shl	$2, %rdx
+	shl	$2, %RDX_LP
+# elif defined __ILP32__
+	/* Clear the upper 32 bits.  */
+	mov	%edx, %edx
 # endif
 	pxor	%xmm0, %xmm0
-	cmp	$79, %rdx
+	cmp	$79, %RDX_LP
 	ja	L(79bytesormore)
 # ifndef USE_AS_WMEMCMP
-	cmp	$1, %rdx
+	cmp	$1, %RDX_LP
 	je	L(firstbyte)
 # endif
 	add	%rdx, %rsi

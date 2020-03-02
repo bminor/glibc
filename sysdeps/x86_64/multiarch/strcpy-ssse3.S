@@ -31,13 +31,13 @@ ENTRY (STRCPY)
 
 	mov	%rsi, %rcx
 #  ifdef USE_AS_STRNCPY
-	mov	%rdx, %r8
+	mov	%RDX_LP, %R8_LP
 #  endif
 	mov	%rdi, %rdx
 #  ifdef USE_AS_STRNCPY
-	test	%r8, %r8
+	test	%R8_LP, %R8_LP
 	jz	L(Exit0)
-	cmp	$8, %r8
+	cmp	$8, %R8_LP
 	jbe	L(StrncpyExit8Bytes)
 # endif
 	cmpb	$0, (%rcx)

@@ -40,16 +40,20 @@
 ENTRY (MEMCHR)
 # ifndef USE_AS_RAWMEMCHR
 	/* Check for zero length.  */
-	testq	%rdx, %rdx
+	test	%RDX_LP, %RDX_LP
 	jz	L(null)
 # endif
 	movl	%edi, %ecx
 	/* Broadcast CHAR to YMM0.  */
 	vmovd	%esi, %xmm0
 # ifdef USE_AS_WMEMCHR
-	shl	$2, %rdx
+	shl	$2, %RDX_LP
 	vpbroadcastd %xmm0, %ymm0
 # else
+#  ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+#  endif
 	vpbroadcastb %xmm0, %ymm0
 # endif
 	/* Check if we may cross page boundary with one vector load.  */

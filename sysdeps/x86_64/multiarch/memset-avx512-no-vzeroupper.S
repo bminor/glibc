@@ -29,12 +29,16 @@
 	.section .text.avx512,"ax",@progbits
 #if defined PIC
 ENTRY (MEMSET_CHK)
-	cmpq	%rdx, %rcx
+	cmp	%RDX_LP, %RCX_LP
 	jb	HIDDEN_JUMPTARGET (__chk_fail)
 END (MEMSET_CHK)
 #endif
 
 ENTRY (MEMSET)
+# ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	mov	%edx, %edx
+# endif
 	vpxor	%xmm0, %xmm0, %xmm0
 	vmovd	%esi, %xmm1
 	lea	(%rdi, %rdx), %rsi

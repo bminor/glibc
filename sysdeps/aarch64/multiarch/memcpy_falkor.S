@@ -29,11 +29,19 @@
 #define dst	x3
 #define srcend	x4
 #define dstend	x5
-#define A_l	x6
-#define A_lw	w6
-#define A_h	x7
-#define A_hw	w7
 #define tmp1	x14
+#define A_x	x6
+#define B_x	x7
+#define A_w	w6
+#define B_w	w7
+
+#define A_q	q0
+#define B_q	q1
+#define C_q	q2
+#define D_q	q3
+#define E_q	q4
+#define F_q	q5
+#define G_q	q6
 
 /* Copies are split into 3 main cases:
 
@@ -53,9 +61,9 @@
    bumping up the small copies up to 32 bytes allows us to do that without
    cost and also allows us to reduce the size of the prep code before loop64.
 
-   All copies are done only via two registers r6 and r7.  This is to ensure
-   that all loads hit a single hardware prefetcher which can get correctly
-   trained to prefetch a single stream.
+   The copy loop uses only one register q0.  This is to ensure that all loads
+   hit a single hardware prefetcher which can get correctly trained to prefetch
+   a single stream.
 
    The non-temporal stores help optimize cache utilization.  */
 
@@ -66,29 +74,29 @@ ENTRY_ALIGN (__memcpy_falkor, 6)
 	add	srcend, src, count
 	add	dstend, dstin, count
 	b.ls	L(copy32)
-	ldp	A_l, A_h, [src]
+	ldr	A_q, [src]
 	cmp	count, 128
-	stp	A_l, A_h, [dstin]
+	str	A_q, [dstin]
 	b.hi	L(copy_long)
 
 	/* Medium copies: 33..128 bytes.  */
 	sub	tmp1, count, 1
-	ldp	A_l, A_h, [src, 16]
-	stp	A_l, A_h, [dstin, 16]
+	ldr	A_q, [src, 16]
+	ldr	B_q, [srcend, -32]
+	ldr	C_q, [srcend, -16]
 	tbz	tmp1, 6, 1f
-	ldp	A_l, A_h, [src, 32]
-	stp	A_l, A_h, [dstin, 32]
-	ldp	A_l, A_h, [src, 48]
-	stp	A_l, A_h, [dstin, 48]
-	ldp	A_l, A_h, [srcend, -64]
-	stp	A_l, A_h, [dstend, -64]
-	ldp	A_l, A_h, [srcend, -48]
-	stp	A_l, A_h, [dstend, -48]
+	ldr	D_q, [src, 32]
+	ldr	E_q, [src, 48]
+	str	D_q, [dstin, 32]
+	str	E_q, [dstin, 48]
+	ldr	F_q, [srcend, -64]
+	ldr	G_q, [srcend, -48]
+	str	F_q, [dstend, -64]
+	str	G_q, [dstend, -48]
 1:
-	ldp	A_l, A_h, [srcend, -32]
-	stp	A_l, A_h, [dstend, -32]
-	ldp	A_l, A_h, [srcend, -16]
-	stp	A_l, A_h, [dstend, -16]
+	str	A_q, [dstin, 16]
+	str	B_q, [dstend, -32]
+	str	C_q, [dstend, -16]
 	ret
 
 	.p2align 4
@@ -97,44 +105,44 @@ L(copy32):
 	/* 16-32 */
 	cmp	count, 16
 	b.lo	1f
-	ldp	A_l, A_h, [src]
-	stp	A_l, A_h, [dstin]
-	ldp	A_l, A_h, [srcend, -16]
-	stp	A_l, A_h, [dstend, -16]
+	ldr	A_q, [src]
+	ldr	B_q, [srcend, -16]
+	str	A_q, [dstin]
+	str	B_q, [dstend, -16]
 	ret
 	.p2align 4
 1:
 	/* 8-15 */
 	tbz	count, 3, 1f
-	ldr	A_l, [src]
-	str	A_l, [dstin]
-	ldr	A_l, [srcend, -8]
-	str	A_l, [dstend, -8]
+	ldr	A_x, [src]
+	ldr	B_x, [srcend, -8]
+	str	A_x, [dstin]
+	str	B_x, [dstend, -8]
 	ret
 	.p2align 4
 1:
 	/* 4-7 */
 	tbz	count, 2, 1f
-	ldr	A_lw, [src]
-	str	A_lw, [dstin]
-	ldr	A_lw, [srcend, -4]
-	str	A_lw, [dstend, -4]
+	ldr	A_w, [src]
+	ldr	B_w, [srcend, -4]
+	str	A_w, [dstin]
+	str	B_w, [dstend, -4]
 	ret
 	.p2align 4
 1:
 	/* 2-3 */
 	tbz	count, 1, 1f
-	ldrh	A_lw, [src]
-	strh	A_lw, [dstin]
-	ldrh	A_lw, [srcend, -2]
-	strh	A_lw, [dstend, -2]
+	ldrh	A_w, [src]
+	ldrh	B_w, [srcend, -2]
+	strh	A_w, [dstin]
+	strh	B_w, [dstend, -2]
 	ret
 	.p2align 4
 1:
 	/* 0-1 */
 	tbz	count, 0, 1f
-	ldrb	A_lw, [src]
-	strb	A_lw, [dstin]
+	ldrb	A_w, [src]
+	strb	A_w, [dstin]
 1:
 	ret
 
@@ -153,30 +161,29 @@ L(copy_long):
 	add	count, count, tmp1
 
 L(loop64):
-	ldp	A_l, A_h, [src, 16]!
-	stnp	A_l, A_h, [dst, 16]
-	ldp	A_l, A_h, [src, 16]!
+	ldr	A_q, [src, 16]!
+	str	A_q, [dst, 16]
+	ldr	A_q, [src, 16]!
 	subs	count, count, 64
-	stnp	A_l, A_h, [dst, 32]
-	ldp	A_l, A_h, [src, 16]!
-	stnp	A_l, A_h, [dst, 48]
-	ldp	A_l, A_h, [src, 16]!
-	stnp	A_l, A_h, [dst, 64]
-	add	dst, dst, 64
+	str	A_q, [dst, 32]
+	ldr	A_q, [src, 16]!
+	str	A_q, [dst, 48]
+	ldr	A_q, [src, 16]!
+	str	A_q, [dst, 64]!
 	b.hi	L(loop64)
 
 	/* Write the last full set of 64 bytes.  The remainder is at most 64
 	   bytes, so it is safe to always copy 64 bytes from the end even if
 	   there is just 1 byte left.  */
 L(last64):
-	ldp	A_l, A_h, [srcend, -64]
-	stnp	A_l, A_h, [dstend, -64]
-	ldp	A_l, A_h, [srcend, -48]
-	stnp	A_l, A_h, [dstend, -48]
-	ldp	A_l, A_h, [srcend, -32]
-	stnp	A_l, A_h, [dstend, -32]
-	ldp	A_l, A_h, [srcend, -16]
-	stnp	A_l, A_h, [dstend, -16]
+	ldr	E_q, [srcend, -64]
+	str	E_q, [dstend, -64]
+	ldr	D_q, [srcend, -48]
+	str	D_q, [dstend, -48]
+	ldr	C_q, [srcend, -32]
+	str	C_q, [dstend, -32]
+	ldr	B_q, [srcend, -16]
+	str	B_q, [dstend, -16]
 	ret
 
 END (__memcpy_falkor)

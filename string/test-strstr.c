@@ -24,6 +24,7 @@
 
 #define STRSTR simple_strstr
 #define libc_hidden_builtin_def(arg) /* nothing */
+#define __strnlen strnlen
 #include "strstr.c"
 
 
@@ -150,6 +151,32 @@ check2 (void)
     }
 }
 
+#define N 1024
+
+static void
+pr23637 (void)
+{
+  char *h = (char*) buf1;
+  char *n = (char*) buf2;
+
+  for (int i = 0; i < N; i++)
+    {
+      n[i] = 'x';
+      h[i] = ' ';
+      h[i + N] = 'x';
+    }
+
+  n[N] = '\0';
+  h[N * 2] = '\0';
+
+  /* Ensure we don't match at the first 'x'.  */
+  h[0] = 'x';
+
+  char *exp_result = stupid_strstr (h, n);
+  FOR_EACH_IMPL (impl, 0)
+    check_result (impl, h, n, exp_result);
+}
+
 static int
 test_main (void)
 {
@@ -157,6 +184,7 @@ test_main (void)
 
   check1 ();
   check2 ();
+  pr23637 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)
@@ -201,6 +229,9 @@ test_main (void)
 	do_test (15, 9, hlen, klen, 1);
 	do_test (15, 15, hlen, klen, 0);
 	do_test (15, 15, hlen, klen, 1);
+
+	do_test (15, 15, hlen + klen * 4, klen * 4, 0);
+	do_test (15, 15, hlen + klen * 4, klen * 4, 1);
       }
 
   do_test (0, 0, page_size - 1, 16, 0);

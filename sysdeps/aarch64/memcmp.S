@@ -22,132 +22,132 @@
 
 /* Assumptions:
  *
- * ARMv8-a, AArch64
+ * ARMv8-a, AArch64, unaligned accesses.
  */
 
 /* Parameters and result.  */
 #define src1		x0
 #define src2		x1
 #define limit		x2
-#define result		x0
+#define result		w0
 
 /* Internal variables.  */
 #define data1		x3
 #define data1w		w3
-#define data2		x4
-#define data2w		w4
-#define has_nul		x5
-#define diff		x6
-#define endloop		x7
-#define tmp1		x8
-#define tmp2		x9
-#define tmp3		x10
-#define pos		x11
-#define limit_wd	x12
-#define mask		x13
+#define data1h		x4
+#define data2		x5
+#define data2w		w5
+#define data2h		x6
+#define tmp1		x7
+#define tmp2		x8
 
 ENTRY_ALIGN (memcmp, 6)
 	DELOUSE (0)
 	DELOUSE (1)
 	DELOUSE (2)
-	cbz	limit, L(ret0)
-	eor	tmp1, src1, src2
-	tst	tmp1, #7
-	b.ne	L(misaligned8)
-	ands	tmp1, src1, #7
-	b.ne	L(mutual_align)
-	add	limit_wd, limit, #7
-	lsr	limit_wd, limit_wd, #3
-	/* Start of performance-critical section  -- one 64B cache line.  */
-L(loop_aligned):
-	ldr	data1, [src1], #8
-	ldr	data2, [src2], #8
-L(start_realigned):
-	subs	limit_wd, limit_wd, #1
-	eor	diff, data1, data2	/* Non-zero if differences found.  */
-	csinv	endloop, diff, xzr, ne	/* Last Dword or differences.  */
-	cbz	endloop, L(loop_aligned)
-	/* End of performance-critical section  -- one 64B cache line.  */
 
-	/* Not reached the limit, must have found a diff.  */
-	cbnz	limit_wd, L(not_limit)
+	subs	limit, limit, 8
+	b.lo	L(less8)
 
-	/* Limit % 8 == 0 => all bytes significant.  */
-	ands	limit, limit, #7
-	b.eq	L(not_limit)
+	ldr	data1, [src1], 8
+	ldr	data2, [src2], 8
+	cmp	data1, data2
+	b.ne	L(return)
 
-	lsl	limit, limit, #3	/* Bits -> bytes.  */
-	mov	mask, #~0
-#ifdef __AARCH64EB__
-	lsr	mask, mask, limit
-#else
-	lsl	mask, mask, limit
-#endif
-	bic	data1, data1, mask
-	bic	data2, data2, mask
+	subs	limit, limit, 8
+	b.gt	L(more16)
 
-	orr	diff, diff, mask
-L(not_limit):
+	ldr	data1, [src1, limit]
+	ldr	data2, [src2, limit]
+	b	L(return)
 
-#ifndef	__AARCH64EB__
-	rev	diff, diff
+L(more16):
+	ldr	data1, [src1], 8
+	ldr	data2, [src2], 8
+	cmp	data1, data2
+	bne	L(return)
+
+	/* Jump directly to comparing the last 16 bytes for 32 byte (or less)
+	   strings.  */
+	subs	limit, limit, 16
+	b.ls	L(last_bytes)
+
+	/* We overlap loads between 0-32 bytes at either side of SRC1 when we
+	   try to align, so limit it only to strings larger than 128 bytes.  */
+	cmp	limit, 96
+	b.ls	L(loop16)
+
+	/* Align src1 and adjust src2 with bytes not yet done.  */
+	and	tmp1, src1, 15
+	add	limit, limit, tmp1
+	sub	src1, src1, tmp1
+	sub	src2, src2, tmp1
+
+	/* Loop performing 16 bytes per iteration using aligned src1.
+	   Limit is pre-decremented by 16 and must be larger than zero.
+	   Exit if <= 16 bytes left to do or if the data is not equal.  */
+	.p2align 4
+L(loop16):
+	ldp	data1, data1h, [src1], 16
+	ldp	data2, data2h, [src2], 16
+	subs	limit, limit, 16
+	ccmp	data1, data2, 0, hi
+	ccmp	data1h, data2h, 0, eq
+	b.eq	L(loop16)
+
+	cmp	data1, data2
+	bne	L(return)
+	mov	data1, data1h
+	mov	data2, data2h
+	cmp	data1, data2
+	bne	L(return)
+
+	/* Compare last 1-16 bytes using unaligned access.  */
+L(last_bytes):
+	add	src1, src1, limit
+	add	src2, src2, limit
+	ldp	data1, data1h, [src1]
+	ldp	data2, data2h, [src2]
+	cmp     data1, data2
+	bne	L(return)
+	mov	data1, data1h
+	mov	data2, data2h
+	cmp	data1, data2
+
+	/* Compare data bytes and set return value to 0, -1 or 1.  */
+L(return):
+#ifndef __AARCH64EB__
 	rev	data1, data1
 	rev	data2, data2
 #endif
-	/* The MS-non-zero bit of DIFF marks either the first bit
-	   that is different, or the end of the significant data.
-	   Shifting left now will bring the critical information into the
-	   top bits.  */
-	clz	pos, diff
-	lsl	data1, data1, pos
-	lsl	data2, data2, pos
-	/* But we need to zero-extend (char is unsigned) the value and then
-	   perform a signed 32-bit subtraction.  */
-	lsr	data1, data1, #56
-	sub	result, data1, data2, lsr #56
-	RET
+	cmp     data1, data2
+L(ret_eq):
+	cset	result, ne
+	cneg	result, result, lo
+	ret
 
-L(mutual_align):
-	/* Sources are mutually aligned, but are not currently at an
-	   alignment boundary.  Round down the addresses and then mask off
-	   the bytes that precede the start point.  */
-	bic	src1, src1, #7
-	bic	src2, src2, #7
-	add	limit, limit, tmp1	/* Adjust the limit for the extra.  */
-	lsl	tmp1, tmp1, #3		/* Bytes beyond alignment -> bits.  */
-	ldr	data1, [src1], #8
-	neg	tmp1, tmp1		/* Bits to alignment -64.  */
-	ldr	data2, [src2], #8
-	mov	tmp2, #~0
-#ifdef __AARCH64EB__
-	/* Big-endian.  Early bytes are at MSB.  */
-	lsl	tmp2, tmp2, tmp1	/* Shift (tmp1 & 63).  */
-#else
-	/* Little-endian.  Early bytes are at LSB.  */
-	lsr	tmp2, tmp2, tmp1	/* Shift (tmp1 & 63).  */
-#endif
-	add	limit_wd, limit, #7
-	orr	data1, data1, tmp2
-	orr	data2, data2, tmp2
-	lsr	limit_wd, limit_wd, #3
-	b	L(start_realigned)
+	.p2align 4
+	/* Compare up to 8 bytes.  Limit is [-8..-1].  */
+L(less8):
+	adds	limit, limit, 4
+	b.lo	L(less4)
+	ldr	data1w, [src1], 4
+	ldr	data2w, [src2], 4
+	cmp	data1w, data2w
+	b.ne	L(return)
+	sub	limit, limit, 4
+L(less4):
+	adds	limit, limit, 4
+	beq	L(ret_eq)
+L(byte_loop):
+	ldrb	data1w, [src1], 1
+	ldrb	data2w, [src2], 1
+	subs	limit, limit, 1
+	ccmp	data1w, data2w, 0, ne	/* NZCV = 0b0000.  */
+	b.eq	L(byte_loop)
+	sub	result, data1w, data2w
+	ret
 
-L(ret0):
-	mov	result, #0
-	RET
-
-	.p2align 6
-L(misaligned8):
-	sub	limit, limit, #1
-1:
-	/* Perhaps we can do better than this.  */
-	ldrb	data1w, [src1], #1
-	ldrb	data2w, [src2], #1
-	subs	limit, limit, #1
-	ccmp	data1w, data2w, #0, cs	/* NZCV = 0b0000.  */
-	b.eq	1b
-	sub	result, data1, data2
-	RET
 END (memcmp)
 #undef bcmp
 weak_alias (memcmp, bcmp)

@@ -1,3 +1,259 @@
+2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/memmem.c (__memmem): Rewrite to improve performance.
+
+2019-06-12  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/str-two-way.h (two_way_short_needle): Add inline to avoid
+	warning.
+	(two_way_long_needle): Block inlining.
+	* string/strstr.c (strstr2): Add new function.
+	(strstr3): Likewise.
+	(STRSTR): Completely rewrite strstr to improve performance.
+
+2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	[BZ #23637]
+	* string/test-strstr.c (pr23637): New function.
+	(test_main): Add tests with longer needles.
+	* string/strcasestr.c (AVAILABLE): Fix readahead distance.
+	* string/strstr.c (AVAILABLE): Likewise.
+
+2019-09-13  Rajalakshmi Srinivasaraghavan  <raji@linux.vnet.ibm.com>
+
+	* string/memmem.c: Use memcmp for first match.
+
+2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* string/strcasestr.c (STRCASESTR): Simplify and speedup first match.
+	* string/strstr.c (AVAILABLE): Likewise.
+
+2019-09-13  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* benchtests/bench-strcasestr.c: Rename __strnlen to strnlen.
+	* benchtests/bench-strstr.c: Likewise.
+	* string/memmem.c (FASTSEARCH): Define.
+	* string/str-two-way.h (two_way_short_needle): Minor cleanups.
+	Add support for FASTSEARCH.
+	* string/strcasestr.c (AVAILABLE): Use read-ahead __strnlen.
+	* string/strstr.c (AVAILABLE): Use read-ahead __strnlen.
+	(FASTSEARCH): Define.
+	* string/test-strcasestr.c: Rename __strnlen to strnlen.
+	* string/test-strstr.c: Likewise.
+
+2019-09-06  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* manual/tunables.texi (glibc.cpu.name): Add ares tunable.
+	* sysdeps/aarch64/multiarch/memcpy.c (__libc_memcpy): Use
+	__memcpy_falkor for ares.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.h (IS_ARES):
+	Add new define.
+	* sysdeps/unix/sysv/linux/aarch64/cpu-features.c (cpu_list):
+	Add ares cpu.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/multiarch/memcpy_falkor.S (__memcpy_falkor):
+	Use vector registers.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/multiarch/memcpy_falkor.S (__memcpy_falkor):
+	Use multiple registers to copy data in loop tail.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strncmp.S (strncmp): Use lsr instead of
+	mov + lsr.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strncmp.S (strncmp): Use a separate shift
+	instruction to unbreak builds with binutils 2.26 and older.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strncmp.S (count): New macro.
+	(strncmp): Store misaligned length in SRC1 in COUNT.
+	(mutual_align): Adjust.
+	(misaligned8): Load dword at a time when it is safe.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strcmp.S (do_misaligned): Jump back to
+	do_misaligned, not misaligned8.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/strcmp.S (misaligned8): Compare dword at a
+	time whenever possible.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/memcmp.S (more16): Fix loop16 branch target.
+
+	* sysdeps/aarch64/memcmp.S: Widen comparison to 16 bytes at a
+	time.
+
+2019-09-06  Siddhesh Poyarekar  <siddhesh@sourceware.org>
+
+	* sysdeps/aarch64/memcmp.S: Use L() macro for labels.
+
+2019-09-06  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	* sysdeps/aarch64/memcmp.S (memcmp):
+	Rewrite of optimized memcmp.
+
+2019-07-12  Adhemerval Zanella  <adhemerval.zanella@linaro.org>
+
+	[BZ #24699]
+	* posix/tst-mmap-offset.c: Mention BZ #24699.
+	(do_test_bz21270): Rename to do_test_large_offset and use
+	mmap64_maximum_offset to check for maximum expected offset value.
+	* sysdeps/generic/mmap_info.h: New file.
+	* sysdeps/unix/sysv/linux/mips/mmap_info.h: Likewise.
+	* sysdeps/unix/sysv/linux/mmap64.c (MMAP_OFF_HIGH_MASK): Define iff
+	__NR_mmap2 is used.
+
+2019-07-12  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* sysdeps/aarch64/dl-machine.h (elf_machine_lazy_rel): Check
+	STO_AARCH64_VARIANT_PCS and bind such symbols at load time.
+
+2019-06-13  Szabolcs Nagy  <szabolcs.nagy@arm.com>
+
+	* elf/elf.h (STO_AARCH64_VARIANT_PCS): Define.
+	(DT_AARCH64_VARIANT_PCS): Define.
+
+2019-05-22  Wilco Dijkstra  <wdijkstr@arm.com>
+
+	[BZ #24531]
+	* malloc/malloc.c (MAX_TCACHE_COUNT): New define.
+	(do_set_tcache_count): Only update if count is small enough.
+	* manual/tunables.texi (glibc.malloc.tcache_count): Document max value.
+
+2019-05-15  Andreas Schwab  <schwab@suse.de>
+
+	[BZ #20568]
+	* libio/wfileops.c (_IO_wfile_sync): Correct last argument to
+	__codecvt_do_length.
+	* libio/Makefile (tests): Add tst-wfile-sync.
+	($(objpfx)tst-wfile-sync.out): Depend on $(gen-locales).
+	* libio/tst-wfile-sync.c: New file.
+	* libio/tst-wfile-sync.input: New file.
+
+2019-02-07  Stefan Liebler  <stli@linux.ibm.com>
+
+	[BZ #24180]
+	* nptl/pthread_mutex_trylock.c (__pthread_mutex_trylock):
+	Add compiler barriers and comments.
+
+2019-02-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24155]
+	CVE-2019-7309
+	* NEWS: Updated for CVE-2019-7309.
+	* sysdeps/x86_64/memcmp.S: Use RDX_LP for size.  Clear the
+	upper 32 bits of RDX register for x32.  Use unsigned Jcc
+	instructions, instead of signed.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memcmp-2.
+	* sysdeps/x86_64/x32/tst-size_t-memcmp-2.c: New test.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/strlen-avx2.S: Use RSI_LP for length.
+	Clear the upper 32 bits of RSI register.
+	* sysdeps/x86_64/strlen.S: Use RSI_LP for length.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-strnlen
+	and tst-size_t-wcsnlen.
+	* sysdeps/x86_64/x32/tst-size_t-strnlen.c: New file.
+	* sysdeps/x86_64/x32/tst-size_t-wcsnlen.c: Likewise.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/strcpy-sse2-unaligned.S: Use RDX_LP
+	for length.
+	* sysdeps/x86_64/multiarch/strcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-strncpy.
+	* sysdeps/x86_64/x32/tst-size_t-strncpy.c: New file.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/strcmp-sse42.S: Use RDX_LP for length.
+	* sysdeps/x86_64/strcmp.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-strncasecmp,
+	tst-size_t-strncmp and tst-size_t-wcsncmp.
+	* sysdeps/x86_64/x32/tst-size_t-strncasecmp.c: New file.
+	* sysdeps/x86_64/x32/tst-size_t-strncmp.c: Likewise.
+	* sysdeps/x86_64/x32/tst-size_t-wcsncmp.c: Likewise.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/memset-avx512-no-vzeroupper.S: Use
+	RDX_LP for length.  Clear the upper 32 bits of RDX register.
+	* sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-wmemset.
+	* sysdeps/x86_64/x32/tst-size_t-memset.c: New file.
+	* sysdeps/x86_64/x32/tst-size_t-wmemset.c: Likewise.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/memrchr.S: Use RDX_LP for length.
+	* sysdeps/x86_64/multiarch/memrchr-avx2.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memrchr.
+	* sysdeps/x86_64/x32/tst-size_t-memrchr.c: New file.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/memcpy-ssse3-back.S: Use RDX_LP for
+	length.  Clear the upper 32 bits of RDX register.
+	* sysdeps/x86_64/multiarch/memcpy-ssse3.S: Likewise.
+	* sysdeps/x86_64/multiarch/memmove-avx512-no-vzeroupper.S:
+	Likewise.
+	* sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:
+	Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memcpy.
+	tst-size_t-wmemchr.
+	* sysdeps/x86_64/x32/tst-size_t-memcpy.c: New file.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S: Use RDX_LP for
+	length.  Clear the upper 32 bits of RDX register.
+	* sysdeps/x86_64/multiarch/memcmp-sse4.S: Likewise.
+	* sysdeps/x86_64/multiarch/memcmp-ssse3.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memcmp and
+	tst-size_t-wmemcmp.
+	* sysdeps/x86_64/x32/tst-size_t-memcmp.c: New file.
+	* sysdeps/x86_64/x32/tst-size_t-wmemcmp.c: Likewise.
+
+2019-02-01  H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #24097]
+	CVE-2019-6488
+	* sysdeps/x86_64/memchr.S: Use RDX_LP for length.  Clear the
+	upper 32 bits of RDX register.
+	* sysdeps/x86_64/multiarch/memchr-avx2.S: Likewise.
+	* sysdeps/x86_64/x32/Makefile (tests): Add tst-size_t-memchr and
+	tst-size_t-wmemchr.
+	* sysdeps/x86_64/x32/test-size_t.h: New file.
+	* sysdeps/x86_64/x32/tst-size_t-memchr.c: Likewise.
+	* sysdeps/x86_64/x32/tst-size_t-wmemchr.c: Likewise.
+
 2019-01-11  Gabriel F. T. Gomes  <gabriel@inconstante.eti.br>
 
 	* sysdeps/powerpc/fpu/libm-test-ulps: Regenerate.
