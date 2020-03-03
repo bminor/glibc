@@ -28,11 +28,7 @@
 
 ENTRY (__vfork)
 
-#ifdef __NR_vfork
 	DO_CALL (vfork, 0)
-#else
-	DO_CALL (fork, 0)
-#endif
 	addik	r12,r0,-4095
 	cmpu	r12,r12,r3
 	bgei	r12,SYSCALL_ERROR_LABEL
