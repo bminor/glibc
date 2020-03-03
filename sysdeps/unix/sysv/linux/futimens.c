@@ -38,6 +38,8 @@ __futimens64 (int fd, const struct __timespec64 tsp64[2])
 }
 
 #if __TIMESIZE != 64
+libc_hidden_def (__futimens64);
+
 int
 __futimens (int fd, const struct timespec tsp[2])
 {
