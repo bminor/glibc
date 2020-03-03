@@ -57,10 +57,6 @@ endif
 # "current" rounding mode, and it's easiest to set this with all of them.
 sysdep-CFLAGS += -mieee -mfp-rounding-mode=d
 
-# libc.so requires about 16k for the small data area, which is well
-# below the 64k maximum.
-pic-ccflag = -fpic
-
 #  Software floating-point emulation.
 
 ifeq ($(subdir),soft-fp)
