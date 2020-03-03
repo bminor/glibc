@@ -25,11 +25,6 @@ copy_file_range (int infd, __off64_t *pinoff,
                  int outfd, __off64_t *poutoff,
                  size_t length, unsigned int flags)
 {
-#ifdef __NR_copy_file_range
   return SYSCALL_CANCEL (copy_file_range, infd, pinoff, outfd, poutoff,
                          length, flags);
-#else
-  __set_errno (ENOSYS);
-  return -1;
-#endif
 }
