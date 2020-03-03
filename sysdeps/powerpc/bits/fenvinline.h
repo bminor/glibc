@@ -75,7 +75,7 @@
     int __e = __excepts;						      \
     int __ret = 0;							      \
     if (__builtin_constant_p (__e)					      \
-        && powerof2 (__e)						      \
+        && __builtin_popcount (__e) == 1				      \
         && __e != FE_INVALID)						      \
       {									      \
 	__MTFSB1 ((__builtin_clz (__e)));				      \
@@ -91,7 +91,7 @@
     int __e = __excepts;						      \
     int __ret = 0;							      \
     if (__builtin_constant_p (__e)					      \
-        && powerof2 (__e)						      \
+        && __builtin_popcount (__e) == 1				      \
         && __e != FE_INVALID)						      \
       {									      \
 	__MTFSB0 ((__builtin_clz (__e)));				      \
