@@ -20,15 +20,9 @@
 #include <stddef.h>
 #include <sysdep.h>
 
-#ifdef __NR_mq_getsetattr
-
 /* Query status and attributes of message queue MQDES.  */
 int
 mq_getattr (mqd_t mqdes, struct mq_attr *mqstat)
 {
   return mq_setattr (mqdes, NULL, mqstat);
 }
-
-#else
-# include <rt/mq_getattr.c>
-#endif
