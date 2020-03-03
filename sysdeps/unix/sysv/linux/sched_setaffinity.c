@@ -24,8 +24,6 @@
 #include <shlib-compat.h>
 
 
-#ifdef __NR_sched_setaffinity
-
 extern int __sched_setaffinity_new (pid_t, size_t, const cpu_set_t *);
 libc_hidden_proto (__sched_setaffinity_new)
 
@@ -46,7 +44,7 @@ versioned_symbol (libc, __sched_setaffinity_new, sched_setaffinity,
 		  GLIBC_2_3_4);
 
 
-# if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
+#if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
 int
 attribute_compat_text_section
 __sched_setaffinity_old (pid_t pid, const cpu_set_t *cpuset)
@@ -55,7 +53,4 @@ __sched_setaffinity_old (pid_t pid, const cpu_set_t *cpuset)
   return __sched_setaffinity_new (pid, 128, cpuset);
 }
 compat_symbol (libc, __sched_setaffinity_old, sched_setaffinity, GLIBC_2_3_3);
-# endif
-#else
-# include <posix/sched_setaffinity.c>
 #endif
