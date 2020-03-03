@@ -26,8 +26,6 @@
 
 #include "gai_misc.h"
 
-#ifdef __NR_rt_sigqueueinfo
-
 /* Return any pending signal or wait for one for the given time.  */
 int
 __gai_sigqueue (int sig, const union sigval val, pid_t caller_pid)
@@ -46,6 +44,3 @@ __gai_sigqueue (int sig, const union sigval val, pid_t caller_pid)
 
   return INLINE_SYSCALL (rt_sigqueueinfo, 3, info.si_pid, sig, &info);
 }
-#else
-# include <resolv/gai_sigqueue.c>
-#endif
