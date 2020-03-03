@@ -25,12 +25,12 @@ ssize_t
 pwritev2 (int fd, const struct iovec *vector, int count, off_t offset,
 	  int flags)
 {
-# ifdef __NR_pwritev2
+
   ssize_t result = SYSCALL_CANCEL (pwritev2, fd, vector, count,
 				   LO_HI_LONG (offset), flags);
   if (result >= 0 || errno != ENOSYS)
     return result;
-# endif
+
   /* Trying to emulate the pwritev2 syscall flags is troublesome:
 
      * We can not temporary change the file state of the O_DSYNC and O_SYNC
