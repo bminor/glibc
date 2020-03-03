@@ -27,11 +27,9 @@ mlock2 (const void *addr, size_t length, unsigned int flags)
 #else
   if (flags == 0)
     return INLINE_SYSCALL_CALL (mlock, addr, length);
-# ifdef __NR_mlock2
   int ret = INLINE_SYSCALL_CALL (mlock2, addr, length, flags);
   if (ret == 0 || errno != ENOSYS)
     return ret;
-# endif /* __NR_mlock2 */
   /* Treat the missing system call as an invalid (non-zero) flag
      argument.  */
   __set_errno (EINVAL);
