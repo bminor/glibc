@@ -29,15 +29,14 @@ __renameat2 (int oldfd, const char *old, int newfd, const char *new,
 #else
   if (flags == 0)
     return __renameat (oldfd, old, newfd, new);
-# ifdef __NR_renameat2
+
   /* For non-zero flags, try the renameat2 system call.  */
   int ret = INLINE_SYSCALL_CALL (renameat2, oldfd, old, newfd, new, flags);
   if (ret != -1 || errno != ENOSYS)
     /* Preserve non-error/non-ENOSYS return values.  */
     return ret;
-# endif
-  /* No kernel (header) support for renameat2.  All flags are
-     unknown.  */
+
+  /* No kernel support for renameat2.  All flags are unknown.  */
   __set_errno (EINVAL);
   return -1;
 #endif
