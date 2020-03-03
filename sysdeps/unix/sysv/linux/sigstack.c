@@ -22,7 +22,6 @@
 #include <sys/syscall.h>
 
 
-#ifdef __NR_sigaltstack
 int
 sigstack (struct sigstack *ss, struct sigstack *oss)
 {
@@ -61,6 +60,3 @@ sigstack (struct sigstack *ss, struct sigstack *oss)
 }
 
 link_warning (sigstack, "the `sigstack' function is dangerous.  `sigaltstack' should be used instead.")
-#else
-# include <signal/sigstack.c>
-#endif
