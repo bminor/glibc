@@ -63,7 +63,6 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 
   int ret = shmctl_syscall (shmid, cmd, buf);
 
-#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
   if (ret >= 0)
     {
       switch (cmd)
@@ -71,10 +70,16 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
         case IPC_STAT:
         case SHM_STAT:
         case SHM_STAT_ANY:
+#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
           buf->shm_perm.mode >>= 16;
+#else
+	  /* Old Linux kernel versions might not clear the mode padding.  */
+	  if (sizeof ((struct shmid_ds){0}.shm_perm.mode)
+	      != sizeof (__kernel_mode_t))
+	    buf->shm_perm.mode &= 0xFFFF;
+#endif
 	}
     }
-#endif
 
   return ret;
 }
