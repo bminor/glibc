@@ -61,7 +61,6 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 
   int ret = msgctl_syscall (msqid, cmd, buf);
 
-#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
   if (ret >= 0)
     {
       switch (cmd)
@@ -69,10 +68,16 @@ __new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
 	case IPC_STAT:
 	case MSG_STAT:
 	case MSG_STAT_ANY:
+#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
 	  buf->msg_perm.mode >>= 16;
+#else
+	  /* Old Linux kernel versions might not clear the mode padding.  */
+	  if (sizeof ((struct msqid_ds){0}.msg_perm.mode)
+	      != sizeof (__kernel_mode_t))
+	    buf->msg_perm.mode &= 0xFFFF;
+#endif
 	}
     }
-#endif
 
   return ret;
 }

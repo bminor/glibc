@@ -92,7 +92,6 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 
   int ret = semctl_syscall (semid, semnum, cmd, arg);
 
-#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
   if (ret >= 0)
     {
       switch (cmd)
@@ -100,10 +99,16 @@ __new_semctl (int semid, int semnum, int cmd, ...)
         case IPC_STAT:
         case SEM_STAT:
         case SEM_STAT_ANY:
+#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
           arg.buf->sem_perm.mode >>= 16;
+#else
+	  /* Old Linux kernel versions might not clear the mode padding.  */
+	  if (sizeof ((struct semid_ds){0}.sem_perm.mode)
+	      != sizeof (__kernel_mode_t))
+	    arg.buf->sem_perm.mode &= 0xFFFF;
+#endif
 	}
     }
-#endif
 
   return ret;
 }
