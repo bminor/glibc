@@ -22,10 +22,6 @@
 
 # ifdef __ASSUME_PREADV
 
-#  ifndef __NR_preadv
-#   define __NR_preadv __NR_preadv64
-#  endif
-
 ssize_t
 preadv (int fd, const struct iovec *vector, int count, off_t offset)
 {
@@ -37,12 +33,10 @@ static ssize_t __atomic_preadv_replacement (int, const struct iovec *,
 ssize_t
 preadv (int fd, const struct iovec *vector, int count, off_t offset)
 {
-#  ifdef __NR_preadv
   ssize_t result = SYSCALL_CANCEL (preadv, fd, vector, count,
 				   LO_HI_LONG (offset));
   if (result >= 0 || errno != ENOSYS)
     return result;
-#  endif
   return __atomic_preadv_replacement (fd, vector, count, offset);
 }
 #  define PREADV static __atomic_preadv_replacement

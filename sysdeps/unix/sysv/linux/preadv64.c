@@ -20,14 +20,10 @@
 
 #ifdef __ASSUME_PREADV
 
-# ifndef __NR_preadv64
-#  define __NR_preadv64 __NR_preadv
-# endif
-
 ssize_t
 preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
 {
-  return SYSCALL_CANCEL (preadv64, fd, vector, count, LO_HI_LONG (offset));
+  return SYSCALL_CANCEL (preadv, fd, vector, count, LO_HI_LONG (offset));
 }
 #else
 static ssize_t __atomic_preadv64_replacement (int, const struct iovec *,
@@ -35,12 +31,10 @@ static ssize_t __atomic_preadv64_replacement (int, const struct iovec *,
 ssize_t
 preadv64 (int fd, const struct iovec *vector, int count, off64_t offset)
 {
-#ifdef __NR_preadv64
-  ssize_t result = SYSCALL_CANCEL (preadv64, fd, vector, count,
+  ssize_t result = SYSCALL_CANCEL (preadv, fd, vector, count,
 				   LO_HI_LONG (offset));
   if (result >= 0 || errno != ENOSYS)
     return result;
-#endif
   return __atomic_preadv64_replacement (fd, vector, count, offset);
 }
 # define PREADV static __atomic_preadv64_replacement
