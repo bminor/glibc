@@ -21,7 +21,9 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
-  [Add security related changes here]
+  CVE-2020-10029: Trigonometric functions on x86 targets suffered from stack
+  corruption when they were passed a pseudo-zero argument.  Reported by Guido
+  Vranken / ForAllSecure Mayhem.
 
 The following bugs are resolved with this release:
 
