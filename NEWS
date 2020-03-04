@@ -13,7 +13,9 @@ The following bugs are resolved with this release:
 
 Security related changes:
 
- CVE-2020-10029
+  CVE-2020-10029: Trigonometric functions on x86 targets suffered from stack
+  corruption when they were passed a pseudo-zero argument.  Reported by Guido
+  Vranken / ForAllSecure Mayhem.
 
 
 Version 2.31
