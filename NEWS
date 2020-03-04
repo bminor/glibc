@@ -15,6 +15,10 @@ CVE-2019-19126: ld.so failed to ignore the LD_PREFER_MAP_32BIT_EXEC
   addresses for loaded libraries and thus bypass ASLR for a setuid
   program.  Reported by Marcin Kościelnicki.
 
+CVE-2020-10029: Trigonometric functions on x86 targets suffered from stack
+  corruption when they were passed a pseudo-zero argument.  Reported by Guido
+  Vranken / ForAllSecure Mayhem.
+
 The following bugs are resolved with this release:
 
   [23518] login: Remove utmp backend jump tables
