@@ -2880,7 +2880,7 @@ validate_args (char *format, int nargs, OBJECT *args)
      @r{length of the string.}  */
 
   argtypes = (int *) alloca (strlen (format) / 2 * sizeof (int));
-  nwanted = parse_printf_format (string, nelts, argtypes);
+  nwanted = parse_printf_format (format, nargs, argtypes);
 
   /* @r{Check the number of arguments.}  */
   if (nwanted > nargs)
