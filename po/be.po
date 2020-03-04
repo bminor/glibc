@@ -2,12 +2,12 @@
 # Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 # Ales Nyakhaychyk <nab@mail.by>, 2002, 2003.
-# Viktar Siarheichyk <vics@eq.by>, 2014, 2016, 2017, 2018, 2019.
+# Viktar Siarheichyk <vics@eq.by>, 2014, 2016, 2017, 2018, 2019, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.30.9000\n"
 "POT-Creation-Date: 2020-01-02 20:08+0530\n"
-"PO-Revision-Date: 2020-02-12 17:25+0300\n"
+"PO-Revision-Date: 2020-02-12 17:42+0300\n"
 "Last-Translator: Viktar Siarheichyk <vics@eq.by>\n"
 "Language-Team: Belarusian <debian-l10n-belarusian@lists.debian.org>\n"
 "Language: be\n"
@@ -1544,6 +1544,11 @@ msgstr "rcmd: socket: Выкарыстаныя ўсе парты\n"
 #, c-format
 msgid "connect to address %s: "
 msgstr "падлучэнне да %s: "
+
+#: inet/rcmd.c:215
+#, c-format
+msgid "Trying %s...\n"
+msgstr "Спрабуем %s...\n"
 
 #: inet/rcmd.c:485
 msgid "cannot open"

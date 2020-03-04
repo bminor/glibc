@@ -1,4 +1,4 @@
-# translation of libc-2.25.90.fr.po to Français
+# translation of libc-2.30.9000.fr.po to Français
 # Messages français pour GNU concernant libc.
 # Copyright © 2004, 2008, 2009 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
@@ -7,10 +7,10 @@
 # kerb <traduc@traduc.org>, 2008, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.25.90\n"
+"Project-Id-Version: libc-2.30.9000\n"
 "POT-Creation-Date: 2020-01-02 20:08+0530\n"
-"PO-Revision-Date: 2017-07-31 16:19+0200\n"
-"Last-Translator: Yan Kerb <y.kerb@laposte.net>\n"
+"PO-Revision-Date: 2020-01-16 16:00+0100\n"
+"Last-Translator: kerb <ykerb2@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -18,22 +18,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: argp/argp-help.c:227
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
-msgstr "%.*s : le paramètre ARGP_HELP_FMT requiert une valeur"
+msgstr "%.*s: le paramètre ARGP_HELP_FMT requiert une valeur"
 
 #: argp/argp-help.c:237
 #, c-format
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
-msgstr "%.*s : paramètre ARGP_HELP_FMT inconnu"
+msgstr "%.*s: paramètre ARGP_HELP_FMT inconnu"
 
 #: argp/argp-help.c:250
 #, c-format
 msgid "Garbage in ARGP_HELP_FMT: %s"
-msgstr "Rebut dans ARGP_HELP_FMT : %s"
+msgstr "Rebut dans ARGP_HELP_FMT: %s"
 
 #: argp/argp-help.c:1214
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
@@ -104,6 +104,15 @@ msgstr "%s : Trop d'arguments\n"
 #: argp/argp-parse.c:766
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(ERREUR DU PROGRAMME) L'option aurait dû être reconnue ! ?"
+
+#: assert/assert-perr.c:35
+#, c-format
+msgid ""
+"%s%s%s:%u: %s%sUnexpected error: %s.\n"
+"%n"
+msgstr ""
+"%s%s%s : %u : %s%s Erreur imprévue: %s.\n"
+"%n"
 
 #: assert/assert.c:101
 #, c-format
@@ -448,6 +457,10 @@ msgstr "la chaîne dynamique d'un jeton de substitution est vide"
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr "ne peut charger l'auxiliaire « %s » en raison d'une chaîne dynamique de substitution de jeton vide\n"
 
+#: elf/dl-deps.c:220
+msgid "cannot allocate dependency buffer"
+msgstr "ne peut allouer un tampon de dépendance"
+
 #: elf/dl-deps.c:443
 msgid "cannot allocate dependency list"
 msgstr "ne peut allouer une liste de dépendances"
@@ -520,6 +533,10 @@ msgstr "Commande de chargement sur une page ELF qui n'est pas alignée"
 msgid "ELF load command address/offset not properly aligned"
 msgstr "Commande de chargement sur une adresse ELF incorrectement alignée"
 
+#: elf/dl-load.c:1151
+msgid "cannot process note segment"
+msgstr "ne peut traiter le segment de note"
+
 #: elf/dl-load.c:1162
 msgid "object file has no loadable segments"
 msgstr "le fichier objet n'a pas de segment chargeable"
@@ -531,6 +548,10 @@ msgstr "ne peut dynamiquement charger un exécutable"
 #: elf/dl-load.c:1196
 msgid "object file has no dynamic section"
 msgstr "le fichier objet n'a pas de section dynamique"
+
+#: elf/dl-load.c:1223
+msgid "cannot dynamically load position-independent executable"
+msgstr "ne peut dynamiquement charger l'exécutable indépendant de la poition"
 
 #: elf/dl-load.c:1225
 msgid "shared object cannot be dlopen()ed"
@@ -1046,6 +1067,11 @@ msgstr "ID de fil (thread) invalide '%s'"
 #, c-format
 msgid "cannot attach to process %lu"
 msgstr "ne peut s'attacher au process %lu"
+
+#: elf/pldd.c:184
+#, c-format
+msgid "no valid %s/task entries"
+msgstr "pas d'entrée valide de %s/tâche"
 
 #: elf/pldd.c:290
 #, c-format
@@ -1592,6 +1618,10 @@ msgstr "mémoire épuisée"
 msgid "Error: .netrc file is readable by others."
 msgstr "Erreur : le fichier .netrc est lisible par les autres usagers."
 
+#: inet/ruserpass.c:180
+msgid "Remove 'password' line or make file unreadable by others."
+msgstr "Retirer la ligne 'mot de passe' ou rendre le fichier illisible pour les autres usagers."
+
 #: inet/ruserpass.c:199
 #, c-format
 msgid "Unknown .netrc keyword %s"
@@ -1611,6 +1641,11 @@ msgstr "fichier de la table des caractères « %s » non repérable"
 #, c-format
 msgid "default character map file `%s' not found"
 msgstr "fichier par défaut de la table des caractères « %s » non repéré"
+
+#: locale/programs/charmap.c:265
+#, c-format
+msgid "character map `%s' is not ASCII compatible, locale not ISO C compliant [--no-warnings=ascii]"
+msgstr "table de caractères « %s » n'est pas compatible ASCII, la localisation n'est pas compatible ISO C  [--no-warnings=ascii]"
 
 #: locale/programs/charmap.c:343
 #, c-format
@@ -2316,6 +2351,21 @@ msgstr "Pas de chiffre défini et aucun des noms standards dans la table des car
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s : le particularisme local « %s » ne dispose pas des données de transposition"
 
+#: locale/programs/ld-ctype.c:3672
+#, c-format
+msgid "%s: table for class \"%s\": %lu bytes"
+msgstr "%s: table pour la classe \"%s\": %lu octets"
+
+#: locale/programs/ld-ctype.c:3736
+#, c-format
+msgid "%s: table for map \"%s\": %lu bytes"
+msgstr "%s: table de caractères \"%s\": %lu octets"
+
+#: locale/programs/ld-ctype.c:3860
+#, c-format
+msgid "%s: table for width: %lu bytes"
+msgstr "%s: table de largeur: %lu octets"
+
 #: locale/programs/ld-identification.c:173
 #, c-format
 msgid "%s: no identification for category `%s'"
@@ -2356,6 +2406,11 @@ msgstr "%s : expression régulière incorrecte du champ « %s » : %s"
 #, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
 msgstr "%s : valeur du champ « int_curr_symbol » n'a pas la bonne longueur"
+
+#: locale/programs/ld-monetary.c:245
+#, c-format
+msgid "%s: value of field `int_curr_symbol' does not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"
+msgstr "%s: valeur du champ « int_curr_symbol » ne correspond pas à un nom valide de la norme ISO 4217 [--no-warnings=intcurrsym]"
 
 #: locale/programs/ld-monetary.c:293 locale/programs/ld-monetary.c:322
 #, c-format
@@ -2557,6 +2612,16 @@ msgstr ""
 msgid "while preparing output"
 msgstr "lors de la préparation de la sortie"
 
+#: locale/programs/locale.c:998
+#, c-format
+msgid "Cannot set %s to default locale"
+msgstr "Ne peut initialiser %s à la localisation par défaut"
+
+#: locale/programs/locale.c:1096
+#, c-format
+msgid "warning: The LOCPATH variable is set to \"%s\"\n"
+msgstr "attention: La variable LOCPATH est valorisé avec \"%s\"\n"
+
 #: locale/programs/localedef.c:116
 msgid "Input Files:"
 msgstr "Fichiers d'entrée :"
@@ -2577,6 +2642,10 @@ msgstr "FICHIER contient la table d'adressage des noms symboliques vers les vale
 msgid "Create output even if warning messages were issued"
 msgstr "Créer la sortie même si des messages d'avertissement sont affichées"
 
+#: locale/programs/localedef.c:128
+msgid "Do not create hard links between installed locales"
+msgstr "Ne pas créer de liens physiques entre  \"locales\" installées"
+
 #: locale/programs/localedef.c:129
 msgid "Optional output file prefix"
 msgstr "Préfixe optionnel du fichier de sortie"
@@ -2592,6 +2661,18 @@ msgstr "Supprimer les messages d'avertissement et d'information"
 #: locale/programs/localedef.c:133
 msgid "Print more messages"
 msgstr "Afficher d'autres messages"
+
+#: locale/programs/localedef.c:134 locale/programs/localedef.c:137
+msgid "<warnings>"
+msgstr "<avertissement> "
+
+#: locale/programs/localedef.c:135
+msgid "Comma-separated list of warnings to disable; supported warnings are: ascii, intcurrsym"
+msgstr "Liste d'alertes séparées par une virgule à désactiver; alertes supportées: ascii, intcurrsym"
+
+#: locale/programs/localedef.c:138
+msgid "Comma-separated list of warnings to enable; supported warnings are: ascii, intcurrsym"
+msgstr "Liste d'alertes séparées par une virgule à activer; alertes supportées: ascii, intcurrsym"
 
 #: locale/programs/localedef.c:141
 msgid "Archive control:"
@@ -2662,6 +2743,10 @@ msgstr "Ne peut ouvrir le fichier des particularisations « %s »"
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "Ne peut écrire dans les fichiers de sortie vers « %s »"
+
+#: locale/programs/localedef.c:309
+msgid "no output file produced because errors were issued"
+msgstr "pas de fichier de sortie généré en raison d'erreurs émises"
 
 #: locale/programs/localedef.c:441
 #, c-format
@@ -3855,6 +3940,11 @@ msgstr "Ne peut écrire les résultats : « %s »"
 msgid "error getting caller's id: %s"
 msgstr "erreur lors de la récupération de l'identifiant de l'appelant : %s"
 
+#: nscd/connections.c:1349
+#, c-format
+msgid "cannot open /proc/self/cmdline: %m; disabling paranoia mode"
+msgstr "ne peut ouvrir /proc/self/cmdline : %m; désactive le mode paranoïa"
+
 #: nscd/connections.c:1372
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
@@ -4336,6 +4426,16 @@ msgstr ""
 "%15<PRIuMAX>  allocation de mémoire à échouée\n"
 "%15s  vérifier /etc/%s pour les changements\n"
 
+#: nscd/pwdcache.c:407
+#, c-format
+msgid "Haven't found \"%s\" in user database cache!"
+msgstr "N'a pas trouvé \"%s\" dans le cache de la base de l'usager !"
+
+#: nscd/pwdcache.c:409
+#, c-format
+msgid "Reloading \"%s\" in user database cache!"
+msgstr "Recharge « %s » dans le cache de la base de l'usager!"
+
 #: nscd/pwdcache.c:471
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
@@ -4480,6 +4580,11 @@ msgstr "Obtient des entrées de la base de données administrative"
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "Énumération non supportée sur %s\n"
+
+#: nss/getent.c:517 nss/getent.c:530
+#, c-format
+msgid "Could not allocate group list: %m\n"
+msgstr "N'a pu allouer la liste de groupe: %m\n"
 
 #: nss/getent.c:901
 #, c-format
@@ -4706,6 +4811,10 @@ msgstr "Barre oblique inverse en suffixe"
 #: posix/regcomp.c:153
 msgid "Invalid back reference"
 msgstr "Référence arrière invalide"
+
+#: posix/regcomp.c:156
+msgid "Unmatched [, [^, [:, [., or [="
+msgstr "Échec du pairage [, [^, [:, [., or [="
 
 #: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
@@ -6629,6 +6738,26 @@ msgstr "Ne peut ouvrir « %s »"
 msgid "cannot read header from `%s'"
 msgstr "Ne peut lire l'en-tête de « %s »"
 
+#: sysdeps/x86/dl-cet.c:202
+msgid "mprotect legacy bitmap failed"
+msgstr "Echec de l'héritage du bitmap mprotect"
+
+#: sysdeps/x86/dl-cet.c:217
+msgid "legacy bitmap isn't available"
+msgstr "bitmap héritée indisponible"
+
+#: sysdeps/x86/dl-cet.c:247
+msgid "failed to mark legacy code region"
+msgstr "a failli à marquer le code région hérité"
+
+#: sysdeps/x86/dl-cet.c:269
+msgid "shadow stack isn't enabled"
+msgstr "la pile d'arrière plan n'est pas activée"
+
+#: sysdeps/x86/dl-cet.c:290
+msgid "can't disable CET"
+msgstr "Ne peut désactiver CET"
+
 #: timezone/zdump.c:332
 msgid "has fewer than 3 characters"
 msgstr "a moins de 3 caractères"
@@ -6645,6 +6774,33 @@ msgstr "a  des caractères autres que de l'alphanumérique ASCII, '-' ou '+'"
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
 msgstr "%s : attention : zone \"%s\" abréviation \"%s\" %s\n"
+
+#: timezone/zdump.c:387
+#, c-format
+msgid ""
+"%s: usage: %s OPTIONS TIMEZONE ...\n"
+"Options include:\n"
+"  -c [L,]U   Start at year L (default -500), end before year U (default 2500)\n"
+"  -t [L,]U   Start at time L, end before time U (in seconds since 1970)\n"
+"  -i         List transitions briefly (format is experimental)\n"
+"  -v         List transitions verbosely\n"
+"  -V         List transitions a bit less verbosely\n"
+"  --help     Output this help\n"
+"  --version  Output version info\n"
+"\n"
+"Report bugs to %s.\n"
+msgstr ""
+"%s: usage: %s OPTIONS TIMEZONE ...\n"
+"Options incluses:\n"
+"  -c [L,]U  Commence à l'année L (par défaut -500), fini avant l'année U (défaut 2500)\n"
+"  -t [L,]U   Commence à l'heure L, fini avant l'heure U (en secondes depuis 1970)\n"
+"  -i         Liste les transitions en bref (format expérimental)\n"
+"  -v         Liste les transitions en étendu\n"
+"  -V         Liste les transitions en un peu moins étendu\n"
+"  --help     Affiche cette aide\n"
+"  --version  Affiche les infos de version\n"
+"\n"
+"Déclarer les bugs à %s.\n"
 
 #: timezone/zdump.c:473
 #, c-format
@@ -6665,6 +6821,10 @@ msgstr "%s : mémoire épuisée : %s\n"
 msgid "size overflow"
 msgstr "Débordement de taille"
 
+#: timezone/zic.c:447
+msgid "alignment overflow"
+msgstr "Débordement d'alignement"
+
 #: timezone/zic.c:495
 msgid "integer overflow"
 msgstr "Débordement d'entier "
@@ -6683,6 +6843,21 @@ msgstr " (règle de \"%s\", ligne %<PRIdMAX>)"
 #, c-format
 msgid "warning: "
 msgstr "AVERTISSEMENT : "
+
+#: timezone/zic.c:576
+#, c-format
+msgid ""
+"%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
+"\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
+"\t[ -t localtime-link ] [ -L leapseconds ] [ filename ... ]\n"
+"\n"
+"Report bugs to %s.\n"
+msgstr ""
+"%s : la syntaxe est %s [ --version ] [ --help ] [ -v ] \\\n"
+"\t[ -l localtime ] [ -p posixrules ] [ -d directory ]\\\n"
+"\t[ -t localtime-link ] [ -L leapseconds ] [ filename ... ]\n"
+"\n"
+"Rapporter les bugs à %s.\n"
 
 #: timezone/zic.c:599
 #, c-format
@@ -6707,6 +6882,15 @@ msgstr "%s : option -l spécifiée plus d'une fois\n"
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s : option -p spécifiée plus d'une fois\n"
+
+#: timezone/zic.c:680
+#, c-format
+msgid "%s: More than one -t option specified\n"
+msgstr "%s: option -t spécifiée plus d'une fois\n"
+
+#: timezone/zic.c:689
+msgid "-y is obsolescent"
+msgstr "-y est obsolète"
 
 #: timezone/zic.c:693
 #, c-format
@@ -6834,6 +7018,10 @@ msgstr "%s : panique : valeur %d de type « l_value » invalide\n"
 msgid "expected continuation line not found"
 msgstr "ligne de continuation attendue, non repérée"
 
+#: timezone/zic.c:1203
+msgid "fractional seconds rejected by pre-2018 versions of zic"
+msgstr "secondes fractionnées non prises en charge par les versions de zic antérieures à 2018"
+
 #: timezone/zic.c:1221 timezone/zic.c:3078
 msgid "time overflow"
 msgstr "Débordement du temps alloué"
@@ -6849,6 +7037,11 @@ msgstr "Temps sauvegardé invalide"
 #: timezone/zic.c:1256
 msgid "wrong number of fields on Rule line"
 msgstr "Mauvais nombre de champs sur la ligne de type « Rule »"
+
+#: timezone/zic.c:1265
+#, c-format
+msgid "Invalid rule name \"%s\""
+msgstr "nom de règle invalide  « %s » "
 
 #: timezone/zic.c:1287
 msgid "wrong number of fields on Zone line"
@@ -6928,6 +7121,10 @@ msgstr "champ CORRECTION non permis dans la ligne de type « Leap »"
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "Champ « Rolling/Stationary » non permis sur la ligne de type « Leap »"
 
+#: timezone/zic.c:1505
+msgid "leap second precedes Epoch"
+msgstr "La seconde de saut précède Epoch"
+
 #: timezone/zic.c:1518
 msgid "wrong number of fields on Link line"
 msgstr "Mauvais nombre de champs sur la ligne de type « Link »"
@@ -6952,6 +7149,11 @@ msgstr "année initiale plus grande que l'année finale"
 msgid "typed single year"
 msgstr "une seule année fournie"
 
+#: timezone/zic.c:1633
+#, c-format
+msgid "year type \"%s\" is obsolete; use \"-\" instead"
+msgstr "type d'année \"%s\" est obsolète; employer \"-\" à la place"
+
 #: timezone/zic.c:1668
 msgid "invalid weekday name"
 msgstr "Nom du jour de semaine invalide"
@@ -6968,6 +7170,11 @@ msgstr "les clients pre-2014 peuvent mal gérer plus de 1200 heures de transitio
 #: timezone/zic.c:1920
 msgid "too many transition times"
 msgstr "trop d'heures de transition"
+
+#: timezone/zic.c:2107
+#, c-format
+msgid "%%z UT offset magnitude exceeds 99:59:59"
+msgstr "%%z l'ampleur du décalage UTC excède 99:59:59"
 
 #: timezone/zic.c:2488
 msgid "no POSIX environment variable for zone"
@@ -7000,6 +7207,10 @@ msgstr "décalage  de l'UTC en dehors de la plage"
 msgid "too many leap seconds"
 msgstr "trop de délai en secondes"
 
+#: timezone/zic.c:2844
+msgid "Leap seconds too close together"
+msgstr "Les secondes de saut sont trop proches les unes des autres"
+
 #: timezone/zic.c:2891
 msgid "Wild result from command execution"
 msgstr "Résultat anarchique résultant de l'exécution de la commande"
@@ -7008,6 +7219,16 @@ msgstr "Résultat anarchique résultant de l'exécution de la commande"
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s : la commande était « %s », le résultat était %d\n"
+
+#: timezone/zic.c:2998
+#, c-format
+msgid "\"%s\" is undocumented; use \"last%s\" instead"
+msgstr "\"%s\" est non documenté; employer \"last%s\" à la place"
+
+#: timezone/zic.c:3029
+#, c-format
+msgid "\"%s\" is ambiguous in pre-2017c zic"
+msgstr "\"%s\" ambigü dans pre-2017c zic"
 
 #: timezone/zic.c:3063
 msgid "Odd number of quotation marks"
