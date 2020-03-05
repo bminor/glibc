@@ -1,8 +1,6 @@
-/* POSIX.1 sigaction call for Linux/SPARC64.
-   Copyright (C) 1997-2020 Free Software Foundation, Inc.
+/* Sigreturn stub function used on sa_restore field.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Miguel de Icaza <miguel@nuclecu.unam.mx> and
-		  Jakub Jelinek <jj@ultra.linux.cz>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,15 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <string.h>
-#include <syscall.h>
 #include <sysdep.h>
 
-/* Defined on sigreturn_stub.S.  */
-void __rt_sigreturn_stub (void);
+/* This function must not change the register window or the stack
+   pointer [1].
 
-#define STUB(act, sigsetsize) \
-  (((unsigned long) &__rt_sigreturn_stub) - 8),	\
-  (sigsetsize)
+   [1] https://lkml.org/lkml/2016/5/27/465  */
 
-#include <sysdeps/unix/sysv/linux/sigaction.c>
+ENTRY (__rt_sigreturn_stub)
+	mov	__NR_rt_sigreturn, %g1
+	ta	0x6d
+END (__rt_sigreturn_stub)

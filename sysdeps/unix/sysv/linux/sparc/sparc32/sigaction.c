@@ -24,8 +24,8 @@
 #include <kernel_sigaction.h>
 #include <sysdep.h>
 
-static void __rt_sigreturn_stub (void);
-static void __sigreturn_stub (void);
+void __rt_sigreturn_stub (void);
+void __sigreturn_stub (void);
 
 #define STUB(act, sigsetsize) \
   (act) ? ((unsigned long)((act->sa_flags & SA_SIGINFO)	\
@@ -35,25 +35,3 @@ static void __sigreturn_stub (void);
   (sigsetsize)
 
 #include <sysdeps/unix/sysv/linux/sigaction.c>
-
-static
-inhibit_stack_protector
-void
-__rt_sigreturn_stub (void)
-{
-  __asm__ ("mov %0, %%g1\n\t"
-	   "ta	0x10\n\t"
-	   : /* no outputs */
-	   : "i" (__NR_rt_sigreturn));
-}
-
-static
-inhibit_stack_protector
-void
-__sigreturn_stub (void)
-{
-  __asm__ ("mov %0, %%g1\n\t"
-	   "ta	0x10\n\t"
-	   : /* no outputs */
-	   : "i" (__NR_sigreturn));
-}
