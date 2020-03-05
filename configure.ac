@@ -809,7 +809,8 @@ mach=
 tail=$machine${submachine:+/$submachine}
 while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
   set $m
-  # Prepend the machine's FPU directory unless --without-fp.
+  # Prepend the machine's FPU directory unless the architecture specific
+  # preconfigure disables it.
   if test "$libc_cv_with_fp" = yes; then
     maybe_fpu=/fpu
   else
