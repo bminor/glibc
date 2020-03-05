@@ -186,7 +186,7 @@ are used:
 @{
   wint_t c;
   @dots{}
-  while ((c = wgetc (fp)) != WEOF)
+  while ((c = getwc (fp)) != WEOF)
     @dots{}
 @}
 @end smallexample
