@@ -495,6 +495,10 @@ build the GNU C Library:
      moment.  As of release time, GNU 'binutils' 2.32 is the newest
      verified to work to build the GNU C Library.
 
+     For PowerPC 64-bits little-endian (powerpc64le), 'objcopy' is
+     required to support '--update-section'.  This option requires
+     binutils 2.26 or newer.
+
    * GNU 'texinfo' 4.7 or later
 
      To correctly translate and install the Texinfo documentation you

@@ -51,5 +51,11 @@ CFLAGS="$save_CFLAGS"])
 AS_IF([test "$libc_cv_compiler_powerpc64le_ice" != "yes"],
       [critic_missing="$critic_missing __builtin_signbit is broken.  GCC 7.4 or newer is required to resolve (PR83862)."])
 
+dnl objcopy (binutils) 2.26 or newer required to support the --update-section
+dnl feature for fixing up .gnu.attribute section with IEEE ldbl.
+AC_CHECK_PROG_VER(OBJCOPY, $OBJCOPY, --version,
+		  [GNU objcopy.* \([0-9]*\.[0-9.]*\)],
+		  [2.1[0-9][0-9]*|2.2[6-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
+		  AS=: critic_missing="$critic_missing objcopy >= 2.26 is required on powerpc64le")
 
 test -n "$critic_missing" && AC_MSG_ERROR([*** $critic_missing])

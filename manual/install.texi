@@ -533,6 +533,10 @@ No other assembler or linker has the necessary functionality at the
 moment. As of release time, GNU @code{binutils} 2.32 is the newest
 verified to work to build @theglibc{}.
 
+For PowerPC 64-bits little-endian (powerpc64le), @command{objcopy} is required
+to support @option{--update-section}.  This option requires binutils 2.26 or
+newer.
+
 @item
 GNU @code{texinfo} 4.7 or later
 
