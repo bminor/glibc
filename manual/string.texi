@@ -1778,7 +1778,7 @@ need that information, it is better (but less portable) to use
 @code{strchrnul} than to search for it a second time.
 @end deftypefun
 
-@deftypefun {wchar_t *} wcschr (const wchar_t *@var{wstring}, int @var{wc})
+@deftypefun {wchar_t *} wcschr (const wchar_t *@var{wstring}, wchar_t @var{wc})
 @standards{ISO, wchar.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The @code{wcschr} function finds the first occurrence of the wide
