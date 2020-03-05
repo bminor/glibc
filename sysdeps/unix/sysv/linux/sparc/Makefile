@@ -11,8 +11,12 @@ ifeq ($(subdir),sysvipc)
 sysdep_routines += getshmlba
 endif
 
+ifeq ($(subdir),signal)
+sysdep_routines += sigreturn_stub
+endif
+
 ifeq ($(subdir),nptl)
 # pull in __syscall_error routine
-libpthread-routines += sysdep
-libpthread-shared-only-routines += sysdep
+libpthread-routines += sysdep sigreturn_stub
+libpthread-shared-only-routines += sysdep sigreturn_stub
 endif
