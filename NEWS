@@ -45,6 +45,7 @@ The following bugs are resolved with this release:
   [25401] Remove incorrect alloc_size attribute from pvalloc
   [25487] sinl() stack corruption from crafted input (CVE-2020-10029)
   [25523] MIPS/Linux inline syscall template is miscompiled
+  [25635] arm: Wrong sysdep order selection for soft-fp
 
 
 Version 2.30
