@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <time.h>
+#include <fcntl.h>
 
 int
 __utimes64 (const char *file, const struct __timeval64 tvp[2])
@@ -29,7 +30,7 @@ __utimes64 (const char *file, const struct __timeval64 tvp[2])
       ts64[1] = timeval64_to_timespec64 (tvp[1]);
     }
 
-  return __utimensat64_helper (0, file, tvp ? ts64 : NULL, 0);
+  return __utimensat64_helper (AT_FDCWD, file, tvp ? ts64 : NULL, 0);
 }
 
 #if __TIMESIZE != 64

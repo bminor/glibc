@@ -18,6 +18,7 @@
 
 #include <utime.h>
 #include <time.h>
+#include <fcntl.h>
 
 int
 __utime64 (const char *file, const struct __utimbuf64 *times)
@@ -32,7 +33,7 @@ __utime64 (const char *file, const struct __utimbuf64 *times)
       ts64[1].tv_nsec = 0LL;
     }
 
-  return __utimensat64_helper (0, file, times ? ts64 : NULL, 0);
+  return __utimensat64_helper (AT_FDCWD, file, times ? ts64 : NULL, 0);
 }
 
 #if __TIMESIZE != 64
