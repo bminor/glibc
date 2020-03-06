@@ -22,6 +22,7 @@
 #include <sysdep.h>
 #include <shlib-compat.h>
 #include <errno.h>
+#include <linux/posix_types.h>  /* For __kernel_mode_t.  */
 
 /* Define a `union semun' suitable for Linux here.  */
 union semun
