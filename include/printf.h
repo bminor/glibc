@@ -1,5 +1,13 @@
 #ifndef	_PRINTF_H
 
+/* Workaround PR90731 with GCC 9 when using ldbl redirects in C++.  */
+#include <bits/floatn.h>
+#if defined __cplusplus && __LONG_DOUBLE_USES_FLOAT128 == 1
+# if __GNUC_PREREQ (9, 0) && !__GNUC_PREREQ (9, 3)
+#   pragma GCC system_header
+# endif
+#endif
+
 #include <stdio-common/printf.h>
 
 # ifndef _ISOMAC
