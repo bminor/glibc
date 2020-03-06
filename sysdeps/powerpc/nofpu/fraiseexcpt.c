@@ -21,7 +21,6 @@
 #include "soft-supp.h"
 #include <signal.h>
 
-#undef feraiseexcept
 int
 __feraiseexcept (int x)
 {

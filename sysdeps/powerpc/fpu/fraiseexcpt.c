@@ -18,7 +18,6 @@
 
 #include <fenv_libc.h>
 
-#undef feraiseexcept
 int
 __feraiseexcept (int excepts)
 {

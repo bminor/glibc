@@ -21,10 +21,12 @@
 int
 (__fegetround) (void)
 {
-  return __fegetround();
+  fenv_union_t fe;
+
+  fe.fenv = fegetenv_control ();
+
+  return fe.l & 0x3;
 }
-#undef fegetround
-#undef __fegetround
 libm_hidden_def (__fegetround)
 weak_alias (__fegetround, fegetround)
 libm_hidden_weak (fegetround)

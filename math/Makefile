@@ -24,7 +24,7 @@ include ../Makeconfig
 # Installed header files.
 headers		:= math.h bits/mathcalls.h \
 		   fpu_control.h complex.h bits/cmathcalls.h fenv.h \
-		   bits/fenv.h bits/fenvinline.h bits/mathdef.h tgmath.h \
+		   bits/fenv.h bits/mathdef.h tgmath.h \
 		   bits/math-vector.h finclude/math-vector-fortran.h \
 		   bits/libm-simd-decl-stubs.h bits/iscanonical.h \
 		   bits/flt-eval-method.h bits/fp-fast.h bits/fp-logb.h \
@@ -233,7 +233,7 @@ tests = test-matherr-3 test-fenv basic-test \
 	test-misc test-fpucw test-fpucw-ieee tst-definitions test-tgmath \
 	test-tgmath-ret bug-nextafter bug-nexttoward bug-tgmath1 \
 	test-tgmath-int test-tgmath2 test-powl tst-CMPLX tst-CMPLX2 test-snan \
-	test-fenv-tls test-fenv-preserve test-fenv-return test-fenvinline \
+	test-fenv-tls test-fenv-preserve test-fenv-return \
 	test-nearbyint-except test-fenv-clear \
 	test-nearbyint-except-2 test-signgam-uchar test-signgam-uchar-init \
 	test-signgam-uint test-signgam-uint-init test-signgam-ullong \
