@@ -1852,7 +1852,7 @@ strrchr ("hello, world", 'l')
 @end smallexample
 @end deftypefun
 
-@deftypefun {wchar_t *} wcsrchr (const wchar_t *@var{wstring}, wchar_t @var{c})
+@deftypefun {wchar_t *} wcsrchr (const wchar_t *@var{wstring}, wchar_t @var{wc})
 @standards{ISO, wchar.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 The function @code{wcsrchr} is like @code{wcschr}, except that it searches
