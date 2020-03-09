@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <fenv_private.h>
 
 int
 __feholdexcept (fenv_t *envp)

@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <fenv_private.h>
 #include <fpu_control.h>
 
 #define FPU_CONTROL_BITS 0xcfc00000UL

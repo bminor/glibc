@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <fenv_private.h>
 
 int
 fegetexcept (void)

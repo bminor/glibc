@@ -3,6 +3,15 @@
 
 #include <fenv.h>
 
+/* For internal use only: access the fp state register.  */
+#if __WORDSIZE == 64
+# define __fenv_stfsr(X)   __asm__ __volatile__ ("stx %%fsr,%0" : "=m" (X))
+# define __fenv_ldfsr(X)   __asm__ __volatile__ ("ldx %0,%%fsr" : : "m" (X))
+#else
+# define __fenv_stfsr(X)   __asm__ __volatile__ ("st %%fsr,%0" : "=m" (X))
+# define __fenv_ldfsr(X)   __asm__ __volatile__ ("ld %0,%%fsr" : : "m" (X))
+#endif
+
 static __always_inline void
 libc_feholdexcept (fenv_t *e)
 {

@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
+#include <fenv_private.h>
 #include <math.h>
 #include <shlib-compat.h>
 
