@@ -43,7 +43,7 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
   struct kernel_stat kst;
 
   result = INTERNAL_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result)))
+  if (!__glibc_likely (INTERNAL_SYSCALL_ERROR_P (result)))
     return __xstat64_conv (vers, &kst, st);
   else
     {
