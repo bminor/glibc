@@ -492,11 +492,12 @@ _dl_map_object_deps (struct link_map *map,
       if (__builtin_expect (trace_mode, 0) && runp->map->l_faked)
 	/* This can happen when we trace the loading.  */
 	--map->l_searchlist.r_nlist;
-      else {
-	if (runp->map == map)
-	  map_index = nlist;
-	map->l_searchlist.r_list[nlist++] = runp->map;
-      }
+      else
+	{
+	  if (runp->map == map)
+	    map_index = nlist;
+	  map->l_searchlist.r_list[nlist++] = runp->map;
+	}
 
       /* Now clear all the mark bits we set in the objects on the search list
 	 to avoid duplicates, so the next call starts fresh.  */
