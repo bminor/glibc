@@ -1145,7 +1145,7 @@ main (int argc, char **argv)
   execvp (new_child_exec, new_child_proc);
 
   /* Or don't run the child?  */
-  FAIL_EXIT1 ("Unable to exec %s\n", new_child_exec);
+  FAIL_EXIT1 ("Unable to exec %s: %s\n", new_child_exec, strerror (errno));
 
   /* Because gcc won't know error () never returns...  */
   exit (EXIT_UNSUPPORTED);
