@@ -16,14 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <signal.h>
 #include <pthreadP.h>
 #include <sysdep.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_sigmask (int how, const sigset_t *newmask, sigset_t *oldmask)
+__pthread_sigmask (int how, const sigset_t *newmask, sigset_t *oldmask)
 {
   sigset_t local_newmask;
 
@@ -47,3 +46,9 @@ pthread_sigmask (int how, const sigset_t *newmask, sigset_t *oldmask)
 	  ? INTERNAL_SYSCALL_ERRNO (result)
 	  : 0);
 }
+
+versioned_symbol (libc, __pthread_sigmask, pthread_sigmask, GLIBC_2_32);
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_32)
+strong_alias (__pthread_sigmask, __pthread_sigmask_2);
+compat_symbol (libc, __pthread_sigmask_2, pthread_sigmask, GLIBC_2_0);
+#endif

@@ -137,7 +137,6 @@ GLIBC_2.2.5 pthread_setcancelstate F
 GLIBC_2.2.5 pthread_setcanceltype F
 GLIBC_2.2.5 pthread_setconcurrency F
 GLIBC_2.2.5 pthread_setspecific F
-GLIBC_2.2.5 pthread_sigmask F
 GLIBC_2.2.5 pthread_spin_destroy F
 GLIBC_2.2.5 pthread_spin_init F
 GLIBC_2.2.5 pthread_spin_lock F

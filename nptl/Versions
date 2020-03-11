@@ -16,6 +16,7 @@ libc {
     pthread_mutex_lock; pthread_mutex_unlock;
     pthread_self;
     pthread_setcancelstate; pthread_setcanceltype;
+    pthread_sigmask;
   }
   GLIBC_2.1 {
     pthread_attr_init;
@@ -31,6 +32,9 @@ libc {
   # C11 thread symbols.
   GLIBC_2.28 {
     thrd_current; thrd_equal; thrd_sleep; thrd_yield;
+  }
+  GLIBC_2.32 {
+    pthread_sigmask;
   }
   GLIBC_PRIVATE {
     __libc_alloca_cutoff;

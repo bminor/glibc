@@ -1288,6 +1288,7 @@ GLIBC_2.2.5 pthread_self F
 GLIBC_2.2.5 pthread_setcancelstate F
 GLIBC_2.2.5 pthread_setcanceltype F
 GLIBC_2.2.5 pthread_setschedparam F
+GLIBC_2.2.5 pthread_sigmask F
 GLIBC_2.2.5 ptrace F
 GLIBC_2.2.5 ptsname F
 GLIBC_2.2.5 ptsname_r F
@@ -2059,6 +2060,7 @@ GLIBC_2.30 getdents64 F
 GLIBC_2.30 gettid F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
+GLIBC_2.32 pthread_sigmask F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F
 GLIBC_2.4 __fgets_unlocked_chk F

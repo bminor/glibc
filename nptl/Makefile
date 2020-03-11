@@ -59,6 +59,7 @@ routines = \
   pthread_getschedparam \
   pthread_self \
   pthread_setschedparam \
+  pthread_sigmask \
   register-atfork \
 
 shared-only-routines = forward
@@ -123,7 +124,7 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_barrierattr_setpshared \
 		      pthread_key_create pthread_key_delete \
 		      pthread_getspecific pthread_setspecific \
-		      pthread_sigmask pthread_kill pthread_sigqueue \
+		      pthread_kill pthread_sigqueue \
 		      pthread_cancel pthread_testcancel \
 		      pthread_setcancelstate pthread_setcanceltype \
 		      pthread_once \

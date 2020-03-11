@@ -891,6 +891,7 @@ GLIBC_2.0 pthread_self F
 GLIBC_2.0 pthread_setcancelstate F
 GLIBC_2.0 pthread_setcanceltype F
 GLIBC_2.0 pthread_setschedparam F
+GLIBC_2.0 pthread_sigmask F
 GLIBC_2.0 ptrace F
 GLIBC_2.0 putc F
 GLIBC_2.0 putc_unlocked F
@@ -2225,6 +2226,7 @@ GLIBC_2.30 getdents64 F
 GLIBC_2.30 gettid F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
+GLIBC_2.32 pthread_sigmask F
 GLIBC_2.4 _IO_fprintf F
 GLIBC_2.4 _IO_printf F
 GLIBC_2.4 _IO_sprintf F
