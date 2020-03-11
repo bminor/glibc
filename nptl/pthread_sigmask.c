@@ -46,6 +46,7 @@ __pthread_sigmask (int how, const sigset_t *newmask, sigset_t *oldmask)
 	  ? INTERNAL_SYSCALL_ERRNO (result)
 	  : 0);
 }
+libc_hidden_def (__pthread_sigmask)
 
 versioned_symbol (libc, __pthread_sigmask, pthread_sigmask, GLIBC_2_32);
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_32)

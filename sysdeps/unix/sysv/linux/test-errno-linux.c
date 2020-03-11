@@ -121,6 +121,17 @@ check_error_in_list (int code, int *codes, size_t count)
   test_wrp_rv(int, "%d", LIST_FORWARD (experr), syscall, __VA_ARGS__)
 
 static int
+invalid_sigprocmask_how (void)
+{
+  int n = 0;
+  const int how[] = { SIG_BLOCK, SIG_UNBLOCK, SIG_SETMASK };
+  for (int i = 0; i < array_length (how); i++)
+    if (how[i] == n)
+      n++;
+  return n;
+}
+
+static int
 do_test (void)
 {
   fd_set rs, ws, es;
@@ -133,9 +144,12 @@ do_test (void)
   struct sched_param sch_param;
   struct timespec ts;
   struct timeval tv;
+  sigset_t sigs;
   unsigned char vec[16];
   ss.ss_flags = ~SS_DISABLE;
   ts.tv_sec = -1;
+
+  sigemptyset (&sigs);
 
   int fails = 0;
   fails |= test_wrp (EINVAL, epoll_create, -1);
@@ -175,6 +189,11 @@ do_test (void)
   fails |= test_wrp (EBADF, sendfile, -1, -1, &off, 0);
   fails |= test_wrp (EINVAL, sigaltstack, &ss, NULL);
   fails |= test_wrp (ECHILD, wait4, -1, &status, 0, NULL);
+  /* Austin Group issue #1132 states EINVAL should be returned for invalid
+     how argument iff the new set mask is non-null.  And Linux follows the
+     standard on this regard.  */
+  fails |= test_wrp (EINVAL, sigprocmask, invalid_sigprocmask_how (), &sigs,
+		     NULL);
 
   return fails;
 }

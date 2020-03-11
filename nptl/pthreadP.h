@@ -482,6 +482,8 @@ extern void __pthread_testcancel (void);
 extern int __pthread_clockjoin_ex (pthread_t, void **, clockid_t,
 				   const struct timespec *, bool)
   attribute_hidden;
+extern int __pthread_sigmask (int, const sigset_t *, sigset_t *);
+libc_hidden_proto (__pthread_sigmask);
 
 
 #if IS_IN (libpthread)
