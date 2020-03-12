@@ -15,13 +15,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <signal.h>
-#include <unistd.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
-
+#include <sigsetops.h>
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */

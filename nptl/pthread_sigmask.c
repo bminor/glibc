@@ -29,12 +29,11 @@ __pthread_sigmask (int how, const sigset_t *newmask, sigset_t *oldmask)
   /* The only thing we have to make sure here is that SIGCANCEL and
      SIGSETXID is not blocked.  */
   if (newmask != NULL
-      && (__builtin_expect (__sigismember (newmask, SIGCANCEL), 0)
-	  || __builtin_expect (__sigismember (newmask, SIGSETXID), 0)))
+      && (__glibc_unlikely (__sigismember (newmask, SIGCANCEL))
+         || __glibc_unlikely (__sigismember (newmask, SIGSETXID))))
     {
       local_newmask = *newmask;
-      __sigdelset (&local_newmask, SIGCANCEL);
-      __sigdelset (&local_newmask, SIGSETXID);
+      __clear_internal_signals (&local_newmask);
       newmask = &local_newmask;
     }
 
