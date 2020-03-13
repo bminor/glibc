@@ -218,7 +218,7 @@ parse_tunables (char *tunestr, char *valstring)
 	    {
 	      /* If we are in a secure context (AT_SECURE) then ignore the tunable
 		 unless it is explicitly marked as secure.  Tunable values take
-		 precendence over their envvar aliases.  */
+		 precedence over their envvar aliases.  */
 	      if (__libc_enable_secure)
 		{
 		  if (cur->security_level == TUNABLE_SECLEVEL_SXID_ERASE)
