@@ -20,6 +20,6 @@ gen-as-const-headers += tcb-offsets.sym
 endif
 
 ifeq ($(subdir),nptl)
-libpthread-routines += sysdep sigblock sigprocmask
-libpthread-shared-only-routines += sysdep sigblock sigprocmask
+libpthread-routines += sysdep
+libpthread-shared-only-routines += sysdep
 endif
