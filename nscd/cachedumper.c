@@ -26,6 +26,7 @@
 #include <sys/mman.h>
 #include <arpa/inet.h>
 #include <getopt.h>
+#include <sys/param.h>
 
 #include "nscd.h"
 #include "dbg_log.h"
@@ -137,8 +138,8 @@ nscd_print_cache (const char *name)
 	  data_string (key, "", here->len);
 
 	  struct datahead *dh = (struct datahead *) (data + here->packet);
-	  printf ("\" (len:%d)  Data %08lx\n", here->len,
-		  (char *) dh - (char *) the_cache);
+	  printf ("\" (len:%ld)  Data %08lx\n", (long) here->len,
+		  (long unsigned int) ((char *) dh - (char *) the_cache));
 
 	  if (debug_level > 0)
 	    {
@@ -256,8 +257,9 @@ nscd_print_cache (const char *name)
 	    case GETAI:
 	      {
 		ai_response_header *ai = &(dh->data[0].aidata);
-		printf (" naddrs %d addrslen %d canonlen %d error %d [",
-			ai->naddrs, ai->addrslen, ai->canonlen, ai->error);
+		printf (" naddrs %ld addrslen %ld canonlen %ld error %d [",
+			(long) ai->naddrs, (long) ai->addrslen,
+			(long) ai->canonlen, ai->error);
 		cp += sizeof (*ai);
 		unsigned char *addrs = cp;
 		unsigned char *families = cp + ai->addrslen;
@@ -305,8 +307,8 @@ nscd_print_cache (const char *name)
 	    case GETSERVBYPORT:
 	      {
 		serv_response_header *serv = &(dh->data[0].servdata);
-		printf (" alias_cnt %d port %d (stored as %d)",
-			serv->s_aliases_cnt,
+		printf (" alias_cnt %ld port %d (stored as %d)",
+			(long) serv->s_aliases_cnt,
 			((serv->s_port & 0xff00) >> 8) | ((serv->
 							   s_port & 0xff) <<
 							  8), serv->s_port);
