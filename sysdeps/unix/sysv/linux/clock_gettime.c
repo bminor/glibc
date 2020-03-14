@@ -73,6 +73,8 @@ __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp)
 }
 
 #if __TIMESIZE != 64
+libc_hidden_def (__clock_gettime64)
+
 int
 __clock_gettime (clockid_t clock_id, struct timespec *tp)
 {

@@ -67,6 +67,8 @@ __ppoll64 (struct pollfd *fds, nfds_t nfds, const struct __timespec64 *timeout,
 }
 
 #if __TIMESIZE != 64
+libc_hidden_def (__ppoll64)
+
 int
 __ppoll (struct pollfd *fds, nfds_t nfds, const struct timespec *timeout,
          const sigset_t *sigmask)

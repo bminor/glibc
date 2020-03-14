@@ -55,6 +55,8 @@ __clock_settime64 (clockid_t clock_id, const struct __timespec64 *tp)
 }
 
 #if __TIMESIZE != 64
+libc_hidden_def (__clock_settime64)
+
 int
 __clock_settime (clockid_t clock_id, const struct timespec *tp)
 {

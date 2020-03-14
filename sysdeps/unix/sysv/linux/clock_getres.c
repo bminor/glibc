@@ -72,6 +72,8 @@ __clock_getres64 (clockid_t clock_id, struct __timespec64 *res)
 }
 
 #if __TIMESIZE != 64
+libc_hidden_def (__clock_getres64)
+
 int
 __clock_getres (clockid_t clock_id, struct timespec *res)
 {

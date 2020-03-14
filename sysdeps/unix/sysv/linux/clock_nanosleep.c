@@ -79,6 +79,8 @@ __clock_nanosleep_time64 (clockid_t clock_id, int flags, const struct __timespec
 }
 
 #if __TIMESIZE != 64
+libc_hidden_def (__clock_nanosleep_time64)
+
 int
 __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
                    struct timespec *rem)
