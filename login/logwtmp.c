@@ -21,6 +21,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <utmp.h>
+#include <struct___timespec64.h>
 
 
 void
@@ -36,8 +37,8 @@ logwtmp (const char *line, const char *name, const char *host)
   strncpy (ut.ut_name, name, sizeof ut.ut_name);
   strncpy (ut.ut_host, host, sizeof ut.ut_host);
 
-  struct timespec ts;
-  __clock_gettime (CLOCK_REALTIME, &ts);
+  struct __timespec64 ts;
+  __clock_gettime64 (CLOCK_REALTIME, &ts);
   TIMESPEC_TO_TIMEVAL (&ut.ut_tv, &ts);
 
   updwtmp (_PATH_WTMP, &ut);

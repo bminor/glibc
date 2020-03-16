@@ -35,8 +35,8 @@ __gettimeofday_tv32 (struct __timeval32 *restrict tv32, void *restrict tz)
   if (__glibc_unlikely (tz != 0))
     memset (tz, 0, sizeof (struct timezone));
 
-  struct timespec ts;
-  __clock_gettime (CLOCK_REALTIME, &ts);
+  struct __timespec64 ts;
+  __clock_gettime64 (CLOCK_REALTIME, &ts);
 
   *tv32 = valid_timespec_to_timeval32 (ts);
   return 0;

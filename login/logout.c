@@ -47,8 +47,8 @@ logout (const char *line)
       memset (ut->ut_name, '\0', sizeof ut->ut_name);
       memset (ut->ut_host, '\0', sizeof ut->ut_host);
 
-      struct timespec ts;
-      __clock_gettime (CLOCK_REALTIME, &ts);
+      struct __timespec64 ts;
+      __clock_gettime64 (CLOCK_REALTIME, &ts);
       TIMESPEC_TO_TIMEVAL (&ut->ut_tv, &ts);
       ut->ut_type = DEAD_PROCESS;
 

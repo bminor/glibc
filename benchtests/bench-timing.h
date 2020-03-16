@@ -18,7 +18,7 @@
 
 #undef attribute_hidden
 #define attribute_hidden
-#define __clock_gettime clock_gettime
+#define __clock_gettime __clock_gettime64
 #include <hp-timing.h>
 #include <stdint.h>
 

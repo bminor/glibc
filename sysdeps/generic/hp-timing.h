@@ -34,8 +34,8 @@ typedef uint64_t hp_timing_t;
    vDSO symbol.  */
 #define HP_TIMING_NOW(var) \
 ({								\
-  struct timespec tv;						\
-  __clock_gettime (CLOCK_MONOTONIC, &tv);			\
+  struct __timespec64 tv;						\
+  __clock_gettime64 (CLOCK_MONOTONIC, &tv);			\
   (var) = (tv.tv_nsec + UINT64_C(1000000000) * tv.tv_sec);	\
 })
 
