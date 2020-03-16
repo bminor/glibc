@@ -1301,12 +1301,6 @@ iszero (__T __val)
 # endif
 #endif
 
-/* Get machine-dependent inline versions (if there are any).  */
-#ifdef __USE_EXTERN_INLINES
-# include <bits/mathinline.h>
-#endif
-
-
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 /* An expression whose type has the widest of the evaluation formats
    of X and Y (which are of floating-point types).  */

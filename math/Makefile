@@ -22,7 +22,7 @@ subdir		:= math
 include ../Makeconfig
 
 # Installed header files.
-headers		:= math.h bits/mathcalls.h bits/mathinline.h \
+headers		:= math.h bits/mathcalls.h \
 		   fpu_control.h complex.h bits/cmathcalls.h fenv.h \
 		   bits/fenv.h bits/fenvinline.h bits/mathdef.h tgmath.h \
 		   bits/math-vector.h finclude/math-vector-fortran.h \
