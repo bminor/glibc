@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include <sys/time.h>
 #include <libc-diag.h>
+#include <struct___timespec64.h>
 
 int __inet6_scopeid_pton (const struct in6_addr *address,
                           const char *scope, uint32_t *result);
@@ -76,7 +77,7 @@ enum idna_name_classification __idna_name_classify (const char *name)
    timeouts and vice versa.  */
 struct deadline_current_time
 {
-  struct timespec current;
+  struct __timespec64 current;
 };
 
 /* Return the current time.  Terminates the process if the current
@@ -86,7 +87,7 @@ struct deadline_current_time __deadline_current_time (void) attribute_hidden;
 /* Computed absolute deadline.  */
 struct deadline
 {
-  struct timespec absolute;
+  struct __timespec64 absolute;
 };
 
 
