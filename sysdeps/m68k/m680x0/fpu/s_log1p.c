@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include "mathimpl.h"
 
 #ifndef FUNC
 #define FUNC log1p

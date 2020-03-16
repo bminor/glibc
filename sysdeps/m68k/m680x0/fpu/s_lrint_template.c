@@ -19,6 +19,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include "mathimpl.h"
 
 long int
 M_DECL_FUNC (__lrint) (FLOAT x)

@@ -18,6 +18,7 @@
 
 #define NO_MATH_REDIRECT
 #include <math.h>
+#include "mathimpl.h"
 
 FLOAT
 M_DECL_FUNC (__floor) (FLOAT x)

@@ -15,6 +15,7 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#define NO_MATH_REDIRECT
 #define scalbln __no_scalbln_decl
 #define scalblnf __no_scalblnf_decl
 #define scalblnl __no_scalblnl_decl
@@ -28,6 +29,7 @@
 #undef __scalbln
 #undef __scalblnf
 #undef __scalblnl
+#include "mathimpl.h"
 
 #ifndef suffix
 #define suffix /*empty*/

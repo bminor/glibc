@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include "mathimpl.h"
 
 FLOAT
 M_DECL_FUNC (__fabs) (FLOAT x)

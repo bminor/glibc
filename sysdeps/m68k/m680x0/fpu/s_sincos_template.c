@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include "mathimpl.h"
 
 void
 M_DECL_FUNC (__sincos) (FLOAT x, FLOAT *sinx, FLOAT *cosx)
