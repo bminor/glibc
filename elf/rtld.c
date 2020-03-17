@@ -1508,6 +1508,12 @@ of this helper program; chances are you did not intend to run this program.\n\
 	main_map->l_relro_size = ph->p_memsz;
 	break;
 
+      case PT_GNU_PROPERTY:
+	if (_dl_process_pt_gnu_property (main_map, ph))
+	  _dl_error_printf (
+"ERROR: '%s': cannot process GNU property segment.\n", _dl_argv[0]);
+	break;
+
       case PT_NOTE:
 	if (_rtld_process_pt_note (main_map, ph))
 	  _dl_error_printf ("\

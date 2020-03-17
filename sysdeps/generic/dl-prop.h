@@ -20,11 +20,11 @@
 #define _DL_PROP_H
 
 /* The following functions are used by the dynamic loader and the
-   dlopen machinery to process PT_NOTE entries in the binary or
-   shared object.  The notes can be used to change the behaviour of
-   the loader, and as such offer a flexible mechanism for hooking in
-   various checks related to ABI tags or implementing "flag day" ABI
-   transitions.  */
+   dlopen machinery to process PT_NOTE and PT_GNU_PROPERTY entries in
+   the binary or shared object.  The notes can be used to change the
+   behaviour of the loader, and as such offer a flexible mechanism
+   for hooking in various checks related to ABI tags or implementing
+   "flag day" ABI transitions.  */
 
 static inline void __attribute__ ((always_inline))
 _rtld_main_check (struct link_map *m, const char *program)
@@ -47,6 +47,12 @@ _dl_process_pt_note (struct link_map *l, const ElfW(Phdr) *ph,
 
 static inline int __attribute__ ((always_inline))
 _rtld_process_pt_note (struct link_map *l, const ElfW(Phdr) *ph)
+{
+  return 0;
+}
+
+static inline int __attribute__ ((always_inline))
+_dl_process_pt_gnu_property (struct link_map *l, const ElfW(Phdr) *ph)
 {
   return 0;
 }

@@ -1188,6 +1188,20 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 				  maplength, has_holes, loader);
     if (__glibc_unlikely (errstring != NULL))
       goto call_lose;
+
+    /* Process program headers again after load segments are mapped in
+       case processing requires accessing those segments.  */
+    for (ph = phdr; ph < &phdr[l->l_phnum]; ++ph)
+      switch (ph->p_type)
+	{
+	case PT_GNU_PROPERTY:
+	  if (_dl_process_pt_gnu_property (l, ph))
+	    {
+	      errstring = N_("cannot process GNU property segment");
+	      goto call_lose;
+	    }
+	  break;
+	}
   }
 
   if (l->l_ld == 0)
