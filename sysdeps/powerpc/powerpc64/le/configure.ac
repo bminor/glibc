@@ -51,6 +51,21 @@ CFLAGS="$save_CFLAGS"])
 AS_IF([test "$libc_cv_compiler_powerpc64le_ice" != "yes"],
       [critic_missing="$critic_missing __builtin_signbit is broken.  GCC 7.4 or newer is required to resolve (PR83862)."])
 
+dnl Some old compiler versions give out error messages when combining
+dnl -mabi=% and -mlong-double-128.  i.e GCC 7.5.0 (PR94200)
+AC_CACHE_CHECK([if $CC compiles with -mabi=ieeelongdouble and -mlong-double-128],
+	       libc_cv_compiler_powerpc64le_ldbl128_mabi, [dnl
+save_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -mabi=ieeelongdouble -mlong-double-128"
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+long double x;
+]])],
+		  [libc_cv_compiler_powerpc64le_ldbl128_mabi=yes],
+		  [libc_cv_compiler_powerpc64le_ldbl128_mabi=no])
+CFLAGS="$save_CFLAGS"])
+AS_IF([test "$libc_cv_compiler_powerpc64le_ldbl128_mabi" == "no"],
+      [critic_missing="$critic_missing The compiler must support -mabi=ieeelongdouble and -mlongdouble simultaneously."])
+
 dnl objcopy (binutils) 2.26 or newer required to support the --update-section
 dnl feature for fixing up .gnu.attribute section with IEEE ldbl.
 AC_CHECK_PROG_VER(OBJCOPY, $OBJCOPY, --version,

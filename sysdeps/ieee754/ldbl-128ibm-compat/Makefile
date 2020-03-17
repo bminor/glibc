@@ -249,13 +249,6 @@ ldbl-extra-routines += err \
 CFLAGS-ieee128-qefgcvt.c += -mabi=ieeelongdouble -Wno-psabi -mno-gnu-attribute
 CFLAGS-ieee128-qefgcvt_r.c += -mabi=ieeelongdouble -Wno-psabi -mno-gnu-attribute
 
-# Remove -mlong-double-128 because it does not work correctly with
-# -mabi=ibmlongdoule in some GCC versions, e.g. GCC 7.
-$(foreach o,$(all-object-suffixes),$(objpfx)ieee128-qefgcvt$(o)): \
-  sysdep-CFLAGS := $(filter-out -mlong-double-128, $(sysdep-CFLAGS))
-$(foreach o,$(all-object-suffixes),$(objpfx)ieee128-qefgcvt_r$(o)): \
-  sysdep-CFLAGS := $(filter-out -mlong-double-128, $(sysdep-CFLAGS))
-
 tests-internal += tst-ibm128-warn tst-ieee128-warn
 tests-internal += tst-ibm128-error tst-ieee128-error
 tests-internal += tst-ibm128-efgcvt tst-ieee128-efgcvt
@@ -347,11 +340,6 @@ ldbl-ibm128-files := $(objpfx)test-%-ibm128^ \
 		     $(foreach r,$(ldbl-extra-routines),$(objpfx)$(r)^) \
 		     $(foreach r,$(ldbl-extra-routines),$(objpfx)$(r)-internal^)
 obj-suf-foreach = $(foreach suf,$(all-object-suffixes),$(subst ^,$(suf),$(1)))
-
-# Remove -mlong-double-128 because it does not work correctly with
-# -mabi=ibmlongdoule in some GCC versions, e.g. GCC 7.
-$(call obj-suf-foreach,$(ldbl-ibm128-files)): \
-  sysdep-CFLAGS := $(filter-out -mlong-double-128, $(sysdep-CFLAGS))
 
 # Explicitly add -mabi=ibm-long-double to required files.
 $(call obj-suf-foreach,$(ldbl-ibm128-files)): \

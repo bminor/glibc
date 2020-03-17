@@ -509,8 +509,14 @@ release time, GCC 9.2.1 is the newest compiler verified to work to build
 
 For PowerPC 64-bits little-endian (powerpc64le), a GCC version with support
 for @option{-mno-gnu-attribute}, @option{-mabi=ieeelongdouble}, and
-@option{-mabi=ibmlondouble} is required.  These additional features are
-required for building the GNU C Library with support for IEEE long double.
+@option{-mabi=ibmlondouble} is required.  Likewise, the compiler must also
+support passing @option{-mlong-double-128} with the preceding options.  As
+of release, this implies GCC 7.4 and newer (excepting GCC 7.5.0, see GCC
+PR94200).  These additional features are required for building the GNU C
+Library with support for IEEE long double.
+
+@c powerpc64le performs an autoconf test to verify the compiler compiles with
+@c commands like "$CC -c foo.c -mabi=ibmlongdouble -mlong-double-128".
 
 For multi-arch support it is recommended to use a GCC which has been built with
 support for GNU indirect functions.  This ensures that correct debugging
