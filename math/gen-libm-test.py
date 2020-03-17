@@ -24,8 +24,7 @@ import re
 
 
 # Sorted list of all float types in ulps files.
-ALL_FLOATS = ('double', 'float', 'float128', 'idouble',
-              'ifloat', 'ifloat128', 'ildouble', 'ldouble')
+ALL_FLOATS = ('double', 'float', 'float128', 'ldouble')
 
 # Map float types in ulps files to C-like prefix for macros.
 ALL_FLOATS_PFX = {'double': 'DBL',
@@ -94,7 +93,6 @@ BEAUTIFY_MAP = {'minus_zero': '-0',
 
 # Flags in auto-libm-test-out that map directly to C flags.
 FLAGS_SIMPLE = {'ignore-zero-inf-sign': 'IGNORE_ZERO_INF_SIGN',
-                'no-test-inline': 'NO_TEST_INLINE',
                 'xfail': 'XFAIL_TEST'}
 
 # Exceptions in auto-libm-test-out, and their corresponding C flags
@@ -558,7 +556,6 @@ def gen_test_line(descr_args, descr_res, args_str):
                 or 'ERRNO' in res[-1]
                 or 'IGNORE_ZERO_INF_SIGN' in res[-1]
                 or 'TEST_NAN_SIGN' in res[-1]
-                or 'NO_TEST_INLINE' in res[-1]
                 or 'XFAIL' in res[-1]):
             raise ValueError('wrong number of arguments: %s' % args_str)
         res_rm = [res, res, res, res]

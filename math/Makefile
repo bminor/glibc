@@ -303,14 +303,9 @@ generated += libm-test-ulps.h $(libm-test-c-auto) $(libm-test-c-noauto) \
 	     $(libm-test-c-narrow)
 
 libm-tests-base-normal = $(foreach t,$(test-types),test-$(t))
-libm-tests-base-inline = $(foreach t,$(test-types),test-i$(t))
 libm-tests-base-narrow = $(foreach t,$(test-type-pairs),test-$(t))
-libm-tests-base = $(libm-tests-base-normal) $(libm-tests-base-inline) \
-		  $(libm-vec-tests)
+libm-tests-base = $(libm-tests-base-normal) $(libm-vec-tests)
 libm-tests-normal = $(foreach t,$(libm-tests-base-normal),\
-				$(foreach f,$(libm-test-funcs-all),\
-					    $(t)-$(f)))
-libm-tests-inline = $(foreach t,$(libm-tests-base-inline),\
 				$(foreach f,$(libm-test-funcs-all),\
 					    $(t)-$(f)))
 libm-tests-narrow = $(foreach t,$(libm-tests-base-narrow),\
@@ -318,11 +313,9 @@ libm-tests-narrow = $(foreach t,$(libm-tests-base-narrow),\
 					    $(t)-$(f)))
 libm-tests-vector = $(foreach t,$(libmvec-tests),\
 				$(foreach f,$($(t)-funcs),test-$(t)-$(f)))
-libm-tests = $(libm-tests-normal) $(libm-tests-inline) \
-	     $(libm-tests-narrow) $(libm-tests-vector)
+libm-tests = $(libm-tests-normal) $(libm-tests-narrow) $(libm-tests-vector)
 libm-tests-compat = $(foreach t,$(libm-tests-base-normal) \
-				$(libm-tests-base-finite) \
-				$(libm-tests-base-inline),\
+				$(libm-tests-base-finite),\
 				$(foreach f,$(libm-test-funcs-compat),\
 					    $(t)-$(f)))
 libm-tests-for-type = $(foreach f,$(libm-test-funcs-all),\
@@ -417,7 +410,6 @@ CFLAGS-test-float-vlen16-wrappers.c += $(float-vlen16-arch-ext-cflags)
 # validated.
 libm-test-no-inline-cflags = -fno-inline -ffloat-store -fno-builtin \
 			     -fsignaling-nans
-libm-test-inline-cflags = $(libm-test-fast-math-cflags)
 CFLAGS-test-tgmath.c += -fno-builtin
 # The following testcase uses very long lines (>3 million), so it may take a
 # while to compile it. See: http://llvm.org/bugs/show_bug.cgi?id=14106 and
@@ -493,19 +485,7 @@ $(foreach t,$(libm-tests-normal),$(objpfx)$(t).c): $(objpfx)test-%.c:
 	( \
 	  echo "#include <test-$$type.h>"; \
 	  echo "#include <test-math-exceptions.h>"; \
-	  echo "#include <test-math-no-inline.h>"; \
 	  echo "#include <test-math-errno.h>"; \
-	  echo "#include <test-math-scalar.h>"; \
-	  echo "#include <libm-test-$$func.c>"; \
-	) > $@
-
-$(foreach t,$(libm-tests-inline),$(objpfx)$(t).c): $(objpfx)test-i%.c:
-	type_func=$*; \
-	type=$${type_func%%-*}; \
-	func=$${type_func#*-}; \
-	( \
-	  echo "#include <test-$$type.h>"; \
-	  echo "#include <test-math-inline.h>"; \
 	  echo "#include <test-math-scalar.h>"; \
 	  echo "#include <libm-test-$$func.c>"; \
 	) > $@
@@ -520,7 +500,6 @@ $(foreach t,$(libm-tests-narrow),$(objpfx)$(t).c): $(objpfx)test-%.c:
 	  echo "#include <test-$$ret_type.h>"; \
 	  echo "#include <test-arg-$$arg_type.h>"; \
 	  echo "#include <test-math-exceptions.h>"; \
-	  echo "#include <test-math-no-inline.h>"; \
 	  echo "#include <test-math-errno.h>"; \
 	  echo "#include <test-math-narrow.h>"; \
 	  echo "#include <libm-test-narrow-$$func.c>"; \
@@ -567,13 +546,6 @@ $(foreach f,$(libm-test-funcs-all),\
 	    $(objpfx)$(o)-$(f).o): CFLAGS += $(libm-test-no-inline-cflags)
 endef
 object-suffixes-left := $(libm-tests-base-normal)
-include $(o-iterator)
-
-define o-iterator-doit
-$(foreach f,$(libm-test-funcs-all),\
-	    $(objpfx)$(o)-$(f).o): CFLAGS += $(libm-test-inline-cflags)
-endef
-object-suffixes-left := $(libm-tests-base-inline)
 include $(o-iterator)
 
 define o-iterator-doit

@@ -30,8 +30,8 @@ static const struct test_f_f_data atanh_test_data[] =
     /* atanh (x) == qNaN plus invalid exception if |x| > 1.  */
     TEST_f_f (atanh, 1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (atanh, -1.125L, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
-    TEST_f_f (atanh, max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM|NO_TEST_INLINE),
-    TEST_f_f (atanh, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM|NO_TEST_INLINE),
+    TEST_f_f (atanh, max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
+    TEST_f_f (atanh, -max_value, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (atanh, plus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
     TEST_f_f (atanh, minus_infty, qnan_value, INVALID_EXCEPTION|ERRNO_EDOM),
 

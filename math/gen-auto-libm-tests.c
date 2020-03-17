@@ -92,8 +92,7 @@
    permitted.  In other cases (where no overflow or underflow is
    permitted), errno is expected to be left unchanged.
 
-   The flag "no-test-inline" indicates a test is disabled for inline
-   function testing; "ignore-zero-inf-sign" indicates the the signs of
+   The flag "ignore-zero-inf-sign" indicates the the signs of
    zero and infinite results should be ignored; "xfail" indicates the
    test is disabled as expected to produce incorrect results,
    "xfail-rounding" indicates the test is disabled only in rounding
@@ -119,7 +118,7 @@
    plus_infty or minus_infty for infinite expected results, or as
    integer constant expressions (not necessarily with the right type)
    or IGNORE for integer inputs and outputs.  Flags are
-   "no-test-inline", "ignore-zero-info-sign", "xfail", "<exception>",
+   "ignore-zero-info-sign", "xfail", "<exception>",
    "<exception>-ok", "errno-<value>", "errno-<value>-ok", which may be
    unconditional or conditional.  "<exception>" indicates that a
    correct result means the given exception should be raised.
@@ -336,7 +335,6 @@ typedef struct
 /* A type of input flag.  */
 typedef enum
   {
-    flag_no_test_inline,
     flag_ignore_zero_inf_sign,
     flag_xfail,
     flag_xfail_rounding,
@@ -364,7 +362,6 @@ typedef enum
    enumeration.  */
 static const char *const input_flags[num_input_flag_types] =
   {
-    "no-test-inline",
     "ignore-zero-inf-sign",
     "xfail",
     "xfail-rounding",
@@ -2050,7 +2047,6 @@ output_for_one_input_case (FILE *fp, const char *filename, test_function *tf,
 	      for (size_t i = 0; i < it->num_flags; i++)
 		switch (it->flags[i].type)
 		  {
-		  case flag_no_test_inline:
 		  case flag_ignore_zero_inf_sign:
 		  case flag_xfail:
 		    if (fprintf (fp, " %s%s",

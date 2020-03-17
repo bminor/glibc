@@ -45,8 +45,7 @@
 
    TYPE_STR: The name of the type as used in ulps files, as a string.
 
-   ULP_IDX, ULP_I_IDX: The array indexes for ulps values for this
-   function.
+   ULP_IDX: The array indexes for ulps values for this function.
 
    LIT: Append the correct suffix to a literal.
 
@@ -195,7 +194,6 @@ compare_ulp_data (const void *key, const void *ulp)
   return strcmp (keystr, ulpdat->name);
 }
 
-static const int ulp_i_idx = ULP_I_IDX;
 static const int ulp_idx = ULP_IDX;
 
 /* Return the ulps for NAME in array DATA with NMEMB elements, or 0 if
@@ -209,7 +207,7 @@ find_ulps (const char *name, const struct ulp_data *data, size_t nmemb)
   if (entry == NULL)
     return 0;
   else
-    return entry->max_ulp[(flag_test_inline ? ulp_i_idx : ulp_idx)];
+    return entry->max_ulp[ulp_idx];
 }
 
 void
@@ -980,8 +978,6 @@ int
 enable_test (int exceptions)
 {
   if (exceptions & XFAIL_TEST)
-    return 0;
-  if (flag_test_inline && (exceptions & NO_TEST_INLINE))
     return 0;
   if ((!SNAN_TESTS (FLOAT) || !snan_tests_arg)
       && (exceptions & TEST_SNAN) != 0)

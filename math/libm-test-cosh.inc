@@ -20,8 +20,8 @@
 
 static const struct test_f_f_data cosh_test_data[] =
   {
-    TEST_f_f (cosh, plus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
-    TEST_f_f (cosh, minus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
+    TEST_f_f (cosh, plus_infty, plus_infty, ERRNO_UNCHANGED),
+    TEST_f_f (cosh, minus_infty, plus_infty, ERRNO_UNCHANGED),
     TEST_f_f (cosh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (cosh, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (cosh, snan_value, qnan_value, INVALID_EXCEPTION),

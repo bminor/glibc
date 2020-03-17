@@ -24,7 +24,6 @@
 #define LIT(x) (x)
 #define TYPE_STR "double"
 #define ULP_IDX ULP_DBL
-#define ULP_I_IDX ULP_I_DBL
 #define LITM(x) x
 #define FTOSTR strfromd
 #define snan_value_MACRO SNAN

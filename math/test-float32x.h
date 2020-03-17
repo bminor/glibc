@@ -30,7 +30,6 @@
 #define PREFIX FLT32X
 #define TYPE_STR "double"
 #define ULP_IDX ULP_DBL
-#define ULP_I_IDX ULP_I_DBL
 #define LIT(x) __f32x (x)
 #define LITM(x) x ## f32x
 #define FTOSTR strfromf32x

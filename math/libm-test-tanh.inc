@@ -20,8 +20,8 @@
 
 static const struct test_f_f_data tanh_test_data[] =
   {
-    TEST_f_f (tanh, plus_infty, 1, ERRNO_UNCHANGED|NO_TEST_INLINE),
-    TEST_f_f (tanh, minus_infty, -1, ERRNO_UNCHANGED|NO_TEST_INLINE),
+    TEST_f_f (tanh, plus_infty, 1, ERRNO_UNCHANGED),
+    TEST_f_f (tanh, minus_infty, -1, ERRNO_UNCHANGED),
     TEST_f_f (tanh, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (tanh, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (tanh, snan_value, qnan_value, INVALID_EXCEPTION),

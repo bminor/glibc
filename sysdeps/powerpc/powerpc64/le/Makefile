@@ -15,8 +15,6 @@ $(foreach suf,$(all-object-suffixes),%f128$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),%f128_r$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-float128%$(suf)): CFLAGS += -mfloat128
 $(foreach suf,$(all-object-suffixes),$(objpfx)test-float64x%$(suf)): CFLAGS += -mfloat128
-$(foreach suf,$(all-object-suffixes),$(objpfx)test-ifloat128%$(suf)): CFLAGS += -mfloat128
-$(foreach suf,$(all-object-suffixes),$(objpfx)test-ifloat64x%$(suf)): CFLAGS += -mfloat128
 # Pairs of types with _Float128 / _Float64x as the wider type but not
 # the narrower one.
 f128-pairs = float32-float64x float32-float128 float64-float64x \
@@ -29,7 +27,7 @@ CFLAGS-test-math-iseqsig.cc += -mfloat128
 CFLAGS-test-math-issignaling.cc += -mfloat128
 CFLAGS-test-math-iszero.cc += -mfloat128
 $(foreach test, \
-	  test-float128% test-ifloat128% test-float64x% test-ifloat64x% \
+	  test-float128% test-float64x% \
 	  $(foreach pair,$(f128-pairs),test-$(pair)%) \
 	  test-math-iscanonical test-math-iseqsig test-math-issignaling \
 	  test-math-iszero, \

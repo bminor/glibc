@@ -17,7 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "test-float.h"
-#include "test-math-no-inline.h"
 #include "test-math-vector.h"
 
 #define VEC_SUFF _vlen4

@@ -324,8 +324,6 @@ ifeq ($(subdir),math)
 # support.  Thus, they can only correctly be used with ibm128.
 CFLAGS-test-ldouble-compat_totalorder.c += -mabi=ibmlongdouble
 CFLAGS-test-ldouble-compat_totalordermag.c += -mabi=ibmlongdouble
-CFLAGS-test-ildouble-compat_totalorder.c += -mabi=ibmlongdouble
-CFLAGS-test-ildouble-compat_totalordermag.c += -mabi=ibmlongdouble
 endif
 
 # Add IEEE binary128 files as make targets.

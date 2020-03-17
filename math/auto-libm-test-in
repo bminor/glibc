@@ -86,10 +86,10 @@ acos -min_subnorm
 
 acosh 1
 acosh 0x1.000002p0
-acosh 0x1.0000000000001p0 no-test-inline
-acosh 0x1.0000000000000002p0 no-test-inline
-acosh 0x1.000000000000000000000000008p0 no-test-inline
-acosh 0x1.0000000000000000000000000001p0 no-test-inline
+acosh 0x1.0000000000001p0
+acosh 0x1.0000000000000002p0
+acosh 0x1.000000000000000000000000008p0
+acosh 0x1.0000000000000000000000000001p0
 acosh 1.625
 acosh 7
 acosh 100
@@ -140,7 +140,7 @@ acosh 0x1.1b836p+0
 acosh 0x1.07c956p+0
 acosh 0x1.1808eep+0
 acosh 0x1.1052c4p+0
-acosh max no-test-inline
+acosh max
 
 add 0 0
 add 0 -0
@@ -375,8 +375,8 @@ asinh min
 asinh -min
 asinh min_subnorm
 asinh -min_subnorm
-asinh max no-test-inline
-asinh -max no-test-inline
+asinh max
+asinh -max
 
 atan 0
 atan -0
@@ -547,24 +547,24 @@ atanh 0x1p-600
 atanh -0x1p-600
 atanh 0x1p-10000
 atanh -0x1p-10000
-atanh 0x0.ffffffp0 no-test-inline
-atanh -0x0.ffffffp0 no-test-inline
-atanh 0x0.ffffffff8p0 no-test-inline
-atanh -0x0.ffffffff8p0 no-test-inline
-atanh 0x0.ffffffffffffp0 no-test-inline
-atanh -0x0.ffffffffffffp0 no-test-inline
-atanh 0x0.fffffffffffff8p0 no-test-inline
-atanh -0x0.fffffffffffff8p0 no-test-inline
-atanh 0x0.ffffffffffffffffp0 no-test-inline
-atanh -0x0.ffffffffffffffffp0 no-test-inline
-atanh 0x0.ffffffffffffffffffffffffffcp0 no-test-inline
-atanh -0x0.ffffffffffffffffffffffffffcp0 no-test-inline
-atanh 0x0.ffffffffffffffffffffffffffff8p0 no-test-inline
-atanh -0x0.ffffffffffffffffffffffffffff8p0 no-test-inline
+atanh 0x0.ffffffp0
+atanh -0x0.ffffffp0
+atanh 0x0.ffffffff8p0
+atanh -0x0.ffffffff8p0
+atanh 0x0.ffffffffffffp0
+atanh -0x0.ffffffffffffp0
+atanh 0x0.fffffffffffff8p0
+atanh -0x0.fffffffffffff8p0
+atanh 0x0.ffffffffffffffffp0
+atanh -0x0.ffffffffffffffffp0
+atanh 0x0.ffffffffffffffffffffffffffcp0
+atanh -0x0.ffffffffffffffffffffffffffcp0
+atanh 0x0.ffffffffffffffffffffffffffff8p0
+atanh -0x0.ffffffffffffffffffffffffffff8p0
 atanh -0x6.e6c77p-20
 atanh 0x3.2ca824p-4
 atanh -0x1.cc1d66p-4
-atanh -0xf.cd3809ca8fd28p-4 no-test-inline
+atanh -0xf.cd3809ca8fd28p-4
 atanh -0x1.04f386p-4
 atanh -0x2.084568p-4
 atanh -0x3.e0a5d8p-4
@@ -4451,8 +4451,8 @@ cosh 0x2.f5d128p+0
 cosh -0xd.0c03p+0
 cosh -0x3.d04328728b72cp-4
 cosh 0x1.629188p+4
-cosh max no-test-inline
-cosh -max no-test-inline
+cosh max
+cosh -max
 cosh min
 cosh -min
 cosh min_subnorm
@@ -4474,14 +4474,14 @@ cosh 0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ibm128-libgcc
 cosh 0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ibm128-libgcc
 cosh -0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ibm128-libgcc
 cosh -0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ibm128-libgcc
-cosh 0x2.c5d37700c6bb03a4p+12 no-test-inline
-cosh 0x2.c5d37700c6bb03a8p+12 no-test-inline
-cosh -0x2.c5d37700c6bb03a4p+12 no-test-inline
-cosh -0x2.c5d37700c6bb03a8p+12 no-test-inline
-cosh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline
-cosh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline
-cosh -0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline
-cosh -0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline
+cosh 0x2.c5d37700c6bb03a4p+12
+cosh 0x2.c5d37700c6bb03a8p+12
+cosh -0x2.c5d37700c6bb03a4p+12
+cosh -0x2.c5d37700c6bb03a8p+12
+cosh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12
+cosh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12
+cosh -0x2.c5d37700c6bb03a6c24b6c9b494cp+12
+cosh -0x2.c5d37700c6bb03a6c24b6c9b494ep+12
 
 cpow 1 0 0 0 ignore-zero-inf-sign
 cpow 2 0 10 0 ignore-zero-inf-sign
@@ -5659,42 +5659,42 @@ hypot 0.75 1.25
 hypot 1.0 0x1p-61
 hypot 0x1p+0 0x1.fp-129
 hypot 0x1.23456789abcdef0123456789ab8p-500 0x1.23456789abcdef0123456789ab8p-500
-hypot 0x3p125 0x4p125 no-test-inline:binary32
-hypot 0x1.234566p-126 0x1.234566p-126 no-test-inline:binary32
-hypot 0x3p1021 0x4p1021 no-test-inline:binary64
-hypot 0x1p+0 0x0.3ep-1022 no-test-inline:binary64
-hypot 0x3p16381 0x4p16381 no-test-inline
+hypot 0x3p125 0x4p125
+hypot 0x1.234566p-126 0x1.234566p-126
+hypot 0x3p1021 0x4p1021
+hypot 0x1p+0 0x0.3ep-1022
+hypot 0x3p16381 0x4p16381
 hypot 0x1p-149 0x1p-149
 hypot 0x1p-1074 0x1p-1074
-hypot 0x1p-16445 0x1p-16445 no-test-inline
-hypot 0x1p-16494 0x1p-16494 no-test-inline
+hypot 0x1p-16445 0x1p-16445
+hypot 0x1p-16494 0x1p-16494
 hypot 0x0.fffffep-126 0x0.fp-127
 hypot 0x0.fffffep-126 0x0.fp-130
 hypot 0x0.fffffffffffffp-1022 0x0.fp-1023
 hypot 0x0.fffffffffffffp-1022 0x0.fp-1026
-hypot 0x0.ffffffp-16382 0x0.fp-16383 no-test-inline
-hypot 0x0.ffffffp-16382 0x0.fp-16386 no-test-inline
-hypot 0 min no-test-inline
-hypot 0 min_subnorm no-test-inline
-hypot 0 -min no-test-inline
-hypot 0 -min_subnorm no-test-inline
-hypot min 0 no-test-inline
-hypot min_subnorm 0 no-test-inline
-hypot -min 0 no-test-inline
-hypot -min_subnorm 0 no-test-inline
-hypot min min no-test-inline
-hypot min_subnorm min_subnorm no-test-inline
-hypot min min_subnorm no-test-inline
+hypot 0x0.ffffffp-16382 0x0.fp-16383
+hypot 0x0.ffffffp-16382 0x0.fp-16386
+hypot 0 min
+hypot 0 min_subnorm
+hypot 0 -min
+hypot 0 -min_subnorm
+hypot min 0
+hypot min_subnorm 0
+hypot -min 0
+hypot -min_subnorm 0
+hypot min min
+hypot min_subnorm min_subnorm
+hypot min min_subnorm
 hypot 0x1.fp127 0x1.fp127
 hypot 0x1.fp1023 0x1.fp1023
-hypot 0x1.fp16383 0x1.fp16383 no-test-inline xfail-rounding:ibm128-libgcc
+hypot 0x1.fp16383 0x1.fp16383 xfail-rounding:ibm128-libgcc
 
 hypot 0x1p-127 0x1p-149
 hypot 0x1p-1023 0x1p-1074
 hypot 0x1p-970 0x1p-1074
-hypot 0x1p-16383 0x1p-16445 no-test-inline
-hypot 0x1p-16384 0x1p-16446 no-test-inline
-hypot 0x1p-16383 0x1p-16494 no-test-inline
+hypot 0x1p-16383 0x1p-16445
+hypot 0x1p-16384 0x1p-16446
+hypot 0x1p-16383 0x1p-16494
 
 hypot -0x1.fa7deap+0 0x1.a761bab383ac8p+0
 
@@ -7301,8 +7301,8 @@ sinh -0x1.3dda8ap+0
 sinh -0x5.ee9218p-4
 sinh -0x1.bcfc98p+0
 sinh -0x6.9bbb6df7c5d08p-4
-sinh max no-test-inline
-sinh -max no-test-inline
+sinh max
+sinh -max
 sinh min
 sinh -min
 sinh min_subnorm
@@ -7314,10 +7314,10 @@ sinh 0x2.c679d1f73f0fap+8
 sinh 0x2.c679d1f73f0fcp+8
 sinh 0x2.c679d1f73f0fb624d358b213a7p+8 xfail-rounding:ibm128-libgcc
 sinh 0x2.c679d1f73f0fb624d358b213a8p+8 xfail-rounding:ibm128-libgcc
-sinh 0x2.c5d37700c6bb03a4p+12 no-test-inline
-sinh 0x2.c5d37700c6bb03a8p+12 no-test-inline
-sinh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12 no-test-inline
-sinh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12 no-test-inline
+sinh 0x2.c5d37700c6bb03a4p+12
+sinh 0x2.c5d37700c6bb03a8p+12
+sinh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12
+sinh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12
 
 sub 0 0
 sub 0 -0

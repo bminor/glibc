@@ -23,7 +23,6 @@
 /* Flags set by the including file.  */
 const int flag_test_errno = TEST_ERRNO;
 const int flag_test_exceptions = TEST_EXCEPTIONS;
-const int flag_test_inline = TEST_INLINE;
 const int flag_test_mathvec = TEST_MATHVEC;
 
 #if TEST_NARROW
@@ -41,8 +40,6 @@ const int snan_tests_arg = SNAN_TESTS (FLOAT);
 /* Informal description of the functions being tested.  */
 #if TEST_MATHVEC
 # define TEST_MSG "testing " STR_FLOAT " (vector length " STR_VEC_LEN ")\n"
-#elif TEST_INLINE
-# define TEST_MSG "testing " STR_FLOAT " (inline functions)\n"
 #elif TEST_NARROW
 # define TEST_MSG "testing " STR_FLOAT " (argument " STR_ARG_FLOAT ")\n"
 #else
@@ -70,11 +67,7 @@ const char test_msg[] = TEST_MSG;
 					 ? TEST_NAN_PAYLOAD		\
 					 : 0)
 
-#if TEST_INLINE
-const char qtype_str[] = "i" TYPE_STR;
-#else
 const char qtype_str[] = TYPE_STR;
-#endif
 
 /* Various constants derived from pi.  We must supply them precalculated for
    accuracy.  They are written as a series of postfix operations to keep

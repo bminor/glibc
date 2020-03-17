@@ -30,7 +30,6 @@
 #define PREFIX FLT32
 #define TYPE_STR "float"
 #define ULP_IDX ULP_FLT
-#define ULP_I_IDX ULP_I_FLT
 #define LIT(x) __f32 (x)
 #define LITM(x) x ## f32
 #define FTOSTR strfromf32

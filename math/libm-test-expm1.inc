@@ -20,8 +20,8 @@
 
 static const struct test_f_f_data expm1_test_data[] =
   {
-    TEST_f_f (expm1, plus_infty, plus_infty, ERRNO_UNCHANGED|NO_TEST_INLINE),
-    TEST_f_f (expm1, minus_infty, -1, ERRNO_UNCHANGED|NO_TEST_INLINE),
+    TEST_f_f (expm1, plus_infty, plus_infty, ERRNO_UNCHANGED),
+    TEST_f_f (expm1, minus_infty, -1, ERRNO_UNCHANGED),
     TEST_f_f (expm1, qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (expm1, -qnan_value, qnan_value, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_f (expm1, snan_value, qnan_value, INVALID_EXCEPTION),
