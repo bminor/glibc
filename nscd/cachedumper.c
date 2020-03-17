@@ -33,7 +33,7 @@
 
 static void *the_cache;
 
-#define NO_REF ((ref_t)-1)
+#define NO_REF ((ref_t) -1)
 
 /* Given a chunk of raw data CP of length LEN, print it in a hopefully
    user-readable format, including colorizing non-readable characters.
@@ -82,10 +82,10 @@ nscd_print_cache (const char *name)
 
   /* Shortcut for "print the cache offset (address) of X in the
      cache".  */
-#define A(x) (int)((char *)&(x)-(char *)the_cache)
+#define A(x) (int) ((char *) &(x) - (char *) the_cache)
 
   /* Common code for "print field DPS->F, it's offset, and contents".  */
-#define DPS(f) printf("%08x: %24s : %10d %08x\n", A (dps->f), #f, (int)dps->f, (int)dps->f);
+#define DPS(f) printf("%08x: %24s : %10d %08x\n", A (dps->f), #f, (int) dps->f, (int) dps->f);
 
   if (debug_level > 0)
     {
@@ -144,7 +144,7 @@ nscd_print_cache (const char *name)
 	  if (debug_level > 0)
 	    {
 /* Common code for printing fields in struct DATAHEAD DH.  */
-#define DH(f) printf ("%08x; %24s : %10d %08x\n", A (dh->f), #f, (int)dh->f, (int)dh->f);
+#define DH(f) printf ("%08x; %24s : %10d %08x\n", A (dh->f), #f, (int) dh->f, (int) dh->f);
 	      DH (allocsize);
 	      DH (recsize);
 	      DH (timeout);
