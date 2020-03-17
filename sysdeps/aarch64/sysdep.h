@@ -41,12 +41,42 @@
 
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name
 
+/* Branch Target Identitication support.  */
+#define BTI_C		hint	34
+#define BTI_J		hint	36
+
+/* GNU_PROPERTY_AARCH64_* macros from elf.h for use in asm code.  */
+#define FEATURE_1_AND 0xc0000000
+#define FEATURE_1_BTI 1
+#define FEATURE_1_PAC 2
+
+/* Add a NT_GNU_PROPERTY_TYPE_0 note.  */
+#define GNU_PROPERTY(type, value)	\
+  .section .note.gnu.property, "a";	\
+  .p2align 3;				\
+  .word 4;				\
+  .word 16;				\
+  .word 5;				\
+  .asciz "GNU";				\
+  .word type;				\
+  .word 4;				\
+  .word value;				\
+  .word 0;				\
+  .text
+
+/* Add GNU property note with the supported features to all asm code
+   where sysdep.h is included.  */
+#if HAVE_AARCH64_BTI
+GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI)
+#endif
+
 /* Define an entry point visible from C.  */
 #define ENTRY(name)						\
   .globl C_SYMBOL_NAME(name);					\
   .type C_SYMBOL_NAME(name),%function;				\
   .align 4;							\
   C_LABEL(name)							\
+  BTI_C;							\
   cfi_startproc;						\
   CALL_MCOUNT
 
@@ -56,6 +86,7 @@
   .type C_SYMBOL_NAME(name),%function;				\
   .p2align align;						\
   C_LABEL(name)							\
+  BTI_C;							\
   cfi_startproc;						\
   CALL_MCOUNT
 
@@ -68,10 +99,11 @@
   .globl C_SYMBOL_NAME(name);					\
   .type C_SYMBOL_NAME(name),%function;				\
   .p2align align;						\
-  .rep padding;							\
+  .rep padding - 1; /* -1 for bti c.  */			\
   nop;								\
   .endr;							\
   C_LABEL(name)							\
+  BTI_C;							\
   cfi_startproc;						\
   CALL_MCOUNT
 
