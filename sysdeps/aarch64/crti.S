@@ -75,6 +75,7 @@ call_weak_fn:
 	.hidden	_init
 	.type	_init, %function
 _init:
+	BTI_C
 	stp	x29, x30, [sp, -16]!
 	mov	x29, sp
 #if PREINIT_FUNCTION_WEAK
@@ -89,5 +90,6 @@ _init:
 	.hidden	_fini
 	.type	_fini, %function
 _fini:
+	BTI_C
 	stp	x29, x30, [sp, -16]!
 	mov	x29, sp

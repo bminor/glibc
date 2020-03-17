@@ -35,6 +35,7 @@
 	cfi_startproc
 	.align 2
 _dl_runtime_resolve:
+	BTI_C
 	/* AArch64 we get called with:
 	   ip0		&PLTGOT[2]
 	   ip1		temp(dl resolver entry point)
@@ -126,6 +127,7 @@ _dl_runtime_resolve:
 	cfi_startproc
 	.align 2
 _dl_runtime_profile:
+	BTI_C
 	/* AArch64 we get called with:
 	   ip0		&PLTGOT[2]
 	   ip1		temp(dl resolver entry point)

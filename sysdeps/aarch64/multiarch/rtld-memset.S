@@ -17,6 +17,8 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <sysdep.h>
+
 #if IS_IN (rtld)
 # define MEMSET memset
 # include <sysdeps/aarch64/memset.S>
