@@ -46,6 +46,7 @@
 	.globl _start
 	.type _start,#function
 _start:
+	BTI_C
 	/* Create an initial frame with 0 LR and FP */
 	mov	x29, #0
 	mov	x30, #0

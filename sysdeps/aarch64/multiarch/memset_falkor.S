@@ -17,6 +17,7 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <sysdep.h>
 #include <memset-reg.h>
 
 /* Reading dczid_el0 is expensive on falkor so move it into the ifunc
