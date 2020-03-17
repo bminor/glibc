@@ -17,7 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #undef _LIBC
-#undef __LIBC_INTERNAL_MATH_INLINES
 #undef _GNU_SOURCE
 
 #include <math.h>
