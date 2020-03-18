@@ -1,5 +1,6 @@
-/* Linux/x86 CET initializers function.
-   Copyright (C) 2018-2020 Free Software Foundation, Inc.
+/* Check compatibility of legacy executable with a JIT engine.
+   Copyright (C) 2020 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -15,18 +16,23 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/prctl.h>
-#include <asm/prctl.h>
+#include <stdio.h>
+#include <sys/mman.h>
+#include <support/xunistd.h>
 
-static inline int __attribute__ ((always_inline))
-dl_cet_disable_cet (unsigned int cet_feature)
+/* Check that mmapped legacy code works with -fcf-protection=none.  */
+
+static int
+do_test (void)
 {
-  return (int) INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_CET_DISABLE,
-				      cet_feature);
+  void (*funcp) (void);
+  funcp = xmmap (NULL, 0x1000, PROT_EXEC | PROT_READ | PROT_WRITE,
+		 MAP_ANONYMOUS | MAP_PRIVATE, -1);
+  printf ("mmap = %p\n", funcp);
+  /* Write RET instruction.  */
+  *(char *) funcp = 0xc3;
+  funcp ();
+  return 0;
 }
 
-static inline int __attribute__ ((always_inline))
-dl_cet_lock_cet (void)
-{
-  return (int) INTERNAL_SYSCALL_CALL (arch_prctl, ARCH_CET_LOCK, 0);
-}
+#include <support/test-driver.c>

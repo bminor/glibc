@@ -1,6 +1,5 @@
-/* Check compatibility of CET-enabled executable with dlopened legacy
-   shared object.
-   Copyright (C) 2018-2020 Free Software Foundation, Inc.
+/* Check incompatibility with legacy JIT engine.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,39 +16,33 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <x86intrin.h>
+#include <sys/mman.h>
+#include <support/test-driver.h>
+#include <support/xsignal.h>
+#include <support/xunistd.h>
 
-#include <support/check.h>
+/* Check that mmapped legacy code trigges segfault with -fcf-protection.  */
 
 static int
 do_test (void)
 {
-  static const char modname[] = "tst-cet-legacy-mod-4.so";
-  int (*fp) (void);
-  void *h;
+  /* NB: This test should trigger SIGSEGV on CET platforms.  If SHSTK
+     is disabled, assuming IBT is also disabled.  */
+  if (_get_ssp () == 0)
+    return EXIT_UNSUPPORTED;
 
-  h = dlopen (modname, RTLD_LAZY);
-  if (h == NULL)
-    {
-      const char *err = dlerror ();
-      if (!strstr (err, "rebuild shared object with IBT support enabled"))
-	FAIL_EXIT1 ("incorrect dlopen '%s' error: %s\n", modname, err);
-      return 0;
-    }
-
-  fp = dlsym (h, "test");
-  if (fp == NULL)
-    FAIL_EXIT1 ("cannot get symbol 'test': %s\n", dlerror ());
-
-  if (fp () != 0)
-    FAIL_EXIT1 ("test () != 0");
-
-  dlclose (h);
-
-  return 0;
+  void (*funcp) (void);
+  funcp = xmmap (NULL, 0x1000, PROT_EXEC | PROT_READ | PROT_WRITE,
+		 MAP_ANONYMOUS | MAP_PRIVATE, -1);
+  printf ("mmap = %p\n", funcp);
+  /* Write RET instruction.  */
+  *(char *) funcp = 0xc3;
+  funcp ();
+  return EXIT_FAILURE;
 }
 
+#define EXPECTED_SIGNAL (_get_ssp () == 0 ? 0 : SIGSEGV)
 #include <support/test-driver.c>

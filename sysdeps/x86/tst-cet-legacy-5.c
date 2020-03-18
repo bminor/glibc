@@ -35,7 +35,8 @@ do_test_1 (const char *modname, bool fail)
       if (fail)
 	{
 	  const char *err = dlerror ();
-	  if (strstr (err, "shadow stack isn't enabled") == NULL)
+	  if (strstr (err, "rebuild shared object with SHSTK support enabled")
+	      == NULL)
 	    {
 	      printf ("incorrect dlopen '%s' error: %s\n", modname,
 		      err);
