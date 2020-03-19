@@ -19,6 +19,9 @@ CVE-2020-10029: Trigonometric functions on x86 targets suffered from stack
   corruption when they were passed a pseudo-zero argument.  Reported by Guido
   Vranken / ForAllSecure Mayhem.
 
+CVE-2020-1752: A use-after-free vulnerability in the glob function when
+  expanding ~user has been fixed.
+
 The following bugs are resolved with this release:
 
   [23518] login: Remove utmp backend jump tables
