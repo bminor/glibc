@@ -66,6 +66,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-scanf-round \
 	 tst-renameat2 tst-bz11319 tst-bz11319-fortify2 \
 	 scanf14a scanf16a \
+	 tst-printf-bz25691
 
 
 test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble
@@ -75,10 +76,12 @@ tests-special += $(objpfx)tst-unbputc.out $(objpfx)tst-printf.out \
 		 $(objpfx)tst-printf-bz18872-mem.out \
 		 $(objpfx)tst-setvbuf1-cmp.out \
 		 $(objpfx)tst-vfprintf-width-prec-mem.out \
-		 $(objpfx)tst-printfsz-islongdouble.out
+		 $(objpfx)tst-printfsz-islongdouble.out \
+		 $(objpfx)tst-printf-bz25691-mem.out
 generated += tst-printf-bz18872.c tst-printf-bz18872.mtrace \
 	     tst-printf-bz18872-mem.out \
-	     tst-vfprintf-width-prec.mtrace tst-vfprintf-width-prec-mem.out
+	     tst-vfprintf-width-prec.mtrace tst-vfprintf-width-prec-mem.out \
+	     tst-printf-bz25691.mtrace tst-printf-bz25691-mem.out
 endif
 
 include ../Rules
@@ -100,6 +103,8 @@ endif
 tst-printf-bz18872-ENV = MALLOC_TRACE=$(objpfx)tst-printf-bz18872.mtrace
 tst-vfprintf-width-prec-ENV = \
   MALLOC_TRACE=$(objpfx)tst-vfprintf-width-prec.mtrace
+tst-printf-bz25691-ENV = \
+  MALLOC_TRACE=$(objpfx)tst-printf-bz25691.mtrace
 
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)' > $@; \
