@@ -327,6 +327,18 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 # define MAX_TCACHE_COUNT UINT16_MAX
 #endif
 
+/* Safe-Linking:
+   Use randomness from ASLR (mmap_base) to protect single-linked lists
+   of Fast-Bins and TCache.  That is, mask the "next" pointers of the
+   lists' chunks, and also perform allocation alignment checks on them.
+   This mechanism reduces the risk of pointer hijacking, as was done with
+   Safe-Unlinking in the double-linked lists of Small-Bins.
+   It assumes a minimum page size of 4096 bytes (12 bits).  Systems with
+   larger pages provide less entropy, although the pointer mangling
+   still works.  */
+#define PROTECT_PTR(pos, ptr) \
+  ((__typeof (ptr)) ((((size_t) pos) >> 12) ^ ((size_t) ptr)))
+#define REVEAL_PTR(ptr)  PROTECT_PTR (&ptr, ptr)
 
 /*
   REALLOC_ZERO_BYTES_FREES should be set if a call to
@@ -2157,12 +2169,15 @@ do_check_malloc_state (mstate av)
 
       while (p != 0)
         {
+	  if (__glibc_unlikely (!aligned_OK (p)))
+	    malloc_printerr ("do_check_malloc_state(): " \
+			     "unaligned fastbin chunk detected");
           /* each chunk claims to be inuse */
           do_check_inuse_chunk (av, p);
           total += chunksize (p);
           /* chunk belongs in this bin */
           assert (fastbin_index (chunksize (p)) == i);
-          p = p->fd;
+	  p = REVEAL_PTR (p->fd);
         }
     }
 
@@ -2923,7 +2938,7 @@ tcache_put (mchunkptr chunk, size_t tc_idx)
      detect a double free.  */
   e->key = tcache;
 
-  e->next = tcache->entries[tc_idx];
+  e->next = PROTECT_PTR (&e->next, tcache->entries[tc_idx]);
   tcache->entries[tc_idx] = e;
   ++(tcache->counts[tc_idx]);
 }
@@ -2934,9 +2949,11 @@ static __always_inline void *
 tcache_get (size_t tc_idx)
 {
   tcache_entry *e = tcache->entries[tc_idx];
-  tcache->entries[tc_idx] = e->next;
+  tcache->entries[tc_idx] = REVEAL_PTR (e->next);
   --(tcache->counts[tc_idx]);
   e->key = NULL;
+  if (__glibc_unlikely (!aligned_OK (e)))
+    malloc_printerr ("malloc(): unaligned tcache chunk detected");
   return (void *) e;
 }
 
@@ -2960,7 +2977,10 @@ tcache_thread_shutdown (void)
       while (tcache_tmp->entries[i])
 	{
 	  tcache_entry *e = tcache_tmp->entries[i];
-	  tcache_tmp->entries[i] = e->next;
+      if (__glibc_unlikely (!aligned_OK (e)))
+	malloc_printerr ("tcache_thread_shutdown(): " \
+			 "unaligned tcache chunk detected");
+	  tcache_tmp->entries[i] = REVEAL_PTR (e->next);
 	  __libc_free (e);
 	}
     }
@@ -3570,8 +3590,11 @@ _int_malloc (mstate av, size_t bytes)
       victim = pp;					\
       if (victim == NULL)				\
 	break;						\
+      pp = REVEAL_PTR (victim->fd);                                     \
+      if (__glibc_unlikely (!aligned_OK (pp)))                          \
+	malloc_printerr ("malloc(): unaligned fastbin chunk detected"); \
     }							\
-  while ((pp = catomic_compare_and_exchange_val_acq (fb, victim->fd, victim)) \
+  while ((pp = catomic_compare_and_exchange_val_acq (fb, pp, victim)) \
 	 != victim);					\
 
   if ((unsigned long) (nb) <= (unsigned long) (get_max_fast ()))
@@ -3583,8 +3606,11 @@ _int_malloc (mstate av, size_t bytes)
 
       if (victim != NULL)
 	{
+	  if (__glibc_unlikely (!aligned_OK (victim)))
+	    malloc_printerr ("malloc(): unaligned fastbin chunk detected");
+
 	  if (SINGLE_THREAD_P)
-	    *fb = victim->fd;
+	    *fb = REVEAL_PTR (victim->fd);
 	  else
 	    REMOVE_FB (fb, pp, victim);
 	  if (__glibc_likely (victim != NULL))
@@ -3605,8 +3631,10 @@ _int_malloc (mstate av, size_t bytes)
 		  while (tcache->counts[tc_idx] < mp_.tcache_count
 			 && (tc_victim = *fb) != NULL)
 		    {
+		      if (__glibc_unlikely (!aligned_OK (tc_victim)))
+			malloc_printerr ("malloc(): unaligned fastbin chunk detected");
 		      if (SINGLE_THREAD_P)
-			*fb = tc_victim->fd;
+			*fb = REVEAL_PTR (tc_victim->fd);
 		      else
 			{
 			  REMOVE_FB (fb, pp, tc_victim);
@@ -4196,11 +4224,15 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	    LIBC_PROBE (memory_tcache_double_free, 2, e, tc_idx);
 	    for (tmp = tcache->entries[tc_idx];
 		 tmp;
-		 tmp = tmp->next)
+		 tmp = REVEAL_PTR (tmp->next))
+        {
+	      if (__glibc_unlikely (!aligned_OK (tmp)))
+		malloc_printerr ("free(): unaligned chunk detected in tcache 2");
 	      if (tmp == e)
 		malloc_printerr ("free(): double free detected in tcache 2");
 	    /* If we get here, it was a coincidence.  We've wasted a
 	       few cycles, but don't abort.  */
+        }
 	  }
 
 	if (tcache->counts[tc_idx] < mp_.tcache_count)
@@ -4264,7 +4296,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	   add (i.e., double free).  */
 	if (__builtin_expect (old == p, 0))
 	  malloc_printerr ("double free or corruption (fasttop)");
-	p->fd = old;
+	p->fd = PROTECT_PTR (&p->fd, old);
 	*fb = p;
       }
     else
@@ -4274,7 +4306,8 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	     add (i.e., double free).  */
 	  if (__builtin_expect (old == p, 0))
 	    malloc_printerr ("double free or corruption (fasttop)");
-	  p->fd = old2 = old;
+	  old2 = old;
+	  p->fd = PROTECT_PTR (&p->fd, old);
 	}
       while ((old = catomic_compare_and_exchange_val_rel (fb, p, old2))
 	     != old2);
@@ -4472,13 +4505,17 @@ static void malloc_consolidate(mstate av)
     if (p != 0) {
       do {
 	{
+	  if (__glibc_unlikely (!aligned_OK (p)))
+	    malloc_printerr ("malloc_consolidate(): " \
+			     "unaligned fastbin chunk detected");
+
 	  unsigned int idx = fastbin_index (chunksize (p));
 	  if ((&fastbin (av, idx)) != fb)
 	    malloc_printerr ("malloc_consolidate(): invalid chunk size");
 	}
 
 	check_inuse_chunk(av, p);
-	nextp = p->fd;
+	nextp = REVEAL_PTR (p->fd);
 
 	/* Slightly streamlined version of consolidation code in free() */
 	size = chunksize (p);
@@ -4896,8 +4933,13 @@ int_mallinfo (mstate av, struct mallinfo *m)
 
   for (i = 0; i < NFASTBINS; ++i)
     {
-      for (p = fastbin (av, i); p != 0; p = p->fd)
+      for (p = fastbin (av, i);
+	   p != 0;
+	   p = REVEAL_PTR (p->fd))
         {
+	  if (__glibc_unlikely (!aligned_OK (p)))
+	    malloc_printerr ("int_mallinfo(): " \
+			     "unaligned fastbin chunk detected");
           ++nfastblocks;
           fastavail += chunksize (p);
         }
@@ -5437,8 +5479,11 @@ __malloc_info (int options, FILE *fp)
 
 	      while (p != NULL)
 		{
+		  if (__glibc_unlikely (!aligned_OK (p)))
+		    malloc_printerr ("__malloc_info(): " \
+				     "unaligned fastbin chunk detected");
 		  ++nthissize;
-		  p = p->fd;
+		  p = REVEAL_PTR (p->fd);
 		}
 
 	      fastavail += nthissize * thissize;
