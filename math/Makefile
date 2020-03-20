@@ -613,10 +613,6 @@ endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 
-# We don't want the fdlibm code to use the inline math functions,
-# only the fdlibm code.
-math-CPPFLAGS += -D__NO_MATH_INLINES
-
 ifneq ($(long-double-fcts),yes)
 # The `double' and `long double' types are the same on this machine.
 # We won't compile the `long double' code at all.  Tell the `double' code

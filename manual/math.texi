@@ -2010,12 +2010,6 @@ might have a reduced precision and/or argument range in comparison with
 the library functions.  The latter inline functions are only available
 if the flag @code{-ffast-math} is given to GNU CC.
 
-In cases where the inline functions and macros are not wanted the symbol
-@code{__NO_MATH_INLINES} should be defined before any system header is
-included.  This will ensure that only library functions are used.  Of
-course, it can be determined for each file in the project whether
-giving this option is preferable or not.
-
 Not all hardware implements the entire @w{IEEE 754} standard, and even
 if it does there may be a substantial performance penalty for using some
 of its features.  For example, enabling traps on some processors forces

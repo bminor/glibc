@@ -19,8 +19,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef HAVE_MAIN
-#undef __NO_MATH_INLINES
-#define __NO_MATH_INLINES 1
 #include <float.h>
 #include <math.h>
 #include <stdint.h>

@@ -38,11 +38,9 @@ The test drivers "test-double-<func>.c", "test-float-<func>.c", and
 double, float and long double implementation of libm.  Each driver
 selects the desired real floating type to exercise the math functions
 to test with (float, double, or long double) by defining a small set
-of macros just before including the generic "libm-test.c" file.  Each
-driver also either defines or undefines the __NO_MATH_INLINES macro
-just before including "libm-test-<func>.c" to select either the real
-or inline functions, respectively.  Each driver is compiled into a
-single executable test program with the corresponding name.
+of macros just before including the generic "libm-test.c" file. Each
+driver is compiled into a single executable test program with the
+corresponding name.
 
 As mentioned above, the "gen-libm-test.py" script looks for a file
 named "libm-test-ulps" in the platform specific sysdep directory (or
