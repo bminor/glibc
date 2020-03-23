@@ -17,14 +17,128 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <signal.h>
+#include <paths.h>
 
+#include <support/capture_subprocess.h>
+#include <support/check.h>
+#include <support/temp_file.h>
+#include <support/support.h>
+
+static char *tmpdir;
+static long int namemax;
+
+static void
+do_prepare (int argc, char *argv[])
+{
+  tmpdir = support_create_temp_directory ("tst-system-");
+  /* Include the last '/0'.  */
+  namemax = pathconf (tmpdir, _PC_NAME_MAX) + 1;
+  TEST_VERIFY_EXIT (namemax != -1);
+}
+#define PREPARE do_prepare
+
+struct args
+{
+  const char *command;
+  int exit_status;
+  int term_sig;
+  const char *path;
+};
+
+static void
+call_system (void *closure)
+{
+  struct args *args = (struct args *) closure;
+  int ret;
+
+  if (args->path != NULL)
+    TEST_COMPARE (setenv ("PATH", args->path, 1), 0);
+  ret = system (args->command);
+  if (args->term_sig == 0)
+    {
+      /* Expect regular termination.  */
+      TEST_VERIFY (WIFEXITED (ret) != 0);
+      TEST_COMPARE (WEXITSTATUS (ret), args->exit_status);
+    }
+  else
+    {
+      /* status_or_signal < 0.  Expect termination by signal.  */
+      TEST_VERIFY (WIFSIGNALED (ret) != 0);
+      TEST_COMPARE (WTERMSIG (ret), args->term_sig);
+    }
+}
 
 static int
 do_test (void)
 {
-  return system (":");
+  TEST_VERIFY (system (NULL) != 0);
+
+  {
+    char cmd[namemax];
+    memset (cmd, 'a', sizeof(cmd));
+    cmd[sizeof(cmd) - 1] = '\0';
+
+    struct support_capture_subprocess result;
+    result = support_capture_subprocess (call_system,
+					 &(struct args) {
+					   cmd, 127, 0, tmpdir
+					 });
+    support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr);
+
+    char *returnerr = xasprintf ("%s: 1: %s: not found\n",
+				 basename(_PATH_BSHELL), cmd);
+    TEST_COMPARE_STRING (result.err.buffer, returnerr);
+    free (returnerr);
+  }
+
+  {
+    char cmd[namemax + 1];
+    memset (cmd, 'a', sizeof(cmd));
+    cmd[sizeof(cmd) - 1] = '\0';
+
+    struct support_capture_subprocess result;
+    result = support_capture_subprocess (call_system,
+					 &(struct args) {
+					   cmd, 127, 0, tmpdir
+					 });
+    support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr);
+
+    char *returnerr = xasprintf ("%s: 1: %s: File name too long\n",
+				 basename(_PATH_BSHELL), cmd);
+    TEST_COMPARE_STRING (result.err.buffer, returnerr);
+    free (returnerr);
+  }
+
+  {
+    struct support_capture_subprocess result;
+    result = support_capture_subprocess (call_system,
+					 &(struct args) {
+					   "kill -USR1 $$", 0, SIGUSR1
+					 });
+    support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
+  }
+
+  {
+    struct support_capture_subprocess result;
+    result = support_capture_subprocess (call_system,
+					 &(struct args) { "echo ...", 0 });
+    support_capture_subprocess_check (&result, "system", 0, sc_allow_stdout);
+    TEST_COMPARE_STRING (result.out.buffer, "...\n");
+  }
+
+  {
+    struct support_capture_subprocess result;
+    result = support_capture_subprocess (call_system,
+					 &(struct args) { "exit 1", 1 });
+    support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
+  }
+
+  TEST_COMPARE (system (":"), 0);
+
+  return 0;
 }
 
-
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

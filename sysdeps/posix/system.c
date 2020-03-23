@@ -101,7 +101,8 @@ cancel_handler (void *arg)
 static int
 do_system (const char *line)
 {
-  int status;
+  int status = -1;
+  int ret;
   pid_t pid;
   struct sigaction sa;
 #ifndef _LIBC_REENTRANT
@@ -144,14 +145,14 @@ do_system (const char *line)
   __posix_spawnattr_setflags (&spawn_attr,
 			      POSIX_SPAWN_SETSIGDEF | POSIX_SPAWN_SETSIGMASK);
 
-  status = __posix_spawn (&pid, SHELL_PATH, 0, &spawn_attr,
-			  (char *const[]){ (char*) SHELL_NAME,
-					   (char*) "-c",
-					   (char *) line, NULL },
-			  __environ);
+  ret = __posix_spawn (&pid, SHELL_PATH, 0, &spawn_attr,
+		       (char *const[]){ (char *) SHELL_NAME,
+					(char *) "-c",
+					(char *) line, NULL },
+		       __environ);
   __posix_spawnattr_destroy (&spawn_attr);
 
-  if (status == 0)
+  if (ret == 0)
     {
       /* Cancellation results in cleanup handlers running as exceptions in
 	 the block where they were installed, so it is safe to reference
@@ -185,6 +186,9 @@ do_system (const char *line)
       __sigprocmask (SIG_SETMASK, &omask, NULL);
     }
   DO_UNLOCK ();
+
+  if (ret != 0)
+    __set_errno (ret);
 
   return status;
 }
