@@ -135,6 +135,18 @@ copy_func (char **argv)
 
 }
 
+/* Emulate the 'exit' builtin.  The exit value is optional.  */
+static int
+exit_func (char **argv)
+{
+  int exit_val = 0;
+
+  if (argv[0] != 0)
+    exit_val = atoi (argv[0]) & 0xff;
+  exit (exit_val);
+  return 0;
+}
+
 /* This is a list of all the built-in commands we understand.  */
 static struct {
   const char *name;
@@ -143,6 +155,7 @@ static struct {
   { "true", true_func },
   { "echo", echo_func },
   { "cp", copy_func },
+  { "exit", exit_func },
   { NULL, NULL }
 };
 
