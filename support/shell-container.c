@@ -147,6 +147,25 @@ exit_func (char **argv)
   return 0;
 }
 
+/* Emulate the "/bin/kill" command.  Options are ignored.  */
+static int
+kill_func (char **argv)
+{
+  int signum = SIGTERM;
+  int i;
+
+  for (i = 0; argv[i]; i++)
+    {
+      pid_t pid;
+      if (strcmp (argv[i], "$$") == 0)
+	pid = getpid ();
+      else
+	pid = atoi (argv[i]);
+      kill (pid, signum);
+    }
+  return 0;
+}
+
 /* This is a list of all the built-in commands we understand.  */
 static struct {
   const char *name;
@@ -156,6 +175,7 @@ static struct {
   { "echo", echo_func },
   { "cp", copy_func },
   { "exit", exit_func },
+  { "kill", kill_func },
   { NULL, NULL }
 };
 
@@ -263,6 +283,11 @@ run_command_array (char **argv)
       int rv = WEXITSTATUS (status);
       if (rv)
 	exit (rv);
+    }
+  else if (WIFSIGNALED (status))
+    {
+      int sig = WTERMSIG (status);
+      raise (sig);
     }
   else
     exit (1);
