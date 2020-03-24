@@ -238,7 +238,7 @@ run_command_array (char **argv)
 
       fprintf (stderr, "sh: execing %s failed: %s",
 	       argv[0], strerror (errno));
-      exit (1);
+      exit (127);
     }
 
   waitpid (pid, &status, 0);
