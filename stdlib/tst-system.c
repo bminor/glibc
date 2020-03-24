@@ -88,7 +88,8 @@ do_test (void)
 					 });
     support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr);
 
-    char *returnerr = xasprintf ("%s: 1: %s: not found\n",
+    char *returnerr = xasprintf ("%s: execing %s failed: "
+				 "No such file or directory",
 				 basename(_PATH_BSHELL), cmd);
     TEST_COMPARE_STRING (result.err.buffer, returnerr);
     free (returnerr);
@@ -106,7 +107,8 @@ do_test (void)
 					 });
     support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr);
 
-    char *returnerr = xasprintf ("%s: 1: %s: File name too long\n",
+    char *returnerr = xasprintf ("%s: execing %s failed: "
+				 "File name too long",
 				 basename(_PATH_BSHELL), cmd);
     TEST_COMPARE_STRING (result.err.buffer, returnerr);
     free (returnerr);
@@ -116,7 +118,7 @@ do_test (void)
     struct support_capture_subprocess result;
     result = support_capture_subprocess (call_system,
 					 &(struct args) {
-					   "kill -USR1 $$", 0, SIGUSR1
+					   "kill $$", 0, SIGTERM
 					 });
     support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
   }
@@ -136,7 +138,7 @@ do_test (void)
     support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
   }
 
-  TEST_COMPARE (system (":"), 0);
+  TEST_COMPARE (system (""), 0);
 
   return 0;
 }
