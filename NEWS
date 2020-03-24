@@ -25,6 +25,9 @@ Security related changes:
   corruption when they were passed a pseudo-zero argument.  Reported by Guido
   Vranken / ForAllSecure Mayhem.
 
+  CVE-2020-1751: A defect in the PowerPC backtrace function could cause an
+  out-of-bounds write when executed in a signal frame context.
+
   CVE-2020-1752: A use-after-free vulnerability in the glob function when
   expanding ~user has been fixed.
 
