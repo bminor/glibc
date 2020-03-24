@@ -77,5 +77,6 @@ libc {
   GLIBC_PRIVATE {
     # same as clock_gettime; used in other libraries
     __clock_gettime;
+    __clock_gettime64;
   }
 }
