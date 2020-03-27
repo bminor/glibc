@@ -73,7 +73,7 @@ modules.so := $(addsuffix .so, $(modules))
 ifeq (yes,$(build-shared))
 tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big tst-iconv4 bug-iconv4 \
 	tst-iconv6 bug-iconv5 bug-iconv6 tst-iconv7 bug-iconv8 bug-iconv9 \
-	bug-iconv10 bug-iconv11 bug-iconv12
+	bug-iconv10 bug-iconv11 bug-iconv12 tst-iconv-big5-hkscs-to-2ucs4
 ifeq ($(have-thread-library),yes)
 tests += bug-iconv3
 endif
@@ -275,15 +275,20 @@ endif
 endif
 endif
 
-include ../Rules
-
 ifeq ($(run-built-tests),yes)
-LOCALES := de_DE.UTF-8
+LOCALES := \
+	de_DE.UTF-8 \
+	zh_HK.BIG5-HKSCS \
+	$(NULL)
+
 include ../gen-locales.mk
 
 $(objpfx)bug-iconv6.out: $(gen-locales)
 $(objpfx)tst-iconv7.out: $(gen-locales)
+$(objpfx)tst-iconv-big5-hkscs-to-2ucs4.out: $(gen-locales)
 endif
+
+include ../Rules
 
 # Set libof-* for each routine.
 cpp-srcs-left := $(modules) $(generated-modules) $(libJIS-routines) \
@@ -340,3 +345,7 @@ tst-tables-clean:
 
 $(objpfx)gconv-modules: gconv-modules
 	cat $(sysdeps-gconv-modules) $^ > $@
+
+# Test requires BIG5HKSCS.
+$(objpfx)tst-iconv-big5-hkscs-to-2ucs4.out: $(objpfx)gconv-modules \
+			 $(addprefix $(objpfx),$(modules.so))

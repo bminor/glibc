@@ -17895,6 +17895,9 @@ static struct
 	else								      \
 	  ++inptr;							      \
       }									      \
+    else								      \
+      /* Clear the queue and proceed to output the saved character.  */	      \
+      *statep = 0;							      \
 									      \
     put32 (outptr, ch);							      \
     outptr += 4;							      \
