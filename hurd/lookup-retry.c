@@ -178,8 +178,17 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	      /* We got a successful translation.  Now apply any open-time
 		 action flags we were passed.  */
 
-	      if (!err && (flags & O_TRUNC)) /* Asked to truncate the file.  */
-		err = __file_set_size (*result, 0);
+	      if (!err && (flags & O_TRUNC))
+		{
+		  /* Asked to truncate the file.  */
+		  err = __file_set_size (*result, 0);
+		  if (!err)
+		    {
+		      struct timespec atime = { 0, UTIME_OMIT };
+		      struct timespec mtime = { 0, UTIME_NOW };
+		      __file_utimens (*result, atime, mtime);
+		    }
+		}
 
 	      if (err)
 		__mach_port_deallocate (__mach_task_self (), *result);
