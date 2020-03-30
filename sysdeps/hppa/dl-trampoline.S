@@ -31,7 +31,7 @@
    slow down __cffc when it attempts to call fixup to resolve function
    descriptor references. Please refer to gcc/gcc/config/pa/fptr.c
 
-   Enter with r19 = reloc offset, r20 = got-8, r21 = fixup ltp.  */
+   Enter with r19 = reloc offset, r20 = got-8, r21 = fixup ltp, r22 = fp.  */
 
 	/* RELOCATION MARKER: bl to provide gcc's __cffc with fixup loc. */
 	.text
@@ -61,17 +61,20 @@ _dl_runtime_resolve:
 	copy	%sp, %r1	/* Copy previous sp */
 	/* Save function result address (on entry) */
 	stwm	%r28,128(%sp)
-	/* Fillin some frame info to follow ABI */
+	/* Fill in some frame info to follow ABI */
 	stw	%r1,-4(%sp)	/* Previous sp */
 	stw	%r21,-32(%sp)	/* PIC register value */
 
 	/* Save input floating point registers. This must be done
 	   in the new frame since the previous frame doesn't have
 	   enough space */
-	ldo	-56(%sp),%r1
+	ldo	-64(%sp),%r1
 	fstd,ma	%fr4,-8(%r1)
 	fstd,ma	%fr5,-8(%r1)
 	fstd,ma	%fr6,-8(%r1)
+
+	/* Test PA_GP_RELOC bit.  */
+	bb,>=	%r19,31,2f		/* branch if not reloc offset */
 	fstd,ma	%fr7,-8(%r1)
 
 	/* Set up args to fixup func, needs only two arguments  */
@@ -79,7 +82,7 @@ _dl_runtime_resolve:
 	copy	%r19,%r25		/* (2) reloc offset  */
 
 	/* Call the real address resolver. */
-	bl	_dl_fixup,%rp
+3:	bl	_dl_fixup,%rp
 	copy	%r21,%r19		/* set fixup func ltp */
 
 	/* While the linker will set a function pointer to NULL when it
@@ -102,7 +105,7 @@ _dl_runtime_resolve:
 	copy	%r29, %r19
 
 	/* Reload arguments fp args */
-	ldo	-56(%sp),%r1
+	ldo	-64(%sp),%r1
 	fldd,ma	-8(%r1),%fr4
 	fldd,ma	-8(%r1),%fr5
 	fldd,ma	-8(%r1),%fr6
@@ -129,6 +132,25 @@ _dl_runtime_resolve:
 	bv	%r0(%rp)
 	ldo	-128(%sp),%sp
 
+2:
+	/* Set up args for _dl_fix_reloc_arg.  */
+	copy	%r22,%r26		/* (1) function pointer */
+	depi	0,31,2,%r26		/* clear least significant bits */
+	ldw	8+4(%r20),%r25		/* (2) got[1] == struct link_map */
+
+	/* Save ltp and link map arg for _dl_fixup.  */
+	stw	%r21,-56(%sp)		/* ltp */
+	stw	%r25,-60(%sp)		/* struct link map */
+
+	/* Find reloc offset. */
+	bl	_dl_fix_reloc_arg,%rp
+	copy	%r21,%r19		/* set func ltp */
+
+	/* Set up args for _dl_fixup.  */
+	ldw	-56(%sp),%r21		/* ltp */
+	ldw	-60(%sp),%r26		/* (1) struct link map */
+	b	3b
+	copy	%ret0,%r25		/* (2) reloc offset */
         .EXIT
         .PROCEND
 	cfi_endproc
@@ -153,7 +175,7 @@ _dl_runtime_profile:
 	copy	%sp, %r1	/* Copy previous sp */
 	/* Save function result address (on entry) */
 	stwm	%r28,192(%sp)
-	/* Fillin some frame info to follow ABI */
+	/* Fill in some frame info to follow ABI */
 	stw	%r1,-4(%sp)	/* Previous sp */
 	stw	%r21,-32(%sp)	/* PIC register value */
 
@@ -181,10 +203,11 @@ _dl_runtime_profile:
 	fstd,ma	%fr5,8(%r1)
 	fstd,ma	%fr6,8(%r1)
 	fstd,ma	%fr7,8(%r1)
-	/* 32-bit stack pointer and return register */
-	stw	%sp,-56(%sp)
-	stw	%r2,-52(%sp)
 
+	/* Test PA_GP_RELOC bit.  */
+	bb,>=	%r19,31,2f		/* branch if not reloc offset */
+	/* 32-bit stack pointer */
+	stw	%sp,-56(%sp)
 
 	/* Set up args to fixup func, needs five arguments  */
 	ldw	8+4(%r20),%r26		/* (1) got[1] == struct link_map */
@@ -197,7 +220,7 @@ _dl_runtime_profile:
 	stw	%r1, -52(%sp)		/* (5) long int *framesizep */
 
 	/* Call the real address resolver. */
-	bl	_dl_profile_fixup,%rp
+3:	bl	_dl_profile_fixup,%rp
 	copy	%r21,%r19		/* set fixup func ltp */
 
 	/* Load up the returned function descriptor */
@@ -215,7 +238,9 @@ _dl_runtime_profile:
 	fldd,ma	8(%r1),%fr5
 	fldd,ma	8(%r1),%fr6
 	fldd,ma	8(%r1),%fr7
-	ldw	-52(%sp),%rp
+
+	/* Reload rp register -(192+20) without adjusting stack */
+	ldw	-212(%sp),%rp
 
 	/* Reload static link register -(192+16) without adjusting stack */
 	ldw	-208(%sp),%r29
@@ -303,6 +328,33 @@ L(cont):
         ldw -20(%sp),%rp
 	/* Return */
 	bv,n	0(%r2)
+
+2:
+	/* Set up args for _dl_fix_reloc_arg.  */
+	copy	%r22,%r26		/* (1) function pointer */
+	depi	0,31,2,%r26		/* clear least significant bits */
+	ldw	8+4(%r20),%r25		/* (2) got[1] == struct link_map */
+
+	/* Save ltp and link map arg for _dl_fixup.  */
+	stw	%r21,-92(%sp)		/* ltp */
+	stw	%r25,-116(%sp)		/* struct link map */
+
+	/* Find reloc offset. */
+	bl	_dl_fix_reloc_arg,%rp
+	copy	%r21,%r19		/* set func ltp */
+
+	 /* Restore fixup ltp.  */
+	ldw	-92(%sp),%r21		/* ltp */
+
+	/* Set up args to fixup func, needs five arguments  */
+	ldw	-116(%sp),%r26		/* (1) struct link map */
+	copy	%ret0,%r25		/* (2) reloc offset  */
+	stw	%r25,-120(%sp)		/* Save reloc offset */
+	ldw	-212(%sp),%r24		/* (3) profile_fixup needs rp */
+	ldo	-56(%sp),%r23		/* (4) La_hppa_regs */
+	ldo	-112(%sp), %r1
+	b	3b
+	stw	%r1, -52(%sp)		/* (5) long int *framesizep */
         .EXIT
         .PROCEND
 	cfi_endproc
