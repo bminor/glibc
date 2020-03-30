@@ -172,8 +172,8 @@ make_fdesc (ElfW(Addr) ip, ElfW(Addr) gp)
     }
 
  install:
-  fdesc->ip = ip;
   fdesc->gp = gp;
+  fdesc->ip = ip;
 
   return (ElfW(Addr)) fdesc;
 }
@@ -350,7 +350,9 @@ ElfW(Addr)
 _dl_lookup_address (const void *address)
 {
   ElfW(Addr) addr = (ElfW(Addr)) address;
-  unsigned int *desc, *gptr;
+  ElfW(Word) reloc_arg;
+  volatile unsigned int *desc;
+  unsigned int *gptr;
 
   /* Return ADDR if the least-significant two bits of ADDR are not consistent
      with ADDR being a linker defined function pointer.  The normal value for
@@ -367,7 +369,11 @@ _dl_lookup_address (const void *address)
   if (!_dl_read_access_allowed (desc))
     return addr;
 
-  /* Load first word of candidate descriptor.  It should be a pointer
+  /* First load the relocation offset.  */
+  reloc_arg = (ElfW(Word)) desc[1];
+  atomic_full_barrier();
+
+  /* Then load first word of candidate descriptor.  It should be a pointer
      with word alignment and point to memory that can be read.  */
   gptr = (unsigned int *) desc[0];
   if (((unsigned int) gptr & 3) != 0
@@ -377,8 +383,8 @@ _dl_lookup_address (const void *address)
   /* See if descriptor requires resolution.  The following trampoline is
      used in each global offset table for function resolution:
 
-		ldw 0(r20),r22
-		bv r0(r22)
+		ldw 0(r20),r21
+		bv r0(r21)
 		ldw 4(r20),r21
      tramp:	b,l .-12,r20
 		depwi 0,31,2,r20
@@ -389,7 +395,15 @@ _dl_lookup_address (const void *address)
   if (gptr[0] == 0xea9f1fdd			/* b,l .-12,r20     */
       && gptr[1] == 0xd6801c1e			/* depwi 0,31,2,r20 */
       && (ElfW(Addr)) gptr[2] == elf_machine_resolve ())
-    _dl_fixup ((struct link_map *) gptr[5], (ElfW(Word)) desc[1]);
+    {
+      struct link_map *l = (struct link_map *) gptr[5];
+
+      /* If gp has been resolved, we need to hunt for relocation offset.  */
+      if (!(reloc_arg & PA_GP_RELOC))
+	reloc_arg = _dl_fix_reloc_arg (addr, l);
+
+      _dl_fixup (l, reloc_arg);
+    }
 
   return (ElfW(Addr)) desc[0];
 }
