@@ -371,6 +371,8 @@ asinh -0x6.e26358p-4
 asinh 0x6.c92c08p-4
 asinh 0x1p-500
 asinh 0x1p-5000
+# the next value generates larger error bounds on x86_64 (binary32)
+asinh 0xf.96c69p-8
 asinh min
 asinh -min
 asinh min_subnorm
@@ -4421,6 +4423,8 @@ cos 0x3.042d88p+0
 cos 0x1.8475e5afd4481p+0
 cos 1.57079697
 cos -1.57079697
+# the next value generates larger error bounds on x86_64 (binary32)
+cos 0x2.3c6ef4p-12
 
 cosh 0
 cosh -0
@@ -4482,6 +4486,8 @@ cosh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12
 cosh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12
 cosh -0x2.c5d37700c6bb03a6c24b6c9b494cp+12
 cosh -0x2.c5d37700c6bb03a6c24b6c9b494ep+12
+# the next value generates larger error bounds on x86_64 (binary32)
+cosh 0x5.8bfe6p+4
 
 cpow 1 0 0 0 ignore-zero-inf-sign
 cpow 2 0 10 0 ignore-zero-inf-sign
@@ -4982,6 +4988,8 @@ erfc 0x6.a8a0561d8bbe942p+4
 erfc 0x6.a8a0561d8bbe9428p+4
 erfc 0x6.a893032db905274042fb05c665dcp+4
 erfc 0x6.a893032db905274042fb05c665ep+4
+# the next value generates larger error bounds on x86_64 (binary32)
+erfc 0xd.03d06p-4
 erfc min
 erfc -min
 erfc min_subnorm
@@ -5096,6 +5104,8 @@ exp 0x3.248524p+0
 exp 0x1.f0b362p+0
 exp 0xd.89746a799ac4eedp+0
 exp -0x6.58b64p-4
+# the next value generates larger error bounds on x86_64 (binary32)
+exp 0x1.fefe02p-16
 
 exp10 0
 exp10 -0
@@ -5159,6 +5169,8 @@ exp10 0x1.34413509f79fef311f12b35816f9p+12
 exp10 0x1.34413509f79fef311f12b35816fap+12
 exp10 -0x1.343793004f503231a589bac27c39p+12
 exp10 -0x1.343793004f503231a589bac27c38p+12
+# the next value generates larger error bounds on x86_64 (binary32)
+exp10 -0xa.6f431p+0
 exp10 min
 exp10 -min
 exp10 min_subnorm
@@ -5734,6 +5746,8 @@ j0 -0x1.001000001p+593
 j0 0x1p1023
 j0 0x1p16382
 j0 0x1p16383
+# the next value generates larger error bounds on x86_64 (binary32)
+j0 0x2.602774p+0
 
 j1 -1.0
 j1 0.0
@@ -5765,6 +5779,8 @@ j1 0x1p-60
 j1 0x1p-100
 j1 0x1p-600
 j1 0x1p-10000
+# the next value generates larger error bounds on x86_64 (binary32)
+j1 0x3.ae4b2p+0
 j1 min
 j1 -min
 j1 min_subnorm
@@ -5903,6 +5919,8 @@ lgamma 0x1p-16445
 lgamma -0x1p-16445
 lgamma 0x1p-16494
 lgamma -0x1p-16494
+# the next value generates larger error bounds on x86_64 (binary32)
+lgamma -0x3.ec4298p+0
 
 # Values +/- 10ulp from overflow threshold.  (Values very close to
 # overflow threshold produce results very close of that threshold,
@@ -7205,6 +7223,8 @@ sin 0x6.287cc8749212e72p+0
 sin -0x1.02e34cp+0
 sin 0xf.f0274p+4
 sin 0x3.042d88p+0
+# the next value generates larger error bounds on x86_64 (binary32)
+sin 0x1.d12ed2p-12
 sin max
 sin -max
 sin min
@@ -8159,6 +8179,8 @@ tgamma -0xa.ccfcep+0
 tgamma -0x9.418c8p+0
 tgamma -0x6.ce9158p+0
 tgamma -0xd.cbf53d0e7d06p+0
+# the next value generates larger error bounds on x86_64 (binary32)
+tgamma -0x3.0aa534p+0
 
 y0 0.125
 y0 0.75
@@ -8185,6 +8207,8 @@ y0 0x1p-100
 y0 0x1p-110
 y0 0x1p-600
 y0 0x1p-10000
+# the next value generates larger error bounds on x86_64 (binary32)
+y0 0xd.3432bp-4
 y0 min
 y0 min_subnorm
 

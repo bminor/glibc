@@ -2201,6 +2201,31 @@ lgamma -0x1p-16494
 = lgamma tonearest binary128 -0x4p-16496 : 0x2.ca8c50440f005913a49acbd2c4e8p+12 -1 : inexact-ok
 = lgamma towardzero binary128 -0x4p-16496 : 0x2.ca8c50440f005913a49acbd2c4e6p+12 -1 : inexact-ok
 = lgamma upward binary128 -0x4p-16496 : 0x2.ca8c50440f005913a49acbd2c4e8p+12 -1 : inexact-ok
+lgamma -0x3.ec4298p+0
+= lgamma downward binary32 -0x3.ec4298p+0 : -0x7.d809fp-4 1 : inexact-ok
+= lgamma tonearest binary32 -0x3.ec4298p+0 : -0x7.d809fp-4 1 : inexact-ok
+= lgamma towardzero binary32 -0x3.ec4298p+0 : -0x7.d809e8p-4 1 : inexact-ok
+= lgamma upward binary32 -0x3.ec4298p+0 : -0x7.d809e8p-4 1 : inexact-ok
+= lgamma downward binary64 -0x3.ec4298p+0 : -0x7.d809ecd340fc4p-4 1 : inexact-ok
+= lgamma tonearest binary64 -0x3.ec4298p+0 : -0x7.d809ecd340fcp-4 1 : inexact-ok
+= lgamma towardzero binary64 -0x3.ec4298p+0 : -0x7.d809ecd340fcp-4 1 : inexact-ok
+= lgamma upward binary64 -0x3.ec4298p+0 : -0x7.d809ecd340fcp-4 1 : inexact-ok
+= lgamma downward intel96 -0x3.ec4298p+0 : -0x7.d809ecd340fc16ep-4 1 : inexact-ok
+= lgamma tonearest intel96 -0x3.ec4298p+0 : -0x7.d809ecd340fc16d8p-4 1 : inexact-ok
+= lgamma towardzero intel96 -0x3.ec4298p+0 : -0x7.d809ecd340fc16d8p-4 1 : inexact-ok
+= lgamma upward intel96 -0x3.ec4298p+0 : -0x7.d809ecd340fc16d8p-4 1 : inexact-ok
+= lgamma downward m68k96 -0x3.ec4298p+0 : -0x7.d809ecd340fc16ep-4 1 : inexact-ok
+= lgamma tonearest m68k96 -0x3.ec4298p+0 : -0x7.d809ecd340fc16d8p-4 1 : inexact-ok
+= lgamma towardzero m68k96 -0x3.ec4298p+0 : -0x7.d809ecd340fc16d8p-4 1 : inexact-ok
+= lgamma upward m68k96 -0x3.ec4298p+0 : -0x7.d809ecd340fc16d8p-4 1 : inexact-ok
+= lgamma downward binary128 -0x3.ec4298p+0 : -0x7.d809ecd340fc16da6722ad116694p-4 1 : inexact-ok
+= lgamma tonearest binary128 -0x3.ec4298p+0 : -0x7.d809ecd340fc16da6722ad116694p-4 1 : inexact-ok
+= lgamma towardzero binary128 -0x3.ec4298p+0 : -0x7.d809ecd340fc16da6722ad11669p-4 1 : inexact-ok
+= lgamma upward binary128 -0x3.ec4298p+0 : -0x7.d809ecd340fc16da6722ad11669p-4 1 : inexact-ok
+= lgamma downward ibm128 -0x3.ec4298p+0 : -0x7.d809ecd340fc16da6722ad1168p-4 1 : inexact-ok
+= lgamma tonearest ibm128 -0x3.ec4298p+0 : -0x7.d809ecd340fc16da6722ad1166p-4 1 : inexact-ok
+= lgamma towardzero ibm128 -0x3.ec4298p+0 : -0x7.d809ecd340fc16da6722ad1166p-4 1 : inexact-ok
+= lgamma upward ibm128 -0x3.ec4298p+0 : -0x7.d809ecd340fc16da6722ad1166p-4 1 : inexact-ok
 lgamma 0x3.12be0cp+120
 = lgamma downward binary32 0x3.12be0cp+120 : 0xf.ffff1p+124 1 : inexact-ok
 = lgamma tonearest binary32 0x3.12be0cp+120 : 0xf.ffff1p+124 1 : inexact-ok

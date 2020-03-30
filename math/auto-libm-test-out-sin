@@ -3118,6 +3118,31 @@ sin 0x3.042d88p+0
 = sin tonearest ibm128 0x3.042d88p+0 : 0x1.ffc6da9f1ffed895f9fa424ba9p-4 : inexact-ok
 = sin towardzero ibm128 0x3.042d88p+0 : 0x1.ffc6da9f1ffed895f9fa424ba9p-4 : inexact-ok
 = sin upward ibm128 0x3.042d88p+0 : 0x1.ffc6da9f1ffed895f9fa424ba98p-4 : inexact-ok
+sin 0x1.d12ed2p-12
+= sin downward binary32 0x1.d12ed2p-12 : 0x1.d12edp-12 : inexact-ok
+= sin tonearest binary32 0x1.d12ed2p-12 : 0x1.d12edp-12 : inexact-ok
+= sin towardzero binary32 0x1.d12ed2p-12 : 0x1.d12edp-12 : inexact-ok
+= sin upward binary32 0x1.d12ed2p-12 : 0x1.d12ed2p-12 : inexact-ok
+= sin downward binary64 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfp-12 : inexact-ok
+= sin tonearest binary64 0x1.d12ed2p-12 : 0x1.d12ed0fffffep-12 : inexact-ok
+= sin towardzero binary64 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfp-12 : inexact-ok
+= sin upward binary64 0x1.d12ed2p-12 : 0x1.d12ed0fffffep-12 : inexact-ok
+= sin downward intel96 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0ep-12 : inexact-ok
+= sin tonearest intel96 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe1p-12 : inexact-ok
+= sin towardzero intel96 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0ep-12 : inexact-ok
+= sin upward intel96 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe1p-12 : inexact-ok
+= sin downward m68k96 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0ep-12 : inexact-ok
+= sin tonearest m68k96 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe1p-12 : inexact-ok
+= sin towardzero m68k96 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0ep-12 : inexact-ok
+= sin upward m68k96 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe1p-12 : inexact-ok
+= sin downward binary128 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0f0008c8b28232p-12 : inexact-ok
+= sin tonearest binary128 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0f0008c8b28233p-12 : inexact-ok
+= sin towardzero binary128 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0f0008c8b28232p-12 : inexact-ok
+= sin upward binary128 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0f0008c8b28233p-12 : inexact-ok
+= sin downward ibm128 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0f0008c8b282p-12 : inexact-ok
+= sin tonearest ibm128 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0f0008c8b282p-12 : inexact-ok
+= sin towardzero ibm128 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0f0008c8b282p-12 : inexact-ok
+= sin upward ibm128 0x1.d12ed2p-12 : 0x1.d12ed0fffffdfe0f0008c8b2828p-12 : inexact-ok
 sin max
 = sin downward binary32 0xf.fffffp+124 : -0x8.599b4p-4 : inexact-ok
 = sin tonearest binary32 0xf.fffffp+124 : -0x8.599b3p-4 : inexact-ok

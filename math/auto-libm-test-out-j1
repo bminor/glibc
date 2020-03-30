@@ -968,6 +968,31 @@ j1 0x1p-10000
 = j1 tonearest binary128 0x1p-10000 : 0x8p-10004 : inexact-ok
 = j1 towardzero binary128 0x1p-10000 : 0x7.fffffffffffffffffffffffffffcp-10004 : inexact-ok
 = j1 upward binary128 0x1p-10000 : 0x8p-10004 : inexact-ok
+j1 0x3.ae4b2p+0
+= j1 downward binary32 0x3.ae4b2p+0 : 0xf.d085cp-8 : inexact-ok
+= j1 tonearest binary32 0x3.ae4b2p+0 : 0xf.d085cp-8 : inexact-ok
+= j1 towardzero binary32 0x3.ae4b2p+0 : 0xf.d085cp-8 : inexact-ok
+= j1 upward binary32 0x3.ae4b2p+0 : 0xf.d085dp-8 : inexact-ok
+= j1 downward binary64 0x3.ae4b2p+0 : 0xf.d085c66e86f3p-8 : inexact-ok
+= j1 tonearest binary64 0x3.ae4b2p+0 : 0xf.d085c66e86f3p-8 : inexact-ok
+= j1 towardzero binary64 0x3.ae4b2p+0 : 0xf.d085c66e86f3p-8 : inexact-ok
+= j1 upward binary64 0x3.ae4b2p+0 : 0xf.d085c66e86f38p-8 : inexact-ok
+= j1 downward intel96 0x3.ae4b2p+0 : 0xf.d085c66e86f3026p-8 : inexact-ok
+= j1 tonearest intel96 0x3.ae4b2p+0 : 0xf.d085c66e86f3026p-8 : inexact-ok
+= j1 towardzero intel96 0x3.ae4b2p+0 : 0xf.d085c66e86f3026p-8 : inexact-ok
+= j1 upward intel96 0x3.ae4b2p+0 : 0xf.d085c66e86f3027p-8 : inexact-ok
+= j1 downward m68k96 0x3.ae4b2p+0 : 0xf.d085c66e86f3026p-8 : inexact-ok
+= j1 tonearest m68k96 0x3.ae4b2p+0 : 0xf.d085c66e86f3026p-8 : inexact-ok
+= j1 towardzero m68k96 0x3.ae4b2p+0 : 0xf.d085c66e86f3026p-8 : inexact-ok
+= j1 upward m68k96 0x3.ae4b2p+0 : 0xf.d085c66e86f3027p-8 : inexact-ok
+= j1 downward binary128 0x3.ae4b2p+0 : 0xf.d085c66e86f30267f22d6f787d2p-8 : inexact-ok
+= j1 tonearest binary128 0x3.ae4b2p+0 : 0xf.d085c66e86f30267f22d6f787d2p-8 : inexact-ok
+= j1 towardzero binary128 0x3.ae4b2p+0 : 0xf.d085c66e86f30267f22d6f787d2p-8 : inexact-ok
+= j1 upward binary128 0x3.ae4b2p+0 : 0xf.d085c66e86f30267f22d6f787d28p-8 : inexact-ok
+= j1 downward ibm128 0x3.ae4b2p+0 : 0xf.d085c66e86f30267f22d6f787cp-8 : inexact-ok
+= j1 tonearest ibm128 0x3.ae4b2p+0 : 0xf.d085c66e86f30267f22d6f787cp-8 : inexact-ok
+= j1 towardzero ibm128 0x3.ae4b2p+0 : 0xf.d085c66e86f30267f22d6f787cp-8 : inexact-ok
+= j1 upward ibm128 0x3.ae4b2p+0 : 0xf.d085c66e86f30267f22d6f788p-8 : inexact-ok
 j1 min
 = j1 downward binary32 0x4p-128 : 0x1.fffff8p-128 : inexact-ok underflow errno-erange-ok
 = j1 tonearest binary32 0x4p-128 : 0x2p-128 : inexact-ok underflow errno-erange-ok

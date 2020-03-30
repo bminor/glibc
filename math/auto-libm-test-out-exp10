@@ -3620,6 +3620,31 @@ exp10 -0x1.343793004f503231a589bac27c38p+12
 = exp10 tonearest ibm128 -0x1.343793004f503231a589bac27c8p+12 : 0x0p+0 : inexact-ok underflow errno-erange
 = exp10 towardzero ibm128 -0x1.343793004f503231a589bac27c8p+12 : 0x0p+0 : xfail:ibm128-libgcc inexact-ok underflow errno-erange
 = exp10 upward ibm128 -0x1.343793004f503231a589bac27c8p+12 : 0x4p-1076 : xfail:ibm128-libgcc inexact-ok underflow errno-erange-ok
+exp10 -0xa.6f431p+0
+= exp10 downward binary32 -0xa.6f431p+0 : 0x2.86b328p-36 : inexact-ok
+= exp10 tonearest binary32 -0xa.6f431p+0 : 0x2.86b32cp-36 : inexact-ok
+= exp10 towardzero binary32 -0xa.6f431p+0 : 0x2.86b328p-36 : inexact-ok
+= exp10 upward binary32 -0xa.6f431p+0 : 0x2.86b32cp-36 : inexact-ok
+= exp10 downward binary64 -0xa.6f431p+0 : 0x2.86b32a000000cp-36 : inexact-ok
+= exp10 tonearest binary64 -0xa.6f431p+0 : 0x2.86b32a000000ep-36 : inexact-ok
+= exp10 towardzero binary64 -0xa.6f431p+0 : 0x2.86b32a000000cp-36 : inexact-ok
+= exp10 upward binary64 -0xa.6f431p+0 : 0x2.86b32a000000ep-36 : inexact-ok
+= exp10 downward intel96 -0xa.6f431p+0 : 0x2.86b32a000000da34p-36 : inexact-ok
+= exp10 tonearest intel96 -0xa.6f431p+0 : 0x2.86b32a000000da34p-36 : inexact-ok
+= exp10 towardzero intel96 -0xa.6f431p+0 : 0x2.86b32a000000da34p-36 : inexact-ok
+= exp10 upward intel96 -0xa.6f431p+0 : 0x2.86b32a000000da38p-36 : inexact-ok
+= exp10 downward m68k96 -0xa.6f431p+0 : 0x2.86b32a000000da34p-36 : inexact-ok
+= exp10 tonearest m68k96 -0xa.6f431p+0 : 0x2.86b32a000000da34p-36 : inexact-ok
+= exp10 towardzero m68k96 -0xa.6f431p+0 : 0x2.86b32a000000da34p-36 : inexact-ok
+= exp10 upward m68k96 -0xa.6f431p+0 : 0x2.86b32a000000da38p-36 : inexact-ok
+= exp10 downward binary128 -0xa.6f431p+0 : 0x2.86b32a000000da34970abbb69d3ap-36 : inexact-ok
+= exp10 tonearest binary128 -0xa.6f431p+0 : 0x2.86b32a000000da34970abbb69d3ap-36 : inexact-ok
+= exp10 towardzero binary128 -0xa.6f431p+0 : 0x2.86b32a000000da34970abbb69d3ap-36 : inexact-ok
+= exp10 upward binary128 -0xa.6f431p+0 : 0x2.86b32a000000da34970abbb69d3cp-36 : inexact-ok
+= exp10 downward ibm128 -0xa.6f431p+0 : 0x2.86b32a000000da34970abbb69dp-36 : inexact-ok
+= exp10 tonearest ibm128 -0xa.6f431p+0 : 0x2.86b32a000000da34970abbb69dp-36 : inexact-ok
+= exp10 towardzero ibm128 -0xa.6f431p+0 : 0x2.86b32a000000da34970abbb69dp-36 : inexact-ok
+= exp10 upward ibm128 -0xa.6f431p+0 : 0x2.86b32a000000da34970abbb69ep-36 : inexact-ok
 exp10 min
 = exp10 downward binary32 0x4p-128 : 0x1p+0 : inexact-ok
 = exp10 tonearest binary32 0x4p-128 : 0x1p+0 : inexact-ok

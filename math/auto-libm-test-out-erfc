@@ -2860,6 +2860,31 @@ erfc 0x6.a893032db905274042fb05c665ep+4
 = erfc tonearest ibm128 0x6.a893032db905274042fb05c664p+4 : 0x0p+0 : inexact-ok underflow errno-erange
 = erfc towardzero ibm128 0x6.a893032db905274042fb05c664p+4 : 0x0p+0 : xfail:ibm128-libgcc inexact-ok underflow errno-erange
 = erfc upward ibm128 0x6.a893032db905274042fb05c664p+4 : 0x4p-1076 : xfail:ibm128-libgcc inexact-ok underflow errno-erange-ok
+erfc 0xd.03d06p-4
+= erfc downward binary32 0xd.03d06p-4 : 0x3.fff918p-4 : inexact-ok
+= erfc tonearest binary32 0xd.03d06p-4 : 0x3.fff91cp-4 : inexact-ok
+= erfc towardzero binary32 0xd.03d06p-4 : 0x3.fff918p-4 : inexact-ok
+= erfc upward binary32 0xd.03d06p-4 : 0x3.fff91cp-4 : inexact-ok
+= erfc downward binary64 0xd.03d06p-4 : 0x3.fff91a7d782bp-4 : inexact-ok
+= erfc tonearest binary64 0xd.03d06p-4 : 0x3.fff91a7d782bp-4 : inexact-ok
+= erfc towardzero binary64 0xd.03d06p-4 : 0x3.fff91a7d782bp-4 : inexact-ok
+= erfc upward binary64 0xd.03d06p-4 : 0x3.fff91a7d782b2p-4 : inexact-ok
+= erfc downward intel96 0xd.03d06p-4 : 0x3.fff91a7d782b0064p-4 : inexact-ok
+= erfc tonearest intel96 0xd.03d06p-4 : 0x3.fff91a7d782b0064p-4 : inexact-ok
+= erfc towardzero intel96 0xd.03d06p-4 : 0x3.fff91a7d782b0064p-4 : inexact-ok
+= erfc upward intel96 0xd.03d06p-4 : 0x3.fff91a7d782b0068p-4 : inexact-ok
+= erfc downward m68k96 0xd.03d06p-4 : 0x3.fff91a7d782b0064p-4 : inexact-ok
+= erfc tonearest m68k96 0xd.03d06p-4 : 0x3.fff91a7d782b0064p-4 : inexact-ok
+= erfc towardzero m68k96 0xd.03d06p-4 : 0x3.fff91a7d782b0064p-4 : inexact-ok
+= erfc upward m68k96 0xd.03d06p-4 : 0x3.fff91a7d782b0068p-4 : inexact-ok
+= erfc downward binary128 0xd.03d06p-4 : 0x3.fff91a7d782b006458655c2be87cp-4 : inexact-ok
+= erfc tonearest binary128 0xd.03d06p-4 : 0x3.fff91a7d782b006458655c2be87cp-4 : inexact-ok
+= erfc towardzero binary128 0xd.03d06p-4 : 0x3.fff91a7d782b006458655c2be87cp-4 : inexact-ok
+= erfc upward binary128 0xd.03d06p-4 : 0x3.fff91a7d782b006458655c2be87ep-4 : inexact-ok
+= erfc downward ibm128 0xd.03d06p-4 : 0x3.fff91a7d782b006458655c2be8p-4 : inexact-ok
+= erfc tonearest ibm128 0xd.03d06p-4 : 0x3.fff91a7d782b006458655c2be8p-4 : inexact-ok
+= erfc towardzero ibm128 0xd.03d06p-4 : 0x3.fff91a7d782b006458655c2be8p-4 : inexact-ok
+= erfc upward ibm128 0xd.03d06p-4 : 0x3.fff91a7d782b006458655c2be9p-4 : inexact-ok
 erfc min
 = erfc downward binary32 0x4p-128 : 0xf.fffffp-4 : inexact-ok
 = erfc tonearest binary32 0x4p-128 : 0x1p+0 : inexact-ok

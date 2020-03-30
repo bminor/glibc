@@ -2506,6 +2506,31 @@ asinh 0x1p-5000
 = asinh tonearest binary128 0x1p-5000 : 0x1p-5000 : inexact-ok
 = asinh towardzero binary128 0x1p-5000 : 0xf.fffffffffffffffffffffffffff8p-5004 : inexact-ok
 = asinh upward binary128 0x1p-5000 : 0x1p-5000 : inexact-ok
+asinh 0xf.96c69p-8
+= asinh downward binary32 0xf.96c69p-8 : 0xf.94503p-8 : inexact-ok
+= asinh tonearest binary32 0xf.96c69p-8 : 0xf.94504p-8 : inexact-ok
+= asinh towardzero binary32 0xf.96c69p-8 : 0xf.94503p-8 : inexact-ok
+= asinh upward binary32 0xf.96c69p-8 : 0xf.94504p-8 : inexact-ok
+= asinh downward binary64 0xf.96c69p-8 : 0xf.94503821fcc68p-8 : inexact-ok
+= asinh tonearest binary64 0xf.96c69p-8 : 0xf.94503821fcc68p-8 : inexact-ok
+= asinh towardzero binary64 0xf.96c69p-8 : 0xf.94503821fcc68p-8 : inexact-ok
+= asinh upward binary64 0xf.96c69p-8 : 0xf.94503821fcc7p-8 : inexact-ok
+= asinh downward intel96 0xf.96c69p-8 : 0xf.94503821fcc6aeap-8 : inexact-ok
+= asinh tonearest intel96 0xf.96c69p-8 : 0xf.94503821fcc6aebp-8 : inexact-ok
+= asinh towardzero intel96 0xf.96c69p-8 : 0xf.94503821fcc6aeap-8 : inexact-ok
+= asinh upward intel96 0xf.96c69p-8 : 0xf.94503821fcc6aebp-8 : inexact-ok
+= asinh downward m68k96 0xf.96c69p-8 : 0xf.94503821fcc6aeap-8 : inexact-ok
+= asinh tonearest m68k96 0xf.96c69p-8 : 0xf.94503821fcc6aebp-8 : inexact-ok
+= asinh towardzero m68k96 0xf.96c69p-8 : 0xf.94503821fcc6aeap-8 : inexact-ok
+= asinh upward m68k96 0xf.96c69p-8 : 0xf.94503821fcc6aebp-8 : inexact-ok
+= asinh downward binary128 0xf.96c69p-8 : 0xf.94503821fcc6aead1cad28d4935p-8 : inexact-ok
+= asinh tonearest binary128 0xf.96c69p-8 : 0xf.94503821fcc6aead1cad28d4935p-8 : inexact-ok
+= asinh towardzero binary128 0xf.96c69p-8 : 0xf.94503821fcc6aead1cad28d4935p-8 : inexact-ok
+= asinh upward binary128 0xf.96c69p-8 : 0xf.94503821fcc6aead1cad28d49358p-8 : inexact-ok
+= asinh downward ibm128 0xf.96c69p-8 : 0xf.94503821fcc6aead1cad28d49p-8 : inexact-ok
+= asinh tonearest ibm128 0xf.96c69p-8 : 0xf.94503821fcc6aead1cad28d494p-8 : inexact-ok
+= asinh towardzero ibm128 0xf.96c69p-8 : 0xf.94503821fcc6aead1cad28d49p-8 : inexact-ok
+= asinh upward ibm128 0xf.96c69p-8 : 0xf.94503821fcc6aead1cad28d494p-8 : inexact-ok
 asinh min
 = asinh downward binary32 0x4p-128 : 0x3.fffff8p-128 : inexact-ok underflow-ok errno-erange-ok
 = asinh tonearest binary32 0x4p-128 : 0x4p-128 : inexact-ok underflow-ok errno-erange-ok

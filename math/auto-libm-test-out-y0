@@ -795,6 +795,31 @@ y0 0x1p-10000
 = y0 tonearest binary128 0x1p-10000 : -0x1.13cc92aab9d385d1d0f2693cb631p+12 : inexact-ok
 = y0 towardzero binary128 0x1p-10000 : -0x1.13cc92aab9d385d1d0f2693cb631p+12 : inexact-ok
 = y0 upward binary128 0x1p-10000 : -0x1.13cc92aab9d385d1d0f2693cb631p+12 : inexact-ok
+y0 0xd.3432bp-4
+= y0 downward binary32 0xd.3432bp-4 : -0xf.fdd88p-8 : inexact-ok
+= y0 tonearest binary32 0xd.3432bp-4 : -0xf.fdd87p-8 : inexact-ok
+= y0 towardzero binary32 0xd.3432bp-4 : -0xf.fdd87p-8 : inexact-ok
+= y0 upward binary32 0xd.3432bp-4 : -0xf.fdd87p-8 : inexact-ok
+= y0 downward binary64 0xd.3432bp-4 : -0xf.fdd871793bc78p-8 : inexact-ok
+= y0 tonearest binary64 0xd.3432bp-4 : -0xf.fdd871793bc7p-8 : inexact-ok
+= y0 towardzero binary64 0xd.3432bp-4 : -0xf.fdd871793bc7p-8 : inexact-ok
+= y0 upward binary64 0xd.3432bp-4 : -0xf.fdd871793bc7p-8 : inexact-ok
+= y0 downward intel96 0xd.3432bp-4 : -0xf.fdd871793bc71fap-8 : inexact-ok
+= y0 tonearest intel96 0xd.3432bp-4 : -0xf.fdd871793bc71f9p-8 : inexact-ok
+= y0 towardzero intel96 0xd.3432bp-4 : -0xf.fdd871793bc71f9p-8 : inexact-ok
+= y0 upward intel96 0xd.3432bp-4 : -0xf.fdd871793bc71f9p-8 : inexact-ok
+= y0 downward m68k96 0xd.3432bp-4 : -0xf.fdd871793bc71fap-8 : inexact-ok
+= y0 tonearest m68k96 0xd.3432bp-4 : -0xf.fdd871793bc71f9p-8 : inexact-ok
+= y0 towardzero m68k96 0xd.3432bp-4 : -0xf.fdd871793bc71f9p-8 : inexact-ok
+= y0 upward m68k96 0xd.3432bp-4 : -0xf.fdd871793bc71f9p-8 : inexact-ok
+= y0 downward binary128 0xd.3432bp-4 : -0xf.fdd871793bc71f92d6b137b44118p-8 : inexact-ok
+= y0 tonearest binary128 0xd.3432bp-4 : -0xf.fdd871793bc71f92d6b137b44118p-8 : inexact-ok
+= y0 towardzero binary128 0xd.3432bp-4 : -0xf.fdd871793bc71f92d6b137b4411p-8 : inexact-ok
+= y0 upward binary128 0xd.3432bp-4 : -0xf.fdd871793bc71f92d6b137b4411p-8 : inexact-ok
+= y0 downward ibm128 0xd.3432bp-4 : -0xf.fdd871793bc71f92d6b137b444p-8 : inexact-ok
+= y0 tonearest ibm128 0xd.3432bp-4 : -0xf.fdd871793bc71f92d6b137b44p-8 : inexact-ok
+= y0 towardzero ibm128 0xd.3432bp-4 : -0xf.fdd871793bc71f92d6b137b44p-8 : inexact-ok
+= y0 upward ibm128 0xd.3432bp-4 : -0xf.fdd871793bc71f92d6b137b44p-8 : inexact-ok
 y0 min
 = y0 downward binary32 0x4p-128 : -0x3.7ac89cp+4 : inexact-ok
 = y0 tonearest binary32 0x4p-128 : -0x3.7ac89cp+4 : inexact-ok
