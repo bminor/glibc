@@ -125,6 +125,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 .globl _dl_start_user							\n\
 .type _dl_start_user, %function						\n\
 _start:									\n\
+	// bti c							\n\
+	hint	34							\n\
 	mov	" PTR "0, " PTR_SP "					\n\
 	bl	_dl_start						\n\
 	// returns user entry point in x0				\n\
@@ -178,7 +180,8 @@ _dl_start_user:								\n\
 	adrp	x0, _dl_fini						\n\
 	add	" PTR "0, " PTR "0, #:lo12:_dl_fini			\n\
 	// jump to the user_s entry point				\n\
-	br      x21							\n\
+	mov     x16, x21						\n\
+	br      x16							\n\
 ");
 
 #define elf_machine_type_class(type)					\
