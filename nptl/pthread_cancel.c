@@ -53,7 +53,7 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
   /* Set the return value.  */
   THREAD_SETMEM (self, result, PTHREAD_CANCELED);
   /* Make sure asynchronous cancellation is still enabled.  */
-  if ((ch & CANCELTYPE_BITMASK) != 0)
+  if (self->canceltype == PTHREAD_CANCEL_ASYNCHRONOUS)
     __do_cancel ();
 }
 
@@ -104,8 +104,8 @@ __pthread_cancel (pthread_t th)
 #endif
 
       THREAD_SETMEM (pd, result, PTHREAD_CANCELED);
-      if ((oldch & CANCELSTATE_BITMASK) == 0
-	  && (oldch & CANCELTYPE_BITMASK) != 0)
+      if (pd->cancelstate == PTHREAD_CANCEL_ENABLE
+	  && pd->canceltype == PTHREAD_CANCEL_ASYNCHRONOUS)
 	__do_cancel ();
       return 0;
     }

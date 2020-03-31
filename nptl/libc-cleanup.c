@@ -27,27 +27,9 @@ __libc_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer)
 
   buffer->__prev = THREAD_GETMEM (self, cleanup);
 
-  int cancelhandling = THREAD_GETMEM (self, cancelhandling);
-
   /* Disable asynchronous cancellation for now.  */
-  if (__glibc_unlikely (cancelhandling & CANCELTYPE_BITMASK))
-    while (1)
-      {
-	int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
-						cancelhandling
-						& ~CANCELTYPE_BITMASK,
-						cancelhandling);
-	if (__glibc_likely (curval == cancelhandling))
-	  /* Successfully replaced the value.  */
-	  break;
-
-	/* Prepare for the next round.  */
-	cancelhandling = curval;
-      }
-
-  buffer->__canceltype = (cancelhandling & CANCELTYPE_BITMASK
-			  ? PTHREAD_CANCEL_ASYNCHRONOUS
-			  : PTHREAD_CANCEL_DEFERRED);
+  buffer->__canceltype = THREAD_GETMEM (self, canceltype);
+  THREAD_SETMEM (self, canceltype, PTHREAD_CANCEL_DEFERRED);
 
   THREAD_SETMEM (self, cleanup, buffer);
 }
@@ -60,26 +42,8 @@ __libc_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer)
 
   THREAD_SETMEM (self, cleanup, buffer->__prev);
 
-  int cancelhandling;
-  if (__builtin_expect (buffer->__canceltype != PTHREAD_CANCEL_DEFERRED, 0)
-      && ((cancelhandling = THREAD_GETMEM (self, cancelhandling))
-	  & CANCELTYPE_BITMASK) == 0)
-    {
-      while (1)
-	{
-	  int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
-						  cancelhandling
-						  | CANCELTYPE_BITMASK,
-						  cancelhandling);
-	  if (__glibc_likely (curval == cancelhandling))
-	    /* Successfully replaced the value.  */
-	    break;
-
-	  /* Prepare for the next round.  */
-	  cancelhandling = curval;
-	}
-
+  THREAD_SETMEM (self, canceltype, buffer->__canceltype);
+  if (buffer->__canceltype == PTHREAD_CANCEL_ASYNCHRONOUS)
       __pthread_testcancel ();
-    }
 }
 libc_hidden_def (__libc_cleanup_pop_restore)

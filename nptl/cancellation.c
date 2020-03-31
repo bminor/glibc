@@ -31,31 +31,19 @@ int
 __pthread_enable_asynccancel (void)
 {
   struct pthread *self = THREAD_SELF;
-  int oldval = THREAD_GETMEM (self, cancelhandling);
 
-  while (1)
+  int oldval = THREAD_GETMEM (self, canceltype);
+  THREAD_SETMEM (self, canceltype, PTHREAD_CANCEL_ASYNCHRONOUS);
+
+  int ch = THREAD_GETMEM (self, cancelhandling);
+
+  if (self->cancelstate == PTHREAD_CANCEL_ENABLE
+      && (ch & CANCELED_BITMASK)
+      && !(ch & EXITING_BITMASK)
+      && !(ch & TERMINATED_BITMASK))
     {
-      int newval = oldval | CANCELTYPE_BITMASK;
-
-      if (newval == oldval)
-	break;
-
-      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
-					      oldval);
-      if (__glibc_likely (curval == oldval))
-	{
-	  if (self->cancelstate == PTHREAD_CANCEL_ENABLE
-	      && CANCEL_CANCELED_AND_ASYNCHRONOUS (newval))
-	    {
-	      THREAD_SETMEM (self, result, PTHREAD_CANCELED);
-	      __do_cancel ();
-	    }
-
-	  break;
-	}
-
-      /* Prepare the next round.  */
-      oldval = curval;
+      THREAD_SETMEM (self, result, PTHREAD_CANCELED);
+      __do_cancel ();
     }
 
   return oldval;
@@ -69,25 +57,10 @@ __pthread_disable_asynccancel (int oldtype)
 {
   /* If asynchronous cancellation was enabled before we do not have
      anything to do.  */
-  if (oldtype & CANCELTYPE_BITMASK)
+  if (oldtype == PTHREAD_CANCEL_ASYNCHRONOUS)
     return;
 
   struct pthread *self = THREAD_SELF;
-  int newval;
-
-  int oldval = THREAD_GETMEM (self, cancelhandling);
-
-  while (1)
-    {
-      newval = oldval & ~CANCELTYPE_BITMASK;
-
-      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
-					      oldval);
-      if (__glibc_likely (curval == oldval))
-	break;
-
-      /* Prepare the next round.  */
-      oldval = curval;
-    }
+  self->canceltype = PTHREAD_CANCEL_DEFERRED;
 }
 libc_hidden_def (__pthread_disable_asynccancel)

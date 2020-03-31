@@ -96,4 +96,5 @@ __tls_init_tp (void)
   THREAD_SETMEM (pd, stackblock_size, (size_t) __libc_stack_end);
 
   THREAD_SETMEM (pd, cancelstate, PTHREAD_CANCEL_ENABLE);
+  THREAD_SETMEM (pd, canceltype, PTHREAD_CANCEL_DEFERRED);
 }
