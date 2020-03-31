@@ -92,7 +92,7 @@ ___pthread_unregister_cancel_restore (__pthread_unwind_buf_t *buf)
 	  cancelhandling = curval;
 	}
 
-      CANCELLATION_P (self);
+      __pthread_testcancel ();
     }
 }
 versioned_symbol (libc, ___pthread_unregister_cancel_restore,

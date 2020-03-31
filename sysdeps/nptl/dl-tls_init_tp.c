@@ -94,4 +94,6 @@ __tls_init_tp (void)
      It will be bigger than it actually is, but for unwind.c/pt-longjmp.c
      purposes this is good enough.  */
   THREAD_SETMEM (pd, stackblock_size, (size_t) __libc_stack_end);
+
+  THREAD_SETMEM (pd, cancelstate, PTHREAD_CANCEL_ENABLE);
 }

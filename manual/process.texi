@@ -68,7 +68,7 @@ until the subprogram terminates before you can do anything else.
 @c   CLEANUP_HANDLER @ascuplugin @ascuheap @acsmem
 @c    libc_cleanup_region_start @ascuplugin @ascuheap @acsmem
 @c     pthread_cleanup_push_defer @ascuplugin @ascuheap @acsmem
-@c      CANCELLATION_P @ascuplugin @ascuheap @acsmem
+@c      __pthread_testcancel @ascuplugin @ascuheap @acsmem
 @c       CANCEL_ENABLED_AND_CANCELED ok
 @c       do_cancel @ascuplugin @ascuheap @acsmem
 @c    cancel_handler ok
@@ -86,7 +86,6 @@ until the subprogram terminates before you can do anything else.
 @c  SINGLE_THREAD_P ok
 @c  LIBC_CANCEL_ASYNC @ascuplugin @ascuheap @acsmem
 @c   libc_enable_asynccancel @ascuplugin @ascuheap @acsmem
-@c    CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS dup ok
 @c    do_cancel dup @ascuplugin @ascuheap @acsmem
 @c  LIBC_CANCEL_RESET ok
 @c   libc_disable_asynccancel ok

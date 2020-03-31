@@ -245,18 +245,6 @@ libc_hidden_proto (__pthread_current_priority)
 #define INVALID_TD_P(pd) __builtin_expect ((pd)->tid <= 0, 0)
 #define INVALID_NOT_TERMINATED_TD_P(pd) __builtin_expect ((pd)->tid < 0, 0)
 
-/* Cancellation test.  */
-#define CANCELLATION_P(self) \
-  do {									      \
-    int cancelhandling = THREAD_GETMEM (self, cancelhandling);		      \
-    if (CANCEL_ENABLED_AND_CANCELED (cancelhandling))			      \
-      {									      \
-	THREAD_SETMEM (self, result, PTHREAD_CANCELED);			      \
-	__do_cancel ();							      \
-      }									      \
-  } while (0)
-
-
 extern void __pthread_unwind (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute __attribute ((__noreturn__))
 #if !defined SHARED && !IS_IN (libpthread)

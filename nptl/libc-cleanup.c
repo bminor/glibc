@@ -79,7 +79,7 @@ __libc_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer)
 	  cancelhandling = curval;
 	}
 
-      CANCELLATION_P (self);
+      __pthread_testcancel ();
     }
 }
 libc_hidden_def (__libc_cleanup_pop_restore)

@@ -53,7 +53,8 @@ __pthread_setcanceltype (int type, int *oldtype)
 					      oldval);
       if (__glibc_likely (curval == oldval))
 	{
-	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
+	  if (self->cancelstate == PTHREAD_CANCEL_ENABLE
+	      && CANCEL_CANCELED_AND_ASYNCHRONOUS (newval))
 	    {
 	      THREAD_SETMEM (self, result, PTHREAD_CANCELED);
 	      __do_cancel ();

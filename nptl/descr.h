@@ -277,9 +277,6 @@ struct pthread
 
   /* Flags determining processing of cancellation.  */
   int cancelhandling;
-  /* Bit set if cancellation is disabled.  */
-#define CANCELSTATE_BIT		0
-#define CANCELSTATE_BITMASK	(0x01 << CANCELSTATE_BIT)
   /* Bit set if asynchronous cancellation mode is selected.  */
 #define CANCELTYPE_BIT		1
 #define CANCELTYPE_BITMASK	(0x01 << CANCELTYPE_BIT)
@@ -298,11 +295,8 @@ struct pthread
   /* Mask for the rest.  Helps the compiler to optimize.  */
 #define CANCEL_RESTMASK		0xffffff80
 
-#define CANCEL_ENABLED_AND_CANCELED(value) \
-  (((value) & (CANCELSTATE_BITMASK | CANCELED_BITMASK | EXITING_BITMASK	      \
-	       | CANCEL_RESTMASK | TERMINATED_BITMASK)) == CANCELED_BITMASK)
-#define CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS(value) \
-  (((value) & (CANCELSTATE_BITMASK | CANCELTYPE_BITMASK | CANCELED_BITMASK    \
+#define CANCEL_CANCELED_AND_ASYNCHRONOUS(value) \
+  (((value) & (CANCELTYPE_BITMASK | CANCELED_BITMASK    \
 	       | EXITING_BITMASK | CANCEL_RESTMASK | TERMINATED_BITMASK))     \
    == (CANCELTYPE_BITMASK | CANCELED_BITMASK))
 
@@ -403,6 +397,10 @@ struct pthread
 
   /* Indicates whether is a C11 thread created by thrd_creat.  */
   bool c11;
+
+  /* Thread cancel state (PTHREAD_CANCEL_ENABLE or
+     PTHREAD_CANCEL_DISABLE).  */
+  unsigned char cancelstate;
 
   /* Used on strsignal.  */
   struct tls_internal_t tls_state;

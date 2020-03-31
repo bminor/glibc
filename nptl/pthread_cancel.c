@@ -45,7 +45,7 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 
   int ch = atomic_load_relaxed (&self->cancelhandling);
   /* Cancelation not enabled, not cancelled, or already exitting.  */
-  if ((ch & CANCELSTATE_BITMASK) != 0
+  if (self->cancelstate == PTHREAD_CANCEL_DISABLE
       || (ch & CANCELED_BITMASK) == 0
       || (ch & EXITING_BITMASK) != 0)
     return;

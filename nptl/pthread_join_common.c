@@ -59,7 +59,10 @@ __pthread_clockjoin_ex (pthread_t threadid, void **thread_return,
 	   && (pd->cancelhandling
 	       & (CANCELED_BITMASK | EXITING_BITMASK
 		  | TERMINATED_BITMASK)) == 0))
-      && !CANCEL_ENABLED_AND_CANCELED (self->cancelhandling))
+      && !(self->cancelstate == PTHREAD_CANCEL_ENABLE
+	   && (pd->cancelhandling & (CANCELED_BITMASK | EXITING_BITMASK
+				     | TERMINATED_BITMASK))
+	       == CANCELED_BITMASK))
     /* This is a deadlock situation.  The threads are waiting for each
        other to finish.  Note that this is a "may" error.  To be 100%
        sure we catch this error we would have to lock the data

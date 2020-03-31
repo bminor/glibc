@@ -160,6 +160,7 @@ get_cached_stack (size_t *sizep, void **memp)
 
   /* Cancellation handling is back to the default.  */
   result->cancelhandling = 0;
+  result->cancelstate = PTHREAD_CANCEL_ENABLE;
   result->cleanup = NULL;
   result->setup_failed = 0;
 
