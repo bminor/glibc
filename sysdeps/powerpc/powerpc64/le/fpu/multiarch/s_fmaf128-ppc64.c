@@ -18,6 +18,8 @@
 
 #undef weak_alias
 #define weak_alias(a, b)
+#undef strong_alias
+#define strong_alias(a, b)
 
 #define __fmaf128 __fmaf128_ppc64
 
