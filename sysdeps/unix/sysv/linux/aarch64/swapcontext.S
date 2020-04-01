@@ -28,8 +28,12 @@
 	.text
 ENTRY(__swapcontext)
 	DELOUSE (0)
-	/* Set the value returned when swapcontext() returns in this context. */
-	str	xzr,      [x0, oX0 +  0 * SZREG]
+	/* Set the value returned when swapcontext() returns in this context.
+	   And set up x1 to become the return address of the caller, so we
+	   can return there with a normal RET instead of an indirect jump.  */
+	stp	xzr, x30, [x0, oX0 +  0 * SZREG]
+	/* Arrange the oucp context to return to 2f.  */
+	adr	x30, 2f
 
 	stp	x18, x19, [x0, oX0 + 18 * SZREG]
 	stp	x20, x21, [x0, oX0 + 20 * SZREG]
@@ -97,5 +101,11 @@ ENTRY(__swapcontext)
 
 1:
 	b	C_SYMBOL_NAME(__syscall_error)
+2:
+	/* The oucp context is restored here via an indirect branch,
+	   x1 must be restored too which has the real return address.  */
+	BTI_J
+	mov	x30, x1
+	RET
 PSEUDO_END (__swapcontext)
 weak_alias (__swapcontext, swapcontext)
