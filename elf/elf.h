@@ -1319,6 +1319,12 @@ typedef struct
 /* Application-specific semantics, hi */
 #define GNU_PROPERTY_HIUSER			0xffffffff
 
+/* AArch64 specific GNU properties.  */
+#define GNU_PROPERTY_AARCH64_FEATURE_1_AND	0xc0000000
+
+#define GNU_PROPERTY_AARCH64_FEATURE_1_BTI	(1U << 0)
+#define GNU_PROPERTY_AARCH64_FEATURE_1_PAC	(1U << 1)
+
 /* The x86 instruction sets indicated by the corresponding bits are
    used in program.  Their support in the hardware is optional.  */
 #define GNU_PROPERTY_X86_ISA_1_USED		0xc0000000
