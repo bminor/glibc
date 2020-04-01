@@ -53,6 +53,8 @@ offset	length	contents
    identify the earliest release of that OS that supports this ABI.
    See abi-tags (top level) for details. */
 
+#include <link.h>
+#include <stdint.h>
 #include <config.h>
 #include <abi-tag.h>		/* OS-specific ABI tag value */
 
@@ -60,13 +62,16 @@ offset	length	contents
    name begins with `.note' and creates a PT_NOTE program header entry
    pointing at it. */
 
-	.section ".note.ABI-tag", "a"
-	.p2align 2
-	.long 1f - 0f		/* name length */
-	.long 3f - 2f		/* data length */
-	.long  1		/* note type */
-0:	.asciz "GNU"		/* vendor name */
-1:	.p2align 2
-2:	.long __ABI_TAG_OS	/* note data: the ABI tag */
-	.long __ABI_TAG_VERSION
-3:	.p2align 2		/* pad out section */
+__attribute__ ((used, aligned (4), section (".note.ABI-tag")))
+static const struct
+{
+  ElfW(Nhdr) nhdr;
+  char name[4];
+  int32_t desc[4];
+} __abi_tag = {
+  { .n_namesz = sizeof __abi_tag.name,
+    .n_descsz = sizeof __abi_tag.desc,
+    .n_type = 1 },
+  "GNU",
+  { __ABI_TAG_OS, __ABI_TAG_VERSION }
+};
