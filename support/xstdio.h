@@ -27,7 +27,10 @@ __BEGIN_DECLS
 FILE *xfopen (const char *path, const char *mode);
 void xfclose (FILE *);
 
-ssize_t xgetline (char **lineptr, size_t *n, FILE *stream);
+/* Read a line from FP, using getline.  *BUFFER must be NULL, or a
+   heap-allocated pointer of *LENGTH bytes.  Return the number of
+   bytes in the line if a line was read, or 0 on EOF.  */
+size_t xgetline (char **lineptr, size_t *n, FILE *stream);
 
 __END_DECLS
 

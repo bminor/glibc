@@ -18,16 +18,22 @@
 
 #include <support/xstdio.h>
 #include <support/check.h>
-#include <errno.h>
 
-ssize_t
+size_t
 xgetline (char **lineptr, size_t *n, FILE *stream)
 {
-  int old_errno = errno;
-  errno = 0;
-  size_t ret = getline (lineptr, n, stream);
-  if (!feof (stream) && ferror (stream))
-    FAIL_EXIT1 ("getline failed: %m");
-  errno = old_errno;
+  TEST_VERIFY (!ferror (stream));
+  ssize_t ret = getline (lineptr, n, stream);
+  if (ferror (stream))
+    {
+      TEST_VERIFY (ret < 0);
+      FAIL_EXIT1 ("getline: %m");
+    }
+  if (feof (stream))
+    {
+      TEST_VERIFY (ret <= 0);
+      return 0;
+    }
+  TEST_VERIFY (ret > 0);
   return ret;
 }

@@ -59,7 +59,7 @@ support_process_state_wait (pid_t pid, enum support_process_state state)
   for (;;)
     {
       char cur_state = -1;
-      while (xgetline (&line, &linesiz, fstatus) != -1)
+      while (xgetline (&line, &linesiz, fstatus) > 0)
 	if (strncmp (line, "State:", strlen ("State:")) == 0)
 	  {
 	    TEST_COMPARE (sscanf (line, "%*s %c", &cur_state), 1);
