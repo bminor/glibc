@@ -45,6 +45,7 @@
 #include <stap-probe.h>
 #include <stackinfo.h>
 #include <not-cancel.h>
+#include <array_length.h>
 
 #include <assert.h>
 
@@ -109,8 +110,53 @@ static void print_missing_version (int errcode, const char *objname,
 /* Print the various times we collected.  */
 static void print_statistics (const hp_timing_t *total_timep);
 
-/* Add audit objects.  */
-static void process_dl_audit (char *str);
+/* Length limits for names and paths, to protect the dynamic linker,
+   particularly when __libc_enable_secure is active.  */
+#ifdef NAME_MAX
+# define SECURE_NAME_LIMIT NAME_MAX
+#else
+# define SECURE_NAME_LIMIT 255
+#endif
+#ifdef PATH_MAX
+# define SECURE_PATH_LIMIT PATH_MAX
+#else
+# define SECURE_PATH_LIMIT 1024
+#endif
+
+/* Strings containing colon-separated lists of audit modules.  */
+struct audit_list
+{
+  /* Array of strings containing colon-separated path lists.  Each
+     audit module needs its own namespace, so pre-allocate the largest
+     possible list.  */
+  const char *audit_strings[DL_NNS];
+
+  /* Number of entries added to audit_strings.  */
+  size_t length;
+
+  /* Index into the audit_strings array (for the iteration phase).  */
+  size_t current_index;
+
+  /* Tail of audit_strings[current_index] which still needs
+     processing.  */
+  const char *current_tail;
+
+  /* Scratch buffer for returning a name which is part of the strings
+     in audit_strings.  */
+  char fname[SECURE_NAME_LIMIT];
+};
+
+/* Creates an empty audit list.  */
+static void audit_list_init (struct audit_list *);
+
+/* Add a string to the end of the audit list, for later parsing.  Must
+   not be called after audit_list_next.  */
+static void audit_list_add_string (struct audit_list *, const char *);
+
+/* Extract the next audit module from the audit list.  Only modules
+   for which dso_name_valid_for_suid is true are returned.  Must be
+   called after all the audit_list_add_string calls.  */
+static const char *audit_list_next (struct audit_list *);
 
 /* This is a list of all the modes the dynamic loader can be in.  */
 enum mode { normal, list, verify, trace };
@@ -118,7 +164,7 @@ enum mode { normal, list, verify, trace };
 /* Process all environments variables the dynamic linker must recognize.
    Since all of them start with `LD_' we are a bit smarter while finding
    all the entries.  */
-static void process_envvars (enum mode *modep);
+static void process_envvars (enum mode *modep, struct audit_list *);
 
 #ifdef DL_ARGV_NOT_RELRO
 int _dl_argc attribute_hidden;
@@ -146,19 +192,6 @@ uintptr_t __pointer_chk_guard_local
 strong_alias (__pointer_chk_guard_local, __pointer_chk_guard)
 #endif
 
-/* Length limits for names and paths, to protect the dynamic linker,
-   particularly when __libc_enable_secure is active.  */
-#ifdef NAME_MAX
-# define SECURE_NAME_LIMIT NAME_MAX
-#else
-# define SECURE_NAME_LIMIT 255
-#endif
-#ifdef PATH_MAX
-# define SECURE_PATH_LIMIT PATH_MAX
-#else
-# define SECURE_PATH_LIMIT 1024
-#endif
-
 /* Check that AT_SECURE=0, or that the passed name does not contain
    directories and is not overly long.  Reject empty names
    unconditionally.  */
@@ -176,89 +209,75 @@ dso_name_valid_for_suid (const char *p)
   return *p != '\0';
 }
 
-/* LD_AUDIT variable contents.  Must be processed before the
-   audit_list below.  */
-const char *audit_list_string;
-
-/* Cyclic list of auditing DSOs.  audit_list->next is the first
-   element.  */
-static struct audit_list
-{
-  const char *name;
-  struct audit_list *next;
-} *audit_list;
-
-/* Iterator for audit_list_string followed by audit_list.  */
-struct audit_list_iter
-{
-  /* Tail of audit_list_string still needing processing, or NULL.  */
-  const char *audit_list_tail;
-
-  /* The list element returned in the previous iteration.  NULL before
-     the first element.  */
-  struct audit_list *previous;
-
-  /* Scratch buffer for returning a name which is part of
-     audit_list_string.  */
-  char fname[SECURE_NAME_LIMIT];
-};
-
-/* Initialize an audit list iterator.  */
 static void
-audit_list_iter_init (struct audit_list_iter *iter)
+audit_list_init (struct audit_list *list)
 {
-  iter->audit_list_tail = audit_list_string;
-  iter->previous = NULL;
+  list->length = 0;
+  list->current_index = 0;
+  list->current_tail = NULL;
 }
 
-/* Iterate through both audit_list_string and audit_list.  */
-static const char *
-audit_list_iter_next (struct audit_list_iter *iter)
+static void
+audit_list_add_string (struct audit_list *list, const char *string)
 {
-  if (iter->audit_list_tail != NULL)
-    {
-      /* First iterate over audit_list_string.  */
-      while (*iter->audit_list_tail != '\0')
-	{
-	  /* Split audit list at colon.  */
-	  size_t len = strcspn (iter->audit_list_tail, ":");
-	  if (len > 0 && len < sizeof (iter->fname))
-	    {
-	      memcpy (iter->fname, iter->audit_list_tail, len);
-	      iter->fname[len] = '\0';
-	    }
-	  else
-	    /* Do not return this name to the caller.  */
-	    iter->fname[0] = '\0';
+  /* Empty strings do not load anything.  */
+  if (*string == '\0')
+    return;
 
-	  /* Skip over the substring and the following delimiter.  */
-	  iter->audit_list_tail += len;
-	  if (*iter->audit_list_tail == ':')
-	    ++iter->audit_list_tail;
+  if (list->length == array_length (list->audit_strings))
+    _dl_fatal_printf ("Fatal glibc error: Too many audit modules requested\n");
 
-	  /* If the name is valid, return it.  */
-	  if (dso_name_valid_for_suid (iter->fname))
-	    return iter->fname;
-	  /* Otherwise, wrap around and try the next name.  */
-	}
-      /* Fall through to the procesing of audit_list.  */
-    }
+  list->audit_strings[list->length++] = string;
 
-  if (iter->previous == NULL)
-    {
-      if (audit_list == NULL)
-	/* No pre-parsed audit list.  */
-	return NULL;
-      /* Start of audit list.  The first list element is at
-	 audit_list->next (cyclic list).  */
-      iter->previous = audit_list->next;
-      return iter->previous->name;
-    }
-  if (iter->previous == audit_list)
-    /* Cyclic list wrap-around.  */
+  /* Initialize processing of the first string for
+     audit_list_next.  */
+  if (list->length == 1)
+    list->current_tail = string;
+}
+
+static const char *
+audit_list_next (struct audit_list *list)
+{
+  if (list->current_tail == NULL)
     return NULL;
-  iter->previous = iter->previous->next;
-  return iter->previous->name;
+
+  while (true)
+    {
+      /* Advance to the next string in audit_strings if the current
+	 string has been exhausted.  */
+      while (*list->current_tail == '\0')
+	{
+	  ++list->current_index;
+	  if (list->current_index == list->length)
+	    {
+	      list->current_tail = NULL;
+	      return NULL;
+	    }
+	  list->current_tail = list->audit_strings[list->current_index];
+	}
+
+      /* Split the in-string audit list at the next colon colon.  */
+      size_t len = strcspn (list->current_tail, ":");
+      if (len > 0 && len < sizeof (list->fname))
+	{
+	  memcpy (list->fname, list->current_tail, len);
+	  list->fname[len] = '\0';
+	}
+      else
+	/* Mark the name as unusable for dso_name_valid_for_suid.  */
+	list->fname[0] = '\0';
+
+      /* Skip over the substring and the following delimiter.  */
+      list->current_tail += len;
+      if (*list->current_tail == ':')
+	++list->current_tail;
+
+      /* If the name is valid, return it.  */
+      if (dso_name_valid_for_suid (list->fname))
+	return list->fname;
+
+      /* Otherwise wrap around to find the next list element. .  */
+    }
 }
 
 #ifndef HAVE_INLINED_SYSCALLS
@@ -1062,15 +1081,13 @@ notify_audit_modules_of_loaded_object (struct link_map *map)
 
 /* Load all audit modules.  */
 static void
-load_audit_modules (struct link_map *main_map)
+load_audit_modules (struct link_map *main_map, struct audit_list *audit_list)
 {
   struct audit_ifaces *last_audit = NULL;
-  struct audit_list_iter al_iter;
-  audit_list_iter_init (&al_iter);
 
   while (true)
     {
-      const char *name = audit_list_iter_next (&al_iter);
+      const char *name = audit_list_next (audit_list);
       if (name == NULL)
 	break;
       load_audit_module (name, &last_audit);
@@ -1102,6 +1119,9 @@ dl_main (const ElfW(Phdr) *phdr,
   bool rtld_is_main = false;
   void *tcbp = NULL;
 
+  struct audit_list audit_list;
+  audit_list_init (&audit_list);
+
   GL(dl_init_static_tls) = &_dl_nothread_init_static_tls;
 
 #if defined SHARED && defined _LIBC_REENTRANT \
@@ -1115,7 +1135,7 @@ dl_main (const ElfW(Phdr) *phdr,
   GL(dl_make_stack_executable_hook) = &_dl_make_stack_executable;
 
   /* Process the environment variable which control the behaviour.  */
-  process_envvars (&mode);
+  process_envvars (&mode, &audit_list);
 
 #ifndef HAVE_INLINED_SYSCALLS
   /* Set up a flag which tells we are just starting.  */
@@ -1189,7 +1209,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	  }
 	else if (! strcmp (_dl_argv[1], "--audit") && _dl_argc > 2)
 	  {
-	    process_dl_audit (_dl_argv[2]);
+	    audit_list_add_string (&audit_list, _dl_argv[2]);
 
 	    _dl_skip_args += 2;
 	    _dl_argc -= 2;
@@ -1619,8 +1639,7 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
 
   /* If we have auditing DSOs to load, do it now.  */
   bool need_security_init = true;
-  if (__glibc_unlikely (audit_list != NULL)
-      || __glibc_unlikely (audit_list_string != NULL))
+  if (audit_list.length > 0)
     {
       /* Since we start using the auditing DSOs right away we need to
 	 initialize the data structures now.  */
@@ -1633,7 +1652,7 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
       security_init ();
       need_security_init = false;
 
-      load_audit_modules (main_map);
+      load_audit_modules (main_map, &audit_list);
     }
 
   /* Keep track of the currently loaded modules to count how many
@@ -2507,30 +2526,6 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n");
     }
 }
 
-static void
-process_dl_audit (char *str)
-{
-  /* The parameter is a colon separated list of DSO names.  */
-  char *p;
-
-  while ((p = (strsep) (&str, ":")) != NULL)
-    if (dso_name_valid_for_suid (p))
-      {
-	/* This is using the local malloc, not the system malloc.  The
-	   memory can never be freed.  */
-	struct audit_list *newp = malloc (sizeof (*newp));
-	newp->name = p;
-
-	if (audit_list == NULL)
-	  audit_list = newp->next = newp;
-	else
-	  {
-	    newp->next = audit_list->next;
-	    audit_list = audit_list->next = newp;
-	  }
-      }
-}
-
 /* Process all environments variables the dynamic linker must recognize.
    Since all of them start with `LD_' we are a bit smarter while finding
    all the entries.  */
@@ -2538,7 +2533,7 @@ extern char **_environ attribute_hidden;
 
 
 static void
-process_envvars (enum mode *modep)
+process_envvars (enum mode *modep, struct audit_list *audit_list)
 {
   char **runp = _environ;
   char *envline;
@@ -2578,7 +2573,7 @@ process_envvars (enum mode *modep)
 	      break;
 	    }
 	  if (memcmp (envline, "AUDIT", 5) == 0)
-	    audit_list_string = &envline[6];
+	    audit_list_add_string (audit_list, &envline[6]);
 	  break;
 
 	case 7:
