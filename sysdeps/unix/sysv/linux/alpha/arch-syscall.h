@@ -188,6 +188,7 @@
 #define __NR_open_by_handle_at 498
 #define __NR_open_tree 538
 #define __NR_openat 450
+#define __NR_openat2 547
 #define __NR_osf_adjtime 140
 #define __NR_osf_afs_syscall 258
 #define __NR_osf_alt_plock 181
@@ -303,6 +304,7 @@
 #define __NR_pciconfig_write 346
 #define __NR_perf_event_open 493
 #define __NR_personality 324
+#define __NR_pidfd_getfd 548
 #define __NR_pidfd_open 544
 #define __NR_pidfd_send_signal 534
 #define __NR_pipe 42

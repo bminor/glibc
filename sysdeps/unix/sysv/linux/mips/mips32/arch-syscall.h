@@ -209,9 +209,11 @@
 #define __NR_open_by_handle_at 4340
 #define __NR_open_tree 4428
 #define __NR_openat 4288
+#define __NR_openat2 4437
 #define __NR_pause 4029
 #define __NR_perf_event_open 4333
 #define __NR_personality 4136
+#define __NR_pidfd_getfd 4438
 #define __NR_pidfd_open 4434
 #define __NR_pidfd_send_signal 4424
 #define __NR_pipe 4042

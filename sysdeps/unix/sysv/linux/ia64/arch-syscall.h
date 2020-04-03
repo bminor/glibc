@@ -179,11 +179,13 @@
 #define __NR_open_by_handle_at 1327
 #define __NR_open_tree 1452
 #define __NR_openat 1281
+#define __NR_openat2 1461
 #define __NR_pciconfig_read 1173
 #define __NR_pciconfig_write 1174
 #define __NR_perf_event_open 1352
 #define __NR_perfmonctl 1175
 #define __NR_personality 1140
+#define __NR_pidfd_getfd 1462
 #define __NR_pidfd_open 1458
 #define __NR_pidfd_send_signal 1448
 #define __NR_pipe 1058

@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 5.5.
-kernel 5.5
+# The list of system calls is current as of Linux 5.6.
+kernel 5.6
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -292,6 +292,7 @@ open
 open_by_handle_at
 open_tree
 openat
+openat2
 osf_adjtime
 osf_afs_syscall
 osf_alt_plock
@@ -410,6 +411,7 @@ perf_event_open
 perfctr
 perfmonctl
 personality
+pidfd_getfd
 pidfd_open
 pidfd_send_signal
 pipe

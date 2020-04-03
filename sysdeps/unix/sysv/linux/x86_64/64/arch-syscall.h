@@ -186,9 +186,11 @@
 #define __NR_open_by_handle_at 304
 #define __NR_open_tree 428
 #define __NR_openat 257
+#define __NR_openat2 437
 #define __NR_pause 34
 #define __NR_perf_event_open 298
 #define __NR_personality 135
+#define __NR_pidfd_getfd 438
 #define __NR_pidfd_open 434
 #define __NR_pidfd_send_signal 424
 #define __NR_pipe 22
