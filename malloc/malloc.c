@@ -1632,7 +1632,7 @@ static INTERNAL_SIZE_T global_max_fast;
  */
 
 #define set_max_fast(s) \
-  global_max_fast = (((s) == 0)						      \
+  global_max_fast = (((size_t) (s) <= MALLOC_ALIGN_MASK - SIZE_SZ)	\
                      ? MIN_CHUNK_SIZE / 2 : ((s + SIZE_SZ) & ~MALLOC_ALIGN_MASK))
 
 static inline INTERNAL_SIZE_T
