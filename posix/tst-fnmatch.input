@@ -801,7 +801,7 @@ C		"foot"			"@(!(z*)|*x)"	       0       EXTMATCH
 C		"zoot"			"@(!(z*)|*x)"	       NOMATCH EXTMATCH
 C		"foox"			"@(!(z*)|*x)"	       0       EXTMATCH
 C		"zoox"			"@(!(z*)|*x)"	       0       EXTMATCH
-C		"foo"			"*(!(foo))	       0       EXTMATCH
+C		"foo"			"*(!(foo))"	       0       EXTMATCH
 C		"foob"			"!(foo)b*"	       NOMATCH EXTMATCH
 C		"foobb"			"!(foo)b*"	       0       EXTMATCH
 C		"["			"*([a[])"	       0       EXTMATCH
