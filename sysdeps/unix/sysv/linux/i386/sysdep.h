@@ -580,8 +580,9 @@ struct libc_do_syscall_args
 # define EXTRAVAR_5
 #endif
 
-/* Consistency check for position-independent code.  */
-#if defined __PIC__ && !defined OPTIMIZE_FOR_GCC_5
+/* Consistency check for position-independent code.  Disabled for GCC 5
+   and above since there is no fixed PIC register in GCC 5 and above.  */
+#if defined __PIC__ && !__GNUC_PREREQ (5,0)
 # define check_consistency()						      \
   ({ int __res;								      \
      __asm__ __volatile__						      \
