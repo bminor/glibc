@@ -29,13 +29,13 @@ __wait4_time64 (pid_t pid, int *stat_loc, int options, struct __rusage64 *usage)
 # if __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64
   return SYSCALL_CANCEL (wait4, pid, stat_loc, options, usage);
 # else
+  pid_t ret;
   struct __rusage32 usage32;
-  pid_t ret = SYSCALL_CANCEL (wait4, pid, stat_loc, options, &usage32);
 
-  if (ret != 0)
-    return ret;
+  ret = SYSCALL_CANCEL (wait4, pid, stat_loc, options,
+                        usage != NULL ? &usage32 : NULL);
 
-  if (usage != NULL)
+  if (ret > 0 && usage != NULL)
     rusage32_to_rusage64 (&usage32, usage);
 
   return ret;
@@ -114,15 +114,14 @@ libc_hidden_def (__wait4_time64)
 pid_t
 __wait4 (pid_t pid, int *stat_loc, int options, struct rusage *usage)
 {
-  pid_t ret ;
+  pid_t ret;
   struct __rusage64 usage64;
 
-  ret = __wait4_time64 (pid, stat_loc, options, &usage64);
+  ret = __wait4_time64 (pid, stat_loc, options,
+                        usage != NULL ? &usage64 : NULL);
 
-  if (ret != 0)
-    return ret;
-
-  rusage64_to_rusage (&usage64, usage);
+  if (ret > 0 && usage != 0)
+    rusage64_to_rusage (&usage64, usage);
 
   return ret;
 }
