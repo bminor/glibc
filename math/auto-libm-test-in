@@ -5747,7 +5747,7 @@ j0 0x1p1023
 j0 0x1p16382
 j0 0x1p16383
 # the next value generates larger error bounds on x86_64 (binary32)
-j0 0x2.602774p+0
+j0 0x2.602774p+0 xfail-rounding:ibm128-libgcc
 
 j1 -1.0
 j1 0.0
@@ -5780,7 +5780,7 @@ j1 0x1p-100
 j1 0x1p-600
 j1 0x1p-10000
 # the next value generates larger error bounds on x86_64 (binary32)
-j1 0x3.ae4b2p+0
+j1 0x3.ae4b2p+0 xfail-rounding:ibm128-libgcc
 j1 min
 j1 -min
 j1 min_subnorm
