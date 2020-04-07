@@ -17,21 +17,4 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <float128_private.h>
-#include <math.h>
-#include <math_private.h>
-
-/* Once GCC >= 6.0 is required for building glibc, this implementation can
-   be removed and replaced with an inclusion of ldbl-128/s_signbitl.c.  */
-int
-__signbitf128 (_Float128 x)
-{
-#if __GNUC_PREREQ (6, 0)
-  return __builtin_signbit (x);
-#else
-  int64_t e;
-
-  GET_FLOAT128_MSW64 (e, x);
-  return e < 0;
-#endif
-}
-hidden_def (__signbitf128)
+#include "../ldbl-128/s_signbitl.c"
