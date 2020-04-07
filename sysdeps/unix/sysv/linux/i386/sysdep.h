@@ -48,7 +48,7 @@
    to compile glibc.  Disable GCC 5 optimization when compiling for
    profiling or when -fno-omit-frame-pointer is used since asm ("ebp")
    can't be used to put the 6th argument in %ebp for syscall.  */
-#if __GNUC_PREREQ (5,0) && !defined PROF && CAN_USE_REGISTER_ASM_EBP
+#if !defined PROF && CAN_USE_REGISTER_ASM_EBP
 # define OPTIMIZE_FOR_GCC_5
 #endif
 
@@ -578,21 +578,6 @@ struct libc_do_syscall_args
 # define EXTRAVAR_5 int _xv;
 #else
 # define EXTRAVAR_5
-#endif
-
-/* Consistency check for position-independent code.  Disabled for GCC 5
-   and above since there is no fixed PIC register in GCC 5 and above.  */
-#if defined __PIC__ && !__GNUC_PREREQ (5,0)
-# define check_consistency()						      \
-  ({ int __res;								      \
-     __asm__ __volatile__						      \
-       (LOAD_PIC_REG_STR (cx) ";"					      \
-	"subl %%ebx, %%ecx;"						      \
-	"je 1f;"							      \
-	"ud2;"								      \
-	"1:\n"								      \
-	: "=c" (__res));						      \
-     __res; })
 #endif
 
 #endif	/* __ASSEMBLER__ */

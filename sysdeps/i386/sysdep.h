@@ -18,8 +18,6 @@
 
 #include <sysdeps/x86/sysdep.h>
 
-#include <features.h> /* For __GNUC_PREREQ.  */
-
 /* It is desirable that the names of PIC thunks match those used by
    GCC so that multiple copies are eliminated by the linker.  Because
    GCC 4.6 and earlier use __i686 in the names, it is necessary to
