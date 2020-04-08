@@ -704,6 +704,7 @@ ldouble: 1
 
 Function: "cos":
 double: 1
+float: 1
 float128: 1
 
 Function: "cos_downward":
@@ -1052,6 +1053,7 @@ float: 1
 float128: 1
 
 Function: "exp10":
+float: 1
 float128: 2
 
 Function: "exp10_downward":
@@ -1136,7 +1138,7 @@ ldouble: 1
 
 Function: "j0":
 double: 2
-float: 2
+float: 8
 float128: 2
 ldouble: 2
 
@@ -1147,26 +1149,26 @@ float128: 4
 ldouble: 3
 
 Function: "j0_towardzero":
-double: 2
-float: 1
+double: 4
+float: 6
 float128: 2
-ldouble: 5
+ldouble: 9
 
 Function: "j0_upward":
-double: 3
-float: 2
+double: 4
+float: 5
 float128: 5
 ldouble: 5
 
 Function: "j1":
-double: 1
-float: 2
+double: 2
+float: 8
 float128: 4
-ldouble: 1
+ldouble: 5
 
 Function: "j1_downward":
-double: 3
-float: 2
+double: 4
+float: 5
 float128: 4
 ldouble: 4
 
@@ -1180,7 +1182,7 @@ Function: "j1_upward":
 double: 3
 float: 4
 float128: 3
-ldouble: 3
+ldouble: 5
 
 Function: "jn":
 double: 4
@@ -1412,7 +1414,7 @@ ldouble: 1
 
 Function: "y0":
 double: 2
-float: 1
+float: 6
 float128: 3
 ldouble: 1
 
@@ -1426,13 +1428,13 @@ Function: "y0_towardzero":
 double: 3
 float: 3
 float128: 3
-ldouble: 5
+ldouble: 7
 
 Function: "y0_upward":
 double: 4
 float: 5
 float128: 3
-ldouble: 3
+ldouble: 7
 
 Function: "y1":
 double: 3
