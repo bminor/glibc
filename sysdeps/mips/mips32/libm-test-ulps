@@ -49,7 +49,7 @@ float: 1
 
 Function: "asinh":
 double: 1
-float: 1
+float: 2
 
 Function: "asinh_downward":
 double: 3
@@ -521,7 +521,7 @@ float: 2
 
 Function: "cosh":
 double: 1
-float: 1
+float: 2
 
 Function: "cosh_downward":
 double: 2
@@ -739,7 +739,7 @@ float: 1
 
 Function: "erfc":
 double: 3
-float: 2
+float: 3
 
 Function: "erfc_downward":
 double: 5
@@ -758,6 +758,7 @@ float: 1
 
 Function: "exp10":
 double: 2
+float: 1
 
 Function: "exp10_downward":
 double: 3
@@ -817,19 +818,19 @@ float: 1
 
 Function: "gamma":
 double: 4
-float: 4
+float: 7
 
 Function: "gamma_downward":
 double: 5
-float: 4
+float: 7
 
 Function: "gamma_towardzero":
 double: 5
-float: 4
+float: 6
 
 Function: "gamma_upward":
 double: 5
-float: 5
+float: 6
 
 Function: "hypot":
 double: 1
@@ -845,27 +846,27 @@ double: 1
 
 Function: "j0":
 double: 2
-float: 2
+float: 8
 
 Function: "j0_downward":
 double: 2
 float: 4
 
 Function: "j0_towardzero":
-double: 3
-float: 2
+double: 4
+float: 5
 
 Function: "j0_upward":
-double: 3
-float: 2
+double: 4
+float: 5
 
 Function: "j1":
-double: 1
-float: 2
+double: 2
+float: 9
 
 Function: "j1_downward":
 double: 3
-float: 3
+float: 5
 
 Function: "j1_towardzero":
 double: 3
@@ -893,19 +894,19 @@ float: 5
 
 Function: "lgamma":
 double: 4
-float: 4
+float: 7
 
 Function: "lgamma_downward":
 double: 5
-float: 4
+float: 7
 
 Function: "lgamma_towardzero":
 double: 5
-float: 4
+float: 6
 
 Function: "lgamma_upward":
 double: 5
-float: 5
+float: 6
 
 Function: "log":
 float: 1
@@ -1065,27 +1066,27 @@ float: 3
 
 Function: "tgamma":
 double: 5
-float: 4
+float: 8
 
 Function: "tgamma_downward":
 double: 5
-float: 5
+float: 7
 
 Function: "tgamma_towardzero":
 double: 5
-float: 4
+float: 7
 
 Function: "tgamma_upward":
 double: 4
-float: 4
+float: 8
 
 Function: "y0":
-double: 2
-float: 1
+double: 3
+float: 8
 
 Function: "y0_downward":
 double: 3
-float: 4
+float: 6
 
 Function: "y0_towardzero":
 double: 3
@@ -1093,7 +1094,7 @@ float: 3
 
 Function: "y0_upward":
 double: 3
-float: 5
+float: 6
 
 Function: "y1":
 double: 3
