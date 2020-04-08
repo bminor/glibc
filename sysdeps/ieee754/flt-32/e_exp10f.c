@@ -21,6 +21,8 @@
 #include <stdint.h>
 #include <libm-alias-finite.h>
 #include <libm-alias-float.h>
+#include <shlib-compat.h>
+#include <math-svid-compat.h>
 #include "math_config.h"
 
 /*
@@ -139,7 +141,7 @@ top13 (float x)
 }
 
 float
-__ieee754_exp10f (float x)
+__exp10f (float x)
 {
   uint32_t abstop;
   uint64_t ki, t;
@@ -195,4 +197,16 @@ __ieee754_exp10f (float x)
   y = y * s;
   return (float) y;
 }
+#ifndef __exp10f
+strong_alias (__exp10f, __ieee754_exp10f)
 libm_alias_finite (__ieee754_exp10f, __exp10f)
+/* For architectures that already provided exp10f without SVID support, there
+   is no need to add a new version.  */
+#if !LIBM_SVID_COMPAT
+# define EXP10F_VERSION GLIBC_2_26
+#else
+# define EXP10F_VERSION GLIBC_2_32
+#endif
+versioned_symbol (libm, __exp10f, exp10f, EXP10F_VERSION);
+libm_alias_float_other (__exp10, exp10)
+#endif

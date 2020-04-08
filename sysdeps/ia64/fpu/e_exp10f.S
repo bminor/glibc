@@ -218,7 +218,7 @@ LOCAL_OBJECT_END(T_table)
 
 
 .section .text
-GLOBAL_IEEE754_ENTRY(exp10f)
+GLOBAL_IEEE754_ENTRY(__exp10f)
 
 
 {.mfi
@@ -487,11 +487,17 @@ OUT_RANGE_exp10:
 }
 ;;
 
-GLOBAL_IEEE754_END(exp10f)
+GLOBAL_IEEE754_END(__exp10f)
 libm_alias_float_other (__exp10, exp10)
 #if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_27)
-compat_symbol (libm, exp10f, pow10f, GLIBC_2_2)
+strong_alias (__exp10f, __pow10f_compat)
+compat_symbol (libm, __pow10f_compat, pow10f, GLIBC_2_2)
 #endif
+#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_32)
+strong_alias (__exp10f, __exp10f_compat)
+compat_symbol (libm, __exp10f_compat, exp10f, GLIBC_2_1)
+#endif
+versioned_symbol (libm, __exp10f, exp10f, GLIBC_2_32)
 
 
 LOCAL_LIBM_ENTRY(__libm_error_region)

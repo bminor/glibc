@@ -590,4 +590,7 @@ libm {
     totalorderf128;
     totalordermagf128;
   }
+  GLIBC_2.32 {
+    exp10f;
+  }
 }

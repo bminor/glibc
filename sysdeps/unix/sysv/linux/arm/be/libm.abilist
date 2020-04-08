@@ -470,6 +470,7 @@ GLIBC_2.31 totalordermagf32 F
 GLIBC_2.31 totalordermagf32x F
 GLIBC_2.31 totalordermagf64 F
 GLIBC_2.31 totalordermagl F
+GLIBC_2.32 exp10f F
 GLIBC_2.4 _LIB_VERSION D 0x4
 GLIBC_2.4 __clog10 F
 GLIBC_2.4 __clog10f F

@@ -1089,3 +1089,4 @@ GLIBC_2.31 totalordermagf32x F
 GLIBC_2.31 totalordermagf64 F
 GLIBC_2.31 totalordermagf64x F
 GLIBC_2.31 totalordermagl F
+GLIBC_2.32 exp10f F

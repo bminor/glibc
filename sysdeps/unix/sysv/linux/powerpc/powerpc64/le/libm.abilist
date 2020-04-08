@@ -1214,3 +1214,4 @@ GLIBC_2.32 __ufromfpxieee128 F
 GLIBC_2.32 __y0ieee128 F
 GLIBC_2.32 __y1ieee128 F
 GLIBC_2.32 __ynieee128 F
+GLIBC_2.32 exp10f F
