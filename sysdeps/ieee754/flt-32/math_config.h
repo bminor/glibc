@@ -109,7 +109,7 @@ attribute_hidden float __math_may_uflowf (uint32_t);
 attribute_hidden float __math_divzerof (uint32_t);
 attribute_hidden float __math_invalidf (float);
 
-/* Shared between expf, exp2f and powf.  */
+/* Shared between expf, exp2f, exp10f, and powf.  */
 #define EXP2F_TABLE_BITS 5
 #define EXP2F_POLY_ORDER 3
 extern const struct exp2f_data
