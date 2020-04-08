@@ -24,7 +24,8 @@ include ../Makeconfig
 bench-math := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 \
 	      modf pow rint sin sincos sinh sqrt tan tanh fmin fmax fminf \
 	      fmaxf powf trunc truncf roundeven roundevenf expf exp2f logf \
-	      log2f sincosf sinf cosf isnan isinf isfinite hypot logb logbf
+	      log2f sincosf sinf cosf isnan isinf isfinite hypot logb logbf \
+	      exp10f
 
 bench-pthread := pthread_once thread_create
 
