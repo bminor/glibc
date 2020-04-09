@@ -1057,12 +1057,15 @@ float: 1
 float128: 2
 
 Function: "exp10_downward":
+float: 1
 float128: 3
 
 Function: "exp10_towardzero":
+float: 1
 float128: 3
 
 Function: "exp10_upward":
+float: 1
 float128: 3
 
 Function: "exp2":
