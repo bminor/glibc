@@ -301,6 +301,9 @@ booted and the randomness source has not yet been initialized.
 @item GRND_NONBLOCK
 Instead of blocking, return to the caller immediately if no data is
 available.
+
+@item GRND_INSECURE
+Write random data that may not be cryptographically secure.
 @end table
 
 Unlike @code{getentropy}, the @code{getrandom} function is a
