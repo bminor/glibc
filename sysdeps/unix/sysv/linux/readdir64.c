@@ -23,17 +23,71 @@
 #define readdir   __no_readdir_decl
 #define __readdir __no___readdir_decl
 #include <dirent.h>
-
-#define __READDIR   __readdir64
-#define __GETDENTS  __getdents64
-#define DIRENT_TYPE struct dirent64
-
-#include <sysdeps/posix/readdir.c>
-
 #undef __readdir
 #undef readdir
 
+/* Read a directory entry from DIRP.  */
+struct dirent64 *
+__readdir64 (DIR *dirp)
+{
+  struct dirent64 *dp;
+  int saved_errno = errno;
+
+#if IS_IN (libc)
+  __libc_lock_lock (dirp->lock);
+#endif
+
+  do
+    {
+      size_t reclen;
+
+      if (dirp->offset >= dirp->size)
+	{
+	  /* We've emptied out our buffer.  Refill it.  */
+
+	  size_t maxread = dirp->allocation;
+	  ssize_t bytes;
+
+	  bytes = __getdents64 (dirp->fd, dirp->data, maxread);
+	  if (bytes <= 0)
+	    {
+	      /* On some systems getdents fails with ENOENT when the
+		 open directory has been rmdir'd already.  POSIX.1
+		 requires that we treat this condition like normal EOF.  */
+	      if (bytes < 0 && errno == ENOENT)
+		bytes = 0;
+
+	      /* Don't modifiy errno when reaching EOF.  */
+	      if (bytes == 0)
+		__set_errno (saved_errno);
+	      dp = NULL;
+	      break;
+	    }
+	  dirp->size = (size_t) bytes;
+
+	  /* Reset the offset into the buffer.  */
+	  dirp->offset = 0;
+	}
+
+      dp = (struct dirent64 *) &dirp->data[dirp->offset];
+
+      reclen = dp->d_reclen;
+
+      dirp->offset += reclen;
+
+      dirp->filepos = dp->d_off;
+
+      /* Skip deleted files.  */
+    } while (dp->d_ino == 0);
+
+#if IS_IN (libc)
+  __libc_lock_unlock (dirp->lock);
+#endif
+
+  return dp;
+}
 libc_hidden_def (__readdir64)
+
 #if _DIRENT_MATCHES_DIRENT64
 strong_alias (__readdir64, __readdir)
 weak_alias (__readdir64, readdir64)
@@ -49,10 +103,67 @@ versioned_symbol (libc, __readdir64, readdir64, GLIBC_2_2);
 # endif
 # if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
 #  include <olddirent.h>
-#  define __READDIR   attribute_compat_text_section __old_readdir64
-#  define __GETDENTS  __old_getdents64
-#  define DIRENT_TYPE struct __old_dirent64
-#  include <sysdeps/posix/readdir.c>
+
+attribute_compat_text_section
+struct __old_dirent64 *
+__old_readdir64 (DIR *dirp)
+{
+  struct __old_dirent64 *dp;
+  int saved_errno = errno;
+
+#if IS_IN (libc)
+  __libc_lock_lock (dirp->lock);
+#endif
+
+  do
+    {
+      size_t reclen;
+
+      if (dirp->offset >= dirp->size)
+	{
+	  /* We've emptied out our buffer.  Refill it.  */
+
+	  size_t maxread = dirp->allocation;
+	  ssize_t bytes;
+
+	  bytes = __old_getdents64 (dirp->fd, dirp->data, maxread);
+	  if (bytes <= 0)
+	    {
+	      /* On some systems getdents fails with ENOENT when the
+		 open directory has been rmdir'd already.  POSIX.1
+		 requires that we treat this condition like normal EOF.  */
+	      if (bytes < 0 && errno == ENOENT)
+		bytes = 0;
+
+	      /* Don't modifiy errno when reaching EOF.  */
+	      if (bytes == 0)
+		__set_errno (saved_errno);
+	      dp = NULL;
+	      break;
+	    }
+	  dirp->size = (size_t) bytes;
+
+	  /* Reset the offset into the buffer.  */
+	  dirp->offset = 0;
+	}
+
+      dp = (struct __old_dirent64 *) &dirp->data[dirp->offset];
+
+      reclen = dp->d_reclen;
+
+      dirp->offset += reclen;
+
+      dirp->filepos = dp->d_off;
+
+      /* Skip deleted files.  */
+    } while (dp->d_ino == 0);
+
+#if IS_IN (libc)
+  __libc_lock_unlock (dirp->lock);
+#endif
+
+  return dp;
+}
 libc_hidden_def (__old_readdir64)
 compat_symbol (libc, __old_readdir64, readdir64, GLIBC_2_1);
 # endif /* SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)  */
