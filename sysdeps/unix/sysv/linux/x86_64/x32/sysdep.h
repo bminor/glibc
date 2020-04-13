@@ -26,4 +26,20 @@
 #undef LO_HI_LONG
 #define LO_HI_LONG(val) (val)
 
+#ifndef __ASSEMBLER__
+# undef ARGIFY
+/* Enforce zero-extension for pointers and array system call arguments.
+   For integer types, extend to int64_t (the full register) using a
+   regular cast, resulting in zero or sign extension based on the
+   signedness of the original type.  */
+# define ARGIFY(X) \
+ ({									\
+    _Pragma ("GCC diagnostic push");					\
+    _Pragma ("GCC diagnostic ignored \"-Wpointer-to-int-cast\"");	\
+    (__builtin_classify_type (X) == 5					\
+     ? (uintptr_t) (X) : (int64_t) (X));				\
+    _Pragma ("GCC diagnostic pop");					\
+  })
+#endif	/* __ASSEMBLER__ */
+
 #endif /* linux/x86_64/x32/sysdep.h */
