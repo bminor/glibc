@@ -75,25 +75,22 @@ __readdir_unlocked (DIR *dirp)
       size_t new_reclen = ALIGN_UP (old_reclen - size_diff,
 				    _Alignof (struct dirent));
 
-      if (!in_ino_t_range (inp->dp64.d_ino)
-	  || !in_off_t_range (inp->dp64.d_off))
+      /* telldir can not return an error, so preallocate a map entry if
+	 d_off can not be used directly.  */
+      if (telldir_need_dirstream (inp->dp64.d_off))
 	{
-	  /* Overflow.  If there was at least one entry before this one,
-	     return them without error, otherwise signal overflow.  */
-	  if (dirp->offset != 0)
-	    {
-	      __lseek64 (dirp->fd, dirp->offset, SEEK_SET);
-	      outp = (void*)(outp->b - dirp->data);
-	      return &outp->dp;
-	    }
-	  __set_errno (EOVERFLOW);
-	  return NULL;
+	  dirstream_loc_add (&dirp->locs, inp->dp64.d_off);
+	  if (dirstream_loc_has_failed (&dirp->locs))
+	    return NULL;
 	}
 
       /* Copy the data from INP and access only OUTP.  */
       const uint64_t d_ino = inp->dp64.d_ino;
       const int64_t d_off = inp->dp64.d_off;
       const uint8_t d_type = inp->dp64.d_type;
+      /* This will clamp both d_off and d_ino values, which is required to
+	 avoid return EOVERFLOW.  The lelldir/seekdir uses the 'locs' value
+	 if the value overflows.  */
       outp->dp.d_ino = d_ino;
       outp->dp.d_off = d_off;
       outp->dp.d_reclen = new_reclen;

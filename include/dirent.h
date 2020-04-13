@@ -1,8 +1,8 @@
 #ifndef _DIRENT_H
+# include <dirent/dirent.h>
 # ifndef _ISOMAC
 #  include <dirstream.h>
 # endif
-# include <dirent/dirent.h>
 # ifndef _ISOMAC
 # include <sys/stat.h>
 # include <stdbool.h>

@@ -33,6 +33,11 @@ __rewinddir (DIR *dirp)
   dirp->offset = 0;
   dirp->size = 0;
   dirp->errcode = 0;
+
+#ifndef __LP64__
+  dirstream_loc_clear (&dirp->locs);
+#endif
+
 #if IS_IN (libc)
   __libc_lock_unlock (dirp->lock);
 #endif

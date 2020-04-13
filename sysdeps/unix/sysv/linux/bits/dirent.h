@@ -57,3 +57,7 @@ struct dirent64
 #else
 # define _DIRENT_MATCHES_DIRENT64	0
 #endif
+
+/* The telldir function returns long int, which may not be large enough to
+   store off64_t values.  In this case, translation is required.  */
+#define _DIRENT_OFFSET_TRANSLATION (LONG_WIDTH < 64)

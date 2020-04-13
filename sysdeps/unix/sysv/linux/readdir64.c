@@ -68,6 +68,17 @@ __readdir64 (DIR *dirp)
   dirp->offset += dp->d_reclen;
   dirp->filepos = dp->d_off;
 
+#if _DIRENT_OFFSET_TRANSLATION
+  /* telldir can not return an error, so preallocate a map entry if
+     d_off can not be used directly.  */
+  if (telldir_need_dirstream (dp->d_off))
+    {
+      dirstream_loc_add (&dirp->locs, dp->d_off);
+      if (dirstream_loc_has_failed (&dirp->locs))
+	dp = NULL;
+    }
+#endif
+
 #if IS_IN (libc)
   __libc_lock_unlock (dirp->lock);
 #endif

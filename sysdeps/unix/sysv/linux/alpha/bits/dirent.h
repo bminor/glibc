@@ -54,4 +54,7 @@ struct dirent64
 /* Inform libc code that these two types are effectively identical.  */
 #define _DIRENT_MATCHES_DIRENT64	1
 
+/* alpha 'long int' is enough to handle off64_t.  */
+#define _DIRENT_OFFSET_TRANSLATION	0
+
 #endif /* bits/dirent.h */

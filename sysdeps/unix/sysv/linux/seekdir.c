@@ -22,14 +22,36 @@
 #include <dirstream.h>
 
 /* Seek to position POS in DIRP.  */
-/* XXX should be __seekdir ? */
 void
 seekdir (DIR *dirp, long int pos)
 {
+  off64_t filepos;
+
   __libc_lock_lock (dirp->lock);
-  (void) __lseek (dirp->fd, pos, SEEK_SET);
-  dirp->size = 0;
+
+#if _DIRENT_OFFSET_TRANSLATION
+  union dirstream_packed dsp = { .l = pos };
+  if (dsp.p.is_packed == 1)
+    filepos = dsp.p.info;
+  else
+    {
+      size_t index = dsp.p.info;
+
+      if (index >= dirstream_loc_size (&dirp->locs))
+	{
+	  __libc_lock_unlock (dirp->lock);
+	  return;
+	}
+      filepos = *dirstream_loc_at (&dirp->locs, index);
+    }
+#else
+  filepos = pos;
+#endif
+
+  __lseek64 (dirp->fd, filepos, SEEK_SET);
+  dirp->filepos = filepos;
   dirp->offset = 0;
-  dirp->filepos = pos;
+  dirp->size = 0;
+
   __libc_lock_unlock (dirp->lock);
 }

@@ -47,6 +47,10 @@ __closedir (DIR *dirp)
   __libc_lock_fini (dirp->lock);
 #endif
 
+#if _DIRENT_OFFSET_TRANSLATION
+  dirstream_loc_clear (&dirp->locs);
+#endif
+
   free ((void *) dirp);
 
   return __close_nocancel (fd);
