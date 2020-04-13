@@ -177,12 +177,15 @@
 /* Registers clobbered by syscall.  */
 # define REGISTERS_CLOBBERED_BY_SYSCALL "cc", "r11", "cx"
 
-/* Create a variable 'name' based on type 'X' to avoid explicit types.
-   This is mainly used set use 64-bits arguments in x32.   */
-#define TYPEFY(X, name) __typeof__ ((X) - (X)) name
-/* Explicit cast the argument to avoid integer from pointer warning on
-   x32.  */
-#define ARGIFY(X) ((__typeof__ ((X) - (X))) (X))
+/* NB: This also works when X is an array.  For an array X,  type of
+   (X) - (X) is ptrdiff_t, which is signed, since size of ptrdiff_t
+   == size of pointer, cast is a NOP.   */
+#define TYPEFY1(X) __typeof__ ((X) - (X))
+/* Explicit cast the argument.  */
+#define ARGIFY(X) ((TYPEFY1 (X)) (X))
+/* Create a variable 'name' based on type of variable 'X' to avoid
+   explicit types.  */
+#define TYPEFY(X, name) __typeof__ (ARGIFY (X)) name
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, nr, args...)				\
