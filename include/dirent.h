@@ -20,6 +20,7 @@ extern DIR *__opendirat (int dfd, const char *__name) attribute_hidden;
 extern DIR *__fdopendir (int __fd) attribute_hidden;
 extern int __closedir (DIR *__dirp) attribute_hidden;
 extern struct dirent *__readdir (DIR *__dirp) attribute_hidden;
+extern struct dirent *__readdir_unlocked (DIR *__dirp) attribute_hidden;
 extern struct dirent64 *__readdir64 (DIR *__dirp);
 libc_hidden_proto (__readdir64)
 extern int __readdir_r (DIR *__dirp, struct dirent *__entry,

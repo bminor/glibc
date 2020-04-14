@@ -23,14 +23,10 @@
 
 /* Read a directory entry from DIRP.  */
 struct dirent *
-__readdir (DIR *dirp)
+__readdir_unlocked (DIR *dirp)
 {
   struct dirent *dp;
   int saved_errno = errno;
-
-#if IS_IN (libc)
-  __libc_lock_lock (dirp->lock);
-#endif
 
   do
     {
@@ -75,6 +71,18 @@ __readdir (DIR *dirp)
       /* Skip deleted files.  */
     } while (dp->d_ino == 0);
 
+  return dp;
+}
+
+struct dirent *
+__readdir (DIR *dirp)
+{
+  struct dirent *dp;
+
+#if IS_IN (libc)
+  __libc_lock_lock (dirp->lock);
+#endif
+  dp = __readdir_unlocked (dirp);
 #if IS_IN (libc)
   __libc_lock_unlock (dirp->lock);
 #endif

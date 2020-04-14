@@ -25,89 +25,43 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 {
   struct dirent *dp;
   size_t reclen;
-  const int saved_errno = errno;
-  int ret;
 
   __libc_lock_lock (dirp->lock);
 
-  do
+  while (1)
     {
-      if (dirp->offset >= dirp->size)
-	{
-	  /* We've emptied out our buffer.  Refill it.  */
-
-	  size_t maxread = dirp->allocation;
-	  ssize_t bytes;
-
-	  maxread = dirp->allocation;
-
-	  bytes = __getdents (dirp->fd, dirp->data, maxread);
-	  if (bytes <= 0)
-	    {
-	      /* On some systems getdents fails with ENOENT when the
-		 open directory has been rmdir'd already.  POSIX.1
-		 requires that we treat this condition like normal EOF.  */
-	      if (bytes < 0 && errno == ENOENT)
-		{
-		  bytes = 0;
-		  __set_errno (saved_errno);
-		}
-	      if (bytes < 0)
-		dirp->errcode = errno;
-
-	      dp = NULL;
-	      break;
-	    }
-	  dirp->size = (size_t) bytes;
-
-	  /* Reset the offset into the buffer.  */
-	  dirp->offset = 0;
-	}
-
-      dp = (struct dirent *) &dirp->data[dirp->offset];
+      dp = __readdir_unlocked (dirp);
+      if (dp == NULL)
+	break;
 
       reclen = dp->d_reclen;
+      if (reclen <= offsetof (struct dirent, d_name) + NAME_MAX + 1)
+	break;
 
-      dirp->offset += reclen;
-
-      dirp->filepos = dp->d_off;
-
-      if (reclen > offsetof (struct dirent, d_name) + NAME_MAX + 1)
+      /* The record is very long.  It could still fit into the caller-supplied
+	 buffer if we can skip padding at the end.  */
+      size_t namelen = _D_EXACT_NAMLEN (dp);
+      if (namelen <= NAME_MAX)
 	{
-	  /* The record is very long.  It could still fit into the
-	     caller-supplied buffer if we can skip padding at the
-	     end.  */
-	  size_t namelen = _D_EXACT_NAMLEN (dp);
-	  if (namelen <= NAME_MAX)
-	    reclen = offsetof (struct dirent, d_name) + namelen + 1;
-	  else
-	    {
-	      /* The name is too long.  Ignore this file.  */
-	      dirp->errcode = ENAMETOOLONG;
-	      dp->d_ino = 0;
-	      continue;
-	    }
+	  reclen = offsetof (struct dirent, d_name) + namelen + 1;
+	  break;
 	}
 
-      /* Skip deleted and ignored files.  */
+      /* The name is too long.  Ignore this file.  */
+      dirp->errcode = ENAMETOOLONG;
     }
-  while (dp->d_ino == 0);
 
   if (dp != NULL)
     {
       *result = memcpy (entry, dp, reclen);
       entry->d_reclen = reclen;
-      ret = 0;
     }
   else
-    {
-      *result = NULL;
-      ret = dirp->errcode;
-    }
+    *result = NULL;
 
   __libc_lock_unlock (dirp->lock);
 
-  return ret;
+  return dp != NULL ? 0 : dirp->errcode;
 }
 
 weak_alias (__readdir_r, readdir_r)
