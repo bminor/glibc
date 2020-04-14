@@ -9,7 +9,7 @@ comment_char %
 % otherwise be governed by that license.
 
 % Transliterations of compatibility characters and ligatures.
-% Generated automatically from UnicodeData.txt by gen_translit_compat.py on 2019-05-08 for Unicode 12.1.0.
+% Generated automatically from UnicodeData.txt by gen_translit_compat.py on 2020-04-14 for Unicode 13.0.0.
 
 LC_CTYPE
 
@@ -1691,6 +1691,8 @@ translit_start
 <UAB5E> "<U026B>"
 % MODIFIER LETTER SMALL U WITH LEFT HOOK
 <UAB5F> "<UAB52>"
+% MODIFIER LETTER SMALL TURNED W
+<UAB69> "<U028D>"
 % LATIN SMALL LIGATURE FF
 <UFB00> "<U0066><U0066>"
 % LATIN SMALL LIGATURE FI

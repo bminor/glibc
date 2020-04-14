@@ -9,7 +9,7 @@ comment_char %
 % otherwise be governed by that license.
 
 % Transliterations of CJK compatibility characters.
-% Generated automatically from UnicodeData.txt by gen_translit_cjk_compat.py on 2019-05-08 for Unicode 12.1.0.
+% Generated automatically from UnicodeData.txt by gen_translit_cjk_compat.py on 2020-04-14 for Unicode 13.0.0.
 
 LC_CTYPE
 
