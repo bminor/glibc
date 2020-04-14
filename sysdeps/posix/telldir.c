@@ -23,5 +23,11 @@
 long int
 telldir (DIR *dirp)
 {
-  return dirp->filepos;
+  long int ret;
+
+  __libc_lock_lock (dirp->lock);
+  ret = dirp->filepos;
+  __libc_lock_unlock (dirp->lock);
+
+  return ret;
 }
