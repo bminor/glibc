@@ -58,6 +58,9 @@ libc {
   GLIBC_2.21 {
     __mach_host_self_;
   }
+  GLIBC_2.32 {
+    mach_print;
+  }
 
   HURD_CTHREADS_0.3 {
     __mutex_init; __mutex_lock; __mutex_lock_solid; __mutex_trylock;
