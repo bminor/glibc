@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2020 Free Software Foundation, Inc.
+/* sysctl function stub.  microblaze version.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -13,20 +13,17 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
+/* microblaze is special because it has an ABI baseline of 2.18, but
+   still includes the __sysctl symbol.  */
 
-#include <sysdep.h>
-#include <sys/syscall.h>
+#ifdef SHARED
 
-/* This deprecated syscall is no longer used (replaced with /proc/sys).  */
-int
-sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
-        void *newval, size_t newlen)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-stub_warning (sysctl)
+# include <sysdeps/unix/sysv/linux/sysctl.c>
+
+strong_alias (___sysctl, ___sysctl2)
+compat_symbol (libc, ___sysctl2, __sysctl, GLIBC_2_2);
+
+#endif

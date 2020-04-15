@@ -1,4 +1,5 @@
-/* Copyright (C) 2012-2020 Free Software Foundation, Inc.
+/* sysctl function stub.  powerpc64le version.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,6 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if defined __x86_64__ && defined __ILP32__
-# error "sysctl system call is unsupported in x32 kernel"
+/* powerpc64le is special because it has an ABI baseline of 2.17, but
+   still includes the __sysctl symbol.  */
+
+#ifdef SHARED
+
+# include <sysdeps/unix/sysv/linux/sysctl.c>
+
+strong_alias (___sysctl, ___sysctl2)
+compat_symbol (libc, ___sysctl2, __sysctl, GLIBC_2_2);
+
 #endif

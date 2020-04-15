@@ -54,9 +54,7 @@ CFLAGS-malloc.c += -DMORECORE_CLEARS=2
 endif
 
 ifeq ($(subdir),misc)
-include $(firstword $(wildcard $(sysdirs:=/sysctl.mk)))
-
-sysdep_routines += adjtimex clone umount umount2 readahead \
+sysdep_routines += adjtimex clone umount umount2 readahead sysctl \
 		   setfsuid setfsgid epoll_pwait signalfd \
 		   eventfd eventfd_read eventfd_write prlimit \
 		   personality epoll_wait tee vmsplice splice \
@@ -71,7 +69,7 @@ CFLAGS-open_by_handle_at.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sync_file_range.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=(0x80000000-sysconf(_SC_PAGESIZE))"
 
-sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
+sysdep_headers += sys/mount.h sys/acct.h \
 		  sys/klog.h \
 		  sys/user.h sys/prctl.h \
 		  sys/kd.h sys/soundcard.h sys/vt.h \
@@ -81,7 +79,7 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  bits/a.out.h sys/inotify.h sys/signalfd.h sys/eventfd.h \
 		  sys/timerfd.h sys/fanotify.h bits/eventfd.h bits/inotify.h \
 		  bits/signalfd.h bits/timerfd.h bits/epoll.h \
-		  bits/socket_type.h bits/syscall.h bits/sysctl.h \
+		  bits/socket_type.h bits/syscall.h \
 		  bits/mman-linux.h bits/mman-shared.h bits/ptrace-shared.h \
 		  bits/siginfo-arch.h bits/siginfo-consts-arch.h \
 		  bits/procfs.h bits/procfs-id.h bits/procfs-extra.h \

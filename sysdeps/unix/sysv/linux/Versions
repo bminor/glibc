@@ -177,6 +177,8 @@ libc {
   GLIBC_2.30 {
     getdents64; gettid; tgkill;
   }
+  GLIBC_2.32 {
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

@@ -74,11 +74,6 @@ for header in "$@"; do
         (finclude/*)
             continue;;
 
-	# sys/sysctl.h produces a deprecation warning and therefore
-	# fails compilation with -Werror.
-	(sys/sysctl.h)
-	    continue;;
-
         # sys/vm86.h is "unsupported on x86-64" and errors out on that target.
         (sys/vm86.h)
             case "$is_x86_64" in
