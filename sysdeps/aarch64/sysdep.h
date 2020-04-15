@@ -44,6 +44,13 @@ strip_pac (void *p)
   asm ("hint 7 // xpaclri" : "+r"(ra));
   return ra;
 }
+
+/* This is needed when glibc is built with -mbranch-protection=pac-ret
+   with a gcc that is affected by PR target/94891.  */
+# if HAVE_AARCH64_PAC_RET
+#  undef RETURN_ADDRESS
+#  define RETURN_ADDRESS(n) strip_pac (__builtin_return_address (n))
+# endif
 #endif
 
 #ifdef	__ASSEMBLER__
