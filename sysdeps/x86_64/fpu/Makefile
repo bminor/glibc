@@ -23,10 +23,8 @@ libmvec-support += svml_d_cos2_core svml_d_cos4_core_avx \
 		   svml_s_sincosf8_core svml_s_sincosf16_core
 endif
 
-ifeq ($(subdir),math)
-libm-routines += sfp-exceptions
-
 # Variables for libmvec tests.
+ifeq ($(subdir),math)
 ifeq ($(build-mathvec),yes)
 libmvec-tests += double-vlen2 double-vlen4 double-vlen4-avx2 \
 		 float-vlen4 float-vlen8 float-vlen8-avx2
