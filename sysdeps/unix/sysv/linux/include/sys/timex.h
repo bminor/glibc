@@ -30,6 +30,7 @@ libc_hidden_proto (__adjtimex)
 /* Local definition of 64 bit time supporting timex struct */
 #  if __TIMESIZE == 64
 #   define __timex64 timex
+#   define __clock_adjtime64 __clock_adjtime
 #  else
 
 struct __timex64
@@ -71,6 +72,8 @@ struct __timex64
   int  :32;
   int  :32;
 };
+extern int __clock_adjtime64 (const clockid_t clock_id, struct __timex64 *tx64);
+libc_hidden_proto (__clock_adjtime64);
 #  endif
 
 /* Convert a known valid struct timex into a struct __timex64.  */
