@@ -32,6 +32,7 @@ libc_hidden_proto (__adjtimex)
 #   define __timex64 timex
 #   define __clock_adjtime64 __clock_adjtime
 #   define ___adjtimex64 ___adjtimex
+#   define __ntptimeval64 ntptimeval
 #  else
 
 struct __timex64
@@ -77,6 +78,19 @@ extern int __clock_adjtime64 (const clockid_t clock_id, struct __timex64 *tx64);
 libc_hidden_proto (__clock_adjtime64);
 extern int ___adjtimex64 (struct __timex64 *tx64);
 libc_hidden_proto (___adjtimex64)
+
+struct __ntptimeval64
+{
+  struct __timeval64 time;	/* current time (ro) */
+  long int maxerror;	/* maximum error (us) (ro) */
+  long int esterror;	/* estimated error (us) (ro) */
+  long int tai;		/* TAI offset (ro) */
+
+  long int __glibc_reserved1;
+  long int __glibc_reserved2;
+  long int __glibc_reserved3;
+  long int __glibc_reserved4;
+};
 #  endif
 
 /* Convert a known valid struct timex into a struct __timex64.  */
