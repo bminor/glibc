@@ -20,10 +20,27 @@
 #include <sysdep.h>
 
 int
-___adjtimex (struct timex *buf)
+___adjtimex64 (struct __timex64 *tx64)
 {
-  return __clock_adjtime (CLOCK_REALTIME, buf);
+  return __clock_adjtime64 (CLOCK_REALTIME, tx64);
 }
+
+#if __TIMESIZE != 64
+libc_hidden_def (___adjtimex64)
+
+int
+___adjtimex (struct timex *tx)
+{
+  struct __timex64 tx64;
+  int retval;
+
+  tx64 = valid_timex_to_timex64 (*tx);
+  retval = ___adjtimex64 (&tx64);
+  *tx = valid_timex64_to_timex (tx64);
+
+  return retval;
+}
+#endif
 
 #ifdef VERSION_adjtimex
 weak_alias (___adjtimex, __wadjtimex);
