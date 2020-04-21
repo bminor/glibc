@@ -26,6 +26,15 @@ extern int __settimezone (const struct timezone *__tz)
 	attribute_hidden;
 extern int __adjtime (const struct timeval *__delta,
 		      struct timeval *__olddelta);
+
+#  include <struct___timeval64.h>
+#  if __TIMESIZE == 64
+#   define __adjtime64 __adjtime
+#  else
+extern int __adjtime64 (const struct __timeval64 *itv,
+                        struct __timeval64 *otv);
+libc_hidden_proto (__adjtime64)
+#  endif
 extern int __getitimer (enum __itimer_which __which,
 			struct itimerval *__value);
 extern int __setitimer (enum __itimer_which __which,
