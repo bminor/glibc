@@ -25,5 +25,51 @@
 
 libc_hidden_proto (__adjtimex)
 
+#  include <struct___timeval64.h>
+/* Local definition of 64 bit time supporting timex struct */
+#  if __TIMESIZE == 64
+#   define __timex64 timex
+#  else
+
+struct __timex64
+{
+  unsigned int modes;          /* mode selector */
+  int :32;                     /* pad */
+  long long int offset;            /* time offset (usec) */
+  long long int freq;              /* frequency offset (scaled ppm) */
+  long long int maxerror;          /* maximum error (usec) */
+  long long int esterror;          /* estimated error (usec) */
+  int status;                  /* clock command/status */
+  int :32;                     /* pad */
+  long long int constant;          /* pll time constant */
+  long long int precision;         /* clock precision (usec) (read only) */
+  long long int tolerance;         /* clock frequency tolerance (ppm) (ro) */
+  struct __timeval64 time;     /* (read only, except for ADJ_SETOFFSET) */
+  long long int tick;              /* (modified) usecs between clock ticks */
+  long long int ppsfreq;           /* pps frequency (scaled ppm) (ro) */
+  long long int jitter;            /* pps jitter (us) (ro) */
+  int shift;                   /* interval duration (s) (shift) (ro) */
+  int :32;                     /* pad */
+  long long int stabil;            /* pps stability (scaled ppm) (ro) */
+  long long int jitcnt;            /* jitter limit exceeded (ro) */
+  long long int calcnt;            /* calibration intervals (ro) */
+  long long int errcnt;            /* calibration errors (ro) */
+  long long int stbcnt;            /* stability limit exceeded (ro) */
+
+  int tai;                     /* TAI offset (ro) */
+
+  int  :32;
+  int  :32;
+  int  :32;
+  int  :32;
+  int  :32;
+  int  :32;
+  int  :32;
+  int  :32;
+  int  :32;
+  int  :32;
+  int  :32;
+};
+#  endif
 # endif /* _ISOMAC */
 #endif /* sys/timex.h */
