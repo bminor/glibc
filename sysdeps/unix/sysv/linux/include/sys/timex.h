@@ -33,6 +33,7 @@ libc_hidden_proto (__adjtimex)
 #   define __clock_adjtime64 __clock_adjtime
 #   define ___adjtimex64 ___adjtimex
 #   define __ntptimeval64 ntptimeval
+#   define __ntp_gettime64 __ntp_gettime
 #  else
 
 struct __timex64
@@ -91,6 +92,9 @@ struct __ntptimeval64
   long int __glibc_reserved3;
   long int __glibc_reserved4;
 };
+extern int __ntp_gettime64 (struct __ntptimeval64 *ntv);
+libc_hidden_proto (__ntp_gettime64)
+
 #  endif
 
 /* Convert a known valid struct timex into a struct __timex64.  */
