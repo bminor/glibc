@@ -18,7 +18,7 @@
 
 #include <sysdep.h>
 #define _SIGNAL_H
-#include <bits/signum.h>
+#include <bits/signum-arch.h>
 #include <tcb-offsets.h>
 
 /* The following are defined in linux/sched.h, which unfortunately	*/

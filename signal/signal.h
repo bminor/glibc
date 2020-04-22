@@ -27,7 +27,7 @@
 __BEGIN_DECLS
 
 #include <bits/types.h>
-#include <bits/signum.h>
+#include <bits/signum-generic.h>
 
 #include <bits/types/sig_atomic_t.h>
 
