@@ -152,5 +152,41 @@ valid_timex64_to_timex (const struct __timex64 tx64)
 
   return tx;
 }
+
+/* Convert a known valid struct ntptimeval into a struct __ntptimeval64.  */
+static inline struct __ntptimeval64
+valid_ntptimeval_to_ntptimeval64 (const struct ntptimeval ntv)
+{
+  struct __ntptimeval64 ntv64;
+
+  ntv64.time = valid_timeval_to_timeval64 (ntv.time);
+  ntv64.maxerror = ntv.maxerror;
+  ntv64.esterror = ntv.esterror;
+  ntv64.tai = ntv.tai;
+  ntv64.__glibc_reserved1 = 0;
+  ntv64.__glibc_reserved2 = 0;
+  ntv64.__glibc_reserved3 = 0;
+  ntv64.__glibc_reserved4 = 0;
+
+  return ntv64;
+}
+
+/* Convert a known valid struct __ntptimeval64 into a struct ntptimeval.  */
+static inline struct ntptimeval
+valid_ntptimeval64_to_ntptimeval (const struct __ntptimeval64 ntp64)
+{
+  struct ntptimeval ntp;
+
+  ntp.time = valid_timeval64_to_timeval (ntp64.time);
+  ntp.maxerror = ntp64.maxerror;
+  ntp.esterror = ntp64.esterror;
+  ntp.tai = ntp64.tai;
+  ntp.__glibc_reserved1 = 0;
+  ntp.__glibc_reserved2 = 0;
+  ntp.__glibc_reserved3 = 0;
+  ntp.__glibc_reserved4 = 0;
+
+  return ntp;
+}
 # endif /* _ISOMAC */
 #endif /* sys/timex.h */
