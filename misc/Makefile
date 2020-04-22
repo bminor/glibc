@@ -87,7 +87,7 @@ tests := tst-dirname tst-tsearch tst-fdset tst-mntent tst-hsearch \
 	 tst-preadvwritev tst-preadvwritev64 tst-makedev tst-empty \
 	 tst-preadvwritev2 tst-preadvwritev64v2 tst-warn-wide \
 	 tst-ldbl-warn tst-ldbl-error tst-dbl-efgcvt tst-ldbl-efgcvt \
-	 tst-mntent-autofs
+	 tst-mntent-autofs tst-syscalls
 
 # Tests which need libdl.
 ifeq (yes,$(build-shared))
