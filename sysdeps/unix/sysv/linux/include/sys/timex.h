@@ -34,6 +34,7 @@ libc_hidden_proto (__adjtimex)
 #   define ___adjtimex64 ___adjtimex
 #   define __ntptimeval64 ntptimeval
 #   define __ntp_gettime64 __ntp_gettime
+#   define __ntp_gettimex64 __ntp_gettimex
 #  else
 
 struct __timex64
@@ -94,6 +95,8 @@ struct __ntptimeval64
 };
 extern int __ntp_gettime64 (struct __ntptimeval64 *ntv);
 libc_hidden_proto (__ntp_gettime64)
+extern int __ntp_gettimex64 (struct __ntptimeval64 *ntv);
+libc_hidden_proto (__ntp_gettimex64)
 
 #  endif
 
