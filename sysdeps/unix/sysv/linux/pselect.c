@@ -43,7 +43,7 @@ __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
   } data;
 
   data.ss = (__syscall_ulong_t) (uintptr_t) sigmask;
-  data.ss_len = _NSIG / 8;
+  data.ss_len = __NSIG_BYTES;
 
   return SYSCALL_CANCEL (pselect6, nfds, readfds, writefds, exceptfds,
                          timeout, &data);

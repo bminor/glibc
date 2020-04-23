@@ -57,7 +57,8 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
      real size of the user-level sigset_t.  */
   result = INLINE_SYSCALL_CALL (rt_sigaction, sig,
 				act ? &kact : NULL,
-				oact ? &koact : NULL, STUB (act, _NSIG / 8));
+				oact ? &koact : NULL, STUB (act,
+							    __NSIG_BYTES));
 
   if (oact && result >= 0)
     {

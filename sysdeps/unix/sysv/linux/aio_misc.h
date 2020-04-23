@@ -31,7 +31,8 @@ __aio_start_notify_thread (void)
 {
   sigset_t ss;
   sigemptyset (&ss);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, &ss, NULL, _NSIG / 8);
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, &ss, NULL,
+			 __NSIG_BYTES);
 }
 
 extern inline int
@@ -52,12 +53,14 @@ __aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   sigset_t ss;
   sigset_t oss;
   sigfillset (&ss);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, &ss, &oss, _NSIG / 8);
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, &ss, &oss,
+			 __NSIG_BYTES);
 
   int ret = pthread_create (threadp, &attr, tf, arg);
 
   /* Restore the signal mask.  */
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, &oss, NULL, _NSIG / 8);
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, &oss, NULL,
+			 __NSIG_BYTES);
 
   (void) pthread_attr_destroy (&attr);
   return ret;

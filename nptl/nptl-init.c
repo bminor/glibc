@@ -281,7 +281,7 @@ __pthread_initialize_minimal_internal (void)
   __sigaddset (&sa.sa_mask, SIGCANCEL);
   __sigaddset (&sa.sa_mask, SIGSETXID);
   INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_UNBLOCK, &sa.sa_mask,
-			 NULL, _NSIG / 8);
+			 NULL, __NSIG_BYTES);
 
   /* Get the size of the static and alignment requirements for the TLS
      block.  */

@@ -2,6 +2,8 @@
 # include <signal/signal.h>
 
 # ifndef _ISOMAC
+#  include <sigsetops.h>
+
 libc_hidden_proto (sigemptyset)
 libc_hidden_proto (sigfillset)
 libc_hidden_proto (sigaddset)

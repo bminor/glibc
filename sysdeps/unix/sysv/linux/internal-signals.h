@@ -68,7 +68,7 @@ static inline void
 __libc_signal_block_all (sigset_t *set)
 {
   INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_BLOCK, &sigall_set, set,
-			 _NSIG / 8);
+			 __NSIG_BYTES);
 }
 
 /* Block all application signals (excluding internal glibc ones).  */
@@ -78,7 +78,7 @@ __libc_signal_block_app (sigset_t *set)
   sigset_t allset = sigall_set;
   __clear_internal_signals (&allset);
   INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_BLOCK, &allset, set,
-			 _NSIG / 8);
+			 __NSIG_BYTES);
 }
 
 /* Block only SIGTIMER and return the previous set on SET.  */
@@ -86,7 +86,7 @@ static inline void
 __libc_signal_block_sigtimer (sigset_t *set)
 {
   INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_BLOCK, &sigtimer_set, set,
-			 _NSIG / 8);
+			 __NSIG_BYTES);
 }
 
 /* Unblock only SIGTIMER and return the previous set on SET.  */
@@ -94,7 +94,7 @@ static inline void
 __libc_signal_unblock_sigtimer (sigset_t *set)
 {
   INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_UNBLOCK, &sigtimer_set, set,
-			 _NSIG / 8);
+			 __NSIG_BYTES);
 }
 
 /* Restore current process signal mask.  */
@@ -102,7 +102,7 @@ static inline void
 __libc_signal_restore_set (const sigset_t *set)
 {
   INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, set, NULL,
-			 _NSIG / 8);
+			 __NSIG_BYTES);
 }
 
 /* Used to communicate with signal handler.  */
