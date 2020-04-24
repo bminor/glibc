@@ -336,6 +336,10 @@ struct rtld_global
        recursive dlopen calls from ELF constructors.  */
     unsigned int _ns_global_scope_pending_adds;
 
+    /* Once libc.so has been loaded into the namespace, this points to
+       its link map.  */
+    struct link_map *libc_map;
+
     /* Search table for unique objects.  */
     struct unique_sym_table
     {
@@ -945,6 +949,19 @@ extern lookup_t _dl_lookup_symbol_x (const char *undef,
 				     struct link_map *skip_map)
      attribute_hidden;
 
+
+/* Restricted version of _dl_lookup_symbol_x.  Searches MAP (and only
+   MAP) for the symbol UNDEF_NAME, with GNU hash NEW_HASH (computed
+   with dl_new_hash), symbol version VERSION, and symbol version hash
+   VERSION_HASH (computed with _dl_elf_hash).  Returns a pointer to
+   the symbol table entry in MAP on success, or NULL on failure.  MAP
+   must have symbol versioning information, or otherwise the result is
+   undefined.  */
+const ElfW(Sym) *_dl_lookup_direct (struct link_map *map,
+				    const char *undef_name,
+				    uint32_t new_hash,
+				    const char *version,
+				    uint32_t version_hash) attribute_hidden;
 
 /* Add the new link_map NEW to the end of the namespace list.  */
 extern void _dl_add_to_namespace_list (struct link_map *new, Lmid_t nsid)

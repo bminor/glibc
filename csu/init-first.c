@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -74,9 +73,6 @@ _init_first (int argc, char **argv, char **envp)
 #endif
 
   __init_misc (argc, argv, envp);
-
-  /* Initialize ctype data.  */
-  __ctype_init ();
 
 #if defined SHARED && !defined NO_CTORS_DTORS_SECTIONS
   __libc_global_ctors ();

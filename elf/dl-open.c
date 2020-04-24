@@ -34,6 +34,7 @@
 #include <atomic.h>
 #include <libc-internal.h>
 #include <array_length.h>
+#include <libc-early-init.h>
 
 #include <dl-dst.h>
 #include <dl-prop.h>
@@ -56,6 +57,13 @@ struct dl_open_args
      dl_open_worker.  Only valid if nsid is a real namespace
      (non-negative).  */
   unsigned int original_global_scope_pending_adds;
+
+  /* Set to true by dl_open_worker if libc.so was already loaded into
+     the namespace at the time dl_open_worker was called.  This is
+     used to determine whether libc.so early initialization has
+     already been done before, and whether to roll back the cached
+     libc_map value in the namespace in case of a dlopen failure.  */
+  bool libc_already_loaded;
 
   /* Original parameters to the program and the current environment.  */
   int argc;
@@ -500,6 +508,11 @@ dl_open_worker (void *a)
 	args->nsid = call_map->l_ns;
     }
 
+  /* The namespace ID is now known.  Keep track of whether libc.so was
+     already loaded, to determine whether it is necessary to call the
+     early initialization routine (or clear libc_map on error).  */
+  args->libc_already_loaded = GL(dl_ns)[args->nsid].libc_map != NULL;
+
   /* Retain the old value, so that it can be restored.  */
   args->original_global_scope_pending_adds
     = GL (dl_ns)[args->nsid]._ns_global_scope_pending_adds;
@@ -734,6 +747,11 @@ dl_open_worker (void *a)
   if (relocation_in_progress)
     LIBC_PROBE (reloc_complete, 3, args->nsid, r, new);
 
+  /* If libc.so was not there before, attempt to call its early
+     initialization routine.  */
+  if (!args->libc_already_loaded)
+    _dl_call_libc_early_init (GL(dl_ns)[args->nsid].libc_map);
+
 #ifndef SHARED
   DL_STATIC_INIT (new);
 #endif
@@ -828,6 +846,8 @@ no more namespaces available for dlmopen()"));
   args.caller_dlopen = caller_dlopen;
   args.map = NULL;
   args.nsid = nsid;
+  /* args.libc_already_loaded is always assigned by dl_open_worker
+     (before any explicit/non-local returns).  */
   args.argc = argc;
   args.argv = argv;
   args.env = env;
@@ -856,6 +876,11 @@ no more namespaces available for dlmopen()"));
   /* See if an error occurred during loading.  */
   if (__glibc_unlikely (exception.errstring != NULL))
     {
+      /* Avoid keeping around a dangling reference to the libc.so link
+	 map in case it has been cached in libc_map.  */
+      if (!args.libc_already_loaded)
+	GL(dl_ns)[nsid].libc_map = NULL;
+
       /* Remove the object from memory.  It may be in an inconsistent
 	 state if relocation failed, for example.  */
       if (args.map)

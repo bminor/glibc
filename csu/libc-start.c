@@ -22,6 +22,7 @@
 #include <ldsodefs.h>
 #include <exit-thread.h>
 #include <libc-internal.h>
+#include <elf/libc-early-init.h>
 
 #include <elf/dl-tunables.h>
 
@@ -238,6 +239,10 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
     __cxa_atexit ((void (*) (void *)) rtld_fini, NULL, NULL);
 
 #ifndef SHARED
+  /* Perform early initialization.  In the shared case, this function
+     is called from the dynamic loader as early as possible.  */
+  __libc_early_init ();
+
   /* Call the initializer of the libc.  This is only needed here if we
      are compiling for the static library in which case we haven't
      run the constructors in `_dl_start_user'.  */
