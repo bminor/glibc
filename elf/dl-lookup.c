@@ -28,17 +28,11 @@
 #include <libc-lock.h>
 #include <tls.h>
 #include <atomic.h>
+#include <elf_machine_sym_no_match.h>
 
 #include <assert.h>
 
-/* Return nonzero if check_match should consider SYM to fail to match a
-   symbol reference for some machine-specific reason.  */
-#ifndef ELF_MACHINE_SYM_NO_MATCH
-# define ELF_MACHINE_SYM_NO_MATCH(sym) 0
-#endif
-
 #define VERSTAG(tag)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (tag))
-
 
 struct sym_val
   {
@@ -78,7 +72,7 @@ check_match (const char *const undef_name,
   if (__glibc_unlikely ((sym->st_value == 0 /* No value.  */
 			 && sym->st_shndx != SHN_ABS
 			 && stt != STT_TLS)
-			|| ELF_MACHINE_SYM_NO_MATCH (sym)
+			|| elf_machine_sym_no_match (sym)
 			|| (type_class & (sym->st_shndx == SHN_UNDEF))))
     return NULL;
 
