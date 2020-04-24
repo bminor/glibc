@@ -34,7 +34,7 @@ psignal (int sig, const char *s)
   else
     colon = ": ";
 
-  if (sig >= 0 && sig < NSIG && (desc = _sys_siglist[sig]) != NULL)
+  if (sig >= 0 && sig < NSIG && (desc = __sys_siglist[sig]) != NULL)
     (void) __fxprintf (NULL, "%s%s%s\n", s, colon, _(desc));
   else
     {

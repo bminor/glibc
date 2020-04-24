@@ -49,20 +49,16 @@
 static const char *fname;
 
 
-/* We better should not use `strerror' since it can call far too many
-   other functions which might fail.  Do it here ourselves.  */
+/* Print the signal number SIGNAL.  Either strerror or strsignal might
+   call local internal functions and these in turn call far too many
+   other functions and might even allocate memory which might fail.  */
 static void
 write_strsignal (int fd, int signal)
 {
-  if (signal < 0 || signal >= _NSIG || _sys_siglist[signal] == NULL)
-    {
-      char buf[30];
-      char *ptr = _itoa_word (signal, &buf[sizeof (buf)], 10, 0);
-      WRITE_STRING ("signal ");
-      write (fd, buf, &buf[sizeof (buf)] - ptr);
-    }
-  else
-    WRITE_STRING (_sys_siglist[signal]);
+  char buf[30];
+  char *ptr = _itoa_word (signal, &buf[sizeof (buf)], 10, 0);
+  WRITE_STRING ("signal ");
+  write (fd, buf, &buf[sizeof (buf)] - ptr);
 }
 
 

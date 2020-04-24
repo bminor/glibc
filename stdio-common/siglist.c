@@ -20,17 +20,19 @@
 #include <signal.h>
 #include <libintl.h>
 
-const char *const _sys_siglist[NSIG] =
+const char *const __sys_siglist[NSIG] =
 {
 #define init_sig(sig, abbrev, desc)   [sig] = desc,
 #include <siglist.h>
 #undef init_sig
 };
+libc_hidden_def (__sys_siglist)
 
-
-const char *const _sys_sigabbrev[NSIG] =
+const char *const __sys_sigabbrev[NSIG] =
 {
 #define init_sig(sig, abbrev, desc)   [sig] = abbrev,
 #include <siglist.h>
 #undef init_sig
 };
+
+#include <siglist-compat.c>

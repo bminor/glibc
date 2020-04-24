@@ -880,11 +880,6 @@ to @var{signum}.
 This function is a BSD feature, declared in the header file @file{signal.h}.
 @end deftypefun
 
-@vindex sys_siglist
-There is also an array @code{sys_siglist} which contains the messages
-for the various signal codes.  This array exists on BSD systems, unlike
-@code{strsignal}.
-
 @node Signal Actions
 @section Specifying Signal Actions
 @cindex signal actions

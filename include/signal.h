@@ -12,7 +12,9 @@ libc_hidden_proto (__sigpause)
 libc_hidden_proto (raise)
 libc_hidden_proto (__libc_current_sigrtmin)
 libc_hidden_proto (__libc_current_sigrtmax)
-libc_hidden_proto (_sys_siglist)
+extern const char * const __sys_siglist[_NSIG];
+libc_hidden_proto (__sys_siglist)
+
 
 /* Now define the internal interfaces.  */
 extern __sighandler_t __bsd_signal (int __sig, __sighandler_t __handler);

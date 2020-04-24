@@ -67,6 +67,12 @@ Deprecated and removed features, and other changes affecting compatibility:
 * ldconfig now defaults to the new format for ld.so.cache. glibc has
   already supported this format for almost 20 years.
 
+* The deprecated arrays sys_siglist, _sys_siglist, and sys_sigabbrev
+  are no longer available to newly linked binaries, and their declarations
+  have been removed from <string.h>.  They are exported solely as
+  compatibility symbols to support old binaries.  All programs should use
+  strsignal instead.
+
 Changes to build and runtime requirements:
 
 * powerpc64le requires GCC 7.4 or newer.  This is required for supporting

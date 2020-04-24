@@ -1,4 +1,5 @@
-/* Copyright (C) 1996-2020 Free Software Foundation, Inc.
+/* Compatibility signal numbers and their names symbols.  Hurd version.
+   Copyright (C) 1997-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,10 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* This file is included multiple times.  */
+#include <siglist-compat.h>
 
-#include_next <siglist.h>	/* Get the canonical list.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+DEFINE_COMPAT_SIGLIST (33, GLIBC_2_0)
+#endif
 
-#define	OLD_SIGLIST_SIZE	32 /* For GLIBC_2.0 binary compatibility.  */
-
-#define OLD2_SIGLIST_SIZE	64 /* For GLIBC_2.1 binary compatibility.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_32)
+DEFINE_COMPAT_SIGLIST (NSIG, GLIBC_2_1)
+#endif

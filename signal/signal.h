@@ -284,12 +284,6 @@ extern int sigqueue (__pid_t __pid, int __sig, const union sigval __val)
 
 #ifdef __USE_MISC
 
-/* Names of the signals.  This variable exists only for compatibility.
-   Use `strsignal' instead (see <string.h>).  */
-extern const char *const _sys_siglist[_NSIG];
-extern const char *const sys_siglist[_NSIG];
-
-
 /* Get machine-dependent `struct sigcontext' and signal subcodes.  */
 # include <bits/sigcontext.h>
 
