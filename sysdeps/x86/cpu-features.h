@@ -53,6 +53,7 @@ enum cpu_features_kind
   arch_kind_unknown = 0,
   arch_kind_intel,
   arch_kind_amd,
+  arch_kind_zhaoxin,
   arch_kind_other
 };
 

@@ -466,6 +466,60 @@ init_cpu_features (struct cpu_features *cpu_features)
 	  }
 	}
     }
+  /* This spells out "CentaurHauls" or " Shanghai ".  */
+  else if ((ebx == 0x746e6543 && ecx == 0x736c7561 && edx == 0x48727561)
+	   || (ebx == 0x68532020 && ecx == 0x20206961 && edx == 0x68676e61))
+    {
+      unsigned int extended_model, stepping;
+
+      kind = arch_kind_zhaoxin;
+
+      get_common_indices (cpu_features, &family, &model, &extended_model,
+			  &stepping);
+
+      get_extended_indices (cpu_features);
+
+      model += extended_model;
+      if (family == 0x6)
+        {
+          if (model == 0xf || model == 0x19)
+            {
+              cpu_features->feature[index_arch_AVX_Usable]
+                &= (~bit_arch_AVX_Usable
+                & ~bit_arch_AVX2_Usable);
+
+              cpu_features->feature[index_arch_Slow_SSE4_2]
+                |= (bit_arch_Slow_SSE4_2);
+
+              cpu_features->feature[index_arch_AVX_Fast_Unaligned_Load]
+                &= ~bit_arch_AVX_Fast_Unaligned_Load;
+            }
+        }
+      else if (family == 0x7)
+        {
+          if (model == 0x1b)
+            {
+              cpu_features->feature[index_arch_AVX_Usable]
+                &= (~bit_arch_AVX_Usable
+                & ~bit_arch_AVX2_Usable);
+
+              cpu_features->feature[index_arch_Slow_SSE4_2]
+                |= bit_arch_Slow_SSE4_2;
+
+              cpu_features->feature[index_arch_AVX_Fast_Unaligned_Load]
+                &= ~bit_arch_AVX_Fast_Unaligned_Load;
+           }
+         else if (model == 0x3b)
+           {
+             cpu_features->feature[index_arch_AVX_Usable]
+               &= (~bit_arch_AVX_Usable
+               & ~bit_arch_AVX2_Usable);
+
+               cpu_features->feature[index_arch_AVX_Fast_Unaligned_Load]
+               &= ~bit_arch_AVX_Fast_Unaligned_Load;
+           }
+       }
+    }
   else
     {
       kind = arch_kind_other;
