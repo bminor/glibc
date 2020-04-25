@@ -32,16 +32,9 @@ __xpg_strerror_r (int errnum, char *buf, size_t buflen)
      string) if errnum is invalid, otherwise it returns a string whose
      storage has indefinite extent.  */
   if (estr == buf)
-    {
-      assert (errnum < 0 || errnum >= _sys_nerr_internal
-	      || _sys_errlist_internal[errnum] == NULL);
-      return EINVAL;
-    }
+    return EINVAL;
   else
     {
-      assert (errnum >= 0 && errnum < _sys_nerr_internal
-	      && _sys_errlist_internal[errnum] != NULL);
-
       size_t estrlen = strlen (estr);
 
       /* Terminate the string in any case.  */

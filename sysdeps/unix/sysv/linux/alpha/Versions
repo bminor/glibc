@@ -1,12 +1,5 @@
 libc {
-  # The comment lines with "#errlist-compat" are magic; see
-  # sysdeps/gnu/errlist-compat.awk.
-  # When you get an error from errlist-compat.awk, you need to add a new
-  # version here.  Don't do this blindly, since this means changing the ABI
-  # for all GNU/Linux configurations.
-
   GLIBC_2.0 {
-    #errlist-compat	131
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
 
     # Unfortunately in wider use.
@@ -33,7 +26,6 @@ libc {
     pciconfig_read; pciconfig_write; sethae;
   }
   GLIBC_2.1 {
-    #errlist-compat	131
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
 
     # Linux/Alpha 64-bit timeval functions.
@@ -70,19 +62,15 @@ libc {
     wordexp;
   }
   GLIBC_2.3 {
-    #errlist-compat	132
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.4 {
-    #errlist-compat	138
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.12 {
-    #errlist-compat	139
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.16 {
-    #errlist-compat	140
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.27 {

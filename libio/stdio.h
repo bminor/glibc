@@ -779,12 +779,6 @@ extern int ferror_unlocked (FILE *__stream) __THROW __wur;
    marked with __THROW.  */
 extern void perror (const char *__s);
 
-/* Provide the declarations for `sys_errlist' and `sys_nerr' if they
-   are available on this system.  Even if available, these variables
-   should not be used directly.  The `strerror' function provides
-   all the necessary functionality.  */
-#include <bits/sys_errlist.h>
-
 
 #ifdef	__USE_POSIX
 /* Return the system file descriptor for STREAM.  */

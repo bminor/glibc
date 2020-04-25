@@ -1,5 +1,5 @@
-/* Declare sys_errlist and sys_nerr, or don't.  Don't version.
-   Copyright (C) 2002-2020 Free Software Foundation, Inc.
+/* Linux sys_errlist compat symbol definitions.  Sparc version.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +16,28 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _STDIO_H
-# error "Never include <bits/sys_errlist.h> directly; use <stdio.h> instead."
+#include <errlist-compat.h>
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+DEFINE_COMPAT_ERRLIST (127, GLIBC_2_0)
 #endif
 
-/* sys_errlist and sys_nerr are deprecated.  Use strerror instead.  */
+#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_3)
+DEFINE_COMPAT_ERRLIST (127, GLIBC_2_1)
+#endif
+
+#if SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_4)
+DEFINE_COMPAT_ERRLIST (128, GLIBC_2_3)
+#endif
+
+#if SHLIB_COMPAT (libc, GLIBC_2_4, GLIBC_2_12)
+DEFINE_COMPAT_ERRLIST (134, GLIBC_2_4)
+#endif
+
+#if SHLIB_COMPAT (libc, GLIBC_2_12, GLIBC_2_16)
+DEFINE_COMPAT_ERRLIST (135, GLIBC_2_12)
+#endif
+
+#if SHLIB_COMPAT (libc, GLIBC_2_16, GLIBC_2_32)
+DEFINE_COMPAT_ERRLIST (136, GLIBC_2_16)
+#endif

@@ -36,8 +36,8 @@
 char *
 __strerror_r (int errnum, char *buf, size_t buflen)
 {
-  if (__builtin_expect (errnum < 0 || errnum >= _sys_nerr_internal
-			|| _sys_errlist_internal[errnum] == NULL, 0))
+  char *err = (char *) __get_errlist (errnum);
+  if (__glibc_unlikely (err == NULL))
     {
       /* Buffer we use to print the number in.  For a maximum size for
 	 `int' of 8 bytes we never need more than 20 digits.  */
@@ -68,7 +68,7 @@ __strerror_r (int errnum, char *buf, size_t buflen)
       return buf;
     }
 
-  return (char *) _(_sys_errlist_internal[errnum]);
+  return _(err);
 }
 weak_alias (__strerror_r, strerror_r)
 libc_hidden_def (__strerror_r)

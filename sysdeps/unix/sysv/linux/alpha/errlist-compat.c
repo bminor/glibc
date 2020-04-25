@@ -1,4 +1,5 @@
-/* Copyright (C) 1998-2020 Free Software Foundation, Inc.
+/* Linux sys_errlist compat symbol definitions.  Alpha version.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,7 +16,28 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <mach/error.h>
+#include <errlist-compat.h>
 
-#define ERR_MAP(value) err_get_code (value)
-#include <stdio-common/errlist.c>
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+DEFINE_COMPAT_ERRLIST (131, GLIBC_2_0)
+#endif
+
+#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_3)
+DEFINE_COMPAT_ERRLIST (131, GLIBC_2_1)
+#endif
+
+#if SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_4)
+DEFINE_COMPAT_ERRLIST (132, GLIBC_2_3)
+#endif
+
+#if SHLIB_COMPAT (libc, GLIBC_2_4, GLIBC_2_12)
+DEFINE_COMPAT_ERRLIST (138, GLIBC_2_4)
+#endif
+
+#if SHLIB_COMPAT (libc, GLIBC_2_12, GLIBC_2_16)
+DEFINE_COMPAT_ERRLIST (139, GLIBC_2_12)
+#endif
+
+#if SHLIB_COMPAT (libc, GLIBC_2_16, GLIBC_2_32)
+DEFINE_COMPAT_ERRLIST (140, GLIBC_2_16)
+#endif

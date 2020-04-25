@@ -15,49 +15,6 @@
 # License along with the GNU C Library; if not, see
 # <https://www.gnu.org/licenses/>.
 
-# Generate the list of strings for errno codes from the section of the
-# manual which documents the codes.
-
-$(..)sysdeps/gnu/errlist.c: $(..)sysdeps/gnu/errlist.awk \
-			    $(..)manual/errno.texi
-	$(AWK) -f $^ > $@-tmp
-# Make it unwritable so noone will edit it by mistake.
-	-chmod a-w $@-tmp
-	mv -f $@-tmp $@
-
-ifeq ($(subdir),stdio-common)
-
-errlist-c = $(firstword $(wildcard $(addsuffix /errlist.c,$(sysdirs) .)))
-
-libof-errlist-compat = extramodules
-
-ifeq ($(build-shared),yes)
-$(objpfx)errlist-compat.c: $(errlist-c) $(..)sysdeps/gnu/errlist-compat.awk \
-			   $(common-objpfx)Versions.v.i $(before-compile)
-else
-$(objpfx)errlist-compat.c: $(errlist-c) $(..)sysdeps/gnu/errlist-compat.awk \
-			   $(before-compile)
-endif
-	$(make-target-directory)
-	$(AWK) -v maxerr=`\
-	  $(CC) -S $(CPPFLAGS) $(CFLAGS) -DEMIT_ERR_MAX $< -o - \
-	  | sed -n 's/^.*@@@[^0-9]*\([0-9]*\)[^0-9]*@@@.*$$/\1/p'` \
-	       -f $(..)sysdeps/gnu/errlist-compat.awk \
-	       $(wildcard $(sysdirs:=/Versions)) > $@T
-# Make it unwritable so noone will edit it by mistake.
-	-chmod a-w $@T
-	mv -f $@T $@
-$(objpfx)errlist-compat.h: $(objpfx)errlist-compat.c
-	sed -n '1p;/ERR_MAX/p' $< > $@T
-	-chmod a-w $@T
-	mv -f $@T $@
-generated += errlist-compat.c errlist-compat.h
-
-# This will force the generation above to happy if need be.
-$(foreach o,$(object-suffixes) $(object-suffixes:=.d),\
-	  $(objpfx)errlist$o): $(objpfx)errlist-compat.h
-endif
-
 ifeq ($(subdir),login)
 sysdep_routines += setutxent getutxent endutxent getutxid getutxline \
 		   pututxline utmpxname updwtmpx getutmpx getutmp

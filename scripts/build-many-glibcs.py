@@ -892,8 +892,7 @@ class Context(object):
         # Some other files have such dependencies but do not need to
         # be touched because nothing in a build depends on the files
         # in question.
-        for f in ('sysdeps/gnu/errlist.c',
-                  'sysdeps/mach/hurd/bits/errno.h'):
+        for f in ('sysdeps/mach/hurd/bits/errno.h',):
             to_touch = os.path.join(srcdir, f)
             subprocess.run(['touch', '-c', to_touch], check=True)
         for dirpath, dirnames, filenames in os.walk(srcdir):

@@ -40,10 +40,8 @@ translate (const char *str, locale_t loc)
 char *
 strerror_l (int errnum, locale_t loc)
 {
-
-
-  if (__builtin_expect (errnum < 0 || errnum >= _sys_nerr_internal
-			|| _sys_errlist_internal[errnum] == NULL, 0))
+  char *err = (char *) __get_errlist (errnum);
+  if (__glibc_unlikely (err == NULL))
     {
       free (last_value);
       if (__asprintf (&last_value, "%s%d",
@@ -53,7 +51,7 @@ strerror_l (int errnum, locale_t loc)
       return last_value;
     }
 
-  return (char *) translate (_sys_errlist_internal[errnum], loc);
+  return (char *) translate (err, loc);
 }
 
 void

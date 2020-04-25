@@ -1,30 +1,20 @@
 libc {
-  # The comment lines with "#errlist-compat" are magic; see errlist-compat.awk.
-  # When you get an error from errlist-compat.awk, you need to add a new
-  # version here.
-
   GLIBC_2.0 {
-    #errlist-compat	127
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.1 {
-    #errlist-compat	127
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.3 {
-    #errlist-compat	128
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.4 {
-    #errlist-compat	134
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.12 {
-    #errlist-compat	135
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.16 {
-    #errlist-compat	136
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
 
     __getshmlba;

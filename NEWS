@@ -73,6 +73,12 @@ Deprecated and removed features, and other changes affecting compatibility:
   compatibility symbols to support old binaries.  All programs should use
   strsignal instead.
 
+* The deprecated symbols sys_errlist, _sys_errlist, sys_nerr, and _sys_nerr
+  are no longer available to newly linked binaries, and their declarations
+  have been removed from from <stdio.h>.  They are exported solely as
+  compatibility symbols to support old binaries.  All programs should use
+  strerror or strerror_r instead.
+
 Changes to build and runtime requirements:
 
 * powerpc64le requires GCC 7.4 or newer.  This is required for supporting

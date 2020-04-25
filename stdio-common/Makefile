@@ -85,6 +85,8 @@ generated += tst-printf-bz18872.c tst-printf-bz18872.mtrace \
 	     tst-printf-bz25691.mtrace tst-printf-bz25691-mem.out
 endif
 
+tests-special += $(objpfx)tst-errno-manual.out
+
 include ../Rules
 
 ifeq ($(run-built-tests),yes)
@@ -127,6 +129,15 @@ $(objpfx)tst-printf-bz18872.c: tst-printf-bz18872.sh
 
 $(objpfx)tst-%-mem.out: $(objpfx)tst-%.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-$*.mtrace > $@; \
+	$(evaluate-test)
+
+errlist-h = $(firstword $(wildcard $(addsuffix /errlist.h,$(sysdirs) .)))
+
+$(objpfx)tst-errno-manual.out: tst-errno-manual.py \
+			       $(errlist-h) \
+			       $(..)manual/errno.texi
+	$(PYTHON) tst-errno-manual.py -m $(..)manual/errno.texi \
+				      -e $(errlist-h) > $@; \
 	$(evaluate-test)
 
 CFLAGS-vfprintf.c += -Wno-uninitialized
