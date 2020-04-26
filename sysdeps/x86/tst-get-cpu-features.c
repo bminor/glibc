@@ -38,6 +38,7 @@ static const char * const cpu_kinds[] =
   "Unknown",
   "Intel",
   "AMD",
+  "ZHAOXIN",
   "Other",
 };
 
@@ -50,6 +51,7 @@ do_test (void)
     {
     case arch_kind_intel:
     case arch_kind_amd:
+    case arch_kind_zhaoxin:
     case arch_kind_other:
       printf ("Vendor: %s\n", cpu_kinds[cpu_features->basic.kind]);
       printf ("Family: 0x%x\n", cpu_features->basic.family);
