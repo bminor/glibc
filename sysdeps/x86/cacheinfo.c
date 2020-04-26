@@ -436,6 +436,57 @@ handle_amd (int name)
 }
 
 
+static long int __attribute__ ((noinline))
+handle_zhaoxin (int name)
+{
+  unsigned int eax;
+  unsigned int ebx;
+  unsigned int ecx;
+  unsigned int edx;
+
+  int folded_rel_name = (M(name) / 3) * 3;
+
+  unsigned int round = 0;
+  while (1)
+    {
+      __cpuid_count (4, round, eax, ebx, ecx, edx);
+
+      enum { null = 0, data = 1, inst = 2, uni = 3 } type = eax & 0x1f;
+      if (type == null)
+        break;
+
+      unsigned int level = (eax >> 5) & 0x7;
+
+      if ((level == 1 && type == data
+        && folded_rel_name == M(_SC_LEVEL1_DCACHE_SIZE))
+        || (level == 1 && type == inst
+            && folded_rel_name == M(_SC_LEVEL1_ICACHE_SIZE))
+        || (level == 2 && folded_rel_name == M(_SC_LEVEL2_CACHE_SIZE))
+        || (level == 3 && folded_rel_name == M(_SC_LEVEL3_CACHE_SIZE)))
+        {
+          unsigned int offset = M(name) - folded_rel_name;
+
+          if (offset == 0)
+            /* Cache size.  */
+            return (((ebx >> 22) + 1)
+                * (((ebx >> 12) & 0x3ff) + 1)
+                * ((ebx & 0xfff) + 1)
+                * (ecx + 1));
+          if (offset == 1)
+            return (ebx >> 22) + 1;
+
+          assert (offset == 2);
+          return (ebx & 0xfff) + 1;
+        }
+
+      ++round;
+    }
+
+  /* Nothing found.  */
+  return 0;
+}
+
+
 /* Get the value of the system variable NAME.  */
 long int
 attribute_hidden
@@ -448,6 +499,9 @@ __cache_sysconf (int name)
 
   if (cpu_features->basic.kind == arch_kind_amd)
     return handle_amd (name);
+
+  if (cpu_features->basic.kind == arch_kind_zhaoxin)
+    return handle_zhaoxin (name);
 
   // XXX Fill in more vendors.
 
@@ -483,6 +537,224 @@ int __x86_prefetchw attribute_hidden;
 
 
 static void
+get_common_cache_info (long int *shared_ptr, unsigned int *threads_ptr,
+                long int core)
+{
+  unsigned int eax;
+  unsigned int ebx;
+  unsigned int ecx;
+  unsigned int edx;
+
+  /* Number of logical processors sharing L2 cache.  */
+  int threads_l2;
+
+  /* Number of logical processors sharing L3 cache.  */
+  int threads_l3;
+
+  const struct cpu_features *cpu_features = __get_cpu_features ();
+  int max_cpuid = cpu_features->basic.max_cpuid;
+  unsigned int family = cpu_features->basic.family;
+  unsigned int model = cpu_features->basic.model;
+  long int shared = *shared_ptr;
+  unsigned int threads = *threads_ptr;
+  bool inclusive_cache = true;
+  bool support_count_mask = true;
+
+  /* Try L3 first.  */
+  unsigned int level = 3;
+
+  if (cpu_features->basic.kind == arch_kind_zhaoxin && family == 6)
+    support_count_mask = false;
+
+  if (shared <= 0)
+    {
+      /* Try L2 otherwise.  */
+      level  = 2;
+      shared = core;
+      threads_l2 = 0;
+      threads_l3 = -1;
+    }
+  else
+    {
+      threads_l2 = 0;
+      threads_l3 = 0;
+    }
+
+  /* A value of 0 for the HTT bit indicates there is only a single
+     logical processor.  */
+  if (HAS_CPU_FEATURE (HTT))
+    {
+      /* Figure out the number of logical threads that share the
+         highest cache level.  */
+      if (max_cpuid >= 4)
+        {
+          int i = 0;
+
+          /* Query until cache level 2 and 3 are enumerated.  */
+          int check = 0x1 | (threads_l3 == 0) << 1;
+          do
+            {
+              __cpuid_count (4, i++, eax, ebx, ecx, edx);
+
+              /* There seems to be a bug in at least some Pentium Ds
+                 which sometimes fail to iterate all cache parameters.
+                 Do not loop indefinitely here, stop in this case and
+                 assume there is no such information.  */
+              if (cpu_features->basic.kind == arch_kind_intel
+                  && (eax & 0x1f) == 0 )
+                goto intel_bug_no_cache_info;
+
+              switch ((eax >> 5) & 0x7)
+                {
+                  default:
+                    break;
+                  case 2:
+                    if ((check & 0x1))
+                      {
+                        /* Get maximum number of logical processors
+                           sharing L2 cache.  */
+                        threads_l2 = (eax >> 14) & 0x3ff;
+                        check &= ~0x1;
+                      }
+                    break;
+                  case 3:
+                    if ((check & (0x1 << 1)))
+                      {
+                        /* Get maximum number of logical processors
+                           sharing L3 cache.  */
+                        threads_l3 = (eax >> 14) & 0x3ff;
+
+                        /* Check if L2 and L3 caches are inclusive.  */
+                        inclusive_cache = (edx & 0x2) != 0;
+                        check &= ~(0x1 << 1);
+                      }
+                    break;
+                }
+            }
+          while (check);
+
+          /* If max_cpuid >= 11, THREADS_L2/THREADS_L3 are the maximum
+             numbers of addressable IDs for logical processors sharing
+             the cache, instead of the maximum number of threads
+             sharing the cache.  */
+          if (max_cpuid >= 11 && support_count_mask)
+            {
+              /* Find the number of logical processors shipped in
+                 one core and apply count mask.  */
+              i = 0;
+
+              /* Count SMT only if there is L3 cache.  Always count
+                 core if there is no L3 cache.  */
+              int count = ((threads_l2 > 0 && level == 3)
+                           | ((threads_l3 > 0
+                               || (threads_l2 > 0 && level == 2)) << 1));
+
+              while (count)
+                {
+                  __cpuid_count (11, i++, eax, ebx, ecx, edx);
+
+                  int shipped = ebx & 0xff;
+                  int type = ecx & 0xff00;
+                  if (shipped == 0 || type == 0)
+                    break;
+                  else if (type == 0x100)
+                    {
+                      /* Count SMT.  */
+                      if ((count & 0x1))
+                        {
+                          int count_mask;
+
+                          /* Compute count mask.  */
+                          asm ("bsr %1, %0"
+                               : "=r" (count_mask) : "g" (threads_l2));
+                          count_mask = ~(-1 << (count_mask + 1));
+                          threads_l2 = (shipped - 1) & count_mask;
+                          count &= ~0x1;
+                        }
+                    }
+                  else if (type == 0x200)
+                    {
+                      /* Count core.  */
+                      if ((count & (0x1 << 1)))
+                        {
+                          int count_mask;
+                          int threads_core
+                            = (level == 2 ? threads_l2 : threads_l3);
+
+                          /* Compute count mask.  */
+                          asm ("bsr %1, %0"
+                               : "=r" (count_mask) : "g" (threads_core));
+                          count_mask = ~(-1 << (count_mask + 1));
+                          threads_core = (shipped - 1) & count_mask;
+                          if (level == 2)
+                            threads_l2 = threads_core;
+                          else
+                            threads_l3 = threads_core;
+                          count &= ~(0x1 << 1);
+                        }
+                    }
+                }
+            }
+          if (threads_l2 > 0)
+            threads_l2 += 1;
+          if (threads_l3 > 0)
+            threads_l3 += 1;
+          if (level == 2)
+            {
+              if (threads_l2)
+                {
+                  threads = threads_l2;
+                  if (cpu_features->basic.kind == arch_kind_intel
+                      && threads > 2
+                      && family == 6)
+                    switch (model)
+                      {
+                        case 0x37:
+                        case 0x4a:
+                        case 0x4d:
+                        case 0x5a:
+                        case 0x5d:
+                          /* Silvermont has L2 cache shared by 2 cores.  */
+                          threads = 2;
+                          break;
+                        default:
+                          break;
+                      }
+                }
+            }
+          else if (threads_l3)
+            threads = threads_l3;
+        }
+      else
+        {
+intel_bug_no_cache_info:
+          /* Assume that all logical threads share the highest cache
+             level.  */
+          threads
+            = ((cpu_features->cpuid[COMMON_CPUID_INDEX_1].ebx
+                >> 16) & 0xff);
+        }
+
+        /* Cap usage of highest cache level to the number of supported
+           threads.  */
+        if (shared > 0 && threads > 0)
+          shared /= threads;
+    }
+
+  /* Account for non-inclusive L2 and L3 caches.  */
+  if (!inclusive_cache)
+    {
+      if (threads_l2 > 0)
+        core /= threads_l2;
+      shared += core;
+    }
+
+  *shared_ptr = shared;
+  *threads_ptr = threads;
+}
+
+
+static void
 __attribute__((constructor))
 init_cacheinfo (void)
 {
@@ -494,211 +766,25 @@ init_cacheinfo (void)
   int max_cpuid_ex;
   long int data = -1;
   long int shared = -1;
-  unsigned int level;
+  long int core;
   unsigned int threads = 0;
   const struct cpu_features *cpu_features = __get_cpu_features ();
-  int max_cpuid = cpu_features->basic.max_cpuid;
 
   if (cpu_features->basic.kind == arch_kind_intel)
     {
       data = handle_intel (_SC_LEVEL1_DCACHE_SIZE, cpu_features);
-
-      long int core = handle_intel (_SC_LEVEL2_CACHE_SIZE, cpu_features);
-      bool inclusive_cache = true;
-
-      /* Try L3 first.  */
-      level  = 3;
+      core = handle_intel (_SC_LEVEL2_CACHE_SIZE, cpu_features);
       shared = handle_intel (_SC_LEVEL3_CACHE_SIZE, cpu_features);
 
-      /* Number of logical processors sharing L2 cache.  */
-      int threads_l2;
+      get_common_cache_info (&shared, &threads, core);
+    }
+  else if (cpu_features->basic.kind == arch_kind_zhaoxin)
+    {
+      data = handle_zhaoxin (_SC_LEVEL1_DCACHE_SIZE);
+      core = handle_zhaoxin (_SC_LEVEL2_CACHE_SIZE);
+      shared = handle_zhaoxin (_SC_LEVEL3_CACHE_SIZE);
 
-      /* Number of logical processors sharing L3 cache.  */
-      int threads_l3;
-
-      if (shared <= 0)
-	{
-	  /* Try L2 otherwise.  */
-	  level  = 2;
-	  shared = core;
-	  threads_l2 = 0;
-	  threads_l3 = -1;
-	}
-      else
-	{
-	  threads_l2 = 0;
-	  threads_l3 = 0;
-	}
-
-      /* A value of 0 for the HTT bit indicates there is only a single
-	 logical processor.  */
-      if (HAS_CPU_FEATURE (HTT))
-	{
-	  /* Figure out the number of logical threads that share the
-	     highest cache level.  */
-	  if (max_cpuid >= 4)
-	    {
-	      unsigned int family = cpu_features->basic.family;
-	      unsigned int model = cpu_features->basic.model;
-
-	      int i = 0;
-
-	      /* Query until cache level 2 and 3 are enumerated.  */
-	      int check = 0x1 | (threads_l3 == 0) << 1;
-	      do
-		{
-		  __cpuid_count (4, i++, eax, ebx, ecx, edx);
-
-		  /* There seems to be a bug in at least some Pentium Ds
-		     which sometimes fail to iterate all cache parameters.
-		     Do not loop indefinitely here, stop in this case and
-		     assume there is no such information.  */
-		  if ((eax & 0x1f) == 0)
-		    goto intel_bug_no_cache_info;
-
-		  switch ((eax >> 5) & 0x7)
-		    {
-		    default:
-		      break;
-		    case 2:
-		      if ((check & 0x1))
-			{
-			  /* Get maximum number of logical processors
-			     sharing L2 cache.  */
-			  threads_l2 = (eax >> 14) & 0x3ff;
-			  check &= ~0x1;
-			}
-		      break;
-		    case 3:
-		      if ((check & (0x1 << 1)))
-			{
-			  /* Get maximum number of logical processors
-			     sharing L3 cache.  */
-			  threads_l3 = (eax >> 14) & 0x3ff;
-
-			  /* Check if L2 and L3 caches are inclusive.  */
-			  inclusive_cache = (edx & 0x2) != 0;
-			  check &= ~(0x1 << 1);
-			}
-		      break;
-		    }
-		}
-	      while (check);
-
-	      /* If max_cpuid >= 11, THREADS_L2/THREADS_L3 are the maximum
-		 numbers of addressable IDs for logical processors sharing
-		 the cache, instead of the maximum number of threads
-		 sharing the cache.  */
-	      if (max_cpuid >= 11)
-		{
-		  /* Find the number of logical processors shipped in
-		     one core and apply count mask.  */
-		  i = 0;
-
-		  /* Count SMT only if there is L3 cache.  Always count
-		     core if there is no L3 cache.  */
-		  int count = ((threads_l2 > 0 && level == 3)
-			       | ((threads_l3 > 0
-				   || (threads_l2 > 0 && level == 2)) << 1));
-
-		  while (count)
-		    {
-		      __cpuid_count (11, i++, eax, ebx, ecx, edx);
-
-		      int shipped = ebx & 0xff;
-		      int type = ecx & 0xff00;
-		      if (shipped == 0 || type == 0)
-			break;
-		      else if (type == 0x100)
-			{
-			  /* Count SMT.  */
-			  if ((count & 0x1))
-			    {
-			      int count_mask;
-
-			      /* Compute count mask.  */
-			      asm ("bsr %1, %0"
-				   : "=r" (count_mask) : "g" (threads_l2));
-			      count_mask = ~(-1 << (count_mask + 1));
-			      threads_l2 = (shipped - 1) & count_mask;
-			      count &= ~0x1;
-			    }
-			}
-		      else if (type == 0x200)
-			{
-			  /* Count core.  */
-			  if ((count & (0x1 << 1)))
-			    {
-			      int count_mask;
-			      int threads_core
-				= (level == 2 ? threads_l2 : threads_l3);
-
-			      /* Compute count mask.  */
-			      asm ("bsr %1, %0"
-				   : "=r" (count_mask) : "g" (threads_core));
-			      count_mask = ~(-1 << (count_mask + 1));
-			      threads_core = (shipped - 1) & count_mask;
-			      if (level == 2)
-				threads_l2 = threads_core;
-			      else
-				threads_l3 = threads_core;
-			      count &= ~(0x1 << 1);
-			    }
-			}
-		    }
-		}
-	      if (threads_l2 > 0)
-		threads_l2 += 1;
-	      if (threads_l3 > 0)
-		threads_l3 += 1;
-	      if (level == 2)
-		{
-		  if (threads_l2)
-		    {
-		      threads = threads_l2;
-		      if (threads > 2 && family == 6)
-			switch (model)
-			  {
-			  case 0x37:
-			  case 0x4a:
-			  case 0x4d:
-			  case 0x5a:
-			  case 0x5d:
-			    /* Silvermont has L2 cache shared by 2 cores.  */
-			    threads = 2;
-			    break;
-			  default:
-			    break;
-			  }
-		    }
-		}
-	      else if (threads_l3)
-		threads = threads_l3;
-	    }
-	  else
-	    {
-intel_bug_no_cache_info:
-	      /* Assume that all logical threads share the highest cache
-		 level.  */
-
-	      threads
-		= ((cpu_features->cpuid[COMMON_CPUID_INDEX_1].ebx
-		    >> 16) & 0xff);
-	    }
-
-	  /* Cap usage of highest cache level to the number of supported
-	     threads.  */
-	  if (shared > 0 && threads > 0)
-	    shared /= threads;
-	}
-
-      /* Account for non-inclusive L2 and L3 caches.  */
-      if (!inclusive_cache)
-	{
-	  if (threads_l2 > 0)
-	    core /= threads_l2;
-	  shared += core;
-	}
+      get_common_cache_info (&shared, &threads, core);
     }
   else if (cpu_features->basic.kind == arch_kind_amd)
     {
