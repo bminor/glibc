@@ -95,6 +95,8 @@ void xpthread_rwlock_wrlock (pthread_rwlock_t *rwlock);
 void xpthread_rwlock_rdlock (pthread_rwlock_t *rwlock);
 void xpthread_rwlock_unlock (pthread_rwlock_t *rwlock);
 void xpthread_rwlock_destroy (pthread_rwlock_t *rwlock);
+pthread_key_t xpthread_key_create (void (*destr_function) (void *));
+void xpthread_key_delete (pthread_key_t key);
 
 __END_DECLS
 

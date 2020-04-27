@@ -130,6 +130,8 @@ libsupport-routines = \
   xpthread_create \
   xpthread_detach \
   xpthread_join \
+  xpthread_key_create \
+  xpthread_key_delete \
   xpthread_mutex_consistent \
   xpthread_mutex_destroy \
   xpthread_mutex_init \
