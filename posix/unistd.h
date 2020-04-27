@@ -295,6 +295,11 @@ extern int euidaccess (const char *__name, int __type)
 /* An alias for `euidaccess', used by some other systems.  */
 extern int eaccess (const char *__name, int __type)
      __THROW __nonnull ((1));
+
+/* Execute program relative to a directory file descriptor.  */
+extern int execveat (int __fd, const char *__path, char *const __argv[],
+                     char *const __envp[], int __flags)
+    __THROW __nonnull ((2, 3));
 #endif
 
 #ifdef __USE_ATFILE
