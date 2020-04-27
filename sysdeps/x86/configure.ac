@@ -1,7 +1,7 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/x86.
 
-if test x"$enable_cet" = xyes; then
+if test $enable_cet != no; then
   # Check if CET can be enabled.
   AC_CACHE_CHECK(whether CET can be enabled,
 		 libc_cv_x86_cet_available, [dnl
@@ -16,17 +16,11 @@ EOF
 		   libc_cv_x86_cet_available=no
 		 fi
 		 rm -rf conftest*])
-  if test $libc_cv_x86_cet_available = yes; then
-    enable_cet=yes
-  else
-    if test x"$enable_cet" = xdefault; then
-      enable_cet=no
-    else
-      AC_MSG_ERROR([$CC doesn't support CET])
-    fi
+  if test $libc_cv_x86_cet_available != yes; then
+    AC_MSG_ERROR([$CC doesn't support CET])
   fi
 fi
-if test $enable_cet = yes; then
+if test $enable_cet != no; then
   # Check if assembler supports CET.
   AC_CACHE_CHECK(whether $AS supports CET,
 		 libc_cv_x86_cet_as, [dnl
@@ -42,5 +36,10 @@ EOF
   if test $libc_cv_x86_cet_as = no; then
     AC_MSG_ERROR([$AS doesn't support CET])
   fi
+fi
+if test $enable_cet = yes; then
+  AC_DEFINE(DEFAULT_DL_X86_CET_CONTROL, cet_elf_property)
+elif test $enable_cet = permissive; then
+  AC_DEFINE(DEFAULT_DL_X86_CET_CONTROL, cet_permissive)
 fi
 LIBC_CONFIG_VAR([enable-cet], [$enable_cet])

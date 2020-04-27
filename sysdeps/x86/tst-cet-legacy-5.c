@@ -22,6 +22,14 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <x86intrin.h>
+#include <support/check.h>
+
+#if defined CET_IS_PERMISSIVE || defined CET_DISABLED_BY_ENV
+# define CET_MAYBE_DISABLED 1
+#else
+# define CET_MAYBE_DISABLED 0
+#endif
 
 static void
 do_test_1 (const char *modname, bool fail)
@@ -32,23 +40,24 @@ do_test_1 (const char *modname, bool fail)
   h = dlopen (modname, RTLD_LAZY);
   if (h == NULL)
     {
+      const char *err = dlerror ();
       if (fail)
 	{
-	  const char *err = dlerror ();
 	  if (strstr (err, "rebuild shared object with SHSTK support enabled")
 	      == NULL)
-	    {
-	      printf ("incorrect dlopen '%s' error: %s\n", modname,
-		      err);
-	      exit (1);
-	    }
+	    FAIL_EXIT1 ("incorrect dlopen '%s' error: %s\n", modname, err);
 
 	  return;
 	}
 
-      printf ("cannot open '%s': %s\n", modname, dlerror ());
-      exit (1);
+      FAIL_EXIT1 ("cannot open '%s': %s\n", modname, err);
     }
+
+  /* NB: dlopen should never fail on non-CET platforms.  If SHSTK is
+     disabled, assuming IBT is also disabled.  */
+  bool cet_enabled = _get_ssp () != 0 && !CET_MAYBE_DISABLED;
+  if (fail && cet_enabled)
+    FAIL_EXIT1 ("dlopen should have failed\n");
 
   fp = dlsym (h, "test");
   if (fp == NULL)

@@ -24,7 +24,7 @@ ifeq ($(subdir),setjmp)
 tests += tst-saved_mask-1
 endif
 
-ifeq ($(enable-cet),yes)
+ifneq ($(enable-cet),no)
 ifeq ($(subdir),elf)
 tests += tst-cet-property-1 tst-cet-property-2
 

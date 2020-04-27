@@ -123,20 +123,24 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      executables (PIE) by default.
 
 '--enable-cet'
+'--enable-cet=permissive'
      Enable Intel Control-flow Enforcement Technology (CET) support.
-     When the GNU C Library is built with '--enable-cet', the resulting
-     library is protected with indirect branch tracking (IBT) and shadow
-     stack (SHSTK).  When CET is enabled, the GNU C Library is
-     compatible with all existing executables and shared libraries.
-     This feature is currently supported on i386, x86_64 and x32 with
-     GCC 8 and binutils 2.29 or later.  Note that when CET is enabled,
-     the GNU C Library requires CPUs capable of multi-byte NOPs, like
-     x86-64 processors as well as Intel Pentium Pro or newer.
+     When the GNU C Library is built with '--enable-cet' or
+     '--enable-cet=permissive', the resulting library is protected with
+     indirect branch tracking (IBT) and shadow stack (SHSTK).  When CET
+     is enabled, the GNU C Library is compatible with all existing
+     executables and shared libraries.  This feature is currently
+     supported on i386, x86_64 and x32 with GCC 8 and binutils 2.29 or
+     later.  Note that when CET is enabled, the GNU C Library requires
+     CPUs capable of multi-byte NOPs, like x86-64 processors as well as
+     Intel Pentium Pro or newer.  With '--enable-cet', it is an error to
+     dlopen a non CET enabled shared library in CET enabled application.
+     With '--enable-cet=permissive', CET is disabled when dlopening a
+     non CET enabled shared library in CET enabled application.
 
      NOTE: '--enable-cet' has been tested for i686, x86_64 and x32 on
-     non-CET processors.  '--enable-cet' has been tested for x86_64 and
-     x32 on CET SDVs, but Intel CET support hasn't been validated for
-     i686.
+     non-CET processors.  '--enable-cet' has been tested for i686,
+     x86_64 and x32 on CET processors.
 
 '--disable-profile'
      Don't build libraries with profiling information.  You may want to

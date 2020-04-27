@@ -1,7 +1,7 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/x86.
 
-if test x"$enable_cet" = xyes; then
+if test $enable_cet != no; then
   # Check if CET can be enabled.
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether CET can be enabled" >&5
 $as_echo_n "checking whether CET can be enabled... " >&6; }
@@ -27,17 +27,11 @@ EOF
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_x86_cet_available" >&5
 $as_echo "$libc_cv_x86_cet_available" >&6; }
-  if test $libc_cv_x86_cet_available = yes; then
-    enable_cet=yes
-  else
-    if test x"$enable_cet" = xdefault; then
-      enable_cet=no
-    else
-      as_fn_error $? "$CC doesn't support CET" "$LINENO" 5
-    fi
+  if test $libc_cv_x86_cet_available != yes; then
+    as_fn_error $? "$CC doesn't support CET" "$LINENO" 5
   fi
 fi
-if test $enable_cet = yes; then
+if test $enable_cet != no; then
   # Check if assembler supports CET.
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $AS supports CET" >&5
 $as_echo_n "checking whether $AS supports CET... " >&6; }
@@ -64,6 +58,13 @@ $as_echo "$libc_cv_x86_cet_as" >&6; }
   if test $libc_cv_x86_cet_as = no; then
     as_fn_error $? "$AS doesn't support CET" "$LINENO" 5
   fi
+fi
+if test $enable_cet = yes; then
+  $as_echo "#define DEFAULT_DL_X86_CET_CONTROL cet_elf_property" >>confdefs.h
+
+elif test $enable_cet = permissive; then
+  $as_echo "#define DEFAULT_DL_X86_CET_CONTROL cet_permissive" >>confdefs.h
+
 fi
 config_vars="$config_vars
 enable-cet = $enable_cet"

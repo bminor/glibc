@@ -152,20 +152,24 @@ PIE.  This option also implies that glibc programs and tests are created
 as dynamic position independent executables (PIE) by default.
 
 @item --enable-cet
+@itemx --enable-cet=permissive
 Enable Intel Control-flow Enforcement Technology (CET) support.  When
-@theglibc{} is built with @option{--enable-cet}, the resulting library
+@theglibc{} is built with @option{--enable-cet} or
+@option{--enable-cet=permissive}, the resulting library
 is protected with indirect branch tracking (IBT) and shadow stack
 (SHSTK)@.  When CET is enabled, @theglibc{} is compatible with all
 existing executables and shared libraries.  This feature is currently
 supported on i386, x86_64 and x32 with GCC 8 and binutils 2.29 or later.
 Note that when CET is enabled, @theglibc{} requires CPUs capable of
 multi-byte NOPs, like x86-64 processors as well as Intel Pentium Pro or
-newer.
+newer.  With @option{--enable-cet}, it is an error to dlopen a non CET
+enabled shared library in CET enabled application.  With
+@option{--enable-cet=permissive}, CET is disabled when dlopening a
+non CET enabled shared library in CET enabled application.
 
 NOTE: @option{--enable-cet} has been tested for i686, x86_64 and x32
 on non-CET processors.  @option{--enable-cet} has been tested for
-x86_64 and x32 on CET SDVs, but Intel CET support hasn't been validated
-for i686.
+i686, x86_64 and x32 on CET processors.
 
 @item --disable-profile
 Don't build libraries with profiling information.  You may want to use
