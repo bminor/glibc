@@ -369,7 +369,6 @@ __free_tcb (struct pthread *pd)
     }
 }
 
-
 /* Local function to start thread and handle cleanup.
    createthread.c defines the macro START_THREAD_DEFN to the
    declaration that its create_thread function will refer to, and
@@ -385,10 +384,6 @@ START_THREAD_DEFN
   /* Initialize pointers to locale data.  */
   __ctype_init ();
 
-  /* Allow setxid from now onwards.  */
-  if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0) == -2))
-    futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
-
 #ifndef __ASSUME_SET_ROBUST_LIST
   if (__set_robust_list_avail >= 0)
 #endif
@@ -397,18 +392,6 @@ START_THREAD_DEFN
 	 succeeded.  */
       INTERNAL_SYSCALL_CALL (set_robust_list, &pd->robust_head,
 			     sizeof (struct robust_list_head));
-    }
-
-  /* If the parent was running cancellation handlers while creating
-     the thread the new thread inherited the signal mask.  Reset the
-     cancellation signal mask.  */
-  if (__glibc_unlikely (pd->parent_cancelhandling & CANCELING_BITMASK))
-    {
-      sigset_t mask;
-      __sigemptyset (&mask);
-      __sigaddset (&mask, SIGCANCEL);
-      INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_UNBLOCK, &mask,
-			     NULL, _NSIG / 8);
     }
 
   /* This is where the try/finally block should be created.  For
@@ -431,6 +414,12 @@ START_THREAD_DEFN
      handlers.  */
   unwind_buf.priv.data.prev = NULL;
   unwind_buf.priv.data.cleanup = NULL;
+
+  __libc_signal_restore_set (&pd->sigmask);
+
+  /* Allow setxid from now onwards.  */
+  if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0) == -2))
+    futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
 
   if (__glibc_likely (! not_first_call))
     {
@@ -722,10 +711,6 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
   CHECK_THREAD_SYSINFO (pd);
 #endif
 
-  /* Inform start_thread (above) about cancellation state that might
-     translate into inherited signal state.  */
-  pd->parent_cancelhandling = THREAD_GETMEM (THREAD_SELF, cancelhandling);
-
   /* Determine scheduling parameters for the thread.  */
   if (__builtin_expect ((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)
       && (iattr->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)) != 0)
@@ -771,6 +756,21 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
      ownership of PD (see CONCURRENCY NOTES above).  */
   bool stopped_start = false; bool thread_ran = false;
 
+  /* Block all signals, so that the new thread starts out with
+     signals disabled.  This avoids race conditions in the thread
+     startup.  */
+  sigset_t original_sigmask;
+  __libc_signal_block_all (&original_sigmask);
+
+  /* Conceptually, the new thread needs to inherit the signal mask of
+     this thread.  Therefore, it needs to restore the saved signal
+     mask of this thread, so save it in the startup information.  */
+  pd->sigmask = original_sigmask;
+
+  /* Reset the cancellation signal mask in case this thread is running
+     cancellation.  */
+  __sigdelset (&pd->sigmask, SIGCANCEL);
+
   /* Start the thread.  */
   if (__glibc_unlikely (report_thread_creation (pd)))
     {
@@ -812,6 +812,10 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
   else
     retval = create_thread (pd, iattr, &stopped_start,
 			    STACK_VARIABLES_ARGS, &thread_ran);
+
+  /* Return to the previous signal mask, after creating the new
+     thread.  */
+  __libc_signal_restore_set (&original_sigmask);
 
   if (__glibc_unlikely (retval != 0))
     {
