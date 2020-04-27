@@ -405,6 +405,19 @@ be an array of strings in the same format as for the @code{environ}
 variable; see @ref{Environment Access}.
 @end deftypefun
 
+@deftypefun int fexecve (int @var{fd},  char *const @var{argv}@t{[]}, char *const @var{env}@t{[]})
+@standards{POSIX.1, unistd.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This is similar to @code{execve}, but instead identifying the progam
+executable by its pathname, the file descriptor @var{fd} is used.  The
+descriptor must have been opened with the @code{O_RDONLY} flag or (on
+Linux) the @code{O_PATH} flag.
+
+On Linux, @code{fexecve} can fail with an error of @code{ENOSYS} if
+@file{/proc} has not been mounted and the kernel lacks support for the
+underlying @code{execveat} system call.
+@end deftypefun
+
 @deftypefun int execle (const char *@var{filename}, const char *@var{arg0}, @dots{}, char *const @var{env}@t{[]})
 @standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
