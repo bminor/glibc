@@ -714,6 +714,11 @@ tst-audit-threads-ENV = LD_AUDIT=$(objpfx)tst-audit-threads-mod1.so
 
 CFLAGS-tst-unwind-thread.c += -funwind-tables
 
+# The test uses dlopen indirectly and would otherwise load system
+# objects.
+tst-setuid1-static-ENV = \
+  LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
+
 # The tests here better do not run in parallel.
 ifeq ($(run-built-tests),yes)
 ifneq ($(filter %tests,$(MAKECMDGOALS)),)
