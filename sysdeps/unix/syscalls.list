@@ -78,7 +78,6 @@ sigaction	-	sigaction	i:ipp	__sigaction	sigaction
 sigsuspend	-	sigsuspend	Ci:p	sigsuspend
 socket		-	socket		i:iii	__socket	socket
 socketpair	-	socketpair	i:iiif	socketpair
-sstk		-	sstk		b:i	sstk
 statfs		-	statfs		i:sp	__statfs	statfs
 swapoff		-	swapoff		i:s	swapoff
 swapon		-	swapon		i:s	swapon

@@ -19,7 +19,7 @@
 #include <shlib-compat.h>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_32)
-void *
+void * attribute_compat_text_section
 sstk (int increment)
 {
   __set_errno (ENOSYS);
