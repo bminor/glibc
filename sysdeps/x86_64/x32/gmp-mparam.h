@@ -29,5 +29,3 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 #define BITS_PER_INT 32
 #define BITS_PER_SHORTINT 16
 #define BITS_PER_CHAR 8
-
-#define IEEE_DOUBLE_BIG_ENDIAN 0
