@@ -47,7 +47,27 @@
 # if !defined PROCINFO_DECL && defined SHARED
   ._dl_x86_feature_1
 # else
-PROCINFO_CLASS unsigned int _dl_x86_feature_1[2]
+PROCINFO_CLASS unsigned int _dl_x86_feature_1
+# endif
+# ifndef PROCINFO_DECL
+= 0
+# endif
+# if !defined SHARED || defined PROCINFO_DECL
+;
+# else
+,
+# endif
+
+# if !defined PROCINFO_DECL && defined SHARED
+  ._dl_x86_feature_control
+# else
+PROCINFO_CLASS struct dl_x86_feature_control _dl_x86_feature_control
+# endif
+# ifndef PROCINFO_DECL
+= {
+    .ibt = cet_elf_property,
+    .shstk = cet_elf_property
+  }
 # endif
 # if !defined SHARED || defined PROCINFO_DECL
 ;

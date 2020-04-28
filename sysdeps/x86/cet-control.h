@@ -16,14 +16,26 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Valid control values:
-   0: Enable CET features based on ELF property note.
-   1: Always disable CET features.
-   2: Always enable CET features.
-   3: Enable CET features permissively.
- */
-#define CET_ELF_PROPERTY	0
-#define CET_ALWAYS_OFF		1
-#define CET_ALWAYS_ON		2
-#define CET_PERMISSIVE		3
-#define CET_MAX			CET_PERMISSIVE
+#ifndef _CET_CONTROL_H
+#define _CET_CONTROL_H
+
+/* For each CET feature, IBT and SHSTK, valid control values.  */
+enum dl_x86_cet_control
+{
+  /* Enable CET features based on ELF property note.  */
+  cet_elf_property = 0,
+  /* Always enable CET features.  */
+  cet_always_on,
+  /* Always disable CET features.  */
+  cet_always_off,
+  /* Enable CET features permissively.  */
+  cet_permissive
+};
+
+struct dl_x86_feature_control
+{
+  enum dl_x86_cet_control ibt : 2;
+  enum dl_x86_cet_control shstk : 2;
+};
+
+#endif /* cet-control.h */

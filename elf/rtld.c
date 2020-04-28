@@ -315,6 +315,8 @@ rtld_hidden_def (_dl_starting_up)
    (except those which cannot be added for some reason).  */
 struct rtld_global _rtld_global =
   {
+    /* Get architecture specific initializer.  */
+#include <dl-procruntime.c>
     /* Generally the default presumption without further information is an
      * executable stack but this is not true for all platforms.  */
     ._dl_stack_flags = DEFAULT_STACK_PERMS,

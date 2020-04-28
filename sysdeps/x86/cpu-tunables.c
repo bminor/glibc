@@ -336,28 +336,18 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 }
 
 # if CET_ENABLED
-#  include <cet-tunables.h>
 
 attribute_hidden
 void
 TUNABLE_CALLBACK (set_x86_ibt) (tunable_val_t *valp)
 {
   if (DEFAULT_MEMCMP (valp->strval, "on", sizeof ("on")) == 0)
-    {
-      GL(dl_x86_feature_1)[1] &= ~((1 << CET_MAX) - 1);
-      GL(dl_x86_feature_1)[1] |= CET_ALWAYS_ON;
-    }
+    GL(dl_x86_feature_control).ibt = cet_always_on;
   else if (DEFAULT_MEMCMP (valp->strval, "off", sizeof ("off")) == 0)
-    {
-      GL(dl_x86_feature_1)[1] &= ~((1 << CET_MAX) - 1);
-      GL(dl_x86_feature_1)[1] |= CET_ALWAYS_OFF;
-    }
+    GL(dl_x86_feature_control).ibt = cet_always_off;
   else if (DEFAULT_MEMCMP (valp->strval, "permissive",
 			   sizeof ("permissive")) == 0)
-    {
-      GL(dl_x86_feature_1)[1] &= ~((1 << CET_MAX) - 1);
-      GL(dl_x86_feature_1)[1] |= CET_PERMISSIVE;
-    }
+    GL(dl_x86_feature_control).ibt = cet_permissive;
 }
 
 attribute_hidden
@@ -365,21 +355,12 @@ void
 TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *valp)
 {
   if (DEFAULT_MEMCMP (valp->strval, "on", sizeof ("on")) == 0)
-    {
-      GL(dl_x86_feature_1)[1] &= ~(((1 << CET_MAX) - 1) << CET_MAX);
-      GL(dl_x86_feature_1)[1] |= (CET_ALWAYS_ON << CET_MAX);
-    }
+    GL(dl_x86_feature_control).shstk = cet_always_on;
   else if (DEFAULT_MEMCMP (valp->strval, "off", sizeof ("off")) == 0)
-    {
-      GL(dl_x86_feature_1)[1] &= ~(((1 << CET_MAX) - 1) << CET_MAX);
-      GL(dl_x86_feature_1)[1] |= (CET_ALWAYS_OFF << CET_MAX);
-    }
+    GL(dl_x86_feature_control).shstk = cet_always_off;
   else if (DEFAULT_MEMCMP (valp->strval, "permissive",
 			   sizeof ("permissive")) == 0)
-    {
-      GL(dl_x86_feature_1)[1] &= ~(((1 << CET_MAX) - 1) << CET_MAX);
-      GL(dl_x86_feature_1)[1] |= (CET_PERMISSIVE << CET_MAX);
-    }
+    GL(dl_x86_feature_control).shstk = cet_permissive;
 }
 # endif
 #endif

@@ -61,6 +61,7 @@ struct La_x32_retval;
 				     struct La_x86_64_retval *,		\
 				     const char *)
 
+#include <cet-control.h>
 #include_next <ldsodefs.h>
 
 #endif

@@ -20,7 +20,6 @@
 #include <libintl.h>
 #include <ldsodefs.h>
 #include <dl-cet.h>
-#include <cet-tunables.h>
 
 /* GNU_PROPERTY_X86_FEATURE_1_IBT and GNU_PROPERTY_X86_FEATURE_1_SHSTK
    are defined in <elf.h>, which are only available for C sources.
@@ -39,23 +38,23 @@ static void
 dl_cet_check (struct link_map *m, const char *program)
 {
   /* Check how IBT should be enabled.  */
-  unsigned int enable_ibt_type
-    = GL(dl_x86_feature_1)[1] & ((1 << CET_MAX) - 1);
+  enum dl_x86_cet_control enable_ibt_type
+    = GL(dl_x86_feature_control).ibt;
   /* Check how SHSTK should be enabled.  */
-  unsigned int enable_shstk_type
-    = ((GL(dl_x86_feature_1)[1] >> CET_MAX) & ((1 << CET_MAX) - 1));
+  enum dl_x86_cet_control enable_shstk_type
+    = GL(dl_x86_feature_control).shstk;
 
   /* No legacy object check if both IBT and SHSTK are always on.  */
-  if (enable_ibt_type == CET_ALWAYS_ON
-      && enable_shstk_type == CET_ALWAYS_ON)
+  if (enable_ibt_type == cet_always_on
+      && enable_shstk_type == cet_always_on)
     return;
 
   /* Check if IBT is enabled by kernel.  */
   bool ibt_enabled
-    = (GL(dl_x86_feature_1)[0] & GNU_PROPERTY_X86_FEATURE_1_IBT) != 0;
+    = (GL(dl_x86_feature_1) & GNU_PROPERTY_X86_FEATURE_1_IBT) != 0;
   /* Check if SHSTK is enabled by kernel.  */
   bool shstk_enabled
-    = (GL(dl_x86_feature_1)[0] & GNU_PROPERTY_X86_FEATURE_1_SHSTK) != 0;
+    = (GL(dl_x86_feature_1) & GNU_PROPERTY_X86_FEATURE_1_SHSTK) != 0;
 
   if (ibt_enabled || shstk_enabled)
     {
@@ -65,9 +64,9 @@ dl_cet_check (struct link_map *m, const char *program)
 
       /* Check if IBT and SHSTK are enabled in object.  */
       bool enable_ibt = (ibt_enabled
-			 && enable_ibt_type != CET_ALWAYS_OFF);
+			 && enable_ibt_type != cet_always_off);
       bool enable_shstk = (shstk_enabled
-			   && enable_shstk_type != CET_ALWAYS_OFF);
+			   && enable_shstk_type != cet_always_off);
       if (program)
 	{
 	  /* Enable IBT and SHSTK only if they are enabled in executable.
@@ -76,10 +75,10 @@ dl_cet_check (struct link_map *m, const char *program)
 	     GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 	   */
 	  enable_ibt &= (HAS_CPU_FEATURE (IBT)
-			 && (enable_ibt_type == CET_ALWAYS_ON
+			 && (enable_ibt_type == cet_always_on
 			     || (m->l_cet & lc_ibt) != 0));
 	  enable_shstk &= (HAS_CPU_FEATURE (SHSTK)
-			   && (enable_shstk_type == CET_ALWAYS_ON
+			   && (enable_shstk_type == cet_always_on
 			       || (m->l_cet & lc_shstk) != 0));
 	}
 
@@ -111,7 +110,7 @@ dl_cet_check (struct link_map *m, const char *program)
 
 	      /* IBT is enabled only if it is enabled in executable as
 		 well as all shared objects.  */
-	      enable_ibt &= (enable_ibt_type == CET_ALWAYS_ON
+	      enable_ibt &= (enable_ibt_type == cet_always_on
 			     || (l->l_cet & lc_ibt) != 0);
 	      if (!found_ibt_legacy && enable_ibt != ibt_enabled)
 		{
@@ -121,7 +120,7 @@ dl_cet_check (struct link_map *m, const char *program)
 
 	      /* SHSTK is enabled only if it is enabled in executable as
 		 well as all shared objects.  */
-	      enable_shstk &= (enable_shstk_type == CET_ALWAYS_ON
+	      enable_shstk &= (enable_shstk_type == cet_always_on
 			       || (l->l_cet & lc_shstk) != 0);
 	      if (enable_shstk != shstk_enabled)
 		{
@@ -137,7 +136,7 @@ dl_cet_check (struct link_map *m, const char *program)
 	{
 	  if (!program)
 	    {
-	      if (enable_ibt_type != CET_PERMISSIVE)
+	      if (enable_ibt_type != cet_permissive)
 		{
 		  /* When IBT is enabled, we cannot dlopen a shared
 		     object without IBT.  */
@@ -148,7 +147,7 @@ dl_cet_check (struct link_map *m, const char *program)
 				      N_("rebuild shared object with IBT support enabled"));
 		}
 
-	      if (enable_shstk_type != CET_PERMISSIVE)
+	      if (enable_shstk_type != cet_permissive)
 		{
 		  /* When SHSTK is enabled, we cannot dlopen a shared
 		     object without SHSTK.  */
@@ -159,8 +158,8 @@ dl_cet_check (struct link_map *m, const char *program)
 				      N_("rebuild shared object with SHSTK support enabled"));
 		}
 
-	      if (enable_ibt_type != CET_PERMISSIVE
-		  && enable_shstk_type != CET_PERMISSIVE)
+	      if (enable_ibt_type != cet_permissive
+		  && enable_shstk_type != cet_permissive)
 		return;
 	    }
 
@@ -190,7 +189,7 @@ dl_cet_check (struct link_map *m, const char *program)
 	    }
 
 	  /* Clear the disabled bits in dl_x86_feature_1.  */
-	  GL(dl_x86_feature_1)[0] &= ~cet_feature;
+	  GL(dl_x86_feature_1) &= ~cet_feature;
 
 	  cet_feature_changed = true;
 	}
@@ -199,9 +198,9 @@ dl_cet_check (struct link_map *m, const char *program)
       if (program && (ibt_enabled || shstk_enabled))
 	{
 	  if ((!ibt_enabled
-	       || enable_ibt_type != CET_PERMISSIVE)
+	       || enable_ibt_type != cet_permissive)
 	      && (!shstk_enabled
-		  || enable_shstk_type != CET_PERMISSIVE))
+		  || enable_shstk_type != cet_permissive))
 	    {
 	      /* Lock CET if IBT or SHSTK is enabled in executable unless
 	         IBT or SHSTK is enabled permissively.  */

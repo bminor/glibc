@@ -34,7 +34,7 @@ static inline void
 x86_setup_tls (void)
 {
   __libc_setup_tls ();
-  THREAD_SETMEM (THREAD_SELF, header.feature_1, GL(dl_x86_feature_1)[0]);
+  THREAD_SETMEM (THREAD_SELF, header.feature_1, GL(dl_x86_feature_1));
 }
 
 #  define ARCH_SETUP_TLS() x86_setup_tls ()

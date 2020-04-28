@@ -71,7 +71,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   extern void _dl_runtime_profile_shstk (Elf32_Word) attribute_hidden;
   /* Check if SHSTK is enabled by kernel.  */
   bool shstk_enabled
-    = (GL(dl_x86_feature_1)[0] & GNU_PROPERTY_X86_FEATURE_1_SHSTK) != 0;
+    = (GL(dl_x86_feature_1) & GNU_PROPERTY_X86_FEATURE_1_SHSTK) != 0;
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
