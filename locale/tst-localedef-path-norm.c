@@ -92,15 +92,12 @@ do_test (void)
   /* We are running as root inside the container.  */
   prog = xasprintf ("%s/localedef", support_bindir_prefix);
 
-  /* Create the needed directories:
-     - We need the default compiled locale dir for default output.
-     - We need an arbitrary absolute path for localedef output.
-
-     Note: Writing to a non-default absolute path disables any kind
+  /* We need an arbitrary absolute path for localedef output.
+     Writing to a non-default absolute path disables any kind
      of path normalization since we expect the user wants the path
      exactly as they specified it.  */
-  xmkdirp (support_complocaledir_prefix, 0777);
-  xmkdirp ("/output", 0777);
+#define ABSDIR "/output"
+  xmkdirp (ABSDIR, 0777);
 
   /* It takes ~10 seconds to serially execute 9 localedef test.  We
      could run the compilations in parallel if we want to reduce test
@@ -109,7 +106,7 @@ do_test (void)
      tests saves disk space during testing.  */
 
   /* Test 1: Expected normalization.
-     Run localedef and expect output in /usr/lib/locale/en_US1.utf8,
+     Run localedef and expect output in $(complocaledir)/en_US1.utf8,
      with normalization changing UTF-8 to utf8.  */
   run_test ((struct test_closure)
 	    {
@@ -123,7 +120,7 @@ do_test (void)
 	    });
 
   /* Test 2: No normalization past '@'.
-     Run localedef and expect output in /usr/lib/locale/en_US2.utf8@tEsT,
+     Run localedef and expect output in $(complocaledir)/en_US2.utf8@tEsT,
      with normalization changing UTF-8@tEsT to utf8@tEsT (everything after
      @ is untouched).  */
   run_test ((struct test_closure)
@@ -138,7 +135,7 @@ do_test (void)
 	    });
 
   /* Test 3: No normalization past '@' despite period.
-     Run localedef and expect output in /usr/lib/locale/en_US3@tEsT.UTF-8,
+     Run localedef and expect output in $(complocaledir)/en_US3@tEsT.UTF-8,
      with normalization changing nothing (everything after @ is untouched)
      despite there being a period near the end.  */
   run_test ((struct test_closure)
@@ -153,7 +150,7 @@ do_test (void)
 	    });
 
   /* Test 4: Normalize numeric codeset by adding 'iso' prefix.
-     Run localedef and expect output in /usr/lib/locale/en_US4.88591,
+     Run localedef and expect output in $(complocaledir)/en_US4.88591,
      with normalization changing 88591 to iso88591.  */
   run_test ((struct test_closure)
 	    {
@@ -167,7 +164,7 @@ do_test (void)
 	    });
 
   /* Test 5: Don't add 'iso' prefix if first char is alpha.
-     Run localedef and expect output in /usr/lib/locale/en_US5.a88591,
+     Run localedef and expect output in $(complocaledir)/en_US5.a88591,
      with normalization changing nothing.  */
   run_test ((struct test_closure)
 	    {
@@ -181,7 +178,7 @@ do_test (void)
 	    });
 
   /* Test 6: Don't add 'iso' prefix if last char is alpha.
-     Run localedef and expect output in /usr/lib/locale/en_US6.88591a,
+     Run localedef and expect output in $(complocaledir)/en_US6.88591a,
      with normalization changing nothing.  */
   run_test ((struct test_closure)
 	    {
@@ -195,7 +192,7 @@ do_test (void)
 	    });
 
   /* Test 7: Don't normalize anything with an absolute path.
-     Run localedef and expect output in /output/en_US7.UTF-8,
+     Run localedef and expect output in ABSDIR/en_US7.UTF-8,
      with normalization changing nothing.  */
   run_test ((struct test_closure)
 	    {
@@ -203,13 +200,13 @@ do_test (void)
 			"--no-archive",
 			"-i", "en_US",
 			"-f", "UTF-8",
-			"/output/en_US7.UTF-8", NULL },
+			ABSDIR "/en_US7.UTF-8", NULL },
 	      .exp = "en_US7.UTF-8",
-	      .complocaledir = "/output"
+	      .complocaledir = ABSDIR
 	    });
 
   /* Test 8: Don't normalize anything with an absolute path.
-     Run localedef and expect output in /output/en_US8.UTF-8@tEsT,
+     Run localedef and expect output in ABSDIR/en_US8.UTF-8@tEsT,
      with normalization changing nothing.  */
   run_test ((struct test_closure)
 	    {
@@ -217,13 +214,13 @@ do_test (void)
 			"--no-archive",
 			"-i", "en_US",
 			"-f", "UTF-8",
-			"/output/en_US8.UTF-8@tEsT", NULL },
+			ABSDIR "/en_US8.UTF-8@tEsT", NULL },
 	      .exp = "en_US8.UTF-8@tEsT",
-	      .complocaledir = "/output"
+	      .complocaledir = ABSDIR
 	    });
 
   /* Test 9: Don't normalize anything with an absolute path.
-     Run localedef and expect output in /output/en_US9@tEsT.UTF-8,
+     Run localedef and expect output in ABSDIR/en_US9@tEsT.UTF-8,
      with normalization changing nothing.  */
   run_test ((struct test_closure)
 	    {
@@ -231,9 +228,9 @@ do_test (void)
 			"--no-archive",
 			"-i", "en_US",
 			"-f", "UTF-8",
-			"/output/en_US9@tEsT.UTF-8", NULL },
+			ABSDIR "/en_US9@tEsT.UTF-8", NULL },
 	      .exp = "en_US9@tEsT.UTF-8",
-	      .complocaledir = "/output"
+	      .complocaledir = ABSDIR
 	    });
 
   return 0;
