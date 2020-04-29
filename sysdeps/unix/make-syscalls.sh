@@ -30,6 +30,7 @@
 # P: optionally-NULL pointer to typed object (e.g., 3rd argument to sigaction)
 # s: non-NULL string (e.g., 1st arg to open)
 # S: optionally-NULL string (e.g., 1st arg to acct)
+# U: unsigned long int (32-bit types are zero-extended to 64-bit types)
 # v: vararg scalar (e.g., optional 3rd arg to open)
 # V: byte-per-page vector (3rd arg to mincore)
 # W: wait status, optionally-NULL pointer to int (e.g., 2nd arg of wait4)
@@ -184,6 +185,27 @@ while read file srcfile caller syscall args strong weak; do
   ?:?????????) nargs=9;;
   esac
 
+  # Derive the unsigned long int arguments from the argument signature
+  ulong_arg_1=0
+  ulong_arg_2=0
+  ulong_count=0
+  for U in $(echo $args | sed -e "s/.*:/:/" | grep -ob U)
+  do
+    ulong_count=$(expr $ulong_count + 1)
+    ulong_arg=$(echo $U | sed -e "s/:U//")
+    case $ulong_count in
+    1)
+      ulong_arg_1=$ulong_arg
+      ;;
+    2)
+      ulong_arg_2=$ulong_arg
+      ;;
+    *)
+      echo >&2 "$0: Too many unsigned long int arguments for syscall ($strong $weak)"
+      exit 2
+    esac
+  done
+
   # Make sure only the first syscall rule is used, if multiple dirs
   # define the same syscall.
   echo ''
@@ -245,6 +267,8 @@ while read file srcfile caller syscall args strong weak; do
 	\$(make-target-directory)
 	(echo '#define SYSCALL_NAME $syscall'; \\
 	 echo '#define SYSCALL_NARGS $nargs'; \\
+	 echo '#define SYSCALL_ULONG_ARG_1 $ulong_arg_1'; \\
+	 echo '#define SYSCALL_ULONG_ARG_2 $ulong_arg_2'; \\
 	 echo '#define SYSCALL_SYMBOL $strong'; \\
 	 echo '#define SYSCALL_NOERRNO $noerrno'; \\
 	 echo '#define SYSCALL_ERRVAL $errval'; \\

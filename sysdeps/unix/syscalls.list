@@ -37,16 +37,16 @@ kill		-	kill		i:ii	__kill		kill
 link		-	link		i:ss	__link		link
 listen		-	listen		i:ii	__listen	listen
 lseek		-	lseek		i:iii	__libc_lseek	__lseek lseek
-madvise		-	madvise		i:pii	__madvise	madvise
+madvise		-	madvise		i:pUi	__madvise	madvise
 mkdir		-	mkdir		i:si	__mkdir		mkdir
 mmap		-	mmap		b:aniiii __mmap		mmap
-mprotect	-	mprotect	i:aii	__mprotect	mprotect
-munmap		-	munmap		i:ai	__munmap	munmap
+mprotect	-	mprotect	i:aUi	__mprotect	mprotect
+munmap		-	munmap		i:aU	__munmap	munmap
 open		-	open		Ci:siv	__libc_open __open open
 profil		-	profil		i:piii	__profil	profil
 ptrace		-	ptrace		i:iiii	ptrace
 read		-	read		Ci:ibn	__libc_read	__read read
-readlink	-	readlink	i:spi	__readlink	readlink
+readlink	-	readlink	i:spU	__readlink	readlink
 readv		-	readv		Ci:ipi	__readv		readv
 reboot		-	reboot		i:i	reboot
 recv		-	recv		Ci:ibni	__libc_recv	recv
