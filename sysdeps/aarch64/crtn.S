@@ -41,8 +41,14 @@
 
 	.section .init,"ax",%progbits
 	ldp	x29, x30, [sp], 16
+#if HAVE_AARCH64_PAC_RET
+	AUTIASP
+#endif
 	RET
 
 	.section .fini,"ax",%progbits
 	ldp	x29, x30, [sp], 16
+#if HAVE_AARCH64_PAC_RET
+	AUTIASP
+#endif
 	RET
