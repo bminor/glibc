@@ -39,7 +39,7 @@ objpfx := $(patsubst %//,%/,$(objdir)/$(subdir)/)
 common-objpfx = $(objdir)/
 common-objdir = $(objdir)
 else
-objdir must be defined by the build-directory Makefile.
+$(error objdir must be defined by the build-directory Makefile)
 endif
 
 # Root of the sysdeps tree.
