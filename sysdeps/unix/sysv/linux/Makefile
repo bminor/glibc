@@ -59,7 +59,8 @@ sysdep_routines += adjtimex clone umount umount2 readahead sysctl \
 		   eventfd eventfd_read eventfd_write prlimit \
 		   personality epoll_wait tee vmsplice splice \
 		   open_by_handle_at mlock2 pkey_mprotect pkey_set pkey_get \
-		   timerfd_gettime timerfd_settime
+		   timerfd_gettime timerfd_settime \
+		   process_vm_readv process_vm_writev
 
 CFLAGS-gethostid.c = -fexceptions
 CFLAGS-tee.c = -fexceptions -fasynchronous-unwind-tables
