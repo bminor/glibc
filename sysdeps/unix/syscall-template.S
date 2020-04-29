@@ -25,6 +25,12 @@
    defining a few macros:
 	SYSCALL_NAME		syscall name
 	SYSCALL_NARGS		number of arguments this call takes
+	SYSCALL_ULONG_ARG_1	the first unsigned long int argument this
+				call takes.  0 means that there are no
+				unsigned long int arguments.
+	SYSCALL_ULONG_ARG_2	the second unsigned long int argument this
+				call takes.  0 means that there is at most
+				one unsigned long int argument.
 	SYSCALL_SYMBOL		primary symbol name
 	SYSCALL_NOERRNO		1 to define a no-errno version (see below)
 	SYSCALL_ERRVAL		1 to define an error-value version (see below)
@@ -44,9 +50,31 @@
 /* This indirection is needed so that SYMBOL gets macro-expanded.  */
 #define syscall_hidden_def(SYMBOL)		hidden_def (SYMBOL)
 
-#define T_PSEUDO(SYMBOL, NAME, N)		PSEUDO (SYMBOL, NAME, N)
-#define T_PSEUDO_NOERRNO(SYMBOL, NAME, N)	PSEUDO_NOERRNO (SYMBOL, NAME, N)
-#define T_PSEUDO_ERRVAL(SYMBOL, NAME, N)	PSEUDO_ERRVAL (SYMBOL, NAME, N)
+/* If PSEUDOS_HAVE_ULONG_INDICES is defined, PSEUDO and T_PSEUDO macros
+   have 2 extra arguments for unsigned long int arguments:
+     Extra argument 1: Position of the first unsigned long int argument.
+     Extra argument 2: Position of the second unsigned long int argument.
+ */
+#ifndef PSEUDOS_HAVE_ULONG_INDICES
+# undef SYSCALL_ULONG_ARG_1
+# define SYSCALL_ULONG_ARG_1 0
+#endif
+
+#if SYSCALL_ULONG_ARG_1
+# define T_PSEUDO(SYMBOL, NAME, N, U1, U2) \
+  PSEUDO (SYMBOL, NAME, N, U1, U2)
+# define T_PSEUDO_NOERRNO(SYMBOL, NAME, N, U1, U2) \
+  PSEUDO_NOERRNO (SYMBOL, NAME, N, U1, U2)
+# define T_PSEUDO_ERRVAL(SYMBOL, NAME, N, U1, U2) \
+  PSEUDO_ERRVAL (SYMBOL, NAME, N, U1, U2)
+#else
+# define T_PSEUDO(SYMBOL, NAME, N) \
+  PSEUDO (SYMBOL, NAME, N)
+# define T_PSEUDO_NOERRNO(SYMBOL, NAME, N) \
+  PSEUDO_NOERRNO (SYMBOL, NAME, N)
+# define T_PSEUDO_ERRVAL(SYMBOL, NAME, N) \
+  PSEUDO_ERRVAL (SYMBOL, NAME, N)
+#endif
 #define T_PSEUDO_END(SYMBOL)			PSEUDO_END (SYMBOL)
 #define T_PSEUDO_END_NOERRNO(SYMBOL)		PSEUDO_END_NOERRNO (SYMBOL)
 #define T_PSEUDO_END_ERRVAL(SYMBOL)		PSEUDO_END_ERRVAL (SYMBOL)
@@ -56,7 +84,12 @@
 /* This kind of system call stub never returns an error.
    We return the return value register to the caller unexamined.  */
 
+# if SYSCALL_ULONG_ARG_1
+T_PSEUDO_NOERRNO (SYSCALL_SYMBOL, SYSCALL_NAME, SYSCALL_NARGS,
+		  SYSCALL_ULONG_ARG_1, SYSCALL_ULONG_ARG_2)
+# else
 T_PSEUDO_NOERRNO (SYSCALL_SYMBOL, SYSCALL_NAME, SYSCALL_NARGS)
+# endif
 	ret_NOERRNO
 T_PSEUDO_END_NOERRNO (SYSCALL_SYMBOL)
 
@@ -66,7 +99,12 @@ T_PSEUDO_END_NOERRNO (SYSCALL_SYMBOL)
    value, or zero for success.  We may massage the kernel's return value
    to meet that ABI, but we never set errno here.  */
 
+# if SYSCALL_ULONG_ARG_1
+T_PSEUDO_ERRVAL (SYSCALL_SYMBOL, SYSCALL_NAME, SYSCALL_NARGS,
+		 SYSCALL_ULONG_ARG_1, SYSCALL_ULONG_ARG_2)
+# else
 T_PSEUDO_ERRVAL (SYSCALL_SYMBOL, SYSCALL_NAME, SYSCALL_NARGS)
+# endif
 	ret_ERRVAL
 T_PSEUDO_END_ERRVAL (SYSCALL_SYMBOL)
 
@@ -75,7 +113,12 @@ T_PSEUDO_END_ERRVAL (SYSCALL_SYMBOL)
 /* This is a "normal" system call stub: if there is an error,
    it returns -1 and sets errno.  */
 
+# if SYSCALL_ULONG_ARG_1
+T_PSEUDO (SYSCALL_SYMBOL, SYSCALL_NAME, SYSCALL_NARGS,
+	  SYSCALL_ULONG_ARG_1, SYSCALL_ULONG_ARG_2)
+# else
 T_PSEUDO (SYSCALL_SYMBOL, SYSCALL_NAME, SYSCALL_NARGS)
+# endif
 	ret
 T_PSEUDO_END (SYSCALL_SYMBOL)
 
