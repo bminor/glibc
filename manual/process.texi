@@ -408,7 +408,7 @@ variable; see @ref{Environment Access}.
 @deftypefun int fexecve (int @var{fd},  char *const @var{argv}@t{[]}, char *const @var{env}@t{[]})
 @standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-This is similar to @code{execve}, but instead identifying the progam
+This is similar to @code{execve}, but instead of identifying the program
 executable by its pathname, the file descriptor @var{fd} is used.  The
 descriptor must have been opened with the @code{O_RDONLY} flag or (on
 Linux) the @code{O_PATH} flag.
