@@ -20,7 +20,7 @@
 #include <libc-early-init.h>
 
 void
-__libc_early_init (void)
+__libc_early_init (_Bool initial)
 {
   /* Initialize ctype data.  */
   __ctype_init ();

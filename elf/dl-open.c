@@ -748,9 +748,22 @@ dl_open_worker (void *a)
     LIBC_PROBE (reloc_complete, 3, args->nsid, r, new);
 
   /* If libc.so was not there before, attempt to call its early
-     initialization routine.  */
+     initialization routine.  Indicate to the initialization routine
+     whether the libc being initialized is the one in the base
+     namespace.  */
   if (!args->libc_already_loaded)
-    _dl_call_libc_early_init (GL(dl_ns)[args->nsid].libc_map);
+    {
+      struct link_map *libc_map = GL(dl_ns)[args->nsid].libc_map;
+#ifdef SHARED
+      bool initial = libc_map->l_ns == LM_ID_BASE;
+#else
+      /* In the static case, there is only one namespace, but it
+	 contains a secondary libc (the primary libc is statically
+	 linked).  */
+      bool initial = false;
+#endif
+      _dl_call_libc_early_init (libc_map, initial);
+    }
 
 #ifndef SHARED
   DL_STATIC_INIT (new);

@@ -23,6 +23,7 @@
 #include <exit-thread.h>
 #include <libc-internal.h>
 #include <elf/libc-early-init.h>
+#include <stdbool.h>
 
 #include <elf/dl-tunables.h>
 
@@ -241,7 +242,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 #ifndef SHARED
   /* Perform early initialization.  In the shared case, this function
      is called from the dynamic loader as early as possible.  */
-  __libc_early_init ();
+  __libc_early_init (true);
 
   /* Call the initializer of the libc.  This is only needed here if we
      are compiling for the static library in which case we haven't

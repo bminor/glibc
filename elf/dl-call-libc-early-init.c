@@ -23,7 +23,7 @@
 #include <stddef.h>
 
 void
-_dl_call_libc_early_init (struct link_map *libc_map)
+_dl_call_libc_early_init (struct link_map *libc_map, _Bool initial)
 {
   /* There is nothing to do if we did not actually load libc.so.  */
   if (libc_map == NULL)
@@ -37,5 +37,5 @@ _dl_call_libc_early_init (struct link_map *libc_map)
   assert (sym != NULL);
   __typeof (__libc_early_init) *early_init
     = DL_SYMBOL_ADDRESS (libc_map, sym);
-  early_init ();
+  early_init (initial);
 }
