@@ -940,7 +940,9 @@ main (int argc, char **argv)
 	    else if (nt == 3 && strcmp (the_words[0], "chmod") == 0)
 	      {
 		long int m;
+		errno = 0;
 		m = strtol (the_words[1], NULL, 0);
+		TEST_COMPARE (errno, 0);
 		if (chmod (the_words[2], m) < 0)
 		    FAIL_EXIT1 ("chmod %s: %s\n",
 				the_words[2], strerror (errno));

@@ -133,7 +133,9 @@ static int
 parse_int (const char *str)
 {
   char *endptr;
-  long int ret = strtol (str, &endptr, 10);
+  long int ret;
+  errno = 0;
+  ret = strtol (str, &endptr, 10);
   TEST_COMPARE (errno, 0);
   TEST_VERIFY (ret >= 0 && ret <= INT_MAX);
   return ret;
