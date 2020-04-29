@@ -28,7 +28,7 @@ inotify_add_watch	EXTRA	inotify_add_watch	i:isi	inotify_add_watch
 inotify_init	EXTRA	inotify_init	i:	inotify_init
 inotify_init1	EXTRA	inotify_init1	i:I	inotify_init1
 inotify_rm_watch	EXTRA	inotify_rm_watch	i:ii	inotify_rm_watch
-ioperm		-	ioperm		i:iii	ioperm
+ioperm		-	ioperm		i:UUi	ioperm
 iopl		-	iopl		i:i	iopl
 klogctl		EXTRA	syslog		i:isi	klogctl
 lchown		-	lchown		i:sii	__lchown	lchown
@@ -55,7 +55,7 @@ sched_setp	-	sched_setparam	i:ip	__sched_setparam	sched_setparam
 sched_sets	-	sched_setscheduler	i:iip	__sched_setscheduler	sched_setscheduler
 sched_yield	-	sched_yield	i:	__sched_yield	sched_yield
 sendfile	-	sendfile	i:iipU	sendfile
-sendfile64	-	sendfile64	i:iipi	sendfile64
+sendfile64	-	sendfile64	i:iipU	sendfile64
 setfsgid	EXTRA	setfsgid	i:i	setfsgid
 setfsuid	EXTRA	setfsuid	i:i	setfsuid
 setpgid		-	setpgid		i:ii	__setpgid	setpgid
@@ -75,15 +75,15 @@ readlinkat	-	readlinkat	i:issU	readlinkat
 symlinkat	-	symlinkat	i:sis	symlinkat
 unlinkat	-	unlinkat	i:isi	unlinkat
 
-setxattr	-	setxattr	i:sspii	setxattr
-lsetxattr	-	lsetxattr	i:sspii	lsetxattr
-fsetxattr	-	fsetxattr	i:ispii	fsetxattr
-getxattr	-	getxattr	i:sspi	getxattr
-lgetxattr	-	lgetxattr	i:sspi	lgetxattr
-fgetxattr	-	fgetxattr	i:ispi	fgetxattr
-listxattr	-	listxattr	i:ssi	listxattr
-llistxattr	-	llistxattr	i:ssi	llistxattr
-flistxattr	-	flistxattr	i:isi	flistxattr
+setxattr	-	setxattr	i:sspUi	setxattr
+lsetxattr	-	lsetxattr	i:sspUi	lsetxattr
+fsetxattr	-	fsetxattr	i:ispUi	fsetxattr
+getxattr	-	getxattr	i:sspU	getxattr
+lgetxattr	-	lgetxattr	i:sspU	lgetxattr
+fgetxattr	-	fgetxattr	i:ispU	fgetxattr
+listxattr	-	listxattr	i:ssU	listxattr
+llistxattr	-	llistxattr	i:ssU	llistxattr
+flistxattr	-	flistxattr	i:isU	flistxattr
 removexattr	-	removexattr	i:ss	removexattr
 lremovexattr	-	lremovexattr	i:ss	lremovexattr
 fremovexattr	-	fremovexattr	i:is	fremovexattr
