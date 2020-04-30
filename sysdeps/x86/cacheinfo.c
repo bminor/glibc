@@ -759,7 +759,6 @@ __attribute__((constructor))
 init_cacheinfo (void)
 {
   /* Find out what brand of processor.  */
-  unsigned int eax;
   unsigned int ebx;
   unsigned int ecx;
   unsigned int edx;
@@ -830,6 +829,7 @@ init_cacheinfo (void)
 #ifndef DISABLE_PREFETCHW
       if (max_cpuid_ex >= 0x80000001)
 	{
+	  unsigned int eax;
 	  __cpuid (0x80000001, eax, ebx, ecx, edx);
 	  /*  PREFETCHW     || 3DNow!  */
 	  if ((ecx & 0x100) || (edx & 0x80000000))
