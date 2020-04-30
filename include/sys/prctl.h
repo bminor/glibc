@@ -4,6 +4,7 @@
 # ifndef _ISOMAC
 
 extern int __prctl (int __option, ...);
+libc_hidden_proto (__prctl)
 
 # endif /* !_ISOMAC */
 #endif
