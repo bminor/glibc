@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.30.9000\n"
 "POT-Creation-Date: 2020-01-02 20:08+0530\n"
-"PO-Revision-Date: 2020-01-10 12:03-0800\n"
+"PO-Revision-Date: 2020-03-14 16:29-0700\n"
 "Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "Language: hr\n"
@@ -3187,7 +3187,7 @@ msgstr "Predmemorija je istekla"
 
 #: nis/nis_error.h:6
 msgid "NIS+ servers unreachable"
-msgstr "NIS+ poslužitelji nisu dostupni"
+msgstr "NIS+ serveri nisu dostupni"
 
 #: nis/nis_error.h:7
 msgid "Unknown object"
@@ -3216,7 +3216,7 @@ msgstr "Nije vlasnik"
 
 #: nis/nis_error.h:13
 msgid "Name not served by this server"
-msgstr "Ovaj poslužitelj ne servira ime"
+msgstr "Ovaj server ne servira ime"
 
 #: nis/nis_error.h:14
 msgid "Server out of memory"
@@ -3228,7 +3228,7 @@ msgstr "Postoji objekt istog imena"
 
 #: nis/nis_error.h:16
 msgid "Not master server for this domain"
-msgstr "Nije glavni poslužitelj za ovu domenu"
+msgstr "Nije glavni server za ovu domenu"
 
 #: nis/nis_error.h:17
 msgid "Invalid object for operation"
@@ -3304,7 +3304,7 @@ msgstr "Nepropisna vrsta objekta za operaciju"
 
 #: nis/nis_error.h:35
 msgid "Passed object is not the same object on server"
-msgstr "Dobiveni objekt nije isti kao objekt na poslužitelju"
+msgstr "Dobiveni objekt nije isti kao objekt na serveru"
 
 #: nis/nis_error.h:36
 msgid "Modify operation failed"
@@ -3340,7 +3340,7 @@ msgstr "To je točno, 42 je smisao života..."
 
 #: nis/nis_error.h:44
 msgid "Unable to authenticate NIS+ server"
-msgstr "Nije moguće provjeriti autentičnost NIS+ poslužitelja"
+msgstr "Nije moguće provjeriti autentičnost NIS+ servera"
 
 #: nis/nis_error.h:45
 msgid "Unable to authenticate NIS+ client"
@@ -3348,15 +3348,15 @@ msgstr "Nije moguće provjeriti autentičnost NIS+ klijenta"
 
 #: nis/nis_error.h:46
 msgid "No file space on server"
-msgstr "Nema više prostora na disku poslužitelja"
+msgstr "Nema više prostora na disku servera"
 
 #: nis/nis_error.h:47
 msgid "Unable to create process on server"
-msgstr "Nije moguće stvoriti proces na poslužitelju"
+msgstr "Nije moguće stvoriti proces na serveru"
 
 #: nis/nis_error.h:48
 msgid "Master server busy, full dump rescheduled."
-msgstr "Glavni poslužitelj je zauzet; planira se kompletni ispis (dump)"
+msgstr "Glavni server je zauzet; planira se kompletni ispis (dump)"
 
 #: nis/nis_local_names.c:122
 #, c-format
@@ -3415,7 +3415,7 @@ msgstr "Vrsta : %s\n"
 
 #: nis/nis_print.c:174
 msgid "Master Server :\n"
-msgstr "Glavni poslužitelj :\n"
+msgstr "Glavni server :\n"
 
 #: nis/nis_print.c:176
 msgid "Replicate :\n"
@@ -3719,11 +3719,11 @@ msgstr "RPC neuspjeh na NIS operaciji"
 
 #: nis/ypclnt.c:834
 msgid "Can't bind to server which serves this domain"
-msgstr "Nije moguće povezati se na poslužitelj koji poslužuje ovu domenu"
+msgstr "Nije moguće povezati se na server koji poslužuje ovu domenu"
 
 #: nis/ypclnt.c:837
 msgid "No such map in server's domain"
-msgstr "Nema takve mape u domeni poslužitelja"
+msgstr "Nema takve mape u domeni servera"
 
 #: nis/ypclnt.c:840
 msgid "No such key in map"
@@ -3763,7 +3763,7 @@ msgstr "Loša baza podataka NIS mape"
 
 #: nis/ypclnt.c:867
 msgid "NIS client/server version mismatch - can't supply service"
-msgstr "NIS klijent/poslužitelj inačice se ne slažu -- pružanje usluge nije moguće"
+msgstr "NIS klijent/server inačice se ne slažu -- pružanje usluge nije moguće"
 
 #: nis/ypclnt.c:873
 msgid "Database is busy"
@@ -3795,7 +3795,7 @@ msgstr "yp_update: nije moguće pretvoriti hostname u mrežno ime (netname)\n"
 
 #: nis/ypclnt.c:985
 msgid "yp_update: cannot get server address\n"
-msgstr "yp_update: nije moguće dobiti adresu poslužitelja\n"
+msgstr "yp_update: nije moguće dobiti adresu servera\n"
 
 #: nscd/aicache.c:82 nscd/hstcache.c:452
 #, c-format
@@ -4177,7 +4177,7 @@ msgstr "pokrene BROJ dretvi"
 
 #: nscd/nscd.c:112
 msgid "Shut the server down"
-msgstr "isključi poslužitelj"
+msgstr "isključi server"
 
 #: nscd/nscd.c:113
 msgid "Print current configuration statistics"
@@ -4211,7 +4211,7 @@ msgstr "nevaljani broj argumenata"
 #: nscd/nscd.c:165
 #, c-format
 msgid "failure while reading configuration file; this is fatal"
-msgstr "nije moguće pročitati konfiguracijsku datoteku -- poslužitelj se neće pokrenuti"
+msgstr "nije moguće pročitati konfiguracijsku datoteku -- server se neće pokrenuti"
 
 #: nscd/nscd.c:174
 #, c-format
@@ -4375,27 +4375,27 @@ msgid ""
 msgstr ""
 "Konfiguracija nscd:\n"
 "\n"
-"%15d  debug razina poslužitelja\n"
+"%15d  debug razina servera\n"
 
 #: nscd/nscd_stat.c:248
 #, c-format
 msgid "%3ud %2uh %2um %2lus  server runtime\n"
-msgstr "%3ud %2uh %2um %2lus  vrijeme rada poslužitelja\n"
+msgstr "%3ud %2uh %2um %2lus  vrijeme rada servera\n"
 
 #: nscd/nscd_stat.c:251
 #, c-format
 msgid "    %2uh %2um %2lus  server runtime\n"
-msgstr "    %2uh %2um %2lus  vrijeme rada poslužitelja\n"
+msgstr "    %2uh %2um %2lus  vrijeme rada servera\n"
 
 #: nscd/nscd_stat.c:253
 #, c-format
 msgid "        %2um %2lus  server runtime\n"
-msgstr "        %2um %2lus  vrijeme rada poslužitelja\n"
+msgstr "        %2um %2lus  vrijeme rada servera\n"
 
 #: nscd/nscd_stat.c:255
 #, c-format
 msgid "            %2lus  server runtime\n"
-msgstr "            %2lus  vrijeme rada poslužitelja\n"
+msgstr "            %2lus  vrijeme rada servera\n"
 
 #: nscd/nscd_stat.c:257
 #, c-format
@@ -4917,7 +4917,7 @@ msgstr "Nije pronađeno hostname"
 
 #: resolv/herror.c:66
 msgid "Unknown server error"
-msgstr "Nepoznata greška na poslužitelju"
+msgstr "Nepoznata greška na serveru"
 
 #: resolv/herror.c:67
 msgid "No address associated with name"
@@ -5297,7 +5297,7 @@ msgstr "Akreditiv klijenta je preslabi"
 
 #: sunrpc/clnt_perr.c:353
 msgid "Invalid server verifier"
-msgstr "Verifikator poslužitelja nije valjani"
+msgstr "Verifikator servera nije valjan"
 
 #: sunrpc/clnt_perr.c:357
 msgid "Failed (unspecified error)"
@@ -5491,12 +5491,12 @@ msgstr "-i veličina     veličina pri kojoj započinje generiranje inline koda\
 #: sunrpc/rpc_main.c:1420
 #, c-format
 msgid "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"
-msgstr "-I              generira kod za inetd podršku u poslužitelju (za SunOS 4.1)\n"
+msgstr "-I              generira kod za inetd podršku u serveru (za SunOS 4.1)\n"
 
 #: sunrpc/rpc_main.c:1421
 #, c-format
 msgid "-K seconds\tserver exits after K seconds of inactivity\n"
-msgstr "-K sekundi      nakon K sekundi neaktivnosti poslužitelj završi s radom\n"
+msgstr "-K sekundi      nakon K sekundi neaktivnosti server završi s radom\n"
 
 # Basically, a client-side stub is a procedure that looks to the client as if it were a callable server procedure.
 # A server-side stub looks to the server as if it's a calling client.
@@ -5506,18 +5506,18 @@ msgstr "-K sekundi      nakon K sekundi neaktivnosti poslužitelj završi s rado
 #: sunrpc/rpc_main.c:1422
 #, c-format
 msgid "-l\t\tgenerate client side stubs\n"
-msgstr "-l              generira client-side stubs (klijent-poslužitelj procedure)\n"
+msgstr "-l              generira client-side stubs (klijent-server procedure)\n"
 
 #: sunrpc/rpc_main.c:1423
 #, c-format
 msgid "-L\t\tserver errors will be printed to syslog\n"
-msgstr "-L              greške poslužitelja biti će zapisane u dnevnik sustava\n"
+msgstr "-L              greške servera bit će zapisane u dnevnik sustava\n"
 
 # v. gore za client side stubs
 #: sunrpc/rpc_main.c:1424
 #, c-format
 msgid "-m\t\tgenerate server side stubs\n"
-msgstr "-m              generira server-side stubs (poslužitelj-klijent procedure)\n"
+msgstr "-m              generira server-side stubs (server-klijent procedure)\n"
 
 #: sunrpc/rpc_main.c:1425
 #, c-format
@@ -5527,7 +5527,7 @@ msgstr "-M              generira MT-safe code (sigurni višedretveni kod)\n"
 #: sunrpc/rpc_main.c:1426
 #, c-format
 msgid "-n netid\tgenerate server code that supports named netid\n"
-msgstr "-n netid        generira kod poslužitelja koji podržava imenovani netid\n"
+msgstr "-n netid        generira kod servera koji podržava imenovani netid\n"
 
 #: sunrpc/rpc_main.c:1427
 #, c-format
@@ -5542,7 +5542,7 @@ msgstr "-o izlaznadatoteka  ime izlazne datoteke\n"
 #: sunrpc/rpc_main.c:1429
 #, c-format
 msgid "-s nettype\tgenerate server code that supports named nettype\n"
-msgstr "-s nettype      generira kod poslužitelja koji podržava imenovani nettype\n"
+msgstr "-s nettype      generira kod servera koji podržava imenovani nettype\n"
 
 #: sunrpc/rpc_main.c:1430
 #, c-format
@@ -5555,7 +5555,7 @@ msgstr ""
 #, c-format
 msgid "-Ss\t\tgenerate sample server code that defines remote procedures\n"
 msgstr ""
-"-Ss             generira primjer koda za poslužitelja koji\n"
+"-Ss             generira primjer koda za servera koji\n"
 "                  definira remote procedures\n"
 
 #: sunrpc/rpc_main.c:1432
@@ -5639,7 +5639,7 @@ msgstr "nije moguće ponovno dodijeliti broj procedure %ld\n"
 
 #: sunrpc/svc_simple.c:82
 msgid "couldn't create an rpc server\n"
-msgstr "nije bilo moguće stvoriti RPC poslužitelj\n"
+msgstr "nije bilo moguće stvoriti RPC server\n"
 
 #: sunrpc/svc_simple.c:90
 #, c-format
