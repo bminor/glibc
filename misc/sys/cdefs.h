@@ -548,4 +548,15 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
 # define __HAVE_GENERIC_SELECTION 0
 #endif
 
+#if __GNUC_PREREQ (10, 0)
+/* Designates a 1-based positional argument ref-index of pointer type
+   that can be used to access size-index elements of the pointed-to
+   array according to access mode, or at least one element when
+   size-index is not provided:
+     access (access-mode, <ref-index> [, <size-index>])  */
+#define __attr_access(x) __attribute__ ((__access__ x))
+#else
+#  define __attr_access(x)
+#endif
+
 #endif	 /* sys/cdefs.h */

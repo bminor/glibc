@@ -566,7 +566,7 @@ extern int putw (int __w, FILE *__stream);
    This function is a possible cancellation point and therefore not
    marked with __THROW.  */
 extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
-     __wur;
+     __wur __attr_access ((__write_only__, 1, 2));
 
 #if __GLIBC_USE (DEPRECATED_GETS)
 /* Get a newline-terminated string from stdin, removing the newline.
@@ -589,7 +589,8 @@ extern char *gets (char *__s) __wur __attribute_deprecated__;
    or due to the implementation it is a cancellation point and
    therefore not marked with __THROW.  */
 extern char *fgets_unlocked (char *__restrict __s, int __n,
-			     FILE *__restrict __stream) __wur;
+			     FILE *__restrict __stream) __wur
+    __attr_access ((__write_only__, 1, 2));
 #endif
 
 
