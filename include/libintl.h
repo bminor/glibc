@@ -37,17 +37,33 @@ extern char *__bind_textdomain_codeset (const char *__domainname,
 extern const char _libc_intl_domainname[];
 libc_hidden_proto (_libc_intl_domainname)
 
-/* Define the macros `_' and `N_' for conveniently marking translatable
-   strings in the libc source code.  We have to make sure we get the
-   correct definitions so we undefine the macros first.  */
+/* _ marks its argument, a string literal, for translation, and
+   performs translation at run time if the LC_MESSAGES locale category
+   has been set.  The MSGID argument is extracted, added to the
+   translation database, and eventually submitted to the translation
+   team for processing.  New translations are periodically
+   incorporated into the glibc source tree as part of translation
+   updates.  */
+# undef _
+# define _(msgid) __dcgettext (_libc_intl_domainname, msgid, LC_MESSAGES)
 
+/* N_ marks its argument, a string literal, for translation, so that
+   it is extracted and added to the translation database (similar to
+   the _ macro above).  It does not translate the string at run time.
+   The first, primary use case for N_ is a context in which a string
+   literal is required, such as an initializer.  Translation will
+   happen later, for example using the __gettext function.
+
+   The second, historic, use case involves strings which may be
+   translated in a future version of the library, but cannot be
+   translated in current releases due to some technical limitation
+   (e.g., gettext not being available in the dynamic loader).  No
+   translation at run time happens in such cases.  In the future, this
+   historic usage of N_ may become deprecated.  Strings which are not
+   translated create unnecessary work for the translation team.  We
+   continue to use N_ because it helps mark translatable strings.  */
 # undef N_
 # define N_(msgid)	msgid
-
-# undef _
-/* This is defined as an optimizing macro, so use it.  */
-# define _(msgid) \
-  __dcgettext (_libc_intl_domainname, msgid, LC_MESSAGES)
 
 # endif /* !_ISOMAC */
 #endif
