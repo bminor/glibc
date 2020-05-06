@@ -109,6 +109,9 @@
 /* AArch64 big endian ABI */
 #undef HAVE_AARCH64_BE
 
+/* AArch64 BTI support enabled.  */
+#define HAVE_AARCH64_BTI 0
+
 /* C-SKY ABI version.  */
 #undef CSKYABI
 
