@@ -172,3 +172,45 @@ else
   config_vars="$config_vars
 default-abi = lp64"
 fi
+
+# Only consider BTI supported if -mbranch-protection=bti is
+# on by default in the compiler and the linker produces
+# binaries with GNU property notes in PT_GNU_PROPERTY segment.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for BTI support" >&5
+$as_echo_n "checking for BTI support... " >&6; }
+if ${libc_cv_aarch64_bti+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+    cat > conftest.c <<EOF
+void foo (void) { }
+EOF
+  libc_cv_aarch64_bti=no
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostdlib -nostartfiles $no_ssp -shared -fPIC -o conftest.so conftest.c'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } \
+     && { ac_try='$READELF -lW conftest.so | grep -q GNU_PROPERTY'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } \
+     && { ac_try='$READELF -nW conftest.so | grep -q "NT_GNU_PROPERTY_TYPE_0.*AArch64 feature:.* BTI"'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+  then
+    libc_cv_aarch64_bti=yes
+  fi
+  rm -rf conftest.*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_aarch64_bti" >&5
+$as_echo "$libc_cv_aarch64_bti" >&6; }
+if test $libc_cv_aarch64_bti = yes; then
+  $as_echo "#define HAVE_AARCH64_BTI 1" >>confdefs.h
+
+fi
