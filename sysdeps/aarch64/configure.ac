@@ -20,3 +20,22 @@ if test $libc_cv_aarch64_be = yes; then
 else
   LIBC_CONFIG_VAR([default-abi], [lp64])
 fi
+
+# Only consider BTI supported if -mbranch-protection=bti is
+# on by default in the compiler and the linker produces
+# binaries with GNU property notes in PT_GNU_PROPERTY segment.
+AC_CACHE_CHECK([for BTI support], [libc_cv_aarch64_bti], [dnl
+  cat > conftest.c <<EOF
+void foo (void) { }
+EOF
+  libc_cv_aarch64_bti=no
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostdlib -nostartfiles $no_ssp -shared -fPIC -o conftest.so conftest.c]) \
+     && AC_TRY_COMMAND([$READELF -lW conftest.so | grep -q GNU_PROPERTY]) \
+     && AC_TRY_COMMAND([$READELF -nW conftest.so | grep -q "NT_GNU_PROPERTY_TYPE_0.*AArch64 feature:.* BTI"])
+  then
+    libc_cv_aarch64_bti=yes
+  fi
+  rm -rf conftest.*])
+if test $libc_cv_aarch64_bti = yes; then
+  AC_DEFINE(HAVE_AARCH64_BTI)
+fi
