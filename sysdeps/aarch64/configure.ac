@@ -40,3 +40,24 @@ LIBC_CONFIG_VAR([aarch64-bti], [$libc_cv_aarch64_bti])
 if test $libc_cv_aarch64_bti = yes; then
   AC_DEFINE(HAVE_AARCH64_BTI)
 fi
+
+# Check if glibc is built with return address signing, i.e.
+# if -mbranch-protection=pac-ret is on. We need this because
+# pac-ret relies on unwinder support so it's not safe to use
+# it in assembly code unconditionally, but there is no
+# feature test macro for it in gcc.
+AC_CACHE_CHECK([if pac-ret is enabled], [libc_cv_aarch64_pac_ret], [dnl
+  cat > conftest.c <<EOF
+int bar (void);
+int foo (void) { return bar () + 1; }
+EOF
+  libc_cv_aarch64_pac_ret=no
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -o conftest.s conftest.c]) \
+     && AC_TRY_COMMAND([grep -q -E '\''(hint( |	)+25|paciasp)'\'' conftest.s])
+  then
+    libc_cv_aarch64_pac_ret=yes
+  fi
+  rm -rf conftest.*])
+if test $libc_cv_aarch64_pac_ret = yes; then
+  AC_DEFINE(HAVE_AARCH64_PAC_RET)
+fi
