@@ -112,6 +112,9 @@
 /* AArch64 BTI support enabled.  */
 #define HAVE_AARCH64_BTI 0
 
+/* AArch64 PAC-RET code generation is enabled.  */
+#define HAVE_AARCH64_PAC_RET 0
+
 /* C-SKY ABI version.  */
 #undef CSKYABI
 
