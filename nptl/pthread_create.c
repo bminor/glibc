@@ -552,11 +552,7 @@ START_THREAD_DEFN
   advise_stack_range (pd->stackblock, pd->stackblock_size, (uintptr_t) pd,
 		      pd->guardsize);
 
-  /* If the thread is detached free the TCB.  */
-  if (IS_DETACHED (pd))
-    /* Free the TCB.  */
-    __free_tcb (pd);
-  else if (__glibc_unlikely (pd->cancelhandling & SETXID_BITMASK))
+  if (__glibc_unlikely (pd->cancelhandling & SETXID_BITMASK))
     {
       /* Some other thread might call any of the setXid functions and expect
 	 us to reply.  In this case wait until we did that.  */
@@ -571,6 +567,11 @@ START_THREAD_DEFN
       /* Reset the value so that the stack can be reused.  */
       pd->setxid_futex = 0;
     }
+
+  /* If the thread is detached free the TCB.  */
+  if (IS_DETACHED (pd))
+    /* Free the TCB.  */
+    __free_tcb (pd);
 
   /* We cannot call '_exit' here.  '_exit' will terminate the process.
 
