@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2020 Free Software Foundation, Inc.
+/* Unmount filesystem.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,10 @@
 #include <sysdep.h>
 
 int
-__umount (const char *name)
+__umount2 (const char *special_file, int flags)
 {
-  return __umount2 (name, 0);
+  return INLINE_SYSCALL_CALL (umount2, special_file, flags);
 }
+libc_hidden_def (__umount2)
 
-weak_alias (__umount, umount);
+weak_alias (__umount2, umount2)

@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2020 Free Software Foundation, Inc.
+/* Internal declarations for sys/mount.h.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -13,16 +13,19 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/mount.h>
-#include <sysdep.h>
+#ifndef _INCLUDE_SYS_MOUNT_H
+#define _INCLUDE_SYS_MOUNT_H	1
 
-int
-__umount (const char *name)
-{
-  return __umount2 (name, 0);
-}
+#include_next <sys/mount.h>
 
-weak_alias (__umount, umount);
+# ifndef _ISOMAC
+
+extern __typeof (umount) __umount __THROW;
+extern __typeof (umount2) __umount2 __THROW;
+libc_hidden_proto (__umount2)
+
+# endif /* _ISOMAC */
+#endif /* sys/sysinfo.h */
