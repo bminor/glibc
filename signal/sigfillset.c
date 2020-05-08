@@ -17,8 +17,8 @@
 
 #include <errno.h>
 #include <signal.h>
-#include <string.h>
 #include <internal-signals.h>
+#include <sigsetops.h>
 
 /* Set all signals in SET.  */
 int
@@ -30,10 +30,8 @@ sigfillset (sigset_t *set)
       return -1;
     }
 
-  memset (set, 0xff, sizeof (sigset_t));
-
+  __sigfillset (set);
   __clear_internal_signals (set);
-
   return 0;
 }
 libc_hidden_def (sigfillset)
