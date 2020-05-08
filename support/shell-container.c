@@ -135,6 +135,37 @@ copy_func (char **argv)
 
 }
 
+/* Emulate the 'exit' builtin.  The exit value is optional.  */
+static int
+exit_func (char **argv)
+{
+  int exit_val = 0;
+
+  if (argv[0] != 0)
+    exit_val = atoi (argv[0]) & 0xff;
+  exit (exit_val);
+  return 0;
+}
+
+/* Emulate the "/bin/kill" command.  Options are ignored.  */
+static int
+kill_func (char **argv)
+{
+  int signum = SIGTERM;
+  int i;
+
+  for (i = 0; argv[i]; i++)
+    {
+      pid_t pid;
+      if (strcmp (argv[i], "$$") == 0)
+	pid = getpid ();
+      else
+	pid = atoi (argv[i]);
+      kill (pid, signum);
+    }
+  return 0;
+}
+
 /* This is a list of all the built-in commands we understand.  */
 static struct {
   const char *name;
@@ -143,6 +174,8 @@ static struct {
   { "true", true_func },
   { "echo", echo_func },
   { "cp", copy_func },
+  { "exit", exit_func },
+  { "kill", kill_func },
   { NULL, NULL }
 };
 
@@ -238,7 +271,7 @@ run_command_array (char **argv)
 
       fprintf (stderr, "sh: execing %s failed: %s",
 	       argv[0], strerror (errno));
-      exit (1);
+      exit (127);
     }
 
   waitpid (pid, &status, 0);
@@ -250,6 +283,11 @@ run_command_array (char **argv)
       int rv = WEXITSTATUS (status);
       if (rv)
 	exit (rv);
+    }
+  else if (WIFSIGNALED (status))
+    {
+      int sig = WTERMSIG (status);
+      raise (sig);
     }
   else
     exit (1);

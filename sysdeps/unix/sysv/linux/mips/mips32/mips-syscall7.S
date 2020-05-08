@@ -22,9 +22,10 @@
 	.text
 	.set	nomips16
 
-/* long long __mips_syscall7 (long arg1, long arg2, long arg3, long arg4,
-			      long arg5, long arg6, long arg7,
-			      long number)  */
+/* long long int __mips_syscall7 (long int arg1, long int arg2, long int arg3,
+				  long int arg4, long int arg5, long int arg6,
+				  long int arg7,
+				  long int number)  */
 
 ENTRY(__mips_syscall7)
 	lw	v0, 28(sp)

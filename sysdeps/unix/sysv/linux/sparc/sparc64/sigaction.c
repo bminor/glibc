@@ -22,21 +22,11 @@
 #include <syscall.h>
 #include <sysdep.h>
 
-static void __rt_sigreturn_stub (void);
+/* Defined on sigreturn_stub.S.  */
+void __rt_sigreturn_stub (void);
 
 #define STUB(act, sigsetsize) \
   (((unsigned long) &__rt_sigreturn_stub) - 8),	\
   (sigsetsize)
 
 #include <sysdeps/unix/sysv/linux/sigaction.c>
-
-static
-inhibit_stack_protector
-void
-__rt_sigreturn_stub (void)
-{
-  __asm__ ("mov %0, %%g1\n\t"
-	   "ta	0x6d\n\t"
-	   : /* no outputs */
-	   : "i" (__NR_rt_sigreturn));
-}

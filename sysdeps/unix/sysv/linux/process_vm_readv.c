@@ -1,5 +1,5 @@
-/* MIPS16 syscall wrappers.
-   Copyright (C) 2013-2019 Free Software Foundation, Inc.
+/* process_vm_readv - Linux specific syscall.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,18 +14,19 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
+#include <unistd.h>
 #include <sysdep.h>
+#include <errno.h>
+#include <sys/uio.h>
 
-#undef __mips16_syscall1
-
-long long int __nomips16
-__mips16_syscall1 (long int a0,
-		   long int number)
+ssize_t
+process_vm_readv (pid_t pid, const struct iovec *local_iov,
+		  unsigned long int liovcnt,
+		  const struct iovec *remote_iov,
+		  unsigned long int riovcnt, unsigned long int flags)
 {
-  union __mips_syscall_return ret;
-  ret.reg.v0 = INTERNAL_SYSCALL_MIPS16 (number, ret.reg.v1, 1,
-					a0);
-  return ret.val;
+  return INLINE_SYSCALL_CALL (process_vm_readv, pid, local_iov,
+			      liovcnt, remote_iov, riovcnt, flags);
 }

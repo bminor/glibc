@@ -18,7 +18,9 @@ sysdep_routines += clone umount umount2 readahead \
 		   setfsuid setfsgid epoll_pwait signalfd \
 		   eventfd eventfd_read eventfd_write prlimit \
 		   personality epoll_wait tee vmsplice splice \
-		   open_by_handle_at mlock2 pkey_mprotect pkey_set pkey_get
+		   open_by_handle_at mlock2 pkey_mprotect pkey_set pkey_get \
+		   prctl \
+		   process_vm_readv process_vm_writev
 
 CFLAGS-gethostid.c = -fexceptions
 CFLAGS-tee.c = -fexceptions -fasynchronous-unwind-tables

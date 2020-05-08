@@ -52,7 +52,7 @@
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)				\
   ({ INTERNAL_SYSCALL_DECL (_sc_err);					\
-     long result_var = INTERNAL_SYSCALL (name, _sc_err, nr, args);	\
+     long int result_var = INTERNAL_SYSCALL (name, _sc_err, nr, args);	\
      if ( INTERNAL_SYSCALL_ERROR_P (result_var, _sc_err) )		\
        {								\
 	 __set_errno (INTERNAL_SYSCALL_ERRNO (result_var, _sc_err));	\
@@ -61,10 +61,10 @@
      result_var; })
 
 #undef INTERNAL_SYSCALL_DECL
-#define INTERNAL_SYSCALL_DECL(err) long err __attribute__ ((unused))
+#define INTERNAL_SYSCALL_DECL(err) long int err __attribute__ ((unused))
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err)   ((void) (val), (long) (err))
+#define INTERNAL_SYSCALL_ERROR_P(val, err)   ((void) (val), (long int) (err))
 
 #undef INTERNAL_SYSCALL_ERRNO
 #define INTERNAL_SYSCALL_ERRNO(val, err)     ((void) (err), val)
@@ -110,13 +110,13 @@
 
 #define internal_syscall0(v0_init, input, number, err, dummy...)	\
 ({									\
-	long _sys_result;						\
+	long int _sys_result;						\
 									\
 	{								\
-	register long __s0 asm ("$16") __attribute__ ((unused))		\
+	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long __v0 asm ("$2");					\
-	register long __a3 asm ("$7");					\
+	register long int __v0 asm ("$2");				\
+	register long int __a3 asm ("$7");				\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -133,14 +133,15 @@
 
 #define internal_syscall1(v0_init, input, number, err, arg1)		\
 ({									\
-	long _sys_result;						\
+	long int _sys_result;						\
 									\
 	{								\
-	register long __s0 asm ("$16") __attribute__ ((unused))		\
+	long int _arg1 = (long int) (arg1);				\
+	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long __v0 asm ("$2");					\
-	register long __a0 asm ("$4") = (long) (arg1);			\
-	register long __a3 asm ("$7");					\
+	register long int __v0 asm ("$2");				\
+	register long int __a0 asm ("$4") = _arg1;			\
+	register long int __a3 asm ("$7");				\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -157,15 +158,17 @@
 
 #define internal_syscall2(v0_init, input, number, err, arg1, arg2)	\
 ({									\
-	long _sys_result;						\
+	long int _sys_result;						\
 									\
 	{								\
-	register long __s0 asm ("$16") __attribute__ ((unused))		\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long __v0 asm ("$2");					\
-	register long __a0 asm ("$4") = (long) (arg1);			\
-	register long __a1 asm ("$5") = (long) (arg2);			\
-	register long __a3 asm ("$7");					\
+	register long int __v0 asm ("$2");				\
+	register long int __a0 asm ("$4") = _arg1;			\
+	register long int __a1 asm ("$5") = _arg2;			\
+	register long int __a3 asm ("$7");				\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -183,16 +186,19 @@
 #define internal_syscall3(v0_init, input, number, err,			\
 			  arg1, arg2, arg3)				\
 ({									\
-	long _sys_result;						\
+	long int _sys_result;						\
 									\
 	{								\
-	register long __s0 asm ("$16") __attribute__ ((unused))		\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
+	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long __v0 asm ("$2");					\
-	register long __a0 asm ("$4") = (long) (arg1);			\
-	register long __a1 asm ("$5") = (long) (arg2);			\
-	register long __a2 asm ("$6") = (long) (arg3);			\
-	register long __a3 asm ("$7");					\
+	register long int __v0 asm ("$2");				\
+	register long int __a0 asm ("$4") = _arg1;			\
+	register long int __a1 asm ("$5") = _arg2;			\
+	register long int __a2 asm ("$6") = _arg3;			\
+	register long int __a3 asm ("$7");				\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -210,16 +216,20 @@
 #define internal_syscall4(v0_init, input, number, err,			\
 			  arg1, arg2, arg3, arg4)			\
 ({									\
-	long _sys_result;						\
+	long int _sys_result;						\
 									\
 	{								\
-	register long __s0 asm ("$16") __attribute__ ((unused))		\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
+	long int _arg4 = (long int) (arg4);				\
+	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long __v0 asm ("$2");					\
-	register long __a0 asm ("$4") = (long) (arg1);			\
-	register long __a1 asm ("$5") = (long) (arg2);			\
-	register long __a2 asm ("$6") = (long) (arg3);			\
-	register long __a3 asm ("$7") = (long) (arg4);			\
+	register long int __v0 asm ("$2");				\
+	register long int __a0 asm ("$4") = _arg1;			\
+	register long int __a1 asm ("$5") = _arg2;			\
+	register long int __a2 asm ("$6") = _arg3;			\
+	register long int __a3 asm ("$7") = _arg4;			\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -237,17 +247,22 @@
 #define internal_syscall5(v0_init, input, number, err,			\
 			  arg1, arg2, arg3, arg4, arg5)			\
 ({									\
-	long _sys_result;						\
+	long int _sys_result;						\
 									\
 	{								\
-	register long __s0 asm ("$16") __attribute__ ((unused))		\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
+	long int _arg4 = (long int) (arg4);				\
+	long int _arg5 = (long int) (arg5);				\
+	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long __v0 asm ("$2");					\
-	register long __a0 asm ("$4") = (long) (arg1);			\
-	register long __a1 asm ("$5") = (long) (arg2);			\
-	register long __a2 asm ("$6") = (long) (arg3);			\
-	register long __a3 asm ("$7") = (long) (arg4);			\
-	register long __a4 asm ("$8") = (long) (arg5);			\
+	register long int __v0 asm ("$2");				\
+	register long int __a0 asm ("$4") = _arg1;			\
+	register long int __a1 asm ("$5") = _arg2;			\
+	register long int __a2 asm ("$6") = _arg3;			\
+	register long int __a3 asm ("$7") = _arg4;			\
+	register long int __a4 asm ("$8") = _arg5;			\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -265,18 +280,24 @@
 #define internal_syscall6(v0_init, input, number, err,			\
 			  arg1, arg2, arg3, arg4, arg5, arg6)		\
 ({									\
-	long _sys_result;						\
+	long int _sys_result;						\
 									\
 	{								\
-	register long __s0 asm ("$16") __attribute__ ((unused))		\
+	long int _arg1 = (long int) (arg1);				\
+	long int _arg2 = (long int) (arg2);				\
+	long int _arg3 = (long int) (arg3);				\
+	long int _arg4 = (long int) (arg4);				\
+	long int _arg5 = (long int) (arg5);				\
+	long int _arg6 = (long int) (arg6);				\
+	register long int __s0 asm ("$16") __attribute__ ((unused))	\
 	  = (number);							\
-	register long __v0 asm ("$2");					\
-	register long __a0 asm ("$4") = (long) (arg1);			\
-	register long __a1 asm ("$5") = (long) (arg2);			\
-	register long __a2 asm ("$6") = (long) (arg3);			\
-	register long __a3 asm ("$7") = (long) (arg4);			\
-	register long __a4 asm ("$8") = (long) (arg5);			\
-	register long __a5 asm ("$9") = (long) (arg6);			\
+	register long int __v0 asm ("$2");				\
+	register long int __a0 asm ("$4") = _arg1;			\
+	register long int __a1 asm ("$5") = _arg2;			\
+	register long int __a2 asm ("$6") = _arg3;			\
+	register long int __a3 asm ("$7") = _arg4;			\
+	register long int __a4 asm ("$8") = _arg5;			\
+	register long int __a5 asm ("$9") = _arg6;			\
 	__asm__ volatile (						\
 	".set\tnoreorder\n\t"						\
 	v0_init								\
@@ -301,7 +322,7 @@
 #define INTERNAL_VSYSCALL_CALL(funcptr, err, nr, args...)		\
   ({									\
     long _ret = funcptr (args);						\
-    err = ((unsigned long) (_ret) >= (unsigned long) -4095L);		\
+    err = ((unsigned long) (_ret) >= (unsigned long int) -4095L);	\
     if (err)								\
       _ret = -_ret;							\
     _ret;								\

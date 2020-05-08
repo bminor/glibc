@@ -73,13 +73,18 @@ ENTRY(__clone)
 #endif
 
 	/* Sanity check arguments.  */
-	comib,=,n  0, %arg0, .LerrorSanity        /* no NULL function pointers */
-	comib,=,n  0, %arg1, .LerrorSanity        /* no NULL stack pointers */
+	comib,=,n	0,%arg0,.LerrorSanity	/* no NULL function pointers */
+	comib,=,n	0,%arg1,.LerrorSanity	/* no NULL stack pointers */
+
+	/* Ensure stack argument is 8-byte aligned.  */
+	ldo		7(%r25),%r25
+	depi		0,31,3,%r25
 
 	/* Save the function pointer, arg, and flags on the new stack.  */
 	stwm    %r26, 64(%r25)
 	stw	%r23, -60(%r25)
 	stw     %r24, -56(%r25)
+
 	/* Clone arguments are (int flags, void * child_stack) */
 	copy	%r24, %r26		/* flags are first */
 	/* User stack pointer is in the correct register already */
