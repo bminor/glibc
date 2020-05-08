@@ -116,6 +116,8 @@ reorder-after <S0B39> % ORIYA LETTER HA
 % &ଯ<<ୟ
 <U0B5F> <S0B2F>;"<BASE><VRNT1>";<MIN>;<U0B5F> % ORIYA LETTER YYA
 
+reorder-end
+
 END LC_COLLATE
 
 %%%%%%%%%%%%%

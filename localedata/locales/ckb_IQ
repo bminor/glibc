@@ -84,6 +84,8 @@ reorder-after <S0646> % ن
 <S0648> % و
 <S06C6> % ۆ
 
+reorder-end
+
 END LC_COLLATE
 
 LC_MONETARY
