@@ -1,5 +1,5 @@
-# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
- # Local preconfigure fragment for sysdeps/powerpc
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+# Local preconfigure fragment for sysdeps/powerpc
 
 case "$machine" in
 powerpc64le)
@@ -14,7 +14,7 @@ powerpc*)
   case "$host_os" in
     *gnuspe*)
       # SPE support was dropped in glibc 2.30.
-      as_fn_error $? "Host system type $host is no longer supported." "$LINENO" 5
+      AC_MSG_ERROR([Host system type $host is no longer supported.])
     ;;
   esac
   ;;
@@ -31,7 +31,7 @@ case "${machine}:${submachine}" in
 *powerpc*:)
   archcpu=`echo "int foo () { return 0; }" \
 	   | $CC $CFLAGS $CPPFLAGS -S -frecord-gcc-switches -xc -o - - \
-	   | grep -E "mcpu=|.machine" -m 1 \
+	   | grep -E "mcpu=|[.]machine" -m 1 \
 	   | sed -e "s/.*machine //" -e "s/.*mcpu=\(.*\)\"/\1/"`
   # Note if you add patterns here you must ensure that an appropriate
   # directory exists in sysdeps/powerpc.  Likewise, if we find a
@@ -39,31 +39,16 @@ case "${machine}:${submachine}" in
   case "$archcpu" in
   405fp|440fp|464fp|476fp)
     submachine=${archcpu%fp}
-    if ${libc_cv_cc_submachine+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  libc_cv_cc_submachine=""
-fi
-
+    AC_CACHE_VAL(libc_cv_cc_submachine,libc_cv_cc_submachine="")
     ;;
   405|440|464|476)
     submachine=${archcpu}
-    if ${libc_cv_cc_submachine+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  libc_cv_cc_submachine=""
-fi
-
+    AC_CACHE_VAL(libc_cv_cc_submachine,libc_cv_cc_submachine="")
     ;;
 
-  a2|970|power[4-9]|power5x|power6+)
+  a2|970|power[[4-9]]|power5x|power6+)
     submachine=${archcpu}
-    if ${libc_cv_cc_submachine+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  libc_cv_cc_submachine=""
-fi
-
+    AC_CACHE_VAL(libc_cv_cc_submachine,libc_cv_cc_submachine="")
     ;;
   *)
     # We couldn't figure it out, assume none
