@@ -244,7 +244,7 @@ L(return):
 	ret
 
 L(movsb):
-	cmpq	__x86_shared_non_temporal_threshold(%rip), %rdx
+	cmp	__x86_shared_non_temporal_threshold(%rip), %RDX_LP
 	jae	L(more_8x_vec)
 	cmpq	%rsi, %rdi
 	jb	1f
@@ -402,7 +402,7 @@ L(more_8x_vec):
 	addq	%r8, %rdx
 #if (defined USE_MULTIARCH || VEC_SIZE == 16) && IS_IN (libc)
 	/* Check non-temporal store threshold.  */
-	cmpq	__x86_shared_non_temporal_threshold(%rip), %rdx
+	cmp	__x86_shared_non_temporal_threshold(%rip), %RDX_LP
 	ja	L(large_forward)
 #endif
 L(loop_4x_vec_forward):
@@ -454,7 +454,7 @@ L(more_8x_vec_backward):
 	subq	%r8, %rdx
 #if (defined USE_MULTIARCH || VEC_SIZE == 16) && IS_IN (libc)
 	/* Check non-temporal store threshold.  */
-	cmpq	__x86_shared_non_temporal_threshold(%rip), %rdx
+	cmp	__x86_shared_non_temporal_threshold(%rip), %RDX_LP
 	ja	L(large_backward)
 #endif
 L(loop_4x_vec_backward):
