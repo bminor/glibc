@@ -18,6 +18,10 @@ The following bugs are resolved with this release:
   [25639] localedata: Some names of days and months wrongly spelt in
     Occitan
   [25715] system() returns wrong errors when posix_spawn fails
+  [25810] x32: Incorrect syscall entries with pointer, off_t and size_t
+  [25896] Incorrect prctl
+  [25902] Bad LOADARGS_N
+  [25966] Incorrect access of __x86_shared_non_temporal_threshold for x32
 
 Security related changes:
 
