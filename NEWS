@@ -7,6 +7,11 @@ using `glibc' in the "product" field.
 
 Version 2.30.1
 
+  [25810] x32: Incorrect syscall entries with pointer, off_t and size_t
+  [25896] Incorrect prctl
+  [25902] Bad LOADARGS_N
+  [25966] Incorrect access of __x86_shared_non_temporal_threshold for x32
+
 Security related changes:
 
 CVE-2019-19126: ld.so failed to ignore the LD_PREFER_MAP_32BIT_EXEC
