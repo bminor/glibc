@@ -85,8 +85,9 @@ _hurd_thread_sigstate (thread_t thread)
       ss = malloc (sizeof (*ss));
       if (ss == NULL)
 	__libc_fatal ("hurd: Can't allocate sigstate\n");
-      ss->thread = thread;
+      __spin_lock_init (&ss->critical_section_lock);
       __spin_lock_init (&ss->lock);
+      ss->thread = thread;
 
       /* Initialize default state.  */
       __sigemptyset (&ss->blocked);
@@ -97,6 +98,9 @@ _hurd_thread_sigstate (thread_t thread)
       ss->suspended = MACH_PORT_NULL;
       ss->intr_port = MACH_PORT_NULL;
       ss->context = NULL;
+      ss->active_resources = NULL;
+      ss->cancel = 0;
+      ss->cancel_hook = NULL;
 
       if (thread == MACH_PORT_NULL)
 	{
