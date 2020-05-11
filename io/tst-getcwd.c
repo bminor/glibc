@@ -23,6 +23,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/param.h>
+#include <libc-diag.h>
 
 
 #define TEST_FUNCTION do_test ()
@@ -58,7 +59,13 @@ do_test (void)
       bufs[i] = (char *) malloc (sbs);
     }
 
+  /* Avoid warnings about the first argument being null when the second
+     is nonzero.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (10.1, "-Wnonnull");
   bufs[i] = getcwd (NULL, sbs);
+  DIAG_POP_NEEDS_COMMENT;
+
   lens[i] = sbs;
   if (bufs[i] == NULL)
     {
@@ -96,12 +103,17 @@ getcwd (NULL, sbs) = \"%s\", getcwd (thepath, sizeof thepath) = \"%s\"\n",
     free (bufs[i]);
 
   /* Test whether the function signals success despite the buffer
-     being too small.  */
+     being too small.
+     Avoid warnings about the first argument being null when the second
+     is nonzero.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (10.1, "-Wnonnull");
   if (getcwd (NULL, len) != NULL)
     {
       puts ("getcwd (NULL, len) didn't failed");
       return 1;
     }
+  DIAG_POP_NEEDS_COMMENT;
 
   bufs[0] = malloc (len);
   bufs[1] = malloc (len);
@@ -132,13 +144,18 @@ getcwd (NULL, sbs) = \"%s\", getcwd (thepath, sizeof thepath) = \"%s\"\n",
 	return 1;
       }
 
-  /* Now test handling of correctly sized buffers.  */
+  /* Now test handling of correctly sized buffers.
+     Again. avoid warnings about the first argument being null when
+     the second is nonzero.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (10.1, "-Wnonnull");
   bufs[0] = getcwd (NULL, len + 1);
   if (bufs[0] == NULL)
     {
       puts ("getcwd (NULL, len + 1) failed");
       return 1;
     }
+  DIAG_POP_NEEDS_COMMENT;
   free (bufs[0]);
 
   memset (thepath, '\xff', sizeof thepath);

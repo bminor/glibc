@@ -34,6 +34,7 @@
 #include <sys/uio.h>
 #include <unistd.h>
 #include <netinet/in.h>
+#include <libc-diag.h>
 
 /* This is not an exhaustive test: only system calls that can be
    persuaded to fail with a consistent error code and no side effects
@@ -119,7 +120,16 @@ do_test (void)
   fails |= test_wrp (EBADF, fstatfs, -1, &sfs);
   fails |= test_wrp (EBADF, fsync, -1);
   fails |= test_wrp (EBADF, ftruncate, -1, 0);
+
+#if __GNUC_PREREQ (7, 0)
+  DIAG_PUSH_NEEDS_COMMENT;
+  /* Avoid warnings about the second (size) argument being negative.  */
+  DIAG_IGNORE_NEEDS_COMMENT (10.1, "-Wstringop-overflow");
+#endif
   fails |= test_wrp (EINVAL, getgroups, -1, 0);
+#if __GNUC_PREREQ (7, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
   fails |= test_wrp (EBADF, getpeername, -1, &sa, &sl);
   fails |= test_wrp (EBADF, getsockname, -1, &sa, &sl);
   fails |= test_wrp (EBADF, getsockopt, -1, 0, 0, buf, &sl);
@@ -134,7 +144,7 @@ do_test (void)
   fails |= test_wrp (EINVAL, munmap, (void *) -1, 0);
   fails |= test_wrp (EISDIR, open, "/bin", EISDIR, O_WRONLY);
   fails |= test_wrp (EBADF, read, -1, buf, 1);
-  fails |= test_wrp (EINVAL, readlink, "/", buf, -1);
+  fails |= test_wrp (EINVAL, readlink, "/", buf, sizeof buf);
   fails |= test_wrp (EBADF, readv, -1, iov, 1);
   fails |= test_wrp (EBADF, recv, -1, buf, 1, 0);
   fails |= test_wrp (EBADF, recvfrom, -1, buf, 1, 0, &sa, &sl);
