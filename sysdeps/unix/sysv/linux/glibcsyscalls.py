@@ -17,9 +17,12 @@
 # License along with the GNU C Library; if not, see
 # <http://www.gnu.org/licenses/>.
 
+import os
 import re
 
-import glibcextract
+if __name__ != '__main__':
+    # When called as a main program, this is not needed.
+    import glibcextract
 
 def extract_system_call_name(macro):
     """Convert the macro name (with __NR_) to a system call name."""
@@ -168,3 +171,82 @@ def linux_kernel_version(cc):
     val = glibcextract.compute_c_consts(sym_data, cc)['LINUX_VERSION_CODE']
     val = int(val)
     return ((val & 0xff0000) >> 16, (val & 0xff00) >> 8)
+
+class ArchSyscall:
+    """Canonical name and location of a syscall header."""
+
+    def __init__(self, name, path):
+        self.name = name
+        self.path = path
+
+    def __repr__(self):
+        return 'ArchSyscall(name={!r}, patch={!r})'.format(
+            self.name, self.path)
+
+def list_arch_syscall_headers(topdir):
+    """A generator which returns all the ArchSyscall objects in a tree."""
+
+    sysdeps = os.path.join(topdir, 'sysdeps', 'unix', 'sysv', 'linux')
+    for root, dirs, files in os.walk(sysdeps):
+        if root != sysdeps:
+            for filename in files:
+                if filename == 'arch-syscall.h':
+                    yield ArchSyscall(
+                        name=os.path.relpath(root, sysdeps),
+                        path=os.path.join(root, filename))
+
+def __main():
+    """Entry point when called as the main program."""
+
+    import argparse
+    import sys
+
+    # Top-level directory of the source tree.
+    topdir = os.path.realpath(os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), *('..',) * 4))
+
+    def get_parser():
+        parser = argparse.ArgumentParser(description=__doc__)
+        subparsers = parser.add_subparsers(dest='command', required=True)
+        subparsers.add_parser('list-headers',
+            help='Print the absolute paths of all arch-syscall.h header files')
+        subparser = subparsers.add_parser('query-syscall',
+            help='Summarize the implementation status of system calls')
+        subparser.add_argument('syscalls', help='Which syscalls to check',
+                               nargs='+')
+        return parser
+    parser = get_parser()
+    args = parser.parse_args()
+
+    if args.command == 'list-headers':
+        for header in sorted([syscall.path for syscall
+                              in list_arch_syscall_headers(topdir)]):
+            print(header)
+
+    elif args.command == 'query-syscall':
+        # List of system call tables.
+        tables = sorted(list_arch_syscall_headers(topdir),
+                          key=lambda syscall: syscall.name)
+        for table in tables:
+            table.numbers = load_arch_syscall_header(table.path)
+
+        for nr in args.syscalls:
+            defined = [table.name for table in tables
+                           if nr in table.numbers]
+            undefined = [table.name for table in tables
+                             if nr not in table.numbers]
+            if not defined:
+                print('{}: not defined on any architecture'.format(nr))
+            elif not undefined:
+                print('{}: defined on all architectures'.format(nr))
+            else:
+                print('{}:'.format(nr))
+                print('  defined: {}'.format(' '.join(defined)))
+                print('  undefined: {}'.format(' '.join(undefined)))
+
+    else:
+        # Unrecognized command.
+        usage(1)
+
+if __name__ == '__main__':
+    __main()
