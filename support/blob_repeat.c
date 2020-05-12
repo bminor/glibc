@@ -125,10 +125,11 @@ minimum_stride_size (size_t page_size, size_t element_size)
 }
 
 /* Allocations larger than maximum_small_size potentially use mmap
-   with alias mappings.  */
+   with alias mappings.  If SHARED, the alias mappings are created
+   using MAP_SHARED instead of MAP_PRIVATE.  */
 static struct support_blob_repeat
 allocate_big (size_t total_size, const void *element, size_t element_size,
-              size_t count)
+              size_t count, bool shared)
 {
   unsigned long page_size = xsysconf (_SC_PAGESIZE);
   size_t stride_size = minimum_stride_size (page_size, element_size);
@@ -213,7 +214,11 @@ allocate_big (size_t total_size, const void *element, size_t element_size,
   {
     size_t remaining_size = total_size;
     char *current = target;
-    int flags = MAP_FIXED | MAP_FILE | MAP_PRIVATE;
+    int flags = MAP_FIXED | MAP_FILE;
+    if (shared)
+      flags |= MAP_SHARED;
+    else
+      flags |= MAP_PRIVATE;
 #ifdef MAP_NORESERVE
     flags |= MAP_NORESERVE;
 #endif
@@ -251,8 +256,8 @@ allocate_big (size_t total_size, const void *element, size_t element_size,
 }
 
 struct support_blob_repeat
-support_blob_repeat_allocate (const void *element, size_t element_size,
-                              size_t count)
+repeat_allocate (const void *element, size_t element_size,
+		 size_t count, bool shared)
 {
   size_t total_size;
   if (__builtin_mul_overflow (element_size, count, &total_size))
@@ -263,7 +268,21 @@ support_blob_repeat_allocate (const void *element, size_t element_size,
   if (total_size <= maximum_small_size)
     return allocate_malloc (total_size, element, element_size, count);
   else
-    return allocate_big (total_size, element, element_size, count);
+    return allocate_big (total_size, element, element_size, count, shared);
+}
+
+struct support_blob_repeat
+support_blob_repeat_allocate (const void *element, size_t element_size,
+                              size_t count)
+{
+  return repeat_allocate (element, element_size, count, false);
+}
+
+struct support_blob_repeat
+support_blob_repeat_allocate_shared (const void *element, size_t element_size,
+				     size_t count)
+{
+  return repeat_allocate (element, element_size, count, true);
 }
 
 void

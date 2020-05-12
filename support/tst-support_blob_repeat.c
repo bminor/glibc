@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
+#include <string.h>
 #include <support/blob_repeat.h>
 #include <support/check.h>
 
@@ -63,21 +64,39 @@ do_test (void)
     }
   support_blob_repeat_free (&repeat);
 
-  repeat = support_blob_repeat_allocate ("012345678", 9, 10 * 1000 * 1000);
-  if (repeat.start == NULL)
-    puts ("warning: not enough memory for large mapping");
-  else
+  for (int do_shared = 0; do_shared < 2; ++do_shared)
     {
-      unsigned char *p = repeat.start;
-      for (int i = 0; i < 10 * 1000 * 1000; ++i)
-        for (int j = 0; j <= 8; ++j)
-          if (p[i * 9 + j] != '0' + j)
-            {
-              printf ("error: element %d index %d\n", i, j);
-              TEST_COMPARE (p[i * 9 + j], '0' + j);
-            }
+      if (do_shared)
+        repeat = support_blob_repeat_allocate_shared ("012345678", 9,
+                                                      10 * 1000 * 1000);
+      else
+        repeat = support_blob_repeat_allocate ("012345678", 9,
+                                               10 * 1000 * 1000);
+      if (repeat.start == NULL)
+        puts ("warning: not enough memory for large mapping");
+      else
+        {
+          unsigned char *p = repeat.start;
+          for (int i = 0; i < 10 * 1000 * 1000; ++i)
+            for (int j = 0; j <= 8; ++j)
+              if (p[i * 9 + j] != '0' + j)
+                {
+                  printf ("error: element %d index %d\n", i, j);
+                  TEST_COMPARE (p[i * 9 + j], '0' + j);
+                }
+
+          enum { total_size = 9 * 10 * 1000 * 1000 };
+          p[total_size - 1] = '\0';
+          asm ("" ::: "memory");
+          if (do_shared)
+            /* The write is repeated in multiple places earlier in the
+               string due to page sharing.  */
+            TEST_VERIFY (strlen (repeat.start) < total_size - 1);
+          else
+            TEST_COMPARE (strlen (repeat.start), total_size - 1);
+        }
+      support_blob_repeat_free (&repeat);
     }
-  support_blob_repeat_free (&repeat);
 
   return 0;
 }

@@ -38,7 +38,17 @@ struct support_blob_repeat support_blob_repeat_allocate (const void *element,
                                                          size_t element_size,
                                                          size_t count);
 
-/* Deallocate the blob created by support_blob_repeat_allocate.  */
+/* Like support_blob_repeat_allocate, except that copy-on-write
+   semantics are disabled.  This means writing to one part of the blob
+   can affect other parts.  It is possible to map non-shared memory
+   over parts of the resulting blob using MAP_ANONYMOUS | MAP_FIXED
+   | MAP_PRIVATE, so that writes to these parts do not affect
+   others.  */
+struct support_blob_repeat support_blob_repeat_allocate_shared
+  (const void *element, size_t element_size, size_t count);
+
+/* Deallocate the blob created by support_blob_repeat_allocate or
+   support_blob_repeat_allocate_shared.  */
 void support_blob_repeat_free (struct support_blob_repeat *);
 
 #endif /* SUPPORT_BLOB_REPEAT_H */
