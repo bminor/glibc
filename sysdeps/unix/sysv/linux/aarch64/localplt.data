@@ -7,6 +7,9 @@ libc.so: malloc
 libc.so: memalign
 libc.so: realloc
 libm.so: matherr
+# If outline atomics are used, libgcc (built outside of glibc) may
+# call __getauxval using the PLT.
+libc.so: __getauxval ?
 # The dynamic loader needs __tls_get_addr for TLS.
 ld.so: __tls_get_addr
 # The TLS-enabled version of these functions is interposed from libc.so.
