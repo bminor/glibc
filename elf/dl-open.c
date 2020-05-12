@@ -769,11 +769,6 @@ dl_open_worker (void *a)
   DL_STATIC_INIT (new);
 #endif
 
-  /* Perform the necessary allocations for adding new global objects
-     to the global scope below, via add_to_global_update.  */
-  if (mode & RTLD_GLOBAL)
-    add_to_global_resize (new);
-
   /* Run the initializer functions of new objects.  Temporarily
      disable the exception handler, so that lazy binding failures are
      fatal.  */
