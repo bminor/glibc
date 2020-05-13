@@ -25,9 +25,16 @@
 extern __typeof (strcpy) __strcpy_ppc attribute_hidden;
 extern __typeof (strcpy) __strcpy_power7 attribute_hidden;
 extern __typeof (strcpy) __strcpy_power8 attribute_hidden;
+# ifdef __LITTLE_ENDIAN__
+extern __typeof (strcpy) __strcpy_power9 attribute_hidden;
+# endif
 #undef strcpy
 
 libc_ifunc_redirected (__redirect_strcpy, strcpy,
+# ifdef __LITTLE_ENDIAN__
+			(hwcap2 & PPC_FEATURE2_ARCH_3_00)
+			? __strcpy_power9 :
+# endif
 		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
 		       ? __strcpy_power8
 		       : (hwcap & PPC_FEATURE_HAS_VSX)
