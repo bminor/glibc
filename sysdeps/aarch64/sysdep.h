@@ -35,6 +35,17 @@
 
 #define PTR_SIZE	(1<<PTR_LOG_SIZE)
 
+#ifndef __ASSEMBLER__
+/* Strip pointer authentication code from pointer p.  */
+static inline void *
+strip_pac (void *p)
+{
+  register void *ra asm ("x30") = (p);
+  asm ("hint 7 // xpaclri" : "+r"(ra));
+  return ra;
+}
+#endif
+
 #ifdef	__ASSEMBLER__
 
 /* Syntactic details of assembler.  */
