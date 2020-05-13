@@ -26,13 +26,20 @@
 extern __typeof (__stpcpy) __stpcpy_ppc attribute_hidden;
 extern __typeof (__stpcpy) __stpcpy_power7 attribute_hidden;
 extern __typeof (__stpcpy) __stpcpy_power8 attribute_hidden;
+# ifdef __LITTLE_ENDIAN__
+extern __typeof (__stpcpy) __stpcpy_power9 attribute_hidden;
+# endif
 
 libc_ifunc_hidden (__stpcpy, __stpcpy,
-		   (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-		   ? __stpcpy_power8
-		   : (hwcap & PPC_FEATURE_HAS_VSX)
-		     ? __stpcpy_power7
-		     : __stpcpy_ppc);
+# ifdef __LITTLE_ENDIAN__
+		   (hwcap2 & PPC_FEATURE2_ARCH_3_00)
+		   ? __stpcpy_power9 :
+# endif
+		     (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+		     ? __stpcpy_power8
+		     : (hwcap & PPC_FEATURE_HAS_VSX)
+		       ? __stpcpy_power7
+		       : __stpcpy_ppc);
 
 weak_alias (__stpcpy, stpcpy)
 libc_hidden_def (__stpcpy)
