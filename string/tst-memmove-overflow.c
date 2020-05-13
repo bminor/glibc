@@ -57,6 +57,25 @@ expected_value (size_t index)
   return randomized >> 25;	/* Result is in the range [0, 127].  */
 }
 
+/* Used to count mismatches up to a limit, to avoid creating a huge
+   test output file.  */
+static unsigned int mismatch_count;
+
+/* Check ACTUAL == EXPECTED.  Use INDEX for error reporting.  Exit the
+   process after too many errors.  */
+static inline void
+check_one_index (size_t index, unsigned char actual, unsigned char expected)
+{
+  if (actual != expected)
+    {
+      printf ("error: mismatch at index %zu: expected 0x%02x, got 0x%02x\n",
+	      index, actual, expected);
+      ++mismatch_count;
+      if (mismatch_count > 200)
+	FAIL_EXIT1 ("bailing out due to too many errors");
+    }
+}
+
 static int
 test_main (void)
 {
@@ -138,13 +157,13 @@ test_main (void)
 			 start + allocation_size - sizeof (expected_end) - 1,
 			 sizeof (expected_end));
       for (size_t i = 0; i < unshared_size - 1; ++i)
-	TEST_COMPARE (start[i], expected_value (i + 1));
+	check_one_index (i, start[i], expected_value (i + 1));
       /* The gap between the checked start and end area of the mapping
 	 has shared mappings at unspecified boundaries, so do not
 	 check the expected values in the middle.  */
       for (size_t i = allocation_size - unshared_size; i < allocation_size - 1;
 	   ++i)
-	TEST_COMPARE (start[i], expected_value (i + 1));
+	check_one_index (i, start[i], expected_value (i + 1));
 
       support_blob_repeat_free (&repeat);
     }
