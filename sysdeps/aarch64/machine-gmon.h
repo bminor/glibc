@@ -27,8 +27,9 @@ static void mcount_internal (u_long frompc, u_long selfpc);
 #define _MCOUNT_DECL(frompc, selfpc) \
 static inline void mcount_internal (u_long frompc, u_long selfpc)
 
+/* Note: strip_pac is needed for frompc because of gcc PR target/94791.  */
 #define MCOUNT                                                    \
 void __mcount (void *frompc)                                      \
 {                                                                 \
-  mcount_internal ((u_long) frompc, (u_long) RETURN_ADDRESS (0)); \
+  mcount_internal ((u_long) strip_pac (frompc), (u_long) RETURN_ADDRESS (0)); \
 }
