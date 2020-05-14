@@ -18,11 +18,8 @@
 #include <libintl.h>
 #include <locale.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <errno.h>
-
-static __thread char *last_value;
+#include <tls-internal.h>
 
 
 static const char *
@@ -43,12 +40,13 @@ __strerror_l (int errnum, locale_t loc)
   char *err = (char *) __get_errlist (errnum);
   if (__glibc_unlikely (err == NULL))
     {
-      free (last_value);
-      if (__asprintf (&last_value, "%s%d",
+      struct tls_internal_t *tls_internal = __glibc_tls_internal ();
+      free (tls_internal->strerror_l_buf);
+      if (__asprintf (&tls_internal->strerror_l_buf, "%s%d",
 		      translate ("Unknown error ", loc), errnum) == -1)
-	last_value = NULL;
+	tls_internal->strerror_l_buf = NULL;
 
-      err = last_value;
+      err = tls_internal->strerror_l_buf;
     }
   else
     err = (char *) translate (err, loc);
@@ -58,10 +56,3 @@ __strerror_l (int errnum, locale_t loc)
 }
 weak_alias (__strerror_l, strerror_l)
 libc_hidden_def (__strerror_l)
-
-void
-__strerror_thread_freeres (void)
-{
-  free (last_value);
-}
-text_set_element (__libc_subfreeres, __strerror_thread_freeres);

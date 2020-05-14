@@ -53,9 +53,6 @@ extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
 
 extern char *__strerror_l (int __errnum, locale_t __loc);
 
-/* Called as part of the thread shutdown sequence.  */
-void __strerror_thread_freeres (void) attribute_hidden;
-
 /* Get _STRING_ARCH_unaligned.  */
 #include <string_private.h>
 #endif

@@ -23,11 +23,7 @@
 #include <string.h>
 #include <mach/error.h>
 #include <errorlib.h>
-#include <sys/param.h>
-#include <libc-symbols.h>
-
-
-static __thread char *last_value;
+#include <tls-internal.h>
 
 
 static const char *
@@ -58,13 +54,14 @@ __strerror_l (int errnum, locale_t loc)
 
   if (system > err_max_system || ! __mach_error_systems[system].bad_sub)
     {
-      free (last_value);
-      if (__asprintf (&last_value, "%s%X",
+      struct tls_internal_t *tls_internal = __glibc_tls_internal ();
+      free (tls_internal->strerror_l_buf);
+      if (__asprintf (&tls_internal->strerror_l_buf, "%s%X",
 		      translate ("Error in unknown error system: ", loc),
 		      errnum) == -1)
-	last_value = NULL;
+	tls_internal->strerror_l_buf = NULL;
 
-      return last_value;
+      return tls_internal->strerror_l_buf;
     }
 
   es = &__mach_error_systems[system];
@@ -74,25 +71,18 @@ __strerror_l (int errnum, locale_t loc)
 
   if (code >= es->subsystem[sub].max_code)
     {
-      free (last_value);
-      if (__asprintf (&last_value, "%s%s %d",
+      struct tls_internal_t *tls_internal = __glibc_tls_internal ();
+      free (tls_internal->strerror_l_buf);
+      if (__asprintf (&tls_internal->strerror_l_buf, "%s%s %d",
 		      translate ("Unknown error ", loc),
 		      translate (es->subsystem[sub].subsys_name, loc),
 		      errnum) == -1)
-	last_value = NULL;
+	tls_internal->strerror_l_buf = NULL;
 
-      return last_value;
+      return tls_internal->strerror_l_buf;
     }
 
   return (char *) translate (es->subsystem[sub].codes[code], loc);
 }
 weak_alias (__strerror_l, strerror_l)
 libc_hidden_def (__strerror_l)
-
-/* This is called when a thread is exiting to free the last_value string.  */
-void
-__strerror_thread_freeres (void)
-{
-  free (last_value);
-}
-text_set_element (__libc_subfreeres, __strerror_thread_freeres);

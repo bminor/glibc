@@ -22,6 +22,7 @@
 struct tls_internal_t
 {
   char *strsignal_buf;
+  char *strerror_l_buf;
 };
 
 #endif

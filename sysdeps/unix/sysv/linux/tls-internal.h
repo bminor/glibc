@@ -32,6 +32,7 @@ static inline void
 __glibc_tls_internal_free (void)
 {
   free (THREAD_SELF->tls_state.strsignal_buf);
+  free (THREAD_SELF->tls_state.strerror_l_buf);
 }
 
 #endif

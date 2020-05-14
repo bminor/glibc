@@ -32,7 +32,6 @@ __libc_thread_freeres (void)
 {
   call_function_static_weak (__rpc_thread_destroy);
   call_function_static_weak (__res_thread_freeres);
-  call_function_static_weak (__strerror_thread_freeres);
   __glibc_tls_internal_free ();
 
   /* This should come last because it shuts down malloc for this
