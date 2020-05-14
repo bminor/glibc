@@ -21,6 +21,7 @@
 #include <resolv/resolv-internal.h>
 #include <rpc/rpc.h>
 #include <string.h>
+#include <tls-internal.h>
 
 /* Thread shutdown function.  Note that this function must be called
    for threads during shutdown for correctness reasons.  Unlike
@@ -32,6 +33,7 @@ __libc_thread_freeres (void)
   call_function_static_weak (__rpc_thread_destroy);
   call_function_static_weak (__res_thread_freeres);
   call_function_static_weak (__strerror_thread_freeres);
+  __glibc_tls_internal_free ();
 
   /* This should come last because it shuts down malloc for this
      thread and the other shutdown functions might well call free.  */

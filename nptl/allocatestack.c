@@ -237,6 +237,8 @@ get_cached_stack (size_t *sizep, void **memp)
   /* No pending event.  */
   result->nextevent = NULL;
 
+  result->tls_state = (struct tls_internal_t) { 0 };
+
   /* Clear the DTV.  */
   dtv_t *dtv = GET_DTV (TLS_TPADJ (result));
   for (size_t cnt = 0; cnt < dtv[-1].counter; ++cnt)

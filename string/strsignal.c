@@ -20,106 +20,36 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libintl.h>
-#include <libc-lock.h>
-
-static __libc_key_t key;
-
-/* If nonzero the key allocation failed and we should better use a
-   static buffer than fail.  */
-#define BUFFERSIZ	100
-static char local_buf[BUFFERSIZ];
-static char *static_buf;
-
-/* Destructor for the thread-specific data.  */
-static void init (void);
-static void free_key_mem (void *mem);
-static char *getbuffer (void);
-
+#include <tls-internal.h>
+#include <array_length.h>
 
 /* Return a string describing the meaning of the signal number SIGNUM.  */
 char *
 strsignal (int signum)
 {
-  __libc_once_define (static, once);
-  const char *desc;
+  const char *desc = NULL;
 
-  /* If we have not yet initialized the buffer do it now.  */
-  __libc_once (once, init);
+  if (signum >= 0 && signum <= NSIG && signum < array_length (__sys_siglist))
+    desc = __sys_siglist[signum];
 
-  if (
+  if (desc != NULL)
+    return (char *) _(desc);
+
+  struct tls_internal_t *tls_internal = __glibc_tls_internal ();
+  free (tls_internal->strsignal_buf);
+
+  int r;
 #ifdef SIGRTMIN
-      (signum >= SIGRTMIN && signum <= SIGRTMAX) ||
-#endif
-      signum < 0 || signum >= NSIG
-      || (desc = __sys_siglist[signum]) == NULL)
-    {
-      char *buffer = getbuffer ();
-      int len;
-#ifdef SIGRTMIN
-      if (signum >= SIGRTMIN && signum <= SIGRTMAX)
-	len = __snprintf (buffer, BUFFERSIZ - 1, _("Real-time signal %d"),
-			  signum - SIGRTMIN);
-      else
-#endif
-	len = __snprintf (buffer, BUFFERSIZ - 1, _("Unknown signal %d"),
-			  signum);
-      if (len >= BUFFERSIZ)
-	buffer = NULL;
-      else
-	buffer[len] = '\0';
-
-      return buffer;
-    }
-
-  return (char *) _(desc);
-}
-
-
-/* Initialize buffer.  */
-static void
-init (void)
-{
-  if (__libc_key_create (&key, free_key_mem))
-    /* Creating the key failed.  This means something really went
-       wrong.  In any case use a static buffer which is better than
-       nothing.  */
-    static_buf = local_buf;
-}
-
-
-/* Free the thread specific data, this is done if a thread terminates.  */
-static void
-free_key_mem (void *mem)
-{
-  free (mem);
-  __libc_setspecific (key, NULL);
-}
-
-
-/* Return the buffer to be used.  */
-static char *
-getbuffer (void)
-{
-  char *result;
-
-  if (static_buf != NULL)
-    result = static_buf;
+  if (signum >= SIGRTMIN && signum <= SIGRTMAX)
+    r = __asprintf (&tls_internal->strsignal_buf, _("Real-time signal %d"),
+		    signum - SIGRTMIN);
   else
-    {
-      /* We don't use the static buffer and so we have a key.  Use it
-	 to get the thread-specific buffer.  */
-      result = __libc_getspecific (key);
-      if (result == NULL)
-	{
-	  /* No buffer allocated so far.  */
-	  result = malloc (BUFFERSIZ);
-	  if (result == NULL)
-	    /* No more memory available.  We use the static buffer.  */
-	    result = local_buf;
-	  else
-	    __libc_setspecific (key, result);
-	}
-    }
+#endif
+    r = __asprintf (&tls_internal->strsignal_buf, _("Unknown signal %d"),
+		    signum);
 
-  return result;
+  if (r == -1)
+    tls_internal->strsignal_buf = NULL;
+
+  return tls_internal->strsignal_buf;
 }

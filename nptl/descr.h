@@ -34,6 +34,7 @@
 #include <unwind.h>
 #include <bits/types/res_state.h>
 #include <kernel-features.h>
+#include <tls-internal-struct.h>
 
 #ifndef TCB_ALIGNMENT
 # define TCB_ALIGNMENT	sizeof (double)
@@ -397,6 +398,9 @@ struct pthread
 
   /* Indicates whether is a C11 thread created by thrd_creat.  */
   bool c11;
+
+  /* Used on strsignal.  */
+  struct tls_internal_t tls_state;
 
   /* This member must be last.  */
   char end_padding[];

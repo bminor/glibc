@@ -16,6 +16,7 @@
 # <https://www.gnu.org/licenses/>.
 
 ifeq ($(subdir),string)
+sysdep_routines += tls-internal
 CFLAGS-wordcopy.c += -Wno-uninitialized
 endif
 
