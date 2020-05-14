@@ -216,6 +216,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/powerpc/powerpc64/multiarch/rawmemchr.c.  */
   IFUNC_IMPL (i, name, rawmemchr,
+#ifdef __LITTLE_ENDIAN__
+	      IFUNC_IMPL_ADD (array, i, rawmemchr,
+			      hwcap2 & PPC_FEATURE2_ARCH_3_00,
+			      __rawmemchr_power9)
+#endif
 	      IFUNC_IMPL_ADD (array, i, rawmemchr,
 			      hwcap & PPC_FEATURE_HAS_VSX,
 			      __rawmemchr_power7)
