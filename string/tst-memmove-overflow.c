@@ -42,11 +42,11 @@ IMPL (memmove, 1)
 
 /* Size of the part of the allocation which is not shared, at the
    start and the end of the overall allocation.  4 MiB.  */
-static const size_t unshared_size = 4U << 20;
+enum { unshared_size = (size_t) 4U << 20 };
 
 /* The allocation is 2 GiB plus 8 MiB.  This should work with all page
    sizes that occur in practice.  */
-static const size_t allocation_size = (2U << 30) + 2 * unshared_size;
+enum { allocation_size = ((size_t) 2U << 30) + 2 * unshared_size };
 
 /* Compute the expected byte at the given index.  This is used to
    produce a non-repeating pattern.  */
