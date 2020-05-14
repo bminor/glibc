@@ -15,22 +15,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <string.h>
 #include <libintl.h>
 #include <stdio.h>
 #include <string.h>
 #include <mach/error.h>
 #include <errorlib.h>
-#include <sys/param.h>
-#include <_itoa.h>
-
-/* It is critical here that we always use the `dcgettext' function for
-   the message translation.  Since <libintl.h> only defines the macro
-   `dgettext' to use `dcgettext' for optimizing programs this is not
-   always guaranteed.  */
-#ifndef dgettext
-# include <locale.h>		/* We need LC_MESSAGES.  */
-# define dgettext(domainname, msgid) dcgettext (domainname, msgid, LC_MESSAGES)
-#endif
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
@@ -50,26 +40,8 @@ __strerror_r (int errnum, char *buf, size_t buflen)
 
   if (system > err_max_system || ! __mach_error_systems[system].bad_sub)
     {
-      /* Buffer we use to print the number in.  For a maximum size for
-	 `int' of 8 bytes we never need more than 20 digits.  */
-      char numbuf[21];
-      const char *unk = _("Error in unknown error system: ");
-      const size_t unklen = strlen (unk);
-      char *p, *q;
-
-      numbuf[20] = '\0';
-      p = _itoa_word (errnum, &numbuf[20], 16, 1);
-
-      /* Now construct the result while taking care for the destination
-	 buffer size.  */
-      q = __mempcpy (buf, unk, MIN (unklen, buflen));
-      if (unklen < buflen)
-	memcpy (q, p, MIN (&numbuf[21] - p, buflen - unklen));
-
-      /* Terminate the string in any case.  */
-      if (buflen > 0)
-	buf[buflen - 1] = '\0';
-
+      __snprintf (buf, buflen, "%s: %d", _("Error in unknown error system: "),
+		  errnum);
       return buf;
     }
 
@@ -80,37 +52,8 @@ __strerror_r (int errnum, char *buf, size_t buflen)
 
   if (code >= es->subsystem[sub].max_code)
     {
-      /* Buffer we use to print the number in.  For a maximum size for
-	 `int' of 8 bytes we never need more than 20 digits.  */
-      char numbuf[21];
-      const char *unk = _("Unknown error ");
-      const size_t unklen = strlen (unk);
-      char *p, *q;
-      size_t len = strlen (es->subsystem[sub].subsys_name);
-
-      numbuf[20] = '\0';
-      p = _itoa_word (errnum, &numbuf[20], 10, 0);
-
-      /* Now construct the result while taking care for the destination
-	 buffer size.  */
-      q = __mempcpy (buf, unk, MIN (unklen, buflen));
-      if (unklen < buflen)
-	{
-	  q = __mempcpy (q, es->subsystem[sub].subsys_name,
-			 MIN (len, buflen - unklen));
-	  if (unklen + len < buflen)
-	    {
-	      *q++ = ' ';
-	      if (unklen + len + 1 < buflen)
-		memcpy (q, p,
-			MIN (&numbuf[21] - p, buflen - unklen - len - 1));
-	    }
-	}
-
-       /* Terminate the string in any case.  */
-      if (buflen > 0)
-	buf[buflen - 1] = '\0';
-
+      __snprintf (buf, buflen, "%s%s %d", _("Unknown error "),
+		  es->subsystem[sub].subsys_name, errnum);
       return buf;
     }
 
