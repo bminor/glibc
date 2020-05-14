@@ -20,8 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/param.h>
-#include <libc-symbols.h>
+#include <errno.h>
 
 static __thread char *last_value;
 
@@ -38,8 +37,9 @@ translate (const char *str, locale_t loc)
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
-strerror_l (int errnum, locale_t loc)
+__strerror_l (int errnum, locale_t loc)
 {
+  int saved_errno = errno;
   char *err = (char *) __get_errlist (errnum);
   if (__glibc_unlikely (err == NULL))
     {
@@ -48,11 +48,16 @@ strerror_l (int errnum, locale_t loc)
 		      translate ("Unknown error ", loc), errnum) == -1)
 	last_value = NULL;
 
-      return last_value;
+      err = last_value;
     }
+  else
+    err = (char *) translate (err, loc);
 
-  return (char *) translate (err, loc);
+  __set_errno (saved_errno);
+  return err;
 }
+weak_alias (__strerror_l, strerror_l)
+libc_hidden_def (__strerror_l)
 
 void
 __strerror_thread_freeres (void)

@@ -79,6 +79,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   compatibility symbols to support old binaries.  All programs should use
   strerror or strerror_r instead.
 
+* Both strerror and strerror_l now share the same internal buffer in the
+  calling thread, meaning that the returned string pointer may be invalided
+  or contents might be overwritten on subsequent calls in the same thread or
+  if the thread is terminated.  It makes strerror MT-safe.
+
 Changes to build and runtime requirements:
 
 * powerpc64le requires GCC 7.4 or newer.  This is required for supporting

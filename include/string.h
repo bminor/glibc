@@ -4,6 +4,7 @@
 /* Some of these are defined as macros in the real string.h, so we must
    prototype them before including it.  */
 #include <sys/types.h>
+#include <locale.h>
 
 extern void *__memccpy (void *__dest, const void *__src,
 			int __c, size_t __n);
@@ -49,6 +50,8 @@ extern void __bzero (void *__s, size_t __n) __THROW __nonnull ((1));
 extern int __ffs (int __i) __attribute__ ((const));
 
 extern char *__strerror_r (int __errnum, char *__buf, size_t __buflen);
+
+extern char *__strerror_l (int __errnum, locale_t __loc);
 
 /* Called as part of the thread shutdown sequence.  */
 void __strerror_thread_freeres (void) attribute_hidden;
@@ -113,6 +116,7 @@ libc_hidden_proto (memmem)
 extern __typeof (memmem) __memmem;
 libc_hidden_proto (__memmem)
 libc_hidden_proto (__ffs)
+libc_hidden_proto (__strerror_l)
 
 #if IS_IN (libc)
 /* Avoid hidden reference to IFUNC symbol __explicit_bzero_chk.  */

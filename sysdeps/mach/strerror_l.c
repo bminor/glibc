@@ -42,7 +42,7 @@ translate (const char *str, locale_t loc)
 
 /* Return a string describing the errno code in ERRNUM.  */
 char *
-strerror_l (int errnum, locale_t loc)
+__strerror_l (int errnum, locale_t loc)
 {
   int system;
   int sub;
@@ -86,6 +86,8 @@ strerror_l (int errnum, locale_t loc)
 
   return (char *) translate (es->subsystem[sub].codes[code], loc);
 }
+weak_alias (__strerror_l, strerror_l)
+libc_hidden_def (__strerror_l)
 
 /* This is called when a thread is exiting to free the last_value string.  */
 void
