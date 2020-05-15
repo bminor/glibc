@@ -347,7 +347,8 @@ extern int __pthread_create_2_1 (pthread_t *newthread,
 extern int __pthread_create_2_0 (pthread_t *newthread,
 				 const pthread_attr_t *attr,
 				 void *(*start_routine) (void *), void *arg);
-extern int __pthread_attr_init_2_1 (pthread_attr_t *attr);
+extern int __pthread_attr_init (pthread_attr_t *attr);
+libc_hidden_proto (__pthread_attr_init)
 extern int __pthread_attr_init_2_0 (pthread_attr_t *attr);
 
 
@@ -403,6 +404,7 @@ extern int __pthread_mutexattr_init (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);
 extern int __pthread_attr_destroy (pthread_attr_t *attr);
+libc_hidden_proto (__pthread_attr_destroy)
 extern int __pthread_attr_getdetachstate (const pthread_attr_t *attr,
 					  int *detachstate);
 extern int __pthread_attr_setdetachstate (pthread_attr_t *attr,

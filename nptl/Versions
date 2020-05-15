@@ -59,6 +59,7 @@ libc {
     # Used by the C11 threads implementation.
     __pthread_cond_destroy; __pthread_cond_init;
     __pthread_attr_setaffinity_np;
+    __pthread_attr_init; __pthread_attr_destroy;
   }
 }
 
