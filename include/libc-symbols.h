@@ -737,6 +737,29 @@ for linking")
 # define libresolv_hidden_data_ver(local, name)
 #endif
 
+#if IS_IN (libpthread)
+# define libpthread_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
+# define libpthread_hidden_tls_proto(name, attrs...) \
+  hidden_tls_proto (name, ##attrs)
+# define libpthread_hidden_def(name) hidden_def (name)
+# define libpthread_hidden_weak(name) hidden_weak (name)
+# define libpthread_hidden_ver(local, name) hidden_ver (local, name)
+# define libpthread_hidden_data_def(name) hidden_data_def (name)
+# define libpthread_hidden_tls_def(name) hidden_tls_def (name)
+# define libpthread_hidden_data_weak(name) hidden_data_weak (name)
+# define libpthread_hidden_data_ver(local, name) hidden_data_ver (local, name)
+#else
+# define libpthread_hidden_proto(name, attrs...)
+# define libpthread_hidden_tls_proto(name, attrs...)
+# define libpthread_hidden_def(name)
+# define libpthread_hidden_weak(name)
+# define libpthread_hidden_ver(local, name)
+# define libpthread_hidden_data_def(name)
+# define libpthread_hidden_tls_def(name)
+# define libpthread_hidden_data_weak(name)
+# define libpthread_hidden_data_ver(local, name)
+#endif
+
 #if IS_IN (librt)
 # define librt_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define librt_hidden_tls_proto(name, attrs...) \
