@@ -1,6 +1,6 @@
-/* Set the processor affinity of a thread.  Stub version.
-   Copyright (C) 2014-2020 Free Software Foundation, Inc.
+/* Copyright (C) 2003-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,17 +16,38 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
 #include <pthreadP.h>
+#include <sysdep.h>
+#include <sys/types.h>
+#include <shlib-compat.h>
+
 
 int
-pthread_setaffinity_np (pthread_t th,
-                        size_t cpusetsize, const cpu_set_t *cpuset)
+__pthread_setaffinity_new (pthread_t th, size_t cpusetsize,
+			   const cpu_set_t *cpuset)
 {
   const struct pthread *pd = (const struct pthread *) th;
+  int res;
 
-  if (INVALID_TD_P (pd))
-    return ESRCH;
+  res = INTERNAL_SYSCALL_CALL (sched_setaffinity, pd->tid, cpusetsize,
+			       cpuset);
 
-  return ENOSYS;
+  return (INTERNAL_SYSCALL_ERROR_P (res)
+	  ? INTERNAL_SYSCALL_ERRNO (res)
+	  : 0);
 }
-stub_warning (pthread_setaffinity_np)
+versioned_symbol (libpthread, __pthread_setaffinity_new,
+		  pthread_setaffinity_np, GLIBC_2_3_4);
+
+
+#if SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_3_4)
+int
+__pthread_setaffinity_old (pthread_t th, cpu_set_t *cpuset)
+{
+  /* The old interface by default assumed a 1024 processor bitmap.  */
+  return __pthread_setaffinity_new (th, 128, cpuset);
+}
+compat_symbol (libpthread, __pthread_setaffinity_old, pthread_setaffinity_np,
+	       GLIBC_2_3_3);
+#endif

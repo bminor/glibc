@@ -321,14 +321,19 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-thread-exit-clobber tst-minstack-cancel tst-minstack-exit \
 	tst-minstack-throw \
 	tst-rwlock-pwn \
-	tst-unwind-thread
+	tst-unwind-thread \
+	tst-thread-affinity-pthread \
+	tst-thread-affinity-pthread2 \
+	tst-thread-affinity-sched \
+
 
 tests-container =  tst-pthread-getattr
 
 tests-internal := tst-robustpi8 tst-rwlock19 tst-rwlock20 \
 		  tst-sem11 tst-sem12 tst-sem13 \
 		  tst-barrier5 tst-signal7 tst-mutex8 tst-mutex8-static \
-		  tst-mutexpi8 tst-mutexpi8-static tst-cancel25
+		  tst-mutexpi8 tst-mutexpi8-static tst-cancel25 \
+		  tst-setgetname \
 
 xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
 	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10

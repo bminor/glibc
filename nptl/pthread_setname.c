@@ -1,5 +1,5 @@
-/* pthread_setname_np -- Set thread name.  Stub version.
-   Copyright (C) 2014-2020 Free Software Foundation, Inc.
+/* pthread_setname_np -- Set  thread name.  Linux version
+   Copyright (C) 2010-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,16 +17,47 @@
    not, see <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <pthreadP.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/prctl.h>
+
+#include <not-cancel.h>
+
 
 int
 pthread_setname_np (pthread_t th, const char *name)
 {
   const struct pthread *pd = (const struct pthread *) th;
 
-  if (INVALID_TD_P (pd))
-    return ESRCH;
+  /* Unfortunately the kernel headers do not export the TASK_COMM_LEN
+     macro.  So we have to define it here.  */
+#define TASK_COMM_LEN 16
+  size_t name_len = strlen (name);
+  if (name_len >= TASK_COMM_LEN)
+    return ERANGE;
 
-  return ENOSYS;
+  if (pd == THREAD_SELF)
+    return prctl (PR_SET_NAME, name) ? errno : 0;
+
+#define FMT "/proc/self/task/%u/comm"
+  char fname[sizeof (FMT) + 8];
+  sprintf (fname, FMT, (unsigned int) pd->tid);
+
+  int fd = __open64_nocancel (fname, O_RDWR);
+  if (fd == -1)
+    return errno;
+
+  int res = 0;
+  ssize_t n = TEMP_FAILURE_RETRY (__write_nocancel (fd, name, name_len));
+  if (n < 0)
+    res = errno;
+  else if (n != name_len)
+    res = EIO;
+
+  __close_nocancel_nostatus (fd);
+
+  return res;
 }
-stub_warning (pthread_setname_np)
