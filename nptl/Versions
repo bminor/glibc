@@ -31,6 +31,7 @@ libc {
   }
   GLIBC_2.3.3 {
     pthread_attr_setaffinity_np;
+    pthread_getaffinity_np;
   }
   GLIBC_2.3.4 {
     pthread_attr_setaffinity_np;
@@ -41,6 +42,7 @@ libc {
   }
   GLIBC_2.32 {
     pthread_attr_setaffinity_np;
+    pthread_getaffinity_np;
     pthread_sigmask;
   }
   GLIBC_PRIVATE {
@@ -53,6 +55,7 @@ libc {
     # Used by the C11 threads implementation.
     __pthread_cond_destroy; __pthread_cond_init;
     __pthread_attr_setaffinity_np;
+    __pthread_getaffinity_np; # For pthread_getattr_np.
   }
 }
 
@@ -226,7 +229,7 @@ libpthread {
     __pthread_cleanup_routine;
 
     # affinity interfaces without size parameter
-    pthread_getaffinity_np; pthread_setaffinity_np;
+    pthread_setaffinity_np;
     pthread_attr_getaffinity_np;
   }
 

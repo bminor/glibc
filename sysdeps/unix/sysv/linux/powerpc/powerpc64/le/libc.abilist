@@ -1528,6 +1528,7 @@ GLIBC_2.17 pthread_condattr_destroy F
 GLIBC_2.17 pthread_condattr_init F
 GLIBC_2.17 pthread_equal F
 GLIBC_2.17 pthread_exit F
+GLIBC_2.17 pthread_getaffinity_np F
 GLIBC_2.17 pthread_getschedparam F
 GLIBC_2.17 pthread_mutex_destroy F
 GLIBC_2.17 pthread_mutex_init F
@@ -2343,4 +2344,5 @@ GLIBC_2.32 __wprintf_chkieee128 F
 GLIBC_2.32 __wprintfieee128 F
 GLIBC_2.32 __wscanfieee128 F
 GLIBC_2.32 pthread_attr_setaffinity_np F
+GLIBC_2.32 pthread_getaffinity_np F
 GLIBC_2.32 pthread_sigmask F

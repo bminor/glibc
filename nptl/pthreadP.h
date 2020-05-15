@@ -520,6 +520,7 @@ extern int __pthread_cond_wait_2_0 (pthread_cond_2_0_t *cond,
 
 extern int __pthread_getaffinity_np (pthread_t th, size_t cpusetsize,
 				     cpu_set_t *cpuset);
+libc_hidden_proto (__pthread_getaffinity_np)
 
 #if IS_IN (libpthread)
 /* Special versions which use non-exported functions.  */

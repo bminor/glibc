@@ -2124,6 +2124,7 @@ GLIBC_2.3.3 nftw64 F
 GLIBC_2.3.3 posix_fadvise64 F
 GLIBC_2.3.3 posix_fallocate64 F
 GLIBC_2.3.3 pthread_attr_setaffinity_np F
+GLIBC_2.3.3 pthread_getaffinity_np F
 GLIBC_2.3.3 remap_file_pages F
 GLIBC_2.3.3 sched_getaffinity F
 GLIBC_2.3.3 sched_setaffinity F
@@ -2161,6 +2162,7 @@ GLIBC_2.3.4 getsourcefilter F
 GLIBC_2.3.4 longjmp F
 GLIBC_2.3.4 makecontext F
 GLIBC_2.3.4 pthread_attr_setaffinity_np F
+GLIBC_2.3.4 pthread_getaffinity_np F
 GLIBC_2.3.4 regexec F
 GLIBC_2.3.4 sched_getaffinity F
 GLIBC_2.3.4 sched_setaffinity F
@@ -2189,6 +2191,7 @@ GLIBC_2.30 gettid F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
 GLIBC_2.32 pthread_attr_setaffinity_np F
+GLIBC_2.32 pthread_getaffinity_np F
 GLIBC_2.32 pthread_sigmask F
 GLIBC_2.4 _IO_fprintf F
 GLIBC_2.4 _IO_printf F

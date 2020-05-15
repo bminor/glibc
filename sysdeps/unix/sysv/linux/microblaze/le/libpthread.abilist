@@ -95,7 +95,6 @@ GLIBC_2.18 pthread_condattr_setpshared F
 GLIBC_2.18 pthread_create F
 GLIBC_2.18 pthread_detach F
 GLIBC_2.18 pthread_exit F
-GLIBC_2.18 pthread_getaffinity_np F
 GLIBC_2.18 pthread_getattr_default_np F
 GLIBC_2.18 pthread_getattr_np F
 GLIBC_2.18 pthread_getconcurrency F

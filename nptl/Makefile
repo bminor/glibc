@@ -57,6 +57,7 @@ routines = \
   pthread_condattr_destroy \
   pthread_condattr_init \
   pthread_equal \
+  pthread_getaffinity \
   pthread_getschedparam \
   pthread_self \
   pthread_setschedparam \
@@ -149,7 +150,7 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      sigaction \
 		      herrno res pt-allocrtsig \
 		      pthread_kill_other_threads \
-		      pthread_getaffinity pthread_setaffinity \
+		      pthread_setaffinity \
 		      pthread_attr_getaffinity \
 		      pthread_mutexattr_getrobust pthread_mutexattr_setrobust \
 		      pthread_mutex_consistent \

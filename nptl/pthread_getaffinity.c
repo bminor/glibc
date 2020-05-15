@@ -27,7 +27,7 @@
 
 
 int
-__pthread_getaffinity_new (pthread_t th, size_t cpusetsize, cpu_set_t *cpuset)
+__pthread_getaffinity_np (pthread_t th, size_t cpusetsize, cpu_set_t *cpuset)
 {
   const struct pthread *pd = (const struct pthread *) th;
 
@@ -41,18 +41,23 @@ __pthread_getaffinity_new (pthread_t th, size_t cpusetsize, cpu_set_t *cpuset)
 
   return 0;
 }
-strong_alias (__pthread_getaffinity_new, __pthread_getaffinity_np)
-versioned_symbol (libpthread, __pthread_getaffinity_new,
-		  pthread_getaffinity_np, GLIBC_2_3_4);
+libc_hidden_def (__pthread_getaffinity_np)
+versioned_symbol (libc, __pthread_getaffinity_np, pthread_getaffinity_np,
+		  GLIBC_2_32);
 
+#if SHLIB_COMPAT (libc, GLIBC_2_3_4, GLIBC_2_32)
+strong_alias (__pthread_getaffinity_np, __pthread_getaffinity_alias)
+compat_symbol (libc, __pthread_getaffinity_alias, pthread_getaffinity_np,
+	       GLIBC_2_3_4);
+#endif
 
-#if SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_3_4)
+#if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)
 int
 __pthread_getaffinity_old (pthread_t th, cpu_set_t *cpuset)
 {
   /* The old interface by default assumed a 1024 processor bitmap.  */
-  return __pthread_getaffinity_new (th, 128, cpuset);
+  return __pthread_getaffinity_np (th, 128, cpuset);
 }
-compat_symbol (libpthread, __pthread_getaffinity_old, pthread_getaffinity_np,
+compat_symbol (libc, __pthread_getaffinity_old, pthread_getaffinity_np,
 	       GLIBC_2_3_3);
 #endif
