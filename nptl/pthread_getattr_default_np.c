@@ -16,20 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stdlib.h>
 #include <pthreadP.h>
 
 int
 pthread_getattr_default_np (pthread_attr_t *out)
 {
-  struct pthread_attr *real_out;
-
-  real_out = (struct pthread_attr *) out;
-
   lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
-  *real_out = __default_pthread_attr;
+  int ret = __pthread_attr_copy (out,
+                                 (pthread_attr_t *) &__default_pthread_attr);
   lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
-
-  return 0;
+  return ret;
 }

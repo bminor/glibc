@@ -328,6 +328,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-thread-affinity-pthread \
 	tst-thread-affinity-pthread2 \
 	tst-thread-affinity-sched \
+	tst-pthread-defaultattr-free \
 
 
 tests-container =  tst-pthread-getattr
