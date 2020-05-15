@@ -33,8 +33,13 @@ int
 __pthread_getattr_np (pthread_t thread_id, pthread_attr_t *attr)
 {
   struct pthread *thread = (struct pthread *) thread_id;
+
+  /* Prepare the new thread attribute.  */
+  int ret = __pthread_attr_init (attr);
+  if (ret != 0)
+    return ret;
+
   struct pthread_attr *iattr = (struct pthread_attr *) attr;
-  int ret = 0;
 
   lll_lock (thread->lock, LLL_PRIVATE);
 
@@ -187,24 +192,17 @@ __pthread_getattr_np (pthread_t thread_id, pthread_attr_t *attr)
       while (ret == EINVAL && size < 1024 * 1024);
 
       if (ret == 0)
-	{
-	  iattr->cpuset = cpuset;
-	  iattr->cpusetsize = size;
-	}
-      else
-	{
-	  free (cpuset);
-	  if (ret == ENOSYS)
-	    {
-	      /* There is no such functionality.  */
-	      ret = 0;
-	      iattr->cpuset = NULL;
-	      iattr->cpusetsize = 0;
-	    }
-	}
+	ret = __pthread_attr_setaffinity_np (attr, size, cpuset);
+      else if (ret == ENOSYS)
+	/* There is no such functionality.  */
+	ret = 0;
+      free (cpuset);
     }
 
   lll_unlock (thread->lock, LLL_PRIVATE);
+
+  if (ret != 0)
+    __pthread_attr_destroy (attr);
 
   return ret;
 }
