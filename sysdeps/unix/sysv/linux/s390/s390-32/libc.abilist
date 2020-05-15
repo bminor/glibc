@@ -1941,6 +1941,7 @@ GLIBC_2.2.3 __rpc_thread_svc_fdset F
 GLIBC_2.2.3 __rpc_thread_svc_max_pollfd F
 GLIBC_2.2.3 __rpc_thread_svc_pollfd F
 GLIBC_2.2.3 fnmatch F
+GLIBC_2.2.3 pthread_getattr_np F
 GLIBC_2.2.3 sprofil F
 GLIBC_2.2.4 dl_iterate_phdr F
 GLIBC_2.2.4 getgrouplist F
@@ -2190,6 +2191,7 @@ GLIBC_2.31 semctl F
 GLIBC_2.31 shmctl F
 GLIBC_2.32 pthread_attr_setaffinity_np F
 GLIBC_2.32 pthread_getaffinity_np F
+GLIBC_2.32 pthread_getattr_np F
 GLIBC_2.32 pthread_sigmask F
 GLIBC_2.4 _IO_fprintf F
 GLIBC_2.4 _IO_printf F

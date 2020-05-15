@@ -1443,6 +1443,7 @@ GLIBC_2.18 pthread_condattr_init F
 GLIBC_2.18 pthread_equal F
 GLIBC_2.18 pthread_exit F
 GLIBC_2.18 pthread_getaffinity_np F
+GLIBC_2.18 pthread_getattr_np F
 GLIBC_2.18 pthread_getschedparam F
 GLIBC_2.18 pthread_mutex_destroy F
 GLIBC_2.18 pthread_mutex_init F
@@ -2142,4 +2143,5 @@ GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
 GLIBC_2.32 pthread_attr_setaffinity_np F
 GLIBC_2.32 pthread_getaffinity_np F
+GLIBC_2.32 pthread_getattr_np F
 GLIBC_2.32 pthread_sigmask F

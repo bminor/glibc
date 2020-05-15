@@ -58,6 +58,7 @@ routines = \
   pthread_condattr_init \
   pthread_equal \
   pthread_getaffinity \
+  pthread_getattr_np \
   pthread_getschedparam \
   pthread_self \
   pthread_setschedparam \
@@ -89,7 +90,6 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_attr_getstackaddr pthread_attr_setstackaddr \
 		      pthread_attr_getstacksize pthread_attr_setstacksize \
 		      pthread_attr_getstack pthread_attr_setstack \
-		      pthread_getattr_np \
 		      pthread_mutex_init pthread_mutex_destroy \
 		      pthread_mutex_lock pthread_mutex_trylock \
 		      pthread_mutex_timedlock pthread_mutex_unlock \

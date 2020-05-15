@@ -104,7 +104,6 @@ GLIBC_2.29 pthread_create F
 GLIBC_2.29 pthread_detach F
 GLIBC_2.29 pthread_exit F
 GLIBC_2.29 pthread_getattr_default_np F
-GLIBC_2.29 pthread_getattr_np F
 GLIBC_2.29 pthread_getconcurrency F
 GLIBC_2.29 pthread_getcpuclockid F
 GLIBC_2.29 pthread_getname_np F

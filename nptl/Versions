@@ -21,6 +21,9 @@ libc {
   GLIBC_2.1 {
     pthread_attr_init;
   }
+  GLIBC_2.2.3 {
+    pthread_getattr_np;
+  }
   GLIBC_2.3.2 {
     __register_atfork;
 
@@ -43,6 +46,7 @@ libc {
   GLIBC_2.32 {
     pthread_attr_setaffinity_np;
     pthread_getaffinity_np;
+    pthread_getattr_np;
     pthread_sigmask;
   }
   GLIBC_PRIVATE {
@@ -55,7 +59,6 @@ libc {
     # Used by the C11 threads implementation.
     __pthread_cond_destroy; __pthread_cond_init;
     __pthread_attr_setaffinity_np;
-    __pthread_getaffinity_np; # For pthread_getattr_np.
   }
 }
 
@@ -197,8 +200,7 @@ libpthread {
   }
 
   GLIBC_2.2.3 {
-    # Extensions.
-    pthread_getattr_np;
+    __libpthread_version_placeholder;
   }
 
   GLIBC_2.2.6 {

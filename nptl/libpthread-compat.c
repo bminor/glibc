@@ -41,6 +41,11 @@ compat_symbol_unique (libpthread,
 		      __libpthread_version_placeholder, GLIBC_2_1_2);
 #endif
 
+#if (SHLIB_COMPAT (libpthread, GLIBC_2_2_3, GLIBC_2_2_4))
+compat_symbol_unique (libpthread,
+		      __libpthread_version_placeholder, GLIBC_2_2_3);
+#endif
+
 #if (SHLIB_COMPAT (libpthread, GLIBC_2_2_6, GLIBC_2_3))
 compat_symbol_unique (libpthread,
 		      __libpthread_version_placeholder, GLIBC_2_2_6);

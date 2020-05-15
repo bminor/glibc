@@ -30,7 +30,7 @@
 
 
 int
-pthread_getattr_np (pthread_t thread_id, pthread_attr_t *attr)
+__pthread_getattr_np (pthread_t thread_id, pthread_attr_t *attr)
 {
   struct pthread *thread = (struct pthread *) thread_id;
   struct pthread_attr *iattr = (struct pthread_attr *) attr;
@@ -84,7 +84,7 @@ pthread_getattr_np (pthread_t thread_id, pthread_attr_t *attr)
       /* We need the limit of the stack in any case.  */
       else
 	{
-	  if (getrlimit (RLIMIT_STACK, &rl) != 0)
+	  if (__getrlimit (RLIMIT_STACK, &rl) != 0)
 	    ret = errno;
 	  else
 	    {
@@ -115,7 +115,7 @@ pthread_getattr_np (pthread_t thread_id, pthread_attr_t *attr)
 
 	      while (! feof_unlocked (fp))
 		{
-		  if (__getdelim (&line, &linelen, '\n', fp) <= 0)
+		  if (__getline (&line, &linelen, fp) <= 0)
 		    break;
 
 		  uintptr_t from;
@@ -208,3 +208,10 @@ pthread_getattr_np (pthread_t thread_id, pthread_attr_t *attr)
 
   return ret;
 }
+versioned_symbol (libc, __pthread_getattr_np, pthread_getattr_np, GLIBC_2_32);
+
+#if SHLIB_COMPAT (libc, GLIBC_2_2_3, GLIBC_2_32)
+strong_alias (__pthread_getattr_np, __pthread_getattr_np_alias)
+compat_symbol (libc, __pthread_getattr_np_alias,
+	       pthread_getattr_np, GLIBC_2_2_3);
+#endif
