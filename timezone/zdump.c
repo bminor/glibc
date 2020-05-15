@@ -328,12 +328,12 @@ abbrok(const char *const abbrp, const char *const zone)
 	cp = abbrp;
 	while (is_alpha(*cp) || is_digit(*cp) || *cp == '-' || *cp == '+')
 		++cp;
-	if (cp - abbrp < 3)
+	if (*cp)
+	  wp = _("has characters other than ASCII alphanumerics, '-' or '+'");
+	else if (cp - abbrp < 3)
 	  wp = _("has fewer than 3 characters");
 	else if (cp - abbrp > 6)
 	  wp = _("has more than 6 characters");
-	else if (*cp)
-	  wp = _("has characters other than ASCII alphanumerics, '-' or '+'");
 	else
 	  return;
 	fflush(stdout);

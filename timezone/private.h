@@ -132,11 +132,16 @@
 ** Nested includes
 */
 
-/* Avoid clashes with NetBSD by renaming NetBSD's declarations.  */
+/* Avoid clashes with NetBSD by renaming NetBSD's declarations.
+   If defining the 'timezone' variable, avoid a clash with FreeBSD's
+   'timezone' function by renaming its declaration.  */
 #define localtime_rz sys_localtime_rz
 #define mktime_z sys_mktime_z
 #define posix2time_z sys_posix2time_z
 #define time2posix_z sys_time2posix_z
+#if defined USG_COMPAT && USG_COMPAT == 2
+# define timezone sys_timezone
+#endif
 #define timezone_t sys_timezone_t
 #define tzalloc sys_tzalloc
 #define tzfree sys_tzfree
@@ -145,6 +150,9 @@
 #undef mktime_z
 #undef posix2time_z
 #undef time2posix_z
+#if defined USG_COMPAT && USG_COMPAT == 2
+# undef timezone
+#endif
 #undef timezone_t
 #undef tzalloc
 #undef tzfree
@@ -195,6 +203,14 @@
 #  define HAVE_TZNAME 0
 # else
 #  define HAVE_TZNAME 1
+# endif
+#endif
+
+#ifndef ALTZONE
+# if defined __sun || defined _M_XENIX
+#  define ALTZONE 1
+# else
+#  define ALTZONE 0
 # endif
 #endif
 
@@ -409,6 +425,10 @@ static time_t sys_time(time_t *x) { return time(x); }
 
 typedef time_tz tz_time_t;
 
+# undef  asctime
+# define asctime tz_asctime
+# undef  asctime_r
+# define asctime_r tz_asctime_r
 # undef  ctime
 # define ctime tz_ctime
 # undef  ctime_r
@@ -473,11 +493,13 @@ typedef time_tz tz_time_t;
 #  undef  timezone
 #  define timezone tz_timezone
 # endif
-# ifdef ALTZONE
+# if ALTZONE
 #  undef  altzone
 #  define altzone tz_altzone
 # endif
 
+char *asctime(struct tm const *);
+char *asctime_r(struct tm const *restrict, char *restrict);
 char *ctime(time_t const *);
 char *ctime_r(time_t const *, char *);
 double difftime(time_t, time_t) ATTRIBUTE_CONST;
@@ -512,17 +534,14 @@ extern char *asctime_r(struct tm const *restrict, char *restrict);
 extern char **environ;
 #endif
 
-#if TZ_TIME_T || !HAVE_POSIX_DECLS
-# if HAVE_TZNAME
+#if 2 <= HAVE_TZNAME + (TZ_TIME_T || !HAVE_POSIX_DECLS)
 extern char *tzname[];
-# endif
-# if USG_COMPAT
+#endif
+#if 2 <= USG_COMPAT + (TZ_TIME_T || !HAVE_POSIX_DECLS)
 extern long timezone;
 extern int daylight;
-# endif
 #endif
-
-#ifdef ALTZONE
+#if 2 <= ALTZONE + (TZ_TIME_T || !HAVE_POSIX_DECLS)
 extern long altzone;
 #endif
 

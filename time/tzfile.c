@@ -189,7 +189,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
   chars = (size_t) decode (tzhead.tzh_charcnt);
   num_leaps = (size_t) decode (tzhead.tzh_leapcnt);
   num_isstd = (size_t) decode (tzhead.tzh_ttisstdcnt);
-  num_isgmt = (size_t) decode (tzhead.tzh_ttisgmtcnt);
+  num_isgmt = (size_t) decode (tzhead.tzh_ttisutcnt);
 
   if (__glibc_unlikely (num_isstd > num_types || num_isgmt > num_types))
     goto lose;
