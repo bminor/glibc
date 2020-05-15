@@ -33,11 +33,6 @@ __pthread_setaffinity_new (pthread_t th, size_t cpusetsize,
   res = INTERNAL_SYSCALL_CALL (sched_setaffinity, pd->tid, cpusetsize,
 			       cpuset);
 
-#ifdef RESET_VGETCPU_CACHE
-  if (!INTERNAL_SYSCALL_ERROR_P (res))
-    RESET_VGETCPU_CACHE ();
-#endif
-
   return (INTERNAL_SYSCALL_ERROR_P (res)
 	  ? INTERNAL_SYSCALL_ERRNO (res)
 	  : 0);

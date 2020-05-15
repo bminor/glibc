@@ -11,7 +11,6 @@ CLEANUP_PREV		offsetof (struct _pthread_cleanup_buffer, __prev)
 MUTEX_FUTEX		offsetof (pthread_mutex_t, __data.__lock)
 MULTIPLE_THREADS_OFFSET	offsetof (tcbhead_t, multiple_threads)
 POINTER_GUARD		offsetof (tcbhead_t, pointer_guard)
-VGETCPU_CACHE_OFFSET	offsetof (tcbhead_t, vgetcpu_cache)
 FEATURE_1_OFFSET	offsetof (tcbhead_t, feature_1)
 SSP_BASE_OFFSET		offsetof (tcbhead_t, ssp_base)
 

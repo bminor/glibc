@@ -32,11 +32,6 @@ __sched_setaffinity_new (pid_t pid, size_t cpusetsize, const cpu_set_t *cpuset)
 {
   int result = INLINE_SYSCALL (sched_setaffinity, 3, pid, cpusetsize, cpuset);
 
-#ifdef RESET_VGETCPU_CACHE
-  if (result != -1)
-    RESET_VGETCPU_CACHE ();
-#endif
-
   return result;
 }
 libc_hidden_def (__sched_setaffinity_new)
