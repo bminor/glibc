@@ -19,7 +19,7 @@
 #include <pthreadP.h>
 
 int
-pthread_getattr_default_np (pthread_attr_t *out)
+__pthread_getattr_default_np (pthread_attr_t *out)
 {
   lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
   int ret = __pthread_attr_copy (out,
@@ -27,3 +27,5 @@ pthread_getattr_default_np (pthread_attr_t *out)
   lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
   return ret;
 }
+libpthread_hidden_def (__pthread_getattr_default_np)
+weak_alias (__pthread_getattr_default_np, pthread_getattr_default_np)

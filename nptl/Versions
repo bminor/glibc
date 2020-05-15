@@ -61,6 +61,7 @@ libc {
     __pthread_attr_setaffinity_np;
     __pthread_attr_init; __pthread_attr_destroy;
     __pthread_attr_copy;
+    __pthread_getattr_default_np;
   }
 }
 
