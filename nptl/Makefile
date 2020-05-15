@@ -46,6 +46,7 @@ routines = \
   pthread_attr_getschedpolicy \
   pthread_attr_getscope \
   pthread_attr_init \
+  pthread_attr_setaffinity \
   pthread_attr_setdetachstate \
   pthread_attr_setinheritsched \
   pthread_attr_setschedparam \
@@ -149,7 +150,7 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      herrno res pt-allocrtsig \
 		      pthread_kill_other_threads \
 		      pthread_getaffinity pthread_setaffinity \
-		      pthread_attr_getaffinity pthread_attr_setaffinity \
+		      pthread_attr_getaffinity \
 		      pthread_mutexattr_getrobust pthread_mutexattr_setrobust \
 		      pthread_mutex_consistent \
 		      cleanup_routine unwind-forcedunwind \

@@ -1431,6 +1431,7 @@ GLIBC_2.16 pthread_attr_getschedparam F
 GLIBC_2.16 pthread_attr_getschedpolicy F
 GLIBC_2.16 pthread_attr_getscope F
 GLIBC_2.16 pthread_attr_init F
+GLIBC_2.16 pthread_attr_setaffinity_np F
 GLIBC_2.16 pthread_attr_setdetachstate F
 GLIBC_2.16 pthread_attr_setinheritsched F
 GLIBC_2.16 pthread_attr_setschedparam F
@@ -2159,4 +2160,5 @@ GLIBC_2.30 getdents64 F
 GLIBC_2.30 gettid F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
+GLIBC_2.32 pthread_attr_setaffinity_np F
 GLIBC_2.32 pthread_sigmask F

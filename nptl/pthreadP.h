@@ -433,6 +433,8 @@ extern int __pthread_attr_getstack (const pthread_attr_t *__restrict __attr,
 				    size_t *__restrict __stacksize);
 extern int __pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
 				    size_t __stacksize);
+int __pthread_attr_setaffinity_np (pthread_attr_t *, size_t, const cpu_set_t *);
+libc_hidden_proto (__pthread_attr_setaffinity_np)
 extern int __pthread_rwlock_init (pthread_rwlock_t *__restrict __rwlock,
 				  const pthread_rwlockattr_t *__restrict
 				  __attr);

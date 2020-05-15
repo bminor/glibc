@@ -2061,6 +2061,7 @@ GLIBC_2.3.3 inet6_option_next F
 GLIBC_2.3.3 inet6_option_space F
 GLIBC_2.3.3 nftw F
 GLIBC_2.3.3 nftw64 F
+GLIBC_2.3.3 pthread_attr_setaffinity_np F
 GLIBC_2.3.3 remap_file_pages F
 GLIBC_2.3.3 sched_getaffinity F
 GLIBC_2.3.3 sched_setaffinity F
@@ -2091,6 +2092,7 @@ GLIBC_2.3.4 __vsprintf_chk F
 GLIBC_2.3.4 __xpg_strerror_r F
 GLIBC_2.3.4 getipv4sourcefilter F
 GLIBC_2.3.4 getsourcefilter F
+GLIBC_2.3.4 pthread_attr_setaffinity_np F
 GLIBC_2.3.4 regexec F
 GLIBC_2.3.4 sched_getaffinity F
 GLIBC_2.3.4 sched_setaffinity F
@@ -2102,6 +2104,7 @@ GLIBC_2.30 getdents64 F
 GLIBC_2.30 gettid F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
+GLIBC_2.32 pthread_attr_setaffinity_np F
 GLIBC_2.32 pthread_sigmask F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F
