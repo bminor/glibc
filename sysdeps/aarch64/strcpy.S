@@ -234,8 +234,13 @@ L(entry_no_page_cross):
 #endif
 	/* calculate the loc value */
 	cmeq	datav.16b, datav.16b, #0
+#ifdef __AARCH64EB__
+	mov	data1, datav.d[1]
+	mov	data2, datav.d[0]
+#else
 	mov	data1, datav.d[0]
 	mov	data2, datav.d[1]
+#endif
 	cmp	data1, 0
 	csel	data1, data1, data2, ne
 	mov	pos, 8
