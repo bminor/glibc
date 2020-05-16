@@ -294,10 +294,10 @@ test_udp_server (int port)
   double after = get_ticks ();
   if (test_verbose)
     printf ("info: 21 garbage packets took %f seconds\n", after - before);
-  /* Expected timeout is 0.5 seconds.  Add some slack in case process
-     scheduling delays processing the query or response, but do not
-     accept a retry (which would happen at 1.5 seconds).  */
-  TEST_VERIFY (0.5 <= after - before);
+  /* Expected timeout is 0.5 seconds.  Add some slack for rounding errors and
+     in case process scheduling delays processing the query or response, but
+     do not accept a retry (which would happen at 1.5 seconds).  */
+  TEST_VERIFY (0.45 <= after - before);
   TEST_VERIFY (after - before < 1.2);
   test_call_flush (clnt);
 
@@ -316,7 +316,7 @@ test_udp_server (int port)
             after - before);
   /* Expected timeout is 1.5 seconds.  Do not accept a second retry
      (which would happen at 3 seconds).  */
-  TEST_VERIFY (1.5 <= after - before);
+  TEST_VERIFY (1.45 <= after - before);
   TEST_VERIFY (after - before < 2.9);
   test_call_flush (clnt);
 
@@ -331,7 +331,7 @@ test_udp_server (int port)
   if (test_verbose)
     printf ("info: 0.75 second timeout took %f seconds\n",
             after - before);
-  TEST_VERIFY (0.75 <= after - before);
+  TEST_VERIFY (0.70 <= after - before);
   TEST_VERIFY (after - before < 1.4);
   test_call_flush (clnt);
 
@@ -351,7 +351,7 @@ test_udp_server (int port)
         printf ("info: test_udp_server: 0.75 second timeout took %f seconds"
                 " (garbage %d)\n",
                 after - before, with_garbage);
-      TEST_VERIFY (0.75 <= after - before);
+      TEST_VERIFY (0.70 <= after - before);
       TEST_VERIFY (after - before < 1.4);
       test_call_flush (clnt);
 
@@ -369,7 +369,7 @@ test_udp_server (int port)
         printf ("info: test_udp_server: 2.5 second timeout took %f seconds"
                 " (garbage %d)\n",
                 after - before, with_garbage);
-      TEST_VERIFY (2.5 <= after - before);
+      TEST_VERIFY (2.45 <= after - before);
       TEST_VERIFY (after - before < 3.0);
       test_call_flush (clnt);
     }
