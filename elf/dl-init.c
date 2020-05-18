@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <assert.h>
 #include <stddef.h>
 #include <ldsodefs.h>
 #include <elf-initfini.h>
@@ -28,6 +29,11 @@ typedef void (*init_t) (int, char **, char **);
 static void
 call_init (struct link_map *l, int argc, char **argv, char **env)
 {
+  /* If the object has not been relocated, this is a bug.  The
+     function pointers are invalid in this case.  (Executables do not
+     need relocation, and neither do proxy objects.)  */
+  assert (l->l_real->l_relocated || l->l_real->l_type == lt_executable);
+
   if (l->l_init_called)
     /* This object is all done.  */
     return;
