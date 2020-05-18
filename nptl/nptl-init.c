@@ -318,8 +318,8 @@ __pthread_initialize_minimal_internal (void)
   /* Round the resource limit up to page size.  */
   limit.rlim_cur = ALIGN_UP (limit.rlim_cur, pagesz);
   lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
-  __default_pthread_attr.stacksize = limit.rlim_cur;
-  __default_pthread_attr.guardsize = GLRO (dl_pagesize);
+  __default_pthread_attr.internal.stacksize = limit.rlim_cur;
+  __default_pthread_attr.internal.guardsize = GLRO (dl_pagesize);
   lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
 
 #ifdef SHARED

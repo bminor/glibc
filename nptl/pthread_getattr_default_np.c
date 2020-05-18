@@ -22,8 +22,7 @@ int
 __pthread_getattr_default_np (pthread_attr_t *out)
 {
   lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
-  int ret = __pthread_attr_copy (out,
-                                 (pthread_attr_t *) &__default_pthread_attr);
+  int ret = __pthread_attr_copy (out, &__default_pthread_attr.external);
   lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
   return ret;
 }

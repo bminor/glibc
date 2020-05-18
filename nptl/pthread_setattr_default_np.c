@@ -68,15 +68,15 @@ pthread_setattr_default_np (const pthread_attr_t *in)
 
   /* Preserve the previous stack size (see above).  */
   if (temp.internal.stacksize == 0)
-    temp.internal.stacksize = __default_pthread_attr.stacksize;
+    temp.internal.stacksize = __default_pthread_attr.internal.stacksize;
 
   /* Destroy the old attribute structure because it will be
      overwritten.  */
-  __pthread_attr_destroy ((pthread_attr_t *) &__default_pthread_attr);
+  __pthread_attr_destroy (&__default_pthread_attr.external);
 
   /* __default_pthread_attr takes ownership, so do not free
      attrs.internal after this point.  */
-  __default_pthread_attr = temp.internal;
+  __default_pthread_attr = temp;
 
   lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
   return ret;

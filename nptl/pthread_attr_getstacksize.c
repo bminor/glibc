@@ -33,7 +33,7 @@ __pthread_attr_getstacksize (const pthread_attr_t *attr, size_t *stacksize)
   if (size == 0)
     {
       lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
-      size = __default_pthread_attr.stacksize;
+      size = __default_pthread_attr.internal.stacksize;
       lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
     }
   *stacksize = size;

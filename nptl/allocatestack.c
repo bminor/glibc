@@ -425,7 +425,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
   else
     {
       lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
-      size = __default_pthread_attr.stacksize;
+      size = __default_pthread_attr.internal.stacksize;
       lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
     }
 

@@ -612,16 +612,16 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
   STACK_VARIABLES;
 
   const struct pthread_attr *iattr = (struct pthread_attr *) attr;
-  struct pthread_attr default_attr;
+  union pthread_attr_transparent default_attr;
   bool destroy_default_attr = false;
   bool c11 = (attr == ATTR_C11_THREAD);
   if (iattr == NULL || c11)
     {
-      int ret = __pthread_getattr_default_np ((pthread_attr_t *) &default_attr);
+      int ret = __pthread_getattr_default_np (&default_attr.external);
       if (ret != 0)
 	return ret;
       destroy_default_attr = true;
-      iattr = &default_attr;
+      iattr = &default_attr.internal;
     }
 
   struct pthread *pd = NULL;
@@ -852,7 +852,7 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 
  out:
   if (destroy_default_attr)
-    __pthread_attr_destroy ((pthread_attr_t *) &default_attr);
+    __pthread_attr_destroy (&default_attr.external);
 
   return retval;
 }

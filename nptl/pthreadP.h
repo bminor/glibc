@@ -199,7 +199,7 @@ enum
 
 
 /* Default pthread attributes.  */
-extern struct pthread_attr __default_pthread_attr attribute_hidden;
+extern union pthread_attr_transparent __default_pthread_attr attribute_hidden;
 extern int __default_pthread_attr_lock attribute_hidden;
 
 /* Size and alignment of static TLS block.  */
