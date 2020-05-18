@@ -29,6 +29,8 @@
 #include <sys/stat.h>
 /* For ssize_t and off64_t.  */
 #include <sys/types.h>
+/* For locale_t.  */
+#include <locale.h>
 
 __BEGIN_DECLS
 
@@ -92,6 +94,8 @@ char *xasprintf (const char *format, ...)
 char *xstrdup (const char *);
 char *xstrndup (const char *, size_t);
 char *xsetlocale (int category, const char *locale);
+locale_t xnewlocale (int category_mask, const char *locale, locale_t base);
+char *xuselocale (locale_t newloc);
 
 /* These point to the TOP of the source/build tree, not your (or
    support's) subdirectory.  */

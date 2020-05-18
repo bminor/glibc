@@ -108,6 +108,7 @@ libsupport-routines = \
   xmmap \
   xmprotect \
   xmunmap \
+  xnewlocale \
   xopen \
   xpipe \
   xpoll \
@@ -173,6 +174,7 @@ libsupport-routines = \
   xsymlink \
   xsysconf \
   xunlink \
+  xuselocale \
   xwaitpid \
   xwrite \
 
