@@ -73,10 +73,6 @@ _init_first (int argc, char **argv, char **envp)
 #endif
 
   __init_misc (argc, argv, envp);
-
-#if defined SHARED && !defined NO_CTORS_DTORS_SECTIONS
-  __libc_global_ctors ();
-#endif
 }
 
 /* This function is defined here so that if this file ever gets into

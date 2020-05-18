@@ -98,7 +98,7 @@ ld-map		= $(common-objpfx)ld.map
 endif
 
 ifeq (yes,$(build-shared))
-extra-objs	= $(all-rtld-routines:%=%.os) soinit.os sofini.os interp.os
+extra-objs	= $(all-rtld-routines:%=%.os) sofini.os interp.os
 generated	+= librtld.os dl-allobjs.os ld.so ldd
 install-others	= $(inst_rtlddir)/$(rtld-installed-name)
 install-bin-script = ldd

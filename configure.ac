@@ -1251,36 +1251,6 @@ if test $libc_cv_have_sdata_section = yes; then
   AC_DEFINE(HAVE_SDATA_SECTION)
 fi
 
-AC_CACHE_CHECK(whether to use .ctors/.dtors header and trailer,
-	       libc_cv_ctors_header, [dnl
-  libc_cv_ctors_header=yes
-  LIBC_TRY_LINK_STATIC([
-__attribute__ ((constructor)) void ctor (void) { asm (""); }
-__attribute__ ((destructor))  void dtor (void) { asm (""); }
-],
-	      [dnl
-      AS_IF([$READELF -WS conftest$ac_exeext | $AWK '
-	{ gsub(/\@<:@ */, "@<:@") }
-	$2 == ".ctors" || $2 == ".dtors" {
-	  size = strtonum("0x" $6)
-	  align = strtonum("0x" $NF)
-	  seen@<:@$2@:>@ = 1
-	  stub@<:@$2@:>@ = size == align * 2
-	}
-	END {
-	  ctors_ok = !seen@<:@".ctors"@:>@ || stub@<:@".ctors"@:>@
-	  dtors_ok = !seen@<:@".dtors"@:>@ || stub@<:@".dtors"@:>@
-	  exit ((ctors_ok && dtors_ok) ? 0 : 1)
-	}
-      '], [libc_cv_ctors_header=no])
-    ], [dnl
-      AC_MSG_ERROR([missing __attribute__ ((constructor)) support??])
-    ])
-])
-if test $libc_cv_ctors_header = no; then
-  AC_DEFINE(NO_CTORS_DTORS_SECTIONS)
-fi
-
 AC_CACHE_CHECK(for libunwind-support in compiler,
 	       libc_cv_cc_with_libunwind, [
   cat > conftest.c <<EOF

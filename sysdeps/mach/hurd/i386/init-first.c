@@ -33,7 +33,6 @@
 
 extern void __mach_init (void);
 extern void __init_misc (int, char **, char **);
-extern void __libc_global_ctors (void);
 
 unsigned long int __hurd_threadvar_stack_offset;
 unsigned long int __hurd_threadvar_stack_mask;
@@ -83,10 +82,6 @@ posixland_init (int argc, char **argv, char **envp)
   _dl_non_dynamic_init ();
 #endif
   __init_misc (argc, argv, envp);
-
-#if defined SHARED && !defined NO_CTORS_DTORS_SECTIONS
-  __libc_global_ctors ();
-#endif
 }
 
 
