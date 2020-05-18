@@ -55,6 +55,11 @@ do_test (void)
   (void) msg;
   TEST_COMPARE (errno, 0);
 
+  locale_t l = xnewlocale (LC_ALL_MASK, "C", NULL);
+  msg = strerror_l (-3, l);
+  (void) msg;
+  TEST_COMPARE (errno, 0);
+
   return 0;
 }
 
