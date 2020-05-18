@@ -60,7 +60,8 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   bug-envz1 tst-strxfrm2 tst-endian tst-svc2		\
 		   tst-strtok_r bug-strcoll2 tst-cmp tst-xbzero-opt	\
 		   test-endian-types test-endian-file-scope		\
-		   test-endian-sign-conversion tst-memmove-overflow
+		   test-endian-sign-conversion tst-memmove-overflow	\
+		   tst-strsignal
 
 # This test allocates a lot of memory and can run for a long time.
 xtests = tst-strcoll-overflow
@@ -105,7 +106,7 @@ $(objpfx)tst-svc-cmp.out: tst-svc.expect $(objpfx)tst-svc.out
 
 LOCALES := de_DE.UTF-8 en_US.ISO-8859-1 en_US.UTF-8 \
            tr_TR.ISO-8859-9 tr_TR.UTF-8 cs_CZ.UTF-8 \
-	   da_DK.ISO-8859-1 en_GB.UTF-8
+	   da_DK.ISO-8859-1 en_GB.UTF-8 pt_BR.UTF-8
 include ../gen-locales.mk
 
 $(objpfx)test-strcasecmp.out: $(gen-locales)
@@ -115,5 +116,6 @@ $(objpfx)tst-strxfrm2.out: $(gen-locales)
 # bug-strcoll2 needs cs_CZ.UTF-8 and da_DK.ISO-8859-1.
 $(objpfx)bug-strcoll2.out: $(gen-locales)
 $(objpfx)tst-strcoll-overflow.out: $(gen-locales)
+$(objpfx)tst-strsignal.out: $(gen-locales)
 
 endif
