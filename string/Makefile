@@ -44,7 +44,8 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 				     addsep replace)			\
 		   envz basename					\
 		   strcoll_l strxfrm_l string-inlines memrchr		\
-		   xpg-strerror strerror_l explicit_bzero
+		   xpg-strerror strerror_l explicit_bzero		\
+		   sigdescr_np sigabbrev_np
 
 strop-tests	:= memchr memcmp memcpy memmove mempcpy memset memccpy	\
 		   stpcpy stpncpy strcat strchr strcmp strcpy strcspn	\
@@ -61,7 +62,7 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strtok_r bug-strcoll2 tst-cmp tst-xbzero-opt	\
 		   test-endian-types test-endian-file-scope		\
 		   test-endian-sign-conversion tst-memmove-overflow	\
-		   tst-strsignal tst-strerror
+		   tst-strsignal tst-strerror test-sig_np
 
 # This test allocates a lot of memory and can run for a long time.
 xtests = tst-strcoll-overflow

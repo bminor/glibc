@@ -454,6 +454,14 @@ extern char *strsep (char **__restrict __stringp,
 /* Return a string describing the meaning of the signal number in SIG.  */
 extern char *strsignal (int __sig) __THROW;
 
+# ifdef __USE_GNU
+/* Return an abbreviation string for the signal number SIG.  */
+extern const char *sigabbrev_np (int __sig) __THROW;
+/* Return a string describing the meaning of the signal number in SIG,
+   the result is not translated.  */
+extern const char *sigdescr_np (int __sig) __THROW;
+# endif
+
 /* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
 extern char *__stpcpy (char *__restrict __dest, const char *__restrict __src)
      __THROW __nonnull ((1, 2));

@@ -47,6 +47,16 @@ Major new features:
   instead of weak references to symbols historically defined in
   libpthread.
 
+* The functions sigabbrev_np and sigdescr_np have been added.  The
+  sigabbrev_np returns the abbreviated signal name (e.g. "HUP" for SIGHUP)
+  while sigdescr_np returns a string describing the signal number (e.g
+  "Hangup" for SIGHUP).  Different than strsignal, sigdescr_np does not
+  attempt to translate the return description, both functions return
+  NULL for an invalid signal number.
+
+  They should be used instead of sys_siglist or sys_sigabbrev and they
+  are both thread and async-signal safe.  These functions are GNU extensions.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The deprecated <sys/sysctl.h> header and the sysctl function have been

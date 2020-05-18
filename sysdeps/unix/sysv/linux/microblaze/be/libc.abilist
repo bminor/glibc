@@ -2152,3 +2152,5 @@ GLIBC_2.32 pthread_attr_setsigmask_np F
 GLIBC_2.32 pthread_getaffinity_np F
 GLIBC_2.32 pthread_getattr_np F
 GLIBC_2.32 pthread_sigmask F
+GLIBC_2.32 sigabbrev_np F
+GLIBC_2.32 sigdescr_np F

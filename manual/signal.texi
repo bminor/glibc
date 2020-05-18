@@ -880,6 +880,30 @@ to @var{signum}.
 This function is a BSD feature, declared in the header file @file{signal.h}.
 @end deftypefun
 
+@deftypefun void sigdescr_np (int @var{signum})
+@standards{GNU, string.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function returns the message describing the signal @var{signum} or
+@code{NULL} for invalid signal number (e.g "Hangup" for @code{SIGHUP}).
+Different than @code{strsignal} the returned description is not translated.
+The message points to a static storage whose lifetime is the whole lifetime
+of the program.
+
+@pindex string.h
+This function is a GNU extension, declared in the header file @file{string.h}.
+@end deftypefun
+
+@deftypefun void sigabbrev_np (int @var{signum})
+@standards{GNU, string.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+This function returns the abbreviation describing the signal @var{signum} or
+@code{NULL} for invalid signal number.  The message points to a static
+storage whose lifetime is the whole lifetime of the program.
+
+@pindex string.h
+This function is a GNU extension, declared in the header file @file{string.h}.
+@end deftypefun
+
 @node Signal Actions
 @section Specifying Signal Actions
 @cindex signal actions

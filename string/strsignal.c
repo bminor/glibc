@@ -21,19 +21,14 @@
 #include <string.h>
 #include <libintl.h>
 #include <tls-internal.h>
-#include <array_length.h>
 
 /* Return a string describing the meaning of the signal number SIGNUM.  */
 char *
 strsignal (int signum)
 {
-  const char *desc = NULL;
-
-  if (signum >= 0 && signum <= NSIG && signum < array_length (__sys_siglist))
-    desc = __sys_siglist[signum];
-
+  const char *desc = __sigdescr_np (signum);
   if (desc != NULL)
-    return (char *) _(desc);
+    return _(desc);
 
   struct tls_internal_t *tls_internal = __glibc_tls_internal ();
   free (tls_internal->strsignal_buf);

@@ -1,5 +1,5 @@
-/* Define list of all signal numbers and their names.
-   Copyright (C) 1997-2020 Free Software Foundation, Inc.
+/* Return string describing signal abbreviation.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +16,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
+#include <string.h>
 #include <signal.h>
-#include <libintl.h>
+#include <array_length.h>
 
-const char *const __sys_siglist[NSIG] =
+const char *const
+sigabbrev_np (int signum)
 {
-#define init_sig(sig, abbrev, desc)   [sig] = desc,
-#include <siglist.h>
-#undef init_sig
-};
-libc_hidden_def (__sys_siglist)
+  const char *abbrev = NULL;
 
-const char *const __sys_sigabbrev[NSIG] =
-{
-#define init_sig(sig, abbrev, desc)   [sig] = abbrev,
-#include <siglist.h>
-#undef init_sig
-};
-libc_hidden_def (__sys_sigabbrev)
+  if (signum >= 0 && signum <= NSIG
+      && signum < array_length (__sys_sigabbrev))
+    abbrev = __sys_sigabbrev[signum];
 
-#include <siglist-compat.c>
+  return abbrev;
+}
