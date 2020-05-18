@@ -187,6 +187,7 @@ libc_hidden_proto (__libc_readline_unlocked);
 
 extern const char *const _sys_errlist_internal[] attribute_hidden;
 extern const char *__get_errlist (int) attribute_hidden;
+extern const char *__get_errname (int) attribute_hidden;
 
 libc_hidden_ldbl_proto (__asprintf)
 

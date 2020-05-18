@@ -87,5 +87,6 @@ libc {
   }
   GLIBC_2.32 {
     sigdescr_np; sigabbrev_np;
+    strerrordesc_np; strerrorname_np;
   }
 }

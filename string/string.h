@@ -428,6 +428,13 @@ extern int __xpg_strerror_r (int __errnum, char *__buf, size_t __buflen)
 extern char *strerror_r (int __errnum, char *__buf, size_t __buflen)
      __THROW __nonnull ((2)) __wur  __attr_access ((__write_only__, 2, 3));
 # endif
+
+# ifdef __USE_GNU
+/* Return a string describing the meaning of tthe error in ERR.  */
+extern const char *strerrordesc_np (int __err) __THROW;
+/* Return a string with the error name in ERR.  */
+extern const char *strerrorname_np (int __err) __THROW;
+# endif
 #endif
 
 #ifdef __USE_XOPEN2K8

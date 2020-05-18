@@ -2062,6 +2062,8 @@ GLIBC_2.32 pthread_getattr_np F
 GLIBC_2.32 pthread_sigmask F
 GLIBC_2.32 sigabbrev_np F
 GLIBC_2.32 sigdescr_np F
+GLIBC_2.32 strerrordesc_np F
+GLIBC_2.32 strerrorname_np F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F
 GLIBC_2.4 __fgets_unlocked_chk F

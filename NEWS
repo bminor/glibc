@@ -57,6 +57,16 @@ Major new features:
   They should be used instead of sys_siglist or sys_sigabbrev and they
   are both thread and async-signal safe.  These functions are GNU extensions.
 
+* The functions strerrorname_np and strerrordesc_np have been added.  The
+  strerroname_np returns error number name (e.g. "EINVAL" for EINVAL) while
+  strerrordesc_np returns string describing error number
+  (e.g "Invalid argument" for EINVAL).  Different than strerror,
+  strerrordesc_np does not attempt to translate the return description, both
+  functions return NULL for an invalid error number.
+
+  They should be used instead of sys_errlist and sys_nerr, both are
+  thread and async-signal safe.  These functions are GNU extensions.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The deprecated <sys/sysctl.h> header and the sysctl function have been

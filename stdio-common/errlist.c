@@ -35,4 +35,37 @@ __get_errlist (int errnum)
   return NULL;
 }
 
+static const union sys_errname_t
+{
+  struct
+  {
+#define MSGSTRFIELD1(line) str##line
+#define MSGSTRFIELD(line)  MSGSTRFIELD1(line)
+#define _S(n, str)         char MSGSTRFIELD(__LINE__)[sizeof(str)];
+#include <errlist.h>
+#undef _S
+  };
+  char str[0];
+} _sys_errname = { {
+#define _S(n, s) s,
+#include <errlist.h>
+#undef _S
+} };
+
+static const unsigned short _sys_errnameidx[] =
+{
+#define _S(n, s) [n] = offsetof(union sys_errname_t, MSGSTRFIELD(__LINE__)),
+#include <errlist.h>
+#undef _S
+};
+
+const char *
+__get_errname (int errnum)
+{
+  if (errnum < 0 || errnum >= array_length (_sys_errnameidx)
+      || (errnum > 0 && _sys_errnameidx[errnum] == 0))
+    return NULL;
+  return _sys_errname.str + _sys_errnameidx[errnum];
+}
+
 #include <errlist-compat.c>

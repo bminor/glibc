@@ -45,7 +45,8 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   envz basename					\
 		   strcoll_l strxfrm_l string-inlines memrchr		\
 		   xpg-strerror strerror_l explicit_bzero		\
-		   sigdescr_np sigabbrev_np
+		   sigdescr_np sigabbrev_np strerrorname_np		\
+		   strerrordesc_np
 
 strop-tests	:= memchr memcmp memcpy memmove mempcpy memset memccpy	\
 		   stpcpy stpncpy strcat strchr strcmp strcpy strcspn	\
