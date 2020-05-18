@@ -613,32 +613,14 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 
   const struct pthread_attr *iattr = (struct pthread_attr *) attr;
   struct pthread_attr default_attr;
-  bool free_cpuset = false;
+  bool destroy_default_attr = false;
   bool c11 = (attr == ATTR_C11_THREAD);
   if (iattr == NULL || c11)
     {
-      lll_lock (__default_pthread_attr_lock, LLL_PRIVATE);
-      default_attr = __default_pthread_attr;
-      size_t cpusetsize = default_attr.cpusetsize;
-      if (cpusetsize > 0)
-	{
-	  cpu_set_t *cpuset;
-	  if (__glibc_likely (__libc_use_alloca (cpusetsize)))
-	    cpuset = __alloca (cpusetsize);
-	  else
-	    {
-	      cpuset = malloc (cpusetsize);
-	      if (cpuset == NULL)
-		{
-		  lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
-		  return ENOMEM;
-		}
-	      free_cpuset = true;
-	    }
-	  memcpy (cpuset, default_attr.cpuset, cpusetsize);
-	  default_attr.cpuset = cpuset;
-	}
-      lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
+      int ret = __pthread_getattr_default_np ((pthread_attr_t *) &default_attr);
+      if (ret != 0)
+	return ret;
+      destroy_default_attr = true;
       iattr = &default_attr;
     }
 
@@ -869,8 +851,8 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
     }
 
  out:
-  if (__glibc_unlikely (free_cpuset))
-    free (default_attr.cpuset);
+  if (destroy_default_attr)
+    __pthread_attr_destroy ((pthread_attr_t *) &default_attr);
 
   return retval;
 }
