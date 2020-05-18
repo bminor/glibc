@@ -625,6 +625,8 @@ the standard.
 @menu
 * Default Thread Attributes::             Setting default attributes for
 					  threads in a process.
+* Waiting with Explicit Clocks::          Functions for waiting with an
+                                          explicit clock specification.
 @end menu
 
 @node Default Thread Attributes
@@ -668,6 +670,12 @@ attributes or the stack address is set in the attribute.
 The system does not have sufficient memory.
 @end table
 @end deftypefun
+
+@node Waiting with Explicit Clocks
+@subsubsection Functions for Waiting According to a Specific Clock
+
+@Theglibc{} provides several waiting functions that expect an explicit
+@code{clockid_t} argument.
 
 @comment semaphore.h
 @comment POSIX-proposed
