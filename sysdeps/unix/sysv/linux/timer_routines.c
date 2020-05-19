@@ -136,22 +136,23 @@ __start_helper_thread (void)
   (void) pthread_attr_init (&attr);
   (void) pthread_attr_setstacksize (&attr, __pthread_get_minstack (&attr));
 
-  /* Block all signals in the helper thread but SIGSETXID.  To do this
-     thoroughly we temporarily have to block all signals here.  The
-     helper can lose wakeups if SIGTIMER is not blocked throughout.  */
+  /* Block all signals in the helper thread but SIGSETXID.  */
   sigset_t ss;
-  __libc_signal_block_app (&ss);
-  __libc_signal_block_sigtimer (NULL);
+  __sigfillset (&ss);
+  __sigdelset (&ss, SIGSETXID);
+  int res = __pthread_attr_setsigmask_internal (&attr, &ss);
+  if (res != 0)
+    {
+      pthread_attr_destroy (&attr);
+      return;
+    }
 
   /* Create the helper thread for this timer.  */
   pthread_t th;
-  int res = pthread_create (&th, &attr, timer_helper_thread, NULL);
+  res = pthread_create (&th, &attr, timer_helper_thread, NULL);
   if (res == 0)
     /* We managed to start the helper thread.  */
     __helper_tid = ((struct pthread *) th)->tid;
-
-  /* Restore the signal mask.  */
-  __libc_signal_restore_set (&ss);
 
   /* No need for the attribute anymore.  */
   (void) pthread_attr_destroy (&attr);
