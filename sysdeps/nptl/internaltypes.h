@@ -49,6 +49,13 @@ struct pthread_attr
 #define ATTR_FLAG_SCHED_SET		0x0020
 #define ATTR_FLAG_POLICY_SET		0x0040
 
+/* Used to allocate a pthread_attr_t object which is also accessed
+   internally.  */
+union pthread_attr_transparent
+{
+  pthread_attr_t external;
+  struct pthread_attr internal;
+};
 
 /* Mutex attribute data structure.  */
 struct pthread_mutexattr

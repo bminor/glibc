@@ -60,6 +60,7 @@ libc {
     __pthread_cond_destroy; __pthread_cond_init;
     __pthread_attr_setaffinity_np;
     __pthread_attr_init; __pthread_attr_destroy;
+    __pthread_attr_copy;
   }
 }
 

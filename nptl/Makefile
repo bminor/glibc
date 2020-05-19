@@ -39,6 +39,7 @@ routines = \
   old_pthread_cond_destroy \
   old_pthread_cond_init \
   pthread_atfork \
+  pthread_attr_copy \
   pthread_attr_destroy \
   pthread_attr_getdetachstate \
   pthread_attr_getinheritsched \
