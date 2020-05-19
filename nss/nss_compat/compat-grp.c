@@ -144,7 +144,7 @@ _nss_compat_setgrent (int stayopen)
 }
 
 
-static enum nss_status
+static enum nss_status __attribute_warn_unused_result__
 internal_endgrent (ent_t *ent)
 {
   if (ent->stream != NULL)
@@ -163,6 +163,15 @@ internal_endgrent (ent_t *ent)
     ent->blacklist.current = 0;
 
   return NSS_STATUS_SUCCESS;
+}
+
+/* Like internal_endgrent, but preserve errno in all cases.  */
+static void
+internal_endgrent_noerror (ent_t *ent)
+{
+  int saved_errno = errno;
+  enum nss_status unused __attribute__ ((unused)) = internal_endgrent (ent);
+  __set_errno (saved_errno);
 }
 
 enum nss_status
@@ -485,7 +494,7 @@ _nss_compat_getgrnam_r (const char *name, struct group *grp,
   if (result == NSS_STATUS_SUCCESS)
     result = internal_getgrnam_r (name, grp, &ent, buffer, buflen, errnop);
 
-  internal_endgrent (&ent);
+  internal_endgrent_noerror (&ent);
 
   return result;
 }
@@ -614,7 +623,7 @@ _nss_compat_getgrgid_r (gid_t gid, struct group *grp,
   if (result == NSS_STATUS_SUCCESS)
     result = internal_getgrgid_r (gid, grp, &ent, buffer, buflen, errnop);
 
-  internal_endgrent (&ent);
+  internal_endgrent_noerror (&ent);
 
   return result;
 }

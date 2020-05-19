@@ -217,7 +217,7 @@ _nss_compat_setspent (int stayopen)
 }
 
 
-static enum nss_status
+static enum nss_status __attribute_warn_unused_result__
 internal_endspent (ent_t *ent)
 {
   if (ent->stream != NULL)
@@ -246,6 +246,15 @@ internal_endspent (ent_t *ent)
   return NSS_STATUS_SUCCESS;
 }
 
+/* Like internal_endspent, but preserve errno in all cases.  */
+static void
+internal_endspent_noerror (ent_t *ent)
+{
+  int saved_errno = errno;
+  enum nss_status unused __attribute__ ((unused)) = internal_endspent (ent);
+  __set_errno (saved_errno);
+}
+
 enum nss_status
 _nss_compat_endspent (void)
 {
@@ -262,7 +271,6 @@ _nss_compat_endspent (void)
 
   return result;
 }
-
 
 static enum nss_status
 getspent_next_nss_netgr (const char *name, struct spwd *result, ent_t *ent,
@@ -788,7 +796,7 @@ _nss_compat_getspnam_r (const char *name, struct spwd *pwd,
   if (result == NSS_STATUS_SUCCESS)
     result = internal_getspnam_r (name, pwd, &ent, buffer, buflen, errnop);
 
-  internal_endspent (&ent);
+  internal_endspent_noerror (&ent);
 
   return result;
 }

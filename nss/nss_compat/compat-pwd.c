@@ -261,7 +261,7 @@ _nss_compat_setpwent (int stayopen)
 }
 
 
-static enum nss_status
+static enum nss_status __attribute_warn_unused_result__
 internal_endpwent (ent_t *ent)
 {
   if (ent->stream != NULL)
@@ -287,6 +287,15 @@ internal_endpwent (ent_t *ent)
   give_pwd_free (&ent->pwd);
 
   return NSS_STATUS_SUCCESS;
+}
+
+/* Like internal_endpwent, but preserve errno in all cases.  */
+static void
+internal_endpwent_noerror (ent_t *ent)
+{
+  int saved_errno = errno;
+  enum nss_status unused __attribute__ ((unused)) = internal_endpwent (ent);
+  __set_errno (saved_errno);
 }
 
 enum nss_status
@@ -824,7 +833,7 @@ _nss_compat_getpwnam_r (const char *name, struct passwd *pwd,
   if (result == NSS_STATUS_SUCCESS)
     result = internal_getpwnam_r (name, pwd, &ent, buffer, buflen, errnop);
 
-  internal_endpwent (&ent);
+  internal_endpwent_noerror (&ent);
 
   return result;
 }
@@ -1063,7 +1072,7 @@ _nss_compat_getpwuid_r (uid_t uid, struct passwd *pwd,
   if (result == NSS_STATUS_SUCCESS)
     result = internal_getpwuid_r (uid, pwd, &ent, buffer, buflen, errnop);
 
-  internal_endpwent (&ent);
+  internal_endpwent_noerror (&ent);
 
   return result;
 }
