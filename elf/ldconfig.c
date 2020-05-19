@@ -97,7 +97,7 @@ int opt_verbose;
 
 /* Format to support.  */
 /* 0: only libc5/glibc2; 1: both; 2: only glibc 2.2.  */
-int opt_format = 1;
+int opt_format = 2;
 
 /* Build cache.  */
 static int opt_build_cache = 1;
@@ -150,7 +150,7 @@ static const struct argp_option options[] =
   { NULL, 'f', N_("CONF"), 0, N_("Use CONF as configuration file"), 0},
   { NULL, 'n', NULL, 0, N_("Only process directories specified on the command line.  Don't build cache."), 0},
   { NULL, 'l', NULL, 0, N_("Manually link individual libraries."), 0},
-  { "format", 'c', N_("FORMAT"), 0, N_("Format to use: new, old or compat (default)"), 0},
+  { "format", 'c', N_("FORMAT"), 0, N_("Format to use: new (default), old, or compat"), 0},
   { "ignore-aux-cache", 'i', NULL, 0, N_("Ignore auxiliary cache file"), 0},
   { NULL, 0, NULL, 0, NULL, 0 }
 };
