@@ -81,3 +81,13 @@ pthread_setattr_default_np (const pthread_attr_t *in)
   lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
   return ret;
 }
+
+/* This is placed in the same file as pthread_setattr_default_np
+   because only this function can trigger allocation of attribute
+   data.  This way, the function is automatically defined for all the
+   cases when it is needed in static builds.  */
+void
+__default_pthread_attr_freeres (void)
+{
+  __pthread_attr_destroy (&__default_pthread_attr.external);
+}
