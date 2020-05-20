@@ -161,6 +161,9 @@ libc {
   GLIBC_2.30 {
     twalk_r;
   }
+  GLIBC_2.32 {
+    __libc_single_threaded;
+  }
   GLIBC_PRIVATE {
     __madvise;
     __mktemp;

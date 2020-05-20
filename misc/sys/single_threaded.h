@@ -1,4 +1,4 @@
-/* Early initialization of libc.so, libc.so side.
+/* Support for single-thread optimizations.
    Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,21 +16,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <ctype.h>
-#include <libc-early-init.h>
-#include <rseq-internal.h>
-#include <sys/single_threaded.h>
+#ifndef _SYS_SINGLE_THREADED_H
+#define _SYS_SINGLE_THREADED_H
 
-void
-__libc_early_init (_Bool initial)
-{
-  /* Initialize ctype data.  */
-  __ctype_init ();
+#include <features.h>
 
-  /* Register rseq ABI to the kernel for the main program's libc.   */
-  if (initial)
-    rseq_register_current_thread ();
+__BEGIN_DECLS
 
-  /* Only the outer namespace is marked as single-threaded.  */
-  __libc_single_threaded = initial;
-}
+/* If this variable is non-zero, then the current thread is the only
+   thread in the process image.  If it is zero, the process might be
+   multi-threaded.  */
+extern char __libc_single_threaded;
+
+__END_DECLS
+
+#endif /* _SYS_SINGLE_THREADED_H */

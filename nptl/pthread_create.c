@@ -35,6 +35,7 @@
 #include <tls-setup.h>
 #include <rseq-internal.h>
 #include "libioP.h"
+#include <sys/single_threaded.h>
 
 #include <shlib-compat.h>
 
@@ -624,6 +625,10 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 		      void *(*start_routine) (void *), void *arg)
 {
   STACK_VARIABLES;
+
+  /* Avoid a data race in the multi-threaded case.  */
+  if (__libc_single_threaded)
+    __libc_single_threaded = 0;
 
   const struct pthread_attr *iattr = (struct pthread_attr *) attr;
   union pthread_attr_transparent default_attr;

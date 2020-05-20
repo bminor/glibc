@@ -37,7 +37,8 @@ headers	:= sys/uio.h bits/uio-ext.h bits/uio_lim.h \
 	   bits/syslog.h bits/syslog-ldbl.h bits/syslog-path.h bits/error.h \
 	   bits/select2.h bits/hwcap.h sys/auxv.h \
 	   sys/sysmacros.h bits/sysmacros.h bits/types/struct_iovec.h \
-	   bits/err-ldbl.h bits/error-ldbl.h
+	   bits/err-ldbl.h bits/error-ldbl.h \
+	   sys/single_threaded.h
 
 routines := brk sbrk sstk ioctl \
 	    readv writev preadv preadv64 pwritev pwritev64 \
@@ -72,7 +73,7 @@ routines := brk sbrk sstk ioctl \
 	    fgetxattr flistxattr fremovexattr fsetxattr getxattr \
 	    listxattr lgetxattr llistxattr lremovexattr lsetxattr \
 	    removexattr setxattr getauxval ifunc-impl-list makedev \
-	    allocate_once fd_to_filename
+	    allocate_once fd_to_filename single_threaded
 
 generated += tst-error1.mtrace tst-error1-mem.out \
   tst-allocate_once.mtrace tst-allocate_once-mem.out

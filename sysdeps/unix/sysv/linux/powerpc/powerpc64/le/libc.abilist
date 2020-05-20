@@ -2279,6 +2279,7 @@ GLIBC_2.32 __isoc99_vsscanfieee128 F
 GLIBC_2.32 __isoc99_vswscanfieee128 F
 GLIBC_2.32 __isoc99_vwscanfieee128 F
 GLIBC_2.32 __isoc99_wscanfieee128 F
+GLIBC_2.32 __libc_single_threaded D 0x1
 GLIBC_2.32 __obstack_printf_chkieee128 F
 GLIBC_2.32 __obstack_printfieee128 F
 GLIBC_2.32 __obstack_vprintf_chkieee128 F

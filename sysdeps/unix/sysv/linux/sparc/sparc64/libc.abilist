@@ -2107,6 +2107,7 @@ GLIBC_2.30 getdents64 F
 GLIBC_2.30 gettid F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
+GLIBC_2.32 __libc_single_threaded D 0x1
 GLIBC_2.32 __rseq_abi T 0x20
 GLIBC_2.32 pthread_attr_getsigmask_np F
 GLIBC_2.32 pthread_attr_setaffinity_np F

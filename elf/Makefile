@@ -155,7 +155,9 @@ endif
 tests-static-normal := tst-leaks1-static tst-array1-static tst-array5-static \
 	       tst-dl-iter-static \
 	       tst-tlsalign-static tst-tlsalign-extern-static \
-	       tst-linkall-static tst-env-setuid tst-env-setuid-tunables
+	       tst-linkall-static tst-env-setuid tst-env-setuid-tunables \
+	       tst-single_threaded-static tst-single_threaded-pthread-static
+
 tests-static-internal := tst-tls1-static tst-tls2-static \
 	       tst-ptrguard1-static tst-stackguard1-static \
 	       tst-tls1-static-non-pie tst-libc_dlvsym-static
@@ -174,9 +176,11 @@ tests-internal := tst-tls1 tst-tls2 $(tests-static-internal)
 tests-static := $(tests-static-normal) $(tests-static-internal)
 
 ifeq (yes,$(build-shared))
-tests-static += tst-tls9-static
-tst-tls9-static-ENV = \
-       LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
+tests-static += tst-tls9-static tst-single_threaded-static-dlopen
+static-dlopen-environment = \
+  LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
+tst-tls9-static-ENV = $(static-dlopen-environment)
+tst-single_threaded-static-dlopen-ENV = $(static-dlopen-environment)
 
 tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 constload1 order noload filter \
@@ -204,7 +208,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-dlopen-self tst-auditmany tst-initfinilazyfail tst-dlopenfail \
 	 tst-dlopenfail-2 \
 	 tst-filterobj tst-filterobj-dlopen tst-auxobj tst-auxobj-dlopen \
-	 tst-audit14 tst-audit15 tst-audit16
+	 tst-audit14 tst-audit15 tst-audit16 \
+	 tst-single_threaded tst-single_threaded-pthread
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -317,7 +322,9 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-dlopenfailmod1 tst-dlopenfaillinkmod tst-dlopenfailmod2 \
 		tst-dlopenfailmod3 tst-ldconfig-ld-mod \
 		tst-filterobj-flt tst-filterobj-aux tst-filterobj-filtee \
-		tst-auditlogmod-1 tst-auditlogmod-2 tst-auditlogmod-3
+		tst-auditlogmod-1 tst-auditlogmod-2 tst-auditlogmod-3 \
+		tst-single_threaded-mod1 tst-single_threaded-mod2 \
+		tst-single_threaded-mod3 tst-single_threaded-mod4
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
 modules-names-tests = $(filter-out ifuncmod% tst-libc_dlvsym-dso tst-tlsmod%,\
@@ -1748,3 +1755,17 @@ $(objpfx)tst-auxobj: $(objpfx)tst-filterobj-aux.so
 $(objpfx)tst-auxobj-dlopen: $(libdl)
 $(objpfx)tst-auxobj.out: $(objpfx)tst-filterobj-filtee.so
 $(objpfx)tst-auxobj-dlopen.out: $(objpfx)tst-filterobj-filtee.so
+
+$(objpfx)tst-single_threaded: $(objpfx)tst-single_threaded-mod1.so $(libdl)
+$(objpfx)tst-single_threaded.out: \
+  $(objpfx)tst-single_threaded-mod2.so $(objpfx)tst-single_threaded-mod3.so
+$(objpfx)tst-single_threaded-static-dlopen: \
+  $(objpfx)tst-single_threaded-mod1.o $(common-objpfx)dlfcn/libdl.a
+$(objpfx)tst-single_threaded-static-dlopen.out: \
+  $(objpfx)tst-single_threaded-mod2.so
+$(objpfx)tst-single_threaded-pthread: \
+  $(objpfx)tst-single_threaded-mod1.so $(libdl) $(shared-thread-library)
+$(objpfx)tst-single_threaded-pthread.out: \
+  $(objpfx)tst-single_threaded-mod2.so $(objpfx)tst-single_threaded-mod3.so \
+  $(objpfx)tst-single_threaded-mod4.so
+$(objpfx)tst-single_threaded-pthread-static: $(static-thread-library)

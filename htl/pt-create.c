@@ -24,6 +24,7 @@
 
 #include <atomic.h>
 #include <hurd/resource.h>
+#include <sys/single_threaded.h>
 
 #include <pt-internal.h>
 #include <pthreadP.h>
@@ -103,6 +104,10 @@ __pthread_create_internal (struct __pthread **thread,
   const struct __pthread_attr *setup;
   sigset_t sigset;
   size_t stacksize;
+
+  /* Avoid a data race in the multi-threaded case.  */
+  if (__libc_single_threaded)
+    __libc_single_threaded = 0;
 
   /* Allocate a new thread structure.  */
   err = __pthread_alloc (&pthread);

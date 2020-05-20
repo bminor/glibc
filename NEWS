@@ -41,6 +41,12 @@ Major new features:
   The GNU C Library manual has details on integration of Restartable
   Sequences.
 
+* The GNU C Library now provides the header file <sys/single_threaded.h>
+  which declares the variable __libc_single_threaded.  Applications are
+  encouraged to use this variable for single-thread optimizations,
+  instead of weak references to symbols historically defined in
+  libpthread.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The deprecated <sys/sysctl.h> header and the sysctl function have been
