@@ -40,6 +40,7 @@ __ntp_gettime64 (struct __ntptimeval64 *ntv)
   ntv->time = tntx.time;
   ntv->maxerror = tntx.maxerror;
   ntv->esterror = tntx.esterror;
+  ntv->tai = tntx.tai;
   return result;
 }
 
