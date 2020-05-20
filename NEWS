@@ -23,6 +23,10 @@ Major new features:
   toolchains.  It is recommended to use GCC 8 or newer when testing
   this option.
 
+* To help detect buffer overflows and other out-of-bounds accesses
+  several APIs have been annotated with GCC 'access' attribute.  This
+  should help GCC 10 issue better warnings.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The deprecated <sys/sysctl.h> header and the sysctl function have been
