@@ -932,7 +932,7 @@ extern int wctomb (char *__s, wchar_t __wchar) __THROW;
 /* Convert a multibyte string to a wide char string.  */
 extern size_t mbstowcs (wchar_t *__restrict  __pwcs,
 			const char *__restrict __s, size_t __n) __THROW
-    __attr_access ((__write_only__, 1, 3)) __attr_access ((__read_only__, 2));
+    __attr_access ((__read_only__, 2));
 /* Convert a wide char string to multibyte string.  */
 extern size_t wcstombs (char *__restrict __s,
 			const wchar_t *__restrict __pwcs, size_t __n)

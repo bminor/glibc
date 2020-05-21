@@ -1026,6 +1026,10 @@ stores in the pointer pointed to by @var{src} either a null pointer (if
 the NUL byte in the input string was reached) or the address of the byte
 following the last converted multibyte character.
 
+Like @code{mbstowcs} the @var{dst} parameter may be a null pointer and
+the function can be used to count the number of wide characters that
+would be required.
+
 @pindex wchar.h
 @code{mbsrtowcs} was introduced in @w{Amendment 1} to @w{ISO C90} and is
 declared in @file{wchar.h}.
@@ -1101,10 +1105,11 @@ successfully converted.
 
 Except in the case of an encoding error the return value of the
 @code{wcsrtombs} function is the number of bytes in all the multibyte
-character sequences stored in @var{dst}.  Before returning, the state in
-the object pointed to by @var{ps} (or the internal object in case
-@var{ps} is a null pointer) is updated to reflect the state after the
-last conversion.  The state is the initial shift state in case the
+character sequences which were or would have been (if @var{dst} was
+not a null) stored in @var{dst}.  Before returning, the state in the
+object pointed to by @var{ps} (or the internal object in case @var{ps}
+is a null pointer) is updated to reflect the state after the last
+conversion.  The state is the initial shift state in case the
 terminating NUL wide character was converted.
 
 @pindex wchar.h
@@ -1130,6 +1135,10 @@ multibyte character string.  In other words, the multibyte character
 string @code{*@var{src}} need not be NUL-terminated.  But if a NUL byte
 is found within the @var{nmc} first bytes of the string, the conversion
 stops there.
+
+Like @code{mbstowcs} the @var{dst} parameter may be a null pointer and
+the function can be used to count the number of wide characters that
+would be required.
 
 This function is a GNU extension.  It is meant to work around the
 problems mentioned above.  Now it is possible to convert a buffer with
@@ -1465,6 +1474,12 @@ mbstowcs_alloc (const char *string)
 @}
 @end smallexample
 
+If @var{wstring} is a null pointer then no output is written and the
+conversion proceeds as above, and the result is returned.  In practice
+such behaviour is useful for calculating the exact number of wide
+characters required to convert @var{string}.  This behaviour of
+accepting a null pointer for @var{wstring} is an @w{XPG4.2} extension
+that is not specified in @w{ISO C} and is optional in @w{POSIX}.
 @end deftypefun
 
 @deftypefun size_t wcstombs (char *@var{string}, const wchar_t *@var{wstring}, size_t @var{size})
