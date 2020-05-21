@@ -347,23 +347,41 @@ init_cpu_features (struct cpu_features *cpu_features)
 	    case 0x57:
 	      /* Knights Landing.  Enable Silvermont optimizations.  */
 
+	    case 0x7a:
+	      /* Unaligned load versions are faster than SSSE3
+		 on Goldmont Plus.  */
+
 	    case 0x5c:
 	    case 0x5f:
 	      /* Unaligned load versions are faster than SSSE3
 		 on Goldmont.  */
 
 	    case 0x4c:
+	    case 0x5a:
+	    case 0x75:
 	      /* Airmont is a die shrink of Silvermont.  */
 
 	    case 0x37:
 	    case 0x4a:
 	    case 0x4d:
-	    case 0x5a:
 	    case 0x5d:
 	      /* Unaligned load versions are faster than SSSE3
 		 on Silvermont.  */
 	      cpu_features->feature[index_arch_Fast_Unaligned_Load]
 		|= (bit_arch_Fast_Unaligned_Load
+		    | bit_arch_Fast_Unaligned_Copy
+		    | bit_arch_Prefer_PMINUB_for_stringop
+		    | bit_arch_Slow_SSE4_2);
+	      break;
+
+	    case 0x86:
+	    case 0x96:
+	    case 0x9c:
+	      /* Enable rep string instructions, unaligned load, unaligned
+	         copy, pminub and avoid SSE 4.2 on Tremont.  */
+	      cpu_features->feature[index_arch_Fast_Rep_String]
+		|= (bit_arch_Fast_Rep_String
+		    | bit_arch_Fast_Unaligned_Load
 		    | bit_arch_Fast_Unaligned_Copy
 		    | bit_arch_Prefer_PMINUB_for_stringop
 		    | bit_arch_Slow_SSE4_2);
