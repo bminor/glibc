@@ -304,6 +304,7 @@ open_by_handle_at
 open_tree
 openat
 openat2
+or1k_atomic
 osf_adjtime
 osf_afs_syscall
 osf_alt_plock
