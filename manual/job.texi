@@ -860,7 +860,6 @@ void
 do_job_notification (void)
 @{
   job *j, *jlast, *jnext;
-  process *p;
 
   /* @r{Update status information for child processes.}  */
   update_status ();
