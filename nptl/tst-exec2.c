@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <support/xsignal.h>
 
 
 static void *
@@ -56,11 +57,7 @@ do_test (void)
     }
 
   /* Not interested in knowing when the pipe is closed.  */
-  if (sigignore (SIGPIPE) != 0)
-    {
-      puts ("sigignore failed");
-      exit (1);
-    }
+  xsignal (SIGPIPE, SIG_IGN);
 
   pid_t pid = fork ();
   if (pid == -1)

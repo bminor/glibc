@@ -39,6 +39,7 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <sys/uio.h>
+#include <libc-diag.h>
 
 
 /* Since STREAMS are not supported in the standard Linux kernel and
@@ -527,7 +528,13 @@ tf_sigpause (void *arg)
 
   pthread_cleanup_push (cl, NULL);
 
+  /* This tests the deprecated sigpause and sigmask functions.  The
+     file is compiled with -Wno-errno so that the sigmask deprecation
+     warning is not fatal.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
   sigpause (sigmask (SIGINT));
+  DIAG_POP_NEEDS_COMMENT;
 
   pthread_cleanup_pop (0);
 

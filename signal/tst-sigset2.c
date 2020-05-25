@@ -9,6 +9,10 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <libc-diag.h>
+
+/* The sigset function is deprecated.  */
+DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
 
 #define TEST_SIG SIGINT
 

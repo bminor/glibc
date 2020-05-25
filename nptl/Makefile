@@ -510,6 +510,13 @@ endif
 # function frequently to get a thread-specific handle.
 CFLAGS-pthread_self.os += -fomit-frame-pointer
 
+# The sigmask macro is deprecated and triggers are compiler warning
+# which cannot be suppressed (as of GCC 9).
+CFLAGS-tst-cancel4.c += -Wno-error
+CFLAGS-tst-cancel5.c += -Wno-error
+CFLAGS-tst-cancelx4.c += -Wno-error
+CFLAGS-tst-cancelx5.c += -Wno-error
+
 # Run the cancellation and cleanup tests also for the modern, exception-based
 # implementation.  For this we have to pass the -fexceptions parameter.
 CFLAGS-tst-cancelx2.c += -fexceptions

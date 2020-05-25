@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <support/xsignal.h>
 
 
 static void *
@@ -56,11 +57,7 @@ do_test (void)
     }
 
   /* Not interested in knowing when the pipe is closed.  */
-  if (sigignore (SIGPIPE) != 0)
-    {
-      puts ("sigignore failed");
-      exit (1);
-    }
+  xsignal (SIGPIPE, SIG_IGN);
 
   posix_spawn_file_actions_t a;
   if (posix_spawn_file_actions_init (&a) != 0)

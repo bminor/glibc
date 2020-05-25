@@ -20,7 +20,10 @@
 #include <signal.h>
 #include <stdio.h>
 #include <string.h>
+#include <libc-diag.h>
 
+/* The sighold and sigrelse functions are deprecated.  */
+DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
 
 static int
 do_test (void)

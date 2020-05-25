@@ -86,11 +86,7 @@ do_test (void)
     }
 
   /* Not interested in knowing when the pipe is closed.  */
-  if (sigignore (SIGPIPE) != 0)
-    {
-      puts ("error: sigignore failed");
-      exit (1);
-    }
+  xsignal (SIGPIPE, SIG_IGN);
 
   /* To synchronize with the thread.  */
   if (pthread_barrier_init (&b, NULL, 2) != 0)

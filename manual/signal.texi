@@ -3250,6 +3250,9 @@ are interrupted by handling signal @var{signum}.  If @var{failflag} is
 false, signal @var{signum} restarts primitives.  If @var{failflag} is
 true, handling @var{signum} causes these primitives to fail with error
 code @code{EINTR}.  @xref{Interrupted Primitives}.
+
+This function has been replaced by the @code{SA_RESTART} flag of the
+@code{sigaction} function.  @xref{Advanced Signal Handling}.
 @end deftypefun
 
 @deftypefn Macro int sigmask (int @var{signum})
@@ -3267,6 +3270,9 @@ together to specify more than one signal.  For example,
 
 @noindent
 specifies a mask that includes all the job-control stop signals.
+
+This macro has been replaced by the @code{sigset_t} type and the
+associated signal set manipulation functions.  @xref{Signal Sets}.
 @end deftypefn
 
 @deftypefun int sigblock (int @var{mask})

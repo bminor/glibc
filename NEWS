@@ -39,6 +39,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   Its implementation always returned with a failure, and the function
   was not declared in any header file.
 
+* The legacy signal handling functions siginterrupt, sigpause, sighold,
+  sigrelse, sigignore and sigset, and the sigmask macro have been
+  deprecated.  Applications should use the sigsuspend, sigprocmask and
+  sigaction functions instead.
+
 * ldconfig now defaults to the new format for ld.so.cache. glibc has
   already supported this format for almost 20 years.
 

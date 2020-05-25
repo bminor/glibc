@@ -22,17 +22,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <support/xsignal.h>
 
 static void *
 tf (void *arg)
 {
   /* Ignore SIGUSR1 and block SIGUSR2.  */
-  if (sigignore (SIGUSR1) != 0)
-    {
-      puts ("sigignore failed");
-      exit (1);
-    }
+  xsignal (SIGUSR1, SIG_IGN);
 
   sigset_t ss;
   sigemptyset (&ss);
