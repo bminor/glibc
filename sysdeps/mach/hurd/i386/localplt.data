@@ -43,6 +43,7 @@ ld.so: _dl_allocate_tls_init
 ld.so: _dl_exception_create
 ld.so: _dl_exception_create_format
 ld.so: _dl_exception_free
+ld.so: _dl_fatal_printf
 ld.so: _dl_find_dso_for_object
 ld.so: _dl_init_first
 ld.so: _dl_mcount

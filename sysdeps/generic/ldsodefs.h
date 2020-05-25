@@ -751,24 +751,19 @@ _dl_dprintf (int fd, const char *fmt, ...)
 
 /* Write a message on the specified descriptor standard output.  The
    parameters are interpreted as for a `printf' call.  */
-#define _dl_printf(fmt, args...) \
-  _dl_dprintf (STDOUT_FILENO, fmt, ##args)
+void _dl_printf (const char *fmt, ...)
+  attribute_hidden __attribute__ ((__format__ (__printf__, 1, 2)));
 
 /* Write a message on the specified descriptor standard error.  The
    parameters are interpreted as for a `printf' call.  */
-#define _dl_error_printf(fmt, args...) \
-  _dl_dprintf (STDERR_FILENO, fmt, ##args)
+void _dl_error_printf (const char *fmt, ...)
+  attribute_hidden __attribute__ ((__format__ (__printf__, 1, 2)));
 
 /* Write a message on the specified descriptor standard error and exit
    the program.  The parameters are interpreted as for a `printf' call.  */
-#define _dl_fatal_printf(fmt, args...) \
-  do									      \
-    {									      \
-      _dl_dprintf (STDERR_FILENO, fmt, ##args);				      \
-      _exit (127);							      \
-    }									      \
-  while (1)
-
+void _dl_fatal_printf (const char *fmt, ...)
+  __attribute__ ((__format__ (__printf__, 1, 2), __noreturn__));
+rtld_hidden_proto (_dl_fatal_printf)
 
 /* An exception raised by the _dl_signal_error function family and
    caught by _dl_catch_error function family.  Exceptions themselves

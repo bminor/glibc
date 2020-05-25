@@ -275,6 +275,37 @@ _dl_dprintf (int fd, const char *fmt, ...)
   va_end (arg);
 }
 
+void
+_dl_printf (const char *fmt, ...)
+{
+  va_list arg;
+
+  va_start (arg, fmt);
+  _dl_debug_vdprintf (STDOUT_FILENO, 0, fmt, arg);
+  va_end (arg);
+}
+
+void
+_dl_error_printf (const char *fmt, ...)
+{
+  va_list arg;
+
+  va_start (arg, fmt);
+  _dl_debug_vdprintf (STDERR_FILENO, 0, fmt, arg);
+  va_end (arg);
+}
+
+void
+_dl_fatal_printf (const char *fmt, ...)
+{
+  va_list arg;
+
+  va_start (arg, fmt);
+  _dl_debug_vdprintf (STDERR_FILENO, 0, fmt, arg);
+  va_end (arg);
+  _exit (127);
+}
+rtld_hidden_def (_dl_fatal_printf)
 
 /* Test whether given NAME matches any of the names of the given object.  */
 int
