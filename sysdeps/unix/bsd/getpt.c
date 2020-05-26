@@ -41,7 +41,7 @@ const char __libc_ptyname2[] attribute_hidden = PTYNAME2;
 
 /* Open a master pseudo terminal and return its file descriptor.  */
 int
-__getpt (void)
+__bsd_openpt (int oflag)
 {
   char buf[sizeof (_PATH_PTY) + 2];
   const char *p, *q;
@@ -61,7 +61,7 @@ __getpt (void)
 
 	  s[1] = *q;
 
-	  fd = __open (buf, O_RDWR);
+	  fd = __open (buf, oflag);
 	  if (fd != -1)
 	    return fd;
 
@@ -74,18 +74,16 @@ __getpt (void)
   return -1;
 }
 
-#undef __getpt
+int
+__getpt (void)
+{
+  return __bsd_openpt (O_RDWR);
+}
 weak_alias (__getpt, getpt)
 
-#ifndef HAVE_POSIX_OPENPT
-/* We cannot define posix_openpt in general for BSD systems.  */
 int
 __posix_openpt (int oflag)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  return __bsd_openpt (oflag);
 }
 weak_alias (__posix_openpt, posix_openpt)
-
-stub_warning (posix_openpt)
-#endif
