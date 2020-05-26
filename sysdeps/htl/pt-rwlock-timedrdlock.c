@@ -27,6 +27,7 @@
    wait forever.  */
 int
 __pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock *rwlock,
+				       clockid_t clockid,
 				       const struct timespec *abstime)
 {
   error_t err;
@@ -62,7 +63,10 @@ __pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock *rwlock,
   assert (rwlock->__readers == 0);
 
   if (abstime != NULL && ! valid_nanoseconds (abstime->tv_nsec))
-    return EINVAL;
+    {
+      __pthread_spin_unlock (&rwlock->__lock);
+      return EINVAL;
+    }
 
   self = _pthread_self ();
 
@@ -72,7 +76,7 @@ __pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock *rwlock,
 
   /* Block the thread.  */
   if (abstime != NULL)
-    err = __pthread_timedblock (self, abstime, CLOCK_REALTIME);
+    err = __pthread_timedblock (self, abstime, clockid);
   else
     {
       err = 0;
@@ -116,6 +120,15 @@ int
 __pthread_rwlock_timedrdlock (struct __pthread_rwlock *rwlock,
 			      const struct timespec *abstime)
 {
-  return __pthread_rwlock_timedrdlock_internal (rwlock, abstime);
+  return __pthread_rwlock_timedrdlock_internal (rwlock, CLOCK_REALTIME, abstime);
 }
 weak_alias (__pthread_rwlock_timedrdlock, pthread_rwlock_timedrdlock)
+
+int
+__pthread_rwlock_clockrdlock (struct __pthread_rwlock *rwlock,
+			      clockid_t clockid,
+			      const struct timespec *abstime)
+{
+  return __pthread_rwlock_timedrdlock_internal (rwlock, clockid, abstime);
+}
+weak_alias (__pthread_rwlock_clockrdlock, pthread_rwlock_clockrdlock)

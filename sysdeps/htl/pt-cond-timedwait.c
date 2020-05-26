@@ -24,6 +24,7 @@
 
 extern int __pthread_cond_timedwait_internal (pthread_cond_t *cond,
 					      pthread_mutex_t *mutex,
+					      clockid_t clockid,
 					      const struct timespec *abstime);
 
 int
@@ -31,10 +32,21 @@ __pthread_cond_timedwait (pthread_cond_t *cond,
 			  pthread_mutex_t *mutex,
 			  const struct timespec *abstime)
 {
-  return __pthread_cond_timedwait_internal (cond, mutex, abstime);
+  return __pthread_cond_timedwait_internal (cond, mutex, -1, abstime);
 }
 
 weak_alias (__pthread_cond_timedwait, pthread_cond_timedwait);
+
+int
+__pthread_cond_clockwait (pthread_cond_t *cond,
+			  pthread_mutex_t *mutex,
+			  clockid_t clockid,
+			  const struct timespec *abstime)
+{
+  return __pthread_cond_timedwait_internal (cond, mutex, clockid, abstime);
+}
+
+weak_alias (__pthread_cond_clockwait, pthread_cond_clockwait);
 
 struct cancel_ctx
 {
@@ -69,11 +81,17 @@ cancel_hook (void *arg)
 int
 __pthread_cond_timedwait_internal (pthread_cond_t *cond,
 				   pthread_mutex_t *mutex,
+				   clockid_t clockid,
 				   const struct timespec *abstime)
 {
   error_t err;
   int cancelled, oldtype, drain;
-  clockid_t clock_id = __pthread_default_condattr.__clock;
+  clockid_t clock_id;
+
+  if (clockid != -1)
+    clock_id = clockid;
+  else
+    clock_id = __pthread_default_condattr.__clock;
 
   if (abstime && ! valid_nanoseconds (abstime->tv_nsec))
     return EINVAL;
@@ -114,7 +132,7 @@ __pthread_cond_timedwait_internal (pthread_cond_t *cond,
          already unblocked, progressing on the return path.  */
       __pthread_spin_wait (&cond->__lock);
       __pthread_enqueue (&cond->__queue, self);
-      if (cond->__attr != NULL)
+      if (cond->__attr != NULL && clockid == -1)
 	clock_id = cond->__attr->__clock;
       __pthread_spin_unlock (&cond->__lock);
     }

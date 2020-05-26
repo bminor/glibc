@@ -22,6 +22,7 @@
 /* Implemented in pt-rwlock-timedrdlock.c.  */
 extern int __pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock
 						  *rwlock,
+						  clockid_t clockid,
 						  const struct timespec
 						  *abstime);
 
@@ -29,6 +30,6 @@ extern int __pthread_rwlock_timedrdlock_internal (struct __pthread_rwlock
 int
 __pthread_rwlock_rdlock (struct __pthread_rwlock *rwlock)
 {
-  return __pthread_rwlock_timedrdlock_internal (rwlock, 0);
+  return __pthread_rwlock_timedrdlock_internal (rwlock, -1, 0);
 }
 weak_alias (__pthread_rwlock_rdlock, pthread_rwlock_rdlock);

@@ -51,17 +51,23 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
 	 tst-cond23 tst-cond24 tst-cond25 \
 	 tst-cond-except \
-	 tst-join1 tst-join4 tst-join5 tst-join6 tst-join7 \
+	 tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 tst-join6 tst-join7 \
+	 tst-join8 tst-join9 tst-join10 tst-join11 tst-join12 tst-join13 \
+	 tst-join14 \
 	 tst-key1 tst-key2 tst-key3 tst-key4 \
-	 tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex6 tst-mutex10 \
+	 tst-mutex-errorcheck tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 \
+	 tst-mutex5 tst-mutex6 tst-mutex7 tst-mutex7robust tst-mutex9 \
+	 tst-mutex10 tst-mutex11 tst-pthread-mutexattr \
 	 tst-once1 tst-once2 tst-once3 tst-once4 \
 	 tst-robust1 tst-robust2 tst-robust3 tst-robust4 tst-robust5 \
 	 tst-robust6 tst-robust7 tst-robust9 tst-robust10 \
-	 tst-rwlock1 tst-rwlock4 tst-rwlock5 tst-rwlock13 tst-rwlock16 \
+	 tst-rwlock1 tst-rwlock4 tst-rwlock5 tst-rwlock12 \
+	 tst-rwlock13 tst-rwlock14 tst-rwlock16 \
 	 tst-rwlock-tryrdlock-stall tst-rwlock-trywrlock-stall \
 	 tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem6 tst-sem7 \
 	 tst-sem8 tst-sem9 tst-sem10 tst-sem14 tst-sem15 tst-sem16 \
-	 tst-spin1 tst-spin2 tst-spin3 tst-spin4
+	 tst-spin1 tst-spin2 tst-spin3 tst-spin4 \
+	 tst-abstime
 
 tests-internal += tst-robust8
 

@@ -50,6 +50,11 @@ extern int __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex);
 extern int __pthread_cond_timedwait (pthread_cond_t *cond,
 				     pthread_mutex_t *mutex,
 				     const struct timespec *abstime);
+extern int __pthread_cond_clockwait (pthread_cond_t *cond,
+				     pthread_mutex_t *mutex,
+				     clockid_t clockid,
+				     const struct timespec *abstime)
+  __nonnull ((1, 2, 4));
 extern int __pthread_cond_destroy (pthread_cond_t *cond);
 
 typedef struct __cthread *__cthread_t;

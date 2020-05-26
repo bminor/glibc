@@ -259,8 +259,8 @@ CFLAGS-tst-minstack-throw.o = -std=gnu++11
 LDLIBS-tst-minstack-throw = -lstdc++
 
 tests = tst-attr2 tst-attr3 tst-default-attr \
-	tst-mutex5 tst-mutex7 tst-mutex9 tst-mutex11 tst-mutex5a tst-mutex7a \
-	tst-mutex7robust tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 \
+	tst-mutex5a tst-mutex7a \
+	tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 \
 	tst-mutexpi5 tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a \
 	tst-mutexpi9 \
 	tst-cond11 tst-cond20 tst-cond21 tst-cond22 tst-cond26 tst-cond27 \
@@ -268,16 +268,13 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-robustpi6 tst-robustpi7 tst-robustpi9 \
 	tst-rwlock2 tst-rwlock2a tst-rwlock2b tst-rwlock3 \
 	tst-rwlock6 tst-rwlock7 tst-rwlock8 \
-	tst-rwlock9 tst-rwlock10 tst-rwlock11 tst-rwlock12 \
-	tst-rwlock14 tst-rwlock15 tst-rwlock17 tst-rwlock18 \
+	tst-rwlock9 tst-rwlock10 tst-rwlock11 \
+	tst-rwlock15 tst-rwlock17 tst-rwlock18 \
 	tst-once5 \
 	tst-sem5 tst-sem17 \
 	tst-align tst-align3 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
 	tst-raise1 \
-	tst-join2 tst-join3 \
-	tst-join8 tst-join9 tst-join10 tst-join11 tst-join12 tst-join13 \
-	tst-join14 \
 	tst-detach1 \
 	tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \
 	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 tst-tsd5 tst-tsd6 \
@@ -301,7 +298,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-exit1 tst-exit2 tst-exit3 \
 	tst-stdio1 tst-stdio2 \
 	tst-stack1 tst-stack2 tst-stack3 tst-stack4 \
-	tst-pthread-attr-affinity tst-pthread-mutexattr \
+	tst-pthread-attr-affinity \
 	tst-unload \
 	tst-dlsym1 \
 	tst-sysconf \
@@ -312,14 +309,13 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-context1 \
 	tst-sched1 \
 	tst-backtrace1 \
-	tst-abstime \
 	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x \
 	tst-getpid3 \
 	tst-setuid3 \
 	tst-initializers1 $(addprefix tst-initializers1-,\
 			    c89 gnu89 c99 gnu99 c11 gnu11) \
 	tst-bad-schedattr \
-	tst-thread_local1 tst-mutex-errorcheck \
+	tst-thread_local1 \
 	tst-robust-fork tst-create-detached tst-memstream \
 	tst-thread-exit-clobber tst-minstack-cancel tst-minstack-exit \
 	tst-minstack-throw \

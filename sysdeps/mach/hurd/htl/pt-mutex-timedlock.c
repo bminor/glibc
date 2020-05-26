@@ -24,7 +24,9 @@
 #include <hurdlock.h>
 
 int
-__pthread_mutex_timedlock (pthread_mutex_t *mtxp, const struct timespec *tsp)
+__pthread_mutex_clocklock (pthread_mutex_t *mtxp,
+			   clockid_t clockid,
+			   const struct timespec *tsp)
 {
   struct __pthread *self;
   int ret, flags = mtxp->__flags & GSYNC_SHARED;
@@ -32,7 +34,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mtxp, const struct timespec *tsp)
   switch (MTX_TYPE (mtxp))
     {
     case PT_MTX_NORMAL:
-      ret = lll_abstimed_lock (&mtxp->__lock, tsp, flags);
+      ret = lll_abstimed_lock (&mtxp->__lock, tsp, flags, clockid);
       break;
 
     case PT_MTX_RECURSIVE:
@@ -45,7 +47,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mtxp, const struct timespec *tsp)
 	  ++mtxp->__cnt;
 	  ret = 0;
 	}
-      else if ((ret = lll_abstimed_lock (&mtxp->__lock, tsp, flags)) == 0)
+      else if ((ret = lll_abstimed_lock (&mtxp->__lock, tsp, flags, clockid)) == 0)
 	{
 	  mtx_set_owner (mtxp, self, flags);
 	  mtxp->__cnt = 1;
@@ -57,7 +59,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mtxp, const struct timespec *tsp)
       self = _pthread_self ();
       if (mtx_owned_p (mtxp, self, flags))
 	ret = EDEADLK;
-      else if ((ret = lll_abstimed_lock (&mtxp->__lock, tsp, flags)) == 0)
+      else if ((ret = lll_abstimed_lock (&mtxp->__lock, tsp, flags, clockid)) == 0)
 	mtx_set_owner (mtxp, self, flags);
 
       break;
@@ -66,7 +68,7 @@ __pthread_mutex_timedlock (pthread_mutex_t *mtxp, const struct timespec *tsp)
     case PT_MTX_RECURSIVE | PTHREAD_MUTEX_ROBUST:
     case PT_MTX_ERRORCHECK | PTHREAD_MUTEX_ROBUST:
       self = _pthread_self ();
-      ROBUST_LOCK (self, mtxp, lll_robust_abstimed_lock, tsp, flags);
+      ROBUST_LOCK (self, mtxp, lll_robust_abstimed_lock, tsp, flags, clockid);
       break;
 
     default:
@@ -75,6 +77,14 @@ __pthread_mutex_timedlock (pthread_mutex_t *mtxp, const struct timespec *tsp)
     }
 
   return ret;
+}
+weak_alias (__pthread_mutex_clocklock, pthread_mutex_clocklock)
+
+int
+__pthread_mutex_timedlock (pthread_mutex_t *mutex,
+			   const struct timespec *tsp)
+{
+  return __pthread_mutex_clocklock (mutex, CLOCK_REALTIME, tsp);
 }
 weak_alias (__pthread_mutex_timedlock, pthread_mutex_timedlock)
 hidden_def (__pthread_mutex_timedlock)
