@@ -17,10 +17,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Clear PA_GP_RELOC bit in relocation offset.  */
-#define reloc_offset (reloc_arg & ~PA_GP_RELOC)
-#define reloc_index  (reloc_arg & ~PA_GP_RELOC) / sizeof (PLTREL)
-
 #include <elf/dl-runtime.c>
 
 /* The caller has encountered a partially relocated function descriptor.

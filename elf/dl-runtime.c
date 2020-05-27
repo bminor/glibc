@@ -27,6 +27,7 @@
 #include "dynamic-link.h"
 #include <tls.h>
 #include <dl-irel.h>
+#include <dl-runtime.h>
 
 
 #if (!ELF_MACHINE_NO_RELA && !defined ELF_MACHINE_PLT_REL) \
@@ -41,13 +42,6 @@
 #ifndef ARCH_FIXUP_ATTRIBUTE
 # define ARCH_FIXUP_ATTRIBUTE
 #endif
-
-#ifndef reloc_offset
-# define reloc_offset reloc_arg
-# define reloc_index  reloc_arg / sizeof (PLTREL)
-#endif
-
-
 
 /* This function is called through a special trampoline from the PLT the
    first time each PLT entry is called.  We must perform the relocation
@@ -68,8 +62,11 @@ _dl_fixup (
     = (const void *) D_PTR (l, l_info[DT_SYMTAB]);
   const char *strtab = (const void *) D_PTR (l, l_info[DT_STRTAB]);
 
+  const uintptr_t pltgot = (uintptr_t) D_PTR (l, l_info[DT_PLTGOT]);
+
   const PLTREL *const reloc
-    = (const void *) (D_PTR (l, l_info[DT_JMPREL]) + reloc_offset);
+    = (const void *) (D_PTR (l, l_info[DT_JMPREL])
+		      + reloc_offset (pltgot, reloc_arg));
   const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
   const ElfW(Sym) *refsym = sym;
   void *const rel_addr = (void *)(l->l_addr + reloc->r_offset);
@@ -180,9 +177,12 @@ _dl_profile_fixup (
 			l, reloc_arg);
     }
 
+  const uintptr_t pltgot = (uintptr_t) D_PTR (l, l_info[DT_PLTGOT]);
+
   /* This is the address in the array where we store the result of previous
      relocations.  */
-  struct reloc_result *reloc_result = &l->l_reloc_result[reloc_index];
+  struct reloc_result *reloc_result
+    = &l->l_reloc_result[reloc_index (pltgot, reloc_arg, sizeof (PLTREL))];
 
  /* CONCURRENCY NOTES:
 
@@ -219,8 +219,11 @@ _dl_profile_fixup (
 	= (const void *) D_PTR (l, l_info[DT_SYMTAB]);
       const char *strtab = (const char *) D_PTR (l, l_info[DT_STRTAB]);
 
+      const uintptr_t pltgot = (uintptr_t) D_PTR (l, l_info[DT_PLTGOT]);
+
       const PLTREL *const reloc
-	= (const void *) (D_PTR (l, l_info[DT_JMPREL]) + reloc_offset);
+	= (const void *) (D_PTR (l, l_info[DT_JMPREL])
+			  + reloc_offset (pltgot, reloc_arg));
       const ElfW(Sym) *refsym = &symtab[ELFW(R_SYM) (reloc->r_info)];
       const ElfW(Sym) *defsym = refsym;
       lookup_t result;
@@ -485,11 +488,14 @@ _dl_call_pltexit (struct link_map *l, ElfW(Word) reloc_arg,
 		  const void *inregs, void *outregs)
 {
 #ifdef SHARED
+  const uintptr_t pltgot = (uintptr_t) D_PTR (l, l_info[DT_PLTGOT]);
+
   /* This is the address in the array where we store the result of previous
      relocations.  */
   // XXX Maybe the bound information must be stored on the stack since
   // XXX with bind_not a new value could have been stored in the meantime.
-  struct reloc_result *reloc_result = &l->l_reloc_result[reloc_index];
+  struct reloc_result *reloc_result =
+    &l->l_reloc_result[reloc_index (pltgot, reloc_arg, sizeof (PLTREL))];
   ElfW(Sym) *defsym = ((ElfW(Sym) *) D_PTR (reloc_result->bound,
 					    l_info[DT_SYMTAB])
 		       + reloc_result->boundndx);
