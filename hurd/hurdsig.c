@@ -564,8 +564,8 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state, int live)
       }
 }
 
-/* Wake up any sigsuspend call that is blocking SS->thread.  SS must be
-   locked.  */
+/* Wake up any sigsuspend or pselect call that is blocking SS->thread.  SS must
+   be locked.  */
 static void
 wake_sigsuspend (struct hurd_sigstate *ss)
 {
