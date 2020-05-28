@@ -118,19 +118,9 @@ ENTRY (__strcasecmp_ssse3)
 	PUSH	(%ebx)
 	LOAD_PIC_REG(bx)
 	movl	__libc_tsd_LOCALE@GOTNTPOFF(%ebx), %eax
-#  ifdef NO_TLS_DIRECT_SEG_REFS
-	addl	%gs:0, %eax
-	movl	(%eax), %eax
-#  else
 	movl	%gs:(%eax), %eax
-#  endif
 # else
-#  ifdef NO_TLS_DIRECT_SEG_REFS
-	movl	%gs:0, %eax
-	movl	__libc_tsd_LOCALE@NTPOFF(%eax), %eax
-#  else
 	movl	%gs:__libc_tsd_LOCALE@NTPOFF, %eax
-#  endif
 # endif
 # if LOCALE_T___LOCALES != 0 || LC_CTYPE != 0
 	movl	LOCALE_T___LOCALES+LC_CTYPE*4(%eax), %eax
@@ -155,19 +145,9 @@ ENTRY (__strncasecmp_ssse3)
 	PUSH	(%ebx)
 	LOAD_PIC_REG(bx)
 	movl	__libc_tsd_LOCALE@GOTNTPOFF(%ebx), %eax
-#  ifdef NO_TLS_DIRECT_SEG_REFS
-	addl	%gs:0, %eax
-	movl	(%eax), %eax
-#  else
 	movl	%gs:(%eax), %eax
-#  endif
 # else
-#  ifdef NO_TLS_DIRECT_SEG_REFS
-	movl	%gs:0, %eax
-	movl	__libc_tsd_LOCALE@NTPOFF(%eax), %eax
-#  else
 	movl	%gs:__libc_tsd_LOCALE@NTPOFF, %eax
-#  endif
 # endif
 # if LOCALE_T___LOCALES != 0 || LC_CTYPE != 0
 	movl	LOCALE_T___LOCALES+LC_CTYPE*4(%eax), %eax
