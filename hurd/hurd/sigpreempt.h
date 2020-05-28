@@ -50,16 +50,6 @@ struct hurd_signal_preemptor
     struct hurd_signal_preemptor *next;	/* List structure.  */
   };
 
-#define HURD_PREEMPT_SIGNAL_P(preemptor, signo, sigcode) \
-  (((preemptor)->signals & __sigmask (signo)) \
-   && (sigcode) >= (preemptor)->first && (sigcode) <= (preemptor)->last)
-
-
-/* Signal preemptors applying to all threads; locked by _hurd_siglock.  */
-extern struct hurd_signal_preemptor *_hurdsig_preemptors;
-extern sigset_t _hurdsig_preempted_set;
-
-
 /* The caller must initialize all members of *PREEMPTOR except `next'.
    The preemptor is registered on the global list.  */
 void hurd_preempt_signals (struct hurd_signal_preemptor *preemptor);
