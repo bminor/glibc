@@ -25,10 +25,23 @@
 int
 fexecve (int fd, char *const argv[], char *const envp[])
 {
-  error_t err = HURD_DPORT_USE (fd, _hurd_exec_paths (__mach_task_self (),
-						      port, NULL, NULL,
-						      argv, envp));
+  file_t file;
+  error_t err;
+  enum retry_type doretry;
+  char retryname[1024];
+
+  err = HURD_DPORT_USE (fd,
+      __dir_lookup (port, "", O_EXEC, 0, &doretry, retryname, &file));
+
+  if (! err && (doretry != FS_RETRY_NORMAL || retryname[0] != '\0'))
+    err = EGRATUITOUS;
+  if (err)
+    return __hurd_fail(err);
+
+  err = _hurd_exec_paths (__mach_task_self (), file, NULL, NULL, argv, envp);
   if (! err)
     err = EGRATUITOUS;
+
+  __mach_port_deallocate (__mach_task_self (), file);
   return __hurd_fail (err);
 }
