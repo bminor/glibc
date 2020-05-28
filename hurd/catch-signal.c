@@ -84,7 +84,7 @@ hurd_safe_memset (void *dest, int byte, size_t nbytes)
       memset (dest, byte, nbytes);
       return 0;
     }
-  return __hurd_catch_signal (sigmask (SIGBUS) | sigmask (SIGSEGV),
+  return __hurd_catch_signal (__sigmask (SIGBUS) | __sigmask (SIGSEGV),
 			      (vm_address_t) dest, (vm_address_t) dest + nbytes,
 			      &operate, SIG_ERR);
 }
@@ -98,7 +98,7 @@ hurd_safe_copyout (void *dest, const void *src, size_t nbytes)
       memcpy (dest, src, nbytes);
       return 0;
     }
-  return __hurd_catch_signal (sigmask (SIGBUS) | sigmask (SIGSEGV),
+  return __hurd_catch_signal (__sigmask (SIGBUS) | __sigmask (SIGSEGV),
 			      (vm_address_t) dest, (vm_address_t) dest + nbytes,
 			      &operate, SIG_ERR);
 }
@@ -111,7 +111,7 @@ hurd_safe_copyin (void *dest, const void *src, size_t nbytes)
       memcpy (dest, src, nbytes);
       return 0;
     }
-  return __hurd_catch_signal (sigmask (SIGBUS) | sigmask (SIGSEGV),
+  return __hurd_catch_signal (__sigmask (SIGBUS) | __sigmask (SIGSEGV),
 			      (vm_address_t) src, (vm_address_t) src + nbytes,
 			      &operate, SIG_ERR);
 }
@@ -125,13 +125,13 @@ hurd_safe_memmove (void *dest, const void *src, size_t nbytes)
 
   struct hurd_signal_preemptor src_preemptor =
     {
-      sigmask (SIGBUS) | sigmask (SIGSEGV),
+      __sigmask (SIGBUS) | __sigmask (SIGSEGV),
       (vm_address_t) src, (vm_address_t) src + nbytes,
       NULL, (sighandler_t) &throw,
     };
   struct hurd_signal_preemptor dest_preemptor =
     {
-      sigmask (SIGBUS) | sigmask (SIGSEGV),
+      __sigmask (SIGBUS) | __sigmask (SIGSEGV),
       (vm_address_t) dest, (vm_address_t) dest + nbytes,
       NULL, (sighandler_t) &throw,
       &src_preemptor

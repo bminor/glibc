@@ -51,7 +51,7 @@ struct hurd_signal_preemptor
   };
 
 #define HURD_PREEMPT_SIGNAL_P(preemptor, signo, sigcode) \
-  (((preemptor)->signals & sigmask (signo)) \
+  (((preemptor)->signals & __sigmask (signo)) \
    && (sigcode) >= (preemptor)->first && (sigcode) <= (preemptor)->last)
 
 

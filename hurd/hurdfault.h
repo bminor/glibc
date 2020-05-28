@@ -43,7 +43,7 @@ extern struct hurd_signal_preemptor _hurdsig_fault_preemptor;
 
 
 #define _hurdsig_catch_memory_fault(object) \
-  _hurdsig_catch_fault (sigmask (SIGSEGV) | sigmask (SIGBUS), \
+  _hurdsig_catch_fault (__sigmask (SIGSEGV) | __sigmask (SIGBUS), \
 			(object), (object) + 1)
 
 
