@@ -48,7 +48,11 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
   error_t err;
 
   if (err = HURD_DPORT_USE (fd, __term_get_peername (port, peername)))
-    return __hurd_dfail (fd, err), errno;
+    {
+      if (err == EMIG_BAD_ID || err == EOPNOTSUPP)
+	err = ENOTTY;
+      return __hurd_dfail (fd, err), errno;
+    }
 
   len = __strnlen (peername, sizeof peername - 1) + 1;
   if (len > buflen)
