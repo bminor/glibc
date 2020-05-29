@@ -392,7 +392,7 @@ recursive_remove (char *path)
     /* "rm" would have already printed a suitable error message.  */
     if (! WIFEXITED (status)
 	|| WEXITSTATUS (status) != 0)
-      exit (1);
+      FAIL_EXIT1 ("exec child returned status: %d", status);
 
     break;
   }
