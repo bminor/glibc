@@ -25,6 +25,7 @@
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
 #include <tininess.h>
+#include <math-use-builtins.h>
 
 /* This implementation uses rounding to odd to avoid problems with
    double rounding.  See a paper by Boldo and Melquiond:
@@ -33,6 +34,9 @@
 _Float128
 __fmal (_Float128 x, _Float128 y, _Float128 z)
 {
+#if USE_FMAL_BUILTIN
+  return __builtin_fmal (x, y, z);
+#else
   union ieee854_long_double u, v, w;
   int adjust = 0;
   u.d = x;
@@ -296,5 +300,6 @@ __fmal (_Float128 x, _Float128 y, _Float128 z)
       v.ieee.mantissa3 |= j;
       return v.d * L(0x1p-228);
     }
+#endif /* ! USE_FMAL_BUILTIN  */
 }
 libm_alias_ldouble (__fma, fma)

@@ -111,4 +111,9 @@
 #define USE_SQRT_BUILTIN 0
 #define USE_SQRTF_BUILTIN 0
 
+#define USE_FMA_BUILTIN 0
+#define USE_FMAF_BUILTIN 0
+#define USE_FMAL_BUILTIN 0
+#define USE_FMAF128_BUILTIN 0
+
 #endif /* math-use-builtins.h */

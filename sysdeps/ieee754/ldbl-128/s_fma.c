@@ -21,6 +21,7 @@
 #include <fenv.h>
 #include <ieee754.h>
 #include <libm-alias-double.h>
+#include <math-use-builtins.h>
 
 /* This implementation relies on long double being more than twice as
    precise as double and uses rounding to odd in order to avoid problems
@@ -31,6 +32,9 @@
 double
 __fma (double x, double y, double z)
 {
+#if USE_FMA_BUILTIN
+  return __builtin_fma (x, y, z);
+#else
   fenv_t env;
   /* Multiplication is always exact.  */
   long double temp = (long double) x * (long double) y;
@@ -50,6 +54,7 @@ __fma (double x, double y, double z)
   feupdateenv (&env);
   /* And finally truncation with round to nearest.  */
   return (double) u.d;
+#endif /* ! USE_FMA_BUILTIN  */
 }
 #ifndef __fma
 libm_alias_double (__fma, fma)

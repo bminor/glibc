@@ -23,6 +23,7 @@
 #include <math-barriers.h>
 #include <fenv_private.h>
 #include <libm-alias-float.h>
+#include <math-use-builtins.h>
 
 /* This implementation relies on double being more than twice as
    precise as float and uses rounding to odd in order to avoid problems
@@ -33,6 +34,10 @@
 float
 __fmaf (float x, float y, float z)
 {
+#if USE_FMAF_BUILTIN
+  return __builtin_fmaf (x, y, z);
+#else
+  /* Use generic implementation.  */
   fenv_t env;
 
   /* Multiplication is always exact.  */
@@ -60,6 +65,7 @@ __fmaf (float x, float y, float z)
 
   /* And finally truncation with round to nearest.  */
   return (float) u.d;
+#endif /* ! USE_FMAF_BUILTIN  */
 }
 #ifndef __fmaf
 libm_alias_float (__fma, fma)

@@ -25,6 +25,7 @@
 #include <fenv_private.h>
 #include <libm-alias-double.h>
 #include <tininess.h>
+#include <math-use-builtins.h>
 
 /* This implementation uses rounding to odd to avoid problems with
    double rounding.  See a paper by Boldo and Melquiond:
@@ -33,6 +34,10 @@
 double
 __fma (double x, double y, double z)
 {
+#if USE_FMA_BUILTIN
+  return __builtin_fma (x, y, z);
+#else
+  /* Use generic implementation.  */
   union ieee754_double u, v, w;
   int adjust = 0;
   u.d = x;
@@ -292,6 +297,7 @@ __fma (double x, double y, double z)
       v.ieee.mantissa1 |= j;
       return v.d * 0x1p-108;
     }
+#endif /* ! USE_FMA_BUILTIN  */
 }
 #ifndef __fma
 libm_alias_double (__fma, fma)
