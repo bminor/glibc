@@ -60,4 +60,7 @@
 # define USE_COPYSIGNF128_BUILTIN 0
 #endif
 
+#define USE_SQRT_BUILTIN 0
+#define USE_SQRTF_BUILTIN 0
+
 #endif /* math-use-builtins.h */

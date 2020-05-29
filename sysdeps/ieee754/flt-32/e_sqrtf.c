@@ -16,12 +16,15 @@
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-finite.h>
-
-static	const float	one	= 1.0, tiny=1.0e-30;
+#include <math-use-builtins.h>
 
 float
 __ieee754_sqrtf(float x)
 {
+#if USE_SQRTF_BUILTIN
+	return __builtin_sqrtf (x);
+#else
+	/* Use generic implementation.  */
 	float z;
 	int32_t sign = (int)0x80000000;
 	int32_t ix,s,q,m,t,i;
@@ -70,10 +73,10 @@ __ieee754_sqrtf(float x)
 
     /* use floating add to find out rounding direction */
 	if(ix!=0) {
-	    z = one-tiny; /* trigger inexact flag */
-	    if (z>=one) {
-		z = one+tiny;
-		if (z>one)
+	    z = 0x1p0 - 0x1.4484cp-100; /* trigger inexact flag.  */
+	    if (z >= 0x1p0) {
+		z = 0x1p0 + 0x1.4484cp-100;
+		if (z > 0x1p0)
 		    q += 2;
 		else
 		    q += (q&1);
@@ -83,6 +86,7 @@ __ieee754_sqrtf(float x)
 	ix += (m <<23);
 	SET_FLOAT_WORD(z,ix);
 	return z;
+#endif /* ! USE_SQRTF_BUILTIN  */
 }
 #ifndef __ieee754_sqrtf
 libm_alias_finite (__ieee754_sqrtf, __sqrtf)
