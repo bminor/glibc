@@ -24,17 +24,18 @@ void
 print_trace (void)
 {
   void *array[10];
-  size_t size;
   char **strings;
-  size_t i;
+  int size, i;
 
   size = backtrace (array, 10);
   strings = backtrace_symbols (array, size);
+  if (strings != NULL)
+  {
 
-  printf ("Obtained %zd stack frames.\n", size);
-
-  for (i = 0; i < size; i++)
-     printf ("%s\n", strings[i]);
+    printf ("Obtained %d stack frames.\n", size);
+    for (i = 0; i < size; i++)
+      printf ("%s\n", strings[i]);
+  }
 
   free (strings);
 }
