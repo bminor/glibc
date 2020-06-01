@@ -104,8 +104,8 @@ do_test (void)
   else if (e == 0)
       FAIL_RET ("sysconf (_SC_MONOTONIC_CLOCK) must not return 0");
   else
-    {
 #  endif
+    {
       run_test (CLOCK_MONOTONIC, CLOCK_USE_ATTR_CLOCK);
       run_test (CLOCK_REALTIME, CLOCK_MONOTONIC);
       run_test (CLOCK_MONOTONIC, CLOCK_MONOTONIC);
