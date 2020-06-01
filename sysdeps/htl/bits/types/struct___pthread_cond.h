@@ -27,12 +27,12 @@ struct __pthread_cond
   __pthread_spinlock_t __lock;
   struct __pthread *__queue;
   struct __pthread_condattr *__attr;
-  struct __pthread_condimpl *__impl;
+  unsigned int __wrefs;
   void *__data;
 };
 
 /* Initializer for a condition variable.  */
 #define __PTHREAD_COND_INITIALIZER \
-  { __PTHREAD_SPIN_LOCK_INITIALIZER, NULL, NULL, NULL, NULL }
+  { __PTHREAD_SPIN_LOCK_INITIALIZER, NULL, NULL, 0, NULL }
 
 #endif /* bits/types/struct___pthread_cond.h */

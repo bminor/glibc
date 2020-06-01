@@ -49,7 +49,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
 	 tst-cond8 tst-cond9 tst-cond10 tst-cond11 tst-cond12 tst-cond13 \
 	 tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
-	 tst-cond23 tst-cond24 tst-cond25 tst-cond27 \
+	 tst-cond20 tst-cond21 tst-cond23 tst-cond24 tst-cond25 tst-cond27 \
 	 tst-cond-except \
 	 tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 tst-join6 tst-join7 \
 	 tst-join8 tst-join9 tst-join10 tst-join11 tst-join12 tst-join13 \

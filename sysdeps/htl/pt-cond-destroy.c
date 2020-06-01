@@ -22,14 +22,26 @@
 int
 __pthread_cond_destroy (pthread_cond_t *cond)
 {
-  int ret = 0;
+  /* Set the wake request flag. */
+  unsigned int wrefs = atomic_fetch_or_acquire (&cond->__wrefs, 1);
 
   __pthread_spin_wait (&cond->__lock);
   if (cond->__queue)
-    ret = EBUSY;
+    {
+      __pthread_spin_unlock (&cond->__lock);
+      return EBUSY;
+    }
   __pthread_spin_unlock (&cond->__lock);
 
-  return ret;
+  while (wrefs >> 1 != 0)
+    {
+      gsync_wait (__mach_task_self (), (vm_offset_t) &cond->__wrefs, wrefs,
+		  0, 0, 0);
+      wrefs = atomic_load_acquire (&cond->__wrefs);
+    }
+  /* The memory the condvar occupies can now be reused.  */
+
+  return 0;
 }
 
 weak_alias (__pthread_cond_destroy, pthread_cond_destroy);
