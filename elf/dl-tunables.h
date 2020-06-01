@@ -70,9 +70,10 @@ typedef struct _tunable tunable_t;
 
 extern void __tunables_init (char **);
 extern void __tunable_get_val (tunable_id_t, void *, tunable_callback_t);
-extern void __tunable_set_val (tunable_id_t, void *);
+extern void __tunable_set_val (tunable_id_t, void *, void *, void *);
 rtld_hidden_proto (__tunables_init)
 rtld_hidden_proto (__tunable_get_val)
+rtld_hidden_proto (__tunable_set_val)
 
 /* Define TUNABLE_GET and TUNABLE_SET in short form if TOP_NAMESPACE and
    TUNABLE_NAMESPACE are defined.  This is useful shorthand to get and set
@@ -82,11 +83,18 @@ rtld_hidden_proto (__tunable_get_val)
   TUNABLE_GET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __type, __cb)
 # define TUNABLE_SET(__id, __type, __val) \
   TUNABLE_SET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __type, __val)
+# define TUNABLE_SET_WITH_BOUNDS(__id, __type, __val, __min, __max) \
+  TUNABLE_SET_WITH_BOUNDS_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, \
+				__type, __val, __min, __max)
 #else
 # define TUNABLE_GET(__top, __ns, __id, __type, __cb) \
   TUNABLE_GET_FULL (__top, __ns, __id, __type, __cb)
 # define TUNABLE_SET(__top, __ns, __id, __type, __val) \
   TUNABLE_SET_FULL (__top, __ns, __id, __type, __val)
+# define TUNABLE_SET_WITH_BOUNDS(__top, __ns, __id, __type, __val, \
+				 __min, __max) \
+  TUNABLE_SET_WITH_BOUNDS_FULL (__top, __ns, __id, __type, __val, \
+				__min, __max)
 #endif
 
 /* Get and return a tunable value.  If the tunable was set externally and __CB
@@ -103,7 +111,16 @@ rtld_hidden_proto (__tunable_get_val)
 # define TUNABLE_SET_FULL(__top, __ns, __id, __type, __val) \
 ({									      \
   __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),		      \
-			& (__type) {__val});				      \
+		     & (__type) {__val}, NULL, NULL);			      \
+})
+
+/* Set a tunable value together with min/max values.  */
+# define TUNABLE_SET_WITH_BOUNDS_FULL(__top, __ns, __id, __type, __val,	      \
+				      __min, __max)			      \
+({									      \
+  __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),		      \
+		     & (__type) {__val},  & (__type) {__min},		      \
+		     & (__type) {__max});				      \
 })
 
 /* Namespace sanity for callback functions.  Use this macro to keep the

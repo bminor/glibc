@@ -100,8 +100,42 @@ get_next_env (char **envp, char **name, size_t *namelen, char **val,
     }									      \
 })
 
+#define TUNABLE_SET_BOUNDS_IF_VALID(__cur, __minp, __maxp, __type)	      \
+({									      \
+  if (__minp != NULL)							      \
+    {									      \
+      /* MIN is specified.  */						      \
+      __type min = *((__type *) __minp);				      \
+      if (__maxp != NULL)						      \
+	{								      \
+	   /* Both MIN and MAX are specified.  */			      \
+	    __type max = *((__type *) __maxp);				      \
+	  if (max >= min						      \
+	      && max <= (__cur)->type.max				      \
+	      && min >= (__cur)->type.min)				      \
+	    {								      \
+	      (__cur)->type.min = min;					      \
+	      (__cur)->type.max = max;					      \
+	    }								      \
+	}								      \
+      else if (min > (__cur)->type.min && min <= (__cur)->type.max)	      \
+	{								      \
+	  /* Only MIN is specified.  */					      \
+	  (__cur)->type.min = min;					      \
+	}								      \
+    }									      \
+  else if (__maxp != NULL)						      \
+    {									      \
+      /* Only MAX is specified.  */					      \
+      __type max = *((__type *) __maxp);				      \
+      if (max < (__cur)->type.max && max >= (__cur)->type.min)		      \
+	(__cur)->type.max = max;					      \
+    }									      \
+})
+
 static void
-do_tunable_update_val (tunable_t *cur, const void *valp)
+do_tunable_update_val (tunable_t *cur, const void *valp,
+		       const void *minp, const void *maxp)
 {
   uint64_t val;
 
@@ -112,16 +146,19 @@ do_tunable_update_val (tunable_t *cur, const void *valp)
     {
     case TUNABLE_TYPE_INT_32:
 	{
+	  TUNABLE_SET_BOUNDS_IF_VALID (cur, minp, maxp, int64_t);
 	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, int64_t);
 	  break;
 	}
     case TUNABLE_TYPE_UINT_64:
 	{
+	  TUNABLE_SET_BOUNDS_IF_VALID (cur, minp, maxp, uint64_t);
 	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, uint64_t);
 	  break;
 	}
     case TUNABLE_TYPE_SIZE_T:
 	{
+	  TUNABLE_SET_BOUNDS_IF_VALID (cur, minp, maxp, uint64_t);
 	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, uint64_t);
 	  break;
 	}
@@ -153,15 +190,15 @@ tunable_initialize (tunable_t *cur, const char *strval)
       cur->initialized = true;
       valp = strval;
     }
-  do_tunable_update_val (cur, valp);
+  do_tunable_update_val (cur, valp, NULL, NULL);
 }
 
 void
-__tunable_set_val (tunable_id_t id, void *valp)
+__tunable_set_val (tunable_id_t id, void *valp, void *minp, void *maxp)
 {
   tunable_t *cur = &tunable_list[id];
 
-  do_tunable_update_val (cur, valp);
+  do_tunable_update_val (cur, valp, minp, maxp);
 }
 
 #if TUNABLES_FRONTEND == TUNABLES_FRONTEND_valstring

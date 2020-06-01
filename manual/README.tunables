@@ -67,7 +67,7 @@ The list of allowed attributes are:
 				     non-AT_SECURE subprocesses.
 			NONE: Read all the time.
 
-2. Use TUNABLE_GET/TUNABLE_SET to get and set tunables.
+2. Use TUNABLE_GET/TUNABLE_SET/TUNABLE_SET_WITH_BOUNDS to get and set tunables.
 
 3. OPTIONAL: If tunables in a namespace are being used multiple times within a
    specific module, set the TUNABLE_NAMESPACE macro to reduce the amount of
@@ -112,9 +112,29 @@ form of the macros as follows:
 where 'glibc' is the top namespace, 'cpu' is the tunable namespace and the
 remaining arguments are the same as the short form macros.
 
+The minimum and maximum values can updated together with the tunable value
+using:
+
+  TUNABLE_SET_WITH_BOUNDS (check, int32_t, val, min, max)
+
+where 'check' is the tunable name, 'int32_t' is the C type of the tunable,
+'val' is a value of same type, 'min' and 'max' are the minimum and maximum
+values of the tunable.
+
+To set the minimum and maximum values of tunables in a different namespace
+from that module, use the full form of the macros as follows:
+
+  val = TUNABLE_GET_FULL (glibc, cpu, hwcap_mask, uint64_t, NULL)
+
+  TUNABLE_SET_WITH_BOUNDS_FULL (glibc, cpu, hwcap_mask, uint64_t, val, min, max)
+
+where 'glibc' is the top namespace, 'cpu' is the tunable namespace and the
+remaining arguments are the same as the short form macros.
+
 When TUNABLE_NAMESPACE is not defined in a module, TUNABLE_GET is equivalent to
 TUNABLE_GET_FULL, so you will need to provide full namespace information for
-both macros.  Likewise for TUNABLE_SET and TUNABLE_SET_FULL.
+both macros.  Likewise for TUNABLE_SET, TUNABLE_SET_FULL,
+TUNABLE_SET_WITH_BOUNDS and TUNABLE_SET_WITH_BOUNDS_FULL.
 
 ** IMPORTANT NOTE **
 
