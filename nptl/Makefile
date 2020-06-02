@@ -41,6 +41,7 @@ routines = \
   pthread_atfork \
   pthread_attr_copy \
   pthread_attr_destroy \
+  pthread_attr_extension \
   pthread_attr_getdetachstate \
   pthread_attr_getinheritsched \
   pthread_attr_getschedparam \

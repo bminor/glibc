@@ -578,6 +578,12 @@ extern void __shm_directory_freeres (void) attribute_hidden;
 
 extern void __wait_lookup_done (void) attribute_hidden;
 
+/* Allocates the extension space for ATTR.  Returns an error code on
+   memory allocation failure, zero on success.  If ATTR already has an
+   extension space, this function does nothing.  */
+int __pthread_attr_extension (struct pthread_attr *attr) attribute_hidden
+  __attribute_warn_unused_result__;
+
 #ifdef SHARED
 # define PTHREAD_STATIC_FN_REQUIRE(name)
 #else

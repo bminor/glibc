@@ -884,7 +884,7 @@ __pthread_create_2_0 (pthread_t *newthread, const pthread_attr_t *attr,
       new_attr.guardsize = ps;
       new_attr.stackaddr = NULL;
       new_attr.stacksize = 0;
-      new_attr.cpuset = NULL;
+      new_attr.extension = NULL;
 
       /* We will pass this value on to the real implementation.  */
       attr = (pthread_attr_t *) &new_attr;

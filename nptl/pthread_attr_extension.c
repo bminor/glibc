@@ -1,6 +1,6 @@
-/* Copyright (C) 2002-2020 Free Software Foundation, Inc.
+/* Allocate the extension space for struct pthread_attr.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,31 +17,16 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <string.h>
-#include <unistd.h>
-#include "pthreadP.h"
-#include <shlib-compat.h>
+#include <pthreadP.h>
+#include <stdlib.h>
 
 int
-__pthread_attr_destroy (pthread_attr_t *attr)
+ __pthread_attr_extension (struct pthread_attr *attr)
 {
-  struct pthread_attr *iattr;
-
-  iattr = (struct pthread_attr *) attr;
-
-#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_1)
-  /* In old struct pthread_attr, the extension member is missing.  */
-  if (__builtin_expect ((iattr->flags & ATTR_FLAG_OLDATTR), 0) == 0)
-#endif
-    {
-      if (iattr->extension != NULL)
-        {
-          free (iattr->extension->cpuset);
-          free (iattr->extension);
-        }
-    }
-
+  if (attr->extension != NULL)
+    return 0;
+  attr->extension = calloc (sizeof (*attr->extension), 1);
+  if (attr->extension == NULL)
+    return errno;
   return 0;
 }
-libc_hidden_def (__pthread_attr_destroy)
-weak_alias (__pthread_attr_destroy, pthread_attr_destroy)

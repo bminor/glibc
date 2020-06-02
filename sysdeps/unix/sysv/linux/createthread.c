@@ -52,8 +52,10 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
   /* Determine whether the newly created threads has to be started
      stopped since we have to set the scheduling parameters or set the
      affinity.  */
+  bool need_setaffinity = (attr != NULL && attr->extension != NULL
+			   && attr->extension->cpuset != 0);
   if (attr != NULL
-      && (__glibc_unlikely (attr->cpuset != NULL)
+      && (__glibc_unlikely (need_setaffinity)
 	  || __glibc_unlikely ((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0)))
     *stopped_start = true;
 
@@ -113,12 +115,13 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
       int res;
 
       /* Set the affinity mask if necessary.  */
-      if (attr->cpuset != NULL)
+      if (need_setaffinity)
 	{
 	  assert (*stopped_start);
 
 	  res = INTERNAL_SYSCALL_CALL (sched_setaffinity, pd->tid,
-				       attr->cpusetsize, attr->cpuset);
+				       attr->extension->cpusetsize,
+				       attr->extension->cpuset);
 
 	  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res)))
 	  err_out:

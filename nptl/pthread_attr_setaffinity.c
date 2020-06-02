@@ -34,23 +34,30 @@ __pthread_attr_setaffinity_np (pthread_attr_t *attr, size_t cpusetsize,
 
   if (cpuset == NULL || cpusetsize == 0)
     {
-      free (iattr->cpuset);
-      iattr->cpuset = NULL;
-      iattr->cpusetsize = 0;
+      if (iattr->extension != NULL)
+	{
+	  free (iattr->extension->cpuset);
+	  iattr->extension->cpuset = NULL;
+	  iattr->extension->cpusetsize = 0;
+	}
     }
   else
     {
-      if (iattr->cpusetsize != cpusetsize)
+      int ret = __pthread_attr_extension (iattr);
+      if (ret != 0)
+	return ret;
+
+      if (iattr->extension->cpusetsize != cpusetsize)
 	{
-	  void *newp = (cpu_set_t *) realloc (iattr->cpuset, cpusetsize);
+	  void *newp = realloc (iattr->extension->cpuset, cpusetsize);
 	  if (newp == NULL)
 	    return ENOMEM;
 
-	  iattr->cpuset = newp;
-	  iattr->cpusetsize = cpusetsize;
+	  iattr->extension->cpuset = newp;
+	  iattr->extension->cpusetsize = cpusetsize;
 	}
 
-      memcpy (iattr->cpuset, cpuset, cpusetsize);
+      memcpy (iattr->extension->cpuset, cpuset, cpusetsize);
     }
 
   return 0;

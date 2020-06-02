@@ -29,18 +29,20 @@ __pthread_attr_copy (pthread_attr_t *target, const pthread_attr_t *source)
   temp.external = *source;
 
   /* Force new allocation.  This function has full ownership of temp.  */
-  temp.internal.cpuset = NULL;
-  temp.internal.cpusetsize = 0;
+  temp.internal.extension = NULL;
 
   int ret = 0;
 
   struct pthread_attr *isource = (struct pthread_attr *) source;
 
-  /* Propagate affinity mask information.  */
-  if (isource->cpusetsize > 0)
-    ret = __pthread_attr_setaffinity_np (&temp.external,
-                                         isource->cpusetsize,
-                                         isource->cpuset);
+  if (isource->extension != NULL)
+    {
+      /* Propagate affinity mask information.  */
+      if (isource->extension->cpusetsize > 0)
+        ret = __pthread_attr_setaffinity_np (&temp.external,
+                                             isource->extension->cpusetsize,
+                                             isource->extension->cpuset);
+    }
 
   if (ret != 0)
     {

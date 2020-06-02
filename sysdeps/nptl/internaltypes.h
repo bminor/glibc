@@ -36,9 +36,10 @@ struct pthread_attr
   /* Stack handling.  */
   void *stackaddr;
   size_t stacksize;
-  /* Affinity map.  */
-  cpu_set_t *cpuset;
-  size_t cpusetsize;
+
+  /* Allocated via a call to __pthread_attr_extension once needed.  */
+  struct pthread_attr_extension *extension;
+  void *unused;
 };
 
 #define ATTR_FLAG_DETACHSTATE		0x0001
@@ -55,6 +56,15 @@ union pthread_attr_transparent
 {
   pthread_attr_t external;
   struct pthread_attr internal;
+};
+
+/* Extension space for pthread attributes.  Referenced by the
+   extension member of struct pthread_attr.  */
+struct pthread_attr_extension
+{
+  /* Affinity map.  */
+  cpu_set_t *cpuset;
+  size_t cpusetsize;
 };
 
 /* Mutex attribute data structure.  */

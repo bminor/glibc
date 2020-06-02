@@ -33,22 +33,22 @@ __pthread_attr_getaffinity_new (const pthread_attr_t *attr, size_t cpusetsize,
 
   iattr = (const struct pthread_attr *) attr;
 
-  if (iattr->cpuset != NULL)
+  if (iattr->extension != NULL && iattr->extension->cpuset != NULL)
     {
       /* Check whether there are any bits set beyond the limits
 	 the user requested.  */
-      for (size_t cnt = cpusetsize; cnt < iattr->cpusetsize; ++cnt)
-	if (((char *) iattr->cpuset)[cnt] != 0)
+      for (size_t cnt = cpusetsize; cnt < iattr->extension->cpusetsize; ++cnt)
+	if (((char *) iattr->extension->cpuset)[cnt] != 0)
 	  return EINVAL;
 
       /* Copy over the cpuset from the thread attribute object.  Limit the copy
 	 to the minimum of the source and destination sizes to prevent a buffer
 	 overrun.  If the destination is larger, fill the remaining space with
 	 zeroes.  */
-      void *p = mempcpy (cpuset, iattr->cpuset,
-			 MIN (iattr->cpusetsize, cpusetsize));
-      if (cpusetsize > iattr->cpusetsize)
-	memset (p, '\0', cpusetsize - iattr->cpusetsize);
+      void *p = mempcpy (cpuset, iattr->extension->cpuset,
+			 MIN (iattr->extension->cpusetsize, cpusetsize));
+      if (cpusetsize > iattr->extension->cpusetsize)
+	memset (p, '\0', cpusetsize - iattr->extension->cpusetsize);
     }
   else
     /* We have no information.  */
