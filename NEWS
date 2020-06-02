@@ -27,6 +27,10 @@ Major new features:
   several APIs have been annotated with GCC 'access' attribute.  This
   should help GCC 10 issue better warnings.
 
+* On Linux, functions the pthread_attr_setsigmask_np and
+  pthread_attr_getsigmask_np have been added.  They allow applications
+  to specify the signal mask of a thread created with pthread_create.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The deprecated <sys/sysctl.h> header and the sysctl function have been

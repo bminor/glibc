@@ -2144,7 +2144,9 @@ GLIBC_2.30 twalk_r F
 GLIBC_2.31 msgctl F
 GLIBC_2.31 semctl F
 GLIBC_2.31 shmctl F
+GLIBC_2.32 pthread_attr_getsigmask_np F
 GLIBC_2.32 pthread_attr_setaffinity_np F
+GLIBC_2.32 pthread_attr_setsigmask_np F
 GLIBC_2.32 pthread_getaffinity_np F
 GLIBC_2.32 pthread_getattr_np F
 GLIBC_2.32 pthread_sigmask F

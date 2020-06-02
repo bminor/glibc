@@ -2344,7 +2344,9 @@ GLIBC_2.32 __wcstoieee128_l F
 GLIBC_2.32 __wprintf_chkieee128 F
 GLIBC_2.32 __wprintfieee128 F
 GLIBC_2.32 __wscanfieee128 F
+GLIBC_2.32 pthread_attr_getsigmask_np F
 GLIBC_2.32 pthread_attr_setaffinity_np F
+GLIBC_2.32 pthread_attr_setsigmask_np F
 GLIBC_2.32 pthread_getaffinity_np F
 GLIBC_2.32 pthread_getattr_np F
 GLIBC_2.32 pthread_sigmask F

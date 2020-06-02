@@ -528,6 +528,16 @@ extern int __pthread_getaffinity_np (pthread_t th, size_t cpusetsize,
 				     cpu_set_t *cpuset);
 libc_hidden_proto (__pthread_getaffinity_np)
 
+/* Special internal version of pthread_attr_setsigmask_np which does
+   not filter out internal signals from *SIGMASK.  This can be used to
+   launch threads with internal signals blocked.  */
+  extern int __pthread_attr_setsigmask_internal (pthread_attr_t *attr,
+						 const sigset_t *sigmask);
+libc_hidden_proto (__pthread_attr_setsigmask_internal)
+
+extern __typeof (pthread_attr_getsigmask_np) __pthread_attr_getsigmask_np;
+libc_hidden_proto (__pthread_attr_getsigmask_np)
+
 #if IS_IN (libpthread)
 /* Special versions which use non-exported functions.  */
 extern void __pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,

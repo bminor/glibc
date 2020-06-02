@@ -745,14 +745,23 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
   sigset_t original_sigmask;
   __libc_signal_block_all (&original_sigmask);
 
-  /* Conceptually, the new thread needs to inherit the signal mask of
-     this thread.  Therefore, it needs to restore the saved signal
-     mask of this thread, so save it in the startup information.  */
-  pd->sigmask = original_sigmask;
+  if (iattr->extension != NULL && iattr->extension->sigmask_set)
+    /* Use the signal mask in the attribute.  The internal signals
+       have already been filtered by the public
+       pthread_attr_setsigmask_np interface.  */
+    pd->sigmask = iattr->extension->sigmask;
+  else
+    {
+      /* Conceptually, the new thread needs to inherit the signal mask
+	 of this thread.  Therefore, it needs to restore the saved
+	 signal mask of this thread, so save it in the startup
+	 information.  */
+      pd->sigmask = original_sigmask;
 
-  /* Reset the cancellation signal mask in case this thread is running
-     cancellation.  */
-  __sigdelset (&pd->sigmask, SIGCANCEL);
+      /* Reset the cancellation signal mask in case this thread is
+	 running cancellation.  */
+      __sigdelset (&pd->sigmask, SIGCANCEL);
+    }
 
   /* Start the thread.  */
   if (__glibc_unlikely (report_thread_creation (pd)))

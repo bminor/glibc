@@ -44,7 +44,9 @@ libc {
     thrd_current; thrd_equal; thrd_sleep; thrd_yield;
   }
   GLIBC_2.32 {
+    pthread_attr_getsigmask_np;
     pthread_attr_setaffinity_np;
+    pthread_attr_setsigmask_np;
     pthread_getaffinity_np;
     pthread_getattr_np;
     pthread_sigmask;
@@ -62,6 +64,7 @@ libc {
     __pthread_attr_init; __pthread_attr_destroy;
     __pthread_attr_copy;
     __pthread_getattr_default_np;
+    __pthread_attr_setsigmask_internal;
   }
 }
 

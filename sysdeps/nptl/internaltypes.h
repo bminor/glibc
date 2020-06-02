@@ -65,6 +65,9 @@ struct pthread_attr_extension
   /* Affinity map.  */
   cpu_set_t *cpuset;
   size_t cpusetsize;
+
+  sigset_t sigmask;
+  bool sigmask_set;
 };
 
 /* Mutex attribute data structure.  */

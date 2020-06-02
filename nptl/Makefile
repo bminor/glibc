@@ -47,6 +47,7 @@ routines = \
   pthread_attr_getschedparam \
   pthread_attr_getschedpolicy \
   pthread_attr_getscope \
+  pthread_attr_getsigmask \
   pthread_attr_init \
   pthread_attr_setaffinity \
   pthread_attr_setdetachstate \
@@ -54,6 +55,8 @@ routines = \
   pthread_attr_setschedparam \
   pthread_attr_setschedpolicy \
   pthread_attr_setscope \
+  pthread_attr_setsigmask \
+  pthread_attr_setsigmask_internal \
   pthread_cond_destroy \
   pthread_cond_init \
   pthread_condattr_destroy \
@@ -326,6 +329,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-thread-affinity-pthread2 \
 	tst-thread-affinity-sched \
 	tst-pthread-defaultattr-free \
+	tst-pthread-attr-sigmask \
 
 
 tests-container =  tst-pthread-getattr
