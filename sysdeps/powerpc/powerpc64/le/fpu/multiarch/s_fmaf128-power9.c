@@ -20,7 +20,9 @@
 
 #undef libm_alias_float128
 #define libm_alias_float128(a, b)
+#undef strong_alias
+#define strong_alias(a, b)
 
 #define __fmaf128 __fmaf128_power9
 
-#include <sysdeps/powerpc/powerpc64/le/power9/fpu/s_fmaf128.c>
+#include <sysdeps/ieee754/float128/s_fmaf128.c>
