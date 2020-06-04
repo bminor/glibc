@@ -93,9 +93,9 @@ get_next_env (char **envp, char **name, size_t *namelen, char **val,
   __type min = (__cur)->type.min;					      \
   __type max = (__cur)->type.max;					      \
 									      \
-  if ((__type) (__val) >= min && (__type) (val) <= max)			      \
+  if ((__type) (__val) >= min && (__type) (__val) <= max)		      \
     {									      \
-      (__cur)->val.numval = val;					      \
+      (__cur)->val.numval = (__val);					      \
       (__cur)->initialized = true;					      \
     }									      \
 })
