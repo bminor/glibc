@@ -18,22 +18,16 @@
 
 #include <math.h>
 #include <math_private.h>
-#include <fenv.h>
 #include <fenv_libc.h>
-#include <inttypes.h>
-#include <stdint.h>
-#include <sysdep.h>
-#include <ldsodefs.h>
 #include <libm-alias-finite.h>
+#include <math-use-builtins.h>
 
-#ifndef _ARCH_PPCSQ
-static const float almost_half = 0.50000006;	/* 0.5 + 2^-24 */
-static const ieee_float_shape_type a_nan = {.word = 0x7fc00000 };
-static const ieee_float_shape_type a_inf = {.word = 0x7f800000 };
-static const float two48 = 281474976710656.0;
-static const float twom24 = 5.9604644775390625e-8;
-extern const float __t_sqrt[1024];
-
+float
+__ieee754_sqrtf (float x)
+{
+#if USE_SQRTF_BUILTIN
+  return __builtin_sqrtf (x);
+#else
 /* The method is based on a description in
    Computation of elementary functions on the IBM RISC System/6000 processor,
    P. W. Markstein, IBM J. Res. Develop, 34(1) 1990.
@@ -48,14 +42,11 @@ extern const float __t_sqrt[1024];
    generated guesses (which mostly runs on the integer unit, while the
    Newton-Raphson is running on the FPU).  */
 
-float
-__slow_ieee754_sqrtf (float x)
-{
-  const float inf = a_inf.value;
+  extern const float __t_sqrt[1024];
 
   if (x > 0)
     {
-      if (x != inf)
+      if (x != INFINITY)
 	{
 	  /* Variables named starting with 's' exist in the
 	     argument-reduced space, so that 2 > sx >= 0.5,
@@ -94,7 +85,7 @@ __slow_ieee754_sqrtf (float x)
 	  sy2 = sy + sy;
 	  sg = __builtin_fmaf (sy, sd, sg);	/* 16-bit approximation to
 						   sqrt(sx). */
-	  e = -__builtin_fmaf (sy, sg, -almost_half);
+	  e = -__builtin_fmaf (sy, sg, -0x1.0000020365653p-1);
 	  SET_FLOAT_WORD (fsg, fsgi);
 	  sd = -__builtin_fmaf (sg, sg, -sx);
 	  sy = __builtin_fmaf (e, sy2, sy);
@@ -106,7 +97,7 @@ __slow_ieee754_sqrtf (float x)
 						   rounded incorrectly.  */
 	  sy2 = sy + sy;
 	  g = sg * fsg;
-	  e = -__builtin_fmaf (sy, sg, -almost_half);
+	  e = -__builtin_fmaf (sy, sg, -0x1.0000020365653p-1);
 	  d = -__builtin_fmaf (g, sg, -shx);
 	  sy = __builtin_fmaf (e, sy2, sy);
 	  fesetenv_register (fe);
@@ -115,38 +106,23 @@ __slow_ieee754_sqrtf (float x)
 	  /* For denormalised numbers, we normalise, calculate the
 	     square root, and return an adjusted result.  */
 	  fesetenv_register (fe);
-	  return __slow_ieee754_sqrtf (x * two48) * twom24;
+	  return __ieee754_sqrtf (x * 0x1p+48) * 0x1p-24;
 	}
     }
   else if (x < 0)
     {
       /* For some reason, some PowerPC32 processors don't implement
 	 FE_INVALID_SQRT.  */
-#ifdef FE_INVALID_SQRT
+# ifdef FE_INVALID_SQRT
       feraiseexcept (FE_INVALID_SQRT);
 
       fenv_union_t u = { .fenv = fegetenv_register () };
       if ((u.l & FE_INVALID) == 0)
-#endif
+# endif
 	feraiseexcept (FE_INVALID);
-      x = a_nan.value;
+      x = NAN;
     }
   return f_washf (x);
-}
-#endif /* _ARCH_PPCSQ  */
-
-#undef __ieee754_sqrtf
-float
-__ieee754_sqrtf (float x)
-{
-  float z;
-
-#ifdef _ARCH_PPCSQ
-  asm ("fsqrts	%0,%1\n" :"=f" (z):"f" (x));
-#else
-  z = __slow_ieee754_sqrtf (x);
-#endif
-
-  return z;
+#endif /* USE_SQRTF_BUILTIN  */
 }
 libm_alias_finite (__ieee754_sqrtf, __sqrtf)
