@@ -27,7 +27,12 @@ BENCH_DURATION.
 
 The benchmark suite does function call measurements using architecture-specific
 high precision timing instructions whenever available.  When such support is
-not available, it uses clock_gettime (CLOCK_MONOTONIC).
+not available, it uses clock_gettime (CLOCK_MONOTONIC).  One can force the
+benchmark to use clock_gettime by invoking make as follows:
+
+  $ make USE_CLOCK_GETTIME=1 bench
+
+Again, one must run `make bench-clean' before changing the measurement method.
 
 On x86 processors, RDTSCP instruction provides more precise timing data
 than RDTSC instruction.  All x86 processors since 2010 support RDTSCP
