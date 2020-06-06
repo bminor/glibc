@@ -303,6 +303,13 @@ out:
   ((descr)->stack_guard							      \
    = THREAD_GETMEM (THREAD_SELF, stack_guard))
 
+/* Set the pointer guard field in the TCB head.  */
+#define THREAD_SET_POINTER_GUARD(value) \
+  THREAD_SETMEM (THREAD_SELF, pointer_guard, value)
+#define THREAD_COPY_POINTER_GUARD(descr) \
+  ((descr)->pointer_guard						      \
+   = THREAD_GETMEM (THREAD_SELF, pointer_guard))
+
 
 # include <mach/machine/thread_status.h>
 
