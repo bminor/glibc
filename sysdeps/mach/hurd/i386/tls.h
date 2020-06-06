@@ -295,6 +295,15 @@ out:
      asm ("movl %%gs:%P1,%0" : "=q" (_dtv) : "i" (offsetof (tcbhead_t, dtv)));\
      _dtv; })
 
+
+/* Set the stack guard field in TCB head.  */
+#define THREAD_SET_STACK_GUARD(value) \
+  THREAD_SETMEM (THREAD_SELF, stack_guard, value)
+#define THREAD_COPY_STACK_GUARD(descr) \
+  ((descr)->stack_guard							      \
+   = THREAD_GETMEM (THREAD_SELF, stack_guard))
+
+
 # include <mach/machine/thread_status.h>
 
 /* Set up TLS in the new thread of a fork child, copying from the original.  */
