@@ -7,6 +7,10 @@ ifeq ($(subdir),debug)
 gen-as-const-headers += signal-defines.sym
 endif
 
+ifeq ($(subdir),setjmp)
+gen-as-const-headers += signal-defines.sym
+endif
+
 ifeq ($(subdir),csu)
 ifeq (yes,$(build-shared))
 sysdep_routines += divdi3
