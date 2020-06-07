@@ -196,7 +196,8 @@ sysdep_routines += cthreads
 endif
 
 ifeq (io, $(subdir))
-sysdep_routines += f_setlk close_nocancel_nostatus
+sysdep_routines += f_setlk close_nocancel_nostatus read_nocancel \
+		   pread64_nocancel
 endif
 
 ifeq ($(subdir),sunrpc)

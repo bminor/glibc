@@ -47,6 +47,7 @@
 
 #include <dl-tunables.h>
 #include <not-errno.h>
+#include <not-cancel.h>
 
 extern void __mach_init (void);
 
@@ -359,6 +360,7 @@ __close (int fd)
 }
 
 check_no_hidden(__pread64);
+check_no_hidden(__pread64_nocancel);
 __ssize_t weak_function
 __pread64 (int fd, void *buf, size_t nbytes, off64_t offset)
 {
@@ -381,14 +383,17 @@ __pread64 (int fd, void *buf, size_t nbytes, off64_t offset)
   return nread;
 }
 libc_hidden_weak (__pread64)
+weak_alias (__pread64, __pread64_nocancel)
 
 check_no_hidden(__read);
+check_no_hidden(__read_nocancel);
 __ssize_t weak_function
 __read (int fd, void *buf, size_t nbytes)
 {
   return __pread64 (fd, buf, nbytes, -1);
 }
 libc_hidden_weak (__read)
+weak_alias (__read, __read_nocancel)
 
 check_no_hidden(__write);
 __ssize_t weak_function
