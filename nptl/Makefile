@@ -275,7 +275,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-rwlock9 tst-rwlock10 tst-rwlock11 \
 	tst-rwlock15 tst-rwlock17 tst-rwlock18 \
 	tst-once5 \
-	tst-sem5 tst-sem17 \
+	tst-sem17 \
 	tst-align tst-align3 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
 	tst-raise1 \

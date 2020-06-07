@@ -20,12 +20,13 @@
 #include <pt-internal.h>
 
 extern int __sem_timedwait_internal (sem_t *restrict sem,
+				     clockid_t clockid,
 				     const struct timespec *restrict timeout);
 
 int
 __sem_wait (sem_t *sem)
 {
-  return __sem_timedwait_internal (sem, 0);
+  return __sem_timedwait_internal (sem, CLOCK_REALTIME, 0);
 }
 
 strong_alias (__sem_wait, sem_wait);

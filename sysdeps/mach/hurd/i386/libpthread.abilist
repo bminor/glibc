@@ -168,6 +168,7 @@ GLIBC_2.32 pthread_rwlock_clockrdlock F
 GLIBC_2.32 pthread_rwlock_clockwrlock F
 GLIBC_2.32 pthread_timedjoin_np F
 GLIBC_2.32 pthread_tryjoin_np F
+GLIBC_2.32 sem_clockwait F
 GLIBC_2.32 thrd_create F
 GLIBC_2.32 thrd_detach F
 GLIBC_2.32 thrd_exit F

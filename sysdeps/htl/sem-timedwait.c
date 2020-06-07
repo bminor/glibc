@@ -25,12 +25,12 @@
 
 int
 __sem_timedwait_internal (sem_t *restrict sem,
+			  clockid_t clock_id,
 			  const struct timespec *restrict timeout)
 {
   error_t err;
   int drain;
   struct __pthread *self;
-  clockid_t clock_id = CLOCK_REALTIME;
 
   __pthread_spin_wait (&sem->__lock);
   if (sem->__value > 0)
@@ -89,9 +89,17 @@ __sem_timedwait_internal (sem_t *restrict sem,
 }
 
 int
+__sem_clockwait (sem_t *sem, clockid_t clockid,
+		 const struct timespec *restrict timeout)
+{
+  return __sem_timedwait_internal (sem, clockid, timeout);
+}
+weak_alias (__sem_clockwait, sem_clockwait);
+
+int
 __sem_timedwait (sem_t *restrict sem, const struct timespec *restrict timeout)
 {
-  return __sem_timedwait_internal (sem, timeout);
+  return __sem_timedwait_internal (sem, CLOCK_REALTIME, timeout);
 }
 
 weak_alias (__sem_timedwait, sem_timedwait);
