@@ -19,8 +19,8 @@
 #include <shlib-compat.h>
 
 #if SHLIB_COMPAT(libpthread, GLIBC_2_12, GLIBC_2_23)
-# define pthread_atfork __dyn_pthread_atfork
+# define __pthread_atfork __dyn_pthread_atfork
 # include "pt-atfork.c"
-# undef pthread_atfork
+# undef __pthread_atfork
 compat_symbol (libpthread, __dyn_pthread_atfork, pthread_atfork, GLIBC_2_12);
 #endif
