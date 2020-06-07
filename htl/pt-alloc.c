@@ -212,3 +212,32 @@ retry:
   *pthread = new;
   return 0;
 }
+
+void
+attribute_hidden
+__pthread_init_static_tls (struct link_map *map)
+{
+  int i;
+
+  __pthread_rwlock_wrlock (&__pthread_threads_lock);
+  for (i = 0; i < __pthread_num_threads; ++i)
+    {
+      struct __pthread *t = __pthread_threads[i];
+
+      if (t == NULL)
+	continue;
+
+# if TLS_TCB_AT_TP
+      void *dest = (char *) t->tcb - map->l_tls_offset;
+# elif TLS_DTV_AT_TP
+      void *dest = (char *) t->tcb + map->l_tls_offset + TLS_PRE_TCB_SIZE;
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+
+      /* Initialize the memory.  */
+      memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
+	      '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
+    }
+  __pthread_rwlock_unlock (&__pthread_threads_lock);
+}
