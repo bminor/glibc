@@ -67,7 +67,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \
 	 tst-exec1 tst-exec2 tst-exec3 \
 	 tst-exit1 tst-exit2 tst-exit3 \
-	 tst-flock1 \
+	 tst-flock1 tst-flock2 \
 	 tst-fork1 tst-fork2 tst-fork3 tst-fork4 \
 	 tst-atfork1 \
 	 tst-getpid3 \
@@ -92,6 +92,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
 	 tst-sem8 tst-sem9 tst-sem10 tst-sem14 tst-sem15 tst-sem16 \
 	 tst-setuid3 \
+	 tst-signal1 tst-signal2 \
 	 tst-signal4 tst-signal5 tst-signal6 tst-signal8 \
 	 tst-spin1 tst-spin2 tst-spin3 tst-spin4 \
 	 tst-stack1 \

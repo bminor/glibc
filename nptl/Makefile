@@ -282,8 +282,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-cancel16 tst-cancel17 tst-cancel20 tst-cancel21 tst-cancel24 \
 	tst-cancel-self tst-cancel-self-cancelstate \
 	tst-cleanup4 \
-	tst-flock2 \
-	tst-signal1 tst-signal2 tst-signal3 \
+	tst-signal3 \
 	tst-exec4 tst-exec5 \
 	tst-stack2 tst-stack3 tst-stack4 \
 	tst-pthread-attr-affinity \

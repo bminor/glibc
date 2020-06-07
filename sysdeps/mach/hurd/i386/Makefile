@@ -119,6 +119,9 @@ test-xfail-tst-barrier2 = yes
 test-xfail-tst-pututxline-cache = yes
 test-xfail-tst-pututxline-lockfail = yes
 test-xfail-tst-mallocfork2 = yes
+test-xfail-tst-flock2 = yes
+test-xfail-tst-signal1 = yes
+test-xfail-tst-signal2 = yes
 
 # For bug 25522
 # (setprotocol support)
