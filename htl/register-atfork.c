@@ -109,15 +109,15 @@ __register_atfork (void (*prepare) (void),
   new->parent = parent;
   new->child = child;
   new->dso_handle = dso_handle;
-  new->prev = NULL;
+  new->next = NULL;
 
   __libc_lock_lock (atfork_lock);
-  new->next = fork_handlers;
-  if (fork_handlers != NULL)
-    fork_handlers->prev = new;
-  fork_handlers = new;
-  if (fork_last_handler == NULL)
-    fork_last_handler = new;
+  new->prev = fork_last_handler;
+  if (fork_last_handler != NULL)
+    fork_last_handler->next = new;
+  if (fork_handlers == NULL)
+    fork_handlers = new;
+  fork_last_handler = new;
   __libc_lock_unlock (atfork_lock);
 
   return 0;
