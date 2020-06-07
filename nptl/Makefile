@@ -364,27 +364,23 @@ tests += tst-cancelx4 tst-cancelx5 tst-cancelx6 tst-cancelx7 tst-cancelx9 \
 	 tst-cleanupx4
 
 ifeq ($(build-shared),yes)
-tests += tst-atfork2 tst-tls4 tst-_res1 tst-fini1 tst-compat-forwarder \
-	 tst-audit-threads
+tests += tst-compat-forwarder tst-audit-threads
 tests-internal += tst-tls3 tst-tls3-malloc tst-tls5 tst-stackguard1
-tests-nolibpthread += tst-fini1
 ifeq ($(have-z-execstack),yes)
 tests += tst-execstack
 endif
 endif
 
-modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
+modules-names = tst-tls3mod \
 		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
 		tst-tls5modd tst-tls5mode tst-tls5modf tst-stack4mod \
-		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod tst-fini1mod \
+		tst-execstack-mod \
 		tst-compat-forwarder-mod tst-audit-threads-mod1 \
 		tst-audit-threads-mod2
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) \
 		   tst-cleanup4aux.o tst-cleanupx4aux.o
 test-extras += tst-cleanup4aux tst-cleanupx4aux
-test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 
-tst-atfork2mod.so-no-z-defs = yes
 tst-tls3mod.so-no-z-defs = yes
 tst-tls5mod.so-no-z-defs = yes
 tst-tls5moda.so-no-z-defs = yes
@@ -393,11 +389,6 @@ tst-tls5modc.so-no-z-defs = yes
 tst-tls5modd.so-no-z-defs = yes
 tst-tls5mode.so-no-z-defs = yes
 tst-tls5modf.so-no-z-defs = yes
-
-ifeq ($(build-shared),yes)
-# Build all the modules even when not actually running test programs.
-tests: $(test-modules)
-endif
 
 ifeq ($(build-shared),yes)
 
@@ -510,11 +501,6 @@ CFLAGS-tst-initializers1-gnu11.c += $(CFLAGS-tst-initializers1-<)
 tst-cancel7-ARGS = --command "exec $(host-test-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)
 
-$(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
-LDFLAGS-tst-atfork2 = -rdynamic
-tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace
-$(objpfx)tst-atfork2mod.so: $(shared-thread-library)
-
 tst-stack3-ENV = MALLOC_TRACE=$(objpfx)tst-stack3.mtrace
 $(objpfx)tst-stack3-mem.out: $(objpfx)tst-stack3.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-stack3.mtrace > $@; \
@@ -546,9 +532,6 @@ $(objpfx)tst-tls3-malloc: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-tls3-malloc = -rdynamic
 $(objpfx)tst-tls3-malloc.out: $(objpfx)tst-tls3mod.so
 
-$(objpfx)tst-tls4: $(libdl) $(shared-thread-library)
-$(objpfx)tst-tls4.out: $(objpfx)tst-tls4moda.so $(objpfx)tst-tls4modb.so
-
 $(objpfx)tst-tls5: $(objpfx)tst-tls5mod.so $(shared-thread-library)
 LDFLAGS-tst-tls5 = -Wl,--no-as-needed
 LDFLAGS-tst-tls5mod.so = -Wl,-soname,tst-tls5mod.so
@@ -565,8 +548,6 @@ endif
 
 $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
 
-$(objpfx)tst-fini1: $(shared-thread-library) $(objpfx)tst-fini1mod.so
-
 ifeq (yes,$(build-shared))
 librt = $(common-objpfx)rt/librt.so
 else
@@ -579,11 +560,6 @@ $(common-objpfx)rt/librt.so: $(shared-thread-library)
 
 $(objpfx)tst-cancel17: $(librt)
 $(objpfx)tst-cancelx17: $(librt)
-$(objpfx)tst-_res1mod2.so: $(objpfx)tst-_res1mod1.so
-LDFLAGS-tst-_res1mod1.so = -Wl,-soname,tst-_res1mod1.so
-LDFLAGS-tst-_res1mod2.so = -Wl,-soname,tst-_res1mod2.so
-$(objpfx)tst-_res1: $(objpfx)tst-_res1mod1.so $(objpfx)tst-_res1mod2.so \
-		    $(shared-thread-library)
 
 LDLIBS-tst-cancel24 = -Wl,--no-as-needed -lstdc++
 LDLIBS-tst-cancel24-static = $(LDLIBS-tst-cancel24)
@@ -592,10 +568,6 @@ extra-B-pthread.so = -B$(common-objpfx)nptl/
 $(objpfx)libpthread.so: $(addprefix $(objpfx),$(crti-objs) $(crtn-objs))
 $(objpfx)libpthread.so: +preinit += $(addprefix $(objpfx),$(crti-objs))
 $(objpfx)libpthread.so: +postinit += $(addprefix $(objpfx),$(crtn-objs))
-
-ifeq ($(build-shared),yes)
-$(objpfx)tst-atfork2.out: $(objpfx)tst-atfork2mod.so
-endif
 
 ifeq ($(build-shared),yes)
 $(objpfx)crti.o: $(objpfx)pt-crti.o
@@ -609,10 +581,7 @@ $(objpfx)$(multidir)/crtn.o: $(objpfx)crtn.o $(objpfx)$(multidir)/
 	ln -f $< $@
 endif
 
-generated += multidir.mk tst-atfork2.mtrace tst-tls6.out
-
-generated += $(objpfx)tst-atfork2.mtrace \
-	     $(addsuffix .so,$(strip $(modules-names)))
+generated += multidir.mk tst-tls6.out
 
 # Give libpthread.so an entry point and make it directly runnable itself.
 LDFLAGS-pthread.so += -e __nptl_main
@@ -626,8 +595,6 @@ $(objpfx)tst-execstack: $(libdl)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
 LDFLAGS-tst-execstack = -Wl,-z,noexecstack
 CFLAGS-tst-execstack-mod.c += -Wno-trampolines
-
-$(objpfx)tst-fini1mod.so: $(shared-thread-library)
 
 tst-stackguard1-ARGS = --command "$(host-test-program-cmd) --child"
 tst-stackguard1-static-ARGS = --command "$(objpfx)tst-stackguard1-static --child"

@@ -117,6 +117,22 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx8 tst-cancelx10 \
 	 tst-cancelx12 tst-cancelx14 tst-cancelx15 tst-cancelx18 \
 	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3
 
+ifeq ($(build-shared),yes)
+tests += tst-atfork2 tst-pt-tls4 tst-_res1 tst-fini1
+tests-nolibpthread += tst-fini1
+endif
+
+modules-names += tst-atfork2mod tst-tls4moda tst-tls4modb \
+		 tst-_res1mod1 tst-_res1mod2 tst-fini1mod
+test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
+
+tst-atfork2mod.so-no-z-defs = yes
+
+ifeq ($(build-shared),yes)
+# Build all the modules even when not actually running test programs.
+tests: $(test-modules)
+endif
+
 tests-static += tst-locale1 tst-locale2
 
 tests += tst-cond11-static
@@ -150,6 +166,15 @@ CFLAGS-tst-pt-align3.c += $(stack-align-test-flags)
 
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp
 
+$(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
+LDFLAGS-tst-atfork2 = -rdynamic
+tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace
+$(objpfx)tst-atfork2mod.so: $(shared-thread-library)
+
+ifeq ($(build-shared),yes)
+$(objpfx)tst-atfork2.out: $(objpfx)tst-atfork2mod.so
+endif
+
 ifeq ($(build-shared),yes)
 $(objpfx)tst-cleanup0.out: /dev/null $(objpfx)tst-cleanup0
 	$(make-test-out) > $@ 2>&1; \
@@ -164,7 +189,23 @@ else
 $(objpfx)tst-cancel28: $(common-objpfx)rt/librt.a
 endif
 
+$(objpfx)tst-fini1: $(shared-thread-library) $(objpfx)tst-fini1mod.so
 
+$(objpfx)tst-fini1mod.so: $(shared-thread-library)
+
+$(objpfx)tst-_res1mod2.so: $(objpfx)tst-_res1mod1.so
+LDFLAGS-tst-_res1mod1.so = -Wl,-soname,tst-_res1mod1.so
+LDFLAGS-tst-_res1mod2.so = -Wl,-soname,tst-_res1mod2.so
+$(objpfx)tst-_res1: $(objpfx)tst-_res1mod1.so $(objpfx)tst-_res1mod2.so \
+		    $(shared-thread-library)
+
+$(objpfx)tst-pt-tls4: $(libdl) $(shared-thread-library)
+$(objpfx)tst-pt-tls4.out: $(objpfx)tst-tls4moda.so $(objpfx)tst-tls4modb.so
+
+generated += tst-atfork2.mtrace
+
+generated += $(objpfx)tst-atfork2.mtrace \
+	     $(addsuffix .so,$(strip $(modules-names)))
 
 tests-internal += tst-robust8
 
