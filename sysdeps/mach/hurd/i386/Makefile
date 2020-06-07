@@ -116,6 +116,9 @@ test-xfail-tst-rwlock4 = yes
 test-xfail-tst-rwlock12 = yes
 test-xfail-tst-sem3 = yes
 test-xfail-tst-barrier2 = yes
+test-xfail-tst-pututxline-cache = yes
+test-xfail-tst-pututxline-lockfail = yes
+test-xfail-tst-mallocfork2 = yes
 
 # For bug 25522
 # (setprotocol support)
