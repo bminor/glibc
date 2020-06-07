@@ -21,9 +21,11 @@ endif
 
 ifeq ($(subdir),conform)
 # For bugs 23081, 23082, 23083, 23084, 23085, 23086.
+# (type conformance)
 conformtest-xfail-conds += i386-gnu
 
 # For bug 23088
+# (sched_* visibility)
 test-xfail-POSIX/fcntl.h/conform = yes
 test-xfail-POSIX/signal.h/conform = yes
 test-xfail-POSIX/semaphore.h/conform = yes
@@ -103,6 +105,7 @@ endif
 
 ifeq ($(subdir),htl)
 # For bug 25521
+# (setpshared support)
 test-xfail-tst-mutex4 = yes
 test-xfail-tst-cond4 = yes
 test-xfail-tst-cond6 = yes
@@ -115,16 +118,19 @@ test-xfail-tst-sem3 = yes
 test-xfail-tst-barrier2 = yes
 
 # For bug 25522
+# (setprotocol support)
 test-xfail-tst-cond24 = yes
 test-xfail-tst-cond25 = yes
 
 # For bug 25524
+# (sem_open support)
 test-xfail-tst-sem4 = yes
 test-xfail-tst-sem7 = yes
 test-xfail-tst-sem8 = yes
 test-xfail-tst-sem9 = yes
 
 # For bug 25563
+# (robust support against dead threads)
 test-xfail-tst-robust1 = yes
 test-xfail-tst-robust2 = yes
 test-xfail-tst-robust3 = yes
