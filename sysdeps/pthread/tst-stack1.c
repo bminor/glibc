@@ -75,7 +75,10 @@ do_test (void)
 {
   int result = 0;
 
-  size = MAX (4 * getpagesize (), PTHREAD_STACK_MIN);
+  size = 4 * getpagesize ();
+#ifdef PTHREAD_STACK_MIN
+  size = MAX (size, PTHREAD_STACK_MIN);
+#endif
   if (posix_memalign (&stack, getpagesize (), size) != 0)
     {
       puts ("out of memory while allocating the stack memory");

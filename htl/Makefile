@@ -203,12 +203,3 @@ libc-link.so = $(common-objpfx)libc.so
 extra-B-pthread.so = -B$(common-objpfx)htl/
 
 include ../Rules
-
-ifeq (yes,$(build-shared))
-$(addprefix $(objpfx), \
-  $(filter-out $(tests-static) $(xtests-static) $(tests-reverse) \
-    $(tests-nolibpthread), \
-    $(tests) $(tests-internal) $(xtests) $(test-srcs))): $(objpfx)libpthread.so
-endif
-
-$(addprefix $(objpfx),$(tests-static) $(xtests-static)): $(objpfx)libpthread.a

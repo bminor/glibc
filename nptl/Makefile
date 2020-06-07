@@ -276,55 +276,27 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-rwlock15 tst-rwlock17 tst-rwlock18 \
 	tst-once5 \
 	tst-sem17 \
-	tst-align tst-align3 \
-	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
-	tst-raise1 \
-	tst-detach1 \
-	tst-eintr2 tst-eintr3 tst-eintr4 tst-eintr5 \
-	tst-tsd1 tst-tsd2 tst-tsd3 tst-tsd4 tst-tsd5 tst-tsd6 \
-	tst-tls1 tst-tls2 \
-	tst-fork1 tst-fork2 tst-fork3 tst-fork4 \
-	tst-atfork1 \
-	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel4_1 \
-	tst-cancel4_2 tst-cancel5 \
-	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 tst-cancel10 \
-	tst-cancel11 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 \
-	tst-cancel16 tst-cancel17 tst-cancel18 tst-cancel19 tst-cancel20 \
-	tst-cancel21 tst-cancel22 tst-cancel23 tst-cancel24 \
-	tst-cancel26 tst-cancel27 tst-cancel28 \
+	tst-tsd3 tst-tsd4 \
+	tst-cancel4 tst-cancel4_1 tst-cancel4_2 tst-cancel5 \
+	tst-cancel6 tst-cancel7 tst-cancel9 tst-cancel11 tst-cancel13 \
+	tst-cancel16 tst-cancel17 tst-cancel20 tst-cancel21 tst-cancel24 \
 	tst-cancel-self tst-cancel-self-cancelstate \
-	tst-cancel-self-canceltype tst-cancel-self-testcancel \
-	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 tst-cleanup4 \
-	tst-flock1 tst-flock2 \
-	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
-	tst-signal6 tst-signal8 \
-	tst-exec1 tst-exec2 tst-exec3 tst-exec4 tst-exec5 \
-	tst-exit1 tst-exit2 tst-exit3 \
-	tst-stdio1 tst-stdio2 \
-	tst-stack1 tst-stack2 tst-stack3 tst-stack4 \
+	tst-cleanup4 \
+	tst-flock2 \
+	tst-signal1 tst-signal2 tst-signal3 \
+	tst-exec4 tst-exec5 \
+	tst-stack2 tst-stack3 tst-stack4 \
 	tst-pthread-attr-affinity \
-	tst-unload \
 	tst-dlsym1 \
-	tst-sysconf \
-	tst-locale1 tst-locale2 \
-	tst-umask1 \
-	tst-popen1 \
-	tst-clock1 \
 	tst-context1 \
 	tst-sched1 \
-	tst-backtrace1 \
-	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x \
-	tst-getpid3 \
-	tst-setuid3 \
 	tst-initializers1 $(addprefix tst-initializers1-,\
 			    c89 gnu89 c99 gnu99 c11 gnu11) \
-	tst-bad-schedattr \
 	tst-thread_local1 \
-	tst-robust-fork tst-create-detached tst-memstream \
+	tst-robust-fork \
 	tst-thread-exit-clobber tst-minstack-cancel tst-minstack-exit \
 	tst-minstack-throw \
 	tst-rwlock-pwn \
-	tst-unwind-thread \
 	tst-thread-affinity-pthread \
 	tst-thread-affinity-pthread2 \
 	tst-thread-affinity-sched \
@@ -352,9 +324,6 @@ test-srcs = tst-oddstacklimit
 # Test expected to fail on most targets (except x86_64) due to bug
 # 18435 - pthread_once hangs when init routine throws an exception.
 test-xfail-tst-once5 = yes
-
-# Files which must not be linked with libpthread.
-tests-nolibpthread = tst-unload
 
 gen-as-const-headers = unwindbuf.sym \
 		       pthread-pi-defines.sym
@@ -390,15 +359,11 @@ endif
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
-# GCC-4.9 compiles 'sprintf(NULL, ...)' into UD2 on x86_64 without -fno-builtin
-CFLAGS-tst-cleanup2.c += -fno-builtin
-CFLAGS-tst-cleanupx2.c += -fno-builtin
+tests += tst-cancelx4 tst-cancelx5 tst-cancelx6 tst-cancelx7 tst-cancelx9 \
+	 tst-cancelx11 tst-cancelx13 \
+	 tst-cancelx16 tst-cancelx17 tst-cancelx20 tst-cancelx21 \
+	 tst-cleanupx4
 
-tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
-	 tst-cancelx6 tst-cancelx7 tst-cancelx8 tst-cancelx9 tst-cancelx10 \
-	 tst-cancelx11 tst-cancelx12 tst-cancelx13 tst-cancelx14 tst-cancelx15 \
-	 tst-cancelx16 tst-cancelx17 tst-cancelx18 tst-cancelx20 tst-cancelx21 \
-	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3 tst-cleanupx4
 ifeq ($(build-shared),yes)
 tests += tst-atfork2 tst-tls4 tst-_res1 tst-fini1 tst-compat-forwarder \
 	 tst-audit-threads
@@ -466,23 +431,23 @@ CFLAGS-funlockfile.c += $(libio-mtsafe)
 link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a
 
-tests-static += tst-locale1 tst-locale2 tst-stackguard1-static \
+tests-static += tst-stackguard1-static \
 		tst-cancel21-static tst-cancel24-static \
 		tst-mutex8-static tst-mutexpi8-static tst-sem11-static \
 		tst-sem12-static tst-cond11-static
 
-tests += tst-cancel21-static tst-cancel24-static \
-	 tst-cond11-static
+tests += tst-cancel21-static tst-cancel24-static
+
 tests-internal += tst-sem11-static tst-sem12-static tst-stackguard1-static
 xtests-static += tst-setuid1-static
 
 # These tests are linked with libc before libpthread
-tests-reverse += tst-cancel5 tst-cancel23 tst-vfork1x tst-vfork2x
+tests-reverse += tst-cancel5
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-stack3-mem.out $(objpfx)tst-oddstacklimit.out
 ifeq ($(build-shared),yes)
-tests-special += $(objpfx)tst-tls6.out $(objpfx)tst-cleanup0-cmp.out
+tests-special += $(objpfx)tst-tls6.out
 endif
 endif
 
@@ -520,33 +485,19 @@ CFLAGS-tst-cancelx5.c += -Wno-error
 
 # Run the cancellation and cleanup tests also for the modern, exception-based
 # implementation.  For this we have to pass the -fexceptions parameter.
-CFLAGS-tst-cancelx2.c += -fexceptions
-CFLAGS-tst-cancelx3.c += -fexceptions
 CFLAGS-tst-cancelx4.c += -fexceptions
 CFLAGS-tst-cancelx5.c += -fexceptions
 CFLAGS-tst-cancelx6.c += -fexceptions
 CFLAGS-tst-cancelx7.c += -fexceptions
-CFLAGS-tst-cancelx8.c += -fexceptions
 CFLAGS-tst-cancelx9.c += -fexceptions
-CFLAGS-tst-cancelx10.c += -fexceptions
 CFLAGS-tst-cancelx11.c += -fexceptions
-CFLAGS-tst-cancelx12.c += -fexceptions
 CFLAGS-tst-cancelx13.c += -fexceptions
-CFLAGS-tst-cancelx14.c += -fexceptions
-CFLAGS-tst-cancelx15.c += -fexceptions
 CFLAGS-tst-cancelx16.c += -fexceptions
 CFLAGS-tst-cancelx17.c += -fexceptions
-CFLAGS-tst-cancelx18.c += -fexceptions
 CFLAGS-tst-cancelx20.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cancelx21.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-tst-cleanupx0.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-tst-cleanupx1.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-tst-cleanupx2.c += -fexceptions
-CFLAGS-tst-cleanupx3.c += -fexceptions
 CFLAGS-tst-cleanupx4.c += -fexceptions
 CFLAGS-tst-cleanupx4aux.c += -fexceptions
-CFLAGS-tst-align.c += $(stack-align-test-flags)
-CFLAGS-tst-align3.c += $(stack-align-test-flags)
 CFLAGS-tst-initializers1.c += -W -Wall -Werror
 CFLAGS-tst-initializers1-< = $(CFLAGS-tst-initializers1.c) \
 			     $(patsubst tst-initializers1-%.c,-std=%,$<)
@@ -559,7 +510,6 @@ CFLAGS-tst-initializers1-gnu11.c += $(CFLAGS-tst-initializers1-<)
 
 tst-cancel7-ARGS = --command "exec $(host-test-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)
-tst-umask1-ARGS = $(objpfx)tst-umask1.temp
 
 $(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
 LDFLAGS-tst-atfork2 = -rdynamic
@@ -612,9 +562,6 @@ $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
 	$(BASH) $< $(common-objpfx) '$(test-via-rtld-prefix)' \
 	  '$(test-wrapper-env)' '$(run-program-env)' > $@; \
 	$(evaluate-test)
-$(objpfx)tst-cancel28: $(common-objpfx)rt/librt.so
-else
-$(objpfx)tst-cancel28: $(common-objpfx)rt/librt.a
 endif
 
 $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
@@ -647,36 +594,11 @@ $(objpfx)libpthread.so: $(addprefix $(objpfx),$(crti-objs) $(crtn-objs))
 $(objpfx)libpthread.so: +preinit += $(addprefix $(objpfx),$(crti-objs))
 $(objpfx)libpthread.so: +postinit += $(addprefix $(objpfx),$(crtn-objs))
 
-# Make sure we link with the thread library.
 ifeq ($(build-shared),yes)
-$(addprefix $(objpfx), \
-  $(filter-out $(tests-static) $(xtests-static) $(tests-reverse) \
-    $(tests-nolibpthread), \
-    $(tests) $(tests-internal) $(xtests) $(test-srcs) $(tests-container))): \
-	$(objpfx)libpthread.so
-$(objpfx)tst-unload: $(libdl)
-# $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
-# since otherwise libpthread.so comes before libc.so when linking.
-$(addprefix $(objpfx), $(tests-reverse)): \
-  $(objpfx)../libc.so $(objpfx)libpthread.so
-$(objpfx)../libc.so: $(common-objpfx)libc.so ;
-$(addprefix $(objpfx),$(tests-static) $(xtests-static)): $(objpfx)libpthread.a
-
 $(objpfx)tst-atfork2.out: $(objpfx)tst-atfork2mod.so
-else
-$(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
 endif
 
 ifeq ($(build-shared),yes)
-
-$(objpfx)tst-cleanup0.out: /dev/null $(objpfx)tst-cleanup0
-	$(make-test-out) > $@ 2>&1; \
-	$(evaluate-test)
-
-$(objpfx)tst-cleanup0-cmp.out: tst-cleanup0.expect $(objpfx)tst-cleanup0.out
-	cmp $^ > $@; \
-	$(evaluate-test)
-
 $(objpfx)crti.o: $(objpfx)pt-crti.o
 	ln -f $< $@
 
@@ -728,8 +650,6 @@ LDFLAGS-tst-audit-threads = -Wl,-z,lazy
 $(objpfx)tst-audit-threads: $(objpfx)tst-audit-threads-mod2.so
 $(objpfx)tst-audit-threads.out: $(objpfx)tst-audit-threads-mod1.so
 tst-audit-threads-ENV = LD_AUDIT=$(objpfx)tst-audit-threads-mod1.so
-
-CFLAGS-tst-unwind-thread.c += -funwind-tables
 
 # The test uses dlopen indirectly and would otherwise load system
 # objects.
