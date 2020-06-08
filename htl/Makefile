@@ -203,3 +203,21 @@ libc-link.so = $(common-objpfx)libc.so
 extra-B-pthread.so = -B$(common-objpfx)htl/
 
 include ../Rules
+
+# Make sure we link with the thread library.
+ifeq ($(build-shared),yes)
+$(addprefix $(objpfx), \
+  $(filter-out $(tests-static) $(xtests-static) $(tests-reverse) \
+    $(tests-nolibpthread), \
+    $(tests) $(tests-internal) $(xtests) $(test-srcs) $(tests-container))): \
+	$(objpfx)libpthread.so
+$(objpfx)tst-unload: $(libdl)
+# $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
+# since otherwise libpthread.so comes before libc.so when linking.
+$(addprefix $(objpfx), $(tests-reverse)): \
+  $(objpfx)../libc.so $(objpfx)libpthread.so
+$(objpfx)../libc.so: $(common-objpfx)libc.so ;
+$(addprefix $(objpfx),$(tests-static) $(xtests-static)): $(objpfx)libpthread.a
+else
+$(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
+endif
