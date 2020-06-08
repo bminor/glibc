@@ -227,7 +227,11 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 }
 
 /* The trampoline code follows.  This used to be located inside
-   _hurd_setup_sighandler, but was optimized away by gcc 2.95.  */
+   _hurd_setup_sighandler, but was optimized away by gcc 2.95.
+
+   If you modify this, update
+   - in gcc: libgcc/config/i386/gnu-unwind.h x86_gnu_fallback_frame_state,
+   - in gdb: gdb/i386-gnu-tdep.c gnu_sigtramp_code.  */
 
 asm ("rpc_wait_trampoline:\n");
   /* This is the entry point when we have an RPC reply message to receive
