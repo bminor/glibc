@@ -661,19 +661,39 @@ libc.so-gnulib := -lgcc
 endif
 +preinit = $(addprefix $(csu-objpfx),crti.o)
 +postinit = $(addprefix $(csu-objpfx),crtn.o)
+ifeq ($(with-clang),yes)
+# With clang, use the crt*.o files from llvm's compiler-rt package.
+# The files normally have an architecture name appended, in case of
+# variants (32/64, le/be etc) installed in the same directory.
++prector = `$(CC) $(sysdep-LDFLAGS) --print-file-name=clang_rt.crtbegin-$(config-machine).o`
++postctor = `$(CC) $(sysdep-LDFLAGS) --print-file-name=clang_rt.crtend-$(config-machine).o`
+else
 +prector = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbegin.o`
 +postctor = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtend.o`
+endif
 # Variants of the two previous definitions for linking PIE programs.
+ifeq ($(with-clang),yes)
+# compiler-rt crt*.o also works for PIE.
++prectorS = $(+prector)
++postctorS = $(+postctor)
+else
 +prectorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginS.o`
 +postctorS = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtendS.o`
+endif
 # Variants of the two previous definitions for statically linking programs.
 ifeq (yes,$(enable-static-pie))
 # Static PIE must use PIE variants.
 +prectorT = $(+prectorS)
 +postctorT = $(+postctorS)
 else
+ifeq ($(with-clang),yes)
+# compiler-rt crt*.o also works for static PIE.
++prectorT = $(+prector)
++postctorT = $(+postctor)
+else
 +prectorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbeginT.o`
 +postctorT = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtend.o`
+endif
 endif
 csu-objpfx = $(common-objpfx)csu/
 elf-objpfx = $(common-objpfx)elf/
