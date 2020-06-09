@@ -47,8 +47,13 @@ ldbl_unpack_ppc (long double l, double *a, double *aa)
   *aa = xl;
 }
 
+/* These inline functions do not work with clang at all; drop back to the
+   default versions.  (The defaults are not inlined by clang either, but they
+   return correct values at least.)*/
+#if !defined __clang__
 #define ldbl_pack   ldbl_pack_ppc
 #define ldbl_unpack ldbl_unpack_ppc
+#endif /* !__clang__ */
 
 #include <sysdeps/ieee754/ldbl-128ibm/math_ldbl.h>
 
