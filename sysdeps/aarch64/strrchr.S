@@ -24,142 +24,119 @@
  *
  * ARMv8-a, AArch64
  * Neon Available.
+ * MTE compatible.
  */
 
 /* Arguments and results.  */
 #define srcin		x0
 #define chrin		w1
-
 #define result		x0
 
 #define src		x2
-#define	tmp1		x3
-#define wtmp2		w4
-#define tmp3		x5
-#define src_match	x6
-#define src_offset	x7
-#define const_m1	x8
-#define tmp4		x9
-#define nul_match	x10
-#define chr_match	x11
+#define tmp		x3
+#define wtmp		w3
+#define synd		x3
+#define shift		x4
+#define src_match	x4
+#define nul_match	x5
+#define chr_match	x6
 
 #define vrepchr		v0
-#define vdata1		v1
-#define vdata2		v2
-#define vhas_nul1	v3
-#define vhas_nul2	v4
-#define vhas_chr1	v5
-#define vhas_chr2	v6
-#define vrepmask_0	v7
-#define vrepmask_c	v16
-#define vend1		v17
-#define vend2		v18
+#define vdata		v1
+#define vhas_nul	v2
+#define vhas_chr	v3
+#define vrepmask	v4
+#define vrepmask2	v5
+#define vend		v5
+#define dend		d5
 
 /* Core algorithm.
 
-   For each 32-byte hunk we calculate a 64-bit syndrome value, with
-   two bits per byte (LSB is always in bits 0 and 1, for both big
-   and little-endian systems).  For each tuple, bit 0 is set iff
-   the relevant byte matched the requested character; bit 1 is set
-   iff the relevant byte matched the NUL end of string (we trigger
-   off bit0 for the special case of looking for NUL).  Since the bits
-   in the syndrome reflect exactly the order in which things occur
-   in the original string a count_trailing_zeros() operation will
-   identify exactly which byte is causing the termination, and why.  */
+   For each 16-byte chunk we calculate a 64-bit syndrome value, with
+   four bits per byte (LSB is always in bits 0 and 1, for both big
+   and little-endian systems).  For each tuple, bits 0-1 are set if
+   the relevant byte matched the requested character; bits 2-3 are set
+   if the relevant byte matched the NUL end of string.  */
 
 ENTRY(strrchr)
 	DELOUSE (0)
-	cbz	x1, L(null_search)
-	/* Magic constant 0x40100401 to allow us to identify which lane
-	   matches the requested byte.  Magic constant 0x80200802 used
-	   similarly for NUL termination.  */
-	mov	wtmp2, #0x0401
-	movk	wtmp2, #0x4010, lsl #16
+	bic	src, srcin, 15
 	dup	vrepchr.16b, chrin
-	bic	src, srcin, #31		/* Work with aligned 32-byte hunks.  */
-	dup	vrepmask_c.4s, wtmp2
-	mov	src_offset, #0
-	ands	tmp1, srcin, #31
-	add	vrepmask_0.4s, vrepmask_c.4s, vrepmask_c.4s /* equiv: lsl #1 */
-	b.eq	L(aligned)
+	mov	wtmp, 0x3003
+	dup	vrepmask.8h, wtmp
+	tst	srcin, 15
+	beq	L(loop1)
 
-	/* Input string is not 32-byte aligned.  Rather than forcing
-	   the padding bytes to a safe value, we calculate the syndrome
-	   for all the bytes, but then mask off those bits of the
-	   syndrome that are related to the padding.  */
-	ld1	{vdata1.16b, vdata2.16b}, [src], #32
-	neg	tmp1, tmp1
-	cmeq	vhas_nul1.16b, vdata1.16b, #0
-	cmeq	vhas_chr1.16b, vdata1.16b, vrepchr.16b
-	cmeq	vhas_nul2.16b, vdata2.16b, #0
-	cmeq	vhas_chr2.16b, vdata2.16b, vrepchr.16b
-	and	vhas_nul1.16b, vhas_nul1.16b, vrepmask_0.16b
-	and	vhas_chr1.16b, vhas_chr1.16b, vrepmask_c.16b
-	and	vhas_nul2.16b, vhas_nul2.16b, vrepmask_0.16b
-	and	vhas_chr2.16b, vhas_chr2.16b, vrepmask_c.16b
-	addp	vhas_nul1.16b, vhas_nul1.16b, vhas_nul2.16b	// 256->128
-	addp	vhas_chr1.16b, vhas_chr1.16b, vhas_chr2.16b	// 256->128
-	addp	vhas_nul1.16b, vhas_nul1.16b, vhas_nul1.16b	// 128->64
-	addp	vhas_chr1.16b, vhas_chr1.16b, vhas_chr1.16b	// 128->64
-	mov	nul_match, vhas_nul1.2d[0]
-	lsl	tmp1, tmp1, #1
-	mov	const_m1, #~0
-	mov	chr_match, vhas_chr1.2d[0]
-	lsr	tmp3, const_m1, tmp1
+	ld1	{vdata.16b}, [src], 16
+	cmeq	vhas_nul.16b, vdata.16b, 0
+	cmeq	vhas_chr.16b, vdata.16b, vrepchr.16b
+	mov	wtmp, 0xf00f
+	dup	vrepmask2.8h, wtmp
+	bit	vhas_nul.16b, vhas_chr.16b, vrepmask.16b
+	and	vhas_nul.16b, vhas_nul.16b, vrepmask2.16b
+	addp	vend.16b, vhas_nul.16b, vhas_nul.16b
+	lsl	shift, srcin, 2
+	fmov	synd, dend
+	lsr	synd, synd, shift
+	lsl	synd, synd, shift
+	ands	nul_match, synd, 0xcccccccccccccccc
+	bne	L(tail)
+	cbnz	synd, L(loop2)
 
-	bic	nul_match, nul_match, tmp3	// Mask padding bits.
-	bic	chr_match, chr_match, tmp3	// Mask padding bits.
-	cbnz	nul_match, L(tail)
+	.p2align 5
+L(loop1):
+	ld1	{vdata.16b}, [src], 16
+	cmeq	vhas_chr.16b, vdata.16b, vrepchr.16b
+	cmhs	vhas_nul.16b, vhas_chr.16b, vdata.16b
+	umaxp	vend.16b, vhas_nul.16b, vhas_nul.16b
+	fmov	synd, dend
+	cbz	synd, L(loop1)
 
-L(loop):
-	cmp	chr_match, #0
-	csel	src_match, src, src_match, ne
-	csel	src_offset, chr_match, src_offset, ne
-L(aligned):
-	ld1	{vdata1.16b, vdata2.16b}, [src], #32
-	cmeq	vhas_nul1.16b, vdata1.16b, #0
-	cmeq	vhas_chr1.16b, vdata1.16b, vrepchr.16b
-	cmeq	vhas_nul2.16b, vdata2.16b, #0
-	cmeq	vhas_chr2.16b, vdata2.16b, vrepchr.16b
-	addp	vend1.16b, vhas_nul1.16b, vhas_nul2.16b	// 256->128
-	and	vhas_chr1.16b, vhas_chr1.16b, vrepmask_c.16b
-	and	vhas_chr2.16b, vhas_chr2.16b, vrepmask_c.16b
-	addp	vhas_chr1.16b, vhas_chr1.16b, vhas_chr2.16b	// 256->128
-	addp	vend1.16b, vend1.16b, vend1.16b	// 128->64
-	addp	vhas_chr1.16b, vhas_chr1.16b, vhas_chr1.16b	// 128->64
-	mov	nul_match, vend1.2d[0]
-	mov	chr_match, vhas_chr1.2d[0]
-	cbz	nul_match, L(loop)
-
-	and	vhas_nul1.16b, vhas_nul1.16b, vrepmask_0.16b
-	and	vhas_nul2.16b, vhas_nul2.16b, vrepmask_0.16b
-	addp	vhas_nul1.16b, vhas_nul1.16b, vhas_nul2.16b
-	addp	vhas_nul1.16b, vhas_nul1.16b, vhas_nul1.16b
-	mov	nul_match, vhas_nul1.2d[0]
+	cmeq	vhas_nul.16b, vdata.16b, 0
+	bit	vhas_nul.16b, vhas_chr.16b, vrepmask.16b
+	bic	vhas_nul.8h, 0x0f, lsl 8
+	addp	vend.16b, vhas_nul.16b, vhas_nul.16b
+	fmov	synd, dend
+	ands	nul_match, synd, 0xcccccccccccccccc
+	beq	L(loop2)
 
 L(tail):
-	/* Work out exactly where the string ends.  */
-	sub	tmp4, nul_match, #1
-	eor	tmp4, tmp4, nul_match
-	ands	chr_match, chr_match, tmp4
-	/* And pick the values corresponding to the last match.  */
-	csel	src_match, src, src_match, ne
-	csel	src_offset, chr_match, src_offset, ne
-
-	/* Count down from the top of the syndrome to find the last match.  */
-	clz	tmp3, src_offset
-	/* Src_match points beyond the word containing the match, so we can
-	   simply subtract half the bit-offset into the syndrome.  Because
-	   we are counting down, we need to go back one more character.  */
-	add	tmp3, tmp3, #2
-	sub	result, src_match, tmp3, lsr #1
-	/* But if the syndrome shows no match was found, then return NULL.  */
-	cmp	src_offset, #0
+	sub	nul_match, nul_match, 1
+	and	chr_match, synd, 0x3333333333333333
+	ands	chr_match, chr_match, nul_match
+	sub	result, src, 1
+	clz	tmp, chr_match
+	sub	result, result, tmp, lsr 2
 	csel	result, result, xzr, ne
-
 	ret
-L(null_search):
-	b	__strchrnul
+
+	.p2align 4
+L(loop2):
+	cmp	synd, 0
+	csel	src_match, src, src_match, ne
+	csel	chr_match, synd, chr_match, ne
+	ld1	{vdata.16b}, [src], 16
+	cmeq	vhas_nul.16b, vdata.16b, 0
+	cmeq	vhas_chr.16b, vdata.16b, vrepchr.16b
+	bit	vhas_nul.16b, vhas_chr.16b, vrepmask.16b
+	umaxp	vend.16b, vhas_nul.16b, vhas_nul.16b
+	fmov	synd, dend
+	tst	synd, 0xcccccccccccccccc
+	beq	L(loop2)
+
+	bic	vhas_nul.8h, 0x0f, lsl 8
+	addp	vend.16b, vhas_nul.16b, vhas_nul.16b
+	fmov	synd, dend
+	and	nul_match, synd, 0xcccccccccccccccc
+	sub	nul_match, nul_match, 1
+	and	tmp, synd, 0x3333333333333333
+	ands	tmp, tmp, nul_match
+	csel	chr_match, tmp, chr_match, ne
+	csel	src_match, src, src_match, ne
+	sub	src_match, src_match, 1
+	clz	tmp, chr_match
+	sub	result, src_match, tmp, lsr 2
+	ret
 
 END(strrchr)
 weak_alias (strrchr, rindex)
