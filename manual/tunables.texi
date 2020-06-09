@@ -31,6 +31,7 @@ their own namespace.
 @menu
 * Tunable names::  The structure of a tunable name
 * Memory Allocation Tunables::  Tunables in the memory allocation subsystem
+* Dynamic Linking Tunables:: Tunables in the dynamic linking subsystem
 * Elision Tunables::  Tunables in elision subsystem
 * POSIX Thread Tunables:: Tunables in the POSIX thread subsystem
 * Hardware Capability Tunables::  Tunables that modify the hardware
@@ -224,6 +225,26 @@ from fast bins with this tunable.  Note that the value specified
 includes malloc's internal overhead, which is normally the size of one
 pointer, so add 4 on 32-bit systems or 8 on 64-bit systems to the size
 passed to @code{malloc} for the largest bin size to enable.
+@end deftp
+
+@node Dynamic Linking Tunables
+@section Dynamic Linking Tunables
+@cindex dynamic linking tunables
+@cindex rtld tunables
+
+@deftp {Tunable namespace} glibc.rtld
+Dynamic linker behavior can be modified by setting the
+following tunables in the @code{rtld} namespace:
+@end deftp
+
+@deftp Tunable glibc.rtld.nns
+Sets the number of supported dynamic link namespaces (see @code{dlmopen}).
+Currently this limit can be set between 1 and 16 inclusive, the default is 4.
+Each link namespace consumes some memory in all thread, and thus raising the
+limit will increase the amount of memory each thread uses. Raising the limit
+is useful when your application uses more than 4 dynamic linker audit modules
+e.g. @env{LD_AUDIT}, or will use more than 4 dynamic link namespaces as created
+by @code{dlmopen} with an lmid argument of @code{LM_ID_NEWLM}.
 @end deftp
 
 @node Elision Tunables

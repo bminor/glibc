@@ -780,6 +780,9 @@ init_tls (void)
       }
   assert (i == GL(dl_tls_max_dtv_idx));
 
+  /* Calculate the size of the static TLS surplus.  */
+  _dl_tls_static_surplus_init ();
+
   /* Compute the TLS offsets for the various blocks.  */
   _dl_determine_tlsoffset ();
 

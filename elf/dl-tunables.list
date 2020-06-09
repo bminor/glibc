@@ -126,4 +126,13 @@ glibc {
       default: 3
     }
   }
+
+  rtld {
+    nns {
+      type: SIZE_T
+      minval: 1
+      maxval: 16
+      default: 4
+    }
+  }
 }
