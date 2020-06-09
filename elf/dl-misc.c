@@ -167,6 +167,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	  switch (*fmt)
 	    {
 	      /* Integer formatting.  */
+	    case 'd':
 	    case 'u':
 	    case 'x':
 	      {
@@ -179,17 +180,43 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 #else
 		unsigned long int num = va_arg (arg, unsigned int);
 #endif
+		bool negative = false;
+		if (*fmt == 'd')
+		  {
+#if LONG_MAX != INT_MAX
+		    if (long_mod)
+		      {
+			if ((long int) num < 0)
+			  negative = true;
+		      }
+		    else
+		      {
+			if ((int) num < 0)
+			  {
+			    num = (unsigned int) num;
+			    negative = true;
+			  }
+		      }
+#else
+		    if ((int) num < 0)
+		      negative = true;
+#endif
+		  }
+
 		/* We use alloca() to allocate the buffer with the most
 		   pessimistic guess for the size.  Using alloca() allows
 		   having more than one integer formatting in a call.  */
-		char *buf = (char *) alloca (3 * sizeof (unsigned long int));
-		char *endp = &buf[3 * sizeof (unsigned long int)];
+		char *buf = (char *) alloca (1 + 3 * sizeof (unsigned long int));
+		char *endp = &buf[1 + 3 * sizeof (unsigned long int)];
 		char *cp = _itoa (num, endp, *fmt == 'x' ? 16 : 10, 0);
 
 		/* Pad to the width the user specified.  */
 		if (width != -1)
 		  while (endp - cp < width)
 		    *--cp = fill;
+
+		if (negative)
+		  *--cp = '-';
 
 		iov[niov].iov_base = cp;
 		iov[niov].iov_len = endp - cp;
