@@ -60,8 +60,6 @@
    This should be large enough to cover runtime libraries of the
    compiler such as libgomp and libraries in libc other than libc.so.  */
 #define OTHER_IE_TLS 144
-/* Size of additional surplus TLS, placeholder for TLS optimizations.  */
-#define OPT_SURPLUS_TLS 512
 
 /* Calculate the size of the static TLS surplus, when the given
    number of audit modules are loaded.  Must be called after the
@@ -69,13 +67,15 @@
 void
 _dl_tls_static_surplus_init (size_t naudit)
 {
-  size_t nns;
+  size_t nns, opt_tls;
 
 #if HAVE_TUNABLES
   nns = TUNABLE_GET (nns, size_t, NULL);
+  opt_tls = TUNABLE_GET (optional_static_tls, size_t, NULL);
 #else
   /* Default values of the tunables.  */
   nns = 4;
+  opt_tls = 512;
 #endif
   if (nns > DL_NNS)
     nns = DL_NNS;
@@ -84,9 +84,10 @@ _dl_tls_static_surplus_init (size_t naudit)
 		      (unsigned long) naudit, (unsigned long) (DL_NNS - nns));
   nns += naudit;
 
+  GL(dl_tls_static_optional) = opt_tls;
   GLRO(dl_tls_static_surplus) = ((nns - 1) * LIBC_IE_TLS
 				 + nns * OTHER_IE_TLS
-				 + OPT_SURPLUS_TLS);
+				 + opt_tls);
 }
 
 /* Out-of-memory handler.  */

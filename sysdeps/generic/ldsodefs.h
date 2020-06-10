@@ -442,6 +442,9 @@ struct rtld_global
   EXTERN size_t _dl_tls_static_used;
   /* Alignment requirement of the static TLS block.  */
   EXTERN size_t _dl_tls_static_align;
+  /* Remaining amount of static TLS that may be used for optimizing
+     dynamic TLS access (e.g. with TLSDESC).  */
+  EXTERN size_t _dl_tls_static_optional;
 
 /* Number of additional entries in the slotinfo array of each slotinfo
    list element.  A large number makes it almost certain take we never

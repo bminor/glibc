@@ -56,6 +56,9 @@ size_t _dl_tls_static_align;
    loaded modules with IE-model TLS or for TLSDESC optimization.
    See comments in elf/dl-tls.c where it is initialized.  */
 size_t _dl_tls_static_surplus;
+/* Remaining amount of static TLS that may be used for optimizing
+   dynamic TLS access (e.g. with TLSDESC).  */
+size_t _dl_tls_static_optional;
 
 /* Generation counter for the dtv.  */
 size_t _dl_tls_generation;

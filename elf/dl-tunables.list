@@ -134,5 +134,10 @@ glibc {
       maxval: 16
       default: 4
     }
+    optional_static_tls {
+      type: SIZE_T
+      minval: 0
+      default: 512
+    }
   }
 }

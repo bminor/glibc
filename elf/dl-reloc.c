@@ -39,13 +39,16 @@
 /* We are trying to perform a static TLS relocation in MAP, but it was
    dynamically loaded.  This can only work if there is enough surplus in
    the static TLS area already allocated for each running thread.  If this
-   object's TLS segment is too big to fit, we fail.  If it fits,
-   we set MAP->l_tls_offset and return.
-   This function intentionally does not return any value but signals error
-   directly, as static TLS should be rare and code handling it should
-   not be inlined as much as possible.  */
+   object's TLS segment is too big to fit, we fail with -1.  If it fits,
+   we set MAP->l_tls_offset and return 0.
+   A portion of the surplus static TLS can be optionally used to optimize
+   dynamic TLS access (with TLSDESC or powerpc TLS optimizations).
+   If OPTIONAL is true then TLS is allocated for such optimization and
+   the caller must have a fallback in case the optional portion of surplus
+   TLS runs out.  If OPTIONAL is false then the entire surplus TLS area is
+   considered and the allocation only fails if that runs out.  */
 int
-_dl_try_allocate_static_tls (struct link_map *map)
+_dl_try_allocate_static_tls (struct link_map *map, bool optional)
 {
   /* If we've already used the variable with dynamic access, or if the
      alignment requirements are too high, fail.  */
@@ -68,8 +71,14 @@ _dl_try_allocate_static_tls (struct link_map *map)
 
   size_t n = (freebytes - blsize) / map->l_tls_align;
 
-  size_t offset = GL(dl_tls_static_used) + (freebytes - n * map->l_tls_align
-					    - map->l_tls_firstbyte_offset);
+  /* Account optional static TLS surplus usage.  */
+  size_t use = freebytes - n * map->l_tls_align - map->l_tls_firstbyte_offset;
+  if (optional && use > GL(dl_tls_static_optional))
+    goto fail;
+  else if (optional)
+    GL(dl_tls_static_optional) -= use;
+
+  size_t offset = GL(dl_tls_static_used) + use;
 
   map->l_tls_offset = GL(dl_tls_static_used) = offset;
 #elif TLS_DTV_AT_TP
@@ -82,6 +91,13 @@ _dl_try_allocate_static_tls (struct link_map *map)
 
   if (used > GL(dl_tls_static_size))
     goto fail;
+
+  /* Account optional static TLS surplus usage.  */
+  size_t use = used - GL(dl_tls_static_used);
+  if (optional && use > GL(dl_tls_static_optional))
+    goto fail;
+  else if (optional)
+    GL(dl_tls_static_optional) -= use;
 
   map->l_tls_offset = offset;
   map->l_tls_firstbyte_offset = GL(dl_tls_static_used);
@@ -110,12 +126,15 @@ _dl_try_allocate_static_tls (struct link_map *map)
   return 0;
 }
 
+/* This function intentionally does not return any value but signals error
+   directly, as static TLS should be rare and code handling it should
+   not be inlined as much as possible.  */
 void
 __attribute_noinline__
 _dl_allocate_static_tls (struct link_map *map)
 {
   if (map->l_tls_offset == FORCED_DYNAMIC_TLS_OFFSET
-      || _dl_try_allocate_static_tls (map))
+      || _dl_try_allocate_static_tls (map, false))
     {
       _dl_signal_error (0, map->l_name, NULL, N_("\
 cannot allocate memory in static TLS block"));
