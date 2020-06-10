@@ -278,8 +278,8 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-sem17 \
 	tst-tsd3 tst-tsd4 \
 	tst-cancel4 tst-cancel4_1 tst-cancel4_2 tst-cancel5 \
-	tst-cancel6 tst-cancel7 tst-cancel9 tst-cancel11 tst-cancel13 \
-	tst-cancel16 tst-cancel17 tst-cancel20 tst-cancel21 tst-cancel24 \
+	tst-cancel7 tst-cancel9 tst-cancel13 \
+	tst-cancel16 tst-cancel17 tst-cancel20 tst-cancel24 \
 	tst-cancel-self tst-cancel-self-cancelstate \
 	tst-cleanup4 \
 	tst-signal3 \
@@ -358,9 +358,9 @@ endif
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
-tests += tst-cancelx4 tst-cancelx5 tst-cancelx6 tst-cancelx7 tst-cancelx9 \
-	 tst-cancelx11 tst-cancelx13 \
-	 tst-cancelx16 tst-cancelx17 tst-cancelx20 tst-cancelx21 \
+tests += tst-cancelx4 tst-cancelx5 tst-cancelx7 tst-cancelx9 \
+	 tst-cancelx13 \
+	 tst-cancelx16 tst-cancelx17 tst-cancelx20 \
 	 tst-cleanupx4
 
 ifeq ($(build-shared),yes)
@@ -422,11 +422,11 @@ link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 		    $(common-objpfx)libc.a
 
 tests-static += tst-stackguard1-static \
-		tst-cancel21-static tst-cancel24-static \
+		tst-cancel24-static \
 		tst-mutex8-static tst-mutexpi8-static tst-sem11-static \
 		tst-sem12-static tst-cond11-static
 
-tests += tst-cancel21-static tst-cancel24-static
+tests += tst-cancel24-static
 
 tests-internal += tst-sem11-static tst-sem12-static tst-stackguard1-static
 xtests-static += tst-setuid1-static
@@ -477,15 +477,12 @@ CFLAGS-tst-cancelx5.c += -Wno-error
 # implementation.  For this we have to pass the -fexceptions parameter.
 CFLAGS-tst-cancelx4.c += -fexceptions
 CFLAGS-tst-cancelx5.c += -fexceptions
-CFLAGS-tst-cancelx6.c += -fexceptions
 CFLAGS-tst-cancelx7.c += -fexceptions
 CFLAGS-tst-cancelx9.c += -fexceptions
-CFLAGS-tst-cancelx11.c += -fexceptions
 CFLAGS-tst-cancelx13.c += -fexceptions
 CFLAGS-tst-cancelx16.c += -fexceptions
 CFLAGS-tst-cancelx17.c += -fexceptions
 CFLAGS-tst-cancelx20.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-tst-cancelx21.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx4.c += -fexceptions
 CFLAGS-tst-cleanupx4aux.c += -fexceptions
 CFLAGS-tst-initializers1.c += -W -Wall -Werror
