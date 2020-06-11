@@ -27,6 +27,7 @@
 
 #ifdef WIDE
 # define L(str) L##str
+# define STRDUP wcsdup
 # define SIMPLE_STRNCMP simple_wcsncmp
 
 /* Wcsncmp uses signed semantics for comparison, not unsigned.
@@ -48,6 +49,7 @@ simple_wcsncmp (const CHAR *s1, const CHAR *s2, size_t n)
 
 #else
 # define L(str) str
+# define STRDUP strdup
 # define SIMPLE_STRNCMP simple_strncmp
 
 /* Strncmp uses unsigned semantics for comparison.  */
@@ -190,6 +192,129 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len, size_t
   json_element_object_end (json_ctx);
 }
 
+static void
+do_one_test_page_boundary (json_ctx_t *json_ctx, CHAR *s1, CHAR *s2,
+			   size_t align1, size_t align2, size_t len,
+			   size_t n, int exp_result)
+{
+  json_element_object_begin (json_ctx);
+  json_attr_uint (json_ctx, "strlen", (double) len);
+  json_attr_uint (json_ctx, "len", (double) n);
+  json_attr_uint (json_ctx, "align1", (double) align1);
+  json_attr_uint (json_ctx, "align2", (double) align2);
+  json_array_begin (json_ctx, "timings");
+  FOR_EACH_IMPL (impl, 0)
+    do_one_test (json_ctx, impl, s1, s2, n, exp_result);
+  json_array_end (json_ctx);
+  json_element_object_end (json_ctx);
+}
+
+static void
+do_test_page_boundary (json_ctx_t *json_ctx)
+{
+  /* To trigger bug 25933, we need a size that is equal to the vector
+     length times 4. In the case of AVX2 for Intel, we need 32 * 4.  We
+     make this test generic and run it for all architectures as additional
+     boundary testing for such related algorithms.  */
+  size_t size = 32 * 4;
+  size_t len;
+  CHAR *s1 = (CHAR *) (buf1 + (BUF1PAGES - 1) * page_size);
+  CHAR *s2 = (CHAR *) (buf2 + (BUF1PAGES - 1) * page_size);
+  int exp_result;
+
+  memset (s1, 'a', page_size);
+  memset (s2, 'a', page_size);
+
+  s1[(page_size / CHARBYTES) - 1] = (CHAR) 0;
+
+  /* Iterate over a size that is just below where we expect the bug to
+     trigger up to the size we expect will trigger the bug e.g. [99-128].
+     Likewise iterate the start of two strings between 30 and 31 bytes
+     away from the boundary to simulate alignment changes.  */
+  for (size_t s = 99; s <= size; s++)
+    for (size_t s1a = 30; s1a < 32; s1a++)
+      for (size_t s2a = 30; s2a < 32; s2a++)
+	{
+	  size_t align1 = (page_size / CHARBYTES - s) - s1a;
+	  size_t align2 = (page_size / CHARBYTES - s) - s2a;
+	  CHAR *s1p = s1 + align1;
+	  CHAR *s2p = s2 + align2;
+	  len = (page_size / CHARBYTES) - 1 - align1;
+	  exp_result = SIMPLE_STRNCMP (s1p, s2p, s);
+	  do_one_test_page_boundary (json_ctx, s1p, s2p, align1, align2,
+				     len, s, exp_result);
+	}
+}
+
+static void
+do_one_test_page (json_ctx_t *json_ctx, size_t offset1, size_t offset2,
+		  CHAR *s2)
+{
+  CHAR *s1;
+  int exp_result;
+
+  if (offset1 * CHARBYTES  >= page_size
+      || offset2 * CHARBYTES >= page_size)
+    return;
+
+  s1 = (CHAR *) buf1;
+  s1 += offset1;
+  s2 += offset2;
+
+  size_t len = (page_size / CHARBYTES) - offset1;
+
+  exp_result= *s1;
+
+  json_element_object_begin (json_ctx);
+  json_attr_uint (json_ctx, "strlen", (double) len);
+  json_attr_uint (json_ctx, "len", (double) page_size);
+  json_attr_uint (json_ctx, "align1", (double) offset1);
+  json_attr_uint (json_ctx, "align2", (double) offset2);
+  json_array_begin (json_ctx, "timings");
+  {
+    FOR_EACH_IMPL (impl, 0)
+      do_one_test (json_ctx, impl, s1, s2, page_size, -exp_result);
+  }
+  json_array_end (json_ctx);
+  json_element_object_end (json_ctx);
+
+  json_element_object_begin (json_ctx);
+  json_attr_uint (json_ctx, "strlen", (double) len);
+  json_attr_uint (json_ctx, "len", (double) page_size);
+  json_attr_uint (json_ctx, "align1", (double) offset1);
+  json_attr_uint (json_ctx, "align2", (double) offset2);
+  json_array_begin (json_ctx, "timings");
+  {
+    FOR_EACH_IMPL (impl, 0)
+      do_one_test (json_ctx, impl, s1, s2, page_size, exp_result);
+  }
+  json_array_end (json_ctx);
+  json_element_object_end (json_ctx);
+}
+
+static void
+do_test_page (json_ctx_t *json_ctx)
+{
+  size_t i;
+  CHAR *s1, *s2;
+
+  s1 = (CHAR *) buf1;
+  /* Fill buf1 with 23. */
+  for (i = 0; i < (page_size / CHARBYTES) - 1; i++)
+    s1[i] = 23;
+  s1[i] = 0;
+
+  /* Make a copy of buf1.  */
+  s2 = STRDUP (s1);
+
+  /* Test should terminate within the page boundary.  */
+  for (i = 0; i < (108 / CHARBYTES); ++i)
+    do_one_test_page (json_ctx, ((page_size - 108) / CHARBYTES) + i,
+		      ((page_size - 1460) / CHARBYTES), s2);
+
+  free (s2);
+}
+
 int
 test_main (void)
 {
@@ -266,6 +391,9 @@ test_main (void)
       do_test_limit (&json_ctx, 0, 0, 15 - i, 16 - i, 255, 1);
       do_test_limit (&json_ctx, 0, 0, 15 - i, 16 - i, 255, -1);
     }
+
+  do_test_page_boundary (&json_ctx);
+  do_test_page (&json_ctx);
 
   json_array_end (&json_ctx);
   json_attr_object_end (&json_ctx);
