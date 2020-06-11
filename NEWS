@@ -67,6 +67,17 @@ Major new features:
   They should be used instead of sys_errlist and sys_nerr, both are
   thread and async-signal safe.  These functions are GNU extensions.
 
+* AArch64 now supports standard branch protection security hardening
+  in glibc when it is built with a GCC that is configured with
+  --enable-standard-branch-protection.  This includes branch target
+  identification (BTI) and pointer authentication for return addresses
+  (PAC-RET).  They require armv8.5-a and armv8.3-a architecture
+  extensions respectively for the protection to be effective,
+  otherwise the used instructions are nops.  User code can use PAC-RET
+  without libc support, but BTI requires a libc that is built with BTI
+  support, otherwise runtime objects linked into user code will not be
+  BTI compatible.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The deprecated <sys/sysctl.h> header and the sysctl function have been
