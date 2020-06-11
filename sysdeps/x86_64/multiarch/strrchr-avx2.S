@@ -44,7 +44,7 @@ ENTRY (STRRCHR)
 	movl	%edi, %ecx
 	/* Broadcast CHAR to YMM4.  */
 	VPBROADCAST %xmm4, %ymm4
-	vpxor	%ymm0, %ymm0, %ymm0
+	vpxor	%xmm0, %xmm0, %xmm0
 
 	/* Check if we may cross page boundary with one vector load.  */
 	andl	$(2 * VEC_SIZE - 1), %ecx

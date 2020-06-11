@@ -91,8 +91,8 @@ ENTRY (STRCMP)
 # endif
 	movl	%edi, %eax
 	xorl	%edx, %edx
-	/* Make %ymm7 all zeros in this function.  */
-	vpxor	%ymm7, %ymm7, %ymm7
+	/* Make %xmm7 (%ymm7) all zeros in this function.  */
+	vpxor	%xmm7, %xmm7, %xmm7
 	orl	%esi, %eax
 	andl	$(PAGE_SIZE - 1), %eax
 	cmpl	$(PAGE_SIZE - (VEC_SIZE * 4)), %eax
