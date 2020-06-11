@@ -18,6 +18,10 @@
 #include <sys/resource.h>
 #include <sysdep.h>
 
+/* For ports that support the 64-bit ABI we do not need to define prlimit
+   and instead prlimit aliases to prlimit64.  See the prlimit64
+   implementation.  */
+#if !__RLIM_T_MATCHES_RLIM64_T
 int
 prlimit (__pid_t pid, enum __rlimit_resource resource,
 	 const struct rlimit *new_rlimit, struct rlimit *old_rlimit)
@@ -73,3 +77,4 @@ prlimit (__pid_t pid, enum __rlimit_resource resource,
 
   return res;
 }
+#endif /* __RLIM_T_MATCHES_RLIM64_T  */

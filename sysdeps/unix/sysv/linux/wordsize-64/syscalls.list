@@ -1,5 +1,4 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 sendfile	-	sendfile	i:iipi	sendfile	sendfile64
-prlimit		EXTRA	prlimit64	i:iipp	prlimit		prlimit64
 personality	EXTRA	personality	i:i	__personality	personality

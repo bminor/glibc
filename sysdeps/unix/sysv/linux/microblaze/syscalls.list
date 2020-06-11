@@ -2,5 +2,4 @@
 
 cacheflush	EXTRA	cacheflush	i:iiii	__cacheflush	cacheflush
 
-prlimit64	EXTRA	prlimit64	i:iipp	prlimit64
 personality	EXTRA	personality	Ei:i	__personality	personality

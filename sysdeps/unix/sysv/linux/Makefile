@@ -56,7 +56,7 @@ endif
 ifeq ($(subdir),misc)
 sysdep_routines += adjtimex clone umount umount2 readahead sysctl \
 		   setfsuid setfsgid epoll_pwait signalfd \
-		   eventfd eventfd_read eventfd_write prlimit \
+		   eventfd eventfd_read eventfd_write prlimit prlimit64 \
 		   personality epoll_wait tee vmsplice splice \
 		   open_by_handle_at mlock2 pkey_mprotect pkey_set pkey_get \
 		   timerfd_gettime timerfd_settime prctl \
