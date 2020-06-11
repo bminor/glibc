@@ -359,6 +359,38 @@ check (void)
     }
 }
 
+static void
+check2 (void)
+{
+  /* To trigger bug 25933, we need a size that is equal to the vector
+     length times 4. In the case of AVX2 for Intel, we need 32 * 4.  We
+     make this test generic and run it for all architectures as additional
+     boundary testing for such related algorithms.  */
+  size_t size = 32 * 4;
+  CHAR *s1 = (CHAR *) (buf1 + (BUF1PAGES - 1) * page_size);
+  CHAR *s2 = (CHAR *) (buf2 + (BUF1PAGES - 1) * page_size);
+  int exp_result;
+
+  memset (s1, 'a', page_size);
+  memset (s2, 'a', page_size);
+  s1[(page_size / CHARBYTES) - 1] = (CHAR) 0;
+  s2[(page_size / CHARBYTES) - 1] = (CHAR) 0;
+
+  /* Iterate over a size that is just below where we expect the bug to
+     trigger up to the size we expect will trigger the bug e.g. [99-128].
+     Likewise iterate the start of two strings between 30 and 31 bytes
+     away from the boundary to simulate alignment changes.  */
+  for (size_t s = 99; s <= size; s++)
+    for (size_t s1a = 30; s1a < 32; s1a++)
+      for (size_t s2a = 30; s2a < 32; s2a++)
+	{
+	  CHAR *s1p = s1 + (page_size / CHARBYTES - s) - s1a;
+	  CHAR *s2p = s2 + (page_size / CHARBYTES - s) - s2a;
+	  exp_result = SIMPLE_STRCMP (s1p, s2p);
+	  FOR_EACH_IMPL (impl, 0)
+	    check_result (impl, s1p, s2p, exp_result);
+	}
+}
 
 int
 test_main (void)
@@ -367,6 +399,7 @@ test_main (void)
 
   test_init ();
   check();
+  check2 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)
