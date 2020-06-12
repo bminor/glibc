@@ -591,7 +591,14 @@ L(loop_cross_page_2_vec):
 	movl	$(PAGE_SIZE / (VEC_SIZE * 4) - 1), %esi
 
 	testq	%rdi, %rdi
+# ifdef USE_AS_STRNCMP
+	/* At this point, if %rdi value is 0, it already tested
+	   VEC_SIZE*4+%r10 byte starting from %rax. This label
+	   checks whether strncmp maximum offset reached or not.  */
+	je	L(string_nbyte_offset_check)
+# else
 	je	L(back_to_loop)
+# endif
 	tzcntq	%rdi, %rcx
 	addq	%r10, %rcx
 	/* Adjust for number of bytes skipped.  */
@@ -626,6 +633,14 @@ L(loop_cross_page_2_vec):
 # endif
 	VZEROUPPER
 	ret
+
+# ifdef USE_AS_STRNCMP
+L(string_nbyte_offset_check):
+	leaq	(VEC_SIZE * 4)(%r10), %r10
+	cmpq	%r10, %r11
+	jbe	L(zero)
+	jmp	L(back_to_loop)
+# endif
 
 	.p2align 4
 L(cross_page_loop):
