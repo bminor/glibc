@@ -11,6 +11,7 @@ libc {
     # Functions shared with the dynamic linker
     __access; __access_noerrno; __libc_read; __libc_write; __libc_lseek64;
     __read_nocancel; __pread64_nocancel;
+    __write_nocancel;
     __libc_lock_self0; __getcwd;
 
     _dl_init_first;
@@ -51,6 +52,7 @@ ld {
     # functions that must be shared with libc
     __access; __access_noerrno; __libc_read; __libc_write; __libc_lseek64;
     __read_nocancel; __pread64_nocancel;
+    __write_nocancel;
     __libc_lock_self0; __getcwd;
   }
 }

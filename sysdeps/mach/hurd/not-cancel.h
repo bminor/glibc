@@ -48,8 +48,12 @@ __typeof (__read) __read_nocancel;
 /* Non cancellable pread syscall (LFS version).  */
 __typeof (__pread64) __pread64_nocancel;
 
-#define __write_nocancel(fd, buf, n) \
-  __write (fd, buf, n)
+/* Non cancellable write syscall.  */
+__typeof (__write) __write_nocancel;
+
+/* Non cancellable pwrite syscall (LFS version).  */
+__typeof (__pwrite64) __pwrite64_nocancel;
+
 #define __writev_nocancel_nostatus(fd, iov, n) \
   (void) __writev (fd, iov, n)
 # define __waitpid_nocancel(pid, stat_loc, options) \
@@ -60,6 +64,8 @@ __typeof (__pread64) __pread64_nocancel;
 #if IS_IN (libc)
 hidden_proto (__read_nocancel)
 hidden_proto (__pread64_nocancel)
+hidden_proto (__write_nocancel)
+hidden_proto (__pwrite64_nocancel)
 hidden_proto (__close_nocancel_nostatus)
 #endif
 

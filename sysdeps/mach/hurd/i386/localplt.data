@@ -23,7 +23,8 @@ ld.so: __read ?
 ld.so: __read_nocancel
 ld.so: __pread64
 ld.so: __pread64_nocancel
-ld.so: __write
+ld.so: __write ?
+ld.so: __write_nocancel
 ld.so: __writev
 ld.so: __libc_lseek64
 ld.so: __mmap

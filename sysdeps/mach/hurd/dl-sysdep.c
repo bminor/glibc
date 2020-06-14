@@ -396,6 +396,7 @@ libc_hidden_weak (__read)
 weak_alias (__read, __read_nocancel)
 
 check_no_hidden(__write);
+check_no_hidden(__write_nocancel);
 __ssize_t weak_function
 __write (int fd, const void *buf, size_t nbytes)
 {
@@ -411,6 +412,7 @@ __write (int fd, const void *buf, size_t nbytes)
   return nwrote;
 }
 libc_hidden_weak (__write)
+  weak_alias (__write, __write_nocancel)
 
 /* This is only used for printing messages (see dl-misc.c).  */
 check_no_hidden(__writev);
