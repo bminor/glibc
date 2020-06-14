@@ -81,7 +81,6 @@ struct __pthread
   int cancel_state;
   int cancel_type;
   int cancel_pending;
-  struct __pthread_cancelation_handler *cancelation_handlers;
 
   /* Thread stack.  */
   void *stackaddr;
@@ -197,6 +196,9 @@ extern pthread_rwlock_t __pthread_threads_lock;
 #ifndef _pthread_self
 extern struct __pthread *_pthread_self (void);
 #endif
+
+/* Stores the stack of cleanup handlers for the thread.  */
+extern __thread struct __pthread_cancelation_handler *__pthread_cleanup_stack;
 
 
 /* Initialize the pthreads library.  */

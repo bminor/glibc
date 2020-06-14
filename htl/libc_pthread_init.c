@@ -19,6 +19,8 @@
 #include <string.h>
 #include <pthread-functions.h>
 
+__thread struct __pthread_cancelation_handler *__pthread_cleanup_stack;
+
 void
 __libc_pthread_init (const struct pthread_functions *functions)
 {

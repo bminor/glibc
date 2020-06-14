@@ -23,6 +23,6 @@
 struct __pthread_cancelation_handler **
 __pthread_get_cleanup_stack (void)
 {
-  return &_pthread_self ()->cancelation_handlers;
+  return &__pthread_cleanup_stack;
 }
 hidden_def(__pthread_get_cleanup_stack)

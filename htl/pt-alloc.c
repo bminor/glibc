@@ -65,8 +65,6 @@ initialize_pthread (struct __pthread *new)
   new->state_lock = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
   new->state_cond = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
 
-  new->cancelation_handlers = 0;
-
   memset (&new->res_state, '\0', sizeof (new->res_state));
 
   new->tcb = NULL;

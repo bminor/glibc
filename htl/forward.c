@@ -23,6 +23,7 @@
 #include <pthread-functions.h>
 #include <libc-lock.h>
 #include <fork.h>
+#include <pt-internal.h>
 
 /* Pointers to the libc functions.  */
 struct pthread_functions __libc_pthread_functions attribute_hidden;
@@ -140,6 +141,5 @@ strong_alias (__pthread_setcancelstate, pthread_setcancelstate);
 
 FORWARD (pthread_setcanceltype, (int type, int *oldtype), (type, oldtype), 0)
 
-struct __pthread_cancelation_handler *dummy_list;
 FORWARD2 (__pthread_get_cleanup_stack, struct __pthread_cancelation_handler **,
-	  (void), (), return &dummy_list);
+	  (void), (), return &__pthread_cleanup_stack);
