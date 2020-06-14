@@ -51,9 +51,10 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
 	 tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	 tst-basic7 \
+	 tst-cancel-self tst-cancel-self-cancelstate \
 	 tst-cancel-self-canceltype tst-cancel-self-testcancel \
 	 tst-cancel1 tst-cancel2 tst-cancel3 \
-	 tst-cancel6 tst-cancel8 tst-cancel10 tst-cancel11 \
+	 tst-cancel6 tst-cancel8 tst-cancel9 tst-cancel10 tst-cancel11 \
 	 tst-cancel12 tst-cancel14 tst-cancel15 tst-cancel18 tst-cancel19 \
 	 tst-cancel21 \
 	 tst-cancel22 tst-cancel23 tst-cancel26 tst-cancel27 tst-cancel28 \
@@ -115,8 +116,8 @@ tests-nolibpthread = tst-unload
 CFLAGS-tst-cleanup2.c += -fno-builtin
 CFLAGS-tst-cleanupx2.c += -fno-builtin
 
-tests += tst-cancelx2 tst-cancelx3 tst-cancelx6 tst-cancelx8 tst-cancelx10 \
-	 tst-cancelx11 tst-cancelx12 tst-cancelx14 tst-cancelx15 \
+tests += tst-cancelx2 tst-cancelx3 tst-cancelx6 tst-cancelx8 tst-cancelx9 \
+	 tst-cancelx10 tst-cancelx11 tst-cancelx12 tst-cancelx14 tst-cancelx15 \
 	 tst-cancelx18 tst-cancelx21 \
 	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3
 
@@ -155,6 +156,7 @@ CFLAGS-tst-cancelx2.c += -fexceptions
 CFLAGS-tst-cancelx3.c += -fexceptions
 CFLAGS-tst-cancelx6.c += -fexceptions
 CFLAGS-tst-cancelx8.c += -fexceptions
+CFLAGS-tst-cancelx9.c += -fexceptions
 CFLAGS-tst-cancelx10.c += -fexceptions
 CFLAGS-tst-cancelx11.c += -fexceptions
 CFLAGS-tst-cancelx12.c += -fexceptions

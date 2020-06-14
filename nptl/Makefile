@@ -278,9 +278,8 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-sem17 \
 	tst-tsd3 tst-tsd4 \
 	tst-cancel4 tst-cancel4_1 tst-cancel4_2 tst-cancel5 \
-	tst-cancel7 tst-cancel9 tst-cancel13 \
+	tst-cancel7 tst-cancel13 \
 	tst-cancel16 tst-cancel17 tst-cancel20 tst-cancel24 \
-	tst-cancel-self tst-cancel-self-cancelstate \
 	tst-cleanup4 \
 	tst-signal3 \
 	tst-exec4 tst-exec5 \
