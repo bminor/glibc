@@ -22,6 +22,7 @@
 #include <hurd/fd.h>
 #include <hurd/ifsock.h>
 #include <hurd/socket.h>
+#include <sysdep-cancel.h>
 #include "hurd/hurdsocket.h"
 
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
@@ -82,11 +83,13 @@ __sendto (int fd,
 			  if (! err)
 			    {
 			      /* Send the data.  */
+			      int cancel_oldtype = LIBC_CANCEL_ASYNC();
 			      err = __socket_send (port, aport,
 						   flags, buf, n,
 						   NULL,
 						   MACH_MSG_TYPE_COPY_SEND, 0,
 						   NULL, 0, &wrote);
+			      LIBC_CANCEL_RESET (cancel_oldtype);
 			    }
 			  err;
 			}));

@@ -20,6 +20,7 @@
 #include <hurd.h>
 #include <hurd/socket.h>
 #include <hurd/fd.h>
+#include <sysdep-cancel.h>
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 ssize_t
@@ -27,11 +28,14 @@ __send (int fd, const void *buf, size_t n, int flags)
 {
   error_t err;
   size_t wrote;
+  int cancel_oldtype;
 
+  cancel_oldtype = LIBC_CANCEL_ASYNC();
   err = HURD_DPORT_USE (fd, __socket_send (port, MACH_PORT_NULL,
 					   flags, buf, n,
 					   NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 					   NULL, 0, &wrote));
+  LIBC_CANCEL_RESET (cancel_oldtype);
 
   if (err == MIG_BAD_ID || err == EOPNOTSUPP)
     /* The file did not grok the socket protocol.  */
