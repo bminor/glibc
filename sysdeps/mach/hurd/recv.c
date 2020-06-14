@@ -21,6 +21,7 @@
 #include <hurd/fd.h>
 #include <hurd/socket.h>
 #include <string.h>
+#include <sysdep-cancel.h>
 
 /* Read N bytes into BUF from socket FD.
    Returns the number read or -1 for errors.  */
@@ -36,13 +37,17 @@ __recv (int fd, void *buf, size_t n, int flags)
   mach_msg_type_number_t nports = 0;
   char *cdata = NULL;
   mach_msg_type_number_t clen = 0;
+  int cancel_oldtype;
 
+  cancel_oldtype = LIBC_CANCEL_ASYNC();
   err = HURD_DPORT_USE (fd, __socket_recv (port, &addrport,
 					       flags, &bufp, &nread,
 					       &ports, &nports,
 					       &cdata, &clen,
 					       &flags,
 					       n));
+  LIBC_CANCEL_RESET (cancel_oldtype);
+
   if (err == MIG_BAD_ID || err == EOPNOTSUPP)
     /* The file did not grok the socket protocol.  */
     err = ENOTSOCK;

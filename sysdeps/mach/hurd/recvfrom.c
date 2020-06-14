@@ -21,6 +21,7 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <hurd/socket.h>
+#include <sysdep-cancel.h>
 
 /* Read N bytes into BUF through socket FD.
    If ADDR is not NULL, fill in *ADDR_LEN bytes of it with tha address of
@@ -39,13 +40,18 @@ __recvfrom (int fd, void *buf, size_t n, int flags, __SOCKADDR_ARG addrarg,
   char *cdata = NULL;
   mach_msg_type_number_t clen = 0;
   struct sockaddr *addr = addrarg.__sockaddr__;
+  int cancel_oldtype;
 
-  if (err = HURD_DPORT_USE (fd, __socket_recv (port, &addrport,
-					       flags, &bufp, &nread,
-					       &ports, &nports,
-					       &cdata, &clen,
-					       &flags,
-					       n)))
+  cancel_oldtype = LIBC_CANCEL_ASYNC();
+  err = HURD_DPORT_USE (fd, __socket_recv (port, &addrport,
+					   flags, &bufp, &nread,
+					   &ports, &nports,
+					   &cdata, &clen,
+					   &flags,
+					   n));
+  LIBC_CANCEL_RESET (cancel_oldtype);
+
+  if (err)
     return __hurd_sockfail (fd, flags, err);
 
   /* Get address data for the returned address port if requested.  */
@@ -55,7 +61,9 @@ __recvfrom (int fd, void *buf, size_t n, int flags, __SOCKADDR_ARG addrarg,
       mach_msg_type_number_t buflen = *addr_len;
       int type;
 
+      cancel_oldtype = LIBC_CANCEL_ASYNC();
       err = __socket_whatis_address (addrport, &type, &buf, &buflen);
+      LIBC_CANCEL_RESET (cancel_oldtype);
       if (err == EOPNOTSUPP)
 	/* If the protocol server can't tell us the address, just return a
 	   zero-length one.  */

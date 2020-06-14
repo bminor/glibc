@@ -22,6 +22,7 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <hurd/socket.h>
+#include <sysdep-cancel.h>
 
 /* Receive a message as described by MESSAGE from socket FD.
    Returns the number of bytes read or -1 for errors.  */
@@ -42,12 +43,16 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
   int nfds, *opened_fds = NULL;
   int i, ii, j;
   int newfds;
+  int cancel_oldtype;
 
   error_t reauthenticate (mach_port_t port, mach_port_t *result)
     {
       error_t err;
       mach_port_t ref;
       ref = __mach_reply_port ();
+      int cancel_oldtype;
+
+      cancel_oldtype = LIBC_CANCEL_ASYNC();
       do
 	err = __io_reauthenticate (port, ref, MACH_MSG_TYPE_MAKE_SEND);
       while (err == EINTR);
@@ -57,6 +62,8 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
 					  ref, MACH_MSG_TYPE_MAKE_SEND,
 					  result));
 	while (err == EINTR);
+      LIBC_CANCEL_RESET (cancel_oldtype);
+
       __mach_port_destroy (__mach_task_self (), ref);
       return err;
     }
@@ -78,11 +85,14 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
     }
 
   buf = data;
-  if (err = HURD_DPORT_USE (fd, __socket_recv (port, &aport,
-					       flags, &data, &len,
-					       &ports, &nports,
-					       &cdata, &clen,
-					       &message->msg_flags, amount)))
+  cancel_oldtype = LIBC_CANCEL_ASYNC();
+  err = HURD_DPORT_USE (fd, __socket_recv (port, &aport,
+					   flags, &data, &len,
+					   &ports, &nports,
+					   &cdata, &clen,
+					   &message->msg_flags, amount));
+  LIBC_CANCEL_RESET (cancel_oldtype);
+  if (err)
     return __hurd_sockfail (fd, flags, err);
 
   if (message->msg_name != NULL && aport != MACH_PORT_NULL)
@@ -91,7 +101,10 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
       mach_msg_type_number_t buflen = message->msg_namelen;
       int type;
 
+      cancel_oldtype = LIBC_CANCEL_ASYNC();
       err = __socket_whatis_address (aport, &type, &buf, &buflen);
+      LIBC_CANCEL_RESET (cancel_oldtype);
+
       if (err == EOPNOTSUPP)
 	/* If the protocol server can't tell us the address, just return a
 	   zero-length one.  */
