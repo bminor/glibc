@@ -205,6 +205,7 @@ $(inst_libdir)/libpthread_syms.a: $(srcdir)/libpthread_syms.a $(+force)
 libc-link.so = $(common-objpfx)libc.so
 
 extra-B-pthread.so = -B$(common-objpfx)htl/
+LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
 include ../Rules
 
