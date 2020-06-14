@@ -200,6 +200,10 @@ sysdep_routines += f_setlk close_nocancel_nostatus read_nocancel \
 		   pread64_nocancel write_nocancel pwrite64_nocancel
 endif
 
+ifeq (misc, $(subdir))
+sysdep_routines += writev_nocancel writev_nocancel_nostatus
+endif
+
 ifeq ($(subdir),sunrpc)
 sysdep_headers += nfs/nfs.h
 endif

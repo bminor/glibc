@@ -54,8 +54,12 @@ __typeof (__write) __write_nocancel;
 /* Non cancellable pwrite syscall (LFS version).  */
 __typeof (__pwrite64) __pwrite64_nocancel;
 
-#define __writev_nocancel_nostatus(fd, iov, n) \
-  (void) __writev (fd, iov, n)
+/* Non cancellable writev syscall.  */
+__typeof (__writev) __writev_nocancel;
+
+/* Non cancellable writev syscall with no status.  */
+void __writev_nocancel_nostatus (int fd, const struct iovec *vector, int count);
+
 # define __waitpid_nocancel(pid, stat_loc, options) \
   __waitpid (pid, stat_loc, options)
 #define __fcntl64_nocancel(fd, cmd, ...) \
@@ -66,6 +70,8 @@ hidden_proto (__read_nocancel)
 hidden_proto (__pread64_nocancel)
 hidden_proto (__write_nocancel)
 hidden_proto (__pwrite64_nocancel)
+hidden_proto (__writev_nocancel)
+hidden_proto (__writev_nocancel_nostatus)
 hidden_proto (__close_nocancel_nostatus)
 #endif
 
