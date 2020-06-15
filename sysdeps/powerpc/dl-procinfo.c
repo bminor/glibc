@@ -77,7 +77,7 @@ PROCINFO_CLASS const char _dl_powerpc_cap_flags[64][15]
     "", "", "", "",
     "", "", "", "",
     "", "", "", "",
-    "", "", "", "htm-no-suspend",
+    "", "mma", "arch_3_1", "htm-no-suspend",
     "scv", "darn", "ieee128", "arch_3_00",
     "htm-nosc", "vcrypto", "tar", "isel",
     "ebb", "dscr", "htm", "arch_2_07",
