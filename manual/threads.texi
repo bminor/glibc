@@ -625,6 +625,7 @@ the standard.
 @menu
 * Default Thread Attributes::             Setting default attributes for
 					  threads in a process.
+* Initial Thread Signal Mask::            Setting the initial mask of threads.
 * Waiting with Explicit Clocks::          Functions for waiting with an
                                           explicit clock specification.
 @end menu
@@ -670,6 +671,77 @@ attributes or the stack address is set in the attribute.
 The system does not have sufficient memory.
 @end table
 @end deftypefun
+
+@node Initial Thread Signal Mask
+@subsubsection Controlling the Initial Signal Mask of a New Thread
+
+@Theglibc{} provides a way to specify the initial signal mask of a
+thread created using @code{pthread_create}, passing a thread attribute
+object configured for this purpose.
+
+@deftypefun int pthread_attr_setsigmask_np (pthread_attr_t *@var{attr}, const sigset_t *@var{sigmask})
+@standards{GNU, pthread.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+Change the initial signal mask specified by @var{attr}.  If
+@var{sigmask} is not @code{NULL}, the initial signal mask for new
+threads created with @var{attr} is set to @code{*@var{sigmask}}.  If
+@var{sigmask} is @code{NULL}, @var{attr} will no longer specify an
+explicit signal mask, so that the initial signal mask of the new
+thread is inherited from the thread that calls @code{pthread_create}.
+
+This function returns zero on success, and @code{ENOMEM} on memory
+allocation failure.
+@end deftypefun
+
+@deftypefun int pthread_attr_getsigmask_np (const pthread_attr_t *@var{attr}, sigset_t *@var{sigmask})
+@standards{GNU, pthread.h}
+@safety{@prelim{}@mtsafe{}@asunsafe{@ascuheap{}}@acunsafe{@acsmem{}}}
+Retrieve the signal mask stored in @var{attr} and copy it to
+@code{*@var{sigmask}}.  If the signal mask has not been set, return
+the special constant @code{PTHREAD_ATTR_NO_SIGMASK_NP}, otherwise
+return zero.
+
+@c Move this to the documentation of pthread_getattr_np once it exists.
+Obtaining the signal mask only works if it has been previously stored
+by @code{pthread_attr_setsigmask_np}.  For example, the
+@code{pthread_getattr_np} function does not obtain the current signal
+mask of the specified thread, and @code{pthread_attr_getsigmask_np}
+will subsequently report the signal mask as unset.
+@end deftypefun
+
+@deftypevr Macro int PTHREAD_ATTR_NO_SIGMASK_NP
+The special value returned by @code{pthread_attr_setsigmask_np} to
+indicate that no signal mask has been set for the attribute.
+@end deftypevr
+
+It is possible to create a new thread with a specific signal mask
+without using these functions.  On the thread that calls
+@code{pthread_create}, the required steps for the general case are:
+
+@enumerate 1
+@item
+Mask all signals, and save the old signal mask, using
+@code{pthread_sigmask}.  This ensures that the new thread will be
+created with all signals masked, so that no signals can be delivered
+to the thread until the desired signal mask is set.
+
+@item
+Call @code{pthread_create} to create the new thread, passing the
+desired signal mask to the thread start routine (which could be a
+wrapper function for the actual thread start routine).  It may be
+necessary to make a copy of the desired signal mask on the heap, so
+that the life-time of the copy extends to the point when the start
+routine needs to access the signal mask.
+
+@item
+Restore the thread's signal mask, to the set that was saved in the
+first step.
+@end enumerate
+
+The start routine for the created thread needs to locate the desired
+signal mask and use @code{pthread_sigmask} to apply it to the thread.
+If the signal mask was copied to a heap allocation, the copy should be
+freed.
 
 @node Waiting with Explicit Clocks
 @subsubsection Functions for Waiting According to a Specific Clock
