@@ -199,15 +199,25 @@ _dl_load_cache_lookup (const char *name)
 					       PROT_READ);
 
       /* We can handle three different cache file formats here:
+	 - only the new format
 	 - the old libc5/glibc2.0/2.1 format
 	 - the old format with the new format in it
-	 - only the new format
 	 The following checks if the cache contains any of these formats.  */
-      if (file != MAP_FAILED && cachesize > sizeof *cache
-	  && memcmp (file, CACHEMAGIC, sizeof CACHEMAGIC - 1) == 0
+      if (file != MAP_FAILED && cachesize > sizeof *cache_new
+	  && memcmp (file, CACHEMAGIC_VERSION_NEW,
+		     sizeof CACHEMAGIC_VERSION_NEW - 1) == 0
 	  /* Check for corruption, avoiding overflow.  */
-	  && ((cachesize - sizeof *cache) / sizeof (struct file_entry)
-	      >= ((struct cache_file *) file)->nlibs))
+	  && ((cachesize - sizeof *cache_new) / sizeof (struct file_entry_new)
+	      >= ((struct cache_file_new *) file)->nlibs))
+	{
+	  cache_new = file;
+	  cache = file;
+	}
+      else if (file != MAP_FAILED && cachesize > sizeof *cache
+	       && memcmp (file, CACHEMAGIC, sizeof CACHEMAGIC - 1) == 0
+	       /* Check for corruption, avoiding overflow.  */
+	       && ((cachesize - sizeof *cache) / sizeof (struct file_entry)
+		   >= ((struct cache_file *) file)->nlibs))
 	{
 	  size_t offset;
 	  /* Looks ok.  */
@@ -222,13 +232,6 @@ _dl_load_cache_lookup (const char *name)
 	      || memcmp (cache_new->magic, CACHEMAGIC_VERSION_NEW,
 			 sizeof CACHEMAGIC_VERSION_NEW - 1) != 0)
 	    cache_new = (void *) -1;
-	}
-      else if (file != MAP_FAILED && cachesize > sizeof *cache_new
-	       && memcmp (file, CACHEMAGIC_VERSION_NEW,
-			  sizeof CACHEMAGIC_VERSION_NEW - 1) == 0)
-	{
-	  cache_new = file;
-	  cache = file;
 	}
       else
 	{
