@@ -43,7 +43,7 @@ fax        ""
 language   "Turkish"
 territory  "Turkey"
 revision   "1.0"
-date       "2020-04-14"
+date       "2020-06-25"
 
 category "i18n:2012";LC_IDENTIFICATION
 category "i18n:2012";LC_CTYPE

@@ -10,7 +10,7 @@ comment_char %
 
 % Transliterations that remove all combining characters (accents,
 % pronounciation marks, etc.).
-% Generated automatically from UnicodeData.txt by gen_translit_combining.py on 2020-04-14 for Unicode 13.0.0.
+% Generated automatically from UnicodeData.txt by gen_translit_combining.py on 2020-06-25 for Unicode 13.0.0.
 
 LC_CTYPE
 

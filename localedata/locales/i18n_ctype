@@ -26,7 +26,7 @@ fax       ""
 language  ""
 territory "Earth"
 revision  "13.0.0"
-date      "2020-04-14"
+date      "2020-06-25"
 category  "i18n:2012";LC_CTYPE
 END LC_IDENTIFICATION
 
