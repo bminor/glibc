@@ -795,11 +795,13 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 # else
 	  /* Make sure the remaining bytes fit into the state objects
 	     buffer.  */
-	  assert (inend - *inptrp < 4);
+	  size_t cnt_after = inend - *inptrp;
+	  assert (cnt_after <= sizeof (data->__statep->__value.__wchb));
 
 	  size_t cnt;
-	  for (cnt = 0; *inptrp < inend; ++cnt)
-	    data->__statep->__value.__wchb[cnt] = *(*inptrp)++;
+	  for (cnt = 0; cnt < cnt_after; ++cnt)
+	    data->__statep->__value.__wchb[cnt] = (*inptrp)[cnt];
+	  *inptrp = inend;
 	  data->__statep->__count &= ~7;
 	  data->__statep->__count |= cnt;
 # endif
