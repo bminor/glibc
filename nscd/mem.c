@@ -264,7 +264,7 @@ gc (struct database_dyn *db)
 
   /* Now we start modifying the data.  Make sure all readers of the
      data are aware of this and temporarily don't use the data.  */
-  ++db->head->gc_cycle;
+  atomic_fetch_add_relaxed (&db->head->gc_cycle, 1);
   assert ((db->head->gc_cycle & 1) == 1);
 
 
@@ -490,7 +490,7 @@ gc (struct database_dyn *db)
 
 
   /* Now we are done modifying the data.  */
-  ++db->head->gc_cycle;
+  atomic_fetch_add_relaxed (&db->head->gc_cycle, 1);
   assert ((db->head->gc_cycle & 1) == 0);
 
   /* We are done.  */
