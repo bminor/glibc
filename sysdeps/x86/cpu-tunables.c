@@ -54,7 +54,7 @@ extern __typeof (memcmp) DEFAULT_MEMCMP;
   _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);	\
   if (!DEFAULT_MEMCMP (f, #name, len))					\
     {									\
-      cpu_features->feature[index_arch_##name]				\
+      cpu_features->feature_##name[index_arch_##name]			\
 	&= ~bit_arch_##name;						\
       break;								\
     }
@@ -66,10 +66,10 @@ extern __typeof (memcmp) DEFAULT_MEMCMP;
   if (!DEFAULT_MEMCMP (f, #name, len))					\
     {									\
       if (disable)							\
-	cpu_features->feature[index_arch_##name]			\
+	cpu_features->feature_##name[index_arch_##name]			\
 	  &= ~bit_arch_##name;						\
       else								\
-	cpu_features->feature[index_arch_##name]			\
+	cpu_features->feature_##name[index_arch_##name]			\
 	  |= bit_arch_##name;						\
       break;								\
     }
@@ -82,10 +82,10 @@ extern __typeof (memcmp) DEFAULT_MEMCMP;
   if (!DEFAULT_MEMCMP (f, #name, len))					\
     {									\
       if (disable)							\
-	cpu_features->feature[index_arch_##name]			\
+	cpu_features->feature_##name[index_arch_##name]			\
 	  &= ~bit_arch_##name;						\
       else if (CPU_FEATURES_ARCH_P (cpu_features, need))		\
-	cpu_features->feature[index_arch_##name]			\
+	cpu_features->feature_##name[index_arch_##name]			\
 	  |= bit_arch_##name;						\
       break;								\
     }
@@ -98,10 +98,10 @@ extern __typeof (memcmp) DEFAULT_MEMCMP;
   if (!DEFAULT_MEMCMP (f, #name, len))					\
     {									\
       if (disable)							\
-	cpu_features->feature[index_arch_##name]			\
+	cpu_features->feature_##name[index_arch_##name]			\
 	  &= ~bit_arch_##name;						\
       else if (CPU_FEATURES_CPU_P (cpu_features, need))			\
-	cpu_features->feature[index_arch_##name]			\
+	cpu_features->feature_##name[index_arch_##name]			\
 	  |= bit_arch_##name;						\
       break;								\
     }

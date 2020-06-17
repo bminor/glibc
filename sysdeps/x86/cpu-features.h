@@ -20,12 +20,20 @@
 
 enum
 {
-  /* The integer bit array index for the first set of internal feature
+  /* The integer bit array index for the first set of usable feature
      bits.  */
-  FEATURE_INDEX_1 = 0,
-  FEATURE_INDEX_2,
+  USABLE_FEATURE_INDEX_1 = 0,
   /* The current maximum size of the feature integer bit array.  */
-  FEATURE_INDEX_MAX
+  USABLE_FEATURE_INDEX_MAX
+};
+
+enum
+{
+  /* The integer bit array index for the first set of preferred feature
+     bits.  */
+  PREFERRED_FEATURE_INDEX_1 = 0,
+  /* The current maximum size of the feature integer bit array.  */
+  PREFERRED_FEATURE_INDEX_MAX
 };
 
 enum
@@ -36,6 +44,7 @@ enum
   COMMON_CPUID_INDEX_D_ECX_1,
   COMMON_CPUID_INDEX_80000007,
   COMMON_CPUID_INDEX_80000008,
+  COMMON_CPUID_INDEX_7_ECX_1,
   /* Keep the following line at the end.  */
   COMMON_CPUID_INDEX_MAX
 };
@@ -68,9 +77,11 @@ struct cpu_features_basic
 
 struct cpu_features
 {
-  struct cpuid_registers cpuid[COMMON_CPUID_INDEX_MAX];
-  unsigned int feature[FEATURE_INDEX_MAX];
   struct cpu_features_basic basic;
+  unsigned int *usable_p;
+  struct cpuid_registers cpuid[COMMON_CPUID_INDEX_MAX];
+  unsigned int usable[USABLE_FEATURE_INDEX_MAX];
+  unsigned int preferred[PREFERRED_FEATURE_INDEX_MAX];
   /* The state size for XSAVEC or XSAVE.  The type must be unsigned long
      int so that we use
 
@@ -102,7 +113,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define CPU_FEATURES_CPU_P(ptr, name) \
   ((ptr->cpuid[index_cpu_##name].reg_##name & (bit_cpu_##name)) != 0)
 # define CPU_FEATURES_ARCH_P(ptr, name) \
-  ((ptr->feature[index_arch_##name] & (bit_arch_##name)) != 0)
+  ((ptr->feature_##name[index_arch_##name] & (bit_arch_##name)) != 0)
 
 /* HAS_CPU_FEATURE evaluates to true if CPU supports the feature.  */
 #define HAS_CPU_FEATURE(name) \
@@ -112,13 +123,12 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define HAS_ARCH_FEATURE(name) \
   CPU_FEATURES_ARCH_P (__get_cpu_features (), name)
 /* CPU_FEATURE_USABLE evaluates to true if the feature is usable.  */
-#define CPU_FEATURE_USABLE(name)				\
-  ((need_arch_feature_##name && HAS_ARCH_FEATURE (name##_Usable))	\
-   || (!need_arch_feature_##name && HAS_CPU_FEATURE(name)))
+#define CPU_FEATURE_USABLE(name) \
+  HAS_ARCH_FEATURE (name##_Usable)
 
 /* Architecture features.  */
 
-/* FEATURE_INDEX_1.  */
+/* USABLE_FEATURE_INDEX_1.  */
 #define bit_arch_AVX_Usable			(1u << 0)
 #define bit_arch_AVX2_Usable			(1u << 1)
 #define bit_arch_AVX512F_Usable			(1u << 2)
@@ -143,237 +153,65 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_arch_XOP_Usable			(1u << 21)
 #define bit_arch_XSAVEC_Usable			(1u << 22)
 #define bit_arch_F16C_Usable			(1u << 23)
+#define bit_arch_AVX512_VP2INTERSECT_Usable	(1u << 24)
+#define bit_arch_AVX512_BF16_Usable		(1u << 25)
+#define bit_arch_PKU_Usable			(1u << 26)
 
-#define index_arch_AVX_Usable			FEATURE_INDEX_1
-#define index_arch_AVX2_Usable			FEATURE_INDEX_1
-#define index_arch_AVX512F_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512CD_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512ER_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512PF_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512VL_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512BW_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512DQ_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512_4FMAPS_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512_4VNNIW_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512_BITALG_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512_IFMA_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512_VBMI_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512_VBMI2_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512_VNNI_Usable		FEATURE_INDEX_1
-#define index_arch_AVX512_VPOPCNTDQ_Usable	FEATURE_INDEX_1
-#define index_arch_FMA_Usable			FEATURE_INDEX_1
-#define index_arch_FMA4_Usable			FEATURE_INDEX_1
-#define index_arch_VAES_Usable			FEATURE_INDEX_1
-#define index_arch_VPCLMULQDQ_Usable		FEATURE_INDEX_1
-#define index_arch_XOP_Usable			FEATURE_INDEX_1
-#define index_arch_XSAVEC_Usable		FEATURE_INDEX_1
-#define index_arch_F16C_Usable			FEATURE_INDEX_1
+#define index_arch_AVX_Usable			USABLE_FEATURE_INDEX_1
+#define index_arch_AVX2_Usable			USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512F_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512CD_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512ER_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512PF_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512VL_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512BW_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512DQ_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512_4FMAPS_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512_4VNNIW_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512_BITALG_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512_IFMA_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512_VBMI_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512_VBMI2_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512_VNNI_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512_VPOPCNTDQ_Usable	USABLE_FEATURE_INDEX_1
+#define index_arch_FMA_Usable			USABLE_FEATURE_INDEX_1
+#define index_arch_FMA4_Usable			USABLE_FEATURE_INDEX_1
+#define index_arch_VAES_Usable			USABLE_FEATURE_INDEX_1
+#define index_arch_VPCLMULQDQ_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_XOP_Usable			USABLE_FEATURE_INDEX_1
+#define index_arch_XSAVEC_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_F16C_Usable			USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512_VP2INTERSECT_Usable	USABLE_FEATURE_INDEX_1
+#define index_arch_AVX512_BF16_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_PKU_Usable			USABLE_FEATURE_INDEX_1
 
-/* Unused.  Compiler will optimize them out.  */
-#define bit_arch_SSE3_Usable			(1u << 0)
-#define bit_arch_PCLMULQDQ_Usable		(1u << 0)
-#define bit_arch_SSSE3_Usable			(1u << 0)
-#define bit_arch_CMPXCHG16B_Usable		(1u << 0)
-#define bit_arch_SSE4_1_Usable			(1u << 0)
-#define bit_arch_SSE4_2_Usable			(1u << 0)
-#define bit_arch_MOVBE_Usable			(1u << 0)
-#define bit_arch_POPCNT_Usable			(1u << 0)
-#define bit_arch_AES_Usable			(1u << 0)
-#define bit_arch_XSAVE_Usable			(1u << 0)
-#define bit_arch_OSXSAVE_Usable			(1u << 0)
-#define bit_arch_RDRAND_Usable			(1u << 0)
-#define bit_arch_FPU_Usable			(1u << 0)
-#define bit_arch_TSC_Usable			(1u << 0)
-#define bit_arch_MSR_Usable			(1u << 0)
-#define bit_arch_CX8_Usable			(1u << 0)
-#define bit_arch_SEP_Usable			(1u << 0)
-#define bit_arch_CMOV_Usable			(1u << 0)
-#define bit_arch_CLFSH_Usable			(1u << 0)
-#define bit_arch_MMX_Usable			(1u << 0)
-#define bit_arch_FXSR_Usable			(1u << 0)
-#define bit_arch_SSE_Usable			(1u << 0)
-#define bit_arch_SSE2_Usable			(1u << 0)
-#define bit_arch_FSGSBASE_Usable		(1u << 0)
-#define bit_arch_BMI1_Usable			(1u << 0)
-#define bit_arch_HLE_Usable			(1u << 0)
-#define bit_arch_BMI2_Usable			(1u << 0)
-#define bit_arch_ERMS_Usable			(1u << 0)
-#define bit_arch_RTM_Usable			(1u << 0)
-#define bit_arch_RDSEED_Usable			(1u << 0)
-#define bit_arch_ADX_Usable			(1u << 0)
-#define bit_arch_CLFLUSHOPT_Usable		(1u << 0)
-#define bit_arch_CLWB_Usable			(1u << 0)
-#define bit_arch_SHA_Usable			(1u << 0)
-#define bit_arch_PREFETCHWT1_Usable		(1u << 0)
-#define bit_arch_GFNI_Usable			(1u << 0)
-#define bit_arch_RDPID_Usable			(1u << 0)
-#define bit_arch_CLDEMOTE_Usable		(1u << 0)
-#define bit_arch_MOVDIRI_Usable			(1u << 0)
-#define bit_arch_MOVDIR64B_Usable		(1u << 0)
-#define bit_arch_FSRM_Usable			(1u << 0)
-#define bit_arch_LAHF64_SAHF64_Usable		(1u << 0)
-#define bit_arch_SVM_Usable			(1u << 0)
-#define bit_arch_LZCNT_Usable			(1u << 0)
-#define bit_arch_SSE4A_Usable			(1u << 0)
-#define bit_arch_PREFETCHW_Usable		(1u << 0)
-#define bit_arch_TBM_Usable			(1u << 0)
-#define bit_arch_SYSCALL_SYSRET_Usable		(1u << 0)
-#define bit_arch_RDTSCP_Usable			(1u << 0)
-#define bit_arch_XSAVEOPT_Usable		(1u << 0)
-#define bit_arch_XGETBV_ECX_1_Usable		(1u << 0)
-#define bit_arch_XSAVES_Usable			(1u << 0)
-#define bit_arch_INVARIANT_TSC_Usable		(1u << 0)
-#define bit_arch_WBNOINVD_Usable		(1u << 0)
-
-/* Unused.  Compiler will optimize them out.  */
-#define index_arch_SSE3_Usable			FEATURE_INDEX_1
-#define index_arch_PCLMULQDQ_Usable		FEATURE_INDEX_1
-#define index_arch_SSSE3_Usable			FEATURE_INDEX_1
-#define index_arch_CMPXCHG16B_Usable		FEATURE_INDEX_1
-#define index_arch_SSE4_1_Usable		FEATURE_INDEX_1
-#define index_arch_SSE4_2_Usable		FEATURE_INDEX_1
-#define index_arch_MOVBE_Usable			FEATURE_INDEX_1
-#define index_arch_POPCNT_Usable		FEATURE_INDEX_1
-#define index_arch_AES_Usable			FEATURE_INDEX_1
-#define index_arch_XSAVE_Usable			FEATURE_INDEX_1
-#define index_arch_OSXSAVE_Usable		FEATURE_INDEX_1
-#define index_arch_RDRAND_Usable		FEATURE_INDEX_1
-#define index_arch_FPU_Usable			FEATURE_INDEX_1
-#define index_arch_TSC_Usable			FEATURE_INDEX_1
-#define index_arch_MSR_Usable			FEATURE_INDEX_1
-#define index_arch_CX8_Usable			FEATURE_INDEX_1
-#define index_arch_SEP_Usable			FEATURE_INDEX_1
-#define index_arch_CMOV_Usable			FEATURE_INDEX_1
-#define index_arch_CLFSH_Usable			FEATURE_INDEX_1
-#define index_arch_MMX_Usable			FEATURE_INDEX_1
-#define index_arch_FXSR_Usable			FEATURE_INDEX_1
-#define index_arch_SSE_Usable			FEATURE_INDEX_1
-#define index_arch_SSE2_Usable			FEATURE_INDEX_1
-#define index_arch_FSGSBASE_Usable		FEATURE_INDEX_1
-#define index_arch_BMI1_Usable			FEATURE_INDEX_1
-#define index_arch_HLE_Usable			FEATURE_INDEX_1
-#define index_arch_BMI2_Usable			FEATURE_INDEX_1
-#define index_arch_ERMS_Usable			FEATURE_INDEX_1
-#define index_arch_RTM_Usable			FEATURE_INDEX_1
-#define index_arch_RDSEED_Usable		FEATURE_INDEX_1
-#define index_arch_ADX_Usable			FEATURE_INDEX_1
-#define index_arch_CLFLUSHOPT_Usable		FEATURE_INDEX_1
-#define index_arch_CLWB_Usable			FEATURE_INDEX_1
-#define index_arch_SHA_Usable			FEATURE_INDEX_1
-#define index_arch_PREFETCHWT1_Usable		FEATURE_INDEX_1
-#define index_arch_GFNI_Usable			FEATURE_INDEX_1
-#define index_arch_RDPID_Usable			FEATURE_INDEX_1
-#define index_arch_CLDEMOTE_Usable		FEATURE_INDEX_1
-#define index_arch_MOVDIRI_Usable		FEATURE_INDEX_1
-#define index_arch_MOVDIR64B_Usable		FEATURE_INDEX_1
-#define index_arch_FSRM_Usable			FEATURE_INDEX_1
-#define index_arch_LAHF64_SAHF64_Usable		FEATURE_INDEX_1
-#define index_arch_LZCNT_Usable			FEATURE_INDEX_1
-#define index_arch_SSE4A_Usable			FEATURE_INDEX_1
-#define index_arch_PREFETCHW_Usable		FEATURE_INDEX_1
-#define index_arch_TBM_Usable			FEATURE_INDEX_1
-#define index_arch_SYSCALL_SYSRET_Usable	FEATURE_INDEX_1
-#define index_arch_RDTSCP_Usable		FEATURE_INDEX_1
-#define index_arch_XSAVEOPT_Usable		FEATURE_INDEX_1
-#define index_arch_XGETBV_ECX_1_Usable		FEATURE_INDEX_1
-#define index_arch_XSAVES_Usable		FEATURE_INDEX_1
-#define index_arch_INVARIANT_TSC_Usable		FEATURE_INDEX_1
-#define index_arch_WBNOINVD_Usable		FEATURE_INDEX_1
-
-/* COMMON_CPUID_INDEX_1.  */
-
-/* ECX.  */
-#define	need_arch_feature_SSE3			0
-#define	need_arch_feature_PCLMULQDQ		0
-#define need_arch_feature_SSSE3			0
-#define need_arch_feature_FMA			1
-#define need_arch_feature_CMPXCHG16B		0
-#define need_arch_feature_SSE4_1		0
-#define need_arch_feature_SSE4_2		0
-#define need_arch_feature_MOVBE			0
-#define need_arch_feature_POPCNT		0
-#define need_arch_feature_AES			0
-#define need_arch_feature_XSAVE			0
-#define need_arch_feature_OSXSAVE		0
-#define need_arch_feature_AVX			1
-#define need_arch_feature_F16C			1
-#define need_arch_feature_RDRAND		0
-
-/* EDX.  */
-#define need_arch_feature_FPU			0
-#define need_arch_feature_TSC			0
-#define need_arch_feature_MSR			0
-#define need_arch_feature_CX8			0
-#define need_arch_feature_SEP			0
-#define need_arch_feature_CMOV			0
-#define need_arch_feature_CLFSH			0
-#define need_arch_feature_MMX			0
-#define need_arch_feature_FXSR			0
-#define need_arch_feature_SSE			0
-#define need_arch_feature_SSE2			0
-
-/* COMMON_CPUID_INDEX_7.  */
-
-/* EBX.  */
-#define need_arch_feature_FSGSBASE		0
-#define need_arch_feature_BMI1			0
-#define need_arch_feature_HLE			0
-#define need_arch_feature_AVX2			1
-#define need_arch_feature_BMI2			0
-#define need_arch_feature_ERMS			0
-#define need_arch_feature_RTM			0
-#define need_arch_feature_AVX512F		1
-#define need_arch_feature_AVX512DQ		1
-#define need_arch_feature_RDSEED		0
-#define need_arch_feature_ADX			0
-#define need_arch_feature_AVX512_IFMA		1
-#define need_arch_feature_CLFLUSHOPT		0
-#define need_arch_feature_CLWB			0
-#define need_arch_feature_AVX512PF		1
-#define need_arch_feature_AVX512ER		1
-#define need_arch_feature_AVX512CD		1
-#define need_arch_feature_SHA			0
-#define need_arch_feature_AVX512BW		1
-#define need_arch_feature_AVX512VL		1
-
-/* ECX.  */
-#define need_arch_feature_PREFETCHWT1		0
-#define need_arch_feature_AVX512_VBMI		1
-#define need_arch_feature_AVX512_VBMI2		1
-#define need_arch_feature_GFNI			0
-#define need_arch_feature_VAES			1
-#define need_arch_feature_VPCLMULQDQ		1
-#define need_arch_feature_AVX512_VNNI		1
-#define need_arch_feature_AVX512_BITALG		1
-#define need_arch_feature_AVX512_VPOPCNTDQ	1
-#define need_arch_feature_RDPID			0
-#define need_arch_feature_CLDEMOTE		0
-#define need_arch_feature_MOVDIRI		0
-#define need_arch_feature_MOVDIR64B		0
-
-/* EDX.  */
-#define need_arch_feature_AVX512_4VNNIW		1
-#define need_arch_feature_AVX512_4FMAPS		1
-#define need_arch_feature_FSRM			0
-
-/* COMMON_CPUID_INDEX_80000001.  */
-
-/* ECX.  */
-#define need_arch_feature_LAHF64_SAHF64		0
-#define need_arch_feature_LZCNT			0
-#define need_arch_feature_SSE4A			0
-#define need_arch_feature_PREFETCHW		0
-#define need_arch_feature_XOP			1
-#define need_arch_feature_FMA4			1
-#define need_arch_feature_TBM			0
-#define need_arch_feature_SYSCALL_SYSRET	0
-#define need_arch_feature_RDTSCP		0
-#define need_arch_feature_XSAVEOPT		0
-#define need_arch_feature_XSAVEC		1
-#define need_arch_feature_XGETBV_ECX_1		0
-#define need_arch_feature_XSAVES		0
-#define need_arch_feature_INVARIANT_TSC		0
-#define need_arch_feature_WBNOINVD		0
+#define feature_AVX_Usable			usable
+#define feature_AVX2_Usable			usable
+#define feature_AVX512F_Usable			usable
+#define feature_AVX512CD_Usable			usable
+#define feature_AVX512ER_Usable			usable
+#define feature_AVX512PF_Usable			usable
+#define feature_AVX512VL_Usable			usable
+#define feature_AVX512BW_Usable			usable
+#define feature_AVX512DQ_Usable			usable
+#define feature_AVX512_4FMAPS_Usable		usable
+#define feature_AVX512_4VNNIW_Usable		usable
+#define feature_AVX512_BITALG_Usable		usable
+#define feature_AVX512_IFMA_Usable		usable
+#define feature_AVX512_VBMI_Usable		usable
+#define feature_AVX512_VBMI2_Usable		usable
+#define feature_AVX512_VNNI_Usable		usable
+#define feature_AVX512_VPOPCNTDQ_Usable		usable
+#define feature_FMA_Usable			usable
+#define feature_FMA4_Usable			usable
+#define feature_VAES_Usable			usable
+#define feature_VPCLMULQDQ_Usable		usable
+#define feature_XOP_Usable			usable
+#define feature_XSAVEC_Usable			usable
+#define feature_F16C_Usable			usable
+#define feature_AVX512_VP2INTERSECT_Usable	usable
+#define feature_AVX512_BF16_Usable		usable
+#define feature_PKU_Usable			usable
 
 /* CPU features.  */
 
@@ -494,17 +332,26 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_CLDEMOTE	(1u << 25)
 #define bit_cpu_MOVDIRI		(1u << 27)
 #define bit_cpu_MOVDIR64B	(1u << 28)
+#define bit_cpu_ENQCMD		(1u << 29)
 #define bit_cpu_SGX_LC		(1u << 30)
+#define bit_cpu_PKS		(1u << 31)
 
 /* EDX.  */
 #define bit_cpu_AVX512_4VNNIW	(1u << 2)
 #define bit_cpu_AVX512_4FMAPS	(1u << 3)
 #define bit_cpu_FSRM		(1u << 4)
+#define bit_cpu_AVX512_VP2INTERSECT (1u << 8)
+#define bit_cpu_MD_CLEAR	(1u << 10)
+#define bit_cpu_SERIALIZE	(1u << 14)
+#define bit_cpu_HYBRID		(1u << 15)
+#define bit_cpu_TSXLDTRK	(1u << 16)
 #define bit_cpu_PCONFIG		(1u << 18)
 #define bit_cpu_IBT		(1u << 20)
 #define bit_cpu_IBRS_IBPB	(1u << 26)
 #define bit_cpu_STIBP		(1u << 27)
-#define bit_cpu_CAPABILITIES	(1u << 29)
+#define bit_cpu_L1D_FLUSH	(1u << 28)
+#define bit_cpu_ARCH_CAPABILITIES (1u << 29)
+#define bit_cpu_CORE_CAPABILITIES (1u << 30)
 #define bit_cpu_SSBD		(1u << 31)
 
 /* COMMON_CPUID_INDEX_80000001.  */
@@ -544,6 +391,11 @@ extern const struct cpu_features *__get_cpu_features (void)
 
 /* EBX.  */
 #define bit_cpu_WBNOINVD	(1u << 9)
+
+/* COMMON_CPUID_INDEX_7_ECX_1.  */
+
+/* EAX.  */
+#define bit_cpu_AVX512_BF16	(1u << 5)
 
 /* COMMON_CPUID_INDEX_1.  */
 
@@ -662,17 +514,26 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_CLDEMOTE	COMMON_CPUID_INDEX_7
 #define index_cpu_MOVDIRI	COMMON_CPUID_INDEX_7
 #define index_cpu_MOVDIR64B	COMMON_CPUID_INDEX_7
+#define index_cpu_ENQCMD	COMMON_CPUID_INDEX_7
 #define index_cpu_SGX_LC	COMMON_CPUID_INDEX_7
+#define index_cpu_PKS		COMMON_CPUID_INDEX_7
 
 /* EDX.  */
 #define index_cpu_AVX512_4VNNIW COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512_4FMAPS	COMMON_CPUID_INDEX_7
 #define index_cpu_FSRM		COMMON_CPUID_INDEX_7
+#define index_cpu_AVX512_VP2INTERSECT COMMON_CPUID_INDEX_7
+#define index_cpu_MD_CLEAR	COMMON_CPUID_INDEX_7
+#define index_cpu_SERIALIZE	COMMON_CPUID_INDEX_7
+#define index_cpu_HYBRID	COMMON_CPUID_INDEX_7
+#define index_cpu_TSXLDTRK	COMMON_CPUID_INDEX_7
 #define index_cpu_PCONFIG	COMMON_CPUID_INDEX_7
 #define index_cpu_IBT		COMMON_CPUID_INDEX_7
 #define index_cpu_IBRS_IBPB	COMMON_CPUID_INDEX_7
 #define index_cpu_STIBP		COMMON_CPUID_INDEX_7
-#define index_cpu_CAPABILITIES	COMMON_CPUID_INDEX_7
+#define index_cpu_L1D_FLUSH	COMMON_CPUID_INDEX_7
+#define index_cpu_ARCH_CAPABILITIES COMMON_CPUID_INDEX_7
+#define index_cpu_CORE_CAPABILITIES COMMON_CPUID_INDEX_7
 #define index_cpu_SSBD		COMMON_CPUID_INDEX_7
 
 /* COMMON_CPUID_INDEX_80000001.  */
@@ -712,6 +573,11 @@ extern const struct cpu_features *__get_cpu_features (void)
 
 /* EBX.  */
 #define index_cpu_WBNOINVD	COMMON_CPUID_INDEX_80000008
+
+/* COMMON_CPUID_INDEX_7_ECX_1.  */
+
+/* EAX.  */
+#define index_cpu_AVX512_BF16	COMMON_CPUID_INDEX_7_ECX_1
 
 /* COMMON_CPUID_INDEX_1.  */
 
@@ -830,17 +696,26 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_CLDEMOTE		ecx
 #define reg_MOVDIRI		ecx
 #define reg_MOVDIR64B		ecx
+#define reg_ENQCMD		ecx
 #define reg_SGX_LC		ecx
+#define reg_PKS			ecx
 
 /* EDX.  */
 #define reg_AVX512_4VNNIW	edx
 #define reg_AVX512_4FMAPS	edx
 #define reg_FSRM		edx
+#define reg_AVX512_VP2INTERSECT	edx
+#define reg_MD_CLEAR		edx
+#define reg_SERIALIZE		edx
+#define reg_HYBRID		edx
+#define reg_TSXLDTRK		edx
 #define reg_PCONFIG		edx
 #define reg_IBT			edx
 #define reg_IBRS_IBPB		edx
 #define reg_STIBP		edx
-#define reg_CAPABILITIES	edx
+#define reg_L1D_FLUSH		edx
+#define reg_ARCH_CAPABILITIES	edx
+#define reg_CORE_CAPABILITIES	edx
 #define reg_SSBD		edx
 
 /* COMMON_CPUID_INDEX_80000001.  */
@@ -881,6 +756,11 @@ extern const struct cpu_features *__get_cpu_features (void)
 /* EBX.  */
 #define reg_WBNOINVD		ebx
 
+/* COMMON_CPUID_INDEX_7_ECX_1.  */
+
+/* EAX.  */
+#define reg_AVX512_BF16		eax
+
 /* FEATURE_INDEX_2.  */
 #define bit_arch_I586				(1u << 0)
 #define bit_arch_I686				(1u << 1)
@@ -899,22 +779,39 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_arch_Prefer_No_AVX512		(1u << 14)
 #define bit_arch_MathVec_Prefer_No_AVX512	(1u << 15)
 
-#define index_arch_Fast_Rep_String		FEATURE_INDEX_2
-#define index_arch_Fast_Copy_Backward		FEATURE_INDEX_2
-#define index_arch_Slow_BSF			FEATURE_INDEX_2
-#define index_arch_Fast_Unaligned_Load		FEATURE_INDEX_2
-#define index_arch_Prefer_PMINUB_for_stringop 	FEATURE_INDEX_2
-#define index_arch_Fast_Unaligned_Copy		FEATURE_INDEX_2
-#define index_arch_I586				FEATURE_INDEX_2
-#define index_arch_I686				FEATURE_INDEX_2
-#define index_arch_Slow_SSE4_2			FEATURE_INDEX_2
-#define index_arch_AVX_Fast_Unaligned_Load	FEATURE_INDEX_2
-#define index_arch_Prefer_MAP_32BIT_EXEC	FEATURE_INDEX_2
-#define index_arch_Prefer_No_VZEROUPPER		FEATURE_INDEX_2
-#define index_arch_Prefer_ERMS			FEATURE_INDEX_2
-#define index_arch_Prefer_No_AVX512		FEATURE_INDEX_2
-#define index_arch_MathVec_Prefer_No_AVX512	FEATURE_INDEX_2
-#define index_arch_Prefer_FSRM			FEATURE_INDEX_2
+#define index_arch_Fast_Rep_String		PREFERRED_FEATURE_INDEX_1
+#define index_arch_Fast_Copy_Backward		PREFERRED_FEATURE_INDEX_1
+#define index_arch_Slow_BSF			PREFERRED_FEATURE_INDEX_1
+#define index_arch_Fast_Unaligned_Load		PREFERRED_FEATURE_INDEX_1
+#define index_arch_Prefer_PMINUB_for_stringop 	PREFERRED_FEATURE_INDEX_1
+#define index_arch_Fast_Unaligned_Copy		PREFERRED_FEATURE_INDEX_1
+#define index_arch_I586				PREFERRED_FEATURE_INDEX_1
+#define index_arch_I686				PREFERRED_FEATURE_INDEX_1
+#define index_arch_Slow_SSE4_2			PREFERRED_FEATURE_INDEX_1
+#define index_arch_AVX_Fast_Unaligned_Load	PREFERRED_FEATURE_INDEX_1
+#define index_arch_Prefer_MAP_32BIT_EXEC	PREFERRED_FEATURE_INDEX_1
+#define index_arch_Prefer_No_VZEROUPPER		PREFERRED_FEATURE_INDEX_1
+#define index_arch_Prefer_ERMS			PREFERRED_FEATURE_INDEX_1
+#define index_arch_Prefer_No_AVX512		PREFERRED_FEATURE_INDEX_1
+#define index_arch_MathVec_Prefer_No_AVX512	PREFERRED_FEATURE_INDEX_1
+#define index_arch_Prefer_FSRM			PREFERRED_FEATURE_INDEX_1
+
+#define feature_Fast_Rep_String			preferred
+#define feature_Fast_Copy_Backward		preferred
+#define feature_Slow_BSF			preferred
+#define feature_Fast_Unaligned_Load		preferred
+#define feature_Prefer_PMINUB_for_stringop 	preferred
+#define feature_Fast_Unaligned_Copy		preferred
+#define feature_I586				preferred
+#define feature_I686				preferred
+#define feature_Slow_SSE4_2			preferred
+#define feature_AVX_Fast_Unaligned_Load		preferred
+#define feature_Prefer_MAP_32BIT_EXEC		preferred
+#define feature_Prefer_No_VZEROUPPER		preferred
+#define feature_Prefer_ERMS			preferred
+#define feature_Prefer_No_AVX512		preferred
+#define feature_MathVec_Prefer_No_AVX512	preferred
+#define feature_Prefer_FSRM			preferred
 
 /* XCR0 Feature flags.  */
 #define bit_XMM_state		(1u << 1)
