@@ -68,6 +68,7 @@ sysdep_routines += adjtimex clone umount umount2 readahead sysctl \
 		   closefrom_fallback \
 		   clone3 clone-internal \
 		   fanotify_mark \
+		   mremap \
 
 CFLAGS-gethostid.c = -fexceptions
 CFLAGS-tee.c = -fexceptions -fasynchronous-unwind-tables
