@@ -357,7 +357,7 @@ endif
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
-tests += tst-cancelx4 tst-cancelx5 tst-cancelx7 tst-cancelx9 \
+tests += tst-cancelx4 tst-cancelx5 tst-cancelx7 \
 	 tst-cancelx13 \
 	 tst-cancelx16 tst-cancelx17 tst-cancelx20 \
 	 tst-cleanupx4
@@ -477,7 +477,6 @@ CFLAGS-tst-cancelx5.c += -Wno-error
 CFLAGS-tst-cancelx4.c += -fexceptions
 CFLAGS-tst-cancelx5.c += -fexceptions
 CFLAGS-tst-cancelx7.c += -fexceptions
-CFLAGS-tst-cancelx9.c += -fexceptions
 CFLAGS-tst-cancelx13.c += -fexceptions
 CFLAGS-tst-cancelx16.c += -fexceptions
 CFLAGS-tst-cancelx17.c += -fexceptions
