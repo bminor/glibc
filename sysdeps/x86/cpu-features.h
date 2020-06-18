@@ -142,6 +142,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_arch_VPCLMULQDQ_Usable		(1u << 20)
 #define bit_arch_XOP_Usable			(1u << 21)
 #define bit_arch_XSAVEC_Usable			(1u << 22)
+#define bit_arch_F16C_Usable			(1u << 23)
 
 #define index_arch_AVX_Usable			FEATURE_INDEX_1
 #define index_arch_AVX2_Usable			FEATURE_INDEX_1
@@ -166,6 +167,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_arch_VPCLMULQDQ_Usable		FEATURE_INDEX_1
 #define index_arch_XOP_Usable			FEATURE_INDEX_1
 #define index_arch_XSAVEC_Usable		FEATURE_INDEX_1
+#define index_arch_F16C_Usable			FEATURE_INDEX_1
 
 /* Unused.  Compiler will optimize them out.  */
 #define bit_arch_SSE3_Usable			(1u << 0)
@@ -179,7 +181,6 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_arch_AES_Usable			(1u << 0)
 #define bit_arch_XSAVE_Usable			(1u << 0)
 #define bit_arch_OSXSAVE_Usable			(1u << 0)
-#define bit_arch_F16C_Usable			(1u << 0)
 #define bit_arch_RDRAND_Usable			(1u << 0)
 #define bit_arch_FPU_Usable			(1u << 0)
 #define bit_arch_TSC_Usable			(1u << 0)
@@ -236,7 +237,6 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_arch_AES_Usable			FEATURE_INDEX_1
 #define index_arch_XSAVE_Usable			FEATURE_INDEX_1
 #define index_arch_OSXSAVE_Usable		FEATURE_INDEX_1
-#define index_arch_F16C_Usable			FEATURE_INDEX_1
 #define index_arch_RDRAND_Usable		FEATURE_INDEX_1
 #define index_arch_FPU_Usable			FEATURE_INDEX_1
 #define index_arch_TSC_Usable			FEATURE_INDEX_1
@@ -296,7 +296,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define need_arch_feature_XSAVE			0
 #define need_arch_feature_OSXSAVE		0
 #define need_arch_feature_AVX			1
-#define need_arch_feature_F16C			0
+#define need_arch_feature_F16C			1
 #define need_arch_feature_RDRAND		0
 
 /* EDX.  */

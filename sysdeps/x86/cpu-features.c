@@ -146,6 +146,10 @@ get_common_indices (struct cpu_features *cpu_features,
 	      if (CPU_FEATURES_CPU_P (cpu_features, XOP))
 		cpu_features->feature[index_arch_XOP_Usable]
 		  |= bit_arch_XOP_Usable;
+	      /* Determine if F16C is usable.  */
+	      if (CPU_FEATURES_CPU_P (cpu_features, F16C))
+		cpu_features->feature[index_arch_F16C_Usable]
+		  |= bit_arch_F16C_Usable;
 	    }
 
 	  /* Check if OPMASK state, upper 256-bit of ZMM0-ZMM15 and
