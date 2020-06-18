@@ -36,19 +36,9 @@ _dl_open_check (struct link_map *m)
 {
 }
 
-#ifdef FILEBUF_SIZE
-static inline int __attribute__ ((always_inline))
-_dl_process_pt_note (struct link_map *l, const ElfW(Phdr) *ph,
-		     int fd, struct filebuf *fbp)
+static inline void __attribute__ ((always_inline))
+_dl_process_pt_note (struct link_map *l, const ElfW(Phdr) *ph)
 {
-  return 0;
-}
-#endif
-
-static inline int __attribute__ ((always_inline))
-_rtld_process_pt_note (struct link_map *l, const ElfW(Phdr) *ph)
-{
-  return 0;
 }
 
 /* Called for each property in the NT_GNU_PROPERTY_TYPE_0 note of L,

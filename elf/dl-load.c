@@ -1216,14 +1216,6 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	  l->l_relro_addr = ph->p_vaddr;
 	  l->l_relro_size = ph->p_memsz;
 	  break;
-
-	case PT_NOTE:
-	  if (_dl_process_pt_note (l, ph, fd, fbp))
-	    {
-	      errstring = N_("cannot process note segment");
-	      goto call_lose;
-	    }
-	  break;
 	}
 
     if (__glibc_unlikely (nloadcmds == 0))
@@ -1261,12 +1253,17 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       goto call_lose;
 
     /* Process program headers again after load segments are mapped in
-       case processing requires accessing those segments.  */
-    for (ph = phdr; ph < &phdr[l->l_phnum]; ++ph)
-      switch (ph->p_type)
+       case processing requires accessing those segments.  Scan program
+       headers backward so that PT_NOTE can be skipped if PT_GNU_PROPERTY
+       exits.  */
+    for (ph = &phdr[l->l_phnum]; ph != phdr; --ph)
+      switch (ph[-1].p_type)
 	{
+	case PT_NOTE:
+	  _dl_process_pt_note (l, &ph[-1]);
+	  break;
 	case PT_GNU_PROPERTY:
-	  _dl_process_pt_gnu_property (l, ph);
+	  _dl_process_pt_gnu_property (l, &ph[-1]);
 	  break;
 	}
   }
