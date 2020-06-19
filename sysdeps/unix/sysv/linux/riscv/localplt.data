@@ -5,6 +5,7 @@ libc.so: calloc
 libc.so: free
 libc.so: malloc
 libc.so: memalign
+libc.so: memset ?
 libc.so: realloc
 # The TLS-enabled version of these functions is interposed from libc.so.
 ld.so: _dl_signal_error
