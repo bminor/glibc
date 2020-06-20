@@ -7,6 +7,9 @@ libc {
     # functions with a weak definition in the dynamic linker
     __writev;
   }
+  GLIBC_2.32 {
+    mremap;
+  }
   GLIBC_PRIVATE {
     # Functions shared with the dynamic linker
     __access; __access_noerrno; __libc_read; __libc_write; __libc_lseek64;

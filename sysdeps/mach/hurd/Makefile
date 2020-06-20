@@ -201,7 +201,7 @@ sysdep_routines += f_setlk close_nocancel_nostatus read_nocancel \
 endif
 
 ifeq (misc, $(subdir))
-sysdep_routines += writev_nocancel writev_nocancel_nostatus
+sysdep_routines += writev_nocancel writev_nocancel_nostatus mremap
 endif
 
 ifeq ($(subdir),sunrpc)
