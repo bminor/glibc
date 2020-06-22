@@ -20,6 +20,7 @@
 #define _CPU_FEATURES_AARCH64_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #define MIDR_PARTNUM_SHIFT	4
 #define MIDR_PARTNUM_MASK	(0xfff << MIDR_PARTNUM_SHIFT)
@@ -64,6 +65,7 @@ struct cpu_features
 {
   uint64_t midr_el1;
   unsigned zva_size;
+  bool bti;
 };
 
 #endif /* _CPU_FEATURES_AARCH64_H  */
