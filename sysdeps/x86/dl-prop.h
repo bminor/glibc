@@ -19,8 +19,6 @@
 #ifndef _DL_PROP_H
 #define _DL_PROP_H
 
-#include <not-cancel.h>
-
 extern void _dl_cet_check (struct link_map *, const char *)
     attribute_hidden;
 extern void _dl_cet_open_check (struct link_map *)
@@ -146,48 +144,17 @@ _dl_process_cet_property_note (struct link_map *l,
 #endif
 }
 
-#ifdef FILEBUF_SIZE
-static inline int __attribute__ ((unused))
-_dl_process_pt_note (struct link_map *l, const ElfW(Phdr) *ph,
-		     int fd, struct filebuf *fbp)
-{
-# if CET_ENABLED
-  const ElfW(Nhdr) *note;
-  ElfW(Nhdr) *note_malloced = NULL;
-  ElfW(Addr) size = ph->p_filesz;
-
-  if (ph->p_offset + size <= (size_t) fbp->len)
-    note = (const void *) (fbp->buf + ph->p_offset);
-  else
-    {
-      if (size < __MAX_ALLOCA_CUTOFF)
-	note = alloca (size);
-      else
-	{
-	  note_malloced = malloc (size);
-	  note = note_malloced;
-	}
-      if (__pread64_nocancel (fd, (void *) note, size, ph->p_offset) != size)
-	{
-	  if (note_malloced)
-	    free (note_malloced);
-	  return -1;
-	}
-    }
-
-  _dl_process_cet_property_note (l, note, size, ph->p_align);
-  if (note_malloced)
-    free (note_malloced);
-# endif
-  return 0;
-}
-#endif
-
-static inline int __attribute__ ((unused))
-_rtld_process_pt_note (struct link_map *l, const ElfW(Phdr) *ph)
+static inline void __attribute__ ((unused))
+_dl_process_pt_note (struct link_map *l, const ElfW(Phdr) *ph)
 {
   const ElfW(Nhdr) *note = (const void *) (ph->p_vaddr + l->l_addr);
   _dl_process_cet_property_note (l, note, ph->p_memsz, ph->p_align);
+}
+
+static inline int __attribute__ ((always_inline))
+_dl_process_gnu_property (struct link_map *l, uint32_t type, uint32_t datasz,
+			  void *data)
+{
   return 0;
 }
 
