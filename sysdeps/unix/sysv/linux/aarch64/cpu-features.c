@@ -83,4 +83,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 
   if ((dczid & DCZID_DZP_MASK) == 0)
     cpu_features->zva_size = 4 << (dczid & DCZID_BS_MASK);
+
+  /* Check if BTI is supported.  */
+  cpu_features->bti = GLRO (dl_hwcap2) & HWCAP2_BTI;
 }
