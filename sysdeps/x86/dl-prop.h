@@ -191,4 +191,11 @@ _rtld_process_pt_note (struct link_map *l, const ElfW(Phdr) *ph)
   return 0;
 }
 
+static inline int __attribute__ ((always_inline))
+_dl_process_gnu_property (struct link_map *l, uint32_t type, uint32_t datasz,
+			  void *data)
+{
+  return 0;
+}
+
 #endif /* _DL_PROP_H */
