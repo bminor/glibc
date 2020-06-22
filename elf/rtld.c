@@ -1507,11 +1507,17 @@ of this helper program; chances are you did not intend to run this program.\n\
 	main_map->l_relro_addr = ph->p_vaddr;
 	main_map->l_relro_size = ph->p_memsz;
 	break;
-
+      }
+  /* Process program headers again, but scan them backwards so
+     that PT_NOTE can be skipped if PT_GNU_PROPERTY exits.  */
+  for (ph = &phdr[phnum]; ph != phdr; --ph)
+    switch (ph[-1].p_type)
+      {
       case PT_NOTE:
-	if (_rtld_process_pt_note (main_map, ph))
-	  _dl_error_printf ("\
-ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
+	_dl_process_pt_note (main_map, &ph[-1]);
+	break;
+      case PT_GNU_PROPERTY:
+	_dl_process_pt_gnu_property (main_map, &ph[-1]);
 	break;
       }
 

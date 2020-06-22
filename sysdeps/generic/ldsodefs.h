@@ -910,6 +910,10 @@ extern void _dl_setup_hash (struct link_map *map) attribute_hidden;
 extern void _dl_rtld_di_serinfo (struct link_map *loader,
 				 Dl_serinfo *si, bool counting);
 
+/* Process PT_GNU_PROPERTY program header PH in module L after
+   PT_LOAD segments are mapped.  */
+void _dl_process_pt_gnu_property (struct link_map *l, const ElfW(Phdr) *ph);
+
 
 /* Search loaded objects' symbol tables for a definition of the symbol
    referred to by UNDEF.  *SYM is the symbol table entry containing the
