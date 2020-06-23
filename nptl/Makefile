@@ -278,7 +278,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-sem17 \
 	tst-tsd3 tst-tsd4 \
 	tst-cancel4 tst-cancel4_1 tst-cancel4_2 tst-cancel5 \
-	tst-cancel7 tst-cancel13 \
+	tst-cancel7 \
 	tst-cancel16 tst-cancel17 tst-cancel20 tst-cancel24 \
 	tst-cleanup4 \
 	tst-signal3 \
@@ -358,7 +358,6 @@ endif
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
 tests += tst-cancelx4 tst-cancelx5 tst-cancelx7 \
-	 tst-cancelx13 \
 	 tst-cancelx16 tst-cancelx17 tst-cancelx20 \
 	 tst-cleanupx4
 
@@ -477,7 +476,6 @@ CFLAGS-tst-cancelx5.c += -Wno-error
 CFLAGS-tst-cancelx4.c += -fexceptions
 CFLAGS-tst-cancelx5.c += -fexceptions
 CFLAGS-tst-cancelx7.c += -fexceptions
-CFLAGS-tst-cancelx13.c += -fexceptions
 CFLAGS-tst-cancelx16.c += -fexceptions
 CFLAGS-tst-cancelx17.c += -fexceptions
 CFLAGS-tst-cancelx20.c += -fexceptions -fasynchronous-unwind-tables

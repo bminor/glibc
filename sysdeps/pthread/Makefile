@@ -55,8 +55,8 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-cancel-self-canceltype tst-cancel-self-testcancel \
 	 tst-cancel1 tst-cancel2 tst-cancel3 \
 	 tst-cancel6 tst-cancel8 tst-cancel9 tst-cancel10 tst-cancel11 \
-	 tst-cancel12 tst-cancel14 tst-cancel15 tst-cancel18 tst-cancel19 \
-	 tst-cancel21 \
+	 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 tst-cancel18 \
+	 tst-cancel19 tst-cancel21 \
 	 tst-cancel22 tst-cancel23 tst-cancel26 tst-cancel27 tst-cancel28 \
 	 tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 \
 	 tst-clock1 \
@@ -117,8 +117,8 @@ CFLAGS-tst-cleanup2.c += -fno-builtin
 CFLAGS-tst-cleanupx2.c += -fno-builtin
 
 tests += tst-cancelx2 tst-cancelx3 tst-cancelx6 tst-cancelx8 tst-cancelx9 \
-	 tst-cancelx10 tst-cancelx11 tst-cancelx12 tst-cancelx14 tst-cancelx15 \
-	 tst-cancelx18 tst-cancelx21 \
+	 tst-cancelx10 tst-cancelx11 tst-cancelx12 tst-cancelx13 tst-cancelx14 \
+	 tst-cancelx15 tst-cancelx18 tst-cancelx21 \
 	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3
 
 ifeq ($(build-shared),yes)
@@ -160,6 +160,7 @@ CFLAGS-tst-cancelx9.c += -fexceptions
 CFLAGS-tst-cancelx10.c += -fexceptions
 CFLAGS-tst-cancelx11.c += -fexceptions
 CFLAGS-tst-cancelx12.c += -fexceptions
+CFLAGS-tst-cancelx13.c += -fexceptions
 CFLAGS-tst-cancelx14.c += -fexceptions
 CFLAGS-tst-cancelx15.c += -fexceptions
 CFLAGS-tst-cancelx18.c += -fexceptions
