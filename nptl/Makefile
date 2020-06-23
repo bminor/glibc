@@ -307,7 +307,7 @@ tests-container =  tst-pthread-getattr
 tests-internal := tst-robustpi8 tst-rwlock19 tst-rwlock20 \
 		  tst-sem11 tst-sem12 tst-sem13 \
 		  tst-barrier5 tst-signal7 tst-mutex8 tst-mutex8-static \
-		  tst-mutexpi8 tst-mutexpi8-static tst-cancel25 \
+		  tst-mutexpi8 tst-mutexpi8-static \
 		  tst-setgetname \
 
 xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \

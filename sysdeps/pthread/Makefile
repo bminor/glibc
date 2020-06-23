@@ -214,7 +214,7 @@ generated += tst-atfork2.mtrace
 generated += $(objpfx)tst-atfork2.mtrace \
 	     $(addsuffix .so,$(strip $(modules-names)))
 
-tests-internal += tst-robust8
+tests-internal += tst-cancel25 tst-robust8
 
 tests += tst-oncex3 tst-oncex4
 

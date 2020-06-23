@@ -18,11 +18,13 @@ tf2 (void *arg)
       puts ("pthread_sigmask failed");
       exit (1);
     }
+#ifdef SIGCANCEL
   if (sigismember (&mask, SIGCANCEL))
     {
       puts ("SIGCANCEL blocked in new thread");
       exit (1);
     }
+#endif
 
   /* Sync with the main thread so that we do not test anything else.  */
   int e = pthread_barrier_wait (&b);
