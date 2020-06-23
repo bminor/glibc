@@ -91,13 +91,19 @@ struct cleanup_arg
 static void
 cancel_handler (void *ptr)
 {
-#ifndef NO_SIGPIPE
   /* Restore the old signal handler.  */
   struct cleanup_arg *clarg = (struct cleanup_arg *) ptr;
 
-  if (clarg != NULL && clarg->oldaction != NULL)
-    __sigaction (SIGPIPE, clarg->oldaction, NULL);
+  if (clarg != NULL)
+    {
+#ifndef NO_SIGPIPE
+      if (clarg->oldaction != NULL)
+	__sigaction (SIGPIPE, clarg->oldaction, NULL);
 #endif
+
+      /* Free the memstream buffer,  */
+      free (clarg->buf);
+    }
 
   /* Free the lock.  */
   __libc_lock_unlock (syslog_lock);
@@ -169,9 +175,17 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 		pri &= LOG_PRIMASK|LOG_FACMASK;
 	}
 
+	/* Prepare for multiple users.  We have to take care: most
+	   syscalls we are using are cancellation points.  */
+	struct cleanup_arg clarg;
+	clarg.buf = NULL;
+	clarg.oldaction = NULL;
+	__libc_cleanup_push (cancel_handler, &clarg);
+	__libc_lock_lock (syslog_lock);
+
 	/* Check priority against setlogmask values. */
 	if ((LOG_MASK (LOG_PRI (pri)) & LogMask) == 0)
-		return;
+		goto out;
 
 	/* Set default facility if none specified. */
 	if ((pri & LOG_FACMASK) == 0)
@@ -235,6 +249,9 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 	    /* Close the memory stream; this will finalize the data
 	       into a malloc'd buffer in BUF.  */
 	    fclose (f);
+
+	    /* Tell the cancellation handler to free this buffer.  */
+	    clarg.buf = buf;
 	  }
 
 	/* Output to stderr if requested. */
@@ -252,21 +269,9 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 		    v->iov_len = 1;
 		  }
 
-		__libc_cleanup_push (free, buf == failbuf ? NULL : buf);
-
 		/* writev is a cancellation point.  */
 		(void)__writev(STDERR_FILENO, iov, v - iov + 1);
-
-		__libc_cleanup_pop (0);
 	}
-
-	/* Prepare for multiple users.  We have to take care: open and
-	   write are cancellation points.  */
-	struct cleanup_arg clarg;
-	clarg.buf = buf;
-	clarg.oldaction = NULL;
-	__libc_cleanup_push (cancel_handler, &clarg);
-	__libc_lock_lock (syslog_lock);
 
 #ifndef NO_SIGPIPE
 	/* Prepare for a broken connection.  */
@@ -320,6 +325,7 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 		__sigaction (SIGPIPE, &oldaction, (struct sigaction *) NULL);
 #endif
 
+ out:
 	/* End of critical section.  */
 	__libc_cleanup_pop (0);
 	__libc_lock_unlock (syslog_lock);
@@ -430,8 +436,14 @@ setlogmask (int pmask)
 {
 	int omask;
 
+	/* Protect against multiple users.  */
+	__libc_lock_lock (syslog_lock);
+
 	omask = LogMask;
 	if (pmask != 0)
 		LogMask = pmask;
+
+	__libc_lock_unlock (syslog_lock);
+
 	return (omask);
 }
