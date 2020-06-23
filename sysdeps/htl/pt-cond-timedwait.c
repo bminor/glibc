@@ -117,29 +117,30 @@ __pthread_cond_timedwait_internal (pthread_cond_t *cond,
   cancelled = (self->cancel_state == PTHREAD_CANCEL_ENABLE)
       && self->cancel_pending;
 
-  if (!cancelled)
-    {
-      self->cancel_hook = cancel_hook;
-      self->cancel_hook_arg = &ctx;
-      oldtype = self->cancel_type;
-
-      if (oldtype != PTHREAD_CANCEL_DEFERRED)
-	self->cancel_type = PTHREAD_CANCEL_DEFERRED;
-
-      /* Add ourselves to the list of waiters.  This is done while setting
-         the cancellation hook to simplify the cancellation procedure, i.e.
-         if the thread is queued, it can be cancelled, otherwise it is
-         already unblocked, progressing on the return path.  */
-      __pthread_spin_wait (&cond->__lock);
-      __pthread_enqueue (&cond->__queue, self);
-      if (cond->__attr != NULL && clockid == -1)
-	clock_id = cond->__attr->__clock;
-      __pthread_spin_unlock (&cond->__lock);
-    }
-  __pthread_mutex_unlock (&self->cancel_lock);
-
   if (cancelled)
-    __pthread_exit (PTHREAD_CANCELED);
+    {
+      __pthread_mutex_unlock (&self->cancel_lock);
+      __pthread_exit (PTHREAD_CANCELED);
+    }
+
+  self->cancel_hook = cancel_hook;
+  self->cancel_hook_arg = &ctx;
+  oldtype = self->cancel_type;
+
+  if (oldtype != PTHREAD_CANCEL_DEFERRED)
+    self->cancel_type = PTHREAD_CANCEL_DEFERRED;
+
+  /* Add ourselves to the list of waiters.  This is done while setting
+     the cancellation hook to simplify the cancellation procedure, i.e.
+     if the thread is queued, it can be cancelled, otherwise it is
+     already unblocked, progressing on the return path.  */
+  __pthread_spin_wait (&cond->__lock);
+  __pthread_enqueue (&cond->__queue, self);
+  if (cond->__attr != NULL && clockid == -1)
+    clock_id = cond->__attr->__clock;
+  __pthread_spin_unlock (&cond->__lock);
+
+  __pthread_mutex_unlock (&self->cancel_lock);
 
   /* Release MUTEX before blocking.  */
   __pthread_mutex_unlock (mutex);
