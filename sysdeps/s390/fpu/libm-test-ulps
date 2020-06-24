@@ -958,10 +958,12 @@ ldouble: 2
 
 Function: "exp10_downward":
 double: 3
+float: 1
 ldouble: 3
 
 Function: "exp10_towardzero":
 double: 3
+float: 1
 ldouble: 3
 
 Function: "exp10_upward":
