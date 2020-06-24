@@ -21,6 +21,8 @@
 #ifndef _TUNABLES_H_
 #define _TUNABLES_H_
 
+#include <stdbool.h>
+
 #if !HAVE_TUNABLES
 static inline void
 __always_inline
