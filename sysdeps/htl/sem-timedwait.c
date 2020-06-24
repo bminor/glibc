@@ -167,7 +167,7 @@ out_locked:
     {
       if (ret == 0 && ctx.cancel_wake == 0)
 	/* We were cancelled while waking up with a token, put it back.  */
-	sem_post (sem);
+	__sem_post (sem);
 
       __pthread_exit (PTHREAD_CANCELED);
     }

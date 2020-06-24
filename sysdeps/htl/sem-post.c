@@ -64,5 +64,5 @@ __sem_post (sem_t *sem)
 
   return 0;
 }
-
+libpthread_hidden_def (__sem_post)
 strong_alias (__sem_post, sem_post);
