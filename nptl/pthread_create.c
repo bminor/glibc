@@ -549,8 +549,9 @@ START_THREAD_DEFN
     }
 #endif
 
-  advise_stack_range (pd->stackblock, pd->stackblock_size, (uintptr_t) pd,
-		      pd->guardsize);
+  if (!pd->user_stack)
+    advise_stack_range (pd->stackblock, pd->stackblock_size, (uintptr_t) pd,
+			pd->guardsize);
 
   if (__glibc_unlikely (pd->cancelhandling & SETXID_BITMASK))
     {
