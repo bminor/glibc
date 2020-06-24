@@ -27,6 +27,7 @@ struct cancel_ctx
 {
   struct __pthread *wakeup;
   sem_t *sem;
+  int cancel_wake;
 };
 
 static void
@@ -42,7 +43,10 @@ cancel_hook (void *arg)
      If it was already unblocked, it's not queued any more.  */
   unblock = wakeup->prevp != NULL;
   if (unblock)
-    __pthread_dequeue (wakeup);
+    {
+      __pthread_dequeue (wakeup);
+      ctx->cancel_wake = 1;
+    }
   __pthread_spin_unlock (&sem->__lock);
 
   if (unblock)
@@ -62,6 +66,7 @@ __sem_timedwait_internal (sem_t *restrict sem,
   struct cancel_ctx ctx;
   ctx.wakeup = self;
   ctx.sem = sem;
+  ctx.cancel_wake = 0;
 
   /* Test for a pending cancellation request, switch to deferred mode for
      safer resource handling, and prepare the hook to call in case we're
@@ -159,7 +164,13 @@ out_locked:
   __pthread_mutex_unlock (&self->cancel_lock);
 
   if (cancelled)
-    __pthread_exit (PTHREAD_CANCELED);
+    {
+      if (ret == 0 && ctx.cancel_wake == 0)
+	/* We were cancelled while waking up with a token, put it back.  */
+	sem_post (sem);
+
+      __pthread_exit (PTHREAD_CANCELED);
+    }
 
   return ret;
 }
