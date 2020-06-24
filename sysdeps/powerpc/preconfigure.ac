@@ -46,7 +46,7 @@ case "${machine}:${submachine}" in
     AC_CACHE_VAL(libc_cv_cc_submachine,libc_cv_cc_submachine="")
     ;;
 
-  a2|970|power[[4-9]]|power5x|power6+)
+  a2|970|power[[4-9]]|power5x|power6+|power10)
     submachine=${archcpu}
     AC_CACHE_VAL(libc_cv_cc_submachine,libc_cv_cc_submachine="")
     ;;

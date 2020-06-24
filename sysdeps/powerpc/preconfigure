@@ -56,7 +56,7 @@ fi
 
     ;;
 
-  a2|970|power[4-9]|power5x|power6+)
+  a2|970|power[4-9]|power5x|power6+|power10)
     submachine=${archcpu}
     if ${libc_cv_cc_submachine+:} false; then :
   $as_echo_n "(cached) " >&6
