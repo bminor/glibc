@@ -239,6 +239,24 @@ get_common_indices (struct cpu_features *cpu_features,
 	    }
 	}
 
+      /* Are XTILECFG and XTILEDATA states usable?  */
+      if ((xcrlow & (bit_XTILECFG_state | bit_XTILEDATA_state))
+	  == (bit_XTILECFG_state | bit_XTILEDATA_state))
+	{
+	  /* Determine if AMX_BF16 is usable.  */
+	  if (CPU_FEATURES_CPU_P (cpu_features, AMX_BF16))
+	    cpu_features->usable[index_arch_AMX_BF16_Usable]
+	      |= bit_arch_AMX_BF16_Usable;
+	  /* Determine if AMX_TILE is usable.  */
+	  if (CPU_FEATURES_CPU_P (cpu_features, AMX_TILE))
+	    cpu_features->usable[index_arch_AMX_TILE_Usable]
+	      |= bit_arch_AMX_TILE_Usable;
+	  /* Determine if AMX_INT8 is usable.  */
+	  if (CPU_FEATURES_CPU_P (cpu_features, AMX_INT8))
+	    cpu_features->usable[index_arch_AMX_INT8_Usable]
+	      |= bit_arch_AMX_INT8_Usable;
+	}
+
       /* For _dl_runtime_resolve, set xsave_state_size to xsave area
 	 size + integer register save size and align it to 64 bytes.  */
       if (cpu_features->basic.max_cpuid >= 0xd)

@@ -156,6 +156,9 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_arch_AVX512_VP2INTERSECT_Usable	(1u << 24)
 #define bit_arch_AVX512_BF16_Usable		(1u << 25)
 #define bit_arch_PKU_Usable			(1u << 26)
+#define bit_arch_AMX_BF16_Usable		(1u << 27)
+#define bit_arch_AMX_TILE_Usable		(1u << 28)
+#define bit_arch_AMX_INT8_Usable		(1u << 29)
 
 #define index_arch_AVX_Usable			USABLE_FEATURE_INDEX_1
 #define index_arch_AVX2_Usable			USABLE_FEATURE_INDEX_1
@@ -184,6 +187,9 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_arch_AVX512_VP2INTERSECT_Usable	USABLE_FEATURE_INDEX_1
 #define index_arch_AVX512_BF16_Usable		USABLE_FEATURE_INDEX_1
 #define index_arch_PKU_Usable			USABLE_FEATURE_INDEX_1
+#define index_arch_AMX_BF16_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AMX_TILE_Usable		USABLE_FEATURE_INDEX_1
+#define index_arch_AMX_INT8_Usable		USABLE_FEATURE_INDEX_1
 
 #define feature_AVX_Usable			usable
 #define feature_AVX2_Usable			usable
@@ -212,6 +218,9 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define feature_AVX512_VP2INTERSECT_Usable	usable
 #define feature_AVX512_BF16_Usable		usable
 #define feature_PKU_Usable			usable
+#define feature_AMX_BF16_Usable			usable
+#define feature_AMX_TILE_Usable			usable
+#define feature_AMX_INT8_Usable			usable
 
 /* CPU features.  */
 
@@ -347,6 +356,9 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_TSXLDTRK	(1u << 16)
 #define bit_cpu_PCONFIG		(1u << 18)
 #define bit_cpu_IBT		(1u << 20)
+#define bit_cpu_AMX_BF16	(1u << 22)
+#define bit_cpu_AMX_TILE	(1u << 24)
+#define bit_cpu_AMX_INT8	(1u << 25)
 #define bit_cpu_IBRS_IBPB	(1u << 26)
 #define bit_cpu_STIBP		(1u << 27)
 #define bit_cpu_L1D_FLUSH	(1u << 28)
@@ -529,6 +541,9 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_TSXLDTRK	COMMON_CPUID_INDEX_7
 #define index_cpu_PCONFIG	COMMON_CPUID_INDEX_7
 #define index_cpu_IBT		COMMON_CPUID_INDEX_7
+#define index_cpu_AMX_BF16	COMMON_CPUID_INDEX_7
+#define index_cpu_AMX_TILE	COMMON_CPUID_INDEX_7
+#define index_cpu_AMX_INT8	COMMON_CPUID_INDEX_7
 #define index_cpu_IBRS_IBPB	COMMON_CPUID_INDEX_7
 #define index_cpu_STIBP		COMMON_CPUID_INDEX_7
 #define index_cpu_L1D_FLUSH	COMMON_CPUID_INDEX_7
@@ -711,6 +726,9 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_TSXLDTRK		edx
 #define reg_PCONFIG		edx
 #define reg_IBT			edx
+#define reg_AMX_BF16		edx
+#define reg_AMX_TILE		edx
+#define reg_AMX_INT8		edx
 #define reg_IBRS_IBPB		edx
 #define reg_STIBP		edx
 #define reg_L1D_FLUSH		edx
@@ -819,6 +837,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_Opmask_state	(1u << 5)
 #define bit_ZMM0_15_state	(1u << 6)
 #define bit_ZMM16_31_state	(1u << 7)
+#define bit_XTILECFG_state	(1u << 17)
+#define bit_XTILEDATA_state	(1u << 18)
 
 # if defined (_LIBC) && !IS_IN (nonlib)
 /* Unused for x86.  */
