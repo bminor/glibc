@@ -19,7 +19,9 @@
 #ifndef _LDCONFIG_H
 #define _LDCONFIG_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <sys/stat.h>
 
 #define FLAG_ANY			-1
 #define FLAG_TYPE_MASK			0x00ff
