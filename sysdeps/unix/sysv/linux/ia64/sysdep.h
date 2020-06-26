@@ -172,6 +172,9 @@
 
 #else /* not __ASSEMBLER__ */
 
+#undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
+#define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
+
 #define BREAK_INSN_1(num) "break " #num ";;\n\t"
 #define BREAK_INSN(num) BREAK_INSN_1(num)
 

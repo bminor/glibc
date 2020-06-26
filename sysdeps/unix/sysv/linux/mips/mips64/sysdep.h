@@ -41,6 +41,9 @@
 
 #else   /* ! __ASSEMBLER__ */
 
+#undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
+#define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
+
 #if _MIPS_SIM == _ABIN32
 /* Convert X to a long long, without losing any bits if it is one
    already or warning if it is a 32-bit pointer.  */

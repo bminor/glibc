@@ -461,6 +461,9 @@ __local_syscall_error:				\
 # define INTERNAL_SYSCALL_NCS(number, nr, args...)		\
   INTERNAL_SYSCALL_RAW##nr (number, args)
 
+#undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
+#define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
+
 #endif /* __ASSEMBLER__ */
 
 /* Pointer mangling support.  */

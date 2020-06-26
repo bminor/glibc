@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2020 Free Software Foundation, Inc.
+/* Change data segment size.  Linux/Alpha.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,19 +20,14 @@
 #include <unistd.h>
 #include <sysdep.h>
 
-/* This must be initialized data because commons can't have aliases.  */
 void *__curbrk = 0;
-
-/* Old braindamage in GCC's crtstuff.c requires this symbol in an attempt
-   to work around different old braindamage in the old Linux ELF dynamic
-   linker.  */
-weak_alias (__curbrk, ___brk_addr)
 
 int
 __brk (void *addr)
 {
+  /* Alpha brk returns -ENOMEM in case of failure.  */
   __curbrk = (void *) INTERNAL_SYSCALL_CALL (brk, addr);
-  if (__curbrk < addr)
+  if ((unsigned long) __curbrk == -ENOMEM)
     {
       __set_errno (ENOMEM);
       return -1;

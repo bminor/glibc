@@ -234,6 +234,9 @@
 # define INTERNAL_SYSCALL_NCS(number, nr, args...)	\
 	INTERNAL_SYSCALL_RAW (number, nr, args)
 
+#undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
+#define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
+
 #endif	/* __ASSEMBLER__ */
 
 /* Pointer mangling is supported for AArch64.  */

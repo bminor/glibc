@@ -173,6 +173,11 @@
 #define ret_ERRVAL							      \
     br	    14
 
+#else
+
+# undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
+# define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
+
 #endif /* __ASSEMBLER__ */
 
 /* Pointer mangling support.  */

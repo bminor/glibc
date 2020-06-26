@@ -121,6 +121,9 @@ ENTRY(name);					\
 	"f24", "f25", "f26", "f27", "f28", "f29", "f30", "f31",		\
 	"cc", "memory"
 
+#undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
+#define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
+
 #endif	/* __ASSEMBLER__ */
 
 /* Pointer mangling support.  */

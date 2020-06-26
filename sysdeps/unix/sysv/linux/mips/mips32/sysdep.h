@@ -43,6 +43,9 @@
 
 #else   /* ! __ASSEMBLER__ */
 
+#undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
+#define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
+
 /* Note that the original Linux syscall restart convention required the
    instruction immediately preceding SYSCALL to initialize $v0 with the
    syscall number.  Then if a restart triggered, $v0 would have been

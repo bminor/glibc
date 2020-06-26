@@ -155,6 +155,9 @@
    RV64).  */
 # define HAVE_GETCPU_VSYSCALL		"__vdso_getcpu"
 
+# undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
+# define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
+
 # define INTERNAL_SYSCALL(name, nr, args...) \
 	internal_syscall##nr (SYS_ify (name), args)
 

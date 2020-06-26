@@ -99,4 +99,8 @@
    it missing due the usage of a old generic version without it).  */
 #define HAVE_INTERNAL_SEND_SYMBOL	1
 
+/* Export the ___brk_addr symbol on brk.c implementation (some ABIs export
+   it due and old crtstuff.c code).  */
+#define HAVE_INTERNAL_BRK_ADDR_SYMBOL   0
+
 #endif /* _SYSDEP_LINUX_H  */

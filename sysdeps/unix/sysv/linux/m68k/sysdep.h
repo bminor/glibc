@@ -292,6 +292,9 @@ SYSCALL_ERROR_LABEL:							      \
   LOAD_REGS_5
 #define ASM_ARGS_6	ASM_ARGS_5, "a" (_a0)
 
+#undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
+#define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
+
 #endif /* not __ASSEMBLER__ */
 
 /* Pointer mangling is not yet supported for M68K.  */
