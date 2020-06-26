@@ -20,7 +20,7 @@
 static int
 do_test (void)
 {
-  if (socketpair (AF_UNIX, SOCK_STREAM, PF_UNIX, fds) != 0)
+  if (socketpair (AF_UNIX, SOCK_STREAM, 0, fds) != 0)
     {
       perror ("socketpair");
       exit (1);
