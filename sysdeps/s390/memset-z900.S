@@ -157,28 +157,27 @@ ENTRY(MEMSET_Z196)
 # if !defined __s390x__
 	llgfr	%r4,%r4
 # endif /* !defined __s390x__  */
-	ltgr    %r4,%r4
-	je      .L_Z196_4
+	clgfi	%r4,1
+	jl	.L_Z196_4	    # n == 0
 	stc     %r3,0(%r2)
+	je      .L_Z196_4	    # n == 1
+	aghi	%r4,-2
 	lgr     %r1,%r2
-	cghi    %r4,1
-	je      .L_Z196_4
-	aghi    %r4,-2
-	srlg    %r5,%r4,8
-	ltgr    %r5,%r5
-	jne     .L_Z196_1
+	risbg	%r5,%r4,8,128+63,56 # r5 = n / 256
+	jne     .L_Z196_1	    # Jump away if r5 != 0
 .L_Z196_3:
 	exrl    %r4,.L_Z196_17
 .L_Z196_4:
 	br      %r14
 .L_Z196_1:
 	cgfi	%r5,1048576
-	jh	__memset_mvcle	   # Switch to mvcle for >256MB
+	jh	__memset_mvcle	    # Switch to mvcle for >256MB
 .L_Z196_2:
 	pfd     2,1024(%r1)
-	mvc     1(256,%r1),0(%r1)
+	mvc     1(255,%r1),0(%r1)
 	aghi    %r5,-1
 	la      %r1,256(%r1)
+	stc     %r3,0(%r1)
 	jne     .L_Z196_2
 	j       .L_Z196_3
 .L_Z196_17:
