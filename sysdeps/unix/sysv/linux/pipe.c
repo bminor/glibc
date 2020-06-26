@@ -1,4 +1,5 @@
-/* Copyright (C) 1999-2021 Free Software Foundation, Inc.
+/* Create create pipe.  Linux generic version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -12,31 +13,20 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <unistd.h>
 #include <sysdep.h>
 
-ENTRY (__libc_pipe)
-	mov	#+__NR_pipe, r3
-	trapa	#0x10
-	mov     r0, r3
-	mov	#-12, r2
-	shad	r2, r3
-	not	r3, r3			// r1=0 means r0 = -1 to -4095
-	tst	r3, r3			// i.e. error in linux
-	bt	1f
-	mov.l	r0, @r4
-	mov.l	r1, @(4, r4)
-	rts
-	 mov	#0, r0
-1:
-	SYSCALL_ERROR_HANDLER
-.Lpseudo_end:
-	rts
-	 nop
-PSEUDO_END (__libc_pipe)
-
-weak_alias (__libc_pipe, __pipe)
+/* Create a one-way communication channel (__pipe).
+   If successful, two file descriptors are stored in PIPEDES;
+   bytes written on PIPEDES[1] can be read from PIPEDES[0].
+   Returns 0 if successful, -1 if not.  */
+int
+__pipe (int __pipedes[2])
+{
+  return INLINE_SYSCALL_CALL (pipe2, (int *) __pipedes, 0);
+}
 libc_hidden_def (__pipe)
-weak_alias (__libc_pipe, pipe)
+weak_alias (__pipe, pipe)
