@@ -184,24 +184,33 @@ ENTRY(MEMCPY_Z196)
 	je      .L_Z196_4
 .L_Z196_start2:
 	aghi    %r4,-1
-	srlg    %r5,%r4,8
-	ltgr    %r5,%r5
+	risbg	%r5,%r4,8,128+63,56 # r0 = r5 / 256
 	jne     .L_Z196_5
 .L_Z196_3:
 	exrl    %r4,.L_Z196_14
 .L_Z196_4:
 	br      %r14
 .L_Z196_5:
-	cgfi    %r5,262144      # Switch to mvcle for copies >64MB
-	jh      __memcpy_mvcle
+	cgfi	%r5,255		# Switch to loop with pfd for copies >=64kB
+	jh	.L_Z196_6
 .L_Z196_2:
-	pfd     1,768(%r3)
-	pfd     2,768(%r1)
 	mvc     0(256,%r1),0(%r3)
 	aghi    %r5,-1
 	la      %r1,256(%r1)
 	la      %r3,256(%r3)
 	jne     .L_Z196_2
+	j       .L_Z196_3
+.L_Z196_6:
+	cgfi    %r5,262144      # Switch to mvcle for copies >64MB
+	jh      __memcpy_mvcle
+.L_Z196_7:
+	pfd     1,1024(%r3)
+	pfd     2,1024(%r1)
+	mvc     0(256,%r1),0(%r3)
+	aghi    %r5,-1
+	la      %r1,256(%r1)
+	la      %r3,256(%r3)
+	jne     .L_Z196_7
 	j       .L_Z196_3
 .L_Z196_14:
 	mvc     0(1,%r1),0(%r3)
