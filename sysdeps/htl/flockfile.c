@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
-#include <libc-lock.h>
+#include <libc-lockP.h>
 
 
 void
