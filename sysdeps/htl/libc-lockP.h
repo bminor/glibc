@@ -19,7 +19,6 @@
 #ifndef _BITS_LIBC_LOCKP_H
 #define _BITS_LIBC_LOCKP_H 1
 
-#include <libc-lock.h>
 #include <pthread.h>
 #include <pthread-functions.h>
 
@@ -73,36 +72,6 @@ typedef pthread_key_t __libc_key_t;
 #define __libc_setspecific(KEY, VALUE) \
   __libc_ptf_call (__pthread_setspecific, (KEY, VALUE), 0)
 
-
-#undef __libc_cleanup_region_start
-#undef __libc_cleanup_region_end
-#undef __libc_cleanup_end
-
-#define __libc_cleanup_region_start(DOIT, FCT, ARG) \
-  {									      \
-    struct __pthread_cancelation_handler **__handlers = NULL;		      \
-    struct __pthread_cancelation_handler __handler;			      \
-    int _ditit = 0;							      \
-    if (DOIT && __pthread_get_cleanup_stack != NULL)			      \
-      {									      \
-	__handlers = __pthread_get_cleanup_stack ();			      \
-	__handler.__handler = FCT;					      \
-	__handler.__arg = ARG;						      \
-	__handler.__next = *__handlers;					      \
-	*__handlers = &__handler;					      \
-	_ditit = 1;							      \
-      }
-
-#define __libc_cleanup_end(DOIT) \
-    if (_ditit) {							      \
-      if (DOIT)								      \
-	__handler.__handler (__handler.__arg);				      \
-      *__handlers = __handler.__next;					      \
-    }
-
-#define __libc_cleanup_region_end(DOIT) \
-    __libc_cleanup_end(DOIT)						      \
-  }
 
 /* Functions that are used by this file and are internal to the GNU C
    library.  */
@@ -185,7 +154,6 @@ weak_extern (__pthread_once)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 weak_extern (__pthread_setcancelstate)
-weak_extern (__pthread_get_cleanup_stack)
 # else
 #  pragma weak __pthread_mutex_init
 #  pragma weak __pthread_mutex_destroy
@@ -208,7 +176,6 @@ weak_extern (__pthread_get_cleanup_stack)
 #  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
 #  pragma weak __pthread_setcancelstate
-#  pragma weak __pthread_get_cleanup_stack
 # endif
 #endif
 
