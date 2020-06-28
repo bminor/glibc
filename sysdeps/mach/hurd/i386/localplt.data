@@ -19,7 +19,8 @@ ld.so: _dl_catch_exception + REL R_386_GLOB_DAT
 ld.so: __open ?
 ld.so: __open64 ?
 ld.so: __open_nocancel
-ld.so: __close
+ld.so: __close ?
+ld.so: __close_nocancel
 ld.so: __read ?
 ld.so: __read_nocancel
 ld.so: __pread64

@@ -28,9 +28,8 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
-/* For now we have none.  Map the name to the normal functions.  */
-#define __close_nocancel(fd) \
-  __close (fd)
+/* Non cancellable close syscall.  */
+__typeof (__close) __close_nocancel;
 
 void __close_nocancel_nostatus (int fd);
 
@@ -64,12 +63,15 @@ __typeof (__writev) __writev_nocancel;
 /* Non cancellable writev syscall with no status.  */
 void __writev_nocancel_nostatus (int fd, const struct iovec *vector, int count);
 
+/* For now we have none.  Map the name to the normal functions.  */
 # define __waitpid_nocancel(pid, stat_loc, options) \
   __waitpid (pid, stat_loc, options)
 #define __fcntl64_nocancel(fd, cmd, ...) \
   __fcntl64 (fd, cmd, __VA_ARGS__)
 
 #if IS_IN (libc)
+hidden_proto (__close_nocancel)
+hidden_proto (__close_nocancel_nostatus)
 hidden_proto (__open_nocancel)
 hidden_proto (__openat_nocancel)
 hidden_proto (__read_nocancel)
@@ -78,7 +80,6 @@ hidden_proto (__write_nocancel)
 hidden_proto (__pwrite64_nocancel)
 hidden_proto (__writev_nocancel)
 hidden_proto (__writev_nocancel_nostatus)
-hidden_proto (__close_nocancel_nostatus)
 #endif
 
 #endif /* NOT_CANCEL_H  */

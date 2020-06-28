@@ -353,6 +353,7 @@ weak_alias (__open, __open64)
 weak_alias (__open, __open_nocancel)
 
 check_no_hidden(__close);
+check_no_hidden(__close_nocancel);
 int weak_function
 __close (int fd)
 {
@@ -360,6 +361,7 @@ __close (int fd)
     __mach_port_deallocate (__mach_task_self (), (mach_port_t) fd);
   return 0;
 }
+weak_alias (__close, __close_nocancel)
 
 check_no_hidden(__pread64);
 check_no_hidden(__pread64_nocancel);
