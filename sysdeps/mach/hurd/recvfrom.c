@@ -43,12 +43,12 @@ __recvfrom (int fd, void *buf, size_t n, int flags, __SOCKADDR_ARG addrarg,
   int cancel_oldtype;
 
   cancel_oldtype = LIBC_CANCEL_ASYNC();
-  err = HURD_DPORT_USE (fd, __socket_recv (port, &addrport,
-					   flags, &bufp, &nread,
-					   &ports, &nports,
-					   &cdata, &clen,
-					   &flags,
-					   n));
+  err = HURD_DPORT_USE_CANCEL (fd, __socket_recv (port, &addrport,
+						  flags, &bufp, &nread,
+						  &ports, &nports,
+						  &cdata, &clen,
+						  &flags,
+						  n));
   LIBC_CANCEL_RESET (cancel_oldtype);
 
   if (err)

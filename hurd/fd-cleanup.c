@@ -1,5 +1,5 @@
-/* _hurd_fd_write -- write to a file descriptor; handles job control et al.
-   Copyright (C) 1993-2020 Free Software Foundation, Inc.
+/* Cleanup function for `struct hurd_fd' users.
+   Copyright (C) 1995-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +16,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <unistd.h>
-#include <hurd.h>
+#include <mach.h>
 #include <hurd/fd.h>
 
-error_t
-_hurd_fd_write (struct hurd_fd *fd,
-		const void *buf, size_t *nbytes, loff_t offset)
+/* We were cancelled while using an fd, and called from the cleanup unwinding.
+ */
+
+void
+_hurd_fd_port_use_cleanup (void *arg)
 {
-  error_t err;
-  mach_msg_type_number_t wrote;
+  struct _hurd_fd_port_use_data *data = arg;
 
-  error_t writefd (io_t port)
-    {
-      return __io_write (port, buf, *nbytes, offset, &wrote);
-    }
-
-  err = HURD_FD_PORT_USE_CANCEL (fd, _hurd_ctty_output (port, ctty, writefd));
-
-  if (! err)
-    *nbytes = wrote;
-
-  return err;
+  _hurd_port_free (&data->d->port, &data->ulink, data->port);
+  if (data->ctty != MACH_PORT_NULL)
+    _hurd_port_free (&data->d->ctty, &data->ctty_ulink, data->ctty);
 }

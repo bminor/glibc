@@ -92,6 +92,7 @@ extern sigset_t _hurdsig_traced;
 
 /* Shorthand macro for internal library code referencing _hurd_ports (see
    <hurd/port.h>).  */
+/* Also see __USEPORT_CANCEL.  */
 
 #define	__USEPORT(which, expr) \
   HURD_PORT_USE (&_hurd_ports[INIT_PORT_##which], (expr))

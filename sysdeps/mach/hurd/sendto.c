@@ -73,7 +73,7 @@ __sendto (int fd,
       return err_port;
     }
 
-  err = HURD_DPORT_USE (fd,
+  err = HURD_DPORT_USE_CANCEL (fd,
 			({
 			  if (addr != NULL)
 			    err = create_address_port (port, addr, addr_len,

@@ -1,4 +1,4 @@
-/* Cleanup function for `struct hurd_port' users who longjmp.
+/* Cleanup function for `struct hurd_port' users.
    Copyright (C) 1995-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -27,4 +27,15 @@ void
 _hurd_port_cleanup (void *cleanup_data, jmp_buf env, int val)
 {
   __mach_port_deallocate (__mach_task_self (), (mach_port_t) cleanup_data);
+}
+
+/* We were cancelled while using a port, and called from the cleanup unwinding.
+ */
+
+void
+_hurd_port_use_cleanup (void *arg)
+{
+  struct _hurd_port_use_data *data = arg;
+
+  _hurd_port_free (data->p, &data->link, data->port);
 }

@@ -174,7 +174,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 	err = EIEIO;
     }
 
-  err = HURD_DPORT_USE (fd,
+  err = HURD_DPORT_USE_CANCEL (fd,
 			({
 			  if (err)
 			    err = __socket_create_address (port,

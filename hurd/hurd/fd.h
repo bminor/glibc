@@ -115,6 +115,7 @@ _hurd_fd_get (int fd)
   HURD_FD_USE ((fd), HURD_FD_PORT_USE (descriptor, (expr)))
 
 /* Likewise, but FD is a pointer to the file descriptor structure.  */
+/* Also see HURD_FD_PORT_USE_CANCEL.  */
 
 #define	HURD_FD_PORT_USE(fd, expr)					      \
   ({ error_t __result;							      \

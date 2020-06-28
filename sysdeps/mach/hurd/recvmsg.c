@@ -58,7 +58,7 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
       while (err == EINTR);
       if (!err)
 	do
-	  err = __USEPORT (AUTH, __auth_user_authenticate (port,
+	  err = __USEPORT_CANCEL (AUTH, __auth_user_authenticate (port,
 					  ref, MACH_MSG_TYPE_MAKE_SEND,
 					  result));
 	while (err == EINTR);
@@ -86,11 +86,11 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
 
   buf = data;
   cancel_oldtype = LIBC_CANCEL_ASYNC();
-  err = HURD_DPORT_USE (fd, __socket_recv (port, &aport,
-					   flags, &data, &len,
-					   &ports, &nports,
-					   &cdata, &clen,
-					   &message->msg_flags, amount));
+  err = HURD_DPORT_USE_CANCEL (fd, __socket_recv (port, &aport,
+						  flags, &data, &len,
+						  &ports, &nports,
+						  &cdata, &clen,
+						  &message->msg_flags, amount));
   LIBC_CANCEL_RESET (cancel_oldtype);
   if (err)
     return __hurd_sockfail (fd, flags, err);

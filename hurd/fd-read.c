@@ -35,7 +35,7 @@ _hurd_fd_read (struct hurd_fd *fd, void *buf, size_t *nbytes, loff_t offset)
 
   data = buf;
   nread = *nbytes;
-  if (err = HURD_FD_PORT_USE (fd, _hurd_ctty_input (port, ctty, readfd)))
+  if (err = HURD_FD_PORT_USE_CANCEL (fd, _hurd_ctty_input (port, ctty, readfd)))
     return err;
 
   if (data != buf)
