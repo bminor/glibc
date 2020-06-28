@@ -69,9 +69,11 @@ __typeof (__wait4) __wait4_nocancel;
 # define __waitpid_nocancel(pid, stat_loc, options) \
   __wait4_nocancel (pid, stat_loc, options, NULL)
 
-/* For now we have none.  Map the name to the normal functions.  */
-#define __fcntl64_nocancel(fd, cmd, ...) \
-  __fcntl64 (fd, cmd, __VA_ARGS__)
+/* Non cancellable fcntl syscall.  */
+__typeof (__fcntl) __fcntl_nocancel;
+/* fcntl64 is just the same as fcntl for us.  */
+#define __fcntl64_nocancel(...) \
+  __fcntl_nocancel (__VA_ARGS__)
 
 #if IS_IN (libc)
 hidden_proto (__close_nocancel)
@@ -85,6 +87,7 @@ hidden_proto (__pwrite64_nocancel)
 hidden_proto (__writev_nocancel)
 hidden_proto (__writev_nocancel_nostatus)
 hidden_proto (__wait4_nocancel)
+hidden_proto (__fcntl_nocancel)
 #endif
 
 #endif /* NOT_CANCEL_H  */

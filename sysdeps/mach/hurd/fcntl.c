@@ -21,6 +21,11 @@
 #include <hurd/fd.h>
 #include <stdarg.h>
 #include <sys/file.h>		/* XXX for LOCK_* */
+#ifdef NOCANCEL
+#include <not-cancel.h>
+#else
+#include <sysdep-cancel.h>
+#endif
 #include "f_setlk.h"
 
 /* Perform file control operations on FD.  */
@@ -155,8 +160,19 @@ __libc_fcntl (int fd, int cmd, ...)
 	  .l_pid = fl->l_pid
 	};
 
-	err = HURD_FD_PORT_USE (d, __file_record_lock (port, cmd, &fl64,
-				MACH_PORT_NULL, MACH_MSG_TYPE_MAKE_SEND));
+#ifndef NOCANCEL
+	if (cmd == F_SETLKW64)
+	  {
+	    int cancel_oldtype = LIBC_CANCEL_ASYNC();
+	    err = HURD_FD_PORT_USE_CANCEL (d, __file_record_lock (port, cmd,
+					   &fl64, MACH_PORT_NULL,
+					   MACH_MSG_TYPE_MAKE_SEND));
+	    LIBC_CANCEL_RESET (cancel_oldtype);
+	  }
+	else
+#endif
+	  err = HURD_FD_PORT_USE (d, __file_record_lock (port, cmd, &fl64,
+				  MACH_PORT_NULL, MACH_MSG_TYPE_MAKE_SEND));
 
 	/* XXX: To remove once file_record_lock RPC is settled.  */
 	if (err == EMIG_BAD_ID || err == EOPNOTSUPP)
@@ -207,8 +223,19 @@ __libc_fcntl (int fd, int cmd, ...)
       {
 	struct flock64 *fl = va_arg (ap, struct flock64 *);
 
-	err = HURD_FD_PORT_USE (d, __file_record_lock (port, cmd, fl,
-				MACH_PORT_NULL, MACH_MSG_TYPE_MAKE_SEND));
+#ifndef NOCANCEL
+	if (cmd == F_SETLKW64)
+	  {
+	    int cancel_oldtype = LIBC_CANCEL_ASYNC();
+	    err = HURD_FD_PORT_USE_CANCEL (d, __file_record_lock (port, cmd,
+					   fl, MACH_PORT_NULL,
+					   MACH_MSG_TYPE_MAKE_SEND));
+	    LIBC_CANCEL_RESET (cancel_oldtype);
+	  }
+	else
+#endif
+	  err = HURD_FD_PORT_USE (d, __file_record_lock (port, cmd, fl,
+				  MACH_PORT_NULL, MACH_MSG_TYPE_MAKE_SEND));
 
 	/* XXX: To remove once file_record_lock RPC is settled.  */
 	if (err == EMIG_BAD_ID || err == EOPNOTSUPP)
@@ -263,6 +290,8 @@ __libc_fcntl (int fd, int cmd, ...)
   return result;
 }
 libc_hidden_def (__libc_fcntl)
+
+#ifndef NOCANCEL
 weak_alias (__libc_fcntl, __fcntl)
 libc_hidden_weak (__fcntl)
 weak_alias (__libc_fcntl, fcntl)
@@ -272,3 +301,4 @@ libc_hidden_def (__libc_fcntl64)
 weak_alias (__libc_fcntl64, __fcntl64)
 libc_hidden_weak (__fcntl64)
 weak_alias (__fcntl64, fcntl64)
+#endif
