@@ -2,6 +2,8 @@
 #include_next <hurd/port.h>
 
 #ifndef _ISOMAC
+#include <libc-lock.h>
+
 struct _hurd_port_use_data
   {
      struct hurd_port *p;
@@ -14,6 +16,7 @@ extern void _hurd_port_use_cleanup (void *arg);
 /* Like HURD_PORT_USE, but cleans fd on cancel.  */
 #define	HURD_PORT_USE_CANCEL(portcell, expr)				      \
   ({ struct _hurd_port_use_data __d;					      \
+     mach_port_t port;							      \
      __typeof(expr) __result;						      \
      void *__crit;							      \
      __d.p = (portcell);						      \
