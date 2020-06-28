@@ -29,18 +29,22 @@
 #include <hurd/fd.h>
 
 /* For now we have none.  Map the name to the normal functions.  */
-#define __open_nocancel(...) \
-  __open (__VA_ARGS__)
-#define __open64_nocancel(...) \
-  __open64 (__VA_ARGS__)
-#define __openat_nocancel(...) \
-  __openat (__VA_ARGS__)
-#define __openat64_nocancel(...) \
-  __openat64 (__VA_ARGS__)
 #define __close_nocancel(fd) \
   __close (fd)
 
 void __close_nocancel_nostatus (int fd);
+
+/* Non cancellable open syscall.  */
+__typeof (__open) __open_nocancel;
+/* open64 is just the same as open for us.  */
+#define __open64_nocancel(...) \
+  __open_nocancel (__VA_ARGS__)
+
+/* Non cancellable openat syscall.  */
+__typeof (__openat) __openat_nocancel;
+/* open64 is just the same as open for us.  */
+#define __openat64_nocancel(...) \
+  __openat_nocancel (__VA_ARGS__)
 
 /* Non cancellable read syscall.  */
 __typeof (__read) __read_nocancel;
@@ -66,6 +70,8 @@ void __writev_nocancel_nostatus (int fd, const struct iovec *vector, int count);
   __fcntl64 (fd, cmd, __VA_ARGS__)
 
 #if IS_IN (libc)
+hidden_proto (__open_nocancel)
+hidden_proto (__openat_nocancel)
 hidden_proto (__read_nocancel)
 hidden_proto (__pread64_nocancel)
 hidden_proto (__write_nocancel)

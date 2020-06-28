@@ -338,6 +338,7 @@ open_file (const char *file_name, int flags,
 
 check_no_hidden(__open);
 check_no_hidden (__open64);
+check_no_hidden (__open_nocancel);
 int weak_function
 __open (const char *file_name, int mode, ...)
 {
@@ -349,6 +350,7 @@ __open (const char *file_name, int mode, ...)
     return (int)port;
 }
 weak_alias (__open, __open64)
+weak_alias (__open, __open_nocancel)
 
 check_no_hidden(__close);
 int weak_function
