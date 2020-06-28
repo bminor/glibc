@@ -22,6 +22,7 @@
 #include <hurd/socket.h>
 #include <sys/un.h>
 #include <hurd/ifsock.h>
+#include <sysdep-cancel.h>
 #include "hurd/hurdsocket.h"
 
 /* Open a connection on socket FD to peer at ADDR (which LEN bytes long).
@@ -34,13 +35,17 @@ __connect (int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
   error_t err;
   addr_port_t aport;
   const struct sockaddr_un *addr = addrarg.__sockaddr_un__;
+  int cancel_oldtype;
 
   if (addr->sun_family == AF_LOCAL)
     {
       char *name = _hurd_sun_path_dupa (addr, len);
       /* For the local domain, we must look up the name as a file and talk
 	 to it with the ifsock protocol.  */
-      file_t file = __file_name_lookup (name, 0, 0);
+      file_t file;
+      cancel_oldtype = LIBC_CANCEL_ASYNC();
+      file = __file_name_lookup (name, 0, 0);
+      LIBC_CANCEL_RESET (cancel_oldtype);
       if (file == MACH_PORT_NULL)
 	return -1;
       err = __ifsock_getsockaddr (file, &aport);
@@ -54,7 +59,7 @@ __connect (int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
   else
     err = EIEIO;
 
-  err = HURD_DPORT_USE (fd,
+  err = HURD_DPORT_USE_CANCEL (fd,
 			({
 			  if (err)
 			    err = __socket_create_address (port,
@@ -63,7 +68,9 @@ __connect (int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
 							   &aport);
 			  if (! err)
 			    {
+			      cancel_oldtype = LIBC_CANCEL_ASYNC();
 			      err = __socket_connect (port, aport);
+			      LIBC_CANCEL_RESET (cancel_oldtype);
 			      __mach_port_deallocate (__mach_task_self (),
 						      aport);
 			    }

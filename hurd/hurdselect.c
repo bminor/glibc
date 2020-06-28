@@ -28,6 +28,7 @@
 #include <stdint.h>
 #include <limits.h>
 #include <time.h>
+#include <sysdep-cancel.h>
 
 /* All user select types.  */
 #define SELECT_ALL (SELECT_READ | SELECT_WRITE | SELECT_URG)
@@ -432,11 +433,14 @@ _hurd_select (int nfds,
 	  to = MACH_MSG_TIMEOUT_NONE;
 	}
 
+      int cancel_oldtype = LIBC_CANCEL_ASYNC();
       while ((msgerr = __mach_msg (&msg.head,
 				   MACH_RCV_MSG | MACH_RCV_INTERRUPT | options,
 				   0, sizeof msg, portset, to,
 				   MACH_PORT_NULL)) == MACH_MSG_SUCCESS)
 	{
+	  LIBC_CANCEL_RESET (cancel_oldtype);
+
 	  /* We got a message.  Decode it.  */
 #ifdef MACH_MSG_TYPE_BIT
 	  const union typeword inttype =
@@ -527,6 +531,7 @@ _hurd_select (int nfds,
 	      options |= MACH_RCV_TIMEOUT;
 	    }
 	}
+      LIBC_CANCEL_RESET (cancel_oldtype);
 
       if (msgerr == MACH_RCV_INTERRUPTED)
 	/* Interruption on our side (e.g. signal reception).  */

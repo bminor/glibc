@@ -19,6 +19,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <mach.h>
+#include <sysdep-cancel.h>
 
 /* Make the process sleep for SECONDS seconds, or until a signal arrives
    and is not ignored.  The function returns the number of seconds less
@@ -30,12 +31,15 @@ __sleep (unsigned int seconds)
 {
   time_t before, after;
   mach_port_t recv;
+  int cancel_oldtype;
 
   recv = __mach_reply_port ();
 
   before = time_now ();
+  cancel_oldtype = LIBC_CANCEL_ASYNC();
   (void) __mach_msg (NULL, MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
 		     0, 0, recv, seconds * 1000, MACH_PORT_NULL);
+  LIBC_CANCEL_RESET (cancel_oldtype);
   after = time_now ();
   __mach_port_destroy (__mach_task_self (), recv);
 

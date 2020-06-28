@@ -24,6 +24,7 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <hurd/socket.h>
+#include <sysdep-cancel.h>
 
 /* Await a connection on socket FD.
    When a connection arrives, open a new socket to communicate with it,
@@ -41,13 +42,17 @@ __libc_accept4 (int fd, __SOCKADDR_ARG addrarg, socklen_t *addr_len, int flags)
   char *buf = (char *) addr;
   mach_msg_type_number_t buflen;
   int type;
+  int cancel_oldtype;
 
   flags = sock_to_o_flags (flags);
 
   if (flags & ~(O_CLOEXEC | O_NONBLOCK))
     return __hurd_fail (EINVAL);
 
-  if (err = HURD_DPORT_USE (fd, __socket_accept (port, &new, &aport)))
+  cancel_oldtype = LIBC_CANCEL_ASYNC();
+  err = HURD_DPORT_USE_CANCEL (fd, __socket_accept (port, &new, &aport));
+  LIBC_CANCEL_RESET (cancel_oldtype);
+  if (err)
     return __hurd_dfail (fd, err);
 
   if (addr != NULL)

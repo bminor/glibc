@@ -19,12 +19,18 @@
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include <sysdep-cancel.h>
 
 /* Make all changes done to FD's file data actually appear on disk.  */
 int
 fdatasync (int fd)
 {
-  error_t err = HURD_DPORT_USE (fd, __file_sync (port, 1, 1));
+  error_t err;
+  int cancel_oldtype;
+
+  cancel_oldtype = LIBC_CANCEL_ASYNC();
+  err = HURD_DPORT_USE_CANCEL (fd, __file_sync (port, 1, 1));
+  LIBC_CANCEL_RESET (cancel_oldtype);
   if (err)
     {
       if (err == EOPNOTSUPP)

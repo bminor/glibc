@@ -20,6 +20,7 @@
 #include <sys/mman.h>
 #include <errno.h>
 #include <mach.h>
+#include <sysdep-cancel.h>
 
 /* Some Mach variants have vm_msync and some don't.  Those that have it
    define the VM_SYNC_* bits when we include <mach/mach_types.h>.  */
@@ -37,6 +38,7 @@ msync (void *addr, size_t len, int flags)
 {
   vm_sync_t sync_flags = 0;
   kern_return_t err;
+  int cancel_oldtype;
 
   if (flags & MS_SYNC)
     sync_flags |= VM_SYNC_SYNCHRONOUS;
@@ -45,8 +47,11 @@ msync (void *addr, size_t len, int flags)
   if (flags & MS_INVALIDATE)
     sync_flags |= VM_SYNC_INVALIDATE;
 
-  if (err = __vm_msync (__mach_task_self (),
-			(vm_address_t) addr, (vm_size_t) len, sync_flags))
+  cancel_oldtype = LIBC_CANCEL_ASYNC();
+  err = __vm_msync (__mach_task_self (),
+		    (vm_address_t) addr, (vm_size_t) len, sync_flags);
+  LIBC_CANCEL_RESET (cancel_oldtype);
+  if (err)
     {
       errno = err;
       return -1;

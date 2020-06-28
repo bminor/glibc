@@ -19,6 +19,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <errno.h>
+#include <sysdep-cancel.h>
 
 #include <hurd/hurd.h>
 
@@ -44,6 +45,7 @@ msync (void *addr, size_t length, int flags)
   vm_offset_t offset;
 
   kern_return_t err;
+  int cancel_oldtype;
 
   if (flags & (MS_SYNC | MS_ASYNC) == (MS_SYNC | MS_ASYNC))
     return __hurd_fail (EINVAL);
@@ -77,8 +79,10 @@ msync (void *addr, size_t length, int flags)
 	  else
 	    sync_len = len;
 
+	  cancel_oldtype = LIBC_CANCEL_ASYNC();
 	  err = __vm_object_sync (obj, cur - begin + offset, sync_len,
 				  should_flush, 1, should_iosync);
+	  LIBC_CANCEL_RESET (cancel_oldtype);
 	  __mach_port_deallocate (__mach_task_self (), obj);
 
 	  if (err)

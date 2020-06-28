@@ -27,6 +27,7 @@
 #include <stdint.h>
 #include <hurd/ioctl.h>
 #include <mach/mig_support.h>
+#include <sysdep-cancel.h>
 
 #include <hurd/ioctls.defs>
 
@@ -269,7 +270,15 @@ __ioctl (int fd, unsigned long int request, ...)
   /* Marshal the arguments into the request message and make the RPC.
      This wrapper function handles EBACKGROUND returns, turning them
      into either SIGTTOU or EIO.  */
-  err = HURD_DPORT_USE (fd, _hurd_ctty_output (port, ctty, send_rpc));
+  if (request == TIOCDRAIN)
+    {
+      /* This is a cancellation point.  */
+      int cancel_oldtype = LIBC_CANCEL_ASYNC();
+      err = HURD_DPORT_USE_CANCEL (fd, _hurd_ctty_output (port, ctty, send_rpc));
+      LIBC_CANCEL_RESET (cancel_oldtype);
+    }
+  else
+    err = HURD_DPORT_USE (fd, _hurd_ctty_output (port, ctty, send_rpc));
 
 #ifdef MACH_MSG_TYPE_BIT
   t = (mach_msg_type_t *) msg.data;

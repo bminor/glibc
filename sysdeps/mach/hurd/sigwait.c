@@ -21,6 +21,7 @@
 #include <hurd/msg.h>
 #include <hurd/sigpreempt.h>
 #include <assert.h>
+#include <sysdep-cancel.h>
 
 /* Select any of pending signals from SET or wait for any to arrive.  */
 int
@@ -33,6 +34,7 @@ __sigwait (const sigset_t *set, int *sig)
   jmp_buf buf;
   mach_port_t wait;
   mach_msg_header_t msg;
+  int cancel_oldtype;
 
   sighandler_t
     preempt_fun (struct hurd_signal_preemptor *pe,
@@ -71,6 +73,7 @@ __sigwait (const sigset_t *set, int *sig)
     __sigemptyset (&mask);
 
   ss = _hurd_self_sigstate ();
+  cancel_oldtype = LIBC_CANCEL_ASYNC();
   _hurd_sigstate_lock (ss);
 
   /* See if one of these signals is currently pending.  */
@@ -128,6 +131,7 @@ __sigwait (const sigset_t *set, int *sig)
 
 all_done:
   _hurd_sigstate_unlock (ss);
+  LIBC_CANCEL_RESET (cancel_oldtype);
 
   __mach_port_destroy (__mach_task_self (), wait);
   *sig = signo;

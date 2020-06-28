@@ -20,6 +20,7 @@
 #include <hurd.h>
 #include <hurd/signal.h>
 #include <hurd/msg.h>
+#include <sysdep-cancel.h>
 
 /* Change the set of blocked signals to SET,
    wait until a signal arrives, and restore the set of blocked signals.  */
@@ -30,6 +31,7 @@ __sigsuspend (const sigset_t *set)
   sigset_t newmask, oldmask, pending;
   mach_port_t wait;
   mach_msg_header_t msg;
+  int cancel_oldtype;
 
   if (set != NULL)
     /* Crash before locking.  */
@@ -59,8 +61,11 @@ __sigsuspend (const sigset_t *set)
     __msg_sig_post (_hurd_msgport, 0, 0, __mach_task_self ());
 
   /* Wait for the signal thread's message.  */
+
+  cancel_oldtype = LIBC_CANCEL_ASYNC();
   __mach_msg (&msg, MACH_RCV_MSG, 0, sizeof (msg), wait,
 	      MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
+  LIBC_CANCEL_RESET (cancel_oldtype);
   __mach_port_destroy (__mach_task_self (), wait);
 
   /* Restore the old mask and check for pending signals again.  */
