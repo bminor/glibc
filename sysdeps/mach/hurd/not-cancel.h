@@ -63,9 +63,13 @@ __typeof (__writev) __writev_nocancel;
 /* Non cancellable writev syscall with no status.  */
 void __writev_nocancel_nostatus (int fd, const struct iovec *vector, int count);
 
-/* For now we have none.  Map the name to the normal functions.  */
+/* Non cancellable wait4 syscall.  */
+__typeof (__wait4) __wait4_nocancel;
+
 # define __waitpid_nocancel(pid, stat_loc, options) \
-  __waitpid (pid, stat_loc, options)
+  __wait4_nocancel (pid, stat_loc, options, NULL)
+
+/* For now we have none.  Map the name to the normal functions.  */
 #define __fcntl64_nocancel(fd, cmd, ...) \
   __fcntl64 (fd, cmd, __VA_ARGS__)
 
@@ -80,6 +84,7 @@ hidden_proto (__write_nocancel)
 hidden_proto (__pwrite64_nocancel)
 hidden_proto (__writev_nocancel)
 hidden_proto (__writev_nocancel_nostatus)
+hidden_proto (__wait4_nocancel)
 #endif
 
 #endif /* NOT_CANCEL_H  */
