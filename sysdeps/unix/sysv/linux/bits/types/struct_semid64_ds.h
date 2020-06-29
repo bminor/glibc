@@ -1,5 +1,5 @@
-/* Sparc implementation of the semaphore struct semid_ds
-   Copyright (C) 1995-2020 Free Software Foundation, Inc.
+/* Generic implementation of the semaphore struct semid64_ds.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,20 +20,14 @@
 # error "Never include <bits/types/struct_semid_ds.h> directly; use <sys/sem.h> instead."
 #endif
 
-/* Data structure describing a set of semaphores.  */
-struct semid_ds
-{
-  struct ipc_perm sem_perm;   /* operation permission struct */
-#if __TIMESIZE == 32
-  __syscall_ulong_t __sem_otime_high;
-  __time_t sem_otime;         /* last semop() time */
-  __syscall_ulong_t __sem_ctime_high;
-  __time_t sem_ctime;        /* last time changed by semctl() */
+#if __TIMESIZE == 64
+# define __semid64_ds semid_ds
 #else
-  __time_t sem_otime;         /* last semop() time */
-  __time_t sem_ctime;         /* last time changed by semctl() */
-#endif
-  __syscall_ulong_t sem_nsems;    /* number of semaphores in set */
-  __syscall_ulong_t __glibc_reserved3;
-  __syscall_ulong_t __glibc_reserved4;
+struct __semid64_ds
+{
+  struct ipc_perm sem_perm;		/* operation permission struct */
+  __time64_t sem_otime;			/* last semop() time */
+  __time64_t sem_ctime;			/* last time changed by semctl() */
+  __syscall_ulong_t sem_nsems;		/* number of semaphores in set */
 };
+#endif

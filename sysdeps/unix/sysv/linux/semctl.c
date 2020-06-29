@@ -21,10 +21,13 @@
 #include <ipc_priv.h>
 #include <sysdep.h>
 #include <shlib-compat.h>
-#include <errno.h>
-#include <linux/posix_types.h>  /* For __kernel_mode_t.  */
+#include <bits/types/struct_semid64_ds.h>  /* For __semid64_ds.  */
+#include <linux/posix_types.h>             /* For __kernel_mode_t.  */
 
-/* Define a `union semun' suitable for Linux here.  */
+/* The struct used to issue the syscall.  For architectures that assume
+   64-bit time as default (!__ASSUME_TIME64_SYSCALLS) the syscall will
+   split the resulting 64-bit sem_{o,c}time in two fields (sem_{o,c}time
+   and __sem_{o,c}time_high).  */
 union semun
 {
   int val;			/* value for SETVAL */
@@ -33,16 +36,90 @@ union semun
   struct seminfo *__buf;	/* buffer for IPC_INFO */
 };
 
-#ifndef DEFAULT_VERSION
-# ifndef __ASSUME_SYSVIPC_BROKEN_MODE_T
-#  define DEFAULT_VERSION GLIBC_2_2
+#if __IPC_TIME64 == 0
+# define semun64 semun
+typedef union semun semctl_arg_t;
+#else
+# include <struct_kernel_semid64_ds.h>
+
+union ksemun64
+{
+  int val;
+  struct kernel_semid64_ds *buf;
+  unsigned short int *array;
+  struct seminfo *__buf;
+};
+
+# if __TIMESIZE == 64
+#  define semun64 semun
 # else
-#  define DEFAULT_VERSION GLIBC_2_31
+/* The struct used when __semctl64 is called.  */
+union semun64
+{
+  int val;
+  struct __semid64_ds *buf;
+  unsigned short int *array;
+  struct seminfo *__buf;
+};
 # endif
+
+static void
+semid64_to_ksemid64 (const struct __semid64_ds *semid64,
+		     struct kernel_semid64_ds *ksemid)
+{
+  ksemid->sem_perm       = semid64->sem_perm;
+  ksemid->sem_otime      = semid64->sem_otime;
+  ksemid->sem_otime_high = semid64->sem_otime >> 32;
+  ksemid->sem_ctime      = semid64->sem_ctime;
+  ksemid->sem_ctime_high = semid64->sem_ctime >> 32;
+  ksemid->sem_nsems      = semid64->sem_nsems;
+}
+
+static void
+ksemid64_to_semid64 (const struct kernel_semid64_ds *ksemid,
+		     struct __semid64_ds *semid64)
+{
+  semid64->sem_perm  = ksemid->sem_perm;
+  semid64->sem_otime = ksemid->sem_otime
+		       | ((__time64_t) ksemid->sem_otime_high << 32);
+  semid64->sem_ctime = ksemid->sem_ctime
+		       | ((__time64_t) ksemid->sem_ctime_high << 32);
+  semid64->sem_nsems = ksemid->sem_nsems;
+}
+
+static union ksemun64
+semun64_to_ksemun64 (int cmd, union semun64 semun64,
+		     struct kernel_semid64_ds *buf)
+{
+  union ksemun64 r = { 0 };
+  switch (cmd)
+    {
+    case SETVAL:
+      r.val = semun64.val;
+      break;
+    case GETALL:
+    case SETALL:
+      r.array = semun64.array;
+      break;
+    case SEM_STAT:
+    case IPC_STAT:
+    case IPC_SET:
+      r.buf = buf;
+      semid64_to_ksemid64 (semun64.buf, r.buf);
+      break;
+    case IPC_INFO:
+    case SEM_INFO:
+      r.__buf = semun64.__buf;
+      break;
+    }
+  return r;
+}
+
+typedef union ksemun64 semctl_arg_t;
 #endif
 
 static int
-semctl_syscall (int semid, int semnum, int cmd, union semun arg)
+semctl_syscall (int semid, int semnum, int cmd, semctl_arg_t arg)
 {
 #ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
   return INLINE_SYSCALL_CALL (semctl, semid, semnum, cmd | __IPC_64,
@@ -53,15 +130,132 @@ semctl_syscall (int semid, int semnum, int cmd, union semun arg)
 #endif
 }
 
-int
-__new_semctl (int semid, int semnum, int cmd, ...)
-{
-  /* POSIX states ipc_perm mode should have type of mode_t.  */
-  _Static_assert (sizeof ((struct semid_ds){0}.sem_perm.mode)
-		  == sizeof (mode_t),
-		  "sizeof (msqid_ds.msg_perm.mode) != sizeof (mode_t)");
+/* POSIX states ipc_perm mode should have type of mode_t.  */
+_Static_assert (sizeof ((struct semid_ds){0}.sem_perm.mode)
+		== sizeof (mode_t),
+		"sizeof (msqid_ds.msg_perm.mode) != sizeof (mode_t)");
 
+int
+__semctl64 (int semid, int semnum, int cmd, ...)
+{
+  union semun64 arg64 = { 0 };
+  va_list ap;
+
+  /* Get the argument only if required.  */
+  switch (cmd)
+    {
+    case SETVAL:        /* arg.val */
+    case GETALL:        /* arg.array */
+    case SETALL:
+    case IPC_STAT:      /* arg.buf */
+    case IPC_SET:
+    case SEM_STAT:
+    case IPC_INFO:      /* arg.__buf */
+    case SEM_INFO:
+      va_start (ap, cmd);
+      arg64 = va_arg (ap, union semun64);
+      va_end (ap);
+      break;
+    }
+
+#if __IPC_TIME64
+  struct kernel_semid64_ds ksemid;
+  union ksemun64 ksemun = semun64_to_ksemun64 (cmd, arg64, &ksemid);
+# ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
+  if (cmd == IPC_SET)
+    ksemid.sem_perm.mode *= 0x10000U;
+# endif
+  union ksemun64 arg = ksemun;
+#else
+  union semun arg = arg64;
+#endif
+
+  int ret = semctl_syscall (semid, semnum, cmd, arg);
+  if (ret < 0)
+    return ret;
+
+  switch (cmd)
+    {
+    case IPC_STAT:
+    case SEM_STAT:
+    case SEM_STAT_ANY:
+#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
+      arg.buf->sem_perm.mode >>= 16;
+#else
+      /* Old Linux kernel versions might not clear the mode padding.  */
+      if (sizeof ((struct semid_ds){0}.sem_perm.mode)
+	  != sizeof (__kernel_mode_t))
+	arg.buf->sem_perm.mode &= 0xFFFF;
+#endif
+
+#if __IPC_TIME64
+      ksemid64_to_semid64 (arg.buf, arg64.buf);
+#endif
+    }
+
+  return ret;
+}
+#if __TIMESIZE != 64
+libc_hidden_def (__semctl64)
+
+
+/* The 64-bit time_t semid_ds version might have a different layout and
+   internal field alignment.  */
+
+static void
+semid_to_semid64 (struct __semid64_ds *ds64, const struct semid_ds *ds)
+{
+  ds64->sem_perm  = ds->sem_perm;
+  ds64->sem_otime = ds->sem_otime
+		    | ((__time64_t) ds->__sem_otime_high << 32);
+  ds64->sem_ctime = ds->sem_ctime
+		    | ((__time64_t) ds->__sem_ctime_high << 32);
+  ds64->sem_nsems = ds->sem_nsems;
+}
+
+static void
+semid64_to_semid (struct semid_ds *ds, const struct __semid64_ds *ds64)
+{
+  ds->sem_perm         = ds64->sem_perm;
+  ds->sem_otime        = ds64->sem_otime;
+  ds->__sem_otime_high = 0;
+  ds->sem_ctime        = ds64->sem_ctime;
+  ds->__sem_ctime_high = 0;
+  ds->sem_nsems        = ds64->sem_nsems;
+}
+
+static union semun64
+semun_to_semun64 (int cmd, union semun semun, struct __semid64_ds *semid64)
+{
+  union semun64 r = { 0 };
+  switch (cmd)
+    {
+    case SETVAL:
+      r.val = semun.val;
+      break;
+    case GETALL:
+    case SETALL:
+      r.array = semun.array;
+      break;
+    case SEM_STAT:
+    case IPC_STAT:
+    case IPC_SET:
+      r.buf = semid64;
+      semid_to_semid64 (r.buf, semun.buf);
+      break;
+    case IPC_INFO:
+    case SEM_INFO:
+      r.__buf = semun.__buf;
+      break;
+    }
+  return r;
+}
+
+int
+__semctl (int semid, int semnum, int cmd, ...)
+{
   union semun arg = { 0 };
+
   va_list ap;
 
   /* Get the argument only if required.  */
@@ -81,39 +275,33 @@ __new_semctl (int semid, int semnum, int cmd, ...)
       break;
     }
 
-#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
-  struct semid_ds tmpds;
-  if (cmd == IPC_SET)
-    {
-      tmpds = *arg.buf;
-      tmpds.sem_perm.mode *= 0x10000U;
-      arg.buf = &tmpds;
-    }
-#endif
+  struct __semid64_ds semid64;
+  union semun64 arg64 = semun_to_semun64 (cmd, arg, &semid64);
 
-  int ret = semctl_syscall (semid, semnum, cmd, arg);
+  int ret = __semctl64 (semid, semnum, cmd, arg64);
+  if (ret < 0)
+    return ret;
 
-  if (ret >= 0)
+  switch (cmd)
     {
-      switch (cmd)
-	{
-        case IPC_STAT:
-        case SEM_STAT:
-        case SEM_STAT_ANY:
-#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
-          arg.buf->sem_perm.mode >>= 16;
-#else
-	  /* Old Linux kernel versions might not clear the mode padding.  */
-	  if (sizeof ((struct semid_ds){0}.sem_perm.mode)
-	      != sizeof (__kernel_mode_t))
-	    arg.buf->sem_perm.mode &= 0xFFFF;
-#endif
-	}
+    case IPC_STAT:
+    case SEM_STAT:
+    case SEM_STAT_ANY:
+      semid64_to_semid (arg.buf, arg64.buf);
     }
 
   return ret;
 }
-versioned_symbol (libc, __new_semctl, semctl, DEFAULT_VERSION);
+#endif
+
+#ifndef DEFAULT_VERSION
+# ifndef __ASSUME_SYSVIPC_BROKEN_MODE_T
+#  define DEFAULT_VERSION GLIBC_2_2
+# else
+#  define DEFAULT_VERSION GLIBC_2_31
+# endif
+#endif
+versioned_symbol (libc, __semctl, semctl, DEFAULT_VERSION);
 
 #if defined __ASSUME_SYSVIPC_BROKEN_MODE_T \
     && SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_31)
@@ -121,7 +309,7 @@ int
 attribute_compat_text_section
 __semctl_mode16 (int semid, int semnum, int cmd, ...)
 {
-  union semun arg = { 0 };
+  semctl_arg_t arg = { 0 };
   va_list ap;
 
   /* Get the argument only if required.  */
@@ -136,7 +324,7 @@ __semctl_mode16 (int semid, int semnum, int cmd, ...)
     case IPC_INFO:      /* arg.__buf */
     case SEM_INFO:
       va_start (ap, cmd);
-      arg = va_arg (ap, union semun);
+      arg = va_arg (ap, semctl_arg_t);
       va_end (ap);
       break;
     }

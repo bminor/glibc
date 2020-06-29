@@ -53,4 +53,14 @@ struct __old_ipc_perm
 #define SEMTIMEDOP_IPC_ARGS(__nsops, __sops, __timeout) \
   (__nsops), 0, (__sops), (__timeout)
 
+/* Linux SysV ipc does not provide new syscalls for 64-bit time support on
+   32-bit architectures, but rather split the timestamp into high and low;
+   storing the high value in previously unused fields.  */
+#if (__WORDSIZE == 32 \
+     && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE == 32))
+# define __IPC_TIME64 1
+#else
+# define __IPC_TIME64 0
+#endif
+
 #include <ipc_ops.h>
