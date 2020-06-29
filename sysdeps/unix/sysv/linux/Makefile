@@ -92,6 +92,7 @@ sysdep_headers += sys/mount.h sys/acct.h \
 		  bits/termios-c_lflag.h bits/termios-tcflow.h \
 		  bits/termios-misc.h \
 		  bits/types/struct_semid_ds.h \
+		  bits/types/struct_msqid_ds.h \
 		  bits/ipc-perm.h \
 		  sys/rseq.h bits/rseq.h
 
