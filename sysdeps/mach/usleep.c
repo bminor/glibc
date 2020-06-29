@@ -27,16 +27,13 @@ usleep (useconds_t useconds)
 {
   mach_port_t recv;
   int cancel_oldtype;
-  useconds_t useconds_up = useconds + 999;
-
-  if (useconds_up < useconds)
-    useconds_up = UINT32_MAX;
+  mach_msg_timeout_t timeout = useconds / 1000 + (useconds % 1000 != 0);
 
   recv = __mach_reply_port ();
 
   cancel_oldtype = LIBC_CANCEL_ASYNC();
   (void) __mach_msg (NULL, MACH_RCV_MSG|MACH_RCV_TIMEOUT|MACH_RCV_INTERRUPT,
-		     0, 0, recv, useconds_up / 1000, MACH_PORT_NULL);
+		     0, 0, recv, timeout, MACH_PORT_NULL);
   LIBC_CANCEL_RESET (cancel_oldtype);
   __mach_port_destroy (mach_task_self (), recv);
 
