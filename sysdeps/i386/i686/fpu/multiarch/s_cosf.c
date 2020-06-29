@@ -23,7 +23,7 @@
 extern float __cosf_sse2 (float);
 extern float __cosf_ia32 (float);
 
-libm_ifunc (__cosf, HAS_CPU_FEATURE (SSE2) ? __cosf_sse2 : __cosf_ia32);
+libm_ifunc (__cosf, CPU_FEATURE_USABLE (SSE2) ? __cosf_sse2 : __cosf_ia32);
 libm_alias_float (__cos, cos);
 
 #define COSF __cosf_ia32

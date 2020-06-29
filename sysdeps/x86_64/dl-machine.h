@@ -99,9 +99,9 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 end in this function.  */
       if (__glibc_unlikely (profile))
 	{
-	  if (HAS_ARCH_FEATURE (AVX512F_Usable))
+	  if (CPU_FEATURE_USABLE (AVX512F))
 	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile_avx512;
-	  else if (HAS_ARCH_FEATURE (AVX_Usable))
+	  else if (CPU_FEATURE_USABLE (AVX))
 	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile_avx;
 	  else
 	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile_sse;
@@ -119,7 +119,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	     the resolved address.  */
 	  if (GLRO(dl_x86_cpu_features).xsave_state_size != 0)
 	    *(ElfW(Addr) *) (got + 2)
-	      = (HAS_ARCH_FEATURE (XSAVEC_Usable)
+	      = (CPU_FEATURE_USABLE (XSAVEC)
 		 ? (ElfW(Addr)) &_dl_runtime_resolve_xsavec
 		 : (ElfW(Addr)) &_dl_runtime_resolve_xsave);
 	  else

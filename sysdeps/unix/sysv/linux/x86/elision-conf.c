@@ -63,7 +63,7 @@ do_set_elision_enable (int32_t elision_enable)
      if __libc_enable_secure isn't enabled since elision_enable will be set
      according to the default, which is disabled.  */
   if (elision_enable == 1)
-    __pthread_force_elision = HAS_CPU_FEATURE (RTM) ? 1 : 0;
+    __pthread_force_elision = CPU_FEATURE_USABLE (RTM) ? 1 : 0;
 }
 
 /* The pthread->elision_enable tunable is 0 or 1 indicating that elision

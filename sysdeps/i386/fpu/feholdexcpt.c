@@ -30,7 +30,7 @@ __feholdexcept (fenv_t *envp)
   __asm__ volatile ("fnstenv %0; fnclex" : "=m" (*envp));
 
   /* If the CPU supports SSE we set the MXCSR as well.  */
-  if (HAS_CPU_FEATURE (SSE))
+  if (CPU_FEATURE_USABLE (SSE))
     {
       unsigned int xwork;
 

@@ -38,7 +38,7 @@ fedisableexcept (int excepts)
   __asm__ ("fldcw %0" : : "m" (*&new_exc));
 
   /* If the CPU supports SSE we set the MXCSR as well.  */
-  if (HAS_CPU_FEATURE (SSE))
+  if (CPU_FEATURE_USABLE (SSE))
     {
       unsigned int xnew_exc;
 

@@ -34,10 +34,10 @@ IFUNC_SELECTOR (void)
 
   if (!CPU_FEATURES_ARCH_P (cpu_features, MathVec_Prefer_No_AVX512))
     {
-      if (CPU_FEATURES_ARCH_P (cpu_features, AVX512DQ_Usable))
+      if (CPU_FEATURE_USABLE_P (cpu_features, AVX512DQ))
 	return OPTIMIZE (skx);
 
-      if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable))
+      if (CPU_FEATURE_USABLE_P (cpu_features, AVX512F))
 	return OPTIMIZE (knl);
     }
 

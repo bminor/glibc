@@ -45,13 +45,13 @@ IFUNC_SELECTOR (void)
       || CPU_FEATURES_ARCH_P (cpu_features, Prefer_FSRM))
     return OPTIMIZE (erms);
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable)
+  if (CPU_FEATURE_USABLE_P (cpu_features, AVX512F)
       && !CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_AVX512))
     {
       if (CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER))
 	return OPTIMIZE (avx512_no_vzeroupper);
 
-      if (CPU_FEATURES_CPU_P (cpu_features, ERMS))
+      if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
 	return OPTIMIZE (avx512_unaligned_erms);
 
       return OPTIMIZE (avx512_unaligned);
@@ -59,16 +59,16 @@ IFUNC_SELECTOR (void)
 
   if (CPU_FEATURES_ARCH_P (cpu_features, AVX_Fast_Unaligned_Load))
     {
-      if (CPU_FEATURES_CPU_P (cpu_features, ERMS))
+      if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
 	return OPTIMIZE (avx_unaligned_erms);
 
       return OPTIMIZE (avx_unaligned);
     }
 
-  if (!CPU_FEATURES_CPU_P (cpu_features, SSSE3)
+  if (!CPU_FEATURE_USABLE_P (cpu_features, SSSE3)
       || CPU_FEATURES_ARCH_P (cpu_features, Fast_Unaligned_Copy))
     {
-      if (CPU_FEATURES_CPU_P (cpu_features, ERMS))
+      if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
 	return OPTIMIZE (sse2_unaligned_erms);
 
       return OPTIMIZE (sse2_unaligned);

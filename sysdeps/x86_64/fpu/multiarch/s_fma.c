@@ -41,8 +41,8 @@ __fma_fma4 (double x, double y, double z)
 }
 
 
-libm_ifunc (__fma, HAS_ARCH_FEATURE (FMA_Usable)
-	    ? __fma_fma3 : (HAS_ARCH_FEATURE (FMA4_Usable)
+libm_ifunc (__fma, CPU_FEATURE_USABLE (FMA)
+	    ? __fma_fma3 : (CPU_FEATURE_USABLE (FMA4)
 			    ? __fma_fma4 : __fma_sse2));
 libm_alias_double (__fma, fma)
 

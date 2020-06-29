@@ -583,7 +583,7 @@ get_common_cache_info (long int *shared_ptr, unsigned int *threads_ptr,
 
   /* A value of 0 for the HTT bit indicates there is only a single
      logical processor.  */
-  if (HAS_CPU_FEATURE (HTT))
+  if (CPU_FEATURE_USABLE (HTT))
     {
       /* Figure out the number of logical threads that share the
          highest cache level.  */
@@ -732,7 +732,7 @@ intel_bug_no_cache_info:
           /* Assume that all logical threads share the highest cache
              level.  */
           threads
-            = ((cpu_features->cpuid[COMMON_CPUID_INDEX_1].ebx
+            = ((cpu_features->features[COMMON_CPUID_INDEX_1].cpuid.ebx
                 >> 16) & 0xff);
         }
 
@@ -867,14 +867,14 @@ init_cacheinfo (void)
   unsigned int minimum_rep_movsb_threshold;
   /* NB: The default REP MOVSB threshold is 2048 * (VEC_SIZE / 16).  */
   unsigned int rep_movsb_threshold;
-  if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable)
-      && !CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_AVX512))
+  if (CPU_FEATURE_USABLE_P (cpu_features, AVX512F)
+      && !CPU_FEATURE_PREFERRED_P (cpu_features, Prefer_No_AVX512))
     {
       rep_movsb_threshold = 2048 * (64 / 16);
       minimum_rep_movsb_threshold = 64 * 8;
     }
-  else if (CPU_FEATURES_ARCH_P (cpu_features,
-				AVX_Fast_Unaligned_Load))
+  else if (CPU_FEATURE_PREFERRED_P (cpu_features,
+				    AVX_Fast_Unaligned_Load))
     {
       rep_movsb_threshold = 2048 * (32 / 16);
       minimum_rep_movsb_threshold = 32 * 8;

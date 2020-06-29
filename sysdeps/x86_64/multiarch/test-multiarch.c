@@ -75,18 +75,18 @@ do_test (int argc, char **argv)
   int fails;
 
   get_cpuinfo ();
-  fails = check_proc ("avx", HAS_ARCH_FEATURE (AVX_Usable),
-		      "HAS_ARCH_FEATURE (AVX_Usable)");
-  fails += check_proc ("fma4", HAS_ARCH_FEATURE (FMA4_Usable),
-		       "HAS_ARCH_FEATURE (FMA4_Usable)");
-  fails += check_proc ("sse4_2", HAS_CPU_FEATURE (SSE4_2),
-		       "HAS_CPU_FEATURE (SSE4_2)");
-  fails += check_proc ("sse4_1", HAS_CPU_FEATURE (SSE4_1)
-		       , "HAS_CPU_FEATURE (SSE4_1)");
-  fails += check_proc ("ssse3", HAS_CPU_FEATURE (SSSE3),
-		       "HAS_CPU_FEATURE (SSSE3)");
-  fails += check_proc ("popcnt", HAS_CPU_FEATURE (POPCNT),
-		       "HAS_CPU_FEATURE (POPCNT)");
+  fails = check_proc ("avx", CPU_FEATURE_USABLE (AVX),
+		      "CPU_FEATURE_USABLE (AVX)");
+  fails += check_proc ("fma4", CPU_FEATURE_USABLE (FMA4),
+		       "CPU_FEATURE_USABLE (FMA4)");
+  fails += check_proc ("sse4_2", CPU_FEATURE_USABLE (SSE4_2),
+		       "CPU_FEATURE_USABLE (SSE4_2)");
+  fails += check_proc ("sse4_1", CPU_FEATURE_USABLE (SSE4_1)
+		       , "CPU_FEATURE_USABLE (SSE4_1)");
+  fails += check_proc ("ssse3", CPU_FEATURE_USABLE (SSSE3),
+		       "CPU_FEATURE_USABLE (SSSE3)");
+  fails += check_proc ("popcnt", CPU_FEATURE_USABLE (POPCNT),
+		       "CPU_FEATURE_USABLE (POPCNT)");
 
   printf ("%d differences between /proc/cpuinfo and glibc code.\n", fails);
 

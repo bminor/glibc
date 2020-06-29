@@ -36,11 +36,11 @@ IFUNC_SELECTOR (void)
   const struct cpu_features* cpu_features = __get_cpu_features ();
 
   if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER)
-      && CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable)
+      && CPU_FEATURE_USABLE_P (cpu_features, AVX2)
       && CPU_FEATURES_ARCH_P (cpu_features, AVX_Fast_Unaligned_Load))
     return OPTIMIZE (avx2);
 
-  if (CPU_FEATURES_CPU_P (cpu_features, SSE4_1))
+  if (CPU_FEATURE_USABLE_P (cpu_features, SSE4_1))
     return OPTIMIZE (sse4_1);
 
   return OPTIMIZE (sse2);

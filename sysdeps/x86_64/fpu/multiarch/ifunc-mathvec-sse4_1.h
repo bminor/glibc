@@ -31,7 +31,7 @@ IFUNC_SELECTOR (void)
 {
   const struct cpu_features* cpu_features = __get_cpu_features ();
 
-  if (CPU_FEATURES_CPU_P (cpu_features, SSE4_1))
+  if (CPU_FEATURE_USABLE_P (cpu_features, SSE4_1))
     return OPTIMIZE (sse4);
 
   return OPTIMIZE (sse2);

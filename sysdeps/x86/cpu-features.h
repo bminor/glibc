@@ -20,15 +20,6 @@
 
 enum
 {
-  /* The integer bit array index for the first set of usable feature
-     bits.  */
-  USABLE_FEATURE_INDEX_1 = 0,
-  /* The current maximum size of the feature integer bit array.  */
-  USABLE_FEATURE_INDEX_MAX
-};
-
-enum
-{
   /* The integer bit array index for the first set of preferred feature
      bits.  */
   PREFERRED_FEATURE_INDEX_1 = 0,
@@ -57,6 +48,12 @@ struct cpuid_registers
   unsigned int edx;
 };
 
+struct cpuid_features
+{
+  struct cpuid_registers cpuid;
+  struct cpuid_registers usable;
+};
+
 enum cpu_features_kind
 {
   arch_kind_unknown = 0,
@@ -78,9 +75,7 @@ struct cpu_features_basic
 struct cpu_features
 {
   struct cpu_features_basic basic;
-  unsigned int *usable_p;
-  struct cpuid_registers cpuid[COMMON_CPUID_INDEX_MAX];
-  unsigned int usable[USABLE_FEATURE_INDEX_MAX];
+  struct cpuid_features features[COMMON_CPUID_INDEX_MAX];
   unsigned int preferred[PREFERRED_FEATURE_INDEX_MAX];
   /* The state size for XSAVEC or XSAVE.  The type must be unsigned long
      int so that we use
@@ -91,7 +86,7 @@ struct cpu_features
   unsigned long int xsave_state_size;
   /* The full state size for XSAVE when XSAVEC is disabled by
 
-     GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVEC_Usable
+     GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVEC
    */
   unsigned int xsave_state_full_size;
   /* Data cache size for use in memory and string routines, typically
@@ -114,117 +109,40 @@ extern const struct cpu_features *__get_cpu_features (void)
      __attribute__ ((const));
 
 /* Only used directly in cpu-features.c.  */
-# define CPU_FEATURES_CPU_P(ptr, name) \
-  ((ptr->cpuid[index_cpu_##name].reg_##name & (bit_cpu_##name)) != 0)
-# define CPU_FEATURES_ARCH_P(ptr, name) \
-  ((ptr->feature_##name[index_arch_##name] & (bit_arch_##name)) != 0)
+#define CPU_FEATURE_CHECK_P(ptr, name, check) \
+  ((ptr->features[index_cpu_##name].check.reg_##name \
+    & bit_cpu_##name) != 0)
+#define CPU_FEATURE_SET(ptr, name) \
+  ptr->features[index_cpu_##name].usable.reg_##name |= bit_cpu_##name;
+#define CPU_FEATURE_UNSET(ptr, name) \
+  ptr->features[index_cpu_##name].usable.reg_##name &= ~bit_cpu_##name;
+#define CPU_FEATURE_SET_USABLE(ptr, name) \
+  ptr->features[index_cpu_##name].usable.reg_##name \
+     |= ptr->features[index_cpu_##name].cpuid.reg_##name & bit_cpu_##name;
+#define CPU_FEATURE_PREFERRED_P(ptr, name) \
+  ((ptr->preferred[index_arch_##name] & bit_arch_##name) != 0)
+#define CPU_FEATURE_CPU_P(ptr, name) \
+  CPU_FEATURE_CHECK_P (ptr, name, cpuid)
+#define CPU_FEATURE_USABLE_P(ptr, name) \
+  CPU_FEATURE_CHECK_P (ptr, name, usable)
 
 /* HAS_CPU_FEATURE evaluates to true if CPU supports the feature.  */
 #define HAS_CPU_FEATURE(name) \
-  CPU_FEATURES_CPU_P (__get_cpu_features (), name)
-/* HAS_ARCH_FEATURE evaluates to true if we may use the feature at
-   runtime.  */
-# define HAS_ARCH_FEATURE(name) \
-  CPU_FEATURES_ARCH_P (__get_cpu_features (), name)
+  CPU_FEATURE_CPU_P (__get_cpu_features (), name)
 /* CPU_FEATURE_USABLE evaluates to true if the feature is usable.  */
 #define CPU_FEATURE_USABLE(name) \
-  HAS_ARCH_FEATURE (name##_Usable)
+  CPU_FEATURE_USABLE_P (__get_cpu_features (), name)
+/* CPU_FEATURE_PREFER evaluates to true if we prefer the feature at
+   runtime.  */
+#define CPU_FEATURE_PREFERRED(name) \
+  CPU_FEATURE_PREFERRED_P(__get_cpu_features (), name)
 
-/* Architecture features.  */
-
-/* USABLE_FEATURE_INDEX_1.  */
-#define bit_arch_AVX_Usable			(1u << 0)
-#define bit_arch_AVX2_Usable			(1u << 1)
-#define bit_arch_AVX512F_Usable			(1u << 2)
-#define bit_arch_AVX512CD_Usable		(1u << 3)
-#define bit_arch_AVX512ER_Usable		(1u << 4)
-#define bit_arch_AVX512PF_Usable		(1u << 5)
-#define bit_arch_AVX512VL_Usable		(1u << 6)
-#define bit_arch_AVX512DQ_Usable		(1u << 7)
-#define bit_arch_AVX512BW_Usable		(1u << 8)
-#define bit_arch_AVX512_4FMAPS_Usable		(1u << 9)
-#define bit_arch_AVX512_4VNNIW_Usable		(1u << 10)
-#define bit_arch_AVX512_BITALG_Usable		(1u << 11)
-#define bit_arch_AVX512_IFMA_Usable		(1u << 12)
-#define bit_arch_AVX512_VBMI_Usable		(1u << 13)
-#define bit_arch_AVX512_VBMI2_Usable		(1u << 14)
-#define bit_arch_AVX512_VNNI_Usable		(1u << 15)
-#define bit_arch_AVX512_VPOPCNTDQ_Usable	(1u << 16)
-#define bit_arch_FMA_Usable			(1u << 17)
-#define bit_arch_FMA4_Usable			(1u << 18)
-#define bit_arch_VAES_Usable			(1u << 19)
-#define bit_arch_VPCLMULQDQ_Usable		(1u << 20)
-#define bit_arch_XOP_Usable			(1u << 21)
-#define bit_arch_XSAVEC_Usable			(1u << 22)
-#define bit_arch_F16C_Usable			(1u << 23)
-#define bit_arch_AVX512_VP2INTERSECT_Usable	(1u << 24)
-#define bit_arch_AVX512_BF16_Usable		(1u << 25)
-#define bit_arch_PKU_Usable			(1u << 26)
-#define bit_arch_AMX_BF16_Usable		(1u << 27)
-#define bit_arch_AMX_TILE_Usable		(1u << 28)
-#define bit_arch_AMX_INT8_Usable		(1u << 29)
-
-#define index_arch_AVX_Usable			USABLE_FEATURE_INDEX_1
-#define index_arch_AVX2_Usable			USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512F_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512CD_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512ER_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512PF_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512VL_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512BW_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512DQ_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512_4FMAPS_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512_4VNNIW_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512_BITALG_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512_IFMA_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512_VBMI_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512_VBMI2_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512_VNNI_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512_VPOPCNTDQ_Usable	USABLE_FEATURE_INDEX_1
-#define index_arch_FMA_Usable			USABLE_FEATURE_INDEX_1
-#define index_arch_FMA4_Usable			USABLE_FEATURE_INDEX_1
-#define index_arch_VAES_Usable			USABLE_FEATURE_INDEX_1
-#define index_arch_VPCLMULQDQ_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_XOP_Usable			USABLE_FEATURE_INDEX_1
-#define index_arch_XSAVEC_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_F16C_Usable			USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512_VP2INTERSECT_Usable	USABLE_FEATURE_INDEX_1
-#define index_arch_AVX512_BF16_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_PKU_Usable			USABLE_FEATURE_INDEX_1
-#define index_arch_AMX_BF16_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AMX_TILE_Usable		USABLE_FEATURE_INDEX_1
-#define index_arch_AMX_INT8_Usable		USABLE_FEATURE_INDEX_1
-
-#define feature_AVX_Usable			usable
-#define feature_AVX2_Usable			usable
-#define feature_AVX512F_Usable			usable
-#define feature_AVX512CD_Usable			usable
-#define feature_AVX512ER_Usable			usable
-#define feature_AVX512PF_Usable			usable
-#define feature_AVX512VL_Usable			usable
-#define feature_AVX512BW_Usable			usable
-#define feature_AVX512DQ_Usable			usable
-#define feature_AVX512_4FMAPS_Usable		usable
-#define feature_AVX512_4VNNIW_Usable		usable
-#define feature_AVX512_BITALG_Usable		usable
-#define feature_AVX512_IFMA_Usable		usable
-#define feature_AVX512_VBMI_Usable		usable
-#define feature_AVX512_VBMI2_Usable		usable
-#define feature_AVX512_VNNI_Usable		usable
-#define feature_AVX512_VPOPCNTDQ_Usable		usable
-#define feature_FMA_Usable			usable
-#define feature_FMA4_Usable			usable
-#define feature_VAES_Usable			usable
-#define feature_VPCLMULQDQ_Usable		usable
-#define feature_XOP_Usable			usable
-#define feature_XSAVEC_Usable			usable
-#define feature_F16C_Usable			usable
-#define feature_AVX512_VP2INTERSECT_Usable	usable
-#define feature_AVX512_BF16_Usable		usable
-#define feature_PKU_Usable			usable
-#define feature_AMX_BF16_Usable			usable
-#define feature_AMX_TILE_Usable			usable
-#define feature_AMX_INT8_Usable			usable
+#define CPU_FEATURES_CPU_P(ptr, name) \
+  CPU_FEATURE_CPU_P (ptr, name)
+#define CPU_FEATURES_ARCH_P(ptr, name) \
+  CPU_FEATURE_PREFERRED_P (ptr, name)
+#define HAS_ARCH_FEATURE(name) \
+  CPU_FEATURE_PREFERRED (name)
 
 /* CPU features.  */
 
@@ -247,6 +165,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_CMPXCHG16B	(1u << 13)
 #define bit_cpu_XTPRUPDCTRL	(1u << 14)
 #define bit_cpu_PDCM		(1u << 15)
+#define bit_cpu_INDEX_1_ECX_16	(1u << 16)
 #define bit_cpu_PCID		(1u << 17)
 #define bit_cpu_DCA		(1u << 18)
 #define bit_cpu_SSE4_1		(1u << 19)
@@ -261,6 +180,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_AVX		(1u << 28)
 #define bit_cpu_F16C		(1u << 29)
 #define bit_cpu_RDRAND		(1u << 30)
+#define bit_cpu_INDEX_1_ECX_31	(1u << 31)
 
 /* EDX.  */
 #define bit_cpu_FPU		(1u << 0)
@@ -273,6 +193,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_MCE		(1u << 7)
 #define bit_cpu_CX8		(1u << 8)
 #define bit_cpu_APIC		(1u << 9)
+#define bit_cpu_INDEX_1_EDX_10	(1u << 10)
 #define bit_cpu_SEP		(1u << 11)
 #define bit_cpu_MTRR		(1u << 12)
 #define bit_cpu_PGE		(1u << 13)
@@ -282,6 +203,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_PSE_36		(1u << 17)
 #define bit_cpu_PSN		(1u << 18)
 #define bit_cpu_CLFSH		(1u << 19)
+#define bit_cpu_INDEX_1_EDX_20	(1u << 20)
 #define bit_cpu_DS		(1u << 21)
 #define bit_cpu_ACPI		(1u << 22)
 #define bit_cpu_MMX		(1u << 23)
@@ -291,6 +213,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_SS		(1u << 27)
 #define bit_cpu_HTT		(1u << 28)
 #define bit_cpu_TM		(1u << 29)
+#define bit_cpu_INDEX_1_EDX_30	(1u << 30)
 #define bit_cpu_PBE		(1u << 31)
 
 /* COMMON_CPUID_INDEX_7.  */
@@ -302,12 +225,14 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_BMI1		(1u << 3)
 #define bit_cpu_HLE		(1u << 4)
 #define bit_cpu_AVX2		(1u << 5)
+#define bit_cpu_INDEX_7_EBX_6	(1u << 6)
 #define bit_cpu_SMEP		(1u << 7)
 #define bit_cpu_BMI2		(1u << 8)
 #define bit_cpu_ERMS		(1u << 9)
 #define bit_cpu_INVPCID		(1u << 10)
 #define bit_cpu_RTM		(1u << 11)
 #define bit_cpu_PQM		(1u << 12)
+#define bit_cpu_DEPR_FPU_CS_DS	(1u << 13)
 #define bit_cpu_MPX		(1u << 14)
 #define bit_cpu_PQE		(1u << 15)
 #define bit_cpu_AVX512F		(1u << 16)
@@ -316,6 +241,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_ADX		(1u << 19)
 #define bit_cpu_SMAP		(1u << 20)
 #define bit_cpu_AVX512_IFMA	(1u << 21)
+#define bit_cpu_INDEX_7_EBX_22	(1u << 22)
 #define bit_cpu_CLFLUSHOPT	(1u << 23)
 #define bit_cpu_CLWB		(1u << 24)
 #define bit_cpu_TRACE		(1u << 25)
@@ -340,9 +266,17 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_VPCLMULQDQ	(1u << 10)
 #define bit_cpu_AVX512_VNNI	(1u << 11)
 #define bit_cpu_AVX512_BITALG	(1u << 12)
+#define bit_cpu_INDEX_7_ECX_13	(1u << 13)
 #define bit_cpu_AVX512_VPOPCNTDQ (1u << 14)
+#define bit_cpu_INDEX_7_ECX_15	(1u << 15)
+#define bit_cpu_INDEX_7_ECX_16	(1u << 16)
+/* Note: Bits 17-21: The value of MAWAU used by the BNDLDX and BNDSTX
+   instructions in 64-bit mode.  */
 #define bit_cpu_RDPID		(1u << 22)
+#define bit_cpu_INDEX_7_ECX_23	(1u << 23)
+#define bit_cpu_INDEX_7_ECX_24	(1u << 24)
 #define bit_cpu_CLDEMOTE	(1u << 25)
+#define bit_cpu_INDEX_7_ECX_26	(1u << 26)
 #define bit_cpu_MOVDIRI		(1u << 27)
 #define bit_cpu_MOVDIR64B	(1u << 28)
 #define bit_cpu_ENQCMD		(1u << 29)
@@ -350,17 +284,30 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_PKS		(1u << 31)
 
 /* EDX.  */
+#define bit_cpu_INDEX_7_EDX_0	(1u << 0)
+#define bit_cpu_INDEX_7_EDX_1	(1u << 1)
 #define bit_cpu_AVX512_4VNNIW	(1u << 2)
 #define bit_cpu_AVX512_4FMAPS	(1u << 3)
 #define bit_cpu_FSRM		(1u << 4)
+#define bit_cpu_INDEX_7_EDX_5	(1u << 5)
+#define bit_cpu_INDEX_7_EDX_6	(1u << 6)
+#define bit_cpu_INDEX_7_EDX_7	(1u << 7)
 #define bit_cpu_AVX512_VP2INTERSECT (1u << 8)
+#define bit_cpu_INDEX_7_EDX_9	(1u << 9)
 #define bit_cpu_MD_CLEAR	(1u << 10)
+#define bit_cpu_INDEX_7_EDX_11	(1u << 11)
+#define bit_cpu_INDEX_7_EDX_12	(1u << 12)
+#define bit_cpu_INDEX_7_EDX_13	(1u << 13)
 #define bit_cpu_SERIALIZE	(1u << 14)
 #define bit_cpu_HYBRID		(1u << 15)
 #define bit_cpu_TSXLDTRK	(1u << 16)
+#define bit_cpu_INDEX_7_EDX_17	(1u << 17)
 #define bit_cpu_PCONFIG		(1u << 18)
+#define bit_cpu_INDEX_7_EDX_19	(1u << 19)
 #define bit_cpu_IBT		(1u << 20)
+#define bit_cpu_INDEX_7_EDX_21	(1u << 21)
 #define bit_cpu_AMX_BF16	(1u << 22)
+#define bit_cpu_INDEX_7_EDX_23	(1u << 23)
 #define bit_cpu_AMX_TILE	(1u << 24)
 #define bit_cpu_AMX_INT8	(1u << 25)
 #define bit_cpu_IBRS_IBPB	(1u << 26)
@@ -433,6 +380,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_CMPXCHG16B	COMMON_CPUID_INDEX_1
 #define index_cpu_XTPRUPDCTRL	COMMON_CPUID_INDEX_1
 #define index_cpu_PDCM		COMMON_CPUID_INDEX_1
+#define index_cpu_INDEX_1_ECX_16 COMMON_CPUID_INDEX_1
 #define index_cpu_PCID		COMMON_CPUID_INDEX_1
 #define index_cpu_DCA		COMMON_CPUID_INDEX_1
 #define index_cpu_SSE4_1	COMMON_CPUID_INDEX_1
@@ -447,6 +395,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_AVX		COMMON_CPUID_INDEX_1
 #define index_cpu_F16C		COMMON_CPUID_INDEX_1
 #define index_cpu_RDRAND	COMMON_CPUID_INDEX_1
+#define index_cpu_INDEX_1_ECX_31 COMMON_CPUID_INDEX_1
 
 /* ECX.  */
 #define index_cpu_FPU		COMMON_CPUID_INDEX_1
@@ -459,6 +408,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_MCE		COMMON_CPUID_INDEX_1
 #define index_cpu_CX8		COMMON_CPUID_INDEX_1
 #define index_cpu_APIC		COMMON_CPUID_INDEX_1
+#define index_cpu_INDEX_1_EDX_10 COMMON_CPUID_INDEX_1
 #define index_cpu_SEP		COMMON_CPUID_INDEX_1
 #define index_cpu_MTRR		COMMON_CPUID_INDEX_1
 #define index_cpu_PGE		COMMON_CPUID_INDEX_1
@@ -468,6 +418,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_PSE_36	COMMON_CPUID_INDEX_1
 #define index_cpu_PSN		COMMON_CPUID_INDEX_1
 #define index_cpu_CLFSH		COMMON_CPUID_INDEX_1
+#define index_cpu_INDEX_1_EDX_20 COMMON_CPUID_INDEX_1
 #define index_cpu_DS		COMMON_CPUID_INDEX_1
 #define index_cpu_ACPI		COMMON_CPUID_INDEX_1
 #define index_cpu_MMX		COMMON_CPUID_INDEX_1
@@ -477,6 +428,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_SS		COMMON_CPUID_INDEX_1
 #define index_cpu_HTT		COMMON_CPUID_INDEX_1
 #define index_cpu_TM		COMMON_CPUID_INDEX_1
+#define index_cpu_INDEX_1_EDX_30 COMMON_CPUID_INDEX_1
 #define index_cpu_PBE		COMMON_CPUID_INDEX_1
 
 /* COMMON_CPUID_INDEX_7.  */
@@ -488,12 +440,14 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_BMI1		COMMON_CPUID_INDEX_7
 #define index_cpu_HLE		COMMON_CPUID_INDEX_7
 #define index_cpu_AVX2		COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EBX_6	COMMON_CPUID_INDEX_7
 #define index_cpu_SMEP		COMMON_CPUID_INDEX_7
 #define index_cpu_BMI2		COMMON_CPUID_INDEX_7
 #define index_cpu_ERMS		COMMON_CPUID_INDEX_7
 #define index_cpu_INVPCID	COMMON_CPUID_INDEX_7
 #define index_cpu_RTM		COMMON_CPUID_INDEX_7
 #define index_cpu_PQM		COMMON_CPUID_INDEX_7
+#define index_cpu_DEPR_FPU_CS_DS COMMON_CPUID_INDEX_7
 #define index_cpu_MPX		COMMON_CPUID_INDEX_7
 #define index_cpu_PQE		COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512F	COMMON_CPUID_INDEX_7
@@ -502,6 +456,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_ADX		COMMON_CPUID_INDEX_7
 #define index_cpu_SMAP		COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512_IFMA	COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EBX_22 COMMON_CPUID_INDEX_7
 #define index_cpu_CLFLUSHOPT	COMMON_CPUID_INDEX_7
 #define index_cpu_CLWB		COMMON_CPUID_INDEX_7
 #define index_cpu_TRACE		COMMON_CPUID_INDEX_7
@@ -526,9 +481,15 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_VPCLMULQDQ	COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512_VNNI	COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512_BITALG COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_ECX_13 COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512_VPOPCNTDQ COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_ECX_15 COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_ECX_16 COMMON_CPUID_INDEX_7
 #define index_cpu_RDPID		COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_ECX_23 COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_ECX_24 COMMON_CPUID_INDEX_7
 #define index_cpu_CLDEMOTE	COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_ECX_26 COMMON_CPUID_INDEX_7
 #define index_cpu_MOVDIRI	COMMON_CPUID_INDEX_7
 #define index_cpu_MOVDIR64B	COMMON_CPUID_INDEX_7
 #define index_cpu_ENQCMD	COMMON_CPUID_INDEX_7
@@ -536,17 +497,30 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_PKS		COMMON_CPUID_INDEX_7
 
 /* EDX.  */
+#define index_cpu_INDEX_7_EDX_0	COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_1	COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512_4VNNIW COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512_4FMAPS	COMMON_CPUID_INDEX_7
 #define index_cpu_FSRM		COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_5	COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_6	COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_7	COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512_VP2INTERSECT COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_9	COMMON_CPUID_INDEX_7
 #define index_cpu_MD_CLEAR	COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_11 COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_12 COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_13 COMMON_CPUID_INDEX_7
 #define index_cpu_SERIALIZE	COMMON_CPUID_INDEX_7
 #define index_cpu_HYBRID	COMMON_CPUID_INDEX_7
 #define index_cpu_TSXLDTRK	COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_17 COMMON_CPUID_INDEX_7
 #define index_cpu_PCONFIG	COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_19 COMMON_CPUID_INDEX_7
 #define index_cpu_IBT		COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_21 COMMON_CPUID_INDEX_7
 #define index_cpu_AMX_BF16	COMMON_CPUID_INDEX_7
+#define index_cpu_INDEX_7_EDX_23 COMMON_CPUID_INDEX_7
 #define index_cpu_AMX_TILE	COMMON_CPUID_INDEX_7
 #define index_cpu_AMX_INT8	COMMON_CPUID_INDEX_7
 #define index_cpu_IBRS_IBPB	COMMON_CPUID_INDEX_7
@@ -619,6 +593,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_CMPXCHG16B		ecx
 #define reg_XTPRUPDCTRL		ecx
 #define reg_PDCM		ecx
+#define reg_INDEX_1_ECX_16	ecx
 #define reg_PCID		ecx
 #define reg_DCA			ecx
 #define reg_SSE4_1		ecx
@@ -633,6 +608,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_AVX			ecx
 #define reg_F16C		ecx
 #define reg_RDRAND		ecx
+#define reg_INDEX_1_ECX_31	ecx
 
 /* EDX.  */
 #define reg_FPU			edx
@@ -645,6 +621,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_MCE			edx
 #define reg_CX8			edx
 #define reg_APIC		edx
+#define reg_INDEX_1_EDX_10	edx
 #define reg_SEP			edx
 #define reg_MTRR		edx
 #define reg_PGE			edx
@@ -654,6 +631,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_PSE_36		edx
 #define reg_PSN			edx
 #define reg_CLFSH		edx
+#define reg_INDEX_1_EDX_20	edx
 #define reg_DS			edx
 #define reg_ACPI		edx
 #define reg_MMX			edx
@@ -663,6 +641,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_SS			edx
 #define reg_HTT			edx
 #define reg_TM			edx
+#define reg_INDEX_1_EDX_30	edx
 #define reg_PBE			edx
 
 /* COMMON_CPUID_INDEX_7.  */
@@ -675,11 +654,13 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_HLE			ebx
 #define reg_BMI2		ebx
 #define reg_AVX2		ebx
+#define reg_INDEX_7_EBX_6	ebx
 #define reg_SMEP		ebx
 #define reg_ERMS		ebx
 #define reg_INVPCID		ebx
 #define reg_RTM			ebx
 #define reg_PQM			ebx
+#define reg_DEPR_FPU_CS_DS	ebx
 #define reg_MPX			ebx
 #define reg_PQE			ebx
 #define reg_AVX512F		ebx
@@ -688,6 +669,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_ADX			ebx
 #define reg_SMAP		ebx
 #define reg_AVX512_IFMA		ebx
+#define reg_INDEX_7_EBX_22	ebx
 #define reg_CLFLUSHOPT		ebx
 #define reg_CLWB		ebx
 #define reg_TRACE		ebx
@@ -712,9 +694,15 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_VPCLMULQDQ		ecx
 #define reg_AVX512_VNNI		ecx
 #define reg_AVX512_BITALG	ecx
+#define reg_INDEX_7_ECX_13	ecx
 #define reg_AVX512_VPOPCNTDQ	ecx
+#define reg_INDEX_7_ECX_15	ecx
+#define reg_INDEX_7_ECX_16	ecx
 #define reg_RDPID		ecx
+#define reg_INDEX_7_ECX_23	ecx
+#define reg_INDEX_7_ECX_24	ecx
 #define reg_CLDEMOTE		ecx
+#define reg_INDEX_7_ECX_26	ecx
 #define reg_MOVDIRI		ecx
 #define reg_MOVDIR64B		ecx
 #define reg_ENQCMD		ecx
@@ -722,17 +710,30 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_PKS			ecx
 
 /* EDX.  */
+#define reg_INDEX_7_EDX_0	edx
+#define reg_INDEX_7_EDX_1	edx
 #define reg_AVX512_4VNNIW	edx
 #define reg_AVX512_4FMAPS	edx
 #define reg_FSRM		edx
+#define reg_INDEX_7_EDX_5	edx
+#define reg_INDEX_7_EDX_6	edx
+#define reg_INDEX_7_EDX_7	edx
 #define reg_AVX512_VP2INTERSECT	edx
+#define reg_INDEX_7_EDX_9	edx
 #define reg_MD_CLEAR		edx
+#define reg_INDEX_7_EDX_11	edx
+#define reg_INDEX_7_EDX_12	edx
+#define reg_INDEX_7_EDX_13	edx
 #define reg_SERIALIZE		edx
 #define reg_HYBRID		edx
 #define reg_TSXLDTRK		edx
+#define reg_INDEX_7_EDX_17	edx
 #define reg_PCONFIG		edx
+#define reg_INDEX_7_EDX_19	edx
 #define reg_IBT			edx
+#define reg_INDEX_7_EDX_21	edx
 #define reg_AMX_BF16		edx
+#define reg_INDEX_7_EDX_23	edx
 #define reg_AMX_TILE		edx
 #define reg_AMX_INT8		edx
 #define reg_IBRS_IBPB		edx
@@ -821,23 +822,6 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_arch_MathVec_Prefer_No_AVX512	PREFERRED_FEATURE_INDEX_1
 #define index_arch_Prefer_FSRM			PREFERRED_FEATURE_INDEX_1
 
-#define feature_Fast_Rep_String			preferred
-#define feature_Fast_Copy_Backward		preferred
-#define feature_Slow_BSF			preferred
-#define feature_Fast_Unaligned_Load		preferred
-#define feature_Prefer_PMINUB_for_stringop 	preferred
-#define feature_Fast_Unaligned_Copy		preferred
-#define feature_I586				preferred
-#define feature_I686				preferred
-#define feature_Slow_SSE4_2			preferred
-#define feature_AVX_Fast_Unaligned_Load		preferred
-#define feature_Prefer_MAP_32BIT_EXEC		preferred
-#define feature_Prefer_No_VZEROUPPER		preferred
-#define feature_Prefer_ERMS			preferred
-#define feature_Prefer_No_AVX512		preferred
-#define feature_MathVec_Prefer_No_AVX512	preferred
-#define feature_Prefer_FSRM			preferred
-
 /* XCR0 Feature flags.  */
 #define bit_XMM_state		(1u << 1)
 #define bit_YMM_state		(1u << 2)
@@ -851,8 +835,6 @@ extern const struct cpu_features *__get_cpu_features (void)
 /* Unused for x86.  */
 #  define INIT_ARCH()
 #  define __get_cpu_features()	(&GLRO(dl_x86_cpu_features))
-#  define x86_get_cpuid_registers(i) \
-       (&(GLRO(dl_x86_cpu_features).cpuid[i]))
 # endif
 
 #ifdef __x86_64__

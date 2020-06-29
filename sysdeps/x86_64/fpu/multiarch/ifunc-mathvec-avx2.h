@@ -31,8 +31,8 @@ IFUNC_SELECTOR (void)
 {
   const struct cpu_features* cpu_features = __get_cpu_features ();
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, FMA_Usable)
-      && CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable))
+  if (CPU_FEATURE_USABLE_P (cpu_features, FMA)
+      && CPU_FEATURE_USABLE_P (cpu_features, AVX2))
     return OPTIMIZE (avx2);
 
   return OPTIMIZE (sse_wrapper);

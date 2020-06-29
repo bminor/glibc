@@ -31,7 +31,7 @@ __fegetenv (fenv_t *envp)
      would block all exceptions.  */
   __asm__ ("fldenv %0" : : "m" (*envp));
 
-  if (HAS_CPU_FEATURE (SSE))
+  if (CPU_FEATURE_USABLE (SSE))
     __asm__ ("stmxcsr %0" : "=m" (envp->__eip));
 
   /* Success.  */

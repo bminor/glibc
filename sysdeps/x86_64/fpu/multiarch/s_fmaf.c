@@ -40,8 +40,8 @@ __fmaf_fma4 (float x, float y, float z)
 }
 
 
-libm_ifunc (__fmaf, HAS_ARCH_FEATURE (FMA_Usable)
-	    ? __fmaf_fma3 : (HAS_ARCH_FEATURE (FMA4_Usable)
+libm_ifunc (__fmaf, CPU_FEATURE_USABLE (FMA)
+	    ? __fmaf_fma3 : (CPU_FEATURE_USABLE (FMA4)
 			     ? __fmaf_fma4 : __fmaf_sse2));
 libm_alias_float (__fma, fma)
 

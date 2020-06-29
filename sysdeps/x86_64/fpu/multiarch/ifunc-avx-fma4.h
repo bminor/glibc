@@ -29,14 +29,14 @@ IFUNC_SELECTOR (void)
 {
   const struct cpu_features* cpu_features = __get_cpu_features ();
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, FMA_Usable)
-      && CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable))
+  if (CPU_FEATURE_USABLE_P (cpu_features, FMA)
+      && CPU_FEATURE_USABLE_P (cpu_features, AVX2))
     return OPTIMIZE (fma);
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, FMA4_Usable))
+  if (CPU_FEATURE_USABLE_P (cpu_features, FMA4))
     return OPTIMIZE (fma4);
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, AVX_Usable))
+  if (CPU_FEATURE_USABLE_P (cpu_features, AVX))
     return OPTIMIZE (avx);
 
   return OPTIMIZE (sse2);

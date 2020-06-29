@@ -41,7 +41,7 @@ __feclearexcept (int excepts)
   __asm__ ("fldenv %0" : : "m" (*&temp));
 
   /* If the CPU supports SSE, we clear the MXCSR as well.  */
-  if (HAS_CPU_FEATURE (SSE))
+  if (CPU_FEATURE_USABLE (SSE))
     {
       unsigned int xnew_exc;
 

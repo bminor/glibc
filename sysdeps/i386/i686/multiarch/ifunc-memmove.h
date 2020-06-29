@@ -33,7 +33,7 @@ IFUNC_SELECTOR (void)
   if (CPU_FEATURES_ARCH_P (cpu_features, Fast_Unaligned_Load))
     return OPTIMIZE (sse2_unaligned);
 
-  if (CPU_FEATURES_CPU_P (cpu_features, SSSE3))
+  if (CPU_FEATURE_USABLE_P (cpu_features, SSSE3))
     {
       if (CPU_FEATURES_ARCH_P (cpu_features, Fast_Rep_String))
 	return OPTIMIZE (ssse3_rep);
