@@ -107,6 +107,8 @@ ifeq ($(subdir),htl)
 # For bug 25521
 # (setpshared support)
 test-xfail-tst-mutex4 = yes
+test-xfail-tst-cancel16 = yes
+test-xfail-tst-cancelx16 = yes
 test-xfail-tst-cond4 = yes
 test-xfail-tst-cond6 = yes
 test-xfail-tst-cond12 = yes

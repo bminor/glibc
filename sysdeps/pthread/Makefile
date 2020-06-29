@@ -55,8 +55,8 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-cancel-self-canceltype tst-cancel-self-testcancel \
 	 tst-cancel1 tst-cancel2 tst-cancel3 \
 	 tst-cancel6 tst-cancel8 tst-cancel9 tst-cancel10 tst-cancel11 \
-	 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 tst-cancel18 \
-	 tst-cancel19 tst-cancel21 \
+	 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 tst-cancel16 \
+	 tst-cancel18 tst-cancel19 tst-cancel20 tst-cancel21 \
 	 tst-cancel22 tst-cancel23 tst-cancel26 tst-cancel27 tst-cancel28 \
 	 tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 \
 	 tst-clock1 \
@@ -118,7 +118,7 @@ CFLAGS-tst-cleanupx2.c += -fno-builtin
 
 tests += tst-cancelx2 tst-cancelx3 tst-cancelx6 tst-cancelx8 tst-cancelx9 \
 	 tst-cancelx10 tst-cancelx11 tst-cancelx12 tst-cancelx13 tst-cancelx14 \
-	 tst-cancelx15 tst-cancelx18 tst-cancelx21 \
+	 tst-cancelx15 tst-cancelx16 tst-cancelx18 tst-cancelx20 tst-cancelx21 \
 	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3
 
 ifeq ($(build-shared),yes)
@@ -137,7 +137,8 @@ ifeq ($(build-shared),yes)
 tests: $(test-modules)
 endif
 
-tests-static += tst-locale1 tst-locale2 tst-cancel21-static \
+
+tests-static += tst-locale1 tst-locale2 tst-cancel21-static
 
 tests += tst-cancel21-static tst-cond11-static
 
@@ -163,7 +164,9 @@ CFLAGS-tst-cancelx12.c += -fexceptions
 CFLAGS-tst-cancelx13.c += -fexceptions
 CFLAGS-tst-cancelx14.c += -fexceptions
 CFLAGS-tst-cancelx15.c += -fexceptions
+CFLAGS-tst-cancelx16.c += -fexceptions
 CFLAGS-tst-cancelx18.c += -fexceptions
+CFLAGS-tst-cancelx20.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cancelx21.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx0.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx1.c += -fexceptions -fasynchronous-unwind-tables
