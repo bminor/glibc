@@ -1,4 +1,4 @@
-/* Generic implementation of the shared memory struct shmid_ds.
+/* Linux/HPPA implementation of the shared memory struct shmid_ds.
    Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -24,19 +24,20 @@
 struct shmid_ds
   {
     struct ipc_perm shm_perm;		/* operation permission struct */
-    size_t shm_segsz;			/* size of segment in bytes */
 #if __TIMESIZE == 32
-    __time_t shm_atime;			/* time of last shmat() */
     unsigned long int __glibc_reserved1;
-    __time_t shm_dtime;			/* time of last shmdt() */
+    __time_t shm_atime;			/* time of last shmat() */
     unsigned long int __glibc_reserved2;
-    __time_t shm_ctime;			/* time of last change by shmctl() */
+    __time_t shm_dtime;			/* time of last shmdt() */
     unsigned long int __glibc_reserved3;
+    __time_t shm_ctime;			/* time of last change by shmctl() */
+    unsigned long int __glibc_reserved4;
 #else
     __time_t shm_atime;			/* time of last shmat() */
     __time_t shm_dtime;			/* time of last shmdt() */
     __time_t shm_ctime;			/* time of last change by shmctl() */
 #endif
+    size_t shm_segsz;			/* size of segment in bytes */
     __pid_t shm_cpid;			/* pid of creator */
     __pid_t shm_lpid;			/* pid of last shmop */
     shmatt_t shm_nattch;		/* number of current attaches */
