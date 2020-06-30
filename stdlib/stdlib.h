@@ -397,7 +397,7 @@ extern long int a64l (const char *__s)
    `initstate' and `setstate' functions are those from BSD Unices.
    The `rand' and `srand' functions are required by the ANSI standard.
    We provide both interfaces to the same random number generator.  */
-/* Return a random long integer between 0 and RAND_MAX inclusive.  */
+/* Return a random long integer between 0 and 2^31-1 inclusive.  */
 extern long int random (void) __THROW;
 
 /* Seed the random number generator with the given number.  */
