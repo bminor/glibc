@@ -1648,8 +1648,8 @@ ____STRTOF_INTERNAL (const STRING_TYPE *nptr, STRING_TYPE **endptr, int group,
 	  d1 = den[densize - 2];
 
 	  /* The division does not work if the upper limb of the two-limb
-	     numerator is greater than the denominator.  */
-	  if (__mpn_cmp (num, &den[densize - numsize], numsize) > 0)
+	     numerator is greater or equal to than the denominator.  */
+	  if (__mpn_cmp (num, &den[densize - numsize], numsize) >= 0)
 	    num[numsize++] = 0;
 
 	  if (numsize < densize)
