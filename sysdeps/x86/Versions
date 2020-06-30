@@ -1,5 +1,5 @@
 ld {
-  GLIBC_PRIVATE {
-    __get_cpu_features;
+  GLIBC_2.33 {
+    __x86_get_cpu_features;
   }
 }

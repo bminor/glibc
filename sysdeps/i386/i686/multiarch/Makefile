@@ -1,7 +1,3 @@
-ifeq ($(subdir),csu)
-tests += test-multiarch
-endif
-
 ifeq ($(subdir),string)
 gen-as-const-headers += locale-defines.sym
 sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \

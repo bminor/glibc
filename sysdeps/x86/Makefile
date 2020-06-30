@@ -4,8 +4,10 @@ endif
 
 ifeq ($(subdir),elf)
 sysdep-dl-routines += dl-get-cpu-features
+sysdep_headers += sys/platform/x86.h
 
-tests += tst-get-cpu-features tst-get-cpu-features-static
+tests += tst-get-cpu-features tst-get-cpu-features-static \
+	 tst-cpu-features-cpuinfo tst-cpu-features-supports
 tests-static += tst-get-cpu-features-static
 endif
 

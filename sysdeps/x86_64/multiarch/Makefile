@@ -1,7 +1,3 @@
-ifeq ($(subdir),csu)
-tests += test-multiarch
-endif
-
 ifeq ($(subdir),string)
 
 sysdep_routines += strncat-c stpncpy-c strncpy-c \

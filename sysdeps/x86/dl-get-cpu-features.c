@@ -18,10 +18,12 @@
 
 #include <ldsodefs.h>
 
-#undef __get_cpu_features
+#undef __x86_get_cpu_features
 
 const struct cpu_features *
-__get_cpu_features (void)
+__x86_get_cpu_features (unsigned int max)
 {
+  if (max > COMMON_CPUID_INDEX_MAX)
+    return NULL;
   return &GLRO(dl_x86_cpu_features);
 }

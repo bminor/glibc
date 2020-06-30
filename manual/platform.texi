@@ -7,6 +7,7 @@
 @menu
 * PowerPC::           Facilities Specific to the PowerPC Architecture
 * RISC-V::            Facilities Specific to the RISC-V Architecture
+* X86::               Facilities Specific to the X86 Architecture
 @end menu
 
 @node PowerPC
@@ -134,3 +135,519 @@ all threads in the current process.  Setting the
 ordering on only the current thread is necessary.  All other flag bits are
 reserved.
 @end deftypefun
+
+@node X86
+@appendixsec X86-specific Facilities
+
+Facilities specific to X86 that are not specific to a particular
+operating system are declared in @file{sys/platform/x86.h}.
+
+@deftypefun {const struct cpu_features *} __x86_get_cpu_features (unsigned int @var{max})
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+Return a pointer to x86 CPU feature structure used by query macros for x86
+CPU features.  If @var{max} exceeds @code{COMMON_CPUID_INDEX_MAX} which
+is the limit of the CPUID leaves supported by @Theglibc{}, the function
+returns @code{NULL}, indicating that the queried processor feature is
+unsupported by @Theglibc{} run-time.
+@end deftypefun
+
+@deftypefn Macro int HAS_CPU_FEATURE (@var{name})
+This macro returns a nonzero value (true) if the processor has the feature
+@var{name}.
+@end deftypefn
+
+@deftypefn Macro int CPU_FEATURE_USABLE (@var{name})
+This macro returns a nonzero value (true) if the processor has the feature
+@var{name} and the feature is supported by the operating system.
+@end deftypefn
+
+The supported processor features are:
+
+@itemize @bullet
+
+@item
+@code{ACPI} -- Thermal Monitor and Software Controlled Clock Facilities.
+
+@item
+@code{ADX} -- ADX instruction extensions.
+
+@item
+@code{APIC} -- APIC On-Chip.
+
+@item
+@code{AES} -- The AES instruction extensions.
+
+@item
+@code{AMX_BF16} -- Tile computational operations on bfloat16 numbers.
+
+@item
+@code{AMX_INT8} -- Tile computational operations on 8-bit numbers.
+
+@item
+@code{AMX_TILE} -- Tile architecture.
+
+@item
+@code{ARCH_CAPABILITIES} -- IA32_ARCH_CAPABILITIES MSR.
+
+@item
+@code{AVX} -- The AVX instruction extensions.
+
+@item
+@code{AVX2} -- The AVX2 instruction extensions.
+
+@item
+@code{AVX512_4FMAPS} -- The AVX512_4FMAPS instruction extensions.
+
+@item
+@code{AVX512_4VNNIW} -- The AVX512_4VNNIW instruction extensions.
+
+@item
+@code{AVX512_BF16} -- The AVX512_BF16 instruction extensions.
+
+@item
+@code{AVX512_BITALG} -- The AVX512_BITALG instruction extensions.
+
+@item
+@code{AVX512_IFMA} -- The AVX512_IFMA instruction extensions.
+
+@item
+@code{AVX512_VBMI} -- The AVX512_VBMI instruction extensions.
+
+@item
+@code{AVX512_VBMI2} -- The AVX512_VBMI2 instruction extensions.
+
+@item
+@code{AVX512_VNNI} -- The AVX512_VNNI instruction extensions.
+
+@item
+@code{AVX512_VP2INTERSECT} -- The AVX512_VP2INTERSECT instruction
+extensions.
+
+@item
+@code{AVX512_VPOPCNTDQ} -- The AVX512_VPOPCNTDQ instruction extensions.
+
+@item
+@code{AVX512BW} -- The AVX512BW instruction extensions.
+
+@item
+@code{AVX512CD} -- The AVX512CD instruction extensions.
+
+@item
+@code{AVX512ER} -- The AVX512ER instruction extensions.
+
+@item
+@code{AVX512DQ} -- The AVX512DQ instruction extensions.
+
+@item
+@code{AVX512F} -- The AVX512F instruction extensions.
+
+@item
+@code{AVX512PF} -- The AVX512PF instruction extensions.
+
+@item
+@code{AVX512VL} -- The AVX512VL instruction extensions.
+
+@item
+@code{BMI1} -- BMI1 instructions.
+
+@item
+@code{BMI2} -- BMI2 instructions.
+
+@item
+@code{CLDEMOTE} -- CLDEMOTE instruction.
+
+@item
+@code{CLFLUSHOPT} -- CLFLUSHOPT instruction.
+
+@item
+@code{CLFSH} -- CLFLUSH instruction.
+
+@item
+@code{CLWB} -- CLWB instruction.
+
+@item
+@code{CMOV} -- Conditional Move instructions.
+
+@item
+@code{CMPXCHG16B} -- CMPXCHG16B instruction.
+
+@item
+@code{CNXT_ID} -- L1 Context ID.
+
+@item
+@code{CORE_CAPABILITIES} -- IA32_CORE_CAPABILITIES MSR.
+
+@item
+@code{CX8} -- CMPXCHG8B instruction.
+
+@item
+@code{DCA} -- Data prefetch from a memory mapped device.
+
+@item
+@code{DE} -- Debugging Extensions.
+
+@item
+@code{DEPR_FPU_CS_DS} -- Deprecates FPU CS and FPU DS values.
+
+@item
+@code{DS} -- Debug Store.
+
+@item
+@code{DS_CPL} -- CPL Qualified Debug Store.
+
+@item
+@code{DTES64} -- 64-bit DS Area.
+
+@item
+@code{EIST} -- Enhanced Intel SpeedStep technology.
+
+@item
+@code{ENQCMD} -- Enqueue Stores instructions.
+
+@item
+@code{ERMS} -- Enhanced REP MOVSB/STOSB.
+
+@item
+@code{F16C} -- 16-bit floating-point conversion instructions.
+
+@item
+@code{FMA} -- FMA extensions using YMM state.
+
+@item
+@code{FMA4} -- FMA4 instruction extensions.
+
+@item
+@code{FPU} -- X87 Floating Point Unit On-Chip.
+
+@item
+@code{FSGSBASE} -- RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE instructions.
+
+@item
+@code{FSRM} -- Fast Short REP MOV.
+
+@item
+@code{FXSR} -- FXSAVE and FXRSTOR instructions.
+
+@item
+@code{GFNI} -- GFNI instruction extensions.
+
+@item
+@code{HLE} -- HLE instruction extensions.
+
+@item
+@code{HTT} -- Max APIC IDs reserved field is Valid.
+
+@item
+@code{HYBRID} -- Hybrid processor.
+
+@item
+@code{IBRS_IBPB} -- Indirect branch restricted speculation (IBRS) and
+the indirect branch predictor barrier (IBPB).
+
+@item
+@code{IBT} -- Intel Indirect Branch Tracking instruction extensions.
+
+@item
+@code{INVARIANT_TSC} -- Invariant TSC.
+
+@item
+@code{INVPCID} -- INVPCID instruction.
+
+@item
+@code{L1D_FLUSH} -- IA32_FLUSH_CMD MSR.
+
+@item
+@code{LAHF64_SAHF64} -- LAHF/SAHF available in 64-bit mode.
+
+@item
+@code{LM} -- Long mode.
+
+@item
+@code{LWP} -- Lightweight profiling.
+
+@item
+@code{LZCNT} -- LZCNT instruction.
+
+@item
+@code{MCA} -- Machine Check Architecture.
+
+@item
+@code{MCE} -- Machine Check Exception.
+
+@item
+@code{MD_CLEAR} -- MD_CLEAR.
+
+@item
+@code{MMX} -- Intel MMX Technology.
+
+@item
+@code{MONITOR} --  MONITOR/MWAIT instructions.
+
+@item
+@code{MOVBE} -- MOVBE instruction.
+
+@item
+@code{MOVDIRI} -- MOVDIRI instruction.
+
+@item
+@code{MOVDIR64B} -- MOVDIR64B instruction.
+
+@item
+@code{MPX} -- Intel Memory Protection Extensions.
+
+@item
+@code{MSR} -- Model Specific Registers RDMSR and WRMSR instructions.
+
+@item
+@code{MTRR} -- Memory Type Range Registers.
+
+@item
+@code{NX} -- No-execute page protection.
+
+@item
+@code{OSPKE} -- OS has set CR4.PKE to enable protection keys.
+
+@item
+@code{OSXSAVE} -- The OS has set CR4.OSXSAVE[bit 18] to enable
+XSETBV/XGETBV instructions to access XCR0 and to support processor
+extended state management using XSAVE/XRSTOR.
+
+@item
+@code{PAE} -- Physical Address Extension.
+
+@item
+@code{PAGE1GB} -- 1-GByte page.
+
+@item
+@code{PAT} -- Page Attribute Table.
+
+@item
+@code{PBE} -- Pending Break Enable.
+
+@item
+@code{PCID} -- Process-context identifiers.
+
+@item
+@code{PCLMULQDQ} -- PCLMULQDQ instruction.
+
+@item
+@code{PCONFIG} -- PCONFIG instruction.
+
+@item
+@code{PDCM} -- Perfmon and Debug Capability.
+
+@item
+@code{PGE} -- Page Global Bit.
+
+@item
+@code{PKS} -- Protection keys for supervisor-mode pages.
+
+@item
+@code{PKU} -- Protection keys for user-mode pages.
+
+@item
+@code{POPCNT} -- POPCNT instruction.
+
+@item
+@code{PREFETCHW} -- PREFETCHW instruction.
+
+@item
+@code{PREFETCHWT1} -- PREFETCHWT1 instruction.
+
+@item
+@code{PSE} -- Page Size Extension.
+
+@item
+@code{PSE_36} -- 36-Bit Page Size Extension.
+
+@item
+@code{PSN} -- Processor Serial Number.
+
+@item
+@code{RDPID} -- RDPID instruction.
+
+@item
+@code{RDRAND} -- RDRAND instruction.
+
+@item
+@code{RDSEED} -- RDSEED instruction.
+
+@item
+@code{RDT_A} -- Intel Resource Director Technology (Intel RDT) Allocation
+capability.
+
+@item
+@code{RDT_M} -- Intel Resource Director Technology (Intel RDT) Monitoring
+capability.
+
+@item
+@code{RDTSCP} -- RDTSCP instruction.
+
+@item
+@code{RTM} -- RTM instruction extensions.
+
+@item
+@code{SDBG} -- IA32_DEBUG_INTERFACE MSR for silicon debug.
+
+@item
+@code{SEP} -- SYSENTER and SYSEXIT instructions.
+
+@item
+@code{SERIALIZE} -- SERIALIZE instruction.
+
+@item
+@code{SGX} -- Intel Software Guard Extensions.
+
+@item
+@code{SGX_LC} -- SGX Launch Configuration.
+
+@item
+@code{SHA} -- SHA instruction extensions.
+
+@item
+@code{SHSTK} -- Intel Shadow Stack instruction extensions.
+
+@item
+@code{SMAP} -- Supervisor-Mode Access Prevention.
+
+@item
+@code{SMEP} -- Supervisor-Mode Execution Prevention.
+
+@item
+@code{SMX} -- Safer Mode Extensions.
+
+@item
+@code{SS} -- Self Snoop.
+
+@item
+@code{SSBD} -- Speculative Store Bypass Disable (SSBD).
+
+@item
+@code{SSE} -- Streaming SIMD Extensions.
+
+@item
+@code{SSE2} -- Streaming SIMD Extensions 2.
+
+@item
+@code{SSE3} -- Streaming SIMD Extensions 3.
+
+@item
+@code{SSE4_1} -- Streaming SIMD Extensions 4.1.
+
+@item
+@code{SSE4_2} -- Streaming SIMD Extensions 4.2.
+
+@item
+@code{SSE4A} -- SSE4A instruction extensions.
+
+@item
+@code{SSSE3} -- Supplemental Streaming SIMD Extensions 3.
+
+@item
+@code{STIBP} -- Single thread indirect branch predictors (STIBP).
+
+@item
+@code{SVM} -- Secure Virtual Machine.
+
+@item
+@code{SYSCALL_SYSRET} -- SYSCALL/SYSRET instructions.
+
+@item
+@code{TBM} -- Trailing bit manipulation instructions.
+
+@item
+@code{TM} -- Thermal Monitor.
+
+@item
+@code{TM2} -- Thermal Monitor 2.
+
+@item
+@code{TRACE} -- Intel Processor Trace.
+
+@item
+@code{TSC} -- Time Stamp Counter.  RDTSC instruction.
+
+@item
+@code{TSC_ADJUST} -- IA32_TSC_ADJUST MSR.
+
+@item
+@code{TSC_DEADLINE} -- Local APIC timer supports one-shot operation
+using a TSC deadline value.
+
+@item
+@code{TSXLDTRK} -- TSXLDTRK instructions.
+
+@item
+@code{UMIP} -- User-mode instruction prevention.
+
+@item
+@code{VAES} -- VAES instruction extensions.
+
+@item
+@code{VME} -- Virtual 8086 Mode Enhancements.
+
+@item
+@code{VMX} -- Virtual Machine Extensions.
+
+@item
+@code{VPCLMULQDQ} -- VPCLMULQDQ instruction.
+
+@item
+@code{WAITPKG} -- WAITPKG instruction extensions.
+
+@item
+@code{WBNOINVD} -- WBINVD/WBNOINVD instructions.
+
+@item
+@code{X2APIC} -- x2APIC.
+
+@item
+@code{XFD} -- Extended Feature Disable (XFD).
+
+@item
+@code{XGETBV_ECX_1} -- XGETBV with ECX = 1.
+
+@item
+@code{XOP} -- XOP instruction extensions.
+
+@item
+@code{XSAVE} -- The XSAVE/XRSTOR processor extended states feature, the
+XSETBV/XGETBV instructions, and XCR0.
+
+@item
+@code{XSAVEC} -- XSAVEC instruction.
+
+@item
+@code{XSAVEOPT} -- XSAVEOPT instruction.
+
+@item
+@code{XSAVES} -- XSAVES/XRSTORS instructions.
+
+@item
+@code{XTPRUPDCTRL} -- xTPR Update Control.
+
+@end itemize
+
+You could query if a processor supports @code{AVX} with:
+
+@smallexample
+#include <sys/platform/x86.h>
+
+int
+support_avx (void)
+@{
+  return HAS_CPU_FEATURE (AVX);
+@}
+@end smallexample
+
+and if @code{AVX} is usable with:
+
+@smallexample
+#include <sys/platform/x86.h>
+
+int
+usable_avx (void)
+@{
+  return CPU_FEATURE_USABLE (AVX);
+@}
+@end smallexample

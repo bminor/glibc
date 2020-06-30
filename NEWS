@@ -9,6 +9,7 @@ Version 2.33
 
 Major new features:
 
+* Add <sys/platform/x86.h> to provide query macros for x86 CPU features.
 
 * Support for the RISC-V ISA running on Linux has been expanded to run on
   32-bit hardware.  This is supported for the following ISA and ABI pairs:
