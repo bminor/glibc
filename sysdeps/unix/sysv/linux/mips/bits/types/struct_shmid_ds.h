@@ -38,9 +38,9 @@ struct shmid_ds
     __pid_t shm_lpid;			/* pid of last shmop */
     shmatt_t shm_nattch;		/* number of current attaches */
 #if __TIMESIZE == 32
-    unsigned short int __glibc_reserved1;
-    unsigned short int __glibc_reserved2;
-    unsigned short int __glibc_reserved3;
+    unsigned short int __shm_atime_high;
+    unsigned short int __shm_dtime_high;
+    unsigned short int __shm_ctime_high;
     unsigned short int __glibc_reserved4;
 #else
     __syscall_ulong_t __glibc_reserved5;

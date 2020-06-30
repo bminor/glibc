@@ -1,1 +1,1 @@
-#include <sysvipc/sys/shm.h>
+#include_next <sys/shm.h>

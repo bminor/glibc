@@ -25,11 +25,11 @@ struct shmid_ds
   {
     struct ipc_perm shm_perm;		/* operation permission struct */
 #if __TIMESIZE == 32
-    unsigned long int __glibc_reserved1;
+    unsigned long int __shm_atime_high;
     __time_t shm_atime;			/* time of last shmat() */
-    unsigned long int __glibc_reserved2;
+    unsigned long int __shm_dtime_high;
     __time_t shm_dtime;			/* time of last shmdt() */
-    unsigned long int __glibc_reserved3;
+    unsigned long int __shm_ctime_high;
     __time_t shm_ctime;			/* time of last change by shmctl() */
 #else
     __time_t shm_atime;			/* time of last shmat() */
