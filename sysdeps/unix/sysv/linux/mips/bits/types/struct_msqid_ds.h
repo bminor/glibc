@@ -28,17 +28,17 @@ struct msqid_ds
 #if __TIMESIZE == 32
 # ifdef __MIPSEL__
   __time_t msg_stime;		/* time of last msgsnd command */
-  unsigned long int __glibc_reserved1;
+  unsigned long int __msg_stime_high;
   __time_t msg_rtime;		/* time of last msgsnd command */
-  unsigned long int __glibc_reserved2;
+  unsigned long int __msg_rtime_high;
   __time_t msg_ctime;		/* time of last change */
-  unsigned long int __glibc_reserved3;
+  unsigned long int __msg_ctime_high;
 # else
-  unsigned long int __glibc_reserved1;
+  unsigned long int __msg_stime_high;
   __time_t msg_stime;		/* time of last msgsnd command */
-  unsigned long int __glibc_reserved2;
+  unsigned long int __msg_rtime_high;
   __time_t msg_rtime;		/* time of last msgsnd command */
-  unsigned long int __glibc_reserved3;
+  unsigned long int __msg_ctime_high;
   __time_t msg_ctime;		/* time of last change */
 # endif
 #else

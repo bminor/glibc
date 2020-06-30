@@ -23,16 +23,57 @@
 #include <errno.h>
 #include <linux/posix_types.h>  /* For __kernel_mode_t.  */
 
-#ifndef DEFAULT_VERSION
-# ifndef __ASSUME_SYSVIPC_BROKEN_MODE_T
-#  define DEFAULT_VERSION GLIBC_2_2
-# else
-#  define DEFAULT_VERSION GLIBC_2_31
-# endif
+/* POSIX states ipc_perm mode should have type of mode_t.  */
+_Static_assert (sizeof ((struct msqid_ds){0}.msg_perm.mode)
+		== sizeof (mode_t),
+		"sizeof (msqid_ds.msg_perm.mode) != sizeof (mode_t)");
+
+#if __IPC_TIME64 == 0
+typedef struct msqid_ds msgctl_arg_t;
+#else
+# include <struct_kernel_msqid64_ds.h>
+
+static void
+msqid64_to_kmsqid64 (const struct __msqid64_ds *msqid64,
+		     struct kernel_msqid64_ds *kmsqid)
+{
+  kmsqid->msg_perm       = msqid64->msg_perm;
+  kmsqid->msg_stime      = msqid64->msg_stime;
+  kmsqid->msg_stime_high = msqid64->msg_stime >> 32;
+  kmsqid->msg_rtime      = msqid64->msg_rtime;
+  kmsqid->msg_rtime_high = msqid64->msg_rtime >> 32;
+  kmsqid->msg_ctime      = msqid64->msg_ctime;
+  kmsqid->msg_ctime_high = msqid64->msg_ctime >> 32;
+  kmsqid->msg_cbytes     = msqid64->msg_cbytes;
+  kmsqid->msg_qnum       = msqid64->msg_qnum;
+  kmsqid->msg_qbytes     = msqid64->msg_qbytes;
+  kmsqid->msg_lspid      = msqid64->msg_lspid;
+  kmsqid->msg_lrpid      = msqid64->msg_lrpid;
+}
+
+static void
+kmsqid64_to_msqid64 (const struct kernel_msqid64_ds *kmsqid,
+		     struct __msqid64_ds *msqid64)
+{
+  msqid64->msg_perm   = kmsqid->msg_perm;
+  msqid64->msg_stime  = kmsqid->msg_stime
+		        | ((__time64_t) kmsqid->msg_stime_high << 32);
+  msqid64->msg_rtime  = kmsqid->msg_rtime
+		        | ((__time64_t) kmsqid->msg_rtime_high << 32);
+  msqid64->msg_ctime  = kmsqid->msg_ctime
+		        | ((__time64_t) kmsqid->msg_ctime_high << 32);
+  msqid64->msg_cbytes = kmsqid->msg_cbytes;
+  msqid64->msg_qnum   = kmsqid->msg_qnum;
+  msqid64->msg_qbytes = kmsqid->msg_qbytes;
+  msqid64->msg_lspid  = kmsqid->msg_lspid;
+  msqid64->msg_lrpid  = kmsqid->msg_lrpid;
+}
+
+typedef struct kernel_msqid64_ds msgctl_arg_t;
 #endif
 
 static int
-msgctl_syscall (int msqid, int cmd, struct msqid_ds *buf)
+msgctl_syscall (int msqid, int cmd, msgctl_arg_t *buf)
 {
 #ifdef __ASSUME_DIRECT_SYSVIPC_SYSCALLS
   return INLINE_SYSCALL_CALL (msgctl, msqid, cmd | __IPC_64, buf);
@@ -43,46 +84,119 @@ msgctl_syscall (int msqid, int cmd, struct msqid_ds *buf)
 }
 
 int
-__new_msgctl (int msqid, int cmd, struct msqid_ds *buf)
+__msgctl64 (int msqid, int cmd, struct __msqid64_ds *buf)
 {
-  /* POSIX states ipc_perm mode should have type of mode_t.  */
-  _Static_assert (sizeof ((struct msqid_ds){0}.msg_perm.mode)
-		  == sizeof (mode_t),
-		  "sizeof (msqid_ds.msg_perm.mode) != sizeof (mode_t)");
-
-#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
-  struct msqid_ds tmpds;
-  if (cmd == IPC_SET)
+#if __IPC_TIME64
+  struct kernel_msqid64_ds ksemid, *arg = NULL;
+  if (buf != NULL)
     {
-      tmpds = *buf;
-      tmpds.msg_perm.mode *= 0x10000U;
-      buf = &tmpds;
+      msqid64_to_kmsqid64 (buf, &ksemid);
+      arg = &ksemid;
     }
-#endif
-
-  int ret = msgctl_syscall (msqid, cmd, buf);
-
-  if (ret >= 0)
-    {
-      switch (cmd)
-	{
-	case IPC_STAT:
-	case MSG_STAT:
-	case MSG_STAT_ANY:
-#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
-	  buf->msg_perm.mode >>= 16;
+# ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
+  if (cmd == IPC_SET)
+    arg->msg_perm.mode *= 0x10000U;
+# endif
 #else
-	  /* Old Linux kernel versions might not clear the mode padding.  */
-	  if (sizeof ((struct msqid_ds){0}.msg_perm.mode)
-	      != sizeof (__kernel_mode_t))
-	    buf->msg_perm.mode &= 0xFFFF;
+  msgctl_arg_t *arg = buf;
 #endif
-	}
+
+  int ret = msgctl_syscall (msqid, cmd, arg);
+  if (ret < 0)
+    return ret;
+
+  switch (cmd)
+    {
+    case IPC_STAT:
+    case MSG_STAT:
+    case MSG_STAT_ANY:
+#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
+      arg->msg_perm.mode >>= 16;
+#else
+      /* Old Linux kernel versions might not clear the mode padding.  */
+      if (sizeof ((struct msqid_ds){0}.msg_perm.mode)
+          != sizeof (__kernel_mode_t))
+	arg->msg_perm.mode &= 0xFFFF;
+#endif
+
+#if __IPC_TIME64
+      kmsqid64_to_msqid64 (arg, buf);
+#endif
     }
 
   return ret;
 }
-versioned_symbol (libc, __new_msgctl, msgctl, DEFAULT_VERSION);
+#if __TIMESIZE != 64
+libc_hidden_def (__msgctl64)
+
+static void
+msqid_to_msqid64 (struct __msqid64_ds *mq64, const struct msqid_ds *mq)
+{
+  mq64->msg_perm   = mq->msg_perm;
+  mq64->msg_stime  = mq->msg_stime
+		     | ((__time64_t) mq->__msg_stime_high << 32);
+  mq64->msg_rtime  = mq->msg_rtime
+		     | ((__time64_t) mq->__msg_rtime_high << 32);
+  mq64->msg_ctime  = mq->msg_ctime
+		     | ((__time64_t) mq->__msg_ctime_high << 32);
+  mq64->msg_cbytes = mq->msg_cbytes;
+  mq64->msg_qnum   = mq->msg_qnum;
+  mq64->msg_qbytes = mq->msg_qbytes;
+  mq64->msg_lspid  = mq->msg_lspid;
+  mq64->msg_lrpid  = mq->msg_lrpid;
+}
+
+static void
+msqid64_to_msqid (struct msqid_ds *mq, const struct __msqid64_ds *mq64)
+{
+  mq->msg_perm         = mq64->msg_perm;
+  mq->msg_stime        = mq64->msg_stime;
+  mq->__msg_stime_high = 0;
+  mq->msg_rtime        = mq64->msg_rtime;
+  mq->__msg_rtime_high = 0;
+  mq->msg_ctime        = mq64->msg_ctime;
+  mq->__msg_ctime_high = 0;
+  mq->msg_cbytes       = mq64->msg_cbytes;
+  mq->msg_qnum         = mq64->msg_qnum;
+  mq->msg_qbytes       = mq64->msg_qbytes;
+  mq->msg_lspid        = mq64->msg_lspid;
+  mq->msg_lrpid        = mq64->msg_lrpid;
+}
+
+int
+__msgctl (int msqid, int cmd, struct msqid_ds *buf)
+{
+  struct __msqid64_ds msqid64, *buf64 = NULL;
+  if (buf != NULL)
+    {
+      msqid_to_msqid64 (&msqid64, buf);
+      buf64 = &msqid64;
+    }
+
+  int ret = __msgctl64 (msqid, cmd, buf64);
+  if (ret < 0)
+    return ret;
+
+  switch (cmd)
+    {
+    case IPC_STAT:
+    case MSG_STAT:
+    case MSG_STAT_ANY:
+      msqid64_to_msqid (buf, buf64);
+    }
+
+  return ret;
+}
+#endif
+
+#ifndef DEFAULT_VERSION
+# ifndef __ASSUME_SYSVIPC_BROKEN_MODE_T
+#  define DEFAULT_VERSION GLIBC_2_2
+# else
+#  define DEFAULT_VERSION GLIBC_2_31
+# endif
+#endif
+versioned_symbol (libc, __msgctl, msgctl, DEFAULT_VERSION);
 
 #if defined __ASSUME_SYSVIPC_BROKEN_MODE_T \
     && SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_31)
@@ -90,7 +204,7 @@ int
 attribute_compat_text_section
 __msgctl_mode16 (int msqid, int cmd, struct msqid_ds *buf)
 {
-  return msgctl_syscall (msqid, cmd, buf);
+  return msgctl_syscall (msqid, cmd, (msgctl_arg_t *) buf);
 }
 compat_symbol (libc, __msgctl_mode16, msgctl, GLIBC_2_2);
 #endif

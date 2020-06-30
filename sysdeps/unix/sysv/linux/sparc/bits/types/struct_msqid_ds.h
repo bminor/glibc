@@ -26,11 +26,11 @@ struct msqid_ds
 {
   struct ipc_perm msg_perm;	/* structure describing operation permission */
 #if __TIMESIZE == 32
-  unsigned long int __glibc_reserved1;
+  unsigned long int __msg_stime_high;
   __time_t msg_stime;		/* time of last msgsnd command */
-  unsigned long int __glibc_reserved2;
+  unsigned long int __msg_rtime_high;
   __time_t msg_rtime;		/* time of last msgsnd command */
-  unsigned long int __glibc_reserved3;
+  unsigned long int __msg_ctime_high;
   __time_t msg_ctime;		/* time of last change */
 #else
   __time_t msg_stime;		/* time of last msgsnd command */
