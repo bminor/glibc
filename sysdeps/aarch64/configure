@@ -210,6 +210,8 @@ EOF
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_aarch64_bti" >&5
 $as_echo "$libc_cv_aarch64_bti" >&6; }
+config_vars="$config_vars
+aarch64-bti = $libc_cv_aarch64_bti"
 if test $libc_cv_aarch64_bti = yes; then
   $as_echo "#define HAVE_AARCH64_BTI 1" >>confdefs.h
 

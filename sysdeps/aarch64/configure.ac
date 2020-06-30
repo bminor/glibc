@@ -36,6 +36,7 @@ EOF
     libc_cv_aarch64_bti=yes
   fi
   rm -rf conftest.*])
+LIBC_CONFIG_VAR([aarch64-bti], [$libc_cv_aarch64_bti])
 if test $libc_cv_aarch64_bti = yes; then
   AC_DEFINE(HAVE_AARCH64_BTI)
 fi
