@@ -25,6 +25,7 @@
 int
 __settimeofday64 (const struct __timeval64 *tv, const struct timezone *tz)
 {
+  /* Backwards compatibility for setting the UTC offset.  */
   if (__glibc_unlikely (tz != 0))
     {
       if (tv != 0)
@@ -45,9 +46,13 @@ libc_hidden_def (__settimeofday64)
 int
 __settimeofday (const struct timeval *tv, const struct timezone *tz)
 {
-  struct __timeval64 tv64 = valid_timeval_to_timeval64 (*tv);
-
-  return __settimeofday64 (&tv64, tz);
+  if (__glibc_unlikely (tv == NULL))
+    return __settimeofday64 (NULL, tz);
+  else
+    {
+      struct __timeval64 tv64 = valid_timeval_to_timeval64 (*tv);
+      return __settimeofday64 (&tv64, tz);
+    }
 }
 #endif
 weak_alias (__settimeofday, settimeofday);
