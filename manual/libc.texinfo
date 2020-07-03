@@ -40,8 +40,6 @@
 @set FDL_VERSION 1.3
 
 @copying
-This file documents @theglibc{}.
-
 This is
 @c Disabled (printed editions, see above).
 @c Edition @value{EDITION} of
@@ -105,20 +103,24 @@ supports it in developing GNU and promoting software freedom.''
 
 @end titlepage
 
+@c @titlepage is only visible in the printed manual.  Show the
+@c copyright information elsewhere in other renderings.  For the HTML
+@c version, it should come above the short table of contents.  In the
+@c Info manual, the option below is used.
+@ifhtml
+@insertcopying
+@end ifhtml
+
 @shortcontents
 @contents
 
 @ifnottex
 @node Top, Introduction, (dir), (dir)
 @top Main Menu
-This is
 @c Disabled (printed editions, see above).
-@c Edition @value{EDITION} of
-@cite{The GNU C Library Reference Manual}, for Version @value{VERSION}
-@ifclear PKGVERSION_DEFAULT
-@value{PKGVERSION}
-@end ifclear
-of @theglibc{}.
+@ifnothtml
+@insertcopying
+@end ifnothtml
 @end ifnottex
 
 @include top-menu.texi
