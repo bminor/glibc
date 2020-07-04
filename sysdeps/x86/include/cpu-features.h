@@ -159,6 +159,7 @@ struct cpu_features
 /* Unused for x86.  */
 #  define INIT_ARCH()
 #  define __x86_get_cpu_features(max) (&GLRO(dl_x86_cpu_features))
+extern void _dl_x86_init_cpu_features (void) attribute_hidden;
 # endif
 
 # ifdef __x86_64__

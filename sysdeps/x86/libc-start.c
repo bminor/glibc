@@ -20,7 +20,6 @@
    PIE.  */
 # include <startup.h>
 # include <ldsodefs.h>
-# include <cpu-features.h>
 # include <cpu-features.c>
 
 extern struct cpu_features _dl_x86_cpu_features;
