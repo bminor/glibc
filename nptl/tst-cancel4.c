@@ -607,7 +607,15 @@ tf_sigwaitinfo (void *arg)
   pthread_cleanup_push (cl, NULL);
 
   /* Wait for SIGUSR1.  */
-  sigwaitinfo (&mask, &info);
+  int ret;
+  ret = sigwaitinfo (&mask, &info);
+  if (ret == -1 && errno == ENOSYS)
+    {
+      int sig;
+
+      printf ("sigwaitinfo not supported\n");
+      sigwait (&mask, &sig);
+    }
 
   pthread_cleanup_pop (0);
 
@@ -634,7 +642,15 @@ tf_sigtimedwait (void *arg)
   struct timespec ts = { .tv_sec = 60, .tv_nsec = 0 };
   pthread_cleanup_push (cl, NULL);
 
-  sigtimedwait (&mask, &info, &ts);
+  int ret;
+  ret = sigtimedwait (&mask, &info, &ts);
+  if (ret == -1 && errno == ENOSYS)
+    {
+      int sig;
+      printf ("sigtimedwait not supported\n");
+
+      sigwait (&mask, &sig);
+    }
 
   pthread_cleanup_pop (0);
 
@@ -1459,7 +1475,16 @@ tf_msgrcv (void *arg)
 {
   tempmsg = msgget (IPC_PRIVATE, 0666 | IPC_CREAT);
   if (tempmsg == -1)
-    FAIL_EXIT1 ("msgget (IPC_PRIVATE, 0666 | IPC_CREAT): %m");
+    {
+      if (errno == ENOSYS)
+	{
+	  printf ("msgget not supported\n");
+	  tf_usleep (arg);
+	  pthread_exit (NULL);
+	}
+      else
+	FAIL_EXIT1 ("msgget (IPC_PRIVATE, 0666 | IPC_CREAT): %m");
+    }
 
   xpthread_barrier_wait (&b2);
 
@@ -1505,7 +1530,16 @@ tf_msgsnd (void *arg)
 
   tempmsg = msgget (IPC_PRIVATE, 0666 | IPC_CREAT);
   if (tempmsg == -1)
-    FAIL_EXIT1 ("msgget (IPC_PRIVATE, 0666 | IPC_CREAT): %m");
+    {
+      if (errno == ENOSYS)
+	{
+	  printf ("msgget not supported\n");
+	  tf_usleep (arg);
+	  pthread_exit (NULL);
+	}
+      else
+	FAIL_EXIT1 ("msgget (IPC_PRIVATE, 0666 | IPC_CREAT): %m");
+    }
 
   xpthread_barrier_wait (&b2);
 
