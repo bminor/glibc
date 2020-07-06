@@ -22,18 +22,59 @@
 #include <errno.h>
 
 /* Perform user-defined atomical operation of array of semaphores.  */
+int
+__semtimedop64 (int semid, struct sembuf *sops, size_t nsops,
+		const struct __timespec64 *timeout)
+{
+#if defined __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+# ifndef __NR_semtimedop_time64
+#  define __NR_semtimedop_time64 __NR_semtimedop
+# endif
+  int r = INLINE_SYSCALL_CALL (semtimedop_time64, semid, sops, nsops,
+			       timeout);
+#else
+  int r = INLINE_SYSCALL_CALL (ipc, IPCOP_semtimedop, semid,
+			       SEMTIMEDOP_IPC_ARGS (nsops, sops, timeout));
+#endif
+
+#ifndef __ASSUME_TIME64_SYSCALLS
+  if (r == 0 || errno != ENOSYS)
+    return r;
+
+  struct timespec ts32, *pts32 = NULL;
+  if (timeout != NULL)
+    {
+      if (! in_time_t_range (timeout->tv_sec))
+	{
+	  __set_errno (EINVAL);
+	  return -1;
+	}
+      ts32 = valid_timespec64_to_timespec (*timeout);
+      pts32 = &ts32;
+    }
+# if defined __ASSUME_DIRECT_SYSVIPC_SYSCALLS
+  r = INLINE_SYSCALL_CALL (semtimedop, semid, sops, nsops, pts32);
+# else
+  r = INLINE_SYSCALL_CALL (ipc, IPCOP_semtimedop, semid,
+			   SEMTIMEDOP_IPC_ARGS (nsops, sops, pts32));
+# endif
+#endif /* __ASSUME_TIME64_SYSCALLS  */
+  return r;
+}
+#if __TIMESIZE != 64
+libc_hidden_def (__semtimedop64)
 
 int
 __semtimedop (int semid, struct sembuf *sops, size_t nsops,
 	      const struct timespec *timeout)
 {
-  /* semtimedop wire-up syscall is not exported for 32-bit ABIs (they have
-     semtimedop_time64 instead with uses a 64-bit time_t).  */
-#if defined __ASSUME_DIRECT_SYSVIPC_SYSCALLS && defined __NR_semtimedop
-  return INLINE_SYSCALL_CALL (semtimedop, semid, sops, nsops, timeout);
-#else
-  return INLINE_SYSCALL_CALL (ipc, IPCOP_semtimedop, semid,
-			      SEMTIMEDOP_IPC_ARGS (nsops, sops, timeout));
-#endif
+  struct __timespec64 ts64, *pts64 = NULL;
+  if (timeout != NULL)
+    {
+      ts64 = valid_timespec_to_timespec64 (*timeout);
+      pts64 = &ts64;
+    }
+  return __semtimedop64 (semid, sops, nsops, pts64);
 }
+#endif
 weak_alias (__semtimedop, semtimedop)
