@@ -31,6 +31,16 @@ Major new features:
   pthread_attr_getsigmask_np have been added.  They allow applications
   to specify the signal mask of a thread created with pthread_create.
 
+* Support for automatically registering threads with the Linux rseq
+  system call has been added.  This system call is implemented starting
+  from Linux 4.18.  The Restartable Sequences ABI accelerates user-space
+  operations on per-cpu data.  It allows user-space to perform updates
+  on per-cpu data without requiring heavy-weight atomic operations.
+  Automatically registering threads allows all libraries, including libc,
+  to make immediate use of the rseq support by using the documented ABI.
+  The GNU C Library manual has details on integration of Restartable
+  Sequences.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The deprecated <sys/sysctl.h> header and the sysctl function have been

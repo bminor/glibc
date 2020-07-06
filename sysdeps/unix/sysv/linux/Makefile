@@ -41,7 +41,7 @@ update-syscall-lists: arch-syscall.h
 endif
 
 ifeq ($(subdir),csu)
-sysdep_routines += errno-loc
+sysdep_routines += errno-loc rseq-sym
 endif
 
 ifeq ($(subdir),assert)
@@ -92,7 +92,8 @@ sysdep_headers += sys/mount.h sys/acct.h \
 		  bits/termios-c_lflag.h bits/termios-tcflow.h \
 		  bits/termios-misc.h \
 		  bits/types/struct_semid_ds.h \
-		  bits/ipc-perm.h
+		  bits/ipc-perm.h \
+		  sys/rseq.h bits/rseq.h
 
 tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-quota tst-sync_file_range tst-sysconf-iov_max tst-ttyname \

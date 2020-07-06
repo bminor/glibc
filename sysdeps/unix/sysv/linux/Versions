@@ -178,6 +178,7 @@ libc {
     getdents64; gettid; tgkill;
   }
   GLIBC_2.32 {
+    __rseq_abi;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries

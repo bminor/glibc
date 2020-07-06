@@ -628,6 +628,8 @@ the standard.
 * Initial Thread Signal Mask::            Setting the initial mask of threads.
 * Waiting with Explicit Clocks::          Functions for waiting with an
                                           explicit clock specification.
+* Restartable Sequences::                 Linux-specific Restartable Sequences
+                                          integration.
 @end menu
 
 @node Default Thread Attributes
@@ -842,6 +844,68 @@ will wait forever in the same way as @code{pthread_join}.
 Behaves like @code{pthread_timedjoin_np} except that the absolute time in
 @var{abstime} is measured against the clock specified by @var{clockid}.
 @end deftypefun
+
+@node Restartable Sequences
+@subsubsection Restartable Sequences
+
+This section describes Restartable Sequences integration for
+@theglibc{}.  This functionality is only available on Linux.
+
+@deftypevar {struct rseq} __rseq_abi
+@standards{Linux, sys/rseq.h}
+@Theglibc{} implements a @code{__rseq_abi} TLS symbol to interact with
+the Restartable Sequences system call.  The layout of this structure is
+defined by the @file{sys/rseq.h} header.  Registration of each thread's
+@code{__rseq_abi} is performed by @theglibc{} at library initialization
+and thread creation.  The manual for the rseq system call can be found
+at @uref{https://git.kernel.org/pub/scm/libs/librseq/librseq.git/tree/doc/man/rseq.2}.
+
+The main executable and shared libraries may either have an undefined
+@code{__rseq_abi} TLS symbol, or define their own, with the same
+declaration as the one present in @file{sys/rseq.h}.  The dynamic linker
+will ensure that only one of those available symbols will be used at
+runtime across the process.
+
+If the main executable or shared libraries observe an uninitialized
+@code{__rseq_abi.cpu_id} field (value @code{RSEQ_CPU_ID_UNINITIALIZED}),
+they may perform rseq registration to the kernel: this means either
+glibc was prevented from doing the registration, or an older glibc
+version, which does not include rseq support, is in use.  When the main
+executable or a library thus takes ownership of the registration, the
+memory used to hold the @code{__rseq_abi} TLS variable must stay
+allocated, and is not re-used, until the very end of the thread lifetime
+or until an explicit rseq unregistration for that thread is performed.
+It is not recommended to @code{dlclose} libraries owning the
+@code{__rseq_abi} TLS variable.
+
+Users of the @code{__rseq_abi} TLS symbol can store the address of a
+@code{struct rseq_cs} to the @code{__rseq_abi.rseq_cs} TLS variable,
+thus informing the kernel that it enters a Restartable Sequence critical
+section.  This pointer and the code areas it itself points to must not
+be left pointing to memory areas which are freed or re-used.  Several
+approaches can guarantee this.  If the application or library can
+guarantee that the memory used to hold the @code{struct rseq_cs} and the
+code areas it refers to are never freed or re-used, no special action
+must be taken.  Else, before that memory is re-used of freed, the
+application is responsible for setting the @code{__rseq_abi.rseq_cs} TLS
+variable to @code{NULL} in each thread's TLS to guarantee that it does
+not leak dangling references.  Because the application does not
+typically have knowledge of libraries' use of Restartable Sequences, it
+is recommended that libraries using Restartable Sequences which may end
+up freeing or re-using their memory set the @code{__rseq_abi.rseq_cs}
+TLS variable to @code{NULL} before returning from library functions
+which use Restartable Sequences.
+
+@end deftypevar
+
+@deftypevr Macro int RSEQ_SIG
+@standards{Linux, sys/rseq.h}
+Each supported architecture provides a @code{RSEQ_SIG} macro in
+@file{sys/rseq.h} which contains a signature.  That signature is
+expected to be present in the code before each Restartable Sequences
+abort handler.  Failure to provide the expected signature may terminate
+the process with a segmentation fault.
+@end deftypevr
 
 @c FIXME these are undocumented:
 @c pthread_atfork

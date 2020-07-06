@@ -1,6 +1,5 @@
-/* Early initialization of libc.so, libc.so side.
+/* Restartable Sequences internal API.  Stub version.
    Copyright (C) 2020 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,16 +15,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <ctype.h>
-#include <libc-early-init.h>
-#include <rseq-internal.h>
+#ifndef RSEQ_INTERNAL_H
+#define RSEQ_INTERNAL_H
 
-void
-__libc_early_init (_Bool initial)
+static inline void
+rseq_register_current_thread (void)
 {
-  /* Initialize ctype data.  */
-  __ctype_init ();
-  /* Register rseq ABI to the kernel for the main program's libc.   */
-  if (initial)
-    rseq_register_current_thread ();
 }
+
+#endif /* rseq-internal.h */

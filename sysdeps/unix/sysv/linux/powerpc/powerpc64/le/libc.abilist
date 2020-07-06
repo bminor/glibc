@@ -2291,6 +2291,7 @@ GLIBC_2.32 __qecvtieee128_r F
 GLIBC_2.32 __qfcvtieee128 F
 GLIBC_2.32 __qfcvtieee128_r F
 GLIBC_2.32 __qgcvtieee128 F
+GLIBC_2.32 __rseq_abi T 0x20
 GLIBC_2.32 __scanfieee128 F
 GLIBC_2.32 __snprintf_chkieee128 F
 GLIBC_2.32 __snprintfieee128 F

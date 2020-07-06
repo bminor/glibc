@@ -1,6 +1,5 @@
-/* Early initialization of libc.so, libc.so side.
+/* Restartable Sequences exported symbols.  Linux Implementation.
    Copyright (C) 2020 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,16 +15,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <ctype.h>
-#include <libc-early-init.h>
-#include <rseq-internal.h>
+#include <sys/syscall.h>
+#include <stdint.h>
+#include <kernel-features.h>
+#include <sys/rseq.h>
 
-void
-__libc_early_init (_Bool initial)
-{
-  /* Initialize ctype data.  */
-  __ctype_init ();
-  /* Register rseq ABI to the kernel for the main program's libc.   */
-  if (initial)
-    rseq_register_current_thread ();
-}
+__thread struct rseq __rseq_abi =
+  {
+    .cpu_id = RSEQ_CPU_ID_UNINITIALIZED,
+  };

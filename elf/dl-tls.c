@@ -31,7 +31,7 @@
 
 /* Amount of excess space to allocate in the static TLS area
    to allow dynamic loading of modules defining IE-model TLS data.  */
-#define TLS_STATIC_SURPLUS	64 + DL_NNS * 100
+#define TLS_STATIC_SURPLUS	64 + DL_NNS * 176
 
 
 /* Out-of-memory handler.  */
@@ -134,6 +134,12 @@ void
 _dl_determine_tlsoffset (void)
 {
   size_t max_align = TLS_TCB_ALIGN;
+  /* libc.so with rseq has TLS with 32-byte alignment.  Since TLS is
+     initialized before audit modules are loaded and slotinfo
+     information is available, this is not taken into account below in
+     the audit case.  */
+  max_align = MAX (max_align, 32U);
+
   size_t freetop = 0;
   size_t freebottom = 0;
 

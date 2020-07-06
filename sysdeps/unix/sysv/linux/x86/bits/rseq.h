@@ -1,6 +1,5 @@
-/* Early initialization of libc.so, libc.so side.
+/* Restartable Sequences Linux x86 architecture header.
    Copyright (C) 2020 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -16,16 +15,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <ctype.h>
-#include <libc-early-init.h>
-#include <rseq-internal.h>
+#ifndef _SYS_RSEQ_H
+# error "Never use <bits/rseq.h> directly; include <sys/rseq.h> instead."
+#endif
 
-void
-__libc_early_init (_Bool initial)
-{
-  /* Initialize ctype data.  */
-  __ctype_init ();
-  /* Register rseq ABI to the kernel for the main program's libc.   */
-  if (initial)
-    rseq_register_current_thread ();
-}
+/* RSEQ_SIG is a signature required before each abort handler code.
+
+   RSEQ_SIG is used with the following reserved undefined instructions, which
+   trap in user-space:
+
+   x86-32:    0f b9 3d 53 30 05 53      ud1    0x53053053,%edi
+   x86-64:    0f b9 3d 53 30 05 53      ud1    0x53053053(%rip),%edi  */
+
+#define RSEQ_SIG        0x53053053
