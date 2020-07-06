@@ -104,6 +104,12 @@ Deprecated and removed features, and other changes affecting compatibility:
   or contents might be overwritten on subsequent calls in the same thread or
   if the thread is terminated.  It makes strerror MT-safe.
 
+* The "files", "nis" and "nisplus" NSS modules no longer supports the
+  "key" database (used for secure RPC).  The contents of the
+  /etc/publickey file will be ignored, regardless of the settings in
+  /etc/nsswitch.conf.  (This method of storing RPC keys only supported
+  the obsolete and insecure AUTH_DES flavor of secure RPC.)
+
 Changes to build and runtime requirements:
 
 * powerpc64le requires GCC 7.4 or newer.  This is required for supporting

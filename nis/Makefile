@@ -36,7 +36,7 @@ headers			:= $(wildcard rpcsvc/*.[hx])
 # These are the databases available for the nis (and perhaps later nisplus)
 # service.  This must be a superset of the services in nss.
 databases		= proto service hosts network grp pwd rpc ethers \
-			  spwd netgrp alias publickey
+			  spwd netgrp alias
 
 # Specify rules for the nss_* modules.
 services		:= nis nisplus

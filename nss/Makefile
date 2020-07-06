@@ -93,7 +93,8 @@ subdir-dirs = $(services:%=nss_%)
 vpath %.c $(subdir-dirs) ../locale/programs ../intl
 
 
-libnss_files-routines	:= $(addprefix files-,$(databases)) \
+libnss_files-routines	:= $(addprefix files-, \
+			     $(filter-out key, $(databases))) \
 			   files-initgroups files-init
 
 libnss_db-dbs		:= $(addprefix db-,\
