@@ -66,3 +66,8 @@ getrpcport (const char *host, u_long prognum, u_long versnum, u_int proto)
     return 0;
   return pmap_getport (&addr, prognum, versnum, proto);
 }
+#ifdef SHARED
+# ifndef EXPORT_RPC_SYMBOLS
+compat_symbol (libc, getrpcport, getrpcport, GLIBC_2_0);
+# endif
+#endif
