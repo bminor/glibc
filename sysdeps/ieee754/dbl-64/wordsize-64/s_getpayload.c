@@ -26,6 +26,9 @@ __getpayload (const double *x)
 {
   uint64_t ix;
   EXTRACT_WORDS64 (ix, *x);
+  if ((ix & 0x7ff0000000000000ULL) != 0x7ff0000000000000ULL
+      || (ix & 0xfffffffffffffULL) == 0)
+    return -1;
   ix &= 0x7ffffffffffffULL;
   return (double) ix;
 }

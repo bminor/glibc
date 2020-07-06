@@ -20,17 +20,17 @@
 
 static const struct test_f_f_data getpayload_test_data[] =
   {
-    TEST_fp_f (getpayload, plus_infty, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_fp_f (getpayload, minus_infty, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_fp_f (getpayload, plus_zero, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_fp_f (getpayload, minus_zero, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_fp_f (getpayload, 1000, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_fp_f (getpayload, max_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_fp_f (getpayload, -max_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_fp_f (getpayload, min_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_fp_f (getpayload, -min_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_fp_f (getpayload, min_subnorm_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_fp_f (getpayload, -min_subnorm_value, IGNORE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, plus_infty, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, minus_infty, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, plus_zero, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, minus_zero, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, 1000, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, max_value, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -max_value, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, min_value, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -min_value, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, min_subnorm_value, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_fp_f (getpayload, -min_subnorm_value, -1.0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
 #if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
     TEST_fp_f (getpayload, snan_value_pl ("0x0"), plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_fp_f (getpayload, -snan_value_pl ("0x0"), plus_zero, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),

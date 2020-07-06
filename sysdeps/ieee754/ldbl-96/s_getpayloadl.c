@@ -27,6 +27,9 @@ __getpayloadl (const long double *x)
   uint16_t se __attribute__ ((unused));
   uint32_t hx, lx;
   GET_LDOUBLE_WORDS (se, hx, lx, *x);
+  if ((se & 0x7fff) != 0x7fff
+      || ((hx & 0x7fffffff) | lx) == 0)
+    return -1;
   hx &= 0x3fffffff;
   uint64_t ix = ((uint64_t) hx << 32) | lx;
   return (long double) ix;

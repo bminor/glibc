@@ -27,6 +27,9 @@ __getpayloadl (const long double *x)
   double xhi = ldbl_high (*x);
   uint64_t ix;
   EXTRACT_WORDS64 (ix, xhi);
+  if ((ix & 0x7ff0000000000000ULL) != 0x7ff0000000000000ULL
+      || (ix & 0xfffffffffffffULL) == 0)
+    return -1;
   ix &= 0x7ffffffffffffULL;
   if (FIX_INT_FP_CONVERT_ZERO && ix == 0)
     return 0.0L;

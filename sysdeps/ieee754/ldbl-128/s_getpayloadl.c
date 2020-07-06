@@ -26,6 +26,9 @@ __getpayloadl (const _Float128 *x)
 {
   uint64_t hx, lx;
   GET_LDOUBLE_WORDS64 (hx, lx, *x);
+  if ((hx & 0x7fff000000000000ULL) != 0x7fff000000000000ULL
+      || ((hx & 0xffffffffffffULL) | lx) == 0)
+    return -1;
   hx &= 0x7fffffffffffULL;
   /* Construct the representation of the return value directly, since
      128-bit integers may not be available.  */

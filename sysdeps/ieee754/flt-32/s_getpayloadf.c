@@ -27,6 +27,9 @@ __getpayloadf (const float *x)
 {
   uint32_t ix;
   GET_FLOAT_WORD (ix, *x);
+  if ((ix & 0x7f800000) != 0x7f800000
+      || (ix & 0x7fffff) == 0)
+    return -1;
   ix &= 0x3fffff;
   if (FIX_INT_FP_CONVERT_ZERO && ix == 0)
     return 0.0f;

@@ -27,6 +27,9 @@ __getpayload (const double *x)
 {
   uint32_t hx, lx;
   EXTRACT_WORDS (hx, lx, *x);
+  if ((hx & 0x7ff00000) != 0x7ff00000
+      || ((hx & 0xfffff) | lx) == 0)
+    return -1;
   hx &= 0x7ffff;
   uint64_t ix = ((uint64_t) hx << 32) | lx;
   if (FIX_INT_FP_CONVERT_ZERO && ix == 0)
