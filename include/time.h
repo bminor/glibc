@@ -464,6 +464,12 @@ valid_timespec_to_timeval32 (const struct timespec ts)
   return (struct __timeval32) { (time_t) ts.tv_sec, ts.tv_nsec / 1000 };
 }
 
+static inline struct __timeval64
+valid_timespec_to_timeval64 (const struct timespec ts)
+{
+  return (struct __timeval64) { (time_t) ts.tv_sec, ts.tv_nsec / 1000 };
+}
+
 /* Check if a value is in the valid nanoseconds range. Return true if
    it is, false otherwise.  */
 static inline bool
