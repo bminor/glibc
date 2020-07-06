@@ -1,0 +1,64 @@
+/* Restartable Sequences single-threaded tests.
+   Copyright (C) 2020 Free Software Foundation, Inc.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+/* These tests validate that rseq is registered from main in an executable
+   not linked against libpthread.  */
+
+#include <support/check.h>
+#include <stdio.h>
+#include <sys/rseq.h>
+#include <unistd.h>
+
+#ifdef RSEQ_SIG
+# include <errno.h>
+# include <error.h>
+# include <stdlib.h>
+# include <string.h>
+# include <syscall.h>
+# include "tst-rseq.h"
+
+static void
+do_rseq_main_test (void)
+{
+  TEST_VERIFY_EXIT (rseq_thread_registered ());
+}
+
+static void
+do_rseq_test (void)
+{
+  if (!rseq_available ())
+    {
+      FAIL_UNSUPPORTED ("kernel does not support rseq, skipping test");
+    }
+  do_rseq_main_test ();
+}
+#else /* RSEQ_SIG */
+static void
+do_rseq_test (void)
+{
+  FAIL_UNSUPPORTED ("glibc does not define RSEQ_SIG, skipping test");
+}
+#endif /* RSEQ_SIG */
+
+static int
+do_test (void)
+{
+  do_rseq_test ();
+  return 0;
+}
+
+#include <support/test-driver.c>
