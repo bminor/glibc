@@ -15,19 +15,37 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <signal.h>
-#include <string.h>
-#include <sysdep-cancel.h>
+#include <sysdep.h>
 
 int
-__sigtimedwait (const sigset_t *set, siginfo_t *info,
-		const struct timespec *timeout)
+__sigtimedwait64 (const sigset_t *set, siginfo_t *info,
+		  const struct __timespec64 *timeout)
 {
-  /* XXX The size argument hopefully will have to be changed to the
-     real size of the user-level sigset_t.  */
-  int result = SYSCALL_CANCEL (rt_sigtimedwait, set, info, timeout,
+#ifndef __NR_rt_sigtimedwait_time64
+# define __NR_rt_sigtimedwait_time64 __NR_rt_sigtimedwait
+#endif
+  int result = SYSCALL_CANCEL (rt_sigtimedwait_time64, set, info, timeout,
 			       __NSIG_BYTES);
+
+#ifndef __ASSUME_TIME64_SYSCALLS
+  if (result != 0 && errno == ENOSYS)
+    {
+      struct timespec ts32, *pts32 = NULL;
+      if (timeout != NULL)
+	{
+	  if (! in_time_t_range (timeout->tv_sec))
+	    {
+	      __set_errno (EINVAL);
+	      return -1;
+	    }
+	  ts32 = valid_timespec64_to_timespec (*timeout);
+	  pts32 = &ts32;
+	}
+      result = SYSCALL_CANCEL (rt_sigtimedwait, set, info, pts32,
+			       __NSIG_BYTES);
+    }
+#endif
 
   /* The kernel generates a SI_TKILL code in si_code in case tkill is
      used.  tkill is transparently used in raise().  Since having
@@ -38,5 +56,21 @@ __sigtimedwait (const sigset_t *set, siginfo_t *info,
 
   return result;
 }
+#if __TIMESIZE != 64
+libc_hidden_def (__sigtimedwait64)
+
+int
+__sigtimedwait (const sigset_t *set, siginfo_t *info,
+		const struct timespec *timeout)
+{
+  struct __timespec64 ts64, *pts64 = NULL;
+  if (timeout != NULL)
+    {
+      ts64 = valid_timespec_to_timespec64 (*timeout);
+      pts64 = &ts64;
+    }
+  return __sigtimedwait64 (set, info, pts64);
+}
+#endif
 libc_hidden_def (__sigtimedwait)
 weak_alias (__sigtimedwait, sigtimedwait)

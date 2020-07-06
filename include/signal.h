@@ -38,6 +38,14 @@ extern int __sigwait (const sigset_t *__set, int *__sig);
 libc_hidden_proto (__sigwait)
 extern int __sigwaitinfo (const sigset_t *__set, siginfo_t *__info);
 libc_hidden_proto (__sigwaitinfo)
+#if __TIMESIZE == 64
+# define __sigtimedwait64 __sigtimedwait
+#else
+# include <struct___timespec64.h>
+extern int __sigtimedwait64 (const sigset_t *__set, siginfo_t *__info,
+			     const struct __timespec64 *__timeout);
+libc_hidden_proto (__sigtimedwait64)
+#endif
 extern int __sigtimedwait (const sigset_t *__set, siginfo_t *__info,
 			   const struct timespec *__timeout);
 libc_hidden_proto (__sigtimedwait)
