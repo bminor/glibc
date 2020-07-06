@@ -257,7 +257,11 @@ clnt_sperrno (enum clnt_stat stat)
     }
   return _("RPC: (unknown error code)");
 }
+#ifdef EXPORT_RPC_SYMBOLS
 libc_hidden_def (clnt_sperrno)
+#else
+libc_hidden_nolink_sunrpc (clnt_sperrno, GLIBC_2_0)
+#endif
 
 void
 clnt_perrno (enum clnt_stat num)
