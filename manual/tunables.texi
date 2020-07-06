@@ -396,6 +396,22 @@ to set threshold in bytes for non temporal store.
 This tunable is specific to i386 and x86-64.
 @end deftp
 
+@deftp Tunable glibc.cpu.x86_rep_movsb_threshold
+The @code{glibc.cpu.x86_rep_movsb_threshold} tunable allows the user to
+set threshold in bytes to start using "rep movsb".  The value must be
+greater than zero, and currently defaults to 2048 bytes.
+
+This tunable is specific to i386 and x86-64.
+@end deftp
+
+@deftp Tunable glibc.cpu.x86_rep_stosb_threshold
+The @code{glibc.cpu.x86_rep_stosb_threshold} tunable allows the user to
+set threshold in bytes to start using "rep stosb".  The value must be
+greater than zero, and currently defaults to 2048 bytes.
+
+This tunable is specific to i386 and x86-64.
+@end deftp
+
 @deftp Tunable glibc.cpu.x86_ibt
 The @code{glibc.cpu.x86_ibt} tunable allows the user to control how
 indirect branch tracking (IBT) should be enabled.  Accepted values are

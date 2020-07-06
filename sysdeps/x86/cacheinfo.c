@@ -530,6 +530,12 @@ long int __x86_raw_shared_cache_size attribute_hidden = 1024 * 1024;
 /* Threshold to use non temporal store.  */
 long int __x86_shared_non_temporal_threshold attribute_hidden;
 
+/* Threshold to use Enhanced REP MOVSB.  */
+long int __x86_rep_movsb_threshold attribute_hidden = 2048;
+
+/* Threshold to use Enhanced REP STOSB.  */
+long int __x86_rep_stosb_threshold attribute_hidden = 2048;
+
 #ifndef DISABLE_PREFETCHW
 /* PREFETCHW support flag for use in memory and string routines.  */
 int __x86_prefetchw attribute_hidden;
@@ -872,6 +878,36 @@ init_cacheinfo (void)
     = (cpu_features->non_temporal_threshold != 0
        ? cpu_features->non_temporal_threshold
        : __x86_shared_cache_size * threads * 3 / 4);
+
+  /* NB: The REP MOVSB threshold must be greater than VEC_SIZE * 8.  */
+  unsigned int minimum_rep_movsb_threshold;
+  /* NB: The default REP MOVSB threshold is 2048 * (VEC_SIZE / 16).  */
+  unsigned int rep_movsb_threshold;
+  if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable)
+      && !CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_AVX512))
+    {
+      rep_movsb_threshold = 2048 * (64 / 16);
+      minimum_rep_movsb_threshold = 64 * 8;
+    }
+  else if (CPU_FEATURES_ARCH_P (cpu_features,
+				AVX_Fast_Unaligned_Load))
+    {
+      rep_movsb_threshold = 2048 * (32 / 16);
+      minimum_rep_movsb_threshold = 32 * 8;
+    }
+  else
+    {
+      rep_movsb_threshold = 2048 * (16 / 16);
+      minimum_rep_movsb_threshold = 16 * 8;
+    }
+  if (cpu_features->rep_movsb_threshold > minimum_rep_movsb_threshold)
+    __x86_rep_movsb_threshold = cpu_features->rep_movsb_threshold;
+  else
+    __x86_rep_movsb_threshold = rep_movsb_threshold;
+
+# if HAVE_TUNABLES
+  __x86_rep_stosb_threshold = cpu_features->rep_stosb_threshold;
+# endif
 }
 
 #endif

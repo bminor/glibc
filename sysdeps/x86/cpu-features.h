@@ -102,6 +102,10 @@ struct cpu_features
   unsigned long int shared_cache_size;
   /* Threshold to use non temporal store.  */
   unsigned long int non_temporal_threshold;
+  /* Threshold to use "rep movsb".  */
+  unsigned long int rep_movsb_threshold;
+  /* Threshold to use "rep stosb".  */
+  unsigned long int rep_stosb_threshold;
 };
 
 /* Used from outside of glibc to get access to the CPU features

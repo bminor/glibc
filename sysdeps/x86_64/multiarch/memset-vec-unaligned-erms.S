@@ -58,16 +58,6 @@
 # endif
 #endif
 
-/* Threshold to use Enhanced REP STOSB.  Since there is overhead to set
-   up REP STOSB operation, REP STOSB isn't faster on short data.  The
-   memset micro benchmark in glibc shows that 2KB is the approximate
-   value above which REP STOSB becomes faster on processors with
-   Enhanced REP STOSB.  Since the stored value is fixed, larger register
-   size has minimal impact on threshold.  */
-#ifndef REP_STOSB_THRESHOLD
-# define REP_STOSB_THRESHOLD		2048
-#endif
-
 #ifndef SECTION
 # error SECTION is not defined!
 #endif
@@ -181,7 +171,7 @@ ENTRY (MEMSET_SYMBOL (__memset, unaligned_erms))
 	ret
 
 L(stosb_more_2x_vec):
-	cmpq	$REP_STOSB_THRESHOLD, %rdx
+	cmp	__x86_rep_stosb_threshold(%rip), %RDX_LP
 	ja	L(stosb)
 #endif
 L(more_2x_vec):

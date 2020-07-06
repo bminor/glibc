@@ -606,6 +606,10 @@ no_cpuid:
   TUNABLE_GET (hwcaps, tunable_val_t *, TUNABLE_CALLBACK (set_hwcaps));
   cpu_features->non_temporal_threshold
     = TUNABLE_GET (x86_non_temporal_threshold, long int, NULL);
+  cpu_features->rep_movsb_threshold
+    = TUNABLE_GET (x86_rep_movsb_threshold, long int, NULL);
+  cpu_features->rep_stosb_threshold
+    = TUNABLE_GET (x86_rep_stosb_threshold, long int, NULL);
   cpu_features->data_cache_size
     = TUNABLE_GET (x86_data_cache_size, long int, NULL);
   cpu_features->shared_cache_size
