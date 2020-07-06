@@ -393,6 +393,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_XSAVEC		(1u << 1)
 #define bit_cpu_XGETBV_ECX_1	(1u << 2)
 #define bit_cpu_XSAVES		(1u << 3)
+#define bit_cpu_XFD		(1u << 4)
 
 /* COMMON_CPUID_INDEX_80000007.  */
 
@@ -578,6 +579,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_XSAVEC	COMMON_CPUID_INDEX_D_ECX_1
 #define index_cpu_XGETBV_ECX_1	COMMON_CPUID_INDEX_D_ECX_1
 #define index_cpu_XSAVES	COMMON_CPUID_INDEX_D_ECX_1
+#define index_cpu_XFD		COMMON_CPUID_INDEX_D_ECX_1
 
 /* COMMON_CPUID_INDEX_80000007.  */
 
@@ -763,6 +765,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_XSAVEC		eax
 #define reg_XGETBV_ECX_1	eax
 #define reg_XSAVES		eax
+#define reg_XFD			eax
 
 /* COMMON_CPUID_INDEX_80000007.  */
 
