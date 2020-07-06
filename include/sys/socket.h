@@ -104,6 +104,14 @@ extern ssize_t __libc_recvmsg (int __fd, struct msghdr *__message,
 			       int __flags);
 extern ssize_t __recvmsg (int __fd, struct msghdr *__message,
 			  int __flags) attribute_hidden;
+#if __TIMESIZE == 64
+# define __recvmmsg64 __recvmmsg
+#else
+extern int __recvmmsg64 (int __fd, struct mmsghdr *vmessages,
+			 unsigned int vlen, int flags,
+			 struct __timespec64 *timeout);
+libc_hidden_proto (__recvmmsg64)
+#endif
 
 /* Set socket FD's option OPTNAME at protocol level LEVEL
    to *OPTVAL (which is OPTLEN bytes long).

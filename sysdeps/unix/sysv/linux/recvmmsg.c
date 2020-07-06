@@ -16,21 +16,62 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <sys/socket.h>
-
-#include <sysdep-cancel.h>
-#include <sys/syscall.h>
+#include <sysdep.h>
 #include <socketcall.h>
-#include <kernel-features.h>
 
 int
-recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
-	  struct timespec *tmo)
+__recvmmsg64 (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
+	      struct __timespec64 *timeout)
 {
-#ifdef __ASSUME_RECVMMSG_SYSCALL
-  return SYSCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
-#else
-  return SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, tmo);
+#ifndef __NR_recvmmsg_time64
+# define __NR_recvmmsg_time64 __NR_recvmmsg
 #endif
+  int r = SYSCALL_CANCEL (recvmmsg_time64, fd, vmessages, vlen, flags,
+			  timeout);
+#ifndef __ASSUME_TIME64_SYSCALLS
+  if (r >= 0 || errno != ENOSYS)
+    return r;
+
+  struct timespec ts32, *pts32 = NULL;
+  if (timeout != NULL)
+    {
+      if (! in_time_t_range (timeout->tv_sec))
+	{
+	  __set_errno (EINVAL);
+	  return -1;
+	}
+      ts32 = valid_timespec64_to_timespec (*timeout);
+      pts32 = &ts32;
+    }
+# ifdef __ASSUME_RECVMMSG_SYSCALL
+  r = SYSCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, pts32);
+# else
+  r = SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, pts32);
+# endif
+  if (r >= 0 && timeout != NULL)
+    *timeout = valid_timespec_to_timespec64 (ts32);
+#endif /* __ASSUME_TIME64_SYSCALLS  */
+  return r;
 }
+#if __TIMESIZE != 64
+libc_hidden_def (__recvmmsg64)
+
+int
+__recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
+	    struct timespec *timeout)
+{
+  struct __timespec64 ts64, *pts64 = NULL;
+  if (timeout != NULL)
+    {
+      ts64 = valid_timespec_to_timespec64 (*timeout);
+      pts64 = &ts64;
+    }
+  int r = __recvmmsg64 (fd, vmessages, vlen, flags, pts64);
+  if (r >= 0 && timeout != NULL)
+    /* The remanining timeout will be always less the input TIMEOUT.  */
+    *timeout = valid_timespec64_to_timespec (ts64);
+  return r;
+}
+#endif
+weak_alias (__recvmmsg, recvmmsg)
