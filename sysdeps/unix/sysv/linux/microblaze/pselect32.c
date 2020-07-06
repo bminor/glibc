@@ -23,38 +23,27 @@
 #include <sysdep-cancel.h>
 
 #ifndef __ASSUME_PSELECT
-# define __pselect __pselect_syscall
-#endif
-
-/* If pselect is supported, just use the Linux generic implementation.  */
-#include <sysdeps/unix/sysv/linux/pselect.c>
-
-#ifndef __ASSUME_PSELECT
-# undef __pselect
 int
-__pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
-	   const struct timespec *timeout, const sigset_t *sigmask)
+__pselect32 (int nfds, fd_set *readfds, fd_set *writefds,
+	     fd_set *exceptfds, const struct __timespec64 *timeout,
+	     const sigset_t *sigmask)
 {
-  int ret = __pselect_syscall (nfds, readfds, writefds, exceptfds, timeout,
-			       sigmask);
-  if (ret >= 0 || errno != ENOSYS)
-    return ret;
-
   /* The fallback uses 'select' which shows the race condition regarding
      signal mask set/restore, requires two additional syscalls, and has
      a worse timeout precision (microseconds instead of nanoseconds).  */
 
-  struct timeval tval, *ptval = NULL;
+  struct timeval tv32, *ptv32 = NULL;
   if (timeout != NULL)
     {
-      if (! valid_nanoseconds (timeout->tv_nsec))
+      if (! in_time_t_range (timeout->tv_sec)
+	  || ! valid_nanoseconds (timeout->tv_nsec))
 	{
 	  __set_errno (EINVAL);
 	  return -1;
 	}
 
-      TIMESPEC_TO_TIMEVAL (&tval, timeout);
-      ptval = &tval;
+      tv32 = valid_timespec64_to_timeval (*timeout);
+      ptv32 = &tv32;
     }
 
   sigset_t savemask;
@@ -62,12 +51,11 @@ __pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
     __sigprocmask (SIG_SETMASK, sigmask, &savemask);
 
   /* select itself is a cancellation entrypoint.  */
-  ret = __select (nfds, readfds, writefds, exceptfds, ptval);
+  int ret = __select (nfds, readfds, writefds, exceptfds, ptv32);
 
   if (sigmask != NULL)
     __sigprocmask (SIG_SETMASK, &savemask, NULL);
 
   return ret;
 }
-weak_alias (__pselect, pselect)
-#endif
+#endif /* __ASSUME_PSELECT  */

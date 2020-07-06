@@ -3,6 +3,22 @@
 
 #ifndef _ISOMAC
 /* Now define the internal interfaces.  */
+# if __TIMESIZE == 64
+#  define __pselect64 __pselect
+#else
+# include <struct___timespec64.h>
+extern int __pselect64 (int __nfds, fd_set *__readfds,
+			fd_set *__writefds, fd_set *__exceptfds,
+			const struct __timespec64 *__timeout,
+			const __sigset_t *__sigmask);
+libc_hidden_proto (__pselect64)
+
+extern int __pselect32 (int __nfds, fd_set *__readfds,
+			fd_set *__writefds, fd_set *__exceptfds,
+			const struct __timespec64 *__timeout,
+			const __sigset_t *__sigmask)
+  attribute_hidden;
+#endif
 extern int __pselect (int __nfds, fd_set *__readfds,
 		      fd_set *__writefds, fd_set *__exceptfds,
 		      const struct timespec *__timeout,
