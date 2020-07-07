@@ -57,7 +57,7 @@ do_test (void)
 
   ret = fprintf (fp, "%." SN3 "d", 1);
   printf ("ret = %d\n", ret);
-  if (ret != -1 || errno != EOVERFLOW)
+  if (ret != N3)
 	  return 1;
 
   /* GCC 9 warns about output of more than INT_MAX characters; this is
