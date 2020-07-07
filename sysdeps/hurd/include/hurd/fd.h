@@ -20,10 +20,11 @@ extern void _hurd_fd_port_use_cleanup (void *arg);
 /* Like HURD_FD_PORT_USE, but cleans fd on cancel.  */
 #define	HURD_FD_PORT_USE_CANCEL(fd, expr)				      \
   ({ error_t __result;							      \
-     void *__crit = _hurd_critical_section_lock ();			      \
      struct _hurd_fd_port_use_data __d;					      \
      io_t port, ctty;							      \
+     void *__crit;							      \
      __d.d = (fd);							      \
+     __crit = _hurd_critical_section_lock ();				      \
      __spin_lock (&__d.d->port.lock);					      \
      if (__d.d->port.port == MACH_PORT_NULL)				      \
        {								      \
