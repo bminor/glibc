@@ -49,7 +49,10 @@
    that affects the size of the static TLS and by default it's small enough
    not to cause problems with existing applications. The limit is not
    enforced or checked: it is the user's responsibility to increase rtld.nns
-   if more dlmopen namespaces are used.  */
+   if more dlmopen namespaces are used.
+
+   Audit modules use their own namespaces, they are not included in rtld.nns,
+   but come on top when computing the number of namespaces.  */
 
 /* Size of initial-exec TLS in libc.so.  */
 #define LIBC_IE_TLS 192
@@ -60,8 +63,11 @@
 /* Size of additional surplus TLS, placeholder for TLS optimizations.  */
 #define OPT_SURPLUS_TLS 512
 
+/* Calculate the size of the static TLS surplus, when the given
+   number of audit modules are loaded.  Must be called after the
+   number of audit modules is known and before static TLS allocation.  */
 void
-_dl_tls_static_surplus_init (void)
+_dl_tls_static_surplus_init (size_t naudit)
 {
   size_t nns;
 
@@ -73,6 +79,11 @@ _dl_tls_static_surplus_init (void)
 #endif
   if (nns > DL_NNS)
     nns = DL_NNS;
+  if (DL_NNS - nns < naudit)
+    _dl_fatal_printf ("Failed loading %lu audit modules, %lu are supported.\n",
+		      (unsigned long) naudit, (unsigned long) (DL_NNS - nns));
+  nns += naudit;
+
   GLRO(dl_tls_static_surplus) = ((nns - 1) * LIBC_IE_TLS
 				 + nns * OTHER_IE_TLS
 				 + OPT_SURPLUS_TLS);

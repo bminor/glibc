@@ -242,9 +242,12 @@ Sets the number of supported dynamic link namespaces (see @code{dlmopen}).
 Currently this limit can be set between 1 and 16 inclusive, the default is 4.
 Each link namespace consumes some memory in all thread, and thus raising the
 limit will increase the amount of memory each thread uses. Raising the limit
-is useful when your application uses more than 4 dynamic linker audit modules
-e.g. @env{LD_AUDIT}, or will use more than 4 dynamic link namespaces as created
-by @code{dlmopen} with an lmid argument of @code{LM_ID_NEWLM}.
+is useful when your application uses more than 4 dynamic link namespaces as
+created by @code{dlmopen} with an lmid argument of @code{LM_ID_NEWLM}.
+Dynamic linker audit modules are loaded in their own dynamic link namespaces,
+but they are not accounted for in @code{glibc.rtld.nns}.  They implicitly
+increase the per-thread memory usage as necessary, so this tunable does
+not need to be changed to allow many audit modules e.g. via @env{LD_AUDIT}.
 @end deftp
 
 @node Elision Tunables

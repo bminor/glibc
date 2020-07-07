@@ -1106,8 +1106,9 @@ extern size_t _dl_count_modids (void) attribute_hidden;
 /* Calculate offset of the TLS blocks in the static TLS block.  */
 extern void _dl_determine_tlsoffset (void) attribute_hidden;
 
-/* Calculate the size of the static TLS surplus.  */
-void _dl_tls_static_surplus_init (void) attribute_hidden;
+/* Calculate the size of the static TLS surplus, when the given
+   number of audit modules are loaded.  */
+void _dl_tls_static_surplus_init (size_t naudit) attribute_hidden;
 
 #ifndef SHARED
 /* Set up the TCB for statically linked applications.  This is called

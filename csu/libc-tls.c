@@ -126,8 +126,8 @@ __libc_setup_tls (void)
 	  break;
 	}
 
-  /* Calculate the size of the static TLS surplus.  */
-  _dl_tls_static_surplus_init ();
+  /* Calculate the size of the static TLS surplus, with 0 auditors.  */
+  _dl_tls_static_surplus_init (0);
 
   /* We have to set up the TCB block which also (possibly) contains
      'errno'.  Therefore we avoid 'malloc' which might touch 'errno'.
