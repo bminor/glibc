@@ -1505,50 +1505,50 @@ installing such hooks.
 
 @cindex allocation statistics
 You can get information about dynamic memory allocation by calling the
-@code{mallinfo} function.  This function and its associated data type
+@code{mallinfo2} function.  This function and its associated data type
 are declared in @file{malloc.h}; they are an extension of the standard
 SVID/XPG version.
 @pindex malloc.h
 
-@deftp {Data Type} {struct mallinfo}
+@deftp {Data Type} {struct mallinfo2}
 @standards{GNU, malloc.h}
 This structure type is used to return information about the dynamic
 memory allocator.  It contains the following members:
 
 @table @code
-@item int arena
+@item size_t arena
 This is the total size of memory allocated with @code{sbrk} by
 @code{malloc}, in bytes.
 
-@item int ordblks
+@item size_t ordblks
 This is the number of chunks not in use.  (The memory allocator
-internally gets chunks of memory from the operating system, and then
+size_ternally gets chunks of memory from the operating system, and then
 carves them up to satisfy individual @code{malloc} requests;
 @pxref{The GNU Allocator}.)
 
-@item int smblks
+@item size_t smblks
 This field is unused.
 
-@item int hblks
+@item size_t hblks
 This is the total number of chunks allocated with @code{mmap}.
 
-@item int hblkhd
+@item size_t hblkhd
 This is the total size of memory allocated with @code{mmap}, in bytes.
 
-@item int usmblks
+@item size_t usmblks
 This field is unused and always 0.
 
-@item int fsmblks
+@item size_t fsmblks
 This field is unused.
 
-@item int uordblks
+@item size_t uordblks
 This is the total size of memory occupied by chunks handed out by
 @code{malloc}.
 
-@item int fordblks
+@item size_t fordblks
 This is the total size of memory occupied by free (not in use) chunks.
 
-@item int keepcost
+@item size_t keepcost
 This is the size of the top-most releasable chunk that normally
 borders the end of the heap (i.e., the high end of the virtual address
 space's data segment).
@@ -1556,7 +1556,7 @@ space's data segment).
 @end table
 @end deftp
 
-@deftypefun {struct mallinfo} mallinfo (void)
+@deftypefun {struct mallinfo2} mallinfo2 (void)
 @standards{SVID, malloc.h}
 @safety{@prelim{}@mtunsafe{@mtuinit{} @mtasuconst{:mallopt}}@asunsafe{@asuinit{} @asulock{}}@acunsafe{@acuinit{} @aculock{}}}
 @c Accessing mp_.n_mmaps and mp_.max_mmapped_mem, modified with atomics
@@ -1564,7 +1564,7 @@ space's data segment).
 @c mark the statistics as unsafe, rather than the fast-path functions
 @c that collect the possibly inconsistent data.
 
-@c __libc_mallinfo @mtuinit @mtasuconst:mallopt @asuinit @asulock @aculock
+@c __libc_mallinfo2 @mtuinit @mtasuconst:mallopt @asuinit @asulock @aculock
 @c  ptmalloc_init (once) dup @mtsenv @asulock @aculock @acsfd @acsmem
 @c  mutex_lock dup @asulock @aculock
 @c  int_mallinfo @mtasuconst:mallopt [mp_ access on main_arena]
@@ -1577,7 +1577,7 @@ space's data segment).
 @c  mutex_unlock @aculock
 
 This function returns information about the current dynamic memory usage
-in a structure of type @code{struct mallinfo}.
+in a structure of type @code{struct mallinfo2}.
 @end deftypefun
 
 @node Summary of Malloc
@@ -1644,7 +1644,7 @@ A pointer to a function that @code{free} uses whenever it is called.
 A pointer to a function that @code{aligned_alloc}, @code{memalign},
 @code{posix_memalign} and @code{valloc} use whenever they are called.
 
-@item struct mallinfo mallinfo (void)
+@item struct mallinfo2 mallinfo2 (void)
 Return information about the current dynamic memory usage.
 @xref{Statistics of Malloc}.
 @end table
@@ -1970,7 +1970,7 @@ In addition, very old applications may use the obsolete @code{cfree}
 function.
 
 Further @code{malloc}-related functions such as @code{mallopt} or
-@code{mallinfo} will not have any effect or return incorrect statistics
+@code{mallinfo2} will not have any effect or return incorrect statistics
 when a replacement @code{malloc} is in use.  However, failure to replace
 these functions typically does not result in crashes or other incorrect
 application behavior, but may result in static linking failures.
