@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #include <mach/error.h>
 #include <errorlib.h>
 #include <tls-internal.h>
@@ -40,6 +41,8 @@ translate (const char *str, locale_t loc)
 char *
 __strerror_l (int errnum, locale_t loc)
 {
+  int saved_errno = errno;
+  char *err;
   int system;
   int sub;
   int code;
@@ -61,15 +64,15 @@ __strerror_l (int errnum, locale_t loc)
 		      errnum) == -1)
 	tls_internal->strerror_l_buf = NULL;
 
+      __set_errno (saved_errno);
       return tls_internal->strerror_l_buf;
     }
 
   es = &__mach_error_systems[system];
 
   if (sub >= es->max_sub)
-    return (char *) translate (es->bad_sub, loc);
-
-  if (code >= es->subsystem[sub].max_code)
+    err = (char *) translate (es->bad_sub, loc);
+  else if (code >= es->subsystem[sub].max_code)
     {
       struct tls_internal_t *tls_internal = __glibc_tls_internal ();
       free (tls_internal->strerror_l_buf);
@@ -79,10 +82,13 @@ __strerror_l (int errnum, locale_t loc)
 		      errnum) == -1)
 	tls_internal->strerror_l_buf = NULL;
 
-      return tls_internal->strerror_l_buf;
+      err = tls_internal->strerror_l_buf;
     }
+  else
+    err = (char *) translate (es->subsystem[sub].codes[code], loc);
 
-  return (char *) translate (es->subsystem[sub].codes[code], loc);
+  __set_errno (saved_errno);
+  return err;
 }
 weak_alias (__strerror_l, strerror_l)
 libc_hidden_def (__strerror_l)
