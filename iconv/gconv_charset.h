@@ -19,9 +19,68 @@
 
 #include <ctype.h>
 #include <locale.h>
+#include <stdbool.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+#include "gconv_int.h"
 
 
-static void
+/* An iconv encoding is in the form of a triplet, with parts separated by
+   a '/' character.  The first part is the standard name, the second part is
+   the character set, and the third part is the error handler.  If the first
+   part is sufficient to identify both the standard and the character set
+   then the second part can be empty e.g. UTF-8//.  If the first part is not
+   sufficient to identify both the standard and the character set then the
+   second part is required e.g. ISO-10646/UTF8/.  If neither the first or
+   second parts are provided e.g. //, then the current locale is used.
+   The actual values used in the first and second parts are not entirely
+   relevant to the implementation.  The values themselves are used in a hash
+   table to lookup modules and so the naming convention of the first two parts
+   is somewhat arbitrary and only helps locate the entries in the cache.
+   The third part is the error handler and is comprised of a ',' or '/'
+   separated list of suffixes.  Currently, we support "TRANSLIT" for
+   transliteration and "IGNORE" for ignoring conversion errors due to
+   unrecognized input characters.  */
+#define GCONV_TRIPLE_SEPARATOR "/"
+#define GCONV_SUFFIX_SEPARATOR ","
+#define GCONV_TRANSLIT_SUFFIX "TRANSLIT"
+#define GCONV_IGNORE_ERRORS_SUFFIX "IGNORE"
+
+
+/* This function accepts the charset names of the source and destination of the
+   conversion and populates *conv_spec with an equivalent conversion
+   specification that may later be used by __gconv_open.  The charset names
+   might contain options in the form of suffixes that alter the conversion,
+   e.g. "ISO-10646/UTF-8/TRANSLIT".  It processes the charset names, ignoring
+   and truncating any suffix options in fromcode, and processing and truncating
+   any suffix options in tocode.  Supported suffix options ("TRANSLIT" or
+   "IGNORE") when found in tocode lead to the corresponding flag in *conv_spec
+   to be set to true.  Unrecognized suffix options are silently discarded.  If
+   the function succeeds, it returns conv_spec back to the caller.  It returns
+   NULL upon failure.  */
+struct gconv_spec *
+__gconv_create_spec (struct gconv_spec *conv_spec, const char *fromcode,
+                     const char *tocode);
+libc_hidden_proto (__gconv_create_spec)
+
+
+/* This function frees all heap memory allocated by __gconv_create_spec.  */
+static void __attribute__ ((unused))
+gconv_destroy_spec (struct gconv_spec *conv_spec)
+{
+  free (conv_spec->fromcode);
+  free (conv_spec->tocode);
+  return;
+}
+
+
+/* This function copies in-order, characters from the source 's' that are
+   either alpha-numeric or one in one of these: "_-.,:/" - into the destination
+   'wp' while dropping all other characters.  In the process, it converts all
+   alphabetical characters to upper case.  It then appends up to two '/'
+   characters so that the total number of '/'es in the destination is 2.  */
+static inline void __attribute__ ((unused, always_inline))
 strip (char *wp, const char *s)
 {
   int slash_count = 0;

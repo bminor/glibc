@@ -97,6 +97,8 @@ The following bugs are resolved with this release:
   [18035] Fix pldd hang
   [18830] locale: iconv -c -f ascii with >buffer size worth of input before
     invalid input drops valid char
+  [19519] iconv(1) with -c option hangs on illegal multi-byte sequences
+    (CVE-2016-10228)
   [20419] files with large allocated notes crash in open_verify
   [20568] Fix crash in _IO_wfile_sync
   [21269] i386 sigaction sa_restorer handling is wrong
