@@ -26,7 +26,7 @@ headers		= iconv.h gconv.h
 routines	= iconv_open iconv iconv_close \
 		  gconv_open gconv gconv_close gconv_db gconv_conf \
 		  gconv_builtin gconv_simple gconv_trans gconv_cache
-routines	+= gconv_dl
+routines	+= gconv_dl gconv_charset
 
 vpath %.c ../locale/programs ../intl
 
@@ -44,7 +44,7 @@ CFLAGS-linereader.c += -DNO_TRANSLITERATION
 CFLAGS-simple-hash.c += -I../locale
 
 tests	= tst-iconv1 tst-iconv2 tst-iconv3 tst-iconv4 tst-iconv5 tst-iconv6 \
-	  tst-iconv7 tst-iconv-mt
+	  tst-iconv7 tst-iconv-mt tst-iconv-opt
 
 others		= iconv_prog iconvconfig
 install-others-programs	= $(inst_bindir)/iconv
@@ -61,6 +61,7 @@ include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
 ifeq ($(run-built-tests),yes)
 xtests-special += $(objpfx)test-iconvconfig.out
+tests-special += $(objpfx)tst-iconv_prog.out
 endif
 
 # Make a copy of the file because gconv module names are constructed
@@ -81,6 +82,13 @@ endif
 
 include ../Rules
 
+ifeq ($(run-built-tests),yes)
+LOCALES := en_US.UTF-8
+include ../gen-locales.mk
+
+$(objpfx)tst-iconv-opt.out: $(gen-locales)
+endif
+
 $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
 	$(do-install-program)
 
@@ -94,4 +102,9 @@ $(objpfx)test-iconvconfig.out: /dev/null $(objpfx)iconvconfig
 	 $(make-test-out) --output=$$tmp --nostdlib $(inst_gconvdir); \
 	 cmp $$tmp $(inst_gconvdir)/gconv-modules.cache; \
 	 rm -f $$tmp) > $@; \
+	$(evaluate-test)
+
+$(objpfx)tst-iconv_prog.out: tst-iconv_prog.sh $(objpfx)iconv_prog
+	$(BASH) $< $(common-objdir) '$(test-wrapper-env)' \
+		 '$(run-program-env)' > $@; \
 	$(evaluate-test)

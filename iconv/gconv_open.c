@@ -31,7 +31,7 @@
 
 
 int
-__gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
+__gconv_open (struct gconv_spec *conv_spec, __gconv_t *handle,
 	      int flags)
 {
   struct __gconv_step *steps;
@@ -40,77 +40,38 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
   size_t cnt = 0;
   int res;
   int conv_flags = 0;
-  const char *errhand;
-  const char *ignore;
   bool translit = false;
+  char *tocode, *fromcode;
 
   /* Find out whether any error handling method is specified.  */
-  errhand = strchr (toset, '/');
-  if (errhand != NULL)
-    errhand = strchr (errhand + 1, '/');
-  if (__glibc_likely (errhand != NULL))
-    {
-      if (*++errhand == '\0')
-	errhand = NULL;
-      else
-	{
-	  /* Make copy without the error handling description.  */
-	  char *newtoset = (char *) alloca (errhand - toset + 1);
-	  char *tok;
-	  char *ptr = NULL /* Work around a bogus warning */;
+  translit = conv_spec->translit;
 
-	  newtoset[errhand - toset] = '\0';
-	  toset = memcpy (newtoset, toset, errhand - toset);
+  if (conv_spec->ignore)
+    conv_flags |= __GCONV_IGNORE_ERRORS;
 
-	  /* Find the appropriate transliteration handlers.  */
-	  tok = strdupa (errhand);
-
-	  tok = __strtok_r (tok, ",", &ptr);
-	  while (tok != NULL)
-	    {
-	      if (__strcasecmp_l (tok, "TRANSLIT", _nl_C_locobj_ptr) == 0)
-		translit = true;
-	      else if (__strcasecmp_l (tok, "IGNORE", _nl_C_locobj_ptr) == 0)
-		/* Set the flag to ignore all errors.  */
-		conv_flags |= __GCONV_IGNORE_ERRORS;
-
-	      tok = __strtok_r (NULL, ",", &ptr);
-	    }
-	}
-    }
-
-  /* For the source character set we ignore the error handler specification.
-     XXX Is this really always the best?  */
-  ignore = strchr (fromset, '/');
-  if (ignore != NULL && (ignore = strchr (ignore + 1, '/')) != NULL
-      && *++ignore != '\0')
-    {
-      char *newfromset = (char *) alloca (ignore - fromset + 1);
-
-      newfromset[ignore - fromset] = '\0';
-      fromset = memcpy (newfromset, fromset, ignore - fromset);
-    }
+  tocode = conv_spec->tocode;
+  fromcode = conv_spec->fromcode;
 
   /* If the string is empty define this to mean the charset of the
      currently selected locale.  */
-  if (strcmp (toset, "//") == 0)
+  if (strcmp (tocode, "//") == 0)
     {
       const char *codeset = _NL_CURRENT (LC_CTYPE, CODESET);
       size_t len = strlen (codeset);
       char *dest;
-      toset = dest = (char *) alloca (len + 3);
+      tocode = dest = (char *) alloca (len + 3);
       memcpy (__mempcpy (dest, codeset, len), "//", 3);
     }
-  if (strcmp (fromset, "//") == 0)
+  if (strcmp (fromcode, "//") == 0)
     {
       const char *codeset = _NL_CURRENT (LC_CTYPE, CODESET);
       size_t len = strlen (codeset);
       char *dest;
-      fromset = dest = (char *) alloca (len + 3);
+      fromcode = dest = (char *) alloca (len + 3);
       memcpy (__mempcpy (dest, codeset, len), "//", 3);
     }
 
-  res = __gconv_find_transform (toset, fromset, &steps, &nsteps, flags);
+  res = __gconv_find_transform (tocode, fromcode, &steps, &nsteps, flags);
   if (res == __GCONV_OK)
     {
       /* Allocate room for handle.  */
@@ -209,3 +170,4 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
   *handle = result;
   return res;
 }
+libc_hidden_def (__gconv_open)

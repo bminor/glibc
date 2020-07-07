@@ -39,6 +39,7 @@
 #include <gconv_int.h>
 #include "iconv_prog.h"
 #include "iconvconfig.h"
+#include "gconv_charset.h"
 
 /* Get libc version number.  */
 #include "../version.h"
@@ -118,8 +119,7 @@ main (int argc, char *argv[])
 {
   int status = EXIT_SUCCESS;
   int remaining;
-  iconv_t cd;
-  const char *orig_to_code;
+  __gconv_t cd;
   struct charmap_t *from_charmap = NULL;
   struct charmap_t *to_charmap = NULL;
 
@@ -139,39 +139,6 @@ main (int argc, char *argv[])
       exit (EXIT_SUCCESS);
     }
 
-  /* If we have to ignore errors make sure we use the appropriate name for
-     the to-character-set.  */
-  orig_to_code = to_code;
-  if (omit_invalid)
-    {
-      const char *errhand = strchrnul (to_code, '/');
-      int nslash = 2;
-      char *newp;
-      char *cp;
-
-      if (*errhand == '/')
-	{
-	  --nslash;
-	  errhand = strchrnul (errhand + 1, '/');
-
-	  if (*errhand == '/')
-	    {
-	      --nslash;
-	      errhand = strchr (errhand, '\0');
-	    }
-	}
-
-      newp = (char *) alloca (errhand - to_code + nslash + 7 + 1);
-      cp = mempcpy (newp, to_code, errhand - to_code);
-      while (nslash-- > 0)
-	*cp++ = '/';
-      if (cp[-1] != '/')
-	*cp++ = ',';
-      memcpy (cp, "IGNORE", sizeof ("IGNORE"));
-
-      to_code = newp;
-    }
-
   /* POSIX 1003.2b introduces a silly thing: the arguments to -t anf -f
      can be file names of charmaps.  In this case iconv will have to read
      those charmaps and use them to do the conversion.  But there are
@@ -184,10 +151,10 @@ main (int argc, char *argv[])
        file.  */
     from_charmap = charmap_read (from_code, /*0, 1*/1, 0, 0, 0);
 
-  if (strchr (orig_to_code, '/') != NULL)
+  if (strchr (to_code, '/') != NULL)
     /* The to-name might be a charmap file name.  Try reading the
        file.  */
-    to_charmap = charmap_read (orig_to_code, /*0, 1,*/1, 0, 0, 0);
+    to_charmap = charmap_read (to_code, /*0, 1,*/1, 0, 0, 0);
 
 
   /* At this point we have to handle two cases.  The first one is
@@ -201,9 +168,25 @@ main (int argc, char *argv[])
 				 argc, remaining, argv, output_file);
   else
     {
+      struct gconv_spec conv_spec;
+      int res;
+
+      if (__gconv_create_spec (&conv_spec, from_code, to_code) == NULL)
+        {
+          error (EXIT_FAILURE, errno,
+                 _("failed to start conversion processing"));
+          exit (1);
+        }
+
+      if (omit_invalid)
+        conv_spec.ignore = true;
+
       /* Let's see whether we have these coded character sets.  */
-      cd = iconv_open (to_code, from_code);
-      if (cd == (iconv_t) -1)
+      res = __gconv_open (&conv_spec, &cd, 0);
+
+      gconv_destroy_spec (&conv_spec);
+
+      if (res != __GCONV_OK)
 	{
 	  if (errno == EINVAL)
 	    {
@@ -221,7 +204,7 @@ main (int argc, char *argv[])
 	      const char *from_pretty =
 		(from_code[0] ? from_code : nl_langinfo (CODESET));
 	      const char *to_pretty =
-		(orig_to_code[0] ? orig_to_code : nl_langinfo (CODESET));
+		(to_code[0] ? to_code : nl_langinfo (CODESET));
 
 	      if (from_wrong)
 		{
