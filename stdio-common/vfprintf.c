@@ -42,10 +42,6 @@
 
 #include <libioP.h>
 
-/* In some cases we need extra space for all the output which is not
-   counted in the width of the string. We assume 32 characters is
-   enough.  */
-#define EXTSIZ		32
 #define ARGCHECK(S, Format) \
   do									      \
     {									      \
@@ -1295,7 +1291,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
   /* Buffer intermediate results.  */
   CHAR_T work_buffer[WORK_BUFFER_SIZE];
-  CHAR_T *workstart = NULL;
   CHAR_T *workend;
 
   /* We have to save the original argument pointer.  */
@@ -1404,7 +1399,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       UCHAR_T pad = L_(' ');/* Padding character.  */
       CHAR_T spec;
 
-      workstart = NULL;
       workend = work_buffer + WORK_BUFFER_SIZE;
 
       /* Get current character in format string.  */
@@ -1496,31 +1490,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    pad = L_(' ');
 	    left = 1;
 	  }
-
-	if (__glibc_unlikely (width >= INT_MAX / sizeof (CHAR_T) - EXTSIZ))
-	  {
-	    __set_errno (EOVERFLOW);
-	    done = -1;
-	    goto all_done;
-	  }
-
-	if (width >= WORK_BUFFER_SIZE - EXTSIZ)
-	  {
-	    /* We have to use a special buffer.  */
-	    size_t needed = ((size_t) width + EXTSIZ) * sizeof (CHAR_T);
-	    if (__libc_use_alloca (needed))
-	      workend = (CHAR_T *) alloca (needed) + width + EXTSIZ;
-	    else
-	      {
-		workstart = (CHAR_T *) malloc (needed);
-		if (workstart == NULL)
-		  {
-		    done = -1;
-		    goto all_done;
-		  }
-		workend = workstart + width + EXTSIZ;
-	      }
-	  }
       }
       JUMP (*f, step1_jumps);
 
@@ -1528,31 +1497,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (width):
       width = read_int (&f);
 
-      if (__glibc_unlikely (width == -1
-			    || width >= INT_MAX / sizeof (CHAR_T) - EXTSIZ))
+      if (__glibc_unlikely (width == -1))
 	{
 	  __set_errno (EOVERFLOW);
 	  done = -1;
 	  goto all_done;
 	}
 
-      if (width >= WORK_BUFFER_SIZE - EXTSIZ)
-	{
-	  /* We have to use a special buffer.  */
-	  size_t needed = ((size_t) width + EXTSIZ) * sizeof (CHAR_T);
-	  if (__libc_use_alloca (needed))
-	    workend = (CHAR_T *) alloca (needed) + width + EXTSIZ;
-	  else
-	    {
-	      workstart = (CHAR_T *) malloc (needed);
-	      if (workstart == NULL)
-		{
-		  done = -1;
-		  goto all_done;
-		}
-	      workend = workstart + width + EXTSIZ;
-	    }
-	}
       if (*f == L_('$'))
 	/* Oh, oh.  The argument comes from a positional parameter.  */
 	goto do_positional;
@@ -1601,34 +1552,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	}
       else
 	prec = 0;
-      if (prec > width && prec > WORK_BUFFER_SIZE - EXTSIZ)
-	{
-	  /* Deallocate any previously allocated buffer because it is
-	     too small.  */
-	  if (__glibc_unlikely (workstart != NULL))
-	    free (workstart);
-	  workstart = NULL;
-	  if (__glibc_unlikely (prec >= INT_MAX / sizeof (CHAR_T) - EXTSIZ))
-	    {
-	      __set_errno (EOVERFLOW);
-	      done = -1;
-	      goto all_done;
-	    }
-	  size_t needed = ((size_t) prec + EXTSIZ) * sizeof (CHAR_T);
-
-	  if (__libc_use_alloca (needed))
-	    workend = (CHAR_T *) alloca (needed) + prec + EXTSIZ;
-	  else
-	    {
-	      workstart = (CHAR_T *) malloc (needed);
-	      if (workstart == NULL)
-		{
-		  done = -1;
-		  goto all_done;
-		}
-	      workend = workstart + prec + EXTSIZ;
-	    }
-	}
       JUMP (*f, step2_jumps);
 
       /* Process 'h' modifier.  There might another 'h' following.  */
@@ -1692,10 +1615,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       /* The format is correctly handled.  */
       ++nspecs_done;
 
-      if (__glibc_unlikely (workstart != NULL))
-	free (workstart);
-      workstart = NULL;
-
       /* Look for next format specifier.  */
 #ifdef COMPILE_WPRINTF
       f = __find_specwc ((end_of_spec = ++f));
@@ -1713,18 +1632,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
   /* Hand off processing for positional parameters.  */
 do_positional:
-  if (__glibc_unlikely (workstart != NULL))
-    {
-      free (workstart);
-      workstart = NULL;
-    }
   done = printf_positional (s, format, readonly_format, ap, &ap_save,
 			    done, nspecs_done, lead_str_end, work_buffer,
 			    save_errno, grouping, thousands_sep);
 
  all_done:
-  if (__glibc_unlikely (workstart != NULL))
-    free (workstart);
   /* Unlock the stream.  */
   _IO_funlockfile (s);
   _IO_cleanup_region_end (0);
@@ -1766,8 +1678,6 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
 
   /* Just a counter.  */
   size_t cnt;
-
-  CHAR_T *workstart = NULL;
 
   if (grouping == (const char *) -1)
     {
@@ -1957,7 +1867,6 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
       char pad = specs[nspecs_done].info.pad;
       CHAR_T spec = specs[nspecs_done].info.spec;
 
-      workstart = NULL;
       CHAR_T *workend = work_buffer + WORK_BUFFER_SIZE;
 
       /* Fill in last information.  */
@@ -1989,27 +1898,6 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
 	    specs[nspecs_done].info.prec = -1;
 
 	  prec = specs[nspecs_done].info.prec;
-	}
-
-      /* Maybe the buffer is too small.  */
-      if (MAX (prec, width) + EXTSIZ > WORK_BUFFER_SIZE)
-	{
-	  if (__libc_use_alloca ((MAX (prec, width) + EXTSIZ)
-				 * sizeof (CHAR_T)))
-	    workend = ((CHAR_T *) alloca ((MAX (prec, width) + EXTSIZ)
-					  * sizeof (CHAR_T))
-		       + (MAX (prec, width) + EXTSIZ));
-	  else
-	    {
-	      workstart = (CHAR_T *) malloc ((MAX (prec, width) + EXTSIZ)
-					     * sizeof (CHAR_T));
-	      if (workstart == NULL)
-		{
-		  done = -1;
-		  goto all_done;
-		}
-	      workend = workstart + (MAX (prec, width) + EXTSIZ);
-	    }
 	}
 
       /* Process format specifiers.  */
@@ -2085,18 +1973,12 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
 	  break;
 	}
 
-      if (__glibc_unlikely (workstart != NULL))
-	free (workstart);
-      workstart = NULL;
-
       /* Write the following constant string.  */
       outstring (specs[nspecs_done].end_of_fmt,
 		 specs[nspecs_done].next_fmt
 		 - specs[nspecs_done].end_of_fmt);
     }
  all_done:
-  if (__glibc_unlikely (workstart != NULL))
-    free (workstart);
   scratch_buffer_free (&argsbuf);
   scratch_buffer_free (&specsbuf);
   return done;

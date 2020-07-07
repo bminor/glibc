@@ -64,6 +64,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-scanf-round \
 	 tst-renameat2 \
 	 tst-printf-bz25691 \
+	 tst-vfprintf-width-prec-alloc
 
 test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble
 

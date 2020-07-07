@@ -42,7 +42,7 @@ do_test (void)
 
   ret = fprintf (fp, "%." SN3 "d", 1);
   printf ("ret = %d\n", ret);
-  if (ret != -1 || errno != EOVERFLOW)
+  if (ret != N3)
 	  return 1;
 
   ret = fprintf (fp, "%" SN2 "d%" SN2 "d", 1, 1);
