@@ -9,8 +9,8 @@ Version 2.32
 
 Major new features:
 
-* Unicode 12.1.0 Support: Character encoding, character type info, and
-  transliteration tables are all updated to Unicode 12.1.0, using
+* Unicode 13.0.0 Support: Character encoding, character type info, and
+  transliteration tables are all updated to Unicode 13.0.0, using
   generator scripts contributed by Mike FABIAN (Red Hat).
 
 * New locale added: ckb_IQ (Kurdish/Sorani spoken in Iraq)
