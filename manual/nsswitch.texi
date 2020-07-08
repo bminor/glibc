@@ -3,14 +3,14 @@
 # Name Service Switch configuration file.
 #
 
-passwd:     db files nis
+passwd:     db files
 shadow:     files
-group:      db files nis
+group:      db files
 
-hosts:      files nisplus nis dns
-networks:   nisplus [NOTFOUND=return] files
+hosts:      files dns
+networks:   files
 
-ethers:     nisplus [NOTFOUND=return] db files
-protocols:  nisplus [NOTFOUND=return] db files
-rpc:        nisplus [NOTFOUND=return] db files
-services:   nisplus [NOTFOUND=return] db files
+ethers:     db files
+protocols:  db files
+rpc:        db files
+services:   db files

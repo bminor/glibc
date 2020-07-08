@@ -56,8 +56,6 @@ extern enum nss_status _nss_ ## service ##_initgroups_dyn		   \
 DECLARE_NSS_PROTOTYPES (compat)
 DECLARE_NSS_PROTOTYPES (files)
 DECLARE_NSS_PROTOTYPES (hesiod)
-DECLARE_NSS_PROTOTYPES (nis)
-DECLARE_NSS_PROTOTYPES (nisplus)
 
 #undef DECLARE_NSS_PROTOTYPES
 #endif

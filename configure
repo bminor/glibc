@@ -673,7 +673,6 @@ base_machine
 have_tunables
 build_pt_chown
 build_nscd
-build_obsolete_nsl
 link_obsolete_rpc
 libc_cv_static_nss_crypt
 libc_cv_nss_crypt
@@ -786,7 +785,6 @@ enable_experimental_malloc
 enable_crypt
 enable_nss_crypt
 enable_obsolete_rpc
-enable_obsolete_nsl
 enable_systemtap
 enable_build_nscd
 enable_nscd
@@ -1459,8 +1457,6 @@ Optional Features:
   --enable-nss-crypt      enable libcrypt to use nss
   --enable-obsolete-rpc   build and install the obsolete RPC code for
                           link-time usage
-  --enable-obsolete-nsl   build and install the obsolete libnsl library and
-                          depending NSS modules
   --enable-systemtap      enable systemtap static probe points [default=no]
   --disable-build-nscd    disable building and installing the nscd daemon
   --disable-nscd          library functions will not contact the nscd daemon
@@ -3654,20 +3650,6 @@ if test "$link_obsolete_rpc" = yes; then
 
 fi
 
-# Check whether --enable-obsolete-nsl was given.
-if test "${enable_obsolete_nsl+set}" = set; then :
-  enableval=$enable_obsolete_nsl; build_obsolete_nsl=$enableval
-else
-  build_obsolete_nsl=no
-fi
-
-
-
-if test "$build_obsolete_nsl" = yes; then
-  $as_echo "#define LINK_OBSOLETE_NSL 1" >>confdefs.h
-
-fi
-
 # Check whether --enable-systemtap was given.
 if test "${enable_systemtap+set}" = set; then :
   enableval=$enable_systemtap; systemtap=$enableval
@@ -3785,7 +3767,7 @@ main ()
 {
 
 #ifndef __CET__
-#error no CET compiler support
+# error no CET compiler support
 #endif
   ;
   return 0;

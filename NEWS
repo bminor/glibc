@@ -80,6 +80,16 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
+* Remove configure option --enable-obsolete-nsl.  libnsl is only built
+  as shared library for backward compatibility and the NSS modules "nis"
+  and "nisplus" are not built at all and libnsl's headers aren't
+  installed.  This compatibility is kept only for architectures and ABIs
+  that have been added in or before version 2.28.  Replacement
+  implementations based on TI-RPC, which additionally support IPv6, are
+  available from <https://github.com/thkukuk/>.  This change does not
+  affect the "compat" NSS module, which does not depended on libnsl
+  since 2.27 and thus can be used without NIS.
+
 * The deprecated <sys/sysctl.h> header and the sysctl function have been
   removed.  To support old binaries, the sysctl function continues to
   exist as a compatibility symbol (on those architectures which had it),
@@ -115,11 +125,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   or contents might be overwritten on subsequent calls in the same thread or
   if the thread is terminated.  It makes strerror MT-safe.
 
-* The "files", "nis" and "nisplus" NSS modules no longer supports the
-  "key" database (used for secure RPC).  The contents of the
-  /etc/publickey file will be ignored, regardless of the settings in
-  /etc/nsswitch.conf.  (This method of storing RPC keys only supported
-  the obsolete and insecure AUTH_DES flavor of secure RPC.)
+* The "files" NSS module no longer supports the "key" database (used for
+  secure RPC).  The contents of the /etc/publickey file will be ignored,
+  regardless of the settings in /etc/nsswitch.conf.  (This method of
+  storing RPC keys only supported the obsolete and insecure AUTH_DES
+  flavor of secure RPC.)
 
 Changes to build and runtime requirements:
 

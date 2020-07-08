@@ -22,39 +22,12 @@ subdir	:= nis
 
 include ../Makeconfig
 
-ifndef have-GLIBC_2.28
-
-ifeq ($(build-obsolete-nsl),yes)
-$(error --enabe-obsolete-nsl is not available)
-endif
-
-else
-
-ifeq ($(build-obsolete-nsl),yes)
-headers			:= $(wildcard rpcsvc/*.[hx])
-
-# These are the databases available for the nis (and perhaps later nisplus)
-# service.  This must be a superset of the services in nss.
-databases		= proto service hosts network grp pwd rpc ethers \
-			  spwd netgrp alias
-
-# Specify rules for the nss_* modules.
-services		:= nis nisplus
-endif
+ifdef have-GLIBC_2.28
 
 extra-libs		= libnsl
-ifeq ($(build-obsolete-nsl),yes)
-extra-libs += $(services:%=libnss_%)
-endif
 # These libraries will be built in the `others' pass rather than
 # the `lib' pass, because they depend on libc.so being built already.
 extra-libs-others	= $(extra-libs)
-
-ifeq ($(build-obsolete-nsl),yes)
-# The sources are found in the appropriate subdir.
-subdir-dirs = $(services:%=nss_%)
-vpath %.c $(subdir-dirs)
-endif
 
 libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
 		  nis_subr nis_local_names nis_free nis_file \
@@ -68,17 +41,6 @@ libnsl-routines = yp_xdr ypclnt ypupdate_xdr \
 		  nis_findserv nis_callback nis_clone_dir nis_clone_obj\
 		  nis_clone_res
 
-ifeq ($(build-obsolete-nsl),yes)
-libnsl-routines += nss-default
-libnss_nis-routines	:= $(addprefix nis-,$(databases)) nis-initgroups \
-			   nss-nis
-libnss_nis-inhibit-o	= $(filter-out .os,$(object-suffixes))
-
-libnss_nisplus-routines	:= $(addprefix nisplus-,$(databases)) nisplus-parser \
-			   nss-nisplus nisplus-initgroups
-libnss_nisplus-inhibit-o = $(filter-out .os,$(object-suffixes))
-
-else # not $(build-obsolete-nsl)
 # Pretend that libnsl.so is a linker script, so that the symbolic link
 # is not installed.
 install-lib-ldscripts = libnsl.so
@@ -86,31 +48,18 @@ $(inst_libdir)/libnsl.so:
 # Build only shared libnsl.
 libnsl-inhibit-o = $(filter-out .os,$(object-suffixes))
 
-endif # not $(build-obsolete-nsl)
-
 endif # have-GLIBC_2.28
 
 include ../Rules
 
 
-ifeq ($(build-obsolete-nsl),yes)
-$(objpfx)libnss_nis.so: $(objpfx)libnsl.so$(libnsl.so-version) \
-			$(common-objpfx)nss/libnss_files.so
-$(objpfx)libnss_nisplus.so: $(objpfx)libnsl.so$(libnsl.so-version)
-endif
-
 libnsl-libc = $(common-objpfx)linkobj/libc.so
 # Target-specific variable setting to link objects using deprecated
 # RPC interfaces with the version of libc.so that makes them available
 # for new links:
-$(services:%=$(objpfx)libnss_%.so) $(objpfx)libnsl.so: \
-  libc-for-link = $(libnsl-libc)
+$(objpfx)libnsl.so: libc-for-link = $(libnsl-libc)
 
 
 ifeq ($(build-shared),yes)
 $(others:%=$(objpfx)%): $(objpfx)libnsl.so$(libnsl.so-version)
-else
-ifeq ($(build-obsolete-nsl),yes)
-$(others:%=$(objpfx)%): $(objpfx)libnsl.a
-endif
 endif

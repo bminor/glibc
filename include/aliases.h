@@ -33,8 +33,6 @@ extern enum nss_status _nss_ ## service ## _getaliasbyname_r		     \
 
 
 DECLARE_NSS_PROTOTYPES (files)
-DECLARE_NSS_PROTOTYPES (nis)
-DECLARE_NSS_PROTOTYPES (nisplus)
 #undef DECLARE_NSS_PROTOTYPES
 
 # endif /* !_ISOMAC */

@@ -36,8 +36,6 @@ extern enum nss_status _nss_ ## service ## _getntohost_r		      \
 			char *buffer, size_t buflen, int *errnop);
 
 DECLARE_NSS_PROTOTYPES (files)
-DECLARE_NSS_PROTOTYPES (nis)
-DECLARE_NSS_PROTOTYPES (nisplus)
 
 #undef DECLARE_NSS_PROTOTYPES
 

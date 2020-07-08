@@ -257,16 +257,6 @@ This frontend allows users to specify tunables as a colon-separated list in a
 single environment variable @env{GLIBC_TUNABLES}.
 @end table
 
-@item --enable-obsolete-nsl
-By default, libnsl is only built as shared library for backward
-compatibility and the NSS modules libnss_compat, libnss_nis and
-libnss_nisplus are not built at all.
-Use this option to enable libnsl with all depending NSS modules and
-header files.
-For architectures and ABIs that have been added after version 2.28 of
-@theglibc{} this option is not available, and the libnsl compatibility
-library is not built.
-
 @item --disable-crypt
 Do not install the passphrase-hashing library @file{libcrypt} or the
 header file @file{crypt.h}.  @file{unistd.h} will still declare the

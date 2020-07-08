@@ -45,8 +45,6 @@ extern enum nss_status _nss_ ## service ## _getrpcbynumber_r		      \
 
 
 DECLARE_NSS_PROTOTYPES (files)
-DECLARE_NSS_PROTOTYPES (nis)
-DECLARE_NSS_PROTOTYPES (nisplus)
 
 #undef DECLARE_NSS_PROTOTYPES
 

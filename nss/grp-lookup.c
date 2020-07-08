@@ -19,10 +19,6 @@
 #include <config.h>
 
 #define DATABASE_NAME group
-#ifdef LINK_OBSOLETE_NSL
-# define DEFAULT_CONFIG "compat [NOTFOUND=return] files"
-#else
-# define DEFAULT_CONFIG "files"
-#endif
+#define DEFAULT_CONFIG "files"
 
 #include "XXX-lookup.c"

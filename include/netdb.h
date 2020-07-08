@@ -286,14 +286,8 @@ DECLARE_NSS_PROTOTYPES (compat)
 DECLARE_NSS_PROTOTYPES (dns)
 DECLARE_NSS_PROTOTYPES (files)
 DECLARE_NSS_PROTOTYPES (hesiod)
-DECLARE_NSS_PROTOTYPES (nis)
-DECLARE_NSS_PROTOTYPES (nisplus)
 
 #undef DECLARE_NSS_PROTOTYPES
-
-libnss_nis_hidden_proto (_nss_nis_endhostent)
-libnss_nis_hidden_proto (_nss_nis_endnetent)
-libnss_nis_hidden_proto (_nss_nis_endspent)
 
 #endif
 

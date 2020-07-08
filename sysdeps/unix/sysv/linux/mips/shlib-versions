@@ -15,8 +15,6 @@ libresolv=2		GLIBC_2.0 GLIBC_2.2
 libnss_files=2		GLIBC_2.0 GLIBC_2.2
 libnss_dns=2		GLIBC_2.0 GLIBC_2.2
 libnss_compat=2		GLIBC_2.0 GLIBC_2.2
-libnss_nis=2		GLIBC_2.0 GLIBC_2.2
-libnss_nisplus=2	GLIBC_2.0 GLIBC_2.2
 libnss_ldap=2		GLIBC_2.0 GLIBC_2.2
 libnss_hesiod=2		GLIBC_2.0 GLIBC_2.2
 

@@ -97,7 +97,6 @@ build-static-nss = @static_nss@
 cross-compiling = @cross_compiling@
 force-install = @force_install@
 link-obsolete-rpc = @link_obsolete_rpc@
-build-obsolete-nsl = @build_obsolete_nsl@
 build-crypt = @build_crypt@
 build-nscd = @build_nscd@
 use-nscd = @use_nscd@

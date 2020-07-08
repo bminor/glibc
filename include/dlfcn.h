@@ -39,10 +39,11 @@ extern char **__libc_argv attribute_hidden;
       __libgcc_s_init because unwinding is already in progress, so libgcc_s.so
       has already been loaded if its unwinder is used (Bug 22636).
    2. It allows us to provide robust fallback code at dlopen time for
-      incorrectly configured systems that mix old libnss_* modules with newly
-      installed libraries e.g. old libnss_nis.so.2 with new libnsl.so.1.  Using
-      RTLD_LAZY here causes a failure at the time the symbol is called and at
-      that point it is much harder to safely return an error (Bug 22766).
+      incorrectly configured systems that mix old libnss_* modules
+      with newly installed libraries e.g. old libnss_dns.so.2 with new
+      libresolv.so.2.  Using RTLD_LAZY here causes a failure at the
+      time the symbol is called and at that point it is much harder to
+      safely return an error (Bug 22766).
 
    The use of RTLD_NOW also impacts gconv module loading, backtracing
    (where the unwinder form libgcc_s.so is used), and IDNA functions
