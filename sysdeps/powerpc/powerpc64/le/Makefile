@@ -38,6 +38,14 @@ if [ ! -z "$(filter libm.so libc.so,$(notdir $1))" ]; then \
 fi
 endef
 
+# Ensure a .gnu.attributes section is present by building an ibm128 file with
+# -mgnu-attribute in both libm and libc shared libraries.  Prior to GCC 11 this
+# section was implicitly included via static libgcc ibm128 routines.
+ifeq ($(subdir),math)
+$(objpfx)m_ldexpl.os: CFLAGS += -mgnu-attribute
+$(objpfx)s_ldexpl.os: CFLAGS += -mgnu-attribute
+endif
+
 endif # ifeq ($(build-shared),yes)
 endif # ifeq ($(ibm128-fcts),yes)
 
