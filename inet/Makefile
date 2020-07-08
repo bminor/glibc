@@ -36,16 +36,19 @@ routines := htonl htons		\
 	    getnetbynm_r \
 	    getproto getproto_r getprtent getprtent_r getprtname getprtname_r \
 	    getsrvbynm getsrvbynm_r getsrvbypt getsrvbypt_r getservent \
-	    getservent_r	\
+	    getservent_r getrpcent getrpcbyname getrpcbynumber \
+	    getrpcent_r getrpcbyname_r getrpcbynumber_r \
 	    ether_aton ether_aton_r ether_hton ether_line \
 	    ether_ntoa ether_ntoa_r ether_ntoh \
-	    rcmd rexec ruserpass \
+	    rcmd rexec ruserpass bindresvport \
 	    getnetgrent_r getnetgrent \
 	    getaliasent_r getaliasent getaliasname getaliasname_r \
 	    in6_addr getnameinfo if_index ifaddrs inet6_option \
 	    getipv4sourcefilter setipv4sourcefilter \
 	    getsourcefilter setsourcefilter inet6_opt inet6_rth \
 	    inet6_scopeid_pton deadline idna idna_name_classify
+
+install-others = $(inst_sysconfdir)/rpc
 
 aux := check_pf check_native ifreq
 
@@ -107,6 +110,10 @@ CFLAGS-tst-checks-posix.c += -std=c99
 CFLAGS-tst-sockaddr.c += -fno-strict-aliasing
 
 endif
+
+# Install the rpc database file.
+$(inst_sysconfdir)/rpc: etc.rpc $(+force)
+	$(do-install)
 
 ifeq ($(build-static-nss),yes)
 CFLAGS += -DSTATIC_NSS

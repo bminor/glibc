@@ -32,7 +32,6 @@ include ../Makeconfig
 # file name limits:
 #
 #	authunix_prot.c -> authuxprot.c
-#	bindresvport.c -> bindrsvprt.c
 #	clnt_generic.c -> clnt_gen.c
 #	clnt_perror.c -> clnt_perr.c
 #	clnt_simple.c -> clnt_simp.c
@@ -54,7 +53,6 @@ headers-sunrpc = $(addprefix rpc/,auth.h auth_unix.h clnt.h pmap_clnt.h \
 				  key_prot.h) \
 		       $(rpcsvc:%=rpcsvc/%) rpcsvc/bootparam.h
 headers = rpc/netdb.h
-install-others = $(inst_sysconfdir)/rpc
 generated += $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) $(rpcsvc:%.x=x%.stmp) \
 	     $(rpcsvc:%.x=rpcsvc/%.stmp) rpcgen
 generated-dirs += rpcsvc
@@ -70,13 +68,11 @@ need-export-routines := auth_des auth_unix clnt_gen clnt_perr clnt_tcp \
 			xdr_intXX_t xdr_mem xdr_ref xdr_sizeof xdr_stdio \
 			svc_run
 
-routines := auth_none authuxprot bindrsvprt clnt_raw clnt_simp \
+routines := auth_none authuxprot clnt_raw clnt_simp \
 	    rpc_dtable getrpcport pmap_clnt pm_getmaps pmap_prot pmap_prot2 \
 	    pmap_rmt rpc_prot rpc_common rpc_cmsg svc_auth svc_authux svc_raw \
 	    svc_simple xdr_float xdr_rec publickey authdes_prot \
 	    des_crypt des_impl des_soft key_prot openchild rtime svcauth_des \
-	    getrpcent getrpcbyname getrpcbynumber \
-	    getrpcent_r getrpcbyname_r getrpcbynumber_r \
 	    clnt_unix svc_unix create_xid $(need-export-routines) \
 	    rpc_gethostbyname
 ifneq ($(link-obsolete-rpc),yes)
@@ -188,9 +184,6 @@ include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 # binary be the second dependency listed in each rule using rpcgen-cmd.
 rpcgen-cmd = CPP='$(CC) -E -x c-header' $(built-program-file) -Y ../scripts
 
-# Install the rpc data base file.
-$(inst_sysconfdir)/rpc: etc.rpc $(+force)
-	$(do-install)
 
 # Generate the rpcsvc headers with rpcgen.
 # We use a stamp file to avoid unnessary recompilation each time rpcgen is
