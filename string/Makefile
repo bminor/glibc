@@ -63,7 +63,9 @@ tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strtok_r bug-strcoll2 tst-cmp tst-xbzero-opt	\
 		   test-endian-types test-endian-file-scope		\
 		   test-endian-sign-conversion tst-memmove-overflow	\
-		   tst-strsignal tst-strerror test-sig_np
+		   test-sig_np
+
+tests-container += tst-strsignal tst-strerror
 
 # This test allocates a lot of memory and can run for a long time.
 xtests = tst-strcoll-overflow
