@@ -22,6 +22,9 @@
 #include <sysdeps/unix/sysv/linux/generic/sysdep.h>
 #include <tls.h>
 
+#undef SYS_ify
+#define SYS_ify(syscall_name)	__NR_##syscall_name
+
 #ifdef __ASSEMBLER__
 
 # include <sys/asm.h>
@@ -107,19 +110,7 @@
 # undef ret_ERRVAL
 # define ret_ERRVAL ret
 
-#endif /* __ASSEMBLER__ */
-
-/* In order to get __set_errno() definition in INLINE_SYSCALL.  */
-#ifndef __ASSEMBLER__
-# include <errno.h>
-#endif
-
-#include <sysdeps/unix/sysdep.h>
-
-#undef SYS_ify
-#define SYS_ify(syscall_name)	__NR_##syscall_name
-
-#ifndef __ASSEMBLER__
+#else /* !__ASSEMBLER__ */
 
 # define VDSO_NAME  "LINUX_4.15"
 # define VDSO_HASH  182943605
