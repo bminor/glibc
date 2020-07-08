@@ -20,7 +20,7 @@
 #include <signal.h>
 #include <array_length.h>
 
-const char *const
+const char *
 sigabbrev_np (int signum)
 {
   const char *abbrev = NULL;

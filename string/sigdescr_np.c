@@ -20,7 +20,7 @@
 #include <signal.h>
 #include <array_length.h>
 
-const char *const
+const char *
 __sigdescr_np (int signum)
 {
   const char *descr = NULL;
