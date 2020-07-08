@@ -117,8 +117,11 @@ t_fmt   "%r"
 % Appropriate AM/PM time representation (%r)
 t_fmt_ampm "%I:%M:%S %p"
 %
-% Appropriate date and time representation for date(1)
-date_fmt "%a %d %b %Y %r %Z"
+% Appropriate date and time representation for date(1).  This is
+% different from d_t_fmt for historical reasons and has been different
+% since 2000 when date_fmt was added as a GNU extension.  At the end
+% of 2018 it was adjusted to use 12H time (bug 24046) instead of 24H.
+date_fmt "%a %b %e %r %Z %Y"
 %
 % Strings for AM/PM
 %
