@@ -85,7 +85,7 @@ ENTRY(memmove)
 		add	r1, r1, r2
 		add	r0, r0, r2
 		subs	r2, r2, #4
-		blt	8f
+		blo	8f
 		ands	ip, r0, #3
 	PLD(	pld	[r1, #-4]		)
 		bne	9f
@@ -99,7 +99,7 @@ ENTRY(memmove)
 		cfi_rel_offset (r6, 4)
 		cfi_rel_offset (r7, 8)
 		cfi_rel_offset (r8, 12)
-		blt	5f
+		blo     5f
 
 	CALGN(	ands	ip, r1, #31		)
 	CALGN(	sbcsne	r4, ip, r2		)  @ C is always set here
@@ -114,9 +114,9 @@ ENTRY(memmove)
 #endif
 
 	PLD(	pld	[r1, #-4]		)
-2:	PLD(	subs	r2, r2, #96		)
+2:	PLD(	cmp	r2, #96			)
 	PLD(	pld	[r1, #-32]		)
-	PLD(	blt	4f			)
+	PLD(    blo     4f                      )
 	PLD(	pld	[r1, #-64]		)
 	PLD(	pld	[r1, #-96]		)
 
@@ -124,9 +124,7 @@ ENTRY(memmove)
 4:		ldmdb	r1!, {r3, r4, r5, r6, r7, r8, ip, lr}
 		subs	r2, r2, #32
 		stmdb	r0!, {r3, r4, r5, r6, r7, r8, ip, lr}
-		bge	3b
-	PLD(	cmn	r2, #96			)
-	PLD(	bge	4b			)
+		bhs     3b
 
 5:		ands	ip, r2, #28
 		rsb	ip, ip, #32
@@ -237,7 +235,7 @@ ENTRY(memmove)
 		strbge	r4, [r0, #-1]!
 		subs	r2, r2, ip
 		strb	lr, [r0, #-1]!
-		blt	8b
+		blo	8b
 		ands	ip, r1, #3
 		beq	1b
 
@@ -251,7 +249,7 @@ ENTRY(memmove)
 		.macro	backward_copy_shift push pull
 
 		subs	r2, r2, #28
-		blt	14f
+		blo	14f
 
 	CALGN(	ands	ip, r1, #31		)
 	CALGN(	rsb	ip, ip, #32		)
@@ -268,9 +266,9 @@ ENTRY(memmove)
 		cfi_rel_offset (r10, 16)
 
 	PLD(	pld	[r1, #-4]		)
-	PLD(	subs	r2, r2, #96		)
+	PLD(	cmp	r2, #96			)
 	PLD(	pld	[r1, #-32]		)
-	PLD(	blt	13f			)
+	PLD(	blo	13f			)
 	PLD(	pld	[r1, #-64]		)
 	PLD(	pld	[r1, #-96]		)
 
@@ -295,9 +293,7 @@ ENTRY(memmove)
 		mov     r4, r4, PUSH #\push
 		orr     r4, r4, r3, PULL #\pull
 		stmdb   r0!, {r4 - r8, r10, ip, lr}
-		bge	12b
-	PLD(	cmn	r2, #96			)
-	PLD(	bge	13b			)
+		bhs	12b
 
 		pop	{r5 - r8, r10}
 		cfi_adjust_cfa_offset (-20)
