@@ -19,6 +19,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <errno.h>
 #include <locale.h>
 #include <array_length.h>
@@ -29,6 +30,8 @@
 static int
 do_test (void)
 {
+  unsetenv ("LANGUAGE");
+
   xsetlocale (LC_ALL, "C");
 
   TEST_COMPARE_STRING (strerror (EINVAL), "Invalid argument");

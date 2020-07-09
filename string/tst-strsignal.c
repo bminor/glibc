@@ -20,6 +20,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <signal.h>
+#include <stdlib.h>
 #include <locale.h>
 #include <array_length.h>
 
@@ -29,6 +30,8 @@
 static int
 do_test (void)
 {
+  unsetenv ("LANGUAGE");
+
   xsetlocale (LC_ALL, "C");
 
   TEST_COMPARE_STRING (strsignal (SIGINT),     "Interrupt");
