@@ -72,7 +72,10 @@
       if (putc (outc, fp) == EOF)					      \
 	{								      \
 	  if (buffer_malloced)						      \
-	    free (wbuffer);						      \
+	    {								      \
+	      free (buffer);						      \
+	      free (wbuffer);						      \
+	    }								      \
 	  return -1;							      \
 	}								      \
       ++done;								      \
@@ -87,7 +90,10 @@
 	  if (PUT (fp, wide ? (const char *) wptr : ptr, outlen) != outlen)   \
 	    {								      \
 	      if (buffer_malloced)					      \
-		free (wbuffer);						      \
+		{							      \
+		  free (buffer);					      \
+		  free (wbuffer);					      \
+		}							      \
 	      return -1;						      \
 	    }								      \
 	  ptr += outlen;						      \
@@ -110,7 +116,10 @@
       if (PAD (fp, ch, len) != len)					      \
 	{								      \
 	  if (buffer_malloced)						      \
-	    free (wbuffer);						      \
+	    {								      \
+	      free (buffer);						      \
+	      free (wbuffer);						      \
+	    }								      \
 	  return -1;							      \
 	}								      \
       done += len;							      \
@@ -259,7 +268,8 @@ __printf_fp_l (FILE *fp, locale_t loc,
 
   /* Buffer in which we produce the output.  */
   wchar_t *wbuffer = NULL;
-  /* Flag whether wbuffer is malloc'ed or not.  */
+  char *buffer = NULL;
+  /* Flag whether wbuffer and buffer are malloc'ed or not.  */
   int buffer_malloced = 0;
 
   p.expsign = 0;
@@ -1172,7 +1182,6 @@ __printf_fp_l (FILE *fp, locale_t loc,
       PADN ('0', width);
 
     {
-      char *buffer = NULL;
       char *buffer_end = NULL;
       char *cp = NULL;
       char *tmpptr;
@@ -1252,6 +1261,7 @@ __printf_fp_l (FILE *fp, locale_t loc,
 	  free (wbuffer);
 	  /* Avoid a double free if the subsequent PADN encounters an
 	     I/O error.  */
+	  buffer = NULL;
 	  wbuffer = NULL;
 	}
     }
