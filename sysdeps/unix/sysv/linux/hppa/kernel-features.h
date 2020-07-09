@@ -18,11 +18,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 
-/* Support for the utimes syscall was added in 3.14.  */
-#if __LINUX_KERNEL_VERSION >= 0x030e00
-# define __ASSUME_UTIMES		1
-#endif
-
 #include_next <kernel-features.h>
 
 #define __ASSUME_RECV_SYSCALL   1
