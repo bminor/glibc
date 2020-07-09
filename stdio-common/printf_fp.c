@@ -1250,6 +1250,9 @@ __printf_fp_l (FILE *fp, locale_t loc,
 	{
 	  free (buffer);
 	  free (wbuffer);
+	  /* Avoid a double free if the subsequent PADN encounters an
+	     I/O error.  */
+	  wbuffer = NULL;
 	}
     }
 
