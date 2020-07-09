@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <ldconfig.h>
+#include <assert.h>
 
 /* For now we only support the natural XLEN ABI length on all targets, so the
    only bits that need to go into ld.so.cache are the FLEG ABI length.  */
@@ -34,6 +35,8 @@
    RISC-V, libraries can be found in paths ending in:
      - /lib64/lp64d
      - /lib64/lp64
+     - /lib32/ilp32d
+     - /lib32/ilp32
      - /lib (only ld.so)
    so this will add all of those paths.
 
@@ -48,27 +51,46 @@
 #define add_system_dir(dir) 						\
   do							    		\
     {									\
+      static const char* lib_dirs[] = {					\
+	"/lib64/lp64d",							\
+	"/lib64/lp64",							\
+	"/lib32/ilp32d",						\
+	"/lib32/ilp32",							\
+	NULL,								\
+      };								\
+      const size_t lib_len = sizeof ("/lib") - 1;			\
       size_t len = strlen (dir);					\
-      char path[len + 9];						\
+      char path[len + 10];						\
+      const char **ptr;							\
+									\
       memcpy (path, dir, len + 1);					\
-      if (len >= 12 && ! memcmp(path + len - 12, "/lib64/lp64d", 12))	\
+									\
+      for (ptr = lib_dirs; *ptr != NULL; ptr++)				\
 	{								\
-	  len -= 8;							\
-	  path[len] = '\0';						\
-	}								\
-      if (len >= 11 && ! memcmp(path + len - 11, "/lib64/lp64", 11))	\
-	{								\
-	  len -= 7;							\
-	  path[len] = '\0';						\
+	  const char *lib_dir = *ptr;					\
+	  size_t dir_len = strlen (lib_dir);				\
+									\
+	  if (len >= dir_len						\
+	      && !memcmp (path + len - dir_len, lib_dir, dir_len))	\
+	    {								\
+	      len -= dir_len - lib_len;					\
+	      path[len] = '\0';						\
+	      break;							\
+	    }								\
 	}								\
       add_dir (path);							\
-      if (len >= 4 && ! memcmp(path + len - 4, "/lib", 4))		\
-	{								\
-	  memcpy (path + len, "64/lp64d", 9);				\
-	  add_dir (path);						\
-	  memcpy (path + len, "64/lp64", 8);				\
-	  add_dir (path);						\
-	}								\
+      if (len >= lib_len						\
+	  && !memcmp (path + len - lib_len, "/lib", lib_len))		\
+	for (ptr = lib_dirs; *ptr != NULL; ptr++)			\
+	  {								\
+	    const char *lib_dir = *ptr;					\
+	    size_t dir_len = strlen (lib_dir);				\
+									\
+	    assert (dir_len >= lib_len);				\
+	    memcpy (path + len, lib_dir + lib_len,			\
+		    dir_len - lib_len + 1);				\
+	    add_dir (path);						\
+	  }								\
     } while (0)
 
 
