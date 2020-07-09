@@ -26,7 +26,7 @@ ifndef subdir
 # architecture-specific system call names.
 #
 # To bootstrap a new architecture, create an empty file in the right
-# place and run “make update-arch-syscall” from the top-level of a
+# place and run `make update-syscall-lists' from the top-level of a
 # configured, but not-yet-built glibc tree.
 #
 # --lock points to a file not replaced during the update operation, so
