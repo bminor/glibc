@@ -36,9 +36,13 @@ __utimensat64_helper (int fd, const char *file,
   if (ret == 0 || errno != ENOSYS)
     return ret;
 
+  /* For UTIME_NOW and UTIME_OMIT the value of tv_sec field is ignored.  */
+# define TS_VALID(ns) \
+  ((((ns).tv_nsec == UTIME_NOW || (ns).tv_nsec == UTIME_OMIT) \
+   || in_time_t_range ((ns).tv_sec)))
+
   if (tsp64 != NULL
-      && (! in_time_t_range (tsp64[0].tv_sec)
-          || ! in_time_t_range (tsp64[1].tv_sec)))
+      && (!TS_VALID (tsp64[0]) || !TS_VALID (tsp64[1])))
     {
       __set_errno (EOVERFLOW);
       return -1;
