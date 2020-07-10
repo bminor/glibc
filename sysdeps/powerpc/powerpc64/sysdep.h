@@ -278,7 +278,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
 
 #ifdef SHARED
 #define TAIL_CALL_SYSCALL_ERROR \
-    b JUMPTARGET(__syscall_error)
+    b JUMPTARGET (NOTOC (__syscall_error))
 #else
 /* Static version might be linked into a large app with a toc exceeding
    64k.  We can't put a toc adjusting stub on a plain branch, so can't
@@ -364,6 +364,12 @@ LT_LABELSUFFIX(name,_name_end): ; \
 # define __GLRO(rOUT, var, offset)		\
 	ld	rOUT,.LC__ ## var@toc(r2);	\
 	lwz	rOUT,0(rOUT)
+#endif
+
+#ifdef USE_PPC64_NOTOC
+# define NOTOC(l) l@notoc
+#else
+# define NOTOC(l) l
 #endif
 
 #else /* !__ASSEMBLER__ */

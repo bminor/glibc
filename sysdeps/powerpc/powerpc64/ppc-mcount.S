@@ -29,7 +29,7 @@ ENTRY(_mcount)
 	cfi_adjust_cfa_offset (FRAME_MIN_SIZE)
 	cfi_offset (lr, FRAME_LR_SAVE)
 	ld		 r3, FRAME_LR_SAVE(r11)
-	bl		 JUMPTARGET(__mcount_internal)
+	bl		 JUMPTARGET (NOTOC (__mcount_internal))
 #ifndef SHARED
 	nop
 #endif

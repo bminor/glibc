@@ -160,7 +160,7 @@ L(exitcode):
 	li    r3,-1
 L(do_exit):
 #ifdef SHARED
-	b     JUMPTARGET(__GI_exit);
+	b     JUMPTARGET (NOTOC (__GI_exit));
 #else
 	b     JUMPTARGET(exit);
 	nop

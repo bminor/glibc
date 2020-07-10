@@ -21,3 +21,14 @@ rm -f conftest.c conftest.s
 if test x$libc_cv_overlapping_opd = xyes; then
   AC_DEFINE(USE_PPC64_OVERLAPPING_OPD)
 fi
+
+# @notoc started to be supported in GNU Binutils 2.31.
+AC_CACHE_CHECK([if the assembler supports @notoc],
+	       libc_cv_ppc64_notoc, [
+	       AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+void foo (void) {asm("b foo@notoc");}
+		  ])],
+		  [libc_cv_ppc64_notoc=yes],
+		  [libc_cv_ppc64_notoc=no])])
+AS_IF([test x$libc_cv_ppc64_notoc = xyes],
+      [AC_DEFINE(USE_PPC64_NOTOC)])

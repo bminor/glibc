@@ -217,7 +217,7 @@ L(no_vmx):
 	li	r3,0
 	blr
 #elif defined SHARED
-	b	JUMPTARGET (__sigjmp_save_symbol)
+	b	JUMPTARGET (NOTOC (__sigjmp_save_symbol))
 #else
 	mflr	r0
 	std	r0,FRAME_LR_SAVE(r1)
