@@ -28,18 +28,15 @@ int
 __utimensat64_helper (int fd, const char *file,
                       const struct __timespec64 tsp64[2], int flags)
 {
-#ifdef __ASSUME_TIME64_SYSCALLS
-# ifndef __NR_utimensat_time64
-#  define __NR_utimensat_time64 __NR_utimensat
-# endif
-  return INLINE_SYSCALL (utimensat_time64, 4, fd, file, &tsp64[0], flags);
-#else
-# ifdef __NR_utimensat_time64
-  int ret = INLINE_SYSCALL (utimensat_time64, 4, fd, file, &tsp64[0], flags);
+#ifndef __NR_utimensat_time64
+# define __NR_utimensat_time64 __NR_utimensat
+#endif
+  int ret = INLINE_SYSCALL_CALL (utimensat_time64, fd, file, &tsp64[0], flags);
+#ifndef __ASSUME_TIME64_SYSCALLS
   if (ret == 0 || errno != ENOSYS)
     return ret;
-# endif
-  if (tsp64
+
+  if (tsp64 != NULL
       && (! in_time_t_range (tsp64[0].tv_sec)
           || ! in_time_t_range (tsp64[1].tv_sec)))
     {
@@ -54,10 +51,10 @@ __utimensat64_helper (int fd, const char *file,
       tsp32[1] = valid_timespec64_to_timespec (tsp64[1]);
     }
 
-  return INLINE_SYSCALL (utimensat, 4, fd, file, tsp64 ? &tsp32[0] : NULL,
-                         flags);
+  ret = INLINE_SYSCALL_CALL (utimensat, fd, file, tsp64 ? &tsp32[0] : NULL,
+			     flags);
 #endif
-
+  return ret;
 }
 libc_hidden_def (__utimensat64_helper)
 
