@@ -37,19 +37,16 @@ __ppoll64 (struct pollfd *fds, nfds_t nfds, const struct __timespec64 *timeout,
       timeout = &tval;
     }
 
-#ifdef __ASSUME_TIME64_SYSCALLS
-# ifndef __NR_ppoll_time64
-#  define __NR_ppoll_time64 __NR_ppoll
-# endif
-  return SYSCALL_CANCEL (ppoll_time64, fds, nfds, timeout, sigmask,
-			 __NSIG_BYTES);
-#else
-# ifdef __NR_ppoll_time64
+#ifndef __NR_ppoll_time64
+# define __NR_ppoll_time64 __NR_ppoll
+#endif
   int ret = SYSCALL_CANCEL (ppoll_time64, fds, nfds, timeout, sigmask,
                             __NSIG_BYTES);
+
+#ifndef __ASSUME_TIME64_SYSCALLS
   if (ret >= 0 || errno != ENOSYS)
     return ret;
-# endif
+
   struct timespec ts32;
   if (timeout)
     {
@@ -62,9 +59,11 @@ __ppoll64 (struct pollfd *fds, nfds_t nfds, const struct __timespec64 *timeout,
       ts32 = valid_timespec64_to_timespec (*timeout);
     }
 
-  return SYSCALL_CANCEL (ppoll, fds, nfds, timeout ? &ts32 : NULL, sigmask,
-                         __NSIG_BYTES);
+  ret = SYSCALL_CANCEL (ppoll, fds, nfds, timeout ? &ts32 : NULL, sigmask,
+			__NSIG_BYTES);
 #endif
+
+  return ret;
 }
 
 #if __TIMESIZE != 64
