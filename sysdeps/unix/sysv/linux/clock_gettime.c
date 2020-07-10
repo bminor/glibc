@@ -22,43 +22,34 @@
 #include <time.h>
 #include "kernel-posix-cpu-timers.h"
 #include <sysdep-vdso.h>
-
+#include <time64-support.h>
 #include <shlib-compat.h>
 
 /* Get current value of CLOCK and store it in TP.  */
 int
 __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp)
 {
-#ifdef __ASSUME_TIME64_SYSCALLS
-  /* 64 bit ABIs or newer 32-bit ABIs that only support 64-bit time_t.  */
-# ifndef __NR_clock_gettime64
-#  define __NR_clock_gettime64 __NR_clock_gettime
-# endif
-# ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
-  return INLINE_VSYSCALL (clock_gettime64, 2, clock_id, tp);
-# else
-  return INLINE_SYSCALL_CALL (clock_gettime64, clock_id, tp);
-# endif
-#else
   int r;
-  /* Old 32-bit ABI with possible 64-bit time_t support.  */
-# ifdef __NR_clock_gettime64
-  /* Avoid issue a __NR_clock_gettime64 syscall on kernels that do not
-     support 64-bit time_t.  */
-  static int time64_support = 1;
-  if (atomic_load_relaxed (&time64_support) != 0)
+
+#ifndef __NR_clock_gettime64
+# define __NR_clock_gettime64 __NR_clock_gettime
+#endif
+
+  if (supports_time64 ())
     {
-#  ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
+#ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
       r = INLINE_VSYSCALL (clock_gettime64, 2, clock_id, tp);
-#  else
+#else
       r = INLINE_SYSCALL_CALL (clock_gettime64, clock_id, tp);
-#  endif
+#endif
+
       if (r == 0 || errno != ENOSYS)
 	return r;
 
-      atomic_store_relaxed (&time64_support, 0);
-    }
-# endif
+      mark_time64_unsupported ();
+   }
+
+#ifndef __ASSUME_TIME64_SYSCALLS
   /* Fallback code that uses 32-bit support.  */
   struct timespec tp32;
 # ifdef HAVE_CLOCK_GETTIME_VSYSCALL
@@ -68,8 +59,9 @@ __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp)
 # endif
   if (r == 0)
     *tp = valid_timespec_to_timespec64 (tp32);
-  return r;
 #endif
+
+  return r;
 }
 
 #if __TIMESIZE != 64
