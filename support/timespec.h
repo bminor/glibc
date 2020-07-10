@@ -48,6 +48,14 @@ void test_timespec_equal_or_after_impl (const char *file, int line,
                                         const struct timespec left,
                                         const struct timespec right);
 
+long support_timespec_ns (struct timespec time);
+
+struct timespec support_timespec_normalize (struct timespec time);
+
+int support_timespec_check_in_range (struct timespec expected, struct timespec observed,
+				  double lower_bound, double upper_bound);
+
+
 /* Check that the timespec on the left represents a time before the
    time on the right. */
 #define TEST_TIMESPEC_BEFORE(left, right)                               \

@@ -238,6 +238,7 @@ tests = \
   tst-test_compare \
   tst-test_compare_blob \
   tst-test_compare_string \
+  tst-timespec \
   tst-xreadlink \
   tst-xsigstack \
 
