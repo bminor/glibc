@@ -536,11 +536,6 @@ long int __x86_rep_movsb_threshold attribute_hidden = 2048;
 /* Threshold to use Enhanced REP STOSB.  */
 long int __x86_rep_stosb_threshold attribute_hidden = 2048;
 
-#ifndef DISABLE_PREFETCHW
-/* PREFETCHW support flag for use in memory and string routines.  */
-int __x86_prefetchw attribute_hidden;
-#endif
-
 
 static void
 get_common_cache_info (long int *shared_ptr, unsigned int *threads_ptr,
@@ -831,17 +826,6 @@ init_cacheinfo (void)
 	  /* Account for exclusive L2 and L3 caches.  */
 	  shared += core;
 	}
-
-#ifndef DISABLE_PREFETCHW
-      if (max_cpuid_ex >= 0x80000001)
-	{
-	  unsigned int eax;
-	  __cpuid (0x80000001, eax, ebx, ecx, edx);
-	  /*  PREFETCHW     || 3DNow!  */
-	  if ((ecx & 0x100) || (edx & 0x80000000))
-	    __x86_prefetchw = -1;
-	}
-#endif
     }
 
   if (cpu_features->data_cache_size != 0)

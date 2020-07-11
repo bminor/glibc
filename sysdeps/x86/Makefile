@@ -14,6 +14,10 @@ gen-as-const-headers += jmp_buf-ssp.sym
 sysdep_routines += __longjmp_cancel
 endif
 
+ifeq ($(subdir),string)
+sysdep_routines += cacheinfo
+endif
+
 ifneq ($(enable-cet),no)
 ifeq ($(subdir),elf)
 sysdep-dl-routines += dl-cet

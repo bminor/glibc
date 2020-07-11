@@ -13,10 +13,6 @@ ifeq ($(subdir),math)
 CFLAGS-e_gamma_r.c += -DMATH_SET_BOTH_ROUNDING_MODES
 endif
 
-ifeq ($(subdir),string)
-sysdep_routines += cacheinfo
-endif
-
 ifeq ($(subdir),gmon)
 sysdep_routines += i386-mcount
 endif
