@@ -32,7 +32,9 @@
 #ifndef __ASSEMBLER__
 /* Don't declare this as a function---we want it's entry-point, not
    it's function descriptor... */
-extern int _dl_sysinfo_break attribute_hidden;
+/* Use section ".text" to force far GPREL64 relocation instead of
+   GPREL22. */
+extern int _dl_sysinfo_break attribute_hidden __attribute__((section(".text")));
 # define DL_SYSINFO_DEFAULT ((uintptr_t) &_dl_sysinfo_break)
 # define DL_SYSINFO_IMPLEMENTATION		\
   asm (".text\n\t"				\
