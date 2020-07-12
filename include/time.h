@@ -271,6 +271,15 @@ extern struct tm *__tz_convert (__time64_t timer, int use_localtime,
 extern int __nanosleep (const struct timespec *__requested_time,
 			struct timespec *__remaining);
 hidden_proto (__nanosleep)
+#if __TIMESIZE == 64
+# define __nanosleep64 __nanosleep
+#else
+extern int __nanosleep64 (const struct __timespec64 *__requested_time,
+			  struct __timespec64 *__remaining);
+hidden_proto (__nanosleep64)
+#endif
+
+
 extern int __getdate_r (const char *__string, struct tm *__resbufp)
   attribute_hidden;
 
