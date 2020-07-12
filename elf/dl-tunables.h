@@ -69,9 +69,11 @@ typedef struct _tunable tunable_t;
 # include "dl-tunable-list.h"
 
 extern void __tunables_init (char **);
+extern void __tunables_print (void);
 extern void __tunable_get_val (tunable_id_t, void *, tunable_callback_t);
 extern void __tunable_set_val (tunable_id_t, void *, void *, void *);
 rtld_hidden_proto (__tunables_init)
+rtld_hidden_proto (__tunables_print)
 rtld_hidden_proto (__tunable_get_val)
 rtld_hidden_proto (__tunable_set_val)
 

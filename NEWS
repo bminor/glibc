@@ -9,6 +9,10 @@ Version 2.33
 
 Major new features:
 
+* The dynamic linker accepts the --list-tunables argument which prints
+  all the supported tunables.  This option is disable if glibc is
+  configured with tunables disabled (--enable-tunables=no).
+
 * The dynamic linker accepts the --argv0 argument and provides opportunity
   to change argv[0] string.
 

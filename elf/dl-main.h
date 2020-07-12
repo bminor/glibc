@@ -63,7 +63,7 @@ struct audit_list
 enum rtld_mode
   {
     rtld_mode_normal, rtld_mode_list, rtld_mode_verify, rtld_mode_trace,
-    rtld_mode_help,
+    rtld_mode_list_tunables, rtld_mode_help,
   };
 
 /* Aggregated state information extracted from environment variables

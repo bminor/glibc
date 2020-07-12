@@ -255,7 +255,12 @@ setting environment variables (which would be inherited by subprocesses).\n\
                         in LIST\n\
   --audit LIST          use objects named in LIST as auditors\n\
   --preload LIST        preload objects named in LIST\n\
-  --argv0 STRING        set argv[0] to STRING before running\n\
+  --argv0 STRING        set argv[0] to STRING before running\n"
+#if HAVE_TUNABLES
+"\
+  --list-tunables       list all tunables with minimum and maximum values\n"
+#endif
+"\
   --help                display this help and exit\n\
   --version             output version information and exit\n\
 \n\

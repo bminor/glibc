@@ -26,6 +26,7 @@
 #include <sysdep.h>
 #include <fcntl.h>
 #include <ldsodefs.h>
+#include <array_length.h>
 
 #define TUNABLES_INTERNAL 1
 #include "dl-tunables.h"
@@ -393,6 +394,48 @@ __tunables_init (char **envp)
 
 	      tunable_initialize (cur, envval);
 	      break;
+	    }
+	}
+    }
+}
+
+void
+__tunables_print (void)
+{
+  for (int i = 0; i < array_length (tunable_list); i++)
+    {
+      const tunable_t *cur = &tunable_list[i];
+      if (cur->type.type_code == TUNABLE_TYPE_STRING
+	  && cur->val.strval == NULL)
+	_dl_printf ("%s:\n", cur->name);
+      else
+	{
+	  _dl_printf ("%s: ", cur->name);
+	  switch (cur->type.type_code)
+	    {
+	    case TUNABLE_TYPE_INT_32:
+	      _dl_printf ("%d (min: %d, max: %d)\n",
+			  (int) cur->val.numval,
+			  (int) cur->type.min,
+			  (int) cur->type.max);
+	      break;
+	    case TUNABLE_TYPE_UINT_64:
+	      _dl_printf ("0x%lx (min: 0x%lx, max: 0x%lx)\n",
+			  (long int) cur->val.numval,
+			  (long int) cur->type.min,
+			  (long int) cur->type.max);
+	      break;
+	    case TUNABLE_TYPE_SIZE_T:
+	      _dl_printf ("0x%Zx (min: 0x%Zx, max: 0x%Zx)\n",
+			  (size_t) cur->val.numval,
+			  (size_t) cur->type.min,
+			  (size_t) cur->type.max);
+	      break;
+	    case TUNABLE_TYPE_STRING:
+	      _dl_printf ("%s\n", cur->val.strval);
+	      break;
+	    default:
+	      __builtin_unreachable ();
 	    }
 	}
     }

@@ -50,6 +50,7 @@
 #include <dl-main.h>
 #include <list.h>
 #include <gnu/lib-names.h>
+#include <dl-tunables.h>
 
 #include <assert.h>
 
@@ -1276,6 +1277,16 @@ dl_main (const ElfW(Phdr) *phdr,
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
+#if HAVE_TUNABLES
+	else if (! strcmp (_dl_argv[1], "--list-tunables"))
+	  {
+	    state.mode = rtld_mode_list_tunables;
+
+	    ++_dl_skip_args;
+	    --_dl_argc;
+	    ++_dl_argv;
+	  }
+#endif
 	else if (strcmp (_dl_argv[1], "--help") == 0)
 	  {
 	    state.mode = rtld_mode_help;
@@ -1295,6 +1306,14 @@ dl_main (const ElfW(Phdr) *phdr,
 	  }
 	else
 	  break;
+
+#if HAVE_TUNABLES
+      if (__glibc_unlikely (state.mode == rtld_mode_list_tunables))
+	{
+	  __tunables_print ();
+	  _exit (0);
+	}
+#endif
 
       /* If we have no further argument the program was called incorrectly.
 	 Grant the user some education.  */
