@@ -16,42 +16,34 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define __xstat64 __xstat64_disable
-
-#include <errno.h>
-#include <stddef.h>
+#define __xstat __redirect___xstat
 #include <sys/stat.h>
+#undef __xstat
+#include <fcntl.h>
 #include <kernel_stat.h>
 #include <sysdep.h>
-#include <sys/syscall.h>
 #include <xstatconv.h>
-
-#undef __xstat64
-
 
 /* Get information about the file NAME in BUF.  */
 int
-__xstat (int vers, const char *name, struct stat *buf)
+__xstat64 (int vers, const char *name, struct stat64 *buf)
 {
-  int result;
-  struct kernel_stat kbuf;
-
-  if (vers == _STAT_VER_KERNEL64)
+  switch (vers)
     {
-      result = INTERNAL_SYSCALL_CALL (stat64, name, buf);
-      if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result)))
-	return result;
-      __set_errno (INTERNAL_SYSCALL_ERRNO (result));
-      return -1;
-    }
+    case _STAT_VER_KERNEL64:
+      return INLINE_SYSCALL_CALL (stat64, name, buf);
 
-  result = INTERNAL_SYSCALL_CALL (stat, name, &kbuf);
-  if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result)))
-    return __xstat_conv (vers, &kbuf, buf);
-  __set_errno (INTERNAL_SYSCALL_ERRNO (result));
-  return -1;
+    default:
+      {
+        struct kernel_stat kbuf;
+	int r = INTERNAL_SYSCALL_CALL (stat, name, &kbuf);
+	if (r == 0)
+	  return __xstat_conv (vers, &kbuf, buf);
+	return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
+      }
+    }
 }
-hidden_def (__xstat)
-weak_alias (__xstat, _xstat);
-strong_alias (__xstat, __xstat64);
-hidden_ver (__xstat, __xstat64)
+weak_alias (__xstat64, __xstat);
+weak_alias (__xstat64, __GI___xstat);
+
+hidden_def (__xstat64)
