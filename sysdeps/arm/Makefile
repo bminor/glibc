@@ -68,8 +68,3 @@ ifeq ($(subdir),nptl)
 libpthread-sysdep_routines += pt-arm-unwind-resume
 libpthread-shared-only-routines += pt-arm-unwind-resume
 endif
-
-ifeq ($(subdir),string)
-# This test fails on arm due to bug 25620 and related issues.
-test-xfail-tst-memmove-overflow = yes
-endif
