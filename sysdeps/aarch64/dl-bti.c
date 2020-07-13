@@ -24,13 +24,20 @@ static int
 enable_bti (struct link_map *map, const char *program)
 {
   const ElfW(Phdr) *phdr;
-  unsigned prot = PROT_READ | PROT_EXEC | PROT_BTI;
+  unsigned prot;
 
   for (phdr = map->l_phdr; phdr < &map->l_phdr[map->l_phnum]; ++phdr)
     if (phdr->p_type == PT_LOAD && (phdr->p_flags & PF_X))
       {
 	void *start = (void *) (phdr->p_vaddr + map->l_addr);
 	size_t len = phdr->p_memsz;
+
+	prot = PROT_EXEC | PROT_BTI;
+	if (phdr->p_flags & PF_R)
+	  prot |= PROT_READ;
+	if (phdr->p_flags & PF_W)
+	  prot |= PROT_WRITE;
+
 	if (__mprotect (start, len, prot) < 0)
 	  {
 	    if (program)
