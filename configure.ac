@@ -376,17 +376,6 @@ AC_SUBST(libc_cv_nss_crypt)
 AC_SUBST(libc_cv_static_nss_crypt)
 
 
-AC_ARG_ENABLE([obsolete-rpc],
-              AC_HELP_STRING([--enable-obsolete-rpc],
-                             [build and install the obsolete RPC code for link-time usage]),
-              [link_obsolete_rpc=$enableval],
-              [link_obsolete_rpc=no])
-AC_SUBST(link_obsolete_rpc)
-
-if test "$link_obsolete_rpc" = yes; then
-  AC_DEFINE(LINK_OBSOLETE_RPC)
-fi
-
 AC_ARG_ENABLE([systemtap],
               [AS_HELP_STRING([--enable-systemtap],
 	       [enable systemtap static probe points @<:@default=no@:>@])],

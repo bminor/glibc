@@ -91,6 +91,14 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
+* Remove configure option --enable-obsolete-rpc.  Sun RPC is removed
+  from glibc.  This includes the rpcgen program, librpcsvc, and the Sun
+  RPC header files.  Backward compatibility for old programs is kept
+  only for architectures and ABIs that have been added in or before
+  glibc 2.31.  New programs need to use TI-RPC
+  <http://git.linux-nfs.org/?p=steved/libtirpc.git;a=summary> and
+  rpcsvc-proto <https://github.com/thkukuk/rpcsvc-proto>.
+
 * Remove configure option --enable-obsolete-nsl.  libnsl is only built
   as shared library for backward compatibility and the NSS modules "nis"
   and "nisplus" are not built at all and libnsl's headers aren't

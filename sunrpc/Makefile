@@ -22,11 +22,13 @@ subdir	:= sunrpc
 
 include ../Makeconfig
 
+ifdef have-GLIBC_2.31
+
 # The code in this subdirectory is taken from Sun's RPCSRC-4.0
 # distribution with some additional changes from the TI-RPC package
 # which is also available from Sun.  The files are heavily changed to
 # compile cleanly and to fit in the GNU environment.  All the code
-# from Sun's rpc, etc, and rpcgen subdirectories is in this directory;
+# from Sun's rpc and etc subdirectories is in this directory;
 # the rpc subdirectory contains only the header files.  Other than
 # that, several files were renamed so as not to exceed 14-character
 # file name limits:
@@ -44,23 +46,6 @@ include ../Makeconfig
 #	svc_auth_unix.c -> svc_authux.c
 #	xdr_reference.c -> xdr_ref.c
 
-rpcsvc = bootparam_prot.x nlm_prot.x rstat.x \
-	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
-	 rusers.x spray.x nfs_prot.x rquota.x key_prot.x
-headers-sunrpc = $(addprefix rpc/,auth.h auth_unix.h clnt.h pmap_clnt.h \
-				  pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h \
-				  svc.h svc_auth.h types.h xdr.h auth_des.h \
-				  key_prot.h) \
-		       $(rpcsvc:%=rpcsvc/%) rpcsvc/bootparam.h
-headers = rpc/netdb.h
-generated += $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) $(rpcsvc:%.x=x%.stmp) \
-	     $(rpcsvc:%.x=rpcsvc/%.stmp) rpcgen
-generated-dirs += rpcsvc
-
-ifeq ($(link-obsolete-rpc),yes)
-headers += $(headers-sunrpc)
-endif
-
 ifeq ($(build-shared),yes)
 need-export-routines := auth_des auth_unix clnt_gen clnt_perr clnt_tcp \
 			clnt_udp get_myaddr key_call netname pm_getport \
@@ -75,19 +60,8 @@ routines := auth_none authuxprot clnt_raw clnt_simp \
 	    des_crypt des_impl des_soft key_prot openchild rtime svcauth_des \
 	    clnt_unix svc_unix create_xid $(need-export-routines) \
 	    rpc_gethostbyname
-ifneq ($(link-obsolete-rpc),yes)
 # We only add the RPC for compatibility to libc.so.
 shared-only-routines = $(routines)
-endif
-endif
-
-ifeq ($(link-obsolete-rpc),yes)
-install-bin := rpcgen
-rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
-	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o \
-	      rpc_tblout.o rpc_sample.o
-extra-objs = $(rpcgen-objs) $(addprefix cross-,$(rpcgen-objs))
-others += rpcgen
 endif
 
 tests = tst-xdrmem tst-xdrmem2 test-rpcent tst-udp-error tst-udp-timeout \
@@ -98,22 +72,6 @@ ifeq ($(have-thread-library),yes)
 xtests += thrsvc
 tests += tst-udp-garbage
 tests-internal += tst-svc_register
-endif
-
-ifeq ($(run-built-tests),yes)
-ifeq ($(link-obsolete-rpc),yes)
-rpcgen-tests := $(objpfx)bug20790.out
-tests-special += $(rpcgen-tests)
-endif
-endif
-
-ifeq ($(link-obsolete-rpc),yes)
-headers += $(rpcsvc:%.x=rpcsvc/%.h)
-extra-libs := librpcsvc
-extra-libs-others := librpcsvc # Make it in `others' pass, not `lib' pass.
-librpcsvc-routines = $(rpcsvc:%.x=x%)
-librpcsvc-inhibit-o = .os # Build no shared rpcsvc library.
-omit-deps = $(librpcsvc-routines)
 endif
 
 ifeq (yes,$(build-shared))
@@ -133,19 +91,6 @@ $(rpc-compat-routines.os): $(objpfx)compat-%.os: %.c $(before-compile)
 	$(compile-command.c) -DEXPORT_RPC_SYMBOLS
 endif
 
-CFLAGS-xbootparam_prot.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xnlm_prot.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xrstat.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xyppasswd.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xklm_prot.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xrex.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xsm_inter.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xmount.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xrusers.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xspray.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xnfs_prot.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xrquota.c += -Wno-unused $(PIC-ccflag)
-CFLAGS-xkey_prot.c += -Wno-unused $(PIC-ccflag)
 CFLAGS-auth_unix.c += -fexceptions
 CFLAGS-key_call.c += -fexceptions
 CFLAGS-pmap_rmt.c += -fexceptions
@@ -159,83 +104,26 @@ $(objpfx)tst-udp-error: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-svc_register: \
   $(common-objpfx)linkobj/libc.so $(shared-thread-library)
 
-$(objpfx)rpcgen: $(addprefix $(objpfx),$(rpcgen-objs))
-
-cross-rpcgen-objs := $(addprefix $(objpfx)cross-,$(rpcgen-objs))
-
-# When generic makefile support for build system programs is
-# available, it should replace this code.  See
-# <https://sourceware.org/bugzilla/show_bug.cgi?id=14087>.
-$(cross-rpcgen-objs): $(objpfx)cross-%.o: %.c $(before-compile)
-	$(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) $< \
-		$(OUTPUT_OPTION) $(native-compile-mkdep-flags) -c
-
-$(objpfx)cross-rpcgen: $(cross-rpcgen-objs)
-	$(BUILD_CC) $^ $(BUILD_LDFLAGS) -o $@
-
-# This makes sure -DIN_MODULE is passed for all these modules.
-cpp-srcs-left := $(rpcgen-objs:.o=.c)
-lib := nonlib
-include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
-
-# How we run rpcgen to generate sources and headers in the rules below.
-# Setting CPP tells it how to run the C preprocessor correctly.  Note
-# that $(built-program-file) requires that the just-built cross-rpcgen
-# binary be the second dependency listed in each rule using rpcgen-cmd.
-rpcgen-cmd = CPP='$(CC) -E -x c-header' $(built-program-file) -Y ../scripts
-
-
-# Generate the rpcsvc headers with rpcgen.
-# We use a stamp file to avoid unnessary recompilation each time rpcgen is
-# relinked.
-$(rpcsvc:%.x=$(objpfx)rpcsvc/%.h): $(objpfx)rpcsvc/%.h: $(objpfx)rpcsvc/%.stmp
-	@:
-$(objpfx)rpcsvc/%.stmp: rpcsvc/%.x $(objpfx)cross-rpcgen
-	$(make-target-directory)
-	-@rm -f ${@:stmp=T} $@
-	$(rpcgen-cmd) -h $< -o ${@:stmp=T}
-	$(move-if-change) $(@:stmp=T) $(@:stmp=h)
-	touch $@
-
-# Generate the rpcsvc XDR functions with rpcgen.
-$(rpcsvc:%.x=$(objpfx)x%.c): $(objpfx)x%.c: $(objpfx)x%.stmp
-	@:
-$(objpfx)x%.stmp: rpcsvc/%.x $(objpfx)cross-rpcgen
-	-@rm -f ${@:stmp=T} $@
-	$(rpcgen-cmd) -c $< -o ${@:stmp=T}
-	$(move-if-change) $(@:stmp=T) $(@:stmp=c)
-	touch $@
-
-# The generated source files depend on the corresponding generated headers.
-# Gratuitous dependency on generated .c file here just gets it mentioned to
-# avoid being an intermediate file and getting removed.
-define o-iterator-doit
-$(rpcsvc:%.x=$(objpfx)x%$o): $(objpfx)x%$o: $(objpfx)x%.c $(objpfx)rpcsvc/%.h
-endef
-object-suffixes-left = $(filter-out $(librpcsvc-inhibit-o),$(object-suffixes))
-include $(o-iterator)
-
-rpcsvc-dt-files := $(foreach o,$(filter-out $(librpcsvc-inhibit-o),\
-					    $(object-suffixes)),\
-			     $(rpcsvc:%.x=$(objpfx)x%$o.dt))
-rpcsvc-depfiles := $(patsubst %.dt,%.d,$(wildcard $(rpcsvc-dt-files))) \
-		   $(wildcard $(rpcsvc-dt-files:.dt=.d))
-ifdef rpcsvc-depfiles
-ifneq ($(no_deps),t)
--include $(rpcsvc-depfiles)
-endif
-endif
-
 $(objpfx)thrsvc: $(common-objpfx)linkobj/libc.so $(shared-thread-library)
-
-ifeq ($(run-built-tests),yes)
-$(rpcgen-tests): $(objpfx)%.out: %.x $(objpfx)rpcgen
-	-rm -f $@
-	$(built-program-cmd) -c $< -o $@; \
-	$(evaluate-test)
-endif
 
 $(objpfx)tst-udp-timeout: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-udp-nonblocking: $(common-objpfx)linkobj/libc.so
 $(objpfx)tst-udp-garbage: \
   $(common-objpfx)linkobj/libc.so $(shared-thread-library)
+
+else # !have-GLIBC_2.31
+
+routines = $(routines-for-nss)
+
+include ../Rules
+
+ifeq (yes,$(build-shared))
+# Create an empty archive, so that Makerules can reference it.
+subdir_lib: $(objpfx)librpc_compat_pic.a
+$(objpfx)librpc_compat_pic.a: Makefile
+	$(make-target-directory)
+	$(AR) cr $@
+endif
+
+
+endif # !have-GLIBC_2.31

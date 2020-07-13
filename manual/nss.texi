@@ -335,9 +335,7 @@ with a @code{+} character was found NIS was used.  This kind of lookup
 was removed and now the default value for the services is @code{files}.
 libnss_compat no longer depends on libnsl and can be used without NIS.
 
-For all other databases the default value is @code{files} unless
-@theglibc{} was configured with @code{--enable-obsolete-rpc} option, in
-which case it the default value is @code{nis [NOTFOUND=return] files}.
+For all other databases the default value is @code{files}.
 
 @cindex optimizing NSS
 A second point is that the user should try to optimize the lookup

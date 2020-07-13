@@ -673,7 +673,6 @@ base_machine
 have_tunables
 build_pt_chown
 build_nscd
-link_obsolete_rpc
 libc_cv_static_nss_crypt
 libc_cv_nss_crypt
 build_crypt
@@ -784,7 +783,6 @@ enable_multi_arch
 enable_experimental_malloc
 enable_crypt
 enable_nss_crypt
-enable_obsolete_rpc
 enable_systemtap
 enable_build_nscd
 enable_nscd
@@ -1455,8 +1453,6 @@ Optional Features:
   --disable-crypt         do not build nor install the passphrase hashing
                           library, libcrypt
   --enable-nss-crypt      enable libcrypt to use nss
-  --enable-obsolete-rpc   build and install the obsolete RPC code for
-                          link-time usage
   --enable-systemtap      enable systemtap static probe points [default=no]
   --disable-build-nscd    disable building and installing the nscd daemon
   --disable-nscd          library functions will not contact the nscd daemon
@@ -3635,20 +3631,6 @@ fi
 
 
 
-
-# Check whether --enable-obsolete-rpc was given.
-if test "${enable_obsolete_rpc+set}" = set; then :
-  enableval=$enable_obsolete_rpc; link_obsolete_rpc=$enableval
-else
-  link_obsolete_rpc=no
-fi
-
-
-
-if test "$link_obsolete_rpc" = yes; then
-  $as_echo "#define LINK_OBSOLETE_RPC 1" >>confdefs.h
-
-fi
 
 # Check whether --enable-systemtap was given.
 if test "${enable_systemtap+set}" = set; then :
