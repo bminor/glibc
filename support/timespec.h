@@ -48,7 +48,7 @@ void test_timespec_equal_or_after_impl (const char *file, int line,
                                         const struct timespec left,
                                         const struct timespec right);
 
-long support_timespec_ns (struct timespec time);
+time_t support_timespec_ns (struct timespec time);
 
 struct timespec support_timespec_normalize (struct timespec time);
 

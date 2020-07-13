@@ -196,6 +196,13 @@ CFLAGS-support_paths.c = \
 		-DROOTSBINDIR_PATH=\"$(rootsbindir)\" \
 		-DCOMPLOCALEDIR_PATH=\"$(complocaledir)\"
 
+# In support_timespec_check_in_range we may be passed a very tight
+# range for which we should produce a correct result for expected
+# being withing the observed range.  The code uses double internally
+# in support_timespec_check_in_range and for that computation we use
+# -fexcess-precision=standard.
+CFLAGS-timespec.c += -fexcess-precision=standard
+
 ifeq (,$(CXX))
 LINKS_DSO_PROGRAM = links-dso-program-c
 else

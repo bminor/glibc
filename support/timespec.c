@@ -60,21 +60,17 @@ test_timespec_equal_or_after_impl (const char *file, int line,
   }
 }
 
-/* Convert TIME to nanoseconds stored in a long.
-   Returns long maximum or minimum if the conversion overflows
+/* Convert TIME to nanoseconds stored in a time_t.
+   Returns time_t maximum or minimum if the conversion overflows
    or underflows, respectively.  */
-long
+time_t
 support_timespec_ns (struct timespec time)
 {
-  long time_ns;
+  time_t time_ns;
   if (INT_MULTIPLY_WRAPV(time.tv_sec, TIMESPEC_HZ, &time_ns))
-   {
-      return (time.tv_sec < 0) ? TYPE_MINIMUM(long): TYPE_MAXIMUM(long);
-   }
+    return time.tv_sec < 0 ? TYPE_MINIMUM(time_t) : TYPE_MAXIMUM(time_t);
   if (INT_ADD_WRAPV(time_ns, time.tv_nsec, &time_ns))
-   {
-      return (time.tv_nsec < 0) ? TYPE_MINIMUM(long): TYPE_MAXIMUM(long);
-   }
+    return time.tv_nsec < 0 ? TYPE_MINIMUM(time_t) : TYPE_MAXIMUM(time_t);
   return time_ns;
 }
 
@@ -113,7 +109,7 @@ support_timespec_check_in_range (struct timespec expected, struct timespec obser
 			      double lower_bound, double upper_bound)
 {
   assert (upper_bound >= lower_bound);
-  long expected_norm, observed_norm;
+  time_t expected_norm, observed_norm;
   expected_norm = support_timespec_ns (expected);
   /* Don't divide by zero  */
   assert(expected_norm != 0);

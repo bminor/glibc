@@ -19,13 +19,14 @@
 #include <support/timespec.h>
 #include <support/check.h>
 #include <limits.h>
+#include <intprops.h>
 
 #define TIMESPEC_HZ 1000000000
 
 struct timespec_ns_test_case
 {
   struct timespec time;
-  long time_ns;
+  time_t time_ns;
 };
 
 struct timespec_norm_test_case
@@ -42,6 +43,9 @@ struct timespec_test_case
   double lower_bound;
   int result;
 };
+
+#define TIME_T_MIN TYPE_MINIMUM (time_t)
+#define TIME_T_MAX TYPE_MAXIMUM (time_t)
 
 /* Test cases for timespec_ns */
 struct timespec_ns_test_case ns_cases[] = {
@@ -73,36 +77,42 @@ struct timespec_ns_test_case ns_cases[] = {
    .time_ns = -TIMESPEC_HZ + 1,
   },
   /* Overflow bondary by 2  */
-  {.time = {.tv_sec = LONG_MAX / TIMESPEC_HZ, .tv_nsec = LONG_MAX%TIMESPEC_HZ - 1},
-   .time_ns = LONG_MAX - 1,
+  {.time = {.tv_sec = TIME_T_MAX / TIMESPEC_HZ,
+	    .tv_nsec = TIME_T_MAX % TIMESPEC_HZ - 1},
+   .time_ns = TIME_T_MAX - 1,
   },
   /* Overflow bondary  */
-  {.time = {.tv_sec = LONG_MAX / TIMESPEC_HZ, .tv_nsec = LONG_MAX%TIMESPEC_HZ},
-   .time_ns = LONG_MAX,
+  {.time = {.tv_sec = TIME_T_MAX / TIMESPEC_HZ,
+	    .tv_nsec = TIME_T_MAX % TIMESPEC_HZ},
+   .time_ns = TIME_T_MAX,
   },
   /* Underflow bondary by 1  */
-  {.time = {.tv_sec = LONG_MIN / TIMESPEC_HZ, .tv_nsec = LONG_MIN%TIMESPEC_HZ + 1},
-   .time_ns = LONG_MIN + 1,
+  {.time = {.tv_sec = TIME_T_MIN / TIMESPEC_HZ,
+	    .tv_nsec = TIME_T_MIN % TIMESPEC_HZ + 1},
+   .time_ns = TIME_T_MIN + 1,
   },
   /* Underflow bondary  */
-  {.time = {.tv_sec = LONG_MIN / TIMESPEC_HZ, .tv_nsec = LONG_MIN%TIMESPEC_HZ},
-   .time_ns = LONG_MIN,
+  {.time = {.tv_sec = TIME_T_MIN / TIMESPEC_HZ,
+	    .tv_nsec = TIME_T_MIN % TIMESPEC_HZ},
+   .time_ns = TIME_T_MIN,
   },
   /* Multiplication overflow  */
-  {.time = {.tv_sec = LONG_MAX / TIMESPEC_HZ + 1, .tv_nsec = 1},
-   .time_ns = LONG_MAX,
+  {.time = {.tv_sec = TIME_T_MAX / TIMESPEC_HZ + 1, .tv_nsec = 1},
+   .time_ns = TIME_T_MAX,
   },
   /* Multiplication underflow  */
-  {.time = {.tv_sec = LONG_MIN / TIMESPEC_HZ - 1, .tv_nsec = -1},
-   .time_ns = LONG_MIN,
+  {.time = {.tv_sec = TIME_T_MIN / TIMESPEC_HZ - 1, .tv_nsec = -1},
+   .time_ns = TIME_T_MIN,
   },
   /* Sum overflows  */
-  {.time = {.tv_sec = LONG_MAX / TIMESPEC_HZ, .tv_nsec = LONG_MAX%TIMESPEC_HZ + 1},
-   .time_ns = LONG_MAX,
+  {.time = {.tv_sec = TIME_T_MAX / TIMESPEC_HZ,
+	    .tv_nsec = TIME_T_MAX % TIMESPEC_HZ + 1},
+   .time_ns = TIME_T_MAX,
   },
   /* Sum underflow  */
-  {.time = {.tv_sec = LONG_MIN / TIMESPEC_HZ, .tv_nsec = LONG_MIN%TIMESPEC_HZ - 1},
-   .time_ns = LONG_MIN,
+  {.time = {.tv_sec = TIME_T_MIN / TIMESPEC_HZ,
+	    .tv_nsec = TIME_T_MIN % TIMESPEC_HZ - 1},
+   .time_ns = TIME_T_MIN,
   }
 };
 
@@ -144,28 +154,28 @@ struct timespec_norm_test_case norm_cases[] = {
    .norm = {.tv_sec = -2, .tv_nsec = -1}
   },
   /* Overflow bondary by 2  */
-  {.time = {.tv_sec = LONG_MAX - 2, .tv_nsec = TIMESPEC_HZ + 1},
-   .norm = {.tv_sec = LONG_MAX - 1, 1},
+  {.time = {.tv_sec = TIME_T_MAX - 2, .tv_nsec = TIMESPEC_HZ + 1},
+   .norm = {.tv_sec = TIME_T_MAX - 1, 1},
   },
   /* Overflow bondary by 1  */
-  {.time = {.tv_sec = LONG_MAX - 1, .tv_nsec = TIMESPEC_HZ + 1},
-   .norm = {.tv_sec = LONG_MAX, .tv_nsec = 1},
+  {.time = {.tv_sec = TIME_T_MAX - 1, .tv_nsec = TIMESPEC_HZ + 1},
+   .norm = {.tv_sec = TIME_T_MAX, .tv_nsec = 1},
   },
   /* Underflow bondary by 2  */
-  {.time = {.tv_sec = LONG_MIN + 2, .tv_nsec = -TIMESPEC_HZ - 1},
-   .norm = {.tv_sec = LONG_MIN + 1, -1},
+  {.time = {.tv_sec = TIME_T_MIN + 2, .tv_nsec = -TIMESPEC_HZ - 1},
+   .norm = {.tv_sec = TIME_T_MIN + 1, -1},
   },
   /* Underflow bondary by 1  */
-  {.time = {.tv_sec = LONG_MIN + 1, .tv_nsec = -TIMESPEC_HZ - 1},
-   .norm = {.tv_sec = LONG_MIN, .tv_nsec = -1},
+  {.time = {.tv_sec = TIME_T_MIN + 1, .tv_nsec = -TIMESPEC_HZ - 1},
+   .norm = {.tv_sec = TIME_T_MIN, .tv_nsec = -1},
   },
   /* SUM overflow  */
-  {.time = {.tv_sec = LONG_MAX, .tv_nsec = TIMESPEC_HZ},
-   .norm = {.tv_sec = LONG_MAX, .tv_nsec = TIMESPEC_HZ - 1},
+  {.time = {.tv_sec = TIME_T_MAX, .tv_nsec = TIMESPEC_HZ},
+   .norm = {.tv_sec = TIME_T_MAX, .tv_nsec = TIMESPEC_HZ - 1},
   },
   /* SUM underflow  */
-  {.time = {.tv_sec = LONG_MIN, .tv_nsec = -TIMESPEC_HZ},
-   .norm = {.tv_sec = LONG_MIN, .tv_nsec = -1 * (TIMESPEC_HZ - 1)},
+  {.time = {.tv_sec = TIME_T_MIN, .tv_nsec = -TIMESPEC_HZ},
+   .norm = {.tv_sec = TIME_T_MIN, .tv_nsec = -1 * (TIMESPEC_HZ - 1)},
   }
 };
 
@@ -243,39 +253,41 @@ struct timespec_test_case check_cases[] = {
   },
   /* Maximum/Minimum long values  */
   /* 14  */
-  {.expected = {.tv_sec = LONG_MAX, .tv_nsec = TIMESPEC_HZ - 1},
-   .observed = {.tv_sec = LONG_MAX, .tv_nsec = TIMESPEC_HZ - 2},
+  {.expected = {.tv_sec = TIME_T_MAX, .tv_nsec = TIMESPEC_HZ - 1},
+   .observed = {.tv_sec = TIME_T_MAX, .tv_nsec = TIMESPEC_HZ - 2},
    .upper_bound = 1, .lower_bound = .9, .result = 1,
   },
   /* 15 - support_timespec_ns overflow  */
-  {.expected = {.tv_sec = LONG_MAX, .tv_nsec = TIMESPEC_HZ},
-   .observed = {.tv_sec = LONG_MAX, .tv_nsec = TIMESPEC_HZ},
+  {.expected = {.tv_sec = TIME_T_MAX, .tv_nsec = TIMESPEC_HZ},
+   .observed = {.tv_sec = TIME_T_MAX, .tv_nsec = TIMESPEC_HZ},
    .upper_bound = 1, .lower_bound = 1, .result = 1,
   },
   /* 16 - support_timespec_ns overflow + underflow  */
-  {.expected = {.tv_sec = LONG_MAX, .tv_nsec = TIMESPEC_HZ},
-   .observed = {.tv_sec = LONG_MIN, .tv_nsec = -TIMESPEC_HZ},
+  {.expected = {.tv_sec = TIME_T_MAX, .tv_nsec = TIMESPEC_HZ},
+   .observed = {.tv_sec = TIME_T_MIN, .tv_nsec = -TIMESPEC_HZ},
    .upper_bound = 1, .lower_bound = 1, .result = 0,
   },
   /* 17 - support_timespec_ns underflow  */
-  {.expected = {.tv_sec = LONG_MIN, .tv_nsec = -TIMESPEC_HZ},
-   .observed = {.tv_sec = LONG_MIN, .tv_nsec = -TIMESPEC_HZ},
+  {.expected = {.tv_sec = TIME_T_MIN, .tv_nsec = -TIMESPEC_HZ},
+   .observed = {.tv_sec = TIME_T_MIN, .tv_nsec = -TIMESPEC_HZ},
    .upper_bound = 1, .lower_bound = 1, .result = 1,
   },
   /* 18 - support_timespec_ns underflow + overflow  */
-  {.expected = {.tv_sec = LONG_MIN, .tv_nsec = -TIMESPEC_HZ},
-   .observed = {.tv_sec = LONG_MAX, .tv_nsec = TIMESPEC_HZ},
+  {.expected = {.tv_sec = TIME_T_MIN, .tv_nsec = -TIMESPEC_HZ},
+   .observed = {.tv_sec = TIME_T_MAX, .tv_nsec = TIMESPEC_HZ},
    .upper_bound = 1, .lower_bound = 1, .result = 0,
   },
   /* 19 - Biggest division  */
-  {.expected = {.tv_sec = LONG_MAX / TIMESPEC_HZ , .tv_nsec = TIMESPEC_HZ - 1},
+  {.expected = {.tv_sec = TIME_T_MAX / TIMESPEC_HZ,
+		.tv_nsec = TIMESPEC_HZ - 1},
    .observed = {.tv_sec = 0, .tv_nsec = 1},
    .upper_bound = 1, .lower_bound = 1.0842021724855044e-19, .result = 1,
   },
   /* 20 - Lowest division  */
   {.expected = {.tv_sec = 0, .tv_nsec = 1},
-   .observed = {.tv_sec = LONG_MAX / TIMESPEC_HZ , .tv_nsec = TIMESPEC_HZ - 1},
-   .upper_bound = LONG_MAX, .lower_bound = 1, .result = 1,
+   .observed = {.tv_sec = TIME_T_MAX / TIMESPEC_HZ,
+		.tv_nsec = TIMESPEC_HZ - 1},
+   .upper_bound = TIME_T_MAX, .lower_bound = 1, .result = 1,
   },
 };
 
@@ -288,6 +300,7 @@ do_test (void)
   printf("Testing support_timespec_ns\n");
   for (i = 0; i < ntests; i++)
     {
+      printf("Test case %d\n", i);
       TEST_COMPARE (support_timespec_ns (ns_cases[i].time),
 		    ns_cases[i].time_ns);
     }
@@ -297,6 +310,7 @@ do_test (void)
   printf("Testing support_timespec_normalize\n");
   for (i = 0; i < ntests; i++)
     {
+      printf("Test case %d\n", i);
       result = support_timespec_normalize (norm_cases[i].time);
       TEST_COMPARE (norm_cases[i].norm.tv_sec, result.tv_sec);
       TEST_COMPARE (norm_cases[i].norm.tv_nsec, result.tv_nsec);
