@@ -142,6 +142,13 @@ Deprecated and removed features, and other changes affecting compatibility:
   storing RPC keys only supported the obsolete and insecure AUTH_DES
   flavor of secure RPC.)
 
+* The __morecore and __after_morecore_hook malloc hooks and the default
+  implementation __default_morecore have been deprecated.  Applications
+  should use malloc interposition to change malloc behavior, and mmap to
+  allocate anonymous memory.  A future version of glibc may require that
+  applications which use the malloc hooks must preload a special shared
+  object, to enable the hooks.
+
 Changes to build and runtime requirements:
 
 * powerpc64le requires GCC 7.4 or newer.  This is required for supporting
