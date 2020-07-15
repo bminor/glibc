@@ -37,7 +37,7 @@ int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
   int result;
-#ifdef STAT_IS_KERNEL_STAT
+#if STAT_IS_KERNEL_STAT
 # define kst (*st)
 #else
   struct kernel_stat kst;
@@ -46,7 +46,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   result = INTERNAL_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);
   if (!__glibc_likely (INTERNAL_SYSCALL_ERROR_P (result)))
     {
-#ifdef STAT_IS_KERNEL_STAT
+#if STAT_IS_KERNEL_STAT
       return 0;
 #else
       return __xstat_conv (vers, &kst, st);

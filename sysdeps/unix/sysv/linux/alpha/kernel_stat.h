@@ -85,5 +85,6 @@ struct glibc21_stat
     long __glibc_reserved[4];
   };
 
+#define STAT_IS_KERNEL_STAT 0
 #define XSTAT_IS_XSTAT64 1
 #define STATFS_IS_STATFS64 0

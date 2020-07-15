@@ -44,5 +44,6 @@ struct kernel_stat64
     long int __glibc_reserved[3];
   };
 
+#define STAT_IS_KERNEL_STAT 0
 #define XSTAT_IS_XSTAT64 1
 #define STATFS_IS_STATFS64 0

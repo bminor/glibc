@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef STAT_IS_KERNEL_STAT
+#if !STAT_IS_KERNEL_STAT
 extern int __xstat_conv (int vers, struct kernel_stat *kbuf, void *ubuf)
   attribute_hidden;
 extern int __xstat64_conv (int vers, struct kernel_stat *kbuf, void *ubuf)

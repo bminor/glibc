@@ -20,7 +20,7 @@
 #include <sys/stat.h>
 #include <kernel_stat.h>
 
-#ifdef STAT_IS_KERNEL_STAT
+#if STAT_IS_KERNEL_STAT
 
 /* Dummy.  */
 struct kernel_stat;
