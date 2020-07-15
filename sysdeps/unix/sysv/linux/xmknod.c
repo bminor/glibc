@@ -16,13 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/sysmacros.h>
-
+#include <fcntl.h>
 #include <sysdep.h>
-#include <sys/syscall.h>
 
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
@@ -40,7 +37,8 @@ __xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
   if (k_dev != *dev)
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
-  return INLINE_SYSCALL (mknod, 3, path, mode, (unsigned int) k_dev);
+  return INLINE_SYSCALL_CALL (mknodat, AT_FDCWD, path, mode,
+			      (unsigned int) k_dev);
 }
 
 weak_alias (__xmknod, _xmknod)
