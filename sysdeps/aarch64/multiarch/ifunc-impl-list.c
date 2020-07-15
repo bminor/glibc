@@ -42,11 +42,13 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_thunderx)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_thunderx2)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_falkor)
+	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_simd)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_generic))
   IFUNC_IMPL (i, name, memmove,
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_thunderx)
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_thunderx2)
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_falkor)
+	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_simd)
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_generic))
   IFUNC_IMPL (i, name, memset,
 	      /* Enable this on non-falkor processors too so that other cores
