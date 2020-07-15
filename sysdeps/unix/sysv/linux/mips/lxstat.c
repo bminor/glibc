@@ -1,4 +1,4 @@
-/* lxstat using old-style Unix lstat system call.
+/* lxstat using old-style Unix stat system call.
    Copyright (C) 1991-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,30 +16,27 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Ho hum, since xstat == xstat64 we must get rid of the prototype or gcc
-   will complain since they don't strictly match.  */
-#define __lxstat64 __lxstat64_disable
-
-#include <errno.h>
-#include <stddef.h>
 #include <sys/stat.h>
-
+#include <fcntl.h>
+#include <kernel_stat.h>
 #include <sysdep.h>
-#include <sys/syscall.h>
+#include <xstatconv.h>
 
-/* Get information about the file FD in BUF.  */
+/* Get information about the file NAME in BUF.  */
 int
 __lxstat (int vers, const char *name, struct stat *buf)
 {
-  if (vers == _STAT_VER_KERNEL || vers == _STAT_VER_LINUX)
-    return INLINE_SYSCALL (lstat, 2, name, buf);
+  switch (vers)
+    {
+    case _STAT_VER_KERNEL:
+      return INLINE_SYSCALL_CALL (lstat, name, buf);
 
-  __set_errno (EINVAL);
-  return -1;
+    default:
+      {
+	struct kernel_stat kbuf;
+	int r = INTERNAL_SYSCALL_CALL (lstat, name, &kbuf);
+	return r ?: __xstat_conv (vers, &kbuf, buf);
+      }
+    }
 }
-
 hidden_def (__lxstat)
-weak_alias (__lxstat, _lxstat);
-#undef __lxstat64
-strong_alias (__lxstat, __lxstat64);
-hidden_ver (__lxstat, __lxstat64)

@@ -1,4 +1,4 @@
-/* lxstat using old-style Unix lstat system call.
+/* lxstat using old-style Unix stat system call.
    Copyright (C) 1991-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,45 +16,47 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Ho hum, if xstat == xstat64 we must get rid of the prototype or gcc
-   will complain since they don't strictly match.  */
-#define __lxstat64 __lxstat64_disable
-
-#include <errno.h>
-#include <stddef.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 #include <kernel_stat.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
 
-#include <xstatconv.h>
+#if !XSTAT_IS_XSTAT64
+# include <xstatconv.h>
+# include <xstatover.h>
 
 /* Get information about the file NAME in BUF.  */
 int
 __lxstat (int vers, const char *name, struct stat *buf)
 {
-  if (vers == _STAT_VER_KERNEL)
-    return INLINE_SYSCALL (lstat, 2, name, buf);
+  switch (vers)
+    {
+    case _STAT_VER_KERNEL:
+      {
+# if STAT_IS_KERNEL_STAT
+	/* New kABIs which uses generic pre 64-bit time Linux ABI,
+	   e.g. csky, nios2  */
+	int r = INLINE_SYSCALL_CALL (fstatat64, AT_FDCWD, name, buf,
+				     AT_SYMLINK_NOFOLLOW);
+	return r ?: stat_overflow (buf);
+# else
+	/* Old kABIs with old non-LFS support, e.g. arm, i386, hppa, m68k,
+	   microblaze, s390, sh, powerpc, and sparc.  */
+	return INLINE_SYSCALL_CALL (lstat, name, buf);
+# endif
+      }
 
-#if STAT_IS_KERNEL_STAT
-  return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-#else
-  struct kernel_stat kbuf;
-  int result;
-
-  result = INLINE_SYSCALL (lstat, 2, name, &kbuf);
-  if (result == 0)
-    result = __xstat_conv (vers, &kbuf, buf);
-
-  return result;
+    default:
+      {
+# if STAT_IS_KERNEL_STAT
+	return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+# else
+	struct stat64 buf64;
+	int r = INLINE_SYSCALL_CALL (lstat64, name, &buf64);
+	return r ?: __xstat32_conv (vers, &buf64, buf);
 #endif
+      }
+    }
 }
-
 hidden_def (__lxstat)
-weak_alias (__lxstat, _lxstat);
-#if XSTAT_IS_XSTAT64
-#undef __lxstat64
-strong_alias (__lxstat, __lxstat64);
-hidden_ver (__lxstat, __lxstat64)
-#endif
+#endif /* XSTAT_IS_XSTAT64  */
