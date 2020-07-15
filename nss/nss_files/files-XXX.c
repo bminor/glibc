@@ -135,10 +135,9 @@ internal_getent (FILE *stream, struct STRUCTURE *result,
 		 char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO
 		 EXTRA_ARGS_DECL)
 {
-  char *p;
   struct parser_data *data = (void *) buffer;
   size_t linebuflen = buffer + buflen - data->linebuffer;
-  int parse_result;
+  int saved_errno = errno;	/* Do not clobber errno on success.  */
 
   if (buflen < sizeof *data + 2)
     {
@@ -149,66 +148,42 @@ internal_getent (FILE *stream, struct STRUCTURE *result,
 
   while (true)
     {
-      ssize_t r = __libc_readline_unlocked
-	(stream, data->linebuffer, linebuflen);
-      if (r < 0)
-	{
-	  *errnop = errno;
-	  H_ERRNO_SET (NETDB_INTERNAL);
-	  if (*errnop == ERANGE)
-	    /* Request larger buffer.  */
-	    return NSS_STATUS_TRYAGAIN;
-	  else
-	    /* Other read failure.  */
-	    return NSS_STATUS_UNAVAIL;
-	}
-      else if (r == 0)
+      off64_t original_offset;
+      int ret = __nss_readline (stream, data->linebuffer, linebuflen,
+				&original_offset);
+      if (ret == ENOENT)
 	{
 	  /* End of file.  */
 	  H_ERRNO_SET (HOST_NOT_FOUND);
+	  __set_errno (saved_errno);
 	  return NSS_STATUS_NOTFOUND;
 	}
-
-      /* Everything OK.  Now skip leading blanks.  */
-      p = data->linebuffer;
-      while (isspace (*p))
-	++p;
-
-      /* Ignore empty and comment lines.  */
-      if (*p == '\0' || *p == '#')
-	continue;
-
-      /* Parse the line.   */
-      *errnop = EINVAL;
-      parse_result = parse_line (p, result, data, buflen, errnop EXTRA_ARGS);
-
-      if (parse_result == -1)
+      else if (ret == 0)
 	{
-	  if (*errnop == ERANGE)
+	  ret = __nss_parse_line_result (stream, original_offset,
+					 parse_line (data->linebuffer,
+						     result, data, buflen,
+						     errnop EXTRA_ARGS));
+	  if (ret == 0)
 	    {
-	      /* Return to the original file position at the beginning
-		 of the line, so that the next call can read it again
-		 if necessary.  */
-	      if (__fseeko64 (stream, -r, SEEK_CUR) != 0)
-		{
-		  if (errno == ERANGE)
-		    *errnop = EINVAL;
-		  else
-		    *errnop = errno;
-		  H_ERRNO_SET (NETDB_INTERNAL);
-		  return NSS_STATUS_UNAVAIL;
-		}
+	      /* Line has been parsed successfully.  */
+	      __set_errno (saved_errno);
+	      return NSS_STATUS_SUCCESS;
 	    }
-	  H_ERRNO_SET (NETDB_INTERNAL);
-	  return NSS_STATUS_TRYAGAIN;
+	  else if (ret == EINVAL)
+	    /* If it is invalid, loop to get the next line of the file
+	       to parse.  */
+	    continue;
 	}
 
-      /* Return the data if parsed successfully.  */
-      if (parse_result != 0)
-	return NSS_STATUS_SUCCESS;
-
-      /* If it is invalid, loop to get the next line of the file to
-	 parse.  */
+      *errnop = ret;
+      H_ERRNO_SET (NETDB_INTERNAL);
+      if (ret == ERANGE)
+	/* Request larger buffer.  */
+	return NSS_STATUS_TRYAGAIN;
+      else
+	/* Other read failure.  */
+	return NSS_STATUS_UNAVAIL;
     }
 }
 

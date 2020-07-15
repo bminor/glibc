@@ -25,6 +25,28 @@
 FILE *__nss_files_fopen (const char *path);
 libc_hidden_proto (__nss_files_fopen)
 
+/* Read a line from FP, storing it BUF.  Strip leading blanks and skip
+   comments.  Sets errno and returns error code on failure.  Special
+   failure: ERANGE means the buffer is too small.  The function writes
+   the original offset to *POFFSET (which can be negative in the case
+   of non-seekable input).  */
+int __nss_readline (FILE *fp, char *buf, size_t len, off64_t *poffset);
+libc_hidden_proto (__nss_readline)
+
+/* Seek FP to OFFSET.  Sets errno and returns error code on failure.
+   On success, sets errno to ERANGE and returns ERANGE (to indicate
+   re-reading of the same input line to the caller).  If OFFSET is
+   negative, fail with ESPIPE without seeking.  Intended to be used
+   after parsing data read by __nss_readline failed with ERANGE.  */
+int __nss_readline_seek (FILE *fp, off64_t offset) attribute_hidden;
+
+/* Handles the result of a parse_line call (as defined by
+   nss/nss_files/files-parse.c).  Adjusts the file offset of FP as
+   necessary.  Returns 0 on success, and updates errno on failure (and
+   returns that error code).  */
+int __nss_parse_line_result (FILE *fp, off64_t offset, int parse_line_result);
+libc_hidden_proto (__nss_parse_line_result)
+
 struct parser_data;
 
 /* Instances of the parse_line function from
@@ -51,5 +73,12 @@ libnss_files_hidden_proto (_nss_files_parse_rpcent)
 libnss_files_hidden_proto (_nss_files_parse_servent)
 libc_hidden_proto (_nss_files_parse_sgent)
 libc_hidden_proto (_nss_files_parse_spent)
+
+/* Generic implementation of fget*ent_r.  Reads lines from FP until
+   EOF or a successful parse into *RESULT using PARSER.  Returns 0 on
+   success, ENOENT on EOF, ERANGE on too-small buffer.  */
+int __nss_fgetent_r (FILE *fp, void *result,
+                     char *buffer, size_t buffer_length,
+                     nss_files_parse_line parser) attribute_hidden;
 
 #endif /* _NSS_FILES_H */
