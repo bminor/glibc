@@ -41,7 +41,9 @@ libc_ifunc (__libc_memmove,
 		? __memmove_falkor
 		: (IS_THUNDERX2 (midr) || IS_THUNDERX2PA (midr)
 		  ? __memmove_thunderx2
-		  : (IS_ARES (midr) ? __memmove_simd : __memmove_generic)))));
+		  : (IS_NEOVERSE_N1 (midr)
+		     ? __memmove_simd
+		     : __memmove_generic)))));
 
 # undef memmove
 strong_alias (__libc_memmove, memmove);

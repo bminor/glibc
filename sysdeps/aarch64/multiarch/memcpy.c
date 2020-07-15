@@ -41,7 +41,9 @@ libc_ifunc (__libc_memcpy,
 		? __memcpy_falkor
 		: (IS_THUNDERX2 (midr) || IS_THUNDERX2PA (midr)
 		  ? __memcpy_thunderx2
-		  : (IS_ARES (midr) ? __memcpy_simd : __memcpy_generic)))));
+		  : (IS_NEOVERSE_N1 (midr)
+		     ? __memcpy_simd
+		     : __memcpy_generic)))));
 
 # undef memcpy
 strong_alias (__libc_memcpy, memcpy);
