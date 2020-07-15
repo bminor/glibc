@@ -29,7 +29,7 @@ isfdtype (int fildes, int fdtype)
 
   {
     int save_error = errno;
-    result = fstat64 (fildes, &st);
+    result = __fstat64 (fildes, &st);
     __set_errno (save_error);
   }
 

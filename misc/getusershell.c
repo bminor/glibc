@@ -106,7 +106,7 @@ initshells (void)
 	strings = NULL;
 	if ((fp = fopen(_PATH_SHELLS, "rce")) == NULL)
 		goto init_okshells_noclose;
-	if (fstat64(fileno(fp), &statb) == -1) {
+	if (__fstat64(fileno(fp), &statb) == -1) {
 	init_okshells:
 		(void)fclose(fp);
 	init_okshells_noclose:

@@ -29,7 +29,7 @@ __fdopendir (int fd)
 {
   struct stat64 statbuf;
 
-  if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &statbuf), 0) < 0)
+  if (__builtin_expect (__fstat64 (fd, &statbuf), 0) < 0)
     return NULL;
   if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
     {

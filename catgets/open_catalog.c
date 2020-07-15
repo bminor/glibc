@@ -194,7 +194,7 @@ __open_catalog (const char *cat_name, const char *nlspath, const char *env_var,
       return -1;
     }
 
-  if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) < 0)
+  if (__builtin_expect (__fstat64 (fd, &st), 0) < 0)
     goto close_unlock_return;
 
   if (__builtin_expect (!S_ISREG (st.st_mode), 0)

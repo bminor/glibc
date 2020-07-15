@@ -207,7 +207,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	/* Cannot open the archive, for whatever reason.  */
 	return NULL;
 
-      if (__fxstat64 (_STAT_VER, fd, &archive_stat) == -1)
+      if (__fstat64 (fd, &archive_stat) == -1)
 	{
 	  /* stat failed, very strange.  */
 	close_and_out:
@@ -405,7 +405,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	      /* Now verify we think this is really the same archive file
 		 we opened before.  If it has been changed we cannot trust
 		 the header we read previously.  */
-	      if (__fxstat64 (_STAT_VER, fd, &st) < 0
+	      if (__fstat64 (fd, &st) < 0
 		  || st.st_size != archive_stat.st_size
 		  || st.st_mtime != archive_stat.st_mtime
 		  || st.st_dev != archive_stat.st_dev

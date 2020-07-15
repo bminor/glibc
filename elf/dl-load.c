@@ -1914,7 +1914,7 @@ open_path (const char *name, size_t namelen, int mode,
 
 		  buf[buflen - namelen - 1] = '\0';
 
-		  if (__xstat64 (_STAT_VER, buf, &st) != 0
+		  if (__stat64 (buf, &st) != 0
 		      || ! S_ISDIR (st.st_mode))
 		    /* The directory does not exist or it is no directory.  */
 		    this_dir->status[cnt] = nonexisting;
@@ -1934,7 +1934,7 @@ open_path (const char *name, size_t namelen, int mode,
 		 directories and so exploit the bugs.  */
 	      struct stat64 st;
 
-	      if (__fxstat64 (_STAT_VER, fd, &st) != 0
+	      if (__fstat64 (fd, &st) != 0
 		  || (st.st_mode & S_ISUID) == 0)
 		{
 		  /* The shared object cannot be tested for being SUID

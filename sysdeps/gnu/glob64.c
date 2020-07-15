@@ -12,7 +12,7 @@
 #undef stat
 #define stat stat64
 #undef __stat
-#define __stat(file, buf) __xstat64 (_STAT_VER, file, buf)
+#define __stat(file, buf) __stat64 (file, buf)
 
 #define COMPILE_GLOB64	1
 

@@ -44,7 +44,7 @@ faccessat (int fd, const char *file, int mode, int flag)
     return INLINE_SYSCALL (faccessat, 3, fd, file, mode);
 
   struct stat64 stats;
-  if (__fxstatat64 (_STAT_VER, fd, file, &stats, flag & AT_SYMLINK_NOFOLLOW))
+  if (__fstatat64 (fd, file, &stats, flag & AT_SYMLINK_NOFOLLOW))
     return -1;
 
   mode &= (X_OK | W_OK | R_OK);	/* Clear any bogus bits. */

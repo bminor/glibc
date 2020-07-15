@@ -140,7 +140,7 @@ euidaccess (const char *path, int mode)
     return access (path, mode);
 #endif
 
-  if (stat64 (path, &stats))
+  if (__stat64 (path, &stats))
     return -1;
 
   mode &= (X_OK | W_OK | R_OK);	/* Clear any bogus bits. */

@@ -180,7 +180,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
     /* Cannot open the file.  */
     return;
 
-  if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) < 0)
+  if (__builtin_expect (__fstat64 (fd, &st), 0) < 0)
     {
     puntfd:
       __close_nocancel_nostatus (fd);
@@ -206,7 +206,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       if (__builtin_expect (fd, 0) < 0)
 	return;
 
-      if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) < 0)
+      if (__builtin_expect (__fstat64 (fd, &st), 0) < 0)
 	goto puntfd;
     }
 

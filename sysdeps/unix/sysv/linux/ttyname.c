@@ -84,7 +84,7 @@ getttyname (const char *dev, const struct stat64 *mytty, int save, int *dostat)
 	    *((char *) __mempcpy (getttyname_name, dev, devlen - 1)) = '/';
 	  }
 	memcpy (&getttyname_name[devlen], d->d_name, dlen);
-	if (__xstat64 (_STAT_VER, getttyname_name, &st) == 0
+	if (__stat64 (getttyname_name, &st) == 0
 	    && is_mytty (mytty, &st))
 	  {
 	    (void) __closedir (dirstream);
@@ -125,7 +125,7 @@ ttyname (int fd)
   if (__glibc_unlikely (__tcgetattr (fd, &term) < 0))
     return NULL;
 
-  if (__fxstat64 (_STAT_VER, fd, &st) < 0)
+  if (__fstat64 (fd, &st) < 0)
     return NULL;
 
   /* We try using the /proc filesystem.  */
@@ -162,14 +162,14 @@ ttyname (int fd)
 
       /* Verify readlink result, fall back on iterating through devices.  */
       if (ttyname_buf[0] == '/'
-	  && __xstat64 (_STAT_VER, ttyname_buf, &st1) == 0
+	  && __stat64 (ttyname_buf, &st1) == 0
 	  && is_mytty (&st, &st1))
 	return ttyname_buf;
 
       doispty = 1;
     }
 
-  if (__xstat64 (_STAT_VER, "/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
+  if (__stat64 ("/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
     {
       name = getttyname ("/dev/pts", &st, save, &dostat);
     }

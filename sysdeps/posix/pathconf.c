@@ -131,7 +131,7 @@ __pathconf (const char *path, int name)
 	/* AIO is only allowed on regular files and block devices.  */
 	struct stat64 st;
 
-	if (__xstat64 (_STAT_VER, path, &st) < 0
+	if (__stat64 (path, &st) < 0
 	    || (! S_ISREG (st.st_mode) && ! S_ISBLK (st.st_mode)))
 	  return -1;
 	else

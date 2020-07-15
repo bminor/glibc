@@ -474,7 +474,7 @@ iruserfopen (const char *file, uid_t okuser)
   /* If not a regular file, if owned by someone other than user or
      root, if writeable by anyone but the owner, or if hardlinked
      anywhere, quit.  */
-  if (__lxstat64 (_STAT_VER, file, &st))
+  if (__lstat64 (file, &st))
     cp = _("lstat failed");
   else if (!S_ISREG (st.st_mode))
     cp = _("not regular file");
@@ -483,7 +483,7 @@ iruserfopen (const char *file, uid_t okuser)
       res = fopen (file, "rce");
       if (!res)
 	cp = _("cannot open");
-      else if (__fxstat64 (_STAT_VER, fileno (res), &st) < 0)
+      else if (__fstat64 (fileno (res), &st) < 0)
 	cp = _("fstat failed");
       else if (st.st_uid && st.st_uid != okuser)
 	cp = _("bad owner");

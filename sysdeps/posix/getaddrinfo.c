@@ -1785,7 +1785,7 @@ gaiconf_init (void)
   if (fp != NULL)
     {
       struct stat64 st;
-      if (__fxstat64 (_STAT_VER, fileno (fp), &st) != 0)
+      if (__fstat64 (fileno (fp), &st) != 0)
 	{
 	  fclose (fp);
 	  goto no_file;
@@ -2138,7 +2138,7 @@ static void
 gaiconf_reload (void)
 {
   struct stat64 st;
-  if (__xstat64 (_STAT_VER, GAICONF_FNAME, &st) != 0
+  if (stat64 (GAICONF_FNAME, &st) != 0
       || !check_gaiconf_mtime (&st))
     gaiconf_init ();
 }

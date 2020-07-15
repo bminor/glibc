@@ -163,7 +163,7 @@ print_cache (const char *cache_name)
     error (EXIT_FAILURE, errno, _("Can't open cache file %s\n"), cache_name);
 
   struct stat64 st;
-  if (fstat64 (fd, &st) < 0
+  if (__fstat64 (fd, &st) < 0
       /* No need to map the file if it is empty.  */
       || st.st_size == 0)
     {
@@ -699,7 +699,7 @@ load_aux_cache (const char *aux_cache_name)
     }
 
   struct stat64 st;
-  if (fstat64 (fd, &st) < 0 || st.st_size < sizeof (struct aux_cache_file))
+  if (__fstat64 (fd, &st) < 0 || st.st_size < sizeof (struct aux_cache_file))
     {
       close (fd);
       init_aux_cache ();

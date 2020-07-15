@@ -135,15 +135,15 @@ int rpl_lstat (const char *, struct stat *);
 # define NFTW_OLD_NAME __old_nftw
 # define NFTW_NEW_NAME __new_nftw
 # define INO_T ino_t
-# define STAT stat
+# define STRUCT_STAT stat
 # ifdef _LIBC
-#  define LXSTAT __lxstat
-#  define XSTAT __xstat
-#  define FXSTATAT __fxstatat
+#  define LSTAT __lstat
+#  define STAT __stat
+#  define FSTATAT __fstatat
 # else
-#  define LXSTAT(V,f,sb) lstat (f,sb)
-#  define XSTAT(V,f,sb) stat (f,sb)
-#  define FXSTATAT(V,d,f,sb,m) fstatat (d, f, sb, m)
+#  define LSTAT lstat
+#  define XTAT stat
+#  define FSTATAT fstatat
 # endif
 # define FTW_FUNC_T __ftw_func_t
 # define NFTW_FUNC_T __nftw_func_t
@@ -219,7 +219,7 @@ static const int ftw_arr[] =
 
 
 /* Forward declarations of local functions.  */
-static int ftw_dir (struct ftw_data *data, struct STAT *st,
+static int ftw_dir (struct ftw_data *data, struct STRUCT_STAT *st,
 		    struct dir_data *old_dir);
 
 
@@ -239,7 +239,7 @@ object_compare (const void *p1, const void *p2)
 
 
 static int
-add_object (struct ftw_data *data, struct STAT *st)
+add_object (struct ftw_data *data, struct STRUCT_STAT *st)
 {
   struct known_object *newp = malloc (sizeof (struct known_object));
   if (newp == NULL)
@@ -251,7 +251,7 @@ add_object (struct ftw_data *data, struct STAT *st)
 
 
 static inline int
-find_object (struct ftw_data *data, struct STAT *st)
+find_object (struct ftw_data *data, struct STRUCT_STAT *st)
 {
   struct known_object obj;
   obj.dev = st->st_dev;
@@ -378,7 +378,7 @@ static int
 process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 	       size_t namlen, int d_type)
 {
-  struct STAT st;
+  struct STRUCT_STAT st;
   int result = 0;
   int flag = 0;
   size_t new_buflen;
@@ -405,16 +405,16 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 
   int statres;
   if (dir->streamfd != -1)
-    statres = FXSTATAT (_STAT_VER, dir->streamfd, name, &st,
-			(data->flags & FTW_PHYS) ? AT_SYMLINK_NOFOLLOW : 0);
+    statres = FSTATAT (dir->streamfd, name, &st,
+		       (data->flags & FTW_PHYS) ? AT_SYMLINK_NOFOLLOW : 0);
   else
     {
       if ((data->flags & FTW_CHDIR) == 0)
 	name = data->dirbuf;
 
       statres = ((data->flags & FTW_PHYS)
-		 ? LXSTAT (_STAT_VER, name, &st)
-		 : XSTAT (_STAT_VER, name, &st));
+		 ? LSTAT (name, &st)
+		 : STAT (name, &st));
     }
 
   if (statres < 0)
@@ -430,10 +430,10 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 	     it should contain information about the link (ala lstat).
 	     We do our best to fill in what data we can.  */
 	  if (dir->streamfd != -1)
-	    statres = FXSTATAT (_STAT_VER, dir->streamfd, name, &st,
-				AT_SYMLINK_NOFOLLOW);
+	    statres = FSTATAT (dir->streamfd, name, &st,
+			       AT_SYMLINK_NOFOLLOW);
 	  else
-	    statres = LXSTAT (_STAT_VER, name, &st);
+	    statres = LSTAT (name, &st);
 	  if (statres == 0 && S_ISLNK (st.st_mode))
 	    flag = FTW_SLN;
 	  else
@@ -476,7 +476,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 
 static int
 __attribute ((noinline))
-ftw_dir (struct ftw_data *data, struct STAT *st, struct dir_data *old_dir)
+ftw_dir (struct ftw_data *data, struct STRUCT_STAT *st, struct dir_data *old_dir)
 {
   struct dir_data dir;
   struct dirent64 *d;
@@ -630,7 +630,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 	     int flags)
 {
   struct ftw_data data;
-  struct STAT st;
+  struct STRUCT_STAT st;
   int result = 0;
   int save_err;
   int cwdfd = -1;
@@ -740,12 +740,12 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 	name = data.dirbuf;
 
       if (((flags & FTW_PHYS)
-	   ? LXSTAT (_STAT_VER, name, &st)
-	   : XSTAT (_STAT_VER, name, &st)) < 0)
+	   ? LSTAT (name, &st)
+	   : STAT (name, &st)) < 0)
 	{
 	  if (!(flags & FTW_PHYS)
 	      && errno == ENOENT
-	      && LXSTAT (_STAT_VER, name, &st) == 0
+	      && LSTAT (name, &st) == 0
 	      && S_ISLNK (st.st_mode))
 	    result = (*data.func) (data.dirbuf, &st, data.cvt_arr[FTW_SLN],
 				   &data.ftw);

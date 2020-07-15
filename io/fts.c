@@ -81,8 +81,9 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 # define FTSOBJ FTS
 # define FTSENTRY FTSENT
 # define INO_T ino_t
-# define STAT stat
-# define LSTAT lstat
+# define STRUCT_STAT stat
+# define STAT __stat
+# define LSTAT __lstat
 #endif
 
 static FTSENTRY	*fts_alloc (FTSOBJ *, const char *, size_t);
@@ -872,7 +873,7 @@ fts_stat (FTSOBJ *sp, FTSENTRY *p, int follow)
 	FTSENTRY *t;
 	dev_t dev;
 	INO_T ino;
-	struct STAT *sbp, sb;
+	struct STRUCT_STAT *sbp, sb;
 	int saved_errno;
 
 	/* If user needs stat info, stat buffer already allocated. */
@@ -906,7 +907,7 @@ fts_stat (FTSOBJ *sp, FTSENTRY *p, int follow)
 		}
 	} else if (LSTAT(p->fts_accpath, sbp)) {
 		p->fts_errno = errno;
-err:		memset(sbp, 0, sizeof(struct STAT));
+err:		memset(sbp, 0, sizeof(struct STRUCT_STAT));
 		return (FTS_NS);
 	}
 
@@ -996,7 +997,7 @@ fts_alloc (FTSOBJ *sp, const char *name, size_t namelen)
 	 */
 	len = sizeof(FTSENTRY) + namelen;
 	if (!ISSET(FTS_NOSTAT))
-		len += sizeof(struct STAT) + ALIGNBYTES;
+		len += sizeof(struct STRUCT_STAT) + ALIGNBYTES;
 	if ((p = malloc(len)) == NULL)
 		return (NULL);
 
@@ -1005,7 +1006,7 @@ fts_alloc (FTSOBJ *sp, const char *name, size_t namelen)
 	p->fts_name[namelen] = '\0';
 
 	if (!ISSET(FTS_NOSTAT))
-		p->fts_statp = (struct STAT *)ALIGN(p->fts_name + namelen + 2);
+		p->fts_statp = (struct STRUCT_STAT *)ALIGN(p->fts_name + namelen + 2);
 	p->fts_namelen = namelen;
 	p->fts_path = sp->fts_path;
 	p->fts_errno = 0;
@@ -1116,7 +1117,7 @@ fts_safe_changedir (FTSOBJ *sp, FTSENTRY *p, int fd, const char *path)
 		return (0);
 	if (fd < 0 && (newfd = __open(path, O_RDONLY, 0)) < 0)
 		return (-1);
-	if (__fxstat64(_STAT_VER, newfd, &sb)) {
+	if (__fstat64(newfd, &sb)) {
 		ret = -1;
 		goto bail;
 	}

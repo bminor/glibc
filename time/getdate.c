@@ -121,7 +121,7 @@ __getdate_r (const char *string, struct tm *tp)
   if (datemsk == NULL || *datemsk == '\0')
     return 1;
 
-  if (stat64 (datemsk, &st) < 0)
+  if (__stat64 (datemsk, &st) < 0)
     return 3;
 
   if (!S_ISREG (st.st_mode))

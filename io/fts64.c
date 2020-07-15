@@ -24,7 +24,8 @@
 #define FTSOBJ FTS64
 #define FTSENTRY FTSENT64
 #define INO_T ino64_t
-#define STAT stat64
-#define LSTAT lstat64
+#define STRUCT_STAT stat64
+#define STAT __stat64
+#define LSTAT __lstat64
 
 #include "fts.c"

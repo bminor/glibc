@@ -63,7 +63,7 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
 
   if (stp)
     {
-      if (__xstat64 (_STAT_VER, peername, stp) < 0)
+      if (__stat64 (peername, stp) < 0)
 	return errno;
     }
 

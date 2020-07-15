@@ -56,7 +56,7 @@ opendir_tail (int fd)
      `stat' call.  The S_ISDIR check is superfluous if O_DIRECTORY works,
      but it's cheap and we need the stat call for st_blksize anyway.  */
   struct stat64 statbuf;
-  if (__glibc_unlikely (__fxstat64 (_STAT_VER, fd, &statbuf) < 0))
+  if (__glibc_unlikely (__fstat64 (fd, &statbuf) < 0))
     goto lose;
   if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
     {

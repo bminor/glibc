@@ -32,8 +32,8 @@ get_current_dir_name (void)
 
   pwd = getenv ("PWD");
   if (pwd != NULL
-      && stat64 (".", &dotstat) == 0
-      && stat64 (pwd, &pwdstat) == 0
+      && __stat64 (".", &dotstat) == 0
+      && __stat64 (pwd, &pwdstat) == 0
       && pwdstat.st_dev == dotstat.st_dev
       && pwdstat.st_ino == dotstat.st_ino)
     /* The PWD value is correct.  Use it.  */

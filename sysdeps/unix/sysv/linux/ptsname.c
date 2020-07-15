@@ -114,7 +114,7 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
 	  return ERANGE;
 	}
 
-      if (__fxstat64 (_STAT_VER, fd, stp) < 0)
+      if (__fstat64 (fd, stp) < 0)
 	return errno;
 
       /* Check if FD really is a master pseudo terminal.  */
@@ -138,7 +138,7 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
       p[2] = '\0';
     }
 
-  if (__xstat64 (_STAT_VER, buf, stp) < 0)
+  if (__stat64 (buf, stp) < 0)
     return errno;
 
   /* Check if the name we're about to return really corresponds to a

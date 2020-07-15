@@ -342,7 +342,7 @@ _dl_start_profile (void)
       return;
     }
 
-  if (__fxstat64 (_STAT_VER, fd, &st) < 0 || !S_ISREG (st.st_mode))
+  if (__fstat64 (fd, &st) < 0 || !S_ISREG (st.st_mode))
     {
       /* Not stat'able or not a regular file => don't use it.  */
       errstr = "%s: cannot stat file: %s\n";

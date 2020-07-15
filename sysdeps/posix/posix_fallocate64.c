@@ -48,7 +48,7 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
   }
 
   /* We have to make sure that this is really a regular file.  */
-  if (__fxstat64 (_STAT_VER, fd, &st) != 0)
+  if (__fstat64 (fd, &st) != 0)
     return EBADF;
   if (S_ISFIFO (st.st_mode))
     return ESPIPE;

@@ -60,8 +60,8 @@ fexecve (int fd, char *const argv[], char *const envp[])
 
   /* We come here only if the 'execve' call fails.  Determine whether
      /proc is mounted.  If not we return ENOSYS.  */
-  struct stat st;
-  if (stat ("/proc/self/fd", &st) != 0 && errno == ENOENT)
+  struct stat64 st;
+  if (__stat64 ("/proc/self/fd", &st) != 0 && errno == ENOENT)
     save = ENOSYS;
 
   __set_errno (save);

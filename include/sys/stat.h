@@ -53,6 +53,7 @@ extern __typeof (__fxstatat64) __fxstatat64 attribute_hidden;
 #define lstat64(fname, buf)  __lxstat64 (_STAT_VER, fname, buf)
 #define __lstat64(fname, buf)  __lxstat64 (_STAT_VER, fname, buf)
 #define stat64(fname, buf) __xstat64 (_STAT_VER, fname, buf)
+#define __stat64(fname, buf) __xstat64 (_STAT_VER, fname, buf)
 #define fstat64(fd, buf) __fxstat64 (_STAT_VER, fd, buf)
 #define __fstat64(fd, buf) __fxstat64 (_STAT_VER, fd, buf)
 #define fstat(fd, buf) __fxstat (_STAT_VER, fd, buf)

@@ -174,7 +174,7 @@ next:
 			break;
 		case PASSWD:
 			if (strcmp(*aname, "anonymous") &&
-			    fstat64(fileno(cfile), &stb) >= 0 &&
+			    __fstat64(fileno(cfile), &stb) >= 0 &&
 			    (stb.st_mode & 077) != 0) {
 	warnx(_("Error: .netrc file is readable by others."));
 	warnx(_("Remove 'password' line or make file unreadable by others."));
