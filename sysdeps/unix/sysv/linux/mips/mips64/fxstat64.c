@@ -16,14 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stddef.h>
 #include <sys/stat.h>
 #include <kernel_stat.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
-
 #include <xstatconv.h>
 
 /* Get information about the file FD in BUF.  */
@@ -31,14 +26,10 @@
 int
 __fxstat64 (int vers, int fd, struct stat64 *buf)
 {
-  int result;
   struct kernel_stat kbuf;
+  int r = INLINE_SYSCALL_CALL (fstat, fd, &kbuf);
+  return r ?: __xstat64_conv (vers, &kbuf, buf);
 
-  result = INLINE_SYSCALL (fstat, 2, fd, &kbuf);
-  if (result == 0)
-    result = __xstat64_conv (vers, &kbuf, buf);
-
-  return result;
 }
 
 hidden_def (__fxstat64)

@@ -1,5 +1,5 @@
 /* fxstat using old-style Unix stat system call.
-   Copyright (C) 2004-2020 Free Software Foundation, Inc.
+   Copyright (C) 1991-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,45 +13,30 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define __fxstat64 __fxstat64_disable
-
-#include <errno.h>
-#include <stddef.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 #include <kernel_stat.h>
 #include <sysdep.h>
-#include <sys/syscall.h>
 #include <xstatconv.h>
-
-#undef __fxstat64
-
 
 /* Get information about the file NAME in BUF.  */
 int
 __fxstat (int vers, int fd, struct stat *buf)
 {
-  int result;
-  struct kernel_stat kbuf;
-
-  if (vers == _STAT_VER_KERNEL64)
+  switch (vers)
     {
-      result = INTERNAL_SYSCALL_CALL (fstat64, fd, buf);
-      if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result)))
-	return result;
-      __set_errno (INTERNAL_SYSCALL_ERRNO (result));
-      return -1;
-    }
+    case _STAT_VER_KERNEL:
+      return INLINE_SYSCALL_CALL (fstat, fd, buf);
 
-  result = INTERNAL_SYSCALL_CALL (fstat, fd, &kbuf);
-  if (__glibc_likely (!INTERNAL_SYSCALL_ERROR_P (result)))
-    return __xstat_conv (vers, &kbuf, buf);
-  __set_errno (INTERNAL_SYSCALL_ERRNO (result));
-  return -1;
+    default:
+      {
+	struct kernel_stat kbuf;
+	int r = INTERNAL_SYSCALL_CALL (fstat, fd, &kbuf);
+	return r ?: __xstat_conv (vers, &kbuf, buf);
+      }
+    }
 }
 hidden_def (__fxstat)
-weak_alias (__fxstat, _fxstat);
-strong_alias (__fxstat, __fxstat64);
-hidden_ver (__fxstat, __fxstat64)

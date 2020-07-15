@@ -1,7 +1,6 @@
-/* __fxstat64 () implementation.
-   Copyright (C) 2016-2020 Free Software Foundation, Inc.
+/* fxstat64 using old-style Unix stat system call.
+   Copyright (C) 2004-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,20 +16,32 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Hide the prototypes for __fxstat and _fxstat so that GCC will not
-   complain about the different function signatures if they are aliased
-   to  __fxstat64.  If XSTAT_IS_XSTAT64 is set to non-zero then the stat and
-   stat64 structures have an identical layout but different type names.  */
-
-#define __fxstat __fxstat_disable
-#define _fxstat _fxstat_disable
-
-#include <sysdeps/unix/sysv/linux/fxstat64.c>
-
+#define __fxstat __redirect___fxstat64
+#include <sys/stat.h>
 #undef __fxstat
-#undef _fxstat
-#if XSTAT_IS_XSTAT64
-weak_alias (__fxstat64, __fxstat)
-weak_alias (__fxstat64, _fxstat)
+#include <kernel_stat.h>
+#include <sysdep.h>
+#include <xstatconv.h>
+
+/* Get information about the file NAME in BUF.  */
+int
+__fxstat64 (int vers, int fd, struct stat64 *buf)
+{
+  switch (vers)
+    {
+    case _STAT_VER_KERNEL64:
+      return INLINE_SYSCALL_CALL (fstat64, fd, buf);
+
+    default:
+      {
+        struct kernel_stat kbuf;
+	int r = INTERNAL_SYSCALL_CALL (fstat, fd, &kbuf);
+	if (r == 0)
+	  return __xstat_conv (vers, &kbuf, buf);
+	return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
+      }
+    }
+}
+hidden_def (__fxstat64)
+strong_alias (__fxstat64, __fxstat);
 hidden_ver (__fxstat64, __fxstat)
-#endif
