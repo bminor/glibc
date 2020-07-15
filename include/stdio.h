@@ -179,19 +179,6 @@ int __vfxprintf (FILE *__fp, const char *__fmt, __gnuc_va_list,
 		 unsigned int)
   attribute_hidden;
 
-/* Read the next line from FP into BUFFER, of LENGTH bytes.  LINE will
-   include the line terminator and a NUL terminator.  On success,
-   return the length of the line, including the line terminator, but
-   excluding the NUL termintor.  On EOF, return zero and write a NUL
-   terminator.  On error, return -1 and set errno.  If the total byte
-   count (line and both terminators) exceeds LENGTH, return -1 and set
-   errno to ERANGE (but do not mark the stream as failed).
-
-   The behavior is undefined if FP is not seekable, or if the stream
-   is already in an error state.  */
-ssize_t __libc_readline_unlocked (FILE *fp, char *buffer, size_t length);
-libc_hidden_proto (__libc_readline_unlocked);
-
 extern const char *const _sys_errlist_internal[] attribute_hidden;
 extern const char *__get_errlist (int) attribute_hidden;
 extern const char *__get_errname (int) attribute_hidden;

@@ -49,7 +49,7 @@ routines	:=							      \
 	__fbufsize __freading __fwriting __freadable __fwritable __flbf	      \
 	__fpurge __fpending __fsetlocking				      \
 									      \
-	libc_fatal fmemopen oldfmemopen vtables readline
+	libc_fatal fmemopen oldfmemopen vtables
 
 tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst_wprintf2 tst-widetext test-fmemopen tst-ext tst-ext2 \
@@ -68,7 +68,7 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst-sprintf-ub tst-sprintf-chk-ub tst-bz24051 tst-bz24153 \
 	tst-wfile-sync
 
-tests-internal = tst-vtables tst-vtables-interposed tst-readline
+tests-internal = tst-vtables tst-vtables-interposed
 
 ifeq (yes,$(build-shared))
 # Add test-fopenloc only if shared library is enabled since it depends on
