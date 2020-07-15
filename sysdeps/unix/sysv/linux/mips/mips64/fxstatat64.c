@@ -15,17 +15,9 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <fcntl.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
 #include <sys/stat.h>
 #include <kernel_stat.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
-
 #include <xstatconv.h>
 
 /* Get information about the file NAME in BUF.  */
@@ -33,22 +25,12 @@
 int
 __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 {
-  if (__builtin_expect (vers != _STAT_VER_LINUX, 0))
+  if (vers == _STAT_VER_LINUX)
     {
-      __set_errno (EINVAL);
-      return -1;
+      struct kernel_stat kst;
+      int r = INLINE_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);;
+      return r ?: __xstat64_conv (vers, &kst, st);
     }
-
-  int result;
-  struct kernel_stat kst;
-
-  result = INTERNAL_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);
-  if (!__glibc_likely (INTERNAL_SYSCALL_ERROR_P (result)))
-    return __xstat64_conv (vers, &kst, st);
-  else
-    {
-      __set_errno (INTERNAL_SYSCALL_ERRNO (result));
-      return -1;
-    }
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 }
 libc_hidden_def (__fxstatat64)

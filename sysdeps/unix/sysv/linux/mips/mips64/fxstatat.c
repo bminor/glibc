@@ -1,4 +1,5 @@
-/* Copyright (C) 2005-2020 Free Software Foundation, Inc.
+/* fxstat using old-style Unix fstat system call.
+   Copyright (C) 1991-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,34 +16,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Ho hum, since fxstatat == fxstatat64 we must get rid of the
-   prototype or gcc will complain since they don't strictly match.  */
-#define __fxstatat64 __fxstatat64_disable
-
-#include <errno.h>
-#include <fcntl.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
 #include <sys/stat.h>
-
+#include <fcntl.h>
+#include <kernel_stat.h>
 #include <sysdep.h>
-#include <sys/syscall.h>
+#include <xstatconv.h>
 
-
-/* Get information about the file NAME relative to FD in ST.  */
+/* Get information about the file FD in BUF.  */
 int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
-  if (vers != _STAT_VER_KERNEL && vers != _STAT_VER_LINUX)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
-
-  return INLINE_SYSCALL (newfstatat, 4, fd, file, st, flag);
+  struct kernel_stat kst;
+  int r = INLINE_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);
+  return r ?: __xstat_conv (vers, &kst, st);
 }
 libc_hidden_def (__fxstatat)
-#undef __fxstatat64
-strong_alias (__fxstatat, __fxstatat64);
-strong_alias (__fxstatat64, __GI___fxstatat64)

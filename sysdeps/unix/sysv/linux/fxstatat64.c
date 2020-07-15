@@ -1,4 +1,5 @@
-/* Copyright (C) 2005-2020 Free Software Foundation, Inc.
+/* fxstatat64 used on fstatat64, Linux implementation.
+   Copyright (C) 2005-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,41 +16,53 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <fcntl.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
+#define __fxstatat __redirect___fxstatat
 #include <sys/stat.h>
+#undef __fxstatat
+#include <fcntl.h>
 #include <kernel_stat.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
-
+#include <xstatconv.h>
 #include <statx_cp.h>
 
-/* Get information about the file NAME in BUF.  */
+/* Get information about the file FD in BUF.  */
 
 int
 __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 {
-  if (__glibc_unlikely (vers != _STAT_VER_LINUX))
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-
-  int result;
-
-#ifdef __NR_fstatat64
-  result = INTERNAL_SYSCALL_CALL (fstatat64, fd, file, st, flag);
+#if XSTAT_IS_XSTAT64
+# ifdef __NR_newfstatat
+  /* 64-bit kABI, e.g. aarch64, ia64, powerpc64*, s390x, riscv64, and
+     x86_64.  */
+  if (vers == _STAT_VER_KERNEL || vers == _STAT_VER_LINUX)
+    return INLINE_SYSCALL_CALL (newfstatat, fd, file, st, flag);
+# elif defined __NR_fstatat64
+  /* 64-bit kABI outlier, e.g. sparc64.  */
+  struct stat64 st64;
+  int r = INLINE_SYSCALL_CALL (fstatat64, fd, file, &st64, flag);
+  return r ?: __xstat32_conv (vers, &st64, (struct stat *) st);
+# else
+  /* New 32-bit kABIs with only 64-bit time_t support, e.g. arc, riscv32.  */
+  if (vers == _STAT_VER_KERNEL)
+    {
+      struct statx tmp;
+      int r = INLINE_SYSCALL_CALL (statx, fd, file, AT_NO_AUTOMOUNT | flag,
+				   STATX_BASIC_STATS, &tmp);
+      if (r == 0)
+	__cp_stat64_statx (st, &tmp);
+      return r;
+    }
+# endif
 #else
-  struct statx tmp;
-
-  result = INTERNAL_SYSCALL_CALL (statx, fd, file, AT_NO_AUTOMOUNT | flag,
-				  STATX_BASIC_STATS, &tmp);
-  if (result == 0)
-    __cp_stat64_statx (st, &tmp);
+  /* All kABIs with non-LFS support, e.g. arm, csky, i386, hppa, m68k,
+     microblaze, mips32, nios2, sh, powerpc32, and sparc32.  */
+  if (vers == _STAT_VER_LINUX)
+    return INLINE_SYSCALL_CALL (fstatat64, fd, file, st, flag);
 #endif
-  if (!__glibc_likely (INTERNAL_SYSCALL_ERROR_P (result)))
-    return 0;
-  return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result));
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 }
 libc_hidden_def (__fxstatat64)
+#if XSTAT_IS_XSTAT64 && IS_IN(libc)
+strong_alias (__fxstatat64, __fxstatat);
+hidden_ver (__fxstatat64, __fxstatat)
+#endif

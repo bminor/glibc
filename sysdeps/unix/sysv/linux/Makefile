@@ -281,8 +281,7 @@ tests += tst-fallocate tst-fallocate64 tst-o_path-locks
 endif
 
 ifeq ($(subdir),elf)
-sysdep-rtld-routines += dl-brk dl-sbrk dl-getcwd dl-openat64 dl-opendir \
-			dl-fxstatat64
+sysdep-rtld-routines += dl-brk dl-sbrk dl-getcwd dl-openat64 dl-opendir
 
 libof-lddlibc4 = lddlibc4
 

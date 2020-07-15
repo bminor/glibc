@@ -1,4 +1,5 @@
-/* Copyright (C) 2005-2020 Free Software Foundation, Inc.
+/* fxstatat used on fstatat, Linux implementation.
+   Copyright (C) 2005-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,48 +16,36 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Ho hum, if fxstatat == fxstatat64 we must get rid of the prototype or gcc
-   will complain since they don't strictly match.  */
-#define __fxstatat64 __fxstatat64_disable
-
-#include <errno.h>
-#include <fcntl.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 #include <kernel_stat.h>
-
 #include <sysdep.h>
-#include <sys/syscall.h>
 
-#include <xstatconv.h>
+#if !XSTAT_IS_XSTAT64
+# include <xstatconv.h>
+# include <xstatover.h>
 
-/* Get information about the file NAME in BUF.  */
+/* Get information about the file FD in BUF.  */
 int
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
-  int result;
 #if STAT_IS_KERNEL_STAT
-# define kst (*st)
-#else
-  struct kernel_stat kst;
-#endif
-
-  result = INTERNAL_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);
-  if (!__glibc_likely (INTERNAL_SYSCALL_ERROR_P (result)))
+  /* New kABIs which uses generic pre 64-bit time Linux ABI, e.g.
+     csky, nios2  */
+  if (vers == _STAT_VER_KERNEL)
     {
-#if STAT_IS_KERNEL_STAT
-      return 0;
-#else
-      return __xstat_conv (vers, &kst, st);
-#endif
+      int r = INLINE_SYSCALL_CALL (fstatat64, fd, file, st, flag);
+      return r ?: stat_overflow (st);
     }
-  return INLINE_SYSCALL_ERROR_RETURN_VALUE (INTERNAL_SYSCALL_ERRNO (result));
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+#else
+  /* Old kABIs with old non-LFS support, e.g. arm, i386, hppa, m68k, mips32,
+     microblaze, s390, sh, powerpc32, and sparc32.  */
+  struct stat64 st64;
+  int r = INLINE_SYSCALL_CALL (fstatat64, fd, file, &st64, flag);
+  return r ?: __xstat32_conv (vers, &st64, st);
+#endif
 }
 libc_hidden_def (__fxstatat)
-#if XSTAT_IS_XSTAT64
-# undef __fxstatat64
-strong_alias (__fxstatat, __fxstatat64);
-libc_hidden_def (__fxstatat64)
-#endif
+
+#endif /* XSTAT_IS_XSTAT64  */
