@@ -98,7 +98,7 @@ GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI)
 #define ENTRY(name)						\
   .globl C_SYMBOL_NAME(name);					\
   .type C_SYMBOL_NAME(name),%function;				\
-  .align 4;							\
+  .p2align 6;							\
   C_LABEL(name)							\
   cfi_startproc;						\
   BTI_C;							\
