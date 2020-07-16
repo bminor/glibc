@@ -2138,7 +2138,7 @@ static void
 gaiconf_reload (void)
 {
   struct stat64 st;
-  if (stat64 (GAICONF_FNAME, &st) != 0
+  if (__stat64 (GAICONF_FNAME, &st) != 0
       || !check_gaiconf_mtime (&st))
     gaiconf_init ();
 }

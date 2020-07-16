@@ -132,6 +132,9 @@ libc {
     fcntl64;
     statx;
   }
+  GLIBC_2.33 {
+    stat; stat64; fstat; fstat64; lstat; lstat64; fstatat; fstatat64;
+  }
   GLIBC_PRIVATE {
     __libc_fcntl64;
     __fcntl_nocancel;
@@ -141,5 +144,6 @@ libc {
     __file_change_detection_for_stat;
     __file_change_detection_for_path;
     __file_change_detection_for_fp;
+    __fstat64;
   }
 }

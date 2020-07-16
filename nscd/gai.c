@@ -16,6 +16,7 @@
    along with this program; if not, see <https://www.gnu.org/licenses/>.  */
 
 #include <alloca.h>
+#include <sys/stat.h>
 
 /* This file uses the getaddrinfo code but it compiles it without NSCD
    support.  We just need a few symbol renames.  */
@@ -32,6 +33,10 @@
 #define __libc_use_alloca(size) (size <= __MAX_ALLOCA_CUTOFF)
 #define __getifaddrs getifaddrs
 #define __freeifaddrs freeifaddrs
+#undef __fstat64
+#define __fstat64 fstat64
+#undef __stat64
+#define __stat64 stat64
 
 /* We are nscd, so we don't want to be talking to ourselves.  */
 #undef  USE_NSCD

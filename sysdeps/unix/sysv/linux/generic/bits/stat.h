@@ -26,17 +26,6 @@
 #include <bits/endian.h>
 #include <bits/wordsize.h>
 
-/* 64-bit libc uses the kernel's 'struct stat', accessed via the
-   stat() syscall; 32-bit libc uses the kernel's 'struct stat64'
-   and accesses it via the stat64() syscall.  All the various
-   APIs offered by libc use the kernel shape for their struct stat
-   structure; the only difference is that 32-bit programs not
-   using __USE_FILE_OFFSET64 only see the low 32 bits of some
-   of the fields (specifically st_ino, st_size, and st_blocks).  */
-#define _STAT_VER_KERNEL	0
-#define _STAT_VER_LINUX		0
-#define _STAT_VER		_STAT_VER_KERNEL
-
 /* Versions of the `xmknod' interface.  */
 #define _MKNOD_VER_LINUX	0
 

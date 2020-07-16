@@ -2104,4 +2104,12 @@ GLIBC_2.32 sigabbrev_np F
 GLIBC_2.32 sigdescr_np F
 GLIBC_2.32 strerrordesc_np F
 GLIBC_2.32 strerrorname_np F
+GLIBC_2.33 fstat F
+GLIBC_2.33 fstat64 F
+GLIBC_2.33 fstatat F
+GLIBC_2.33 fstatat64 F
+GLIBC_2.33 lstat F
+GLIBC_2.33 lstat64 F
 GLIBC_2.33 mallinfo2 F
+GLIBC_2.33 stat F
+GLIBC_2.33 stat64 F

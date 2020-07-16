@@ -60,8 +60,7 @@ routines :=								\
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive
 # linked against when the shared library will be used.
-static-only-routines = stat fstat lstat stat64 fstat64 lstat64	\
-		       fstatat fstatat64 mknod mknodat
+static-only-routines = mknod mknodat
 
 others		:= pwd
 test-srcs	:= ftwtest
@@ -78,6 +77,7 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 
 # Likewise for statx, but we do not need static linking here.
 tests-internal += tst-statx
+tests-static += tst-statx
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)ftwtest.out

@@ -793,6 +793,10 @@ GLIBC_2.33 fseeko64 F
 GLIBC_2.33 fsetpos F
 GLIBC_2.33 fsetpos64 F
 GLIBC_2.33 fsetxattr F
+GLIBC_2.33 fstat F
+GLIBC_2.33 fstat64 F
+GLIBC_2.33 fstatat F
+GLIBC_2.33 fstatat64 F
 GLIBC_2.33 fstatfs F
 GLIBC_2.33 fstatfs64 F
 GLIBC_2.33 fstatvfs F
@@ -1164,6 +1168,8 @@ GLIBC_2.33 lsearch F
 GLIBC_2.33 lseek F
 GLIBC_2.33 lseek64 F
 GLIBC_2.33 lsetxattr F
+GLIBC_2.33 lstat F
+GLIBC_2.33 lstat64 F
 GLIBC_2.33 lutimes F
 GLIBC_2.33 madvise F
 GLIBC_2.33 makecontext F
@@ -1631,6 +1637,8 @@ GLIBC_2.33 srandom F
 GLIBC_2.33 srandom_r F
 GLIBC_2.33 sscanf F
 GLIBC_2.33 ssignal F
+GLIBC_2.33 stat F
+GLIBC_2.33 stat64 F
 GLIBC_2.33 statfs F
 GLIBC_2.33 statfs64 F
 GLIBC_2.33 statvfs F
