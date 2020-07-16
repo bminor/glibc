@@ -29,6 +29,7 @@
 #include <libc-lock.h>
 #include <kernel-features.h>
 #include <scratch_buffer.h>
+#include <nss_files.h>
 
 NSS_DECLARE_MODULE_FUNCTIONS (compat)
 
@@ -122,13 +123,10 @@ internal_setgrent (ent_t *ent)
   else
     ent->blacklist.current = 0;
 
-  ent->stream = fopen ("/etc/group", "rme");
+  ent->stream = __nss_files_fopen ("/etc/group");
 
   if (ent->stream == NULL)
     status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
-  else
-    /* We take care of locking ourself.  */
-    __fsetlocking (ent->stream, FSETLOCKING_BYCALLER);
 
   return status;
 }

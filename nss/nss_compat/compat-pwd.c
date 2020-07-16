@@ -27,6 +27,7 @@
 #include <string.h>
 #include <libc-lock.h>
 #include <kernel-features.h>
+#include <nss_files.h>
 
 #include "netgroup.h"
 #include "nisdomain.h"
@@ -223,13 +224,10 @@ internal_setpwent (ent_t *ent, int stayopen, int needent)
 
   if (ent->stream == NULL)
     {
-      ent->stream = fopen ("/etc/passwd", "rme");
+      ent->stream = __nss_files_fopen ("/etc/passwd");
 
       if (ent->stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
-      else
-	/* We take care of locking ourself.  */
-	__fsetlocking (ent->stream, FSETLOCKING_BYCALLER);
     }
   else
     rewind (ent->stream);
