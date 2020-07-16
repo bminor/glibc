@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #include <libc-lock.h>
 #include "nsswitch.h"
+#include <nss_files.h>
 
 #include <kernel-features.h>
 
@@ -74,7 +75,7 @@ internal_setent (FILE **stream)
 
   if (*stream == NULL)
     {
-      *stream = fopen (DATAFILE, "rce");
+      *stream = __nss_files_fopen (DATAFILE);
 
       if (*stream == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;

@@ -28,7 +28,7 @@ headers			:= nss.h
 routines		= nsswitch getnssent getnssent_r digits_dots \
 			  valid_field valid_list_field rewrite_field \
 			  $(addsuffix -lookup,$(databases)) \
-			  compat-lookup nss_hash
+			  compat-lookup nss_hash nss_files_fopen
 
 # These are the databases that go through nss dispatch.
 # Caution: if you add a database here, you must add its real name

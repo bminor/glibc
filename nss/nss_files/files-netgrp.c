@@ -26,6 +26,7 @@
 #include <string.h>
 #include "nsswitch.h"
 #include "netgroup.h"
+#include <nss_files.h>
 
 NSS_DECLARE_MODULE_FUNCTIONS (files)
 
@@ -64,7 +65,7 @@ _nss_files_setnetgrent (const char *group, struct __netgrent *result)
     return NSS_STATUS_UNAVAIL;
 
   /* Find the netgroups file and open it.  */
-  fp = fopen (DATAFILE, "rce");
+  fp = __nss_files_fopen (DATAFILE);
   if (fp == NULL)
     status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
   else
@@ -77,8 +78,6 @@ _nss_files_setnetgrent (const char *group, struct __netgrent *result)
 
       status = NSS_STATUS_NOTFOUND;
       result->cursor = result->data;
-
-      __fsetlocking (fp, FSETLOCKING_BYCALLER);
 
       while (!feof_unlocked (fp))
 	{
