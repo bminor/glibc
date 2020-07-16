@@ -30,12 +30,6 @@ extern int __old_getgrnam_r (const char *__name, struct group *__resultbuf,
 			     char *__buffer, size_t __buflen,
 			     struct group **__result);
 
-struct parser_data;
-extern int _nss_files_parse_grent (char *line, struct group *result,
-				   struct parser_data *data,
-				   size_t datalen, int *errnop);
-libc_hidden_proto (_nss_files_parse_grent)
-
 #define DECLARE_NSS_PROTOTYPES(service)					   \
 extern enum nss_status _nss_ ## service ## _setgrent (int);		   \
 extern enum nss_status _nss_ ## service ## _endgrent (void);		   \

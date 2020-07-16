@@ -202,23 +202,10 @@ libc_hidden_proto (ruserpass)
 
 #include <inet/netgroup.h>
 
-struct parser_data;
-extern int _nss_files_parse_protoent (char *line, struct protoent *result,
-				      struct parser_data *data,
-				      size_t datalen, int *errnop);
-extern int _nss_files_parse_servent (char *line, struct servent *result,
-				     struct parser_data *data,
-				     size_t datalen, int *errnop);
-extern int _nss_files_parse_netent (char *line, struct netent *result,
-				    struct parser_data *data,
-				    size_t datalen, int *errnop);
 extern enum nss_status _nss_netgroup_parseline (char **cursor,
 						struct __netgrent *result,
 						char *buffer, size_t buflen,
 						int *errnop);
-libnss_files_hidden_proto (_nss_files_parse_protoent)
-libnss_files_hidden_proto (_nss_files_parse_servent)
-libnss_files_hidden_proto (_nss_files_parse_netent)
 libnss_files_hidden_proto (_nss_netgroup_parseline)
 
 #define DECLARE_NSS_PROTOTYPES(service)					      \

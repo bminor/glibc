@@ -25,12 +25,6 @@ extern int __fgetspent_r (FILE *__stream, struct spwd *__result_buf,
 extern int __lckpwdf (void);
 extern int __ulckpwdf (void);
 
-struct parser_data;
-extern int _nss_files_parse_spent (char *line, struct spwd *result,
-				   struct parser_data *data,
-				   size_t datalen, int *errnop);
-libc_hidden_proto (_nss_files_parse_spent)
-
 #define DECLARE_NSS_PROTOTYPES(service)					\
 extern enum nss_status _nss_ ## service ## _setspent (int);		\
 extern enum nss_status _nss_ ## service ## _endspent (void);		\

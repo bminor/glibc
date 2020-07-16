@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <nss_files.h>
 
 /* These symbols are defined by the including source file:
 
