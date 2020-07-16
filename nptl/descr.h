@@ -95,7 +95,13 @@ struct pthread_unwind_buf
 struct xid_command
 {
   int syscall_no;
-  long int id[3];
+  /* Enforce zero-extension for the pointer argument in
+
+     int setgroups (size_t size, const gid_t *list);
+
+     The kernel XID arguments are unsigned and do not require sign
+     extension.  */
+  unsigned long int id[3];
   volatile int cntr;
   volatile int error; /* -1: no call yet, 0: success seen, >0: error seen.  */
 };
