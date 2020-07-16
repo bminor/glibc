@@ -55,7 +55,7 @@
    but come on top when computing the number of namespaces.  */
 
 /* Size of initial-exec TLS in libc.so.  */
-#define LIBC_IE_TLS 192
+#define LIBC_IE_TLS 160
 /* Size of initial-exec TLS in libraries other than libc.so.
    This should be large enough to cover runtime libraries of the
    compiler such as libgomp and libraries in libc other than libc.so.  */
@@ -190,12 +190,6 @@ void
 _dl_determine_tlsoffset (void)
 {
   size_t max_align = TLS_TCB_ALIGN;
-  /* libc.so with rseq has TLS with 32-byte alignment.  Since TLS is
-     initialized before audit modules are loaded and slotinfo
-     information is available, this is not taken into account below in
-     the audit case.  */
-  max_align = MAX (max_align, 32U);
-
   size_t freetop = 0;
   size_t freebottom = 0;
 

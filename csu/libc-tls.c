@@ -112,12 +112,6 @@ __libc_setup_tls (void)
   size_t tcb_offset;
   const ElfW(Phdr) *phdr;
 
-  /* libc.so with rseq has TLS with 32-byte alignment.  Static dlopen
-     requires at least 32-byte alignment as well, otherwise loading
-     libc.so will always fail.  */
-  if (max_align < 32)
-    max_align = 32;
-
   struct link_map *main_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
   /* Look through the TLS segment if there is any.  */

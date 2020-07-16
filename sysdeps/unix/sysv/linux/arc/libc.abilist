@@ -345,7 +345,6 @@ GLIBC_2.32 __res_nclose F
 GLIBC_2.32 __res_ninit F
 GLIBC_2.32 __res_randomid F
 GLIBC_2.32 __res_state F
-GLIBC_2.32 __rseq_abi T 0x20
 GLIBC_2.32 __sbrk F
 GLIBC_2.32 __sched_cpualloc F
 GLIBC_2.32 __sched_cpucount F
