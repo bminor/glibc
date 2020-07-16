@@ -26,7 +26,7 @@ headers		= gshadow.h
 routines	= getsgent getsgnam sgetsgent fgetsgent putsgent \
 		  getsgent_r getsgnam_r sgetsgent_r fgetsgent_r
 
-tests = tst-gshadow tst-putsgent
+tests = tst-gshadow tst-putsgent tst-fgetsgent_r
 
 CFLAGS-getsgent_r.c += -fexceptions
 CFLAGS-getsgent.c += -fexceptions
