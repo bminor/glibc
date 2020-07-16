@@ -1,9 +1,9 @@
 @c We need some definitions here.
 @ifclear mult
 @ifhtml
-@set mult &middot;
-@set infty &infin;
-@set pie &pi;
+@set mult @U{00B7}
+@set infty @U{221E}
+@set pie @U{03C0}
 @end ifhtml
 @iftex
 @set mult @cdot
