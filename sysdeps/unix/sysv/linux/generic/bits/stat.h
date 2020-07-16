@@ -26,9 +26,6 @@
 #include <bits/endian.h>
 #include <bits/wordsize.h>
 
-/* Versions of the `xmknod' interface.  */
-#define _MKNOD_VER_LINUX	0
-
 #if defined __USE_FILE_OFFSET64
 # define __field64(type, type64, name) type64 name
 #elif __WORDSIZE == 64 || defined __INO_T_MATCHES_INO64_T

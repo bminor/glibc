@@ -23,11 +23,6 @@
 #ifndef _BITS_STAT_H
 #define _BITS_STAT_H	1
 
-/* Versions of the `xmknod' interface.  */
-#define _MKNOD_VER_LINUX       1
-#define _MKNOD_VER_SVR4        2
-#define _MKNOD_VER             _MKNOD_VER_LINUX  /* The bits defined below.  */
-
 #ifndef __USE_FILE_OFFSET64
 struct stat
 {

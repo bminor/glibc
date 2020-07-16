@@ -25,16 +25,6 @@
 #include <bits/wordsize.h>
 
 #if __WORDSIZE == 64
-/* Versions of the `xmknod' interface.	*/
-#define _MKNOD_VER_LINUX	0
-#else
-/* Versions of the `xmknod' interface.  */
-# define _MKNOD_VER_LINUX	1
-# define _MKNOD_VER_SVR4	2
-# define _MKNOD_VER		_MKNOD_VER_LINUX
-#endif
-
-#if __WORDSIZE == 64
 struct stat
   {
     __dev_t st_dev;		/* Device.  */

@@ -29,14 +29,18 @@ libc_hidden_proto (fchmodat)
 extern __mode_t __umask (__mode_t __mask);
 extern int __mkdir (const char *__path, __mode_t __mode);
 libc_hidden_proto (__mkdir)
+
+extern int __mknodat (int fd, const char *path, mode_t mode, dev_t dev);
+libc_hidden_proto (__mknodat);
 extern int __mknod (const char *__path,
 		    __mode_t __mode, __dev_t __dev);
+libc_hidden_proto (__mknod);
+
+extern int __xmknod (int __ver, const char *__path, __mode_t __mode,
+		     __dev_t *__dev);
 libc_hidden_proto (__xmknod)
-extern __inline__ int __mknod (const char *__path, __mode_t __mode,
-			       __dev_t __dev)
-{
-  return __xmknod (_MKNOD_VER, __path, __mode, &__dev);
-}
+extern int __xmknodat (int __ver, int __fd, const char *__path,
+		       __mode_t __mode, __dev_t *__dev);
 libc_hidden_proto (__xmknodat)
 
 int __fxstat (int __ver, int __fildes, struct stat *__stat_buf);

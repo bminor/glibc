@@ -7,3 +7,8 @@
 #define _STAT_VER_GLIBC2_3_4	3
 #define _STAT_VER_LINUX		3
 #define _STAT_VER		_STAT_VER_LINUX
+
+/* Versions of the 'xmknod' interface used in compatibility xmknod
+   functions.  */
+#define _MKNOD_VER_LINUX	0
+#define _MKNOD_VER		_MKNOD_VER_LINUX

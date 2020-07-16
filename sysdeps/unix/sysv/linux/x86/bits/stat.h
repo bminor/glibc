@@ -22,17 +22,6 @@
 #ifndef _BITS_STAT_H
 #define _BITS_STAT_H	1
 
-/* Versions of the `struct stat' data structure.  */
-#ifndef __x86_64__
-/* i386 versions of the `xmknod' interface.  */
-# define _MKNOD_VER_LINUX	1
-# define _MKNOD_VER_SVR4	2
-# define _MKNOD_VER		_MKNOD_VER_LINUX /* The bits defined below.  */
-#else
-/* x86-64 versions of the `xmknod' interface.  */
-# define _MKNOD_VER_LINUX	0
-#endif
-
 struct stat
   {
     __dev_t st_dev;		/* Device.  */

@@ -367,41 +367,9 @@ extern int utimensat (int __fd, const char *__path,
 /* Set file access and modification times of the file associated with FD.  */
 extern int futimens (int __fd, const struct timespec __times[2]) __THROW;
 #endif
-
-#ifndef _MKNOD_VER
-# define _MKNOD_VER	0
-#endif
-
-extern int __xmknod (int __ver, const char *__path, __mode_t __mode,
-		     __dev_t *__dev) __THROW __nonnull ((2, 4));
-
-extern int __xmknodat (int __ver, int __fd, const char *__path,
-		       __mode_t __mode, __dev_t *__dev)
-     __THROW __nonnull ((3, 5));
 
 #ifdef __USE_GNU
 # include <bits/statx.h>
-#endif
-
-#ifdef __USE_EXTERN_INLINES
-# ifdef __USE_MISC
-__extern_inline int
-__NTH (mknod (const char *__path, __mode_t __mode, __dev_t __dev))
-{
-  return __xmknod (_MKNOD_VER, __path, __mode, &__dev);
-}
-# endif
-
-# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
-#  ifdef __USE_ATFILE
-__extern_inline int
-__NTH (mknodat (int __fd, const char *__path, __mode_t __mode,
-		__dev_t __dev))
-{
-  return __xmknodat (_MKNOD_VER, __fd, __path, __mode, &__dev);
-}
-#  endif
-# endif
 #endif
 
 __END_DECLS

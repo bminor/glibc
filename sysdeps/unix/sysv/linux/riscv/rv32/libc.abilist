@@ -1213,6 +1213,8 @@ GLIBC_2.33 mkdirat F
 GLIBC_2.33 mkdtemp F
 GLIBC_2.33 mkfifo F
 GLIBC_2.33 mkfifoat F
+GLIBC_2.33 mknod F
+GLIBC_2.33 mknodat F
 GLIBC_2.33 mkostemp F
 GLIBC_2.33 mkostemp64 F
 GLIBC_2.33 mkostemps F

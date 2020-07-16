@@ -23,6 +23,5 @@
 int
 mkfifoat (int fd, const char *file, mode_t mode)
 {
-  dev_t dev = 0;
-  return __xmknodat (_MKNOD_VER, fd, file, mode | S_IFIFO, &dev);
+  return __mknodat (fd, file, mode | S_IFIFO, 0);
 }

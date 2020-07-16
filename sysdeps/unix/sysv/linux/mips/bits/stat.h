@@ -24,11 +24,6 @@
 
 #include <sgidefs.h>
 
-/* Versions of the `xmknod' interface.  */
-#define _MKNOD_VER_LINUX	1
-#define _MKNOD_VER_SVR4		2
-#define _MKNOD_VER		_MKNOD_VER_LINUX /* The bits defined below.  */
-
 
 #if _MIPS_SIM == _ABIO32
 /* Structure describing file characteristics.  */

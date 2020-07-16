@@ -1927,5 +1927,7 @@ GLIBC_2.33 fstatat64 F
 GLIBC_2.33 lstat F
 GLIBC_2.33 lstat64 F
 GLIBC_2.33 mallinfo2 F
+GLIBC_2.33 mknod F
+GLIBC_2.33 mknodat F
 GLIBC_2.33 stat F
 GLIBC_2.33 stat64 F

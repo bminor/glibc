@@ -9,3 +9,9 @@
 #else
 # define _STAT_VER		_STAT_VER_KERNEL
 #endif
+
+/* Versions of the 'xmknod' interface used in compatibility xmknod
+   functions.  */
+#define _MKNOD_VER_LINUX	1
+#define _MKNOD_VER_SVR4		2
+#define _MKNOD_VER		_MKNOD_VER_LINUX

@@ -22,10 +22,6 @@
 #ifndef _BITS_STAT_H
 #define _BITS_STAT_H	1
 
-/* Versions of the `xmknod' interface.  */
-#define _MKNOD_VER_LINUX	0
-
-
 /* Nanosecond resolution timestamps are stored in a format equivalent to
    'struct timespec'.  This is the type used whenever possible but the
    Unix namespace rules do not allow the identifier 'timespec' to appear

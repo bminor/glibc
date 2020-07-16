@@ -57,11 +57,6 @@ routines :=								\
 	sendfile sendfile64 copy_file_range 				\
 	utimensat futimens file_change_detection
 
-# These routines will be omitted from the libc shared object.
-# Instead the static object files will be included in a special archive
-# linked against when the shared library will be used.
-static-only-routines = mknod mknodat
-
 others		:= pwd
 test-srcs	:= ftwtest
 tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \

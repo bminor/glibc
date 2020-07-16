@@ -5,8 +5,12 @@
 # define _STAT_VER_KERNEL	1
 # define _STAT_VER_SVR4		2
 # define _STAT_VER_LINUX	3
+# define _MKNOD_VER_LINUX	1
+# define _MKNOD_VER_SVR4	2
 #else
 # define _STAT_VER_KERNEL	0
 # define _STAT_VER_LINUX	1
+# define _MKNOD_VER_LINUX	0
 #endif
 #define _STAT_VER		_STAT_VER_LINUX
+#define _MKNOD_VER		_MKNOD_VER_LINUX

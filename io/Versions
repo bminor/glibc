@@ -134,6 +134,7 @@ libc {
   }
   GLIBC_2.33 {
     stat; stat64; fstat; fstat64; lstat; lstat64; fstatat; fstatat64;
+    mknod; mknodat;
   }
   GLIBC_PRIVATE {
     __libc_fcntl64;

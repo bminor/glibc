@@ -22,9 +22,6 @@
 #ifndef _BITS_STAT_H
 #define _BITS_STAT_H	1
 
-/* Versions of the `xmknod' interface.  */
-#define _MKNOD_VER_LINUX	0
-
 struct stat
   {
     __dev_t st_dev;		/* Device.  */
