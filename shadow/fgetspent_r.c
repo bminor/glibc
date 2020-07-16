@@ -20,9 +20,6 @@
 #include <shadow.h>
 #include <stdio.h>
 
-#define flockfile(s) _IO_flockfile (s)
-#define funlockfile(s) _IO_funlockfile (s)
-
 /* Define a line parsing function using the common code
    used in the nss_files module.  */
 
@@ -39,39 +36,11 @@ int
 __fgetspent_r (FILE *stream, struct spwd *resbuf, char *buffer, size_t buflen,
 	       struct spwd **result)
 {
-  char *p;
-
-  flockfile (stream);
-  do
-    {
-      buffer[buflen - 1] = '\xff';
-      p = fgets_unlocked (buffer, buflen, stream);
-      if (p == NULL && feof_unlocked (stream))
-	{
-	  funlockfile (stream);
-	  *result = NULL;
-	  __set_errno (ENOENT);
-	  return errno;
-	}
-      if (p == NULL || buffer[buflen - 1] != '\xff')
-	{
-	  funlockfile (stream);
-	  *result = NULL;
-	  __set_errno (ERANGE);
-	  return errno;
-	}
-
-      /* Skip leading blanks.  */
-      while (isspace (*p))
-	++p;
-    } while (*p == '\0' || *p == '#' /* Ignore empty and comment lines.  */
-	     /* Parse the line.  If it is invalid, loop to
-		get the next line of the file to parse.  */
-	     || ! parse_line (buffer, (void *) resbuf, NULL, 0, &errno));
-
-  funlockfile (stream);
-
-  *result = resbuf;
-  return 0;
+  int ret = __nss_fgetent_r (stream, resbuf, buffer, buflen, parse_line);
+  if (ret == 0)
+    *result = resbuf;
+  else
+    *result = NULL;
+  return ret;
 }
 weak_alias (__fgetspent_r, fgetspent_r)

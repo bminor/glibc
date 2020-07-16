@@ -168,6 +168,7 @@ run_test (const char *path, size_t buffer_size)
       free (result_storage);
     }
 
+  xfclose (fp);
   return resized;
 }
 
