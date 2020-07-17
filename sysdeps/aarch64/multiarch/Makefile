@@ -3,5 +3,5 @@ sysdep_routines += memcpy_generic memcpy_advsimd memcpy_thunderx memcpy_thunderx
 		   memcpy_falkor \
 		   memset_generic memset_falkor memset_emag memset_kunpeng \
 		   memchr_generic memchr_nosimd \
-		   strlen_generic strlen_asimd
+		   strlen_mte strlen_asimd
 endif

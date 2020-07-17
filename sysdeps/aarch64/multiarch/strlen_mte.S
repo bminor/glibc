@@ -17,14 +17,14 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* The actual strlen code is in ../strlen.S.  If we are building libc this file
-   defines __strlen_generic.  Otherwise the include of ../strlen.S will define
+   defines __strlen_mte.  Otherwise the include of ../strlen.S will define
    the normal __strlen  entry points.  */
 
 #include <sysdep.h>
 
 #if IS_IN (libc)
 
-# define STRLEN __strlen_generic
+# define STRLEN __strlen_mte
 
 /* Do not hide the generic version of strlen, we use it internally.  */
 # undef libc_hidden_builtin_def
@@ -32,7 +32,7 @@
 
 # ifdef SHARED
 /* It doesn't make sense to send libc-internal strlen calls through a PLT. */
-	.globl __GI_strlen; __GI_strlen = __strlen_generic
+	.globl __GI_strlen; __GI_strlen = __strlen_mte
 # endif
 #endif
 

@@ -26,17 +26,15 @@
 # include <string.h>
 # include <init-arch.h>
 
-#define USE_ASIMD_STRLEN() IS_FALKOR (midr)
+/* This should check HWCAP_MTE when it is available.  */
+#define MTE_ENABLED() (false)
 
 extern __typeof (__redirect_strlen) __strlen;
 
-extern __typeof (__redirect_strlen) __strlen_generic attribute_hidden;
+extern __typeof (__redirect_strlen) __strlen_mte attribute_hidden;
 extern __typeof (__redirect_strlen) __strlen_asimd attribute_hidden;
 
-libc_ifunc (__strlen,
-	    (USE_ASIMD_STRLEN () || IS_KUNPENG920 (midr)
-	    ? __strlen_asimd
-	    :__strlen_generic));
+libc_ifunc (__strlen, (MTE_ENABLED () ? __strlen_mte : __strlen_asimd));
 
 # undef strlen
 strong_alias (__strlen, strlen);
