@@ -126,13 +126,6 @@ tests-special += $(objpfx)mtrace-tst-resolv-res_ninit.out
 endif
 endif
 
-ifeq (,$(filter sunrpc,$(subdirs)))
-# The netdb.h we install does '#include <rpc/netdb.h>', so one must exist.
-# If sunrpc/ is built in this configuration, it installs a real <rpc/netdb.h>.
-# If that's not going to happen, install our dummy file.
-headers += rpc/netdb.h
-endif
-
 generated += mtrace-tst-leaks.out tst-leaks.mtrace \
 	     mtrace-tst-leaks2.out tst-leaks2.mtrace \
 	     mtrace-tst-resolv-res_ninit.out tst-resolv-res_ninit.mtrace \

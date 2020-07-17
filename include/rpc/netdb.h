@@ -1,5 +1,5 @@
 #ifndef _RPC_NETDB_H
-#include <sunrpc/rpc/netdb.h>
+#include <inet/rpc/netdb.h>
 
 # ifndef _ISOMAC
 
