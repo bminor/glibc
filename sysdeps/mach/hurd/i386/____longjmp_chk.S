@@ -60,7 +60,14 @@ ENTRY (____longjmp_chk)
 	PTR_DEMANGLE (%ecx)
 #endif
 
-	movl	%gs:SIGSTATE_OFFSET,%edi
+	movw	%ds, %si
+	movw	%gs, %di
+	cmpw	%si, %di
+	jz	.Lok		/* TLS not initialized yet */
+
+	movl	%gs:SIGSTATE_OFFSET, %edi
+	testl	%edi, %edi
+	jnz	.Lok		/* sigstate not initialized yet */
 
 	testl	$SS_ONSTACK, (HURD_SIGSTATE__SIGALTSTACK__OFFSET + SIGALTSTACK__SS_FLAGS__OFFSET)(%edi)
 	jnz	.Lonstack
