@@ -17,5 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define STAT_IS_KERNEL_STAT 1
+#define STAT64_IS_KERNEL_STAT64 1
 #define XSTAT_IS_XSTAT64 1
 #define STATFS_IS_STATFS64 0

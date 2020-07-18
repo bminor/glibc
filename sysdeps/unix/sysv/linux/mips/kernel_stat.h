@@ -1,3 +1,6 @@
+#ifndef _KERNEL_STAT_H
+#define _KERNEL_STAT_H
+
 #include <sgidefs.h>
 /* As tempting as it is to define XSTAT_IS_XSTAT64 for n64, the
    userland data structures are not identical, because of different
@@ -57,5 +60,8 @@ struct kernel_stat
 #endif
 
 #define STAT_IS_KERNEL_STAT 0
+#define STAT64_IS_KERNEL_STAT64 0
 #define XSTAT_IS_XSTAT64 0
 #define STATFS_IS_STATFS64 0
+
+#endif
