@@ -24,9 +24,13 @@
 #if !XSTAT_IS_XSTAT64
 # include <xstatconv.h>
 # include <xstatover.h>
+# include <shlib-compat.h>
+
+# if SHLIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
 
 /* Get information about the file FD in BUF.  */
 int
+attribute_compat_text_section
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
 #if STAT_IS_KERNEL_STAT
@@ -46,4 +50,8 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   return r ?: __xstat32_conv (vers, &st64, st);
 #endif
 }
+
+compat_symbol (libc, __fxstatat, __fxstatat, GLIBC_2_4);
+# endif /* SHLIB_COMPAT  */
+
 #endif /* XSTAT_IS_XSTAT64  */

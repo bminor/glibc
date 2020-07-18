@@ -23,9 +23,11 @@
 #include <kernel_stat.h>
 #include <sysdep.h>
 #include <xstatconv.h>
+#include <shlib-compat.h>
 
 /* Get information about the file NAME in BUF.  */
 int
+attribute_compat_text_section
 __lxstat64 (int vers, const char *name, struct stat64 *buf)
 {
   switch (vers)
@@ -43,4 +45,12 @@ __lxstat64 (int vers, const char *name, struct stat64 *buf)
       }
     }
 }
-weak_alias (__lxstat64, __lxstat);
+
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
+strong_alias (__lxstat64, __lxstat_compat)
+compat_symbol (libc, __lxstat_compat, __lxstat, GLIBC_2_0);
+#endif
+
+#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_33)
+compat_symbol (libc, __lxstat64, __lxstat64, GLIBC_2_1);
+#endif

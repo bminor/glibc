@@ -19,10 +19,14 @@
 #include <kernel_stat.h>
 #include <sysdep.h>
 #include <xstatconv.h>
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
 
 /* Get information about the file NAME in BUF.  */
 
 int
+attribute_compat_text_section
 __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 {
   if (vers == _STAT_VER_LINUX)
@@ -33,3 +37,7 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
     }
   return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 }
+
+compat_symbol (libc, __fxstatat64, __fxstatat64, GLIBC_2_4);
+
+#endif

@@ -20,13 +20,20 @@
 #include <kernel_stat.h>
 #include <sysdep.h>
 #include <xstatconv.h>
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_33)
 
 /* Get information about the file NAME in BUF.  */
-
 int
+attribute_compat_text_section
 __xstat64 (int vers, const char *name, struct stat64 *buf)
 {
   struct kernel_stat kbuf;
   int r = INLINE_SYSCALL_CALL (stat, name, &kbuf);
   return r ?: __xstat64_conv (vers, &kbuf, buf);
 }
+
+compat_symbol (libc, __xstat64, __xstat64, GLIBC_2_2);
+
+#endif

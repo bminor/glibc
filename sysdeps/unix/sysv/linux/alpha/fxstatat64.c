@@ -22,11 +22,18 @@
 #include <kernel_stat.h>
 #include <sysdep.h>
 #include <xstatconv.h>
+#include <shlib-compat.h>
 
+#if SHLIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
 /* Get information about the file NAME in BUF.  */
 int
+attribute_compat_text_section
 __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 {
   return INLINE_SYSCALL_CALL (fstatat64, fd, file, st, flag);
 }
-strong_alias (__fxstatat64, __fxstatat);
+strong_alias (__fxstatat64, __fxstatat_compat)
+compat_symbol (libc, __fxstatat_compat, __fxstatat, GLIBC_2_4);
+
+compat_symbol (libc, __fxstatat64, __fxstatat64, GLIBC_2_4);
+#endif

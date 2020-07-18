@@ -201,10 +201,6 @@ GLIBC_2.33 __fsetlocking F
 GLIBC_2.33 __fwprintf_chk F
 GLIBC_2.33 __fwritable F
 GLIBC_2.33 __fwriting F
-GLIBC_2.33 __fxstat F
-GLIBC_2.33 __fxstat64 F
-GLIBC_2.33 __fxstatat F
-GLIBC_2.33 __fxstatat64 F
 GLIBC_2.33 __getauxval F
 GLIBC_2.33 __getcwd_chk F
 GLIBC_2.33 __getdelim F
@@ -287,8 +283,6 @@ GLIBC_2.33 __libc_start_main F
 GLIBC_2.33 __libc_valloc F
 GLIBC_2.33 __longjmp_chk F
 GLIBC_2.33 __lseek F
-GLIBC_2.33 __lxstat F
-GLIBC_2.33 __lxstat64 F
 GLIBC_2.33 __malloc_hook D 0x4
 GLIBC_2.33 __mbrlen F
 GLIBC_2.33 __mbrtowc F
@@ -489,8 +483,6 @@ GLIBC_2.33 __xmknodat F
 GLIBC_2.33 __xpg_basename F
 GLIBC_2.33 __xpg_sigpause F
 GLIBC_2.33 __xpg_strerror_r F
-GLIBC_2.33 __xstat F
-GLIBC_2.33 __xstat64 F
 GLIBC_2.33 _dl_mcount_wrapper F
 GLIBC_2.33 _dl_mcount_wrapper_check F
 GLIBC_2.33 _environ D 0x4
