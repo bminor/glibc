@@ -45,7 +45,7 @@ ENTRY (__longjmp)
 
 	movl	%gs:SIGSTATE_OFFSET, %edi
 	testl	%edi, %edi
-	jnz	.Lok		/* sigstate not initialized yet */
+	jz	.Lok		/* sigstate not initialized yet */
 
 	testl	$SS_ONSTACK, (HURD_SIGSTATE__SIGALTSTACK__OFFSET + SIGALTSTACK__SS_FLAGS__OFFSET)(%edi)
 	jz	.Lok
