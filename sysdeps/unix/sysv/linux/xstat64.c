@@ -88,8 +88,6 @@ weak_alias (___xstat64, __GI___xstat);
 versioned_symbol (libc, ___xstat64, __xstat64, GLIBC_2_2);
 strong_alias (___xstat64, __old__xstat64)
 compat_symbol (libc, __old__xstat64, __xstat64, GLIBC_2_1);
-hidden_ver (___xstat64, __xstat64)
 #else
 strong_alias (___xstat64, __xstat64)
-hidden_def (__xstat64)
 #endif

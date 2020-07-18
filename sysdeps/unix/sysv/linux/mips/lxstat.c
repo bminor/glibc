@@ -39,4 +39,3 @@ __lxstat (int vers, const char *name, struct stat *buf)
       }
     }
 }
-hidden_def (__lxstat)

@@ -57,5 +57,4 @@ __xstat (int vers, const char *name, struct stat *buf)
       }
     }
 }
-hidden_def (__xstat)
 #endif /* XSTAT_IS_XSTAT64  */

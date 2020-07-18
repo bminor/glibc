@@ -33,4 +33,3 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
     }
   return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 }
-libc_hidden_def (__fxstatat64)

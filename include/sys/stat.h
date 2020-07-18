@@ -3,6 +3,28 @@
 
 #ifndef _ISOMAC
 # include <xstatver.h>
+# include <stdbool.h>
+
+static inline bool
+in_ino_t_range (__ino64_t v)
+{
+  __ino_t s = v;
+  return s == v;
+}
+
+static inline bool
+in_off_t_range (__off64_t v)
+{
+  __off_t s = v;
+  return s == v;
+}
+
+static inline bool
+in_blkcnt_t_range (__blkcnt64_t v)
+{
+  __blkcnt_t s = v;
+  return s == v;
+}
 
 /* Now define the internal interfaces. */
 extern int __stat (const char *__file, struct stat *__buf);
@@ -54,19 +76,19 @@ int __xstat64 (int ver, const char *__filename, struct stat64 *__stat_buf);
 int __lxstat64 (int ver, const char *__filename, struct stat64 *__stat_buf);
 int __fxstatat64 (int ver, int __fildes, const char *__filename,
 		  struct stat64 *__stat_buf, int __flag);
+
+# ifdef NO_RTLD_HIDDEN
+/* These are still required for Hurd.  */
 libc_hidden_proto (__fxstat);
 libc_hidden_proto (__xstat);
 libc_hidden_proto (__lxstat);
 libc_hidden_proto (__fxstatat);
-# if IS_IN (libc) || (IS_IN (rtld) && !defined NO_RTLD_HIDDEN)
+#  if IS_IN (libc)
 hidden_proto (__fxstat64);
 hidden_proto (__xstat64);
 hidden_proto (__lxstat64);
 hidden_proto (__fxstatat64);
-# endif
-
-# ifdef NO_RTLD_HIDDEN
-/* These are still required for Hurd.  */
+#  endif
 #  define stat(fname, buf) __xstat (_STAT_VER, fname, buf)
 #  define lstat(fname, buf)  __lxstat (_STAT_VER, fname, buf)
 #  define __lstat(fname, buf)  __lxstat (_STAT_VER, fname, buf)

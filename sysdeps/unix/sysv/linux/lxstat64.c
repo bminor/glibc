@@ -91,8 +91,6 @@ weak_alias (___lxstat64, __GI___lxstat);
 versioned_symbol (libc, ___lxstat64, __lxstat64, GLIBC_2_2);
 strong_alias (___lxstat64, __old__lxstat64)
 compat_symbol (libc, __old__lxstat64, __lxstat64, GLIBC_2_1);
-hidden_ver (___lxstat64, __lxstat64)
 #else
 strong_alias (___lxstat64, __lxstat64);
-hidden_def (__lxstat64)
 #endif

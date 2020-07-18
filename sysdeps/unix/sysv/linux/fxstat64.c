@@ -69,13 +69,10 @@ ___fxstat64 (int vers, int fd, struct stat64 *buf)
 versioned_symbol (libc, ___fxstat64, __fxstat64, GLIBC_2_2);
 strong_alias (___fxstat64, __old__fxstat64)
 compat_symbol (libc, __old__fxstat64, __fxstat64, GLIBC_2_1);
-hidden_ver (___fxstat64, __fxstat64)
 #else
 strong_alias (___fxstat64, __fxstat64)
-hidden_def (__fxstat64)
 #endif
 
 #if XSTAT_IS_XSTAT64
 strong_alias (__fxstat64, __fxstat);
-hidden_ver (__fxstat64, __fxstat)
 #endif

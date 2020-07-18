@@ -44,6 +44,3 @@ __xstat64 (int vers, const char *name, struct stat64 *buf)
     }
 }
 weak_alias (__xstat64, __xstat);
-weak_alias (__xstat64, __GI___xstat);
-
-hidden_def (__xstat64)

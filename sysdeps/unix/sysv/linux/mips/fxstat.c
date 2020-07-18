@@ -39,4 +39,3 @@ __fxstat (int vers, int fd, struct stat *buf)
       }
     }
 }
-hidden_def (__fxstat)

@@ -42,6 +42,4 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
       }
     }
 }
-hidden_def (__fxstat64)
 strong_alias (__fxstat64, __fxstat);
-hidden_ver (__fxstat64, __fxstat)

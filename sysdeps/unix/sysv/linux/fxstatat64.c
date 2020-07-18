@@ -61,8 +61,6 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 #endif
   return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 }
-libc_hidden_def (__fxstatat64)
-#if XSTAT_IS_XSTAT64 && IS_IN(libc)
+#if XSTAT_IS_XSTAT64
 strong_alias (__fxstatat64, __fxstatat);
-hidden_ver (__fxstatat64, __fxstatat)
 #endif

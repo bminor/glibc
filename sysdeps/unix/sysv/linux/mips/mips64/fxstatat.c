@@ -30,4 +30,3 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   int r = INLINE_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);
   return r ?: __xstat_conv (vers, &kst, st);
 }
-libc_hidden_def (__fxstatat)

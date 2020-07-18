@@ -29,5 +29,3 @@ __lxstat64 (int vers, const char *name, struct stat64 *buf)
   int r = INLINE_SYSCALL_CALL (lstat, name, &kbuf);
   return r ?: __xstat64_conv (vers, &kbuf, buf);
 }
-
-hidden_def (__lxstat64)

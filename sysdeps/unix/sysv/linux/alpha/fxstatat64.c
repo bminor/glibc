@@ -29,8 +29,4 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
 {
   return INLINE_SYSCALL_CALL (fstatat64, fd, file, st, flag);
 }
-libc_hidden_def (__fxstatat64)
-#if IS_IN(libc)
 strong_alias (__fxstatat64, __fxstatat);
-hidden_ver (__fxstatat64, __fxstatat)
-#endif

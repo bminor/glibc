@@ -31,5 +31,3 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
   return r ?: __xstat64_conv (vers, &kbuf, buf);
 
 }
-
-hidden_def (__fxstat64)
