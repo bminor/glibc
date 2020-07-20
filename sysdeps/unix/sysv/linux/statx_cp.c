@@ -47,3 +47,33 @@ __cp_stat64_statx (struct stat64 *to, struct statx *from)
   to->st_blksize = from->stx_blksize;
 }
 #endif
+
+#if (__WORDSIZE == 32 \
+     && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE == 32))
+void
+__cp_stat64_t64_statx (struct __stat64_t64 *to, const struct statx *from)
+{
+  /* Clear both pad and reserved fields.  */
+  memset (to, 0, sizeof (*to));
+
+  to->st_dev = ((from->stx_dev_minor & 0xff) | (from->stx_dev_major << 8)
+		| ((from->stx_dev_minor & ~0xff) << 12));
+  to->st_ino = from->stx_ino;
+  to->st_mode = from->stx_mode;
+  to->st_nlink = from->stx_nlink;
+  to->st_uid = from->stx_uid;
+  to->st_gid = from->stx_gid;
+  to->st_rdev = ((from->stx_rdev_minor & 0xff) | (from->stx_rdev_major << 8)
+		 | ((from->stx_rdev_minor & ~0xff) << 12));
+  to->st_size = from->stx_size;
+  to->st_blksize = from->stx_blksize;
+  to->st_blocks = from->stx_blocks;
+
+  to->st_atime = from->stx_atime.tv_sec;
+  to->st_atim.tv_nsec = from->stx_atime.tv_nsec;
+  to->st_mtime = from->stx_mtime.tv_sec;
+  to->st_mtim.tv_nsec = from->stx_mtime.tv_nsec;
+  to->st_ctime = from->stx_ctime.tv_sec;
+  to->st_ctim.tv_nsec = from->stx_ctime.tv_nsec;
+}
+#endif

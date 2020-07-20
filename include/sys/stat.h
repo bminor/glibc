@@ -3,6 +3,8 @@
 
 #ifndef _ISOMAC
 # include <xstatver.h>
+# include <struct___timespec64.h>
+# include <struct_stat_time64.h>
 # include <stdbool.h>
 
 static inline bool
@@ -42,6 +44,24 @@ hidden_proto (__stat64)
 hidden_proto (__fstat64)
 hidden_proto (__lstat64)
 hidden_proto (__fstatat64)
+# endif
+
+# if __TIMESIZE == 64
+#  define __stat64_time64  __stat64
+#  define __fstat64_time64  __fstat64
+#  define __lstat64_time64  __lstat64
+#  define __fstatat_time64  __fstatat
+#  define __fstatat64_time64  __fstatat64
+# else
+extern int __stat64_time64 (const char *file, struct __stat64_t64 *buf);
+hidden_proto (__stat64_time64);
+extern int __lstat64_time64 (const char *file, struct __stat64_t64 *buf);
+hidden_proto (__lstat64_time64);
+extern int __fstat64_time64 (int fd, struct __stat64_t64 *buf);
+hidden_proto (__fstat64_time64);
+extern int __fstatat64_time64 (int dirfd, const char *pathname,
+			       struct __stat64_t64 *buf, int flags);
+hidden_proto (__fstatat64_time64);
 # endif
 
 extern int __chmod (const char *__file, __mode_t __mode);

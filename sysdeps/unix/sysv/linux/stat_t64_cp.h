@@ -1,5 +1,5 @@
-/* Struct statx to stat/stat64 conversion for Linux.
-   Copyright (C) 2018-2020 Free Software Foundation, Inc.
+/* Copy to/from struct stat with and without 64-bit time_t support.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +16,10 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-extern void __cp_stat64_statx (struct stat64 *to, struct statx *from)
+#include <sys/stat.h>
+
+#if __TIMESIZE != 64
+extern int __cp_stat64_t64_stat64 (const struct __stat64_t64 *st64_t64,
+				   struct stat64 *st64)
   attribute_hidden;
-extern void __cp_stat64_t64_statx (struct __stat64_t64 *to,
-				   const struct statx *from)
-  attribute_hidden;
+#endif

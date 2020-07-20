@@ -19,16 +19,30 @@
 #define __fstat __redirect___fstat
 #define fstat   __redirect_fstat
 #include <sys/stat.h>
-#undef __fstat
-#undef fstat
 #include <fcntl.h>
 #include <kernel_stat.h>
+#include <stat_t64_cp.h>
+
+int
+__fstat64_time64 (int fd, struct __stat64_t64 *buf)
+{
+  return __fstatat64_time64 (fd, "", buf, AT_EMPTY_PATH);
+}
+#if __TIMESIZE != 64
+hidden_def (__fstat64_time64)
 
 int
 __fstat64 (int fd, struct stat64 *buf)
 {
-  return __fstatat64 (fd, "", buf, AT_EMPTY_PATH);
+  struct __stat64_t64 st_t64;
+  return __fstat64_time64 (fd, &st_t64)
+	 ?: __cp_stat64_t64_stat64 (&st_t64, buf);
 }
+#endif
+
+#undef __fstat
+#undef fstat
+
 hidden_def (__fstat64)
 weak_alias (__fstat64, fstat64)
 

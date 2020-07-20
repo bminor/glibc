@@ -22,11 +22,14 @@
 static inline int
 __cp_kstat_stat (const struct kernel_stat *kst, struct stat *st)
 {
+  if (! in_ino_t_range (kst->st_ino)
+      || ! in_off_t_range (kst->st_size)
+      || ! in_blkcnt_t_range (kst->st_blocks))
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EOVERFLOW);
+
   st->st_dev = kst->st_dev;
   memset (&st->st_pad1, 0, sizeof (st->st_pad1));
   st->st_ino = kst->st_ino;
-  if (st->st_ino != kst->st_ino)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EOVERFLOW);
   st->st_mode = kst->st_mode;
   st->st_nlink = kst->st_nlink;
   st->st_uid = kst->st_uid;
@@ -34,8 +37,6 @@ __cp_kstat_stat (const struct kernel_stat *kst, struct stat *st)
   st->st_rdev = kst->st_rdev;
   memset (&st->st_pad2, 0, sizeof (st->st_pad2));
   st->st_size = kst->st_size;
-  if (st->st_size != kst->st_size)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EOVERFLOW);
   st->st_pad3 = 0;
   st->st_atim.tv_sec = kst->st_atime_sec;
   st->st_atim.tv_nsec = kst->st_atime_nsec;
@@ -45,26 +46,21 @@ __cp_kstat_stat (const struct kernel_stat *kst, struct stat *st)
   st->st_ctim.tv_nsec = kst->st_ctime_nsec;
   st->st_blksize = kst->st_blksize;
   st->st_blocks = kst->st_blocks;
-  if (st->st_blocks != kst->st_blocks)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EOVERFLOW);
   memset (&st->st_pad5, 0, sizeof (st->st_pad5));
 
   return 0;
 }
 
 static inline int
-__cp_kstat_stat64 (const struct kernel_stat *kst, struct stat64 *st)
+__cp_kstat_stat64_t64 (const struct kernel_stat *kst, struct __stat64_t64 *st)
 {
   st->st_dev = kst->st_dev;
-  memset (&st->st_pad1, 0, sizeof (st->st_pad1));
   st->st_ino = kst->st_ino;
   st->st_mode = kst->st_mode;
   st->st_nlink = kst->st_nlink;
   st->st_uid = kst->st_uid;
   st->st_gid = kst->st_gid;
   st->st_rdev = kst->st_rdev;
-  memset (&st->st_pad2, 0, sizeof (st->st_pad2));
-  st->st_pad3 = 0;
   st->st_size = kst->st_size;
   st->st_blksize = kst->st_blksize;
   st->st_blocks = kst->st_blocks;
@@ -74,7 +70,6 @@ __cp_kstat_stat64 (const struct kernel_stat *kst, struct stat64 *st)
   st->st_mtim.tv_nsec = kst->st_mtime_nsec;
   st->st_ctim.tv_sec = kst->st_ctime_sec;
   st->st_ctim.tv_nsec = kst->st_ctime_nsec;
-  memset (&st->st_pad4, 0, sizeof (st->st_pad4));
 
   return 0;
 }
