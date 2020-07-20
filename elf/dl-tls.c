@@ -54,12 +54,36 @@
    Audit modules use their own namespaces, they are not included in rtld.nns,
    but come on top when computing the number of namespaces.  */
 
-/* Size of initial-exec TLS in libc.so.  */
-#define LIBC_IE_TLS 160
+/* Size of initial-exec TLS in libc.so.  This should be the maximum of
+   observed PT_GNU_TLS sizes across all architectures.  Some
+   architectures have lower values due to differences in type sizes
+   and link editor capabilities.  */
+#define LIBC_IE_TLS 144
+
 /* Size of initial-exec TLS in libraries other than libc.so.
    This should be large enough to cover runtime libraries of the
    compiler such as libgomp and libraries in libc other than libc.so.  */
 #define OTHER_IE_TLS 144
+
+/* Default number of namespaces.  */
+#define DEFAULT_NNS 4
+
+/* Default for dl_tls_static_optional.  */
+#define OPTIONAL_TLS 512
+
+/* Compute the static TLS surplus based on the namespace count and the
+   TLS space that can be used for optimizations.  */
+static inline int
+tls_static_surplus (int nns, int opt_tls)
+{
+  return (nns - 1) * LIBC_IE_TLS + nns * OTHER_IE_TLS + opt_tls;
+}
+
+/* This value is chosen so that with default values for the tunables,
+   the computation of dl_tls_static_surplus in
+   _dl_tls_static_surplus_init yields the historic value 1664, for
+   backwards compatibility.  */
+#define LEGACY_TLS (1664 - tls_static_surplus (DEFAULT_NNS, OPTIONAL_TLS))
 
 /* Calculate the size of the static TLS surplus, when the given
    number of audit modules are loaded.  Must be called after the
@@ -74,8 +98,8 @@ _dl_tls_static_surplus_init (size_t naudit)
   opt_tls = TUNABLE_GET (optional_static_tls, size_t, NULL);
 #else
   /* Default values of the tunables.  */
-  nns = 4;
-  opt_tls = 512;
+  nns = DEFAULT_NNS;
+  opt_tls = OPTIONAL_TLS;
 #endif
   if (nns > DL_NNS)
     nns = DL_NNS;
@@ -85,9 +109,8 @@ _dl_tls_static_surplus_init (size_t naudit)
   nns += naudit;
 
   GL(dl_tls_static_optional) = opt_tls;
-  GLRO(dl_tls_static_surplus) = ((nns - 1) * LIBC_IE_TLS
-				 + nns * OTHER_IE_TLS
-				 + opt_tls);
+  assert (LEGACY_TLS >= 0);
+  GLRO(dl_tls_static_surplus) = tls_static_surplus (nns, opt_tls) + LEGACY_TLS;
 }
 
 /* Out-of-memory handler.  */
