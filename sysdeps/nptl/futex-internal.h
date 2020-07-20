@@ -467,4 +467,56 @@ futex_unlock_pi (unsigned int *futex_word, int private)
     }
 }
 
+#ifndef __NR_futex_time64
+# define __NR_futex_time64 __NR_futex
+#endif
+
+static __always_inline int
+futex_timed_wait_cancel64 (pid_t *tidp,  pid_t tid,
+                           const struct __timespec64 *timeout, int private)
+{
+  int err = INTERNAL_SYSCALL_CANCEL (futex_time64, tidp,
+                                     __lll_private_flag
+                                     (FUTEX_WAIT, private), tid, timeout);
+#ifndef __ASSUME_TIME64_SYSCALLS
+  if (err == -ENOSYS)
+    {
+      if (in_time_t_range (timeout->tv_sec))
+        {
+          struct timespec ts32 = valid_timespec64_to_timespec (*timeout);
+
+          err = INTERNAL_SYSCALL_CANCEL (futex, tidp,
+                                         __lll_private_flag (FUTEX_WAIT,
+                                                             private),
+                                         tid, &ts32);
+        }
+      else
+        err = -EOVERFLOW;
+    }
+#endif
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+    case -ETIMEDOUT:
+    case -EDEADLK:
+    case -ENOSYS:
+    case -EOVERFLOW:  /* Passed absolute timeout uses 64 bit time_t type, but
+                         underlying kernel does not support 64 bit time_t futex
+                         syscalls.  */
+    case -EPERM:  /*  The caller is not allowed to attach itself to the futex.
+		      Used to check if PI futexes are supported by the
+		      kernel.  */
+      return -err;
+
+    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
+		     being normalized.  Must have been caused by a glibc or
+		     application bug.  */
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
 #endif  /* futex-internal.h */

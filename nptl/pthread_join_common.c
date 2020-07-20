@@ -20,6 +20,7 @@
 #include <atomic.h>
 #include <stap-probe.h>
 #include <time.h>
+#include <futex-internal.h>
 
 static void
 cleanup (void *arg)
@@ -37,9 +38,11 @@ cleanup (void *arg)
    afterwards.  The kernel up to version 3.16.3 does not use the private futex
    operations for futex wake-up when the clone terminates.  */
 static int
-clockwait_tid (pid_t *tidp, clockid_t clockid, const struct timespec *abstime)
+clockwait_tid (pid_t *tidp, clockid_t clockid,
+               const struct __timespec64 *abstime)
 {
   pid_t tid;
+  int ret;
 
   if (! valid_nanoseconds (abstime->tv_nsec))
     return EINVAL;
@@ -47,11 +50,11 @@ clockwait_tid (pid_t *tidp, clockid_t clockid, const struct timespec *abstime)
   /* Repeat until thread terminated.  */
   while ((tid = *tidp) != 0)
     {
-      struct timespec rt;
+      struct __timespec64 rt;
 
       /* Get the current time. This can only fail if clockid is
          invalid. */
-      if (__glibc_unlikely (__clock_gettime (clockid, &rt)))
+      if (__glibc_unlikely (__clock_gettime64 (clockid, &rt)))
         return EINVAL;
 
       /* Compute relative timeout.  */
@@ -70,9 +73,9 @@ clockwait_tid (pid_t *tidp, clockid_t clockid, const struct timespec *abstime)
       /* If *tidp == tid, wait until thread terminates or the wait times out.
          The kernel up to version 3.16.3 does not use the private futex
          operations for futex wake-up when the clone terminates.  */
-      if (lll_futex_timed_wait_cancel (tidp, tid, &rt, LLL_SHARED)
-	  == -ETIMEDOUT)
-        return ETIMEDOUT;
+      ret = futex_timed_wait_cancel64 (tidp, tid, &rt, LLL_SHARED);
+      if (ret == -ETIMEDOUT || ret == -EOVERFLOW)
+        return -ret;
     }
 
   return 0;
@@ -80,8 +83,8 @@ clockwait_tid (pid_t *tidp, clockid_t clockid, const struct timespec *abstime)
 
 int
 __pthread_clockjoin_ex (pthread_t threadid, void **thread_return,
-			clockid_t clockid,
-			const struct timespec *abstime, bool block)
+                        clockid_t clockid,
+                        const struct __timespec64 *abstime, bool block)
 {
   struct pthread *pd = (struct pthread *) threadid;
 

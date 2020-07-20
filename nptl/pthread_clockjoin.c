@@ -16,14 +16,27 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <time.h>
 #include "pthreadP.h"
 
 int
-__pthread_clockjoin_np (pthread_t threadid, void **thread_return,
-			clockid_t clockid,
-			const struct timespec *abstime)
+__pthread_clockjoin_np64 (pthread_t threadid, void **thread_return,
+                          clockid_t clockid, const struct __timespec64 *abstime)
 {
   return __pthread_clockjoin_ex (threadid, thread_return,
                                  clockid, abstime, true);
 }
+
+#if __TIMESIZE != 64
+libc_hidden_def (__pthread_clockjoin_np64)
+
+int
+__pthread_clockjoin_np (pthread_t threadid, void **thread_return,
+                        clockid_t clockid, const struct timespec *abstime)
+{
+  struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
+
+  return __pthread_clockjoin_np64 (threadid, thread_return, clockid, &ts64);
+}
+#endif
 weak_alias (__pthread_clockjoin_np, pthread_clockjoin_np)

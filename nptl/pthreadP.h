@@ -458,6 +458,20 @@ extern int __pthread_cond_init (pthread_cond_t *cond,
 libc_hidden_proto (__pthread_cond_init)
 extern int __pthread_cond_signal (pthread_cond_t *cond);
 extern int __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex);
+
+#if __TIMESIZE == 64
+# define __pthread_clockjoin_np64 __pthread_clockjoin_np
+# define __pthread_timedjoin_np64 __pthread_timedjoin_np
+#else
+extern int __pthread_clockjoin_np64 (pthread_t threadid, void **thread_return,
+                                     clockid_t clockid,
+                                     const struct __timespec64 *abstime);
+libc_hidden_proto (__pthread_clockjoin_np64)
+extern int __pthread_timedjoin_np64 (pthread_t threadid, void **thread_return,
+                                     const struct __timespec64 *abstime);
+libc_hidden_proto (__pthread_timedjoin_np64)
+#endif
+
 extern int __pthread_cond_timedwait (pthread_cond_t *cond,
 				     pthread_mutex_t *mutex,
 				     const struct timespec *abstime);
@@ -488,7 +502,7 @@ extern int __pthread_enable_asynccancel (void) attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype) attribute_hidden;
 extern void __pthread_testcancel (void);
 extern int __pthread_clockjoin_ex (pthread_t, void **, clockid_t,
-				   const struct timespec *, bool)
+				   const struct __timespec64 *, bool)
   attribute_hidden;
 extern int __pthread_sigmask (int, const sigset_t *, sigset_t *);
 libc_hidden_proto (__pthread_sigmask);
