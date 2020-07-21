@@ -478,8 +478,6 @@ GLIBC_2.33 __wprintf_chk F
 GLIBC_2.33 __write F
 GLIBC_2.33 __wuflow F
 GLIBC_2.33 __wunderflow F
-GLIBC_2.33 __xmknod F
-GLIBC_2.33 __xmknodat F
 GLIBC_2.33 __xpg_basename F
 GLIBC_2.33 __xpg_sigpause F
 GLIBC_2.33 __xpg_strerror_r F

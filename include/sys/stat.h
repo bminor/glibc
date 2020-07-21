@@ -80,10 +80,8 @@ libc_hidden_proto (__mknod);
 
 extern int __xmknod (int __ver, const char *__path, __mode_t __mode,
 		     __dev_t *__dev);
-libc_hidden_proto (__xmknod)
 extern int __xmknodat (int __ver, int __fd, const char *__path,
 		       __mode_t __mode, __dev_t *__dev);
-libc_hidden_proto (__xmknodat)
 
 int __fxstat (int __ver, int __fildes, struct stat *__stat_buf);
 int __xstat (int __ver, const char *__filename,
@@ -109,6 +107,8 @@ hidden_proto (__xstat64);
 hidden_proto (__lxstat64);
 hidden_proto (__fxstatat64);
 #  endif
+libc_hidden_proto (__xmknod)
+libc_hidden_proto (__xmknodat)
 #  define stat(fname, buf) __xstat (_STAT_VER, fname, buf)
 #  define lstat(fname, buf)  __lxstat (_STAT_VER, fname, buf)
 #  define __lstat(fname, buf)  __lxstat (_STAT_VER, fname, buf)

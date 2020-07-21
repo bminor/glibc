@@ -15,12 +15,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <fcntl.h>
-#include <stddef.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-
+#include <fcntl.h>
+#include <shlib-compat.h>
 
 /* Create a device file named FILE_NAME, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
@@ -31,3 +28,13 @@ __xmknod (int vers, const char *file_name, mode_t mode, dev_t *dev)
   return __xmknodat (vers, AT_FDCWD, file_name, mode, dev);
 }
 libc_hidden_def (__xmknod)
+
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
+int
+__xmknod_compat (int vers, const char *file_name, mode_t mode, dev_t *dev)
+{
+  return __xmknod (vers, file_name, mode, dev);
+}
+
+compat_symbol (libc, __xmknod_compat, __xmknod, GLIBC_2_0);
+#endif

@@ -26,6 +26,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/sysmacros.h>
+#include <shlib-compat.h>
 
 /* Create a device file named PATH relative to FD, with permission and
    special bits MODE and device number DEV (which can be constructed
@@ -116,5 +117,14 @@ __xmknodat (int vers, int fd, const char *path, mode_t mode, dev_t *dev)
     return __hurd_fail (err);
   return 0;
 }
-
 libc_hidden_def (__xmknodat)
+
+#if SHLIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
+int
+__xmknodat_compat (int vers, int fd, const char *path, mode_t mode, dev_t *dev)
+{
+  return __xmknodat (vers, fd, path, mode, dev);
+}
+
+compat_symbol (libc, __xmknodat_compat, __xmknodat, GLIBC_2_4);
+#endif

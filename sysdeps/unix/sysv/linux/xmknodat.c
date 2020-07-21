@@ -15,18 +15,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/sysmacros.h>
+#include <errno.h>
+#include <shlib-compat.h>
 
-#include <sysdep.h>
-#include <sys/syscall.h>
-
-
+#if SHLIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
 /* Create a device file named PATH relative to FD, with permission and
    special bits MODE and device number DEV (which can be constructed
    from major and minor device numbers with the `makedev' macro above).  */
@@ -36,12 +29,8 @@ __xmknodat (int vers, int fd, const char *file, mode_t mode, dev_t *dev)
   if (vers != _MKNOD_VER)
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
-  /* We must convert the value to dev_t type used by the kernel.  */
-  unsigned long long int k_dev =  (*dev) & ((1ULL << 32) - 1);
-  if (k_dev != *dev)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-
-  return INLINE_SYSCALL (mknodat, 4, fd, file, mode, (unsigned int) k_dev);
+  return __mknodat (fd, file, mode, *dev);
 }
 
-libc_hidden_def (__xmknodat)
+compat_symbol (libc, __xmknodat, __xmknodat, GLIBC_2_4);
+#endif

@@ -1,5 +1,5 @@
-/* xmknod call using old-style Unix mknod system call.
-   Copyright (C) 1991-2020 Free Software Foundation, Inc.
+/* Create a special or ordinary file.  Linux version.
+   Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +16,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
 #include <errno.h>
-#include <shlib-compat.h>
 
-#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
-/* Create a device file named PATH, with permission and special bits MODE
-   and device number DEV (which can be constructed from major and minor
-   device numbers with the `makedev' macro above).  */
 int
-attribute_compat_text_section
-__xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
+__mknodat (int fd, const char *path, mode_t mode, dev_t dev)
 {
-  if (vers != _MKNOD_VER)
+  /* The user-exported dev_t is 64-bit while the kernel interface is
+     32-bit.  */
+  unsigned int k_dev = dev;
+  if (k_dev != dev)
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
-  return __mknodat (AT_FDCWD, path, mode, *dev);
+  return INLINE_SYSCALL_CALL (mknodat, fd, path, mode, k_dev);
 }
-
-compat_symbol (libc, __xmknod, __xmknod, GLIBC_2_0);
-#endif
+libc_hidden_def (__mknodat)
+weak_alias (__mknodat, mknodat)
