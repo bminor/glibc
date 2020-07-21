@@ -96,6 +96,7 @@ _dl_string_platform (const char *str)
 	  if (str[1] == '0')
 	    {
 	      ret = _DL_FIRST_PLATFORM + PPC_PLATFORM_POWER10;
+	      str++;
 	    }
 	  else
 	    return -1;
