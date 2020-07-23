@@ -38,6 +38,7 @@
 #include <sys/stat.h>
 #include <sys/uio.h>
 #include "nss_db/nss_db.h"
+#include <libc-diag.h>
 
 /* Get libc version number.  */
 #include "../version.h"
@@ -841,6 +842,13 @@ print_database (int fd)
 
 
 #ifdef HAVE_SELINUX
+
+/* security_context_t and matchpathcon (along with several other symbols) were
+   marked as deprecated by the SELinux API starting from version 3.1.  We use
+   them here, but should eventually switch to the newer API.  */
+DIAG_PUSH_NEEDS_COMMENT
+DIAG_IGNORE_NEEDS_COMMENT (10, "-Wdeprecated-declarations");
+
 static void
 set_file_creation_context (const char *outname, mode_t mode)
 {
@@ -870,6 +878,7 @@ set_file_creation_context (const char *outname, mode_t mode)
       freecon (ctx);
     }
 }
+DIAG_POP_NEEDS_COMMENT
 
 static void
 reset_file_creation_context (void)

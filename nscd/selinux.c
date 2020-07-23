@@ -33,6 +33,7 @@
 #ifdef HAVE_LIBAUDIT
 # include <libaudit.h>
 #endif
+#include <libc-diag.h>
 
 #include "dbg_log.h"
 #include "selinux.h"
@@ -320,6 +321,12 @@ avc_free_lock (void *lock)
 }
 
 
+/* avc_init (along with several other symbols) was marked as deprecated by the
+   SELinux API starting from version 3.1.  We use it here, but should
+   eventually switch to the newer API.  */
+DIAG_PUSH_NEEDS_COMMENT
+DIAG_IGNORE_NEEDS_COMMENT (10, "-Wdeprecated-declarations");
+
 /* Initialize the user space access vector cache (AVC) for NSCD along with
    log/thread/lock callbacks.  */
 void
@@ -335,7 +342,14 @@ nscd_avc_init (void)
   audit_init ();
 #endif
 }
+DIAG_POP_NEEDS_COMMENT
 
+
+/* security_context_t and sidput (along with several other symbols) were marked
+   as deprecated by the SELinux API starting from version 3.1.  We use them
+   here, but should eventually switch to the newer API.  */
+DIAG_PUSH_NEEDS_COMMENT
+DIAG_IGNORE_NEEDS_COMMENT (10, "-Wdeprecated-declarations");
 
 /* Check the permission from the caller (via getpeercon) to nscd.
    Returns 0 if access is allowed, 1 if denied, and -1 on error.
@@ -422,6 +436,7 @@ out:
 
   return rc;
 }
+DIAG_POP_NEEDS_COMMENT
 
 
 /* Wrapper to get AVC statistics.  */
