@@ -134,6 +134,14 @@ Deprecated and removed features, and other changes affecting compatibility:
   or contents might be overwritten on subsequent calls in the same thread or
   if the thread is terminated.  It makes strerror MT-safe.
 
+* Using weak references to libpthread functions such as pthread_create
+  or pthread_key_create to detect the singled-threaded nature of a
+  program is an obsolescent feature.  Future versions of glibc will
+  define pthread_create within libc.so.6 itself, so such checks will
+  always flag the program as multi-threaded.  Applications should check
+  the __libc_single_threaded variable declared in
+  <sys/single_threaded.h> instead.
+
 * The "files" NSS module no longer supports the "key" database (used for
   secure RPC).  The contents of the /etc/publickey file will be ignored,
   regardless of the settings in /etc/nsswitch.conf.  (This method of
