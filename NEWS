@@ -147,6 +147,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   applications which use the malloc hooks must preload a special shared
   object, to enable the hooks.
 
+* The hesiod NSS module has been deprecated and will be removed in a
+  future version of glibc.  System administrators are encouraged to
+  switch to other approaches for networked account databases, such as
+  LDAP.
+
 Changes to build and runtime requirements:
 
 * powerpc64le requires GCC 7.4 or newer.  This is required for supporting
