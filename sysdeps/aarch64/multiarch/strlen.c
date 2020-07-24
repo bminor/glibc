@@ -26,8 +26,14 @@
 # include <string.h>
 # include <init-arch.h>
 
-/* This should check HWCAP_MTE when it is available.  */
-#define MTE_ENABLED() (false)
+/* This should check HWCAP2_MTE when it is available: current
+   linux kernel does not expose it, but its value is reserved.
+   This is needed to make glibc MTE-safe on future systems in
+   case user code enables MTE. The ABI contract for enabling
+   MTE is not yet specified, but it can be useful for at least
+   debugging which does not need a contract.  */
+#define FUTURE_HWCAP2_MTE (1 << 18)
+#define MTE_ENABLED() (GLRO(dl_hwcap2) & FUTURE_HWCAP2_MTE)
 
 extern __typeof (__redirect_strlen) __strlen;
 
