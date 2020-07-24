@@ -16,11 +16,23 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/timeb.h>
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_33)
+
 #include <time.h>
 
+struct timeb
+  {
+    time_t time;		/* Seconds since epoch, as from `time'.  */
+    unsigned short int millitm;	/* Additional milliseconds.  */
+    short int timezone;		/* Minutes west of GMT.  */
+    short int dstflag;		/* Nonzero if Daylight Savings Time used.  */
+  };
+
 int
-ftime (struct timeb *timebuf)
+attribute_compat_text_section
+__ftime (struct timeb *timebuf)
 {
   struct timespec ts;
   __clock_gettime (CLOCK_REALTIME, &ts);
@@ -31,3 +43,6 @@ ftime (struct timeb *timebuf)
   timebuf->dstflag = 0;
   return 0;
 }
+
+compat_symbol (libc, __ftime, ftime, GLIBC_2_0);
+#endif

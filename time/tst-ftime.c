@@ -16,9 +16,23 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/timeb.h>
-#include <stdio.h>
-#include <libc-diag.h>
+
+#include <shlib-compat.h>
+#if TEST_COMPAT (libc, GLIBC_2_0, GLIBC_2_33)
+#include <time.h>
+#include <support/check.h>
+
+compat_symbol_reference (libc, ftime, ftime, GLIBC_2_0);
+
+struct timeb
+  {
+    time_t time;
+    unsigned short int millitm;
+    short int timezone;
+    short int dstflag;
+  };
+
+extern int ftime (struct timeb *__timebuf);
 
 static int
 do_test (void)
@@ -30,36 +44,23 @@ do_test (void)
     {
       prev = curr;
 
-      /* ftime was deprecated on 2.31.  */
-      DIAG_PUSH_NEEDS_COMMENT;
-      DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
-
-      if (ftime (&curr))
-        {
-          printf ("ftime returned an error\n");
-          return 1;
-        }
-
-      DIAG_POP_NEEDS_COMMENT;
-
-      if (curr.time < prev.time)
-        {
-          printf ("ftime's time flowed backwards\n");
-          return 1;
-        }
-
-      if (curr.time == prev.time
-          && curr.millitm < prev.millitm)
-        {
-          printf ("ftime's millitm flowed backwards\n");
-          return 1;
-        }
+      /* ftime was deprecated on 2.31 and removed on 2.33.  */
+      TEST_COMPARE (ftime (&curr), 0);
+      TEST_VERIFY_EXIT (curr.time >= prev.time);
+      if (curr.time == prev.time)
+	TEST_VERIFY_EXIT (curr.millitm >= prev.millitm);
 
       if (curr.time > prev.time)
         sec ++;
     }
   return 0;
 }
+#else
+static int
+do_test (void)
+{
+  return EXIT_UNSUPPORTED;
+}
+#endif
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

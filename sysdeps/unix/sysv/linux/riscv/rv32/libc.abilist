@@ -795,7 +795,6 @@ GLIBC_2.33 fsync F
 GLIBC_2.33 ftell F
 GLIBC_2.33 ftello F
 GLIBC_2.33 ftello64 F
-GLIBC_2.33 ftime F
 GLIBC_2.33 ftok F
 GLIBC_2.33 ftruncate F
 GLIBC_2.33 ftruncate64 F
