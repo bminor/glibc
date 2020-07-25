@@ -1323,8 +1323,8 @@ float128: 4
 ldouble: 4
 
 Function: "j0_towardzero":
-double: 4
-float: 5
+double: 5
+float: 6
 float128: 2
 ldouble: 5
 
