@@ -557,7 +557,7 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 	$(LINK.o) -shared -Wl,-O1 \
 		  -nostdlib -nostartfiles \
 		  $(sysdep-LDFLAGS) $(rtld-LDFLAGS) $(LDFLAGS.so) \
-		  -Wl,--verbose 2>&1 | \
+		  -Wl,--verbose 2>/dev/null | \
 	  sed > $@T \
 	      -e '/^=========/,/^=========/!d;/^=========/d' \
 	      $(if $(filter yes,$(have-hash-style)), \
@@ -1073,7 +1073,7 @@ ifneq (unknown,$(output-format))
 else
 	$(LINK.o) -shared $(sysdep-LDFLAGS) $(rtld-LDFLAGS) \
 		  $(LDFLAGS.so) $(LDFLAGS-lib.so) \
-		  -x c /dev/null -o $@.so -Wl,--verbose -v 2>&1 \
+		  -x c /dev/null -o $@.so -Wl,--verbose -v 2>/dev/null \
 	| sed -n -f $< > $@.new
 	test -s $@.new
 	rm -f $@.so
