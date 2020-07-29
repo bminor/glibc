@@ -70,7 +70,9 @@ Major new features:
 
 * AArch64 now supports standard branch protection security hardening
   in glibc when it is built with a GCC that is configured with
-  --enable-standard-branch-protection.  This includes branch target
+  --enable-standard-branch-protection (or if -mbranch-protection=standard
+  flag is passed when building both GCC target libraries and glibc,
+  in either case a custom GCC is needed).  This includes branch target
   identification (BTI) and pointer authentication for return addresses
   (PAC-RET).  They require armv8.5-a and armv8.3-a architecture
   extensions respectively for the protection to be effective,
