@@ -167,6 +167,10 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
+  CVE-2016-10228: An infinite loop has been fixed in the iconv program when
+  invoked with the -c option and when processing invalid multi-byte input
+  sequences.  Reported by Jan Engelhardt.
+
   CVE-2020-10029: Trigonometric functions on x86 targets suffered from stack
   corruption when they were passed a pseudo-zero argument.  Reported by Guido
   Vranken / ForAllSecure Mayhem.
