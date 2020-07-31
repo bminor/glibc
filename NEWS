@@ -171,9 +171,6 @@ Security related changes:
   corruption when they were passed a pseudo-zero argument.  Reported by Guido
   Vranken / ForAllSecure Mayhem.
 
-  CVE-2020-1751: A defect in the PowerPC backtrace function could cause an
-  out-of-bounds write when executed in a signal frame context.
-
   CVE-2020-1752: A use-after-free vulnerability in the glob function when
   expanding ~user has been fixed.
 
@@ -324,6 +321,9 @@ Changes to build and runtime requirements:
   ChangeLog.N where the highest N has the latest entries.
 
 Security related changes:
+
+  CVE-2020-1751: A defect in the PowerPC backtrace function could cause an
+  out-of-bounds write when executed in a signal frame context.
 
   CVE-2019-19126: ld.so failed to ignore the LD_PREFER_MAP_32BIT_EXEC
   environment variable during program execution after a security
