@@ -25,6 +25,7 @@ The following bugs are resolved with this release:
   [25966] Incorrect access of __x86_shared_non_temporal_threshold for x32
   [25976] nss_compat: internal_end*ent may clobber errno, hiding ERANGE
   [26248] Incorrect argument types for INLINE_SETXID_SYSCALL
+  [26332] Incorrect cache line size load causes memory corruption in memset
 
 Security related changes:
 
