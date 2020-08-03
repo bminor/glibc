@@ -179,8 +179,8 @@ GOT_LABEL:			;					      \
 #else
 /* Position-dependent code does not require access to the GOT.  */
 # define __GLRO(rOUT, rGOT, member, offset)				\
-	lis     rOUT,(member+LOWORD)@ha;					\
-	lwz     rOUT,(member+LOWORD)@l(rOUT)
+	lis     rOUT,(member)@ha;					\
+	lwz     rOUT,(member)@l(rOUT)
 #endif	/* PIC */
 
 #endif	/* __ASSEMBLER__ */
