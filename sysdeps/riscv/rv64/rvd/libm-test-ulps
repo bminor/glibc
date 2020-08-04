@@ -61,7 +61,7 @@ ldouble: 2
 
 Function: "asinh":
 double: 1
-float: 1
+float: 2
 ldouble: 3
 
 Function: "asinh_downward":
@@ -633,6 +633,7 @@ ldouble: 2
 
 Function: "cos":
 double: 1
+float: 1
 ldouble: 1
 
 Function: "cos_downward":
@@ -652,7 +653,7 @@ ldouble: 2
 
 Function: "cosh":
 double: 1
-float: 1
+float: 2
 ldouble: 1
 
 Function: "cosh_downward":
@@ -947,6 +948,7 @@ float: 4
 ldouble: 5
 
 Function: "exp":
+float: 1
 ldouble: 1
 
 Function: "exp10":
@@ -1055,7 +1057,7 @@ ldouble: 1
 
 Function: "j0":
 double: 2
-float: 2
+float: 8
 ldouble: 2
 
 Function: "j0_downward":
@@ -1064,23 +1066,23 @@ float: 4
 ldouble: 4
 
 Function: "j0_towardzero":
-double: 2
-float: 1
+double: 5
+float: 6
 ldouble: 2
 
 Function: "j0_upward":
-double: 3
-float: 2
+double: 4
+float: 5
 ldouble: 5
 
 Function: "j1":
-double: 1
-float: 2
+double: 2
+float: 8
 ldouble: 4
 
 Function: "j1_downward":
 double: 3
-float: 2
+float: 5
 ldouble: 4
 
 Function: "j1_towardzero":
@@ -1224,6 +1226,7 @@ ldouble: 2
 
 Function: "sin":
 double: 1
+float: 1
 ldouble: 1
 
 Function: "sin_downward":
@@ -1321,27 +1324,27 @@ ldouble: 3
 
 Function: "tgamma":
 double: 5
-float: 4
+float: 8
 ldouble: 4
 
 Function: "tgamma_downward":
 double: 5
-float: 5
+float: 7
 ldouble: 5
 
 Function: "tgamma_towardzero":
 double: 5
-float: 4
+float: 7
 ldouble: 5
 
 Function: "tgamma_upward":
 double: 4
-float: 4
+float: 8
 ldouble: 4
 
 Function: "y0":
 double: 2
-float: 1
+float: 6
 ldouble: 3
 
 Function: "y0_downward":
