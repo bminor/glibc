@@ -1,14 +1,14 @@
 # Polish translation for GNU libc.
-# Copyright (C) 1996, 1997, 1998, 1999, 2002, 2003, 2004, 2005, 2006, 2007, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999, 2002, 2003, 2004, 2005, 2006, 2007, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 # Paweł Krawczyk <kravietz@ceti.pl>, 1996-1999.
-# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2019.
+# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2020.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.29.9000\n"
-"POT-Creation-Date: 2020-01-02 20:08+0530\n"
-"PO-Revision-Date: 2019-07-24 20:30+0200\n"
+"Project-Id-Version: libc 2.31.9000\n"
+"POT-Creation-Date: 2020-07-22 23:24-0400\n"
+"PO-Revision-Date: 2020-07-23 18:06+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "Language: pl\n"
@@ -67,7 +67,8 @@ msgid "Give a short usage message"
 msgstr "Wyświetlenie krótkiej informacji o składni polecenia"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105 nss/makedb.c:120
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
+#: nss/makedb.c:120
 msgid "NAME"
 msgstr "NAZWA"
 
@@ -146,10 +147,10 @@ msgstr ""
 "-o PLIK-WY [PLIK-WE]...\n"
 "[PLIK-WY [PLIK-WE]...]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
-#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:306
+#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:388
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:276
-#: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
+#: locale/programs/localedef.c:438 login/programs/pt_chown.c:89
 #: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
@@ -161,11 +162,11 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
-#: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:293 locale/programs/localedef.c:463
+#: elf/ldconfig.c:322 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
+#: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -180,10 +181,10 @@ msgstr ""
 
 # w %s wchodzi nazwisko autora danego programu/procedury -PK
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:329 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:427
+#: elf/ldconfig.c:327 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:298
-#: locale/programs/localedef.c:468 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:93 nss/makedb.c:390
+#: locale/programs/localedef.c:465 malloc/memusage.sh:75
+#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -193,7 +194,7 @@ msgstr "Autorem jest %s.\n"
 msgid "*standard input*"
 msgstr "*standardowe wejście*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:290
+#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
 #: nss/makedb.c:246
 #, c-format
 msgid "cannot open input file `%s'"
@@ -392,7 +393,7 @@ msgstr "Nieznany system"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ABI systemu: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1334
+#: elf/cache.c:163 elf/ldconfig.c:1297
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Nie można otworzyć pliku pamięci podręcznej %s\n"
@@ -433,11 +434,11 @@ msgstr "Zmiana praw dostępu %s na %#o nie powiodła się"
 msgid "Renaming of %s to %s failed"
 msgstr "Zmiana nazwy %s na %s nie powiodła się"
 
-#: elf/dl-close.c:406 elf/dl-open.c:285
+#: elf/dl-close.c:406 elf/dl-open.c:293
 msgid "cannot create scope list"
 msgstr "nie można utworzyć listy zakresów"
 
-#: elf/dl-close.c:852
+#: elf/dl-close.c:862
 msgid "shared object not open"
 msgstr "obiekt dzielony nie jest otwarty"
 
@@ -462,11 +463,11 @@ msgstr "nie można przydzielić pamięci dla bufora zależności"
 msgid "cannot allocate dependency list"
 msgstr "nie można przydzielić pamięci dla listy zależności"
 
-#: elf/dl-deps.c:483 elf/dl-deps.c:543
+#: elf/dl-deps.c:483 elf/dl-deps.c:548
 msgid "cannot allocate symbol search list"
 msgstr "nie można przydzielić pamięci dla listy przeszukiwania symboli"
 
-#: elf/dl-deps.c:523
+#: elf/dl-deps.c:528
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Filtry nie są obsługiwane z LD_TRACE_PRELINKING"
 
@@ -490,143 +491,139 @@ msgstr "nie można odwzorować stron dla tablicy fptr"
 msgid "internal error: symidx out of range of fptr table"
 msgstr "błąd wewnętrzny: symidx spoza zakresu tablicy fptr"
 
-#: elf/dl-hwcaps.c:202 elf/dl-hwcaps.c:214
+#: elf/dl-hwcaps.c:92 elf/dl-hwcaps.c:104
 msgid "cannot create capability list"
 msgstr "nie można utworzyć listy uprawnień"
 
-#: elf/dl-load.c:427
+#: elf/dl-load.c:428
 msgid "cannot allocate name record"
 msgstr "nie można przydzielić pamięci dla rekordu nazwy"
 
-#: elf/dl-load.c:513 elf/dl-load.c:626 elf/dl-load.c:715 elf/dl-load.c:811
+#: elf/dl-load.c:514 elf/dl-load.c:627 elf/dl-load.c:716 elf/dl-load.c:812
 msgid "cannot create cache for search path"
 msgstr "nie można utworzyć pamięci podręcznej dla ścieżki przeszukiwania"
 
-#: elf/dl-load.c:609
+#: elf/dl-load.c:610
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "nie można utworzyć kopii RUNPATH/RPATH"
 
-#: elf/dl-load.c:702
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "nie można utworzyć tablicy ścieżki przeszukiwania"
 
-#: elf/dl-load.c:892
+#: elf/dl-load.c:964
 msgid "cannot stat shared object"
 msgstr "nie można wykonać stat na obiekcie dzielonym"
 
-#: elf/dl-load.c:1003 elf/dl-load.c:2191
+#: elf/dl-load.c:1075 elf/dl-load.c:2278
 msgid "cannot create shared object descriptor"
 msgstr "nie można utworzyć deskryptora obiektu dzielonego"
 
-#: elf/dl-load.c:1022 elf/dl-load.c:1571 elf/dl-load.c:1672
+#: elf/dl-load.c:1094 elf/dl-load.c:1658 elf/dl-load.c:1759
 msgid "cannot read file data"
 msgstr "nie można odczytać danych z pliku"
 
-#: elf/dl-load.c:1068
+#: elf/dl-load.c:1140
 msgid "ELF load command alignment not page-aligned"
 msgstr "wyrównanie polecenia wczytania ELF nie wyrównane do granicy stron"
 
-#: elf/dl-load.c:1075
+#: elf/dl-load.c:1147
 msgid "ELF load command address/offset not properly aligned"
 msgstr "adres/przesunięcie polecenia wczytania ELF niewłaściwie wyrównane"
 
-#: elf/dl-load.c:1151
-msgid "cannot process note segment"
-msgstr "nie można przetworzyć segmentu notatki"
-
-#: elf/dl-load.c:1162
+#: elf/dl-load.c:1226
 msgid "object file has no loadable segments"
 msgstr "plik obiektu nie ma segmentów ładowalnych"
 
-#: elf/dl-load.c:1175
+#: elf/dl-load.c:1239
 msgid "cannot dynamically load executable"
 msgstr "nie można dynamicznie załadować pliku wykonywalnego"
 
-#: elf/dl-load.c:1196
+#: elf/dl-load.c:1275
 msgid "object file has no dynamic section"
 msgstr "plik obiektu nie ma sekcji dynamicznej"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1302
 msgid "cannot dynamically load position-independent executable"
 msgstr "nie można dynamicznie załadować pliku wykonywalnego niezależnego od położenia"
 
-#: elf/dl-load.c:1225
+#: elf/dl-load.c:1304
 msgid "shared object cannot be dlopen()ed"
 msgstr "obiekt dzielony nie może być otwarty przez dlopen()"
 
-#: elf/dl-load.c:1238
+#: elf/dl-load.c:1317
 msgid "cannot allocate memory for program header"
 msgstr "nie można przydzielić pamięci na nagłówek programu"
 
-#: elf/dl-load.c:1271 elf/dl-load.h:130
+#: elf/dl-load.c:1350 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "nie można zmienić ochrony pamięci"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1370
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nie można włączyć wykonywalnego stosu wymaganego przez obiekt dzielony"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1383
 msgid "cannot close file descriptor"
 msgstr "nie można zamknąć deskryptora pliku"
 
-#: elf/dl-load.c:1571
+#: elf/dl-load.c:1658
 msgid "file too short"
 msgstr "plik za krótki"
 
-#: elf/dl-load.c:1606
+#: elf/dl-load.c:1693
 msgid "invalid ELF header"
 msgstr "nieprawidłowy nagłówek ELF"
 
-#: elf/dl-load.c:1618
+#: elf/dl-load.c:1705
 msgid "ELF file data encoding not big-endian"
 msgstr "kodowanie danych w pliku ELF nie jest big-endian"
 
-#: elf/dl-load.c:1620
+#: elf/dl-load.c:1707
 msgid "ELF file data encoding not little-endian"
 msgstr "kodowanie danych w pliku ELF nie jest little-endian"
 
-#: elf/dl-load.c:1624
+#: elf/dl-load.c:1711
 msgid "ELF file version ident does not match current one"
 msgstr "identyfikator wersji pliku ELF nie zgadza się z aktualnym"
 
-#: elf/dl-load.c:1628
+#: elf/dl-load.c:1715
 msgid "ELF file OS ABI invalid"
 msgstr "niepoprawne ABI systemu w pliku ELF"
 
-#: elf/dl-load.c:1631
+#: elf/dl-load.c:1718
 msgid "ELF file ABI version invalid"
 msgstr "niepoprawna wersja ABI w pliku ELF"
 
-#: elf/dl-load.c:1634
+#: elf/dl-load.c:1721
 msgid "nonzero padding in e_ident"
 msgstr "niezerowe wypełnienie w e_ident"
 
-#: elf/dl-load.c:1637
+#: elf/dl-load.c:1724
 msgid "internal error"
 msgstr "błąd wewnętrzny"
 
-#: elf/dl-load.c:1644
+#: elf/dl-load.c:1731
 msgid "ELF file version does not match current one"
 msgstr "wersja pliku ELF nie zgadza się z aktualną"
 
-#: elf/dl-load.c:1652
+#: elf/dl-load.c:1739
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "tylko ET_DYN i ET_EXEC mogą być wczytane"
 
-#: elf/dl-load.c:1657
+#: elf/dl-load.c:1744
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize w pliku ELF nie jest oczekiwanym rozmiarem"
 
-#: elf/dl-load.c:2210
+#: elf/dl-load.c:2297
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "niewłaściwa klasa ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2211
+#: elf/dl-load.c:2298
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "niewłaściwa klasa ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2214
+#: elf/dl-load.c:2301
 msgid "cannot open shared object file"
 msgstr "nie można otworzyć pliku obiektu dzielonego"
 
@@ -638,56 +635,56 @@ msgstr "odwzorowanie segmentu z obiektu dzielonego nie powiodło się"
 msgid "cannot map zero-fill pages"
 msgstr "nie można odwzorować stron wypełnionych zerami"
 
-#: elf/dl-lookup.c:882
+#: elf/dl-lookup.c:876
 msgid "symbol lookup error"
 msgstr "błąd wyszukiwania symbolu"
 
-#: elf/dl-open.c:71
+#: elf/dl-open.c:79
 msgid "cannot extend global scope"
 msgstr "nie można rozszerzyć zakresu globalnego"
 
-#: elf/dl-open.c:391
+#: elf/dl-open.c:399
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Licznik generacji TLS przekręcił się! Proszę to zgłosić."
 
-#: elf/dl-open.c:783
+#: elf/dl-open.c:808
 msgid "invalid mode for dlopen()"
 msgstr "błędny typ dla dlopen()"
 
-#: elf/dl-open.c:800
+#: elf/dl-open.c:825
 msgid "no more namespaces available for dlmopen()"
 msgstr "nie ma więcej dostępnych przestrzeni nazw dla dlmopen()"
 
-#: elf/dl-open.c:824
+#: elf/dl-open.c:849
 msgid "invalid target namespace in dlmopen()"
 msgstr "błędna przestrzeń nazw dla celu w dlmopen()"
 
-#: elf/dl-reloc.c:120
+#: elf/dl-reloc.c:139
 msgid "cannot allocate memory in static TLS block"
 msgstr "nie można przydzielić pamięci w statycznym bloku TLS"
 
-#: elf/dl-reloc.c:213
+#: elf/dl-reloc.c:232
 msgid "cannot make segment writable for relocation"
 msgstr "nie można uczynić segmentu zapisywalnym w celu relokacji"
 
-#: elf/dl-reloc.c:273
+#: elf/dl-reloc.c:292
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: brak pamięci na zapisanie wyników relokacji dla %s\n"
 
-#: elf/dl-reloc.c:289
+#: elf/dl-reloc.c:308
 msgid "cannot restore segment prot after reloc"
 msgstr "nie można odtworzyć ochrony segmentu po relokacji"
 
-#: elf/dl-reloc.c:320
+#: elf/dl-reloc.c:339
 msgid "cannot apply additional memory protection after relocation"
 msgstr "nie można nałożyć dodatkowej ochrony pamięci po relokacji"
 
-#: elf/dl-sym.c:150
+#: elf/dl-sym.c:138
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT wystąpiło w kodzie nie ładowanym dynamicznie"
 
-#: elf/dl-tls.c:931
+#: elf/dl-tls.c:1011
 msgid "cannot create TLS data structures"
 msgstr "nie można utworzyć struktur danych TLS"
 
@@ -699,220 +696,216 @@ msgstr "błąd wyszukiwania wersji"
 msgid "cannot allocate version reference table"
 msgstr "nie można przydzielić tablicy odniesień do wersji"
 
-#: elf/ldconfig.c:142
+#: elf/ldconfig.c:145
 msgid "Print cache"
 msgstr "Wypisanie zawartości pamięci podręcznej"
 
-#: elf/ldconfig.c:143
+#: elf/ldconfig.c:146
 msgid "Generate verbose messages"
 msgstr "Wyświetlanie większej liczby komunikatów"
 
-#: elf/ldconfig.c:144
+#: elf/ldconfig.c:147
 msgid "Don't build cache"
 msgstr "Niebudowanie pamięci podręcznej"
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:148
 msgid "Don't update symbolic links"
 msgstr "Bez uaktualniania dowiązań symbolicznych"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:149
 msgid "Change to and use ROOT as root directory"
 msgstr "Przejście do i używanie KATALOGU jako głównego katalogu"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:149
 msgid "ROOT"
 msgstr "KATALOG"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:150
 msgid "CACHE"
 msgstr "BUFOR"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:150
 msgid "Use CACHE as cache file"
 msgstr "Użycie BUFORA jako pliku pamięci podręcznej"
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:151
 msgid "CONF"
 msgstr "KONF"
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:151
 msgid "Use CONF as configuration file"
 msgstr "Użycie KONF jako pliku konfiguracyjnego"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:152
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Przetwarzanie wyłącznie katalogów podanych z linii poleceń; niebudowanie pamięci podręcznej."
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:153
 msgid "Manually link individual libraries."
 msgstr "Ręczne tworzenie dowiązań do pojedynczych bibliotek."
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:154
 msgid "FORMAT"
 msgstr "FORMAT"
 
-#: elf/ldconfig.c:151
-msgid "Format to use: new, old or compat (default)"
-msgstr "Używany format: new, old lub compat (domyślny)"
+#: elf/ldconfig.c:154
+msgid "Format to use: new (default), old, or compat"
+msgstr "Używany format: new (domyślny), old lub compat"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:155
 msgid "Ignore auxiliary cache file"
 msgstr "Ignorowanie dodatkowego pliku pamięci podręcznej"
 
-#: elf/ldconfig.c:160
+#: elf/ldconfig.c:163
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Konfiguracja powiązań dynamicznego linkera."
 
-#: elf/ldconfig.c:347
+#: elf/ldconfig.c:346
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Ścieżka `%s' podana więcej niż raz"
 
-#: elf/ldconfig.c:387
+#: elf/ldconfig.c:347
+#, c-format
+msgid "(from %s:%d and %s:%d)\n"
+msgstr "(od %s:%d i %s:%d)\n"
+
+#: elf/ldconfig.c:393
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s nie jest znanym rodzajem biblioteki"
 
-#: elf/ldconfig.c:415
+#: elf/ldconfig.c:421
 #, c-format
 msgid "Can't stat %s"
 msgstr "Nie można wykonać stat na %s"
 
-#: elf/ldconfig.c:489
+#: elf/ldconfig.c:500
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Nie można wykonać stat na %s\n"
 
-#: elf/ldconfig.c:499
+#: elf/ldconfig.c:510
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s nie jest dowiązaniem symbolicznym\n"
 
-#: elf/ldconfig.c:518
+#: elf/ldconfig.c:529
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Nie można usunąć %s"
 
-#: elf/ldconfig.c:524
+#: elf/ldconfig.c:535
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Nie można dowiązać %s do %s"
 
-#: elf/ldconfig.c:530
+#: elf/ldconfig.c:541
 msgid " (changed)\n"
 msgstr " (zmieniono)\n"
 
-#: elf/ldconfig.c:532
+#: elf/ldconfig.c:543
 msgid " (SKIPPED)\n"
 msgstr " (POMINIĘTO)\n"
 
-#: elf/ldconfig.c:587
+#: elf/ldconfig.c:598
 #, c-format
 msgid "Can't find %s"
 msgstr "Nie można znaleźć %s"
 
-#: elf/ldconfig.c:603 elf/ldconfig.c:769 elf/ldconfig.c:825 elf/ldconfig.c:857
+#: elf/ldconfig.c:614 elf/ldconfig.c:781 elf/ldconfig.c:839 elf/ldconfig.c:871
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Nie można wykonać lstat na %s"
 
-#: elf/ldconfig.c:610
+#: elf/ldconfig.c:621
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Zignorowano plik %s ponieważ nie jest zwykłym plikiem."
 
-#: elf/ldconfig.c:619
+#: elf/ldconfig.c:630
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Nie utworzono dowiązania ponieważ nie znaleziono soname dla %s"
 
-#: elf/ldconfig.c:702
+#: elf/ldconfig.c:689
+#, c-format
+msgid " (from %s:%d)\n"
+msgstr " (od %s:%d)\n"
+
+#: elf/ldconfig.c:714
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Nie można otworzyć katalogu %s"
 
-#: elf/ldconfig.c:787 elf/ldconfig.c:845 elf/readlib.c:97
+#: elf/ldconfig.c:799 elf/ldconfig.c:859 elf/readlib.c:97
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Nie znaleziono pliku wejściowego %s.\n"
 
-#: elf/ldconfig.c:794
+#: elf/ldconfig.c:806
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Nie można wykonać stat na %s"
 
-#: elf/ldconfig.c:939
+#: elf/ldconfig.c:953
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "biblioteka libc5 %s w złym katalogu"
 
-#: elf/ldconfig.c:942
+#: elf/ldconfig.c:956
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "biblioteka libc6 %s w złym katalogu"
 
-#: elf/ldconfig.c:945
+#: elf/ldconfig.c:959
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "biblioteka libc4 %s w złym katalogu"
 
-#: elf/ldconfig.c:973
+#: elf/ldconfig.c:987
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "biblioteki %s i %s w katalogu %s mają to samo soname ale inny rodzaj."
 
-#: elf/ldconfig.c:1083
+#: elf/ldconfig.c:1097
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Uwaga: zignorowano plik konfiguracyjny, którego nie można otworzyć: %s"
 
-#: elf/ldconfig.c:1149
+#: elf/ldconfig.c:1145
 #, c-format
-msgid "%s:%u: bad syntax in hwcap line"
-msgstr "%s:%u: błędna składnia w linii hwcap"
+msgid "%s:%u: hwcap directive ignored"
+msgstr "%s:%u: zignorowano dyrektywę hwcap"
 
-#: elf/ldconfig.c:1155
-#, c-format
-msgid "%s:%u: hwcap index %lu above maximum %u"
-msgstr "%s:%u: indeks hwcap %lu powyżej maksymalnego %u"
-
-#: elf/ldconfig.c:1162 elf/ldconfig.c:1170
-#, c-format
-msgid "%s:%u: hwcap index %lu already defined as %s"
-msgstr "%s:%u: indeks hwcap %lu już zdefiniowany jako %s"
-
-#: elf/ldconfig.c:1173
-#, c-format
-msgid "%s:%u: duplicate hwcap %lu %s"
-msgstr "%s:%u: powtórzony hwcap %lu %s"
-
-#: elf/ldconfig.c:1195
+#: elf/ldconfig.c:1164
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "opcja -r wymaga bezwzględnej ścieżki pliku konfiguracyjnego"
 
-#: elf/ldconfig.c:1202 locale/programs/xmalloc.c:63 malloc/obstack.c:416
-#: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
+#: elf/ldconfig.c:1171 locale/programs/xasprintf.c:31
+#: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
+#: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "pamięć wyczerpana"
 
-#: elf/ldconfig.c:1235
+#: elf/ldconfig.c:1204
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: nie można odczytać %s"
 
-#: elf/ldconfig.c:1283
+#: elf/ldconfig.c:1252
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "użyto względnej ścieżki `%s' do utworzenia pamięci podręcznej"
 
-#: elf/ldconfig.c:1313
+#: elf/ldconfig.c:1276
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Nie można przejść do katalogu /"
 
-#: elf/ldconfig.c:1354
+#: elf/ldconfig.c:1317
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Nie można otworzyć katalogu pliku pamięci podręcznej %s\n"
@@ -958,7 +951,7 @@ msgstr "brakujące argumenty plikowe"
 #. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:37
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:16
 msgid "No such file or directory"
 msgstr "Nie ma takiego pliku ani katalogu"
 
@@ -1346,12 +1339,12 @@ msgstr "`%s' nie jest poprawnym plikiem danych profilujących dla `%s'"
 msgid "cannot allocate symbol data"
 msgstr "nie można przydzielić pamięci dla symboli"
 
-#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:445
+#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:428
 #, c-format
 msgid "cannot open output file"
 msgstr "nie można otworzyć pliku wyjściowego"
 
-#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:308
+#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:291
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "błąd podczas zamykania wejścia `%s'"
@@ -1361,128 +1354,128 @@ msgstr "błąd podczas zamykania wejścia `%s'"
 msgid "illegal input sequence at position %Zd"
 msgstr "błędna sekwencja wejściowa na pozycji %Zd"
 
-#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:536
+#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:519
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "niekompletny znak lub sekwencja sterująca na końcu bufora"
 
-#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:579
-#: iconv/iconv_prog.c:615
+#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:562
+#: iconv/iconv_prog.c:598
 #, c-format
 msgid "error while reading the input"
 msgstr "błąd podczas czytania danych wejściowych"
 
-#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:580
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "przydzielenie bufora dla danych wejściowych było niemożliwe"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "Specyfikacja formatu wejścia/wyjścia:"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "kodowanie oryginalnego tekstu"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "kodowanie wyników"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Informacje:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "wyświetlenie wszystkich znanych zestawów znaków"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:124
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:124
 msgid "Output control:"
 msgstr "Kontrola wyjścia:"
 
-#: iconv/iconv_prog.c:65
+#: iconv/iconv_prog.c:66
 msgid "omit invalid characters from output"
 msgstr "pominięcie nieprawidłowych znaków z wyjścia"
 
-#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:128
 #: locale/programs/localedef.c:117 locale/programs/localedef.c:119
 #: locale/programs/localedef.c:121 locale/programs/localedef.c:150
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr "PLIK"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "plik wynikowy"
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "suppress warnings"
 msgstr "bez wypisywania ostrzeżeń"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "wyświetlanie informacji o postępie konwersji"
 
-#: iconv/iconv_prog.c:73
+#: iconv/iconv_prog.c:74
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Konwersja podanych plików między różnymi metodami kodowania."
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:78
 msgid "[FILE...]"
 msgstr "[PLIK...]"
 
-#: iconv/iconv_prog.c:230
-#, c-format
-msgid "conversions from `%s' and to `%s' are not supported"
-msgstr "konwersje z `%s' oraz do `%s' nie są obsługiwane"
-
-#: iconv/iconv_prog.c:235
-#, c-format
-msgid "conversion from `%s' is not supported"
-msgstr "konwersja z `%s' nie jest obsługiwana"
-
-#: iconv/iconv_prog.c:242
-#, c-format
-msgid "conversion to `%s' is not supported"
-msgstr "konwersja do `%s' nie jest obsługiwana"
-
-#: iconv/iconv_prog.c:246
-#, c-format
-msgid "conversion from `%s' to `%s' is not supported"
-msgstr "konwersja z `%s' do `%s' nie jest obsługiwana"
-
-#: iconv/iconv_prog.c:256
+#: iconv/iconv_prog.c:177 iconv/iconv_prog.c:239
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "nie udało się rozpocząć konwersji"
 
-#: iconv/iconv_prog.c:354
+#: iconv/iconv_prog.c:213
+#, c-format
+msgid "conversions from `%s' and to `%s' are not supported"
+msgstr "konwersje z `%s' oraz do `%s' nie są obsługiwane"
+
+#: iconv/iconv_prog.c:218
+#, c-format
+msgid "conversion from `%s' is not supported"
+msgstr "konwersja z `%s' nie jest obsługiwana"
+
+#: iconv/iconv_prog.c:225
+#, c-format
+msgid "conversion to `%s' is not supported"
+msgstr "konwersja do `%s' nie jest obsługiwana"
+
+#: iconv/iconv_prog.c:229
+#, c-format
+msgid "conversion from `%s' to `%s' is not supported"
+msgstr "konwersja z `%s' do `%s' nie jest obsługiwana"
+
+#: iconv/iconv_prog.c:337
 #, c-format
 msgid "error while closing output file"
 msgstr "błąd podczas zamykania pliku wyjściowego"
 
-#: iconv/iconv_prog.c:455
+#: iconv/iconv_prog.c:438
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "konwersja przerwana z powodu problemu z zapisaniem wyników"
 
-#: iconv/iconv_prog.c:532
+#: iconv/iconv_prog.c:515
 #, c-format
 msgid "illegal input sequence at position %ld"
 msgstr "błędna sekwencja wejściowa na pozycji %ld"
 
-#: iconv/iconv_prog.c:540
+#: iconv/iconv_prog.c:523
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "błąd wewnętrzny (nieprawidłowy deskryptor)"
 
-#: iconv/iconv_prog.c:543
+#: iconv/iconv_prog.c:526
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "nieznany błąd iconv() %d"
 
-#: iconv/iconv_prog.c:786
+#: iconv/iconv_prog.c:769
 msgid ""
 "The following list contains all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -2717,27 +2710,27 @@ msgstr ""
 "[--add-to-archive|--delete-from-archive] PLIK...\n"
 "--list-archive [PLIK]"
 
-#: locale/programs/localedef.c:238
+#: locale/programs/localedef.c:239
 #, c-format
 msgid "cannot create directory for output files"
 msgstr "nie można utworzyć katalogu na pliki wyjściowe"
 
-#: locale/programs/localedef.c:249
+#: locale/programs/localedef.c:250
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr "OSTATECZNE: system nie definiuje `_POSIX2_LOCALEDEF'"
 
-#: locale/programs/localedef.c:263 locale/programs/localedef.c:279
-#: locale/programs/localedef.c:673 locale/programs/localedef.c:693
+#: locale/programs/localedef.c:264 locale/programs/localedef.c:280
+#: locale/programs/localedef.c:678 locale/programs/localedef.c:698
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "nie można otworzyć pliku definicji lokalizacji `%s'"
 
-#: locale/programs/localedef.c:303
+#: locale/programs/localedef.c:304
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "nie można zapisać plików wyjściowych do `%s'"
 
-#: locale/programs/localedef.c:309
+#: locale/programs/localedef.c:310
 msgid "no output file produced because errors were issued"
 msgstr "nie utworzono pliku wyjściowego, ponieważ wystąpiły błędy"
 
@@ -2754,11 +2747,21 @@ msgstr ""
 "                    ścieżka lokalizacji: %s\n"
 "%s"
 
-#: locale/programs/localedef.c:641
+#: locale/programs/localedef.c:546
+#, c-format
+msgid "cannot create output path '%s': %s"
+msgstr "nie można utworzyć ścieżki wyjściowej '%s': %s"
+
+#: locale/programs/localedef.c:554
+#, c-format
+msgid "no write permission to output path '%s': %s"
+msgstr "brak uprawnień do zapisu pod ścieżką wyjściową '%s': %s"
+
+#: locale/programs/localedef.c:646
 msgid "circular dependencies between locale definitions"
 msgstr "zapętlone zależności pomiędzy definicjami lokalizacji"
 
-#: locale/programs/localedef.c:647
+#: locale/programs/localedef.c:652
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr "nie można dodać po raz drugi już odczytanej lokalizacji `%s'"
@@ -3132,7 +3135,7 @@ msgid "unable to free arguments"
 msgstr "zwolnienie argumentów niemożliwe"
 
 #: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.c:21
+#: sysdeps/gnu/errlist.h:4
 msgid "Success"
 msgstr "Sukces"
 
@@ -3173,7 +3176,7 @@ msgid "First/next chain broken"
 msgstr "Łańcuch pierwszy/następny jest uszkodzony"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.c:158
+#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.h:93
 msgid "Permission denied"
 msgstr "Brak dostępu"
 
@@ -3640,45 +3643,6 @@ msgstr "    Nie-członkowie rekursywni:\n"
 msgid "    No recursive nonmembers\n"
 msgstr "   Brak rekursywnych nie-członków\n"
 
-#: nis/nss_nisplus/nisplus-publickey.c:100
-#: nis/nss_nisplus/nisplus-publickey.c:182
-#, c-format
-msgid "DES entry for netname %s not unique\n"
-msgstr "Pozycja DES dla sieci %s nie jest unikalna\n"
-
-#: nis/nss_nisplus/nisplus-publickey.c:219
-#, c-format
-msgid "netname2user: missing group id list in `%s'"
-msgstr "netname2user: brak listy identyfikatorów grup w `%s'"
-
-#: nis/nss_nisplus/nisplus-publickey.c:301
-#: nis/nss_nisplus/nisplus-publickey.c:307
-#: nis/nss_nisplus/nisplus-publickey.c:372
-#: nis/nss_nisplus/nisplus-publickey.c:381
-#, c-format
-msgid "netname2user: (nis+ lookup): %s\n"
-msgstr "netname2user: (odwzorowanie nis+): %s\n"
-
-#: nis/nss_nisplus/nisplus-publickey.c:320
-#, c-format
-msgid "netname2user: DES entry for %s in directory %s not unique"
-msgstr "netname2user: wpis DES dla %s w katalogu %s nie jest unikalny"
-
-# XXX principal = nadzorca, troche lame -PK
-#: nis/nss_nisplus/nisplus-publickey.c:338
-#, c-format
-msgid "netname2user: principal name `%s' too long"
-msgstr "name2user: nazwa nadzorcy `%s' jest zbyt długa"
-
-#: nis/nss_nisplus/nisplus-publickey.c:394
-#, c-format
-msgid "netname2user: LOCAL entry for %s in directory %s not unique"
-msgstr "netname2user: wpis LOKALNY dla %s w katalogu %s nie jest unikalny"
-
-#: nis/nss_nisplus/nisplus-publickey.c:401
-msgid "netname2user: should not have uid 0"
-msgstr "netname2user: UID 0 nie powinien wystąpić"
-
 #: nis/ypclnt.c:828
 msgid "Request arguments bad"
 msgstr "Argumenty żądania są błędne"
@@ -3767,12 +3731,12 @@ msgstr "yp_update: nie można przekonwertować nazwy hosta na nazwę sieci\n"
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: nie można uzyskać adresu serwera\n"
 
-#: nscd/aicache.c:82 nscd/hstcache.c:452
+#: nscd/aicache.c:69 nscd/hstcache.c:452
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Nie znaleziono \"%s\" w pamięci podręcznej hostów!"
 
-#: nscd/aicache.c:84 nscd/hstcache.c:454
+#: nscd/aicache.c:71 nscd/hstcache.c:454
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "Przeładowywanie \"%s\" w pamięci podręcznej hostów!"
@@ -3805,6 +3769,15 @@ msgstr "czyszczenie pamięci podręcznej %s; czas %ld"
 #, c-format
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "rozważanie wpisu %s \"%s\", limit czasu %<PRIu64>"
+
+#: nscd/cachedumper.c:168
+msgid " - all data: "
+msgstr " - wszystkie dane: "
+
+#: nscd/cachedumper.c:362
+#, c-format
+msgid " - remaining data %p: "
+msgstr " - pozostałe dane %p: "
 
 #: nscd/connections.c:520
 #, c-format
@@ -4062,18 +4035,18 @@ msgstr "getgrouplist nie powiodło się"
 msgid "setgroups failed"
 msgstr "setgroups nie powiodło się"
 
-#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:385
+#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:379
 #: nscd/pwdcache.c:363 nscd/servicescache.c:310
 #, c-format
 msgid "short write in %s: %s"
 msgstr "błąd zapisu w %s: %s"
 
-#: nscd/grpcache.c:430 nscd/initgrcache.c:81
+#: nscd/grpcache.c:430 nscd/initgrcache.c:75
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "Nie znaleziono \"%s\" w pamięci podręcznej grup!"
 
-#: nscd/grpcache.c:432 nscd/initgrcache.c:83
+#: nscd/grpcache.c:432 nscd/initgrcache.c:77
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr "Przeładowywanie \"%s\" w pamięci podręcznej grup!"
@@ -4113,119 +4086,123 @@ msgstr "Nie znaleziono \"%s (%s,%s,%s)\" w pamięci podręcznej netgroup!"
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Przeładowywanie \"%s (%s,%s,%s)\" w pamięci podręcznej netgroup!"
 
-#: nscd/nscd.c:106
+#: nscd/nscd.c:108
 msgid "Read configuration data from NAME"
 msgstr "Odczyt konfiguracji z pliku NAZWA"
 
-#: nscd/nscd.c:108
+#: nscd/nscd.c:110
 msgid "Do not fork and display messages on the current tty"
 msgstr "Nieprzechodzenie w tło i wyświetlanie komunikatów na bieżącym terminalu"
 
-#: nscd/nscd.c:110
+#: nscd/nscd.c:112
+msgid "Print contents of the offline cache file NAME"
+msgstr "Wypisanie zawartości pliku pamięci podręcznej offline o podanej NAZWIE"
+
+#: nscd/nscd.c:114
 msgid "Do not fork, but otherwise behave like a daemon"
 msgstr "Nieprzechodzenie w tło, ale poza tym działanie jak demon"
 
-#: nscd/nscd.c:111
+#: nscd/nscd.c:115
 msgid "NUMBER"
 msgstr "LICZBA"
 
-#: nscd/nscd.c:111
+#: nscd/nscd.c:115
 msgid "Start NUMBER threads"
 msgstr "Uruchomienie takiej LICZBY wątków"
 
-#: nscd/nscd.c:112
+#: nscd/nscd.c:116
 msgid "Shut the server down"
 msgstr "Zakończenie pracy serwera"
 
-#: nscd/nscd.c:113
+#: nscd/nscd.c:117
 msgid "Print current configuration statistics"
 msgstr "Wyświetlenie aktualnych statystyk konfiguracji"
 
-#: nscd/nscd.c:114
+#: nscd/nscd.c:118
 msgid "TABLE"
 msgstr "TABLICA"
 
-#: nscd/nscd.c:115
+#: nscd/nscd.c:119
 msgid "Invalidate the specified cache"
 msgstr "Unieważnienie podanego bufora"
 
-#: nscd/nscd.c:116
+#: nscd/nscd.c:120
 msgid "TABLE,yes"
 msgstr "TABLICA,yes"
 
-#: nscd/nscd.c:117
+#: nscd/nscd.c:121
 msgid "Use separate cache for each user"
 msgstr "Użycie oddzielnego bufora dla każdego użytkownika"
 
 # XXX moze zostawic oryginal albo zrobic ladniej -PK
-#: nscd/nscd.c:122
+#: nscd/nscd.c:126
 msgid "Name Service Cache Daemon."
 msgstr "Demon buforujący usługi odwzorowania nazw."
 
-#: nscd/nscd.c:155 nss/getent.c:987 nss/makedb.c:206
+#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "zła liczba argumentów"
 
-#: nscd/nscd.c:165
+#: nscd/nscd.c:174
 #, c-format
 msgid "failure while reading configuration file; this is fatal"
 msgstr "niepowodzenie podczas odczytu pliku konfiguracyjnego; koniec pracy"
 
-#: nscd/nscd.c:174
+#: nscd/nscd.c:183
 #, c-format
 msgid "already running"
 msgstr "jest już uruchomiony"
 
-#: nscd/nscd.c:194
+#: nscd/nscd.c:203
 #, c-format
 msgid "cannot create a pipe to talk to the child"
 msgstr "nie można utworzyć potoku do komunikacji z potomkiem"
 
-#: nscd/nscd.c:198
+#: nscd/nscd.c:207
 #, c-format
 msgid "cannot fork"
 msgstr "nie można wykonać fork"
 
-#: nscd/nscd.c:268
+#: nscd/nscd.c:277
 msgid "cannot change current working directory to \"/\""
 msgstr "nie można zmienić bieżącego katalogu na \"/\""
 
-#: nscd/nscd.c:276
+#: nscd/nscd.c:285
 msgid "Could not create log file"
 msgstr "Nie można utworzyć pliku dziennika"
 
-#: nscd/nscd.c:355 nscd/nscd_stat.c:209
+#: nscd/nscd.c:364 nscd/nscd_stat.c:209
 #, c-format
 msgid "write incomplete"
 msgstr "zapis nie był kompletny"
 
-#: nscd/nscd.c:366
+#: nscd/nscd.c:375
 #, c-format
 msgid "cannot read invalidate ACK"
 msgstr "nie można odczytać ACK dla unieważnienia"
 
-#: nscd/nscd.c:372
+#: nscd/nscd.c:381
 #, c-format
 msgid "invalidation failed"
 msgstr "unieważnienie nie powiodło się"
 
-#: nscd/nscd.c:417 nscd/nscd.c:442 nscd/nscd_stat.c:190
+#: nscd/nscd.c:430 nscd/nscd.c:455 nscd/nscd_stat.c:190
 #, c-format
 msgid "Only root is allowed to use this option!"
 msgstr "Tylko root może używać tej opcji!"
 
-#: nscd/nscd.c:437
+#: nscd/nscd.c:450
 #, c-format
 msgid "'%s' is not a known database"
 msgstr "'%s' nie jest znaną bazą danych"
 
-#: nscd/nscd.c:452
+#: nscd/nscd.c:465
 #, c-format
 msgid "secure services not implemented anymore"
 msgstr "bezpieczne usługi nie są już zaimplementowane"
 
-#: nscd/nscd.c:485
+#: nscd/nscd.c:498
 #, c-format
 msgid ""
 "Supported tables:\n"
@@ -4240,17 +4217,17 @@ msgstr ""
 "Instrukcje dotyczące zgłaszania błędów znajdują się pod adresem:\n"
 "%s.\n"
 
-#: nscd/nscd.c:635
+#: nscd/nscd.c:648
 #, c-format
 msgid "'wait' failed\n"
 msgstr "'wait' nie powiodło się\n"
 
-#: nscd/nscd.c:642
+#: nscd/nscd.c:655
 #, c-format
 msgid "child exited with status %d\n"
 msgstr "potomek zakończył się ze stanem %d\n"
 
-#: nscd/nscd.c:647
+#: nscd/nscd.c:660
 #, c-format
 msgid "child terminated by signal %d\n"
 msgstr "potomek zakończony sygnałem %d\n"
@@ -5035,7 +5012,7 @@ msgstr "Dostępne bufory wyjściowe"
 msgid "Input message available"
 msgstr "Dostępny komunikat wejściowy"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:561
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:564
 msgid "I/O error"
 msgstr "Błąd we/wy"
 
@@ -5097,20 +5074,16 @@ msgstr "%s%sNieznany sygnał %d\n"
 msgid "Unknown signal"
 msgstr "Nieznany sygnał"
 
-#: string/_strerror.c:45 sysdeps/mach/_strerror.c:86
+#: string/_strerror.c:30 sysdeps/mach/_strerror.c:55
 msgid "Unknown error "
 msgstr "Nieznany błąd "
 
-#: string/strerror.c:41
-msgid "Unknown error"
-msgstr "Nieznany błąd"
-
-#: string/strsignal.c:60
+#: string/strsignal.c:39
 #, c-format
 msgid "Real-time signal %d"
 msgstr "Sygnał czasu rzeczywistego %d"
 
-#: string/strsignal.c:64
+#: string/strsignal.c:43
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Nieznany sygnał %d"
@@ -5218,35 +5191,35 @@ msgstr "RPC: Nieudane (niesprecyzowany błąd)"
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (nieznany kod błędu)"
 
-#: sunrpc/clnt_perr.c:330
+#: sunrpc/clnt_perr.c:334
 msgid "Authentication OK"
 msgstr "Uwierzytelnienie poprawne"
 
-#: sunrpc/clnt_perr.c:333
+#: sunrpc/clnt_perr.c:337
 msgid "Invalid client credential"
 msgstr "Błędne uwierzytelnienie klienta"
 
-#: sunrpc/clnt_perr.c:337
+#: sunrpc/clnt_perr.c:341
 msgid "Server rejected credential"
 msgstr "Serwer odrzucił wierzytelność"
 
-#: sunrpc/clnt_perr.c:341
+#: sunrpc/clnt_perr.c:345
 msgid "Invalid client verifier"
 msgstr "Błędny weryfikator klienta"
 
-#: sunrpc/clnt_perr.c:345
+#: sunrpc/clnt_perr.c:349
 msgid "Server rejected verifier"
 msgstr "Serwer odrzucił weryfikację"
 
-#: sunrpc/clnt_perr.c:349
+#: sunrpc/clnt_perr.c:353
 msgid "Client credential too weak"
 msgstr "Wierzytelność klienta jest zbyt mała"
 
-#: sunrpc/clnt_perr.c:353
+#: sunrpc/clnt_perr.c:357
 msgid "Invalid server verifier"
 msgstr "Błędny weryfikator serwera"
 
-#: sunrpc/clnt_perr.c:357
+#: sunrpc/clnt_perr.c:361
 msgid "Failed (unspecified error)"
 msgstr "Nieudane (nieustalony błąd)"
 
@@ -5281,279 +5254,6 @@ msgstr "Problem z nasłuchem przy rozgłaszaniu"
 #: sunrpc/pmap_rmt.c:341
 msgid "Cannot receive reply to broadcast"
 msgstr "Nie można otrzymać odpowiedzi na rozgłaszanie"
-
-#: sunrpc/rpc_main.c:281
-#, c-format
-msgid "%s: output would overwrite %s\n"
-msgstr "%s: wyjście nadpisze %s\n"
-
-#: sunrpc/rpc_main.c:288
-#, c-format
-msgid "%s: unable to open %s: %m\n"
-msgstr "%s: nie można otworzyć %s: %m\n"
-
-#: sunrpc/rpc_main.c:300
-#, c-format
-msgid "%s: while writing output %s: %m"
-msgstr "%s: podczas zapisywania wyjścia do %s: %m"
-
-#: sunrpc/rpc_main.c:336 sunrpc/rpc_main.c:375
-#, c-format
-msgid "cannot find C preprocessor: %s\n"
-msgstr "nie można odnaleźć preprocesora C: %s\n"
-
-#: sunrpc/rpc_main.c:411
-#, c-format
-msgid "%s: C preprocessor failed with signal %d\n"
-msgstr "%s: preprocesor C zakończył pracę z sygnałem %d\n"
-
-#: sunrpc/rpc_main.c:414
-#, c-format
-msgid "%s: C preprocessor failed with exit code %d\n"
-msgstr "%s: preprocesor C zakończył pracę z kodem wyjścia %d\n"
-
-#: sunrpc/rpc_main.c:454
-#, c-format
-msgid "illegal nettype: `%s'\n"
-msgstr "błędny typ sieci: '%s'\n"
-
-#: sunrpc/rpc_main.c:1089
-#, c-format
-msgid "rpcgen: too many defines\n"
-msgstr "rpcgen: za dużo definicji\n"
-
-#: sunrpc/rpc_main.c:1101
-#, c-format
-msgid "rpcgen: arglist coding error\n"
-msgstr "rpcgen: błędne kodowanie arglist\n"
-
-#. TRANS: the file will not be removed; this is an
-#. TRANS: informative message.
-#: sunrpc/rpc_main.c:1134
-#, c-format
-msgid "file `%s' already exists and may be overwritten\n"
-msgstr "plik `%s' już istnieje i może zostać nadpisany\n"
-
-#: sunrpc/rpc_main.c:1179
-#, c-format
-msgid "Cannot specify more than one input file!\n"
-msgstr "Można podać tylko jeden plik wejściowy!\n"
-
-#: sunrpc/rpc_main.c:1349
-#, c-format
-msgid "Cannot use netid flag with inetd flag!\n"
-msgstr "Nie można używać flagi id_sieci z flagą inetd!\n"
-
-#: sunrpc/rpc_main.c:1358
-#, c-format
-msgid "Cannot use netid flag without TIRPC!\n"
-msgstr "Flagi id_sieci można używać tylko z TIRPC!\n"
-
-#: sunrpc/rpc_main.c:1365
-#, c-format
-msgid "Cannot use table flags with newstyle!\n"
-msgstr "Nowa składnia opcji nie pozwala na używanie flagi table!\n"
-
-#: sunrpc/rpc_main.c:1384
-#, c-format
-msgid "\"infile\" is required for template generation flags.\n"
-msgstr "flagi generowania szablonów wymagają podania \"pliku_we\".\n"
-
-#: sunrpc/rpc_main.c:1389
-#, c-format
-msgid "Cannot have more than one file generation flag!\n"
-msgstr "Nie można podać więcej niż jednej flagi generowania pliku!\n"
-
-#: sunrpc/rpc_main.c:1398
-#, c-format
-msgid "usage: %s infile\n"
-msgstr "składnia: %s plik_we\n"
-
-#: sunrpc/rpc_main.c:1399
-#, c-format
-msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
-msgstr "\t%s [-abkCLNTM][-Dnazwa[=wartość]] [-i rozmiar] [-I [-K sekund]] [-Y ścieżka] plik_we\n"
-
-#: sunrpc/rpc_main.c:1401
-#, c-format
-msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
-msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o plik_wy] [plik_we]\n"
-
-#: sunrpc/rpc_main.c:1403
-#, c-format
-msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
-msgstr "\t%s [-s typ_sieci]* [-o plik_wy] [plik_we]\n"
-
-#: sunrpc/rpc_main.c:1404
-#, c-format
-msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
-msgstr "\t%s [-n id_sieci]* [-o plik_wy] [plik_we]\n"
-
-#: sunrpc/rpc_main.c:1412
-#, c-format
-msgid "options:\n"
-msgstr "opcje:\n"
-
-#: sunrpc/rpc_main.c:1413
-#, c-format
-msgid "-a\t\tgenerate all files, including samples\n"
-msgstr "-a\t\tgenerowanie wszystkich plików, także przykładów\n"
-
-#: sunrpc/rpc_main.c:1414
-#, c-format
-msgid "-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n"
-msgstr "-b\t\ttryb kompatybilności wstecznej (generuje kod dla SunOS 4.1)\n"
-
-#: sunrpc/rpc_main.c:1415
-#, c-format
-msgid "-c\t\tgenerate XDR routines\n"
-msgstr "-c\t\tgenerowanie funkcji XDR\n"
-
-#: sunrpc/rpc_main.c:1416
-#, c-format
-msgid "-C\t\tANSI C mode\n"
-msgstr "-C\t\ttryb ANSI C\n"
-
-#: sunrpc/rpc_main.c:1417
-#, c-format
-msgid "-Dname[=value]\tdefine a symbol (same as #define)\n"
-msgstr "-Dnazwa[=wartość]\tdefinicja symbolu (to samo co #define)\n"
-
-#: sunrpc/rpc_main.c:1418
-#, c-format
-msgid "-h\t\tgenerate header file\n"
-msgstr "-h\t\tgenerowanie pliku nagłówkowego\n"
-
-#: sunrpc/rpc_main.c:1419
-#, c-format
-msgid "-i size\t\tsize at which to start generating inline code\n"
-msgstr "-i rozmiar\trozmiar przy którym zacząć generować kod inline\n"
-
-#: sunrpc/rpc_main.c:1420
-#, c-format
-msgid "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"
-msgstr "-I\t\tgenerowanie kodu do obsługi inetd w serwerze (dla SunOS 4.1)\n"
-
-#: sunrpc/rpc_main.c:1421
-#, c-format
-msgid "-K seconds\tserver exits after K seconds of inactivity\n"
-msgstr "-K sekund\tserwer kończy pracę po K sekund nieaktywności\n"
-
-#: sunrpc/rpc_main.c:1422
-#, c-format
-msgid "-l\t\tgenerate client side stubs\n"
-msgstr "-l\t\tgenerowanie zaślepek dla strony klienckiej\n"
-
-#: sunrpc/rpc_main.c:1423
-#, c-format
-msgid "-L\t\tserver errors will be printed to syslog\n"
-msgstr "-L\t\tzapisywanie błędów serwera do dziennika systemowego\n"
-
-#: sunrpc/rpc_main.c:1424
-#, c-format
-msgid "-m\t\tgenerate server side stubs\n"
-msgstr "-m\t\tgenerowanie zaślepek dla strony serwera\n"
-
-#: sunrpc/rpc_main.c:1425
-#, c-format
-msgid "-M\t\tgenerate MT-safe code\n"
-msgstr "-M\t\tgenerowanie kodu bezpiecznego dla wątków (MT-safe)\n"
-
-#: sunrpc/rpc_main.c:1426
-#, c-format
-msgid "-n netid\tgenerate server code that supports named netid\n"
-msgstr "-n id_sieci\tgenerowanie kodu serwera obsługującego podany id_sieci\n"
-
-#: sunrpc/rpc_main.c:1427
-#, c-format
-msgid "-N\t\tsupports multiple arguments and call-by-value\n"
-msgstr "-N\t\tobsługa wielu argumentów i wywoływania przez wartość\n"
-
-#: sunrpc/rpc_main.c:1428
-#, c-format
-msgid "-o outfile\tname of the output file\n"
-msgstr "-o plik_wy\tnazwa pliku wyjściowego\n"
-
-#: sunrpc/rpc_main.c:1429
-#, c-format
-msgid "-s nettype\tgenerate server code that supports named nettype\n"
-msgstr "-s typ_sieci\tgenerowanie kodu serwera obsługującego podany typ_sieci\n"
-
-#: sunrpc/rpc_main.c:1430
-#, c-format
-msgid "-Sc\t\tgenerate sample client code that uses remote procedures\n"
-msgstr "-Sc\t\tgenerowanie przykładowego kodu klienta używającego procedur zdalnych\n"
-
-#: sunrpc/rpc_main.c:1431
-#, c-format
-msgid "-Ss\t\tgenerate sample server code that defines remote procedures\n"
-msgstr "-Ss\t\tgenerowanie przykładowego kodu serwera definiującego procedury zdalne\n"
-
-#: sunrpc/rpc_main.c:1432
-#, c-format
-msgid "-Sm \t\tgenerate makefile template \n"
-msgstr "-Sm \t\tgenerowanie szablonu makefile\n"
-
-#: sunrpc/rpc_main.c:1433
-#, c-format
-msgid "-t\t\tgenerate RPC dispatch table\n"
-msgstr "-t\t\tgenerowanie tablicy wysyłania RPC\n"
-
-#: sunrpc/rpc_main.c:1434
-#, c-format
-msgid "-T\t\tgenerate code to support RPC dispatch tables\n"
-msgstr "-T\t\tgenerowanie kodu obsługującego tablice wysyłania RPC\n"
-
-#: sunrpc/rpc_main.c:1435
-#, c-format
-msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
-msgstr "-Y ścieżka\tnazwa katalogu, w którym znajduje się preprocesor C (cpp)\n"
-
-#: sunrpc/rpc_main.c:1436
-#, c-format
-msgid "-5\t\tSysVr4 compatibility mode\n"
-msgstr "-5\t\ttryb zgodności z SysVr4\n"
-
-#: sunrpc/rpc_main.c:1437
-#, c-format
-msgid "--help\t\tgive this help list\n"
-msgstr "--help\t\twyświetlenie tego tekstu pomocy\n"
-
-#: sunrpc/rpc_main.c:1438
-#, c-format
-msgid "--version\tprint program version\n"
-msgstr "--version\twypisanie wersji programu\n"
-
-#: sunrpc/rpc_main.c:1440
-#, c-format
-msgid ""
-"\n"
-"For bug reporting instructions, please see:\n"
-"%s.\n"
-msgstr ""
-"\n"
-"Instrukcje dotyczące zgłaszania błędów znajdują się pod adresem:\n"
-"%s.\n"
-
-#: sunrpc/rpc_scan.c:112
-msgid "constant or identifier expected"
-msgstr "spodziewana stała lub identyfikator"
-
-#: sunrpc/rpc_scan.c:308
-msgid "illegal character in file: "
-msgstr "błędny znak w pliku: "
-
-#: sunrpc/rpc_scan.c:347 sunrpc/rpc_scan.c:373
-msgid "unterminated string constant"
-msgstr "nie zakończony łańcuch znaków"
-
-#: sunrpc/rpc_scan.c:379
-msgid "empty char string"
-msgstr "pusty łańcuch znaków"
-
-#: sunrpc/rpc_scan.c:521 sunrpc/rpc_scan.c:531
-msgid "preprocessor error"
-msgstr "błąd preprocesora"
 
 #: sunrpc/svc_run.c:72
 msgid "svc_run: - out of memory"
@@ -5647,6 +5347,10 @@ msgstr "svc_unix.c - problemy przy tworzeniu gniazda AF_UNIX"
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c - nie można wykonać getsockname lub listen"
 
+#: sysdeps/aarch64/dl-bti.c:41
+msgid "mprotect failed to turn on BTI"
+msgstr "mprotect nie mogło włączyć BTI"
+
 #: sysdeps/generic/siglist.h:29
 msgid "Hangup"
 msgstr "Rozłączenie"
@@ -5697,7 +5401,7 @@ msgstr "Naruszenie ochrony pamięci"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.c:360
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:219
 msgid "Broken pipe"
 msgstr "Przerwany potok"
 
@@ -5791,12 +5495,12 @@ msgstr "Zasoby zostały stracone"
 
 #. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.c:26
+#: sysdeps/gnu/errlist.h:9
 msgid "Operation not permitted"
 msgstr "Operacja niedozwolona"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.c:46
+#: sysdeps/gnu/errlist.h:21
 msgid "No such process"
 msgstr "Nie ma takiego procesu"
 
@@ -5807,12 +5511,12 @@ msgstr "Nie ma takiego procesu"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.c:61
+#: sysdeps/gnu/errlist.h:32
 msgid "Interrupted system call"
 msgstr "Przerwane wywołanie systemowe"
 
 #. TRANS Usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.c:70
+#: sysdeps/gnu/errlist.h:37
 msgid "Input/output error"
 msgstr "Błąd wejścia/wyjścia"
 
@@ -5821,7 +5525,7 @@ msgstr "Błąd wejścia/wyjścia"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.c:83
+#: sysdeps/gnu/errlist.h:46
 msgid "No such device or address"
 msgstr "Nie ma takiego urządzenia ani adresu"
 
@@ -5829,27 +5533,27 @@ msgstr "Nie ma takiego urządzenia ani adresu"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:95
+#: sysdeps/gnu/errlist.h:54
 msgid "Argument list too long"
 msgstr "Lista argumentów za długa"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.c:105
+#: sysdeps/gnu/errlist.h:60
 msgid "Exec format error"
 msgstr "Błędny format pliku wykonywalnego"
 
 #. TRANS For example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.c:116
+#: sysdeps/gnu/errlist.h:67
 msgid "Bad file descriptor"
 msgstr "Błędny deskryptor pliku"
 
 #. TRANS This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.c:127
+#: sysdeps/gnu/errlist.h:74
 msgid "No child processes"
 msgstr "Brak procesów potomnych"
 
@@ -5857,69 +5561,69 @@ msgstr "Brak procesów potomnych"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.c:139
+#: sysdeps/gnu/errlist.h:82
 msgid "Resource deadlock avoided"
 msgstr "Uniknięto zakleszczenia zasobów"
 
 #. TRANS The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.c:149
+#: sysdeps/gnu/errlist.h:88
 msgid "Cannot allocate memory"
 msgstr "Nie można przydzielić pamięci"
 
 #. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.c:168
+#: sysdeps/gnu/errlist.h:99
 msgid "Bad address"
 msgstr "Błędny adres"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.c:179
+#: sysdeps/gnu/errlist.h:106
 msgid "Block device required"
 msgstr "Wymagane urządzenie blokowe"
 
 #. TRANS A system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.c:190
+#: sysdeps/gnu/errlist.h:113
 msgid "Device or resource busy"
 msgstr "Urządzenie lub zasoby zajęte"
 
 #. TRANS An existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.c:200
+#: sysdeps/gnu/errlist.h:119
 msgid "File exists"
 msgstr "Plik istnieje"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:211
+#: sysdeps/gnu/errlist.h:126
 msgid "Invalid cross-device link"
 msgstr "Błędne dowiązanie między urządzeniami"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.c:221
+#: sysdeps/gnu/errlist.h:132
 msgid "No such device"
 msgstr "Nie ma takiego urządzenia"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.c:230
+#: sysdeps/gnu/errlist.h:137
 msgid "Not a directory"
 msgstr "Nie jest katalogiem"
 
 #. TRANS You cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.c:240
+#: sysdeps/gnu/errlist.h:143
 msgid "Is a directory"
 msgstr "Jest katalogiem"
 
 #. TRANS This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.c:250
+#: sysdeps/gnu/errlist.h:149
 msgid "Invalid argument"
 msgstr "Zły argument"
 
@@ -5930,20 +5634,20 @@ msgstr "Zły argument"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.c:265
+#: sysdeps/gnu/errlist.h:160
 msgid "Too many open files"
 msgstr "Za dużo otwartych plików"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:276
+#: sysdeps/gnu/errlist.h:167
 msgid "Too many open files in system"
 msgstr "Za dużo otwartych plików w systemie"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.c:286
+#: sysdeps/gnu/errlist.h:173
 msgid "Inappropriate ioctl for device"
 msgstr "Niewłaściwy ioctl dla urządzenia"
 
@@ -5952,47 +5656,47 @@ msgstr "Niewłaściwy ioctl dla urządzenia"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.c:299
+#: sysdeps/gnu/errlist.h:182
 msgid "Text file busy"
 msgstr "Plik wykonywalny zajęty"
 
 #. TRANS The size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.c:308
+#: sysdeps/gnu/errlist.h:187
 msgid "File too large"
 msgstr "Plik zbyt duży"
 
 #. TRANS Write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.c:318
+#: sysdeps/gnu/errlist.h:193
 msgid "No space left on device"
 msgstr "Brak miejsca na urządzeniu"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.c:327
+#: sysdeps/gnu/errlist.h:198
 msgid "Illegal seek"
 msgstr "Błędne przesunięcie"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.c:336
+#: sysdeps/gnu/errlist.h:203
 msgid "Read-only file system"
 msgstr "System plików wyłącznie do odczytu"
 
 #. TRANS The link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:347
+#: sysdeps/gnu/errlist.h:210
 msgid "Too many links"
 msgstr "Za dużo dowiązań"
 
 #. TRANS Used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.c:370
+#: sysdeps/gnu/errlist.h:225
 msgid "Numerical argument out of domain"
 msgstr "Argument liczbowy spoza dziedziny"
 
 #. TRANS Used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.c:380
+#: sysdeps/gnu/errlist.h:231
 msgid "Numerical result out of range"
 msgstr "Wynik liczbowy poza zakresem"
 
@@ -6025,18 +5729,9 @@ msgstr "Wynik liczbowy poza zakresem"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.c:417
+#: sysdeps/gnu/errlist.h:264
 msgid "Resource temporarily unavailable"
 msgstr "Zasoby chwilowo niedostępne"
-
-#. TRANS In @theglibc{}, this is another name for @code{EAGAIN} (above).
-#. TRANS The values are always the same, on every operating system.
-#. TRANS
-#. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
-#. TRANS separate error code.
-#: sysdeps/gnu/errlist.c:430
-msgid "Operation would block"
-msgstr "Operacja spowodowałaby blokadę"
 
 #. TRANS An operation that cannot complete immediately was initiated on an object
 #. TRANS that has non-blocking mode selected.  Some functions that must always
@@ -6046,47 +5741,47 @@ msgstr "Operacja spowodowałaby blokadę"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.c:446
+#: sysdeps/gnu/errlist.h:276
 msgid "Operation now in progress"
 msgstr "Operacja jest właśnie wykonywana"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.c:456
+#: sysdeps/gnu/errlist.h:282
 msgid "Operation already in progress"
 msgstr "Operacja jest już wykonywana"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.c:465
+#: sysdeps/gnu/errlist.h:287
 msgid "Socket operation on non-socket"
 msgstr "Operacja na obiekcie, który nie jest gniazdem"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.c:475
+#: sysdeps/gnu/errlist.h:293
 msgid "Message too long"
 msgstr "Komunikat za długi"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.c:484
+#: sysdeps/gnu/errlist.h:298
 msgid "Protocol wrong type for socket"
 msgstr "Typ protokołu nie pasuje do gniazda"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.c:494
+#: sysdeps/gnu/errlist.h:304
 msgid "Protocol not available"
 msgstr "Protokół niedostępny"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.c:505
+#: sysdeps/gnu/errlist.h:311
 msgid "Protocol not supported"
 msgstr "Protokół nie obsługiwany"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.c:514
+#: sysdeps/gnu/errlist.h:316
 msgid "Socket type not supported"
 msgstr "Nie obsługiwany typ gniazda"
 
@@ -6096,71 +5791,71 @@ msgstr "Nie obsługiwany typ gniazda"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.c:528
+#: sysdeps/gnu/errlist.h:326
 msgid "Operation not supported"
 msgstr "Operacja nie obsługiwana"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.c:537
+#: sysdeps/gnu/errlist.h:331
 msgid "Protocol family not supported"
 msgstr "Nie obsługiwana rodzina protokołów"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.c:547
+#: sysdeps/gnu/errlist.h:337
 msgid "Address family not supported by protocol"
 msgstr "Rodzina adresów nie obsługiwana przez protokół"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:556
+#: sysdeps/gnu/errlist.h:342
 msgid "Address already in use"
 msgstr "Adres jest już w użyciu"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:567
+#: sysdeps/gnu/errlist.h:349
 msgid "Cannot assign requested address"
 msgstr "Nie można przypisać żądanego adresu"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.c:576
+#: sysdeps/gnu/errlist.h:354
 msgid "Network is down"
 msgstr "Sieć jest wyłączona"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.c:586
+#: sysdeps/gnu/errlist.h:360
 msgid "Network is unreachable"
 msgstr "Sieć jest niedostępna"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.c:595
+#: sysdeps/gnu/errlist.h:365
 msgid "Network dropped connection on reset"
 msgstr "Sieć przerwała połączenie po resecie"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.c:604
+#: sysdeps/gnu/errlist.h:370
 msgid "Software caused connection abort"
 msgstr "Oprogramowanie spowodowało przerwanie połączenia"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.c:615
+#: sysdeps/gnu/errlist.h:377
 msgid "Connection reset by peer"
 msgstr "Połączenie zerwane przez drugą stronę"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.c:626
+#: sysdeps/gnu/errlist.h:384
 msgid "No buffer space available"
 msgstr "Brak miejsca w buforze"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.c:636
+#: sysdeps/gnu/errlist.h:390
 msgid "Transport endpoint is already connected"
 msgstr "Drugi koniec jest już połączony"
 
@@ -6168,82 +5863,74 @@ msgstr "Drugi koniec jest już połączony"
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.c:648
+#: sysdeps/gnu/errlist.h:398
 msgid "Transport endpoint is not connected"
 msgstr "Drugi koniec nie jest połączony"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.c:659
+#: sysdeps/gnu/errlist.h:405
 msgid "Destination address required"
 msgstr "Wymagany jest adres docelowy"
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.c:668
+#: sysdeps/gnu/errlist.h:410
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "Wysyłanie po zamknięciu gniazda jest niemożliwe"
 
-#: sysdeps/gnu/errlist.c:676
+#: sysdeps/gnu/errlist.h:413
 msgid "Too many references: cannot splice"
 msgstr "Za dużo odniesień: dowiązanie niemożliwe"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.c:686
+#: sysdeps/gnu/errlist.h:419
 msgid "Connection timed out"
 msgstr "Przekroczony czas oczekiwania na połączenie"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.c:696
+#: sysdeps/gnu/errlist.h:425
 msgid "Connection refused"
 msgstr "Połączenie odrzucone"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.c:706
+#: sysdeps/gnu/errlist.h:431
 msgid "Too many levels of symbolic links"
 msgstr "Za duże zagnieżdżenie dowiązań symbolicznych"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.c:717
+#: sysdeps/gnu/errlist.h:438
 msgid "File name too long"
 msgstr "Za długa nazwa pliku"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.c:726
+#: sysdeps/gnu/errlist.h:443
 msgid "Host is down"
 msgstr "Urządzenie jest wyłączone"
 
-#. TRANS The remote host for a requested network connection is not reachable.
-#: sysdeps/gnu/errlist.c:735
+#: sysdeps/gnu/errlist.h:448
 msgid "No route to host"
 msgstr "Brak trasy do hosta"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.c:745
+#: sysdeps/gnu/errlist.h:454
 msgid "Directory not empty"
 msgstr "Katalog nie jest pusty"
 
-#. TRANS This means that the per-user limit on new process would be exceeded by
-#. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
-#. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.c:756
-msgid "Too many processes"
-msgstr "Za dużo procesów"
-
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.c:766
+#: sysdeps/gnu/errlist.h:460
 msgid "Too many users"
 msgstr "Za dużo użytkowników"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.c:775
+#: sysdeps/gnu/errlist.h:465
 msgid "Disk quota exceeded"
 msgstr "Przekroczony limit dyskowy"
 
@@ -6252,7 +5939,7 @@ msgstr "Przekroczony limit dyskowy"
 #. TRANS for NFS file systems or corruption in other file systems.
 #. TRANS Repairing this condition usually requires unmounting, possibly repairing
 #. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.c:788
+#: sysdeps/gnu/errlist.h:474
 msgid "Stale file handle"
 msgstr "Nieaktualny uchwyt pliku"
 
@@ -6262,63 +5949,318 @@ msgstr "Nieaktualny uchwyt pliku"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.c:800
+#: sysdeps/gnu/errlist.h:482
 msgid "Object is remote"
 msgstr "Zdalny obiekt jest obiektem podmontowanym przez NFS"
-
-#: sysdeps/gnu/errlist.c:808
-msgid "RPC struct is bad"
-msgstr "Struktura RPC jest błędna"
-
-#: sysdeps/gnu/errlist.c:816
-msgid "RPC version wrong"
-msgstr "Zła wersja RPC"
-
-#: sysdeps/gnu/errlist.c:824
-msgid "RPC program not available"
-msgstr "Program RPC niedostępny"
-
-#: sysdeps/gnu/errlist.c:832
-msgid "RPC program version wrong"
-msgstr "Zła wersja programu RPC"
-
-#: sysdeps/gnu/errlist.c:840
-msgid "RPC bad procedure for program"
-msgstr "Zła procedura RPC dla programu"
 
 #. TRANS This is used by the file locking facilities; see
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.c:852
+#: sysdeps/gnu/errlist.h:490
 msgid "No locks available"
 msgstr "Brak dostępnych blokad"
-
-#. TRANS The file was the wrong type for the
-#. TRANS operation, or a data file had the wrong format.
-#. TRANS
-#. TRANS On some systems @code{chmod} returns this error if you try to set the
-#. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.c:865
-msgid "Inappropriate file type or format"
-msgstr "Niewłaściwy typ lub format pliku"
-
-#: sysdeps/gnu/errlist.c:873
-msgid "Authentication error"
-msgstr "Błąd uwierzytelnienia"
-
-#: sysdeps/gnu/errlist.c:881
-msgid "Need authenticator"
-msgstr "Wymagane uwierzytelnienie"
 
 #. TRANS This indicates that the function called is
 #. TRANS not implemented at all, either in the C library itself or in the
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.c:894
+#: sysdeps/gnu/errlist.h:499
 msgid "Function not implemented"
 msgstr "Nie zaimplementowana funkcja"
+
+#. TRANS While decoding a multibyte character the function came along an invalid
+#. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
+#: sysdeps/gnu/errlist.h:505
+msgid "Invalid or incomplete multibyte or wide character"
+msgstr "Błędny lub niepełny znak wielobajtowy"
+
+#: sysdeps/gnu/errlist.h:508
+msgid "Bad message"
+msgstr "Błędny komunikat"
+
+#: sysdeps/gnu/errlist.h:511
+msgid "Identifier removed"
+msgstr "Identyfikator został usunięty"
+
+# wydaje mi sie ze tu chodzi o wyczerpanie TTL i stad 'zbyt' -PK
+#: sysdeps/gnu/errlist.h:514
+msgid "Multihop attempted"
+msgstr "Próba przejścia przez zbyt wiele ruterów"
+
+#: sysdeps/gnu/errlist.h:517
+msgid "No data available"
+msgstr "Brak danych"
+
+#: sysdeps/gnu/errlist.h:520
+msgid "Link has been severed"
+msgstr "Połączenie zostało przerwane"
+
+#: sysdeps/gnu/errlist.h:523
+msgid "No message of desired type"
+msgstr "Brak komunikatu o pożądanym typie"
+
+#: sysdeps/gnu/errlist.h:526
+msgid "Out of streams resources"
+msgstr "Brak dodatkowych strumieni"
+
+#: sysdeps/gnu/errlist.h:529
+msgid "Device not a stream"
+msgstr "Urządzenie nie jest strumieniem"
+
+#: sysdeps/gnu/errlist.h:532
+msgid "Value too large for defined data type"
+msgstr "Wartość za duża dla zdefiniowanego typu danych"
+
+#: sysdeps/gnu/errlist.h:535
+msgid "Protocol error"
+msgstr "Błąd protokołu"
+
+#: sysdeps/gnu/errlist.h:538
+msgid "Timer expired"
+msgstr "Upłynął czas stopera"
+
+#. TRANS An asynchronous operation was canceled before it
+#. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
+#. TRANS the normal result is for the operations affected to complete with this
+#. TRANS error; @pxref{Cancel AIO Operations}.
+#: sysdeps/gnu/errlist.h:546
+msgid "Operation canceled"
+msgstr "Operacja anulowana"
+
+#: sysdeps/gnu/errlist.h:549
+msgid "Owner died"
+msgstr "Właściciel zmarł"
+
+#: sysdeps/gnu/errlist.h:552
+msgid "State not recoverable"
+msgstr "Stan bez możliwości wyjścia"
+
+#: sysdeps/gnu/errlist.h:555
+msgid "Interrupted system call should be restarted"
+msgstr "Należy wznowić przerwane wywołanie systemowe"
+
+#: sysdeps/gnu/errlist.h:558
+msgid "Channel number out of range"
+msgstr "Numer kanału poza zakresem"
+
+#: sysdeps/gnu/errlist.h:561
+msgid "Level 2 not synchronized"
+msgstr "Poziom 2 nie zsynchronizowany"
+
+#: sysdeps/gnu/errlist.h:564
+msgid "Level 3 halted"
+msgstr "Poziom 3 zatrzymany"
+
+#: sysdeps/gnu/errlist.h:567
+msgid "Level 3 reset"
+msgstr "Poziom 3 wyzerowany"
+
+#: sysdeps/gnu/errlist.h:570
+msgid "Link number out of range"
+msgstr "Numer dowiązania poza zakresem"
+
+#: sysdeps/gnu/errlist.h:573
+msgid "Protocol driver not attached"
+msgstr "Sterownik protokołu nie jest podłączony"
+
+#: sysdeps/gnu/errlist.h:576
+msgid "No CSI structure available"
+msgstr "Struktura CSI niedostępna"
+
+#: sysdeps/gnu/errlist.h:579
+msgid "Level 2 halted"
+msgstr "Poziom 2 zatrzymany"
+
+#: sysdeps/gnu/errlist.h:582
+msgid "Invalid exchange"
+msgstr "Błędna wymiana"
+
+#: sysdeps/gnu/errlist.h:585
+msgid "Invalid request descriptor"
+msgstr "Błędny deskryptor żądania"
+
+#: sysdeps/gnu/errlist.h:588
+msgid "Exchange full"
+msgstr "Przepełniona wymiana"
+
+#: sysdeps/gnu/errlist.h:591
+msgid "No anode"
+msgstr "Brak anody"
+
+#: sysdeps/gnu/errlist.h:594
+msgid "Invalid request code"
+msgstr "Zły kod żądania"
+
+#: sysdeps/gnu/errlist.h:597
+msgid "Invalid slot"
+msgstr "Błędny kanał"
+
+#: sysdeps/gnu/errlist.h:600
+msgid "Bad font file format"
+msgstr "Błędny format pliku fontu"
+
+#: sysdeps/gnu/errlist.h:603
+msgid "Machine is not on the network"
+msgstr "Maszyna nie znajduje się w tej sieci"
+
+#: sysdeps/gnu/errlist.h:606
+msgid "Package not installed"
+msgstr "Pakiet nie jest zainstalowany"
+
+#: sysdeps/gnu/errlist.h:609
+msgid "Advertise error"
+msgstr "Błąd podczas ogłaszania"
+
+#: sysdeps/gnu/errlist.h:612
+msgid "Srmount error"
+msgstr "Błąd srmount"
+
+#: sysdeps/gnu/errlist.h:615
+msgid "Communication error on send"
+msgstr "Błąd komunikacji podczas wysyłania"
+
+#: sysdeps/gnu/errlist.h:618
+msgid "RFS specific error"
+msgstr "Błąd RFS"
+
+#: sysdeps/gnu/errlist.h:621
+msgid "Name not unique on network"
+msgstr "Nazwa nie jest unikalna w sieci"
+
+#: sysdeps/gnu/errlist.h:624
+msgid "File descriptor in bad state"
+msgstr "Deskryptor pliku w złym stanie"
+
+#: sysdeps/gnu/errlist.h:627
+msgid "Remote address changed"
+msgstr "Zmienił się adres drugiego końca"
+
+#: sysdeps/gnu/errlist.h:630
+msgid "Can not access a needed shared library"
+msgstr "Brak dostępu do wymaganej biblioteki dzielonej"
+
+#: sysdeps/gnu/errlist.h:633
+msgid "Accessing a corrupted shared library"
+msgstr "Próba użycia uszkodzonej biblioteki dzielonej"
+
+#: sysdeps/gnu/errlist.h:636
+msgid ".lib section in a.out corrupted"
+msgstr "Sekcja .lib w a.out jest uszkodzona"
+
+#: sysdeps/gnu/errlist.h:639
+msgid "Attempting to link in too many shared libraries"
+msgstr "Próba łączenia ze zbyt wieloma bibliotekami dzielonymi"
+
+#: sysdeps/gnu/errlist.h:642
+msgid "Cannot exec a shared library directly"
+msgstr "Nie można bezpośrednio uruchomić biblioteki dzielonej"
+
+#: sysdeps/gnu/errlist.h:645
+msgid "Streams pipe error"
+msgstr "Błąd potoku biblioteki strumieni"
+
+#: sysdeps/gnu/errlist.h:648
+msgid "Structure needs cleaning"
+msgstr "Struktura wymaga wyczyszczenia"
+
+#: sysdeps/gnu/errlist.h:651
+msgid "Not a XENIX named type file"
+msgstr "Nie jest XENIXowym plikiem nazwanego typu"
+
+#: sysdeps/gnu/errlist.h:654
+msgid "No XENIX semaphores available"
+msgstr "Brak dostępnych semaforów XENIXowych"
+
+#: sysdeps/gnu/errlist.h:657
+msgid "Is a named type file"
+msgstr "Jest plikiem nazwanym"
+
+#: sysdeps/gnu/errlist.h:660
+msgid "Remote I/O error"
+msgstr "Błąd we/wy w odległym systemie"
+
+#: sysdeps/gnu/errlist.h:663
+msgid "No medium found"
+msgstr "Brak medium"
+
+#: sysdeps/gnu/errlist.h:666
+msgid "Wrong medium type"
+msgstr "Niewłaściwy typ medium"
+
+#: sysdeps/gnu/errlist.h:669
+msgid "Required key not available"
+msgstr "Wymagany klucz niedostępny"
+
+#: sysdeps/gnu/errlist.h:672
+msgid "Key has expired"
+msgstr "Klucz wygasł"
+
+#: sysdeps/gnu/errlist.h:675
+msgid "Key has been revoked"
+msgstr "Klucz został unieważniony"
+
+#: sysdeps/gnu/errlist.h:678
+msgid "Key was rejected by service"
+msgstr "Klucz został odrzucony przez usługę"
+
+#: sysdeps/gnu/errlist.h:681
+msgid "Operation not possible due to RF-kill"
+msgstr "Operacja niemożliwa ze względu na RF-kill"
+
+#: sysdeps/gnu/errlist.h:684
+msgid "Memory page has hardware error"
+msgstr "Strona pamięci ma błąd sprzętowy"
+
+#: sysdeps/gnu/errlist.h:687
+msgid "RPC struct is bad"
+msgstr "Struktura RPC jest błędna"
+
+#. TRANS The file was the wrong type for the
+#. TRANS operation, or a data file had the wrong format.
+#. TRANS
+#. TRANS On some systems @code{chmod} returns this error if you try to set the
+#. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
+#: sysdeps/gnu/errlist.h:696
+msgid "Inappropriate file type or format"
+msgstr "Niewłaściwy typ lub format pliku"
+
+#: sysdeps/gnu/errlist.h:699
+msgid "RPC bad procedure for program"
+msgstr "Zła procedura RPC dla programu"
+
+#: sysdeps/gnu/errlist.h:702
+msgid "Authentication error"
+msgstr "Błąd uwierzytelnienia"
+
+#. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
+#. TRANS translated by a program and the translator program dies while starting
+#. TRANS up, before it has connected to the file.
+#: sysdeps/gnu/errlist.h:709
+msgid "Translator died"
+msgstr "Translator przerwał pracę"
+
+#: sysdeps/gnu/errlist.h:712
+msgid "RPC version wrong"
+msgstr "Zła wersja RPC"
+
+#. TRANS You did @strong{what}?
+#: sysdeps/gnu/errlist.h:717
+msgid "You really blew it this time"
+msgstr "Tym razem dałeś popalić"
+
+#. TRANS This means that the per-user limit on new process would be exceeded by
+#. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
+#. TRANS the @code{RLIMIT_NPROC} limit.
+#: sysdeps/gnu/errlist.h:724
+msgid "Too many processes"
+msgstr "Za dużo procesów"
+
+#. TRANS This error code has no purpose.
+#: sysdeps/gnu/errlist.h:729
+msgid "Gratuitous error"
+msgstr "Nieoczekiwany błąd"
 
 #. TRANS A function returns this error when certain parameter
 #. TRANS values are valid, but the functionality they request is not available.
@@ -6332,15 +6274,13 @@ msgstr "Nie zaimplementowana funkcja"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.c:914
+#: sysdeps/gnu/errlist.h:745
 msgid "Not supported"
 msgstr "Nie obsługiwane"
 
-#. TRANS While decoding a multibyte character the function came along an invalid
-#. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.c:924
-msgid "Invalid or incomplete multibyte or wide character"
-msgstr "Błędny lub niepełny znak wielobajtowy"
+#: sysdeps/gnu/errlist.h:748
+msgid "RPC program version wrong"
+msgstr "Zła wersja programu RPC"
 
 #. TRANS On @gnuhurdsystems{}, servers supporting the @code{term} protocol return
 #. TRANS this error for certain operations when the caller is not in the
@@ -6348,28 +6288,9 @@ msgstr "Błędny lub niepełny znak wielobajtowy"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.c:938
+#: sysdeps/gnu/errlist.h:758
 msgid "Inappropriate operation for background process"
 msgstr "Działanie niedopuszczalne dla procesu w tle"
-
-#. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
-#. TRANS translated by a program and the translator program dies while starting
-#. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.c:949
-msgid "Translator died"
-msgstr "Translator przerwał pracę"
-
-#. TRANS The experienced user will know what is wrong.
-#. TRANS @c This error code is a joke.  Its perror text is part of the joke.
-#. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.c:960
-msgid "?"
-msgstr "?"
-
-#. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.c:969
-msgid "You really blew it this time"
-msgstr "Tym razem dałeś popalić"
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
 #. TRANS @c Okay.  Since you are dying to know, I'll tell you.
@@ -6385,257 +6306,35 @@ msgstr "Tym razem dałeś popalić"
 #. TRANS @c
 #. TRANS @c Translators, please do not translate this litteraly, translate it into
 #. TRANS @c an idiomatic funny way of saying that the computer died.
-#: sysdeps/gnu/errlist.c:991
+#: sysdeps/gnu/errlist.h:776
 msgid "Computer bought the farm"
 msgstr "Komputer wyjechał na wakacje"
 
-#. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.c:1000
-msgid "Gratuitous error"
-msgstr "Nieoczekiwany błąd"
+#. TRANS In @theglibc{}, this is another name for @code{EAGAIN} (above).
+#. TRANS The values are always the same, on every operating system.
+#. TRANS
+#. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
+#. TRANS separate error code.
+#: sysdeps/gnu/errlist.h:785
+msgid "Operation would block"
+msgstr "Operacja spowodowałaby blokadę"
 
-#: sysdeps/gnu/errlist.c:1008
-msgid "Bad message"
-msgstr "Błędny komunikat"
+#: sysdeps/gnu/errlist.h:788
+msgid "Need authenticator"
+msgstr "Wymagane uwierzytelnienie"
 
-#: sysdeps/gnu/errlist.c:1016
-msgid "Identifier removed"
-msgstr "Identyfikator został usunięty"
+#. TRANS The experienced user will know what is wrong.
+#. TRANS @c This error code is a joke.  Its perror text is part of the joke.
+#. TRANS @c Don't change it.
+#: sysdeps/gnu/errlist.h:795
+msgid "?"
+msgstr "?"
 
-# wydaje mi sie ze tu chodzi o wyczerpanie TTL i stad 'zbyt' -PK
-#: sysdeps/gnu/errlist.c:1024
-msgid "Multihop attempted"
-msgstr "Próba przejścia przez zbyt wiele ruterów"
+#: sysdeps/gnu/errlist.h:798
+msgid "RPC program not available"
+msgstr "Program RPC niedostępny"
 
-#: sysdeps/gnu/errlist.c:1032
-msgid "No data available"
-msgstr "Brak danych"
-
-#: sysdeps/gnu/errlist.c:1040
-msgid "Link has been severed"
-msgstr "Połączenie zostało przerwane"
-
-#: sysdeps/gnu/errlist.c:1048
-msgid "No message of desired type"
-msgstr "Brak komunikatu o pożądanym typie"
-
-#: sysdeps/gnu/errlist.c:1056
-msgid "Out of streams resources"
-msgstr "Brak dodatkowych strumieni"
-
-#: sysdeps/gnu/errlist.c:1064
-msgid "Device not a stream"
-msgstr "Urządzenie nie jest strumieniem"
-
-#: sysdeps/gnu/errlist.c:1072
-msgid "Value too large for defined data type"
-msgstr "Wartość za duża dla zdefiniowanego typu danych"
-
-#: sysdeps/gnu/errlist.c:1080
-msgid "Protocol error"
-msgstr "Błąd protokołu"
-
-#: sysdeps/gnu/errlist.c:1088
-msgid "Timer expired"
-msgstr "Upłynął czas stopera"
-
-#. TRANS An asynchronous operation was canceled before it
-#. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
-#. TRANS the normal result is for the operations affected to complete with this
-#. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.c:1100
-msgid "Operation canceled"
-msgstr "Operacja anulowana"
-
-#: sysdeps/gnu/errlist.c:1108
-msgid "Owner died"
-msgstr "Właściciel zmarł"
-
-#: sysdeps/gnu/errlist.c:1116
-msgid "State not recoverable"
-msgstr "Stan bez możliwości wyjścia"
-
-#: sysdeps/gnu/errlist.c:1124
-msgid "Interrupted system call should be restarted"
-msgstr "Należy wznowić przerwane wywołanie systemowe"
-
-#: sysdeps/gnu/errlist.c:1132
-msgid "Channel number out of range"
-msgstr "Numer kanału poza zakresem"
-
-#: sysdeps/gnu/errlist.c:1140
-msgid "Level 2 not synchronized"
-msgstr "Poziom 2 nie zsynchronizowany"
-
-#: sysdeps/gnu/errlist.c:1148
-msgid "Level 3 halted"
-msgstr "Poziom 3 zatrzymany"
-
-#: sysdeps/gnu/errlist.c:1156
-msgid "Level 3 reset"
-msgstr "Poziom 3 wyzerowany"
-
-#: sysdeps/gnu/errlist.c:1164
-msgid "Link number out of range"
-msgstr "Numer dowiązania poza zakresem"
-
-#: sysdeps/gnu/errlist.c:1172
-msgid "Protocol driver not attached"
-msgstr "Sterownik protokołu nie jest podłączony"
-
-#: sysdeps/gnu/errlist.c:1180
-msgid "No CSI structure available"
-msgstr "Struktura CSI niedostępna"
-
-#: sysdeps/gnu/errlist.c:1188
-msgid "Level 2 halted"
-msgstr "Poziom 2 zatrzymany"
-
-#: sysdeps/gnu/errlist.c:1196
-msgid "Invalid exchange"
-msgstr "Błędna wymiana"
-
-#: sysdeps/gnu/errlist.c:1204
-msgid "Invalid request descriptor"
-msgstr "Błędny deskryptor żądania"
-
-#: sysdeps/gnu/errlist.c:1212
-msgid "Exchange full"
-msgstr "Przepełniona wymiana"
-
-#: sysdeps/gnu/errlist.c:1220
-msgid "No anode"
-msgstr "Brak anody"
-
-#: sysdeps/gnu/errlist.c:1228
-msgid "Invalid request code"
-msgstr "Zły kod żądania"
-
-#: sysdeps/gnu/errlist.c:1236
-msgid "Invalid slot"
-msgstr "Błędny kanał"
-
-#: sysdeps/gnu/errlist.c:1244
-msgid "File locking deadlock error"
-msgstr "Podczas blokowania pliku wystąpiło zakleszczenie"
-
-#: sysdeps/gnu/errlist.c:1252
-msgid "Bad font file format"
-msgstr "Błędny format pliku fontu"
-
-#: sysdeps/gnu/errlist.c:1260
-msgid "Machine is not on the network"
-msgstr "Maszyna nie znajduje się w tej sieci"
-
-#: sysdeps/gnu/errlist.c:1268
-msgid "Package not installed"
-msgstr "Pakiet nie jest zainstalowany"
-
-#: sysdeps/gnu/errlist.c:1276
-msgid "Advertise error"
-msgstr "Błąd podczas ogłaszania"
-
-#: sysdeps/gnu/errlist.c:1284
-msgid "Srmount error"
-msgstr "Błąd srmount"
-
-#: sysdeps/gnu/errlist.c:1292
-msgid "Communication error on send"
-msgstr "Błąd komunikacji podczas wysyłania"
-
-#: sysdeps/gnu/errlist.c:1300
-msgid "RFS specific error"
-msgstr "Błąd RFS"
-
-#: sysdeps/gnu/errlist.c:1308
-msgid "Name not unique on network"
-msgstr "Nazwa nie jest unikalna w sieci"
-
-#: sysdeps/gnu/errlist.c:1316
-msgid "File descriptor in bad state"
-msgstr "Deskryptor pliku w złym stanie"
-
-#: sysdeps/gnu/errlist.c:1324
-msgid "Remote address changed"
-msgstr "Zmienił się adres drugiego końca"
-
-#: sysdeps/gnu/errlist.c:1332
-msgid "Can not access a needed shared library"
-msgstr "Brak dostępu do wymaganej biblioteki dzielonej"
-
-#: sysdeps/gnu/errlist.c:1340
-msgid "Accessing a corrupted shared library"
-msgstr "Próba użycia uszkodzonej biblioteki dzielonej"
-
-#: sysdeps/gnu/errlist.c:1348
-msgid ".lib section in a.out corrupted"
-msgstr "Sekcja .lib w a.out jest uszkodzona"
-
-#: sysdeps/gnu/errlist.c:1356
-msgid "Attempting to link in too many shared libraries"
-msgstr "Próba łączenia ze zbyt wieloma bibliotekami dzielonymi"
-
-#: sysdeps/gnu/errlist.c:1364
-msgid "Cannot exec a shared library directly"
-msgstr "Nie można bezpośrednio uruchomić biblioteki dzielonej"
-
-#: sysdeps/gnu/errlist.c:1372
-msgid "Streams pipe error"
-msgstr "Błąd potoku biblioteki strumieni"
-
-#: sysdeps/gnu/errlist.c:1380
-msgid "Structure needs cleaning"
-msgstr "Struktura wymaga wyczyszczenia"
-
-#: sysdeps/gnu/errlist.c:1388
-msgid "Not a XENIX named type file"
-msgstr "Nie jest XENIXowym plikiem nazwanego typu"
-
-#: sysdeps/gnu/errlist.c:1396
-msgid "No XENIX semaphores available"
-msgstr "Brak dostępnych semaforów XENIXowych"
-
-#: sysdeps/gnu/errlist.c:1404
-msgid "Is a named type file"
-msgstr "Jest plikiem nazwanym"
-
-#: sysdeps/gnu/errlist.c:1412
-msgid "Remote I/O error"
-msgstr "Błąd we/wy w odległym systemie"
-
-#: sysdeps/gnu/errlist.c:1420
-msgid "No medium found"
-msgstr "Brak medium"
-
-#: sysdeps/gnu/errlist.c:1428
-msgid "Wrong medium type"
-msgstr "Niewłaściwy typ medium"
-
-#: sysdeps/gnu/errlist.c:1436
-msgid "Required key not available"
-msgstr "Wymagany klucz niedostępny"
-
-#: sysdeps/gnu/errlist.c:1444
-msgid "Key has expired"
-msgstr "Klucz wygasł"
-
-#: sysdeps/gnu/errlist.c:1452
-msgid "Key has been revoked"
-msgstr "Klucz został unieważniony"
-
-#: sysdeps/gnu/errlist.c:1460
-msgid "Key was rejected by service"
-msgstr "Klucz został odrzucony przez usługę"
-
-#: sysdeps/gnu/errlist.c:1468
-msgid "Operation not possible due to RF-kill"
-msgstr "Operacja niemożliwa ze względu na RF-kill"
-
-#: sysdeps/gnu/errlist.c:1476
-msgid "Memory page has hardware error"
-msgstr "Strona pamięci ma błąd sprzętowy"
-
-#: sysdeps/mach/_strerror.c:56
+#: sysdeps/mach/_strerror.c:43
 msgid "Error in unknown error system: "
 msgstr "Błąd w nieznanym systemie błędów: "
 
@@ -6736,37 +6435,29 @@ msgstr "nie można otworzyć `%s'"
 msgid "cannot read header from `%s'"
 msgstr "nie można przeczytać nagłówka z `%s'"
 
-#: sysdeps/x86/dl-cet.c:202
-msgid "mprotect legacy bitmap failed"
-msgstr "mprotect dla starej bitmapy nie powiodło się"
+#: sysdeps/x86/dl-cet.c:147
+msgid "rebuild shared object with IBT support enabled"
+msgstr "należy przebudować obiekt współdzielony z włączoną obsługą IBT"
 
-#: sysdeps/x86/dl-cet.c:217
-msgid "legacy bitmap isn't available"
-msgstr "stara bitmapa nie jest dostępna"
+#: sysdeps/x86/dl-cet.c:158
+msgid "rebuild shared object with SHSTK support enabled"
+msgstr "należy przebudować obiekt współdzielony z włączoną obsługą SHSTK"
 
-#: sysdeps/x86/dl-cet.c:247
-msgid "failed to mark legacy code region"
-msgstr "nie udało oznaczyć regionu starego kodu"
-
-#: sysdeps/x86/dl-cet.c:269
-msgid "shadow stack isn't enabled"
-msgstr "stos ukryty nie jest włączony"
-
-#: sysdeps/x86/dl-cet.c:290
+#: sysdeps/x86/dl-cet.c:187
 msgid "can't disable CET"
 msgstr "nie można wyłączyć CET"
 
 #: timezone/zdump.c:332
+msgid "has characters other than ASCII alphanumerics, '-' or '+'"
+msgstr "zawiera znaki inne niż ASCII alfanumeryczne, '-' lub '+'"
+
+#: timezone/zdump.c:334
 msgid "has fewer than 3 characters"
 msgstr "ma mniej niż 3 znaki"
 
-#: timezone/zdump.c:334
+#: timezone/zdump.c:336
 msgid "has more than 6 characters"
 msgstr "ma więcej niż 6 znaków"
-
-#: timezone/zdump.c:336
-msgid "has characters other than ASCII alphanumerics, '-' or '+'"
-msgstr "zawiera znaki inne niż ASCII alfanumeryczne, '-' lub '+'"
 
 #: timezone/zdump.c:341
 #, c-format
@@ -6810,450 +6501,487 @@ msgstr "%s: niepoprawny argument opcji -c: %s\n"
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: niepoprawny argument opcji -t: %s\n"
 
-#: timezone/zic.c:429
+#: timezone/zic.c:432
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Brak pamięci: %s\n"
 
-#: timezone/zic.c:437
+#: timezone/zic.c:440
 msgid "size overflow"
 msgstr "przepełnienie rozmiaru"
 
-#: timezone/zic.c:447
+#: timezone/zic.c:450
 msgid "alignment overflow"
 msgstr "przepełnienie wyrównania"
 
-#: timezone/zic.c:495
+#: timezone/zic.c:498
 msgid "integer overflow"
 msgstr "przepełnienie liczby całkowitej"
 
-#: timezone/zic.c:529
+#: timezone/zic.c:532
 #, c-format
 msgid "\"%s\", line %<PRIdMAX>: "
 msgstr "\"%s\", linia %<PRIdMAX>: "
 
-#: timezone/zic.c:532
+#: timezone/zic.c:535
 #, c-format
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
 msgstr " (reguła z \"%s\", linia %<PRIdMAX>)"
 
-#: timezone/zic.c:551
+#: timezone/zic.c:554
 #, c-format
 msgid "warning: "
 msgstr "uwaga: "
 
-#: timezone/zic.c:576
+#: timezone/zic.c:579
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-"\t[ -t localtime-link ] [ -L leapseconds ] [ filename ... ]\n"
+"\t[ -b {slim|fat} ] [ -d directory ] [ -l localtime ] [ -L leapseconds ] \\\n"
+"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -t localtime-link ] \\\n"
+"\t[ filename ... ]\n"
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
 "%s: składnia: %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -l czas_lokalny ] [ -p reguły_POSIX ] [ -d katalog ] \\\n"
-"\t[ -t dowiązanie_czasu_lokalnego ] [ -L sek_przestępne ] [ plik ... ]\n"
+"\t[ -b {slim|fat} ] [ -d katalog ] [ -l czas_lokalny ] [ -L sek_przestępne ] \\\n"
+"\t[ -p reguły_POSIX ] [ -r '[@lo][/@hi]' ] [ -t dowiązanie_czasu_lokalnego ] \\\n"
+"\t[ plik ... ]\n"
 "\n"
 "Błędy prosimy zgłaszać na adres %s.\n"
 
-#: timezone/zic.c:599
+#: timezone/zic.c:604
 #, c-format
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s: Nie można zmienić katalogu na %s: %s\n"
 
-#: timezone/zic.c:632
+#: timezone/zic.c:698
 msgid "wild compilation-time specification of zic_t"
 msgstr "niepoprawna specyfikacja zic_t w czasie kompilacji"
 
-#: timezone/zic.c:652
+#: timezone/zic.c:716 timezone/zic.c:720
+msgid "incompatible -b options"
+msgstr "niezgodne opcje -b"
+
+#: timezone/zic.c:723
+#, c-format
+msgid "invalid option: -b '%s'"
+msgstr "błędna opcja: -b '%s'"
+
+#: timezone/zic.c:730
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: Podano więcej niż jedną opcję -d\n"
 
-#: timezone/zic.c:662
+#: timezone/zic.c:740
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: Podano więcej niż jedną opcję -l\n"
 
-#: timezone/zic.c:672
+#: timezone/zic.c:750
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: Podano więcej niż jedną opcję -p\n"
 
-#: timezone/zic.c:680
+#: timezone/zic.c:758
 #, c-format
 msgid "%s: More than one -t option specified\n"
 msgstr "%s: Podano więcej niż jedną opcję -t\n"
 
-#: timezone/zic.c:689
+#: timezone/zic.c:767
 msgid "-y is obsolescent"
 msgstr "-y jest przestarzałe"
 
-#: timezone/zic.c:693
+#: timezone/zic.c:771
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: Podano więcej niż jedną opcję -y\n"
 
-#: timezone/zic.c:703
+#: timezone/zic.c:781
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: Podano więcej niż jedną opcję -L\n"
 
-#: timezone/zic.c:712
-msgid "-s ignored"
-msgstr "-s zignorowano"
+#: timezone/zic.c:792
+#, c-format
+msgid "%s: More than one -r option specified\n"
+msgstr "%s: Podano więcej niż jedną opcję -r\n"
 
-#: timezone/zic.c:753
+#: timezone/zic.c:798
+#, c-format
+msgid "%s: invalid time range: %s\n"
+msgstr "%s: błędny przedział czasu: %s\n"
+
+#: timezone/zic.c:805
+msgid "-s ignored"
+msgstr "zignorowano -s"
+
+#: timezone/zic.c:848
 msgid "link to link"
 msgstr "dowiązanie do dowiązania"
 
-#: timezone/zic.c:756 timezone/zic.c:760
+#: timezone/zic.c:851 timezone/zic.c:855
 msgid "command line"
 msgstr "linia poleceń"
 
-#: timezone/zic.c:776
+#: timezone/zic.c:871
 msgid "empty file name"
 msgstr "pusta nazwa pliku"
 
-#: timezone/zic.c:779
+#: timezone/zic.c:874
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr "nazwa pliku '%s' zaczyna się od '/'"
 
-#: timezone/zic.c:789
+#: timezone/zic.c:884
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr "nazwa pliku '%s' zawiera element '%.*s'"
 
-#: timezone/zic.c:795
+#: timezone/zic.c:890
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr "element nazwy pliku '%s' zawiera wiodący '-'"
 
-#: timezone/zic.c:798
+#: timezone/zic.c:893
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr "nazwa pliku '%s' zawiera zbyt długi element '%.*s...'"
 
-#: timezone/zic.c:826
+#: timezone/zic.c:921
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr "nazwa pliku '%s' zawiera bajt '%c'"
 
-#: timezone/zic.c:827
+#: timezone/zic.c:922
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr "nazwa pliku '%s' zawiera bajt '\\%o'"
 
-#: timezone/zic.c:897
+#: timezone/zic.c:992
 #, c-format
 msgid "%s: link from %s/%s failed: %s\n"
 msgstr "%s: dowiązanie z %s/%s nie powiodło się: %s\n"
 
-#: timezone/zic.c:907 timezone/zic.c:1876
+#: timezone/zic.c:1002 timezone/zic.c:1992
 #, c-format
 msgid "%s: Can't remove %s/%s: %s\n"
 msgstr "%s: Nie można usunąć %s/%s: %s\n"
 
-#: timezone/zic.c:931
+#: timezone/zic.c:1026
 #, c-format
 msgid "symbolic link used because hard link failed: %s"
 msgstr "użyto dowiązania symbolicznego, ponieważ zwykłe nie powiodło się: %s"
 
-#: timezone/zic.c:939
+#: timezone/zic.c:1034
 #, c-format
 msgid "%s: Can't read %s/%s: %s\n"
 msgstr "%s: Nie można odczytać %s/%s: %s\n"
 
-#: timezone/zic.c:946 timezone/zic.c:1889
+#: timezone/zic.c:1041 timezone/zic.c:2005
 #, c-format
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr "%s: Nie można utworzyć %s/%s: %s\n"
 
-#: timezone/zic.c:955
+#: timezone/zic.c:1050
 #, c-format
 msgid "copy used because hard link failed: %s"
 msgstr "użyto kopii, ponieważ dowiązanie zwykłe nie powiodło się: %s"
 
-#: timezone/zic.c:958
+#: timezone/zic.c:1053
 #, c-format
 msgid "copy used because symbolic link failed: %s"
 msgstr "użyto kopii, ponieważ dowiązanie symboliczne nie powiodło się: %s"
 
-#: timezone/zic.c:1032 timezone/zic.c:1034
+#: timezone/zic.c:1122 timezone/zic.c:1124
 msgid "same rule name in multiple files"
 msgstr "ta sama nazwa nazwa reguły w różnych plikach"
 
-#: timezone/zic.c:1081
+#: timezone/zic.c:1171
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s w strefie dla której nie zdefiniowano reguł"
 
-#: timezone/zic.c:1101
+#: timezone/zic.c:1191
 msgid "standard input"
 msgstr "standardowe wejście"
 
-#: timezone/zic.c:1106
+#: timezone/zic.c:1196
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Nie można otworzyć %s: %s\n"
 
-#: timezone/zic.c:1117
+#: timezone/zic.c:1207
 msgid "line too long"
 msgstr "za długa linia"
 
-#: timezone/zic.c:1139
+#: timezone/zic.c:1230
 msgid "input line of unknown type"
 msgstr "nieznany typ linii wejściowej"
 
-#: timezone/zic.c:1158 timezone/zic.c:1593 timezone/zic.c:1615
+#: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: panika: Błędna l-wartość %d\n"
 
-#: timezone/zic.c:1167
+#: timezone/zic.c:1262
 msgid "expected continuation line not found"
 msgstr "brak spodziewanej linii kontynuacji"
 
-#: timezone/zic.c:1203
+#: timezone/zic.c:1298
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "ułamki sekund są odrzucane przez wersje zic sprzed 2018 roku"
 
-#: timezone/zic.c:1221 timezone/zic.c:3078
+#: timezone/zic.c:1316 timezone/zic.c:3282
 msgid "time overflow"
 msgstr "przepełnienie czasu"
 
-#: timezone/zic.c:1227
+#: timezone/zic.c:1322
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "wartości większe niż 24 godziny nie były obsługiwane przez zic sprzed 2007 roku"
 
-#: timezone/zic.c:1245
+#: timezone/zic.c:1340
 msgid "invalid saved time"
 msgstr "błędny czas oszczędności"
 
-#: timezone/zic.c:1256
+#: timezone/zic.c:1351
 msgid "wrong number of fields on Rule line"
 msgstr "zła liczba pól w linii Rule"
 
-#: timezone/zic.c:1265
+#: timezone/zic.c:1360
 #, c-format
 msgid "Invalid rule name \"%s\""
 msgstr "Nieprawidłowa nazwa reguły \"%s\""
 
-#: timezone/zic.c:1287
+#: timezone/zic.c:1382
 msgid "wrong number of fields on Zone line"
 msgstr "zła liczba pól w linii Zone"
 
-#: timezone/zic.c:1292
+#: timezone/zic.c:1387
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "Linia \"Zone %s\" i opcja -l wykluczają się wzajemnie"
 
-#: timezone/zic.c:1298
+#: timezone/zic.c:1393
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "Linia \"Zone %s\" i opcja -p wykluczają się wzajemnie"
 
-#: timezone/zic.c:1305
+#: timezone/zic.c:1400
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr "powtórzona nazwa strefy %s (plik \"%s\", linia %<PRIdMAX>)"
 
-#: timezone/zic.c:1319
+#: timezone/zic.c:1414
 msgid "wrong number of fields on Zone continuation line"
 msgstr "zła liczba pól w linii kontynuacji Zone"
 
-#: timezone/zic.c:1359
+#: timezone/zic.c:1454
 msgid "invalid UT offset"
 msgstr "nieprawidłowe przesunięcie UT"
 
-#: timezone/zic.c:1363
+#: timezone/zic.c:1458
 msgid "invalid abbreviation format"
 msgstr "nieprawidłowy format skrótu"
 
-#: timezone/zic.c:1372
+#: timezone/zic.c:1467
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr "format '%s' nie jest obsługiwany przez wersje zic sprzed 2015 roku"
 
-#: timezone/zic.c:1399
+#: timezone/zic.c:1494
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "Czas końcowy linii kontynuacji Zone nie jest po czasie końcowym poprzedniej linii"
 
-#: timezone/zic.c:1426
-msgid "wrong number of fields on Leap line"
-msgstr "zła liczba pól w linii Leap"
-
-#: timezone/zic.c:1435
+#: timezone/zic.c:1526
 msgid "invalid leaping year"
 msgstr "nieprawidłowy rok przestępny"
 
-#: timezone/zic.c:1455 timezone/zic.c:1547
+#: timezone/zic.c:1548 timezone/zic.c:1653
 msgid "invalid month name"
 msgstr "nieprawidłowa nazwa miesiąca"
 
-#: timezone/zic.c:1468 timezone/zic.c:1663 timezone/zic.c:1677
+#: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
 msgid "invalid day of month"
 msgstr "nieprawidłowy dzień miesiąca"
 
-#: timezone/zic.c:1473
+#: timezone/zic.c:1566
 msgid "time too small"
 msgstr "czas zbyt mały"
 
-#: timezone/zic.c:1477
+#: timezone/zic.c:1570
 msgid "time too large"
 msgstr "czas zbyt duży"
 
-#: timezone/zic.c:1481 timezone/zic.c:1576
+#: timezone/zic.c:1574 timezone/zic.c:1682
 msgid "invalid time of day"
 msgstr "nieprawidłowa pora dnia"
 
-#: timezone/zic.c:1494
-msgid "illegal CORRECTION field on Leap line"
-msgstr "błędne pole CORRECTION w linii Leap"
-
-#: timezone/zic.c:1499
-msgid "illegal Rolling/Stationary field on Leap line"
-msgstr "błędne pole Rolling/Stationary w linii Leap"
-
-#: timezone/zic.c:1505
+#: timezone/zic.c:1577
 msgid "leap second precedes Epoch"
 msgstr "sekunda przestępna sprzed Epoki"
 
-#: timezone/zic.c:1518
+#: timezone/zic.c:1585
+msgid "wrong number of fields on Leap line"
+msgstr "zła liczba pól w linii Leap"
+
+#: timezone/zic.c:1591
+msgid "invalid Rolling/Stationary field on Leap line"
+msgstr "błędne pole Rolling/Stationary w linii Leap"
+
+#: timezone/zic.c:1599
+msgid "invalid CORRECTION field on Leap line"
+msgstr "błędne pole CORRECTION w linii Leap"
+
+#: timezone/zic.c:1611
+msgid "wrong number of fields on Expires line"
+msgstr "zła liczba pól w linii Expires"
+
+#: timezone/zic.c:1613
+msgid "multiple Expires lines"
+msgstr "wiele linii Expires"
+
+#: timezone/zic.c:1624
 msgid "wrong number of fields on Link line"
 msgstr "zła liczba pól w linii Link"
 
-#: timezone/zic.c:1522
+#: timezone/zic.c:1628
 msgid "blank FROM field on Link line"
 msgstr "puste pole FROM w linii Link"
 
-#: timezone/zic.c:1597
+#: timezone/zic.c:1703
 msgid "invalid starting year"
 msgstr "nieprawidłowy rok początkowy"
 
-#: timezone/zic.c:1619
+#: timezone/zic.c:1725
 msgid "invalid ending year"
 msgstr "nieprawidłowy rok końcowy"
 
-#: timezone/zic.c:1623
+#: timezone/zic.c:1729
 msgid "starting year greater than ending year"
 msgstr "rok początkowy jest późniejszy niż końcowy"
 
-#: timezone/zic.c:1630
+#: timezone/zic.c:1736
 msgid "typed single year"
 msgstr "podano pojedynczy rok"
 
-#: timezone/zic.c:1633
+#: timezone/zic.c:1739
 #, c-format
 msgid "year type \"%s\" is obsolete; use \"-\" instead"
 msgstr "typ roku \"%s\" jest przestarzały; zamiast tego należy użyć \"-\""
 
-#: timezone/zic.c:1668
+#: timezone/zic.c:1774
 msgid "invalid weekday name"
 msgstr "nieprawidłowa nazwa dnia tygodnia"
 
-#: timezone/zic.c:1800
+#: timezone/zic.c:1935
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
 msgstr "klienci referencyjni mogą źle obsługiwać więcej niż %d zmian czasu"
 
-#: timezone/zic.c:1804
+#: timezone/zic.c:1939
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "klienci sprzed 2014 roku mogą źle obsługiwać więcej niż 1200 zmian czasu"
 
-#: timezone/zic.c:1920
+#: timezone/zic.c:2058
 msgid "too many transition times"
 msgstr "za dużo zmian czasu"
 
-#: timezone/zic.c:2107
+#: timezone/zic.c:2297
 #, c-format
 msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "wielkość przesunięcia %%z względem czasu uniwersalnego przekracza 99:59:59"
 
-#: timezone/zic.c:2488
+#: timezone/zic.c:2673
 msgid "no POSIX environment variable for zone"
 msgstr "brak zmiennej środowiskowej POSIX dla strefy"
 
-#: timezone/zic.c:2494
+#: timezone/zic.c:2679
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: klienci sprzed wersji %d mogą źle obsługiwać odległe oznaczenia czasu"
 
-#: timezone/zic.c:2631
+#: timezone/zic.c:2818
 msgid "two rules for same instant"
 msgstr "dwie reguły dla tej samej chwili"
 
 # jak ladnie przetlumaczyc ten until time? -PK
-#: timezone/zic.c:2696
+#: timezone/zic.c:2889
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "nie można określić skrótu strefy czasowej po końcu przedziału czasu"
 
-#: timezone/zic.c:2785
-msgid "too many local time types"
-msgstr "za dużo lokalnych typów czasu"
-
-#: timezone/zic.c:2789
+#: timezone/zic.c:2964
 msgid "UT offset out of range"
 msgstr "przesunięcie względem UT poza zakresem"
 
-#: timezone/zic.c:2813
+#: timezone/zic.c:2987
+msgid "too many local time types"
+msgstr "za dużo lokalnych typów czasu"
+
+#: timezone/zic.c:3005
 msgid "too many leap seconds"
 msgstr "za dużo sekund przestępnych"
 
-#: timezone/zic.c:2844
+#: timezone/zic.c:3032
 msgid "Leap seconds too close together"
 msgstr "Sekundy przestępne zbyt bliskie"
 
-#: timezone/zic.c:2891
+#: timezone/zic.c:3043
+msgid "\"#expires\" is obsolescent; use \"Expires\""
+msgstr "\"#expires\" jest przestarzałe; zamiast tego należy użyć \"Expires\""
+
+#: timezone/zic.c:3049
+msgid "last Leap time does not precede Expires time"
+msgstr "ostatni czas Leap nie poprzedza czasu Expires"
+
+#: timezone/zic.c:3095
 msgid "Wild result from command execution"
 msgstr "Osobliwy wynik wykonania polecenia"
 
-#: timezone/zic.c:2892
+#: timezone/zic.c:3096
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: polecenie `%s' zwróciło %d\n"
 
-#: timezone/zic.c:2998
+#: timezone/zic.c:3202
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "\"%s\" nie jest udokumentowane; zamiast tego należy używać \"last%s\""
 
-#: timezone/zic.c:3029
+#: timezone/zic.c:3233
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "\"%s\" jest niejednoznaczne w zic sprzed wersji 2017c"
 
-#: timezone/zic.c:3063
+#: timezone/zic.c:3267
 msgid "Odd number of quotation marks"
 msgstr "Nieparzysta liczba cudzysłowów"
 
-#: timezone/zic.c:3157
+#: timezone/zic.c:3361
 msgid "use of 2/29 in non leap-year"
 msgstr "użycie 2/29 w roku nieprzestępnym"
 
-#: timezone/zic.c:3192
+#: timezone/zic.c:3396
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "reguła przekracza początek/koniec miesiąca; nie zadziała z wersjami zic sprzed 2004 roku"
 
-#: timezone/zic.c:3219
+#: timezone/zic.c:3423
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "skrót nazwy strefy czasowej ma mniej niż 3 znaki"
 
-#: timezone/zic.c:3221
+#: timezone/zic.c:3425
 msgid "time zone abbreviation has too many characters"
 msgstr "skrót nazwy strefy czasowej ma zbyt dużo znaków"
 
-#: timezone/zic.c:3223
+#: timezone/zic.c:3427
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "skrót nazwy strefy czasowej różni się od standardu POSIX"
 
-#: timezone/zic.c:3229
+#: timezone/zic.c:3433
 msgid "too many, or too long, time zone abbreviations"
 msgstr "za długie lub za dużo skrótów stref czasowych"
 
-#: timezone/zic.c:3275
+#: timezone/zic.c:3479
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: Nie można utworzyć katalogu %s: %s"

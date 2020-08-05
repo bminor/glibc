@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.17-pre1\n"
-"POT-Creation-Date: 2020-01-02 20:08+0530\n"
+"POT-Creation-Date: 2020-07-22 23:24-0400\n"
 "PO-Revision-Date: 2013-04-26 04:10+0400\n"
 "Last-Translator: Nik Kalach <nik.kalach@inbox.ru>\n"
 "Language-Team: Interlingua <translation-team-ia@lists.sourceforge.net>\n"
@@ -67,7 +67,8 @@ msgid "Give a short usage message"
 msgstr "Monstrar un breve message de usage"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105 nss/makedb.c:120
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
+#: nss/makedb.c:120
 msgid "NAME"
 msgstr "NOMINE"
 
@@ -133,10 +134,10 @@ msgstr ""
 "-o FILE-OUTPUT [FILE-INPUT]...\n"
 "[FILE-OUTPUT [FILE-INPUT]...]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
-#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:306
+#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:388
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:276
-#: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
+#: locale/programs/localedef.c:438 login/programs/pt_chown.c:89
 #: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
@@ -148,11 +149,11 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
-#: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:293 locale/programs/localedef.c:463
+#: elf/ldconfig.c:322 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
+#: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -165,10 +166,10 @@ msgstr ""
 "NULLE garantia; atque pro MERCABILETATE o APTITUDE PRO UN PROPOSITO PARTICULAR.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:329 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:427
+#: elf/ldconfig.c:327 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:298
-#: locale/programs/localedef.c:468 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:93 nss/makedb.c:390
+#: locale/programs/localedef.c:465 malloc/memusage.sh:75
+#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -178,7 +179,7 @@ msgstr "Scribite per %s.\n"
 msgid "*standard input*"
 msgstr "*input standard*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:290
+#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
 #: nss/makedb.c:246
 #, c-format
 msgid "cannot open input file `%s'"
@@ -376,7 +377,7 @@ msgstr "Systema operative incognite"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ABI del systema operative: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1334
+#: elf/cache.c:163 elf/ldconfig.c:1297
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Impossibile de aperir le file de cache %s\n"
@@ -417,11 +418,11 @@ msgstr "Insuccesso del modification del derectos de accesso de %s a %#o"
 msgid "Renaming of %s to %s failed"
 msgstr "Insuccesso del cambiamento de nomine %s a %s"
 
-#: elf/dl-close.c:406 elf/dl-open.c:285
+#: elf/dl-close.c:406 elf/dl-open.c:293
 msgid "cannot create scope list"
 msgstr "impossibile de crear un lista de ambito"
 
-#: elf/dl-close.c:852
+#: elf/dl-close.c:862
 msgid "shared object not open"
 msgstr "objecto condivise non aperte"
 
@@ -442,11 +443,11 @@ msgstr "impossibile de cargar le `%s' auxiliar a causa del substitution de DST v
 msgid "cannot allocate dependency list"
 msgstr "impossibile de allocar un lista de dependentias "
 
-#: elf/dl-deps.c:483 elf/dl-deps.c:543
+#: elf/dl-deps.c:483 elf/dl-deps.c:548
 msgid "cannot allocate symbol search list"
 msgstr "impossibile de allocar un lista pro le cerca de symbolos"
 
-#: elf/dl-deps.c:523
+#: elf/dl-deps.c:528
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Filtros non es supportate con LD_TRACE_PRELINKING"
 
@@ -470,135 +471,135 @@ msgstr "impossibile de effectuar mmap pro le tabula fptr"
 msgid "internal error: symidx out of range of fptr table"
 msgstr "error interne: symidx es in exterior del tabula fptr"
 
-#: elf/dl-hwcaps.c:202 elf/dl-hwcaps.c:214
+#: elf/dl-hwcaps.c:92 elf/dl-hwcaps.c:104
 msgid "cannot create capability list"
 msgstr "impossibile de crear un lista de capabilitates"
 
-#: elf/dl-load.c:427
+#: elf/dl-load.c:428
 msgid "cannot allocate name record"
 msgstr "impossibile de allocar un entrata de nomine"
 
-#: elf/dl-load.c:513 elf/dl-load.c:626 elf/dl-load.c:715 elf/dl-load.c:811
+#: elf/dl-load.c:514 elf/dl-load.c:627 elf/dl-load.c:716 elf/dl-load.c:812
 msgid "cannot create cache for search path"
 msgstr "impossibile de crear un cache pro le percurso de cerca"
 
-#: elf/dl-load.c:609
+#: elf/dl-load.c:610
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "impossibile de crear un copia de RUNPATH/RPATH"
 
-#: elf/dl-load.c:702
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "impossibile de crear un array del percurso de cerca"
 
-#: elf/dl-load.c:892
+#: elf/dl-load.c:964
 msgid "cannot stat shared object"
 msgstr "impossibile de effectuar stat sur le objecto condivise"
 
-#: elf/dl-load.c:1003 elf/dl-load.c:2191
+#: elf/dl-load.c:1075 elf/dl-load.c:2278
 msgid "cannot create shared object descriptor"
 msgstr "impossibile de crear un descriptor de objecto condivise"
 
-#: elf/dl-load.c:1022 elf/dl-load.c:1571 elf/dl-load.c:1672
+#: elf/dl-load.c:1094 elf/dl-load.c:1658 elf/dl-load.c:1759
 msgid "cannot read file data"
 msgstr "impossibile de leger datos del file"
 
-#: elf/dl-load.c:1068
+#: elf/dl-load.c:1140
 msgid "ELF load command alignment not page-aligned"
 msgstr "Le commando de cargar ELF non es alineate a un pagina"
 
-#: elf/dl-load.c:1075
+#: elf/dl-load.c:1147
 msgid "ELF load command address/offset not properly aligned"
 msgstr "Le adresso o displaciamento del commando de cargar ELF non es alineate correctemente"
 
-#: elf/dl-load.c:1162
+#: elf/dl-load.c:1226
 msgid "object file has no loadable segments"
 msgstr "le file de objecto non ha segmentos cargabile"
 
-#: elf/dl-load.c:1175
+#: elf/dl-load.c:1239
 msgid "cannot dynamically load executable"
 msgstr "impossibile de cargar dynamicamente un executabile"
 
-#: elf/dl-load.c:1196
+#: elf/dl-load.c:1275
 msgid "object file has no dynamic section"
 msgstr "le file de objecto non ha un section dynamic"
 
-#: elf/dl-load.c:1225
+#: elf/dl-load.c:1304
 msgid "shared object cannot be dlopen()ed"
 msgstr "le objecto condivise non pote esser aperite via dlopen()"
 
-#: elf/dl-load.c:1238
+#: elf/dl-load.c:1317
 msgid "cannot allocate memory for program header"
 msgstr "impossibile de allocar le memoria pro un testa de programma"
 
-#: elf/dl-load.c:1271 elf/dl-load.h:130
+#: elf/dl-load.c:1350 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "impossibile de modificar le protection de memoria"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1370
 msgid "cannot enable executable stack as shared object requires"
 msgstr "impossibile de habilitar un pila executabile como le objecto condivise necessita"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1383
 msgid "cannot close file descriptor"
 msgstr "impossibile de clauder un descriptor de file"
 
-#: elf/dl-load.c:1571
+#: elf/dl-load.c:1658
 msgid "file too short"
 msgstr "file troppo curte"
 
-#: elf/dl-load.c:1606
+#: elf/dl-load.c:1693
 msgid "invalid ELF header"
 msgstr "testa ELF incorrecte"
 
-#: elf/dl-load.c:1618
+#: elf/dl-load.c:1705
 msgid "ELF file data encoding not big-endian"
 msgstr "le codification de datos del file ELF non es big-endian"
 
-#: elf/dl-load.c:1620
+#: elf/dl-load.c:1707
 msgid "ELF file data encoding not little-endian"
 msgstr "le codification de datos del file ELF non es little-endian"
 
-#: elf/dl-load.c:1624
+#: elf/dl-load.c:1711
 msgid "ELF file version ident does not match current one"
 msgstr "le identificator de version del file ELF non corresponde con le version actual"
 
-#: elf/dl-load.c:1628
+#: elf/dl-load.c:1715
 msgid "ELF file OS ABI invalid"
 msgstr "ABI de systema operative del file ELF invalide"
 
-#: elf/dl-load.c:1631
+#: elf/dl-load.c:1718
 msgid "ELF file ABI version invalid"
 msgstr "Version de ABI del file ELF invalide"
 
-#: elf/dl-load.c:1634
+#: elf/dl-load.c:1721
 msgid "nonzero padding in e_ident"
 msgstr "impletion con non-zeros in e_ident"
 
-#: elf/dl-load.c:1637
+#: elf/dl-load.c:1724
 msgid "internal error"
 msgstr "error interne"
 
-#: elf/dl-load.c:1644
+#: elf/dl-load.c:1731
 msgid "ELF file version does not match current one"
 msgstr "Le version del file ELF non corresponde con le version actual"
 
-#: elf/dl-load.c:1652
+#: elf/dl-load.c:1739
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "solo ET_DYN e ET_EXEC pote esser cargate"
 
-#: elf/dl-load.c:1657
+#: elf/dl-load.c:1744
 msgid "ELF file's phentsize not the expected size"
 msgstr "Le valor `phentsize' del file ELF non concorda con le expectation"
 
-#: elf/dl-load.c:2210
+#: elf/dl-load.c:2297
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "classe ELF incorrecte: ELFCLASS64"
 
-#: elf/dl-load.c:2211
+#: elf/dl-load.c:2298
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "classe ELF incorrecte: ELFCLASS32"
 
-#: elf/dl-load.c:2214
+#: elf/dl-load.c:2301
 msgid "cannot open shared object file"
 msgstr "impossibile de aperir un file de objecto condivise"
 
@@ -610,56 +611,56 @@ msgstr "insuccesso de mmap sur un objecto condivise"
 msgid "cannot map zero-fill pages"
 msgstr "impossibile de mmap paginas del dispositivo de impletion con zeros"
 
-#: elf/dl-lookup.c:882
+#: elf/dl-lookup.c:876
 msgid "symbol lookup error"
 msgstr "error de cerca de symbolo"
 
-#: elf/dl-open.c:71
+#: elf/dl-open.c:79
 msgid "cannot extend global scope"
 msgstr "impossibile de extender le ambito global"
 
-#: elf/dl-open.c:391
+#: elf/dl-open.c:399
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Le contator de generation TLS ha permitite! Reporta iste problema."
 
-#: elf/dl-open.c:783
+#: elf/dl-open.c:808
 msgid "invalid mode for dlopen()"
 msgstr "modo invalide pro dlopen()"
 
-#: elf/dl-open.c:800
+#: elf/dl-open.c:825
 msgid "no more namespaces available for dlmopen()"
 msgstr "necun altere spatios de nomines disponibile pro dlmopen()"
 
-#: elf/dl-open.c:824
+#: elf/dl-open.c:849
 msgid "invalid target namespace in dlmopen()"
 msgstr "spatio de nomines de destination invalide in dlmopen()"
 
-#: elf/dl-reloc.c:120
+#: elf/dl-reloc.c:139
 msgid "cannot allocate memory in static TLS block"
 msgstr "impossibile de allocar memoria in un bloco TLS static"
 
-#: elf/dl-reloc.c:213
+#: elf/dl-reloc.c:232
 msgid "cannot make segment writable for relocation"
 msgstr "impossibile de render un segmento scribibile pro le relocation"
 
-#: elf/dl-reloc.c:273
+#: elf/dl-reloc.c:292
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: memoria exhauste pro immagazinar le resultatos de relocation pro %s\n"
 
-#: elf/dl-reloc.c:289
+#: elf/dl-reloc.c:308
 msgid "cannot restore segment prot after reloc"
 msgstr "impossibile de restabilir le protection del segmento post le relocation"
 
-#: elf/dl-reloc.c:320
+#: elf/dl-reloc.c:339
 msgid "cannot apply additional memory protection after relocation"
 msgstr "impossibile de applicar le protection de memoria additional post le relocation"
 
-#: elf/dl-sym.c:150
+#: elf/dl-sym.c:138
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT usate in le codice non cargate dynamicamente"
 
-#: elf/dl-tls.c:931
+#: elf/dl-tls.c:1011
 msgid "cannot create TLS data structures"
 msgstr "impossibile de crear structuras de datos TLS"
 
@@ -671,216 +672,193 @@ msgstr "error de cerca de version"
 msgid "cannot allocate version reference table"
 msgstr "impossibile de allocar le tabula de referentias a versiones"
 
-#: elf/ldconfig.c:142
+#: elf/ldconfig.c:145
 msgid "Print cache"
 msgstr "Monstrar le cache"
 
-#: elf/ldconfig.c:143
+#: elf/ldconfig.c:146
 msgid "Generate verbose messages"
 msgstr "Monstrar messages in modo verbose"
 
-#: elf/ldconfig.c:144
+#: elf/ldconfig.c:147
 msgid "Don't build cache"
 msgstr "Non construer le cache"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:149
 msgid "Change to and use ROOT as root directory"
 msgstr "Passar a RADICE e utilisar lo como un directorio de radice"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:149
 msgid "ROOT"
 msgstr "RADICE"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:150
 msgid "CACHE"
 msgstr "CACHE"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:150
 msgid "Use CACHE as cache file"
 msgstr "Utilisar CACHE como un file de cache"
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:151
 msgid "CONF"
 msgstr "CONF"
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:151
 msgid "Use CONF as configuration file"
 msgstr "Utilisar CONF como un file de configuration"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:152
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Tractar solo le directorios specificate in le linea de commando. Non construer le cache."
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:153
 msgid "Manually link individual libraries."
 msgstr "Ligar manualmente le bibliothecas individual."
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:154
 msgid "FORMAT"
 msgstr "FORMATO"
 
-#: elf/ldconfig.c:151
-msgid "Format to use: new, old or compat (default)"
-msgstr "Formato a usar: `new', `old' o `compat' (predefinition)"
-
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:155
 msgid "Ignore auxiliary cache file"
 msgstr "Ignorar le file de cache auxiliar"
 
-#: elf/ldconfig.c:160
+#: elf/ldconfig.c:163
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Configurar le associationes de tempore de execution del editor de ligamines dynamic."
 
-#: elf/ldconfig.c:347
+#: elf/ldconfig.c:346
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Percurso `%s' fornite plus de un vice"
 
-#: elf/ldconfig.c:387
+#: elf/ldconfig.c:393
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s non es un typo de bibliotheca cognite"
 
-#: elf/ldconfig.c:415
+#: elf/ldconfig.c:421
 #, c-format
 msgid "Can't stat %s"
 msgstr "Impossibile de effectuar stat sur %s"
 
-#: elf/ldconfig.c:489
+#: elf/ldconfig.c:500
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Impossibile de effectuar stat sur %s\n"
 
-#: elf/ldconfig.c:499
+#: elf/ldconfig.c:510
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s non es un ligamine symbolic\n"
 
-#: elf/ldconfig.c:518
+#: elf/ldconfig.c:529
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Impossibile de efectuar unlink sur %s"
 
-#: elf/ldconfig.c:524
+#: elf/ldconfig.c:535
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Impossibile de crear un ligamine de %s a %s"
 
-#: elf/ldconfig.c:530
+#: elf/ldconfig.c:541
 msgid " (changed)\n"
 msgstr " (cambiate)\n"
 
-#: elf/ldconfig.c:532
+#: elf/ldconfig.c:543
 msgid " (SKIPPED)\n"
 msgstr " (OMITTITE)\n"
 
-#: elf/ldconfig.c:587
+#: elf/ldconfig.c:598
 #, c-format
 msgid "Can't find %s"
 msgstr "Impossibile de trovar %s"
 
-#: elf/ldconfig.c:603 elf/ldconfig.c:769 elf/ldconfig.c:825 elf/ldconfig.c:857
+#: elf/ldconfig.c:614 elf/ldconfig.c:781 elf/ldconfig.c:839 elf/ldconfig.c:871
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Impossibile de effectuar lstat sur %s"
 
-#: elf/ldconfig.c:610
+#: elf/ldconfig.c:621
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Le file %s es ignorate proque illo non es un file regular."
 
-#: elf/ldconfig.c:619
+#: elf/ldconfig.c:630
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Ligamine non create proque il non esseva possibile trovar le so-nomine pro %s"
 
-#: elf/ldconfig.c:702
+#: elf/ldconfig.c:714
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Impossibile de aperir le directorio %s"
 
-#: elf/ldconfig.c:787 elf/ldconfig.c:845 elf/readlib.c:97
+#: elf/ldconfig.c:799 elf/ldconfig.c:859 elf/readlib.c:97
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Le file de entrata %s non trovate.\n"
 
-#: elf/ldconfig.c:794
+#: elf/ldconfig.c:806
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Impossibile de effectuar stat sur %s"
 
-#: elf/ldconfig.c:939
+#: elf/ldconfig.c:953
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "bibliotheca libc5 %s es in un directorio incorrecte"
 
-#: elf/ldconfig.c:942
+#: elf/ldconfig.c:956
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "bibliotheca libc6 %s es in un directorio incorrecte"
 
-#: elf/ldconfig.c:945
+#: elf/ldconfig.c:959
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "bibliotheca libc4 %s es in un directorio incorrecte"
 
-#: elf/ldconfig.c:973
+#: elf/ldconfig.c:987
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "Le bibliothecas %s e %s es in le directorio %s ha le mesme so-nomine, ma lor typo es differente."
 
-#: elf/ldconfig.c:1083
+#: elf/ldconfig.c:1097
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Advertimento: ignorar le file de configuration que non pote esser aperite: %s"
 
-#: elf/ldconfig.c:1149
-#, c-format
-msgid "%s:%u: bad syntax in hwcap line"
-msgstr "%s:%u: syntaxe incorrecte in le linea hwcap"
-
-#: elf/ldconfig.c:1155
-#, c-format
-msgid "%s:%u: hwcap index %lu above maximum %u"
-msgstr "%s:%u: le indice hwcap %lu superpassa le maximo %u"
-
-#: elf/ldconfig.c:1162 elf/ldconfig.c:1170
-#, c-format
-msgid "%s:%u: hwcap index %lu already defined as %s"
-msgstr "%s:%u: le indice hwcap %lu jam definite como %s"
-
-#: elf/ldconfig.c:1173
-#, c-format
-msgid "%s:%u: duplicate hwcap %lu %s"
-msgstr "%s:%u: hwcap duplicate %lu %s"
-
-#: elf/ldconfig.c:1195
+#: elf/ldconfig.c:1164
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "il es necessari usar le nomine absolute pro le file de configuration quando on utilisa -r"
 
-#: elf/ldconfig.c:1202 locale/programs/xmalloc.c:63 malloc/obstack.c:416
-#: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
+#: elf/ldconfig.c:1171 locale/programs/xasprintf.c:31
+#: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
+#: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "memoria exhaurite"
 
-#: elf/ldconfig.c:1235
+#: elf/ldconfig.c:1204
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: impossibile de leger le directorio %s"
 
-#: elf/ldconfig.c:1283
+#: elf/ldconfig.c:1252
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "percurso relative `%s' usate pro construer le cache"
 
-#: elf/ldconfig.c:1313
+#: elf/ldconfig.c:1276
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Impossibile de effectuar chdir a /"
 
-#: elf/ldconfig.c:1354
+#: elf/ldconfig.c:1317
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Impossibile de aperir le directorio de files de cache %s\n"
@@ -926,7 +904,7 @@ msgstr "argumentos de file mancante"
 #. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:37
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:16
 msgid "No such file or directory"
 msgstr "Necun tal file o directorio"
 
@@ -1302,12 +1280,12 @@ msgstr "`%s' non es un file de datos de profilage correcte pro `%s'"
 msgid "cannot allocate symbol data"
 msgstr "impossibile de allocar le datos de symbolo"
 
-#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:445
+#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:428
 #, c-format
 msgid "cannot open output file"
 msgstr "impossibile de aperir le file de output"
 
-#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:308
+#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:291
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "error al clauder le input `%s'"
@@ -1317,116 +1295,116 @@ msgstr "error al clauder le input `%s'"
 msgid "illegal input sequence at position %Zd"
 msgstr "sequentia de entrata non permittite al position %Zd"
 
-#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:536
+#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:519
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "character o sequentia de cambiamento incomplete al fin de buffer"
 
-#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:579
-#: iconv/iconv_prog.c:615
+#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:562
+#: iconv/iconv_prog.c:598
 #, c-format
 msgid "error while reading the input"
 msgstr "error al leger le entrata"
 
-#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:580
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "impossibile de allocar un buffer pro le entrata"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "Specification del formato de input/output:"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "codification del texto original"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "codification pro output"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Information:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "monstrar tote le codificationes de characteres cognite"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:124
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:124
 msgid "Output control:"
 msgstr "Gerentia del output:"
 
-#: iconv/iconv_prog.c:65
+#: iconv/iconv_prog.c:66
 msgid "omit invalid characters from output"
 msgstr "omitter characteres invalide del output"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "file de output"
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "suppress warnings"
 msgstr "supprimer advertimentos"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "monstrar le information super le progresso"
 
-#: iconv/iconv_prog.c:73
+#: iconv/iconv_prog.c:74
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Converter le codification de files indicate de un codification al altere."
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:78
 msgid "[FILE...]"
 msgstr "[FILE...]"
 
-#: iconv/iconv_prog.c:230
-#, c-format
-msgid "conversions from `%s' and to `%s' are not supported"
-msgstr "le conversiones desde `%s' e verso `%s' non es supportate"
-
-#: iconv/iconv_prog.c:235
-#, c-format
-msgid "conversion from `%s' is not supported"
-msgstr "le conversion de `%s' non es supportate"
-
-#: iconv/iconv_prog.c:242
-#, c-format
-msgid "conversion to `%s' is not supported"
-msgstr "le conversion a `%s' non es supportate"
-
-#: iconv/iconv_prog.c:246
-#, c-format
-msgid "conversion from `%s' to `%s' is not supported"
-msgstr "le conversion de `%s' a `%s' non es supportate"
-
-#: iconv/iconv_prog.c:256
+#: iconv/iconv_prog.c:177 iconv/iconv_prog.c:239
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "insuccesso al comenciamento del processo de conversion"
 
-#: iconv/iconv_prog.c:354
+#: iconv/iconv_prog.c:213
+#, c-format
+msgid "conversions from `%s' and to `%s' are not supported"
+msgstr "le conversiones desde `%s' e verso `%s' non es supportate"
+
+#: iconv/iconv_prog.c:218
+#, c-format
+msgid "conversion from `%s' is not supported"
+msgstr "le conversion de `%s' non es supportate"
+
+#: iconv/iconv_prog.c:225
+#, c-format
+msgid "conversion to `%s' is not supported"
+msgstr "le conversion a `%s' non es supportate"
+
+#: iconv/iconv_prog.c:229
+#, c-format
+msgid "conversion from `%s' to `%s' is not supported"
+msgstr "le conversion de `%s' a `%s' non es supportate"
+
+#: iconv/iconv_prog.c:337
 #, c-format
 msgid "error while closing output file"
 msgstr "error al clauder le file de output"
 
-#: iconv/iconv_prog.c:455
+#: iconv/iconv_prog.c:438
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "conversion stoppate a causa de un problema al scriber le resultato"
 
-#: iconv/iconv_prog.c:532
+#: iconv/iconv_prog.c:515
 #, c-format
 msgid "illegal input sequence at position %ld"
 msgstr "sequentia de entrata non permittite al position %ld"
 
-#: iconv/iconv_prog.c:540
+#: iconv/iconv_prog.c:523
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "error interne (descriptor non permittite)"
 
-#: iconv/iconv_prog.c:543
+#: iconv/iconv_prog.c:526
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "error incognite %d de iconv()"

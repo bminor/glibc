@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3\n"
-"POT-Creation-Date: 2020-01-02 20:08+0530\n"
+"POT-Creation-Date: 2020-07-22 23:24-0400\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -32,7 +32,7 @@ msgstr "Ikoresha:"
 msgid "unknown"
 msgstr "itazwi"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Ibisobanuro:"
 
@@ -46,17 +46,13 @@ msgid "syntax error"
 msgstr "Ikosa mu myandikire"
 
 #: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.c:21
+#: sysdeps/gnu/errlist.h:4
 msgid "Success"
 msgstr "Ibyatunganye"
 
 #: posix/getconf.c:669 posix/getconf.c:685
 msgid "undefined"
 msgstr "kidasobanuye"
-
-#: string/strerror.c:41
-msgid "Unknown error"
-msgstr "Ikosa itazwi"
 
 #: sysdeps/generic/siglist.h:30
 msgid "Interrupt"
@@ -72,17 +68,17 @@ msgstr "Kyahagariswe"
 
 #. TRANS This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.c:250
+#: sysdeps/gnu/errlist.h:149
 msgid "Invalid argument"
 msgstr "Inkoresha siyo"
+
+#: sysdeps/gnu/errlist.h:535
+msgid "Protocol error"
+msgstr "Ikosa rya Protocol"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.c:960
+#: sysdeps/gnu/errlist.h:795
 msgid "?"
 msgstr "?"
-
-#: sysdeps/gnu/errlist.c:1080
-msgid "Protocol error"
-msgstr "Ikosa rya Protocol"

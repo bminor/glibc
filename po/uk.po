@@ -2,13 +2,13 @@
 # Copyright (C) 2013 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2013, 2014, 2015, 2017, 2018, 2019.
+# Yuri Chornoivan <yurchor@ukr.net>, 2013-2020.
 # Volodymyr M. Lisivka <lvm@mystery.lviv.net>, 2013.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.29.9000\n"
-"POT-Creation-Date: 2020-01-02 20:08+0530\n"
-"PO-Revision-Date: 2019-07-24 21:22+0300\n"
+"Project-Id-Version: libc 2.31.9000\n"
+"POT-Creation-Date: 2020-07-22 23:24-0400\n"
+"PO-Revision-Date: 2020-07-23 11:27+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 19.07.70\n"
+"X-Generator: Lokalize 20.03.70\n"
 
 #: argp/argp-help.c:227
 #, c-format
@@ -69,7 +69,8 @@ msgid "Give a short usage message"
 msgstr "Отримати коротке повідомлення щодо використання"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105 nss/makedb.c:120
+#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
+#: nss/makedb.c:120
 msgid "NAME"
 msgstr "НАЗВА"
 
@@ -148,10 +149,10 @@ msgstr ""
 "-o ФАЙЛ-ВИВЕДЕННЯ [ФАЙЛ-ВХІДНИХ-ДАНИХ]...\n"
 "[ФАЙЛ-ВИВЕДЕННЯ [ФАЙЛ-ВХІДНИХ-ДАНИХ]...]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:308
-#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:405
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:306
+#: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:388
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:276
-#: locale/programs/localedef.c:437 login/programs/pt_chown.c:89
+#: locale/programs/localedef.c:438 login/programs/pt_chown.c:89
 #: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
@@ -163,11 +164,11 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:324 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
-#: elf/sprof.c:389 iconv/iconv_prog.c:422 iconv/iconvconfig.c:396
-#: locale/programs/locale.c:293 locale/programs/localedef.c:463
+#: elf/ldconfig.c:322 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
+#: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:509 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -179,10 +180,10 @@ msgstr ""
 "Це програмне забезпечення є вільним, умови копіювання викладено у його початкових кодах. Умовами ліцензування програми НЕ передбачено жодних гарантій, зокрема гарантій працездатності або придатності для певної мети.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:329 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:427
+#: elf/ldconfig.c:327 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:298
-#: locale/programs/localedef.c:468 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:514 nss/getent.c:93 nss/makedb.c:390
+#: locale/programs/localedef.c:465 malloc/memusage.sh:75
+#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -192,7 +193,7 @@ msgstr "Автор — %s.\n"
 msgid "*standard input*"
 msgstr "*стандартний ввід*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:290
+#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
 #: nss/makedb.c:246
 #, c-format
 msgid "cannot open input file `%s'"
@@ -390,7 +391,7 @@ msgstr "Невідома ОС"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ABI ОС: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1334
+#: elf/cache.c:163 elf/ldconfig.c:1297
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Не вдалося відкрити файл кешу %s\n"
@@ -431,11 +432,11 @@ msgstr "Спроба змінити права доступу до %s на %#o �
 msgid "Renaming of %s to %s failed"
 msgstr "Спроба перейменувати %s на %s зазнала невдачі"
 
-#: elf/dl-close.c:406 elf/dl-open.c:285
+#: elf/dl-close.c:406 elf/dl-open.c:293
 msgid "cannot create scope list"
 msgstr "не вдалося створити список областей дії"
 
-#: elf/dl-close.c:852
+#: elf/dl-close.c:862
 msgid "shared object not open"
 msgstr "об’єкт спільного використання не відкрито"
 
@@ -460,11 +461,11 @@ msgstr "не вдалося розмістити буфер залежносте
 msgid "cannot allocate dependency list"
 msgstr "не вдалося розмістити список залежностей у пам’яті"
 
-#: elf/dl-deps.c:483 elf/dl-deps.c:543
+#: elf/dl-deps.c:483 elf/dl-deps.c:548
 msgid "cannot allocate symbol search list"
 msgstr "не вдалося розмістити список символів для пошуку у пам’яті"
 
-#: elf/dl-deps.c:523
+#: elf/dl-deps.c:528
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Підтримки фільтрів разом з LD_TRACE_PRELINKING не передбачено"
 
@@ -488,143 +489,139 @@ msgstr "не можна відображати сторінки для табл�
 msgid "internal error: symidx out of range of fptr table"
 msgstr "внутрішня помилка: symidx перебуває поза межами таблиці fptr"
 
-#: elf/dl-hwcaps.c:202 elf/dl-hwcaps.c:214
+#: elf/dl-hwcaps.c:92 elf/dl-hwcaps.c:104
 msgid "cannot create capability list"
 msgstr "не вдалося створити список можливостей"
 
-#: elf/dl-load.c:427
+#: elf/dl-load.c:428
 msgid "cannot allocate name record"
 msgstr "не вдалося розмістити запис назви у пам’яті"
 
-#: elf/dl-load.c:513 elf/dl-load.c:626 elf/dl-load.c:715 elf/dl-load.c:811
+#: elf/dl-load.c:514 elf/dl-load.c:627 elf/dl-load.c:716 elf/dl-load.c:812
 msgid "cannot create cache for search path"
 msgstr "не вдалося створити кеш для шляху пошуку"
 
-#: elf/dl-load.c:609
+#: elf/dl-load.c:610
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "не вдалося створити копію RUNPATH/RPATH"
 
-#: elf/dl-load.c:702
+#: elf/dl-load.c:703
 msgid "cannot create search path array"
 msgstr "не вдалося створити масив шляхів пошуку"
 
-#: elf/dl-load.c:892
+#: elf/dl-load.c:964
 msgid "cannot stat shared object"
 msgstr "не вдалося виконати статистичну обробку об’єкта спільного використання"
 
-#: elf/dl-load.c:1003 elf/dl-load.c:2191
+#: elf/dl-load.c:1075 elf/dl-load.c:2278
 msgid "cannot create shared object descriptor"
 msgstr "не вдалося створити дескриптор об’єкта спільного використання"
 
-#: elf/dl-load.c:1022 elf/dl-load.c:1571 elf/dl-load.c:1672
+#: elf/dl-load.c:1094 elf/dl-load.c:1658 elf/dl-load.c:1759
 msgid "cannot read file data"
 msgstr "не вдалося прочитати дані файла"
 
-#: elf/dl-load.c:1068
+#: elf/dl-load.c:1140
 msgid "ELF load command alignment not page-aligned"
 msgstr "Вирівнювання команди завантаження ELF виконано не за сторінками пам’яті"
 
-#: elf/dl-load.c:1075
+#: elf/dl-load.c:1147
 msgid "ELF load command address/offset not properly aligned"
 msgstr "адреса або зміщення команди завантаження ELF неправильно вирівняно"
 
-#: elf/dl-load.c:1151
-msgid "cannot process note segment"
-msgstr "не вдалося обробити сегмент нотатки щодо процесу"
-
-#: elf/dl-load.c:1162
+#: elf/dl-load.c:1226
 msgid "object file has no loadable segments"
 msgstr "у об’єктному файлі немає придатних до завантаження сегментів"
 
-#: elf/dl-load.c:1175
+#: elf/dl-load.c:1239
 msgid "cannot dynamically load executable"
 msgstr "не вдалося завантажити виконуваний файл у динамічному режимі"
 
-#: elf/dl-load.c:1196
+#: elf/dl-load.c:1275
 msgid "object file has no dynamic section"
 msgstr "у об’єктному файлі немає динамічного розділу"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1302
 msgid "cannot dynamically load position-independent executable"
 msgstr "не вдалося завантажити позиційно незалежний виконуваний файл у динамічному режимі"
 
-#: elf/dl-load.c:1225
+#: elf/dl-load.c:1304
 msgid "shared object cannot be dlopen()ed"
 msgstr "об’єкт спільного використання не може бути відкрито за допомогою dlopen()"
 
-#: elf/dl-load.c:1238
+#: elf/dl-load.c:1317
 msgid "cannot allocate memory for program header"
 msgstr "не вдалося отримати пам’ять для заголовка програми"
 
-#: elf/dl-load.c:1271 elf/dl-load.h:130
+#: elf/dl-load.c:1350 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "зміна захисту області пам’яті неможлива"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1370
 msgid "cannot enable executable stack as shared object requires"
 msgstr "не вдалося увімкнути стек виконання, як цього вимагає об’єкт спільного використання"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1383
 msgid "cannot close file descriptor"
 msgstr "не вдалося закрити дескриптор файла"
 
-#: elf/dl-load.c:1571
+#: elf/dl-load.c:1658
 msgid "file too short"
 msgstr "файл є надто коротким"
 
-#: elf/dl-load.c:1606
+#: elf/dl-load.c:1693
 msgid "invalid ELF header"
 msgstr "некоректний заголовок ELF"
 
-#: elf/dl-load.c:1618
+#: elf/dl-load.c:1705
 msgid "ELF file data encoding not big-endian"
 msgstr "байти у даних файла ELF впорядковано не у зворотному порядку"
 
-#: elf/dl-load.c:1620
+#: elf/dl-load.c:1707
 msgid "ELF file data encoding not little-endian"
 msgstr "байти у даних файла ELF впорядковано не у прямому порядку"
 
-#: elf/dl-load.c:1624
+#: elf/dl-load.c:1711
 msgid "ELF file version ident does not match current one"
 msgstr "ідентифікатор версії файла ELF не відповідає поточному"
 
-#: elf/dl-load.c:1628
+#: elf/dl-load.c:1715
 msgid "ELF file OS ABI invalid"
 msgstr "некоректний ABI ОС у файлі ELF"
 
-#: elf/dl-load.c:1631
+#: elf/dl-load.c:1718
 msgid "ELF file ABI version invalid"
 msgstr "некоректна версія ABI у файлі ELF"
 
-#: elf/dl-load.c:1634
+#: elf/dl-load.c:1721
 msgid "nonzero padding in e_ident"
 msgstr "ненульове доповнення у e_ident"
 
-#: elf/dl-load.c:1637
+#: elf/dl-load.c:1724
 msgid "internal error"
 msgstr "внутрішня помилка"
 
-#: elf/dl-load.c:1644
+#: elf/dl-load.c:1731
 msgid "ELF file version does not match current one"
 msgstr "версія файла ELF не збігається з поточною"
 
-#: elf/dl-load.c:1652
+#: elf/dl-load.c:1739
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "можна завантажити лише ET_DYN і ET_EXEC"
 
-#: elf/dl-load.c:1657
+#: elf/dl-load.c:1744
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize файла ELF не є очікуваним"
 
-#: elf/dl-load.c:2210
+#: elf/dl-load.c:2297
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "помилковий клас ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2211
+#: elf/dl-load.c:2298
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "помилковий клас ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2214
+#: elf/dl-load.c:2301
 msgid "cannot open shared object file"
 msgstr "не вдалося відкрити файл об’єктів спільного використання"
 
@@ -636,56 +633,56 @@ msgstr "не вдалося відобразити сегмент з об’єк
 msgid "cannot map zero-fill pages"
 msgstr "не вдалося відобразити сторінки заповнення нулями"
 
-#: elf/dl-lookup.c:882
+#: elf/dl-lookup.c:876
 msgid "symbol lookup error"
 msgstr "помилка під час пошуку символів"
 
-#: elf/dl-open.c:71
+#: elf/dl-open.c:79
 msgid "cannot extend global scope"
 msgstr "не вдалося розширити загальну область"
 
-#: elf/dl-open.c:391
+#: elf/dl-open.c:399
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Переповнено лічильник створення TLS! Будь ласка, повідомте про цю помилку розробникам."
 
-#: elf/dl-open.c:783
+#: elf/dl-open.c:808
 msgid "invalid mode for dlopen()"
 msgstr "некоректний режим для dlopen()"
 
-#: elf/dl-open.c:800
+#: elf/dl-open.c:825
 msgid "no more namespaces available for dlmopen()"
 msgstr "більше немає просторів назв для dlmopen()"
 
-#: elf/dl-open.c:824
+#: elf/dl-open.c:849
 msgid "invalid target namespace in dlmopen()"
 msgstr "некоректний простір назв призначення у dlmopen()"
 
-#: elf/dl-reloc.c:120
+#: elf/dl-reloc.c:139
 msgid "cannot allocate memory in static TLS block"
 msgstr "не вдалося отримати область пам’яті у статичному блоці TLS"
 
-#: elf/dl-reloc.c:213
+#: elf/dl-reloc.c:232
 msgid "cannot make segment writable for relocation"
 msgstr "не вдалося створити сегмент придатний до запису для пересування"
 
-#: elf/dl-reloc.c:273
+#: elf/dl-reloc.c:292
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: не вистачає пам’яті для зберігання результатів пересування для %s\n"
 
-#: elf/dl-reloc.c:289
+#: elf/dl-reloc.c:308
 msgid "cannot restore segment prot after reloc"
 msgstr "не вдалося відновити захист сегмент після пересування"
 
-#: elf/dl-reloc.c:320
+#: elf/dl-reloc.c:339
 msgid "cannot apply additional memory protection after relocation"
 msgstr "не вдалося застосувати додатковий захист пам’яті після пересування"
 
-#: elf/dl-sym.c:150
+#: elf/dl-sym.c:138
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "Використаний у коді символ RTLD_NEXT не завантажується динамічно"
 
-#: elf/dl-tls.c:931
+#: elf/dl-tls.c:1011
 msgid "cannot create TLS data structures"
 msgstr "не вдалося створити структури даних TLS"
 
@@ -697,220 +694,216 @@ msgstr "помилка під час пошуку версії"
 msgid "cannot allocate version reference table"
 msgstr "не вдалося розмістити таблицю посилань на версії"
 
-#: elf/ldconfig.c:142
+#: elf/ldconfig.c:145
 msgid "Print cache"
 msgstr "Вивести кеш"
 
-#: elf/ldconfig.c:143
+#: elf/ldconfig.c:146
 msgid "Generate verbose messages"
 msgstr "Режим докладних повідомлень"
 
-#: elf/ldconfig.c:144
+#: elf/ldconfig.c:147
 msgid "Don't build cache"
 msgstr "Не збирати кеш"
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:148
 msgid "Don't update symbolic links"
 msgstr "Не оновлювати символічні посилання"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:149
 msgid "Change to and use ROOT as root directory"
 msgstr "Перейти до каталогу КОРІНЬ і використовувати його як кореневий"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:149
 msgid "ROOT"
 msgstr "КОРІНЬ"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:150
 msgid "CACHE"
 msgstr "КЕШ"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:150
 msgid "Use CACHE as cache file"
 msgstr "Використовувати КЕШ як файл кешу"
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:151
 msgid "CONF"
 msgstr "КОНФ"
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:151
 msgid "Use CONF as configuration file"
 msgstr "Використовувати КОНФ як файл налаштувань"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:152
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Обробляти лише каталоги, вказані у командному рядку. Не будувати кеш."
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:153
 msgid "Manually link individual libraries."
 msgstr "Під’єднати окремі бібліотеки вручну."
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:154
 msgid "FORMAT"
 msgstr "ФОРМАТ"
 
-#: elf/ldconfig.c:151
-msgid "Format to use: new, old or compat (default)"
-msgstr "Формат, яким слід скористатися: new, old або compat (типовий)"
+#: elf/ldconfig.c:154
+msgid "Format to use: new (default), old, or compat"
+msgstr "Формат, яким слід скористатися: new (типовий), old або compat"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:155
 msgid "Ignore auxiliary cache file"
 msgstr "Ігнорувати допоміжний файл кешу"
 
-#: elf/ldconfig.c:160
+#: elf/ldconfig.c:163
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Налаштувати прив’язки динамічного компонувальника під час виконання."
 
-#: elf/ldconfig.c:347
+#: elf/ldconfig.c:346
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Шлях «%s» вказано декілька разів"
 
-#: elf/ldconfig.c:387
+#: elf/ldconfig.c:347
+#, c-format
+msgid "(from %s:%d and %s:%d)\n"
+msgstr "(від %s:%d і %s:%d)\n"
+
+#: elf/ldconfig.c:393
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s не є відомим типом бібліотеки"
 
-#: elf/ldconfig.c:415
+#: elf/ldconfig.c:421
 #, c-format
 msgid "Can't stat %s"
 msgstr "Не вдалося отримати статистичні дані щодо %s"
 
-#: elf/ldconfig.c:489
+#: elf/ldconfig.c:500
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Не вдалося отримати статистичні дані щодо %s\n"
 
-#: elf/ldconfig.c:499
+#: elf/ldconfig.c:510
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s не є символічним посиланням\n"
 
-#: elf/ldconfig.c:518
+#: elf/ldconfig.c:529
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Не вдалося від’єднати %s"
 
-#: elf/ldconfig.c:524
+#: elf/ldconfig.c:535
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Не вдалося під’єднати %s до %s"
 
-#: elf/ldconfig.c:530
+#: elf/ldconfig.c:541
 msgid " (changed)\n"
 msgstr " (змінено)\n"
 
-#: elf/ldconfig.c:532
+#: elf/ldconfig.c:543
 msgid " (SKIPPED)\n"
 msgstr " (ПРОПУЩЕНО)\n"
 
-#: elf/ldconfig.c:587
+#: elf/ldconfig.c:598
 #, c-format
 msgid "Can't find %s"
 msgstr "Не вдалося знайти %s"
 
-#: elf/ldconfig.c:603 elf/ldconfig.c:769 elf/ldconfig.c:825 elf/ldconfig.c:857
+#: elf/ldconfig.c:614 elf/ldconfig.c:781 elf/ldconfig.c:839 elf/ldconfig.c:871
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Не вдалося обробити lstat %s"
 
-#: elf/ldconfig.c:610
+#: elf/ldconfig.c:621
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Файл %s проігноровано, оскільки він не є звичайним файлом."
 
-#: elf/ldconfig.c:619
+#: elf/ldconfig.c:630
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Зв’язку не створено, оскільки не вдалося знайти бібліотеку so для %s"
 
-#: elf/ldconfig.c:702
+#: elf/ldconfig.c:689
+#, c-format
+msgid " (from %s:%d)\n"
+msgstr " (від %s:%d)\n"
+
+#: elf/ldconfig.c:714
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Не вдалося відкрити каталог %s"
 
-#: elf/ldconfig.c:787 elf/ldconfig.c:845 elf/readlib.c:97
+#: elf/ldconfig.c:799 elf/ldconfig.c:859 elf/readlib.c:97
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Файл вхідних даних %s не знайдено.\n"
 
-#: elf/ldconfig.c:794
+#: elf/ldconfig.c:806
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Не вдалося отримати статистичні дані щодо %s"
 
-#: elf/ldconfig.c:939
+#: elf/ldconfig.c:953
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "Бібліотека libc5 %s зберігається у помилковому каталозі"
 
-#: elf/ldconfig.c:942
+#: elf/ldconfig.c:956
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "Бібліотека libc6 %s зберігається у помилковому каталозі"
 
-#: elf/ldconfig.c:945
+#: elf/ldconfig.c:959
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "Бібліотека libc4 %s зберігається у помилковому каталозі"
 
-#: elf/ldconfig.c:973
+#: elf/ldconfig.c:987
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "бібліотеки %s і %s у каталозі %s мають однакові назви so, але належать до різних типів."
 
-#: elf/ldconfig.c:1083
+#: elf/ldconfig.c:1097
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Попередження: ігноруємо файл налаштувань, який не вдалося відкрити: %s"
 
-#: elf/ldconfig.c:1149
+#: elf/ldconfig.c:1145
 #, c-format
-msgid "%s:%u: bad syntax in hwcap line"
-msgstr "%s:%u: помилковий синтаксис у рядку hwcap"
+msgid "%s:%u: hwcap directive ignored"
+msgstr "%s:%u: інструкцію hwcap проігноровано"
 
-#: elf/ldconfig.c:1155
-#, c-format
-msgid "%s:%u: hwcap index %lu above maximum %u"
-msgstr "%s:%u: індекс hwcap %lu перевищує максимальне значення %u"
-
-#: elf/ldconfig.c:1162 elf/ldconfig.c:1170
-#, c-format
-msgid "%s:%u: hwcap index %lu already defined as %s"
-msgstr "%s:%u: індекс hwcap %lu вже визначено як %s"
-
-#: elf/ldconfig.c:1173
-#, c-format
-msgid "%s:%u: duplicate hwcap %lu %s"
-msgstr "%s:%u: дублювання hwcap %lu %s"
-
-#: elf/ldconfig.c:1195
+#: elf/ldconfig.c:1164
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "якщо використано -r, слід вказати абсолютну назву файла для файла налаштувань"
 
-#: elf/ldconfig.c:1202 locale/programs/xmalloc.c:63 malloc/obstack.c:416
-#: malloc/obstack.c:418 posix/getconf.c:458 posix/getconf.c:697
+#: elf/ldconfig.c:1171 locale/programs/xasprintf.c:31
+#: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
+#: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "пам’ять вичерпано"
 
-#: elf/ldconfig.c:1235
+#: elf/ldconfig.c:1204
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: не вдалося прочитати каталог %s"
 
-#: elf/ldconfig.c:1283
+#: elf/ldconfig.c:1252
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "відносний шлях «%s» використано для збирання кешу"
 
-#: elf/ldconfig.c:1313
+#: elf/ldconfig.c:1276
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Не вдалося змінити каталог на /"
 
-#: elf/ldconfig.c:1354
+#: elf/ldconfig.c:1317
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Не вдалося відкрити каталог файлів кешу %s\n"
@@ -956,7 +949,7 @@ msgstr "не вказано аргументів-назв файл"
 #. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.c:37
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:16
 msgid "No such file or directory"
 msgstr "Немає такого файла або каталогу"
 
@@ -1342,12 +1335,12 @@ msgstr "«%s» не є коректним файлом даних профілю
 msgid "cannot allocate symbol data"
 msgstr "не вдалося розмістити дані символу"
 
-#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:445
+#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:428
 #, c-format
 msgid "cannot open output file"
 msgstr "не вдалося відкрити файл виведення"
 
-#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:308
+#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:291
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "помилка під час спроби закрити вхідний файл «%s»"
@@ -1357,128 +1350,128 @@ msgstr "помилка під час спроби закрити вхідний 
 msgid "illegal input sequence at position %Zd"
 msgstr "некоректна послідовність вхідних даних на позиції %Zd"
 
-#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:536
+#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:519
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "незавершений символ чи послідовність зміни регістру наприкінці буфера"
 
-#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:579
-#: iconv/iconv_prog.c:615
+#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:562
+#: iconv/iconv_prog.c:598
 #, c-format
 msgid "error while reading the input"
 msgstr "помилка під час читання вхідних даних"
 
-#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:597
+#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:580
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "не вдалося розмістити буфер для вхідних даних"
 
-#: iconv/iconv_prog.c:59
+#: iconv/iconv_prog.c:60
 msgid "Input/Output format specification:"
 msgstr "Специфікація форматі вхідних і вихідних даних:"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:61
 msgid "encoding of original text"
 msgstr "кодування початкового тексту"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:62
 msgid "encoding for output"
 msgstr "кодування результату перетворення"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:63
 msgid "Information:"
 msgstr "Інформація:"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:64
 msgid "list all known coded character sets"
 msgstr "показати список усіх відомих програмі наборів символів"
 
-#: iconv/iconv_prog.c:64 locale/programs/localedef.c:124
+#: iconv/iconv_prog.c:65 locale/programs/localedef.c:124
 msgid "Output control:"
 msgstr "Керування виводом:"
 
-#: iconv/iconv_prog.c:65
+#: iconv/iconv_prog.c:66
 msgid "omit invalid characters from output"
 msgstr "пропускати некоректні символи у вхідних даних"
 
-#: iconv/iconv_prog.c:66 iconv/iconvconfig.c:128
+#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:128
 #: locale/programs/localedef.c:117 locale/programs/localedef.c:119
 #: locale/programs/localedef.c:121 locale/programs/localedef.c:150
 #: malloc/memusagestat.c:56
 msgid "FILE"
 msgstr "ФАЙЛ"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:67
 msgid "output file"
 msgstr "вихідний файл"
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:68
 msgid "suppress warnings"
 msgstr "придушити попередження"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:69
 msgid "print progress information"
 msgstr "виводити дані щодо поступу"
 
-#: iconv/iconv_prog.c:73
+#: iconv/iconv_prog.c:74
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Змінити кодування у вказаних файлах."
 
-#: iconv/iconv_prog.c:77
+#: iconv/iconv_prog.c:78
 msgid "[FILE...]"
 msgstr "[ФАЙЛ...]"
 
-#: iconv/iconv_prog.c:230
-#, c-format
-msgid "conversions from `%s' and to `%s' are not supported"
-msgstr "перетворення з «%s» до «%s» не передбачено"
-
-#: iconv/iconv_prog.c:235
-#, c-format
-msgid "conversion from `%s' is not supported"
-msgstr "підтримки перетворення з «%s» не передбачено"
-
-#: iconv/iconv_prog.c:242
-#, c-format
-msgid "conversion to `%s' is not supported"
-msgstr "підтримки перетворення до «%s» не передбачено"
-
-#: iconv/iconv_prog.c:246
-#, c-format
-msgid "conversion from `%s' to `%s' is not supported"
-msgstr "перетворення з «%s» до «%s» не передбачено"
-
-#: iconv/iconv_prog.c:256
+#: iconv/iconv_prog.c:177 iconv/iconv_prog.c:239
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "не вдалося розпочати процес перетворення"
 
-#: iconv/iconv_prog.c:354
+#: iconv/iconv_prog.c:213
+#, c-format
+msgid "conversions from `%s' and to `%s' are not supported"
+msgstr "перетворення з «%s» до «%s» не передбачено"
+
+#: iconv/iconv_prog.c:218
+#, c-format
+msgid "conversion from `%s' is not supported"
+msgstr "підтримки перетворення з «%s» не передбачено"
+
+#: iconv/iconv_prog.c:225
+#, c-format
+msgid "conversion to `%s' is not supported"
+msgstr "підтримки перетворення до «%s» не передбачено"
+
+#: iconv/iconv_prog.c:229
+#, c-format
+msgid "conversion from `%s' to `%s' is not supported"
+msgstr "перетворення з «%s» до «%s» не передбачено"
+
+#: iconv/iconv_prog.c:337
 #, c-format
 msgid "error while closing output file"
 msgstr "помилка під час спроби закрити файл виведених даних"
 
-#: iconv/iconv_prog.c:455
+#: iconv/iconv_prog.c:438
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "перетворення припинено через проблеми із записом результату"
 
-#: iconv/iconv_prog.c:532
+#: iconv/iconv_prog.c:515
 #, c-format
 msgid "illegal input sequence at position %ld"
 msgstr "некоректна послідовність вхідних даних на позиції %ld"
 
-#: iconv/iconv_prog.c:540
+#: iconv/iconv_prog.c:523
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "внутрішня помилка (некоректний дескриптор)"
 
-#: iconv/iconv_prog.c:543
+#: iconv/iconv_prog.c:526
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "невідома помилка iconv() з номером %d"
 
-#: iconv/iconv_prog.c:786
+#: iconv/iconv_prog.c:769
 msgid ""
 "The following list contains all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -2709,27 +2702,27 @@ msgstr ""
 "[--add-to-archive|--delete-from-archive] ФАЙЛ...\n"
 "--list-archive [ФАЙЛ]"
 
-#: locale/programs/localedef.c:238
+#: locale/programs/localedef.c:239
 #, c-format
 msgid "cannot create directory for output files"
 msgstr "не вдалося створити каталог для виведення файлів"
 
-#: locale/programs/localedef.c:249
+#: locale/programs/localedef.c:250
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr "КРИТИЧНА ПОМИЛКА: у системі не визначено «_POSIX2_LOCALEDEF»"
 
-#: locale/programs/localedef.c:263 locale/programs/localedef.c:279
-#: locale/programs/localedef.c:673 locale/programs/localedef.c:693
+#: locale/programs/localedef.c:264 locale/programs/localedef.c:280
+#: locale/programs/localedef.c:678 locale/programs/localedef.c:698
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "не вдалося відкрити файл визначення локалі «%s»"
 
-#: locale/programs/localedef.c:303
+#: locale/programs/localedef.c:304
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "не вдалося вивести файли до «%s»"
 
-#: locale/programs/localedef.c:309
+#: locale/programs/localedef.c:310
 msgid "no output file produced because errors were issued"
 msgstr "файл результатів роботи не створено, оскільки виявлено помилки"
 
@@ -2746,11 +2739,21 @@ msgstr ""
 "\t\t       шлях до локалі : %s\n"
 "%s"
 
-#: locale/programs/localedef.c:641
+#: locale/programs/localedef.c:546
+#, c-format
+msgid "cannot create output path '%s': %s"
+msgstr "не вдалося створити шлях для виведення даних «%s»: %s"
+
+#: locale/programs/localedef.c:554
+#, c-format
+msgid "no write permission to output path '%s': %s"
+msgstr "немає прав доступу до запису до шляху виведення даних «%s»: %s"
+
+#: locale/programs/localedef.c:646
 msgid "circular dependencies between locale definitions"
 msgstr "циклічні залежності у визначеннях локалей"
 
-#: locale/programs/localedef.c:647
+#: locale/programs/localedef.c:652
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr "неможливо додати вже прочитану локаль «%s» удруге"
@@ -3124,7 +3127,7 @@ msgid "unable to free arguments"
 msgstr "не вдалося звільнити аргументи"
 
 #: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.c:21
+#: sysdeps/gnu/errlist.h:4
 msgid "Success"
 msgstr "Успіх"
 
@@ -3165,7 +3168,7 @@ msgid "First/next chain broken"
 msgstr "Розірвано ланцюжок перший-наступний"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.c:158
+#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.h:93
 msgid "Permission denied"
 msgstr "Відмовлено у доступі"
 
@@ -3630,44 +3633,6 @@ msgstr "    Рекурсивні неучасники:\n"
 msgid "    No recursive nonmembers\n"
 msgstr "    Немає рекурсивних неучасників\n"
 
-#: nis/nss_nisplus/nisplus-publickey.c:100
-#: nis/nss_nisplus/nisplus-publickey.c:182
-#, c-format
-msgid "DES entry for netname %s not unique\n"
-msgstr "Запис DES для netname %s не є унікальним\n"
-
-#: nis/nss_nisplus/nisplus-publickey.c:219
-#, c-format
-msgid "netname2user: missing group id list in `%s'"
-msgstr "netname2user: у «%s» не вистачає списку ідентифікаторів груп"
-
-#: nis/nss_nisplus/nisplus-publickey.c:301
-#: nis/nss_nisplus/nisplus-publickey.c:307
-#: nis/nss_nisplus/nisplus-publickey.c:372
-#: nis/nss_nisplus/nisplus-publickey.c:381
-#, c-format
-msgid "netname2user: (nis+ lookup): %s\n"
-msgstr "netname2user: (пошук у nis+): %s\n"
-
-#: nis/nss_nisplus/nisplus-publickey.c:320
-#, c-format
-msgid "netname2user: DES entry for %s in directory %s not unique"
-msgstr "netname2user: запис DES для %s у каталозі %s не є унікальним"
-
-#: nis/nss_nisplus/nisplus-publickey.c:338
-#, c-format
-msgid "netname2user: principal name `%s' too long"
-msgstr "netname2user: назва адміністратора доступу (принципала) «%s» є надто довгою"
-
-#: nis/nss_nisplus/nisplus-publickey.c:394
-#, c-format
-msgid "netname2user: LOCAL entry for %s in directory %s not unique"
-msgstr "netname2user: запис LOCAL для %s у каталозі %s не є унікальним"
-
-#: nis/nss_nisplus/nisplus-publickey.c:401
-msgid "netname2user: should not have uid 0"
-msgstr "netname2user: не можна використовувати UID 0"
-
 #: nis/ypclnt.c:828
 msgid "Request arguments bad"
 msgstr "Помилка у аргументах запиту"
@@ -3756,12 +3721,12 @@ msgstr "yp_update: не вдалося перетворити адресу ву�
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: не вдалося отримати адресу сервера\n"
 
-#: nscd/aicache.c:82 nscd/hstcache.c:452
+#: nscd/aicache.c:69 nscd/hstcache.c:452
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Не вдалося знайти «%s» у кеші вузлів!"
 
-#: nscd/aicache.c:84 nscd/hstcache.c:454
+#: nscd/aicache.c:71 nscd/hstcache.c:454
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "Перезавантажуємо «%s» у кеші вузлів!"
@@ -3794,6 +3759,15 @@ msgstr "спорожнюємо кеш %s; час — %ld"
 #, c-format
 msgid "considering %s entry \"%s\", timeout %<PRIu64>"
 msgstr "обробляємо запис %s «%s», час очікування %<PRIu64>"
+
+#: nscd/cachedumper.c:168
+msgid " - all data: "
+msgstr " - усі дані: "
+
+#: nscd/cachedumper.c:362
+#, c-format
+msgid " - remaining data %p: "
+msgstr " - залишок даних %p: "
 
 #: nscd/connections.c:520
 #, c-format
@@ -4051,18 +4025,18 @@ msgstr "помилка getgrouplist"
 msgid "setgroups failed"
 msgstr "помилка setgroups"
 
-#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:385
+#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:379
 #: nscd/pwdcache.c:363 nscd/servicescache.c:310
 #, c-format
 msgid "short write in %s: %s"
 msgstr "неповний запис до %s: %s"
 
-#: nscd/grpcache.c:430 nscd/initgrcache.c:81
+#: nscd/grpcache.c:430 nscd/initgrcache.c:75
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "Не вдалося знайти «%s» у кеші груп!"
 
-#: nscd/grpcache.c:432 nscd/initgrcache.c:83
+#: nscd/grpcache.c:432 nscd/initgrcache.c:77
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr "Перезавантажуємо «%s» до кешу груп!"
@@ -4102,118 +4076,122 @@ msgstr "Не вдалося знайти «%s (%s,%s,%s)» у кеші netgroup!
 msgid "Reloading \"%s (%s,%s,%s)\" in netgroup cache!"
 msgstr "Перезавантажуємо «%s (%s,%s,%s)» до кешу netgroup!"
 
-#: nscd/nscd.c:106
+#: nscd/nscd.c:108
 msgid "Read configuration data from NAME"
 msgstr "Прочитати дані налаштування з файла НАЗВА"
 
-#: nscd/nscd.c:108
+#: nscd/nscd.c:110
 msgid "Do not fork and display messages on the current tty"
 msgstr "Не відгалужувати дочірній процес і показувати повідомлення у поточному tty"
 
-#: nscd/nscd.c:110
+#: nscd/nscd.c:112
+msgid "Print contents of the offline cache file NAME"
+msgstr "Вивести дані автономного файла кешування НАЗВА"
+
+#: nscd/nscd.c:114
 msgid "Do not fork, but otherwise behave like a daemon"
 msgstr "Не відгалужувати дочірній процес, але працювати подібно до фонової служби"
 
-#: nscd/nscd.c:111
+#: nscd/nscd.c:115
 msgid "NUMBER"
 msgstr "ЧИСЛО"
 
-#: nscd/nscd.c:111
+#: nscd/nscd.c:115
 msgid "Start NUMBER threads"
 msgstr "Запустити вказане ЧИСЛО потоків обробки"
 
-#: nscd/nscd.c:112
+#: nscd/nscd.c:116
 msgid "Shut the server down"
 msgstr "Завершити роботу сервера"
 
-#: nscd/nscd.c:113
+#: nscd/nscd.c:117
 msgid "Print current configuration statistics"
 msgstr "Вивести статистичні дані щодо поточного налаштування"
 
-#: nscd/nscd.c:114
+#: nscd/nscd.c:118
 msgid "TABLE"
 msgstr "ТАБЛИЦЯ"
 
-#: nscd/nscd.c:115
+#: nscd/nscd.c:119
 msgid "Invalidate the specified cache"
 msgstr "Скасувати чинність вказаного кешу"
 
-#: nscd/nscd.c:116
+#: nscd/nscd.c:120
 msgid "TABLE,yes"
 msgstr "ТАБЛИЦЯ,yes"
 
-#: nscd/nscd.c:117
+#: nscd/nscd.c:121
 msgid "Use separate cache for each user"
 msgstr "Використовувати окремий кеш для кожного з користувачів"
 
-#: nscd/nscd.c:122
+#: nscd/nscd.c:126
 msgid "Name Service Cache Daemon."
 msgstr "Фонова служба кешування служби назв."
 
-#: nscd/nscd.c:155 nss/getent.c:987 nss/makedb.c:206
+#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "помилкова кількість параметрів"
 
-#: nscd/nscd.c:165
+#: nscd/nscd.c:174
 #, c-format
 msgid "failure while reading configuration file; this is fatal"
 msgstr "не вдалося прочитати дані з файла налаштувань; ця помилка є критичною"
 
-#: nscd/nscd.c:174
+#: nscd/nscd.c:183
 #, c-format
 msgid "already running"
 msgstr "вже працює"
 
-#: nscd/nscd.c:194
+#: nscd/nscd.c:203
 #, c-format
 msgid "cannot create a pipe to talk to the child"
 msgstr "не вдалося створити канал для обміну даними з дочірнім процесом"
 
-#: nscd/nscd.c:198
+#: nscd/nscd.c:207
 #, c-format
 msgid "cannot fork"
 msgstr "не вдалося створити процес"
 
-#: nscd/nscd.c:268
+#: nscd/nscd.c:277
 msgid "cannot change current working directory to \"/\""
 msgstr "не вдалося змінити поточний робочий каталог на «/»"
 
-#: nscd/nscd.c:276
+#: nscd/nscd.c:285
 msgid "Could not create log file"
 msgstr "Не вдалося створити файл журналу"
 
-#: nscd/nscd.c:355 nscd/nscd_stat.c:209
+#: nscd/nscd.c:364 nscd/nscd_stat.c:209
 #, c-format
 msgid "write incomplete"
 msgstr "неповний запис"
 
-#: nscd/nscd.c:366
+#: nscd/nscd.c:375
 #, c-format
 msgid "cannot read invalidate ACK"
 msgstr "читання нечинного ACK неможливе"
 
-#: nscd/nscd.c:372
+#: nscd/nscd.c:381
 #, c-format
 msgid "invalidation failed"
 msgstr "спроба скасування чинності зазнала невдачі"
 
-#: nscd/nscd.c:417 nscd/nscd.c:442 nscd/nscd_stat.c:190
+#: nscd/nscd.c:430 nscd/nscd.c:455 nscd/nscd_stat.c:190
 #, c-format
 msgid "Only root is allowed to use this option!"
 msgstr "Цим параметром може користуватися лише користувач root!"
 
-#: nscd/nscd.c:437
+#: nscd/nscd.c:450
 #, c-format
 msgid "'%s' is not a known database"
 msgstr "«%s» не є назвою відомої бази даних"
 
-#: nscd/nscd.c:452
+#: nscd/nscd.c:465
 #, c-format
 msgid "secure services not implemented anymore"
 msgstr "безпечні служби більше не підтримуються"
 
-#: nscd/nscd.c:485
+#: nscd/nscd.c:498
 #, c-format
 msgid ""
 "Supported tables:\n"
@@ -4228,17 +4206,17 @@ msgstr ""
 "Настанови щодо звітування про вади наведено тут:\n"
 "%s.\n"
 
-#: nscd/nscd.c:635
+#: nscd/nscd.c:648
 #, c-format
 msgid "'wait' failed\n"
 msgstr "помилка «wait»\n"
 
-#: nscd/nscd.c:642
+#: nscd/nscd.c:655
 #, c-format
 msgid "child exited with status %d\n"
 msgstr "дочірній процес завершив роботу зі станом %d\n"
 
-#: nscd/nscd.c:647
+#: nscd/nscd.c:660
 #, c-format
 msgid "child terminated by signal %d\n"
 msgstr "роботу дочірнього процесу перервано сигналом %d\n"
@@ -5023,7 +5001,7 @@ msgstr "Доступні буфери виведення даних"
 msgid "Input message available"
 msgstr "Доступне вхідне повідомлення"
 
-#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:561
+#: stdio-common/psiginfo-data.h:46 timezone/zdump.c:375 timezone/zic.c:564
 msgid "I/O error"
 msgstr "помилка вводу/виводу"
 
@@ -5085,20 +5063,16 @@ msgstr "%s%sНевідомий сигнал %d\n"
 msgid "Unknown signal"
 msgstr "Невідомий сигнал"
 
-#: string/_strerror.c:45 sysdeps/mach/_strerror.c:86
+#: string/_strerror.c:30 sysdeps/mach/_strerror.c:55
 msgid "Unknown error "
 msgstr "Невідома помилка "
 
-#: string/strerror.c:41
-msgid "Unknown error"
-msgstr "Невідома помилка"
-
-#: string/strsignal.c:60
+#: string/strsignal.c:39
 #, c-format
 msgid "Real-time signal %d"
 msgstr "Сигнал реального часу %d"
 
-#: string/strsignal.c:64
+#: string/strsignal.c:43
 #, c-format
 msgid "Unknown signal %d"
 msgstr "Невідомий сигнал %d"
@@ -5206,35 +5180,35 @@ msgstr "RPC: невизначена помилка"
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (невідомий код помилки)"
 
-#: sunrpc/clnt_perr.c:330
+#: sunrpc/clnt_perr.c:334
 msgid "Authentication OK"
 msgstr "Розпізнавання пройдено"
 
-#: sunrpc/clnt_perr.c:333
+#: sunrpc/clnt_perr.c:337
 msgid "Invalid client credential"
 msgstr "Некоректні реєстраційні дані клієнта"
 
-#: sunrpc/clnt_perr.c:337
+#: sunrpc/clnt_perr.c:341
 msgid "Server rejected credential"
 msgstr "Сервером відмовлено у розпізнаванні"
 
-#: sunrpc/clnt_perr.c:341
+#: sunrpc/clnt_perr.c:345
 msgid "Invalid client verifier"
 msgstr "Некоректний засіб перевірки клієнта"
 
-#: sunrpc/clnt_perr.c:345
+#: sunrpc/clnt_perr.c:349
 msgid "Server rejected verifier"
 msgstr "Сервером відмовлено у засобі перевірки"
 
-#: sunrpc/clnt_perr.c:349
+#: sunrpc/clnt_perr.c:353
 msgid "Client credential too weak"
 msgstr "Захист реєстраційних даних клієнта є нестійким до зламу"
 
-#: sunrpc/clnt_perr.c:353
+#: sunrpc/clnt_perr.c:357
 msgid "Invalid server verifier"
 msgstr "Некоректний засіб перевірки сервера"
 
-#: sunrpc/clnt_perr.c:357
+#: sunrpc/clnt_perr.c:361
 msgid "Failed (unspecified error)"
 msgstr "Невизначена помилка"
 
@@ -5269,279 +5243,6 @@ msgstr "Проблема з трансляційним опитуванням"
 #: sunrpc/pmap_rmt.c:341
 msgid "Cannot receive reply to broadcast"
 msgstr "Не вдалося отримати відповідь на трансляцію даних"
-
-#: sunrpc/rpc_main.c:281
-#, c-format
-msgid "%s: output would overwrite %s\n"
-msgstr "%s: виведення даних перезапише %s\n"
-
-#: sunrpc/rpc_main.c:288
-#, c-format
-msgid "%s: unable to open %s: %m\n"
-msgstr "%s: не вдалося відкрити %s: %m\n"
-
-#: sunrpc/rpc_main.c:300
-#, c-format
-msgid "%s: while writing output %s: %m"
-msgstr "%s: під час записування даних результату %s: %m"
-
-#: sunrpc/rpc_main.c:336 sunrpc/rpc_main.c:375
-#, c-format
-msgid "cannot find C preprocessor: %s\n"
-msgstr "не вдалося знайти препроцесор C: %s\n"
-
-#: sunrpc/rpc_main.c:411
-#, c-format
-msgid "%s: C preprocessor failed with signal %d\n"
-msgstr "%s: помилка препроцесора C з сигналом %d\n"
-
-#: sunrpc/rpc_main.c:414
-#, c-format
-msgid "%s: C preprocessor failed with exit code %d\n"
-msgstr "%s: помилка препроцесора C з кодом виходу %d\n"
-
-#: sunrpc/rpc_main.c:454
-#, c-format
-msgid "illegal nettype: `%s'\n"
-msgstr "помилкове значення типу мережі: «%s»\n"
-
-#: sunrpc/rpc_main.c:1089
-#, c-format
-msgid "rpcgen: too many defines\n"
-msgstr "rpcgen: забагато визначень (define)\n"
-
-#: sunrpc/rpc_main.c:1101
-#, c-format
-msgid "rpcgen: arglist coding error\n"
-msgstr "rpcgen: помилка кодування списку аргументів\n"
-
-#. TRANS: the file will not be removed; this is an
-#. TRANS: informative message.
-#: sunrpc/rpc_main.c:1134
-#, c-format
-msgid "file `%s' already exists and may be overwritten\n"
-msgstr "файл «%s» вже існує, його може бути перезаписано\n"
-
-#: sunrpc/rpc_main.c:1179
-#, c-format
-msgid "Cannot specify more than one input file!\n"
-msgstr "Не можна вказувати декілька файлів вхідних даних!\n"
-
-#: sunrpc/rpc_main.c:1349
-#, c-format
-msgid "Cannot use netid flag with inetd flag!\n"
-msgstr "Не можна використовувати прапорець netid разом з прапорцем inetd!\n"
-
-#: sunrpc/rpc_main.c:1358
-#, c-format
-msgid "Cannot use netid flag without TIRPC!\n"
-msgstr "Не можна використовувати прапорець netid без TIRPC!\n"
-
-#: sunrpc/rpc_main.c:1365
-#, c-format
-msgid "Cannot use table flags with newstyle!\n"
-msgstr "Не можна використовувати прапорці таблиць, якщо використовується новий стиль!\n"
-
-#: sunrpc/rpc_main.c:1384
-#, c-format
-msgid "\"infile\" is required for template generation flags.\n"
-msgstr "Для прапорців створення шаблонів потрібен аргумент файла вхідних даних.\n"
-
-#: sunrpc/rpc_main.c:1389
-#, c-format
-msgid "Cannot have more than one file generation flag!\n"
-msgstr "Не можна вказувати декілька прапорців створення файлів!\n"
-
-#: sunrpc/rpc_main.c:1398
-#, c-format
-msgid "usage: %s infile\n"
-msgstr "користування: %s файл_вхідних_даних\n"
-
-#: sunrpc/rpc_main.c:1399
-#, c-format
-msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
-msgstr "\t%s [-abkCLNTM][-Dname[=значення]] [-i розмір] [-I [-K секунди]] [-Y шлях] файл_вхідних_даних\n"
-
-#: sunrpc/rpc_main.c:1401
-#, c-format
-msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
-msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o файл_виведених_даних] [файл_вхідних_даних]\n"
-
-#: sunrpc/rpc_main.c:1403
-#, c-format
-msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
-msgstr "\t%s [-s тип_мережі]* [-o файл_виведених_даних] [файл_вхідних_даних]\n"
-
-#: sunrpc/rpc_main.c:1404
-#, c-format
-msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
-msgstr "\t%s [-n ід_мережі]* [-o файл_виведених_даних] [файл_вхідних_даних]\n"
-
-#: sunrpc/rpc_main.c:1412
-#, c-format
-msgid "options:\n"
-msgstr "параметри:\n"
-
-#: sunrpc/rpc_main.c:1413
-#, c-format
-msgid "-a\t\tgenerate all files, including samples\n"
-msgstr "-a\t\tстворити усі файли, зокрема зразки\n"
-
-#: sunrpc/rpc_main.c:1414
-#, c-format
-msgid "-b\t\tbackward compatibility mode (generates code for SunOS 4.1)\n"
-msgstr "-b\t\tрежим зворотної сумісності (створити код для SunOS 4.1)\n"
-
-#: sunrpc/rpc_main.c:1415
-#, c-format
-msgid "-c\t\tgenerate XDR routines\n"
-msgstr "-c\t\tстворити підпрограми XDR\n"
-
-#: sunrpc/rpc_main.c:1416
-#, c-format
-msgid "-C\t\tANSI C mode\n"
-msgstr "-C\t\tрежим ANSI C\n"
-
-#: sunrpc/rpc_main.c:1417
-#, c-format
-msgid "-Dname[=value]\tdefine a symbol (same as #define)\n"
-msgstr "-Dname[=значення]\tвизначити символ (те саме, що і #define)\n"
-
-#: sunrpc/rpc_main.c:1418
-#, c-format
-msgid "-h\t\tgenerate header file\n"
-msgstr "-h\t\tстворити файл заголовка\n"
-
-#: sunrpc/rpc_main.c:1419
-#, c-format
-msgid "-i size\t\tsize at which to start generating inline code\n"
-msgstr "-i розмір\t\tрозмір, при досягненні якого слід розпочати створювати вбудований код\n"
-
-#: sunrpc/rpc_main.c:1420
-#, c-format
-msgid "-I\t\tgenerate code for inetd support in server (for SunOS 4.1)\n"
-msgstr "-I\t\tстворити код для підтримки inetd на сервері (для SunOS 4.1)\n"
-
-#: sunrpc/rpc_main.c:1421
-#, c-format
-msgid "-K seconds\tserver exits after K seconds of inactivity\n"
-msgstr "-K секунди\tсервер завершує роботу після вказаної кількості секунд неактивності\n"
-
-#: sunrpc/rpc_main.c:1422
-#, c-format
-msgid "-l\t\tgenerate client side stubs\n"
-msgstr "-l\t\tстворити заглушки на боці клієнта\n"
-
-#: sunrpc/rpc_main.c:1423
-#, c-format
-msgid "-L\t\tserver errors will be printed to syslog\n"
-msgstr "-L\t\tпомилки сервера буде виведено до загальносистемного журналу\n"
-
-#: sunrpc/rpc_main.c:1424
-#, c-format
-msgid "-m\t\tgenerate server side stubs\n"
-msgstr "-m\t\tстворити заглушки на боці сервера\n"
-
-#: sunrpc/rpc_main.c:1425
-#, c-format
-msgid "-M\t\tgenerate MT-safe code\n"
-msgstr "-M\t\tстворити безпечний для багатопотокової обробки код\n"
-
-#: sunrpc/rpc_main.c:1426
-#, c-format
-msgid "-n netid\tgenerate server code that supports named netid\n"
-msgstr "-n ід_мережі\tстворити код сервера з підтримкою іменованих ідентифікаторів мережі\n"
-
-#: sunrpc/rpc_main.c:1427
-#, c-format
-msgid "-N\t\tsupports multiple arguments and call-by-value\n"
-msgstr "-N\t\tпідтримка декількох аргументів та виклику за значенням\n"
-
-#: sunrpc/rpc_main.c:1428
-#, c-format
-msgid "-o outfile\tname of the output file\n"
-msgstr "-o результат\tназва файла результатів\n"
-
-#: sunrpc/rpc_main.c:1429
-#, c-format
-msgid "-s nettype\tgenerate server code that supports named nettype\n"
-msgstr "-s тип_мережі\tстворити код сервера з підтримкою іменованих типів мережі\n"
-
-#: sunrpc/rpc_main.c:1430
-#, c-format
-msgid "-Sc\t\tgenerate sample client code that uses remote procedures\n"
-msgstr "-Sc\t\tстворити код заглушки клієнта з використанням віддалених процедур\n"
-
-#: sunrpc/rpc_main.c:1431
-#, c-format
-msgid "-Ss\t\tgenerate sample server code that defines remote procedures\n"
-msgstr "-Ss\t\tстворити код заглушки, який визначає віддалені процедури\n"
-
-#: sunrpc/rpc_main.c:1432
-#, c-format
-msgid "-Sm \t\tgenerate makefile template \n"
-msgstr "-Sm \t\tстворити шаблон makefile \n"
-
-#: sunrpc/rpc_main.c:1433
-#, c-format
-msgid "-t\t\tgenerate RPC dispatch table\n"
-msgstr "-t\t\tстворити таблицю розподілу RPC\n"
-
-#: sunrpc/rpc_main.c:1434
-#, c-format
-msgid "-T\t\tgenerate code to support RPC dispatch tables\n"
-msgstr "-T\t\tстворити код підтримки таблиць розподілу RPC\n"
-
-#: sunrpc/rpc_main.c:1435
-#, c-format
-msgid "-Y path\t\tdirectory name to find C preprocessor (cpp)\n"
-msgstr "-Y шлях\t\tназва каталогу для пошуку препроцесора C (cpp)\n"
-
-#: sunrpc/rpc_main.c:1436
-#, c-format
-msgid "-5\t\tSysVr4 compatibility mode\n"
-msgstr "-5\t\tрежим сумісності з SysVr4\n"
-
-#: sunrpc/rpc_main.c:1437
-#, c-format
-msgid "--help\t\tgive this help list\n"
-msgstr "--help\t\tвивести цей список довідкових повідомлень\n"
-
-#: sunrpc/rpc_main.c:1438
-#, c-format
-msgid "--version\tprint program version\n"
-msgstr "--version\tвивести дані щодо версії програми\n"
-
-#: sunrpc/rpc_main.c:1440
-#, c-format
-msgid ""
-"\n"
-"For bug reporting instructions, please see:\n"
-"%s.\n"
-msgstr ""
-"\n"
-"Настанови щодо звітування про вади наведено тут:\n"
-"%s.\n"
-
-#: sunrpc/rpc_scan.c:112
-msgid "constant or identifier expected"
-msgstr "мало бути вказано константу або ідентифікатор"
-
-#: sunrpc/rpc_scan.c:308
-msgid "illegal character in file: "
-msgstr "некоректний символ у файлі: "
-
-#: sunrpc/rpc_scan.c:347 sunrpc/rpc_scan.c:373
-msgid "unterminated string constant"
-msgstr "незавершена рядкова константа"
-
-#: sunrpc/rpc_scan.c:379
-msgid "empty char string"
-msgstr "порожній рядок символів"
-
-#: sunrpc/rpc_scan.c:521 sunrpc/rpc_scan.c:531
-msgid "preprocessor error"
-msgstr "помилка препроцесора"
 
 #: sunrpc/svc_run.c:72
 msgid "svc_run: - out of memory"
@@ -5635,6 +5336,10 @@ msgstr "svc_unix.c - проблема зі створенням сокета AF_
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c - не вдалося виконати getsockname або listen"
 
+#: sysdeps/aarch64/dl-bti.c:41
+msgid "mprotect failed to turn on BTI"
+msgstr "mprotect не вдалося увімкнути BTI"
+
 #: sysdeps/generic/siglist.h:29
 msgid "Hangup"
 msgstr "Від’єднання"
@@ -5684,7 +5389,7 @@ msgstr "Помилка адресування"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.c:360
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:219
 msgid "Broken pipe"
 msgstr "Канал обірвано"
 
@@ -5778,12 +5483,12 @@ msgstr "Втрачено ресурс"
 
 #. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.c:26
+#: sysdeps/gnu/errlist.h:9
 msgid "Operation not permitted"
 msgstr "Дію заборонено"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.c:46
+#: sysdeps/gnu/errlist.h:21
 msgid "No such process"
 msgstr "Немає такого процесу"
 
@@ -5794,12 +5499,12 @@ msgstr "Немає такого процесу"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.c:61
+#: sysdeps/gnu/errlist.h:32
 msgid "Interrupted system call"
 msgstr "Перерваний системний виклик"
 
 #. TRANS Usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.c:70
+#: sysdeps/gnu/errlist.h:37
 msgid "Input/output error"
 msgstr "Помилка введення-виведення"
 
@@ -5808,7 +5513,7 @@ msgstr "Помилка введення-виведення"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.c:83
+#: sysdeps/gnu/errlist.h:46
 msgid "No such device or address"
 msgstr "Немає такого пристрою чи адреси"
 
@@ -5816,27 +5521,27 @@ msgstr "Немає такого пристрою чи адреси"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:95
+#: sysdeps/gnu/errlist.h:54
 msgid "Argument list too long"
 msgstr "Занадто довгий список аргументів"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.c:105
+#: sysdeps/gnu/errlist.h:60
 msgid "Exec format error"
 msgstr "Помилка, пов’язана з форматом виконуваних файлів"
 
 #. TRANS For example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.c:116
+#: sysdeps/gnu/errlist.h:67
 msgid "Bad file descriptor"
 msgstr "Помилковий дескриптор файла"
 
 #. TRANS This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.c:127
+#: sysdeps/gnu/errlist.h:74
 msgid "No child processes"
 msgstr "Немає дочірніх процесів"
 
@@ -5844,69 +5549,69 @@ msgstr "Немає дочірніх процесів"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.c:139
+#: sysdeps/gnu/errlist.h:82
 msgid "Resource deadlock avoided"
 msgstr "Уникнено взаємне блокування ресурсу"
 
 #. TRANS The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.c:149
+#: sysdeps/gnu/errlist.h:88
 msgid "Cannot allocate memory"
 msgstr "Не вдалося розподілити пам’ять"
 
 #. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.c:168
+#: sysdeps/gnu/errlist.h:99
 msgid "Bad address"
 msgstr "Неправильна адреса"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.c:179
+#: sysdeps/gnu/errlist.h:106
 msgid "Block device required"
 msgstr "Потрібен блоковий пристрій"
 
 #. TRANS A system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.c:190
+#: sysdeps/gnu/errlist.h:113
 msgid "Device or resource busy"
 msgstr "Пристрій або ресурс зайнято"
 
 #. TRANS An existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.c:200
+#: sysdeps/gnu/errlist.h:119
 msgid "File exists"
 msgstr "Файл вже існує"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:211
+#: sysdeps/gnu/errlist.h:126
 msgid "Invalid cross-device link"
 msgstr "Некоректне перехресне посилання на пристрій"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.c:221
+#: sysdeps/gnu/errlist.h:132
 msgid "No such device"
 msgstr "Пристрою не знайдено"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.c:230
+#: sysdeps/gnu/errlist.h:137
 msgid "Not a directory"
 msgstr "Не є каталогом"
 
 #. TRANS You cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.c:240
+#: sysdeps/gnu/errlist.h:143
 msgid "Is a directory"
 msgstr "Є каталогом"
 
 #. TRANS This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.c:250
+#: sysdeps/gnu/errlist.h:149
 msgid "Invalid argument"
 msgstr "Некоректний аргумент"
 
@@ -5917,20 +5622,20 @@ msgstr "Некоректний аргумент"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.c:265
+#: sysdeps/gnu/errlist.h:160
 msgid "Too many open files"
 msgstr "Забагато відкритих файлів"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.c:276
+#: sysdeps/gnu/errlist.h:167
 msgid "Too many open files in system"
 msgstr "У системі забагато відкритих файлів"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.c:286
+#: sysdeps/gnu/errlist.h:173
 msgid "Inappropriate ioctl for device"
 msgstr "Неналежна дія з керування введенням-виведенням (ioctl) для пристрою"
 
@@ -5939,47 +5644,47 @@ msgstr "Неналежна дія з керування введенням-ви�
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.c:299
+#: sysdeps/gnu/errlist.h:182
 msgid "Text file busy"
 msgstr "Текстовий файл зайнято"
 
 #. TRANS The size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.c:308
+#: sysdeps/gnu/errlist.h:187
 msgid "File too large"
 msgstr "Файл є надто великим"
 
 #. TRANS Write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.c:318
+#: sysdeps/gnu/errlist.h:193
 msgid "No space left on device"
 msgstr "Недостатньо місця на пристрої"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.c:327
+#: sysdeps/gnu/errlist.h:198
 msgid "Illegal seek"
 msgstr "Некоректне позиціювання"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.c:336
+#: sysdeps/gnu/errlist.h:203
 msgid "Read-only file system"
 msgstr "Файлова система тільки для зчитування"
 
 #. TRANS The link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.c:347
+#: sysdeps/gnu/errlist.h:210
 msgid "Too many links"
 msgstr "Забагато посилань"
 
 #. TRANS Used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.c:370
+#: sysdeps/gnu/errlist.h:225
 msgid "Numerical argument out of domain"
 msgstr "Числовий аргумент поза доменом"
 
 #. TRANS Used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.c:380
+#: sysdeps/gnu/errlist.h:231
 msgid "Numerical result out of range"
 msgstr "Числовий результат поза дозволеним діапазоном"
 
@@ -6012,18 +5717,9 @@ msgstr "Числовий результат поза дозволеним діа
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.c:417
+#: sysdeps/gnu/errlist.h:264
 msgid "Resource temporarily unavailable"
 msgstr "Ресурс тимчасово недоступний"
-
-#. TRANS In @theglibc{}, this is another name for @code{EAGAIN} (above).
-#. TRANS The values are always the same, on every operating system.
-#. TRANS
-#. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
-#. TRANS separate error code.
-#: sysdeps/gnu/errlist.c:430
-msgid "Operation would block"
-msgstr "Дія заблокує"
 
 #. TRANS An operation that cannot complete immediately was initiated on an object
 #. TRANS that has non-blocking mode selected.  Some functions that must always
@@ -6033,47 +5729,47 @@ msgstr "Дія заблокує"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.c:446
+#: sysdeps/gnu/errlist.h:276
 msgid "Operation now in progress"
 msgstr "Дія зараз виконується"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.c:456
+#: sysdeps/gnu/errlist.h:282
 msgid "Operation already in progress"
 msgstr "Дія вже виконується"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.c:465
+#: sysdeps/gnu/errlist.h:287
 msgid "Socket operation on non-socket"
 msgstr "Дія на об'єкті, який не є сокетом"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.c:475
+#: sysdeps/gnu/errlist.h:293
 msgid "Message too long"
 msgstr "Задовге повідомлення"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.c:484
+#: sysdeps/gnu/errlist.h:298
 msgid "Protocol wrong type for socket"
 msgstr "Помилковий тип протоколу сокета"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.c:494
+#: sysdeps/gnu/errlist.h:304
 msgid "Protocol not available"
 msgstr "Протокол недоступний"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.c:505
+#: sysdeps/gnu/errlist.h:311
 msgid "Protocol not supported"
 msgstr "Протокол не підтримується"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.c:514
+#: sysdeps/gnu/errlist.h:316
 msgid "Socket type not supported"
 msgstr "Тип сокета не підтримується"
 
@@ -6083,71 +5779,71 @@ msgstr "Тип сокета не підтримується"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.c:528
+#: sysdeps/gnu/errlist.h:326
 msgid "Operation not supported"
 msgstr "Дія не підтримується"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.c:537
+#: sysdeps/gnu/errlist.h:331
 msgid "Protocol family not supported"
 msgstr "Сімейство протоколів не підтримується"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.c:547
+#: sysdeps/gnu/errlist.h:337
 msgid "Address family not supported by protocol"
 msgstr "Сімейство адрес не підтримується протоколом"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:556
+#: sysdeps/gnu/errlist.h:342
 msgid "Address already in use"
 msgstr "Адресу вже використано"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.c:567
+#: sysdeps/gnu/errlist.h:349
 msgid "Cannot assign requested address"
 msgstr "Не вдалося призначити вказану адресу"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.c:576
+#: sysdeps/gnu/errlist.h:354
 msgid "Network is down"
 msgstr "Мережу вимкнено"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.c:586
+#: sysdeps/gnu/errlist.h:360
 msgid "Network is unreachable"
 msgstr "Не вдалося отримати доступ до мережі"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.c:595
+#: sysdeps/gnu/errlist.h:365
 msgid "Network dropped connection on reset"
 msgstr "Під час перезапуску з’єднання було розірвано"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.c:604
+#: sysdeps/gnu/errlist.h:370
 msgid "Software caused connection abort"
 msgstr "З’єднання розірвано програмним забезпеченням"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.c:615
+#: sysdeps/gnu/errlist.h:377
 msgid "Connection reset by peer"
 msgstr "Вузол розірвав з’єднання"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.c:626
+#: sysdeps/gnu/errlist.h:384
 msgid "No buffer space available"
 msgstr "У буфері не залишилося місця"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.c:636
+#: sysdeps/gnu/errlist.h:390
 msgid "Transport endpoint is already connected"
 msgstr "Кінцеву точку передавання вже з’єднано"
 
@@ -6155,82 +5851,74 @@ msgstr "Кінцеву точку передавання вже з’єднан�
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.c:648
+#: sysdeps/gnu/errlist.h:398
 msgid "Transport endpoint is not connected"
 msgstr "Кінцеву точку передавання не з’єднано"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.c:659
+#: sysdeps/gnu/errlist.h:405
 msgid "Destination address required"
 msgstr "Слід вказати адресу призначення"
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.c:668
+#: sysdeps/gnu/errlist.h:410
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "Надсилання неможливе після завершення роботи кінцевої точки каналу зв’язку"
 
-#: sysdeps/gnu/errlist.c:676
+#: sysdeps/gnu/errlist.h:413
 msgid "Too many references: cannot splice"
 msgstr "Забагато посилань: не вдалося об’єднати"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.c:686
+#: sysdeps/gnu/errlist.h:419
 msgid "Connection timed out"
 msgstr "Перевищено інтервал очікування з'єднання"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.c:696
+#: sysdeps/gnu/errlist.h:425
 msgid "Connection refused"
 msgstr "У з'єднанні відмовлено"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.c:706
+#: sysdeps/gnu/errlist.h:431
 msgid "Too many levels of symbolic links"
 msgstr "Забагато рівнів символічних посилань"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.c:717
+#: sysdeps/gnu/errlist.h:438
 msgid "File name too long"
 msgstr "Файл є занадто великим"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.c:726
+#: sysdeps/gnu/errlist.h:443
 msgid "Host is down"
 msgstr "Вузол вимкнено"
 
-#. TRANS The remote host for a requested network connection is not reachable.
-#: sysdeps/gnu/errlist.c:735
+#: sysdeps/gnu/errlist.h:448
 msgid "No route to host"
 msgstr "Немає маршруту до вузла"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.c:745
+#: sysdeps/gnu/errlist.h:454
 msgid "Directory not empty"
 msgstr "Каталог непорожній"
 
-#. TRANS This means that the per-user limit on new process would be exceeded by
-#. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
-#. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.c:756
-msgid "Too many processes"
-msgstr "Забагато процесів"
-
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.c:766
+#: sysdeps/gnu/errlist.h:460
 msgid "Too many users"
 msgstr "Забагато користувачів"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.c:775
+#: sysdeps/gnu/errlist.h:465
 msgid "Disk quota exceeded"
 msgstr "Перевищено квоту диска"
 
@@ -6239,7 +5927,7 @@ msgstr "Перевищено квоту диска"
 #. TRANS for NFS file systems or corruption in other file systems.
 #. TRANS Repairing this condition usually requires unmounting, possibly repairing
 #. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.c:788
+#: sysdeps/gnu/errlist.h:474
 msgid "Stale file handle"
 msgstr "Застарілий дескриптор файла"
 
@@ -6247,63 +5935,317 @@ msgstr "Застарілий дескриптор файла"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.c:800
+#: sysdeps/gnu/errlist.h:482
 msgid "Object is remote"
 msgstr "Об’єкт є віддаленим"
-
-#: sysdeps/gnu/errlist.c:808
-msgid "RPC struct is bad"
-msgstr "помилкова структура RPC"
-
-#: sysdeps/gnu/errlist.c:816
-msgid "RPC version wrong"
-msgstr "помилкова версія RPC"
-
-#: sysdeps/gnu/errlist.c:824
-msgid "RPC program not available"
-msgstr "програма RPC недоступна"
-
-#: sysdeps/gnu/errlist.c:832
-msgid "RPC program version wrong"
-msgstr "помилкова версія програми RPC"
-
-#: sysdeps/gnu/errlist.c:840
-msgid "RPC bad procedure for program"
-msgstr "Помилкова процедура RPC для програми"
 
 #. TRANS This is used by the file locking facilities; see
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.c:852
+#: sysdeps/gnu/errlist.h:490
 msgid "No locks available"
 msgstr "Блокування недоступні"
-
-#. TRANS The file was the wrong type for the
-#. TRANS operation, or a data file had the wrong format.
-#. TRANS
-#. TRANS On some systems @code{chmod} returns this error if you try to set the
-#. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.c:865
-msgid "Inappropriate file type or format"
-msgstr "Неналежний тип або формат файла"
-
-#: sysdeps/gnu/errlist.c:873
-msgid "Authentication error"
-msgstr "Помилка розпізнавання"
-
-#: sysdeps/gnu/errlist.c:881
-msgid "Need authenticator"
-msgstr "Потрібен запис розпізнавання"
 
 #. TRANS This indicates that the function called is
 #. TRANS not implemented at all, either in the C library itself or in the
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.c:894
+#: sysdeps/gnu/errlist.h:499
 msgid "Function not implemented"
 msgstr "Функцію не реалізовано"
+
+#. TRANS While decoding a multibyte character the function came along an invalid
+#. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
+#: sysdeps/gnu/errlist.h:505
+msgid "Invalid or incomplete multibyte or wide character"
+msgstr "Некоректний або неповний багатобайтовий або широкий символ"
+
+#: sysdeps/gnu/errlist.h:508
+msgid "Bad message"
+msgstr "Помилкове повідомлення"
+
+#: sysdeps/gnu/errlist.h:511
+msgid "Identifier removed"
+msgstr "Ідентифікатор вилучено"
+
+#: sysdeps/gnu/errlist.h:514
+msgid "Multihop attempted"
+msgstr "Спроба кратного переходу"
+
+#: sysdeps/gnu/errlist.h:517
+msgid "No data available"
+msgstr "Не виявлено даних"
+
+#: sysdeps/gnu/errlist.h:520
+msgid "Link has been severed"
+msgstr "Зв’язок розірвано"
+
+#: sysdeps/gnu/errlist.h:523
+msgid "No message of desired type"
+msgstr "Немає повідомлення бажаного типу"
+
+#: sysdeps/gnu/errlist.h:526
+msgid "Out of streams resources"
+msgstr "Не вистачає ресурсів потоків"
+
+#: sysdeps/gnu/errlist.h:529
+msgid "Device not a stream"
+msgstr "Пристрій не є потоковим"
+
+#: sysdeps/gnu/errlist.h:532
+msgid "Value too large for defined data type"
+msgstr "Значення є надто великим для визначеного типу даних"
+
+#: sysdeps/gnu/errlist.h:535
+msgid "Protocol error"
+msgstr "Помилка протоколу"
+
+#: sysdeps/gnu/errlist.h:538
+msgid "Timer expired"
+msgstr "Відлік на таймері завершено"
+
+#. TRANS An asynchronous operation was canceled before it
+#. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
+#. TRANS the normal result is for the operations affected to complete with this
+#. TRANS error; @pxref{Cancel AIO Operations}.
+#: sysdeps/gnu/errlist.h:546
+msgid "Operation canceled"
+msgstr "Дію скасовано"
+
+#: sysdeps/gnu/errlist.h:549
+msgid "Owner died"
+msgstr "Власник завершив роботу"
+
+#: sysdeps/gnu/errlist.h:552
+msgid "State not recoverable"
+msgstr "Невідновлюваний стан"
+
+#: sysdeps/gnu/errlist.h:555
+msgid "Interrupted system call should be restarted"
+msgstr "Перерваний системний виклик має бути перезапущено"
+
+#: sysdeps/gnu/errlist.h:558
+msgid "Channel number out of range"
+msgstr "Номер каналу лежить поза припустимим діапазоном"
+
+#: sysdeps/gnu/errlist.h:561
+msgid "Level 2 not synchronized"
+msgstr "Рівень 2 не синхронізовано"
+
+#: sysdeps/gnu/errlist.h:564
+msgid "Level 3 halted"
+msgstr "Рівень 3 перервано"
+
+#: sysdeps/gnu/errlist.h:567
+msgid "Level 3 reset"
+msgstr "Рівень 3 скинуто"
+
+#: sysdeps/gnu/errlist.h:570
+msgid "Link number out of range"
+msgstr "Кількість зв’язків поза припустимим діапазоном"
+
+#: sysdeps/gnu/errlist.h:573
+msgid "Protocol driver not attached"
+msgstr "Драйвер протоколу не долучено"
+
+#: sysdeps/gnu/errlist.h:576
+msgid "No CSI structure available"
+msgstr "Структура CSI недоступна"
+
+#: sysdeps/gnu/errlist.h:579
+msgid "Level 2 halted"
+msgstr "Рівень 2 перервано"
+
+#: sysdeps/gnu/errlist.h:582
+msgid "Invalid exchange"
+msgstr "Некоректний обмін"
+
+#: sysdeps/gnu/errlist.h:585
+msgid "Invalid request descriptor"
+msgstr "Некоректний дескриптор запиту"
+
+#: sysdeps/gnu/errlist.h:588
+msgid "Exchange full"
+msgstr "Повний обмін"
+
+#: sysdeps/gnu/errlist.h:591
+msgid "No anode"
+msgstr "Немає anode"
+
+#: sysdeps/gnu/errlist.h:594
+msgid "Invalid request code"
+msgstr "Некоректний код запиту"
+
+#: sysdeps/gnu/errlist.h:597
+msgid "Invalid slot"
+msgstr "Некоректний слот"
+
+#: sysdeps/gnu/errlist.h:600
+msgid "Bad font file format"
+msgstr "Помилковий формат файла шрифту"
+
+#: sysdeps/gnu/errlist.h:603
+msgid "Machine is not on the network"
+msgstr "Комп’ютер не перебуває у мережі"
+
+#: sysdeps/gnu/errlist.h:606
+msgid "Package not installed"
+msgstr "Пакунок не встановлено"
+
+#: sysdeps/gnu/errlist.h:609
+msgid "Advertise error"
+msgstr "Помилка під час оголошення"
+
+#: sysdeps/gnu/errlist.h:612
+msgid "Srmount error"
+msgstr "Помилка srmount"
+
+#: sysdeps/gnu/errlist.h:615
+msgid "Communication error on send"
+msgstr "Помилка обміну даними під час надсилання"
+
+#: sysdeps/gnu/errlist.h:618
+msgid "RFS specific error"
+msgstr "Специфічна для RFS помилка"
+
+#: sysdeps/gnu/errlist.h:621
+msgid "Name not unique on network"
+msgstr "Назва не є унікальною у мережі"
+
+#: sysdeps/gnu/errlist.h:624
+msgid "File descriptor in bad state"
+msgstr "Файловий дескриптор у помилковому стані"
+
+#: sysdeps/gnu/errlist.h:627
+msgid "Remote address changed"
+msgstr "Віддалену адресу змінено"
+
+#: sysdeps/gnu/errlist.h:630
+msgid "Can not access a needed shared library"
+msgstr "Не вдалося отримати доступ до потрібної бібліотеки спільного використання"
+
+#: sysdeps/gnu/errlist.h:633
+msgid "Accessing a corrupted shared library"
+msgstr "Доступ до пошкодженої бібліотеки спільного використання"
+
+#: sysdeps/gnu/errlist.h:636
+msgid ".lib section in a.out corrupted"
+msgstr "Розділ .lib у a.out пошкоджено"
+
+#: sysdeps/gnu/errlist.h:639
+msgid "Attempting to link in too many shared libraries"
+msgstr "Спроба компонування надто великої кількості бібліотек спільного використання"
+
+#: sysdeps/gnu/errlist.h:642
+msgid "Cannot exec a shared library directly"
+msgstr "Не можна виконувати бібліотеку спільного використання безпосередньо"
+
+#: sysdeps/gnu/errlist.h:645
+msgid "Streams pipe error"
+msgstr "Помилка каналу потоків"
+
+#: sysdeps/gnu/errlist.h:648
+msgid "Structure needs cleaning"
+msgstr "Структура потребує чищення"
+
+#: sysdeps/gnu/errlist.h:651
+msgid "Not a XENIX named type file"
+msgstr "Не є файлом іменованих типів XENIX"
+
+#: sysdeps/gnu/errlist.h:654
+msgid "No XENIX semaphores available"
+msgstr "Семафори XENIX недоступні"
+
+#: sysdeps/gnu/errlist.h:657
+msgid "Is a named type file"
+msgstr "Є файлом іменованих типів"
+
+#: sysdeps/gnu/errlist.h:660
+msgid "Remote I/O error"
+msgstr "Помилка під час віддаленого введення-виведення"
+
+#: sysdeps/gnu/errlist.h:663
+msgid "No medium found"
+msgstr "Не знайдено носія"
+
+#: sysdeps/gnu/errlist.h:666
+msgid "Wrong medium type"
+msgstr "Помилковий тип носія"
+
+#: sysdeps/gnu/errlist.h:669
+msgid "Required key not available"
+msgstr "Потрібний ключ недоступний"
+
+#: sysdeps/gnu/errlist.h:672
+msgid "Key has expired"
+msgstr "Строк дії ключа вичерпано"
+
+#: sysdeps/gnu/errlist.h:675
+msgid "Key has been revoked"
+msgstr "Ключ було відкликано"
+
+#: sysdeps/gnu/errlist.h:678
+msgid "Key was rejected by service"
+msgstr "Служба відмовилася прийняти ключ"
+
+#: sysdeps/gnu/errlist.h:681
+msgid "Operation not possible due to RF-kill"
+msgstr "Дію не може бути виконано через RF-kill"
+
+#: sysdeps/gnu/errlist.h:684
+msgid "Memory page has hardware error"
+msgstr "На сторінці пам’яті виявлено апаратну помилку"
+
+#: sysdeps/gnu/errlist.h:687
+msgid "RPC struct is bad"
+msgstr "помилкова структура RPC"
+
+#. TRANS The file was the wrong type for the
+#. TRANS operation, or a data file had the wrong format.
+#. TRANS
+#. TRANS On some systems @code{chmod} returns this error if you try to set the
+#. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
+#: sysdeps/gnu/errlist.h:696
+msgid "Inappropriate file type or format"
+msgstr "Неналежний тип або формат файла"
+
+#: sysdeps/gnu/errlist.h:699
+msgid "RPC bad procedure for program"
+msgstr "Помилкова процедура RPC для програми"
+
+#: sysdeps/gnu/errlist.h:702
+msgid "Authentication error"
+msgstr "Помилка розпізнавання"
+
+#. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
+#. TRANS translated by a program and the translator program dies while starting
+#. TRANS up, before it has connected to the file.
+#: sysdeps/gnu/errlist.h:709
+msgid "Translator died"
+msgstr "Транслятор несподівано завершив роботу"
+
+#: sysdeps/gnu/errlist.h:712
+msgid "RPC version wrong"
+msgstr "помилкова версія RPC"
+
+#. TRANS You did @strong{what}?
+#: sysdeps/gnu/errlist.h:717
+msgid "You really blew it this time"
+msgstr "Цього разу ви просто знищили усіх"
+
+#. TRANS This means that the per-user limit on new process would be exceeded by
+#. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
+#. TRANS the @code{RLIMIT_NPROC} limit.
+#: sysdeps/gnu/errlist.h:724
+msgid "Too many processes"
+msgstr "Забагато процесів"
+
+#. TRANS This error code has no purpose.
+#: sysdeps/gnu/errlist.h:729
+msgid "Gratuitous error"
+msgstr "Безпричинна помилка"
 
 #. TRANS A function returns this error when certain parameter
 #. TRANS values are valid, but the functionality they request is not available.
@@ -6317,15 +6259,13 @@ msgstr "Функцію не реалізовано"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.c:914
+#: sysdeps/gnu/errlist.h:745
 msgid "Not supported"
 msgstr "Не підтримується"
 
-#. TRANS While decoding a multibyte character the function came along an invalid
-#. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.c:924
-msgid "Invalid or incomplete multibyte or wide character"
-msgstr "Некоректний або неповний багатобайтовий або широкий символ"
+#: sysdeps/gnu/errlist.h:748
+msgid "RPC program version wrong"
+msgstr "помилкова версія програми RPC"
 
 #. TRANS On @gnuhurdsystems{}, servers supporting the @code{term} protocol return
 #. TRANS this error for certain operations when the caller is not in the
@@ -6333,28 +6273,9 @@ msgstr "Некоректний або неповний багатобайтов�
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.c:938
+#: sysdeps/gnu/errlist.h:758
 msgid "Inappropriate operation for background process"
 msgstr "Невідповідна дія для фонового процесу"
-
-#. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
-#. TRANS translated by a program and the translator program dies while starting
-#. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.c:949
-msgid "Translator died"
-msgstr "Транслятор несподівано завершив роботу"
-
-#. TRANS The experienced user will know what is wrong.
-#. TRANS @c This error code is a joke.  Its perror text is part of the joke.
-#. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.c:960
-msgid "?"
-msgstr "?"
-
-#. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.c:969
-msgid "You really blew it this time"
-msgstr "Цього разу ви просто знищили усіх"
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
 #. TRANS @c Okay.  Since you are dying to know, I'll tell you.
@@ -6370,256 +6291,35 @@ msgstr "Цього разу ви просто знищили усіх"
 #. TRANS @c
 #. TRANS @c Translators, please do not translate this litteraly, translate it into
 #. TRANS @c an idiomatic funny way of saying that the computer died.
-#: sysdeps/gnu/errlist.c:991
+#: sysdeps/gnu/errlist.h:776
 msgid "Computer bought the farm"
 msgstr "Комп’ютеру капець"
 
-#. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.c:1000
-msgid "Gratuitous error"
-msgstr "Безпричинна помилка"
+#. TRANS In @theglibc{}, this is another name for @code{EAGAIN} (above).
+#. TRANS The values are always the same, on every operating system.
+#. TRANS
+#. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
+#. TRANS separate error code.
+#: sysdeps/gnu/errlist.h:785
+msgid "Operation would block"
+msgstr "Дія заблокує"
 
-#: sysdeps/gnu/errlist.c:1008
-msgid "Bad message"
-msgstr "Помилкове повідомлення"
+#: sysdeps/gnu/errlist.h:788
+msgid "Need authenticator"
+msgstr "Потрібен запис розпізнавання"
 
-#: sysdeps/gnu/errlist.c:1016
-msgid "Identifier removed"
-msgstr "Ідентифікатор вилучено"
+#. TRANS The experienced user will know what is wrong.
+#. TRANS @c This error code is a joke.  Its perror text is part of the joke.
+#. TRANS @c Don't change it.
+#: sysdeps/gnu/errlist.h:795
+msgid "?"
+msgstr "?"
 
-#: sysdeps/gnu/errlist.c:1024
-msgid "Multihop attempted"
-msgstr "Спроба кратного переходу"
+#: sysdeps/gnu/errlist.h:798
+msgid "RPC program not available"
+msgstr "програма RPC недоступна"
 
-#: sysdeps/gnu/errlist.c:1032
-msgid "No data available"
-msgstr "Не виявлено даних"
-
-#: sysdeps/gnu/errlist.c:1040
-msgid "Link has been severed"
-msgstr "Зв’язок розірвано"
-
-#: sysdeps/gnu/errlist.c:1048
-msgid "No message of desired type"
-msgstr "Немає повідомлення бажаного типу"
-
-#: sysdeps/gnu/errlist.c:1056
-msgid "Out of streams resources"
-msgstr "Не вистачає ресурсів потоків"
-
-#: sysdeps/gnu/errlist.c:1064
-msgid "Device not a stream"
-msgstr "Пристрій не є потоковим"
-
-#: sysdeps/gnu/errlist.c:1072
-msgid "Value too large for defined data type"
-msgstr "Значення є надто великим для визначеного типу даних"
-
-#: sysdeps/gnu/errlist.c:1080
-msgid "Protocol error"
-msgstr "Помилка протоколу"
-
-#: sysdeps/gnu/errlist.c:1088
-msgid "Timer expired"
-msgstr "Відлік на таймері завершено"
-
-#. TRANS An asynchronous operation was canceled before it
-#. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
-#. TRANS the normal result is for the operations affected to complete with this
-#. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.c:1100
-msgid "Operation canceled"
-msgstr "Дію скасовано"
-
-#: sysdeps/gnu/errlist.c:1108
-msgid "Owner died"
-msgstr "Власник завершив роботу"
-
-#: sysdeps/gnu/errlist.c:1116
-msgid "State not recoverable"
-msgstr "Невідновлюваний стан"
-
-#: sysdeps/gnu/errlist.c:1124
-msgid "Interrupted system call should be restarted"
-msgstr "Перерваний системний виклик має бути перезапущено"
-
-#: sysdeps/gnu/errlist.c:1132
-msgid "Channel number out of range"
-msgstr "Номер каналу лежить поза припустимим діапазоном"
-
-#: sysdeps/gnu/errlist.c:1140
-msgid "Level 2 not synchronized"
-msgstr "Рівень 2 не синхронізовано"
-
-#: sysdeps/gnu/errlist.c:1148
-msgid "Level 3 halted"
-msgstr "Рівень 3 перервано"
-
-#: sysdeps/gnu/errlist.c:1156
-msgid "Level 3 reset"
-msgstr "Рівень 3 скинуто"
-
-#: sysdeps/gnu/errlist.c:1164
-msgid "Link number out of range"
-msgstr "Кількість зв’язків поза припустимим діапазоном"
-
-#: sysdeps/gnu/errlist.c:1172
-msgid "Protocol driver not attached"
-msgstr "Драйвер протоколу не долучено"
-
-#: sysdeps/gnu/errlist.c:1180
-msgid "No CSI structure available"
-msgstr "Структура CSI недоступна"
-
-#: sysdeps/gnu/errlist.c:1188
-msgid "Level 2 halted"
-msgstr "Рівень 2 перервано"
-
-#: sysdeps/gnu/errlist.c:1196
-msgid "Invalid exchange"
-msgstr "Некоректний обмін"
-
-#: sysdeps/gnu/errlist.c:1204
-msgid "Invalid request descriptor"
-msgstr "Некоректний дескриптор запиту"
-
-#: sysdeps/gnu/errlist.c:1212
-msgid "Exchange full"
-msgstr "Повний обмін"
-
-#: sysdeps/gnu/errlist.c:1220
-msgid "No anode"
-msgstr "Немає anode"
-
-#: sysdeps/gnu/errlist.c:1228
-msgid "Invalid request code"
-msgstr "Некоректний код запиту"
-
-#: sysdeps/gnu/errlist.c:1236
-msgid "Invalid slot"
-msgstr "Некоректний слот"
-
-#: sysdeps/gnu/errlist.c:1244
-msgid "File locking deadlock error"
-msgstr "Помилка взаємного блокування файла"
-
-#: sysdeps/gnu/errlist.c:1252
-msgid "Bad font file format"
-msgstr "Помилковий формат файла шрифту"
-
-#: sysdeps/gnu/errlist.c:1260
-msgid "Machine is not on the network"
-msgstr "Комп’ютер не перебуває у мережі"
-
-#: sysdeps/gnu/errlist.c:1268
-msgid "Package not installed"
-msgstr "Пакунок не встановлено"
-
-#: sysdeps/gnu/errlist.c:1276
-msgid "Advertise error"
-msgstr "Помилка під час оголошення"
-
-#: sysdeps/gnu/errlist.c:1284
-msgid "Srmount error"
-msgstr "Помилка srmount"
-
-#: sysdeps/gnu/errlist.c:1292
-msgid "Communication error on send"
-msgstr "Помилка обміну даними під час надсилання"
-
-#: sysdeps/gnu/errlist.c:1300
-msgid "RFS specific error"
-msgstr "Специфічна для RFS помилка"
-
-#: sysdeps/gnu/errlist.c:1308
-msgid "Name not unique on network"
-msgstr "Назва не є унікальною у мережі"
-
-#: sysdeps/gnu/errlist.c:1316
-msgid "File descriptor in bad state"
-msgstr "Файловий дескриптор у помилковому стані"
-
-#: sysdeps/gnu/errlist.c:1324
-msgid "Remote address changed"
-msgstr "Віддалену адресу змінено"
-
-#: sysdeps/gnu/errlist.c:1332
-msgid "Can not access a needed shared library"
-msgstr "Не вдалося отримати доступ до потрібної бібліотеки спільного використання"
-
-#: sysdeps/gnu/errlist.c:1340
-msgid "Accessing a corrupted shared library"
-msgstr "Доступ до пошкодженої бібліотеки спільного використання"
-
-#: sysdeps/gnu/errlist.c:1348
-msgid ".lib section in a.out corrupted"
-msgstr "Розділ .lib у a.out пошкоджено"
-
-#: sysdeps/gnu/errlist.c:1356
-msgid "Attempting to link in too many shared libraries"
-msgstr "Спроба компонування надто великої кількості бібліотек спільного використання"
-
-#: sysdeps/gnu/errlist.c:1364
-msgid "Cannot exec a shared library directly"
-msgstr "Не можна виконувати бібліотеку спільного використання безпосередньо"
-
-#: sysdeps/gnu/errlist.c:1372
-msgid "Streams pipe error"
-msgstr "Помилка каналу потоків"
-
-#: sysdeps/gnu/errlist.c:1380
-msgid "Structure needs cleaning"
-msgstr "Структура потребує чищення"
-
-#: sysdeps/gnu/errlist.c:1388
-msgid "Not a XENIX named type file"
-msgstr "Не є файлом іменованих типів XENIX"
-
-#: sysdeps/gnu/errlist.c:1396
-msgid "No XENIX semaphores available"
-msgstr "Семафори XENIX недоступні"
-
-#: sysdeps/gnu/errlist.c:1404
-msgid "Is a named type file"
-msgstr "Є файлом іменованих типів"
-
-#: sysdeps/gnu/errlist.c:1412
-msgid "Remote I/O error"
-msgstr "Помилка під час віддаленого введення-виведення"
-
-#: sysdeps/gnu/errlist.c:1420
-msgid "No medium found"
-msgstr "Не знайдено носія"
-
-#: sysdeps/gnu/errlist.c:1428
-msgid "Wrong medium type"
-msgstr "Помилковий тип носія"
-
-#: sysdeps/gnu/errlist.c:1436
-msgid "Required key not available"
-msgstr "Потрібний ключ недоступний"
-
-#: sysdeps/gnu/errlist.c:1444
-msgid "Key has expired"
-msgstr "Строк дії ключа вичерпано"
-
-#: sysdeps/gnu/errlist.c:1452
-msgid "Key has been revoked"
-msgstr "Ключ було відкликано"
-
-#: sysdeps/gnu/errlist.c:1460
-msgid "Key was rejected by service"
-msgstr "Служба відмовилася прийняти ключ"
-
-#: sysdeps/gnu/errlist.c:1468
-msgid "Operation not possible due to RF-kill"
-msgstr "Дію не може бути виконано через RF-kill"
-
-#: sysdeps/gnu/errlist.c:1476
-msgid "Memory page has hardware error"
-msgstr "На сторінці пам’яті виявлено апаратну помилку"
-
-#: sysdeps/mach/_strerror.c:56
+#: sysdeps/mach/_strerror.c:43
 msgid "Error in unknown error system: "
 msgstr "Помилка у невідомій системі помилок: "
 
@@ -6720,37 +6420,29 @@ msgstr "не вдалося відкрити «%s»"
 msgid "cannot read header from `%s'"
 msgstr "не вдалося прочитати заголовок з «%s»"
 
-#: sysdeps/x86/dl-cet.c:202
-msgid "mprotect legacy bitmap failed"
-msgstr "помилка mprotect для застарілої бітової карти"
+#: sysdeps/x86/dl-cet.c:147
+msgid "rebuild shared object with IBT support enabled"
+msgstr "перезбирання об'єкта спільного використання із увімкненою підтримкою IBT"
 
-#: sysdeps/x86/dl-cet.c:217
-msgid "legacy bitmap isn't available"
-msgstr "застаріла бітова карта недоступна"
+#: sysdeps/x86/dl-cet.c:158
+msgid "rebuild shared object with SHSTK support enabled"
+msgstr "перезбирання об'єкта спільного використання із увімкненою підтримкою SHSTK"
 
-#: sysdeps/x86/dl-cet.c:247
-msgid "failed to mark legacy code region"
-msgstr "не вдалося позначити область застарілого коду"
-
-#: sysdeps/x86/dl-cet.c:269
-msgid "shadow stack isn't enabled"
-msgstr "тіньовий стек не увімкнено"
-
-#: sysdeps/x86/dl-cet.c:290
+#: sysdeps/x86/dl-cet.c:187
 msgid "can't disable CET"
 msgstr "не вдалося вимкнути CET"
 
 #: timezone/zdump.c:332
+msgid "has characters other than ASCII alphanumerics, '-' or '+'"
+msgstr "містить символи, які не є літерами або цифрами ASCII, символами «-» або «+»"
+
+#: timezone/zdump.c:334
 msgid "has fewer than 3 characters"
 msgstr "складається з менше ніж 3 символів"
 
-#: timezone/zdump.c:334
+#: timezone/zdump.c:336
 msgid "has more than 6 characters"
 msgstr "складається з понад 6 символів"
-
-#: timezone/zdump.c:336
-msgid "has characters other than ASCII alphanumerics, '-' or '+'"
-msgstr "містить символи, які не є літерами або цифрами ASCII, символами «-» або «+»"
 
 #: timezone/zdump.c:341
 #, c-format
@@ -6794,449 +6486,486 @@ msgstr "%s: помилковий аргумент -c %s\n"
 msgid "%s: wild -t argument %s\n"
 msgstr "%s: помилковий аргумент -t %s\n"
 
-#: timezone/zic.c:429
+#: timezone/zic.c:432
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: вичерпано пам’ять: %s\n"
 
-#: timezone/zic.c:437
+#: timezone/zic.c:440
 msgid "size overflow"
 msgstr "переповнення розміру"
 
-#: timezone/zic.c:447
+#: timezone/zic.c:450
 msgid "alignment overflow"
 msgstr "переповнення вирівнювання"
 
-#: timezone/zic.c:495
+#: timezone/zic.c:498
 msgid "integer overflow"
 msgstr "переповнення типу цілого значення"
 
-#: timezone/zic.c:529
+#: timezone/zic.c:532
 #, c-format
 msgid "\"%s\", line %<PRIdMAX>: "
 msgstr "\"%s\", рядок %<PRIdMAX>: "
 
-#: timezone/zic.c:532
+#: timezone/zic.c:535
 #, c-format
 msgid " (rule from \"%s\", line %<PRIdMAX>)"
 msgstr " (правило з «%s», рядок %<PRIdMAX>)"
 
-#: timezone/zic.c:551
+#: timezone/zic.c:554
 #, c-format
 msgid "warning: "
 msgstr "попередження: "
 
-#: timezone/zic.c:576
+#: timezone/zic.c:579
 #, c-format
 msgid ""
 "%s: usage is %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -l localtime ] [ -p posixrules ] [ -d directory ] \\\n"
-"\t[ -t localtime-link ] [ -L leapseconds ] [ filename ... ]\n"
+"\t[ -b {slim|fat} ] [ -d directory ] [ -l localtime ] [ -L leapseconds ] \\\n"
+"\t[ -p posixrules ] [ -r '[@lo][/@hi]' ] [ -t localtime-link ] \\\n"
+"\t[ filename ... ]\n"
 "\n"
 "Report bugs to %s.\n"
 msgstr ""
 "%s: користування: %s [ --version ] [ --help ] [ -v ] \\\n"
-"\t[ -l місцевий час ] [ -p правила_posix ] [ -d каталог ] \\\n"
-"\t[ -t пос-на-місцевий-час ] [ -L високос_секунди ] [ назва файла ... ]\n"
+"\t[ -b {slim|fat} ] [ -d каталог ] [ -l місц_час ] [ -L висок_секунди ] \\\n"
+"\t[ -p правила_posix ] [ -r '[@lo][/@hi]' ] [ -t посилання_на_місц_час ] \\\n"
+"\t[ назва_файла ... ]\n"
 "\n"
 "Про вади повідомляйте за адресою %s.\n"
 
-#: timezone/zic.c:599
+#: timezone/zic.c:604
 #, c-format
 msgid "%s: Can't chdir to %s: %s\n"
 msgstr "%s: не вдалося змінити каталог на %s: %s\n"
 
-#: timezone/zic.c:632
+#: timezone/zic.c:698
 msgid "wild compilation-time specification of zic_t"
 msgstr "помилкова специфікації під час збирання для zic_t"
 
-#: timezone/zic.c:652
+#: timezone/zic.c:716 timezone/zic.c:720
+msgid "incompatible -b options"
+msgstr "несумісні параметри -b"
+
+#: timezone/zic.c:723
+#, c-format
+msgid "invalid option: -b '%s'"
+msgstr "некоректний параметр: -b '%s'"
+
+#: timezone/zic.c:730
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: вказано декілька параметрів -d\n"
 
-#: timezone/zic.c:662
+#: timezone/zic.c:740
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: вказано декілька параметрів -l\n"
 
-#: timezone/zic.c:672
+#: timezone/zic.c:750
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: вказано декілька параметрів -p\n"
 
-#: timezone/zic.c:680
+#: timezone/zic.c:758
 #, c-format
 msgid "%s: More than one -t option specified\n"
 msgstr "%s: вказано декілька параметрів -t\n"
 
-#: timezone/zic.c:689
+#: timezone/zic.c:767
 msgid "-y is obsolescent"
 msgstr "-y виходить з ужитку"
 
-#: timezone/zic.c:693
+#: timezone/zic.c:771
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: вказано декілька параметрів -y\n"
 
-#: timezone/zic.c:703
+#: timezone/zic.c:781
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: вказано декілька параметрів -L\n"
 
-#: timezone/zic.c:712
+#: timezone/zic.c:792
+#, c-format
+msgid "%s: More than one -r option specified\n"
+msgstr "%s: вказано декілька параметрів -r\n"
+
+#: timezone/zic.c:798
+#, c-format
+msgid "%s: invalid time range: %s\n"
+msgstr "%s: некоректний діапазон часу: %s\n"
+
+#: timezone/zic.c:805
 msgid "-s ignored"
 msgstr "-s проігноровано"
 
-#: timezone/zic.c:753
+#: timezone/zic.c:848
 msgid "link to link"
 msgstr "посилання на посилання"
 
-#: timezone/zic.c:756 timezone/zic.c:760
+#: timezone/zic.c:851 timezone/zic.c:855
 msgid "command line"
 msgstr "командний рядок"
 
-#: timezone/zic.c:776
+#: timezone/zic.c:871
 msgid "empty file name"
 msgstr "порожня назва файла"
 
-#: timezone/zic.c:779
+#: timezone/zic.c:874
 #, c-format
 msgid "file name '%s' begins with '/'"
 msgstr "назва файла «%s» починається з «/»"
 
-#: timezone/zic.c:789
+#: timezone/zic.c:884
 #, c-format
 msgid "file name '%s' contains '%.*s' component"
 msgstr "назва файла «%s» містить компонент «%.*s»"
 
-#: timezone/zic.c:795
+#: timezone/zic.c:890
 #, c-format
 msgid "file name '%s' component contains leading '-'"
 msgstr "компонента назви файла «%s» містить початковий символ «-»"
 
-#: timezone/zic.c:798
+#: timezone/zic.c:893
 #, c-format
 msgid "file name '%s' contains overlength component '%.*s...'"
 msgstr "назва файла «%s» містить надто довгий компонент «%.*s...»"
 
-#: timezone/zic.c:826
+#: timezone/zic.c:921
 #, c-format
 msgid "file name '%s' contains byte '%c'"
 msgstr "назва файла «%s» містить байт «%c»"
 
-#: timezone/zic.c:827
+#: timezone/zic.c:922
 #, c-format
 msgid "file name '%s' contains byte '\\%o'"
 msgstr "назва файла «%s» містить байт «\\%o»"
 
-#: timezone/zic.c:897
+#: timezone/zic.c:992
 #, c-format
 msgid "%s: link from %s/%s failed: %s\n"
 msgstr "%s: помилка посилання з %s/%s: %s\n"
 
-#: timezone/zic.c:907 timezone/zic.c:1876
+#: timezone/zic.c:1002 timezone/zic.c:1992
 #, c-format
 msgid "%s: Can't remove %s/%s: %s\n"
 msgstr "%s: не вдалося вилучити %s/%s: %s\n"
 
-#: timezone/zic.c:931
+#: timezone/zic.c:1026
 #, c-format
 msgid "symbolic link used because hard link failed: %s"
 msgstr "використано символічне посилання, оскільки не вдалося використати жорстке посилання: %s"
 
-#: timezone/zic.c:939
+#: timezone/zic.c:1034
 #, c-format
 msgid "%s: Can't read %s/%s: %s\n"
 msgstr "%s: не вдалося прочитати %s/%s: %s\n"
 
-#: timezone/zic.c:946 timezone/zic.c:1889
+#: timezone/zic.c:1041 timezone/zic.c:2005
 #, c-format
 msgid "%s: Can't create %s/%s: %s\n"
 msgstr "%s: не вдалося створити %s/%s: %s\n"
 
-#: timezone/zic.c:955
+#: timezone/zic.c:1050
 #, c-format
 msgid "copy used because hard link failed: %s"
 msgstr "використано копіювання, оскільки не вдалося використати жорстке посилання: %s"
 
-#: timezone/zic.c:958
+#: timezone/zic.c:1053
 #, c-format
 msgid "copy used because symbolic link failed: %s"
 msgstr "використано копіювання, оскільки не вдалося використати символічне посилання: %s"
 
-#: timezone/zic.c:1032 timezone/zic.c:1034
+#: timezone/zic.c:1122 timezone/zic.c:1124
 msgid "same rule name in multiple files"
 msgstr "правило з однією назвою зберігається у декількох файлах"
 
-#: timezone/zic.c:1081
+#: timezone/zic.c:1171
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s у зоні без правил"
 
-#: timezone/zic.c:1101
+#: timezone/zic.c:1191
 msgid "standard input"
 msgstr "стандартне джерело даних"
 
-#: timezone/zic.c:1106
+#: timezone/zic.c:1196
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: не вдалося відкрити %s: %s\n"
 
-#: timezone/zic.c:1117
+#: timezone/zic.c:1207
 msgid "line too long"
 msgstr "рядок надто довгий"
 
-#: timezone/zic.c:1139
+#: timezone/zic.c:1230
 msgid "input line of unknown type"
 msgstr "рядок вхідних даних невідомого типу"
 
-#: timezone/zic.c:1158 timezone/zic.c:1593 timezone/zic.c:1615
+#: timezone/zic.c:1253 timezone/zic.c:1699 timezone/zic.c:1721
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: паніка: некоректне значення l_value %d\n"
 
-#: timezone/zic.c:1167
+#: timezone/zic.c:1262
 msgid "expected continuation line not found"
 msgstr "очікуваного рядка продовження не знайдено"
 
-#: timezone/zic.c:1203
+#: timezone/zic.c:1298
 msgid "fractional seconds rejected by pre-2018 versions of zic"
 msgstr "у zic до 2018 року не передбачено підтримки дробових часток секунди"
 
-#: timezone/zic.c:1221 timezone/zic.c:3078
+#: timezone/zic.c:1316 timezone/zic.c:3282
 msgid "time overflow"
 msgstr "переповнення запису часу"
 
-#: timezone/zic.c:1227
+#: timezone/zic.c:1322
 msgid "values over 24 hours not handled by pre-2007 versions of zic"
 msgstr "значення, більші за 24 годин не обробляються версіями zic до 2007 року"
 
-#: timezone/zic.c:1245
+#: timezone/zic.c:1340
 msgid "invalid saved time"
 msgstr "помилковий літній час"
 
-#: timezone/zic.c:1256
+#: timezone/zic.c:1351
 msgid "wrong number of fields on Rule line"
 msgstr "помилкова кількість полів у рядку Rule"
 
-#: timezone/zic.c:1265
+#: timezone/zic.c:1360
 #, c-format
 msgid "Invalid rule name \"%s\""
 msgstr "Некоректна назва правила — «%s»"
 
-#: timezone/zic.c:1287
+#: timezone/zic.c:1382
 msgid "wrong number of fields on Zone line"
 msgstr "помилкова кількість полів у рядку Zone"
 
-#: timezone/zic.c:1292
+#: timezone/zic.c:1387
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "Рядок «Zone %s» і параметр -l не можна використовувати разом"
 
-#: timezone/zic.c:1298
+#: timezone/zic.c:1393
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "Рядок «Zone %s» і параметр -p не можна використовувати разом"
 
-#: timezone/zic.c:1305
+#: timezone/zic.c:1400
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %<PRIdMAX>)"
 msgstr "дублювання назв поясів %s (файл «%s», рядок %<PRIdMAX>)"
 
-#: timezone/zic.c:1319
+#: timezone/zic.c:1414
 msgid "wrong number of fields on Zone continuation line"
 msgstr "помилкова кількість полів у рядку продовження Zone"
 
-#: timezone/zic.c:1359
+#: timezone/zic.c:1454
 msgid "invalid UT offset"
 msgstr "некоректне значення різниці з Грінвичем"
 
-#: timezone/zic.c:1363
+#: timezone/zic.c:1458
 msgid "invalid abbreviation format"
 msgstr "некоректний формат абревіатури"
 
-#: timezone/zic.c:1372
+#: timezone/zic.c:1467
 #, c-format
 msgid "format '%s' not handled by pre-2015 versions of zic"
 msgstr "у zic до 2015 року не передбачено підтримки формату «%s»"
 
-#: timezone/zic.c:1399
+#: timezone/zic.c:1494
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr "кінцевий час у рядку продовження Zone не перевищує кінцевого часу у попередньому рядку"
 
-#: timezone/zic.c:1426
-msgid "wrong number of fields on Leap line"
-msgstr "помилкова кількість полів у рядку Leap"
-
-#: timezone/zic.c:1435
+#: timezone/zic.c:1526
 msgid "invalid leaping year"
 msgstr "некоректний високосний рік"
 
-#: timezone/zic.c:1455 timezone/zic.c:1547
+#: timezone/zic.c:1548 timezone/zic.c:1653
 msgid "invalid month name"
 msgstr "некоректна назва місяця"
 
-#: timezone/zic.c:1468 timezone/zic.c:1663 timezone/zic.c:1677
+#: timezone/zic.c:1561 timezone/zic.c:1769 timezone/zic.c:1783
 msgid "invalid day of month"
 msgstr "некоректний день місяця"
 
-#: timezone/zic.c:1473
+#: timezone/zic.c:1566
 msgid "time too small"
 msgstr "надто малий час"
 
-#: timezone/zic.c:1477
+#: timezone/zic.c:1570
 msgid "time too large"
 msgstr "надто великий час"
 
-#: timezone/zic.c:1481 timezone/zic.c:1576
+#: timezone/zic.c:1574 timezone/zic.c:1682
 msgid "invalid time of day"
 msgstr "некоректний час доби"
 
-#: timezone/zic.c:1494
-msgid "illegal CORRECTION field on Leap line"
-msgstr "некоректне поле CORRECTION у рядку Leap"
-
-#: timezone/zic.c:1499
-msgid "illegal Rolling/Stationary field on Leap line"
-msgstr "некоректне поле Rolling/Stationary у рядку Leap"
-
-#: timezone/zic.c:1505
+#: timezone/zic.c:1577
 msgid "leap second precedes Epoch"
 msgstr "високосна секунда до початку епохи"
 
-#: timezone/zic.c:1518
+#: timezone/zic.c:1585
+msgid "wrong number of fields on Leap line"
+msgstr "помилкова кількість полів у рядку Leap"
+
+#: timezone/zic.c:1591
+msgid "invalid Rolling/Stationary field on Leap line"
+msgstr "некоректне поле Rolling/Stationary у рядку Leap"
+
+#: timezone/zic.c:1599
+msgid "invalid CORRECTION field on Leap line"
+msgstr "некоректне поле CORRECTION у рядку Leap"
+
+#: timezone/zic.c:1611
+msgid "wrong number of fields on Expires line"
+msgstr "помилкова кількість полів у рядку Expires"
+
+#: timezone/zic.c:1613
+msgid "multiple Expires lines"
+msgstr "декілька рядків Expires"
+
+#: timezone/zic.c:1624
 msgid "wrong number of fields on Link line"
 msgstr "помилкова кількість полів у рядку Link"
 
-#: timezone/zic.c:1522
+#: timezone/zic.c:1628
 msgid "blank FROM field on Link line"
 msgstr "порожнє поле FROM у рядку Link"
 
-#: timezone/zic.c:1597
+#: timezone/zic.c:1703
 msgid "invalid starting year"
 msgstr "некоректний рік початку"
 
-#: timezone/zic.c:1619
+#: timezone/zic.c:1725
 msgid "invalid ending year"
 msgstr "некоректний рік завершення"
 
-#: timezone/zic.c:1623
+#: timezone/zic.c:1729
 msgid "starting year greater than ending year"
 msgstr "значення початкового року перевищує значення кінцевого року"
 
-#: timezone/zic.c:1630
+#: timezone/zic.c:1736
 msgid "typed single year"
 msgstr "типізований одинарний рік"
 
-#: timezone/zic.c:1633
+#: timezone/zic.c:1739
 #, c-format
 msgid "year type \"%s\" is obsolete; use \"-\" instead"
 msgstr "тип року «%s» є застарілим; скористайтеся замість нього «-»"
 
-#: timezone/zic.c:1668
+#: timezone/zic.c:1774
 msgid "invalid weekday name"
 msgstr "некоректна назва дня тижня"
 
-#: timezone/zic.c:1800
+#: timezone/zic.c:1935
 #, c-format
 msgid "reference clients mishandle more than %d transition times"
 msgstr "еталонні клієнтські частини обробляють переведення часу, кількість яких перевищує %d, з помилками"
 
-#: timezone/zic.c:1804
+#: timezone/zic.c:1939
 msgid "pre-2014 clients may mishandle more than 1200 transition times"
 msgstr "клієнтські частини до версії 2014 можуть обробляти переведення часу, що перевищують за величиною 1200, з помилками"
 
-#: timezone/zic.c:1920
+#: timezone/zic.c:2058
 msgid "too many transition times"
 msgstr "забагато переведень часу"
 
-#: timezone/zic.c:2107
+#: timezone/zic.c:2297
 #, c-format
 msgid "%%z UT offset magnitude exceeds 99:59:59"
 msgstr "Величина зсуву щодо UT %%z перевищує 99:59:59"
 
-#: timezone/zic.c:2488
+#: timezone/zic.c:2673
 msgid "no POSIX environment variable for zone"
 msgstr "немає змінної середовища POSIX для часового поясу"
 
-#: timezone/zic.c:2494
+#: timezone/zic.c:2679
 #, c-format
 msgid "%s: pre-%d clients may mishandle distant timestamps"
 msgstr "%s: клієнтські частини до версії %d можуть обробляти віддалені часові позначки з помилками"
 
-#: timezone/zic.c:2631
+#: timezone/zic.c:2818
 msgid "two rules for same instant"
 msgstr "одночасно два правила для одного випадку"
 
-#: timezone/zic.c:2696
+#: timezone/zic.c:2889
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "не вдалося визначити скорочення часового поясу, яким слід скористатися безпосередньо після часу завершення"
 
-#: timezone/zic.c:2785
-msgid "too many local time types"
-msgstr "забагато типів місцевого часу"
-
-#: timezone/zic.c:2789
+#: timezone/zic.c:2964
 msgid "UT offset out of range"
 msgstr "зсув відносно часу за Грівичем поза межами припустимого діапазону"
 
-#: timezone/zic.c:2813
+#: timezone/zic.c:2987
+msgid "too many local time types"
+msgstr "забагато типів місцевого часу"
+
+#: timezone/zic.c:3005
 msgid "too many leap seconds"
 msgstr "забагато високосних секунд"
 
-#: timezone/zic.c:2844
+#: timezone/zic.c:3032
 msgid "Leap seconds too close together"
 msgstr "Високосні секунди є надто близькими одна до одної"
 
-#: timezone/zic.c:2891
+#: timezone/zic.c:3043
+msgid "\"#expires\" is obsolescent; use \"Expires\""
+msgstr "«#expires» є застарілим; користуйтеся «Expires»"
+
+#: timezone/zic.c:3049
+msgid "last Leap time does not precede Expires time"
+msgstr "останній момент часу Leap не є попереднім щодо моменту часу Expires"
+
+#: timezone/zic.c:3095
 msgid "Wild result from command execution"
 msgstr "Неочікуваний результат виконання команди"
 
-#: timezone/zic.c:2892
+#: timezone/zic.c:3096
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: команда — «%s», результат — %d\n"
 
-#: timezone/zic.c:2998
+#: timezone/zic.c:3202
 #, c-format
 msgid "\"%s\" is undocumented; use \"last%s\" instead"
 msgstr "«%s» є недокументованим; скористайтеся замість нього «last%s»"
 
-#: timezone/zic.c:3029
+#: timezone/zic.c:3233
 #, c-format
 msgid "\"%s\" is ambiguous in pre-2017c zic"
 msgstr "«%s» є ноднозначним у zic до 2017c"
 
-#: timezone/zic.c:3063
+#: timezone/zic.c:3267
 msgid "Odd number of quotation marks"
 msgstr "Непарна кількість лапок"
 
-#: timezone/zic.c:3157
+#: timezone/zic.c:3361
 msgid "use of 2/29 in non leap-year"
 msgstr "використання 29 лютого у невисокосному році"
 
-#: timezone/zic.c:3192
+#: timezone/zic.c:3396
 msgid "rule goes past start/end of month; will not work with pre-2004 versions of zic"
 msgstr "правило виходить за межі початку або кінця місяця; це не працюватиме з версіями zic до 2004 року"
 
-#: timezone/zic.c:3219
+#: timezone/zic.c:3423
 msgid "time zone abbreviation has fewer than 3 characters"
 msgstr "скорочення назви часового поясу складається з менше ніж 3 символів"
 
-#: timezone/zic.c:3221
+#: timezone/zic.c:3425
 msgid "time zone abbreviation has too many characters"
 msgstr "скорочення назви часового поясу складається з надто великої кількості символів"
 
-#: timezone/zic.c:3223
+#: timezone/zic.c:3427
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "скорочення назви часового поясу суперечить стандарту POSIX"
 
-#: timezone/zic.c:3229
+#: timezone/zic.c:3433
 msgid "too many, or too long, time zone abbreviations"
 msgstr "забагато скорочень назв часових поясів або вони є надто довгими"
 
-#: timezone/zic.c:3275
+#: timezone/zic.c:3479
 #, c-format
 msgid "%s: Can't create directory %s: %s"
 msgstr "%s: не вдалося створити каталог %s: %s"
