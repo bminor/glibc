@@ -47,9 +47,18 @@
 #define __FSWORD_T_TYPE		__SWORD_TYPE
 #define __ID_T_TYPE		__U32_TYPE
 #define __CLOCK_T_TYPE		__SLONGWORD_TYPE
-#define __TIME_T_TYPE		__SLONGWORD_TYPE
+#if __TIMESIZE == 64 && __WORDSIZE == 32
+# define __TIME_T_TYPE		__SQUAD_TYPE
+#else
+# define __TIME_T_TYPE		__SLONGWORD_TYPE
+#endif
 #define __USECONDS_T_TYPE	__U32_TYPE
-#define __SUSECONDS_T_TYPE	__SLONGWORD_TYPE
+#if __TIMESIZE == 64 && __WORDSIZE == 32
+# define __SUSECONDS_T_TYPE	__SQUAD_TYPE
+#else
+# define __SUSECONDS_T_TYPE	__SLONGWORD_TYPE
+#endif
+#define __SUSECONDS64_T_TYPE	__SQUAD_TYPE
 #define __DADDR_T_TYPE		__S32_TYPE
 #define __KEY_T_TYPE		__S32_TYPE
 #define __CLOCKID_T_TYPE	__S32_TYPE
@@ -81,6 +90,9 @@
 
 /* And for __fsbilcnt_t and __fsbilcnt64_t.  */
 #define __FSFILCNT_T_TYPE_MATCHES_FSFILCNT64_T_TYPE	1
+
+/* And for getitimer, setitimer and rusage  */
+#define __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64 (__WORDSIZE == 64)
 
 /* Number of descriptors that can fit in an `fd_set'.  */
 #define __FD_SETSIZE		1024
