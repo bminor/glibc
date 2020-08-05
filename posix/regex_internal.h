@@ -591,9 +591,8 @@ struct re_backref_cache_entry
   Idx str_idx;
   Idx subexp_from;
   Idx subexp_to;
+  bitset_word_t eps_reachable_subexps_map;
   char more;
-  char unused;
-  unsigned short int eps_reachable_subexps_map;
 };
 
 typedef struct
