@@ -1,8 +1,5 @@
 libc {
   GLIBC_2.0 {
-    # necessary for the Hurd brk implementation
-    _end;
-
     # variables used in macros & inline functions
     __hurd_threadvar_stack_mask; __hurd_threadvar_stack_offset;
 

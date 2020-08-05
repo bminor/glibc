@@ -19,6 +19,7 @@
 #include <hurd.h>
 #include <hurd/resource.h>
 #include <cthreads.h>		/* For `struct mutex'.  */
+#include <vm_param.h>
 
 
 /* Initial maximum size of the data segment (this is arbitrary).  */
@@ -39,9 +40,7 @@ weak_alias (_hurd_brk, ___brk_addr)
 
 struct mutex _hurd_brk_lock;
 
-extern int __data_start, _end;
-weak_extern (__data_start)
-static vm_address_t static_data_start;
+static vm_address_t brk_start;
 
 
 /* Set the end of the process's data space to INADDR.
@@ -91,7 +90,7 @@ _hurd_set_brk (vm_address_t addr)
   rlimit = _hurd_rlimits[RLIMIT_DATA].rlim_cur;
   __mutex_unlock (&_hurd_rlimit_lock);
 
-  if (addr - static_data_start > rlimit)
+  if (addr - brk_start > rlimit)
     {
       /* Need to increase the resource limit.  */
       errno = ENOMEM;
@@ -138,17 +137,18 @@ init_brk (void)
 
   __mutex_init (&_hurd_brk_lock);
 
-  static_data_start = (vm_address_t) (&__data_start ?: &_end);
+  brk_start = (vm_address_t) BRK_START;
 
   /* If _hurd_brk is already set, don't change it.  The assumption is that
      it was set in a previous run before something like Emacs's unexec was
      called and dumped all the data up to the break at that point.  */
-  if (_hurd_brk == 0)
-    _hurd_brk = (vm_address_t) &_end;
+  if (_hurd_brk == 0) {
+    _hurd_brk = (vm_address_t) BRK_START;
+  }
 
   pagend = round_page (_hurd_brk);
 
-  _hurd_data_end = round_page (static_data_start + DATA_SIZE);
+  _hurd_data_end = round_page (brk_start + DATA_SIZE);
 
   if (pagend < _hurd_data_end)
     {

@@ -554,7 +554,6 @@ GLIBC_2.2.6 __xstat64 F
 GLIBC_2.2.6 _authenticate F
 GLIBC_2.2.6 _dl_mcount_wrapper F
 GLIBC_2.2.6 _dl_mcount_wrapper_check F
-GLIBC_2.2.6 _end D 0x0
 GLIBC_2.2.6 _environ D 0x4
 GLIBC_2.2.6 _exit F
 GLIBC_2.2.6 _flushlbf F
