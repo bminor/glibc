@@ -44,107 +44,55 @@ extern void TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *)
 static void
 update_usable (struct cpu_features *cpu_features)
 {
-  /* Before COMMON_CPUID_INDEX_80000001, copy the cpuid array elements to
-     the usable array.  */
-  unsigned int i;
-  for (i = 0; i < COMMON_CPUID_INDEX_80000001; i++)
-    cpu_features->features[i].usable = cpu_features->features[i].cpuid;
-
-  /* Before COMMON_CPUID_INDEX_80000001, clear the unknown usable bits
-     and the always zero bits.  */
-  CPU_FEATURE_UNSET (cpu_features, INDEX_1_ECX_16);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_1_ECX_31);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_1_EDX_10);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_1_EDX_20);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_1_EDX_30);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EBX_6);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EBX_22);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_ECX_13);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_ECX_15);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_ECX_16);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_ECX_23);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_ECX_24);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_ECX_26);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_0);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_1);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_5);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_6);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_7);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_9);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_11);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_12);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_13);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_17);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_19);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_21);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_23);
-
-  /* EAX/EBX from COMMON_CPUID_INDEX_1 and EAX from COMMON_CPUID_INDEX_7
-     aren't used for CPU feature detection.  */
-  cpu_features->features[COMMON_CPUID_INDEX_1].usable.eax = 0;
-  cpu_features->features[COMMON_CPUID_INDEX_1].usable.ebx = 0;
-  cpu_features->features[COMMON_CPUID_INDEX_7].usable.eax = 0;
-
-  /* Starting from COMMON_CPUID_INDEX_80000001, copy the cpuid bits to
-     usable bits.  */
+  /* Copy the cpuid bits to usable bits for CPU featuress whose usability
+     in user space can be detected without additonal OS support.  */
+  CPU_FEATURE_SET_USABLE (cpu_features, SSE3);
+  CPU_FEATURE_SET_USABLE (cpu_features, PCLMULQDQ);
+  CPU_FEATURE_SET_USABLE (cpu_features, SSSE3);
+  CPU_FEATURE_SET_USABLE (cpu_features, CMPXCHG16B);
+  CPU_FEATURE_SET_USABLE (cpu_features, SSE4_1);
+  CPU_FEATURE_SET_USABLE (cpu_features, SSE4_2);
+  CPU_FEATURE_SET_USABLE (cpu_features, MOVBE);
+  CPU_FEATURE_SET_USABLE (cpu_features, POPCNT);
+  CPU_FEATURE_SET_USABLE (cpu_features, AES);
+  CPU_FEATURE_SET_USABLE (cpu_features, OSXSAVE);
+  CPU_FEATURE_SET_USABLE (cpu_features, TSC);
+  CPU_FEATURE_SET_USABLE (cpu_features, CX8);
+  CPU_FEATURE_SET_USABLE (cpu_features, CMOV);
+  CPU_FEATURE_SET_USABLE (cpu_features, CLFSH);
+  CPU_FEATURE_SET_USABLE (cpu_features, MMX);
+  CPU_FEATURE_SET_USABLE (cpu_features, FXSR);
+  CPU_FEATURE_SET_USABLE (cpu_features, SSE);
+  CPU_FEATURE_SET_USABLE (cpu_features, SSE2);
+  CPU_FEATURE_SET_USABLE (cpu_features, HTT);
+  CPU_FEATURE_SET_USABLE (cpu_features, BMI1);
+  CPU_FEATURE_SET_USABLE (cpu_features, HLE);
+  CPU_FEATURE_SET_USABLE (cpu_features, BMI2);
+  CPU_FEATURE_SET_USABLE (cpu_features, ERMS);
+  CPU_FEATURE_SET_USABLE (cpu_features, RTM);
+  CPU_FEATURE_SET_USABLE (cpu_features, RDSEED);
+  CPU_FEATURE_SET_USABLE (cpu_features, ADX);
+  CPU_FEATURE_SET_USABLE (cpu_features, CLFLUSHOPT);
+  CPU_FEATURE_SET_USABLE (cpu_features, CLWB);
+  CPU_FEATURE_SET_USABLE (cpu_features, SHA);
+  CPU_FEATURE_SET_USABLE (cpu_features, PREFETCHWT1);
+  CPU_FEATURE_SET_USABLE (cpu_features, OSPKE);
+  CPU_FEATURE_SET_USABLE (cpu_features, WAITPKG);
+  CPU_FEATURE_SET_USABLE (cpu_features, GFNI);
+  CPU_FEATURE_SET_USABLE (cpu_features, RDPID);
+  CPU_FEATURE_SET_USABLE (cpu_features, CLDEMOTE);
+  CPU_FEATURE_SET_USABLE (cpu_features, MOVDIRI);
+  CPU_FEATURE_SET_USABLE (cpu_features, MOVDIR64B);
+  CPU_FEATURE_SET_USABLE (cpu_features, FSRM);
+  CPU_FEATURE_SET_USABLE (cpu_features, SERIALIZE);
+  CPU_FEATURE_SET_USABLE (cpu_features, TSXLDTRK);
   CPU_FEATURE_SET_USABLE (cpu_features, LAHF64_SAHF64);
-  CPU_FEATURE_SET_USABLE (cpu_features, SVM);
   CPU_FEATURE_SET_USABLE (cpu_features, LZCNT);
   CPU_FEATURE_SET_USABLE (cpu_features, SSE4A);
   CPU_FEATURE_SET_USABLE (cpu_features, PREFETCHW);
-  CPU_FEATURE_SET_USABLE (cpu_features, XOP);
-  CPU_FEATURE_SET_USABLE (cpu_features, LWP);
-  CPU_FEATURE_SET_USABLE (cpu_features, FMA4);
   CPU_FEATURE_SET_USABLE (cpu_features, TBM);
-  CPU_FEATURE_SET_USABLE (cpu_features, SYSCALL_SYSRET);
-  CPU_FEATURE_SET_USABLE (cpu_features, NX);
-  CPU_FEATURE_SET_USABLE (cpu_features, PAGE1GB);
   CPU_FEATURE_SET_USABLE (cpu_features, RDTSCP);
-  CPU_FEATURE_SET_USABLE (cpu_features, LM);
-  CPU_FEATURE_SET_USABLE (cpu_features, XSAVEOPT);
-  CPU_FEATURE_SET_USABLE (cpu_features, XSAVEC);
-  CPU_FEATURE_SET_USABLE (cpu_features, XGETBV_ECX_1);
-  CPU_FEATURE_SET_USABLE (cpu_features, XSAVES);
-  CPU_FEATURE_SET_USABLE (cpu_features, XFD);
-  CPU_FEATURE_SET_USABLE (cpu_features, INVARIANT_TSC);
   CPU_FEATURE_SET_USABLE (cpu_features, WBNOINVD);
-  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_BF16);
-
-  /* MPX has been deprecated.  */
-  CPU_FEATURE_UNSET (cpu_features, MPX);
-
-  /* Clear the usable bits which require OS support.  */
-  CPU_FEATURE_UNSET (cpu_features, FMA);
-  CPU_FEATURE_UNSET (cpu_features, AVX);
-  CPU_FEATURE_UNSET (cpu_features, F16C);
-  CPU_FEATURE_UNSET (cpu_features, AVX2);
-  CPU_FEATURE_UNSET (cpu_features, AVX512F);
-  CPU_FEATURE_UNSET (cpu_features, AVX512DQ);
-  CPU_FEATURE_UNSET (cpu_features, AVX512_IFMA);
-  CPU_FEATURE_UNSET (cpu_features, AVX512PF);
-  CPU_FEATURE_UNSET (cpu_features, AVX512ER);
-  CPU_FEATURE_UNSET (cpu_features, AVX512CD);
-  CPU_FEATURE_UNSET (cpu_features, AVX512BW);
-  CPU_FEATURE_UNSET (cpu_features, AVX512VL);
-  CPU_FEATURE_UNSET (cpu_features, AVX512_VBMI);
-  CPU_FEATURE_UNSET (cpu_features, PKU);
-  CPU_FEATURE_UNSET (cpu_features, AVX512_VBMI2);
-  CPU_FEATURE_UNSET (cpu_features, VAES);
-  CPU_FEATURE_UNSET (cpu_features, VPCLMULQDQ);
-  CPU_FEATURE_UNSET (cpu_features, AVX512_VNNI);
-  CPU_FEATURE_UNSET (cpu_features, AVX512_BITALG);
-  CPU_FEATURE_UNSET (cpu_features, AVX512_VPOPCNTDQ);
-  CPU_FEATURE_UNSET (cpu_features, AVX512_4VNNIW);
-  CPU_FEATURE_UNSET (cpu_features, AVX512_4FMAPS);
-  CPU_FEATURE_UNSET (cpu_features, AVX512_VP2INTERSECT);
-  CPU_FEATURE_UNSET (cpu_features, AMX_BF16);
-  CPU_FEATURE_UNSET (cpu_features, AMX_TILE);
-  CPU_FEATURE_UNSET (cpu_features, AMX_INT8);
-  CPU_FEATURE_UNSET (cpu_features, XOP);
-  CPU_FEATURE_UNSET (cpu_features, FMA4);
-  CPU_FEATURE_UNSET (cpu_features, XSAVEC);
-  CPU_FEATURE_UNSET (cpu_features, XFD);
-  CPU_FEATURE_UNSET (cpu_features, AVX512_BF16);
 
   /* Can we call xgetbv?  */
   if (CPU_FEATURES_CPU_P (cpu_features, OSXSAVE))
@@ -243,8 +191,11 @@ update_usable (struct cpu_features *cpu_features)
 	  CPU_FEATURE_SET_USABLE (cpu_features, AMX_INT8);
 	}
 
-
-      /* XFD is usable only when OSXSAVE is enabled.  */
+      /* These features are usable only when OSXSAVE is enabled.  */
+      CPU_FEATURE_SET (cpu_features, XSAVE);
+      CPU_FEATURE_SET_USABLE (cpu_features, XSAVEOPT);
+      CPU_FEATURE_SET_USABLE (cpu_features, XSAVEC);
+      CPU_FEATURE_SET_USABLE (cpu_features, XGETBV_ECX_1);
       CPU_FEATURE_SET_USABLE (cpu_features, XFD);
 
       /* For _dl_runtime_resolve, set xsave_state_size to xsave area
