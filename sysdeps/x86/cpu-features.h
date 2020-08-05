@@ -156,7 +156,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_DS_CPL		(1u << 4)
 #define bit_cpu_VMX		(1u << 5)
 #define bit_cpu_SMX		(1u << 6)
-#define bit_cpu_EST		(1u << 7)
+#define bit_cpu_EIST		(1u << 7)
 #define bit_cpu_TM2		(1u << 8)
 #define bit_cpu_SSSE3		(1u << 9)
 #define bit_cpu_CNXT_ID		(1u << 10)
@@ -231,10 +231,10 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_cpu_ERMS		(1u << 9)
 #define bit_cpu_INVPCID		(1u << 10)
 #define bit_cpu_RTM		(1u << 11)
-#define bit_cpu_PQM		(1u << 12)
+#define bit_cpu_RDT_M		(1u << 12)
 #define bit_cpu_DEPR_FPU_CS_DS	(1u << 13)
 #define bit_cpu_MPX		(1u << 14)
-#define bit_cpu_PQE		(1u << 15)
+#define bit_cpu_RDT_A		(1u << 15)
 #define bit_cpu_AVX512F		(1u << 16)
 #define bit_cpu_AVX512DQ	(1u << 17)
 #define bit_cpu_RDSEED		(1u << 18)
@@ -371,7 +371,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_DS_CPL	COMMON_CPUID_INDEX_1
 #define index_cpu_VMX		COMMON_CPUID_INDEX_1
 #define index_cpu_SMX		COMMON_CPUID_INDEX_1
-#define index_cpu_EST		COMMON_CPUID_INDEX_1
+#define index_cpu_EIST		COMMON_CPUID_INDEX_1
 #define index_cpu_TM2		COMMON_CPUID_INDEX_1
 #define index_cpu_SSSE3		COMMON_CPUID_INDEX_1
 #define index_cpu_CNXT_ID	COMMON_CPUID_INDEX_1
@@ -446,10 +446,10 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_cpu_ERMS		COMMON_CPUID_INDEX_7
 #define index_cpu_INVPCID	COMMON_CPUID_INDEX_7
 #define index_cpu_RTM		COMMON_CPUID_INDEX_7
-#define index_cpu_PQM		COMMON_CPUID_INDEX_7
+#define index_cpu_RDT_M		COMMON_CPUID_INDEX_7
 #define index_cpu_DEPR_FPU_CS_DS COMMON_CPUID_INDEX_7
 #define index_cpu_MPX		COMMON_CPUID_INDEX_7
-#define index_cpu_PQE		COMMON_CPUID_INDEX_7
+#define index_cpu_RDT_A		COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512F	COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512DQ	COMMON_CPUID_INDEX_7
 #define index_cpu_RDSEED	COMMON_CPUID_INDEX_7
@@ -584,7 +584,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_DS_CPL		ecx
 #define reg_VMX			ecx
 #define reg_SMX			ecx
-#define reg_EST			ecx
+#define reg_EIST		ecx
 #define reg_TM2			ecx
 #define reg_SSSE3		ecx
 #define reg_CNXT_ID		ecx
@@ -659,10 +659,10 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define reg_ERMS		ebx
 #define reg_INVPCID		ebx
 #define reg_RTM			ebx
-#define reg_PQM			ebx
+#define reg_RDT_M		ebx
 #define reg_DEPR_FPU_CS_DS	ebx
 #define reg_MPX			ebx
-#define reg_PQE			ebx
+#define reg_RDT_A		ebx
 #define reg_AVX512F		ebx
 #define reg_AVX512DQ		ebx
 #define reg_RDSEED		ebx
