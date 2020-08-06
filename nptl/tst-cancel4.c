@@ -753,12 +753,12 @@ tf_send (void *arg)
   if (tempfd2 == -1)
     FAIL_EXIT1 ("socket (AF_UNIX, SOCK_STREAM, 0): %m");
 
-  set_socket_buffer (tempfd2);
-
   if (connect (tempfd2, (struct sockaddr *) &sun, sizeof (sun)) != 0)
     FAIL_EXIT1 ("connect: %m");
 
   unlink (sun.sun_path);
+
+  set_socket_buffer (tempfd2);
 
   xpthread_barrier_wait (&b2);
 
@@ -1288,12 +1288,12 @@ tf_sendto (void *arg)
   if (tempfd2 == -1)
     FAIL_EXIT1 ("socket (AF_UNIX, SOCK_STREAM, 0): %m");
 
-  set_socket_buffer (tempfd2);
-
   if (connect (tempfd2, (struct sockaddr *) &sun, sizeof (sun)) != 0)
     FAIL_EXIT1 ("connect: %m");
 
   unlink (sun.sun_path);
+
+  set_socket_buffer (tempfd2);
 
   xpthread_barrier_wait (&b2);
 
