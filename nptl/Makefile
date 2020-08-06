@@ -277,7 +277,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-once5 \
 	tst-sem17 \
 	tst-tsd3 tst-tsd4 \
-	tst-cancel4 tst-cancel4_1 tst-cancel4_2 tst-cancel5 \
+	tst-cancel4_1 tst-cancel4_2 \
 	tst-cancel7 tst-cancel17 tst-cancel24 \
 	tst-cleanup4 \
 	tst-signal3 \
@@ -356,7 +356,7 @@ endif
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
-tests += tst-cancelx4 tst-cancelx5 tst-cancelx7 tst-cancelx17 tst-cleanupx4
+tests += tst-cancelx7 tst-cancelx17 tst-cleanupx4
 
 ifeq ($(build-shared),yes)
 tests += tst-compat-forwarder tst-audit-threads
@@ -426,9 +426,6 @@ tests += tst-cancel24-static
 tests-internal += tst-sem11-static tst-sem12-static tst-stackguard1-static
 xtests-static += tst-setuid1-static
 
-# These tests are linked with libc before libpthread
-tests-reverse += tst-cancel5
-
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-stack3-mem.out $(objpfx)tst-oddstacklimit.out
 ifeq ($(build-shared),yes)
@@ -461,17 +458,8 @@ endif
 # function frequently to get a thread-specific handle.
 CFLAGS-pthread_self.os += -fomit-frame-pointer
 
-# The sigmask macro is deprecated and triggers are compiler warning
-# which cannot be suppressed (as of GCC 9).
-CFLAGS-tst-cancel4.c += -Wno-error
-CFLAGS-tst-cancel5.c += -Wno-error
-CFLAGS-tst-cancelx4.c += -Wno-error
-CFLAGS-tst-cancelx5.c += -Wno-error
-
 # Run the cancellation and cleanup tests also for the modern, exception-based
 # implementation.  For this we have to pass the -fexceptions parameter.
-CFLAGS-tst-cancelx4.c += -fexceptions
-CFLAGS-tst-cancelx5.c += -fexceptions
 CFLAGS-tst-cancelx7.c += -fexceptions
 CFLAGS-tst-cancelx17.c += -fexceptions
 CFLAGS-tst-cleanupx4.c += -fexceptions

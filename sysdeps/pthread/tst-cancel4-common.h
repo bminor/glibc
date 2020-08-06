@@ -74,6 +74,7 @@ set_socket_buffer (int s)
 		    sizeof (val)) == 0);
   TEST_VERIFY_EXIT (getsockopt (s, SOL_SOCKET, SO_SNDBUF, &val, &len) == 0);
   TEST_VERIFY_EXIT (val < WRITE_BUFFER_SIZE);
+  printf("got size %d\n", val);
 }
 
 /* Cleanup handling test.  */
