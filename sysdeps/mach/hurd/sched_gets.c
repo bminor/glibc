@@ -27,4 +27,5 @@ __sched_getscheduler (pid_t pid)
 {
   return SCHED_OTHER;
 }
+libc_hidden_def (__sched_getscheduler)
 weak_alias (__sched_getscheduler, sched_getscheduler)
