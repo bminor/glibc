@@ -44,6 +44,7 @@
 #define __NR_exit 1025
 #define __NR_exit_group 1236
 #define __NR_faccessat 1293
+#define __NR_faccessat2 1463
 #define __NR_fadvise64 1234
 #define __NR_fallocate 1303
 #define __NR_fanotify_init 1323

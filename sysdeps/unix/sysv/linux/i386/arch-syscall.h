@@ -55,6 +55,7 @@
 #define __NR_exit 1
 #define __NR_exit_group 252
 #define __NR_faccessat 307
+#define __NR_faccessat2 439
 #define __NR_fadvise64 250
 #define __NR_fadvise64_64 272
 #define __NR_fallocate 324
