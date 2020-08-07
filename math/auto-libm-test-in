@@ -5748,6 +5748,8 @@ j0 0x1p16382
 j0 0x1p16383
 # the next value generates larger error bounds on x86_64 (binary32)
 j0 0x2.602774p+0 xfail-rounding:ibm128-libgcc
+# the next value exercises the flt-32 code path for x >= 2^127
+j0 0x8.2f4ecp+124
 
 j1 -1.0
 j1 0.0

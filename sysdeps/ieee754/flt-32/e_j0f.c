@@ -55,7 +55,22 @@ __ieee754_j0f(float x)
 		    z = -__cosf(x+x);
 		    if ((s*c)<zero) cc = z/ss;
 		    else	    ss = z/cc;
-		}
+		} else {
+		    /* We subtract (exactly) a value x0 such that
+		       cos(x0)+sin(x0) is very near to 0, and use the identity
+		       sin(x-x0) = sin(x)*cos(x0)-cos(x)*sin(x0) to get
+		       sin(x) + cos(x) with extra accuracy.  */
+		    float x0 = 0xe.d4108p+124f;
+		    float y = x - x0; /* exact  */
+		    /* sin(y) = sin(x)*cos(x0)-cos(x)*sin(x0)  */
+		    z = __sinf (y);
+		    float eps = 0x1.5f263ep-24f;
+		    /* cos(x0) ~ -sin(x0) + eps  */
+		    z += eps * __cosf (x);
+		    /* now z ~ (sin(x)-cos(x))*cos(x0)  */
+		    float cosx0 = -0xb.504f3p-4f;
+		    cc = z / cosx0;
+                }
 	/*
 	 * j0(x) = 1/sqrt(pi) * (P(0,x)*cc - Q(0,x)*ss) / sqrt(x)
 	 * y0(x) = 1/sqrt(pi) * (P(0,x)*ss + Q(0,x)*cc) / sqrt(x)
