@@ -30,6 +30,13 @@
 int
 faccessat (int fd, const char *file, int mode, int flag)
 {
+  int ret = INLINE_SYSCALL_CALL (faccessat2, fd, file, mode, flag);
+#if __ASSUME_FACCESSAT2
+  return ret;
+#else
+  if (ret == 0 || errno != ENOSYS)
+    return ret;
+
   if (flag & ~(AT_SYMLINK_NOFOLLOW | AT_EACCESS))
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
@@ -41,9 +48,9 @@ faccessat (int fd, const char *file, int mode, int flag)
     return -1;
 
   mode &= (X_OK | W_OK | R_OK);	/* Clear any bogus bits. */
-#if R_OK != S_IROTH || W_OK != S_IWOTH || X_OK != S_IXOTH
-# error Oops, portability assumptions incorrect.
-#endif
+# if R_OK != S_IROTH || W_OK != S_IWOTH || X_OK != S_IXOTH
+#  error Oops, portability assumptions incorrect.
+# endif
 
   if (mode == F_OK)
     return 0;			/* The file exists. */
@@ -68,4 +75,5 @@ faccessat (int fd, const char *file, int mode, int flag)
     return 0;
 
   return INLINE_SYSCALL_ERROR_RETURN_VALUE (EACCES);
+#endif /* !__ASSUME_FACCESSAT2 */
 }

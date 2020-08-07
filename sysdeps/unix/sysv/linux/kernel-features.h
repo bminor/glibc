@@ -214,4 +214,12 @@
 # define __ASSUME_WAITID_PID0_P_PGID
 #endif
 
+/* The faccessat2 system call was introduced across all architectures
+   in Linux 5.8.  */
+#if __LINUX_KERNEL_VERSION >= 0x050800
+# define __ASSUME_FACCESSAT2 1
+#else
+# define __ASSUME_FACCESSAT2 0
+#endif
+
 #endif /* kernel-features.h */
