@@ -1259,13 +1259,13 @@ Function: "j0_downward":
 double: 2
 float: 4
 float128: 4
-ldouble: 4
+ldouble: 6
 
 Function: "j0_towardzero":
 double: 3
 float: 2
-float128: 2
-ldouble: 5
+float128: 4
+ldouble: 6
 
 Function: "j0_upward":
 double: 3
