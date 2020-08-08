@@ -880,7 +880,7 @@ to @var{signum}.
 This function is a BSD feature, declared in the header file @file{signal.h}.
 @end deftypefun
 
-@deftypefun void sigdescr_np (int @var{signum})
+@deftypefun {const char *} sigdescr_np (int @var{signum})
 @standards{GNU, string.h}
 @safety{@mtsafe{}@assafe{}@acsafe{}}
 This function returns the message describing the signal @var{signum} or
@@ -893,7 +893,7 @@ of the program.
 This function is a GNU extension, declared in the header file @file{string.h}.
 @end deftypefun
 
-@deftypefun void sigabbrev_np (int @var{signum})
+@deftypefun {const char *} sigabbrev_np (int @var{signum})
 @standards{GNU, string.h}
 @safety{@mtsafe{}@assafe{}@acsafe{}}
 This function returns the abbreviation describing the signal @var{signum} or
