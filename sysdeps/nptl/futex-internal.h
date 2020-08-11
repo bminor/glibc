@@ -519,4 +519,14 @@ futex_timed_wait_cancel64 (pid_t *tidp,  pid_t tid,
       futex_fatal_error ();
     }
 }
+
+/* The futex_abstimed_wait_cancelable64 has been moved to a separate file
+   to avoid problems with exhausting available registers on some architectures
+   - e.g. on m68k architecture.  */
+int
+__futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
+                                    unsigned int expected, clockid_t clockid,
+                                    const struct __timespec64* abstime,
+                                    int private) attribute_hidden;
+
 #endif  /* futex-internal.h */

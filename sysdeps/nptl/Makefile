@@ -17,7 +17,7 @@
 # <https://www.gnu.org/licenses/>.
 
 ifeq ($(subdir),nptl)
-libpthread-sysdep_routines += errno-loc
+libpthread-sysdep_routines += errno-loc futex-internal
 endif
 
 ifeq ($(subdir),rt)

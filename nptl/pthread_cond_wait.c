@@ -378,8 +378,7 @@ __condvar_cleanup_waiting (void *arg)
 */
 static __always_inline int
 __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
-    clockid_t clockid,
-    const struct timespec *abstime)
+    clockid_t clockid, const struct __timespec64 *abstime)
 {
   const int maxspin = 0;
   int err;
@@ -517,7 +516,7 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 	        err = ETIMEDOUT;
 	      else
 		{
-		  err = futex_abstimed_wait_cancelable
+		  err = __futex_abstimed_wait_cancelable64
                     (cond->__data.__g_signals + g, 0, clockid, abstime,
                      private);
 		}
@@ -640,8 +639,8 @@ __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)
 
 /* See __pthread_cond_wait_common.  */
 int
-__pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
-    const struct timespec *abstime)
+__pthread_cond_timedwait64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
+                            const struct __timespec64 *abstime)
 {
   /* Check parameter validity.  This should also tell the compiler that
      it can assume that abstime is not NULL.  */
@@ -655,6 +654,20 @@ __pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
                     ? CLOCK_MONOTONIC : CLOCK_REALTIME;
   return __pthread_cond_wait_common (cond, mutex, clockid, abstime);
 }
+
+#if __TIMESIZE != 64
+libpthread_hidden_def (__pthread_cond_timedwait64)
+
+int
+__pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
+                          const struct timespec *abstime)
+{
+  struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
+
+  return __pthread_cond_timedwait64 (cond, mutex, &ts64);
+}
+#endif
+
 versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2);
 versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
@@ -662,9 +675,9 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 
 /* See __pthread_cond_wait_common.  */
 int
-__pthread_cond_clockwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
-			  clockid_t clockid,
-			  const struct timespec *abstime)
+__pthread_cond_clockwait64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
+                            clockid_t clockid,
+                            const struct __timespec64 *abstime)
 {
   /* Check parameter validity.  This should also tell the compiler that
      it can assume that abstime is not NULL.  */
@@ -676,4 +689,18 @@ __pthread_cond_clockwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
 
   return __pthread_cond_wait_common (cond, mutex, clockid, abstime);
 }
+
+#if __TIMESIZE != 64
+libpthread_hidden_def (__pthread_cond_clockwait64)
+
+int
+__pthread_cond_clockwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
+                          clockid_t clockid,
+                          const struct timespec *abstime)
+{
+  struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
+
+  return __pthread_cond_clockwait64 (cond, mutex, clockid, &ts64);
+}
+#endif
 weak_alias (__pthread_cond_clockwait, pthread_cond_clockwait);
