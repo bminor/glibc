@@ -212,7 +212,8 @@ class Context(object):
                         os_name='gnu')
         self.add_config(arch='ia64',
                         os_name='linux-gnu',
-                        first_gcc_cfg=['--with-system-libunwind'])
+                        first_gcc_cfg=['--with-system-libunwind'],
+                        binutils_cfg=['--enable-obsolete'])
         self.add_config(arch='m68k',
                         os_name='linux-gnu',
                         gcc_cfg=['--disable-multilib'])
@@ -1264,7 +1265,8 @@ class Config(object):
     """A configuration for building a compiler and associated libraries."""
 
     def __init__(self, ctx, arch, os_name, variant=None, gcc_cfg=None,
-                 first_gcc_cfg=None, glibcs=None, extra_glibcs=None):
+                 first_gcc_cfg=None, binutils_cfg=None, glibcs=None,
+                 extra_glibcs=None):
         """Initialize a Config object."""
         self.ctx = ctx
         self.arch = arch
@@ -1283,6 +1285,10 @@ class Config(object):
             self.first_gcc_cfg = []
         else:
             self.first_gcc_cfg = first_gcc_cfg
+        if binutils_cfg is None:
+            self.binutils_cfg = []
+        else:
+            self.binutils_cfg = binutils_cfg
         if glibcs is None:
             glibcs = [{'variant': variant}]
         if extra_glibcs is None:
@@ -1316,7 +1322,7 @@ class Config(object):
                                '--disable-gdbserver',
                                '--disable-libdecnumber',
                                '--disable-readline',
-                               '--disable-sim'])
+                               '--disable-sim'] + self.binutils_cfg)
         if self.os.startswith('linux'):
             install_linux_headers(LinuxHeadersPolicyForBuild(self), cmdlist)
         self.build_gcc(cmdlist, True)
