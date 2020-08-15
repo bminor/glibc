@@ -34,9 +34,13 @@ int
 __pthread_timedjoin_np (pthread_t threadid, void **thread_return,
                         const struct timespec *abstime)
 {
-  struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
-
-  return __pthread_timedjoin_np64 (threadid, thread_return, &ts64);
+  if (abstime != NULL)
+    {
+      struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
+      return __pthread_timedjoin_np64 (threadid, thread_return, &ts64);
+    }
+  else
+    return __pthread_timedjoin_np64 (threadid, thread_return, NULL);
 }
 #endif
 weak_alias (__pthread_timedjoin_np, pthread_timedjoin_np)
