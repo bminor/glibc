@@ -366,7 +366,9 @@ class Context(object):
         self.add_config(arch='s390x',
                         os_name='linux-gnu',
                         glibcs=[{},
-                                {'arch': 's390', 'ccopts': '-m31'}])
+                                {'arch': 's390', 'ccopts': '-m31'}],
+                        extra_glibcs=[{'variant': 'O3',
+                                       'cflags': '-O3'}])
         self.add_config(arch='sh3',
                         os_name='linux-gnu')
         self.add_config(arch='sh3eb',
@@ -1483,6 +1485,9 @@ class GlibcPolicyDefault(object):
         ]
         if glibc.os == 'gnu':
             self.configure_args.append('MIG=%s' % glibc.tool_name('mig'))
+        if glibc.cflags:
+            self.configure_args.append('CFLAGS=%s' % glibc.cflags)
+            self.configure_args.append('CXXFLAGS=%s' % glibc.cflags)
         self.configure_args += glibc.cfg
 
     def configure(self, cmdlist):
@@ -1551,7 +1556,7 @@ class Glibc(object):
     """A configuration for building glibc."""
 
     def __init__(self, compiler, arch=None, os_name=None, variant=None,
-                 cfg=None, ccopts=None):
+                 cfg=None, ccopts=None, cflags=None):
         """Initialize a Glibc object."""
         self.ctx = compiler.ctx
         self.compiler = compiler
@@ -1573,7 +1578,11 @@ class Glibc(object):
             self.cfg = []
         else:
             self.cfg = cfg
+        # ccopts contain ABI options and are passed to configure as CC / CXX.
         self.ccopts = ccopts
+        # cflags contain non-ABI options like -g or -O and are passed to
+        # configure as CFLAGS / CXXFLAGS.
+        self.cflags = cflags
 
     def tool_name(self, tool):
         """Return the name of a cross-compilation tool."""
