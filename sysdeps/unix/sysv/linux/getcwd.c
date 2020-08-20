@@ -40,7 +40,10 @@
    named `cwd'.  Reading the content of this link immediate gives us the
    information.  But we have to take care for systems which do not have
    the proc filesystem mounted.  Use the POSIX implementation in this case.  */
-static char *generic_getcwd (char *buf, size_t size);
+
+/* Get the code for the generic version.  */
+#define GETCWD_RETURN_TYPE	static char *
+#include <sysdeps/posix/getcwd.c>
 
 char *
 __getcwd (char *buf, size_t size)
@@ -105,7 +108,7 @@ __getcwd (char *buf, size_t size)
 	}
 #endif
 
-      result = generic_getcwd (path, size);
+      result = __getcwd_generic (path, size);
 
 #ifndef NO_ALLOCATION
       if (result == NULL && buf == NULL && size != 0)
@@ -129,8 +132,3 @@ __getcwd (char *buf, size_t size)
 }
 libc_hidden_def (__getcwd)
 weak_alias (__getcwd, getcwd)
-
-/* Get the code for the generic version.  */
-#define GETCWD_RETURN_TYPE	static char *
-#define __getcwd		generic_getcwd
-#include <sysdeps/posix/getcwd.c>

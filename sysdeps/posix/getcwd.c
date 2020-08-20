@@ -15,522 +15,479 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Wants:
-   AC_STDC_HEADERS
-   AC_DIR_HEADER
-   AC_UNISTD_H
-   AC_MEMORY_H
-   AC_CONST
-   AC_ALLOCA
- */
-
-/* AIX requires this to be the first thing in the file.  */
-#if defined _AIX && !defined __GNUC__
- #pragma alloca
-#endif
-
-#ifdef	HAVE_CONFIG_H
-# include "config.h"
+#if !_LIBC
+# include <config.h>
+# include <unistd.h>
+# include "pathmax.h"
+#else
+# define HAVE_OPENAT 1
+# define D_INO_IN_DIRENT 1
+# define HAVE_MSVC_INVALID_PARAMETER_HANDLER 0
+# define HAVE_MINIMALLY_WORKING_GETCWD 0
 #endif
 
 #include <errno.h>
-#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdbool.h>
+#include <stddef.h>
 
-#ifdef	STDC_HEADERS
-# include <stddef.h>
+#include <fcntl.h> /* For AT_FDCWD on Solaris 9.  */
+
+/* If this host provides the openat function or if we're using the
+   gnulib replacement function with a native fdopendir, then enable
+   code below to make getcwd more efficient and robust.  */
+#if defined HAVE_OPENAT || (defined GNULIB_OPENAT && defined HAVE_FDOPENDIR)
+# define HAVE_OPENAT_SUPPORT 1
+#else
+# define HAVE_OPENAT_SUPPORT 0
 #endif
 
-#if !defined __GNU_LIBRARY__ && !defined STDC_HEADERS
-extern int errno;
-#endif
 #ifndef __set_errno
-# define __set_errno(val) errno = (val)
+# define __set_errno(val) (errno = (val))
 #endif
 
-#ifndef	NULL
-# define NULL	0
+#include <dirent.h>
+#ifndef _D_EXACT_NAMLEN
+# define _D_EXACT_NAMLEN(d) strlen ((d)->d_name)
+#endif
+#ifndef _D_ALLOC_NAMLEN
+# define _D_ALLOC_NAMLEN(d) (_D_EXACT_NAMLEN (d) + 1)
 #endif
 
-#if defined USGr3 && !defined DIRENT
-# define DIRENT
-#endif /* USGr3 */
-#if defined Xenix && !defined SYSNDIR
-# define SYSNDIR
-#endif /* Xenix */
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
 
-#if defined POSIX || defined DIRENT || defined __GNU_LIBRARY__
-# include <dirent.h>
-# ifndef __GNU_LIBRARY__
-#  define D_NAMLEN(d) strlen((d)->d_name)
-# else
-#  define HAVE_D_NAMLEN
-#  define D_NAMLEN(d) ((d)->d_namlen)
+#if _LIBC
+# ifndef mempcpy
+#  define mempcpy __mempcpy
 # endif
-#else /* not POSIX or DIRENT */
-# define dirent		direct
-# define D_NAMLEN(d)	((d)->d_namlen)
-# define HAVE_D_NAMLEN
-# if defined USG && !defined sgi
-#  if defined SYSNDIR
-#   include <sys/ndir.h>
-#  else /* Not SYSNDIR */
-#   include "ndir.h"
-#  endif /* SYSNDIR */
-# else /* not USG */
-#  include <sys/dir.h>
-# endif /* USG */
-#endif /* POSIX or DIRENT or __GNU_LIBRARY__ */
-
-#if defined HAVE_UNISTD_H || defined __GNU_LIBRARY__
-# include <unistd.h>
 #endif
-
-#if defined STDC_HEADERS || defined __GNU_LIBRARY__ || defined POSIX
-# include <stdlib.h>
-# include <string.h>
-# define ANSI_STRING
-#else	/* No standard headers.  */
-
-# ifdef	USG
-
-#  include <string.h>
-#  ifdef NEED_MEMORY_H
-#   include <memory.h>
-#  endif
-#  define	ANSI_STRING
-
-# else	/* Not USG.  */
-
-#  ifdef NeXT
-
-#   include <string.h>
-
-#  else	/* Not NeXT.  */
-
-#   include <strings.h>
-
-#   ifndef bcmp
-extern int bcmp ();
-#   endif
-#   ifndef bzero
-extern void bzero ();
-#   endif
-#   ifndef bcopy
-extern void bcopy ();
-#   endif
-
-#  endif /* NeXT. */
-
-# endif	/* USG.  */
-
-extern char *malloc (), *realloc ();
-extern void free ();
-
-#endif /* Standard headers.  */
-
-#ifndef	ANSI_STRING
-# define memcpy(d, s, n)	bcopy((s), (d), (n))
-# define memmove memcpy
-#endif	/* Not ANSI_STRING.  */
 
 #ifndef MAX
 # define MAX(a, b) ((a) < (b) ? (b) : (a))
 #endif
-
-#ifdef _LIBC
-# ifndef mempcpy
-#  define mempcpy __mempcpy
-# endif
-# define HAVE_MEMPCPY	1
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
-#if !defined __alloca && !defined __GNU_LIBRARY__
-
-# ifdef	__GNUC__
-#  undef alloca
-#  define alloca(n)	__builtin_alloca (n)
-# else	/* Not GCC.  */
-#  if	defined sparc || defined HAVE_ALLOCA_H
-#   include <alloca.h>
-#  else	/* Not sparc or HAVE_ALLOCA_H.  */
-#   ifndef _AIX
-extern char *alloca ();
-#   endif /* Not _AIX.  */
-#  endif /* sparc or HAVE_ALLOCA_H.  */
-# endif	/* GCC.  */
-
-# define __alloca	alloca
-
-#endif
-
-#if defined HAVE_LIMITS_H || defined STDC_HEADERS || defined __GNU_LIBRARY__
-# include <limits.h>
-#else
-# include <sys/param.h>
-#endif
-
-#if defined _LIBC
-# include <not-cancel.h>
-# include <kernel-features.h>
-#else
-# define __openat64_nocancel(dfd, name, mode) openat64 (dfd, name, mode)
-# define __close_nocancel_nostatus(fd) close (fd)
-#endif
-
+/* In this file, PATH_MAX only serves as a threshold for choosing among two
+   algorithms.  */
 #ifndef PATH_MAX
-# ifdef	MAXPATHLEN
-#  define PATH_MAX MAXPATHLEN
-# else
-#  define PATH_MAX 1024
-# endif
+# define PATH_MAX 8192
 #endif
 
-#if !defined STDC_HEADERS && !defined __GNU_LIBRARY__
-# undef	size_t
-# define size_t	unsigned int
+#if D_INO_IN_DIRENT
+# define MATCHING_INO(dp, ino) ((dp)->d_ino == (ino))
+#else
+# define MATCHING_INO(dp, ino) true
 #endif
 
-#ifndef __GNU_LIBRARY__
-# define __lstat64	stat64
+#if HAVE_MSVC_INVALID_PARAMETER_HANDLER
+# include "msvc-inval.h"
 #endif
 
-#ifndef _LIBC
-# define __rewinddir	rewinddir
+#if !_LIBC
+# define __close_nocancel_nostatus close
+# define __getcwd_generic rpl_getcwd
+# define stat64    stat
+# define __fstat64 fstat
+# define __fstatat64 fstatat
+# define __lstat64 lstat
+# define __closedir closedir
+# define __opendir opendir
+# define __readdir readdir
+# define __fdopendir fdopendir
+# define __openat openat
+# define __rewinddir rewinddir
+# define __openat64 openat
+#else
+# include <not-cancel.h>
+#endif
+
+/* The results of opendir() in this file are not used with dirfd and fchdir,
+   and we do not leak fds to any single-threaded code that could use stdio,
+   therefore save some unnecessary recursion in fchdir.c.
+   FIXME - if the kernel ever adds support for multi-thread safety for
+   avoiding standard fds, then we should use opendir_safer and
+   openat_safer.  */
+#ifdef GNULIB_defined_opendir
+# undef opendir
+#endif
+#ifdef GNULIB_defined_closedir
+# undef closedir
 #endif
 
-#ifndef _LIBC
-# define __getcwd getcwd
+#if defined _WIN32 && !defined __CYGWIN__
+# if HAVE_MSVC_INVALID_PARAMETER_HANDLER
+static char *
+getcwd_nothrow (char *buf, size_t size)
+{
+  char *result;
+
+  TRY_MSVC_INVAL
+    {
+      result = _getcwd (buf, size);
+    }
+  CATCH_MSVC_INVAL
+    {
+      result = NULL;
+      errno = ERANGE;
+    }
+  DONE_MSVC_INVAL;
+
+  return result;
+}
+# else
+#  define getcwd_nothrow _getcwd
+# endif
+# define getcwd_system getcwd_nothrow
+#else
+# define getcwd_system getcwd
 #endif
 
-#ifndef GETCWD_RETURN_TYPE
-# define GETCWD_RETURN_TYPE char *
-#endif
-
-#ifdef __ASSUME_ATFCTS
-# define __have_atfcts 1
-#elif IS_IN (rtld)
-static int __rtld_have_atfcts;
-# define __have_atfcts __rtld_have_atfcts
-#endif
-
-/* Get the pathname of the current working directory, and put it in SIZE
-   bytes of BUF.  Returns NULL if the directory couldn't be determined or
-   SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
-   NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
-   unless SIZE == 0, in which case it is as big as necessary.  */
+/* Get the name of the current working directory, and put it in SIZE
+   bytes of BUF.  Returns NULL with errno set if the directory couldn't be
+   determined or SIZE was too small.  If successful, returns BUF.  In GNU,
+   if BUF is NULL, an array is allocated with 'malloc'; the array is SIZE
+   bytes long, unless SIZE == 0, in which case it is as big as necessary.  */
 
 GETCWD_RETURN_TYPE
-__getcwd (char *buf, size_t size)
+__getcwd_generic (char *buf, size_t size)
 {
-#ifndef __ASSUME_ATFCTS
-  static const char dots[]
-    = "../../../../../../../../../../../../../../../../../../../../../../../\
-../../../../../../../../../../../../../../../../../../../../../../../../../../\
-../../../../../../../../../../../../../../../../../../../../../../../../../..";
-  const char *dotp = &dots[sizeof (dots)];
-  const char *dotlist = dots;
-  size_t dotsize = sizeof (dots) - 1;
-#endif
-  int prev_errno = errno;
-  DIR *dirstream = NULL;
-  bool fd_needs_closing = false;
-  int fd = AT_FDCWD;
+  /* Lengths of big file name components and entire file names, and a
+     deep level of file name nesting.  These numbers are not upper
+     bounds; they are merely large values suitable for initial
+     allocations, designed to be large enough for most real-world
+     uses.  */
+  enum
+    {
+      BIG_FILE_NAME_COMPONENT_LENGTH = 255,
+      BIG_FILE_NAME_LENGTH = MIN (4095, PATH_MAX - 1),
+      DEEP_NESTING = 100
+    };
 
-  char *path;
-#ifndef NO_ALLOCATION
+#if HAVE_OPENAT_SUPPORT
+  int fd = AT_FDCWD;
+  bool fd_needs_closing = false;
+#else
+  char dots[DEEP_NESTING * sizeof ".." + BIG_FILE_NAME_COMPONENT_LENGTH + 1];
+  char *dotlist = dots;
+  size_t dotsize = sizeof dots;
+  size_t dotlen = 0;
+#endif
+  DIR *dirstream = NULL;
+  dev_t rootdev, thisdev;
+  ino_t rootino, thisino;
+  char *dir;
+  register char *dirp;
+  struct stat64 st;
   size_t allocated = size;
+  size_t used;
+
+#if HAVE_MINIMALLY_WORKING_GETCWD
+  /* If AT_FDCWD is not defined, the algorithm below is O(N**2) and
+     this is much slower than the system getcwd (at least on
+     GNU/Linux).  So trust the system getcwd's results unless they
+     look suspicious.
+
+     Use the system getcwd even if we have openat support, since the
+     system getcwd works even when a parent is unreadable, while the
+     openat-based approach does not.
+
+     But on AIX 5.1..7.1, the system getcwd is not even minimally
+     working: If the current directory name is slightly longer than
+     PATH_MAX, it omits the first directory component and returns
+     this wrong result with errno = 0.  */
+
+# undef getcwd
+  dir = getcwd_system (buf, size);
+  if (dir || (size && errno == ERANGE))
+    return dir;
+
+  /* Solaris getcwd (NULL, 0) fails with errno == EINVAL, but it has
+     internal magic that lets it work even if an ancestor directory is
+     inaccessible, which is better in many cases.  So in this case try
+     again with a buffer that's almost always big enough.  */
+  if (errno == EINVAL && buf == NULL && size == 0)
+    {
+      char big_buffer[BIG_FILE_NAME_LENGTH + 1];
+      dir = getcwd_system (big_buffer, sizeof big_buffer);
+      if (dir)
+        return strdup (dir);
+    }
+
+# if HAVE_PARTLY_WORKING_GETCWD
+  /* The system getcwd works, except it sometimes fails when it
+     shouldn't, setting errno to ERANGE, ENAMETOOLONG, or ENOENT.    */
+  if (errno != ERANGE && errno != ENAMETOOLONG && errno != ENOENT)
+    return NULL;
+# endif
+#endif
   if (size == 0)
     {
       if (buf != NULL)
-	{
-	  __set_errno (EINVAL);
-	  return NULL;
-	}
+        {
+          __set_errno (EINVAL);
+          return NULL;
+        }
 
-      allocated = PATH_MAX + 1;
+      allocated = BIG_FILE_NAME_LENGTH + 1;
     }
 
   if (buf == NULL)
     {
-      path = malloc (allocated);
-      if (path == NULL)
-	return NULL;
+      dir = malloc (allocated);
+      if (dir == NULL)
+        return NULL;
     }
   else
-#else
-# define allocated size
-#endif
-    path = buf;
+    dir = buf;
 
-  char *pathp = path + allocated;
-  *--pathp = '\0';
+  dirp = dir + allocated;
+  *--dirp = '\0';
 
-  struct stat64 st;
   if (__lstat64 (".", &st) < 0)
     goto lose;
-  dev_t thisdev = st.st_dev;
-  ino_t thisino = st.st_ino;
+  thisdev = st.st_dev;
+  thisino = st.st_ino;
 
   if (__lstat64 ("/", &st) < 0)
     goto lose;
-  dev_t rootdev = st.st_dev;
-  ino_t rootino = st.st_ino;
+  rootdev = st.st_dev;
+  rootino = st.st_ino;
 
   while (!(thisdev == rootdev && thisino == rootino))
     {
-      if (__have_atfcts >= 0)
-	  fd = __openat64_nocancel (fd, "..", O_RDONLY | O_CLOEXEC);
-      else
-	fd = -1;
-      if (fd >= 0)
-	{
-	  fd_needs_closing = true;
-	  if (__fstat64 (fd, &st) < 0)
-	    goto lose;
-	}
-#ifndef __ASSUME_ATFCTS
-      else if (errno == ENOSYS)
-	{
-	  __have_atfcts = -1;
+      struct dirent *d;
+      dev_t dotdev;
+      ino_t dotino;
+      bool mount_point;
+      int parent_status;
+      size_t dirroom;
+      size_t namlen;
+      bool use_d_ino = true;
 
-	  /* Look at the parent directory.  */
-	  if (dotp == dotlist)
-	    {
-# ifdef NO_ALLOCATION
-	      __set_errno (ENOMEM);
-	      goto lose;
-# else
-	      /* My, what a deep directory tree you have, Grandma.  */
-	      char *new;
-	      if (dotlist == dots)
-		{
-		  new = malloc (dotsize * 2 + 1);
-		  if (new == NULL)
-		    goto lose;
-#  ifdef HAVE_MEMPCPY
-		  dotp = mempcpy (new, dots, dotsize);
-#  else
-		  memcpy (new, dots, dotsize);
-		  dotp = &new[dotsize];
-#  endif
-		}
-	      else
-		{
-		  new = realloc ((void *) dotlist, dotsize * 2 + 1);
-		  if (new == NULL)
-		    goto lose;
-		  dotp = &new[dotsize];
-		}
-#  ifdef HAVE_MEMPCPY
-	      *((char *) mempcpy ((char *) dotp, new, dotsize)) = '\0';
-	      dotsize *= 2;
-#  else
-	      memcpy ((char *) dotp, new, dotsize);
-	      dotsize *= 2;
-	      new[dotsize] = '\0';
-#  endif
-	      dotlist = new;
-# endif
-	    }
-
-	  dotp -= 3;
-
-	  /* Figure out if this directory is a mount point.  */
-	  if (__lstat64 (dotp, &st) < 0)
-	    goto lose;
-	}
+      /* Look at the parent directory.  */
+#if HAVE_OPENAT_SUPPORT
+      fd = __openat64 (fd, "..", O_RDONLY);
+      if (fd < 0)
+        goto lose;
+      fd_needs_closing = true;
+      parent_status = __fstat64 (fd, &st);
+#else
+      dotlist[dotlen++] = '.';
+      dotlist[dotlen++] = '.';
+      dotlist[dotlen] = '\0';
+      parent_status = __lstat64 (dotlist, &st);
 #endif
-      else
-	goto lose;
+      if (parent_status != 0)
+        goto lose;
 
       if (dirstream && __closedir (dirstream) != 0)
-	{
-	  dirstream = NULL;
-	  goto lose;
-       }
+        {
+          dirstream = NULL;
+          goto lose;
+        }
 
-      dev_t dotdev = st.st_dev;
-      ino_t dotino = st.st_ino;
-      bool mount_point = dotdev != thisdev;
+      /* Figure out if this directory is a mount point.  */
+      dotdev = st.st_dev;
+      dotino = st.st_ino;
+      mount_point = dotdev != thisdev;
 
       /* Search for the last directory.  */
-      if (__have_atfcts >= 0)
-	dirstream = __fdopendir (fd);
-#ifndef __ASSUME_ATFCTS
-      else
-	dirstream = __opendir (dotp);
-#endif
+#if HAVE_OPENAT_SUPPORT
+      dirstream = __fdopendir (fd);
       if (dirstream == NULL)
-	goto lose;
+        goto lose;
       fd_needs_closing = false;
-
-      struct dirent *d;
-      bool use_d_ino = true;
-      while (1)
-	{
-	  /* Clear errno to distinguish EOF from error if readdir returns
-	     NULL.  */
-	  __set_errno (0);
-	  d = __readdir (dirstream);
-	  if (d == NULL)
-	    {
-	      if (errno == 0)
-		{
-		  /* When we've iterated through all directory entries
-		     without finding one with a matching d_ino, rewind the
-		     stream and consider each name again, but this time, using
-		     lstat64.  This is necessary in a chroot on at least one
-		     system.  */
-		  if (use_d_ino)
-		    {
-		      use_d_ino = false;
-		      __rewinddir (dirstream);
-		      continue;
-		    }
-
-		  /* EOF on dirstream, which means that the current directory
-		     has been removed.  */
-		  __set_errno (ENOENT);
-		}
-	      goto lose;
-	    }
-
-#ifdef _DIRENT_HAVE_D_TYPE
-	  if (d->d_type != DT_DIR && d->d_type != DT_UNKNOWN)
-	    continue;
+#else
+      dirstream = __opendir (dotlist);
+      if (dirstream == NULL)
+        goto lose;
+      dotlist[dotlen++] = '/';
 #endif
-	  if (d->d_name[0] == '.'
-	      && (d->d_name[1] == '\0'
-		  || (d->d_name[1] == '.' && d->d_name[2] == '\0')))
-	    continue;
-	  if (use_d_ino && !mount_point && (ino_t) d->d_ino != thisino)
-	    continue;
+      for (;;)
+        {
+          /* Clear errno to distinguish EOF from error if readdir returns
+             NULL.  */
+          __set_errno (0);
+          d = __readdir (dirstream);
 
-	  if (__have_atfcts >= 0)
-	    {
-	      /* We don't fail here if we cannot stat64() a directory entry.
-		 This can happen when (network) filesystems fail.  If this
-		 entry is in fact the one we are looking for we will find
-		 out soon as we reach the end of the directory without
-		 having found anything.  */
-	      if (__fstatat64 (fd, d->d_name, &st, AT_SYMLINK_NOFOLLOW) < 0)
-		continue;
-	    }
-#ifndef __ASSUME_ATFCTS
-	  else
-	    {
-	      char name[dotlist + dotsize - dotp + 1 + _D_ALLOC_NAMLEN (d)];
-# ifdef HAVE_MEMPCPY
-	      char *tmp = mempcpy (name, dotp, dotlist + dotsize - dotp);
-	      *tmp++ = '/';
-	      strcpy (tmp, d->d_name);
-# else
-	      memcpy (name, dotp, dotlist + dotsize - dotp);
-	      name[dotlist + dotsize - dotp] = '/';
-	      strcpy (&name[dotlist + dotsize - dotp + 1], d->d_name);
-# endif
-	      /* We don't fail here if we cannot stat64() a directory entry.
-		 This can happen when (network) filesystems fail.  If this
-		 entry is in fact the one we are looking for we will find
-		 out soon as we reach the end of the directory without
-		 having found anything.  */
-	      if (__lstat64 (name, &st) < 0)
-		continue;
-	    }
+          /* When we've iterated through all directory entries without finding
+             one with a matching d_ino, rewind the stream and consider each
+             name again, but this time, using lstat.  This is necessary in a
+             chroot on at least one system (glibc-2.3.6 + linux 2.6.12), where
+             .., ../.., ../../.., etc. all had the same device number, yet the
+             d_ino values for entries in / did not match those obtained
+             via lstat.  */
+          if (d == NULL && errno == 0 && use_d_ino)
+            {
+              use_d_ino = false;
+              __rewinddir (dirstream);
+              d = __readdir (dirstream);
+            }
+
+          if (d == NULL)
+            {
+              if (errno == 0)
+                /* EOF on dirstream, which can mean e.g., that the current
+                   directory has been removed.  */
+                __set_errno (ENOENT);
+              goto lose;
+            }
+          if (d->d_name[0] == '.' &&
+              (d->d_name[1] == '\0' ||
+               (d->d_name[1] == '.' && d->d_name[2] == '\0')))
+            continue;
+
+          if (use_d_ino)
+            {
+              bool match = (MATCHING_INO (d, thisino) || mount_point);
+              if (! match)
+                continue;
+            }
+
+          {
+            int entry_status;
+#if HAVE_OPENAT_SUPPORT
+            entry_status = __fstatat64 (fd, d->d_name, &st, AT_SYMLINK_NOFOLLOW);
+#else
+            /* Compute size needed for this file name, or for the file
+               name ".." in the same directory, whichever is larger.
+               Room for ".." might be needed the next time through
+               the outer loop.  */
+            size_t name_alloc = _D_ALLOC_NAMLEN (d);
+            size_t filesize = dotlen + MAX (sizeof "..", name_alloc);
+
+            if (filesize < dotlen)
+              goto memory_exhausted;
+
+            if (dotsize < filesize)
+              {
+                /* My, what a deep directory tree you have, Grandma.  */
+                size_t newsize = MAX (filesize, dotsize * 2);
+                size_t i;
+                if (newsize < dotsize)
+                  goto memory_exhausted;
+                if (dotlist != dots)
+                  free (dotlist);
+                dotlist = malloc (newsize);
+                if (dotlist == NULL)
+                  goto lose;
+                dotsize = newsize;
+
+                i = 0;
+                do
+                  {
+                    dotlist[i++] = '.';
+                    dotlist[i++] = '.';
+                    dotlist[i++] = '/';
+                  }
+                while (i < dotlen);
+              }
+
+            memcpy (dotlist + dotlen, d->d_name, _D_ALLOC_NAMLEN (d));
+            entry_status = __lstat64 (dotlist, &st);
 #endif
-	  if (S_ISDIR (st.st_mode)
-	      && st.st_dev == thisdev && st.st_ino == thisino)
-	    break;
-	}
+            /* We don't fail here if we cannot stat() a directory entry.
+               This can happen when (network) file systems fail.  If this
+               entry is in fact the one we are looking for we will find
+               out soon as we reach the end of the directory without
+               having found anything.  */
+            if (entry_status == 0 && S_ISDIR (st.st_mode)
+                && st.st_dev == thisdev && st.st_ino == thisino)
+              break;
+          }
+        }
 
-      size_t namlen = _D_EXACT_NAMLEN (d);
+      dirroom = dirp - dir;
+      namlen = _D_EXACT_NAMLEN (d);
 
-      if ((size_t) (pathp - path) <= namlen)
-	{
-#ifndef NO_ALLOCATION
-	  if (size == 0)
-	    {
-	      size_t oldsize = allocated;
+      if (dirroom <= namlen)
+        {
+          if (size != 0)
+            {
+              __set_errno (ERANGE);
+              goto lose;
+            }
+          else
+            {
+              char *tmp;
+              size_t oldsize = allocated;
 
-	      allocated = 2 * MAX (allocated, namlen);
-	      char *tmp = realloc (path, allocated);
-	      if (tmp == NULL)
-		goto lose;
+              allocated += MAX (allocated, namlen);
+              if (allocated < oldsize
+                  || ! (tmp = realloc (dir, allocated)))
+                goto memory_exhausted;
 
-	      /* Move current contents up to the end of the buffer.
-		 This is guaranteed to be non-overlapping.  */
-	      pathp = memcpy (tmp + allocated - (path + oldsize - pathp),
-			      tmp + (pathp - path),
-			      path + oldsize - pathp);
-	      path = tmp;
-	    }
-	  else
-#endif
-	    {
-	      __set_errno (ERANGE);
-	      goto lose;
-	    }
-	}
-      pathp -= namlen;
-      (void) memcpy (pathp, d->d_name, namlen);
-      *--pathp = '/';
+              /* Move current contents up to the end of the buffer.
+                 This is guaranteed to be non-overlapping.  */
+              dirp = memcpy (tmp + allocated - (oldsize - dirroom),
+                             tmp + dirroom,
+                             oldsize - dirroom);
+              dir = tmp;
+            }
+        }
+      dirp -= namlen;
+      memcpy (dirp, d->d_name, namlen);
+      *--dirp = '/';
 
       thisdev = dotdev;
       thisino = dotino;
     }
 
-  if (dirstream != NULL && __closedir (dirstream) != 0)
+  if (dirstream && __closedir (dirstream) != 0)
     {
       dirstream = NULL;
       goto lose;
     }
 
-  if (pathp == &path[allocated - 1])
-    *--pathp = '/';
+  if (dirp == &dir[allocated - 1])
+    *--dirp = '/';
 
-#ifndef __ASSUME_ATFCTS
+#if ! HAVE_OPENAT_SUPPORT
   if (dotlist != dots)
-    free ((void *) dotlist);
+    free (dotlist);
 #endif
 
-  size_t used = path + allocated - pathp;
-  memmove (path, pathp, used);
+  used = dir + allocated - dirp;
+  memmove (dir, dirp, used);
 
   if (size == 0)
     /* Ensure that the buffer is only as large as necessary.  */
-    buf = realloc (path, used);
+    buf = (used < allocated ? realloc (dir, used) : dir);
 
   if (buf == NULL)
-    /* Either buf was NULL all along, or `realloc' failed but
+    /* Either buf was NULL all along, or 'realloc' failed but
        we still have the original string.  */
-    buf = path;
-
-  /* Restore errno on successful return.  */
-  __set_errno (prev_errno);
+    buf = dir;
 
   return buf;
 
- lose:;
-  int save_errno = errno;
-#ifndef __ASSUME_ATFCTS
-  if (dotlist != dots)
-    free ((void *) dotlist);
+ memory_exhausted:
+  __set_errno (ENOMEM);
+ lose:
+  {
+    int save = errno;
+    if (dirstream)
+      __closedir (dirstream);
+#if HAVE_OPENAT_SUPPORT
+    if (fd_needs_closing)
+       __close_nocancel_nostatus (fd);
+#else
+    if (dotlist != dots)
+      free (dotlist);
 #endif
-  if (dirstream != NULL)
-    __closedir (dirstream);
-  if (fd_needs_closing)
-    __close_nocancel_nostatus (fd);
-#ifndef NO_ALLOCATION
-  if (buf == NULL)
-    free (path);
-#endif
-  __set_errno (save_errno);
+    if (buf == NULL)
+      free (dir);
+    __set_errno (save);
+  }
   return NULL;
 }
 
-#if defined _LIBC && !defined __getcwd
+#if defined _LIBC && !defined GETCWD_RETURN_TYPE
 libc_hidden_def (__getcwd)
 weak_alias (__getcwd, getcwd)
 #endif
