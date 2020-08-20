@@ -17,7 +17,7 @@
 # <http://www.gnu.org/licenses/>.
 
 from frontend_c import Frontend
-from vcs_to_changelog import ProjectQuirks
+from projectquirks import ProjectQuirks
 import re
 
 class GlibcProjectQuirks(ProjectQuirks):
