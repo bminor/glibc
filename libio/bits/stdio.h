@@ -60,7 +60,7 @@ fgetc_unlocked (FILE *__fp)
 # endif /* misc */
 
 
-# ifdef __USE_POSIX
+# ifdef __USE_POSIX199506
 /* This is defined in POSIX.1:1996.  */
 __STDIO_INLINE int
 getc_unlocked (FILE *__fp)
@@ -95,7 +95,7 @@ fputc_unlocked (int __c, FILE *__stream)
 # endif /* misc */
 
 
-# ifdef __USE_POSIX
+# ifdef __USE_POSIX199506
 /* This is defined in POSIX.1:1996.  */
 __STDIO_INLINE int
 putc_unlocked (int __c, FILE *__stream)

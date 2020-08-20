@@ -486,13 +486,15 @@ __NTH (mknod (const char *__path, __mode_t __mode, __dev_t __dev))
 }
 # endif
 
-# ifdef __USE_ATFILE
+# if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
+#  ifdef __USE_ATFILE
 __extern_inline int
 __NTH (mknodat (int __fd, const char *__path, __mode_t __mode,
 		__dev_t __dev))
 {
   return __xmknodat (_MKNOD_VER, __fd, __path, __mode, &__dev);
 }
+#  endif
 # endif
 
 # if defined __USE_LARGEFILE64 \
