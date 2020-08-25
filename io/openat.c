@@ -23,11 +23,6 @@
 #include <sys/stat.h>
 #include <kernel-features.h>
 
-/* Some mostly-generic code (e.g. sysdeps/posix/getcwd.c) uses this variable
-   if __ASSUME_ATFCTS is not defined.  */
-#ifndef __ASSUME_ATFCTS
-int __have_atfcts;
-#endif
 
 /* Open FILE with access OFLAG.  Interpret relative paths relative to
    the directory associated with FD.  If O_CREAT or O_TMPFILE is in OFLAG, a
