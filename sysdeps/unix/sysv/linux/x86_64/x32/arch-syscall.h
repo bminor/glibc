@@ -260,6 +260,7 @@
 #define __NR_sendto 1073741868
 #define __NR_set_mempolicy 1073742062
 #define __NR_set_robust_list 1073742354
+#define __NR_set_thread_area 1073742029
 #define __NR_set_tid_address 1073742042
 #define __NR_setdomainname 1073741995
 #define __NR_setfsgid 1073741947
