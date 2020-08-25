@@ -42,7 +42,11 @@ weak_alias (__readdir64, readdir)
 /* The compat code expects the 'struct direct' with d_ino being a __ino_t
    instead of __ino64_t.  */
 # include <shlib-compat.h>
+# if IS_IN(rtld)
+weak_alias (__readdir64, readdir64)
+# else
 versioned_symbol (libc, __readdir64, readdir64, GLIBC_2_2);
+# endif
 # if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
 #  include <olddirent.h>
 #  define __READDIR   attribute_compat_text_section __old_readdir64

@@ -97,11 +97,12 @@
 # define __lstat64 lstat
 # define __closedir closedir
 # define __opendir opendir
-# define __readdir readdir
+# define __readdir64 readdir
 # define __fdopendir fdopendir
 # define __openat openat
 # define __rewinddir rewinddir
 # define __openat64 openat
+# define dirent64 dirent
 #else
 # include <not-cancel.h>
 #endif
@@ -260,7 +261,7 @@ __getcwd_generic (char *buf, size_t size)
 
   while (!(thisdev == rootdev && thisino == rootino))
     {
-      struct dirent *d;
+      struct dirent64 *d;
       dev_t dotdev;
       ino_t dotino;
       bool mount_point;
@@ -313,7 +314,7 @@ __getcwd_generic (char *buf, size_t size)
           /* Clear errno to distinguish EOF from error if readdir returns
              NULL.  */
           __set_errno (0);
-          d = __readdir (dirstream);
+          d = __readdir64 (dirstream);
 
           /* When we've iterated through all directory entries without finding
              one with a matching d_ino, rewind the stream and consider each
@@ -326,7 +327,7 @@ __getcwd_generic (char *buf, size_t size)
             {
               use_d_ino = false;
               __rewinddir (dirstream);
-              d = __readdir (dirstream);
+              d = __readdir64 (dirstream);
             }
 
           if (d == NULL)
