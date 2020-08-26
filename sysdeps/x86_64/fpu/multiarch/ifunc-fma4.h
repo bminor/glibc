@@ -32,7 +32,7 @@ IFUNC_SELECTOR (void)
       && CPU_FEATURE_USABLE_P (cpu_features, AVX2))
     return OPTIMIZE (fma);
 
-  if (CPU_FEATURE_USABLE_P (cpu_features, FMA))
+  if (CPU_FEATURE_USABLE_P (cpu_features, FMA4))
     return OPTIMIZE (fma4);
 
   return OPTIMIZE (sse2);
