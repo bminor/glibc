@@ -5,6 +5,11 @@ See the end for copying conditions.
 Please send GNU C library bug reports via <https://sourceware.org/bugzilla/>
 using `glibc' in the "product" field.
 
+The following bugs are resolved with this release:
+
+  [26534] libm.so 2.32 SIGILL in pow() due to FMA4 instruction on non-FMA4
+    system
+
 Version 2.32
 
 Major new features:
