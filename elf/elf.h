@@ -2875,6 +2875,8 @@ enum
 #define R_AARCH64_IRELATIVE	1032	/* STT_GNU_IFUNC relocation.  */
 
 /* AArch64 specific values for the Dyn d_tag field.  */
+#define DT_AARCH64_BTI_PLT	(DT_LOPROC + 1)
+#define DT_AARCH64_PAC_PLT	(DT_LOPROC + 3)
 #define DT_AARCH64_VARIANT_PCS	(DT_LOPROC + 5)
 #define DT_AARCH64_NUM		6
 
