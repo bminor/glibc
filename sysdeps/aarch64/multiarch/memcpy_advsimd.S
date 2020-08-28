@@ -223,12 +223,13 @@ L(copy_long_backwards):
 	b.ls	L(copy64_from_start)
 
 L(loop64_backwards):
-	stp	A_q, B_q, [dstend, -32]
+	str	B_q, [dstend, -16]
+	str	A_q, [dstend, -32]
 	ldp	A_q, B_q, [srcend, -96]
-	stp	C_q, D_q, [dstend, -64]
+	str	D_q, [dstend, -48]
+	str	C_q, [dstend, -64]!
 	ldp	C_q, D_q, [srcend, -128]
 	sub	srcend, srcend, 64
-	sub	dstend, dstend, 64
 	subs	count, count, 64
 	b.hi	L(loop64_backwards)
 
