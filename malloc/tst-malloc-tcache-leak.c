@@ -29,6 +29,7 @@
 #include <malloc.h>
 #include <pthread.h>
 #include <assert.h>
+#include <libc-diag.h>
 
 #include <support/check.h>
 #include <support/support.h>
@@ -72,6 +73,10 @@ do_test (void)
      pthread_t required to run the test.  */
   thread = (pthread_t *) xcalloc (1, sizeof (pthread_t));
 
+  /* The test below covers the deprecated mallinfo function.  */
+  DIAG_PUSH_NEEDS_COMMENT;
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdeprecated-declarations");
+
   info_before = mallinfo ();
 
   assert (info_before.uordblks != 0);
@@ -103,6 +108,8 @@ do_test (void)
      which is a QoI we'd want to detect and fix.  */
   if (info_after.uordblks > (info_before.uordblks + threads))
     FAIL_EXIT1 ("Memory usage after threads is too high.\n");
+
+  DIAG_POP_NEEDS_COMMENT;
 
   /* Did not detect excessive memory usage.  */
   free (thread);
