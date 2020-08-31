@@ -69,7 +69,8 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-printf-bz25691 \
 	 tst-vfprintf-width-prec-alloc \
 	 tst-printf-fp-free \
-	 tst-printf-fp-leak
+	 tst-printf-fp-leak \
+	 test-strerr
 
 
 test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble
