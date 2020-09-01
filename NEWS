@@ -9,6 +9,10 @@ Version 2.33
 
 Major new features:
 
+* The mallinfo2 function is added to report statistics as per mallinfo,
+  but with larger field widths to accurately report values that are
+  larger than fit in an integer.
+
 * Add <sys/platform/x86.h> to provide query macros for x86 CPU features.
 
 * Support for the RISC-V ISA running on Linux has been expanded to run on
@@ -23,7 +27,8 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* The mallinfo function is marked deprecated.  Callers should call
+  mallinfo2 instead.
 
 Changes to build and runtime requirements:
 

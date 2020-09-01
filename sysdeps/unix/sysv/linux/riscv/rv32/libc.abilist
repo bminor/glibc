@@ -1168,6 +1168,7 @@ GLIBC_2.33 lutimes F
 GLIBC_2.33 madvise F
 GLIBC_2.33 makecontext F
 GLIBC_2.33 mallinfo F
+GLIBC_2.33 mallinfo2 F
 GLIBC_2.33 malloc F
 GLIBC_2.33 malloc_info F
 GLIBC_2.33 malloc_stats F

@@ -1920,3 +1920,4 @@ GLIBC_2.32 wprintf F
 GLIBC_2.32 write F
 GLIBC_2.32 writev F
 GLIBC_2.32 wscanf F
+GLIBC_2.33 mallinfo2 F

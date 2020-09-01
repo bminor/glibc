@@ -639,6 +639,7 @@ libc_hidden_proto (__libc_mallopt)
   thus be inaccurate.
 */
 struct mallinfo2 __libc_mallinfo2(void);
+libc_hidden_proto (__libc_mallinfo2)
 
 struct mallinfo __libc_mallinfo(void);
 
@@ -4999,6 +5000,7 @@ __libc_mallinfo2 (void)
 
   return m;
 }
+libc_hidden_def (__libc_mallinfo2)
 
 struct mallinfo
 __libc_mallinfo (void)

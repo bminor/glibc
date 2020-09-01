@@ -2191,6 +2191,7 @@ GLIBC_2.32 thrd_current F
 GLIBC_2.32 thrd_equal F
 GLIBC_2.32 thrd_sleep F
 GLIBC_2.32 thrd_yield F
+GLIBC_2.33 mallinfo2 F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F
 GLIBC_2.4 __fgets_unlocked_chk F

@@ -2200,6 +2200,7 @@ GLIBC_2.32 sigabbrev_np F
 GLIBC_2.32 sigdescr_np F
 GLIBC_2.32 strerrordesc_np F
 GLIBC_2.32 strerrorname_np F
+GLIBC_2.33 mallinfo2 F
 GLIBC_2.4 _IO_fprintf F
 GLIBC_2.4 _IO_printf F
 GLIBC_2.4 _IO_sprintf F

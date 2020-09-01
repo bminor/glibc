@@ -35,7 +35,7 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-interpose-thread \
 	 tst-alloc_buffer \
 	 tst-malloc-tcache-leak \
-	 tst-malloc_info \
+	 tst-malloc_info tst-mallinfo2 \
 	 tst-malloc-too-large \
 	 tst-malloc-stats-cancellation \
 	 tst-tcfree1 tst-tcfree2 tst-tcfree3 \
