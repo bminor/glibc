@@ -27,7 +27,7 @@ do_test (void)
 {
   static mtx_t mutex;
 
-  if (mtx_init (&mutex, mtx_recursive) != thrd_success)
+  if (mtx_init (&mutex, mtx_plain | mtx_recursive) != thrd_success)
     FAIL_EXIT1 ("mtx_init failed");
 
   if (mtx_lock (&mutex) != thrd_success)

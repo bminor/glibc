@@ -33,7 +33,7 @@ tss_thrd (void *arg)
   if (tss_create (&key, NULL) != thrd_success)
     FAIL_EXIT1 ("tss_create failed");
 
-  if (tss_set (key, TSS_VALUE))
+  if (tss_set (key, TSS_VALUE) != thrd_success)
     FAIL_EXIT1 ("tss_set failed");
 
   void *value = tss_get (key);
