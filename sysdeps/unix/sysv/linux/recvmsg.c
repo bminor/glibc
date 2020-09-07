@@ -19,16 +19,27 @@
 #include <sys/socket.h>
 #include <sysdep-cancel.h>
 #include <socketcall.h>
-#include <shlib-compat.h>
 
 ssize_t
 __libc_recvmsg (int fd, struct msghdr *msg, int flags)
 {
-# ifdef __ASSUME_RECVMSG_SYSCALL
-  return SYSCALL_CANCEL (recvmsg, fd, msg, flags);
-# else
-  return SOCKETCALL_CANCEL (recvmsg, fd, msg, flags);
-# endif
+  ssize_t r;
+#ifndef __ASSUME_TIME64_SYSCALLS
+  socklen_t orig_controllen = msg->msg_controllen;
+#endif
+
+#ifdef __ASSUME_RECVMSG_SYSCALL
+  r = SYSCALL_CANCEL (recvmsg, fd, msg, flags);
+#else
+  r = SOCKETCALL_CANCEL (recvmsg, fd, msg, flags);
+#endif
+
+#ifndef __ASSUME_TIME64_SYSCALLS
+  if (r >= 0)
+    __convert_scm_timestamps (msg, orig_controllen);
+#endif
+
+  return r;
 }
 weak_alias (__libc_recvmsg, recvmsg)
 weak_alias (__libc_recvmsg, __recvmsg)

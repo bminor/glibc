@@ -70,6 +70,18 @@ getsockopt32 (int fd, int level, int optname, void *optval,
 	else
 	  memcpy (optval, &tv32, sizeof tv32);
       }
+      break;
+
+    case COMPAT_SO_TIMESTAMP_NEW:
+    case COMPAT_SO_TIMESTAMPNS_NEW:
+      {
+	if (optname == COMPAT_SO_TIMESTAMP_NEW)
+	  optname = COMPAT_SO_TIMESTAMP_OLD;
+	if (optname == COMPAT_SO_TIMESTAMPNS_NEW)
+	  optname = COMPAT_SO_TIMESTAMPNS_OLD;
+	r = getsockopt_syscall (fd, level, optname, optval, len);
+      }
+      break;
     }
 
   return r;

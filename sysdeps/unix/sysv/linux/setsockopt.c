@@ -69,6 +69,18 @@ setsockopt32 (int fd, int level, int optname, const void *optval,
 
 	r = setsockopt_syscall (fd, level, optname, &tv32, sizeof (tv32));
       }
+      break;
+
+    case COMPAT_SO_TIMESTAMP_NEW:
+    case COMPAT_SO_TIMESTAMPNS_NEW:
+      {
+	if (optname == COMPAT_SO_TIMESTAMP_NEW)
+	  optname = COMPAT_SO_TIMESTAMP_OLD;
+	if (optname == COMPAT_SO_TIMESTAMPNS_NEW)
+	  optname = COMPAT_SO_TIMESTAMPNS_OLD;
+	r = setsockopt_syscall (fd, level, optname, NULL, 0);
+      }
+      break;
     }
 
   return r;

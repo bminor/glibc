@@ -164,5 +164,10 @@ libc_hidden_proto (__libc_sa_len)
 
 libc_hidden_proto (__cmsg_nxthdr)
 
+#ifndef __ASSUME_TIME64_SYSCALLS
+extern void __convert_scm_timestamps (struct msghdr *msg, socklen_t msgsize)
+     attribute_hidden;
+#endif
+
 #endif
 #endif
