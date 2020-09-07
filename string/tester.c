@@ -47,6 +47,9 @@ DIAG_IGNORE_NEEDS_COMMENT (7, "-Wstringop-overflow=");
 #if __GNUC_PREREQ (8, 0)
 DIAG_IGNORE_NEEDS_COMMENT (8, "-Wstringop-truncation");
 #endif
+#if __GNUC_PREREQ (11, 0)
+DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overread");
+#endif
 
 
 #define	STREQ(a, b)	(strcmp((a), (b)) == 0)
