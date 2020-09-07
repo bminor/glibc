@@ -104,18 +104,18 @@ __sem_wait_cleanup (void *arg)
 static int
 __attribute__ ((noinline))
 do_futex_wait (struct new_sem *sem, clockid_t clockid,
-	       const struct timespec *abstime)
+	       const struct __timespec64 *abstime)
 {
   int err;
 
 #if __HAVE_64B_ATOMICS
-  err = futex_abstimed_wait_cancelable (
+  err = __futex_abstimed_wait_cancelable64 (
       (unsigned int *) &sem->data + SEM_VALUE_OFFSET, 0,
       clockid, abstime,
       sem->private);
 #else
-  err = futex_abstimed_wait_cancelable (&sem->value, SEM_NWAITERS_MASK,
-					clockid, abstime, sem->private);
+  err = __futex_abstimed_wait_cancelable64 (&sem->value, SEM_NWAITERS_MASK,
+					    clockid, abstime, sem->private);
 #endif
 
   return err;
@@ -162,8 +162,8 @@ __new_sem_wait_fast (struct new_sem *sem, int definitive_result)
 /* Slow path that blocks.  */
 static int
 __attribute__ ((noinline))
-__new_sem_wait_slow (struct new_sem *sem, clockid_t clockid,
-		     const struct timespec *abstime)
+__new_sem_wait_slow64 (struct new_sem *sem, clockid_t clockid,
+		       const struct __timespec64 *abstime)
 {
   int err = 0;
 

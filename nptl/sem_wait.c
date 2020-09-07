@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <lowlevellock.h>	/* lll_futex* used by the old code.  */
+#include "semaphoreP.h"
 #include "sem_waitcommon.c"
 
 int
@@ -39,8 +40,8 @@ __new_sem_wait (sem_t *sem)
   if (__new_sem_wait_fast ((struct new_sem *) sem, 0) == 0)
     return 0;
   else
-    return __new_sem_wait_slow ((struct new_sem *) sem,
-				CLOCK_REALTIME, NULL);
+    return __new_sem_wait_slow64 ((struct new_sem *) sem,
+				  CLOCK_REALTIME, NULL);
 }
 versioned_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);
 

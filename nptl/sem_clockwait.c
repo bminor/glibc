@@ -19,11 +19,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <time.h>
+#include "semaphoreP.h"
 #include "sem_waitcommon.c"
 
 int
-sem_clockwait (sem_t *sem, clockid_t clockid,
-	       const struct timespec *abstime)
+__sem_clockwait64 (sem_t *sem, clockid_t clockid,
+                   const struct __timespec64 *abstime)
 {
   /* Check that supplied clockid is one we support, even if we don't end up
      waiting.  */
@@ -42,5 +43,18 @@ sem_clockwait (sem_t *sem, clockid_t clockid,
   if (__new_sem_wait_fast ((struct new_sem *) sem, 0) == 0)
     return 0;
   else
-    return __new_sem_wait_slow ((struct new_sem *) sem, clockid, abstime);
+    return __new_sem_wait_slow64 ((struct new_sem *) sem, clockid, abstime);
 }
+
+#if __TIMESIZE != 64
+libpthread_hidden_def (__sem_clockwait64)
+
+int
+__sem_clockwait (sem_t *sem, clockid_t clockid, const struct timespec *abstime)
+{
+  struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
+
+  return __sem_clockwait64 (sem, clockid, &ts64);
+}
+#endif
+weak_alias (__sem_clockwait, sem_clockwait)

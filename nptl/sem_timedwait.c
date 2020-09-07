@@ -18,12 +18,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <time.h>
+#include "semaphoreP.h"
 #include "sem_waitcommon.c"
 
 /* This is in a separate file because because sem_timedwait is only provided
    if __USE_XOPEN2K is defined.  */
 int
-sem_timedwait (sem_t *sem, const struct timespec *abstime)
+__sem_timedwait64 (sem_t *sem, const struct __timespec64 *abstime)
 {
   if (! valid_nanoseconds (abstime->tv_nsec))
     {
@@ -37,6 +38,19 @@ sem_timedwait (sem_t *sem, const struct timespec *abstime)
   if (__new_sem_wait_fast ((struct new_sem *) sem, 0) == 0)
     return 0;
   else
-    return __new_sem_wait_slow ((struct new_sem *) sem,
-				CLOCK_REALTIME, abstime);
+    return __new_sem_wait_slow64 ((struct new_sem *) sem,
+				  CLOCK_REALTIME, abstime);
 }
+
+#if __TIMESIZE != 64
+libpthread_hidden_def (__sem_timedwait64)
+
+int
+__sem_timedwait (sem_t *sem, const struct timespec *abstime)
+{
+  struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
+
+  return __sem_timedwait64 (sem, &ts64);
+}
+#endif
+weak_alias (__sem_timedwait, sem_timedwait)
