@@ -74,6 +74,10 @@
 # error FUTEX_PRIVATE must be equal to 0
 #endif
 
+#ifndef __NR_futex_time64
+# define __NR_futex_time64 __NR_futex
+#endif
+
 /* Calls __libc_fatal with an error message.  Convenience function for
    concrete implementations of the futex interface.  */
 static __always_inline __attribute__ ((__noreturn__)) void
@@ -466,10 +470,6 @@ futex_unlock_pi (unsigned int *futex_word, int private)
       futex_fatal_error ();
     }
 }
-
-#ifndef __NR_futex_time64
-# define __NR_futex_time64 __NR_futex
-#endif
 
 static __always_inline int
 futex_timed_wait_cancel64 (pid_t *tidp,  pid_t tid,
