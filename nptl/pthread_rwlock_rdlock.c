@@ -24,7 +24,7 @@ __pthread_rwlock_rdlock (pthread_rwlock_t *rwlock)
 {
   LIBC_PROBE (rdlock_entry, 1, rwlock);
 
-  int result = __pthread_rwlock_rdlock_full (rwlock, CLOCK_REALTIME, NULL);
+  int result = __pthread_rwlock_rdlock_full64 (rwlock, CLOCK_REALTIME, NULL);
   LIBC_PROBE (rdlock_acquire_read, 1, rwlock);
   return result;
 }

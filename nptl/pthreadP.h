@@ -464,6 +464,10 @@ extern int __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex);
 # define __pthread_timedjoin_np64 __pthread_timedjoin_np
 # define __pthread_cond_timedwait64 __pthread_cond_timedwait
 # define __pthread_cond_clockwait64 __pthread_cond_clockwait
+# define __pthread_rwlock_clockrdlock64 __pthread_rwlock_clockrdlock
+# define __pthread_rwlock_clockwrlock64 __pthread_rwlock_clockwrlock
+# define __pthread_rwlock_timedrdlock64 __pthread_rwlock_timedrdlock
+# define __pthread_rwlock_timedwrlock64 __pthread_rwlock_timedwrlock
 #else
 extern int __pthread_clockjoin_np64 (pthread_t threadid, void **thread_return,
                                      clockid_t clockid,
@@ -481,6 +485,20 @@ extern int __pthread_cond_clockwait64 (pthread_cond_t *cond,
                                        clockid_t clockid,
                                        const struct __timespec64 *abstime);
 libpthread_hidden_proto (__pthread_cond_clockwait64)
+extern int __pthread_rwlock_clockrdlock64 (pthread_rwlock_t *rwlock,
+                                           clockid_t clockid,
+                                           const struct __timespec64 *abstime);
+libpthread_hidden_proto (__pthread_rwlock_clockrdlock64)
+extern int __pthread_rwlock_clockwrlock64 (pthread_rwlock_t *rwlock,
+                                           clockid_t clockid,
+                                           const struct __timespec64 *abstime);
+libpthread_hidden_proto (__pthread_rwlock_clockwrlock64)
+extern int __pthread_rwlock_timedrdlock64 (pthread_rwlock_t *rwlock,
+                                           const struct __timespec64 *abstime);
+libpthread_hidden_proto (__pthread_rwlock_timedrdlock64)
+extern int __pthread_rwlock_timedwrlock64 (pthread_rwlock_t *rwlock,
+                                           const struct __timespec64 *abstime);
+libpthread_hidden_proto (__pthread_rwlock_timedwrlock64)
 #endif
 
 extern int __pthread_cond_timedwait (pthread_cond_t *cond,

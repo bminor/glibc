@@ -20,8 +20,22 @@
 
 /* See pthread_rwlock_common.c.  */
 int
-pthread_rwlock_timedrdlock (pthread_rwlock_t *rwlock,
-    const struct timespec *abstime)
+__pthread_rwlock_timedrdlock64 (pthread_rwlock_t *rwlock,
+                                const struct __timespec64 *abstime)
 {
-  return __pthread_rwlock_rdlock_full (rwlock, CLOCK_REALTIME, abstime);
+  return __pthread_rwlock_rdlock_full64 (rwlock, CLOCK_REALTIME, abstime);
 }
+
+#if __TIMESIZE != 64
+libpthread_hidden_def (__pthread_rwlock_timedrdlock64)
+
+int
+__pthread_rwlock_timedrdlock (pthread_rwlock_t *rwlock,
+                              const struct timespec *abstime)
+{
+  struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
+
+  return __pthread_rwlock_timedrdlock64 (rwlock, &ts64);
+}
+#endif
+weak_alias (__pthread_rwlock_timedrdlock, pthread_rwlock_timedrdlock)
