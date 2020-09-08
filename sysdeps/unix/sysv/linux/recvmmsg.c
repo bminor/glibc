@@ -44,13 +44,26 @@ __recvmmsg64 (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
       ts32 = valid_timespec64_to_timespec (*timeout);
       pts32 = &ts32;
     }
+
+  socklen_t csize[IOV_MAX];
+  if (vlen > IOV_MAX)
+    vlen = IOV_MAX;
+  for (int i = 0; i < vlen; i++)
+    csize[i] = vmessages[i].msg_hdr.msg_controllen;
+
 # ifdef __ASSUME_RECVMMSG_SYSCALL
   r = SYSCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, pts32);
 # else
   r = SOCKETCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, pts32);
 # endif
-  if (r >= 0 && timeout != NULL)
-    *timeout = valid_timespec_to_timespec64 (ts32);
+  if (r >= 0)
+    {
+      if (timeout != NULL)
+        *timeout = valid_timespec_to_timespec64 (ts32);
+
+      for (int i=0; i < r; i++)
+        __convert_scm_timestamps (&vmessages[i].msg_hdr, csize[i]);
+    }
 #endif /* __ASSUME_TIME64_SYSCALLS  */
   return r;
 }
