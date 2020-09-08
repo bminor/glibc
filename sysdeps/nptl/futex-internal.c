@@ -67,9 +67,9 @@ __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
                                  abstime, NULL /* Unused.  */,
                                  FUTEX_BITSET_MATCH_ANY);
 #ifndef __ASSUME_TIME64_SYSCALLS
-if (err == -ENOSYS)
-	err = __futex_abstimed_wait_cancellable32 (futex_word, expected,
-	                                           clockid, abstime, private);
+  if (err == -ENOSYS)
+    err = __futex_abstimed_wait_cancellable32 (futex_word, expected,
+                                               clockid, abstime, private);
 #endif
 
   switch (err)
