@@ -529,4 +529,10 @@ __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
                                     const struct __timespec64* abstime,
                                     int private) attribute_hidden;
 
+int
+__futex_abstimed_wait64 (unsigned int* futex_word, unsigned int expected,
+                         clockid_t clockid,
+                         const struct __timespec64* abstime,
+                         int private) attribute_hidden;
+
 #endif  /* futex-internal.h */
