@@ -1317,13 +1317,13 @@ Function: "j0_downward":
 double: 2
 float: 4
 float128: 4
-ldouble: 11
+ldouble: 12
 
 Function: "j0_towardzero":
 double: 5
 float: 6
-float128: 2
-ldouble: 8
+float128: 4
+ldouble: 16
 
 Function: "j0_upward":
 double: 4
