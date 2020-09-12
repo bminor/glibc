@@ -44,10 +44,13 @@ __pselect64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
   int r;
   if (supports_time64 ())
     {
+      /* NB: This is required by ARGIFY used in x32 internal_syscallN.  */
+      __syscall_ulong_t data[2] =
+	{
+	  (uintptr_t) sigmask, __NSIG_BYTES
+	};
       r = SYSCALL_CANCEL (pselect6_time64, nfds, readfds, writefds, exceptfds,
-			  timeout,
-			  ((__syscall_ulong_t[]){ (uintptr_t) sigmask,
-						  __NSIG_BYTES }));
+			  timeout, data);
       if (r == 0 || errno != ENOSYS)
 	return r;
 
