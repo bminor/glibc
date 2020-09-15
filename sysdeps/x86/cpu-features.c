@@ -269,6 +269,14 @@ update_usable (struct cpu_features *cpu_features)
   /* Determine if PKU is usable.  */
   if (CPU_FEATURES_CPU_P (cpu_features, OSPKE))
     CPU_FEATURE_SET (cpu_features, PKU);
+
+  /* Determine if Key Locker instructions are usable.  */
+  if (CPU_FEATURES_CPU_P (cpu_features, AESKLE))
+    {
+      CPU_FEATURE_SET (cpu_features, AESKLE);
+      CPU_FEATURE_SET_USABLE (cpu_features, KL);
+      CPU_FEATURE_SET_USABLE (cpu_features, WIDE_KL);
+    }
 }
 
 static void
@@ -341,6 +349,12 @@ get_common_indices (struct cpu_features *cpu_features,
 		   cpu_features->features[COMMON_CPUID_INDEX_D_ECX_1].cpuid.ecx,
 		   cpu_features->features[COMMON_CPUID_INDEX_D_ECX_1].cpuid.edx);
 
+  if (cpu_features->basic.max_cpuid >= 0x19)
+    __cpuid_count (0x19, 0,
+		   cpu_features->features[COMMON_CPUID_INDEX_19].cpuid.eax,
+		   cpu_features->features[COMMON_CPUID_INDEX_19].cpuid.ebx,
+		   cpu_features->features[COMMON_CPUID_INDEX_19].cpuid.ecx,
+		   cpu_features->features[COMMON_CPUID_INDEX_19].cpuid.edx);
 }
 
 _Static_assert (((index_arch_Fast_Unaligned_Load

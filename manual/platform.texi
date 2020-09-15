@@ -178,6 +178,9 @@ The supported processor features are:
 @code{AES} -- The AES instruction extensions.
 
 @item
+@code{AESKLE} -- AES Key Locker instructions are enabled by OS.
+
+@item
 @code{AMX_BF16} -- Tile computational operations on bfloat16 numbers.
 
 @item
@@ -352,6 +355,9 @@ the indirect branch predictor barrier (IBPB).
 
 @item
 @code{INVPCID} -- INVPCID instruction.
+
+@item
+@code{KL} -- AES Key Locker instructions.
 
 @item
 @code{L1D_FLUSH} -- IA32_FLUSH_CMD MSR.
@@ -597,6 +603,9 @@ using a TSC deadline value.
 
 @item
 @code{WBNOINVD} -- WBINVD/WBNOINVD instructions.
+
+@item
+@code{WIDE_KL} -- AES wide Key Locker instructions.
 
 @item
 @code{X2APIC} -- x2APIC.

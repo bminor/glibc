@@ -28,6 +28,7 @@ enum
   COMMON_CPUID_INDEX_80000007,
   COMMON_CPUID_INDEX_80000008,
   COMMON_CPUID_INDEX_7_ECX_1,
+  COMMON_CPUID_INDEX_19,
   /* Keep the following line at the end.  */
   COMMON_CPUID_INDEX_MAX
 };
@@ -224,7 +225,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 /* Note: Bits 17-21: The value of MAWAU used by the BNDLDX and BNDSTX
    instructions in 64-bit mode.  */
 #define bit_cpu_RDPID		(1u << 22)
-#define bit_cpu_INDEX_7_ECX_23	(1u << 23)
+#define bit_cpu_KL		(1u << 23)
 #define bit_cpu_INDEX_7_ECX_24	(1u << 24)
 #define bit_cpu_CLDEMOTE	(1u << 25)
 #define bit_cpu_INDEX_7_ECX_26	(1u << 26)
@@ -311,6 +312,12 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 
 /* EAX.  */
 #define bit_cpu_AVX512_BF16	(1u << 5)
+
+/* COMMON_CPUID_INDEX_19.  */
+
+/* EBX.  */
+#define bit_cpu_AESKLE		(1u << 0)
+#define bit_cpu_WIDE_KL		(1u << 2)
 
 /* COMMON_CPUID_INDEX_1.  */
 
@@ -437,7 +444,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 #define index_cpu_INDEX_7_ECX_15 COMMON_CPUID_INDEX_7
 #define index_cpu_INDEX_7_ECX_16 COMMON_CPUID_INDEX_7
 #define index_cpu_RDPID		COMMON_CPUID_INDEX_7
-#define index_cpu_INDEX_7_ECX_23 COMMON_CPUID_INDEX_7
+#define index_cpu_KL		COMMON_CPUID_INDEX_7
 #define index_cpu_INDEX_7_ECX_24 COMMON_CPUID_INDEX_7
 #define index_cpu_CLDEMOTE	COMMON_CPUID_INDEX_7
 #define index_cpu_INDEX_7_ECX_26 COMMON_CPUID_INDEX_7
@@ -524,6 +531,12 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 
 /* EAX.  */
 #define index_cpu_AVX512_BF16	COMMON_CPUID_INDEX_7_ECX_1
+
+/* COMMON_CPUID_INDEX_19.  */
+
+/* EBX.  */
+#define index_cpu_AESKLE	COMMON_CPUID_INDEX_19
+#define index_cpu_WIDE_KL	COMMON_CPUID_INDEX_19
 
 /* COMMON_CPUID_INDEX_1.  */
 
@@ -650,7 +663,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 #define reg_INDEX_7_ECX_15	ecx
 #define reg_INDEX_7_ECX_16	ecx
 #define reg_RDPID		ecx
-#define reg_INDEX_7_ECX_23	ecx
+#define reg_KL			ecx
 #define reg_INDEX_7_ECX_24	ecx
 #define reg_CLDEMOTE		ecx
 #define reg_INDEX_7_ECX_26	ecx
@@ -737,5 +750,11 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 
 /* EAX.  */
 #define reg_AVX512_BF16		eax
+
+/* COMMON_CPUID_INDEX_19.  */
+
+/* EBX.  */
+#define reg_AESKLE		ebx
+#define reg_WIDE_KL		ebx
 
 #endif  /* _SYS_PLATFORM_X86_H */
