@@ -96,7 +96,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   bug-getopt5 tst-getopt_long1 bug-regex34 bug-regex35 \
 		   tst-pathconf tst-rxspencer-no-utf8 \
 		   tst-fnmatch3 bug-regex36 \
-		   tst-fnmatch4 tst-fnmatch5 \
+		   tst-fnmatch4 tst-fnmatch5 tst-fnmatch6 \
 		   tst-posix_spawn-fd tst-posix_spawn-setsid \
 		   tst-posix_fadvise tst-posix_fadvise64 \
 		   tst-sysconf-empty-chroot tst-glob_symlinks tst-fexecve \
@@ -197,6 +197,7 @@ $(objpfx)bug-regex35.out: $(gen-locales)
 $(objpfx)tst-fnmatch.out: $(gen-locales)
 $(objpfx)tst-fnmatch4.out: $(gen-locales)
 $(objpfx)tst-fnmatch5.out: $(gen-locales)
+$(objpfx)tst-fnmatch6.out: $(gen-locales)
 $(objpfx)tst-regex.out: $(gen-locales)
 $(objpfx)tst-regex2.out: $(gen-locales)
 $(objpfx)tst-regexloc.out: $(gen-locales)
