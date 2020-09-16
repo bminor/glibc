@@ -74,10 +74,10 @@ dl_cet_check (struct link_map *m, const char *program)
 
 	     GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 	   */
-	  enable_ibt &= (CPU_FEATURE_USABLE (IBT)
+	  enable_ibt &= (HAS_CPU_FEATURE (IBT)
 			 && (enable_ibt_type == cet_always_on
 			     || (m->l_cet & lc_ibt) != 0));
-	  enable_shstk &= (CPU_FEATURE_USABLE (SHSTK)
+	  enable_shstk &= (HAS_CPU_FEATURE (SHSTK)
 			   && (enable_shstk_type == cet_always_on
 			       || (m->l_cet & lc_shstk) != 0));
 	}

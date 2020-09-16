@@ -723,9 +723,9 @@ no_cpuid:
 	     GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 	   */
 	  unsigned int cet_feature = 0;
-	  if (!CPU_FEATURE_USABLE (IBT))
+	  if (!HAS_CPU_FEATURE (IBT))
 	    cet_feature |= GNU_PROPERTY_X86_FEATURE_1_IBT;
-	  if (!CPU_FEATURE_USABLE (SHSTK))
+	  if (!HAS_CPU_FEATURE (SHSTK))
 	    cet_feature |= GNU_PROPERTY_X86_FEATURE_1_SHSTK;
 
 	  if (cet_feature)
