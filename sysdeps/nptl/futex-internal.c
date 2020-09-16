@@ -24,10 +24,10 @@
 
 #ifndef __ASSUME_TIME64_SYSCALLS
 static int
-__futex_abstimed_wait_cancellable32 (unsigned int* futex_word,
-                                     unsigned int expected, clockid_t clockid,
-                                     const struct __timespec64* abstime,
-                                     int private)
+__futex_abstimed_wait_cancelable32 (unsigned int* futex_word,
+                                    unsigned int expected, clockid_t clockid,
+                                    const struct __timespec64* abstime,
+                                    int private)
 {
   struct timespec ts32, *pts32 = NULL;
   if (abstime != NULL)
@@ -74,8 +74,8 @@ __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
                                  FUTEX_BITSET_MATCH_ANY);
 #ifndef __ASSUME_TIME64_SYSCALLS
   if (err == -ENOSYS)
-    err = __futex_abstimed_wait_cancellable32 (futex_word, expected,
-                                               clockid, abstime, private);
+    err = __futex_abstimed_wait_cancelable32 (futex_word, expected,
+                                              clockid, abstime, private);
 #endif
 
   switch (err)
