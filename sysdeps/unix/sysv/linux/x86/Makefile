@@ -40,6 +40,11 @@ $(objpfx)tst-cet-property-2.out: $(objpfx)tst-cet-property-2 \
 	  $(evaluate-test)
 endif
 
+ifeq ($(subdir),posix)
+tests += tst-cet-vfork-1
+CFLAGS-tst-cet-vfork-1.c += -mshstk
+endif
+
 ifeq ($(subdir),stdlib)
 tests += tst-cet-setcontext-1
 CFLAGS-tst-cet-setcontext-1.c += -mshstk

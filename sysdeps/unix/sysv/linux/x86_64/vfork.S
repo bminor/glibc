@@ -20,22 +20,6 @@
 #include <bits/errno.h>
 #include <tcb-offsets.h>
 
-#if SHSTK_ENABLED
-/* The shadow stack prevents us from pushing the saved return PC onto
-   the stack and returning normally.  Instead we pop the shadow stack
-   and return directly.  This is the safest way to return and ensures
-   any stack manipulations done by the vfork'd child doesn't cause the
-   parent to terminate when CET is enabled.  */
-# undef SYSCALL_ERROR_HANDLER
-# define SYSCALL_ERROR_HANDLER			\
-0:						\
-  SYSCALL_SET_ERRNO;				\
-  or $-1, %RAX_LP;				\
-  jmp 1b;
-# undef SYSCALL_ERROR_LABEL
-# define SYSCALL_ERROR_LABEL 0f
-#endif
-
 /* Clone the calling process, but without copying the whole address space.
    The calling process is suspended until the new process exits or is
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
@@ -53,17 +37,14 @@ ENTRY (__vfork)
 	movl	$SYS_ify (vfork), %eax
 	syscall
 
-#if !SHSTK_ENABLED
 	/* Push back the return PC.  */
 	pushq	%rdi
 	cfi_adjust_cfa_offset(8)
-#endif
 
 	cmpl	$-4095, %eax
 	jae SYSCALL_ERROR_LABEL		/* Branch forward if it failed.  */
 
 #if SHSTK_ENABLED
-1:
 	/* Check if shadow stack is in use.  */
 	xorl	%esi, %esi
 	rdsspq	%rsi
@@ -71,16 +52,19 @@ ENTRY (__vfork)
 	/* Normal return if shadow stack isn't in use.  */
 	je	L(no_shstk)
 
-	/* Pop return address from shadow stack and jump back to caller
-	   directly.  */
-	movl	$1, %esi
-	incsspq	%rsi
+	testl	%eax, %eax
+	/* In parent, normal return.  */
+	jnz	L(no_shstk)
+
+	/* NB: In child, jump back to caller via indirect branch without
+	   popping shadow stack which is shared with parent.  Keep shadow
+	   stack mismatched so that child returns in the vfork-calling
+	   function will trigger SIGSEGV.  */
+	popq	%rdi
+	cfi_adjust_cfa_offset(-8)
 	jmp	*%rdi
 
 L(no_shstk):
-	/* Push back the return PC.  */
-	pushq	%rdi
-	cfi_adjust_cfa_offset(8)
 #endif
 
 	/* Normal return.  */
