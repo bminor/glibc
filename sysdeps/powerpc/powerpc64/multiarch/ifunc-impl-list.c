@@ -99,7 +99,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/powerpc/powerpc64/multiarch/stpcpy.c.  */
   IFUNC_IMPL (i, name, stpcpy,
 #ifdef __LITTLE_ENDIAN__
-	      IFUNC_IMPL_ADD (array, i, strncmp, hwcap2 & PPC_FEATURE2_ARCH_3_00,
+	      IFUNC_IMPL_ADD (array, i, stpcpy, hwcap2 & PPC_FEATURE2_ARCH_3_00,
 			      __stpcpy_power9)
 #endif
 	      IFUNC_IMPL_ADD (array, i, stpcpy, hwcap2 & PPC_FEATURE2_ARCH_2_07,
@@ -112,7 +112,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/powerpc/powerpc64/multiarch/strlen.c.  */
   IFUNC_IMPL (i, name, strlen,
 #ifdef __LITTLE_ENDIAN__
-	      IFUNC_IMPL_ADD (array, i, strcpy, hwcap2 & PPC_FEATURE2_ARCH_3_00,
+	      IFUNC_IMPL_ADD (array, i, strlen, hwcap2 & PPC_FEATURE2_ARCH_3_00,
 			      __strlen_power9)
 #endif
 	      IFUNC_IMPL_ADD (array, i, strlen, hwcap2 & PPC_FEATURE2_ARCH_2_07,
