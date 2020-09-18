@@ -18,11 +18,8 @@
 
 #if IS_IN (libc)
 
-#include <assert.h>
 #include <unistd.h>
-#include <cpuid.h>
 #include <ldsodefs.h>
-#include <dl-cacheinfo.h>
 
 /* Get the value of the system variable NAME.  */
 long int
@@ -30,20 +27,45 @@ attribute_hidden
 __cache_sysconf (int name)
 {
   const struct cpu_features *cpu_features = __get_cpu_features ();
+  switch (name)
+    {
+    case _SC_LEVEL1_ICACHE_SIZE:
+      return cpu_features->level1_icache_size;
 
-  if (cpu_features->basic.kind == arch_kind_intel)
-    return handle_intel (name, cpu_features);
+    case _SC_LEVEL1_DCACHE_SIZE:
+      return cpu_features->level1_dcache_size;
 
-  if (cpu_features->basic.kind == arch_kind_amd)
-    return handle_amd (name);
+    case _SC_LEVEL1_DCACHE_ASSOC:
+      return cpu_features->level1_dcache_assoc;
 
-  if (cpu_features->basic.kind == arch_kind_zhaoxin)
-    return handle_zhaoxin (name);
+    case _SC_LEVEL1_DCACHE_LINESIZE:
+      return cpu_features->level1_dcache_linesize;
 
-  // XXX Fill in more vendors.
+    case _SC_LEVEL2_CACHE_SIZE:
+      return cpu_features->level2_cache_size;
 
-  /* CPU not known, we have no information.  */
-  return 0;
+    case _SC_LEVEL2_CACHE_ASSOC:
+      return cpu_features->level2_cache_assoc;
+
+    case _SC_LEVEL2_CACHE_LINESIZE:
+      return cpu_features->level2_cache_linesize;
+
+    case _SC_LEVEL3_CACHE_SIZE:
+      return cpu_features->level3_cache_size;
+
+    case _SC_LEVEL3_CACHE_ASSOC:
+      return cpu_features->level3_cache_assoc;
+
+    case _SC_LEVEL3_CACHE_LINESIZE:
+      return cpu_features->level3_cache_linesize;
+
+    case _SC_LEVEL4_CACHE_SIZE:
+      return cpu_features->level4_cache_size;
+
+    default:
+      break;
+    }
+  return -1;
 }
 
 # ifdef SHARED

@@ -149,6 +149,28 @@ struct cpu_features
   unsigned long int rep_movsb_threshold;
   /* Threshold to use "rep stosb".  */
   unsigned long int rep_stosb_threshold;
+  /* _SC_LEVEL1_ICACHE_SIZE.  */
+  unsigned long int level1_icache_size;
+  /* _SC_LEVEL1_DCACHE_SIZE.  */
+  unsigned long int level1_dcache_size;
+  /* _SC_LEVEL1_DCACHE_ASSOC.  */
+  unsigned long int level1_dcache_assoc;
+  /* _SC_LEVEL1_DCACHE_LINESIZE.  */
+  unsigned long int level1_dcache_linesize;
+  /* _SC_LEVEL2_CACHE_ASSOC.  */
+  unsigned long int level2_cache_size;
+  /* _SC_LEVEL2_DCACHE_ASSOC.  */
+  unsigned long int level2_cache_assoc;
+  /* _SC_LEVEL2_CACHE_LINESIZE.  */
+  unsigned long int level2_cache_linesize;
+  /* /_SC_LEVEL3_CACHE_SIZE.  */
+  unsigned long int level3_cache_size;
+  /* _SC_LEVEL3_CACHE_ASSOC.  */
+  unsigned long int level3_cache_assoc;
+  /* _SC_LEVEL3_CACHE_LINESIZE.  */
+  unsigned long int level3_cache_linesize;
+  /* /_SC_LEVEL4_CACHE_SIZE.  */
+  unsigned long int level4_cache_size;
 };
 
 #if defined (_LIBC) && !IS_IN (nonlib)
