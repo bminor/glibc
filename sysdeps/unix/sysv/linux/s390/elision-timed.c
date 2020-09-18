@@ -19,8 +19,9 @@
 #include <time.h>
 #include <elision-conf.h>
 #include <lowlevellock.h>
+#include "futex-internal.h"
 #define __lll_lock_elision __lll_clocklock_elision
-#define EXTRAARG clockid_t clockid, const struct timespec *t,
+#define EXTRAARG clockid_t clockid, const struct __timespec64 *t,
 #undef LLL_LOCK
-#define LLL_LOCK(a, b) lll_clocklock(a, clockid, t, b)
+#define LLL_LOCK(a, b) __futex_clocklock64 (&(a), clockid, t, b)
 #include "elision-lock.c"

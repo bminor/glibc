@@ -437,6 +437,51 @@ futex_lock_pi (unsigned int *futex_word, const struct timespec *abstime,
     }
 }
 
+static __always_inline int
+futex_lock_pi64 (int *futex_word, const struct __timespec64 *abstime,
+                 int private)
+{
+  int err = INTERNAL_SYSCALL_CALL (futex_time64, futex_word,
+                                   __lll_private_flag
+                                   (FUTEX_LOCK_PI, private), 0, abstime);
+#ifndef __ASSUME_TIME64_SYSCALLS
+  if (err == -ENOSYS)
+    {
+      if (abstime != NULL && ! in_time_t_range (abstime->tv_sec))
+        return EOVERFLOW;
+
+      struct timespec ts32;
+      if (abstime != NULL)
+        ts32 = valid_timespec64_to_timespec (*abstime);
+
+      err = INTERNAL_SYSCALL_CALL (futex, futex_word, __lll_private_flag
+                                   (FUTEX_LOCK_PI, private), 0,
+                                   abstime != NULL ? &ts32 : NULL);
+    }
+#endif
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+    case -ETIMEDOUT:
+    case -ESRCH:
+    case -EDEADLK:
+    case -EINVAL: /* This indicates either state corruption or that the kernel
+		     found a waiter on futex address which is waiting via
+		     FUTEX_WAIT or FUTEX_WAIT_BITSET.  This is reported on
+		     some futex_lock_pi usage (pthread_mutex_timedlock for
+		     instance).  */
+      return -err;
+
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
+
 /* Wakes the top priority waiter that called a futex_lock_pi operation on
    the futex.
 
@@ -476,8 +521,8 @@ futex_timed_wait_cancel64 (pid_t *tidp,  pid_t tid,
                            const struct __timespec64 *timeout, int private)
 {
   int err = INTERNAL_SYSCALL_CANCEL (futex_time64, tidp,
-                                     __lll_private_flag
-                                     (FUTEX_WAIT, private), tid, timeout);
+                                     __lll_private_flag (FUTEX_WAIT, private),
+                                     tid, timeout);
 #ifndef __ASSUME_TIME64_SYSCALLS
   if (err == -ENOSYS)
     {
@@ -534,5 +579,28 @@ __futex_abstimed_wait64 (unsigned int* futex_word, unsigned int expected,
                          clockid_t clockid,
                          const struct __timespec64* abstime,
                          int private) attribute_hidden;
+
+int
+__futex_clocklock_wait64 (int *futex, int val, clockid_t clockid,
+                          const struct __timespec64 *abstime,
+                          int private) attribute_hidden;
+
+static __always_inline int
+__futex_clocklock64 (int *futex, clockid_t clockid,
+                     const struct __timespec64 *abstime, int private)
+{
+  int err = 0;
+
+  if (__glibc_unlikely (atomic_compare_and_exchange_bool_acq (futex, 1, 0)))
+    {
+      while (atomic_exchange_acq (futex, 2) != 0)
+        {
+          err = __futex_clocklock_wait64 (futex, 2, clockid, abstime, private);
+          if (err == EINVAL || err == ETIMEDOUT || err == EOVERFLOW)
+            break;
+        }
+    }
+  return err;
+}
 
 #endif  /* futex-internal.h */
