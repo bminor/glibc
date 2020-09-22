@@ -115,6 +115,14 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 	   && res_ptr[N - 1] == 0)
     /* Pseudo zero.  */
     *expt = 0;
+  else
+    /* Unlike other floating point formats, the most significant bit
+       is explicit and expected to be set for normal numbers.  Set it
+       in case it is cleared in the input.  Otherwise, callers will
+       not be able to produce the expected multi-precision integer
+       layout by shifting.  */
+    res_ptr[N - 1] |= (mp_limb_t) 1 << (LDBL_MANT_DIG - 1
+					- ((N - 1) * BITS_PER_MP_LIMB));
 
   return N;
 }
