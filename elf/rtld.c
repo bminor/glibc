@@ -330,7 +330,7 @@ struct rtld_global _rtld_global =
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous
-   declaration.  So spell out was strong_alias does plus add the
+   declaration.  So spell out what strong_alias does plus add the
    visibility attribute.  */
 extern struct rtld_global _rtld_local
     __attribute__ ((alias ("_rtld_global"), visibility ("hidden")));
