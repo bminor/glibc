@@ -58,10 +58,14 @@
 #  define __NTHNL(fct)  __attribute__ ((__nothrow__)) fct
 # else
 #  if defined __cplusplus && __GNUC_PREREQ (2,8)
-#   define __THROW	throw ()
-#   define __THROWNL	throw ()
-#   define __NTH(fct)	__LEAF_ATTR fct throw ()
-#   define __NTHNL(fct) fct throw ()
+#   if __cplusplus >= 201103L
+#    define __THROW	noexcept (true)
+#   else
+#    define __THROW	throw ()
+#   endif
+#   define __THROWNL	__THROW
+#   define __NTH(fct)	__LEAF_ATTR fct __THROW
+#   define __NTHNL(fct) fct __THROW
 #  else
 #   define __THROW
 #   define __THROWNL
