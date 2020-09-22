@@ -1,1 +1,1 @@
-#include "../i386/ldbl2mpn.c"
+#include "../x86/ldbl2mpn.c"
