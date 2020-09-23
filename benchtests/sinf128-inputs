@@ -1,6 +1,6 @@
 ## includes: math.h
-## args: __float128
-## ret: __float128
+## args: _Float128
+## ret: _Float128
 # Random inputs in [-10,10]
 ## name: workload-random.wrf
 0x4.e6f9d6da10d9a422942a89cdfa1p+0

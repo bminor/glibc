@@ -1,6 +1,6 @@
 ## includes: math.h
-## args: __float128:__float128
-## ret: __float128
+## args: _Float128:_Float128
+## ret: _Float128
 # Random inputs in [-10,10] such that x and y are not both negative
 ## name: workload-random.wrf
 0x8.130b31ed5288656428a29cead83p+0L, -0x6.e7ead09b7877a118813b50cfb3c8p+0L
