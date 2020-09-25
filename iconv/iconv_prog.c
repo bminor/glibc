@@ -184,7 +184,7 @@ main (int argc, char *argv[])
       /* Let's see whether we have these coded character sets.  */
       res = __gconv_open (&conv_spec, &cd, 0);
 
-      gconv_destroy_spec (&conv_spec);
+      __gconv_destroy_spec (&conv_spec);
 
       if (res != __GCONV_OK)
 	{
