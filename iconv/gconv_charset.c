@@ -216,3 +216,13 @@ out:
   return ret;
 }
 libc_hidden_def (__gconv_create_spec)
+
+
+void
+__gconv_destroy_spec (struct gconv_spec *conv_spec)
+{
+  free (conv_spec->fromcode);
+  free (conv_spec->tocode);
+  return;
+}
+libc_hidden_def (__gconv_destroy_spec)
