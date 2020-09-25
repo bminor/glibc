@@ -152,6 +152,27 @@ extern int __gconv_open (struct gconv_spec *conv_spec,
                          __gconv_t *handle, int flags);
 libc_hidden_proto (__gconv_open)
 
+/* This function accepts the charset names of the source and destination of the
+   conversion and populates *conv_spec with an equivalent conversion
+   specification that may later be used by __gconv_open.  The charset names
+   might contain options in the form of suffixes that alter the conversion,
+   e.g. "ISO-10646/UTF-8/TRANSLIT".  It processes the charset names, ignoring
+   and truncating any suffix options in fromcode, and processing and truncating
+   any suffix options in tocode.  Supported suffix options ("TRANSLIT" or
+   "IGNORE") when found in tocode lead to the corresponding flag in *conv_spec
+   to be set to true.  Unrecognized suffix options are silently discarded.  If
+   the function succeeds, it returns conv_spec back to the caller.  It returns
+   NULL upon failure.  */
+extern struct gconv_spec *
+__gconv_create_spec (struct gconv_spec *conv_spec, const char *fromcode,
+                     const char *tocode);
+libc_hidden_proto (__gconv_create_spec)
+
+/* This function frees all heap memory allocated by __gconv_create_spec.  */
+extern void
+__gconv_destroy_spec (struct gconv_spec *conv_spec);
+libc_hidden_proto (__gconv_destroy_spec)
+
 /* Free resources associated with transformation descriptor CD.  */
 extern int __gconv_close (__gconv_t cd)
      attribute_hidden;

@@ -22,13 +22,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <support/check.h>
 
 static int
 do_test (void)
 {
-  char *s;
-  int result = 0;
-
   unsetenv ("LANGUAGE");
   unsetenv ("OUTPUT_CHARSET");
   setlocale (LC_ALL, "de_DE.ISO-8859-1");
@@ -36,25 +34,21 @@ do_test (void)
   bindtextdomain ("codeset", OBJPFX "domaindir");
 
   /* Here we expect output in ISO-8859-1.  */
-  s = gettext ("cheese");
-  if (strcmp (s, "K\344se"))
-    {
-      printf ("call 1 returned: %s\n", s);
-      result = 1;
-    }
-
-  bind_textdomain_codeset ("codeset", "UTF-8");
+  TEST_COMPARE_STRING (gettext ("cheese"), "K\344se");
 
   /* Here we expect output in UTF-8.  */
-  s = gettext ("cheese");
-  if (strcmp (s, "K\303\244se"))
-    {
-      printf ("call 2 returned: %s\n", s);
-      result = 1;
-    }
+  bind_textdomain_codeset ("codeset", "UTF-8");
+  TEST_COMPARE_STRING (gettext ("cheese"), "K\303\244se");
 
-  return result;
+  /* `a with umlaut' is transliterated to `ae'.  */
+  bind_textdomain_codeset ("codeset", "ASCII//TRANSLIT");
+  TEST_COMPARE_STRING (gettext ("cheese"), "Kaese");
+
+  /* Transliteration also works by default even if not set.  */
+  bind_textdomain_codeset ("codeset", "ASCII");
+  TEST_COMPARE_STRING (gettext ("cheese"), "Kaese");
+
+  return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
