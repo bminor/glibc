@@ -48,33 +48,6 @@
 #define GCONV_IGNORE_ERRORS_SUFFIX "IGNORE"
 
 
-/* This function accepts the charset names of the source and destination of the
-   conversion and populates *conv_spec with an equivalent conversion
-   specification that may later be used by __gconv_open.  The charset names
-   might contain options in the form of suffixes that alter the conversion,
-   e.g. "ISO-10646/UTF-8/TRANSLIT".  It processes the charset names, ignoring
-   and truncating any suffix options in fromcode, and processing and truncating
-   any suffix options in tocode.  Supported suffix options ("TRANSLIT" or
-   "IGNORE") when found in tocode lead to the corresponding flag in *conv_spec
-   to be set to true.  Unrecognized suffix options are silently discarded.  If
-   the function succeeds, it returns conv_spec back to the caller.  It returns
-   NULL upon failure.  */
-struct gconv_spec *
-__gconv_create_spec (struct gconv_spec *conv_spec, const char *fromcode,
-                     const char *tocode);
-libc_hidden_proto (__gconv_create_spec)
-
-
-/* This function frees all heap memory allocated by __gconv_create_spec.  */
-static void __attribute__ ((unused))
-gconv_destroy_spec (struct gconv_spec *conv_spec)
-{
-  free (conv_spec->fromcode);
-  free (conv_spec->tocode);
-  return;
-}
-
-
 /* This function copies in-order, characters from the source 's' that are
    either alpha-numeric or one in one of these: "_-.,:/" - into the destination
    'wp' while dropping all other characters.  In the process, it converts all
