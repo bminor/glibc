@@ -89,7 +89,9 @@ enum
 # define ST_NOEXEC	ST_NOEXEC
   ST_SYNCHRONOUS = 16,
 # define ST_SYNCHRONOUS	ST_SYNCHRONOUS
-  ST_NOATIME = 32		/* Do not update access times.  */
+  ST_NOATIME = 32,		/* Do not update access times.  */
 # define ST_NOATIME	ST_NOATIME
+  ST_RELATIME = 64		/* Update atime relative to mtime/ctime.  */
+# define ST_RELATIME	ST_RELATIME
 #endif
 };
