@@ -854,14 +854,20 @@ init_cacheinfo (void)
       __x86_shared_cache_size = shared;
     }
 
-  /* The large memcpy micro benchmark in glibc shows that 6 times of
-     shared cache size is the approximate value above which non-temporal
-     store becomes faster on a 8-core processor.  This is the 3/4 of the
-     total shared cache size.  */
+  /* The default setting for the non_temporal threshold is 3/4 of one
+     thread's share of the chip's cache. For most Intel and AMD processors
+     with an initial release date between 2017 and 2020, a thread's typical
+     share of the cache is from 500 KBytes to 2 MBytes. Using the 3/4
+     threshold leaves 125 KBytes to 500 KBytes of the thread's data
+     in cache after a maximum temporal copy, which will maintain
+     in cache a reasonable portion of the thread's stack and other
+     active data. If the threshold is set higher than one thread's
+     share of the cache, it has a substantial risk of negatively
+     impacting the performance of other threads running on the chip. */
   __x86_shared_non_temporal_threshold
     = (cpu_features->non_temporal_threshold != 0
        ? cpu_features->non_temporal_threshold
-       : __x86_shared_cache_size * threads * 3 / 4);
+       : __x86_shared_cache_size * 3 / 4);
 
   /* NB: The REP MOVSB threshold must be greater than VEC_SIZE * 8.  */
   unsigned int minimum_rep_movsb_threshold;
