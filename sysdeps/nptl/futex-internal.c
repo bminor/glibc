@@ -29,16 +29,22 @@ __futex_abstimed_wait_cancellable32 (unsigned int* futex_word,
                                      const struct __timespec64* abstime,
                                      int private)
 {
-  if (! in_time_t_range (abstime->tv_sec))
-    return -EOVERFLOW;
+  struct timespec ts32, *pts32 = NULL;
+  if (abstime != NULL)
+    {
+      if (! in_time_t_range (abstime->tv_sec))
+	return -EOVERFLOW;
+
+      ts32 = valid_timespec64_to_timespec (*abstime);
+      pts32 = &ts32;
+    }
 
   unsigned int clockbit = (clockid == CLOCK_REALTIME)
 	  ? FUTEX_CLOCK_REALTIME : 0;
   int op = __lll_private_flag (FUTEX_WAIT_BITSET | clockbit, private);
 
-  struct timespec ts32 = valid_timespec64_to_timespec (*abstime);
   return INTERNAL_SYSCALL_CANCEL (futex, futex_word, op, expected,
-                                  &ts32, NULL /* Unused.  */,
+                                  pts32, NULL /* Unused.  */,
                                   FUTEX_BITSET_MATCH_ANY);
 }
 #endif
