@@ -432,7 +432,11 @@ set shared cache size in bytes for use in memory and string routines.
 
 @deftp Tunable glibc.cpu.x86_non_temporal_threshold
 The @code{glibc.cpu.x86_non_temporal_threshold} tunable allows the user
-to set threshold in bytes for non temporal store.
+to set threshold in bytes for non temporal store. Non temporal stores
+give a hint to the hardware to move data directly to memory without
+displacing other data from the cache. This tunable is used by some
+platforms to determine when to use non temporal stores in operations
+like memmove and memcpy.
 
 This tunable is specific to i386 and x86-64.
 @end deftp
