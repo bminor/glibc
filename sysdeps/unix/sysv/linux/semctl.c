@@ -158,6 +158,15 @@ __semctl64 (int semid, int semnum, int cmd, ...)
       arg64 = va_arg (ap, union semun64);
       va_end (ap);
       break;
+    case IPC_RMID:      /* arg ignored.  */
+    case GETNCNT:
+    case GETPID:
+    case GETVAL:
+    case GETZCNT:
+      break;
+    default:
+      __set_errno (EINVAL);
+      return -1;
     }
 
 #if __IPC_TIME64
@@ -277,6 +286,7 @@ __semctl (int semid, int semnum, int cmd, ...)
       arg = va_arg (ap, union semun);
       va_end (ap);
       break;
+    /* __semctl64 handles non-supported commands.  */
     }
 
   struct __semid64_ds semid64;

@@ -25,6 +25,8 @@
 #include <sys/ipc.h>
 #include <sys/sem.h>
 
+#include <test-sysvipc.h>
+
 #include <support/support.h>
 #include <support/check.h>
 #include <support/temp_file.h>
@@ -79,6 +81,9 @@ do_test (void)
 	FAIL_UNSUPPORTED ("msgget not supported");
       FAIL_EXIT1 ("semget failed (errno=%d)", errno);
     }
+
+  TEST_COMPARE (semctl (semid, 0, first_sem_invalid_cmd (), NULL), -1);
+  TEST_COMPARE (errno, EINVAL);
 
   /* Get semaphore kernel information and do some sanity checks.  */
   struct semid_ds seminfo;
