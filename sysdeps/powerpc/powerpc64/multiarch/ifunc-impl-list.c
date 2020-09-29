@@ -112,6 +112,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/powerpc/powerpc64/multiarch/strlen.c.  */
   IFUNC_IMPL (i, name, strlen,
 #ifdef __LITTLE_ENDIAN__
+	      IFUNC_IMPL_ADD (array, i, strlen, hwcap2 & PPC_FEATURE2_ARCH_3_1,
+			      __strlen_power10)
 	      IFUNC_IMPL_ADD (array, i, strlen, hwcap2 & PPC_FEATURE2_ARCH_3_00,
 			      __strlen_power9)
 #endif

@@ -31,9 +31,12 @@ extern __typeof (__redirect_strlen) __strlen_ppc attribute_hidden;
 extern __typeof (__redirect_strlen) __strlen_power7 attribute_hidden;
 extern __typeof (__redirect_strlen) __strlen_power8 attribute_hidden;
 extern __typeof (__redirect_strlen) __strlen_power9 attribute_hidden;
+extern __typeof (__redirect_strlen) __strlen_power10 attribute_hidden;
 
 libc_ifunc (__libc_strlen,
 # ifdef __LITTLE_ENDIAN__
+	(hwcap2 & PPC_FEATURE2_ARCH_3_1)
+	? __strlen_power10 :
 	  (hwcap2 & PPC_FEATURE2_ARCH_3_00)
 	  ? __strlen_power9 :
 # endif
