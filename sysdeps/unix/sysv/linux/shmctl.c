@@ -88,25 +88,49 @@ __shmctl64 (int shmid, int cmd, struct __shmid64_ds *buf)
 {
 #if __IPC_TIME64
   struct kernel_shmid64_ds kshmid, *arg = NULL;
-  if (buf != NULL)
+#else
+  shmctl_arg_t *arg;
+#endif
+
+  switch (cmd)
     {
-      /* This is a Linux extension where kernel expects either a
-	 'struct shminfo' (IPC_INFO) or 'struct shm_info' (SHM_INFO).  */
-      if (cmd == IPC_INFO || cmd == SHM_INFO)
-	arg = (struct kernel_shmid64_ds *) buf;
-      else
+    case IPC_RMID:
+    case SHM_LOCK:
+    case SHM_UNLOCK:
+      arg = NULL;
+      break;
+
+    case IPC_SET:
+    case IPC_STAT:
+    case SHM_STAT:
+    case SHM_STAT_ANY:
+#if __IPC_TIME64
+      if (buf != NULL)
 	{
 	  shmid64_to_kshmid64 (buf, &kshmid);
 	  arg = &kshmid;
 	}
-    }
 # ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
-  if (cmd == IPC_SET)
-    arg->shm_perm.mode *= 0x10000U;
+      if (cmd == IPC_SET)
+        arg->shm_perm.mode *= 0x10000U;
 # endif
 #else
-  shmctl_arg_t *arg = buf;
+      arg = buf;
 #endif
+      break;
+
+    case IPC_INFO:
+    case SHM_INFO:
+      /* This is a Linux extension where kernel expects either a
+	 'struct shminfo' (IPC_INFO) or 'struct shm_info' (SHM_INFO).  */
+      arg = (__typeof__ (arg)) buf;
+      break;
+
+    default:
+      __set_errno (EINVAL);
+      return -1;
+    }
+
 
   int ret = shmctl_syscall (shmid, cmd, arg);
   if (ret < 0)

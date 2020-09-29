@@ -25,7 +25,7 @@
 #include <sys/shm.h>
 #include <include/array_length.h>
 
-/* Return the first invalid command SysV IPC command from common shared
+/* Return the first invalid SysV IPC command from common shared
    between message queue, shared memory, and semaphore.  */
 static inline int
 first_common_invalid_cmd (void)
@@ -50,7 +50,7 @@ first_common_invalid_cmd (void)
   return invalid;
 }
 
-/* Return the first invalid command SysV IPC command for semaphore.  */
+/* Return the first invalid SysV IPC command for semaphore.  */
 static inline int
 first_sem_invalid_cmd (void)
 {
@@ -82,7 +82,7 @@ first_sem_invalid_cmd (void)
   return invalid;
 }
 
-/* Return the first invalid command SysV IPC command for message queue.  */
+/* Return the first invalid SysV IPC command for message queue.  */
 static inline int
 first_msg_invalid_cmd (void)
 {
@@ -98,6 +98,33 @@ first_msg_invalid_cmd (void)
   for (int i = 0; i < array_length (msg_cmds); i++)
     {
       if (invalid == msg_cmds[i])
+	{
+	  invalid++;
+	  i = 0;
+	}
+    }
+
+  return invalid;
+}
+
+/* Return the first invalid SysV IPC command for shared memory.  */
+static inline int
+first_shm_invalid_cmd (void)
+{
+  const int shm_cmds[] = {
+    SHM_STAT,
+    SHM_INFO,
+#ifdef SHM_STAT_ANY
+    SHM_STAT_ANY,
+#endif
+    SHM_LOCK,
+    SHM_UNLOCK
+  };
+
+  int invalid = first_common_invalid_cmd ();
+  for (int i = 0; i < array_length (shm_cmds); i++)
+    {
+      if (invalid == shm_cmds[i])
 	{
 	  invalid++;
 	  i = 0;

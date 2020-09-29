@@ -25,6 +25,8 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
+#include <test-sysvipc.h>
+
 #include <support/support.h>
 #include <support/check.h>
 #include <support/temp_file.h>
@@ -80,6 +82,9 @@ do_test (void)
 	FAIL_UNSUPPORTED ("shmget not supported");
       FAIL_EXIT1 ("shmget failed (errno=%d)", errno);
     }
+
+  TEST_COMPARE (shmctl (shmid, first_shm_invalid_cmd (), NULL), -1);
+  TEST_COMPARE (errno, EINVAL);
 
   /* Get shared memory kernel information and do some sanity checks.  */
   struct shmid_ds shminfo;
