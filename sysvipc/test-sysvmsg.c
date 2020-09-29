@@ -24,6 +24,8 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
+#include <test-sysvipc.h>
+
 #include <support/support.h>
 #include <support/check.h>
 #include <support/temp_file.h>
@@ -85,6 +87,9 @@ do_test (void)
 	FAIL_UNSUPPORTED ("msgget not supported");
       FAIL_EXIT1 ("msgget failed (errno=%d)", errno);
     }
+
+  TEST_COMPARE (msgctl (msqid, first_msg_invalid_cmd (), NULL), -1);
+  TEST_COMPARE (errno, EINVAL);
 
   /* Get message queue kernel information and do some sanity checks.  */
   struct msqid_ds msginfo;

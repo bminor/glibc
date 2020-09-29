@@ -88,25 +88,46 @@ __msgctl64 (int msqid, int cmd, struct __msqid64_ds *buf)
 {
 #if __IPC_TIME64
   struct kernel_msqid64_ds ksemid, *arg = NULL;
-  if (buf != NULL)
+#else
+  msgctl_arg_t *arg;
+#endif
+
+  switch (cmd)
     {
-      /* This is a Linux extension where kernel returns a 'struct msginfo'
-	 instead.  */
-      if (cmd == IPC_INFO || cmd == MSG_INFO)
-	arg = (struct kernel_msqid64_ds *) buf;
-      else
+    case IPC_RMID:
+      arg = NULL;
+      break;
+
+    case IPC_SET:
+    case IPC_STAT:
+    case MSG_STAT:
+    case MSG_STAT_ANY:
+#if __IPC_TIME64
+      if (buf != NULL)
 	{
 	  msqid64_to_kmsqid64 (buf, &ksemid);
 	  arg = &ksemid;
 	}
-    }
 # ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
-  if (cmd == IPC_SET)
-    arg->msg_perm.mode *= 0x10000U;
+      if (cmd == IPC_SET)
+	arg->msg_perm.mode *= 0x10000U;
 # endif
 #else
-  msgctl_arg_t *arg = buf;
+      arg = buf;
 #endif
+      break;
+
+    case IPC_INFO:
+    case MSG_INFO:
+      /* This is a Linux extension where kernel returns a 'struct msginfo'
+	 instead.  */
+      arg = (__typeof__ (arg)) buf;
+      break;
+
+    default:
+      __set_errno (EINVAL);
+      return -1;
+    }
 
   int ret = msgctl_syscall (msqid, cmd, arg);
   if (ret < 0)

@@ -82,4 +82,29 @@ first_sem_invalid_cmd (void)
   return invalid;
 }
 
+/* Return the first invalid command SysV IPC command for message queue.  */
+static inline int
+first_msg_invalid_cmd (void)
+{
+  const int msg_cmds[] = {
+    MSG_STAT,
+    MSG_INFO,
+#ifdef MSG_STAT_ANY
+    MSG_STAT_ANY,
+#endif
+  };
+
+  int invalid = first_common_invalid_cmd ();
+  for (int i = 0; i < array_length (msg_cmds); i++)
+    {
+      if (invalid == msg_cmds[i])
+	{
+	  invalid++;
+	  i = 0;
+	}
+    }
+
+  return invalid;
+}
+
 #endif /* _TEST_SYSV_H  */
