@@ -102,6 +102,7 @@ semun64_to_ksemun64 (int cmd, union semun64 semun64,
       r.array = semun64.array;
       break;
     case SEM_STAT:
+    case SEM_STAT_ANY:
     case IPC_STAT:
     case IPC_SET:
       r.buf = buf;
@@ -150,6 +151,7 @@ __semctl64 (int semid, int semnum, int cmd, ...)
     case IPC_STAT:      /* arg.buf */
     case IPC_SET:
     case SEM_STAT:
+    case SEM_STAT_ANY:
     case IPC_INFO:      /* arg.__buf */
     case SEM_INFO:
       va_start (ap, cmd);
@@ -238,6 +240,7 @@ semun_to_semun64 (int cmd, union semun semun, struct __semid64_ds *semid64)
       r.array = semun.array;
       break;
     case SEM_STAT:
+    case SEM_STAT_ANY:
     case IPC_STAT:
     case IPC_SET:
       r.buf = semid64;
@@ -267,6 +270,7 @@ __semctl (int semid, int semnum, int cmd, ...)
     case IPC_STAT:      /* arg.buf */
     case IPC_SET:
     case SEM_STAT:
+    case SEM_STAT_ANY:
     case IPC_INFO:      /* arg.__buf */
     case SEM_INFO:
       va_start (ap, cmd);
@@ -321,6 +325,7 @@ __semctl_mode16 (int semid, int semnum, int cmd, ...)
     case IPC_STAT:      /* arg.buf */
     case IPC_SET:
     case SEM_STAT:
+    case SEM_STAT_ANY:
     case IPC_INFO:      /* arg.__buf */
     case SEM_INFO:
       va_start (ap, cmd);
@@ -354,6 +359,7 @@ __old_semctl (int semid, int semnum, int cmd, ...)
     case IPC_STAT:      /* arg.buf */
     case IPC_SET:
     case SEM_STAT:
+    case SEM_STAT_ANY:
     case IPC_INFO:      /* arg.__buf */
     case SEM_INFO:
       va_start (ap, cmd);
