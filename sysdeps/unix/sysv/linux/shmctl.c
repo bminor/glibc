@@ -90,8 +90,15 @@ __shmctl64 (int shmid, int cmd, struct __shmid64_ds *buf)
   struct kernel_shmid64_ds kshmid, *arg = NULL;
   if (buf != NULL)
     {
-      shmid64_to_kshmid64 (buf, &kshmid);
-      arg = &kshmid;
+      /* This is a Linux extension where kernel expects either a
+	 'struct shminfo' (IPC_INFO) or 'struct shm_info' (SHM_INFO).  */
+      if (cmd == IPC_INFO || cmd == SHM_INFO)
+	arg = (struct kernel_shmid64_ds *) buf;
+      else
+	{
+	  shmid64_to_kshmid64 (buf, &kshmid);
+	  arg = &kshmid;
+	}
     }
 # ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
   if (cmd == IPC_SET)
@@ -107,7 +114,6 @@ __shmctl64 (int shmid, int cmd, struct __shmid64_ds *buf)
 
   switch (cmd)
     {
-      case IPC_INFO:
       case IPC_STAT:
       case SHM_STAT:
       case SHM_STAT_ANY:
@@ -168,8 +174,15 @@ __shmctl (int shmid, int cmd, struct shmid_ds *buf)
   struct __shmid64_ds shmid64, *buf64 = NULL;
   if (buf != NULL)
     {
-      shmid_to_shmid64 (&shmid64, buf);
-      buf64 = &shmid64;
+      /* This is a Linux extension where kernel expects either a
+	 'struct shminfo' (IPC_INFO) or 'struct shm_info' (SHM_INFO).  */
+      if (cmd == IPC_INFO || cmd == SHM_INFO)
+	buf64 = (struct __shmid64_ds *) buf;
+      else
+	{
+	  shmid_to_shmid64 (&shmid64, buf);
+	  buf64 = &shmid64;
+	}
     }
 
   int ret = __shmctl64 (shmid, cmd, buf64);
@@ -178,7 +191,6 @@ __shmctl (int shmid, int cmd, struct shmid_ds *buf)
 
   switch (cmd)
     {
-      case IPC_INFO:
       case IPC_STAT:
       case SHM_STAT:
       case SHM_STAT_ANY:
