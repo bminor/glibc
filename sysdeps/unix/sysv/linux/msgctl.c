@@ -90,8 +90,15 @@ __msgctl64 (int msqid, int cmd, struct __msqid64_ds *buf)
   struct kernel_msqid64_ds ksemid, *arg = NULL;
   if (buf != NULL)
     {
-      msqid64_to_kmsqid64 (buf, &ksemid);
-      arg = &ksemid;
+      /* This is a Linux extension where kernel returns a 'struct msginfo'
+	 instead.  */
+      if (cmd == IPC_INFO || cmd == MSG_INFO)
+	arg = (struct kernel_msqid64_ds *) buf;
+      else
+	{
+	  msqid64_to_kmsqid64 (buf, &ksemid);
+	  arg = &ksemid;
+	}
     }
 # ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
   if (cmd == IPC_SET)
@@ -169,8 +176,15 @@ __msgctl (int msqid, int cmd, struct msqid_ds *buf)
   struct __msqid64_ds msqid64, *buf64 = NULL;
   if (buf != NULL)
     {
-      msqid_to_msqid64 (&msqid64, buf);
-      buf64 = &msqid64;
+      /* This is a Linux extension where kernel returns a 'struct msginfo'
+	 instead.  */
+      if (cmd == IPC_INFO || cmd == MSG_INFO)
+	buf64 = (struct __msqid64_ds *) buf;
+      else
+	{
+	  msqid_to_msqid64 (&msqid64, buf);
+	  buf64 = &msqid64;
+	}
     }
 
   int ret = __msgctl64 (msqid, cmd, buf64);
