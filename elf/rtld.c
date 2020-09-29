@@ -1202,6 +1202,8 @@ dl_main (const ElfW(Phdr) *phdr,
 	 installing it.  */
       rtld_is_main = true;
 
+      char *argv0 = NULL;
+
       /* Note the place where the dynamic linker actually came from.  */
       GL(dl_rtld_map).l_name = rtld_progname;
 
@@ -1263,6 +1265,14 @@ dl_main (const ElfW(Phdr) *phdr,
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
+	else if (! strcmp (_dl_argv[1], "--argv0") && _dl_argc > 2)
+	  {
+	    argv0 = _dl_argv[2];
+
+	    _dl_skip_args += 2;
+	    _dl_argc -= 2;
+	    _dl_argv += 2;
+	  }
 	else
 	  break;
 
@@ -1292,7 +1302,8 @@ of this helper program; chances are you did not intend to run this program.\n\
   --inhibit-rpath LIST  ignore RUNPATH and RPATH information in object names\n\
 			in LIST\n\
   --audit LIST          use objects named in LIST as auditors\n\
-  --preload LIST        preload objects named in LIST\n");
+  --preload LIST        preload objects named in LIST\n\
+  --argv0 STRING        set argv[0] to STRING before running\n");
 
       ++_dl_skip_args;
       --_dl_argc;
@@ -1384,6 +1395,10 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    break;
 	  }
 #endif
+
+      /* Set the argv[0] string now that we've processed the executable.  */
+      if (argv0 != NULL)
+        _dl_argv[0] = argv0;
     }
   else
     {

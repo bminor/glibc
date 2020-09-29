@@ -210,7 +210,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-filterobj tst-filterobj-dlopen tst-auxobj tst-auxobj-dlopen \
 	 tst-audit14 tst-audit15 tst-audit16 \
 	 tst-single_threaded tst-single_threaded-pthread \
-	 tst-tls-ie tst-tls-ie-dlmopen
+	 tst-tls-ie tst-tls-ie-dlmopen \
+	 argv0test
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -414,7 +415,7 @@ endif
 ifeq (yes,$(build-shared))
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-pathopt.out $(objpfx)tst-rtld-load-self.out \
-		 $(objpfx)tst-rtld-preload.out
+		 $(objpfx)tst-rtld-preload.out $(objpfx)argv0test.out
 endif
 tests-special += $(objpfx)check-textrel.out $(objpfx)check-execstack.out \
 		 $(objpfx)check-wx-segment.out \
@@ -1796,3 +1797,10 @@ $(objpfx)tst-tls-ie-dlmopen.out: \
   $(objpfx)tst-tls-ie-mod6.so
 
 $(objpfx)tst-tls-surplus: $(libdl)
+
+$(objpfx)argv0test.out: tst-rtld-argv0.sh $(objpfx)ld.so \
+			$(objpfx)argv0test
+	$(SHELL) $< $(objpfx)ld.so $(objpfx)argv0test \
+            '$(test-wrapper-env)' '$(run_program_env)' \
+            '$(rpath-link)' 'test-argv0' > $@; \
+    $(evaluate-test)

@@ -9,6 +9,9 @@ Version 2.33
 
 Major new features:
 
+* The dynamic linker accepts the --argv0 argument and provides opportunity
+  to change argv[0] string.
+
 * The mallinfo2 function is added to report statistics as per mallinfo,
   but with larger field widths to accurately report values that are
   larger than fit in an integer.
