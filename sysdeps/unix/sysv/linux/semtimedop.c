@@ -26,11 +26,15 @@ int
 __semtimedop64 (int semid, struct sembuf *sops, size_t nsops,
 		const struct __timespec64 *timeout)
 {
-#ifndef __NR_semtimedop_time64
-# define __NR_semtimedop_time64 __NR_semtimedop
+  int r;
+#if defined __NR_semtimedop_time64
+  r = INLINE_SYSCALL_CALL (semtimedop_time64, semid, sops, nsops, timeout);
+#elif defined __ASSUME_DIRECT_SYSVIPC_SYSCALLS && defined __NR_semtimedop
+  r = INLINE_SYSCALL_CALL (semtimedop, semid, sops, nsops, timeout);
+#else
+  r = INLINE_SYSCALL_CALL (ipc, IPCOP_semtimedop, semid,
+			   SEMTIMEDOP_IPC_ARGS (nsops, sops, timeout));
 #endif
-  int r = INLINE_SYSCALL_CALL (semtimedop_time64, semid, sops, nsops,
-			       timeout);
 
 #ifndef __ASSUME_TIME64_SYSCALLS
   if (r == 0 || errno != ENOSYS)
