@@ -208,7 +208,7 @@ $(objpfx)isomac: isomac.c
 $(objpfx)tst-fmtmsg.out: tst-fmtmsg.sh $(objpfx)tst-fmtmsg
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix-before-env)' \
 		 '$(run-program-env)' '$(test-program-prefix-after-env)' \
-		 $(common-objpfx)stdlib/ > $@; \
+		 $(common-objpfx)stdlib/; \
 	$(evaluate-test)
 
 $(objpfx)tst-putenv: $(objpfx)tst-putenvmod.so
@@ -239,7 +239,7 @@ $(objpfx)tst-tls-atexit-nodelete.out: $(objpfx)tst-tls-atexit-lib.so
 $(objpfx)tst-setcontext3.out: tst-setcontext3.sh $(objpfx)tst-setcontext3
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix-before-env)' \
 		 '$(run-program-env)' '$(test-program-prefix-after-env)' \
-		 $(common-objpfx)stdlib/ > $@; \
+		 $(common-objpfx)stdlib/; \
 	$(evaluate-test)
 
 $(objpfx)tst-makecontext: $(libdl)
