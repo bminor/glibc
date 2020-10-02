@@ -27,7 +27,7 @@ extern __typeof (__strncasecmp) __strncasecmp_power7 attribute_hidden;
 extern __typeof (__strncasecmp) __strncasecmp_power8 attribute_hidden;
 
 libc_ifunc (__libc_strncasecmp,
-	     (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+	     (hwcap2 & PPC_FEATURE2_ARCH_2_07 && hwcap & PPC_FEATURE_HAS_VSX)
              ? __strncasecmp_power8:
 	     (hwcap & PPC_FEATURE_HAS_VSX)
              ? __strncasecmp_power7

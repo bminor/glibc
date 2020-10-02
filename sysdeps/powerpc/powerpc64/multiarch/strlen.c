@@ -34,10 +34,10 @@ extern __typeof (__redirect_strlen) __strlen_power9 attribute_hidden;
 
 libc_ifunc (__libc_strlen,
 # ifdef __LITTLE_ENDIAN__
-	  (hwcap2 & PPC_FEATURE2_ARCH_3_00)
+	  (hwcap2 & PPC_FEATURE2_ARCH_3_00 && hwcap & PPC_FEATURE_HAS_VSX)
 	  ? __strlen_power9 :
 # endif
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+	    (hwcap2 & PPC_FEATURE2_ARCH_2_07 && hwcap & PPC_FEATURE_HAS_VSX)
 	    ? __strlen_power8 :
 	      (hwcap & PPC_FEATURE_HAS_VSX)
 	      ? __strlen_power7

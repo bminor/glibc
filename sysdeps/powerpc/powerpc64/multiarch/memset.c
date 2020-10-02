@@ -38,6 +38,7 @@ extern __typeof (__redirect_memset) __memset_power8 attribute_hidden;
    ifunc symbol properly.  */
 libc_ifunc (__libc_memset,
 	    (hwcap2 & PPC_FEATURE2_ARCH_2_07
+	     && hwcap & PPC_FEATURE_HAS_VSX
 	     && __GLRO(dl_cache_line_size) == 0x80)
 	    ? __memset_power8 :
 	    (hwcap & PPC_FEATURE_HAS_VSX

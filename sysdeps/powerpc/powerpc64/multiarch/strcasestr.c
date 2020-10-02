@@ -27,7 +27,7 @@ extern __typeof (__strcasestr) __strcasestr_power8 attribute_hidden;
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
 libc_ifunc (__strcasestr,
-		(hwcap2 & PPC_FEATURE2_ARCH_2_07)
+		(hwcap2 & PPC_FEATURE2_ARCH_2_07 && hwcap & PPC_FEATURE_HAS_VSX)
 		? __strcasestr_power8
 		: __strcasestr_ppc);
 

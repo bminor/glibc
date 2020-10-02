@@ -27,7 +27,7 @@ extern __typeof (strcspn) __strcspn_ppc attribute_hidden;
 extern __typeof (strcspn) __strcspn_power8 attribute_hidden;
 
 libc_ifunc (__libc_strcspn,
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+	    (hwcap2 & PPC_FEATURE2_ARCH_2_07 && hwcap & PPC_FEATURE_HAS_VSX)
 	    ? __strcspn_power8
 	    : __strcspn_ppc);
 

@@ -30,6 +30,7 @@ extern __typeof (bzero) __bzero_power8 attribute_hidden;
 
 libc_ifunc (__bzero,
 	    (hwcap2 & PPC_FEATURE2_ARCH_2_07
+	     && hwcap & PPC_FEATURE_HAS_VSX
 	     && __GLRO(dl_cache_line_size) == 0x80)
 	    ? __bzero_power8 :
 	    (hwcap & PPC_FEATURE_HAS_VSX

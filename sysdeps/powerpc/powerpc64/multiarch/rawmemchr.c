@@ -34,7 +34,8 @@ extern __typeof (__rawmemchr) __rawmemchr_power9 attribute_hidden;
    ifunc symbol properly.  */
 libc_ifunc_redirected (__redirect___rawmemchr, __rawmemchr,
 # ifdef __LITTLE_ENDIAN__
-		       (hwcap2 & PPC_FEATURE2_ARCH_3_00)
+		       (hwcap2 & PPC_FEATURE2_ARCH_3_00
+			&& hwcap & PPC_FEATURE_HAS_VSX)
 		       ? __rawmemchr_power9 :
 # endif
 		         (hwcap & PPC_FEATURE_HAS_VSX)
