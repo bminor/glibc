@@ -29,15 +29,18 @@ extern __typeof (bzero) __bzero_power7 attribute_hidden;
 extern __typeof (bzero) __bzero_power8 attribute_hidden;
 
 libc_ifunc (__bzero,
-            (hwcap2 & PPC_FEATURE2_ARCH_2_07)
-            ? __bzero_power8 :
-	      (hwcap & PPC_FEATURE_HAS_VSX)
-	      ? __bzero_power7 :
-		(hwcap & PPC_FEATURE_ARCH_2_05)
-		? __bzero_power6 :
-		  (hwcap & PPC_FEATURE_POWER4)
-		  ? __bzero_power4
-            : __bzero_ppc);
+	    (hwcap2 & PPC_FEATURE2_ARCH_2_07
+	     && __GLRO(dl_cache_line_size) == 0x80)
+	    ? __bzero_power8 :
+	    (hwcap & PPC_FEATURE_HAS_VSX
+	     && __GLRO(dl_cache_line_size) == 0x80)
+	    ? __bzero_power7 :
+	    (hwcap & PPC_FEATURE_ARCH_2_05
+	     && __GLRO(dl_cache_line_size) == 0x80)
+	    ? __bzero_power6 :
+	    (hwcap & PPC_FEATURE_POWER4 && __GLRO(dl_cache_line_size) == 0x80)
+	    ? __bzero_power4
+	    : __bzero_ppc);
 
 weak_alias (__bzero, bzero)
 #endif
