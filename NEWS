@@ -75,6 +75,7 @@ The following bugs are resolved with this release:
   [25232] No const correctness for strchr et al. for Clang++
   [25414] 'glob' use-after-free bug (CVE-2020-1752)
   [25423] Array overflow in backtrace on powerpc
+  [25933] Off by one error in __strncmp_avx2
 
 Security related changes:
 
