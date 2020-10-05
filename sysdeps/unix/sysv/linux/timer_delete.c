@@ -32,15 +32,15 @@ int
 timer_delete (timer_t timerid)
 {
 #undef timer_delete
-  struct timer *kt = (struct timer *) timerid;
-
-  /* Delete the kernel timer object.  */
-  int res = INLINE_SYSCALL (timer_delete, 1, kt->ktimerid);
+  kernel_timer_t ktimerid = timerid_to_kernel_timer (timerid);
+  int res = INLINE_SYSCALL_CALL (timer_delete, ktimerid);
 
   if (res == 0)
     {
-      if (kt->sigev_notify == SIGEV_THREAD)
+      if (timer_is_sigev_thread (timerid))
 	{
+	  struct timer *kt = timerid_to_timer (timerid);
+
 	  /* Remove the timer from the list.  */
 	  pthread_mutex_lock (&__active_timer_sigev_thread_lock);
 	  if (__active_timer_sigev_thread == kt)
@@ -58,10 +58,9 @@ timer_delete (timer_t timerid)
 		  prevp = prevp->next;
 	    }
 	  pthread_mutex_unlock (&__active_timer_sigev_thread_lock);
-	}
 
-      /* Free the memory.  */
-      (void) free (kt);
+	  free (kt);
+	}
 
       return 0;
     }

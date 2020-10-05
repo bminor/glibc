@@ -43,21 +43,11 @@ extern pthread_mutex_t __active_timer_sigev_thread_lock attribute_hidden;
 /* Type of timers in the kernel.  */
 typedef int kernel_timer_t;
 
-
-/* Internal representation of timer.  */
+/* Internal representation of SIGEV_THREAD timer.  */
 struct timer
 {
-  /* Notification mechanism.  */
-  int sigev_notify;
-
-  /* Timer ID returned by the kernel.  */
   kernel_timer_t ktimerid;
 
-  /* All new elements must be added after ktimerid.  And if the thrfunc
-     element is not the third element anymore the memory allocation in
-     timer_create needs to be changed.  */
-
-  /* Parameters for the thread to be started for SIGEV_THREAD.  */
   void (*thrfunc) (sigval_t);
   sigval_t sival;
   pthread_attr_t attr;
@@ -65,3 +55,43 @@ struct timer
   /* Next element in list of active SIGEV_THREAD timers.  */
   struct timer *next;
 };
+
+
+/* For !SIGEV_THREAD, the resulting 'timer_t' is the returned kernel timer
+   identifer (kernel_timer_t), while for SIGEV_THREAD it uses the fact malloc
+   returns at least _Alignof (max_align_t) pointers plus that valid
+   kernel_timer_t are always positive to set the MSB bit of the returned
+   'timer_t' to indicate the timer handles a SIGEV_THREAD.  */
+
+static inline timer_t
+kernel_timer_to_timerid (kernel_timer_t ktimerid)
+{
+  return (timer_t) ((intptr_t) ktimerid);
+}
+
+static inline timer_t
+timer_to_timerid (struct timer *ptr)
+{
+  return (timer_t) (INTPTR_MIN | (uintptr_t) ptr >> 1);
+}
+
+static inline bool
+timer_is_sigev_thread (timer_t timerid)
+{
+  return (intptr_t) timerid < 0;
+}
+
+static inline struct timer *
+timerid_to_timer (timer_t timerid)
+{
+  return (struct timer *)((uintptr_t) timerid << 1);
+}
+
+static inline kernel_timer_t
+timerid_to_kernel_timer (timer_t timerid)
+{
+  if (timer_is_sigev_thread (timerid))
+    return timerid_to_timer (timerid)->ktimerid;
+  else
+    return (kernel_timer_t) ((uintptr_t) timerid);
+}

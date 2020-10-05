@@ -31,10 +31,6 @@ int
 timer_getoverrun (timer_t timerid)
 {
 #undef timer_getoverrun
-  struct timer *kt = (struct timer *) timerid;
-
-  /* Get the information from the kernel.  */
-  int res = INLINE_SYSCALL (timer_getoverrun, 1, kt->ktimerid);
-
-  return res;
+  kernel_timer_t ktimerid = timerid_to_kernel_timer (timerid);
+  return INLINE_SYSCALL_CALL (timer_getoverrun, ktimerid);
 }

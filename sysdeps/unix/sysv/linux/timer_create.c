@@ -52,16 +52,6 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
       {
 	struct sigevent local_evp;
 
-	/* We avoid allocating too much memory by basically
-	   using struct timer as a derived class with the
-	   first two elements being in the superclass.  We only
-	   need these two elements here.  */
-	struct timer *newp = (struct timer *) malloc (offsetof (struct timer,
-								thrfunc));
-	if (newp == NULL)
-	  /* No more memory.  */
-	  return -1;
-
 	if (evp == NULL)
 	  {
 	    /* The kernel has to pass up the timer ID which is a
@@ -69,31 +59,17 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 	       the kernel to determine it.  */
 	    local_evp.sigev_notify = SIGEV_SIGNAL;
 	    local_evp.sigev_signo = SIGALRM;
-	    local_evp.sigev_value.sival_ptr = newp;
+	    local_evp.sigev_value.sival_ptr = NULL;
 
 	    evp = &local_evp;
 	  }
 
 	kernel_timer_t ktimerid;
-	int retval = INLINE_SYSCALL (timer_create, 3, syscall_clockid, evp,
-				     &ktimerid);
+	if (INLINE_SYSCALL_CALL (timer_create, syscall_clockid, evp,
+				 &ktimerid) == -1)
+	  return -1;
 
-	if (retval != -1)
-	  {
-	    newp->sigev_notify = (evp != NULL
-				  ? evp->sigev_notify : SIGEV_SIGNAL);
-	    newp->ktimerid = ktimerid;
-
-	    *timerid = (timer_t) newp;
-	  }
-	else
-	  {
-	    /* Cannot allocate the timer, fail.  */
-	    free (newp);
-	    retval = -1;
-	  }
-
-	return retval;
+	*timerid = kernel_timer_to_timerid (ktimerid);
       }
     else
       {
@@ -106,20 +82,18 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 	    return -1;
 	  }
 
-	struct timer *newp;
-	newp = (struct timer *) malloc (sizeof (struct timer));
+	struct timer *newp = malloc (sizeof (struct timer));
 	if (newp == NULL)
 	  return -1;
 
 	/* Copy the thread parameters the user provided.  */
 	newp->sival = evp->sigev_value;
 	newp->thrfunc = evp->sigev_notify_function;
-	newp->sigev_notify = SIGEV_THREAD;
 
 	/* We cannot simply copy the thread attributes since the
 	   implementation might keep internal information for
 	   each instance.  */
-	(void) pthread_attr_init (&newp->attr);
+	pthread_attr_init (&newp->attr);
 	if (evp->sigev_notify_attributes != NULL)
 	  {
 	    struct pthread_attr *nattr;
@@ -137,8 +111,7 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 	  }
 
 	/* In any case set the detach flag.  */
-	(void) pthread_attr_setdetachstate (&newp->attr,
-					    PTHREAD_CREATE_DETACHED);
+	pthread_attr_setdetachstate (&newp->attr, PTHREAD_CREATE_DETACHED);
 
 	/* Create the event structure for the kernel timer.  */
 	struct sigevent sev =
@@ -149,27 +122,24 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 
 	/* Create the timer.  */
 	int res;
-	res = INTERNAL_SYSCALL_CALL (timer_create,
-				     syscall_clockid, &sev, &newp->ktimerid);
-	if (! INTERNAL_SYSCALL_ERROR_P (res))
+	res = INTERNAL_SYSCALL_CALL (timer_create, syscall_clockid, &sev,
+				     &newp->ktimerid);
+	if (INTERNAL_SYSCALL_ERROR_P (res))
 	  {
-	    /* Add to the queue of active timers with thread
-	       delivery.  */
-	    pthread_mutex_lock (&__active_timer_sigev_thread_lock);
-	    newp->next = __active_timer_sigev_thread;
-	    __active_timer_sigev_thread = newp;
-	    pthread_mutex_unlock (&__active_timer_sigev_thread_lock);
-
-	    *timerid = (timer_t) newp;
-	    return 0;
+	    free (newp);
+	    __set_errno (INTERNAL_SYSCALL_ERRNO (res));
+	    return -1;
 	  }
 
-	/* Free the resources.  */
-	free (newp);
+	/* Add to the queue of active timers with thread delivery.  */
+	pthread_mutex_lock (&__active_timer_sigev_thread_lock);
+	newp->next = __active_timer_sigev_thread;
+	__active_timer_sigev_thread = newp;
+	pthread_mutex_unlock (&__active_timer_sigev_thread_lock);
 
-	__set_errno (INTERNAL_SYSCALL_ERRNO (res));
-
-	return -1;
+	*timerid = timer_to_timerid (newp);
       }
   }
+
+  return 0;
 }
