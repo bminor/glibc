@@ -18,8 +18,7 @@
 
 #include <time.h>
 
-/* Clang ifunc support works, but differently enough that this code breaks.  */
-#if defined(SHARED) && !defined(__clang__)
+#ifdef SHARED
 
 #include <dl-vdso.h>
 #include <errno.h>
@@ -57,8 +56,4 @@ time (time_t *t)
   return INTERNAL_SYSCALL (time, err, 1, t);
 }
 
-#endif
-
-#if defined(__clang__)
-libc_hidden_weak (time)
 #endif
