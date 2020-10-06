@@ -505,7 +505,7 @@ void *(*__morecore)(ptrdiff_t) = __default_morecore;
   if no space is available. Additionally, on failure, errno is
   set to ENOMEM on ANSI C systems.
 
-  If n is zero, malloc returns a minumum-sized chunk. (The minimum
+  If n is zero, malloc returns a minimum-sized chunk. (The minimum
   size is 16 bytes on most 32bit systems, and 24 or 32 bytes on 64bit
   systems.)  On most systems, size_t is an unsigned type, so calls
   with negative arguments are interpreted as requests for huge amounts

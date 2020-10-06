@@ -23,7 +23,7 @@
 # error "Never include this file directly.  Use <signal.h> instead"
 #endif
 
-/* Minumum stack size for a signal handler.  */
+/* Minimum stack size for a signal handler.  */
 #define MINSIGSTKSZ	8192
 
 /* System default stack size.  */

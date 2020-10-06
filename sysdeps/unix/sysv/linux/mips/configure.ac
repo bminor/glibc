@@ -138,7 +138,7 @@ fi
 # Check if we are supposed to run on kernels older than 4.8.0. If so,
 # force executable stack to avoid potential runtime problems with fpu
 # emulation.
-# NOTE: The check below assumes that in absence of user-provided minumum_kernel
+# NOTE: The check below assumes that in absence of user-provided minimum_kernel
 # we will default to arch_minimum_kernel which is currently less than 4.8.0 for
 # all known configurations. If this changes, the check must be updated.
 AC_CACHE_CHECK([whether the compiler must use executable stack],
