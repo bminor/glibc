@@ -1,4 +1,4 @@
-/* Test for grantpt error corner cases.
+/* Test for grantpt, unlockpt error corner cases.
    Copyright (C) 2001-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -28,7 +28,7 @@
 #include <support/temp_file.h>
 #include <support/xunistd.h>
 
-/* Test grantpt with a closed descriptor.  */
+/* Test grantpt, unlockpt with a closed descriptor.  */
 static void
 test_ebadf (void)
 {
@@ -48,9 +48,12 @@ test_ebadf (void)
       printf ("grantpt(): expected: return = %d, errno = %d\n", -1, EBADF);
       printf ("           got: return = %d, errno = %d\n", ret, err);
     }
+
+  TEST_COMPARE (unlockpt (fd), -1);
+  TEST_COMPARE (errno, EBADF);
 }
 
-/* Test grantpt on a regular file.  */
+/* Test grantpt, unlockpt on a regular file.  */
 static void
 test_einval (void)
 {
@@ -68,10 +71,13 @@ test_einval (void)
       printf ("           got: return = %d, errno = %d\n", ret, err);
     }
 
+  TEST_COMPARE (unlockpt (fd), -1);
+  TEST_COMPARE (errno, EINVAL);
+
   xclose (fd);
 }
 
-/* Test grantpt on a non-ptmx pseudo-terminal.  */
+/* Test grantpt, unlockpt on a non-ptmx pseudo-terminal.  */
 static void
 test_not_ptmx (void)
 {
@@ -80,12 +86,18 @@ test_not_ptmx (void)
   TEST_COMPARE (grantpt (ptmx), 0);
   TEST_COMPARE (unlockpt (ptmx), 0);
 
+  /* A second unlock succeeds as well.  */
+  TEST_COMPARE (unlockpt (ptmx), 0);
+
   const char *name = ptsname (ptmx);
   TEST_VERIFY_EXIT (name != NULL);
   int pts = open (name, O_RDWR | O_NOCTTY);
   TEST_VERIFY_EXIT (pts >= 0);
 
   TEST_COMPARE (grantpt (pts), -1);
+  TEST_COMPARE (errno, EINVAL);
+
+  TEST_COMPARE (unlockpt (pts), -1);
   TEST_COMPARE (errno, EINVAL);
 
   xclose (pts);
