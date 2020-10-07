@@ -757,6 +757,12 @@ _dl_dprintf (int fd, const char *fmt, ...)
 }
 #endif
 
+/* Write LENGTH bytes at BUFFER to FD, like write.  Returns the number
+   of bytes written on success, or a negative error constant on
+   failure.  */
+ssize_t _dl_write (int fd, const void *buffer, size_t length)
+  attribute_hidden;
+
 /* Write a message on the specified descriptor standard output.  The
    parameters are interpreted as for a `printf' call.  */
 void _dl_printf (const char *fmt, ...)
