@@ -69,6 +69,7 @@ CFLAGS-vmsplice.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-splice.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-open_by_handle_at.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sync_file_range.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pselect32.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=(0x80000000-sysconf(_SC_PAGESIZE))"
 
 sysdep_headers += sys/mount.h sys/acct.h \

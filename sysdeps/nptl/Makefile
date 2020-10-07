@@ -18,6 +18,7 @@
 
 ifeq ($(subdir),nptl)
 libpthread-sysdep_routines += errno-loc futex-internal
+CFLAGS-futex-internal.c += -fexceptions -fasynchronous-unwind-tables
 endif
 
 ifeq ($(subdir),rt)
