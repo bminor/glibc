@@ -1,3 +1,21 @@
+/* Test for grantpt error corner cases.
+   Copyright (C) 2001-2020 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -6,76 +24,81 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include <support/check.h>
+#include <support/temp_file.h>
+#include <support/xunistd.h>
 
-static int
+/* Test grantpt with a closed descriptor.  */
+static void
 test_ebadf (void)
 {
   int fd, ret, err;
 
   fd = posix_openpt (O_RDWR);
   if (fd == -1)
-    {
-      printf ("posix_openpt(O_RDWR) failed\nerrno %d (%s)\n",
-	      errno, strerror (errno));
-      /* We don't fail because of this; maybe the system does not have
-	 SUS pseudo terminals.  */
-      return 0;
-    }
-  unlockpt (fd);
-  close (fd);
+    FAIL_EXIT1 ("posix_openpt(O_RDWR) failed\nerrno %d (%m)\n", errno);
+  TEST_COMPARE (unlockpt (fd), 0);
 
+  xclose (fd);
   ret = grantpt (fd);
   err = errno;
   if (ret != -1 || err != EBADF)
     {
+      support_record_failure ();
       printf ("grantpt(): expected: return = %d, errno = %d\n", -1, EBADF);
       printf ("           got: return = %d, errno = %d\n", ret, err);
-      return 1;
     }
-  return 0;
 }
 
-static int
+/* Test grantpt on a regular file.  */
+static void
 test_einval (void)
 {
   int fd, ret, err;
-  const char file[] = "./grantpt-einval";
 
-  fd = open (file, O_RDWR | O_CREAT, 0600);
-  if (fd == -1)
-    {
-      printf ("open(\"%s\", O_RDWR) failed\nerrno %d (%s)\n",
-	      file, errno, strerror (errno));
-      return 0;
-    }
-  unlink (file);
+  fd = create_temp_file ("tst-grantpt-", NULL);
+  TEST_VERIFY_EXIT (fd >= 0);
 
   ret = grantpt (fd);
   err = errno;
   if (ret != -1 || err != EINVAL)
     {
+      support_record_failure ();
       printf ("grantpt(): expected: return = %d, errno = %d\n", -1, EINVAL);
       printf ("           got: return = %d, errno = %d\n", ret, err);
-      ret = 1;
     }
-  else
-    ret = 0;
 
-  close (fd);
+  xclose (fd);
+}
 
-  return ret;
+/* Test grantpt on a non-ptmx pseudo-terminal.  */
+static void
+test_not_ptmx (void)
+{
+  int ptmx = posix_openpt (O_RDWR);
+  TEST_VERIFY_EXIT (ptmx >= 0);
+  TEST_COMPARE (grantpt (ptmx), 0);
+  TEST_COMPARE (unlockpt (ptmx), 0);
+
+  const char *name = ptsname (ptmx);
+  TEST_VERIFY_EXIT (name != NULL);
+  int pts = open (name, O_RDWR | O_NOCTTY);
+  TEST_VERIFY_EXIT (pts >= 0);
+
+  TEST_COMPARE (grantpt (pts), -1);
+  TEST_COMPARE (errno, EINVAL);
+
+  xclose (pts);
+  xclose (ptmx);
 }
 
 static int
 do_test (void)
 {
-  int result = 0;
-
-  result += test_ebadf ();
-  result += test_einval ();
-
-  return result;
+  test_ebadf ();
+  test_einval ();
+  test_not_ptmx ();
+  return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
