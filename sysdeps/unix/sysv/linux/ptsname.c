@@ -21,38 +21,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <sys/sysmacros.h>
 #include <termios.h>
 #include <unistd.h>
 
 #include <_itoa.h>
 
-/* Check if DEV corresponds to a master pseudo terminal device.  */
-#define MASTER_P(Dev)							\
-  (__gnu_dev_major ((Dev)) == 2						\
-   || (__gnu_dev_major ((Dev)) == 4					\
-       && __gnu_dev_minor ((Dev)) >= 128 && __gnu_dev_minor ((Dev)) < 192) \
-   || (__gnu_dev_major ((Dev)) >= 128 && __gnu_dev_major ((Dev)) < 136))
-
-/* Check if DEV corresponds to a slave pseudo terminal device.  */
-#define SLAVE_P(Dev)							\
-  (__gnu_dev_major ((Dev)) == 3						\
-   || (__gnu_dev_major ((Dev)) == 4					\
-       && __gnu_dev_minor ((Dev)) >= 192 && __gnu_dev_minor ((Dev)) < 256) \
-   || (__gnu_dev_major ((Dev)) >= 136 && __gnu_dev_major ((Dev)) < 144))
-
-/* Note that major number 4 corresponds to the old BSD style pseudo
-   terminal devices.  As of Linux 2.1.115 these are no longer
-   supported.  They have been replaced by major numbers 2 (masters)
-   and 3 (slaves).  */
-
 /* Directory where we can find the slave pty nodes.  */
 #define _PATH_DEVPTS "/dev/pts/"
-
-/* The are declared in getpt.c.  */
-extern const char __libc_ptyname1[] attribute_hidden;
-extern const char __libc_ptyname2[] attribute_hidden;
 
 /* Static buffer for `ptsname'.  */
 static char buffer[sizeof (_PATH_DEVPTS) + 20];
@@ -68,19 +43,15 @@ ptsname (int fd)
 }
 
 
+/* Store at most BUFLEN characters of the pathname of the slave pseudo
+   terminal associated with the master FD is open on in BUF.
+   Return 0 on success, otherwise an error number.  */
 int
-__ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
+__ptsname_r (int fd, char *buf, size_t buflen)
 {
   int save_errno = errno;
   unsigned int ptyno;
 
-  if (!__isatty (fd))
-    {
-      __set_errno (ENOTTY);
-      return ENOTTY;
-    }
-
-#ifdef TIOCGPTN
   if (__ioctl (fd, TIOCGPTN, &ptyno) == 0)
     {
       /* Buffer we use to print the number in.  For a maximum size for
@@ -101,67 +72,11 @@ __ptsname_internal (int fd, char *buf, size_t buflen, struct stat64 *stp)
 
       memcpy (__stpcpy (buf, devpts), p, &numbuf[sizeof (numbuf)] - p);
     }
-  else if (errno != EINVAL)
-    return errno;
   else
-#endif
-    {
-      char *p;
-
-      if (buflen < strlen (_PATH_TTY) + 3)
-	{
-	  __set_errno (ERANGE);
-	  return ERANGE;
-	}
-
-      if (__fstat64 (fd, stp) < 0)
-	return errno;
-
-      /* Check if FD really is a master pseudo terminal.  */
-      if (! MASTER_P (stp->st_rdev))
-	{
-	  __set_errno (ENOTTY);
-	  return ENOTTY;
-	}
-
-      ptyno = __gnu_dev_minor (stp->st_rdev);
-
-      if (ptyno / 16 >= strlen (__libc_ptyname1))
-	{
-	  __set_errno (ENOTTY);
-	  return ENOTTY;
-	}
-
-      p = __stpcpy (buf, _PATH_TTY);
-      p[0] = __libc_ptyname1[ptyno / 16];
-      p[1] = __libc_ptyname2[ptyno % 16];
-      p[2] = '\0';
-    }
-
-  if (__stat64 (buf, stp) < 0)
+    /* Bad file descriptor, or not a ptmx descriptor.  */
     return errno;
-
-  /* Check if the name we're about to return really corresponds to a
-     slave pseudo terminal.  */
-  if (! S_ISCHR (stp->st_mode) || ! SLAVE_P (stp->st_rdev))
-    {
-      /* This really is a configuration problem.  */
-      __set_errno (ENOTTY);
-      return ENOTTY;
-    }
 
   __set_errno (save_errno);
   return 0;
-}
-
-
-/* Store at most BUFLEN characters of the pathname of the slave pseudo
-   terminal associated with the master FD is open on in BUF.
-   Return 0 on success, otherwise an error number.  */
-int
-__ptsname_r (int fd, char *buf, size_t buflen)
-{
-  struct stat64 st;
-  return __ptsname_internal (fd, buf, buflen, &st);
 }
 weak_alias (__ptsname_r, ptsname_r)

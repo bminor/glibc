@@ -188,14 +188,9 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
 '--enable-pt_chown'
      The file 'pt_chown' is a helper binary for 'grantpt' (*note
      Pseudo-Terminals: Allocation.) that is installed setuid root to fix
-     up pseudo-terminal ownership.  It is not built by default because
-     systems using the Linux kernel are commonly built with the 'devpts'
-     filesystem enabled and mounted at '/dev/pts', which manages
-     pseudo-terminal ownership automatically.  By using
-     '--enable-pt_chown', you may build 'pt_chown' and install it setuid
-     and owned by 'root'.  The use of 'pt_chown' introduces additional
-     security risks to the system and you should enable it only if you
-     understand and accept those risks.
+     up pseudo-terminal ownership on GNU/Hurd.  It is not required on
+     GNU/Linux, and the GNU C Library will not use the installed
+     'pt_chown' program when configured with '--enable-pt_chown'.
 
 '--disable-werror'
      By default, the GNU C Library is built with '-Werror'.  If you wish

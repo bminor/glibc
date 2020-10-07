@@ -1,44 +1,41 @@
-#include <assert.h>
-#include <ctype.h>
-#include <dirent.h>
+/* grantpt implementation for Linux.
+   Copyright (C) 1998-2020 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
 #include <errno.h>
-#include <fcntl.h>
-#include <paths.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <sys/ioctl.h>
+#include <termios.h>
 
-#include <not-cancel.h>
-
-#include "pty-private.h"
-
-#if HAVE_PT_CHOWN
-/* Close all file descriptors except the one specified.  */
-static void
-close_all_fds (void)
+int
+grantpt (int fd)
 {
-  DIR *dir = __opendir ("/proc/self/fd");
-  if (dir != NULL)
-    {
-      struct dirent64 *d;
-      while ((d = __readdir64 (dir)) != NULL)
-	if (isdigit (d->d_name[0]))
-	  {
-	    char *endp;
-	    long int fd = strtol (d->d_name, &endp, 10);
-	    if (*endp == '\0' && fd != PTY_FILENO && fd != dirfd (dir))
-	      __close_nocancel_nostatus (fd);
-	  }
+  /* Without pt_chown on Linux, we have delegated the creation of the
+     pty node with the right group and permission mode to the kernel, and
+     non-root users are unlikely to be able to change it. Therefore let's
+     consider that POSIX enforcement is the responsibility of the whole
+     system and not only the GNU libc.   */
 
-      __closedir (dir);
-
-      int nullfd = __open_nocancel (_PATH_DEVNULL, O_RDONLY);
-      assert (nullfd == STDIN_FILENO);
-      nullfd = __open_nocancel (_PATH_DEVNULL, O_WRONLY);
-      assert (nullfd == STDOUT_FILENO);
-      __dup2 (STDOUT_FILENO, STDERR_FILENO);
-    }
+  /* Verify that fd refers to a ptmx descriptor.  */
+  unsigned int ptyno;
+  int ret = __ioctl (fd, TIOCGPTN, &ptyno);
+  if (ret != 0 && errno == ENOTTY)
+    /* POSIX requires EINVAL instead of ENOTTY provided by the kernel.  */
+    __set_errno (EINVAL);
+  return ret;
 }
-# define CLOSE_ALL_FDS() close_all_fds()
-#endif
-
-#include <sysdeps/unix/grantpt.c>
