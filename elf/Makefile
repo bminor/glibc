@@ -29,7 +29,7 @@ routines	= $(all-dl-routines) dl-support dl-iteratephdr \
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
-dl-routines	= $(addprefix dl-,load lookup object reloc deps hwcaps \
+dl-routines	= $(addprefix dl-,load lookup object reloc deps \
 				  runtime init fini debug misc \
 				  version profile tls origin scope \
 				  execstack open close trampoline \
@@ -59,7 +59,7 @@ elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin \
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
 rtld-routines	= rtld $(all-dl-routines) dl-sysdep dl-environ dl-minimal \
-  dl-error-minimal dl-conflict
+  dl-error-minimal dl-conflict dl-hwcaps
 all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 
 CFLAGS-dl-runtime.c += -fexceptions -fasynchronous-unwind-tables

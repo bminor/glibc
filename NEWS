@@ -33,6 +33,10 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The mallinfo function is marked deprecated.  Callers should call
   mallinfo2 instead.
 
+* When dlopen is used in statically linked programs, alternative library
+  implementations from HWCAP subdirectories are no longer loaded.
+  Instead, the default implementation is used.
+
 Changes to build and runtime requirements:
 
 * On Linux, the system administrator needs to configure /dev/pts with

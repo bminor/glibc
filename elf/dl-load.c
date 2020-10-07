@@ -101,9 +101,13 @@ int __stack_prot attribute_hidden attribute_relro
 static struct r_search_path_struct env_path_list attribute_relro;
 
 /* List of the hardware capabilities we might end up using.  */
+#ifdef SHARED
 static const struct r_strlenpair *capstr attribute_relro;
 static size_t ncapstr attribute_relro;
 static size_t max_capstrlen attribute_relro;
+#else
+enum { ncapstr = 1, max_capstrlen = 0 };
+#endif
 
 
 /* Get the generated information about the trusted directories.  Use
@@ -691,9 +695,11 @@ _dl_init_paths (const char *llp)
   /* Fill in the information about the application's RPATH and the
      directories addressed by the LD_LIBRARY_PATH environment variable.  */
 
+#ifdef SHARED
   /* Get the capabilities.  */
   capstr = _dl_important_hwcaps (GLRO(dl_platform), GLRO(dl_platformlen),
 				 &ncapstr, &max_capstrlen);
+#endif
 
   /* First set up the rest of the default search directory entries.  */
   aelem = rtld_search_dirs.dirs = (struct r_search_path_elem **)
@@ -1521,11 +1527,15 @@ print_search_path (struct r_search_path_elem **list,
       for (cnt = 0; cnt < ncapstr; ++cnt)
 	if ((*list)->status[cnt] != nonexisting)
 	  {
+#ifdef SHARED
 	    char *cp = __mempcpy (endp, capstr[cnt].str, capstr[cnt].len);
 	    if (cp == buf || (cp == buf + 1 && buf[0] == '/'))
 	      cp[0] = '\0';
 	    else
 	      cp[-1] = '\0';
+#else
+	    *endp = '\0';
+#endif
 
 	    _dl_debug_printf_c (first ? "%s" : ":%s", buf);
 	    first = 0;
@@ -1886,11 +1896,15 @@ open_path (const char *name, size_t namelen, int mode,
 	  if (this_dir->status[cnt] == nonexisting)
 	    continue;
 
+#ifdef SHARED
 	  buflen =
 	    ((char *) __mempcpy (__mempcpy (edp, capstr[cnt].str,
 					    capstr[cnt].len),
 				 name, namelen)
 	     - buf);
+#else
+	  buflen = (char *) __mempcpy (edp, name, namelen) - buf;
+#endif
 
 	  /* Print name we try if this is wanted.  */
 	  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))
