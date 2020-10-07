@@ -31,7 +31,7 @@ ifneq (,$(filter yes,$(float128-fcts) $(float128-alias-fcts)))
 bench-math += expf128 powf128 sinf128
 endif
 
-bench-pthread := pthread_once thread_create
+bench-pthread := pthread_once thread_create pthread-locks
 
 bench-string := ffs ffsll
 
@@ -109,6 +109,7 @@ $(addprefix $(objpfx)bench-,$(bench-math)): $(libm)
 $(addprefix $(objpfx)bench-,$(math-benchset)): $(libm)
 $(addprefix $(objpfx)bench-,$(bench-pthread)): $(shared-thread-library)
 $(addprefix $(objpfx)bench-,$(bench-malloc)): $(shared-thread-library)
+$(addprefix $(objpfx)bench-,pthread-locks): $(libm)
 
 
 
