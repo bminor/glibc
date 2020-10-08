@@ -140,7 +140,7 @@ _td_fetch_value (td_thragent_t *ta,
 
 td_err_e
 _td_store_value (td_thragent_t *ta,
-		 uint32_t desc[2], int descriptor_name, psaddr_t idx,
+		 db_desc_t desc, int descriptor_name, psaddr_t idx,
 		 psaddr_t address, psaddr_t widened_value)
 {
   ps_err_e err;
@@ -240,7 +240,7 @@ _td_fetch_value_local (td_thragent_t *ta,
 
 td_err_e
 _td_store_value_local (td_thragent_t *ta,
-		       uint32_t desc[2], int descriptor_name, psaddr_t idx,
+		       db_desc_t desc, int descriptor_name, psaddr_t idx,
 		       void *address, psaddr_t widened_value)
 {
   td_err_e terr = _td_locate_field (ta, desc, descriptor_name, idx, &address);
