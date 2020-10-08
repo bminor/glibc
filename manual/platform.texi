@@ -347,6 +347,9 @@ extensions.
 @code{HTT} -- Max APIC IDs reserved field is Valid.
 
 @item
+@code{HRESET} -- History reset.
+
+@item
 @code{HYBRID} -- Hybrid processor.
 
 @item
