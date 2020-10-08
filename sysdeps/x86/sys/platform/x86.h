@@ -241,7 +241,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 #define bit_cpu_AVX512_4VNNIW	(1u << 2)
 #define bit_cpu_AVX512_4FMAPS	(1u << 3)
 #define bit_cpu_FSRM		(1u << 4)
-#define bit_cpu_INDEX_7_EDX_5	(1u << 5)
+#define bit_cpu_UINTR		(1u << 5)
 #define bit_cpu_INDEX_7_EDX_6	(1u << 6)
 #define bit_cpu_INDEX_7_EDX_7	(1u << 7)
 #define bit_cpu_AVX512_VP2INTERSECT (1u << 8)
@@ -460,7 +460,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 #define index_cpu_AVX512_4VNNIW COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512_4FMAPS	COMMON_CPUID_INDEX_7
 #define index_cpu_FSRM		COMMON_CPUID_INDEX_7
-#define index_cpu_INDEX_7_EDX_5	COMMON_CPUID_INDEX_7
+#define index_cpu_UINTR		COMMON_CPUID_INDEX_7
 #define index_cpu_INDEX_7_EDX_6	COMMON_CPUID_INDEX_7
 #define index_cpu_INDEX_7_EDX_7	COMMON_CPUID_INDEX_7
 #define index_cpu_AVX512_VP2INTERSECT COMMON_CPUID_INDEX_7
@@ -679,7 +679,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 #define reg_AVX512_4VNNIW	edx
 #define reg_AVX512_4FMAPS	edx
 #define reg_FSRM		edx
-#define reg_INDEX_7_EDX_5	edx
+#define reg_UINTR		edx
 #define reg_INDEX_7_EDX_6	edx
 #define reg_INDEX_7_EDX_7	edx
 #define reg_AVX512_VP2INTERSECT	edx

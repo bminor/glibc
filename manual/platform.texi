@@ -584,6 +584,9 @@ using a TSC deadline value.
 @code{TSXLDTRK} -- TSXLDTRK instructions.
 
 @item
+@code{UINTR} -- User interrupts.
+
+@item
 @code{UMIP} -- User-mode instruction prevention.
 
 @item
