@@ -142,7 +142,7 @@ typedef int (*netname2user_function) (const char netname[MAXNETNAMELEN + 1],
 				      uid_t *, gid_t *, int *, gid_t *);
 
 int
-netname2user (const char netname[MAXNETNAMELEN + 1], uid_t * uidp, gid_t * gidp,
+netname2user (const char *netname, uid_t * uidp, gid_t * gidp,
 	      int *gidlenp, gid_t * gidlist)
 {
   static service_user *startp;
@@ -189,8 +189,7 @@ libc_hidden_nolink_sunrpc (netname2user, GLIBC_2_1)
 #endif
 
 int
-netname2host (const char netname[MAXNETNAMELEN + 1], char *hostname,
-	      const int hostlen)
+netname2host (const char *netname, char *hostname, const int hostlen)
 {
   char *p1, *p2;
 

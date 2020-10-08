@@ -179,9 +179,11 @@ extern AUTH *authdes_pk_create (const char *, netobj *, u_int,
  *  Netname manipulating functions
  *
  */
-extern int getnetname (char *) __THROW;
-extern int host2netname (char *, const char *, const char *) __THROW;
-extern int user2netname (char *, const uid_t, const char *) __THROW;
+extern int getnetname (char [MAXNETNAMELEN + 1]) __THROW;
+extern int host2netname (char [MAXNETNAMELEN + 1], const char *,
+			 const char *) __THROW;
+extern int user2netname (char [MAXNETNAMELEN + 1], const uid_t,
+			 const char *) __THROW;
 extern int netname2user (const char *, uid_t *, gid_t *, int *, gid_t *)
      __THROW;
 extern int netname2host (const char *, char *, const int) __THROW;
