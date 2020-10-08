@@ -661,7 +661,8 @@ libof-ldconfig = ldconfig
 CFLAGS-dl-cache.c += $(SYSCONF-FLAGS)
 CFLAGS-cache.c += $(SYSCONF-FLAGS)
 CFLAGS-rtld.c += $(SYSCONF-FLAGS)
-CFLAGS-dl-usage.c += $(SYSCONF-FLAGS)
+CFLAGS-dl-usage.c += $(SYSCONF-FLAGS) \
+  -D'RTLD="$(rtlddir)/$(rtld-installed-name)"'
 
 cpp-srcs-left := $(all-rtld-routines:=.os)
 lib := rtld

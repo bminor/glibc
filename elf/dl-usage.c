@@ -76,6 +76,8 @@ setting environment variables (which would be inherited by subprocesses).\n\
   --argv0 STRING        set argv[0] to STRING before running\n\
   --help                display this help and exit\n\
   --version             output version information and exit\n\
+\n\
+This program interpreter self-identifies as: " RTLD "\n\
 ",
               argv0);
   _exit (EXIT_SUCCESS);
