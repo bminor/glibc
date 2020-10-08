@@ -51,17 +51,17 @@ _dl_help (const char *argv0, struct dl_main_state *state)
 {
   _dl_printf ("\
 Usage: %s [OPTION]... EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
-You have invoked `ld.so', the helper program for shared library executables.\n\
-This program usually lives in the file `/lib/ld.so', and special directives\n\
-in executable files using ELF shared libraries tell the system's program\n\
-loader to load the helper program from this file.  This helper program loads\n\
-the shared libraries needed by the program executable, prepares the program\n\
-to run, and runs it.  You may invoke this helper program directly from the\n\
-command line to load and run an ELF executable file; this is like executing\n\
-that file itself, but always uses this helper program from the file you\n\
-specified, instead of the helper program file specified in the executable\n\
-file you run.  This is mostly of use for maintainers to test new versions\n\
-of this helper program; chances are you did not intend to run this program.\n\
+You have invoked 'ld.so', the program interpreter for dynamically-linked\n\
+ELF programs.  Usually, the program interpreter is invoked automatically\n\
+when a dynamically-linked executable is started.\n\
+\n\
+You may invoke the program interpreter program directly from the command\n\
+line to load and run an ELF executable file; this is like executing that\n\
+file itself, but always uses the program interpreter you invoked,\n\
+instead of the program interpreter specified in the executable file you\n\
+run.  Invoking the program interpreter directly provides access to\n\
+additional diagnostics, and changing the dynamic linker behavior without\n\
+setting environment variables (which would be inherited by subprocesses).\n\
 \n\
   --list                list all dependencies and how they are resolved\n\
   --verify              verify that given object really is a dynamically linked\n\
