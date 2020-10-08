@@ -1046,8 +1046,10 @@ rtld_hidden_proto (_dl_debug_state)
 extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
      attribute_hidden;
 
-/* Initialize the basic data structure for the search paths.  */
-extern void _dl_init_paths (const char *library_path) attribute_hidden;
+/* Initialize the basic data structure for the search paths.  SOURCE
+   is either "LD_LIBRARY_PATH" or "--library-path".  */
+extern void _dl_init_paths (const char *library_path, const char *source)
+  attribute_hidden;
 
 /* Gather the information needed to install the profiling tables and start
    the timers.  */

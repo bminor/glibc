@@ -682,7 +682,7 @@ cache_rpath (struct link_map *l,
 
 
 void
-_dl_init_paths (const char *llp)
+_dl_init_paths (const char *llp, const char *source)
 {
   size_t idx;
   const char *strp;
@@ -820,7 +820,7 @@ _dl_init_paths (const char *llp)
 	}
 
       (void) fillin_rpath (llp_tmp, env_path_list.dirs, ":;",
-			   "LD_LIBRARY_PATH", NULL, l);
+			   source, NULL, l);
 
       if (env_path_list.dirs[0] == NULL)
 	{

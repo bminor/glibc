@@ -286,6 +286,7 @@ dl_main_state_init (struct dl_main_state *state)
 {
   audit_list_init (&state->audit_list);
   state->library_path = NULL;
+  state->library_path_source = NULL;
   state->preloadlist = NULL;
   state->preloadarg = NULL;
   state->mode = rtld_mode_normal;
@@ -1203,6 +1204,7 @@ dl_main (const ElfW(Phdr) *phdr,
 		 && _dl_argc > 2)
 	  {
 	    state.library_path = _dl_argv[2];
+	    state.library_path_source = "--library-path";
 
 	    _dl_skip_args += 2;
 	    _dl_argc -= 2;
@@ -2655,6 +2657,7 @@ process_envvars (struct dl_main_state *state)
 	      && memcmp (envline, "LIBRARY_PATH", 12) == 0)
 	    {
 	      state->library_path = &envline[13];
+	      state->library_path_source = "LD_LIBRARY_PATH";
 	      break;
 	    }
 

@@ -323,7 +323,7 @@ _dl_non_dynamic_init (void)
 
   /* Initialize the data structures for the search paths for shared
      objects.  */
-  _dl_init_paths (getenv ("LD_LIBRARY_PATH"));
+  _dl_init_paths (getenv ("LD_LIBRARY_PATH"), "LD_LIBRARY_PATH");
 
   /* Remember the last search directory added at startup.  */
   _dl_init_all_dirs = GL(dl_all_dirs);

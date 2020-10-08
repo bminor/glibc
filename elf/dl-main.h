@@ -74,6 +74,9 @@ struct dl_main_state
   /* The library search path.  */
   const char *library_path;
 
+  /* Where library_path comes from.  LD_LIBRARY_PATH or --library-path.  */
+  const char *library_path_source;
+
   /* The list preloaded objects from LD_PRELOAD.  */
   const char *preloadlist;
 
@@ -94,7 +97,7 @@ struct dl_main_state
 static inline void
 call_init_paths (const struct dl_main_state *state)
 {
-  _dl_init_paths (state->library_path);
+  _dl_init_paths (state->library_path, state->library_path_source);
 }
 
 /* Print ld.so usage information and exit.  */
