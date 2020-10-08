@@ -59,6 +59,14 @@ __rtld_malloc_init_stubs (void)
   __rtld_realloc = &rtld_realloc;
 }
 
+bool
+__rtld_malloc_is_complete (void)
+{
+  /* The caller assumes that there is an active malloc.  */
+  assert (__rtld_malloc != NULL);
+  return __rtld_malloc != &rtld_malloc;
+}
+
 /* Lookup NAME at VERSION in the scope of MATCH.  */
 static void *
 lookup_malloc_symbol (struct link_map *main_map, const char *name,

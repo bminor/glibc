@@ -66,6 +66,10 @@ realloc (void *ptr, size_t size)
    implementation.  */
 void __rtld_malloc_init_stubs (void) attribute_hidden;
 
+/* Return false if the active malloc is the ld.so minimal malloc, true
+   if it is the full implementation from libc.so.  */
+_Bool __rtld_malloc_is_complete (void) attribute_hidden;
+
 /* Called shortly before the final self-relocation (when RELRO
    variables are still writable) to activate the real malloc
    implementation.  MAIN_MAP is the link map of the executable.  */
