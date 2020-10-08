@@ -313,6 +313,9 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 /* EAX.  */
 #define bit_cpu_AVX_VNNI	(1u << 4)
 #define bit_cpu_AVX512_BF16	(1u << 5)
+#define bit_cpu_FZLRM		(1u << 10)
+#define bit_cpu_FSRS		(1u << 11)
+#define bit_cpu_FSRCS		(1u << 12)
 #define bit_cpu_HRESET		(1u << 22)
 
 /* COMMON_CPUID_INDEX_19.  */
@@ -534,6 +537,9 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 /* EAX.  */
 #define index_cpu_AVX_VNNI	COMMON_CPUID_INDEX_7_ECX_1
 #define index_cpu_AVX512_BF16	COMMON_CPUID_INDEX_7_ECX_1
+#define index_cpu_FZLRM		COMMON_CPUID_INDEX_7_ECX_1
+#define index_cpu_FSRS		COMMON_CPUID_INDEX_7_ECX_1
+#define index_cpu_FSRCS		COMMON_CPUID_INDEX_7_ECX_1
 #define index_cpu_HRESET	COMMON_CPUID_INDEX_7_ECX_1
 
 /* COMMON_CPUID_INDEX_19.  */
@@ -755,6 +761,9 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 /* EAX.  */
 #define reg_AVX_VNNI		eax
 #define reg_AVX512_BF16		eax
+#define reg_FZLRM		eax
+#define reg_FSRS		eax
+#define reg_FSRCS		eax
 #define reg_HRESET		eax
 
 /* COMMON_CPUID_INDEX_19.  */

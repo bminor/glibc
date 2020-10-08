@@ -332,10 +332,19 @@ extensions.
 @code{FSGSBASE} -- RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE instructions.
 
 @item
+@code{FSRCS} -- Fast Short REP CMP and SCA.
+
+@item
 @code{FSRM} -- Fast Short REP MOV.
 
 @item
+@code{FSRS} -- Fast Short REP STO.
+
+@item
 @code{FXSR} -- FXSAVE and FXRSTOR instructions.
+
+@item
+@code{FZLRM} -- Fast Zero-Length REP MOV.
 
 @item
 @code{GFNI} -- GFNI instruction extensions.

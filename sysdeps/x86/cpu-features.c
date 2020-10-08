@@ -93,6 +93,9 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_USABLE (cpu_features, TBM);
   CPU_FEATURE_SET_USABLE (cpu_features, RDTSCP);
   CPU_FEATURE_SET_USABLE (cpu_features, WBNOINVD);
+  CPU_FEATURE_SET_USABLE (cpu_features, FZLRM);
+  CPU_FEATURE_SET_USABLE (cpu_features, FSRS);
+  CPU_FEATURE_SET_USABLE (cpu_features, FSRCS);
 
   /* Can we call xgetbv?  */
   if (CPU_FEATURES_CPU_P (cpu_features, OSXSAVE))
