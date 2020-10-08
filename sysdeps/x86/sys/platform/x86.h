@@ -311,6 +311,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 /* COMMON_CPUID_INDEX_7_ECX_1.  */
 
 /* EAX.  */
+#define bit_cpu_AVX_VNNI	(1u << 4)
 #define bit_cpu_AVX512_BF16	(1u << 5)
 
 /* COMMON_CPUID_INDEX_19.  */
@@ -530,6 +531,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 /* COMMON_CPUID_INDEX_7_ECX_1.  */
 
 /* EAX.  */
+#define index_cpu_AVX_VNNI	COMMON_CPUID_INDEX_7_ECX_1
 #define index_cpu_AVX512_BF16	COMMON_CPUID_INDEX_7_ECX_1
 
 /* COMMON_CPUID_INDEX_19.  */
@@ -749,6 +751,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 /* COMMON_CPUID_INDEX_7_ECX_1.  */
 
 /* EAX.  */
+#define reg_AVX_VNNI		eax
 #define reg_AVX512_BF16		eax
 
 /* COMMON_CPUID_INDEX_19.  */

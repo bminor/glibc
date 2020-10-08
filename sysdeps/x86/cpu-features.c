@@ -119,6 +119,8 @@ update_usable (struct cpu_features *cpu_features)
 		  cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
 		    |= bit_arch_AVX_Fast_Unaligned_Load;
 		}
+	      /* Determine if AVX-VNNI is usable.  */
+	      CPU_FEATURE_SET_USABLE (cpu_features, AVX_VNNI);
 	      /* Determine if FMA is usable.  */
 	      CPU_FEATURE_SET_USABLE (cpu_features, FMA);
 	      /* Determine if VAES is usable.  */

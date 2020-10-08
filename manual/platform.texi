@@ -199,6 +199,9 @@ The supported processor features are:
 @code{AVX2} -- The AVX2 instruction extensions.
 
 @item
+@code{AVX_VNNI} -- The AVX-VNNI instruction extensions.
+
+@item
 @code{AVX512_4FMAPS} -- The AVX512_4FMAPS instruction extensions.
 
 @item
