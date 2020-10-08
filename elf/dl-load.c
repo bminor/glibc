@@ -98,7 +98,7 @@ int __stack_prot attribute_hidden attribute_relro
 
 
 /* This is the decomposed LD_LIBRARY_PATH search path.  */
-static struct r_search_path_struct env_path_list attribute_relro;
+struct r_search_path_struct __rtld_env_path_list attribute_relro;
 
 /* List of the hardware capabilities we might end up using.  */
 #ifdef SHARED
@@ -442,7 +442,7 @@ add_name_to_object (struct link_map *l, const char *name)
 }
 
 /* Standard search directories.  */
-static struct r_search_path_struct rtld_search_dirs attribute_relro;
+struct r_search_path_struct __rtld_search_dirs attribute_relro;
 
 static size_t max_dirnamelen;
 
@@ -702,9 +702,9 @@ _dl_init_paths (const char *llp, const char *source)
 #endif
 
   /* First set up the rest of the default search directory entries.  */
-  aelem = rtld_search_dirs.dirs = (struct r_search_path_elem **)
+  aelem = __rtld_search_dirs.dirs = (struct r_search_path_elem **)
     malloc ((nsystem_dirs_len + 1) * sizeof (struct r_search_path_elem *));
-  if (rtld_search_dirs.dirs == NULL)
+  if (__rtld_search_dirs.dirs == NULL)
     {
       errstring = N_("cannot create search path array");
     signal_error:
@@ -715,16 +715,17 @@ _dl_init_paths (const char *llp, const char *source)
 		 + ncapstr * sizeof (enum r_dir_status))
 		/ sizeof (struct r_search_path_elem));
 
-  rtld_search_dirs.dirs[0] = malloc (nsystem_dirs_len * round_size
-				     * sizeof (*rtld_search_dirs.dirs[0]));
-  if (rtld_search_dirs.dirs[0] == NULL)
+  __rtld_search_dirs.dirs[0]
+    = malloc (nsystem_dirs_len * round_size
+	      * sizeof (*__rtld_search_dirs.dirs[0]));
+  if (__rtld_search_dirs.dirs[0] == NULL)
     {
       errstring = N_("cannot create cache for search path");
       goto signal_error;
     }
 
-  rtld_search_dirs.malloced = 0;
-  pelem = GL(dl_all_dirs) = rtld_search_dirs.dirs[0];
+  __rtld_search_dirs.malloced = 0;
+  pelem = GL(dl_all_dirs) = __rtld_search_dirs.dirs[0];
   strp = system_dirs;
   idx = 0;
 
@@ -811,27 +812,27 @@ _dl_init_paths (const char *llp, const char *source)
 	if (*cp == ':' || *cp == ';')
 	  ++nllp;
 
-      env_path_list.dirs = (struct r_search_path_elem **)
+      __rtld_env_path_list.dirs = (struct r_search_path_elem **)
 	malloc ((nllp + 1) * sizeof (struct r_search_path_elem *));
-      if (env_path_list.dirs == NULL)
+      if (__rtld_env_path_list.dirs == NULL)
 	{
 	  errstring = N_("cannot create cache for search path");
 	  goto signal_error;
 	}
 
-      (void) fillin_rpath (llp_tmp, env_path_list.dirs, ":;",
+      (void) fillin_rpath (llp_tmp, __rtld_env_path_list.dirs, ":;",
 			   source, NULL, l);
 
-      if (env_path_list.dirs[0] == NULL)
+      if (__rtld_env_path_list.dirs[0] == NULL)
 	{
-	  free (env_path_list.dirs);
-	  env_path_list.dirs = (void *) -1;
+	  free (__rtld_env_path_list.dirs);
+	  __rtld_env_path_list.dirs = (void *) -1;
 	}
 
-      env_path_list.malloced = 0;
+      __rtld_env_path_list.malloced = 0;
     }
   else
-    env_path_list.dirs = (void *) -1;
+    __rtld_env_path_list.dirs = (void *) -1;
 }
 
 
@@ -1996,9 +1997,9 @@ open_path (const char *name, size_t namelen, int mode,
       if (sps->malloced)
 	free (sps->dirs);
 
-      /* rtld_search_dirs and env_path_list are attribute_relro, therefore
-	 avoid writing into it.  */
-      if (sps != &rtld_search_dirs && sps != &env_path_list)
+      /* __rtld_search_dirs and __rtld_env_path_list are
+	 attribute_relro, therefore avoid writing to them.  */
+      if (sps != &__rtld_search_dirs && sps != &__rtld_env_path_list)
 	sps->dirs = (void *) -1;
     }
 
@@ -2146,8 +2147,8 @@ _dl_map_object (struct link_map *loader, const char *name,
 	}
 
       /* Try the LD_LIBRARY_PATH environment variable.  */
-      if (fd == -1 && env_path_list.dirs != (void *) -1)
-	fd = open_path (name, namelen, mode, &env_path_list,
+      if (fd == -1 && __rtld_env_path_list.dirs != (void *) -1)
+	fd = open_path (name, namelen, mode, &__rtld_env_path_list,
 			&realname, &fb,
 			loader ?: GL(dl_ns)[LM_ID_BASE]._ns_loaded,
 			LA_SER_LIBPATH, &found_other_class);
@@ -2236,8 +2237,8 @@ _dl_map_object (struct link_map *loader, const char *name,
       if (fd == -1
 	  && ((l = loader ?: GL(dl_ns)[nsid]._ns_loaded) == NULL
 	      || __glibc_likely (!(l->l_flags_1 & DF_1_NODEFLIB)))
-	  && rtld_search_dirs.dirs != (void *) -1)
-	fd = open_path (name, namelen, mode, &rtld_search_dirs,
+	  && __rtld_search_dirs.dirs != (void *) -1)
+	fd = open_path (name, namelen, mode, &__rtld_search_dirs,
 			&realname, &fb, l, LA_SER_DEFAULT, &found_other_class);
 
       /* Add another newline when we are tracing the library loading.  */
@@ -2405,7 +2406,7 @@ _dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
     }
 
   /* Try the LD_LIBRARY_PATH environment variable.  */
-  add_path (&p, &env_path_list, XXX_ENV);
+  add_path (&p, &__rtld_env_path_list, XXX_ENV);
 
   /* Look at the RUNPATH information for this binary.  */
   if (cache_rpath (loader, &loader->l_runpath_dirs, DT_RUNPATH, "RUNPATH"))
@@ -2417,7 +2418,7 @@ _dl_rtld_di_serinfo (struct link_map *loader, Dl_serinfo *si, bool counting)
 
   /* Finally, try the default path.  */
   if (!(loader->l_flags_1 & DF_1_NODEFLIB))
-    add_path (&p, &rtld_search_dirs, XXX_default);
+    add_path (&p, &__rtld_search_dirs, XXX_default);
 
   if (counting)
     /* Count the struct size before the string area, which we didn't

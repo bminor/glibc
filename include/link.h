@@ -79,6 +79,10 @@ struct r_search_path_struct
     int malloced;
   };
 
+/* Search path information computed by _dl_init_paths.  */
+extern struct r_search_path_struct __rtld_search_dirs attribute_hidden;
+extern struct r_search_path_struct __rtld_env_path_list attribute_hidden;
+
 /* Structure describing a loaded shared object.  The `l_next' and `l_prev'
    members form a chain of all the shared objects loaded at startup.
 
