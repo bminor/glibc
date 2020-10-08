@@ -175,6 +175,8 @@ update_usable (struct cpu_features *cpu_features)
 					  AVX512_VP2INTERSECT);
 		  /* Determine if AVX512_BF16 is usable.  */
 		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_BF16);
+		  /* Determine if AVX512_FP16 is usable.  */
+		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_FP16);
 		}
 	    }
 	}

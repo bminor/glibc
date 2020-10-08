@@ -211,6 +211,9 @@ The supported processor features are:
 @code{AVX512_BITALG} -- The AVX512_BITALG instruction extensions.
 
 @item
+@code{AVX512_FP16} -- The AVX512_FP16 instruction extensions.
+
+@item
 @code{AVX512_IFMA} -- The AVX512_IFMA instruction extensions.
 
 @item

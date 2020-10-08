@@ -259,7 +259,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 #define bit_cpu_IBT		(1u << 20)
 #define bit_cpu_INDEX_7_EDX_21	(1u << 21)
 #define bit_cpu_AMX_BF16	(1u << 22)
-#define bit_cpu_INDEX_7_EDX_23	(1u << 23)
+#define bit_cpu_AVX512_FP16	(1u << 23)
 #define bit_cpu_AMX_TILE	(1u << 24)
 #define bit_cpu_AMX_INT8	(1u << 25)
 #define bit_cpu_IBRS_IBPB	(1u << 26)
@@ -478,7 +478,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 #define index_cpu_IBT		COMMON_CPUID_INDEX_7
 #define index_cpu_INDEX_7_EDX_21 COMMON_CPUID_INDEX_7
 #define index_cpu_AMX_BF16	COMMON_CPUID_INDEX_7
-#define index_cpu_INDEX_7_EDX_23 COMMON_CPUID_INDEX_7
+#define index_cpu_AVX512_FP16	COMMON_CPUID_INDEX_7
 #define index_cpu_AMX_TILE	COMMON_CPUID_INDEX_7
 #define index_cpu_AMX_INT8	COMMON_CPUID_INDEX_7
 #define index_cpu_IBRS_IBPB	COMMON_CPUID_INDEX_7
@@ -697,7 +697,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 #define reg_IBT			edx
 #define reg_INDEX_7_EDX_21	edx
 #define reg_AMX_BF16		edx
-#define reg_INDEX_7_EDX_23	edx
+#define reg_AVX512_FP16		edx
 #define reg_AMX_TILE		edx
 #define reg_AMX_INT8		edx
 #define reg_IBRS_IBPB		edx
