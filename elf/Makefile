@@ -59,7 +59,7 @@ elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin \
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
 rtld-routines	= rtld $(all-dl-routines) dl-sysdep dl-environ dl-minimal \
-  dl-error-minimal dl-conflict dl-hwcaps
+  dl-error-minimal dl-conflict dl-hwcaps dl-usage
 all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 
 CFLAGS-dl-runtime.c += -fexceptions -fasynchronous-unwind-tables
@@ -618,6 +618,12 @@ ldso_install: $(inst_rtlddir)/$(rtld-installed-name)
 endif
 
 
+# Workarounds for ${exec_prefix} expansion in configure variables.
+# config.status cannot be used directly for processing ldd.bash.in or
+# expanding variables such as sysconfdir because the expansion
+# contains the literal string ${exec_prefix}, which is not valid in C
+# headers or installed shell scripts.
+
 ldd-rewrite = -e 's%@RTLD@%$(rtlddir)/$(rtld-installed-name)%g' \
 	      -e 's%@VERSION@%$(version)%g' \
 	      -e 's|@PKGVERSION@|$(PKGVERSION)|g' \
@@ -655,6 +661,7 @@ libof-ldconfig = ldconfig
 CFLAGS-dl-cache.c += $(SYSCONF-FLAGS)
 CFLAGS-cache.c += $(SYSCONF-FLAGS)
 CFLAGS-rtld.c += $(SYSCONF-FLAGS)
+CFLAGS-dl-usage.c += $(SYSCONF-FLAGS)
 
 cpp-srcs-left := $(all-rtld-routines:=.os)
 lib := rtld
