@@ -20,6 +20,7 @@
 #include <dl-main.h>
 #include <ldsodefs.h>
 #include <unistd.h>
+#include "version.h"
 
 void
 _dl_usage (const char *argv0, const char *wrong_option)
@@ -30,6 +31,19 @@ _dl_usage (const char *argv0, const char *wrong_option)
     _dl_error_printf ("%s: missing program name\n", argv0);
   _dl_error_printf ("Try '%s --help' for more information.\n", argv0);
   _exit (EXIT_FAILURE);
+}
+
+void
+_dl_version (void)
+{
+  _dl_printf ("\
+ld.so " PKGVERSION RELEASE " release version " VERSION ".\n\
+Copyright (C) 2020 Free Software Foundation, Inc.\n\
+This is free software; see the source for copying conditions.\n\
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
+PARTICULAR PURPOSE.\n\
+");
+  _exit (EXIT_SUCCESS);
 }
 
 void
@@ -61,6 +75,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   --preload LIST        preload objects named in LIST\n\
   --argv0 STRING        set argv[0] to STRING before running\n\
   --help                display this help and exit\n\
+  --version             output version information and exit\n\
 ",
               argv0);
   _exit (EXIT_SUCCESS);

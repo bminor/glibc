@@ -1254,6 +1254,8 @@ dl_main (const ElfW(Phdr) *phdr,
 	    --_dl_argc;
 	    ++_dl_argv;
 	  }
+	else if (strcmp (_dl_argv[1], "--version") == 0)
+	  _dl_version ();
 	else if (_dl_argv[1][0] == '-' && _dl_argv[1][1] == '-')
 	  {
 	   if (_dl_argv[1][1] == '\0')
