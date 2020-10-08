@@ -1151,6 +1151,7 @@ dl_main (const ElfW(Phdr) *phdr,
   _dl_starting_up = 1;
 #endif
 
+  const char *ld_so_name = _dl_argv[0];
   if (*user_entry == (ElfW(Addr)) ENTRY_POINT)
     {
       /* Ho ho.  We are not the program interpreter!  We are the program
@@ -1178,8 +1179,12 @@ dl_main (const ElfW(Phdr) *phdr,
       while (_dl_argc > 1)
 	if (! strcmp (_dl_argv[1], "--list"))
 	  {
-	    state.mode = rtld_mode_list;
-	    GLRO(dl_lazy) = -1;	/* This means do no dependency analysis.  */
+	    if (state.mode != rtld_mode_help)
+	      {
+	       state.mode = rtld_mode_list;
+		/* This means do no dependency analysis.  */
+		GLRO(dl_lazy) = -1;
+	      }
 
 	    ++_dl_skip_args;
 	    --_dl_argc;
@@ -1187,7 +1192,8 @@ dl_main (const ElfW(Phdr) *phdr,
 	  }
 	else if (! strcmp (_dl_argv[1], "--verify"))
 	  {
-	    state.mode = rtld_mode_verify;
+	    if (state.mode != rtld_mode_help)
+	      state.mode = rtld_mode_verify;
 
 	    ++_dl_skip_args;
 	    --_dl_argc;
@@ -1242,13 +1248,34 @@ dl_main (const ElfW(Phdr) *phdr,
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
+	else if (strcmp (_dl_argv[1], "--help") == 0)
+	  {
+	    state.mode = rtld_mode_help;
+	    --_dl_argc;
+	    ++_dl_argv;
+	  }
+	else if (_dl_argv[1][0] == '-' && _dl_argv[1][1] == '-')
+	  {
+	   if (_dl_argv[1][1] == '\0')
+	     /* End of option list.  */
+	     break;
+	   else
+	     /* Unrecognized option.  */
+	     _dl_usage (ld_so_name, _dl_argv[1]);
+	  }
 	else
 	  break;
 
       /* If we have no further argument the program was called incorrectly.
 	 Grant the user some education.  */
       if (_dl_argc < 2)
-	_dl_usage ();
+	{
+	  if (state.mode == rtld_mode_help)
+	    /* --help without an executable is not an error.  */
+	    _dl_help (ld_so_name, &state);
+	  else
+	    _dl_usage (ld_so_name, NULL);
+	}
 
       ++_dl_skip_args;
       --_dl_argc;
@@ -1273,7 +1300,8 @@ dl_main (const ElfW(Phdr) *phdr,
 	    break;
 	  }
 
-      if (__glibc_unlikely (state.mode == rtld_mode_verify))
+      if (__glibc_unlikely (state.mode == rtld_mode_verify
+			    || state.mode == rtld_mode_help))
 	{
 	  const char *objname;
 	  const char *err_str = NULL;
@@ -1286,9 +1314,16 @@ dl_main (const ElfW(Phdr) *phdr,
 	  (void) _dl_catch_error (&objname, &err_str, &malloced, map_doit,
 				  &args);
 	  if (__glibc_unlikely (err_str != NULL))
-	    /* We don't free the returned string, the programs stops
-	       anyway.  */
-	    _exit (EXIT_FAILURE);
+	    {
+	      /* We don't free the returned string, the programs stops
+		 anyway.  */
+	      if (state.mode == rtld_mode_help)
+		/* Mask the failure to load the main object.  The help
+		   message contains less information in this case.  */
+		_dl_help (ld_so_name, &state);
+	      else
+		_exit (EXIT_FAILURE);
+	    }
 	}
       else
 	{
@@ -1646,6 +1681,11 @@ dl_main (const ElfW(Phdr) *phdr,
 
   audit_list_add_dynamic_tag (&state.audit_list, main_map, DT_AUDIT);
   audit_list_add_dynamic_tag (&state.audit_list, main_map, DT_DEPAUDIT);
+
+  /* At this point, all data has been obtained that is included in the
+     --help output.  */
+  if (__glibc_unlikely (state.mode == rtld_mode_help))
+    _dl_help (ld_so_name, &state);
 
   /* If we have auditing DSOs to load, do it now.  */
   bool need_security_init = true;

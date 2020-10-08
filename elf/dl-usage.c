@@ -19,12 +19,24 @@
 #include <dl-cache.h>
 #include <dl-main.h>
 #include <ldsodefs.h>
+#include <unistd.h>
 
 void
-_dl_usage (void)
+_dl_usage (const char *argv0, const char *wrong_option)
 {
-  _dl_fatal_printf ("\
-Usage: ld.so [OPTION]... EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
+  if (wrong_option != NULL)
+    _dl_error_printf ("%s: unrecognized option '%s'\n", argv0, wrong_option);
+  else
+    _dl_error_printf ("%s: missing program name\n", argv0);
+  _dl_error_printf ("Try '%s --help' for more information.\n", argv0);
+  _exit (EXIT_FAILURE);
+}
+
+void
+_dl_help (const char *argv0, struct dl_main_state *state)
+{
+  _dl_printf ("\
+Usage: %s [OPTION]... EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
 You have invoked `ld.so', the helper program for shared library executables.\n\
 This program usually lives in the file `/lib/ld.so', and special directives\n\
 in executable files using ELF shared libraries tell the system's program\n\
@@ -47,5 +59,9 @@ of this helper program; chances are you did not intend to run this program.\n\
                         in LIST\n\
   --audit LIST          use objects named in LIST as auditors\n\
   --preload LIST        preload objects named in LIST\n\
-  --argv0 STRING        set argv[0] to STRING before running\n");
+  --argv0 STRING        set argv[0] to STRING before running\n\
+  --help                display this help and exit\n\
+",
+              argv0);
+  _exit (EXIT_SUCCESS);
 }
