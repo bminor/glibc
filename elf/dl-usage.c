@@ -22,6 +22,8 @@
 #include <unistd.h>
 #include "version.h"
 
+#include <dl-hwcaps.h>
+
 void
 _dl_usage (const char *argv0, const char *wrong_option)
 {
@@ -101,6 +103,65 @@ print_search_path_for_help (struct dl_main_state *state)
   print_search_path_for_help_1 (__rtld_search_dirs.dirs);
 }
 
+/* Helper function for printing flags associated with a HWCAP name.  */
+static void
+print_hwcap_1 (bool *first, bool active, const char *label)
+{
+  if (active)
+    {
+      if (*first)
+        {
+          _dl_printf (" (");
+          *first = false;
+        }
+      else
+        _dl_printf (", ");
+      _dl_printf ("%s", label);
+    }
+}
+
+/* Called after a series of print_hwcap_1 calls to emit the line
+   terminator.  */
+static void
+print_hwcap_1_finish (bool *first)
+{
+  if (*first)
+    _dl_printf ("\n");
+  else
+    _dl_printf (")\n");
+}
+
+/* Write a list of hwcap subdirectories to standard output.  See
+ _dl_important_hwcaps in dl-hwcaps.c.  */
+static void
+print_legacy_hwcap_directories (void)
+{
+  _dl_printf ("\n\
+Legacy HWCAP subdirectories under library search path directories:\n");
+
+  const char *platform = GLRO (dl_platform);
+  if (platform != NULL)
+    _dl_printf ("  %s (AT_PLATFORM; supported, searched)\n", platform);
+
+  _dl_printf ("  tls (supported, searched)\n");
+
+  uint64_t hwcap_mask = GET_HWCAP_MASK();
+  uint64_t searched = GLRO (dl_hwcap) & hwcap_mask;
+  for (int n = 63; n >= 0; --n)
+    {
+      uint64_t bit = 1ULL << n;
+      if (HWCAP_IMPORTANT & bit)
+        {
+          _dl_printf ("  %s", _dl_hwcap_string (n));
+          bool first = true;
+          print_hwcap_1 (&first, GLRO (dl_hwcap) & bit, "supported");
+          print_hwcap_1 (&first, !(hwcap_mask & bit), "masked");
+          print_hwcap_1 (&first, searched & bit, "searched");
+          print_hwcap_1_finish (&first);
+        }
+    }
+}
+
 void
 _dl_help (const char *argv0, struct dl_main_state *state)
 {
@@ -136,5 +197,6 @@ This program interpreter self-identifies as: " RTLD "\n\
 ",
               argv0);
   print_search_path_for_help (state);
+  print_legacy_hwcap_directories ();
   _exit (EXIT_SUCCESS);
 }
