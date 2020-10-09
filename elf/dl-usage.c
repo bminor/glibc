@@ -46,6 +46,61 @@ PARTICULAR PURPOSE.\n\
   _exit (EXIT_SUCCESS);
 }
 
+/* Print part of the library search path (from a single source).  */
+static void
+print_search_path_for_help_1 (struct r_search_path_elem **list)
+{
+  if (list == NULL || list == (void *) -1)
+    /* Path is missing or marked as inactive.  */
+    return;
+
+  for (; *list != NULL; ++list)
+    {
+      _dl_write (STDOUT_FILENO, "  ", 2);
+      const char *name = (*list)->dirname;
+      size_t namelen = (*list)->dirnamelen;
+      if (namelen == 0)
+        {
+          /* The empty string denotes the current directory.  */
+          name = ".";
+          namelen = 1;
+        }
+      else if (namelen > 1)
+        /* Remove the trailing slash.  */
+        --namelen;
+      _dl_write (STDOUT_FILENO, name, namelen);
+      _dl_printf (" (%s)\n", (*list)->what);
+    }
+}
+
+/* Prints the library search path.  See _dl_init_paths in dl-load.c
+   how this information is populated.  */
+static void
+print_search_path_for_help (struct dl_main_state *state)
+{
+  if (__rtld_search_dirs.dirs == NULL)
+    /* The run-time search paths have not yet been initialized.  */
+    _dl_init_paths (state->library_path, state->library_path_source);
+
+  _dl_printf ("\nShared library search path:\n");
+
+  /* The print order should reflect the processing in
+     _dl_map_object.  */
+
+  struct link_map *map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+  if (map != NULL)
+    print_search_path_for_help_1 (map->l_rpath_dirs.dirs);
+
+  print_search_path_for_help_1 (__rtld_env_path_list.dirs);
+
+  if (map != NULL)
+    print_search_path_for_help_1 (map->l_runpath_dirs.dirs);
+
+  _dl_printf ("  (libraries located via %s)\n", LD_SO_CACHE);
+
+  print_search_path_for_help_1 (__rtld_search_dirs.dirs);
+}
+
 void
 _dl_help (const char *argv0, struct dl_main_state *state)
 {
@@ -80,5 +135,6 @@ setting environment variables (which would be inherited by subprocesses).\n\
 This program interpreter self-identifies as: " RTLD "\n\
 ",
               argv0);
+  print_search_path_for_help (state);
   _exit (EXIT_SUCCESS);
 }
