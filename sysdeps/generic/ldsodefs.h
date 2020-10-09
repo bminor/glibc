@@ -1071,12 +1071,12 @@ extern void _dl_show_auxv (void) attribute_hidden;
    other.  */
 extern char *_dl_next_ld_env_entry (char ***position) attribute_hidden;
 
-/* Return an array with the names of the important hardware capabilities.  */
-extern const struct r_strlenpair *_dl_important_hwcaps (const char *platform,
-							size_t paltform_len,
-							size_t *sz,
-							size_t *max_capstrlen)
-     attribute_hidden;
+/* Return an array with the names of the important hardware
+   capabilities.  The length of the array is written to *SZ, and the
+   maximum of all strings length is written to *MAX_CAPSTRLEN.  */
+const struct r_strlenpair *_dl_important_hwcaps (size_t *sz,
+						 size_t *max_capstrlen)
+  attribute_hidden;
 
 /* Look up NAME in ld.so.cache and return the file name stored there,
    or null if none is found.  Caller must free returned string.  */

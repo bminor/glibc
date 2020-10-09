@@ -697,8 +697,7 @@ _dl_init_paths (const char *llp, const char *source)
 
 #ifdef SHARED
   /* Get the capabilities.  */
-  capstr = _dl_important_hwcaps (GLRO(dl_platform), GLRO(dl_platformlen),
-				 &ncapstr, &max_capstrlen);
+  capstr = _dl_important_hwcaps (&ncapstr, &max_capstrlen);
 #endif
 
   /* First set up the rest of the default search directory entries.  */

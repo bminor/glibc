@@ -28,13 +28,12 @@
 
 /* Return an array of useful/necessary hardware capability names.  */
 const struct r_strlenpair *
-_dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
-		      size_t *max_capstrlen)
+_dl_important_hwcaps (size_t *sz, size_t *max_capstrlen)
 {
   uint64_t hwcap_mask = GET_HWCAP_MASK();
   /* Determine how many important bits are set.  */
   uint64_t masked = GLRO(dl_hwcap) & hwcap_mask;
-  size_t cnt = platform != NULL;
+  size_t cnt = GLRO (dl_platform) != NULL;
   size_t n, m;
   size_t total;
   struct r_strlenpair *result;
@@ -60,10 +59,10 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 	masked ^= 1ULL << n;
 	++m;
       }
-  if (platform != NULL)
+  if (GLRO (dl_platform) != NULL)
     {
-      temp[m].str = platform;
-      temp[m].len = platform_len;
+      temp[m].str = GLRO (dl_platform);
+      temp[m].len = GLRO (dl_platformlen);
       ++m;
     }
 
