@@ -19,7 +19,8 @@
 #include <stdio.h>
 #include <support/check.h>
 #include <sys/param.h>
-#include <sys/platform/x86.h>
+#include <elf.h>
+#include <get-isa-level.h>
 
 extern int marker2 (void);
 extern int marker3 (void);
@@ -31,35 +32,15 @@ compute_level (void)
 {
   const struct cpu_features *cpu_features
     = __x86_get_cpu_features (COMMON_CPUID_INDEX_MAX);
+  unsigned int isa_level = get_isa_level (cpu_features);
 
- if (!(CPU_FEATURE_USABLE_P (cpu_features, CMPXCHG16B)
-       && CPU_FEATURE_USABLE_P (cpu_features, LAHF64_SAHF64)
-       && CPU_FEATURE_USABLE_P (cpu_features, POPCNT)
-       && CPU_FEATURE_USABLE_P (cpu_features, MMX)
-       && CPU_FEATURE_USABLE_P (cpu_features, SSE)
-       && CPU_FEATURE_USABLE_P (cpu_features, SSE2)
-       && CPU_FEATURE_USABLE_P (cpu_features, SSE3)
-       && CPU_FEATURE_USABLE_P (cpu_features, SSSE3)
-       && CPU_FEATURE_USABLE_P (cpu_features, SSE4_1)
-       && CPU_FEATURE_USABLE_P (cpu_features, SSE4_2)))
-   return 1;
- if (!(CPU_FEATURE_USABLE_P (cpu_features, AVX)
-       && CPU_FEATURE_USABLE_P (cpu_features, AVX2)
-       && CPU_FEATURE_USABLE_P (cpu_features, BMI1)
-       && CPU_FEATURE_USABLE_P (cpu_features, BMI2)
-       && CPU_FEATURE_USABLE_P (cpu_features, F16C)
-       && CPU_FEATURE_USABLE_P (cpu_features, FMA)
-       && CPU_FEATURE_USABLE_P (cpu_features, LZCNT)
-       && CPU_FEATURE_USABLE_P (cpu_features, MOVBE)
-       && CPU_FEATURE_USABLE_P (cpu_features, OSXSAVE)))
-   return 2;
- if (!(CPU_FEATURE_USABLE_P (cpu_features, AVX512F)
-       && CPU_FEATURE_USABLE_P (cpu_features, AVX512BW)
-       && CPU_FEATURE_USABLE_P (cpu_features, AVX512CD)
-       && CPU_FEATURE_USABLE_P (cpu_features, AVX512DQ)
-       && CPU_FEATURE_USABLE_P (cpu_features, AVX512VL)))
-   return 3;
- return 4;
+  if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V2))
+    return 1;
+  if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V3))
+    return 2;
+  if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V4))
+    return 3;
+  return 4;
 }
 
 static int

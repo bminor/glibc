@@ -18,6 +18,7 @@
 
 #include <dl-hwcaps.h>
 #include <cpu-features.h>
+#include <get-isa-level.h>
 
 const char _dl_hwcaps_subdirs[] = "x86-64-v4:x86-64-v3:x86-64-v2";
 enum { subdirs_count = 3 }; /* Number of components in _dl_hwcaps_subdirs.  */
@@ -25,40 +26,25 @@ enum { subdirs_count = 3 }; /* Number of components in _dl_hwcaps_subdirs.  */
 uint32_t
 _dl_hwcaps_subdirs_active (void)
 {
+  const struct cpu_features *cpu_features
+    = __x86_get_cpu_features (COMMON_CPUID_INDEX_MAX);
+  unsigned int isa_level = get_isa_level (cpu_features);
   int active = 0;
 
   /* Test in reverse preference order.  */
 
   /* x86-64-v2.  */
-  if (!(CPU_FEATURE_USABLE (CMPXCHG16B)
-        && CPU_FEATURE_USABLE (LAHF64_SAHF64)
-        && CPU_FEATURE_USABLE (POPCNT)
-        && CPU_FEATURE_USABLE (SSE3)
-        && CPU_FEATURE_USABLE (SSE4_1)
-        && CPU_FEATURE_USABLE (SSE4_2)
-        && CPU_FEATURE_USABLE (SSSE3)))
+  if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V2))
     return _dl_hwcaps_subdirs_build_bitmask (subdirs_count, active);
   ++active;
 
   /* x86-64-v3.  */
-  if (!(CPU_FEATURE_USABLE (AVX)
-        && CPU_FEATURE_USABLE (AVX2)
-        && CPU_FEATURE_USABLE (BMI1)
-        && CPU_FEATURE_USABLE (BMI2)
-        && CPU_FEATURE_USABLE (F16C)
-        && CPU_FEATURE_USABLE (FMA)
-        && CPU_FEATURE_USABLE (LZCNT)
-        && CPU_FEATURE_USABLE (MOVBE)
-        && CPU_FEATURE_USABLE (OSXSAVE)))
+  if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V3))
     return _dl_hwcaps_subdirs_build_bitmask (subdirs_count, active);
   ++active;
 
- /* x86-64-v4.  */
-  if (!(CPU_FEATURE_USABLE (AVX512F)
-        && CPU_FEATURE_USABLE (AVX512BW)
-        && CPU_FEATURE_USABLE (AVX512CD)
-        && CPU_FEATURE_USABLE (AVX512DQ)
-        && CPU_FEATURE_USABLE (AVX512VL)))
+  /* x86-64-v4.  */
+  if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V4))
     return _dl_hwcaps_subdirs_build_bitmask (subdirs_count, active);
   ++active;
 

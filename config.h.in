@@ -269,4 +269,7 @@
 /* The default value of x86 CET control.  */
 #define DEFAULT_DL_X86_CET_CONTROL cet_elf_property
 
+/* Define if x86 ISA level should be included in shared libraries.  */
+#undef INCLUDE_X86_ISA_LEVEL
+
 #endif

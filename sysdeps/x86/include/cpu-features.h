@@ -123,6 +123,8 @@ struct cpu_features
   struct cpu_features_basic basic;
   struct cpuid_features features[COMMON_CPUID_INDEX_MAX];
   unsigned int preferred[PREFERRED_FEATURE_INDEX_MAX];
+  /* X86 micro-architecture ISA levels.  */
+  unsigned int isa_1;
   /* The state size for XSAVEC or XSAVE.  The type must be unsigned long
      int so that we use
 

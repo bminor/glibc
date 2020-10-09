@@ -19,6 +19,7 @@
 #include <cpuid.h>
 #include <dl-hwcap.h>
 #include <libc-pointer-arith.h>
+#include <get-isa-level.h>
 #if IS_IN (libc) && !defined SHARED
 # include <assert.h>
 # include <unistd.h>
@@ -290,6 +291,8 @@ update_usable (struct cpu_features *cpu_features)
       CPU_FEATURE_SET_USABLE (cpu_features, KL);
       CPU_FEATURE_SET_USABLE (cpu_features, WIDE_KL);
     }
+
+  cpu_features->isa_1 = get_isa_level (cpu_features);
 }
 
 static void

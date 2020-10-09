@@ -43,3 +43,69 @@ elif test $enable_cet = permissive; then
   AC_DEFINE(DEFAULT_DL_X86_CET_CONTROL, cet_permissive)
 fi
 LIBC_CONFIG_VAR([enable-cet], [$enable_cet])
+
+# Check if linker supports x86 ISA level.
+AC_CACHE_CHECK([for linker x86 ISA level support],
+	       libc_cv_include_x86_isa_level, [dnl
+cat > conftest1.S <<EOF
+#ifdef __LP64__
+# define P2ALIGN 3
+#else
+# define P2ALIGN 2
+#endif
+	.section ".note.gnu.property", "a"
+	.p2align P2ALIGN
+	.long 1f - 0f		/* name length.  */
+	.long 4f - 1f		/* data length.  */
+	/* NT_GNU_PROPERTY_TYPE_0 */
+	.long 5			/* note type.  */
+0:
+	.asciz "GNU"		/* vendor name.  */
+1:
+	.p2align P2ALIGN
+	/* GNU_PROPERTY_X86_ISA_1_NEEDED */
+	.long 0xc0008002	/* pr_type.  */
+	.long 3f - 2f		/* pr_datasz.  */
+2:
+	.long 0x1
+3:
+	.p2align P2ALIGN
+4:
+EOF
+cat > conftest2.S <<EOF
+#ifdef __LP64__
+# define P2ALIGN 3
+#else
+# define P2ALIGN 2
+#endif
+	.section ".note.gnu.property", "a"
+	.p2align P2ALIGN
+	.long 1f - 0f		/* name length.  */
+	.long 4f - 1f		/* data length.  */
+	/* NT_GNU_PROPERTY_TYPE_0 */
+	.long 5			/* note type.  */
+0:
+	.asciz "GNU"		/* vendor name.  */
+1:
+	.p2align P2ALIGN
+	/* GNU_PROPERTY_X86_ISA_1_NEEDED */
+	.long 0xc0008002	/* pr_type.  */
+	.long 3f - 2f		/* pr_datasz.  */
+2:
+	.long 0x2
+3:
+	.p2align P2ALIGN
+4:
+EOF
+libc_cv_include_x86_isa_level=no
+if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS -nostartfiles -nostdlib -r -o conftest conftest1.S conftest2.S); then
+  count=`LC_ALL=C $READELF -n conftest | grep NT_GNU_PROPERTY_TYPE_0 | wc -l`
+  if test "$count" = 1; then
+    libc_cv_include_x86_isa_level=yes
+  fi
+fi
+rm -f conftest*])
+if test $libc_cv_include_x86_isa_level = yes; then
+  AC_DEFINE(INCLUDE_X86_ISA_LEVEL)
+fi
+LIBC_CONFIG_VAR([enable-x86-isa-level], [$libc_cv_include_x86_isa_level])
