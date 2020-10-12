@@ -1422,9 +1422,9 @@ This is an obsolete alias for @code{memcmp}, derived from BSD.
 In some locales, the conventions for lexicographic ordering differ from
 the strict numeric ordering of character codes.  For example, in Spanish
 most glyphs with diacritical marks such as accents are not considered
-distinct letters for the purposes of collation.  On the other hand, the
-two-character sequence @samp{ll} is treated as a single letter that is
-collated immediately after @samp{l}.
+distinct letters for the purposes of collation.  On the other hand, in
+Czech the two-character sequence @samp{ch} is treated as a single letter
+that is collated between @samp{h} and @samp{i}.
 
 You can use the functions @code{strcoll} and @code{strxfrm} (declared in
 the headers file @file{string.h}) and @code{wcscoll} and @code{wcsxfrm}
