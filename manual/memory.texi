@@ -1142,7 +1142,7 @@ overwritten.
 The default value of this parameter is @code{0}.
 
 This parameter can also be set for the process at startup by setting the
-environment variable @env{MALLOC_MMAP_PERTURB_} to the desired value.
+environment variable @env{MALLOC_PERTURB_} to the desired value.
 
 @item M_TOP_PAD
 This parameter determines the amount of extra memory to obtain from the system
