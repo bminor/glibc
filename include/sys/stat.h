@@ -50,7 +50,6 @@ hidden_proto (__fstatat64)
 #  define __stat64_time64  __stat64
 #  define __fstat64_time64  __fstat64
 #  define __lstat64_time64  __lstat64
-#  define __fstatat_time64  __fstatat
 #  define __fstatat64_time64  __fstatat64
 # else
 extern int __stat64_time64 (const char *file, struct __stat64_t64 *buf);
