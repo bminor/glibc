@@ -181,7 +181,9 @@ resolv_response_init (struct resolv_response_builder *b,
   b->buffer[2] |= b->query_buffer[2] & 0x01; /* Copy the RD bit.  */
   if (flags.tc)
     b->buffer[2] |= 0x02;
-  b->buffer[3] = 0x80 | flags.rcode; /* Always set RA.  */
+  b->buffer[3] = flags.rcode;
+  if (!flags.clear_ra)
+    b->buffer[3] |= 0x80;
   if (flags.ad)
     b->buffer[3] |= 0x20;
 
