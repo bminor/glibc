@@ -35,6 +35,8 @@ libsupport-routines = \
   ignore_stderr \
   next_to_fault \
   oom_error \
+  resolv_response_context_duplicate \
+  resolv_response_context_free \
   resolv_test \
   set_fortify_handler \
   support-xfstat \

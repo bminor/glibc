@@ -35,24 +35,35 @@ struct resolv_edns_info
   uint16_t payload_size;
 };
 
+/* This opaque struct collects information about the resolver testing
+   currently in progress.  */
+struct resolv_test;
+
 /* This struct provides context information when the response callback
    specified in struct resolv_redirect_config is invoked. */
 struct resolv_response_context
 {
-  const unsigned char *query_buffer;
+  struct resolv_test *test;
+  void *client_address;
+  size_t client_address_length;
+  unsigned char *query_buffer;
   size_t query_length;
   int server_index;
   bool tcp;
   struct resolv_edns_info edns;
 };
 
+/* Produces a deep copy of the context.  */
+struct resolv_response_context *
+  resolv_response_context_duplicate (const struct resolv_response_context *);
+
+/* Frees the copy.  For the context passed to the response function,
+   this happens implicitly.  */
+void resolv_response_context_free (struct resolv_response_context *);
+
 /* This opaque struct is used to construct responses from within the
    response callback function.  */
 struct resolv_response_builder;
-
-/* This opaque struct collects information about the resolver testing
-   currently in progress.  */
-struct resolv_test;
 
 enum
   {
@@ -187,6 +198,22 @@ void resolv_response_close (struct resolv_response_builder *);
 
 /* The size of the response packet built so far.  */
 size_t resolv_response_length (const struct resolv_response_builder *);
+
+/* Allocates a response builder tied to a specific query packet,
+   starting at QUERY_BUFFER, containing QUERY_LENGTH bytes.  */
+struct resolv_response_builder *
+  resolv_response_builder_allocate (const unsigned char *query_buffer,
+                                    size_t query_length);
+
+/* Deallocates a response buffer.  */
+void resolv_response_builder_free (struct resolv_response_builder *);
+
+/* Sends a UDP response using a specific context.  This can be used to
+   reorder or duplicate responses, along with
+   resolv_response_context_duplicate and
+   response_builder_allocate.  */
+void resolv_response_send_udp (const struct resolv_response_context *,
+                               struct resolv_response_builder *);
 
 __END_DECLS
 
