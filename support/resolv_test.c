@@ -434,9 +434,9 @@ resolv_response_buffer (const struct resolv_response_builder *b)
   return result;
 }
 
-static struct resolv_response_builder *
-response_builder_allocate
-  (const unsigned char *query_buffer, size_t query_length)
+struct resolv_response_builder *
+resolv_response_builder_allocate (const unsigned char *query_buffer,
+                                  size_t query_length)
 {
   struct resolv_response_builder *b = xmalloc (sizeof (*b));
   memset (b, 0, offsetof (struct resolv_response_builder, buffer));
@@ -445,8 +445,8 @@ response_builder_allocate
   return b;
 }
 
-static void
-response_builder_free (struct resolv_response_builder *b)
+void
+resolv_response_builder_free (struct resolv_response_builder *b)
 {
   tdestroy (b->compression_offsets, free);
   free (b);
@@ -661,13 +661,17 @@ server_thread_udp_process_one (struct resolv_test *obj, int server_index)
 
   struct resolv_response_context ctx =
     {
+      .test = obj,
+      .client_address = &peer,
+      .client_address_length = peerlen,
       .query_buffer = query,
       .query_length = length,
       .server_index = server_index,
       .tcp = false,
       .edns = qinfo.edns,
     };
-  struct resolv_response_builder *b = response_builder_allocate (query, length);
+  struct resolv_response_builder *b
+    = resolv_response_builder_allocate (query, length);
   obj->config.response_callback
     (&ctx, b, qinfo.qname, qinfo.qclass, qinfo.qtype);
 
@@ -684,7 +688,7 @@ server_thread_udp_process_one (struct resolv_test *obj, int server_index)
           if (b->offset >= 12)
             printf ("info: UDP server %d: sending response:"
                     " %zu bytes, RCODE %d (for %s/%u/%u)\n",
-                    server_index, b->offset, b->buffer[3] & 0x0f,
+                    ctx.server_index, b->offset, b->buffer[3] & 0x0f,
                     qinfo.qname, qinfo.qclass, qinfo.qtype);
           else
             printf ("info: UDP server %d: sending response: %zu bytes"
@@ -694,21 +698,29 @@ server_thread_udp_process_one (struct resolv_test *obj, int server_index)
           if (b->truncate_bytes > 0)
             printf ("info:    truncated by %u bytes\n", b->truncate_bytes);
         }
-      size_t to_send = b->offset;
-      if (to_send < b->truncate_bytes)
-        to_send = 0;
-      else
-        to_send -= b->truncate_bytes;
-
-      /* Ignore most errors here because the other end may have closed
-         the socket. */
-      if (sendto (obj->servers[server_index].socket_udp,
-                  b->buffer, to_send, 0,
-                  (struct sockaddr *) &peer, peerlen) < 0)
-        TEST_VERIFY_EXIT (errno != EBADF);
+      resolv_response_send_udp (&ctx, b);
     }
-  response_builder_free (b);
+  resolv_response_builder_free (b);
   return true;
+}
+
+void
+resolv_response_send_udp (const struct resolv_response_context *ctx,
+                          struct resolv_response_builder *b)
+{
+  TEST_VERIFY_EXIT (!ctx->tcp);
+  size_t to_send = b->offset;
+  if (to_send < b->truncate_bytes)
+    to_send = 0;
+  else
+    to_send -= b->truncate_bytes;
+
+  /* Ignore most errors here because the other end may have closed
+     the socket.  */
+  if (sendto (ctx->test->servers[ctx->server_index].socket_udp,
+              b->buffer, to_send, 0,
+              ctx->client_address, ctx->client_address_length) < 0)
+    TEST_VERIFY_EXIT (errno != EBADF);
 }
 
 /* UDP thread_callback function.  Variant for one thread per
@@ -897,14 +909,15 @@ server_thread_tcp_client (void *arg)
 
       struct resolv_response_context ctx =
         {
+          .test = closure->obj,
           .query_buffer = query_buffer,
           .query_length = query_length,
           .server_index = closure->server_index,
           .tcp = true,
           .edns = qinfo.edns,
         };
-      struct resolv_response_builder *b = response_builder_allocate
-        (query_buffer, query_length);
+      struct resolv_response_builder *b
+        = resolv_response_builder_allocate (query_buffer, query_length);
       closure->obj->config.response_callback
         (&ctx, b, qinfo.qname, qinfo.qclass, qinfo.qtype);
 
@@ -936,7 +949,7 @@ server_thread_tcp_client (void *arg)
           writev_fully (closure->client_socket, buffers, 2);
         }
       bool close_flag = b->close;
-      response_builder_free (b);
+      resolv_response_builder_free (b);
       free (query_buffer);
       if (close_flag)
         break;
