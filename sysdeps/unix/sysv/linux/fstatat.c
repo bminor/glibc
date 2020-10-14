@@ -26,21 +26,22 @@
 int
 __fstatat (int fd, const char *file, struct stat *buf, int flag)
 {
+  int r;
+
 # if STAT_IS_KERNEL_STAT
   /* New kABIs which uses generic pre 64-bit time Linux ABI, e.g.
      csky, nios2  */
-  int r = INLINE_SYSCALL_CALL (fstatat64, fd, file, buf, flag);
+  r = INTERNAL_SYSCALL_CALL (fstatat64, fd, file, buf, flag);
   if (r == 0 && (buf->__st_ino_pad != 0
 		 || buf->__st_size_pad != 0
 		 || buf->__st_blocks_pad != 0))
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EOVERFLOW);
-  return r;
 # else
 #  ifdef __NR_fstatat64
   /* Old KABIs with old non-LFS support, e.g. arm, i386, hppa, m68k, mips32,
      microblaze, s390, sh, powerpc, and sparc.  */
   struct stat64 st64;
-  int r = INLINE_SYSCALL_CALL (fstatat64, fd, file, &st64, flag);
+  r = INTERNAL_SYSCALL_CALL (fstatat64, fd, file, &st64, flag);
   if (r == 0)
     {
       if (! in_ino_t_range (st64.st_ino)
@@ -67,15 +68,21 @@ __fstatat (int fd, const char *file, struct stat *buf, int flag)
       buf->st_mtim.tv_nsec = st64.st_mtim.tv_nsec;
       buf->st_ctim.tv_sec = st64.st_ctim.tv_sec;
       buf->st_ctim.tv_nsec = st64.st_ctim.tv_nsec;
+
+      return 0;
     }
-  return r;
 #  else
   /* 64-bit kabi outlier, e.g. mips64 and mips64-n32.  */
   struct kernel_stat kst;
-  int r = INLINE_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);
-  return r ?: __cp_kstat_stat (&kst, buf);
+  r = INTERNAL_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);
+  if (r == 0)
+    r = __cp_kstat_stat (&kst, buf);
 #  endif /* __nr_fstatat64  */
 # endif /* STAT_IS_KERNEL_STAT  */
+
+  return INTERNAL_SYSCALL_ERROR_P (r)
+	 ? INLINE_SYSCALL_ERROR_RETURN_VALUE (-r)
+	 : 0;
 }
 
 weak_alias (__fstatat, fstatat)

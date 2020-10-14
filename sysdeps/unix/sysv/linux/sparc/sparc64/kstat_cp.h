@@ -18,7 +18,7 @@
 
 #include <errno.h>
 
-static inline int
+static inline void
 __cp_stat64_kstat64 (struct stat64 *st64, const struct kernel_stat64 *kst64)
 {
   st64->st_dev = kst64->st_dev;
@@ -41,6 +41,4 @@ __cp_stat64_kstat64 (struct stat64 *st64, const struct kernel_stat64 *kst64)
   st64->st_ctim.tv_nsec = kst64->st_ctime_nsec;
   st64->__glibc_reserved4 = 0;
   st64->__glibc_reserved5 = 0;
-
-  return 0;
 }

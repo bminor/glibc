@@ -19,13 +19,13 @@
 #include <sys/stat.h>
 #include <kernel_stat.h>
 
-static inline int
+static inline long int
 __cp_kstat_stat (const struct kernel_stat *kst, struct stat *st)
 {
   if (! in_ino_t_range (kst->st_ino)
       || ! in_off_t_range (kst->st_size)
       || ! in_blkcnt_t_range (kst->st_blocks))
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EOVERFLOW);
+    return -EOVERFLOW;
 
   st->st_dev = kst->st_dev;
   memset (&st->st_pad1, 0, sizeof (st->st_pad1));
@@ -51,7 +51,7 @@ __cp_kstat_stat (const struct kernel_stat *kst, struct stat *st)
   return 0;
 }
 
-static inline int
+static inline void
 __cp_kstat_stat64_t64 (const struct kernel_stat *kst, struct __stat64_t64 *st)
 {
   st->st_dev = kst->st_dev;
@@ -70,6 +70,4 @@ __cp_kstat_stat64_t64 (const struct kernel_stat *kst, struct __stat64_t64 *st)
   st->st_mtim.tv_nsec = kst->st_mtime_nsec;
   st->st_ctim.tv_sec = kst->st_ctime_sec;
   st->st_ctim.tv_nsec = kst->st_ctime_nsec;
-
-  return 0;
 }
