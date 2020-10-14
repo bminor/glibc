@@ -38,7 +38,8 @@ libc_ifunc (__libc_memmove,
 	     ? __memmove_thunderx
 	     : (IS_FALKOR (midr) || IS_PHECDA (midr)
 		? __memmove_falkor
-		  : (IS_NEOVERSE_N1 (midr)
+		  : (IS_NEOVERSE_N1 (midr) || IS_NEOVERSE_N2 (midr)
+		     || IS_NEOVERSE_V1 (midr)
 		     ? __memmove_simd
 		     : __memmove_generic))));
 
