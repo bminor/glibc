@@ -317,6 +317,13 @@ extern int __timespec_get64 (struct __timespec64 *ts, int base);
 libc_hidden_proto (__timespec_get64)
 #endif
 
+#if __TIMESIZE == 64
+# define __time64 __time
+#else
+extern __time64_t __time64 (__time64_t *timer);
+libc_hidden_proto (__time64)
+#endif
+
 /* Use in the clock_* functions.  Size of the field representing the
    actual clock ID.  */
 #define CLOCK_IDFIELD_SIZE	3
