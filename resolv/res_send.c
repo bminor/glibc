@@ -1342,15 +1342,6 @@ send_dg(res_state statp,
 			*terrno = EMSGSIZE;
 			return close_and_return_error (statp, resplen2);
 		}
-		if ((recvresp1 || hp->id != anhp->id)
-		    && (recvresp2 || hp2->id != anhp->id)) {
-			/*
-			 * response from old query, ignore it.
-			 * XXX - potential security hazard could
-			 *	 be detected here.
-			 */
-			goto wait;
-		}
 
 		/* Paranoia check.  Due to the connected UDP socket,
 		   the kernel has already filtered invalid addresses
@@ -1360,15 +1351,24 @@ send_dg(res_state statp,
 
 		/* Check for the correct header layout and a matching
 		   question.  */
-		if ((recvresp1 || !res_queriesmatch(buf, buf + buflen,
-						       *thisansp,
-						       *thisansp
-						       + *thisanssizp))
-		    && (recvresp2 || !res_queriesmatch(buf2, buf2 + buflen2,
-						       *thisansp,
-						       *thisansp
-						       + *thisanssizp)))
-		  goto wait;
+		int matching_query = 0; /* Default to no matching query.  */
+		if (!recvresp1
+		    && anhp->id == hp->id
+		    && res_queriesmatch (buf, buf + buflen,
+					 *thisansp, *thisansp + *thisanssizp))
+		  matching_query = 1;
+		if (!recvresp2
+		    && anhp->id == hp2->id
+		    && res_queriesmatch (buf2, buf2 + buflen2,
+					 *thisansp, *thisansp + *thisanssizp))
+		  matching_query = 2;
+		if (matching_query == 0)
+		  /* Spurious UDP packet.  Drop it and continue
+		     waiting.  */
+		  {
+		    need_recompute = 1;
+		    goto wait;
+		  }
 
 		if (anhp->rcode == SERVFAIL ||
 		    anhp->rcode == NOTIMP ||
@@ -1383,7 +1383,7 @@ send_dg(res_state statp,
 			    /* No data from the first reply.  */
 			    resplen = 0;
 			    /* We are waiting for a possible second reply.  */
-			    if (hp->id == anhp->id)
+			    if (matching_query == 1)
 			      recvresp1 = 1;
 			    else
 			      recvresp2 = 1;
@@ -1414,7 +1414,7 @@ send_dg(res_state statp,
 			return (1);
 		}
 		/* Mark which reply we received.  */
-		if (recvresp1 == 0 && hp->id == anhp->id)
+		if (matching_query == 1)
 			recvresp1 = 1;
 		else
 			recvresp2 = 1;
