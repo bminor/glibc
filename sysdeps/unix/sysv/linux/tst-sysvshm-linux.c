@@ -54,9 +54,9 @@ do_prepare (int argc, char *argv[])
 
 struct test_shminfo
 {
-  unsigned long int shmall;
-  unsigned long int shmmax;
-  unsigned long int shmmni;
+  __syscall_ulong_t shmall;
+  __syscall_ulong_t shmmax;
+  __syscall_ulong_t shmmni;
 };
 
 /* It tries to obtain some system-wide SysV shared memory information from
@@ -128,7 +128,8 @@ do_test (void)
 #if LONG_MAX == INT_MAX
     /* Kernel explicit clamp the value for shmmax on compat symbol (32-bit
        binaries running on 64-bit kernels).  */
-    if (v > INT_MAX)
+    if (sizeof (__syscall_ulong_t) == sizeof (unsigned long int)
+        && v > INT_MAX)
       v = INT_MAX;
 #endif
     tipcinfo.shmmax = v;
