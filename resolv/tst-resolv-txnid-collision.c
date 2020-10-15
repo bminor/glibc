@@ -309,6 +309,11 @@ do_test (void)
     ((struct resolv_redirect_config)
      {
        .response_callback = response,
+
+       /* The response callback use global state (the previous_*
+          variables), and query processing must therefore be
+          serialized.  */
+       .single_thread_udp = true,
      });
 
   for (int rcode = 0; rcode <= 5; ++rcode)
