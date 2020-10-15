@@ -32,6 +32,13 @@ void add_temp_file (const char *name);
    *FILENAME.  */
 int create_temp_file (const char *base, char **filename);
 
+/* Create a temporary file in directory DIR.  Return the opened file
+   descriptor on success, or -1 on failure.  Write the file name to
+   *FILENAME if FILENAME is not NULL.  In this case, the caller is
+   expected to free *FILENAME.  */
+int create_temp_file_in_dir (const char *base, const char *dir,
+			     char **filename);
+
 /* Create a temporary directory and schedule it for deletion.  BASE is
    used as a prefix for the unique directory name, which the function
    returns.  The caller should free this string.  */

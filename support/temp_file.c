@@ -60,14 +60,12 @@ add_temp_file (const char *name)
 }
 
 int
-create_temp_file (const char *base, char **filename)
+create_temp_file_in_dir (const char *base, const char *dir, char **filename)
 {
   char *fname;
   int fd;
 
-  fname = (char *) xmalloc (strlen (test_dir) + 1 + strlen (base)
-			    + sizeof ("XXXXXX"));
-  strcpy (stpcpy (stpcpy (stpcpy (fname, test_dir), "/"), base), "XXXXXX");
+  fname = xasprintf ("%s/%sXXXXXX", dir, base);
 
   fd = mkstemp (fname);
   if (fd == -1)
@@ -84,6 +82,12 @@ create_temp_file (const char *base, char **filename)
     free (fname);
 
   return fd;
+}
+
+int
+create_temp_file (const char *base, char **filename)
+{
+  return create_temp_file_in_dir (base, test_dir, filename);
 }
 
 char *
