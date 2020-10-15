@@ -100,7 +100,8 @@ sysdep_headers += sys/mount.h sys/acct.h \
 		  bits/types/struct_msqid_ds.h \
 		  bits/types/struct_shmid_ds.h \
 		  bits/ipc-perm.h \
-		  bits/struct_stat.h
+		  bits/struct_stat.h \
+		  bits/struct_stat_time64_helper.h
 
 tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-quota tst-sync_file_range tst-sysconf-iov_max tst-ttyname \
