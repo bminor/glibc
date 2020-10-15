@@ -34,13 +34,26 @@
 /* We want to see output immediately.  */
 #define STDOUT_UNBUFFERED
 
+static char shm_test_name[sizeof "/glibc-shm-test-" + sizeof (pid_t) * 3];
+static char shm_escape_name[sizeof "/../escaped-" + sizeof (pid_t) * 3];
+
+static void
+init_shm_test_names (void)
+{
+  snprintf (shm_test_name, sizeof (shm_test_name), "/glibc-shm-test-%u",
+	    getpid ());
+  snprintf (shm_escape_name, sizeof (shm_escape_name), "/../escaped-%u",
+	    getpid ());
+}
+
 static void
 worker (int write_now)
 {
   struct timespec ts;
   struct stat64 st;
   int i;
-  int fd = shm_open ("/glibc-shm-test", O_RDWR, 0600);
+
+  int fd = shm_open (shm_test_name, O_RDWR, 0600);
 
   if (fd == -1)
     error (EXIT_FAILURE, 0, "failed to open shared memory object: shm_open");
@@ -117,7 +130,9 @@ do_test (void)
   int status2;
   struct stat64 st;
 
-  fd = shm_open ("/../escaped", O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
+  init_shm_test_names ();
+
+  fd = shm_open (shm_escape_name, O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
   if (fd != -1)
     {
       perror ("read file outside of SHMDIR directory");
@@ -126,7 +141,7 @@ do_test (void)
 
 
   /* Create the shared memory object.  */
-  fd = shm_open ("/glibc-shm-test", O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
+  fd = shm_open (shm_test_name, O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
   if (fd == -1)
     {
       /* If shm_open is unimplemented we skip the test.  */
@@ -146,18 +161,18 @@ do_test (void)
          shared memory itself.  */
       perror ("failed to size of shared memory object: ftruncate");
       close (fd);
-      shm_unlink ("/glibc-shm-test");
+      shm_unlink (shm_test_name);
       return 0;
     }
 
   if (fstat64 (fd, &st) == -1)
     {
-      shm_unlink ("/glibc-shm-test");
+      shm_unlink (shm_test_name);
       error (EXIT_FAILURE, 0, "initial stat failed");
     }
   if (st.st_size != 4000)
     {
-      shm_unlink ("/glibc-shm-test");
+      shm_unlink (shm_test_name);
       error (EXIT_FAILURE, 0, "initial size not correct");
     }
 
@@ -170,7 +185,7 @@ do_test (void)
       /* Couldn't create a second process.  */
       perror ("fork");
       close (fd);
-      shm_unlink ("/glibc-shm-test");
+      shm_unlink (shm_test_name);
       return 0;
     }
 
@@ -185,7 +200,7 @@ do_test (void)
       kill (pid1, SIGTERM);
       waitpid (pid1, &ignore, 0);
       close (fd);
-      shm_unlink ("/glibc-shm-test");
+      shm_unlink (shm_test_name);
       return 0;
     }
 
@@ -194,7 +209,7 @@ do_test (void)
   waitpid (pid2, &status2, 0);
 
   /* Now we can unlink the shared object.  */
-  shm_unlink ("/glibc-shm-test");
+  shm_unlink (shm_test_name);
 
   return (!WIFEXITED (status1) || WEXITSTATUS (status1) != 0
 	  || !WIFEXITED (status2) || WEXITSTATUS (status2) != 0);
@@ -203,7 +218,7 @@ do_test (void)
 static void
 cleanup_handler (void)
 {
-  shm_unlink ("/glibc-shm-test");
+  shm_unlink (shm_test_name);
 }
 
 #define CLEANUP_HANDLER cleanup_handler

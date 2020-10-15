@@ -26,7 +26,14 @@
 #include <stdlib.h>
 
 static sem_t sem;	/* Use to sync with thread start.  */
-static const char shm_name[] = "/glibc-shm_open-cancel";
+static char shm_name[sizeof "/glibc-shm_open-cancel-" + sizeof (pid_t) * 3];
+
+static void
+init_shm_name (void)
+{
+  snprintf (shm_name, sizeof (shm_name), "/glibc-shm_open-cancel-%u",
+	    getpid ());
+}
 
 static void
 remove_shm (int status, void *arg)
@@ -85,6 +92,8 @@ static int
 do_test (void)
 {
   pthread_t td;
+
+  init_shm_name ();
 
   if (sem_init (&sem, 0, 0))
     {
