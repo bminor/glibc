@@ -19,7 +19,7 @@ subdir := resource
 
 include ../Makeconfig
 
-headers	  := sys/resource.h bits/resource.h sys/vlimit.h sys/vtimes.h	\
+headers	  := sys/resource.h bits/resource.h sys/vlimit.h	\
 	     ulimit.h bits/types/struct_rusage.h
 
 routines := getrlimit setrlimit getrlimit64 setrlimit64 getrusage ulimit      \

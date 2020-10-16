@@ -121,67 +121,6 @@ scheduled).
 @end table
 @end deftp
 
-@code{vtimes} is a historical function that does some of what
-@code{getrusage} does.  @code{getrusage} is a better choice.
-
-@code{vtimes} and its @code{vtimes} data structure are declared in
-@file{sys/vtimes.h}.
-@pindex sys/vtimes.h
-
-@deftypefun int vtimes (struct vtimes *@var{current}, struct vtimes *@var{child})
-@standards{???, sys/vtimes.h}
-@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
-@c Calls getrusage twice.
-
-@code{vtimes} reports resource usage totals for a process.
-
-If @var{current} is non-null, @code{vtimes} stores resource usage totals for
-the invoking process alone in the structure to which it points.  If
-@var{child} is non-null, @code{vtimes} stores resource usage totals for all
-past children (which have terminated) of the invoking process in the structure
-to which it points.
-
-@deftp {Data Type} {struct vtimes}
-This data type contains information about the resource usage of a process.
-Each member corresponds to a member of the @code{struct rusage} data type
-described above.
-
-@table @code
-@item vm_utime
-User CPU time.  Analogous to @code{ru_utime} in @code{struct rusage}
-@item vm_stime
-System CPU time.  Analogous to @code{ru_stime} in @code{struct rusage}
-@item vm_idsrss
-Data and stack memory.  The sum of the values that would be reported as
-@code{ru_idrss} and @code{ru_isrss} in @code{struct rusage}
-@item vm_ixrss
-Shared memory.  Analogous to @code{ru_ixrss} in @code{struct rusage}
-@item vm_maxrss
-Maximent resident set size.  Analogous to @code{ru_maxrss} in
-@code{struct rusage}
-@item vm_majflt
-Major page faults.  Analogous to @code{ru_majflt} in @code{struct rusage}
-@item vm_minflt
-Minor page faults.  Analogous to @code{ru_minflt} in @code{struct rusage}
-@item vm_nswap
-Swap count.  Analogous to @code{ru_nswap} in @code{struct rusage}
-@item vm_inblk
-Disk reads.  Analogous to @code{ru_inblk} in @code{struct rusage}
-@item vm_oublk
-Disk writes.  Analogous to @code{ru_oublk} in @code{struct rusage}
-@end table
-@end deftp
-
-
-The return value is zero if the function succeeds; @code{-1} otherwise.
-
-
-
-@end deftypefun
-An additional historical function for examining resource usage,
-@code{vtimes}, is supported but not documented here.  It is declared in
-@file{sys/vtimes.h}.
-
 @node Limits on Resources
 @section Limiting Resource Usage
 @cindex resource limits

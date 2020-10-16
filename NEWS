@@ -42,6 +42,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   as a compatibility symbol (on those architectures which had it).  All
   programs should use gettimeofday or clock_gettime instead.
 
+* The deprecated <sys/vtimes.h> header and the function vtimes have been
+  removed.  To support old binaries, the vtimes function continues to exist
+  as a compatibility symbol.  Applications should use the getrlimit or
+  prlimit.
+
 Changes to build and runtime requirements:
 
 * On Linux, the system administrator needs to configure /dev/pts with

@@ -1839,7 +1839,6 @@ GLIBC_2.33 vsscanf F
 GLIBC_2.33 vswprintf F
 GLIBC_2.33 vswscanf F
 GLIBC_2.33 vsyslog F
-GLIBC_2.33 vtimes F
 GLIBC_2.33 vwarn F
 GLIBC_2.33 vwarnx F
 GLIBC_2.33 vwprintf F
