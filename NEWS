@@ -37,6 +37,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   implementations from HWCAP subdirectories are no longer loaded.
   Instead, the default implementation is used.
 
+* The deprecated <sys/timeb.h> header and the ftime function have been
+  removed.  To support old binaries, the ftime function continue to exist
+  as a compatibility symbol (on those architectures which had it).  All
+  programs should use gettimeofday or clock_gettime instead.
+
 Changes to build and runtime requirements:
 
 * On Linux, the system administrator needs to configure /dev/pts with
