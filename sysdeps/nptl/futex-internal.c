@@ -70,7 +70,28 @@ __futex_abstimed_wait32 (unsigned int* futex_word,
                                 abstime != NULL ? &ts32 : NULL,
                                 NULL /* Unused.  */, FUTEX_BITSET_MATCH_ANY);
 }
-#endif
+
+static int
+__futex_clock_wait_bitset32 (int *futexp, int val, clockid_t clockid,
+                             const struct __timespec64 *abstime, int private)
+{
+  struct timespec ts32;
+
+  if (abstime != NULL && ! in_time_t_range (abstime->tv_sec))
+    return -EOVERFLOW;
+
+  const unsigned int clockbit =
+    (clockid == CLOCK_REALTIME) ? FUTEX_CLOCK_REALTIME : 0;
+  const int op = __lll_private_flag (FUTEX_WAIT_BITSET | clockbit, private);
+
+  if (abstime != NULL)
+    ts32 = valid_timespec64_to_timespec (*abstime);
+
+  return INTERNAL_SYSCALL_CALL (futex, futexp, op, val,
+                                abstime != NULL ? &ts32 : NULL,
+                                NULL /* Unused.  */, FUTEX_BITSET_MATCH_ANY);
+}
+#endif /* ! __ASSUME_TIME64_SYSCALLS */
 
 int
 __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
@@ -221,4 +242,29 @@ __futex_clocklock_wait64 (int *futex, int val, clockid_t clockid,
 #endif
 
   return -err;
+}
+
+int
+__futex_clock_wait_bitset64 (int *futexp, int val, clockid_t clockid,
+                             const struct __timespec64 *abstime,
+                             int private)
+{
+  int ret;
+  if (! lll_futex_supported_clockid (clockid))
+    {
+      return -EINVAL;
+    }
+
+  const unsigned int clockbit =
+    (clockid == CLOCK_REALTIME) ? FUTEX_CLOCK_REALTIME : 0;
+  const int op = __lll_private_flag (FUTEX_WAIT_BITSET | clockbit, private);
+
+  ret = INTERNAL_SYSCALL_CALL (futex_time64, futexp, op, val,
+                               abstime, NULL /* Unused.  */,
+                               FUTEX_BITSET_MATCH_ANY);
+#ifndef __ASSUME_TIME64_SYSCALLS
+  if (ret == -ENOSYS)
+    ret = __futex_clock_wait_bitset32 (futexp, val, clockid, abstime, private);
+#endif
+  return ret;
 }
