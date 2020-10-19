@@ -20,19 +20,9 @@
 
 #include <features.h>
 
-#include <bits/types/time_t.h>
-
 __BEGIN_DECLS
 
-/* Structure returned by the `ftime' function.  */
-
-struct timeb
-  {
-    time_t time;		/* Seconds since epoch, as from `time'.  */
-    unsigned short int millitm;	/* Additional milliseconds.  */
-    short int timezone;		/* Minutes west of GMT.  */
-    short int dstflag;		/* Nonzero if Daylight Savings Time used.  */
-  };
+# include <bits/types/struct_timeb.h>
 
 /* Fill in TIMEBUF with information about the current time.  */
 
