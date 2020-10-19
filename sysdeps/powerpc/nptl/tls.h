@@ -29,8 +29,24 @@
 
 #else /* __ASSEMBLER__ */
 # include <tcb-offsets.h>
+# define __ASSEMBLY__
+# include <asm/ptrace.h>
 #endif /* __ASSEMBLER__ */
 
+#ifndef __powerpc64__
+/* Register r2 (tp) is reserved by the ABI as "thread pointer". */
+# define PT_THREAD_POINTER PT_R2
+# ifndef __ASSEMBLER__
+register void *__thread_register __asm__ ("r2");
+# endif
+
+#else /* __powerpc64__ */
+/* Register r13 (tp) is reserved by the ABI as "thread pointer". */
+# define PT_THREAD_POINTER PT_R13
+# ifndef __ASSEMBLER__
+register void *__thread_register __asm__ ("r13");
+# endif
+#endif /* __powerpc64__ */
 
 #ifndef __ASSEMBLER__
 
@@ -105,16 +121,6 @@ typedef struct
 # define TLS_PRE_TCB_SIZE \
   (sizeof (struct pthread)						      \
    + ((sizeof (tcbhead_t) + TLS_TCB_ALIGN - 1) & ~(TLS_TCB_ALIGN - 1)))
-
-# ifndef __powerpc64__
-/* Register r2 (tp) is reserved by the ABI as "thread pointer". */
-register void *__thread_register __asm__ ("r2");
-#  define PT_THREAD_POINTER PT_R2
-# else
-/* Register r13 (tp) is reserved by the ABI as "thread pointer". */
-register void *__thread_register __asm__ ("r13");
-#  define PT_THREAD_POINTER PT_R13
-# endif
 
 /* The following assumes that TP (R2 or R13) points to the end of the
    TCB + 0x7000 (per the ABI).  This implies that TCB address is
