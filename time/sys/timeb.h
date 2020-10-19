@@ -1,5 +1,4 @@
-/* Deprecated return date and time.
-   Copyright (C) 1994-2020 Free Software Foundation, Inc.
+/* Copyright (C) 1994-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +15,31 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _SYS_TIMEB_H
+#define _SYS_TIMEB_H	1
+
 #include <features.h>
-#include <sys/timeb.h>
-#include <time.h>
 
-int
-ftime (struct timeb *timebuf)
-{
-  struct timespec ts;
-  __clock_gettime (CLOCK_REALTIME, &ts);
+#include <bits/types/time_t.h>
 
-  timebuf->time = ts.tv_sec;
-  timebuf->millitm = ts.tv_nsec / 1000000;
-  timebuf->timezone = 0;
-  timebuf->dstflag = 0;
-  return 0;
-}
+__BEGIN_DECLS
+
+/* Structure returned by the `ftime' function.  */
+
+struct timeb
+  {
+    time_t time;		/* Seconds since epoch, as from `time'.  */
+    unsigned short int millitm;	/* Additional milliseconds.  */
+    short int timezone;		/* Minutes west of GMT.  */
+    short int dstflag;		/* Nonzero if Daylight Savings Time used.  */
+  };
+
+/* Fill in TIMEBUF with information about the current time.  */
+
+extern int ftime (struct timeb *__timebuf)
+  __nonnull ((1))
+  __attribute_deprecated_msg__ ("Use gettimeofday or clock_gettime instead");
+
+__END_DECLS
+
+#endif	/* sys/timeb.h */
