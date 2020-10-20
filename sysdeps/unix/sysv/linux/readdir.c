@@ -20,43 +20,92 @@
 
 #if !_DIRENT_MATCHES_DIRENT64
 #include <dirstream.h>
+#include <unistd.h>
+
+# ifndef DIRENT_SET_DP_INO
+#  define DIRENT_SET_DP_INO(dp, value) (dp)->d_ino = (value)
+# endif
 
 /* Read a directory entry from DIRP.  */
 struct dirent *
 __readdir_unlocked (DIR *dirp)
 {
-  struct dirent *dp;
   int saved_errno = errno;
 
-  if (dirp->offset >= dirp->size)
+  while (1)
     {
-      /* We've emptied out our buffer.  Refill it.  */
-
-      size_t maxread = dirp->allocation;
-      ssize_t bytes;
-
-      bytes = __getdents (dirp->fd, dirp->data, maxread);
-      if (bytes <= 0)
+      if (dirp->offset >= dirp->size)
 	{
-	  /* Linux may fail with ENOENT on some file systems if the
-	     directory inode is marked as dead (deleted).  POSIX
-	     treats this as a regular end-of-directory condition, so
-	     do not set errno in that case, to indicate success.  */
-	  if (bytes == 0 || errno == ENOENT)
-	    __set_errno (saved_errno);
+	  ssize_t bytes = __getdents64 (dirp->fd, dirp->data,
+					dirp->allocation);
+	  if (bytes <= 0)
+	    {
+	      /* Linux may fail with ENOENT on some file systems if the
+		 directory inode is marked as dead (deleted).  POSIX
+		 treats this as a regular end-of-directory condition, so
+		 do not set errno in that case, to indicate success.  */
+	      if (bytes < 0 && errno == ENOENT)
+		__set_errno (saved_errno);
+	      return NULL;
+	    }
+	  dirp->size = bytes;
+
+ 	  /* Reset the offset into the buffer.  */
+	  dirp->offset = 0;
+ 	}
+
+    /* These two pointers might alias the same memory buffer.  Standard C
+       requires that we always use the same type for them, so we must use the
+       union type.  */
+      union
+      {
+	struct dirent64 dp64;
+	struct dirent dp;
+	char *b;
+      } *inp, *outp;
+      inp = (void*) &dirp->data[dirp->offset];
+      outp = (void*) &dirp->data[dirp->offset];
+
+      const size_t size_diff = offsetof (struct dirent64, d_name)
+	- offsetof (struct dirent, d_name);
+
+      /* Since inp->dp64.d_reclen is already aligned for the kernel structure
+	 this may compute a value that is bigger than necessary.  */
+      size_t old_reclen = inp->dp64.d_reclen;
+      size_t new_reclen = ALIGN_UP (old_reclen - size_diff,
+				    _Alignof (struct dirent));
+
+      if (!in_ino_t_range (inp->dp64.d_ino)
+	  || !in_off_t_range (inp->dp64.d_off))
+	{
+	  /* Overflow.  If there was at least one entry before this one,
+	     return them without error, otherwise signal overflow.  */
+	  if (dirp->offset != 0)
+	    {
+	      __lseek64 (dirp->fd, dirp->offset, SEEK_SET);
+	      outp = (void*)(outp->b - dirp->data);
+	      return &outp->dp;
+	    }
+	  __set_errno (EOVERFLOW);
 	  return NULL;
 	}
-      dirp->size = (size_t) bytes;
 
-      /* Reset the offset into the buffer.  */
-      dirp->offset = 0;
+      /* Copy the data from INP and access only OUTP.  */
+      const uint64_t d_ino = inp->dp64.d_ino;
+      const int64_t d_off = inp->dp64.d_off;
+      const uint8_t d_type = inp->dp64.d_type;
+      outp->dp.d_ino = d_ino;
+      outp->dp.d_off = d_off;
+      outp->dp.d_reclen = new_reclen;
+      outp->dp.d_type = d_type;
+      memmove (outp->dp.d_name, inp->dp64.d_name,
+	       old_reclen - offsetof (struct dirent64, d_name));
+
+      dirp->filepos = d_off;
+      dirp->offset += old_reclen;
+
+      return &outp->dp;
     }
-
-  dp = (struct dirent *) &dirp->data[dirp->offset];
-  dirp->offset += dp->d_reclen;
-  dirp->filepos = dp->d_off;
-
-  return dp;
 }
 
 struct dirent *
