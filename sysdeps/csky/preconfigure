@@ -3,7 +3,7 @@ csky*)
     abi=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null |
       sed -n 's/^#define __CSKYABI__ \(.*\)/\1/p'`
     float_abi=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null |
-      sed -n 's/^#define __CSKY_HARD_FLOAT_ABI__ \(.*\)/\1/p'`
+      sed -n 's/^#define __CSKY_HARD_FLOAT__ \(.*\)/\1/p'`
 
     case "$abi" in
     1)
