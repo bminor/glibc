@@ -673,6 +673,7 @@ signal_safe_allocate_and_init (dtv_t *dtv, struct link_map *map)
 	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
 
   dtv->pointer.val = newp;
+  dtv->pointer.to_free = newp;
 }
 
 struct link_map *
