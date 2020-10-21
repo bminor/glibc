@@ -374,7 +374,7 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-oncex3 tst-oncex4
 ifeq ($(build-shared),yes)
 tests += tst-atfork2 tst-tls4 tst-_res1 tst-fini1 tst-compat-forwarder
-tests += tst-tls7a
+tests += tst-tls7a tst-tls7leak
 tests-internal += tst-tls3 tst-tls3-malloc tst-tls5 tst-stackguard1
 tests-nolibpthread += tst-fini1
 ifeq ($(have-z-execstack),yes)
@@ -390,7 +390,7 @@ modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5modd tst-tls5mode tst-tls5modf tst-stack4mod \
 		tst-_res1mod1 tst-_res1mod2 tst-fini1mod \
 		tst-join7mod tst-compat-forwarder-mod
-modules-names += tst-tls7amod
+modules-names += tst-tls7amod tst-tls7leakmod
 ifneq ($(with-clang),yes)
 modules-names += tst-execstack-mod
 endif
@@ -409,6 +409,7 @@ tst-tls5modd.so-no-z-defs = yes
 tst-tls5mode.so-no-z-defs = yes
 tst-tls5modf.so-no-z-defs = yes
 tst-tls7amod.so-no-z-defs = yes
+tst-tls7leakmod.so-no-z-defs = yes
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -606,6 +607,10 @@ LDFLAGS-tst-tls5mod.so = -Wl,-soname,tst-tls5mod.so
 $(objpfx)tst-tls7a: $(libdl) $(shared-thread-library)
 $(objpfx)tst-tls7a.out: $(objpfx)tst-tls7amod.so
 $(objpfx)tst-tls7amod.so: $(shared-thread-library)
+
+$(objpfx)tst-tls7leak: $(libdl) $(shared-thread-library)
+$(objpfx)tst-tls7leak.out: $(objpfx)tst-tls7leakmod.so
+$(objpfx)tst-tls7leakmod.so: $(shared-thread-library)
 
 ifeq ($(build-shared),yes)
 $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
