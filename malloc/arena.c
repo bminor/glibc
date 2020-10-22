@@ -419,13 +419,13 @@ dump_heap (heap_info *heap)
                    ~MALLOC_ALIGN_MASK);
   for (;; )
     {
-      fprintf (stderr, "chunk %p size %10lx", p, (long) p->size);
+      fprintf (stderr, "chunk %p size %10lx", p, (long) chunksize_nomask(p));
       if (p == top (heap->ar_ptr))
         {
           fprintf (stderr, " (top)\n");
           break;
         }
-      else if (p->size == (0 | PREV_INUSE))
+      else if (chunksize_nomask(p) == (0 | PREV_INUSE))
         {
           fprintf (stderr, " (fence)\n");
           break;
