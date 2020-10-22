@@ -27,7 +27,6 @@
    and device number DEV (which can be constructed from major and minor
    device numbers with the `makedev' macro above).  */
 int
-attribute_compat_text_section
 __xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
 {
   if (vers != _MKNOD_VER)
@@ -35,6 +34,4 @@ __xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
 
   return __mknodat (AT_FDCWD, path, mode, *dev);
 }
-
-compat_symbol (libc, __xmknod, __xmknod, GLIBC_2_0);
 #endif

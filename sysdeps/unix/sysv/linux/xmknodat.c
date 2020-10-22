@@ -32,6 +32,4 @@ __xmknodat (int vers, int fd, const char *file, mode_t mode, dev_t *dev)
 
   return __mknodat (fd, file, mode, *dev);
 }
-
-compat_symbol (libc, __xmknodat, __xmknodat, GLIBC_2_4);
 #endif
