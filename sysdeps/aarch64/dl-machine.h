@@ -395,13 +395,6 @@ elf_machine_lazy_rel (struct link_map *map,
   /* Check for unexpected PLT reloc type.  */
   if (__builtin_expect (r_type == AARCH64_R(JUMP_SLOT), 1))
     {
-      if (map->l_mach.plt == 0)
-	{
-	  /* Prelinking.  */
-	  *reloc_addr += l_addr;
-	  return;
-	}
-
       if (__glibc_unlikely (map->l_info[DT_AARCH64 (VARIANT_PCS)] != NULL))
 	{
 	  /* Check the symbol table for variant PCS symbols.  */
@@ -425,7 +418,10 @@ elf_machine_lazy_rel (struct link_map *map,
 	    }
 	}
 
-      *reloc_addr = map->l_mach.plt;
+      if (map->l_mach.plt == 0)
+	*reloc_addr += l_addr;
+      else
+	*reloc_addr = map->l_mach.plt;
     }
   else if (__builtin_expect (r_type == AARCH64_R(TLSDESC), 1))
     {
