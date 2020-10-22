@@ -59,12 +59,13 @@ The list of allowed attributes are:
 
 - env_alias:		An alias environment variable
 
-- security_level:	Specify security level of the tunable.  Valid values:
+- security_level:	Specify security level of the tunable for AT_SECURE
+			binaries.  Valid values are:
 
-			SXID_ERASE: (default) Don't read for AT_SECURE binaries and
-				    removed so that child processes can't read it.
-			SXID_IGNORE: Don't read for AT_SECURE binaries, but retained for
-				     non-AT_SECURE subprocesses.
+			SXID_ERASE: (default) Do not read and do not pass on to
+			child processes.
+			SXID_IGNORE: Do not read, but retain for non-AT_SECURE
+			child processes.
 			NONE: Read all the time.
 
 2. Use TUNABLE_GET/TUNABLE_SET/TUNABLE_SET_WITH_BOUNDS to get and set tunables.
