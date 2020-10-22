@@ -27,15 +27,15 @@
 static int
 do_test (void)
 {
-  char * volatile ptrs[20];
+#define COUNT 20
+  char * volatile ptrs[COUNT];
   int i;
 
   /* Allocate enough small chunks so that when we free them all, the tcache
      is full, and the first one we freed is at the end of its linked list.  */
-#define COUNT 20
-  for (i=0; i<COUNT; i++)
+  for (i = 0; i < COUNT; i++)
     ptrs[i] = malloc (20);
-  for (i=0; i<COUNT; i++)
+  for (i = 0; i < COUNT; i++)
     free (ptrs[i]);
   free (ptrs[0]);
 
