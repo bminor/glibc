@@ -25,6 +25,7 @@
 #define __NR_clone 1128
 #define __NR_clone2 1213
 #define __NR_close 1029
+#define __NR_close_range 1460
 #define __NR_connect 1192
 #define __NR_copy_file_range 1347
 #define __NR_creat 1030

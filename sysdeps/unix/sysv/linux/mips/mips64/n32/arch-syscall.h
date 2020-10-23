@@ -33,6 +33,7 @@
 #define __NR_clone 6055
 #define __NR_clone3 6435
 #define __NR_close 6003
+#define __NR_close_range 6436
 #define __NR_connect 6041
 #define __NR_copy_file_range 6324
 #define __NR_creat 6083

@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 5.8.
-kernel 5.8
+# The list of system calls is current as of Linux 5.9.
+kernel 5.9
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -79,6 +79,7 @@ clone
 clone2
 clone3
 close
+close_range
 cmpxchg_badaddr
 connect
 copy_file_range

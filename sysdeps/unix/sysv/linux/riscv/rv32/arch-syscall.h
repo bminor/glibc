@@ -17,6 +17,7 @@
 #define __NR_clock_settime64 404
 #define __NR_clone 220
 #define __NR_close 57
+#define __NR_close_range 436
 #define __NR_connect 203
 #define __NR_copy_file_range 285
 #define __NR_delete_module 106
