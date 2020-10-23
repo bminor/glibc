@@ -199,7 +199,9 @@ ifeq (io, $(subdir))
 sysdep_routines += f_setlk close_nocancel close_nocancel_nostatus \
 		   fcntl_nocancel open_nocancel openat_nocancel read_nocancel \
 		   pread64_nocancel write_nocancel pwrite64_nocancel \
-		   wait4_nocancel
+		   wait4_nocancel \
+		   xstat fxstat lxstat xstat64 fxstat64 lxstat64 \
+		   fxstatat fxstatat64
 endif
 
 ifeq (misc, $(subdir))

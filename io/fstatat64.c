@@ -16,12 +16,26 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/stat.h>
+#include <errno.h>
 
-#undef __fstatat64
 int
 __fstatat64 (int fd, const char *file, struct stat64 *buf, int flag)
 {
-  return __fxstatat64 (_STAT_VER, fd, file, buf, flag);
+  if (fd < 0 && fd != AT_FDCWD)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
+  if (buf == NULL || (flag & ~AT_SYMLINK_NOFOLLOW) != 0)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  __set_errno (ENOSYS);
+  return -1;
 }
 hidden_def (__fstatat64)
 weak_alias (__fstatat64, fstatat64)
+
+stub_warning (fstatat64)

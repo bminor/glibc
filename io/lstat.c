@@ -17,11 +17,10 @@
 
 #include <sys/stat.h>
 
-#undef __lstat
 int
 __lstat (const char *file, struct stat *buf)
 {
-  return __lxstat (_STAT_VER, file, buf);
+  return __fstatat (AT_FDCWD, file, buf, AT_SYMLINK_NOFOLLOW);
 }
 
 weak_alias (__lstat, lstat)

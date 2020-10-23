@@ -17,11 +17,10 @@
 
 #include <sys/stat.h>
 
-#undef __lstat64
 int
 __lstat64 (const char *file, struct stat64 *buf)
 {
-  return __lxstat64 (_STAT_VER, file, buf);
+  return __fstatat64 (AT_FDCWD, file, buf, AT_SYMLINK_NOFOLLOW);
 }
 hidden_def (__lstat64)
 weak_alias (__lstat64, lstat64)

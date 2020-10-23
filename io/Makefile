@@ -33,9 +33,8 @@ routines :=								\
 	utime								\
 	mkfifo mkfifoat							\
 	stat fstat lstat stat64 fstat64 lstat64 fstatat fstatat64	\
-	xstat fxstat lxstat xstat64 fxstat64 lxstat64 statx		\
+	statx								\
 	mknod mknodat xmknod xmknodat					\
-	fxstatat fxstatat64						\
 	statfs fstatfs statfs64 fstatfs64				\
 	statvfs fstatvfs statvfs64 fstatvfs64				\
 	umask chmod fchmod lchmod fchmodat				\

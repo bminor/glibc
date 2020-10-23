@@ -17,11 +17,10 @@
 
 #include <sys/stat.h>
 
-#undef __fstat64
 int
 __fstat64 (int fd, struct stat64 *buf)
 {
-  return __fxstat64 (_STAT_VER, fd, buf);
+  return __fstatat64 (fd, "", buf, AT_EMPTY_PATH);
 }
 hidden_def (__fstat64)
 weak_alias (__fstat64, fstat64)

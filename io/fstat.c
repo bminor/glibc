@@ -17,11 +17,10 @@
 
 #include <sys/stat.h>
 
-#undef __fstat
 int
 __fstat (int fd, struct stat *buf)
 {
-  return __fxstat (_STAT_VER, fd, buf);
+  return __fstatat (fd, "", buf, AT_EMPTY_PATH);
 }
 
 weak_alias (__fstat, fstat)
