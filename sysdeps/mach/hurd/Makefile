@@ -201,6 +201,7 @@ sysdep_routines += f_setlk close_nocancel close_nocancel_nostatus \
 		   pread64_nocancel write_nocancel pwrite64_nocancel \
 		   wait4_nocancel \
 		   xstat fxstat lxstat xstat64 fxstat64 lxstat64 \
+		   xmknod xmknodat \
 		   fxstatat fxstatat64
 endif
 

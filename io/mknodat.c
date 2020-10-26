@@ -21,7 +21,10 @@
 int
 __mknodat (int fd, const char *path, mode_t mode, dev_t dev)
 {
-  return __xmknodat (_MKNOD_VER, fd, path, mode, &dev);
+  __set_errno (ENOSYS);
+  return -1;
 }
 libc_hidden_def (__mknodat)
 weak_alias (__mknodat, mknodat)
+
+stub_warning (mknodat)

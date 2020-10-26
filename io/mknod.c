@@ -15,13 +15,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 
 int
 __mknod (const char *path, mode_t mode, dev_t dev)
 {
-  return __xmknod (_MKNOD_VER, path, mode, &dev);
+  return __mknodat (AT_FDCWD, path, mode, dev);
 }
 libc_hidden_def (__mknod)
 weak_alias (__mknod, mknod)
