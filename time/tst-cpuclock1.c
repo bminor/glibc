@@ -26,7 +26,6 @@
 #include <signal.h>
 #include <stdint.h>
 #include <sys/wait.h>
-#include <support/timespec.h>
 
 /* This function is intended to rack up both user and system time.  */
 static void
@@ -125,7 +124,7 @@ do_test (void)
 	  child, (unsigned long int) child_clock,
 	  (uintmax_t) res.tv_sec, (uintmax_t) res.tv_nsec);
 
-  struct timespec before, after;
+  struct timespec before;
   if (clock_gettime (child_clock, &before) < 0)
     {
       printf ("clock_gettime on live PID %d clock %lx => %s\n",
@@ -137,38 +136,7 @@ do_test (void)
   printf ("live PID %d before sleep => %ju.%.9ju\n",
 	  child, (uintmax_t) before.tv_sec, (uintmax_t) before.tv_nsec);
 
-  struct timespec sleeptime = { .tv_nsec = 500000000 };
-  if (nanosleep (&sleeptime, NULL) != 0)
-    {
-      perror ("nanosleep");
-      result = 1;
-      goto done;
-    }
-
-  if (clock_gettime (child_clock, &after) < 0)
-    {
-      printf ("clock_gettime on live PID %d clock %lx => %s\n",
-	      child, (unsigned long int) child_clock, strerror (errno));
-      result = 1;
-      goto done;
-    }
-  /* Should be close to 0.5.  */
-  printf ("live PID %d after sleep => %ju.%.9ju\n",
-	  child, (uintmax_t) after.tv_sec, (uintmax_t) after.tv_nsec);
-
-  /* The bound values are empirically defined by testing this code over high cpu
-     usage and different nice values. Of all the values we keep the 90th
-     percentile of values and use those values for our testing allowed range.  */
-  struct timespec diff = timespec_sub (support_timespec_normalize (after),
-				       support_timespec_normalize (before));
-  if (!support_timespec_check_in_range (sleeptime, diff, .9,  1.1))
-    {
-      printf ("before - after %ju.%.9ju outside reasonable range\n",
-	      (uintmax_t) diff.tv_sec, (uintmax_t) diff.tv_nsec);
-      result = 1;
-    }
-
-  sleeptime.tv_nsec = 100000000;
+  struct timespec sleeptime = { .tv_nsec = 100000000 };
   e = clock_nanosleep (child_clock, 0, &sleeptime, NULL);
   if (e == EINVAL || e == ENOTSUP || e == ENOSYS)
     {
@@ -191,18 +159,9 @@ do_test (void)
 	}
       else
 	{
-        /* The bound values are empirically defined by testing this code over
-           high cpu usage and different nice values. Of all the values we keep
-           the 90th percentile of values and use those values for our testing
-           allowed range.  */
-	  diff = timespec_sub (support_timespec_normalize (afterns),
-			       support_timespec_normalize (after));
-	  if (!support_timespec_check_in_range (sleeptime, diff, .9, 1.2))
-	    {
-	      printf ("nanosleep time %ju.%.9ju outside reasonable range\n",
-		      (uintmax_t) diff.tv_sec, (uintmax_t) diff.tv_nsec);
-	      result = 1;
-	    }
+	  printf ("live PID %d after sleep => %ju.%.9ju\n",
+		  child, (uintmax_t) afterns.tv_sec,
+		  (uintmax_t) afterns.tv_nsec);
 	}
     }
 
@@ -231,21 +190,9 @@ do_test (void)
       result = 1;
       goto done;
     }
-  /* Should be close to 0.6.  */
+  /* Should be close to 0.1.  */
   printf ("dead PID %d => %ju.%.9ju\n",
 	  child, (uintmax_t) dead.tv_sec, (uintmax_t) dead.tv_nsec);
-  /* The bound values are empirically defined by testing this code over high cpu
-     usage and different nice values. Of all the values we keep the 90th
-     percentile of values and use those values for our testing allowed range.  */
-  diff = timespec_sub (support_timespec_normalize (dead),
-		       support_timespec_normalize (after));
-  sleeptime.tv_nsec = 100000000;
-  if (!support_timespec_check_in_range (sleeptime, diff, .9, 1.2))
-    {
-      printf ("dead - after %ju.%.9ju outside reasonable range\n",
-	      (uintmax_t) diff.tv_sec, (uintmax_t) diff.tv_nsec);
-      result = 1;
-    }
 
   /* Now reap the child and verify that its clock is no longer valid.  */
   {
