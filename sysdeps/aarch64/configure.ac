@@ -61,3 +61,25 @@ EOF
 if test $libc_cv_aarch64_pac_ret = yes; then
   AC_DEFINE(HAVE_AARCH64_PAC_RET)
 fi
+
+# Check if binutils supports variant PCS symbols.
+AC_CACHE_CHECK([for variant PCS support], [libc_cv_aarch64_variant_pcs], [dnl
+  cat > conftest.S <<EOF
+.global foo
+.type foo, %function
+.variant_pcs foo
+foo:
+	ret
+.global bar
+.type bar, %function
+bar:
+	b foo
+EOF
+  libc_cv_aarch64_variant_pcs=no
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostdlib -nostartfiles $no_ssp -shared -fPIC -o conftest.so conftest.S]) \
+     && AC_TRY_COMMAND([$READELF -dW conftest.so | grep -q AARCH64_VARIANT_PCS])
+  then
+    libc_cv_aarch64_variant_pcs=yes
+  fi
+  rm -rf conftest.*])
+LIBC_CONFIG_VAR([aarch64-variant-pcs], [$libc_cv_aarch64_variant_pcs])

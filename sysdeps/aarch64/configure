@@ -255,3 +255,43 @@ if test $libc_cv_aarch64_pac_ret = yes; then
   $as_echo "#define HAVE_AARCH64_PAC_RET 1" >>confdefs.h
 
 fi
+
+# Check if binutils supports variant PCS symbols.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for variant PCS support" >&5
+$as_echo_n "checking for variant PCS support... " >&6; }
+if ${libc_cv_aarch64_variant_pcs+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+    cat > conftest.S <<EOF
+.global foo
+.type foo, %function
+.variant_pcs foo
+foo:
+	ret
+.global bar
+.type bar, %function
+bar:
+	b foo
+EOF
+  libc_cv_aarch64_variant_pcs=no
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostdlib -nostartfiles $no_ssp -shared -fPIC -o conftest.so conftest.S'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } \
+     && { ac_try='$READELF -dW conftest.so | grep -q AARCH64_VARIANT_PCS'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+  then
+    libc_cv_aarch64_variant_pcs=yes
+  fi
+  rm -rf conftest.*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_aarch64_variant_pcs" >&5
+$as_echo "$libc_cv_aarch64_variant_pcs" >&6; }
+config_vars="$config_vars
+aarch64-variant-pcs = $libc_cv_aarch64_variant_pcs"
