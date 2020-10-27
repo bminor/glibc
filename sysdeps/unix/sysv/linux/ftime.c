@@ -1,4 +1,4 @@
-/* Deprecated return date and time.
+/* Deprecated return date and time.  Linux version.
    Copyright (C) 1994-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,14 +16,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <features.h>
 #include <sys/timeb.h>
-#include <time.h>
+#include <errno.h>
 
 int
-ftime (struct timeb *timebuf)
+__ftime64 (struct __timeb64 *timebuf)
 {
-  struct timespec ts;
-  __clock_gettime (CLOCK_REALTIME, &ts);
+  struct __timespec64 ts;
+  __clock_gettime64 (CLOCK_REALTIME, &ts);
 
   timebuf->time = ts.tv_sec;
   timebuf->millitm = ts.tv_nsec / 1000000;
@@ -31,3 +32,23 @@ ftime (struct timeb *timebuf)
   timebuf->dstflag = 0;
   return 0;
 }
+#if __TIMESIZE != 64
+libc_hidden_def (__ftime64)
+
+int
+ftime (struct timeb *timebuf)
+{
+  struct __timeb64 tb64;
+  __ftime64 (&tb64);
+  if (! in_time_t_range (tb64.time))
+    {
+      __set_errno (EOVERFLOW);
+      return -1;
+    }
+  timebuf->time = tb64.time;
+  timebuf->millitm = tb64.millitm;
+  timebuf->timezone = tb64.timezone;
+  timebuf->dstflag = tb64.dstflag;
+  return 0;
+}
+#endif
