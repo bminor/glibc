@@ -19,10 +19,6 @@
 #ifndef _ELF_H
 #define	_ELF_H 1
 
-#include <features.h>
-
-__BEGIN_DECLS
-
 /* Standard ELF types.  */
 
 #include <stdint.h>
@@ -4104,7 +4100,5 @@ enum
 #define R_ARC_TLS_DTPOFF_S9	0x4a
 #define R_ARC_TLS_LE_S9		0x4a
 #define R_ARC_TLS_LE_32		0x4b
-
-__END_DECLS
 
 #endif	/* elf.h */
