@@ -125,13 +125,13 @@ Option names are single alphanumeric characters (as for @code{isalnum};
 @pxref{Classification of Characters}).
 
 @item
-Certain options require an argument.  For example, the @samp{-o} command
-of the @code{ld} command requires an argument---an output file name.
+Certain options require an argument.  For example, the @option{-o} option
+of the @command{ld} command requires an argument---an output file name.
 
 @item
 An option and its argument may or may not appear as separate tokens.  (In
 other words, the whitespace separating them is optional.)  Thus,
-@w{@samp{-o foo}} and @samp{-ofoo} are equivalent.
+@w{@option{-o foo}} and @option{-ofoo} are equivalent.
 
 @item
 Options typically precede other non-option arguments.
@@ -146,7 +146,7 @@ it, define the @code{_POSIX_OPTION_ORDER} environment variable.
 @xref{Standard Environment}.
 
 @item
-The argument @samp{--} terminates all options; any following arguments
+The argument @option{--} terminates all options; any following arguments
 are treated as non-option arguments, even if they begin with a hyphen.
 
 @item
@@ -161,13 +161,13 @@ interpretation is left up to the particular application program.
 
 @cindex long-named options
 GNU adds @dfn{long options} to these conventions.  Long options consist
-of @samp{--} followed by a name made of alphanumeric characters and
+of @option{--} followed by a name made of alphanumeric characters and
 dashes.  Option names are typically one to three words long, with
 hyphens to separate words.  Users can abbreviate the option names as
 long as the abbreviations are unique.
 
 To specify an argument for a long option, write
-@samp{--@var{name}=@var{value}}.  This syntax enables a long option to
+@option{--@var{name}=@var{value}}.  This syntax enables a long option to
 accept an argument that is itself optional.
 
 Eventually, @gnusystems{} will provide completion for long option names
