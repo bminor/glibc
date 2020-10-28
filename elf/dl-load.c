@@ -864,10 +864,12 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
 
 /* Process PT_GNU_PROPERTY program header PH in module L after
    PT_LOAD segments are mapped.  Only one NT_GNU_PROPERTY_TYPE_0
-   note is handled which contains processor specific properties.  */
+   note is handled which contains processor specific properties.
+   FD is -1 for the kernel mapped main executable otherwise it is
+   the fd used for loading module L.  */
 
 void
-_dl_process_pt_gnu_property (struct link_map *l, const ElfW(Phdr) *ph)
+_dl_process_pt_gnu_property (struct link_map *l, int fd, const ElfW(Phdr) *ph)
 {
   const ElfW(Nhdr) *note = (const void *) (ph->p_vaddr + l->l_addr);
   const ElfW(Addr) size = ph->p_memsz;
@@ -914,7 +916,7 @@ _dl_process_pt_gnu_property (struct link_map *l, const ElfW(Phdr) *ph)
 	      last_type = type;
 
 	      /* Target specific property processing.  */
-	      if (_dl_process_gnu_property (l, type, datasz, ptr) == 0)
+	      if (_dl_process_gnu_property (l, fd, type, datasz, ptr) == 0)
 		return;
 
 	      /* Check the next property item.  */
@@ -1394,10 +1396,10 @@ cannot enable executable stack as shared object requires");
     switch (ph[-1].p_type)
       {
       case PT_NOTE:
-	_dl_process_pt_note (l, &ph[-1]);
+	_dl_process_pt_note (l, fd, &ph[-1]);
 	break;
       case PT_GNU_PROPERTY:
-	_dl_process_pt_gnu_property (l, &ph[-1]);
+	_dl_process_pt_gnu_property (l, fd, &ph[-1]);
 	break;
       }
 

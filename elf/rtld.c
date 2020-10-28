@@ -1558,10 +1558,10 @@ dl_main (const ElfW(Phdr) *phdr,
     switch (ph[-1].p_type)
       {
       case PT_NOTE:
-	_dl_process_pt_note (main_map, &ph[-1]);
+	_dl_process_pt_note (main_map, -1, &ph[-1]);
 	break;
       case PT_GNU_PROPERTY:
-	_dl_process_pt_gnu_property (main_map, &ph[-1]);
+	_dl_process_pt_gnu_property (main_map, -1, &ph[-1]);
 	break;
       }
 
