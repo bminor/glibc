@@ -320,7 +320,7 @@ init_cacheinfo (void)
 	      threads = 1 << ((ecx >> 12) & 0x0f);
 	    }
 
-	  if (threads == 0)
+	  if (threads == 0 || cpu_features->basic.family >= 0x17)
 	    {
 	      /* If APIC ID width is not available, use logical
 		 processor count.  */
@@ -335,13 +335,30 @@ init_cacheinfo (void)
 	  if (threads > 0)
 	    shared /= threads;
 
-	  /* Account for exclusive L2 and L3 caches.  */
-	  shared += core;
-	}
+	  /* Get shared cache per ccx for Zen architectures.  */
+	  if (cpu_features->basic.family >= 0x17)
+	    {
+	      unsigned int eax;
+
+	      /* Get number of threads share the L3 cache in CCX.  */
+	      __cpuid_count (0x8000001D, 0x3, eax, ebx, ecx, edx);
+
+	      unsigned int threads_per_ccx = ((eax >> 14) & 0xfff) + 1;
+	      shared *= threads_per_ccx;
+	    }
+	  else
+	    {
+	      /* Account for exclusive L2 and L3 caches.  */
+	      shared += core;
+            }
+      }
     }
 
   if (cpu_features->data_cache_size != 0)
-    data = cpu_features->data_cache_size;
+    {
+      if (data == 0 || cpu_features->basic.kind != arch_kind_amd)
+        data = cpu_features->data_cache_size;
+    }
 
   if (data > 0)
     {
@@ -354,7 +371,10 @@ init_cacheinfo (void)
     }
 
   if (cpu_features->shared_cache_size != 0)
-    shared = cpu_features->shared_cache_size;
+    {
+      if (shared == 0 || cpu_features->basic.kind != arch_kind_amd)
+        shared = cpu_features->shared_cache_size;
+    }
 
   if (shared > 0)
     {
