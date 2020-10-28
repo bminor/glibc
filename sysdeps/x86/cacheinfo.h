@@ -354,11 +354,9 @@ init_cacheinfo (void)
       }
     }
 
+  /* Prefer cache size configure via tuning.  */
   if (cpu_features->data_cache_size != 0)
-    {
-      if (data == 0 || cpu_features->basic.kind != arch_kind_amd)
-        data = cpu_features->data_cache_size;
-    }
+    data = cpu_features->data_cache_size;
 
   if (data > 0)
     {
@@ -370,11 +368,9 @@ init_cacheinfo (void)
       __x86_data_cache_size = data;
     }
 
+  /* Prefer cache size configure via tuning.  */
   if (cpu_features->shared_cache_size != 0)
-    {
-      if (shared == 0 || cpu_features->basic.kind != arch_kind_amd)
-        shared = cpu_features->shared_cache_size;
-    }
+    shared = cpu_features->shared_cache_size;
 
   if (shared > 0)
     {
