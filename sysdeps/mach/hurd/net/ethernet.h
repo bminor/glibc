@@ -56,7 +56,7 @@ struct ether_header
 #define	ETHER_MIN_LEN	(ETH_ZLEN + ETH_CRC_LEN) /* min packet length */
 #define	ETHER_MAX_LEN	(ETH_FRAME_LEN + ETH_CRC_LEN) /* max packet length */
 
-/* make sure ethenet length is valid */
+/* make sure ethernet length is valid */
 #define	ETHER_IS_VALID_LEN(foo)	\
 	((foo) >= ETHER_MIN_LEN && (foo) <= ETHER_MAX_LEN)
 
