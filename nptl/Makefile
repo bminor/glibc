@@ -265,7 +265,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutex5a tst-mutex7a \
 	tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 \
 	tst-mutexpi5 tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a \
-	tst-mutexpi9 \
+	tst-mutexpi9 tst-mutexpi10 \
 	tst-cond22 tst-cond26 \
 	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 tst-robustpi5 \
 	tst-robustpi6 tst-robustpi7 tst-robustpi9 \

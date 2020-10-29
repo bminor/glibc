@@ -112,7 +112,9 @@ static int do_test (void)
 {
   do_test_clock (CLOCK_USE_TIMEDLOCK, "timedlock");
   do_test_clock (CLOCK_REALTIME, "clocklock(realtime)");
+#ifndef ENABLE_PI
   do_test_clock (CLOCK_MONOTONIC, "clocklock(monotonic)");
+#endif
   return 0;
 }
 

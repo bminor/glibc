@@ -133,7 +133,9 @@ do_test (void)
 {
   do_test_clock (CLOCK_USE_TIMEDLOCK);
   do_test_clock (CLOCK_REALTIME);
+#ifndef ENABLE_PI
   do_test_clock (CLOCK_MONOTONIC);
+#endif
   return 0;
 }
 
