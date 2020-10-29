@@ -1251,21 +1251,6 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 				  maplength, has_holes, loader);
     if (__glibc_unlikely (errstring != NULL))
       goto call_lose;
-
-    /* Process program headers again after load segments are mapped in
-       case processing requires accessing those segments.  Scan program
-       headers backward so that PT_NOTE can be skipped if PT_GNU_PROPERTY
-       exits.  */
-    for (ph = &phdr[l->l_phnum]; ph != phdr; --ph)
-      switch (ph[-1].p_type)
-	{
-	case PT_NOTE:
-	  _dl_process_pt_note (l, &ph[-1]);
-	  break;
-	case PT_GNU_PROPERTY:
-	  _dl_process_pt_gnu_property (l, &ph[-1]);
-	  break;
-	}
   }
 
   if (l->l_ld == 0)
@@ -1376,6 +1361,21 @@ cannot enable executable stack as shared object requires");
   /* Adjust the address of the TLS initialization image.  */
   if (l->l_tls_initimage != NULL)
     l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_addr;
+
+  /* Process program headers again after load segments are mapped in
+     case processing requires accessing those segments.  Scan program
+     headers backward so that PT_NOTE can be skipped if PT_GNU_PROPERTY
+     exits.  */
+  for (ph = &l->l_phdr[l->l_phnum]; ph != l->l_phdr; --ph)
+    switch (ph[-1].p_type)
+      {
+      case PT_NOTE:
+	_dl_process_pt_note (l, &ph[-1]);
+	break;
+      case PT_GNU_PROPERTY:
+	_dl_process_pt_gnu_property (l, &ph[-1]);
+	break;
+      }
 
   /* We are done mapping in the file.  We no longer need the descriptor.  */
   if (__glibc_unlikely (__close_nocancel (fd) != 0))
