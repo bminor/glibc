@@ -59,8 +59,8 @@
 */
 struct file_entry
 {
-  int flags;		/* This is 1 for an ELF library.  */
-  unsigned int key, value; /* String table indices.  */
+  int32_t flags;		/* This is 1 for an ELF library.  */
+  uint32_t key, value;		/* String table indices.  */
 };
 
 struct cache_file
@@ -77,8 +77,17 @@ struct cache_file
 
 struct file_entry_new
 {
-  int32_t flags;		/* This is 1 for an ELF library.  */
-  uint32_t key, value;		/* String table indices.  */
+  union
+  {
+    /* Fields shared with struct file_entry.  */
+    struct file_entry entry;
+    /* Also expose these fields directly.  */
+    struct
+    {
+      int32_t flags;		/* This is 1 for an ELF library.  */
+      uint32_t key, value;	/* String table indices.  */
+    };
+  };
   uint32_t osversion;		/* Required OS version.	 */
   uint64_t hwcap;		/* Hwcap entry.	 */
 };

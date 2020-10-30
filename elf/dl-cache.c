@@ -35,103 +35,141 @@ static struct cache_file *cache;
 static struct cache_file_new *cache_new;
 static size_t cachesize;
 
-/* 1 if cache_data + PTR points into the cache.  */
-#define _dl_cache_verify_ptr(ptr) (ptr < cache_data_size)
+/* True if PTR is a valid string table index.  */
+static inline bool
+_dl_cache_verify_ptr (uint32_t ptr, size_t string_table_size)
+{
+  return ptr < string_table_size;
+}
 
-#define SEARCH_CACHE(cache) \
-/* We use binary search since the table is sorted in the cache file.	      \
-   The first matching entry in the table is returned.			      \
-   It is important to use the same algorithm as used while generating	      \
-   the cache file.  */							      \
-do									      \
-  {									      \
-    left = 0;								      \
-    right = cache->nlibs - 1;						      \
-									      \
-    while (left <= right)						      \
-      {									      \
-	__typeof__ (cache->libs[0].key) key;				      \
-									      \
-	middle = (left + right) / 2;					      \
-									      \
-	key = cache->libs[middle].key;					      \
-									      \
-	/* Make sure string table indices are not bogus before using	      \
-	   them.  */							      \
-	if (! _dl_cache_verify_ptr (key))				      \
-	  {								      \
-	    cmpres = 1;							      \
-	    break;							      \
-	  }								      \
-									      \
-	/* Actually compare the entry with the key.  */			      \
-	cmpres = _dl_cache_libcmp (name, cache_data + key);		      \
-	if (__glibc_unlikely (cmpres == 0))				      \
-	  {								      \
-	    /* Found it.  LEFT now marks the last entry for which we	      \
-	       know the name is correct.  */				      \
-	    left = middle;						      \
-									      \
-	    /* There might be entries with this name before the one we	      \
-	       found.  So we have to find the beginning.  */		      \
-	    while (middle > 0)						      \
-	      {								      \
-		__typeof__ (cache->libs[0].key) key;			      \
-									      \
-		key = cache->libs[middle - 1].key;			      \
-		/* Make sure string table indices are not bogus before	      \
-		   using them.  */					      \
-		if (! _dl_cache_verify_ptr (key)			      \
-		    /* Actually compare the entry.  */			      \
-		    || _dl_cache_libcmp (name, cache_data + key) != 0)	      \
-		  break;						      \
-		--middle;						      \
-	      }								      \
-									      \
-	    do								      \
-	      {								      \
-		int flags;						      \
-		__typeof__ (cache->libs[0]) *lib = &cache->libs[middle];      \
-									      \
-		/* Only perform the name test if necessary.  */		      \
-		if (middle > left					      \
-		    /* We haven't seen this string so far.  Test whether the  \
-		       index is ok and whether the name matches.  Otherwise   \
-		       we are done.  */					      \
-		    && (! _dl_cache_verify_ptr (lib->key)		      \
-			|| (_dl_cache_libcmp (name, cache_data + lib->key)    \
-			    != 0)))					      \
-		  break;						      \
-									      \
-		flags = lib->flags;					      \
-		if (_dl_cache_check_flags (flags)			      \
-		    && _dl_cache_verify_ptr (lib->value))		      \
-		  {							      \
-		    if (best == NULL || flags == GLRO(dl_correct_cache_id))   \
-		      {							      \
-			HWCAP_CHECK;					      \
-			best = cache_data + lib->value;			      \
-									      \
-			if (flags == GLRO(dl_correct_cache_id))		      \
-			  /* We've found an exact match for the shared	      \
-			     object and no general `ELF' release.  Stop	      \
-			     searching.  */				      \
-			  break;					      \
-		      }							      \
-		  }							      \
-	      }								      \
-	    while (++middle <= right);					      \
-	    break;							      \
-	}								      \
-									      \
-	if (cmpres < 0)							      \
-	  left = middle + 1;						      \
-	else								      \
-	  right = middle - 1;						      \
-      }									      \
-  }									      \
-while (0)
+/* Compute the address of the element INDEX of the array at LIBS.
+   Conceptually, this is &LIBS[INDEX], but use ENTRY_SIZE for the size
+   of *LIBS.  */
+static inline const struct file_entry *
+_dl_cache_file_entry (const struct file_entry *libs, size_t entry_size,
+		      size_t index)
+{
+  return (const void *) libs + index * entry_size;
+}
 
+/* We use binary search since the table is sorted in the cache file.
+   The first matching entry in the table is returned.  It is important
+   to use the same algorithm as used while generating the cache file.
+   STRING_TABLE_SIZE indicates the maximum offset in STRING_TABLE at
+   which data is mapped; it is not exact.  */
+static const char *
+search_cache (const char *string_table, uint32_t string_table_size,
+	      struct file_entry *libs, uint32_t nlibs, uint32_t entry_size,
+	      const char *name)
+{
+  /* Used by the HWCAP check in the struct file_entry_new case.  */
+  uint64_t platform = _dl_string_platform (GLRO (dl_platform));
+  if (platform != (uint64_t) -1)
+    platform = 1ULL << platform;
+  uint64_t hwcap_mask = GET_HWCAP_MASK ();
+#define _DL_HWCAP_TLS_MASK (1LL << 63)
+  uint64_t hwcap_exclude = ~((GLRO (dl_hwcap) & hwcap_mask)
+			     | _DL_HWCAP_PLATFORM | _DL_HWCAP_TLS_MASK);
+
+  int left = 0;
+  int right = nlibs - 1;
+  const char *best = NULL;
+
+  while (left <= right)
+    {
+      int middle = (left + right) / 2;
+      uint32_t key = _dl_cache_file_entry (libs, entry_size, middle)->key;
+
+      /* Make sure string table indices are not bogus before using
+	 them.  */
+      if (!_dl_cache_verify_ptr (key, string_table_size))
+	return NULL;
+
+      /* Actually compare the entry with the key.  */
+      int cmpres = _dl_cache_libcmp (name, string_table + key);
+      if (__glibc_unlikely (cmpres == 0))
+	{
+	  /* Found it.  LEFT now marks the last entry for which we
+	     know the name is correct.  */
+	  left = middle;
+
+	  /* There might be entries with this name before the one we
+	     found.  So we have to find the beginning.  */
+	  while (middle > 0)
+	    {
+	      key = _dl_cache_file_entry (libs, entry_size, middle - 1)->key;
+	      /* Make sure string table indices are not bogus before
+		 using them.  */
+	      if (!_dl_cache_verify_ptr (key, string_table_size)
+		  /* Actually compare the entry.  */
+		  || _dl_cache_libcmp (name, string_table + key) != 0)
+		break;
+	      --middle;
+	    }
+
+	  do
+	    {
+	      int flags;
+	      const struct file_entry *lib
+		= _dl_cache_file_entry (libs, entry_size, middle);
+
+	      /* Only perform the name test if necessary.  */
+	      if (middle > left
+		  /* We haven't seen this string so far.  Test whether the
+		     index is ok and whether the name matches.  Otherwise
+		     we are done.  */
+		  && (! _dl_cache_verify_ptr (lib->key, string_table_size)
+		      || (_dl_cache_libcmp (name, string_table + lib->key)
+			  != 0)))
+		break;
+
+	      flags = lib->flags;
+	      if (_dl_cache_check_flags (flags)
+		  && _dl_cache_verify_ptr (lib->value, string_table_size))
+		{
+		  if (best == NULL || flags == GLRO (dl_correct_cache_id))
+		    {
+		      if (entry_size >= sizeof (struct file_entry_new))
+			{
+			  /* The entry is large enough to include
+			     HWCAP data.  Check it.  */
+			  struct file_entry_new *libnew
+			    = (struct file_entry_new *) lib;
+
+			  if (libnew->hwcap & hwcap_exclude)
+			    continue;
+			  if (GLRO (dl_osversion)
+			      && libnew->osversion > GLRO (dl_osversion))
+			    continue;
+			  if (_DL_PLATFORMS_COUNT
+			      && (libnew->hwcap & _DL_HWCAP_PLATFORM) != 0
+			      && ((libnew->hwcap & _DL_HWCAP_PLATFORM)
+				  != platform))
+			    continue;
+			}
+
+		      best = string_table + lib->value;
+
+		      if (flags == GLRO (dl_correct_cache_id))
+			/* We've found an exact match for the shared
+			   object and no general `ELF' release.  Stop
+			   searching.  */
+			break;
+		    }
+		}
+	    }
+	  while (++middle <= right);
+	  break;
+	}
+
+      if (cmpres < 0)
+	left = middle + 1;
+      else
+	right = middle - 1;
+    }
+
+  return best;
+}
 
 int
 _dl_cache_libcmp (const char *p1, const char *p2)
@@ -182,12 +220,6 @@ _dl_cache_libcmp (const char *p1, const char *p2)
 char *
 _dl_load_cache_lookup (const char *name)
 {
-  int left, right, middle;
-  int cmpres;
-  const char *cache_data;
-  uint32_t cache_data_size;
-  const char *best;
-
   /* Print a message if the loading of libs is traced.  */
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_LIBS))
     _dl_debug_printf (" search cache=%s\n", LD_SO_CACHE);
@@ -247,51 +279,22 @@ _dl_load_cache_lookup (const char *name)
     /* Previously looked for the cache file and didn't find it.  */
     return NULL;
 
-  best = NULL;
-
+  const char *best;
   if (cache_new != (void *) -1)
     {
-      uint64_t platform;
-
-      /* This is where the strings start.  */
-      cache_data = (const char *) cache_new;
-
-      /* Now we can compute how large the string table is.  */
-      cache_data_size = (const char *) cache + cachesize - cache_data;
-
-      platform = _dl_string_platform (GLRO(dl_platform));
-      if (platform != (uint64_t) -1)
-	platform = 1ULL << platform;
-
-      uint64_t hwcap_mask = GET_HWCAP_MASK();
-
-#define _DL_HWCAP_TLS_MASK (1LL << 63)
-      uint64_t hwcap_exclude = ~((GLRO(dl_hwcap) & hwcap_mask)
-				 | _DL_HWCAP_PLATFORM | _DL_HWCAP_TLS_MASK);
-
-      /* Only accept hwcap if it's for the right platform.  */
-#define HWCAP_CHECK \
-      if (lib->hwcap & hwcap_exclude)					      \
-	continue;							      \
-      if (GLRO(dl_osversion) && lib->osversion > GLRO(dl_osversion))	      \
-	continue;							      \
-      if (_DL_PLATFORMS_COUNT						      \
-	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != 0			      \
-	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != platform)		      \
-	continue
-      SEARCH_CACHE (cache_new);
+      const char *string_table = (const char *) cache_new;
+      best = search_cache (string_table, cachesize,
+			   &cache_new->libs[0].entry, cache_new->nlibs,
+			   sizeof (cache_new->libs[0]), name);
     }
   else
     {
-      /* This is where the strings start.  */
-      cache_data = (const char *) &cache->libs[cache->nlibs];
-
-      /* Now we can compute how large the string table is.  */
-      cache_data_size = (const char *) cache + cachesize - cache_data;
-
-#undef HWCAP_CHECK
-#define HWCAP_CHECK do {} while (0)
-      SEARCH_CACHE (cache);
+      const char *string_table = (const char *) &cache->libs[cache->nlibs];
+      uint32_t string_table_size
+	= (const char *) cache + cachesize - string_table;
+      best = search_cache (string_table, string_table_size,
+			   &cache->libs[0], cache->nlibs,
+			   sizeof (cache->libs[0]), name);
     }
 
   /* Print our result if wanted.  */
