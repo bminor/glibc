@@ -135,7 +135,7 @@ extern int _nl_msg_cat_cntr;
 
 /* Construct a new composite name.  */
 static char *
-new_composite_name (int category, const char *newnames[__LC_LAST])
+new_composite_name (int category, const char **newnames)
 {
   size_t last_len = 0;
   size_t cumlen = 0;
