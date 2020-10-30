@@ -328,6 +328,23 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 	   "Andreas Jaeger");
 }
 
+/* Allocate a new subdirectory with full path PATH under ENTRY, using
+   inode data from *ST.  */
+static struct dir_entry *
+new_sub_entry (const struct dir_entry *entry, const char *path,
+	       const struct stat64 *st)
+{
+  struct dir_entry *new_entry = xmalloc (sizeof (struct dir_entry));
+  new_entry->from_file = entry->from_file;
+  new_entry->from_line = entry->from_line;
+  new_entry->path = xstrdup (path);
+  new_entry->flag = entry->flag;
+  new_entry->next = NULL;
+  new_entry->ino = st->st_ino;
+  new_entry->dev = st->st_dev;
+  return new_entry;
+}
+
 /* Add a single directory entry.  */
 static void
 add_single_dir (struct dir_entry *entry, int verbose)
@@ -823,26 +840,17 @@ search_dir (const struct dir_entry *entry)
 
       if (is_dir && is_hwcap_platform (direntry->d_name))
 	{
-	  /* Handle subdirectory later.  */
-	  struct dir_entry *new_entry;
-
-	  new_entry = xmalloc (sizeof (struct dir_entry));
-	  new_entry->from_file = entry->from_file;
-	  new_entry->from_line = entry->from_line;
-	  new_entry->path = xstrdup (file_name);
-	  new_entry->flag = entry->flag;
-	  new_entry->next = NULL;
 	  if (!is_link
 	      && direntry->d_type != DT_UNKNOWN
 	      && __builtin_expect (lstat64 (real_file_name, &lstat_buf), 0))
 	    {
 	      error (0, errno, _("Cannot lstat %s"), file_name);
-	      free (new_entry->path);
-	      free (new_entry);
 	      continue;
 	    }
-	  new_entry->ino = lstat_buf.st_ino;
-	  new_entry->dev = lstat_buf.st_dev;
+
+	  /* Handle subdirectory later.  */
+	  struct dir_entry *new_entry = new_sub_entry (entry, file_name,
+						       &lstat_buf);
 	  add_single_dir (new_entry, 0);
 	  continue;
 	}
