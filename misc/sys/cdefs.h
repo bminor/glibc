@@ -563,4 +563,12 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
 #  define __attr_access(x)
 #endif
 
+/* Specify that a function such as setjmp or vfork may return
+   twice.  */
+#if __GNUC_PREREQ (4, 1)
+# define __attribute_returns_twice__ __attribute__ ((__returns_twice__))
+#else
+# define __attribute_returns_twice__ /* Ignore.  */
+#endif
+
 #endif	 /* sys/cdefs.h */
