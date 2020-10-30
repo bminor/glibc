@@ -30,6 +30,7 @@
 #include <sys/uio.h>
 #include <libc-lock.h>
 #include <shlib-compat.h>
+#include <libc-diag.h>
 
 /* This should only be defined on systems with a BSD compatible ypbind */
 #ifndef BINDINGDIR
@@ -368,12 +369,19 @@ do_ypcall_tr (const char *domain, u_long prog, xdrproc_t xargs,
 	      caddr_t req, xdrproc_t xres, caddr_t resp)
 {
   int status = do_ypcall (domain, prog, xargs, req, xres, resp);
+  DIAG_PUSH_NEEDS_COMMENT;
+  /* This cast results in a warning that a ypresp_val is partly
+     outside the bounds of the actual object referenced, but as
+     explained below only the stat element (in a common prefix) is
+     accessed.  */
+  DIAG_IGNORE_NEEDS_COMMENT (11, "-Warray-bounds");
   if (status == YPERR_SUCCESS)
     /* We cast to ypresp_val although the pointer could also be of
        type ypresp_key_val or ypresp_master or ypresp_order or
        ypresp_maplist.  But the stat element is in a common prefix so
        this does not matter.  */
     status = ypprot_err (((struct ypresp_val *) resp)->stat);
+  DIAG_POP_NEEDS_COMMENT;
   return status;
 }
 
