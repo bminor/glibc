@@ -23,6 +23,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "pthreadP.h"
+#include <libc-diag.h>
 #include <jmpbuf-unwind.h>
 
 #ifdef _STACK_GROWS_DOWN
@@ -90,8 +91,17 @@ unwind_stop (int version, _Unwind_Action actions,
 	}
     }
 
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* This call results in a -Wstringop-overflow warning because struct
+     pthread_unwind_buf is smaller than jmp_buf.  setjmp and longjmp
+     do not use anything beyond the common prefix (they never access
+     the saved signal mask), so that is a false positive.  */
+  DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overflow=");
+#endif
   if (do_longjump)
     __libc_unwind_longjmp ((struct __jmp_buf_tag *) buf->cancel_jmp_buf, 1);
+  DIAG_POP_NEEDS_COMMENT;
 
   return _URC_NO_REASON;
 }

@@ -26,6 +26,7 @@
 #include <hp-timing.h>
 #include <ldsodefs.h>
 #include <atomic.h>
+#include <libc-diag.h>
 #include <libc-internal.h>
 #include <resolv.h>
 #include <kernel-features.h>
@@ -400,7 +401,16 @@ START_THREAD_DEFN
   struct pthread_unwind_buf unwind_buf;
 
   int not_first_call;
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* This call results in a -Wstringop-overflow warning because struct
+     pthread_unwind_buf is smaller than jmp_buf.  setjmp and longjmp
+     do not use anything beyond the common prefix (they never access
+     the saved signal mask), so that is a false positive.  */
+  DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overflow=");
+#endif
   not_first_call = setjmp ((struct __jmp_buf_tag *) unwind_buf.cancel_jmp_buf);
+  DIAG_POP_NEEDS_COMMENT;
 
   /* No previous handlers.  NB: This must be done after setjmp since the
      private space in the unwind jump buffer may overlap space used by

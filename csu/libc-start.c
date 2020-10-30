@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <exit-thread.h>
+#include <libc-diag.h>
 #include <libc-internal.h>
 #include <elf/libc-early-init.h>
 #include <stdbool.h>
@@ -298,7 +299,16 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   struct pthread_unwind_buf unwind_buf;
 
   int not_first_call;
+  DIAG_PUSH_NEEDS_COMMENT;
+#if __GNUC_PREREQ (7, 0)
+  /* This call results in a -Wstringop-overflow warning because struct
+     pthread_unwind_buf is smaller than jmp_buf.  setjmp and longjmp
+     do not use anything beyond the common prefix (they never access
+     the saved signal mask), so that is a false positive.  */
+  DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overflow=");
+#endif
   not_first_call = setjmp ((struct __jmp_buf_tag *) unwind_buf.cancel_jmp_buf);
+  DIAG_POP_NEEDS_COMMENT;
   if (__glibc_likely (! not_first_call))
     {
       struct pthread *self = THREAD_SELF;
