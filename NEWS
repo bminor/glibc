@@ -736,7 +736,7 @@ The following bugs are resolved with this release:
   [24040] libc: riscv64: unterminated call chain in __thread_start
   [24047] network: libresolv should use IP_RECVERR/IPV6_RECVERR to avoid
     long timeouts
-  [24051] stdio: puts and putchar ouput to _IO_stdout instead of stdout
+  [24051] stdio: puts and putchar output to _IO_stdout instead of stdout
   [24059] nss: nss_files: get_next_alias calls fgets_unlocked without
     checking for NULL.
   [24114] regex: regexec buffer read overrun in "grep -i
@@ -1914,7 +1914,7 @@ The following bugs are resolved with this release:
   [22111] malloc: malloc: per thread cache is not returned when thread exits
   [22112] localedata: Fix LC_TELEPHONE/LC_NAME for az_AZ
   [22134] libc: [linux] implement fexecve with execveat
-  [22142] libc: [powerpc] printf oupts a wrong value of DBL_MAX on ppc64 and
+  [22142] libc: [powerpc] printf outputs a wrong value of DBL_MAX on ppc64 and
     ppc64le
   [22145] libc: ttyname() gives up too early in the face of namespaces
   [22146] math: C++ build issue with float128 on x86_64
@@ -2697,7 +2697,7 @@ Security related changes:
 
 The following bugs are resolved with this release:
 
-  [4099] stdio: Overly agressive caching by stream i/o functions.
+  [4099] stdio: Overly aggressive caching by stream i/o functions.
   [7065] build: Support building glibc with -fstack-protector or -fstack-
     protector-all
   [9842] localedata: en_CA: incorrect date format
