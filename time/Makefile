@@ -47,7 +47,8 @@ tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
 	   tst-mktime3 tst-strptime2 bug-asctime bug-asctime_r bug-mktime1 \
 	   tst-strptime3 bug-getdate1 tst-strptime-whitespace tst-ftime \
 	   tst-tzname tst-y2039 bug-mktime4 tst-strftime2 tst-strftime3 \
-	   tst-clock tst-clock2 tst-clock_nanosleep tst-cpuclock1
+	   tst-clock tst-clock2 tst-clock_nanosleep tst-cpuclock1 \
+	   tst-adjtime
 
 include ../Rules
 

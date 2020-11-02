@@ -68,11 +68,16 @@ libc_hidden_def (__adjtime64)
 int
 __adjtime (const struct timeval *itv, struct timeval *otv)
 {
-  struct __timeval64 itv64, otv64;
+  struct __timeval64 itv64, *pitv64 = NULL;
+  struct __timeval64 otv64;
   int retval;
 
-  itv64 = valid_timeval_to_timeval64 (*itv);
-  retval = __adjtime64 (&itv64, otv != NULL ? &otv64 : NULL);
+  if (itv != NULL)
+    {
+      itv64 = valid_timeval_to_timeval64 (*itv);
+      pitv64 = &itv64;
+    }
+  retval = __adjtime64 (pitv64, otv != NULL ? &otv64 : NULL);
   if (otv != NULL)
     *otv = valid_timeval64_to_timeval (otv64);
 
