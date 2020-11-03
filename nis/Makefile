@@ -34,7 +34,8 @@ databases		= proto service hosts network grp pwd rpc ethers \
 services		:= nis nisplus
 endif
 
-extra-libs		= libnsl
+# Suppress regular libnsl build in favor of the stub in google-nsl-stub.
+#extra-libs		= libnsl
 ifeq ($(build-obsolete-nsl),yes)
 extra-libs += $(services:%=libnss_%)
 endif
