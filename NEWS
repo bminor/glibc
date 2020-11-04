@@ -58,7 +58,9 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
-  [Add security related changes here]
+  CVE-2020-27618: An infinite loop has been fixed in the iconv program when
+  invoked with input containing redundant shift sequences in the IBM1364,
+  IBM1371, IBM1388, IBM1390, or IBM1399 character sets.
 
 The following bugs are resolved with this release:
 
