@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 
 /* Unlock the slave pseudo terminal associated with the master pseudo
@@ -31,6 +32,10 @@ unlockpt (int fd)
 
   /* BSD doesn't have a lock, but it does have `revoke'.  */
   if (__ptsname_r (fd, buf, sizeof (buf)))
-    return -1;
+    {
+      if (errno == ENOTTY)
+	__set_errno (EINVAL);
+      return -1;
+    }
   return __revoke (buf);
 }
