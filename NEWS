@@ -15,6 +15,7 @@ The following bugs are resolved with this release:
   [26637] libc: semctl SEM_STAT_ANY fails to pass the buffer specified
     by the caller to the kernel
   [26639] libc: msgctl IPC_INFO and MSG_INFO return garbage
+  [26853] aarch64: Missing unwind information in statically linked startup code
 
 Version 2.32
 

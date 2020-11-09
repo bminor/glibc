@@ -43,11 +43,9 @@
  */
 
 	.text
-	.globl _start
-	.type _start,#function
-_start:
-	BTI_C
+ENTRY(_start)
 	/* Create an initial frame with 0 LR and FP */
+	cfi_undefined (x30)
 	mov	x29, #0
 	mov	x30, #0
 
@@ -103,6 +101,7 @@ _start:
 __wrap_main:
 	b	main
 #endif
+END(_start)
 
 	/* Define a symbol for the first piece of initialized data.  */
 	.data
