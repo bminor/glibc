@@ -66,6 +66,9 @@ static int npwd_data = default_npwd_data;
 static struct group *grp_data = NULL;
 static int ngrp_data = 0;
 
+static struct hostent *host_data = NULL;
+static int nhost_data = 0;
+
 /* This function will get called, and once per session, look back into
    the test case's executable for an init hook function, and call
    it.  */
@@ -98,6 +101,13 @@ init(void)
 	  for (i=0; ! GRP_ISLAST(& grp_data[i]); i++)
 	    ;
 	  ngrp_data = i;
+	}
+      if (t.host_table)
+	{
+	  host_data = t.host_table;
+	  for (i=0; ! HOST_ISLAST(& host_data[i]); i++)
+	    ;
+	  nhost_data = i;
 	}
     }
   initted = 1;
@@ -280,7 +290,7 @@ NAME(getgrent_r) (struct group *result, char *buffer, size_t buflen,
       ++grp_iter;
     }
 
-  pthread_mutex_unlock (&pwd_lock);
+  pthread_mutex_unlock (&grp_lock);
 
   return res;
 }
@@ -311,4 +321,158 @@ NAME(getgrnam_r) (const char *name, struct group *result, char *buffer,
       }
 
   return NSS_STATUS_NOTFOUND;
+}
+
+/* -------------------------------------------------- */
+/* Host handling.  */
+
+static size_t host_iter;
+#define CURHOST host_data[host_iter]
+
+static pthread_mutex_t host_lock = PTHREAD_MUTEX_INITIALIZER;
+
+enum nss_status
+NAME(sethostent) (int stayopen)
+{
+  init();
+  host_iter = 0;
+  return NSS_STATUS_SUCCESS;
+}
+
+
+enum nss_status
+NAME(endhostent) (void)
+{
+  init();
+  return NSS_STATUS_SUCCESS;
+}
+
+static enum nss_status
+copy_host (struct hostent *result, struct hostent *local,
+	    char *buffer, size_t buflen, int *errnop)
+{
+  struct alloc_buffer buf = alloc_buffer_create (buffer, buflen);
+  char **memlist;
+  int i, j;
+
+  if (local->h_addr_list)
+    {
+      i = 0;
+      while (local->h_addr_list[i])
+	++i;
+
+      memlist = alloc_buffer_alloc_array (&buf, char *, i + 1);
+
+      if (memlist) {
+	for (j = 0; j < i; ++j)
+	  memlist[j] = alloc_buffer_maybe_copy_string (&buf, local->h_addr_list[j]);
+	memlist[j] = NULL;
+      }
+
+      result->h_addr_list = memlist;
+    }
+  else
+    {
+      result->h_addr_list = NULL;
+    }
+
+  result->h_aliases = NULL;
+  result->h_addrtype = AF_INET;
+  result->h_length = 4;
+  result->h_name = alloc_buffer_maybe_copy_string (&buf, local->h_name);
+
+  if (alloc_buffer_has_failed (&buf))
+    {
+      *errnop = ERANGE;
+      return NSS_STATUS_TRYAGAIN;
+    }
+
+  return NSS_STATUS_SUCCESS;
+}
+
+
+enum nss_status
+NAME(gethostent_r) (struct hostent *ret, char *buffer, size_t buflen,
+		    struct hostent **result, int *errnop)
+{
+  int res = NSS_STATUS_SUCCESS;
+
+  init();
+  pthread_mutex_lock (&host_lock);
+
+  if (host_iter >= nhost_data)
+    {
+      res = NSS_STATUS_NOTFOUND;
+      *result = NULL;
+    }
+  else
+    {
+      res = copy_host (ret, &CURHOST, buffer, buflen, errnop);
+      *result = ret;
+      ++host_iter;
+    }
+
+  pthread_mutex_unlock (&host_lock);
+
+  return res;
+}
+
+enum nss_status
+NAME(gethostbyname3_r) (const char *name, int af, struct hostent *ret,
+			     char *buffer, size_t buflen, int *errnop,
+			     int *h_errnop, int32_t *ttlp, char **canonp)
+{
+  init();
+
+  for (size_t idx = 0; idx < nhost_data; ++idx)
+    if (strcmp (host_data[idx].h_name, name) == 0)
+      return copy_host (ret, & host_data[idx], buffer, buflen, h_errnop);
+
+  return NSS_STATUS_NOTFOUND;
+}
+
+enum nss_status
+NAME(gethostbyname_r) (const char *name, struct hostent *result,
+		       char *buffer, size_t buflen,
+		       int *errnop, int *h_errnop)
+{
+  return NAME(gethostbyname3_r) (name, AF_INET, result, buffer, buflen,
+				 errnop, h_errnop, NULL, NULL);
+}
+
+enum nss_status
+NAME(gethostbyname2_r) (const char *name, int af, struct hostent *result,
+			char *buffer, size_t buflen,
+			int *errnop, int *h_errnop)
+{
+  return NAME(gethostbyname3_r) (name, af, result, buffer, buflen,
+				 errnop, h_errnop, NULL, NULL);
+}
+
+enum nss_status
+NAME(gethostbyaddr2_r) (const void *addr, socklen_t len, int af,
+			struct hostent *result, char *buffer, size_t buflen,
+			int *errnop, int *h_errnop, int32_t *ttlp)
+{
+  init();
+
+  /* Support this later.  */
+  if (len != 4)
+    return NSS_STATUS_NOTFOUND;
+
+  for (size_t idx = 0; idx < nhost_data; ++idx)
+    if (memcmp (host_data[idx].h_addr, addr, len) == 0)
+      return copy_host (result, & host_data[idx], buffer, buflen, h_errnop);
+
+  return NSS_STATUS_NOTFOUND;
+}
+
+/* Note: only the first address is supported, intentionally.  */
+enum nss_status
+NAME(gethostbyaddr_r) (const void *addr, socklen_t len, int af,
+		       struct hostent *result, char *buffer, size_t buflen,
+		       int *errnop, int *h_errnop)
+{
+  return NAME(gethostbyaddr2_r) (addr, len, af, result, buffer, buflen,
+				 errnop, h_errnop, NULL);
 }
