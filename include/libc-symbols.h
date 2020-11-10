@@ -643,7 +643,7 @@ for linking")
 # define libc_hidden_data_ver(local, name)
 #endif
 
-#if IS_IN (rtld) && !defined NO_RTLD_HIDDEN
+#if IS_IN (rtld)
 # define rtld_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
 # define rtld_hidden_tls_proto(name, attrs...) hidden_tls_proto (name, ##attrs)
 # define rtld_hidden_def(name) hidden_def (name)

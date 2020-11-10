@@ -4,7 +4,9 @@
 # ifndef _ISOMAC
 
 libc_hidden_proto (_exit, __noreturn__)
+#  ifndef NO_RTLD_HIDDEN
 rtld_hidden_proto (_exit, __noreturn__)
+#  endif
 libc_hidden_proto (alarm)
 extern size_t __confstr (int name, char *buf, size_t len);
 libc_hidden_proto (__confstr)

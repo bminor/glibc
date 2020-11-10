@@ -292,7 +292,9 @@ Inconsistency detected by ld.so: %s: %u: %s%sAssertion `%s' failed!\n",
 		    assertion);
 
 }
+# ifndef NO_RTLD_HIDDEN
 rtld_hidden_weak (__assert_fail)
+# endif
 
 void weak_function
 __assert_perror_fail (int errnum,
@@ -306,7 +308,9 @@ Inconsistency detected by ld.so: %s: %u: %s%sUnexpected error: %s.\n",
 		    __strerror_r (errnum, errbuf, sizeof errbuf));
 
 }
+# ifndef NO_RTLD_HIDDEN
 rtld_hidden_weak (__assert_perror_fail)
+# endif
 #endif
 
 #undef _itoa

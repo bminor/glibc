@@ -27,7 +27,7 @@ extern void __libc_longjmp (sigjmp_buf env, int val)
 libc_hidden_proto (_setjmp)
 libc_hidden_proto (__sigsetjmp)
 
-# if IS_IN (rtld) && !defined NO_RTLD_HIDDEN
+# if IS_IN (rtld)
 extern __typeof (__sigsetjmp) __sigsetjmp attribute_hidden;
 # endif
 

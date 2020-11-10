@@ -81,7 +81,7 @@ extern int __scandir64_tail (DIR *dp,
 libc_hidden_proto (__rewinddir)
 extern __typeof (scandirat) __scandirat;
 
-#  if IS_IN (rtld) && !defined NO_RTLD_HIDDEN
+#  if IS_IN (rtld)
 extern __typeof (__rewinddir) __rewinddir attribute_hidden;
 #  endif
 # endif

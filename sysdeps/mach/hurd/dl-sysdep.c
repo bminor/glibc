@@ -641,7 +641,8 @@ __sbrk (intptr_t increment)
   return (void *) addr;
 }
 
-check_no_hidden(__strtoul_internal);
+/* This is only used by hurdlookup for the /dev/fd/nnn magic.
+ * We avoid pulling the whole libc implementation, and we can keep this hidden.  */
 unsigned long int weak_function
 __strtoul_internal (const char *nptr, char **endptr, int base, int group)
 {
@@ -698,7 +699,6 @@ abort (void)
 /* We need this alias to satisfy references from libc_pic.a objects
    that were affected by the libc_hidden_proto declaration for abort.  */
 strong_alias (abort, __GI_abort)
-strong_alias (abort, __GI___chk_fail)
 strong_alias (abort, __GI___fortify_fail)
 strong_alias (abort, __GI___assert_fail)
 strong_alias (abort, __GI___assert_perror_fail)

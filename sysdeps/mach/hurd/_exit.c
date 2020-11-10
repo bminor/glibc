@@ -51,5 +51,7 @@ _exit (int status)
   _hurd_exit (W_EXITCODE (status, 0));
 }
 libc_hidden_def (_exit)
+#ifndef NO_RTLD_HIDDEN
 rtld_hidden_def (_exit)
+#endif
 weak_alias (_exit, _Exit)
