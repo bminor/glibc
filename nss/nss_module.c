@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <nss_module.h>
+#include <nsswitch.h>
+#include <nscd/nscd.h>
+#include <nscd/nscd_proto.h>
 
 #include <array_length.h>
 #include <assert.h>
@@ -286,6 +288,66 @@ __nss_module_get_function (struct nss_module *module, const char *name)
 #endif
   return fptr;
 }
+
+#if defined SHARED && defined USE_NSCD
+/* Load all libraries for the service.  */
+static void
+nss_load_all_libraries (const char *service, const char *def)
+{
+  nss_action_list ni = NULL;
+
+  if (__nss_database_lookup2 (service, NULL, def, &ni) == 0)
+    while (ni->module != NULL)
+      {
+        __nss_module_load (ni->module);
+        ++ni;
+      }
+}
+
+define_traced_file (pwd, _PATH_NSSWITCH_CONF);
+define_traced_file (grp, _PATH_NSSWITCH_CONF);
+define_traced_file (hst, _PATH_NSSWITCH_CONF);
+define_traced_file (serv, _PATH_NSSWITCH_CONF);
+define_traced_file (netgr, _PATH_NSSWITCH_CONF);
+
+/* Called by nscd and nscd alone.  */
+void
+__nss_disable_nscd (void (*cb) (size_t, struct traced_file *))
+{
+  void (*cb1) (size_t, struct traced_file *);
+  cb1 = cb;
+# ifdef PTR_MANGLE
+  PTR_MANGLE (cb);
+# endif
+  nscd_init_cb = cb;
+  is_nscd = true;
+
+  /* Find all the relevant modules so that the init functions are called.  */
+  nss_load_all_libraries ("passwd", DEFAULT_CONFIG);
+  nss_load_all_libraries ("group", DEFAULT_CONFIG);
+  nss_load_all_libraries ("hosts", "dns [!UNAVAIL=return] files");
+  nss_load_all_libraries ("services", NULL);
+
+  /* Make sure NSCD purges its cache if nsswitch.conf changes.  */
+  init_traced_file (&pwd_traced_file.file, _PATH_NSSWITCH_CONF, 0);
+  cb1 (pwddb, &pwd_traced_file.file);
+  init_traced_file (&grp_traced_file.file, _PATH_NSSWITCH_CONF, 0);
+  cb1 (grpdb, &grp_traced_file.file);
+  init_traced_file (&hst_traced_file.file, _PATH_NSSWITCH_CONF, 0);
+  cb1 (hstdb, &hst_traced_file.file);
+  init_traced_file (&serv_traced_file.file, _PATH_NSSWITCH_CONF, 0);
+  cb1 (servdb, &serv_traced_file.file);
+  init_traced_file (&netgr_traced_file.file, _PATH_NSSWITCH_CONF, 0);
+  cb1 (netgrdb, &netgr_traced_file.file);
+
+  /* Disable all uses of NSCD.  */
+  __nss_not_use_nscd_passwd = -1;
+  __nss_not_use_nscd_group = -1;
+  __nss_not_use_nscd_hosts = -1;
+  __nss_not_use_nscd_services = -1;
+  __nss_not_use_nscd_netgroup = -1;
+}
+#endif
 
 void __libc_freeres_fn_section
 __nss_module_freeres (void)

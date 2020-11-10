@@ -20,7 +20,7 @@
 #include <set-hooks.h>
 #include <libc-internal.h>
 
-#include "../nss/nss_module.h"
+#include "../nss/nsswitch.h"
 #include "../libio/libioP.h"
 
 DEFINE_HOOK (__libc_subfreeres, (void));
@@ -43,6 +43,8 @@ __libc_freeres (void)
       void *const *p;
 
       call_function_static_weak (__nss_module_freeres);
+      call_function_static_weak (__nss_action_freeres);
+      call_function_static_weak (__nss_database_freeres);
 
       _IO_cleanup ();
 

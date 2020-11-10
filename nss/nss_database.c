@@ -226,6 +226,39 @@ process_line (struct nss_database_data *data, char *line)
   return true;
 }
 
+int
+__nss_configure_lookup (const char *dbname, const char *service_line)
+{
+  int db;
+  nss_action_list result;
+  struct nss_database_state *local;
+
+  /* Convert named database to index.  */
+  db = name_to_database_index (dbname);
+  if (db < 0)
+    /* Not our database (e.g., sudoers).  */
+    return -1;
+
+  /* Force any load/cache/read whatever to happen, so we can override
+     it.  */
+  __nss_database_get (db, &result);
+
+  local = nss_database_state_get ();
+
+  result = __nss_action_parse (service_line);
+  if (result == NULL)
+    return -1;
+
+  atomic_store_release (&local->data.reload_disabled, 1);
+  local->data.services[db] = result;
+
+#ifdef USE_NSCD
+  __nss_database_custom[db] = true;
+#endif
+
+  return 0;
+}
+
 /* Iterate over the lines in FP, parse them, and store them in DATA.
    Return false on memory allocation failure, true on success.  */
 static bool
@@ -326,8 +359,11 @@ nss_database_check_reload_and_get (struct nss_database_state *local,
      may have loaded the configuration first, so synchronize with the
      Release MO store there.  */
   if (atomic_load_acquire (&local->data.reload_disabled))
-    /* No reload, so there is no error.  */
-    return true;
+    {
+      *result = local->data.services[database_index];
+      /* No reload, so there is no error.  */
+      return true;
+    }
 
   struct file_change_detection initial;
   if (!__file_change_detection_for_path (&initial, _PATH_NSSWITCH_CONF))

@@ -16,8 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "nss_action.h"
-#include "nss_module.h"
+#include <nsswitch.h>
 
 #include <ctype.h>
 #include <string.h>
@@ -169,18 +168,13 @@ nss_action_list
   action_list_init (&list);
   if (nss_action_parse (line, &list))
     {
-      size_t size = action_list_size (&list);
-      nss_action_list result
-        = malloc (sizeof (*result) * (size + 1));
-      if (result == NULL)
-        {
-          action_list_free (&list);
-          return NULL;
-        }
-      memcpy (result, action_list_begin (&list), sizeof (*result) * size);
-      /* Sentinel.  */
-      result[size].module = NULL;
-      return result;
+      size_t size;
+      struct nss_action null_service
+        = { .module = NULL, };
+
+      action_list_add (&list, null_service);
+      size = action_list_size (&list);
+      return __nss_action_allocate (action_list_begin (&list), size);
     }
   else if (action_list_has_failed (&list))
     {
