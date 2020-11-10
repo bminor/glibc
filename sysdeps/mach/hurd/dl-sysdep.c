@@ -125,9 +125,25 @@ _dl_sysdep_start (void **start_argptr,
       else
 	_dl_hurd_data = (void *) p;
 
+      GLRO(dl_platform) = NULL; /* Default to nothing known about the platform.  */
+
       __libc_enable_secure = _dl_hurd_data->flags & EXEC_SECURE;
 
       __tunables_init (_environ);
+
+#ifdef DL_SYSDEP_INIT
+      DL_SYSDEP_INIT;
+#endif
+
+#ifdef SHARED
+#ifdef DL_PLATFORM_INIT
+      DL_PLATFORM_INIT;
+#endif
+
+      /* Determine the length of the platform name.  */
+      if (GLRO(dl_platform) != NULL)
+	GLRO(dl_platformlen) = strlen (GLRO(dl_platform));
+#endif
 
       if (_dl_hurd_data->flags & EXEC_STACK_ARGS
 	  && _dl_hurd_data->user_entry == 0)
