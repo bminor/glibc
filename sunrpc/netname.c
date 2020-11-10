@@ -145,9 +145,7 @@ int
 netname2user (const char *netname, uid_t * uidp, gid_t * gidp,
 	      int *gidlenp, gid_t * gidlist)
 {
-  static service_user *startp;
-  static netname2user_function start_fct;
-  service_user *nip;
+  nss_action_list nip;
   union
   {
     netname2user_function f;
@@ -156,22 +154,7 @@ netname2user (const char *netname, uid_t * uidp, gid_t * gidp,
   enum nss_status status = NSS_STATUS_UNAVAIL;
   int no_more;
 
-  if (startp == NULL)
-    {
-      no_more = __nss_publickey_lookup2 (&nip, "netname2user", NULL, &fct.ptr);
-      if (no_more)
-	startp = (service_user *) - 1;
-      else
-	{
-	  startp = nip;
-	  start_fct = fct.f;
-	}
-    }
-  else
-    {
-      fct.f = start_fct;
-      no_more = (nip = startp) == (service_user *) - 1;
-    }
+  no_more = __nss_publickey_lookup2 (&nip, "netname2user", NULL, &fct.ptr);
 
   while (!no_more)
     {

@@ -33,7 +33,7 @@
 
 NSS_DECLARE_MODULE_FUNCTIONS (compat)
 
-static service_user *ni;
+static nss_action_list ni;
 static enum nss_status (*initgroups_dyn_impl) (const char *, gid_t,
 					       long int *, long int *,
 					       gid_t **, long int, int *);

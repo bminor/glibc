@@ -10,7 +10,7 @@ typedef enum nss_status (*get_function) (struct group *, char *,
 
 
 static enum nss_status
-compat_call (service_user *nip, const char *user, gid_t group, long int *start,
+compat_call (nss_action_list nip, const char *user, gid_t group, long int *start,
 	     long int *size, gid_t **groupsp, long int limit, int *errnop)
 {
   struct group grpbuf;

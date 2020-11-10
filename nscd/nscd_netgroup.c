@@ -116,7 +116,7 @@ __nscd_setnetgrent (const char *group, struct __netgrent *datap)
       datap->data_size = datalen;
       datap->cursor = respdata;
       datap->first = 1;
-      datap->nip = (service_user *) -1l;
+      datap->nip = (nss_action_list) -1l;
       datap->known_groups = NULL;
       datap->needed_groups = NULL;
 

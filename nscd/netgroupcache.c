@@ -124,7 +124,7 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 	dbg_log (_("Reloading \"%s\" in netgroup cache!"), key);
     }
 
-  static service_user *netgroup_database;
+  static nss_action_list netgroup_database;
   time_t timeout;
   struct dataset *dataset;
   bool cacheable = false;
@@ -175,7 +175,7 @@ addgetnetgrentX (struct database_dyn *db, int fd, request_header *req,
 	void *ptr;
       } setfct;
 
-      service_user *nip = netgroup_database;
+      nss_action_list nip = netgroup_database;
       int no_more = __nss_lookup (&nip, "setnetgrent", NULL, &setfct.ptr);
       while (!no_more)
 	{

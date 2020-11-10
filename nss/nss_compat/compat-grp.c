@@ -30,7 +30,7 @@
 
 NSS_DECLARE_MODULE_FUNCTIONS (compat)
 
-static service_user *ni;
+static nss_action_list ni;
 static enum nss_status (*setgrent_impl) (int stayopen);
 static enum nss_status (*getgrnam_r_impl) (const char *name,
 					   struct group * grp, char *buffer,

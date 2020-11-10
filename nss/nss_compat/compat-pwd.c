@@ -34,7 +34,7 @@
 
 NSS_DECLARE_MODULE_FUNCTIONS (compat)
 
-static service_user *ni;
+static nss_action_list ni;
 static enum nss_status (*setpwent_impl) (int stayopen);
 static enum nss_status (*getpwnam_r_impl) (const char *name,
 					   struct passwd * pwd, char *buffer,

@@ -30,9 +30,7 @@ typedef int (*lookup_function) (const char *, struct etherent *, char *, int,
 int
 ether_hostton (const char *hostname, struct ether_addr *addr)
 {
-  static service_user *startp;
-  static lookup_function start_fct;
-  service_user *nip;
+  nss_action_list nip;
   union
   {
     lookup_function f;
@@ -42,22 +40,7 @@ ether_hostton (const char *hostname, struct ether_addr *addr)
   enum nss_status status = NSS_STATUS_UNAVAIL;
   struct etherent etherent;
 
-  if (startp == NULL)
-    {
-      no_more = __nss_ethers_lookup2 (&nip, "gethostton_r", NULL, &fct.ptr);
-      if (no_more)
-	startp = (service_user *) -1;
-      else
-	{
-	  startp = nip;
-	  start_fct = fct.f;
-	}
-    }
-  else
-    {
-      fct.f = start_fct;
-      no_more = (nip = startp) == (service_user *) -1;
-    }
+  no_more = __nss_ethers_lookup2 (&nip, "gethostton_r", NULL, &fct.ptr);
 
   while (no_more == 0)
     {

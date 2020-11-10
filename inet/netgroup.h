@@ -64,7 +64,7 @@ struct __netgrent
 
   /* This handle for the NSS data base is shared between all
      set/get/endXXXent functions.  */
-  service_user *nip;
+  struct nss_action *nip;
 };
 
 

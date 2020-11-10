@@ -179,7 +179,7 @@ typedef enum nss_status (*lookup_function) (ADD_PARAMS, LOOKUP_TYPE *, char *,
 					    EXTRA_PARAMS);
 
 /* The lookup function for the first entry of this service.  */
-extern int DB_LOOKUP_FCT (service_user **nip, const char *name,
+extern int DB_LOOKUP_FCT (nss_action_list *nip, const char *name,
 			  const char *name2, void **fctp);
 libc_hidden_proto (DB_LOOKUP_FCT)
 
@@ -189,10 +189,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 			   size_t buflen, LOOKUP_TYPE **result H_ERRNO_PARM
 			   EXTRA_PARAMS)
 {
-  static bool startp_initialized;
-  static service_user *startp;
-  static lookup_function start_fct;
-  service_user *nip;
+  nss_action_list nip;
   int do_merge = 0;
   LOOKUP_TYPE mergegrp;
   char *mergebuf = NULL;
@@ -226,6 +223,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 #ifdef PREPROCESS
   PREPROCESS;
 #endif
+
 
 #ifdef HANDLE_DIGITS_DOTS
   switch (__nss_hostname_digits_dots (name, resbuf, &buffer, NULL,
@@ -264,47 +262,8 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
     }
 #endif
 
-  if (! startp_initialized)
-    {
-      no_more = DB_LOOKUP_FCT (&nip, REENTRANT_NAME_STRING,
-			       REENTRANT2_NAME_STRING, &fct.ptr);
-      if (no_more)
-	{
-	  void *tmp_ptr = (service_user *) -1l;
-#ifdef PTR_MANGLE
-	  PTR_MANGLE (tmp_ptr);
-#endif
-	  startp = tmp_ptr;
-	}
-      else
-	{
-	  void *tmp_ptr = fct.l;
-#ifdef PTR_MANGLE
-	  PTR_MANGLE (tmp_ptr);
-#endif
-	  start_fct = tmp_ptr;
-	  tmp_ptr = nip;
-#ifdef PTR_MANGLE
-	  PTR_MANGLE (tmp_ptr);
-#endif
-	  startp = tmp_ptr;
-	}
-
-      /* Make sure start_fct and startp are written before
-	 startp_initialized.  */
-      atomic_write_barrier ();
-      startp_initialized = true;
-    }
-  else
-    {
-      fct.l = start_fct;
-      nip = startp;
-#ifdef PTR_DEMANGLE
-      PTR_DEMANGLE (fct.l);
-      PTR_DEMANGLE (nip);
-#endif
-      no_more = nip == (service_user *) -1l;
-    }
+  no_more = DB_LOOKUP_FCT (&nip, REENTRANT_NAME_STRING,
+			   REENTRANT2_NAME_STRING, &fct.ptr);
 
   while (no_more == 0)
     {

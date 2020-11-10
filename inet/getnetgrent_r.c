@@ -39,40 +39,12 @@ static struct __netgrent dataset;
 /* Set up NIP to run through the services.  Return nonzero if there are no
    services (left).  */
 static int
-setup (void **fctp, service_user **nipp)
+setup (void **fctp, nss_action_list *nipp)
 {
-  /* Remember the first service_entry, it's always the same.  */
-  static bool startp_initialized;
-  static service_user *startp;
   int no_more;
 
-  if (!startp_initialized)
-    {
-      /* Executing this more than once at the same time must yield the
-	 same result every time.  So we need no locking.  */
-      no_more = __nss_netgroup_lookup2 (nipp, "setnetgrent", NULL, fctp);
-      startp = no_more ? (service_user *) -1 : *nipp;
-#ifdef PTR_MANGLE
-      PTR_MANGLE (startp);
-#endif
-      atomic_write_barrier ();
-      startp_initialized = true;
-    }
-  else
-    {
-      service_user *nip = startp;
-#ifdef PTR_DEMANGLE
-      PTR_DEMANGLE (nip);
-#endif
-      if (nip == (service_user *) -1)
-	/* No services at all.  */
-	return 1;
+  no_more = __nss_netgroup_lookup2 (nipp, "setnetgrent", NULL, fctp);
 
-      /* Reset to the beginning of the service list.  */
-      *nipp = nip;
-      /* Look up the first function.  */
-      no_more = __nss_lookup (nipp, "setnetgrent", NULL, fctp);
-    }
   return no_more;
 }
 
@@ -100,7 +72,7 @@ endnetgrent_hook (struct __netgrent *datap)
 {
   enum nss_status (*endfct) (struct __netgrent *);
 
-  if (datap->nip == NULL || datap->nip == (service_user *) -1l)
+  if (datap->nip == NULL || datap->nip == (nss_action_list) -1l)
     return;
 
   endfct = __nss_lookup_function (datap->nip, "endnetgrent");
@@ -133,7 +105,7 @@ __internal_setnetgrent_reuse (const char *group, struct __netgrent *datap,
       /* Ignore status, we force check in `__nss_next2'.  */
       status = DL_CALL_FCT (*fct.f, (group, datap));
 
-      service_user *old_nip = datap->nip;
+      nss_action_list old_nip = datap->nip;
       no_more = __nss_next2 (&datap->nip, "setnetgrent", NULL, &fct.ptr,
 			     status, 0);
 
@@ -275,7 +247,7 @@ __internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
       /* This bogus function pointer is a special marker left by
 	 __nscd_setnetgrent to tell us to use the data it left
 	 before considering any modules.  */
-      if (datap->nip == (service_user *) -1l)
+      if (datap->nip == (nss_action_list) -1l)
 	fct = nscd_getnetgrent;
       else
 #endif

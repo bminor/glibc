@@ -77,8 +77,8 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	dbg_log (_("Reloading \"%s\" in group cache!"), (char *) key);
     }
 
-  static service_user *group_database;
-  service_user *nip;
+  static nss_action_list group_database;
+  nss_action_list nip;
   int no_more;
 
   if (group_database == NULL)
@@ -161,10 +161,10 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
 	  && nss_next_action (nip, status) == NSS_ACTION_RETURN)
 	 break;
 
-      if (nip->next == NULL)
+      if (nip[1].module == NULL)
 	no_more = -1;
       else
-	nip = nip->next;
+	++nip;
     }
 
   bool all_written;

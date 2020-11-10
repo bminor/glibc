@@ -95,11 +95,11 @@
 
 /* This handle for the NSS data base is shared between all
    set/get/endXXXent functions.  */
-static service_user *nip;
+static nss_action_list nip;
 /* Remember the last service used since the last call to  `endXXent'.  */
-static service_user *last_nip;
-/* Remember the first service_entry, it's always the same.  */
-static service_user *startp;
+static nss_action_list last_nip;
+/* Remember the first service_entry across set/get/endent.  */
+static nss_action_list startp;
 
 #ifdef STAYOPEN_TMP
 /* We need to remember the last `stayopen' flag given by the user
@@ -112,7 +112,7 @@ static STAYOPEN_TMP;
 __libc_lock_define_initialized (static, lock)
 
 /* The lookup function for the first entry of this service.  */
-extern int DB_LOOKUP_FCT (service_user **nip, const char *name,
+extern int DB_LOOKUP_FCT (nss_action_list *nip, const char *name,
 			  const char *name2, void **fctp);
 libc_hidden_proto (DB_LOOKUP_FCT)
 

@@ -34,9 +34,7 @@ typedef int (*secret_function) (const char *, char *, const char *, int *);
 int
 getpublickey (const char *name, char *key)
 {
-  static service_user *startp;
-  static public_function start_fct;
-  service_user *nip;
+  nss_action_list nip;
   union
   {
     public_function f;
@@ -45,22 +43,7 @@ getpublickey (const char *name, char *key)
   enum nss_status status = NSS_STATUS_UNAVAIL;
   int no_more;
 
-  if (startp == NULL)
-    {
-      no_more = __nss_publickey_lookup2 (&nip, "getpublickey", NULL, &fct.ptr);
-      if (no_more)
-	startp = (service_user *) -1;
-      else
-	{
-	  startp = nip;
-	  start_fct = fct.f;
-	}
-    }
-  else
-    {
-      fct.f = start_fct;
-      no_more = (nip = startp) == (service_user *) -1;
-    }
+  no_more = __nss_publickey_lookup2 (&nip, "getpublickey", NULL, &fct.ptr);
 
   while (! no_more)
     {
@@ -77,9 +60,7 @@ libc_hidden_nolink_sunrpc (getpublickey, GLIBC_2_0)
 int
 getsecretkey (const char *name, char *key, const char *passwd)
 {
-  static service_user *startp;
-  static secret_function start_fct;
-  service_user *nip;
+  nss_action_list nip;
   union
   {
     secret_function f;
@@ -88,22 +69,7 @@ getsecretkey (const char *name, char *key, const char *passwd)
   enum nss_status status = NSS_STATUS_UNAVAIL;
   int no_more;
 
-  if (startp == NULL)
-    {
-      no_more = __nss_publickey_lookup2 (&nip, "getsecretkey", NULL, &fct.ptr);
-      if (no_more)
-	startp = (service_user *) -1;
-      else
-	{
-	  startp = nip;
-	  start_fct = fct.f;
-	}
-    }
-  else
-    {
-      fct.f = start_fct;
-      no_more = (nip = startp) == (service_user *) -1;
-    }
+  no_more = __nss_publickey_lookup2 (&nip, "getsecretkey", NULL, &fct.ptr);
 
   while (! no_more)
     {

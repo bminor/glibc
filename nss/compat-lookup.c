@@ -29,7 +29,7 @@
    glibc 2.7 and earlier and glibc 2.8 and later, even on i386.  */
 int
 attribute_compat_text_section
-__nss_passwd_lookup (service_user **ni, const char *fct_name, void **fctp)
+__nss_passwd_lookup (nss_action_list *ni, const char *fct_name, void **fctp)
 {
   __set_errno (ENOSYS);
   return -1;
@@ -46,11 +46,11 @@ compat_symbol (libc, __nss_hosts_lookup, __nss_hosts_lookup, GLIBC_2_0);
 
 /* These functions were exported under a non-GLIBC_PRIVATE version,
    even though it is not usable externally due to the service_user
-   type dependency.  */
+   (now nss_action_list) type dependency.  */
 
 int
 attribute_compat_text_section
-__nss_next (service_user **ni, const char *fct_name, void **fctp, int status,
+__nss_next (nss_action_list *ni, const char *fct_name, void **fctp, int status,
             int all_values)
 {
   return -1;
@@ -60,7 +60,7 @@ compat_symbol (libc, __nss_next, __nss_next, GLIBC_2_0);
 int
 attribute_compat_text_section
 __nss_database_lookup (const char *database, const char *alternate_name,
-                       const char *defconfig, service_user **ni)
+                       const char *defconfig, nss_action_list *ni)
 {
   *ni = NULL;
   return -1;

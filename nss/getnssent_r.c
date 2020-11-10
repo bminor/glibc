@@ -25,20 +25,20 @@
    services (left).  */
 static int
 setup (const char *func_name, db_lookup_function lookup_fct,
-       void **fctp, service_user **nip, service_user **startp, int all)
+       void **fctp, nss_action_list *nip, nss_action_list *startp, int all)
 {
   int no_more;
-  if (*startp == NULL)
+  if (*startp == NULL || all)
     {
       no_more = lookup_fct (nip, func_name, NULL, fctp);
-      *startp = no_more ? (service_user *) -1l : *nip;
+      *startp = no_more ? (nss_action_list) -1l : *nip;
     }
-  else if (*startp == (service_user *) -1l)
+  else if (*startp == (nss_action_list) -1l)
     /* No services at all.  */
     return 1;
   else
     {
-      if (all || !*nip)
+      if (!*nip)
 	/* Reset to the beginning of the service list.  */
 	*nip = *startp;
       /* Look up the first function.  */
@@ -49,8 +49,8 @@ setup (const char *func_name, db_lookup_function lookup_fct,
 
 void
 __nss_setent (const char *func_name, db_lookup_function lookup_fct,
-	      service_user **nip, service_user **startp,
-	      service_user **last_nip, int stayopen, int *stayopen_tmp,
+	      nss_action_list *nip, nss_action_list *startp,
+	      nss_action_list *last_nip, int stayopen, int *stayopen_tmp,
 	      int res)
 {
   union
@@ -110,8 +110,8 @@ __nss_setent (const char *func_name, db_lookup_function lookup_fct,
 
 void
 __nss_endent (const char *func_name, db_lookup_function lookup_fct,
-	      service_user **nip, service_user **startp,
-	      service_user **last_nip, int res)
+	      nss_action_list *nip, nss_action_list *startp,
+	      nss_action_list *last_nip, int res)
 {
   union
   {
@@ -154,8 +154,8 @@ int
 __nss_getent_r (const char *getent_func_name,
 		const char *setent_func_name,
 		db_lookup_function lookup_fct,
-		service_user **nip, service_user **startp,
-		service_user **last_nip, int *stayopen_tmp, int res,
+		nss_action_list *nip, nss_action_list *startp,
+		nss_action_list *last_nip, int *stayopen_tmp, int res,
 		void *resbuf, char *buffer, size_t buflen,
 		void **result, int *h_errnop)
 {

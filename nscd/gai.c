@@ -48,4 +48,4 @@
 #include <check_native.c>
 
 /* Some variables normally defined in libc.  */
-service_user *__nss_hosts_database attribute_hidden;
+nss_action_list __nss_hosts_database attribute_hidden;

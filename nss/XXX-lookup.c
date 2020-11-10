@@ -53,12 +53,11 @@
 #endif
 
 int
-DB_LOOKUP_FCT (service_user **ni, const char *fct_name, const char *fct2_name,
+DB_LOOKUP_FCT (nss_action_list *ni, const char *fct_name, const char *fct2_name,
 	       void **fctp)
 {
-  if (DATABASE_NAME_SYMBOL == NULL
-      && __nss_database_lookup2 (DATABASE_NAME_STRING, ALTERNATE_NAME_STRING,
-				 DEFAULT_CONFIG, &DATABASE_NAME_SYMBOL) < 0)
+  if (__nss_database_lookup2 (DATABASE_NAME_STRING, ALTERNATE_NAME_STRING,
+			      DEFAULT_CONFIG, &DATABASE_NAME_SYMBOL) < 0)
     return -1;
 
   *ni = DATABASE_NAME_SYMBOL;
