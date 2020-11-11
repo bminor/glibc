@@ -102,6 +102,9 @@ struct __pthread
   /* Indicates whether is a C11 thread created by thrd_creat.  */
   bool c11;
 
+  /* Initial sigset for the thread.  */
+  sigset_t init_sigset;
+
   /* Thread context.  */
   struct pthread_mcontext mcontext;
 
