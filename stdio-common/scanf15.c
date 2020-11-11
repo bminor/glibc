@@ -69,8 +69,6 @@ main (void)
 
   char fname[strlen (tmpdir) + sizeof "/tst-scanf15.XXXXXX"];
   sprintf (fname, "%s/tst-scanf15.XXXXXX", tmpdir);
-  if (fname == NULL)
-    FAIL ();
 
   /* Create a temporary file.   */
   int fd = mkstemp (fname);
