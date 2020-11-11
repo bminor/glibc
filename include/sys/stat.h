@@ -94,36 +94,5 @@ int __lxstat64 (int ver, const char *__filename, struct stat64 *__stat_buf);
 int __fxstatat64 (int ver, int __fildes, const char *__filename,
 		  struct stat64 *__stat_buf, int __flag);
 
-# ifdef NO_RTLD_HIDDEN
-/* These are still required for Hurd.  */
-libc_hidden_proto (__fxstat);
-libc_hidden_proto (__xstat);
-libc_hidden_proto (__lxstat);
-libc_hidden_proto (__fxstatat);
-#  if IS_IN (libc)
-hidden_proto (__fxstat64);
-hidden_proto (__xstat64);
-hidden_proto (__lxstat64);
-hidden_proto (__fxstatat64);
-#  endif
-libc_hidden_proto (__xmknod)
-libc_hidden_proto (__xmknodat)
-#  define stat(fname, buf) __xstat (_STAT_VER, fname, buf)
-#  define lstat(fname, buf)  __lxstat (_STAT_VER, fname, buf)
-#  define __lstat(fname, buf)  __lxstat (_STAT_VER, fname, buf)
-#  define lstat64(fname, buf)  __lxstat64 (_STAT_VER, fname, buf)
-#  define __lstat64(fname, buf)  __lxstat64 (_STAT_VER, fname, buf)
-#  define stat64(fname, buf) __xstat64 (_STAT_VER, fname, buf)
-#  define __stat64(fname, buf) __xstat64 (_STAT_VER, fname, buf)
-#  define fstat64(fd, buf) __fxstat64 (_STAT_VER, fd, buf)
-#  define __fstat64(fd, buf) __fxstat64 (_STAT_VER, fd, buf)
-#  define fstat(fd, buf) __fxstat (_STAT_VER, fd, buf)
-#  define __fstat(fd, buf) __fxstat (_STAT_VER, fd, buf)
-#  define __fstatat(dfd, fname, buf, flag) \
-    __fxstatat (_STAT_VER, dfd, fname, buf, flag)
-#  define __fstatat64(dfd, fname, buf, flag) \
-    __fxstatat64 (_STAT_VER, dfd, fname, buf, flag)
-# endif /* NO_RTLD_HIDDEN  */
-
 #endif
 #endif

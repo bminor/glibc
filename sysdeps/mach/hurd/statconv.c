@@ -20,7 +20,7 @@
 #include <sys/stat.h>
 
 static inline int
-xstat64_conv (struct stat *buf, const struct stat64 *buf64)
+stat64_conv (struct stat *buf, const struct stat64 *buf64)
 {
   if (sizeof *buf == sizeof *buf64
       && sizeof buf->st_ino == sizeof buf64->st_ino

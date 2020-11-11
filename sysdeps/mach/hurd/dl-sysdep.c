@@ -545,13 +545,11 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
   return (void *) mapaddr;
 }
 
-check_no_hidden(__fxstat64);
+check_no_hidden(__fstat64);
 int weak_function
-__fxstat64 (int vers, int fd, struct stat64 *buf)
+__fstat64 (int fd, struct stat64 *buf)
 {
   error_t err;
-
-  assert (vers == _STAT_VER);
 
   err = __io_stat ((mach_port_t) fd, buf);
   if (err)
@@ -559,16 +557,14 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
 
   return 0;
 }
-libc_hidden_def (__fxstat64)
+libc_hidden_def (__fstat64)
 
-check_no_hidden(__xstat64);
+check_no_hidden(__stat64);
 int weak_function
-__xstat64 (int vers, const char *file, struct stat64 *buf)
+__stat64 (const char *file, struct stat64 *buf)
 {
   error_t err;
   mach_port_t port;
-
-  assert (vers == _STAT_VER);
 
   err = open_file (file, 0, &port, buf);
   if (err)
@@ -578,7 +574,7 @@ __xstat64 (int vers, const char *file, struct stat64 *buf)
 
   return 0;
 }
-libc_hidden_def (__xstat64)
+libc_hidden_def (__stat64)
 
 /* This function is called by the dynamic linker (rtld.c) to check
    whether debugging malloc is allowed even for SUID binaries.  This

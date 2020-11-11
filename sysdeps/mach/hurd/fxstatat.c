@@ -19,14 +19,18 @@
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
+#include <hurd.h>
+#include <shlib-compat.h>
 
-#include "xstatconv.c"
+#if SHLIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
 
 int
 __fxstatat (int vers, int fd, const char *filename, struct stat *buf, int flag)
 {
-  struct stat64 buf64;
-  return (__fxstatat64 (vers, fd, filename, &buf64, flag)
-	  ?: xstat64_conv (buf, &buf64));
+  if (vers != _STAT_VER)
+    return __hurd_fail (EINVAL);
+
+  return __fstatat (fd, filename, buf, flag);
 }
-libc_hidden_def (__fxstatat)
+
+#endif

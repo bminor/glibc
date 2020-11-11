@@ -18,6 +18,7 @@ libc {
     __read_nocancel; __pread64_nocancel;
     __write_nocancel;
     __libc_lock_self0; __getcwd;
+    __stat64;
 
     _dl_init_first;
     __close_nocancel_nostatus;
@@ -35,7 +36,7 @@ ld {
     # functions that must be shared with libc
     __close; __getpid;
     __mmap; __open; __read; __sbrk; __strtoul_internal;
-    __write; __writev; __xstat64; __fxstat64;
+    __write; __writev;
     _exit; _hurd_intr_rpc_mach_msg;
     abort;
   }
@@ -61,5 +62,6 @@ ld {
     __read_nocancel; __pread64_nocancel;
     __write_nocancel;
     __libc_lock_self0; __getcwd;
+    __stat64; __fstat64;
   }
 }

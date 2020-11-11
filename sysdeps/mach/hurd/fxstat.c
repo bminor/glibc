@@ -18,15 +18,20 @@
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
+#include <hurd.h>
+#include <shlib-compat.h>
 
-#include "xstatconv.c"
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
 
 /* Get information about the file descriptor FD in BUF.  */
 int
 __fxstat (int vers, int fd, struct stat *buf)
 {
-  struct stat64 buf64;
-  return __fxstat64 (vers, fd, &buf64) ?: xstat64_conv (buf, &buf64);
+  if (vers != _STAT_VER)
+    return __hurd_fail (EINVAL);
+
+  return __fstat (fd, buf);
 }
-hidden_def (__fxstat)
 weak_alias (__fxstat, _fxstat)
+
+#endif

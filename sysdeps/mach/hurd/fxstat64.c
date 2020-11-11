@@ -15,28 +15,22 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef RTLD_STAT64		/* dl-fxstat64.c, but we don't want it.  */
-
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
 #include <hurd.h>
-#include <hurd/fd.h>
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_33)
 
 /* Get information about the file descriptor FD in BUF.  */
 int
 __fxstat64 (int vers, int fd, struct stat64 *buf)
 {
-  error_t err;
-
   if (vers != _STAT_VER)
     return __hurd_fail (EINVAL);
 
-  if (err = HURD_DPORT_USE (fd, __io_stat (port, buf)))
-    return __hurd_dfail (fd, err);
-
-  return 0;
+  return __fstat64 (fd, buf);
 }
-hidden_def (__fxstat64)
 
 #endif

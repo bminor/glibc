@@ -18,14 +18,19 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <stddef.h>
+#include <hurd.h>
+#include <shlib-compat.h>
 
-#include "xstatconv.c"
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
 
 int
 __lxstat (int vers, const char *file, struct stat *buf)
 {
-  struct stat64 buf64;
-  return __lxstat64 (vers, file, &buf64) ?: xstat64_conv (buf, &buf64);
+  if (vers != _STAT_VER)
+    return __hurd_fail (EINVAL);
+
+  return __lstat (file, buf);
 }
-hidden_def (__lxstat)
 weak_alias (__lxstat, _lxstat)
+
+#endif

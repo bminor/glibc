@@ -1,5 +1,5 @@
-/* Create a device file relative to an open directory.  Hurd version.
-   Copyright (C) 1991-2020 Free Software Foundation, Inc.
+/* Get information about file named relative to open directory.  Hurd version.
+   Copyright (C) 2006-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,23 +16,28 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/stat.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <stddef.h>
+#include <sys/stat.h>
 #include <hurd.h>
-#include <shlib-compat.h>
+#include <hurd/fd.h>
 
-#if SHLIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
-/* Create a device file named PATH relative to FD, with permission and
-   special bits MODE and device number DEV (which can be constructed
-   from major and minor device numbers with the `makedev' macro
-   above).  */
+/* Get information about the file descriptor FD in BUF.  */
 int
-__xmknodat (int vers, int fd, const char *path, mode_t mode, dev_t *dev)
+__fstatat64 (int fd, const char *filename, struct stat64 *buf, int flag)
 {
-  if (vers != _MKNOD_VER)
-    return __hurd_fail (EINVAL);
+  error_t err;
+  io_t port;
 
-  return __mknodat (fd, path, mode, *dev);
+  port = __file_name_lookup_at (fd, flag, filename, 0, 0);
+  if (port == MACH_PORT_NULL)
+    return -1;
+
+  err = __io_stat (port, buf);
+  __mach_port_deallocate (__mach_task_self (), port);
+
+  return __hurd_fail (err);
 }
-#endif
+libc_hidden_def (__fstatat64)
+weak_alias (__fstatat64, fstatat64)

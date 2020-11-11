@@ -20,24 +20,18 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <hurd.h>
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_33)
 
 /* Get information about the file descriptor FD in BUF.  */
 int
 __lxstat64 (int vers, const char *file, struct stat64 *buf)
 {
-  error_t err;
-  file_t port;
-
   if (vers != _STAT_VER)
     return __hurd_fail (EINVAL);
 
-  port = __file_name_lookup (file, O_NOLINK, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = __io_stat (port, buf);
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  return __lstat64 (file, buf);
 }
-hidden_def (__lxstat64)
+
+#endif
