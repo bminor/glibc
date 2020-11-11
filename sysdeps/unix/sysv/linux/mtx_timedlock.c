@@ -1,4 +1,4 @@
-/* Internal C11 threads definitions - linux version
+/* C11 threads mutex timed lock implementation - Linux variant.
    Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,16 +16,28 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdeps/pthread/thrd_priv.h>
+#include <time.h>
+#include "thrd_priv.h"
 
-#if __TIMESIZE == 64
-# define __cnd_timedwait64 __cnd_timedwait
-# define __mtx_timedlock64 __mtx_timedlock
-#else
-extern int __cnd_timedwait64 (cnd_t *restrict cond, mtx_t *restrict mutex,
-                              const struct __timespec64 *restrict time_point);
-libpthread_hidden_proto (__cnd_timedwait64)
-extern int __mtx_timedlock64 (mtx_t *restrict mutex,
-                              const struct __timespec64 *restrict time_point);
-libpthread_hidden_proto (__mtx_timedlock64)
+int
+__mtx_timedlock64 (mtx_t *restrict mutex,
+                   const struct __timespec64 *restrict time_point)
+{
+  int err_code = __pthread_mutex_timedlock64 ((pthread_mutex_t *)mutex,
+                                              time_point);
+  return thrd_err_map (err_code);
+}
+
+#if __TIMESIZE != 64
+libpthread_hidden_def (__mtx_timedlock64)
+
+int
+__mtx_timedlock (mtx_t *restrict mutex,
+                 const struct timespec *restrict time_point)
+{
+  struct __timespec64 ts64 = valid_timespec_to_timespec64 (*time_point);
+
+  return __mtx_timedlock64 (mutex, &ts64);
+}
 #endif
+weak_alias (__mtx_timedlock, mtx_timedlock)
