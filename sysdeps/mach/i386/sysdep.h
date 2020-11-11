@@ -39,16 +39,6 @@
       envp = p;							      \
     } while (0)
 
-#define CALL_WITH_SP(fn, info, sp) \
-  do {									      \
-	void **ptr = (void **) sp;					      \
-	*--(__typeof (info) *) ptr = info;				      \
-	ptr[-1] = ptr;							      \
-	--ptr;								      \
-    asm volatile ("movl %0, %%esp; call %1" : : 			      \
-		  "g" (ptr), "m" (*(long int *) (fn)) : "%esp"); 	      \
-  } while (0)
-
 #define RETURN_TO(sp, pc, retval) \
   asm volatile ("movl %0, %%esp; jmp %*%1 # %2" \
 		: : "g" (sp), "r" (pc), "a" (retval))

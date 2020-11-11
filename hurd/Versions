@@ -143,9 +143,6 @@ libc {
     __cthread_fork; __cthread_detach;
     __pthread_getattr_np; __pthread_attr_getstack;
 
-    # variables used for detecting cthreads
-    _cthread_exit_routine; _cthread_init_routine;
-
     # cthreads functions with stubs in libc
     __cthread_keycreate; __cthread_getspecific; __cthread_setspecific;
   }

@@ -1,6 +1,6 @@
 /* pthread initializer is weak in glibc.  It must be included if glibc
    is to start threading. */
-EXTERN(_cthread_init_routine)
+EXTERN(__pthread_initialize_minimal)
 
 /* Weak references in glibc that must be filled if glibc is to be
    thread safe.  */

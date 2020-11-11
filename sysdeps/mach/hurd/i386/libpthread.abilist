@@ -10,7 +10,6 @@ GLIBC_2.12 __pthread_spin_init F
 GLIBC_2.12 __pthread_spin_lock F
 GLIBC_2.12 __pthread_spin_trylock F
 GLIBC_2.12 __pthread_spin_unlock F
-GLIBC_2.12 _cthread_init_routine D 0x4
 GLIBC_2.12 _cthreads_flockfile F
 GLIBC_2.12 _cthreads_ftrylockfile F
 GLIBC_2.12 _cthreads_funlockfile F

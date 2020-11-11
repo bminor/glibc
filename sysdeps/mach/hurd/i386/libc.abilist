@@ -2333,4 +2333,3 @@ HURD_CTHREADS_0.3 __spin_lock_init F
 HURD_CTHREADS_0.3 __spin_lock_solid F
 HURD_CTHREADS_0.3 __spin_try_lock F
 HURD_CTHREADS_0.3 __spin_unlock F
-HURD_CTHREADS_0.3 _cthread_exit_routine D 0x4

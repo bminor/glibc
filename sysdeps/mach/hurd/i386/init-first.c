@@ -46,9 +46,6 @@ extern int __libc_argc attribute_hidden;
 extern char **__libc_argv attribute_hidden;
 extern char **_dl_argv;
 
-extern void *(*_cthread_init_routine) (void) __attribute__ ((weak));
-void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));
-
 /* Things that want to be run before _hurd_init or much anything else.
    Importantly, these are called before anything tries to use malloc.  */
 DEFINE_HOOK (_hurd_preinit_hook, (void));
@@ -96,10 +93,6 @@ init1 (int argc, char *arg0, ...)
     ++envp;
   d = (void *) ++envp;
 
-  /* Initialize libpthread if linked in.  */
-  if (__pthread_initialize_minimal != NULL)
-    __pthread_initialize_minimal ();
-
   if ((void *) d == argv[0])
     /* No Hurd data block to process.  */
     return;
@@ -145,7 +138,6 @@ init (int *data)
   int argc = *data;
   char **argv = (void *) (data + 1);
   char **envp = &argv[argc + 1];
-  struct hurd_startup_data *d;
 
   /* Since the cthreads initialization code uses malloc, and the
      malloc initialization code needs to get at the environment, make
@@ -154,11 +146,13 @@ init (int *data)
      stored.  */
   __environ = envp;
 
+#ifndef SHARED
+  struct hurd_startup_data *d;
+
   while (*envp)
     ++envp;
   d = (void *) ++envp;
 
-#ifndef SHARED
   /* If we are the bootstrap task started by the kernel,
      then after the environment pointers there is no Hurd
      data block; the argument strings start there.  */
@@ -190,79 +184,27 @@ init (int *data)
   __libc_setup_tls ();
 #endif
 
-  /* After possibly switching stacks, call `init1' (above) with the user
-     code as the return address, and the argument data immediately above
-     that on the stack.  */
+  /* Call `init1' (above) with the user code as the return address, and the
+     argument data immediately above that on the stack.  */
 
-  if (&_cthread_init_routine && _cthread_init_routine)
-    {
-      /* Initialize cthreads, which will allocate us a new stack to run on.  */
-      int *newsp = (*_cthread_init_routine) ();
-      struct hurd_startup_data *od;
+  int usercode;
 
-      void switch_stacks (void);
+  void call_init1 (void);
 
-      __libc_stack_end = newsp;
-
-      /* Copy the argdata from the old stack to the new one.  */
-      newsp = memcpy (newsp - ((char *) &d[1] - (char *) data), data,
-		      (char *) d - (char *) data);
-
-#ifdef SHARED
-      /* And readjust the dynamic linker's idea of where the argument
-	 vector lives.  */
-      assert (_dl_argv == argv);
-      _dl_argv = (void *) (newsp + 1);
-#endif
-
-      /* Set up the Hurd startup data block immediately following
-	 the argument and environment pointers on the new stack.  */
-      od = ((void *) newsp + ((char *) d - (char *) data));
-      if ((void *) argv[0] == d)
-	/* We were started up by the kernel with arguments on the stack.
-	   There is no Hurd startup data, so zero the block.  */
-	memset (od, 0, sizeof *od);
-      else
-	/* Copy the Hurd startup data block to the new stack.  */
-	*od = *d;
-
-      /* Push the user code address on the top of the new stack.  It will
-	 be the return address for `init1'; we will jump there with NEWSP
-	 as the stack pointer.  */
-      /* The following expression would typically be written as
-	 ``__builtin_return_address (0)''.  But, for example, GCC 4.4.6 doesn't
-	 recognize that this read operation may alias the following write
-	 operation, and thus is free to reorder the two, clobbering the
-	 original return address.  */
-      *--newsp = *((int *) __builtin_frame_address (0) + 1);
-      /* GCC 4.4.6 also wants us to force loading *NEWSP already here.  */
-      asm volatile ("# %0" : : "X" (*newsp));
-      *((void **) __builtin_frame_address (0) + 1) = &switch_stacks;
-      /* Force NEWSP into %eax and &init1 into %ecx, which are not restored
-	 by function return.  */
-      asm volatile ("# a %0 c %1" : : "a" (newsp), "c" (&init1));
-    }
-  else
-    {
-      int usercode;
-
-      void call_init1 (void);
-
-      /* The argument data is just above the stack frame we will unwind by
-	 returning.  Mutate our own return address to run the code below.  */
-      /* The following expression would typically be written as
-	 ``__builtin_return_address (0)''.  But, for example, GCC 4.4.6 doesn't
-	 recognize that this read operation may alias the following write
-	 operation, and thus is free to reorder the two, clobbering the
-	 original return address.  */
-      usercode = *((int *) __builtin_frame_address (0) + 1);
-      /* GCC 4.4.6 also wants us to force loading USERCODE already here.  */
-      asm volatile ("# %0" : : "X" (usercode));
-      *((void **) __builtin_frame_address (0) + 1) = &call_init1;
-      /* Force USERCODE into %eax and &init1 into %ecx, which are not
-	 restored by function return.  */
-      asm volatile ("# a %0 c %1" : : "a" (usercode), "c" (&init1));
-    }
+  /* The argument data is just above the stack frame we will unwind by
+     returning.  Mutate our own return address to run the code below.  */
+  /* The following expression would typically be written as
+     ``__builtin_return_address (0)''.  But, for example, GCC 4.4.6 doesn't
+     recognize that this read operation may alias the following write
+     operation, and thus is free to reorder the two, clobbering the
+     original return address.  */
+  usercode = *((int *) __builtin_frame_address (0) + 1);
+  /* GCC 4.4.6 also wants us to force loading USERCODE already here.  */
+  asm volatile ("# %0" : : "X" (usercode));
+  *((void **) __builtin_frame_address (0) + 1) = &call_init1;
+  /* Force USERCODE into %eax and &init1 into %ecx, which are not
+     restored by function return.  */
+  asm volatile ("# a %0 c %1" : : "a" (usercode), "c" (&init1));
 
   DIAG_POP_NEEDS_COMMENT;	/* -Warray-bounds.  */
 }

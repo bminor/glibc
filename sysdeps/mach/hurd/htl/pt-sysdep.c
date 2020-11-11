@@ -28,13 +28,6 @@
 
 __thread struct __pthread *___pthread_self;
 
-/* Forward.  */
-static void *init_routine (void);
-
-/* OK, the name of this variable isn't really appropriate, but I don't
-   want to change it yet.  */
-void *(*_cthread_init_routine) (void) = &init_routine;
-
 static void
 reset_pthread_total (void)
 {
@@ -45,7 +38,7 @@ reset_pthread_total (void)
 /* This function is called from the Hurd-specific startup code.  It
    should return a new stack pointer for the main thread.  The caller
    will switch to this new stack before doing anything serious.  */
-static void *
+static void
 _init_routine (void *stack)
 {
   struct __pthread *thread;
@@ -54,7 +47,7 @@ _init_routine (void *stack)
 
   if (__pthread_threads != NULL)
     /* Already initialized */
-    return 0;
+    return;
 
   /* Initialize the library.  */
   ___pthread_init ();
@@ -96,14 +89,12 @@ _init_routine (void *stack)
 
   /* Make MiG code thread aware.  */
   __mig_init (thread->stackaddr);
-
-  return thread->mcontext.sp;
 }
 
-static void *
-init_routine (void)
+void
+__pthread_initialize_minimal (void)
 {
-  return _init_routine (0);
+  _init_routine (__libc_stack_end);
 }
 
 #ifdef SHARED

@@ -43,8 +43,6 @@ libpthread {
 
     __pthread_mutex_transfer_np;
 
-    _cthread_init_routine;
-
     cthread_detach;
     cthread_fork;
     cthread_keycreate;
@@ -168,6 +166,8 @@ libpthread {
   }
 
   GLIBC_PRIVATE {
+    __pthread_initialize_minimal;
+
     __shm_directory;
     __pthread_threads;
 

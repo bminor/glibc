@@ -62,14 +62,6 @@
 #error SNARF_ARGS not defined by sysdeps/mach/MACHINE/sysdep.h
 #endif
 
-/* Call the C function FN with no arguments,
-   on a stack starting at SP (as returned by *_cthread_init_routine).
-   You don't need to deal with FN returning; it shouldn't.  */
-#ifndef	CALL_WITH_SP
-#define CALL_WITH_SP(fn, sp)
-#error CALL_WITH_SP not defined by sysdeps/mach/MACHINE/sysdep.h
-#endif
-
 /* LOSE can be defined as the `halt' instruction or something
    similar which will cause the process to die in a characteristic
    way suggesting a bug.  */
