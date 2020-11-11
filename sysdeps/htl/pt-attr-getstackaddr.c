@@ -25,4 +25,4 @@ __pthread_attr_getstackaddr (const pthread_attr_t *attr, void **stackaddr)
   *stackaddr = attr->__stackaddr;
   return 0;
 }
-strong_alias (__pthread_attr_getstackaddr, pthread_attr_getstackaddr)
+weak_alias (__pthread_attr_getstackaddr, pthread_attr_getstackaddr)
