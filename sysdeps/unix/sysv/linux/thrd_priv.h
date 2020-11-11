@@ -21,6 +21,7 @@
 #if __TIMESIZE == 64
 # define __cnd_timedwait64 __cnd_timedwait
 # define __mtx_timedlock64 __mtx_timedlock
+# define __thrd_sleep64 __thrd_sleep
 #else
 extern int __cnd_timedwait64 (cnd_t *restrict cond, mtx_t *restrict mutex,
                               const struct __timespec64 *restrict time_point);
@@ -28,4 +29,7 @@ libpthread_hidden_proto (__cnd_timedwait64)
 extern int __mtx_timedlock64 (mtx_t *restrict mutex,
                               const struct __timespec64 *restrict time_point);
 libpthread_hidden_proto (__mtx_timedlock64)
+extern int __thrd_sleep64 (const struct __timespec64 *time_point,
+                           struct __timespec64 *remaining);
+libpthread_hidden_proto (__thrd_sleep64)
 #endif
