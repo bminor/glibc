@@ -63,6 +63,9 @@ posixland_init (int argc, char **argv, char **envp)
     {
       /* Set the FPU control word to the proper default value.  */
       __setfpucw (__fpu_control);
+
+      /* Now we have relocations etc. we can start signals etc.  */
+      _hurd_libc_proc_init (argv);
     }
   else
     {
