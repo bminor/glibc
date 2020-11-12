@@ -28,11 +28,19 @@
 extern __typeof (strncpy) __strncpy_ppc attribute_hidden;
 extern __typeof (strncpy) __strncpy_power7 attribute_hidden;
 extern __typeof (strncpy) __strncpy_power8 attribute_hidden;
+# ifdef __LITTLE_ENDIAN__
+extern __typeof (strncpy) __strncpy_power9 attribute_hidden;
+# endif
 # undef strncpy
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
  ifunc symbol properly. */
 libc_ifunc_redirected (__redirect_strncpy, strncpy,
+# ifdef __LITTLE_ENDIAN__
+		       (hwcap2 & PPC_FEATURE2_ARCH_3_00) &&
+		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       ? __strncpy_power9 :
+# endif
 		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
 		       ? __strncpy_power8
 		       : (hwcap & PPC_FEATURE_HAS_VSX)

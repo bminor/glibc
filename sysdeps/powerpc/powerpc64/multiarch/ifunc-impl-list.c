@@ -301,6 +301,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/powerpc/powerpc64/multiarch/strncpy.c.  */
   IFUNC_IMPL (i, name, strncpy,
+#ifdef __LITTLE_ENDIAN__
+	      IFUNC_IMPL_ADD (array, i, strncpy,
+			      (hwcap2 & PPC_FEATURE2_ARCH_3_00)
+			      && (hwcap & PPC_FEATURE_HAS_VSX),
+			      __strncpy_power9)
+#endif
 	      IFUNC_IMPL_ADD (array, i, strncpy,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strncpy_power8)
