@@ -78,7 +78,8 @@ __clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
   struct __timespec64 treq64, trem64;
 
   treq64 = valid_timespec_to_timespec64 (*req);
-  r = __clock_nanosleep_time64 (clock_id, flags, &treq64, &trem64);
+  r = __clock_nanosleep_time64 (clock_id, flags, &treq64,
+                                rem != NULL ? &trem64 : NULL);
 
   if (r == EINTR && rem != NULL && (flags & TIMER_ABSTIME) == 0)
     *rem = valid_timespec64_to_timespec (trem64);

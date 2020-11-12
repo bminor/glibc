@@ -39,7 +39,7 @@ __nanosleep (const struct timespec *req, struct timespec *rem)
   struct __timespec64 treq64, trem64;
 
   treq64 = valid_timespec_to_timespec64 (*req);
-  int ret = __nanosleep64 (&treq64, &trem64);
+  int ret = __nanosleep64 (&treq64, rem != NULL ? &trem64 : NULL);
 
   if (ret != 0 && errno == EINTR && rem != NULL)
     *rem = valid_timespec64_to_timespec (trem64);
