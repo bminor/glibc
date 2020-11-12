@@ -91,7 +91,13 @@ __NTH (strncpy (char *__restrict __dest, const char *__restrict __src,
   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
 }
 
-/* XXX We have no corresponding builtin yet.  */
+#if __GNUC_PREREQ (4, 7) || __glibc_clang_prereq (2, 6)
+__fortify_function char *
+__NTH (stpncpy (char *__dest, const char *__src, size_t __n))
+{
+  return __builtin___stpncpy_chk (__dest, __src, __n, __bos (__dest));
+}
+#else
 extern char *__stpncpy_chk (char *__dest, const char *__src, size_t __n,
 			    size_t __destlen) __THROW
   __attr_access ((__write_only__, 1, 3)) __attr_access ((__read_only__, 2));
@@ -106,6 +112,7 @@ __NTH (stpncpy (char *__dest, const char *__src, size_t __n))
     return __stpncpy_chk (__dest, __src, __n, __bos (__dest));
   return __stpncpy_alias (__dest, __src, __n);
 }
+#endif
 
 
 __fortify_function char *
