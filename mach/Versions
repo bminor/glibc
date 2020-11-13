@@ -68,4 +68,8 @@ libc {
     __spin_lock; __spin_lock_init; __spin_lock_solid; __spin_try_lock;
     __spin_unlock;
   }
+  GLIBC_PRIVATE {
+    # functions used by RPC stubs
+    __mig_memcpy;
+  }
 }
