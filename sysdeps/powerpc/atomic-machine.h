@@ -53,14 +53,9 @@ typedef uintmax_t uatomic_max_t;
 #define __arch_compare_and_exchange_bool_16_acq(mem, newval, oldval) \
   (abort (), 0)
 
-#ifdef UP
-# define __ARCH_ACQ_INSTR	""
-# define __ARCH_REL_INSTR	""
-#else
-# define __ARCH_ACQ_INSTR	"isync"
-# ifndef __ARCH_REL_INSTR
-#  define __ARCH_REL_INSTR	"sync"
-# endif
+#define __ARCH_ACQ_INSTR	"isync"
+#ifndef __ARCH_REL_INSTR
+# define __ARCH_REL_INSTR	"sync"
 #endif
 
 #ifndef MUTEX_HINT_ACQ

@@ -230,9 +230,7 @@
 /*
  * "light weight" sync can also be used for the release barrier.
  */
-#ifndef UP
-# define __ARCH_REL_INSTR	"lwsync"
-#endif
+#define __ARCH_REL_INSTR	"lwsync"
 #define atomic_write_barrier()	__asm ("lwsync" ::: "memory")
 
 /*
