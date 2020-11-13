@@ -120,9 +120,6 @@ __pthread_mutex_lock (pthread_mutex_t *mutex)
   else if (__builtin_expect (PTHREAD_MUTEX_TYPE (mutex)
 			  == PTHREAD_MUTEX_ADAPTIVE_NP, 1))
     {
-      if (! __is_smp)
-	goto simple;
-
       if (LLL_MUTEX_TRYLOCK (mutex) != 0)
 	{
 	  int cnt = 0;

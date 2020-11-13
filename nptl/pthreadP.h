@@ -208,9 +208,6 @@ extern void __default_pthread_attr_freeres (void) attribute_hidden;
 extern size_t __static_tls_size attribute_hidden;
 extern size_t __static_tls_align_m1 attribute_hidden;
 
-/* Flag whether the machine is SMP or not.  */
-extern int __is_smp attribute_hidden;
-
 /* Thread descriptor handling.  */
 extern list_t __stack_user;
 hidden_proto (__stack_user)

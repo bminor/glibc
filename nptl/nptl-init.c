@@ -32,7 +32,6 @@
 #include <fork.h>
 #include <version.h>
 #include <shlib-compat.h>
-#include <smp.h>
 #include <lowlevellock.h>
 #include <futex-internal.h>
 #include <kernel-features.h>
@@ -345,9 +344,6 @@ __pthread_initialize_minimal_internal (void)
 #endif
     __libc_pthread_init (&__fork_generation, __reclaim_stacks,
 			 ptr_pthread_functions);
-
-  /* Determine whether the machine is SMP or not.  */
-  __is_smp = is_smp_system ();
 
 #if HAVE_TUNABLES
   __pthread_tunables_init ();

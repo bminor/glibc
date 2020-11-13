@@ -113,9 +113,6 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 
 
     case PTHREAD_MUTEX_ADAPTIVE_NP:
-      if (! __is_smp)
-	goto simple;
-
       if (lll_trylock (mutex->__data.__lock) != 0)
 	{
 	  int cnt = 0;
