@@ -49,11 +49,7 @@ typedef uintmax_t uatomic_max_t;
 #define ATOMIC_EXCHANGE_USES_CAS 1
 
 
-#ifdef UP
-# define __MB		/* nothing */
-#else
-# define __MB		"	mb\n"
-#endif
+#define __MB		"	mb\n"
 
 
 /* Compare and exchange.  For all of the "xxx" routines, we expect a
@@ -363,8 +359,6 @@ typedef uintmax_t uatomic_max_t;
 
 */
 
-#ifndef UP
-# define atomic_full_barrier()	__asm ("mb" : : : "memory");
-# define atomic_read_barrier()	__asm ("mb" : : : "memory");
-# define atomic_write_barrier()	__asm ("wmb" : : : "memory");
-#endif
+#define atomic_full_barrier()	__asm ("mb" : : : "memory");
+#define atomic_read_barrier()	__asm ("mb" : : : "memory");
+#define atomic_write_barrier()	__asm ("wmb" : : : "memory");
