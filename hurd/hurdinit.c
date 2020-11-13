@@ -114,17 +114,25 @@ libc_hidden_def (_hurd_init)
 void
 _hurd_libc_proc_init (char **argv)
 {
-  /* Tell the proc server we exist, if it does.  */
-  if (_hurd_portarray[INIT_PORT_PROC] != MACH_PORT_NULL)
-    _hurd_new_proc_init (argv, _hurd_intarray, _hurd_intarraysize);
+  if (_hurd_portarray)
+    {
+      /* Tell the proc server we exist, if it does.  */
+      if (_hurd_portarray[INIT_PORT_PROC] != MACH_PORT_NULL)
+	_hurd_new_proc_init (argv, _hurd_intarray, _hurd_intarraysize);
 
-  /* All done with init ints and ports.  */
-  __vm_deallocate (__mach_task_self (),
-		   (vm_address_t) _hurd_intarray,
-		   _hurd_intarraysize * sizeof (int));
-  __vm_deallocate (__mach_task_self (),
-		   (vm_address_t) _hurd_portarray,
-		   _hurd_portarraysize * sizeof (mach_port_t));
+      /* All done with init ints and ports.  */
+      __vm_deallocate (__mach_task_self (),
+		       (vm_address_t) _hurd_intarray,
+		       _hurd_intarraysize * sizeof (int));
+      _hurd_intarray = NULL;
+      _hurd_intarraysize = 0;
+
+      __vm_deallocate (__mach_task_self (),
+		       (vm_address_t) _hurd_portarray,
+		       _hurd_portarraysize * sizeof (mach_port_t));
+      _hurd_portarray = NULL;
+      _hurd_portarraysize = 0;
+    }
 }
 libc_hidden_def (_hurd_libc_proc_init)
 
