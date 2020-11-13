@@ -26,7 +26,3 @@ fi
 if test -n "$sysheaders"; then
   CPPFLAGS=$OLD_CPPFLAGS
 fi
-
-dnl ifunc does not work yet for static binaries
-dnl https://www.gnu.org/software/hurd/open_issues/ifunc.html
-libc_cv_ld_gnu_indirect_function=no
