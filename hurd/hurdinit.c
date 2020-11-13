@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <hurd.h>
 #include <hurd/port.h>
+#include <ldsodefs.h>
 #include "set-hooks.h"
 #include "hurdmalloc.h"		/* XXX */
 
@@ -116,6 +117,11 @@ _hurd_libc_proc_init (char **argv)
 {
   if (_hurd_portarray)
     {
+      /* We will start the signal thread, so we need to initialize libpthread
+       * if linked in.  */
+      if (__pthread_initialize_minimal != NULL)
+	__pthread_initialize_minimal ();
+
       /* Tell the proc server we exist, if it does.  */
       if (_hurd_portarray[INIT_PORT_PROC] != MACH_PORT_NULL)
 	_hurd_new_proc_init (argv, _hurd_intarray, _hurd_intarraysize);
