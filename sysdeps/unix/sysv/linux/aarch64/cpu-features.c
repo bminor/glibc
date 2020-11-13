@@ -126,4 +126,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 
   /* Check if SVE is supported.  */
   cpu_features->sve = GLRO (dl_hwcap) & HWCAP_SVE;
+
+  /* Check if Morello is supported.  */
+  cpu_features->morello = GLRO (dl_hwcap2) & HWCAP2_MORELLO;
 }
