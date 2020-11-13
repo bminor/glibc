@@ -24,13 +24,10 @@
 #define O_EXCL		00002000 /* not fcntl */
 #define O_NOCTTY	00400000 /* not fcntl */
 #define O_APPEND	00000010
-#define O_NONBLOCK	00200004 /* HPUX has separate NDELAY & NONBLOCK */
+#define O_NONBLOCK	00200000
 #define __O_DSYNC	01000000
-#define __O_RSYNC	02000000 /* HPUX only */
 #define __O_SYNC	00100000
 #define O_SYNC		(__O_SYNC|__O_DSYNC)
-
-#define O_BLKSEEK	00000100 /* HPUX only */
 
 #define __O_DIRECTORY	000010000 /* Must be a directory.  */
 #define __O_NOFOLLOW	000000200 /* Do not follow links.  */
