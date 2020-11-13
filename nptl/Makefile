@@ -614,7 +614,7 @@ tst-audit-threads-ENV = LD_AUDIT=$(objpfx)tst-audit-threads-mod1.so
 # The test uses dlopen indirectly and would otherwise load system
 # objects.
 tst-setuid1-static-ENV = \
-  LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf:$(common-objpfx)nss
+  LD_LIBRARY_PATH=$(ld-library-path):$(common-objpfx)elf:$(common-objpfx)nss
 
 # The tests here better do not run in parallel.
 ifeq ($(run-built-tests),yes)

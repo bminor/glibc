@@ -123,5 +123,5 @@ endif
 # The test uses dlopen indirectly and would otherwise load system
 # objects.
 tst-idna_name_classify-ENV = \
-  LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
+  LD_LIBRARY_PATH=$(ld-library-path):$(common-objpfx):$(common-objpfx)elf
 $(objpfx)tst-idna_name_classify.out: $(gen-locales)

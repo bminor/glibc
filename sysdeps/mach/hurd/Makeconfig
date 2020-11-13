@@ -5,3 +5,5 @@ static-start-installed-name = crt0.o
 
 # GNU libc on the Hurd is always reentrant.
 libc-reentrant = yes
+
+sysdep-ld-library-path = $(common-objpfx)/mach:$(common-objpfx)/hurd

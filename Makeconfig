@@ -769,6 +769,9 @@ built-program-cmd = $(built-program-cmd-before-env) $(run-program-env) \
 # the second dependency of the makefile target in which
 # $(host-built-program-cmd) is used.
 host-built-program-cmd = $(run-via-rtld-prefix) $(built-program-file)
+# $(ld-library-path) is the common content to be set in LD_LIBRARY_PATH
+# for running static binaries that may load dynamic objects.
+ld-library-path = $(objpfx):$(common-objpfx)$(addprefix :,$(sysdep-ld-library-path))
 
 ifndef LD
 LD := ld -X

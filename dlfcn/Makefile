@@ -52,7 +52,7 @@ ifeq (yes,$(build-shared))
 tests += tststatic tststatic2 tststatic3 tststatic4 tststatic5
 tests-static += tststatic tststatic2 tststatic3 tststatic4 tststatic5
 modules-names += modstatic modstatic2 modstatic3 modstatic5
-tststatic-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
+tststatic-ENV = LD_LIBRARY_PATH=$(ld-library-path):$(common-objpfx)elf
 tststatic2-ENV = $(tststatic-ENV)
 tststatic3-ENV = $(tststatic-ENV)
 tststatic4-ENV = $(tststatic-ENV)

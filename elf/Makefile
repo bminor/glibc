@@ -180,7 +180,7 @@ tests-static := $(tests-static-normal) $(tests-static-internal)
 ifeq (yes,$(build-shared))
 tests-static += tst-tls9-static tst-single_threaded-static-dlopen
 static-dlopen-environment = \
-  LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
+  LD_LIBRARY_PATH=$(ld-library-path):$(common-objpfx)dlfcn
 tst-tls9-static-ENV = $(static-dlopen-environment)
 tst-single_threaded-static-dlopen-ENV = $(static-dlopen-environment)
 
@@ -1671,7 +1671,7 @@ $(objpfx)tst-libc_dlvsym-dso.so: $(libsupport) $(libdl)
 $(objpfx)tst-libc_dlvsym.out: $(objpfx)tst-libc_dlvsym-dso.so
 $(objpfx)tst-libc_dlvsym-static: $(common-objpfx)dlfcn/libdl.a
 tst-libc_dlvsym-static-ENV = \
-  LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)dlfcn
+  LD_LIBRARY_PATH=$(ld-library-path):$(common-objpfx)dlfcn
 $(objpfx)tst-libc_dlvsym-static.out: $(objpfx)tst-libc_dlvsym-dso.so
 
 $(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so
