@@ -32,7 +32,6 @@ __clock_gettime (clockid_t clock_id, struct timespec *ts)
   switch (clock_id) {
 
     case CLOCK_REALTIME:
-    case CLOCK_MONOTONIC:
       {
 	/* __host_get_time can only fail if passed an invalid host_t.
 	   __mach_host_self could theoretically fail (producing an
