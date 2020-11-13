@@ -99,13 +99,7 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 /* Get system call information.  */
 # include <sysdep.h>
 
-#ifndef LOCK_PREFIX
-# ifdef UP
-#  define LOCK_PREFIX	/* nothing */
-# else
-#  define LOCK_PREFIX	"lock;"
-# endif
-#endif
+#define LOCK_PREFIX "lock;"
 
 /* This is the size of the initial TCB.  Can't be just sizeof (tcbhead_t),
    because NPTL getpid, __libc_alloca_cutoff etc. need (almost) the whole

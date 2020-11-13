@@ -155,13 +155,7 @@ union user_desc_init
 # define INIT_SYSINFO
 #endif
 
-#ifndef LOCK_PREFIX
-# ifdef UP
-#  define LOCK_PREFIX  /* nothing */
-# else
-#  define LOCK_PREFIX "lock;"
-# endif
-#endif
+#define LOCK_PREFIX "lock;"
 
 static inline void __attribute__ ((unused, always_inline))
 tls_fill_user_desc (union user_desc_init *desc,

@@ -20,17 +20,11 @@
 #include <errno.h>
 
 
-#ifdef UP
-# define LOCK
-#else
-# define LOCK lock
-#endif
-
 ENTRY (pthread_spin_trylock)
 	movl	4(%esp), %edx
 	movl	$1, %eax
 	xorl	%ecx, %ecx
-	LOCK
+	lock
 	cmpxchgl %ecx, (%edx)
 	movl	$EBUSY, %eax
 #ifdef HAVE_CMOV

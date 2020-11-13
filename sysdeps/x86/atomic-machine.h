@@ -49,13 +49,7 @@ typedef intmax_t atomic_max_t;
 typedef uintmax_t uatomic_max_t;
 
 
-#ifndef LOCK_PREFIX
-# ifdef UP
-#  define LOCK_PREFIX	/* nothing */
-# else
-#  define LOCK_PREFIX "lock;"
-# endif
-#endif
+#define LOCK_PREFIX "lock;"
 
 #define USE_ATOMIC_COMPILER_BUILTINS	1
 
