@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- * Never include this file directly; use <pthread.h> or <cthreads.h> instead.
+ * Never include this file directly; use <pthread.h> instead.
  */
 
 #ifndef _BITS_PTHREAD_NP_H

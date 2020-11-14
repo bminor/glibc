@@ -4,6 +4,7 @@
 #include "hurdmalloc.h"		/* XXX see that file */
 
 #include <mach.h>
+#include <mach/spin-lock.h>
 #define vm_allocate __vm_allocate
 #define vm_page_size __vm_page_size
 
@@ -78,8 +79,6 @@
 
 
 #include <assert.h>
-
-#include <cthreads.h>
 
 #define MCHECK
 
@@ -221,7 +220,7 @@ malloc (size_t size)
 		i += 1;
 		n <<= 1;
 	}
-	ASSERT(i < NBUCKETS);
+	assert(i < NBUCKETS);
 	fl = &malloc_free_list[i];
 	spin_lock(&fl->lock);
 	h = fl->head;
@@ -291,11 +290,11 @@ free (void *base)
 	 * Sanity checks.
 	 */
 	if (i < 0 || i >= NBUCKETS) {
-		ASSERT(0 <= i && i < NBUCKETS);
+		assert(0 <= i && i < NBUCKETS);
 		return;
 	}
 	if (fl != &malloc_free_list[i]) {
-		ASSERT(fl == &malloc_free_list[i]);
+		assert(fl == &malloc_free_list[i]);
 		return;
 	}
 	/*
@@ -340,11 +339,11 @@ realloc (void *old_base, size_t new_size)
 	 * Sanity checks.
 	 */
 	if (i < 0 || i >= NBUCKETS) {
-		ASSERT(0 <= i && i < NBUCKETS);
+		assert(0 <= i && i < NBUCKETS);
 		return 0;
 	}
 	if (fl != &malloc_free_list[i]) {
-		ASSERT(fl == &malloc_free_list[i]);
+		assert(fl == &malloc_free_list[i]);
 		return 0;
 	}
 	/*

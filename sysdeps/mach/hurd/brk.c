@@ -18,7 +18,7 @@
 #include <errno.h>
 #include <hurd.h>
 #include <hurd/resource.h>
-#include <cthreads.h>		/* For `struct mutex'.  */
+#include <lock-intern.h>	/* For `struct mutex'.  */
 #include <vm_param.h>
 
 

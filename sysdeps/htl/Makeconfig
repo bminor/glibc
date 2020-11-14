@@ -4,7 +4,7 @@
 have-thread-library = yes
 
 shared-thread-library = $(common-objpfx)htl/libpthread.so
-static-thread-library = $(common-objpfx)htl/libpthread.a
+static-thread-library = $(..)htl/libpthread_syms.a $(common-objpfx)htl/libpthread.a
 bounded-thread-library = $(static-thread-library)
 
 rpath-dirs += htl

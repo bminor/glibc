@@ -103,7 +103,6 @@ extern error_t _hurd_ports_use (int which, error_t (*operate) (mach_port_t));
 
 
 /* Base address and size of the initial stack set up by the exec server.
-   If using cthreads, this stack is deallocated in startup.
    Not locked.  */
 
 extern vm_address_t _hurd_stack_base;
@@ -123,9 +122,6 @@ extern int _hurd_orphaned;
 
 /* This variable is incremented every time the process IDs change.  */
 extern unsigned int _hurd_pids_changed_stamp;
-
-/* This condition is broadcast every time the process IDs change.  */
-extern struct condition _hurd_pids_changed_sync;
 
 /* Unix `data break', for brk and sbrk.
    If brk and sbrk are not used, this info will not be initialized or used.  */

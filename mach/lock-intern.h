@@ -95,6 +95,15 @@ __spin_lock_locked (__spin_lock_t *__lock)
 #endif
 
 /* Name space-clean internal interface to mutex locks.  */
+struct mutex {
+	__spin_lock_t __held;
+	__spin_lock_t __lock;
+	const char *__name;
+	void *__head, *__tail;
+	void *__holder;
+};
+
+#define MUTEX_INITIALIZER { __SPIN_LOCK_INITIALIZER }
 
 /* Initialize the newly allocated mutex lock LOCK for further use.  */
 extern void __mutex_init (void *__lock);

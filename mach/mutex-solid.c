@@ -17,11 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <lock-intern.h>
-#include <cthreads.h>
 
-/* If cthreads is linked in, it will define these functions itself to do
-   real cthreads mutex locks.  This file will only be linked in when
-   cthreads is not used, and `mutexes' are in fact just spin locks (and
+/* If pthread is linked in, it will define these functions itself to do
+   real pthread mutex locks.  This file will only be linked in when
+   pthread is not used, and `mutexes' are in fact just spin locks (and
    some unused storage).  */
 
 void

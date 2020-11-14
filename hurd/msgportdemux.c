@@ -51,14 +51,14 @@ msgport_server (mach_msg_header_t *inp,
 }
 
 /* This is the code that the signal thread runs.  */
-void
-_hurd_msgport_receive (void)
+void *
+_hurd_msgport_receive (void *arg)
 {
   /* Get our own sigstate cached so we never again have to take a lock to
      fetch it.  There is much code in hurdsig.c that operates with some
      sigstate lock held, which will deadlock with _hurd_thread_sigstate.
 
-     Furthermore, in the cthreads case this is the convenient spot
+     Furthermore, in the pthread case this is the convenient spot
      to initialize _hurd_msgport_thread (see hurdsig.c:_hurdsig_init).  */
 
   _hurd_msgport_thread = _hurd_self_sigstate ()->thread;

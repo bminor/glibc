@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <hurd.h>
-#include <cthreads.h>
+#include <lock-intern.h>
 #include <hurd/resource.h>
 
 /* This must be given an initializer, or the a.out linking rules will

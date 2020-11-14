@@ -22,7 +22,7 @@
 #include <hurd.h>
 #include <mach/mach4.h>
 #include <mach/pc_sample.h>
-#include <cthreads.h>
+#include <lock-intern.h>
 #include <assert.h>
 #include <libc-internal.h>
 

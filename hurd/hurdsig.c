@@ -19,11 +19,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <cthreads.h>		/* For `struct mutex'.  */
+#include <lock-intern.h>	/* For `struct mutex'.  */
 #include <pthreadP.h>
 #include <mach.h>
 #include <mach/thread_switch.h>
 #include <mach/mig_support.h>
+#include <mach/vm_param.h>
 
 #include <hurd.h>
 #include <hurd/id.h>
@@ -1477,8 +1478,8 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
 
   /* Start the signal thread listening on the message port.  */
 
-#pragma weak __cthread_fork
-  if (!__cthread_fork)
+#pragma weak __pthread_create
+  if (!__pthread_create)
     {
       err = __thread_create (__mach_task_self (), &_hurd_msgport_thread);
       assert_perror (err);
@@ -1503,41 +1504,40 @@ _hurdsig_init (const int *intarray, size_t intarraysize)
     }
   else
     {
-      /* When cthreads is being used, we need to make the signal thread a
-         proper cthread.  Otherwise it cannot use mutex_lock et al, which
-         will be the cthreads versions.  Various of the message port RPC
+      pthread_t thread;
+      pthread_attr_t attr;
+      void *addr;
+      size_t size;
+
+      /* When pthread is being used, we need to make the signal thread a
+         proper pthread.  Otherwise it cannot use mutex_lock et al, which
+         will be the pthread versions.  Various of the message port RPC
          handlers need to take locks, so we need to be able to call into
-         cthreads code and meet its assumptions about how our thread and
-         its stack are arranged.  Since cthreads puts it there anyway,
+         pthread code and meet its assumptions about how our thread and
+         its stack are arranged.  Since pthread puts it there anyway,
          we'll let the signal thread's per-thread variables be found as for
-         any normal cthread, and just leave the magic __hurd_sigthread_*
+         any normal pthread, and just leave the magic __hurd_sigthread_*
          values all zero so they'll be ignored.  */
-#pragma weak __cthread_detach
+
+#pragma weak __pthread_detach
 #pragma weak __pthread_getattr_np
 #pragma weak __pthread_attr_getstack
-      __cthread_t thread = __cthread_fork (
-			     (cthread_fn_t) &_hurd_msgport_receive, 0);
-      __cthread_detach (thread);
+      __pthread_create(&thread, NULL, &_hurd_msgport_receive, NULL);
 
-      if (__pthread_getattr_np)
-	{
-	  /* Record signal thread stack layout for fork() */
-	  pthread_attr_t attr;
-	  void *addr;
-	  size_t size;
+      /* Record signal thread stack layout for fork() */
+      __pthread_getattr_np (thread, &attr);
+      __pthread_attr_getstack (&attr, &addr, &size);
+      __hurd_sigthread_stack_base = (uintptr_t) addr;
+      __hurd_sigthread_stack_end = __hurd_sigthread_stack_base + size;
 
-	  __pthread_getattr_np ((pthread_t) thread, &attr);
-	  __pthread_attr_getstack (&attr, &addr, &size);
-	  __hurd_sigthread_stack_base = (uintptr_t) addr;
-	  __hurd_sigthread_stack_end = __hurd_sigthread_stack_base + size;
-	}
+      __pthread_detach(thread);
 
       /* XXX We need the thread port for the signal thread further on
          in this thread (see hurdfault.c:_hurdsigfault_init).
          Therefore we block until _hurd_msgport_thread is initialized
          by the newly created thread.  This really shouldn't be
          necessary; we should be able to fetch the thread port for a
-         cthread from here.  */
+         pthread from here.  */
       while (_hurd_msgport_thread == 0)
 	__swtch_pri (0);
     }

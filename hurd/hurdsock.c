@@ -23,7 +23,7 @@
 #include <hurd/paths.h>
 #include <stdio.h>
 #include <_itoa.h>
-#include <cthreads.h>		/* For `struct mutex'.  */
+#include <lock-intern.h>	/* For `struct mutex'.  */
 #include "hurdmalloc.h"		/* XXX */
 
 static struct mutex lock;

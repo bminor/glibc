@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <limits.h>
-#include <cthreads.h>		/* For `struct mutex'.  */
+#include <lock-intern.h>	/* For `struct mutex'.  */
 #include "set-hooks.h"
 #include "hurdmalloc.h"		/* XXX */
 

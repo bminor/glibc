@@ -153,6 +153,8 @@ ifeq ($(subdir),elf)
 # We do use nested functions involving creation of trampolines, notably for
 # callbacks whose parameters don't permit to get the context parameters.
 check-execstack-xfail += ld.so libc.so libpthread.so
+# We always create a thread for signals
+test-xfail-tst-single_threaded-pthread-static = yes
 endif
 
 ifeq ($(subdir),stdlib)

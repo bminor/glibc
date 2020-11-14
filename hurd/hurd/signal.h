@@ -37,7 +37,6 @@
 #include <bits/sigaction.h>
 #include <hurd/msg.h>
 
-#include <cthreads.h>		/* For `struct mutex'.  */
 #include <setjmp.h>		/* For `jmp_buf'.  */
 #include <spin-lock.h>
 struct hurd_signal_preemptor;	/* <hurd/sigpreempt.h> */
@@ -119,8 +118,6 @@ struct hurd_sigstate
 /* Linked list of states of all threads whose state has been asked for.  */
 
 extern struct hurd_sigstate *_hurd_sigstates;
-
-extern struct mutex _hurd_siglock; /* Locks _hurd_sigstates.  */
 
 /* Get the sigstate of a given thread, taking its lock.  */
 
@@ -320,7 +317,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 
 /* Function run by the signal thread to receive from the signal port.  */
 
-extern void _hurd_msgport_receive (void);
+extern void *_hurd_msgport_receive (void *arg);
 
 /* Set up STATE with a thread state that, when resumed, is
    like `longjmp (_hurd_sigthread_fault_env, 1)'.  */

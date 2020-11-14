@@ -497,7 +497,7 @@ __fork (void)
 #else
       if (__hurd_sigthread_stack_end == 0)
 	{
-	  /* The signal thread has a stack assigned by cthreads.
+	  /* The signal thread has a stack assigned by pthread.
 	     The threadvar_stack variables conveniently tell us how
 	     to get to the highest address in the stack, just below
 	     the per-thread variables.  */

@@ -1,3 +1,5 @@
+extern struct mutex _hurd_siglock; /* Locks _hurd_sigstates.  */
+
 #ifndef	_HURD_SIGNAL_H
 extern struct hurd_sigstate *_hurd_self_sigstate (void) __attribute__ ((__const__));
 #ifndef _ISOMAC

@@ -24,7 +24,7 @@
 #include <errno.h>
 #include <bits/types/error_t.h>
 
-#include <cthreads.h>		/* For `struct mutex'.  */
+#include <lock-intern.h>	/* For `struct mutex'.  */
 
 /* Structure describing authorization data for the process.  */
 

@@ -41,15 +41,7 @@ extern void __mach_init (void);
    initialization so mig-generated stubs work, and then do an exec_startup
    RPC on our bootstrap port, to which the exec server responds with the
    information passed in the exec call, as well as our original bootstrap
-   port, and the base address and size of the preallocated stack.
-
-   If using cthreads, we are given a new stack by cthreads initialization and
-   deallocate the stack set up by the exec server.  On the new stack we call
-   `start1' (above) to do the rest of the startup work.  Since the stack may
-   disappear out from under us in a machine-dependent way, we use a pile of
-   static variables to communicate the information from exec_startup to start1.
-   This is unfortunate but preferable to machine-dependent frobnication to copy
-   the state from the old stack to the new one.  */
+   port, and the base address and size of the preallocated stack.  */
 
 
 void

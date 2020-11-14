@@ -16,7 +16,6 @@
    License along with the GNU C Library;  if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <cthreads.h>
 #include <pthread.h>		/* Must come before <stdio.h>! */
 #include <stdio.h>
 

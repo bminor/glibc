@@ -189,14 +189,15 @@ $(linknamespace-symlists-tests): $(objpfx)symlist-%: list-header-symbols.py
 
 linknamespace-libs-isoc = $(common-objpfx)libc.a $(common-objpfx)math/libm.a
 linknamespace-libs-thr = $(linknamespace-libs-isoc) \
-			 $(common-objpfx)rt/librt.a $(static-thread-library)
+			 $(common-objpfx)rt/librt.a \
+			 $(filter-out %_syms.a,$(static-thread-library))
 linknamespace-libs-posix = $(linknamespace-libs-thr) \
 			   $(common-objpfx)dlfcn/libdl.a
 linknamespace-libs-xsi = $(linknamespace-libs-posix)
 linknamespace-libs-ISO = $(linknamespace-libs-isoc)
 linknamespace-libs-ISO99 = $(linknamespace-libs-isoc)
 linknamespace-libs-ISO11 = $(linknamespace-libs-isoc) \
-			   $(static-thread-library)
+			   $(filter-out %_syms.a,$(static-thread-library))
 linknamespace-libs-XPG4 = $(linknamespace-libs-isoc)
 linknamespace-libs-XPG42 = $(linknamespace-libs-XPG4)
 linknamespace-libs-POSIX = $(linknamespace-libs-thr)
