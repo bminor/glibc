@@ -22,10 +22,3 @@
    (open, mmap, etc).  */
 
 #define RTLD_PRIVATE_ERRNO 0
-
-#ifdef SHARED
-/* _dl_argv and __libc_stack_end cannot be attribute_relro, because the stack-switching
-   libc initializer for using cthreads might write into it.  */
-# define DL_ARGV_NOT_RELRO 1
-# define LIBC_STACK_END_NOT_RELRO 1
-#endif
