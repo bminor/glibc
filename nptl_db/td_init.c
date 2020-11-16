@@ -29,3 +29,17 @@ td_init (void)
   LOG ("td_init");
   return TD_OK;
 }
+
+bool
+__td_ta_rtld_global (td_thragent_t *ta)
+{
+  if (ta->ta_addr__rtld_global == 0
+      && td_mod_lookup (ta->ph, LD_SO, SYM__rtld_global,
+                        &ta->ta_addr__rtld_global) != PS_OK)
+    {
+      ta->ta_addr__rtld_global = (void*)-1;
+      return false;
+    }
+  else
+    return ta->ta_addr__rtld_global != (void*)-1;
+}

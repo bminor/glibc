@@ -269,4 +269,17 @@ extern td_err_e _td_check_sizeof (td_thragent_t *ta, uint32_t *sizep,
 extern td_err_e __td_ta_lookup_th_unique (const td_thragent_t *ta,
 					  lwpid_t lwpid, td_thrhandle_t *th);
 
+/* Try to initialize TA->ta_addr__rtld_global.  Return true on
+   success, false on failure (which may be cached).  */
+bool __td_ta_rtld_global (td_thragent_t *ta) attribute_hidden;
+
+/* Obtain the address of the list_t fields _dl_stack_user and
+   _dl_stack_used in _rtld_global, or fall back to the global
+   variables of the same name (to support statically linked
+   programs).  */
+td_err_e __td_ta_stack_user (td_thragent_t *ta, psaddr_t *plist)
+  attribute_hidden;
+td_err_e __td_ta_stack_used (td_thragent_t *ta, psaddr_t *plist)
+  attribute_hidden;
+
 #endif /* thread_dbP.h */

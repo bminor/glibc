@@ -157,8 +157,6 @@ register struct pthread *__thread_self __asm__("r23");
       atomic_write_barrier ();						     \
     }									     \
   while (0)
-#define THREAD_GSCOPE_WAIT() \
-  GL(dl_wait_lookup_done) ()
 
 #endif /* __ASSEMBLER__ */
 

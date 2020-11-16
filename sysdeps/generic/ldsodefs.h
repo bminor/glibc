@@ -38,6 +38,7 @@
 #include <libc-lock.h>
 #include <hp-timing.h>
 #include <tls.h>
+#include <list_t.h>
 
 __BEGIN_DECLS
 
@@ -461,15 +462,22 @@ struct rtld_global
 
   EXTERN void (*_dl_init_static_tls) (struct link_map *);
 
-  EXTERN void (*_dl_wait_lookup_done) (void);
-
   /* Scopes to free after next THREAD_GSCOPE_WAIT ().  */
   EXTERN struct dl_scope_free_list
   {
     size_t count;
     void *list[50];
   } *_dl_scope_free_list;
-#if !THREAD_GSCOPE_IN_TCB
+#if THREAD_GSCOPE_IN_TCB
+  /* List of active thread stacks, with memory managed by glibc.  */
+  EXTERN list_t _dl_stack_used;
+
+  /* List of thread stacks that were allocated by the application.  */
+  EXTERN list_t _dl_stack_user;
+
+  /* Mutex protecting the stack lists.  */
+  EXTERN int _dl_stack_cache_lock;
+#else
   EXTERN int _dl_thread_gscope_count;
 #endif
 #ifdef SHARED
@@ -1251,6 +1259,11 @@ link_map_audit_state (struct link_map *l, size_t index)
     }
 }
 #endif /* SHARED */
+
+#if THREAD_GSCOPE_IN_TCB
+void __thread_gscope_wait (void) attribute_hidden;
+# define THREAD_GSCOPE_WAIT() __thread_gscope_wait ()
+#endif
 
 __END_DECLS
 

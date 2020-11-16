@@ -129,8 +129,6 @@ typedef struct
       atomic_write_barrier ();						     \
     }									     \
   while (0)
-# define THREAD_GSCOPE_WAIT() \
-  GL(dl_wait_lookup_done) ()
 
 # endif /* __ASSEMBLER__ */
 

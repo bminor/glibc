@@ -69,8 +69,6 @@ DB_STRUCT (td_eventbuf_t)
 DB_STRUCT_FIELD (td_eventbuf_t, eventnum)
 DB_STRUCT_FIELD (td_eventbuf_t, eventdata)
 
-DB_SYMBOL (stack_used)
-DB_SYMBOL (__stack_user)
 DB_SYMBOL (nptl_version)
 DB_FUNCTION (__nptl_create_event)
 DB_FUNCTION (__nptl_death_event)
@@ -106,6 +104,8 @@ DB_STRUCT (rtld_global)
 DB_RTLD_VARIABLE (_rtld_global)
 #endif
 DB_RTLD_GLOBAL_FIELD (dl_tls_dtv_slotinfo_list)
+DB_RTLD_GLOBAL_FIELD (dl_stack_user)
+DB_RTLD_GLOBAL_FIELD (dl_stack_used)
 
 DB_STRUCT (dtv_slotinfo_list)
 DB_STRUCT_FIELD (dtv_slotinfo_list, len)

@@ -208,10 +208,6 @@ extern void __default_pthread_attr_freeres (void) attribute_hidden;
 extern size_t __static_tls_size attribute_hidden;
 extern size_t __static_tls_align_m1 attribute_hidden;
 
-/* Thread descriptor handling.  */
-extern list_t __stack_user;
-hidden_proto (__stack_user)
-
 /* Attribute handling.  */
 extern struct pthread_attr *__attr_list attribute_hidden;
 extern int __attr_list_lock attribute_hidden;

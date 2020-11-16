@@ -187,7 +187,7 @@ td_ta_map_lwp2thr (const td_thragent_t *ta_arg,
      fake a special descriptor for the initial thread.  */
 
   psaddr_t list;
-  td_err_e err = DB_GET_SYMBOL (list, ta, __stack_user);
+  td_err_e err = __td_ta_stack_user (ta, &list);
   if (err != TD_OK)
     return err;
 

@@ -251,12 +251,9 @@ __pthread_initialize_minimal_internal (void)
      purposes this is good enough.  */
   THREAD_SETMEM (pd, stackblock_size, (size_t) __libc_stack_end);
 
-  /* Initialize the list of all running threads with the main thread.  */
-  INIT_LIST_HEAD (&__stack_user);
-  list_add (&pd->list, &__stack_user);
-
-  /* Before initializing __stack_user, the debugger could not find us and
-     had to set __nptl_initial_report_events.  Propagate its setting.  */
+  /* Before initializing GL (dl_stack_user), the debugger could not
+     find us and had to set __nptl_initial_report_events.  Propagate
+     its setting.  */
   THREAD_SETMEM (pd, report_events, __nptl_initial_report_events);
 
   struct sigaction sa;
@@ -335,8 +332,6 @@ __pthread_initialize_minimal_internal (void)
 #endif
 
   GL(dl_init_static_tls) = &__pthread_init_static_tls;
-
-  GL(dl_wait_lookup_done) = &__wait_lookup_done;
 
   /* Register the fork generation counter with the libc.  */
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB

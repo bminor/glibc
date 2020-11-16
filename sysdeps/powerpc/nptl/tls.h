@@ -245,8 +245,6 @@ register void *__thread_register __asm__ ("r13");
       atomic_write_barrier ();						     \
     }									     \
   while (0)
-#define THREAD_GSCOPE_WAIT() \
-  GL(dl_wait_lookup_done) ()
 
 #endif /* __ASSEMBLER__ */
 

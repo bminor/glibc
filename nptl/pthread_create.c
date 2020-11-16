@@ -213,9 +213,9 @@ __find_in_stack_list (struct pthread *pd)
   list_t *entry;
   struct pthread *result = NULL;
 
-  lll_lock (stack_cache_lock, LLL_PRIVATE);
+  lll_lock (GL (dl_stack_cache_lock), LLL_PRIVATE);
 
-  list_for_each (entry, &stack_used)
+  list_for_each (entry, &GL (dl_stack_used))
     {
       struct pthread *curp;
 
@@ -228,7 +228,7 @@ __find_in_stack_list (struct pthread *pd)
     }
 
   if (result == NULL)
-    list_for_each (entry, &__stack_user)
+    list_for_each (entry, &GL (dl_stack_user))
       {
 	struct pthread *curp;
 
@@ -240,7 +240,7 @@ __find_in_stack_list (struct pthread *pd)
 	  }
       }
 
-  lll_unlock (stack_cache_lock, LLL_PRIVATE);
+  lll_unlock (GL (dl_stack_cache_lock), LLL_PRIVATE);
 
   return result;
 }

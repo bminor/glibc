@@ -332,8 +332,6 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
   while (0)
 # define THREAD_GSCOPE_SET_FLAG() \
   THREAD_SETMEM (THREAD_SELF, header.gscope_flag, THREAD_GSCOPE_FLAG_USED)
-# define THREAD_GSCOPE_WAIT() \
-  GL(dl_wait_lookup_done) ()
 
 #endif /* __ASSEMBLER__ */
 

@@ -183,10 +183,11 @@ ElfW(Word) _dl_stack_flags = DEFAULT_STACK_PERMS;
 int (*_dl_make_stack_executable_hook) (void **) = _dl_make_stack_executable;
 
 
-/* Function in libpthread to wait for termination of lookups.  */
-void (*_dl_wait_lookup_done) (void);
-
-#if !THREAD_GSCOPE_IN_TCB
+#if THREAD_GSCOPE_IN_TCB
+list_t _dl_stack_used;
+list_t _dl_stack_user;
+int _dl_stack_cache_lock;
+#else
 int _dl_thread_gscope_count;
 #endif
 struct dl_scope_free_list *_dl_scope_free_list;

@@ -20,6 +20,41 @@
 #include "thread_dbP.h"
 #include <stdbool.h>
 
+td_err_e
+__td_ta_stack_user (td_thragent_t *ta, psaddr_t *plist)
+{
+  if (__td_ta_rtld_global (ta))
+    return DB_GET_FIELD_ADDRESS (*plist, ta, ta->ta_addr__rtld_global,
+				 rtld_global, _dl_stack_user, 0);
+  else
+    {
+      if (ta->ta_addr__dl_stack_user == 0
+	  && td_mod_lookup (ta->ph, NULL, SYM__dl_stack_user,
+			    &ta->ta_addr__dl_stack_user) != PS_OK)
+	return TD_ERR;
+      *plist = ta->ta_addr__dl_stack_user;
+      return TD_OK;
+    }
+}
+
+td_err_e
+__td_ta_stack_used (td_thragent_t *ta, psaddr_t *plist)
+{
+
+  if (__td_ta_rtld_global (ta))
+    return DB_GET_FIELD_ADDRESS (*plist, ta, ta->ta_addr__rtld_global,
+				 rtld_global, _dl_stack_used, 0);
+  else
+    {
+      if (ta->ta_addr__dl_stack_used == 0
+	  && td_mod_lookup (ta->ph, NULL, SYM__dl_stack_used,
+			    &ta->ta_addr__dl_stack_used) != PS_OK)
+	return TD_ERR;
+      *plist = ta->ta_addr__dl_stack_used;
+      return TD_OK;
+    }
+}
+
 static td_err_e
 check_thread_list (const td_thrhandle_t *th, psaddr_t head, bool *uninit)
 {
@@ -62,7 +97,7 @@ td_thr_validate (const td_thrhandle_t *th)
 
   /* First check the list with threads using user allocated stacks.  */
   bool uninit = false;
-  err = DB_GET_SYMBOL (list, th->th_ta_p, __stack_user);
+  err = __td_ta_stack_user (th->th_ta_p, &list);
   if (err == TD_OK)
     err = check_thread_list (th, list, &uninit);
 
@@ -70,7 +105,7 @@ td_thr_validate (const td_thrhandle_t *th)
      using implementation allocated stacks.  */
   if (err == TD_NOTHR)
     {
-      err = DB_GET_SYMBOL (list, th->th_ta_p, stack_used);
+      err = __td_ta_stack_used (th->th_ta_p, &list);
       if (err == TD_OK)
 	err = check_thread_list (th, list, &uninit);
 
