@@ -90,17 +90,14 @@ __getdents64 (int fd, void *buf, size_t nbytes)
 
   while ((char *) kdp < (char *) skdp + r)
     {
-      /* This macro is used to avoid aliasing violation.  */
-#define KDP_MEMBER(src, member)			     			\
-    (__typeof__((struct kernel_dirent){0}.member) *)			\
-      memcpy (&((__typeof__((struct kernel_dirent){0}.member)){0}),	\
-	      ((char *)(src) + offsetof (struct kernel_dirent, member)),\
-	      sizeof ((struct kernel_dirent){0}.member))
-
       /* This is a conservative approximation, since some of size_diff might
 	 fit into the existing padding for alignment.  */
-      unsigned short int k_reclen = *KDP_MEMBER (kdp, d_reclen);
-      unsigned short int new_reclen = ALIGN_UP (k_reclen + size_diff,
+
+      /* Obtain the d_ino, d_off, and d_reclen from kernel filled buffer.  */
+      struct kernel_dirent kdirent;
+      memcpy (&kdirent, kdp, offsetof (struct kernel_dirent, d_name));
+
+      unsigned short int new_reclen = ALIGN_UP (kdirent.d_reclen + size_diff,
 						_Alignof (struct dirent64));
       if (nb + new_reclen > nbytes)
 	{
@@ -118,19 +115,21 @@ __getdents64 (int fd, void *buf, size_t nbytes)
 	}
       nb += new_reclen;
 
-      memcpy (((char *) dp + offsetof (struct dirent64, d_ino)),
-	      KDP_MEMBER (kdp, d_ino), sizeof ((struct dirent64){0}.d_ino));
-      memcpy (((char *) dp + offsetof (struct dirent64, d_off)),
-	      KDP_MEMBER (kdp, d_off), sizeof ((struct dirent64){0}.d_off));
-      last_offset = *KDP_MEMBER (kdp, d_off);
-      memcpy (((char *) dp + offsetof (struct dirent64, d_reclen)),
-	      &new_reclen, sizeof (new_reclen));
-      dp->d_type = *((char *) kdp + k_reclen - 1);
+      struct dirent64 d64;
+      d64.d_ino = kdirent.d_ino;
+      d64.d_off = kdirent.d_off;
+      d64.d_reclen = new_reclen;
+      d64.d_type = *((char *) kdp + kdirent.d_reclen - 1);
+      /* First copy only the header.  */
+      memcpy (dp, &d64, offsetof (struct dirent64, d_name));
+      /* And then the d_name.  */
       memcpy (dp->d_name, kdp->d_name,
-	      k_reclen - offsetof (struct kernel_dirent, d_name));
+	      kdirent.d_reclen - offsetof (struct kernel_dirent, d_name));
+
+      last_offset = kdirent.d_off;
 
       dp = (struct dirent64 *) ((char *) dp + new_reclen);
-      kdp = (struct kernel_dirent *) (((char *) kdp) + k_reclen);
+      kdp = (struct kernel_dirent *) (((char *) kdp) + kdirent.d_reclen);
     }
 
   return (char *) dp - (char *) buf;
