@@ -60,6 +60,7 @@ The following bugs are resolved with this release:
     lazy bound
   [26831] aarch64: seccomp filters may prevent mprotect(PROT_EXEC|PROT_BTI)
   [26853] aarch64: Missing unwind information in statically linked startup code
+  [26923] Assertion failure in iconv when converting invalid UCS4 (CVE-2020-29562)
   [26926] dynamic-link: aarch64: library dependencies are not bti
     protected
   [26932] libc: sh: Multiple floating point functions defined as stubs only
