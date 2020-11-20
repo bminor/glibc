@@ -288,6 +288,10 @@ libc_hidden_proto (_dl_open_hook);
 #endif
 
 #ifdef _LIBC_MTAG
+
+/* Generate a new (random) tag value for PTR and tag the memory it
+   points to upto __malloc_usable_size (PTR).  Return the newly tagged
+   pointer.  */
 static void *
 __mtag_tag_new_usable (void *ptr)
 {
@@ -297,6 +301,10 @@ __mtag_tag_new_usable (void *ptr)
   return ptr;
 }
 
+/* Generate a new (random) tag value for PTR, set the tags for the
+   memory to the new tag and initialize the memory contents to VAL.
+   In practice this function will only be called with VAL=0, but we
+   keep this parameter to maintain the same prototype as memset.  */
 static void *
 __mtag_tag_new_memset (void *ptr, int val, size_t size)
 {

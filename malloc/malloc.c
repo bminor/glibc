@@ -381,7 +381,65 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 void * __default_morecore (ptrdiff_t);
 void *(*__morecore)(ptrdiff_t) = __default_morecore;
 
+/* Memory tagging.  */
+
+/* Some systems support the concept of tagging (sometimes known as
+   coloring) memory locations on a fine grained basis.  Each memory
+   location is given a color (normally allocated randomly) and
+   pointers are also colored.  When the pointer is dereferenced, the
+   pointer's color is checked against the memory's color and if they
+   differ the access is faulted (sometimes lazily).
+
+   We use this in glibc by maintaining a single color for the malloc
+   data structures that are interleaved with the user data and then
+   assigning separate colors for each block allocation handed out.  In
+   this way simple buffer overruns will be rapidly detected.  When
+   memory is freed, the memory is recolored back to the glibc default
+   so that simple use-after-free errors can also be detected.
+
+   If memory is reallocated the buffer is recolored even if the
+   address remains the same.  This has a performance impact, but
+   guarantees that the old pointer cannot mistakenly be reused (code
+   that compares old against new will see a mismatch and will then
+   need to behave as though realloc moved the data to a new location).
+
+   Internal API for memory tagging support.
+
+   The aim is to keep the code for memory tagging support as close to
+   the normal APIs in glibc as possible, so that if tagging is not
+   enabled in the library, or is disabled at runtime then standard
+   operations can continue to be used.  Support macros are used to do
+   this:
+
+   void *TAG_NEW_MEMSET (void *ptr, int, val, size_t size)
+
+   Has the same interface as memset(), but additionally allocates a
+   new tag, colors the memory with that tag and returns a pointer that
+   is correctly colored for that location.  The non-tagging version
+   will simply call memset.
+
+   void *TAG_REGION (void *ptr, size_t size)
+
+   Color the region of memory pointed to by PTR and size SIZE with
+   the color of PTR.  Returns the original pointer.
+
+   void *TAG_NEW_USABLE (void *ptr)
+
+   Allocate a new random color and use it to color the region of
+   memory starting at PTR and of size __malloc_usable_size() with that
+   color.  Returns PTR suitably recolored for accessing the memory there.
+
+   void *TAG_AT (void *ptr)
+
+   Read the current color of the memory at the address pointed to by
+   PTR (ignoring it's current color) and return PTR recolored to that
+   color.  PTR must be valid address in all other respects.  When
+   tagging is not enabled, it simply returns the original pointer.
+*/
+
 #ifdef _LIBC_MTAG
+
+/* Default implementaions when memory tagging is supported, but disabled.  */
 static void *
 __default_tag_region (void *ptr, size_t size)
 {
@@ -412,21 +470,6 @@ static void *(*__tag_at)(void *) = __default_tag_nop;
 # define TAG_NEW_USABLE(ptr) (ptr)
 # define TAG_AT(ptr) (ptr)
 #endif
-
-/* When using tagged memory, we cannot share the end of the user block
-   with the header for the next chunk, so ensure that we allocate
-   blocks that are rounded up to the granule size.  Take care not to
-   overflow from close to MAX_SIZE_T to a small number.  */
-static inline size_t
-ROUND_UP_ALLOCATION_SIZE(size_t bytes)
-{
-#ifdef _LIBC_MTAG
-  return (bytes + ~__mtag_granule_mask) & __mtag_granule_mask;
-#else
-  return bytes;
-#endif
-}
-
 
 #include <string.h>
 
@@ -1234,10 +1277,26 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
   ---------- Size and alignment checks and conversions ----------
 */
 
-/* conversion from malloc headers to user pointers, and back */
+/* Conversion from malloc headers to user pointers, and back.  When
+   using memory tagging the user data and the malloc data structure
+   headers have distinct tags.  Converting fully from one to the other
+   involves extracting the tag at the other address and creating a
+   suitable pointer using it.  That can be quite expensive.  There are
+   many occasions, though when the pointer will not be dereferenced
+   (for example, because we only want to assert that the pointer is
+   correctly aligned).  In these cases it is more efficient not
+   to extract the tag, since the answer will be the same either way.
+   chunk2rawmem() can be used in these cases.
+ */
 
-#define chunk2mem(p) ((void*)TAG_AT (((char*)(p) + 2*SIZE_SZ)))
+/* Convert a user mem pointer to a chunk address without correcting
+   the tag.  */
 #define chunk2rawmem(p) ((void*)((char*)(p) + 2*SIZE_SZ))
+
+/* Convert between user mem pointers and chunk pointers, updating any
+   memory tags on the pointer to respect the tag value at that
+   location.  */
+#define chunk2mem(p) ((void*)TAG_AT (((char*)(p) + 2*SIZE_SZ)))
 #define mem2chunk(mem) ((mchunkptr)TAG_AT (((char*)(mem) - 2*SIZE_SZ)))
 
 /* The smallest possible chunk */
@@ -1257,7 +1316,8 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    & MALLOC_ALIGN_MASK)
 
 /* pad request bytes into a usable size -- internal version */
-
+/* Note: This must be a macro that evaluates to a compile time constant
+   if passed a literal constant.  */
 #define request2size(req)                                         \
   (((req) + SIZE_SZ + MALLOC_ALIGN_MASK < MINSIZE)  ?             \
    MINSIZE :                                                      \
@@ -1272,7 +1332,18 @@ checked_request2size (size_t req, size_t *sz) __nonnull (1)
 {
   if (__glibc_unlikely (req > PTRDIFF_MAX))
     return false;
-  req = ROUND_UP_ALLOCATION_SIZE (req);
+
+#ifdef _LIBC_MTAG
+  /* When using tagged memory, we cannot share the end of the user
+     block with the header for the next chunk, so ensure that we
+     allocate blocks that are rounded up to the granule size.  Take
+     care not to overflow from close to MAX_SIZE_T to a small
+     number.  Ideally, this would be part of request2size(), but that
+     must be a macro that produces a compile time constant if passed
+     a constant literal.  */
+  req = (req + ~__mtag_granule_mask) & __mtag_granule_mask;
+#endif
+
   *sz = request2size (req);
   return true;
 }
@@ -3391,6 +3462,7 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
       return 0;
     }
 
+
   /* Make sure alignment is power of 2.  */
   if (!powerof2 (alignment))
     {
@@ -4784,7 +4856,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
 
   check_inuse_chunk (av, newp);
   return TAG_NEW_USABLE (chunk2rawmem (newp));
-    }
+}
 
 /*
    ------------------------------ memalign ------------------------------
