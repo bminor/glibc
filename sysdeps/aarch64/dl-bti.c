@@ -51,11 +51,24 @@ enable_bti (struct link_map *map, const char *program)
   return 0;
 }
 
-/* Enable BTI for L if required.  */
+/* Enable BTI for L and its dependencies.  */
 
 void
 _dl_bti_check (struct link_map *l, const char *program)
 {
-  if (GLRO(dl_aarch64_cpu_features).bti && l->l_mach.bti)
+  if (!GLRO(dl_aarch64_cpu_features).bti)
+    return;
+
+  if (l->l_mach.bti)
     enable_bti (l, program);
+
+  unsigned int i = l->l_searchlist.r_nlist;
+  while (i-- > 0)
+    {
+      struct link_map *dep = l->l_initfini[i];
+      if (dep->l_init_called)
+	continue;
+      if (dep->l_mach.bti)
+	enable_bti (dep, program);
+    }
 }
