@@ -141,4 +141,13 @@ glibc {
       default: 512
     }
   }
+
+memtag {
+    enable {
+      type: INT_32
+      minval: 0
+      maxval: 255
+      env_alias: _MTAG_ENABLE
+    }
+  }
 }
