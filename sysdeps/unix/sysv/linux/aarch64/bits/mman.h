@@ -1,4 +1,5 @@
 /* Definitions for POSIX memory map interface.  Linux/AArch64 version.
+
    Copyright (C) 2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -24,6 +25,12 @@
    arch/arm64/include/uapi/asm/mman.h.  */
 
 #define PROT_BTI	0x10
+
+/* The following definitions basically come from the kernel headers.
+   But the kernel header is not namespace clean.  */
+
+/* Other flags.  */
+#define PROT_MTE	0x20		/* Normal Tagged mapping.  */
 
 #include <bits/mman-map-flags-generic.h>
 
