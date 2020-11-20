@@ -425,9 +425,10 @@ void *(*__morecore)(ptrdiff_t) = __default_morecore;
 
    void *TAG_NEW_USABLE (void *ptr)
 
-   Allocate a new random color and use it to color the region of
-   memory starting at PTR and of size __malloc_usable_size() with that
-   color.  Returns PTR suitably recolored for accessing the memory there.
+   Allocate a new random color and use it to color the user region of
+   a chunk; this may include data from the subsequent chunk's header
+   if tagging is sufficiently fine grained.  Returns PTR suitably
+   recolored for accessing the memory there.
 
    void *TAG_AT (void *ptr)
 
@@ -1289,15 +1290,19 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    chunk2rawmem() can be used in these cases.
  */
 
+/* The chunk header is two SIZE_SZ elements, but this is used widely, so
+   we define it here for clarity later.  */
+#define CHUNK_HDR_SZ (2 * SIZE_SZ)
+
 /* Convert a user mem pointer to a chunk address without correcting
    the tag.  */
-#define chunk2rawmem(p) ((void*)((char*)(p) + 2*SIZE_SZ))
+#define chunk2rawmem(p) ((void*)((char*)(p) + CHUNK_HDR_SZ))
 
 /* Convert between user mem pointers and chunk pointers, updating any
    memory tags on the pointer to respect the tag value at that
    location.  */
-#define chunk2mem(p) ((void*)TAG_AT (((char*)(p) + 2*SIZE_SZ)))
-#define mem2chunk(mem) ((mchunkptr)TAG_AT (((char*)(mem) - 2*SIZE_SZ)))
+#define chunk2mem(p) ((void*)TAG_AT (((char*)(p) + CHUNK_HDR_SZ)))
+#define mem2chunk(mem) ((mchunkptr)TAG_AT (((char*)(mem) - CHUNK_HDR_SZ)))
 
 /* The smallest possible chunk */
 #define MIN_CHUNK_SIZE        (offsetof(struct malloc_chunk, fd_nextsize))
@@ -1312,7 +1317,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #define aligned_OK(m)  (((unsigned long)(m) & MALLOC_ALIGN_MASK) == 0)
 
 #define misaligned_chunk(p) \
-  ((uintptr_t)(MALLOC_ALIGNMENT == 2 * SIZE_SZ ? (p) : chunk2mem (p)) \
+  ((uintptr_t)(MALLOC_ALIGNMENT == CHUNK_HDR_SZ ? (p) : chunk2mem (p)) \
    & MALLOC_ALIGN_MASK)
 
 /* pad request bytes into a usable size -- internal version */
@@ -1322,6 +1327,17 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
   (((req) + SIZE_SZ + MALLOC_ALIGN_MASK < MINSIZE)  ?             \
    MINSIZE :                                                      \
    ((req) + SIZE_SZ + MALLOC_ALIGN_MASK) & ~MALLOC_ALIGN_MASK)
+
+/* Available size of chunk.  This is the size of the real usable data
+   in the chunk, plus the chunk header.  */
+#ifdef _LIBC_MTAG
+#define CHUNK_AVAILABLE_SIZE(p) \
+  ((chunksize (p) + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))	\
+   & __mtag_granule_mask)
+#else
+#define CHUNK_AVAILABLE_SIZE(p) \
+  (chunksize (p) + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))
+#endif
 
 /* Check if REQ overflows when padded and aligned and if the resulting value
    is less than PTRDIFF_T.  Returns TRUE and the requested size or MINSIZE in
@@ -1442,7 +1458,6 @@ checked_request2size (size_t req, size_t *sz) __nonnull (1)
 /* Set size at footer (only when chunk is not in use) */
 #define set_foot(p, s)       (((mchunkptr) ((char *) (p) + (s)))->mchunk_prev_size = (s))
 
-
 #pragma GCC poison mchunk_size
 #pragma GCC poison mchunk_prev_size
 
@@ -1538,7 +1553,7 @@ typedef struct malloc_chunk *mbinptr;
 #define NBINS             128
 #define NSMALLBINS         64
 #define SMALLBIN_WIDTH    MALLOC_ALIGNMENT
-#define SMALLBIN_CORRECTION (MALLOC_ALIGNMENT > 2 * SIZE_SZ)
+#define SMALLBIN_CORRECTION (MALLOC_ALIGNMENT > CHUNK_HDR_SZ)
 #define MIN_LARGE_SIZE    ((NSMALLBINS - SMALLBIN_CORRECTION) * SMALLBIN_WIDTH)
 
 #define in_smallbin_range(sz)  \
@@ -2438,7 +2453,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
          See the front_misalign handling below, for glibc there is no
          need for further alignments unless we have have high alignment.
        */
-      if (MALLOC_ALIGNMENT == 2 * SIZE_SZ)
+      if (MALLOC_ALIGNMENT == CHUNK_HDR_SZ)
         size = ALIGN_UP (nb + SIZE_SZ, pagesize);
       else
         size = ALIGN_UP (nb + SIZE_SZ + MALLOC_ALIGN_MASK, pagesize);
@@ -2460,11 +2475,13 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
                  address argument for later munmap in free() and realloc().
                */
 
-              if (MALLOC_ALIGNMENT == 2 * SIZE_SZ)
+              if (MALLOC_ALIGNMENT == CHUNK_HDR_SZ)
                 {
-                  /* For glibc, chunk2rawmem increases the address by 2*SIZE_SZ and
-                     MALLOC_ALIGN_MASK is 2*SIZE_SZ-1.  Each mmap'ed area is page
-                     aligned and therefore definitely MALLOC_ALIGN_MASK-aligned.  */
+                  /* For glibc, chunk2rawmem increases the address by
+                     CHUNK_HDR_SZ and MALLOC_ALIGN_MASK is
+                     CHUNK_HDR_SZ-1.  Each mmap'ed area is page
+                     aligned and therefore definitely
+                     MALLOC_ALIGN_MASK-aligned.  */
                   assert (((INTERNAL_SIZE_T) chunk2rawmem (mm) & MALLOC_ALIGN_MASK) == 0);
                   front_misalign = 0;
                 }
@@ -2557,18 +2574,20 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
              become the top chunk again later.  Note that a footer is set
              up, too, although the chunk is marked in use. */
           old_size = (old_size - MINSIZE) & ~MALLOC_ALIGN_MASK;
-          set_head (chunk_at_offset (old_top, old_size + 2 * SIZE_SZ), 0 | PREV_INUSE);
+          set_head (chunk_at_offset (old_top, old_size + CHUNK_HDR_SZ),
+		    0 | PREV_INUSE);
           if (old_size >= MINSIZE)
             {
-              set_head (chunk_at_offset (old_top, old_size), (2 * SIZE_SZ) | PREV_INUSE);
-              set_foot (chunk_at_offset (old_top, old_size), (2 * SIZE_SZ));
+              set_head (chunk_at_offset (old_top, old_size),
+			CHUNK_HDR_SZ | PREV_INUSE);
+              set_foot (chunk_at_offset (old_top, old_size), CHUNK_HDR_SZ);
               set_head (old_top, old_size | PREV_INUSE | NON_MAIN_ARENA);
               _int_free (av, old_top, 1);
             }
           else
             {
-              set_head (old_top, (old_size + 2 * SIZE_SZ) | PREV_INUSE);
-              set_foot (old_top, (old_size + 2 * SIZE_SZ));
+              set_head (old_top, (old_size + CHUNK_HDR_SZ) | PREV_INUSE);
+              set_foot (old_top, (old_size + CHUNK_HDR_SZ));
             }
         }
       else if (!tried_mmap)
@@ -2770,7 +2789,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
               /* handle non-contiguous cases */
               else
                 {
-                  if (MALLOC_ALIGNMENT == 2 * SIZE_SZ)
+                  if (MALLOC_ALIGNMENT == CHUNK_HDR_SZ)
                     /* MORECORE/mmap must correctly align */
                     assert (((unsigned long) chunk2rawmem (brk) & MALLOC_ALIGN_MASK) == 0);
                   else
@@ -2820,7 +2839,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
                          multiple of MALLOC_ALIGNMENT. We know there is at least
                          enough space in old_top to do this.
                        */
-                      old_size = (old_size - 4 * SIZE_SZ) & ~MALLOC_ALIGN_MASK;
+                      old_size = (old_size - 2 * CHUNK_HDR_SZ) & ~MALLOC_ALIGN_MASK;
                       set_head (old_top, old_size | PREV_INUSE);
 
                       /*
@@ -2830,9 +2849,10 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
                          lost.
                        */
 		      set_head (chunk_at_offset (old_top, old_size),
-				(2 * SIZE_SZ) | PREV_INUSE);
-		      set_head (chunk_at_offset (old_top, old_size + 2 * SIZE_SZ),
-				(2 * SIZE_SZ) | PREV_INUSE);
+				CHUNK_HDR_SZ | PREV_INUSE);
+		      set_head (chunk_at_offset (old_top,
+						 old_size + CHUNK_HDR_SZ),
+				CHUNK_HDR_SZ | PREV_INUSE);
 
                       /* If possible, release the rest. */
                       if (old_size >= MINSIZE)
@@ -3259,7 +3279,7 @@ __libc_free (void *mem)
   p = mem2chunk (mem);
 
   /* Mark the chunk as belonging to the library again.  */
-  (void)TAG_REGION (chunk2rawmem (p), __malloc_usable_size (mem));
+  (void)TAG_REGION (chunk2rawmem (p), CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
 
   if (chunk_is_mmapped (p))                       /* release mmapped memory. */
     {
@@ -3358,7 +3378,7 @@ __libc_realloc (void *oldmem, size_t bytes)
 	    return NULL;
 	  /* Copy as many bytes as are available from the old chunk
 	     and fit into the new size.  NB: The overhead for faked
-	     mmapped chunks is only SIZE_SZ, not 2 * SIZE_SZ as for
+	     mmapped chunks is only SIZE_SZ, not CHUNK_HDR_SZ as for
 	     regular mmapped chunks.  */
 	  if (bytes > oldsize - SIZE_SZ)
 	    bytes = oldsize - SIZE_SZ;
@@ -3390,7 +3410,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       if (newmem == 0)
         return 0;              /* propagate failure */
 
-      memcpy (newmem, oldmem, oldsize - 2 * SIZE_SZ);
+      memcpy (newmem, oldmem, oldsize - CHUNK_HDR_SZ);
       munmap_chunk (oldp);
       return newmem;
     }
@@ -3629,13 +3649,13 @@ __libc_calloc (size_t n, size_t elem_size)
   if (mem == 0)
     return 0;
 
+  mchunkptr p = mem2chunk (mem);
   /* If we are using memory tagging, then we need to set the tags
      regardless of MORECORE_CLEARS, so we zero the whole block while
      doing so.  */
 #ifdef _LIBC_MTAG
-  return TAG_NEW_MEMSET (mem, 0, __malloc_usable_size (mem));
+  return TAG_NEW_MEMSET (mem, 0, CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
 #else
-  mchunkptr p = mem2chunk (mem);
   INTERNAL_SIZE_T csz = chunksize (p);
 
   /* Two optional cases in which clearing not necessary */
@@ -3927,10 +3947,10 @@ _int_malloc (mstate av, size_t bytes)
           size = chunksize (victim);
           mchunkptr next = chunk_at_offset (victim, size);
 
-          if (__glibc_unlikely (size <= 2 * SIZE_SZ)
+          if (__glibc_unlikely (size <= CHUNK_HDR_SZ)
               || __glibc_unlikely (size > av->system_mem))
             malloc_printerr ("malloc(): invalid size (unsorted)");
-          if (__glibc_unlikely (chunksize_nomask (next) < 2 * SIZE_SZ)
+          if (__glibc_unlikely (chunksize_nomask (next) < CHUNK_HDR_SZ)
               || __glibc_unlikely (chunksize_nomask (next) > av->system_mem))
             malloc_printerr ("malloc(): invalid next size (unsorted)");
           if (__glibc_unlikely ((prev_size (next) & ~(SIZE_BITS)) != size))
@@ -4429,7 +4449,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
       ) {
 
     if (__builtin_expect (chunksize_nomask (chunk_at_offset (p, size))
-			  <= 2 * SIZE_SZ, 0)
+			  <= CHUNK_HDR_SZ, 0)
 	|| __builtin_expect (chunksize (chunk_at_offset (p, size))
 			     >= av->system_mem, 0))
       {
@@ -4440,7 +4460,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	if (!have_lock)
 	  {
 	    __libc_lock_lock (av->mutex);
-	    fail = (chunksize_nomask (chunk_at_offset (p, size)) <= 2 * SIZE_SZ
+	    fail = (chunksize_nomask (chunk_at_offset (p, size)) <= CHUNK_HDR_SZ
 		    || chunksize (chunk_at_offset (p, size)) >= av->system_mem);
 	    __libc_lock_unlock (av->mutex);
 	  }
@@ -4449,7 +4469,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	  malloc_printerr ("free(): invalid next size (fast)");
       }
 
-    free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
+    free_perturb (chunk2mem(p), size - CHUNK_HDR_SZ);
 
     atomic_store_relaxed (&av->have_fastchunks, true);
     unsigned int idx = fastbin_index(size);
@@ -4518,11 +4538,11 @@ _int_free (mstate av, mchunkptr p, int have_lock)
       malloc_printerr ("double free or corruption (!prev)");
 
     nextsize = chunksize(nextchunk);
-    if (__builtin_expect (chunksize_nomask (nextchunk) <= 2 * SIZE_SZ, 0)
+    if (__builtin_expect (chunksize_nomask (nextchunk) <= CHUNK_HDR_SZ, 0)
 	|| __builtin_expect (nextsize >= av->system_mem, 0))
       malloc_printerr ("free(): invalid next size (normal)");
 
-    free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
+    free_perturb (chunk2mem(p), size - CHUNK_HDR_SZ);
 
     /* consolidate backward */
     if (!prev_inuse(p)) {
@@ -4753,7 +4773,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
   unsigned long    remainder_size;  /* its size */
 
   /* oldmem size */
-  if (__builtin_expect (chunksize_nomask (oldp) <= 2 * SIZE_SZ, 0)
+  if (__builtin_expect (chunksize_nomask (oldp) <= CHUNK_HDR_SZ, 0)
       || __builtin_expect (oldsize >= av->system_mem, 0))
     malloc_printerr ("realloc(): invalid old size");
 
@@ -4764,7 +4784,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
 
   next = chunk_at_offset (oldp, oldsize);
   INTERNAL_SIZE_T nextsize = chunksize (next);
-  if (__builtin_expect (chunksize_nomask (next) <= 2 * SIZE_SZ, 0)
+  if (__builtin_expect (chunksize_nomask (next) <= CHUNK_HDR_SZ, 0)
       || __builtin_expect (nextsize >= av->system_mem, 0))
     malloc_printerr ("realloc(): invalid next size");
 
@@ -4821,7 +4841,8 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
             {
 	      void *oldmem = chunk2mem (oldp);
 	      newmem = TAG_NEW_USABLE (newmem);
-	      memcpy (newmem, oldmem, __malloc_usable_size (oldmem));
+	      memcpy (newmem, oldmem,
+		      CHUNK_AVAILABLE_SIZE (oldp) - CHUNK_HDR_SZ);
 	      (void) TAG_REGION (chunk2rawmem (oldp), oldsize);
               _int_free (av, oldp, 1);
               check_inuse_chunk (av, newp);
@@ -4987,7 +5008,8 @@ mtrim (mstate av, size_t pad)
                                                 + sizeof (struct malloc_chunk)
                                                 + psm1) & ~psm1);
 
-                assert ((char *) chunk2rawmem (p) + 4 * SIZE_SZ <= paligned_mem);
+                assert ((char *) chunk2rawmem (p) + 2 * CHUNK_HDR_SZ
+			<= paligned_mem);
                 assert ((char *) p + size > paligned_mem);
 
                 /* This is the size we could potentially free.  */
@@ -5062,7 +5084,7 @@ musable (void *mem)
 	  if (DUMPED_MAIN_ARENA_CHUNK (p))
 	    result = chunksize (p) - SIZE_SZ;
 	  else
-	    result = chunksize (p) - 2 * SIZE_SZ;
+	    result = chunksize (p) - CHUNK_HDR_SZ;
 	}
       else if (inuse (p))
 	result = chunksize (p) - SIZE_SZ;

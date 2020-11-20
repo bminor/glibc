@@ -290,14 +290,22 @@ libc_hidden_proto (_dl_open_hook);
 #ifdef _LIBC_MTAG
 
 /* Generate a new (random) tag value for PTR and tag the memory it
-   points to upto __malloc_usable_size (PTR).  Return the newly tagged
-   pointer.  */
+   points to upto the end of the usable size for the chunk containing
+   it.  Return the newly tagged pointer.  */
 static void *
 __mtag_tag_new_usable (void *ptr)
 {
   if (ptr)
-    ptr = __libc_mtag_tag_region (__libc_mtag_new_tag (ptr),
-				  __malloc_usable_size (ptr));
+    {
+      mchunkptr cp = mem2chunk(ptr);
+      /* This likely will never happen, but we can't handle retagging
+	 chunks from the dumped main arena.  So just return the
+	 existing pointer.  */
+      if (DUMPED_MAIN_ARENA_CHUNK (cp))
+	return ptr;
+      ptr = __libc_mtag_tag_region (__libc_mtag_new_tag (ptr),
+				    CHUNK_AVAILABLE_SIZE (cp) - CHUNK_HDR_SZ);
+    }
   return ptr;
 }
 
