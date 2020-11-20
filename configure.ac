@@ -311,6 +311,16 @@ AC_ARG_ENABLE([experimental-malloc],
 	      [experimental_malloc=yes])
 AC_SUBST(experimental_malloc)
 
+AC_ARG_ENABLE([memory-tagging],
+	      AC_HELP_STRING([--enable-memory-tagging],
+			     [enable memory tagging if supported by the architecture @<:@default=no@:>@]),
+	      [memory_tagging=$enableval],
+	      [memory_tagging=no])
+if test "$memory_tagging" = yes; then
+  AC_DEFINE(_LIBC_MTAG)
+fi
+AC_SUBST(memory_tagging)
+
 AC_ARG_ENABLE([crypt],
               AC_HELP_STRING([--disable-crypt],
                              [do not build nor install the passphrase hashing library, libcrypt]),
