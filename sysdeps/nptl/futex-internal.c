@@ -25,7 +25,7 @@
 #ifndef __ASSUME_TIME64_SYSCALLS
 static int
 __futex_abstimed_wait_cancelable32 (unsigned int* futex_word,
-                                    unsigned int expected, clockid_t clockid,
+                                    unsigned int expected, int op,
                                     const struct __timespec64* abstime,
                                     int private)
 {
@@ -38,10 +38,6 @@ __futex_abstimed_wait_cancelable32 (unsigned int* futex_word,
       ts32 = valid_timespec64_to_timespec (*abstime);
       pts32 = &ts32;
     }
-
-  unsigned int clockbit = (clockid == CLOCK_REALTIME)
-	  ? FUTEX_CLOCK_REALTIME : 0;
-  int op = __lll_private_flag (FUTEX_WAIT_BITSET | clockbit, private);
 
   return INTERNAL_SYSCALL_CANCEL (futex, futex_word, op, expected,
                                   pts32, NULL /* Unused.  */,
@@ -119,7 +115,7 @@ __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
 #ifndef __ASSUME_TIME64_SYSCALLS
   if (err == -ENOSYS)
     err = __futex_abstimed_wait_cancelable32 (futex_word, expected,
-                                              clockid, abstime, private);
+                                              op, abstime, private);
 #endif
 
   switch (err)

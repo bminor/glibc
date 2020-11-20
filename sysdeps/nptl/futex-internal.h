@@ -390,9 +390,17 @@ futex_unlock_pi (unsigned int *futex_word, int private)
     }
 }
 
-/* The futex_abstimed_wait_cancelable64 has been moved to a separate file
-   to avoid problems with exhausting available registers on some architectures
-   - e.g. on m68k architecture.  */
+/* Like futex_wait, but will eventually time out (i.e., stop being blocked)
+   after the duration of time provided (i.e., ABSTIME) has passed using the
+   clock specified by CLOCKID (currently only CLOCK_REALTIME and
+   CLOCK_MONOTONIC, the ones support by lll_futex_supported_clockid). ABSTIME
+   can also equal NULL, in which case this function behaves equivalent to
+   futex_wait.
+
+   Returns the same values as futex_wait under those same conditions;
+   additionally, returns ETIMEDOUT if the timeout expired.
+
+   The call acts as a cancellation entrypoint.  */
 int
 __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
                                     unsigned int expected, clockid_t clockid,
