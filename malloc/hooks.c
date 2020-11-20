@@ -56,6 +56,12 @@ static int using_malloc_checking;
 void
 __malloc_check_init (void)
 {
+#if HAVE_TUNABLES && defined (_LIBC_MTAG)
+  /* If memory tagging is enabled, there is no need for the boundary
+     checking cookie as well.  */
+  if ((TUNABLE_GET_FULL (glibc, memtag, enable, int32_t, NULL) & 1) != 0)
+    return;
+#endif
   using_malloc_checking = 1;
   __malloc_hook = malloc_check;
   __free_hook = free_check;

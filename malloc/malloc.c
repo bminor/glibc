@@ -242,6 +242,9 @@
 /* For DIAG_PUSH/POP_NEEDS_COMMENT et al.  */
 #include <libc-diag.h>
 
+/* For memory tagging.  */
+#include <libc-mtag.h>
+
 #include <malloc/malloc-internal.h>
 
 /* For SINGLE_THREAD_P.  */
@@ -377,6 +380,52 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 #define MORECORE_FAILURE 0
 void * __default_morecore (ptrdiff_t);
 void *(*__morecore)(ptrdiff_t) = __default_morecore;
+
+#ifdef _LIBC_MTAG
+static void *
+__default_tag_region (void *ptr, size_t size)
+{
+  return ptr;
+}
+
+static void *
+__default_tag_nop (void *ptr)
+{
+  return ptr;
+}
+
+static int __mtag_mmap_flags = 0;
+static size_t __mtag_granule_mask = ~(size_t)0;
+
+static void *(*__tag_new_memset)(void *, int, size_t) = memset;
+static void *(*__tag_region)(void *, size_t) = __default_tag_region;
+static void *(*__tag_new_usable)(void *) = __default_tag_nop;
+static void *(*__tag_at)(void *) = __default_tag_nop;
+
+# define TAG_NEW_MEMSET(ptr, val, size) __tag_new_memset (ptr, val, size)
+# define TAG_REGION(ptr, size) __tag_region (ptr, size)
+# define TAG_NEW_USABLE(ptr) __tag_new_usable (ptr)
+# define TAG_AT(ptr) __tag_at (ptr)
+#else
+# define TAG_NEW_MEMSET(ptr, val, size) memset (ptr, val, size)
+# define TAG_REGION(ptr, size) (ptr)
+# define TAG_NEW_USABLE(ptr) (ptr)
+# define TAG_AT(ptr) (ptr)
+#endif
+
+/* When using tagged memory, we cannot share the end of the user block
+   with the header for the next chunk, so ensure that we allocate
+   blocks that are rounded up to the granule size.  Take care not to
+   overflow from close to MAX_SIZE_T to a small number.  */
+static inline size_t
+ROUND_UP_ALLOCATION_SIZE(size_t bytes)
+{
+#ifdef _LIBC_MTAG
+  return (bytes + ~__mtag_granule_mask) & __mtag_granule_mask;
+#else
+  return bytes;
+#endif
+}
 
 
 #include <string.h>
@@ -1187,8 +1236,9 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 /* conversion from malloc headers to user pointers, and back */
 
-#define chunk2mem(p)   ((void*)((char*)(p) + 2*SIZE_SZ))
-#define mem2chunk(mem) ((mchunkptr)((char*)(mem) - 2*SIZE_SZ))
+#define chunk2mem(p) ((void*)TAG_AT (((char*)(p) + 2*SIZE_SZ)))
+#define chunk2rawmem(p) ((void*)((char*)(p) + 2*SIZE_SZ))
+#define mem2chunk(mem) ((mchunkptr)TAG_AT (((char*)(mem) - 2*SIZE_SZ)))
 
 /* The smallest possible chunk */
 #define MIN_CHUNK_SIZE        (offsetof(struct malloc_chunk, fd_nextsize))
@@ -1222,6 +1272,7 @@ checked_request2size (size_t req, size_t *sz) __nonnull (1)
 {
   if (__glibc_unlikely (req > PTRDIFF_MAX))
     return false;
+  req = ROUND_UP_ALLOCATION_SIZE (req);
   *sz = request2size (req);
   return true;
 }
@@ -1967,7 +2018,7 @@ do_check_chunk (mstate av, mchunkptr p)
       /* chunk is page-aligned */
       assert (((prev_size (p) + sz) & (GLRO (dl_pagesize) - 1)) == 0);
       /* mem is aligned */
-      assert (aligned_OK (chunk2mem (p)));
+      assert (aligned_OK (chunk2rawmem (p)));
     }
 }
 
@@ -1991,7 +2042,7 @@ do_check_free_chunk (mstate av, mchunkptr p)
   if ((unsigned long) (sz) >= MINSIZE)
     {
       assert ((sz & MALLOC_ALIGN_MASK) == 0);
-      assert (aligned_OK (chunk2mem (p)));
+      assert (aligned_OK (chunk2rawmem (p)));
       /* ... matching footer field */
       assert (prev_size (next_chunk (p)) == sz);
       /* ... and is fully consolidated */
@@ -2070,7 +2121,7 @@ do_check_remalloced_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T s)
   assert ((sz & MALLOC_ALIGN_MASK) == 0);
   assert ((unsigned long) (sz) >= MINSIZE);
   /* ... and alignment */
-  assert (aligned_OK (chunk2mem (p)));
+  assert (aligned_OK (chunk2rawmem (p)));
   /* chunk is less than MINSIZE more than request */
   assert ((long) (sz) - (long) (s) >= 0);
   assert ((long) (sz) - (long) (s + MINSIZE) < 0);
@@ -2325,7 +2376,8 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
       /* Don't try if size wraps around 0 */
       if ((unsigned long) (size) > (unsigned long) (nb))
         {
-          mm = (char *) (MMAP (0, size, PROT_READ | PROT_WRITE, 0));
+          mm = (char *) (MMAP (0, size,
+			       MTAG_MMAP_FLAGS | PROT_READ | PROT_WRITE, 0));
 
           if (mm != MAP_FAILED)
             {
@@ -2339,14 +2391,14 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
               if (MALLOC_ALIGNMENT == 2 * SIZE_SZ)
                 {
-                  /* For glibc, chunk2mem increases the address by 2*SIZE_SZ and
+                  /* For glibc, chunk2rawmem increases the address by 2*SIZE_SZ and
                      MALLOC_ALIGN_MASK is 2*SIZE_SZ-1.  Each mmap'ed area is page
                      aligned and therefore definitely MALLOC_ALIGN_MASK-aligned.  */
-                  assert (((INTERNAL_SIZE_T) chunk2mem (mm) & MALLOC_ALIGN_MASK) == 0);
+                  assert (((INTERNAL_SIZE_T) chunk2rawmem (mm) & MALLOC_ALIGN_MASK) == 0);
                   front_misalign = 0;
                 }
               else
-                front_misalign = (INTERNAL_SIZE_T) chunk2mem (mm) & MALLOC_ALIGN_MASK;
+                front_misalign = (INTERNAL_SIZE_T) chunk2rawmem (mm) & MALLOC_ALIGN_MASK;
               if (front_misalign > 0)
                 {
                   correction = MALLOC_ALIGNMENT - front_misalign;
@@ -2518,7 +2570,9 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
           /* Don't try if size wraps around 0 */
           if ((unsigned long) (size) > (unsigned long) (nb))
             {
-              char *mbrk = (char *) (MMAP (0, size, PROT_READ | PROT_WRITE, 0));
+              char *mbrk = (char *) (MMAP (0, size,
+					   MTAG_MMAP_FLAGS | PROT_READ | PROT_WRITE,
+					   0));
 
               if (mbrk != MAP_FAILED)
                 {
@@ -2589,7 +2643,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
                   /* Guarantee alignment of first new chunk made from this space */
 
-                  front_misalign = (INTERNAL_SIZE_T) chunk2mem (brk) & MALLOC_ALIGN_MASK;
+                  front_misalign = (INTERNAL_SIZE_T) chunk2rawmem (brk) & MALLOC_ALIGN_MASK;
                   if (front_misalign > 0)
                     {
                       /*
@@ -2647,10 +2701,10 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
                 {
                   if (MALLOC_ALIGNMENT == 2 * SIZE_SZ)
                     /* MORECORE/mmap must correctly align */
-                    assert (((unsigned long) chunk2mem (brk) & MALLOC_ALIGN_MASK) == 0);
+                    assert (((unsigned long) chunk2rawmem (brk) & MALLOC_ALIGN_MASK) == 0);
                   else
                     {
-                      front_misalign = (INTERNAL_SIZE_T) chunk2mem (brk) & MALLOC_ALIGN_MASK;
+                      front_misalign = (INTERNAL_SIZE_T) chunk2rawmem (brk) & MALLOC_ALIGN_MASK;
                       if (front_misalign > 0)
                         {
                           /*
@@ -2835,7 +2889,7 @@ munmap_chunk (mchunkptr p)
   if (DUMPED_MAIN_ARENA_CHUNK (p))
     return;
 
-  uintptr_t mem = (uintptr_t) chunk2mem (p);
+  uintptr_t mem = (uintptr_t) chunk2rawmem (p);
   uintptr_t block = (uintptr_t) p - prev_size (p);
   size_t total_size = prev_size (p) + size;
   /* Unfortunately we have to do the compilers job by hand here.  Normally
@@ -2890,7 +2944,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
   p = (mchunkptr) (cp + offset);
 
-  assert (aligned_OK (chunk2mem (p)));
+  assert (aligned_OK (chunk2rawmem (p)));
 
   assert (prev_size (p) == offset);
   set_head (p, (new_size - offset) | IS_MMAPPED);
@@ -3071,14 +3125,15 @@ __libc_malloc (size_t bytes)
       && tcache
       && tcache->counts[tc_idx] > 0)
     {
-      return tcache_get (tc_idx);
+      victim = tcache_get (tc_idx);
+      return TAG_NEW_USABLE (victim);
     }
   DIAG_POP_NEEDS_COMMENT;
 #endif
 
   if (SINGLE_THREAD_P)
     {
-      victim = _int_malloc (&main_arena, bytes);
+      victim = TAG_NEW_USABLE (_int_malloc (&main_arena, bytes));
       assert (!victim || chunk_is_mmapped (mem2chunk (victim)) ||
 	      &main_arena == arena_for_chunk (mem2chunk (victim)));
       return victim;
@@ -3098,6 +3153,8 @@ __libc_malloc (size_t bytes)
 
   if (ar_ptr != NULL)
     __libc_lock_unlock (ar_ptr->mutex);
+
+  victim = TAG_NEW_USABLE (victim);
 
   assert (!victim || chunk_is_mmapped (mem2chunk (victim)) ||
           ar_ptr == arena_for_chunk (mem2chunk (victim)));
@@ -3122,7 +3179,16 @@ __libc_free (void *mem)
   if (mem == 0)                              /* free(0) has no effect */
     return;
 
+#ifdef _LIBC_MTAG
+  /* Quickly check that the freed pointer matches the tag for the memory.
+     This gives a useful double-free detection.  */
+  *(volatile char *)mem;
+#endif
+
   p = mem2chunk (mem);
+
+  /* Mark the chunk as belonging to the library again.  */
+  (void)TAG_REGION (chunk2rawmem (p), __malloc_usable_size (mem));
 
   if (chunk_is_mmapped (p))                       /* release mmapped memory. */
     {
@@ -3172,6 +3238,12 @@ __libc_realloc (void *oldmem, size_t bytes)
   /* realloc of null is supposed to be same as malloc */
   if (oldmem == 0)
     return __libc_malloc (bytes);
+
+#ifdef _LIBC_MTAG
+  /* Perform a quick check to ensure that the pointer's tag matches the
+     memory's tag.  */
+  *(volatile char*) oldmem;
+#endif
 
   /* chunk corresponding to oldmem */
   const mchunkptr oldp = mem2chunk (oldmem);
@@ -3228,7 +3300,15 @@ __libc_realloc (void *oldmem, size_t bytes)
 #if HAVE_MREMAP
       newp = mremap_chunk (oldp, nb);
       if (newp)
-        return chunk2mem (newp);
+	{
+	  void *newmem = chunk2rawmem (newp);
+	  /* Give the new block a different tag.  This helps to ensure
+	     that stale handles to the previous mapping are not
+	     reused.  There's a performance hit for both us and the
+	     caller for doing this, so we might want to
+	     reconsider.  */
+	  return TAG_NEW_USABLE (newmem);
+	}
 #endif
       /* Note the extra SIZE_SZ overhead. */
       if (oldsize - SIZE_SZ >= nb)
@@ -3311,7 +3391,6 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
       return 0;
     }
 
-
   /* Make sure alignment is power of 2.  */
   if (!powerof2 (alignment))
     {
@@ -3326,8 +3405,7 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
       p = _int_memalign (&main_arena, alignment, bytes);
       assert (!p || chunk_is_mmapped (mem2chunk (p)) ||
 	      &main_arena == arena_for_chunk (mem2chunk (p)));
-
-      return p;
+      return TAG_NEW_USABLE (p);
     }
 
   arena_get (ar_ptr, bytes + alignment + MINSIZE);
@@ -3345,7 +3423,7 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
 
   assert (!p || chunk_is_mmapped (mem2chunk (p)) ||
           ar_ptr == arena_for_chunk (mem2chunk (p)));
-  return p;
+  return TAG_NEW_USABLE (p);
 }
 /* For ISO C11.  */
 weak_alias (__libc_memalign, aligned_alloc)
@@ -3354,17 +3432,22 @@ libc_hidden_def (__libc_memalign)
 void *
 __libc_valloc (size_t bytes)
 {
+  void *p;
+
   if (__malloc_initialized < 0)
     ptmalloc_init ();
 
   void *address = RETURN_ADDRESS (0);
   size_t pagesize = GLRO (dl_pagesize);
-  return _mid_memalign (pagesize, bytes, address);
+  p = _mid_memalign (pagesize, bytes, address);
+  return TAG_NEW_USABLE (p);
 }
 
 void *
 __libc_pvalloc (size_t bytes)
 {
+  void *p;
+
   if (__malloc_initialized < 0)
     ptmalloc_init ();
 
@@ -3381,19 +3464,22 @@ __libc_pvalloc (size_t bytes)
     }
   rounded_bytes = rounded_bytes & -(pagesize - 1);
 
-  return _mid_memalign (pagesize, rounded_bytes, address);
+  p = _mid_memalign (pagesize, rounded_bytes, address);
+  return TAG_NEW_USABLE (p);
 }
 
 void *
 __libc_calloc (size_t n, size_t elem_size)
 {
   mstate av;
-  mchunkptr oldtop, p;
-  INTERNAL_SIZE_T sz, csz, oldtopsize;
+  mchunkptr oldtop;
+  INTERNAL_SIZE_T sz, oldtopsize;
   void *mem;
+#ifndef _LIBC_MTAG
   unsigned long clearsize;
   unsigned long nclears;
   INTERNAL_SIZE_T *d;
+#endif
   ptrdiff_t bytes;
 
   if (__glibc_unlikely (__builtin_mul_overflow (n, elem_size, &bytes)))
@@ -3401,6 +3487,7 @@ __libc_calloc (size_t n, size_t elem_size)
        __set_errno (ENOMEM);
        return NULL;
     }
+
   sz = bytes;
 
   void *(*hook) (size_t, const void *) =
@@ -3470,7 +3557,14 @@ __libc_calloc (size_t n, size_t elem_size)
   if (mem == 0)
     return 0;
 
-  p = mem2chunk (mem);
+  /* If we are using memory tagging, then we need to set the tags
+     regardless of MORECORE_CLEARS, so we zero the whole block while
+     doing so.  */
+#ifdef _LIBC_MTAG
+  return TAG_NEW_MEMSET (mem, 0, __malloc_usable_size (mem));
+#else
+  mchunkptr p = mem2chunk (mem);
+  INTERNAL_SIZE_T csz = chunksize (p);
 
   /* Two optional cases in which clearing not necessary */
   if (chunk_is_mmapped (p))
@@ -3480,8 +3574,6 @@ __libc_calloc (size_t n, size_t elem_size)
 
       return mem;
     }
-
-  csz = chunksize (p);
 
 #if MORECORE_CLEARS
   if (perturb_byte == 0 && (p == oldtop && csz > oldtopsize))
@@ -3525,6 +3617,7 @@ __libc_calloc (size_t n, size_t elem_size)
     }
 
   return mem;
+#endif
 }
 
 /*
@@ -4621,7 +4714,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
           av->top = chunk_at_offset (oldp, nb);
           set_head (av->top, (newsize - nb) | PREV_INUSE);
           check_inuse_chunk (av, oldp);
-          return chunk2mem (oldp);
+          return TAG_NEW_USABLE (chunk2rawmem (oldp));
         }
 
       /* Try to expand forward into next chunk;  split off remainder below */
@@ -4654,7 +4747,10 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
             }
           else
             {
-	      memcpy (newmem, chunk2mem (oldp), oldsize - SIZE_SZ);
+	      void *oldmem = chunk2mem (oldp);
+	      newmem = TAG_NEW_USABLE (newmem);
+	      memcpy (newmem, oldmem, __malloc_usable_size (oldmem));
+	      (void) TAG_REGION (chunk2rawmem (oldp), oldsize);
               _int_free (av, oldp, 1);
               check_inuse_chunk (av, newp);
               return chunk2mem (newp);
@@ -4676,6 +4772,8 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
   else   /* split remainder */
     {
       remainder = chunk_at_offset (newp, nb);
+      /* Clear any user-space tags before writing the header.  */
+      remainder = TAG_REGION (remainder, remainder_size);
       set_head_size (newp, nb | (av != &main_arena ? NON_MAIN_ARENA : 0));
       set_head (remainder, remainder_size | PREV_INUSE |
                 (av != &main_arena ? NON_MAIN_ARENA : 0));
@@ -4685,8 +4783,8 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
     }
 
   check_inuse_chunk (av, newp);
-  return chunk2mem (newp);
-}
+  return TAG_NEW_USABLE (chunk2rawmem (newp));
+    }
 
 /*
    ------------------------------ memalign ------------------------------
@@ -4763,7 +4861,7 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
       p = newp;
 
       assert (newsize >= nb &&
-              (((unsigned long) (chunk2mem (p))) % alignment) == 0);
+              (((unsigned long) (chunk2rawmem (p))) % alignment) == 0);
     }
 
   /* Also give back spare room at the end */
@@ -4817,7 +4915,7 @@ mtrim (mstate av, size_t pad)
                                                 + sizeof (struct malloc_chunk)
                                                 + psm1) & ~psm1);
 
-                assert ((char *) chunk2mem (p) + 4 * SIZE_SZ <= paligned_mem);
+                assert ((char *) chunk2rawmem (p) + 4 * SIZE_SZ <= paligned_mem);
                 assert ((char *) p + size > paligned_mem);
 
                 /* This is the size we could potentially free.  */
@@ -4880,20 +4978,30 @@ musable (void *mem)
   mchunkptr p;
   if (mem != 0)
     {
+      size_t result = 0;
+
       p = mem2chunk (mem);
 
       if (__builtin_expect (using_malloc_checking == 1, 0))
-        return malloc_check_get_size (p);
+	return malloc_check_get_size (p);
 
       if (chunk_is_mmapped (p))
 	{
 	  if (DUMPED_MAIN_ARENA_CHUNK (p))
-	    return chunksize (p) - SIZE_SZ;
+	    result = chunksize (p) - SIZE_SZ;
 	  else
-	    return chunksize (p) - 2 * SIZE_SZ;
+	    result = chunksize (p) - 2 * SIZE_SZ;
 	}
       else if (inuse (p))
-        return chunksize (p) - SIZE_SZ;
+	result = chunksize (p) - SIZE_SZ;
+
+#ifdef _LIBC_MTAG
+      /* The usable space may be reduced if memory tagging is needed,
+	 since we cannot share the user-space data with malloc's internal
+	 data structure.  */
+      result &= __mtag_granule_mask;
+#endif
+      return result;
     }
   return 0;
 }
