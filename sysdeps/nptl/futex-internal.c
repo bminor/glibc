@@ -90,15 +90,13 @@ __futex_abstimed_wait_common64 (unsigned int* futex_word,
     case -EAGAIN:
     case -EINTR:
     case -ETIMEDOUT:
+    case -EINVAL:
     case -EOVERFLOW:  /* Passed absolute timeout uses 64 bit time_t type, but
                          underlying kernel does not support 64 bit time_t futex
                          syscalls.  */
       return -err;
 
     case -EFAULT: /* Must have been caused by a glibc or application bug.  */
-    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
-		     being normalized.  Must have been caused by a glibc or
-		     application bug.  */
     case -ENOSYS: /* Must have been caused by a glibc bug.  */
     /* No other errors are documented at this time.  */
     default:
@@ -123,57 +121,4 @@ __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
 {
   return __futex_abstimed_wait_common64 (futex_word, expected, clockid,
                                          abstime, private, true);
-}
-
-int
-__futex_clocklock_wait64 (int *futex, int val, clockid_t clockid,
-                          const struct __timespec64 *abstime, int private)
-{
-  struct __timespec64 ts, *tsp = NULL;
-
-  if (abstime != NULL)
-    {
-      /* Reject invalid timeouts.  */
-      if (! valid_nanoseconds (abstime->tv_nsec))
-        return EINVAL;
-
-      /* Get the current time. This can only fail if clockid is not valid.  */
-      if (__glibc_unlikely (__clock_gettime64 (clockid, &ts) != 0))
-        return EINVAL;
-
-      /* Compute relative timeout.  */
-      ts.tv_sec = abstime->tv_sec - ts.tv_sec;
-      ts.tv_nsec = abstime->tv_nsec - ts.tv_nsec;
-      if (ts.tv_nsec < 0)
-        {
-	  ts.tv_nsec += 1000000000;
-	  --ts.tv_sec;
-        }
-
-      if (ts.tv_sec < 0)
-        return ETIMEDOUT;
-
-      tsp = &ts;
-    }
-
-  int err = INTERNAL_SYSCALL_CALL (futex_time64, futex,
-                                   __lll_private_flag (FUTEX_WAIT, private),
-                                   val, tsp);
-#ifndef __ASSUME_TIME64_SYSCALLS
-  if (err == -ENOSYS)
-    {
-      if (tsp != NULL && ! in_time_t_range (tsp->tv_sec))
-        return EOVERFLOW;
-
-      struct timespec ts32;
-      if (tsp != NULL)
-        ts32 = valid_timespec64_to_timespec (*tsp);
-
-      err = INTERNAL_SYSCALL_CALL (futex, futex,
-                                   __lll_private_flag (FUTEX_WAIT, private),
-                                   val, tsp != NULL ? &ts32 : NULL);
-    }
-#endif
-
-  return -err;
 }

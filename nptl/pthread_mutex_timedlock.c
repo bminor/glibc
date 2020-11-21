@@ -391,8 +391,8 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 		/* Delay the thread until the timeout is reached. Then return
 		   ETIMEDOUT.  */
 		do
-		  e = __futex_clocklock_wait64 (&(int){0}, 0, clockid, abstime,
-		                                private);
+		  e = __futex_abstimed_wait64 (&(unsigned int){0}, 0, clockid,
+					       abstime, private);
 		while (e != ETIMEDOUT);
 		return ETIMEDOUT;
 	      }

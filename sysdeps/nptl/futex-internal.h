@@ -413,10 +413,6 @@ __futex_abstimed_wait64 (unsigned int* futex_word, unsigned int expected,
                          const struct __timespec64* abstime,
                          int private) attribute_hidden;
 
-int
-__futex_clocklock_wait64 (int *futex, int val, clockid_t clockid,
-                          const struct __timespec64 *abstime,
-                          int private) attribute_hidden;
 
 static __always_inline int
 __futex_clocklock64 (int *futex, clockid_t clockid,
@@ -428,7 +424,8 @@ __futex_clocklock64 (int *futex, clockid_t clockid,
     {
       while (atomic_exchange_acq (futex, 2) != 0)
         {
-          err = __futex_clocklock_wait64 (futex, 2, clockid, abstime, private);
+          err = __futex_abstimed_wait64 ((unsigned int *) futex, 2, clockid,
+					 abstime, private);
           if (err == EINVAL || err == ETIMEDOUT || err == EOVERFLOW)
             break;
         }
