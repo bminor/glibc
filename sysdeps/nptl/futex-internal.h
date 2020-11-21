@@ -436,9 +436,4 @@ __futex_clocklock64 (int *futex, clockid_t clockid,
   return err;
 }
 
-int
-__futex_clock_wait_bitset64 (int *futexp, int val, clockid_t clockid,
-                             const struct __timespec64 *abstime,
-                             int private) attribute_hidden;
-
 #endif  /* futex-internal.h */

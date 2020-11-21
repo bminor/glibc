@@ -265,12 +265,13 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 	  assume_other_futex_waiters |= FUTEX_WAITERS;
 
 	  /* Block using the futex.  */
-	  int err = __futex_clock_wait_bitset64 (&mutex->__data.__lock,
+	  int err = __futex_abstimed_wait64 (
+	      (unsigned int *) &mutex->__data.__lock,
 	      oldval, clockid, abstime,
 	      PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 	  /* The futex call timed out.  */
-	  if (err == -ETIMEDOUT)
-	    return -err;
+	  if (err == ETIMEDOUT)
+	    return err;
 	  /* Reload current lock value.  */
 	  oldval = mutex->__data.__lock;
 	}
