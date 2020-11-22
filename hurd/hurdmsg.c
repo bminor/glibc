@@ -295,7 +295,7 @@ _S_msg_set_fd (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_msg_get_env_variable (mach_port_t msgport,
-			 char *variable,
+			 string_t variable, //
 			 char **data, mach_msg_type_number_t *datalen)
 {
   error_t err;
@@ -322,8 +322,8 @@ _S_msg_get_env_variable (mach_port_t msgport,
 
 kern_return_t
 _S_msg_set_env_variable (mach_port_t msgport, mach_port_t auth,
-			 char *variable,
-			 char *value,
+			 string_t variable, //
+			 string_t value, //
 			 int replace)
 {
   AUTHCHECK;
