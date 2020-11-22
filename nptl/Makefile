@@ -147,7 +147,6 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pt-longjmp pt-cleanup\
 		      cancellation \
 		      lowlevellock \
-		      lll_timedlock_wait \
 		      pt-fork pt-fcntl \
 		      $(pthread-compat-wrappers) \
 		      pt-raise pt-system \
