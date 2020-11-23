@@ -177,35 +177,6 @@ futex_wait_simple (unsigned int *futex_word, unsigned int expected,
   ignore_value (futex_wait (futex_word, expected, private));
 }
 
-
-/* Like futex_wait but is a POSIX cancellation point.  */
-static __always_inline int
-futex_wait_cancelable (unsigned int *futex_word, unsigned int expected,
-		       int private)
-{
-  int oldtype;
-  oldtype = __pthread_enable_asynccancel ();
-  int err = lll_futex_timed_wait (futex_word, expected, NULL, private);
-  __pthread_disable_asynccancel (oldtype);
-  switch (err)
-    {
-    case 0:
-    case -EAGAIN:
-    case -EINTR:
-      return -err;
-
-    case -ETIMEDOUT: /* Cannot have happened as we provided no timeout.  */
-    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
-    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
-		     being normalized.  Must have been caused by a glibc or
-		     application bug.  */
-    case -ENOSYS: /* Must have been caused by a glibc bug.  */
-    /* No other errors are documented at this time.  */
-    default:
-      futex_fatal_error ();
-    }
-}
-
 /* Like futex_wait, but will eventually time out (i.e., stop being
    blocked) after the duration of time provided (i.e., RELTIME) has
    passed.  The caller must provide a normalized RELTIME.  RELTIME can also

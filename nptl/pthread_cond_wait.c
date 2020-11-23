@@ -501,26 +501,8 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 	  cbuffer.private = private;
 	  __pthread_cleanup_push (&buffer, __condvar_cleanup_waiting, &cbuffer);
 
-	  if (abstime == NULL)
-	    {
-	      /* Block without a timeout.  */
-	      err = futex_wait_cancelable (
-		  cond->__data.__g_signals + g, 0, private);
-	    }
-	  else
-	    {
-	      /* Block, but with a timeout.
-		 Work around the fact that the kernel rejects negative timeout
-		 values despite them being valid.  */
-	      if (__glibc_unlikely (abstime->tv_sec < 0))
-	        err = ETIMEDOUT;
-	      else
-		{
-		  err = __futex_abstimed_wait_cancelable64
-                    (cond->__data.__g_signals + g, 0, clockid, abstime,
-                     private);
-		}
-	    }
+	  err = __futex_abstimed_wait_cancelable64 (
+	    cond->__data.__g_signals + g, 0, clockid, abstime, private);
 
 	  __pthread_cleanup_pop (&buffer, 0);
 
