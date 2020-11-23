@@ -152,7 +152,7 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
 	      /* Blocked in a system call.  */
 	      if (*msgid == -25
 		  /* mach_msg system call.  Examine its parameters.  */
-		  && MSG_EXAMINE (&state, msgid, &send_port, &rcv_port,
+		  && MSG_EXAMINE (&state, msgid, &rcv_port, &send_port,
 				  &option, &timeout) == 0)
 		{
 		  char *p;
