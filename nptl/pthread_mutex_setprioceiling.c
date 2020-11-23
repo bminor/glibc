@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <pthreadP.h>
 #include <atomic.h>
+#include <futex-internal.h>
 
 
 int
@@ -84,8 +85,8 @@ pthread_mutex_setprioceiling (pthread_mutex_t *mutex, int prioceiling,
 	      break;
 
 	    if (oldval != ceilval)
-	      lll_futex_wait (&mutex->__data.__lock, ceilval | 2,
-			      PTHREAD_MUTEX_PSHARED (mutex));
+	      futex_wait ((unsigned int *) &mutex->__data.__lock, ceilval | 2,
+			  PTHREAD_MUTEX_PSHARED (mutex));
 	  }
 	while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
 						    ceilval | 2, ceilval)

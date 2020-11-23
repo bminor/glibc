@@ -307,8 +307,8 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 	  assume_other_futex_waiters |= FUTEX_WAITERS;
 
 	  /* Block using the futex and reload current lock value.  */
-	  lll_futex_wait (&mutex->__data.__lock, oldval,
-			  PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
+	  futex_wait ((unsigned int *) &mutex->__data.__lock, oldval,
+		      PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 	  oldval = mutex->__data.__lock;
 	}
 
@@ -568,8 +568,9 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 		  break;
 
 		if (oldval != ceilval)
-		  lll_futex_wait (&mutex->__data.__lock, ceilval | 2,
-				  PTHREAD_MUTEX_PSHARED (mutex));
+		  futex_wait ((unsigned int * ) &mutex->__data.__lock,
+			      ceilval | 2,
+			      PTHREAD_MUTEX_PSHARED (mutex));
 	      }
 	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
 							ceilval | 2, ceilval)

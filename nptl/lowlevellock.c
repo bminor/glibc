@@ -18,7 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <lowlevellock.h>
+#include <futex-internal.h>
 #include <atomic.h>
 #include <stap-probe.h>
 
@@ -32,7 +32,7 @@ __lll_lock_wait_private (int *futex)
     {
     futex:
       LIBC_PROBE (lll_lock_wait_private, 1, futex);
-      lll_futex_wait (futex, 2, LLL_PRIVATE); /* Wait if *futex == 2.  */
+      futex_wait ((unsigned int *) futex, 2, LLL_PRIVATE); /* Wait if *futex == 2.  */
     }
 }
 
@@ -49,7 +49,7 @@ __lll_lock_wait (int *futex, int private)
     {
     futex:
       LIBC_PROBE (lll_lock_wait, 1, futex);
-      lll_futex_wait (futex, 2, private); /* Wait if *futex == 2.  */
+      futex_wait ((unsigned int *) futex, 2, private); /* Wait if *futex == 2.  */
     }
 }
 #endif

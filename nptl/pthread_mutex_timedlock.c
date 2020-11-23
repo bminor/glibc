@@ -561,9 +561,9 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 			goto failpp;
 		      }
 
-		    lll_futex_timed_wait (&mutex->__data.__lock,
-					  ceilval | 2, &rt,
-					  PTHREAD_MUTEX_PSHARED (mutex));
+		    __futex_abstimed_wait64 (
+		      (unsigned int *) &mutex->__data.__lock, clockid,
+		      ceilval | 2, &rt, PTHREAD_MUTEX_PSHARED (mutex));
 		  }
 	      }
 	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
