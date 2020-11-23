@@ -600,7 +600,7 @@ __pthread_mutex_clocklock64 (pthread_mutex_t *mutex,
 			     clockid_t clockid,
 			     const struct __timespec64 *abstime)
 {
-  if (__glibc_unlikely (!lll_futex_supported_clockid (clockid)))
+  if (__glibc_unlikely (!futex_abstimed_supported_clockid (clockid)))
     return EINVAL;
 
   LIBC_PROBE (mutex_clocklock_entry, 3, mutex, clockid, abstime);
