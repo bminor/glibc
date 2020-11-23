@@ -32,55 +32,6 @@ cleanup (void *arg)
   atomic_compare_exchange_weak_acquire (&arg, &self, NULL);
 }
 
-/* The kernel notifies a process which uses CLONE_CHILD_CLEARTID via futex
-   wake-up when the clone terminates.  The memory location contains the
-   thread ID while the clone is running and is reset to zero by the kernel
-   afterwards.  The kernel up to version 3.16.3 does not use the private futex
-   operations for futex wake-up when the clone terminates.  */
-static int
-clockwait_tid (pid_t *tidp, clockid_t clockid,
-               const struct __timespec64 *abstime)
-{
-  pid_t tid;
-  int ret;
-
-  if (! valid_nanoseconds (abstime->tv_nsec))
-    return EINVAL;
-
-  /* Repeat until thread terminated.  */
-  while ((tid = *tidp) != 0)
-    {
-      struct __timespec64 rt;
-
-      /* Get the current time. This can only fail if clockid is
-         invalid. */
-      if (__glibc_unlikely (__clock_gettime64 (clockid, &rt)))
-        return EINVAL;
-
-      /* Compute relative timeout.  */
-      rt.tv_sec = abstime->tv_sec - rt.tv_sec;
-      rt.tv_nsec = abstime->tv_nsec - rt.tv_nsec;
-      if (rt.tv_nsec < 0)
-        {
-          rt.tv_nsec += 1000000000;
-          --rt.tv_sec;
-        }
-
-      /* Already timed out?  */
-      if (rt.tv_sec < 0)
-        return ETIMEDOUT;
-
-      /* If *tidp == tid, wait until thread terminates or the wait times out.
-         The kernel up to version 3.16.3 does not use the private futex
-         operations for futex wake-up when the clone terminates.  */
-      ret = futex_timed_wait_cancel64 (tidp, tid, &rt, LLL_SHARED);
-      if (ret == -ETIMEDOUT || ret == -EOVERFLOW)
-        return -ret;
-    }
-
-  return 0;
-}
-
 int
 __pthread_clockjoin_ex (pthread_t threadid, void **thread_return,
                         clockid_t clockid,
@@ -137,15 +88,24 @@ __pthread_clockjoin_ex (pthread_t threadid, void **thread_return,
 	 un-wait-ed for again.  */
       pthread_cleanup_push (cleanup, &pd->joinid);
 
-      if (abstime != NULL)
-	result = clockwait_tid (&pd->tid, clockid, abstime);
-      else
-	{
-	  pid_t tid;
-	  /* We need acquire MO here so that we synchronize with the
-	     kernel's store to 0 when the clone terminates. (see above)  */
-	  while ((tid = atomic_load_acquire (&pd->tid)) != 0)
-	    lll_futex_wait_cancel (&pd->tid, tid, LLL_SHARED);
+      /* We need acquire MO here so that we synchronize with the
+         kernel's store to 0 when the clone terminates. (see above)  */
+      pid_t tid;
+      while ((tid = atomic_load_acquire (&pd->tid)) != 0)
+        {
+         /* The kernel notifies a process which uses CLONE_CHILD_CLEARTID via
+	    futex wake-up when the clone terminates.  The memory location
+	    contains the thread ID while the clone is running and is reset to
+	    zero by the kernel afterwards.  The kernel up to version 3.16.3
+	    does not use the private futex operations for futex wake-up when
+	    the clone terminates.  */
+	  int ret = __futex_abstimed_wait_cancelable64 (
+	    (unsigned int *) &pd->tid, tid, clockid, abstime, LLL_SHARED);
+	  if (ret == ETIMEDOUT || ret == EOVERFLOW)
+	    {
+	      result = ret;
+	      break;
+	    }
 	}
 
       pthread_cleanup_pop (0);
