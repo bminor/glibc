@@ -26,11 +26,15 @@
 #include <intr-msg.h>
 
 static char *
-describe_number (string_t description, const char *flavor, long int i)
+describe_number (char *description, const char *flavor, long int i, size_t size)
 {
   unsigned long int j;
-  char *p = flavor == NULL ? description : __stpcpy (description, flavor);
+  char *limit = description + size;
+  char *p = flavor == NULL ? description : __stpncpy (description, flavor, size);
   char *end;
+
+  if (p == limit)
+    return p;
 
   /* Handle sign.  */
   if (i < 0)
@@ -39,15 +43,24 @@ describe_number (string_t description, const char *flavor, long int i)
       *p++ = '-';
     }
 
+  if (p == limit)
+    return p;
+
   /* Allocate space for the number at the end of DESCRIPTION.  */
   for (j = i; j >= 10; j /= 10)
     p++;
   end = p + 1;
-  *end = '\0';
+
+  if (end < limit)
+    *end = '\0';
+  else
+    end = limit;
 
   do
     {
-      *p-- = '0' + i % 10;
+      if (p < limit)
+	*p = '0' + i % 10;
+      p--;
       i /= 10;
     } while (i != 0);
 
@@ -55,27 +68,27 @@ describe_number (string_t description, const char *flavor, long int i)
 }
 
 static char *
-describe_port (string_t description, mach_port_t port)
+describe_port (char *description, mach_port_t port, size_t size)
 {
   int i;
 
   if (port == MACH_PORT_NULL)
-    return __stpcpy (description, "(null)");
+    return __stpncpy (description, "(null)", size);
   if (port == MACH_PORT_DEAD)
-    return __stpcpy (description, "(dead)");
+    return __stpncpy (description, "(dead)", size);
 
   if (port == __mach_task_self ())
-    return __stpcpy (description, "task-self");
+    return __stpncpy (description, "task-self", size);
 
   for (i = 0; i < _hurd_nports; ++i)
     if (port == _hurd_ports[i].port)
-      return describe_number (description, "init#", i);
+      return describe_number (description, "init#", i, size);
 
   if (_hurd_init_dtable)
     {
       for (i = 0; i < _hurd_init_dtablesize; ++i)
 	if (port == _hurd_init_dtable[i])
-	  return describe_number (description, "fd#", i);
+	  return describe_number (description, "fd#", i, size);
     }
   if (_hurd_dtable)
     {
@@ -83,12 +96,12 @@ describe_port (string_t description, mach_port_t port)
 	if (_hurd_dtable[i] == NULL)
 	  continue;
 	else if (port == _hurd_dtable[i]->port.port)
-	  return describe_number (description, "fd#", i);
+	  return describe_number (description, "fd#", i, size);
 	else if (port == _hurd_dtable[i]->ctty.port)
-	  return describe_number (description, "bgfd#", i);
+	  return describe_number (description, "bgfd#", i, size);
     }
 
-  return describe_number (description, "port#", port);
+  return describe_number (description, "port#", port, size);
 }
 
 
@@ -106,13 +119,15 @@ kern_return_t
 _S_msg_report_wait (mach_port_t msgport, thread_t thread,
 		    string_t description, mach_msg_id_t *msgid)
 {
+  char *limit = description + 1024; /* XXX */
+  char *cur = description;
   *msgid = 0;
 
   if (thread == _hurd_msgport_thread)
     /* Cute.  */
-    strcpy (description, "msgport");
+    cur = __stpncpy (cur, "msgport", limit - cur);
   else if (&_hurd_itimer_thread && thread == _hurd_itimer_thread)
-    strcpy (description, "itimer");
+    cur = __stpncpy (cur, "itimer", limit - cur);
   else
     {
       /* Make sure this is really one of our threads.  */
@@ -129,7 +144,7 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
 	return EINVAL;
 
       if (ss->suspended != MACH_PORT_NULL)
-	strcpy (description, "sigsuspend");
+	cur = __stpncpy (cur, "sigsuspend", limit - cur);
       else
 	{
 	  /* Examine the thread's state to see if it is blocked in an RPC.  */
@@ -155,7 +170,6 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
 		  && MSG_EXAMINE (&state, msgid, &rcv_port, &send_port,
 				  &option, &timeout) == 0)
 		{
-		  char *p;
 		  if (send_port != MACH_PORT_NULL && *msgid != 0)
 		    {
 		      /* For the normal case of RPCs, we consider the
@@ -168,13 +182,14 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
 			  /* This is a Hurd interruptible RPC.
 			     Mark it by surrounding the port description
 			     string with [...] brackets.  */
-			  description[0] = '[';
-			  p = describe_port (description + 1, send_port);
-			  *p++ = ']';
-			  *p = '\0';
+			  if (cur < limit)
+			    *cur++ = '[';
+			  cur = describe_port (cur, send_port, limit - cur);
+			  if (cur < limit)
+			    *cur++ = ']';
 			}
 		      else
-			(void) describe_port (description, send_port);
+			cur = describe_port (cur, send_port, limit - cur);
 		    }
 		  else if (rcv_port != MACH_PORT_NULL)
 		    {
@@ -183,7 +198,8 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
 			 some garbage or perhaps the msgid of the last
 			 message this thread received, but it's not a
 			 helpful thing to return.  */
-		      strcpy (describe_port (description, rcv_port), ":rcv");
+		      cur = describe_port (cur, rcv_port, limit - cur);
+		      cur = __stpncpy (cur, ":rcv", limit - cur);
 		      *msgid = 0;
 		    }
 		  else if ((option & (MACH_RCV_MSG|MACH_RCV_TIMEOUT))
@@ -193,27 +209,31 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
 			 pure timeout.  Report the timeout value (counted
 			 in milliseconds); note this is the original total
 			 time, not the time remaining.  */
-		      strcpy (describe_number (description, 0, timeout), "ms");
+		      cur = describe_number (cur, 0, timeout, limit - cur);
+		      cur = __stpncpy (cur, "ms", limit - cur);
 		      *msgid = 0;
 		    }
 		  else
 		    {
-		      strcpy (description, "mach_msg");
+		      cur = __stpncpy (cur, "mach_msg", limit - cur);
 		      *msgid = 0;
 		    }
 		}
 	      else		/* Some other system call.  */
 		{
-		  (void) describe_number (description, "syscall#", *msgid);
+		  cur = describe_number (cur, "syscall#", *msgid, limit - cur);
 		  *msgid = 0;
 		}
 	    }
-	  else
-	    description[0] = '\0';
 	}
     }
 
   __mach_port_deallocate (__mach_task_self (), thread);
+
+  if (cur == limit)
+    return ENOMEM;
+
+  *cur = '\0';
   return 0;
 }
 
@@ -232,7 +252,7 @@ _S_msg_describe_ports (mach_port_t msgport, mach_port_t refport,
   while (nports-- > 0)
     {
       char this[200];
-      describe_port (this, *ports++);
+      describe_port (this, *ports++, sizeof this);
       p = __stpncpy (p, this, end - p);
       if (p == end && p[-1] != '\0')
 	return ENOMEM;
