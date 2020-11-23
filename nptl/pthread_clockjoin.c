@@ -17,12 +17,16 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <time.h>
+#include <futex-internal.h>
 #include "pthreadP.h"
 
 int
 __pthread_clockjoin_np64 (pthread_t threadid, void **thread_return,
                           clockid_t clockid, const struct __timespec64 *abstime)
 {
+  if (!futex_abstimed_supported_clockid (clockid))
+    return EINVAL;
+
   return __pthread_clockjoin_ex (threadid, thread_return,
                                  clockid, abstime, true);
 }

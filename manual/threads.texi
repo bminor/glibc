@@ -842,6 +842,8 @@ will wait forever in the same way as @code{pthread_join}.
 @safety{@prelim{}@mtsafe{}@asunsafe{@asulock{}}@acunsafe{@aculock{}}}
 Behaves like @code{pthread_timedjoin_np} except that the absolute time in
 @var{abstime} is measured against the clock specified by @var{clockid}.
+Currently, @var{clockid} must be either @code{CLOCK_MONOTONIC} or
+@code{CLOCK_REALTIME}.
 @end deftypefun
 
 @node Single-Threaded

@@ -77,7 +77,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-getpid3 \
 	 tst-join1 tst-join2 tst-join3 tst-join4 tst-join5 tst-join6 tst-join7 \
 	 tst-join8 tst-join9 tst-join10 tst-join11 tst-join12 tst-join13 \
-	 tst-join14 \
+	 tst-join14 tst-join15 \
 	 tst-key1 tst-key2 tst-key3 tst-key4 \
 	 tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \
 	 tst-locale1 tst-locale2 \
