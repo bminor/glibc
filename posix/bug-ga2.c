@@ -3,9 +3,10 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <string.h>
+#include <support/check.h>
 
-int
-main (void)
+static int
+do_test (void)
 {
   struct addrinfo hints, *res;
   int i, ret;
@@ -20,11 +21,11 @@ main (void)
       ret = getaddrinfo ("www.gnu.org", "http", &hints, &res);
 
       if (ret)
-	{
-	  printf ("%s\n", gai_strerror (ret));
-	  return 1;
-	}
+	FAIL_EXIT1 ("%s\n", gai_strerror (ret));
+
       freeaddrinfo (res);
     }
   return 0;
 }
+
+#include <support/test-driver.c>

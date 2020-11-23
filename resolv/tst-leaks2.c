@@ -21,6 +21,7 @@
 #include <mcheck.h>
 #include <netdb.h>
 #include <resolv.h>
+#include <support/check.h>
 
 static int
 do_test (void)
@@ -28,8 +29,9 @@ do_test (void)
   mtrace ();
   for (int i = 0; i < 20; ++i)
     {
-      res_init ();
-      gethostbyname ("www.gnu.org");
+      TEST_VERIFY_EXIT (res_init () == 0);
+      if (gethostbyname ("www.gnu.org") == NULL)
+	FAIL_EXIT1 ("%s\n", hstrerror (h_errno));
     }
   return 0;
 }

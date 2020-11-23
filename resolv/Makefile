@@ -32,7 +32,7 @@ routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init \
 	    resolv_context resolv_conf
 
 tests = tst-aton tst-leaks tst-inet_ntop
-xtests = tst-leaks2
+tests-container = tst-leaks2
 
 tests-internal += tst-inet_aton_exact
 
@@ -125,9 +125,8 @@ endif
 
 ifeq ($(run-built-tests),yes)
 ifneq (no,$(PERL))
-tests-special += $(objpfx)mtrace-tst-leaks.out
-xtests-special += $(objpfx)mtrace-tst-leaks2.out
-tests-special += $(objpfx)mtrace-tst-resolv-res_ninit.out
+tests-special += $(objpfx)mtrace-tst-leaks.out $(objpfx)mtrace-tst-leaks2.out \
+		 $(objpfx)mtrace-tst-resolv-res_ninit.out
 endif
 endif
 

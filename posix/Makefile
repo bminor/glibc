@@ -106,7 +106,8 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 tests-internal	:= bug-regex5 bug-regex20 bug-regex33 \
 		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3 \
 		   tst-glob_lstat_compat tst-spawn4-compat
-xtests		:= bug-ga2 tst-getaddrinfo4 tst-getaddrinfo5
+tests-container := bug-ga2
+xtests		:= tst-getaddrinfo4 tst-getaddrinfo5
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn tst-spawn2 tst-spawn3
@@ -153,8 +154,7 @@ tests-special += $(objpfx)bug-regex2-mem.out $(objpfx)bug-regex14-mem.out \
 		 $(objpfx)tst-boost-mem.out $(objpfx)tst-getconf.out \
 		 $(objpfx)bug-glob2-mem.out $(objpfx)tst-vfork3-mem.out \
 		 $(objpfx)tst-fnmatch-mem.out $(objpfx)bug-regex36-mem.out \
-		 $(objpfx)tst-glob-tilde-mem.out
-xtests-special += $(objpfx)bug-ga2-mem.out
+		 $(objpfx)tst-glob-tilde-mem.out $(objpfx)bug-ga2-mem.out
 endif
 
 include ../Rules
