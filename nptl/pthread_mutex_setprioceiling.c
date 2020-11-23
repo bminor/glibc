@@ -116,8 +116,8 @@ pthread_mutex_setprioceiling (pthread_mutex_t *mutex, int prioceiling,
 			 | (prioceiling << PTHREAD_MUTEX_PRIO_CEILING_SHIFT);
   atomic_full_barrier ();
 
-  lll_futex_wake (&mutex->__data.__lock, INT_MAX,
-		  PTHREAD_MUTEX_PSHARED (mutex));
+  futex_wake ((unsigned int *)&mutex->__data.__lock, INT_MAX,
+	      PTHREAD_MUTEX_PSHARED (mutex));
 
   return 0;
 }
