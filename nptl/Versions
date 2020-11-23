@@ -302,6 +302,7 @@ libpthread {
     __pthread_clock_gettime; __pthread_clock_settime;
     __pthread_unwind; __pthread_get_minstack;
     __pthread_barrier_init; __pthread_barrier_wait;
+    __futex_abstimed_wait64; __futex_abstimed_wait_cancelable64;
     __shm_directory;
     __libpthread_freeres;
   }
