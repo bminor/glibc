@@ -77,7 +77,7 @@ describe_port (string_t description, mach_port_t port)
 	if (port == _hurd_init_dtable[i])
 	  return describe_number (description, "fd#", i);
     }
-  else if (_hurd_dtable)
+  if (_hurd_dtable)
     {
       for (i = 0; i < _hurd_dtablesize; ++i)
 	if (_hurd_dtable[i] == NULL)
