@@ -835,30 +835,6 @@ _dl_init_paths (const char *llp, const char *source)
 }
 
 
-static void
-__attribute__ ((noreturn, noinline))
-lose (int code, int fd, const char *name, char *realname, struct link_map *l,
-      const char *msg, struct r_debug *r, Lmid_t nsid)
-{
-  /* The file might already be closed.  */
-  if (fd != -1)
-    (void) __close_nocancel (fd);
-  if (l != NULL && l->l_origin != (char *) -1l)
-    free ((char *) l->l_origin);
-  free (l);
-  free (realname);
-
-  if (r != NULL)
-    {
-      r->r_state = RT_CONSISTENT;
-      _dl_debug_state ();
-      LIBC_PROBE (map_failed, 2, nsid, r);
-    }
-
-  _dl_signal_error (code, name, NULL, msg);
-}
-
-
 /* Process PT_GNU_PROPERTY program header PH in module L after
    PT_LOAD segments are mapped.  Only one NT_GNU_PROPERTY_TYPE_0
    note is handled which contains processor specific properties.  */
@@ -927,6 +903,30 @@ _dl_process_pt_gnu_property (struct link_map *l, const ElfW(Phdr) *ph)
 	      + ELF_NOTE_NEXT_OFFSET (note->n_namesz, note->n_descsz,
 				      align));
     }
+}
+
+
+static void
+__attribute__ ((noreturn, noinline))
+lose (int code, int fd, const char *name, char *realname, struct link_map *l,
+      const char *msg, struct r_debug *r, Lmid_t nsid)
+{
+  /* The file might already be closed.  */
+  if (fd != -1)
+    (void) __close_nocancel (fd);
+  if (l != NULL && l->l_origin != (char *) -1l)
+    free ((char *) l->l_origin);
+  free (l);
+  free (realname);
+
+  if (r != NULL)
+    {
+      r->r_state = RT_CONSISTENT;
+      _dl_debug_state ();
+      LIBC_PROBE (map_failed, 2, nsid, r);
+    }
+
+  _dl_signal_error (code, name, NULL, msg);
 }
 
 
