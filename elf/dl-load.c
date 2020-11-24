@@ -914,8 +914,15 @@ lose (int code, int fd, const char *name, char *realname, struct link_map *l,
   /* The file might already be closed.  */
   if (fd != -1)
     (void) __close_nocancel (fd);
+  if (l != NULL && l->l_map_start != 0)
+    _dl_unmap_segments (l);
   if (l != NULL && l->l_origin != (char *) -1l)
     free ((char *) l->l_origin);
+  if (l != NULL && !l->l_libname->dont_free)
+    free (l->l_libname);
+  if (l != NULL && l->l_phdr_allocated)
+    free ((void *) l->l_phdr);
+
   free (l);
   free (realname);
 
@@ -1256,7 +1263,11 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
     errstring = _dl_map_segments (l, fd, header, type, loadcmds, nloadcmds,
 				  maplength, has_holes, loader);
     if (__glibc_unlikely (errstring != NULL))
-      goto call_lose;
+      {
+	/* Mappings can be in an inconsistent state: avoid unmap.  */
+	l->l_map_start = l->l_map_end = 0;
+	goto call_lose;
+      }
 
     /* Process program headers again after load segments are mapped in
        case processing requires accessing those segments.  Scan program
@@ -1294,14 +1305,6 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       || (__glibc_unlikely (l->l_flags_1 & DF_1_PIE)
 	  && __glibc_unlikely ((mode & __RTLD_OPENEXEC) == 0)))
     {
-      /* We are not supposed to load this object.  Free all resources.  */
-      _dl_unmap_segments (l);
-
-      if (!l->l_libname->dont_free)
-	free (l->l_libname);
-
-      if (l->l_phdr_allocated)
-	free ((void *) l->l_phdr);
 
       if (l->l_flags_1 & DF_1_PIE)
 	errstring
@@ -1391,6 +1394,9 @@ cannot enable executable stack as shared object requires");
     }
   /* Signal that we closed the file.  */
   fd = -1;
+
+  /* Failures before this point are handled locally via lose.
+     No more failures are allowed in this function until return.  */
 
   /* If this is ET_EXEC, we should have loaded it as lt_executable.  */
   assert (type != ET_EXEC || l->l_type == lt_executable);
