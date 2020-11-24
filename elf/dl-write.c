@@ -41,7 +41,7 @@ _dl_write (int fd, const void *buffer, size_t length)
   else
     {
       __rtld_lock_lock_recursive (GL(dl_load_lock));
-      __writev (fd, &iov, 1);
+      ret = __writev (fd, &iov, 1);
       if (ret < 0)
         ret = -errno;
       __rtld_lock_unlock_recursive (GL(dl_load_lock));
