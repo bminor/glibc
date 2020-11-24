@@ -838,30 +838,6 @@ _dl_init_paths (const char *llp, const char *source,
 }
 
 
-static void
-__attribute__ ((noreturn, noinline))
-lose (int code, int fd, const char *name, char *realname, struct link_map *l,
-      const char *msg, struct r_debug *r, Lmid_t nsid)
-{
-  /* The file might already be closed.  */
-  if (fd != -1)
-    (void) __close_nocancel (fd);
-  if (l != NULL && l->l_origin != (char *) -1l)
-    free ((char *) l->l_origin);
-  free (l);
-  free (realname);
-
-  if (r != NULL)
-    {
-      r->r_state = RT_CONSISTENT;
-      _dl_debug_state ();
-      LIBC_PROBE (map_failed, 2, nsid, r);
-    }
-
-  _dl_signal_error (code, name, NULL, msg);
-}
-
-
 /* Process PT_GNU_PROPERTY program header PH in module L after
    PT_LOAD segments are mapped.  Only one NT_GNU_PROPERTY_TYPE_0
    note is handled which contains processor specific properties.
@@ -973,11 +949,25 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       if (__glibc_unlikely (!_dl_get_file_id (fd, &id)))
 	{
 	  errstring = N_("cannot stat shared object");
-	call_lose_errno:
+	lose_errno:
 	  errval = errno;
-	call_lose:
-	  lose (errval, fd, name, realname, l, errstring,
-		make_consistent ? r : NULL, nsid);
+	lose:
+	  /* The file might already be closed.  */
+	  if (fd != -1)
+	    __close_nocancel (fd);
+	  if (l != NULL && l->l_origin != (char *) -1l)
+	    free ((char *) l->l_origin);
+	  free (l);
+	  free (realname);
+
+	  if (make_consistent && r != NULL)
+	    {
+	      r->r_state = RT_CONSISTENT;
+	      _dl_debug_state ();
+	      LIBC_PROBE (map_failed, 2, nsid, r);
+	    }
+
+	  _dl_signal_error (errval, name, NULL, errstring);
 	}
 
       /* Look again to see if the real name matched another already loaded.  */
@@ -1084,7 +1074,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
     fail_new:
 #endif
       errstring = N_("cannot create shared object descriptor");
-      goto call_lose_errno;
+      goto lose_errno;
     }
 
   /* Extract the remaining details we need from the ELF header
@@ -1103,7 +1093,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 				       header->e_phoff) != maplength)
 	{
 	  errstring = N_("cannot read file data");
-	  goto call_lose_errno;
+	  goto lose_errno;
 	}
     }
 
@@ -1149,14 +1139,14 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	  if (__glibc_unlikely ((ph->p_align & (GLRO(dl_pagesize) - 1)) != 0))
 	    {
 	      errstring = N_("ELF load command alignment not page-aligned");
-	      goto call_lose;
+	      goto lose;
 	    }
 	  if (__glibc_unlikely (((ph->p_vaddr - ph->p_offset)
 				 & (ph->p_align - 1)) != 0))
 	    {
 	      errstring
 		= N_("ELF load command address/offset not properly aligned");
-	      goto call_lose;
+	      goto lose;
 	    }
 
 	  struct loadcmd *c = &loadcmds[nloadcmds++];
@@ -1235,7 +1225,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	   another error below.  But we don't want to go through the
 	   calculations below using NLOADCMDS - 1.  */
 	errstring = N_("object file has no loadable segments");
-	goto call_lose;
+	goto lose;
       }
 
     /* dlopen of an executable is not valid because it is not possible
@@ -1248,7 +1238,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	/* This object is loaded at a fixed address.  This must never
 	   happen for objects loaded with dlopen.  */
 	errstring = N_("cannot dynamically load executable");
-	goto call_lose;
+	goto lose;
       }
 
     /* Length of the sections to be loaded.  */
@@ -1261,7 +1251,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
     errstring = _dl_map_segments (l, fd, header, type, loadcmds, nloadcmds,
 				  maplength, has_holes, loader);
     if (__glibc_unlikely (errstring != NULL))
-      goto call_lose;
+      goto lose;
   }
 
   if (l->l_ld == 0)
@@ -1269,7 +1259,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       if (__glibc_unlikely (type == ET_DYN))
 	{
 	  errstring = N_("object file has no dynamic section");
-	  goto call_lose;
+	  goto lose;
 	}
     }
   else
@@ -1298,7 +1288,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	  = N_("cannot dynamically load position-independent executable");
       else
 	errstring = N_("shared object cannot be dlopen()ed");
-      goto call_lose;
+      goto lose;
     }
 
   if (l->l_phdr == NULL)
@@ -1311,7 +1301,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       if (newp == NULL)
 	{
 	  errstring = N_("cannot allocate memory for program header");
-	  goto call_lose_errno;
+	  goto lose_errno;
 	}
 
       l->l_phdr = memcpy (newp, phdr,
@@ -1344,7 +1334,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	      if (__mprotect ((void *) p, s, PROT_READ|PROT_WRITE) < 0)
 		{
 		  errstring = N_("cannot change memory protections");
-		  goto call_lose_errno;
+		  goto lose_errno;
 		}
 	      __stack_prot |= PROT_READ|PROT_WRITE|PROT_EXEC;
 	      __mprotect ((void *) p, s, PROT_READ);
@@ -1365,7 +1355,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	{
 	  errstring = N_("\
 cannot enable executable stack as shared object requires");
-	  goto call_lose;
+	  goto lose;
 	}
     }
 
@@ -1392,7 +1382,7 @@ cannot enable executable stack as shared object requires");
   if (__glibc_unlikely (__close_nocancel (fd) != 0))
     {
       errstring = N_("cannot close file descriptor");
-      goto call_lose_errno;
+      goto lose_errno;
     }
   /* Signal that we closed the file.  */
   fd = -1;
@@ -1671,14 +1661,15 @@ open_verify (const char *name, int fd,
 	  errval = errno;
 	  errstring = (errval == 0
 		       ? N_("file too short") : N_("cannot read file data"));
-	call_lose:
+	lose:
 	  if (free_name)
 	    {
 	      char *realname = (char *) name;
 	      name = strdupa (realname);
 	      free (realname);
 	    }
-	  lose (errval, fd, name, NULL, NULL, errstring, NULL, 0);
+	  __close_nocancel (fd);
+	  _dl_signal_error (errval, name, NULL, errstring);
 	}
 
       /* See whether the ELF header is what we expect.  */
@@ -1738,13 +1729,13 @@ open_verify (const char *name, int fd,
 	    /* Otherwise we don't know what went wrong.  */
 	    errstring = N_("internal error");
 
-	  goto call_lose;
+	  goto lose;
 	}
 
       if (__glibc_unlikely (ehdr->e_version != EV_CURRENT))
 	{
 	  errstring = N_("ELF file version does not match current one");
-	  goto call_lose;
+	  goto lose;
 	}
       if (! __glibc_likely (elf_machine_matches_host (ehdr)))
 	goto close_and_out;
@@ -1752,12 +1743,12 @@ open_verify (const char *name, int fd,
 				 && ehdr->e_type != ET_EXEC))
 	{
 	  errstring = N_("only ET_DYN and ET_EXEC can be loaded");
-	  goto call_lose;
+	  goto lose;
 	}
       else if (__glibc_unlikely (ehdr->e_phentsize != sizeof (ElfW(Phdr))))
 	{
 	  errstring = N_("ELF file's phentsize not the expected size");
-	  goto call_lose;
+	  goto lose;
 	}
 
       maplength = ehdr->e_phnum * sizeof (ElfW(Phdr));
@@ -1772,7 +1763,7 @@ open_verify (const char *name, int fd,
 	    read_error:
 	      errval = errno;
 	      errstring = N_("cannot read file data");
-	      goto call_lose;
+	      goto lose;
 	    }
 	}
 
