@@ -42,6 +42,10 @@ Deprecated and removed features, and other changes affecting compatibility:
   as a compatibility symbol.  Applications should use the getrlimit or
   prlimit.
 
+* Following a change in the tzdata 2018a release upstream, the zdump
+  program is now installed in the /usr/bin subdirectory.  Previously,
+  the /usr/sbin subdirectory was used.
+
 Changes to build and runtime requirements:
 
 * On Linux, the system administrator needs to configure /dev/pts with
