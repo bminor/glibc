@@ -547,30 +547,11 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 			goto failpp;
 		      }
 
-		    struct __timespec64 rt;
-
-		    /* Get the current time.  */
-		    __clock_gettime64 (CLOCK_REALTIME, &rt);
-
-		    /* Compute relative timeout.  */
-		    rt.tv_sec = abstime->tv_sec - rt.tv_sec;
-		    rt.tv_nsec = abstime->tv_nsec - rt.tv_nsec;
-		    if (rt.tv_nsec < 0)
-		      {
-			rt.tv_nsec += 1000000000;
-			--rt.tv_sec;
-		      }
-
-		    /* Already timed out?  */
-		    if (rt.tv_sec < 0)
-		      {
-			result = ETIMEDOUT;
-			goto failpp;
-		      }
-
-		    __futex_abstimed_wait64 (
-		      (unsigned int *) &mutex->__data.__lock, clockid,
-		      ceilval | 2, &rt, PTHREAD_MUTEX_PSHARED (mutex));
+		    int e = __futex_abstimed_wait64 (
+		      (unsigned int *) &mutex->__data.__lock, ceilval | 2,
+		      clockid, abstime, PTHREAD_MUTEX_PSHARED (mutex));
+		    if (e == ETIMEDOUT)
+		      return ETIMEDOUT;
 		  }
 	      }
 	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,
