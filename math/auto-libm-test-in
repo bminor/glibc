@@ -373,6 +373,8 @@ asinh 0x1p-500
 asinh 0x1p-5000
 # the next value generates larger error bounds on x86_64 (binary32)
 asinh 0xf.96c69p-8
+# the next value generates larger error bounds on x86_64 (binary64)
+asinh 0x1.023cfeab10a13p-2
 asinh min
 asinh -min
 asinh min_subnorm
@@ -3863,6 +3865,8 @@ cbrt 0x1.bd0098p-104
 cbrt -0x3.300d34p+0
 cbrt 0x6.247f5p-4
 cbrt -0x3.48648028cb464p+0
+# the next value generates larger error bounds on x86_64 (binary64)
+cbrt -0x1.7cec1dab41272p-230
 cbrt max xfail:ibm128-libgcc
 cbrt -max xfail:ibm128-libgcc
 cbrt min
@@ -4488,6 +4492,8 @@ cosh -0x2.c5d37700c6bb03a6c24b6c9b494cp+12
 cosh -0x2.c5d37700c6bb03a6c24b6c9b494ep+12
 # the next value generates larger error bounds on x86_64 (binary32)
 cosh 0x5.8bfe6p+4
+# the next value generates larger error bounds on x86_64 (binary64)
+cosh 0x1.633c457f1e66bp+9
 
 cpow 1 0 0 0 ignore-zero-inf-sign
 cpow 2 0 10 0 ignore-zero-inf-sign
@@ -5020,6 +5026,8 @@ erfc 0x2.56af04p+0
 erfc 0x2.b7f8cb76737d2af98dead7c4c5eep+0
 erfc 0x2.dfb9b4p+0
 erfc 0x1.e33c9ep+0
+# the next value generates larger error bounds on x86_64 (binary64)
+erfc 0x1.3ffcbf39febb4p+0
 
 exp 0
 exp -0
@@ -5106,6 +5114,8 @@ exp 0xd.89746a799ac4eedp+0
 exp -0x6.58b64p-4
 # the next value generates larger error bounds on x86_64 (binary32)
 exp 0x1.fefe02p-16
+# the next value generates larger error bounds on x86_64 (binary64)
+exp -0x1.0c4af1ad4ee36p+9
 
 exp10 0
 exp10 -0
@@ -6424,6 +6434,8 @@ log 0x1.0b5c1ep+36
 log 0x2.1b17c2887e938p+928
 log 0x1.929d9cp+0
 log 0x1.770072p+0
+# the next value generates larger error bounds on x86_64 (binary64)
+log 0x1.d405118796bd8p-1
 
 log10 1
 log10 0.1
@@ -7340,6 +7352,8 @@ sinh 0x2.c5d37700c6bb03a4p+12
 sinh 0x2.c5d37700c6bb03a8p+12
 sinh 0x2.c5d37700c6bb03a6c24b6c9b494cp+12
 sinh 0x2.c5d37700c6bb03a6c24b6c9b494ep+12
+# the next value generates larger error bounds on x86_64 (binary64)
+sinh -0x1.633c62890fa14p+9
 
 sub 0 0
 sub 0 -0
@@ -8183,6 +8197,8 @@ tgamma -0x6.ce9158p+0
 tgamma -0xd.cbf53d0e7d06p+0
 # the next value generates larger error bounds on x86_64 (binary32)
 tgamma -0x3.0aa534p+0
+# the next value generates larger error bounds on x86_64 (binary64)
+tgamma -0x1.62b8c36c7180bp+4
 
 y0 0.125
 y0 0.75
