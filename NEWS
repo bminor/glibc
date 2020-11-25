@@ -17,6 +17,7 @@ The following bugs are resolved with this release:
     by the caller to the kernel
   [26639] libc: msgctl IPC_INFO and MSG_INFO return garbage
   [26853] aarch64: Missing unwind information in statically linked startup code
+  [26932] libc: sh: Multiple floating point functions defined as stubs only
 
 Version 2.32
 
