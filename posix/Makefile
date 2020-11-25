@@ -358,7 +358,9 @@ $(objpfx)tst-getconf.out: tst-getconf.sh $(objpfx)getconf
 	$(evaluate-test)
 
 $(objpfx)bug-ga2-mem.out: $(objpfx)bug-ga2.out
-	$(common-objpfx)malloc/mtrace $(objpfx)bug-ga2.mtrace > $@; \
+	{ test -r $(objpfx)bug-ga2.mtrace \
+	|| ( echo "bug-ga2.mtrace does not exist"; exit 77; ) \
+	&& $(common-objpfx)malloc/mtrace $(objpfx)bug-ga2.mtrace; } > $@; \
 	$(evaluate-test)
 
 bug-ga2-ENV = MALLOC_TRACE=$(objpfx)bug-ga2.mtrace

@@ -158,7 +158,9 @@ $(objpfx)mtrace-tst-leaks.out: $(objpfx)tst-leaks.out
 
 tst-leaks2-ENV = MALLOC_TRACE=$(objpfx)tst-leaks2.mtrace
 $(objpfx)mtrace-tst-leaks2.out: $(objpfx)tst-leaks2.out
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace > $@; \
+	{ test -r $(objpfx)tst-leaks2.mtrace \
+	|| ( echo "tst-leaks2.mtrace does not exist"; exit 77; ) \
+	&& $(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace; } > $@; \
 	$(evaluate-test)
 
 tst-resolv-res_ninit-ENV = MALLOC_TRACE=$(objpfx)tst-resolv-res_ninit.mtrace
