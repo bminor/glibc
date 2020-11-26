@@ -646,15 +646,17 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 
   data.maxdir = descriptors < 1 ? 1 : descriptors;
   data.actdir = 0;
-  data.dirstreams = (struct dir_data **) alloca (data.maxdir
-						 * sizeof (struct dir_data *));
-  memset (data.dirstreams, '\0', data.maxdir * sizeof (struct dir_data *));
-
   /* PATH_MAX is always defined when we get here.  */
   data.dirbufsize = MAX (2 * strlen (dir), PATH_MAX);
-  data.dirbuf = (char *) malloc (data.dirbufsize);
-  if (data.dirbuf == NULL)
+  data.dirstreams = malloc (data.maxdir * sizeof (struct dir_data *)
+                            + data.dirbufsize);
+  if (data.dirstreams == NULL)
     return -1;
+
+  memset (data.dirstreams, '\0', data.maxdir * sizeof (struct dir_data *));
+
+  data.dirbuf = (char *) data.dirstreams
+                + data.maxdir * sizeof (struct dir_data *);
   cp = __stpcpy (data.dirbuf, dir);
   /* Strip trailing slashes.  */
   while (cp > data.dirbuf + 1 && cp[-1] == '/')
@@ -803,7 +805,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
  out_fail:
   save_err = errno;
   __tdestroy (data.known_objects, free);
-  free (data.dirbuf);
+  free (data.dirstreams);
   __set_errno (save_err);
 
   return result;
