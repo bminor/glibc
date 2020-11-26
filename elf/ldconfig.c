@@ -100,8 +100,7 @@ static int opt_print_cache;
 int opt_verbose;
 
 /* Format to support.  */
-/* 0: only libc5/glibc2; 1: both; 2: only glibc 2.2.  */
-int opt_format = 2;
+enum opt_format opt_format = opt_format_new;
 
 /* Build cache.  */
 static int opt_build_cache = 1;
@@ -281,11 +280,11 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case 'c':
       if (strcmp (arg, "old") == 0)
-	opt_format = 0;
+	opt_format = opt_format_old;
       else if (strcmp (arg, "compat") == 0)
-	opt_format = 1;
+	opt_format = opt_format_compat;
       else if (strcmp (arg, "new") == 0)
-	opt_format = 2;
+	opt_format = opt_format_new;
       break;
     default:
       return ARGP_ERR_UNKNOWN;

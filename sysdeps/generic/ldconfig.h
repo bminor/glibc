@@ -90,7 +90,14 @@ extern char *chroot_canon (const char *chroot, const char *name);
 /* Declared in ldconfig.c.  */
 extern int opt_verbose;
 
-extern int opt_format;
+enum opt_format
+  {
+    opt_format_old = 0,	/* Use struct cache_file.  */
+    opt_format_compat = 1, /* Use both, old format followed by new.  */
+    opt_format_new = 2,	/* Use struct cache_file_new.  */
+  };
+
+extern enum opt_format opt_format;
 
 /* Prototypes for a few program-wide used functions.  */
 #include <programs/xmalloc.h>
