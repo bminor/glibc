@@ -46,6 +46,7 @@ libsupport-routines = \
   support_capture_subprocess \
   support_capture_subprocess_check \
   support_chroot \
+  support_copy_file \
   support_copy_file_range \
   support_descriptor_supports_holes \
   support_descriptors \

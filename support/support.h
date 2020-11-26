@@ -119,6 +119,11 @@ extern const char support_install_rootsbindir[];
 /* Corresponds to the install's compiled locale directory.  */
 extern const char support_complocaledir_prefix[];
 
+/* Copies the file at the path FROM to TO.  If TO does not exist, it
+   is created.  If TO is a regular file, it is truncated before
+   copying.  The file mode is copied, but the permissions are not.  */
+extern void support_copy_file (const char *from, const char *to);
+
 extern ssize_t support_copy_file_range (int, off64_t *, int, off64_t *,
 					size_t, unsigned int);
 
