@@ -191,7 +191,7 @@ __new_sem_wait_slow64 (struct new_sem *sem, clockid_t clockid,
 	     documentation.  Before Linux 2.6.22, EINTR was also returned on
 	     spurious wake-ups; we only support more recent Linux versions,
 	     so do not need to consider this here.)  */
-	  if (err == ETIMEDOUT || err == EINTR)
+	  if (err == ETIMEDOUT || err == EINTR || err == EOVERFLOW)
 	    {
 	      __set_errno (err);
 	      err = -1;

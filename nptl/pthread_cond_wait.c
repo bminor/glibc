@@ -506,7 +506,7 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 
 	  __pthread_cleanup_pop (&buffer, 0);
 
-	  if (__glibc_unlikely (err == ETIMEDOUT))
+	  if (__glibc_unlikely (err == ETIMEDOUT || err == EOVERFLOW))
 	    {
 	      __condvar_dec_grefs (cond, g, private);
 	      /* If we timed out, we effectively cancel waiting.  Note that
@@ -515,7 +515,7 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 		 __condvar_quiesce_and_switch_g1 and us trying to acquire
 		 the lock during cancellation is not possible.  */
 	      __condvar_cancel_waiting (cond, seq, g, private);
-	      result = ETIMEDOUT;
+	      result = err;
 	      goto done;
 	    }
 	  else

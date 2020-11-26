@@ -270,7 +270,7 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 	      oldval, clockid, abstime,
 	      PTHREAD_ROBUST_MUTEX_PSHARED (mutex));
 	  /* The futex call timed out.  */
-	  if (err == ETIMEDOUT)
+	  if (err == ETIMEDOUT || err == EOVERFLOW)
 	    return err;
 	  /* Reload current lock value.  */
 	  oldval = mutex->__data.__lock;
@@ -550,8 +550,8 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 		    int e = __futex_abstimed_wait64 (
 		      (unsigned int *) &mutex->__data.__lock, ceilval | 2,
 		      clockid, abstime, PTHREAD_MUTEX_PSHARED (mutex));
-		    if (e == ETIMEDOUT)
-		      return ETIMEDOUT;
+		    if (e == ETIMEDOUT || e == EOVERFLOW)
+		      return e;
 		  }
 	      }
 	    while (atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,

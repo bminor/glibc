@@ -334,7 +334,7 @@ __pthread_rwlock_rdlock_full64 (pthread_rwlock_t *rwlock, clockid_t clockid,
 		                                     private);
 		  /* We ignore EAGAIN and EINTR.  On time-outs, we can just
 		     return because we don't need to clean up anything.  */
-		  if (err == ETIMEDOUT)
+		  if (err == ETIMEDOUT || err == EOVERFLOW)
 		    return err;
 		}
 	      /* It makes sense to not break out of the outer loop here
@@ -460,7 +460,7 @@ __pthread_rwlock_rdlock_full64 (pthread_rwlock_t *rwlock, clockid_t clockid,
 	  int err = __futex_abstimed_wait64 (&rwlock->__data.__wrphase_futex,
 					     1 | PTHREAD_RWLOCK_FUTEX_USED,
 					     clockid, abstime, private);
-	  if (err == ETIMEDOUT)
+	  if (err == ETIMEDOUT || err == EOVERFLOW)
 	    {
 	      /* If we timed out, we need to unregister.  If no read phase
 		 has been installed while we waited, we can just decrement
@@ -479,7 +479,7 @@ __pthread_rwlock_rdlock_full64 (pthread_rwlock_t *rwlock, clockid_t clockid,
 		  if (atomic_compare_exchange_weak_relaxed
 		      (&rwlock->__data.__readers, &r,
 		       r - (1 << PTHREAD_RWLOCK_READER_SHIFT)))
-		    return ETIMEDOUT;
+		    return err;
 		  /* TODO Back-off.  */
 		}
 	      /* Use the acquire MO fence to mirror the steps taken in the
@@ -730,7 +730,7 @@ __pthread_rwlock_wrlock_full64 (pthread_rwlock_t *rwlock, clockid_t clockid,
 	  int err = __futex_abstimed_wait64 (&rwlock->__data.__writers_futex,
 					     1 | PTHREAD_RWLOCK_FUTEX_USED,
 					     clockid, abstime, private);
-	  if (err == ETIMEDOUT)
+	  if (err == ETIMEDOUT || err == EOVERFLOW)
 	    {
 	      if (prefer_writer)
 		{
@@ -758,7 +758,7 @@ __pthread_rwlock_wrlock_full64 (pthread_rwlock_t *rwlock, clockid_t clockid,
 		}
 	      /* We cleaned up and cannot have stolen another waiting writer's
 		 futex wake-up, so just return.  */
-	      return ETIMEDOUT;
+	      return err;
 	    }
 	  /* If we got interrupted (EINTR) or the futex word does not have the
 	     expected value (EAGAIN), retry after reloading __readers.  */
@@ -829,7 +829,7 @@ __pthread_rwlock_wrlock_full64 (pthread_rwlock_t *rwlock, clockid_t clockid,
 	  int err = __futex_abstimed_wait64 (&rwlock->__data.__wrphase_futex,
 					     PTHREAD_RWLOCK_FUTEX_USED,
 					     clockid, abstime, private);
-	  if (err == ETIMEDOUT)
+	  if (err == ETIMEDOUT || err == EOVERFLOW)
 	    {
 	      if (rwlock->__data.__flags != PTHREAD_RWLOCK_PREFER_READER_NP)
 		{
@@ -861,7 +861,7 @@ __pthread_rwlock_wrlock_full64 (pthread_rwlock_t *rwlock, clockid_t clockid,
 			      if ((wf & PTHREAD_RWLOCK_FUTEX_USED) != 0)
 				futex_wake (&rwlock->__data.__writers_futex,
 					    1, private);
-			      return ETIMEDOUT;
+			      return err;
 			    }
 			  /* TODO Back-off.  */
 			}
