@@ -879,6 +879,14 @@ for linking")
 # define libutil_hidden_data_ver(local, name)
 #endif
 
+#if IS_IN (libanl)
+# define libanl_hidden_proto(name, attrs...) hidden_proto (name, ##attrs)
+# define libanl_hidden_def(name) hidden_def (name)
+#else
+# define libanl_hidden_proto(name, attrs...)
+# define libanl_hidden_def(name)
+#endif
+
 /* Get some dirty hacks.  */
 #include <symbol-hacks.h>
 
