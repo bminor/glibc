@@ -46,11 +46,12 @@
 	do								      \
 	  {								      \
 	    if (cancel)							      \
-	      status = futex_reltimed_wait_cancelable (			      \
-		(unsigned int *) futexaddr, oldval, timeout, FUTEX_PRIVATE);  \
+	      status = __futex_abstimed_wait_cancelable64 (		      \
+		(unsigned int *) futexaddr, oldval, CLOCK_MONOTONIC, timeout, \
+		FUTEX_PRIVATE);						      \
 	    else							      \
-	      status = futex_reltimed_wait ((unsigned int *) futexaddr,	      \
-		oldval, timeout, FUTEX_PRIVATE);	      		      \
+	      status = __futex_abstimed_wait64 ((unsigned int *) futexaddr,   \
+		oldval, CLOCK_REALTIME, timeout, FUTEX_PRIVATE);	      \
 	    if (status != EAGAIN)					      \
 	      break;							      \
 									      \
@@ -62,6 +63,8 @@
 	  result = EINTR;						      \
 	else if (status == ETIMEDOUT)					      \
 	  result = EAGAIN;						      \
+	else if (status == EOVERFLOW)					      \
+	  result = EOVERFLOW;						      \
 	else								      \
 	  assert (status == 0 || status == EAGAIN);			      \
 									      \

@@ -24,10 +24,9 @@
 
 #include <gai_misc.h>
 
-
 int
-gai_suspend (const struct gaicb *const list[], int ent,
-	     const struct timespec *timeout)
+__gai_suspend_time64 (const struct gaicb *const list[], int ent,
+                      const struct __timespec64 *timeout)
 {
   struct waitlist waitlist[ent];
   struct requestlist *requestlist[ent];
@@ -63,6 +62,19 @@ gai_suspend (const struct gaicb *const list[], int ent,
 	  }
       }
 
+  struct __timespec64 ts;
+  if (timeout != NULL)
+    {
+      __clock_gettime64 (CLOCK_MONOTONIC, &ts);
+      ts.tv_sec += timeout->tv_sec;
+      ts.tv_nsec += timeout->tv_nsec;
+      if (ts.tv_nsec >= 1000000000)
+	{
+	  ts.tv_nsec -= 1000000000;
+	  ts.tv_sec++;
+	}
+    }
+
   if (none)
     {
       if (cnt < ent)
@@ -83,29 +95,11 @@ gai_suspend (const struct gaicb *const list[], int ent,
 
 #ifdef DONT_NEED_GAI_MISC_COND
       result = 0;
-      GAI_MISC_WAIT (result, cntr, timeout, 1);
+      GAI_MISC_WAIT (result, cntr, timeout == NULL ? NULL : &ts, 1);
 #else
-      if (timeout == NULL)
-	result = pthread_cond_wait (&cond, &__gai_requests_mutex);
-      else
-	{
-	  /* We have to convert the relative timeout value into an
-	     absolute time value with pthread_cond_timedwait expects.  */
-	  struct timespec now;
-	  struct timespec abstime;
-
-          __clock_gettime (CLOCK_REALTIME, &now);
-	  abstime.tv_nsec = timeout->tv_nsec + now.tv_nsec;
-	  abstime.tv_sec = timeout->tv_sec + now.tv_sec;
-	  if (abstime.tv_nsec >= 1000000000)
-	    {
-	      abstime.tv_nsec -= 1000000000;
-	      abstime.tv_sec += 1;
-	    }
-
-	  result = pthread_cond_timedwait (&cond, &__gai_requests_mutex,
-					   &abstime);
-	}
+      struct timespec ts32 = valid_timespec64_to_timespec (ts);
+      result = pthread_cond_timedwait (&cond, &__gai_requests_mutex,
+                                       timeout == NULL ? NULL : &ts32);
 #endif
 
       /* Now remove the entry in the waiting list for all requests
@@ -155,3 +149,20 @@ gai_suspend (const struct gaicb *const list[], int ent,
 
   return result;
 }
+
+#if __TIMESIZE != 64
+libanl_hidden_def (__gai_suspend_time64)
+
+int
+__gai_suspend (const struct gaicb *const list[], int ent,
+	       const struct timespec *timeout)
+{
+  struct __timespec64 ts64;
+
+  if (timeout != NULL)
+    ts64 = valid_timespec_to_timespec64 (*timeout);
+
+  return __gai_suspend_time64 (list, ent, timeout != NULL ? &ts64 : NULL);
+}
+#endif
+weak_alias (__gai_suspend, gai_suspend)

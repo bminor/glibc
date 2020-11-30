@@ -194,6 +194,13 @@ extern int ruserpass (const char *host, const char **aname,
 		      const char **apass);
 libc_hidden_proto (ruserpass)
 
+# if __TIMESIZE == 64
+#  define __gai_suspend_time64 __gai_suspend
+# else
+extern int __gai_suspend_time64 (const struct gaicb *const list[], int ent,
+                                 const struct __timespec64 *timeout);
+libanl_hidden_proto (__gai_suspend_time64)
+# endif
 
 /* The following definition has been removed from the public header
    since we don't want people to use them.  */
