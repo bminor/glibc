@@ -51,8 +51,12 @@
 
 #define IS_PHECDA(midr) (MIDR_IMPLEMENTOR(midr) == 'h'			      \
                         && MIDR_PARTNUM(midr) == 0x000)
-#define IS_ARES(midr) (MIDR_IMPLEMENTOR(midr) == 'A'			      \
-			&& MIDR_PARTNUM(midr) == 0xd0c)
+#define IS_NEOVERSE_N1(midr) (MIDR_IMPLEMENTOR(midr) == 'A'		      \
+			      && MIDR_PARTNUM(midr) == 0xd0c)
+#define IS_NEOVERSE_N2(midr) (MIDR_IMPLEMENTOR(midr) == 'A'		      \
+			      && MIDR_PARTNUM(midr) == 0xd49)
+#define IS_NEOVERSE_V1(midr) (MIDR_IMPLEMENTOR(midr) == 'A'		      \
+			      && MIDR_PARTNUM(midr) == 0xd40)
 
 #define IS_EMAG(midr) (MIDR_IMPLEMENTOR(midr) == 'P'			      \
                        && MIDR_PARTNUM(midr) == 0x000)
