@@ -46,6 +46,13 @@ Deprecated and removed features, and other changes affecting compatibility:
   program is now installed in the /usr/bin subdirectory.  Previously,
   the /usr/sbin subdirectory was used.
 
+* On s390(x), the type float_t is now derived from the macro
+  __FLT_EVAL_METHOD__ that is defined by the compiler, instead of being
+  hardcoded to double.  This does not affect the ABI of any libraries
+  that are part of the GNU C Library, but may affect the ABI of other
+  libraries that use this type in their interfaces.  The new definition
+  improves consistency with compiler behavior in many scenarios.
+
 Changes to build and runtime requirements:
 
 * On Linux, the system administrator needs to configure /dev/pts with
