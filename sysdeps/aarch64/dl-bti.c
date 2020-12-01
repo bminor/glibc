@@ -20,19 +20,22 @@
 #include <libintl.h>
 #include <ldsodefs.h>
 
-static int
+static void
 enable_bti (struct link_map *map, const char *program)
 {
+  const size_t pagesz = GLRO(dl_pagesize);
   const ElfW(Phdr) *phdr;
-  unsigned prot;
 
   for (phdr = map->l_phdr; phdr < &map->l_phdr[map->l_phnum]; ++phdr)
     if (phdr->p_type == PT_LOAD && (phdr->p_flags & PF_X))
       {
-	void *start = (void *) (phdr->p_vaddr + map->l_addr);
-	size_t len = phdr->p_memsz;
+	size_t vstart = ALIGN_DOWN (phdr->p_vaddr, pagesz);
+	size_t vend = ALIGN_UP (phdr->p_vaddr + phdr->p_filesz, pagesz);
+	off_t off = ALIGN_DOWN (phdr->p_offset, pagesz);
+	void *start = (void *) (vstart + map->l_addr);
+	size_t len = vend - vstart;
 
-	prot = PROT_EXEC | PROT_BTI;
+	unsigned prot = PROT_EXEC | PROT_BTI;
 	if (phdr->p_flags & PF_R)
 	  prot |= PROT_READ;
 	if (phdr->p_flags & PF_W)
@@ -48,7 +51,6 @@ enable_bti (struct link_map *map, const char *program)
 				N_("mprotect failed to turn on BTI"));
 	  }
       }
-  return 0;
 }
 
 /* Enable BTI for L and its dependencies.  */
