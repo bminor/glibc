@@ -298,7 +298,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-thread-affinity-sched \
 	tst-pthread-defaultattr-free \
 	tst-pthread-attr-sigmask \
-
+	tst-pthread-timedlock-lockloop
 
 tests-container =  tst-pthread-getattr
 

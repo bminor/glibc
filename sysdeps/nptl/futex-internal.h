@@ -420,19 +420,18 @@ static __always_inline int
 __futex_clocklock64 (int *futex, clockid_t clockid,
                      const struct __timespec64 *abstime, int private)
 {
-  int err = 0;
-
   if (__glibc_unlikely (atomic_compare_and_exchange_bool_acq (futex, 1, 0)))
     {
       while (atomic_exchange_acq (futex, 2) != 0)
         {
+	  int err = 0;
           err = __futex_abstimed_wait64 ((unsigned int *) futex, 2, clockid,
 					 abstime, private);
           if (err == EINVAL || err == ETIMEDOUT || err == EOVERFLOW)
-            break;
+            return err;
         }
     }
-  return err;
+  return 0;
 }
 
 #endif  /* futex-internal.h */
