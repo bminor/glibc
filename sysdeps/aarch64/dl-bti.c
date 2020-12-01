@@ -19,9 +19,17 @@
 #include <errno.h>
 #include <libintl.h>
 #include <ldsodefs.h>
+#include <sys/mman.h>
 
-static void
-enable_bti (struct link_map *map, const char *program)
+/* See elf/dl-load.h.  */
+#ifndef MAP_COPY
+# define MAP_COPY (MAP_PRIVATE | MAP_DENYWRITE)
+#endif
+
+/* Enable BTI protection for MAP.  */
+
+void
+_dl_bti_protect (struct link_map *map, int fd)
 {
   const size_t pagesz = GLRO(dl_pagesize);
   const ElfW(Phdr) *phdr;
@@ -41,17 +49,29 @@ enable_bti (struct link_map *map, const char *program)
 	if (phdr->p_flags & PF_W)
 	  prot |= PROT_WRITE;
 
-	if (__mprotect (start, len, prot) < 0)
-	  {
-	    if (program)
-	      _dl_fatal_printf ("%s: mprotect failed to turn on BTI\n",
-				map->l_name);
-	    else
-	      _dl_signal_error (errno, map->l_name, "dlopen",
-				N_("mprotect failed to turn on BTI"));
-	  }
+	if (fd == -1)
+	  /* Ignore failures for kernel mapped binaries.  */
+	  __mprotect (start, len, prot);
+	else
+	  map->l_mach.bti_fail = __mmap (start, len, prot,
+					 MAP_FIXED|MAP_COPY|MAP_FILE,
+					 fd, off) == MAP_FAILED;
       }
 }
+
+
+static void
+bti_failed (struct link_map *l, const char *program)
+{
+  if (program)
+    _dl_fatal_printf ("%s: %s: failed to turn on BTI protection\n",
+		      program, l->l_name);
+  else
+    /* Note: the errno value is not available any more.  */
+    _dl_signal_error (0, l->l_name, "dlopen",
+		      N_("failed to turn on BTI protection"));
+}
+
 
 /* Enable BTI for L and its dependencies.  */
 
@@ -61,16 +81,14 @@ _dl_bti_check (struct link_map *l, const char *program)
   if (!GLRO(dl_aarch64_cpu_features).bti)
     return;
 
-  if (l->l_mach.bti)
-    enable_bti (l, program);
+  if (l->l_mach.bti_fail)
+    bti_failed (l, program);
 
   unsigned int i = l->l_searchlist.r_nlist;
   while (i-- > 0)
     {
       struct link_map *dep = l->l_initfini[i];
-      if (dep->l_init_called)
-	continue;
-      if (dep->l_mach.bti)
-	enable_bti (dep, program);
+      if (dep->l_mach.bti_fail)
+	bti_failed (dep, program);
     }
 }
