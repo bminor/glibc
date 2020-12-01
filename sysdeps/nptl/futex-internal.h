@@ -177,67 +177,6 @@ futex_wait_simple (unsigned int *futex_word, unsigned int expected,
   ignore_value (futex_wait (futex_word, expected, private));
 }
 
-/* Like futex_wait, but will eventually time out (i.e., stop being
-   blocked) after the duration of time provided (i.e., RELTIME) has
-   passed.  The caller must provide a normalized RELTIME.  RELTIME can also
-   equal NULL, in which case this function behaves equivalent to futex_wait.
-
-   Returns the same values as futex_wait under those same conditions;
-   additionally, returns ETIMEDOUT if the timeout expired.
-   */
-static __always_inline int
-futex_reltimed_wait (unsigned int* futex_word, unsigned int expected,
-		     const struct timespec* reltime, int private)
-{
-  int err = lll_futex_timed_wait (futex_word, expected, reltime, private);
-  switch (err)
-    {
-    case 0:
-    case -EAGAIN:
-    case -EINTR:
-    case -ETIMEDOUT:
-      return -err;
-
-    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
-    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
-		     being normalized.  Must have been caused by a glibc or
-		     application bug.  */
-    case -ENOSYS: /* Must have been caused by a glibc bug.  */
-    /* No other errors are documented at this time.  */
-    default:
-      futex_fatal_error ();
-    }
-}
-
-/* Like futex_reltimed_wait but is a POSIX cancellation point.  */
-static __always_inline int
-futex_reltimed_wait_cancelable (unsigned int* futex_word,
-				unsigned int expected,
-			        const struct timespec* reltime, int private)
-{
-  int oldtype;
-  oldtype = LIBC_CANCEL_ASYNC ();
-  int err = lll_futex_timed_wait (futex_word, expected, reltime, private);
-  LIBC_CANCEL_RESET (oldtype);
-  switch (err)
-    {
-    case 0:
-    case -EAGAIN:
-    case -EINTR:
-    case -ETIMEDOUT:
-      return -err;
-
-    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
-    case -EINVAL: /* Either due to wrong alignment or due to the timeout not
-		     being normalized.  Must have been caused by a glibc or
-		     application bug.  */
-    case -ENOSYS: /* Must have been caused by a glibc bug.  */
-    /* No other errors are documented at this time.  */
-    default:
-      futex_fatal_error ();
-    }
-}
-
 /* Check whether the specified clockid is supported by
    futex_abstimed_wait and futex_abstimed_wait_cancelable.  */
 static __always_inline int
