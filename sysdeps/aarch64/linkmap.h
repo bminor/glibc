@@ -22,5 +22,5 @@ struct link_map_machine
 {
   ElfW(Addr) plt;	  /* Address of .plt */
   void *tlsdesc_table;	  /* Address of TLS descriptor hash table.  */
-  bool bti;		  /* Branch Target Identification is enabled.  */
+  bool bti_fail;	  /* Failed to enable Branch Target Identification.  */
 };
