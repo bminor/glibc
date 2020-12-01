@@ -94,28 +94,6 @@
 # define lll_futex_supported_clockid(clockid)			\
   ((clockid) == CLOCK_REALTIME || (clockid) == CLOCK_MONOTONIC)
 
-/* The kernel currently only supports CLOCK_MONOTONIC or
-   CLOCK_REALTIME timeouts for FUTEX_WAIT_BITSET.  We could attempt to
-   convert others here but currently do not.  */
-# define lll_futex_clock_wait_bitset(futexp, val, clockid, timeout, private) \
-  ({									\
-    long int __ret;							\
-    if (lll_futex_supported_clockid (clockid))                          \
-      {                                                                 \
-        const unsigned int clockbit =                                   \
-          (clockid == CLOCK_REALTIME) ? FUTEX_CLOCK_REALTIME : 0;       \
-        const int op =                                                  \
-          __lll_private_flag (FUTEX_WAIT_BITSET | clockbit, private);   \
-                                                                        \
-        __ret = lll_futex_syscall (6, futexp, op, val,                  \
-                                   timeout, NULL /* Unused.  */,	\
-                                   FUTEX_BITSET_MATCH_ANY);		\
-      }                                                                 \
-    else                                                                \
-      __ret = -EINVAL;							\
-    __ret;								\
-  })
-
 /* Wake up up to NR waiters on FUTEXP.  */
 # define lll_futex_wake(futexp, nr, private)                             \
   lll_futex_syscall (4, futexp,                                         \
@@ -138,31 +116,10 @@
 		     FUTEX_OP_CLEAR_WAKE_IF_GT_ONE)
 
 
-/* Priority Inheritance support.  */
-#define lll_futex_timed_lock_pi(futexp, abstime, private) 		\
-  lll_futex_syscall (4, futexp,						\
-		     __lll_private_flag (FUTEX_LOCK_PI, private),	\
-		     0, abstime)
-
 #define lll_futex_timed_unlock_pi(futexp, private) 			\
   lll_futex_syscall (4, futexp,						\
 		     __lll_private_flag (FUTEX_UNLOCK_PI, private),	\
 		     0, 0)
-
-/* Like lll_futex_wait (FUTEXP, VAL, PRIVATE) but with the expectation
-   that lll_futex_cmp_requeue_pi (FUTEXP, _, _, MUTEX, _, PRIVATE) will
-   be used to do the wakeup.  Confers priority-inheritance behavior on
-   the waiter.  */
-# define lll_futex_wait_requeue_pi(futexp, val, mutex, private) \
-  lll_futex_timed_wait_requeue_pi (futexp, val, NULL, 0, mutex, private)
-
-/* Like lll_futex_wait_requeue_pi, but with a timeout.  */
-# define lll_futex_timed_wait_requeue_pi(futexp, val, timeout, clockbit, \
-                                        mutex, private)                 \
-  lll_futex_syscall (5, futexp,                                         \
-		     __lll_private_flag (FUTEX_WAIT_REQUEUE_PI          \
-					 | (clockbit), private),        \
-		     val, timeout, mutex)
 
 /* Like lll_futex_requeue, but pairs with lll_futex_wait_requeue_pi
    and inherits priority from the waiter.  */
