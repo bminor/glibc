@@ -30,7 +30,6 @@
 
 /* Get information about the file FD in BUF.  */
 int
-attribute_compat_text_section
 __fxstat (int vers, int fd, struct stat *buf)
 {
   switch (vers)
@@ -62,7 +61,6 @@ __fxstat (int vers, int fd, struct stat *buf)
     }
 }
 
-compat_symbol (libc, __fxstat, __fxstat, GLIBC_2_0);
 # endif /* SHLIB_COMPAT  */
 
 #endif /* XSTAT_IS_XSTAT64  */

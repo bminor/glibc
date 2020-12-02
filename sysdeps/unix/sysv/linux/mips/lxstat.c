@@ -21,13 +21,9 @@
 #include <kernel_stat.h>
 #include <sysdep.h>
 #include <xstatconv.h>
-#include <shlib-compat.h>
-
-#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
 
 /* Get information about the file NAME in BUF.  */
 int
-attribute_compat_text_section
 __lxstat (int vers, const char *name, struct stat *buf)
 {
   switch (vers)
@@ -43,7 +39,3 @@ __lxstat (int vers, const char *name, struct stat *buf)
       }
     }
 }
-
-compat_symbol (libc, __lxstat, __lxstat, GLIBC_2_0);
-
-#endif

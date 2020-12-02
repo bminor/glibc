@@ -31,7 +31,6 @@
 /* Get information about the file NAME in BUF.  */
 
 int
-attribute_compat_text_section
 ___lxstat64 (int vers, const char *name, struct stat64 *buf)
 {
 #if XSTAT_IS_XSTAT64
@@ -85,17 +84,15 @@ ___lxstat64 (int vers, const char *name, struct stat64 *buf)
 }
 
 #if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_2)
-compat_symbol (libc, ___lxstat64, __lxstat64, GLIBC_2_2);
+versioned_symbol (libc, ___lxstat64, __lxstat64, GLIBC_2_2);
 strong_alias (___lxstat64, __old__lxstat64)
 compat_symbol (libc, __old__lxstat64, __lxstat64, GLIBC_2_1);
 #else
 strong_alias (___lxstat64, __lxstat64);
-compat_symbol (libc, ___lxstat64, __lxstat64, GLIBC_2_2);
 #endif
 
 #if XSTAT_IS_XSTAT64
-strong_alias (___lxstat64,__lxstat_compat)
-compat_symbol (libc, __lxstat_compat, __lxstat, GLIBC_2_2);
+strong_alias (___lxstat64,__lxstat)
 #endif
 
 #endif /* SHLIB_COMPAT  */

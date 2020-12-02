@@ -30,7 +30,6 @@
 
 /* Get information about the file FD in BUF.  */
 int
-attribute_compat_text_section
 __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 {
 #if STAT_IS_KERNEL_STAT
@@ -51,7 +50,6 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 #endif
 }
 
-compat_symbol (libc, __fxstatat, __fxstatat, GLIBC_2_4);
 # endif /* SHLIB_COMPAT  */
 
 #endif /* XSTAT_IS_XSTAT64  */

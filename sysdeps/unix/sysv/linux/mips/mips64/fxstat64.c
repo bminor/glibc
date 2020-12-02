@@ -20,14 +20,10 @@
 #include <kernel_stat.h>
 #include <sysdep.h>
 #include <xstatconv.h>
-#include <shlib-compat.h>
-
-#if SHLIB_COMPAT(libc, GLIBC_2_2, GLIBC_2_33)
 
 /* Get information about the file FD in BUF.  */
 
 int
-attribute_compat_text_section
 __fxstat64 (int vers, int fd, struct stat64 *buf)
 {
   struct kernel_stat kbuf;
@@ -35,7 +31,3 @@ __fxstat64 (int vers, int fd, struct stat64 *buf)
   return r ?: __xstat64_conv (vers, &kbuf, buf);
 
 }
-
-compat_symbol (libc, __fxstat64, __fxstat64, GLIBC_2_2);
-
-#endif
