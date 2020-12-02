@@ -307,7 +307,7 @@ for linking")
 
 /* Resource freeing functions from libc.so go in this section.  */
 #define __libc_freeres_fn_section \
-  __attribute__ ((section ("__libc_freeres_fn")))
+  __attribute__ ((__used__, section ("__libc_freeres_fn")))
 
 /* Resource freeing functions for libc.so.  */
 #define libc_freeres_fn(name) \
