@@ -318,7 +318,7 @@ typedef struct
 				/* reserved 184 */
 #define EM_AVR32	185	/* Amtel 32-bit microprocessor */
 #define EM_STM8		186	/* STMicroelectronics STM8 */
-#define EM_TILE64	187	/* Tileta TILE64 */
+#define EM_TILE64	187	/* Tilera TILE64 */
 #define EM_TILEPRO	188	/* Tilera TILEPro */
 #define EM_MICROBLAZE	189	/* Xilinx MicroBlaze */
 #define EM_CUDA		190	/* NVIDIA CUDA */
