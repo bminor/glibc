@@ -97,6 +97,8 @@ int __pthread_attr_getstack (const pthread_attr_t *, void **, size_t *);
 void __pthread_testcancel (void);
 
 #if IS_IN (libpthread)
+hidden_proto (__pthread_create)
+hidden_proto (__pthread_detach)
 hidden_proto (__pthread_key_create)
 hidden_proto (__pthread_getspecific)
 hidden_proto (__pthread_setspecific)
