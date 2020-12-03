@@ -40,6 +40,11 @@ check_supports (int supports, int usable, const char *supports_name,
 #define CHECK_SUPPORTS(str, name) \
   check_supports (__builtin_cpu_supports (#str), \
 		  CPU_FEATURE_USABLE (name), \
+		  #str, "CPU_FEATURE_USABLE (" #name ")");
+
+#define CHECK_CPU_SUPPORTS(str, name) \
+  check_supports (__builtin_cpu_supports (#str), \
+		  HAS_CPU_FEATURE (name), \
 		  #str, "HAS_CPU_FEATURE (" #name ")");
 
 static int
@@ -118,7 +123,7 @@ do_test (int argc, char **argv)
   fails += CHECK_SUPPORTS (fma4, FMA4);
 #endif
 #if __GNUC_PREREQ (11, 0)
-  fails += CHECK_SUPPORTS (fsgsbase, FSGSBASE);
+  fails += CHECK_CPU_SUPPORTS (fsgsbase, FSGSBASE);
   fails += CHECK_SUPPORTS (fxsave, FXSR);
 #endif
 #if __GNUC_PREREQ (8, 0)
@@ -126,9 +131,9 @@ do_test (int argc, char **argv)
 #endif
 #if __GNUC_PREREQ (11, 0)
   fails += CHECK_SUPPORTS (hle, HLE);
-  fails += CHECK_SUPPORTS (ibt, IBT);
+  fails += CHECK_CPU_SUPPORTS (ibt, IBT);
   fails += CHECK_SUPPORTS (lahf_lm, LAHF64_SAHF64);
-  fails += CHECK_SUPPORTS (lm, LM);
+  fails += CHECK_CPU_SUPPORTS (lm, LM);
   fails += CHECK_SUPPORTS (lwp, LWP);
   fails += CHECK_SUPPORTS (lzcnt, LZCNT);
 #endif
@@ -150,7 +155,7 @@ do_test (int argc, char **argv)
   fails += CHECK_SUPPORTS (rtm, RTM);
   fails += CHECK_SUPPORTS (serialize, SERIALIZE);
   fails += CHECK_SUPPORTS (sha, SHA);
-  fails += CHECK_SUPPORTS (shstk, SHSTK);
+  fails += CHECK_CPU_SUPPORTS (shstk, SHSTK);
 #endif
   fails += CHECK_SUPPORTS (sse, SSE);
   fails += CHECK_SUPPORTS (sse2, SSE2);
@@ -180,7 +185,7 @@ do_test (int argc, char **argv)
   fails += CHECK_SUPPORTS (xsave, XSAVE);
   fails += CHECK_SUPPORTS (xsavec, XSAVEC);
   fails += CHECK_SUPPORTS (xsaveopt, XSAVEOPT);
-  fails += CHECK_SUPPORTS (xsaves, XSAVES);
+  fails += CHECK_CPU_SUPPORTS (xsaves, XSAVES);
 #endif
 
   printf ("%d differences between __builtin_cpu_supports and glibc code.\n",
