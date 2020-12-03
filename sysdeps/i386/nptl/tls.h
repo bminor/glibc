@@ -234,11 +234,16 @@ tls_fill_user_desc (union user_desc_init *desc,
    assignments like
 	pthread_descr self = thread_self();
    do not get optimized away.  */
-# define THREAD_SELF \
+# if __GNUC_PREREQ (6, 0)
+#  define THREAD_SELF \
+  (*(struct pthread *__seg_gs *) offsetof (struct pthread, header.self))
+# else
+#  define THREAD_SELF \
   ({ struct pthread *__self;						      \
      asm ("movl %%gs:%c1,%0" : "=r" (__self)				      \
 	  : "i" (offsetof (struct pthread, header.self)));		      \
      __self;})
+# endif
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF \

@@ -180,11 +180,16 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
    assignments like
 	pthread_descr self = thread_self();
    do not get optimized away.  */
-# define THREAD_SELF \
+# if __GNUC_PREREQ (6, 0)
+#  define THREAD_SELF \
+  (*(struct pthread *__seg_fs *) offsetof (struct pthread, header.self))
+# else
+#  define THREAD_SELF \
   ({ struct pthread *__self;						      \
      asm ("mov %%fs:%c1,%0" : "=r" (__self)				      \
 	  : "i" (offsetof (struct pthread, header.self)));	 	      \
      __self;})
+# endif
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF_INCLUDE  <sys/reg.h> /* For the FS constant.  */
