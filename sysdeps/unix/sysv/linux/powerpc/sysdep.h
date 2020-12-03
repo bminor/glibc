@@ -64,38 +64,83 @@
 #define INTERNAL_VSYSCALL_CALL(funcptr, nr, args...)			\
   INTERNAL_VSYSCALL_CALL_TYPE(funcptr, long int, nr, args)
 
+#define DECLARE_REGS				\
+  register long int r0  __asm__ ("r0");		\
+  register long int r3  __asm__ ("r3");		\
+  register long int r4  __asm__ ("r4");		\
+  register long int r5  __asm__ ("r5");		\
+  register long int r6  __asm__ ("r6");		\
+  register long int r7  __asm__ ("r7");		\
+  register long int r8  __asm__ ("r8");
 
-#undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL_NCS(name, nr, args...) \
-  ({									\
-    register long int r0  __asm__ ("r0");				\
-    register long int r3  __asm__ ("r3");				\
-    register long int r4  __asm__ ("r4");				\
-    register long int r5  __asm__ ("r5");				\
-    register long int r6  __asm__ ("r6");				\
-    register long int r7  __asm__ ("r7");				\
-    register long int r8  __asm__ ("r8");				\
-    LOADARGS_##nr (name, ##args);					\
-    __asm__ __volatile__						\
-      ("sc\n\t"								\
-       "mfcr  %0\n\t"							\
-       "0:"								\
-       : "=&r" (r0),							\
-         "=&r" (r3), "=&r" (r4), "=&r" (r5),				\
-         "=&r" (r6), "=&r" (r7), "=&r" (r8)				\
-       : ASM_INPUT_##nr							\
-       : "r9", "r10", "r11", "r12",					\
-         "cr0", "ctr", "memory");					\
-    r0 & (1 << 28) ? -r3 : r3;						\
+#define SYSCALL_SCV(nr)				\
+  ({						\
+    __asm__ __volatile__			\
+      ("scv 0\n\t"				\
+       "0:"					\
+       : "=&r" (r0),				\
+	 "=&r" (r3), "=&r" (r4), "=&r" (r5),	\
+	 "=&r" (r6), "=&r" (r7), "=&r" (r8)	\
+       : ASM_INPUT_##nr			\
+       : "r9", "r10", "r11", "r12",		\
+	 "lr", "ctr", "memory");		\
+    r3;					\
   })
-#define INTERNAL_SYSCALL(name, nr, args...)				\
-  INTERNAL_SYSCALL_NCS (__NR_##name, nr, args)
+
+#define SYSCALL_SC(nr)				\
+  ({						\
+    __asm__ __volatile__			\
+      ("sc\n\t"				\
+       "mfcr %0\n\t"				\
+       "0:"					\
+       : "=&r" (r0),				\
+	 "=&r" (r3), "=&r" (r4), "=&r" (r5),	\
+	 "=&r" (r6), "=&r" (r7), "=&r" (r8)	\
+       : ASM_INPUT_##nr			\
+       : "r9", "r10", "r11", "r12",		\
+	 "cr0", "ctr", "memory");		\
+    r0 & (1 << 28) ? -r3 : r3;			\
+  })
+
+/* This will only be non-empty for 64-bit systems, see below.  */
+#define TRY_SYSCALL_SCV(nr)
 
 #if defined(__PPC64__) || defined(__powerpc64__)
 # define SYSCALL_ARG_SIZE 8
+
+/* For the static case, unlike the dynamic loader, there is no compile-time way
+   to check if we are inside startup code.  So we need to check if the thread
+   pointer has already been setup before trying to access the TLS.  */
+# ifndef SHARED
+#  define CHECK_THREAD_POINTER (__thread_register != 0)
+# else
+#  define CHECK_THREAD_POINTER (1)
+# endif
+
+/* When inside the dynamic loader, the thread pointer may not have been
+   initialized yet, so don't check for scv support in that case.  */
+# if !IS_IN(rtld)
+#  undef TRY_SYSCALL_SCV
+#  define TRY_SYSCALL_SCV(nr)						\
+  CHECK_THREAD_POINTER && THREAD_GET_HWCAP() & PPC_FEATURE2_SCV ?	\
+      SYSCALL_SCV(nr) :
+# endif
+
 #else
 # define SYSCALL_ARG_SIZE 4
 #endif
+
+# define INTERNAL_SYSCALL_NCS(name, nr, args...)	\
+  ({							\
+    DECLARE_REGS;					\
+    LOADARGS_##nr (name, ##args);			\
+    TRY_SYSCALL_SCV(nr)					\
+    SYSCALL_SC(nr);					\
+  })
+
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, nr, args...)				\
+  INTERNAL_SYSCALL_NCS (__NR_##name, nr, args)
 
 #define LOADARGS_0(name, dummy) \
 	r0 = name

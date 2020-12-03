@@ -28,9 +28,11 @@
 ENTRY (__vfork)
 	CALL_MCOUNT 0
 
-	DO_CALL (SYS_ify (vfork))
+	li r0,SYS_ify (vfork)
+	DO_CALL_SC
 
-	PSEUDO_RET
+	RET_SC
+	TAIL_CALL_SYSCALL_ERROR
 
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)

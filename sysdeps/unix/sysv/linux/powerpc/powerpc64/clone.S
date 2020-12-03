@@ -68,7 +68,8 @@ ENTRY (__clone)
 	cfi_endproc
 
 	/* Do the call.  */
-	DO_CALL(SYS_ify(clone))
+	li 	r0,SYS_ify(clone)
+	DO_CALL_SC
 
 	/* Check for child process.  */
 	cmpdi	cr1,r3,0
@@ -82,7 +83,8 @@ ENTRY (__clone)
 	bctrl
 	ld	r2,FRAME_TOC_SAVE(r1)
 
-	DO_CALL(SYS_ify(exit))
+	li	r0,(SYS_ify(exit))
+	DO_CALL_SC
 	/* We won't ever get here but provide a nop so that the linker
 	   will insert a toc adjusting stub if necessary.  */
 	nop
@@ -104,7 +106,8 @@ L(parent):
 	cfi_restore(r30)
 	cfi_restore(r31)
 
-	PSEUDO_RET
+	RET_SC
+	TAIL_CALL_SYSCALL_ERROR
 
 END (__clone)
 
