@@ -173,6 +173,8 @@ libpthread {
 
     __cthread_detach;
     __cthread_fork;
+    __pthread_detach;
+    __pthread_create;
     __cthread_keycreate;
     __cthread_getspecific;
     __cthread_setspecific;

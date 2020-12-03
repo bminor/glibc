@@ -140,7 +140,7 @@ libc {
 
   HURD_CTHREADS_0.3 {
     # weak refs to libthreads functions that libc calls iff libthreads in use
-    __cthread_fork; __cthread_detach;
+    __cthread_fork; __pthread_create; __cthread_detach; __pthread_detach;
     __pthread_getattr_np; __pthread_attr_getstack;
 
     # cthreads functions with stubs in libc
