@@ -3563,10 +3563,9 @@ The symbols in this section are defined in the header file
 @node Access Modes
 @subsection File Access Modes
 
-The file access modes allow a file descriptor to be used for reading,
-writing, or both.  (On @gnuhurdsystems{}, they can also allow none of these,
-and allow execution of the file as a program.)  The access modes are chosen
-when the file is opened, and never change.
+The file access mode allows a file descriptor to be used for reading,
+writing, both, or neither.  The access mode is determined when the file
+is opened, and never change.
 
 @deftypevr Macro int O_RDONLY
 @standards{POSIX.1, fcntl.h}
@@ -3583,7 +3582,43 @@ Open the file for write access.
 Open the file for both reading and writing.
 @end deftypevr
 
-On @gnuhurdsystems{} (and not on other systems), @code{O_RDONLY} and
+@deftypevr Macro int O_PATH
+@standards{Linux, fcntl.h}
+Obtain a file descriptor for the file, but do not open the file for
+reading or writing.  Permission checks for the file itself are skipped
+when the file is opened (but permission to access the directory that
+contains it is still needed), and permissions are checked when the
+descriptor is used later on.
+
+For example, such descriptors can be used with the @code{fexecve}
+function (@pxref{Executing a File}).
+
+This access mode is specific to Linux.  On @gnuhurdsystems{}, it is
+possible to use @code{O_EXEC} explicitly, or specify no access modes
+at all (see below).
+@end deftypevr
+
+The portable file access modes @code{O_RDONLY}, @code{O_WRONLY}, and
+@code{O_RDWR} may not correspond to individual bits.  To determine the
+file access mode with @code{fcntl}, you must extract the access mode
+bits from the retrieved file status flags, using the @code{O_ACCMODE}
+mask.
+
+@deftypevr Macro int O_ACCMODE
+@standards{POSIX.1, fcntl.h}
+
+This macro is a mask that can be bitwise-ANDed with the file status flag
+value to recover the file access mode, assuming that a standard file
+access mode is in use.
+@end deftypevr
+
+If a non-standard file access mode is used (such as @code{O_PATH} or
+@code{O_EXEC}), masking with @code{O_ACCMODE} may give incorrect
+results.  These non-standard access modes are identified by individual
+bits and have to be checked directly (without masking with
+@code{O_ACCMODE} first).
+
+On @gnuhurdsystems{} (but not on other systems), @code{O_RDONLY} and
 @code{O_WRONLY} are independent bits that can be bitwise-ORed together,
 and it is valid for either bit to be set or clear.  This means that
 @code{O_RDWR} is the same as @code{O_RDONLY|O_WRONLY}.  A file access
@@ -3591,40 +3626,21 @@ mode of zero is permissible; it allows no operations that do input or
 output to the file, but does allow other operations such as
 @code{fchmod}.  On @gnuhurdsystems{}, since ``read-only'' or ``write-only''
 is a misnomer, @file{fcntl.h} defines additional names for the file
-access modes.  These names are preferred when writing GNU-specific code.
-But most programs will want to be portable to other POSIX.1 systems and
-should use the POSIX.1 names above instead.
+access modes.
 
 @deftypevr Macro int O_READ
 @standards{GNU, fcntl.h (optional)}
-Open the file for reading.  Same as @code{O_RDONLY}; only defined on GNU.
+Open the file for reading.  Same as @code{O_RDONLY}; only defined on GNU/Hurd.
 @end deftypevr
 
 @deftypevr Macro int O_WRITE
 @standards{GNU, fcntl.h (optional)}
-Open the file for writing.  Same as @code{O_WRONLY}; only defined on GNU.
+Open the file for writing.  Same as @code{O_WRONLY}; only defined on GNU/Hurd.
 @end deftypevr
 
 @deftypevr Macro int O_EXEC
 @standards{GNU, fcntl.h (optional)}
-Open the file for executing.  Only defined on GNU.
-@end deftypevr
-
-To determine the file access mode with @code{fcntl}, you must extract
-the access mode bits from the retrieved file status flags.  On
-@gnuhurdsystems{},
-you can just test the @code{O_READ} and @code{O_WRITE} bits in
-the flags word.  But in other POSIX.1 systems, reading and writing
-access modes are not stored as distinct bit flags.  The portable way to
-extract the file access mode bits is with @code{O_ACCMODE}.
-
-@deftypevr Macro int O_ACCMODE
-@standards{POSIX.1, fcntl.h}
-This macro stands for a mask that can be bitwise-ANDed with the file
-status flag value to produce a value representing the file access mode.
-The mode will be @code{O_RDONLY}, @code{O_WRONLY}, or @code{O_RDWR}.
-(On @gnuhurdsystems{} it could also be zero, and it never includes the
-@code{O_EXEC} bit.)
+Open the file for executing.  Only defined on GNU/Hurd.
 @end deftypevr
 
 @node Open-time Flags
