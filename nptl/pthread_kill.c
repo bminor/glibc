@@ -18,6 +18,7 @@
 
 #include <unistd.h>
 #include <pthreadP.h>
+#include <shlib-compat.h>
 
 int
 __pthread_kill (pthread_t threadid, int signo)
@@ -43,4 +44,8 @@ __pthread_kill (pthread_t threadid, int signo)
   return (INTERNAL_SYSCALL_ERROR_P (val)
 	  ? INTERNAL_SYSCALL_ERRNO (val) : 0);
 }
-strong_alias (__pthread_kill, pthread_kill)
+versioned_symbol (libc, __pthread_kill, pthread_kill, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libc, __pthread_kill, pthread_kill, GLIBC_2_0);
+#endif

@@ -77,7 +77,6 @@ GLIBC_2.18 pthread_getspecific F
 GLIBC_2.18 pthread_join F
 GLIBC_2.18 pthread_key_create F
 GLIBC_2.18 pthread_key_delete F
-GLIBC_2.18 pthread_kill F
 GLIBC_2.18 pthread_kill_other_threads_np F
 GLIBC_2.18 pthread_mutex_consistent F
 GLIBC_2.18 pthread_mutex_consistent_np F

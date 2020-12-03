@@ -91,7 +91,6 @@ GLIBC_2.32 pthread_getspecific F
 GLIBC_2.32 pthread_join F
 GLIBC_2.32 pthread_key_create F
 GLIBC_2.32 pthread_key_delete F
-GLIBC_2.32 pthread_kill F
 GLIBC_2.32 pthread_kill_other_threads_np F
 GLIBC_2.32 pthread_mutex_clocklock F
 GLIBC_2.32 pthread_mutex_consistent F

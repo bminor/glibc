@@ -23,6 +23,7 @@ libc {
     pthread_equal;
     pthread_exit;
     pthread_getschedparam;
+    pthread_kill;
     pthread_mutex_destroy;
     pthread_mutex_init;
     pthread_mutex_lock;
@@ -69,6 +70,9 @@ libc {
     pthread_getaffinity_np;
     pthread_getattr_np;
     pthread_sigmask;
+  }
+  GLIBC_2.34 {
+    pthread_kill;
   }
   GLIBC_PRIVATE {
     __futex_abstimed_wait64;
@@ -141,7 +145,6 @@ libpthread {
     pthread_join;
     pthread_key_create;
     pthread_key_delete;
-    pthread_kill;
     pthread_kill_other_threads_np;
     pthread_mutex_destroy;
     pthread_mutex_init;
