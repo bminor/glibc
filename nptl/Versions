@@ -161,7 +161,6 @@ libpthread {
     pthread_setspecific;
     pthread_sigmask;
     pthread_testcancel;
-    raise;
     sem_destroy;
     sem_getvalue;
     sem_init;

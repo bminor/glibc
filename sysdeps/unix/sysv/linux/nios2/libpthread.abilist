@@ -138,7 +138,6 @@ GLIBC_2.21 pthread_testcancel F
 GLIBC_2.21 pthread_timedjoin_np F
 GLIBC_2.21 pthread_tryjoin_np F
 GLIBC_2.21 pthread_yield F
-GLIBC_2.21 raise F
 GLIBC_2.21 sem_close F
 GLIBC_2.21 sem_destroy F
 GLIBC_2.21 sem_getvalue F

@@ -155,7 +155,6 @@ GLIBC_2.33 pthread_testcancel F
 GLIBC_2.33 pthread_timedjoin_np F
 GLIBC_2.33 pthread_tryjoin_np F
 GLIBC_2.33 pthread_yield F
-GLIBC_2.33 raise F
 GLIBC_2.33 sem_clockwait F
 GLIBC_2.33 sem_close F
 GLIBC_2.33 sem_destroy F

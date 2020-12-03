@@ -103,7 +103,6 @@ libpthread-routines = \
   pt-cleanup \
   pt-interp \
   pt-longjmp \
-  pt-raise \
   pthread_attr_getaffinity \
   pthread_attr_getguardsize \
   pthread_attr_getstack \

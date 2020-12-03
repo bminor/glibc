@@ -136,7 +136,6 @@ GLIBC_2.3 pthread_spin_trylock F
 GLIBC_2.3 pthread_spin_unlock F
 GLIBC_2.3 pthread_testcancel F
 GLIBC_2.3 pthread_yield F
-GLIBC_2.3 raise F
 GLIBC_2.3 sem_close F
 GLIBC_2.3 sem_destroy F
 GLIBC_2.3 sem_getvalue F
