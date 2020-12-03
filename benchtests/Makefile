@@ -25,10 +25,10 @@ bench-math := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2 \
 	      modf pow rint sin sincos sinh sqrt tan tanh fmin fmax fminf \
 	      fmaxf powf trunc truncf roundeven roundevenf expf exp2f logf \
 	      log2f sincosf sinf cosf isnan isinf isfinite hypot logb logbf \
-	      exp10f
+	      exp10f ilogb ilogbf
 
 ifneq (,$(filter yes,$(float128-fcts) $(float128-alias-fcts)))
-bench-math += expf128 powf128 sinf128
+bench-math += expf128 powf128 sinf128 ilogbf128
 endif
 
 bench-pthread := pthread_once thread_create pthread-locks
