@@ -16,23 +16,31 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <signal.h>
+#include <unistd.h>
 #include <pthreadP.h>
-
 
 int
 __pthread_kill (pthread_t threadid, int signo)
 {
-  struct pthread *pd = (struct pthread *) threadid;
+  /* Disallow sending the signal we use for cancellation, timers,
+     for the setxid implementation.  */
+  if (__is_internal_signal (signo))
+    return EINVAL;
 
-  /* Make sure the descriptor is valid.  */
-  if (DEBUGGING_P && INVALID_TD_P (pd))
+  /* Force load of pd->tid into local variable or register.  Otherwise
+     if a thread exits between ESRCH test and tgkill, we might return
+     EINVAL, because pd->tid would be cleared by the kernel.  */
+  struct pthread *pd = (struct pthread *) threadid;
+  pid_t tid = atomic_forced_read (pd->tid);
+  if (__glibc_unlikely (tid <= 0))
     /* Not a valid thread handle.  */
     return ESRCH;
 
-  return ENOSYS;
+  /* We have a special syscall to do the work.  */
+  pid_t pid = __getpid ();
+
+  int val = INTERNAL_SYSCALL_CALL (tgkill, pid, tid, signo);
+  return (INTERNAL_SYSCALL_ERROR_P (val)
+	  ? INTERNAL_SYSCALL_ERRNO (val) : 0);
 }
 strong_alias (__pthread_kill, pthread_kill)
-
-stub_warning (pthread_kill)
