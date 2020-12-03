@@ -85,6 +85,7 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_USABLE (cpu_features, WAITPKG);
   CPU_FEATURE_SET_USABLE (cpu_features, GFNI);
   CPU_FEATURE_SET_USABLE (cpu_features, RDPID);
+  CPU_FEATURE_SET_USABLE (cpu_features, RDRAND);
   CPU_FEATURE_SET_USABLE (cpu_features, CLDEMOTE);
   CPU_FEATURE_SET_USABLE (cpu_features, MOVDIRI);
   CPU_FEATURE_SET_USABLE (cpu_features, MOVDIR64B);
