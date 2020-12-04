@@ -174,7 +174,7 @@ tests-container := \
 
 tests := tst-tls9 tst-leaks1 \
 	tst-array1 tst-array2 tst-array3 tst-array4 tst-array5 \
-	tst-auxv
+	tst-auxv tst-stringtable
 tests-internal := tst-tls1 tst-tls2 $(tests-static-internal)
 tests-static := $(tests-static-normal) $(tests-static-internal)
 
