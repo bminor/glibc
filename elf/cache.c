@@ -35,11 +35,15 @@
 #include <ldconfig.h>
 #include <dl-cache.h>
 #include <version.h>
+#include <stringtable.h>
+
+/* Used to store library names, paths, and other strings.  */
+static struct stringtable strings;
 
 struct cache_entry
 {
-  char *lib;			/* Library name.  */
-  char *path;			/* Path to find library.  */
+  struct stringtable_entry *lib; /* Library name.  */
+  struct stringtable_entry *path; /* Path to find library.  */
   int flags;			/* Flags to indicate kind of library.  */
   unsigned int osversion;	/* Required OS version.  */
   uint64_t hwcap;		/* Important hardware capabilities.  */
@@ -300,7 +304,7 @@ static int
 compare (const struct cache_entry *e1, const struct cache_entry *e2)
 {
   /* We need to swap entries here to get the correct sort order.  */
-  int res = _dl_cache_libcmp (e2->lib, e1->lib);
+  int res = _dl_cache_libcmp (e2->lib->string, e1->lib->string);
   if (res == 0)
     {
       if (e1->flags < e2->flags)
@@ -369,25 +373,23 @@ save_cache (const char *cache_name)
 {
   /* The cache entries are sorted already, save them in this order. */
 
-  /* Count the length of all strings.  */
-  /* The old format doesn't contain hwcap entries and doesn't contain
-     libraries in subdirectories with hwcaps entries.  Count therefore
-     also all entries with hwcap == 0.  */
-  size_t total_strlen = 0;
   struct cache_entry *entry;
   /* Number of cache entries.  */
   int cache_entry_count = 0;
-  /* Number of normal cache entries.  */
+  /* The old format doesn't contain hwcap entries and doesn't contain
+     libraries in subdirectories with hwcaps entries.  Count therefore
+     also all entries with hwcap == 0.  */
   int cache_entry_old_count = 0;
 
   for (entry = entries; entry != NULL; entry = entry->next)
     {
-      /* Account the final NULs.  */
-      total_strlen += strlen (entry->lib) + strlen (entry->path) + 2;
       ++cache_entry_count;
       if (entry->hwcap == 0)
 	++cache_entry_old_count;
     }
+
+  struct stringtable_finalized strings_finalized;
+  stringtable_finalize (&strings, &strings_finalized);
 
   /* Create the on disk cache structure.  */
   struct cache_file *file_entries = NULL;
@@ -432,7 +434,7 @@ save_cache (const char *cache_name)
 	      sizeof CACHE_VERSION - 1);
 
       file_entries_new->nlibs = cache_entry_count;
-      file_entries_new->len_strings = total_strlen;
+      file_entries_new->len_strings = strings_finalized.size;
       file_entries_new->flags = cache_file_new_flags_endian_current;
     }
 
@@ -449,20 +451,20 @@ save_cache (const char *cache_name)
     str_offset = 0;
 
   /* An array for all strings.  */
-  char *strings = xmalloc (total_strlen);
-  char *str = strings;
   int idx_old;
   int idx_new;
 
   for (idx_old = 0, idx_new = 0, entry = entries; entry != NULL;
        entry = entry->next, ++idx_new)
     {
-      /* First the library.  */
       if (opt_format != opt_format_new && entry->hwcap == 0)
 	{
 	  file_entries->libs[idx_old].flags = entry->flags;
 	  /* XXX: Actually we can optimize here and remove duplicates.  */
 	  file_entries->libs[idx_old].key = str_offset + pad;
+	  file_entries->libs[idx_new].key = str_offset + entry->lib->offset;
+	  file_entries->libs[idx_new].value
+	    = str_offset + entry->path->offset;
 	}
       if (opt_format != opt_format_old)
 	{
@@ -473,20 +475,12 @@ save_cache (const char *cache_name)
 	  file_entries_new->libs[idx_new].flags = entry->flags;
 	  file_entries_new->libs[idx_new].osversion = entry->osversion;
 	  file_entries_new->libs[idx_new].hwcap = entry->hwcap;
-	  file_entries_new->libs[idx_new].key = str_offset;
+	  file_entries_new->libs[idx_new].key
+	    = str_offset + entry->lib->offset;
+	  file_entries_new->libs[idx_new].value
+	    = str_offset + entry->path->offset;
 	}
 
-      size_t len = strlen (entry->lib) + 1;
-      str = mempcpy (str, entry->lib, len);
-      str_offset += len;
-      /* Then the path.  */
-      if (opt_format != opt_format_new && entry->hwcap == 0)
-	file_entries->libs[idx_old].value = str_offset + pad;
-      if (opt_format != opt_format_old)
-	file_entries_new->libs[idx_new].value = str_offset;
-      len = strlen (entry->path) + 1;
-      str = mempcpy (str, entry->path, len);
-      str_offset += len;
       /* Ignore entries with hwcap for old format.  */
       if (entry->hwcap == 0)
 	++idx_old;
@@ -511,7 +505,7 @@ save_cache (const char *cache_name)
 	extension_offset += pad;
       extension_offset += file_entries_new_size;
     }
-  extension_offset += total_strlen;
+  extension_offset += strings_finalized.size;
   extension_offset = roundup (extension_offset, 4); /* Provide alignment.  */
   if (opt_format != opt_format_old)
     file_entries_new->extension_offset = extension_offset;
@@ -551,7 +545,8 @@ save_cache (const char *cache_name)
 	error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
     }
 
-  if (write (fd, strings, total_strlen) != (ssize_t) total_strlen)
+  if (write (fd, strings_finalized.strings, strings_finalized.size)
+      != (ssize_t) strings_finalized.size)
     error (EXIT_FAILURE, errno, _("Writing of cache data failed"));
 
   if (opt_format != opt_format_old)
@@ -580,7 +575,7 @@ save_cache (const char *cache_name)
   /* Free all allocated memory.  */
   free (file_entries_new);
   free (file_entries);
-  free (strings);
+  free (strings_finalized.strings);
 
   while (entries)
     {
@@ -596,14 +591,19 @@ void
 add_to_cache (const char *path, const char *lib, int flags,
 	      unsigned int osversion, uint64_t hwcap)
 {
-  size_t liblen = strlen (lib) + 1;
-  size_t len = liblen + strlen (path) + 1;
-  struct cache_entry *new_entry
-    = xmalloc (sizeof (struct cache_entry) + liblen + len);
+  struct cache_entry *new_entry = xmalloc (sizeof (*new_entry));
 
-  new_entry->lib = memcpy ((char *) (new_entry + 1), lib, liblen);
-  new_entry->path = new_entry->lib + liblen;
-  snprintf (new_entry->path, len, "%s/%s", path, lib);
+  struct stringtable_entry *path_interned;
+  {
+    char *p;
+    if (asprintf (&p, "%s/%s", path, lib) < 0)
+      error (EXIT_FAILURE, errno, _("Could not create library path"));
+    path_interned = stringtable_add (&strings, p);
+    free (p);
+  }
+
+  new_entry->lib = stringtable_add (&strings, lib);
+  new_entry->path = path_interned;
   new_entry->flags = flags;
   new_entry->osversion = osversion;
   new_entry->hwcap = hwcap;

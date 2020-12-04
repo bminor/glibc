@@ -120,7 +120,8 @@ others-static	+= ldconfig
 others		+= ldconfig
 install-rootsbin += ldconfig
 
-ldconfig-modules := cache readlib xmalloc xstrdup chroot_canon static-stubs
+ldconfig-modules := cache readlib xmalloc xstrdup chroot_canon static-stubs \
+  stringtable
 extra-objs	+= $(ldconfig-modules:=.o)
 others-extras   = $(ldconfig-modules)
 endif
