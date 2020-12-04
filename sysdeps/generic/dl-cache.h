@@ -99,6 +99,23 @@ struct file_entry_new
   uint64_t hwcap;		/* Hwcap entry.	 */
 };
 
+/* This bit in the hwcap field of struct file_entry_new indicates that
+   the lower 32 bits contain an index into the
+   cache_extension_tag_glibc_hwcaps section.  Older glibc versions do
+   not know about this HWCAP bit, so they will ignore these
+   entries.  */
+#define DL_CACHE_HWCAP_EXTENSION (1ULL << 62)
+
+/* Return true if the ENTRY->hwcap value indicates that
+   DL_CACHE_HWCAP_EXTENSION is used.  */
+static inline bool
+dl_cache_hwcap_extension (struct file_entry_new *entry)
+{
+  /* If DL_CACHE_HWCAP_EXTENSION is set, but other bits as well, this
+     is a different kind of extension.  */
+  return (entry->hwcap >> 32) == (DL_CACHE_HWCAP_EXTENSION >> 32);
+}
+
 /* See flags member of struct cache_file_new below.  */
 enum
   {
@@ -182,6 +199,17 @@ enum cache_extension_tag
       cache file.  */
    cache_extension_tag_generator,
 
+   /* glibc-hwcaps subdirectory information.  An array of uint32_t
+      values, which are indices into the string table.  The strings
+      are sorted lexicographically (according to strcmp).  The extra
+      level of indirection (instead of using string table indices
+      directly) allows the dynamic loader to compute the preference
+      order of the hwcaps names more efficiently.
+
+      For this section, 4-byte alignment is required, and the section
+      size must be a multiple of 4.  */
+   cache_extension_tag_glibc_hwcaps,
+
    /* Total number of known cache extension tags.  */
    cache_extension_count
   };
@@ -236,6 +264,27 @@ struct cache_extension_all_loaded
   struct cache_extension_loaded sections[cache_extension_count];
 };
 
+/* Performs basic data validation based on section tag, and removes
+   the sections which are invalid.  */
+static void
+cache_extension_verify (struct cache_extension_all_loaded *loaded)
+{
+  {
+    /* Section must not be empty, it must be aligned at 4 bytes, and
+       the size must be a multiple of 4.  */
+    struct cache_extension_loaded *hwcaps
+      = &loaded->sections[cache_extension_tag_glibc_hwcaps];
+    if (hwcaps->size == 0
+	|| ((uintptr_t) hwcaps->base % 4) != 0
+	|| (hwcaps->size % 4) != 0)
+      {
+	hwcaps->base = NULL;
+	hwcaps->size = 0;
+	hwcaps->flags = 0;
+      }
+  }
+}
+
 static bool __attribute__ ((unused))
 cache_extension_load (const struct cache_file_new *cache,
 		      const void *file_base, size_t file_size,
@@ -282,6 +331,7 @@ cache_extension_load (const struct cache_file_new *cache,
       loaded->sections[tag].size = ext->sections[i].size;
       loaded->sections[tag].flags = ext->sections[i].flags;
     }
+  cache_extension_verify (loaded);
   return true;
 }
 

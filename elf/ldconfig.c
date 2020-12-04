@@ -16,6 +16,7 @@
    along with this program; if not, see <https://www.gnu.org/licenses/>.  */
 
 #define PROCINFO_CLASS static
+#include <assert.h>
 #include <alloca.h>
 #include <argp.h>
 #include <dirent.h>
@@ -41,6 +42,7 @@
 
 #include <ldconfig.h>
 #include <dl-cache.h>
+#include <dl-hwcaps.h>
 
 #include <dl-procinfo.h>
 
@@ -85,6 +87,10 @@ struct dir_entry
   dev_t dev;
   const char *from_file;
   int from_line;
+
+  /* Non-NULL for subdirectories under a glibc-hwcaps subdirectory.  */
+  struct glibc_hwcaps_subdirectory *hwcaps;
+
   struct dir_entry *next;
 };
 
@@ -338,17 +344,20 @@ new_sub_entry (const struct dir_entry *entry, const char *path,
   new_entry->from_line = entry->from_line;
   new_entry->path = xstrdup (path);
   new_entry->flag = entry->flag;
+  new_entry->hwcaps = NULL;
   new_entry->next = NULL;
   new_entry->ino = st->st_ino;
   new_entry->dev = st->st_dev;
   return new_entry;
 }
 
-/* Add a single directory entry.  */
-static void
+/* Add a single directory entry.  Return true if the directory is
+   actually added (because it is not a duplicate).  */
+static bool
 add_single_dir (struct dir_entry *entry, int verbose)
 {
   struct dir_entry *ptr, *prev;
+  bool added = true;
 
   ptr = dir_entries;
   prev = ptr;
@@ -368,6 +377,7 @@ add_single_dir (struct dir_entry *entry, int verbose)
 	  ptr->flag = entry->flag;
 	  free (entry->path);
 	  free (entry);
+	  added = false;
 	  break;
 	}
       prev = ptr;
@@ -378,6 +388,73 @@ add_single_dir (struct dir_entry *entry, int verbose)
     dir_entries = entry;
   else if (ptr == NULL)
     prev->next = entry;
+  return added;
+}
+
+/* Check if PATH contains a "glibc-hwcaps" subdirectory.  If so, queue
+   its subdirectories for glibc-hwcaps processing.  */
+static void
+add_glibc_hwcaps_subdirectories (struct dir_entry *entry, const char *path)
+{
+  /* glibc-hwcaps subdirectories do not nest.  */
+  assert (entry->hwcaps == NULL);
+
+  char *glibc_hwcaps;
+  if (asprintf (&glibc_hwcaps, "%s/" GLIBC_HWCAPS_SUBDIRECTORY, path) < 0)
+    error (EXIT_FAILURE, errno, _("Could not form glibc-hwcaps path"));
+
+  DIR *dir = opendir (glibc_hwcaps);
+  if (dir != NULL)
+    {
+      while (true)
+	{
+	  errno = 0;
+	  struct dirent64 *e = readdir64 (dir);
+	  if (e == NULL)
+	    {
+	      if (errno == 0)
+		break;
+	      else
+		error (EXIT_FAILURE, errno, _("Listing directory %s"), path);
+	    }
+
+	  /* Ignore hidden subdirectories, including "." and "..", and
+	     regular files.  File names containing a ':' cannot be
+	     looked up by the dynamic loader, so skip those as
+	     well.  */
+	  if (e->d_name[0] == '.' || e->d_type == DT_REG
+	      || strchr (e->d_name, ':') != NULL)
+	    continue;
+
+	  /* See if this entry eventually resolves to a directory.  */
+	  struct stat64 st;
+	  if (fstatat64 (dirfd (dir), e->d_name, &st, 0) < 0)
+	    /* Ignore unreadable entries.  */
+	    continue;
+
+	  if (S_ISDIR (st.st_mode))
+	    {
+	      /* This is a directory, so it needs to be scanned for
+		 libraries, associated with the hwcaps implied by the
+		 subdirectory name.  */
+	      char *new_path;
+	      if (asprintf (&new_path, "%s/" GLIBC_HWCAPS_SUBDIRECTORY "/%s",
+			    /* Use non-canonicalized path here.  */
+			    entry->path, e->d_name) < 0)
+		error (EXIT_FAILURE, errno,
+		       _("Could not form glibc-hwcaps path"));
+	      struct dir_entry *new_entry = new_sub_entry (entry, new_path,
+							   &st);
+	      free (new_path);
+	      new_entry->hwcaps = new_glibc_hwcaps_subdirectory (e->d_name);
+	      add_single_dir (new_entry, 0);
+	    }
+	}
+
+      closedir (dir);
+    }
+
+  free (glibc_hwcaps);
 }
 
 /* Add one directory to the list of directories to process.  */
@@ -386,6 +463,7 @@ add_dir_1 (const char *line, const char *from_file, int from_line)
 {
   unsigned int i;
   struct dir_entry *entry = xmalloc (sizeof (struct dir_entry));
+  entry->hwcaps = NULL;
   entry->next = NULL;
 
   entry->from_file = strdup (from_file);
@@ -443,7 +521,9 @@ add_dir_1 (const char *line, const char *from_file, int from_line)
       entry->ino = stat_buf.st_ino;
       entry->dev = stat_buf.st_dev;
 
-      add_single_dir (entry, 1);
+      if (add_single_dir (entry, 1))
+	/* Add glibc-hwcaps subdirectories if present.  */
+	add_glibc_hwcaps_subdirectories (entry, path);
     }
 
   if (opt_chroot)
@@ -695,15 +775,27 @@ struct dlib_entry
 static void
 search_dir (const struct dir_entry *entry)
 {
-  uint64_t hwcap = path_hwcap (entry->path);
-  if (opt_verbose)
+  uint64_t hwcap;
+  if (entry->hwcaps == NULL)
     {
-      if (hwcap != 0)
-	printf ("%s: (hwcap: %#.16" PRIx64 ")", entry->path, hwcap);
-      else
-	printf ("%s:", entry->path);
-      printf (_(" (from %s:%d)\n"), entry->from_file, entry->from_line);
+      hwcap = path_hwcap (entry->path);
+      if (opt_verbose)
+	{
+	  if (hwcap != 0)
+	    printf ("%s: (hwcap: %#.16" PRIx64 ")", entry->path, hwcap);
+	  else
+	    printf ("%s:", entry->path);
+	}
     }
+  else
+    {
+      hwcap = 0;
+      if (opt_verbose)
+	printf ("%s: (hwcap: \"%s\")", entry->path,
+		glibc_hwcaps_subdirectory_name (entry->hwcaps));
+    }
+  if (opt_verbose)
+    printf (_(" (from %s:%d)\n"), entry->from_file, entry->from_line);
 
   char *dir_name;
   char *real_file_name;
@@ -745,13 +837,15 @@ search_dir (const struct dir_entry *entry)
 	  && direntry->d_type != DT_DIR)
 	continue;
       /* Does this file look like a shared library or is it a hwcap
-	 subdirectory?  The dynamic linker is also considered as
+	 subdirectory (if not already processing a glibc-hwcaps
+	 subdirectory)?  The dynamic linker is also considered as
 	 shared library.  */
       if (((strncmp (direntry->d_name, "lib", 3) != 0
 	    && strncmp (direntry->d_name, "ld-", 3) != 0)
 	   || strstr (direntry->d_name, ".so") == NULL)
 	  && (direntry->d_type == DT_REG
-	      || !is_hwcap_platform (direntry->d_name)))
+	      || (entry->hwcaps == NULL
+		  && !is_hwcap_platform (direntry->d_name))))
 	continue;
 
       size_t len = strlen (direntry->d_name);
@@ -799,7 +893,7 @@ search_dir (const struct dir_entry *entry)
 	  }
 
       struct stat64 stat_buf;
-      int is_dir;
+      bool is_dir;
       int is_link = S_ISLNK (lstat_buf.st_mode);
       if (is_link)
 	{
@@ -837,7 +931,10 @@ search_dir (const struct dir_entry *entry)
       else
 	is_dir = S_ISDIR (lstat_buf.st_mode);
 
-      if (is_dir && is_hwcap_platform (direntry->d_name))
+      /* No descending into subdirectories if this directory is a
+	 glibc-hwcaps subdirectory (which are not recursive).  */
+      if (entry->hwcaps == NULL
+	  && is_dir && is_hwcap_platform (direntry->d_name))
 	{
 	  if (!is_link
 	      && direntry->d_type != DT_UNKNOWN
@@ -1028,13 +1125,31 @@ search_dir (const struct dir_entry *entry)
   struct dlib_entry *dlib_ptr;
   for (dlib_ptr = dlibs; dlib_ptr != NULL; dlib_ptr = dlib_ptr->next)
     {
-      /* Don't create links to links.  */
-      if (dlib_ptr->is_link == 0)
-	create_links (dir_name, entry->path, dlib_ptr->name,
-		      dlib_ptr->soname);
+      /* The cached file name is the soname for non-glibc-hwcaps
+	 subdirectories (relying on symbolic links; this helps with
+	 library updates that change the file name), and the actual
+	 file for glibc-hwcaps subdirectories.  */
+      const char *filename;
+      if (entry->hwcaps == NULL)
+	{
+	  /* Don't create links to links.  */
+	  if (dlib_ptr->is_link == 0)
+	    create_links (dir_name, entry->path, dlib_ptr->name,
+			  dlib_ptr->soname);
+	  filename = dlib_ptr->soname;
+	}
+      else
+	{
+	  /* Do not create links in glibc-hwcaps subdirectories, but
+	     still log the cache addition.  */
+	  if (opt_verbose)
+	    printf ("\t%s -> %s\n", dlib_ptr->soname, dlib_ptr->name);
+	  filename = dlib_ptr->name;
+	}
       if (opt_build_cache)
-	add_to_cache (entry->path, dlib_ptr->soname, dlib_ptr->flag,
-		      dlib_ptr->osversion, hwcap);
+	add_to_cache (entry->path, filename, dlib_ptr->soname,
+		      dlib_ptr->flag, dlib_ptr->osversion,
+		      hwcap, entry->hwcaps);
     }
 
   /* Free all resources.  */

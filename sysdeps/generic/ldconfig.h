@@ -57,8 +57,22 @@ extern void init_cache (void);
 
 extern void save_cache (const char *cache_name);
 
-extern void add_to_cache (const char *path, const char *lib, int flags,
-			  unsigned int osversion, uint64_t hwcap);
+struct glibc_hwcaps_subdirectory;
+
+/* Return a struct describing the subdirectory for NAME.  Reuse an
+   existing struct if it exists.  */
+struct glibc_hwcaps_subdirectory *new_glibc_hwcaps_subdirectory
+  (const char *name);
+
+/* Returns the name that was specified when
+   add_glibc_hwcaps_subdirectory was called.  */
+const char *glibc_hwcaps_subdirectory_name
+  (const struct glibc_hwcaps_subdirectory *);
+
+extern void add_to_cache (const char *path, const char *filename,
+			  const char *soname,
+			  int flags, unsigned int osversion, uint64_t hwcap,
+			  struct glibc_hwcaps_subdirectory *);
 
 extern void init_aux_cache (void);
 

@@ -40,6 +40,105 @@
 /* Used to store library names, paths, and other strings.  */
 static struct stringtable strings;
 
+/* Keeping track of "glibc-hwcaps" subdirectories.  During cache
+   construction, a linear search by name is performed to deduplicate
+   entries.  */
+struct glibc_hwcaps_subdirectory
+{
+  struct glibc_hwcaps_subdirectory *next;
+
+  /* Interned string with the subdirectory name.  */
+  struct stringtable_entry *name;
+
+  /* Array index in the cache_extension_tag_glibc_hwcaps section in
+     the stored cached file.  This is computed after all the
+     subdirectories have been processed, so that subdirectory names in
+     the extension section can be sorted.  */
+  uint32_t section_index;
+
+  /* True if the subdirectory is actually used for anything.  */
+  bool used;
+};
+
+const char *
+glibc_hwcaps_subdirectory_name (const struct glibc_hwcaps_subdirectory *dir)
+{
+  return dir->name->string;
+}
+
+/* Linked list of known hwcaps subdirecty names.  */
+static struct glibc_hwcaps_subdirectory *hwcaps;
+
+struct glibc_hwcaps_subdirectory *
+new_glibc_hwcaps_subdirectory (const char *name)
+{
+  struct stringtable_entry *name_interned = stringtable_add (&strings, name);
+  for (struct glibc_hwcaps_subdirectory *p = hwcaps; p != NULL; p = p->next)
+    if (p->name == name_interned)
+      return p;
+  struct glibc_hwcaps_subdirectory *p = xmalloc (sizeof (*p));
+  p->next = hwcaps;
+  p->name = name_interned;
+  p->section_index = 0;
+  p->used = false;
+  hwcaps = p;
+  return p;
+}
+
+/* Helper for sorting struct glibc_hwcaps_subdirectory elements by
+   name.  */
+static int
+assign_glibc_hwcaps_indices_compare (const void *l, const void *r)
+{
+  const struct glibc_hwcaps_subdirectory *left
+    = *(struct glibc_hwcaps_subdirectory **)l;
+  const struct glibc_hwcaps_subdirectory *right
+    = *(struct glibc_hwcaps_subdirectory **)r;
+  return strcmp (glibc_hwcaps_subdirectory_name (left),
+		 glibc_hwcaps_subdirectory_name (right));
+}
+
+/* Count the number of hwcaps subdirectories which are actually
+   used.  */
+static size_t
+glibc_hwcaps_count (void)
+{
+  size_t count = 0;
+  for (struct glibc_hwcaps_subdirectory *p = hwcaps; p != NULL; p = p->next)
+    if (p->used)
+      ++count;
+  return count;
+}
+
+/* Compute the section_index fields for all   */
+static void
+assign_glibc_hwcaps_indices (void)
+{
+  /* Convert the linked list into an array, so that we can use qsort.
+     Only copy the subdirectories which are actually used.  */
+  size_t count = glibc_hwcaps_count ();
+  struct glibc_hwcaps_subdirectory **array
+    = xmalloc (sizeof (*array) * count);
+  {
+    size_t i = 0;
+    for (struct glibc_hwcaps_subdirectory *p = hwcaps; p != NULL; p = p->next)
+      if (p->used)
+	{
+	  array[i] = p;
+	  ++i;
+	}
+    assert (i == count);
+  }
+
+  qsort (array, count, sizeof (*array), assign_glibc_hwcaps_indices_compare);
+
+  /* Assign the array indices.  */
+  for (size_t i = 0; i < count; ++i)
+    array[i]->section_index = i;
+
+  free (array);
+}
+
 struct cache_entry
 {
   struct stringtable_entry *lib; /* Library name.  */
@@ -48,6 +147,10 @@ struct cache_entry
   unsigned int osversion;	/* Required OS version.  */
   uint64_t hwcap;		/* Important hardware capabilities.  */
   int bits_hwcap;		/* Number of bits set in hwcap.  */
+
+  /* glibc-hwcaps subdirectory.  If not NULL, hwcap must be zero.  */
+  struct glibc_hwcaps_subdirectory *hwcaps;
+
   struct cache_entry *next;	/* Next entry in list.  */
 };
 
@@ -60,7 +163,7 @@ static const char *flag_descr[] =
 /* Print a single entry.  */
 static void
 print_entry (const char *lib, int flag, unsigned int osversion,
-	     uint64_t hwcap, const char *key)
+	     uint64_t hwcap, const char *hwcap_string, const char *key)
 {
   printf ("\t%s (", lib);
   switch (flag & FLAG_TYPE_MASK)
@@ -132,7 +235,9 @@ print_entry (const char *lib, int flag, unsigned int osversion,
       printf (",%d", flag & FLAG_REQUIRED_MASK);
       break;
     }
-  if (hwcap != 0)
+  if (hwcap_string != NULL)
+    printf (", hwcap: \"%s\"", hwcap_string);
+  else if (hwcap != 0)
     printf (", hwcap: %#.16" PRIx64, hwcap);
   if (osversion != 0)
     {
@@ -158,6 +263,29 @@ print_entry (const char *lib, int flag, unsigned int osversion,
   printf (") => %s\n", key);
 }
 
+/* Returns the string with the name of the glibcs-hwcaps subdirectory
+   associated with ENTRY->hwcap.  file_base must be the base address
+   for string table indices.  */
+static const char *
+glibc_hwcaps_string (struct cache_extension_all_loaded *ext,
+		     const void *file_base, size_t file_size,
+		     struct file_entry_new *entry)
+{
+  const uint32_t *hwcaps_array
+    = ext->sections[cache_extension_tag_glibc_hwcaps].base;
+  if (dl_cache_hwcap_extension (entry) && hwcaps_array != NULL)
+    {
+      uint32_t index = (uint32_t) entry->hwcap;
+      if (index < ext->sections[cache_extension_tag_glibc_hwcaps].size / 4)
+	{
+	  uint32_t string_table_index = hwcaps_array[index];
+	  if (string_table_index < file_size)
+	    return file_base + string_table_index;
+	}
+    }
+  return NULL;
+}
+
 /* Print an error and exit if the new-file cache is internally
    inconsistent.  */
 static void
@@ -167,9 +295,7 @@ check_new_cache (struct cache_file_new *cache)
     error (EXIT_FAILURE, 0, _("Cache file has wrong endianness.\n"));
 }
 
-/* Print the extension information at the cache at start address
-   FILE_BASE, of length FILE_SIZE bytes.  The new-format cache header
-   is at CACHE, and the file name for diagnostics is CACHE_NAME.  */
+/* Print the extension information in *EXT.  */
 static void
 print_extensions (struct cache_extension_all_loaded *ext)
 {
@@ -266,7 +392,7 @@ print_cache (const char *cache_name)
       /* Print everything.  */
       for (unsigned int i = 0; i < cache->nlibs; i++)
 	print_entry (cache_data + cache->libs[i].key,
-		     cache->libs[i].flags, 0, 0,
+		     cache->libs[i].flags, 0, 0, NULL,
 		     cache_data + cache->libs[i].value);
     }
   else if (format == 1)
@@ -281,11 +407,16 @@ print_cache (const char *cache_name)
 
       /* Print everything.  */
       for (unsigned int i = 0; i < cache_new->nlibs; i++)
-	print_entry (cache_data + cache_new->libs[i].key,
-		     cache_new->libs[i].flags,
-		     cache_new->libs[i].osversion,
-		     cache_new->libs[i].hwcap,
-		     cache_data + cache_new->libs[i].value);
+	{
+	  const char *hwcaps_string
+	    = glibc_hwcaps_string (&ext, cache, cache_size,
+				   &cache_new->libs[i]);
+	  print_entry (cache_data + cache_new->libs[i].key,
+		       cache_new->libs[i].flags,
+		       cache_new->libs[i].osversion,
+		       cache_new->libs[i].hwcap, hwcaps_string,
+		       cache_data + cache_new->libs[i].value);
+	}
       print_extensions (&ext);
     }
   /* Cleanup.  */
@@ -311,8 +442,23 @@ compare (const struct cache_entry *e1, const struct cache_entry *e2)
 	return 1;
       else if (e1->flags > e2->flags)
 	return -1;
+      /* Keep the glibc-hwcaps extension entries before the regular
+	 entries, and sort them by their names.  search_cache in
+	 dl-cache.c stops searching once the first non-extension entry
+	 is found, so the extension entries need to come first.  */
+      else if (e1->hwcaps != NULL && e2->hwcaps == NULL)
+	return -1;
+      else if (e1->hwcaps == NULL && e2->hwcaps != NULL)
+	return 1;
+      else if (e1->hwcaps != NULL && e2->hwcaps != NULL)
+	{
+	  res = strcmp (glibc_hwcaps_subdirectory_name (e1->hwcaps),
+			glibc_hwcaps_subdirectory_name (e2->hwcaps));
+	  if (res != 0)
+	    return res;
+	}
       /* Sort by most specific hwcap.  */
-      else if (e2->bits_hwcap > e1->bits_hwcap)
+      if (e2->bits_hwcap > e1->bits_hwcap)
 	return 1;
       else if (e2->bits_hwcap < e1->bits_hwcap)
 	return -1;
@@ -337,30 +483,65 @@ enum
 			      * sizeof (struct cache_extension_section)))
   };
 
-/* Write the cache extensions to FD.  The extension directory is
-   assumed to be located at CACHE_EXTENSION_OFFSET.  */
+/* Write the cache extensions to FD.  The string table is shifted by
+   STRING_TABLE_OFFSET.  The extension directory is assumed to be
+   located at CACHE_EXTENSION_OFFSET.  assign_glibc_hwcaps_indices
+   must have been called.  */
 static void
-write_extensions (int fd, uint32_t cache_extension_offset)
+write_extensions (int fd, uint32_t str_offset,
+		  uint32_t cache_extension_offset)
 {
   assert ((cache_extension_offset % 4) == 0);
 
+  /* The length and contents of the glibc-hwcaps section.  */
+  uint32_t hwcaps_count = glibc_hwcaps_count ();
+  uint32_t hwcaps_offset = cache_extension_offset + cache_extension_size;
+  uint32_t hwcaps_size = hwcaps_count * sizeof (uint32_t);
+  uint32_t *hwcaps_array = xmalloc (hwcaps_size);
+  for (struct glibc_hwcaps_subdirectory *p = hwcaps; p != NULL; p = p->next)
+    if (p->used)
+      hwcaps_array[p->section_index] = str_offset + p->name->offset;
+
+  /* This is the offset of the generator string.  */
+  uint32_t generator_offset = hwcaps_offset;
+  if (hwcaps_count == 0)
+    /* There is no section for the hwcaps subdirectories.  */
+    generator_offset -= sizeof (struct cache_extension_section);
+  else
+    /* The string table indices for the hwcaps subdirectories shift
+       the generator string backwards.  */
+    generator_offset += hwcaps_size;
+
   struct cache_extension *ext = xmalloc (cache_extension_size);
   ext->magic = cache_extension_magic;
-  ext->count = cache_extension_count;
 
-  for (int i = 0; i < cache_extension_count; ++i)
-    {
-      ext->sections[i].tag = i;
-      ext->sections[i].flags = 0;
-    }
+  /* Extension index current being filled.  */
+  size_t xid = 0;
 
   const char *generator
     = "ldconfig " PKGVERSION RELEASE " release version " VERSION;
-  ext->sections[cache_extension_tag_generator].offset
-    = cache_extension_offset + cache_extension_size;
-  ext->sections[cache_extension_tag_generator].size = strlen (generator);
+  ext->sections[xid].tag = cache_extension_tag_generator;
+  ext->sections[xid].flags = 0;
+  ext->sections[xid].offset = generator_offset;
+  ext->sections[xid].size = strlen (generator);
 
-  if (write (fd, ext, cache_extension_size) != cache_extension_size
+  if (hwcaps_count > 0)
+    {
+      ++xid;
+      ext->sections[xid].tag = cache_extension_tag_glibc_hwcaps;
+      ext->sections[xid].flags = 0;
+      ext->sections[xid].offset = hwcaps_offset;
+      ext->sections[xid].size = hwcaps_size;
+    }
+
+  ++xid;
+  ext->count = xid;
+  assert (xid <= cache_extension_count);
+
+  size_t ext_size = (offsetof (struct cache_extension, sections)
+		     + xid * sizeof (struct cache_extension_section));
+  if (write (fd, ext, ext_size) != ext_size
+      || write (fd, hwcaps_array, hwcaps_size) != hwcaps_size
       || write (fd, generator, strlen (generator)) != strlen (generator))
     error (EXIT_FAILURE, errno, _("Writing of cache extension data failed"));
 
@@ -372,6 +553,8 @@ void
 save_cache (const char *cache_name)
 {
   /* The cache entries are sorted already, save them in this order. */
+
+  assign_glibc_hwcaps_indices ();
 
   struct cache_entry *entry;
   /* Number of cache entries.  */
@@ -474,7 +657,11 @@ save_cache (const char *cache_name)
 	     struct.  */
 	  file_entries_new->libs[idx_new].flags = entry->flags;
 	  file_entries_new->libs[idx_new].osversion = entry->osversion;
-	  file_entries_new->libs[idx_new].hwcap = entry->hwcap;
+	  if (entry->hwcaps == NULL)
+	    file_entries_new->libs[idx_new].hwcap = entry->hwcap;
+	  else
+	    file_entries_new->libs[idx_new].hwcap
+	      = DL_CACHE_HWCAP_EXTENSION | entry->hwcaps->section_index;
 	  file_entries_new->libs[idx_new].key
 	    = str_offset + entry->lib->offset;
 	  file_entries_new->libs[idx_new].value
@@ -554,7 +741,7 @@ save_cache (const char *cache_name)
       /* Align file position to 4.  */
       off64_t old_offset = lseek64 (fd, extension_offset, SEEK_SET);
       assert ((unsigned long long int) (extension_offset - old_offset) < 4);
-      write_extensions (fd, extension_offset);
+      write_extensions (fd, str_offset, extension_offset);
     }
 
   /* Make sure user can always read cache file */
@@ -588,26 +775,34 @@ save_cache (const char *cache_name)
 
 /* Add one library to the cache.  */
 void
-add_to_cache (const char *path, const char *lib, int flags,
-	      unsigned int osversion, uint64_t hwcap)
+add_to_cache (const char *path, const char *filename, const char *soname,
+	      int flags, unsigned int osversion, uint64_t hwcap,
+	      struct glibc_hwcaps_subdirectory *hwcaps)
 {
   struct cache_entry *new_entry = xmalloc (sizeof (*new_entry));
 
   struct stringtable_entry *path_interned;
   {
     char *p;
-    if (asprintf (&p, "%s/%s", path, lib) < 0)
+    if (asprintf (&p, "%s/%s", path, filename) < 0)
       error (EXIT_FAILURE, errno, _("Could not create library path"));
     path_interned = stringtable_add (&strings, p);
     free (p);
   }
 
-  new_entry->lib = stringtable_add (&strings, lib);
+  new_entry->lib = stringtable_add (&strings, soname);
   new_entry->path = path_interned;
   new_entry->flags = flags;
   new_entry->osversion = osversion;
   new_entry->hwcap = hwcap;
+  new_entry->hwcaps = hwcaps;
   new_entry->bits_hwcap = 0;
+
+  if (hwcaps != NULL)
+    {
+      assert (hwcap == 0);
+      hwcaps->used = true;
+    }
 
   /* Count the number of bits set in the masked value.  */
   for (size_t i = 0;
