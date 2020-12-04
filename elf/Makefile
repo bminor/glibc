@@ -1832,7 +1832,7 @@ $(objpfx)argv0test.out: tst-rtld-argv0.sh $(objpfx)ld.so \
 # glibc-hwcaps mechanism for this architecture).  Used to obtain test
 # coverage for some glibc-hwcaps tests for the widest possible range
 # of systems.
-glibc-hwcaps-first-subdirs-for-tests =
+glibc-hwcaps-first-subdirs-for-tests = x86-64-v2
 
 # The test modules are parameterized by preprocessor macros.
 LDFLAGS-libmarkermod1-1.so += -Wl,-soname,libmarkermod1.so
