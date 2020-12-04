@@ -1055,8 +1055,13 @@ extern struct r_debug *_dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
      attribute_hidden;
 
 /* Initialize the basic data structure for the search paths.  SOURCE
-   is either "LD_LIBRARY_PATH" or "--library-path".  */
-extern void _dl_init_paths (const char *library_path, const char *source)
+   is either "LD_LIBRARY_PATH" or "--library-path".
+   GLIBC_HWCAPS_PREPEND adds additional glibc-hwcaps subdirectories to
+   search.  GLIBC_HWCAPS_MASK is used to filter the built-in
+   subdirectories if not NULL.  */
+extern void _dl_init_paths (const char *library_path, const char *source,
+			    const char *glibc_hwcaps_prepend,
+			    const char *glibc_hwcaps_mask)
   attribute_hidden;
 
 /* Gather the information needed to install the profiling tables and start
@@ -1080,9 +1085,14 @@ extern void _dl_show_auxv (void) attribute_hidden;
 extern char *_dl_next_ld_env_entry (char ***position) attribute_hidden;
 
 /* Return an array with the names of the important hardware
-   capabilities.  The length of the array is written to *SZ, and the
-   maximum of all strings length is written to *MAX_CAPSTRLEN.  */
-const struct r_strlenpair *_dl_important_hwcaps (size_t *sz,
+   capabilities.  PREPEND is a colon-separated list of glibc-hwcaps
+   directories to search first.  MASK is a colon-separated list used
+   to filter the built-in glibc-hwcaps subdirectories.  The length of
+   the array is written to *SZ, and the maximum of all strings length
+   is written to *MAX_CAPSTRLEN.  */
+const struct r_strlenpair *_dl_important_hwcaps (const char *prepend,
+						 const char *mask,
+						 size_t *sz,
 						 size_t *max_capstrlen)
   attribute_hidden;
 

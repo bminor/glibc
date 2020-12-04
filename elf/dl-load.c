@@ -682,7 +682,9 @@ cache_rpath (struct link_map *l,
 
 
 void
-_dl_init_paths (const char *llp, const char *source)
+_dl_init_paths (const char *llp, const char *source,
+		const char *glibc_hwcaps_prepend,
+		const char *glibc_hwcaps_mask)
 {
   size_t idx;
   const char *strp;
@@ -697,7 +699,8 @@ _dl_init_paths (const char *llp, const char *source)
 
 #ifdef SHARED
   /* Get the capabilities.  */
-  capstr = _dl_important_hwcaps (&ncapstr, &max_capstrlen);
+  capstr = _dl_important_hwcaps (glibc_hwcaps_prepend, glibc_hwcaps_mask,
+				 &ncapstr, &max_capstrlen);
 #endif
 
   /* First set up the rest of the default search directory entries.  */

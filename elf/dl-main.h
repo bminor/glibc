@@ -84,6 +84,14 @@ struct dl_main_state
   /* The preload list passed as a command argument.  */
   const char *preloadarg;
 
+  /* Additional glibc-hwcaps subdirectories to search first.
+     Colon-separated list.  */
+  const char *glibc_hwcaps_prepend;
+
+  /* Mask for the internal glibc-hwcaps subdirectories.
+     Colon-separated list.  */
+  const char *glibc_hwcaps_mask;
+
   enum rtld_mode mode;
 
   /* True if any of the debugging options is enabled.  */
@@ -98,7 +106,8 @@ struct dl_main_state
 static inline void
 call_init_paths (const struct dl_main_state *state)
 {
-  _dl_init_paths (state->library_path, state->library_path_source);
+  _dl_init_paths (state->library_path, state->library_path_source,
+                  state->glibc_hwcaps_prepend, state->glibc_hwcaps_mask);
 }
 
 /* Print ld.so usage information and exit.  */

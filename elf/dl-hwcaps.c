@@ -26,19 +26,96 @@
 #include <dl-procinfo.h>
 #include <dl-hwcaps.h>
 
+/* This is the result of counting the substrings in a colon-separated
+   hwcaps string.  */
+struct hwcaps_counts
+{
+  /* Number of substrings.  */
+  size_t count;
+
+  /* Sum of the individual substring lengths (without separators or
+     null terminators).  */
+  size_t total_length;
+
+  /* Maximum length of an individual substring.  */
+  size_t maximum_length;
+};
+
+/* Update *COUNTS according to the contents of HWCAPS.  Skip over
+   entries whose bit is not set in MASK.  */
+static void
+update_hwcaps_counts (struct hwcaps_counts *counts, const char *hwcaps,
+		      uint32_t bitmask, const char *mask)
+{
+  struct dl_hwcaps_split_masked sp;
+  _dl_hwcaps_split_masked_init (&sp, hwcaps, bitmask, mask);
+  while (_dl_hwcaps_split_masked (&sp))
+    {
+      ++counts->count;
+      counts->total_length += sp.split.length;
+      if (sp.split.length > counts->maximum_length)
+	counts->maximum_length = sp.split.length;
+    }
+}
+
+/* State for copy_hwcaps.  Must be initialized to point to
+   the storage areas for the array and the strings themselves.  */
+struct copy_hwcaps
+{
+  struct r_strlenpair *next_pair;
+  char *next_string;
+};
+
+/* Copy HWCAPS into the string pairs and strings, advancing *TARGET.
+   Skip over entries whose bit is not set in MASK.  */
+static void
+copy_hwcaps (struct copy_hwcaps *target, const char *hwcaps,
+	     uint32_t bitmask, const char *mask)
+{
+  struct dl_hwcaps_split_masked sp;
+  _dl_hwcaps_split_masked_init (&sp, hwcaps, bitmask, mask);
+  while (_dl_hwcaps_split_masked (&sp))
+    {
+      target->next_pair->str = target->next_string;
+      char *slash = __mempcpy (__mempcpy (target->next_string,
+					  GLIBC_HWCAPS_PREFIX,
+					  strlen (GLIBC_HWCAPS_PREFIX)),
+			       sp.split.segment, sp.split.length);
+      *slash = '/';
+      target->next_pair->len
+	= strlen (GLIBC_HWCAPS_PREFIX) + sp.split.length + 1;
+      ++target->next_pair;
+      target->next_string = slash + 1;
+    }
+}
+
 /* Return an array of useful/necessary hardware capability names.  */
 const struct r_strlenpair *
-_dl_important_hwcaps (size_t *sz, size_t *max_capstrlen)
+_dl_important_hwcaps (const char *glibc_hwcaps_prepend,
+		      const char *glibc_hwcaps_mask,
+		      size_t *sz, size_t *max_capstrlen)
 {
   uint64_t hwcap_mask = GET_HWCAP_MASK();
   /* Determine how many important bits are set.  */
   uint64_t masked = GLRO(dl_hwcap) & hwcap_mask;
   size_t cnt = GLRO (dl_platform) != NULL;
   size_t n, m;
-  size_t total;
   struct r_strlenpair *result;
   struct r_strlenpair *rp;
   char *cp;
+
+  /* glibc-hwcaps subdirectories.  These are exempted from the power
+     set construction below.  */
+  uint32_t hwcaps_subdirs_active = _dl_hwcaps_subdirs_active ();
+  struct hwcaps_counts hwcaps_counts =  { 0, };
+  update_hwcaps_counts (&hwcaps_counts, glibc_hwcaps_prepend, -1, NULL);
+  update_hwcaps_counts (&hwcaps_counts, _dl_hwcaps_subdirs,
+			hwcaps_subdirs_active, glibc_hwcaps_mask);
+
+  /* Each hwcaps subdirectory has a GLIBC_HWCAPS_PREFIX string prefix
+     and a "/" suffix once stored in the result.  */
+  size_t total = (hwcaps_counts.count * (strlen (GLIBC_HWCAPS_PREFIX) + 1)
+		  + hwcaps_counts.total_length);
 
   /* Count the number of bits set in the masked value.  */
   for (n = 0; (~((1ULL << n) - 1) & masked) != 0; ++n)
@@ -74,10 +151,10 @@ _dl_important_hwcaps (size_t *sz, size_t *max_capstrlen)
 
   /* Determine the total size of all strings together.  */
   if (cnt == 1)
-    total = temp[0].len + 1;
+    total += temp[0].len + 1;
   else
     {
-      total = temp[0].len + temp[cnt - 1].len + 2;
+      total += temp[0].len + temp[cnt - 1].len + 2;
       if (cnt > 2)
 	{
 	  total <<= 1;
@@ -94,26 +171,48 @@ _dl_important_hwcaps (size_t *sz, size_t *max_capstrlen)
 	}
     }
 
-  /* The result structure: we use a very compressed way to store the
-     various combinations of capability names.  */
-  *sz = 1 << cnt;
-  result = (struct r_strlenpair *) malloc (*sz * sizeof (*result) + total);
-  if (result == NULL)
+  *sz = hwcaps_counts.count + (1 << cnt);
+
+  /* This is the overall result, including both glibc-hwcaps
+     subdirectories and the legacy hwcaps subdirectories using the
+     power set construction.  */
+  struct r_strlenpair *overall_result
+    = malloc (*sz * sizeof (*result) + total);
+  if (overall_result == NULL)
     _dl_signal_error (ENOMEM, NULL, NULL,
 		      N_("cannot create capability list"));
 
+  /* Fill in the glibc-hwcaps subdirectories.  */
+  {
+    struct copy_hwcaps target;
+    target.next_pair = overall_result;
+    target.next_string = (char *) (overall_result + *sz);
+    copy_hwcaps (&target, glibc_hwcaps_prepend, -1, NULL);
+    copy_hwcaps (&target, _dl_hwcaps_subdirs,
+		 hwcaps_subdirs_active, glibc_hwcaps_mask);
+    /* Set up the write target for the power set construction.  */
+    result = target.next_pair;
+    cp = target.next_string;
+  }
+
+
+  /* Power set construction begins here.  We use a very compressed way
+     to store the various combinations of capability names.  */
+
   if (cnt == 1)
     {
-      result[0].str = (char *) (result + *sz);
+      result[0].str = cp;
       result[0].len = temp[0].len + 1;
-      result[1].str = (char *) (result + *sz);
+      result[1].str = cp;
       result[1].len = 0;
-      cp = __mempcpy ((char *) (result + *sz), temp[0].str, temp[0].len);
+      cp = __mempcpy (cp, temp[0].str, temp[0].len);
       *cp = '/';
-      *sz = 2;
-      *max_capstrlen = result[0].len;
+      if (result[0].len > hwcaps_counts.maximum_length)
+	*max_capstrlen = result[0].len;
+      else
+	*max_capstrlen = hwcaps_counts.maximum_length;
 
-      return result;
+      return overall_result;
     }
 
   /* Fill in the information.  This follows the following scheme
@@ -124,7 +223,7 @@ _dl_important_hwcaps (size_t *sz, size_t *max_capstrlen)
 	      #3: 0, 3			1001
      This allows the representation of all possible combinations of
      capability names in the string.  First generate the strings.  */
-  result[1].str = result[0].str = cp = (char *) (result + *sz);
+  result[1].str = result[0].str = cp;
 #define add(idx) \
       cp = __mempcpy (__mempcpy (cp, temp[idx].str, temp[idx].len), "/", 1);
   if (cnt == 2)
@@ -191,7 +290,10 @@ _dl_important_hwcaps (size_t *sz, size_t *max_capstrlen)
   while (--n != 0);
 
   /* The maximum string length.  */
-  *max_capstrlen = result[0].len;
+  if (result[0].len > hwcaps_counts.maximum_length)
+    *max_capstrlen = result[0].len;
+  else
+    *max_capstrlen = hwcaps_counts.maximum_length;
 
-  return result;
+  return overall_result;
 }

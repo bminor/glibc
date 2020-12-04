@@ -290,6 +290,8 @@ dl_main_state_init (struct dl_main_state *state)
   state->library_path_source = NULL;
   state->preloadlist = NULL;
   state->preloadarg = NULL;
+  state->glibc_hwcaps_prepend = NULL;
+  state->glibc_hwcaps_mask = NULL;
   state->mode = rtld_mode_normal;
   state->any_debug = false;
   state->version_info = false;
@@ -1253,6 +1255,22 @@ dl_main (const ElfW(Phdr) *phdr,
 	  {
 	    argv0 = _dl_argv[2];
 
+	    _dl_skip_args += 2;
+	    _dl_argc -= 2;
+	    _dl_argv += 2;
+	  }
+	else if (strcmp (_dl_argv[1], "--glibc-hwcaps-prepend") == 0
+		 && _dl_argc > 2)
+	  {
+	    state.glibc_hwcaps_prepend = _dl_argv[2];
+	    _dl_skip_args += 2;
+	    _dl_argc -= 2;
+	    _dl_argv += 2;
+	  }
+	else if (strcmp (_dl_argv[1], "--glibc-hwcaps-mask") == 0
+		 && _dl_argc > 2)
+	  {
+	    state.glibc_hwcaps_mask = _dl_argv[2];
 	    _dl_skip_args += 2;
 	    _dl_argc -= 2;
 	    _dl_argv += 2;

@@ -83,7 +83,7 @@ print_search_path_for_help (struct dl_main_state *state)
 {
   if (__rtld_search_dirs.dirs == NULL)
     /* The run-time search paths have not yet been initialized.  */
-    _dl_init_paths (state->library_path, state->library_path_source);
+    call_init_paths (state);
 
   _dl_printf ("\nShared library search path:\n");
 
@@ -130,6 +130,67 @@ print_hwcap_1_finish (bool *first)
     _dl_printf ("\n");
   else
     _dl_printf (")\n");
+}
+
+/* Print the header for print_hwcaps_subdirectories.  */
+static void
+print_hwcaps_subdirectories_header (bool *nothing_printed)
+{
+  if (*nothing_printed)
+    {
+      _dl_printf ("\n\
+Subdirectories of glibc-hwcaps directories, in priority order:\n");
+      *nothing_printed = false;
+    }
+}
+
+/* Print the HWCAP name itself, indented.  */
+static void
+print_hwcaps_subdirectories_name (const struct dl_hwcaps_split *split)
+{
+  _dl_write (STDOUT_FILENO, "  ", 2);
+  _dl_write (STDOUT_FILENO, split->segment, split->length);
+}
+
+/* Print the list of recognized glibc-hwcaps subdirectories.  */
+static void
+print_hwcaps_subdirectories (const struct dl_main_state *state)
+{
+  bool nothing_printed = true;
+  struct dl_hwcaps_split split;
+
+  /* The prepended glibc-hwcaps subdirectories.  */
+  _dl_hwcaps_split_init (&split, state->glibc_hwcaps_prepend);
+  while (_dl_hwcaps_split (&split))
+    {
+      print_hwcaps_subdirectories_header (&nothing_printed);
+      print_hwcaps_subdirectories_name (&split);
+      bool first = true;
+      print_hwcap_1 (&first, true, "searched");
+      print_hwcap_1_finish (&first);
+    }
+
+  /* The built-in glibc-hwcaps subdirectories.  Do the filtering
+     manually, so that more precise diagnostics are possible.  */
+  uint32_t mask = _dl_hwcaps_subdirs_active ();
+  _dl_hwcaps_split_init (&split, _dl_hwcaps_subdirs);
+  while (_dl_hwcaps_split (&split))
+    {
+      print_hwcaps_subdirectories_header (&nothing_printed);
+      print_hwcaps_subdirectories_name (&split);
+      bool first = true;
+      print_hwcap_1 (&first, mask & 1, "supported");
+      bool listed = _dl_hwcaps_contains (state->glibc_hwcaps_mask,
+                                         split.segment, split.length);
+      print_hwcap_1 (&first, !listed, "masked");
+      print_hwcap_1 (&first, (mask & 1) && listed, "searched");
+      print_hwcap_1_finish (&first);
+      mask >>= 1;
+    }
+
+  if (nothing_printed)
+    _dl_printf ("\n\
+No subdirectories of glibc-hwcaps directories are searched.\n");
 }
 
 /* Write a list of hwcap subdirectories to standard output.  See
@@ -186,6 +247,10 @@ setting environment variables (which would be inherited by subprocesses).\n\
   --inhibit-cache       Do not use " LD_SO_CACHE "\n\
   --library-path PATH   use given PATH instead of content of the environment\n\
                         variable LD_LIBRARY_PATH\n\
+  --glibc-hwcaps-prepend LIST\n\
+                        search glibc-hwcaps subdirectories in LIST\n\
+  --glibc-hwcaps-mask LIST\n\
+                        only search built-in subdirectories if in LIST\n\
   --inhibit-rpath LIST  ignore RUNPATH and RPATH information in object names\n\
                         in LIST\n\
   --audit LIST          use objects named in LIST as auditors\n\
@@ -198,6 +263,7 @@ This program interpreter self-identifies as: " RTLD "\n\
 ",
               argv0);
   print_search_path_for_help (state);
+  print_hwcaps_subdirectories (state);
   print_legacy_hwcap_directories ();
   _exit (EXIT_SUCCESS);
 }
