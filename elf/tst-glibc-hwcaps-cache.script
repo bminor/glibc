@@ -1,0 +1,6 @@
+# test-container does not support scripts in sysdeps directories, so
+# collect everything in one file.
+
+cp $B/elf/libmarkermod2-1.so $L/libmarkermod2.so
+cp $B/elf/libmarkermod3-1.so $L/libmarkermod3.so
+cp $B/elf/libmarkermod4-1.so $L/libmarkermod4.so

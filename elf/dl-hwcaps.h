@@ -132,4 +132,23 @@ _dl_hwcaps_subdirs_build_bitmask (int subdirs, int active)
   return mask ^ ((1U << inactive) - 1);
 }
 
+/* Pre-computed glibc-hwcaps subdirectory priorities.  Used in
+   dl-cache.c to quickly find the proprieties for the stored HWCAP
+   names.  */
+struct dl_hwcaps_priority
+{
+  /* The name consists of name_length bytes at name (not necessarily
+     null-terminated).  */
+  const char *name;
+  uint32_t name_length;
+
+  /* Priority of this name.  A positive number.  */
+  uint32_t priority;
+};
+
+/* Pre-computed hwcaps priorities.  Set up by
+   _dl_important_hwcaps.  */
+extern struct dl_hwcaps_priority *_dl_hwcaps_priorities attribute_hidden;
+extern uint32_t _dl_hwcaps_priorities_length attribute_hidden;
+
 #endif /* _DL_HWCAPS_H */
