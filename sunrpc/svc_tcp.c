@@ -271,6 +271,14 @@ again:
    * make a new transporter (re-uses xprt)
    */
   xprt = makefd_xprt (sock, r->sendsize, r->recvsize);
+
+  /* If we are out of memory, makefd_xprt has already dumped an error.  */
+  if (xprt == NULL)
+    {
+      __svc_wait_on_error ();
+      return FALSE;
+    }
+
   memcpy (&xprt->xp_raddr, &addr, sizeof (addr));
   xprt->xp_addrlen = len;
   return FALSE;		/* there is never an rpc msg to be processed */
