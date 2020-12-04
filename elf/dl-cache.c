@@ -242,6 +242,11 @@ _dl_load_cache_lookup (const char *name)
 	  && ((cachesize - sizeof *cache_new) / sizeof (struct file_entry_new)
 	      >= ((struct cache_file_new *) file)->nlibs))
 	{
+	  if (! cache_file_new_matches_endian (file))
+	    {
+	      __munmap (file, cachesize);
+	      file = (void *) -1;
+	    }
 	  cache_new = file;
 	  cache = file;
 	}
@@ -263,7 +268,20 @@ _dl_load_cache_lookup (const char *name)
 	  if (cachesize < (offset + sizeof (struct cache_file_new))
 	      || memcmp (cache_new->magic, CACHEMAGIC_VERSION_NEW,
 			 sizeof CACHEMAGIC_VERSION_NEW - 1) != 0)
-	    cache_new = (void *) -1;
+	      cache_new = (void *) -1;
+	  else
+	    {
+	      if (! cache_file_new_matches_endian (cache_new))
+		{
+		  /* The old-format part of the cache is bogus as well
+		     if the endianness does not match.  (But it is
+		     unclear how the new header can be located if the
+		     endianess does not match.)  */
+		  cache = (void *) -1;
+		  cache_new = (void *) -1;
+		  __munmap (file, cachesize);
+		}
+	    }
 	}
       else
 	{

@@ -152,6 +152,14 @@ print_entry (const char *lib, int flag, unsigned int osversion,
   printf (") => %s\n", key);
 }
 
+/* Print an error and exit if the new-file cache is internally
+   inconsistent.  */
+static void
+check_new_cache (struct cache_file_new *cache)
+{
+  if (! cache_file_new_matches_endian (cache))
+    error (EXIT_FAILURE, 0, _("Cache file has wrong endianness.\n"));
+}
 
 /* Print the whole cache file, if a file contains the new cache format
    hidden in the old one, print the contents of the new format.  */
@@ -193,6 +201,7 @@ print_cache (const char *cache_name)
 	  || memcmp (cache_new->version, CACHE_VERSION,
 		      sizeof CACHE_VERSION - 1))
 	error (EXIT_FAILURE, 0, _("File is not a cache file.\n"));
+      check_new_cache (cache_new);
       format = 1;
       /* This is where the strings start.  */
       cache_data = (const char *) cache_new;
@@ -222,6 +231,7 @@ print_cache (const char *cache_name)
 	      && memcmp (cache_new->version, CACHE_VERSION,
 			 sizeof CACHE_VERSION - 1) == 0)
 	    {
+	      check_new_cache (cache_new);
 	      cache_data = (const char *) cache_new;
 	      format = 1;
 	    }
@@ -361,6 +371,7 @@ save_cache (const char *cache_name)
 
       file_entries_new->nlibs = cache_entry_count;
       file_entries_new->len_strings = total_strlen;
+      file_entries_new->flags = cache_file_new_flags_endian_current;
     }
 
   /* Pad for alignment of cache_file_new.  */

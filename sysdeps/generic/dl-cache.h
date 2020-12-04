@@ -16,6 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _DL_CACHE_H
+#define _DL_CACHE_H
+
+#include <endian.h>
+#include <stdbool.h>
 #include <stdint.h>
 
 #ifndef _DL_CACHE_DEFAULT_ID
@@ -92,17 +97,72 @@ struct file_entry_new
   uint64_t hwcap;		/* Hwcap entry.	 */
 };
 
+/* See flags member of struct cache_file_new below.  */
+enum
+  {
+    /* No endianness information available.  An old ldconfig version
+       without endianness support wrote the file.  */
+    cache_file_new_flags_endian_unset = 0,
+
+    /* Cache is invalid and should be ignored.  */
+    cache_file_new_flags_endian_invalid = 1,
+
+    /* Cache format is little endian.  */
+    cache_file_new_flags_endian_little = 2,
+
+    /* Cache format is big endian.  */
+    cache_file_new_flags_endian_big = 3,
+
+    /* Bit mask to extract the cache_file_new_flags_endian_*
+       values.  */
+    cache_file_new_flags_endian_mask = 3,
+
+    /* Expected value of the endian bits in the flags member for the
+       current architecture.  */
+    cache_file_new_flags_endian_current
+      = (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+	 ? cache_file_new_flags_endian_little
+	 : cache_file_new_flags_endian_big),
+  };
+
 struct cache_file_new
 {
   char magic[sizeof CACHEMAGIC_NEW - 1];
   char version[sizeof CACHE_VERSION - 1];
   uint32_t nlibs;		/* Number of entries.  */
   uint32_t len_strings;		/* Size of string table. */
-  uint32_t unused[5];		/* Leave space for future extensions
+
+  /* flags & cache_file_new_flags_endian_mask is one of the values
+     cache_file_new_flags_endian_unset, cache_file_new_flags_endian_invalid,
+     cache_file_new_flags_endian_little, cache_file_new_flags_endian_big.
+
+     The remaining bits are unused and should be generated as zero and
+     ignored by readers.  */
+  uint8_t flags;
+
+  uint8_t padding_unsed[3];	/* Not used, for future extensions.  */
+
+  uint32_t unused[4];		/* Leave space for future extensions
 				   and align to 8 byte boundary.  */
   struct file_entry_new libs[0]; /* Entries describing libraries.  */
   /* After this the string table of size len_strings is found.	*/
 };
+_Static_assert (sizeof (struct cache_file_new) == 48,
+		"size of struct cache_file_new");
+
+/* Returns false if *CACHE has the wrong endianness for this
+   architecture, and true if the endianness matches (or is
+   unknown).  */
+static inline bool
+cache_file_new_matches_endian (const struct cache_file_new *cache)
+{
+  /* A zero value for cache->flags means that no endianness
+     information is available.  */
+  return cache->flags == 0
+    || ((cache->flags & cache_file_new_flags_endian_big)
+	== cache_file_new_flags_endian_current);
+}
+
 
 /* Used to align cache_file_new.  */
 #define ALIGN_CACHE(addr)				\
@@ -110,3 +170,5 @@ struct cache_file_new
  & (~(__alignof__ (struct cache_file_new) - 1)))
 
 extern int _dl_cache_libcmp (const char *p1, const char *p2) attribute_hidden;
+
+#endif /* _DL_CACHE_H */
