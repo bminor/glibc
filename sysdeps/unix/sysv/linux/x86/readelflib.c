@@ -44,7 +44,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	/* X32 libraries are always libc.so.6+.  */
 	file_flag = FLAG_X8664_LIBX32|FLAG_ELF_LIBC6;
       break;
-#ifndef SKIP_EM_IA_64
+#ifndef __x86_64__
     case EM_IA_64:
       if (elf_header->e_ident[EI_CLASS] == ELFCLASS64)
 	{
@@ -59,7 +59,7 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	break;
       /* Fall through.  */
     default:
-#ifndef SKIP_EM_IA_64
+#ifndef __x86_64__
 failed:
 #endif
       error (0, 0, _("%s is for unknown machine %d.\n"),
