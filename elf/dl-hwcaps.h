@@ -20,6 +20,7 @@
 #define _DL_HWCAPS_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 #include <elf/dl-tunables.h>
 
