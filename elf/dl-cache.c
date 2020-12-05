@@ -25,6 +25,7 @@
 #include <stdint.h>
 #include <_itoa.h>
 #include <dl-hwcaps.h>
+#include <dl-isa-level.h>
 
 #ifndef _DL_PLATFORMS_COUNT
 # define _DL_PLATFORMS_COUNT 0
@@ -284,6 +285,9 @@ search_cache (const char *string_table, uint32_t string_table_size,
 
 #ifdef SHARED
 			  named_hwcap = dl_cache_hwcap_extension (libnew);
+			  if (named_hwcap
+			      && !dl_cache_hwcap_isa_level_compatible (libnew))
+			    continue;
 #endif
 
 			  /* The entries with named/extension hwcaps

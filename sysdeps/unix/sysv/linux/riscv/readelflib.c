@@ -17,11 +17,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 
-int process_elf32_file (const char *file_name, const char *lib, int *flag,
-			unsigned int *osversion, char **soname,
+int process_elf32_file (const char *file_name, const char *lib,
+			int *flag, unsigned int *osversion,
+			unsigned int *isa_level, char **soname,
 			void *file_contents, size_t file_length);
-int process_elf64_file (const char *file_name, const char *lib, int *flag,
-			unsigned int *osversion, char **soname,
+int process_elf64_file (const char *file_name, const char *lib,
+			int *flag, unsigned int *osversion,
+			unsigned int *isa_level, char **soname,
 			void *file_contents, size_t file_length);
 
 /* The ELF flags supported by our current glibc port:
@@ -38,8 +40,8 @@ int process_elf64_file (const char *file_name, const char *lib, int *flag,
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
 process_elf_file (const char *file_name, const char *lib, int *flag,
-		  unsigned int *osversion, char **soname, void *file_contents,
-		  size_t file_length)
+		  unsigned int *osversion, unsigned int *isa_level,
+		  char **soname, void *file_contents, size_t file_length)
 {
   ElfW(Ehdr) *elf_header = (ElfW(Ehdr) *) file_contents;
   Elf32_Ehdr *elf32_header = (Elf32_Ehdr *) elf_header;
@@ -52,14 +54,14 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 
   if (elf_header->e_ident [EI_CLASS] == ELFCLASS32)
     {
-      ret = process_elf32_file (file_name, lib, flag, osversion, soname,
-				file_contents, file_length);
+      ret = process_elf32_file (file_name, lib, flag, osversion, isa_level,
+				soname, file_contents, file_length);
       flags = elf32_header->e_flags;
     }
   else
     {
-      ret = process_elf64_file (file_name, lib, flag, osversion, soname,
-				file_contents, file_length);
+      ret = process_elf64_file (file_name, lib, flag, osversion, isa_level,
+				soname, file_contents, file_length);
       flags = elf64_header->e_flags;
     }
 

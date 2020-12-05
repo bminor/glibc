@@ -20,18 +20,20 @@
    <https://www.gnu.org/licenses/>.  */
 
 
-int process_elf32_file (const char *file_name, const char *lib, int *flag,
-			unsigned int *osversion, char **soname,
+int process_elf32_file (const char *file_name, const char *lib,
+			int *flag, unsigned int *osversion,
+			unsigned int *isa_level, char **soname,
 			void *file_contents, size_t file_length);
-int process_elf64_file (const char *file_name, const char *lib, int *flag,
-			unsigned int *osversion, char **soname,
+int process_elf64_file (const char *file_name, const char *lib,
+			int *flag, unsigned int *osversion,
+			unsigned int *isa_level, char **soname,
 			void *file_contents, size_t file_length);
 
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
 process_elf_file (const char *file_name, const char *lib, int *flag,
-		  unsigned int *osversion, char **soname, void *file_contents,
-		  size_t file_length)
+		  unsigned int *osversion, unsigned int *isa_level,
+		  char **soname, void *file_contents, size_t file_length)
 {
   union
     {
@@ -45,8 +47,8 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
   elf_header.eh = file_contents;
   if (elf_header.eh->e_ident [EI_CLASS] == ELFCLASS32)
     {
-      ret = process_elf32_file (file_name, lib, flag, osversion, soname,
-				file_contents, file_length);
+      ret = process_elf32_file (file_name, lib, flag, osversion, isa_level,
+				soname, file_contents, file_length);
       if (!ret)
 	{
 	  Elf32_Word flags = elf_header.eh32->e_flags;
@@ -62,8 +64,8 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
     }
   else
     {
-      ret = process_elf64_file (file_name, lib, flag, osversion, soname,
-				file_contents, file_length);
+      ret = process_elf64_file (file_name, lib, flag, osversion, isa_level,
+				soname, file_contents, file_length);
       /* n64 libraries are always libc.so.6+.  */
       if (!ret)
 	{

@@ -146,6 +146,7 @@ struct cache_entry
   struct stringtable_entry *path; /* Path to find library.  */
   int flags;			/* Flags to indicate kind of library.  */
   unsigned int osversion;	/* Required OS version.  */
+  unsigned int isa_level;	/* Required ISA level.  */
   uint64_t hwcap;		/* Important hardware capabilities.  */
   int bits_hwcap;		/* Number of bits set in hwcap.  */
 
@@ -549,6 +550,19 @@ write_extensions (int fd, uint32_t str_offset,
   free (ext);
 }
 
+/* Compute the hwcap value from ENTRY.  */
+static inline uint64_t
+compute_hwcap_value (struct cache_entry *entry)
+{
+  if (entry->isa_level > DL_CACHE_HWCAP_ISA_LEVEL_MASK)
+    error (EXIT_FAILURE, 0, _("%s: ISA level is too high (%d > %d)"),
+	   entry->path->string, entry->isa_level,
+	   DL_CACHE_HWCAP_ISA_LEVEL_MASK);
+  return (DL_CACHE_HWCAP_EXTENSION
+	  | (((uint64_t) entry->isa_level) << 32)
+	  | entry->hwcaps->section_index);
+}
+
 /* Save the contents of the cache.  */
 void
 save_cache (const char *cache_name)
@@ -662,7 +676,7 @@ save_cache (const char *cache_name)
 	    file_entries_new->libs[idx_new].hwcap = entry->hwcap;
 	  else
 	    file_entries_new->libs[idx_new].hwcap
-	      = DL_CACHE_HWCAP_EXTENSION | entry->hwcaps->section_index;
+	      = compute_hwcap_value (entry);
 	  file_entries_new->libs[idx_new].key
 	    = str_offset + entry->lib->offset;
 	  file_entries_new->libs[idx_new].value
@@ -777,7 +791,8 @@ save_cache (const char *cache_name)
 /* Add one library to the cache.  */
 void
 add_to_cache (const char *path, const char *filename, const char *soname,
-	      int flags, unsigned int osversion, uint64_t hwcap,
+	      int flags, unsigned int osversion,
+	      unsigned int isa_level, uint64_t hwcap,
 	      struct glibc_hwcaps_subdirectory *hwcaps)
 {
   struct cache_entry *new_entry = xmalloc (sizeof (*new_entry));
@@ -795,6 +810,7 @@ add_to_cache (const char *path, const char *filename, const char *soname,
   new_entry->path = path_interned;
   new_entry->flags = flags;
   new_entry->osversion = osversion;
+  new_entry->isa_level = isa_level;
   new_entry->hwcap = hwcap;
   new_entry->hwcaps = hwcaps;
   new_entry->bits_hwcap = 0;
@@ -851,6 +867,7 @@ struct aux_cache_entry
   struct aux_cache_entry_id id;
   int flags;
   unsigned int osversion;
+  unsigned int isa_level;
   int used;
   char *soname;
   struct aux_cache_entry *next;
@@ -864,7 +881,7 @@ struct aux_cache_file_entry
   int32_t flags;		/* This is 1 for an ELF library.  */
   uint32_t soname;		/* String table indice.  */
   uint32_t osversion;		/* Required OS version.	 */
-  int32_t pad;
+  uint32_t isa_level;		/* Required ISA level.	 */
 };
 
 /* ldconfig maintains an auxiliary cache file that allows
@@ -915,7 +932,8 @@ init_aux_cache (void)
 
 int
 search_aux_cache (struct stat64 *stat_buf, int *flags,
-		  unsigned int *osversion, char **soname)
+		  unsigned int *osversion, unsigned int *isa_level,
+		  char **soname)
 {
   struct aux_cache_entry_id id;
   id.ino = (uint64_t) stat_buf->st_ino;
@@ -933,6 +951,7 @@ search_aux_cache (struct stat64 *stat_buf, int *flags,
       {
 	*flags = entry->flags;
 	*osversion = entry->osversion;
+	*isa_level = entry->isa_level;
 	if (entry->soname != NULL)
 	  *soname = xstrdup (entry->soname);
 	else
@@ -946,7 +965,8 @@ search_aux_cache (struct stat64 *stat_buf, int *flags,
 
 static void
 insert_to_aux_cache (struct aux_cache_entry_id *id, int flags,
-		     unsigned int osversion, const char *soname, int used)
+		     unsigned int osversion, unsigned int isa_level,
+		     const char *soname, int used)
 {
   size_t hash = aux_cache_entry_id_hash (id) % aux_hash_size;
   struct aux_cache_entry *entry;
@@ -962,6 +982,7 @@ insert_to_aux_cache (struct aux_cache_entry_id *id, int flags,
   entry->id = *id;
   entry->flags = flags;
   entry->osversion = osversion;
+  entry->isa_level = isa_level;
   entry->used = used;
   if (soname != NULL)
     entry->soname = memcpy ((char *) (entry + 1), soname, len);
@@ -973,14 +994,15 @@ insert_to_aux_cache (struct aux_cache_entry_id *id, int flags,
 
 void
 add_to_aux_cache (struct stat64 *stat_buf, int flags,
-		  unsigned int osversion, const char *soname)
+		  unsigned int osversion, unsigned int isa_level,
+		  const char *soname)
 {
   struct aux_cache_entry_id id;
   id.ino = (uint64_t) stat_buf->st_ino;
   id.ctime = (uint64_t) stat_buf->st_ctime;
   id.size = (uint64_t) stat_buf->st_size;
   id.dev = (uint64_t) stat_buf->st_dev;
-  insert_to_aux_cache (&id, flags, osversion, soname, 1);
+  insert_to_aux_cache (&id, flags, osversion, isa_level, soname, 1);
 }
 
 /* Load auxiliary cache to search for unchanged entries.   */
@@ -1026,6 +1048,7 @@ load_aux_cache (const char *aux_cache_name)
     insert_to_aux_cache (&aux_cache->libs[i].id,
 			 aux_cache->libs[i].flags,
 			 aux_cache->libs[i].osversion,
+			 aux_cache->libs[i].isa_level,
 			 aux_cache->libs[i].soname == 0
 			 ? NULL : aux_cache_data + aux_cache->libs[i].soname,
 			 0);
@@ -1094,7 +1117,7 @@ save_aux_cache (const char *aux_cache_name)
 	      str_offset += len;
 	    }
 	  file_entries->libs[idx].osversion = entry->osversion;
-	  file_entries->libs[idx++].pad = 0;
+	  file_entries->libs[idx++].isa_level = entry->isa_level;
 	}
 
   /* Write out auxiliary cache file.  */

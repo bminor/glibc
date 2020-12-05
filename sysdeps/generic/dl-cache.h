@@ -106,14 +106,24 @@ struct file_entry_new
    entries.  */
 #define DL_CACHE_HWCAP_EXTENSION (1ULL << 62)
 
+/* The number of the ISA level bits in the upper 32 bits of the hwcap
+   field.  */
+#define DL_CACHE_HWCAP_ISA_LEVEL_COUNT 10
+
+/* The mask of the ISA level bits in the hwcap field.  */
+#define DL_CACHE_HWCAP_ISA_LEVEL_MASK \
+  ((1 << DL_CACHE_HWCAP_ISA_LEVEL_COUNT) -1)
+
 /* Return true if the ENTRY->hwcap value indicates that
    DL_CACHE_HWCAP_EXTENSION is used.  */
 static inline bool
 dl_cache_hwcap_extension (struct file_entry_new *entry)
 {
-  /* If DL_CACHE_HWCAP_EXTENSION is set, but other bits as well, this
-     is a different kind of extension.  */
-  return (entry->hwcap >> 32) == (DL_CACHE_HWCAP_EXTENSION >> 32);
+  /* This is an hwcap extension if only the DL_CACHE_HWCAP_EXTENSION bit
+     is set, ignoring the lower 32 bits as well as the ISA level bits in
+     the upper 32 bits.  */
+  return (((entry->hwcap >> 32) & ~DL_CACHE_HWCAP_ISA_LEVEL_MASK)
+	  == (DL_CACHE_HWCAP_EXTENSION >> 32));
 }
 
 /* See flags member of struct cache_file_new below.  */

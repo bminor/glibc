@@ -75,7 +75,8 @@ is_gdb_python_file (const char *name)
 int
 process_file (const char *real_file_name, const char *file_name,
 	      const char *lib, int *flag, unsigned int *osversion,
-	      char **soname, int is_link, struct stat64 *stat_buf)
+	      unsigned int *isa_level, char **soname, int is_link,
+	      struct stat64 *stat_buf)
 {
   FILE *file;
   struct stat64 statbuf;
@@ -173,8 +174,8 @@ process_file (const char *real_file_name, const char *file_name,
   /* Libraries have to be shared object files.  */
   else if (elf_header->e_type != ET_DYN)
     ret = 1;
-  else if (process_elf_file (file_name, lib, flag, osversion, soname,
-			     file_contents, statbuf.st_size))
+  else if (process_elf_file (file_name, lib, flag, osversion, isa_level,
+			     soname, file_contents, statbuf.st_size))
     ret = 1;
 
  done:

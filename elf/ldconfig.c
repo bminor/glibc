@@ -655,6 +655,7 @@ manual_link (char *library)
   struct stat64 stat_buf;
   int flag;
   unsigned int osversion;
+  unsigned int isa_level;
 
   /* Prepare arguments for create_links call.  Split library name in
      directory and filename first.  Since path is allocated, we've got
@@ -721,7 +722,7 @@ manual_link (char *library)
     }
 
   if (process_file (real_library, library, libname, &flag, &osversion,
-		    &soname, 0, &stat_buf))
+		    &isa_level, &soname, 0, &stat_buf))
     {
       error (0, 0, _("No link created since soname could not be found for %s"),
 	     library);
@@ -768,6 +769,7 @@ struct dlib_entry
   int flag;
   int is_link;
   unsigned int osversion;
+  unsigned int isa_level;
   struct dlib_entry *next;
 };
 
@@ -980,17 +982,21 @@ search_dir (const struct dir_entry *entry)
 	 library already and it's not changed.  */
       char *soname;
       unsigned int osversion;
-      if (!search_aux_cache (&lstat_buf, &flag, &osversion, &soname))
+      unsigned int isa_level;
+      if (!search_aux_cache (&lstat_buf, &flag, &osversion, &isa_level,
+			     &soname))
 	{
 	  if (process_file (real_name, file_name, direntry->d_name, &flag,
-			    &osversion, &soname, is_link, &lstat_buf))
+			    &osversion, &isa_level, &soname, is_link,
+			    &lstat_buf))
 	    {
 	      if (real_name != real_file_name)
 		free (real_name);
 	      continue;
 	    }
 	  else if (opt_build_cache)
-	    add_to_aux_cache (&lstat_buf, flag, osversion, soname);
+	    add_to_aux_cache (&lstat_buf, flag, osversion, isa_level,
+			      soname);
 	}
 
       if (soname == NULL)
@@ -1096,6 +1102,7 @@ search_dir (const struct dir_entry *entry)
 		  dlib_ptr->name = xstrdup (direntry->d_name);
 		  dlib_ptr->is_link = is_link;
 		  dlib_ptr->osversion = osversion;
+		  dlib_ptr->isa_level = isa_level;
 		}
 	      /* Don't add this library, abort loop.  */
 	      /* Also free soname, since it's dynamically allocated.  */
@@ -1112,6 +1119,7 @@ search_dir (const struct dir_entry *entry)
 	  dlib_ptr->flag = flag;
 	  dlib_ptr->is_link = is_link;
 	  dlib_ptr->osversion = osversion;
+	  dlib_ptr->isa_level = isa_level;
 	  /* Add at head of list.  */
 	  dlib_ptr->next = dlibs;
 	  dlibs = dlib_ptr;
@@ -1149,7 +1157,7 @@ search_dir (const struct dir_entry *entry)
       if (opt_build_cache)
 	add_to_cache (entry->path, filename, dlib_ptr->soname,
 		      dlib_ptr->flag, dlib_ptr->osversion,
-		      hwcap, entry->hwcaps);
+		      dlib_ptr->isa_level, hwcap, entry->hwcaps);
     }
 
   /* Free all resources.  */

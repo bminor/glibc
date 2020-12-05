@@ -17,6 +17,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <elf-read-prop.h>
+
 /* This code is a heavily simplified version of the readelf program
    that's part of the current binutils development version.  For architectures
    which need to handle both 32bit and 64bit ELF libraries,  this file is
@@ -40,8 +42,8 @@ do								\
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
 process_elf_file (const char *file_name, const char *lib, int *flag,
-		  unsigned int *osversion, char **soname, void *file_contents,
-		  size_t file_length)
+		  unsigned int *osversion, unsigned int *isa_level,
+		  char **soname, void *file_contents, size_t file_length)
 {
   int i;
   unsigned int j;
@@ -85,6 +87,9 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
   /* The library is an elf library, now search for soname and
      libc5/libc6.  */
   *flag = FLAG_ELF;
+
+  /* The default ISA level is 0.  */
+  *isa_level = 0;
 
   dynamic_addr = 0;
   dynamic_size = 0;
@@ -162,6 +167,78 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 			    | ((abi_note [6] & 0xff) << 8)
 			    | (abi_note [7] & 0xff));
 	    }
+	  break;
+
+	case PT_GNU_PROPERTY:
+	  /* The NT_GNU_PROPERTY_TYPE_0 note must be aligned to 4 bytes
+	     in 32-bit objects and to 8 bytes in 64-bit objects.  Skip
+	     notes with incorrect alignment.  */
+	  if (segment->p_align == (__ELF_NATIVE_CLASS / 8))
+	    {
+	      const ElfW(Nhdr) *note = (const void *) (file_contents
+						       + segment->p_offset);
+	      const ElfW(Addr) size = segment->p_filesz;
+	      const ElfW(Addr) align = segment->p_align;
+
+	      const ElfW(Addr) start = (ElfW(Addr)) (uintptr_t) note;
+	      unsigned int last_type = 0;
+
+	      while ((ElfW(Addr)) (uintptr_t) (note + 1) - start < size)
+		{
+		  /* Find the NT_GNU_PROPERTY_TYPE_0 note.  */
+		  if (note->n_namesz == 4
+		      && note->n_type == NT_GNU_PROPERTY_TYPE_0
+		      && memcmp (note + 1, "GNU", 4) == 0)
+		    {
+		      /* Check for invalid property.  */
+		      if (note->n_descsz < 8
+			  || (note->n_descsz % sizeof (ElfW(Addr))) != 0)
+			goto done;
+
+		      /* Start and end of property array.  */
+		      unsigned char *ptr = (unsigned char *) (note + 1) + 4;
+		      unsigned char *ptr_end = ptr + note->n_descsz;
+
+		      do
+			{
+			  unsigned int type = *(unsigned int *) ptr;
+			  unsigned int datasz = *(unsigned int *) (ptr + 4);
+
+			  /* Property type must be in ascending order.  */
+			  if (type < last_type)
+			    goto done;
+
+			  ptr += 8;
+			  if ((ptr + datasz) > ptr_end)
+			    goto done;
+
+			  last_type = type;
+
+			  /* Target specific property processing.
+			     Return value:
+			       false: Continue processing the properties.
+			       true : Stop processing the properties.
+			   */
+			  if (read_gnu_property (isa_level, type,
+						 datasz, ptr))
+			    goto done;
+
+			  /* Check the next property item.  */
+			  ptr += ALIGN_UP (datasz, sizeof (ElfW(Addr)));
+			}
+		      while ((ptr_end - ptr) >= 8);
+
+		      /* Only handle one NT_GNU_PROPERTY_TYPE_0.  */
+		      goto done;
+		    }
+
+		  note = ((const void *) note
+			  + ELF_NOTE_NEXT_OFFSET (note->n_namesz,
+						  note->n_descsz,
+						  align));
+		}
+	    }
+done:
 	  break;
 
 	default:
