@@ -16,13 +16,20 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <signal.h>
-#include <unistd.h>
+#include <errno.h>
+#include <pthread.h>
 
 /* Raise the signal SIG.  */
 int
 raise (int sig)
 {
-  return __kill (__getpid (), sig);
+  int ret = __pthread_kill (__pthread_self (), sig);
+  if (ret != 0)
+    {
+      __set_errno (ret);
+      ret = -1;
+    }
+  return ret;
 }
 libc_hidden_def (raise)
 weak_alias (raise, gsignal)

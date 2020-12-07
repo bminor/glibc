@@ -16,4 +16,9 @@ extern int __pthread_barrier_wait (pthread_barrier_t *__barrier)
 
 /* This function is called to initialize the pthread library.  */
 extern void __pthread_initialize (void) __attribute__ ((weak));
+
+extern int __pthread_kill (pthread_t threadid, int signo);
+
+extern pthread_t __pthread_self (void);
+
 #endif

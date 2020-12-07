@@ -20,7 +20,9 @@
 #include <tls.h>
 
 pthread_t
-pthread_self (void)
+__pthread_self (void)
 {
   return (pthread_t) THREAD_SELF;
 }
+libc_hidden_def (__pthread_self)
+weak_alias (__pthread_self, pthread_self)

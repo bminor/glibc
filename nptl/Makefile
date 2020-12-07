@@ -251,6 +251,7 @@ CFLAGS-pthread_clockjoin.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_once.c += $(uses-callbacks) -fexceptions \
 			-fasynchronous-unwind-tables
 CFLAGS-pthread_cond_wait.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_kill.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_wait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_timedwait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_clockwait.c = -fexceptions -fasynchronous-unwind-tables
