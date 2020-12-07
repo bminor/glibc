@@ -21,13 +21,8 @@
 #include <shlib-compat.h>
 
 int
-__pthread_kill (pthread_t threadid, int signo)
+__pthread_kill_internal (pthread_t threadid, int signo)
 {
-  /* Disallow sending the signal we use for cancellation, timers,
-     for the setxid implementation.  */
-  if (__is_internal_signal (signo))
-    return EINVAL;
-
   pid_t tid;
   struct pthread *pd = (struct pthread *) threadid;
 
@@ -54,6 +49,17 @@ __pthread_kill (pthread_t threadid, int signo)
     val = ESRCH;
 
   return val;
+}
+
+int
+__pthread_kill (pthread_t threadid, int signo)
+{
+  /* Disallow sending the signal we use for cancellation, timers,
+     for the setxid implementation.  */
+  if (__is_internal_signal (signo))
+    return EINVAL;
+
+  return __pthread_kill_internal (threadid, signo);
 }
 /* Some architectures (for instance arm) might pull raise through libgcc, so
    avoid the symbol version if it ends up being used on ld.so.  */

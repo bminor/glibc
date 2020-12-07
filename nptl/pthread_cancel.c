@@ -110,11 +110,7 @@ __pthread_cancel (pthread_t th)
       return 0;
     }
 
-  pid_t pid = __getpid ();
-  int val = INTERNAL_SYSCALL_CALL (tgkill, pid, pd->tid, SIGCANCEL);
-  return INTERNAL_SYSCALL_ERROR_P (val)
-	 ? INTERNAL_SYSCALL_ERRNO (val)
-	 : 0;
+  return __pthread_kill_internal (th, SIGCANCEL);
 }
 versioned_symbol (libc, __pthread_cancel, pthread_cancel, GLIBC_2_34);
 
