@@ -22,3 +22,4 @@
 #include "wcstol.c"
 
 weak_alias (wcstoll, wcstoq)
+weak_alias (wcstoll, wcstoimax)

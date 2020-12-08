@@ -30,4 +30,5 @@ compat_symbol (libc, __strtoll_internal, __strtoq_internal, GLIBC_2_0);
 
 # endif
 weak_alias (strtoll, strtoq)
+weak_alias (strtoll, strtoimax)
 #endif

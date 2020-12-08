@@ -30,4 +30,5 @@ compat_symbol (libc, __strtoull_internal, __strtouq_internal, GLIBC_2_0);
 
 # endif
 weak_alias (strtoull, strtouq)
+weak_alias (strtoull, strtoumax)
 #endif

@@ -56,7 +56,6 @@ routines	:=							      \
 	system canonicalize						      \
 	a64l l64a							      \
 	rpmatch strfmon strfmon_l getsubopt xpg_basename fmtmsg		      \
-	strtoimax strtoumax wcstoimax wcstoumax				      \
 	getcontext setcontext makecontext swapcontext
 aux =	grouping groupingwc tens_in_limb
 
