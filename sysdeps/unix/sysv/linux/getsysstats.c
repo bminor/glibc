@@ -143,6 +143,7 @@ __get_nprocs (void)
   char *re = buffer_end;
 
   const int flags = O_RDONLY | O_CLOEXEC;
+  /* This file contains comma-separated ranges.  */
   int fd = __open_nocancel ("/sys/devices/system/cpu/online", flags);
   char *l;
   int result = 0;
@@ -175,10 +176,10 @@ __get_nprocs (void)
 	    result += m - n + 1;
 
 	    l = endp;
-	    while (l < re && isspace (*l))
+	    if (l < re && *l == ',')
 	      ++l;
 	  }
-	while (l < re);
+	while (l < re && *l != '\n');
 
       __close_nocancel_nostatus (fd);
 
