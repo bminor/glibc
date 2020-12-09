@@ -153,7 +153,7 @@ sort_priorities_by_name (void)
 	else
 	  to_compare = previous->name_length;
 	int cmp = memcmp (current->name, previous->name, to_compare);
-	if (cmp >= 0
+	if (cmp > 0
 	    || (cmp == 0 && current->name_length >= previous->name_length))
 	  break;
 
