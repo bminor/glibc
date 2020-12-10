@@ -1719,7 +1719,7 @@ $(objpfx)tst-dlopenfailmod1.so: \
 LDFLAGS-tst-dlopenfaillinkmod.so = -Wl,-soname,tst-dlopenfail-missingmod.so
 $(objpfx)tst-dlopenfailmod2.so: $(shared-thread-library)
 $(objpfx)tst-dlopenfail-2: $(libdl)
-$(objpfx)tst-dlopenfail.out: \
+$(objpfx)tst-dlopenfail-2.out: \
   $(objpfx)tst-dlopenfailmod1.so $(objpfx)tst-dlopenfailmod2.so \
   $(objpfx)tst-dlopenfailmod3.so
 
