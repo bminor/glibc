@@ -398,6 +398,9 @@
 # elif !__GNUC_PREREQ (4, 1)
 #  warning _FORTIFY_SOURCE requires GCC 4.1 or later
 # elif _FORTIFY_SOURCE > 1
+#  if _FORTIFY_SOURCE > 2
+#   warning _FORTIFY_SOURCE > 2 is treated like 2 on this platform
+#  endif
 #  define __USE_FORTIFY_LEVEL 2
 # else
 #  define __USE_FORTIFY_LEVEL 1
