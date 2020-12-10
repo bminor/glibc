@@ -212,7 +212,8 @@ process_line (struct nss_database_data *data, char *line)
   if (line[0] == '\0' || name == line)
     /* Syntax error.  Skip this line.  */
     return true;
-  *line++ = '\0';
+  while (line[0] != '\0' && (isspace (line[0]) || line[0] == ':'))
+    *line++ = '\0';
 
   int db = name_to_database_index (name);
   if (db < 0)

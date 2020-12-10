@@ -31,6 +31,10 @@ routines := fgetgrent initgroups setgroups \
 
 tests := testgrp tst-putgrent
 
+tests-container = \
+	tst-initgroups1 \
+	tst-initgroups2
+
 ifeq (yes,$(build-shared))
 test-srcs :=  tst_fgetgrent
 ifeq ($(run-built-tests),yes)

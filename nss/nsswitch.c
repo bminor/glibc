@@ -81,7 +81,10 @@ __nss_database_lookup2 (const char *database, const char *alternate_name,
   if (database_names[database_id] == NULL)
     return -1;
 
-  if (__nss_database_get (database_id, ni))
+  /* If *NI is NULL, the database was not mentioned in nsswitch.conf.
+     If *NI is not NULL, but *NI->module is NULL, the database was in
+     nsswitch.conf but listed no actions.  We test for the former.  */
+  if (__nss_database_get (database_id, ni) && *ni != NULL)
     {
       /* Success.  */
       return 0;

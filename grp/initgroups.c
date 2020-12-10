@@ -72,11 +72,13 @@ internal_getgrouplist (const char *user, gid_t group, long int *size,
 
   nss_action_list nip;
 
-  if (__nss_database_get (nss_database_initgroups, &nip))
+  if (__nss_database_get (nss_database_initgroups, &nip)
+      && nip != NULL)
     {
       use_initgroups_entry = true;
     }
-  else if (__nss_database_get (nss_database_group, &nip))
+  else if (__nss_database_get (nss_database_group, &nip)
+	   && nip != NULL)
     {
       use_initgroups_entry = false;
     }
