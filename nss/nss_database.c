@@ -271,9 +271,9 @@ nss_database_reload_1 (struct nss_database_data *data, FILE *fp)
   while (true)
     {
       ssize_t ret = __getline (&line, &line_allocated, fp);
-      if (ferror_unlocked (fp))
+      if (__ferror_unlocked (fp))
         break;
-      if (feof_unlocked (fp))
+      if (__feof_unlocked (fp))
         {
           result = true;
           break;
