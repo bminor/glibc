@@ -708,7 +708,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, locale_t l)
   assert (((uintptr_t) l_data.indirect) % __alignof__ (l_data.indirect[0]) == 0);
 
   /* We need the elements of the string as unsigned values since they
-     are used as indeces.  */
+     are used as indices.  */
   const USTRING_TYPE *usrc = (const USTRING_TYPE *) src;
 
   /* Allocate cache for small strings on the stack and fill it with weight and

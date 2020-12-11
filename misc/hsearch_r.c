@@ -181,7 +181,7 @@ __hsearch_r (ENTRY item, ACTION action, ENTRY **retval,
       do
 	{
 	  /* Because SIZE is prime this guarantees to step through all
-             available indeces.  */
+             available indices.  */
           if (idx <= hval2)
 	    idx = htab->size + idx - hval2;
 	  else

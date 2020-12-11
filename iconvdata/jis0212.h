@@ -25,7 +25,7 @@
 #include <stdint.h>
 
 
-/* Struct for table with indeces in mapping table.  */
+/* Struct for table with indices in mapping table.  */
 struct jisx0212_idx
 {
   uint16_t start;

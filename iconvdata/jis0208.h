@@ -23,7 +23,7 @@
 #include <gconv.h>
 #include <stdint.h>
 
-/* Struct for table with indeces in UCS mapping table.  */
+/* Struct for table with indices in UCS mapping table.  */
 struct jisx0208_ucs_idx
 {
   uint16_t start;

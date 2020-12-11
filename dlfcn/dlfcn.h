@@ -40,7 +40,7 @@
 # define RTLD_DEFAULT	((void *) 0)
 
 
-/* Type for namespace indeces.  */
+/* Type for namespace indices.  */
 typedef long int Lmid_t;
 
 /* Special namespace ID values.  */

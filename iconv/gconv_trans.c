@@ -79,8 +79,8 @@ __gconv_transliterate (struct __gconv_step *step,
     return (winbuf == winbufend
 	    ? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);
 
-  /* The array starting at FROM_IDX contains indeces to the string table
-     in FROM_TBL.  The indeces are sorted wrt to the strings.  I.e., we
+  /* The array starting at FROM_IDX contains indices to the string table
+     in FROM_TBL.  The indices are sorted wrt to the strings.  I.e., we
      are doing binary search.  */
   low = 0;
   high = size;
