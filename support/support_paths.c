@@ -72,6 +72,13 @@ const char support_sbindir_prefix[] = SBINDIR_PATH;
 # error please -DSBINDIR_PATH=something in the Makefile
 #endif
 
+#ifdef SLIBDIR_PATH
+/* Corresponds to the system /lib or /lib64 directory.  */
+const char support_slibdir_prefix[] = SLIBDIR_PATH;
+#else
+# error please -DSLIBDIR_PATH=something in the Makefile
+#endif
+
 #ifdef ROOTSBINDIR_PATH
 /* Corresponds to the install's sbin/ directory.  */
 const char support_install_rootsbindir[] = ROOTSBINDIR_PATH;

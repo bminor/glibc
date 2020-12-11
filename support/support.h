@@ -114,6 +114,8 @@ extern const char support_libdir_prefix[];
 extern const char support_bindir_prefix[];
 /* Corresponds to the install's sbin/ directory.  */
 extern const char support_sbindir_prefix[];
+/* Corresponds to the install's system /lib or /lib64 directory.  */
+extern const char support_slibdir_prefix[];
 /* Corresponds to the install's sbin/ directory (without prefix).  */
 extern const char support_install_rootsbindir[];
 /* Corresponds to the install's compiled locale directory.  */

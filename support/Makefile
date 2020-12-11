@@ -196,6 +196,7 @@ CFLAGS-support_paths.c = \
 		-DLIBDIR_PATH=\"$(libdir)\" \
 		-DBINDIR_PATH=\"$(bindir)\" \
 		-DSBINDIR_PATH=\"$(sbindir)\" \
+		-DSLIBDIR_PATH=\"$(slibdir)\" \
 		-DROOTSBINDIR_PATH=\"$(rootsbindir)\" \
 		-DCOMPLOCALEDIR_PATH=\"$(complocaledir)\"
 
