@@ -478,7 +478,6 @@ typedef struct
 #define SHF_COMPRESSED	     (1 << 11)	/* Section with compressed data. */
 #define SHF_MASKOS	     0x0ff00000	/* OS-specific.  */
 #define SHF_MASKPROC	     0xf0000000	/* Processor-specific */
-#define SHF_GNU_BUILD_NOTE   (1 << 20)  /* Contains GNU build notes.  */
 #define SHF_GNU_RETAIN	     (1 << 21)  /* Not to be GCed by linker.  */
 #define SHF_ORDERED	     (1 << 30)	/* Special ordering requirement
 					   (Solaris).  */
