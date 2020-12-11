@@ -4224,11 +4224,14 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	if (__glibc_unlikely (e->key == tcache))
 	  {
 	    tcache_entry *tmp;
+	    size_t cnt = 0;
 	    LIBC_PROBE (memory_tcache_double_free, 2, e, tc_idx);
 	    for (tmp = tcache->entries[tc_idx];
 		 tmp;
-		 tmp = REVEAL_PTR (tmp->next))
+		 tmp = REVEAL_PTR (tmp->next), ++cnt)
 	      {
+		if (cnt >= mp_.tcache_count)
+		  malloc_printerr ("free(): too many chunks detected in tcache");
 		if (__glibc_unlikely (!aligned_OK (tmp)))
 		  malloc_printerr ("free(): unaligned chunk detected in tcache 2");
 		if (tmp == e)
