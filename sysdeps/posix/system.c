@@ -175,6 +175,10 @@ do_system (const char *line)
       __libc_cleanup_region_end (0);
 #endif
     }
+  else
+   /* POSIX states that failure to execute the shell should return
+      as if the shell had terminated using _exit(127).  */
+   status = W_EXITCODE (127, 0);
 
   DO_LOCK ();
   if (SUB_REF () == 0)

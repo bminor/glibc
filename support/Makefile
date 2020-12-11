@@ -91,6 +91,7 @@ libsupport-routines = \
   xchroot \
   xclock_gettime \
   xclose \
+  xchmod \
   xconnect \
   xcopy_file_range \
   xdlfcn \
