@@ -25,7 +25,7 @@
 
 __BEGIN_DECLS
 
-/* Remove any previous definitions.  */
+/* Remove any previous definition.  */
 #undef	alloca
 
 /* Allocate a block that will be freed when the calling function exits.  */

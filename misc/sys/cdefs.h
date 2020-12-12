@@ -25,7 +25,7 @@
 
 /* The GNU libc does not support any K&R compilers or the traditional mode
    of ISO C compilers anymore.  Check for some of the combinations not
-   anymore supported.  */
+   supported anymore.  */
 #if defined __GNUC__ && !defined __STDC__
 # error "You need a ISO C conforming compiler to use the glibc headers"
 #endif
@@ -47,7 +47,7 @@
 # endif
 
 /* GCC can always grok prototypes.  For C++ programs we add throw()
-   to help it optimize the function calls.  But this works only with
+   to help it optimize the function calls.  But this only works with
    gcc 2.8.x and egcs.  For gcc 3.2 and up we even mark C functions
    as non-throwing using a function attribute since programs can use
    the -fexceptions options for C code as well.  */
