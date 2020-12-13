@@ -35,4 +35,5 @@ __close (int fd)
   return err ? __hurd_fail (err) : 0;
 }
 libc_hidden_def (__close)
+strong_alias (__close, __libc_close)
 weak_alias (__close, close)
