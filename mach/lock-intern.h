@@ -57,7 +57,7 @@ extern void __spin_lock (__spin_lock_t *__lock);
 _EXTERN_INLINE void
 __spin_lock (__spin_lock_t *__lock)
 {
-  lll_lock (__lock, 0);
+  __lll_lock (__lock, 0);
 }
 #endif
 
@@ -68,7 +68,7 @@ extern void __spin_unlock (__spin_lock_t *__lock);
 _EXTERN_INLINE void
 __spin_unlock (__spin_lock_t *__lock)
 {
-  lll_unlock (__lock, 0);
+  __lll_unlock (__lock, 0);
 }
 #endif
 
@@ -79,7 +79,7 @@ extern int __spin_try_lock (__spin_lock_t *__lock);
 _EXTERN_INLINE int
 __spin_try_lock (__spin_lock_t *__lock)
 {
-  return (lll_trylock (__lock) == 0);
+  return (__lll_trylock (__lock) == 0);
 }
 #endif
 

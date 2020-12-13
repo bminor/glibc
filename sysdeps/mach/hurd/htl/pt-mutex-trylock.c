@@ -32,7 +32,7 @@ __pthread_mutex_trylock (pthread_mutex_t *mtxp)
   switch (MTX_TYPE (mtxp))
     {
     case PT_MTX_NORMAL:
-      ret = lll_trylock (&mtxp->__lock);
+      ret = lll_trylock (mtxp->__lock);
       if (ret)
 	ret = EBUSY;
       break;
@@ -47,7 +47,7 @@ __pthread_mutex_trylock (pthread_mutex_t *mtxp)
 	  ++mtxp->__cnt;
 	  ret = 0;
 	}
-      else if ((ret = lll_trylock (&mtxp->__lock)) == 0)
+      else if ((ret = lll_trylock (mtxp->__lock)) == 0)
 	{
 	  mtx_set_owner (mtxp, self, mtxp->__flags);
 	  mtxp->__cnt = 1;
@@ -59,7 +59,7 @@ __pthread_mutex_trylock (pthread_mutex_t *mtxp)
 
     case PT_MTX_ERRORCHECK:
       self = _pthread_self ();
-      if ((ret = lll_trylock (&mtxp->__lock)) == 0)
+      if ((ret = lll_trylock (mtxp->__lock)) == 0)
 	mtx_set_owner (mtxp, self, mtxp->__flags);
       else
 	ret = EBUSY;
@@ -69,7 +69,7 @@ __pthread_mutex_trylock (pthread_mutex_t *mtxp)
     case PT_MTX_RECURSIVE | PTHREAD_MUTEX_ROBUST:
     case PT_MTX_ERRORCHECK | PTHREAD_MUTEX_ROBUST:
       self = _pthread_self ();
-      ROBUST_LOCK (self, mtxp, __lll_robust_trylock);
+      ROBUST_LOCK (self, mtxp, lll_robust_trylock);
       break;
 
     default:

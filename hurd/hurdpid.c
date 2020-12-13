@@ -66,7 +66,7 @@ _S_msg_proc_newids (mach_port_t me,
 
   /* Notify any waiting user threads that the id change as been completed.  */
   ++_hurd_pids_changed_stamp;
-  lll_wake (&_hurd_pids_changed_stamp, GSYNC_BROADCAST);
+  lll_wake (_hurd_pids_changed_stamp, GSYNC_BROADCAST);
 
   return 0;
 }

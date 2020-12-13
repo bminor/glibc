@@ -32,7 +32,7 @@ __pthread_mutex_unlock (pthread_mutex_t *mtxp)
   switch (MTX_TYPE (mtxp))
     {
     case PT_MTX_NORMAL:
-      lll_unlock (&mtxp->__lock, flags);
+      lll_unlock (mtxp->__lock, flags);
       break;
 
     case PT_MTX_RECURSIVE:
@@ -42,7 +42,7 @@ __pthread_mutex_unlock (pthread_mutex_t *mtxp)
       else if (--mtxp->__cnt == 0)
 	{
 	  mtxp->__owner_id = mtxp->__shpid = 0;
-	  lll_unlock (&mtxp->__lock, flags);
+	  lll_unlock (mtxp->__lock, flags);
 	}
 
       break;
@@ -54,7 +54,7 @@ __pthread_mutex_unlock (pthread_mutex_t *mtxp)
       else
 	{
 	  mtxp->__owner_id = mtxp->__shpid = 0;
-	  lll_unlock (&mtxp->__lock, flags);
+	  lll_unlock (mtxp->__lock, flags);
 	}
 
       break;
@@ -74,7 +74,7 @@ __pthread_mutex_unlock (pthread_mutex_t *mtxp)
 	   * state, mark it as irrecoverable. */
 	  mtxp->__owner_id = ((mtxp->__lock & LLL_DEAD_OWNER)
 			      ? NOTRECOVERABLE_ID : 0);
-	  __lll_robust_unlock (&mtxp->__lock, flags);
+	  lll_robust_unlock (mtxp->__lock, flags);
 	}
 
       break;

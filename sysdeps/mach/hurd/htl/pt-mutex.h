@@ -42,7 +42,7 @@
         return EDEADLK;   \
     }   \
   \
-  ret = cb (&mtxp->__lock, ##__VA_ARGS__);   \
+  ret = cb (mtxp->__lock, ##__VA_ARGS__);   \
   if (ret == 0 || ret == EOWNERDEAD)   \
     {   \
       if (mtxp->__owner_id == ENOTRECOVERABLE)   \

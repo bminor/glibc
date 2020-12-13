@@ -60,7 +60,7 @@
 #define THREAD_GSCOPE_RESET_FLAG() \
   do 									      \
     if (atomic_exchange_and_add_rel (&GL(dl_thread_gscope_count), -1) == 1)   \
-      lll_wake (&GL(dl_thread_gscope_count), 0);			      \
+      lll_wake (GL(dl_thread_gscope_count), 0);				      \
   while (0)
 #define THREAD_GSCOPE_WAIT() \
   do 									      \
@@ -68,7 +68,7 @@
       int count;							      \
       atomic_write_barrier ();						      \
       while ((count = GL(dl_thread_gscope_count)))			      \
-        lll_wait (&GL(dl_thread_gscope_count), count, 0);		      \
+        lll_wait (GL(dl_thread_gscope_count), count, 0);		      \
     }									      \
   while (0)
 

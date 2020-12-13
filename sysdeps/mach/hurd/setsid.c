@@ -56,7 +56,7 @@ __setsid (void)
 	 returned by `getpgrp ()' in other threads) has been updated before
 	 we return.  */
       while (_hurd_pids_changed_stamp == stamp)
-        lll_wait (&_hurd_pids_changed_stamp, stamp, 0);
+        lll_wait (_hurd_pids_changed_stamp, stamp, 0);
     }
 
   HURD_CRITICAL_END;

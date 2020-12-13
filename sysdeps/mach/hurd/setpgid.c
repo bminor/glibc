@@ -39,7 +39,7 @@ __setpgid (pid_t pid, pid_t pgid)
     /* Synchronize with the signal thread to make sure we have
        received and processed proc_newids before returning to the user.  */
     while (_hurd_pids_changed_stamp == stamp)
-      lll_wait (&_hurd_pids_changed_stamp, stamp, 0);
+      lll_wait (_hurd_pids_changed_stamp, stamp, 0);
 
   return 0;
 
