@@ -39,9 +39,11 @@ glibc {
       # REP MOVSB.  Since larger register size can move more data with a
       # single load and store, the threshold is higher with larger register
       # size.  Note: Since the REP MOVSB threshold must be greater than 8
-      # times of vector size, the minium value must be updated at run-time.
+      # times of vector size and the default value is 2048 * (vector size
+      # / 16), the default value and the minimum value must be updated at
+      # run-time.  NB: Don't set the default value since we can't tell if
+      # the tunable value is set by user or not [BZ #27069].
       minval: 1
-      default: 2048
     }
     x86_rep_stosb_threshold {
       type: SIZE_T
