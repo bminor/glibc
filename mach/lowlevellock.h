@@ -34,6 +34,9 @@
 /* Static initializer for low-level locks.  */
 #define LLL_LOCK_INITIALIZER   0
 
+#define LLL_PRIVATE        0
+#define LLL_SHARED         SYNC_SHARED
+
 /* Interruptible version of __gsync_wait.  */
 extern kern_return_t __gsync_wait_intr
 (
