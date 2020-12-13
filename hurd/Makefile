@@ -93,6 +93,7 @@ CFLAGS-RPC_exec_startup_get_info.o = $(no-stack-protector)
 # Make generated headers compatible with all support standards
 migheaderpipe := | sed -e 's/\<ino64_t\>/__ino64_t/' -e 's/\<loff_t\>/__loff_t/'
 include ../mach/Machrules
+libhurduser-routines += RPC_gsync_wait_intr
 include ../Rules
 
 # intr-rpc.defs defines the INTR_INTERFACE macro to make the generated RPC

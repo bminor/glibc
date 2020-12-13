@@ -40,6 +40,11 @@ struct timespec;
   __gsync_wait (__mach_task_self (), \
     (vm_offset_t)ptr, val, 0, mlsec, flags | GSYNC_TIMED)
 
+/* Interruptible version.  */
+#define __lll_timed_wait_intr(ptr, val, mlsec, flags) \
+  __gsync_wait_intr (__mach_task_self (), \
+    (vm_offset_t)ptr, val, 0, mlsec, flags | GSYNC_TIMED)
+
 /* Same as '__lll_xwait', but only block for MLSEC milliseconds.  */
 #define __lll_timed_xwait(ptr, lo, hi, mlsec, flags) \
   __gsync_wait (__mach_task_self (), (vm_offset_t)ptr, \
@@ -48,6 +53,10 @@ struct timespec;
 /* Same as '__lll_wait', but only block until TSP elapses,
    using clock CLK.  */
 extern int __lll_abstimed_wait (void *__ptr, int __val,
+  const struct timespec *__tsp, int __flags, int __clk);
+
+/* Interruptible version.  */
+extern int __lll_abstimed_wait_intr (void *__ptr, int __val,
   const struct timespec *__tsp, int __flags, int __clk);
 
 /* Same as 'lll_xwait', but only block until TSP elapses,
@@ -103,6 +112,13 @@ extern void __lll_robust_unlock (void *__ptr, int __flags);
   ({   \
      const clockid_t __clk[] = { CLOCK_REALTIME, ##__VA_ARGS__ };   \
      __lll_abstimed_wait (&(var), (val), (tsp), (flags),   \
+       __clk[sizeof (__clk) / sizeof (__clk[0]) - 1]);   \
+   })
+
+#define lll_abstimed_wait_intr(var, val, tsp, flags, ...)   \
+  ({   \
+     const clockid_t __clk[] = { CLOCK_REALTIME, ##__VA_ARGS__ };   \
+     __lll_abstimed_wait_intr (&(var), (val), (tsp), (flags),   \
        __clk[sizeof (__clk) / sizeof (__clk[0]) - 1]);   \
    })
 

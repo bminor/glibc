@@ -34,6 +34,17 @@
 /* Static initializer for low-level locks.  */
 #define LLL_LOCK_INITIALIZER   0
 
+/* Interruptible version of __gsync_wait.  */
+extern kern_return_t __gsync_wait_intr
+(
+	mach_port_t task,
+	vm_offset_t addr,
+	unsigned val1,
+	unsigned val2,
+	natural_t msec,
+	int flags
+);
+
 /* Wait on address PTR, without blocking if its contents
  * are different from VAL.  */
 #define __lll_wait(ptr, val, flags)   \
@@ -41,6 +52,13 @@
     (vm_offset_t)(ptr), (val), 0, 0, (flags))
 #define lll_wait(var, val, flags) \
   __lll_wait (&(var), val, flags)
+
+/* Interruptible version.  */
+#define __lll_wait_intr(ptr, val, flags)   \
+  __gsync_wait_intr (__mach_task_self (),   \
+    (vm_offset_t)(ptr), (val), 0, 0, (flags))
+#define lll_wait_intr(var, val, flags) \
+  __lll_wait_intr ((&var), val, flags)
 
 /* Wake one or more threads waiting on address PTR.  */
 #define __lll_wake(ptr, flags)   \

@@ -149,7 +149,7 @@ libc {
 
   GLIBC_PRIVATE {
     # Used by other libs.
-    __lll_abstimed_wait; __lll_abstimed_xwait;
+    __lll_abstimed_wait; __lll_abstimed_wait_intr; __lll_abstimed_xwait;
     __lll_abstimed_lock; __lll_robust_lock;
     __lll_robust_abstimed_lock; __lll_robust_trylock;
     __lll_robust_unlock;

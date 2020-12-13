@@ -55,6 +55,17 @@ __lll_abstimed_wait (void *ptr, int val,
 }
 
 int
+__lll_abstimed_wait_intr (void *ptr, int val,
+  const struct timespec *tsp, int flags, int clk)
+{
+  if (clk != CLOCK_REALTIME)
+    return EINVAL;
+
+  int mlsec = compute_reltime (tsp, clk);
+  return mlsec < 0 ? KERN_TIMEDOUT : __lll_timed_wait_intr (ptr, val, mlsec, flags);
+}
+
+int
 __lll_abstimed_xwait (void *ptr, int lo, int hi,
   const struct timespec *tsp, int flags, int clk)
 {
