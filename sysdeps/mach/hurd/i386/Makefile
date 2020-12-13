@@ -129,13 +129,6 @@ test-xfail-tst-signal2 = yes
 test-xfail-tst-cond24 = yes
 test-xfail-tst-cond25 = yes
 
-# For bug 25524
-# (sem_open support)
-test-xfail-tst-sem4 = yes
-test-xfail-tst-sem7 = yes
-test-xfail-tst-sem8 = yes
-test-xfail-tst-sem9 = yes
-
 # For bug 25563
 # (robust support against dead threads)
 test-xfail-tst-robust1 = yes
