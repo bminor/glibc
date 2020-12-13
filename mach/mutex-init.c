@@ -22,6 +22,6 @@
 void
 __mutex_init (void *lock)
 {
-  *(int *)lock = LLL_INITIALIZER;
+  *(int *)lock = LLL_LOCK_INITIALIZER;
 }
 libc_hidden_def (__mutex_init)

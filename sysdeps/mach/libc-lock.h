@@ -57,13 +57,13 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
   CLASS __libc_lock_t NAME;
 
 /* Define an initialized lock variable NAME with storage class CLASS.  */
-#define _LIBC_LOCK_INITIALIZER LLL_INITIALIZER
+#define _LIBC_LOCK_INITIALIZER LLL_LOCK_INITIALIZER
 #define __libc_lock_define_initialized(CLASS,NAME) \
-  CLASS __libc_lock_t NAME = LLL_INITIALIZER;
+  CLASS __libc_lock_t NAME = LLL_LOCK_INITIALIZER;
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
-#define __libc_lock_init(NAME) (NAME) = LLL_INITIALIZER
+#define __libc_lock_init(NAME) (NAME) = LLL_LOCK_INITIALIZER
 
 /* Finalize the named lock variable, which must be locked.  It cannot be
    used again until __libc_lock_init is called again on it.  This must be
@@ -86,7 +86,7 @@ typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;
 #define __libc_lock_define_recursive(CLASS,NAME) \
   CLASS __libc_lock_recursive_t NAME;
 
-#define _LIBC_LOCK_RECURSIVE_INITIALIZER { LLL_INITIALIZER, 0, 0 }
+#define _LIBC_LOCK_RECURSIVE_INITIALIZER { LLL_LOCK_INITIALIZER, 0, 0 }
 
 #define __libc_lock_define_initialized_recursive(CLASS,NAME) \
   CLASS __libc_lock_recursive_t NAME = _LIBC_LOCK_RECURSIVE_INITIALIZER;

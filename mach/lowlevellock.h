@@ -32,7 +32,7 @@
 #endif
 
 /* Static initializer for low-level locks.  */
-#define LLL_INITIALIZER   0
+#define LLL_LOCK_INITIALIZER   0
 
 /* Wait on address PTR, without blocking if its contents
  * are different from VAL.  */

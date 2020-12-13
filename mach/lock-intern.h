@@ -31,7 +31,7 @@
 typedef unsigned int __spin_lock_t;
 
 /* Static initializer for spinlocks.  */
-#define __SPIN_LOCK_INITIALIZER   LLL_INITIALIZER
+#define __SPIN_LOCK_INITIALIZER   LLL_LOCK_INITIALIZER
 
 /* Initialize LOCK.  */
 

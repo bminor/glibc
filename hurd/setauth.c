@@ -24,7 +24,7 @@
 /* Things in the library which want to be run when the auth port changes.  */
 DEFINE_HOOK (_hurd_reauth_hook, (auth_t new_auth));
 
-static unsigned int reauth_lock = LLL_INITIALIZER;
+static unsigned int reauth_lock = LLL_LOCK_INITIALIZER;
 
 /* Set the auth port to NEW, and reauthenticate
    everything used by the library.  */
