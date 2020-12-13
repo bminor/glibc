@@ -331,4 +331,37 @@ extern const struct __pthread_rwlockattr __pthread_default_rwlockattr;
 /* Default condition attributes.  */
 extern const struct __pthread_condattr __pthread_default_condattr;
 
+/* Semaphore encoding.
+   See nptl implementation for the details.  */
+struct new_sem
+{
+#if __HAVE_64B_ATOMICS
+  /* The data field holds both value (in the least-significant 32 bits) and
+     nwaiters.  */
+# if __BYTE_ORDER == __LITTLE_ENDIAN
+#  define SEM_VALUE_OFFSET 0
+# elif __BYTE_ORDER == __BIG_ENDIAN
+#  define SEM_VALUE_OFFSET 1
+# else
+#  error Unsupported byte order.
+# endif
+# define SEM_NWAITERS_SHIFT 32
+# define SEM_VALUE_MASK (~(unsigned int)0)
+  uint64_t data;
+  int pshared;
+#define __SEMAPHORE_INITIALIZER(value, pshared) \
+  { (value), (pshared) }
+#else
+# define SEM_VALUE_SHIFT 1
+# define SEM_NWAITERS_MASK ((unsigned int)1)
+  unsigned int value;
+  unsigned int nwaiters;
+  int pshared;
+#define __SEMAPHORE_INITIALIZER(value, pshared) \
+  { (value) << SEM_VALUE_SHIFT, 0, (pshared) }
+#endif
+};
+
+extern int __sem_waitfast (struct new_sem *isem, int definitive_result);
+
 #endif /* pt-internal.h */

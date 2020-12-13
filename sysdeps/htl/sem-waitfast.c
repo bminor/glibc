@@ -1,4 +1,4 @@
-/* Initialize a semaphore.  Generic version.
+/* Lock a semaphore if it does not require blocking.  Generic version.
    Copyright (C) 2005-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -22,20 +22,34 @@
 #include <pt-internal.h>
 
 int
-__sem_init (sem_t *sem, int pshared, unsigned value)
+__sem_waitfast (struct new_sem *isem, int definitive_result)
 {
-#ifdef SEM_VALUE_MAX
-  if (value > SEM_VALUE_MAX)
+#if __HAVE_64B_ATOMICS
+  uint64_t d = atomic_load_relaxed (&isem->data);
+
+  do
     {
-      errno = EINVAL;
-      return -1;
+      if ((d & SEM_VALUE_MASK) == 0)
+	break;
+      if (atomic_compare_exchange_weak_acquire (&isem->data, &d, d - 1))
+	/* Successful down.  */
+	return 0;
     }
+  while (definitive_result);
+  return -1;
+#else
+  unsigned v = atomic_load_relaxed (&isem->value);
+
+  do
+    {
+      if ((v >> SEM_VALUE_SHIFT) == 0)
+	break;
+      if (atomic_compare_exchange_weak_acquire (&isem->value,
+	    &v, v - (1 << SEM_VALUE_SHIFT)))
+	/* Successful down.  */
+	return 0;
+    }
+  while (definitive_result);
+  return -1;
 #endif
-
-  struct new_sem *isem = (struct new_sem *) sem;
-
-  *isem = (struct new_sem) __SEMAPHORE_INITIALIZER (value, pshared);
-  return 0;
 }
-
-strong_alias (__sem_init, sem_init);

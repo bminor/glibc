@@ -22,9 +22,13 @@
 int
 __sem_getvalue (sem_t *restrict sem, int *restrict value)
 {
-  __pthread_spin_wait (&sem->__lock);
-  *value = sem->__value;
-  __pthread_spin_unlock (&sem->__lock);
+  struct new_sem *isem = (struct new_sem *) sem;
+
+#if __HAVE_64B_ATOMICS
+  *value = atomic_load_relaxed (&isem->data) & SEM_VALUE_MASK;
+#else
+  *value = atomic_load_relaxed (&isem->value) >> SEM_VALUE_SHIFT;
+#endif
 
   return 0;
 }

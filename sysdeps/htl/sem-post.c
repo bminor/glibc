@@ -19,48 +19,50 @@
 #include <semaphore.h>
 #include <assert.h>
 
+#include <hurdlock.h>
+
 #include <pt-internal.h>
 
 int
 __sem_post (sem_t *sem)
 {
-  struct __pthread *wakeup;
+  struct new_sem *isem = (struct new_sem *) sem;
+  int flags = isem->pshared ? GSYNC_SHARED : 0;
 
-  __pthread_spin_wait (&sem->__lock);
-  if (sem->__value > 0)
-    /* Do a quick up.  */
+#if __HAVE_64B_ATOMICS
+  uint64_t d = atomic_load_relaxed (&isem->data);
+
+  do
     {
-      if (sem->__value == SEM_VALUE_MAX)
+      if ((d & SEM_VALUE_MASK) == SEM_VALUE_MAX)
 	{
-	  __pthread_spin_unlock (&sem->__lock);
 	  errno = EOVERFLOW;
 	  return -1;
 	}
-
-      assert (sem->__queue == NULL);
-      sem->__value++;
-      __pthread_spin_unlock (&sem->__lock);
-      return 0;
     }
+  while (!atomic_compare_exchange_weak_release (&isem->data, &d, d + 1));
 
-  if (sem->__queue == NULL)
-    /* No one waiting.  */
+  if ((d >> SEM_NWAITERS_SHIFT) != 0)
+    /* Wake one waiter.  */
+    __lll_wake (((unsigned int *) &isem->data) + SEM_VALUE_OFFSET, flags);
+#else
+  unsigned int v = atomic_load_relaxed (&isem->value);
+
+  do
     {
-      sem->__value = 1;
-      __pthread_spin_unlock (&sem->__lock);
-      return 0;
+      if ((v >> SEM_VALUE_SHIFT) == SEM_VALUE_MAX)
+	{
+	  errno = EOVERFLOW;
+	  return -1;
+	}
     }
+  while (!atomic_compare_exchange_weak_release
+	  (&isem->value, &v, v + (1 << SEM_VALUE_SHIFT)));
 
-  /* Wake someone up.  */
-
-  /* First dequeue someone.  */
-  wakeup = sem->__queue;
-  __pthread_dequeue (wakeup);
-
-  /* Then drop the lock and transfer control.  */
-  __pthread_spin_unlock (&sem->__lock);
-
-  __pthread_wakeup (wakeup);
+  if ((v & SEM_NWAITERS_MASK) != 0)
+    /* Wake one waiter.  */
+    __lll_wake (&isem->value, flags);
+#endif
 
   return 0;
 }

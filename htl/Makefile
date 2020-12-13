@@ -130,7 +130,7 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 									    \
 	sem-close sem-destroy sem-getvalue sem-init sem-open		    \
 	sem-post sem-timedwait sem-trywait sem-unlink			    \
-	sem-wait							    \
+	sem-wait sem-waitfast						    \
 									    \
 	shm-directory							    \
 									    \

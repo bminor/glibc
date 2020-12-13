@@ -116,7 +116,6 @@ test-xfail-tst-cond13 = yes
 test-xfail-tst-cond23 = yes
 test-xfail-tst-rwlock4 = yes
 test-xfail-tst-rwlock12 = yes
-test-xfail-tst-sem3 = yes
 test-xfail-tst-barrier2 = yes
 test-xfail-tst-pututxline-cache = yes
 test-xfail-tst-pututxline-lockfail = yes
