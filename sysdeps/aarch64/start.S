@@ -99,6 +99,7 @@ ENTRY(_start)
 	   because crt1.o and rcrt1.o share code and the later must avoid the
 	   use of GOT relocations before __libc_start_main is called.  */
 __wrap_main:
+	BTI_C
 	b	main
 #endif
 END(_start)
