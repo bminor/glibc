@@ -42,10 +42,7 @@ do_test (void)
   char buf[30];
   int ret = snprintf (buf, sizeof (buf), "%Lg", value);
   TEST_COMPARE (ret, strlen (buf));
-  if (strcmp (buf, "nan") != 0)
-    /* If snprintf does not recognize the non-normal number as a NaN,
-       it has added the missing explicit MSB.  */
-    TEST_COMPARE_STRING (buf, "3.02201e-4624");
+  TEST_COMPARE_STRING (buf, "nan");
   return 0;
 }
 
