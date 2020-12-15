@@ -339,8 +339,28 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       gotplt[0] = (ElfW(Addr)) &_dl_runtime_resolve;
       gotplt[1] = (ElfW(Addr)) l;
     }
-#endif
 
+  if (l->l_type == lt_executable)
+    {
+      /* The __global_pointer$ may not be defined by the linker if the
+	 $gp register does not be used to access the global variable
+	 in the executable program. Therefore, the search symbol is
+	 set to a weak symbol to avoid we error out if the
+	 __global_pointer$ is not found.  */
+      ElfW(Sym) gp_sym = { 0 };
+      gp_sym.st_info = (unsigned char) ELFW (ST_INFO (STB_WEAK, STT_NOTYPE));
+
+      const ElfW(Sym) *ref = &gp_sym;
+      _dl_lookup_symbol_x ("__global_pointer$", l, &ref,
+			   l->l_scope, NULL, 0, 0, NULL);
+      if (ref)
+        asm (
+          "mv gp, %0\n"
+          :
+          : "r" (ref->st_value)
+        );
+    }
+#endif
   return lazy;
 }
 
