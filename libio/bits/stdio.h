@@ -31,7 +31,7 @@
 
 
 #ifdef __USE_EXTERN_INLINES
-/* For -D_FORTIFY_SOURCE{,=2} bits/stdio2.h will define a different
+/* For -D_FORTIFY_SOURCE{,=2,=3} bits/stdio2.h will define a different
    inline.  */
 # if !(__USE_FORTIFY_LEVEL > 0 && defined __fortify_function)
 /* Write formatted output to stdout from argument list ARG.  */
