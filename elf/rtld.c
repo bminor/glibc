@@ -49,6 +49,7 @@
 #include <libc-early-init.h>
 #include <dl-main.h>
 #include <list.h>
+#include <gnu/lib-names.h>
 
 #include <assert.h>
 
@@ -1609,6 +1610,16 @@ dl_main (const ElfW(Phdr) *phdr,
     {
       /* Extract the contents of the dynamic section for easy access.  */
       elf_get_dynamic_info (main_map, NULL);
+
+      /* If the main map is libc.so, update the base namespace to
+	 refer to this map.  If libc.so is loaded later, this happens
+	 in _dl_map_object_from_fd.  */
+      if (main_map->l_info[DT_SONAME] != NULL
+	  && (strcmp (((const char *) D_PTR (main_map, l_info[DT_STRTAB])
+		      + main_map->l_info[DT_SONAME]->d_un.d_val), LIBC_SO)
+	      == 0))
+	GL(dl_ns)[LM_ID_BASE].libc_map = main_map;
+
       /* Set up our cache of pointers into the hash table.  */
       _dl_setup_hash (main_map);
     }
