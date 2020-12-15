@@ -768,7 +768,7 @@ class Context(object):
         default_versions = {'binutils': 'vcs-2.35',
                             'gcc': 'vcs-10',
                             'glibc': 'vcs-mainline',
-                            'gmp': '6.2.0',
+                            'gmp': '6.2.1',
                             'linux': '5.9',
                             'mpc': '1.2.1',
                             'mpfr': '4.1.0',
