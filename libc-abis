@@ -48,3 +48,4 @@ IFUNC		sparc64-*-linux*
 IFUNC		sparc-*-linux*
 # Absolute (SHN_ABS) symbols working correctly.
 ABSOLUTE
+IFUNC		riscv*-linux*

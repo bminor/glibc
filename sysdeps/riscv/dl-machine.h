@@ -25,6 +25,7 @@
 #include <elf/elf.h>
 #include <sys/asm.h>
 #include <dl-tls.h>
+#include <dl-irel.h>
 
 #ifndef _RTLD_PROLOGUE
 # define _RTLD_PROLOGUE(entry)						\
@@ -176,6 +177,13 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
   if (sym_map != NULL)
     value = SYMBOL_ADDRESS (sym_map, sym, true) + reloc->r_addend;
 
+  if (sym != NULL
+      && __glibc_unlikely (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC)
+      && __glibc_likely (sym->st_shndx != SHN_UNDEF)
+      && __glibc_likely (!skip_ifunc))
+    value = elf_ifunc_invoke (value);
+
+
   switch (r_type)
     {
 #ifndef RTLD_BOOTSTRAP
@@ -251,6 +259,13 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
     }
 #endif
 
+    case R_RISCV_IRELATIVE:
+      value = map->l_addr + reloc->r_addend;
+      if (__glibc_likely (!skip_ifunc))
+        value = elf_ifunc_invoke (value);
+      *addr_field = value;
+      break;
+
     case R_RISCV_JUMP_SLOT:
     case __WORDSIZE == 64 ? R_RISCV_64 : R_RISCV_32:
       *addr_field = value;
@@ -291,6 +306,13 @@ elf_machine_lazy_rel (struct link_map *map, ElfW(Addr) l_addr,
 	}
       else
 	*reloc_addr = map->l_mach.plt;
+    }
+  else if (__glibc_unlikely (r_type == R_RISCV_IRELATIVE))
+    {
+      ElfW(Addr) value = map->l_addr + reloc->r_addend;
+      if (__glibc_likely (!skip_ifunc))
+        value = elf_ifunc_invoke (value);
+      *reloc_addr = value;
     }
   else
     _dl_reloc_bad_type (map, r_type, 1);
