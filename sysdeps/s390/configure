@@ -296,5 +296,40 @@ then
 
 fi
 
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if $CC is sufficient to build libc on s390x" >&5
+$as_echo_n "checking if $CC is sufficient to build libc on s390x... " >&6; }
+if ${libc_cv_compiler_ok_on_s390x+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+#if !defined __GNUC__ || __GNUC__ < 7 || (__GNUC__ == 7 && __GNUC_MINOR__ < 1)
+#error insufficient compiler for building on s390x
+#endif
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_cv_compiler_ok_on_s390x=yes
+else
+  libc_cv_compiler_ok_on_s390x=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_compiler_ok_on_s390x" >&5
+$as_echo "$libc_cv_compiler_ok_on_s390x" >&6; }
+if test "$libc_cv_compiler_ok_on_s390x" != yes; then
+   critic_missing="$critic_missing On s390x, GCC >= 7.1.0 is required."
+fi
+
 test -n "$critic_missing" && as_fn_error $? "
 *** $critic_missing" "$LINENO" 5

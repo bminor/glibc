@@ -467,6 +467,9 @@ build the GNU C Library:
 
      For ARC architecture builds, GCC 8.3 or higher is needed.
 
+     For s390x architecture builds, GCC 7.1 or higher is needed (See gcc
+     Bug 98269).
+
      For multi-arch support it is recommended to use a GCC which has
      been built with support for GNU indirect functions.  This ensures
      that correct debugging information is generated for functions

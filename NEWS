@@ -67,6 +67,8 @@ Changes to build and runtime requirements:
   (and pseudo-terminals are supported), a devpts file system is mounted
   on /dev/pts.  Current systems already meet these requirements.
 
+* s390x requires GCC 7.1 or newer.  See gcc Bug 98269.
+
 Security related changes:
 
   CVE-2020-27618: An infinite loop has been fixed in the iconv program when
