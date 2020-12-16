@@ -47,6 +47,11 @@ extern void __init_misc (int, char **, char **) attribute_hidden;
 extern __typeof (__profile_frequency) __profile_frequency attribute_hidden;
 # endif
 
-extern int __libc_multiple_libcs attribute_hidden;
+#ifdef SHARED
+/* True if this libc belongs to the initially loaded program (i.e., it
+   is not for an audit module, not loaded via dlmopen, and not loaded
+   via static dlopen either).  */
+extern _Bool __libc_initial attribute_hidden;
+#endif
 
 #endif /* _LIBC_INTERNAL  */

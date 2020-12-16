@@ -141,8 +141,6 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   /* Result of the 'main' function.  */
   int result;
 
-  __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up;
-
 #ifndef SHARED
   _dl_relocate_static_pie ();
 
@@ -213,12 +211,11 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 # endif
 
 # ifdef DL_SYSDEP_OSCHECK
-  if (!__libc_multiple_libcs)
-    {
-      /* This needs to run to initiliaze _dl_osversion before TLS
-	 setup might check it.  */
-      DL_SYSDEP_OSCHECK (__libc_fatal);
-    }
+  {
+    /* This needs to run to initiliaze _dl_osversion before TLS
+       setup might check it.  */
+    DL_SYSDEP_OSCHECK (__libc_fatal);
+  }
 # endif
 
   /* Initialize libpthread if linked in.  */

@@ -28,10 +28,6 @@
 
 #include <ldsodefs.h>
 
-/* Set nonzero if we have to be prepared for more than one libc being
-   used in the process.  Safe assumption if initializer never runs.  */
-int __libc_multiple_libcs attribute_hidden = 1;
-
 /* Remember the command line argument and enviroment contents for
    later calls of initializers for dynamic libraries.  */
 int __libc_argc attribute_hidden;
@@ -50,16 +46,16 @@ _init_first (int argc, char **argv, char **envp)
 {
 #endif
 
-  __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up;
-
   /* Make sure we don't initialize twice.  */
-  if (!__libc_multiple_libcs)
+#ifdef SHARED
+  if (__libc_initial)
     {
       /* Set the FPU control word to the proper default value if the
 	 kernel would use a different value.  */
       if (__fpu_control != GLRO(dl_fpu_control))
 	__setfpucw (__fpu_control);
     }
+#endif
 
   /* Save the command-line arguments.  */
   __libc_argc = argc;

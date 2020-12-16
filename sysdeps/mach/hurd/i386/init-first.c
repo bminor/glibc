@@ -30,6 +30,7 @@
 #include <ldsodefs.h>
 #include <fpu_control.h>
 #include <libc-diag.h>
+#include <libc-internal.h>
 
 extern void __mach_init (void);
 extern void __init_misc (int, char **, char **);
@@ -40,7 +41,6 @@ unsigned long int __hurd_threadvar_stack_mask;
 #ifndef SHARED
 int __libc_enable_secure;
 #endif
-int __libc_multiple_libcs attribute_hidden = 1;
 
 extern int __libc_argc attribute_hidden;
 extern char **__libc_argv attribute_hidden;
@@ -56,13 +56,12 @@ DEFINE_HOOK (_hurd_preinit_hook, (void));
 static void
 posixland_init (int argc, char **argv, char **envp)
 {
-  __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up;
-
   /* Now we have relocations etc. we can start signals etc.  */
   _hurd_libc_proc_init (argv);
 
+#ifdef SHARED
   /* Make sure we don't initialize twice.  */
-  if (!__libc_multiple_libcs)
+  if (__libc_initial)
     {
       /* Set the FPU control word to the proper default value.  */
       __setfpucw (__fpu_control);
@@ -72,6 +71,9 @@ posixland_init (int argc, char **argv, char **envp)
       /* Initialize data structures so the additional libc can do RPCs.  */
       __mach_init ();
     }
+#else /* !SHARED */
+  __setfpucw (__fpu_control);
+#endif
 
   /* Save the command-line arguments.  */
   __libc_argc = argc;

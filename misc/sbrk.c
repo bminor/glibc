@@ -16,9 +16,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <libc-internal.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <unistd.h>
-#include <libc-internal.h>
 
 /* Defined in brk.c.  */
 extern void *__curbrk;
@@ -30,21 +31,34 @@ extern int __brk (void *addr);
 void *
 __sbrk (intptr_t increment)
 {
-  void *oldbrk;
+  /* Controls whether __brk (0) is called to read the brk value from
+     the kernel.  */
+  bool update_brk = __curbrk == NULL;
 
-  /* If this is not part of the dynamic library or the library is used
-     via dynamic loading in a statically linked program update
-     __curbrk from the kernel's brk value.  That way two separate
-     instances of __brk and __sbrk can share the heap, returning
-     interleaved pieces of it.  */
-  if (__curbrk == NULL || __libc_multiple_libcs)
+#if defined (SHARED) && ! IS_IN (rtld)
+  if (!__libc_initial)
+    {
+      if (increment != 0)
+	{
+	  /* Do not allow changing the brk from an inner libc because
+	     it cannot be synchronized with the outer libc's brk.  */
+	  __set_errno (ENOMEM);
+	  return (void *) -1;
+	}
+      /* Querying the kernel's brk value from an inner namespace is
+	 fine.  */
+      update_brk = true;
+    }
+#endif
+
+  if (update_brk)
     if (__brk (0) < 0)		/* Initialize the break.  */
       return (void *) -1;
 
   if (increment == 0)
     return __curbrk;
 
-  oldbrk = __curbrk;
+  void *oldbrk = __curbrk;
   if (increment > 0
       ? ((uintptr_t) oldbrk + (uintptr_t) increment < (uintptr_t) oldbrk)
       : ((uintptr_t) oldbrk < (uintptr_t) -increment))

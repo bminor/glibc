@@ -57,8 +57,6 @@ extern char **_environ;
 
 int __libc_enable_secure = 0;
 rtld_hidden_data_def (__libc_enable_secure)
-int __libc_multiple_libcs = 0;	/* Defining this here avoids the inclusion
-				   of init-first.  */
 /* This variable contains the lowest stack address ever used.  */
 void *__libc_stack_end = NULL;
 rtld_hidden_data_def(__libc_stack_end)

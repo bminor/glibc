@@ -787,12 +787,6 @@ dl_open_worker (void *a)
   if (mode & RTLD_GLOBAL)
     add_to_global_update (new);
 
-#ifndef SHARED
-  /* We must be the static _dl_open in libc.a.  A static program that
-     has loaded a dynamic object now has competition.  */
-  __libc_multiple_libcs = 1;
-#endif
-
   /* Let the user know about the opencount.  */
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_FILES))
     _dl_debug_printf ("opening file=%s [%lu]; direct_opencount=%u\n\n",
