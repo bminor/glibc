@@ -203,6 +203,7 @@
 #define __NR_preadv 5289
 #define __NR_preadv2 5321
 #define __NR_prlimit64 5297
+#define __NR_process_madvise 5440
 #define __NR_process_vm_readv 5304
 #define __NR_process_vm_writev 5305
 #define __NR_pselect6 5260

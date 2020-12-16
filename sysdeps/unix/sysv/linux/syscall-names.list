@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 5.9.
-kernel 5.9
+# The list of system calls is current as of Linux 5.10.
+kernel 5.10
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -433,6 +433,7 @@ pread64
 preadv
 preadv2
 prlimit64
+process_madvise
 process_vm_readv
 process_vm_writev
 prof
