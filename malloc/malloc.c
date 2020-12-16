@@ -247,6 +247,8 @@
 /* For SINGLE_THREAD_P.  */
 #include <sysdep-cancel.h>
 
+#include <libc-internal.h>
+
 /*
   Debugging:
 
