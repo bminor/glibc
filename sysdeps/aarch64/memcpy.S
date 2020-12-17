@@ -73,9 +73,9 @@
 */
 
 ENTRY_ALIGN (MEMCPY, 6)
-	DELOUSE (0)
-	DELOUSE (1)
-	DELOUSE (2)
+	PTR_ARG (0)
+	PTR_ARG (1)
+	SIZE_ARG (2)
 
 	add	srcend, src, count
 	add	dstend, dstin, count
@@ -209,9 +209,9 @@ END (MEMCPY)
 libc_hidden_builtin_def (MEMCPY)
 
 ENTRY_ALIGN (MEMMOVE, 4)
-	DELOUSE (0)
-	DELOUSE (1)
-	DELOUSE (2)
+	PTR_ARG (0)
+	PTR_ARG (1)
+	SIZE_ARG (2)
 
 	add	srcend, src, count
 	add	dstend, dstin, count

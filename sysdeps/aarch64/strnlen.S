@@ -55,9 +55,8 @@
 #define REP8_80 0x8080808080808080
 
 ENTRY_ALIGN_AND_PAD (__strnlen, 6, 9)
-	DELOUSE (0)
-	DELOUSE (1)
-	DELOUSE (2)
+	PTR_ARG (0)
+	SIZE_ARG (1)
 	cbz	limit, L(hit_limit)
 	mov	zeroones, #REP8_01
 	bic	src, srcin, #15

@@ -97,9 +97,9 @@
 
 ENTRY_ALIGN (MEMMOVE, 6)
 
-	DELOUSE (0)
-	DELOUSE (1)
-	DELOUSE (2)
+	PTR_ARG (0)
+	PTR_ARG (1)
+	SIZE_ARG (2)
 
 	add	srcend, src, count
 	cmp	count, 16
@@ -127,9 +127,9 @@ libc_hidden_builtin_def (MEMMOVE)
 	.p2align 4
 ENTRY (MEMCPY)
 
-	DELOUSE (0)
-	DELOUSE (1)
-	DELOUSE (2)
+	PTR_ARG (0)
+	PTR_ARG (1)
+	SIZE_ARG (2)
 
 	add	srcend, src, count
 	cmp	count, 16

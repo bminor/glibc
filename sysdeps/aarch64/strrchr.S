@@ -59,7 +59,7 @@
    if the relevant byte matched the NUL end of string.  */
 
 ENTRY(strrchr)
-	DELOUSE (0)
+	PTR_ARG (0)
 	bic	src, srcin, 15
 	dup	vrepchr.16b, chrin
 	mov	wtmp, 0x3003

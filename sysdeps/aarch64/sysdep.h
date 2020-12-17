@@ -25,12 +25,14 @@
 # define AARCH64_R(NAME)	R_AARCH64_ ## NAME
 # define PTR_REG(n)		x##n
 # define PTR_LOG_SIZE		3
-# define DELOUSE(n)
+# define PTR_ARG(n)
+# define SIZE_ARG(n)
 #else
 # define AARCH64_R(NAME)	R_AARCH64_P32_ ## NAME
 # define PTR_REG(n)		w##n
 # define PTR_LOG_SIZE		2
-# define DELOUSE(n)		mov     w##n, w##n
+# define PTR_ARG(n)		mov     w##n, w##n
+# define SIZE_ARG(n)		mov     w##n, w##n
 #endif
 
 #define PTR_SIZE	(1<<PTR_LOG_SIZE)

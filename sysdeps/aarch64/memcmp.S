@@ -42,9 +42,9 @@
 #define tmp2		x8
 
 ENTRY_ALIGN (memcmp, 6)
-	DELOUSE (0)
-	DELOUSE (1)
-	DELOUSE (2)
+	PTR_ARG (0)
+	PTR_ARG (1)
+	SIZE_ARG (2)
 
 	subs	limit, limit, 16
 	b.lo	L(less16)

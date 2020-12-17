@@ -30,7 +30,7 @@
 	.text
 
 ENTRY(__getcontext)
-	DELOUSE (0)
+	PTR_ARG (0)
 	/* The saved context will return to the getcontext() call point
 	   with a return value of 0 */
 	str	xzr,	  [x0, oX0 +  0 * SZREG]

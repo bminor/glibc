@@ -81,9 +81,9 @@
 
 ENTRY_ALIGN (MEMMOVE, 6)
 
-	DELOUSE (0)
-	DELOUSE (1)
-	DELOUSE (2)
+	PTR_ARG (0)
+	PTR_ARG (1)
+	SIZE_ARG (2)
 
 	sub	tmp1, dstin, src
 	cmp	count, 96
@@ -95,9 +95,9 @@ END (MEMMOVE)
 libc_hidden_builtin_def (MEMMOVE)
 ENTRY (MEMCPY)
 
-	DELOUSE (0)
-	DELOUSE (1)
-	DELOUSE (2)
+	PTR_ARG (0)
+	PTR_ARG (1)
+	SIZE_ARG (2)
 
 	prfm	PLDL1KEEP, [src]
 	add	srcend, src, count

@@ -31,8 +31,8 @@
 
 ENTRY_ALIGN (MEMSET, 6)
 
-	DELOUSE (0)
-	DELOUSE (2)
+	PTR_ARG (0)
+	SIZE_ARG (2)
 
 	dup	v0.16B, valw
 	add	dstend, dstin, count
