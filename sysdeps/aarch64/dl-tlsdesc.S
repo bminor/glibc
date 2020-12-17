@@ -75,7 +75,7 @@
 	.align 2
 _dl_tlsdesc_return:
 	BTI_C
-	DELOUSE (0)
+	PTR_ARG (0)
 	ldr	PTR_REG (0), [x0, #PTR_SIZE]
 	RET
 	cfi_endproc
@@ -99,7 +99,7 @@ _dl_tlsdesc_undefweak:
 	BTI_C
 	str	x1, [sp, #-16]!
 	cfi_adjust_cfa_offset (16)
-	DELOUSE (0)
+	PTR_ARG (0)
 	ldr	PTR_REG (0), [x0, #PTR_SIZE]
 	mrs	x1, tpidr_el0
 	sub	PTR_REG (0), PTR_REG (0), PTR_REG (1)
@@ -145,7 +145,7 @@ _dl_tlsdesc_undefweak:
 	.align 2
 _dl_tlsdesc_dynamic:
 	BTI_C
-	DELOUSE (0)
+	PTR_ARG (0)
 
 	/* Save just enough registers to support fast path, if we fall
 	   into slow path we will save additional registers.  */

@@ -59,8 +59,8 @@
    string, counting trailing zeros identifies exactly which byte matched.  */
 
 ENTRY (__memrchr)
-	DELOUSE (0)
-	DELOUSE (2)
+	PTR_ARG (0)
+	SIZE_ARG (2)
 	add	end, srcin, cntin
 	sub	endm1, end, 1
 	bic	src, endm1, 15

@@ -36,8 +36,8 @@
 
 ENTRY_ALIGN (MEMSET, 6)
 
-	DELOUSE (0)
-	DELOUSE (2)
+	PTR_ARG (0)
+	SIZE_ARG (2)
 
 	bfi	valw, valw, 8, 8
 	bfi	valw, valw, 16, 16
