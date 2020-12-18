@@ -77,6 +77,13 @@ extern void *pvalloc (size_t __size) __THROW __attribute_malloc__ __wur;
    contiguous pieces of memory.  */
 extern void *(*__morecore) (ptrdiff_t __size) __MALLOC_DEPRECATED;
 
+#ifdef USE_MTAG
+extern int __mtag_mmap_flags;
+#define MTAG_MMAP_FLAGS __mtag_mmap_flags
+#else
+#define MTAG_MMAP_FLAGS 0
+#endif
+
 /* Default value of `__morecore'.  */
 extern void *__default_morecore (ptrdiff_t __size)
 __THROW __attribute_malloc__  __MALLOC_DEPRECATED;
