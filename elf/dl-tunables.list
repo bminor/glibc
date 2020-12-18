@@ -141,4 +141,13 @@ glibc {
       default: 512
     }
   }
+
+  mem {
+    tagging {
+      type: INT_32
+      minval: 0
+      maxval: 255
+      security_level: SXID_IGNORE
+    }
+  }
 }

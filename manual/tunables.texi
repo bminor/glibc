@@ -36,6 +36,8 @@ their own namespace.
 * POSIX Thread Tunables:: Tunables in the POSIX thread subsystem
 * Hardware Capability Tunables::  Tunables that modify the hardware
 				  capabilities seen by @theglibc{}
+* Memory Related Tunables::  Tunables that control the use of memory by
+			     @theglibc{}.
 @end menu
 
 @node Tunable names
@@ -483,4 +485,37 @@ library returns an error.  With @code{permissive}, it turns off SHSTK
 instead.
 
 This tunable is specific to i386 and x86-64.
+@end deftp
+
+@node Memory Related Tunables
+@section Memory Related Tunables
+@cindex memory related tunables
+
+@deftp {Tunable namespace} glibc.mem
+This tunable namespace supports operations that affect the way @theglibc{}
+and the process manage memory.
+@end deftp
+
+@deftp Tunable glibc.mem.tagging
+If the hardware supports memory tagging, this tunable can be used to
+control the way @theglibc{} uses this feature.  At present this is only
+supported on AArch64 systems with the MTE extention; it is ignored for
+all other systems.
+
+This tunable takes a value between 0 and 255 and acts as a bitmask
+that enables various capabilities.
+
+Bit 0 (the least significant bit) causes the malloc subsystem to allocate
+tagged memory, with each allocation being assigned a random tag.
+
+Bit 1 enables precise faulting mode for tag violations on systems that
+support deferred tag violation reporting.  This may cause programs
+to run more slowly.
+
+Other bits are currently reserved.
+
+@Theglibc{} startup code will automatically enable memory tagging
+support in the kernel if this tunable has any non-zero value.
+
+The default value is @samp{0}, which disables all memory tagging.
 @end deftp
