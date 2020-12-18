@@ -160,6 +160,9 @@
 /* Define if __stack_chk_guard canary should be randomized at program startup.  */
 #undef ENABLE_STACKGUARD_RANDOMIZE
 
+/* Define if memory tagging support should be enabled.  */
+#undef USE_MTAG
+
 /* Package description.  */
 #undef PKGVERSION
 
