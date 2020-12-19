@@ -66,6 +66,7 @@ __hurd_fail (error_t err)
       err = (error_t) ENOMEM;
       break;
 
+    case KERN_INVALID_ADDRESS:
     case KERN_INVALID_ARGUMENT:
       err = (error_t) EINVAL;
       break;
