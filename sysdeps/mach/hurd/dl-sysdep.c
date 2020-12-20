@@ -71,7 +71,7 @@ struct hurd_startup_data *_dl_hurd_data;
 # define fmh()		((void)0)
 # define unfmh()	((void)0)
 #else
-/* XXX loser kludge for vm_map kernel bug */
+/* XXX loser kludge for vm_map kernel bug, fixed by gnumach's 0650a4ee30e3 */
 #undef	ELF_MACHINE_USER_ADDRESS_MASK
 #define ELF_MACHINE_USER_ADDRESS_MASK	0
 static vm_address_t fmha;
