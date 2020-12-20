@@ -143,7 +143,7 @@ extern ElfW(Addr) _dl_profile_fixup (struct link_map *l,
 
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */
-#define ELF_MACHINE_USER_ADDRESS_MASK	0xf8000000UL
+#define ELF_MACHINE_USER_ADDRESS_MASK	0xf0000000UL
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
