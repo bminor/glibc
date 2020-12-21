@@ -19,9 +19,16 @@
 #include <cpu-features.h>
 #include <sys/auxv.h>
 #include <elf/dl-hwcaps.h>
+#include <sys/prctl.h>
 
 #define DCZID_DZP_MASK (1 << 4)
 #define DCZID_BS_MASK (0xf)
+
+/* The maximal set of permitted tags that the MTE random tag generation
+   instruction may use.  We exclude tag 0 because a) we want to reserve
+   that for the libc heap structures and b) because it makes it easier
+   to see when pointer have been correctly tagged.  */
+#define MTE_ALLOWED_TAGS (0xfffe << PR_MTE_TAG_SHIFT)
 
 #if HAVE_TUNABLES
 struct cpu_list
@@ -86,4 +93,27 @@ init_cpu_features (struct cpu_features *cpu_features)
 
   /* Check if BTI is supported.  */
   cpu_features->bti = GLRO (dl_hwcap2) & HWCAP2_BTI;
+
+  /* Setup memory tagging support if the HW and kernel support it, and if
+     the user has requested it.  */
+  cpu_features->mte_state = 0;
+
+#ifdef USE_MTAG
+# if HAVE_TUNABLES
+  int mte_state = TUNABLE_GET (glibc, mem, tagging, unsigned, 0);
+  cpu_features->mte_state = (GLRO (dl_hwcap2) & HWCAP2_MTE) ? mte_state : 0;
+  /* If we lack the MTE feature, disable the tunable, since it will
+     otherwise cause instructions that won't run on this CPU to be used.  */
+  TUNABLE_SET (glibc, mem, tagging, unsigned, cpu_features->mte_state);
+# endif
+
+  if (cpu_features->mte_state & 2)
+    __prctl (PR_SET_TAGGED_ADDR_CTRL,
+	     (PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_SYNC | MTE_ALLOWED_TAGS),
+	     0, 0, 0);
+  else if (cpu_features->mte_state)
+    __prctl (PR_SET_TAGGED_ADDR_CTRL,
+	     (PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_ASYNC | MTE_ALLOWED_TAGS),
+	     0, 0, 0);
+#endif
 }

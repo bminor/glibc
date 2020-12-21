@@ -24,6 +24,7 @@
    arch/arm64/include/uapi/asm/mman.h.  */
 
 #define PROT_BTI	0x10
+#define PROT_MTE	0x20
 
 #include <bits/mman-map-flags-generic.h>
 

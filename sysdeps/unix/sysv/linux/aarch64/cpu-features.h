@@ -70,6 +70,8 @@ struct cpu_features
   uint64_t midr_el1;
   unsigned zva_size;
   bool bti;
+  /* Currently, the GLIBC memory tagging tunable only defines 8 bits.  */
+  uint8_t mte_state;
 };
 
 #endif /* _CPU_FEATURES_AARCH64_H  */
