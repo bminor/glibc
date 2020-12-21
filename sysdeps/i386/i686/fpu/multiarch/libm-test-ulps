@@ -771,13 +771,13 @@ float128: 1
 ldouble: 2
 
 Function: "cosh_downward":
-double: 2
+double: 3
 float: 1
 float128: 2
 ldouble: 3
 
 Function: "cosh_towardzero":
-double: 2
+double: 3
 float: 1
 float128: 2
 ldouble: 2
@@ -1510,7 +1510,7 @@ float128: 3
 ldouble: 5
 
 Function: "sinh_towardzero":
-double: 2
+double: 3
 float: 2
 float128: 3
 ldouble: 4
@@ -1569,7 +1569,7 @@ float128: 3
 ldouble: 4
 
 Function: "tgamma":
-double: 5
+double: 6
 float: 4
 float128: 4
 ldouble: 5
@@ -1587,7 +1587,7 @@ float128: 5
 ldouble: 5
 
 Function: "tgamma_upward":
-double: 5
+double: 6
 float: 6
 float128: 4
 ldouble: 5
