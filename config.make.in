@@ -84,6 +84,8 @@ mach-interface-list = @mach_interface_list@
 
 experimental-malloc = @experimental_malloc@
 
+memory-tagging = @memory_tagging@
+
 nss-crypt = @libc_cv_nss_crypt@
 static-nss-crypt = @libc_cv_static_nss_crypt@
 

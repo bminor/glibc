@@ -171,6 +171,19 @@ NOTE: @option{--enable-cet} has been tested for i686, x86_64 and x32
 on non-CET processors.  @option{--enable-cet} has been tested for
 i686, x86_64 and x32 on CET processors.
 
+@item --enable-memory-tagging
+Enable memory tagging support if the architecture supports it.  When
+@theglibc{} is built with this option then the resulting library will
+be able to control the use of tagged memory when hardware support is
+present by use of the tunable @samp{glibc.mem.tagging}.  This includes
+the generation of tagged memory when using the @code{malloc} APIs.
+
+At present only AArch64 platforms with MTE provide this functionality,
+although the library will still operate (without memory tagging) on
+older versions of the architecture.
+
+The default is to disable support for memory tagging.
+
 @item --disable-profile
 Don't build libraries with profiling information.  You may want to use
 this option if you don't plan to do profiling.

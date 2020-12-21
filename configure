@@ -676,6 +676,7 @@ build_nscd
 libc_cv_static_nss_crypt
 libc_cv_nss_crypt
 build_crypt
+memory_tagging
 experimental_malloc
 enable_werror
 all_warnings
@@ -781,6 +782,7 @@ enable_all_warnings
 enable_werror
 enable_multi_arch
 enable_experimental_malloc
+enable_memory_tagging
 enable_crypt
 enable_nss_crypt
 enable_systemtap
@@ -1450,6 +1452,8 @@ Optional Features:
                           architectures
   --disable-experimental-malloc
                           disable experimental malloc features
+  --enable-memory-tagging enable memory tagging if supported by the
+                          architecture [default=no]
   --disable-crypt         do not build nor install the passphrase hashing
                           library, libcrypt
   --enable-nss-crypt      enable libcrypt to use nss
@@ -3517,6 +3521,24 @@ else
   experimental_malloc=yes
 fi
 
+
+
+# Check whether --enable-memory-tagging was given.
+if test "${enable_memory_tagging+set}" = set; then :
+  enableval=$enable_memory_tagging; memory_tagging=$enableval
+else
+  memory_tagging=no
+fi
+
+if test "$memory_tagging" = yes; then
+  # Only enable this on architectures that support it.
+  case $host_cpu in
+    aarch64)
+      $as_echo "#define USE_MTAG 1" >>confdefs.h
+
+      ;;
+  esac
+fi
 
 
 # Check whether --enable-crypt was given.

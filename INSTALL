@@ -142,6 +142,20 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      non-CET processors.  '--enable-cet' has been tested for i686,
      x86_64 and x32 on CET processors.
 
+'--enable-memory-tagging'
+     Enable memory tagging support if the architecture supports it.
+     When the GNU C Library is built with this option then the resulting
+     library will be able to control the use of tagged memory when
+     hardware support is present by use of the tunable
+     'glibc.mem.tagging'.  This includes the generation of tagged memory
+     when using the 'malloc' APIs.
+
+     At present only AArch64 platforms with MTE provide this
+     functionality, although the library will still operate (without
+     memory tagging) on older versions of the architecture.
+
+     The default is to disable support for memory tagging.
+
 '--disable-profile'
      Don't build libraries with profiling information.  You may want to
      use this option if you don't plan to do profiling.
