@@ -9,9 +9,9 @@ struct kernel_stat
     unsigned int st_gid;
     unsigned int st_rdev;
     long int st_size;
-    unsigned long int st_atime;
-    unsigned long int st_mtime;
-    unsigned long int st_ctime;
+    unsigned long int st_atime_sec;
+    unsigned long int st_mtime_sec;
+    unsigned long int st_ctime_sec;
     unsigned int st_blksize;
     int st_blocks;
     unsigned int st_flags;
@@ -34,11 +34,11 @@ struct kernel_stat64
     unsigned int    st_nlink;
     unsigned int    __pad0;
 
-    unsigned long   st_atime;
+    unsigned long   st_atime_sec;
     unsigned long   st_atimensec;
-    unsigned long   st_mtime;
+    unsigned long   st_mtime_sec;
     unsigned long   st_mtimensec;
-    unsigned long   st_ctime;
+    unsigned long   st_ctime_sec;
     unsigned long   st_ctimensec;
     long            __glibc_reserved[3];
   };
@@ -54,9 +54,9 @@ struct glibc2_stat
     __gid_t st_gid;
     __dev_t st_rdev;
     __off_t st_size;
-    __time_t st_atime;
-    __time_t st_mtime;
-    __time_t st_ctime;
+    __time_t st_atime_sec;
+    __time_t st_mtime_sec;
+    __time_t st_ctime_sec;
     unsigned int st_blksize;
     int st_blocks;
     unsigned int st_flags;
@@ -74,9 +74,9 @@ struct glibc21_stat
     __gid_t st_gid;
     __dev_t st_rdev;
     __off_t st_size;
-    __time_t st_atime;
-    __time_t st_mtime;
-    __time_t st_ctime;
+    __time_t st_atime_sec;
+    __time_t st_mtime_sec;
+    __time_t st_ctime_sec;
     __blkcnt64_t st_blocks;
     __blksize_t st_blksize;
     unsigned int st_flags;

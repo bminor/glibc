@@ -23,37 +23,6 @@
 #ifndef _BITS_STRUCT_STAT_H
 #define _BITS_STRUCT_STAT_H	1
 
-/* Nanosecond resolution timestamps are stored in a format equivalent to
-   'struct timespec'.  This is the type used whenever possible but the
-   Unix namespace rules do not allow the identifier 'timespec' to appear
-   in the <sys/stat.h> header.  Therefore we have to handle the use of
-   this header in strictly standard-compliant sources special.
-
-   Use neat tidy anonymous unions and structures when possible.  */
-
-#ifdef __USE_XOPEN2K8
-# if __GNUC_PREREQ(3,3)
-#  define __ST_TIME(X)				\
-	__extension__ union {			\
-	    struct timespec st_##X##tim;	\
-	    struct {				\
-		__time_t st_##X##time;		\
-		unsigned long st_##X##timensec;	\
-	    };					\
-	}
-# else
-#  define __ST_TIME(X) struct timespec st_##X##tim
-#  define st_atime st_atim.tv_sec
-#  define st_mtime st_mtim.tv_sec
-#  define st_ctime st_ctim.tv_sec
-# endif
-#else
-# define __ST_TIME(X)				\
-	__time_t st_##X##time;			\
-	unsigned long st_##X##timensec
-#endif
-
-
 struct stat
   {
     __dev_t st_dev;		/* Device.  */
@@ -77,9 +46,27 @@ struct stat
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
     __nlink_t st_nlink;		/* Link count.  */
     int __pad2;			/* Real padding.  */
-    __ST_TIME(a);		/* Time of last access.  */
-    __ST_TIME(m);		/* Time of last modification.  */
-    __ST_TIME(c);		/* Time of last status change.  */
+#ifdef __USE_XOPEN2K8
+    /* Nanosecond resolution timestamps are stored in a format
+       equivalent to 'struct timespec'.  This is the type used
+       whenever possible but the Unix namespace rules do not allow the
+       identifier 'timespec' to appear in the <sys/stat.h> header.
+       Therefore we have to handle the use of this header in strictly
+       standard-compliant sources special.  */
+    struct timespec st_atim;		/* Time of last access.  */
+    struct timespec st_mtim;		/* Time of last modification.  */
+    struct timespec st_ctim;		/* Time of last status change.  */
+# define st_atime st_atim.tv_sec	/* Backward compatibility.  */
+# define st_mtime st_mtim.tv_sec
+# define st_ctime st_ctim.tv_sec
+#else
+    __time_t st_atime;			/* Time of last access.  */
+    unsigned long int st_atimensec;	/* Nscecs of last access.  */
+    __time_t st_mtime;			/* Time of last modification.  */
+    unsigned long int st_mtimensec;	/* Nsecs of last modification.  */
+    __time_t st_ctime;			/* Time of last status change.  */
+    unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
+#endif
     long __glibc_reserved[3];
   };
 
@@ -98,14 +85,30 @@ struct stat64
     __blksize_t st_blksize;	/* Optimal block size for I/O.  */
     __nlink_t st_nlink;		/* Link count.  */
     int __pad0;			/* Real padding.  */
-    __ST_TIME(a);		/* Time of last access.  */
-    __ST_TIME(m);		/* Time of last modification.  */
-    __ST_TIME(c);		/* Time of last status change.  */
+#ifdef __USE_XOPEN2K8
+    /* Nanosecond resolution timestamps are stored in a format
+       equivalent to 'struct timespec'.  This is the type used
+       whenever possible but the Unix namespace rules do not allow the
+       identifier 'timespec' to appear in the <sys/stat.h> header.
+       Therefore we have to handle the use of this header in strictly
+       standard-compliant sources special.  */
+    struct timespec st_atim;		/* Time of last access.  */
+    struct timespec st_mtim;		/* Time of last modification.  */
+    struct timespec st_ctim;		/* Time of last status change.  */
+# define st_atime st_atim.tv_sec	/* Backward compatibility.  */
+# define st_mtime st_mtim.tv_sec
+# define st_ctime st_ctim.tv_sec
+#else
+    __time_t st_atime;			/* Time of last access.  */
+    unsigned long int st_atimensec;	/* Nscecs of last access.  */
+    __time_t st_mtime;			/* Time of last modification.  */
+    unsigned long int st_mtimensec;	/* Nsecs of last modification.  */
+    __time_t st_ctime;			/* Time of last status change.  */
+    unsigned long int st_ctimensec;	/* Nsecs of last status change.  */
+#endif
     long __glibc_reserved[3];
   };
 #endif
-
-#undef __ST_TIME
 
 /* Tell code we have these members.  */
 #define	_STATBUF_ST_BLKSIZE
