@@ -63,7 +63,7 @@ static void fill_ucontext (ucontext_t *uc, const struct sigcontext *sc)
   uc->uc_flags = 0;
   uc->uc_link = NULL;
   uc->uc_sigmask = sc->sc_mask;
-  uc->uc_stack.ss_sp = (__ptr_t) sc->sc_esp;
+  uc->uc_stack.ss_sp = (__ptr_t) sc->sc_uesp;
   uc->uc_stack.ss_size = 0;
   uc->uc_stack.ss_flags = 0;
 
