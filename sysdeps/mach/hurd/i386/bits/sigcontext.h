@@ -97,6 +97,10 @@ struct sigcontext
 #define sc_ps	sc_efl
 
 
+/* The deprecated sigcode values below are passed as an extra, non-portable
+   argument to regular signal handlers.  You should use SA_SIGINFO handlers
+   instead, which use the standard POSIX signal codes.  */
+
 /* Codes for SIGFPE.  */
 #define FPE_INTOVF_TRAP		0x1 /* integer overflow */
 #define FPE_INTDIV_FAULT	0x2 /* integer divide by zero */

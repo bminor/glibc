@@ -205,7 +205,7 @@ _hurd_new_proc_init (char **argv,
     /* This process is "traced", meaning it should stop on signals or exec.
        We are all set up now to handle signals.  Stop ourselves, to inform
        our parent (presumably a debugger) that the exec has completed.  */
-    __msg_sig_post (_hurd_msgport, SIGTRAP, 0, __mach_task_self ());
+    __msg_sig_post (_hurd_msgport, SIGTRAP, TRAP_TRACE, __mach_task_self ());
 }
 
 #include <shlib-compat.h>

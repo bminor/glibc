@@ -64,7 +64,7 @@ __kill (pid_t pid, int sig)
 	    {
 	      if (msgport != MACH_PORT_NULL)
 		/* Send a signal message to his message port.  */
-		return __msg_sig_post (msgport, sig, 0, refport);
+		return __msg_sig_post (msgport, sig, SI_USER, refport);
 
 	      /* The process has no message port.  Perhaps try direct
 		 frobnication of the task.  */

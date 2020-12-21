@@ -65,6 +65,7 @@ struct sigaction
 # define SA_RESETHAND	0x0004	/* Reset to SIG_DFL on entry to handler.  */
 #endif
 #define	SA_NOCLDSTOP	0x0008	/* Don't send SIGCHLD when children stop.  */
+#define SA_SIGINFO	0x0040	/* Signal handler with SA_SIGINFO args */
 
 #ifdef __USE_MISC
 # define SA_INTERRUPT	0	/* Historical no-op ("not SA_RESTART").  */

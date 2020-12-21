@@ -18,11 +18,10 @@
 #ifndef _SIGCONTEXTINFO_H
 #define _SIGCONTEXTINFO_H
 
-#define SIGCONTEXT struct sigcontext
 static inline uintptr_t
-sigcontext_get_pc (struct sigcontext ctx)
+sigcontext_get_pc (struct ucontext_t *ctx)
 {
-  return ctx.sc_eip;
+  return ctx->uc_mcontext.gregs[REG_EIP];
 }
 
 #endif

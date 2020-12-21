@@ -288,6 +288,11 @@ extern int _hurd_raise_signal (struct hurd_sigstate *ss, int signo,
 extern void _hurd_exception2signal (struct hurd_signal_detail *detail,
 				    int *signo);
 
+/* Translate a Mach exception into a signal with a legacy sigcode.  */
+
+extern void _hurd_exception2signal_legacy (struct hurd_signal_detail *detail,
+					   int *signo);
+
 
 /* Make the thread described by SS take the signal described by SIGNO and
    DETAIL.  If the process is traced, this will in fact stop with a SIGNO

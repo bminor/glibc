@@ -735,7 +735,7 @@ post_signal (struct hurd_sigstate *ss,
       {				/* PE cannot be null.  */
 	do
 	  {
-	    if (HURD_PREEMPT_SIGNAL_P (pe, signo, detail->code))
+	    if (HURD_PREEMPT_SIGNAL_P (pe, signo, detail->exc_subcode))
 	      {
 		if (pe->preemptor)
 		  {
@@ -1379,7 +1379,7 @@ _S_msg_sig_post (mach_port_t me,
   if (err = signal_allowed (signo, refport))
     return err;
 
-  d.code = sigcode;
+  d.code = d.exc_subcode = sigcode;
   d.exc = 0;
 
   /* Post the signal to a global receiver thread (or mark it pending in
@@ -1408,7 +1408,7 @@ _S_msg_sig_post_untraced (mach_port_t me,
   if (err = signal_allowed (signo, refport))
     return err;
 
-  d.code = sigcode;
+  d.code = d.exc_subcode = sigcode;
   d.exc = 0;
 
   /* Post the signal to the designated signal-receiving thread.  This will
