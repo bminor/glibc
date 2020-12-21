@@ -19,8 +19,18 @@
 /* In many Unix systems signal handlers are called like this
    and the interrupted PC is easily findable in the `struct sigcontext'.  */
 
+#ifdef SA_SIGINFO
+#include <sigcontextinfo.h>
+
+static void
+__profil_counter (int signr, siginfo_t *info, void *ctx)
+{
+  profil_count (sigcontext_get_pc (ctx));
+}
+#else
 static void
 __profil_counter (int signr, int code, struct sigcontext *scp)
 {
   profil_count ((uintptr_t) scp->sc_pc);
 }
+#endif
