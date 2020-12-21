@@ -72,6 +72,7 @@ convert (const char *tocode, const char *fromcode, char *inbufp,
 	{
 	  printf ("iconv failed: from: %s, to: %s: %s",
 		  fromcode, tocode, strerror (errno));
+	  iconv_close (ic);
 	  return -1;
 	}
     }
