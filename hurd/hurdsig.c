@@ -114,6 +114,8 @@ _hurd_thread_sigstate (thread_t thread)
 	}
       else
 	{
+	  error_t err;
+
 	  /* Use the global actions as a default for new threads.  */
 	  struct hurd_sigstate *s = _hurd_global_sigstate;
 	  if (s)
@@ -127,6 +129,11 @@ _hurd_thread_sigstate (thread_t thread)
 
 	  ss->next = _hurd_sigstates;
 	  _hurd_sigstates = ss;
+
+	  err = __mach_port_mod_refs (__mach_task_self (), thread,
+				      MACH_PORT_RIGHT_SEND, 1);
+	  if (err)
+	    __libc_fatal ("hurd: Can't add reference on Mach thread\n");
 	}
     }
   __mutex_unlock (&_hurd_siglock);
@@ -135,8 +142,7 @@ _hurd_thread_sigstate (thread_t thread)
 libc_hidden_def (_hurd_thread_sigstate)
 
 /* Destroy a sigstate structure.  Called by libpthread just before the
- * corresponding thread is terminated (the kernel thread port must remain valid
- * until this function is called.) */
+ * corresponding thread is terminated.  */
 void
 _hurd_sigstate_delete (thread_t thread)
 {
@@ -153,7 +159,12 @@ _hurd_sigstate_delete (thread_t thread)
 
   __mutex_unlock (&_hurd_siglock);
   if (ss)
-    free (ss);
+    {
+      if (ss->thread != MACH_PORT_NULL)
+	__mach_port_deallocate (__mach_task_self (), ss->thread);
+
+      free (ss);
+    }
 }
 
 /* Make SS a global receiver, with pthread signal semantics.  */
