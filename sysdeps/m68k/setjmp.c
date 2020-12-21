@@ -19,6 +19,7 @@
 
 /* Save the current program position in ENV and return 0.  */
 int
+inhibit_stack_protector
 #if defined BSD_SETJMP
 # undef setjmp
 # define savemask 1
