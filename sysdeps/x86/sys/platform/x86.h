@@ -317,6 +317,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 #define bit_cpu_FSRS		(1u << 11)
 #define bit_cpu_FSRCS		(1u << 12)
 #define bit_cpu_HRESET		(1u << 22)
+#define bit_cpu_LAM		(1u << 26)
 
 /* COMMON_CPUID_INDEX_19.  */
 
@@ -541,6 +542,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 #define index_cpu_FSRS		COMMON_CPUID_INDEX_7_ECX_1
 #define index_cpu_FSRCS		COMMON_CPUID_INDEX_7_ECX_1
 #define index_cpu_HRESET	COMMON_CPUID_INDEX_7_ECX_1
+#define index_cpu_LAM		COMMON_CPUID_INDEX_7_ECX_1
 
 /* COMMON_CPUID_INDEX_19.  */
 
@@ -765,6 +767,7 @@ extern const struct cpu_features *__x86_get_cpu_features (unsigned int)
 #define reg_FSRS		eax
 #define reg_FSRCS		eax
 #define reg_HRESET		eax
+#define reg_LAM			eax
 
 /* COMMON_CPUID_INDEX_19.  */
 

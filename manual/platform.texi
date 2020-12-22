@@ -378,6 +378,9 @@ the indirect branch predictor barrier (IBPB).
 @code{KL} -- AES Key Locker instructions.
 
 @item
+@code{LAM} -- Linear Address Masking.
+
+@item
 @code{L1D_FLUSH} -- IA32_FLUSH_CMD MSR.
 
 @item
