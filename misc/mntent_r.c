@@ -212,87 +212,52 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
 libc_hidden_def (__getmntent_r)
 weak_alias (__getmntent_r, getmntent_r)
 
+/* Write STR into STREAM, escaping whitespaces as we go.  Do not check for
+   errors here; we check the stream status in __ADDMNTENT.  */
+static void
+write_string (FILE *stream, const char *str)
+{
+  char c;
+  const char *encode_chars = " \t\n\\";
 
-/* We have to use an encoding for names if they contain spaces or tabs.
-   To be able to represent all characters we also have to escape the
-   backslash itself.  This "function" must be a macro since we use
-   `alloca'.  */
-#define encode_name(name) \
-  do {									      \
-    const char *rp = name;						      \
-									      \
-    while (*rp != '\0')							      \
-      if (*rp == ' ' || *rp == '\t' || *rp == '\n' || *rp == '\\')	      \
-	break;								      \
-      else								      \
-	++rp;								      \
-									      \
-    if (*rp != '\0')							      \
-      {									      \
-	/* In the worst case the length of the string can increase to	      \
-	   four times the current length.  */				      \
-	char *wp;							      \
-									      \
-	rp = name;							      \
-	name = wp = (char *) alloca (strlen (name) * 4 + 1);		      \
-									      \
-	do								      \
-	  if (*rp == ' ')						      \
-	    {								      \
-	      *wp++ = '\\';						      \
-	      *wp++ = '0';						      \
-	      *wp++ = '4';						      \
-	      *wp++ = '0';						      \
-	    }								      \
-	  else if (*rp == '\t')						      \
-	    {								      \
-	      *wp++ = '\\';						      \
-	      *wp++ = '0';						      \
-	      *wp++ = '1';						      \
-	      *wp++ = '1';						      \
-	    }								      \
-	  else if (*rp == '\n')						      \
-	    {								      \
-	      *wp++ = '\\';						      \
-	      *wp++ = '0';						      \
-	      *wp++ = '1';						      \
-	      *wp++ = '2';						      \
-	    }								      \
-	  else if (*rp == '\\')						      \
-	    {								      \
-	      *wp++ = '\\';						      \
-	      *wp++ = '\\';						      \
-	    }								      \
-	  else								      \
-	    *wp++ = *rp;						      \
-	while (*rp++ != '\0');						      \
-      }									      \
-  } while (0)
-
+  while ((c = *str++) != '\0')
+    {
+      if (strchr (encode_chars, c) == NULL)
+	fputc_unlocked (c, stream);
+      else
+	{
+	  fputc_unlocked ('\\', stream);
+	  fputc_unlocked (((c & 0xc0) >> 6) + '0', stream);
+	  fputc_unlocked (((c & 0x38) >> 3) + '0', stream);
+	  fputc_unlocked (((c & 0x07) >> 0) + '0', stream);
+	}
+    }
+  fputc_unlocked (' ', stream);
+}
 
 /* Write the mount table entry described by MNT to STREAM.
    Return zero on success, nonzero on failure.  */
 int
 __addmntent (FILE *stream, const struct mntent *mnt)
 {
-  struct mntent mntcopy = *mnt;
+  int ret = 1;
+
   if (fseek (stream, 0, SEEK_END))
-    return 1;
+    return ret;
 
-  /* Encode spaces and tabs in the names.  */
-  encode_name (mntcopy.mnt_fsname);
-  encode_name (mntcopy.mnt_dir);
-  encode_name (mntcopy.mnt_type);
-  encode_name (mntcopy.mnt_opts);
+  flockfile (stream);
 
-  return (fprintf (stream, "%s %s %s %s %d %d\n",
-		   mntcopy.mnt_fsname,
-		   mntcopy.mnt_dir,
-		   mntcopy.mnt_type,
-		   mntcopy.mnt_opts,
-		   mntcopy.mnt_freq,
-		   mntcopy.mnt_passno) < 0
-	  || fflush (stream) != 0);
+  write_string (stream, mnt->mnt_fsname);
+  write_string (stream, mnt->mnt_dir);
+  write_string (stream, mnt->mnt_type);
+  write_string (stream, mnt->mnt_opts);
+  fprintf (stream, "%d %d\n", mnt->mnt_freq, mnt->mnt_passno);
+
+  ret = ferror (stream) != 0 || fflush (stream) != 0;
+
+  funlockfile (stream);
+
+  return ret;
 }
 weak_alias (__addmntent, addmntent)
 
