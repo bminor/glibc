@@ -34,6 +34,10 @@ __fpclassifyl (long double x)
     retval = FP_ZERO;
   else if (ex == 0 && (hx & 0x80000000) == 0)
     retval = FP_SUBNORMAL;
+  /* Pseudo-normals, i.e. pseudo-zero, pseudo-infinity and un-normals.  They
+     behave like NaNs, so categorize them as such.  */
+  else if ((hx & 0x80000000) == 0)
+    retval = FP_NAN;
   else if (ex == 0x7fff)
     retval = ((hx & 0x7fffffff) | lx) != 0 ? FP_NAN : FP_INFINITE;
 
