@@ -253,7 +253,7 @@ __addmntent (FILE *stream, const struct mntent *mnt)
   write_string (stream, mnt->mnt_opts);
   fprintf (stream, "%d %d\n", mnt->mnt_freq, mnt->mnt_passno);
 
-  ret = ferror (stream) != 0 || fflush (stream) != 0;
+  ret = __ferror_unlocked (stream) != 0 || fflush (stream) != 0;
 
   funlockfile (stream);
 
