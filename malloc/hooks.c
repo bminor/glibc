@@ -315,7 +315,7 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
   __libc_lock_unlock (main_arena.mutex);
   if (!oldp)
     malloc_printerr ("realloc(): invalid pointer");
-  const INTERNAL_SIZE_T oldchsize = CHUNK_AVAILABLE_SIZE (oldp);
+  const INTERNAL_SIZE_T oldsize = chunksize (oldp);
 
   if (!checked_request2size (rb, &chnb))
     goto invert;
@@ -331,7 +331,8 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
       else
 #endif
       {
-        if (oldchsize >= chnb)
+	/* Note the extra SIZE_SZ overhead. */
+        if (oldsize - SIZE_SZ >= chnb)
           newmem = oldmem; /* do nothing */
         else
           {
@@ -340,7 +341,7 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
 	    newmem = _int_malloc (&main_arena, rb);
             if (newmem)
               {
-                memcpy (newmem, oldmem, oldchsize - CHUNK_HDR_SZ);
+                memcpy (newmem, oldmem, oldsize - CHUNK_HDR_SZ);
                 munmap_chunk (oldp);
               }
           }
@@ -349,7 +350,7 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
   else
     {
       top_check ();
-      newmem = _int_realloc (&main_arena, oldp, oldchsize, chnb);
+      newmem = _int_realloc (&main_arena, oldp, oldsize, chnb);
     }
 
   DIAG_PUSH_NEEDS_COMMENT;
