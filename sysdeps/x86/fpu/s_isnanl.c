@@ -28,16 +28,18 @@ static char rcsid[] = "$NetBSD: $";
 
 int __isnanl(long double x)
 {
-	int32_t se,hx,lx;
+	int32_t se,hx,lx,pn;
 	GET_LDOUBLE_WORDS(se,hx,lx,x);
 	se = (se & 0x7fff) << 1;
-	/* The additional & 0x7fffffff is required because Intel's
-	   extended format has the normally implicit 1 explicit
-	   present.  Sigh!  */
+	/* Detect pseudo-normal numbers, i.e. exponent is non-zero and the top
+	   bit of the significand is not set.   */
+	pn = (uint32_t)((~hx & 0x80000000) & (se|(-se)))>>31;
+	/* Clear the significand bit when computing mantissa.  */
 	lx |= hx & 0x7fffffff;
 	se |= (uint32_t)(lx|(-lx))>>31;
 	se = 0xfffe - se;
-	return (int)((uint32_t)(se))>>16;
+
+	return (int)(((uint32_t)(se)) >> 16) | pn;
 }
 hidden_def (__isnanl)
 weak_alias (__isnanl, isnanl)
