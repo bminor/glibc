@@ -192,6 +192,7 @@ _dl_important_hwcaps (const char *glibc_hwcaps_prepend,
 
   /* Each hwcaps subdirectory has a GLIBC_HWCAPS_PREFIX string prefix
      and a "/" suffix once stored in the result.  */
+  hwcaps_counts.maximum_length += strlen (GLIBC_HWCAPS_PREFIX) + 1;
   size_t total = (hwcaps_counts.count * (strlen (GLIBC_HWCAPS_PREFIX) + 1)
 		  + hwcaps_counts.total_length);
 
