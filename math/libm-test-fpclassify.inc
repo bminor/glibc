@@ -37,10 +37,24 @@ static const struct test_f_i_data fpclassify_test_data[] =
     TEST_f_i (fpclassify, -min_subnorm_value, FP_SUBNORMAL, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 
+#if HANDLE_PSEUDO_NUMBERS
+static const struct test_f_i_data_u fpclassify_test_data_u[] =
+  {
+    TEST_f_i (fpclassify, pseudo_zero, FP_NAN, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (fpclassify, pseudo_inf, FP_NAN, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (fpclassify, pseudo_qnan, FP_NAN, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (fpclassify, pseudo_snan, FP_NAN, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_f_i (fpclassify, pseudo_unnormal, FP_NAN, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+  };
+#endif
+
 static void
 fpclassify_test (void)
 {
   ALL_RM_TEST (fpclassify, 1, fpclassify_test_data, RUN_TEST_LOOP_f_i_tg, END);
+#if HANDLE_PSEUDO_NUMBERS
+  ALL_RM_TEST (fpclassify, 1, fpclassify_test_data_u, RUN_TEST_LOOP_f_i_tg_u, END);
+#endif
 }
 
 static void
