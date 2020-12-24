@@ -57,8 +57,6 @@ enum
      |= ptr->features[index_cpu_##name].cpuid.reg_##name & bit_cpu_##name;
 # define CPU_FEATURE_PREFERRED_P(ptr, name) \
   ((ptr->preferred[index_arch_##name] & bit_arch_##name) != 0)
-# define CPU_FEATURE_CPU_P(ptr, name) \
-  CPU_FEATURE_CHECK_P (ptr, name, cpuid)
 
 /* HAS_CPU_FEATURE evaluates to true if CPU supports the feature.  */
 # undef HAS_CPU_FEATURE
