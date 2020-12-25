@@ -293,22 +293,22 @@ get_extended_indices (struct cpu_features *cpu_features)
   __cpuid (0x80000000, eax, ebx, ecx, edx);
   if (eax >= 0x80000001)
     __cpuid (0x80000001,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000001].cpuid.eax,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000001].cpuid.ebx,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000001].cpuid.ecx,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000001].cpuid.edx);
+	     cpu_features->features[CPUID_INDEX_80000001].cpuid.eax,
+	     cpu_features->features[CPUID_INDEX_80000001].cpuid.ebx,
+	     cpu_features->features[CPUID_INDEX_80000001].cpuid.ecx,
+	     cpu_features->features[CPUID_INDEX_80000001].cpuid.edx);
   if (eax >= 0x80000007)
     __cpuid (0x80000007,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000007].cpuid.eax,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000007].cpuid.ebx,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000007].cpuid.ecx,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000007].cpuid.edx);
+	     cpu_features->features[CPUID_INDEX_80000007].cpuid.eax,
+	     cpu_features->features[CPUID_INDEX_80000007].cpuid.ebx,
+	     cpu_features->features[CPUID_INDEX_80000007].cpuid.ecx,
+	     cpu_features->features[CPUID_INDEX_80000007].cpuid.edx);
   if (eax >= 0x80000008)
     __cpuid (0x80000008,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000008].cpuid.eax,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000008].cpuid.ebx,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000008].cpuid.ecx,
-	     cpu_features->features[COMMON_CPUID_INDEX_80000008].cpuid.edx);
+	     cpu_features->features[CPUID_INDEX_80000008].cpuid.eax,
+	     cpu_features->features[CPUID_INDEX_80000008].cpuid.ebx,
+	     cpu_features->features[CPUID_INDEX_80000008].cpuid.ecx,
+	     cpu_features->features[CPUID_INDEX_80000008].cpuid.edx);
 }
 
 static void
@@ -320,10 +320,10 @@ get_common_indices (struct cpu_features *cpu_features,
     {
       unsigned int eax;
       __cpuid (1, eax,
-	       cpu_features->features[COMMON_CPUID_INDEX_1].cpuid.ebx,
-	       cpu_features->features[COMMON_CPUID_INDEX_1].cpuid.ecx,
-	       cpu_features->features[COMMON_CPUID_INDEX_1].cpuid.edx);
-      cpu_features->features[COMMON_CPUID_INDEX_1].cpuid.eax = eax;
+	       cpu_features->features[CPUID_INDEX_1].cpuid.ebx,
+	       cpu_features->features[CPUID_INDEX_1].cpuid.ecx,
+	       cpu_features->features[CPUID_INDEX_1].cpuid.edx);
+      cpu_features->features[CPUID_INDEX_1].cpuid.eax = eax;
       *family = (eax >> 8) & 0x0f;
       *model = (eax >> 4) & 0x0f;
       *extended_model = (eax >> 12) & 0xf0;
@@ -338,30 +338,30 @@ get_common_indices (struct cpu_features *cpu_features,
   if (cpu_features->basic.max_cpuid >= 7)
     {
       __cpuid_count (7, 0,
-		     cpu_features->features[COMMON_CPUID_INDEX_7].cpuid.eax,
-		     cpu_features->features[COMMON_CPUID_INDEX_7].cpuid.ebx,
-		     cpu_features->features[COMMON_CPUID_INDEX_7].cpuid.ecx,
-		     cpu_features->features[COMMON_CPUID_INDEX_7].cpuid.edx);
+		     cpu_features->features[CPUID_INDEX_7].cpuid.eax,
+		     cpu_features->features[CPUID_INDEX_7].cpuid.ebx,
+		     cpu_features->features[CPUID_INDEX_7].cpuid.ecx,
+		     cpu_features->features[CPUID_INDEX_7].cpuid.edx);
       __cpuid_count (7, 1,
-		     cpu_features->features[COMMON_CPUID_INDEX_7_ECX_1].cpuid.eax,
-		     cpu_features->features[COMMON_CPUID_INDEX_7_ECX_1].cpuid.ebx,
-		     cpu_features->features[COMMON_CPUID_INDEX_7_ECX_1].cpuid.ecx,
-		     cpu_features->features[COMMON_CPUID_INDEX_7_ECX_1].cpuid.edx);
+		     cpu_features->features[CPUID_INDEX_7_ECX_1].cpuid.eax,
+		     cpu_features->features[CPUID_INDEX_7_ECX_1].cpuid.ebx,
+		     cpu_features->features[CPUID_INDEX_7_ECX_1].cpuid.ecx,
+		     cpu_features->features[CPUID_INDEX_7_ECX_1].cpuid.edx);
     }
 
   if (cpu_features->basic.max_cpuid >= 0xd)
     __cpuid_count (0xd, 1,
-		   cpu_features->features[COMMON_CPUID_INDEX_D_ECX_1].cpuid.eax,
-		   cpu_features->features[COMMON_CPUID_INDEX_D_ECX_1].cpuid.ebx,
-		   cpu_features->features[COMMON_CPUID_INDEX_D_ECX_1].cpuid.ecx,
-		   cpu_features->features[COMMON_CPUID_INDEX_D_ECX_1].cpuid.edx);
+		   cpu_features->features[CPUID_INDEX_D_ECX_1].cpuid.eax,
+		   cpu_features->features[CPUID_INDEX_D_ECX_1].cpuid.ebx,
+		   cpu_features->features[CPUID_INDEX_D_ECX_1].cpuid.ecx,
+		   cpu_features->features[CPUID_INDEX_D_ECX_1].cpuid.edx);
 
   if (cpu_features->basic.max_cpuid >= 0x19)
     __cpuid_count (0x19, 0,
-		   cpu_features->features[COMMON_CPUID_INDEX_19].cpuid.eax,
-		   cpu_features->features[COMMON_CPUID_INDEX_19].cpuid.ebx,
-		   cpu_features->features[COMMON_CPUID_INDEX_19].cpuid.ecx,
-		   cpu_features->features[COMMON_CPUID_INDEX_19].cpuid.edx);
+		   cpu_features->features[CPUID_INDEX_19].cpuid.eax,
+		   cpu_features->features[CPUID_INDEX_19].cpuid.ebx,
+		   cpu_features->features[CPUID_INDEX_19].cpuid.ecx,
+		   cpu_features->features[CPUID_INDEX_19].cpuid.edx);
 }
 
 _Static_assert (((index_arch_Fast_Unaligned_Load
@@ -536,11 +536,11 @@ init_cpu_features (struct cpu_features *cpu_features)
 
       update_usable (cpu_features);
 
-      ecx = cpu_features->features[COMMON_CPUID_INDEX_1].cpuid.ecx;
+      ecx = cpu_features->features[CPUID_INDEX_1].cpuid.ecx;
 
       if (CPU_FEATURE_USABLE_P (cpu_features, AVX))
 	{
-	  /* Since the FMA4 bit is in COMMON_CPUID_INDEX_80000001 and
+	  /* Since the FMA4 bit is in CPUID_INDEX_80000001 and
 	     FMA4 requires AVX, determine if FMA4 is usable here.  */
 	  CPU_FEATURE_SET_USABLE (cpu_features, FMA4);
 	}

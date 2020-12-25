@@ -3,6 +3,7 @@ gen-as-const-headers += cpu-features-offsets.sym
 endif
 
 ifeq ($(subdir),elf)
+sysdep_routines += get-cpuid-feature-leaf
 sysdep-dl-routines += dl-get-cpu-features
 sysdep_headers += sys/platform/x86.h
 

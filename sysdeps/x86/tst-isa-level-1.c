@@ -60,8 +60,7 @@ do_test_1 (const char *modname, bool fail)
 static int
 do_test (void)
 {
-  const struct cpu_features *cpu_features
-    = __x86_get_cpu_features (COMMON_CPUID_INDEX_MAX);
+  const struct cpu_features *cpu_features = __get_cpu_features ();
   unsigned int isa_level = get_isa_level (cpu_features);
   bool has_isa_baseline = ((isa_level & GNU_PROPERTY_X86_ISA_1_BASELINE)
 			   == GNU_PROPERTY_X86_ISA_1_BASELINE);

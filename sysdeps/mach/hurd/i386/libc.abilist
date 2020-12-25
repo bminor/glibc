@@ -2191,6 +2191,7 @@ GLIBC_2.32 thrd_current F
 GLIBC_2.32 thrd_equal F
 GLIBC_2.32 thrd_sleep F
 GLIBC_2.32 thrd_yield F
+GLIBC_2.33 __x86_get_cpuid_feature_leaf F
 GLIBC_2.33 fstat F
 GLIBC_2.33 fstat64 F
 GLIBC_2.33 fstatat F

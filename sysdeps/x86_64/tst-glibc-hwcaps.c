@@ -30,8 +30,7 @@ extern int marker4 (void);
 static int
 compute_level (void)
 {
-  const struct cpu_features *cpu_features
-    = __x86_get_cpu_features (COMMON_CPUID_INDEX_MAX);
+  const struct cpu_features *cpu_features = __get_cpu_features ();
   unsigned int isa_level = get_isa_level (cpu_features);
 
   if (!(isa_level & GNU_PROPERTY_X86_ISA_1_V2))

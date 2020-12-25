@@ -142,13 +142,10 @@ reserved.
 Facilities specific to X86 that are not specific to a particular
 operating system are declared in @file{sys/platform/x86.h}.
 
-@deftypefun {const struct cpu_features *} __x86_get_cpu_features (unsigned int @var{max})
+@deftypefun {const struct cpuid_feature *} __x86_get_cpuid_feature_leaf (unsigned int @var{leaf})
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 Return a pointer to x86 CPU feature structure used by query macros for x86
-CPU features.  If @var{max} exceeds @code{COMMON_CPUID_INDEX_MAX} which
-is the limit of the CPUID leaves supported by @Theglibc{}, the function
-returns @code{NULL}, indicating that the queried processor feature is
-unsupported by @Theglibc{} run-time.
+CPU feature @var{leaf}.
 @end deftypefun
 
 @deftypefn Macro int HAS_CPU_FEATURE (@var{name})

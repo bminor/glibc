@@ -1,4 +1,4 @@
-/* Test case for __x86_get_cpu_features interface
+/* Test case for <sys/platform/x86.h> interface
    Copyright (C) 2015-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -33,36 +33,9 @@
       printf ("  " #name "\n");		\
   }
 
-static const char * const cpu_kinds[] =
-{
-  "Unknown",
-  "Intel",
-  "AMD",
-  "ZHAOXIN",
-  "Other",
-};
-
 static int
 do_test (void)
 {
-  const struct cpu_features *cpu_features = __x86_get_cpu_features (0);
-
-  switch (cpu_features->basic.kind)
-    {
-    case arch_kind_intel:
-    case arch_kind_amd:
-    case arch_kind_zhaoxin:
-    case arch_kind_other:
-      printf ("Vendor: %s\n", cpu_kinds[cpu_features->basic.kind]);
-      printf ("Family: 0x%x\n", cpu_features->basic.family);
-      printf ("Model: 0x%x\n", cpu_features->basic.model);
-      printf ("Stepping: 0x%x\n", cpu_features->basic.stepping);
-      break;
-
-    default:
-      abort ();
-    }
-
 #ifdef __SSE2__
   TEST_VERIFY_EXIT (HAS_CPU_FEATURE (SSE2));
 #endif

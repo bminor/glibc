@@ -27,8 +27,7 @@ enum { subdirs_count = 3 }; /* Number of components in _dl_hwcaps_subdirs.  */
 uint32_t
 _dl_hwcaps_subdirs_active (void)
 {
-  const struct cpu_features *cpu_features
-    = __x86_get_cpu_features (COMMON_CPUID_INDEX_MAX);
+  const struct cpu_features *cpu_features = __get_cpu_features ();
   unsigned int isa_level = get_isa_level (cpu_features);
   int active = 0;
 

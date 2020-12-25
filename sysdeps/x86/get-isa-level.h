@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <elf.h>
-#include <sys/platform/x86.h>
+#include <cpu-features.h>
 
 /* Get GNU_PROPERTY_X86_ISA_1_BASELINE and GNU_PROPERTY_X86_ISA_1_V[234]
    ISA level.  */

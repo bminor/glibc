@@ -672,8 +672,8 @@ intel_bug_no_cache_info:
           /* Assume that all logical threads share the highest cache
              level.  */
           threads
-            = ((cpu_features->features[COMMON_CPUID_INDEX_1].cpuid.ebx
-                >> 16) & 0xff);
+            = ((cpu_features->features[CPUID_INDEX_1].cpuid.ebx >> 16)
+	       & 0xff);
         }
 
         /* Cap usage of highest cache level to the number of supported

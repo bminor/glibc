@@ -43,12 +43,10 @@ __ifunc (__x86_cpu_features, __x86_cpu_features, NULL, void,
 	 _dl_x86_init_cpu_features);
 #endif
 
-#undef __x86_get_cpu_features
+#undef _dl_x86_get_cpu_features
 
 const struct cpu_features *
-__x86_get_cpu_features (unsigned int max)
+_dl_x86_get_cpu_features (void)
 {
-  if (max > COMMON_CPUID_INDEX_MAX)
-    return NULL;
   return &GLRO(dl_x86_cpu_features);
 }
