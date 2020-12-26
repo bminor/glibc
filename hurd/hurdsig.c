@@ -624,6 +624,13 @@ post_signal (struct hurd_sigstate *ss,
   enum { stop, ignore, core, term, handle } act;
   int ss_suspended;
 
+  /* sigaction for preemptors */
+  struct sigaction preempt_sigaction = {
+    .sa_flags = SA_RESTART
+  };
+
+  struct sigaction *action;
+
   /* Mark the signal as pending.  */
   void mark_pending (void)
     {
@@ -780,11 +787,16 @@ post_signal (struct hurd_sigstate *ss,
     /* Ignore the signal altogether.  */
     act = ignore;
   else if (handler != SIG_ERR)
-    /* Run the preemption-provided handler.  */
-    act = handle;
+    {
+      /* Run the preemption-provided handler.  */
+      action = &preempt_sigaction;
+      act = handle;
+    }
   else
     {
       /* No preemption.  Do normal handling.  */
+
+      action = & _hurd_sigstate_actions (ss) [signo];
 
       if (!untraced && __sigismember (&_hurdsig_traced, signo))
 	{
@@ -800,7 +812,7 @@ post_signal (struct hurd_sigstate *ss,
 	  return NULL;
 	}
 
-      handler = _hurd_sigstate_actions (ss) [signo].sa_handler;
+      handler = action->sa_handler;
 
       if (handler == SIG_DFL)
 	/* Figure out the default action for this signal.  */
@@ -1072,7 +1084,7 @@ post_signal (struct hurd_sigstate *ss,
 
 	/* Call the machine-dependent function to set the thread up
 	   to run the signal handler, and preserve its old context.  */
-	scp = _hurd_setup_sighandler (ss, handler, signo, detail,
+	scp = _hurd_setup_sighandler (ss, action, handler, signo, detail,
 				      wait_for_reply, &thread_state);
 	if (scp == NULL)
 	  goto sigbomb;
@@ -1110,8 +1122,6 @@ post_signal (struct hurd_sigstate *ss,
 	      ss->context = NULL;
 	    }
 	}
-
-	struct sigaction *action = & _hurd_sigstate_actions (ss) [signo];
 
 	/* Backdoor extra argument to signal handler.  */
 	scp->sc_error = detail->error;

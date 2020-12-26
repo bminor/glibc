@@ -327,7 +327,8 @@ extern void _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
 struct machine_thread_all_state;
 extern struct sigcontext *
-_hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
+_hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action,
+			__sighandler_t handler,
 			int signo, struct hurd_signal_detail *detail,
 			int rpc_wait, struct machine_thread_all_state *state);
 

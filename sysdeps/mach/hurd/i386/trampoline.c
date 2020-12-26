@@ -80,7 +80,8 @@ static void fill_ucontext (ucontext_t *uc, const struct sigcontext *sc)
 }
 
 struct sigcontext *
-_hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
+_hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action,
+			__sighandler_t handler,
 			int signo, struct hurd_signal_detail *detail,
 			volatile int rpc_wait,
 			struct machine_thread_all_state *state)
@@ -90,7 +91,6 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   void firewall (void);
   extern const void _hurd_intr_rpc_msg_cx_sp;
   extern const void _hurd_intr_rpc_msg_sp_restored;
-  const struct sigaction *action;
   void *volatile sigsp;
   struct sigcontext *scp;
   struct
@@ -122,11 +122,6 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       ucontext_t ucontext;
       siginfo_t siginfo;
     } *stackframe;
-
-  /* sigaction for preemptors */
-  static const struct sigaction legacy_sigaction = {
-    .sa_flags = SA_RESTART
-  };
 
   if (ss->context)
     {
@@ -169,14 +164,6 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
      new frame below there (if not on the altstack), and restore that value as
      the SP on sigreturn.  */
     state->basic.uesp = state->basic.ecx;
-
-  action = & _hurd_sigstate_actions (ss) [signo];
-  if ( (action->sa_flags & SA_SIGINFO)
-        && handler != (__sighandler_t) action->sa_sigaction
-   || !(action->sa_flags & SA_SIGINFO)
-        && handler != action->sa_handler)
-    /* A signal preemptor took over, use legacy semantic.  */
-    action = &legacy_sigaction;
 
   if ((action->sa_flags & SA_ONSTACK)
       && !(ss->sigaltstack.ss_flags & (SS_DISABLE|SS_ONSTACK)))
