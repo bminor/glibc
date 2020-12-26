@@ -96,6 +96,7 @@ libsupport-routines = \
   xdlfcn \
   xdlmopen \
   xdup2 \
+  xfchmod \
   xfclose \
   xfopen \
   xfork \
