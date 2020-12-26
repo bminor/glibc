@@ -842,7 +842,11 @@ __spawni (pid_t *pid, const char *file,
       {
 	/* The file is accessible but it is not an executable file.
 	   Invoke the shell to interpret it as a script.  */
-	err = __argz_insert (&args, &argslen, args, _PATH_BSHELL);
+	err = 0;
+	if (!argslen)
+	  err = __argz_insert (&args, &argslen, args, relpath);
+	if (!err)
+	  err = __argz_insert (&args, &argslen, args, _PATH_BSHELL);
 	if (!err)
 	  err = child_lookup (_PATH_BSHELL, O_EXEC, 0, &execfile);
 	if (!err)
