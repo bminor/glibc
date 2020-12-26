@@ -87,6 +87,7 @@ libsupport-routines = \
   xasprintf \
   xbind \
   xcalloc \
+  xchdir \
   xchroot \
   xclock_gettime \
   xclose \
