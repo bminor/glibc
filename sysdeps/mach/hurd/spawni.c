@@ -838,7 +838,7 @@ __spawni (pid_t *pid, const char *file,
       err = exec (execfile);
     __mach_port_deallocate (__mach_task_self (), execfile);
 
-    if (err == ENOEXEC)
+    if ((err == ENOEXEC) && (xflags & SPAWN_XFLAGS_TRY_SHELL) != 0)
       {
 	/* The file is accessible but it is not an executable file.
 	   Invoke the shell to interpret it as a script.  */
