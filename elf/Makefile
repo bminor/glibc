@@ -1279,6 +1279,8 @@ CFLAGS-ifuncmain6pie.c += $(pie-ccflag)
 CFLAGS-ifuncmain7pie.c += $(pie-ccflag)
 CFLAGS-tst-ifunc-textrel.c += $(pic-ccflag)
 
+LDFLAGS-ifuncmain6pie = -Wl,-z,lazy
+
 $(objpfx)ifuncmain1pie: $(objpfx)ifuncmod1.so
 $(objpfx)ifuncmain1staticpie: $(objpfx)ifuncdep1pic.o
 $(objpfx)ifuncmain1vispie: $(objpfx)ifuncmod1.so

@@ -9,7 +9,6 @@
 #include "ifunc-sel.h"
 
 typedef int (*foo_p) (void);
-extern foo_p foo_ptr;
 
 static int
 one (void)
@@ -28,20 +27,17 @@ foo_ifunc (void)
 }
 
 extern int foo (void);
-extern foo_p get_foo (void);
+extern int call_foo (void);
 extern foo_p get_foo_p (void);
 
-foo_p my_foo_ptr = foo;
+foo_p foo_ptr = foo;
 
 int
 main (void)
 {
   foo_p p;
 
-  p = get_foo ();
-  if (p != foo)
-    abort ();
-  if ((*p) () != -30)
+  if (call_foo () != -30)
     abort ();
 
   p = get_foo_p ();
@@ -52,11 +48,7 @@ main (void)
 
   if (foo_ptr != foo)
     abort ();
-  if (my_foo_ptr != foo)
-    abort ();
   if ((*foo_ptr) () != -30)
-    abort ();
-  if ((*my_foo_ptr) () != -30)
     abort ();
   if (foo () != -30)
     abort ();

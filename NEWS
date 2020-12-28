@@ -25,6 +25,7 @@ The following bugs are resolved with this release:
 
   [16573] malloc: Set and reset all hooks for tracing
   [18035] Fix pldd hang
+  [20019] NULL pointer dereference in libc.so.6 IFUNC due to uninitialized GOT
   [20568] Fix crash in _IO_wfile_sync
   [24155] x32 memcmp can treat positive length as 0 (if sign bit in RDX is set) (CVE-2019-7309)
   [24164] Systemtap probes need to use "nr" constraint on 32-bit Arm
