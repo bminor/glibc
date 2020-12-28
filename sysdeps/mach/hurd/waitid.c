@@ -1,4 +1,4 @@
-/* Pseudo implementation of waitid.
+/* Implementation of waitid.  Hurd version.
    Copyright (C) 1997-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1997.
@@ -18,14 +18,23 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <sys/types.h>
 #include <sys/wait.h>
 #include <stddef.h>
+#include <hurd.h>
+#include <hurd/port.h>
+#include <hurd/version.h>
+#include <sysdep-cancel.h>
 
 int
 __waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
+  struct rusage ignored;
+  error_t err;
   pid_t pid, child;
+  int sigcode;
   int status;
+  int cancel_oldtype;
 
   switch (idtype)
     {
@@ -59,16 +68,19 @@ __waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
       return -1;
     }
 
-  /* Note the waitid() is a cancellation point.  But since we call
-     waitpid() which itself is a cancellation point we do not have
-     to do anything here.  */
-  child = __waitpid (pid, &status, options);
+  cancel_oldtype = LIBC_CANCEL_ASYNC();
+#if HURD_INTERFACE_VERSION >= 20201227
+  err = __USEPORT_CANCEL (PROC, __proc_waitid (port, pid, options,
+					       &status, &sigcode,
+					       &ignored, &child));
+  if (err == MIG_BAD_ID || err == EOPNOTSUPP)
+#endif
+    err = __USEPORT_CANCEL (PROC, __proc_wait (port, pid, options,
+					       &status, &sigcode,
+					       &ignored, &child));
+  LIBC_CANCEL_RESET (cancel_oldtype);
 
-  if (child == -1)
-    /* `waitpid' set `errno' for us.  */
-    return -1;
-
-  if (child == 0)
+  if (err == EAGAIN)
     {
       /* POSIX.1-2008, Technical Corrigendum 1 XSH/TC1-2008/0713 [153] states
 	 that if waitid returns because WNOHANG was specified and status is
@@ -79,6 +91,9 @@ __waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
       infop->si_code = 0;
       return 0;
     }
+
+  if (err != 0)
+    return __hurd_fail (err);
 
   /* Decode the status field and set infop members... */
   infop->si_signo = SIGCHLD;
@@ -99,6 +114,11 @@ __waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
     {
       infop->si_code = CLD_STOPPED;
       infop->si_status = WSTOPSIG (status);
+    }
+  else if (WIFCONTINUED (status))
+    {
+      infop->si_code = CLD_CONTINUED;
+      infop->si_status = SIGCONT;
     }
 
   return 0;

@@ -8,8 +8,7 @@ constant WUNTRACED
 
 macro WEXITSTATUS
 # if !defined XPG4 && !defined POSIX && !defined POSIX2008
-// Bug 23091: hurd: missing waitid support.
-xfail[i386-gnu]-macro WIFCONTINUED
+macro WIFCONTINUED
 # endif
 macro WIFEXITED
 macro WIFSIGNALED
@@ -17,15 +16,14 @@ macro WIFSTOPPED
 macro WSTOPSIG
 macro WTERMSIG
 
-// Bug 23091: hurd: missing waitid support.
 # if !defined XPG4 && !defined POSIX
-xfail[i386-gnu]-constant WEXITED
-xfail[i386-gnu]-constant WSTOPPED
+constant WEXITED
+constant WSTOPPED
 #  ifndef POSIX2008
-xfail[i386-gnu]-constant WCONTINUED
+constant WCONTINUED
 #  endif
 constant WNOHANG
-xfail[i386-gnu]-constant WNOWAIT
+constant WNOWAIT
 # endif
 
 #if !defined XPG4 && !defined POSIX
