@@ -74,6 +74,7 @@ tests-exclude-mcheck = tst-mcheck tst-malloc-usable \
 tests-mcheck = $(filter-out $(tests-exclude-mcheck),$(tests))
 
 routines = malloc morecore mcheck mtrace obstack reallocarray \
+  scratch_buffer_dupfree \
   scratch_buffer_grow scratch_buffer_grow_preserve \
   scratch_buffer_set_array_size \
   dynarray_at_failure \
