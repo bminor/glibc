@@ -314,16 +314,22 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 	{
 # ifndef RTLD_BOOTSTRAP
 	  if (sym_map != map
-	      && sym_map->l_type != lt_executable
 	      && !sym_map->l_relocated)
 	    {
 	      const char *strtab
 		= (const char *) D_PTR (map, l_info[DT_STRTAB]);
-	      _dl_error_printf ("\
+	      if (sym_map->l_type == lt_executable)
+		_dl_fatal_printf ("\
+%s: IFUNC symbol '%s' referenced in '%s' is defined in the executable \
+and creates an unsatisfiable circular dependency.\n",
+				  RTLD_PROGNAME, strtab + refsym->st_name,
+				  map->l_name);
+	      else
+		_dl_error_printf ("\
 %s: Relink `%s' with `%s' for IFUNC symbol `%s'\n",
-				RTLD_PROGNAME, map->l_name,
-				sym_map->l_name,
-				strtab + refsym->st_name);
+				  RTLD_PROGNAME, map->l_name,
+				  sym_map->l_name,
+				  strtab + refsym->st_name);
 	    }
 # endif
 	  value = ((ElfW(Addr) (*) (void)) value) ();
