@@ -24,7 +24,7 @@
 
 
 int
-faccessat (int fd, const char *file, int mode, int flag)
+__faccessat (int fd, const char *file, int mode, int flag)
 {
   int ret = INLINE_SYSCALL_CALL (faccessat2, fd, file, mode, flag);
 #if __ASSUME_FACCESSAT2
@@ -73,3 +73,4 @@ faccessat (int fd, const char *file, int mode, int flag)
   return INLINE_SYSCALL_ERROR_RETURN_VALUE (EACCES);
 #endif /* !__ASSUME_FACCESSAT2 */
 }
+weak_alias (__faccessat, faccessat)
