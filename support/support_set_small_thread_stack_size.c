@@ -20,8 +20,8 @@
 #include <pthread.h>
 #include <support/xthread.h>
 
-void
-support_set_small_thread_stack_size (pthread_attr_t *attr)
+size_t
+support_small_thread_stack_size (void)
 {
   /* Some architectures have too small values for PTHREAD_STACK_MIN
      which cannot be used for creating threads.  Ensure that the stack
@@ -31,5 +31,11 @@ support_set_small_thread_stack_size (pthread_attr_t *attr)
   if (stack_size < PTHREAD_STACK_MIN)
     stack_size = PTHREAD_STACK_MIN;
 #endif
-  xpthread_attr_setstacksize (attr, stack_size);
+  return stack_size;
+}
+
+void
+support_set_small_thread_stack_size (pthread_attr_t *attr)
+{
+  xpthread_attr_setstacksize (attr, support_small_thread_stack_size ());
 }
