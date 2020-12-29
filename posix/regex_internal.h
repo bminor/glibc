@@ -77,6 +77,14 @@
 # define isblank(ch) ((ch) == ' ' || (ch) == '\t')
 #endif
 
+/* regex code assumes isascii has its usual numeric meaning,
+   even if the portable character set uses EBCDIC encoding,
+   and even if wint_t is wider than int.  */
+#ifndef _LIBC
+# undef isascii
+# define isascii(c) (((c) & ~0x7f) == 0)
+#endif
+
 #ifdef _LIBC
 # ifndef _RE_DEFINE_LOCALE_FUNCTIONS
 #  define _RE_DEFINE_LOCALE_FUNCTIONS 1
@@ -335,7 +343,7 @@ typedef struct
     Idx idx;			/* for BACK_REF */
     re_context_type ctx_type;	/* for ANCHOR */
   } opr;
-#if __GNUC__ >= 2 && !defined __STRICT_ANSI__
+#if (__GNUC__ >= 2 || defined __clang__) && !defined __STRICT_ANSI__
   re_token_type_t type : 8;
 #else
   re_token_type_t type;
@@ -841,10 +849,10 @@ re_string_elem_size_at (const re_string_t *pstr, Idx idx)
 #endif /* RE_ENABLE_I18N */
 
 #ifndef FALLTHROUGH
-# if __GNUC__ < 7
-#  define FALLTHROUGH ((void) 0)
-# else
+# if (__GNUC__ >= 7) || (__clang_major__ >= 10)
 #  define FALLTHROUGH __attribute__ ((__fallthrough__))
+# else
+#  define FALLTHROUGH ((void) 0)
 # endif
 #endif
 
