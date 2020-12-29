@@ -738,6 +738,12 @@ later call to @code{malloc} to reuse the space.  In the meantime, the
 space remains in your program as part of a free-list used internally by
 @code{malloc}.
 
+The @code{free} function preserves the value of @code{errno}, so that
+cleanup code need not worry about saving and restoring @code{errno}
+around a call to @code{free}.  Although neither @w{ISO C} nor
+POSIX.1-2017 requires @code{free} to preserve @code{errno}, a future
+version of POSIX is planned to require it.
+
 There is no point in freeing blocks at the end of a program, because all
 of the program's space is given back to the system when the process
 terminates.
@@ -1935,6 +1941,9 @@ linking against @code{libc.a} (explicitly or implicitly).
 functions (that is, all the functions used by the application,
 @theglibc{}, and other linked-in libraries) can lead to static linking
 failures, and, at run time, to heap corruption and application crashes.
+Replacement functions should implement the behavior documented for
+their counterparts in @theglibc{}; for example, the replacement
+@code{free} should also preserve @code{errno}.
 
 The minimum set of functions which has to be provided by a custom
 @code{malloc} is given in the table below.

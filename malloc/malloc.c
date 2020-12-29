@@ -3278,6 +3278,8 @@ __libc_free (void *mem)
   *(volatile char *)mem;
 #endif
 
+  int err = errno;
+
   p = mem2chunk (mem);
 
   /* Mark the chunk as belonging to the library again.  */
@@ -3298,13 +3300,16 @@ __libc_free (void *mem)
                       mp_.mmap_threshold, mp_.trim_threshold);
         }
       munmap_chunk (p);
-      return;
+    }
+  else
+    {
+      MAYBE_INIT_TCACHE ();
+
+      ar_ptr = arena_for_chunk (p);
+      _int_free (ar_ptr, p, 0);
     }
 
-  MAYBE_INIT_TCACHE ();
-
-  ar_ptr = arena_for_chunk (p);
-  _int_free (ar_ptr, p, 0);
+  __set_errno (err);
 }
 libc_hidden_def (__libc_free)
 
