@@ -260,6 +260,8 @@ free_check (void *mem, const void *caller)
   if (!mem)
     return;
 
+  int err = errno;
+
 #ifdef USE_MTAG
   /* Quickly check that the freed pointer matches the tag for the memory.
      This gives a useful double-free detection.  */
@@ -274,12 +276,16 @@ free_check (void *mem, const void *caller)
     {
       __libc_lock_unlock (main_arena.mutex);
       munmap_chunk (p);
-      return;
     }
-  /* Mark the chunk as belonging to the library again.  */
-  (void)TAG_REGION (chunk2rawmem (p), CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
-  _int_free (&main_arena, p, 1);
-  __libc_lock_unlock (main_arena.mutex);
+  else
+    {
+      /* Mark the chunk as belonging to the library again.  */
+      (void)TAG_REGION (chunk2rawmem (p), CHUNK_AVAILABLE_SIZE (p)
+                                         - CHUNK_HDR_SZ);
+      _int_free (&main_arena, p, 1);
+      __libc_lock_unlock (main_arena.mutex);
+    }
+  __set_errno (err);
 }
 
 static void *
