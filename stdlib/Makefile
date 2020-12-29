@@ -86,7 +86,7 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-makecontext-align test-bz22786 tst-strtod-nan-sign \
 		   tst-swapcontext1 tst-setcontext4 tst-setcontext5 \
 		   tst-setcontext6 tst-setcontext7 tst-setcontext8 \
-		   tst-setcontext9 tst-bz20544
+		   tst-setcontext9 tst-bz20544 tst-canon-bz26341
 
 tests-internal	:= tst-strtod1i tst-strtod3 tst-strtod4 tst-strtod5i \
 		   tst-tls-atexit tst-tls-atexit-nodelete
@@ -101,6 +101,7 @@ LDLIBS-test-atexit-race = $(shared-thread-library)
 LDLIBS-test-at_quick_exit-race = $(shared-thread-library)
 LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
 LDLIBS-test-on_exit-race = $(shared-thread-library)
+LDLIBS-tst-canon-bz26341 = $(shared-thread-library)
 
 LDLIBS-test-dlclose-exit-race = $(shared-thread-library) $(libdl)
 LDFLAGS-test-dlclose-exit-race = $(LDFLAGS-rdynamic)
