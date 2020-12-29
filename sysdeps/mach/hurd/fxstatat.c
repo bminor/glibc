@@ -22,7 +22,7 @@
 #include <hurd.h>
 #include <shlib-compat.h>
 
-#if SHLIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
+#if LIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
 
 int
 __fxstatat (int vers, int fd, const char *filename, struct stat *buf, int flag)
@@ -32,5 +32,4 @@ __fxstatat (int vers, int fd, const char *filename, struct stat *buf, int flag)
 
   return __fstatat (fd, filename, buf, flag);
 }
-
 #endif

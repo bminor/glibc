@@ -21,7 +21,7 @@
 #include <hurd.h>
 #include <shlib-compat.h>
 
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_33)
+#if LIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_33)
 
 /* Get information about the file descriptor FD in BUF.  */
 int

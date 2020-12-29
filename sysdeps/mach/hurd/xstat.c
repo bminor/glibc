@@ -20,7 +20,7 @@
 #include <hurd.h>
 #include <shlib-compat.h>
 
-#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
+#if LIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
 
 /* Get file information about FILE in BUF.  */
 int

@@ -26,7 +26,7 @@
 #include <statx_cp.h>
 #include <shlib-compat.h>
 
-#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
+#if LIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_33)
 
 /* Get information about the file FD in BUF.  */
 
@@ -78,4 +78,4 @@ strong_alias (___fxstat64, __fxstat64)
 strong_alias (___fxstat64, __fxstat)
 #endif
 
-#endif /* SHLIB_COMPAT  */
+#endif /* LIB_COMPAT  */

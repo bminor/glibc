@@ -26,7 +26,7 @@
 #include <statx_cp.h>
 #include <shlib-compat.h>
 
-#if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_33)
+#if LIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_33)
 
 /* Get information about the file NAME in BUF.  */
 
@@ -95,4 +95,4 @@ strong_alias (___lxstat64, __lxstat64);
 strong_alias (___lxstat64,__lxstat)
 #endif
 
-#endif /* SHLIB_COMPAT  */
+#endif /* LIB_COMPAT  */

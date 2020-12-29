@@ -26,7 +26,7 @@
 # include <xstatover.h>
 # include <shlib-compat.h>
 
-# if SHLIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
+# if LIB_COMPAT(libc, GLIBC_2_4, GLIBC_2_33)
 
 /* Get information about the file FD in BUF.  */
 int
@@ -50,6 +50,6 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
 #endif
 }
 
-# endif /* SHLIB_COMPAT  */
+# endif /* LIB_COMPAT  */
 
 #endif /* XSTAT_IS_XSTAT64  */
