@@ -254,7 +254,8 @@ included.
 @standards{GNU, (none)}
 If this macro is defined to @math{1}, security hardening is added to
 various library functions.  If defined to @math{2}, even stricter
-checks are applied.
+checks are applied. If defined to @math{3}, @theglibc{} may also use
+checks that may have an additional performance overhead.
 @end defvr
 
 @defvr Macro _REENTRANT
