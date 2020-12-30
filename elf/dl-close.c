@@ -79,9 +79,10 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
 	{
 	  assert (old_map->l_tls_modid == idx);
 
-	  /* Mark the entry as unused. */
-	  listp->slotinfo[idx - disp].gen = GL(dl_tls_generation) + 1;
-	  listp->slotinfo[idx - disp].map = NULL;
+	  /* Mark the entry as unused.  These can be read concurrently.  */
+	  atomic_store_relaxed (&listp->slotinfo[idx - disp].gen,
+				GL(dl_tls_generation) + 1);
+	  atomic_store_relaxed (&listp->slotinfo[idx - disp].map, NULL);
 	}
 
       /* If this is not the last currently used entry no need to look
@@ -96,8 +97,8 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
 
       if (listp->slotinfo[idx - disp].map != NULL)
 	{
-	  /* Found a new last used index.  */
-	  GL(dl_tls_max_dtv_idx) = idx;
+	  /* Found a new last used index.  This can be read concurrently.  */
+	  atomic_store_relaxed (&GL(dl_tls_max_dtv_idx), idx);
 	  return true;
 	}
     }
@@ -571,7 +572,9 @@ _dl_close_worker (struct link_map *map, bool force)
 					GL(dl_tls_dtv_slotinfo_list), 0,
 					imap->l_init_called))
 		/* All dynamically loaded modules with TLS are unloaded.  */
-		GL(dl_tls_max_dtv_idx) = GL(dl_tls_static_nelem);
+		/* Can be read concurrently.  */
+		atomic_store_relaxed (&GL(dl_tls_max_dtv_idx),
+				      GL(dl_tls_static_nelem));
 
 	      if (imap->l_tls_offset != NO_TLS_OFFSET
 		  && imap->l_tls_offset != FORCED_DYNAMIC_TLS_OFFSET)
@@ -769,8 +772,11 @@ _dl_close_worker (struct link_map *map, bool force)
   /* If we removed any object which uses TLS bump the generation counter.  */
   if (any_tls)
     {
-      if (__glibc_unlikely (++GL(dl_tls_generation) == 0))
+      size_t newgen = GL(dl_tls_generation) + 1;
+      if (__glibc_unlikely (newgen == 0))
 	_dl_fatal_printf ("TLS generation counter wrapped!  Please report as described in "REPORT_BUGS_TO".\n");
+      /* Can be read concurrently.  */
+      atomic_store_relaxed (&GL(dl_tls_generation), newgen);
 
       if (tls_free_end == GL(dl_tls_static_used))
 	GL(dl_tls_static_used) = tls_free_start;
