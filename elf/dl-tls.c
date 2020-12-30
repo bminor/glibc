@@ -590,7 +590,7 @@ _dl_allocate_tls_init (void *result)
 	}
 
       total += cnt;
-      if (total >= GL(dl_tls_max_dtv_idx))
+      if (total > GL(dl_tls_max_dtv_idx))
 	break;
 
       listp = listp->next;
