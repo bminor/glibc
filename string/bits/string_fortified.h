@@ -26,13 +26,15 @@ __fortify_function void *
 __NTH (memcpy (void *__restrict __dest, const void *__restrict __src,
 	       size_t __len))
 {
-  return __builtin___memcpy_chk (__dest, __src, __len, __bos0 (__dest));
+  return __builtin___memcpy_chk (__dest, __src, __len,
+				 __glibc_objsize0 (__dest));
 }
 
 __fortify_function void *
 __NTH (memmove (void *__dest, const void *__src, size_t __len))
 {
-  return __builtin___memmove_chk (__dest, __src, __len, __bos0 (__dest));
+  return __builtin___memmove_chk (__dest, __src, __len,
+				  __glibc_objsize0 (__dest));
 }
 
 #ifdef __USE_GNU
@@ -40,7 +42,8 @@ __fortify_function void *
 __NTH (mempcpy (void *__restrict __dest, const void *__restrict __src,
 		size_t __len))
 {
-  return __builtin___mempcpy_chk (__dest, __src, __len, __bos0 (__dest));
+  return __builtin___mempcpy_chk (__dest, __src, __len,
+				  __glibc_objsize0 (__dest));
 }
 #endif
 
@@ -53,7 +56,8 @@ __NTH (mempcpy (void *__restrict __dest, const void *__restrict __src,
 __fortify_function void *
 __NTH (memset (void *__dest, int __ch, size_t __len))
 {
-  return __builtin___memset_chk (__dest, __ch, __len, __bos0 (__dest));
+  return __builtin___memset_chk (__dest, __ch, __len,
+				 __glibc_objsize0 (__dest));
 }
 
 #ifdef __USE_MISC
@@ -65,21 +69,21 @@ void __explicit_bzero_chk (void *__dest, size_t __len, size_t __destlen)
 __fortify_function void
 __NTH (explicit_bzero (void *__dest, size_t __len))
 {
-  __explicit_bzero_chk (__dest, __len, __bos0 (__dest));
+  __explicit_bzero_chk (__dest, __len, __glibc_objsize0 (__dest));
 }
 #endif
 
 __fortify_function char *
 __NTH (strcpy (char *__restrict __dest, const char *__restrict __src))
 {
-  return __builtin___strcpy_chk (__dest, __src, __bos (__dest));
+  return __builtin___strcpy_chk (__dest, __src, __glibc_objsize (__dest));
 }
 
 #ifdef __USE_GNU
 __fortify_function char *
 __NTH (stpcpy (char *__restrict __dest, const char *__restrict __src))
 {
-  return __builtin___stpcpy_chk (__dest, __src, __bos (__dest));
+  return __builtin___stpcpy_chk (__dest, __src, __glibc_objsize (__dest));
 }
 #endif
 
@@ -88,14 +92,16 @@ __fortify_function char *
 __NTH (strncpy (char *__restrict __dest, const char *__restrict __src,
 		size_t __len))
 {
-  return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+  return __builtin___strncpy_chk (__dest, __src, __len,
+				  __glibc_objsize (__dest));
 }
 
 #if __GNUC_PREREQ (4, 7) || __glibc_clang_prereq (2, 6)
 __fortify_function char *
 __NTH (stpncpy (char *__dest, const char *__src, size_t __n))
 {
-  return __builtin___stpncpy_chk (__dest, __src, __n, __bos (__dest));
+  return __builtin___stpncpy_chk (__dest, __src, __n,
+				  __glibc_objsize (__dest));
 }
 #else
 extern char *__stpncpy_chk (char *__dest, const char *__src, size_t __n,
@@ -118,7 +124,7 @@ __NTH (stpncpy (char *__dest, const char *__src, size_t __n))
 __fortify_function char *
 __NTH (strcat (char *__restrict __dest, const char *__restrict __src))
 {
-  return __builtin___strcat_chk (__dest, __src, __bos (__dest));
+  return __builtin___strcat_chk (__dest, __src, __glibc_objsize (__dest));
 }
 
 
@@ -126,7 +132,8 @@ __fortify_function char *
 __NTH (strncat (char *__restrict __dest, const char *__restrict __src,
 		size_t __len))
 {
-  return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
+  return __builtin___strncat_chk (__dest, __src, __len,
+				  __glibc_objsize (__dest));
 }
 
 #endif /* bits/string_fortified.h */
