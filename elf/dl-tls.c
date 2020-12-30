@@ -179,7 +179,9 @@ _dl_next_tls_modid (void)
       /* No gaps, allocate a new entry.  */
     nogaps:
 
-      result = ++GL(dl_tls_max_dtv_idx);
+      result = GL(dl_tls_max_dtv_idx) + 1;
+      /* Can be read concurrently.  */
+      atomic_store_relaxed (&GL(dl_tls_max_dtv_idx), result);
     }
 
   return result;
@@ -363,10 +365,12 @@ allocate_dtv (void *result)
   dtv_t *dtv;
   size_t dtv_length;
 
+  /* Relaxed MO, because the dtv size is later rechecked, not relied on.  */
+  size_t max_modid = atomic_load_relaxed (&GL(dl_tls_max_dtv_idx));
   /* We allocate a few more elements in the dtv than are needed for the
      initial set of modules.  This should avoid in most cases expansions
      of the dtv.  */
-  dtv_length = GL(dl_tls_max_dtv_idx) + DTV_SURPLUS;
+  dtv_length = max_modid + DTV_SURPLUS;
   dtv = calloc (dtv_length + 2, sizeof (dtv_t));
   if (dtv != NULL)
     {
@@ -771,7 +775,7 @@ _dl_update_slotinfo (unsigned long int req_modid)
 	      if (modid > max_modid)
 		break;
 
-	      size_t gen = listp->slotinfo[cnt].gen;
+	      size_t gen = atomic_load_relaxed (&listp->slotinfo[cnt].gen);
 
 	      if (gen > new_gen)
 		/* Not relevant.  */
@@ -783,7 +787,8 @@ _dl_update_slotinfo (unsigned long int req_modid)
 		continue;
 
 	      /* If there is no map this means the entry is empty.  */
-	      struct link_map *map = listp->slotinfo[cnt].map;
+	      struct link_map *map
+		= atomic_load_relaxed (&listp->slotinfo[cnt].map);
 	      /* Check whether the current dtv array is large enough.  */
 	      if (dtv[-1].counter < modid)
 		{
@@ -927,7 +932,12 @@ __tls_get_addr (GET_ADDR_ARGS)
 {
   dtv_t *dtv = THREAD_DTV ();
 
-  if (__glibc_unlikely (dtv[0].counter != GL(dl_tls_generation)))
+  /* Update is needed if dtv[0].counter < the generation of the accessed
+     module.  The global generation counter is used here as it is easier
+     to check.  Synchronization for the relaxed MO access is guaranteed
+     by user code, see CONCURRENCY NOTES in _dl_update_slotinfo.  */
+  size_t gen = atomic_load_relaxed (&GL(dl_tls_generation));
+  if (__glibc_unlikely (dtv[0].counter != gen))
     return update_get_addr (GET_ADDR_PARAM);
 
   void *p = dtv[GET_ADDR_MODULE].pointer.val;
@@ -950,7 +960,10 @@ _dl_tls_get_addr_soft (struct link_map *l)
     return NULL;
 
   dtv_t *dtv = THREAD_DTV ();
-  if (__glibc_unlikely (dtv[0].counter != GL(dl_tls_generation)))
+  /* This may be called without holding the GL(dl_load_lock).  Reading
+     arbitrary gen value is fine since this is best effort code.  */
+  size_t gen = atomic_load_relaxed (&GL(dl_tls_generation));
+  if (__glibc_unlikely (dtv[0].counter != gen))
     {
       /* This thread's DTV is not completely current,
 	 but it might already cover this module.  */
@@ -1036,8 +1049,10 @@ cannot create TLS data structures"));
   /* Add the information into the slotinfo data structure.  */
   if (do_add)
     {
-      listp->slotinfo[idx].map = l;
-      listp->slotinfo[idx].gen = GL(dl_tls_generation) + 1;
+      /* Can be read concurrently.  See _dl_update_slotinfo.  */
+      atomic_store_relaxed (&listp->slotinfo[idx].map, l);
+      atomic_store_relaxed (&listp->slotinfo[idx].gen,
+			    GL(dl_tls_generation) + 1);
     }
 }
 

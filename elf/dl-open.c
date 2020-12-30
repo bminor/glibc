@@ -395,9 +395,12 @@ update_tls_slotinfo (struct link_map *new)
 	}
     }
 
-  if (__builtin_expect (++GL(dl_tls_generation) == 0, 0))
+  size_t newgen = GL(dl_tls_generation) + 1;
+  if (__glibc_unlikely (newgen == 0))
     _dl_fatal_printf (N_("\
 TLS generation counter wrapped!  Please report this."));
+  /* Can be read concurrently.  */
+  atomic_store_relaxed (&GL(dl_tls_generation), newgen);
 
   /* We need a second pass for static tls data, because
      _dl_update_slotinfo must not be run while calls to
