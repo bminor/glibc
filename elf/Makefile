@@ -222,7 +222,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-audit14 tst-audit15 tst-audit16 \
 	 tst-single_threaded tst-single_threaded-pthread \
 	 tst-tls-ie tst-tls-ie-dlmopen argv0test \
-	 tst-glibc-hwcaps tst-glibc-hwcaps-prepend tst-glibc-hwcaps-mask
+	 tst-glibc-hwcaps tst-glibc-hwcaps-prepend tst-glibc-hwcaps-mask \
+	 tst-tls20
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -344,6 +345,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		libmarkermod2-1 libmarkermod2-2 \
 		libmarkermod3-1 libmarkermod3-2 libmarkermod3-3 \
 		libmarkermod4-1 libmarkermod4-2 libmarkermod4-3 libmarkermod4-4 \
+		tst-tls20mod-bad
 
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
@@ -1922,3 +1924,9 @@ $(objpfx)tst-rtld-help.out: $(objpfx)ld.so
 	fi; \
 	(exit $$status); \
 	$(evaluate-test)
+
+# Reuses tst-tls-many-dynamic-modules
+tst-tls20mod-bad.so-no-z-defs = yes
+$(objpfx)tst-tls20: $(libdl) $(shared-thread-library)
+$(objpfx)tst-tls20.out: $(objpfx)tst-tls20mod-bad.so \
+			$(tst-tls-many-dynamic-modules:%=$(objpfx)%.so)
