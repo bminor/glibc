@@ -354,7 +354,7 @@ LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 tests += tst-cancelx7 tst-cancelx17 tst-cleanupx4
 
 ifeq ($(build-shared),yes)
-tests += tst-compat-forwarder tst-audit-threads
+tests += tst-compat-forwarder tst-audit-threads tst-tls8
 tests-internal += tst-tls3 tst-tls3-malloc tst-tls5 tst-stackguard1 tst-tls7
 ifeq ($(have-z-execstack),yes)
 tests += tst-execstack
@@ -371,7 +371,7 @@ modules-names = tst-tls3mod \
 		tst-execstack-mod \
 		tst-compat-forwarder-mod tst-audit-threads-mod1 \
 		tst-audit-threads-mod2 \
-		tst-tls7mod tst-tls7mod-dep
+		tst-tls7mod tst-tls7mod-dep tst-tls8mod-bad
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) \
 		   tst-cleanup4aux.o tst-cleanupx4aux.o $(tst-tls7mod-deps)
 test-extras += tst-cleanup4aux tst-cleanupx4aux
@@ -527,6 +527,12 @@ $(objpfx)tst-tls7.out: $(objpfx)tst-tls7mod.so
 $(objpfx)tst-tls7mod.so: $(tst-tls7mod-deps:%=$(objpfx)%)
 $(tst-tls7mod-deps:%=$(objpfx)%): $(objpfx)tst-tls7mod-dep.so
 	cp -f $< $@
+
+# Reuse tst-tls7mod-dep*.so.
+tst-tls8mod-bad.so-no-z-defs = yes
+$(objpfx)tst-tls8: $(libdl) $(shared-thread-library)
+$(objpfx)tst-tls8.out: $(objpfx)tst-tls8mod-bad.so \
+		       $(tst-tls7mod-deps:%=$(objpfx)%)
 
 $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
 
