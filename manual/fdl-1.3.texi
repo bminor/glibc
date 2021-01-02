@@ -6,7 +6,7 @@
 
 @display
 Copyright @copyright{} 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc.
-@uref{http://fsf.org/}
+@uref{https://fsf.org/}
 
 Everyone is permitted to copy and distribute verbatim copies
 of this license document, but changing it is not allowed.
@@ -97,7 +97,7 @@ format, SGML or XML using a publicly available
 DTD, and standard-conforming simple HTML,
 PostScript or PDF designed for human modification.  Examples
 of transparent image formats include PNG, XCF and
-JPG.  Opaque formats include proprietary formats that can be
+JPG@.  Opaque formats include proprietary formats that can be
 read and edited only by proprietary word processors, SGML or
 XML for which the DTD and/or processing tools are
 not generally available, and the machine-generated HTML,
@@ -414,7 +414,7 @@ The Free Software Foundation may publish new, revised versions
 of the GNU Free Documentation License from time to time.  Such new
 versions will be similar in spirit to the present version, but may
 differ in detail to address new problems or concerns.  See
-@uref{http://www.gnu.org/copyleft/}.
+@uref{https://www.gnu.org/licenses/}.
 
 Each version of the License is given a distinguishing version number.
 If the Document specifies that a particular numbered version of this
