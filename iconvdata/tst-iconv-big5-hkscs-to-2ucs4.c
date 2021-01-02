@@ -1,5 +1,5 @@
 /* Verify the BIG5HKSCS outputs that generate 2 wchar_t's (Bug 25734).
-   Copyright (C) 2020 Free Software Foundation, Inc.
+   Copyright (C) 2020-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,7 +75,7 @@ check_conversion (struct testdata test)
 
   memset (&st, 0, sizeof (st));
   /* First conversion: Consumes first 2 bytes.  */
-  ret = mbrtowc (&wc, mbs, inlen - consumed, &st); 
+  ret = mbrtowc (&wc, mbs, inlen - consumed, &st);
   if (ret != 2)
     {
       printf ("error: First conversion consumed only %zd bytes.\n", ret);
@@ -90,7 +90,7 @@ check_conversion (struct testdata test)
       err++;
     }
   /* Second conversion: Consumes 0 bytes.  */
-  ret = mbrtowc (&wc, mbs, inlen - consumed, &st); 
+  ret = mbrtowc (&wc, mbs, inlen - consumed, &st);
   if (ret != 0)
     {
       printf ("error: Second conversion consumed only %zd bytes.\n", ret);
@@ -114,7 +114,7 @@ check_conversion (struct testdata test)
       err++;
     }
   /* Third conversion: Consumes 1 byte (it's an ASCII character).  */
-  ret = mbrtowc (&wc, mbs, inlen - consumed, &st); 
+  ret = mbrtowc (&wc, mbs, inlen - consumed, &st);
   if (ret != 1)
     {
       printf ("error: Third conversion consumed only %zd bytes.\n", ret);
@@ -154,7 +154,7 @@ do_test (void)
   if (err > 0)
     FAIL_EXIT1 ("One or more conversions failed.");
 
-  return 0; 
+  return 0;
 }
 
 #include <support/test-driver.c>

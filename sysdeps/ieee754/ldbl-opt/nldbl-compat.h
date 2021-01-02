@@ -1,5 +1,5 @@
 /* Prototypes for compatibility double == long double entry points.
-   Copyright (C) 2006-2020 Free Software Foundation, Inc.
+   Copyright (C) 2006-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@cygnus.com>, 2006.
 

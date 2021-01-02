@@ -1,5 +1,5 @@
 /* Test for i386 sigaction sa_restorer handling (BZ#21269)
-   Copyright (C) 2017-2020 Free Software Foundation, Inc.
+   Copyright (C) 2017-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

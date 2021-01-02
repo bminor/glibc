@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Convert IEEE quad to 128bit signed integer
-   Copyright (C) 2007-2020 Free Software Foundation, Inc.
+   Copyright (C) 2007-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Uroš Bizjak (ubizjak@gmail.com).
 

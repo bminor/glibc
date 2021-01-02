@@ -1,5 +1,5 @@
 /* Test program for rpmatch function.
-   Copyright (C) 1998-2020 Free Software Foundation, Inc.
+   Copyright (C) 1998-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jochen Hein <jochen.hein@delphi.central.de>.
 
