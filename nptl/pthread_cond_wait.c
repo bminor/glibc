@@ -81,7 +81,7 @@ __condvar_cancel_waiting (pthread_cond_t *cond, uint64_t seq, unsigned int g,
 {
   bool consumed_signal = false;
 
-  /* No deadlock with group switching is possible here because we have do
+  /* No deadlock with group switching is possible here because we do
      not hold a reference on the group.  */
   __condvar_acquire_lock (cond, private);
 
