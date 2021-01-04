@@ -31,9 +31,6 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
-#if defined _LIBC || HAVE_ALLOCA
-# include <alloca.h>
-#endif
 #include <wchar.h>
 #include <wctype.h>
 #include <stddef.h>
@@ -86,22 +83,6 @@ typedef ptrdiff_t idx_t;
 /* We often have to test for FNM_FILE_NAME and FNM_PERIOD being both set.  */
 #define NO_LEADING_PERIOD(flags) \
   ((flags & (FNM_FILE_NAME | FNM_PERIOD)) == (FNM_FILE_NAME | FNM_PERIOD))
-
-#ifndef _LIBC
-# if HAVE_ALLOCA
-/* The OS usually guarantees only one guard page at the bottom of the stack,
-   and a page size can be as small as 4096 bytes.  So we cannot safely
-   allocate anything larger than 4096 bytes.  Also care for the possibility
-   of a few compiler-allocated temporary stack slots.  */
-#  define __libc_use_alloca(n) ((n) < 4032)
-# else
-/* Just use malloc.  */
-#  define __libc_use_alloca(n) false
-#  undef alloca
-#  define alloca(n) malloc (n)
-# endif
-# define alloca_account(size, avar) ((avar) += (size), alloca (size))
-#endif
 
 /* Provide support for user-defined character classes, based on the functions
    from ISO C 90 amendment 1.  */
@@ -289,8 +270,7 @@ fnmatch (const char *pattern, const char *string, int flags)
           if (r == 0)
             r = internal_fnwmatch (wpattern.data, wstring.data,
                                    (wchar_t *) wstring.data + n,
-                                   flags & FNM_PERIOD, flags, NULL,
-                                   false);
+                                   flags & FNM_PERIOD, flags, NULL);
         }
 
       scratch_buffer_free (&wstring);
@@ -301,7 +281,7 @@ fnmatch (const char *pattern, const char *string, int flags)
     }
 
   return internal_fnmatch (pattern, string, string + strlen (string),
-                           flags & FNM_PERIOD, flags, NULL, 0);
+                           flags & FNM_PERIOD, flags, NULL);
 }
 
 #undef fnmatch
