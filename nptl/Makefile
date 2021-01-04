@@ -169,10 +169,6 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_setattr_default_np pthread_getattr_default_np \
 		      pthread_mutex_conf \
 		      libpthread-compat
-#		      pthread_setuid pthread_seteuid pthread_setreuid \
-#		      pthread_setresuid \
-#		      pthread_setgid pthread_setegid pthread_setregid \
-#		      pthread_setresgid
 
 libpthread-shared-only-routines = version pt-interp pt-allocrtsig \
 				  unwind-forcedunwind
