@@ -127,9 +127,9 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 		  vmprot, VM_PROT_ALL,
 		  (flags & MAP_SHARED) ? VM_INHERIT_SHARE : VM_INHERIT_COPY);
 
-  if (err == KERN_NO_SPACE)
+  if (flags & MAP_FIXED)
     {
-      if (flags & MAP_FIXED)
+      if (err == KERN_NO_SPACE)
 	{
 	  /* XXX this is not atomic as it is in unix! */
 	  /* The region is already allocated; deallocate it first.  */
@@ -143,7 +143,10 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 			    (flags & MAP_SHARED) ? VM_INHERIT_SHARE
 			    : VM_INHERIT_COPY);
 	}
-      else if (mapaddr != 0)
+    }
+  else
+    {
+      if (mapaddr != 0 && (err == KERN_NO_SPACE || err == KERN_INVALID_ADDRESS))
 	err = __vm_map (__mach_task_self (),
 			&mapaddr, (vm_size_t) len, (vm_address_t) 0,
 			1, memobj, (vm_offset_t) offset,
