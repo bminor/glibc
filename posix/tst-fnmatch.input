@@ -676,6 +676,8 @@ C		 "x"			"*"		       0       PATHNAME|LEADING_DIR
 C		 "x/y"			"*"		       0       PATHNAME|LEADING_DIR
 C		 "x/y/z"		"*"		       0       PATHNAME|LEADING_DIR
 C		 "x"			"*x"		       0       PATHNAME|LEADING_DIR
+
+en_US.UTF-8	 "\366.csv"		"*.csv"                0
 C		 "x/y"			"*x"		       0       PATHNAME|LEADING_DIR
 C		 "x/y/z"		"*x"		       0       PATHNAME|LEADING_DIR
 C		 "x"			"x*"		       0       PATHNAME|LEADING_DIR

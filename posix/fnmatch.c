@@ -75,6 +75,7 @@ extern int fnmatch (const char *pattern, const char *string, int flags);
 
 #include <intprops.h>
 #include <flexmember.h>
+#include <scratch_buffer.h>
 
 #ifdef _LIBC
 typedef ptrdiff_t idx_t;
@@ -231,121 +232,72 @@ is_char_class (const wchar_t *wcs)
 
 #include "fnmatch_loop.c"
 
+static int
+fnmatch_convert_to_wide (const char *str, struct scratch_buffer *buf,
+                         size_t *n)
+{
+  mbstate_t ps;
+  memset (&ps, '\0', sizeof (ps));
+
+  size_t nw = buf->length / sizeof (wchar_t);
+  *n = strnlen (str, nw - 1);
+  if (__glibc_likely (*n < nw))
+    {
+      const char *p = str;
+      *n = mbsrtowcs (buf->data, &p, *n + 1, &ps);
+      if (__glibc_unlikely (*n == (size_t) -1))
+        /* Something wrong.
+           XXX Do we have to set 'errno' to something which mbsrtows hasn't
+           already done?  */
+        return -1;
+      if (p == NULL)
+        return 0;
+      memset (&ps, '\0', sizeof (ps));
+    }
+
+  *n = mbsrtowcs (NULL, &str, 0, &ps);
+  if (__glibc_unlikely (*n == (size_t) -1))
+    return -1;
+  if (!scratch_buffer_set_array_size (buf, *n + 1, sizeof (wchar_t)))
+    {
+      __set_errno (ENOMEM);
+      return -2;
+    }
+  assert (mbsinit (&ps));
+  mbsrtowcs (buf->data, &str, *n + 1, &ps);
+  return 0;
+}
 
 int
 fnmatch (const char *pattern, const char *string, int flags)
 {
   if (__glibc_unlikely (MB_CUR_MAX != 1))
     {
-      mbstate_t ps;
       size_t n;
-      const char *p;
-      wchar_t *wpattern_malloc = NULL;
-      wchar_t *wpattern;
-      wchar_t *wstring_malloc = NULL;
-      wchar_t *wstring;
-      size_t alloca_used = 0;
+      struct scratch_buffer wpattern;
+      scratch_buffer_init (&wpattern);
+      struct scratch_buffer wstring;
+      scratch_buffer_init (&wstring);
+      int r;
 
-      /* Convert the strings into wide characters.  */
-      memset (&ps, '\0', sizeof (ps));
-      p = pattern;
-      n = strnlen (pattern, 1024);
-      if (__glibc_likely (n < 1024))
+      /* Convert the strings into wide characters.  Any conversion issue
+         fallback to the ascii version.  */
+      r = fnmatch_convert_to_wide (pattern, &wpattern, &n);
+      if (r == 0)
         {
-          wpattern = (wchar_t *) alloca_account ((n + 1) * sizeof (wchar_t),
-                                                 alloca_used);
-          n = mbsrtowcs (wpattern, &p, n + 1, &ps);
-          if (__glibc_unlikely (n == (size_t) -1))
-            /* Something wrong.
-               XXX Do we have to set 'errno' to something which mbsrtows hasn't
-               already done?  */
-            return -1;
-          if (p)
-            {
-              memset (&ps, '\0', sizeof (ps));
-              goto prepare_wpattern;
-            }
-        }
-      else
-        {
-        prepare_wpattern:
-          n = mbsrtowcs (NULL, &pattern, 0, &ps);
-          if (__glibc_unlikely (n == (size_t) -1))
-            /* Something wrong.
-               XXX Do we have to set 'errno' to something which mbsrtows hasn't
-               already done?  */
-            return -1;
-          if (__glibc_unlikely (n >= (size_t) -1 / sizeof (wchar_t)))
-            {
-              __set_errno (ENOMEM);
-              return -2;
-            }
-          wpattern_malloc = wpattern
-            = (wchar_t *) malloc ((n + 1) * sizeof (wchar_t));
-          assert (mbsinit (&ps));
-          if (wpattern == NULL)
-            return -2;
-          (void) mbsrtowcs (wpattern, &pattern, n + 1, &ps);
-        }
-
-      assert (mbsinit (&ps));
-      n = strnlen (string, 1024);
-      p = string;
-      if (__glibc_likely (n < 1024))
-        {
-          wstring = (wchar_t *) alloca_account ((n + 1) * sizeof (wchar_t),
-                                                alloca_used);
-          n = mbsrtowcs (wstring, &p, n + 1, &ps);
-          if (__glibc_unlikely (n == (size_t) -1))
-            {
-              /* Something wrong.
-                 XXX Do we have to set 'errno' to something which
-                 mbsrtows hasn't already done?  */
-            free_return:
-              free (wpattern_malloc);
-              return -1;
-            }
-          if (p)
-            {
-              memset (&ps, '\0', sizeof (ps));
-              goto prepare_wstring;
-            }
-        }
-      else
-        {
-        prepare_wstring:
-          n = mbsrtowcs (NULL, &string, 0, &ps);
-          if (__glibc_unlikely (n == (size_t) -1))
-            /* Something wrong.
-               XXX Do we have to set 'errno' to something which mbsrtows hasn't
-               already done?  */
-            goto free_return;
-          if (__glibc_unlikely (n >= (size_t) -1 / sizeof (wchar_t)))
-            {
-              free (wpattern_malloc);
-              __set_errno (ENOMEM);
-              return -2;
-            }
-
-          wstring_malloc = wstring
-            = (wchar_t *) malloc ((n + 1) * sizeof (wchar_t));
-          if (wstring == NULL)
-            {
-              free (wpattern_malloc);
-              return -2;
-            }
-          assert (mbsinit (&ps));
-          (void) mbsrtowcs (wstring, &string, n + 1, &ps);
-        }
-
-      int res = internal_fnwmatch (wpattern, wstring, wstring + n,
+          r = fnmatch_convert_to_wide (string, &wstring, &n);
+          if (r == 0)
+            r = internal_fnwmatch (wpattern.data, wstring.data,
+                                   (wchar_t *) wstring.data + n,
                                    flags & FNM_PERIOD, flags, NULL,
-                                   alloca_used);
+                                   false);
+        }
 
-      free (wstring_malloc);
-      free (wpattern_malloc);
+      scratch_buffer_free (&wstring);
+      scratch_buffer_free (&wpattern);
 
-      return res;
+      if (r == -2 || r == 0)
+        return r;
     }
 
   return internal_fnmatch (pattern, string, string + strlen (string),
