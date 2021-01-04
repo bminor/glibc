@@ -19,9 +19,7 @@
 #ifndef NAN_PSEUDO_NUMBER_H
 #define NAN_PSEUDO_NUMBER_H	1
 
-/* Set this macro and override the definition of IS_PSEUDO_SIGNALING if pseudo
-   numbers need special handling.  */
-#define HANDLE_PSEUDO_NUMBERS 0
+/* Default is to assume that pseudo numbers are not signaling.  */
 static inline int
 is_pseudo_signaling (uint32_t exi, uint32_t hxi)
 {

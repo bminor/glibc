@@ -19,7 +19,6 @@
 #ifndef NAN_PSEUDO_NUMBER_H
 #define NAN_PSEUDO_NUMBER_H	1
 
-#define HANDLE_PSEUDO_NUMBERS 1
 /* Pseudo numbers on x86 are always signaling.  */
 static inline int
 is_pseudo_signaling (uint32_t exi, uint32_t hxi)

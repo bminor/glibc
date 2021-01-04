@@ -19,7 +19,6 @@
 #include "libm-test-support.h"
 
 #include <math-tests-arch.h>
-#include <nan-pseudo-number.h>
 
 /* Flags set by the including file.  */
 const int flag_test_errno = TEST_ERRNO;
@@ -124,7 +123,7 @@ const char qtype_str[] = TYPE_STR;
 #define snan_value_ld	__builtin_nansl ("")
 
 /* For pseudo-normal number tests.  */
-#if HANDLE_PSEUDO_NUMBERS
+#if TEST_COND_intel96
 # include <math_ldbl.h>
 #define pseudo_inf { .parts = { 0x00000000, 0x00000000, 0x7fff }}
 #define pseudo_zero { .parts = { 0x00000000, 0x00000000, 0x0100 }}
@@ -328,7 +327,7 @@ struct test_f_i_data
   } rd, rn, rz, ru;
 };
 /* Used for RUN_TEST_LOOP_f_i_tg_u and RUN_TEST_LOOP_f_b_tg_u.  */
-#if HANDLE_PSEUDO_NUMBERS
+#if TEST_COND_intel96
 struct test_f_i_data_u
 {
   const char *arg_str;
