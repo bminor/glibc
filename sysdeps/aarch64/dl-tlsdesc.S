@@ -150,8 +150,8 @@ _dl_tlsdesc_dynamic:
 	/* Save just enough registers to support fast path, if we fall
 	   into slow path we will save additional registers.  */
 	stp	x1,  x2, [sp, #-32]!
-	stp	x3,  x4, [sp, #16]
 	cfi_adjust_cfa_offset (32)
+	stp	x3,  x4, [sp, #16]
 	cfi_rel_offset (x1, 0)
 	cfi_rel_offset (x2, 8)
 	cfi_rel_offset (x3, 16)
