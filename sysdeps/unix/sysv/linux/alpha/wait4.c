@@ -21,6 +21,8 @@
 #undef weak_alias
 #define weak_alias(a, b)
 #include <sysdeps/unix/sysv/linux/wait4.c>
+#undef weak_alias
+#define weak_alias(name, aliasname) _weak_alias (name, aliasname)
 versioned_symbol (libc, __wait4, wait4, GLIBC_2_1);
 
 /* GLIBC_2_0 version is implemented at osf_wait4.c.  */
