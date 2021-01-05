@@ -1,6 +1,10 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/aarch64.
 
+# Static and hidden objects are accessed without dynamic relocations.
+# The exception is -mcmodel=large which is unsupported with PIC/PIE.
+AC_DEFINE(PI_STATIC_AND_HIDDEN)
+
 # We check to see if the compiler and flags are
 # selecting the big endian ABI and if they are then
 # we set libc_cv_aarch64_be to yes which causes
