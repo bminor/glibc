@@ -170,6 +170,7 @@ _dl_tlsdesc_dynamic:
 	ldr	PTR_REG (0), [x0] /* Load val member of DTV entry.  */
 	cmp	PTR_REG (0), #TLS_DTV_UNALLOCATED
 	b.eq	2f
+	cfi_remember_state
 	sub	PTR_REG (3), PTR_REG (3), PTR_REG (4)
 	add	PTR_REG (0), PTR_REG (0), PTR_REG (3)
 1:
@@ -183,6 +184,7 @@ _dl_tlsdesc_dynamic:
 	   callee will trash.  */
 
 	/* Save the remaining registers that we must treat as caller save.  */
+	cfi_restore_state
 # if HAVE_AARCH64_PAC_RET
 	PACIASP
 	cfi_window_save
