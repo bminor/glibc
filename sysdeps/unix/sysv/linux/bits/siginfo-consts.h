@@ -130,8 +130,12 @@ enum
 #  define SEGV_ACCADI	SEGV_ACCADI
   SEGV_ADIDERR,			/* Disrupting MCD error.  */
 #  define SEGV_ADIDERR	SEGV_ADIDERR
-  SEGV_ADIPERR			/* Precise MCD exception.  */
+  SEGV_ADIPERR,			/* Precise MCD exception.  */
 #  define SEGV_ADIPERR	SEGV_ADIPERR
+  SEGV_MTEAERR,			/* Asynchronous ARM MTE error.  */
+#  define SEGV_MTEAERR	SEGV_MTEAERR
+  SEGV_MTESERR			/* Synchronous ARM MTE exception.  */
+#  define SEGV_MTESERR	SEGV_MTESERR
 };
 
 /* `si_code' values for SIGBUS signal.  */
