@@ -21,8 +21,6 @@
 #ifndef _TUNABLES_H_
 #define _TUNABLES_H_
 
-#include <stdbool.h>
-
 #if !HAVE_TUNABLES
 static inline void
 __always_inline
@@ -31,34 +29,17 @@ __tunables_init (char **unused __attribute__ ((unused)))
   /* This is optimized out if tunables are not enabled.  */
 }
 #else
-
+# include <stdbool.h>
 # include <stddef.h>
-# include "dl-tunable-types.h"
+# include <stdint.h>
 
-/* A tunable.  */
-struct _tunable
+typedef union
 {
-  const char *name;			/* Internal name of the tunable.  */
-  tunable_type_t type;			/* Data type of the tunable.  */
-  tunable_val_t val;			/* The value.  */
-  bool initialized;			/* Flag to indicate that the tunable is
-					   initialized.  */
-  tunable_seclevel_t security_level;	/* Specify the security level for the
-					   tunable with respect to AT_SECURE
-					   programs.  See description of
-					   tunable_seclevel_t to see a
-					   description of the values.
+  int64_t numval;
+  const char *strval;
+} tunable_val_t;
 
-					   Note that even if the tunable is
-					   read, it may not get used by the
-					   target module if the value is
-					   considered unsafe.  */
-  /* Compatibility elements.  */
-  const char *env_alias;		/* The compatibility environment
-					   variable name.  */
-};
-
-typedef struct _tunable tunable_t;
+typedef void (*tunable_callback_t) (tunable_val_t *);
 
 /* Full name for a tunable is top_ns.tunable_ns.id.  */
 # define TUNABLE_NAME_S(top,ns,id) #top "." #ns "." #id
