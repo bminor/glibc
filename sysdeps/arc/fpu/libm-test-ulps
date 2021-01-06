@@ -532,11 +532,11 @@ double: 3
 float: 3
 
 Function: "cosh_downward":
-double: 2
+double: 3
 float: 1
 
 Function: "cosh_towardzero":
-double: 2
+double: 3
 float: 1
 
 Function: "cosh_upward":
@@ -548,7 +548,7 @@ double: 9
 float: 8
 
 Function: Imaginary part of "cpow":
-double: 3
+double: 8
 float: 6
 
 Function: Real part of "cpow_downward":
@@ -1036,7 +1036,7 @@ double: 3
 float: 3
 
 Function: "sinh_towardzero":
-double: 2
+double: 3
 float: 2
 
 Function: "sinh_upward":
