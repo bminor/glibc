@@ -175,8 +175,12 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
          information from auxv.  */
 
       extern const ElfW(Ehdr) __ehdr_start
+# if BUILD_PIE_DEFAULT
+	__attribute__ ((visibility ("hidden")));
+# else
 	__attribute__ ((weak, visibility ("hidden")));
       if (&__ehdr_start != NULL)
+# endif
         {
           assert (__ehdr_start.e_phentsize == sizeof *GL(dl_phdr));
           GL(dl_phdr) = (const void *) &__ehdr_start + __ehdr_start.e_phoff;
