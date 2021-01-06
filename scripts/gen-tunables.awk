@@ -156,8 +156,10 @@ END {
   }
   print "} tunable_id_t;\n"
 
-  # Finally, the tunable list.
   print "\n#ifdef TUNABLES_INTERNAL"
+  # Internal definitions.
+  print "# include \"dl-tunable-types.h\""
+  # Finally, the tunable list.
   print "static tunable_t tunable_list[] attribute_relro = {"
   for (tnm in types) {
     split (tnm, indices, SUBSEP);

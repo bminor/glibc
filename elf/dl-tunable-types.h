@@ -1,4 +1,4 @@
-/* Tunable type information.
+/* Internal representation of tunables.
 
    Copyright (C) 2016-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -18,8 +18,14 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _TUNABLE_TYPES_H_
-# define _TUNABLE_TYPES_H_
+#define _TUNABLE_TYPES_H_
+
+/* Note: This header is included in the generated dl-tunables-list.h and
+   only used internally in the tunables implementation in dl-tunables.c.  */
+
+#include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 typedef enum
 {
@@ -36,14 +42,6 @@ typedef struct
   int64_t max;
 } tunable_type_t;
 
-typedef union
-{
-  int64_t numval;
-  const char *strval;
-} tunable_val_t;
-
-typedef void (*tunable_callback_t) (tunable_val_t *);
-
 /* Security level for tunables.  This decides what to do with individual
    tunables for AT_SECURE binaries.  */
 typedef enum
@@ -58,5 +56,29 @@ typedef enum
   TUNABLE_SECLEVEL_NONE = 2,
 } tunable_seclevel_t;
 
+/* A tunable.  */
+struct _tunable
+{
+  const char *name;			/* Internal name of the tunable.  */
+  tunable_type_t type;			/* Data type of the tunable.  */
+  tunable_val_t val;			/* The value.  */
+  bool initialized;			/* Flag to indicate that the tunable is
+					   initialized.  */
+  tunable_seclevel_t security_level;	/* Specify the security level for the
+					   tunable with respect to AT_SECURE
+					   programs.  See description of
+					   tunable_seclevel_t to see a
+					   description of the values.
+
+					   Note that even if the tunable is
+					   read, it may not get used by the
+					   target module if the value is
+					   considered unsafe.  */
+  /* Compatibility elements.  */
+  const char *env_alias;		/* The compatibility environment
+					   variable name.  */
+};
+
+typedef struct _tunable tunable_t;
 
 #endif
