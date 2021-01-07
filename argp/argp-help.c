@@ -668,37 +668,90 @@ hol_set_group (struct hol *hol, const char *name, int group)
 /* -------------------------------------------------------------------------- */
 /* Sorting the entries in a HOL.                                              */
 
-/* Order by group:  0, 1, 2, ..., n, -m, ..., -2, -1.
-   EQ is what to return if GROUP1 and GROUP2 are the same.  */
+/* Order by group:  0, 1, 2, ..., n, -m, ..., -2, -1.  */
 static int
-group_cmp (int group1, int group2, int eq)
+group_cmp (int group1, int group2)
 {
-  if (group1 == group2)
-    return eq;
-  else if ((group1 < 0 && group2 < 0) || (group1 >= 0 && group2 >= 0))
+  if ((group1 < 0 && group2 < 0) || (group1 >= 0 && group2 >= 0))
     return group1 - group2;
   else
+    /* Return > 0 if group1 < 0 <= group2.
+       Return < 0 if group2 < 0 <= group1.  */
     return group2 - group1;
 }
 
-/* Compare clusters CL1 & CL2 by the order that they should appear in
+/* Compare clusters CL1 and CL2 by the order that they should appear in
+   output.  Assume CL1 and CL2 have the same parent.  */
+static int
+hol_sibling_cluster_cmp (const struct hol_cluster *cl1,
+			 const struct hol_cluster *cl2)
+{
+  /* Compare by group first.  */
+  int cmp = group_cmp (cl1->group, cl2->group);
+  if (cmp != 0)
+    return cmp;
+
+  /* Within a group, compare by index within the group.  */
+  return cl2->index - cl1->index;
+}
+
+/* Compare clusters CL1 and CL2 by the order that they should appear in
+   output.  Assume CL1 and CL2 are at the same depth.  */
+static int
+hol_cousin_cluster_cmp (const struct hol_cluster *cl1,
+			const struct hol_cluster *cl2)
+{
+  if (cl1->parent == cl2->parent)
+    return hol_sibling_cluster_cmp (cl1, cl2);
+  else
+    {
+      /* Compare the parent clusters first.  */
+      int cmp = hol_cousin_cluster_cmp (cl1->parent, cl2->parent);
+      if (cmp != 0)
+	return cmp;
+
+      /* Next, compare by group.  */
+      cmp = group_cmp (cl1->group, cl2->group);
+      if (cmp != 0)
+	return cmp;
+
+      /* Next, within a group, compare by index within the group.  */
+      return cl2->index - cl1->index;
+    }
+}
+
+/* Compare clusters CL1 and CL2 by the order that they should appear in
    output.  */
 static int
 hol_cluster_cmp (const struct hol_cluster *cl1, const struct hol_cluster *cl2)
 {
   /* If one cluster is deeper than the other, use its ancestor at the same
-     level, so that finding the common ancestor is straightforward.  */
-  while (cl1->depth > cl2->depth)
-    cl1 = cl1->parent;
-  while (cl2->depth > cl1->depth)
-    cl2 = cl2->parent;
+     level.  Then, go by the rule that entries that are not in a sub-cluster
+     come before entries in a sub-cluster.  */
+  if (cl1->depth > cl2->depth)
+    {
+      do
+	cl1 = cl1->parent;
+      while (cl1->depth > cl2->depth);
+      int cmp = hol_cousin_cluster_cmp (cl1, cl2);
+      if (cmp != 0)
+	return cmp;
 
-  /* Now reduce both clusters to their ancestors at the point where both have
-     a common parent; these can be directly compared.  */
-  while (cl1->parent != cl2->parent)
-    cl1 = cl1->parent, cl2 = cl2->parent;
+      return 1;
+    }
+  else if (cl1->depth < cl2->depth)
+    {
+      do
+	cl2 = cl2->parent;
+      while (cl1->depth < cl2->depth);
+      int cmp = hol_cousin_cluster_cmp (cl1, cl2);
+      if (cmp != 0)
+	return cmp;
 
-  return group_cmp (cl1->group, cl2->group, cl2->index - cl1->index);
+      return -1;
+    }
+  else
+    return hol_cousin_cluster_cmp (cl1, cl2);
 }
 
 /* Return the ancestor of CL that's just below the root (i.e., has a parent
@@ -710,7 +763,7 @@ hol_cluster_base (struct hol_cluster *cl)
     cl = cl->parent;
   return cl;
 }
-
+
 /* Given the name of an OPTION_DOC option, modifies *NAME to start at the tail
    that should be used for comparisons, and returns true iff it should be
    treated as a non-option.  */
@@ -721,7 +774,7 @@ canon_doc_option (const char **name)
   /* Skip initial whitespace.  */
   while (isspace ((unsigned char) **name))
     (*name)++;
-  /* Decide whether this looks like an option (leading `-') or not.  */
+  /* Decide whether this looks like an option (leading '-') or not.  */
   non_opt = (**name != '-');
   /* Skip until part of name used for sorting.  */
   while (**name && !isalnum ((unsigned char) **name))
@@ -729,77 +782,116 @@ canon_doc_option (const char **name)
   return non_opt;
 }
 
-/* Order ENTRY1 & ENTRY2 by the order which they should appear in a help
-   listing.  */
+/* Order ENTRY1 and ENTRY2 by the order which they should appear in a help
+   listing.
+   This function implements a total order, that is:
+     - if cmp (entry1, entry2) < 0 and cmp (entry2, entry3) < 0,
+       then cmp (entry1, entry3) < 0.
+     - if cmp (entry1, entry2) < 0 and cmp (entry2, entry3) == 0,
+       then cmp (entry1, entry3) < 0.
+     - if cmp (entry1, entry2) == 0 and cmp (entry2, entry3) < 0,
+       then cmp (entry1, entry3) < 0.
+     - if cmp (entry1, entry2) == 0 and cmp (entry2, entry3) == 0,
+       then cmp (entry1, entry3) == 0.  */
 static int
 hol_entry_cmp (const struct hol_entry *entry1,
 	       const struct hol_entry *entry2)
 {
-  /* The group numbers by which the entries should be ordered; if either is
-     in a cluster, then this is just the group within the cluster.  */
-  int group1 = entry1->group, group2 = entry2->group;
+  /* First, compare the group numbers.  For entries within a cluster, what
+     matters is the group number of the base cluster in which the entry
+     resides.  */
+  int group1 = (entry1->cluster
+		? hol_cluster_base (entry1->cluster)->group
+		: entry1->group);
+  int group2 = (entry2->cluster
+		? hol_cluster_base (entry2->cluster)->group
+		: entry2->group);
+  int cmp = group_cmp (group1, group2);
+  if (cmp != 0)
+    return cmp;
 
-  if (entry1->cluster != entry2->cluster)
+  /* The group numbers are the same.  */
+
+  /* Entries that are not in a cluster come before entries in a cluster.  */
+  cmp = (entry1->cluster != NULL) - (entry2->cluster != NULL);
+  if (cmp != 0)
+    return cmp;
+
+  /* Compare the clusters.  */
+  if (entry1->cluster != NULL)
     {
-      /* The entries are not within the same cluster, so we can't compare them
-	 directly, we have to use the appropriate clustering level too.  */
-      if (! entry1->cluster)
-	/* ENTRY1 is at the `base level', not in a cluster, so we have to
-	   compare it's group number with that of the base cluster in which
-	   ENTRY2 resides.  Note that if they're in the same group, the
-	   clustered option always comes last.  */
-	return group_cmp (group1, hol_cluster_base (entry2->cluster)->group, -1);
-      else if (! entry2->cluster)
-	/* Likewise, but ENTRY2's not in a cluster.  */
-	return group_cmp (hol_cluster_base (entry1->cluster)->group, group2, 1);
-      else
-	/* Both entries are in clusters, we can just compare the clusters.  */
-	return hol_cluster_cmp (entry1->cluster, entry2->cluster);
+      cmp = hol_cluster_cmp (entry1->cluster, entry2->cluster);
+      if (cmp != 0)
+	return cmp;
     }
-  else if (group1 == group2)
-    /* The entries are both in the same cluster and group, so compare them
-       alphabetically.  */
+
+  /* For entries in the same cluster, compare also the group numbers
+     within the cluster.  */
+  cmp = group_cmp (entry1->group, entry2->group);
+  if (cmp != 0)
+    return cmp;
+
+  /* The entries are both in the same group and the same cluster.  */
+
+  /* 'documentation' options always follow normal options (or documentation
+     options that *look* like normal options).  */
+  const char *long1 = hol_entry_first_long (entry1);
+  const char *long2 = hol_entry_first_long (entry2);
+  int doc1 =
+    (odoc (entry1->opt) ? long1 != NULL && canon_doc_option (&long1) : 0);
+  int doc2 =
+    (odoc (entry2->opt) ? long2 != NULL && canon_doc_option (&long2) : 0);
+  cmp = doc1 - doc2;
+  if (cmp != 0)
+    return cmp;
+
+  /* Compare the entries alphabetically.  */
+
+  /* First, compare the first character of the options.
+     Put entries without *any* valid options (such as options with
+     OPTION_HIDDEN set) first.  But as they're not displayed, it doesn't
+     matter where they are.  */
+  int short1 = hol_entry_first_short (entry1);
+  int short2 = hol_entry_first_short (entry2);
+  unsigned char first1 = short1 ? short1 : long1 != NULL ? *long1 : 0;
+  unsigned char first2 = short2 ? short2 : long2 != NULL ? *long2 : 0;
+  /* Compare ignoring case.  */
+  /* Use tolower, not _tolower, since the latter has undefined behaviour
+     for characters that are not uppercase letters.  */
+  cmp = tolower (first1) - tolower (first2);
+  if (cmp != 0)
+    return cmp;
+  /* When the options start with the same letter (ignoring case), lower-case
+     comes first.  */
+  cmp = first2 - first1;
+  if (cmp != 0)
+    return cmp;
+
+  /* The first character of the options agree.  */
+
+  /* Put entries with a short option before entries without a short option.  */
+  cmp = (short1 != 0) - (short2 != 0);
+  if (cmp != 0)
+    return cmp;
+
+  /* Compare entries without a short option by comparing the long option.  */
+  if (short1 == 0)
     {
-      int short1 = hol_entry_first_short (entry1);
-      int short2 = hol_entry_first_short (entry2);
-      int doc1 = odoc (entry1->opt);
-      int doc2 = odoc (entry2->opt);
-      const char *long1 = hol_entry_first_long (entry1);
-      const char *long2 = hol_entry_first_long (entry2);
+      cmp = (long1 != NULL) - (long2 != NULL);
+      if (cmp != 0)
+	return cmp;
 
-      if (doc1)
-	doc1 = long1 != NULL && canon_doc_option (&long1);
-      if (doc2)
-	doc2 = long2 != NULL && canon_doc_option (&long2);
-
-      if (doc1 != doc2)
-	/* `documentation' options always follow normal options (or
-	   documentation options that *look* like normal options).  */
-	return doc1 - doc2;
-      else if (!short1 && !short2 && long1 && long2)
-	/* Only long options.  */
-	return __strcasecmp (long1, long2);
-      else
-	/* Compare short/short, long/short, short/long, using the first
-	   character of long options.  Entries without *any* valid
-	   options (such as options with OPTION_HIDDEN set) will be put
-	   first, but as they're not displayed, it doesn't matter where
-	   they are.  */
+      if (long1 != NULL)
 	{
-	  unsigned char first1 = short1 ? short1 : long1 ? *long1 : 0;
-	  unsigned char first2 = short2 ? short2 : long2 ? *long2 : 0;
-	  /* Use tolower, not _tolower, since the latter has undefined
-	     behaviour for characters that are not uppercase letters.  */
-	  int lower_cmp = tolower (first1) - tolower (first2);
-	  /* Compare ignoring case, except when the options are both the
-	     same letter, in which case lower-case always comes first.  */
-	  return lower_cmp ? lower_cmp : first2 - first1;
-	}
+	  cmp = __strcasecmp (long1, long2);
+	  if (cmp != 0)
+	    return cmp;
+        }
     }
-  else
-    /* Within the same cluster, but not the same group, so just compare
-       groups.  */
-    return group_cmp (group1, group2, 0);
+
+  /* We're out of comparison criteria.  At this point, if ENTRY1 != ENTRY2,
+     the order of these entries will be unpredictable.  */
+  return 0;
 }
 
 /* Variant of hol_entry_cmp with correct signature for qsort.  */
