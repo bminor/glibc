@@ -780,13 +780,11 @@ hol_entry_cmp (const struct hol_entry *entry1,
 	   first, but as they're not displayed, it doesn't matter where
 	   they are.  */
 	{
-	  char first1 = short1 ? short1 : long1 ? *long1 : 0;
-	  char first2 = short2 ? short2 : long2 ? *long2 : 0;
-#ifdef _tolower
-	  int lower_cmp = _tolower (first1) - _tolower (first2);
-#else
+	  unsigned char first1 = short1 ? short1 : long1 ? *long1 : 0;
+	  unsigned char first2 = short2 ? short2 : long2 ? *long2 : 0;
+	  /* Use tolower, not _tolower, since the latter has undefined
+	     behaviour for characters that are not uppercase letters.  */
 	  int lower_cmp = tolower (first1) - tolower (first2);
-#endif
 	  /* Compare ignoring case, except when the options are both the
 	     same letter, in which case lower-case always comes first.  */
 	  return lower_cmp ? lower_cmp : first2 - first1;
