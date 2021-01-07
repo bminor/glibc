@@ -1,4 +1,4 @@
-/* Get NaN payload.  dbl-64 version.
+/* Get NaN payload.
    Copyright (C) 2016-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,22 +16,21 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <fix-int-fp-convert-zero.h>
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-double.h>
 #include <stdint.h>
+#include <fix-int-fp-convert-zero.h>
 
 double
 __getpayload (const double *x)
 {
-  uint32_t hx, lx;
-  EXTRACT_WORDS (hx, lx, *x);
-  if ((hx & 0x7ff00000) != 0x7ff00000
-      || ((hx & 0xfffff) | lx) == 0)
+  uint64_t ix;
+  EXTRACT_WORDS64 (ix, *x);
+  if ((ix & 0x7ff0000000000000ULL) != 0x7ff0000000000000ULL
+      || (ix & 0xfffffffffffffULL) == 0)
     return -1;
-  hx &= 0x7ffff;
-  uint64_t ix = ((uint64_t) hx << 32) | lx;
+  ix &= 0x7ffffffffffffULL;
   if (FIX_INT_FP_CONVERT_ZERO && ix == 0)
     return 0.0f;
   return (double) ix;

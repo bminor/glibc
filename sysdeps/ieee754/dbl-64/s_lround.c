@@ -1,7 +1,6 @@
 /* Round double value to long int.
    Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -25,55 +24,41 @@
 #include <libm-alias-double.h>
 #include <fix-fp-int-convert-overflow.h>
 
+/* For LP64, lround is an alias for llround.  */
+#ifndef _LP64
 
 long int
 __lround (double x)
 {
   int32_t j0;
-  uint32_t i1, i0;
+  int64_t i0;
   long int result;
   int sign;
 
-  EXTRACT_WORDS (i0, i1, x);
-  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
-  sign = (i0 & 0x80000000) != 0 ? -1 : 1;
-  i0 &= 0xfffff;
-  i0 |= 0x100000;
+  EXTRACT_WORDS64 (i0, x);
+  j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
+  sign = i0 < 0 ? -1 : 1;
+  i0 &= UINT64_C(0xfffffffffffff);
+  i0 |= UINT64_C(0x10000000000000);
 
-  if (j0 < 20)
+  if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
     {
       if (j0 < 0)
 	return j0 < -1 ? 0 : sign;
+      else if (j0 >= 52)
+	result = i0 << (j0 - 52);
       else
 	{
-	  i0 += 0x80000 >> j0;
+	  i0 += UINT64_C(0x8000000000000) >> j0;
 
-	  result = i0 >> (20 - j0);
-	}
-    }
-  else if (j0 < (int32_t) (8 * sizeof (long int)) - 1)
-    {
-      if (j0 >= 52)
-	result = ((long int) i0 << (j0 - 20)) | ((long int) i1 << (j0 - 52));
-      else
-	{
-	  uint32_t j = i1 + (0x80000000 >> (j0 - 20));
-	  if (j < i1)
-	    ++i0;
-
-	  if (j0 == 20)
-	    result = (long int) i0;
-	  else
-	    {
-	      result = ((long int) i0 << (j0 - 20)) | (j >> (52 - j0));
+	  result = i0 >> (52 - j0);
 #ifdef FE_INVALID
-	      if (sizeof (long int) == 4
-		  && sign == 1
-		  && result == LONG_MIN)
-		/* Rounding brought the value out of range.  */
-		feraiseexcept (FE_INVALID);
+	  if (sizeof (long int) == 4
+	      && sign == 1
+	      && result == LONG_MIN)
+	    /* Rounding brought the value out of range.  */
+	    feraiseexcept (FE_INVALID);
 #endif
-	    }
 	}
     }
   else
@@ -92,8 +77,8 @@ __lround (double x)
 	  return sign == 1 ? LONG_MAX : LONG_MIN;
 	}
       else if (!FIX_DBL_LONG_CONVERT_OVERFLOW
-	       && sizeof (long int) == 4
-	       && x <= (double) LONG_MIN - 0.5)
+	  && sizeof (long int) == 4
+	  && x <= (double) LONG_MIN - 0.5)
 	{
 	  /* If truncation produces LONG_MIN, the cast will not raise
 	     the exception, but may raise "inexact".  */
@@ -108,3 +93,5 @@ __lround (double x)
 }
 
 libm_alias_double (__lround, lround)
+
+#endif

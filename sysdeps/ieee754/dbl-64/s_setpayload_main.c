@@ -1,4 +1,4 @@
-/* Set NaN payload.  dbl-64 version.
+/* Set NaN payload.
    Copyright (C) 2016-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -30,41 +30,25 @@
 int
 FUNC (double *x, double payload)
 {
-  uint32_t hx, lx;
-  EXTRACT_WORDS (hx, lx, payload);
-  int exponent = hx >> (EXPLICIT_MANT_DIG - 32);
+  uint64_t ix;
+  EXTRACT_WORDS64 (ix, payload);
+  int exponent = ix >> EXPLICIT_MANT_DIG;
   /* Test if argument is (a) negative or too large; (b) too small,
      except for 0 when allowed; (c) not an integer.  */
   if (exponent >= BIAS + PAYLOAD_DIG
-      || (exponent < BIAS && !(SET_HIGH_BIT && hx == 0 && lx == 0)))
+      || (exponent < BIAS && !(SET_HIGH_BIT && ix == 0))
+      || (ix & ((1ULL << (BIAS + EXPLICIT_MANT_DIG - exponent)) - 1)) != 0)
     {
-      INSERT_WORDS (*x, 0, 0);
+      INSERT_WORDS64 (*x, 0);
       return 1;
     }
-  int shift = BIAS + EXPLICIT_MANT_DIG - exponent;
-  if (shift < 32
-      ? (lx & ((1U << shift) - 1)) != 0
-      : (lx != 0 || (hx & ((1U << (shift - 32)) - 1)) != 0))
+  if (ix != 0)
     {
-      INSERT_WORDS (*x, 0, 0);
-      return 1;
+      ix &= (1ULL << EXPLICIT_MANT_DIG) - 1;
+      ix |= 1ULL << EXPLICIT_MANT_DIG;
+      ix >>= BIAS + EXPLICIT_MANT_DIG - exponent;
     }
-  if (exponent != 0)
-    {
-      hx &= (1U << (EXPLICIT_MANT_DIG - 32)) - 1;
-      hx |= 1U << (EXPLICIT_MANT_DIG - 32);
-      if (shift >= 32)
-	{
-	  lx = hx >> (shift - 32);
-	  hx = 0;
-	}
-      else if (shift != 0)
-	{
-	  lx = (lx >> shift) | (hx << (32 - shift));
-	  hx >>= shift;
-	}
-    }
-  hx |= 0x7ff00000 | (SET_HIGH_BIT ? 0x80000 : 0);
-  INSERT_WORDS (*x, hx, lx);
+  ix |= 0x7ff0000000000000ULL | (SET_HIGH_BIT ? 0x8000000000000ULL : 0);
+  INSERT_WORDS64 (*x, ix);
   return 0;
 }

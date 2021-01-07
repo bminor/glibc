@@ -1,4 +1,4 @@
-/* @(#)e_acosh.c 5.1 93/09/24 */
+/* Optimized for 64-bit by Ulrich Drepper <drepper@gmail.com>, 2012 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -29,42 +29,40 @@
 #include <libm-alias-finite.h>
 
 static const double
-  one = 1.0,
-  ln2 = 6.93147180559945286227e-01;    /* 0x3FE62E42, 0xFEFA39EF */
+one	= 1.0,
+ln2	= 6.93147180559945286227e-01;  /* 0x3FE62E42, 0xFEFA39EF */
 
 double
 __ieee754_acosh (double x)
 {
-  double t;
-  int32_t hx;
-  uint32_t lx;
-  EXTRACT_WORDS (hx, lx, x);
-  if (hx < 0x3ff00000)                  /* x < 1 */
+  int64_t hx;
+  EXTRACT_WORDS64 (hx, x);
+
+  if (hx > INT64_C (0x4000000000000000))
     {
-      return (x - x) / (x - x);
-    }
-  else if (hx >= 0x41b00000)            /* x > 2**28 */
-    {
-      if (hx >= 0x7ff00000)             /* x is inf of NaN */
+      if (__glibc_unlikely (hx >= INT64_C (0x41b0000000000000)))
 	{
-	  return x + x;
+	  /* x > 2**28 */
+	  if (hx >= INT64_C (0x7ff0000000000000))
+	    /* x is inf of NaN */
+	    return x + x;
+	  else
+	    return __ieee754_log (x) + ln2;/* acosh(huge)=log(2x) */
 	}
-      else
-	return __ieee754_log (x) + ln2;         /* acosh(huge)=log(2x) */
-    }
-  else if (((hx - 0x3ff00000) | lx) == 0)
-    {
-      return 0.0;                       /* acosh(1) = 0 */
-    }
-  else if (hx > 0x40000000)             /* 2**28 > x > 2 */
-    {
-      t = x * x;
+
+      /* 2**28 > x > 2 */
+      double t = x * x;
       return __ieee754_log (2.0 * x - one / (x + sqrt (t - one)));
     }
-  else                                  /* 1<x<2 */
+  else if (__glibc_likely (hx > INT64_C (0x3ff0000000000000)))
     {
-      t = x - one;
+      /* 1<x<2 */
+      double t = x - one;
       return __log1p (t + sqrt (2.0 * t + t * t));
     }
+  else if (__glibc_likely (hx == INT64_C (0x3ff0000000000000)))
+    return 0.0;				/* acosh(1) = 0 */
+  else					/* x < 1 */
+    return (x - x) / (x - x);
 }
 libm_alias_finite (__ieee754_acosh, __acosh)

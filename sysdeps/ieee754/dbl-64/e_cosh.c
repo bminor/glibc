@@ -32,59 +32,54 @@
  */
 
 #include <math.h>
-#include <math-narrow-eval.h>
 #include <math_private.h>
 #include <libm-alias-finite.h>
 
-static const double one = 1.0, half = 0.5, huge = 1.0e300;
+static const double one = 1.0, half=0.5, huge = 1.0e300;
 
 double
 __ieee754_cosh (double x)
 {
-  double t, w;
-  int32_t ix;
-  uint32_t lx;
+	double t,w;
+	int32_t ix;
 
-  /* High word of |x|. */
-  GET_HIGH_WORD (ix, x);
-  ix &= 0x7fffffff;
+    /* High word of |x|. */
+	GET_HIGH_WORD(ix,x);
+	ix &= 0x7fffffff;
 
-  /* |x| in [0,22] */
-  if (ix < 0x40360000)
-    {
-      /* |x| in [0,0.5*ln2], return 1+expm1(|x|)^2/(2*exp(|x|)) */
-      if (ix < 0x3fd62e43)
-	{
-	  if (ix < 0x3c800000)
-	    return one;                                   /* cosh(tiny) = 1 */
-	  t = __expm1 (fabs (x));
-	  w = one + t;
-	  return one + (t * t) / (w + w);
+    /* |x| in [0,22] */
+	if (ix < 0x40360000) {
+	    /* |x| in [0,0.5*ln2], return 1+expm1(|x|)^2/(2*exp(|x|)) */
+		if(ix<0x3fd62e43) {
+		    if (ix<0x3c800000)			/* cosh(tiny) = 1 */
+		      return one;
+		    t = __expm1(fabs(x));
+		    w = one+t;
+		    return one+(t*t)/(w+w);
+		}
+
+	    /* |x| in [0.5*ln2,22], return (exp(|x|)+1/exp(|x|)/2; */
+		t = __ieee754_exp(fabs(x));
+		return half*t+half/t;
 	}
 
-      /* |x| in [0.5*ln2,22], return (exp(|x|)+1/exp(|x|)/2; */
-      t = __ieee754_exp (fabs (x));
-      return half * t + half / t;
-    }
+    /* |x| in [22, log(maxdouble)] return half*exp(|x|) */
+	if (ix < 0x40862e42)  return half*__ieee754_exp(fabs(x));
 
-  /* |x| in [22, log(maxdouble)] return half*exp(|x|) */
-  if (ix < 0x40862e42)
-    return half * __ieee754_exp (fabs (x));
+    /* |x| in [log(maxdouble), overflowthresold] */
+	int64_t fix;
+	EXTRACT_WORDS64(fix, x);
+	fix &= UINT64_C(0x7fffffffffffffff);
+	if (fix <= UINT64_C(0x408633ce8fb9f87d)) {
+	    w = __ieee754_exp(half*fabs(x));
+	    t = half*w;
+	    return t*w;
+	}
 
-  /* |x| in [log(maxdouble), overflowthresold] */
-  GET_LOW_WORD (lx, x);
-  if (ix < 0x408633ce || ((ix == 0x408633ce) && (lx <= (uint32_t) 0x8fb9f87d)))
-    {
-      w = __ieee754_exp (half * fabs (x));
-      t = half * w;
-      return t * w;
-    }
+    /* x is INF or NaN */
+	if(ix>=0x7ff00000) return x*x;
 
-  /* x is INF or NaN */
-  if (ix >= 0x7ff00000)
-    return x * x;
-
-  /* |x| > overflowthresold, cosh(x) overflow */
-  return math_narrow_eval (huge * huge);
+    /* |x| > overflowthresold, cosh(x) overflow */
+	return huge*huge;
 }
 libm_alias_finite (__ieee754_cosh, __cosh)

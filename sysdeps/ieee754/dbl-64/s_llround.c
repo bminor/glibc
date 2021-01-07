@@ -17,54 +17,43 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#define lround __hidden_lround
+#define __lround __hidden___lround
+
 #include <fenv.h>
 #include <limits.h>
 #include <math.h>
+#include <sysdep.h>
 
 #include <math_private.h>
 #include <libm-alias-double.h>
 #include <fix-fp-int-convert-overflow.h>
 
-
 long long int
 __llround (double x)
 {
   int32_t j0;
-  uint32_t i1, i0;
+  int64_t i0;
   long long int result;
   int sign;
 
-  EXTRACT_WORDS (i0, i1, x);
-  j0 = ((i0 >> 20) & 0x7ff) - 0x3ff;
-  sign = (i0 & 0x80000000) != 0 ? -1 : 1;
-  i0 &= 0xfffff;
-  i0 |= 0x100000;
+  EXTRACT_WORDS64 (i0, x);
+  j0 = ((i0 >> 52) & 0x7ff) - 0x3ff;
+  sign = i0 < 0 ? -1 : 1;
+  i0 &= UINT64_C(0xfffffffffffff);
+  i0 |= UINT64_C(0x10000000000000);
 
-  if (j0 < 20)
+  if (j0 < (int32_t) (8 * sizeof (long long int)) - 1)
     {
       if (j0 < 0)
 	return j0 < -1 ? 0 : sign;
+      else if (j0 >= 52)
+	result = i0 << (j0 - 52);
       else
 	{
-	  i0 += 0x80000 >> j0;
+	  i0 += UINT64_C(0x8000000000000) >> j0;
 
-	  result = i0 >> (20 - j0);
-	}
-    }
-  else if (j0 < (int32_t) (8 * sizeof (long long int)) - 1)
-    {
-      if (j0 >= 52)
-	result = (((long long int) i0 << 32) | i1) << (j0 - 52);
-      else
-	{
-	  uint32_t j = i1 + (0x80000000 >> (j0 - 20));
-	  if (j < i1)
-	    ++i0;
-
-	  if (j0 == 20)
-	    result = (long long int) i0;
-	  else
-	    result = ((long long int) i0 << (j0 - 20)) | (j >> (52 - j0));
+	  result = i0 >> (52 - j0);
 	}
     }
   else
@@ -86,3 +75,11 @@ __llround (double x)
 }
 
 libm_alias_double (__llround, llround)
+
+/* long has the same width as long long on LP64 machines, so use an alias.  */
+#undef lround
+#undef __lround
+#ifdef _LP64
+strong_alias (__llround, __lround)
+libm_alias_double (__lround, lround)
+#endif

@@ -1,4 +1,4 @@
-/* Total order operation.  dbl-64 version.
+/* Total order operation.
    Copyright (C) 2016-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,8 +18,8 @@
 
 #include <math.h>
 #include <math_private.h>
-#include <libm-alias-double.h>
 #include <nan-high-order-bit.h>
+#include <libm-alias-double.h>
 #include <stdint.h>
 #include <shlib-compat.h>
 #include <first-versions.h>
@@ -27,30 +27,26 @@
 int
 __totalorder (const double *x, const double *y)
 {
-  int32_t hx, hy;
-  uint32_t lx, ly;
-  EXTRACT_WORDS (hx, lx, *x);
-  EXTRACT_WORDS (hy, ly, *y);
+  int64_t ix, iy;
+  EXTRACT_WORDS64 (ix, *x);
+  EXTRACT_WORDS64 (iy, *y);
 #if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
-  uint32_t uhx = hx & 0x7fffffff, uhy = hy & 0x7fffffff;
   /* For the preferred quiet NaN convention, this operation is a
      comparison of the representations of the arguments interpreted as
      sign-magnitude integers.  If both arguments are NaNs, invert the
      quiet/signaling bit so comparing that way works.  */
-  if ((uhx > 0x7ff00000 || (uhx == 0x7ff00000 && lx != 0))
-      && (uhy > 0x7ff00000 || (uhy == 0x7ff00000 && ly != 0)))
+  if ((ix & 0x7fffffffffffffffULL) > 0x7ff0000000000000ULL
+      && (iy & 0x7fffffffffffffffULL) > 0x7ff0000000000000ULL)
     {
-      hx ^= 0x00080000;
-      hy ^= 0x00080000;
+      ix ^= 0x0008000000000000ULL;
+      iy ^= 0x0008000000000000ULL;
     }
 #endif
-  uint32_t hx_sign = hx >> 31;
-  uint32_t hy_sign = hy >> 31;
-  hx ^= hx_sign >> 1;
-  lx ^= hx_sign;
-  hy ^= hy_sign >> 1;
-  ly ^= hy_sign;
-  return hx < hy || (hx == hy && lx <= ly);
+  uint64_t ix_sign = ix >> 63;
+  uint64_t iy_sign = iy >> 63;
+  ix ^= ix_sign >> 1;
+  iy ^= iy_sign >> 1;
+  return ix <= iy;
 }
 #ifdef SHARED
 # define CONCATX(x, y) x ## y

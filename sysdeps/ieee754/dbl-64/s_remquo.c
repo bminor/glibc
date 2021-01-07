@@ -21,7 +21,7 @@
 
 #include <math_private.h>
 #include <libm-alias-double.h>
-
+#include <stdint.h>
 
 static const double zero = 0.0;
 
@@ -29,50 +29,49 @@ static const double zero = 0.0;
 double
 __remquo (double x, double y, int *quo)
 {
-  int32_t hx, hy;
-  uint32_t sx, lx, ly;
-  int cquo, qs;
+  int64_t hx, hy;
+  uint64_t sx, qs;
+  int cquo;
 
-  EXTRACT_WORDS (hx, lx, x);
-  EXTRACT_WORDS (hy, ly, y);
-  sx = hx & 0x80000000;
-  qs = sx ^ (hy & 0x80000000);
-  hy &= 0x7fffffff;
-  hx &= 0x7fffffff;
+  EXTRACT_WORDS64 (hx, x);
+  EXTRACT_WORDS64 (hy, y);
+  sx = hx & UINT64_C(0x8000000000000000);
+  qs = sx ^ (hy & UINT64_C(0x8000000000000000));
+  hy &= UINT64_C(0x7fffffffffffffff);
+  hx &= UINT64_C(0x7fffffffffffffff);
 
   /* Purge off exception values.  */
-  if ((hy | ly) == 0)
-    return (x * y) / (x * y);                   /* y = 0 */
-  if ((hx >= 0x7ff00000)                        /* x not finite */
-      || ((hy >= 0x7ff00000)                    /* p is NaN */
-	  && (((hy - 0x7ff00000) | ly) != 0)))
+  if (__glibc_unlikely (hy == 0))
+    return (x * y) / (x * y);			/* y = 0 */
+  if (__builtin_expect (hx >= UINT64_C(0x7ff0000000000000) /* x not finite */
+			|| hy > UINT64_C(0x7ff0000000000000), 0))/* y is NaN */
     return (x * y) / (x * y);
 
-  if (hy <= 0x7fbfffff)
-    x = __ieee754_fmod (x, 8 * y);              /* now x < 8y */
+  if (hy <= UINT64_C(0x7fbfffffffffffff))
+    x = __ieee754_fmod (x, 8 * y);		/* now x < 8y */
 
-  if (((hx - hy) | (lx - ly)) == 0)
+  if (__glibc_unlikely (hx == hy))
     {
       *quo = qs ? -1 : 1;
       return zero * x;
     }
 
   x = fabs (x);
-  y = fabs (y);
+  INSERT_WORDS64 (y, hy);
   cquo = 0;
 
-  if (hy <= 0x7fcfffff && x >= 4 * y)
+  if (hy <= UINT64_C(0x7fcfffffffffffff) && x >= 4 * y)
     {
       x -= 4 * y;
       cquo += 4;
     }
-  if (hy <= 0x7fdfffff && x >= 2 * y)
+  if (hy <= UINT64_C(0x7fdfffffffffffff) && x >= 2 * y)
     {
       x -= 2 * y;
       cquo += 2;
     }
 
-  if (hy < 0x00200000)
+  if (hy < UINT64_C(0x0020000000000000))
     {
       if (x + x > y)
 	{

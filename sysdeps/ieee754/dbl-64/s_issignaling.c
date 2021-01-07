@@ -23,25 +23,21 @@
 int
 __issignaling (double x)
 {
+  uint64_t xi;
+  EXTRACT_WORDS64 (xi, x);
 #if HIGH_ORDER_BIT_IS_SET_FOR_SNAN
-  uint32_t hxi;
-  GET_HIGH_WORD (hxi, x);
   /* We only have to care about the high-order bit of x's significand, because
      having it set (sNaN) already makes the significand different from that
      used to designate infinity.  */
-  return (hxi & 0x7ff80000) == 0x7ff80000;
+  return (xi & UINT64_C (0x7ff8000000000000)) == UINT64_C (0x7ff8000000000000);
 #else
-  uint32_t hxi, lxi;
-  EXTRACT_WORDS (hxi, lxi, x);
   /* To keep the following comparison simple, toggle the quiet/signaling bit,
      so that it is set for sNaNs.  This is inverse to IEEE 754-2008 (as well as
      common practice for IEEE 754-1985).  */
-  hxi ^= 0x00080000;
-  /* If lxi != 0, then set any suitable bit of the significand in hxi.  */
-  hxi |= (lxi | -lxi) >> 31;
+  xi ^= UINT64_C (0x0008000000000000);
   /* We have to compare for greater (instead of greater or equal), because x's
      significand being all-zero designates infinity not NaN.  */
-  return (hxi & 0x7fffffff) > 0x7ff80000;
+  return (xi & UINT64_C (0x7fffffffffffffff)) > UINT64_C (0x7ff8000000000000);
 #endif
 }
 libm_hidden_def (__issignaling)

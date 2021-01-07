@@ -1,5 +1,4 @@
 /* Round to nearest integer value, rounding halfway cases to even.
-   dbl-64 version.
    Copyright (C) 2016-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -29,10 +28,10 @@
 double
 __roundeven (double x)
 {
-  uint32_t hx, lx, uhx;
-  EXTRACT_WORDS (hx, lx, x);
-  uhx = hx & 0x7fffffff;
-  int exponent = uhx >> (MANT_DIG - 1 - 32);
+  uint64_t ix, ux;
+  EXTRACT_WORDS64 (ix, x);
+  ux = ix & 0x7fffffffffffffffULL;
+  int exponent = ux >> (MANT_DIG - 1);
   if (exponent >= BIAS + MANT_DIG - 1)
     {
       /* Integer, infinity or NaN.  */
@@ -42,63 +41,29 @@ __roundeven (double x)
       else
 	return x;
     }
-  else if (exponent >= BIAS + MANT_DIG - 32)
-    {
-      /* Not necessarily an integer; integer bit is in low word.
-	 Locate the bits with exponents 0 and -1.  */
-      int int_pos = (BIAS + MANT_DIG - 1) - exponent;
-      int half_pos = int_pos - 1;
-      uint32_t half_bit = 1U << half_pos;
-      uint32_t int_bit = 1U << int_pos;
-      if ((lx & (int_bit | (half_bit - 1))) != 0)
-	{
-	  /* Carry into the exponent works correctly.  No need to test
-	     whether HALF_BIT is set.  */
-	  lx += half_bit;
-	  hx += lx < half_bit;
-	}
-      lx &= ~(int_bit - 1);
-    }
-  else if (exponent == BIAS + MANT_DIG - 33)
-    {
-      /* Not necessarily an integer; integer bit is bottom of high
-	 word, half bit is top of low word.  */
-      if (((hx & 1) | (lx & 0x7fffffff)) != 0)
-	{
-	  lx += 0x80000000;
-	  hx += lx < 0x80000000;
-	}
-      lx = 0;
-    }
   else if (exponent >= BIAS)
     {
-      /* At least 1; not necessarily an integer, integer bit and half
-	 bit are in the high word.  Locate the bits with exponents 0
-	 and -1 (when the unbiased exponent is 0, the bit with
-	 exponent 0 is implicit, but as the bias is odd it is OK to
-	 take it from the low bit of the exponent).  */
-      int int_pos = (BIAS + MANT_DIG - 33) - exponent;
+      /* At least 1; not necessarily an integer.  Locate the bits with
+	 exponents 0 and -1 (when the unbiased exponent is 0, the bit
+	 with exponent 0 is implicit, but as the bias is odd it is OK
+	 to take it from the low bit of the exponent).  */
+      int int_pos = (BIAS + MANT_DIG - 1) - exponent;
       int half_pos = int_pos - 1;
-      uint32_t half_bit = 1U << half_pos;
-      uint32_t int_bit = 1U << int_pos;
-      if (((hx & (int_bit | (half_bit - 1))) | lx) != 0)
-	hx += half_bit;
-      hx &= ~(int_bit - 1);
-      lx = 0;
+      uint64_t half_bit = 1ULL << half_pos;
+      uint64_t int_bit = 1ULL << int_pos;
+      if ((ix & (int_bit | (half_bit - 1))) != 0)
+	/* Carry into the exponent works correctly.  No need to test
+	   whether HALF_BIT is set.  */
+	ix += half_bit;
+      ix &= ~(int_bit - 1);
     }
-  else if (exponent == BIAS - 1 && (uhx > 0x3fe00000 || lx != 0))
-    {
-      /* Interval (0.5, 1).  */
-      hx = (hx & 0x80000000) | 0x3ff00000;
-      lx = 0;
-    }
+  else if (exponent == BIAS - 1 && ux > 0x3fe0000000000000ULL)
+    /* Interval (0.5, 1).  */
+    ix = (ix & 0x8000000000000000ULL) | 0x3ff0000000000000ULL;
   else
-    {
-      /* Rounds to 0.  */
-      hx &= 0x80000000;
-      lx = 0;
-    }
-  INSERT_WORDS (x, hx, lx);
+    /* Rounds to 0.  */
+    ix &= 0x8000000000000000ULL;
+  INSERT_WORDS64 (x, ix);
   return x;
 }
 hidden_def (__roundeven)

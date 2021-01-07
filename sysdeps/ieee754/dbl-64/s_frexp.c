@@ -1,21 +1,28 @@
-/* @(#)s_frexp.c 5.1 93/09/24 */
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+/* Copyright (C) 2011-2021 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@gmail.com>, 2011.
 
-#if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: s_frexp.c,v 1.9 1995/05/10 20:47:24 jtc Exp $";
-#endif
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+#include <inttypes.h>
+#include <math.h>
+#include <math_private.h>
+#include <libm-alias-double.h>
 
 /*
- * for non-zero x
+ * for non-zero, finite x
  *	x = frexp(arg,&exp);
  * return a double fp quantity x such that 0.5 <= |x| <1.0
  * and the corresponding binary exponent "exp". That is
@@ -24,32 +31,36 @@ static char rcsid[] = "$NetBSD: s_frexp.c,v 1.9 1995/05/10 20:47:24 jtc Exp $";
  * with *exp=0.
  */
 
-#include <math.h>
-#include <math_private.h>
-#include <libm-alias-double.h>
-
-static const double
-  two54 = 1.80143985094819840000e+16; /* 0x43500000, 0x00000000 */
 
 double
 __frexp (double x, int *eptr)
 {
-  int32_t hx, ix, lx;
-  EXTRACT_WORDS (hx, lx, x);
-  ix = 0x7fffffff & hx;
-  *eptr = 0;
-  if (ix >= 0x7ff00000 || ((ix | lx) == 0))
-    return x + x;                                           /* 0,inf,nan */
-  if (ix < 0x00100000)                  /* subnormal */
+  int64_t ix;
+  EXTRACT_WORDS64 (ix, x);
+  int32_t ex = 0x7ff & (ix >> 52);
+  int e = 0;
+
+  if (__glibc_likely (ex != 0x7ff && x != 0.0))
     {
-      x *= two54;
-      GET_HIGH_WORD (hx, x);
-      ix = hx & 0x7fffffff;
-      *eptr = -54;
+      /* Not zero and finite.  */
+      e = ex - 1022;
+      if (__glibc_unlikely (ex == 0))
+	{
+	  /* Subnormal.  */
+	  x *= 0x1p54;
+	  EXTRACT_WORDS64 (ix, x);
+	  ex = 0x7ff & (ix >> 52);
+	  e = ex - 1022 - 54;
+	}
+
+      ix = (ix & INT64_C (0x800fffffffffffff)) | INT64_C (0x3fe0000000000000);
+      INSERT_WORDS64 (x, ix);
     }
-  *eptr += (ix >> 20) - 1022;
-  hx = (hx & 0x800fffff) | 0x3fe00000;
-  SET_HIGH_WORD (x, hx);
+  else
+    /* Quiet signaling NaNs.  */
+    x += x;
+
+  *eptr = e;
   return x;
 }
 libm_alias_double (__frexp, frexp)
