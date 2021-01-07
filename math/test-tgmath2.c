@@ -122,7 +122,7 @@ int counts[Tlast][C_last];
       __asm __volatile ("" : : "r" (&texpr));			\
       if (count != 1 || counts[T##type][C_##fn] != 1)		\
 	{							\
-	  FAIL ("wrong function called");			\
+	  FAIL ("wrong function called, "#fn" ("#type")");	\
 	  memset (counts, 0, sizeof (counts));			\
 	}							\
       count = 0;						\
@@ -171,7 +171,7 @@ test_fabs (const int Vint4, const long long int Vllong4)
   TEST (fabs (vcldouble1), ldouble, cabs);
   TEST (fabs (Vfloat1), float, fabs);
   TEST (fabs (Vdouble1), double, fabs);
-  TEST (fabs (Vldouble1), ldouble, fabs);
+  TEST (fabs (Vldouble2), ldouble, fabs);
 #ifndef __OPTIMIZE__
   /* GCC is too smart to optimize these out.  */
   TEST (fabs (Vint1), double, fabs);
