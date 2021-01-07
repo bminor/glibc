@@ -44,6 +44,7 @@
  */
 
 #include <math.h>
+#include <fix-int-fp-convert-zero.h>
 #include <math_private.h>
 #include <stdint.h>
 #include <libm-alias-finite.h>
@@ -80,6 +81,8 @@ __ieee754_log10 (double x)
   i = ((uint64_t) k & UINT64_C(0x8000000000000000)) >> 63;
   hx = (hx & UINT64_C(0x000fffffffffffff)) | ((0x3ff - i) << 52);
   y = (double) (k + i);
+  if (FIX_INT_FP_CONVERT_ZERO && y == 0.0)
+    y = 0.0;
   INSERT_WORDS64 (x, hx);
   z = y * log10_2lo + ivln10 * __ieee754_log (x);
   return z + y * log10_2hi;
