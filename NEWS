@@ -9,6 +9,9 @@ Version 2.32.1
 
 Security related changes:
 
+  CVE-2019-25013: A buffer overflow has been fixed in the iconv function when
+  invoked with EUC-KR input containing invalid multibyte input sequences.
+
   CVE-2020-27618: An infinite loop has been fixed in the iconv program when
   invoked with input containing redundant shift sequences in the IBM1364,
   IBM1371, IBM1388, IBM1390, or IBM1399 character sets.
