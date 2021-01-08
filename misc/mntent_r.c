@@ -223,16 +223,16 @@ write_string (FILE *stream, const char *str)
   while ((c = *str++) != '\0')
     {
       if (strchr (encode_chars, c) == NULL)
-	fputc_unlocked (c, stream);
+	__putc_unlocked (c, stream);
       else
 	{
-	  fputc_unlocked ('\\', stream);
-	  fputc_unlocked (((c & 0xc0) >> 6) + '0', stream);
-	  fputc_unlocked (((c & 0x38) >> 3) + '0', stream);
-	  fputc_unlocked (((c & 0x07) >> 0) + '0', stream);
+	  __putc_unlocked ('\\', stream);
+	  __putc_unlocked (((c & 0xc0) >> 6) + '0', stream);
+	  __putc_unlocked (((c & 0x38) >> 3) + '0', stream);
+	  __putc_unlocked (((c & 0x07) >> 0) + '0', stream);
 	}
     }
-  fputc_unlocked (' ', stream);
+  __putc_unlocked (' ', stream);
 }
 
 /* Write the mount table entry described by MNT to STREAM.
