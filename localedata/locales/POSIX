@@ -329,7 +329,7 @@ END LC_TIME
 
 LC_MESSAGES
 % This is the POSIX Locale definition for
-% the LC_NUMERIC category.
+% the LC_MESSAGES category.
 %
 yesexpr "<U005E><U005B><U0079><U0059><U005D>"
 %
