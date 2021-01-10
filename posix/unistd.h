@@ -831,7 +831,7 @@ extern int symlinkat (const char *__from, int __tofd,
 /* Like readlink but a relative PATH is interpreted relative to FD.  */
 extern ssize_t readlinkat (int __fd, const char *__restrict __path,
 			   char *__restrict __buf, size_t __len)
-     __THROW __nonnull ((2, 3)) __wur __attr_access ((__read_only__, 3, 4));
+     __THROW __nonnull ((2, 3)) __wur __attr_access ((__write_only__, 3, 4));
 #endif
 
 /* Remove the link NAME.  */
