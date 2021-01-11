@@ -9450,7 +9450,6 @@ move-if-change
 check-execstack.awk
 pylint
 pylintrc
-output-format.sed
 merge-test-results.sh
 update-copyrights
 config-uname.sh
