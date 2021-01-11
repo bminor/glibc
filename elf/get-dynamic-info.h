@@ -30,8 +30,6 @@ auto
 inline void __attribute__ ((unused, always_inline))
 elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 {
-  ElfW(Dyn) *dyn = l->l_ld;
-  ElfW(Dyn) **info;
 #if __ELF_NATIVE_CLASS == 32
   typedef Elf32_Word d_tag_utype;
 #elif __ELF_NATIVE_CLASS == 64
@@ -39,39 +37,36 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 #endif
 
 #if !defined RTLD_BOOTSTRAP && !defined STATIC_PIE_BOOTSTRAP
-  if (dyn == NULL)
+  if (l->l_ld == NULL)
     return;
 #endif
 
-  info = l->l_info;
+  ElfW(Dyn) **info = l->l_info;
 
-  while (dyn->d_tag != DT_NULL)
+  for (ElfW(Dyn) *dyn = l->l_ld; dyn->d_tag != DT_NULL; dyn++)
     {
+      d_tag_utype i;
+
       if ((d_tag_utype) dyn->d_tag < DT_NUM)
-	info[dyn->d_tag] = dyn;
+	i = dyn->d_tag;
       else if (dyn->d_tag >= DT_LOPROC
 	       && dyn->d_tag < DT_LOPROC + DT_THISPROCNUM)
-	{
-	  /* This does not violate the array bounds of l->l_info, but
-	     gcc 4.6 on sparc somehow does not see this.  */
-	  DIAG_PUSH_NEEDS_COMMENT;
-	  DIAG_IGNORE_NEEDS_COMMENT (4.6,
-				     "-Warray-bounds");
-	  info[dyn->d_tag - DT_LOPROC + DT_NUM] = dyn;
-	  DIAG_POP_NEEDS_COMMENT;
-	}
+	i = dyn->d_tag - DT_LOPROC + DT_NUM;
       else if ((d_tag_utype) DT_VERSIONTAGIDX (dyn->d_tag) < DT_VERSIONTAGNUM)
-	info[VERSYMIDX (dyn->d_tag)] = dyn;
+	i = VERSYMIDX (dyn->d_tag);
       else if ((d_tag_utype) DT_EXTRATAGIDX (dyn->d_tag) < DT_EXTRANUM)
-	info[DT_EXTRATAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
-	     + DT_VERSIONTAGNUM] = dyn;
+	i = DT_EXTRATAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
+	    + DT_VERSIONTAGNUM;
       else if ((d_tag_utype) DT_VALTAGIDX (dyn->d_tag) < DT_VALNUM)
-	info[DT_VALTAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
-	     + DT_VERSIONTAGNUM + DT_EXTRANUM] = dyn;
+	i = DT_VALTAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
+	    + DT_VERSIONTAGNUM + DT_EXTRANUM;
       else if ((d_tag_utype) DT_ADDRTAGIDX (dyn->d_tag) < DT_ADDRNUM)
-	info[DT_ADDRTAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
-	     + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM] = dyn;
-      ++dyn;
+	i = DT_ADDRTAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
+	    + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM;
+      else
+	continue;
+
+      info[i] = dyn;
     }
 
 #define DL_RO_DYN_TEMP_CNT	8
