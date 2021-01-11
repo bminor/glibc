@@ -3247,7 +3247,7 @@ expand_bkref_cache (re_match_context_t *mctx, re_node_set *cur_nodes,
 /* Build transition table for the state.
    Return true if successful.  */
 
-static bool
+static bool __attribute_noinline__
 build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
 {
   reg_errcode_t err;
@@ -3255,36 +3255,20 @@ build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
   int ch;
   bool need_word_trtable = false;
   bitset_word_t elem, mask;
-  bool dests_node_malloced = false;
-  bool dest_states_malloced = false;
   Idx ndests; /* Number of the destination states from 'state'.  */
   re_dfastate_t **trtable;
-  re_dfastate_t **dest_states = NULL, **dest_states_word, **dest_states_nl;
-  re_node_set follows, *dests_node;
-  bitset_t *dests_ch;
+  re_dfastate_t *dest_states[SBC_MAX];
+  re_dfastate_t *dest_states_word[SBC_MAX];
+  re_dfastate_t *dest_states_nl[SBC_MAX];
+  re_node_set follows;
   bitset_t acceptable;
-
-  struct dests_alloc
-  {
-    re_node_set dests_node[SBC_MAX];
-    bitset_t dests_ch[SBC_MAX];
-  } *dests_alloc;
 
   /* We build DFA states which corresponds to the destination nodes
      from 'state'.  'dests_node[i]' represents the nodes which i-th
      destination state contains, and 'dests_ch[i]' represents the
      characters which i-th destination state accepts.  */
-  if (__libc_use_alloca (sizeof (struct dests_alloc)))
-    dests_alloc = (struct dests_alloc *) alloca (sizeof (struct dests_alloc));
-  else
-    {
-      dests_alloc = re_malloc (struct dests_alloc, 1);
-      if (__glibc_unlikely (dests_alloc == NULL))
-	return false;
-      dests_node_malloced = true;
-    }
-  dests_node = dests_alloc->dests_node;
-  dests_ch = dests_alloc->dests_ch;
+  re_node_set dests_node[SBC_MAX];
+  bitset_t dests_ch[SBC_MAX];
 
   /* Initialize transition table.  */
   state->word_trtable = state->trtable = NULL;
@@ -3294,8 +3278,6 @@ build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
   ndests = group_nodes_into_DFAstates (dfa, state, dests_node, dests_ch);
   if (__glibc_unlikely (ndests <= 0))
     {
-      if (dests_node_malloced)
-	re_free (dests_alloc);
       /* Return false in case of an error, true otherwise.  */
       if (ndests == 0)
 	{
@@ -3310,38 +3292,14 @@ build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
 
   err = re_node_set_alloc (&follows, ndests + 1);
   if (__glibc_unlikely (err != REG_NOERROR))
-    goto out_free;
-
-  /* Avoid arithmetic overflow in size calculation.  */
-  size_t ndests_max
-    = ((SIZE_MAX - (sizeof (re_node_set) + sizeof (bitset_t)) * SBC_MAX)
-       / (3 * sizeof (re_dfastate_t *)));
-  if (__glibc_unlikely (ndests_max < ndests))
-    goto out_free;
-
-  if (__libc_use_alloca ((sizeof (re_node_set) + sizeof (bitset_t)) * SBC_MAX
-			 + ndests * 3 * sizeof (re_dfastate_t *)))
-    dest_states = (re_dfastate_t **)
-      alloca (ndests * 3 * sizeof (re_dfastate_t *));
-  else
     {
-      dest_states = re_malloc (re_dfastate_t *, ndests * 3);
-      if (__glibc_unlikely (dest_states == NULL))
-	{
-out_free:
-	  if (dest_states_malloced)
-	    re_free (dest_states);
-	  re_node_set_free (&follows);
-	  for (i = 0; i < ndests; ++i)
-	    re_node_set_free (dests_node + i);
-	  if (dests_node_malloced)
-	    re_free (dests_alloc);
-	  return false;
-	}
-      dest_states_malloced = true;
+    out_free:
+      re_node_set_free (&follows);
+      for (i = 0; i < ndests; ++i)
+	re_node_set_free (dests_node + i);
+      return false;
     }
-  dest_states_word = dest_states + ndests;
-  dest_states_nl = dest_states_word + ndests;
+
   bitset_empty (acceptable);
 
   /* Then build the states for all destinations.  */
@@ -3466,16 +3424,9 @@ out_free:
 	  }
     }
 
-  if (dest_states_malloced)
-    re_free (dest_states);
-
   re_node_set_free (&follows);
   for (i = 0; i < ndests; ++i)
     re_node_set_free (dests_node + i);
-
-  if (dests_node_malloced)
-    re_free (dests_alloc);
-
   return true;
 }
 
