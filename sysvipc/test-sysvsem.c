@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <stdbool.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>

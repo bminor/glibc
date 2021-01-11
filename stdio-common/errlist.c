@@ -20,9 +20,13 @@
 #include <libintl.h>
 #include <array_length.h>
 
+#ifndef ERR_MAP
+# define ERR_MAP(n) n
+#endif
+
 const char *const _sys_errlist_internal[] =
   {
-#define _S(n, str)         [n] = str,
+#define _S(n, str)         [ERR_MAP(n)] = str,
 #include <errlist.h>
 #undef _S
   };
@@ -41,20 +45,21 @@ static const union sys_errname_t
   {
 #define MSGSTRFIELD1(line) str##line
 #define MSGSTRFIELD(line)  MSGSTRFIELD1(line)
-#define _S(n, str)         char MSGSTRFIELD(__LINE__)[sizeof(str)];
+#define _S(n, str)         char MSGSTRFIELD(__LINE__)[sizeof(#n)];
 #include <errlist.h>
 #undef _S
   };
   char str[0];
 } _sys_errname = { {
-#define _S(n, s) s,
+#define _S(n, s) #n,
 #include <errlist.h>
 #undef _S
 } };
 
 static const unsigned short _sys_errnameidx[] =
 {
-#define _S(n, s) [n] = offsetof(union sys_errname_t, MSGSTRFIELD(__LINE__)),
+#define _S(n, s) \
+  [ERR_MAP(n)] = offsetof(union sys_errname_t, MSGSTRFIELD(__LINE__)),
 #include <errlist.h>
 #undef _S
 };

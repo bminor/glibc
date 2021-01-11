@@ -808,7 +808,7 @@ init_cacheinfo (void)
 	      threads = 1 << ((ecx >> 12) & 0x0f);
 	    }
 
-	  if (threads == 0)
+	  if (threads == 0 || cpu_features->basic.family >= 0x17)
 	    {
 	      /* If APIC ID width is not available, use logical
 		 processor count.  */
@@ -823,8 +823,22 @@ init_cacheinfo (void)
 	  if (threads > 0)
 	    shared /= threads;
 
-	  /* Account for exclusive L2 and L3 caches.  */
-	  shared += core;
+	  /* Get shared cache per ccx for Zen architectures.  */
+	  if (cpu_features->basic.family >= 0x17)
+	    {
+	      unsigned int eax;
+
+	      /* Get number of threads share the L3 cache in CCX.  */
+	      __cpuid_count (0x8000001D, 0x3, eax, ebx, ecx, edx);
+
+	      unsigned int threads_per_ccx = ((eax >> 14) & 0xfff) + 1;
+	      shared *= threads_per_ccx;
+	    }
+	  else
+	    {
+	      /* Account for exclusive L2 and L3 caches.  */
+	      shared += core;
+            }
 	}
     }
 
@@ -854,14 +868,20 @@ init_cacheinfo (void)
       __x86_shared_cache_size = shared;
     }
 
-  /* The large memcpy micro benchmark in glibc shows that 6 times of
-     shared cache size is the approximate value above which non-temporal
-     store becomes faster on a 8-core processor.  This is the 3/4 of the
-     total shared cache size.  */
+  /* The default setting for the non_temporal threshold is 3/4 of one
+     thread's share of the chip's cache. For most Intel and AMD processors
+     with an initial release date between 2017 and 2020, a thread's typical
+     share of the cache is from 500 KBytes to 2 MBytes. Using the 3/4
+     threshold leaves 125 KBytes to 500 KBytes of the thread's data
+     in cache after a maximum temporal copy, which will maintain
+     in cache a reasonable portion of the thread's stack and other
+     active data. If the threshold is set higher than one thread's
+     share of the cache, it has a substantial risk of negatively
+     impacting the performance of other threads running on the chip. */
   __x86_shared_non_temporal_threshold
     = (cpu_features->non_temporal_threshold != 0
        ? cpu_features->non_temporal_threshold
-       : __x86_shared_cache_size * threads * 3 / 4);
+       : __x86_shared_cache_size * 3 / 4);
 
   /* NB: The REP MOVSB threshold must be greater than VEC_SIZE * 8.  */
   unsigned int minimum_rep_movsb_threshold;

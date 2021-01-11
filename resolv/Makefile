@@ -61,6 +61,11 @@ tests += \
   tst-resolv-search \
   tst-resolv-trailing \
 
+# This test calls __res_context_send directly, which is not exported
+# from libresolv.
+tests-internal += tst-resolv-txnid-collision
+tests-static += tst-resolv-txnid-collision
+
 # These tests need libdl.
 ifeq (yes,$(build-shared))
 tests += \
@@ -191,6 +196,8 @@ $(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-trailing: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-threads: \
   $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-txnid-collision: $(objpfx)libresolv.a \
+  $(static-thread-library)
 $(objpfx)tst-resolv-canonname: \
   $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-trustad: $(objpfx)libresolv.so $(shared-thread-library)

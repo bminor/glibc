@@ -51,7 +51,7 @@ routines  = backtrace backtracesyms backtracesymsfd noophooks \
 	    explicit_bzero_chk \
 	    stack_chk_fail fortify_fail \
 	    $(static-only-routines)
-static-only-routines := warning-nop stack_chk_fail_local
+static-only-routines := stack_chk_fail_local
 
 # Don't add stack_chk_fail_local.o to libc.a since __stack_chk_fail_local
 # is an alias of __stack_chk_fail in stack_chk_fail.o.
