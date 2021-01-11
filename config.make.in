@@ -73,7 +73,6 @@ fno-unit-at-a-time = @fno_unit_at_a_time@
 bind-now = @bindnow@
 have-hash-style = @libc_cv_hashstyle@
 use-default-link = @use_default_link@
-output-format = @libc_cv_output_format@
 have-cxx-thread_local = @libc_cv_cxx_thread_local@
 have-loop-to-function = @libc_cv_cc_loop_to_function@
 have-textrel_ifunc = @libc_cv_textrel_ifunc@

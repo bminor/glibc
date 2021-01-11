@@ -1429,17 +1429,6 @@ fi
 rm -f conftest*])
 AC_SUBST(libc_cv_has_glob_dat)
 
-AC_CACHE_CHECK(linker output format, libc_cv_output_format, [dnl
-if libc_cv_output_format=`
-${CC-cc} -nostartfiles -nostdlib $no_ssp -Wl,--print-output-format 2>&AS_MESSAGE_LOG_FD`
-then
-  :
-else
-  libc_cv_output_format=
-fi
-test -n "$libc_cv_output_format" || libc_cv_output_format=unknown])
-AC_SUBST(libc_cv_output_format)
-
 AC_CACHE_CHECK(for -fno-toplevel-reorder -fno-section-anchors, libc_cv_fno_toplevel_reorder, [dnl
 cat > conftest.c <<EOF
 int foo;
