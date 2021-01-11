@@ -33,6 +33,7 @@
 
 #include <math.h>
 #include <math_private.h>
+#include <math-narrow-eval.h>
 #include <libm-alias-finite.h>
 
 static const double one = 1.0, half=0.5, huge = 1.0e300;
@@ -80,6 +81,6 @@ __ieee754_cosh (double x)
 	if(ix>=0x7ff00000) return x*x;
 
     /* |x| > overflowthresold, cosh(x) overflow */
-	return huge*huge;
+	return math_narrow_eval (huge * huge);
 }
 libm_alias_finite (__ieee754_cosh, __cosh)
