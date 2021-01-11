@@ -249,9 +249,9 @@ test_str_fail (void)
         else
           dynarray_str_free (&dyn);
         TEST_VERIFY_EXIT (!dynarray_str_has_failed (&dyn));
-        TEST_VERIFY_EXIT (dyn.dynarray_header.array == dyn.scratch);
+        TEST_VERIFY_EXIT (dyn.u.dynarray_header.array == dyn.scratch);
         TEST_VERIFY_EXIT (dynarray_str_size (&dyn) == 0);
-        TEST_VERIFY_EXIT (dyn.dynarray_header.allocated > 0);
+        TEST_VERIFY_EXIT (dyn.u.dynarray_header.allocated > 0);
       }
 
   /* Exercise failure in finalize.  */
@@ -278,9 +278,9 @@ test_str_fail (void)
       TEST_VERIFY_EXIT (result.array == (char **) (uintptr_t) -1);
       TEST_VERIFY_EXIT (result.length == (size_t) -1);
       TEST_VERIFY_EXIT (!dynarray_str_has_failed (&dyn));
-      TEST_VERIFY_EXIT (dyn.dynarray_header.array == dyn.scratch);
+      TEST_VERIFY_EXIT (dyn.u.dynarray_header.array == dyn.scratch);
       TEST_VERIFY_EXIT (dynarray_str_size (&dyn) == 0);
-      TEST_VERIFY_EXIT (dyn.dynarray_header.allocated > 0);
+      TEST_VERIFY_EXIT (dyn.u.dynarray_header.allocated > 0);
       free_fill_heap (heap_filler);
     }
 

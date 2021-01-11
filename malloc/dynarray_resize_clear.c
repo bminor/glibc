@@ -17,7 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <dynarray.h>
-#include <stdlib.h>
 #include <string.h>
 
 bool
@@ -28,7 +27,8 @@ __libc_dynarray_resize_clear (struct dynarray_header *list, size_t size,
   if (!__libc_dynarray_resize (list, size, scratch, element_size))
     return false;
   /* __libc_dynarray_resize already checked for overflow.  */
-  memset (list->array + (old_size * element_size), 0,
+  char *array = list->array;
+  memset (array + (old_size * element_size), 0,
           (size - old_size) * element_size);
   return true;
 }

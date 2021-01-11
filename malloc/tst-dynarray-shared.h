@@ -48,9 +48,9 @@ struct str_array
   ({                                                            \
     TEST_VERIFY_EXIT (!dynarray_##type##_has_failed (dyn));     \
     TEST_VERIFY_EXIT (dynarray_##type##_size (dyn) == 0);       \
-    TEST_VERIFY_EXIT ((dyn)->dynarray_header.array              \
+    TEST_VERIFY_EXIT ((dyn)->u.dynarray_header.array            \
                       == (dyn)->scratch);                       \
-    TEST_VERIFY_EXIT ((dyn)->dynarray_header.allocated > 0);    \
+    TEST_VERIFY_EXIT ((dyn)->u.dynarray_header.allocated > 0);  \
     (void) 0;                                                   \
   })
 
