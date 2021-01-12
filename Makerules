@@ -1067,9 +1067,8 @@ install: $(inst_slibdir)/libc.so$(libc.so-version)
 # used by a link for a different format on a multi-architecture system.
 $(common-objpfx)format.lds: $(common-objpfx)config.make \
 			    $(common-objpfx)config.h $(..)Makerules
-	$(LINK.o) -shared $(sysdep-LDFLAGS) $(rtld-LDFLAGS) \
-		  $(LDFLAGS.so) $(LDFLAGS-lib.so) \
-		  -x c /dev/null -o $@.so 2>/dev/null
+	$(LINK.o) -shared -nostdlib -nostartfiles \
+		  -x assembler /dev/null -o $@.so
 	$(OBJDUMP) -f $@.so | sed -n 's/.*file format \(.*\)/OUTPUT_FORMAT(\1)/;T;p' > $@
 	rm -f $@.so
 common-generated += format.lds
