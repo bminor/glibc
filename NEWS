@@ -76,6 +76,7 @@ The following bugs are resolved with this release:
   [25414] 'glob' use-after-free bug (CVE-2020-1752)
   [25423] Array overflow in backtrace on powerpc
   [25933] Off by one error in __strncmp_avx2
+  [27130] "rep movsb" performance issue
 
 Security related changes:
 
