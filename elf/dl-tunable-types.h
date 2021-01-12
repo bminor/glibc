@@ -59,7 +59,7 @@ typedef enum
 /* A tunable.  */
 struct _tunable
 {
-  const char *name;			/* Internal name of the tunable.  */
+  const char name[TUNABLE_NAME_MAX];	/* Internal name of the tunable.  */
   tunable_type_t type;			/* Data type of the tunable.  */
   tunable_val_t val;			/* The value.  */
   bool initialized;			/* Flag to indicate that the tunable is
@@ -75,7 +75,7 @@ struct _tunable
 					   target module if the value is
 					   considered unsafe.  */
   /* Compatibility elements.  */
-  const char *env_alias;		/* The compatibility environment
+  const char env_alias[TUNABLE_ALIAS_MAX]; /* The compatibility environment
 					   variable name.  */
 };
 

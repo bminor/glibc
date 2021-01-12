@@ -351,7 +351,7 @@ __tunables_init (char **envp)
 
 	  /* Skip over tunables that have either been set already or should be
 	     skipped.  */
-	  if (cur->initialized || cur->env_alias == NULL)
+	  if (cur->initialized || cur->env_alias[0] == '\0')
 	    continue;
 
 	  const char *name = cur->env_alias;

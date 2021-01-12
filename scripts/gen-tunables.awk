@@ -12,6 +12,8 @@ BEGIN {
   tunable=""
   ns=""
   top_ns=""
+  max_name_len=0
+  max_alias_len=0
 }
 
 # Skip over blank lines and comments.
@@ -57,11 +59,14 @@ $1 == "}" {
       maxvals[top_ns,ns,tunable] = max_of[types[top_ns,ns,tunable]]
     }
     if (!env_alias[top_ns,ns,tunable]) {
-      env_alias[top_ns,ns,tunable] = "NULL"
+      env_alias[top_ns,ns,tunable] = "{0}"
     }
     if (!security_level[top_ns,ns,tunable]) {
       security_level[top_ns,ns,tunable] = "SXID_ERASE"
     }
+    len = length(top_ns"."ns"."tunable)
+    if (len > max_name_len)
+      max_name_len = len
 
     tunable = ""
   }
@@ -109,6 +114,9 @@ $1 == "}" {
   }
   else if (attr == "env_alias") {
     env_alias[top_ns,ns,tunable] = sprintf("\"%s\"", val)
+    len = length(val)
+    if (len > max_alias_len)
+      max_alias_len = len
   }
   else if (attr == "security_level") {
     if (val == "SXID_ERASE" || val == "SXID_IGNORE" || val == "NONE") {
@@ -158,6 +166,8 @@ END {
 
   print "\n#ifdef TUNABLES_INTERNAL"
   # Internal definitions.
+  print "# define TUNABLE_NAME_MAX " (max_name_len + 1)
+  print "# define TUNABLE_ALIAS_MAX " (max_alias_len + 1)
   print "# include \"dl-tunable-types.h\""
   # Finally, the tunable list.
   print "static tunable_t tunable_list[] attribute_relro = {"
