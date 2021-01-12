@@ -10,6 +10,16 @@ sysdep_headers += sys/platform/x86.h
 tests += tst-get-cpu-features tst-get-cpu-features-static \
 	 tst-cpu-features-cpuinfo tst-cpu-features-supports
 tests-static += tst-get-cpu-features-static
+ifeq (yes,$(have-ifunc))
+tests += \
+  tst-ifunc-isa-1 \
+  tst-ifunc-isa-1-static \
+  tst-ifunc-isa-2 \
+  tst-ifunc-isa-2-static
+tests-static += \
+  tst-ifunc-isa-1-static \
+  tst-ifunc-isa-2-static
+endif
 ifeq (yes,$(enable-x86-isa-level))
 tests += tst-isa-level-1
 modules-names += tst-isa-level-mod-1-baseline \
@@ -39,6 +49,10 @@ $(objpfx)tst-isa-level-1.out: $(objpfx)tst-isa-level-mod-1-baseline.so \
 			      $(objpfx)tst-isa-level-mod-1-v2.so \
 			      $(objpfx)tst-isa-level-mod-1-v3.so \
 			      $(objpfx)tst-isa-level-mod-1-v4.so
+endif
+ifneq ($(have-tunables),no)
+tst-ifunc-isa-2-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-SSE4_2,-AVX,-AVX2,-AVX512F
+tst-ifunc-isa-2-static-ENV = $(tst-ifunc-isa-2-ENV)
 endif
 endif
 
