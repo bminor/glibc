@@ -33,6 +33,16 @@
 # include <asm/ptrace.h>
 #endif /* __ASSEMBLER__ */
 
+/* Set the stack guard field in TCB head. Used by elf/Versions.  */
+# define THREAD_SET_STACK_GUARD(value) \
+    (((tcbhead_t *) ((char *) __thread_register				      \
+		     - TLS_TCB_OFFSET))[-1].stack_guard = (value))
+# define THREAD_COPY_STACK_GUARD(descr) \
+    (((tcbhead_t *) ((char *) (descr)					      \
+		     + TLS_PRE_TCB_SIZE))[-1].stack_guard		      \
+     = ((tcbhead_t *) ((char *) __thread_register			      \
+		       - TLS_TCB_OFFSET))[-1].stack_guard)
+
 #ifndef __powerpc64__
 /* Register r2 (tp) is reserved by the ABI as "thread pointer". */
 # define PT_THREAD_POINTER PT_R2
@@ -190,16 +200,6 @@ typedef struct
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 # define THREAD_SETMEM_NC(descr, member, idx, value) \
     ((void)(descr), (THREAD_SELF)->member[idx] = (value))
-
-/* Set the stack guard field in TCB head.  */
-# define THREAD_SET_STACK_GUARD(value) \
-    (((tcbhead_t *) ((char *) __thread_register				      \
-		     - TLS_TCB_OFFSET))[-1].stack_guard = (value))
-# define THREAD_COPY_STACK_GUARD(descr) \
-    (((tcbhead_t *) ((char *) (descr)					      \
-		     + TLS_PRE_TCB_SIZE))[-1].stack_guard		      \
-     = ((tcbhead_t *) ((char *) __thread_register			      \
-		       - TLS_TCB_OFFSET))[-1].stack_guard)
 
 /* Set the stack guard field in TCB head.  */
 # define THREAD_GET_POINTER_GUARD() \

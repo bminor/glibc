@@ -33,11 +33,8 @@ extern void __libc_init_first (int argc, char **argv, char **envp);
 #include <tls.h>
 #ifndef SHARED
 # include <dl-osinfo.h>
-# ifndef THREAD_SET_STACK_GUARD
-/* Only exported for architectures that don't store the stack guard canary
-   in thread local area.  */
+/* Also export to architectures which prefer -mstack-protector-guard=tls.  */
 uintptr_t __stack_chk_guard attribute_relro;
-# endif
 # ifndef  THREAD_SET_POINTER_GUARD
 /* Only exported for architectures that don't store the pointer guard
    value in thread local area.  */
@@ -206,9 +203,8 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random);
 # ifdef THREAD_SET_STACK_GUARD
   THREAD_SET_STACK_GUARD (stack_chk_guard);
-# else
-  __stack_chk_guard = stack_chk_guard;
 # endif
+  __stack_chk_guard = stack_chk_guard;
 
 # ifdef DL_SYSDEP_OSCHECK
   {

@@ -51,6 +51,12 @@ typedef struct
 # include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
 
+/* Set the stack guard field in TCB head. Referenced by elf/Versions.  */
+#define THREAD_SET_STACK_GUARD(value) \
+  THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
+# define THREAD_COPY_STACK_GUARD(descr) \
+  ((descr)->header.stack_guard \
+   = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
 
 #ifndef __ASSEMBLER__
 /* Get system call information.  */
@@ -121,13 +127,6 @@ register struct pthread *__thread_self __asm__("%g7");
   descr->member = (value)
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
   descr->member[idx] = (value)
-
-/* Set the stack guard field in TCB head.  */
-#define THREAD_SET_STACK_GUARD(value) \
-  THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
-# define THREAD_COPY_STACK_GUARD(descr) \
-  ((descr)->header.stack_guard \
-   = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
 
 /* Get/set the stack guard field in TCB head.  */
 #define THREAD_GET_POINTER_GUARD() \

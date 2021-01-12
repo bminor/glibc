@@ -1,3 +1,6 @@
+%if __has_include("tls.h")
+%include "tls.h"
+%endif
 libc {
   GLIBC_2.0 {
 %ifdef EXPORT_UNWIND_FIND_FDE
@@ -50,7 +53,15 @@ ld {
   }
   GLIBC_2.4 {
     # stack canary
+%ifndef THREAD_SET_STACK_GUARD
     __stack_chk_guard;
+%endif
+  }
+  GLIBC_2.33 {
+    # stack canary
+%ifdef THREAD_SET_STACK_GUARD
+    __stack_chk_guard;
+%endif
   }
   GLIBC_PRIVATE {
     # Those are in the dynamic linker, but used by libc.so.

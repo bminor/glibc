@@ -94,6 +94,13 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 /* Alignment requirement for the stack.  */
 #define STACK_ALIGN	16
 
+/* Set the stack guard field in TCB head. Used by elf/Versions.  */
+# define THREAD_SET_STACK_GUARD(value) \
+    THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
+# define THREAD_COPY_STACK_GUARD(descr) \
+    ((descr)->header.stack_guard					      \
+     = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
+
 
 #ifndef __ASSEMBLER__
 /* Get system call information.  */
@@ -301,14 +308,6 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 			 "i" (offsetof (struct pthread, member[0])),	      \
 			 "r" (idx));					      \
        }})
-
-
-/* Set the stack guard field in TCB head.  */
-# define THREAD_SET_STACK_GUARD(value) \
-    THREAD_SETMEM (THREAD_SELF, header.stack_guard, value)
-# define THREAD_COPY_STACK_GUARD(descr) \
-    ((descr)->header.stack_guard					      \
-     = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
 
 
 /* Set the pointer guard field in the TCB head.  */

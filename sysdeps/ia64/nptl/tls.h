@@ -46,6 +46,13 @@ register struct pthread *__thread_self __asm__("r13");
 /* Alignment requirement for the stack.  */
 #define STACK_ALIGN	16
 
+/* Set the stack guard field in TCB head. Referenced by elf/Versions.  */
+#define THREAD_SET_STACK_GUARD(value) \
+  (((uintptr_t *) __thread_self)[-1] = (value))
+#define THREAD_COPY_STACK_GUARD(descr) \
+  (((uintptr_t *) ((char *) (descr) + TLS_PRE_TCB_SIZE))[-1] \
+   = ((uintptr_t *) __thread_self)[-1])
+
 #ifndef __ASSEMBLER__
 /* Get system call information.  */
 # include <sysdep.h>
@@ -137,13 +144,6 @@ register struct pthread *__thread_self __asm__("r13");
   descr->member = (value)
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
   descr->member[idx] = (value)
-
-/* Set the stack guard field in TCB head.  */
-#define THREAD_SET_STACK_GUARD(value) \
-  (((uintptr_t *) __thread_self)[-1] = (value))
-#define THREAD_COPY_STACK_GUARD(descr) \
-  (((uintptr_t *) ((char *) (descr) + TLS_PRE_TCB_SIZE))[-1] \
-   = ((uintptr_t *) __thread_self)[-1])
 
 /* Set the pointer guard field in TCB head.  */
 #define THREAD_GET_POINTER_GUARD() \

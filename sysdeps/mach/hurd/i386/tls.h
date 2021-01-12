@@ -79,6 +79,13 @@ typedef struct
    "Segment Base".)  On such machines, a cache line is 64 bytes.  */
 #define TCB_ALIGNMENT		64
 
+/* Set the stack guard field in TCB head. Referenced by elf/Versions.  */
+#define THREAD_SET_STACK_GUARD(value) \
+  THREAD_SETMEM (THREAD_SELF, stack_guard, value)
+#define THREAD_COPY_STACK_GUARD(descr) \
+  ((descr)->stack_guard							      \
+   = THREAD_GETMEM (THREAD_SELF, stack_guard))
+
 #ifndef __ASSEMBLER__
 
 /* Use i386-specific RPCs to arrange that %gs segment register prefix
@@ -295,13 +302,6 @@ out:
      asm ("movl %%gs:%P1,%0" : "=q" (_dtv) : "i" (offsetof (tcbhead_t, dtv)));\
      _dtv; })
 
-
-/* Set the stack guard field in TCB head.  */
-#define THREAD_SET_STACK_GUARD(value) \
-  THREAD_SETMEM (THREAD_SELF, stack_guard, value)
-#define THREAD_COPY_STACK_GUARD(descr) \
-  ((descr)->stack_guard							      \
-   = THREAD_GETMEM (THREAD_SELF, stack_guard))
 
 /* Set the pointer guard field in the TCB head.  */
 #define THREAD_SET_POINTER_GUARD(value) \

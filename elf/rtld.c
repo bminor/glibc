@@ -154,11 +154,8 @@ unsigned int _dl_skip_args attribute_relro attribute_hidden;
 #endif
 rtld_hidden_data_def (_dl_argv)
 
-#ifndef THREAD_SET_STACK_GUARD
-/* Only exported for architectures that don't store the stack guard canary
-   in thread local area.  */
+/* Also export to architectures which prefer -mstack-protector-guard=tls.  */
 uintptr_t __stack_chk_guard attribute_relro;
-#endif
 
 /* Only exported for architectures that don't store the pointer guard
    value in thread local area.  */
@@ -865,9 +862,8 @@ security_init (void)
   uintptr_t stack_chk_guard = _dl_setup_stack_chk_guard (_dl_random);
 #ifdef THREAD_SET_STACK_GUARD
   THREAD_SET_STACK_GUARD (stack_chk_guard);
-#else
-  __stack_chk_guard = stack_chk_guard;
 #endif
+  __stack_chk_guard = stack_chk_guard;
 
   /* Set up the pointer guard as well, if necessary.  */
   uintptr_t pointer_chk_guard

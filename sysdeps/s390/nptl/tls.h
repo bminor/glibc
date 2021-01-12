@@ -57,6 +57,18 @@ typedef struct
    the SSE memory functions.  */
 #define STACK_ALIGN	16
 
+/* Set the stack guard field in TCB head. Referenced by elf/Versions.  */
+#define THREAD_SET_STACK_GUARD(value) \
+  do									      \
+   {									      \
+     __asm__ __volatile__ ("" : : : "a0", "a1");			      \
+     THREAD_SETMEM (THREAD_SELF, header.stack_guard, value);		      \
+   }									      \
+  while (0)
+#define THREAD_COPY_STACK_GUARD(descr) \
+  ((descr)->header.stack_guard						      \
+   = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
+
 #ifndef __ASSEMBLER__
 /* Get system call information.  */
 # include <sysdep.h>
@@ -144,18 +156,6 @@ typedef struct
   descr->member = (value)
 #define THREAD_SETMEM_NC(descr, member, idx, value) \
   descr->member[idx] = (value)
-
-/* Set the stack guard field in TCB head.  */
-#define THREAD_SET_STACK_GUARD(value) \
-  do									      \
-   {									      \
-     __asm__ __volatile__ ("" : : : "a0", "a1");			      \
-     THREAD_SETMEM (THREAD_SELF, header.stack_guard, value);		      \
-   }									      \
-  while (0)
-#define THREAD_COPY_STACK_GUARD(descr) \
-  ((descr)->header.stack_guard						      \
-   = THREAD_GETMEM (THREAD_SELF, header.stack_guard))
 
 /* s390 doesn't have HP_TIMING_*, so for the time being
    use stack_guard as pointer_guard.  */
