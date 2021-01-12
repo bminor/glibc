@@ -22,6 +22,7 @@
 
 #include <sys/types.h>
 #include <assert.h>
+#include <stdbool.h>
 
 #include <errno.h>
 
@@ -77,11 +78,11 @@ typedef uint_fast64_t random_value;
 #define BASE_62_POWER (62LL * 62 * 62 * 62 * 62 * 62 * 62 * 62 * 62 * 62)
 
 static random_value
-random_bits (random_value var)
+random_bits (random_value var, bool use_getrandom)
 {
   random_value r;
   /* Without GRND_NONBLOCK it can be blocked for minutes on some systems.  */
-  if (__getrandom (&r, sizeof r, GRND_NONBLOCK) == sizeof r)
+  if (use_getrandom && __getrandom (&r, sizeof r, GRND_NONBLOCK) == sizeof r)
     return r;
 #if _LIBC || (defined CLOCK_MONOTONIC && HAVE_CLOCK_GETTIME)
   /* Add entropy if getrandom did not work.  */
@@ -269,6 +270,13 @@ try_tempname_len (char *tmpl, int suffixlen, void *args,
   /* How many random base-62 digits can currently be extracted from V.  */
   int vdigits = 0;
 
+  /* Whether to consume entropy when acquiring random bits.  On the
+     first try it's worth the entropy cost with __GT_NOCREATE, which
+     is inherently insecure and can use the entropy to make it a bit
+     less secure.  On the (rare) second and later attempts it might
+     help against DoS attacks.  */
+  bool use_getrandom = tryfunc == try_nocreate;
+
   /* Least unfair value for V.  If V is less than this, V can generate
      BASE_62_DIGITS digits fairly.  Otherwise it might be biased.  */
   random_value const unfair_min
@@ -292,7 +300,10 @@ try_tempname_len (char *tmpl, int suffixlen, void *args,
           if (vdigits == 0)
             {
               do
-                v = random_bits (v);
+                {
+                  v = random_bits (v, use_getrandom);
+                  use_getrandom = true;
+                }
               while (unfair_min <= v);
 
               vdigits = BASE_62_DIGITS;
