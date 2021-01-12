@@ -41,6 +41,7 @@ The following bugs are resolved with this release:
   [25232] No const correctness for strchr et al. for Clang++
   [25933] Off by one error in __strncmp_avx2
   [25976] nss_compat: internal_end*ent may clobber errno, hiding ERANGE
+  [27130] "rep movsb" performance issue
 
 Security related changes:
 
