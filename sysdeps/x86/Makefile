@@ -48,6 +48,12 @@ endif # $(subdir) == math
 ifeq ($(subdir),setjmp)
 gen-as-const-headers += jmp_buf-ssp.sym
 sysdep_routines += __longjmp_cancel
+ifneq ($(enable-cet),no)
+ifneq ($(have-tunables),no)
+tests += tst-setjmp-cet
+tst-setjmp-cet-ENV = GLIBC_TUNABLES=glibc.cpu.x86_ibt=on:glibc.cpu.x86_shstk=on
+endif
+endif
 endif
 
 ifeq ($(subdir),string)
