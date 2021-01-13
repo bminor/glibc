@@ -77,6 +77,7 @@ The following bugs are resolved with this release:
   [25423] Array overflow in backtrace on powerpc
   [25933] Off by one error in __strncmp_avx2
   [27130] "rep movsb" performance issue
+  [27177] GLIBC_TUNABLES=glibc.cpu.x86_ibt=on:glibc.cpu.x86_shstk=on doesn't work
 
 Security related changes:
 
