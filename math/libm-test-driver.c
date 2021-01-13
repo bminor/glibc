@@ -328,7 +328,7 @@ struct test_f_i_data
 };
 /* Used for RUN_TEST_LOOP_f_i_tg_u and RUN_TEST_LOOP_f_b_tg_u.  */
 #if TEST_COND_intel96
-struct test_f_i_data_u
+struct test_j_i_data_u
 {
   const char *arg_str;
   ieee_long_double_shape_type arg;
@@ -855,17 +855,19 @@ struct test_Ff_b1_data
 		       (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
 		       (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);	\
   ROUND_RESTORE_ ## ROUNDING_MODE
-#define RUN_TEST_LOOP_f_b_tg_u(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+#define RUN_TEST_LOOP_j_b_tg_u(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
   for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
-  RUN_TEST_f_b_tg ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg.value,	\
+  RUN_TEST_f_b_tg ((ARRAY)[i].arg_str, FUNC_NAME,			\
+		   (FLOAT)(ARRAY)[i].arg.value,				\
 		   (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
 		   (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
-#define RUN_TEST_LOOP_f_i_tg_u(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+#define RUN_TEST_LOOP_j_i_tg_u(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
   for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
-  RUN_TEST_f_i_tg ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg.value,	\
+  RUN_TEST_f_i_tg ((ARRAY)[i].arg_str, FUNC_NAME,			\
+		   (FLOAT)(ARRAY)[i].arg.value,				\
 		   (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
 		   (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE

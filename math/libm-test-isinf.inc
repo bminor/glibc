@@ -38,13 +38,13 @@ static const struct test_f_i_data isinf_test_data[] =
   };
 
 #if TEST_COND_intel96
-static const struct test_f_i_data_u isinf_test_data_u[] =
+static const struct test_j_i_data_u isinf_test_data_u[] =
   {
-    TEST_f_b (isinf, pseudo_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_f_b (isinf, pseudo_inf, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_f_b (isinf, pseudo_qnan, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_f_b (isinf, pseudo_snan, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
-    TEST_f_b (isinf, pseudo_unnormal, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_j_b (isinf, pseudo_zero, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_j_b (isinf, pseudo_inf, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_j_b (isinf, pseudo_qnan, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_j_b (isinf, pseudo_snan, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+    TEST_j_b (isinf, pseudo_unnormal, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
   };
 #endif
 
@@ -53,7 +53,7 @@ isinf_test (void)
 {
   ALL_RM_TEST (isinf, 1, isinf_test_data, RUN_TEST_LOOP_f_b_tg, END);
 #if TEST_COND_intel96
-  ALL_RM_TEST (isinf, 1, isinf_test_data_u, RUN_TEST_LOOP_f_b_tg_u, END);
+  ALL_RM_TEST (isinf, 1, isinf_test_data_u, RUN_TEST_LOOP_j_b_tg_u, END);
 #endif
 }
 
