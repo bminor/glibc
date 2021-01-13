@@ -36,6 +36,7 @@ The following bugs are resolved with this release:
   [26923] Assertion failure in iconv when converting invalid UCS4 (CVE-2020-29562)
   [26932] libc: sh: Multiple floating point functions defined as stubs only
   [27130] "rep movsb" performance issue
+  [27177] GLIBC_TUNABLES=glibc.cpu.x86_ibt=on:glibc.cpu.x86_shstk=on doesn't work
 
 Security related changes:
 
