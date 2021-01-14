@@ -18,6 +18,7 @@
 
 #include <dl-hwcaps.h>
 #include <cpu-features.h>
+#include <ldsodefs.h>
 #include <get-isa-level.h>
 
 const char _dl_hwcaps_subdirs[] = "x86-64-v4:x86-64-v3:x86-64-v2";
