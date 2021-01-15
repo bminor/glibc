@@ -16,6 +16,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef SHARED
+
+/* Mark symbols hidden in static PIE for early self relocation to work.  */
+# if BUILD_PIE_DEFAULT
+#  pragma GCC visibility push(hidden)
+# endif
 /* Define I386_USE_SYSENTER to support syscall during startup in static
    PIE.  */
 # include <startup.h>

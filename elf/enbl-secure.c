@@ -19,6 +19,10 @@
 /* This file is used in the static libc.  For the shared library,
    dl-sysdep.c defines and initializes __libc_enable_secure.  */
 
+/* Mark symbols hidden in static PIE for early self relocation to work.  */
+#if BUILD_PIE_DEFAULT
+# pragma GCC visibility push(hidden)
+#endif
 #include <startup.h>
 #include <libc-internal.h>
 

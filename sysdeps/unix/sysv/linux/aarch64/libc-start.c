@@ -17,6 +17,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef SHARED
+
+/* Mark symbols hidden in static PIE for early self relocation to work.  */
+# if BUILD_PIE_DEFAULT
+#  pragma GCC visibility push(hidden)
+# endif
 # include <ldsodefs.h>
 # include <cpu-features.c>
 

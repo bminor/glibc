@@ -19,6 +19,12 @@
 /* This file defines some things that for the dynamic linker are defined in
    rtld.c and dl-sysdep.c in ways appropriate to bootstrap dynamic linking.  */
 
+#include <string.h>
+/* Mark symbols hidden in static PIE for early self relocation to work.
+   Note: string.h may have ifuncs which cannot be hidden on i686.  */
+#if BUILD_PIE_DEFAULT
+# pragma GCC visibility push(hidden)
+#endif
 #include <errno.h>
 #include <libintl.h>
 #include <stdlib.h>
