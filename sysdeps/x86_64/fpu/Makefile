@@ -31,6 +31,12 @@ libmvec-tests += double-vlen2 double-vlen4 double-vlen4-avx2 \
 tests += test-double-libmvec-sincos test-double-libmvec-sincos-avx \
 	 test-double-libmvec-sincos-avx2 test-float-libmvec-sincosf \
 	 test-float-libmvec-sincosf-avx test-float-libmvec-sincosf-avx2
+test-extras += test-double-libmvec-sincos-avx-main \
+		   test-double-libmvec-sincos-avx2-main \
+		   test-double-libmvec-sincos-main \
+		   test-float-libmvec-sincosf-avx-main \
+		   test-float-libmvec-sincosf-avx2-main \
+		   test-float-libmvec-sincosf-main
 extra-test-objs += test-double-libmvec-sincos-avx-main.o \
 		   test-double-libmvec-sincos-avx2-main.o \
 		   test-double-libmvec-sincos-main.o \
@@ -66,6 +72,8 @@ ifeq (yes,$(config-cflags-avx512))
 libmvec-tests += double-vlen8 float-vlen16
 tests += test-double-libmvec-sincos-avx512 \
 	 test-float-libmvec-sincosf-avx512
+test-extras += test-double-libmvec-sincos-avx512-main \
+	       test-float-libmvec-sincosf-avx512-main
 extra-test-objs += test-double-libmvec-sincos-avx512-main.o \
 		   test-float-libmvec-sincosf-avx512-main.o
 
