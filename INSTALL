@@ -347,6 +347,21 @@ is the absolute directory name for the main source directory and
 HOSTNAME is the host name of a system that can run the newly built
 binaries of the GNU C Library.  The source and build directories must be
 visible at the same locations on both the build system and HOSTNAME.
+The 'cross-test-ssh.sh' script requires 'flock' from 'util-linux' to
+work when GLIBC_TEST_ALLOW_TIME_SETTING environment variable is set.
+
+   It is also possible to execute tests, which require setting the date
+on the target machine.  Following use cases are supported:
+   * 'GLIBC_TEST_ALLOW_TIME_SETTING' is set in the environment in which
+     eligible tests are executed and have the privilege to run
+     'clock_settime'.  In this case, nothing prevents those tests from
+     running in parallel, so the caller shall assure that those tests
+     are serialized or provide a proper wrapper script for them.
+
+   * The 'cross-test-ssh.sh' script is used and one passes the
+     '--allow-time-setting' flag.  In this case, both sets
+     'GLIBC_TEST_ALLOW_TIME_SETTING' and serialization of test execution
+     are assured automatically.
 
    In general, when testing the GNU C Library, 'test-wrapper' may be set
 to the name and arguments of any program to run newly built binaries.

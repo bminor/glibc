@@ -22,7 +22,7 @@
 
 progname="$(basename $0)"
 
-usage="usage: ${progname} [--ssh SSH] HOST COMMAND ..."
+usage="usage: ${progname} [--ssh SSH] [--allow-time-setting] HOST COMMAND ..."
 help="Run a glibc test COMMAND on the remote machine HOST, via ssh,
 preserving the current working directory, and respecting quoting.
 
@@ -31,6 +31,10 @@ instead of ordinary 'ssh'.
 
 If the '--timeoutfactor FACTOR' flag is present, set TIMEOUTFACTOR on
 the remote machine to the specified FACTOR.
+
+If the '--allow-time-setting' flag is present, set
+GLIBC_TEST_ALLOW_TIME_SETTING on the remote machine to indicate that
+time can be safely adjusted (e.g. on a virtual machine).
 
 To use this to run glibc tests, invoke the tests as follows:
 
@@ -81,6 +85,10 @@ while [ $# -gt 0 ]; do
       timeoutfactor="$1"
       ;;
 
+    "--allow-time-setting")
+      settimeallowed="1"
+      ;;
+
     "--help")
       echo "$usage"
       echo "$help"
@@ -124,6 +132,21 @@ ${command}"
 # Add command to set the timeout factor, if required.
 if [ "$timeoutfactor" ]; then
   command="export TIMEOUTFACTOR=$(bourne_quote "$timeoutfactor")
+${command}"
+fi
+
+# Add command to set the info that time on target can be adjusted,
+# if required.
+# Serialize execution of this script on target to prevent from unintended
+# change of target time.
+FLOCK_PATH="${FLOCK_PATH:-/var/lock/clock_settime}"
+FLOCK_TIMEOUT="${FLOCK_TIMEOUT:-20}"
+FLOCK_FD="${FLOCK_FD:-99}"
+if [ "$settimeallowed" ]; then
+  command="exec ${FLOCK_FD}<>${FLOCK_PATH}
+flock -w ${FLOCK_TIMEOUT} ${FLOCK_FD}
+if [ $? -ne 0 ]; then exit 1; fi
+export GLIBC_TEST_ALLOW_TIME_SETTING=1
 ${command}"
 fi
 
