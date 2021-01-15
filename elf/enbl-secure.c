@@ -19,7 +19,7 @@
 /* This file is used in the static libc.  For the shared library,
    dl-sysdep.c defines and initializes __libc_enable_secure.  */
 
-#include <unistd.h>
+#include <startup.h>
 #include <libc-internal.h>
 
 /* If nonzero __libc_enable_secure is already set.  */
@@ -31,6 +31,6 @@ void
 __libc_init_secure (void)
 {
   if (__libc_enable_secure_decided == 0)
-    __libc_enable_secure = (__geteuid () != __getuid ()
-			    || __getegid () != __getgid ());
+    __libc_enable_secure = (startup_geteuid () != startup_getuid ()
+			    || startup_getegid () != startup_getgid ());
 }

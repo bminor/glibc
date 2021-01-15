@@ -17,10 +17,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #if BUILD_PIE_DEFAULT
-# include <abort-instr.h>
-
 /* Can't use "call *%gs:SYSINFO_OFFSET" during statup in static PIE.  */
 # define I386_USE_SYSENTER 0
+
+# include <sysdep.h>
+# include <abort-instr.h>
 
 __attribute__ ((__noreturn__))
 static inline void
@@ -30,6 +31,30 @@ _startup_fatal (const char *message __attribute__ ((unused)))
      FIXME: How can it be improved?  */
   ABORT_INSTRUCTION;
   __builtin_unreachable ();
+}
+
+static inline uid_t
+startup_getuid (void)
+{
+  return (uid_t) INTERNAL_SYSCALL_CALL (getuid32);
+}
+
+static inline uid_t
+startup_geteuid (void)
+{
+  return (uid_t) INTERNAL_SYSCALL_CALL (geteuid32);
+}
+
+static inline gid_t
+startup_getgid (void)
+{
+  return (gid_t) INTERNAL_SYSCALL_CALL (getgid32);
+}
+
+static inline gid_t
+startup_getegid (void)
+{
+  return (gid_t) INTERNAL_SYSCALL_CALL (getegid32);
 }
 #else
 # include_next <startup.h>
