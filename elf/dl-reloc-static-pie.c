@@ -17,6 +17,8 @@
    <https://www.gnu.org/licenses/>.  */
 
 #if ENABLE_STATIC_PIE
+/* Mark symbols hidden in static PIE for early self relocation to work.  */
+# pragma GCC visibility push(hidden)
 #include <unistd.h>
 #include <ldsodefs.h>
 #include "dynamic-link.h"
