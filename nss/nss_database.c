@@ -33,6 +33,11 @@ struct nss_database_state
 {
   struct nss_database_data data;
   __libc_lock_define (, lock);
+  /* If "/" changes, we switched into a container and do NOT want to
+     reload anything.  This data must be persistent across
+     reloads.  */
+  ino64_t root_ino;
+  dev_t root_dev;
 };
 
 
@@ -54,6 +59,8 @@ global_state_allocate (void *closure)
       result->data.initialized = true;
       result->data.reload_disabled = false;
       __libc_lock_init (result->lock);
+      result->root_ino = 0;
+      result->root_dev = 0;
     }
   return result;
 }
@@ -356,6 +363,8 @@ nss_database_check_reload_and_get (struct nss_database_state *local,
                                    nss_action_list *result,
                                    enum nss_database database_index)
 {
+  struct stat64 str;
+
   /* Acquire MO is needed because the thread that sets reload_disabled
      may have loaded the configuration first, so synchronize with the
      Release MO store there.  */
@@ -379,6 +388,24 @@ nss_database_check_reload_and_get (struct nss_database_state *local,
       __libc_lock_unlock (local->lock);
       return true;
     }
+
+  /* Before we reload, verify that "/" hasn't changed.  We assume that
+     errors here are very unlikely, but the chance that we're entering
+     a container is also very unlikely, so we err on the side of both
+     very unlikely things not happening at the same time.  */
+  if (__stat64 ("/", &str) != 0
+      || (local->root_ino != 0
+	  && (str.st_ino != local->root_ino
+	      ||  str.st_dev != local->root_dev)))
+    {
+      /* Change detected; disable reloading.  */
+      atomic_store_release (&local->data.reload_disabled, 1);
+      __libc_lock_unlock (local->lock);
+      __nss_module_disable_loading ();
+      return true;
+    }
+  local->root_ino = str.st_ino;
+  local->root_dev = str.st_dev;
   __libc_lock_unlock (local->lock);
 
   /* Avoid overwriting the global configuration until we have loaded

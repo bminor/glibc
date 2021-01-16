@@ -349,6 +349,19 @@ __nss_disable_nscd (void (*cb) (size_t, struct traced_file *))
 }
 #endif
 
+/* Block attempts to dlopen any module we haven't already opened.  */
+void
+__nss_module_disable_loading (void)
+{
+  __libc_lock_lock (nss_module_list_lock);
+
+  for (struct nss_module *p = nss_module_list; p != NULL; p = p->next)
+    if (p->state == nss_module_uninitialized)
+      p->state = nss_module_failed;
+
+  __libc_lock_unlock (nss_module_list_lock);
+}
+
 void __libc_freeres_fn_section
 __nss_module_freeres (void)
 {

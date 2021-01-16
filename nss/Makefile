@@ -67,7 +67,7 @@ tests-container = \
 			  tst-nss-files-hosts-long \
 			  tst-nss-db-endpwent \
 			  tst-nss-db-endgrent \
-			  tst-reload1
+			  tst-reload1 tst-reload2
 
 # Tests which need libdl
 ifeq (yes,$(build-shared))

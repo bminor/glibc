@@ -87,6 +87,9 @@ bool __nss_module_load (struct nss_module *module) attribute_hidden;
 void *__nss_module_get_function (struct nss_module *module, const char *name)
   attribute_hidden;
 
+/* Block attempts to dlopen any module we haven't already opened.  */
+void __nss_module_disable_loading (void);
+
 /* Called from __libc_freeres.  */
 void __nss_module_freeres (void) attribute_hidden;
 
