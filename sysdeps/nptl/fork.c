@@ -34,6 +34,7 @@
 #include <malloc/malloc-internal.h>
 #include <nss/nss_database.h>
 #include <unwind-link.h>
+#include <sys/single_threaded.h>
 
 static void
 fresetlockfiles (void)
@@ -55,7 +56,7 @@ __libc_fork (void)
      handlers in the single-thread case, to make fork safer to use in
      signal handlers.  POSIX requires that fork is async-signal-safe,
      but our current fork implementation is not.  */
-  bool multiple_threads = THREAD_GETMEM (THREAD_SELF, header.multiple_threads);
+  bool multiple_threads = __libc_single_threaded == 0;
 
   __run_fork_handlers (atfork_run_prepare, multiple_threads);
 
