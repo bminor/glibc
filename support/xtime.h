@@ -23,10 +23,15 @@
 
 __BEGIN_DECLS
 
+/* Name of the env variable, which indicates if it is possible to
+   adjust time on target machine.  */
+#define SETTIME_ENV_NAME "GLIBC_TEST_ALLOW_TIME_SETTING"
+
 /* The following functions call the corresponding libc functions and
    terminate the process on error.  */
 
 void xclock_gettime (clockid_t clock, struct timespec *ts);
+void xclock_settime (clockid_t clock, const struct timespec *ts);
 
 /* This helper can often simplify tests by avoiding an explicit
    variable declaration or allowing that declaration to be const. */

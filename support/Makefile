@@ -90,6 +90,7 @@ libsupport-routines = \
   xchdir \
   xchroot \
   xclock_gettime \
+  xclock_settime \
   xclose \
   xchmod \
   xconnect \
