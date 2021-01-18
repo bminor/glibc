@@ -16,11 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fork.h>
-#include <atomic.h>
+#include <libc-lock.h>
+#include <stdbool.h>
+#include <register-atfork.h>
 
 #define DYNARRAY_ELEMENT           struct fork_handler
 #define DYNARRAY_STRUCT            fork_handler_list

@@ -20,6 +20,7 @@
 #include <pt-internal.h>
 #include <fork.h>
 #include <dso_handle.h>
+#include <register-atfork.h>
 
 /* Hide the symbol so that no definition but the one locally in the
    executable or DSO is used.  */

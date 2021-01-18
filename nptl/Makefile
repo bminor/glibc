@@ -74,7 +74,6 @@ routines = \
   pthread_self \
   pthread_setschedparam \
   pthread_sigmask \
-  register-atfork \
 
 shared-only-routines = forward
 static-only-routines = pthread_atfork
