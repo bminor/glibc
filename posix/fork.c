@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2021 Free Software Foundation, Inc.
+/* fork - create a child process.
+   Copyright (C) 1991-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,20 +16,109 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <unistd.h>
+#include <fork.h>
+#include <libio/libioP.h>
+#include <ldsodefs.h>
+#include <malloc/malloc-internal.h>
+#include <nss/nss_database.h>
+#include <register-atfork.h>
+#include <stdio-lock.h>
+#include <sys/single_threaded.h>
+#include <unwind-link.h>
 
-
-/* Clone the calling process, creating an exact copy.
-   Return -1 for errors, 0 to the new process,
-   and the process ID of the new process to the old process.  */
-int
-__fork (void)
+static void
+fresetlockfiles (void)
 {
-  __set_errno (ENOSYS);
-  return -1;
-}
-libc_hidden_def (__fork)
-stub_warning (fork)
+  _IO_ITER i;
 
-weak_alias (__fork, fork)
+  for (i = _IO_iter_begin(); i != _IO_iter_end(); i = _IO_iter_next(i))
+    if ((_IO_iter_file (i)->_flags & _IO_USER_LOCK) == 0)
+      _IO_lock_init (*((_IO_lock_t *) _IO_iter_file(i)->_lock));
+}
+
+pid_t
+__libc_fork (void)
+{
+  /* Determine if we are running multiple threads.  We skip some fork
+     handlers in the single-thread case, to make fork safer to use in
+     signal handlers.  */
+  bool multiple_threads = __libc_single_threaded == 0;
+
+  __run_fork_handlers (atfork_run_prepare, multiple_threads);
+
+  struct nss_database_data nss_database_data;
+
+  /* If we are not running multiple threads, we do not have to
+     preserve lock state.  If fork runs from a signal handler, only
+     async-signal-safe functions can be used in the child.  These data
+     structures are only used by unsafe functions, so their state does
+     not matter if fork was called from a signal handler.  */
+  if (multiple_threads)
+    {
+      call_function_static_weak (__nss_database_fork_prepare_parent,
+				 &nss_database_data);
+
+      _IO_list_lock ();
+
+      /* Acquire malloc locks.  This needs to come last because fork
+	 handlers may use malloc, and the libio list lock has an
+	 indirect malloc dependency as well (via the getdelim
+	 function).  */
+      call_function_static_weak (__malloc_fork_lock_parent);
+    }
+
+  pid_t pid = _Fork ();
+
+  if (pid == 0)
+    {
+      fork_system_setup ();
+
+      /* Reset the lock state in the multi-threaded case.  */
+      if (multiple_threads)
+	{
+	  __libc_unwind_link_after_fork ();
+
+	  fork_system_setup_after_fork ();
+
+	  /* Release malloc locks.  */
+	  call_function_static_weak (__malloc_fork_unlock_child);
+
+	  /* Reset the file list.  These are recursive mutexes.  */
+	  fresetlockfiles ();
+
+	  /* Reset locks in the I/O code.  */
+	  _IO_list_resetlock ();
+
+	  call_function_static_weak (__nss_database_fork_subprocess,
+				     &nss_database_data);
+	}
+
+      /* Reset the lock the dynamic loader uses to protect its data.  */
+      __rtld_lock_initialize (GL(dl_load_lock));
+
+      reclaim_stacks ();
+
+      /* Run the handlers registered for the child.  */
+      __run_fork_handlers (atfork_run_child, multiple_threads);
+    }
+  else
+    {
+      /* Release acquired locks in the multi-threaded case.  */
+      if (multiple_threads)
+	{
+	  /* Release malloc locks, parent process variant.  */
+	  call_function_static_weak (__malloc_fork_unlock_parent);
+
+	  /* We execute this even if the 'fork' call failed.  */
+	  _IO_list_unlock ();
+	}
+
+      /* Run the handlers registered for the parent.  */
+      __run_fork_handlers (atfork_run_parent, multiple_threads);
+    }
+
+  return pid;
+}
+weak_alias (__libc_fork, __fork)
+libc_hidden_def (__fork)
+weak_alias (__libc_fork, fork)

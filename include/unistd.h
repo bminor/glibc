@@ -140,6 +140,8 @@ extern __pid_t __vfork (void);
 libc_hidden_proto (__vfork)
 extern int __ttyname_r (int __fd, char *__buf, size_t __buflen);
 libc_hidden_proto (__ttyname_r)
+extern __pid_t _Fork (void);
+libc_hidden_proto (_Fork);
 extern int __isatty (int __fd) attribute_hidden;
 extern int __link (const char *__from, const char *__to);
 extern int __symlink (const char *__from, const char *__to);

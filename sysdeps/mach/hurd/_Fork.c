@@ -58,16 +58,13 @@ DEFINE_HOOK (_hurd_fork_parent_hook, (void));
    Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
 pid_t
-__fork (void)
+_Fork (void)
 {
   jmp_buf env;
   pid_t pid;
   size_t i;
   error_t err;
   struct hurd_sigstate *volatile ss;
-  struct nss_database_data nss_database_data;
-
-  __run_fork_handlers (atfork_run_prepare, true);
 
   ss = _hurd_self_sigstate ();
 retry:
@@ -107,9 +104,6 @@ retry:
 
       /* Run things that prepare for forking before we create the task.  */
       RUN_HOOK (_hurd_fork_prepare_hook, ());
-
-      call_function_static_weak (__nss_database_fork_prepare_parent,
-				 &nss_database_data);
 
       /* Lock things that want to be locked before we fork.  */
       {
@@ -670,9 +664,6 @@ retry:
       _hurd_malloc_fork_child ();
       call_function_static_weak (__malloc_fork_unlock_child);
 
-      call_function_static_weak (__nss_database_fork_subprocess,
-				 &nss_database_data);
-
       /* Run things that want to run in the child task to set up.  */
       RUN_HOOK (_hurd_fork_child_hook, ());
 
@@ -723,14 +714,6 @@ retry:
     /* Got a signal while inside an RPC of the critical section, retry again */
     goto retry;
 
-  if (!err)
-    {
-      __run_fork_handlers (pid == 0 ? atfork_run_child : atfork_run_parent,
-			   true);
-    }
-
   return err ? __hurd_fail (err) : pid;
 }
-libc_hidden_def (__fork)
-
-weak_alias (__fork, fork)
+libc_hidden_def (_Fork)

@@ -19,6 +19,9 @@
 #ifndef __ARCH_FORK_H
 #define __ARCH_FORK_H
 
+#include <sysdep.h>
+#include <sched.h>
+#include <signal.h>
 #include <unistd.h>
 
 /* Call the clone syscall with fork semantic.  The CTID address is used

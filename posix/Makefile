@@ -39,7 +39,7 @@ routines :=								      \
 	times								      \
 	wait waitpid wait3 wait4 waitid					      \
 	alarm sleep pause nanosleep					      \
-	fork vfork _exit register-atfork				      \
+	fork _Fork vfork _exit register-atfork				      \
 	execve fexecve execv execle execl execvp execlp execvpe		      \
 	getpid getppid							      \
 	getuid geteuid getgid getegid getgroups setuid setgid group_member    \
@@ -266,6 +266,7 @@ CFLAGS-execl.os = -fomit-frame-pointer
 CFLAGS-execvp.os = -fomit-frame-pointer
 CFLAGS-execlp.os = -fomit-frame-pointer
 CFLAGS-nanosleep.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-fork.c = $(libio-mtsafe)
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
