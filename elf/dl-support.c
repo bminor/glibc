@@ -193,8 +193,9 @@ int _dl_thread_gscope_count;
 struct dl_scope_free_list *_dl_scope_free_list;
 
 #ifdef NEED_DL_SYSINFO
-/* Needed for improved syscall handling on at least x86/Linux.  */
-uintptr_t _dl_sysinfo = DL_SYSINFO_DEFAULT;
+/* Needed for improved syscall handling on at least x86/Linux.  NB: Don't
+   initialize it here to avoid RELATIVE relocation in static PIE.  */
+uintptr_t _dl_sysinfo;
 #endif
 #ifdef NEED_DL_SYSINFO_DSO
 /* Address of the ELF headers in the vsyscall page.  */
@@ -231,6 +232,11 @@ _dl_aux_init (ElfW(auxv_t) *av)
   int seen = 0;
   uid_t uid = 0;
   gid_t gid = 0;
+
+#ifdef NEED_DL_SYSINFO
+  /* NB: Avoid RELATIVE relocation in static PIE.  */
+  GL(dl_sysinfo) = DL_SYSINFO_DEFAULT;
+#endif
 
   _dl_auxv = av;
   for (; av->a_type != AT_NULL; ++av)
