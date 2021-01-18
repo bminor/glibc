@@ -48,7 +48,7 @@ double: 1
 float: 1
 
 Function: "asinh":
-double: 1
+double: 2
 float: 2
 
 Function: "asinh_downward":
@@ -334,7 +334,7 @@ double: 1
 float: 1
 
 Function: "cbrt":
-double: 3
+double: 4
 float: 1
 ldouble: 1
 
@@ -530,15 +530,15 @@ double: 1
 float: 2
 
 Function: "cosh":
-double: 1
+double: 2
 float: 2
 
 Function: "cosh_downward":
-double: 2
+double: 3
 float: 1
 
 Function: "cosh_towardzero":
-double: 2
+double: 3
 float: 1
 
 Function: "cosh_upward":
@@ -755,7 +755,7 @@ double: 1
 float: 1
 
 Function: "erfc":
-double: 3
+double: 5
 float: 3
 ldouble: 1
 
@@ -772,6 +772,7 @@ double: 5
 float: 6
 
 Function: "exp":
+double: 1
 float: 1
 
 Function: "exp10":
@@ -1053,7 +1054,7 @@ double: 3
 float: 3
 
 Function: "sinh_towardzero":
-double: 2
+double: 3
 float: 2
 
 Function: "sinh_upward":
@@ -1094,20 +1095,20 @@ double: 3
 float: 3
 
 Function: "tgamma":
-double: 5
+double: 9
 float: 8
 ldouble: 1
 
 Function: "tgamma_downward":
-double: 5
+double: 8
 float: 7
 
 Function: "tgamma_towardzero":
-double: 5
+double: 9
 float: 7
 
 Function: "tgamma_upward":
-double: 4
+double: 9
 float: 8
 
 Function: "y0":
