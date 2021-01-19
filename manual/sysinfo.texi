@@ -954,9 +954,9 @@ Example:
 @group
 #include <sys/mount.h>
 
-mount("/dev/hdb", "/cdrom", MS_MGC_VAL | MS_RDONLY | MS_NOSUID, "");
+mount("/dev/hdb", "/cdrom", "iso9660", MS_MGC_VAL | MS_RDONLY | MS_NOSUID, "");
 
-mount("/dev/hda2", "/mnt", MS_MGC_VAL | MS_REMOUNT, "");
+mount("/dev/hda2", "/mnt", "", MS_MGC_VAL | MS_REMOUNT, "");
 
 @end group
 @end smallexample
