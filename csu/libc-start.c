@@ -146,8 +146,6 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   int result;
 
 #ifndef SHARED
-  _dl_relocate_static_pie ();
-
   char **ev = &argv[argc + 1];
 
   __environ = ev;
@@ -198,6 +196,11 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   __tunables_init (__environ);
 
   ARCH_INIT_CPU_FEATURES ();
+
+  /* Do static pie self relocation after tunables and cpu features
+     are setup for ifunc resolvers. Before this point relocations
+     must be avoided.  */
+  _dl_relocate_static_pie ();
 
   /* Perform IREL{,A} relocations.  */
   ARCH_SETUP_IREL ();
