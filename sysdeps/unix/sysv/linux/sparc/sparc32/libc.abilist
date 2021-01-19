@@ -2412,6 +2412,7 @@ GLIBC_2.33 mknod F
 GLIBC_2.33 mknodat F
 GLIBC_2.33 stat F
 GLIBC_2.33 stat64 F
+GLIBC_2.34 _Fork F
 GLIBC_2.34 ___adjtimex64 F
 GLIBC_2.34 __adjtime64 F
 GLIBC_2.34 __aio_suspend_time64 F

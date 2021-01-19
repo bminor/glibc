@@ -52,6 +52,14 @@ Major new features:
 * On Linux, a new tunable, glibc.pthread.stack_cache_size, can be used
   to configure the size of the thread stack cache.
 
+* The function _Fork has been added as an async-signal-safe fork replacement
+  since Austin Group issue 62 droped the async-signal-safe requirement for
+  fork (and it will be included in the future POSIX standard).  The new _Fork
+  function does not run any atfork function neither resets any internal state
+  or lock (such as the malloc one), and only sets up a minimal state required
+  to call async-signal-safe functions (such as raise or execve).  This function
+  is currently a GNU extension.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs

@@ -137,8 +137,8 @@ creating a process and making it run another program.
 @cindex parent process
 @cindex subprocess
 A new processes is created when one of the functions
-@code{posix_spawn}, @code{fork}, or @code{vfork} is called.  (The
-@code{system} and @code{popen} also create new processes internally.)
+@code{posix_spawn}, @code{fork}, @code{_Fork} or @code{vfork} is called.
+(The @code{system} and @code{popen} also create new processes internally.)
 Due to the name of the @code{fork} function, the act of creating a new
 process is sometimes called @dfn{forking} a process.  Each new process
 (the @dfn{child process} or @dfn{subprocess}) is allocated a process
@@ -154,9 +154,10 @@ limited information about why the child terminated---for example, its
 exit status code.
 
 A newly forked child process continues to execute the same program as
-its parent process, at the point where the @code{fork} call returns.
-You can use the return value from @code{fork} to tell whether the program
-is running in the parent process or the child.
+its parent process, at the point where the @code{fork} or @code{_Fork}
+call returns.  You can use the return value from @code{fork} or
+@code{_Fork} to tell whether the program is running in the parent process
+or the child.
 
 @cindex process image
 Having several processes run the same program is only occasionally
@@ -248,16 +249,13 @@ It is declared in the header file @file{unistd.h}.
 @deftypefun pid_t fork (void)
 @standards{POSIX.1, unistd.h}
 @safety{@prelim{}@mtsafe{}@asunsafe{@ascuplugin{}}@acunsafe{@aculock{}}}
-@c The nptl/.../linux implementation safely collects fork_handlers into
-@c an alloca()ed linked list and increments ref counters; it uses atomic
-@c ops and retries, avoiding locking altogether.  It then takes the
-@c IO_list lock, resets the thread-local pid, and runs fork.  The parent
-@c restores the thread-local pid, releases the lock, and runs parent
-@c handlers, decrementing the ref count and signaling futex wait if
-@c requested by unregister_atfork.  The child bumps the fork generation,
-@c sets the thread-local pid, resets cpu clocks, initializes the robust
-@c mutex list, the stream locks, the IO_list lock, the dynamic loader
-@c lock, runs the child handlers, reseting ref counters to 1, and
+@c The posix/fork.c implementation iterates over the fork_handlers
+@c using a lock.  It then takes the IO_list lock, resets the thread-local
+@c pid, and runs fork.  The parent releases the lock, and runs parent
+@c handlers, and unlocks the internal lock.  The child bumps the fork
+@c generation, sets the thread-local pid, resets cpu clocks, initializes
+@c the robust mutex list, the stream locks, the IO_list lock, the dynamic
+@c loader lock, runs the child handlers, reseting ref counters to 1, and
 @c initializes the fork lock.  These are all safe, unless atfork
 @c handlers themselves are unsafe.
 The @code{fork} function creates a new process.
@@ -321,6 +319,19 @@ process is cleared.  (The child process inherits its mask of blocked
 signals and signal actions from the parent process.)
 @end itemize
 
+@deftypefun pid_t _Fork (void)
+@standards{GNU, unistd.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+The @code{_Fork} function is similar to @code{fork}, but it does not invoke
+any callbacks registered with @code{pthread_atfork}, nor does it reset
+any internal state or locks (such as the @code{malloc} locks).  In the
+new subprocess, only async-signal-safe functions may be called, such as
+@code{dup2} or @code{execve}.
+
+The @code{_Fork} function is an async-signal-safe replacement of @code{fork}.
+It is a GNU extension.
+
+@end deftypefun
 
 @deftypefun pid_t vfork (void)
 @standards{BSD, unistd.h}

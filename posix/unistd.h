@@ -781,6 +781,13 @@ extern __pid_t fork (void) __THROWNL;
 extern __pid_t vfork (void) __THROW;
 #endif /* Use misc or XPG < 7. */
 
+#ifdef __USE_GNU
+/* This is similar to fork, however it does not run the atfork handlers
+   neither reinitialize any internal locks in multithread case.
+   Different than fork, _Fork is async-signal-safe.  */
+extern __pid_t _Fork (void) __THROW;
+#endif
+
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
    The returned storage is good only until the next call to this function.  */

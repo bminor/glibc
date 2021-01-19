@@ -152,6 +152,7 @@ libc {
   GLIBC_2.30 {
   }
   GLIBC_2.34 {
+    _Fork;
     execveat;
   }
   GLIBC_PRIVATE {

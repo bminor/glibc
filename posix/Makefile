@@ -130,7 +130,7 @@ test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn tst-spawn2 tst-spawn3
 endif
 ifeq (yesyes,$(build-shared)$(have-thread-library))
-tests		+= tst-getopt-cancel
+tests		+= tst-getopt-cancel tst-_Fork
 endif
 tests-static	= tst-exec-static tst-spawn-static
 tests		+= $(tests-static)
@@ -299,6 +299,7 @@ $(objpfx)ptestcases.h: PTESTS PTESTS2C.sed
 $(objpfx)runptests.o: $(objpfx)ptestcases.h
 
 $(objpfx)tst-getopt-cancel: $(shared-thread-library)
+$(objpfx)tst-_Fork: $(shared-thread-library)
 
 test-xfail-annexc = yes
 $(objpfx)annexc.out: $(objpfx)annexc

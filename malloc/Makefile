@@ -31,6 +31,7 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-malloc-backtrace tst-malloc-thread-exit \
 	 tst-malloc-thread-fail tst-malloc-fork-deadlock \
 	 tst-mallocfork2 \
+	 tst-mallocfork3 \
 	 tst-interpose-nothread \
 	 tst-interpose-thread \
 	 tst-alloc_buffer \
@@ -113,6 +114,8 @@ libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
 $(objpfx)tst-malloc-backtrace: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-exit: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-fail: $(shared-thread-library)
+$(objpfx)tst-mallocfork3: $(shared-thread-library)
+$(objpfx)tst-mallocfork3-mcheck: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock: $(shared-thread-library)
 $(objpfx)tst-malloc-stats-cancellation: $(shared-thread-library)
 $(objpfx)tst-malloc-backtrace-malloc-check: $(shared-thread-library)
