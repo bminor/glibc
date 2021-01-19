@@ -40,7 +40,6 @@ GLIBC_2.4 __close F
 GLIBC_2.4 __connect F
 GLIBC_2.4 __errno_location F
 GLIBC_2.4 __fcntl F
-GLIBC_2.4 __fork F
 GLIBC_2.4 __h_errno_location F
 GLIBC_2.4 __libc_allocate_rtsig F
 GLIBC_2.4 __libc_current_sigrtmax F
@@ -89,7 +88,6 @@ GLIBC_2.4 close F
 GLIBC_2.4 connect F
 GLIBC_2.4 fcntl F
 GLIBC_2.4 flockfile F
-GLIBC_2.4 fork F
 GLIBC_2.4 fsync F
 GLIBC_2.4 ftrylockfile F
 GLIBC_2.4 funlockfile F

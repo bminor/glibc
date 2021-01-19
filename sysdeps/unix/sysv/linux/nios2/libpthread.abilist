@@ -5,7 +5,6 @@ GLIBC_2.21 __close F
 GLIBC_2.21 __connect F
 GLIBC_2.21 __errno_location F
 GLIBC_2.21 __fcntl F
-GLIBC_2.21 __fork F
 GLIBC_2.21 __h_errno_location F
 GLIBC_2.21 __libc_allocate_rtsig F
 GLIBC_2.21 __libc_current_sigrtmax F
@@ -54,7 +53,6 @@ GLIBC_2.21 close F
 GLIBC_2.21 connect F
 GLIBC_2.21 fcntl F
 GLIBC_2.21 flockfile F
-GLIBC_2.21 fork F
 GLIBC_2.21 fsync F
 GLIBC_2.21 ftrylockfile F
 GLIBC_2.21 funlockfile F

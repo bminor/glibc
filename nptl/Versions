@@ -107,7 +107,6 @@ libpthread {
     __connect;
     __errno_location;
     __fcntl;
-    __fork;
     __h_errno_location;
     __lseek;
     __open;
@@ -138,7 +137,6 @@ libpthread {
     connect;
     fcntl;
     flockfile;
-    fork;
     fsync;
     ftrylockfile;
     funlockfile;

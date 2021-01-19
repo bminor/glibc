@@ -114,7 +114,6 @@ libpthread-routines = \
   pt-allocrtsig \
   pt-cleanup \
   pt-fcntl \
-  pt-fork \
   pt-interp \
   pt-longjmp \
   pt-raise \

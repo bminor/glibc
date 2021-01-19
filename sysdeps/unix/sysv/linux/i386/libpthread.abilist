@@ -5,7 +5,6 @@ GLIBC_2.0 __close F
 GLIBC_2.0 __connect F
 GLIBC_2.0 __errno_location F
 GLIBC_2.0 __fcntl F
-GLIBC_2.0 __fork F
 GLIBC_2.0 __h_errno_location F
 GLIBC_2.0 __lseek F
 GLIBC_2.0 __open F
@@ -34,7 +33,6 @@ GLIBC_2.0 close F
 GLIBC_2.0 connect F
 GLIBC_2.0 fcntl F
 GLIBC_2.0 flockfile F
-GLIBC_2.0 fork F
 GLIBC_2.0 fsync F
 GLIBC_2.0 ftrylockfile F
 GLIBC_2.0 funlockfile F
