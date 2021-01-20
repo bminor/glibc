@@ -52,7 +52,6 @@ routines = \
   nptl_nthreads \
   nptl_setxid \
   nptlfreeres \
-  old_pthread_atfork \
   old_pthread_cond_broadcast \
   old_pthread_cond_destroy \
   old_pthread_cond_init \

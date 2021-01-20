@@ -121,7 +121,6 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 	pt-sigstate-destroy						    \
 	pt-sigstate							    \
 									    \
-	old_pt-atfork							    \
 	pt-kill								    \
 	pt-getcpuclockid						    \
 									    \
@@ -165,9 +164,8 @@ headers :=				\
 
 distribute :=
 
-routines := forward libc_pthread_init alloca_cutoff pt-atfork htlfreeres
+routines := forward libc_pthread_init alloca_cutoff htlfreeres
 shared-only-routines = forward
-static-only-routines = pt-atfork
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)

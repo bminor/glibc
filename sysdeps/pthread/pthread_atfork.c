@@ -36,6 +36,7 @@
 #include "pthreadP.h"
 #include <register-atfork.h>
 #include <dso_handle.h>
+#include <register-atfork.h>
 
 
 /* Hide the symbol so that no definition but the one locally in the

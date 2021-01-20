@@ -29,7 +29,7 @@ endif
 ifneq (,$(filter $(subdir),htl nptl))
 headers += threads.h
 
-routines += thrd_current thrd_equal thrd_sleep thrd_yield
+routines += thrd_current thrd_equal thrd_sleep thrd_yield pthread_atfork
 
 $(libpthread-routines-var) += \
   call_once \
@@ -45,6 +45,7 @@ $(libpthread-routines-var) += \
   mtx_timedlock \
   mtx_trylock \
   mtx_unlock \
+  pthread_atfork_compat \
   thrd_create \
   thrd_detach \
   thrd_exit \
@@ -134,6 +135,7 @@ tests-time64 := \
   tst-sem5-time64 \
   tst-thrd-sleep-time64 \
 
+static-only-routines = pthread_atfork
 
 # Files which must not be linked with libpthread.
 tests-nolibpthread += tst-unload
