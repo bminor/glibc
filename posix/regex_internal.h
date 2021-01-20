@@ -848,12 +848,14 @@ re_string_elem_size_at (const re_string_t *pstr, Idx idx)
 }
 #endif /* RE_ENABLE_I18N */
 
-#ifndef FALLTHROUGH
-# if (__GNUC__ >= 7) || (__clang_major__ >= 10)
+#ifdef _LIBC
+# if __GNUC__ >= 7
 #  define FALLTHROUGH __attribute__ ((__fallthrough__))
 # else
 #  define FALLTHROUGH ((void) 0)
 # endif
+#else
+# include "attribute.h"
 #endif
 
 #endif /*  _REGEX_INTERNAL_H */
