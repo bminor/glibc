@@ -117,3 +117,6 @@ if test x"$multi_arch" != xno; then
   $as_echo "#define NO_HIDDEN_EXTERN_FUNC_IN_PIE 1" >>confdefs.h
 
 fi
+
+$as_echo "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
+

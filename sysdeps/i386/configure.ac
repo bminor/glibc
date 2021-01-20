@@ -77,3 +77,6 @@ dnl via PIC PLT in PIE, which requires setting up EBX register.
 if test x"$multi_arch" != xno; then
   AC_DEFINE(NO_HIDDEN_EXTERN_FUNC_IN_PIE)
 fi
+
+dnl Static PIE is supported.
+AC_DEFINE(SUPPORT_STATIC_PIE)

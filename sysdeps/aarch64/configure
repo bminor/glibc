@@ -6,6 +6,10 @@
 $as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
 
 
+# Static PIE is supported.
+$as_echo "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
+
+
 # We check to see if the compiler and flags are
 # selecting the big endian ABI and if they are then
 # we set libc_cv_aarch64_be to yes which causes

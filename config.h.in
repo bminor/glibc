@@ -259,6 +259,9 @@
 /* Build glibc with tunables support.  */
 #define HAVE_TUNABLES 0
 
+/* Define if static PIE is supported.  */
+#undef SUPPORT_STATIC_PIE
+
 /* Define if static PIE is enabled.  */
 #define ENABLE_STATIC_PIE 0
 

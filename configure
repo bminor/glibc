@@ -6814,6 +6814,19 @@ libc_cv_multidir=`${CC-cc} $CFLAGS $CPPFLAGS -print-multi-directory`
 
 
 if test "$static_pie" = yes; then
+  # Check target support for static PIE
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#ifndef SUPPORT_STATIC_PIE
+# error static PIE is not supported
+#endif
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
+else
+  as_fn_error $? "the architecture does not support static PIE" "$LINENO" 5
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
   # The linker must support --no-dynamic-linker.
   if test "$libc_cv_no_dynamic_linker" != yes; then
     as_fn_error $? "linker support for --no-dynamic-linker needed" "$LINENO" 5

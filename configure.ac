@@ -1831,6 +1831,10 @@ libc_cv_multidir=`${CC-cc} $CFLAGS $CPPFLAGS -print-multi-directory`
 AC_SUBST(libc_cv_multidir)
 
 if test "$static_pie" = yes; then
+  # Check target support for static PIE
+  AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#ifndef SUPPORT_STATIC_PIE
+# error static PIE is not supported
+#endif]])], , AC_MSG_ERROR([the architecture does not support static PIE]))
   # The linker must support --no-dynamic-linker.
   if test "$libc_cv_no_dynamic_linker" != yes; then
     AC_MSG_ERROR([linker support for --no-dynamic-linker needed])
