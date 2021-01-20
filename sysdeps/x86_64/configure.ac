@@ -82,5 +82,8 @@ dnl It is always possible to access static and hidden symbols in an
 dnl position independent way.
 AC_DEFINE(PI_STATIC_AND_HIDDEN)
 
+dnl Static PIE is supported.
+AC_DEFINE(SUPPORT_STATIC_PIE)
+
 test -n "$critic_missing" && AC_MSG_ERROR([
 *** $critic_missing])
