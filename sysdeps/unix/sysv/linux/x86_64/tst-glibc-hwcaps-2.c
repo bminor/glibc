@@ -51,7 +51,7 @@ do_test (void)
     case 2:
       /* The default libx86-64-isa-level.so is used.  */
       printf ("The default shared library is used.\n");
-      if (has_isa_v3 || has_isa_v4 || !has_isa_v2)
+      if (has_isa_v3 || has_isa_v4 || (!has_isa_v2 && level == 2))
 	ret = EXIT_FAILURE;
       else
 	ret = EXIT_SUCCESS;
