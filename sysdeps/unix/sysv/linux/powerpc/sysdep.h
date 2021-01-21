@@ -76,7 +76,10 @@
 #define SYSCALL_SCV(nr)				\
   ({						\
     __asm__ __volatile__			\
-      ("scv 0\n\t"				\
+      (".machine \"push\"\n\t"			\
+       ".machine \"power9\"\n\t"		\
+       "scv 0\n\t"				\
+       ".machine \"pop\"\n\t"			\
        "0:"					\
        : "=&r" (r0),				\
 	 "=&r" (r3), "=&r" (r4), "=&r" (r5),	\

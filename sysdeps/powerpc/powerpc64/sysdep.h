@@ -333,7 +333,10 @@ LT_LABELSUFFIX(name,_name_end): ; \
     mflr r9; \
     std r9,FRAME_LR_SAVE(r1); \
     cfi_offset(lr,FRAME_LR_SAVE); \
+    .machine "push"; \
+    .machine "power9"; \
     scv 0; \
+    .machine "pop"; \
     ld r9,FRAME_LR_SAVE(r1); \
     mtlr r9; \
     cfi_restore(lr);

@@ -76,7 +76,10 @@ ENTRY (__clone)
 	because it uses CFI directives and we just called cfi_endproc.  */
 	mflr 	r9
 	std 	r9,FRAME_LR_SAVE(r1)
+	.machine "push"
+	.machine "power9"
 	scv 	0
+	.machine "pop"
 	ld 	r9,FRAME_LR_SAVE(r1)
 	mtlr 	r9
 
