@@ -53,30 +53,47 @@ get_cpuinfo (void)
 }
 
 int
-check_proc (const char *proc_name, int flag, int usable, const char *name)
+check_proc (const char *proc_name, const char *search_name, int flag,
+	    int usable, const char *name)
 {
   int found = 0;
 
   printf ("Checking %s:\n", name);
-  if (!usable)
-    {
-      printf ("  %s: insufficient usable info, skipped\n", name);
-      return 0;
-    }
   printf ("  %s: %d\n", name, flag);
-  if (strstr (cpu_flags, proc_name) != NULL)
+  char *str = strstr (cpu_flags, search_name);
+  if (str == NULL)
+    {
+      /* If searching for " XXX " failed, try " XXX\n".  */
+      size_t len = strlen (search_name);
+      char buffer[80];
+      if (len >= sizeof buffer)
+	abort ();
+      memcpy (buffer, search_name, len + 1);
+      buffer[len - 1] = '\n';
+      str = strstr (cpu_flags, buffer);
+    }
+  if (str != NULL)
     found = 1;
   printf ("  cpuinfo (%s): %d\n", proc_name, found);
 
   if (found != flag)
-    printf (" *** failure ***\n");
+    {
+      if (found || usable)
+	printf (" *** failure ***\n");
+      else
+	{
+	  printf (" *** missing in /proc/cpuinfo ***\n");
+	  return 0;
+	}
+    }
 
   return (found != flag);
 }
 
 #define CHECK_PROC(str, name) \
-  check_proc (#str, HAS_CPU_FEATURE (name), CPU_FEATURE_USABLE (name), \
-	      "HAS_CPU_FEATURE (" #name ")");
+  check_proc (#str, " "#str" ", HAS_CPU_FEATURE (name), \
+	      CPU_FEATURE_USABLE (name), \
+	      "HAS_CPU_FEATURE (" #name ")")
 
 static int
 do_test (int argc, char **argv)
@@ -99,7 +116,7 @@ do_test (int argc, char **argv)
   fails += CHECK_PROC (avx512_bf16, AVX512_BF16);
   fails += CHECK_PROC (avx512_bitalg, AVX512_BITALG);
   fails += CHECK_PROC (avx512ifma, AVX512_IFMA);
-  fails += CHECK_PROC (avx512_vbmi, AVX512_VBMI);
+  fails += CHECK_PROC (avx512vbmi, AVX512_VBMI);
   fails += CHECK_PROC (avx512_vbmi2, AVX512_VBMI2);
   fails += CHECK_PROC (avx512_vnni, AVX512_VNNI);
   fails += CHECK_PROC (avx512_vp2intersect, AVX512_VP2INTERSECT);
@@ -125,7 +142,7 @@ do_test (int argc, char **argv)
   fails += CHECK_PROC (dca, DCA);
   fails += CHECK_PROC (de, DE);
   fails += CHECK_PROC (zero_fcs_fds, DEPR_FPU_CS_DS);
-  fails += CHECK_PROC (ds, DS);
+  fails += CHECK_PROC (dts, DS);
   fails += CHECK_PROC (ds_cpl, DS_CPL);
   fails += CHECK_PROC (dtes64, DTES64);
   fails += CHECK_PROC (est, EIST);
@@ -206,7 +223,7 @@ do_test (int argc, char **argv)
   fails += CHECK_PROC (ssbd, SSBD);
   fails += CHECK_PROC (sse, SSE);
   fails += CHECK_PROC (sse2, SSE2);
-  fails += CHECK_PROC (sse3, SSE3);
+  fails += CHECK_PROC (pni, SSE3);
   fails += CHECK_PROC (sse4_1, SSE4_1);
   fails += CHECK_PROC (sse4_2, SSE4_2);
   fails += CHECK_PROC (sse4a, SSE4A);
@@ -223,7 +240,7 @@ do_test (int argc, char **argv)
   fails += CHECK_PROC (intel_pt, TRACE);
   fails += CHECK_PROC (tsc, TSC);
   fails += CHECK_PROC (tsc_adjust, TSC_ADJUST);
-  fails += CHECK_PROC (tsc_deadline, TSC_DEADLINE);
+  fails += CHECK_PROC (tsc_deadline_timer, TSC_DEADLINE);
   fails += CHECK_PROC (tsxldtrk, TSXLDTRK);
   fails += CHECK_PROC (umip, UMIP);
   fails += CHECK_PROC (vaes, VAES);
