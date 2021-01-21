@@ -103,6 +103,9 @@ __libc_fork (void)
     }
   else
     {
+      /* If _Fork failed, preserve its errno value.  */
+      int save_errno = errno;
+
       /* Release acquired locks in the multi-threaded case.  */
       if (multiple_threads)
 	{
@@ -115,6 +118,9 @@ __libc_fork (void)
 
       /* Run the handlers registered for the parent.  */
       __run_fork_handlers (atfork_run_parent, multiple_threads);
+
+      if (pid < 0)
+	__set_errno (save_errno);
     }
 
   return pid;
