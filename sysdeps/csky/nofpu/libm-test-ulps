@@ -48,8 +48,8 @@ double: 1
 float: 1
 
 Function: "asinh":
-double: 1
-float: 1
+double: 2
+float: 2
 
 Function: "asinh_downward":
 double: 3
@@ -327,7 +327,7 @@ Function: Imaginary part of "catanh_upward":
 float: 1
 
 Function: "cbrt":
-double: 3
+double: 4
 float: 1
 
 Function: "cbrt_downward":
@@ -518,8 +518,8 @@ double: 1
 float: 2
 
 Function: "cosh":
-double: 1
-float: 1
+double: 2
+float: 2
 
 Function: "cosh_downward":
 double: 1
@@ -736,8 +736,8 @@ double: 1
 float: 1
 
 Function: "erfc":
-double: 3
-float: 2
+double: 5
+float: 3
 
 Function: "erfc_downward":
 double: 5
@@ -752,6 +752,7 @@ double: 5
 float: 6
 
 Function: "exp":
+double: 1
 float: 1
 
 Function: "exp10":
@@ -812,7 +813,7 @@ float: 1
 
 Function: "gamma":
 double: 4
-float: 4
+float: 7
 
 Function: "gamma_downward":
 double: 5
@@ -840,7 +841,7 @@ double: 1
 
 Function: "j0":
 double: 2
-float: 2
+float: 8
 
 Function: "j0_downward":
 double: 2
@@ -855,8 +856,8 @@ double: 3
 float: 2
 
 Function: "j1":
-double: 1
-float: 2
+double: 2
+float: 9
 
 Function: "j1_downward":
 double: 3
@@ -888,7 +889,7 @@ float: 5
 
 Function: "lgamma":
 double: 4
-float: 4
+float: 7
 
 Function: "lgamma_downward":
 double: 5
@@ -1074,8 +1075,8 @@ double: 3
 float: 3
 
 Function: "tgamma":
-double: 5
-float: 4
+double: 9
+float: 8
 
 Function: "tgamma_downward":
 double: 5
@@ -1090,8 +1091,8 @@ double: 4
 float: 4
 
 Function: "y0":
-double: 2
-float: 1
+double: 3
+float: 8
 
 Function: "y0_downward":
 double: 3
