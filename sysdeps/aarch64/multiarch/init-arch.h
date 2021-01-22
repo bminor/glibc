@@ -17,9 +17,18 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <ldsodefs.h>
+#include <sys/auxv.h>
+
+/* Make glibc MTE-safe on a system that supports MTE in case user code
+   enables tag checks independently of the mte_status of glibc.  There
+   is currently no ABI contract for enabling tag checks in user code,
+   but this can be useful for debugging with MTE.  */
+#define MTE_ENABLED() (GLRO(dl_hwcap2) & HWCAP2_MTE)
 
 #define INIT_ARCH()							      \
   uint64_t __attribute__((unused)) midr =				      \
     GLRO(dl_aarch64_cpu_features).midr_el1;				      \
   unsigned __attribute__((unused)) zva_size =				      \
-    GLRO(dl_aarch64_cpu_features).zva_size;
+    GLRO(dl_aarch64_cpu_features).zva_size;				      \
+  bool __attribute__((unused)) mte =					      \
+    MTE_ENABLED ();
