@@ -77,7 +77,7 @@ __cache_sysconf (int name)
 # include <ifunc-init.h>
 
 extern void __x86_cacheinfo (void) attribute_hidden;
-const void (*__x86_cacheinfo_p) (void) attribute_hidden
+void (*const __x86_cacheinfo_p) (void) attribute_hidden
   = __x86_cacheinfo;
 
 __ifunc (__x86_cacheinfo, __x86_cacheinfo, NULL, void, init_cacheinfo);
