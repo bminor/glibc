@@ -460,15 +460,15 @@ build the GNU C Library:
 
    * GNU 'make' 4.0 or newer
 
-     As of relase time, GNU 'make' 4.2.1 is the newest verified to work
-     to build the GNU C Library.
+     As of relase time, GNU 'make' 4.3 is the newest verified to work to
+     build the GNU C Library.
 
    * GCC 6.2 or newer
 
      GCC 6.2 or higher is required.  In general it is recommended to use
      the newest version of the compiler that is known to work for
      building the GNU C Library, as newer compilers usually produce
-     better code.  As of release time, GCC 9.2.1 is the newest compiler
+     better code.  As of release time, GCC 10.2 is the newest compiler
      verified to work to build the GNU C Library.
 
      For PowerPC 64-bits little-endian (powerpc64le), a GCC version with
@@ -503,7 +503,7 @@ build the GNU C Library:
 
      You must use GNU 'binutils' (as and ld) to build the GNU C Library.
      No other assembler or linker has the necessary functionality at the
-     moment.  As of release time, GNU 'binutils' 2.32 is the newest
+     moment.  As of release time, GNU 'binutils' 2.35.1 is the newest
      verified to work to build the GNU C Library.
 
      For PowerPC 64-bits little-endian (powerpc64le), 'objcopy' is
@@ -519,7 +519,7 @@ build the GNU C Library:
      need this version of the 'texinfo' package.  Earlier versions do
      not understand all the tags used in the document, and the
      installation mechanism for the info files is not present or works
-     differently.  As of release time, 'texinfo' 6.6 is the newest
+     differently.  As of release time, 'texinfo' 6.7 is the newest
      verified to work to build the GNU C Library.
 
    * GNU 'awk' 3.1.2, or higher
@@ -527,32 +527,32 @@ build the GNU C Library:
      'awk' is used in several places to generate files.  Some 'gawk'
      extensions are used, including the 'asorti' function, which was
      introduced in version 3.1.2 of 'gawk'.  As of release time, 'gawk'
-     version 5.0.1 is the newest verified to work to build the GNU C
+     version 5.1 is the newest verified to work to build the GNU C
      Library.
 
    * GNU 'bison' 2.7 or later
 
      'bison' is used to generate the 'yacc' parser code in the 'intl'
-     subdirectory.  As of release time, 'bison' version 3.4.1 is the
+     subdirectory.  As of release time, 'bison' version 3.7.4 is the
      newest verified to work to build the GNU C Library.
 
    * Perl 5
 
      Perl is not required, but if present it is used in some tests and
      the 'mtrace' program, to build the GNU C Library manual.  As of
-     release time 'perl' version 5.30.1 is the newest verified to work
+     release time 'perl' version 5.32.0 is the newest verified to work
      to build the GNU C Library.
 
    * GNU 'sed' 3.02 or newer
 
      'Sed' is used in several places to generate files.  Most scripts
      work with any version of 'sed'.  As of release time, 'sed' version
-     4.5 is the newest verified to work to build the GNU C Library.
+     4.8 is the newest verified to work to build the GNU C Library.
 
    * Python 3.4 or later
 
      Python is required to build the GNU C Library.  As of release time,
-     Python 3.7.4 is the newest verified to work for building and
+     Python 3.8.6 is the newest verified to work for building and
      testing the GNU C Library.
 
    * PExpect 4.0
@@ -560,7 +560,7 @@ build the GNU C Library:
      The pretty printer tests drive GDB through test programs and
      compare its output to the printers'.  PExpect is used to capture
      the output of GDB, and should be compatible with the Python version
-     in your system.  As of release time PExpect 4.3 is the newest
+     in your system.  As of release time PExpect 4.8 is the newest
      verified to work to test the pretty printers.
 
    * GDB 7.8 or later with support for Python 2.7/3.4 or later
@@ -569,7 +569,7 @@ build the GNU C Library:
      use the pretty printers.  Notice that your system having Python
      available doesn't imply that GDB supports it, nor that your
      system's Python and GDB's have the same version.  As of release
-     time GNU 'debugger' 8.3 is the newest verified to work to test the
+     time GNU 'debugger' 10.1 is the newest verified to work to test the
      pretty printers.
 
      Unless Python, PExpect and GDB with Python support are present, the
@@ -585,7 +585,7 @@ and if you change any of the message translation files you will need
 
    * GNU 'gettext' 0.10.36 or later
 
-     As of release time, GNU 'gettext' version 0.19.8.1 is the newest
+     As of release time, GNU 'gettext' version 0.21 is the newest
      version verified to work to build the GNU C Library.
 
 You may also need these packages if you upgrade your source tree using
