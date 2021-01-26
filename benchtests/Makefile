@@ -156,13 +156,6 @@ ifdef DETAILED
 DETAILED_OPT := -d
 endif
 
-# This makes sure CPPFLAGS-nonlib and CFLAGS-nonlib are passed
-# for all these modules.
-cpp-srcs-left := $(binaries-benchset:=.c) $(binaries-bench:=.c) \
-		 $(binaries-bench-malloc:=.c)
-lib := nonlib
-include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
-
 bench-deps := bench-skeleton.c bench-timing.h Makefile
 
 run-bench = $(test-wrapper-env) \
@@ -170,6 +163,13 @@ run-bench = $(test-wrapper-env) \
 	    $($*-ENV) $(test-via-rtld-prefix) $${run}
 
 timing-type := $(objpfx)bench-timing-type
+
+# This makes sure CPPFLAGS-nonlib and CFLAGS-nonlib are passed
+# for all these modules.
+cpp-srcs-left := $(binaries-benchset:=.c) $(binaries-bench:=.c) \
+		 $(binaries-bench-malloc:=.c) $(timing-type:=.c)
+lib := nonlib
+include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
 bench-clean:
 	rm -f $(binaries-bench) $(addsuffix .o,$(binaries-bench))
