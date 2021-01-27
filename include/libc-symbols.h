@@ -434,16 +434,11 @@ for linking")
   strong_alias(real, name)
 #endif
 
-#if defined SHARED || defined LIBC_NONSHARED
+#if defined SHARED || defined LIBC_NONSHARED \
+  || (BUILD_PIE_DEFAULT && IS_IN (libc))
 # define attribute_hidden __attribute__ ((visibility ("hidden")))
 #else
 # define attribute_hidden
-#endif
-
-/* Mark all symbols hidden in static PIE libc to avoid GOT indirections.  */
-#if BUILD_PIE_DEFAULT && !defined NO_HIDDEN_EXTERN_FUNC_IN_PIE \
-    && IS_IN (libc) && !defined LIBC_NONSHARED
-# pragma GCC visibility push(hidden)
 #endif
 
 #define attribute_tls_model_ie __attribute__ ((tls_model ("initial-exec")))
