@@ -67,23 +67,34 @@ enum
   CURRENT_SEL_MASK = 7 << 3
 };
 
-/* During UCS-4 to ISO-2022-JP-3 conversion, the COUNT element of the state
-   also contains the last two bytes to be output, shifted by 6 bits, and a
-   one-bit indicator whether they must be preceded by the shift sequence,
-   in bit 22.  */
+/* During UCS-4 to ISO-2022-JP-3 conversion, the COUNT element of the
+   state also contains the last two bytes to be output, shifted by 6
+   bits, and a one-bit indicator whether they must be preceded by the
+   shift sequence, in bit 22.  During ISO-2022-JP-3 to UCS-4
+   conversion, COUNT may also contain a non-zero pending wide
+   character, shifted by six bits.  This happens for certain inputs in
+   JISX0213_1_2004_set and JISX0213_2_set if the second wide character
+   in a combining sequence cannot be written because the buffer is
+   full.  */
 
 /* Since this is a stateful encoding we have to provide code which resets
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if ((data->__statep->__count & ~7) != ASCII_set)			      \
+  if (data->__statep->__count != ASCII_set)			      \
     {									      \
       if (FROM_DIRECTION)						      \
 	{								      \
-	  /* It's easy, we don't have to emit anything, we just reset the     \
-	     state for the input.  */					      \
-	  data->__statep->__count &= 7;					      \
-	  data->__statep->__count |= ASCII_set;				      \
+	  if (__glibc_likely (outbuf + 4 <= outend))			      \
+	    {								      \
+	      /* Write out the last character.  */			      \
+	      *((uint32_t *) outbuf) = data->__statep->__count >> 6;	      \
+	      outbuf += sizeof (uint32_t);				      \
+	      data->__statep->__count = ASCII_set;			\
+	    }								      \
+	  else								      \
+	    /* We don't have enough room in the output buffer.  */	      \
+	    status = __GCONV_FULL_OUTPUT;				      \
 	}								      \
       else								      \
 	{								      \
@@ -151,7 +162,21 @@ enum
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint32_t ch = *inptr;						      \
+    uint32_t ch;							      \
+									      \
+    /* Output any pending character.  */				      \
+    ch = set >> 6;							      \
+    if (__glibc_unlikely (ch != 0))					      \
+      {									      \
+	put32 (outptr, ch);						      \
+	outptr += 4;							      \
+	/* Remove the pending character, but preserve state bits.  */	      \
+	set &= (1 << 6) - 1;						      \
+	continue;							      \
+      }									      \
+									      \
+    /* Otherwise read the next input byte.  */				      \
+    ch = *inptr;							      \
 									      \
     /* Recognize escape sequences.  */					      \
     if (__glibc_unlikely (ch == ESC))					      \
@@ -297,21 +322,25 @@ enum
 	    uint32_t u1 = __jisx0213_to_ucs_combining[ch - 1][0];	      \
 	    uint32_t u2 = __jisx0213_to_ucs_combining[ch - 1][1];	      \
 									      \
+	    inptr += 2;							      \
+									      \
+	    put32 (outptr, u1);						      \
+	    outptr += 4;						      \
+									      \
 	    /* See whether we have room for two characters.  */		      \
-	    if (outptr + 8 <= outend)					      \
+	    if (outptr + 4 <= outend)					      \
 	      {								      \
-		inptr += 2;						      \
-		put32 (outptr, u1);					      \
-		outptr += 4;						      \
 		put32 (outptr, u2);					      \
 		outptr += 4;						      \
 		continue;						      \
 	      }								      \
-	    else							      \
-	      {								      \
-		result = __GCONV_FULL_OUTPUT;				      \
-		break;							      \
-	      }								      \
+									      \
+	    /* Otherwise store only the first character now, and	      \
+	       put the second one into the queue.  */			      \
+	    set |= u2 << 6;						      \
+	    /* Tell the caller why we terminate the loop.  */		      \
+	    result = __GCONV_FULL_OUTPUT;				      \
+	    break;							      \
 	  }								      \
 									      \
 	inptr += 2;							      \
