@@ -54,11 +54,22 @@ struct signal_frame_64 {
   /* We don't care about the rest, since the IP value is at 'uc' field.  */
 };
 
+/* Test if the address match to the inside the trampoline code.
+   Up to and including kernel 5.8, returning from an interrupt or syscall to a
+   signal handler starts execution directly at the handler's entry point, with
+   LR set to address of the sigreturn trampoline (the vDSO symbol).
+   Newer kernels will branch to signal handler from the trampoline instead, so
+   checking the stacktrace against the vDSO entrypoint does not work in such
+   case.
+   The vDSO branches with a 'bctrl' instruction, so checking either the
+   vDSO address itself and the next instruction should cover all kernel
+   versions.  */
 static inline bool
 is_sigtramp_address (void *nip)
 {
 #ifdef HAVE_SIGTRAMP_RT64
-  if (nip == GLRO (dl_vdso_sigtramp_rt64))
+  if (nip == GLRO (dl_vdso_sigtramp_rt64) ||
+      nip == GLRO (dl_vdso_sigtramp_rt64) + 4)
     return true;
 #endif
   return false;
