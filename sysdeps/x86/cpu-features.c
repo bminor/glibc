@@ -75,6 +75,7 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_USABLE (cpu_features, PREFETCHWT1);
   CPU_FEATURE_SET_USABLE (cpu_features, OSPKE);
   CPU_FEATURE_SET_USABLE (cpu_features, WAITPKG);
+  CPU_FEATURE_SET_USABLE (cpu_features, SHSTK);
   CPU_FEATURE_SET_USABLE (cpu_features, GFNI);
   CPU_FEATURE_SET_USABLE (cpu_features, RDPID);
   CPU_FEATURE_SET_USABLE (cpu_features, RDRAND);
@@ -84,6 +85,7 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_USABLE (cpu_features, FSRM);
   CPU_FEATURE_SET_USABLE (cpu_features, SERIALIZE);
   CPU_FEATURE_SET_USABLE (cpu_features, TSXLDTRK);
+  CPU_FEATURE_SET_USABLE (cpu_features, IBT);
   CPU_FEATURE_SET_USABLE (cpu_features, LAHF64_SAHF64);
   CPU_FEATURE_SET_USABLE (cpu_features, LZCNT);
   CPU_FEATURE_SET_USABLE (cpu_features, SSE4A);
@@ -705,6 +707,11 @@ no_cpuid:
   /* Check CET status.  */
   unsigned int cet_status = get_cet_status ();
 
+  if ((cet_status & GNU_PROPERTY_X86_FEATURE_1_IBT) == 0)
+    CPU_FEATURE_UNSET (cpu_features, IBT)
+  if ((cet_status & GNU_PROPERTY_X86_FEATURE_1_SHSTK) == 0)
+    CPU_FEATURE_UNSET (cpu_features, SHSTK)
+
   if (cet_status)
     {
       GL(dl_x86_feature_1) = cet_status;
@@ -720,9 +727,9 @@ no_cpuid:
 	     GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 	   */
 	  unsigned int cet_feature = 0;
-	  if (!HAS_CPU_FEATURE (IBT))
+	  if (!CPU_FEATURE_USABLE (IBT))
 	    cet_feature |= GNU_PROPERTY_X86_FEATURE_1_IBT;
-	  if (!HAS_CPU_FEATURE (SHSTK))
+	  if (!CPU_FEATURE_USABLE (SHSTK))
 	    cet_feature |= GNU_PROPERTY_X86_FEATURE_1_SHSTK;
 
 	  if (cet_feature)

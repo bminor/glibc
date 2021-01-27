@@ -82,7 +82,9 @@ sysdep-dl-routines += dl-cet
 tests += tst-cet-legacy-1 tst-cet-legacy-1a tst-cet-legacy-2 \
 	 tst-cet-legacy-2a tst-cet-legacy-3 tst-cet-legacy-4 \
 	 tst-cet-legacy-5a tst-cet-legacy-6a tst-cet-legacy-7 \
-	 tst-cet-legacy-8
+	 tst-cet-legacy-8 tst-cet-legacy-9 tst-cet-legacy-9-static \
+	 tst-cet-legacy-10 tst-cet-legacy-10-static
+tests-static += tst-cet-legacy-9-static tst-cet-legacy-10-static
 tst-cet-legacy-1a-ARGS = -- $(host-test-program-cmd)
 ifneq (no,$(have-tunables))
 tests += tst-cet-legacy-4a tst-cet-legacy-4b tst-cet-legacy-4c \
@@ -123,6 +125,8 @@ CFLAGS-tst-cet-legacy-mod-6b.c += -fcf-protection
 CFLAGS-tst-cet-legacy-mod-6c.c += -fcf-protection
 CFLAGS-tst-cet-legacy-7.c += -fcf-protection=none
 CFLAGS-tst-cet-legacy-8.c += -mshstk
+CFLAGS-tst-cet-legacy-10.c += -mshstk
+CFLAGS-tst-cet-legacy-10-static.c += -mshstk
 
 $(objpfx)tst-cet-legacy-1: $(objpfx)tst-cet-legacy-mod-1.so \
 		       $(objpfx)tst-cet-legacy-mod-2.so
@@ -163,6 +167,8 @@ $(objpfx)tst-cet-legacy-6b: $(libdl)
 $(objpfx)tst-cet-legacy-6b.out: $(objpfx)tst-cet-legacy-mod-6a.so \
 				$(objpfx)tst-cet-legacy-mod-6b.so
 tst-cet-legacy-6b-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
+tst-cet-legacy-9-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
+tst-cet-legacy-9-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 endif
 endif
 

@@ -37,6 +37,12 @@ do_test_1 (const char *modname, bool fail)
   int (*fp) (void);
   void *h;
 
+  /* NB: dlopen should never fail on non-CET platforms.  If SHSTK is
+     disabled, assuming IBT is also disabled.  */
+  bool cet_enabled = _get_ssp () != 0 && !CET_MAYBE_DISABLED;
+  if (!cet_enabled)
+    fail = false;
+
   h = dlopen (modname, RTLD_LAZY);
   if (h == NULL)
     {
@@ -53,10 +59,7 @@ do_test_1 (const char *modname, bool fail)
       FAIL_EXIT1 ("cannot open '%s': %s\n", modname, err);
     }
 
-  /* NB: dlopen should never fail on non-CET platforms.  If SHSTK is
-     disabled, assuming IBT is also disabled.  */
-  bool cet_enabled = _get_ssp () != 0 && !CET_MAYBE_DISABLED;
-  if (fail && cet_enabled)
+  if (fail)
     FAIL_EXIT1 ("dlopen should have failed\n");
 
   fp = dlsym (h, "test");
