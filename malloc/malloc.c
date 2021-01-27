@@ -441,35 +441,41 @@ void *(*__morecore)(ptrdiff_t) = __default_morecore;
 */
 
 #ifdef USE_MTAG
-
-/* Default implementaions when memory tagging is supported, but disabled.  */
-static void *
-__default_tag_region (void *ptr, size_t size)
-{
-  return ptr;
-}
-
-static void *
-__default_tag_nop (void *ptr)
-{
-  return ptr;
-}
-
+static bool mtag_enabled = false;
 static int mtag_mmap_flags = 0;
 static size_t mtag_granule_mask = ~(size_t)0;
-
-static void *(*tag_new_memset)(void *, int, size_t) = memset;
-static void *(*tag_region)(void *, size_t) = __default_tag_region;
-static void *(*tag_new_usable)(void *) = __default_tag_nop;
-static void *(*tag_at)(void *) = __default_tag_nop;
-
 #else
+# define mtag_enabled false
 # define mtag_mmap_flags 0
-# define tag_new_memset(ptr, val, size) memset (ptr, val, size)
-# define tag_region(ptr, size) (ptr)
-# define tag_new_usable(ptr) (ptr)
-# define tag_at(ptr) (ptr)
 #endif
+
+static __always_inline void *
+tag_region (void *ptr, size_t size)
+{
+  if (__glibc_unlikely (mtag_enabled))
+    return __libc_mtag_tag_region (ptr, size);
+  return ptr;
+}
+
+static __always_inline void *
+tag_new_memset (void *ptr, int val, size_t size)
+{
+  if (__glibc_unlikely (mtag_enabled))
+    return __libc_mtag_memset_with_tag (__libc_mtag_new_tag (ptr), val, size);
+  return memset (ptr, val, size);
+}
+
+/* Defined later.  */
+static void *
+tag_new_usable (void *ptr);
+
+static __always_inline void *
+tag_at (void *ptr)
+{
+  if (__glibc_unlikely (mtag_enabled))
+    return __libc_mtag_address_get_tag (ptr);
+  return ptr;
+}
 
 #include <string.h>
 
@@ -1459,6 +1465,18 @@ checked_request2size (size_t req, size_t *sz) __nonnull (1)
 
 #pragma GCC poison mchunk_size
 #pragma GCC poison mchunk_prev_size
+
+static __always_inline void *
+tag_new_usable (void *ptr)
+{
+  if (__glibc_unlikely (mtag_enabled) && ptr)
+    {
+      mchunkptr cp = mem2chunk(ptr);
+      ptr = __libc_mtag_tag_region (__libc_mtag_new_tag (ptr),
+				    CHUNK_AVAILABLE_SIZE (cp) - CHUNK_HDR_SZ);
+    }
+  return ptr;
+}
 
 /*
    -------------------- Internal data structures --------------------
