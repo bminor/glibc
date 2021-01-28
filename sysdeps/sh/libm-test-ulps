@@ -24,8 +24,8 @@ double: 1
 float: 1
 
 Function: "asinh":
-double: 1
-float: 1
+double: 2
+float: 2
 
 Function: "asinh_towardzero":
 double: 2
@@ -163,7 +163,7 @@ double: 1
 float: 2
 
 Function: "cbrt":
-double: 3
+double: 4
 float: 1
 
 Function: "cbrt_towardzero":
@@ -258,11 +258,11 @@ double: 1
 float: 1
 
 Function: "cosh":
-double: 1
-float: 1
+double: 2
+float: 2
 
 Function: "cosh_towardzero":
-double: 2
+double: 3
 float: 1
 
 Function: Real part of "cpow":
@@ -364,12 +364,16 @@ double: 1
 float: 1
 
 Function: "erfc":
-double: 3
+double: 5
 float: 2
 
 Function: "erfc_towardzero":
 double: 3
 float: 3
+
+Function: "exp":
+double: 1
+float: 1
 
 Function: "exp10":
 double: 2
@@ -415,15 +419,15 @@ double: 1
 
 Function: "j0":
 double: 2
-float: 2
+float: 8
 
 Function: "j0_towardzero":
-double: 3
-float: 1
+double: 4
+float: 6
 
 Function: "j1":
-double: 1
-float: 2
+double: 2
+float: 8
 
 Function: "j1_towardzero":
 double: 3
@@ -500,7 +504,7 @@ double: 2
 float: 2
 
 Function: "sinh_towardzero":
-double: 2
+double: 3
 float: 2
 
 Function: "tan":
@@ -519,16 +523,16 @@ double: 2
 float: 2
 
 Function: "tgamma":
-double: 5
-float: 4
+double: 9
+float: 8
 
 Function: "tgamma_towardzero":
-double: 5
-float: 4
+double: 9
+float: 7
 
 Function: "y0":
-double: 2
-float: 1
+double: 3
+float: 6
 
 Function: "y0_towardzero":
 double: 3
