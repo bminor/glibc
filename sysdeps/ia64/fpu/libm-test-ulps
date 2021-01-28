@@ -1149,12 +1149,12 @@ Function: "j0_downward":
 double: 6
 float: 4
 float128: 4
-ldouble: 3
+ldouble: 4
 
 Function: "j0_towardzero":
 double: 4
 float: 6
-float128: 2
+float128: 4
 ldouble: 9
 
 Function: "j0_upward":
