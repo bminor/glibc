@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.31.9000\n"
-"POT-Creation-Date: 2020-07-22 23:24-0400\n"
+"POT-Creation-Date: 2021-01-27 17:07-0300\n"
 "PO-Revision-Date: 2020-07-23 18:37+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <translation-team-ko@googlegroups.com>\n"
@@ -68,7 +68,7 @@ msgstr "간략한 사용법 메시지를 표시함"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
 #: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "NAME"
 msgstr "<이름>"
 
@@ -127,7 +127,7 @@ msgstr "기호 정의를 담고 있는 C 헤더 파일 NAME을 만듭니다"
 msgid "Do not use existing catalog, force new output file"
 msgstr "이미 있는 목록을 사용하지 않고, 새로운 파일에 출력합니다"
 
-#: catgets/gencat.c:113 nss/makedb.c:120
+#: catgets/gencat.c:113 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "<이름> 파일로 출력합니다"
 
@@ -147,11 +147,11 @@ msgstr ""
 "-o <출력-파일> [<입력-파일>]...\n"
 "[<출력-파일> [<입력-파일>]...]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:306
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:311
 #: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:388
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:276
 #: locale/programs/localedef.c:438 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:370
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -162,11 +162,11 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:322 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -179,10 +179,10 @@ msgstr ""
 "이나 특정 목적에 대한 적합성을 비롯하여 어떠한 보증도 하지 않습니다.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:327 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -193,7 +193,7 @@ msgid "*standard input*"
 msgstr "*표준 입력*"
 
 #: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
-#: nss/makedb.c:246
+#: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "`%s' 입력 파일을 열 수 없습니다"
@@ -376,56 +376,56 @@ msgstr "모드가 잘못됨"
 msgid "invalid mode parameter"
 msgstr "모드 매개변수가 잘못됨"
 
-#: elf/cache.c:69
+#: elf/cache.c:180
 msgid "unknown"
 msgstr "알 수 없음"
 
-#: elf/cache.c:141
+#: elf/cache.c:254
 msgid "Unknown OS"
 msgstr "알 수 없는 운영체제"
 
-#: elf/cache.c:146
+#: elf/cache.c:259
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1297
+#: elf/cache.c:320 elf/ldconfig.c:1427
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "캐시 파일 `%s'을(를) 열 수 없습니다\n"
 
-#: elf/cache.c:177
+#: elf/cache.c:334
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "캐시 파일을 mmap하는 데 실패했습니다.\n"
 
-#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
+#: elf/cache.c:338 elf/cache.c:352 elf/cache.c:363
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "파일이 캐시 파일이 아닙니다.\n"
 
-#: elf/cache.c:233 elf/cache.c:243
+#: elf/cache.c:392 elf/cache.c:407
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%2$s 캐시에 라이브러리가 %1$d개 있습니다\n"
 
-#: elf/cache.c:437
+#: elf/cache.c:725
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "임시 캐시 파일 %s을(를) 열 수 없습니다"
 
-#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
-#: elf/cache.c:473
+#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
+#: elf/cache.c:770
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "캐시 데이터 쓰기가 실패"
 
-#: elf/cache.c:468
+#: elf/cache.c:765
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "%s의 접근권한을 to %#o로(으로) 바꾸는 데 실패했습니다"
 
-#: elf/cache.c:477
+#: elf/cache.c:774
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "%s에서 %s으로(로) 이름을 바꾸는 데 실패했습니다"
@@ -491,139 +491,139 @@ msgstr "내부 오류: symidx가 fptr 테이블의 범위를 벗어났습니다"
 
 # 번역: capability는 DB에서 authentication을 줄이기 위해 쓰는 것..
 # 가까운 DB책 참조.
-#: elf/dl-hwcaps.c:92 elf/dl-hwcaps.c:104
+#: elf/dl-hwcaps.c:247 elf/dl-hwcaps.c:262
 msgid "cannot create capability list"
 msgstr "케이퍼빌리티 리스트를 만들 수 없습니다"
 
-#: elf/dl-load.c:428
+#: elf/dl-load.c:432
 msgid "cannot allocate name record"
 msgstr "네임 레코드를 할당할 수 없습니다"
 
-#: elf/dl-load.c:514 elf/dl-load.c:627 elf/dl-load.c:716 elf/dl-load.c:812
+#: elf/dl-load.c:518 elf/dl-load.c:631 elf/dl-load.c:725 elf/dl-load.c:821
 msgid "cannot create cache for search path"
 msgstr "검색 경로에 대한 캐시를 만들 수 없습니다"
 
-#: elf/dl-load.c:610
+#: elf/dl-load.c:614
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "RUNPATH/RPATH 카피를 만들 수 없습니다"
 
-#: elf/dl-load.c:703
+#: elf/dl-load.c:711
 msgid "cannot create search path array"
 msgstr "검색 경로 배열을 만들 수 없습니다"
 
-#: elf/dl-load.c:964
+#: elf/dl-load.c:951
 msgid "cannot stat shared object"
 msgstr "동적 오브젝트에 대해 stat()이 실패했습니다"
 
-#: elf/dl-load.c:1075 elf/dl-load.c:2278
+#: elf/dl-load.c:1082 elf/dl-load.c:2293
 msgid "cannot create shared object descriptor"
 msgstr "공유 오브젝트 디스크립터를 만들 수 없습니다"
 
-#: elf/dl-load.c:1094 elf/dl-load.c:1658 elf/dl-load.c:1759
+#: elf/dl-load.c:1101 elf/dl-load.c:1668 elf/dl-load.c:1770
 msgid "cannot read file data"
 msgstr "파일 데이터를 읽을 수 없습니다"
 
-#: elf/dl-load.c:1140
+#: elf/dl-load.c:1147
 msgid "ELF load command alignment not page-aligned"
 msgstr "ELF 로드 명령의의 align이 페이지에 align되어 있지 않습니다"
 
-#: elf/dl-load.c:1147
+#: elf/dl-load.c:1154
 msgid "ELF load command address/offset not properly aligned"
 msgstr "ELF 로드 명령의 주소/오프셋이 올바르게 align되어 있지 않습니다"
 
-#: elf/dl-load.c:1226
+#: elf/dl-load.c:1233
 msgid "object file has no loadable segments"
 msgstr "오브젝트 파일에 읽어들일 수 있는 섹션이 없습니다"
 
-#: elf/dl-load.c:1239
+#: elf/dl-load.c:1246
 msgid "cannot dynamically load executable"
 msgstr "동적으로 실행파일을 읽어들일 수 없습니다"
 
-#: elf/dl-load.c:1275
+#: elf/dl-load.c:1271
 msgid "object file has no dynamic section"
 msgstr "오브젝트 파일에 동적 섹션이 없습니다"
 
-#: elf/dl-load.c:1302
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr "위치 독립 실행 파일을 동적으로 읽어들일 수 없습니다"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "동적 오브젝트는 dlopen()될 수 없습니다"
 
-#: elf/dl-load.c:1317
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "프로그램 헤더에 대한 메모리를 할당할 수 없습니다"
 
-#: elf/dl-load.c:1350 elf/dl-load.h:130
+#: elf/dl-load.c:1337 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "메모리 보호를 바꿀 수 없습니다"
 
-#: elf/dl-load.c:1370
+#: elf/dl-load.c:1357
 msgid "cannot enable executable stack as shared object requires"
 msgstr "실행할 수 있는 스택을 공유 오브젝트 필수요소로 만들 수 없습니다"
 
-#: elf/dl-load.c:1383
+#: elf/dl-load.c:1385
 msgid "cannot close file descriptor"
 msgstr "파일 디스크립터를 닫을 수 없습니다"
 
-#: elf/dl-load.c:1658
+#: elf/dl-load.c:1668
 msgid "file too short"
 msgstr "파일이 너무 짧습니다"
 
-#: elf/dl-load.c:1693
+#: elf/dl-load.c:1704
 msgid "invalid ELF header"
 msgstr "ELF 헤더가 잘못됨"
 
-#: elf/dl-load.c:1705
+#: elf/dl-load.c:1716
 msgid "ELF file data encoding not big-endian"
 msgstr "ELF 파일 데이터 인코딩이 빅인디안이 아닙니다"
 
-#: elf/dl-load.c:1707
+#: elf/dl-load.c:1718
 msgid "ELF file data encoding not little-endian"
 msgstr "ELF 파일 데이터 인코딩이 리틀인디안이 아닙니다"
 
-#: elf/dl-load.c:1711
+#: elf/dl-load.c:1722
 msgid "ELF file version ident does not match current one"
 msgstr "ELF 파일 버전 ident가 현재 ident와 맞지 않습니다"
 
-#: elf/dl-load.c:1715
+#: elf/dl-load.c:1726
 msgid "ELF file OS ABI invalid"
 msgstr "ELF 파일 OS ABI가 잘못되었습니다"
 
-#: elf/dl-load.c:1718
+#: elf/dl-load.c:1729
 msgid "ELF file ABI version invalid"
 msgstr "ELF 파일 ABI 버전이 잘못되었습니다"
 
-#: elf/dl-load.c:1721
+#: elf/dl-load.c:1732
 msgid "nonzero padding in e_ident"
 msgstr "e_ident 안에 0이 아닌 채움"
 
-#: elf/dl-load.c:1724
+#: elf/dl-load.c:1735
 msgid "internal error"
 msgstr "내부 오류"
 
-#: elf/dl-load.c:1731
+#: elf/dl-load.c:1742
 msgid "ELF file version does not match current one"
 msgstr "ELF 파일 버전이 현재 버전과 맞지 않습니다"
 
-#: elf/dl-load.c:1739
+#: elf/dl-load.c:1750
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "ET_DYN과 ET_EXEC만을 읽어들일 수 있습니다"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1755
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF 파일의 phentsize가 예상과 맞지 않습니다"
 
-#: elf/dl-load.c:2297
+#: elf/dl-load.c:2312
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "ELF 클래스가 틀렸습니다: ELFCLASS64"
 
-#: elf/dl-load.c:2298
+#: elf/dl-load.c:2313
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "ELF 클래스가 틀렸습니다: ELFCLASS32"
 
-#: elf/dl-load.c:2301
+#: elf/dl-load.c:2316
 msgid "cannot open shared object file"
 msgstr "동적 오브젝트 파일을 열 수 없습니다"
 
@@ -647,15 +647,15 @@ msgstr "전역 스코프를 확장할 수 없습니다"
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "TLS 만들기 카운터가 겹쳤습니다!  이 문제를 알려 주십시오."
 
-#: elf/dl-open.c:808
+#: elf/dl-open.c:802
 msgid "invalid mode for dlopen()"
 msgstr "dlopen()에 모드가 잘못됨"
 
-#: elf/dl-open.c:825
+#: elf/dl-open.c:819
 msgid "no more namespaces available for dlmopen()"
 msgstr "dlmopen()에 사용할 수 있는 네임스페이스가 더 이상 없습니다"
 
-#: elf/dl-open.c:849
+#: elf/dl-open.c:843
 msgid "invalid target namespace in dlmopen()"
 msgstr "dlmopen()에 대상 네임스페이스가 잘못되었습니다"
 
@@ -696,216 +696,216 @@ msgstr "버전 찾기 오류"
 msgid "cannot allocate version reference table"
 msgstr "버전 참조 테이블을 할당할 수 없습니다"
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:150
 msgid "Print cache"
 msgstr "캐시 표시"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:151
 msgid "Generate verbose messages"
 msgstr "더 많은 메시지 표시"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:152
 msgid "Don't build cache"
 msgstr "캐시를 만들지 않음"
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:153
 msgid "Don't update symbolic links"
 msgstr "심볼릭 링크를 업데이트하지 않습니다"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "Change to and use ROOT as root directory"
 msgstr "<루트>로 이동한 다음 <루트>를 루트 디렉터리로 사용합니다"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "ROOT"
 msgstr "<루트>"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "CACHE"
 msgstr "<캐시>"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "Use CACHE as cache file"
 msgstr "캐시 파일로 <캐시>를 사용합니다"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "CONF"
 msgstr "<설정>"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "Use CONF as configuration file"
 msgstr "설정 파일로 <설정>을 사용합니다"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:157
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "명령행에 지정한 디렉터리만 처리합니다.  캐시를 만들지 않습니다."
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:158
 msgid "Manually link individual libraries."
 msgstr "수동으로 각각의 라이브러리를 링크하십시오."
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:159
 msgid "FORMAT"
 msgstr "<형식>"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:159
 msgid "Format to use: new (default), old, or compat"
 msgstr "사용할 수 있는 형식: new (기본값), old, compat"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:160
 msgid "Ignore auxiliary cache file"
 msgstr "보조 캐시 파일 무시"
 
-#: elf/ldconfig.c:163
+#: elf/ldconfig.c:168
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "동적 링커의 런타임 바인딩을 설정합니다."
 
-#: elf/ldconfig.c:346
+#: elf/ldconfig.c:371
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "`%s' 경로가 여러번 주어졌습니다"
 
-#: elf/ldconfig.c:347
+#: elf/ldconfig.c:372
 #, c-format
 msgid "(from %s:%d and %s:%d)\n"
 msgstr "(%s:%d 및 %s:%d에서)\n"
 
-#: elf/ldconfig.c:393
+#: elf/ldconfig.c:487
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s은(는) 알려진 라이브러리 타입이 아닙니다"
 
-#: elf/ldconfig.c:421
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't stat %s"
 msgstr "%s에 stat()할 수 없습니다"
 
-#: elf/ldconfig.c:500
+#: elf/ldconfig.c:596
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "%s에 stat()할 수 없습니다\n"
 
-#: elf/ldconfig.c:510
+#: elf/ldconfig.c:606
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s은(는) 심볼릭 링크가 아닙니다\n"
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:625
 #, c-format
 msgid "Can't unlink %s"
 msgstr "%s을(를) 지울 수 없습니다"
 
-#: elf/ldconfig.c:535
+#: elf/ldconfig.c:631
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "%s을(를) %s(으)로 링크할 수 없습니다"
 
-#: elf/ldconfig.c:541
+#: elf/ldconfig.c:637
 msgid " (changed)\n"
 msgstr " (바뀜)\n"
 
-#: elf/ldconfig.c:543
+#: elf/ldconfig.c:639
 msgid " (SKIPPED)\n"
 msgstr " (지나침)\n"
 
-#: elf/ldconfig.c:598
+#: elf/ldconfig.c:695
 #, c-format
 msgid "Can't find %s"
 msgstr "%s을(를) 찾을 수 없습니다"
 
-#: elf/ldconfig.c:614 elf/ldconfig.c:781 elf/ldconfig.c:839 elf/ldconfig.c:871
+#: elf/ldconfig.c:711 elf/ldconfig.c:893 elf/ldconfig.c:945 elf/ldconfig.c:977
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "%s에 lstat()할 수 없습니다"
 
-#: elf/ldconfig.c:621
+#: elf/ldconfig.c:718
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "일반 파일이 아니므로 %s 파일을 무시합니다."
 
-#: elf/ldconfig.c:630
+#: elf/ldconfig.c:727
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "%s에 대한 soname을 찾을 수 없으므로 링크를 만들지 않습니다"
 
-#: elf/ldconfig.c:689
+#: elf/ldconfig.c:800
 #, c-format
 msgid " (from %s:%d)\n"
 msgstr " (%s:%d에서)\n"
 
-#: elf/ldconfig.c:714
+#: elf/ldconfig.c:824
 #, c-format
 msgid "Can't open directory %s"
 msgstr "디렉터리 %s을(를) 열 수 없습니다"
 
-#: elf/ldconfig.c:799 elf/ldconfig.c:859 elf/readlib.c:97
+#: elf/ldconfig.c:911 elf/ldconfig.c:965 elf/readlib.c:98
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "입력 파일 %s을(를) 찾지 못했습니다.\n"
 
-#: elf/ldconfig.c:806
+#: elf/ldconfig.c:918
 #, c-format
 msgid "Cannot stat %s"
 msgstr "%s에 stat()할 수 없습니다"
 
-#: elf/ldconfig.c:953
+#: elf/ldconfig.c:1063
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5 library %s이(가) 잘못된 디렉터리에 있습니다"
 
-#: elf/ldconfig.c:956
+#: elf/ldconfig.c:1066
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 library %s이(가) 잘못된 디렉터리에 있습니다"
 
-#: elf/ldconfig.c:959
+#: elf/ldconfig.c:1069
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4 library %s이(가) 잘못된 디렉터리에 있습니다"
 
-#: elf/ldconfig.c:987
+#: elf/ldconfig.c:1097
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "디렉터리 %s의 라이브러리 %s과(와) %s이(가) 같은 soname을 가지고 있지만 타입이 다릅니다."
 
-#: elf/ldconfig.c:1097
+#: elf/ldconfig.c:1227
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "경고: 열 수 없는 설정 파일을 무시합니다: %s"
 
-#: elf/ldconfig.c:1145
+#: elf/ldconfig.c:1275
 #, c-format
 msgid "%s:%u: hwcap directive ignored"
 msgstr "%s:%u: hwcap 지시어 무시합니다"
 
-#: elf/ldconfig.c:1164
+#: elf/ldconfig.c:1294
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "-r 옵션을 사용할 경우 설정 파일의 절대 파일 이름이 필요합니다"
 
-#: elf/ldconfig.c:1171 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "메모리가 바닥남"
 
-#: elf/ldconfig.c:1204
+#: elf/ldconfig.c:1334
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: %s 디렉터리를 읽을 수 없습니다"
 
-#: elf/ldconfig.c:1252
+#: elf/ldconfig.c:1382
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "캐시를 만드는데 상대 경로인 `%s' 경로를 사용했습니다"
 
-#: elf/ldconfig.c:1276
+#: elf/ldconfig.c:1406
 #, c-format
 msgid "Can't chdir to /"
 msgstr "/로 디렉터리를 이동할 수 없습니다"
 
-#: elf/ldconfig.c:1317
+#: elf/ldconfig.c:1447
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "캐시 파일 디렉터리 `%s'을(를) 열 수 없습니다\n"
@@ -951,7 +951,7 @@ msgstr "파일 인자가 없습니다"
 #. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:16
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:13
 msgid "No such file or directory"
 msgstr "그런 파일이나 디렉터리가 없습니다"
 
@@ -1073,57 +1073,57 @@ msgstr "프로세스 %lu번의 정보를 얻을 수 없습니다"
 msgid "process %lu is no ELF program"
 msgstr "프로세스 %lu번은 ELF 프로그램이 아닙니다"
 
-#: elf/readelflib.c:34
+#: elf/readelflib.c:36
 #, c-format
 msgid "file %s is truncated\n"
 msgstr "%s 파일이 잘라졌습니다\n"
 
-#: elf/readelflib.c:65
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s은(는) 32비트 ELF 파일입니다.\n"
 
-#: elf/readelflib.c:67
+#: elf/readelflib.c:69
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s은(는) 64비트 ELF 파일입니다.\n"
 
-#: elf/readelflib.c:69
+#: elf/readelflib.c:71
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "%s 파일이 알려지지 않은 ELFCLASS.\n"
 
-#: elf/readelflib.c:76
+#: elf/readelflib.c:78
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s은(는) 동적 오브젝트 파일이 아닙니다(타입: %d).\n"
 
-#: elf/readelflib.c:101
+#: elf/readelflib.c:106
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "여러개의 동적 세그먼트\n"
 
-#: elf/readlib.c:103
+#: elf/readlib.c:104
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "`%s'파일에 fstat()을 할 수 없습니다.\n"
 
-#: elf/readlib.c:114
+#: elf/readlib.c:115
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "%s 파일이 빈 파일이므로 검사하지 않습니다."
 
-#: elf/readlib.c:120
+#: elf/readlib.c:121
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "%s 파일이 너무 작아서 검사하지 않습니다."
 
-#: elf/readlib.c:130
+#: elf/readlib.c:131
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "파일 `%s'에 mmap()할 수 없습니다.\n"
 
-#: elf/readlib.c:169
+#: elf/readlib.c:170
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s은(는) ELF 파일이 아닙니다 - 시작부분의 매직 바이트가 틀렸습니다.\n"
@@ -3141,8 +3141,8 @@ msgstr "알 수 없는 시스템 오류"
 msgid "unable to free arguments"
 msgstr "인자를 비울 수 없습니다"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.h:4
+#: nis/nis_error.h:1 nis/ypclnt.c:833 nis/ypclnt.c:922 posix/regcomp.c:135
+#: sysdeps/gnu/errlist.h:1
 msgid "Success"
 msgstr "성공"
 
@@ -3183,7 +3183,7 @@ msgid "First/next chain broken"
 msgstr "first/next 연결이 끊어짐"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.h:93
+#: nis/nis_error.h:11 nis/ypclnt.c:878 sysdeps/gnu/errlist.h:90
 msgid "Permission denied"
 msgstr "허가 거부"
 
@@ -3648,91 +3648,91 @@ msgstr "    재귀 멤버 아님:\n"
 msgid "    No recursive nonmembers\n"
 msgstr "    재귀 멤버 아님 없음\n"
 
-#: nis/ypclnt.c:828
+#: nis/ypclnt.c:836
 msgid "Request arguments bad"
 msgstr "요청 인수가 잘못됨"
 
-#: nis/ypclnt.c:831
+#: nis/ypclnt.c:839
 msgid "RPC failure on NIS operation"
 msgstr "NIS 연산 중 RPC 실패함"
 
-#: nis/ypclnt.c:834
+#: nis/ypclnt.c:842
 msgid "Can't bind to server which serves this domain"
 msgstr "이 도메인을 제공하는 서버에 연결할 수 없습니다"
 
-#: nis/ypclnt.c:837
+#: nis/ypclnt.c:845
 msgid "No such map in server's domain"
 msgstr "서버의 도메인에 그런 지도가 없음"
 
-#: nis/ypclnt.c:840
+#: nis/ypclnt.c:848
 msgid "No such key in map"
 msgstr "지도에 그런 키가 없음"
 
-#: nis/ypclnt.c:843
+#: nis/ypclnt.c:851
 msgid "Internal NIS error"
 msgstr "내부 NIS 오류"
 
-#: nis/ypclnt.c:846
+#: nis/ypclnt.c:854
 msgid "Local resource allocation failure"
 msgstr "지역 자원 할당 실패"
 
-#: nis/ypclnt.c:849
+#: nis/ypclnt.c:857
 msgid "No more records in map database"
 msgstr "지도 데이터베이스에 더 이상의 기록이 없음"
 
-#: nis/ypclnt.c:852
+#: nis/ypclnt.c:860
 msgid "Can't communicate with portmapper"
 msgstr "rpcinfo: 포트매퍼와 통신할 수 없습니다"
 
-#: nis/ypclnt.c:855
+#: nis/ypclnt.c:863
 msgid "Can't communicate with ypbind"
 msgstr "ypbind와 통신할 수 없습니다"
 
-#: nis/ypclnt.c:858
+#: nis/ypclnt.c:866
 msgid "Can't communicate with ypserv"
 msgstr "ypserv와 통신할 수 없습니다"
 
-#: nis/ypclnt.c:861
+#: nis/ypclnt.c:869
 msgid "Local domain name not set"
 msgstr "지역 도메인명을 설정하지 않았음"
 
-#: nis/ypclnt.c:864
+#: nis/ypclnt.c:872
 msgid "NIS map database is bad"
 msgstr "NIS 지도 데이터베이스가 틀렸습니다"
 
-#: nis/ypclnt.c:867
+#: nis/ypclnt.c:875
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "NIS 클라이언트/서버 버전 불일치 - 서비스를 제공할 수 없습니다"
 
-#: nis/ypclnt.c:873
+#: nis/ypclnt.c:881
 msgid "Database is busy"
 msgstr "데이터베이스가 작업 중입니다"
 
-#: nis/ypclnt.c:876
+#: nis/ypclnt.c:884
 msgid "Unknown NIS error code"
 msgstr "알 수 없는 NIS 오류 코드"
 
-#: nis/ypclnt.c:917
+#: nis/ypclnt.c:925
 msgid "Internal ypbind error"
 msgstr "내부 ypbind 오류"
 
-#: nis/ypclnt.c:920
+#: nis/ypclnt.c:928
 msgid "Domain not bound"
 msgstr "도메인이 연결하지 않음"
 
-#: nis/ypclnt.c:923
+#: nis/ypclnt.c:931
 msgid "System resource allocation failure"
 msgstr "시스템 자원 할당 실패"
 
-#: nis/ypclnt.c:926
+#: nis/ypclnt.c:934
 msgid "Unknown ypbind error"
 msgstr "알 수 없는 ypbind 오류"
 
-#: nis/ypclnt.c:967
+#: nis/ypclnt.c:975
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: 호스트를 네트이름으로 바꿀 수 없습니다\n"
 
-#: nis/ypclnt.c:985
+#: nis/ypclnt.c:993
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: 서버 주소를 얻을 수 없습니다\n"
 
@@ -4146,7 +4146,7 @@ msgstr "사용자별로 별도의 캐시 사용"
 msgid "Name Service Cache Daemon."
 msgstr "네임 서비스 캐시 데몬."
 
-#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:206
+#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:207
 #, c-format
 msgid "wrong number of arguments"
 msgstr "인수의 개수가 잘못되었음"
@@ -4421,85 +4421,85 @@ msgstr "사용자 데이터베이스 캐시에서 \"%s\"을(를) 다시 읽어�
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "UID 번호 \"%s\"번이 잘못되었습니다!"
 
-#: nscd/selinux.c:154
+#: nscd/selinux.c:155
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
 msgstr "보안 심사 서브시스템에 연결을 여는 데 실패했습니다: %m"
 
-#: nscd/selinux.c:175
+#: nscd/selinux.c:176
 msgid "Failed to set keep-capabilities"
 msgstr "keep-capabilities 설정 실패"
 
-#: nscd/selinux.c:176 nscd/selinux.c:239
+#: nscd/selinux.c:177 nscd/selinux.c:240
 msgid "prctl(KEEPCAPS) failed"
 msgstr "prctl(KEEPCAPS) 실패"
 
-#: nscd/selinux.c:190
+#: nscd/selinux.c:191
 msgid "Failed to initialize drop of capabilities"
 msgstr "케이퍼빌리티 드롭 초기화 실패"
 
-#: nscd/selinux.c:191
+#: nscd/selinux.c:192
 msgid "cap_init failed"
 msgstr "cap_init 실패"
 
-#: nscd/selinux.c:212 nscd/selinux.c:229
+#: nscd/selinux.c:213 nscd/selinux.c:230
 msgid "Failed to drop capabilities"
 msgstr "케이퍼빌리티 드롭 실패"
 
-#: nscd/selinux.c:213 nscd/selinux.c:230
+#: nscd/selinux.c:214 nscd/selinux.c:231
 msgid "cap_set_proc failed"
 msgstr "cap_set_proc 실패"
 
-#: nscd/selinux.c:238
+#: nscd/selinux.c:239
 msgid "Failed to unset keep-capabilities"
 msgstr "keep-capabilities 설정을 해제하는 데 실패했습니다"
 
-#: nscd/selinux.c:254
+#: nscd/selinux.c:255
 msgid "Failed to determine if kernel supports SELinux"
 msgstr "커널이 SELinux를 지원하는 지 여부를 알아내는 데 실패했습니다"
 
-#: nscd/selinux.c:269
+#: nscd/selinux.c:270
 msgid "Failed to start AVC thread"
 msgstr "AVC 스레드를 시작하는 데 실패했습니다"
 
-#: nscd/selinux.c:291
+#: nscd/selinux.c:292
 msgid "Failed to create AVC lock"
 msgstr "AVC 잠금을 만드는 데 실패했습니다"
 
-#: nscd/selinux.c:331
+#: nscd/selinux.c:338
 msgid "Failed to start AVC"
 msgstr "AVC를 시작하는 데 실패했습니다"
 
-#: nscd/selinux.c:333
+#: nscd/selinux.c:340
 msgid "Access Vector Cache (AVC) started"
 msgstr "액세스 벡터 캐시(AVC) 시작"
 
-#: nscd/selinux.c:368
+#: nscd/selinux.c:382
 msgid "Error querying policy for undefined object classes or permissions."
 msgstr "정의되지 않은 오브젝트 클래스나 권한의 정책을 질의하는데 오류."
 
-#: nscd/selinux.c:375
+#: nscd/selinux.c:389
 msgid "Error getting security class for nscd."
 msgstr "NSCD 보안 클래스를 얻는데 오류."
 
-#: nscd/selinux.c:380
+#: nscd/selinux.c:394
 #, c-format
 msgid "Error translating permission name \"%s\" to access vector bit."
 msgstr "권한 이름 \"%s\"을(를) 벡터 비트 접근용으로 변환하는데 오류."
 
-#: nscd/selinux.c:390
+#: nscd/selinux.c:404
 msgid "Error getting context of socket peer"
 msgstr "소켓 상대방의 컨텍스트를 얻는 데 오류"
 
-#: nscd/selinux.c:395
+#: nscd/selinux.c:409
 msgid "Error getting context of nscd"
 msgstr "NSCD 컨텍스트를 얻는데 오류"
 
-#: nscd/selinux.c:401
+#: nscd/selinux.c:415
 msgid "Error getting sid from context"
 msgstr "컨텍스트를 없애는데 오류"
 
-#: nscd/selinux.c:439
+#: nscd/selinux.c:454
 #, c-format
 msgid ""
 "\n"
@@ -4580,31 +4580,31 @@ msgstr "지원하는 데이터베이스:\n"
 msgid "Unknown database: %s\n"
 msgstr "알 수 없는 데이터베이스: `%s'\n"
 
-#: nss/makedb.c:119
+#: nss/makedb.c:120
 msgid "Convert key to lower case"
 msgstr "키를 소문자로 변환합니다"
 
-#: nss/makedb.c:122
+#: nss/makedb.c:123
 msgid "Do not print messages while building database"
 msgstr "데이터베이스를 만드는 중에 메시지를 출력하지 않습니다"
 
-#: nss/makedb.c:124
+#: nss/makedb.c:125
 msgid "Print content of database file, one entry a line"
 msgstr "데이터베이스 파일의 내용을 한 줄에 한 항목씩 표시합니다"
 
-#: nss/makedb.c:125
+#: nss/makedb.c:126
 msgid "CHAR"
 msgstr "<문자>"
 
-#: nss/makedb.c:126
+#: nss/makedb.c:127
 msgid "Generated line not part of iteration"
 msgstr "만들어진 줄이 반복 과정의 일부가 아닙니다"
 
-#: nss/makedb.c:131
+#: nss/makedb.c:132
 msgid "Create simple database from textual input."
 msgstr "텍스트 입력에서 간단한 데이터베이스를 만듭니다."
 
-#: nss/makedb.c:134
+#: nss/makedb.c:135
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -4614,71 +4614,71 @@ msgstr ""
 "-o <출력-파일> <입력-파일>\n"
 "-u <입력-파일>"
 
-#: nss/makedb.c:227
+#: nss/makedb.c:228
 #, c-format
 msgid "cannot open database file `%s'"
 msgstr "`%s' 데이터베이스 파일을 열 수 없습니다"
 
-#: nss/makedb.c:272
+#: nss/makedb.c:273
 #, c-format
 msgid "no entries to be processed"
 msgstr "항목을 처리하지 못했습니다"
 
-#: nss/makedb.c:282
+#: nss/makedb.c:283
 #, c-format
 msgid "cannot create temporary file name"
 msgstr "임시 파일 이름을 만들 수 없습니다"
 
-#: nss/makedb.c:288
+#: nss/makedb.c:289
 #, c-format
 msgid "cannot create temporary file"
 msgstr "임시 파일을 만들 수 없습니다"
 
-#: nss/makedb.c:304
+#: nss/makedb.c:305
 #, c-format
 msgid "cannot stat newly created file"
 msgstr "새로 만든 파일의 정보를 읽는데 실패했습니다"
 
-#: nss/makedb.c:315
+#: nss/makedb.c:316
 #, c-format
 msgid "cannot rename temporary file"
 msgstr "임시 파일의 이름을 바꿀 수 없습니다"
 
-#: nss/makedb.c:527 nss/makedb.c:550
+#: nss/makedb.c:528 nss/makedb.c:551
 #, c-format
 msgid "cannot create search tree"
 msgstr "검색 트리를 만들 수 없습니다"
 
-#: nss/makedb.c:556
+#: nss/makedb.c:557
 msgid "duplicate key"
 msgstr "중복된 키"
 
-#: nss/makedb.c:568
+#: nss/makedb.c:569
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "`%s'을(를) 읽는 중에 문제"
 
-#: nss/makedb.c:795
+#: nss/makedb.c:796
 #, c-format
 msgid "failed to write new database file"
 msgstr "새 데이터베이스 파일을 쓰는데 실패"
 
-#: nss/makedb.c:808
+#: nss/makedb.c:809
 #, c-format
 msgid "cannot stat database file"
 msgstr "데이터베이스 파일의 정보를 읽는데 실패"
 
-#: nss/makedb.c:813
+#: nss/makedb.c:814
 #, c-format
 msgid "cannot map database file"
 msgstr "데이터베이스 파일을 매핑할 수 없음"
 
-#: nss/makedb.c:816
+#: nss/makedb.c:817
 #, c-format
 msgid "file not a database file"
 msgstr "파일이 데이터베이스 파일이 아님"
 
-#: nss/makedb.c:867
+#: nss/makedb.c:875
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr "`%s'에 대해 파일 만들기 컨텍스트를 지정할 수 없습니다"
@@ -5354,10 +5354,6 @@ msgstr "svc_unix.c - AF_UNIX 소켓 생성 문제"
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c - getsockname 혹은 listen 불가능"
 
-#: sysdeps/aarch64/dl-bti.c:41
-msgid "mprotect failed to turn on BTI"
-msgstr "mprotect가 BTI를 켜는데 실패했습니다"
-
 #: sysdeps/generic/siglist.h:29
 msgid "Hangup"
 msgstr "끊어짐"
@@ -5407,7 +5403,7 @@ msgstr "세그멘테이션 오류"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:219
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:216
 msgid "Broken pipe"
 msgstr "파이프가 깨어짐"
 
@@ -5501,12 +5497,12 @@ msgstr "자원을 손실했음"
 
 #. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.h:9
+#: sysdeps/gnu/errlist.h:6
 msgid "Operation not permitted"
 msgstr "명령을 허용하지 않음"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.h:21
+#: sysdeps/gnu/errlist.h:18
 msgid "No such process"
 msgstr "그런 프로세스가 없음"
 
@@ -5517,12 +5513,12 @@ msgstr "그런 프로세스가 없음"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.h:32
+#: sysdeps/gnu/errlist.h:29
 msgid "Interrupted system call"
 msgstr "중단된 시스템 콜"
 
 #. TRANS Usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.h:37
+#: sysdeps/gnu/errlist.h:34
 msgid "Input/output error"
 msgstr "입력/출력 오류"
 
@@ -5531,7 +5527,7 @@ msgstr "입력/출력 오류"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.h:46
+#: sysdeps/gnu/errlist.h:43
 msgid "No such device or address"
 msgstr "그런 장치 혹은 주소가 없음"
 
@@ -5539,27 +5535,27 @@ msgstr "그런 장치 혹은 주소가 없음"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:54
+#: sysdeps/gnu/errlist.h:51
 msgid "Argument list too long"
 msgstr "인수 명단이 너무 김"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.h:60
+#: sysdeps/gnu/errlist.h:57
 msgid "Exec format error"
 msgstr "Exec 형식 오류"
 
 #. TRANS For example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.h:67
+#: sysdeps/gnu/errlist.h:64
 msgid "Bad file descriptor"
 msgstr "파일 디스크립터가 잘못됨"
 
 #. TRANS This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.h:74
+#: sysdeps/gnu/errlist.h:71
 msgid "No child processes"
 msgstr "하위 프로세스가 없음"
 
@@ -5567,69 +5563,69 @@ msgstr "하위 프로세스가 없음"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.h:82
+#: sysdeps/gnu/errlist.h:79
 msgid "Resource deadlock avoided"
 msgstr "자원 교착상태를 피했습니다"
 
 #. TRANS The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.h:88
+#: sysdeps/gnu/errlist.h:85
 msgid "Cannot allocate memory"
 msgstr "메모리를 할당할 수 없습니다"
 
 #. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.h:99
+#: sysdeps/gnu/errlist.h:96
 msgid "Bad address"
 msgstr "주소가 잘못됨"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.h:106
+#: sysdeps/gnu/errlist.h:103
 msgid "Block device required"
 msgstr "블럭 장치가 필요함"
 
 #. TRANS A system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.h:113
+#: sysdeps/gnu/errlist.h:110
 msgid "Device or resource busy"
 msgstr "장치나 자원이 동작 중"
 
 #. TRANS An existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.h:119
+#: sysdeps/gnu/errlist.h:116
 msgid "File exists"
 msgstr "파일이 있습니다"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:126
+#: sysdeps/gnu/errlist.h:123
 msgid "Invalid cross-device link"
 msgstr "부적절한 장치간 연결"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.h:132
+#: sysdeps/gnu/errlist.h:129
 msgid "No such device"
 msgstr "그런 장치가 없음"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.h:137
+#: sysdeps/gnu/errlist.h:134
 msgid "Not a directory"
 msgstr "디렉터리가 아닙니다"
 
 #. TRANS You cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.h:143
+#: sysdeps/gnu/errlist.h:140
 msgid "Is a directory"
 msgstr "디렉터리입니다"
 
 #. TRANS This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.h:149
+#: sysdeps/gnu/errlist.h:146
 msgid "Invalid argument"
 msgstr "부적절한 인수"
 
@@ -5640,20 +5636,20 @@ msgstr "부적절한 인수"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.h:160
+#: sysdeps/gnu/errlist.h:157
 msgid "Too many open files"
 msgstr "열린 파일이 너무 많음"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:167
+#: sysdeps/gnu/errlist.h:164
 msgid "Too many open files in system"
 msgstr "시스템에 파일을 너무 많이 열었음"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.h:173
+#: sysdeps/gnu/errlist.h:170
 msgid "Inappropriate ioctl for device"
 msgstr "장치에 대해 부적절한 ioctl"
 
@@ -5662,47 +5658,47 @@ msgstr "장치에 대해 부적절한 ioctl"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.h:182
+#: sysdeps/gnu/errlist.h:179
 msgid "Text file busy"
 msgstr "실행 파일 사용 중"
 
 #. TRANS The size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.h:187
+#: sysdeps/gnu/errlist.h:184
 msgid "File too large"
 msgstr "파일이 너무 큽니다"
 
 #. TRANS Write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.h:193
+#: sysdeps/gnu/errlist.h:190
 msgid "No space left on device"
 msgstr "장치에 남은 공간이 없음"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.h:198
+#: sysdeps/gnu/errlist.h:195
 msgid "Illegal seek"
 msgstr "탐색이 잘못됨"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.h:203
+#: sysdeps/gnu/errlist.h:200
 msgid "Read-only file system"
 msgstr "읽기전용 파일 시스템"
 
 #. TRANS The link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:210
+#: sysdeps/gnu/errlist.h:207
 msgid "Too many links"
 msgstr "연결이 너무 많음"
 
 #. TRANS Used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.h:225
+#: sysdeps/gnu/errlist.h:222
 msgid "Numerical argument out of domain"
 msgstr "영역을 벗어난 수치 인수"
 
 #. TRANS Used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.h:231
+#: sysdeps/gnu/errlist.h:228
 msgid "Numerical result out of range"
 msgstr "범위를 벗어난 수치 결과"
 
@@ -5735,7 +5731,7 @@ msgstr "범위를 벗어난 수치 결과"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.h:264
+#: sysdeps/gnu/errlist.h:261
 msgid "Resource temporarily unavailable"
 msgstr "자원이 일시적으로 사용 불가능함"
 
@@ -5747,47 +5743,47 @@ msgstr "자원이 일시적으로 사용 불가능함"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.h:276
+#: sysdeps/gnu/errlist.h:273
 msgid "Operation now in progress"
 msgstr "지금 진행 중인 명령"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.h:282
+#: sysdeps/gnu/errlist.h:279
 msgid "Operation already in progress"
 msgstr "이미 진행 중인 명령"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.h:287
+#: sysdeps/gnu/errlist.h:284
 msgid "Socket operation on non-socket"
 msgstr "비소켓상의 소켓 동작"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.h:293
+#: sysdeps/gnu/errlist.h:290
 msgid "Message too long"
 msgstr "메시지가 너무 깁니다"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.h:298
+#: sysdeps/gnu/errlist.h:295
 msgid "Protocol wrong type for socket"
 msgstr "소켓에 대한 규약이 잘못됨"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.h:304
+#: sysdeps/gnu/errlist.h:301
 msgid "Protocol not available"
 msgstr "규약 사용 불가능"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.h:311
+#: sysdeps/gnu/errlist.h:308
 msgid "Protocol not supported"
 msgstr "규약을 지원하지 않음"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.h:316
+#: sysdeps/gnu/errlist.h:313
 msgid "Socket type not supported"
 msgstr "소켓 타입을 지원하지 않습니다"
 
@@ -5797,71 +5793,71 @@ msgstr "소켓 타입을 지원하지 않습니다"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.h:326
+#: sysdeps/gnu/errlist.h:323
 msgid "Operation not supported"
 msgstr "명령을 지원하지 않음"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.h:331
+#: sysdeps/gnu/errlist.h:328
 msgid "Protocol family not supported"
 msgstr "규약군을 지원하지 않음"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.h:337
+#: sysdeps/gnu/errlist.h:334
 msgid "Address family not supported by protocol"
 msgstr "주소군을 규약에서 지원하지 않음"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:342
+#: sysdeps/gnu/errlist.h:339
 msgid "Address already in use"
 msgstr "주소가 이미 사용 중입니다"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:349
+#: sysdeps/gnu/errlist.h:346
 msgid "Cannot assign requested address"
 msgstr "요청한 주소를 배정할 수 없습니다"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.h:354
+#: sysdeps/gnu/errlist.h:351
 msgid "Network is down"
 msgstr "네트워크가 죽었습니다"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.h:360
+#: sysdeps/gnu/errlist.h:357
 msgid "Network is unreachable"
 msgstr "네트워크가 접근 불가능합니다"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.h:365
+#: sysdeps/gnu/errlist.h:362
 msgid "Network dropped connection on reset"
 msgstr "네트웍이 reset때문에 연결을 끊었습니다"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.h:370
+#: sysdeps/gnu/errlist.h:367
 msgid "Software caused connection abort"
 msgstr "소프트웨어가 연결 중단을 초래했습니다"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.h:377
+#: sysdeps/gnu/errlist.h:374
 msgid "Connection reset by peer"
 msgstr "상대편이 연결을 끊음"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.h:384
+#: sysdeps/gnu/errlist.h:381
 msgid "No buffer space available"
 msgstr "사용 가능한 버퍼 공간이 없음"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.h:390
+#: sysdeps/gnu/errlist.h:387
 msgid "Transport endpoint is already connected"
 msgstr "전송 종료지점이 이미 연결되어 있습니다"
 
@@ -5869,74 +5865,74 @@ msgstr "전송 종료지점이 이미 연결되어 있습니다"
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.h:398
+#: sysdeps/gnu/errlist.h:395
 msgid "Transport endpoint is not connected"
 msgstr "전송 종료지점이 연결되어 있지 않습니다"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.h:405
+#: sysdeps/gnu/errlist.h:402
 msgid "Destination address required"
 msgstr "목적지 주소가 필요함"
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.h:410
+#: sysdeps/gnu/errlist.h:407
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "전송 종료지점이 지난 후에 보낼 수 없습니다"
 
-#: sysdeps/gnu/errlist.h:413
+#: sysdeps/gnu/errlist.h:410
 msgid "Too many references: cannot splice"
 msgstr "참조가 너무 많음: 연결할 수 없습니다"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.h:419
+#: sysdeps/gnu/errlist.h:416
 msgid "Connection timed out"
 msgstr "연결 시간 초과"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.h:425
+#: sysdeps/gnu/errlist.h:422
 msgid "Connection refused"
 msgstr "연결이 거부됨"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.h:431
+#: sysdeps/gnu/errlist.h:428
 msgid "Too many levels of symbolic links"
 msgstr "기호 연결의 단계가 너무 많음"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.h:438
+#: sysdeps/gnu/errlist.h:435
 msgid "File name too long"
 msgstr "파일 이름이 너무 깁니다"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.h:443
+#: sysdeps/gnu/errlist.h:440
 msgid "Host is down"
 msgstr "호스트가 죽었습니다"
 
-#: sysdeps/gnu/errlist.h:448
+#: sysdeps/gnu/errlist.h:445
 msgid "No route to host"
 msgstr "호스트로 갈 루트가 없음"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.h:454
+#: sysdeps/gnu/errlist.h:451
 msgid "Directory not empty"
 msgstr "디렉터리가 비어있지 않음"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.h:460
+#: sysdeps/gnu/errlist.h:457
 msgid "Too many users"
 msgstr "사용자가 너무 많음"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.h:465
+#: sysdeps/gnu/errlist.h:462
 msgid "Disk quota exceeded"
 msgstr "디스크 할당량이 초과됨"
 
@@ -5945,7 +5941,7 @@ msgstr "디스크 할당량이 초과됨"
 #. TRANS for NFS file systems or corruption in other file systems.
 #. TRANS Repairing this condition usually requires unmounting, possibly repairing
 #. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.h:474
+#: sysdeps/gnu/errlist.h:471
 msgid "Stale file handle"
 msgstr "끊어진 파일 핸들"
 
@@ -5953,7 +5949,7 @@ msgstr "끊어진 파일 핸들"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.h:482
+#: sysdeps/gnu/errlist.h:479
 msgid "Object is remote"
 msgstr "원격 개체입니다"
 
@@ -5961,7 +5957,7 @@ msgstr "원격 개체입니다"
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.h:490
+#: sysdeps/gnu/errlist.h:487
 msgid "No locks available"
 msgstr "사용가능한 잠금장치가 없음"
 
@@ -5970,57 +5966,57 @@ msgstr "사용가능한 잠금장치가 없음"
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.h:499
+#: sysdeps/gnu/errlist.h:496
 msgid "Function not implemented"
 msgstr "함수를 구현하지 않았습니다"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.h:505
+#: sysdeps/gnu/errlist.h:502
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "부적절하거나 불완전한 다중바이트 또는 광역 문자"
 
-#: sysdeps/gnu/errlist.h:508
+#: sysdeps/gnu/errlist.h:505
 msgid "Bad message"
 msgstr "메시지가 잘못됨"
 
-#: sysdeps/gnu/errlist.h:511
+#: sysdeps/gnu/errlist.h:508
 msgid "Identifier removed"
 msgstr "식별자 제거"
 
-#: sysdeps/gnu/errlist.h:514
+#: sysdeps/gnu/errlist.h:511
 msgid "Multihop attempted"
 msgstr "여러개의 hop이 시도됨"
 
-#: sysdeps/gnu/errlist.h:517
+#: sysdeps/gnu/errlist.h:514
 msgid "No data available"
 msgstr "사용 가능한 자료가 없음"
 
-#: sysdeps/gnu/errlist.h:520
+#: sysdeps/gnu/errlist.h:517
 msgid "Link has been severed"
 msgstr "링크가 손상되었습니다"
 
-#: sysdeps/gnu/errlist.h:523
+#: sysdeps/gnu/errlist.h:520
 msgid "No message of desired type"
 msgstr "적당한 형을 가진 메시지가 없음"
 
-#: sysdeps/gnu/errlist.h:526
+#: sysdeps/gnu/errlist.h:523
 msgid "Out of streams resources"
 msgstr "스트림 자원 부족"
 
-#: sysdeps/gnu/errlist.h:529
+#: sysdeps/gnu/errlist.h:526
 msgid "Device not a stream"
 msgstr "장치가 스트림이 아님"
 
-#: sysdeps/gnu/errlist.h:532
+#: sysdeps/gnu/errlist.h:529
 msgid "Value too large for defined data type"
 msgstr "정의한 자료형으로 쓰기엔 너무 큰 값"
 
-#: sysdeps/gnu/errlist.h:535
+#: sysdeps/gnu/errlist.h:532
 msgid "Protocol error"
 msgstr "규약 오류"
 
-#: sysdeps/gnu/errlist.h:538
+#: sysdeps/gnu/errlist.h:535
 msgid "Timer expired"
 msgstr "타이머 만료"
 
@@ -6028,195 +6024,195 @@ msgstr "타이머 만료"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.h:546
+#: sysdeps/gnu/errlist.h:543
 msgid "Operation canceled"
 msgstr "명령을 취소하였습니다"
 
-#: sysdeps/gnu/errlist.h:549
+#: sysdeps/gnu/errlist.h:546
 msgid "Owner died"
 msgstr "소유자가 죽었습니다"
 
-#: sysdeps/gnu/errlist.h:552
+#: sysdeps/gnu/errlist.h:549
 msgid "State not recoverable"
 msgstr "상태를 복구할 수 없습니다"
 
-#: sysdeps/gnu/errlist.h:555
+#: sysdeps/gnu/errlist.h:552
 msgid "Interrupted system call should be restarted"
 msgstr "중단된 시스템 콜을 다시 시작해야 합니다"
 
-#: sysdeps/gnu/errlist.h:558
+#: sysdeps/gnu/errlist.h:555
 msgid "Channel number out of range"
 msgstr "범위를 벗어난 채널 번호"
 
-#: sysdeps/gnu/errlist.h:561
+#: sysdeps/gnu/errlist.h:558
 msgid "Level 2 not synchronized"
 msgstr "등급 2가 동기화되지 않음"
 
-#: sysdeps/gnu/errlist.h:564
+#: sysdeps/gnu/errlist.h:561
 msgid "Level 3 halted"
 msgstr "등급 3 멎었음"
 
-#: sysdeps/gnu/errlist.h:567
+#: sysdeps/gnu/errlist.h:564
 msgid "Level 3 reset"
 msgstr "등급 3 리셋"
 
-#: sysdeps/gnu/errlist.h:570
+#: sysdeps/gnu/errlist.h:567
 msgid "Link number out of range"
 msgstr "범위를 벗어난 링크 번호"
 
-#: sysdeps/gnu/errlist.h:573
+#: sysdeps/gnu/errlist.h:570
 msgid "Protocol driver not attached"
 msgstr "규약 구동기에 연결되지 않음"
 
-#: sysdeps/gnu/errlist.h:576
+#: sysdeps/gnu/errlist.h:573
 msgid "No CSI structure available"
 msgstr "사용 가능한 CSI 구조가 없음"
 
-#: sysdeps/gnu/errlist.h:579
+#: sysdeps/gnu/errlist.h:576
 msgid "Level 2 halted"
 msgstr "등급 2 멎었음"
 
-#: sysdeps/gnu/errlist.h:582
+#: sysdeps/gnu/errlist.h:579
 msgid "Invalid exchange"
 msgstr "부적절한 교환"
 
-#: sysdeps/gnu/errlist.h:585
+#: sysdeps/gnu/errlist.h:582
 msgid "Invalid request descriptor"
 msgstr "요청 디스크립터가 잘못됨"
 
-#: sysdeps/gnu/errlist.h:588
+#: sysdeps/gnu/errlist.h:585
 msgid "Exchange full"
 msgstr "교환이 가득 참"
 
-#: sysdeps/gnu/errlist.h:591
+#: sysdeps/gnu/errlist.h:588
 msgid "No anode"
 msgstr "anode가 없습니다"
 
-#: sysdeps/gnu/errlist.h:594
+#: sysdeps/gnu/errlist.h:591
 msgid "Invalid request code"
 msgstr "부적절한 요청 코드"
 
-#: sysdeps/gnu/errlist.h:597
+#: sysdeps/gnu/errlist.h:594
 msgid "Invalid slot"
 msgstr "부적절한 슬롯"
 
-#: sysdeps/gnu/errlist.h:600
+#: sysdeps/gnu/errlist.h:597
 msgid "Bad font file format"
 msgstr "글꼴 파일 형식이 틀렸습니다"
 
-#: sysdeps/gnu/errlist.h:603
+#: sysdeps/gnu/errlist.h:600
 msgid "Machine is not on the network"
 msgstr "컴퓨터가 네트워크에 붙어 있지 않습니다"
 
-#: sysdeps/gnu/errlist.h:606
+#: sysdeps/gnu/errlist.h:603
 msgid "Package not installed"
 msgstr "패키지를 설치하지 않았습니다"
 
-#: sysdeps/gnu/errlist.h:609
+#: sysdeps/gnu/errlist.h:606
 msgid "Advertise error"
 msgstr "선전 오류"
 
-#: sysdeps/gnu/errlist.h:612
+#: sysdeps/gnu/errlist.h:609
 msgid "Srmount error"
 msgstr "srmount 오류"
 
-#: sysdeps/gnu/errlist.h:615
+#: sysdeps/gnu/errlist.h:612
 msgid "Communication error on send"
 msgstr "전송 중 통신 오류"
 
-#: sysdeps/gnu/errlist.h:618
+#: sysdeps/gnu/errlist.h:615
 msgid "RFS specific error"
 msgstr "RFS 관련 오류"
 
-#: sysdeps/gnu/errlist.h:621
+#: sysdeps/gnu/errlist.h:618
 msgid "Name not unique on network"
 msgstr "이름이 네트워크 상에서 단일하지 않습니다"
 
-#: sysdeps/gnu/errlist.h:624
+#: sysdeps/gnu/errlist.h:621
 msgid "File descriptor in bad state"
 msgstr "파일 디스크립터가 잘못된 상태에 있습니다"
 
-#: sysdeps/gnu/errlist.h:627
+#: sysdeps/gnu/errlist.h:624
 msgid "Remote address changed"
 msgstr "원격 주소가 바뀌었습니다"
 
-#: sysdeps/gnu/errlist.h:630
+#: sysdeps/gnu/errlist.h:627
 msgid "Can not access a needed shared library"
 msgstr "필요한 공유 라이브러리에 접근할 수 없습니다"
 
-#: sysdeps/gnu/errlist.h:633
+#: sysdeps/gnu/errlist.h:630
 msgid "Accessing a corrupted shared library"
 msgstr "손상된 공유 라이브러리에 접근합니다"
 
-#: sysdeps/gnu/errlist.h:636
+#: sysdeps/gnu/errlist.h:633
 msgid ".lib section in a.out corrupted"
 msgstr "a.out의 .lib 섹션이 손상되었습니다"
 
-#: sysdeps/gnu/errlist.h:639
+#: sysdeps/gnu/errlist.h:636
 msgid "Attempting to link in too many shared libraries"
 msgstr "너무 많은 동적 라이브러리와 링크하려고 시도합니다"
 
-#: sysdeps/gnu/errlist.h:642
+#: sysdeps/gnu/errlist.h:639
 msgid "Cannot exec a shared library directly"
 msgstr "공유 라이브러리를 직접 실행할 수 없습니다"
 
-#: sysdeps/gnu/errlist.h:645
+#: sysdeps/gnu/errlist.h:642
 msgid "Streams pipe error"
 msgstr "스트림 파이프 오류"
 
-#: sysdeps/gnu/errlist.h:648
+#: sysdeps/gnu/errlist.h:645
 msgid "Structure needs cleaning"
 msgstr "구조에 청소가 필요합니다"
 
-#: sysdeps/gnu/errlist.h:651
+#: sysdeps/gnu/errlist.h:648
 msgid "Not a XENIX named type file"
 msgstr "XENIX named 타입 파일이 아닙니다"
 
-#: sysdeps/gnu/errlist.h:654
+#: sysdeps/gnu/errlist.h:651
 msgid "No XENIX semaphores available"
 msgstr "사용 가능한 XENIX 세마포어가 없습니다"
 
-#: sysdeps/gnu/errlist.h:657
+#: sysdeps/gnu/errlist.h:654
 msgid "Is a named type file"
 msgstr "named 타입 파일입니다"
 
-#: sysdeps/gnu/errlist.h:660
+#: sysdeps/gnu/errlist.h:657
 msgid "Remote I/O error"
 msgstr "원격 입출력 오류"
 
-#: sysdeps/gnu/errlist.h:663
+#: sysdeps/gnu/errlist.h:660
 msgid "No medium found"
 msgstr "미디어가 없음"
 
-#: sysdeps/gnu/errlist.h:666
+#: sysdeps/gnu/errlist.h:663
 msgid "Wrong medium type"
 msgstr "미디어 종류가 잘못됨"
 
-#: sysdeps/gnu/errlist.h:669
+#: sysdeps/gnu/errlist.h:666
 msgid "Required key not available"
 msgstr "필요한 키가 없습니다"
 
-#: sysdeps/gnu/errlist.h:672
+#: sysdeps/gnu/errlist.h:669
 msgid "Key has expired"
 msgstr "키가 만료되었습니다"
 
-#: sysdeps/gnu/errlist.h:675
+#: sysdeps/gnu/errlist.h:672
 msgid "Key has been revoked"
 msgstr "키가 종료되었습니다"
 
-#: sysdeps/gnu/errlist.h:678
+#: sysdeps/gnu/errlist.h:675
 msgid "Key was rejected by service"
 msgstr "서비스가 키를 거부했습니다"
 
-#: sysdeps/gnu/errlist.h:681
+#: sysdeps/gnu/errlist.h:678
 msgid "Operation not possible due to RF-kill"
 msgstr "작업이 불가능, RF-kill 때문"
 
-#: sysdeps/gnu/errlist.h:684
+#: sysdeps/gnu/errlist.h:681
 msgid "Memory page has hardware error"
 msgstr "메모리 페이지에 하드웨어 오류"
 
-#: sysdeps/gnu/errlist.h:687
+#: sysdeps/gnu/errlist.h:684
 msgid "RPC struct is bad"
 msgstr "RPC 구조가 잘못되었습니다"
 
@@ -6225,43 +6221,43 @@ msgstr "RPC 구조가 잘못되었습니다"
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.h:696
+#: sysdeps/gnu/errlist.h:693
 msgid "Inappropriate file type or format"
 msgstr "부적절한 파일 타입 또는 형식"
 
-#: sysdeps/gnu/errlist.h:699
+#: sysdeps/gnu/errlist.h:696
 msgid "RPC bad procedure for program"
 msgstr "RPC 프로그램의 프로시져가 잘못됨"
 
-#: sysdeps/gnu/errlist.h:702
+#: sysdeps/gnu/errlist.h:699
 msgid "Authentication error"
 msgstr "인증 오류"
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.h:709
+#: sysdeps/gnu/errlist.h:706
 msgid "Translator died"
 msgstr "변환기가 죽었음"
 
-#: sysdeps/gnu/errlist.h:712
+#: sysdeps/gnu/errlist.h:709
 msgid "RPC version wrong"
 msgstr "RPC 버전이 잘못됨"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.h:717
+#: sysdeps/gnu/errlist.h:714
 msgid "You really blew it this time"
 msgstr "이번엔 정말로 날려버렸습니다"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.h:724
+#: sysdeps/gnu/errlist.h:721
 msgid "Too many processes"
 msgstr "프로세스가 너무 많음"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.h:729
+#: sysdeps/gnu/errlist.h:726
 msgid "Gratuitous error"
 msgstr "이유없는 오류"
 
@@ -6277,11 +6273,11 @@ msgstr "이유없는 오류"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.h:745
+#: sysdeps/gnu/errlist.h:742
 msgid "Not supported"
 msgstr "지원하지 않습니다"
 
-#: sysdeps/gnu/errlist.h:748
+#: sysdeps/gnu/errlist.h:745
 msgid "RPC program version wrong"
 msgstr "RPC 프로그램 버전이 잘못됨"
 
@@ -6291,7 +6287,7 @@ msgstr "RPC 프로그램 버전이 잘못됨"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.h:758
+#: sysdeps/gnu/errlist.h:755
 msgid "Inappropriate operation for background process"
 msgstr "배경 프로세스로 부적합한 동작"
 
@@ -6309,7 +6305,7 @@ msgstr "배경 프로세스로 부적합한 동작"
 #. TRANS @c
 #. TRANS @c Translators, please do not translate this litteraly, translate it into
 #. TRANS @c an idiomatic funny way of saying that the computer died.
-#: sysdeps/gnu/errlist.h:776
+#: sysdeps/gnu/errlist.h:773
 msgid "Computer bought the farm"
 msgstr "컴퓨터가 농장을 샀습니다"
 
@@ -6318,22 +6314,22 @@ msgstr "컴퓨터가 농장을 샀습니다"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.h:785
+#: sysdeps/gnu/errlist.h:782
 msgid "Operation would block"
 msgstr "동작이 막힙니다"
 
-#: sysdeps/gnu/errlist.h:788
+#: sysdeps/gnu/errlist.h:785
 msgid "Need authenticator"
 msgstr "인증기가 필요함"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.h:795
+#: sysdeps/gnu/errlist.h:792
 msgid "?"
 msgstr "?"
 
-#: sysdeps/gnu/errlist.h:798
+#: sysdeps/gnu/errlist.h:795
 msgid "RPC program not available"
 msgstr "RPC 프로그램 사용 불가능"
 
@@ -6409,11 +6405,6 @@ msgstr "시그널 때문에 중단됨"
 msgid "Parameter string not correctly encoded"
 msgstr "파라미터 문자열을 올바르게 인코딩하지 않았습니다"
 
-#: sysdeps/unix/sysv/linux/i386/readelflib.c:65
-#, c-format
-msgid "%s is for unknown machine %d.\n"
-msgstr "%s은(는) 알려지지 않은 기계 %d을(를) 위한 것입니다.\n"
-
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:58
 #, c-format
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
@@ -6438,15 +6429,20 @@ msgstr "`%s'을(를) 열 수 없습니다"
 msgid "cannot read header from `%s'"
 msgstr "`%s'에서 헤더를 읽을 수 없습니다"
 
-#: sysdeps/x86/dl-cet.c:147
+#: sysdeps/unix/sysv/linux/x86/readelflib.c:66
+#, c-format
+msgid "%s is for unknown machine %d.\n"
+msgstr "%s은(는) 알려지지 않은 기계 %d을(를) 위한 것입니다.\n"
+
+#: sysdeps/x86/dl-cet.c:154
 msgid "rebuild shared object with IBT support enabled"
 msgstr "IBT 기능을 켜고 공유 오브젝트를 다시 만듭니다"
 
-#: sysdeps/x86/dl-cet.c:158
+#: sysdeps/x86/dl-cet.c:165
 msgid "rebuild shared object with SHSTK support enabled"
 msgstr "SHSTK 기능을 켜고 공유 오브젝트를 다시 만듭니다"
 
-#: sysdeps/x86/dl-cet.c:187
+#: sysdeps/x86/dl-cet.c:194
 msgid "can't disable CET"
 msgstr "CET 사용을 끌 수 없습니다"
 

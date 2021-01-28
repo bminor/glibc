@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.22-pre1\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2020-07-22 23:24-0400\n"
+"POT-Creation-Date: 2021-01-27 17:07-0300\n"
 "PO-Revision-Date: 2016-01-04 23:59+0100\n"
 "Last-Translator: Primož Peterlin <primozz.peterlin@gmail.com>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -69,7 +69,7 @@ msgstr "Poda kratka navodila za uporabo"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
 #: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "NAME"
 msgstr "IME"
 
@@ -119,7 +119,7 @@ msgstr "Ustvari zaglavno datoteko C IME z definicijami simbolov"
 msgid "Do not use existing catalog, force new output file"
 msgstr "Ne uporabljaj obstoječega kataloga, zahtevaj novo izhodno datoteko"
 
-#: catgets/gencat.c:113 nss/makedb.c:120
+#: catgets/gencat.c:113 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "Zapiši izhod na datoteko IME"
 
@@ -137,11 +137,11 @@ msgstr ""
 "-o IZHODNA_DATOTEKA [VHODNA_DATOTEKA]...\n"
 "[IZHODNA_DATOTEKA [VHODNA_DATOTEKA]...]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:306
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:311
 #: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:388
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:276
 #: locale/programs/localedef.c:438 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:370
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -152,11 +152,11 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:322 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -170,10 +170,10 @@ msgstr ""
 "niti jamstev USTREZNOSTI ZA PRODAJO ali PRIMERNOSTI ZA RABO.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:327 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -184,7 +184,7 @@ msgid "*standard input*"
 msgstr "*standardni vhod*"
 
 #: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
-#: nss/makedb.c:246
+#: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "Vhodne datoteke »%s« ni mogoče odpreti"
@@ -366,56 +366,56 @@ msgstr "napačna zaščita"
 msgid "invalid mode parameter"
 msgstr "napačen parameter zaščita"
 
-#: elf/cache.c:69
+#: elf/cache.c:180
 msgid "unknown"
 msgstr "neznano"
 
-#: elf/cache.c:141
+#: elf/cache.c:254
 msgid "Unknown OS"
 msgstr "Neznan OS"
 
-#: elf/cache.c:146
+#: elf/cache.c:259
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1297
+#: elf/cache.c:320 elf/ldconfig.c:1427
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Ni mogoče odpreti predpomnilniške datoteke %s\n"
 
-#: elf/cache.c:177
+#: elf/cache.c:334
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "mmap predpomnilniške datoteke ni uspel.\n"
 
-#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
+#: elf/cache.c:338 elf/cache.c:352 elf/cache.c:363
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Datoteka ni predpomnilniška datoteka.\n"
 
-#: elf/cache.c:233 elf/cache.c:243
+#: elf/cache.c:392 elf/cache.c:407
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d knjižnic najdeno v predpomnilniku »%s«\n"
 
-#: elf/cache.c:437
+#: elf/cache.c:725
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Začasne predpomnilniške datoteke %s ni mogoče ustvariti"
 
-#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
-#: elf/cache.c:473
+#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
+#: elf/cache.c:770
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Zapisovanje predpomnilniških podatkov ni uspelo"
 
-#: elf/cache.c:468
+#: elf/cache.c:765
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Sprememba pravic dostopa za %s na %#o ni uspela"
 
-#: elf/cache.c:477
+#: elf/cache.c:774
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Preimenovanje %s v %s ni uspelo"
@@ -473,135 +473,135 @@ msgstr "strani za tabelo fptr ni mogoče preslikati"
 msgid "internal error: symidx out of range of fptr table"
 msgstr "interna napaka: symidx je izven obsega tabele fptr"
 
-#: elf/dl-hwcaps.c:92 elf/dl-hwcaps.c:104
+#: elf/dl-hwcaps.c:247 elf/dl-hwcaps.c:262
 msgid "cannot create capability list"
 msgstr "seznama sposobnosti ni mogoče ustvariti"
 
-#: elf/dl-load.c:428
+#: elf/dl-load.c:432
 msgid "cannot allocate name record"
 msgstr "zapisa imena ni mogoče dodeliti"
 
-#: elf/dl-load.c:514 elf/dl-load.c:627 elf/dl-load.c:716 elf/dl-load.c:812
+#: elf/dl-load.c:518 elf/dl-load.c:631 elf/dl-load.c:725 elf/dl-load.c:821
 msgid "cannot create cache for search path"
 msgstr "predpomnilnika za iskalno pot ni mogoče ustvariti"
 
-#: elf/dl-load.c:610
+#: elf/dl-load.c:614
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "kopije RUNPATH/RPATH ni mogoče ustvariti"
 
-#: elf/dl-load.c:703
+#: elf/dl-load.c:711
 msgid "cannot create search path array"
 msgstr "polja iskalnih poti ni mogoče ustvariti"
 
-#: elf/dl-load.c:964
+#: elf/dl-load.c:951
 msgid "cannot stat shared object"
 msgstr "statusa deljenega predmeta ni mogoče ugotoviti"
 
-#: elf/dl-load.c:1075 elf/dl-load.c:2278
+#: elf/dl-load.c:1082 elf/dl-load.c:2293
 msgid "cannot create shared object descriptor"
 msgstr "deljenega predmetnega deskriptorja ni mogoče ustvariti"
 
-#: elf/dl-load.c:1094 elf/dl-load.c:1658 elf/dl-load.c:1759
+#: elf/dl-load.c:1101 elf/dl-load.c:1668 elf/dl-load.c:1770
 msgid "cannot read file data"
 msgstr "podatkov datoteke ni mogoče prebrati"
 
-#: elf/dl-load.c:1140
+#: elf/dl-load.c:1147
 msgid "ELF load command alignment not page-aligned"
 msgstr "poravnava ukaza ELF za nalaganje ni poravnana s stranjo"
 
-#: elf/dl-load.c:1147
+#: elf/dl-load.c:1154
 msgid "ELF load command address/offset not properly aligned"
 msgstr "naslov/odmik ukaza ELF za nalaganje ni primerno poravnan"
 
-#: elf/dl-load.c:1226
+#: elf/dl-load.c:1233
 msgid "object file has no loadable segments"
 msgstr "predmetna datoteka nima včitljivega segmenta"
 
-#: elf/dl-load.c:1239
+#: elf/dl-load.c:1246
 msgid "cannot dynamically load executable"
 msgstr "dinamično nalaganje izvedljive datoteke ni mogoče"
 
-#: elf/dl-load.c:1275
+#: elf/dl-load.c:1271
 msgid "object file has no dynamic section"
 msgstr "predmetna datoteka nima dinamične sekcije"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "dlopen() na deljenih predmetih ni mogoč"
 
-#: elf/dl-load.c:1317
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "dodelitev pomnilnika za glavo programa ni mogoča"
 
-#: elf/dl-load.c:1350 elf/dl-load.h:130
+#: elf/dl-load.c:1337 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "sprememba zaščite pomnilnika ni mogoča"
 
-#: elf/dl-load.c:1370
+#: elf/dl-load.c:1357
 msgid "cannot enable executable stack as shared object requires"
 msgstr "izvedljivega sklada ni mogoče omogočiti, kot to zahteva deljeni predmet"
 
-#: elf/dl-load.c:1383
+#: elf/dl-load.c:1385
 msgid "cannot close file descriptor"
 msgstr "datotečnega deskriptorja ni mogoče zapreti"
 
-#: elf/dl-load.c:1658
+#: elf/dl-load.c:1668
 msgid "file too short"
 msgstr "datoteka je prekratka"
 
-#: elf/dl-load.c:1693
+#: elf/dl-load.c:1704
 msgid "invalid ELF header"
 msgstr "neveljavna glava ELF"
 
-#: elf/dl-load.c:1705
+#: elf/dl-load.c:1716
 msgid "ELF file data encoding not big-endian"
 msgstr "kodiranje podatkov datoteke ELF ni »big-endian«"
 
-#: elf/dl-load.c:1707
+#: elf/dl-load.c:1718
 msgid "ELF file data encoding not little-endian"
 msgstr "kodiranje podatkov datoteke ELF ni »little-endian«"
 
-#: elf/dl-load.c:1711
+#: elf/dl-load.c:1722
 msgid "ELF file version ident does not match current one"
 msgstr "identifikator različice datoteke ELF se ne ujema s trenutnim"
 
-#: elf/dl-load.c:1715
+#: elf/dl-load.c:1726
 msgid "ELF file OS ABI invalid"
 msgstr "OS ABI datoteke ELF ni veljaven"
 
-#: elf/dl-load.c:1718
+#: elf/dl-load.c:1729
 msgid "ELF file ABI version invalid"
 msgstr "različica ABI datoteke ELF ni veljavna"
 
-#: elf/dl-load.c:1721
+#: elf/dl-load.c:1732
 msgid "nonzero padding in e_ident"
 msgstr "neničelno zapolnjenje pri e_ident"
 
-#: elf/dl-load.c:1724
+#: elf/dl-load.c:1735
 msgid "internal error"
 msgstr "interna napaka"
 
-#: elf/dl-load.c:1731
+#: elf/dl-load.c:1742
 msgid "ELF file version does not match current one"
 msgstr "različica datoteke ELF se ne ujema s trenutno"
 
-#: elf/dl-load.c:1739
+#: elf/dl-load.c:1750
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "samo ET_DYN in ET_EXEC je mogoče naložiti"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1755
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize datoteke ELF ni pričakovane velikosti"
 
-#: elf/dl-load.c:2297
+#: elf/dl-load.c:2312
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "napačen razred ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2298
+#: elf/dl-load.c:2313
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "napačen razred ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2301
+#: elf/dl-load.c:2316
 msgid "cannot open shared object file"
 msgstr "deljene predmetne datoteke ni mogoče odpreti"
 
@@ -625,15 +625,15 @@ msgstr "ni mogoče razširiti globalnega področja"
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Zapletanje števca generacij TLS! Prosim, javite to napako."
 
-#: elf/dl-open.c:808
+#: elf/dl-open.c:802
 msgid "invalid mode for dlopen()"
 msgstr "neveljavni način za dlopen()"
 
-#: elf/dl-open.c:825
+#: elf/dl-open.c:819
 msgid "no more namespaces available for dlmopen()"
 msgstr "nobenega imenskega prostora za dlmopen() ni več na voljo"
 
-#: elf/dl-open.c:849
+#: elf/dl-open.c:843
 msgid "invalid target namespace in dlmopen()"
 msgstr "neveljavni ciljni imenski prostor pri dlmopen()"
 
@@ -674,166 +674,166 @@ msgstr "napaka pri vpogledu v različico"
 msgid "cannot allocate version reference table"
 msgstr "ni mogoče dodeliti tabele sklicev različic"
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:150
 msgid "Print cache"
 msgstr "Izpiši vsebino predpomnilnika"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:151
 msgid "Generate verbose messages"
 msgstr "Ustvarjaj obširna sporočila"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:152
 msgid "Don't build cache"
 msgstr "Ne gradi predpomnilnika"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "Change to and use ROOT as root directory"
 msgstr "Spremeni delovni imenik v KOREN in ga uporabi kot korenski imenik"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "ROOT"
 msgstr "KOREN"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "CACHE"
 msgstr "PREDPOMNILNIK"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "Use CACHE as cache file"
 msgstr "Uporabi PREDPOMNILNIK kot predpomnilniško datoteko"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "CONF"
 msgstr "KONF"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "Use CONF as configuration file"
 msgstr "Uporabi KONF kot nastavitveno datoteko"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:157
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Obdelaj le imenike, določene v ukazni vrstici. Ne gradi predpomnilnika."
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:158
 msgid "Manually link individual libraries."
 msgstr "Ročno poveži posamične knjižnice."
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:159
 msgid "FORMAT"
 msgstr "OBLIKA"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:160
 msgid "Ignore auxiliary cache file"
 msgstr "Ne upoštevaj nadomestne predpomnilniške datoteke"
 
-#: elf/ldconfig.c:163
+#: elf/ldconfig.c:168
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Nastavi izvajalne povezave dinamičnega povezovalnika."
 
-#: elf/ldconfig.c:346
+#: elf/ldconfig.c:371
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Pot »%s« je podana več kot enkrat"
 
-#: elf/ldconfig.c:393
+#: elf/ldconfig.c:487
 #, c-format
 msgid "%s is not a known library type"
 msgstr "»%s« ni poznan tip knjižnice"
 
-#: elf/ldconfig.c:421
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't stat %s"
 msgstr "Statusa %s ni moč ugotoviti"
 
-#: elf/ldconfig.c:500
+#: elf/ldconfig.c:596
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Statusa %s ni moč ugotoviti\n"
 
-#: elf/ldconfig.c:510
+#: elf/ldconfig.c:606
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s ni simbolna povezava\n"
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:625
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Ni mogoče odstraniti povezave %s"
 
-#: elf/ldconfig.c:535
+#: elf/ldconfig.c:631
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Ni mogoče ustvariti povezave %s na %s"
 
-#: elf/ldconfig.c:541
+#: elf/ldconfig.c:637
 msgid " (changed)\n"
 msgstr " (zamenjano)\n"
 
-#: elf/ldconfig.c:543
+#: elf/ldconfig.c:639
 msgid " (SKIPPED)\n"
 msgstr " (PRESKOČENO)\n"
 
-#: elf/ldconfig.c:598
+#: elf/ldconfig.c:695
 #, c-format
 msgid "Can't find %s"
 msgstr "Neuspelo iskanje %s"
 
-#: elf/ldconfig.c:614 elf/ldconfig.c:781 elf/ldconfig.c:839 elf/ldconfig.c:871
+#: elf/ldconfig.c:711 elf/ldconfig.c:893 elf/ldconfig.c:945 elf/ldconfig.c:977
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Ni mogoče izvesti lstat %s"
 
-#: elf/ldconfig.c:621
+#: elf/ldconfig.c:718
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Datoteka %s ni bila upoštevana, ker ni navadna datoteka."
 
-#: elf/ldconfig.c:630
+#: elf/ldconfig.c:727
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Povezava ni bila ustvarjena, ker ni bilo moč najti soname za %s"
 
-#: elf/ldconfig.c:714
+#: elf/ldconfig.c:824
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Ni mogoče odpreti imenika %s"
 
-#: elf/ldconfig.c:799 elf/ldconfig.c:859 elf/readlib.c:97
+#: elf/ldconfig.c:911 elf/ldconfig.c:965 elf/readlib.c:98
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Vhodne datoteke %s ni moč najti.\n"
 
-#: elf/ldconfig.c:806
+#: elf/ldconfig.c:918
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Statusa %s ni moč ugotoviti"
 
-#: elf/ldconfig.c:953
+#: elf/ldconfig.c:1063
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "knjižnica libc5 %s v napačnem imeniku"
 
-#: elf/ldconfig.c:956
+#: elf/ldconfig.c:1066
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "knjižnica libc6 %s v napačnem imeniku"
 
-#: elf/ldconfig.c:959
+#: elf/ldconfig.c:1069
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "knjižnica libc4 %s v napačnem imeniku"
 
-#: elf/ldconfig.c:987
+#: elf/ldconfig.c:1097
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "knjižnici %s in %s v imeniku %s imata isti soname, a sta različnega tipa."
 
-#: elf/ldconfig.c:1097
+#: elf/ldconfig.c:1227
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Opozorilo: nastavitvene datoteke ni mogoče prebrati in se je ne upošteva: %s"
 
-#: elf/ldconfig.c:1164
+#: elf/ldconfig.c:1294
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "ob izbiri -r je potrebo absolutno ime za nastavitveno datoteko"
@@ -844,29 +844,29 @@ msgstr "ob izbiri -r je potrebo absolutno ime za nastavitveno datoteko"
 # ! INEXACT
 # #-#-#-#-#  gettext-tools-0.18.3.sl.po (GNU gettext-tools 0.18.3)  #-#-#-#-#
 #  Morda ,,Zmanjkalo pomnilnika''?
-#: elf/ldconfig.c:1171 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "pomnilnik porabljen"
 
-#: elf/ldconfig.c:1204
+#: elf/ldconfig.c:1334
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: imenika %s ni mogoče prebrati"
 
-#: elf/ldconfig.c:1252
+#: elf/ldconfig.c:1382
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "relativna pot »%s« uporabljena za izgradnjo predpomnilnika"
 
-#: elf/ldconfig.c:1276
+#: elf/ldconfig.c:1406
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Sprememba imenika na / ni mogoča"
 
-#: elf/ldconfig.c:1317
+#: elf/ldconfig.c:1447
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Ni mogoče odpreti imenika %s s predpomnilniško datoteko\n"
@@ -912,7 +912,7 @@ msgstr "manjkajoči argumenti datoteke"
 #. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:16
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:13
 msgid "No such file or directory"
 msgstr "Datoteka ali imenik s tem imenom ne obstaja"
 
@@ -1029,57 +1029,57 @@ msgstr "informacije o procesu %lu niso na voljo"
 msgid "process %lu is no ELF program"
 msgstr "proces %lu ni program ELF"
 
-#: elf/readelflib.c:34
+#: elf/readelflib.c:36
 #, c-format
 msgid "file %s is truncated\n"
 msgstr "datoteka %s je okrnjena\n"
 
-#: elf/readelflib.c:65
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s je 32-bitna datoteka ELF.\n"
 
-#: elf/readelflib.c:67
+#: elf/readelflib.c:69
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s je 64-bitna datoteka ELF.\n"
 
-#: elf/readelflib.c:69
+#: elf/readelflib.c:71
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "Neznani ELFCLASS v datoteki %s.\n"
 
-#: elf/readelflib.c:76
+#: elf/readelflib.c:78
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s ni deljena predmetna datoteka (tip: %d).\n"
 
-#: elf/readelflib.c:101
+#: elf/readelflib.c:106
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "več kot en dinamični segment\n"
 
-#: elf/readlib.c:103
+#: elf/readlib.c:104
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "fstat() na datoteki %s ni mogoče izvesti.\n"
 
-#: elf/readlib.c:114
+#: elf/readlib.c:115
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "Datoteka %s je prazna, brez preverjanja."
 
-#: elf/readlib.c:120
+#: elf/readlib.c:121
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "Datoteka %s je premajhna, brez preverjanja."
 
-#: elf/readlib.c:130
+#: elf/readlib.c:131
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "mmap() na datoteki %s ni mogoče izvesti.\n"
 
-#: elf/readlib.c:169
+#: elf/readlib.c:170
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s ni datoteka ELF - magično zaporedje bajtov na začetku je napačno.\n"
@@ -1950,8 +1950,8 @@ msgstr "NIZ"
 msgid "Unknown system error"
 msgstr "Neznana sistemska napaka"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.h:4
+#: nis/nis_error.h:1 nis/ypclnt.c:833 nis/ypclnt.c:922 posix/regcomp.c:135
+#: sysdeps/gnu/errlist.h:1
 msgid "Success"
 msgstr "Uspešno"
 
@@ -1959,7 +1959,7 @@ msgstr "Uspešno"
 msgid "NUMBER"
 msgstr "N"
 
-#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:206
+#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:207
 #, c-format
 msgid "wrong number of arguments"
 msgstr "napačno število argumentov"
@@ -1969,7 +1969,7 @@ msgstr "napačno število argumentov"
 msgid "cannot fork"
 msgstr "vejitev ni mogoča"
 
-#: nss/makedb.c:288
+#: nss/makedb.c:289
 #, c-format
 msgid "cannot create temporary file"
 msgstr "začasne datoteke ni mogoče ustvariti"
@@ -2119,7 +2119,7 @@ msgstr "Napaka segmentacije"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:219
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:216
 msgid "Broken pipe"
 msgstr "Prekinjen cevovod"
 
@@ -2213,12 +2213,12 @@ msgstr "Vir izgubljen"
 
 #. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.h:9
+#: sysdeps/gnu/errlist.h:6
 msgid "Operation not permitted"
 msgstr "Operacija ni dovoljena"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.h:21
+#: sysdeps/gnu/errlist.h:18
 msgid "No such process"
 msgstr "Tak proces ne obstaja"
 
@@ -2229,12 +2229,12 @@ msgstr "Tak proces ne obstaja"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.h:32
+#: sysdeps/gnu/errlist.h:29
 msgid "Interrupted system call"
 msgstr "Prekinjen sistemski klic"
 
 #. TRANS Usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.h:37
+#: sysdeps/gnu/errlist.h:34
 msgid "Input/output error"
 msgstr "Vhodno/izhodna napaka"
 
@@ -2243,7 +2243,7 @@ msgstr "Vhodno/izhodna napaka"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.h:46
+#: sysdeps/gnu/errlist.h:43
 msgid "No such device or address"
 msgstr "Taka naprava ali naslov ne obstaja"
 
@@ -2251,27 +2251,27 @@ msgstr "Taka naprava ali naslov ne obstaja"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:54
+#: sysdeps/gnu/errlist.h:51
 msgid "Argument list too long"
 msgstr "Seznam argumentov je predolg"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.h:60
+#: sysdeps/gnu/errlist.h:57
 msgid "Exec format error"
 msgstr "Napaka v zapisu izvedljive datoteke"
 
 #. TRANS For example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.h:67
+#: sysdeps/gnu/errlist.h:64
 msgid "Bad file descriptor"
 msgstr "Nepravilni datotečni deskriptor"
 
 #. TRANS This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.h:74
+#: sysdeps/gnu/errlist.h:71
 msgid "No child processes"
 msgstr "Proces naslednik ne obstaja"
 
@@ -2279,69 +2279,69 @@ msgstr "Proces naslednik ne obstaja"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.h:82
+#: sysdeps/gnu/errlist.h:79
 msgid "Resource deadlock avoided"
 msgstr "Blokada virov preprečena"
 
 #. TRANS The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.h:88
+#: sysdeps/gnu/errlist.h:85
 msgid "Cannot allocate memory"
 msgstr "Pomnilnika ni mogoče dodeliti"
 
 #. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.h:99
+#: sysdeps/gnu/errlist.h:96
 msgid "Bad address"
 msgstr "Nepravilni naslov"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.h:106
+#: sysdeps/gnu/errlist.h:103
 msgid "Block device required"
 msgstr "Potrebuje se bločna enota"
 
 #. TRANS A system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.h:113
+#: sysdeps/gnu/errlist.h:110
 msgid "Device or resource busy"
 msgstr "Naprava ali vir je v rabi"
 
 #. TRANS An existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.h:119
+#: sysdeps/gnu/errlist.h:116
 msgid "File exists"
 msgstr "Datoteka že obstaja"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:126
+#: sysdeps/gnu/errlist.h:123
 msgid "Invalid cross-device link"
 msgstr "Neveljavna povezava med napravami"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.h:132
+#: sysdeps/gnu/errlist.h:129
 msgid "No such device"
 msgstr "Takšna naprava ne obstaja"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.h:137
+#: sysdeps/gnu/errlist.h:134
 msgid "Not a directory"
 msgstr "Ni imenik"
 
 #. TRANS You cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.h:143
+#: sysdeps/gnu/errlist.h:140
 msgid "Is a directory"
 msgstr "Je imenik"
 
 #. TRANS This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.h:149
+#: sysdeps/gnu/errlist.h:146
 msgid "Invalid argument"
 msgstr "Neveljavni argument"
 
@@ -2352,20 +2352,20 @@ msgstr "Neveljavni argument"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.h:160
+#: sysdeps/gnu/errlist.h:157
 msgid "Too many open files"
 msgstr "Preveč odpretih datotek"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:167
+#: sysdeps/gnu/errlist.h:164
 msgid "Too many open files in system"
 msgstr "Preveč odprtih datotek v sistemu"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.h:173
+#: sysdeps/gnu/errlist.h:170
 msgid "Inappropriate ioctl for device"
 msgstr "Neprimeren ioctl za napravo"
 
@@ -2374,47 +2374,47 @@ msgstr "Neprimeren ioctl za napravo"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.h:182
+#: sysdeps/gnu/errlist.h:179
 msgid "Text file busy"
 msgstr "Besedilna datoteka je v rabi"
 
 #. TRANS The size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.h:187
+#: sysdeps/gnu/errlist.h:184
 msgid "File too large"
 msgstr "Prevelika datoteka"
 
 #. TRANS Write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.h:193
+#: sysdeps/gnu/errlist.h:190
 msgid "No space left on device"
 msgstr "Na napravi ni več prostora"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.h:198
+#: sysdeps/gnu/errlist.h:195
 msgid "Illegal seek"
 msgstr "Nedovoljeno iskanje"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.h:203
+#: sysdeps/gnu/errlist.h:200
 msgid "Read-only file system"
 msgstr "Datotečni sistem je zgolj za branje"
 
 #. TRANS The link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:210
+#: sysdeps/gnu/errlist.h:207
 msgid "Too many links"
 msgstr "Preveč povezav"
 
 #. TRANS Used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.h:225
+#: sysdeps/gnu/errlist.h:222
 msgid "Numerical argument out of domain"
 msgstr "Številčni argument izven domene"
 
 #. TRANS Used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.h:231
+#: sysdeps/gnu/errlist.h:228
 msgid "Numerical result out of range"
 msgstr "Številčni rezultat izven obsega"
 
@@ -2447,7 +2447,7 @@ msgstr "Številčni rezultat izven obsega"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.h:264
+#: sysdeps/gnu/errlist.h:261
 msgid "Resource temporarily unavailable"
 msgstr "Vir začasno ni na razpolago"
 
@@ -2459,47 +2459,47 @@ msgstr "Vir začasno ni na razpolago"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.h:276
+#: sysdeps/gnu/errlist.h:273
 msgid "Operation now in progress"
 msgstr "Operacija je v teku"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.h:282
+#: sysdeps/gnu/errlist.h:279
 msgid "Operation already in progress"
 msgstr "Operacija je že v teku"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.h:287
+#: sysdeps/gnu/errlist.h:284
 msgid "Socket operation on non-socket"
 msgstr "Operacija vtičnice na ne-vtičnici"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.h:293
+#: sysdeps/gnu/errlist.h:290
 msgid "Message too long"
 msgstr "Sporočilo je predolgo"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.h:298
+#: sysdeps/gnu/errlist.h:295
 msgid "Protocol wrong type for socket"
 msgstr "Napačna vrsta protokola za vtičnico"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.h:304
+#: sysdeps/gnu/errlist.h:301
 msgid "Protocol not available"
 msgstr "Protokol ni na voljo"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.h:311
+#: sysdeps/gnu/errlist.h:308
 msgid "Protocol not supported"
 msgstr "Protokol ni podprt"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.h:316
+#: sysdeps/gnu/errlist.h:313
 msgid "Socket type not supported"
 msgstr "Vrsta vtičnice ni podprta"
 
@@ -2509,70 +2509,70 @@ msgstr "Vrsta vtičnice ni podprta"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.h:326
+#: sysdeps/gnu/errlist.h:323
 msgid "Operation not supported"
 msgstr "Operacija ni podprta"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.h:331
+#: sysdeps/gnu/errlist.h:328
 msgid "Protocol family not supported"
 msgstr "Družina protokolov ni podprta"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.h:337
+#: sysdeps/gnu/errlist.h:334
 msgid "Address family not supported by protocol"
 msgstr "Protokol ne podpira družine naslovov"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:342
+#: sysdeps/gnu/errlist.h:339
 msgid "Address already in use"
 msgstr "Naslov je že v rabi"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:349
+#: sysdeps/gnu/errlist.h:346
 msgid "Cannot assign requested address"
 msgstr "Zahtevanega naslova ni mogoče dodeliti"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.h:354
+#: sysdeps/gnu/errlist.h:351
 msgid "Network is down"
 msgstr "Omrežje ni dejavno"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.h:360
+#: sysdeps/gnu/errlist.h:357
 msgid "Network is unreachable"
 msgstr "Omrežje ni dostopno"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.h:365
+#: sysdeps/gnu/errlist.h:362
 msgid "Network dropped connection on reset"
 msgstr "Omrežje je prekinilo povezavo ob vnovičnem zagonu"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.h:370
+#: sysdeps/gnu/errlist.h:367
 msgid "Software caused connection abort"
 msgstr "Programsko povzročena prekinitev povezave"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.h:384
+#: sysdeps/gnu/errlist.h:381
 msgid "No buffer space available"
 msgstr "Prostor za medpomnilnik ni na voljo"
 
-#: sysdeps/gnu/errlist.h:600
+#: sysdeps/gnu/errlist.h:597
 msgid "Bad font file format"
 msgstr "Okvarjen zapis datoteke s pisavo"
 
-#: sysdeps/gnu/errlist.h:660
+#: sysdeps/gnu/errlist.h:657
 msgid "Remote I/O error"
 msgstr "Oddaljena V/I napaka"
 
-#: sysdeps/gnu/errlist.h:702
+#: sysdeps/gnu/errlist.h:699
 msgid "Authentication error"
 msgstr "Overitvena napaka"
 
@@ -2581,7 +2581,7 @@ msgstr "Overitvena napaka"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.h:785
+#: sysdeps/gnu/errlist.h:782
 msgid "Operation would block"
 msgstr "Operacija bi blokirala"
 

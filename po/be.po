@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.30.9000\n"
-"POT-Creation-Date: 2020-07-22 23:24-0400\n"
+"POT-Creation-Date: 2021-01-27 17:07-0300\n"
 "PO-Revision-Date: 2020-02-12 17:42+0300\n"
 "Last-Translator: Viktar Siarheichyk <vics@eq.by>\n"
 "Language-Team: Belarusian <debian-l10n-belarusian@lists.debian.org>\n"
@@ -69,7 +69,7 @@ msgstr "Выдаць кароткае паведамленне аб выкары
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
 #: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "NAME"
 msgstr "НАЗВА"
 
@@ -128,7 +128,7 @@ msgstr "Стварыць файл загалоўкаў НАЗВА з азнач�
 msgid "Do not use existing catalog, force new output file"
 msgstr "Замест наяўнага каталогу запісаць у новы файл"
 
-#: catgets/gencat.c:113 nss/makedb.c:120
+#: catgets/gencat.c:113 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "Запісаць вывад у файл НАЗВА"
 
@@ -146,11 +146,11 @@ msgstr ""
 "-o ВЫХОДНЫ-ФАЙЛ [УВАХОДНЫ-ФАЙЛ]...\n"
 "[ВЫХОДНЫ-ФАЙЛ [УВАХОДНЫ-ФАЙЛ]...]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:306
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:311
 #: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:388
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:276
 #: locale/programs/localedef.c:438 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:370
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -161,11 +161,11 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:322 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -178,10 +178,10 @@ msgstr ""
 " НІЯКІХ няма; у тым ліку працаздольнасці ці прыдатнасці для пэўнай мэты.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:327 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -192,7 +192,7 @@ msgid "*standard input*"
 msgstr "*стандартны ўвод*"
 
 #: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
-#: nss/makedb.c:246
+#: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "немагчыма адкрыць файл уводу `%s'"
@@ -375,56 +375,56 @@ msgstr "нерэчаісны рэжым"
 msgid "invalid mode parameter"
 msgstr "няправільны параметр рэжыму"
 
-#: elf/cache.c:69
+#: elf/cache.c:180
 msgid "unknown"
 msgstr "невядомы"
 
-#: elf/cache.c:141
+#: elf/cache.c:254
 msgid "Unknown OS"
 msgstr "Невядомая аперацыйная сістэма"
 
-#: elf/cache.c:146
+#: elf/cache.c:259
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1297
+#: elf/cache.c:320 elf/ldconfig.c:1427
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Немагчыма адкрыць файл кэшу %s\n"
 
-#: elf/cache.c:177
+#: elf/cache.c:334
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "не атрымалася зрабіць mmap кэш-файла.\n"
 
-#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
+#: elf/cache.c:338 elf/cache.c:352 elf/cache.c:363
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Гэта не кэш-файл.\n"
 
-#: elf/cache.c:233 elf/cache.c:243
+#: elf/cache.c:392 elf/cache.c:407
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d бібліятэк адшукана ў кэшы `%s'\n"
 
-#: elf/cache.c:437
+#: elf/cache.c:725
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Не ўдалося стварыць часовы кэш-файл %s"
 
-#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
-#: elf/cache.c:473
+#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
+#: elf/cache.c:770
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Запіс даных кэшу не ўдаўся"
 
-#: elf/cache.c:468
+#: elf/cache.c:765
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Змяненне правоў доступу %s да %#o не ўдалася"
 
-#: elf/cache.c:477
+#: elf/cache.c:774
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Пераназванне %s у %s не ўдалося"
@@ -486,139 +486,139 @@ msgstr "не ўдалося загрузіць старонкі для табл�
 msgid "internal error: symidx out of range of fptr table"
 msgstr "унутраная памылка: symidx па-за дыяпазонам у табліцы fptr"
 
-#: elf/dl-hwcaps.c:92 elf/dl-hwcaps.c:104
+#: elf/dl-hwcaps.c:247 elf/dl-hwcaps.c:262
 msgid "cannot create capability list"
 msgstr "не ўдалося стварыць спіс магчымасцяў"
 
-#: elf/dl-load.c:428
+#: elf/dl-load.c:432
 msgid "cannot allocate name record"
 msgstr "не ўдалося выдзеліць запіс для назвы"
 
-#: elf/dl-load.c:514 elf/dl-load.c:627 elf/dl-load.c:716 elf/dl-load.c:812
+#: elf/dl-load.c:518 elf/dl-load.c:631 elf/dl-load.c:725 elf/dl-load.c:821
 msgid "cannot create cache for search path"
 msgstr "немагчыма стварыць кэш для шляху пошуку"
 
-#: elf/dl-load.c:610
+#: elf/dl-load.c:614
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "немагчыма стварыць RUNPATH/RPATH копію"
 
-#: elf/dl-load.c:703
+#: elf/dl-load.c:711
 msgid "cannot create search path array"
 msgstr "не ўдалося стварыць табліцу шляхоў пошуку"
 
-#: elf/dl-load.c:964
+#: elf/dl-load.c:951
 msgid "cannot stat shared object"
 msgstr "не ўдалося выканаць stat для супольнага аб'екта"
 
-#: elf/dl-load.c:1075 elf/dl-load.c:2278
+#: elf/dl-load.c:1082 elf/dl-load.c:2293
 msgid "cannot create shared object descriptor"
 msgstr "не ўдалося стварыць дэскрыптар супольнага аб'екта"
 
-#: elf/dl-load.c:1094 elf/dl-load.c:1658 elf/dl-load.c:1759
+#: elf/dl-load.c:1101 elf/dl-load.c:1668 elf/dl-load.c:1770
 msgid "cannot read file data"
 msgstr "не ўдалося прачытаць даныя файла"
 
-#: elf/dl-load.c:1140
+#: elf/dl-load.c:1147
 msgid "ELF load command alignment not page-aligned"
 msgstr "раўнаванне каманды загрузкі ELF не выраўнавана па мяжы старонкі"
 
-#: elf/dl-load.c:1147
+#: elf/dl-load.c:1154
 msgid "ELF load command address/offset not properly aligned"
 msgstr "адрас/зрух каманды загрузкі ELF няправільна выраўнаваны"
 
-#: elf/dl-load.c:1226
+#: elf/dl-load.c:1233
 msgid "object file has no loadable segments"
 msgstr "аб'ектны файл не мае сегментаў для загрузкі"
 
-#: elf/dl-load.c:1239
+#: elf/dl-load.c:1246
 msgid "cannot dynamically load executable"
 msgstr "не ўдалося дынамічна загрузіць выканальны файл"
 
-#: elf/dl-load.c:1275
+#: elf/dl-load.c:1271
 msgid "object file has no dynamic section"
 msgstr "аб'ектны файл не мае дынамічнай секцыі"
 
-#: elf/dl-load.c:1302
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr "немагчыма загрузіць пазіцыйна-незалежную праграму ў дынамічным рэжыме"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "супольны аб'ект немагчыма адкрыць праз dlopen()"
 
-#: elf/dl-load.c:1317
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "немагчыма выдзеліць памяць для загалоўку праграмы"
 
-#: elf/dl-load.c:1350 elf/dl-load.h:130
+#: elf/dl-load.c:1337 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "не ўдалося змяніць абарону памяці"
 
-#: elf/dl-load.c:1370
+#: elf/dl-load.c:1357
 msgid "cannot enable executable stack as shared object requires"
 msgstr "не ўдалося ўключыць выканальны стэк, як патрабуе супольны аб'ект"
 
-#: elf/dl-load.c:1383
+#: elf/dl-load.c:1385
 msgid "cannot close file descriptor"
 msgstr "немагчыма закрыць дэскрыптар файла"
 
-#: elf/dl-load.c:1658
+#: elf/dl-load.c:1668
 msgid "file too short"
 msgstr "файл закароткі"
 
-#: elf/dl-load.c:1693
+#: elf/dl-load.c:1704
 msgid "invalid ELF header"
 msgstr "няправільны загаловак ELF"
 
-#: elf/dl-load.c:1705
+#: elf/dl-load.c:1716
 msgid "ELF file data encoding not big-endian"
 msgstr "кадаванне даных файла ELF не big-endian"
 
-#: elf/dl-load.c:1707
+#: elf/dl-load.c:1718
 msgid "ELF file data encoding not little-endian"
 msgstr "кадаванне даных файла ELF не little-endian"
 
-#: elf/dl-load.c:1711
+#: elf/dl-load.c:1722
 msgid "ELF file version ident does not match current one"
 msgstr "ідэнтыфікатар версіі файла ELF не адпавядае актуальнай версіі"
 
-#: elf/dl-load.c:1715
+#: elf/dl-load.c:1726
 msgid "ELF file OS ABI invalid"
 msgstr "няправільны ABI сістэмы файла ELF"
 
-#: elf/dl-load.c:1718
+#: elf/dl-load.c:1729
 msgid "ELF file ABI version invalid"
 msgstr "Няправільная версія ABI ELF файла"
 
-#: elf/dl-load.c:1721
+#: elf/dl-load.c:1732
 msgid "nonzero padding in e_ident"
 msgstr "дапаўненне ў e_ident ненулявое"
 
-#: elf/dl-load.c:1724
+#: elf/dl-load.c:1735
 msgid "internal error"
 msgstr "унутраная памылка"
 
-#: elf/dl-load.c:1731
+#: elf/dl-load.c:1742
 msgid "ELF file version does not match current one"
 msgstr "версія файла ELF не адпавядае актуальнай версіі"
 
-#: elf/dl-load.c:1739
+#: elf/dl-load.c:1750
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "можна загрузіць толькі ET_DYN і ET_EXEC"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1755
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize файла ELF нечаканага памеру"
 
-#: elf/dl-load.c:2297
+#: elf/dl-load.c:2312
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "няправільны клас ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2298
+#: elf/dl-load.c:2313
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "няправільны клас ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2301
+#: elf/dl-load.c:2316
 msgid "cannot open shared object file"
 msgstr "не ўдалося адкрыць супольны аб'ектны файл"
 
@@ -642,15 +642,15 @@ msgstr "не ўдалося пашырыць глабальную прастор
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "лічыльнік генерацыі TLS перапоўніўся! Паведаміце пра гэта."
 
-#: elf/dl-open.c:808
+#: elf/dl-open.c:802
 msgid "invalid mode for dlopen()"
 msgstr "няправільны рэжым для dlopen()"
 
-#: elf/dl-open.c:825
+#: elf/dl-open.c:819
 msgid "no more namespaces available for dlmopen()"
 msgstr "для dlmopen() больш няма прастораў назваў"
 
-#: elf/dl-open.c:849
+#: elf/dl-open.c:843
 msgid "invalid target namespace in dlmopen()"
 msgstr "няправільная прастора назваў прызначэння ў dlmopen()"
 
@@ -691,197 +691,197 @@ msgstr "памылка пошуку версіі"
 msgid "cannot allocate version reference table"
 msgstr "не ўдалося выдзеліць памяць для табліцы спасылак на версіі"
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:150
 msgid "Print cache"
 msgstr "Надрукаваць кэш"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:151
 msgid "Generate verbose messages"
 msgstr "Стварае шматслоўныя паведамленьні"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:152
 msgid "Don't build cache"
 msgstr "Не будаваць кэш"
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:153
 msgid "Don't update symbolic links"
 msgstr "Не абнаўляць сімвалічныя спасылкі"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "Change to and use ROOT as root directory"
 msgstr "Перайсці ў КОРАНЬ і ўжыць яго як каранёвы каталог"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "ROOT"
 msgstr "КОРАНЬ"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "CACHE"
 msgstr "КЭШ"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "Use CACHE as cache file"
 msgstr "Ужываць КЭШ у якасці кэш-файла"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "CONF"
 msgstr "КАНФ"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "Use CONF as configuration file"
 msgstr "Ужыць КАНФ у якасці канфігурацыйнага файла"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:157
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Апрацаваць толькі каталогі ў камандным радку. Не ствараць кэш."
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:158
 msgid "Manually link individual libraries."
 msgstr "Злучыць асобныя бібліятэкі ўручную з"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:159
 msgid "FORMAT"
 msgstr "ФАРМАТ"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:160
 msgid "Ignore auxiliary cache file"
 msgstr "Ігнараваць дапаможны кэш-файл"
 
-#: elf/ldconfig.c:163
+#: elf/ldconfig.c:168
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Cканфігураваць сувязі падчас выканання для дынамічнага лінкера"
 
-#: elf/ldconfig.c:346
+#: elf/ldconfig.c:371
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Шлях `%s' пададзены некалькі разоў"
 
-#: elf/ldconfig.c:393
+#: elf/ldconfig.c:487
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s - гэта невядомы тып бібліятэкі"
 
-#: elf/ldconfig.c:421
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't stat %s"
 msgstr "Немагчыма зрабіць stat %s"
 
-#: elf/ldconfig.c:500
+#: elf/ldconfig.c:596
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Немагчыма зрабіць stat %s\n"
 
-#: elf/ldconfig.c:510
+#: elf/ldconfig.c:606
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s - гэта не сімвальная спасылка\n"
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:625
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Немагчыма зрабіць unlink %s"
 
-#: elf/ldconfig.c:535
+#: elf/ldconfig.c:631
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Немагчыма зрабіць спасылку %s на %s"
 
-#: elf/ldconfig.c:541
+#: elf/ldconfig.c:637
 msgid " (changed)\n"
 msgstr " (зьменена)\n"
 
-#: elf/ldconfig.c:543
+#: elf/ldconfig.c:639
 msgid " (SKIPPED)\n"
 msgstr " (ПРАПУШЧАНА)\n"
 
-#: elf/ldconfig.c:598
+#: elf/ldconfig.c:695
 #, c-format
 msgid "Can't find %s"
 msgstr "Немагчыма знайсці %s"
 
-#: elf/ldconfig.c:614 elf/ldconfig.c:781 elf/ldconfig.c:839 elf/ldconfig.c:871
+#: elf/ldconfig.c:711 elf/ldconfig.c:893 elf/ldconfig.c:945 elf/ldconfig.c:977
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Немагчыма зрабіць lstat %s"
 
-#: elf/ldconfig.c:621
+#: elf/ldconfig.c:718
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Файл %s праігнараваны, бо ён не ёсць звычайным файлам."
 
-#: elf/ldconfig.c:630
+#: elf/ldconfig.c:727
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Спасылка не створаная, бо не знойдзены soname для %s"
 
-#: elf/ldconfig.c:714
+#: elf/ldconfig.c:824
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Немагчыма адкрыць каталог %s"
 
-#: elf/ldconfig.c:799 elf/ldconfig.c:859 elf/readlib.c:97
+#: elf/ldconfig.c:911 elf/ldconfig.c:965 elf/readlib.c:98
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Файл уводу %s не адшуканы.\n"
 
-#: elf/ldconfig.c:806
+#: elf/ldconfig.c:918
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Немагчыма зрабіць stat %s"
 
-#: elf/ldconfig.c:953
+#: elf/ldconfig.c:1063
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5-бібліятэка %s у неадпаведным каталогу"
 
-#: elf/ldconfig.c:956
+#: elf/ldconfig.c:1066
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6-бібліятэка %s у неадпаведным каталогу"
 
-#: elf/ldconfig.c:959
+#: elf/ldconfig.c:1069
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4-бібліятэка %s у неадпаведным каталогу"
 
-#: elf/ldconfig.c:987
+#: elf/ldconfig.c:1097
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "бібліятэкі %s і %s у каталогу %s маюць аднолькавы soname, але адрозныя тыпы."
 
-#: elf/ldconfig.c:1097
+#: elf/ldconfig.c:1227
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Папярэджаньне: ігнаруецца канфігурацыйны файл, які немагчыма адкрыць: %s"
 
-#: elf/ldconfig.c:1164
+#: elf/ldconfig.c:1294
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "пры ўжыванні -r патрэбна абсалютная назва канфігурацыйнага файла"
 
-#: elf/ldconfig.c:1171 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "памяць вычарпана"
 
-#: elf/ldconfig.c:1204
+#: elf/ldconfig.c:1334
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: немагчыма прачытаць каталог %s"
 
-#: elf/ldconfig.c:1252
+#: elf/ldconfig.c:1382
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "пры стварэнні кэшу ўжыты адносны шлях `%s'"
 
-#: elf/ldconfig.c:1276
+#: elf/ldconfig.c:1406
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Немагчыма перайсці ў каталог /"
 
-#: elf/ldconfig.c:1317
+#: elf/ldconfig.c:1447
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Немагчыма адкрыць каталог кэш-файла %s\n"
@@ -927,7 +927,7 @@ msgstr "файлавыя аргументы адсутнічаюць"
 #. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:16
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:13
 msgid "No such file or directory"
 msgstr "Няма такога файла ці каталога"
 
@@ -1049,57 +1049,57 @@ msgstr "немагчыма атрымаць інфармацыю аб працэ
 msgid "process %lu is no ELF program"
 msgstr "сегмент %lu не ёсць праграмай ELF"
 
-#: elf/readelflib.c:34
+#: elf/readelflib.c:36
 #, c-format
 msgid "file %s is truncated\n"
 msgstr "файл %s абрэзаны\n"
 
-#: elf/readelflib.c:65
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s - гэта 32-х бітны ELF файл.\n"
 
-#: elf/readelflib.c:67
+#: elf/readelflib.c:69
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s - гэта 64-х бітны ELF файл.\n"
 
-#: elf/readelflib.c:69
+#: elf/readelflib.c:71
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "Невядомы ELFCLASS у файле %s.\n"
 
-#: elf/readelflib.c:76
+#: elf/readelflib.c:78
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s не ёсць абагуленым аб'ектным файлам (Тып: %d).\n"
 
-#: elf/readelflib.c:101
+#: elf/readelflib.c:106
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "больш за адзін дынамічны сегмент\n"
 
-#: elf/readlib.c:103
+#: elf/readlib.c:104
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "Немагчыма зрабіць fstat файла %s.\n"
 
-#: elf/readlib.c:114
+#: elf/readlib.c:115
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "Файл %s пусты, не правераны."
 
-#: elf/readlib.c:120
+#: elf/readlib.c:121
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "Файл %s замалы, не правераны."
 
-#: elf/readlib.c:130
+#: elf/readlib.c:131
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "Немагчыма зрабіць mmap файла %s.\n"
 
-#: elf/readlib.c:169
+#: elf/readlib.c:170
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s - гэта не ELF файл - ён мае памылковы \"чароўны байт\" на пачатку файлу.\n"
@@ -2419,7 +2419,7 @@ msgid "Generic system error"
 msgstr "Агульная сыстэмная памылка"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.h:93
+#: nis/nis_error.h:11 nis/ypclnt.c:878 sysdeps/gnu/errlist.h:90
 msgid "Permission denied"
 msgstr "бракуе правоў"
 
@@ -2592,27 +2592,27 @@ msgstr "    Яўныя няўдзельнікі:\n"
 msgid "    Implicit nonmembers:\n"
 msgstr "    Няяўныя няўдзельнікі:\n"
 
-#: nis/ypclnt.c:843
+#: nis/ypclnt.c:851
 msgid "Internal NIS error"
 msgstr "Унутраная памылка NIS"
 
-#: nis/ypclnt.c:861
+#: nis/ypclnt.c:869
 msgid "Local domain name not set"
 msgstr "Мясцовы маёнтак неўсталяваны"
 
-#: nis/ypclnt.c:873
+#: nis/ypclnt.c:881
 msgid "Database is busy"
 msgstr "База даньняў занята"
 
-#: nis/ypclnt.c:926
+#: nis/ypclnt.c:934
 msgid "Unknown ypbind error"
 msgstr "Невядомая памылка ypbind"
 
-#: nis/ypclnt.c:967
+#: nis/ypclnt.c:975
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: немагчыма пераўтварыць вузел у сеткавы назоў\n"
 
-#: nis/ypclnt.c:985
+#: nis/ypclnt.c:993
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: немагчыма атрымаць адрэсу паслужніку\n"
 
@@ -2655,7 +2655,7 @@ msgstr "Пералічэньне непадтрымліваецца на %s\n"
 msgid "Unknown database: %s\n"
 msgstr "Невядомая база даньняў: %s\n"
 
-#: nss/makedb.c:288
+#: nss/makedb.c:289
 #, c-format
 msgid "cannot create temporary file"
 msgstr "немагчыма стварыць часовы файл"
@@ -2767,7 +2767,7 @@ msgstr "Збой сэгмэнтацыі"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:219
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:216
 msgid "Broken pipe"
 msgstr "Зламаны трубаправод"
 
@@ -2841,17 +2841,17 @@ msgstr "Згублены расурс"
 
 #. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.h:9
+#: sysdeps/gnu/errlist.h:6
 msgid "Operation not permitted"
 msgstr "дзеяньне не дазволена"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.h:21
+#: sysdeps/gnu/errlist.h:18
 msgid "No such process"
 msgstr "працэс ня йснуе"
 
 #. TRANS Usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.h:37
+#: sysdeps/gnu/errlist.h:34
 msgid "Input/output error"
 msgstr "Памылка ўводу-вываду"
 
@@ -2860,7 +2860,7 @@ msgstr "Памылка ўводу-вываду"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.h:46
+#: sysdeps/gnu/errlist.h:43
 msgid "No such device or address"
 msgstr "прылада ці адрас ня йснуе"
 
@@ -2868,123 +2868,123 @@ msgstr "прылада ці адрас ня йснуе"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:54
+#: sysdeps/gnu/errlist.h:51
 msgid "Argument list too long"
 msgstr "сьпіс довадаў занадта вялікі"
 
 #. TRANS The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.h:88
+#: sysdeps/gnu/errlist.h:85
 msgid "Cannot allocate memory"
 msgstr "немагчыма разьмеркаваць памяць"
 
 #. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.h:99
+#: sysdeps/gnu/errlist.h:96
 msgid "Bad address"
 msgstr "дрэнны адрас"
 
 #. TRANS A system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.h:113
+#: sysdeps/gnu/errlist.h:110
 msgid "Device or resource busy"
 msgstr "Прылада ці расурс заняты"
 
 #. TRANS An existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.h:119
+#: sysdeps/gnu/errlist.h:116
 msgid "File exists"
 msgstr "Файл існуе"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:126
+#: sysdeps/gnu/errlist.h:123
 msgid "Invalid cross-device link"
 msgstr "Нерэчаісная міжпрыладная спасылка"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.h:132
+#: sysdeps/gnu/errlist.h:129
 msgid "No such device"
 msgstr "прылада ня йснуе"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.h:137
+#: sysdeps/gnu/errlist.h:134
 msgid "Not a directory"
 msgstr "Не каталог"
 
 #. TRANS You cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.h:143
+#: sysdeps/gnu/errlist.h:140
 msgid "Is a directory"
 msgstr "Гэта тэчка"
 
 #. TRANS The size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.h:187
+#: sysdeps/gnu/errlist.h:184
 msgid "File too large"
 msgstr "Файл вельмі вялікі"
 
 #. TRANS Write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.h:193
+#: sysdeps/gnu/errlist.h:190
 msgid "No space left on device"
 msgstr "Няма месца на прыладзе"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.h:198
+#: sysdeps/gnu/errlist.h:195
 msgid "Illegal seek"
 msgstr "Недапушчальны пошук"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.h:293
+#: sysdeps/gnu/errlist.h:290
 msgid "Message too long"
 msgstr "Паведамленьне вельмі доўгае"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.h:425
+#: sysdeps/gnu/errlist.h:422
 msgid "Connection refused"
 msgstr "Адмоўлена ў злучэньні"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.h:438
+#: sysdeps/gnu/errlist.h:435
 msgid "File name too long"
 msgstr "Вельмі доўгая назва файла"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.h:443
+#: sysdeps/gnu/errlist.h:440
 msgid "Host is down"
 msgstr "Вузел зьлёг"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.h:454
+#: sysdeps/gnu/errlist.h:451
 msgid "Directory not empty"
 msgstr "Тэчка не парожняя"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.h:465
+#: sysdeps/gnu/errlist.h:462
 msgid "Disk quota exceeded"
 msgstr "Перавышана дыскавая квота"
 
-#: sysdeps/gnu/errlist.h:529
+#: sysdeps/gnu/errlist.h:526
 msgid "Device not a stream"
 msgstr "Прылада не зьяўляецца плыньню"
 
-#: sysdeps/gnu/errlist.h:603
+#: sysdeps/gnu/errlist.h:600
 msgid "Machine is not on the network"
 msgstr "Машына не ў сетцы"
 
-#: sysdeps/gnu/errlist.h:624
+#: sysdeps/gnu/errlist.h:621
 msgid "File descriptor in bad state"
 msgstr "Дэскрыптар файлу ў дрэнным стане"
 
-#: sysdeps/gnu/errlist.h:666
+#: sysdeps/gnu/errlist.h:663
 msgid "Wrong medium type"
 msgstr "Ня той від носьбіта"
 
@@ -3004,11 +3004,6 @@ msgstr "Памылка разьмеркаваньня памяці"
 msgid "ai_socktype not supported"
 msgstr "ai_socktype непадтрымліваецца"
 
-#: sysdeps/unix/sysv/linux/i386/readelflib.c:65
-#, c-format
-msgid "%s is for unknown machine %d.\n"
-msgstr "%s для невядомае машыны %d.\n"
-
 #: sysdeps/unix/sysv/linux/lddlibc4.c:81
 #, c-format
 msgid "cannot open `%s'"
@@ -3018,6 +3013,11 @@ msgstr "немагчыма адчыніць \"%s\""
 #, c-format
 msgid "cannot read header from `%s'"
 msgstr "немагчыма прачытаць загаловак з \"%s\""
+
+#: sysdeps/unix/sysv/linux/x86/readelflib.c:66
+#, c-format
+msgid "%s is for unknown machine %d.\n"
+msgstr "%s для невядомае машыны %d.\n"
 
 #: timezone/zic.c:432
 #, c-format

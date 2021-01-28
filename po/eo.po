@@ -1,17 +1,17 @@
 # Esperanto translations for GNU libc.
-# Copyright (C) 2014 Free Software Foundation, Inc.
+# Copyright (C) 2020 Free Software Foundation, Inc.
 # This file is distributed under the same license as the glibc package.
 #
-# Nuclear device. Attack. Trigger. NSA.
+# "Working full time is clearly ridiculous."
 #
-# Benno Schulenberg <benno@vertaalt.nl>, 2012, 2013, 2014.
+# Benno Schulenberg <benno@vertaalt.nl>, 2012, 2013, 2014, 2020.
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.19.90\n"
+"Project-Id-Version: libc 2.31.9000\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-22 23:24-0400\n"
-"PO-Revision-Date: 2014-08-31 23:02+0200\n"
-"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
+"POT-Creation-Date: 2021-01-27 17:07-0300\n"
+"PO-Revision-Date: 2020-12-30 12:07+0100\n"
+"Last-Translator: Benno Schulenberg <vertaling@coevern.nl>\n"
 "Language-Team: Esperanto <translation-team-eo@lists.sourceforge.net>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.0\n"
 
 #: argp/argp-help.c:227
 #, c-format
@@ -74,7 +73,7 @@ msgstr "montri mallongan uzmanieran mesaĝon"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
 #: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "NAME"
 msgstr "NOMO"
 
@@ -107,6 +106,15 @@ msgstr "%s: tro da argumentoj\n"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(**Programmiso**) Opcio devus esti rekonata!?"
 
+#: assert/assert-perr.c:35
+#, c-format
+msgid ""
+"%s%s%s:%u: %s%sUnexpected error: %s.\n"
+"%n"
+msgstr ""
+"%s%s%s:%u: %s%sNeatendata eraro: %s.\n"
+"%n"
+
 #: assert/assert.c:101
 #, c-format
 msgid ""
@@ -124,7 +132,7 @@ msgstr "krei C-ĉapdosieron kiu enhavas simboldifinojn"
 msgid "Do not use existing catalog, force new output file"
 msgstr "ne aldoni al eligdosiero; anstataŭigi ĝin"
 
-#: catgets/gencat.c:113 nss/makedb.c:120
+#: catgets/gencat.c:113 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "skribi eligon al dosiero NOMO"
 
@@ -144,11 +152,11 @@ msgstr ""
 "-o ELIGDOSIERO [ENIGDOSIERO...]\n"
 "[ELIGDOSIERO [ENIGDOSIERO...]]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:306
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:311
 #: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:388
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:276
 #: locale/programs/localedef.c:438 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:370
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -159,11 +167,11 @@ msgstr ""
 "  %s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:322 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -176,10 +184,10 @@ msgstr ""
 "Doniĝas NENIA GARANTIO; eĉ ne por KOMERCKVALITO aŭ ADEKVATECO POR IU CELO.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:327 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -190,7 +198,7 @@ msgid "*standard input*"
 msgstr "*ĉefenigujo*"
 
 #: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
-#: nss/makedb.c:246
+#: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "ne eblas malfermi enigan dosieron «%s»"
@@ -341,56 +349,56 @@ msgstr "nevalida moduso"
 msgid "invalid mode parameter"
 msgstr "nevalida modusa argumento"
 
-#: elf/cache.c:69
+#: elf/cache.c:180
 msgid "unknown"
 msgstr "nekonata"
 
-#: elf/cache.c:141
+#: elf/cache.c:254
 msgid "Unknown OS"
 msgstr "Nekonata mastrumsistemo"
 
-#: elf/cache.c:146
+#: elf/cache.c:259
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", mastruma ABI-o: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1297
+#: elf/cache.c:320 elf/ldconfig.c:1427
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Ne eblas malfermi kaŝmemoran dosieron %s\n"
 
-#: elf/cache.c:177
+#: elf/cache.c:334
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "Malsukcesis enmemorigo de kaŝmemora dosiero.\n"
 
-#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
+#: elf/cache.c:338 elf/cache.c:352 elf/cache.c:363
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Dosiero ne estas kaŝmemora dosiero.\n"
 
-#: elf/cache.c:233 elf/cache.c:243
+#: elf/cache.c:392 elf/cache.c:407
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d bibliotekoj troviĝis en kaŝmemoro '%s'\n"
 
-#: elf/cache.c:437
+#: elf/cache.c:725
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Ne eblas krei provizoran kaŝmemoran dosieron %s"
 
-#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
-#: elf/cache.c:473
+#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
+#: elf/cache.c:770
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Malsukcesis skribado de kaŝmemoraj datumoj"
 
-#: elf/cache.c:468
+#: elf/cache.c:765
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Malsukcesis ŝanĝi la atingpermesojn por %s al %#o"
 
-#: elf/cache.c:477
+#: elf/cache.c:774
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Malsukcesis alinomi %s al %s"
@@ -411,233 +419,246 @@ msgstr "eraro dum ŝargo de komunaj bibliotekoj"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "**PROGRAMMISO** en dinamika bindilo!!!"
 
-#: elf/dl-hwcaps.c:92 elf/dl-hwcaps.c:104
+#: elf/dl-hwcaps.c:247 elf/dl-hwcaps.c:262
 msgid "cannot create capability list"
 msgstr "ne eblas krei mandatliston"
 
-#: elf/dl-load.c:428
+#: elf/dl-load.c:432
 msgid "cannot allocate name record"
 msgstr "mankas sufiĉa memoro por nomrikordo"
 
-#: elf/dl-load.c:514 elf/dl-load.c:627 elf/dl-load.c:716 elf/dl-load.c:812
+#: elf/dl-load.c:518 elf/dl-load.c:631 elf/dl-load.c:725 elf/dl-load.c:821
 msgid "cannot create cache for search path"
 msgstr "ne eblas krei kaŝmemoron por serĉpado"
 
-#: elf/dl-load.c:964
+#: elf/dl-load.c:951
 msgid "cannot stat shared object"
 msgstr "malsukcesis eltrovi statinformon pri komuna objekto"
 
-#: elf/dl-load.c:1094 elf/dl-load.c:1658 elf/dl-load.c:1759
+#: elf/dl-load.c:1101 elf/dl-load.c:1668 elf/dl-load.c:1770
 msgid "cannot read file data"
 msgstr "ne eblas legi dosierdatumojn"
 
-#: elf/dl-load.c:1383
+#: elf/dl-load.c:1385
 msgid "cannot close file descriptor"
 msgstr "ne eblas fermi dosierpriaĵon"
 
-#: elf/dl-load.c:1658
+#: elf/dl-load.c:1668
 msgid "file too short"
 msgstr "dosiero tro mallongas"
 
-#: elf/dl-load.c:1693
+#: elf/dl-load.c:1704
 msgid "invalid ELF header"
 msgstr "nevalida ELF-ĉapo"
 
-#: elf/dl-load.c:1724
+#: elf/dl-load.c:1735
 msgid "internal error"
 msgstr "**interna programmiso**"
 
-#: elf/dl-load.c:2297
+#: elf/dl-load.c:2312
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "malĝusta ELF-klaso: ELFCLASS64"
 
-#: elf/dl-load.c:2298
+#: elf/dl-load.c:2313
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "malĝusta ELF-klaso: ELFCLASS32"
 
-#: elf/dl-load.c:2301
+#: elf/dl-load.c:2316
 msgid "cannot open shared object file"
 msgstr "ne eblas malfermi komunan objektdosieron"
 
-#: elf/dl-open.c:808
+#: elf/dl-open.c:802
 msgid "invalid mode for dlopen()"
 msgstr "nevalida moduso por 'dlopen()'"
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:150
 msgid "Print cache"
 msgstr "eligi kaŝmemoron"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:151
 msgid "Generate verbose messages"
 msgstr "eligi detalajn mesaĝojn"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:152
 msgid "Don't build cache"
 msgstr "ne krei kaŝmemoron"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:153
+msgid "Don't update symbolic links"
+msgstr "ne ĝisdatigi simbolajn ligojn"
+
+#: elf/ldconfig.c:154
 msgid "Change to and use ROOT as root directory"
 msgstr "ŝanĝi al RADIKO kaj uzi ĝin kiel radikan dosierujon"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "ROOT"
 msgstr "RADIKO"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "CACHE"
 msgstr "KAŜMEMORO"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "Use CACHE as cache file"
 msgstr "uzi KAŜMEMOROn kiel kaŝmemoran dosieron"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "CONF"
 msgstr "AGORDDOSIERO"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "Use CONF as configuration file"
 msgstr "uzi AGORDDOSIEROn kiel agordan dosieron"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:157
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "nur trakti dosierujojn kiuj indikatas en komandlinio; ne krei kaŝmemoron"
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:158
 msgid "Manually link individual libraries."
 msgstr "mane ligi individuajn bibliotekojn"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:159
 msgid "FORMAT"
 msgstr "ARANĜO"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:159
+msgid "Format to use: new (default), old, or compat"
+msgstr "uzenda aranĝo: 'new' (nova, defaŭlte), 'old' (malnova), aŭ 'compat' (kongrua)"
+
+#: elf/ldconfig.c:160
 msgid "Ignore auxiliary cache file"
 msgstr "ignori neĉefan kaŝmemoran dosieron"
 
-#: elf/ldconfig.c:163
+#: elf/ldconfig.c:168
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr ""
 "  \n"
 "Agordas la dinamika bindilo."
 
-#: elf/ldconfig.c:346
+#: elf/ldconfig.c:371
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "pado '%s' indikatas plurfoje"
 
-#: elf/ldconfig.c:393
+#: elf/ldconfig.c:487
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s ne estas konata bibliotektipo"
 
-#: elf/ldconfig.c:421
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't stat %s"
 msgstr "malsukcesis eltrovi statinformon pri %s"
 
-#: elf/ldconfig.c:500
+#: elf/ldconfig.c:596
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "malsukcesis eltrovi statinformon pri %s\n"
 
-#: elf/ldconfig.c:510
+#: elf/ldconfig.c:606
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s ne estas simbola ligo\n"
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:625
 #, c-format
 msgid "Can't unlink %s"
 msgstr "ne eblas malligi %s"
 
-#: elf/ldconfig.c:535
+#: elf/ldconfig.c:631
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "ne eblas ligi %s al %s"
 
 # SIGWINCH    28,28,20    Ign     Window resize signal (4.3 BSD, Sun)
-#: elf/ldconfig.c:541
+#: elf/ldconfig.c:637
 msgid " (changed)\n"
 msgstr " (ŝanĝiĝis)\n"
 
-#: elf/ldconfig.c:543
+#: elf/ldconfig.c:639
 msgid " (SKIPPED)\n"
 msgstr " (TRANSSALTITA)\n"
 
-#: elf/ldconfig.c:598
+#: elf/ldconfig.c:695
 #, c-format
 msgid "Can't find %s"
 msgstr "malsukcesis trovi %s"
 
-#: elf/ldconfig.c:614 elf/ldconfig.c:781 elf/ldconfig.c:839 elf/ldconfig.c:871
+#: elf/ldconfig.c:711 elf/ldconfig.c:893 elf/ldconfig.c:945 elf/ldconfig.c:977
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "malsukcesis eltrovi statinformon pri %s"
 
-#: elf/ldconfig.c:621
+#: elf/ldconfig.c:718
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Dosiero %s ignoriĝis ĉar ĝi ne estas normala dosiero."
 
-#: elf/ldconfig.c:714
+#: elf/ldconfig.c:800
+#, c-format
+msgid " (from %s:%d)\n"
+msgstr " (elde %s:%d)\n"
+
+#: elf/ldconfig.c:824
 #, c-format
 msgid "Can't open directory %s"
 msgstr "ne eblas malfermi dosierujon %s"
 
-#: elf/ldconfig.c:799 elf/ldconfig.c:859 elf/readlib.c:97
+#: elf/ldconfig.c:911 elf/ldconfig.c:965 elf/readlib.c:98
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Eniga dosiero %s ne troviĝas.\n"
 
-#: elf/ldconfig.c:806
+#: elf/ldconfig.c:918
 #, c-format
 msgid "Cannot stat %s"
 msgstr "malsukcesis eltrovi statinformon pri %s"
 
-#: elf/ldconfig.c:953
+#: elf/ldconfig.c:1063
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5-biblioteko %s estas en malĝusta dosierujo"
 
-#: elf/ldconfig.c:956
+#: elf/ldconfig.c:1066
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6-biblioteko %s estas en malĝusta dosierujo"
 
-#: elf/ldconfig.c:959
+#: elf/ldconfig.c:1069
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4-biblioteko %s estas en malĝusta dosierujo"
 
-#: elf/ldconfig.c:1097
+#: elf/ldconfig.c:1227
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Averto: ignoriĝas agorda dosiero kiu ne malfermeblas: %s"
 
-#: elf/ldconfig.c:1171 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "mankas sufiĉa memoro"
 
-#: elf/ldconfig.c:1204
+#: elf/ldconfig.c:1334
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: ne eblas legi dosierujon %s"
 
-#: elf/ldconfig.c:1252
+#: elf/ldconfig.c:1382
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "uziĝas relativa pado '%s' por krei kaŝmemoron"
 
-#: elf/ldconfig.c:1276
+#: elf/ldconfig.c:1406
 #, c-format
 msgid "Can't chdir to /"
 msgstr "malsukcesis ŝanĝi aktualan dosierujon al «/»"
 
-#: elf/ldconfig.c:1317
+#: elf/ldconfig.c:1447
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "malsukcesis malfermi kaŝmemoran dosierujon %s\n"
@@ -665,7 +686,7 @@ msgstr "mankas dosieraj argumentoj"
 #. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:16
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:13
 msgid "No such file or directory"
 msgstr "Dosiero aŭ dosierujo ne ekzistas"
 
@@ -724,6 +745,11 @@ msgstr "ne eblas legi ligojmapon"
 msgid "cannot read object name"
 msgstr "ne eblas legi objektnomon"
 
+#: elf/pldd-xx.c:197
+#, c-format
+msgid "cannot allocate buffer for object name"
+msgstr "mankas sufiĉa memoro por objektnoma bufro"
+
 #: elf/pldd.c:103
 #, c-format
 msgid "invalid process ID '%s'"
@@ -754,32 +780,32 @@ msgstr "ne eblas ekhavi informon pri procezo %lu"
 msgid "process %lu is no ELF program"
 msgstr "procezo %lu ne estas ELF-programo"
 
-#: elf/readelflib.c:34
+#: elf/readelflib.c:36
 #, c-format
 msgid "file %s is truncated\n"
 msgstr "dosiero %s trunkiĝis\n"
 
-#: elf/readelflib.c:101
+#: elf/readelflib.c:106
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "pli ol unu dinamika segmento\n"
 
-#: elf/readlib.c:103
+#: elf/readlib.c:104
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "Malsukcesis eltrovi statinformon pri %s.\n"
 
-#: elf/readlib.c:114
+#: elf/readlib.c:115
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "Dosiero %s vakas; ne kontroliĝas."
 
-#: elf/readlib.c:120
+#: elf/readlib.c:121
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "Dosiero %s tro malgrandas; ne kontroliĝas."
 
-#: elf/readlib.c:130
+#: elf/readlib.c:131
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "Malsukcesis meti tutan dosieron %s en memoro.\n"
@@ -1205,6 +1231,20 @@ msgstr "nefinita signoĉeno"
 msgid "unknown name \"%s\""
 msgstr "nekonata nomo \"%s\""
 
+#: locale/programs/localedef.c:134 locale/programs/localedef.c:137
+msgid "<warnings>"
+msgstr "<avertoj>"
+
+#: locale/programs/localedef.c:304
+#, c-format
+msgid "cannot write output files to `%s'"
+msgstr "ne eblas skribi eligajn dosierojn al '%s'"
+
+#: locale/programs/localedef.c:546
+#, c-format
+msgid "cannot create output path '%s': %s"
+msgstr "ne eblas krei eligan padon '%s': %s"
+
 #: locale/programs/locarchive.c:133 locale/programs/locarchive.c:380
 #, c-format
 msgid "cannot create temporary file: %s"
@@ -1288,8 +1328,8 @@ msgstr "Nekonata sistemeraro"
 msgid "unable to free arguments"
 msgstr "ne eblas liberigi argumentojn"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.h:4
+#: nis/nis_error.h:1 nis/ypclnt.c:833 nis/ypclnt.c:922 posix/regcomp.c:135
+#: sysdeps/gnu/errlist.h:1
 msgid "Success"
 msgstr "Sukceso"
 
@@ -1330,7 +1370,7 @@ msgid "First/next chain broken"
 msgstr "Unua/sekva-ĉeno estas rompita"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.h:93
+#: nis/nis_error.h:11 nis/ypclnt.c:878 sysdeps/gnu/errlist.h:90
 msgid "Permission denied"
 msgstr "Mankas permeso"
 
@@ -1738,31 +1778,31 @@ msgstr "Objekto #%d:\n"
 msgid "Group entry for \"%s.%s\" group:\n"
 msgstr "Grupa ero por grupo \"%s.%s\":\n"
 
-#: nis/ypclnt.c:828
+#: nis/ypclnt.c:836
 msgid "Request arguments bad"
 msgstr "Argumentoj de peto estas misaj"
 
-#: nis/ypclnt.c:843
+#: nis/ypclnt.c:851
 msgid "Internal NIS error"
 msgstr "Interna NIS-eraro"
 
-#: nis/ypclnt.c:873
+#: nis/ypclnt.c:881
 msgid "Database is busy"
 msgstr "Datumbazo okupiĝas"
 
-#: nis/ypclnt.c:876
+#: nis/ypclnt.c:884
 msgid "Unknown NIS error code"
 msgstr "Nekonata NIS-erarkodo"
 
-#: nis/ypclnt.c:917
+#: nis/ypclnt.c:925
 msgid "Internal ypbind error"
 msgstr "**Interna programmiso** en 'ypbind'"
 
-#: nis/ypclnt.c:920
+#: nis/ypclnt.c:928
 msgid "Domain not bound"
 msgstr "Domajno ne estas bindita"
 
-#: nis/ypclnt.c:926
+#: nis/ypclnt.c:934
 msgid "Unknown ypbind error"
 msgstr "Nekonata eraro en 'ypbind'"
 
@@ -1894,7 +1934,7 @@ msgstr "uzi apartan kaŝmemoron por ĉiu uzanto"
 msgid "Name Service Cache Daemon."
 msgstr "Nomserva kaŝmemora servo."
 
-#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:206
+#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:207
 #, c-format
 msgid "wrong number of arguments"
 msgstr "malĝusta nombro de argumentoj"
@@ -2040,6 +2080,16 @@ msgstr "'nscd' ne rulas!\n"
 msgid "cannot read statistics data"
 msgstr "ne eblas legi statistikajn datumojn"
 
+#: nscd/pwdcache.c:407
+#, c-format
+msgid "Haven't found \"%s\" in user database cache!"
+msgstr "Ne troviĝas \"%s\" en kaŝmemoro de uzantoj!"
+
+#: nscd/pwdcache.c:409
+#, c-format
+msgid "Reloading \"%s\" in user database cache!"
+msgstr "Reŝargo de \"%s\" en kaŝmemoron de uzantoj!"
+
 #: nscd/pwdcache.c:471
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
@@ -2081,6 +2131,11 @@ msgstr "Prenas erojn el administrativa datumbazo."
 msgid "Enumeration not supported on %s\n"
 msgstr "listigo ne subtenatas en dosiero '%s'\n"
 
+#: nss/getent.c:517 nss/getent.c:530
+#, c-format
+msgid "Could not allocate group list: %m\n"
+msgstr "mankas sufiĉa memoro por grupa listo: %m\n"
+
 #: nss/getent.c:901
 #, c-format
 msgid "Unknown database name"
@@ -2095,27 +2150,27 @@ msgstr "Subtenataj datumbazoj:\n"
 msgid "Unknown database: %s\n"
 msgstr "nekonata datumbazo: %s\n"
 
-#: nss/makedb.c:119
+#: nss/makedb.c:120
 msgid "Convert key to lower case"
 msgstr "konverti ŝlosilon al minuskloj"
 
-#: nss/makedb.c:122
+#: nss/makedb.c:123
 msgid "Do not print messages while building database"
 msgstr "ne montri mesaĝojn dum kreado de datumbazo"
 
-#: nss/makedb.c:124
+#: nss/makedb.c:125
 msgid "Print content of database file, one entry a line"
 msgstr "montri enhavon de datumbaza dosiero, unu ero po linio"
 
-#: nss/makedb.c:125
+#: nss/makedb.c:126
 msgid "CHAR"
 msgstr "SIGNO"
 
-#: nss/makedb.c:131
+#: nss/makedb.c:132
 msgid "Create simple database from textual input."
 msgstr "Kreas simplan datumbazon el teksta enigo."
 
-#: nss/makedb.c:134
+#: nss/makedb.c:135
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -2125,71 +2180,71 @@ msgstr ""
 "-o ELIGDOSIERO ENIGDOSIERO\n"
 "-u ENIGDOSIERO"
 
-#: nss/makedb.c:227
+#: nss/makedb.c:228
 #, c-format
 msgid "cannot open database file `%s'"
 msgstr "ne eblas malfermi datumbazdosieron '%s'"
 
-#: nss/makedb.c:272
+#: nss/makedb.c:273
 #, c-format
 msgid "no entries to be processed"
 msgstr "neniuj eroj por trakti"
 
-#: nss/makedb.c:282
+#: nss/makedb.c:283
 #, c-format
 msgid "cannot create temporary file name"
 msgstr "malsukcesis krei nomon de provizora dosiero"
 
-#: nss/makedb.c:288
+#: nss/makedb.c:289
 #, c-format
 msgid "cannot create temporary file"
 msgstr "malsukcesis krei provizoran dosieron"
 
-#: nss/makedb.c:304
+#: nss/makedb.c:305
 #, c-format
 msgid "cannot stat newly created file"
 msgstr "malsukcesis eltrovi statinformon pri ĵuse kreita dosiero"
 
-#: nss/makedb.c:315
+#: nss/makedb.c:316
 #, c-format
 msgid "cannot rename temporary file"
 msgstr "malsukcesis alinomi provizoran dosieron"
 
-#: nss/makedb.c:527 nss/makedb.c:550
+#: nss/makedb.c:528 nss/makedb.c:551
 #, c-format
 msgid "cannot create search tree"
 msgstr "malsukcesis krei serĉarbo"
 
-#: nss/makedb.c:556
+#: nss/makedb.c:557
 msgid "duplicate key"
 msgstr "duobla ŝlosilo"
 
-#: nss/makedb.c:568
+#: nss/makedb.c:569
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "problemoj dum legado de '%s'"
 
-#: nss/makedb.c:795
+#: nss/makedb.c:796
 #, c-format
 msgid "failed to write new database file"
 msgstr "malsukcesis skribi novan datumbazan dosieron"
 
-#: nss/makedb.c:808
+#: nss/makedb.c:809
 #, c-format
 msgid "cannot stat database file"
 msgstr "malsukcesis eltrovi statinformon pri datumbaza dosiero"
 
-#: nss/makedb.c:813
+#: nss/makedb.c:814
 #, c-format
 msgid "cannot map database file"
 msgstr "malsukcesis meti tutan datumbazan dosieron en memoro"
 
-#: nss/makedb.c:816
+#: nss/makedb.c:817
 #, c-format
 msgid "file not a database file"
 msgstr "dosiero ne estas datumbaza dosiero"
 
-#: nss/makedb.c:867
+#: nss/makedb.c:875
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr "malsukcesis agordi dosierkrean kuntekston por '%s'"
@@ -2207,6 +2262,31 @@ msgstr "nedifinita"
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "Nerekonata variablo '%s'"
+
+#: posix/getopt.c:277
+#, c-format
+msgid "%s: option '%s%s' is ambiguous\n"
+msgstr "%s: opcio «%s%s» estas plursenca\n"
+
+#: posix/getopt.c:283
+#, c-format
+msgid "%s: option '%s%s' is ambiguous; possibilities:"
+msgstr "%s: opcio «%s%s» estas plursenca; eblaĵoj estas:"
+
+#: posix/getopt.c:318
+#, c-format
+msgid "%s: unrecognized option '%s%s'\n"
+msgstr "%s: nekonata opcio «%s%s»\n"
+
+#: posix/getopt.c:344
+#, c-format
+msgid "%s: option '%s%s' doesn't allow an argument\n"
+msgstr "%s: opcio «%s%s» ne toleras argumenton\n"
+
+#: posix/getopt.c:359
+#, c-format
+msgid "%s: option '%s%s' requires an argument\n"
+msgstr "%s: opcio «%s%s» bezonas argumenton\n"
 
 #: posix/getopt.c:620
 #, c-format
@@ -2241,6 +2321,10 @@ msgstr "Malsuprenstreko '\\' ĉe la fino"
 #: posix/regcomp.c:153
 msgid "Invalid back reference"
 msgstr "Nevalida retroreferenco"
+
+#: posix/regcomp.c:156
+msgid "Unmatched [, [^, [:, [., or [="
+msgstr "Senpara [, [^, [:, [., aŭ [="
 
 #: posix/regcomp.c:159
 msgid "Unmatched ( or \\("
@@ -2766,7 +2850,7 @@ msgstr "Adres-eraro"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:219
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:216
 msgid "Broken pipe"
 msgstr "Rompita dukto"
 
@@ -2869,12 +2953,12 @@ msgstr "Risurco perdiĝis"
 
 #. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.h:9
+#: sysdeps/gnu/errlist.h:6
 msgid "Operation not permitted"
 msgstr "Operacio ne permesatas"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.h:21
+#: sysdeps/gnu/errlist.h:18
 msgid "No such process"
 msgstr "Tiu procezo ne ekzistas"
 
@@ -2885,12 +2969,12 @@ msgstr "Tiu procezo ne ekzistas"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.h:32
+#: sysdeps/gnu/errlist.h:29
 msgid "Interrupted system call"
 msgstr "Interrompita sistemvoko"
 
 #. TRANS Usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.h:37
+#: sysdeps/gnu/errlist.h:34
 msgid "Input/output error"
 msgstr "Eraro de en-eligo"
 
@@ -2899,7 +2983,7 @@ msgstr "Eraro de en-eligo"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.h:46
+#: sysdeps/gnu/errlist.h:43
 msgid "No such device or address"
 msgstr "Tiu aparato aŭ adreso ne ekzistas"
 
@@ -2907,27 +2991,27 @@ msgstr "Tiu aparato aŭ adreso ne ekzistas"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:54
+#: sysdeps/gnu/errlist.h:51
 msgid "Argument list too long"
 msgstr "Listo de argumentoj tro longas"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.h:60
+#: sysdeps/gnu/errlist.h:57
 msgid "Exec format error"
 msgstr "Nevalida aranĝo de rulenda dosiero"
 
 #. TRANS For example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.h:67
+#: sysdeps/gnu/errlist.h:64
 msgid "Bad file descriptor"
 msgstr "Nevalida dosierpriaĵo"
 
 #. TRANS This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.h:74
+#: sysdeps/gnu/errlist.h:71
 msgid "No child processes"
 msgstr "Ne ekzistas idaj procezoj"
 
@@ -2935,69 +3019,69 @@ msgstr "Ne ekzistas idaj procezoj"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.h:82
+#: sysdeps/gnu/errlist.h:79
 msgid "Resource deadlock avoided"
 msgstr "Evitiĝis klinĉo inter risurcoj"
 
 #. TRANS The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.h:88
+#: sysdeps/gnu/errlist.h:85
 msgid "Cannot allocate memory"
 msgstr "Mankas sufiĉa memoro"
 
 #. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.h:99
+#: sysdeps/gnu/errlist.h:96
 msgid "Bad address"
 msgstr "Nevalida adreso"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.h:106
+#: sysdeps/gnu/errlist.h:103
 msgid "Block device required"
 msgstr "Blokaparato bezoniĝas"
 
 #. TRANS A system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.h:113
+#: sysdeps/gnu/errlist.h:110
 msgid "Device or resource busy"
 msgstr "Aparato aŭ risurco uziĝas"
 
 #. TRANS An existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.h:119
+#: sysdeps/gnu/errlist.h:116
 msgid "File exists"
 msgstr "Dosiero jam ekzistas"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:126
+#: sysdeps/gnu/errlist.h:123
 msgid "Invalid cross-device link"
 msgstr "Nevalida ligo inter aparatoj"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.h:132
+#: sysdeps/gnu/errlist.h:129
 msgid "No such device"
 msgstr "Tiu aparato ne ekzistas"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.h:137
+#: sysdeps/gnu/errlist.h:134
 msgid "Not a directory"
 msgstr "Ne estas dosierujo"
 
 #. TRANS You cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.h:143
+#: sysdeps/gnu/errlist.h:140
 msgid "Is a directory"
 msgstr "Estas dosierujo"
 
 #. TRANS This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.h:149
+#: sysdeps/gnu/errlist.h:146
 msgid "Invalid argument"
 msgstr "Nevalida argumento"
 
@@ -3008,20 +3092,20 @@ msgstr "Nevalida argumento"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.h:160
+#: sysdeps/gnu/errlist.h:157
 msgid "Too many open files"
 msgstr "Tro da malfermaj dosieroj"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:167
+#: sysdeps/gnu/errlist.h:164
 msgid "Too many open files in system"
 msgstr "Tro da malfermaj dosieroj en sistemo"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.h:173
+#: sysdeps/gnu/errlist.h:170
 msgid "Inappropriate ioctl for device"
 msgstr "Nevalida 'ioctl' por aparato"
 
@@ -3030,47 +3114,47 @@ msgstr "Nevalida 'ioctl' por aparato"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.h:182
+#: sysdeps/gnu/errlist.h:179
 msgid "Text file busy"
 msgstr "Tekstdosiero uziĝas"
 
 #. TRANS The size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.h:187
+#: sysdeps/gnu/errlist.h:184
 msgid "File too large"
 msgstr "Dosiero tro grandas"
 
 #. TRANS Write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.h:193
+#: sysdeps/gnu/errlist.h:190
 msgid "No space left on device"
 msgstr "Ne haviĝas plu da spaco sur aparato"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.h:198
+#: sysdeps/gnu/errlist.h:195
 msgid "Illegal seek"
 msgstr "Nevalida 'seek'"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.h:203
+#: sysdeps/gnu/errlist.h:200
 msgid "Read-only file system"
 msgstr "Nur-lega dosiersistemo"
 
 #. TRANS The link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:210
+#: sysdeps/gnu/errlist.h:207
 msgid "Too many links"
 msgstr "Tro da ligoj"
 
 #. TRANS Used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.h:225
+#: sysdeps/gnu/errlist.h:222
 msgid "Numerical argument out of domain"
 msgstr "Numereca argumento estas ekster gamo"
 
 #. TRANS Used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.h:231
+#: sysdeps/gnu/errlist.h:228
 msgid "Numerical result out of range"
 msgstr "Numereca rezulto estas ekster gamo"
 
@@ -3103,7 +3187,7 @@ msgstr "Numereca rezulto estas ekster gamo"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.h:264
+#: sysdeps/gnu/errlist.h:261
 msgid "Resource temporarily unavailable"
 msgstr "Risurco dumtempe ne disponeblas"
 
@@ -3115,47 +3199,47 @@ msgstr "Risurco dumtempe ne disponeblas"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.h:276
+#: sysdeps/gnu/errlist.h:273
 msgid "Operation now in progress"
 msgstr "Operacio nun fariĝas"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.h:282
+#: sysdeps/gnu/errlist.h:279
 msgid "Operation already in progress"
 msgstr "Iu operacio jam fariĝas"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.h:287
+#: sysdeps/gnu/errlist.h:284
 msgid "Socket operation on non-socket"
 msgstr "Konektila operacio sur ne-konektilo"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.h:293
+#: sysdeps/gnu/errlist.h:290
 msgid "Message too long"
 msgstr "Mesaĝo tro longas"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.h:298
+#: sysdeps/gnu/errlist.h:295
 msgid "Protocol wrong type for socket"
 msgstr "Protokolo havas malĝustan tipon por konektilo"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.h:304
+#: sysdeps/gnu/errlist.h:301
 msgid "Protocol not available"
 msgstr "Protokolo ne disponeblas"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.h:311
+#: sysdeps/gnu/errlist.h:308
 msgid "Protocol not supported"
 msgstr "Protokolo ne subtenatas"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.h:316
+#: sysdeps/gnu/errlist.h:313
 msgid "Socket type not supported"
 msgstr "Konektiltipo ne subtenatas"
 
@@ -3165,71 +3249,71 @@ msgstr "Konektiltipo ne subtenatas"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.h:326
+#: sysdeps/gnu/errlist.h:323
 msgid "Operation not supported"
 msgstr "Operacio ne subtenatas"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.h:331
+#: sysdeps/gnu/errlist.h:328
 msgid "Protocol family not supported"
 msgstr "Familio de protokoloj ne subtenatas"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.h:337
+#: sysdeps/gnu/errlist.h:334
 msgid "Address family not supported by protocol"
 msgstr "Protokolo ne subtenas adresfamilion"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:342
+#: sysdeps/gnu/errlist.h:339
 msgid "Address already in use"
 msgstr "Adreso jam uziĝas"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:349
+#: sysdeps/gnu/errlist.h:346
 msgid "Cannot assign requested address"
 msgstr "Ne eblas asigni petatan adreson"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.h:354
+#: sysdeps/gnu/errlist.h:351
 msgid "Network is down"
 msgstr "La reto ne funkcias"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.h:360
+#: sysdeps/gnu/errlist.h:357
 msgid "Network is unreachable"
 msgstr "La reto ne atingeblas"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.h:365
+#: sysdeps/gnu/errlist.h:362
 msgid "Network dropped connection on reset"
 msgstr "La retkonekto malekis ĉar gastiganto malfunkciis"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.h:370
+#: sysdeps/gnu/errlist.h:367
 msgid "Software caused connection abort"
 msgstr "La retkonekto malekis ĉar loka komputilo malfunkciis"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.h:377
+#: sysdeps/gnu/errlist.h:374
 msgid "Connection reset by peer"
 msgstr "Konekto simple malekis"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.h:384
+#: sysdeps/gnu/errlist.h:381
 msgid "No buffer space available"
 msgstr "Mankas sufiĉa memoro por bufroj"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.h:390
+#: sysdeps/gnu/errlist.h:387
 msgid "Transport endpoint is already connected"
 msgstr "Celkonektilo jam havas konekton"
 
@@ -3237,74 +3321,74 @@ msgstr "Celkonektilo jam havas konekton"
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.h:398
+#: sysdeps/gnu/errlist.h:395
 msgid "Transport endpoint is not connected"
 msgstr "Celkonektilo ne havas konekton"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.h:405
+#: sysdeps/gnu/errlist.h:402
 msgid "Destination address required"
 msgstr "Celadreso bezoniĝas"
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.h:410
+#: sysdeps/gnu/errlist.h:407
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "Ne eblas sendi post fermado de celkonektilo"
 
-#: sysdeps/gnu/errlist.h:413
+#: sysdeps/gnu/errlist.h:410
 msgid "Too many references: cannot splice"
 msgstr "Tro da referencoj: ne eblas displekti"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.h:419
+#: sysdeps/gnu/errlist.h:416
 msgid "Connection timed out"
 msgstr "Konekto transpasis limtempon"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.h:425
+#: sysdeps/gnu/errlist.h:422
 msgid "Connection refused"
 msgstr "Konekto rifuziĝas"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.h:431
+#: sysdeps/gnu/errlist.h:428
 msgid "Too many levels of symbolic links"
 msgstr "Tro multaj sinsekvaj simbolaj ligoj"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.h:438
+#: sysdeps/gnu/errlist.h:435
 msgid "File name too long"
 msgstr "Dosiernomo tro longas"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.h:443
+#: sysdeps/gnu/errlist.h:440
 msgid "Host is down"
 msgstr "Gastiganto ne funkcias"
 
-#: sysdeps/gnu/errlist.h:448
+#: sysdeps/gnu/errlist.h:445
 msgid "No route to host"
 msgstr "Gastiganto ne atingeblas"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.h:454
+#: sysdeps/gnu/errlist.h:451
 msgid "Directory not empty"
 msgstr "Dosierujo ne vakas"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.h:460
+#: sysdeps/gnu/errlist.h:457
 msgid "Too many users"
 msgstr "Tro multaj uzantoj"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.h:465
+#: sysdeps/gnu/errlist.h:462
 msgid "Disk quota exceeded"
 msgstr "Diska kvoto transpasiĝis"
 
@@ -3313,7 +3397,7 @@ msgstr "Diska kvoto transpasiĝis"
 #. TRANS for NFS file systems or corruption in other file systems.
 #. TRANS Repairing this condition usually requires unmounting, possibly repairing
 #. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.h:474
+#: sysdeps/gnu/errlist.h:471
 msgid "Stale file handle"
 msgstr "Malfreŝa dosierpriaĵo"
 
@@ -3321,7 +3405,7 @@ msgstr "Malfreŝa dosierpriaĵo"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.h:482
+#: sysdeps/gnu/errlist.h:479
 msgid "Object is remote"
 msgstr "Objekto estas fora"
 
@@ -3329,7 +3413,7 @@ msgstr "Objekto estas fora"
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.h:490
+#: sysdeps/gnu/errlist.h:487
 msgid "No locks available"
 msgstr "Neniu ŝloso disponeblas"
 
@@ -3338,57 +3422,57 @@ msgstr "Neniu ŝloso disponeblas"
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.h:499
+#: sysdeps/gnu/errlist.h:496
 msgid "Function not implemented"
 msgstr "Funkcio ne realiĝis"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.h:505
+#: sysdeps/gnu/errlist.h:502
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Nevalida aŭ nekompleta plurbajta aŭ larĝa signo"
 
-#: sysdeps/gnu/errlist.h:508
+#: sysdeps/gnu/errlist.h:505
 msgid "Bad message"
 msgstr "Malbona mesaĝo"
 
-#: sysdeps/gnu/errlist.h:511
+#: sysdeps/gnu/errlist.h:508
 msgid "Identifier removed"
 msgstr "Indentigilo forigiĝis"
 
-#: sysdeps/gnu/errlist.h:514
+#: sysdeps/gnu/errlist.h:511
 msgid "Multihop attempted"
 msgstr "Plursalta provo"
 
-#: sysdeps/gnu/errlist.h:517
+#: sysdeps/gnu/errlist.h:514
 msgid "No data available"
 msgstr "Ne disponeblas datumoj"
 
-#: sysdeps/gnu/errlist.h:520
+#: sysdeps/gnu/errlist.h:517
 msgid "Link has been severed"
 msgstr "Ligo tranĉiĝis"
 
-#: sysdeps/gnu/errlist.h:523
+#: sysdeps/gnu/errlist.h:520
 msgid "No message of desired type"
 msgstr "Neniu mesaĝo de petita tipo"
 
-#: sysdeps/gnu/errlist.h:526
+#: sysdeps/gnu/errlist.h:523
 msgid "Out of streams resources"
 msgstr "Ne havas plu da flu-risurcoj"
 
-#: sysdeps/gnu/errlist.h:529
+#: sysdeps/gnu/errlist.h:526
 msgid "Device not a stream"
 msgstr "Aparato ne estas fluo"
 
-#: sysdeps/gnu/errlist.h:532
+#: sysdeps/gnu/errlist.h:529
 msgid "Value too large for defined data type"
 msgstr "Valoro tro grandas por difinita datumtipo"
 
-#: sysdeps/gnu/errlist.h:535
+#: sysdeps/gnu/errlist.h:532
 msgid "Protocol error"
 msgstr "Protokol-eraro"
 
-#: sysdeps/gnu/errlist.h:538
+#: sysdeps/gnu/errlist.h:535
 msgid "Timer expired"
 msgstr "Horloĝo transpasis limtempon"
 
@@ -3396,195 +3480,195 @@ msgstr "Horloĝo transpasis limtempon"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.h:546
+#: sysdeps/gnu/errlist.h:543
 msgid "Operation canceled"
 msgstr "Operacio nuligitas"
 
-#: sysdeps/gnu/errlist.h:549
+#: sysdeps/gnu/errlist.h:546
 msgid "Owner died"
 msgstr "Posedanto ĉesiĝis"
 
-#: sysdeps/gnu/errlist.h:552
+#: sysdeps/gnu/errlist.h:549
 msgid "State not recoverable"
 msgstr "Stato ne ripareblas"
 
-#: sysdeps/gnu/errlist.h:555
+#: sysdeps/gnu/errlist.h:552
 msgid "Interrupted system call should be restarted"
 msgstr "Interrompita sistemvoko devus esti restartigata"
 
-#: sysdeps/gnu/errlist.h:558
+#: sysdeps/gnu/errlist.h:555
 msgid "Channel number out of range"
 msgstr "Kanalnumero estas ekster gamo"
 
-#: sysdeps/gnu/errlist.h:561
+#: sysdeps/gnu/errlist.h:558
 msgid "Level 2 not synchronized"
 msgstr "Nivelo 2 ne sinkroniĝis"
 
-#: sysdeps/gnu/errlist.h:564
+#: sysdeps/gnu/errlist.h:561
 msgid "Level 3 halted"
 msgstr "Nivelo 3 haltiĝis"
 
-#: sysdeps/gnu/errlist.h:567
+#: sysdeps/gnu/errlist.h:564
 msgid "Level 3 reset"
 msgstr "Nivelo 3 rekomenco"
 
-#: sysdeps/gnu/errlist.h:570
+#: sysdeps/gnu/errlist.h:567
 msgid "Link number out of range"
 msgstr "Lignumero estas ekster gamo"
 
-#: sysdeps/gnu/errlist.h:573
+#: sysdeps/gnu/errlist.h:570
 msgid "Protocol driver not attached"
 msgstr "Protokolpelilo ne kunligatas"
 
-#: sysdeps/gnu/errlist.h:576
+#: sysdeps/gnu/errlist.h:573
 msgid "No CSI structure available"
 msgstr "Neniu CSI-strukturo disponeblas"
 
-#: sysdeps/gnu/errlist.h:579
+#: sysdeps/gnu/errlist.h:576
 msgid "Level 2 halted"
 msgstr "Nivelo 2 haltiĝis"
 
-#: sysdeps/gnu/errlist.h:582
+#: sysdeps/gnu/errlist.h:579
 msgid "Invalid exchange"
 msgstr "Nevalida interŝanĝo"
 
-#: sysdeps/gnu/errlist.h:585
+#: sysdeps/gnu/errlist.h:582
 msgid "Invalid request descriptor"
 msgstr "Nevalida petpriaĵo"
 
-#: sysdeps/gnu/errlist.h:588
+#: sysdeps/gnu/errlist.h:585
 msgid "Exchange full"
 msgstr "Interŝanĝo plenas"
 
-#: sysdeps/gnu/errlist.h:591
+#: sysdeps/gnu/errlist.h:588
 msgid "No anode"
 msgstr "Neniu anodo"
 
-#: sysdeps/gnu/errlist.h:594
+#: sysdeps/gnu/errlist.h:591
 msgid "Invalid request code"
 msgstr "Nevalida petkodo"
 
-#: sysdeps/gnu/errlist.h:597
+#: sysdeps/gnu/errlist.h:594
 msgid "Invalid slot"
 msgstr "Nevalida sulko"
 
-#: sysdeps/gnu/errlist.h:600
+#: sysdeps/gnu/errlist.h:597
 msgid "Bad font file format"
 msgstr "Nevalida aranĝo de tipardosiero"
 
-#: sysdeps/gnu/errlist.h:603
+#: sysdeps/gnu/errlist.h:600
 msgid "Machine is not on the network"
 msgstr "Komputilo ne havas retkonekton"
 
-#: sysdeps/gnu/errlist.h:606
+#: sysdeps/gnu/errlist.h:603
 msgid "Package not installed"
 msgstr "Pako ne estas instalita"
 
-#: sysdeps/gnu/errlist.h:609
+#: sysdeps/gnu/errlist.h:606
 msgid "Advertise error"
 msgstr "Anonc-eraro"
 
-#: sysdeps/gnu/errlist.h:612
+#: sysdeps/gnu/errlist.h:609
 msgid "Srmount error"
 msgstr "Eraro je 'srmount'"
 
-#: sysdeps/gnu/errlist.h:615
+#: sysdeps/gnu/errlist.h:612
 msgid "Communication error on send"
 msgstr "Komunik-eraro je sendo"
 
-#: sysdeps/gnu/errlist.h:618
+#: sysdeps/gnu/errlist.h:615
 msgid "RFS specific error"
 msgstr "RFS-specifa eraro"
 
-#: sysdeps/gnu/errlist.h:621
+#: sysdeps/gnu/errlist.h:618
 msgid "Name not unique on network"
 msgstr "Nomo ne unikas en reto"
 
-#: sysdeps/gnu/errlist.h:624
+#: sysdeps/gnu/errlist.h:621
 msgid "File descriptor in bad state"
 msgstr "Dosierpriaĵo estas en malbona stato"
 
-#: sysdeps/gnu/errlist.h:627
+#: sysdeps/gnu/errlist.h:624
 msgid "Remote address changed"
 msgstr "Fora adreso ŝanĝis"
 
-#: sysdeps/gnu/errlist.h:630
+#: sysdeps/gnu/errlist.h:627
 msgid "Can not access a needed shared library"
 msgstr "Ne eblas atingi necesan komunan bibliotekon"
 
-#: sysdeps/gnu/errlist.h:633
+#: sysdeps/gnu/errlist.h:630
 msgid "Accessing a corrupted shared library"
 msgstr "Atingo de kripla komuna biblioteko"
 
-#: sysdeps/gnu/errlist.h:636
+#: sysdeps/gnu/errlist.h:633
 msgid ".lib section in a.out corrupted"
 msgstr "Sekcio '.lib' en «a.out» kriplas"
 
-#: sysdeps/gnu/errlist.h:639
+#: sysdeps/gnu/errlist.h:636
 msgid "Attempting to link in too many shared libraries"
 msgstr "Provo de bindi tro multajn komunajn bibliotekojn"
 
-#: sysdeps/gnu/errlist.h:642
+#: sysdeps/gnu/errlist.h:639
 msgid "Cannot exec a shared library directly"
 msgstr "Ne eblas rekte ruli komunan bibliotekon"
 
-#: sysdeps/gnu/errlist.h:645
+#: sysdeps/gnu/errlist.h:642
 msgid "Streams pipe error"
 msgstr "Fludukta eraro"
 
-#: sysdeps/gnu/errlist.h:648
+#: sysdeps/gnu/errlist.h:645
 msgid "Structure needs cleaning"
 msgstr "Strukturo bezonas purigon"
 
-#: sysdeps/gnu/errlist.h:651
+#: sysdeps/gnu/errlist.h:648
 msgid "Not a XENIX named type file"
 msgstr "Ne estas XENIX-dosiero kun nomo"
 
-#: sysdeps/gnu/errlist.h:654
+#: sysdeps/gnu/errlist.h:651
 msgid "No XENIX semaphores available"
 msgstr "Neniu XENIX-semaforo disponeblas"
 
-#: sysdeps/gnu/errlist.h:657
+#: sysdeps/gnu/errlist.h:654
 msgid "Is a named type file"
 msgstr "Estas dosiero kun nomo"
 
-#: sysdeps/gnu/errlist.h:660
+#: sysdeps/gnu/errlist.h:657
 msgid "Remote I/O error"
 msgstr "Fora en-eliga eraro"
 
-#: sysdeps/gnu/errlist.h:663
+#: sysdeps/gnu/errlist.h:660
 msgid "No medium found"
 msgstr "Neniu datumportilo troviĝas"
 
-#: sysdeps/gnu/errlist.h:666
+#: sysdeps/gnu/errlist.h:663
 msgid "Wrong medium type"
 msgstr "Neĝusta tipo de datumportilo"
 
-#: sysdeps/gnu/errlist.h:669
+#: sysdeps/gnu/errlist.h:666
 msgid "Required key not available"
 msgstr "Necesa ŝlosilo ne disponeblas"
 
-#: sysdeps/gnu/errlist.h:672
+#: sysdeps/gnu/errlist.h:669
 msgid "Key has expired"
 msgstr "Ŝlosilo kadukiĝis"
 
-#: sysdeps/gnu/errlist.h:675
+#: sysdeps/gnu/errlist.h:672
 msgid "Key has been revoked"
 msgstr "Ŝlosilo senvalidiĝis"
 
-#: sysdeps/gnu/errlist.h:678
+#: sysdeps/gnu/errlist.h:675
 msgid "Key was rejected by service"
 msgstr "Ŝlosilo rifuziĝis per servo"
 
-#: sysdeps/gnu/errlist.h:681
+#: sysdeps/gnu/errlist.h:678
 msgid "Operation not possible due to RF-kill"
 msgstr "Operacio ne eblas pro 'RF-kill'"
 
-#: sysdeps/gnu/errlist.h:684
+#: sysdeps/gnu/errlist.h:681
 msgid "Memory page has hardware error"
 msgstr "Memorpaĝo havas fizikan difekton"
 
-#: sysdeps/gnu/errlist.h:687
+#: sysdeps/gnu/errlist.h:684
 msgid "RPC struct is bad"
 msgstr "RPC-strukturo malbonas"
 
@@ -3593,43 +3677,43 @@ msgstr "RPC-strukturo malbonas"
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.h:696
+#: sysdeps/gnu/errlist.h:693
 msgid "Inappropriate file type or format"
 msgstr "Maladekvata dosiera tipo aŭ aranĝo"
 
-#: sysdeps/gnu/errlist.h:699
+#: sysdeps/gnu/errlist.h:696
 msgid "RPC bad procedure for program"
 msgstr "Malbona RPC-proceduro por programo"
 
-#: sysdeps/gnu/errlist.h:702
+#: sysdeps/gnu/errlist.h:699
 msgid "Authentication error"
 msgstr "Eraro en aŭtentokontrolo"
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.h:709
+#: sysdeps/gnu/errlist.h:706
 msgid "Translator died"
 msgstr "Tradukprogramo pereis"
 
-#: sysdeps/gnu/errlist.h:712
+#: sysdeps/gnu/errlist.h:709
 msgid "RPC version wrong"
 msgstr "RPC-versio malbonas"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.h:717
+#: sysdeps/gnu/errlist.h:714
 msgid "You really blew it this time"
 msgstr "Vi plene ruinigis ĝin ĉifoje"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.h:724
+#: sysdeps/gnu/errlist.h:721
 msgid "Too many processes"
 msgstr "Tro multaj procezoj"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.h:729
+#: sysdeps/gnu/errlist.h:726
 msgid "Gratuitous error"
 msgstr "Sensenca eraro"
 
@@ -3645,11 +3729,11 @@ msgstr "Sensenca eraro"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.h:745
+#: sysdeps/gnu/errlist.h:742
 msgid "Not supported"
 msgstr "Ne subtenatas"
 
-#: sysdeps/gnu/errlist.h:748
+#: sysdeps/gnu/errlist.h:745
 msgid "RPC program version wrong"
 msgstr "RPC-programversio malbonas"
 
@@ -3659,7 +3743,7 @@ msgstr "RPC-programversio malbonas"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.h:758
+#: sysdeps/gnu/errlist.h:755
 msgid "Inappropriate operation for background process"
 msgstr "Maladekvata operacio por fona procezo"
 
@@ -3677,7 +3761,7 @@ msgstr "Maladekvata operacio por fona procezo"
 #. TRANS @c
 #. TRANS @c Translators, please do not translate this litteraly, translate it into
 #. TRANS @c an idiomatic funny way of saying that the computer died.
-#: sysdeps/gnu/errlist.h:776
+#: sysdeps/gnu/errlist.h:773
 msgid "Computer bought the farm"
 msgstr "Sidiĝu kaj ne pensu plu"
 
@@ -3686,22 +3770,22 @@ msgstr "Sidiĝu kaj ne pensu plu"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.h:785
+#: sysdeps/gnu/errlist.h:782
 msgid "Operation would block"
 msgstr "Operacio blokiĝus"
 
-#: sysdeps/gnu/errlist.h:788
+#: sysdeps/gnu/errlist.h:785
 msgid "Need authenticator"
 msgstr "Bezoniĝas aŭtentoktrololilo"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.h:795
+#: sysdeps/gnu/errlist.h:792
 msgid "?"
 msgstr "?"
 
-#: sysdeps/gnu/errlist.h:798
+#: sysdeps/gnu/errlist.h:795
 msgid "RPC program not available"
 msgstr "RPC-programo ne disponeblas"
 
@@ -3777,11 +3861,6 @@ msgstr "Interrompita per signalo"
 msgid "Parameter string not correctly encoded"
 msgstr "Parametra ĉeno ne estas ĝuste kodita"
 
-#: sysdeps/unix/sysv/linux/i386/readelflib.c:65
-#, c-format
-msgid "%s is for unknown machine %d.\n"
-msgstr "%s estas por nekonata maŝino %d.\n"
-
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:58
 #, c-format
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
@@ -3806,6 +3885,19 @@ msgstr "ne eblas malfermi «%s»"
 msgid "cannot read header from `%s'"
 msgstr "ne eblas legi ĉapon el «%s»"
 
+#: sysdeps/unix/sysv/linux/x86/readelflib.c:66
+#, c-format
+msgid "%s is for unknown machine %d.\n"
+msgstr "%s estas por nekonata maŝino %d.\n"
+
+#: timezone/zdump.c:334
+msgid "has fewer than 3 characters"
+msgstr "havas malpli ol tri signojn"
+
+#: timezone/zdump.c:336
+msgid "has more than 6 characters"
+msgstr "havas pli ol ses signojn"
+
 #: timezone/zdump.c:341
 #, c-format
 msgid "%s: warning: zone \"%s\" abbreviation \"%s\" %s\n"
@@ -3825,6 +3917,28 @@ msgstr "%s: troa argumento %s je opcio «-t»\n"
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Mankas sufiĉa memoro: %s\n"
+
+#: timezone/zic.c:440
+msgid "size overflow"
+msgstr "grandtroo"
+
+#: timezone/zic.c:450
+msgid "alignment overflow"
+msgstr "aranĝtroo"
+
+#: timezone/zic.c:498
+msgid "integer overflow"
+msgstr "entjertroo"
+
+#: timezone/zic.c:532
+#, c-format
+msgid "\"%s\", line %<PRIdMAX>: "
+msgstr "«%s», linio %<PRIdMAX>: "
+
+#: timezone/zic.c:535
+#, c-format
+msgid " (rule from \"%s\", line %<PRIdMAX>)"
+msgstr " (regulo el «%s», linio %<PRIdMAX>)"
 
 #: timezone/zic.c:554
 #, c-format
@@ -3926,6 +4040,26 @@ msgstr "tempo tro grandas"
 msgid "invalid time of day"
 msgstr "nevalida tempo de tago"
 
+#: timezone/zic.c:1577
+msgid "leap second precedes Epoch"
+msgstr "supersekundo antaŭas al Epoko"
+
+#: timezone/zic.c:1611
+msgid "wrong number of fields on Expires line"
+msgstr "malĝusta nombro de kampoj en 'Expires'-linio"
+
+#: timezone/zic.c:1613
+msgid "multiple Expires lines"
+msgstr "pluraj 'Expires'-linioj"
+
+#: timezone/zic.c:1624
+msgid "wrong number of fields on Link line"
+msgstr "malĝusta nombro de kampoj en 'Link'-linio"
+
+#: timezone/zic.c:1628
+msgid "blank FROM field on Link line"
+msgstr "vaka 'FROM'-kampo en 'Link'-linio"
+
 #: timezone/zic.c:1703
 msgid "invalid starting year"
 msgstr "nevalida komencjaro"
@@ -3941,6 +4075,10 @@ msgstr "komencjaro pli grandas ol finjaro"
 #: timezone/zic.c:1774
 msgid "invalid weekday name"
 msgstr "nevalida nomo de semajntago"
+
+#: timezone/zic.c:2058
+msgid "too many transition times"
+msgstr "tro multaj pasaĵaj tempoj"
 
 #: timezone/zic.c:2964
 msgid "UT offset out of range"
@@ -3967,6 +4105,14 @@ msgstr "Nepara nombro de citiloj"
 msgid "use of 2/29 in non leap-year"
 msgstr "uzo de feb 29 en nesuperjaro"
 
+#: timezone/zic.c:3423
+msgid "time zone abbreviation has fewer than 3 characters"
+msgstr "horzona mallongigo havas malpli ol tri signojn"
+
+#: timezone/zic.c:3425
+msgid "time zone abbreviation has too many characters"
+msgstr "horzona mallongigo havas tro da signoj"
+
 #: timezone/zic.c:3427
 msgid "time zone abbreviation differs from POSIX standard"
 msgstr "horzona mallongigo diferencas de POSIX-normo"
@@ -3974,3 +4120,8 @@ msgstr "horzona mallongigo diferencas de POSIX-normo"
 #: timezone/zic.c:3433
 msgid "too many, or too long, time zone abbreviations"
 msgstr "tro multaj aŭ tro longaj horzonaj mallongigoj"
+
+#: timezone/zic.c:3479
+#, c-format
+msgid "%s: Can't create directory %s: %s"
+msgstr "%s: Ne eblas krei dosierujon %s: %s"

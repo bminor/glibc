@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.14\n"
-"POT-Creation-Date: 2020-07-22 23:24-0400\n"
+"POT-Creation-Date: 2021-01-27 17:07-0300\n"
 "PO-Revision-Date: 2011-10-08 23:43+0900\n"
 "Last-Translator: Yasuaki Taniguchi <yasuakit@gmail.com>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -70,7 +70,7 @@ msgstr "短い使用方法を表示する"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
 #: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "NAME"
 msgstr "NAME"
 
@@ -120,7 +120,7 @@ msgstr "シンボル定義を含んだ C ヘッダーファイル NAME を作成
 msgid "Do not use existing catalog, force new output file"
 msgstr "既存のカタログを使用せず、強制的に新しい出力ファイルにする"
 
-#: catgets/gencat.c:113 nss/makedb.c:120
+#: catgets/gencat.c:113 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "出力をファイル NAME に書き込む"
 
@@ -141,11 +141,11 @@ msgstr ""
 "[OUTPUT-FILE [INPUT-FILE]...]"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:322 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -158,10 +158,10 @@ msgstr ""
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:327 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -172,7 +172,7 @@ msgid "*standard input*"
 msgstr "*標準入力*"
 
 #: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
-#: nss/makedb.c:246
+#: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "入力ファイル`%s'を開けません"
@@ -350,56 +350,56 @@ msgstr "無効なモードです"
 msgid "invalid mode parameter"
 msgstr "無効なモードパラメータです"
 
-#: elf/cache.c:69
+#: elf/cache.c:180
 msgid "unknown"
 msgstr "不明です"
 
-#: elf/cache.c:141
+#: elf/cache.c:254
 msgid "Unknown OS"
 msgstr "不明な OS です"
 
-#: elf/cache.c:146
+#: elf/cache.c:259
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1297
+#: elf/cache.c:320 elf/ldconfig.c:1427
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "キャッシュファイル %s を開けません\n"
 
-#: elf/cache.c:177
+#: elf/cache.c:334
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "キャッシュファイルの mmap に失敗しました。\n"
 
-#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
+#: elf/cache.c:338 elf/cache.c:352 elf/cache.c:363
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "ファイルはキャッシュファイルではありません.\n"
 
-#: elf/cache.c:233 elf/cache.c:243
+#: elf/cache.c:392 elf/cache.c:407
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d 個のライブラリがキャッシュ `%s' 内で見つかりました\n"
 
-#: elf/cache.c:437
+#: elf/cache.c:725
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "一時キャッシュファイル %s を作成できません"
 
-#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
-#: elf/cache.c:473
+#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
+#: elf/cache.c:770
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "キャッシュデータの書込みに失敗しました"
 
-#: elf/cache.c:468
+#: elf/cache.c:765
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "%s のアクセス権限を %#o へ変更するのに失敗しました"
 
-#: elf/cache.c:477
+#: elf/cache.c:774
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "%s から %s への名前変更に失敗しました"
@@ -457,135 +457,135 @@ msgstr "ファイルポインタ (fptr) 表用のページをマップできま�
 msgid "internal error: symidx out of range of fptr table"
 msgstr "内部エラー: ファイルポインタ (fptr) 表のシンボル索引が範囲外です"
 
-#: elf/dl-hwcaps.c:92 elf/dl-hwcaps.c:104
+#: elf/dl-hwcaps.c:247 elf/dl-hwcaps.c:262
 msgid "cannot create capability list"
 msgstr "権限リストを作成できません"
 
-#: elf/dl-load.c:428
+#: elf/dl-load.c:432
 msgid "cannot allocate name record"
 msgstr "名前レコードを配置できません"
 
-#: elf/dl-load.c:514 elf/dl-load.c:627 elf/dl-load.c:716 elf/dl-load.c:812
+#: elf/dl-load.c:518 elf/dl-load.c:631 elf/dl-load.c:725 elf/dl-load.c:821
 msgid "cannot create cache for search path"
 msgstr "探索パス用のキャッシュを作成できません"
 
-#: elf/dl-load.c:610
+#: elf/dl-load.c:614
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "RUNPATH/RPATH のコピーを作成できません"
 
-#: elf/dl-load.c:703
+#: elf/dl-load.c:711
 msgid "cannot create search path array"
 msgstr "探索パス配列を作成できません"
 
-#: elf/dl-load.c:964
+#: elf/dl-load.c:951
 msgid "cannot stat shared object"
 msgstr "共有オブジェクトの状態取得 (stat) ができません"
 
-#: elf/dl-load.c:1075 elf/dl-load.c:2278
+#: elf/dl-load.c:1082 elf/dl-load.c:2293
 msgid "cannot create shared object descriptor"
 msgstr "共有オブジェクト記述子を作成できません"
 
-#: elf/dl-load.c:1094 elf/dl-load.c:1658 elf/dl-load.c:1759
+#: elf/dl-load.c:1101 elf/dl-load.c:1668 elf/dl-load.c:1770
 msgid "cannot read file data"
 msgstr "ファイルデータを読み込めません"
 
-#: elf/dl-load.c:1140
+#: elf/dl-load.c:1147
 msgid "ELF load command alignment not page-aligned"
 msgstr "ELF ロードコマンド整列がページで整列されていません"
 
-#: elf/dl-load.c:1147
+#: elf/dl-load.c:1154
 msgid "ELF load command address/offset not properly aligned"
 msgstr "ELF ロードコマンドのアドレス/オフセットが適切に整列されていません"
 
-#: elf/dl-load.c:1226
+#: elf/dl-load.c:1233
 msgid "object file has no loadable segments"
 msgstr "オブジェクトファイルはロード可能セグメントを持っていません"
 
-#: elf/dl-load.c:1239
+#: elf/dl-load.c:1246
 msgid "cannot dynamically load executable"
 msgstr "実行ファイルを動的にロードできません"
 
-#: elf/dl-load.c:1275
+#: elf/dl-load.c:1271
 msgid "object file has no dynamic section"
 msgstr "オブジェクトファイルは動的セクションを持っていません"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "共有オブジェクトは dlopen() できません"
 
-#: elf/dl-load.c:1317
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "プログラムヘッダー用のメモリを配置できません"
 
-#: elf/dl-load.c:1350 elf/dl-load.h:130
+#: elf/dl-load.c:1337 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "メモリ保護を変更できません"
 
-#: elf/dl-load.c:1370
+#: elf/dl-load.c:1357
 msgid "cannot enable executable stack as shared object requires"
 msgstr "共有オブジェクトが必要としている実行可能スタックを有効にできません"
 
-#: elf/dl-load.c:1383
+#: elf/dl-load.c:1385
 msgid "cannot close file descriptor"
 msgstr "ファイル記述子を閉じられません"
 
-#: elf/dl-load.c:1658
+#: elf/dl-load.c:1668
 msgid "file too short"
 msgstr "ファイルが小さすぎます"
 
-#: elf/dl-load.c:1693
+#: elf/dl-load.c:1704
 msgid "invalid ELF header"
 msgstr "無効な ELF ヘッダーです"
 
-#: elf/dl-load.c:1705
+#: elf/dl-load.c:1716
 msgid "ELF file data encoding not big-endian"
 msgstr "ELF ファイルデータのエンコーディングがビッグエンディアンではありません"
 
-#: elf/dl-load.c:1707
+#: elf/dl-load.c:1718
 msgid "ELF file data encoding not little-endian"
 msgstr "ELF ファイルデータのエンコーディングがリトルエンディアンではありません"
 
-#: elf/dl-load.c:1711
+#: elf/dl-load.c:1722
 msgid "ELF file version ident does not match current one"
 msgstr "ELF ファイルバージョン識別子が現在のものと一致していません"
 
-#: elf/dl-load.c:1715
+#: elf/dl-load.c:1726
 msgid "ELF file OS ABI invalid"
 msgstr "ELF ファイル OS ABI が無効です"
 
-#: elf/dl-load.c:1718
+#: elf/dl-load.c:1729
 msgid "ELF file ABI version invalid"
 msgstr "ELF ファイル ABI バージョンが無効です"
 
-#: elf/dl-load.c:1721
+#: elf/dl-load.c:1732
 msgid "nonzero padding in e_ident"
 msgstr "e_ident 内にゼロでない詰め文字があります"
 
-#: elf/dl-load.c:1724
+#: elf/dl-load.c:1735
 msgid "internal error"
 msgstr "内部エラー"
 
-#: elf/dl-load.c:1731
+#: elf/dl-load.c:1742
 msgid "ELF file version does not match current one"
 msgstr "ELFファイルのバージョン番号が現在のファイルに一致していません"
 
-#: elf/dl-load.c:1739
+#: elf/dl-load.c:1750
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "ET_DYN と ET_EXEC のみロード可能です"
 
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1755
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF ファイルの phentsize が予期されたサイズではありません"
 
-#: elf/dl-load.c:2297
+#: elf/dl-load.c:2312
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "間違った ELF クラスです: ELFCLASS64"
 
-#: elf/dl-load.c:2298
+#: elf/dl-load.c:2313
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "間違った ELF クラスです: ELFCLASS32"
 
-#: elf/dl-load.c:2301
+#: elf/dl-load.c:2316
 msgid "cannot open shared object file"
 msgstr "共有オブジェクトファイルを開けません"
 
@@ -609,15 +609,15 @@ msgstr "大域スコープを拡張できません"
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "TLS 生成カウンタが一周しました!  これを報告してください。"
 
-#: elf/dl-open.c:808
+#: elf/dl-open.c:802
 msgid "invalid mode for dlopen()"
 msgstr "dlopen() 用の無効なモードです"
 
-#: elf/dl-open.c:825
+#: elf/dl-open.c:819
 msgid "no more namespaces available for dlmopen()"
 msgstr "dlmopen() 用にこれ以上名前空間を使用出来ません"
 
-#: elf/dl-open.c:849
+#: elf/dl-open.c:843
 msgid "invalid target namespace in dlmopen()"
 msgstr "dlmopen() 内で無効なターゲット名前空間です"
 
@@ -658,188 +658,188 @@ msgstr "バージョン検索エラーです"
 msgid "cannot allocate version reference table"
 msgstr "バージョン参照表を配置出来ません"
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:150
 msgid "Print cache"
 msgstr "キャッシュを表示します"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:151
 msgid "Generate verbose messages"
 msgstr "冗長なメッセージを生成します"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:152
 msgid "Don't build cache"
 msgstr "キャッシュの構築を行いません"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "Change to and use ROOT as root directory"
 msgstr "ルートディレクトリを ROOT に変更し、使用します"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "ROOT"
 msgstr "ROOT"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "CACHE"
 msgstr "CACHE"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "Use CACHE as cache file"
 msgstr "キャッシュファイルとして CACHE を使用します"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "CONF"
 msgstr "CONF"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "Use CONF as configuration file"
 msgstr "設定ファイルとして CONF を使用します"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:157
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "コマンドラインで指定されたディレクトリのみ処理します。キャッシュは作成しません。"
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:158
 msgid "Manually link individual libraries."
 msgstr "個々のライブラリを手動でリンクしてください。"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:159
 msgid "FORMAT"
 msgstr "FORMAT"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:160
 msgid "Ignore auxiliary cache file"
 msgstr "補助キャッシュファイルを無視しています"
 
-#: elf/ldconfig.c:163
+#: elf/ldconfig.c:168
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "動的リンカランタイムのバインディングを設定します。"
 
-#: elf/ldconfig.c:346
+#: elf/ldconfig.c:371
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "パス `%s' が二回以上与えられました"
 
-#: elf/ldconfig.c:393
+#: elf/ldconfig.c:487
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s は既知のライブラリ型ではありません"
 
-#: elf/ldconfig.c:421
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't stat %s"
 msgstr "%s の情報取得 (stat) ができません"
 
-#: elf/ldconfig.c:500
+#: elf/ldconfig.c:596
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "%s の情報取得 (stat) が出来ません\n"
 
-#: elf/ldconfig.c:510
+#: elf/ldconfig.c:606
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s はシンボリックリンクではありません\n"
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:625
 #, c-format
 msgid "Can't unlink %s"
 msgstr "%s をリンク解除できません"
 
-#: elf/ldconfig.c:535
+#: elf/ldconfig.c:631
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "%s から %s へリンクできません"
 
-#: elf/ldconfig.c:541
+#: elf/ldconfig.c:637
 msgid " (changed)\n"
 msgstr " (変更されました)\n"
 
-#: elf/ldconfig.c:543
+#: elf/ldconfig.c:639
 msgid " (SKIPPED)\n"
 msgstr " (スキップされました)\n"
 
-#: elf/ldconfig.c:598
+#: elf/ldconfig.c:695
 #, c-format
 msgid "Can't find %s"
 msgstr "%s を見つけられません"
 
-#: elf/ldconfig.c:614 elf/ldconfig.c:781 elf/ldconfig.c:839 elf/ldconfig.c:871
+#: elf/ldconfig.c:711 elf/ldconfig.c:893 elf/ldconfig.c:945 elf/ldconfig.c:977
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "%s の状態取得 (lstat) が出来ません"
 
-#: elf/ldconfig.c:621
+#: elf/ldconfig.c:718
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "通常ファイルでないためファイル %s を無視しています。"
 
-#: elf/ldconfig.c:630
+#: elf/ldconfig.c:727
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "%s 用の動的ライブラリ名 (soname) が見つからないためリンクが作成されませんでした"
 
-#: elf/ldconfig.c:714
+#: elf/ldconfig.c:824
 #, c-format
 msgid "Can't open directory %s"
 msgstr "ディレクトリ %s を開けません"
 
-#: elf/ldconfig.c:799 elf/ldconfig.c:859 elf/readlib.c:97
+#: elf/ldconfig.c:911 elf/ldconfig.c:965 elf/readlib.c:98
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "入力ファイル %s が見つかりません。\n"
 
-#: elf/ldconfig.c:806
+#: elf/ldconfig.c:918
 #, c-format
 msgid "Cannot stat %s"
 msgstr "%s の状態取得 (stat) が出来ません"
 
-#: elf/ldconfig.c:953
+#: elf/ldconfig.c:1063
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5 ライブラリ %s が誤ったディレクトリ内にあります"
 
-#: elf/ldconfig.c:956
+#: elf/ldconfig.c:1066
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 ライブラリ %s が誤ったディレクトリ内にあります"
 
-#: elf/ldconfig.c:959
+#: elf/ldconfig.c:1069
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4 ライブラリ %s が誤ったディレクトリ内にあります"
 
-#: elf/ldconfig.c:987
+#: elf/ldconfig.c:1097
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "ディレクトリ %3$s 内にあるライブラリ %1$s と %2$s は同一の動的ライブラリ名 (soname) ですが異なった型です。"
 
-#: elf/ldconfig.c:1164
+#: elf/ldconfig.c:1294
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "-r を使用しているときは設定ファイル名として絶対パスのファイル名が必要です"
 
-#: elf/ldconfig.c:1171 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "メモリを使い果たしました"
 
-#: elf/ldconfig.c:1204
+#: elf/ldconfig.c:1334
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: ディレクトリ %s を読み込めません"
 
-#: elf/ldconfig.c:1252
+#: elf/ldconfig.c:1382
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "キャッシュ生成時に相対パス `%s' が使用されました"
 
-#: elf/ldconfig.c:1276
+#: elf/ldconfig.c:1406
 #, c-format
 msgid "Can't chdir to /"
 msgstr "/ へディレクトリ移動 (chdir) 出来ません"
 
-#: elf/ldconfig.c:1317
+#: elf/ldconfig.c:1447
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "キャッシュファイルディレクトリ %s を開けません\n"
@@ -885,7 +885,7 @@ msgstr "ファイル引数がありません"
 #. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:16
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:13
 msgid "No such file or directory"
 msgstr "そのようなファイルやディレクトリはありません"
 
@@ -909,57 +909,57 @@ msgstr "不明な終了コードで終了しました"
 msgid "error: you do not have read permission for"
 msgstr "エラー: 読み込みパーミッションがありません:"
 
-#: elf/readelflib.c:34
+#: elf/readelflib.c:36
 #, c-format
 msgid "file %s is truncated\n"
 msgstr "ファイル %s は切り詰められました\n"
 
-#: elf/readelflib.c:65
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s は 32 ビット ELF ファイルです。\n"
 
-#: elf/readelflib.c:67
+#: elf/readelflib.c:69
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s は 64 ビット ELF ファイルです。\n"
 
-#: elf/readelflib.c:69
+#: elf/readelflib.c:71
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "ファイル %s 内に不明な ELFCLASS があります。\n"
 
-#: elf/readelflib.c:76
+#: elf/readelflib.c:78
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s は共有オブジェクトファイルではありません (型: %d)。\n"
 
-#: elf/readelflib.c:101
+#: elf/readelflib.c:106
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "二つ以上の動的セグメントがあります\n"
 
-#: elf/readlib.c:103
+#: elf/readlib.c:104
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "ファイル %s の状態取得 (fstat) ができません。\n"
 
-#: elf/readlib.c:114
+#: elf/readlib.c:115
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "ファイル %s は空です。検査されません。"
 
-#: elf/readlib.c:120
+#: elf/readlib.c:121
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "ファイル %s は小さすぎます。検査されません。"
 
-#: elf/readlib.c:130
+#: elf/readlib.c:131
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "ファイル %s を mmap できません。\n"
 
-#: elf/readlib.c:169
+#: elf/readlib.c:170
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s は ELF ファイルではありません - 先頭に誤ったマジックバイトを持っています。\n"
@@ -2791,8 +2791,8 @@ msgstr "不明なシステムエラー"
 msgid "unable to free arguments"
 msgstr "引数を解放できません"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.h:4
+#: nis/nis_error.h:1 nis/ypclnt.c:833 nis/ypclnt.c:922 posix/regcomp.c:135
+#: sysdeps/gnu/errlist.h:1
 msgid "Success"
 msgstr "成功です"
 
@@ -2833,7 +2833,7 @@ msgid "First/next chain broken"
 msgstr "最初/次のチェインが壊れています"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.h:93
+#: nis/nis_error.h:11 nis/ypclnt.c:878 sysdeps/gnu/errlist.h:90
 msgid "Permission denied"
 msgstr "許可がありません"
 
@@ -3298,91 +3298,91 @@ msgstr "    再帰的非メンバ:\n"
 msgid "    No recursive nonmembers\n"
 msgstr "    非再帰的非メンバ\n"
 
-#: nis/ypclnt.c:828
+#: nis/ypclnt.c:836
 msgid "Request arguments bad"
 msgstr "引数要求が間違っています"
 
-#: nis/ypclnt.c:831
+#: nis/ypclnt.c:839
 msgid "RPC failure on NIS operation"
 msgstr "NIS 操作に関する RPC が失敗しました"
 
-#: nis/ypclnt.c:834
+#: nis/ypclnt.c:842
 msgid "Can't bind to server which serves this domain"
 msgstr "このドメインを扱うサーバーへバインドできません"
 
-#: nis/ypclnt.c:837
+#: nis/ypclnt.c:845
 msgid "No such map in server's domain"
 msgstr "サーバードメインにそのようなマップはありません"
 
-#: nis/ypclnt.c:840
+#: nis/ypclnt.c:848
 msgid "No such key in map"
 msgstr "マップにそのようなキーはありません"
 
-#: nis/ypclnt.c:843
+#: nis/ypclnt.c:851
 msgid "Internal NIS error"
 msgstr "NIS 内部エラー"
 
-#: nis/ypclnt.c:846
+#: nis/ypclnt.c:854
 msgid "Local resource allocation failure"
 msgstr "ローカルリソース確保の失敗しました"
 
-#: nis/ypclnt.c:849
+#: nis/ypclnt.c:857
 msgid "No more records in map database"
 msgstr "マップデータベースにこれ以上レコードがありません"
 
-#: nis/ypclnt.c:852
+#: nis/ypclnt.c:860
 msgid "Can't communicate with portmapper"
 msgstr "ポートマッパーと通信できません"
 
-#: nis/ypclnt.c:855
+#: nis/ypclnt.c:863
 msgid "Can't communicate with ypbind"
 msgstr "ypbind と通信できません"
 
-#: nis/ypclnt.c:858
+#: nis/ypclnt.c:866
 msgid "Can't communicate with ypserv"
 msgstr "ypserv と通信できません"
 
-#: nis/ypclnt.c:861
+#: nis/ypclnt.c:869
 msgid "Local domain name not set"
 msgstr "ローカルドメイン名が設定されていません"
 
-#: nis/ypclnt.c:864
+#: nis/ypclnt.c:872
 msgid "NIS map database is bad"
 msgstr "NIS マップデータベースが間違っています"
 
-#: nis/ypclnt.c:867
+#: nis/ypclnt.c:875
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "NIS クライアントとサーバーのバージョンが一致しません。サービスを提供できません"
 
-#: nis/ypclnt.c:873
+#: nis/ypclnt.c:881
 msgid "Database is busy"
 msgstr "データベースがビジー状態です"
 
-#: nis/ypclnt.c:876
+#: nis/ypclnt.c:884
 msgid "Unknown NIS error code"
 msgstr "不明な NIS エラーコードです"
 
-#: nis/ypclnt.c:917
+#: nis/ypclnt.c:925
 msgid "Internal ypbind error"
 msgstr "ypbind 内部エラーです"
 
-#: nis/ypclnt.c:920
+#: nis/ypclnt.c:928
 msgid "Domain not bound"
 msgstr "ドメインはバインドされていません"
 
-#: nis/ypclnt.c:923
+#: nis/ypclnt.c:931
 msgid "System resource allocation failure"
 msgstr "システムリソースの確保に失敗しました"
 
-#: nis/ypclnt.c:926
+#: nis/ypclnt.c:934
 msgid "Unknown ypbind error"
 msgstr "不明な ypbind エラーです"
 
-#: nis/ypclnt.c:967
+#: nis/ypclnt.c:975
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: ホストをネット名へ変換できません\n"
 
-#: nis/ypclnt.c:985
+#: nis/ypclnt.c:993
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: サーバーアドレスを取得できません\n"
 
@@ -3661,7 +3661,7 @@ msgstr "ユーザごとにキャッシュを分離する"
 msgid "Name Service Cache Daemon."
 msgstr "名前サービスキャッシュデーモン。"
 
-#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:206
+#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:207
 #, c-format
 msgid "wrong number of arguments"
 msgstr "引数の数が間違っています"
@@ -3891,72 +3891,72 @@ msgstr ""
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "無効な uid の数値 \"%s\" です!"
 
-#: nscd/selinux.c:154
+#: nscd/selinux.c:155
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
 msgstr "監査サブシステムへの接続を開くのに失敗しました: %m"
 
-#: nscd/selinux.c:175
+#: nscd/selinux.c:176
 msgid "Failed to set keep-capabilities"
 msgstr "keep-capabilities の設定に失敗しました"
 
-#: nscd/selinux.c:176 nscd/selinux.c:239
+#: nscd/selinux.c:177 nscd/selinux.c:240
 msgid "prctl(KEEPCAPS) failed"
 msgstr "prctl(KEEPCAPS) に失敗しました"
 
-#: nscd/selinux.c:190
+#: nscd/selinux.c:191
 msgid "Failed to initialize drop of capabilities"
 msgstr "権限を取り除いて初期化するのに失敗しました"
 
-#: nscd/selinux.c:191
+#: nscd/selinux.c:192
 msgid "cap_init failed"
 msgstr "cap_init に失敗しました"
 
-#: nscd/selinux.c:212 nscd/selinux.c:229
+#: nscd/selinux.c:213 nscd/selinux.c:230
 msgid "Failed to drop capabilities"
 msgstr "権限を取り除くのに失敗しました"
 
-#: nscd/selinux.c:213 nscd/selinux.c:230
+#: nscd/selinux.c:214 nscd/selinux.c:231
 msgid "cap_set_proc failed"
 msgstr "cap_set_proc に失敗しました"
 
-#: nscd/selinux.c:238
+#: nscd/selinux.c:239
 msgid "Failed to unset keep-capabilities"
 msgstr "keep-capabilities の設定解除に失敗しました"
 
-#: nscd/selinux.c:254
+#: nscd/selinux.c:255
 msgid "Failed to determine if kernel supports SELinux"
 msgstr "カーネルが SELinux をサポートするかどうかの判定に失敗しました"
 
-#: nscd/selinux.c:269
+#: nscd/selinux.c:270
 msgid "Failed to start AVC thread"
 msgstr "AVC スレッドの開始に失敗しました"
 
-#: nscd/selinux.c:291
+#: nscd/selinux.c:292
 msgid "Failed to create AVC lock"
 msgstr "AVC ロックの作成に失敗しました"
 
-#: nscd/selinux.c:331
+#: nscd/selinux.c:338
 msgid "Failed to start AVC"
 msgstr "AVC の開始に失敗しました"
 
-#: nscd/selinux.c:333
+#: nscd/selinux.c:340
 msgid "Access Vector Cache (AVC) started"
 msgstr "Access Vector Cache (AVC) が開始されました"
 
-#: nscd/selinux.c:390
+#: nscd/selinux.c:404
 msgid "Error getting context of socket peer"
 msgstr "ソケット対向のコンテキスト取得中にエラーが発生しました"
 
-#: nscd/selinux.c:395
+#: nscd/selinux.c:409
 msgid "Error getting context of nscd"
 msgstr "nscd のコンテキスト取得中にエラーが発生しました"
 
-#: nscd/selinux.c:401
+#: nscd/selinux.c:415
 msgid "Error getting sid from context"
 msgstr "コンテキストから sid を取得中にエラーが発生しました"
 
-#: nscd/selinux.c:439
+#: nscd/selinux.c:454
 #, c-format
 msgid ""
 "\n"
@@ -4028,19 +4028,19 @@ msgstr "サポートされているデータベース:\n"
 msgid "Unknown database: %s\n"
 msgstr "不明なデータベースです: %s\n"
 
-#: nss/makedb.c:119
+#: nss/makedb.c:120
 msgid "Convert key to lower case"
 msgstr "キーを小文字に変換しています"
 
-#: nss/makedb.c:122
+#: nss/makedb.c:123
 msgid "Do not print messages while building database"
 msgstr "データベース構築中にメッセージを表示しない"
 
-#: nss/makedb.c:124
+#: nss/makedb.c:125
 msgid "Print content of database file, one entry a line"
 msgstr "データベースのコンテキストを、1 エントリ 1 行で表示する"
 
-#: nss/makedb.c:134
+#: nss/makedb.c:135
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -4050,16 +4050,16 @@ msgstr ""
 "-o OUTPUT-FILE INPUT-FILE\n"
 "-u INPUT-FILE"
 
-#: nss/makedb.c:288
+#: nss/makedb.c:289
 #, c-format
 msgid "cannot create temporary file"
 msgstr "一時ファイルを作成できません"
 
-#: nss/makedb.c:556
+#: nss/makedb.c:557
 msgid "duplicate key"
 msgstr "キーが重複しています"
 
-#: nss/makedb.c:568
+#: nss/makedb.c:569
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "`%s' の読み込み中に問題が発生しました"
@@ -4746,7 +4746,7 @@ msgstr "Segmentation fault"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:219
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:216
 msgid "Broken pipe"
 msgstr "Broken pipe"
 
@@ -4840,12 +4840,12 @@ msgstr "リソースが無くなりました"
 
 #. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.h:9
+#: sysdeps/gnu/errlist.h:6
 msgid "Operation not permitted"
 msgstr "許可されていない操作です"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.h:21
+#: sysdeps/gnu/errlist.h:18
 msgid "No such process"
 msgstr "そのようなプロセスはありません"
 
@@ -4856,12 +4856,12 @@ msgstr "そのようなプロセスはありません"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.h:32
+#: sysdeps/gnu/errlist.h:29
 msgid "Interrupted system call"
 msgstr "システムコール割り込み"
 
 #. TRANS Usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.h:37
+#: sysdeps/gnu/errlist.h:34
 msgid "Input/output error"
 msgstr "入力/出力エラーです"
 
@@ -4870,7 +4870,7 @@ msgstr "入力/出力エラーです"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.h:46
+#: sysdeps/gnu/errlist.h:43
 msgid "No such device or address"
 msgstr "そのようなデバイスやアドレスはありません"
 
@@ -4878,27 +4878,27 @@ msgstr "そのようなデバイスやアドレスはありません"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:54
+#: sysdeps/gnu/errlist.h:51
 msgid "Argument list too long"
 msgstr "引数リストが長すぎます"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.h:60
+#: sysdeps/gnu/errlist.h:57
 msgid "Exec format error"
 msgstr "実行形式エラー"
 
 #. TRANS For example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.h:67
+#: sysdeps/gnu/errlist.h:64
 msgid "Bad file descriptor"
 msgstr "不正なファイル記述子です"
 
 #. TRANS This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.h:74
+#: sysdeps/gnu/errlist.h:71
 msgid "No child processes"
 msgstr "子プロセスがありません"
 
@@ -4906,69 +4906,69 @@ msgstr "子プロセスがありません"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.h:82
+#: sysdeps/gnu/errlist.h:79
 msgid "Resource deadlock avoided"
 msgstr "リソースのデッドロック回避"
 
 #. TRANS The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.h:88
+#: sysdeps/gnu/errlist.h:85
 msgid "Cannot allocate memory"
 msgstr "メモリを確保できません"
 
 #. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.h:99
+#: sysdeps/gnu/errlist.h:96
 msgid "Bad address"
 msgstr "不正なアドレスです"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.h:106
+#: sysdeps/gnu/errlist.h:103
 msgid "Block device required"
 msgstr "ブロックデバイスが必要です"
 
 #. TRANS A system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.h:113
+#: sysdeps/gnu/errlist.h:110
 msgid "Device or resource busy"
 msgstr "デバイスもしくはリソースがビジー状態です"
 
 #. TRANS An existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.h:119
+#: sysdeps/gnu/errlist.h:116
 msgid "File exists"
 msgstr "ファイルが存在します"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:126
+#: sysdeps/gnu/errlist.h:123
 msgid "Invalid cross-device link"
 msgstr "無効なクロスデバイスリンクです"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.h:132
+#: sysdeps/gnu/errlist.h:129
 msgid "No such device"
 msgstr "そのようなデバイスはありません"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.h:137
+#: sysdeps/gnu/errlist.h:134
 msgid "Not a directory"
 msgstr "ディレクトリではありません"
 
 #. TRANS You cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.h:143
+#: sysdeps/gnu/errlist.h:140
 msgid "Is a directory"
 msgstr "ディレクトリです"
 
 #. TRANS This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.h:149
+#: sysdeps/gnu/errlist.h:146
 msgid "Invalid argument"
 msgstr "無効な引数です"
 
@@ -4979,20 +4979,20 @@ msgstr "無効な引数です"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.h:160
+#: sysdeps/gnu/errlist.h:157
 msgid "Too many open files"
 msgstr "ファイルを開きすぎです"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:167
+#: sysdeps/gnu/errlist.h:164
 msgid "Too many open files in system"
 msgstr "システム中のファイルを開きすぎです"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.h:173
+#: sysdeps/gnu/errlist.h:170
 msgid "Inappropriate ioctl for device"
 msgstr "デバイスに対する不適切なioctlです"
 
@@ -5001,47 +5001,47 @@ msgstr "デバイスに対する不適切なioctlです"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.h:182
+#: sysdeps/gnu/errlist.h:179
 msgid "Text file busy"
 msgstr "テキストファイルがビジー状態です"
 
 #. TRANS The size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.h:187
+#: sysdeps/gnu/errlist.h:184
 msgid "File too large"
 msgstr "ファイルが大きすぎます"
 
 #. TRANS Write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.h:193
+#: sysdeps/gnu/errlist.h:190
 msgid "No space left on device"
 msgstr "デバイスに空き領域がありません"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.h:198
+#: sysdeps/gnu/errlist.h:195
 msgid "Illegal seek"
 msgstr "不正なシークです"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.h:203
+#: sysdeps/gnu/errlist.h:200
 msgid "Read-only file system"
 msgstr "読み込み専用ファイルシステムです"
 
 #. TRANS The link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:210
+#: sysdeps/gnu/errlist.h:207
 msgid "Too many links"
 msgstr "リンクが多すぎます"
 
 #. TRANS Used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.h:225
+#: sysdeps/gnu/errlist.h:222
 msgid "Numerical argument out of domain"
 msgstr "数値の引数はドメイン外です"
 
 #. TRANS Used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.h:231
+#: sysdeps/gnu/errlist.h:228
 msgid "Numerical result out of range"
 msgstr "計算結果は範囲外の値です"
 
@@ -5074,7 +5074,7 @@ msgstr "計算結果は範囲外の値です"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.h:264
+#: sysdeps/gnu/errlist.h:261
 msgid "Resource temporarily unavailable"
 msgstr "リソースが一時的に利用できません"
 
@@ -5086,47 +5086,47 @@ msgstr "リソースが一時的に利用できません"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.h:276
+#: sysdeps/gnu/errlist.h:273
 msgid "Operation now in progress"
 msgstr "現在処理中の操作です"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.h:282
+#: sysdeps/gnu/errlist.h:279
 msgid "Operation already in progress"
 msgstr "操作はすでに処理中です"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.h:287
+#: sysdeps/gnu/errlist.h:284
 msgid "Socket operation on non-socket"
 msgstr "ソケットでないものにソケット操作をしています"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.h:293
+#: sysdeps/gnu/errlist.h:290
 msgid "Message too long"
 msgstr "メッセージが長すぎます"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.h:298
+#: sysdeps/gnu/errlist.h:295
 msgid "Protocol wrong type for socket"
 msgstr "ソケットに対し間違ったプロトコルの形式です"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.h:304
+#: sysdeps/gnu/errlist.h:301
 msgid "Protocol not available"
 msgstr "プロトコルは利用できません"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.h:311
+#: sysdeps/gnu/errlist.h:308
 msgid "Protocol not supported"
 msgstr "プロトコルはサポートされていません"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.h:316
+#: sysdeps/gnu/errlist.h:313
 msgid "Socket type not supported"
 msgstr "ソケット形式はサポートしていません"
 
@@ -5136,71 +5136,71 @@ msgstr "ソケット形式はサポートしていません"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.h:326
+#: sysdeps/gnu/errlist.h:323
 msgid "Operation not supported"
 msgstr "サポートされていない操作です"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.h:331
+#: sysdeps/gnu/errlist.h:328
 msgid "Protocol family not supported"
 msgstr "プロトコルファミリはサポートしていません"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.h:337
+#: sysdeps/gnu/errlist.h:334
 msgid "Address family not supported by protocol"
 msgstr "アドレスファミリはプロトコルによってサポートされていません"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:342
+#: sysdeps/gnu/errlist.h:339
 msgid "Address already in use"
 msgstr "アドレスは既に使用中です"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:349
+#: sysdeps/gnu/errlist.h:346
 msgid "Cannot assign requested address"
 msgstr "要求アドレスに割り当てられません"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.h:354
+#: sysdeps/gnu/errlist.h:351
 msgid "Network is down"
 msgstr "ネットワークが落ちています"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.h:360
+#: sysdeps/gnu/errlist.h:357
 msgid "Network is unreachable"
 msgstr "ネットワークに届きません"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.h:365
+#: sysdeps/gnu/errlist.h:362
 msgid "Network dropped connection on reset"
 msgstr "リセット中ネットワークの接続が切れました"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.h:370
+#: sysdeps/gnu/errlist.h:367
 msgid "Software caused connection abort"
 msgstr "ソフトウェアが接続を中断しました"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.h:377
+#: sysdeps/gnu/errlist.h:374
 msgid "Connection reset by peer"
 msgstr "接続が相手からリセットされました"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.h:384
+#: sysdeps/gnu/errlist.h:381
 msgid "No buffer space available"
 msgstr "利用可能な空きバッファがありません"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.h:390
+#: sysdeps/gnu/errlist.h:387
 msgid "Transport endpoint is already connected"
 msgstr "通信端点が既に接続されています"
 
@@ -5208,74 +5208,74 @@ msgstr "通信端点が既に接続されています"
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.h:398
+#: sysdeps/gnu/errlist.h:395
 msgid "Transport endpoint is not connected"
 msgstr "通信端点が接続されていません"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.h:405
+#: sysdeps/gnu/errlist.h:402
 msgid "Destination address required"
 msgstr "送信先アドレスが必要です"
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.h:410
+#: sysdeps/gnu/errlist.h:407
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "通信端点のシャットダウン後は送信できません"
 
-#: sysdeps/gnu/errlist.h:413
+#: sysdeps/gnu/errlist.h:410
 msgid "Too many references: cannot splice"
 msgstr "参照が多すぎます: 接続できません"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.h:419
+#: sysdeps/gnu/errlist.h:416
 msgid "Connection timed out"
 msgstr "接続がタイムアウトしました"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.h:425
+#: sysdeps/gnu/errlist.h:422
 msgid "Connection refused"
 msgstr "接続を拒否されました"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.h:431
+#: sysdeps/gnu/errlist.h:428
 msgid "Too many levels of symbolic links"
 msgstr "シンボリックリンクの階層が多すぎます"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.h:438
+#: sysdeps/gnu/errlist.h:435
 msgid "File name too long"
 msgstr "ファイル名が長すぎます"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.h:443
+#: sysdeps/gnu/errlist.h:440
 msgid "Host is down"
 msgstr "ホストが落ちています"
 
-#: sysdeps/gnu/errlist.h:448
+#: sysdeps/gnu/errlist.h:445
 msgid "No route to host"
 msgstr "ホストへの経路がありません"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.h:454
+#: sysdeps/gnu/errlist.h:451
 msgid "Directory not empty"
 msgstr "ディレクトリは空ではありません"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.h:460
+#: sysdeps/gnu/errlist.h:457
 msgid "Too many users"
 msgstr "ユーザが多すぎます"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.h:465
+#: sysdeps/gnu/errlist.h:462
 msgid "Disk quota exceeded"
 msgstr "ディスク使用量制限を超過しました"
 
@@ -5283,7 +5283,7 @@ msgstr "ディスク使用量制限を超過しました"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.h:482
+#: sysdeps/gnu/errlist.h:479
 msgid "Object is remote"
 msgstr "オブジェクトはリモートにあります"
 
@@ -5291,7 +5291,7 @@ msgstr "オブジェクトはリモートにあります"
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.h:490
+#: sysdeps/gnu/errlist.h:487
 msgid "No locks available"
 msgstr "ロックが利用できません"
 
@@ -5300,57 +5300,57 @@ msgstr "ロックが利用できません"
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.h:499
+#: sysdeps/gnu/errlist.h:496
 msgid "Function not implemented"
 msgstr "関数は実装されていません"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.h:505
+#: sysdeps/gnu/errlist.h:502
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "無効または不完全なマルチバイトまたはワイド文字です"
 
-#: sysdeps/gnu/errlist.h:508
+#: sysdeps/gnu/errlist.h:505
 msgid "Bad message"
 msgstr "不正なメッセージです"
 
-#: sysdeps/gnu/errlist.h:511
+#: sysdeps/gnu/errlist.h:508
 msgid "Identifier removed"
 msgstr "識別子を除去しました"
 
-#: sysdeps/gnu/errlist.h:514
+#: sysdeps/gnu/errlist.h:511
 msgid "Multihop attempted"
 msgstr "多重ホップが企てられました"
 
-#: sysdeps/gnu/errlist.h:517
+#: sysdeps/gnu/errlist.h:514
 msgid "No data available"
 msgstr "利用可能なデータがありません"
 
-#: sysdeps/gnu/errlist.h:520
+#: sysdeps/gnu/errlist.h:517
 msgid "Link has been severed"
 msgstr "リンクが切れています"
 
-#: sysdeps/gnu/errlist.h:523
+#: sysdeps/gnu/errlist.h:520
 msgid "No message of desired type"
 msgstr "要求した形式のメッセージはありません"
 
-#: sysdeps/gnu/errlist.h:526
+#: sysdeps/gnu/errlist.h:523
 msgid "Out of streams resources"
 msgstr "ストリームリソース外です"
 
-#: sysdeps/gnu/errlist.h:529
+#: sysdeps/gnu/errlist.h:526
 msgid "Device not a stream"
 msgstr "デバイスはストリーム型ではありません"
 
-#: sysdeps/gnu/errlist.h:532
+#: sysdeps/gnu/errlist.h:529
 msgid "Value too large for defined data type"
 msgstr "定義されたデータ型に対して値が大きすぎます"
 
-#: sysdeps/gnu/errlist.h:535
+#: sysdeps/gnu/errlist.h:532
 msgid "Protocol error"
 msgstr "プロトコルエラー"
 
-#: sysdeps/gnu/errlist.h:538
+#: sysdeps/gnu/errlist.h:535
 msgid "Timer expired"
 msgstr "タイマが破棄されました"
 
@@ -5358,191 +5358,191 @@ msgstr "タイマが破棄されました"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.h:546
+#: sysdeps/gnu/errlist.h:543
 msgid "Operation canceled"
 msgstr "操作は中断されました"
 
-#: sysdeps/gnu/errlist.h:549
+#: sysdeps/gnu/errlist.h:546
 msgid "Owner died"
 msgstr "所有者が無くなりました"
 
-#: sysdeps/gnu/errlist.h:552
+#: sysdeps/gnu/errlist.h:549
 msgid "State not recoverable"
 msgstr "状態の復帰が出来ません"
 
-#: sysdeps/gnu/errlist.h:555
+#: sysdeps/gnu/errlist.h:552
 msgid "Interrupted system call should be restarted"
 msgstr "割り込まれたシステムコールは再スタートさせるべきです"
 
-#: sysdeps/gnu/errlist.h:558
+#: sysdeps/gnu/errlist.h:555
 msgid "Channel number out of range"
 msgstr "チャンネル番号が範囲外です"
 
-#: sysdeps/gnu/errlist.h:561
+#: sysdeps/gnu/errlist.h:558
 msgid "Level 2 not synchronized"
 msgstr "レベル2は同期していません"
 
-#: sysdeps/gnu/errlist.h:564
+#: sysdeps/gnu/errlist.h:561
 msgid "Level 3 halted"
 msgstr "レベル3停止"
 
-#: sysdeps/gnu/errlist.h:567
+#: sysdeps/gnu/errlist.h:564
 msgid "Level 3 reset"
 msgstr "レベル3はリセットしました"
 
-#: sysdeps/gnu/errlist.h:570
+#: sysdeps/gnu/errlist.h:567
 msgid "Link number out of range"
 msgstr "リンク数が範囲外です"
 
-#: sysdeps/gnu/errlist.h:573
+#: sysdeps/gnu/errlist.h:570
 msgid "Protocol driver not attached"
 msgstr "プロトコルドライバがアタッチされていません"
 
-#: sysdeps/gnu/errlist.h:576
+#: sysdeps/gnu/errlist.h:573
 msgid "No CSI structure available"
 msgstr "CSI 構造が利用できません"
 
-#: sysdeps/gnu/errlist.h:579
+#: sysdeps/gnu/errlist.h:576
 msgid "Level 2 halted"
 msgstr "レベル2停止"
 
-#: sysdeps/gnu/errlist.h:582
+#: sysdeps/gnu/errlist.h:579
 msgid "Invalid exchange"
 msgstr "無効な交換です"
 
-#: sysdeps/gnu/errlist.h:585
+#: sysdeps/gnu/errlist.h:582
 msgid "Invalid request descriptor"
 msgstr "無効なリクエスト記述子です"
 
-#: sysdeps/gnu/errlist.h:588
+#: sysdeps/gnu/errlist.h:585
 msgid "Exchange full"
 msgstr "Exchange full"
 
-#: sysdeps/gnu/errlist.h:591
+#: sysdeps/gnu/errlist.h:588
 msgid "No anode"
 msgstr "アノードがありません"
 
-#: sysdeps/gnu/errlist.h:594
+#: sysdeps/gnu/errlist.h:591
 msgid "Invalid request code"
 msgstr "無効なリクエストコードです"
 
-#: sysdeps/gnu/errlist.h:597
+#: sysdeps/gnu/errlist.h:594
 msgid "Invalid slot"
 msgstr "無効なスロットです"
 
-#: sysdeps/gnu/errlist.h:600
+#: sysdeps/gnu/errlist.h:597
 msgid "Bad font file format"
 msgstr "不正なフォントファイル形式です"
 
-#: sysdeps/gnu/errlist.h:603
+#: sysdeps/gnu/errlist.h:600
 msgid "Machine is not on the network"
 msgstr "マシンはネットワークにつながっていません"
 
-#: sysdeps/gnu/errlist.h:606
+#: sysdeps/gnu/errlist.h:603
 msgid "Package not installed"
 msgstr "パッケージはインストールされていません"
 
-#: sysdeps/gnu/errlist.h:609
+#: sysdeps/gnu/errlist.h:606
 msgid "Advertise error"
 msgstr "Advertiseエラー"
 
-#: sysdeps/gnu/errlist.h:612
+#: sysdeps/gnu/errlist.h:609
 msgid "Srmount error"
 msgstr "Srmount エラー"
 
-#: sysdeps/gnu/errlist.h:615
+#: sysdeps/gnu/errlist.h:612
 msgid "Communication error on send"
 msgstr "送信中の通信エラー"
 
-#: sysdeps/gnu/errlist.h:618
+#: sysdeps/gnu/errlist.h:615
 msgid "RFS specific error"
 msgstr "RFS特定エラー"
 
-#: sysdeps/gnu/errlist.h:621
+#: sysdeps/gnu/errlist.h:618
 msgid "Name not unique on network"
 msgstr "名前がネットワーク上で重複しています"
 
-#: sysdeps/gnu/errlist.h:624
+#: sysdeps/gnu/errlist.h:621
 msgid "File descriptor in bad state"
 msgstr "ファイル記述子が不正の状態にあります"
 
-#: sysdeps/gnu/errlist.h:627
+#: sysdeps/gnu/errlist.h:624
 msgid "Remote address changed"
 msgstr "遠隔アドレスが変更されました"
 
-#: sysdeps/gnu/errlist.h:630
+#: sysdeps/gnu/errlist.h:627
 msgid "Can not access a needed shared library"
 msgstr "必要な共有ライブラリにアクセスできません"
 
-#: sysdeps/gnu/errlist.h:633
+#: sysdeps/gnu/errlist.h:630
 msgid "Accessing a corrupted shared library"
 msgstr "壊れた共有ライブラリにアクセスしています"
 
-#: sysdeps/gnu/errlist.h:636
+#: sysdeps/gnu/errlist.h:633
 msgid ".lib section in a.out corrupted"
 msgstr "a.out 中の .lib セクションが壊れています"
 
-#: sysdeps/gnu/errlist.h:639
+#: sysdeps/gnu/errlist.h:636
 msgid "Attempting to link in too many shared libraries"
 msgstr "あまりに多過ぎる共有ライブラリへリンクしようとしています"
 
-#: sysdeps/gnu/errlist.h:642
+#: sysdeps/gnu/errlist.h:639
 msgid "Cannot exec a shared library directly"
 msgstr "共有ライブラリは直接実行できません"
 
-#: sysdeps/gnu/errlist.h:645
+#: sysdeps/gnu/errlist.h:642
 msgid "Streams pipe error"
 msgstr "ストリームパイプエラー"
 
-#: sysdeps/gnu/errlist.h:648
+#: sysdeps/gnu/errlist.h:645
 msgid "Structure needs cleaning"
 msgstr "構造体を内容消去する必要があります"
 
-#: sysdeps/gnu/errlist.h:651
+#: sysdeps/gnu/errlist.h:648
 msgid "Not a XENIX named type file"
 msgstr "XENIX の名前付きファイルではありません"
 
-#: sysdeps/gnu/errlist.h:654
+#: sysdeps/gnu/errlist.h:651
 msgid "No XENIX semaphores available"
 msgstr "XENIX セマフォが利用できません"
 
-#: sysdeps/gnu/errlist.h:657
+#: sysdeps/gnu/errlist.h:654
 msgid "Is a named type file"
 msgstr "名前付きファイルです"
 
-#: sysdeps/gnu/errlist.h:660
+#: sysdeps/gnu/errlist.h:657
 msgid "Remote I/O error"
 msgstr "遠隔I/Oエラーです"
 
-#: sysdeps/gnu/errlist.h:663
+#: sysdeps/gnu/errlist.h:660
 msgid "No medium found"
 msgstr "メディアが見つかりません"
 
-#: sysdeps/gnu/errlist.h:666
+#: sysdeps/gnu/errlist.h:663
 msgid "Wrong medium type"
 msgstr "不正なメディア形式です"
 
-#: sysdeps/gnu/errlist.h:669
+#: sysdeps/gnu/errlist.h:666
 msgid "Required key not available"
 msgstr "要求されたキーが利用できません"
 
-#: sysdeps/gnu/errlist.h:672
+#: sysdeps/gnu/errlist.h:669
 msgid "Key has expired"
 msgstr "キーが期限切れです"
 
-#: sysdeps/gnu/errlist.h:675
+#: sysdeps/gnu/errlist.h:672
 msgid "Key has been revoked"
 msgstr "キーが破棄されています"
 
-#: sysdeps/gnu/errlist.h:678
+#: sysdeps/gnu/errlist.h:675
 msgid "Key was rejected by service"
 msgstr "キーがサービスによって拒否されました"
 
-#: sysdeps/gnu/errlist.h:681
+#: sysdeps/gnu/errlist.h:678
 msgid "Operation not possible due to RF-kill"
 msgstr "RF-kill のため操作は不可能です"
 
-#: sysdeps/gnu/errlist.h:687
+#: sysdeps/gnu/errlist.h:684
 msgid "RPC struct is bad"
 msgstr "RPC構造が不正です"
 
@@ -5551,43 +5551,43 @@ msgstr "RPC構造が不正です"
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.h:696
+#: sysdeps/gnu/errlist.h:693
 msgid "Inappropriate file type or format"
 msgstr "不適切なファイル形式かフォーマットです"
 
-#: sysdeps/gnu/errlist.h:699
+#: sysdeps/gnu/errlist.h:696
 msgid "RPC bad procedure for program"
 msgstr "プログラムに対して不正なRPCの手続きです"
 
-#: sysdeps/gnu/errlist.h:702
+#: sysdeps/gnu/errlist.h:699
 msgid "Authentication error"
 msgstr "認証エラーです"
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.h:709
+#: sysdeps/gnu/errlist.h:706
 msgid "Translator died"
 msgstr "翻訳用プログラムが死んでいます"
 
-#: sysdeps/gnu/errlist.h:712
+#: sysdeps/gnu/errlist.h:709
 msgid "RPC version wrong"
 msgstr "RPCバージョンが違います"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.h:717
+#: sysdeps/gnu/errlist.h:714
 msgid "You really blew it this time"
 msgstr "You really blew it this time"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.h:724
+#: sysdeps/gnu/errlist.h:721
 msgid "Too many processes"
 msgstr "プロセスが多すぎます"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.h:729
+#: sysdeps/gnu/errlist.h:726
 msgid "Gratuitous error"
 msgstr "不必要なエラー"
 
@@ -5603,11 +5603,11 @@ msgstr "不必要なエラー"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.h:745
+#: sysdeps/gnu/errlist.h:742
 msgid "Not supported"
 msgstr "サポートされていません"
 
-#: sysdeps/gnu/errlist.h:748
+#: sysdeps/gnu/errlist.h:745
 msgid "RPC program version wrong"
 msgstr "RPCプログラムバージョンが違います"
 
@@ -5617,7 +5617,7 @@ msgstr "RPCプログラムバージョンが違います"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.h:758
+#: sysdeps/gnu/errlist.h:755
 msgid "Inappropriate operation for background process"
 msgstr "バックグラウンドプロセスに対する不適切な操作です"
 
@@ -5635,7 +5635,7 @@ msgstr "バックグラウンドプロセスに対する不適切な操作です
 #. TRANS @c
 #. TRANS @c Translators, please do not translate this litteraly, translate it into
 #. TRANS @c an idiomatic funny way of saying that the computer died.
-#: sysdeps/gnu/errlist.h:776
+#: sysdeps/gnu/errlist.h:773
 msgid "Computer bought the farm"
 msgstr "コンピュータが「戦死」しました"
 
@@ -5644,22 +5644,22 @@ msgstr "コンピュータが「戦死」しました"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.h:785
+#: sysdeps/gnu/errlist.h:782
 msgid "Operation would block"
 msgstr "ブロックされうる操作です"
 
-#: sysdeps/gnu/errlist.h:788
+#: sysdeps/gnu/errlist.h:785
 msgid "Need authenticator"
 msgstr "認証者(authenticator)が必要です"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.h:795
+#: sysdeps/gnu/errlist.h:792
 msgid "?"
 msgstr "?"
 
-#: sysdeps/gnu/errlist.h:798
+#: sysdeps/gnu/errlist.h:795
 msgid "RPC program not available"
 msgstr "RPCプログラムは利用できません"
 
@@ -5735,11 +5735,6 @@ msgstr "シグナル割り込みが発生しました"
 msgid "Parameter string not correctly encoded"
 msgstr "パラメーター文字列が正しくエンコードされていません"
 
-#: sysdeps/unix/sysv/linux/i386/readelflib.c:65
-#, c-format
-msgid "%s is for unknown machine %d.\n"
-msgstr "%s は未知のマシン %d に対するものです.\n"
-
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:58
 #, c-format
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
@@ -5763,6 +5758,11 @@ msgstr "`%s'を開けません"
 #, c-format
 msgid "cannot read header from `%s'"
 msgstr "`%s'のヘッダーを読めません"
+
+#: sysdeps/unix/sysv/linux/x86/readelflib.c:66
+#, c-format
+msgid "%s is for unknown machine %d.\n"
+msgstr "%s は未知のマシン %d に対するものです.\n"
 
 #: timezone/zdump.c:341
 #, c-format

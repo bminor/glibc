@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.31.9000\n"
-"POT-Creation-Date: 2020-07-22 23:24-0400\n"
+"POT-Creation-Date: 2021-01-27 17:07-0300\n"
 "PO-Revision-Date: 2020-08-02 18:35+0300\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <gnu@d07.ru>\n"
@@ -75,7 +75,7 @@ msgstr "Выдает краткую информацию об использов
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
 #: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "NAME"
 msgstr "ИМЯ"
 
@@ -134,7 +134,7 @@ msgstr "Создает заголовочный файл с ИМЕНЕМ на С
 msgid "Do not use existing catalog, force new output file"
 msgstr "Не использовать существующий каталог, принудительно создать новый выходной файл"
 
-#: catgets/gencat.c:113 nss/makedb.c:120
+#: catgets/gencat.c:113 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "Записать вывод в файл с ИМЕНЕМ"
 
@@ -154,11 +154,11 @@ msgstr ""
 "-o ВЫХОДНОЙ-ФАЙЛ [ВХОДНОЙ-ФАЙЛ]…\n"
 "[ВЫХОДНОЙ-ФАЙЛ [ВХОДНОЙ-ФАЙЛ]…]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:306
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:311
 #: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:388
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:276
 #: locale/programs/localedef.c:438 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:370
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -169,11 +169,11 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:322 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -187,10 +187,10 @@ msgstr ""
 "КОММЕРЧЕСКОЙ ПРИГОДНОСТИ или ПРИГОДНОСТИ ДЛЯ КАКОЙ-ЛИБО ЦЕЛИ.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:327 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -201,7 +201,7 @@ msgid "*standard input*"
 msgstr "*стандартный ввод*"
 
 #: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
-#: nss/makedb.c:246
+#: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "невозможно открыть входной файл «%s»"
@@ -385,56 +385,56 @@ msgstr "неверный режим"
 msgid "invalid mode parameter"
 msgstr "неверный параметр режима"
 
-#: elf/cache.c:69
+#: elf/cache.c:180
 msgid "unknown"
 msgstr "неизвестно"
 
-#: elf/cache.c:141
+#: elf/cache.c:254
 msgid "Unknown OS"
 msgstr "Неизвестная ОС"
 
-#: elf/cache.c:146
+#: elf/cache.c:259
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ABI ОС: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1297
+#: elf/cache.c:320 elf/ldconfig.c:1427
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Невозможно открыть кэш-файл %s\n"
 
-#: elf/cache.c:177
+#: elf/cache.c:334
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "отображение кэш-файла в память не удалось.\n"
 
-#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
+#: elf/cache.c:338 elf/cache.c:352 elf/cache.c:363
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Это не кэш-файл.\n"
 
-#: elf/cache.c:233 elf/cache.c:243
+#: elf/cache.c:392 elf/cache.c:407
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d библиотек найдено в кэше «%s»\n"
 
-#: elf/cache.c:437
+#: elf/cache.c:725
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Невозможно создать временный кэш-файл %s"
 
-#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
-#: elf/cache.c:473
+#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
+#: elf/cache.c:770
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Запись данных кэша завершилась неудачно"
 
-#: elf/cache.c:468
+#: elf/cache.c:765
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Изменение прав доступа для %s на %#o завершилось неудачно"
 
-#: elf/cache.c:477
+#: elf/cache.c:774
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Переименование %s в %s завершилось неудачно"
@@ -496,140 +496,140 @@ msgstr "невозможно отобразить страницы для таб
 msgid "internal error: symidx out of range of fptr table"
 msgstr "внутренняя ошибка: symidx выходит за пределы таблицы fptr"
 
-#: elf/dl-hwcaps.c:92 elf/dl-hwcaps.c:104
+#: elf/dl-hwcaps.c:247 elf/dl-hwcaps.c:262
 msgid "cannot create capability list"
 msgstr "невозможно создать capability list"
 
-#: elf/dl-load.c:428
+#: elf/dl-load.c:432
 msgid "cannot allocate name record"
 msgstr "невозможно выделить память под запись имени"
 
-#: elf/dl-load.c:514 elf/dl-load.c:627 elf/dl-load.c:716 elf/dl-load.c:812
+#: elf/dl-load.c:518 elf/dl-load.c:631 elf/dl-load.c:725 elf/dl-load.c:821
 msgid "cannot create cache for search path"
 msgstr "невозможно создать кэш для путей поиска"
 
-#: elf/dl-load.c:610
+#: elf/dl-load.c:614
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "невозможно создать копию RUNPATH/RPATH"
 
-#: elf/dl-load.c:703
+#: elf/dl-load.c:711
 msgid "cannot create search path array"
 msgstr "невозможно создать массив путей поиска"
 
-#: elf/dl-load.c:964
+#: elf/dl-load.c:951
 msgid "cannot stat shared object"
 msgstr "невозможно выполнить stat для разделяемого объекта"
 
-#: elf/dl-load.c:1075 elf/dl-load.c:2278
+#: elf/dl-load.c:1082 elf/dl-load.c:2293
 msgid "cannot create shared object descriptor"
 msgstr "невозможно создать дескриптор разделяемого объекта"
 
-#: elf/dl-load.c:1094 elf/dl-load.c:1658 elf/dl-load.c:1759
+#: elf/dl-load.c:1101 elf/dl-load.c:1668 elf/dl-load.c:1770
 msgid "cannot read file data"
 msgstr "невозможно прочитать данные файла"
 
-#: elf/dl-load.c:1140
+#: elf/dl-load.c:1147
 msgid "ELF load command alignment not page-aligned"
 msgstr "выравнивание команды загрузки ELF не выровнено по странице"
 
-#: elf/dl-load.c:1147
+#: elf/dl-load.c:1154
 msgid "ELF load command address/offset not properly aligned"
 msgstr "адрес/смещение команды загрузки ELF не выровнено правильно"
 
-#: elf/dl-load.c:1226
+#: elf/dl-load.c:1233
 msgid "object file has no loadable segments"
 msgstr "в объектном файле нет загружаемых сегментов"
 
-#: elf/dl-load.c:1239
+#: elf/dl-load.c:1246
 msgid "cannot dynamically load executable"
 msgstr "невозможно динамически загрузить исполняемый файл"
 
-#: elf/dl-load.c:1275
+#: elf/dl-load.c:1271
 msgid "object file has no dynamic section"
 msgstr "в объектном файле нет динамической секции"
 
-#: elf/dl-load.c:1302
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr "невозможно динамически загрузить независимый от расположения исполняемый файл"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "невозможно применить dlopen() к разделяемому объекту"
 
-#: elf/dl-load.c:1317
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "невозможно выделить память под заголовок программы"
 
-#: elf/dl-load.c:1350 elf/dl-load.h:130
+#: elf/dl-load.c:1337 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "невозможно изменить защиту памяти"
 
-#: elf/dl-load.c:1370
+#: elf/dl-load.c:1357
 msgid "cannot enable executable stack as shared object requires"
 msgstr "невозможно задействовать исполняемый стек, как требует разделяемый объект"
 
-#: elf/dl-load.c:1383
+#: elf/dl-load.c:1385
 msgid "cannot close file descriptor"
 msgstr "невозможно закрыть дескриптор файла"
 
-#: elf/dl-load.c:1658
+#: elf/dl-load.c:1668
 msgid "file too short"
 msgstr "файл слишком мал"
 
-#: elf/dl-load.c:1693
+#: elf/dl-load.c:1704
 msgid "invalid ELF header"
 msgstr "неверный заголовок ELF"
 
-#: elf/dl-load.c:1705
+#: elf/dl-load.c:1716
 msgid "ELF file data encoding not big-endian"
 msgstr "кодировка данных в ELF-файле не тупоконечная"
 
-#: elf/dl-load.c:1707
+#: elf/dl-load.c:1718
 msgid "ELF file data encoding not little-endian"
 msgstr "кодировка данных в ELF-файле не остроконечная"
 
-#: elf/dl-load.c:1711
+#: elf/dl-load.c:1722
 msgid "ELF file version ident does not match current one"
 msgstr "идентификатор версии ELF-файла не соответствует текущей версии"
 
-#: elf/dl-load.c:1715
+#: elf/dl-load.c:1726
 msgid "ELF file OS ABI invalid"
 msgstr "неверный ABI ОС ELF-файла"
 
-#: elf/dl-load.c:1718
+#: elf/dl-load.c:1729
 msgid "ELF file ABI version invalid"
 msgstr "неверная версия ABI ELF-файла"
 
-#: elf/dl-load.c:1721
+#: elf/dl-load.c:1732
 msgid "nonzero padding in e_ident"
 msgstr "заполнение в e_ident не равно нулю"
 
-#: elf/dl-load.c:1724
+#: elf/dl-load.c:1735
 msgid "internal error"
 msgstr "внутренняя ошибка"
 
-#: elf/dl-load.c:1731
+#: elf/dl-load.c:1742
 msgid "ELF file version does not match current one"
 msgstr "версия ELF-файла не соответствует текущей версии"
 
-#: elf/dl-load.c:1739
+#: elf/dl-load.c:1750
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "можно загрузить только ET_DYN и ET_EXEC"
 
 # ???
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1755
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize ELF-файла не совпадает с ожидаемым размером"
 
-#: elf/dl-load.c:2297
+#: elf/dl-load.c:2312
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "неправильный класс ELF: ELFCLASS64"
 
-#: elf/dl-load.c:2298
+#: elf/dl-load.c:2313
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "неправильный класс ELF: ELFCLASS32"
 
-#: elf/dl-load.c:2301
+#: elf/dl-load.c:2316
 msgid "cannot open shared object file"
 msgstr "невозможно открыть разделяемый объектный файл"
 
@@ -653,15 +653,15 @@ msgstr "невозможно расширить глобальную облас�
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Переполнение счетчика поколений TLS!  Пожалуйста, сообщите об этом."
 
-#: elf/dl-open.c:808
+#: elf/dl-open.c:802
 msgid "invalid mode for dlopen()"
 msgstr "неверный режим для dlopen()"
 
-#: elf/dl-open.c:825
+#: elf/dl-open.c:819
 msgid "no more namespaces available for dlmopen()"
 msgstr "больше нет доступных пространств имен для dlmopen()"
 
-#: elf/dl-open.c:849
+#: elf/dl-open.c:843
 msgid "invalid target namespace in dlmopen()"
 msgstr "неверное целевое пространство имен в dlmopen()"
 
@@ -702,216 +702,216 @@ msgstr "ошибка поиска версии"
 msgid "cannot allocate version reference table"
 msgstr "невозможно выделить память под таблицу ссылок на версии"
 
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:150
 msgid "Print cache"
 msgstr "Напечатать кэш"
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:151
 msgid "Generate verbose messages"
 msgstr "Генерировать подробные сообщения"
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:152
 msgid "Don't build cache"
 msgstr "Не строить кэш"
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:153
 msgid "Don't update symbolic links"
 msgstr "Не обновлять символьные ссылки"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "Change to and use ROOT as root directory"
 msgstr "Перейти в КОРЕНЬ и использовать его как корневой каталог"
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "ROOT"
 msgstr "КОРЕНЬ"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "CACHE"
 msgstr "КЭШ"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "Use CACHE as cache file"
 msgstr "Использовать КЭШ в качестве кэш-файла"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "CONF"
 msgstr "КОНФИГУРАЦИЯ"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "Use CONF as configuration file"
 msgstr "Использовать КОНФИГУРАЦИЯ в качестве конфигурационного файла"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:157
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Обработать только каталоги, указанные в командной строке.  Не строить кэш."
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:158
 msgid "Manually link individual libraries."
 msgstr "Вручную скомпоновать отдельные библиотеки."
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:159
 msgid "FORMAT"
 msgstr "FORMAT"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:159
 msgid "Format to use: new (default), old, or compat"
 msgstr "Используемый формат: new (по умолчанию), old или compat"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:160
 msgid "Ignore auxiliary cache file"
 msgstr "Игнорирование вспомогательного файла кэша"
 
-#: elf/ldconfig.c:163
+#: elf/ldconfig.c:168
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Настраивает связи времени выполнения для динамического компоновщика."
 
-#: elf/ldconfig.c:346
+#: elf/ldconfig.c:371
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Путь «%s» задан несколько раз"
 
-#: elf/ldconfig.c:347
+#: elf/ldconfig.c:372
 #, c-format
 msgid "(from %s:%d and %s:%d)\n"
 msgstr "(из %s:%d и %s:%d)\n"
 
-#: elf/ldconfig.c:393
+#: elf/ldconfig.c:487
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s не является известным типом библиотеки"
 
-#: elf/ldconfig.c:421
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't stat %s"
 msgstr "Невозможно выполнить stat %s"
 
-#: elf/ldconfig.c:500
+#: elf/ldconfig.c:596
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Невозможно выполнить stat %s\n"
 
-#: elf/ldconfig.c:510
+#: elf/ldconfig.c:606
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s не является символьной ссылкой\n"
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:625
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Невозможно удалить ссылку %s"
 
-#: elf/ldconfig.c:535
+#: elf/ldconfig.c:631
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Невозможно создать ссылку с %s на %s"
 
-#: elf/ldconfig.c:541
+#: elf/ldconfig.c:637
 msgid " (changed)\n"
 msgstr " (изменено)\n"
 
-#: elf/ldconfig.c:543
+#: elf/ldconfig.c:639
 msgid " (SKIPPED)\n"
 msgstr " (ПРОПУЩЕНО)\n"
 
-#: elf/ldconfig.c:598
+#: elf/ldconfig.c:695
 #, c-format
 msgid "Can't find %s"
 msgstr "Невозможно найти %s"
 
-#: elf/ldconfig.c:614 elf/ldconfig.c:781 elf/ldconfig.c:839 elf/ldconfig.c:871
+#: elf/ldconfig.c:711 elf/ldconfig.c:893 elf/ldconfig.c:945 elf/ldconfig.c:977
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Невозможно выполнить lstat %s"
 
-#: elf/ldconfig.c:621
+#: elf/ldconfig.c:718
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Файл %s проигнорирован, поскольку не является обычным файлом"
 
-#: elf/ldconfig.c:630
+#: elf/ldconfig.c:727
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Ссылка не создана, поскольку для %s не было найдено soname"
 
-#: elf/ldconfig.c:689
+#: elf/ldconfig.c:800
 #, c-format
 msgid " (from %s:%d)\n"
 msgstr " (из %s:%d)\n"
 
-#: elf/ldconfig.c:714
+#: elf/ldconfig.c:824
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Невозможно открыть каталог %s"
 
-#: elf/ldconfig.c:799 elf/ldconfig.c:859 elf/readlib.c:97
+#: elf/ldconfig.c:911 elf/ldconfig.c:965 elf/readlib.c:98
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Входной файл %s не найден.\n"
 
-#: elf/ldconfig.c:806
+#: elf/ldconfig.c:918
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Невозможно выполнить stat %s"
 
-#: elf/ldconfig.c:953
+#: elf/ldconfig.c:1063
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5-библиотека %s в неправильном каталоге"
 
-#: elf/ldconfig.c:956
+#: elf/ldconfig.c:1066
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6-библиотека %s в неправильном каталоге"
 
-#: elf/ldconfig.c:959
+#: elf/ldconfig.c:1069
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4-библиотека %s в неправильном каталоге"
 
-#: elf/ldconfig.c:987
+#: elf/ldconfig.c:1097
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "библиотеки %s и %s в каталоге %s имеют одинаковый soname, но разные типы."
 
-#: elf/ldconfig.c:1097
+#: elf/ldconfig.c:1227
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Предупреждение: файл настройки игнорируется, так как не может быть открыт: %s"
 
-#: elf/ldconfig.c:1145
+#: elf/ldconfig.c:1275
 #, c-format
 msgid "%s:%u: hwcap directive ignored"
 msgstr "%s:%u: директива hwcap игнорируется"
 
-#: elf/ldconfig.c:1164
+#: elf/ldconfig.c:1294
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "при использовании -r необходимо задавать абсолютное имя для конфигурационного файла"
 
-#: elf/ldconfig.c:1171 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "память исчерпана"
 
-#: elf/ldconfig.c:1204
+#: elf/ldconfig.c:1334
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: невозможно прочитать каталог %s"
 
-#: elf/ldconfig.c:1252
+#: elf/ldconfig.c:1382
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "для построения кэша использован относительный путь «%s»"
 
-#: elf/ldconfig.c:1276
+#: elf/ldconfig.c:1406
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Невозможно перейти в каталог /"
 
-#: elf/ldconfig.c:1317
+#: elf/ldconfig.c:1447
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Невозможно открыть каталог кэш-файла %s\n"
@@ -957,7 +957,7 @@ msgstr "отсутствуют аргументы, задающие файлы"
 #. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:16
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:13
 msgid "No such file or directory"
 msgstr "Нет такого файла или каталога"
 
@@ -1079,57 +1079,57 @@ msgstr "не удалось получить информацию о проце�
 msgid "process %lu is no ELF program"
 msgstr "процесс %lu не является программой в формате ELF"
 
-#: elf/readelflib.c:34
+#: elf/readelflib.c:36
 #, c-format
 msgid "file %s is truncated\n"
 msgstr "файл %s усечён\n"
 
-#: elf/readelflib.c:65
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s является 32-битным ELF-файлом.\n"
 
-#: elf/readelflib.c:67
+#: elf/readelflib.c:69
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s является 64-битным ELF-файлом.\n"
 
-#: elf/readelflib.c:69
+#: elf/readelflib.c:71
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "Неизвестный ELFCLASS в файле %s.\n"
 
-#: elf/readelflib.c:76
+#: elf/readelflib.c:78
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s не является разделяемым объектным файлом (Тип: %d).\n"
 
-#: elf/readelflib.c:101
+#: elf/readelflib.c:106
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "более одного динамических сегментов\n"
 
-#: elf/readlib.c:103
+#: elf/readlib.c:104
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "Невозможно выполнить fstat для файла %s.\n"
 
-#: elf/readlib.c:114
+#: elf/readlib.c:115
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "Файл %s пуст; не был проверен."
 
-#: elf/readlib.c:120
+#: elf/readlib.c:121
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "Файл %s слишком мал; не был проверен."
 
-#: elf/readlib.c:130
+#: elf/readlib.c:131
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "Невозможно отобразить в память файл %s.\n"
 
-#: elf/readlib.c:169
+#: elf/readlib.c:170
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s не является файлом в формате ELF — неправильная сигнатура в начале.\n"
@@ -3135,8 +3135,8 @@ msgstr "Неизвестная системная ошибка"
 msgid "unable to free arguments"
 msgstr "не удалось высвободить занятую аргументами память"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.h:4
+#: nis/nis_error.h:1 nis/ypclnt.c:833 nis/ypclnt.c:922 posix/regcomp.c:135
+#: sysdeps/gnu/errlist.h:1
 msgid "Success"
 msgstr "Выполнено"
 
@@ -3177,7 +3177,7 @@ msgid "First/next chain broken"
 msgstr "Разорвана цепочка первый/следующий"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.h:93
+#: nis/nis_error.h:11 nis/ypclnt.c:878 sysdeps/gnu/errlist.h:90
 msgid "Permission denied"
 msgstr "Отказано в доступе"
 
@@ -3643,91 +3643,91 @@ msgstr "    Рекурсивные не-члены:\n"
 msgid "    No recursive nonmembers\n"
 msgstr "    Нет рекурсивных не-членов\n"
 
-#: nis/ypclnt.c:828
+#: nis/ypclnt.c:836
 msgid "Request arguments bad"
 msgstr "Неправильные аргументы запроса"
 
-#: nis/ypclnt.c:831
+#: nis/ypclnt.c:839
 msgid "RPC failure on NIS operation"
 msgstr "Сбой RPC при операции NIS"
 
-#: nis/ypclnt.c:834
+#: nis/ypclnt.c:842
 msgid "Can't bind to server which serves this domain"
 msgstr "Не удается соединиться с сервером, обслуживающим этот домен"
 
-#: nis/ypclnt.c:837
+#: nis/ypclnt.c:845
 msgid "No such map in server's domain"
 msgstr "Нет такого отображения в домене сервера"
 
-#: nis/ypclnt.c:840
+#: nis/ypclnt.c:848
 msgid "No such key in map"
 msgstr "Нет такого ключа в отображении"
 
-#: nis/ypclnt.c:843
+#: nis/ypclnt.c:851
 msgid "Internal NIS error"
 msgstr "Внутренняя ошибка NIS"
 
-#: nis/ypclnt.c:846
+#: nis/ypclnt.c:854
 msgid "Local resource allocation failure"
 msgstr "Сбой при выделении локального ресурса"
 
-#: nis/ypclnt.c:849
+#: nis/ypclnt.c:857
 msgid "No more records in map database"
 msgstr "Больше нет записей в базе данных отображений"
 
-#: nis/ypclnt.c:852
+#: nis/ypclnt.c:860
 msgid "Can't communicate with portmapper"
 msgstr "Невозможно связаться с отображателем портов"
 
-#: nis/ypclnt.c:855
+#: nis/ypclnt.c:863
 msgid "Can't communicate with ypbind"
 msgstr "Невозможно связаться с ypbind"
 
-#: nis/ypclnt.c:858
+#: nis/ypclnt.c:866
 msgid "Can't communicate with ypserv"
 msgstr "Невозможно связаться с ypserv"
 
-#: nis/ypclnt.c:861
+#: nis/ypclnt.c:869
 msgid "Local domain name not set"
 msgstr "Локальное имя домена не установлено"
 
-#: nis/ypclnt.c:864
+#: nis/ypclnt.c:872
 msgid "NIS map database is bad"
 msgstr "Неправильная база данных отображений NIS"
 
-#: nis/ypclnt.c:867
+#: nis/ypclnt.c:875
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "Несоответствие версий клиента/сервера NIS — невозможно предоставить службу"
 
-#: nis/ypclnt.c:873
+#: nis/ypclnt.c:881
 msgid "Database is busy"
 msgstr "База данных занята"
 
-#: nis/ypclnt.c:876
+#: nis/ypclnt.c:884
 msgid "Unknown NIS error code"
 msgstr "Неизвестный код ошибки NIS"
 
-#: nis/ypclnt.c:917
+#: nis/ypclnt.c:925
 msgid "Internal ypbind error"
 msgstr "Внутренняя ошибка ypbind"
 
-#: nis/ypclnt.c:920
+#: nis/ypclnt.c:928
 msgid "Domain not bound"
 msgstr "Домен не найден"
 
-#: nis/ypclnt.c:923
+#: nis/ypclnt.c:931
 msgid "System resource allocation failure"
 msgstr "Сбой выделения системного ресурса"
 
-#: nis/ypclnt.c:926
+#: nis/ypclnt.c:934
 msgid "Unknown ypbind error"
 msgstr "Неизвестная ошибка ypbind"
 
-#: nis/ypclnt.c:967
+#: nis/ypclnt.c:975
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: невозможно преобразовать узел в сетевое имя\n"
 
-#: nis/ypclnt.c:985
+#: nis/ypclnt.c:993
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: невозможно получить адрес сервера\n"
 
@@ -4138,7 +4138,7 @@ msgstr "Использовать отдельный кэш для каждого
 msgid "Name Service Cache Daemon."
 msgstr "Демон кэша службы имен."
 
-#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:206
+#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:207
 #, c-format
 msgid "wrong number of arguments"
 msgstr "Неправильное число аргументов"
@@ -4413,85 +4413,85 @@ msgstr "Перезагрузка «%s» в кэше базы данных пол
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "Неверный числовой идентификатор пользователя «%s»!"
 
-#: nscd/selinux.c:154
+#: nscd/selinux.c:155
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
 msgstr "Не удалось открыть соединение с подсистемой аудита: %m"
 
-#: nscd/selinux.c:175
+#: nscd/selinux.c:176
 msgid "Failed to set keep-capabilities"
 msgstr "Не удалось установить keep-capabilities"
 
-#: nscd/selinux.c:176 nscd/selinux.c:239
+#: nscd/selinux.c:177 nscd/selinux.c:240
 msgid "prctl(KEEPCAPS) failed"
 msgstr "prctl(KEEPCAPS) завершился неудачно"
 
-#: nscd/selinux.c:190
+#: nscd/selinux.c:191
 msgid "Failed to initialize drop of capabilities"
 msgstr "Не удалось инициализировать сброс capabilities"
 
-#: nscd/selinux.c:191
+#: nscd/selinux.c:192
 msgid "cap_init failed"
 msgstr "cap_init завершился неудачно"
 
-#: nscd/selinux.c:212 nscd/selinux.c:229
+#: nscd/selinux.c:213 nscd/selinux.c:230
 msgid "Failed to drop capabilities"
 msgstr "Не удалось сбросить capabilities"
 
-#: nscd/selinux.c:213 nscd/selinux.c:230
+#: nscd/selinux.c:214 nscd/selinux.c:231
 msgid "cap_set_proc failed"
 msgstr "cap_set_proc завершился неудачно"
 
-#: nscd/selinux.c:238
+#: nscd/selinux.c:239
 msgid "Failed to unset keep-capabilities"
 msgstr "Не удалось снять keep-capabilities"
 
-#: nscd/selinux.c:254
+#: nscd/selinux.c:255
 msgid "Failed to determine if kernel supports SELinux"
 msgstr "Не удалось определить, поддерживает ли ядро SELinux"
 
-#: nscd/selinux.c:269
+#: nscd/selinux.c:270
 msgid "Failed to start AVC thread"
 msgstr "Не удалось запустить нить AVC"
 
-#: nscd/selinux.c:291
+#: nscd/selinux.c:292
 msgid "Failed to create AVC lock"
 msgstr "Не удалось создать блокировку"
 
-#: nscd/selinux.c:331
+#: nscd/selinux.c:338
 msgid "Failed to start AVC"
 msgstr "Не удалось запустить AVC"
 
-#: nscd/selinux.c:333
+#: nscd/selinux.c:340
 msgid "Access Vector Cache (AVC) started"
 msgstr "Access Vector Cache (AVC) запущен"
 
-#: nscd/selinux.c:368
+#: nscd/selinux.c:382
 msgid "Error querying policy for undefined object classes or permissions."
 msgstr "Ошибка при запросе в политике неопределённых классов объектов или прав."
 
-#: nscd/selinux.c:375
+#: nscd/selinux.c:389
 msgid "Error getting security class for nscd."
 msgstr "Ошибка получения класса безопасности nscd."
 
-#: nscd/selinux.c:380
+#: nscd/selinux.c:394
 #, c-format
 msgid "Error translating permission name \"%s\" to access vector bit."
 msgstr "Ошибка преобразования имени доступа «%s в битовый вектор доступа."
 
-#: nscd/selinux.c:390
+#: nscd/selinux.c:404
 msgid "Error getting context of socket peer"
 msgstr "Ошибка получения контекста другой стороны сокета"
 
-#: nscd/selinux.c:395
+#: nscd/selinux.c:409
 msgid "Error getting context of nscd"
 msgstr "Ошибка получения контекста nscd"
 
-#: nscd/selinux.c:401
+#: nscd/selinux.c:415
 msgid "Error getting sid from context"
 msgstr "Ошибка получения sid из контекста"
 
-#: nscd/selinux.c:439
+#: nscd/selinux.c:454
 #, c-format
 msgid ""
 "\n"
@@ -4572,31 +4572,31 @@ msgstr "Поддерживаемые базы данных:\n"
 msgid "Unknown database: %s\n"
 msgstr "Неизвестная база данных: %s\n"
 
-#: nss/makedb.c:119
+#: nss/makedb.c:120
 msgid "Convert key to lower case"
 msgstr "Преобразовать ключ в нижний регистр"
 
-#: nss/makedb.c:122
+#: nss/makedb.c:123
 msgid "Do not print messages while building database"
 msgstr "Не печатать сообщений при построении базы данных"
 
-#: nss/makedb.c:124
+#: nss/makedb.c:125
 msgid "Print content of database file, one entry a line"
 msgstr "Напечатать содержимое файла базы данных, по одной записи в строку"
 
-#: nss/makedb.c:125
+#: nss/makedb.c:126
 msgid "CHAR"
 msgstr "CHAR"
 
-#: nss/makedb.c:126
+#: nss/makedb.c:127
 msgid "Generated line not part of iteration"
 msgstr "Сгенерированная строка не является частью итерации"
 
-#: nss/makedb.c:131
+#: nss/makedb.c:132
 msgid "Create simple database from textual input."
 msgstr "Построить простую базу данных из текстового ввода."
 
-#: nss/makedb.c:134
+#: nss/makedb.c:135
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -4606,71 +4606,71 @@ msgstr ""
 "-o ВЫХОДНОЙ-ФАЙЛ ВХОДНОЙ-ФАЙЛ\n"
 "-u ВХОДНОЙ-ФАЙЛ"
 
-#: nss/makedb.c:227
+#: nss/makedb.c:228
 #, c-format
 msgid "cannot open database file `%s'"
 msgstr "не удалось открыть файл базы данных «%s»"
 
-#: nss/makedb.c:272
+#: nss/makedb.c:273
 #, c-format
 msgid "no entries to be processed"
 msgstr "не обработано ни одной записи"
 
-#: nss/makedb.c:282
+#: nss/makedb.c:283
 #, c-format
 msgid "cannot create temporary file name"
 msgstr "не удалось создать имя временного файла"
 
-#: nss/makedb.c:288
+#: nss/makedb.c:289
 #, c-format
 msgid "cannot create temporary file"
 msgstr "невозможно создать временный файл"
 
-#: nss/makedb.c:304
+#: nss/makedb.c:305
 #, c-format
 msgid "cannot stat newly created file"
 msgstr "не удалось выполнить функцию stat для только что созданного файла"
 
-#: nss/makedb.c:315
+#: nss/makedb.c:316
 #, c-format
 msgid "cannot rename temporary file"
 msgstr "не удалось переименовать временный файл"
 
-#: nss/makedb.c:527 nss/makedb.c:550
+#: nss/makedb.c:528 nss/makedb.c:551
 #, c-format
 msgid "cannot create search tree"
 msgstr "не удалось создать дерево поиска"
 
-#: nss/makedb.c:556
+#: nss/makedb.c:557
 msgid "duplicate key"
 msgstr "дублированный ключ"
 
-#: nss/makedb.c:568
+#: nss/makedb.c:569
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "проблемы при чтении «%s»"
 
-#: nss/makedb.c:795
+#: nss/makedb.c:796
 #, c-format
 msgid "failed to write new database file"
 msgstr "ошибка при записи файла базы данных"
 
-#: nss/makedb.c:808
+#: nss/makedb.c:809
 #, c-format
 msgid "cannot stat database file"
 msgstr "не удалось выполнить stat для файла базы данных"
 
-#: nss/makedb.c:813
+#: nss/makedb.c:814
 #, c-format
 msgid "cannot map database file"
 msgstr "не удалось отобразить файл базы данных"
 
-#: nss/makedb.c:816
+#: nss/makedb.c:817
 #, c-format
 msgid "file not a database file"
 msgstr "файл не является файлом базы данных"
 
-#: nss/makedb.c:867
+#: nss/makedb.c:875
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr "не удалось установить контекст безопасности создания файла для «%s»"
@@ -5346,10 +5346,6 @@ msgstr "svc_unix.c — проблема при создании AF_UNIX-соке
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c — невозможно выполнить getsockname или listen"
 
-#: sysdeps/aarch64/dl-bti.c:41
-msgid "mprotect failed to turn on BTI"
-msgstr "mprotect не удалось включить BTI"
-
 #: sysdeps/generic/siglist.h:29
 msgid "Hangup"
 msgstr "Обрыв терминальной линии"
@@ -5399,7 +5395,7 @@ msgstr "Ошибка сегментирования"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:219
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:216
 msgid "Broken pipe"
 msgstr "Обрыв канала"
 
@@ -5493,12 +5489,12 @@ msgstr "Потеря ресурса"
 
 #. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.h:9
+#: sysdeps/gnu/errlist.h:6
 msgid "Operation not permitted"
 msgstr "Операция не позволена"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.h:21
+#: sysdeps/gnu/errlist.h:18
 msgid "No such process"
 msgstr "Нет такого процесса"
 
@@ -5509,12 +5505,12 @@ msgstr "Нет такого процесса"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.h:32
+#: sysdeps/gnu/errlist.h:29
 msgid "Interrupted system call"
 msgstr "Прерван системный вызов"
 
 #. TRANS Usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.h:37
+#: sysdeps/gnu/errlist.h:34
 msgid "Input/output error"
 msgstr "Ошибка ввода/вывода"
 
@@ -5523,7 +5519,7 @@ msgstr "Ошибка ввода/вывода"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.h:46
+#: sysdeps/gnu/errlist.h:43
 msgid "No such device or address"
 msgstr "Нет такого устройства или адреса"
 
@@ -5531,27 +5527,27 @@ msgstr "Нет такого устройства или адреса"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:54
+#: sysdeps/gnu/errlist.h:51
 msgid "Argument list too long"
 msgstr "Слишком длинный список аргументов"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.h:60
+#: sysdeps/gnu/errlist.h:57
 msgid "Exec format error"
 msgstr "Ошибка формата выполняемого файла"
 
 #. TRANS For example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.h:67
+#: sysdeps/gnu/errlist.h:64
 msgid "Bad file descriptor"
 msgstr "Неправильный дескриптор файла"
 
 #. TRANS This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.h:74
+#: sysdeps/gnu/errlist.h:71
 msgid "No child processes"
 msgstr "Нет дочерних процессов"
 
@@ -5559,69 +5555,69 @@ msgstr "Нет дочерних процессов"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.h:82
+#: sysdeps/gnu/errlist.h:79
 msgid "Resource deadlock avoided"
 msgstr "Предотвращена тупиковая ситуация при обращении к ресурсу"
 
 #. TRANS The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.h:88
+#: sysdeps/gnu/errlist.h:85
 msgid "Cannot allocate memory"
 msgstr "Невозможно выделить память"
 
 #. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.h:99
+#: sysdeps/gnu/errlist.h:96
 msgid "Bad address"
 msgstr "Неправильный адрес"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.h:106
+#: sysdeps/gnu/errlist.h:103
 msgid "Block device required"
 msgstr "Требуется блочное устройство"
 
 #. TRANS A system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.h:113
+#: sysdeps/gnu/errlist.h:110
 msgid "Device or resource busy"
 msgstr "Устройство или ресурс занято"
 
 #. TRANS An existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.h:119
+#: sysdeps/gnu/errlist.h:116
 msgid "File exists"
 msgstr "Файл существует"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:126
+#: sysdeps/gnu/errlist.h:123
 msgid "Invalid cross-device link"
 msgstr "Неверная ссылка между устройствами"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.h:132
+#: sysdeps/gnu/errlist.h:129
 msgid "No such device"
 msgstr "Нет такого устройства"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.h:137
+#: sysdeps/gnu/errlist.h:134
 msgid "Not a directory"
 msgstr "Это не каталог"
 
 #. TRANS You cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.h:143
+#: sysdeps/gnu/errlist.h:140
 msgid "Is a directory"
 msgstr "Это каталог"
 
 #. TRANS This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.h:149
+#: sysdeps/gnu/errlist.h:146
 msgid "Invalid argument"
 msgstr "Недопустимый аргумент"
 
@@ -5632,20 +5628,20 @@ msgstr "Недопустимый аргумент"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.h:160
+#: sysdeps/gnu/errlist.h:157
 msgid "Too many open files"
 msgstr "Слишком много открытых файлов"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:167
+#: sysdeps/gnu/errlist.h:164
 msgid "Too many open files in system"
 msgstr "Слишком много открытых файлов в системе"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.h:173
+#: sysdeps/gnu/errlist.h:170
 msgid "Inappropriate ioctl for device"
 msgstr "Неприменимый к данному устройству ioctl"
 
@@ -5654,47 +5650,47 @@ msgstr "Неприменимый к данному устройству ioctl"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.h:182
+#: sysdeps/gnu/errlist.h:179
 msgid "Text file busy"
 msgstr "Текстовый файл занят"
 
 #. TRANS The size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.h:187
+#: sysdeps/gnu/errlist.h:184
 msgid "File too large"
 msgstr "Файл слишком велик"
 
 #. TRANS Write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.h:193
+#: sysdeps/gnu/errlist.h:190
 msgid "No space left on device"
 msgstr "На устройстве не осталось свободного места"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.h:198
+#: sysdeps/gnu/errlist.h:195
 msgid "Illegal seek"
 msgstr "Недопустимая операция смещения"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.h:203
+#: sysdeps/gnu/errlist.h:200
 msgid "Read-only file system"
 msgstr "Файловая система доступна только для чтения"
 
 #. TRANS The link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:210
+#: sysdeps/gnu/errlist.h:207
 msgid "Too many links"
 msgstr "Слишком много ссылок"
 
 #. TRANS Used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.h:225
+#: sysdeps/gnu/errlist.h:222
 msgid "Numerical argument out of domain"
 msgstr "Числовой аргумент вне области определения"
 
 #. TRANS Used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.h:231
+#: sysdeps/gnu/errlist.h:228
 msgid "Numerical result out of range"
 msgstr "Числовой результат вне представимого диапазона"
 
@@ -5727,7 +5723,7 @@ msgstr "Числовой результат вне представимого д
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.h:264
+#: sysdeps/gnu/errlist.h:261
 msgid "Resource temporarily unavailable"
 msgstr "Ресурс временно недоступен"
 
@@ -5739,47 +5735,47 @@ msgstr "Ресурс временно недоступен"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.h:276
+#: sysdeps/gnu/errlist.h:273
 msgid "Operation now in progress"
 msgstr "Операция выполняется в данный момент"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.h:282
+#: sysdeps/gnu/errlist.h:279
 msgid "Operation already in progress"
 msgstr "Операция уже выполняется"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.h:287
+#: sysdeps/gnu/errlist.h:284
 msgid "Socket operation on non-socket"
 msgstr "Операция для сокета применена к не-сокету"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.h:293
+#: sysdeps/gnu/errlist.h:290
 msgid "Message too long"
 msgstr "Сообщение слишком длинное"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.h:298
+#: sysdeps/gnu/errlist.h:295
 msgid "Protocol wrong type for socket"
 msgstr "Неподдерживаемый тип протокола для сокета"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.h:304
+#: sysdeps/gnu/errlist.h:301
 msgid "Protocol not available"
 msgstr "Протокол недоступен"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.h:311
+#: sysdeps/gnu/errlist.h:308
 msgid "Protocol not supported"
 msgstr "Протокол не поддерживается"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.h:316
+#: sysdeps/gnu/errlist.h:313
 msgid "Socket type not supported"
 msgstr "Неподдерживаемый тип сокета"
 
@@ -5789,71 +5785,71 @@ msgstr "Неподдерживаемый тип сокета"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.h:326
+#: sysdeps/gnu/errlist.h:323
 msgid "Operation not supported"
 msgstr "Неподдерживаемая операция"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.h:331
+#: sysdeps/gnu/errlist.h:328
 msgid "Protocol family not supported"
 msgstr "Неподдерживаемое семейство протоколов"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.h:337
+#: sysdeps/gnu/errlist.h:334
 msgid "Address family not supported by protocol"
 msgstr "Семейство адресов не поддерживается протоколом"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:342
+#: sysdeps/gnu/errlist.h:339
 msgid "Address already in use"
 msgstr "Адрес уже используется"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:349
+#: sysdeps/gnu/errlist.h:346
 msgid "Cannot assign requested address"
 msgstr "Невозможно назначить запрошенный адрес"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.h:354
+#: sysdeps/gnu/errlist.h:351
 msgid "Network is down"
 msgstr "Сеть не работает"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.h:360
+#: sysdeps/gnu/errlist.h:357
 msgid "Network is unreachable"
 msgstr "Сеть недоступна"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.h:365
+#: sysdeps/gnu/errlist.h:362
 msgid "Network dropped connection on reset"
 msgstr "Сетевое соединение было разорвано"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.h:370
+#: sysdeps/gnu/errlist.h:367
 msgid "Software caused connection abort"
 msgstr "Программа вызвала разрыв соединения"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.h:377
+#: sysdeps/gnu/errlist.h:374
 msgid "Connection reset by peer"
 msgstr "Соединение разорвано другой стороной"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.h:384
+#: sysdeps/gnu/errlist.h:381
 msgid "No buffer space available"
 msgstr "Недостаточно буферного пространства"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.h:390
+#: sysdeps/gnu/errlist.h:387
 msgid "Transport endpoint is already connected"
 msgstr "Конечная точка передачи уже подсоединена"
 
@@ -5861,74 +5857,74 @@ msgstr "Конечная точка передачи уже подсоедине
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.h:398
+#: sysdeps/gnu/errlist.h:395
 msgid "Transport endpoint is not connected"
 msgstr "Конечная точка передачи не подсоединена"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.h:405
+#: sysdeps/gnu/errlist.h:402
 msgid "Destination address required"
 msgstr "Требуется указать адрес назначения"
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.h:410
+#: sysdeps/gnu/errlist.h:407
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "Невозможно отправить данные после выключения конечной точки передачи"
 
-#: sysdeps/gnu/errlist.h:413
+#: sysdeps/gnu/errlist.h:410
 msgid "Too many references: cannot splice"
 msgstr "Слишком много ссылок: невозможно объединить"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.h:419
+#: sysdeps/gnu/errlist.h:416
 msgid "Connection timed out"
 msgstr "Время ожидания соединения истекло"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.h:425
+#: sysdeps/gnu/errlist.h:422
 msgid "Connection refused"
 msgstr "В соединении отказано"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.h:431
+#: sysdeps/gnu/errlist.h:428
 msgid "Too many levels of symbolic links"
 msgstr "Слишком много уровней символьных ссылок"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.h:438
+#: sysdeps/gnu/errlist.h:435
 msgid "File name too long"
 msgstr "Слишком длинное имя файла"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.h:443
+#: sysdeps/gnu/errlist.h:440
 msgid "Host is down"
 msgstr "Узел выключен"
 
-#: sysdeps/gnu/errlist.h:448
+#: sysdeps/gnu/errlist.h:445
 msgid "No route to host"
 msgstr "Нет маршрута до узла"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.h:454
+#: sysdeps/gnu/errlist.h:451
 msgid "Directory not empty"
 msgstr "Каталог не пуст"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.h:460
+#: sysdeps/gnu/errlist.h:457
 msgid "Too many users"
 msgstr "Слишком много пользователей"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.h:465
+#: sysdeps/gnu/errlist.h:462
 msgid "Disk quota exceeded"
 msgstr "Превышена дисковая квота"
 
@@ -5937,7 +5933,7 @@ msgstr "Превышена дисковая квота"
 #. TRANS for NFS file systems or corruption in other file systems.
 #. TRANS Repairing this condition usually requires unmounting, possibly repairing
 #. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.h:474
+#: sysdeps/gnu/errlist.h:471
 msgid "Stale file handle"
 msgstr "Устаревший дескриптор файла"
 
@@ -5945,7 +5941,7 @@ msgstr "Устаревший дескриптор файла"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.h:482
+#: sysdeps/gnu/errlist.h:479
 msgid "Object is remote"
 msgstr "Это удаленный объект"
 
@@ -5953,7 +5949,7 @@ msgstr "Это удаленный объект"
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.h:490
+#: sysdeps/gnu/errlist.h:487
 msgid "No locks available"
 msgstr "Нет доступных блокировок"
 
@@ -5962,57 +5958,57 @@ msgstr "Нет доступных блокировок"
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.h:499
+#: sysdeps/gnu/errlist.h:496
 msgid "Function not implemented"
 msgstr "Функция не реализована"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.h:505
+#: sysdeps/gnu/errlist.h:502
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Неверный или неполный мультибайтный или широкий символ"
 
-#: sysdeps/gnu/errlist.h:508
+#: sysdeps/gnu/errlist.h:505
 msgid "Bad message"
 msgstr "Неправильное сообщение"
 
-#: sysdeps/gnu/errlist.h:511
+#: sysdeps/gnu/errlist.h:508
 msgid "Identifier removed"
 msgstr "Идентификатор был удален"
 
-#: sysdeps/gnu/errlist.h:514
+#: sysdeps/gnu/errlist.h:511
 msgid "Multihop attempted"
 msgstr "Попытка Multihop"
 
-#: sysdeps/gnu/errlist.h:517
+#: sysdeps/gnu/errlist.h:514
 msgid "No data available"
 msgstr "Нет доступных данных"
 
-#: sysdeps/gnu/errlist.h:520
+#: sysdeps/gnu/errlist.h:517
 msgid "Link has been severed"
 msgstr "Соединение было разорвано"
 
-#: sysdeps/gnu/errlist.h:523
+#: sysdeps/gnu/errlist.h:520
 msgid "No message of desired type"
 msgstr "Нет сообщения желаемого типа"
 
-#: sysdeps/gnu/errlist.h:526
+#: sysdeps/gnu/errlist.h:523
 msgid "Out of streams resources"
 msgstr "Недостаточно потоковых ресурсов"
 
-#: sysdeps/gnu/errlist.h:529
+#: sysdeps/gnu/errlist.h:526
 msgid "Device not a stream"
 msgstr "Устройство не является потоком"
 
-#: sysdeps/gnu/errlist.h:532
+#: sysdeps/gnu/errlist.h:529
 msgid "Value too large for defined data type"
 msgstr "Значение слишком велико для такого типа данных"
 
-#: sysdeps/gnu/errlist.h:535
+#: sysdeps/gnu/errlist.h:532
 msgid "Protocol error"
 msgstr "Ошибка протокола"
 
-#: sysdeps/gnu/errlist.h:538
+#: sysdeps/gnu/errlist.h:535
 msgid "Timer expired"
 msgstr "Таймер истек"
 
@@ -6020,195 +6016,195 @@ msgstr "Таймер истек"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.h:546
+#: sysdeps/gnu/errlist.h:543
 msgid "Operation canceled"
 msgstr "Операция отменена"
 
-#: sysdeps/gnu/errlist.h:549
+#: sysdeps/gnu/errlist.h:546
 msgid "Owner died"
 msgstr "Владелец умер"
 
-#: sysdeps/gnu/errlist.h:552
+#: sysdeps/gnu/errlist.h:549
 msgid "State not recoverable"
 msgstr "Состояние нельзя восстановить"
 
-#: sysdeps/gnu/errlist.h:555
+#: sysdeps/gnu/errlist.h:552
 msgid "Interrupted system call should be restarted"
 msgstr "Прерванный системный вызов следует перезапустить"
 
-#: sysdeps/gnu/errlist.h:558
+#: sysdeps/gnu/errlist.h:555
 msgid "Channel number out of range"
 msgstr "Номер канала вне диапазона"
 
-#: sysdeps/gnu/errlist.h:561
+#: sysdeps/gnu/errlist.h:558
 msgid "Level 2 not synchronized"
 msgstr "Уровень 2 не синхронизирован"
 
-#: sysdeps/gnu/errlist.h:564
+#: sysdeps/gnu/errlist.h:561
 msgid "Level 3 halted"
 msgstr "Уровень 3 остановлен"
 
-#: sysdeps/gnu/errlist.h:567
+#: sysdeps/gnu/errlist.h:564
 msgid "Level 3 reset"
 msgstr "Уровень 3 сброшен"
 
-#: sysdeps/gnu/errlist.h:570
+#: sysdeps/gnu/errlist.h:567
 msgid "Link number out of range"
 msgstr "Число ссылок вне допустимого диапазона"
 
-#: sysdeps/gnu/errlist.h:573
+#: sysdeps/gnu/errlist.h:570
 msgid "Protocol driver not attached"
 msgstr "Драйвер протокола не подсоединен"
 
-#: sysdeps/gnu/errlist.h:576
+#: sysdeps/gnu/errlist.h:573
 msgid "No CSI structure available"
 msgstr "Нет доступной CSI-структуры"
 
-#: sysdeps/gnu/errlist.h:579
+#: sysdeps/gnu/errlist.h:576
 msgid "Level 2 halted"
 msgstr "Уровень 2 остановлен"
 
-#: sysdeps/gnu/errlist.h:582
+#: sysdeps/gnu/errlist.h:579
 msgid "Invalid exchange"
 msgstr "Некорректный обмен"
 
-#: sysdeps/gnu/errlist.h:585
+#: sysdeps/gnu/errlist.h:582
 msgid "Invalid request descriptor"
 msgstr "Неверный дескриптор запроса"
 
-#: sysdeps/gnu/errlist.h:588
+#: sysdeps/gnu/errlist.h:585
 msgid "Exchange full"
 msgstr "Обмен полный"
 
-#: sysdeps/gnu/errlist.h:591
+#: sysdeps/gnu/errlist.h:588
 msgid "No anode"
 msgstr "Нет anode"
 
-#: sysdeps/gnu/errlist.h:594
+#: sysdeps/gnu/errlist.h:591
 msgid "Invalid request code"
 msgstr "Неверный код запроса"
 
-#: sysdeps/gnu/errlist.h:597
+#: sysdeps/gnu/errlist.h:594
 msgid "Invalid slot"
 msgstr "Некорректный слот"
 
-#: sysdeps/gnu/errlist.h:600
+#: sysdeps/gnu/errlist.h:597
 msgid "Bad font file format"
 msgstr "Неверный формат файла со шрифтом"
 
-#: sysdeps/gnu/errlist.h:603
+#: sysdeps/gnu/errlist.h:600
 msgid "Machine is not on the network"
 msgstr "Машина не в сети"
 
-#: sysdeps/gnu/errlist.h:606
+#: sysdeps/gnu/errlist.h:603
 msgid "Package not installed"
 msgstr "Пакет не установлен"
 
-#: sysdeps/gnu/errlist.h:609
+#: sysdeps/gnu/errlist.h:606
 msgid "Advertise error"
 msgstr "Ошибка объявления"
 
-#: sysdeps/gnu/errlist.h:612
+#: sysdeps/gnu/errlist.h:609
 msgid "Srmount error"
 msgstr "Ошибка Srmount"
 
-#: sysdeps/gnu/errlist.h:615
+#: sysdeps/gnu/errlist.h:612
 msgid "Communication error on send"
 msgstr "Ошибка связи при отправке"
 
-#: sysdeps/gnu/errlist.h:618
+#: sysdeps/gnu/errlist.h:615
 msgid "RFS specific error"
 msgstr "Специфичная для RFS ошибка"
 
-#: sysdeps/gnu/errlist.h:621
+#: sysdeps/gnu/errlist.h:618
 msgid "Name not unique on network"
 msgstr "Имя не уникально в сети"
 
-#: sysdeps/gnu/errlist.h:624
+#: sysdeps/gnu/errlist.h:621
 msgid "File descriptor in bad state"
 msgstr "Дескриптор файла в плохом состоянии"
 
-#: sysdeps/gnu/errlist.h:627
+#: sysdeps/gnu/errlist.h:624
 msgid "Remote address changed"
 msgstr "Удаленный адрес был изменен"
 
-#: sysdeps/gnu/errlist.h:630
+#: sysdeps/gnu/errlist.h:627
 msgid "Can not access a needed shared library"
 msgstr "Невозможно получить доступ к нужной разделяемой библиотеке"
 
-#: sysdeps/gnu/errlist.h:633
+#: sysdeps/gnu/errlist.h:630
 msgid "Accessing a corrupted shared library"
 msgstr "Обращение к поврежденной разделяемой библиотеке"
 
-#: sysdeps/gnu/errlist.h:636
+#: sysdeps/gnu/errlist.h:633
 msgid ".lib section in a.out corrupted"
 msgstr "Секция .lib в a.out повреждена"
 
-#: sysdeps/gnu/errlist.h:639
+#: sysdeps/gnu/errlist.h:636
 msgid "Attempting to link in too many shared libraries"
 msgstr "Попытка подключить слишком много разделяемый библиотек"
 
-#: sysdeps/gnu/errlist.h:642
+#: sysdeps/gnu/errlist.h:639
 msgid "Cannot exec a shared library directly"
 msgstr "Невозможно непосредственно выполнить разделяемую библиотеку"
 
-#: sysdeps/gnu/errlist.h:645
+#: sysdeps/gnu/errlist.h:642
 msgid "Streams pipe error"
 msgstr "Ошибка потоков канала"
 
-#: sysdeps/gnu/errlist.h:648
+#: sysdeps/gnu/errlist.h:645
 msgid "Structure needs cleaning"
 msgstr "Структуру необходимо почистить"
 
-#: sysdeps/gnu/errlist.h:651
+#: sysdeps/gnu/errlist.h:648
 msgid "Not a XENIX named type file"
 msgstr "Не является файлом именованного типа XENIX"
 
-#: sysdeps/gnu/errlist.h:654
+#: sysdeps/gnu/errlist.h:651
 msgid "No XENIX semaphores available"
 msgstr "Семафоры XENIX недоступны"
 
-#: sysdeps/gnu/errlist.h:657
+#: sysdeps/gnu/errlist.h:654
 msgid "Is a named type file"
 msgstr "Является файлом именованного типа"
 
-#: sysdeps/gnu/errlist.h:660
+#: sysdeps/gnu/errlist.h:657
 msgid "Remote I/O error"
 msgstr "Ошибка удаленного ввода/вывода"
 
-#: sysdeps/gnu/errlist.h:663
+#: sysdeps/gnu/errlist.h:660
 msgid "No medium found"
 msgstr "Носитель не найден"
 
-#: sysdeps/gnu/errlist.h:666
+#: sysdeps/gnu/errlist.h:663
 msgid "Wrong medium type"
 msgstr "Неправильный тип носителя"
 
-#: sysdeps/gnu/errlist.h:669
+#: sysdeps/gnu/errlist.h:666
 msgid "Required key not available"
 msgstr "Требуемый ключ недоступен"
 
-#: sysdeps/gnu/errlist.h:672
+#: sysdeps/gnu/errlist.h:669
 msgid "Key has expired"
 msgstr "Время жизни ключа истекло"
 
-#: sysdeps/gnu/errlist.h:675
+#: sysdeps/gnu/errlist.h:672
 msgid "Key has been revoked"
 msgstr "Ключ был отозван"
 
-#: sysdeps/gnu/errlist.h:678
+#: sysdeps/gnu/errlist.h:675
 msgid "Key was rejected by service"
 msgstr "Ключ был отвергнут службой"
 
-#: sysdeps/gnu/errlist.h:681
+#: sysdeps/gnu/errlist.h:678
 msgid "Operation not possible due to RF-kill"
 msgstr "Операция не позволяется из-за RF-kill"
 
-#: sysdeps/gnu/errlist.h:684
+#: sysdeps/gnu/errlist.h:681
 msgid "Memory page has hardware error"
 msgstr "В странице памяти аппаратная ошибка"
 
-#: sysdeps/gnu/errlist.h:687
+#: sysdeps/gnu/errlist.h:684
 msgid "RPC struct is bad"
 msgstr "RPC неправильная структура"
 
@@ -6217,43 +6213,43 @@ msgstr "RPC неправильная структура"
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.h:696
+#: sysdeps/gnu/errlist.h:693
 msgid "Inappropriate file type or format"
 msgstr "Неподходящий тип или формат файла"
 
-#: sysdeps/gnu/errlist.h:699
+#: sysdeps/gnu/errlist.h:696
 msgid "RPC bad procedure for program"
 msgstr "RPC неправильная процедура для программы"
 
-#: sysdeps/gnu/errlist.h:702
+#: sysdeps/gnu/errlist.h:699
 msgid "Authentication error"
 msgstr "Ошибка аутентификации"
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.h:709
+#: sysdeps/gnu/errlist.h:706
 msgid "Translator died"
 msgstr "Транслятор умер"
 
-#: sysdeps/gnu/errlist.h:712
+#: sysdeps/gnu/errlist.h:709
 msgid "RPC version wrong"
 msgstr "RPC неправильная версия"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.h:717
+#: sysdeps/gnu/errlist.h:714
 msgid "You really blew it this time"
 msgstr "На этот раз вы всех опрокинули"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.h:724
+#: sysdeps/gnu/errlist.h:721
 msgid "Too many processes"
 msgstr "Слишком много процессов"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.h:729
+#: sysdeps/gnu/errlist.h:726
 msgid "Gratuitous error"
 msgstr "Безвозмездная ошибка"
 
@@ -6269,11 +6265,11 @@ msgstr "Безвозмездная ошибка"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.h:745
+#: sysdeps/gnu/errlist.h:742
 msgid "Not supported"
 msgstr "Не поддерживается"
 
-#: sysdeps/gnu/errlist.h:748
+#: sysdeps/gnu/errlist.h:745
 msgid "RPC program version wrong"
 msgstr "RPC неправильная версия программы"
 
@@ -6283,7 +6279,7 @@ msgstr "RPC неправильная версия программы"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.h:758
+#: sysdeps/gnu/errlist.h:755
 msgid "Inappropriate operation for background process"
 msgstr "Неподходящая операция для фонового процесса"
 
@@ -6301,7 +6297,7 @@ msgstr "Неподходящая операция для фонового про
 #. TRANS @c
 #. TRANS @c Translators, please do not translate this litteraly, translate it into
 #. TRANS @c an idiomatic funny way of saying that the computer died.
-#: sysdeps/gnu/errlist.h:776
+#: sysdeps/gnu/errlist.h:773
 msgid "Computer bought the farm"
 msgstr "Компьютер отбросил копыта"
 
@@ -6310,22 +6306,22 @@ msgstr "Компьютер отбросил копыта"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.h:785
+#: sysdeps/gnu/errlist.h:782
 msgid "Operation would block"
 msgstr "Операция приведет к блокировке"
 
-#: sysdeps/gnu/errlist.h:788
+#: sysdeps/gnu/errlist.h:785
 msgid "Need authenticator"
 msgstr "Необходим аутентификатор"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.h:795
+#: sysdeps/gnu/errlist.h:792
 msgid "?"
 msgstr "?"
 
-#: sysdeps/gnu/errlist.h:798
+#: sysdeps/gnu/errlist.h:795
 msgid "RPC program not available"
 msgstr "RPC программа недоступна"
 
@@ -6401,11 +6397,6 @@ msgstr "Прервано по сигналу"
 msgid "Parameter string not correctly encoded"
 msgstr "Неправильно закодирована строка параметра"
 
-#: sysdeps/unix/sysv/linux/i386/readelflib.c:65
-#, c-format
-msgid "%s is for unknown machine %d.\n"
-msgstr "%s предназначен для неизвестной машины %d.\n"
-
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:58
 #, c-format
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
@@ -6430,15 +6421,20 @@ msgstr "невозможно открыть «%s»"
 msgid "cannot read header from `%s'"
 msgstr "невозможно считать заголовок из «%s»"
 
-#: sysdeps/x86/dl-cet.c:147
+#: sysdeps/unix/sysv/linux/x86/readelflib.c:66
+#, c-format
+msgid "%s is for unknown machine %d.\n"
+msgstr "%s предназначен для неизвестной машины %d.\n"
+
+#: sysdeps/x86/dl-cet.c:154
 msgid "rebuild shared object with IBT support enabled"
 msgstr "включена пересборка общего объекта с поддержкой IBT"
 
-#: sysdeps/x86/dl-cet.c:158
+#: sysdeps/x86/dl-cet.c:165
 msgid "rebuild shared object with SHSTK support enabled"
 msgstr "включена пересборка общего объекта с поддержкой SHSTK"
 
-#: sysdeps/x86/dl-cet.c:187
+#: sysdeps/x86/dl-cet.c:194
 msgid "can't disable CET"
 msgstr "невозможно выключить CET"
 

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.2\n"
-"POT-Creation-Date: 2020-07-22 23:24-0400\n"
+"POT-Creation-Date: 2021-01-27 17:07-0300\n"
 "PO-Revision-Date: 2003-08-28 09:27+0100\n"
 "Last-Translator: Eivind Tagseth <eivindt@multinet.no>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
@@ -68,7 +68,7 @@ msgstr "Gi en kort bruksmelding"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
 #: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "NAME"
 msgstr "NAVN"
 
@@ -101,7 +101,7 @@ msgstr "(PROGRAMFEIL) Flagg skulle ha blitt gjenkjent!?"
 msgid "Do not use existing catalog, force new output file"
 msgstr "Ikke bruk eksisterende katalog, tving opprettelse av ny utfil"
 
-#: catgets/gencat.c:113 nss/makedb.c:120
+#: catgets/gencat.c:113 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "Skriv utdata til fil NAVN"
 
@@ -114,11 +114,11 @@ msgstr ""
 "[UTFIL [INNFIL]...]"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:322 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -132,10 +132,10 @@ msgstr ""
 "TIL NOEN SPESIELL OPPGAVE.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:327 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -146,7 +146,7 @@ msgid "*standard input*"
 msgstr "*standard inn*"
 
 #: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
-#: nss/makedb.c:246
+#: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "kan ikke åpne innfil «%s»"
@@ -199,7 +199,7 @@ msgstr "uavsluttet melding"
 msgid "while opening old catalog file"
 msgstr "da den gamle katalogfilen ble åpnet"
 
-#: elf/dl-open.c:808
+#: elf/dl-open.c:802
 msgid "invalid mode for dlopen()"
 msgstr "ugyldig modus for dlopen()"
 
@@ -207,7 +207,7 @@ msgstr "ugyldig modus for dlopen()"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT brukt i kode som ikke er dynamisk lastet"
 
-#: elf/ldconfig.c:1171 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
@@ -217,7 +217,7 @@ msgstr "minnet oppbrukt"
 #. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:16
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:13
 msgid "No such file or directory"
 msgstr "Ingen slik fil eller filkatalog"
 
@@ -1120,8 +1120,8 @@ msgstr "Ukjent systemfeil"
 msgid "unable to free arguments"
 msgstr "kan ikke frigjøre argumenter"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.h:4
+#: nis/nis_error.h:1 nis/ypclnt.c:833 nis/ypclnt.c:922 posix/regcomp.c:135
+#: sysdeps/gnu/errlist.h:1
 msgid "Success"
 msgstr "Suksess"
 
@@ -1154,7 +1154,7 @@ msgid "Generic system error"
 msgstr "Generell systemfeil"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.h:93
+#: nis/nis_error.h:11 nis/ypclnt.c:878 sysdeps/gnu/errlist.h:90
 msgid "Permission denied"
 msgstr "Ikke tilgang"
 
@@ -1546,92 +1546,92 @@ msgstr "    Ingen implisitte ikke-medlemmer\n"
 msgid "    No recursive nonmembers\n"
 msgstr "    Ingen rekursive ikke-medlemmer\n"
 
-#: nis/ypclnt.c:828
+#: nis/ypclnt.c:836
 msgid "Request arguments bad"
 msgstr "Argumenter for forespørsel er ugyldige"
 
-#: nis/ypclnt.c:831
+#: nis/ypclnt.c:839
 msgid "RPC failure on NIS operation"
 msgstr "RPC-feil ved NIS-operasjon"
 
 # nis/ypclnt.c:637+
-#: nis/ypclnt.c:834
+#: nis/ypclnt.c:842
 msgid "Can't bind to server which serves this domain"
 msgstr "Kan ikke koble til tjener for dette domenet"
 
-#: nis/ypclnt.c:837
+#: nis/ypclnt.c:845
 msgid "No such map in server's domain"
 msgstr "Ingen slik tabell i tjenerens domene"
 
-#: nis/ypclnt.c:840
+#: nis/ypclnt.c:848
 msgid "No such key in map"
 msgstr "Ingen slik nøkkel i tabellen"
 
-#: nis/ypclnt.c:843
+#: nis/ypclnt.c:851
 msgid "Internal NIS error"
 msgstr "Intern NIS-feil"
 
-#: nis/ypclnt.c:846
+#: nis/ypclnt.c:854
 msgid "Local resource allocation failure"
 msgstr "Tildelingsfeil for lokal ressurs"
 
-#: nis/ypclnt.c:849
+#: nis/ypclnt.c:857
 msgid "No more records in map database"
 msgstr "Ingen flere poster i tabellen"
 
-#: nis/ypclnt.c:852
+#: nis/ypclnt.c:860
 msgid "Can't communicate with portmapper"
 msgstr "Kan ikke kommunisere med portmapper"
 
-#: nis/ypclnt.c:855
+#: nis/ypclnt.c:863
 msgid "Can't communicate with ypbind"
 msgstr "Kan ikke kommunisere med ypbind"
 
-#: nis/ypclnt.c:858
+#: nis/ypclnt.c:866
 msgid "Can't communicate with ypserv"
 msgstr "Kan ikke kommunisere med ypserv"
 
-#: nis/ypclnt.c:861
+#: nis/ypclnt.c:869
 msgid "Local domain name not set"
 msgstr "Lokalt domenenavn er ikke satt"
 
-#: nis/ypclnt.c:864
+#: nis/ypclnt.c:872
 msgid "NIS map database is bad"
 msgstr "NIS' kart-database er korrupt"
 
-#: nis/ypclnt.c:867
+#: nis/ypclnt.c:875
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "NIS klient/tjener versjonsforskjell - kan ikke betjene"
 
-#: nis/ypclnt.c:873
+#: nis/ypclnt.c:881
 msgid "Database is busy"
 msgstr "Databasen er opptatt"
 
-#: nis/ypclnt.c:876
+#: nis/ypclnt.c:884
 msgid "Unknown NIS error code"
 msgstr "Ukjent NIS-feilkode"
 
-#: nis/ypclnt.c:917
+#: nis/ypclnt.c:925
 msgid "Internal ypbind error"
 msgstr "Intern ypbind-feil"
 
-#: nis/ypclnt.c:920
+#: nis/ypclnt.c:928
 msgid "Domain not bound"
 msgstr "Domenet er ikke bundet"
 
-#: nis/ypclnt.c:923
+#: nis/ypclnt.c:931
 msgid "System resource allocation failure"
 msgstr "Kunne ikke tildele systemressurs"
 
-#: nis/ypclnt.c:926
+#: nis/ypclnt.c:934
 msgid "Unknown ypbind error"
 msgstr "Ukjent ypbind-feil"
 
-#: nis/ypclnt.c:967
+#: nis/ypclnt.c:975
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: kan ikke konvertere vert til nettnavn\n"
 
-#: nis/ypclnt.c:985
+#: nis/ypclnt.c:993
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: kan ikke hente tjeneradresse\n"
 
@@ -1701,7 +1701,7 @@ msgstr "Start ANTALL tråder"
 msgid "Shut the server down"
 msgstr "Slå av tjeneren"
 
-#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:206
+#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:207
 #, c-format
 msgid "wrong number of arguments"
 msgstr "feil antall argumenter"
@@ -1766,19 +1766,19 @@ msgstr "database [nøkkel ...]"
 msgid "Unknown database: %s\n"
 msgstr "Ukjent database: %s\n"
 
-#: nss/makedb.c:119
+#: nss/makedb.c:120
 msgid "Convert key to lower case"
 msgstr "Konverter nøkkel til små bokstaver"
 
-#: nss/makedb.c:122
+#: nss/makedb.c:123
 msgid "Do not print messages while building database"
 msgstr "Ikke skriv meldinger under bygging av databasen"
 
-#: nss/makedb.c:124
+#: nss/makedb.c:125
 msgid "Print content of database file, one entry a line"
 msgstr "Skriv ut innholdet av en databasefil, ett innslag per linje"
 
-#: nss/makedb.c:134
+#: nss/makedb.c:135
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -1788,11 +1788,11 @@ msgstr ""
 "-o UTFIL INNFIL\n"
 "-u INNFIL"
 
-#: nss/makedb.c:556
+#: nss/makedb.c:557
 msgid "duplicate key"
 msgstr "duplisert nøkkel"
 
-#: nss/makedb.c:568
+#: nss/makedb.c:569
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "problem ved lesing av «%s»"
@@ -2159,7 +2159,7 @@ msgstr "Minnesegmentsfeil"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:219
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:216
 msgid "Broken pipe"
 msgstr "Røret ble brutt"
 
@@ -2253,12 +2253,12 @@ msgstr "Ressurs tapt"
 
 #. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.h:9
+#: sysdeps/gnu/errlist.h:6
 msgid "Operation not permitted"
 msgstr "Operasjonen er ikke tillatt"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.h:21
+#: sysdeps/gnu/errlist.h:18
 msgid "No such process"
 msgstr "Ingen slik prosess"
 
@@ -2269,12 +2269,12 @@ msgstr "Ingen slik prosess"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.h:32
+#: sysdeps/gnu/errlist.h:29
 msgid "Interrupted system call"
 msgstr "Avbrutt systemkall"
 
 #. TRANS Usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.h:37
+#: sysdeps/gnu/errlist.h:34
 msgid "Input/output error"
 msgstr "Inn/ut-feil"
 
@@ -2282,27 +2282,27 @@ msgstr "Inn/ut-feil"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:54
+#: sysdeps/gnu/errlist.h:51
 msgid "Argument list too long"
 msgstr "Argumentlisten er for lang"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.h:60
+#: sysdeps/gnu/errlist.h:57
 msgid "Exec format error"
 msgstr "Ugyldig format på eksekverbar fil"
 
 #. TRANS For example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.h:67
+#: sysdeps/gnu/errlist.h:64
 msgid "Bad file descriptor"
 msgstr "Ugyldig fildeskriptor"
 
 #. TRANS This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.h:74
+#: sysdeps/gnu/errlist.h:71
 msgid "No child processes"
 msgstr "Ingen barneprosesser"
 
@@ -2310,69 +2310,69 @@ msgstr "Ingen barneprosesser"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.h:82
+#: sysdeps/gnu/errlist.h:79
 msgid "Resource deadlock avoided"
 msgstr "Klarte å unngå vranglås ved tildeling av ressurs"
 
 #. TRANS The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.h:88
+#: sysdeps/gnu/errlist.h:85
 msgid "Cannot allocate memory"
 msgstr "Kan ikke tildele minne"
 
 #. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.h:99
+#: sysdeps/gnu/errlist.h:96
 msgid "Bad address"
 msgstr "Ugyldig adresse"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.h:106
+#: sysdeps/gnu/errlist.h:103
 msgid "Block device required"
 msgstr "Blokk-enhet kreves"
 
 #. TRANS A system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.h:113
+#: sysdeps/gnu/errlist.h:110
 msgid "Device or resource busy"
 msgstr "Enheten eller ressursen opptatt"
 
 #. TRANS An existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.h:119
+#: sysdeps/gnu/errlist.h:116
 msgid "File exists"
 msgstr "Filen eksisterer"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:126
+#: sysdeps/gnu/errlist.h:123
 msgid "Invalid cross-device link"
 msgstr "Ugyldig link over adskilte enheter"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.h:132
+#: sysdeps/gnu/errlist.h:129
 msgid "No such device"
 msgstr "Ingen slik enhet"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.h:137
+#: sysdeps/gnu/errlist.h:134
 msgid "Not a directory"
 msgstr "Ikke en filkatalog"
 
 #. TRANS You cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.h:143
+#: sysdeps/gnu/errlist.h:140
 msgid "Is a directory"
 msgstr "Er en filkatalog"
 
 #. TRANS This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.h:149
+#: sysdeps/gnu/errlist.h:146
 msgid "Invalid argument"
 msgstr "Ugyldig argument"
 
@@ -2383,20 +2383,20 @@ msgstr "Ugyldig argument"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.h:160
+#: sysdeps/gnu/errlist.h:157
 msgid "Too many open files"
 msgstr "For mange åpne filer"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:167
+#: sysdeps/gnu/errlist.h:164
 msgid "Too many open files in system"
 msgstr "For mange åpne filer i systemet"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.h:173
+#: sysdeps/gnu/errlist.h:170
 msgid "Inappropriate ioctl for device"
 msgstr "Uegnet «ioctl» for enhet"
 
@@ -2405,47 +2405,47 @@ msgstr "Uegnet «ioctl» for enhet"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.h:182
+#: sysdeps/gnu/errlist.h:179
 msgid "Text file busy"
 msgstr "Programfil opptatt"
 
 #. TRANS The size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.h:187
+#: sysdeps/gnu/errlist.h:184
 msgid "File too large"
 msgstr "For stor fil"
 
 #. TRANS Write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.h:193
+#: sysdeps/gnu/errlist.h:190
 msgid "No space left on device"
 msgstr "Ikke mer plass på enheten"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.h:198
+#: sysdeps/gnu/errlist.h:195
 msgid "Illegal seek"
 msgstr "Ulovlig søkeoperasjon"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.h:203
+#: sysdeps/gnu/errlist.h:200
 msgid "Read-only file system"
 msgstr "Filsystem med kun lesetilgang"
 
 #. TRANS The link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:210
+#: sysdeps/gnu/errlist.h:207
 msgid "Too many links"
 msgstr "For mange linker"
 
 #. TRANS Used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.h:225
+#: sysdeps/gnu/errlist.h:222
 msgid "Numerical argument out of domain"
 msgstr "Numerisk argument er utenfor definert område"
 
 #. TRANS Used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.h:231
+#: sysdeps/gnu/errlist.h:228
 msgid "Numerical result out of range"
 msgstr "Numerisk resultat er utenfor gyldig område"
 
@@ -2478,7 +2478,7 @@ msgstr "Numerisk resultat er utenfor gyldig område"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.h:264
+#: sysdeps/gnu/errlist.h:261
 msgid "Resource temporarily unavailable"
 msgstr "Ressursen midlertidig utilgjengelig"
 
@@ -2490,47 +2490,47 @@ msgstr "Ressursen midlertidig utilgjengelig"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.h:276
+#: sysdeps/gnu/errlist.h:273
 msgid "Operation now in progress"
 msgstr "Operasjonen er nå under bearbeiding"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.h:282
+#: sysdeps/gnu/errlist.h:279
 msgid "Operation already in progress"
 msgstr "Operasjonen er allerede under utførelse"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.h:287
+#: sysdeps/gnu/errlist.h:284
 msgid "Socket operation on non-socket"
 msgstr "Socket-operasjon på noe som ikke er en socket"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.h:293
+#: sysdeps/gnu/errlist.h:290
 msgid "Message too long"
 msgstr "For lang melding"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.h:298
+#: sysdeps/gnu/errlist.h:295
 msgid "Protocol wrong type for socket"
 msgstr "Protokollen er ikke riktig type for socket"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.h:304
+#: sysdeps/gnu/errlist.h:301
 msgid "Protocol not available"
 msgstr "Protokollen er ikke tilgjengelig"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.h:311
+#: sysdeps/gnu/errlist.h:308
 msgid "Protocol not supported"
 msgstr "Protokollen er ikke tilgjengelig"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.h:316
+#: sysdeps/gnu/errlist.h:313
 msgid "Socket type not supported"
 msgstr "Socket-typen er ikke støttet"
 
@@ -2540,71 +2540,71 @@ msgstr "Socket-typen er ikke støttet"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.h:326
+#: sysdeps/gnu/errlist.h:323
 msgid "Operation not supported"
 msgstr "Operasjonen er ikke støttet"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.h:331
+#: sysdeps/gnu/errlist.h:328
 msgid "Protocol family not supported"
 msgstr "Protokoll-familien er ikke støttet"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.h:337
+#: sysdeps/gnu/errlist.h:334
 msgid "Address family not supported by protocol"
 msgstr "Adressefamilien er ikke støttet av protokollen"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:342
+#: sysdeps/gnu/errlist.h:339
 msgid "Address already in use"
 msgstr "Adressen er allerede i bruk"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:349
+#: sysdeps/gnu/errlist.h:346
 msgid "Cannot assign requested address"
 msgstr "Kan ikke benytte den ønskede adressen"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.h:354
+#: sysdeps/gnu/errlist.h:351
 msgid "Network is down"
 msgstr "Nettverket er nede"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.h:360
+#: sysdeps/gnu/errlist.h:357
 msgid "Network is unreachable"
 msgstr "Nettverket er ikke tilgjengelig"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.h:365
+#: sysdeps/gnu/errlist.h:362
 msgid "Network dropped connection on reset"
 msgstr "Nettverket tok ned forbindelsen ved omstart"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.h:370
+#: sysdeps/gnu/errlist.h:367
 msgid "Software caused connection abort"
 msgstr "Programvare forårsaket forbindelsesbrudd"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.h:377
+#: sysdeps/gnu/errlist.h:374
 msgid "Connection reset by peer"
 msgstr "Forbindelsen brutt i den andre enden"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.h:384
+#: sysdeps/gnu/errlist.h:381
 msgid "No buffer space available"
 msgstr "Ikke mer buffer-plass tilgjengelig"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.h:390
+#: sysdeps/gnu/errlist.h:387
 msgid "Transport endpoint is already connected"
 msgstr "Transport-endepunktene er allerede sammenkoblet"
 
@@ -2612,69 +2612,69 @@ msgstr "Transport-endepunktene er allerede sammenkoblet"
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.h:398
+#: sysdeps/gnu/errlist.h:395
 msgid "Transport endpoint is not connected"
 msgstr "Transport-endepunktene er ikke sammenkoblet"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.h:405
+#: sysdeps/gnu/errlist.h:402
 msgid "Destination address required"
 msgstr "Måladresse kreves"
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.h:410
+#: sysdeps/gnu/errlist.h:407
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "Kan ikke sende etter at transportendepunktet har koblet ned"
 
-#: sysdeps/gnu/errlist.h:413
+#: sysdeps/gnu/errlist.h:410
 msgid "Too many references: cannot splice"
 msgstr "For mange referanser: kan ikke spleise sammen"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.h:419
+#: sysdeps/gnu/errlist.h:416
 msgid "Connection timed out"
 msgstr "Oppkoblingen overskred tidsgrensen"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.h:425
+#: sysdeps/gnu/errlist.h:422
 msgid "Connection refused"
 msgstr "Oppkobling nektes"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.h:431
+#: sysdeps/gnu/errlist.h:428
 msgid "Too many levels of symbolic links"
 msgstr "For mange nivåer med symbolske linker"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.h:438
+#: sysdeps/gnu/errlist.h:435
 msgid "File name too long"
 msgstr "For langt filnavn"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.h:443
+#: sysdeps/gnu/errlist.h:440
 msgid "Host is down"
 msgstr "Vertsmaskin er nede"
 
-#: sysdeps/gnu/errlist.h:448
+#: sysdeps/gnu/errlist.h:445
 msgid "No route to host"
 msgstr "Ingen rute til vertsmaskinen"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.h:454
+#: sysdeps/gnu/errlist.h:451
 msgid "Directory not empty"
 msgstr "Filkatalogen er ikke tom"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.h:460
+#: sysdeps/gnu/errlist.h:457
 msgid "Too many users"
 msgstr "For mange brukere"
 
@@ -2682,7 +2682,7 @@ msgstr "For mange brukere"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.h:482
+#: sysdeps/gnu/errlist.h:479
 msgid "Object is remote"
 msgstr "Er et fjernobjekt"
 
@@ -2690,7 +2690,7 @@ msgstr "Er et fjernobjekt"
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.h:490
+#: sysdeps/gnu/errlist.h:487
 msgid "No locks available"
 msgstr "Ingen låser tilgjengelige"
 
@@ -2699,213 +2699,213 @@ msgstr "Ingen låser tilgjengelige"
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.h:499
+#: sysdeps/gnu/errlist.h:496
 msgid "Function not implemented"
 msgstr "Funksjonen er ikke implementert"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.h:505
+#: sysdeps/gnu/errlist.h:502
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Ugyldig eller ufullstendig multibyte eller bredt tegn"
 
-#: sysdeps/gnu/errlist.h:508
+#: sysdeps/gnu/errlist.h:505
 msgid "Bad message"
 msgstr "Ugyldig melding"
 
-#: sysdeps/gnu/errlist.h:511
+#: sysdeps/gnu/errlist.h:508
 msgid "Identifier removed"
 msgstr "Identifikator tatt bort"
 
-#: sysdeps/gnu/errlist.h:514
+#: sysdeps/gnu/errlist.h:511
 msgid "Multihop attempted"
 msgstr "Forsøkte viderehopp"
 
-#: sysdeps/gnu/errlist.h:517
+#: sysdeps/gnu/errlist.h:514
 msgid "No data available"
 msgstr "Ingen data er tilgjengelige"
 
-#: sysdeps/gnu/errlist.h:520
+#: sysdeps/gnu/errlist.h:517
 msgid "Link has been severed"
 msgstr "Linken har blitt skadet"
 
-#: sysdeps/gnu/errlist.h:523
+#: sysdeps/gnu/errlist.h:520
 msgid "No message of desired type"
 msgstr "Ingen meldinger av ønsket type"
 
-#: sysdeps/gnu/errlist.h:526
+#: sysdeps/gnu/errlist.h:523
 msgid "Out of streams resources"
 msgstr "Ikke flere streams-ressurser"
 
-#: sysdeps/gnu/errlist.h:529
+#: sysdeps/gnu/errlist.h:526
 msgid "Device not a stream"
 msgstr "Enheten er ikke en stream"
 
-#: sysdeps/gnu/errlist.h:532
+#: sysdeps/gnu/errlist.h:529
 msgid "Value too large for defined data type"
 msgstr "Verdien er for stor for den definerte datatypen"
 
-#: sysdeps/gnu/errlist.h:535
+#: sysdeps/gnu/errlist.h:532
 msgid "Protocol error"
 msgstr "Protokollfeil"
 
-#: sysdeps/gnu/errlist.h:538
+#: sysdeps/gnu/errlist.h:535
 msgid "Timer expired"
 msgstr "Tidsgrense løp ut"
 
-#: sysdeps/gnu/errlist.h:555
+#: sysdeps/gnu/errlist.h:552
 msgid "Interrupted system call should be restarted"
 msgstr "Avbrutt systemkall burde startes om"
 
-#: sysdeps/gnu/errlist.h:558
+#: sysdeps/gnu/errlist.h:555
 msgid "Channel number out of range"
 msgstr "Kanalnummer utenfor gyldig intervall"
 
-#: sysdeps/gnu/errlist.h:561
+#: sysdeps/gnu/errlist.h:558
 msgid "Level 2 not synchronized"
 msgstr "Nivå 2 ikke synkronisert"
 
-#: sysdeps/gnu/errlist.h:564
+#: sysdeps/gnu/errlist.h:561
 msgid "Level 3 halted"
 msgstr "Nivå 3 stoppet"
 
-#: sysdeps/gnu/errlist.h:567
+#: sysdeps/gnu/errlist.h:564
 msgid "Level 3 reset"
 msgstr "Nivå 3 startet om"
 
-#: sysdeps/gnu/errlist.h:570
+#: sysdeps/gnu/errlist.h:567
 msgid "Link number out of range"
 msgstr "Linknummer utenfor gyldig område"
 
-#: sysdeps/gnu/errlist.h:573
+#: sysdeps/gnu/errlist.h:570
 msgid "Protocol driver not attached"
 msgstr "Protokolldriver er ikke tilkoblet"
 
-#: sysdeps/gnu/errlist.h:576
+#: sysdeps/gnu/errlist.h:573
 msgid "No CSI structure available"
 msgstr "Ingen CSI-strukturer tilgjengelige"
 
-#: sysdeps/gnu/errlist.h:579
+#: sysdeps/gnu/errlist.h:576
 msgid "Level 2 halted"
 msgstr "Nivå 2 stoppet"
 
-#: sysdeps/gnu/errlist.h:582
+#: sysdeps/gnu/errlist.h:579
 msgid "Invalid exchange"
 msgstr "Ugyldig veksel"
 
-#: sysdeps/gnu/errlist.h:585
+#: sysdeps/gnu/errlist.h:582
 msgid "Invalid request descriptor"
 msgstr "Ugyldig forespørseldeskriptor"
 
-#: sysdeps/gnu/errlist.h:588
+#: sysdeps/gnu/errlist.h:585
 msgid "Exchange full"
 msgstr "Veksel full"
 
-#: sysdeps/gnu/errlist.h:591
+#: sysdeps/gnu/errlist.h:588
 msgid "No anode"
 msgstr "Ingen anode"
 
-#: sysdeps/gnu/errlist.h:594
+#: sysdeps/gnu/errlist.h:591
 msgid "Invalid request code"
 msgstr "Ugyldig tilgangskode"
 
-#: sysdeps/gnu/errlist.h:597
+#: sysdeps/gnu/errlist.h:594
 msgid "Invalid slot"
 msgstr "Ugyldig plass"
 
-#: sysdeps/gnu/errlist.h:600
+#: sysdeps/gnu/errlist.h:597
 msgid "Bad font file format"
 msgstr "Ugyldig format på typesnittsfil"
 
-#: sysdeps/gnu/errlist.h:603
+#: sysdeps/gnu/errlist.h:600
 msgid "Machine is not on the network"
 msgstr "Maskinen er ikke på nettverket"
 
-#: sysdeps/gnu/errlist.h:606
+#: sysdeps/gnu/errlist.h:603
 msgid "Package not installed"
 msgstr "Pakken er ikke installert"
 
-#: sysdeps/gnu/errlist.h:609
+#: sysdeps/gnu/errlist.h:606
 msgid "Advertise error"
 msgstr "Annonseringsfeil"
 
-#: sysdeps/gnu/errlist.h:612
+#: sysdeps/gnu/errlist.h:609
 msgid "Srmount error"
 msgstr "Srmount-feil"
 
-#: sysdeps/gnu/errlist.h:615
+#: sysdeps/gnu/errlist.h:612
 msgid "Communication error on send"
 msgstr "Kommunikasjonsfeil ved sending"
 
-#: sysdeps/gnu/errlist.h:618
+#: sysdeps/gnu/errlist.h:615
 msgid "RFS specific error"
 msgstr "RFS-spesifikk feil"
 
-#: sysdeps/gnu/errlist.h:621
+#: sysdeps/gnu/errlist.h:618
 msgid "Name not unique on network"
 msgstr "Navnet er ikke unikt på nettverket"
 
-#: sysdeps/gnu/errlist.h:624
+#: sysdeps/gnu/errlist.h:621
 msgid "File descriptor in bad state"
 msgstr "Fildeskriptor i ugyldig tilstand"
 
-#: sysdeps/gnu/errlist.h:627
+#: sysdeps/gnu/errlist.h:624
 msgid "Remote address changed"
 msgstr "Fjernadresse endret"
 
-#: sysdeps/gnu/errlist.h:630
+#: sysdeps/gnu/errlist.h:627
 msgid "Can not access a needed shared library"
 msgstr "Kan ikke aksessere et nødvendig delt bibliotek"
 
-#: sysdeps/gnu/errlist.h:633
+#: sysdeps/gnu/errlist.h:630
 msgid "Accessing a corrupted shared library"
 msgstr "Aksesserer et skadet delt bibliotek"
 
-#: sysdeps/gnu/errlist.h:636
+#: sysdeps/gnu/errlist.h:633
 msgid ".lib section in a.out corrupted"
 msgstr ".lib-seksjon i a.out skadet"
 
-#: sysdeps/gnu/errlist.h:639
+#: sysdeps/gnu/errlist.h:636
 msgid "Attempting to link in too many shared libraries"
 msgstr "Forsøker å linke inn for mange delte biblioteker"
 
-#: sysdeps/gnu/errlist.h:642
+#: sysdeps/gnu/errlist.h:639
 msgid "Cannot exec a shared library directly"
 msgstr "Kan ikke eksekvere et delt bibliotek direkte"
 
-#: sysdeps/gnu/errlist.h:645
+#: sysdeps/gnu/errlist.h:642
 msgid "Streams pipe error"
 msgstr "Streams-rørfeil"
 
-#: sysdeps/gnu/errlist.h:648
+#: sysdeps/gnu/errlist.h:645
 msgid "Structure needs cleaning"
 msgstr "Strukturen trenger opprydding"
 
-#: sysdeps/gnu/errlist.h:651
+#: sysdeps/gnu/errlist.h:648
 msgid "Not a XENIX named type file"
 msgstr "Ikke en XENIX navngitt fil"
 
-#: sysdeps/gnu/errlist.h:654
+#: sysdeps/gnu/errlist.h:651
 msgid "No XENIX semaphores available"
 msgstr "Ingen XENIX-semaforer tilgjengelige"
 
-#: sysdeps/gnu/errlist.h:657
+#: sysdeps/gnu/errlist.h:654
 msgid "Is a named type file"
 msgstr "Er en navngitt filtype"
 
-#: sysdeps/gnu/errlist.h:660
+#: sysdeps/gnu/errlist.h:657
 msgid "Remote I/O error"
 msgstr "I/O-feil på fjern maskin"
 
-#: sysdeps/gnu/errlist.h:663
+#: sysdeps/gnu/errlist.h:660
 msgid "No medium found"
 msgstr "Medium ikke funnet"
 
-#: sysdeps/gnu/errlist.h:666
+#: sysdeps/gnu/errlist.h:663
 msgid "Wrong medium type"
 msgstr "Gal mediatype"
 
-#: sysdeps/gnu/errlist.h:687
+#: sysdeps/gnu/errlist.h:684
 msgid "RPC struct is bad"
 msgstr "RPC-strukturen er ugyldig"
 
@@ -2914,47 +2914,47 @@ msgstr "RPC-strukturen er ugyldig"
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.h:696
+#: sysdeps/gnu/errlist.h:693
 msgid "Inappropriate file type or format"
 msgstr "Uegnet filtype eller format"
 
-#: sysdeps/gnu/errlist.h:699
+#: sysdeps/gnu/errlist.h:696
 msgid "RPC bad procedure for program"
 msgstr "RPC: ugyldig prosedyre for program"
 
-#: sysdeps/gnu/errlist.h:702
+#: sysdeps/gnu/errlist.h:699
 msgid "Authentication error"
 msgstr "Autentiseringsfeil"
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.h:709
+#: sysdeps/gnu/errlist.h:706
 msgid "Translator died"
 msgstr "Tolken døde"
 
-#: sysdeps/gnu/errlist.h:712
+#: sysdeps/gnu/errlist.h:709
 msgid "RPC version wrong"
 msgstr "feil RPC-versjon"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.h:717
+#: sysdeps/gnu/errlist.h:714
 msgid "You really blew it this time"
 msgstr "Denne gangen rotet du det virkelig til"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.h:724
+#: sysdeps/gnu/errlist.h:721
 msgid "Too many processes"
 msgstr "For mange prosesser"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.h:729
+#: sysdeps/gnu/errlist.h:726
 msgid "Gratuitous error"
 msgstr "Umotivert feil"
 
-#: sysdeps/gnu/errlist.h:748
+#: sysdeps/gnu/errlist.h:745
 msgid "RPC program version wrong"
 msgstr "RPC: feil programversjon"
 
@@ -2964,7 +2964,7 @@ msgstr "RPC: feil programversjon"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.h:758
+#: sysdeps/gnu/errlist.h:755
 msgid "Inappropriate operation for background process"
 msgstr "Uegnet operasjon for bakgrunnsprosess"
 
@@ -2982,7 +2982,7 @@ msgstr "Uegnet operasjon for bakgrunnsprosess"
 #. TRANS @c
 #. TRANS @c Translators, please do not translate this litteraly, translate it into
 #. TRANS @c an idiomatic funny way of saying that the computer died.
-#: sysdeps/gnu/errlist.h:776
+#: sysdeps/gnu/errlist.h:773
 msgid "Computer bought the farm"
 msgstr "Datamaskinen tok ferie"
 
@@ -2991,22 +2991,22 @@ msgstr "Datamaskinen tok ferie"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.h:785
+#: sysdeps/gnu/errlist.h:782
 msgid "Operation would block"
 msgstr "Operasjonen ville ha blokkert"
 
-#: sysdeps/gnu/errlist.h:788
+#: sysdeps/gnu/errlist.h:785
 msgid "Need authenticator"
 msgstr "Må ha noen til å autentisere"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.h:795
+#: sysdeps/gnu/errlist.h:792
 msgid "?"
 msgstr "?"
 
-#: sysdeps/gnu/errlist.h:798
+#: sysdeps/gnu/errlist.h:795
 msgid "RPC program not available"
 msgstr "RPC-programmet er ikke tilgjengelig"
 

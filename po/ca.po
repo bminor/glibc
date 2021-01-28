@@ -48,7 +48,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.29.9000\n"
-"POT-Creation-Date: 2020-07-22 23:24-0400\n"
+"POT-Creation-Date: 2021-01-27 17:07-0300\n"
 "PO-Revision-Date: 2019-11-17 16:17-0500\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -110,7 +110,7 @@ msgstr "Mostra un missatge breu amb la forma d’ús."
 
 #: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
 #: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "NAME"
 msgstr "NOM"
 
@@ -172,7 +172,7 @@ msgstr "Crea el fitxer de capçalera C NOM que contindrà les definicions de sí
 msgid "Do not use existing catalog, force new output file"
 msgstr "No empra el catàleg existent, i crea un nou fitxer d’eixida."
 
-#: catgets/gencat.c:113 nss/makedb.c:120
+#: catgets/gencat.c:113 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "Escriu l’eixida al fitxer NOM."
 
@@ -196,11 +196,11 @@ msgstr ""
 "[FITXER_EIXIDA [FITXER_ENTRADA]…]"
 
 # L’adreça es veu millor així.  ivb
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:306
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:311
 #: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:388
 #: iconv/iconvconfig.c:379 locale/programs/locale.c:276
 #: locale/programs/localedef.c:438 login/programs/pt_chown.c:89
-#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:369
+#: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:370
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
 #, c-format
 msgid ""
@@ -211,11 +211,11 @@ msgstr ""
 "<%s>.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:322 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
 #: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:385 posix/getconf.c:485
+#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
 #: sysdeps/unix/sysv/linux/lddlibc4.c:68
 #, c-format
 msgid ""
@@ -229,10 +229,10 @@ msgstr ""
 "ADEQUACIÓ PER A UN PROPÒSIT PARTICULAR.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:327 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
 #: iconv/iconvconfig.c:401 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:390
+#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -243,7 +243,7 @@ msgid "*standard input*"
 msgstr "*entrada estàndard*"
 
 #: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
-#: nss/makedb.c:246
+#: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "no s’ha pogut obrir el fitxer d’entrada «%s»"
@@ -441,61 +441,61 @@ msgstr "el paràmetre de mode no és vàlid"
 
 # ivb (2001/11/01)
 # ivb  Es refereix al tipus de la biblioteca (libc{4,5,6}) -> masculí.
-#: elf/cache.c:69
+#: elf/cache.c:180
 msgid "unknown"
 msgstr "desconegut"
 
 # ivb (2001/11/06)
 # ivb  Cal mantenir-ho curt...
-#: elf/cache.c:141
+#: elf/cache.c:254
 msgid "Unknown OS"
 msgstr "SO desconegut"
 
 # ivb (2001/11/06)
 # ivb  Cal mantenir-ho curt...
-#: elf/cache.c:146
+#: elf/cache.c:259
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ABI del SO: %s %d.%d.%d"
 
-#: elf/cache.c:163 elf/ldconfig.c:1297
+#: elf/cache.c:320 elf/ldconfig.c:1427
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "no s’ha pogut obrir el fitxer «%s» de memòria cau\n"
 
-#: elf/cache.c:177
+#: elf/cache.c:334
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "ha fallat mmap() sobre el fitxer de memòria cau\n"
 
-#: elf/cache.c:181 elf/cache.c:195 elf/cache.c:205
+#: elf/cache.c:338 elf/cache.c:352 elf/cache.c:363
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "el fitxer no és un fitxer de memòria cau\n"
 
 # No és un error.  ivb
-#: elf/cache.c:233 elf/cache.c:243
+#: elf/cache.c:392 elf/cache.c:407
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "S’han trobat %d biblioteques a la memòria cau «%s».\n"
 
-#: elf/cache.c:437
+#: elf/cache.c:725
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "no s’ha pogut crear el fitxer temporal de memòria cau «%s»"
 
-#: elf/cache.c:445 elf/cache.c:455 elf/cache.c:459 elf/cache.c:463
-#: elf/cache.c:473
+#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
+#: elf/cache.c:770
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "no s’han pogut escriure les dades de la memòria cau"
 
-#: elf/cache.c:468
+#: elf/cache.c:765
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "no s’ha pogut canviar els drets d’accés de «%s» a %#o"
 
-#: elf/cache.c:477
+#: elf/cache.c:774
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "no s’ha pogut reanomenar «%s» a «%s»"
@@ -563,144 +563,144 @@ msgstr "no s’han pogut mapar pàgines per a la taula «fptr»"
 msgid "internal error: symidx out of range of fptr table"
 msgstr "error intern: «symidx» és fora de rang respecte a la taula «fptr»"
 
-#: elf/dl-hwcaps.c:92 elf/dl-hwcaps.c:104
+#: elf/dl-hwcaps.c:247 elf/dl-hwcaps.c:262
 msgid "cannot create capability list"
 msgstr "no s’ha pogut crear la llista de capacitats"
 
-#: elf/dl-load.c:428
+#: elf/dl-load.c:432
 msgid "cannot allocate name record"
 msgstr "no s’ha pogut reservar el registre de nom"
 
-#: elf/dl-load.c:514 elf/dl-load.c:627 elf/dl-load.c:716 elf/dl-load.c:812
+#: elf/dl-load.c:518 elf/dl-load.c:631 elf/dl-load.c:725 elf/dl-load.c:821
 msgid "cannot create cache for search path"
 msgstr "no s’ha pogut crear la memòria cau dels camins de cerca"
 
-#: elf/dl-load.c:610
+#: elf/dl-load.c:614
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "no s’ha pogut crear una còpia de RUNPATH o RPATH"
 
-#: elf/dl-load.c:703
+#: elf/dl-load.c:711
 msgid "cannot create search path array"
 msgstr "no s’ha pogut crear el vector de camins de cerca"
 
-#: elf/dl-load.c:964
+#: elf/dl-load.c:951
 msgid "cannot stat shared object"
 msgstr "ha fallat stat() sobre l’objecte compartit"
 
-#: elf/dl-load.c:1075 elf/dl-load.c:2278
+#: elf/dl-load.c:1082 elf/dl-load.c:2293
 msgid "cannot create shared object descriptor"
 msgstr "no s’ha pogut crear el descriptor d’objecte compartit"
 
-#: elf/dl-load.c:1094 elf/dl-load.c:1658 elf/dl-load.c:1759
+#: elf/dl-load.c:1101 elf/dl-load.c:1668 elf/dl-load.c:1770
 msgid "cannot read file data"
 msgstr "no s’han pogut llegir les dades del fitxer"
 
-#: elf/dl-load.c:1140
+#: elf/dl-load.c:1147
 msgid "ELF load command alignment not page-aligned"
 msgstr "l’alineament de l’ordre ELF de càrrega no està alineada amb la pàgina"
 
-#: elf/dl-load.c:1147
+#: elf/dl-load.c:1154
 msgid "ELF load command address/offset not properly aligned"
 msgstr "l’adreça o desplaçament de l’ordre ELF de càrrega no està correctament alineada"
 
-#: elf/dl-load.c:1226
+#: elf/dl-load.c:1233
 msgid "object file has no loadable segments"
 msgstr "el fitxer d’objecte no té segments carregables"
 
-#: elf/dl-load.c:1239
+#: elf/dl-load.c:1246
 msgid "cannot dynamically load executable"
 msgstr "no s’ha pogut carregar dinàmicament l’executable"
 
-#: elf/dl-load.c:1275
+#: elf/dl-load.c:1271
 msgid "object file has no dynamic section"
 msgstr "el fitxer d’objecte no té secció dinàmica"
 
-#: elf/dl-load.c:1302
+#: elf/dl-load.c:1289
 msgid "cannot dynamically load position-independent executable"
 msgstr "no s’ha pogut carregar dinàmicament l’executable independent de la posició"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1291
 msgid "shared object cannot be dlopen()ed"
 msgstr "ha fallat dlopen() sobre l’objecte compartit"
 
-#: elf/dl-load.c:1317
+#: elf/dl-load.c:1304
 msgid "cannot allocate memory for program header"
 msgstr "no s’ha pogut reservar memòria per a la capçalera del programa"
 
-#: elf/dl-load.c:1350 elf/dl-load.h:130
+#: elf/dl-load.c:1337 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "no s’han pogut canviar les proteccions de memòria"
 
-#: elf/dl-load.c:1370
+#: elf/dl-load.c:1357
 msgid "cannot enable executable stack as shared object requires"
 msgstr "no s’ha pogut habilitar la pila executable a requeriment de l’objecte compartit"
 
-#: elf/dl-load.c:1383
+#: elf/dl-load.c:1385
 msgid "cannot close file descriptor"
 msgstr "no s’ha pogut tancar un descriptor de fitxer"
 
-#: elf/dl-load.c:1658
+#: elf/dl-load.c:1668
 msgid "file too short"
 msgstr "el fitxer és massa curt"
 
-#: elf/dl-load.c:1693
+#: elf/dl-load.c:1704
 msgid "invalid ELF header"
 msgstr "la capçalera ELF no és vàlida"
 
-#: elf/dl-load.c:1705
+#: elf/dl-load.c:1716
 msgid "ELF file data encoding not big-endian"
 msgstr "la codificació de les dades del fitxer ELF no és big‐endian"
 
-#: elf/dl-load.c:1707
+#: elf/dl-load.c:1718
 msgid "ELF file data encoding not little-endian"
 msgstr "la codificació de les dades del fitxer ELF no és little‐endian"
 
-#: elf/dl-load.c:1711
+#: elf/dl-load.c:1722
 msgid "ELF file version ident does not match current one"
 msgstr "la identificació de la versió del fitxer ELF no concorda amb l’actual"
 
 # ivb (2001/11(06)
 # ivb  ABI = Application Binary Interface (interfície binària d'aplicació)
-#: elf/dl-load.c:1715
+#: elf/dl-load.c:1726
 msgid "ELF file OS ABI invalid"
 msgstr "l’ABI de sistema operatiu del fitxer ELF no és vàlida"
 
-#: elf/dl-load.c:1718
+#: elf/dl-load.c:1729
 msgid "ELF file ABI version invalid"
 msgstr "la versió de l’ABI del fitxer ELF no és vàlida"
 
-#: elf/dl-load.c:1721
+#: elf/dl-load.c:1732
 msgid "nonzero padding in e_ident"
 msgstr "el replè de «e_ident» no conté només zeros"
 
-#: elf/dl-load.c:1724
+#: elf/dl-load.c:1735
 msgid "internal error"
 msgstr "error intern"
 
-#: elf/dl-load.c:1731
+#: elf/dl-load.c:1742
 msgid "ELF file version does not match current one"
 msgstr "la versió del fitxer ELF no concorda amb l’actual"
 
-#: elf/dl-load.c:1739
+#: elf/dl-load.c:1750
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "només es poden carregar els tipus ET_DYN i ET_EXEC"
 
 # ivb (2001/11/01)
 # ivb  La traducció completa de «phentsize» vindria a ser: mida d'entrada
 # ivb  de taula de la capçalera de programa.
-#: elf/dl-load.c:1744
+#: elf/dl-load.c:1755
 msgid "ELF file's phentsize not the expected size"
 msgstr "el valor de «phentsize» del fitxer ELF no és l’esperat"
 
-#: elf/dl-load.c:2297
+#: elf/dl-load.c:2312
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "la classe ELF no és vàlida: ELFCLASS64"
 
-#: elf/dl-load.c:2298
+#: elf/dl-load.c:2313
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "la classe ELF no és vàlida: ELFCLASS32"
 
-#: elf/dl-load.c:2301
+#: elf/dl-load.c:2316
 msgid "cannot open shared object file"
 msgstr "no s’ha pogut obrir el fitxer d’objecte compartit"
 
@@ -726,15 +726,15 @@ msgstr "no s’ha pogut estendre l’àmbit global"
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "El comptador de generació de TLS s’ha esgotat!  Per favor, informeu d’açò."
 
-#: elf/dl-open.c:808
+#: elf/dl-open.c:802
 msgid "invalid mode for dlopen()"
 msgstr "el mode de dlopen() no és vàlid"
 
-#: elf/dl-open.c:825
+#: elf/dl-open.c:819
 msgid "no more namespaces available for dlmopen()"
 msgstr "no resten espais de noms disponibles per a dlmopen()"
 
-#: elf/dl-open.c:849
+#: elf/dl-open.c:843
 msgid "invalid target namespace in dlmopen()"
 msgstr "l’espai de noms destí de dlmopen() no és vàlid"
 
@@ -776,201 +776,201 @@ msgid "cannot allocate version reference table"
 msgstr "no s’ha pogut reservar la taula de referències de versions"
 
 # Més ajudes.  ivb
-#: elf/ldconfig.c:145
+#: elf/ldconfig.c:150
 msgid "Print cache"
 msgstr "Mostra la memòria cau."
 
-#: elf/ldconfig.c:146
+#: elf/ldconfig.c:151
 msgid "Generate verbose messages"
 msgstr "Genera missatges detallats."
 
-#: elf/ldconfig.c:147
+#: elf/ldconfig.c:152
 msgid "Don't build cache"
 msgstr "No construeix la memòria cau."
 
-#: elf/ldconfig.c:148
+#: elf/ldconfig.c:153
 msgid "Don't update symbolic links"
 msgstr "No actualitza els enllaços simbòlics."
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "Change to and use ROOT as root directory"
 msgstr "Canvia a i empra ARREL com a directori arrel."
 
-#: elf/ldconfig.c:149
+#: elf/ldconfig.c:154
 msgid "ROOT"
 msgstr "ARREL"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "CACHE"
 msgstr "CACHE"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:155
 msgid "Use CACHE as cache file"
 msgstr "Empra CACHE com a fitxer de memòria cau."
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "CONF"
 msgstr "CONF"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:156
 msgid "Use CONF as configuration file"
 msgstr "Empra CONF com a fitxer de configuració."
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:157
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Només processa els directoris especificats a la línia d’ordres.  No construeix la memòria cau."
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:158
 msgid "Manually link individual libraries."
 msgstr "Per a enllaçar les biblioteques manualment."
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:159
 msgid "FORMAT"
 msgstr "FORMAT"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:160
 msgid "Ignore auxiliary cache file"
 msgstr "No té en compte el fitxer de memòria cau auxiliar."
 
-#: elf/ldconfig.c:163
+#: elf/ldconfig.c:168
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Configura els vincles en temps d’execució de l’enllaçador dinàmic."
 
-#: elf/ldconfig.c:346
+#: elf/ldconfig.c:371
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "s’ha indicat el camí «%s» més d’una volta"
 
-#: elf/ldconfig.c:393
+#: elf/ldconfig.c:487
 #, c-format
 msgid "%s is not a known library type"
 msgstr "«%s» no és un tipus conegut de biblioteca"
 
-#: elf/ldconfig.c:421
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't stat %s"
 msgstr "ha fallat stat() sobre «%s»"
 
-#: elf/ldconfig.c:500
+#: elf/ldconfig.c:596
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "ha fallat stat() sobre «%s»\n"
 
-#: elf/ldconfig.c:510
+#: elf/ldconfig.c:606
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "«%s» no és un enllaç simbòlic\n"
 
-#: elf/ldconfig.c:529
+#: elf/ldconfig.c:625
 #, c-format
 msgid "Can't unlink %s"
 msgstr "no s’ha pogut desenllaçar «%s»"
 
-#: elf/ldconfig.c:535
+#: elf/ldconfig.c:631
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "no s’ha pogut crear un enllaç des de «%s» cap a «%s»"
 
 # ivb (2001/10/28)
 # ivb  Es refereix a un enllaç -> masculí.
-#: elf/ldconfig.c:541
+#: elf/ldconfig.c:637
 msgid " (changed)\n"
 msgstr " (canviat)\n"
 
 # ivb (2001/10/28)
 # ivb  Es refereix a fer o no l'enllaç, no importa el gènere.
-#: elf/ldconfig.c:543
+#: elf/ldconfig.c:639
 msgid " (SKIPPED)\n"
 msgstr " (SALTAT)\n"
 
-#: elf/ldconfig.c:598
+#: elf/ldconfig.c:695
 #, c-format
 msgid "Can't find %s"
 msgstr "no s’ha pogut trobar «%s»"
 
-#: elf/ldconfig.c:614 elf/ldconfig.c:781 elf/ldconfig.c:839 elf/ldconfig.c:871
+#: elf/ldconfig.c:711 elf/ldconfig.c:893 elf/ldconfig.c:945 elf/ldconfig.c:977
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "ha fallat lstat() sobre «%s»"
 
-#: elf/ldconfig.c:621
+#: elf/ldconfig.c:718
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "es descarta el fitxer «%s» que no és un fitxer ordinari"
 
-#: elf/ldconfig.c:630
+#: elf/ldconfig.c:727
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "no s’ha creat l’enllaç perquè no s’ha trobat el nom d’objecte compartit de «%s»"
 
-#: elf/ldconfig.c:714
+#: elf/ldconfig.c:824
 #, c-format
 msgid "Can't open directory %s"
 msgstr "no s’ha pogut obrir el directori «%s»"
 
-#: elf/ldconfig.c:799 elf/ldconfig.c:859 elf/readlib.c:97
+#: elf/ldconfig.c:911 elf/ldconfig.c:965 elf/readlib.c:98
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "no s’ha trobat el fitxer d’entrada «%s»\n"
 
-#: elf/ldconfig.c:806
+#: elf/ldconfig.c:918
 #, c-format
 msgid "Cannot stat %s"
 msgstr "ha fallat stat() sobre «%s»"
 
-#: elf/ldconfig.c:953
+#: elf/ldconfig.c:1063
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "la biblioteca «%s» per a libc5 es troba en un directori incorrecte"
 
-#: elf/ldconfig.c:956
+#: elf/ldconfig.c:1066
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "la biblioteca «%s» per a libc6 es troba en un directori incorrecte"
 
-#: elf/ldconfig.c:959
+#: elf/ldconfig.c:1069
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "la biblioteca «%s» per a libc4 es troba en un directori incorrecte"
 
-#: elf/ldconfig.c:987
+#: elf/ldconfig.c:1097
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "les biblioteques «%s» i «%s» del directori «%s» tenen el mateix nom d’objecte compartit però diferent tipus."
 
-#: elf/ldconfig.c:1097
+#: elf/ldconfig.c:1227
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "avís: es descarta el fitxer de configuració que no s’ha pogut obrir: %s"
 
-#: elf/ldconfig.c:1164
+#: elf/ldconfig.c:1294
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "cal indicar el camí absolut del fitxer de configuració en emprar «-r»"
 
-#: elf/ldconfig.c:1171 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "la memòria s’ha exhaurit"
 
-#: elf/ldconfig.c:1204
+#: elf/ldconfig.c:1334
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: no s’ha pogut llegir el directori «%s»"
 
-#: elf/ldconfig.c:1252
+#: elf/ldconfig.c:1382
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "s’ha indicat el camí relatiu «%s» per a construir la memòria cau"
 
-#: elf/ldconfig.c:1276
+#: elf/ldconfig.c:1406
 #, c-format
 msgid "Can't chdir to /"
 msgstr "no s’ha pogut canviar al directori arrel"
 
-#: elf/ldconfig.c:1317
+#: elf/ldconfig.c:1447
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "no s’ha pogut obrir el directori «%s» de fitxers de memòria cau\n"
@@ -1018,7 +1018,7 @@ msgstr "manquen arguments fitxer"
 #. TRANS This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:16
+#: elf/ldd.bash.in:147 sysdeps/gnu/errlist.h:13
 msgid "No such file or directory"
 msgstr "El fitxer o directori no existeix"
 
@@ -1152,57 +1152,57 @@ msgstr "no s’ha pogut obtenir informació sobre el procés %lu"
 msgid "process %lu is no ELF program"
 msgstr "el procés %lu no pertany a un programa ELF"
 
-#: elf/readelflib.c:34
+#: elf/readelflib.c:36
 #, c-format
 msgid "file %s is truncated\n"
 msgstr "el fitxer «%s» està truncat\n"
 
-#: elf/readelflib.c:65
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "«%s» és un fitxer ELF de 32 bits\n"
 
-#: elf/readelflib.c:67
+#: elf/readelflib.c:69
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "«%s» és un fitxer ELF de 64 bits\n"
 
-#: elf/readelflib.c:69
+#: elf/readelflib.c:71
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "la classe ELF del fitxer «%s» no és coneguda\n"
 
-#: elf/readelflib.c:76
+#: elf/readelflib.c:78
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "«%s» no és un fitxer d’objecte compartit (tipus: %d)\n"
 
-#: elf/readelflib.c:101
+#: elf/readelflib.c:106
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "hi ha més d’un segment dinàmic\n"
 
-#: elf/readlib.c:103
+#: elf/readlib.c:104
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "ha fallat fstat() sobre el fitxer «%s»\n"
 
-#: elf/readlib.c:114
+#: elf/readlib.c:115
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "el fitxer «%s» és buit, no es comprova"
 
-#: elf/readlib.c:120
+#: elf/readlib.c:121
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "el fitxer «%s» és massa menut, no es comprova"
 
-#: elf/readlib.c:130
+#: elf/readlib.c:131
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "ha fallat mmap() sobre el fitxer «%s»\n"
 
-#: elf/readlib.c:169
+#: elf/readlib.c:170
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "«%s» no és un fitxer ELF: els octets màgics del començament no són correctes\n"
@@ -3236,8 +3236,8 @@ msgstr "error desconegut del sistema"
 msgid "unable to free arguments"
 msgstr "no s’han pogut alliberar els arguments"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:825 nis/ypclnt.c:914 posix/regcomp.c:135
-#: sysdeps/gnu/errlist.h:4
+#: nis/nis_error.h:1 nis/ypclnt.c:833 nis/ypclnt.c:922 posix/regcomp.c:135
+#: sysdeps/gnu/errlist.h:1
 msgid "Success"
 msgstr "Èxit"
 
@@ -3278,7 +3278,7 @@ msgid "First/next chain broken"
 msgstr "S’ha trencat la cadena de primer/següent"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:870 sysdeps/gnu/errlist.h:93
+#: nis/nis_error.h:11 nis/ypclnt.c:878 sysdeps/gnu/errlist.h:90
 msgid "Permission denied"
 msgstr "S’ha denegat el permís"
 
@@ -3760,91 +3760,91 @@ msgstr "    No‐membres recursius:\n"
 msgid "    No recursive nonmembers\n"
 msgstr "    No hi ha no‐membres recursius.\n"
 
-#: nis/ypclnt.c:828
+#: nis/ypclnt.c:836
 msgid "Request arguments bad"
 msgstr "Els arguments de la petició són incorrectes"
 
-#: nis/ypclnt.c:831
+#: nis/ypclnt.c:839
 msgid "RPC failure on NIS operation"
 msgstr "El procediment RPC ha fallat en una operació NIS"
 
-#: nis/ypclnt.c:834
+#: nis/ypclnt.c:842
 msgid "Can't bind to server which serves this domain"
 msgstr "No s’ha pogut enllaçar amb el servidor d’aquest domini"
 
-#: nis/ypclnt.c:837
+#: nis/ypclnt.c:845
 msgid "No such map in server's domain"
 msgstr "El mapa no és al domini del servidor"
 
-#: nis/ypclnt.c:840
+#: nis/ypclnt.c:848
 msgid "No such key in map"
 msgstr "La clau no és al mapa"
 
-#: nis/ypclnt.c:843
+#: nis/ypclnt.c:851
 msgid "Internal NIS error"
 msgstr "Error intern de NIS"
 
-#: nis/ypclnt.c:846
+#: nis/ypclnt.c:854
 msgid "Local resource allocation failure"
 msgstr "No s’ha pogut assignar un recurs local"
 
-#: nis/ypclnt.c:849
+#: nis/ypclnt.c:857
 msgid "No more records in map database"
 msgstr "No hi ha més registres a la base de dades del mapa"
 
-#: nis/ypclnt.c:852
+#: nis/ypclnt.c:860
 msgid "Can't communicate with portmapper"
 msgstr "No s’ha pogut comunicar amb el mapador de ports"
 
-#: nis/ypclnt.c:855
+#: nis/ypclnt.c:863
 msgid "Can't communicate with ypbind"
 msgstr "No s’ha pogut comunicar amb «ypbind»"
 
-#: nis/ypclnt.c:858
+#: nis/ypclnt.c:866
 msgid "Can't communicate with ypserv"
 msgstr "No s’ha pogut comunicar amb «ypserv»"
 
-#: nis/ypclnt.c:861
+#: nis/ypclnt.c:869
 msgid "Local domain name not set"
 msgstr "No s’ha establert nom del domini local"
 
-#: nis/ypclnt.c:864
+#: nis/ypclnt.c:872
 msgid "NIS map database is bad"
 msgstr "La base de dades de mapes NIS és feta malbé"
 
-#: nis/ypclnt.c:867
+#: nis/ypclnt.c:875
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "Les versions de client i servidor NIS difereixen; no es pot donar servei"
 
-#: nis/ypclnt.c:873
+#: nis/ypclnt.c:881
 msgid "Database is busy"
 msgstr "La base de dades es troba ocupada"
 
-#: nis/ypclnt.c:876
+#: nis/ypclnt.c:884
 msgid "Unknown NIS error code"
 msgstr "Codi d’error desconegut de NIS"
 
-#: nis/ypclnt.c:917
+#: nis/ypclnt.c:925
 msgid "Internal ypbind error"
 msgstr "Error intern de «ypbind»"
 
-#: nis/ypclnt.c:920
+#: nis/ypclnt.c:928
 msgid "Domain not bound"
 msgstr "El domini no és vinculat"
 
-#: nis/ypclnt.c:923
+#: nis/ypclnt.c:931
 msgid "System resource allocation failure"
 msgstr "No s’han pogut assignar recursos del sistema"
 
-#: nis/ypclnt.c:926
+#: nis/ypclnt.c:934
 msgid "Unknown ypbind error"
 msgstr "Error desconegut de «ypbind»"
 
-#: nis/ypclnt.c:967
+#: nis/ypclnt.c:975
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: no s’ha pogut convertir el nom d’estació a nom de xarxa\n"
 
-#: nis/ypclnt.c:985
+#: nis/ypclnt.c:993
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: no s’ha pogut obtenir l’adreça del servidor\n"
 
@@ -4284,7 +4284,7 @@ msgstr "Empra una memòria cau diferent per a cada usuari."
 msgid "Name Service Cache Daemon."
 msgstr "Dimoni de memòria cau del servei de noms."
 
-#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:206
+#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:207
 #, c-format
 msgid "wrong number of arguments"
 msgstr "el nombre d’arguments és incorrecte"
@@ -4563,85 +4563,85 @@ msgstr "es torna a carregar «%s» a la memòria cau de la base de dades d’usu
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "«%s» no és un identificador numèric d’usuari vàlid"
 
-#: nscd/selinux.c:154
+#: nscd/selinux.c:155
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
 msgstr "no s’ha pogut obrir una connexió amb el subsistema d’auditoria: %m"
 
-#: nscd/selinux.c:175
+#: nscd/selinux.c:176
 msgid "Failed to set keep-capabilities"
 msgstr "no s’han pogut establir les capacitats a mantenir"
 
-#: nscd/selinux.c:176 nscd/selinux.c:239
+#: nscd/selinux.c:177 nscd/selinux.c:240
 msgid "prctl(KEEPCAPS) failed"
 msgstr "ha fallat prctl(KEEPCAPS)"
 
-#: nscd/selinux.c:190
+#: nscd/selinux.c:191
 msgid "Failed to initialize drop of capabilities"
 msgstr "no s’ha pogut començar a renunciar a capacitats"
 
-#: nscd/selinux.c:191
+#: nscd/selinux.c:192
 msgid "cap_init failed"
 msgstr "ha fallat cap_init()"
 
-#: nscd/selinux.c:212 nscd/selinux.c:229
+#: nscd/selinux.c:213 nscd/selinux.c:230
 msgid "Failed to drop capabilities"
 msgstr "no s’ha pogut renunciar a les capacitats"
 
-#: nscd/selinux.c:213 nscd/selinux.c:230
+#: nscd/selinux.c:214 nscd/selinux.c:231
 msgid "cap_set_proc failed"
 msgstr "ha fallat cap_set_proc()"
 
-#: nscd/selinux.c:238
+#: nscd/selinux.c:239
 msgid "Failed to unset keep-capabilities"
 msgstr "no s’han pogut treure les capacitats a mantenir"
 
-#: nscd/selinux.c:254
+#: nscd/selinux.c:255
 msgid "Failed to determine if kernel supports SELinux"
 msgstr "no s’ha pogut determinar si el nucli accepta SELinux"
 
-#: nscd/selinux.c:269
+#: nscd/selinux.c:270
 msgid "Failed to start AVC thread"
 msgstr "no s’ha pogut iniciar el fil d’execució de l’AVC"
 
-#: nscd/selinux.c:291
+#: nscd/selinux.c:292
 msgid "Failed to create AVC lock"
 msgstr "no s’ha pogut crear el blocatge de l’AVC"
 
-#: nscd/selinux.c:331
+#: nscd/selinux.c:338
 msgid "Failed to start AVC"
 msgstr "no s’ha pogut iniciar l’AVC"
 
-#: nscd/selinux.c:333
+#: nscd/selinux.c:340
 msgid "Access Vector Cache (AVC) started"
 msgstr "s’ha iniciat la memòria cau de vectors d’accés (AVC)"
 
-#: nscd/selinux.c:368
+#: nscd/selinux.c:382
 msgid "Error querying policy for undefined object classes or permissions."
 msgstr "error en consultar la política per a classes d’objectes i permisos desconeguts"
 
-#: nscd/selinux.c:375
+#: nscd/selinux.c:389
 msgid "Error getting security class for nscd."
 msgstr "error en obtenir la classe de seguretat de «nscd»"
 
-#: nscd/selinux.c:380
+#: nscd/selinux.c:394
 #, c-format
 msgid "Error translating permission name \"%s\" to access vector bit."
 msgstr "error en traduir el nom de permís «%s» a un vector de bits d’accés"
 
-#: nscd/selinux.c:390
+#: nscd/selinux.c:404
 msgid "Error getting context of socket peer"
 msgstr "error en obtenir el context de l’extrem remot del connector"
 
-#: nscd/selinux.c:395
+#: nscd/selinux.c:409
 msgid "Error getting context of nscd"
 msgstr "error en obtenir el context de «nscd»"
 
-#: nscd/selinux.c:401
+#: nscd/selinux.c:415
 msgid "Error getting sid from context"
 msgstr "error en obtenir el SID del context"
 
-#: nscd/selinux.c:439
+#: nscd/selinux.c:454
 #, c-format
 msgid ""
 "\n"
@@ -4725,32 +4725,32 @@ msgstr "Bases de dades acceptades:\n"
 msgid "Unknown database: %s\n"
 msgstr "la base de dades no és coneguda: %s\n"
 
-#: nss/makedb.c:119
+#: nss/makedb.c:120
 msgid "Convert key to lower case"
 msgstr "Converteix la clau a minúscules."
 
-#: nss/makedb.c:122
+#: nss/makedb.c:123
 msgid "Do not print messages while building database"
 msgstr "No mostra cap missatge mentre es crea la base de dades."
 
-#: nss/makedb.c:124
+#: nss/makedb.c:125
 msgid "Print content of database file, one entry a line"
 msgstr "Mostra el contingut del fitxer de base de dades, a entrada per línia."
 
-#: nss/makedb.c:125
+#: nss/makedb.c:126
 msgid "CHAR"
 msgstr "CARÀCTER"
 
 # No tinc massa clar el significat.  ivb
-#: nss/makedb.c:126
+#: nss/makedb.c:127
 msgid "Generated line not part of iteration"
 msgstr "Línia generada a excloure de la iteració."
 
-#: nss/makedb.c:131
+#: nss/makedb.c:132
 msgid "Create simple database from textual input."
 msgstr "Crea una base de dades simple partint de l’entrada textual."
 
-#: nss/makedb.c:134
+#: nss/makedb.c:135
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -4760,71 +4760,71 @@ msgstr ""
 "-o FITXER_EIXIDA FITXER_ENTRADA\n"
 "-u FITXER_ENTRADA"
 
-#: nss/makedb.c:227
+#: nss/makedb.c:228
 #, c-format
 msgid "cannot open database file `%s'"
 msgstr "no s’ha pogut obrir el fitxer de base de dades «%s»"
 
-#: nss/makedb.c:272
+#: nss/makedb.c:273
 #, c-format
 msgid "no entries to be processed"
 msgstr "no hi ha cap entrada a processar"
 
-#: nss/makedb.c:282
+#: nss/makedb.c:283
 #, c-format
 msgid "cannot create temporary file name"
 msgstr "no s’ha pogut crear un nom de fitxer temporal"
 
-#: nss/makedb.c:288
+#: nss/makedb.c:289
 #, c-format
 msgid "cannot create temporary file"
 msgstr "no s’ha pogut crear un fitxer temporal"
 
-#: nss/makedb.c:304
+#: nss/makedb.c:305
 #, c-format
 msgid "cannot stat newly created file"
 msgstr "ha fallat stat() sobre el nou fitxer temporal"
 
-#: nss/makedb.c:315
+#: nss/makedb.c:316
 #, c-format
 msgid "cannot rename temporary file"
 msgstr "no s’ha pogut reanomenar el fitxer temporal"
 
-#: nss/makedb.c:527 nss/makedb.c:550
+#: nss/makedb.c:528 nss/makedb.c:551
 #, c-format
 msgid "cannot create search tree"
 msgstr "no s’ha pogut crear l’arbre de cerca"
 
-#: nss/makedb.c:556
+#: nss/makedb.c:557
 msgid "duplicate key"
 msgstr "la clau és duplicada"
 
-#: nss/makedb.c:568
+#: nss/makedb.c:569
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "problemes en llegir «%s»"
 
-#: nss/makedb.c:795
+#: nss/makedb.c:796
 #, c-format
 msgid "failed to write new database file"
 msgstr "no s’ha pogut escriure el nou fitxer de base de dades"
 
-#: nss/makedb.c:808
+#: nss/makedb.c:809
 #, c-format
 msgid "cannot stat database file"
 msgstr "ha fallat stat() sobre el fitxer de base de dades"
 
-#: nss/makedb.c:813
+#: nss/makedb.c:814
 #, c-format
 msgid "cannot map database file"
 msgstr "no s’ha pogut mapar el fitxer de base de dades"
 
-#: nss/makedb.c:816
+#: nss/makedb.c:817
 #, c-format
 msgid "file not a database file"
 msgstr "el fitxer no és un fitxer de base dades"
 
-#: nss/makedb.c:867
+#: nss/makedb.c:875
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr "no s’ha pogut establir el context de creació per a «%s»"
@@ -5563,7 +5563,7 @@ msgstr "Violació de segment"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:219
+#: sysdeps/generic/siglist.h:40 sysdeps/gnu/errlist.h:216
 msgid "Broken pipe"
 msgstr "La canonada s’ha trencat"
 
@@ -5662,12 +5662,12 @@ msgstr "S’ha perdut el recurs"
 
 #. TRANS Only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
-#: sysdeps/gnu/errlist.h:9
+#: sysdeps/gnu/errlist.h:6
 msgid "Operation not permitted"
 msgstr "L’operació no és permesa"
 
 #. TRANS No process matches the specified process ID.
-#: sysdeps/gnu/errlist.h:21
+#: sysdeps/gnu/errlist.h:18
 msgid "No such process"
 msgstr "El procés no existeix"
 
@@ -5678,12 +5678,12 @@ msgstr "El procés no existeix"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: sysdeps/gnu/errlist.h:32
+#: sysdeps/gnu/errlist.h:29
 msgid "Interrupted system call"
 msgstr "La crida al sistema ha estat interrompuda"
 
 #. TRANS Usually used for physical read or write errors.
-#: sysdeps/gnu/errlist.h:37
+#: sysdeps/gnu/errlist.h:34
 msgid "Input/output error"
 msgstr "Error d’Entrada/Sortida"
 
@@ -5692,7 +5692,7 @@ msgstr "Error d’Entrada/Sortida"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: sysdeps/gnu/errlist.h:46
+#: sysdeps/gnu/errlist.h:43
 msgid "No such device or address"
 msgstr "El dispositiu o adreça no existeix"
 
@@ -5700,27 +5700,27 @@ msgstr "El dispositiu o adreça no existeix"
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
 #. TRANS File}) occupy too much memory space.  This condition never arises on
 #. TRANS @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:54
+#: sysdeps/gnu/errlist.h:51
 msgid "Argument list too long"
 msgstr "La llista d’arguments és massa llarga"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: sysdeps/gnu/errlist.h:60
+#: sysdeps/gnu/errlist.h:57
 msgid "Exec format error"
 msgstr "L’executable té un format erroni"
 
 #. TRANS For example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
-#: sysdeps/gnu/errlist.h:67
+#: sysdeps/gnu/errlist.h:64
 msgid "Bad file descriptor"
 msgstr "El descriptor de fitxer no és vàlid"
 
 #. TRANS This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: sysdeps/gnu/errlist.h:74
+#: sysdeps/gnu/errlist.h:71
 msgid "No child processes"
 msgstr "No hi ha cap procés fill"
 
@@ -5728,69 +5728,69 @@ msgstr "No hi ha cap procés fill"
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
-#: sysdeps/gnu/errlist.h:82
+#: sysdeps/gnu/errlist.h:79
 msgid "Resource deadlock avoided"
 msgstr "S’ha evitat un interbloqueig amb el recurs"
 
 #. TRANS The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
-#: sysdeps/gnu/errlist.h:88
+#: sysdeps/gnu/errlist.h:85
 msgid "Cannot allocate memory"
 msgstr "No s’ha pogut reservar memòria"
 
 #. TRANS An invalid pointer was detected.
 #. TRANS On @gnuhurdsystems{}, this error never happens; you get a signal instead.
-#: sysdeps/gnu/errlist.h:99
+#: sysdeps/gnu/errlist.h:96
 msgid "Bad address"
 msgstr "L’adreça no és vàlida"
 
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: sysdeps/gnu/errlist.h:106
+#: sysdeps/gnu/errlist.h:103
 msgid "Block device required"
 msgstr "Cal un dispositiu de blocs"
 
 #. TRANS A system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
-#: sysdeps/gnu/errlist.h:113
+#: sysdeps/gnu/errlist.h:110
 msgid "Device or resource busy"
 msgstr "El dispositiu o recurs es troba ocupat"
 
 #. TRANS An existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: sysdeps/gnu/errlist.h:119
+#: sysdeps/gnu/errlist.h:116
 msgid "File exists"
 msgstr "El fitxer ja existeix"
 
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:126
+#: sysdeps/gnu/errlist.h:123
 msgid "Invalid cross-device link"
 msgstr "No es pot crear un enllaç entre dispositius"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: sysdeps/gnu/errlist.h:132
+#: sysdeps/gnu/errlist.h:129
 msgid "No such device"
 msgstr "El dispositiu no és vàlid"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: sysdeps/gnu/errlist.h:137
+#: sysdeps/gnu/errlist.h:134
 msgid "Not a directory"
 msgstr "No és un directori"
 
 #. TRANS You cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: sysdeps/gnu/errlist.h:143
+#: sysdeps/gnu/errlist.h:140
 msgid "Is a directory"
 msgstr "És un directori"
 
 #. TRANS This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: sysdeps/gnu/errlist.h:149
+#: sysdeps/gnu/errlist.h:146
 msgid "Invalid argument"
 msgstr "L’argument passat no és vàlid"
 
@@ -5801,20 +5801,20 @@ msgstr "L’argument passat no és vàlid"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: sysdeps/gnu/errlist.h:160
+#: sysdeps/gnu/errlist.h:157
 msgid "Too many open files"
 msgstr "El procés té massa fitxers oberts"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs on @gnuhurdsystems{}.
-#: sysdeps/gnu/errlist.h:167
+#: sysdeps/gnu/errlist.h:164
 msgid "Too many open files in system"
 msgstr "El sistema té massa fitxers oberts"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: sysdeps/gnu/errlist.h:173
+#: sysdeps/gnu/errlist.h:170
 msgid "Inappropriate ioctl for device"
 msgstr "L’operació ioctl() no s’adequa al dispositiu"
 
@@ -5823,47 +5823,47 @@ msgstr "L’operació ioctl() no s’adequa al dispositiu"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error on @gnuhurdsystems{}; the text is copied as necessary.
-#: sysdeps/gnu/errlist.h:182
+#: sysdeps/gnu/errlist.h:179
 msgid "Text file busy"
 msgstr "El fitxer de text es troba ocupat"
 
 #. TRANS The size of a file would be larger than allowed by the system.
-#: sysdeps/gnu/errlist.h:187
+#: sysdeps/gnu/errlist.h:184
 msgid "File too large"
 msgstr "El fitxer és massa gran"
 
 #. TRANS Write operation on a file failed because the
 #. TRANS disk is full.
-#: sysdeps/gnu/errlist.h:193
+#: sysdeps/gnu/errlist.h:190
 msgid "No space left on device"
 msgstr "No resta espai al dispositiu"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: sysdeps/gnu/errlist.h:198
+#: sysdeps/gnu/errlist.h:195
 msgid "Illegal seek"
 msgstr "No es pot moure el punter de fitxer"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: sysdeps/gnu/errlist.h:203
+#: sysdeps/gnu/errlist.h:200
 msgid "Read-only file system"
 msgstr "El sistema de fitxers és només de lectura"
 
 #. TRANS The link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: sysdeps/gnu/errlist.h:210
+#: sysdeps/gnu/errlist.h:207
 msgid "Too many links"
 msgstr "El fitxer té massa enllaços"
 
 #. TRANS Used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
-#: sysdeps/gnu/errlist.h:225
+#: sysdeps/gnu/errlist.h:222
 msgid "Numerical argument out of domain"
 msgstr "L’argument numèric és fora del domini"
 
 #. TRANS Used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
-#: sysdeps/gnu/errlist.h:231
+#: sysdeps/gnu/errlist.h:228
 msgid "Numerical result out of range"
 msgstr "El resultat numèric és fora de rang"
 
@@ -5896,7 +5896,7 @@ msgstr "El resultat numèric és fora de rang"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: sysdeps/gnu/errlist.h:264
+#: sysdeps/gnu/errlist.h:261
 msgid "Resource temporarily unavailable"
 msgstr "El recurs no es troba disponible temporalment"
 
@@ -5908,47 +5908,47 @@ msgstr "El recurs no es troba disponible temporalment"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: sysdeps/gnu/errlist.h:276
+#: sysdeps/gnu/errlist.h:273
 msgid "Operation now in progress"
 msgstr "L’operació està en marxa"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: sysdeps/gnu/errlist.h:282
+#: sysdeps/gnu/errlist.h:279
 msgid "Operation already in progress"
 msgstr "L’operació ja estava en marxa"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: sysdeps/gnu/errlist.h:287
+#: sysdeps/gnu/errlist.h:284
 msgid "Socket operation on non-socket"
 msgstr "Operació de connector sobre un fitxer no‐connector"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: sysdeps/gnu/errlist.h:293
+#: sysdeps/gnu/errlist.h:290
 msgid "Message too long"
 msgstr "El missatge és massa llarg"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: sysdeps/gnu/errlist.h:298
+#: sysdeps/gnu/errlist.h:295
 msgid "Protocol wrong type for socket"
 msgstr "El connector no permet aquest protocol"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
-#: sysdeps/gnu/errlist.h:304
+#: sysdeps/gnu/errlist.h:301
 msgid "Protocol not available"
 msgstr "El protocol no es troba disponible"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: sysdeps/gnu/errlist.h:311
+#: sysdeps/gnu/errlist.h:308
 msgid "Protocol not supported"
 msgstr "No es permet l’ús del protocol"
 
 #. TRANS The socket type is not supported.
-#: sysdeps/gnu/errlist.h:316
+#: sysdeps/gnu/errlist.h:313
 msgid "Socket type not supported"
 msgstr "No es permet l’ús del tipus de connector"
 
@@ -5958,71 +5958,71 @@ msgstr "No es permet l’ús del tipus de connector"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: sysdeps/gnu/errlist.h:326
+#: sysdeps/gnu/errlist.h:323
 msgid "Operation not supported"
 msgstr "No es permet l’ús de l’operació"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: sysdeps/gnu/errlist.h:331
+#: sysdeps/gnu/errlist.h:328
 msgid "Protocol family not supported"
 msgstr "No es permet l’ús de la família de protocols"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
-#: sysdeps/gnu/errlist.h:337
+#: sysdeps/gnu/errlist.h:334
 msgid "Address family not supported by protocol"
 msgstr "El protocol no permet l’ús d’aquesta família d’adreces"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:342
+#: sysdeps/gnu/errlist.h:339
 msgid "Address already in use"
 msgstr "L’adreça ja és en ús"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: sysdeps/gnu/errlist.h:349
+#: sysdeps/gnu/errlist.h:346
 msgid "Cannot assign requested address"
 msgstr "No s’ha pogut assignar l’adreça sol·licitada"
 
 #. TRANS A socket operation failed because the network was down.
-#: sysdeps/gnu/errlist.h:354
+#: sysdeps/gnu/errlist.h:351
 msgid "Network is down"
 msgstr "La xarxa no és activa"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: sysdeps/gnu/errlist.h:360
+#: sysdeps/gnu/errlist.h:357
 msgid "Network is unreachable"
 msgstr "La xarxa és inabastable"
 
 #. TRANS A network connection was reset because the remote host crashed.
-#: sysdeps/gnu/errlist.h:365
+#: sysdeps/gnu/errlist.h:362
 msgid "Network dropped connection on reset"
 msgstr "La xarxa ha tallat la connexió per un reinici"
 
 #. TRANS A network connection was aborted locally.
-#: sysdeps/gnu/errlist.h:370
+#: sysdeps/gnu/errlist.h:367
 msgid "Software caused connection abort"
 msgstr "El programari ha tallat la connexió"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: sysdeps/gnu/errlist.h:377
+#: sysdeps/gnu/errlist.h:374
 msgid "Connection reset by peer"
 msgstr "La màquina remota ha reiniciat la connexió"
 
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: sysdeps/gnu/errlist.h:384
+#: sysdeps/gnu/errlist.h:381
 msgid "No buffer space available"
 msgstr "No hi ha memòria intermèdia disponible"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: sysdeps/gnu/errlist.h:390
+#: sysdeps/gnu/errlist.h:387
 msgid "Transport endpoint is already connected"
 msgstr "L’extrem de transport ja és connectat"
 
@@ -6030,74 +6030,74 @@ msgstr "L’extrem de transport ja és connectat"
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: sysdeps/gnu/errlist.h:398
+#: sysdeps/gnu/errlist.h:395
 msgid "Transport endpoint is not connected"
 msgstr "L’extrem de transport no és connectat"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: sysdeps/gnu/errlist.h:405
+#: sysdeps/gnu/errlist.h:402
 msgid "Destination address required"
 msgstr "Cal una adreça de destinació"
 
 #. TRANS The socket has already been shut down.
-#: sysdeps/gnu/errlist.h:410
+#: sysdeps/gnu/errlist.h:407
 msgid "Cannot send after transport endpoint shutdown"
 msgstr "No es pot enviar després de tancar l’extrem de transport"
 
-#: sysdeps/gnu/errlist.h:413
+#: sysdeps/gnu/errlist.h:410
 msgid "Too many references: cannot splice"
 msgstr "Hi ha massa referències: no es poden enllaçar"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: sysdeps/gnu/errlist.h:419
+#: sysdeps/gnu/errlist.h:416
 msgid "Connection timed out"
 msgstr "La connexió ha expirat"
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: sysdeps/gnu/errlist.h:425
+#: sysdeps/gnu/errlist.h:422
 msgid "Connection refused"
 msgstr "S’ha refusat la connexió"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
-#: sysdeps/gnu/errlist.h:431
+#: sysdeps/gnu/errlist.h:428
 msgid "Too many levels of symbolic links"
 msgstr "Hi ha massa nivells d’enllaços simbòlics"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: sysdeps/gnu/errlist.h:438
+#: sysdeps/gnu/errlist.h:435
 msgid "File name too long"
 msgstr "El nom de fitxer és massa llarg"
 
 #. TRANS The remote host for a requested network connection is down.
-#: sysdeps/gnu/errlist.h:443
+#: sysdeps/gnu/errlist.h:440
 msgid "Host is down"
 msgstr "L’estació no està operativa"
 
-#: sysdeps/gnu/errlist.h:448
+#: sysdeps/gnu/errlist.h:445
 msgid "No route to host"
 msgstr "No hi ha cap camí cap a l’estació"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: sysdeps/gnu/errlist.h:454
+#: sysdeps/gnu/errlist.h:451
 msgid "Directory not empty"
 msgstr "El directori no és buit"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: sysdeps/gnu/errlist.h:460
+#: sysdeps/gnu/errlist.h:457
 msgid "Too many users"
 msgstr "Hi ha massa usuaris"
 
 #. TRANS The user's disk quota was exceeded.
-#: sysdeps/gnu/errlist.h:465
+#: sysdeps/gnu/errlist.h:462
 msgid "Disk quota exceeded"
 msgstr "S’ha excedit la quota de disc"
 
@@ -6106,7 +6106,7 @@ msgstr "S’ha excedit la quota de disc"
 #. TRANS for NFS file systems or corruption in other file systems.
 #. TRANS Repairing this condition usually requires unmounting, possibly repairing
 #. TRANS and remounting the file system.
-#: sysdeps/gnu/errlist.h:474
+#: sysdeps/gnu/errlist.h:471
 msgid "Stale file handle"
 msgstr "L’indicador del fitxer és obsolet"
 
@@ -6114,7 +6114,7 @@ msgstr "L’indicador del fitxer és obsolet"
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on @gnuhurdsystems{}, making this error code impossible.)
-#: sysdeps/gnu/errlist.h:482
+#: sysdeps/gnu/errlist.h:479
 msgid "Object is remote"
 msgstr "L’objecte és remot"
 
@@ -6122,7 +6122,7 @@ msgstr "L’objecte és remot"
 #. TRANS @ref{File Locks}.  This error is never generated by @gnuhurdsystems{}, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
-#: sysdeps/gnu/errlist.h:490
+#: sysdeps/gnu/errlist.h:487
 msgid "No locks available"
 msgstr "No hi ha blocatges disponibles"
 
@@ -6131,57 +6131,57 @@ msgstr "No hi ha blocatges disponibles"
 #. TRANS operating system.  When you get this error, you can be sure that this
 #. TRANS particular function will always fail with @code{ENOSYS} unless you
 #. TRANS install a new version of the C library or the operating system.
-#: sysdeps/gnu/errlist.h:499
+#: sysdeps/gnu/errlist.h:496
 msgid "Function not implemented"
 msgstr "La funció no està implementada"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: sysdeps/gnu/errlist.h:505
+#: sysdeps/gnu/errlist.h:502
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "El caràcter estès o multioctet no és vàlid o complet"
 
-#: sysdeps/gnu/errlist.h:508
+#: sysdeps/gnu/errlist.h:505
 msgid "Bad message"
 msgstr "El missatge no és vàlid"
 
-#: sysdeps/gnu/errlist.h:511
+#: sysdeps/gnu/errlist.h:508
 msgid "Identifier removed"
 msgstr "L’identificador ha estat eliminat"
 
-#: sysdeps/gnu/errlist.h:514
+#: sysdeps/gnu/errlist.h:511
 msgid "Multihop attempted"
 msgstr "S’ha intentat un salt múltiple"
 
-#: sysdeps/gnu/errlist.h:517
+#: sysdeps/gnu/errlist.h:514
 msgid "No data available"
 msgstr "No hi ha dades disponibles"
 
-#: sysdeps/gnu/errlist.h:520
+#: sysdeps/gnu/errlist.h:517
 msgid "Link has been severed"
 msgstr "S’ha tallat l’enllaç"
 
-#: sysdeps/gnu/errlist.h:523
+#: sysdeps/gnu/errlist.h:520
 msgid "No message of desired type"
 msgstr "No hi ha missatges del tipus desitjat"
 
-#: sysdeps/gnu/errlist.h:526
+#: sysdeps/gnu/errlist.h:523
 msgid "Out of streams resources"
 msgstr "No resten recursos del tipus flux"
 
-#: sysdeps/gnu/errlist.h:529
+#: sysdeps/gnu/errlist.h:526
 msgid "Device not a stream"
 msgstr "El dispositiu no és un flux"
 
-#: sysdeps/gnu/errlist.h:532
+#: sysdeps/gnu/errlist.h:529
 msgid "Value too large for defined data type"
 msgstr "El valor és massa gran per al tipus de dada definit"
 
-#: sysdeps/gnu/errlist.h:535
+#: sysdeps/gnu/errlist.h:532
 msgid "Protocol error"
 msgstr "Error de protocol"
 
-#: sysdeps/gnu/errlist.h:538
+#: sysdeps/gnu/errlist.h:535
 msgid "Timer expired"
 msgstr "El temporitzador ha expirat"
 
@@ -6189,88 +6189,88 @@ msgstr "El temporitzador ha expirat"
 #. TRANS completed.  @xref{Asynchronous I/O}.  When you call @code{aio_cancel},
 #. TRANS the normal result is for the operations affected to complete with this
 #. TRANS error; @pxref{Cancel AIO Operations}.
-#: sysdeps/gnu/errlist.h:546
+#: sysdeps/gnu/errlist.h:543
 msgid "Operation canceled"
 msgstr "L’operació ha estat cancel·lada"
 
-#: sysdeps/gnu/errlist.h:549
+#: sysdeps/gnu/errlist.h:546
 msgid "Owner died"
 msgstr "El propietari ha mort"
 
-#: sysdeps/gnu/errlist.h:552
+#: sysdeps/gnu/errlist.h:549
 msgid "State not recoverable"
 msgstr "L’estat no és recuperable"
 
-#: sysdeps/gnu/errlist.h:555
+#: sysdeps/gnu/errlist.h:552
 msgid "Interrupted system call should be restarted"
 msgstr "Caldria reiniciar la crida al sistema interrompuda"
 
-#: sysdeps/gnu/errlist.h:558
+#: sysdeps/gnu/errlist.h:555
 msgid "Channel number out of range"
 msgstr "El número de canal és fora de rang"
 
-#: sysdeps/gnu/errlist.h:561
+#: sysdeps/gnu/errlist.h:558
 msgid "Level 2 not synchronized"
 msgstr "El nivell 2 no està sincronitzat"
 
-#: sysdeps/gnu/errlist.h:564
+#: sysdeps/gnu/errlist.h:561
 msgid "Level 3 halted"
 msgstr "S’ha aturat el nivell 3"
 
-#: sysdeps/gnu/errlist.h:567
+#: sysdeps/gnu/errlist.h:564
 msgid "Level 3 reset"
 msgstr "S’ha reiniciat el nivell 3"
 
-#: sysdeps/gnu/errlist.h:570
+#: sysdeps/gnu/errlist.h:567
 msgid "Link number out of range"
 msgstr "El nombre d’enllaços és fora de rang"
 
-#: sysdeps/gnu/errlist.h:573
+#: sysdeps/gnu/errlist.h:570
 msgid "Protocol driver not attached"
 msgstr "No hi ha programa de control associat al protocol"
 
-#: sysdeps/gnu/errlist.h:576
+#: sysdeps/gnu/errlist.h:573
 msgid "No CSI structure available"
 msgstr "No hi ha estructures CSI disponibles"
 
-#: sysdeps/gnu/errlist.h:579
+#: sysdeps/gnu/errlist.h:576
 msgid "Level 2 halted"
 msgstr "S’ha aturat el nivell 2"
 
-#: sysdeps/gnu/errlist.h:582
+#: sysdeps/gnu/errlist.h:579
 msgid "Invalid exchange"
 msgstr "L’intercanvi no és vàlid"
 
-#: sysdeps/gnu/errlist.h:585
+#: sysdeps/gnu/errlist.h:582
 msgid "Invalid request descriptor"
 msgstr "El descriptor de petició no és vàlid"
 
-#: sysdeps/gnu/errlist.h:588
+#: sysdeps/gnu/errlist.h:585
 msgid "Exchange full"
 msgstr "L’intercanvi és ple"
 
 # Algun sistema de fitxers té nodes-a a banda de nodes-i.  ivb
-#: sysdeps/gnu/errlist.h:591
+#: sysdeps/gnu/errlist.h:588
 msgid "No anode"
 msgstr "No hi ha node‐a"
 
-#: sysdeps/gnu/errlist.h:594
+#: sysdeps/gnu/errlist.h:591
 msgid "Invalid request code"
 msgstr "El codi de petició no és vàlid"
 
-#: sysdeps/gnu/errlist.h:597
+#: sysdeps/gnu/errlist.h:594
 msgid "Invalid slot"
 msgstr "La ranura no és vàlida"
 
-#: sysdeps/gnu/errlist.h:600
+#: sysdeps/gnu/errlist.h:597
 msgid "Bad font file format"
 msgstr "El fitxer de tipus de lletra no té un format vàlid"
 
-#: sysdeps/gnu/errlist.h:603
+#: sysdeps/gnu/errlist.h:600
 msgid "Machine is not on the network"
 msgstr "La màquina no es troba a la xarxa"
 
-#: sysdeps/gnu/errlist.h:606
+#: sysdeps/gnu/errlist.h:603
 msgid "Package not installed"
 msgstr "El paquet no es troba instal·lat"
 
@@ -6279,112 +6279,112 @@ msgstr "El paquet no es troba instal·lat"
 # ivb  es pot entendre «advertise» com el fet d'exportar recurs pel
 # ivb  seu ús en un sistema de fitxers remot.  Gràcies als amics del
 # ivb  de.po!!
-#: sysdeps/gnu/errlist.h:609
+#: sysdeps/gnu/errlist.h:606
 msgid "Advertise error"
 msgstr "Error d’exportació"
 
-#: sysdeps/gnu/errlist.h:612
+#: sysdeps/gnu/errlist.h:609
 msgid "Srmount error"
 msgstr "Error a «srmount»"
 
-#: sysdeps/gnu/errlist.h:615
+#: sysdeps/gnu/errlist.h:612
 msgid "Communication error on send"
 msgstr "Error de comunicacions a l’enviament"
 
-#: sysdeps/gnu/errlist.h:618
+#: sysdeps/gnu/errlist.h:615
 msgid "RFS specific error"
 msgstr "Error específic d’RFS"
 
-#: sysdeps/gnu/errlist.h:621
+#: sysdeps/gnu/errlist.h:618
 msgid "Name not unique on network"
 msgstr "El nom no és únic a la xarxa"
 
-#: sysdeps/gnu/errlist.h:624
+#: sysdeps/gnu/errlist.h:621
 msgid "File descriptor in bad state"
 msgstr "El descriptor de fitxer és fet malbé"
 
-#: sysdeps/gnu/errlist.h:627
+#: sysdeps/gnu/errlist.h:624
 msgid "Remote address changed"
 msgstr "L’adreça remota ha canviat"
 
-#: sysdeps/gnu/errlist.h:630
+#: sysdeps/gnu/errlist.h:627
 msgid "Can not access a needed shared library"
 msgstr "No s’ha pogut accedir a una biblioteca compartida necessària"
 
-#: sysdeps/gnu/errlist.h:633
+#: sysdeps/gnu/errlist.h:630
 msgid "Accessing a corrupted shared library"
 msgstr "Accés una biblioteca compartida corrupta"
 
-#: sysdeps/gnu/errlist.h:636
+#: sysdeps/gnu/errlist.h:633
 msgid ".lib section in a.out corrupted"
 msgstr "La secció «.lib» del «a.out» és corrupta"
 
-#: sysdeps/gnu/errlist.h:639
+#: sysdeps/gnu/errlist.h:636
 msgid "Attempting to link in too many shared libraries"
 msgstr "S’ha intentat enllaçar massa biblioteques compartides"
 
-#: sysdeps/gnu/errlist.h:642
+#: sysdeps/gnu/errlist.h:639
 msgid "Cannot exec a shared library directly"
 msgstr "No es pot executar directament una biblioteca compartida"
 
-#: sysdeps/gnu/errlist.h:645
+#: sysdeps/gnu/errlist.h:642
 msgid "Streams pipe error"
 msgstr "Error a la canonada entre fluxos"
 
-#: sysdeps/gnu/errlist.h:648
+#: sysdeps/gnu/errlist.h:645
 msgid "Structure needs cleaning"
 msgstr "L’estructura necessita una neteja"
 
-#: sysdeps/gnu/errlist.h:651
+#: sysdeps/gnu/errlist.h:648
 msgid "Not a XENIX named type file"
 msgstr "El fitxer no és d’un tipus XENIX amb nom"
 
-#: sysdeps/gnu/errlist.h:654
+#: sysdeps/gnu/errlist.h:651
 msgid "No XENIX semaphores available"
 msgstr "No hi ha semàfors XENIX disponibles"
 
-#: sysdeps/gnu/errlist.h:657
+#: sysdeps/gnu/errlist.h:654
 msgid "Is a named type file"
 msgstr "El fitxer és d’un tipus amb nom"
 
-#: sysdeps/gnu/errlist.h:660
+#: sysdeps/gnu/errlist.h:657
 msgid "Remote I/O error"
 msgstr "Error en una E/S remota"
 
-#: sysdeps/gnu/errlist.h:663
+#: sysdeps/gnu/errlist.h:660
 msgid "No medium found"
 msgstr "No s’ha trobat el mitjà"
 
-#: sysdeps/gnu/errlist.h:666
+#: sysdeps/gnu/errlist.h:663
 msgid "Wrong medium type"
 msgstr "El tipus de mitjà no és vàlid"
 
-#: sysdeps/gnu/errlist.h:669
+#: sysdeps/gnu/errlist.h:666
 msgid "Required key not available"
 msgstr "La clau requerida no es troba disponible"
 
-#: sysdeps/gnu/errlist.h:672
+#: sysdeps/gnu/errlist.h:669
 msgid "Key has expired"
 msgstr "La clau ha expirat"
 
-#: sysdeps/gnu/errlist.h:675
+#: sysdeps/gnu/errlist.h:672
 msgid "Key has been revoked"
 msgstr "La clau ha estat revocada"
 
-#: sysdeps/gnu/errlist.h:678
+#: sysdeps/gnu/errlist.h:675
 msgid "Key was rejected by service"
 msgstr "El servei ha rebutjat la clau"
 
 # RFKill és el nom d’un subsistema de Linux.  ivb
-#: sysdeps/gnu/errlist.h:681
+#: sysdeps/gnu/errlist.h:678
 msgid "Operation not possible due to RF-kill"
 msgstr "L’operació no és possible a causa de RFKill"
 
-#: sysdeps/gnu/errlist.h:684
+#: sysdeps/gnu/errlist.h:681
 msgid "Memory page has hardware error"
 msgstr "La pàgina de memòria té un error de maquinari"
 
-#: sysdeps/gnu/errlist.h:687
+#: sysdeps/gnu/errlist.h:684
 msgid "RPC struct is bad"
 msgstr "L’estructura RPC és feta malbé"
 
@@ -6393,15 +6393,15 @@ msgstr "L’estructura RPC és feta malbé"
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.h:696
+#: sysdeps/gnu/errlist.h:693
 msgid "Inappropriate file type or format"
 msgstr "El format o tipus de fitxer no és l’apropiat"
 
-#: sysdeps/gnu/errlist.h:699
+#: sysdeps/gnu/errlist.h:696
 msgid "RPC bad procedure for program"
 msgstr "El procediment RPC no és vàlid per al programa"
 
-#: sysdeps/gnu/errlist.h:702
+#: sysdeps/gnu/errlist.h:699
 msgid "Authentication error"
 msgstr "Error d’autenticació"
 
@@ -6410,28 +6410,28 @@ msgstr "Error d’autenticació"
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.h:709
+#: sysdeps/gnu/errlist.h:706
 msgid "Translator died"
 msgstr "El traductor ha mort"
 
-#: sysdeps/gnu/errlist.h:712
+#: sysdeps/gnu/errlist.h:709
 msgid "RPC version wrong"
 msgstr "La versió d’RPC no és correcta"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.h:717
+#: sysdeps/gnu/errlist.h:714
 msgid "You really blew it this time"
 msgstr "Ara sí que te l’has carregat"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.h:724
+#: sysdeps/gnu/errlist.h:721
 msgid "Too many processes"
 msgstr "L’usuari té massa processos"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.h:729
+#: sysdeps/gnu/errlist.h:726
 msgid "Gratuitous error"
 msgstr "Error injustificat"
 
@@ -6447,11 +6447,11 @@ msgstr "Error injustificat"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.h:745
+#: sysdeps/gnu/errlist.h:742
 msgid "Not supported"
 msgstr "No se’n permet l’ús"
 
-#: sysdeps/gnu/errlist.h:748
+#: sysdeps/gnu/errlist.h:745
 msgid "RPC program version wrong"
 msgstr "La versió del programa RPC no és correcta"
 
@@ -6461,7 +6461,7 @@ msgstr "La versió del programa RPC no és correcta"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.h:758
+#: sysdeps/gnu/errlist.h:755
 msgid "Inappropriate operation for background process"
 msgstr "L’operació no és adequada per a un procés de fons"
 
@@ -6481,7 +6481,7 @@ msgstr "L’operació no és adequada per a un procés de fons"
 #. TRANS @c
 #. TRANS @c Translators, please do not translate this litteraly, translate it into
 #. TRANS @c an idiomatic funny way of saying that the computer died.
-#: sysdeps/gnu/errlist.h:776
+#: sysdeps/gnu/errlist.h:773
 msgid "Computer bought the farm"
 msgstr "El tio Pep se’n va a Murooo, tio Peeep"
 
@@ -6490,22 +6490,22 @@ msgstr "El tio Pep se’n va a Murooo, tio Peeep"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.h:785
+#: sysdeps/gnu/errlist.h:782
 msgid "Operation would block"
 msgstr "L’operació quedaria blocada"
 
-#: sysdeps/gnu/errlist.h:788
+#: sysdeps/gnu/errlist.h:785
 msgid "Need authenticator"
 msgstr "Cal un autenticador"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.h:795
+#: sysdeps/gnu/errlist.h:792
 msgid "?"
 msgstr "?"
 
-#: sysdeps/gnu/errlist.h:798
+#: sysdeps/gnu/errlist.h:795
 msgid "RPC program not available"
 msgstr "El programa RPC no es troba disponible"
 
@@ -6584,11 +6584,6 @@ msgstr "Interromput per un senyal"
 msgid "Parameter string not correctly encoded"
 msgstr "La cadena paràmetre no té una codificació vàlida"
 
-#: sysdeps/unix/sysv/linux/i386/readelflib.c:65
-#, c-format
-msgid "%s is for unknown machine %d.\n"
-msgstr "«%s» és per a la màquina desconeguda %d\n"
-
 #: sysdeps/unix/sysv/linux/ia64/makecontext.c:58
 #, c-format
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
@@ -6613,8 +6608,13 @@ msgstr "no s’ha pogut obrir «%s»"
 msgid "cannot read header from `%s'"
 msgstr "no s’ha pogut llegir la capçalera de «%s»"
 
+#: sysdeps/unix/sysv/linux/x86/readelflib.c:66
+#, c-format
+msgid "%s is for unknown machine %d.\n"
+msgstr "«%s» és per a la màquina desconeguda %d\n"
+
 # CET = Control-Flow Enforcement Technology.  ivb
-#: sysdeps/x86/dl-cet.c:187
+#: sysdeps/x86/dl-cet.c:194
 msgid "can't disable CET"
 msgstr "no es pot inhabilitar CET"
 
