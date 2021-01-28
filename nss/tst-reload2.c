@@ -33,6 +33,10 @@
 
 #include "nss_test.h"
 
+#ifndef PATH_MAX
+# define PATH_MAX 1024
+#endif
+
 static struct passwd pwd_table1[] =
   {
    PWD_N (1234, "test1"),
