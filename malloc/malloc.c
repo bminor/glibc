@@ -463,11 +463,13 @@ static void *(*__tag_region)(void *, size_t) = __default_tag_region;
 static void *(*__tag_new_usable)(void *) = __default_tag_nop;
 static void *(*__tag_at)(void *) = __default_tag_nop;
 
+# define MTAG_MMAP_FLAGS __mtag_mmap_flags
 # define TAG_NEW_MEMSET(ptr, val, size) __tag_new_memset (ptr, val, size)
 # define TAG_REGION(ptr, size) __tag_region (ptr, size)
 # define TAG_NEW_USABLE(ptr) __tag_new_usable (ptr)
 # define TAG_AT(ptr) __tag_at (ptr)
 #else
+# define MTAG_MMAP_FLAGS 0
 # define TAG_NEW_MEMSET(ptr, val, size) memset (ptr, val, size)
 # define TAG_REGION(ptr, size) (ptr)
 # define TAG_NEW_USABLE(ptr) (ptr)
