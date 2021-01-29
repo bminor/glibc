@@ -45,6 +45,7 @@
 
 #include <support/support.h>
 #include <support/xunistd.h>
+#include <support/capture_subprocess.h>
 #include "check.h"
 #include "test-driver.h"
 
@@ -83,6 +84,7 @@ int verbose = 0;
    * copy support files and test binary
    * chroot/unshare
    * set up any mounts (like /proc)
+   * run ldconfig
 
    Magic files:
 
@@ -130,6 +132,9 @@ int verbose = 0;
 
    * mytest.root/postclean.req causes fresh rsync (with delete) after
      test if present
+
+   * mytest.root/ldconfig.run causes ldconfig to be issued prior
+     test execution (to setup the initial ld.so.cache).
 
    Note that $srcdir/foo/mytest.script may be used instead of a
    $srcdir/foo/mytest.root/mytest.script in the sysroot template, if
@@ -684,6 +689,16 @@ check_for_unshare_hints (void)
     }
 }
 
+static void
+run_ldconfig (void *x __attribute__((unused)))
+{
+  char *prog = xasprintf ("%s/ldconfig", support_install_rootsbindir);
+  char *args[] = { prog, NULL };
+
+  execv (args[0], args);
+  FAIL_EXIT1 ("execv: %m");
+}
+
 int
 main (int argc, char **argv)
 {
@@ -700,6 +715,7 @@ main (int argc, char **argv)
   char *command_basename;
   char *so_base;
   int do_postclean = 0;
+  bool do_ldconfig = false;
   char *change_cwd = NULL;
 
   int pipes[2];
@@ -825,6 +841,9 @@ main (int argc, char **argv)
 
   if (file_exists (concat (command_root, "/postclean.req", NULL)))
     do_postclean = 1;
+
+  if (file_exists (concat (command_root, "/ldconfig.run", NULL)))
+    do_ldconfig = true;
 
   rsync (pristine_root_path, new_root_path,
 	 file_exists (concat (command_root, "/preclean.req", NULL)));
@@ -1125,6 +1144,13 @@ main (int argc, char **argv)
 
   /* The rest is the child process, which is now PID 1 and "in" the
      new root.  */
+
+  if (do_ldconfig)
+    {
+      struct support_capture_subprocess result =
+        support_capture_subprocess (run_ldconfig, NULL);
+      support_capture_subprocess_check (&result, "execv", 0, sc_allow_none);
+    }
 
   /* Get our "outside" pid from our parent.  We use this to help with
      debugging from outside the container.  */
