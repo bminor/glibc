@@ -413,12 +413,11 @@ void *(*__morecore)(ptrdiff_t) = __default_morecore;
    operations can continue to be used.  Support macros are used to do
    this:
 
-   void *tag_new_memset (void *ptr, int, val, size_t size)
+   void *tag_new_zero_region (void *ptr, size_t size)
 
-   Has the same interface as memset(), but additionally allocates a
-   new tag, colors the memory with that tag and returns a pointer that
-   is correctly colored for that location.  The non-tagging version
-   will simply call memset.
+   Allocates a new tag, colors the memory with that tag, zeros the
+   memory and returns a pointer that is correctly colored for that
+   location.  The non-tagging version will simply call memset with 0.
 
    void *tag_region (void *ptr, size_t size)
 
@@ -458,11 +457,11 @@ tag_region (void *ptr, size_t size)
 }
 
 static __always_inline void *
-tag_new_memset (void *ptr, int val, size_t size)
+tag_new_zero_region (void *ptr, size_t size)
 {
   if (__glibc_unlikely (mtag_enabled))
-    return __libc_mtag_memset_with_tag (__libc_mtag_new_tag (ptr), val, size);
-  return memset (ptr, val, size);
+    return __libc_mtag_tag_zero_region (__libc_mtag_new_tag (ptr), size);
+  return memset (ptr, 0, size);
 }
 
 /* Defined later.  */
@@ -3679,7 +3678,7 @@ __libc_calloc (size_t n, size_t elem_size)
      regardless of MORECORE_CLEARS, so we zero the whole block while
      doing so.  */
 #ifdef USE_MTAG
-  return tag_new_memset (mem, 0, CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
+  return tag_new_zero_region (mem, CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
 #else
   INTERNAL_SIZE_T csz = chunksize (p);
 
