@@ -16,6 +16,19 @@ Major new features:
 * The dynamic linker accepts the --argv0 argument and provides opportunity
   to change argv[0] string.
 
+* The dynamic linker loads optimized implementations of shared objects
+  from subdirectories under the glibc-hwcaps directory on the library
+  search path if the system's capabilities meet the requirements for
+  that subdirectory.  Initially supported subdirectories include
+  "power9" and "power10" for the powerpc64le-linux-gnu architecture,
+  "z13", "z14", "z15" for s390x-linux-gnu, and "x86-64-v2", "x86-64-v3",
+  "x86-64-v4" for x86_64-linux-gnu.  In the x86_64-linux-gnu case, the
+  subdirectory names correspond to the vendor-independent x86-64
+  microarchitecture levels defined in the x86-64 psABI supplement.
+
+* The new --help option of the dynamic linker provides usage and
+  information and library search path diagnostics.
+
 * The mallinfo2 function is added to report statistics as per mallinfo,
   but with larger field widths to accurately report values that are
   larger than fit in an integer.
@@ -62,6 +75,14 @@ Deprecated and removed features, and other changes affecting compatibility:
   that are part of the GNU C Library, but may affect the ABI of other
   libraries that use this type in their interfaces.  The new definition
   improves consistency with compiler behavior in many scenarios.
+
+* A future version of glibc will stop loading shared objects from the
+  "tls" subdirectories on the library search path, the subdirectory that
+  corresponds to the AT_PLATFORM system name, and also stop employing
+  the legacy AT_HWCAP search mechanism.  Applications should switch to
+  the new glibc-hwcaps mechanism instead; if they do not do that, only
+  the baseline version (directly from the search path directory) will be
+  loaded.
 
 Changes to build and runtime requirements:
 
