@@ -16,6 +16,12 @@ Security related changes:
   invoked with input containing redundant shift sequences in the IBM1364,
   IBM1371, IBM1388, IBM1390, or IBM1399 character sets.
 
+  CVE-2021-3326: An assertion failure during conversion from the
+  ISO-20220-JP-3 character set using the iconv function has been fixed.
+  This assertion was triggered by certain valid inputs in which the
+  converted output contains a combined sequence of two wide characters
+  crossing a buffer boundary.  Reported by Tavis Ormandy.
+
   CVE-2021-33574: The mq_notify function has a potential use-after-free
   issue when using a notification type of SIGEV_THREAD and a thread
   attribute with a non-default affinity mask.
