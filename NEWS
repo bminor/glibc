@@ -102,6 +102,12 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
+  CVE-2021-3326: An assertion failure during conversion from the
+  qISO-20220-JP-3 character set using the iconv function has been fixed.
+  This assertion was triggered by certain valid inputs in which the
+  converted output contains a combined sequence of two wide characters
+  crossing a buffer boundary.  Reported by Tavis Ormandy.
+
   CVE-2020-27618: An infinite loop has been fixed in the iconv program when
   invoked with input containing redundant shift sequences in the IBM1364,
   IBM1371, IBM1388, IBM1390, or IBM1399 character sets.
