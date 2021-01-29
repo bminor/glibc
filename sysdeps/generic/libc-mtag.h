@@ -44,12 +44,12 @@ __libc_mtag_tag_region (void *p, size_t n)
   return p;
 }
 
-/* Optimized equivalent to __libc_mtag_tag_region followed by memset.  */
+/* Optimized equivalent to __libc_mtag_tag_region followed by memset to 0.  */
 static inline void *
-__libc_mtag_memset_with_tag (void *p, int c, size_t n)
+__libc_mtag_tag_zero_region (void *p, size_t n)
 {
   __libc_mtag_link_error ();
-  return memset (p, c, n);
+  return memset (p, 0, n);
 }
 
 /* Convert address P to a pointer that is tagged correctly for that

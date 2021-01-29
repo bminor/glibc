@@ -20,9 +20,6 @@
 
 #ifdef USE_MTAG
 
-/* Use the same register names and assignments as memset.  */
-#include "memset-reg.h"
-
 	.arch armv8.5-a
 	.arch_extension memtag
 
@@ -31,16 +28,15 @@
 /* FIXME: This is a minimal implementation.  We could do much better than
    this for large values of COUNT.  */
 
-ENTRY(__libc_mtag_memset_with_tag)
+#define dstin x0
+#define count x1
+#define dst   x2
 
-	and	valw, valw, 255
-	orr	valw, valw, valw, lsl 8
-	orr	valw, valw, valw, lsl 16
-	orr	val, val, val, lsl 32
+ENTRY(__libc_mtag_tag_zero_region)
+
 	mov	dst, dstin
-
 L(loop):
-	stgp	val, val, [dst], #16
+	stzg	dst, [dst], #16
 	subs	count, count, 16
 	bne	L(loop)
 #if 0
@@ -49,5 +45,5 @@ L(loop):
 	ldg	dstin, [dstin] // Recover the tag created (might be untagged).
 #endif
 	ret
-END (__libc_mtag_memset_with_tag)
+END (__libc_mtag_tag_zero_region)
 #endif /* USE_MTAG */

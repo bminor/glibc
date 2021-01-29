@@ -39,8 +39,8 @@
    void *__libc_mtag_tag_region (const void *, size_t)  */
 void *__libc_mtag_tag_region (void *, size_t);
 
-/* Optimized equivalent to __libc_mtag_tag_region followed by memset.  */
-void *__libc_mtag_memset_with_tag (void *, int, size_t);
+/* Optimized equivalent to __libc_mtag_tag_region followed by memset to 0.  */
+void *__libc_mtag_tag_zero_region (void *, size_t);
 
 /* Convert address P to a pointer that is tagged correctly for that
    location.
