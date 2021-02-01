@@ -9,7 +9,10 @@ Version 2.34
 
 Major new features:
 
-  [Add new features here]
+* Add _SC_MINSIGSTKSZ and _SC_SIGSTKSZ.  When _SC_SIGSTKSZ_SOURCE or
+  _GNU_SOURCE are defined, MINSIGSTKSZ and SIGSTKSZ are no longer
+  constant on Linux.  MINSIGSTKSZ is redefined to sysconf(_SC_MINSIGSTKSZ)
+  and SIGSTKSZ is redefined to sysconf (_SC_SIGSTKSZ).
 
 Deprecated and removed features, and other changes affecting compatibility:
 
@@ -32,11 +35,6 @@ The following bugs are resolved with this release:
 Version 2.33
 
 Major new features:
-
-* Add _SC_MINSIGSTKSZ and _SC_SIGSTKSZ.  When _SC_SIGSTKSZ_SOURCE or
-  _GNU_SOURCE are defined, MINSIGSTKSZ and SIGSTKSZ are no longer
-  constant on Linux.  MINSIGSTKSZ is redefined to sysconf(_SC_MINSIGSTKSZ)
-  and SIGSTKSZ is redefined to sysconf (_SC_SIGSTKSZ).
 
 * The dynamic linker accepts the --list-tunables argument which prints
   all the supported tunables.  This option is disable if glibc is
