@@ -526,10 +526,6 @@ rtld-stubbed-symbols = \
   malloc \
   realloc \
 
-# The GCC arguments that implement $(rtld-stubbed-symbols).
-rtld-stubbed-symbols-args = \
-  $(patsubst %,-Wl$(comma)--defsym=%=0, $(rtld-stubbed-symbols))
-
 ifeq ($(have-ssp),yes)
 # rtld is not built with the stack protector, so these references will
 # go away in the rebuilds.
@@ -538,9 +534,12 @@ endif
 
 $(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 	@-rm -f $@T
-	$(reloc-link) -o $@.o $(rtld-stubbed-symbols-args) \
-		'-Wl,-(' $^ -lgcc '-Wl,-)' -Wl,-Map,$@T
-	rm -f $@.o
+	for symbol in $(rtld-stubbed-symbols); do \
+		echo ".globl $$symbol"; \
+		echo "$$symbol:"; \
+	done | $(CC) -o $@T.o $(ASFLAGS) -c -x assembler -
+	$(reloc-link) -o $@.o $@T.o '-Wl,-(' $^ -lgcc '-Wl,-)' -Wl,-Map,$@T
+	rm -f %@T.o $@.o
 	mv -f $@T $@
 
 # For lld, skip preceding addresses and values before matching the archive and the member.
