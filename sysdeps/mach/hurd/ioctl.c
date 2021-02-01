@@ -113,6 +113,10 @@ __ioctl (int fd, unsigned long int request, ...)
 	  /* We don't want to advance ARG since it will be used to copy out
 	     too if IOC_OUT is also set.  */
 	  void *argptr = arg;
+	  int zero = 0;
+
+	  if (request == TIOCFLUSH && !arg)
+	    arg = &zero;
 
 	  /* Pack an argument into the message buffer.  */
 	  void in (unsigned int count, enum __ioctl_datum type)
