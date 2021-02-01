@@ -536,6 +536,9 @@ struct rtld_global_ro
   /* Cached value of `getpagesize ()'.  */
   EXTERN size_t _dl_pagesize;
 
+  /* Cached value of `sysconf (_SC_MINSIGSTKSZ)'.  */
+  EXTERN size_t _dl_minsigstacksize;
+
   /* Do we read from ld.so.cache?  */
   EXTERN int _dl_inhibit_cache;
 

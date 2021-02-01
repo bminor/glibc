@@ -142,6 +142,8 @@ void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
 
 size_t _dl_pagesize = EXEC_PAGESIZE;
 
+size_t _dl_minsigstacksize = CONSTANT_MINSIGSTKSZ;
+
 int _dl_inhibit_cache;
 
 unsigned int _dl_osversion;
@@ -306,6 +308,9 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	break;
       case AT_RANDOM:
 	_dl_random = (void *) av->a_un.a_val;
+	break;
+      case AT_MINSIGSTKSZ:
+	_dl_minsigstacksize = av->a_un.a_val;
 	break;
       DL_PLATFORM_AUXV
       }

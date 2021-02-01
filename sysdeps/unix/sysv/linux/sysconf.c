@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -26,6 +27,7 @@
 #include <sys/param.h>
 #include <not-cancel.h>
 #include <ldsodefs.h>
+#include <sysconf-sigstksz.h>
 
 /* Legacy value of ARG_MAX.  The macro is now not defined since the
    actual value varies based on the stack size.  */
@@ -74,6 +76,13 @@ __sysconf (int name)
         procfname = "/proc/sys/kernel/rtsig-max";
       }
       break;
+
+    case _SC_MINSIGSTKSZ:
+      assert (GLRO(dl_minsigstacksize) != 0);
+      return GLRO(dl_minsigstacksize);
+
+    case _SC_SIGSTKSZ:
+      return sysconf_sigstksz ();
 
     default:
       break;

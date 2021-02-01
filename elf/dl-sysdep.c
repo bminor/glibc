@@ -115,6 +115,11 @@ _dl_sysdep_start (void **start_argptr,
   user_entry = (ElfW(Addr)) ENTRY_POINT;
   GLRO(dl_platform) = NULL; /* Default to nothing known about the platform.  */
 
+  /* NB: Default to a constant CONSTANT_MINSIGSTKSZ.  */
+  _Static_assert (__builtin_constant_p (CONSTANT_MINSIGSTKSZ),
+		  "CONSTANT_MINSIGSTKSZ is constant");
+  GLRO(dl_minsigstacksize) = CONSTANT_MINSIGSTKSZ;
+
   for (av = GLRO(dl_auxv); av->a_type != AT_NULL; set_seen (av++))
     switch (av->a_type)
       {
@@ -178,6 +183,9 @@ _dl_sysdep_start (void **start_argptr,
 #endif
       case AT_RANDOM:
 	_dl_random = (void *) av->a_un.a_val;
+	break;
+      case AT_MINSIGSTKSZ:
+	GLRO(dl_minsigstacksize) = av->a_un.a_val;
 	break;
       DL_PLATFORM_AUXV
       }
@@ -306,6 +314,7 @@ _dl_show_auxv (void)
 	  [AT_SYSINFO_EHDR - 2] =	{ "SYSINFO_EHDR:      0x", hex },
 	  [AT_RANDOM - 2] =		{ "RANDOM:            0x", hex },
 	  [AT_HWCAP2 - 2] =		{ "HWCAP2:            0x", hex },
+	  [AT_MINSIGSTKSZ - 2] =	{ "MINSIGSTKSZ        ", dec },
 	  [AT_L1I_CACHESIZE - 2] =	{ "L1I_CACHESIZE:     ", dec },
 	  [AT_L1I_CACHEGEOMETRY - 2] =	{ "L1I_CACHEGEOMETRY: 0x", hex },
 	  [AT_L1D_CACHESIZE - 2] =	{ "L1D_CACHESIZE:     ", dec },

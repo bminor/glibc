@@ -31,7 +31,8 @@ headers := signal.h sys/signal.h \
 	   bits/types/sigevent_t.h bits/types/siginfo_t.h \
 	   bits/types/sigset_t.h bits/types/sigval_t.h \
 	   bits/types/stack_t.h bits/types/struct_sigstack.h \
-	   bits/types/__sigval_t.h bits/signal_ext.h
+	   bits/types/__sigval_t.h bits/signal_ext.h \
+	   bits/sigstksz.h
 
 routines	:= signal raise killpg \
 		   sigaction sigprocmask kill \
@@ -48,7 +49,7 @@ routines	:= signal raise killpg \
 tests		:= tst-signal tst-sigset tst-sigsimple tst-raise tst-sigset2 \
 		   tst-sigwait-eintr tst-sigaction \
 		   tst-minsigstksz-1 tst-minsigstksz-2 tst-minsigstksz-3 \
-		   tst-minsigstksz-3a tst-minsigstksz-4 \
+		   tst-minsigstksz-3a tst-minsigstksz-4 tst-minsigstksz-5 \
 		   tst-sigisemptyset
 
 include ../Rules

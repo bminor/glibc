@@ -21,6 +21,7 @@
 #include <get-isa-level.h>
 #include <cacheinfo.h>
 #include <dl-cacheinfo.h>
+#include <dl-minsigstacksize.h>
 
 #if HAVE_TUNABLES
 extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
@@ -364,6 +365,8 @@ get_common_indices (struct cpu_features *cpu_features,
 		   cpu_features->features[CPUID_INDEX_19].cpuid.ebx,
 		   cpu_features->features[CPUID_INDEX_19].cpuid.ecx,
 		   cpu_features->features[CPUID_INDEX_19].cpuid.edx);
+
+  dl_check_minsigstacksize (cpu_features);
 }
 
 _Static_assert (((index_arch_Fast_Unaligned_Load

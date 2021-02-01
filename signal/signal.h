@@ -312,6 +312,7 @@ extern int siginterrupt (int __sig, int __interrupt) __THROW
   __attribute_deprecated_msg__ ("Use sigaction with SA_RESTART instead");
 
 # include <bits/sigstack.h>
+# include <bits/sigstksz.h>
 # include <bits/ss_flags.h>
 
 /* Alternate signal handler stack interface.

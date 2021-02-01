@@ -258,6 +258,12 @@ checks are applied. If defined to @math{3}, @theglibc{} may also use
 checks that may have an additional performance overhead.
 @end defvr
 
+@defvr Macro _SC_SIGSTKSZ_SOURCE
+@standards{GNU, (none)}
+If this macro is defined, correct (but non compile-time constant)
+MINSIGSTKSZ and SIGSTKSZ are defined.
+@end defvr
+
 @defvr Macro _REENTRANT
 @defvrx Macro _THREAD_SAFE
 @standards{Obsolete, (none)}

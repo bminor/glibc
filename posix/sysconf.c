@@ -266,6 +266,9 @@ __sysconf (int name)
     case _SC_XOPEN_REALTIME:
     case _SC_XOPEN_REALTIME_THREADS:
 
+    case _SC_MINSIGSTKSZ:
+    case _SC_SIGSTKSZ:
+
       break;
     }
 
