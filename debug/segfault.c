@@ -58,7 +58,7 @@ write_strsignal (int fd, int signal)
   char buf[30];
   char *ptr = _itoa_word (signal, &buf[sizeof (buf)], 10, 0);
   WRITE_STRING ("signal ");
-  write (fd, buf, &buf[sizeof (buf)] - ptr);
+  write (fd, ptr, &buf[sizeof (buf)] - ptr);
 }
 
 
