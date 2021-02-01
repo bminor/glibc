@@ -115,8 +115,8 @@ __ioctl (int fd, unsigned long int request, ...)
 	  void *argptr = arg;
 	  int zero = 0;
 
-	  if (request == TIOCFLUSH && !arg)
-	    arg = &zero;
+	  if (request == TIOCFLUSH && !argptr)
+	    argptr = &zero;
 
 	  /* Pack an argument into the message buffer.  */
 	  void in (unsigned int count, enum __ioctl_datum type)
