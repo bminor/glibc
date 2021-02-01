@@ -30,7 +30,7 @@ static void
 print_mi (const char *msg, struct mallinfo2 *m)
 {
   printf("\n%s...\n", msg);
-#define P(f) printf("%s: %zu\n", #f, m->f);
+#define P(f) printf("%s: %zu\n", #f, m->f)
   P(arena);
   P(ordblks);
   P(smblks);
