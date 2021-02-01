@@ -1,4 +1,4 @@
 /* This file just defines the current version number of libc.  */
 
-#define RELEASE "release"
-#define VERSION "2.33"
+#define RELEASE "development"
+#define VERSION "2.34"
