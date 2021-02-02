@@ -54,6 +54,9 @@ long int __x86_rep_movsb_threshold attribute_hidden = 2048;
 /* Threshold to use Enhanced REP STOSB.  */
 long int __x86_rep_stosb_threshold attribute_hidden = 2048;
 
+/* Threshold to stop using Enhanced REP MOVSB.  */
+long int __x86_rep_movsb_stop_threshold attribute_hidden;
+
 static void
 init_cacheinfo (void)
 {
@@ -79,5 +82,6 @@ init_cacheinfo (void)
 
   __x86_rep_movsb_threshold = cpu_features->rep_movsb_threshold;
   __x86_rep_stosb_threshold = cpu_features->rep_stosb_threshold;
+  __x86_rep_movsb_stop_threshold =  cpu_features->rep_movsb_stop_threshold;
 }
 #endif

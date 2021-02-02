@@ -870,6 +870,8 @@ struct cpu_features
   unsigned long int non_temporal_threshold;
   /* Threshold to use "rep movsb".  */
   unsigned long int rep_movsb_threshold;
+  /* Threshold to stop using "rep movsb".  */
+  unsigned long int rep_movsb_stop_threshold;
   /* Threshold to use "rep stosb".  */
   unsigned long int rep_stosb_threshold;
   /* _SC_LEVEL1_ICACHE_SIZE.  */

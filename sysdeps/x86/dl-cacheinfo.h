@@ -704,7 +704,7 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   int max_cpuid_ex;
   long int data = -1;
   long int shared = -1;
-  long int core;
+  long int core = -1;
   unsigned int threads = 0;
   unsigned long int level1_icache_size = -1;
   unsigned long int level1_dcache_size = -1;
@@ -886,6 +886,18 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
 #endif
     }
 
+  unsigned long int rep_movsb_stop_threshold;
+  /* ERMS feature is implemented from AMD Zen3 architecture and it is
+     performing poorly for data above L2 cache size. Henceforth, adding
+     an upper bound threshold parameter to limit the usage of Enhanced
+     REP MOVSB operations and setting its value to L2 cache size.  */
+  if (cpu_features->basic.kind == arch_kind_amd)
+    rep_movsb_stop_threshold = core;
+  /* Setting the upper bound of ERMS to the computed value of
+     non-temporal threshold for architectures other than AMD.  */
+  else
+    rep_movsb_stop_threshold = non_temporal_threshold;
+
   /* The default threshold to use Enhanced REP STOSB.  */
   unsigned long int rep_stosb_threshold = 2048;
 
@@ -935,4 +947,5 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   cpu_features->non_temporal_threshold = non_temporal_threshold;
   cpu_features->rep_movsb_threshold = rep_movsb_threshold;
   cpu_features->rep_stosb_threshold = rep_stosb_threshold;
+  cpu_features->rep_movsb_stop_threshold = rep_movsb_stop_threshold;
 }

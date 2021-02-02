@@ -30,7 +30,10 @@
       load and aligned store.  Load the last 4 * VEC and first VEC
       before the loop and store them after the loop to support
       overlapping addresses.
-   6. If size >= __x86_shared_non_temporal_threshold and there is no
+   6. On machines with ERMS feature, if size greater than equal or to
+      __x86_rep_movsb_threshold and less than
+      __x86_rep_movsb_stop_threshold, then REP MOVSB will be used.
+   7. If size >= __x86_shared_non_temporal_threshold and there is no
       overlap between destination and source, use non-temporal store
       instead of aligned store.  */
 
@@ -240,7 +243,7 @@ L(return):
 	ret
 
 L(movsb):
-	cmp	__x86_shared_non_temporal_threshold(%rip), %RDX_LP
+	cmp     __x86_rep_movsb_stop_threshold(%rip), %RDX_LP
 	jae	L(more_8x_vec)
 	cmpq	%rsi, %rdi
 	jb	1f
