@@ -122,18 +122,21 @@ do_test (void)
   if (shmid == -1)
     FAIL_EXIT1 ("shmget failed: %m");
 
+  /* It does not check shmmax because kernel clamp its value to INT_MAX for:
+
+     1. Compat symbols with IPC_64, i.e, 32-bit binaries running on 64-bit
+        kernels.
+
+     2. Default symbol without IPC_64 (defined as IPC_OLD within Linux) and
+        glibc always use IPC_64 for 32-bit ABIs (to support 64-bit time_t).
+        It means that 32-bit binaries running on 32-bit kernels will not see
+        shmmax being clamped.
+
+     And finding out whether the compat symbol is used would require checking
+     the underlying kernel against the current ABI.  The shmall and shmmni
+     already provided enough coverage.  */
+
   struct test_shminfo tipcinfo;
-  {
-    uint64_t v = read_proc_file ("/proc/sys/kernel/shmmax");
-#if LONG_MAX == INT_MAX
-    /* Kernel explicit clamp the value for shmmax on compat symbol (32-bit
-       binaries running on 64-bit kernels).  */
-    if (sizeof (__syscall_ulong_t) == sizeof (unsigned long int)
-        && v > INT_MAX)
-      v = INT_MAX;
-#endif
-    tipcinfo.shmmax = v;
-  }
   tipcinfo.shmall = read_proc_file ("/proc/sys/kernel/shmall");
   tipcinfo.shmmni = read_proc_file ("/proc/sys/kernel/shmmni");
 
@@ -152,7 +155,6 @@ do_test (void)
       FAIL_EXIT1 ("shmctl with IPC_INFO failed: %m");
 
     TEST_COMPARE (ipcinfo.shmall, tipcinfo.shmall);
-    TEST_COMPARE (ipcinfo.shmmax, tipcinfo.shmmax);
     TEST_COMPARE (ipcinfo.shmmni, tipcinfo.shmmni);
   }
 
