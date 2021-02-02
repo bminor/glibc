@@ -312,6 +312,50 @@ do_test2 (size_t offset)
   munmap ((void *) large_buf, size);
 }
 
+static void
+do_test3 (size_t bytes_move, size_t offset)
+{
+  size_t size = bytes_move * 3;
+  uint32_t *buf;
+
+  buf = mmap (NULL, size, PROT_READ | PROT_WRITE,
+	      MAP_PRIVATE | MAP_ANON, -1, 0);
+
+  if (buf == MAP_FAILED)
+    error (EXIT_UNSUPPORTED, errno, "mmap failed");
+
+  size_t arr_size = bytes_move / sizeof (uint32_t);
+  size_t i;
+
+  FOR_EACH_IMPL (impl, 0)
+    {
+      for (i = 0; i < arr_size; i++)
+        buf[i] = (uint32_t) i;
+
+      uint32_t *dst = &buf[arr_size + offset];
+
+#ifdef TEST_BCOPY
+      CALL (impl, (char *) buf, (char *) dst, bytes_move);
+#else
+      CALL (impl, (char *) dst, (char *) buf, bytes_move);
+#endif
+
+      for (i = 0; i < arr_size; i++)
+	{
+	  if (dst[i] != (uint32_t) i)
+	    {
+	      error (0, 0,
+		     "Wrong result in function %s dst \"%p\" src \"%p\" offset \"%zd\"",
+		     impl->name, dst, buf, i);
+	      ret = 1;
+	      break;
+	    }
+	}
+    }
+
+  munmap ((void *) buf, size);
+}
+
 int
 test_main (void)
 {
@@ -356,6 +400,10 @@ test_main (void)
   do_test2 (0x200000);
   do_test2 (0x4000000 - 1);
   do_test2 (0x4000000);
+
+  /* Copy 16KB data.  */
+  do_test3 (16384, 3);
+
   return ret;
 }
 
