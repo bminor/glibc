@@ -25,10 +25,6 @@
    we're picking up...  */
 
 /* Memory tagging control operations (for AArch64).  */
-#ifndef PR_TAGGED_ADDR_ENABLE
-# define PR_TAGGED_ADDR_ENABLE	(1UL << 8)
-#endif
-
 #ifndef PR_MTE_TCF_SHIFT
 # define PR_MTE_TCF_SHIFT	1
 # define PR_MTE_TCF_NONE	(0UL << PR_MTE_TCF_SHIFT)
