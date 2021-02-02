@@ -245,7 +245,7 @@ enum
   x86_cpu_XOP			= x86_cpu_index_80000001_ecx + 11,
   x86_cpu_LWP			= x86_cpu_index_80000001_ecx + 15,
   x86_cpu_FMA4			= x86_cpu_index_80000001_ecx + 16,
-  x86_cpu_TBM			= x86_cpu_index_80000001_ecx + 20,
+  x86_cpu_TBM			= x86_cpu_index_80000001_ecx + 21,
 
   x86_cpu_index_80000001_edx
     = (CPUID_INDEX_80000001 * 8 * 4 * sizeof (unsigned int)
