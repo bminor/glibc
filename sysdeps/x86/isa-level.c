@@ -29,32 +29,35 @@
 
 /* ELF program property for x86 ISA level.  */
 #ifdef INCLUDE_X86_ISA_LEVEL
-# if defined __x86_64__ || defined __FXSR__ || !defined _SOFT_FLOAT \
-     || defined  __MMX__ || defined __SSE__ || defined __SSE2__
+# if defined __SSE__ && defined __SSE2__
+/* NB: ISAs, excluding MMX, in x86-64 ISA level baseline are used.  */
 #  define ISA_BASELINE	GNU_PROPERTY_X86_ISA_1_BASELINE
 # else
 #  define ISA_BASELINE	0
 # endif
 
-# if defined __GCC_HAVE_SYNC_COMPARE_AND_SWAP_16 \
-     || (defined __x86_64__ && defined __LAHF_SAHF__) \
-     || defined __POPCNT__ || defined __SSE3__ \
-     || defined __SSSE3__ || defined __SSE4_1__ || defined __SSE4_2__
+# if ISA_BASELINE && defined __GCC_HAVE_SYNC_COMPARE_AND_SWAP_16 \
+     && defined HAVE_X86_LAHF_SAHF && defined __POPCNT__ \
+     && defined __SSE3__ && defined __SSSE3__ && defined __SSE4_1__ \
+     && defined __SSE4_2__
+/* NB: ISAs in x86-64 ISA level v2 are used.  */
 #  define ISA_V2	GNU_PROPERTY_X86_ISA_1_V2
 # else
 #  define ISA_V2	0
 # endif
 
-# if defined __AVX__ || defined __AVX2__ || defined __F16C__ \
-     || defined __FMA__ || defined __LZCNT__ || defined __MOVBE__ \
-     || defined __XSAVE__
+# if ISA_V2 && defined __AVX__ && defined __AVX2__ && defined __F16C__ \
+     && defined __FMA__ && defined __LZCNT__ && defined HAVE_X86_MOVBE
+/* NB: ISAs in x86-64 ISA level v3 are used.  */
 #  define ISA_V3	GNU_PROPERTY_X86_ISA_1_V3
 # else
 #  define ISA_V3	0
 # endif
 
-# if defined __AVX512F__ || defined __AVX512BW__ || defined __AVX512CD__ \
-     || defined __AVX512DQ__ || defined __AVX512VL__
+# if ISA_V3 && defined __AVX512F__ && defined __AVX512BW__ \
+     && defined __AVX512CD__ && defined __AVX512DQ__ \
+     && defined __AVX512VL__
+/* NB: ISAs in x86-64 ISA level v4 are used.  */
 #  define ISA_V4	GNU_PROPERTY_X86_ISA_1_V4
 # else
 #  define ISA_V4	0
