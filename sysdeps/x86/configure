@@ -126,6 +126,8 @@ cat > conftest2.S <<EOF
 4:
 EOF
 libc_cv_include_x86_isa_level=no
+libc_cv_have_x86_lahf_sahf=no
+libc_cv_have_x86_movbe=no
 if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -nostartfiles -nostdlib -r -o conftest conftest1.S conftest2.S'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
@@ -135,6 +137,24 @@ if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -nostartfiles -nostdlib -r -o conftest c
   count=`LC_ALL=C $READELF -n conftest | grep NT_GNU_PROPERTY_TYPE_0 | wc -l`
   if test "$count" = 1; then
     libc_cv_include_x86_isa_level=yes
+    cat > conftest.c <<EOF
+EOF
+    if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - conftest.c'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } | grep -q "\-msahf"; then
+      libc_cv_have_x86_lahf_sahf=yes
+    fi
+    if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - conftest.c'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } | grep -q "\-mmovbe"; then
+      libc_cv_have_x86_movbe=yes
+    fi
   fi
 fi
 rm -f conftest*
@@ -143,6 +163,14 @@ fi
 $as_echo "$libc_cv_include_x86_isa_level" >&6; }
 if test $libc_cv_include_x86_isa_level = yes; then
   $as_echo "#define INCLUDE_X86_ISA_LEVEL 1" >>confdefs.h
+
+fi
+if test $libc_cv_have_x86_lahf_sahf = yes; then
+  $as_echo "#define HAVE_X86_LAHF_SAHF 1" >>confdefs.h
+
+fi
+if test $libc_cv_have_x86_movbe = yes; then
+  $as_echo "#define HAVE_X86_MOVBE 1" >>confdefs.h
 
 fi
 config_vars="$config_vars
