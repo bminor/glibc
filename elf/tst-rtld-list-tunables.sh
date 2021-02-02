@@ -26,6 +26,17 @@ run_program_env=$3
 LC_ALL=C
 export LC_ALL
 
+# Unset tunables and their aliases.
+GLIBC_TUNABLES=
+MALLOC_ARENA_MAX=
+MALLOC_ARENA_TEST=
+MALLOC_CHECK_=
+MALLOC_MMAP_MAX_=
+MALLOC_MMAP_THRESHOLD_=
+MALLOC_PERTURB_=
+MALLOC_TOP_PAD_=
+MALLOC_TRIM_THRESHOLD_=
+
 ${test_wrapper_env} \
 ${run_program_env} \
 $rtld --list-tunables \
