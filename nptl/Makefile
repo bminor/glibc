@@ -137,7 +137,7 @@ libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
 		      pthread_once \
 		      old_pthread_atfork \
 		      pthread_getcpuclockid \
-		      sem_init sem_destroy \
+		      sem_init sem_destroy sem_routines \
 		      sem_open sem_close sem_unlink \
 		      sem_getvalue \
 		      sem_wait sem_timedwait sem_clockwait sem_post \

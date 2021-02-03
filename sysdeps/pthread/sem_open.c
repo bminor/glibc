@@ -16,126 +16,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <fcntl.h>
-#include <pthread.h>
-#include <search.h>
 #include <semaphore.h>
 #include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
-#include <sys/stat.h>
 #include "semaphoreP.h"
 #include <shm-directory.h>
+#include <sem_routines.h>
 #include <futex-internal.h>
 #include <libc-lock.h>
-
-/* Comparison function for search of existing mapping.  */
-int
-attribute_hidden
-__sem_search (const void *a, const void *b)
-{
-  const struct inuse_sem *as = (const struct inuse_sem *) a;
-  const struct inuse_sem *bs = (const struct inuse_sem *) b;
-
-  if (as->ino != bs->ino)
-    /* Cannot return the difference the type is larger than int.  */
-    return as->ino < bs->ino ? -1 : (as->ino == bs->ino ? 0 : 1);
-
-  if (as->dev != bs->dev)
-    /* Cannot return the difference the type is larger than int.  */
-    return as->dev < bs->dev ? -1 : (as->dev == bs->dev ? 0 : 1);
-
-  return strcmp (as->name, bs->name);
-}
-
-
-/* The search tree for existing mappings.  */
-void *__sem_mappings attribute_hidden;
-
-/* Lock to protect the search tree.  */
-int __sem_mappings_lock attribute_hidden = LLL_LOCK_INITIALIZER;
-
-
-/* Search for existing mapping and if possible add the one provided.  */
-static sem_t *
-check_add_mapping (const char *name, int fd, sem_t *existing)
-{
-  size_t namelen = strlen (name);
-  sem_t *result = SEM_FAILED;
-
-  /* Get the information about the file.  */
-  struct stat64 st;
-  if (__fstat64 (fd, &st) == 0)
-    {
-      /* Get the lock.  */
-      lll_lock (__sem_mappings_lock, LLL_PRIVATE);
-
-      /* Search for an existing mapping given the information we have.  */
-      struct inuse_sem *fake;
-      fake = (struct inuse_sem *) alloca (sizeof (*fake) + namelen);
-      memcpy (fake->name, name, namelen);
-      fake->dev = st.st_dev;
-      fake->ino = st.st_ino;
-
-      struct inuse_sem **foundp = __tfind (fake, &__sem_mappings,
-					   __sem_search);
-      if (foundp != NULL)
-	{
-	  /* There is already a mapping.  Use it.  */
-	  result = (*foundp)->sem;
-	  ++(*foundp)->refcnt;
-	}
-      else
-	{
-	  /* We haven't found a mapping.  Install ione.  */
-	  struct inuse_sem *newp;
-
-	  newp = (struct inuse_sem *) malloc (sizeof (*newp) + namelen);
-	  if (newp != NULL)
-	    {
-	      /* If the caller hasn't provided any map it now.  */
-	      if (existing == SEM_FAILED)
-		existing = (sem_t *) mmap (NULL, sizeof (sem_t),
-					   PROT_READ | PROT_WRITE, MAP_SHARED,
-					   fd, 0);
-
-	      newp->dev = st.st_dev;
-	      newp->ino = st.st_ino;
-	      newp->refcnt = 1;
-	      newp->sem = existing;
-	      memcpy (newp->name, name, namelen);
-
-	      /* Insert the new value.  */
-	      if (existing != MAP_FAILED
-		  && __tsearch (newp, &__sem_mappings, __sem_search) != NULL)
-		/* Successful.  */
-		result = existing;
-	      else
-		/* Something went wrong while inserting the new
-		   value.  We fail completely.  */
-		free (newp);
-	    }
-	}
-
-      /* Release the lock.  */
-      lll_unlock (__sem_mappings_lock, LLL_PRIVATE);
-    }
-
-  if (result != existing && existing != SEM_FAILED && existing != MAP_FAILED)
-    {
-      /* Do not disturb errno.  */
-      int save = errno;
-      munmap (existing, sizeof (sem_t));
-      errno = save;
-    }
-
-  return result;
-}
-
 
 sem_t *
 sem_open (const char *name, int oflag, ...)
@@ -183,7 +73,7 @@ sem_open (const char *name, int oflag, ...)
       else
 	/* Check whether we already have this semaphore mapped and
 	   create one if necessary.  */
-	result = check_add_mapping (name, fd, SEM_FAILED);
+	result = __sem_check_add_mapping (name, fd, SEM_FAILED);
     }
   else
     {
@@ -294,7 +184,7 @@ sem_open (const char *name, int oflag, ...)
 	    /* Insert the mapping into the search tree.  This also
 	       determines whether another thread sneaked by and already
 	       added such a mapping despite the fact that we created it.  */
-	    result = check_add_mapping (name, fd, result);
+	    result = __sem_check_add_mapping (name, fd, result);
 	}
 
       /* Now remove the temporary name.  This should never fail.  If
