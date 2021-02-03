@@ -27,11 +27,15 @@
 int
 sem_unlink (const char *name)
 {
-  /* Construct the filename.  */
-  SHM_GET_NAME (ENOENT, -1, SEM_SHM_PREFIX);
+  struct shmdir_name dirname;
+  if (__shm_get_name (&dirname, name, true) != 0)
+    {
+      __set_errno (ENOENT);
+      return -1;
+    }
 
   /* Now try removing it.  */
-  int ret = unlink (shm_name);
+  int ret = unlink (dirname.name);
   if (ret < 0 && errno == EPERM)
     __set_errno (EACCES);
   return ret;

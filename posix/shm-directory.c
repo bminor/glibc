@@ -1,4 +1,4 @@
-/* Header for directory for shm/sem files.  NPTL version.
+/* Determine directory for shm/sem files.  Generic POSIX version.
    Copyright (C) 2014-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,16 +16,31 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SHM_DIRECTORY_H
+#include <unistd.h>
 
-#include <sysdeps/posix/shm-directory.h>
+#if _POSIX_MAPPED_FILES
 
-/* For NPTL the __shm_directory function lives in libpthread.
-   We don't want PLT calls from there.  But it's also used from
-   librt, so it cannot just be declared hidden.  */
+#include <alloc_buffer.h>
+#include <shm-directory.h>
+#include <string.h>
 
-#if IS_IN (libpthread)
-hidden_proto (__shm_directory)
+int
+__shm_get_name (struct shmdir_name *result, const char *name, bool sem_prefix)
+{
+  while (name[0] == '/')
+    ++name;
+  size_t namelen = strlen (name);
+
+  struct alloc_buffer buffer
+    = alloc_buffer_create (result->name, sizeof (result->name));
+  alloc_buffer_copy_bytes (&buffer, SHMDIR, strlen (SHMDIR));
+  if (sem_prefix)
+    alloc_buffer_copy_bytes (&buffer, "sem.", strlen ("sem."));
+  alloc_buffer_copy_bytes (&buffer, name, namelen + 1);
+  if (namelen == 0 || memchr (name, '/', namelen) != NULL
+      || alloc_buffer_has_failed (&buffer))
+    return -1;
+  return 0;
+}
+
 #endif
-
-#endif  /* shm-directory.h */

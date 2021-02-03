@@ -25,16 +25,21 @@
 
 #include <errno.h>
 #include <string.h>
-#include "shm-directory.h"
+#include <shm-directory.h>
 
 
 /* Remove shared memory object.  */
 int
 shm_unlink (const char *name)
 {
-  SHM_GET_NAME (ENOENT, -1, "");
+  struct shmdir_name dirname;
+  if (__shm_get_name (&dirname, name, false) != 0)
+    {
+      __set_errno (ENOENT);
+      return -1;
+    }
 
-  int result = unlink (shm_name);
+  int result = unlink (dirname.name);
   if (result < 0 && errno == EPERM)
     __set_errno (EACCES);
   return result;

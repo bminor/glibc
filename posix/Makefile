@@ -65,7 +65,8 @@ routines :=								      \
 	spawnattr_setsigmask spawnattr_setschedpolicy spawnattr_setschedparam \
 	posix_madvise							      \
 	get_child_max sched_cpucount sched_cpualloc sched_cpufree \
-	streams-compat
+	streams-compat \
+	shm-directory
 
 aux		:= init-posix environ
 tests		:= test-errno tstgetopt testfnm runtests runptests \

@@ -62,8 +62,9 @@ int __sem_mappings_lock attribute_hidden = LLL_LOCK_INITIALIZER;
 
 /* Search for existing mapping and if possible add the one provided.  */
 static sem_t *
-check_add_mapping (const char *name, size_t namelen, int fd, sem_t *existing)
+check_add_mapping (const char *name, int fd, sem_t *existing)
 {
+  size_t namelen = strlen (name);
   sem_t *result = SEM_FAILED;
 
   /* Get the information about the file.  */
@@ -150,8 +151,12 @@ sem_open (const char *name, int oflag, ...)
       return SEM_FAILED;
     }
 
-  /* Create the name of the final file in local variable SHM_NAME.  */
-  SHM_GET_NAME (EINVAL, SEM_FAILED, SEM_SHM_PREFIX);
+  struct shmdir_name dirname;
+  if (__shm_get_name (&dirname, name, true) != 0)
+    {
+      __set_errno (EINVAL);
+      return SEM_FAILED;
+    }
 
   /* Disable asynchronous cancellation.  */
 #ifdef __libc_ptf_call
@@ -164,7 +169,7 @@ sem_open (const char *name, int oflag, ...)
   if ((oflag & O_CREAT) == 0 || (oflag & O_EXCL) == 0)
     {
     try_again:
-      fd = __libc_open (shm_name,
+      fd = __libc_open (dirname.name,
 			(oflag & ~(O_CREAT|O_ACCMODE)) | O_NOFOLLOW | O_RDWR);
 
       if (fd == -1)
@@ -178,13 +183,12 @@ sem_open (const char *name, int oflag, ...)
       else
 	/* Check whether we already have this semaphore mapped and
 	   create one if necessary.  */
-	result = check_add_mapping (name, namelen, fd, SEM_FAILED);
+	result = check_add_mapping (name, fd, SEM_FAILED);
     }
   else
     {
       /* We have to open a temporary file first since it must have the
 	 correct form before we can start using it.  */
-      char *tmpfname;
       mode_t mode;
       unsigned int value;
       va_list ap;
@@ -217,16 +221,11 @@ sem_open (const char *name, int oflag, ...)
       memset ((char *) &sem.initsem + sizeof (struct new_sem), '\0',
 	      sizeof (sem_t) - sizeof (struct new_sem));
 
-      tmpfname = __alloca (shm_dirlen + sizeof SEM_SHM_PREFIX + 6);
-      char *xxxxxx = __mempcpy (tmpfname, shm_dir, shm_dirlen);
-
+      char tmpfname[] = SHMDIR "sem.XXXXXX";
       int retries = 0;
 #define NRETRIES 50
       while (1)
 	{
-	  /* Add the suffix for mktemp.  */
-	  strcpy (xxxxxx, "XXXXXX");
-
 	  /* We really want to use mktemp here.  We cannot use mkstemp
 	     since the file must be opened with a specific mode.  The
 	     mode cannot later be set since then we cannot apply the
@@ -244,7 +243,12 @@ sem_open (const char *name, int oflag, ...)
 	      if (errno == EEXIST)
 		{
 		  if (++retries < NRETRIES)
-		    continue;
+		    {
+		      /* Restore the six placeholder bytes before the
+			 null terminator before the next attempt.  */
+		      memcpy (tmpfname + sizeof (tmpfname) - 7, "XXXXXX", 6);
+		      continue;
+		    }
 
 		  __set_errno (EAGAIN);
 		}
@@ -265,7 +269,7 @@ sem_open (const char *name, int oflag, ...)
 				       fd, 0)) != MAP_FAILED)
 	{
 	  /* Create the file.  Don't overwrite an existing file.  */
-	  if (link (tmpfname, shm_name) != 0)
+	  if (link (tmpfname, dirname.name) != 0)
 	    {
 	      /* Undo the mapping.  */
 	      (void) munmap (result, sizeof (sem_t));
@@ -290,7 +294,7 @@ sem_open (const char *name, int oflag, ...)
 	    /* Insert the mapping into the search tree.  This also
 	       determines whether another thread sneaked by and already
 	       added such a mapping despite the fact that we created it.  */
-	    result = check_add_mapping (name, namelen, fd, result);
+	    result = check_add_mapping (name, fd, result);
 	}
 
       /* Now remove the temporary name.  This should never fail.  If

@@ -24,6 +24,7 @@
 
 #else
 
+# include <errno.h>
 # include <fcntl.h>
 # include <pthread.h>
 # include <shm-directory.h>
@@ -33,7 +34,12 @@
 int
 shm_open (const char *name, int oflag, mode_t mode)
 {
-  SHM_GET_NAME (EINVAL, -1, "");
+  struct shmdir_name dirname;
+  if (__shm_get_name (&dirname, name, false) != 0)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
   oflag |= O_NOFOLLOW | O_CLOEXEC;
 
@@ -41,7 +47,7 @@ shm_open (const char *name, int oflag, mode_t mode)
   int state;
   pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &state);
 
-  int fd = open (shm_name, oflag, mode);
+  int fd = open (dirname.name, oflag, mode);
   if (fd == -1 && __glibc_unlikely (errno == EISDIR))
     /* It might be better to fold this error with EINVAL since
        directory names are just another example for unsuitable shared

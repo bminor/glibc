@@ -168,7 +168,6 @@ libpthread {
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
 
-    __shm_directory;
     __pthread_threads;
 
     __cthread_detach;

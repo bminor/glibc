@@ -20,7 +20,10 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Changes to build and runtime requirements:
 
-  [Add changes to build and runtime requirements here]
+* On Linux, the shm_open, sem_open, and related functions now expect the
+  file shared memory file system to be mounted at /dev/shm.  These functions
+  no longer search among the system's mount points for a suitable
+  replacement if /dev/shm is not available.
 
 Security related changes:
 

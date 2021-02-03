@@ -132,8 +132,6 @@ libpthread-routines := pt-attr pt-attr-destroy pt-attr-getdetachstate	    \
 	sem-post sem-timedwait sem-trywait sem_unlink			    \
 	sem-wait sem-waitfast						    \
 									    \
-	shm-directory							    \
-									    \
 	cancellation							    \
 	cthreads-compat							    \
 	herrno								    \

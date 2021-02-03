@@ -1,4 +1,4 @@
-/* Header for directory for shm/sem files.  libpthread version.
+/* Header for directory for shm/sem files.
    Copyright (C) 2014-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,13 +18,24 @@
 
 #ifndef _SHM_DIRECTORY_H
 
-#include <sysdeps/posix/shm-directory.h>
+#include <limits.h>
+#include <paths.h>
+#include <stdbool.h>
 
-/* For libpthread the __shm_directory function lives in libpthread.
-   We don't want PLT calls from there.  But it's also used from
-   librt, so it cannot just be declared hidden.  */
+/* The directory that contains shared POSIX objects.  */
+#define SHMDIR _PATH_DEV "shm/"
 
-#if IS_IN (libpthread)
-hidden_proto (__shm_directory)
-#endif
-#endif /* shm-directory.h */
+struct shmdir_name
+{
+  /* The combined prefix/name.  The sizeof includes the terminating
+     NUL byte.  4 bytes are needed for the optional "sem." prefix.  */
+  char name[sizeof (SHMDIR) + 4 + NAME_MAX];
+};
+
+/* Sets RESULT->name to the constructed name and returns 0 on success,
+   or -1 on failure.  Includes the "sem." prefix in the name if
+   SEM_PREFIX is true.  */
+int __shm_get_name (struct shmdir_name *result, const char *name,
+		    bool sem_prefix);
+
+#endif  /* shm-directory.h */

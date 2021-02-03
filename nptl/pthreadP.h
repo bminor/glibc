@@ -629,7 +629,6 @@ extern void __nptl_set_robust (struct pthread *self);
 #endif
 
 extern void __nptl_stacks_freeres (void) attribute_hidden;
-extern void __shm_directory_freeres (void) attribute_hidden;
 
 extern void __wait_lookup_done (void) attribute_hidden;
 
