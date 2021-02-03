@@ -37,6 +37,7 @@ IFUNC_SELECTOR (void)
 
   if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER)
       && CPU_FEATURE_USABLE_P (cpu_features, AVX2)
+      && CPU_FEATURE_USABLE_P (cpu_features, BMI2)
       && CPU_FEATURES_ARCH_P (cpu_features, AVX_Fast_Unaligned_Load))
     return OPTIMIZE (avx2);
 
