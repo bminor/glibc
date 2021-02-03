@@ -100,7 +100,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char, int max_char)
   size_t i;
   CHAR *result;
   CHAR *buf = (CHAR *) buf1;
-  align &= 15;
+  align &= 127;
   if ((align + len) * sizeof (CHAR) >= page_size)
     return;
 
@@ -153,8 +153,20 @@ test_main (void)
 
   for (i = 1; i < 8; ++i)
     {
+      do_test (0, 16 << i, 4096, SMALL_CHAR, MIDDLE_CHAR);
+      do_test (i, 16 << i, 4096, SMALL_CHAR, MIDDLE_CHAR);
+    }
+
+  for (i = 1; i < 8; ++i)
+    {
       do_test (i, 64, 256, SMALL_CHAR, MIDDLE_CHAR);
       do_test (i, 64, 256, SMALL_CHAR, BIG_CHAR);
+    }
+
+  for (i = 0; i < 8; ++i)
+    {
+      do_test (16 * i, 256, 512, SMALL_CHAR, MIDDLE_CHAR);
+      do_test (16 * i, 256, 512, SMALL_CHAR, BIG_CHAR);
     }
 
   for (i = 0; i < 32; ++i)
@@ -171,8 +183,20 @@ test_main (void)
 
   for (i = 1; i < 8; ++i)
     {
+      do_test (0, 16 << i, 4096, 0, MIDDLE_CHAR);
+      do_test (i, 16 << i, 4096, 0, MIDDLE_CHAR);
+    }
+
+  for (i = 1; i < 8; ++i)
+    {
       do_test (i, 64, 256, 0, MIDDLE_CHAR);
       do_test (i, 64, 256, 0, BIG_CHAR);
+    }
+
+  for (i = 0; i < 8; ++i)
+    {
+      do_test (16 * i, 256, 512, 0, MIDDLE_CHAR);
+      do_test (16 * i, 256, 512, 0, BIG_CHAR);
     }
 
   for (i = 0; i < 32; ++i)
