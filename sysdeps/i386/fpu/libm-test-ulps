@@ -1101,7 +1101,7 @@ float128: 2
 ldouble: 1
 
 Function: "erfc":
-double: 3
+double: 5
 float: 3
 float128: 2
 ldouble: 3
@@ -1578,25 +1578,25 @@ float128: 3
 ldouble: 4
 
 Function: "tgamma":
-double: 6
+double: 9
 float: 8
 float128: 4
 ldouble: 5
 
 Function: "tgamma_downward":
-double: 6
+double: 8
 float: 7
 float128: 5
 ldouble: 5
 
 Function: "tgamma_towardzero":
-double: 6
+double: 9
 float: 7
 float128: 5
 ldouble: 5
 
 Function: "tgamma_upward":
-double: 6
+double: 9
 float: 8
 float128: 4
 ldouble: 5
