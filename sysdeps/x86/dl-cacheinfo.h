@@ -929,14 +929,14 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   rep_stosb_threshold = TUNABLE_GET (x86_rep_stosb_threshold,
 				     long int, NULL);
 
-  TUNABLE_SET_WITH_BOUNDS (x86_data_cache_size, data, 0, (long int) -1);
-  TUNABLE_SET_WITH_BOUNDS (x86_shared_cache_size, shared, 0, (long int) -1);
+  TUNABLE_SET_WITH_BOUNDS (x86_data_cache_size, data, 0, SIZE_MAX);
+  TUNABLE_SET_WITH_BOUNDS (x86_shared_cache_size, shared, 0, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_non_temporal_threshold, non_temporal_threshold,
-			   0, (long int) -1);
+			   0, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_rep_movsb_threshold, rep_movsb_threshold,
-			   minimum_rep_movsb_threshold, (long int) -1);
+			   minimum_rep_movsb_threshold, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_rep_stosb_threshold, rep_stosb_threshold, 1,
-			   (long int) -1);
+			   SIZE_MAX);
 #endif
 
   cpu_features->data_cache_size = data;
