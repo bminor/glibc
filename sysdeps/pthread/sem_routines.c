@@ -31,6 +31,15 @@ struct inuse_sem
   char name[];
 };
 
+struct search_sem
+{
+  dev_t dev;
+  ino_t ino;
+  int refcnt;
+  sem_t *sem;
+  char name[NAME_MAX];
+};
+
 /* Comparison function for search of existing mapping.  */
 static int
 sem_search (const void *a, const void *b)
@@ -61,6 +70,9 @@ sem_t *
 __sem_check_add_mapping (const char *name, int fd, sem_t *existing)
 {
   size_t namelen = strlen (name);
+  if (namelen > NAME_MAX)
+    return SEM_FAILED;
+
   sem_t *result = SEM_FAILED;
 
   /* Get the information about the file.  */
@@ -71,13 +83,12 @@ __sem_check_add_mapping (const char *name, int fd, sem_t *existing)
       lll_lock (sem_mappings_lock, LLL_PRIVATE);
 
       /* Search for an existing mapping given the information we have.  */
-      struct inuse_sem *fake;
-      fake = (struct inuse_sem *) alloca (sizeof (*fake) + namelen);
-      memcpy (fake->name, name, namelen);
-      fake->dev = st.st_dev;
-      fake->ino = st.st_ino;
+      struct search_sem fake;
+      memcpy (fake.name, name, namelen);
+      fake.dev = st.st_dev;
+      fake.ino = st.st_ino;
 
-      struct inuse_sem **foundp = __tfind (fake, &sem_mappings, sem_search);
+      struct inuse_sem **foundp = __tfind (&fake, &sem_mappings, sem_search);
       if (foundp != NULL)
 	{
 	  /* There is already a mapping.  Use it.  */
