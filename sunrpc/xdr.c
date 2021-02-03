@@ -728,7 +728,7 @@ libc_hidden_nolink_sunrpc (xdr_union, GLIBC_2_0)
 /*
  * XDR null terminated ASCII strings
  * xdr_string deals with "C strings" - arrays of bytes that are
- * terminated by a NULL character.  The parameter cpp references a
+ * terminated by a NUL character.  The parameter cpp references a
  * pointer to storage; If the pointer is null, then the necessary
  * storage is allocated.  The last parameter is the max allowed length
  * of the string as specified by a protocol.
