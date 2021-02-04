@@ -50,20 +50,8 @@
 #define LLL_SHARED	FUTEX_PRIVATE_FLAG
 
 #ifndef __ASSEMBLER__
-
-# if IS_IN (libc) || IS_IN (rtld)
-/* In libc.so or ld.so all futexes are private.  */
-#  define __lll_private_flag(fl, private)			\
-  ({								\
-    /* Prevent warnings in callers of this macro.  */		\
-    int __lll_private_flag_priv __attribute__ ((unused));	\
-    __lll_private_flag_priv = (private);			\
-    ((fl) | FUTEX_PRIVATE_FLAG);				\
-  })
-# else
-#  define __lll_private_flag(fl, private) \
+# define __lll_private_flag(fl, private) \
   (((fl) | FUTEX_PRIVATE_FLAG) ^ (private))
-# endif
 
 # define lll_futex_syscall(nargs, futexp, op, ...)                      \
   ({                                                                    \
