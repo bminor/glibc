@@ -298,11 +298,6 @@ __mtag_tag_new_usable (void *ptr)
   if (ptr)
     {
       mchunkptr cp = mem2chunk(ptr);
-      /* This likely will never happen, but we can't handle retagging
-	 chunks from the dumped main arena.  So just return the
-	 existing pointer.  */
-      if (DUMPED_MAIN_ARENA_CHUNK (cp))
-	return ptr;
       ptr = __libc_mtag_tag_region (__libc_mtag_new_tag (ptr),
 				    CHUNK_AVAILABLE_SIZE (cp) - CHUNK_HDR_SZ);
     }
