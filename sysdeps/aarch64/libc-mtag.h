@@ -35,17 +35,21 @@
 #define __MTAG_MMAP_FLAGS PROT_MTE
 
 /* Set the tags for a region of memory, which must have size and alignment
-   that are multiples of __MTAG_GRANULE_SIZE.  Size cannot be zero.
-   void *__libc_mtag_tag_region (const void *, size_t)  */
+   that are multiples of __MTAG_GRANULE_SIZE.  Size cannot be zero.  */
 void *__libc_mtag_tag_region (void *, size_t);
 
 /* Optimized equivalent to __libc_mtag_tag_region followed by memset to 0.  */
 void *__libc_mtag_tag_zero_region (void *, size_t);
 
 /* Convert address P to a pointer that is tagged correctly for that
-   location.
-   void *__libc_mtag_address_get_tag (void*)  */
-void *__libc_mtag_address_get_tag (void *);
+   location.  */
+static __always_inline void *
+__libc_mtag_address_get_tag (void *p)
+{
+  register void *x0 asm ("x0") = p;
+  asm (".inst 0xd9600000 /* ldg x0, [x0] */" : "+r" (x0));
+  return x0;
+}
 
 /* Assign a new (random) tag to a pointer P (does not adjust the tag on
    the memory addressed).
