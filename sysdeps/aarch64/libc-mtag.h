@@ -52,9 +52,17 @@ __libc_mtag_address_get_tag (void *p)
 }
 
 /* Assign a new (random) tag to a pointer P (does not adjust the tag on
-   the memory addressed).
-   void *__libc_mtag_new_tag (void*)  */
-void *__libc_mtag_new_tag (void *);
+   the memory addressed).  */
+static __always_inline void *
+__libc_mtag_new_tag (void *p)
+{
+  register void *x0 asm ("x0") = p;
+  register unsigned long x1 asm ("x1");
+  /* Guarantee that the new tag is not the same as now.  */
+  asm (".inst 0x9adf1401 /* gmi x1, x0, xzr */\n"
+       ".inst 0x9ac11000 /* irg x0, x0, x1 */" : "+r" (x0), "=r" (x1));
+  return x0;
+}
 
 #endif /* USE_MTAG */
 
