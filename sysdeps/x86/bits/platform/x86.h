@@ -29,7 +29,8 @@ enum
   CPUID_INDEX_80000007,
   CPUID_INDEX_80000008,
   CPUID_INDEX_7_ECX_1,
-  CPUID_INDEX_19
+  CPUID_INDEX_19,
+  CPUID_INDEX_14_ECX_0
 };
 
 struct cpuid_feature
@@ -295,5 +296,11 @@ enum
        + cpuid_register_index_ebx * 8 * sizeof (unsigned int)),
 
   x86_cpu_AESKLE		= x86_cpu_index_19_ebx,
-  x86_cpu_WIDE_KL		= x86_cpu_index_19_ebx + 2
+  x86_cpu_WIDE_KL		= x86_cpu_index_19_ebx + 2,
+
+  x86_cpu_index_14_ecx_0_ebx
+    = (CPUID_INDEX_14_ECX_0 * 8 * 4 * sizeof (unsigned int)
+       + cpuid_register_index_ebx * 8 * sizeof (unsigned int)),
+
+  x86_cpu_PTWRITE		= x86_cpu_index_14_ecx_0_ebx + 4
 };

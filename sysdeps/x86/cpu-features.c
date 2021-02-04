@@ -97,6 +97,7 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_USABLE (cpu_features, FZLRM);
   CPU_FEATURE_SET_USABLE (cpu_features, FSRS);
   CPU_FEATURE_SET_USABLE (cpu_features, FSRCS);
+  CPU_FEATURE_SET_USABLE (cpu_features, PTWRITE);
 
   /* Can we call xgetbv?  */
   if (CPU_FEATURES_CPU_P (cpu_features, OSXSAVE))
@@ -358,6 +359,13 @@ get_common_indices (struct cpu_features *cpu_features,
 		   cpu_features->features[CPUID_INDEX_D_ECX_1].cpuid.ebx,
 		   cpu_features->features[CPUID_INDEX_D_ECX_1].cpuid.ecx,
 		   cpu_features->features[CPUID_INDEX_D_ECX_1].cpuid.edx);
+
+  if (cpu_features->basic.max_cpuid >= 0x14)
+    __cpuid_count (0x14, 0,
+		   cpu_features->features[CPUID_INDEX_14_ECX_0].cpuid.eax,
+		   cpu_features->features[CPUID_INDEX_14_ECX_0].cpuid.ebx,
+		   cpu_features->features[CPUID_INDEX_14_ECX_0].cpuid.ecx,
+		   cpu_features->features[CPUID_INDEX_14_ECX_0].cpuid.edx);
 
   if (cpu_features->basic.max_cpuid >= 0x19)
     __cpuid_count (0x19, 0,

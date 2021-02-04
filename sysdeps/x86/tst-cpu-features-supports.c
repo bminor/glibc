@@ -149,6 +149,7 @@ do_test (int argc, char **argv)
   fails += CHECK_SUPPORTS (popcnt, POPCNT);
 #if __GNUC_PREREQ (11, 0)
   fails += CHECK_SUPPORTS (prefetchwt1, PREFETCHWT1);
+  fails += CHECK_SUPPORTS (ptwrite, PTWRITE);
   fails += CHECK_SUPPORTS (rdpid, RDPID);
   fails += CHECK_SUPPORTS (rdrnd, RDRAND);
   fails += CHECK_SUPPORTS (rdseed, RDSEED);

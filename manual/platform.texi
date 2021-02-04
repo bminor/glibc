@@ -488,6 +488,9 @@ extended state management using XSAVE/XRSTOR.
 @code{PSN} -- Processor Serial Number.
 
 @item
+@code{PTWRITE} -- PTWRITE instruction.
+
+@item
 @code{RDPID} -- RDPID instruction.
 
 @item

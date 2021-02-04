@@ -29,7 +29,7 @@
 
 enum
 {
-  CPUID_INDEX_MAX = CPUID_INDEX_19 + 1
+  CPUID_INDEX_MAX = CPUID_INDEX_14_ECX_0 + 1
 };
 
 enum
@@ -307,6 +307,11 @@ enum
 #define bit_cpu_AESKLE		(1u << 0)
 #define bit_cpu_WIDE_KL		(1u << 2)
 
+/* CPUID_INDEX_14_ECX_0.  */
+
+/* EBX.  */
+#define bit_cpu_PTWRITE		(1u << 4)
+
 /* CPUID_INDEX_1.  */
 
 /* ECX.  */
@@ -532,6 +537,11 @@ enum
 #define index_cpu_AESKLE	CPUID_INDEX_19
 #define index_cpu_WIDE_KL	CPUID_INDEX_19
 
+/* CPUID_INDEX_14_ECX_0.  */
+
+/* EBX.  */
+#define index_cpu_PTWRITE	CPUID_INDEX_14_ECX_0
+
 /* CPUID_INDEX_1.  */
 
 /* ECX.  */
@@ -756,6 +766,11 @@ enum
 /* EBX.  */
 #define reg_AESKLE		ebx
 #define reg_WIDE_KL		ebx
+
+/* CPUID_INDEX_14_ECX_0.  */
+
+/* EBX.  */
+#define reg_PTWRITE		ebx
 
 /* PREFERRED_FEATURE_INDEX_1.  */
 #define bit_arch_I586				(1u << 0)

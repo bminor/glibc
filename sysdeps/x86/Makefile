@@ -8,8 +8,11 @@ sysdep-dl-routines += dl-get-cpu-features
 sysdep_headers += sys/platform/x86.h
 
 tests += tst-get-cpu-features tst-get-cpu-features-static \
-	 tst-cpu-features-cpuinfo tst-cpu-features-supports
-tests-static += tst-get-cpu-features-static
+	 tst-cpu-features-cpuinfo tst-cpu-features-cpuinfo-static \
+	 tst-cpu-features-supports tst-cpu-features-supports-static
+tests-static += tst-get-cpu-features-static \
+		tst-cpu-features-cpuinfo-static \
+		tst-cpu-features-supports-static
 ifeq (yes,$(have-ifunc))
 tests += \
   tst-ifunc-isa-1 \
