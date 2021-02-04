@@ -3284,9 +3284,6 @@ __libc_free (void *mem)
 
   p = mem2chunk (mem);
 
-  /* Mark the chunk as belonging to the library again.  */
-  (void)TAG_REGION (chunk2rawmem (p), CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
-
   if (chunk_is_mmapped (p))                       /* release mmapped memory. */
     {
       /* See if the dynamic brk/mmap threshold needs adjusting.
@@ -3306,6 +3303,10 @@ __libc_free (void *mem)
   else
     {
       MAYBE_INIT_TCACHE ();
+
+      /* Mark the chunk as belonging to the library again.  */
+      (void)TAG_REGION (chunk2rawmem (p),
+			CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
 
       ar_ptr = arena_for_chunk (p);
       _int_free (ar_ptr, p, 0);
