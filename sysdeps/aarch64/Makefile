@@ -40,8 +40,7 @@ endif
 
 ifeq ($(subdir),misc)
 sysdep_headers += sys/ifunc.h
-sysdep_routines += __mtag_address_get_tag \
-		   __mtag_tag_zero_region \
+sysdep_routines += __mtag_tag_zero_region \
 		   __mtag_new_tag \
 		   __mtag_tag_region
 
