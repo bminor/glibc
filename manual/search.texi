@@ -326,22 +326,26 @@ used until the end of the program run.
 Entries of the hashing table and keys for the search are defined using
 this type:
 
-@deftp {Data type} {struct ENTRY}
-Both elements of this structure are pointers to zero-terminated strings.
-This is a limiting restriction of the functionality of the
-@code{hsearch} functions.  They can only be used for data sets which use
-the NUL character always and solely to terminate the records.  It is not
-possible to handle general binary data.
-
+@deftp {Data type} ENTRY
 @table @code
 @item char *key
 Pointer to a zero-terminated string of characters describing the key for
 the search or the element in the hashing table.
-@item char *data
-Pointer to a zero-terminated string of characters describing the data.
-If the functions will be called only for searching an existing entry
-this element might stay undefined since it is not used.
+
+This is a limiting restriction of the functionality of the
+@code{hsearch} functions: They can only be used for data sets which
+use the NUL character always and solely to terminate keys.  It is not
+possible to handle general binary data for keys.
+
+@item void *data
+Generic pointer for use by the application.  The hashing table
+implementation preserves this pointer in entries, but does not use it
+in any way otherwise.
 @end table
+@end deftp
+
+@deftp {Data type} {struct entry}
+The underlying type of @code{ENTRY}.
 @end deftp
 
 @deftypefun {ENTRY *} hsearch (ENTRY @var{item}, ACTION @var{action})
