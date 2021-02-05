@@ -33,9 +33,11 @@ __tunables_init (char **unused __attribute__ ((unused)))
 # include <stddef.h>
 # include <stdint.h>
 
+typedef intmax_t tunable_num_t;
+
 typedef union
 {
-  int64_t numval;
+  tunable_num_t numval;
   const char *strval;
 } tunable_val_t;
 
@@ -52,7 +54,8 @@ typedef void (*tunable_callback_t) (tunable_val_t *);
 extern void __tunables_init (char **);
 extern void __tunables_print (void);
 extern void __tunable_get_val (tunable_id_t, void *, tunable_callback_t);
-extern void __tunable_set_val (tunable_id_t, void *, void *, void *);
+extern void __tunable_set_val (tunable_id_t, tunable_val_t *, tunable_num_t *,
+			       tunable_num_t *);
 rtld_hidden_proto (__tunables_init)
 rtld_hidden_proto (__tunables_print)
 rtld_hidden_proto (__tunable_get_val)
@@ -64,20 +67,18 @@ rtld_hidden_proto (__tunable_set_val)
 #if defined TOP_NAMESPACE && defined TUNABLE_NAMESPACE
 # define TUNABLE_GET(__id, __type, __cb) \
   TUNABLE_GET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __type, __cb)
-# define TUNABLE_SET(__id, __type, __val) \
-  TUNABLE_SET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __type, __val)
-# define TUNABLE_SET_WITH_BOUNDS(__id, __type, __val, __min, __max) \
+# define TUNABLE_SET(__id, __val) \
+  TUNABLE_SET_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, __val)
+# define TUNABLE_SET_WITH_BOUNDS(__id, __val, __min, __max) \
   TUNABLE_SET_WITH_BOUNDS_FULL (TOP_NAMESPACE, TUNABLE_NAMESPACE, __id, \
-				__type, __val, __min, __max)
+				__val, __min, __max)
 #else
 # define TUNABLE_GET(__top, __ns, __id, __type, __cb) \
   TUNABLE_GET_FULL (__top, __ns, __id, __type, __cb)
-# define TUNABLE_SET(__top, __ns, __id, __type, __val) \
-  TUNABLE_SET_FULL (__top, __ns, __id, __type, __val)
-# define TUNABLE_SET_WITH_BOUNDS(__top, __ns, __id, __type, __val, \
-				 __min, __max) \
-  TUNABLE_SET_WITH_BOUNDS_FULL (__top, __ns, __id, __type, __val, \
-				__min, __max)
+# define TUNABLE_SET(__top, __ns, __id, __val) \
+  TUNABLE_SET_FULL (__top, __ns, __id, __val)
+# define TUNABLE_SET_WITH_BOUNDS(__top, __ns, __id, __val, __min, __max) \
+  TUNABLE_SET_WITH_BOUNDS_FULL (__top, __ns, __id, __val, __min, __max)
 #endif
 
 /* Get and return a tunable value.  If the tunable was set externally and __CB
@@ -91,19 +92,19 @@ rtld_hidden_proto (__tunable_set_val)
 })
 
 /* Set a tunable value.  */
-# define TUNABLE_SET_FULL(__top, __ns, __id, __type, __val) \
+# define TUNABLE_SET_FULL(__top, __ns, __id, __val) \
 ({									      \
   __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),		      \
-		     & (__type) {__val}, NULL, NULL);			      \
+		     & (tunable_val_t) {.numval = __val}, NULL, NULL);	      \
 })
 
 /* Set a tunable value together with min/max values.  */
-# define TUNABLE_SET_WITH_BOUNDS_FULL(__top, __ns, __id, __type, __val,	      \
-				      __min, __max)			      \
+# define TUNABLE_SET_WITH_BOUNDS_FULL(__top, __ns, __id,__val, __min, __max)  \
 ({									      \
   __tunable_set_val (TUNABLE_ENUM_NAME (__top, __ns, __id),		      \
-		     & (__type) {__val},  & (__type) {__min},		      \
-		     & (__type) {__max});				      \
+		     & (tunable_val_t) {.numval = __val},		      \
+		     & (tunable_num_t) {__min},				      \
+		     & (tunable_num_t) {__max});			      \
 })
 
 /* Namespace sanity for callback functions.  Use this macro to keep the

@@ -104,7 +104,7 @@ init_cpu_features (struct cpu_features *cpu_features)
   cpu_features->mte_state = (GLRO (dl_hwcap2) & HWCAP2_MTE) ? mte_state : 0;
   /* If we lack the MTE feature, disable the tunable, since it will
      otherwise cause instructions that won't run on this CPU to be used.  */
-  TUNABLE_SET (glibc, mem, tagging, unsigned, cpu_features->mte_state);
+  TUNABLE_SET (glibc, mem, tagging, cpu_features->mte_state);
 # endif
 
   if (cpu_features->mte_state & 2)

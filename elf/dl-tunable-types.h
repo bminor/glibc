@@ -38,8 +38,8 @@ typedef enum
 typedef struct
 {
   tunable_type_code_t type_code;
-  int64_t min;
-  int64_t max;
+  tunable_num_t min;
+  tunable_num_t max;
 } tunable_type_t;
 
 /* Security level for tunables.  This decides what to do with individual
