@@ -21,12 +21,7 @@
 #include <kernel_stat.h>
 #include <sysdep.h>
 
-#if STAT_IS_KERNEL_STAT
-
-/* Dummy.  */
-struct kernel_stat;
-
-#else
+#if !STAT_IS_KERNEL_STAT
 
 #include <string.h>
 
