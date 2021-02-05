@@ -64,6 +64,7 @@ glibc {
       type: INT_32
       env_alias: MALLOC_MMAP_MAX_
       security_level: SXID_IGNORE
+      minval: 0
     }
     arena_max {
       type: SIZE_T
@@ -109,22 +110,27 @@ glibc {
     skip_lock_busy {
       type: INT_32
       default: 3
+      minval: 0
     }
     skip_lock_internal_abort {
       type: INT_32
       default: 3
+      minval: 0
     }
     skip_lock_after_retries {
       type: INT_32
       default: 3
+      minval: 0
     }
     tries {
       type: INT_32
       default: 3
+      minval: 0
     }
     skip_trylock_internal_abort {
       type: INT_32
       default: 3
+      minval: 0
     }
   }
 
