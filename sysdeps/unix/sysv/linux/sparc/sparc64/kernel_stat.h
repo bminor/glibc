@@ -50,6 +50,9 @@ struct kernel_stat64
 #define STAT_IS_KERNEL_STAT 0
 #define STAT64_IS_KERNEL_STAT64 0
 #define XSTAT_IS_XSTAT64 1
-#define STATFS_IS_STATFS64 0
-
+#ifdef __arch64__
+# define STATFS_IS_STATFS64 1
+#else
+# define STATFS_IS_STATFS64 0
+#endif
 #endif /* _KERNEL_STAT_H  */
