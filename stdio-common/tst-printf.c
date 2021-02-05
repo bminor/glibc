@@ -127,21 +127,39 @@ I am ready for my first lesson today.";
   printf("e-style < .1:\t\"%e\"\n", 0.001234);
   printf("e-style big:\t\"%.60e\"\n", 1e20);
   printf ("e-style == .1:\t\"%e\"\n", 0.1);
+  printf("f-style == 0:\t\"%f\"\n", 0.0);
   printf("f-style >= 1:\t\"%f\"\n", 12.34);
   printf("f-style >= .1:\t\"%f\"\n", 0.1234);
   printf("f-style < .1:\t\"%f\"\n", 0.001234);
+  printf("g-style == 0:\t\"%g\"\n", 0.0);
   printf("g-style >= 1:\t\"%g\"\n", 12.34);
   printf("g-style >= .1:\t\"%g\"\n", 0.1234);
   printf("g-style < .1:\t\"%g\"\n", 0.001234);
   printf("g-style big:\t\"%.60g\"\n", 1e20);
 
+  printf("Lf-style == 0:\t\"%Lf\"\n", (long double) 0.0);
+  printf("Lf-style >= 1:\t\"%Lf\"\n", (long double) 12.34);
+  printf("Lf-style >= .1:\t\"%Lf\"\n", (long double) 0.1234);
+  printf("Lf-style < .1:\t\"%Lf\"\n", (long double) 0.001234);
+  printf("Lg-style == 0:\t\"%Lg\"\n", (long double) 0.0);
+  printf("Lg-style >= 1:\t\"%Lg\"\n", (long double) 12.34);
+  printf("Lg-style >= .1:\t\"%Lg\"\n", (long double) 0.1234);
+  printf("Lg-style < .1:\t\"%Lg\"\n", (long double) 0.001234);
+  printf("Lg-style big:\t\"%.60Lg\"\n", (long double) 1e20);
+
   printf (" %6.5f\n", .099999999860301614);
   printf (" %6.5f\n", .1);
   printf ("x%5.4fx\n", .5);
 
+  printf (" %6.5Lf\n", (long double) .099999999860301614);
+  printf (" %6.5Lf\n", (long double) .1);
+  printf ("x%5.4Lfx\n", (long double) .5);
+
   printf ("%#03x\n", 1);
 
   printf ("something really insane: %.10000f\n", 1.0);
+  printf ("something really insane (long double): %.10000Lf\n",
+	  (long double) 1.0);
 
   {
     double d = FLT_MIN;
@@ -154,16 +172,25 @@ I am ready for my first lesson today.";
 
   printf ("%15.5e\n", 4.9406564584124654e-324);
 
-#define FORMAT "|%12.4f|%12.4e|%12.4g|\n"
-  printf (FORMAT, 0.0, 0.0, 0.0);
-  printf (FORMAT, 1.0, 1.0, 1.0);
-  printf (FORMAT, -1.0, -1.0, -1.0);
-  printf (FORMAT, 100.0, 100.0, 100.0);
-  printf (FORMAT, 1000.0, 1000.0, 1000.0);
-  printf (FORMAT, 10000.0, 10000.0, 10000.0);
-  printf (FORMAT, 12345.0, 12345.0, 12345.0);
-  printf (FORMAT, 100000.0, 100000.0, 100000.0);
-  printf (FORMAT, 123456.0, 123456.0, 123456.0);
+#define FORMAT "|%12.4f|%12.4e|%12.4g|%12.4Lf|%12.4Lg|\n"
+  printf (FORMAT, 0.0, 0.0, 0.0,
+	  (long double) 0.0, (long double) 0.0);
+  printf (FORMAT, 1.0, 1.0, 1.0,
+	  (long double) 1.0, (long double) 1.0);
+  printf (FORMAT, -1.0, -1.0, -1.0,
+	  (long double) -1.0, (long double) -1.0);
+  printf (FORMAT, 100.0, 100.0, 100.0,
+	  (long double) 100.0, (long double) 100.0);
+  printf (FORMAT, 1000.0, 1000.0, 1000.0,
+	  (long double) 1000.0, (long double) 1000.0);
+  printf (FORMAT, 10000.0, 10000.0, 10000.0,
+	  (long double) 10000.0, (long double) 10000.0);
+  printf (FORMAT, 12345.0, 12345.0, 12345.0,
+	  (long double) 12345.0, (long double) 12345.0);
+  printf (FORMAT, 100000.0, 100000.0, 100000.0,
+	  (long double) 100000.0, (long double) 100000.0);
+  printf (FORMAT, 123456.0, 123456.0, 123456.0,
+	  (long double) 123456.0, (long double) 123456.0);
 #undef	FORMAT
 
   {
@@ -271,6 +298,9 @@ rfg1 (void)
   sprintf (buf, "%5.f", 33.3);
   if (strcmp (buf, "   33") != 0)
     printf ("got: '%s', expected: '%s'\n", buf, "   33");
+  sprintf (buf, "%5.Lf", (long double) 33.3);
+  if (strcmp (buf, "   33") != 0)
+    printf ("got: '%s', expected: '%s'\n", buf, "   33");
   sprintf (buf, "%8.e", 33.3e7);
   if (strcmp (buf, "   3e+08") != 0)
     printf ("got: '%s', expected: '%s'\n", buf, "   3e+08");
@@ -278,6 +308,9 @@ rfg1 (void)
   if (strcmp (buf, "   3E+08") != 0)
     printf ("got: '%s', expected: '%s'\n", buf, "   3E+08");
   sprintf (buf, "%.g", 33.3);
+  if (strcmp (buf, "3e+01") != 0)
+    printf ("got: '%s', expected: '%s'\n", buf, "3e+01");
+  sprintf (buf, "%.Lg", (long double) 33.3);
   if (strcmp (buf, "3e+01") != 0)
     printf ("got: '%s', expected: '%s'\n", buf, "3e+01");
   sprintf (buf, "%.G", 33.3);
@@ -301,6 +334,18 @@ rfg2 (void)
     printf ("got: '%s', expected: '%s'\n", buf, "3");
   prec = 0;
   sprintf (buf, "%7.*G", prec, 3.33);
+  if (strcmp (buf, "      3") != 0)
+    printf ("got: '%s', expected: '%s'\n", buf, "      3");
+  prec = 0;
+  sprintf (buf, "%.*Lg", prec, (long double) 3.3);
+  if (strcmp (buf, "3") != 0)
+    printf ("got: '%s', expected: '%s'\n", buf, "3");
+  prec = 0;
+  sprintf (buf, "%.*LG", prec, (long double) 3.3);
+  if (strcmp (buf, "3") != 0)
+    printf ("got: '%s', expected: '%s'\n", buf, "3");
+  prec = 0;
+  sprintf (buf, "%7.*LG", prec, (long double) 3.33);
   if (strcmp (buf, "      3") != 0)
     printf ("got: '%s', expected: '%s'\n", buf, "      3");
   prec = 3;
