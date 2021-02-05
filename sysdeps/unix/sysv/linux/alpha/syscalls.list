@@ -29,5 +29,4 @@ utimes		-	utimes		i:sp	__utimes	utimes@@GLIBC_2.1
 getrusage	-	getrusage	i:ip	__getrusage	getrusage@@GLIBC_2.1
 
 # avoid 64-bit aliases on 32-bit statfs syscalls
-fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs
 statfs		-	statfs		i:sp	__statfs	statfs
