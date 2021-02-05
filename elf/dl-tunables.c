@@ -93,87 +93,45 @@ get_next_env (char **envp, char **name, size_t *namelen, char **val,
   return NULL;
 }
 
-#define TUNABLE_SET_VAL_IF_VALID_RANGE(__cur, __val, __type)		      \
-({									      \
-  __type min = (__cur)->type.min;					      \
-  __type max = (__cur)->type.max;					      \
-									      \
-  if ((__type) (__val) >= min && (__type) (__val) <= max)		      \
-    {									      \
-      (__cur)->val.numval = (__val);					      \
-      (__cur)->initialized = true;					      \
-    }									      \
-})
-
-#define TUNABLE_SET_BOUNDS_IF_VALID(__cur, __minp, __maxp, __type)	      \
-({									      \
-  if (__minp != NULL)							      \
-    {									      \
-      /* MIN is specified.  */						      \
-      __type min = *((__type *) __minp);				      \
-      if (__maxp != NULL)						      \
-	{								      \
-	   /* Both MIN and MAX are specified.  */			      \
-	    __type max = *((__type *) __maxp);				      \
-	  if (max >= min						      \
-	      && max <= (__cur)->type.max				      \
-	      && min >= (__cur)->type.min)				      \
-	    {								      \
-	      (__cur)->type.min = min;					      \
-	      (__cur)->type.max = max;					      \
-	    }								      \
-	}								      \
-      else if (min > (__cur)->type.min && min <= (__cur)->type.max)	      \
-	{								      \
-	  /* Only MIN is specified.  */					      \
-	  (__cur)->type.min = min;					      \
-	}								      \
-    }									      \
-  else if (__maxp != NULL)						      \
-    {									      \
-      /* Only MAX is specified.  */					      \
-      __type max = *((__type *) __maxp);				      \
-      if (max < (__cur)->type.max && max >= (__cur)->type.min)		      \
-	(__cur)->type.max = max;					      \
-    }									      \
-})
-
 static void
-do_tunable_update_val (tunable_t *cur, const void *valp,
-		       const void *minp, const void *maxp)
+do_tunable_update_val (tunable_t *cur, const tunable_val_t *valp,
+		       const tunable_num_t *minp,
+		       const tunable_num_t *maxp)
 {
-  uint64_t val;
+  tunable_num_t val, min, max;
 
-  if (cur->type.type_code != TUNABLE_TYPE_STRING)
-    val = *((int64_t *) valp);
-
-  switch (cur->type.type_code)
+  if (cur->type.type_code == TUNABLE_TYPE_STRING)
     {
-    case TUNABLE_TYPE_INT_32:
-	{
-	  TUNABLE_SET_BOUNDS_IF_VALID (cur, minp, maxp, int64_t);
-	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, int64_t);
-	  break;
-	}
-    case TUNABLE_TYPE_UINT_64:
-	{
-	  TUNABLE_SET_BOUNDS_IF_VALID (cur, minp, maxp, uint64_t);
-	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, uint64_t);
-	  break;
-	}
-    case TUNABLE_TYPE_SIZE_T:
-	{
-	  TUNABLE_SET_BOUNDS_IF_VALID (cur, minp, maxp, uint64_t);
-	  TUNABLE_SET_VAL_IF_VALID_RANGE (cur, val, uint64_t);
-	  break;
-	}
-    case TUNABLE_TYPE_STRING:
-	{
-	  cur->val.strval = valp;
-	  break;
-	}
-    default:
-      __builtin_unreachable ();
+      cur->val.strval = valp->strval;
+      cur->initialized = true;
+      return;
+    }
+
+  val = valp->numval;
+  min = minp != NULL ? *minp : cur->type.min;
+  max = maxp != NULL ? *maxp : cur->type.max;
+
+  /* We allow only increasingly restrictive bounds.  */
+  if (min < cur->type.min)
+    min = cur->type.min;
+
+  if (max > cur->type.max)
+    max = cur->type.max;
+
+  /* Skip both bounds if they're inconsistent.  */
+  if (min > max)
+    {
+      min = cur->type.min;
+      max = cur->type.max;
+    }
+
+  /* Write everything out if the value and the bounds are valid.  */
+  if (min <= val && val <= max)
+    {
+      cur->val.numval = val;
+      cur->type.min = min;
+      cur->type.max = max;
+      cur->initialized = true;
     }
 }
 
@@ -182,24 +140,18 @@ do_tunable_update_val (tunable_t *cur, const void *valp,
 static void
 tunable_initialize (tunable_t *cur, const char *strval)
 {
-  uint64_t val;
-  const void *valp;
+  tunable_val_t val;
 
   if (cur->type.type_code != TUNABLE_TYPE_STRING)
-    {
-      val = _dl_strtoul (strval, NULL);
-      valp = &val;
-    }
+    val.numval = (tunable_num_t) _dl_strtoul (strval, NULL);
   else
-    {
-      cur->initialized = true;
-      valp = strval;
-    }
-  do_tunable_update_val (cur, valp, NULL, NULL);
+    val.strval = strval;
+  do_tunable_update_val (cur, &val, NULL, NULL);
 }
 
 void
-__tunable_set_val (tunable_id_t id, void *valp, void *minp, void *maxp)
+__tunable_set_val (tunable_id_t id, tunable_val_t *valp, tunable_num_t *minp,
+		   tunable_num_t *maxp)
 {
   tunable_t *cur = &tunable_list[id];
 
