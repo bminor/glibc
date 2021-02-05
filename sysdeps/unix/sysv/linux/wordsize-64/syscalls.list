@@ -1,6 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-statfs		-	statfs		i:sp	__statfs	statfs statfs64
 sendfile	-	sendfile	i:iipi	sendfile	sendfile64
 prlimit		EXTRA	prlimit64	i:iipp	prlimit		prlimit64
 

@@ -4,6 +4,4 @@ prlimit		EXTRA	prlimit64	i:iipp	prlimit		prlimit64
 
 fanotify_mark	EXTRA	fanotify_mark	i:iiiis	fanotify_mark
 
-statfs		-	statfs		i:sp	__statfs	statfs statfs64 __statfs64
-
 sendfile	-	sendfile	i:iipi	sendfile	sendfile64

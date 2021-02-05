@@ -1,6 +1,6 @@
-/* Copyright (C) 2011-2021 Free Software Foundation, Inc.
+/* Return information about the filesystem on which FILE resides.  Linux/alpha.
+   Copyright (C) 1996-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Chris Metcalf <cmetcalf@tilera.com>, 2011.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -13,24 +13,18 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
 #include <sys/statfs.h>
-#include <kernel_stat.h>
 #include <sysdep.h>
-
-#if !STATFS_IS_STATFS64
-#include "overflow.h"
+#include <kernel_stat.h>
 
 /* Return information about the filesystem on which FILE resides.  */
 int
 __statfs (const char *file, struct statfs *buf)
 {
-  int rc = INLINE_SYSCALL (statfs64, 3, file, sizeof (*buf), buf);
-  return rc ?: statfs_overflow (buf);
+  return INLINE_SYSCALL_CALL (statfs, file, buf);
 }
 libc_hidden_def (__statfs)
 weak_alias (__statfs, statfs)
-#endif
