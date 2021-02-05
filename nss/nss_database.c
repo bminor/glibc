@@ -398,8 +398,9 @@ nss_database_check_reload_and_get (struct nss_database_state *local,
 	  && (str.st_ino != local->root_ino
 	      ||  str.st_dev != local->root_dev)))
     {
-      /* Change detected; disable reloading.  */
+      /* Change detected; disable reloading and return current state.  */
       atomic_store_release (&local->data.reload_disabled, 1);
+      *result = local->data.services[database_index];
       __libc_lock_unlock (local->lock);
       __nss_module_disable_loading ();
       return true;
