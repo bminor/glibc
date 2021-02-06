@@ -16,49 +16,33 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stddef.h>
-#include <string.h>
-#include <sys/stat.h>
+#define __statvfs __statvfs_disable
+#define statvfs statvfs_disable
+#include <sys/statvfs.h>
 #include <sys/statfs.h>
-#include "internal_statvfs.h"
-#include <kernel-features.h>
+#include <internal_statvfs.h>
+#include <time.h>
+#include <kernel_stat.h>
 
 /* Return information about the filesystem on which FILE resides.  */
 int
 __statvfs64 (const char *file, struct statvfs64 *buf)
 {
   struct statfs64 fsbuf;
-  int res = __statfs64 (file, &fsbuf);
+  if (__statfs64 (file, &fsbuf) < 0)
+    return -1;
 
-#ifndef __ASSUME_STATFS64
-  if (res < 0 && errno == ENOSYS)
-    {
-      struct statvfs buf32;
+  /* Convert the result.  */
+  __internal_statvfs64 (file, buf, &fsbuf, -1);
 
-      res = statvfs (file, &buf32);
-      if (res == 0)
-	{
-	  buf->f_bsize = buf32.f_bsize;
-	  buf->f_frsize = buf32.f_frsize;
-	  buf->f_blocks = buf32.f_blocks;
-	  buf->f_bfree = buf32.f_bfree;
-	  buf->f_bavail = buf32.f_bavail;
-	  buf->f_files = buf32.f_files;
-	  buf->f_ffree = buf32.f_ffree;
-	  buf->f_favail = buf32.f_favail;
-	  buf->f_fsid = buf32.f_fsid;
-	  buf->f_flag = buf32.f_flag;
-	  buf->f_namemax = buf32.f_namemax;
-	  memcpy (buf->__f_spare, buf32.__f_spare, sizeof (buf32.__f_spare));
-	}
-    }
-#endif
-
-  if (res == 0)
-    /* Convert the result.  */
-    __internal_statvfs64 (file, buf, &fsbuf, -1);
-
-  return res;
+  return 0;
 }
 weak_alias (__statvfs64, statvfs64)
+
+#undef __statvfs
+#undef statvfs
+
+#if STATFS_IS_STATFS64
+weak_alias (__statvfs64, __statvfs)
+weak_alias (__statvfs64, statvfs)
+#endif

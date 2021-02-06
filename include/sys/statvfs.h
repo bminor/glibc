@@ -3,8 +3,7 @@
 
 #ifndef _ISOMAC
 /* Now define the internal interfaces.  */
-extern int __statvfs64 (const char *__file, struct statvfs64 *__buf)
-     attribute_hidden;
+extern int __statvfs64 (const char *__file, struct statvfs64 *__buf);
 extern int __fstatvfs64 (int __fildes, struct statvfs64 *__buf)
      attribute_hidden;
 

@@ -16,11 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
-#include <sys/stat.h>
+#include <sys/statvfs.h>
 #include <sys/statfs.h>
-#include "internal_statvfs.h"
+#include <internal_statvfs.h>
+#include <time.h>
+#include <kernel_stat.h>
 
+#if !STATFS_IS_STATFS64
 int
 __statvfs (const char *file, struct statvfs *buf)
 {
@@ -38,3 +40,4 @@ __statvfs (const char *file, struct statvfs *buf)
 }
 weak_alias (__statvfs, statvfs)
 libc_hidden_weak (statvfs)
+#endif
