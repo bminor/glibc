@@ -33,7 +33,7 @@ __fstatvfs64 (int fd, struct statvfs64 *buf)
     return -1;
 
   /* Convert the result.  */
-  __internal_statvfs64 (NULL, buf, &fsbuf, fd);
+  __internal_statvfs64 (buf, &fsbuf);
 
   return 0;
 }

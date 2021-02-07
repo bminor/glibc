@@ -33,7 +33,7 @@ __statvfs (const char *file, struct statvfs *buf)
     return -1;
 
   /* Convert the result.  */
-  __internal_statvfs (file, buf, &fsbuf, -1);
+  __internal_statvfs (buf, &fsbuf);
 
   /* We signal success if the statfs call succeeded.  */
   return 0;

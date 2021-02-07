@@ -273,7 +273,7 @@ CFLAGS-ypclnt.c = -DUSE_BINDINGDIR=1
 endif
 
 ifeq ($(subdir),io)
-sysdep_routines += xstatconv internal_statvfs internal_statvfs64 \
+sysdep_routines += xstatconv internal_statvfs \
 		   sync_file_range fallocate fallocate64 \
 		   close_nocancel fcntl_nocancel \
 		   open_nocancel open64_nocancel \

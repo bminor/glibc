@@ -18,9 +18,9 @@
 
 #include <sys/statvfs.h>
 
-extern void __internal_statvfs (const char *name, struct statvfs *buf,
-				struct statfs *fsbuf, int fd)
+extern void __internal_statvfs (struct statvfs *buf,
+				const struct statfs *fsbuf)
       attribute_hidden;
-extern void __internal_statvfs64 (const char *name, struct statvfs64 *buf,
-				  struct statfs64 *fsbuf, int fd)
+extern void __internal_statvfs64 (struct statvfs64 *buf,
+				  const struct statfs64 *fsbuf)
       attribute_hidden;
