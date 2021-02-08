@@ -97,7 +97,7 @@ test_main (void)
 
   json_attr_object_begin (&json_ctx, "functions");
   json_attr_object_begin (&json_ctx, TEST_NAME);
-  json_attr_string (&json_ctx, "bench-variant", "");
+  json_attr_string (&json_ctx, "bench-variant", "default");
 
   json_array_begin (&json_ctx, "ifuncs");
   FOR_EACH_IMPL (impl, 0)
