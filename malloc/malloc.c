@@ -442,7 +442,6 @@ void *(*__morecore)(ptrdiff_t) = __default_morecore;
 #ifdef USE_MTAG
 static bool mtag_enabled = false;
 static int mtag_mmap_flags = 0;
-static size_t mtag_granule_mask = ~(size_t)0;
 #else
 # define mtag_enabled false
 # define mtag_mmap_flags 0
@@ -1333,15 +1332,16 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    ((req) + SIZE_SZ + MALLOC_ALIGN_MASK) & ~MALLOC_ALIGN_MASK)
 
 /* Available size of chunk.  This is the size of the real usable data
-   in the chunk, plus the chunk header.  */
-#ifdef USE_MTAG
-#define CHUNK_AVAILABLE_SIZE(p) \
-  ((chunksize (p) + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))	\
-   & mtag_granule_mask)
-#else
-#define CHUNK_AVAILABLE_SIZE(p) \
-  (chunksize (p) + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))
-#endif
+   in the chunk, plus the chunk header.  Note: If memory tagging is
+   enabled the layout changes to accomodate the granule size, this is
+   wasteful for small allocations so not done by default.  The logic
+   does not work if chunk headers are not granule aligned.  */
+_Static_assert (__MTAG_GRANULE_SIZE <= CHUNK_HDR_SZ,
+		"memory tagging is not supported with large granule.");
+#define CHUNK_AVAILABLE_SIZE(p)                                       \
+  (__MTAG_GRANULE_SIZE > SIZE_SZ && __glibc_unlikely (mtag_enabled) ? \
+    chunksize (p) :                                                   \
+    chunksize (p) + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))
 
 /* Check if REQ overflows when padded and aligned and if the resulting value
    is less than PTRDIFF_T.  Returns TRUE and the requested size or MINSIZE in
@@ -1353,7 +1353,6 @@ checked_request2size (size_t req, size_t *sz) __nonnull (1)
   if (__glibc_unlikely (req > PTRDIFF_MAX))
     return false;
 
-#ifdef USE_MTAG
   /* When using tagged memory, we cannot share the end of the user
      block with the header for the next chunk, so ensure that we
      allocate blocks that are rounded up to the granule size.  Take
@@ -1361,8 +1360,9 @@ checked_request2size (size_t req, size_t *sz) __nonnull (1)
      number.  Ideally, this would be part of request2size(), but that
      must be a macro that produces a compile time constant if passed
      a constant literal.  */
-  req = (req + ~mtag_granule_mask) & mtag_granule_mask;
-#endif
+  if (__glibc_unlikely (mtag_enabled))
+    req = (req + (__MTAG_GRANULE_SIZE - 1)) &
+	  ~(size_t)(__MTAG_GRANULE_SIZE - 1);
 
   *sz = request2size (req);
   return true;
@@ -5112,14 +5112,8 @@ musable (void *mem)
 	    result = chunksize (p) - CHUNK_HDR_SZ;
 	}
       else if (inuse (p))
-	result = chunksize (p) - SIZE_SZ;
+	result = CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ;
 
-#ifdef USE_MTAG
-      /* The usable space may be reduced if memory tagging is needed,
-	 since we cannot share the user-space data with malloc's internal
-	 data structure.  */
-      result &= mtag_granule_mask;
-#endif
       return result;
     }
   return 0;
