@@ -306,7 +306,6 @@ ptmalloc_init (void)
 
       mtag_enabled = true;
       mtag_mmap_flags = __MTAG_MMAP_FLAGS;
-      mtag_granule_mask = ~(size_t)(__MTAG_GRANULE_SIZE - 1);
     }
 #endif
 
