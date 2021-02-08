@@ -82,6 +82,22 @@ enum __ptrace_request
   PTRACE_SYSCALL = 24,
 #define PT_SYSCALL PTRACE_SYSCALL
 
+  /* Continue and stop at the next syscall, it will not be executed.  */
+  PTRACE_SYSEMU = 31,
+#define PT_SYSEMU PTRACE_SYSEMU
+
+  /* Single step the process, the next syscall will not be executed.  */
+  PTRACE_SYSEMU_SINGLESTEP = 32,
+#define PT_SYSEMU_SINGLESTEP PTRACE_SYSEMU_SINGLESTEP
+
+  /* Read MTE tags.  */
+  PTRACE_PEEKMTETAGS = 33,
+#define PT_PEEKMTETAGS PTRACE_PEEKMTETAGS
+
+  /* Write MTE tags.  */
+  PTRACE_POKEMTETAGS = 34,
+#define PT_POKEMTETAGS PTRACE_POKEMTETAGS
+
   /* Set ptrace filter options.  */
   PTRACE_SETOPTIONS = 0x4200,
 #define PT_SETOPTIONS PTRACE_SETOPTIONS
