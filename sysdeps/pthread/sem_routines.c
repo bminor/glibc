@@ -37,7 +37,7 @@ struct search_sem
   ino_t ino;
   int refcnt;
   sem_t *sem;
-  char name[NAME_MAX];
+  char name[NAME_MAX + 1];
 };
 
 /* Comparison function for search of existing mapping.  */
