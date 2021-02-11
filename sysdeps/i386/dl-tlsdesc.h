@@ -43,11 +43,7 @@ struct tlsdesc_dynamic_arg
 
 extern ptrdiff_t attribute_hidden __attribute__ ((regparm (1)))
   _dl_tlsdesc_return (struct tlsdesc *),
-  _dl_tlsdesc_undefweak (struct tlsdesc *),
-  _dl_tlsdesc_resolve_abs_plus_addend (struct tlsdesc *),
-  _dl_tlsdesc_resolve_rel (struct tlsdesc *),
-  _dl_tlsdesc_resolve_rela (struct tlsdesc *),
-  _dl_tlsdesc_resolve_hold (struct tlsdesc *);
+  _dl_tlsdesc_undefweak (struct tlsdesc *);
 
 # ifdef SHARED
 extern void *_dl_make_tlsdesc_dynamic (struct link_map *map,
