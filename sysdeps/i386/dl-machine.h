@@ -688,50 +688,32 @@ elf_machine_lazy_rel (struct link_map *map,
     }
   else if (__glibc_likely (r_type == R_386_TLS_DESC))
     {
-      struct tlsdesc volatile * __attribute__((__unused__)) td =
-	(struct tlsdesc volatile *)reloc_addr;
+      const Elf32_Rel *const r = reloc;
+      /* The code below was borrowed from elf_dynamic_do_rel().  */
+      const ElfW(Sym) *const symtab =
+	(const void *) D_PTR (map, l_info[DT_SYMTAB]);
 
-      /* Handle relocations that reference the local *ABS* in a simple
-	 way, so as to preserve a potential addend.  */
-      if (ELF32_R_SYM (reloc->r_info) == 0)
-	td->entry = _dl_tlsdesc_resolve_abs_plus_addend;
-      /* Given a known-zero addend, we can store a pointer to the
-	 reloc in the arg position.  */
-      else if (td->arg == 0)
-	{
-	  td->arg = (void*)reloc;
-	  td->entry = _dl_tlsdesc_resolve_rel;
-	}
-      else
-	{
-	  /* We could handle non-*ABS* relocations with non-zero addends
-	     by allocating dynamically an arg to hold a pointer to the
-	     reloc, but that sounds pointless.  */
-	  const Elf32_Rel *const r = reloc;
-	  /* The code below was borrowed from elf_dynamic_do_rel().  */
-	  const ElfW(Sym) *const symtab =
-	    (const void *) D_PTR (map, l_info[DT_SYMTAB]);
-
+      /* Always initialize TLS descriptors completely at load time, in
+	 case static TLS is allocated for it that requires locking.  */
 # ifdef RTLD_BOOTSTRAP
-	  /* The dynamic linker always uses versioning.  */
-	  assert (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL);
+      /* The dynamic linker always uses versioning.  */
+      assert (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL);
 # else
-	  if (map->l_info[VERSYMIDX (DT_VERSYM)])
+      if (map->l_info[VERSYMIDX (DT_VERSYM)])
 # endif
-	    {
-	      const ElfW(Half) *const version =
-		(const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
-	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)] & 0x7fff;
-	      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)],
-			       &map->l_versions[ndx],
-			       (void *) (l_addr + r->r_offset), skip_ifunc);
-	    }
-# ifndef RTLD_BOOTSTRAP
-	  else
-	    elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
-			     (void *) (l_addr + r->r_offset), skip_ifunc);
-# endif
+	{
+	  const ElfW(Half) *const version =
+	    (const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
+	  ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)] & 0x7fff;
+	  elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)],
+			   &map->l_versions[ndx],
+			   (void *) (l_addr + r->r_offset), skip_ifunc);
 	}
+# ifndef RTLD_BOOTSTRAP
+      else
+	elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
+			 (void *) (l_addr + r->r_offset), skip_ifunc);
+# endif
     }
   else if (__glibc_unlikely (r_type == R_386_IRELATIVE))
     {
@@ -758,11 +740,21 @@ elf_machine_lazy_rela (struct link_map *map,
     ;
   else if (__glibc_likely (r_type == R_386_TLS_DESC))
     {
-      struct tlsdesc volatile * __attribute__((__unused__)) td =
-	(struct tlsdesc volatile *)reloc_addr;
+      const Elf_Symndx symndx = ELFW (R_SYM) (reloc->r_info);
+      const ElfW (Sym) *symtab = (const void *)D_PTR (map, l_info[DT_SYMTAB]);
+      const ElfW (Sym) *sym = &symtab[symndx];
+      const struct r_found_version *version = NULL;
 
-      td->arg = (void*)reloc;
-      td->entry = _dl_tlsdesc_resolve_rela;
+      if (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+	{
+	  const ElfW (Half) *vernum =
+	    (const void *)D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
+	  version = &map->l_versions[vernum[symndx] & 0x7fff];
+	}
+
+      /* Always initialize TLS descriptors completely at load time, in
+	 case static TLS is allocated for it that requires locking.  */
+      elf_machine_rela (map, reloc, sym, version, reloc_addr, skip_ifunc);
     }
   else if (__glibc_unlikely (r_type == R_386_IRELATIVE))
     {
