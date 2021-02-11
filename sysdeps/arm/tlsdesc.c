@@ -20,7 +20,6 @@
 #include <tls.h>
 #include <dl-tlsdesc.h>
 #include <dl-unmap-segments.h>
-#define _dl_tlsdesc_resolve_hold 0
 #include <tlsdeschtab.h>
 
 /* Unmap the dynamic object, but also release its TLS descriptor table
