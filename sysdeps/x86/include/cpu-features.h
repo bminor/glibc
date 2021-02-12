@@ -941,6 +941,6 @@ extern void _dl_x86_init_cpu_features (void) attribute_hidden;
 # define HAS_CPUID 1
 # define HAS_I586 1
 # define HAS_I686 1
-# endif
+#endif
 
 #endif /* include/cpu-features.h */
