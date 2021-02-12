@@ -80,20 +80,13 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
       l->l_local_scope[0]->r_list = &l->l_real;
 
       /* Now that we have the info handy, use the DSO image's soname
-	 so this object can be looked up by name.  Note that we do not
-	 set l_name here.  That field gives the file name of the DSO,
-	 and this DSO is not associated with any file.  */
+	 so this object can be looked up by name.  */
       if (l->l_info[DT_SONAME] != NULL)
 	{
-	  /* Work around a kernel problem.  The kernel cannot handle
-	     addresses in the vsyscall DSO pages in writev() calls.  */
-	  const char *dsoname = ((char *) D_PTR (l, l_info[DT_STRTAB])
-				 + l->l_info[DT_SONAME]->d_un.d_val);
-	  size_t len = strlen (dsoname) + 1;
-	  char *copy = malloc (len);
-	  if (copy == NULL)
-	    _dl_fatal_printf ("out of memory\n");
-	  l->l_libname->name = l->l_name = memcpy (copy, dsoname, len);
+	  char *dsoname = ((char *) D_PTR (l, l_info[DT_STRTAB])
+			   + l->l_info[DT_SONAME]->d_un.d_val);
+	  l->l_libname->name = dsoname;
+	  l->l_name = dsoname;
 	}
 
       /* Add the vDSO to the object list.  */
