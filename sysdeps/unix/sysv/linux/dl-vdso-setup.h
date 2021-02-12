@@ -47,15 +47,6 @@ setup_vdso_pointers (void)
 #ifdef HAVE_GET_TBFREQ
   GLRO(dl_vdso_get_tbfreq) = dl_vdso_vsym (HAVE_GET_TBFREQ);
 #endif
-#ifdef HAVE_SIGTRAMP_RT64
-  GLRO(dl_vdso_sigtramp_rt64) = dl_vdso_vsym (HAVE_SIGTRAMP_RT64);
-#endif
-#ifdef HAVE_SIGTRAMP_RT32
-  GLRO(dl_vdso_sigtramp_rt32) = dl_vdso_vsym (HAVE_SIGTRAMP_RT32);
-#endif
-#ifdef HAVE_SIGTRAMP_32
-  GLRO(dl_vdso_sigtramp_32) = dl_vdso_vsym (HAVE_SIGTRAMP_32);
-#endif
 }
 
 #endif

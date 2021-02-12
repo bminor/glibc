@@ -255,11 +255,4 @@
 #define HAVE_GETTIMEOFDAY_VSYSCALL      "__kernel_gettimeofday"
 #define HAVE_GET_TBFREQ                 "__kernel_get_tbfreq"
 
-#if defined(__PPC64__) || defined(__powerpc64__)
-# define HAVE_SIGTRAMP_RT64		"__kernel_sigtramp_rt64"
-#else
-# define HAVE_SIGTRAMP_32		"__kernel_sigtramp32"
-# define HAVE_SIGTRAMP_RT32		"__kernel_sigtramp_rt32"
-#endif
-
 #endif /* _LINUX_POWERPC_SYSDEP_H  */
