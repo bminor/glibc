@@ -33,47 +33,6 @@
 #include <kernel-features.h>
 #include <nptl-stack.h>
 
-#ifndef NEED_SEPARATE_REGISTER_STACK
-
-/* Most architectures have exactly one stack pointer.  Some have more.  */
-# define STACK_VARIABLES void *stackaddr = NULL
-
-/* How to pass the values to the 'create_thread' function.  */
-# define STACK_VARIABLES_ARGS stackaddr
-
-/* How to declare function which gets there parameters.  */
-# define STACK_VARIABLES_PARMS void *stackaddr
-
-/* How to declare allocate_stack.  */
-# define ALLOCATE_STACK_PARMS void **stack
-
-/* This is how the function is called.  We do it this way to allow
-   other variants of the function to have more parameters.  */
-# define ALLOCATE_STACK(attr, pd) allocate_stack (attr, pd, &stackaddr)
-
-#else
-
-/* We need two stacks.  The kernel will place them but we have to tell
-   the kernel about the size of the reserved address space.  */
-# define STACK_VARIABLES void *stackaddr = NULL; size_t stacksize = 0
-
-/* How to pass the values to the 'create_thread' function.  */
-# define STACK_VARIABLES_ARGS stackaddr, stacksize
-
-/* How to declare function which gets there parameters.  */
-# define STACK_VARIABLES_PARMS void *stackaddr, size_t stacksize
-
-/* How to declare allocate_stack.  */
-# define ALLOCATE_STACK_PARMS void **stack, size_t *stacksize
-
-/* This is how the function is called.  We do it this way to allow
-   other variants of the function to have more parameters.  */
-# define ALLOCATE_STACK(attr, pd) \
-  allocate_stack (attr, pd, &stackaddr, &stacksize)
-
-#endif
-
-
 /* Default alignment of stack.  */
 #ifndef STACK_ALIGN
 # define STACK_ALIGN __alignof__ (long double)
@@ -252,7 +211,7 @@ advise_stack_range (void *mem, size_t size, uintptr_t pd, size_t guardsize)
    PDP must be non-NULL.  */
 static int
 allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
-		ALLOCATE_STACK_PARMS)
+		void **stack, size_t *stacksize)
 {
   struct pthread *pd;
   size_t size;
@@ -603,25 +562,17 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
   /* We place the thread descriptor at the end of the stack.  */
   *pdp = pd;
 
-#if _STACK_GROWS_DOWN
   void *stacktop;
 
-# if TLS_TCB_AT_TP
+#if TLS_TCB_AT_TP
   /* The stack begins before the TCB and the static TLS block.  */
   stacktop = ((char *) (pd + 1) - tls_static_size_for_stack);
-# elif TLS_DTV_AT_TP
+#elif TLS_DTV_AT_TP
   stacktop = (char *) (pd - 1);
-# endif
-
-# ifdef NEED_SEPARATE_REGISTER_STACK
-  *stack = pd->stackblock;
-  *stacksize = stacktop - *stack;
-# else
-  *stack = stacktop;
-# endif
-#else
-  *stack = pd->stackblock;
 #endif
+
+  *stacksize = stacktop - pd->stackblock;
+  *stack = pd->stackblock;
 
   return 0;
 }

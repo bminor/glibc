@@ -36,6 +36,7 @@
 #include "libioP.h"
 #include <sys/single_threaded.h>
 #include <version.h>
+#include <clone_internal.h>
 
 #include <shlib-compat.h>
 
@@ -227,8 +228,8 @@ late_init (void)
 static int _Noreturn start_thread (void *arg);
 
 static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
-			  bool *stopped_start, STACK_VARIABLES_PARMS,
-			  bool *thread_ran)
+			  bool *stopped_start, void *stackaddr,
+			  size_t stacksize, bool *thread_ran)
 {
   /* Determine whether the newly created threads has to be started
      stopped since we have to set the scheduling parameters or set the
@@ -280,14 +281,18 @@ static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
 
   TLS_DEFINE_INIT_TP (tp, pd);
 
-#ifdef __NR_clone2
-# define ARCH_CLONE __clone2
-#else
-# define ARCH_CLONE __clone
-#endif
-  if (__glibc_unlikely (ARCH_CLONE (&start_thread, STACK_VARIABLES_ARGS,
-				    clone_flags, pd, &pd->tid, tp, &pd->tid)
-			== -1))
+  struct clone_args args =
+    {
+      .flags = clone_flags,
+      .pidfd = (uintptr_t) &pd->tid,
+      .parent_tid = (uintptr_t) &pd->tid,
+      .child_tid = (uintptr_t) &pd->tid,
+      .stack = (uintptr_t) stackaddr,
+      .stack_size = stacksize,
+      .tls = (uintptr_t) tp,
+    };
+  int ret = __clone_internal (&args, &start_thread, pd);
+  if (__glibc_unlikely (ret == -1))
     return errno;
 
   /* It's started now, so if we fail below, we'll have to let it clean itself
@@ -576,7 +581,8 @@ int
 __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 		      void *(*start_routine) (void *), void *arg)
 {
-  STACK_VARIABLES;
+  void *stackaddr = NULL;
+  size_t stacksize = 0;
 
   /* Avoid a data race in the multi-threaded case, and call the
      deferred initialization only once.  */
@@ -600,7 +606,7 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
     }
 
   struct pthread *pd = NULL;
-  int err = ALLOCATE_STACK (iattr, &pd);
+  int err = allocate_stack (iattr, &pd, &stackaddr, &stacksize);
   int retval = 0;
 
   if (__glibc_unlikely (err != 0))
@@ -744,8 +750,8 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 
       /* We always create the thread stopped at startup so we can
 	 notify the debugger.  */
-      retval = create_thread (pd, iattr, &stopped_start,
-			      STACK_VARIABLES_ARGS, &thread_ran);
+      retval = create_thread (pd, iattr, &stopped_start, stackaddr,
+			      stacksize, &thread_ran);
       if (retval == 0)
 	{
 	  /* We retain ownership of PD until (a) (see CONCURRENCY NOTES
@@ -776,8 +782,8 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 	}
     }
   else
-    retval = create_thread (pd, iattr, &stopped_start,
-			    STACK_VARIABLES_ARGS, &thread_ran);
+    retval = create_thread (pd, iattr, &stopped_start, stackaddr,
+			    stacksize, &thread_ran);
 
   /* Return to the previous signal mask, after creating the new
      thread.  */

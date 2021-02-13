@@ -26,6 +26,7 @@
 #include <spawn_int.h>
 #include <sysdep.h>
 #include <sys/resource.h>
+#include <clone_internal.h>
 
 /* The Linux implementation of posix_spawn{p} uses the clone syscall directly
    with CLONE_VM and CLONE_VFORK flags and an allocated stack.  The new stack
@@ -52,21 +53,6 @@
    available methods.  The committee chose to signal an error by a
    normal program exit with the exit code 127.  */
 #define SPAWN_ERROR	127
-
-#ifdef __ia64__
-# define CLONE(__fn, __stackbase, __stacksize, __flags, __args) \
-  __clone2 (__fn, __stackbase, __stacksize, __flags, __args, 0, 0, 0)
-#else
-# define CLONE(__fn, __stack, __stacksize, __flags, __args) \
-  __clone (__fn, __stack, __flags, __args)
-#endif
-
-/* Since ia64 wants the stackbase w/clone2, re-use the grows-up macro.  */
-#if _STACK_GROWS_UP || defined (__ia64__)
-# define STACK(__stack, __stack_size) (__stack)
-#elif _STACK_GROWS_DOWN
-# define STACK(__stack, __stack_size) (__stack + __stack_size)
-#endif
 
 
 struct posix_spawn_args
@@ -382,8 +368,14 @@ __spawnix (pid_t * pid, const char *file,
      need for CLONE_SETTLS.  Although parent and child share the same TLS
      namespace, there will be no concurrent access for TLS variables (errno
      for instance).  */
-  new_pid = CLONE (__spawni_child, STACK (stack, stack_size), stack_size,
-		   CLONE_VM | CLONE_VFORK | SIGCHLD, &args);
+  struct clone_args clone_args =
+    {
+      .flags = CLONE_VM | CLONE_VFORK,
+      .exit_signal = SIGCHLD,
+      .stack = (uintptr_t) stack,
+      .stack_size = stack_size,
+    };
+  new_pid = __clone_internal (&clone_args, __spawni_child, &args);
 
   /* It needs to collect the case where the auxiliary process was created
      but failed to execute the file (due either any preparation step or
