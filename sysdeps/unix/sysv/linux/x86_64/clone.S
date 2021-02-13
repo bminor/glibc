@@ -24,18 +24,20 @@
 #include <asm-syntax.h>
 
 /* The userland implementation is:
-   int clone (int (*fn)(void *arg), void *child_stack, int flags, void *arg),
+   int clone (int (*fn)(void *arg), void *child_stack, int flags,
+	      void *arg, pid_t *parent_tid, void *tls, pid_t *child_tid);
    the kernel entry is:
-   int clone (long flags, void *child_stack).
+   int clone (long flags, void *child_stack, pid_t *parent_tid,
+	      pid_t *child_tid, void *tls);
 
    The parameters are passed in register and on the stack from userland:
    rdi: fn
    rsi: child_stack
    rdx:	flags
    rcx: arg
-   r8d:	TID field in parent
-   r9d: thread pointer
-%esp+8:	TID field in child
+    r8:	TID field in parent
+    r9: thread pointer
+%rsp+8:	TID field in child
 
    The kernel expects:
    rax: system call number
@@ -60,7 +62,7 @@ ENTRY (__clone)
 	movq	%rcx,8(%rsi)
 
 	/* Save the function pointer.  It will be popped off in the
-	   child in the ebx frobbing below.  */
+	   child.  */
 	movq	%rdi,0(%rsi)
 
 	/* Do the system call.  */
