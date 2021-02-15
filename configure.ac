@@ -90,7 +90,7 @@ config_vars=
 
 # Check for a --with-gd argument and set libgd-LDFLAGS in config.make.
 AC_ARG_WITH([gd],
-	    AC_HELP_STRING([--with-gd=DIR],
+	    AS_HELP_STRING([--with-gd=DIR],
 			   [find libgd include dir and library with prefix DIR]),
 	    [dnl
 case "$with_gd" in
@@ -100,7 +100,7 @@ yes|''|no) ;;
 esac
 ])
 AC_ARG_WITH([gd-include],
-	    AC_HELP_STRING([--with-gd-include=DIR],
+	    AS_HELP_STRING([--with-gd-include=DIR],
 			   [find libgd include files in DIR]),
 	    [dnl
 case "$with_gd_include" in
@@ -109,7 +109,7 @@ case "$with_gd_include" in
 esac
 ])
 AC_ARG_WITH([gd-lib],
-	    AC_HELP_STRING([--with-gd-lib=DIR],
+	    AS_HELP_STRING([--with-gd-lib=DIR],
 			   [find libgd library files in DIR]),
 	    [dnl
 case "$with_gd_lib" in
@@ -129,18 +129,18 @@ fi
 
 dnl Arguments to specify presence of other packages/features.
 AC_ARG_WITH([binutils],
-	    AC_HELP_STRING([--with-binutils=PATH],
+	    AS_HELP_STRING([--with-binutils=PATH],
 			   [specify location of binutils (as and ld)]),
 	    [path_binutils=$withval],
 	    [path_binutils=''])
 AC_ARG_WITH([selinux],
-	    AC_HELP_STRING([--with-selinux],
+	    AS_HELP_STRING([--with-selinux],
 			   [if building with SELinux support]),
 	    [with_selinux=$withval],
 	    [with_selinux=auto])
 
 AC_ARG_WITH([headers],
-	    AC_HELP_STRING([--with-headers=PATH],
+	    AS_HELP_STRING([--with-headers=PATH],
 			   [location of system headers to use
 			    (for example /usr/src/linux/include)
 			    @<:@default=compiler default@:>@]),
@@ -150,56 +150,56 @@ AC_SUBST(sysheaders)
 
 AC_SUBST(use_default_link)
 AC_ARG_WITH([default-link],
-	    AC_HELP_STRING([--with-default-link],
+	    AS_HELP_STRING([--with-default-link],
 			   [do not use explicit linker scripts]),
 	    [use_default_link=$withval],
 	    [use_default_link=default])
 
 dnl Additional build flags injection.
 AC_ARG_WITH([nonshared-cflags],
-	    AC_HELP_STRING([--with-nonshared-cflags=CFLAGS],
+	    AS_HELP_STRING([--with-nonshared-cflags=CFLAGS],
 			   [build nonshared libraries with additional CFLAGS]),
 	    [extra_nonshared_cflags=$withval],
 	    [extra_nonshared_cflags=])
 AC_SUBST(extra_nonshared_cflags)
 
 AC_ARG_ENABLE([sanity-checks],
-	      AC_HELP_STRING([--disable-sanity-checks],
+	      AS_HELP_STRING([--disable-sanity-checks],
 			     [really do not use threads (should not be used except in special situations) @<:@default=yes@:>@]),
 	      [enable_sanity=$enableval],
 	      [enable_sanity=yes])
 
 AC_ARG_ENABLE([shared],
-	      AC_HELP_STRING([--enable-shared],
+	      AS_HELP_STRING([--enable-shared],
 			     [build shared library @<:@default=yes if GNU ld@:>@]),
 	      [shared=$enableval],
 	      [shared=yes])
 AC_ARG_ENABLE([profile],
-	      AC_HELP_STRING([--enable-profile],
+	      AS_HELP_STRING([--enable-profile],
 			     [build profiled library @<:@default=no@:>@]),
 	      [profile=$enableval],
 	      [profile=no])
 AC_ARG_ENABLE([static-pie],
-	      AC_HELP_STRING([--enable-static-pie],
+	      AS_HELP_STRING([--enable-static-pie],
 			     [enable static PIE support and use it in the testsuite @<:@default=no@:>@]),
 	      [static_pie=$enableval],
 	      [static_pie=no])
 AC_ARG_ENABLE([timezone-tools],
-	      AC_HELP_STRING([--disable-timezone-tools],
+	      AS_HELP_STRING([--disable-timezone-tools],
 			     [do not install timezone tools @<:@default=install@:>@]),
 	      [enable_timezone_tools=$enableval],
 	      [enable_timezone_tools=yes])
 AC_SUBST(enable_timezone_tools)
 
 AC_ARG_ENABLE([hardcoded-path-in-tests],
-	      AC_HELP_STRING([--enable-hardcoded-path-in-tests],
+	      AS_HELP_STRING([--enable-hardcoded-path-in-tests],
 			     [hardcode newly built glibc path in tests @<:@default=no@:>@]),
 	      [hardcoded_path_in_tests=$enableval],
 	      [hardcoded_path_in_tests=no])
 AC_SUBST(hardcoded_path_in_tests)
 
 AC_ARG_ENABLE([stackguard-randomization],
-	      AC_HELP_STRING([--enable-stackguard-randomization],
+	      AS_HELP_STRING([--enable-stackguard-randomization],
 			     [initialize __stack_chk_guard canary with a random number at program start]),
 	      [enable_stackguard_randomize=$enableval],
 	      [enable_stackguard_randomize=no])
@@ -208,7 +208,7 @@ if test "$enable_stackguard_randomize" = yes; then
 fi
 
 AC_ARG_ENABLE([hidden-plt],
-	      AC_HELP_STRING([--disable-hidden-plt],
+	      AS_HELP_STRING([--disable-hidden-plt],
 			     [do not hide internal function calls to avoid PLT]),
 	      [hidden=$enableval],
 	      [hidden=yes])
@@ -217,7 +217,7 @@ if test "x$hidden" = xno; then
 fi
 
 AC_ARG_ENABLE([bind-now],
-	      AC_HELP_STRING([--enable-bind-now],
+	      AS_HELP_STRING([--enable-bind-now],
 			     [disable lazy relocations in DSOs]),
 	      [bindnow=$enableval],
 	      [bindnow=no])
@@ -229,7 +229,7 @@ fi
 dnl Build glibc with -fstack-protector, -fstack-protector-all, or
 dnl -fstack-protector-strong.
 AC_ARG_ENABLE([stack-protector],
-	      AC_HELP_STRING([--enable-stack-protector=@<:@yes|no|all|strong@:>@],
+	      AS_HELP_STRING([--enable-stack-protector=@<:@yes|no|all|strong@:>@],
 			     [Use -fstack-protector[-all|-strong] to detect glibc buffer overflows]),
 	      [enable_stack_protector=$enableval],
 	      [enable_stack_protector=no])
@@ -241,7 +241,7 @@ esac
 dnl On some platforms we cannot use dynamic loading.  We must provide
 dnl static NSS modules.
 AC_ARG_ENABLE([static-nss],
-	      AC_HELP_STRING([--enable-static-nss],
+	      AS_HELP_STRING([--enable-static-nss],
 			     [build static NSS modules @<:@default=no@:>@]),
 	      [static_nss=$enableval],
 	      [static_nss=no])
@@ -252,14 +252,14 @@ if test x"$static_nss" = xyes || test x"$shared" = xno; then
 fi
 
 AC_ARG_ENABLE([force-install],
-	      AC_HELP_STRING([--disable-force-install],
+	      AS_HELP_STRING([--disable-force-install],
 			     [don't force installation of files from this package, even if they are older than the installed files]),
 	      [force_install=$enableval],
 	      [force_install=yes])
 AC_SUBST(force_install)
 
 AC_ARG_ENABLE([maintainer-mode],
-	      AC_HELP_STRING([--enable-maintainer-mode],
+	      AS_HELP_STRING([--enable-maintainer-mode],
 			     [enable make rules and dependencies not useful (and sometimes confusing) to the casual installer]),
 	      [maintainer=$enableval],
 	      [maintainer=no])
@@ -267,7 +267,7 @@ AC_ARG_ENABLE([maintainer-mode],
 dnl On some platforms we allow dropping compatibility with all kernel
 dnl versions.
 AC_ARG_ENABLE([kernel],
-	      AC_HELP_STRING([--enable-kernel=VERSION],
+	      AS_HELP_STRING([--enable-kernel=VERSION],
 			     [compile for compatibility with kernel not older than VERSION]),
 	      [minimum_kernel=$enableval],
 	      [])
@@ -285,34 +285,34 @@ dnl For the development we sometimes want gcc to issue even more warnings.
 dnl This is not the default since many of the extra warnings are not
 dnl appropriate.
 AC_ARG_ENABLE([all-warnings],
-	      AC_HELP_STRING([--enable-all-warnings],
+	      AS_HELP_STRING([--enable-all-warnings],
 			     [enable all useful warnings gcc can issue]),
 	      [all_warnings=$enableval],
 	      [])
 AC_SUBST(all_warnings)
 
 AC_ARG_ENABLE([werror],
-	      AC_HELP_STRING([--disable-werror],
+	      AS_HELP_STRING([--disable-werror],
 			     [do not build with -Werror]),
 	      [enable_werror=$enableval],
 	      [enable_werror=yes])
 AC_SUBST(enable_werror)
 
 AC_ARG_ENABLE([multi-arch],
-	      AC_HELP_STRING([--enable-multi-arch],
+	      AS_HELP_STRING([--enable-multi-arch],
 			     [enable single DSO with optimizations for multiple architectures]),
 	      [multi_arch=$enableval],
 	      [multi_arch=default])
 
 AC_ARG_ENABLE([experimental-malloc],
-	      AC_HELP_STRING([--disable-experimental-malloc],
+	      AS_HELP_STRING([--disable-experimental-malloc],
 			     [disable experimental malloc features]),
 	      [experimental_malloc=$enableval],
 	      [experimental_malloc=yes])
 AC_SUBST(experimental_malloc)
 
 AC_ARG_ENABLE([memory-tagging],
-	      AC_HELP_STRING([--enable-memory-tagging],
+	      AS_HELP_STRING([--enable-memory-tagging],
 			     [enable memory tagging if supported by the architecture @<:@default=no@:>@]),
 	      [memory_tagging=$enableval],
 	      [memory_tagging=no])
@@ -327,14 +327,14 @@ fi
 AC_SUBST(memory_tagging)
 
 AC_ARG_ENABLE([crypt],
-              AC_HELP_STRING([--disable-crypt],
+              AS_HELP_STRING([--disable-crypt],
                              [do not build nor install the passphrase hashing library, libcrypt]),
               [build_crypt=$enableval],
               [build_crypt=yes])
 AC_SUBST(build_crypt)
 
 AC_ARG_ENABLE([nss-crypt],
-	      AC_HELP_STRING([--enable-nss-crypt],
+	      AS_HELP_STRING([--enable-nss-crypt],
 			     [enable libcrypt to use nss]),
 	      [nss_crypt=$enableval],
 	      [nss_crypt=no])
@@ -474,7 +474,7 @@ AC_TRY_COMPILE([], [
 	       [libc_cv_compiler_default_cet=no])
 
 AC_ARG_ENABLE([cet],
-	      AC_HELP_STRING([--enable-cet],
+	      AS_HELP_STRING([--enable-cet],
 			     [enable Intel Control-flow Enforcement Technology (CET), x86 only]),
 	      [enable_cet=$enableval],
 	      [enable_cet=$libc_cv_compiler_default_cet])
