@@ -993,7 +993,6 @@ else
 fi
 
 # These programs are version sensitive.
-AC_CHECK_TOOL_PREFIX
 AC_CHECK_PROG_VER(MAKE, gnumake gmake make, --version,
   [GNU Make[^0-9]*\([0-9][0-9.]*\)],
   [[4-9].* | [1-9][0-9]*], critic_missing="$critic_missing make")
