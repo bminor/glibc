@@ -3591,11 +3591,9 @@ __libc_calloc (size_t n, size_t elem_size)
   mchunkptr oldtop;
   INTERNAL_SIZE_T sz, oldtopsize;
   void *mem;
-#ifndef USE_MTAG
   unsigned long clearsize;
   unsigned long nclears;
   INTERNAL_SIZE_T *d;
-#endif
   ptrdiff_t bytes;
 
   if (__glibc_unlikely (__builtin_mul_overflow (n, elem_size, &bytes)))
@@ -3674,12 +3672,13 @@ __libc_calloc (size_t n, size_t elem_size)
     return 0;
 
   mchunkptr p = mem2chunk (mem);
+
   /* If we are using memory tagging, then we need to set the tags
      regardless of MORECORE_CLEARS, so we zero the whole block while
      doing so.  */
-#ifdef USE_MTAG
-  return tag_new_zero_region (mem, CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
-#else
+  if (__glibc_unlikely (mtag_enabled))
+    return tag_new_zero_region (mem, CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
+
   INTERNAL_SIZE_T csz = chunksize (p);
 
   /* Two optional cases in which clearing not necessary */
@@ -3733,7 +3732,6 @@ __libc_calloc (size_t n, size_t elem_size)
     }
 
   return mem;
-#endif
 }
 
 /*
