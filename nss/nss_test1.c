@@ -66,6 +66,9 @@ static int npwd_data = default_npwd_data;
 static struct group *grp_data = NULL;
 static int ngrp_data = 0;
 
+static struct spwd *spwd_data = NULL;
+static int nspwd_data = 0;
+
 static struct hostent *host_data = NULL;
 static int nhost_data = 0;
 
@@ -101,6 +104,13 @@ init(void)
 	  for (i=0; ! GRP_ISLAST(& grp_data[i]); i++)
 	    ;
 	  ngrp_data = i;
+	}
+      if (t.spwd_table)
+	{
+	  spwd_data = t.spwd_table;
+	  for (i=0; ! SPWD_ISLAST(& spwd_data[i]); i++)
+	    ;
+	  nspwd_data = i;
 	}
       if (t.host_table)
 	{
@@ -319,6 +329,89 @@ NAME(getgrnam_r) (const char *name, struct group *result, char *buffer,
       {
 	return copy_group (result, &grp_data[idx], buffer, buflen, errnop);
       }
+
+  return NSS_STATUS_NOTFOUND;
+}
+
+/* -------------------------------------------------- */
+/* Shadow password handling.  */
+
+static size_t spwd_iter;
+#define CURSPWD spwd_data[spwd_iter]
+
+static pthread_mutex_t spwd_lock = PTHREAD_MUTEX_INITIALIZER;
+
+enum nss_status
+NAME(setspent) (int stayopen)
+{
+  init();
+  spwd_iter = 0;
+  return NSS_STATUS_SUCCESS;
+}
+
+
+enum nss_status
+NAME(endspwent) (void)
+{
+  init();
+  return NSS_STATUS_SUCCESS;
+}
+
+static enum nss_status
+copy_shadow (struct spwd *result, struct spwd *local,
+	    char *buffer, size_t buflen, int *errnop)
+{
+  struct alloc_buffer buf = alloc_buffer_create (buffer, buflen);
+
+  result->sp_namp = alloc_buffer_maybe_copy_string (&buf, local->sp_namp);
+  result->sp_pwdp = alloc_buffer_maybe_copy_string (&buf, local->sp_pwdp);
+  result->sp_lstchg = local->sp_lstchg;
+  result->sp_min = local->sp_min;
+  result->sp_max = local->sp_max;
+  result->sp_warn = local->sp_warn;
+  result->sp_inact = local->sp_inact;
+  result->sp_expire = local->sp_expire;
+  result->sp_flag = local->sp_flag;
+
+  if (alloc_buffer_has_failed (&buf))
+    {
+      *errnop = ERANGE;
+      return NSS_STATUS_TRYAGAIN;
+    }
+
+  return NSS_STATUS_SUCCESS;
+}
+
+enum nss_status
+NAME(getspent_r) (struct spwd *result, char *buffer, size_t buflen,
+		  int *errnop)
+{
+  int res = NSS_STATUS_SUCCESS;
+
+  init();
+  pthread_mutex_lock (&spwd_lock);
+
+  if (spwd_iter >= nspwd_data)
+    res = NSS_STATUS_NOTFOUND;
+  else
+    {
+      res = copy_shadow (result, &CURSPWD, buffer, buflen, errnop);
+      ++spwd_iter;
+    }
+
+  pthread_mutex_unlock (&spwd_lock);
+
+  return res;
+}
+
+enum nss_status
+NAME(getspnam_r) (const char *name, struct spwd *result, char *buffer,
+		  size_t buflen, int *errnop)
+{
+  init();
+  for (size_t idx = 0; idx < nspwd_data; ++idx)
+    if (strcmp (spwd_data[idx].sp_namp, name) == 0)
+      return copy_shadow (result, &spwd_data[idx], buffer, buflen, errnop);
 
   return NSS_STATUS_NOTFOUND;
 }

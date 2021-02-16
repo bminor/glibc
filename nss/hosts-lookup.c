@@ -17,6 +17,5 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define DATABASE_NAME hosts
-#define DEFAULT_CONFIG "dns [!UNAVAIL=return] files"
 
 #include "XXX-lookup.c"

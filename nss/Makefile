@@ -63,6 +63,7 @@ tests			= test-netdb test-digits-dots tst-nss-getpwent bug17079 \
 xtests			= bug-erange
 
 tests-container = \
+			  tst-nss-compat1 \
 			  tst-nss-test3 \
 			  tst-nss-files-hosts-long \
 			  tst-nss-db-endpwent \

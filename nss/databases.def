@@ -23,17 +23,20 @@
 DEFINE_DATABASE (aliases)
 DEFINE_DATABASE (ethers)
 DEFINE_DATABASE (group)
+DEFINE_DATABASE (group_compat)
 DEFINE_DATABASE (gshadow)
 DEFINE_DATABASE (hosts)
 DEFINE_DATABASE (initgroups)
 DEFINE_DATABASE (netgroup)
 DEFINE_DATABASE (networks)
 DEFINE_DATABASE (passwd)
+DEFINE_DATABASE (passwd_compat)
 DEFINE_DATABASE (protocols)
 DEFINE_DATABASE (publickey)
 DEFINE_DATABASE (rpc)
 DEFINE_DATABASE (services)
 DEFINE_DATABASE (shadow)
+DEFINE_DATABASE (shadow_compat)
 
 /*
    Local Variables:

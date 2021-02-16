@@ -88,15 +88,6 @@ extern bool __nss_database_custom[NSS_DBSIDX_max] attribute_hidden;
 
 /* Interface functions for NSS.  */
 
-/* Get the data structure representing the specified database.
-   If there is no configuration for this database in the file,
-   parse a service list from DEFCONFIG and use that.  More
-   than one function can use the database.  */
-extern int __nss_database_lookup2 (const char *database,
-				   const char *alternative_name,
-				   const char *defconfig, struct nss_action **ni);
-libc_hidden_proto (__nss_database_lookup2)
-
 /* Put first function with name FCT_NAME for SERVICE in FCTP.  The
    position is remembered in NI.  The function returns a value < 0 if
    an error occurred or no such function exists.  */

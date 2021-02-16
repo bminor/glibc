@@ -88,8 +88,7 @@ static bool in_blacklist (const char *, int, ent_t *);
 static void
 init_nss_interface (void)
 {
-  if (__nss_database_lookup2 ("shadow_compat", "passwd_compat",
-			      "nis", &ni) >= 0)
+  if (__nss_database_get (nss_database_shadow_compat, &ni))
     {
       setspent_impl = __nss_lookup_function (ni, "setspent");
       getspnam_r_impl = __nss_lookup_function (ni, "getspnam_r");

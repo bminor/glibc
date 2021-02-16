@@ -82,8 +82,7 @@ addinitgroupsX (struct database_dyn *db, int fd, request_header *req,
   int no_more;
 
   if (group_database == NULL)
-    no_more = __nss_database_lookup2 ("group", NULL, "files",
-				      &group_database);
+    no_more = !__nss_database_get (nss_database_group, &group_database);
   else
     no_more = 0;
   nip = group_database;

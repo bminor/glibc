@@ -37,27 +37,20 @@
 #define CONCAT3_1(Pre, Name, Post) CONCAT3_2 (Pre, Name, Post)
 #define CONCAT3_2(Pre, Name, Post) Pre##Name##Post
 
+#define DATABASE_NAME_ID CONCAT2_1 (nss_database_, DATABASE_NAME)
+#define CONCAT2_1(Pre, Name) CONCAT2_2 (Pre, Name)
+#define CONCAT2_2(Pre, Name) Pre##Name
+
 #define DATABASE_NAME_SYMBOL CONCAT3_1 (__nss_, DATABASE_NAME, _database)
 #define DATABASE_NAME_STRING STRINGIFY1 (DATABASE_NAME)
 #define STRINGIFY1(Name) STRINGIFY2 (Name)
 #define STRINGIFY2(Name) #Name
 
-#ifdef ALTERNATE_NAME
-#define ALTERNATE_NAME_STRING STRINGIFY1 (ALTERNATE_NAME)
-#else
-#define ALTERNATE_NAME_STRING NULL
-#endif
-
-#ifndef DEFAULT_CONFIG
-#define DEFAULT_CONFIG NULL
-#endif
-
 int
 DB_LOOKUP_FCT (nss_action_list *ni, const char *fct_name, const char *fct2_name,
 	       void **fctp)
 {
-  if (__nss_database_lookup2 (DATABASE_NAME_STRING, ALTERNATE_NAME_STRING,
-			      DEFAULT_CONFIG, &DATABASE_NAME_SYMBOL) < 0)
+  if (! __nss_database_get (DATABASE_NAME_ID, &DATABASE_NAME_SYMBOL))
     return -1;
 
   *ni = DATABASE_NAME_SYMBOL;

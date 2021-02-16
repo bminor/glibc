@@ -77,9 +77,7 @@ addhstaiX (struct database_dyn *db, int fd, request_header *req,
   int rc4 = 0;
   int herrno = 0;
 
-  no_more = __nss_database_lookup2 ("hosts", NULL,
-				    "dns [!UNAVAIL=return] files",
-				    &nip);
+  no_more = !__nss_database_get (nss_database_hosts, &nip);
 
   /* Initialize configurations.  */
   struct resolv_context *ctx = __resolv_context_get ();

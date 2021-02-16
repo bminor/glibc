@@ -17,7 +17,5 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define DATABASE_NAME gshadow
-#define ALTERNATE_NAME group
-#define DEFAULT_CONFIG "files"
 
 #include "XXX-lookup.c"

@@ -93,13 +93,16 @@ enum nss_database_default
 static const char per_database_defaults[NSS_DATABASE_COUNT] =
   {
    [nss_database_group] = nss_database_default_compat,
+   [nss_database_group_compat] = nss_database_default_nis,
    [nss_database_gshadow] = nss_database_default_files,
    [nss_database_hosts] = nss_database_default_dns,
    [nss_database_initgroups] = nss_database_default_none,
    [nss_database_networks] = nss_database_default_dns,
    [nss_database_passwd] = nss_database_default_compat,
+   [nss_database_passwd_compat] = nss_database_default_nis,
    [nss_database_publickey] = nss_database_default_nis_nisplus,
    [nss_database_shadow] = nss_database_default_compat,
+   [nss_database_shadow_compat] = nss_database_default_nis,
   };
 
 struct nss_database_default_cache
@@ -166,13 +169,12 @@ nss_database_select_default (struct nss_database_default_cache *cache,
       assert (errno == ENOMEM);
       return false;
     }
-  else
-    return true;
+  return true;
 }
 
 /* database_name must be large enough for each individual name plus a
    null terminator.  */
-typedef char database_name[11];
+typedef char database_name[14];
 #define DEFINE_DATABASE(name) \
   _Static_assert (sizeof (#name) <= sizeof (database_name), #name);
 #include "databases.def"
@@ -323,14 +325,43 @@ nss_database_reload (struct nss_database_data *staging,
     /* No other threads have access to fp.  */
     __fsetlocking (fp, FSETLOCKING_BYCALLER);
 
+  /* We start with all of *staging pointing to NULL.  */
+
   bool ok = true;
   if (fp != NULL)
     ok = nss_database_reload_1 (staging, fp);
+
+  /* Now we have non-NULL entries where the user explictly listed the
+     service in nsswitch.conf.  */
 
   /* Apply defaults.  */
   if (ok)
     {
       struct nss_database_default_cache cache = { };
+
+      /* These three default to other services if the user listed the
+	 other service.  */
+
+      /* "shadow_compat" defaults to "passwd_compat" if only the
+	 latter is given.  */
+      if (staging->services[nss_database_shadow_compat] == NULL)
+	staging->services[nss_database_shadow_compat] =
+	  staging->services[nss_database_passwd_compat];
+
+      /* "shadow" defaults to "passwd" if only the latter is
+	 given.  */
+      if (staging->services[nss_database_shadow] == NULL)
+	staging->services[nss_database_shadow] =
+	  staging->services[nss_database_passwd];
+
+      /* "gshadow" defaults to "group" if only the latter is
+	 given.  */
+      if (staging->services[nss_database_gshadow] == NULL)
+	staging->services[nss_database_gshadow] =
+	  staging->services[nss_database_group];
+
+      /* For anything still unspecified, load the default configs.  */
+
       for (int i = 0; i < NSS_DATABASE_COUNT; ++i)
         if (staging->services[i] == NULL)
           {
@@ -440,6 +471,7 @@ __nss_database_get (enum nss_database db, nss_action_list *actions)
   struct nss_database_state *local = nss_database_state_get ();
   return nss_database_check_reload_and_get (local, actions, db);
 }
+libc_hidden_def (__nss_database_get)
 
 nss_action_list
 __nss_database_get_noreload (enum nss_database db)

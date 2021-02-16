@@ -17,6 +17,5 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define DATABASE_NAME publickey
-#define DEFAULT_CONFIG "nis nisplus"
 
 #include "XXX-lookup.c"

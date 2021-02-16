@@ -19,6 +19,5 @@
 #include <config.h>
 
 #define DATABASE_NAME passwd
-#define DEFAULT_CONFIG "files"
 
 #include "XXX-lookup.c"

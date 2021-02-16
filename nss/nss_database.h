@@ -52,12 +52,11 @@ enum nss_database
   NSS_DATABASE_COUNT
 };
 
-
 /* Looks up the action list for DB and stores it in *ACTIONS.  Returns
    true on success or false on failure.  Success can mean that
    *ACTIONS is NULL.  */
-bool __nss_database_get (enum nss_database db, nss_action_list *actions)
-  attribute_hidden;
+bool __nss_database_get (enum nss_database db, nss_action_list *actions);
+libc_hidden_proto (__nss_database_get)
 
 /* Like __nss_database_get, but does not reload /etc/nsswitch.conf
    from disk.  This assumes that there has been a previous successful

@@ -31,14 +31,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef LINK_OBSOLETE_NSL
-# define DEFAULT_CONFIG    "compat [NOTFOUND=return] files"
-# define DEFAULT_DEFCONFIG "nis [NOTFOUND=return] files"
-#else
-# define DEFAULT_CONFIG    "files"
-# define DEFAULT_DEFCONFIG "files"
-#endif
-
 /* Suffix after .so of NSS service modules.  This is a bit of magic,
    but we assume LIBNSS_FILES_SO looks like "libnss_files.so.2" and we
    want a pointer to the ".2" part.  We have no API to extract this
@@ -292,11 +284,11 @@ __nss_module_get_function (struct nss_module *module, const char *name)
 #if defined SHARED && defined USE_NSCD
 /* Load all libraries for the service.  */
 static void
-nss_load_all_libraries (const char *service, const char *def)
+nss_load_all_libraries (enum nss_database service)
 {
   nss_action_list ni = NULL;
 
-  if (__nss_database_lookup2 (service, NULL, def, &ni) == 0)
+  if (__nss_database_get (service, &ni))
     while (ni->module != NULL)
       {
         __nss_module_load (ni->module);
@@ -323,10 +315,10 @@ __nss_disable_nscd (void (*cb) (size_t, struct traced_file *))
   is_nscd = true;
 
   /* Find all the relevant modules so that the init functions are called.  */
-  nss_load_all_libraries ("passwd", DEFAULT_CONFIG);
-  nss_load_all_libraries ("group", DEFAULT_CONFIG);
-  nss_load_all_libraries ("hosts", "dns [!UNAVAIL=return] files");
-  nss_load_all_libraries ("services", NULL);
+  nss_load_all_libraries (nss_database_passwd);
+  nss_load_all_libraries (nss_database_group);
+  nss_load_all_libraries (nss_database_hosts);
+  nss_load_all_libraries (nss_database_services);
 
   /* Make sure NSCD purges its cache if nsswitch.conf changes.  */
   init_traced_file (&pwd_traced_file.file, _PATH_NSSWITCH_CONF, 0);

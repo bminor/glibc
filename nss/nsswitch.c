@@ -51,52 +51,12 @@
 #undef DEFINE_DATABASE
 
 
-#undef DEFINE_DATABASE
-#define DEFINE_DATABASE(name)  #name,
-static const char * database_names[] = {
-#include "databases.def"
-  NULL
-};
-
 #ifdef USE_NSCD
 /* Flags whether custom rules for database is set.  */
 bool __nss_database_custom[NSS_DBSIDX_max];
 #endif
 
-
 /*__libc_lock_define_initialized (static, lock)*/
-
-/* -1 == database not found
-    0 == database entry pointer stored */
-int
-__nss_database_lookup2 (const char *database, const char *alternate_name,
-			const char *defconfig, nss_action_list *ni)
-{
-  int database_id;
-
-  for (database_id = 0; database_names[database_id]; database_id++)
-    if (strcmp (database_names[database_id], database) == 0)
-	break;
-
-  if (database_names[database_id] == NULL)
-    return -1;
-
-  /* If *NI is NULL, the database was not mentioned in nsswitch.conf.
-     If *NI is not NULL, but *NI->module is NULL, the database was in
-     nsswitch.conf but listed no actions.  We test for the former.  */
-  if (__nss_database_get (database_id, ni) && *ni != NULL)
-    {
-      /* Success.  */
-      return 0;
-    }
-  else
-    {
-      /* Failure.  */
-      return -1;
-    }
-}
-libc_hidden_def (__nss_database_lookup2)
-
 
 /* -1 == not found
     0 == function found

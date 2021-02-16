@@ -91,7 +91,7 @@ init_nss_interface (void)
 
   /* Retest.  */
   if (ni == NULL
-      && __nss_database_lookup2 ("group_compat", NULL, "nis", &ni) >= 0)
+      && __nss_database_get (nss_database_group_compat, &ni))
     {
       initgroups_dyn_impl = __nss_lookup_function (ni, "initgroups_dyn");
       getgrnam_r_impl = __nss_lookup_function (ni, "getgrnam_r");

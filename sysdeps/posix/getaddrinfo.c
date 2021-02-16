@@ -720,9 +720,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    }
 #endif
 
-	  no_more = __nss_database_lookup2 ("hosts", NULL,
-					    "dns [!UNAVAIL=return] files",
-					    &nip);
+	  no_more = !__nss_database_get (nss_database_hosts, &nip);
 
 	  /* If we are looking for both IPv4 and IPv6 address we don't
 	     want the lookup functions to automatically promote IPv4
