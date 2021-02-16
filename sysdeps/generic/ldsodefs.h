@@ -1224,7 +1224,8 @@ extern void _dl_add_to_slotinfo (struct link_map *l, bool do_add)
 
 /* Update slot information data for at least the generation of the
    module with the given index.  */
-extern struct link_map *_dl_update_slotinfo (unsigned long int req_modid)
+extern struct link_map *_dl_update_slotinfo (unsigned long int req_modid,
+					     size_t gen)
      attribute_hidden;
 
 /* Look up the module's TLS block as for __tls_get_addr,

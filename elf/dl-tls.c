@@ -701,7 +701,7 @@ allocate_and_init (struct link_map *map)
 
 
 struct link_map *
-_dl_update_slotinfo (unsigned long int req_modid)
+_dl_update_slotinfo (unsigned long int req_modid, size_t new_gen)
 {
   struct link_map *the_map = NULL;
   dtv_t *dtv = THREAD_DTV ();
@@ -718,19 +718,12 @@ _dl_update_slotinfo (unsigned long int req_modid)
      code and therefore add to the slotinfo list.  This is a problem
      since we must not pick up any information about incomplete work.
      The solution to this is to ignore all dtv slots which were
-     created after the one we are currently interested.  We know that
-     dynamic loading for this module is completed and this is the last
-     load operation we know finished.  */
-  unsigned long int idx = req_modid;
+     created after the generation we are interested in.  We know that
+     dynamic loading for this generation is completed and this is the
+     last load operation we know finished.  */
   struct dtv_slotinfo_list *listp = GL(dl_tls_dtv_slotinfo_list);
 
-  while (idx >= listp->len)
-    {
-      idx -= listp->len;
-      listp = listp->next;
-    }
-
-  if (dtv[0].counter < listp->slotinfo[idx].gen)
+  if (dtv[0].counter < new_gen)
     {
       /* CONCURRENCY NOTES:
 
@@ -751,7 +744,6 @@ _dl_update_slotinfo (unsigned long int req_modid)
 	 other entries are racy.  However updating a non-relevant dtv
 	 entry does not affect correctness.  For a relevant module m,
 	 max_modid >= modid of m.  */
-      size_t new_gen = listp->slotinfo[idx].gen;
       size_t total = 0;
       size_t max_modid  = atomic_load_relaxed (&GL(dl_tls_max_dtv_idx));
       assert (max_modid >= req_modid);
@@ -894,9 +886,9 @@ tls_get_addr_tail (GET_ADDR_ARGS, dtv_t *dtv, struct link_map *the_map)
 
 static struct link_map *
 __attribute_noinline__
-update_get_addr (GET_ADDR_ARGS)
+update_get_addr (GET_ADDR_ARGS, size_t gen)
 {
-  struct link_map *the_map = _dl_update_slotinfo (GET_ADDR_MODULE);
+  struct link_map *the_map = _dl_update_slotinfo (GET_ADDR_MODULE, gen);
   dtv_t *dtv = THREAD_DTV ();
 
   void *p = dtv[GET_ADDR_MODULE].pointer.val;
@@ -931,7 +923,11 @@ __tls_get_addr (GET_ADDR_ARGS)
      by user code, see CONCURRENCY NOTES in _dl_update_slotinfo.  */
   size_t gen = atomic_load_relaxed (&GL(dl_tls_generation));
   if (__glibc_unlikely (dtv[0].counter != gen))
-    return update_get_addr (GET_ADDR_PARAM);
+    {
+// TODO: needs comment update if we rely on consistent generation with slotinfo
+      gen = atomic_load_acquire (&GL(dl_tls_generation));
+      return update_get_addr (GET_ADDR_PARAM, gen);
+    }
 
   void *p = dtv[GET_ADDR_MODULE].pointer.val;
 

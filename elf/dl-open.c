@@ -400,7 +400,7 @@ update_tls_slotinfo (struct link_map *new)
     _dl_fatal_printf (N_("\
 TLS generation counter wrapped!  Please report this."));
   /* Can be read concurrently.  */
-  atomic_store_relaxed (&GL(dl_tls_generation), newgen);
+  atomic_store_release (&GL(dl_tls_generation), newgen);
 
   /* We need a second pass for static tls data, because
      _dl_update_slotinfo must not be run while calls to
@@ -417,8 +417,8 @@ TLS generation counter wrapped!  Please report this."));
 	     now, but we can delay updating the DTV.  */
 	  imap->l_need_tls_init = 0;
 #ifdef SHARED
-	  /* Update the slot information data for at least the
-	     generation of the DSO we are allocating data for.  */
+	  /* Update the slot information data for the current
+	     generation.  */
 
 	  /* FIXME: This can terminate the process on memory
 	     allocation failure.  It is not possible to raise
@@ -426,7 +426,7 @@ TLS generation counter wrapped!  Please report this."));
 	     _dl_update_slotinfo would have to be split into two
 	     operations, similar to resize_scopes and update_scopes
 	     above.  This is related to bug 16134.  */
-	  _dl_update_slotinfo (imap->l_tls_modid);
+	  _dl_update_slotinfo (imap->l_tls_modid, newgen);
 #endif
 
 	  GL(dl_init_static_tls) (imap);

@@ -780,7 +780,7 @@ _dl_close_worker (struct link_map *map, bool force)
       if (__glibc_unlikely (newgen == 0))
 	_dl_fatal_printf ("TLS generation counter wrapped!  Please report as described in "REPORT_BUGS_TO".\n");
       /* Can be read concurrently.  */
-      atomic_store_relaxed (&GL(dl_tls_generation), newgen);
+      atomic_store_release (&GL(dl_tls_generation), newgen);
 
       if (tls_free_end == GL(dl_tls_static_used))
 	GL(dl_tls_static_used) = tls_free_start;
