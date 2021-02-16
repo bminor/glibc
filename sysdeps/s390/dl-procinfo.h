@@ -21,7 +21,7 @@
 #define _DL_PROCINFO_H	1
 #include <ldsodefs.h>
 
-#define _DL_HWCAP_COUNT 19
+#define _DL_HWCAP_COUNT 21
 
 #define _DL_PLATFORMS_COUNT	10
 
@@ -61,6 +61,8 @@ enum
   HWCAP_S390_VXRS_PDE = 1 << 16,
   HWCAP_S390_SORT = 1 << 17,
   HWCAP_S390_DFLT = 1 << 18,
+  HWCAP_S390_VXRS_PDE2 = 1 << 19,
+  HWCAP_S390_NNPA = 1 << 20,
 };
 
 #define HWCAP_IMPORTANT (HWCAP_S390_ZARCH | HWCAP_S390_LDISP \
