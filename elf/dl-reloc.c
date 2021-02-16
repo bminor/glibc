@@ -112,11 +112,11 @@ _dl_try_allocate_static_tls (struct link_map *map, bool optional)
   if (map->l_real->l_relocated)
     {
 #ifdef SHARED
+      /* Update the DTV of the current thread.  Note: GL(dl_load_tls_lock)
+	 is held here so normal load of the generation counter is valid.  */
       if (__builtin_expect (THREAD_DTV()[0].counter != GL(dl_tls_generation),
 			    0))
-	/* Update the slot information data for at least the generation of
-	   the DSO we are allocating data for.  */
-	(void) _dl_update_slotinfo (map->l_tls_modid);
+	(void) _dl_update_slotinfo (map->l_tls_modid, GL(dl_tls_generation));
 #endif
 
       dl_init_static_tls (map);
