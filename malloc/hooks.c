@@ -68,7 +68,7 @@ __malloc_check_init (void)
    tags, so fetch the tag at each location before dereferencing
    it.  */
 #define SAFE_CHAR_OFFSET(p,offset) \
-  ((unsigned char *) TAG_AT (((unsigned char *) p) + offset))
+  ((unsigned char *) tag_at (((unsigned char *) p) + offset))
 
 /* A simple, standard set of debugging hooks.  Overhead is `only' one
    byte per chunk; still this will catch most cases of double frees or
@@ -249,7 +249,7 @@ malloc_check (size_t sz, const void *caller)
   top_check ();
   victim = _int_malloc (&main_arena, nb);
   __libc_lock_unlock (main_arena.mutex);
-  return mem2mem_check (TAG_NEW_USABLE (victim), sz);
+  return mem2mem_check (tag_new_usable (victim), sz);
 }
 
 static void
@@ -280,7 +280,7 @@ free_check (void *mem, const void *caller)
   else
     {
       /* Mark the chunk as belonging to the library again.  */
-      (void)TAG_REGION (chunk2rawmem (p), CHUNK_AVAILABLE_SIZE (p)
+      (void)tag_region (chunk2rawmem (p), CHUNK_AVAILABLE_SIZE (p)
                                          - CHUNK_HDR_SZ);
       _int_free (&main_arena, p, 1);
       __libc_lock_unlock (main_arena.mutex);
@@ -375,7 +375,7 @@ invert:
 
   __libc_lock_unlock (main_arena.mutex);
 
-  return mem2mem_check (TAG_NEW_USABLE (newmem), bytes);
+  return mem2mem_check (tag_new_usable (newmem), bytes);
 }
 
 static void *
@@ -417,7 +417,7 @@ memalign_check (size_t alignment, size_t bytes, const void *caller)
   top_check ();
   mem = _int_memalign (&main_arena, alignment, bytes + 1);
   __libc_lock_unlock (main_arena.mutex);
-  return mem2mem_check (TAG_NEW_USABLE (mem), bytes);
+  return mem2mem_check (tag_new_usable (mem), bytes);
 }
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_25)

@@ -413,26 +413,26 @@ void *(*__morecore)(ptrdiff_t) = __default_morecore;
    operations can continue to be used.  Support macros are used to do
    this:
 
-   void *TAG_NEW_MEMSET (void *ptr, int, val, size_t size)
+   void *tag_new_memset (void *ptr, int, val, size_t size)
 
    Has the same interface as memset(), but additionally allocates a
    new tag, colors the memory with that tag and returns a pointer that
    is correctly colored for that location.  The non-tagging version
    will simply call memset.
 
-   void *TAG_REGION (void *ptr, size_t size)
+   void *tag_region (void *ptr, size_t size)
 
    Color the region of memory pointed to by PTR and size SIZE with
    the color of PTR.  Returns the original pointer.
 
-   void *TAG_NEW_USABLE (void *ptr)
+   void *tag_new_usable (void *ptr)
 
    Allocate a new random color and use it to color the user region of
    a chunk; this may include data from the subsequent chunk's header
    if tagging is sufficiently fine grained.  Returns PTR suitably
    recolored for accessing the memory there.
 
-   void *TAG_AT (void *ptr)
+   void *tag_at (void *ptr)
 
    Read the current color of the memory at the address pointed to by
    PTR (ignoring it's current color) and return PTR recolored to that
@@ -455,25 +455,20 @@ __default_tag_nop (void *ptr)
   return ptr;
 }
 
-static int __mtag_mmap_flags = 0;
-static size_t __mtag_granule_mask = ~(size_t)0;
+static int mtag_mmap_flags = 0;
+static size_t mtag_granule_mask = ~(size_t)0;
 
-static void *(*__tag_new_memset)(void *, int, size_t) = memset;
-static void *(*__tag_region)(void *, size_t) = __default_tag_region;
-static void *(*__tag_new_usable)(void *) = __default_tag_nop;
-static void *(*__tag_at)(void *) = __default_tag_nop;
+static void *(*tag_new_memset)(void *, int, size_t) = memset;
+static void *(*tag_region)(void *, size_t) = __default_tag_region;
+static void *(*tag_new_usable)(void *) = __default_tag_nop;
+static void *(*tag_at)(void *) = __default_tag_nop;
 
-# define MTAG_MMAP_FLAGS __mtag_mmap_flags
-# define TAG_NEW_MEMSET(ptr, val, size) __tag_new_memset (ptr, val, size)
-# define TAG_REGION(ptr, size) __tag_region (ptr, size)
-# define TAG_NEW_USABLE(ptr) __tag_new_usable (ptr)
-# define TAG_AT(ptr) __tag_at (ptr)
 #else
-# define MTAG_MMAP_FLAGS 0
-# define TAG_NEW_MEMSET(ptr, val, size) memset (ptr, val, size)
-# define TAG_REGION(ptr, size) (ptr)
-# define TAG_NEW_USABLE(ptr) (ptr)
-# define TAG_AT(ptr) (ptr)
+# define mtag_mmap_flags 0
+# define tag_new_memset(ptr, val, size) memset (ptr, val, size)
+# define tag_region(ptr, size) (ptr)
+# define tag_new_usable(ptr) (ptr)
+# define tag_at(ptr) (ptr)
 #endif
 
 #include <string.h>
@@ -1305,8 +1300,8 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 /* Convert between user mem pointers and chunk pointers, updating any
    memory tags on the pointer to respect the tag value at that
    location.  */
-#define chunk2mem(p) ((void*)TAG_AT (((char*)(p) + CHUNK_HDR_SZ)))
-#define mem2chunk(mem) ((mchunkptr)TAG_AT (((char*)(mem) - CHUNK_HDR_SZ)))
+#define chunk2mem(p) ((void *)tag_at (((char*)(p) + CHUNK_HDR_SZ)))
+#define mem2chunk(mem) ((mchunkptr)tag_at (((char*)(mem) - CHUNK_HDR_SZ)))
 
 /* The smallest possible chunk */
 #define MIN_CHUNK_SIZE        (offsetof(struct malloc_chunk, fd_nextsize))
@@ -1337,7 +1332,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #ifdef USE_MTAG
 #define CHUNK_AVAILABLE_SIZE(p) \
   ((chunksize (p) + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))	\
-   & __mtag_granule_mask)
+   & mtag_granule_mask)
 #else
 #define CHUNK_AVAILABLE_SIZE(p) \
   (chunksize (p) + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))
@@ -1361,7 +1356,7 @@ checked_request2size (size_t req, size_t *sz) __nonnull (1)
      number.  Ideally, this would be part of request2size(), but that
      must be a macro that produces a compile time constant if passed
      a constant literal.  */
-  req = (req + ~__mtag_granule_mask) & __mtag_granule_mask;
+  req = (req + ~mtag_granule_mask) & mtag_granule_mask;
 #endif
 
   *sz = request2size (req);
@@ -2467,7 +2462,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
       if ((unsigned long) (size) > (unsigned long) (nb))
         {
           mm = (char *) (MMAP (0, size,
-			       MTAG_MMAP_FLAGS | PROT_READ | PROT_WRITE, 0));
+			       mtag_mmap_flags | PROT_READ | PROT_WRITE, 0));
 
           if (mm != MAP_FAILED)
             {
@@ -2665,7 +2660,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
           if ((unsigned long) (size) > (unsigned long) (nb))
             {
               char *mbrk = (char *) (MMAP (0, size,
-					   MTAG_MMAP_FLAGS | PROT_READ | PROT_WRITE,
+					   mtag_mmap_flags | PROT_READ | PROT_WRITE,
 					   0));
 
               if (mbrk != MAP_FAILED)
@@ -3221,14 +3216,14 @@ __libc_malloc (size_t bytes)
       && tcache->counts[tc_idx] > 0)
     {
       victim = tcache_get (tc_idx);
-      return TAG_NEW_USABLE (victim);
+      return tag_new_usable (victim);
     }
   DIAG_POP_NEEDS_COMMENT;
 #endif
 
   if (SINGLE_THREAD_P)
     {
-      victim = TAG_NEW_USABLE (_int_malloc (&main_arena, bytes));
+      victim = tag_new_usable (_int_malloc (&main_arena, bytes));
       assert (!victim || chunk_is_mmapped (mem2chunk (victim)) ||
 	      &main_arena == arena_for_chunk (mem2chunk (victim)));
       return victim;
@@ -3249,7 +3244,7 @@ __libc_malloc (size_t bytes)
   if (ar_ptr != NULL)
     __libc_lock_unlock (ar_ptr->mutex);
 
-  victim = TAG_NEW_USABLE (victim);
+  victim = tag_new_usable (victim);
 
   assert (!victim || chunk_is_mmapped (mem2chunk (victim)) ||
           ar_ptr == arena_for_chunk (mem2chunk (victim)));
@@ -3305,7 +3300,7 @@ __libc_free (void *mem)
       MAYBE_INIT_TCACHE ();
 
       /* Mark the chunk as belonging to the library again.  */
-      (void)TAG_REGION (chunk2rawmem (p),
+      (void)tag_region (chunk2rawmem (p),
 			CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
 
       ar_ptr = arena_for_chunk (p);
@@ -3408,7 +3403,7 @@ __libc_realloc (void *oldmem, size_t bytes)
 	     reused.  There's a performance hit for both us and the
 	     caller for doing this, so we might want to
 	     reconsider.  */
-	  return TAG_NEW_USABLE (newmem);
+	  return tag_new_usable (newmem);
 	}
 #endif
       /* Note the extra SIZE_SZ overhead. */
@@ -3451,7 +3446,7 @@ __libc_realloc (void *oldmem, size_t bytes)
         {
 	  size_t sz = CHUNK_AVAILABLE_SIZE (oldp) - CHUNK_HDR_SZ;
 	  memcpy (newp, oldmem, sz);
-	  (void) TAG_REGION (chunk2rawmem (oldp), sz);
+	  (void) tag_region (chunk2rawmem (oldp), sz);
           _int_free (ar_ptr, oldp, 0);
         }
     }
@@ -3509,7 +3504,7 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
       p = _int_memalign (&main_arena, alignment, bytes);
       assert (!p || chunk_is_mmapped (mem2chunk (p)) ||
 	      &main_arena == arena_for_chunk (mem2chunk (p)));
-      return TAG_NEW_USABLE (p);
+      return tag_new_usable (p);
     }
 
   arena_get (ar_ptr, bytes + alignment + MINSIZE);
@@ -3527,7 +3522,7 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
 
   assert (!p || chunk_is_mmapped (mem2chunk (p)) ||
           ar_ptr == arena_for_chunk (mem2chunk (p)));
-  return TAG_NEW_USABLE (p);
+  return tag_new_usable (p);
 }
 /* For ISO C11.  */
 weak_alias (__libc_memalign, aligned_alloc)
@@ -3544,7 +3539,7 @@ __libc_valloc (size_t bytes)
   void *address = RETURN_ADDRESS (0);
   size_t pagesize = GLRO (dl_pagesize);
   p = _mid_memalign (pagesize, bytes, address);
-  return TAG_NEW_USABLE (p);
+  return tag_new_usable (p);
 }
 
 void *
@@ -3569,7 +3564,7 @@ __libc_pvalloc (size_t bytes)
   rounded_bytes = rounded_bytes & -(pagesize - 1);
 
   p = _mid_memalign (pagesize, rounded_bytes, address);
-  return TAG_NEW_USABLE (p);
+  return tag_new_usable (p);
 }
 
 void *
@@ -3666,7 +3661,7 @@ __libc_calloc (size_t n, size_t elem_size)
      regardless of MORECORE_CLEARS, so we zero the whole block while
      doing so.  */
 #ifdef USE_MTAG
-  return TAG_NEW_MEMSET (mem, 0, CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
+  return tag_new_memset (mem, 0, CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
 #else
   INTERNAL_SIZE_T csz = chunksize (p);
 
@@ -4821,7 +4816,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
           av->top = chunk_at_offset (oldp, nb);
           set_head (av->top, (newsize - nb) | PREV_INUSE);
           check_inuse_chunk (av, oldp);
-          return TAG_NEW_USABLE (chunk2rawmem (oldp));
+          return tag_new_usable (chunk2rawmem (oldp));
         }
 
       /* Try to expand forward into next chunk;  split off remainder below */
@@ -4856,8 +4851,8 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
             {
 	      void *oldmem = chunk2rawmem (oldp);
 	      size_t sz = CHUNK_AVAILABLE_SIZE (oldp) - CHUNK_HDR_SZ;
-	      (void) TAG_REGION (oldmem, sz);
-	      newmem = TAG_NEW_USABLE (newmem);
+	      (void) tag_region (oldmem, sz);
+	      newmem = tag_new_usable (newmem);
 	      memcpy (newmem, oldmem, sz);
 	      _int_free (av, oldp, 1);
 	      check_inuse_chunk (av, newp);
@@ -4881,7 +4876,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
     {
       remainder = chunk_at_offset (newp, nb);
       /* Clear any user-space tags before writing the header.  */
-      remainder = TAG_REGION (remainder, remainder_size);
+      remainder = tag_region (remainder, remainder_size);
       set_head_size (newp, nb | (av != &main_arena ? NON_MAIN_ARENA : 0));
       set_head (remainder, remainder_size | PREV_INUSE |
                 (av != &main_arena ? NON_MAIN_ARENA : 0));
@@ -4891,7 +4886,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
     }
 
   check_inuse_chunk (av, newp);
-  return TAG_NEW_USABLE (chunk2rawmem (newp));
+  return tag_new_usable (chunk2rawmem (newp));
 }
 
 /*
@@ -5108,7 +5103,7 @@ musable (void *mem)
       /* The usable space may be reduced if memory tagging is needed,
 	 since we cannot share the user-space data with malloc's internal
 	 data structure.  */
-      result &= __mtag_granule_mask;
+      result &= mtag_granule_mask;
 #endif
       return result;
     }

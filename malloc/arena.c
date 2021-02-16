@@ -332,12 +332,12 @@ ptmalloc_init (void)
       if (__MTAG_SBRK_UNTAGGED)
 	__morecore = __failing_morecore;
 
-      __mtag_mmap_flags = __MTAG_MMAP_FLAGS;
-      __tag_new_memset = __mtag_tag_new_memset;
-      __tag_region = __libc_mtag_tag_region;
-      __tag_new_usable = __mtag_tag_new_usable;
-      __tag_at = __libc_mtag_address_get_tag;
-      __mtag_granule_mask = ~(size_t)(__MTAG_GRANULE_SIZE - 1);
+      mtag_mmap_flags = __MTAG_MMAP_FLAGS;
+      tag_new_memset = __mtag_tag_new_memset;
+      tag_region = __libc_mtag_tag_region;
+      tag_new_usable = __mtag_tag_new_usable;
+      tag_at = __libc_mtag_address_get_tag;
+      mtag_granule_mask = ~(size_t)(__MTAG_GRANULE_SIZE - 1);
     }
 #endif
 
@@ -557,7 +557,7 @@ new_heap (size_t size, size_t top_pad)
             }
         }
     }
-  if (__mprotect (p2, size, MTAG_MMAP_FLAGS | PROT_READ | PROT_WRITE) != 0)
+  if (__mprotect (p2, size, mtag_mmap_flags | PROT_READ | PROT_WRITE) != 0)
     {
       __munmap (p2, HEAP_MAX_SIZE);
       return 0;
@@ -587,7 +587,7 @@ grow_heap (heap_info *h, long diff)
     {
       if (__mprotect ((char *) h + h->mprotect_size,
                       (unsigned long) new_size - h->mprotect_size,
-                      MTAG_MMAP_FLAGS | PROT_READ | PROT_WRITE) != 0)
+                      mtag_mmap_flags | PROT_READ | PROT_WRITE) != 0)
         return -2;
 
       h->mprotect_size = new_size;
