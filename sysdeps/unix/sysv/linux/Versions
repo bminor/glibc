@@ -1,3 +1,4 @@
+%include <time64-compat.h>
 libc {
   GLIBC_2.0 {
     # functions used in inline functions or macros
@@ -186,6 +187,81 @@ libc {
   }
   GLIBC_2.32 {
   }
+  GLIBC_2.34 {
+%ifdef TIME64_NON_DEFAULT
+    # 64-bit time_t support
+    __adjtime64;
+    ___adjtimex64;
+    __clock_adjtime64;
+    __clock_getres64;
+    __clock_gettime64;
+    __clock_nanosleep_time64;
+    __clock_settime64;
+    __cnd_timedwait64;
+    __ctime64;
+    __ctime64_r;
+    __difftime64;
+    __fstat64_time64;
+    __fstatat64_time64;
+    __futimens64;
+    __futimes64;
+    __futimesat64;
+    __getitimer64;
+    __getrusage64;
+    __gettimeofday64;
+    __gmtime64;
+    __gmtime64_r;
+    __localtime64;
+    __localtime64_r;
+    __lstat64_time64;
+    __lutimes64;
+    __mktime64;
+    __msgctl64;
+    __mtx_timedlock64;
+    __nanosleep64;
+    __nanosleep64;
+    __ntp_gettime64;
+    __ntp_gettimex64;
+    __ppoll64;
+    __pselec64;
+    __pselect64;
+    __pthread_clockjoin_np64;
+    __pthread_cond_clockwait64;
+    __pthread_cond_timedwait64;
+    __pthread_mutex_clocklock64;
+    __pthread_mutex_timedlock64;
+    __pthread_rwlock_clockrdlock64;
+    __pthread_rwlock_clockwrlock64;
+    __pthread_rwlock_timedrdlock64;
+    __pthread_rwlock_timedwrlock64;
+    __pthread_timedjoin_np64;
+    __recvmmsg64;
+    __sched_rr_get_interval64;
+    __select64;
+    __sem_clockwait64;
+    __semctl64;
+    __semtimedop64;
+    __sem_timedwait64;
+    __setitimer64;
+    __settimeofday64;
+    __shmctl64;
+    __sigtimedwait64;
+    __stat64_time64;
+    __thrd_sleep64;
+    __time64;
+    __timegm64;
+    __timerfd_gettime64;
+    __timerfd_settime64;
+    __timespec_get64;
+    __timespec_getres64;
+    __utime64;
+    __utimensat64;
+    __utimes64;
+    __utimes64;
+    __wait3_time64;
+    __wait4_time64;
+%endif
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;
@@ -203,4 +279,25 @@ ld {
   GLIBC_PRIVATE {
     __nptl_change_stack_perm;
   }
+}
+
+librt {
+  GLIBC_2.34 {
+%ifdef TIME64_NON_DEFAULT
+    # 64-bit time_t support
+    __aio_suspend_time64;
+    __mq_timedsend_time64;
+    __mq_timedreceive_time64;
+    __timer_gettime64;
+    __timer_settime64;
+%endif
+  }
+}
+
+libanl {
+%ifdef TIME64_NON_DEFAULT
+  GLIBC_2.34 {
+    __gai_suspend_time64;
+  }
+%endif
 }

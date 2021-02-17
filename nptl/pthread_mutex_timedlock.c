@@ -585,7 +585,8 @@ ___pthread_mutex_clocklock64 (pthread_mutex_t *mutex,
 #if __TIMESIZE == 64
 strong_alias (___pthread_mutex_clocklock64, ___pthread_mutex_clocklock)
 #else /* __TIMESPEC64 != 64 */
-libc_hidden_ver (___pthread_mutex_clocklock64, __pthread_mutex_clocklock64)
+strong_alias (___pthread_mutex_clocklock64, __pthread_mutex_clocklock64)
+libc_hidden_def (__pthread_mutex_clocklock64)
 
 int
 ___pthread_mutex_clocklock (pthread_mutex_t *mutex,
@@ -618,9 +619,8 @@ ___pthread_mutex_timedlock64 (pthread_mutex_t *mutex,
 #if __TIMESIZE == 64
 strong_alias (___pthread_mutex_timedlock64, ___pthread_mutex_timedlock)
 #else /* __TIMESPEC64 != 64 */
-versioned_symbol (libc, ___pthread_mutex_timedlock64,
-		  __pthread_mutex_timedlock64, GLIBC_PRIVATE);
-libc_hidden_ver (___pthread_mutex_timedlock64, __pthread_mutex_timedlock64)
+strong_alias (___pthread_mutex_timedlock64, __pthread_mutex_timedlock64);
+libc_hidden_def (__pthread_mutex_timedlock64)
 
 int
 ___pthread_mutex_timedlock (pthread_mutex_t *mutex,

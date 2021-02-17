@@ -21,8 +21,8 @@
 #include "thrd_priv.h"
 
 int
-___cnd_timedwait64 (cnd_t *restrict cond, mtx_t *restrict mutex,
-                    const struct __timespec64 *restrict time_point)
+__cnd_timedwait64 (cnd_t *restrict cond, mtx_t *restrict mutex,
+                   const struct __timespec64 *restrict time_point)
 {
   int err_code = __pthread_cond_timedwait64 ((pthread_cond_t *) cond,
                                              (pthread_mutex_t *) mutex,
@@ -31,9 +31,9 @@ ___cnd_timedwait64 (cnd_t *restrict cond, mtx_t *restrict mutex,
 }
 
 #if __TIMESIZE == 64
-strong_alias (___cnd_timedwait64, ___cnd_timedwait)
+strong_alias (__cnd_timedwait64, ___cnd_timedwait)
 #else
-libc_hidden_ver (___cnd_timedwait64, __cnd_timedwait64)
+libc_hidden_def (__cnd_timedwait64)
 
 int
 ___cnd_timedwait (cnd_t *restrict cond, mtx_t *restrict mutex,

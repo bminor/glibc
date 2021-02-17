@@ -31,8 +31,8 @@ ___pthread_rwlock_clockwrlock64 (pthread_rwlock_t *rwlock, clockid_t clockid,
 #if __TIMESIZE == 64
 strong_alias (___pthread_rwlock_clockwrlock64, ___pthread_rwlock_clockwrlock)
 #else /* __TIMESPEC64 != 64 */
-libc_hidden_ver (___pthread_rwlock_clockwrlock64,
-		 __pthread_rwlock_clockwrlock64)
+strong_alias (___pthread_rwlock_clockwrlock64, __pthread_rwlock_clockwrlock64)
+libc_hidden_def (__pthread_rwlock_clockwrlock64)
 
 int
 ___pthread_rwlock_clockwrlock (pthread_rwlock_t *rwlock, clockid_t clockid,

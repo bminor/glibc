@@ -389,6 +389,8 @@
 # define __USE_FILE_OFFSET64	1
 #endif
 
+#include <features-time64.h>
+
 #if defined _DEFAULT_SOURCE
 # define __USE_MISC	1
 #endif

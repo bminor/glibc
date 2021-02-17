@@ -196,9 +196,20 @@ extern ssize_t recvmsg (int __fd, struct msghdr *__message, int __flags);
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
+# ifndef __USE_TIME_BITS64
 extern int recvmmsg (int __fd, struct mmsghdr *__vmessages,
 		     unsigned int __vlen, int __flags,
 		     struct timespec *__tmo);
+# else
+#  ifdef __REDIRECT
+extern int __REDIRECT (recvmmsg, (int __fd, struct mmsghdr *__vmessages,
+                                  unsigned int __vlen, int __flags,
+                                  struct timespec *__tmo),
+                       __recvmmsg64);
+#  else
+#   define recvmmsg __recvmmsg64
+#  endif
+# endif
 #endif
 
 

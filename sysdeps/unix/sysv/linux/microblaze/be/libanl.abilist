@@ -2,3 +2,4 @@ GLIBC_2.18 gai_cancel F
 GLIBC_2.18 gai_error F
 GLIBC_2.18 gai_suspend F
 GLIBC_2.18 getaddrinfo_a F
+GLIBC_2.34 __gai_suspend_time64 F

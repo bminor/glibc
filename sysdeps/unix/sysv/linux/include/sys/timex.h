@@ -23,6 +23,7 @@
 
 # ifndef _ISOMAC
 
+extern int __adjtimex (struct timex *__ntx);
 libc_hidden_proto (__adjtimex)
 
 #  include <time.h>

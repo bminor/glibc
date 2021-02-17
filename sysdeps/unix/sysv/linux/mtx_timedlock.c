@@ -21,8 +21,8 @@
 #include "thrd_priv.h"
 
 int
-___mtx_timedlock64 (mtx_t *restrict mutex,
-                    const struct __timespec64 *restrict time_point)
+__mtx_timedlock64 (mtx_t *restrict mutex,
+                   const struct __timespec64 *restrict time_point)
 {
   int err_code = __pthread_mutex_timedlock64 ((pthread_mutex_t *)mutex,
                                               time_point);
@@ -30,9 +30,9 @@ ___mtx_timedlock64 (mtx_t *restrict mutex,
 }
 
 #if __TIMESIZE == 64
-strong_alias (___mtx_timedlock64, ___mtx_timedlock)
+strong_alias (__mtx_timedlock64, ___mtx_timedlock)
 #else
-libc_hidden_ver (___mtx_timedlock64, __mtx_timedlock64)
+libc_hidden_def (__mtx_timedlock64)
 
 int
 ___mtx_timedlock (mtx_t *restrict mutex,

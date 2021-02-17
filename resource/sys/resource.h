@@ -88,6 +88,16 @@ extern int setrlimit64 (__rlimit_resource_t __resource,
    and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
 extern int getrusage (__rusage_who_t __who, struct rusage *__usage) __THROW;
 
+#ifdef __USE_TIME_BITS64
+# if defined(__REDIRECT_NTH)
+extern int __REDIRECT_NTH (getrusage, (__rusage_who_t __who,
+                                       struct rusage *__usage),
+                           __getrusage64);
+# else
+# define getrusage __getrusage64
+# endif
+#endif
+
 /* Return the highest priority of any process specified by WHICH and WHO
    (see above); if WHO is zero, the current process, process group, or user
    (as specified by WHO) is used.  A lower priority number means higher

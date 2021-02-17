@@ -49,7 +49,8 @@ ___sem_clockwait64 (sem_t *sem, clockid_t clockid,
 #if __TIMESIZE == 64
 strong_alias (___sem_clockwait64, ___sem_clockwait)
 #else /* __TIMESPEC64 != 64 */
-libc_hidden_ver (___sem_clockwait64, __sem_clockwait64)
+strong_alias (___sem_clockwait64, __sem_clockwait64)
+libc_hidden_def (__sem_clockwait64)
 
 int
 ___sem_clockwait (sem_t *sem, clockid_t clockid, const struct timespec *abstime)

@@ -21,7 +21,6 @@
 #include <ipc_priv.h>
 #include <sysdep.h>
 #include <shlib-compat.h>
-#include <bits/types/struct_semid64_ds.h>  /* For __semid64_ds.  */
 #include <linux/posix_types.h>             /* For __kernel_mode_t.  */
 
 /* The struct used to issue the syscall.  For architectures that assume

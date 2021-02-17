@@ -3,8 +3,6 @@
 
 #ifndef _ISOMAC
 
-# include <bits/types/struct_shmid64_ds.h>
-
 # if __TIMESIZE == 64
 #  define __shmctl64 __shmctl
 # else

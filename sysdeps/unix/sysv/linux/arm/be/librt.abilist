@@ -1,3 +1,8 @@
+GLIBC_2.34 __aio_suspend_time64 F
+GLIBC_2.34 __mq_timedreceive_time64 F
+GLIBC_2.34 __mq_timedsend_time64 F
+GLIBC_2.34 __timer_gettime64 F
+GLIBC_2.34 __timer_settime64 F
 GLIBC_2.4 aio_cancel F
 GLIBC_2.4 aio_cancel64 F
 GLIBC_2.4 aio_error F

@@ -647,10 +647,8 @@ ___pthread_cond_timedwait64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
 #if __TIMESIZE == 64
 strong_alias (___pthread_cond_timedwait64, ___pthread_cond_timedwait)
 #else
-libc_hidden_ver (___pthread_cond_timedwait64, __pthread_cond_timedwait64)
-#ifndef SHARED
 strong_alias (___pthread_cond_timedwait64, __pthread_cond_timedwait64)
-#endif
+libc_hidden_def (__pthread_cond_timedwait64)
 
 int
 ___pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
@@ -688,9 +686,8 @@ ___pthread_cond_clockwait64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
 #if __TIMESIZE == 64
 strong_alias (___pthread_cond_clockwait64, ___pthread_cond_clockwait)
 #else
-versioned_symbol (libc, ___pthread_cond_clockwait64,
-		  __pthread_cond_clockwait64, GLIBC_PRIVATE);
-libc_hidden_ver (___pthread_cond_clockwait64, __pthread_cond_clockwait64)
+strong_alias (___pthread_cond_clockwait64, __pthread_cond_clockwait64);
+libc_hidden_def (__pthread_cond_clockwait64)
 
 int
 ___pthread_cond_clockwait (pthread_cond_t *cond, pthread_mutex_t *mutex,

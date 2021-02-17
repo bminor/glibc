@@ -269,10 +269,23 @@ extern int sigwaitinfo (const sigset_t *__restrict __set,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
+#  ifndef __USE_TIME_BITS64
 extern int sigtimedwait (const sigset_t *__restrict __set,
 			 siginfo_t *__restrict __info,
 			 const struct timespec *__restrict __timeout)
      __nonnull ((1));
+#  else
+#   ifdef __REDIRECT
+extern int __REDIRECT (sigtimedwait,
+                       (const sigset_t *__restrict __set,
+                        siginfo_t *__restrict __info,
+                        const struct timespec *__restrict __timeout),
+                       __sigtimedwait64)
+     __nonnull ((1));
+#   else
+#    define sigtimedwait __sigtimedwait64
+#   endif
+#  endif
 
 /* Send signal SIG to the process PID.  Associate data in VAL with the
    signal.  */

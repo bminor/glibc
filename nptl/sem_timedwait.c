@@ -45,10 +45,8 @@ ___sem_timedwait64 (sem_t *sem, const struct __timespec64 *abstime)
 #if __TIMESIZE == 64
 strong_alias (___sem_timedwait64, ___sem_timedwait)
 #else /* __TIMESPEC64 != 64 */
-libc_hidden_ver (___sem_timedwait64, __sem_timedwait64)
-#ifndef SHARED
 strong_alias (___sem_timedwait64, __sem_timedwait64)
-#endif
+libc_hidden_def (__sem_timedwait64)
 
 int
 ___sem_timedwait (sem_t *sem, const struct timespec *abstime)

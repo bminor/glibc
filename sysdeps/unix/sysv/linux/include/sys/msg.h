@@ -7,8 +7,6 @@ extern ssize_t __libc_msgrcv (int msqid, void *msgp, size_t msgsz,
 extern int __libc_msgsnd (int msqid, const void *msgp, size_t msgsz,
 			  int msgflg);
 
-# include <bits/types/struct_msqid64_ds.h>
-
 # if __TIMESIZE == 64
 #  define __msgctl64 __msgctl
 # else
