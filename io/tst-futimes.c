@@ -21,13 +21,17 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 
+#ifndef struct_stat
+# define struct_stat struct stat64
+#endif
+
 static int
 test_futimens_helper (const char *file, int fd, const struct timeval *tv)
 {
   int r = futimes (fd, tv);
   TEST_VERIFY_EXIT (r == 0);
 
-  struct stat64 st;
+  struct_stat st;
   xfstat (fd, &st);
 
   /* Check if seconds for atime match */

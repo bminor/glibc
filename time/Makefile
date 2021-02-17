@@ -52,6 +52,24 @@ tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
 	   tst-settimeofday tst-itimer tst-gmtime tst-timegm \
 	   tst-timespec_get tst-timespec_getres
 
+tests-time64 := \
+  tst-adjtime-time64 \
+  tst-clock-time64 \
+  tst-clock2-time64 \
+  tst-clock_nanosleep-time64 \
+  tst-clock_settime-time64 \
+  tst-cpuclock1-time64 \
+  tst-ctime-time64 \
+  tst-difftime-time64 \
+  tst-gmtime-time64 \
+  tst-itimer-time64 \
+  tst-mktime4-time64 \
+  tst-settimeofday-time64 \
+  tst-timegm-time64 \
+  tst-timespec_get-time64 \
+  tst-timespec_getres-time64 \
+  tst-y2039-time64
+
 include ../Rules
 
 ifeq ($(run-built-tests),yes)

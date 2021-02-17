@@ -21,13 +21,17 @@
 #include <support/xunistd.h>
 #include <sys/stat.h>
 
+#ifndef struct_stat
+# define struct_stat struct stat64
+#endif
+
 static int
 test_utime_helper (const char *file, int fd, const struct utimbuf *ut)
 {
   int result = utime (file, ut);
   TEST_VERIFY_EXIT (result == 0);
 
-  struct stat64 st;
+  struct_stat st;
   xfstat (fd, &st);
 
   /* Check if seconds for actime match */

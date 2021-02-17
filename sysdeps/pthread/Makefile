@@ -124,6 +124,16 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-unwind-thread \
 	 tst-pt-vfork1 tst-pt-vfork2 tst-vfork1x tst-vfork2x \
 
+tests-time64 := \
+  tst-abstime-time64 \
+  tst-cnd-timedwait-time64 \
+  tst-cond11-time64 \
+  tst-join14-time64 \
+  tst-mtx-timedlock-time64 \
+  tst-rwlock14-time64 \
+  tst-sem5-time64 \
+  tst-thrd-sleep-time64 \
+
 
 # Files which must not be linked with libpthread.
 tests-nolibpthread += tst-unload

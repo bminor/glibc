@@ -32,6 +32,8 @@ routines := ftok \
 
 tests    := test-sysvmsg test-sysvsem test-sysvshm
 
+tests-time64 := test-sysvmsg-time64 test-sysvsem-time64 test-sysvshm-time64
+
 include ../Rules
 
 CFLAGS-msgrcv.c += -fexceptions -fasynchronous-unwind-tables

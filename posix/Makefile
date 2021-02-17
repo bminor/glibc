@@ -122,7 +122,9 @@ endif
 tests-internal	:= bug-regex5 bug-regex20 bug-regex33 \
 		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3
 tests-container := bug-ga2
+tests-time64	:= tst-wait4-time64 tst-wait3-time64 tst-gnuglob64-time64
 xtests		:= tst-getaddrinfo4 tst-getaddrinfo5 tst-sched_rr_get_interval
+xtests-time64	:= tst-sched_rr_get_interval-time64
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn tst-spawn2 tst-spawn3

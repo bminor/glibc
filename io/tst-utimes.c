@@ -22,13 +22,17 @@
 #include <sys/time.h>
 #include <time.h>
 
+#ifndef struct_stat
+# define struct_stat struct stat64
+#endif
+
 static int
 test_utimes_helper (const char *file, int fd, const struct timeval *tv)
 {
   int result = utimes (file, tv);
   TEST_VERIFY_EXIT (result == 0);
 
-  struct stat64 st;
+  struct_stat st;
   xfstat (fd, &st);
 
   /* Check if seconds for atime match */

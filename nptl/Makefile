@@ -325,6 +325,9 @@ xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
 	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10 tst-setgroups \
 	tst-mutexpp5 tst-mutexpp9
 
+tests-time64 := \
+  tst-cancel4_2-time64
+
 # This test can run into task limits because of a linux kernel bug
 # and then cause the make process to fail too, see bug 24537.
 xtests += tst-eintr1

@@ -21,23 +21,27 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 
+#ifndef struct_stat
+# define struct_stat struct stat64
+#endif
+
 static int
 test_lutimes_helper (const char *testfile, int fd, const char *testlink,
                      const struct timeval *tv)
 {
-  struct stat64 stfile_orig;
+  struct_stat stfile_orig;
   xlstat (testfile, &stfile_orig);
 
   TEST_VERIFY_EXIT (lutimes (testlink, tv) == 0);
 
-  struct stat64 stlink;
+  struct_stat stlink;
   xlstat (testlink, &stlink);
 
   TEST_COMPARE (stlink.st_atime, tv[0].tv_sec);
   TEST_COMPARE (stlink.st_mtime, tv[1].tv_sec);
 
   /* Check if the timestamp from original file is not changed.  */
-  struct stat64 stfile;
+  struct_stat stfile;
   xlstat (testfile, &stfile);
 
   TEST_COMPARE (stfile_orig.st_atime, stfile.st_atime);

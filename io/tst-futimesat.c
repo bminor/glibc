@@ -1,4 +1,23 @@
+/* futimesat basic tests.
+   Copyright (C) 2021 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
 #include <dirent.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,19 +26,19 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 
+#include <support/test-driver.h>
+#include <support/temp_file.h>
 
-static void prepare (void);
-#define PREPARE(argc, argv) prepare ()
-
-static int do_test (void);
-#define TEST_FUNCTION do_test ()
-
-#include "../test-skeleton.c"
+#ifndef struct_stat
+# define struct_stat struct stat64
+# define fstat       fstat64
+# define fstatat     fstatat64
+#endif
 
 static int dir_fd;
 
 static void
-prepare (void)
+prepare (int argc, char *argv[])
 {
   size_t test_dir_len = strlen (test_dir);
   static const char dir_name[] = "/tst-futimesat.XXXXXX";
@@ -48,7 +67,7 @@ prepare (void)
       exit (1);
     }
 }
-
+#define PREPARE prepare
 
 static int
 do_test (void)
@@ -98,8 +117,8 @@ do_test (void)
   write (fd, "hello", 5);
   puts ("file created");
 
-  struct stat64 st1;
-  if (fstat64 (fd, &st1) != 0)
+  struct_stat st1;
+  if (fstat (fd, &st1) != 0)
     {
       puts ("fstat64 failed");
       return 1;
@@ -118,8 +137,8 @@ do_test (void)
       return 1;
     }
 
-  struct stat64 st2;
-  if (fstatat64 (dir_fd, "some-file", &st2, 0) != 0)
+  struct_stat st2;
+  if (fstatat (dir_fd, "some-file", &st2, 0) != 0)
     {
       puts ("fstatat64 failed");
       return 1;
@@ -146,3 +165,5 @@ do_test (void)
 
   return 0;
 }
+
+#include <support/test-driver.c>

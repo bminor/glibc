@@ -24,6 +24,7 @@ static int
 do_test (void)
 {
   char *str;
+  char strb[32];
   time_t t;
 
   /* Use glibc time zone extension "TZ=:" to to guarantee that UTC
@@ -36,9 +37,19 @@ do_test (void)
   str = ctime (&t);
   TEST_COMPARE_STRING (str, "Thu Jan  1 00:00:00 1970\n");
 
+  /* Same as before but with ctime_r.  */
+  str = ctime_r (&t, strb);
+  TEST_VERIFY (str == strb);
+  TEST_COMPARE_STRING (str, "Thu Jan  1 00:00:00 1970\n");
+
   /* Check if the max time value for 32 bit time_t can be converted.  */
   t = 0x7fffffff;
   str = ctime (&t);
+  TEST_COMPARE_STRING (str, "Tue Jan 19 03:14:07 2038\n");
+
+  /* Same as before but with ctime_r.  */
+  str = ctime_r (&t, strb);
+  TEST_VERIFY (str == strb);
   TEST_COMPARE_STRING (str, "Tue Jan 19 03:14:07 2038\n");
 
   /* Check if we run on port with 32 bit time_t size */
@@ -48,6 +59,11 @@ do_test (void)
 
   /* Check if the time is converted after 32 bit time_t overflow.  */
   str = ctime (&tov);
+  TEST_COMPARE_STRING (str, "Tue Jan 19 03:14:08 2038\n");
+
+  /* Same as before but with ctime_r.  */
+  str = ctime_r (&tov, strb);
+  TEST_VERIFY (str == strb);
   TEST_COMPARE_STRING (str, "Tue Jan 19 03:14:08 2038\n");
 
   return 0;

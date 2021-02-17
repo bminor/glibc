@@ -1235,6 +1235,20 @@ $(common-objpfx)versions.stmp: $(common-objpfx)Versions.all \
 	touch $@
 endif # avoid-generated
 endif # $(build-shared) = yes
+
+-include $(common-objpfx)time64-compat.mk
+postclean-generated += time64-compat.mk
+
+$(common-objpfx)time64-compat.mk: $(sysd-versions-force) \
+				  $(common-objpfx)time64-compat.i
+	sed '/^[        ]*#/d;/^[       ]*$$/d' $< > $@T
+	mv -f $@T $@
+$(common-objpfx)time64-compat.i: $(..)Makeconfig
+	printf "#include <time64-compat.h>\n#ifdef TIME64_NON_DEFAULT\nhave-time64-compat = yes\n#endif" \
+	| $(CC) -E -undef $(CPPFLAGS) -x assembler-with-cpp - > $@T
+	mv -f $@T $@
+
+
 endif # sysd-sorted-done
 
 # The name under which the run-time dynamic linker is installed.

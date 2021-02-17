@@ -59,7 +59,7 @@ routines :=								\
 	ftw64-time64
 
 others		:= pwd
-test-srcs	:= ftwtest
+test-srcs	:= ftwtest ftwtest-time64
 tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-fcntl bug-ftw1 bug-ftw2 bug-ftw3 bug-ftw4 tst-statvfs \
 		   tst-openat tst-unlinkat tst-fstatat tst-futimesat \
@@ -78,12 +78,24 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-futimens \
 		   tst-utimensat \
 
+tests-time64 := \
+  tst-futimens-time64 \
+  tst-futimes-time64\
+  tst-fts-time64 \
+  tst-lutimes-time64 \
+  tst-stat-time64 \
+  tst-futimesat-time64 \
+  tst-utime-time64 \
+  tst-utimensat-time64 \
+  tst-utimes-time64 \
+
 # Likewise for statx, but we do not need static linking here.
 tests-internal += tst-statx
 tests-static += tst-statx
 
 ifeq ($(run-built-tests),yes)
-tests-special += $(objpfx)ftwtest.out
+tests-special += $(objpfx)ftwtest.out \
+		 $(objpfx)ftwtest-time64.out
 endif
 
 include ../Rules
@@ -125,8 +137,14 @@ tst-statvfs-ARGS = $(objpfx)tst-statvfs tst-statvfs.c /tmp
 
 tst-open-tmpfile-ARGS = --test-dir=$(objpfx)
 
+CFLAGS-ftwtest-time64.c += -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64
+
 ifeq ($(run-built-tests),yes)
 $(objpfx)ftwtest.out: ftwtest-sh $(objpfx)ftwtest
+	$(SHELL) $< $(common-objpfx) '$(test-program-cmd)' > $@; \
+	$(evaluate-test)
+
+$(objpfx)ftwtest-time64.out: ftwtest-sh $(objpfx)ftwtest-time64
 	$(SHELL) $< $(common-objpfx) '$(test-program-cmd)' > $@; \
 	$(evaluate-test)
 endif

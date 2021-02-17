@@ -37,6 +37,16 @@ do_test (void)
 			> 0);
       puts (buf);
       TEST_VERIFY (strcmp (buf, "2039-04-30 14:00:00 PDT") == 0);
+
+      /* Same as before but for localtime_r.  */
+      struct tm tmd;
+      tm = localtime_r (&ouch, &tmd);
+      TEST_VERIFY_EXIT (tm == &tmd);
+
+      TEST_VERIFY_EXIT (strftime (buf, sizeof buf, "%Y-%m-%d %H:%M:%S %Z", tm)
+			> 0);
+      puts (buf);
+      TEST_VERIFY (strcmp (buf, "2039-04-30 14:00:00 PDT") == 0);
     }
   else
     FAIL_UNSUPPORTED ("32-bit time_t");

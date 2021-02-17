@@ -21,7 +21,11 @@
 
 #if (_POSIX_THREADS - 0) <= 0
 
-# define TEST_FUNCTION 0
+static int
+do_test ()
+{
+  return 0;
+}
 
 #else
 
@@ -330,7 +334,6 @@ do_test (void)
 
   return result;
 }
-# define TEST_FUNCTION do_test ()
 #endif
 
-#include "../test-skeleton.c"
+#include <support/test-driver.c>

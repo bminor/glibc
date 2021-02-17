@@ -51,6 +51,15 @@ tests := tst-shm tst-timer tst-timer2 \
 	 tst-shm-cancel
 tests-internal := tst-timer-sigmask
 
+tests-time64 := \
+  tst-aio6-time64 \
+  tst-cpuclock2-time64 \
+  tst-mqueue1-time64 \
+  tst-mqueue2-time64 \
+  tst-mqueue4-time64 \
+  tst-mqueue8-time64 \
+  tst-timer4-time64
+
 extra-libs := librt
 extra-libs-others := $(extra-libs)
 

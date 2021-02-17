@@ -771,7 +771,8 @@ endif
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
 	     $(patsubst %.oS,%.d,$(filter %.oS,$(extra-objs))) \
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-test-objs:.os=.o))) \
-	     $(addsuffix .d,$(tests) $(tests-internal) $(xtests) $(test-srcs))
+	     $(addsuffix .d,$(tests) $(tests-internal) $(xtests) \
+		$(test-srcs) $(tests-time64) $(xtests-time64))
 ifeq ($(build-programs),yes)
 +depfiles += $(addsuffix .d,$(others) $(sysdep-others))
 endif
@@ -1285,6 +1286,21 @@ check: tests
 # Maintainers should use this target.
 .PHONY: xcheck
 xcheck: xtests
+
+# Handle tests-time64 and xtests-time64 that should built with LFS
+# and 64-bit time support.
+include $(o-iterator)
+define o-iterator-doit
+$(foreach f,$(tests-time64) $(xtests-time64),\
+	    $(objpfx)$(f)$(o)): CFLAGS += -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
+
+ifeq ($(have-time64-compat),yes)
+tests += $(foreach t,$(tests-time64),$(t))
+xtests += $(foreach t,$(xtests-time64),$(t))
+endif
 
 # The only difference between MODULE_NAME=testsuite and MODULE_NAME=nonlib is
 # that almost all internal declarations from config.h, libc-symbols.h, and

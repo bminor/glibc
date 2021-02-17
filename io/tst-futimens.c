@@ -20,13 +20,17 @@
 #include <support/xunistd.h>
 #include <sys/stat.h>
 
+#ifndef struct_stat
+# define struct_stat struct stat64
+#endif
+
 static int
 test_futimens_helper (const char *file, int fd, const struct timespec *ts)
 {
   int result = futimens (fd, ts);
   TEST_VERIFY_EXIT (result == 0);
 
-  struct stat64 st;
+  struct_stat st;
   xfstat (fd, &st);
 
   /* Check if seconds for atime match */
