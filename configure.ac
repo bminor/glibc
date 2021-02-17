@@ -1578,7 +1578,8 @@ if test "$with_gd" != "no"; then
   LDFLAGS="$LDFLAGS $libgd_ldflags"
   old_LIBS="$LIBS"
   LIBS="$LIBS -lgd -lpng -lz -lm"
-  AC_TRY_LINK([#include <gd.h>], [gdImagePng (0, 0)], LIBGD=yes, LIBGD=no)
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <gd.h>]], [[gdImagePng (0, 0)]])],
+		 [LIBGD=yes], [LIBGD=no])
   CFLAGS="$old_CFLAGS"
   LDFLAGS="$old_LDFLAGS"
   LIBS="$old_LIBS"
