@@ -1,4 +1,4 @@
-/* Generic implementation of the shared memory struct shmid_ds.
+/* Common definitions for struct semid_ds with 64-bit time.
    Copyright (C) 2020-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,15 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_SHM_H
-# error "Never include <bits/types/struct_shmid_ds.h> directly; use <sys/shm.h> instead."
-#endif
-
-#if __TIMESIZE == 64
-# define __shmid64_ds shmid_ds
-#else
-struct __shmid64_ds
-{
-# include <bits/types/struct_shmid64_ds_helper.h>
-};
-#endif
+  struct ipc_perm shm_perm;	/* operation permission struct */
+  size_t shm_segsz;		/* size of segment in bytes */
+  __time64_t shm_atime;		/* time of last shmat() */
+  __time64_t shm_dtime;		/* time of last shmdt() */
+  __time64_t shm_ctime;		/* time of last change by shmctl() */
+  __pid_t shm_cpid;		/* pid of creator */
+  __pid_t shm_lpid;		/* pid of last shmop */
+  shmatt_t shm_nattch;		/* number of current attaches */
+  unsigned long int __glibc_reserved5;
+  unsigned long int __glibc_reserved6;
