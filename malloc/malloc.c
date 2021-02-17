@@ -3286,11 +3286,10 @@ __libc_free (void *mem)
   if (mem == 0)                              /* free(0) has no effect */
     return;
 
-#ifdef USE_MTAG
   /* Quickly check that the freed pointer matches the tag for the memory.
      This gives a useful double-free detection.  */
-  *(volatile char *)mem;
-#endif
+  if (__glibc_unlikely (mtag_enabled))
+    *(volatile char *)mem;
 
   int err = errno;
 
@@ -3352,11 +3351,10 @@ __libc_realloc (void *oldmem, size_t bytes)
   if (oldmem == 0)
     return __libc_malloc (bytes);
 
-#ifdef USE_MTAG
   /* Perform a quick check to ensure that the pointer's tag matches the
      memory's tag.  */
-  *(volatile char*) oldmem;
-#endif
+  if (__glibc_unlikely (mtag_enabled))
+    *(volatile char*) oldmem;
 
   /* chunk corresponding to oldmem */
   const mchunkptr oldp = mem2chunk (oldmem);

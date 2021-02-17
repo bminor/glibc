@@ -262,11 +262,10 @@ free_check (void *mem, const void *caller)
 
   int err = errno;
 
-#ifdef USE_MTAG
   /* Quickly check that the freed pointer matches the tag for the memory.
      This gives a useful double-free detection.  */
-  *(volatile char *)mem;
-#endif
+  if (__glibc_unlikely (mtag_enabled))
+    *(volatile char *)mem;
 
   __libc_lock_lock (main_arena.mutex);
   p = mem2chunk_check (mem, NULL);
@@ -310,11 +309,10 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
       return NULL;
     }
 
-#ifdef USE_MTAG
   /* Quickly check that the freed pointer matches the tag for the memory.
      This gives a useful double-free detection.  */
-  *(volatile char *)oldmem;
-#endif
+  if (__glibc_unlikely (mtag_enabled))
+    *(volatile char *)oldmem;
 
   __libc_lock_lock (main_arena.mutex);
   const mchunkptr oldp = mem2chunk_check (oldmem, &magic_p);
