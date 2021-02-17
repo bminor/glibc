@@ -31,22 +31,43 @@
 /* Extra flags to pass to mmap() to request a tagged region of memory.  */
 #define __MTAG_MMAP_FLAGS 0
 
+/* Memory tagging target hooks are only called when memory tagging is
+   enabled at runtime.  The generic definitions here must not be used.  */
+void __libc_mtag_link_error (void);
+
 /* Set the tags for a region of memory, which must have size and alignment
-   that are multiples of __MTAG_GRANULE_SIZE.  Size cannot be zero.
-   void *__libc_mtag_tag_region (const void *, size_t)  */
-#define __libc_mtag_tag_region(p, s) (p)
+   that are multiples of __MTAG_GRANULE_SIZE.  Size cannot be zero.  */
+static inline void *
+__libc_mtag_tag_region (void *p, size_t n)
+{
+  __libc_mtag_link_error ();
+  return p;
+}
 
 /* Optimized equivalent to __libc_mtag_tag_region followed by memset.  */
-#define __libc_mtag_memset_with_tag memset
+static inline void *
+__libc_mtag_memset_with_tag (void *p, int c, size_t n)
+{
+  __libc_mtag_link_error ();
+  return memset (p, c, n);
+}
 
 /* Convert address P to a pointer that is tagged correctly for that
-   location.
-   void *__libc_mtag_address_get_tag (void*)  */
-#define __libc_mtag_address_get_tag(p) (p)
+   location.  */
+static inline void *
+__libc_mtag_address_get_tag (void *p)
+{
+  __libc_mtag_link_error ();
+  return p;
+}
 
 /* Assign a new (random) tag to a pointer P (does not adjust the tag on
-   the memory addressed).
-   void *__libc_mtag_new_tag (void*)  */
-#define __libc_mtag_new_tag(p) (p)
+   the memory addressed).  */
+static inline void *
+__libc_mtag_new_tag (void *p)
+{
+  __libc_mtag_link_error ();
+  return p;
+}
 
 #endif /* _GENERIC_LIBC_MTAG_H */
