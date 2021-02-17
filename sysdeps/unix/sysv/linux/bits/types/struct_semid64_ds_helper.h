@@ -1,4 +1,4 @@
-/* Generic implementation of the semaphore struct semid64_ds.
+/* Common definitions for struct semid_ds with 64-bit time.
    Copyright (C) 2020-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,15 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SYS_SEM_H
-# error "Never include <bits/types/struct_semid_ds.h> directly; use <sys/sem.h> instead."
-#endif
-
-#if __TIMESIZE == 64
-# define __semid64_ds semid_ds
-#else
-struct __semid64_ds
-{
-# include <bits/types/struct_semid64_ds_helper.h>
-};
-#endif
+  /* Content of internal __semid64_ds.  */
+  struct ipc_perm sem_perm;		/* operation permission struct */
+  __time64_t sem_otime;			/* last semop() time */
+  __time64_t sem_ctime;			/* last time changed by semctl() */
+  __syscall_ulong_t sem_nsems;		/* number of semaphores in set */
+  unsigned long int __glibc_reserved3;
+  unsigned long int __glibc_reserved4;
