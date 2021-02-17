@@ -35,8 +35,13 @@ __BEGIN_DECLS
 /* Structure describing file times.  */
 struct utimbuf
   {
+#ifdef __USE_TIME_BITS64
+    __time64_t actime;		/* Access time.  */
+    __time64_t modtime;		/* Modification time.  */
+#else
     __time_t actime;		/* Access time.  */
     __time_t modtime;		/* Modification time.  */
+#endif
   };
 
 /* Set the access and modification times of FILE to those given in
