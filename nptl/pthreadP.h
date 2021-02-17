@@ -469,10 +469,10 @@ extern int __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex);
 extern int __pthread_clockjoin_np64 (pthread_t threadid, void **thread_return,
                                      clockid_t clockid,
                                      const struct __timespec64 *abstime);
-libc_hidden_proto (__pthread_clockjoin_np64)
+libpthread_hidden_proto (__pthread_clockjoin_np64)
 extern int __pthread_timedjoin_np64 (pthread_t threadid, void **thread_return,
                                      const struct __timespec64 *abstime);
-libc_hidden_proto (__pthread_timedjoin_np64)
+libpthread_hidden_proto (__pthread_timedjoin_np64)
 extern int __pthread_cond_timedwait64 (pthread_cond_t *cond,
                                        pthread_mutex_t *mutex,
                                        const struct __timespec64 *abstime);

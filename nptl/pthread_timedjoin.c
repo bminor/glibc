@@ -28,7 +28,7 @@ __pthread_timedjoin_np64 (pthread_t threadid, void **thread_return,
 }
 
 #if __TIMESIZE != 64
-libc_hidden_def (__pthread_timedjoin_np64)
+libpthread_hidden_def (__pthread_timedjoin_np64)
 
 int
 __pthread_timedjoin_np (pthread_t threadid, void **thread_return,
