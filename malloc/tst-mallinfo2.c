@@ -68,14 +68,14 @@ do_test (void)
   for (i = 1; i < 20; ++i)
     {
       ptr = malloc (160 * i);
-      total += 16 * i;
+      total += 160 * i;
     }
 
   mi2 = mallinfo2 ();
   print_mi ("after", &mi2);
 
   /* Check at least something changed.  */
-  TEST_VERIFY (mi2.uordblks > mi1.uordblks + total);
+  TEST_VERIFY (mi2.uordblks >= mi1.uordblks + total);
 
   return 0;
 }
