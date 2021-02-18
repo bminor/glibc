@@ -402,7 +402,6 @@ nss_database_check_reload_and_get (struct nss_database_state *local,
       atomic_store_release (&local->data.reload_disabled, 1);
       *result = local->data.services[database_index];
       __libc_lock_unlock (local->lock);
-      __nss_module_disable_loading ();
       return true;
     }
   local->root_ino = str.st_ino;

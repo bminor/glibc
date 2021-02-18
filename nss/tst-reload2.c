@@ -26,6 +26,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <unistd.h>
+#include <netdb.h>
 
 #include <support/support.h>
 #include <support/check.h>
@@ -48,7 +49,7 @@ static const char *group_4[] = {
   "alpha", "beta", "gamma", "fred", NULL
 };
 
-static struct group group_table_data[] =
+static struct group group_table_data1[] =
   {
    GRP (4),
    GRP_LAST ()
@@ -58,7 +59,7 @@ void
 _nss_test1_init_hook (test_tables *t)
 {
   t->pwd_table = pwd_table1;
-  t->grp_table = group_table_data;
+  t->grp_table = group_table_data1;
 }
 
 static struct passwd pwd_table2[] =
@@ -68,10 +69,21 @@ static struct passwd pwd_table2[] =
    PWD_LAST ()
   };
 
+static const char *group_5[] = {
+  "fred", NULL
+};
+
+static struct group group_table_data2[] =
+  {
+   GRP (5),
+   GRP_LAST ()
+  };
+
 void
 _nss_test2_init_hook (test_tables *t)
 {
   t->pwd_table = pwd_table2;
+  t->grp_table = group_table_data2;
 }
 
 static int
@@ -79,6 +91,7 @@ do_test (void)
 {
   struct passwd *pw;
   struct group *gr;
+  struct hostent *he;
   char buf1[PATH_MAX];
   char buf2[PATH_MAX];
 
@@ -99,7 +112,9 @@ do_test (void)
     TEST_COMPARE (pw->pw_uid, 1234);
 
   /* This just loads the test2 DSO.  */
-  gr = getgrnam ("name4");
+  gr = getgrgid (5);
+  TEST_VERIFY (gr != NULL);
+
 
   /* Change the root dir.  */
 
@@ -114,15 +129,21 @@ do_test (void)
   if (pw)
     TEST_VERIFY (pw->pw_uid != 2468);
 
-  /* The "files" DSO should not be loaded.  */
-  gr = getgrnam ("test3");
-  TEST_VERIFY (gr == NULL);
-
   /* We should still be using the old configuration.  */
   pw = getpwnam ("test1");
   TEST_VERIFY (pw != NULL);
   if (pw)
     TEST_COMPARE (pw->pw_uid, 1234);
+  gr = getgrgid (5);
+  TEST_VERIFY (gr != NULL);
+  gr = getgrnam ("name4");
+  TEST_VERIFY (gr == NULL);
+
+  /* hosts in the outer nsswitch is files; the inner one is test1.
+     Verify that we're still using the outer nsswitch *and* that we
+     can load the files DSO. */
+  he = gethostbyname ("test2");
+  TEST_VERIFY (he != NULL);
 
   return 0;
 }
