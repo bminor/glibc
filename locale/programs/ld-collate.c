@@ -1483,6 +1483,9 @@ order for `%.*s' already defined at %s:%Zu"),
 	    }
 	}
     }
+  /* Move the cursor to the last entry in the ellipsis.
+     Subsequent operations need to start from the last entry.  */
+  collate->cursor = endp;
 }
 
 
