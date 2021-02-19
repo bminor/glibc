@@ -42,6 +42,7 @@
 #define __NR_epoll_create1 315
 #define __NR_epoll_ctl 237
 #define __NR_epoll_pwait 303
+#define __NR_epoll_pwait2 441
 #define __NR_epoll_wait 238
 #define __NR_eventfd 307
 #define __NR_eventfd2 314

@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 5.10.
-kernel 5.10
+# The list of system calls is current as of Linux 5.11.
+kernel 5.11
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -95,6 +95,7 @@ epoll_create1
 epoll_ctl
 epoll_ctl_old
 epoll_pwait
+epoll_pwait2
 epoll_wait
 epoll_wait_old
 eventfd
