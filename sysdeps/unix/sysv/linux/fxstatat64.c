@@ -40,10 +40,15 @@ __fxstatat64 (int vers, int fd, const char *file, struct stat64 *st, int flag)
   if (vers == _STAT_VER_KERNEL || vers == _STAT_VER_LINUX)
     return INLINE_SYSCALL_CALL (newfstatat, fd, file, st, flag);
 # elif defined __NR_fstatat64
+#  ifdef __NR_fstat
   /* 64-bit kABI outlier, e.g. sparc64.  */
   struct stat64 st64;
   int r = INLINE_SYSCALL_CALL (fstatat64, fd, file, &st64, flag);
   return r ?: __xstat32_conv (vers, &st64, (struct stat *) st);
+#  else
+  if (vers == _STAT_VER_LINUX)
+    return INLINE_SYSCALL_CALL (fstatat64, fd, file, st, flag);
+#  endif
 # else
   /* New 32-bit kABIs with only 64-bit time_t support, e.g. arc, riscv32.  */
   if (vers == _STAT_VER_KERNEL)

@@ -35,6 +35,7 @@ ___fxstat64 (int vers, int fd, struct stat64 *buf)
 {
 #if XSTAT_IS_XSTAT64
 # ifdef __NR_fstat64
+#  ifdef __NR_fstat
   /* 64-bit kABI outlier, e.g. sparc64.  */
   if (vers == _STAT_VER_KERNEL)
     return INLINE_SYSCALL_CALL (fstat, fd, buf);
@@ -44,6 +45,9 @@ ___fxstat64 (int vers, int fd, struct stat64 *buf)
       int r = INLINE_SYSCALL_CALL (fstat64, fd, &st64);
       return r ?: __xstat32_conv (vers, &st64, (struct stat *) buf);
     }
+#  else
+  return INLINE_SYSCALL_CALL (fstat64, fd, buf);
+#  endif
 # elif defined __NR_fstat
   /* 64-bit kABI, e.g. aarch64, ia64, powerpc64*, s390x, riscv64,
      and x86_64.  */
