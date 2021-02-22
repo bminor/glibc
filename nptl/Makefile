@@ -31,6 +31,7 @@ extra-libs-others := $(extra-libs)
 routines = \
   alloca_cutoff \
   forward \
+  futex-internal \
   libc-cancellation \
   libc-cleanup \
   libc_multiple_threads \
@@ -97,7 +98,6 @@ libpthread-routines = \
   flockfile \
   ftrylockfile \
   funlockfile \
-  futex-internal \
   herrno \
   libpthread-compat \
   nptl-init \

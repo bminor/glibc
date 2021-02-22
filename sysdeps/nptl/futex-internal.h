@@ -345,14 +345,14 @@ __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
                                     unsigned int expected, clockid_t clockid,
                                     const struct __timespec64* abstime,
                                     int private);
-libpthread_hidden_proto (__futex_abstimed_wait_cancelable64);
+libc_hidden_proto (__futex_abstimed_wait_cancelable64);
 
 int
 __futex_abstimed_wait64 (unsigned int* futex_word, unsigned int expected,
                          clockid_t clockid,
                          const struct __timespec64* abstime,
                          int private);
-libpthread_hidden_proto (__futex_abstimed_wait64);
+libc_hidden_proto (__futex_abstimed_wait64);
 
 
 static __always_inline int

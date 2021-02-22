@@ -112,7 +112,7 @@ __futex_abstimed_wait64 (unsigned int* futex_word, unsigned int expected,
   return __futex_abstimed_wait_common64 (futex_word, expected, clockid,
                                          abstime, private, false);
 }
-libpthread_hidden_def (__futex_abstimed_wait64)
+libc_hidden_def (__futex_abstimed_wait64)
 
 int
 __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
@@ -123,4 +123,4 @@ __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
   return __futex_abstimed_wait_common64 (futex_word, expected, clockid,
                                          abstime, private, true);
 }
-libpthread_hidden_def (__futex_abstimed_wait_cancelable64)
+libc_hidden_def (__futex_abstimed_wait_cancelable64)

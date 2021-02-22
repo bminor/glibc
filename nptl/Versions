@@ -71,6 +71,8 @@ libc {
     pthread_sigmask;
   }
   GLIBC_PRIVATE {
+    __futex_abstimed_wait64;
+    __futex_abstimed_wait_cancelable64;
     __libc_alloca_cutoff;
     __libc_allocate_rtsig_private;
     __libc_current_sigrtmax_private;
@@ -387,8 +389,6 @@ libpthread {
   }
 
   GLIBC_PRIVATE {
-    __futex_abstimed_wait64;
-    __futex_abstimed_wait_cancelable64;
     __libpthread_freeres;
     __pthread_barrier_init;
     __pthread_barrier_wait;
