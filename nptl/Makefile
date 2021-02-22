@@ -97,6 +97,7 @@ libpthread-routines = \
   flockfile \
   ftrylockfile \
   funlockfile \
+  futex-internal \
   herrno \
   libpthread-compat \
   lowlevellock \
@@ -313,6 +314,8 @@ CFLAGS-fdatasync.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fsync.c += -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-pt-system.c += -fexceptions
+
+CFLAGS-futex-internal.c += -fexceptions -fasynchronous-unwind-tables
 
 LDLIBS-tst-once5 = -lstdc++
 CFLAGS-tst-thread_local1.o = -std=gnu++11

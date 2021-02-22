@@ -17,8 +17,7 @@
 # <https://www.gnu.org/licenses/>.
 
 ifeq ($(subdir),nptl)
-libpthread-sysdep_routines += errno-loc futex-internal
-CFLAGS-futex-internal.c += -fexceptions -fasynchronous-unwind-tables
+libpthread-sysdep_routines += errno-loc
 endif
 
 ifeq ($(subdir),rt)
