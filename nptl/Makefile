@@ -85,92 +85,158 @@ pthread-compat-wrappers = \
 		      sigwait sigsuspend \
 		      recvmsg sendmsg
 
-libpthread-routines = nptl-init nptlfreeres vars events version pt-interp \
-		      pthread_create pthread_exit pthread_detach \
-		      pthread_join pthread_tryjoin pthread_timedjoin \
-		      pthread_clockjoin pthread_join_common pthread_yield \
-		      pthread_getconcurrency pthread_setconcurrency \
-		      pthread_setschedprio \
-		      pthread_attr_getguardsize pthread_attr_setguardsize \
-		      pthread_attr_getstackaddr pthread_attr_setstackaddr \
-		      pthread_attr_getstacksize pthread_attr_setstacksize \
-		      pthread_attr_getstack pthread_attr_setstack \
-		      pthread_mutex_init pthread_mutex_destroy \
-		      pthread_mutex_lock pthread_mutex_trylock \
-		      pthread_mutex_timedlock pthread_mutex_unlock \
-		      pthread_mutex_cond_lock \
-		      pthread_mutexattr_init pthread_mutexattr_destroy \
-		      pthread_mutexattr_getpshared \
-		      pthread_mutexattr_setpshared \
-		      pthread_mutexattr_gettype pthread_mutexattr_settype \
-		      pthread_rwlock_init pthread_rwlock_destroy \
-		      pthread_rwlock_rdlock pthread_rwlock_timedrdlock \
-		      pthread_rwlock_clockrdlock \
-		      pthread_rwlock_wrlock pthread_rwlock_timedwrlock \
-		      pthread_rwlock_clockwrlock \
-		      pthread_rwlock_tryrdlock pthread_rwlock_trywrlock \
-		      pthread_rwlock_unlock \
-		      pthread_rwlockattr_init pthread_rwlockattr_destroy \
-		      pthread_rwlockattr_getpshared \
-		      pthread_rwlockattr_setpshared \
-		      pthread_rwlockattr_getkind_np \
-		      pthread_rwlockattr_setkind_np \
-		      pthread_cond_wait \
-		      pthread_cond_signal pthread_cond_broadcast \
-		      old_pthread_cond_wait old_pthread_cond_timedwait \
-		      old_pthread_cond_signal old_pthread_cond_broadcast \
-		      pthread_condattr_getpshared pthread_condattr_setpshared \
-		      pthread_condattr_getclock pthread_condattr_setclock \
-		      pthread_spin_init pthread_spin_destroy \
-		      pthread_spin_lock pthread_spin_trylock \
-		      pthread_spin_unlock \
-		      pthread_barrier_init pthread_barrier_destroy \
-		      pthread_barrier_wait \
-		      pthread_barrierattr_init pthread_barrierattr_destroy \
-		      pthread_barrierattr_getpshared \
-		      pthread_barrierattr_setpshared \
-		      pthread_key_create pthread_key_delete \
-		      pthread_getspecific pthread_setspecific \
-		      pthread_kill pthread_sigqueue \
-		      pthread_cancel pthread_testcancel \
-		      pthread_setcancelstate pthread_setcanceltype \
-		      pthread_once \
-		      old_pthread_atfork \
-		      pthread_getcpuclockid \
-		      sem_init sem_destroy sem_routines \
-		      sem_open sem_close sem_unlink \
-		      sem_getvalue \
-		      sem_wait sem_timedwait sem_clockwait sem_post \
-		      cleanup cleanup_defer cleanup_compat \
-		      cleanup_defer_compat unwind \
-		      pt-longjmp pt-cleanup\
-		      cancellation \
-		      lowlevellock \
-		      pt-fork pt-fcntl \
-		      $(pthread-compat-wrappers) \
-		      pt-raise pt-system \
-		      flockfile ftrylockfile funlockfile \
-		      sigaction \
-		      herrno res pt-allocrtsig \
-		      pthread_kill_other_threads \
-		      pthread_setaffinity \
-		      pthread_attr_getaffinity \
-		      pthread_mutexattr_getrobust pthread_mutexattr_setrobust \
-		      pthread_mutex_consistent \
-		      cleanup_routine unwind-forcedunwind \
-		      pthread_mutexattr_getprotocol \
-		      pthread_mutexattr_setprotocol \
-		      pthread_mutexattr_getprioceiling \
-		      pthread_mutexattr_setprioceiling tpp \
-		      pthread_mutex_getprioceiling \
-		      pthread_mutex_setprioceiling \
-		      pthread_setname pthread_getname \
-		      pthread_setattr_default_np pthread_getattr_default_np \
-		      pthread_mutex_conf \
-		      libpthread-compat
+libpthread-routines = \
+  $(pthread-compat-wrappers) \
+  cancellation \
+  cleanup \
+  cleanup_compat \
+  cleanup_defer \
+  cleanup_defer_compat \
+  cleanup_routine \
+  events \
+  flockfile \
+  ftrylockfile \
+  funlockfile \
+  herrno \
+  libpthread-compat \
+  lowlevellock \
+  nptl-init \
+  nptlfreeres \
+  old_pthread_atfork \
+  old_pthread_cond_broadcast \
+  old_pthread_cond_signal \
+  old_pthread_cond_timedwait \
+  old_pthread_cond_wait \
+  pt-allocrtsig \
+  pt-cleanup \
+  pt-fcntl \
+  pt-fork \
+  pt-interp \
+  pt-longjmp \
+  pt-raise \
+  pt-system \
+  pthread_attr_getaffinity \
+  pthread_attr_getguardsize \
+  pthread_attr_getstack \
+  pthread_attr_getstackaddr \
+  pthread_attr_getstacksize \
+  pthread_attr_setguardsize \
+  pthread_attr_setstack \
+  pthread_attr_setstackaddr \
+  pthread_attr_setstacksize \
+  pthread_barrier_destroy \
+  pthread_barrier_init \
+  pthread_barrier_wait \
+  pthread_barrierattr_destroy \
+  pthread_barrierattr_getpshared \
+  pthread_barrierattr_init \
+  pthread_barrierattr_setpshared \
+  pthread_cancel \
+  pthread_clockjoin \
+  pthread_cond_broadcast \
+  pthread_cond_signal \
+  pthread_cond_wait \
+  pthread_condattr_getclock \
+  pthread_condattr_getpshared \
+  pthread_condattr_setclock \
+  pthread_condattr_setpshared \
+  pthread_create \
+  pthread_detach \
+  pthread_exit \
+  pthread_getattr_default_np \
+  pthread_getconcurrency \
+  pthread_getcpuclockid \
+  pthread_getname \
+  pthread_getspecific \
+  pthread_join \
+  pthread_join_common \
+  pthread_key_create \
+  pthread_key_delete \
+  pthread_kill \
+  pthread_kill_other_threads \
+  pthread_mutex_cond_lock \
+  pthread_mutex_conf \
+  pthread_mutex_consistent \
+  pthread_mutex_destroy \
+  pthread_mutex_getprioceiling \
+  pthread_mutex_init \
+  pthread_mutex_lock \
+  pthread_mutex_setprioceiling \
+  pthread_mutex_timedlock \
+  pthread_mutex_trylock \
+  pthread_mutex_unlock \
+  pthread_mutexattr_destroy \
+  pthread_mutexattr_getprioceiling \
+  pthread_mutexattr_getprotocol \
+  pthread_mutexattr_getpshared \
+  pthread_mutexattr_getrobust \
+  pthread_mutexattr_gettype \
+  pthread_mutexattr_init \
+  pthread_mutexattr_setprioceiling \
+  pthread_mutexattr_setprotocol \
+  pthread_mutexattr_setpshared \
+  pthread_mutexattr_setrobust \
+  pthread_mutexattr_settype \
+  pthread_once \
+  pthread_rwlock_clockrdlock \
+  pthread_rwlock_clockwrlock \
+  pthread_rwlock_destroy \
+  pthread_rwlock_init \
+  pthread_rwlock_rdlock \
+  pthread_rwlock_timedrdlock \
+  pthread_rwlock_timedwrlock \
+  pthread_rwlock_tryrdlock \
+  pthread_rwlock_trywrlock \
+  pthread_rwlock_unlock \
+  pthread_rwlock_wrlock \
+  pthread_rwlockattr_destroy \
+  pthread_rwlockattr_getkind_np \
+  pthread_rwlockattr_getpshared \
+  pthread_rwlockattr_init \
+  pthread_rwlockattr_setkind_np \
+  pthread_rwlockattr_setpshared \
+  pthread_setaffinity \
+  pthread_setattr_default_np \
+  pthread_setcancelstate \
+  pthread_setcanceltype \
+  pthread_setconcurrency \
+  pthread_setname \
+  pthread_setschedprio \
+  pthread_setspecific \
+  pthread_sigqueue \
+  pthread_spin_destroy \
+  pthread_spin_init \
+  pthread_spin_lock \
+  pthread_spin_trylock \
+  pthread_spin_unlock \
+  pthread_testcancel \
+  pthread_timedjoin \
+  pthread_tryjoin \
+  pthread_yield \
+  res \
+  sem_clockwait \
+  sem_close \
+  sem_destroy \
+  sem_getvalue \
+  sem_init \
+  sem_open \
+  sem_post \
+  sem_routines \
+  sem_timedwait \
+  sem_unlink \
+  sem_wait \
+  sigaction \
+  tpp \
+  unwind \
+  unwind-forcedunwind \
+  vars \
+  version \
 
-libpthread-shared-only-routines = version pt-interp pt-allocrtsig \
-				  unwind-forcedunwind
+libpthread-shared-only-routines = \
+  pt-allocrtsig \
+  pt-interp \
+  unwind-forcedunwind \
+  version \
 
 # Since cancellation handling is in large parts handled using exceptions
 # we have to compile some files with exception handling enabled, some
