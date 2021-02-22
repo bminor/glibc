@@ -75,8 +75,10 @@
 #define lll_cond_trylock(lock)	\
   __glibc_unlikely (atomic_compare_and_exchange_bool_acq (&(lock), 2, 0))
 
-extern void __lll_lock_wait_private (int *futex) attribute_hidden;
-extern void __lll_lock_wait (int *futex, int private) attribute_hidden;
+extern void __lll_lock_wait_private (int *futex);
+libc_hidden_proto (__lll_lock_wait_private)
+extern void __lll_lock_wait (int *futex, int private);
+libc_hidden_proto (__lll_lock_wait)
 
 /* This is an expression rather than a statement even though its value is
    void, so that it can be used in a comma expression or as an expression

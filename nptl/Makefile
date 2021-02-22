@@ -33,9 +33,9 @@ routines = \
   forward \
   libc-cancellation \
   libc-cleanup \
-  libc-lowlevellock \
   libc_multiple_threads \
   libc_pthread_init \
+  lowlevellock \
   old_pthread_cond_destroy \
   old_pthread_cond_init \
   pthread_atfork \
@@ -100,7 +100,6 @@ libpthread-routines = \
   futex-internal \
   herrno \
   libpthread-compat \
-  lowlevellock \
   nptl-init \
   nptlfreeres \
   old_pthread_atfork \
