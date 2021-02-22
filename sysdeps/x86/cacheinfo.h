@@ -32,18 +32,10 @@
    L1 size, rounded to multiple of 256 bytes.  */
 long int __x86_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
 long int __x86_data_cache_size attribute_hidden = 32 * 1024;
-/* Similar to __x86_data_cache_size_half, but not rounded.  */
-long int __x86_raw_data_cache_size_half attribute_hidden = 32 * 1024 / 2;
-/* Similar to __x86_data_cache_size, but not rounded.  */
-long int __x86_raw_data_cache_size attribute_hidden = 32 * 1024;
 /* Shared cache size for use in memory and string routines, typically
    L2 or L3 size, rounded to multiple of 256 bytes.  */
 long int __x86_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
 long int __x86_shared_cache_size attribute_hidden = 1024 * 1024;
-/* Similar to __x86_shared_cache_size_half, but not rounded.  */
-long int __x86_raw_shared_cache_size_half attribute_hidden = 1024 * 1024 / 2;
-/* Similar to __x86_shared_cache_size, but not rounded.  */
-long int __x86_raw_shared_cache_size attribute_hidden = 1024 * 1024;
 
 /* Threshold to use non temporal store.  */
 long int __x86_shared_non_temporal_threshold attribute_hidden;
@@ -62,16 +54,12 @@ init_cacheinfo (void)
 {
   const struct cpu_features *cpu_features = __get_cpu_features ();
   long int data = cpu_features->data_cache_size;
-  __x86_raw_data_cache_size_half = data / 2;
-  __x86_raw_data_cache_size = data;
   /* Round data cache size to multiple of 256 bytes.  */
   data = data & ~255L;
   __x86_data_cache_size_half = data / 2;
   __x86_data_cache_size = data;
 
   long int shared = cpu_features->shared_cache_size;
-  __x86_raw_shared_cache_size_half = shared / 2;
-  __x86_raw_shared_cache_size = shared;
   /* Round shared cache size to multiple of 256 bytes.  */
   shared = shared & ~255L;
   __x86_shared_cache_size_half = shared / 2;
