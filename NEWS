@@ -156,6 +156,7 @@ The following bugs are resolved with this release:
   [18683] libc: Linux faccessat implementation can incorrectly ignore
     AT_EACCESS
   [22899] libc: Use 64-bit readdir() in generic POSIX getcwd()
+  [23091] hurd: missing waitid support
   [23249] libc: Epyc and other current AMD CPUs do not select the
     "haswell" platform subdirectory
   [24080] dynamic-link: Definition of "haswell" platform is inconsistent
@@ -4723,11 +4724,11 @@ Version 2.9
 
 * The following bugs are resolved with this release:
 
-  3406, 5209, 5210, 5381, 5794, 5814, 5911, 6428, 6438, 6442, 6447, 6461,
-  6472, 6505, 6544, 6589, 6612, 6634, 6653, 6654, 6657, 6698, 6712, 6713,
-  6719, 6723, 6724, 6740, 6763, 6771, 6790, 6791, 6817, 6824, 6839, 6843,
-  6845, 6856, 6857, 6860, 6867, 6875, 6919, 6920, 6942, 6947, 6955, 6966,
-  6968, 6974, 6980, 6995, 7008, 7009, 7029
+  2447, 3406, 5209, 5210, 5381, 5794, 5814, 5911, 6428, 6438, 6442, 6447,
+  6461, 6472, 6505, 6544, 6589, 6612, 6634, 6653, 6654, 6657, 6698, 6712,
+  6713, 6719, 6723, 6724, 6740, 6763, 6771, 6790, 6791, 6817, 6824, 6839,
+  6843, 6845, 6856, 6857, 6860, 6867, 6875, 6919, 6920, 6942, 6947, 6955,
+  6966, 6968, 6974, 6980, 6995, 7008, 7009, 7029
 
 * Unified lookup for getaddrinfo: IPv4 and IPv6 addresses are now looked
   up at the same time.  Implemented by Ulrich Drepper.
