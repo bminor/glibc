@@ -1,4 +1,5 @@
-/* Copyright (C) 2013-2021 Free Software Foundation, Inc.
+/* elision-lock.c: Lock elision locking.  Stub version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,9 +15,3 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
-
-/* The cond lock is not actually elided yet, but we still need to handle
-   already elided locks.  */
-#include <elision-conf.h>
-
-#include <nptl/pthread_mutex_cond_lock.c>

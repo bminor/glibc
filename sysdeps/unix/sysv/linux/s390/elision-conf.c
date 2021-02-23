@@ -51,13 +51,6 @@ struct elision_config __elision_aconf =
     .skip_trylock_internal_abort = 3,
   };
 
-/* Force elision for all new locks.  This is used to decide whether existing
-   DEFAULT locks should be automatically upgraded to elision in
-   pthread_mutex_lock().  Disabled for suid programs.  Only used when elision
-   is available.  */
-
-int __pthread_force_elision attribute_hidden = 0;
-
 #if HAVE_TUNABLES
 static inline void
 __always_inline
@@ -104,10 +97,8 @@ TUNABLE_CALLBACK_FNDECL (skip_trylock_internal_abort, int32_t);
 
 /* Initialize elison.  */
 
-static void
-elision_init (int argc __attribute__ ((unused)),
-	      char **argv  __attribute__ ((unused)),
-	      char **environ)
+void
+__lll_elision_init (void)
 {
 #if HAVE_TUNABLES
   /* Elision depends on tunables and must be explicitly turned on by setting
@@ -130,17 +121,3 @@ elision_init (int argc __attribute__ ((unused)),
   if (!__pthread_force_elision)
     __elision_aconf.try_tbegin = 0; /* Disable elision on rwlocks.  */
 }
-
-#ifdef SHARED
-# define INIT_SECTION ".init_array"
-# define MAYBE_CONST
-#else
-# define INIT_SECTION ".preinit_array"
-# define MAYBE_CONST const
-#endif
-
-void (*MAYBE_CONST __pthread_init_array []) (int, char **, char **)
-  __attribute__ ((section (INIT_SECTION), aligned (sizeof (void *)))) =
-{
-  &elision_init
-};

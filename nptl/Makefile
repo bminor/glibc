@@ -30,6 +30,11 @@ extra-libs-others := $(extra-libs)
 
 routines = \
   alloca_cutoff \
+  elision-conf \
+  elision-lock \
+  elision-timed \
+  elision-trylock \
+  elision-unlock \
   forward \
   futex-internal \
   libc-cancellation \

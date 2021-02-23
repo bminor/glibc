@@ -12,9 +12,6 @@ gen-as-const-headers += ucontext_i.sym
 endif
 
 ifeq ($(subdir),nptl)
-libpthread-sysdep_routines += elision-lock elision-unlock elision-timed \
-			      elision-trylock
-
 elision-CFLAGS = -mhtm -msoft-float
 CFLAGS-elision-lock.c = $(elision-CFLAGS)
 CFLAGS-elision-timed.c = $(elision-CFLAGS)

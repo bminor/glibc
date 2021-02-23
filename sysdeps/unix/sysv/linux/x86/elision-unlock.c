@@ -31,3 +31,4 @@ __lll_unlock_elision(int *lock, int private)
     lll_unlock ((*lock), private);
   return 0;
 }
+libc_hidden_def (__lll_unlock_elision)

@@ -17,8 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <ctype.h>
+#include <elision-conf.h>
 #include <libc-early-init.h>
 #include <libc-internal.h>
+#include <lowlevellock.h>
 #include <sys/single_threaded.h>
 
 #ifdef SHARED
@@ -36,5 +38,9 @@ __libc_early_init (_Bool initial)
 
 #ifdef SHARED
   __libc_initial = initial;
+#endif
+
+#if ENABLE_ELISION_SUPPORT
+  __lll_elision_init ();
 #endif
 }

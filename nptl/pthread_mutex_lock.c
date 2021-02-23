@@ -27,15 +27,6 @@
 #include <futex-internal.h>
 #include <stap-probe.h>
 
-#ifndef lll_lock_elision
-#define lll_lock_elision(lock, try_lock, private)	({ \
-      lll_lock (lock, private); 0; })
-#endif
-
-#ifndef lll_trylock_elision
-#define lll_trylock_elision(a,t) lll_trylock(a)
-#endif
-
 /* Some of the following definitions differ when pthread_mutex_cond_lock.c
    includes this file.  */
 #ifndef LLL_MUTEX_LOCK
@@ -50,10 +41,6 @@
 # define LLL_MUTEX_TRYLOCK_ELISION(mutex) \
   lll_trylock_elision((mutex)->__data.__lock, (mutex)->__data.__elision, \
 		   PTHREAD_MUTEX_PSHARED (mutex))
-#endif
-
-#ifndef FORCE_ELISION
-#define FORCE_ELISION(m, s)
 #endif
 
 static int __pthread_mutex_lock_full (pthread_mutex_t *mutex)
@@ -80,7 +67,7 @@ __pthread_mutex_lock (pthread_mutex_t *mutex)
       LLL_MUTEX_LOCK (mutex);
       assert (mutex->__data.__owner == 0);
     }
-#ifdef HAVE_ELISION
+#if ENABLE_ELISION_SUPPORT
   else if (__glibc_likely (type == PTHREAD_MUTEX_TIMED_ELISION_NP))
     {
   elision: __attribute__((unused))

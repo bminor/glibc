@@ -41,3 +41,4 @@ __lll_unlock_elision (int *lock, short *adapt_count, int pshared)
     }
   return 0;
 }
+libc_hidden_def (__lll_unlock_elision)

@@ -59,3 +59,4 @@ __lll_unlock_elision(int *futex, short *adapt_count, int private)
     }
   return 0;
 }
+libc_hidden_def (__lll_unlock_elision)

@@ -1,5 +1,5 @@
-/* Elided version of pthread_mutex_lock.
-   Copyright (C) 2015-2021 Free Software Foundation, Inc.
+/* elision-lock.c: Lock elision locking attempts.  Stub version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,8 +15,3 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
-
-#include <elision-conf.h>
-#include <force-elision.h>
-
-#include <nptl/pthread_mutex_lock.c>

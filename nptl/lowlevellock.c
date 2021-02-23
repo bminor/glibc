@@ -51,3 +51,8 @@ __lll_lock_wait (int *futex, int private)
     }
 }
 libc_hidden_def (__lll_lock_wait)
+
+#if ENABLE_ELISION_SUPPORT
+int __pthread_force_elision __attribute__ ((nocommon));
+libc_hidden_data_def (__pthread_force_elision)
+#endif

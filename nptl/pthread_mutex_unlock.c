@@ -24,10 +24,6 @@
 #include <stap-probe.h>
 #include <futex-internal.h>
 
-#ifndef lll_unlock_elision
-#define lll_unlock_elision(a,b,c) ({ lll_unlock (a,c); 0; })
-#endif
-
 static int
 __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
      __attribute_noinline__;

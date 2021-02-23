@@ -95,3 +95,4 @@ __lll_trylock_elision (int *futex, short *adapt_count)
      succeed.  */
   return lll_trylock (*futex);
 }
+libc_hidden_def (__lll_trylock_elision)

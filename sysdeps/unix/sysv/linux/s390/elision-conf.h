@@ -21,6 +21,9 @@
 #include <pthread.h>
 #include <time.h>
 
+#define ENABLE_ELISION_SUPPORT 1
+#define ELISION_UNLOCK_NEEDS_ADAPT_COUNT 1
+
 /* Should make sure there is no false sharing on this.  */
 
 struct elision_config
@@ -33,10 +36,5 @@ struct elision_config
 };
 
 extern struct elision_config __elision_aconf attribute_hidden;
-
-extern int __pthread_force_elision attribute_hidden;
-
-/* Tell the test suite to test elision for this architecture.  */
-#define HAVE_ELISION 1
 
 #endif

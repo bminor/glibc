@@ -1,5 +1,5 @@
-/* Elided version of pthread_mutex_timedlock.
-   Copyright (C) 2015-2021 Free Software Foundation, Inc.
+/* elision-conf.h: Lock elision  configuration.  Stub version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <elision-conf.h>
-#include <force-elision.h>
+#ifndef _ELISION_CONF_H
+#define _ELISION_CONF_H 1
 
-#include <nptl/pthread_mutex_timedlock.c>
+/* No elision support by default.  */
+#define ENABLE_ELISION_SUPPORT 0
+
+/* Whether __lll_unlock_elision expects a pointer argument to the
+   adaptive counter.  Here, an unused arbitrary value.  */
+#define ELISION_UNLOCK_NEEDS_ADAPT_COUNT 0
+
+#endif

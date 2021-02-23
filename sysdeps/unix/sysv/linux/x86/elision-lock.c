@@ -22,12 +22,6 @@
 #include "hle.h"
 #include <elision-conf.h>
 
-#if !defined(LLL_LOCK) && !defined(EXTRAARG)
-/* Make sure the configuration code is always linked in for static
-   libraries.  */
-#include "elision-conf.c"
-#endif
-
 #ifndef EXTRAARG
 #define EXTRAARG
 #endif
@@ -105,3 +99,4 @@ __lll_lock_elision (int *futex, short *adapt_count, EXTRAARG int private)
   /* Use a normal lock here.  */
   return LLL_LOCK ((*futex), private);
 }
+libc_hidden_def (__lll_lock_elision)

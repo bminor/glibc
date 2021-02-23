@@ -29,19 +29,6 @@
 
 #include <stap-probe.h>
 
-#ifndef lll_clocklock_elision
-#define lll_clocklock_elision(futex, adapt_count, clockid, abstime, private) \
-  __futex_clocklock64 (&(futex), clockid, abstime, private)
-#endif
-
-#ifndef lll_trylock_elision
-#define lll_trylock_elision(a,t) lll_trylock(a)
-#endif
-
-#ifndef FORCE_ELISION
-#define FORCE_ELISION(m, s)
-#endif
-
 int
 __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 				  clockid_t clockid,

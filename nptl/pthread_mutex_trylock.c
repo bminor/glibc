@@ -23,14 +23,6 @@
 #include <lowlevellock.h>
 #include <futex-internal.h>
 
-#ifndef lll_trylock_elision
-#define lll_trylock_elision(a,t) lll_trylock(a)
-#endif
-
-#ifndef FORCE_ELISION
-#define FORCE_ELISION(m, s)
-#endif
-
 int
 __pthread_mutex_trylock (pthread_mutex_t *mutex)
 {
