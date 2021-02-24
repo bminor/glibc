@@ -839,6 +839,8 @@ struct cpuid_feature_internal
     };
 };
 
+/* NB: When adding new fields, update sysdeps/x86/dl-diagnostics-cpu.c
+   to print them.  */
 struct cpu_features
 {
   struct cpu_features_basic basic;
