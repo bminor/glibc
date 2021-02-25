@@ -83,8 +83,11 @@ libsupport-routines = \
   support_test_verify_impl \
   temp_file \
   timespec \
+  timespec-time64 \
   timespec-add \
+  timespec-add-time64 \
   timespec-sub \
+  timespec-sub-time64 \
   write_message \
   xaccept \
   xaccept4 \
@@ -94,7 +97,9 @@ libsupport-routines = \
   xchdir \
   xchroot \
   xclock_gettime \
+  xclock_gettime_time64 \
   xclock_settime \
+  xclock_settime_time64 \
   xclose \
   xchmod \
   xconnect \
@@ -216,6 +221,7 @@ CFLAGS-support_paths.c = \
 # in support_timespec_check_in_range and for that computation we use
 # -fexcess-precision=standard.
 CFLAGS-timespec.c += -fexcess-precision=standard
+CFLAGS-timespec-time64.c += -fexcess-precision=standard
 
 ifeq (,$(CXX))
 LINKS_DSO_PROGRAM = links-dso-program-c

@@ -61,5 +61,5 @@ timespec_sub (struct timespec a, struct timespec b)
         }
     }
 
-  return make_timespec (rs, rns);
+  return (struct timespec) { .tv_sec = rs, .tv_nsec = rns };
 }

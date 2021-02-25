@@ -23,9 +23,8 @@
 #include <intprops.h>
 
 void
-test_timespec_before_impl (const char *file, int line,
-			   const struct timespec left,
-			   const struct timespec right)
+test_timespec_before_impl (const char *file, int line, struct timespec left,
+			   struct timespec right)
 {
   if (left.tv_sec > right.tv_sec
       || (left.tv_sec == right.tv_sec
@@ -43,8 +42,8 @@ test_timespec_before_impl (const char *file, int line,
 
 void
 test_timespec_equal_or_after_impl (const char *file, int line,
-				   const struct timespec left,
-				   const struct timespec right)
+				   struct timespec left,
+				   struct timespec right)
 {
   if (left.tv_sec < right.tv_sec
       || (left.tv_sec == right.tv_sec
