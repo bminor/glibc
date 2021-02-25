@@ -3446,7 +3446,9 @@ __libc_realloc (void *oldmem, size_t bytes)
       newp = __libc_malloc (bytes);
       if (newp != NULL)
         {
-          memcpy (newp, oldmem, oldsize - SIZE_SZ);
+	  size_t sz = CHUNK_AVAILABLE_SIZE (oldp) - CHUNK_HDR_SZ;
+	  memcpy (newp, oldmem, sz);
+	  (void) TAG_REGION (chunk2rawmem (oldp), sz);
           _int_free (ar_ptr, oldp, 0);
         }
     }
