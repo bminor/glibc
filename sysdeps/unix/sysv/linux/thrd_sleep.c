@@ -38,7 +38,7 @@ __thrd_sleep64 (const struct __timespec64 *time_point,
 }
 
 #if __TIMESIZE != 64
-libpthread_hidden_def (__thrd_sleep64)
+libc_hidden_def (__thrd_sleep64)
 
 int
 __thrd_sleep (const struct timespec *time_point, struct timespec *remaining)
