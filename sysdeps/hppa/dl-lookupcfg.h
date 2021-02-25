@@ -56,7 +56,7 @@ void attribute_hidden _dl_unmap (struct link_map *map);
 {							\
   ElfW(Addr) addr;					\
   DL_DT_FUNCTION_ADDRESS(map, start, , addr)		\
-  init_t init = (init_t) addr; 				\
+  dl_init_t init = (dl_init_t) addr; 			\
   init (argc, argv, env);				\
 }
 

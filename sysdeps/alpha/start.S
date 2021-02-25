@@ -55,9 +55,8 @@ _start:
 	ldl	a1, 16(sp)	/* get argc */
 	lda	a2, 24(sp)	/* get argv */
 
-  /* Load address of our own entry points to .fini and .init.  */
-	lda	a3, __libc_csu_init
-	lda	a4, __libc_csu_fini
+	mov	$r31, a3 	/* Used to be init.  */
+	mov	$r31, a4 	/* Used to be fini.  */
 
   /* Store address of the shared library termination function.  */
 	mov	v0, a5

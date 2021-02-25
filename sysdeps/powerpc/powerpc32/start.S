@@ -52,8 +52,8 @@
 L(start_addresses):
 	.long	_SDA_BASE_
 	.long	main
-	.long 	__libc_csu_init
-	.long 	__libc_csu_fini
+	.long 	0 /* Used to be init.  */
+	.long 	0 /* Used to be fini.  */
 	ASM_SIZE_DIRECTIVE(L(start_addresses))
 
 	.section ".text"

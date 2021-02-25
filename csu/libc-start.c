@@ -1,4 +1,5 @@
-/* Copyright (C) 1998-2021 Free Software Foundation, Inc.
+/* Perform initialization and invoke main.
+   Copyright (C) 1998-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,10 +16,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* Note: This code is only part of the startup code proper for
+   statically linked binaries.  For dynamically linked binaries, it
+   resides in libc.so.  */
+
 /* Mark symbols hidden in static PIE for early self relocation to work.  */
 #if BUILD_PIE_DEFAULT
 # pragma GCC visibility push(hidden)
 #endif
+
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -29,6 +35,8 @@
 #include <libc-internal.h>
 #include <elf/libc-early-init.h>
 #include <stdbool.h>
+#include <elf-initfini.h>
+#include <shlib-compat.h>
 
 #include <elf/dl-tunables.h>
 
@@ -95,9 +103,11 @@ apply_irel (void)
 # else
 #  define STATIC static inline __attribute__ ((always_inline))
 # endif
+# define DO_DEFINE_LIBC_START_MAIN_VERSION 0
 #else
 # define STATIC
-# define LIBC_START_MAIN __libc_start_main
+# define LIBC_START_MAIN __libc_start_main_impl
+# define DO_DEFINE_LIBC_START_MAIN_VERSION 1
 #endif
 
 #ifdef MAIN_AUXVEC_ARG
@@ -112,6 +122,92 @@ apply_irel (void)
 #ifndef ARCH_INIT_CPU_FEATURES
 # define ARCH_INIT_CPU_FEATURES()
 #endif
+
+#ifdef SHARED
+/* Initialization for dynamic executables.  Find the main executable
+   link map and run its init functions.  */
+static void
+call_init (int argc, char **argv, char **env)
+{
+  /* Obtain the main map of the executable.  */
+  struct link_map *l = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+
+  /* DT_PREINIT_ARRAY is not processed here.  It is already handled in
+     _dl_init in elf/dl-init.c.  Also see the call_init function in
+     the same file.  */
+
+  if (ELF_INITFINI && l->l_info[DT_INIT] != NULL)
+    DL_CALL_DT_INIT(l, l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr,
+		    argc, argv, env);
+
+  ElfW(Dyn) *init_array = l->l_info[DT_INIT_ARRAY];
+  if (init_array != NULL)
+    {
+      unsigned int jm
+	= l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (ElfW(Addr));
+      ElfW(Addr) *addrs = (void *) (init_array->d_un.d_ptr + l->l_addr);
+      for (unsigned int j = 0; j < jm; ++j)
+	((dl_init_t) addrs[j]) (argc, argv, env);
+    }
+}
+
+#else /* !SHARED */
+
+/* These magic symbols are provided by the linker.  */
+extern void (*__preinit_array_start []) (int, char **, char **)
+  attribute_hidden;
+extern void (*__preinit_array_end []) (int, char **, char **)
+  attribute_hidden;
+extern void (*__init_array_start []) (int, char **, char **)
+  attribute_hidden;
+extern void (*__init_array_end []) (int, char **, char **)
+  attribute_hidden;
+extern void (*__fini_array_start []) (void) attribute_hidden;
+extern void (*__fini_array_end []) (void) attribute_hidden;
+
+# if ELF_INITFINI
+/* These function symbols are provided for the .init/.fini section entry
+   points automagically by the linker.  */
+extern void _init (void);
+extern void _fini (void);
+# endif
+
+/* Initialization for static executables.  There is no dynamic
+   segment, so we access the symbols directly.  */
+static void
+call_init (int argc, char **argv, char **envp)
+{
+  /* For static executables, preinit happens right before init.  */
+  {
+    const size_t size = __preinit_array_end - __preinit_array_start;
+    size_t i;
+    for (i = 0; i < size; i++)
+      (*__preinit_array_start [i]) (argc, argv, envp);
+  }
+
+# if ELF_INITFINI
+  _init ();
+# endif
+
+  const size_t size = __init_array_end - __init_array_start;
+  for (size_t i = 0; i < size; i++)
+      (*__init_array_start [i]) (argc, argv, envp);
+}
+
+/* Likewise for the destructor.  */
+static void
+call_fini (void *unused)
+{
+  size_t i = __fini_array_end - __fini_array_start;
+  while (i-- > 0)
+    (*__fini_array_start [i]) ();
+
+# if ELF_INITFINI
+  _fini ();
+# endif
+}
+
+#endif /* !SHARED */
 
 #include <libc-start.h>
 
@@ -129,9 +225,16 @@ STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
      __attribute__ ((noreturn));
 
 
-/* Note: the fini parameter is ignored here for shared library.  It
-   is registered with __cxa_atexit.  This had the disadvantage that
-   finalizers were called in more than one place.  */
+/* Note: The init and fini parameters are no longer used.  fini is
+   completely unused, init is still called if not NULL, but the
+   current startup code always passes NULL.  (In the future, it would
+   be possible to use fini to pass a version code if init is NULL, to
+   indicate the link-time glibc without introducing a hard
+   incompatibility for new programs with older glibc versions.)
+
+   For dynamically linked executables, the dynamic segment is used to
+   locate constructors and destructors.  For statically linked
+   executables, the relevant symbols are access directly.  */
 STATIC int
 LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 		 int argc, char **argv,
@@ -258,9 +361,8 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
      run the constructors in `_dl_start_user'.  */
   __libc_init_first (argc, argv, __environ);
 
-  /* Register the destructor of the program, if any.  */
-  if (fini)
-    __cxa_atexit ((void (*) (void *)) fini, NULL, NULL);
+  /* Register the destructor of the statically-linked program.  */
+  __cxa_atexit (call_fini, NULL, NULL);
 
   /* Some security at this point.  Prevent starting a SUID binary where
      the standard file descriptors are not opened.  We have to do this
@@ -268,15 +370,24 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
      loader did the work already.  */
   if (__builtin_expect (__libc_enable_secure, 0))
     __libc_check_standard_fds ();
-#endif
+#endif /* !SHARED */
 
   /* Call the initializer of the program, if any.  */
 #ifdef SHARED
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
     GLRO(dl_debug_printf) ("\ninitialize program: %s\n\n", argv[0]);
-#endif
-  if (init)
+
+  if (init != NULL)
+    /* This is a legacy program which supplied its own init
+       routine.  */
     (*init) (argc, argv, __environ MAIN_AUXVEC_PARAM);
+  else
+    /* This is a current program.  Use the dynamic segment to find
+       constructors.  */
+    call_init (argc, argv, __environ);
+#else /* !SHARED */
+  call_init (argc, argv, __environ);
+#endif /* SHARED */
 
 #ifdef SHARED
   /* Auditing checkpoint: we have a new object.  */
@@ -365,3 +476,36 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 
   exit (result);
 }
+
+/* Starting with glibc 2.34, the init parameter is always NULL.  Older
+   libcs are not prepared to handle that.  The macro
+   DEFINE_LIBC_START_MAIN_VERSION creates GLIBC_2.34 alias, so that
+   newly linked binaries reflect that dependency.  The macros below
+   expect that the exported function is called
+   __libc_start_main_impl.  */
+#ifdef SHARED
+# define DEFINE_LIBC_START_MAIN_VERSION \
+  DEFINE_LIBC_START_MAIN_VERSION_1 \
+  strong_alias (__libc_start_main_impl, __libc_start_main_alias_2)	\
+  versioned_symbol (libc, __libc_start_main_alias_2, __libc_start_main, \
+		    GLIBC_2_34);
+
+# if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_34)
+#  define DEFINE_LIBC_START_MAIN_VERSION_1 \
+  strong_alias (__libc_start_main_impl, __libc_start_main_alias_1)	\
+  compat_symbol (libc, __libc_start_main_alias_1, __libc_start_main, GLIBC_2_0);
+#  else
+#  define DEFINE_LIBC_START_MAIN_VERSION_1
+# endif
+#else  /* !SHARED */
+/* Enable calling the function under its exported name.  */
+# define DEFINE_LIBC_START_MAIN_VERSION \
+  strong_alias (__libc_start_main_impl, __libc_start_main)
+#endif
+
+/* Only define the version information if LIBC_START_MAIN was not set.
+   If there is a wrapper file, it must expand
+   DEFINE_LIBC_START_MAIN_VERSION on its own.  */
+#if DO_DEFINE_LIBC_START_MAIN_VERSION
+DEFINE_LIBC_START_MAIN_VERSION
+#endif

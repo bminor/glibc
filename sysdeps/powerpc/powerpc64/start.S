@@ -53,8 +53,8 @@ L(start_addresses):
 	.quad	0 /* was _SDA_BASE_  but not in 64-bit ABI*/
 /*     function descriptors so don't need JUMPTARGET */
 	.quad	main
-	.quad 	__libc_csu_init
-	.quad 	__libc_csu_fini
+	.quad 	0 /* Used to be init.  */
+	.quad 	0 /* Used to be fini.  */
 
 	ASM_SIZE_DIRECTIVE(L(start_addresses))
 

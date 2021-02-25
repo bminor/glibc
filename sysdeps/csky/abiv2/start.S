@@ -66,13 +66,9 @@ _start:
 .Lgetpc:
 	lrw	gb, .Lgetpc@GOTPC
 	addu	gb, t0
-	lrw	a3, __libc_csu_fini@GOT
-	ldr.w	a3, (gb, a3 << 0)
-	stw	a3, (sp, 0)
 
-	lrw	a3, __libc_csu_init@GOT
-	addu	a3, gb
-	ldw	a3, (a3, 0)
+	movi	a3, 0		/* Used to be init.  */
+	stw 	a3, (sp, 0) 	/* Used to be fini.  */
 
 	lrw	t0, main@GOT
 	addu	t0, gb
@@ -85,14 +81,9 @@ _start:
 	ldr.w	t1, (gb, t1 << 0)
 	jsr	t1
 #else
-	/* Fetch address of __libc_csu_fini.  */
-	lrw	a0, __libc_csu_fini
-	/* Push __libc_csu_fini */
-	stw	a0, (sp, 0)
-
-	/* Set up the other arguments in registers.  */
+	movi	a3, 0		/* Used to be init.  */
+	stw 	a3, (sp, 0) 	/* Used to be fini.  */
 	lrw	a0, main
-	lrw	a3, __libc_csu_init
 	/* Let the libc call main and exit with its return code.  */
 	jsri	__libc_start_main
 

@@ -22,10 +22,6 @@
 #include <elf-initfini.h>
 
 
-/* Type of the initializer.  */
-typedef void (*init_t) (int, char **, char **);
-
-
 static void
 call_init (struct link_map *l, int argc, char **argv, char **env)
 {
@@ -71,7 +67,7 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
 
       addrs = (ElfW(Addr) *) (init_array->d_un.d_ptr + l->l_addr);
       for (j = 0; j < jm; ++j)
-	((init_t) addrs[j]) (argc, argv, env);
+	((dl_init_t) addrs[j]) (argc, argv, env);
     }
 }
 
@@ -103,7 +99,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 
       addrs = (ElfW(Addr) *) (preinit_array->d_un.d_ptr + main_map->l_addr);
       for (cnt = 0; cnt < i; ++cnt)
-	((init_t) addrs[cnt]) (argc, argv, env);
+	((dl_init_t) addrs[cnt]) (argc, argv, env);
     }
 
   /* Stupid users forced the ELF specification to be changed.  It now

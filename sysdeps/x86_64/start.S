@@ -96,17 +96,13 @@ ENTRY (_start)
 	   which grow downwards).  */
 	pushq %rsp
 
-#ifdef PIC
-	/* Pass address of our own entry points to .fini and .init.  */
-	mov __libc_csu_fini@GOTPCREL(%rip), %R8_LP
-	mov __libc_csu_init@GOTPCREL(%rip), %RCX_LP
+	/* These used to be the addresses of .fini and .init.  */
+	xorl %r8d, %r8d
+	xorl %ecx, %ecx
 
+#ifdef PIC
 	mov main@GOTPCREL(%rip), %RDI_LP
 #else
-	/* Pass address of our own entry points to .fini and .init.  */
-	mov $__libc_csu_fini, %R8_LP
-	mov $__libc_csu_init, %RCX_LP
-
 	mov $main, %RDI_LP
 #endif
 

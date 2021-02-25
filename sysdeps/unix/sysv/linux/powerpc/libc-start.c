@@ -41,12 +41,12 @@ struct startup_info
   };
 
 int
-__libc_start_main (int argc, char **argv,
-		   char **ev,
-		   ElfW (auxv_t) * auxvec,
-		   void (*rtld_fini) (void),
-		   struct startup_info *stinfo,
-		   char **stack_on_entry)
+__libc_start_main_impl (int argc, char **argv,
+			char **ev,
+			ElfW (auxv_t) * auxvec,
+			void (*rtld_fini) (void),
+			struct startup_info *stinfo,
+			char **stack_on_entry)
 {
   /* the PPC SVR4 ABI says that the top thing on the stack will
      be a NULL pointer, so if not we assume that we're being called
@@ -99,3 +99,4 @@ __libc_start_main (int argc, char **argv,
 			     stinfo->init, stinfo->fini, rtld_fini,
 			     stack_on_entry);
 }
+DEFINE_LIBC_START_MAIN_VERSION

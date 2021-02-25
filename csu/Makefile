@@ -27,10 +27,9 @@ subdir := csu
 include ../Makeconfig
 
 routines = init-first libc-start $(libc-init) sysdep version check_fds \
-	   libc-tls elf-init dso_handle
+	   libc-tls dso_handle
 aux	 = errno
 elide-routines.os = libc-tls
-static-only-routines = elf-init
 csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
 extra-objs = start.o \
 	     $(start-installed-name) g$(start-installed-name) $(csu-dummies) \
@@ -58,13 +57,6 @@ CFLAGS-.os += $(no-stack-protector)
 # STACK_PROTECTOR_LEVEL due to the preceding $(no-stack-protector),
 # but it does not matter for this source file.
 CFLAGS-static-reloc.os += $(stack-protector)
-
-# This file is not actually part of the startup code in the nonshared
-# case and statically linked into applications.  See
-# <https://sourceware.org/bugzilla/show_bug.cgi?id=23323>,
-# <https://sourceware.org/ml/libc-alpha/2018-06/msg00717.html>.
-# Also see the note above regarding STACK_PROTECTOR_LEVEL.
-CFLAGS-elf-init.oS += $(stack-protector)
 
 ifeq (yes,$(build-shared))
 extra-objs += S$(start-installed-name) gmon-start.os

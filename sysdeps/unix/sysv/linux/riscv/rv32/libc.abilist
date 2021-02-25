@@ -1933,3 +1933,4 @@ GLIBC_2.33 wprintf F
 GLIBC_2.33 write F
 GLIBC_2.33 writev F
 GLIBC_2.33 wscanf F
+GLIBC_2.34 __libc_start_main F

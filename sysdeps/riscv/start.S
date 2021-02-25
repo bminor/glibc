@@ -54,8 +54,8 @@ ENTRY (ENTRY_POINT)
 	REG_L a1, 0(sp)      /* argc.  */
 	addi  a2, sp, SZREG  /* argv.  */
 	andi  sp, sp, ALMASK /* Align stack. */
-	lla   a3, __libc_csu_init
-	lla   a4, __libc_csu_fini
+	li    a3, 0	     /* Used to be init.  */
+	li    a4, 0	     /* Used to be fini.  */
 	mv    a6, sp  /* stack_end.  */
 
 	call  __libc_start_main@plt

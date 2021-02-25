@@ -49,15 +49,14 @@ ENTRY (ENTRY_POINT)
 
 	/* __libc_start_main (main, argc, argv, init, fini, rtld_fini, stack_end).  */
 
+	mov_s	r3, 0 		/* Used to be init.  */
+	mov	r4, 0		/* Used to be fini.  */
+
 #ifdef SHARED
 	ld	r0, [pcl, @main@gotpc]
-	ld	r3, [pcl, @__libc_csu_init@gotpc]
-	ld	r4, [pcl, @__libc_csu_fini@gotpc]
 	bl	__libc_start_main@plt
 #else
 	mov_s	r0, main
-	mov_s	r3, __libc_csu_init
-	mov	r4, __libc_csu_fini
 	bl	__libc_start_main
 #endif
 

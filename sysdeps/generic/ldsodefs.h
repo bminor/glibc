@@ -93,6 +93,10 @@ typedef struct link_map *lookup_t;
    : (__glibc_unlikely ((ref)->st_shndx == SHN_ABS) ? 0			\
       : LOOKUP_VALUE_ADDRESS (map, map_set)) + (ref)->st_value)
 
+/* Type of a constructor function, in DT_INIT, DT_INIT_ARRAY,
+   DT_PREINIT_ARRAY.  */
+typedef void (*dl_init_t) (int, char **, char **);
+
 /* On some architectures a pointer to a function is not just a pointer
    to the actual code of the function but rather an architecture
    specific descriptor. */
@@ -101,7 +105,7 @@ typedef struct link_map *lookup_t;
  (void *) SYMBOL_ADDRESS (map, ref, false)
 # define DL_LOOKUP_ADDRESS(addr) ((ElfW(Addr)) (addr))
 # define DL_CALL_DT_INIT(map, start, argc, argv, env) \
- ((init_t) (start)) (argc, argv, env)
+ ((dl_init_t) (start)) (argc, argv, env)
 # define DL_CALL_DT_FINI(map, start) ((fini_t) (start)) ()
 #endif
 

@@ -7,6 +7,9 @@ libc {
     # New special glibc functions.
     gnu_get_libc_release; gnu_get_libc_version;
   }
+  GLIBC_2.34 {
+    __libc_start_main;
+  }
   GLIBC_PRIVATE {
     errno;
   }
