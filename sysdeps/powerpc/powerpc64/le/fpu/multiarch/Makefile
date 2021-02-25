@@ -208,4 +208,12 @@ object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
 
 endif # do_f128_multiarch
+
+libm-sysdep_routines += e_log-ppc64
+
+ifeq ($(mcpu-power10), yes)
+libm-sysdep_routines += e_log-power10
+CFLAGS-e_log-power10.c += -mcpu=power10
+endif
+
 endif

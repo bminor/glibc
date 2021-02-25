@@ -23,6 +23,9 @@
 /* On powerpc64, use @notoc.  */
 #undef  USE_PPC64_NOTOC
 
+/* On powerpc64, define if the compiler supports -mcpu=power10.  */
+#undef USE_PPC64_MCPU_POWER10
+
 /* Define if _Unwind_Find_FDE should be exported from glibc.  */
 #undef  EXPORT_UNWIND_FIND_FDE
 
