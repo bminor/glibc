@@ -1036,6 +1036,31 @@ atan -0x1.58c83p+0
 = atan tonearest ibm128 -0x1.58c83p+0 : -0xe.e9f00a57b143b31a8f4be18ea4p-4 : inexact-ok
 = atan towardzero ibm128 -0x1.58c83p+0 : -0xe.e9f00a57b143b31a8f4be18eap-4 : inexact-ok
 = atan upward ibm128 -0x1.58c83p+0 : -0xe.e9f00a57b143b31a8f4be18eap-4 : inexact-ok
+atan 0x1.626772p-1
+= atan downward binary32 0xb.133b9p-4 : 0x9.bp-4 : inexact-ok
+= atan tonearest binary32 0xb.133b9p-4 : 0x9.b0001p-4 : inexact-ok
+= atan towardzero binary32 0xb.133b9p-4 : 0x9.bp-4 : inexact-ok
+= atan upward binary32 0xb.133b9p-4 : 0x9.b0001p-4 : inexact-ok
+= atan downward binary64 0xb.133b9p-4 : 0x9.b0000da23b9d8p-4 : inexact-ok
+= atan tonearest binary64 0xb.133b9p-4 : 0x9.b0000da23b9ep-4 : inexact-ok
+= atan towardzero binary64 0xb.133b9p-4 : 0x9.b0000da23b9d8p-4 : inexact-ok
+= atan upward binary64 0xb.133b9p-4 : 0x9.b0000da23b9ep-4 : inexact-ok
+= atan downward intel96 0xb.133b9p-4 : 0x9.b0000da23b9dce2p-4 : inexact-ok
+= atan tonearest intel96 0xb.133b9p-4 : 0x9.b0000da23b9dce3p-4 : inexact-ok
+= atan towardzero intel96 0xb.133b9p-4 : 0x9.b0000da23b9dce2p-4 : inexact-ok
+= atan upward intel96 0xb.133b9p-4 : 0x9.b0000da23b9dce3p-4 : inexact-ok
+= atan downward m68k96 0xb.133b9p-4 : 0x9.b0000da23b9dce2p-4 : inexact-ok
+= atan tonearest m68k96 0xb.133b9p-4 : 0x9.b0000da23b9dce3p-4 : inexact-ok
+= atan towardzero m68k96 0xb.133b9p-4 : 0x9.b0000da23b9dce2p-4 : inexact-ok
+= atan upward m68k96 0xb.133b9p-4 : 0x9.b0000da23b9dce3p-4 : inexact-ok
+= atan downward binary128 0xb.133b9p-4 : 0x9.b0000da23b9dce2cdb744dda3638p-4 : inexact-ok
+= atan tonearest binary128 0xb.133b9p-4 : 0x9.b0000da23b9dce2cdb744dda364p-4 : inexact-ok
+= atan towardzero binary128 0xb.133b9p-4 : 0x9.b0000da23b9dce2cdb744dda3638p-4 : inexact-ok
+= atan upward binary128 0xb.133b9p-4 : 0x9.b0000da23b9dce2cdb744dda364p-4 : inexact-ok
+= atan downward ibm128 0xb.133b9p-4 : 0x9.b0000da23b9dce2cdb744dda34p-4 : inexact-ok
+= atan tonearest ibm128 0xb.133b9p-4 : 0x9.b0000da23b9dce2cdb744dda38p-4 : inexact-ok
+= atan towardzero ibm128 0xb.133b9p-4 : 0x9.b0000da23b9dce2cdb744dda34p-4 : inexact-ok
+= atan upward ibm128 0xb.133b9p-4 : 0x9.b0000da23b9dce2cdb744dda38p-4 : inexact-ok
 atan min
 = atan downward binary32 0x4p-128 : 0x3.fffff8p-128 : inexact-ok underflow-ok errno-erange-ok
 = atan tonearest binary32 0x4p-128 : 0x4p-128 : inexact-ok underflow-ok errno-erange-ok
