@@ -897,6 +897,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define bit_arch_Prefer_FSRM			(1u << 13)
 #define bit_arch_Prefer_No_AVX512		(1u << 14)
 #define bit_arch_MathVec_Prefer_No_AVX512	(1u << 15)
+#define bit_arch_Prefer_AVX2_STRCMP		(1u << 16)
 
 #define index_arch_Fast_Rep_String		FEATURE_INDEX_2
 #define index_arch_Fast_Copy_Backward		FEATURE_INDEX_2
@@ -914,6 +915,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 #define index_arch_Prefer_No_AVX512		FEATURE_INDEX_2
 #define index_arch_MathVec_Prefer_No_AVX512	FEATURE_INDEX_2
 #define index_arch_Prefer_FSRM			FEATURE_INDEX_2
+#define index_arch_Prefer_AVX2_STRCMP		FEATURE_INDEX_2
 
 /* XCR0 Feature flags.  */
 #define bit_XMM_state		(1u << 1)
