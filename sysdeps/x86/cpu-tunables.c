@@ -282,6 +282,9 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	      CHECK_GLIBC_IFUNC_ARCH_BOTH (n, cpu_features,
 					   Fast_Copy_Backward, disable,
 					   18);
+	      CHECK_GLIBC_IFUNC_ARCH_NEED_ARCH_BOTH
+		(n, cpu_features, Prefer_AVX2_STRCMP, AVX2_Usable,
+		 disable, 18);
 	    }
 	  break;
 	case 19:
