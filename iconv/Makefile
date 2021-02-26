@@ -95,11 +95,12 @@ $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
 $(objpfx)iconv_prog: $(iconv_prog-modules:%=$(objpfx)%.o)
 $(objpfx)iconvconfig: $(iconvconfig-modules:%=$(objpfx)%.o)
 
-$(objpfx)test-iconvconfig.out: /dev/null $(objpfx)iconvconfig
+$(objpfx)test-iconvconfig.out: $(objpfx)iconvconfig
 	(set -e; \
 	 tmp=$(objpfx)gconv-modules.cache.$$$$; \
 	 rm -f $$tmp; \
-	 $(make-test-out) --output=$$tmp --nostdlib $(inst_gconvdir); \
+	 $(run-program-prefix) $(objpfx)iconvconfig \
+		--output=$$tmp --nostdlib $(inst_gconvdir); \
 	 cmp $$tmp $(inst_gconvdir)/gconv-modules.cache; \
 	 rm -f $$tmp) > $@; \
 	$(evaluate-test)
