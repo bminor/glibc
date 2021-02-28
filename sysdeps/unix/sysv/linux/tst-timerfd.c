@@ -26,8 +26,8 @@
 static int
 do_test (void)
 {
-  struct itimerspec settings = { { 2, 0 }, { 2, 0 } };
-  struct itimerspec val1, val2;
+  struct itimerspec settings = { { 0, 0 }, { 2, 0 } };
+  struct itimerspec val;
   int fd, ret;
 
   fd = timerfd_create (CLOCK_REALTIME, 0);
@@ -39,26 +39,19 @@ do_test (void)
   if (ret != 0)
     FAIL_EXIT1 ("*** timerfd_settime failed: %m\n");
 
-  /* Read the timer just before sleep.  */
-  ret = timerfd_gettime (fd, &val1);
-  if (ret != 0)
-    FAIL_EXIT1 ("*** timerfd_gettime failed: %m\n");
-
   /* Sleep for 1 second.  */
   ret = usleep (1000000);
   if (ret != 0)
     FAIL_EXIT1 ("*** usleep failed: %m\n");
 
   /* Read the timer just after sleep.  */
-  ret = timerfd_gettime (fd, &val2);
+  ret = timerfd_gettime (fd, &val);
   if (ret != 0)
     FAIL_EXIT1 ("*** timerfd_gettime failed: %m\n");
 
   /* Check difference between timerfd_gettime calls.  */
-  struct timespec r = timespec_sub (val2.it_value, val1.it_value);
   TEST_COMPARE (support_timespec_check_in_range
-                ((struct timespec) { 1, 0 }, r, 1.0, 1.5), 0);
-
+                ((struct timespec) { 1, 0 }, val.it_value, 0.9, 1.0), 1);
   return 0;
 }
 
