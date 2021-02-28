@@ -108,7 +108,7 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-rlimit-infinity tst-ofdlocks tst-gettid tst-gettid-kill \
 	 tst-tgkill tst-sysvsem-linux tst-sysvmsg-linux tst-sysvshm-linux \
 	 tst-timerfd tst-ppoll tst-futimens tst-utime tst-utimes \
-	 tst-clock_adjtime
+	 tst-clock_adjtime tst-adjtimex
 tests-internal += tst-ofdlocks-compat tst-sigcontext-get_pc
 
 CFLAGS-tst-sigcontext-get_pc.c = -fasynchronous-unwind-tables
