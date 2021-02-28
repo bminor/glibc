@@ -22,6 +22,10 @@
 #include <support/check.h>
 #include <support/timespec.h>
 
+#ifndef ADJTIME_CALL
+# define ADJTIME_CALL(__clock, __timex) clock_adjtime (__clock, __timex)
+#endif
+
 static int
 do_test (void)
 {
@@ -40,7 +44,7 @@ do_test (void)
   delta.time.tv_usec = 0;
   delta.modes = ADJ_SETOFFSET;
 
-  int ret = clock_adjtime (CLOCK_REALTIME, &delta);
+  int ret = ADJTIME_CALL (CLOCK_REALTIME, &delta);
   if (ret == -1)
     FAIL_EXIT1 ("clock_adjtime failed: %m\n");
 
