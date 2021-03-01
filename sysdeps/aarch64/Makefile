@@ -39,7 +39,7 @@ gen-as-const-headers += dl-link.sym
 
 tests-internal += tst-ifunc-arg-1 tst-ifunc-arg-2
 
-ifeq (yes,$(aarch64-variant-pcs))
+ifeq (yesyesno,$(aarch64-variant-pcs)$(build-shared)$(aarch64-purecap))
 tests += tst-vpcs
 modules-names += tst-vpcs-mod
 LDFLAGS-tst-vpcs-mod.so = -Wl,-z,lazy
