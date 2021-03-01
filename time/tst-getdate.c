@@ -17,110 +17,141 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <array_length.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <support/check.h>
+#include <support/temp_file.h>
+#include <support/xunistd.h>
 #include <time.h>
 
 static const struct
 {
   const char *str;
   const char *tz;
-  int err;
   struct tm tm;
+  bool time64;
 } tests [] =
 {
-  {"21:01:10 1999-1-31", "Universal", 0, {10, 1, 21, 31, 0, 99, 0, 0, 0}},
-  {"21:01:10    1999-1-31", "Universal", 0, {10, 1, 21, 31, 0, 99, 0, 0, 0}},
-  {"   21:01:10 1999-1-31", "Universal", 0, {10, 1, 21, 31, 0, 99, 0, 0, 0}},
-  {"21:01:10 1999-1-31   ", "Universal", 0, {10, 1, 21, 31, 0, 99, 0, 0, 0}},
-  {"    21:01:10 1999-1-31   ", "Universal", 0, {10, 1, 21, 31, 0, 99, 0, 0, 0}},
-  {"21:01:10 1999-2-28", "Universal", 0, {10, 1, 21, 28, 1, 99, 0, 0, 0}},
-  {"16:30:46 2000-2-29", "Universal", 0, {46, 30,16, 29, 1, 100, 0, 0, 0}},
-  {"01-08-2000 05:06:07", "Europe/Berlin", 0, {7, 6, 5, 1, 7, 100, 0, 0, 0}}
+  {"21:01:10 1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
+   false },
+  {"21:01:10    1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
+   false },
+  {"   21:01:10 1999-1-31", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
+   false },
+  {"21:01:10 1999-1-31   ", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
+   false },
+  {"    21:01:10 1999-1-31   ", "Universal", {10, 1, 21, 31, 0, 99, 0, 0, 0},
+   false },
+  {"21:01:10 1999-2-28", "Universal", {10, 1, 21, 28, 1, 99, 0, 0, 0},
+   false },
+  {"16:30:46 2000-2-29", "Universal", {46, 30,16, 29, 1, 100, 0, 0, 0},
+   false },
+  {"01-08-2000 05:06:07", "Europe/Berlin", {7, 6, 5, 1, 7, 100, 0, 0, 0},
+   false },
+
+  /* 64 bit time_t tests.  */
+  {"21:01:10 2038-1-31", "Universal", {10, 1, 21, 31, 0, 138, 0, 0, 0},
+   true },
+  {"22:01:10 2048-5-20", "Universal", {10, 1, 22, 20, 4, 148, 0, 0, 0},
+   true },
+  {"01-08-2038 05:06:07", "Europe/Berlin", {7, 6, 5, 1, 7, 138, 0, 0, 0},
+   true },
+  {"20-03-2050 21:30:08", "Europe/Berlin", {8, 30, 21, 20, 2, 150, 0, 0, 0},
+   true }
 };
 
-static void
-report_date_error (int err)
+static const char *
+report_date_error (void)
 {
-  switch(err)
+  switch (getdate_err)
     {
     case 1:
-      printf ("The environment variable DATEMSK is not defined or null.\n");
-      break;
+      return "The environment variable DATEMSK is not defined or null.";
     case 2:
-      printf ("The template file denoted by the DATEMSK environment variable cannot be opened.\n");
-      break;
+      return "The template file denoted by the DATEMSK environment variable "
+	     "cannot be opened.";
     case 3:
-      printf ("Information about the template file cannot retrieved.\n");
-      break;
+      return "Information about the template file cannot retrieved.";
     case 4:
-      printf ("The template file is not a regular file.\n");
-      break;
+      return "The template file is not a regular file.\n";
     case 5:
-      printf ("An I/O error occurred while reading the template file.\n");
-      break;
+      return "An I/O error occurred while reading the template file.";
     case 6:
-      printf ("Not enough memory available to execute the function.\n");
-      break;
+      return "Not enough memory available to execute the function.";
     case 7:
-      printf ("The template file contains no matching template.\n");
-      break;
+      return "The template file contains no matching template.";
     case 8:
-      printf ("The input date is invalid, but would match a template otherwise.\n");
-      break;
+      return "The input date is invalid, but would match a template "
+	      "otherwise.";
     default:
-      printf("Unknown error code.\n");
-      break;
+      return "Unknown error code.";
     }
 }
 
+static char *datemsk;
+static const char datemskstr[] =
+  "%H:%M:%S %F\n"
+  "%d-%m-%Y %T\n";
+
+static void
+do_prepare (int argc, char **argv)
+{
+  int fd = create_temp_file ("tst-chk1.", &datemsk);
+  xwrite (fd, datemskstr, sizeof (datemskstr) - 1);
+
+  setenv ("DATEMSK", datemsk, 1);
+}
+#define PREPARE do_prepare
 
 static int
 do_test (void)
 {
-  int errors = 0;
-  size_t i;
   struct tm *tm;
 
-
-  for (i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
+  for (int i = 0; i < array_length (tests); ++i)
     {
       setenv ("TZ", tests[i].tz, 1);
 
-      tm = getdate (tests[i].str);
+      int expected_err;
+      if (sizeof (time_t) == 4 && tests[i].time64)
+	expected_err = 8;
+      else
+	expected_err = 0;
 
-      if (getdate_err != tests[i].err)
+      tm = getdate (tests[i].str);
+      TEST_COMPARE (getdate_err, expected_err);
+      if (getdate_err != expected_err)
 	{
-	  printf ("Failure for getdate (\"%s\"):\n", tests[i].str);
-	  printf ("getdate_err should be %d but returned: %d which means:\n",
-		  tests[i].err, getdate_err);
-	  report_date_error (getdate_err);
-	  ++errors;
+	  support_record_failure ();
+	  printf ("%s\n", report_date_error ());
 	}
-      else if (tests[i].tm.tm_mon != tm->tm_mon
-	       || tests[i].tm.tm_year != tm->tm_year
-	       || tests[i].tm.tm_mday != tm->tm_mday
-	       || tests[i].tm.tm_hour != tm->tm_hour
-	       || tests[i].tm.tm_min != tm->tm_min
-	       || tests[i].tm.tm_sec != tm->tm_sec)
+      else if (getdate_err == 0)
 	{
-	  printf ("Failure for getdate (\"%s\"):\n", tests[i].str);
-	  printf ("struct tm is:  %d-%d-%d %d:%d:%d\n",
-		  tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
-		  tm->tm_hour, tm->tm_min, tm->tm_sec);
-	  printf ("but should be: %d-%d-%d %d:%d:%d\n",
-		  tests[i].tm.tm_year + 1900, tests[i].tm.tm_mon + 1,
-		  tests[i].tm.tm_mday,
-		  tests[i].tm.tm_hour, tests[i].tm.tm_min, tests[i].tm.tm_sec);
-	  ++errors;
+	  TEST_COMPARE (tests[i].tm.tm_mon, tm->tm_mon);
+	  TEST_COMPARE (tests[i].tm.tm_year, tm->tm_year);
+	  TEST_COMPARE (tests[i].tm.tm_mday, tm->tm_mday);
+	  TEST_COMPARE (tests[i].tm.tm_hour, tm->tm_hour);
+	  TEST_COMPARE (tests[i].tm.tm_min, tm->tm_min);
+	  TEST_COMPARE (tests[i].tm.tm_sec, tm->tm_sec);
+	}
+
+      struct tm tms;
+      TEST_COMPARE (getdate_r (tests[i].str, &tms), expected_err);
+      if (getdate_err == 0)
+	{
+	  TEST_COMPARE (tests[i].tm.tm_mon, tms.tm_mon);
+	  TEST_COMPARE (tests[i].tm.tm_year, tms.tm_year);
+	  TEST_COMPARE (tests[i].tm.tm_mday, tms.tm_mday);
+	  TEST_COMPARE (tests[i].tm.tm_hour, tms.tm_hour);
+	  TEST_COMPARE (tests[i].tm.tm_min, tms.tm_min);
+	  TEST_COMPARE (tests[i].tm.tm_sec, tms.tm_sec);
 	}
     }
 
-  if (!errors)
-    printf ("No errors found.\n");
-  return errors != 0;
+  return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
