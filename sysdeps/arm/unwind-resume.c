@@ -1,6 +1,6 @@
-/* Copyright (C) 2003-2021 Free Software Foundation, Inc.
+/* Unwinder function forwarders for libc.  Arm version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jakub@redhat.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License as
@@ -16,31 +16,10 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <https://www.gnu.org/licenses/>.  */
 
-#include <stdio.h>
-#include <gnu/lib-names.h>
-#include <unwind-link.h>
-#include <sysdep.h>
-#include <unwind-resume.h>
+#include <sysdeps/generic/unwind-resume.c>
 
-static struct unwind_link *
-link (void)
+void *
+__unwind_link_get_resume (void)
 {
-  struct unwind_link *unwind_link = __libc_unwind_link_get ();
-  if (unwind_link == NULL)
-    __libc_fatal (LIBGCC_S_SO " must be installed for unwinding to work\n");
-  return unwind_link;
-}
-
-#if !HAVE_ARCH_UNWIND_RESUME
-void
-_Unwind_Resume (struct _Unwind_Exception *exc)
-{
-  UNWIND_LINK_PTR (link (), _Unwind_Resume) (exc);
-}
-#endif
-
-_Unwind_Reason_Code
-__gcc_personality_v0 PERSONALITY_PROTO
-{
-  return UNWIND_LINK_PTR (link (), personality) PERSONALITY_ARGS;
+  return UNWIND_LINK_PTR (link (), _Unwind_Resume);
 }
