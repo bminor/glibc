@@ -17,58 +17,36 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <libc-lock.h>
-#include <dlfcn.h>
 #include <execinfo.h>
 #include <stdlib.h>
-#include <unwind.h>
+#include <unwind-link.h>
 
 struct trace_arg
 {
   void **array;
+  struct unwind_link *unwind_link;
   int cnt, size;
 };
 
 #ifdef SHARED
-static _Unwind_Reason_Code (*unwind_backtrace) (_Unwind_Trace_Fn, void *);
-static _Unwind_VRS_Result (*unwind_vrs_get) (_Unwind_Context *,
-					     _Unwind_VRS_RegClass,
-					     _uw,
-					     _Unwind_VRS_DataRepresentation,
-					     void *);
-
-static void *libgcc_handle;
-
-static void
-init (void)
-{
-  libgcc_handle = __libc_dlopen ("libgcc_s.so.1");
-
-  if (libgcc_handle == NULL)
-    return;
-
-  unwind_backtrace = __libc_dlsym (libgcc_handle, "_Unwind_Backtrace");
-  unwind_vrs_get = __libc_dlsym (libgcc_handle, "_Unwind_VRS_Get");
-  if (unwind_vrs_get == NULL)
-    unwind_backtrace = NULL;
-}
-
 /* This function is identical to "_Unwind_GetGR", except that it uses
    "unwind_vrs_get" instead of "_Unwind_VRS_Get".  */
 static inline _Unwind_Word
-unwind_getgr (_Unwind_Context *context, int regno)
+unwind_getgr (struct unwind_link *unwind_link,
+	      _Unwind_Context *context, int regno)
 {
   _uw val;
-  unwind_vrs_get (context, _UVRSC_CORE, regno, _UVRSD_UINT32, &val);
+  UNWIND_LINK_PTR (unwind_link, _Unwind_VRS_Get)
+    (context, _UVRSC_CORE, regno, _UVRSD_UINT32, &val);
   return val;
 }
 
 /* This macro is identical to the _Unwind_GetIP macro, except that it
    uses "unwind_getgr" instead of "_Unwind_GetGR".  */
-# define unwind_getip(context) \
-  (unwind_getgr (context, 15) & ~(_Unwind_Word)1)
-#else
-# define unwind_backtrace _Unwind_Backtrace
+#define unwind_getip(context) \
+  (unwind_getgr (arg->unwind_link, context, 15) & ~(_Unwind_Word)1)
+
+#else /* !SHARED */
 # define unwind_getip _Unwind_GetIP
 #endif
 
@@ -89,20 +67,19 @@ backtrace_helper (struct _Unwind_Context *ctx, void *a)
 int
 __backtrace (void **array, int size)
 {
-  struct trace_arg arg = { .array = array, .size = size, .cnt = -1 };
+  struct trace_arg arg =
+    {
+     .array = array,
+     .unwind_link = __libc_unwind_link_get (),
+     .size = size,
+     .cnt = -1
+    };
 
-  if (size <= 0)
+  if (size <= 0 || arg.unwind_link == NULL)
     return 0;
 
-#ifdef SHARED
-  __libc_once_define (static, once);
-
-  __libc_once (once, init);
-  if (unwind_backtrace == NULL)
-    return 0;
-#endif
-
-  unwind_backtrace (backtrace_helper, &arg);
+  UNWIND_LINK_PTR (arg.unwind_link, _Unwind_Backtrace)
+    (backtrace_helper, &arg);
 
   if (arg.cnt > 1 && arg.array[arg.cnt - 1] == NULL)
     --arg.cnt;
@@ -110,17 +87,3 @@ __backtrace (void **array, int size)
 }
 weak_alias (__backtrace, backtrace)
 libc_hidden_def (__backtrace)
-
-
-#ifdef SHARED
-/* Free all resources if necessary.  */
-libc_freeres_fn (free_mem)
-{
-  unwind_backtrace = NULL;
-  if (libgcc_handle != NULL)
-    {
-      __libc_dlclose (libgcc_handle);
-      libgcc_handle = NULL;
-    }
-}
-#endif
