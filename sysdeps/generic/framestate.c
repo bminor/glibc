@@ -17,13 +17,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <dlfcn.h>
 #include <stdlib.h>
 #define STATIC static
 #define __frame_state_for fallback_frame_state_for
 #include <unwind-dw2.c>
 #undef __frame_state_for
 #include <gnu/lib-names.h>
+
+#include <unwind-link.h>
 
 typedef struct frame_state * (*framesf)(void *pc, struct frame_state *);
 struct frame_state *__frame_state_for (void *pc,
@@ -32,21 +33,15 @@ struct frame_state *__frame_state_for (void *pc,
 struct frame_state *
 __frame_state_for (void *pc, struct frame_state *frame_state)
 {
-  static framesf frame_state_for;
-
-  if (frame_state_for == NULL)
+  struct unwind_link *unwind_link = __libc_unwind_link_get ();
+  if (unwind_link != NULL)
+    return UNWIND_LINK_PTR (unwind_link, __frame_state_for) (pc, frame_state);
+  else
     {
-      void *handle = __libc_dlopen (LIBGCC_S_SO);
-
-      if (handle == NULL
-	  || (frame_state_for
-	      = (framesf) __libc_dlsym (handle, "__frame_state_for")) == NULL)
 #ifndef __USING_SJLJ_EXCEPTIONS__
-	frame_state_for = fallback_frame_state_for;
+      return fallback_frame_state_for (pc, frame_state);
 #else
-	frame_state_for = abort;
+      abort ();
 #endif
     }
-
-  return frame_state_for (pc, frame_state);
 }
