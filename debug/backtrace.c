@@ -23,7 +23,7 @@
 #include <gnu/lib-names.h>
 #include <stdlib.h>
 #include <unwind.h>
-#include <unwind-arch.h>
+#include <unwind-link.h>
 
 struct trace_arg
 {

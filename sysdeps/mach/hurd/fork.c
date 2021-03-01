@@ -29,6 +29,7 @@
 #include <tls.h>
 #include <malloc/malloc-internal.h>
 #include <nss/nss_database.h>
+#include <unwind-link.h>
 
 #undef __fork
 
@@ -666,6 +667,8 @@ __fork (void)
       __sigemptyset (&_hurdsig_traced);
       __sigemptyset (&_hurd_global_sigstate->pending);
       __sigemptyset (&ss->pending);
+
+      __libc_unwind_link_after_fork ();
 
       /* Release malloc locks.  */
       _hurd_malloc_fork_child ();

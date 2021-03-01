@@ -33,6 +33,7 @@
 #include <futex-internal.h>
 #include <malloc/malloc-internal.h>
 #include <nss/nss_database.h>
+#include <unwind-link.h>
 
 static void
 fresetlockfiles (void)
@@ -116,6 +117,8 @@ __libc_fork (void)
       /* Reset the lock state in the multi-threaded case.  */
       if (multiple_threads)
 	{
+	  __libc_unwind_link_after_fork ();
+
 	  /* Release malloc locks.  */
 	  call_function_static_weak (__malloc_fork_unlock_child);
 

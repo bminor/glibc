@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <set-hooks.h>
 #include <libc-internal.h>
+#include <unwind-link.h>
 
 #include "../nss/nsswitch.h"
 #include "../libio/libioP.h"
@@ -60,6 +61,10 @@ __libc_freeres (void)
 	 (weak-ref-and-check).  */
       if (&__libpthread_freeres != NULL)
 	__libpthread_freeres ();
+
+#ifdef SHARED
+      __libc_unwind_link_freeres ();
+#endif
 
       for (p = symbol_set_first_element (__libc_freeres_ptrs);
            !symbol_set_end_p (__libc_freeres_ptrs, p); ++p)

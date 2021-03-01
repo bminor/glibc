@@ -73,7 +73,7 @@ routines := brk sbrk sstk ioctl \
 	    fgetxattr flistxattr fremovexattr fsetxattr getxattr \
 	    listxattr lgetxattr llistxattr lremovexattr lsetxattr \
 	    removexattr setxattr getauxval ifunc-impl-list makedev \
-	    allocate_once fd_to_filename single_threaded
+	    allocate_once fd_to_filename single_threaded unwind-link
 
 generated += tst-error1.mtrace tst-error1-mem.out \
   tst-allocate_once.mtrace tst-allocate_once-mem.out

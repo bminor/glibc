@@ -1,4 +1,4 @@
-/* Dynamic loading of the libgcc unwinder.  Generic version of parameters.
+/* Dynamic loading of the libgcc unwinder.  ia64 customization.
    Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,19 +17,16 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef _ARCH_UNWIND_LINK_H
-#define _ARCH_UNWIND_LINK_H
 
-/* The _Unwind_GetIP function is supported.  */
 #define UNWIND_LINK_GETIP 1
-
-/* The __frame_state_for function is needed and re-exported from glibc.  */
-#define UNWIND_LINK_FRAME_STATE_FOR 0
-
-/* No adjustment of the is needed.  */
+#define UNWIND_LINK_FRAME_STATE_FOR 1
 #define UNWIND_LINK_FRAME_ADJUSTMENT 0
-
-/* There are no extra fields in struct unwind_link in the generic version.  */
-#define UNWIND_LINK_EXTRA_FIELDS
-#define UNWIND_LINK_EXTRA_INIT
+#define UNWIND_LINK_EXTRA_FIELDS \
+  __typeof (_Unwind_GetBSP) *ptr__Unwind_GetBSP;
+#define UNWIND_LINK_EXTRA_INIT                               \
+  local.ptr__Unwind_GetBSP                                   \
+    = __libc_dlsym (local_libgcc_handle, "_Unwind_GetBSP");  \
+  assert (local.ptr__Unwind_GetBSP != NULL);                 \
+  PTR_MANGLE (local.ptr__Unwind_GetBSP);
 
 #endif /* _ARCH_UNWIND_LINK_H */

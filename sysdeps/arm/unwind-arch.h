@@ -1,4 +1,4 @@
-/* Dynamic loading of the libgcc unwinder.  Generic version of parameters.
+/* Dynamic loading of the libgcc unwinder.  Arm customization.
    Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -19,17 +19,17 @@
 #ifndef _ARCH_UNWIND_LINK_H
 #define _ARCH_UNWIND_LINK_H
 
-/* The _Unwind_GetIP function is supported.  */
-#define UNWIND_LINK_GETIP 1
+/* On arm, _Unwind_GetIP is a macro.  */
+#define UNWIND_LINK_GETIP 0
 
-/* The __frame_state_for function is needed and re-exported from glibc.  */
 #define UNWIND_LINK_FRAME_STATE_FOR 0
-
-/* No adjustment of the is needed.  */
 #define UNWIND_LINK_FRAME_ADJUSTMENT 0
-
-/* There are no extra fields in struct unwind_link in the generic version.  */
-#define UNWIND_LINK_EXTRA_FIELDS
-#define UNWIND_LINK_EXTRA_INIT
+#define UNWIND_LINK_EXTRA_FIELDS \
+  __typeof (_Unwind_VRS_Get) *ptr__Unwind_VRS_Get;
+#define UNWIND_LINK_EXTRA_INIT                                \
+  local.ptr__Unwind_VRS_Get                                   \
+    = __libc_dlsym (local_libgcc_handle, "_Unwind_VRS_Get");  \
+  assert (local.ptr__Unwind_VRS_Get != NULL);                 \
+  PTR_MANGLE (local.ptr__Unwind_VRS_Get);
 
 #endif /* _ARCH_UNWIND_LINK_H */

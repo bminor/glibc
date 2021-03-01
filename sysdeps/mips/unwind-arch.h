@@ -1,4 +1,4 @@
-/* Return backtrace of current program state.  Arch-specific bits.
+/* Dynamic loading of the libgcc unwinder.  MIPS customization.
    Copyright (C) 2020-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,10 +16,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _UNWIND_ARCH_H
-#define _UNWIND_ARCH_H
+#ifndef _ARCH_UNWIND_LINK_H
+#define _ARCH_UNWIND_LINK_H
 
 #include <stdint.h>
+#include <sys/syscall.h>
+
+#define UNWIND_LINK_GETIP 1
+#define UNWIND_LINK_FRAME_STATE_FOR 1
+#define UNWIND_LINK_FRAME_ADJUSTMENT 1
+#define UNWIND_LINK_EXTRA_FIELDS
+#define UNWIND_LINK_EXTRA_INIT
 
 /* MIPS fallback code handle a frame where its FDE can not be obtained
    (for instance a signal frame) by reading the kernel allocated signal frame
@@ -49,7 +56,7 @@ unwind_arch_adjustment (void *prev, void *addr)
 
      24021061 li v0, 0x1061 (rt_sigreturn)
      0000000c syscall
-	or
+        or
      24021017 li v0, 0x1017 (sigreturn)
      0000000c syscall  */
   if (pc[1] != 0x0000000c)
@@ -64,4 +71,4 @@ unwind_arch_adjustment (void *prev, void *addr)
   return addr;
 }
 
-#endif
+#endif /* _ARCH_UNWIND_LINK_H */
