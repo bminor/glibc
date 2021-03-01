@@ -379,12 +379,11 @@ libc_hidden_def (_IO_wdoallocbuf)
 int
 _IO_wdefault_doallocate (FILE *fp)
 {
-  wchar_t *buf;
-
-  buf = malloc (BUFSIZ);
+  wchar_t *buf = (wchar_t *)malloc (BUFSIZ);
   if (__glibc_unlikely (buf == NULL))
     return EOF;
-  _IO_wsetb (fp, buf, buf + BUFSIZ, 1);
+
+  _IO_wsetb (fp, buf, buf + BUFSIZ / sizeof *buf, 1);
   return 1;
 }
 libc_hidden_def (_IO_wdefault_doallocate)
