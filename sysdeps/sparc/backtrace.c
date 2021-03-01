@@ -21,9 +21,8 @@
 #include <stddef.h>
 #include <sysdep.h>
 #include <sys/trap.h>
-#include <dlfcn.h>
-#include <unwind.h>
 #include <backtrace.h>
+#include <unwind-link.h>
 
 struct layout
 {
@@ -36,44 +35,11 @@ struct layout
 struct trace_arg
 {
   void **array;
+  struct unwind_link *unwind_link;
   _Unwind_Word cfa;
   int cnt;
   int size;
 };
-
-#ifdef SHARED
-static _Unwind_Reason_Code (*unwind_backtrace) (_Unwind_Trace_Fn, void *);
-static _Unwind_Ptr (*unwind_getip) (struct _Unwind_Context *);
-static _Unwind_Word (*unwind_getcfa) (struct _Unwind_Context *);
-static void *libgcc_handle;
-
-/* Dummy version in case libgcc_s does not contain the real code.  */
-static _Unwind_Word
-dummy_getcfa (struct _Unwind_Context *ctx __attribute__ ((unused)))
-{
-  return 0;
-}
-
-static void
-init (void)
-{
-  libgcc_handle = __libc_dlopen ("libgcc_s.so.1");
-
-  if (libgcc_handle == NULL)
-    return;
-
-  unwind_backtrace = __libc_dlsym (libgcc_handle, "_Unwind_Backtrace");
-  unwind_getip = __libc_dlsym (libgcc_handle, "_Unwind_GetIP");
-  if (unwind_getip == NULL)
-    unwind_backtrace = NULL;
-  unwind_getcfa = (__libc_dlsym (libgcc_handle, "_Unwind_GetCFA")
-		  ?: dummy_getcfa);
-}
-#else
-# define unwind_backtrace _Unwind_Backtrace
-# define unwind_getip _Unwind_GetIP
-# define unwind_getcfa _Unwind_GetCFA
-#endif
 
 static _Unwind_Reason_Code
 backtrace_helper (struct _Unwind_Context *ctx, void *a)
@@ -85,11 +51,12 @@ backtrace_helper (struct _Unwind_Context *ctx, void *a)
      Skip it.  */
   if (arg->cnt != -1)
     {
-      ip = unwind_getip (ctx);
+      ip = UNWIND_LINK_PTR (arg->unwind_link, _Unwind_GetIP) (ctx);
       arg->array[arg->cnt] = (void *) ip;
 
       /* Check whether we make any progress.  */
-      _Unwind_Word cfa = unwind_getcfa (ctx);
+      _Unwind_Word cfa
+	= UNWIND_LINK_PTR (arg->unwind_link, _Unwind_GetCFA) (ctx);
 
       if (arg->cnt > 0 && arg->array[arg->cnt - 1] == arg->array[arg->cnt]
 	 && cfa == arg->cfa)
@@ -104,23 +71,19 @@ backtrace_helper (struct _Unwind_Context *ctx, void *a)
 int
 __backtrace (void **array, int size)
 {
-  struct trace_arg arg = { .array = array, .cfa = 0, .size = size, .cnt = -1 };
-  bool use_unwinder;
   int count;
+  struct trace_arg arg =
+    {
+     .array = array,
+     .unwind_link = __libc_unwind_link_get (),
+     .size = size,
+     .cnt = -1,
+    };
 
   if (size <= 0)
     return 0;
 
-  use_unwinder = true;
-#ifdef SHARED
-  __libc_once_define (static, once);
-
-  __libc_once (once, init);
-  if (unwind_backtrace == NULL)
-    use_unwinder = false;
-#endif
-
-  if (use_unwinder == false)
+  if (arg.unwind_link == NULL)
     {
       struct layout *current;
       unsigned long fp, i7;
@@ -145,7 +108,8 @@ __backtrace (void **array, int size)
     }
   else
     {
-      unwind_backtrace (backtrace_helper, &arg);
+      UNWIND_LINK_PTR (arg.unwind_link, _Unwind_Backtrace)
+	(backtrace_helper, &arg);
 
       /* _Unwind_Backtrace seems to put NULL address above
 	 _start.  Fix it up here.  */
