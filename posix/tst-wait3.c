@@ -1,5 +1,5 @@
-/* Tests for wait4.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+/* Tests for wait3.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define WAIT_CALL(__pid, __wstatus, __options, __rusage) \
-   wait4 (__pid, __wstatus, __options, __rusage)
+   wait3 (__wstatus, __options, __rusage)
 
 #include "tst-wait-skeleton.c"

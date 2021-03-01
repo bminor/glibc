@@ -84,7 +84,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
 		   bug-ga1 tst-vfork1 tst-vfork2 tst-vfork3 \
-		   tst-waitid tst-wait4 \
+		   tst-waitid tst-wait4 tst-wait3 \
 		   tst-getaddrinfo2 bug-glob2 bug-glob3 tst-sysconf \
 		   tst-execvp1 tst-execvp2 tst-execlp1 tst-execlp2 \
 		   tst-execv1 tst-execv2 tst-execl1 tst-execl2 \
