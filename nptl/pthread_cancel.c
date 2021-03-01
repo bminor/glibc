@@ -35,7 +35,8 @@ __pthread_cancel (pthread_t th)
     return ESRCH;
 
 #ifdef SHARED
-  pthread_cancel_init ();
+  /* Trigger an error if libgcc_s cannot be loaded.  */
+  __pthread_unwind_link_get ();
 #endif
   int result = 0;
   int oldval;

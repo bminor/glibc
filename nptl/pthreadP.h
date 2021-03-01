@@ -287,9 +287,11 @@ hidden_proto (__pthread_unwind_next)
 hidden_proto (__pthread_register_cancel)
 hidden_proto (__pthread_unregister_cancel)
 # ifdef SHARED
-extern void attribute_hidden pthread_cancel_init (void);
+/* The difference from __libc_unwind_link_get is that here, errors
+   terminate the process.  */
+struct unwind_link ;
+struct unwind_link *__pthread_unwind_link_get (void) attribute_hidden;
 # endif
-extern void __nptl_unwind_freeres (void) attribute_hidden;
 #endif
 
 

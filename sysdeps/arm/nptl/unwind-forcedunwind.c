@@ -1,5 +1,5 @@
-/* _Unwind_Resume wrapper for ARM EABI.
-   Copyright (C) 2015-2021 Free Software Foundation, Inc.
+/* Unwinder function forwarders for libpthread.  Arm version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,8 +13,13 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
-   <https://www.gnu.org/licenses/>.  */
+   License along with the GNU C Library; see the file COPYING.LIB.  If
+   not, see <https://www.gnu.org/licenses/>.  */
 
-/* The implementation in libpthread is identical to the one in libc.  */
-#include <sysdeps/arm/arm-unwind-resume.S>
+#include <sysdeps/nptl/unwind-forcedunwind.c>
+
+void *
+__unwind_link_get_resume (void)
+{
+  return UNWIND_LINK_PTR (__pthread_unwind_link_get (), _Unwind_Resume);
+}
