@@ -28,13 +28,12 @@ libc_hidden_proto (__old_glob64);
 #define convert_dirent __old_convert_dirent
 #define glob_in_dir __old_glob_in_dir
 
-#undef stat
-#define stat stat64
-#undef __stat
-#define __stat(file, buf) __stat64 (file, buf)
-
 /* Avoid calling gl_lstat with GLOB_ALTDIRFUNC.  */
-#define GLOB_NO_LSTAT
+#define struct_stat    struct stat64
+#define struct_stat64  struct stat64
+#define GLOB_LSTAT     gl_stat
+#define GLOB_STAT64    __stat64
+#define GLOB_LSTAT64   __stat64
 
 #define GLOB_ATTRIBUTE attribute_compat_text_section
 

@@ -59,25 +59,37 @@
 # define readdir(str) __readdir64 (str)
 # define getpwnam_r(name, bufp, buf, len, res) \
     __getpwnam_r (name, bufp, buf, len, res)
-# define struct_stat64          struct stat64
 # define FLEXIBLE_ARRAY_MEMBER
+# ifndef struct_stat
+#  define struct_stat           struct stat
+# endif
+# ifndef struct_stat64
+#  define struct_stat64         struct stat64
+# endif
+# ifndef GLOB_LSTAT
+#  define GLOB_LSTAT            gl_lstat
+# endif
+# ifndef GLOB_STAT64
+#  define GLOB_STAT64           __stat64
+# endif
+# ifndef GLOB_LSTAT64
+#  define GLOB_LSTAT64          __lstat64
+# endif
 # include <shlib-compat.h>
 #else /* !_LIBC */
 # define __glob                 glob
 # define __getlogin_r(buf, len) getlogin_r (buf, len)
-# define __lstat64(fname, buf)  lstat (fname, buf)
-# if defined _WIN32 && !defined __CYGWIN__
-   /* Avoid GCC or clang warning.  The original __stat64 macro is unused.  */
-#  undef __stat64
-# endif
-# define __stat64(fname, buf)   stat (fname, buf)
 # define __fxstatat64(_, d, f, st, flag) fstatat (d, f, st, flag)
-# define struct_stat64          struct stat
 # ifndef __MVS__
 #  define __alloca              alloca
 # endif
 # define __readdir              readdir
 # define COMPILE_GLOB64
+# define struct_stat            struct stat
+# define struct_stat64          struct stat
+# define GLOB_LSTAT             gl_lstat
+# define GLOB_STAT64            stat
+# define GLOB_LSTAT64           lstat
 #endif /* _LIBC */
 
 #include <fnmatch.h>
@@ -196,22 +208,14 @@ glob_lstat (glob_t *pglob, int flags, const char *fullname)
 {
 /* Use on glob-lstat-compat.c to provide a compat symbol which does not
    use lstat / gl_lstat.  */
-#ifdef GLOB_NO_LSTAT
-# define GL_LSTAT gl_stat
-# define LSTAT64 __stat64
-#else
-# define GL_LSTAT gl_lstat
-# define LSTAT64 __lstat64
-#endif
-
   union
   {
-    struct stat st;
+    struct_stat st;
     struct_stat64 st64;
   } ust;
   return (__glibc_unlikely (flags & GLOB_ALTDIRFUNC)
-          ? pglob->GL_LSTAT (fullname, &ust.st)
-          : LSTAT64 (fullname, &ust.st64));
+          ? pglob->GLOB_LSTAT (fullname, &ust.st)
+          : GLOB_LSTAT64 (fullname, &ust.st64));
 }
 
 /* Set *R = A + B.  Return true if the answer is mathematically
@@ -249,11 +253,11 @@ static int collated_compare (const void *, const void *) __THROWNL;
 static bool
 is_dir (char const *filename, int flags, glob_t const *pglob)
 {
-  struct stat st;
+  struct_stat st;
   struct_stat64 st64;
   return (__glibc_unlikely (flags & GLOB_ALTDIRFUNC)
           ? pglob->gl_stat (filename, &st) == 0 && S_ISDIR (st.st_mode)
-          : __stat64 (filename, &st64) == 0 && S_ISDIR (st64.st_mode));
+          : GLOB_STAT64 (filename, &st64) == 0 && S_ISDIR (st64.st_mode));
 }
 
 /* Find the end of the sub-pattern in a brace expression.  */

@@ -209,6 +209,8 @@ libc {
     __getitimer64;
     __getrusage64;
     __gettimeofday64;
+    __glob64_time64;
+    __globfree64_time64;
     __gmtime64;
     __gmtime64_r;
     __localtime64;

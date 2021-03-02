@@ -1,5 +1,6 @@
-/* Find pathnames matching a pattern.  Linux version.
-   Copyright (C) 2017-2021 Free Software Foundation, Inc.
+/* Frees the dynamically allocated storage from an earlier call to glob.
+   Linux version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,21 +18,18 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/stat.h>
-#include <kernel_stat.h>
 
-#define struct_stat    struct stat
-#define struct_stat64  struct stat64
-#define GLOB_LSTAT     gl_lstat
-#define GLOB_STAT64    __stat64
-#define GLOB_LSTAT64   __lstat64
+#if __TIMESIZE != 64
+# include <glob.h>
+# include <dirent.h>
+# include <sys/stat.h>
 
-#define glob64 __no_glob64_decl
-#define __glob64 __no___glob64_decl
-#include <posix/glob.c>
-#undef glob64
-#undef __glob64
+# define glob_t glob64_time64_t
+# define globfree(pglob) __globfree64_time64 (pglob)
 
-#if XSTAT_IS_XSTAT64
-strong_alias (__glob, __glob64)
-versioned_symbol (libc, __glob64, glob64, GLIBC_2_27);
+# undef stat
+# define stat __stat64_t64
+
+# include <posix/globfree.c>
+libc_hidden_def (__globfree64_time64)
 #endif

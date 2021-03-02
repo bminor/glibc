@@ -31,10 +31,12 @@
 # define __glob __glob64
 # define globfree(pglob) globfree64 (pglob)
 
-# undef stat
-# define stat stat64
-
 # define COMPILE_GLOB64	1
+# define struct_stat    struct stat64
+# define struct_stat64  struct stat64
+# define GLOB_LSTAT     gl_lstat
+# define GLOB_STAT64    __stat64
+# define GLOB_LSTAT64   __lstat64
 
 # include <posix/glob.c>
 
