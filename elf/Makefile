@@ -71,7 +71,7 @@ all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 
 CFLAGS-dl-runtime.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-dl-iterate-phdr.c += $(uses-callbacks)
+CFLAGS-dl-iteratephdr.c += $(uses-callbacks)
 
 # On targets without __builtin_memset, rtld.c uses a hand-coded loop
 # in _dl_start.  Make sure this isn't turned into a call to regular memset.
