@@ -33,8 +33,8 @@ struct file_change_detection
   off64_t size;
 
   ino64_t ino;
-  struct timespec mtime;
-  struct timespec ctime;
+  struct __timespec64 mtime;
+  struct __timespec64 ctime;
 };
 
 /* Returns true if *LEFT and *RIGHT describe the same version of the
@@ -45,7 +45,7 @@ bool __file_is_unchanged (const struct file_change_detection *left,
 /* Extract file change information to *FILE from the stat buffer
    *ST.  */
 void __file_change_detection_for_stat (struct file_change_detection *file,
-                                       const struct stat64 *st);
+                                       const struct __stat64_t64 *st);
 
 /* Writes file change information for PATH to *FILE.  Returns true on
    success.  For benign errors, *FILE is cleared, and true is

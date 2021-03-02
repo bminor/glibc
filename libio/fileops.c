@@ -545,7 +545,7 @@ libc_hidden_ver (_IO_new_file_underflow, _IO_file_underflow)
 static int
 mmap_remap_check (FILE *fp)
 {
-  struct stat64 st;
+  struct __stat64_t64 st;
 
   if (_IO_SYSSTAT (fp, &st) == 0
       && S_ISREG (st.st_mode) && st.st_size != 0
@@ -663,7 +663,7 @@ decide_maybe_mmap (FILE *fp)
      file descriptors are for mmap-able objects and on 32-bit
      machines we don't want to map files which are too large since
      this would require too much virtual memory.  */
-  struct stat64 st;
+  struct __stat64_t64 st;
 
   if (_IO_SYSSTAT (fp, &st) == 0
       && S_ISREG (st.st_mode) && st.st_size != 0
@@ -962,7 +962,7 @@ _IO_new_file_seekoff (FILE *fp, off64_t offset, int dir, int mode)
       break;
     case _IO_seek_end:
       {
-	struct stat64 st;
+	struct __stat64_t64 st;
 	if (_IO_SYSSTAT (fp, &st) == 0 && S_ISREG (st.st_mode))
 	  {
 	    offset += st.st_size;
@@ -1145,7 +1145,7 @@ libc_hidden_def (_IO_file_seek)
 int
 _IO_file_stat (FILE *fp, void *st)
 {
-  return __fstat64 (fp->_fileno, (struct stat64 *) st);
+  return __fstat64_time64 (fp->_fileno, (struct __stat64_t64 *) st);
 }
 libc_hidden_def (_IO_file_stat)
 

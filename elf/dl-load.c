@@ -1946,11 +1946,11 @@ open_path (const char *name, size_t namelen, int mode,
 		{
 		  /* We failed to open machine dependent library.  Let's
 		     test whether there is any directory at all.  */
-		  struct stat64 st;
+		  struct __stat64_t64 st;
 
 		  buf[buflen - namelen - 1] = '\0';
 
-		  if (__stat64 (buf, &st) != 0
+		  if (__stat64_time64 (buf, &st) != 0
 		      || ! S_ISDIR (st.st_mode))
 		    /* The directory does not exist or it is no directory.  */
 		    this_dir->status[cnt] = nonexisting;
@@ -1968,9 +1968,9 @@ open_path (const char *name, size_t namelen, int mode,
 	      /* This is an extra security effort to make sure nobody can
 		 preload broken shared objects which are in the trusted
 		 directories and so exploit the bugs.  */
-	      struct stat64 st;
+	      struct __stat64_t64 st;
 
-	      if (__fstat64 (fd, &st) != 0
+	      if (__fstat64_time64 (fd, &st) != 0
 		  || (st.st_mode & S_ISUID) == 0)
 		{
 		  /* The shared object cannot be tested for being SUID

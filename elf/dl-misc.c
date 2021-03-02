@@ -43,11 +43,11 @@ void *
 _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 {
   void *result = MAP_FAILED;
-  struct stat64 st;
+  struct __stat64_t64 st;
   int fd = __open64_nocancel (file, O_RDONLY | O_CLOEXEC);
   if (fd >= 0)
     {
-      if (__fstat64 (fd, &st) >= 0)
+      if (__fstat64_time64 (fd, &st) >= 0)
 	{
 	  *sizep = st.st_size;
 

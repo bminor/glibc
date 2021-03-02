@@ -27,9 +27,9 @@
 DIR *
 __fdopendir (int fd)
 {
-  struct stat64 statbuf;
+  struct __stat64_t64 statbuf;
 
-  if (__builtin_expect (__fstat64 (fd, &statbuf), 0) < 0)
+  if (__glibc_unlikely (__fstat64_time64 (fd, &statbuf) < 0))
     return NULL;
   if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
     {

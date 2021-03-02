@@ -49,8 +49,8 @@ opendir_tail (int fd)
   /* Now make sure this really is a directory and nothing changed since the
      `stat' call.  The S_ISDIR check is superfluous if O_DIRECTORY works,
      but it's cheap and we need the stat call for st_blksize anyway.  */
-  struct stat64 statbuf;
-  if (__glibc_unlikely (__fstat64 (fd, &statbuf) < 0))
+  struct __stat64_t64 statbuf;
+  if (__glibc_unlikely (__fstat64_time64 (fd, &statbuf) < 0))
     goto lose;
   if (__glibc_unlikely (! S_ISDIR (statbuf.st_mode)))
     {
@@ -88,7 +88,8 @@ __opendir (const char *name)
 weak_alias (__opendir, opendir)
 
 DIR *
-__alloc_dir (int fd, bool close_fd, int flags, const struct stat64 *statp)
+__alloc_dir (int fd, bool close_fd, int flags,
+	     const struct __stat64_t64 *statp)
 {
   /* We have to set the close-on-exit flag if the user provided the
      file descriptor.  */

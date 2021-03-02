@@ -468,14 +468,14 @@ ruserok (const char *rhost, int superuser, const char *ruser,
 static FILE *
 iruserfopen (const char *file, uid_t okuser)
 {
-  struct stat64 st;
+  struct __stat64_t64 st;
   char *cp = NULL;
   FILE *res = NULL;
 
   /* If not a regular file, if owned by someone other than user or
      root, if writeable by anyone but the owner, or if hardlinked
      anywhere, quit.  */
-  if (__lstat64 (file, &st))
+  if (__lstat64_time64 (file, &st))
     cp = _("lstat failed");
   else if (!S_ISREG (st.st_mode))
     cp = _("not regular file");
@@ -484,7 +484,7 @@ iruserfopen (const char *file, uid_t okuser)
       res = fopen (file, "rce");
       if (!res)
 	cp = _("cannot open");
-      else if (__fstat64 (fileno (res), &st) < 0)
+      else if (__fstat64_time64 (fileno (res), &st) < 0)
 	cp = _("fstat failed");
       else if (st.st_uid && st.st_uid != okuser)
 	cp = _("bad owner");

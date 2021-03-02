@@ -324,8 +324,8 @@ __nscd_get_mapping (request_type type, const char *key,
 
   if (__glibc_unlikely (n == keylen))
     {
-      struct stat64 st;
-      if (__builtin_expect (__fstat64 (mapfd, &st) != 0, 0)
+      struct __stat64_t64 st;
+      if (__glibc_unlikely (__fstat64_time64 (mapfd, &st) != 0)
 	  || __builtin_expect (st.st_size < sizeof (struct database_pers_head),
 			       0))
 	goto out_close;

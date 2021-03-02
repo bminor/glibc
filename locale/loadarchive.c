@@ -78,7 +78,7 @@ static struct archmapped *archmapped;
    ARCHMAPPED points to this; if mapping the archive header failed,
    then headmap.ptr is null.  */
 static struct archmapped headmap;
-static struct stat64 archive_stat; /* stat of archive when header mapped.  */
+static struct __stat64_t64 archive_stat; /* stat of archive when header mapped.  */
 
 /* Record of locales that we have already loaded from the archive.  */
 struct locale_in_archive
@@ -207,7 +207,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	/* Cannot open the archive, for whatever reason.  */
 	return NULL;
 
-      if (__fstat64 (fd, &archive_stat) == -1)
+      if (__fstat64_time64 (fd, &archive_stat) == -1)
 	{
 	  /* stat failed, very strange.  */
 	close_and_out:
@@ -396,7 +396,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  /* Open the file if it hasn't happened yet.  */
 	  if (fd == -1)
 	    {
-	      struct stat64 st;
+	      struct __stat64_t64 st;
 	      fd = __open_nocancel (archfname,
 				    O_RDONLY|O_LARGEFILE|O_CLOEXEC);
 	      if (fd == -1)
@@ -405,7 +405,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	      /* Now verify we think this is really the same archive file
 		 we opened before.  If it has been changed we cannot trust
 		 the header we read previously.  */
-	      if (__fstat64 (fd, &st) < 0
+	      if (__fstat64_time64 (fd, &st) < 0
 		  || st.st_size != archive_stat.st_size
 		  || st.st_mtime != archive_stat.st_mtime
 		  || st.st_dev != archive_stat.st_dev

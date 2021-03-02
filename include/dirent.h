@@ -49,7 +49,7 @@ extern int __versionsort64 (const struct dirent64 **a,
 			    const struct dirent64 **b)
      __attribute_pure__;
 extern DIR *__alloc_dir (int fd, bool close_fd, int flags,
-			 const struct stat64 *statp)
+			 const struct __stat64_t64 *statp)
      __nonnull (4) attribute_hidden;
 extern __typeof (rewinddir) __rewinddir;
 extern __typeof (seekdir) __seekdir;

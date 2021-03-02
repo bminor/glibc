@@ -183,7 +183,7 @@ __getcwd_generic (char *buf, size_t size)
   ino_t rootino, thisino;
   char *dir;
   register char *dirp;
-  struct stat64 st;
+  struct __stat64_t64 st;
   size_t allocated = size;
   size_t used;
 
@@ -249,12 +249,12 @@ __getcwd_generic (char *buf, size_t size)
   dirp = dir + allocated;
   *--dirp = '\0';
 
-  if (__lstat64 (".", &st) < 0)
+  if (__lstat64_time64 (".", &st) < 0)
     goto lose;
   thisdev = st.st_dev;
   thisino = st.st_ino;
 
-  if (__lstat64 ("/", &st) < 0)
+  if (__lstat64_time64 ("/", &st) < 0)
     goto lose;
   rootdev = st.st_dev;
   rootino = st.st_ino;
@@ -276,12 +276,12 @@ __getcwd_generic (char *buf, size_t size)
       if (fd < 0)
         goto lose;
       fd_needs_closing = true;
-      parent_status = __fstat64 (fd, &st);
+      parent_status = __fstat64_time64 (fd, &st);
 #else
       dotlist[dotlen++] = '.';
       dotlist[dotlen++] = '.';
       dotlist[dotlen] = '\0';
-      parent_status = __lstat64 (dotlist, &st);
+      parent_status = __lstat64_time64 (dotlist, &st);
 #endif
       if (parent_status != 0)
         goto lose;
@@ -353,7 +353,8 @@ __getcwd_generic (char *buf, size_t size)
           {
             int entry_status;
 #if HAVE_OPENAT_SUPPORT
-            entry_status = __fstatat64 (fd, d->d_name, &st, AT_SYMLINK_NOFOLLOW);
+            entry_status = __fstatat64_time64 (fd, d->d_name, &st,
+					       AT_SYMLINK_NOFOLLOW);
 #else
             /* Compute size needed for this file name, or for the file
                name ".." in the same directory, whichever is larger.
@@ -390,7 +391,7 @@ __getcwd_generic (char *buf, size_t size)
               }
 
             memcpy (dotlist + dotlen, d->d_name, _D_ALLOC_NAMLEN (d));
-            entry_status = __lstat64 (dotlist, &st);
+            entry_status = __lstat64_time64 (dotlist, &st);
 #endif
             /* We don't fail here if we cannot stat() a directory entry.
                This can happen when (network) file systems fail.  If this

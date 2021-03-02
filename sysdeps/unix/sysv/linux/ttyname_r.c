@@ -31,15 +31,15 @@
 #include "ttyname.h"
 
 static int getttyname_r (char *buf, size_t buflen,
-			 const struct stat64 *mytty, int save,
+			 const struct __stat64_t64 *mytty, int save,
 			 int *dostat);
 
 static int
 attribute_compat_text_section
-getttyname_r (char *buf, size_t buflen, const struct stat64 *mytty,
+getttyname_r (char *buf, size_t buflen, const struct __stat64_t64 *mytty,
 	      int save, int *dostat)
 {
-  struct stat64 st;
+  struct __stat64_t64 st;
   DIR *dirstream;
   struct dirent64 *d;
   size_t devlen = strlen (buf);
@@ -71,7 +71,7 @@ getttyname_r (char *buf, size_t buflen, const struct stat64 *mytty,
 	cp = __stpncpy (buf + devlen, d->d_name, needed);
 	cp[0] = '\0';
 
-	if (__stat64 (buf, &st) == 0
+	if (__stat64_time64 (buf, &st) == 0
 	    && is_mytty (mytty, &st))
 	  {
 	    (void) __closedir (dirstream);
@@ -93,7 +93,7 @@ int
 __ttyname_r (int fd, char *buf, size_t buflen)
 {
   struct fd_to_filename filename;
-  struct stat64 st, st1;
+  struct __stat64_t64 st, st1;
   int dostat = 0;
   int doispty = 0;
   int save = errno;
@@ -118,7 +118,7 @@ __ttyname_r (int fd, char *buf, size_t buflen)
   if (__glibc_unlikely (__tcgetattr (fd, &term) < 0))
     return errno;
 
-  if (__fstat64 (fd, &st) < 0)
+  if (__fstat64_time64 (fd, &st) < 0)
     return errno;
 
   /* We try using the /proc filesystem.  */
@@ -144,7 +144,7 @@ __ttyname_r (int fd, char *buf, size_t buflen)
 
       /* Verify readlink result, fall back on iterating through devices.  */
       if (buf[0] == '/'
-	  && __stat64 (buf, &st1) == 0
+	  && __stat64_time64 (buf, &st1) == 0
 	  && is_mytty (&st, &st1))
 	return 0;
 
@@ -155,7 +155,7 @@ __ttyname_r (int fd, char *buf, size_t buflen)
   memcpy (buf, "/dev/pts/", sizeof ("/dev/pts/"));
   buflen -= sizeof ("/dev/pts/") - 1;
 
-  if (__stat64 (buf, &st1) == 0 && S_ISDIR (st1.st_mode))
+  if (__stat64_time64 (buf, &st1) == 0 && S_ISDIR (st1.st_mode))
     {
       ret = getttyname_r (buf, buflen, &st, save,
 			  &dostat);

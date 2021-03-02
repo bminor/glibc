@@ -48,7 +48,7 @@ int
 __gconv_load_cache (void)
 {
   int fd;
-  struct stat64 st;
+  struct __stat64_t64 st;
   struct gconvcache_header *header;
 
   /* We cannot use the cache if the GCONV_PATH environment variable is
@@ -64,7 +64,7 @@ __gconv_load_cache (void)
     return -1;
 
   /* Get information about the file.  */
-  if (__builtin_expect (__fstat64 (fd, &st), 0) < 0
+  if (__glibc_unlikely (__fstat64_time64 (fd, &st) < 0)
       /* We do not have to start looking at the file if it cannot contain
 	 at least the cache header.  */
       || (size_t) st.st_size < sizeof (struct gconvcache_header))

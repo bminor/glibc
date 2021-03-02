@@ -167,7 +167,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 {
   int fd;
   void *filedata;
-  struct stat64 st;
+  struct __stat64_t64 st;
   struct __locale_data *newdata;
   int save_err;
   int alloc = ld_mapped;
@@ -180,7 +180,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
     /* Cannot open the file.  */
     return;
 
-  if (__builtin_expect (__fstat64 (fd, &st), 0) < 0)
+  if (__glibc_unlikely (__fstat64_time64 (fd, &st) < 0))
     {
     puntfd:
       __close_nocancel_nostatus (fd);
@@ -206,7 +206,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       if (__builtin_expect (fd, 0) < 0)
 	return;
 
-      if (__builtin_expect (__fstat64 (fd, &st), 0) < 0)
+      if (__glibc_unlikely (__fstat64_time64 (fd, &st) < 0))
 	goto puntfd;
     }
 

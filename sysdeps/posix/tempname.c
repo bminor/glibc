@@ -55,14 +55,14 @@
 #include <time.h>
 
 #if _LIBC
-# define struct_stat64 struct stat64
+# define struct_stat64 struct __stat64_t64
 # define __secure_getenv __libc_secure_getenv
 #else
 # define struct_stat64 struct stat
 # define __gen_tempname gen_tempname
 # define __mkdir mkdir
 # define __open open
-# define __lstat64(file, buf) lstat (file, buf)
+# define __lstat64_time64(file, buf) lstat (file, buf)
 # define __stat64(file, buf) stat (file, buf)
 # define __getrandom getrandom
 # define __clock_gettime64 clock_gettime
@@ -99,7 +99,7 @@ static int
 direxists (const char *dir)
 {
   struct_stat64 buf;
-  return __stat64 (dir, &buf) == 0 && S_ISDIR (buf.st_mode);
+  return __stat64_time64 (dir, &buf) == 0 && S_ISDIR (buf.st_mode);
 }
 
 /* Path search algorithm, for tmpnam, tmpfile, etc.  If DIR is
@@ -191,7 +191,7 @@ try_nocreate (char *tmpl, void *flags _GL_UNUSED)
 {
   struct_stat64 st;
 
-  if (__lstat64 (tmpl, &st) == 0 || errno == EOVERFLOW)
+  if (__lstat64_time64 (tmpl, &st) == 0 || errno == EOVERFLOW)
     __set_errno (EEXIST);
   return errno == ENOENT ? 0 : -1;
 }

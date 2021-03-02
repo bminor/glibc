@@ -394,7 +394,7 @@ nss_database_check_reload_and_get (struct nss_database_state *local,
                                    nss_action_list *result,
                                    enum nss_database database_index)
 {
-  struct stat64 str;
+  struct __stat64_t64 str;
 
   /* Acquire MO is needed because the thread that sets reload_disabled
      may have loaded the configuration first, so synchronize with the
@@ -424,7 +424,7 @@ nss_database_check_reload_and_get (struct nss_database_state *local,
      errors here are very unlikely, but the chance that we're entering
      a container is also very unlikely, so we err on the side of both
      very unlikely things not happening at the same time.  */
-  if (__stat64 ("/", &str) != 0
+  if (__stat64_time64 ("/", &str) != 0
       || (local->root_ino != 0
 	  && (str.st_ino != local->root_ino
 	      ||  str.st_dev != local->root_dev)))

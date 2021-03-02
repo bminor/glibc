@@ -150,9 +150,9 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     }
 
   /* If we were already using tzfile, check whether the file changed.  */
-  struct stat64 st;
+  struct __stat64_t64 st;
   if (was_using_tzfile
-      && __stat64 (file, &st) == 0
+      && __stat64_time64 (file, &st) == 0
       && tzfile_ino == st.st_ino && tzfile_dev == st.st_dev
       && tzfile_mtime == st.st_mtime)
     goto done;  /* Nothing to do.  */
@@ -164,7 +164,7 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
     goto ret_free_transitions;
 
   /* Get information about the file we are actually using.  */
-  if (__fstat64 (__fileno (f), &st) != 0)
+  if (__fstat64_time64 (__fileno (f), &st) != 0)
     goto lose;
 
   free ((void *) transitions);

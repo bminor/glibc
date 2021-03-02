@@ -25,24 +25,18 @@
    linux/Documentation/devices.txt (on linux < 4.10) or
    linux/Documentation/admin-guide/devices.txt (on linux >= 4.10).  */
 static inline bool
-is_pty (struct stat64 *sb)
+is_pty (struct __stat64_t64 *sb)
 {
-#ifdef _STATBUF_ST_RDEV
   int m = __gnu_dev_major (sb->st_rdev);
   return (136 <= m && m <= 143);
-#else
-  return false;
-#endif
 }
 
 static inline bool
-is_mytty (const struct stat64 *mytty, const struct stat64 *maybe)
+is_mytty (const struct __stat64_t64 *mytty, const struct __stat64_t64 *maybe)
 {
   return (maybe->st_ino == mytty->st_ino
 	  && maybe->st_dev == mytty->st_dev
-#ifdef _STATBUF_ST_RDEV
 	  && S_ISCHR (maybe->st_mode)
 	  && maybe->st_rdev == mytty->st_rdev
-#endif
 	  );
 }

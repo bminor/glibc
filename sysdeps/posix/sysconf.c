@@ -1215,8 +1215,8 @@ __sysconf_check_spec (const char *spec)
 		   "/POSIX_V6_", sizeof ("/POSIX_V6_") - 1),
 	  spec, speclen + 1);
 
-  struct stat64 st;
-  long int ret = __stat64 (name, &st) >= 0 ? 1 : -1;
+  struct __stat64_t64 st;
+  long int ret = __stat64_time64 (name, &st) >= 0 ? 1 : -1;
 
   __set_errno (save_errno);
   return ret;

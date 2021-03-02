@@ -1636,16 +1636,16 @@ static int gaiconf_reload_flag_ever_set;
 /* Last modification time.  */
 #ifdef _STATBUF_ST_NSEC
 
-static struct timespec gaiconf_mtime;
+static struct __timespec64 gaiconf_mtime;
 
 static inline void
-save_gaiconf_mtime (const struct stat64 *st)
+save_gaiconf_mtime (const struct __stat64_t64 *st)
 {
   gaiconf_mtime = st->st_mtim;
 }
 
 static inline bool
-check_gaiconf_mtime (const struct stat64 *st)
+check_gaiconf_mtime (const struct __stat64_t64 *st)
 {
   return (st->st_mtim.tv_sec == gaiconf_mtime.tv_sec
           && st->st_mtim.tv_nsec == gaiconf_mtime.tv_nsec);
@@ -1656,13 +1656,13 @@ check_gaiconf_mtime (const struct stat64 *st)
 static time_t gaiconf_mtime;
 
 static inline void
-save_gaiconf_mtime (const struct stat64 *st)
+save_gaiconf_mtime (const struct __stat64_t64 *st)
 {
   gaiconf_mtime = st->st_mtime;
 }
 
 static inline bool
-check_gaiconf_mtime (const struct stat64 *st)
+check_gaiconf_mtime (const struct __stat64_t64 *st)
 {
   return st->st_mtime == gaiconf_mtime;
 }
@@ -1777,8 +1777,8 @@ gaiconf_init (void)
   FILE *fp = fopen (GAICONF_FNAME, "rce");
   if (fp != NULL)
     {
-      struct stat64 st;
-      if (__fstat64 (fileno (fp), &st) != 0)
+      struct __stat64_t64 st;
+      if (__fstat64_time64 (fileno (fp), &st) != 0)
 	{
 	  fclose (fp);
 	  goto no_file;
@@ -2130,8 +2130,8 @@ gaiconf_init (void)
 static void
 gaiconf_reload (void)
 {
-  struct stat64 st;
-  if (__stat64 (GAICONF_FNAME, &st) != 0
+  struct __stat64_t64 st;
+  if (__stat64_time64 (GAICONF_FNAME, &st) != 0
       || !check_gaiconf_mtime (&st))
     gaiconf_init ();
 }

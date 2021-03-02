@@ -28,12 +28,12 @@ char *
 get_current_dir_name (void)
 {
   char *pwd;
-  struct stat64 dotstat, pwdstat;
+  struct __stat64_t64 dotstat, pwdstat;
 
   pwd = getenv ("PWD");
   if (pwd != NULL
-      && __stat64 (".", &dotstat) == 0
-      && __stat64 (pwd, &pwdstat) == 0
+      && __stat64_time64 (".", &dotstat) == 0
+      && __stat64_time64 (pwd, &pwdstat) == 0
       && pwdstat.st_dev == dotstat.st_dev
       && pwdstat.st_ino == dotstat.st_ino)
     /* The PWD value is correct.  Use it.  */

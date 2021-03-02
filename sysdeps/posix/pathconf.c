@@ -129,9 +129,9 @@ __pathconf (const char *path, int name)
 #ifdef	_POSIX_ASYNC_IO
       {
 	/* AIO is only allowed on regular files and block devices.  */
-	struct stat64 st;
+	struct __stat64_t64 st;
 
-	if (__stat64 (path, &st) < 0
+	if (__stat64_time64 (path, &st) < 0
 	    || (! S_ISREG (st.st_mode) && ! S_ISBLK (st.st_mode)))
 	  return -1;
 	else

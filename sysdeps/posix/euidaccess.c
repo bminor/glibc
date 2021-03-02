@@ -119,7 +119,7 @@ int group_member ();
 int
 euidaccess (const char *path, int mode)
 {
-  struct stat64 stats;
+  struct __stat64_t64 stats;
   int granted;
 
 #ifdef	_LIBC
@@ -140,7 +140,7 @@ euidaccess (const char *path, int mode)
     return access (path, mode);
 #endif
 
-  if (__stat64 (path, &stats))
+  if (__stat64_time64 (path, &stats))
     return -1;
 
   mode &= (X_OK | W_OK | R_OK);	/* Clear any bogus bits. */

@@ -69,10 +69,10 @@ check_one_fd (int fd, int mode)
 	 Note that the following code assumes that STDIN_FILENO,
 	 STDOUT_FILENO, STDERR_FILENO are the three lowest file
 	 decsriptor numbers, in this order.  */
-      struct stat64 st;
-      if (__builtin_expect (nullfd != fd, 0)
-	  || __builtin_expect (__fstat64 (fd, &st), 0) != 0
-	  || __builtin_expect (S_ISCHR (st.st_mode), 1) == 0
+      struct __stat64_t64 st;
+      if (__glibc_unlikely (nullfd != fd)
+	  || __glibc_likely (__fstat64_time64 (fd, &st) != 0)
+	  || __glibc_unlikely (S_ISCHR (st.st_mode) == 0)
 	  || st.st_rdev != dev)
 	/* We cannot even give an error message here since it would
 	   run into the same problems.  */

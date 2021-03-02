@@ -185,7 +185,7 @@ _dl_start_profile (void)
 {
   char *filename;
   int fd;
-  struct stat64 st;
+  struct __stat64_t64 st;
   const ElfW(Phdr) *ph;
   ElfW(Addr) mapstart = ~((ElfW(Addr)) 0);
   ElfW(Addr) mapend = 0;
@@ -342,7 +342,7 @@ _dl_start_profile (void)
       return;
     }
 
-  if (__fstat64 (fd, &st) < 0 || !S_ISREG (st.st_mode))
+  if (__fstat64_time64 (fd, &st) < 0 || !S_ISREG (st.st_mode))
     {
       /* Not stat'able or not a regular file => don't use it.  */
       errstr = "%s: cannot stat file: %s\n";

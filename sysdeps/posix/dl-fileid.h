@@ -32,9 +32,9 @@ struct r_file_id
 static inline bool
 _dl_get_file_id (int fd, struct r_file_id *id)
 {
-  struct stat64 st;
+  struct __stat64_t64 st;
 
-  if (__glibc_unlikely (__fstat64 (fd, &st) < 0))
+  if (__glibc_unlikely (__fstat64_time64 (fd, &st) < 0))
     return false;
 
   id->dev = st.st_dev;

@@ -78,7 +78,7 @@ _IO_file_doallocate (FILE *fp)
 {
   size_t size;
   char *p;
-  struct stat64 st;
+  struct __stat64_t64 st;
 
   size = BUFSIZ;
   if (fp->_fileno >= 0 && __builtin_expect (_IO_SYSSTAT (fp, &st), 0) >= 0)
