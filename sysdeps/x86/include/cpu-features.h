@@ -772,40 +772,23 @@ enum
 /* EBX.  */
 #define reg_PTWRITE		ebx
 
-/* PREFERRED_FEATURE_INDEX_1.  */
-#define bit_arch_I586				(1u << 0)
-#define bit_arch_I686				(1u << 1)
-#define bit_arch_Fast_Rep_String		(1u << 2)
-#define bit_arch_Fast_Copy_Backward		(1u << 3)
-#define bit_arch_Fast_Unaligned_Load		(1u << 4)
-#define bit_arch_Fast_Unaligned_Copy		(1u << 5)
-#define bit_arch_Slow_BSF			(1u << 6)
-#define bit_arch_Slow_SSE4_2			(1u << 7)
-#define bit_arch_AVX_Fast_Unaligned_Load	(1u << 8)
-#define bit_arch_Prefer_MAP_32BIT_EXEC		(1u << 9)
-#define bit_arch_Prefer_PMINUB_for_stringop	(1u << 10)
-#define bit_arch_Prefer_No_VZEROUPPER		(1u << 11)
-#define bit_arch_Prefer_ERMS			(1u << 12)
-#define bit_arch_Prefer_FSRM			(1u << 13)
-#define bit_arch_Prefer_No_AVX512		(1u << 14)
-#define bit_arch_MathVec_Prefer_No_AVX512	(1u << 15)
-
-#define index_arch_Fast_Rep_String		PREFERRED_FEATURE_INDEX_1
-#define index_arch_Fast_Copy_Backward		PREFERRED_FEATURE_INDEX_1
-#define index_arch_Slow_BSF			PREFERRED_FEATURE_INDEX_1
-#define index_arch_Fast_Unaligned_Load		PREFERRED_FEATURE_INDEX_1
-#define index_arch_Prefer_PMINUB_for_stringop 	PREFERRED_FEATURE_INDEX_1
-#define index_arch_Fast_Unaligned_Copy		PREFERRED_FEATURE_INDEX_1
-#define index_arch_I586				PREFERRED_FEATURE_INDEX_1
-#define index_arch_I686				PREFERRED_FEATURE_INDEX_1
-#define index_arch_Slow_SSE4_2			PREFERRED_FEATURE_INDEX_1
-#define index_arch_AVX_Fast_Unaligned_Load	PREFERRED_FEATURE_INDEX_1
-#define index_arch_Prefer_MAP_32BIT_EXEC	PREFERRED_FEATURE_INDEX_1
-#define index_arch_Prefer_No_VZEROUPPER		PREFERRED_FEATURE_INDEX_1
-#define index_arch_Prefer_ERMS			PREFERRED_FEATURE_INDEX_1
-#define index_arch_Prefer_No_AVX512		PREFERRED_FEATURE_INDEX_1
-#define index_arch_MathVec_Prefer_No_AVX512	PREFERRED_FEATURE_INDEX_1
-#define index_arch_Prefer_FSRM			PREFERRED_FEATURE_INDEX_1
+/* PREFERRED_FEATURE_INDEX_1.  First define the bitindex values
+   sequentially, then define the bit_arch* and index_arch_* lookup
+   constants.  */
+enum
+  {
+#define BIT(x) _bitindex_arch_##x ,
+#include "cpu-features-preferred_feature_index_1.def"
+#undef BIT
+  };
+enum
+  {
+#define BIT(x)					\
+    bit_arch_##x = 1u << _bitindex_arch_##x ,	\
+    index_arch_##x = PREFERRED_FEATURE_INDEX_1,
+#include "cpu-features-preferred_feature_index_1.def"
+#undef BIT
+  };
 
 /* XCR0 Feature flags.  */
 #define bit_XMM_state		(1u << 1)
