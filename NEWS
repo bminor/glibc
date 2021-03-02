@@ -14,6 +14,10 @@ Major new features:
   constant on Linux.  MINSIGSTKSZ is redefined to sysconf(_SC_MINSIGSTKSZ)
   and SIGSTKSZ is redefined to sysconf (_SC_SIGSTKSZ).
 
+* The dynamic linker implements the --list-diagnostics option, printing
+  a dump of information related to IFUNC resolver operation and
+  glibc-hwcaps subdirectory selection.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

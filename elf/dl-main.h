@@ -63,7 +63,7 @@ struct audit_list
 enum rtld_mode
   {
     rtld_mode_normal, rtld_mode_list, rtld_mode_verify, rtld_mode_trace,
-    rtld_mode_list_tunables, rtld_mode_help,
+    rtld_mode_list_tunables, rtld_mode_list_diagnostics, rtld_mode_help,
   };
 
 /* Aggregated state information extracted from environment variables
@@ -120,5 +120,8 @@ _Noreturn void _dl_version (void) attribute_hidden;
 /* Print ld.so --help output and exit.  */
 _Noreturn void _dl_help (const char *argv0, struct dl_main_state *state)
   attribute_hidden;
+
+/* Print a diagnostics dump.  */
+_Noreturn void _dl_print_diagnostics (char **environ) attribute_hidden;
 
 #endif /* _DL_MAIN */
