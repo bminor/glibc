@@ -261,6 +261,7 @@ setting environment variables (which would be inherited by subprocesses).\n\
   --list-tunables       list all tunables with minimum and maximum values\n"
 #endif
 "\
+  --list-diagnostics    list diagnostics information\n\
   --help                display this help and exit\n\
   --version             output version information and exit\n\
 \n\

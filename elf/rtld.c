@@ -141,6 +141,7 @@ static void dl_main_state_init (struct dl_main_state *state);
 /* Process all environments variables the dynamic linker must recognize.
    Since all of them start with `LD_' we are a bit smarter while finding
    all the entries.  */
+extern char **_environ attribute_hidden;
 static void process_envvars (struct dl_main_state *state);
 
 #ifdef DL_ARGV_NOT_RELRO
@@ -1287,6 +1288,14 @@ dl_main (const ElfW(Phdr) *phdr,
 	    ++_dl_argv;
 	  }
 #endif
+	else if (! strcmp (_dl_argv[1], "--list-diagnostics"))
+	  {
+	    state.mode = rtld_mode_list_diagnostics;
+
+	    ++_dl_skip_args;
+	    --_dl_argc;
+	    ++_dl_argv;
+	  }
 	else if (strcmp (_dl_argv[1], "--help") == 0)
 	  {
 	    state.mode = rtld_mode_help;
@@ -1314,6 +1323,9 @@ dl_main (const ElfW(Phdr) *phdr,
 	  _exit (0);
 	}
 #endif
+
+      if (state.mode == rtld_mode_list_diagnostics)
+	_dl_print_diagnostics (_environ);
 
       /* If we have no further argument the program was called incorrectly.
 	 Grant the user some education.  */
@@ -2649,12 +2661,6 @@ a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n");
     }
 }
 
-/* Process all environments variables the dynamic linker must recognize.
-   Since all of them start with `LD_' we are a bit smarter while finding
-   all the entries.  */
-extern char **_environ attribute_hidden;
-
-
 static void
 process_envvars (struct dl_main_state *state)
 {

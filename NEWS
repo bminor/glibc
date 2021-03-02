@@ -5,6 +5,15 @@ See the end for copying conditions.
 Please send GNU C library bug reports via <https://sourceware.org/bugzilla/>
 using `glibc' in the "product" field.
 
+Version 2.33.1
+
+Major new features:
+
+* The dynamic linker implements the --list-diagnostics option, printing
+  a dump of information related to IFUNC resolver operation and
+  glibc-hwcaps subdirectory selection.
+
+
 Version 2.33
 
 Major new features:
