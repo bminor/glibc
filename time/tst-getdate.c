@@ -115,20 +115,14 @@ do_test (void)
     {
       setenv ("TZ", tests[i].tz, 1);
 
-      int expected_err;
-      if (sizeof (time_t) == 4 && tests[i].time64)
-	expected_err = 8;
-      else
-	expected_err = 0;
-
       tm = getdate (tests[i].str);
-      TEST_COMPARE (getdate_err, expected_err);
-      if (getdate_err != expected_err)
+      TEST_COMPARE (getdate_err, 0);
+      if (getdate_err != 0)
 	{
 	  support_record_failure ();
 	  printf ("%s\n", report_date_error ());
 	}
-      else if (getdate_err == 0)
+      else
 	{
 	  TEST_COMPARE (tests[i].tm.tm_mon, tm->tm_mon);
 	  TEST_COMPARE (tests[i].tm.tm_year, tm->tm_year);
@@ -139,7 +133,7 @@ do_test (void)
 	}
 
       struct tm tms;
-      TEST_COMPARE (getdate_r (tests[i].str, &tms), expected_err);
+      TEST_COMPARE (getdate_r (tests[i].str, &tms), 0);
       if (getdate_err == 0)
 	{
 	  TEST_COMPARE (tests[i].tm.tm_mon, tms.tm_mon);

@@ -112,16 +112,16 @@ __getdate_r (const char *string, struct tm *tp)
   size_t len;
   char *datemsk;
   char *result = NULL;
-  time_t timer;
+  __time64_t timer;
   struct tm tm;
-  struct stat64 st;
-  int mday_ok = 0;
+  struct __stat64_t64 st;
+  bool mday_ok = false;
 
   datemsk = getenv ("DATEMSK");
   if (datemsk == NULL || *datemsk == '\0')
     return 1;
 
-  if (__stat64 (datemsk, &st) < 0)
+  if (__stat64_time64 (datemsk, &st) < 0)
     return 3;
 
   if (!S_ISREG (st.st_mode))
@@ -219,8 +219,8 @@ __getdate_r (const char *string, struct tm *tp)
     return 7;
 
   /* Get current time.  */
-  timer = time_now ();
-  __localtime_r (&timer, &tm);
+  timer = time64_now ();
+  __localtime64_r (&timer, &tm);
 
   /* If only the weekday is given, today is assumed if the given day
      is equal to the current day and next week if it is less.  */
@@ -230,7 +230,7 @@ __getdate_r (const char *string, struct tm *tp)
       tp->tm_year = tm.tm_year;
       tp->tm_mon = tm.tm_mon;
       tp->tm_mday = tm.tm_mday + (tp->tm_wday - tm.tm_wday + 7) % 7;
-      mday_ok = 1;
+      mday_ok = true;
     }
 
   /* If only the month is given, the current month is assumed if the
@@ -242,7 +242,7 @@ __getdate_r (const char *string, struct tm *tp)
       if (tp->tm_year == INT_MIN)
 	tp->tm_year = tm.tm_year + (((tp->tm_mon - tm.tm_mon) < 0) ? 1 : 0);
       tp->tm_mday = first_wday (tp->tm_year, tp->tm_mon, tp->tm_wday);
-      mday_ok = 1;
+      mday_ok = true;
     }
 
   /* If no hour, minute and second are given the current hour, minute
@@ -285,15 +285,13 @@ __getdate_r (const char *string, struct tm *tp)
      call normalizes the struct tm.  */
   if ((!mday_ok && !check_mday (TM_YEAR_BASE + tp->tm_year, tp->tm_mon,
 				tp->tm_mday))
-      || mktime (tp) == (time_t) -1)
+      || __mktime64 (tp) == (time_t) -1)
     return 8;
 
   return 0;
 }
-#ifdef weak_alias
 weak_alias (__getdate_r, getdate_r)
-#endif
-
+libc_hidden_def (__getdate_r)
 
 struct tm *
 getdate (const char *string)

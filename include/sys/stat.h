@@ -46,7 +46,7 @@ hidden_proto (__lstat64)
 hidden_proto (__fstatat64)
 # endif
 
-# if __TIMESIZE == 64
+# if __TIMESIZE == 64 || defined NO_RTLD_HIDDEN
 #  define __stat64_time64  __stat64
 #  define __fstat64_time64  __fstat64
 #  define __lstat64_time64  __lstat64
