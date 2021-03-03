@@ -2401,6 +2401,7 @@ GLIBC_2.34 __fts64_close_time64 F
 GLIBC_2.34 __fts64_open_time64 F
 GLIBC_2.34 __fts64_read_time64 F
 GLIBC_2.34 __fts64_set_time64 F
+GLIBC_2.34 __ftw64_time64 F
 GLIBC_2.34 __futimens64 F
 GLIBC_2.34 __futimes64 F
 GLIBC_2.34 __futimesat64 F
@@ -2420,6 +2421,7 @@ GLIBC_2.34 __mktime64 F
 GLIBC_2.34 __msgctl64 F
 GLIBC_2.34 __mtx_timedlock64 F
 GLIBC_2.34 __nanosleep64 F
+GLIBC_2.34 __nftw64_time64 F
 GLIBC_2.34 __ntp_gettime64 F
 GLIBC_2.34 __ntp_gettimex64 F
 GLIBC_2.34 __ppoll64 F

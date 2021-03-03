@@ -211,6 +211,8 @@ libc {
     __fts64_read_time64;
     __fts64_set_time64;
     __fts64_children_time64;
+    __ftw64_time64;
+    __nftw64_time64;
     __getitimer64;
     __getrusage64;
     __gettimeofday64;

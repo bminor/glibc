@@ -821,7 +821,7 @@ FTW_NAME (const char *path, FTW_FUNC_T func, int descriptors)
   return ftw_startup (path, 0, func, descriptors, 0);
 }
 
-#ifndef _LIBC
+#ifndef NFTW_OLD_NAME
 int
 NFTW_NAME (const char *path, NFTW_FUNC_T func, int descriptors, int flags)
 {
@@ -844,7 +844,6 @@ NFTW_NEW_NAME (const char *path, NFTW_FUNC_T func, int descriptors, int flags)
     }
   return ftw_startup (path, 1, func, descriptors, flags);
 }
-
 versioned_symbol (libc, NFTW_NEW_NAME, NFTW_NAME, GLIBC_2_3_3);
 
 # if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_3_3)
@@ -863,4 +862,4 @@ NFTW_OLD_NAME (const char *path, NFTW_FUNC_T func, int descriptors, int flags)
 
 compat_symbol (libc, NFTW_OLD_NAME, NFTW_NAME, GLIBC_2_1);
 # endif
-#endif
+#endif /* NFTW_OLD_NAME  */

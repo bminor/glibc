@@ -55,7 +55,8 @@ routines :=								\
 	posix_fallocate posix_fallocate64				\
 	sendfile sendfile64 copy_file_range 				\
 	utimensat futimens file_change_detection			\
-	fts64-time64
+	fts64-time64							\
+	ftw64-time64
 
 others		:= pwd
 test-srcs	:= ftwtest
@@ -106,6 +107,7 @@ CFLAGS-fts64.c += -Wno-uninitialized $(uses-callbacks) -fexceptions
 CFLAGS-fts64-time64.c += -Wno-uninitialized $(uses-callbacks) -fexceptions
 CFLAGS-ftw.c += $(uses-callbacks) -fexceptions
 CFLAGS-ftw64.c += $(uses-callbacks) -fexceptions
+CFLAGS-ftw64-time64.c += $(uses-callbacks) -fexceptions
 CFLAGS-posix_fallocate.c += -fexceptions
 CFLAGS-posix_fallocate64.c += -fexceptions
 CFLAGS-fallocate.c += -fexceptions
