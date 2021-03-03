@@ -31,7 +31,10 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
-  [Add security related changes here]
+  CVE-2021-27645: The nameserver caching daemon (nscd), when processing
+  a request for netgroup lookup, may crash due to a double-free,
+  potentially resulting in degraded service or Denial of Service on the
+  local system.  Reported by Chris Schanzle.
 
 The following bugs are resolved with this release:
 
