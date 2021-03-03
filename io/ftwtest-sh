@@ -43,15 +43,11 @@ export LC_ALL
 
 # First create our scenario:
 tmp=${objpfx}io
-tmpdir=$tmp/ftwtest.d
+tmpdir=$(mktemp -d $tmp/ftwtest.d.XXXXXX)
+ftwtest=$(basename $tmpdir)
 
 trap 'chmod -fR a+x $tmpdir; rm -fr $tmpdir $testout' 0 1 2 3 15
 
-if test -d $tmpdir; then
-  chmod -fR a+x $tmpdir
-  rm -fr $tmpdir
-fi
-mkdir $tmpdir
 mkdir $tmpdir/foo
 mkdir $tmpdir/bar
 echo > $tmpdir/baz
@@ -67,24 +63,24 @@ ln -s $tmpdir/foo/lvl1/lvl2/lvl3/lvl4 $tmpdir/foo/lvl1/link@1
 echo > $tmpdir/bar/xo
 chmod a-x,a+r $tmpdir/bar
 
-testout=$tmp/ftwtest-tmp.out
+testout=$(mktemp $tmp/ftwtest-tmp-XXXXXX.out)
 
 $testprogram $tmpdir |
     sort > $testout
 
 cat <<EOF | cmp $testout - || exit 1
-base = "$tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
-base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
-base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
-base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
-base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS, level = 2
-base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, level = 4
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
+base = "$tmp/", file = "$ftwtest", flag = FTW_D, level = 0
+base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
+base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_NS, level = 2
+base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, level = 2
+base = "$tmp/$ftwtest/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/", file = "link@1", flag = FTW_SLN, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/", file = "lvl2", flag = FTW_D, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
 EOF
 rm $testout
 
@@ -92,18 +88,18 @@ $testprogram --depth $tmpdir |
     sort > $testout
 
 cat <<EOF | cmp $testout - || exit 1
-base = "$tmp/", file = "ftwtest.d", flag = FTW_DP, level = 0
-base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_DP, level = 1
-base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
-base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_DP, level = 1
-base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS, level = 2
-base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_DP, level = 2
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_DP, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_DP, level = 4
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
+base = "$tmp/", file = "$ftwtest", flag = FTW_DP, level = 0
+base = "$tmp/$ftwtest/", file = "bar", flag = FTW_DP, level = 1
+base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
+base = "$tmp/$ftwtest/", file = "foo", flag = FTW_DP, level = 1
+base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_NS, level = 2
+base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_DP, level = 2
+base = "$tmp/$ftwtest/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/", file = "link@1", flag = FTW_SLN, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/", file = "lvl2", flag = FTW_DP, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_DP, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
 EOF
 rm $testout
 
@@ -111,20 +107,20 @@ $testprogram --phys $tmpdir |
     sort > $testout
 
 cat <<EOF | cmp $testout - || exit 1
-base = "$tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
-base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
-base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
-base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
-base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_NS, level = 2
-base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SL, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "link@2", flag = FTW_SL, level = 4
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, level = 4
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "link@3", flag = FTW_SL, level = 5
+base = "$tmp/", file = "$ftwtest", flag = FTW_D, level = 0
+base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
+base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_NS, level = 2
+base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, level = 2
+base = "$tmp/$ftwtest/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/", file = "link@1", flag = FTW_SL, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/", file = "lvl2", flag = FTW_D, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "link@2", flag = FTW_SL, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/lvl3/", file = "link@3", flag = FTW_SL, level = 5
 EOF
 rm $testout
 
@@ -138,73 +134,73 @@ $testprogram --chdir $tmpdir |
 tmpreal=`cd $tmp; pwd -P 2>/dev/null`
 
 cat <<EOF | cmp $testout - || exit 1
-base = "$tmp/", file = "ftwtest.d", flag = FTW_D, cwd = $tmpreal, level = 0
-base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_D, cwd = $tmpreal/ftwtest.d, level = 1
-base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F, cwd = $tmpreal/ftwtest.d, level = 1
-base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_D, cwd = $tmpreal/ftwtest.d, level = 1
-base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_F, cwd = $tmpreal/ftwtest.d/bar, level = 2
-base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo, level = 2
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2, level = 4
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2, level = 4
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2/lvl3, level = 5
+base = "$tmp/", file = "$ftwtest", flag = FTW_D, cwd = $tmpreal, level = 0
+base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
+base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, cwd = $tmpreal/$ftwtest, level = 1
+base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
+base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_F, cwd = $tmpreal/$ftwtest/bar, level = 2
+base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo, level = 2
+base = "$tmp/$ftwtest/foo/lvl1/", file = "file@1", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/", file = "lvl2", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1/lvl2, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo/lvl1/lvl2, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1/lvl2/lvl3, level = 5
 EOF
 rm $testout
 
 curwd=`pwd -P 2>/dev/null`
 cd "$tmp"
-$testprogram --chdir ftwtest.d |
+$testprogram --chdir $ftwtest |
     sort > $testout
 cd "$curwd"
 
 cat <<EOF | diff -u $testout - || exit 1
-base = "", file = "ftwtest.d", flag = FTW_D, cwd = $tmpreal, level = 0
-base = "ftwtest.d/", file = "bar", flag = FTW_D, cwd = $tmpreal/ftwtest.d, level = 1
-base = "ftwtest.d/", file = "baz", flag = FTW_F, cwd = $tmpreal/ftwtest.d, level = 1
-base = "ftwtest.d/", file = "foo", flag = FTW_D, cwd = $tmpreal/ftwtest.d, level = 1
-base = "ftwtest.d/bar/", file = "xo", flag = FTW_F, cwd = $tmpreal/ftwtest.d/bar, level = 2
-base = "ftwtest.d/foo/", file = "lvl1", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo, level = 2
-base = "ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
-base = "ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
-base = "ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
-base = "ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2, level = 4
-base = "ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2, level = 4
-base = "ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2/lvl3, level = 5
+base = "", file = "$ftwtest", flag = FTW_D, cwd = $tmpreal, level = 0
+base = "$ftwtest/", file = "bar", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
+base = "$ftwtest/", file = "baz", flag = FTW_F, cwd = $tmpreal/$ftwtest, level = 1
+base = "$ftwtest/", file = "foo", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
+base = "$ftwtest/bar/", file = "xo", flag = FTW_F, cwd = $tmpreal/$ftwtest/bar, level = 2
+base = "$ftwtest/foo/", file = "lvl1", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo, level = 2
+base = "$ftwtest/foo/lvl1/", file = "file@1", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
+base = "$ftwtest/foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
+base = "$ftwtest/foo/lvl1/", file = "lvl2", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
+base = "$ftwtest/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1/lvl2, level = 4
+base = "$ftwtest/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo/lvl1/lvl2, level = 4
+base = "$ftwtest/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1/lvl2/lvl3, level = 5
 EOF
 rm $testout
 
 curwd=`pwd -P`
 cd "$tmp"
-$testprogram --chdir ftwtest.d/. |
+$testprogram --chdir $ftwtest/. |
     sort > $testout
 cd "$curwd"
 
 cat <<EOF | diff -u $testout - || exit 1
-base = "ftwtest.d/", file = ".", flag = FTW_D, cwd = $tmpreal/ftwtest.d, level = 0
-base = "ftwtest.d/./", file = "bar", flag = FTW_D, cwd = $tmpreal/ftwtest.d, level = 1
-base = "ftwtest.d/./", file = "baz", flag = FTW_F, cwd = $tmpreal/ftwtest.d, level = 1
-base = "ftwtest.d/./", file = "foo", flag = FTW_D, cwd = $tmpreal/ftwtest.d, level = 1
-base = "ftwtest.d/./bar/", file = "xo", flag = FTW_F, cwd = $tmpreal/ftwtest.d/bar, level = 2
-base = "ftwtest.d/./foo/", file = "lvl1", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo, level = 2
-base = "ftwtest.d/./foo/lvl1/", file = "file@1", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
-base = "ftwtest.d/./foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
-base = "ftwtest.d/./foo/lvl1/", file = "lvl2", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
-base = "ftwtest.d/./foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2, level = 4
-base = "ftwtest.d/./foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2, level = 4
-base = "ftwtest.d/./foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2/lvl3, level = 5
+base = "$ftwtest/", file = ".", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 0
+base = "$ftwtest/./", file = "bar", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
+base = "$ftwtest/./", file = "baz", flag = FTW_F, cwd = $tmpreal/$ftwtest, level = 1
+base = "$ftwtest/./", file = "foo", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
+base = "$ftwtest/./bar/", file = "xo", flag = FTW_F, cwd = $tmpreal/$ftwtest/bar, level = 2
+base = "$ftwtest/./foo/", file = "lvl1", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo, level = 2
+base = "$ftwtest/./foo/lvl1/", file = "file@1", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
+base = "$ftwtest/./foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
+base = "$ftwtest/./foo/lvl1/", file = "lvl2", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
+base = "$ftwtest/./foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1/lvl2, level = 4
+base = "$ftwtest/./foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo/lvl1/lvl2, level = 4
+base = "$ftwtest/./foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1/lvl2/lvl3, level = 5
 EOF
 rm $testout
 
 curwd=`pwd -P 2>/dev/null`
 cd "$tmp"
-$testprogram --chdir ftwtest.d/foo/lvl1/link@1 |
+$testprogram --chdir $ftwtest/foo/lvl1/link@1 |
     sort > $testout
 cd "$curwd"
 
 cat <<EOF | diff -u $testout - || exit 1
-base = "ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 0
+base = "$ftwtest/foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 0
 EOF
 rm $testout
 
@@ -212,7 +208,7 @@ $testprogram --early-exit $tmpdir |
     sort > $testout
 
 cat <<EOF | cmp $testout - || exit 1
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
 succeeded
 EOF
 rm $testout
@@ -226,16 +222,16 @@ $testprogram --skip-subtree=lvl1 $tmpdir |
     sort > $testout
 
 cat <<EOF | diff -u $testout - || exit 1
-base = "$tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
-base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
-base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
-base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
-base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_F, level = 2
-base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
-base = "$tmp/ftwtest.d/foo/", file = "lvl1b", flag = FTW_D, level = 2
-base = "$tmp/ftwtest.d/foo/lvl1b/", file = "file2@1b", flag = FTW_F, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1b/", file = "file3@1b", flag = FTW_F, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1b/", file = "file@1b", flag = FTW_F, level = 3
+base = "$tmp/", file = "$ftwtest", flag = FTW_D, level = 0
+base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
+base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_F, level = 2
+base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, level = 2
+base = "$tmp/$ftwtest/foo/", file = "lvl1b", flag = FTW_D, level = 2
+base = "$tmp/$ftwtest/foo/lvl1b/", file = "file2@1b", flag = FTW_F, level = 3
+base = "$tmp/$ftwtest/foo/lvl1b/", file = "file3@1b", flag = FTW_F, level = 3
+base = "$tmp/$ftwtest/foo/lvl1b/", file = "file@1b", flag = FTW_F, level = 3
 EOF
 rm $testout
 
@@ -250,16 +246,16 @@ catcmd=cat
   && catcmd="grep -v lvl1b"
 
 $catcmd <<EOF | diff -u $testout - || exit 1
-base = "$tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
-base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
-base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
-base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
-base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_F, level = 2
-base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
-base = "$tmp/ftwtest.d/foo/", file = "lvl1b", flag = FTW_D, level = 2
-base = "$tmp/ftwtest.d/foo/lvl1b/", file = "file2@1b", flag = FTW_F, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1b/", file = "file3@1b", flag = FTW_F, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1b/", file = "file@1b", flag = FTW_F, level = 3
+base = "$tmp/", file = "$ftwtest", flag = FTW_D, level = 0
+base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
+base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_F, level = 2
+base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, level = 2
+base = "$tmp/$ftwtest/foo/", file = "lvl1b", flag = FTW_D, level = 2
+base = "$tmp/$ftwtest/foo/lvl1b/", file = "file2@1b", flag = FTW_F, level = 3
+base = "$tmp/$ftwtest/foo/lvl1b/", file = "file3@1b", flag = FTW_F, level = 3
+base = "$tmp/$ftwtest/foo/lvl1b/", file = "file@1b", flag = FTW_F, level = 3
 EOF
 rm $testout
 
@@ -269,28 +265,28 @@ $testprogram --skip-siblings=file@1b $tmpdir |
 # The filesystem is not required to put file2@1b and file3@1b after file@1b.
 # If file[23]@1b come after file@1b, it shouldn't be printed, while if they
 # come before, they should.
-regexp=`echo $(ls -U $tmp/ftwtest.d/foo/lvl1b \
+regexp=`echo $(ls -U $tmp/$ftwtest/foo/lvl1b \
 	       | sed -n '/file@1b$/,${/file[23]@1b$/p;}') | sed 's, ,|,'`
 catcmd=cat
 [ -n "$regexp" ] && catcmd="egrep -v $regexp"
 
 $catcmd <<EOF | diff -u $testout - || exit 1
-base = "$tmp/", file = "ftwtest.d", flag = FTW_D, level = 0
-base = "$tmp/ftwtest.d/", file = "bar", flag = FTW_D, level = 1
-base = "$tmp/ftwtest.d/", file = "baz", flag = FTW_F, level = 1
-base = "$tmp/ftwtest.d/", file = "foo", flag = FTW_D, level = 1
-base = "$tmp/ftwtest.d/bar/", file = "xo", flag = FTW_F, level = 2
-base = "$tmp/ftwtest.d/foo/", file = "lvl1", flag = FTW_D, level = 2
-base = "$tmp/ftwtest.d/foo/", file = "lvl1b", flag = FTW_D, level = 2
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, level = 4
-base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
-base = "$tmp/ftwtest.d/foo/lvl1b/", file = "file2@1b", flag = FTW_F, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1b/", file = "file3@1b", flag = FTW_F, level = 3
-base = "$tmp/ftwtest.d/foo/lvl1b/", file = "file@1b", flag = FTW_F, level = 3
+base = "$tmp/", file = "$ftwtest", flag = FTW_D, level = 0
+base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
+base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_F, level = 2
+base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, level = 2
+base = "$tmp/$ftwtest/foo/", file = "lvl1b", flag = FTW_D, level = 2
+base = "$tmp/$ftwtest/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/", file = "link@1", flag = FTW_SLN, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/", file = "lvl2", flag = FTW_D, level = 3
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, level = 4
+base = "$tmp/$ftwtest/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, level = 5
+base = "$tmp/$ftwtest/foo/lvl1b/", file = "file2@1b", flag = FTW_F, level = 3
+base = "$tmp/$ftwtest/foo/lvl1b/", file = "file3@1b", flag = FTW_F, level = 3
+base = "$tmp/$ftwtest/foo/lvl1b/", file = "file@1b", flag = FTW_F, level = 3
 EOF
 rm $testout
 
