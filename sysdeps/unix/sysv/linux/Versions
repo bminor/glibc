@@ -206,6 +206,11 @@ libc {
     __futimens64;
     __futimes64;
     __futimesat64;
+    __fts64_open_time64;
+    __fts64_close_time64;
+    __fts64_read_time64;
+    __fts64_set_time64;
+    __fts64_children_time64;
     __getitimer64;
     __getrusage64;
     __gettimeofday64;
