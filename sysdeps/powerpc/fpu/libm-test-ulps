@@ -28,7 +28,7 @@ ldouble: 2
 Function: "acosh":
 double: 2
 float: 2
-float128: 2
+float128: 4
 ldouble: 2
 
 Function: "acosh_downward":
@@ -80,7 +80,7 @@ ldouble: 2
 Function: "asinh":
 double: 2
 float: 2
-float128: 3
+float128: 4
 ldouble: 2
 
 Function: "asinh_downward":
@@ -151,7 +151,7 @@ ldouble: 2
 Function: "atanh":
 double: 2
 float: 2
-float128: 3
+float128: 4
 ldouble: 2
 
 Function: "atanh_downward":
@@ -771,7 +771,7 @@ ldouble: 4
 Function: "cos":
 double: 1
 float: 3
-float128: 1
+float128: 2
 ldouble: 4
 
 Function: "cos_downward":
@@ -1130,7 +1130,7 @@ ldouble: 3
 Function: "erfc":
 double: 2
 float: 2
-float128: 2
+float128: 4
 ldouble: 3
 
 Function: "erfc_downward":
@@ -1220,7 +1220,7 @@ ldouble: 1
 Function: "expm1":
 double: 1
 float: 1
-float128: 1
+float128: 2
 ldouble: 1
 
 Function: "expm1_downward":
@@ -1414,7 +1414,7 @@ ldouble: 1
 Function: "log10":
 double: 2
 float: 2
-float128: 1
+float128: 2
 ldouble: 1
 
 Function: "log10_downward":
@@ -1438,7 +1438,7 @@ ldouble: 2
 Function: "log1p":
 double: 1
 float: 1
-float128: 2
+float128: 3
 ldouble: 2
 
 Function: "log1p_downward":
@@ -1462,7 +1462,7 @@ ldouble: 3
 Function: "log2":
 double: 1
 float: 1
-float128: 2
+float128: 3
 ldouble: 1
 
 Function: "log2_downward":
@@ -1548,7 +1548,7 @@ ldouble: 1
 Function: "sin":
 double: 1
 float: 1
-float128: 1
+float128: 2
 ldouble: 1
 
 Function: "sin_downward":
