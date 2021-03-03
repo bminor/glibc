@@ -22,6 +22,11 @@ Security related changes:
   converted output contains a combined sequence of two wide characters
   crossing a buffer boundary.  Reported by Tavis Ormandy.
 
+  CVE-2021-27645: The nameserver caching daemon (nscd), when processing
+  a request for netgroup lookup, may crash due to a double-free,
+  potentially resulting in degraded service or Denial of Service on the
+  local system.  Reported by Chris Schanzle.
+
   CVE-2021-33574: The mq_notify function has a potential use-after-free
   issue when using a notification type of SIGEV_THREAD and a thread
   attribute with a non-default affinity mask.
