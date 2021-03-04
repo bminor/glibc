@@ -111,11 +111,11 @@ __pthread_once_slow (pthread_once_t *once_control, void (*init_routine) (void))
       /* This thread is the first here.  Do the initialization.
 	 Register a cleanup handler so that in case the thread gets
 	 interrupted the initialization can be restarted.  */
-      pthread_cleanup_push (clear_once_control, once_control);
+      pthread_cleanup_combined_push (clear_once_control, once_control);
 
       init_routine ();
 
-      pthread_cleanup_pop (0);
+      pthread_cleanup_combined_pop (0);
 
 
       /* Mark *once_control as having finished the initialization.  We need

@@ -231,7 +231,7 @@ generated += $(objpfx)tst-atfork2.mtrace \
 
 tests-internal += tst-cancel25 tst-robust8
 
-tests += tst-oncex3 tst-oncex4
+tests += tst-oncex3 tst-oncex4 tst-oncey3 tst-oncey4
 
 modules-names += tst-join7mod
 
@@ -242,6 +242,8 @@ endif
 
 CFLAGS-tst-oncex3.c += -fexceptions
 CFLAGS-tst-oncex4.c += -fexceptions
+CFLAGS-tst-oncey3.c += -fno-exceptions -fno-asynchronous-unwind-tables
+CFLAGS-tst-oncey4.c += -fno-exceptions -fno-asynchronous-unwind-tables
 
 $(objpfx)tst-join7: $(libdl) $(shared-thread-library)
 $(objpfx)tst-join7.out: $(objpfx)tst-join7mod.so

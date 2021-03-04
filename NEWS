@@ -15,6 +15,7 @@ Major new features:
 
 The following bugs are resolved with this release:
 
+  [18435] pthread_once hangs when init routine throws an exception
   [23462] Static binary with dynamic string tokens ($LIB, $PLATFORM, $ORIGIN)
     crashes
   [27577] elf/ld.so --help doesn't work
