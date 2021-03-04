@@ -386,10 +386,6 @@ xtests += tst-eintr1
 
 test-srcs = tst-oddstacklimit
 
-# Test expected to fail on most targets (except x86_64) due to bug
-# 18435 - pthread_once hangs when init routine throws an exception.
-test-xfail-tst-once5 = yes
-
 gen-as-const-headers = unwindbuf.sym \
 		       pthread-pi-defines.sym
 

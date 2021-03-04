@@ -59,7 +59,7 @@ do_test (void)
                " throwing an exception", stderr);
     }
     catch (OnceException) {
-      if (1 < niter)
+      if (niter > 1)
         fputs ("pthread_once unexpectedly threw", stderr);
       result = 0;
     }
@@ -75,7 +75,5 @@ do_test (void)
   return result;
 }
 
-// The test currently hangs and is XFAILed.  Reduce the timeout.
-#define TIMEOUT 1
 #define TEST_FUNCTION do_test ()
 #include "../test-skeleton.c"
