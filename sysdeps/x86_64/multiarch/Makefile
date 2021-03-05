@@ -43,11 +43,17 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c \
 		   memchr-evex \
 		   memrchr-evex \
 		   rawmemchr-evex \
+		   stpcpy-evex \
+		   stpncpy-evex \
+		   strcat-evex \
 		   strchr-evex \
 		   strchrnul-evex \
 		   strcmp-evex \
+		   strcpy-evex \
 		   strlen-evex \
+		   strncat-evex \
 		   strncmp-evex \
+		   strncpy-evex \
 		   strnlen-evex \
 		   strrchr-evex
 CFLAGS-varshift.c += -msse4
