@@ -95,6 +95,28 @@ lose:									      \
 #define R14_LP	r14
 #define R15_LP	r15
 
+/* Zero upper vector registers and return with xtest.  NB: Use VZEROALL
+   to avoid RTM abort triggered by VZEROUPPER inside transactionally.  */
+#define ZERO_UPPER_VEC_REGISTERS_RETURN_XTEST \
+	xtest;							\
+	jz	1f;						\
+	vzeroall;						\
+	ret;							\
+1:								\
+	vzeroupper;						\
+	ret
+
+/* Zero upper vector registers and return.  */
+#ifndef ZERO_UPPER_VEC_REGISTERS_RETURN
+# define ZERO_UPPER_VEC_REGISTERS_RETURN \
+	VZEROUPPER;						\
+	ret
+#endif
+
+#ifndef VZEROUPPER_RETURN
+# define VZEROUPPER_RETURN	VZEROUPPER; ret
+#endif
+
 #else	/* __ASSEMBLER__ */
 
 /* Long and pointer size in bytes.  */

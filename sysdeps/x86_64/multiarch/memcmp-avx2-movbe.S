@@ -47,6 +47,10 @@
 #  define VZEROUPPER	vzeroupper
 # endif
 
+# ifndef SECTION
+#  define SECTION(p)	p##.avx
+# endif
+
 # define VEC_SIZE 32
 # define VEC_MASK ((1 << VEC_SIZE) - 1)
 
@@ -55,7 +59,7 @@
            memcmp has to use UNSIGNED comparison for elemnts.
 */
 
-	.section .text.avx,"ax",@progbits
+	.section SECTION(.text),"ax",@progbits
 ENTRY (MEMCMP)
 # ifdef USE_AS_WMEMCMP
 	shl	$2, %RDX_LP
@@ -123,8 +127,8 @@ ENTRY (MEMCMP)
 	vptest	%ymm0, %ymm5
 	jnc	L(4x_vec_end)
 	xorl	%eax, %eax
-	VZEROUPPER
-	ret
+L(return_vzeroupper):
+	ZERO_UPPER_VEC_REGISTERS_RETURN
 
 	.p2align 4
 L(last_2x_vec):
@@ -144,8 +148,7 @@ L(last_vec):
 	vpmovmskb %ymm2, %eax
 	subl    $VEC_MASK, %eax
 	jnz	L(first_vec)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec):
@@ -164,8 +167,7 @@ L(wmemcmp_return):
 	movzbl	(%rsi, %rcx), %edx
 	sub	%edx, %eax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 # ifdef USE_AS_WMEMCMP
 	.p2align 4
@@ -367,8 +369,7 @@ L(last_4x_vec):
 	vpmovmskb %ymm2, %eax
 	subl    $VEC_MASK, %eax
 	jnz	L(first_vec)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(4x_vec_end):
@@ -394,8 +395,7 @@ L(4x_vec_end):
 	movzbl	(VEC_SIZE * 3)(%rsi, %rcx), %edx
 	sub	%edx, %eax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x1):
@@ -410,8 +410,7 @@ L(first_vec_x1):
 	movzbl	VEC_SIZE(%rsi, %rcx), %edx
 	sub	%edx, %eax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x2):
@@ -426,7 +425,6 @@ L(first_vec_x2):
 	movzbl	(VEC_SIZE * 2)(%rsi, %rcx), %edx
 	sub	%edx, %eax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 END (MEMCMP)
 #endif

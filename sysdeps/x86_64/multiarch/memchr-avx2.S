@@ -34,9 +34,13 @@
 #  define VZEROUPPER	vzeroupper
 # endif
 
+# ifndef SECTION
+#  define SECTION(p)	p##.avx
+# endif
+
 # define VEC_SIZE 32
 
-	.section .text.avx,"ax",@progbits
+	.section SECTION(.text),"ax",@progbits
 ENTRY (MEMCHR)
 # ifndef USE_AS_RAWMEMCHR
 	/* Check for zero length.  */
@@ -107,8 +111,8 @@ L(cros_page_boundary):
 # endif
 	addq	%rdi, %rax
 	addq	%rcx, %rax
-	VZEROUPPER
-	ret
+L(return_vzeroupper):
+	ZERO_UPPER_VEC_REGISTERS_RETURN
 
 	.p2align 4
 L(aligned_more):
@@ -224,8 +228,7 @@ L(last_4x_vec_or_less):
 
 	jnz	L(first_vec_x3_check)
 	xorl	%eax, %eax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(last_2x_vec):
@@ -243,8 +246,7 @@ L(last_2x_vec):
 	testl	%eax, %eax
 	jnz	L(first_vec_x1_check)
 	xorl	%eax, %eax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x0_check):
@@ -253,8 +255,7 @@ L(first_vec_x0_check):
 	cmpq	%rax, %rdx
 	jbe	L(zero)
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x1_check):
@@ -264,8 +265,7 @@ L(first_vec_x1_check):
 	jbe	L(zero)
 	addq	$VEC_SIZE, %rax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x2_check):
@@ -275,8 +275,7 @@ L(first_vec_x2_check):
 	jbe	L(zero)
 	addq	$(VEC_SIZE * 2), %rax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x3_check):
@@ -286,12 +285,14 @@ L(first_vec_x3_check):
 	jbe	L(zero)
 	addq	$(VEC_SIZE * 3), %rax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(zero):
-	VZEROUPPER
+	xorl	%eax, %eax
+	jmp     L(return_vzeroupper)
+
+	.p2align 4
 L(null):
 	xorl	%eax, %eax
 	ret
@@ -301,24 +302,21 @@ L(null):
 L(first_vec_x0):
 	tzcntl	%eax, %eax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x1):
 	tzcntl	%eax, %eax
 	addq	$VEC_SIZE, %rax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x2):
 	tzcntl	%eax, %eax
 	addq	$(VEC_SIZE * 2), %rax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(4x_vec_end):
@@ -337,8 +335,7 @@ L(first_vec_x3):
 	tzcntl	%eax, %eax
 	addq	$(VEC_SIZE * 3), %rax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 END (MEMCHR)
 #endif
