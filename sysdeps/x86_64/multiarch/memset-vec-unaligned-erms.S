@@ -34,6 +34,14 @@
 # define WMEMSET_CHK_SYMBOL(p,s)	WMEMSET_SYMBOL(p, s)
 #endif
 
+#ifndef XMM0
+# define XMM0				xmm0
+#endif
+
+#ifndef YMM0
+# define YMM0				ymm0
+#endif
+
 #ifndef VZEROUPPER
 # if VEC_SIZE > 16
 #  define VZEROUPPER			vzeroupper
@@ -67,7 +75,7 @@
 ENTRY (__bzero)
 	mov	%RDI_LP, %RAX_LP /* Set return value.  */
 	mov	%RSI_LP, %RDX_LP /* Set n.  */
-	pxor	%xmm0, %xmm0
+	pxor	%XMM0, %XMM0
 	jmp	L(entry_from_bzero)
 END (__bzero)
 weak_alias (__bzero, bzero)
@@ -223,7 +231,7 @@ L(less_vec):
 	cmpb	$16, %dl
 	jae	L(between_16_31)
 # endif
-	MOVQ	%xmm0, %rcx
+	MOVQ	%XMM0, %rcx
 	cmpb	$8, %dl
 	jae	L(between_8_15)
 	cmpb	$4, %dl
@@ -238,16 +246,16 @@ L(less_vec):
 # if VEC_SIZE > 32
 	/* From 32 to 63.  No branch when size == 32.  */
 L(between_32_63):
-	vmovdqu	%ymm0, -32(%rdi,%rdx)
-	vmovdqu	%ymm0, (%rdi)
+	VMOVU	%YMM0, -32(%rdi,%rdx)
+	VMOVU	%YMM0, (%rdi)
 	VZEROUPPER
 	ret
 # endif
 # if VEC_SIZE > 16
 	/* From 16 to 31.  No branch when size == 16.  */
 L(between_16_31):
-	vmovdqu	%xmm0, -16(%rdi,%rdx)
-	vmovdqu	%xmm0, (%rdi)
+	VMOVU	%XMM0, -16(%rdi,%rdx)
+	VMOVU	%XMM0, (%rdi)
 	VZEROUPPER
 	ret
 # endif

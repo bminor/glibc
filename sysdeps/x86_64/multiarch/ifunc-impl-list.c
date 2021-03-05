@@ -161,6 +161,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      CPU_FEATURE_USABLE (AVX2),
 			      __memset_chk_avx2_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memset_chk,
+			      (CPU_FEATURE_USABLE (AVX512VL)
+			       && CPU_FEATURE_USABLE (AVX512BW)),
+			      __memset_chk_evex_unaligned)
+	      IFUNC_IMPL_ADD (array, i, __memset_chk,
+			      (CPU_FEATURE_USABLE (AVX512VL)
+			       && CPU_FEATURE_USABLE (AVX512BW)),
+			      __memset_chk_evex_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, __memset_chk,
 			      CPU_FEATURE_USABLE (AVX512F),
 			      __memset_chk_avx512_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memset_chk,
@@ -185,6 +193,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memset,
 			      CPU_FEATURE_USABLE (AVX2),
 			      __memset_avx2_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, memset,
+			      (CPU_FEATURE_USABLE (AVX512VL)
+			       && CPU_FEATURE_USABLE (AVX512BW)),
+			      __memset_evex_unaligned)
+	      IFUNC_IMPL_ADD (array, i, memset,
+			      (CPU_FEATURE_USABLE (AVX512VL)
+			       && CPU_FEATURE_USABLE (AVX512BW)),
+			      __memset_evex_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, memset,
 			      CPU_FEATURE_USABLE (AVX512F),
 			      __memset_avx512_unaligned_erms)
@@ -556,6 +572,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      CPU_FEATURE_USABLE (AVX2),
 			      __wmemset_avx2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, wmemset,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __wmemset_evex_unaligned)
+	      IFUNC_IMPL_ADD (array, i, wmemset,
 			      CPU_FEATURE_USABLE (AVX512F),
 			      __wmemset_avx512_unaligned))
 
@@ -723,6 +742,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, __wmemset_chk,
 			      CPU_FEATURE_USABLE (AVX2),
 			      __wmemset_chk_avx2_unaligned)
+	      IFUNC_IMPL_ADD (array, i, __wmemset_chk,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __wmemset_chk_evex_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __wmemset_chk,
 			      CPU_FEATURE_USABLE (AVX512F),
 			      __wmemset_chk_avx512_unaligned))
