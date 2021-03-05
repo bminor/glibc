@@ -42,6 +42,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c \
 		   memset-avx2-unaligned-erms \
 		   memset-avx512-unaligned-erms \
 		   memchr-evex \
+		   memcmp-evex-movbe \
 		   memmove-evex-unaligned-erms \
 		   memrchr-evex \
 		   memset-evex-unaligned-erms \
@@ -82,7 +83,8 @@ sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c \
 		   wcsncmp-evex \
 		   wcsnlen-evex \
 		   wcsrchr-evex \
-		   wmemchr-evex
+		   wmemchr-evex \
+		   wmemcmp-evex-movbe
 endif
 
 ifeq ($(subdir),debug)

@@ -56,6 +56,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      (HAS_ARCH_FEATURE (AVX2_Usable)
 			       && HAS_CPU_FEATURE (MOVBE)),
 			      __memcmp_avx2_movbe)
+	      IFUNC_IMPL_ADD (array, i, memcmp,
+			      (HAS_ARCH_FEATURE (AVX512VL_Usable)
+			       && HAS_ARCH_FEATURE (AVX512BW_Usable)
+			       && HAS_CPU_FEATURE (MOVBE)),
+			      __memcmp_evex_movbe)
 	      IFUNC_IMPL_ADD (array, i, memcmp, HAS_CPU_FEATURE (SSE4_1),
 			      __memcmp_sse4_1)
 	      IFUNC_IMPL_ADD (array, i, memcmp, HAS_CPU_FEATURE (SSSE3),
@@ -546,6 +551,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      (HAS_ARCH_FEATURE (AVX2_Usable)
 			       && HAS_CPU_FEATURE (MOVBE)),
 			      __wmemcmp_avx2_movbe)
+	      IFUNC_IMPL_ADD (array, i, wmemcmp,
+			      (HAS_ARCH_FEATURE (AVX512VL_Usable)
+			       && HAS_ARCH_FEATURE (AVX512BW_Usable)
+			       && HAS_CPU_FEATURE (MOVBE)),
+			      __wmemcmp_evex_movbe)
 	      IFUNC_IMPL_ADD (array, i, wmemcmp, HAS_CPU_FEATURE (SSE4_1),
 			      __wmemcmp_sse4_1)
 	      IFUNC_IMPL_ADD (array, i, wmemcmp, HAS_CPU_FEATURE (SSSE3),
