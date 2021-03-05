@@ -39,7 +39,17 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c \
 		   memmove-avx512-unaligned-erms \
 		   memset-sse2-unaligned-erms \
 		   memset-avx2-unaligned-erms \
-		   memset-avx512-unaligned-erms
+		   memset-avx512-unaligned-erms \
+		   memchr-evex \
+		   memrchr-evex \
+		   rawmemchr-evex \
+		   strchr-evex \
+		   strchrnul-evex \
+		   strcmp-evex \
+		   strlen-evex \
+		   strncmp-evex \
+		   strnlen-evex \
+		   strrchr-evex
 CFLAGS-varshift.c += -msse4
 CFLAGS-strcspn-c.c += -msse4
 CFLAGS-strpbrk-c.c += -msse4
@@ -56,7 +66,14 @@ sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c \
 		   wcschr-sse2 wcschr-avx2 \
 		   wcsrchr-sse2 wcsrchr-avx2 \
 		   wcsnlen-sse4_1 wcsnlen-c \
-		   wcslen-sse2 wcslen-avx2 wcsnlen-avx2
+		   wcslen-sse2 wcslen-avx2 wcsnlen-avx2 \
+		   wcschr-evex \
+		   wcscmp-evex \
+		   wcslen-evex \
+		   wcsncmp-evex \
+		   wcsnlen-evex \
+		   wcsrchr-evex \
+		   wmemchr-evex
 endif
 
 ifeq ($(subdir),debug)
