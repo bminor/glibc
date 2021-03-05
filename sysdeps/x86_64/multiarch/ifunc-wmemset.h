@@ -20,6 +20,8 @@
 
 extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_unaligned) attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_unaligned_rtm)
+  attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (evex_unaligned) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx512_unaligned) attribute_hidden;
 
@@ -38,6 +40,9 @@ IFUNC_SELECTOR (void)
 
       if (CPU_FEATURE_USABLE_P (cpu_features, AVX512VL))
 	return OPTIMIZE (evex_unaligned);
+
+      if (CPU_FEATURE_USABLE_P (cpu_features, RTM))
+	return OPTIMIZE (avx2_unaligned_rtm);
 
       if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER))
 	return OPTIMIZE (avx2_unaligned);

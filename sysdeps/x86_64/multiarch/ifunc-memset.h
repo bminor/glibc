@@ -27,6 +27,10 @@ extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned_erms)
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_unaligned) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_unaligned_erms)
   attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_unaligned_rtm)
+  attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_unaligned_erms_rtm)
+  attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (evex_unaligned)
   attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (evex_unaligned_erms)
@@ -67,6 +71,14 @@ IFUNC_SELECTOR (void)
 	    return OPTIMIZE (evex_unaligned_erms);
 
 	  return OPTIMIZE (evex_unaligned);
+	}
+
+      if (CPU_FEATURE_USABLE_P (cpu_features, RTM))
+	{
+	  if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+	    return OPTIMIZE (avx2_unaligned_erms_rtm);
+
+	  return OPTIMIZE (avx2_unaligned_rtm);
 	}
 
       if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER))

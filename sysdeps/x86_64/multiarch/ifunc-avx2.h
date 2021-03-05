@@ -21,6 +21,7 @@
 
 extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2) attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_rtm) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (evex) attribute_hidden;
 
 static inline void *
@@ -35,6 +36,9 @@ IFUNC_SELECTOR (void)
 	  && CPU_FEATURE_USABLE_P (cpu_features, AVX512BW)
 	  && CPU_FEATURE_USABLE_P (cpu_features, BMI2))
 	return OPTIMIZE (evex);
+
+      if (CPU_FEATURE_USABLE_P (cpu_features, RTM))
+	return OPTIMIZE (avx2_rtm);
 
       if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER))
 	return OPTIMIZE (avx2);
