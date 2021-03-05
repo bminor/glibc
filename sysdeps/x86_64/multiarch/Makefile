@@ -40,6 +40,25 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c \
 		   memset-sse2-unaligned-erms \
 		   memset-avx2-unaligned-erms \
 		   memset-avx512-unaligned-erms \
+		   memchr-avx2-rtm \
+		   memcmp-avx2-movbe-rtm \
+		   memmove-avx-unaligned-erms-rtm \
+		   memrchr-avx2-rtm \
+		   memset-avx2-unaligned-erms-rtm \
+		   rawmemchr-avx2-rtm \
+		   strchr-avx2-rtm \
+		   strcmp-avx2-rtm \
+		   strchrnul-avx2-rtm \
+		   stpcpy-avx2-rtm \
+		   stpncpy-avx2-rtm \
+		   strcat-avx2-rtm \
+		   strcpy-avx2-rtm \
+		   strlen-avx2-rtm \
+		   strncat-avx2-rtm \
+		   strncmp-avx2-rtm \
+		   strncpy-avx2-rtm \
+		   strnlen-avx2-rtm \
+		   strrchr-avx2-rtm \
 		   memchr-evex \
 		   memcmp-evex-movbe \
 		   memmove-evex-unaligned-erms \
@@ -76,6 +95,14 @@ sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c \
 		   wcsrchr-sse2 wcsrchr-avx2 \
 		   wcsnlen-sse4_1 wcsnlen-c \
 		   wcslen-sse2 wcslen-avx2 wcsnlen-avx2 \
+		   wcschr-avx2-rtm \
+		   wcscmp-avx2-rtm \
+		   wcslen-avx2-rtm \
+		   wcsncmp-avx2-rtm \
+		   wcsnlen-avx2-rtm \
+		   wcsrchr-avx2-rtm \
+		   wmemchr-avx2-rtm \
+		   wmemcmp-avx2-movbe-rtm \
 		   wcschr-evex \
 		   wcscmp-evex \
 		   wcslen-evex \

@@ -38,9 +38,13 @@
 #  define VZEROUPPER	vzeroupper
 # endif
 
+# ifndef SECTION
+#  define SECTION(p)	p##.avx
+# endif
+
 # define VEC_SIZE 32
 
-	.section .text.avx,"ax",@progbits
+	.section SECTION(.text),"ax",@progbits
 ENTRY (STRCHR)
 	movl	%edi, %ecx
 	/* Broadcast CHAR to YMM0.  */
@@ -93,8 +97,8 @@ L(cros_page_boundary):
 	cmp	(%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+L(return_vzeroupper):
+	ZERO_UPPER_VEC_REGISTERS_RETURN
 
 	.p2align 4
 L(aligned_more):
@@ -190,8 +194,7 @@ L(first_vec_x0):
 	cmp	(%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x1):
@@ -205,8 +208,7 @@ L(first_vec_x1):
 	cmp	(%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x2):
@@ -220,8 +222,7 @@ L(first_vec_x2):
 	cmp	(%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(4x_vec_end):
@@ -247,8 +248,7 @@ L(first_vec_x3):
 	cmp	(%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 END (STRCHR)
 #endif

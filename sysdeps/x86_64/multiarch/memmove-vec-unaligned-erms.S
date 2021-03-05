@@ -147,11 +147,12 @@ L(last_2x_vec):
 	VMOVU	-VEC_SIZE(%rsi,%rdx), %VEC(1)
 	VMOVU	%VEC(0), (%rdi)
 	VMOVU	%VEC(1), -VEC_SIZE(%rdi,%rdx)
-	VZEROUPPER
 #if !defined USE_MULTIARCH || !IS_IN (libc)
 L(nop):
-#endif
 	ret
+#else
+	VZEROUPPER_RETURN
+#endif
 #if defined USE_MULTIARCH && IS_IN (libc)
 END (MEMMOVE_SYMBOL (__memmove, unaligned))
 
@@ -244,8 +245,11 @@ L(last_2x_vec):
 	VMOVU	%VEC(0), (%rdi)
 	VMOVU	%VEC(1), -VEC_SIZE(%rdi,%rdx)
 L(return):
-	VZEROUPPER
+#if VEC_SIZE > 16
+	ZERO_UPPER_VEC_REGISTERS_RETURN
+#else
 	ret
+#endif
 
 L(movsb):
 	cmp	__x86_shared_non_temporal_threshold(%rip), %RDX_LP
@@ -310,8 +314,7 @@ L(between_32_63):
 	VMOVU	-32(%rsi,%rdx), %YMM1
 	VMOVU	%YMM0, (%rdi)
 	VMOVU	%YMM1, -32(%rdi,%rdx)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 #endif
 #if VEC_SIZE > 16
 	/* From 16 to 31.  No branch when size == 16.  */
@@ -320,7 +323,7 @@ L(between_16_31):
 	VMOVU	-16(%rsi,%rdx), %XMM1
 	VMOVU	%XMM0, (%rdi)
 	VMOVU	%XMM1, -16(%rdi,%rdx)
-	ret
+	VZEROUPPER_RETURN
 #endif
 L(between_8_15):
 	/* From 8 to 15.  No branch when size == 8.  */
@@ -373,8 +376,7 @@ L(more_2x_vec):
 	VMOVU	%VEC(5), -(VEC_SIZE * 2)(%rdi,%rdx)
 	VMOVU	%VEC(6), -(VEC_SIZE * 3)(%rdi,%rdx)
 	VMOVU	%VEC(7), -(VEC_SIZE * 4)(%rdi,%rdx)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 L(last_4x_vec):
 	/* Copy from 2 * VEC to 4 * VEC. */
 	VMOVU	(%rsi), %VEC(0)
@@ -385,8 +387,7 @@ L(last_4x_vec):
 	VMOVU	%VEC(1), VEC_SIZE(%rdi)
 	VMOVU	%VEC(2), -VEC_SIZE(%rdi,%rdx)
 	VMOVU	%VEC(3), -(VEC_SIZE * 2)(%rdi,%rdx)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 L(more_8x_vec):
 	cmpq	%rsi, %rdi
@@ -442,8 +443,7 @@ L(loop_4x_vec_forward):
 	VMOVU	%VEC(8), -(VEC_SIZE * 3)(%rcx)
 	/* Store the first VEC.  */
 	VMOVU	%VEC(4), (%r11)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 L(more_8x_vec_backward):
 	/* Load the first 4 * VEC and last VEC to support overlapping
@@ -494,8 +494,7 @@ L(loop_4x_vec_backward):
 	VMOVU	%VEC(7), (VEC_SIZE * 3)(%rdi)
 	/* Store the last VEC.  */
 	VMOVU	%VEC(8), (%r11)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 #if (defined USE_MULTIARCH || VEC_SIZE == 16) && IS_IN (libc)
 L(large_forward):
@@ -530,8 +529,7 @@ L(loop_large_forward):
 	VMOVU	%VEC(8), -(VEC_SIZE * 3)(%rcx)
 	/* Store the first VEC.  */
 	VMOVU	%VEC(4), (%r11)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 L(large_backward):
 	/* Don't use non-temporal store if there is overlap between
@@ -565,8 +563,7 @@ L(loop_large_backward):
 	VMOVU	%VEC(7), (VEC_SIZE * 3)(%rdi)
 	/* Store the last VEC.  */
 	VMOVU	%VEC(8), (%r11)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 #endif
 END (MEMMOVE_SYMBOL (__memmove, unaligned_erms))
 
