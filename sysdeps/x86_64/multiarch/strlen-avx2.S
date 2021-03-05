@@ -36,9 +36,13 @@
 #  define VZEROUPPER	vzeroupper
 # endif
 
+# ifndef SECTION
+#  define SECTION(p)	p##.avx
+# endif
+
 # define VEC_SIZE 32
 
-	.section .text.avx,"ax",@progbits
+	.section SECTION(.text),"ax",@progbits
 ENTRY (STRLEN)
 # ifdef USE_AS_STRNLEN
 	/* Check for zero length.  */
@@ -111,8 +115,8 @@ L(cros_page_boundary):
 # ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 # endif
-	VZEROUPPER
-	ret
+L(return_vzeroupper):
+	ZERO_UPPER_VEC_REGISTERS_RETURN
 
 	.p2align 4
 L(aligned_more):
@@ -231,8 +235,7 @@ L(last_4x_vec_or_less):
 #  ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(last_2x_vec):
@@ -253,8 +256,7 @@ L(last_2x_vec):
 #  ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x0_check):
@@ -267,8 +269,7 @@ L(first_vec_x0_check):
 #  ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x1_check):
@@ -282,8 +283,7 @@ L(first_vec_x1_check):
 #  ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x2_check):
@@ -297,8 +297,7 @@ L(first_vec_x2_check):
 #  ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x3_check):
@@ -312,8 +311,7 @@ L(first_vec_x3_check):
 #  ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(max):
@@ -321,8 +319,7 @@ L(max):
 #  ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(zero):
@@ -338,8 +335,7 @@ L(first_vec_x0):
 # ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x1):
@@ -350,8 +346,7 @@ L(first_vec_x1):
 # ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x2):
@@ -362,8 +357,7 @@ L(first_vec_x2):
 # ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(4x_vec_end):
@@ -389,8 +383,7 @@ L(first_vec_x3):
 # ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 END (STRLEN)
 #endif
