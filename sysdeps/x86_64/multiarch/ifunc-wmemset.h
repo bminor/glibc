@@ -20,6 +20,7 @@
 
 extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_unaligned) attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (evex_unaligned) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx512_unaligned) attribute_hidden;
 
 static inline void *
@@ -27,14 +28,18 @@ IFUNC_SELECTOR (void)
 {
   const struct cpu_features* cpu_features = __get_cpu_features ();
 
-  if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER)
-      && CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable)
+  if (CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable)
       && CPU_FEATURES_ARCH_P (cpu_features, AVX_Fast_Unaligned_Load))
     {
       if (CPU_FEATURES_ARCH_P (cpu_features, AVX512F_Usable)
-	  && !CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_AVX512))
+	  && !CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_AVX512)
+	  && !CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER))
 	return OPTIMIZE (avx512_unaligned);
-      else
+
+      if (CPU_FEATURES_ARCH_P (cpu_features, AVX512VL_Usable))
+	return OPTIMIZE (evex_unaligned);
+
+      if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER))
 	return OPTIMIZE (avx2_unaligned);
     }
 
