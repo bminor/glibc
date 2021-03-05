@@ -40,10 +40,14 @@
 #  define VZEROUPPER	vzeroupper
 # endif
 
+# ifndef SECTION
+#  define SECTION(p)	p##.avx
+# endif
+
 # define VEC_SIZE 32
 # define PAGE_SIZE 4096
 
-	.section .text.avx,"ax",@progbits
+	.section SECTION(.text),"ax",@progbits
 ENTRY (STRCHR)
 	movl	%edi, %ecx
 # ifndef USE_AS_STRCHRNUL
@@ -76,8 +80,8 @@ ENTRY (STRCHR)
 	cmp (%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+L(return_vzeroupper):
+	ZERO_UPPER_VEC_REGISTERS_RETURN
 
 	.p2align 4
 L(more_vecs):
@@ -126,8 +130,7 @@ L(aligned_more):
 	cmp (%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x0):
@@ -138,8 +141,7 @@ L(first_vec_x0):
 	cmp (%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x1):
@@ -149,8 +151,7 @@ L(first_vec_x1):
 	cmp (%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x2):
@@ -161,8 +162,7 @@ L(first_vec_x2):
 	cmp (%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 L(prep_loop_4x):
 	/* Align data to 4 * VEC_SIZE.	*/
@@ -221,8 +221,7 @@ L(loop_4x_vec):
 	cmp (%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	/* Cold case for crossing page with first load.	 */
 	.p2align 4
@@ -246,8 +245,7 @@ L(cross_page_boundary):
 	cmp (%rax), %CHAR_REG
 	cmovne	%rdx, %rax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 END (STRCHR)
 # endif

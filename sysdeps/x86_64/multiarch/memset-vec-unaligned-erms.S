@@ -45,17 +45,14 @@
 #ifndef VZEROUPPER
 # if VEC_SIZE > 16
 #  define VZEROUPPER			vzeroupper
+#  define VZEROUPPER_SHORT_RETURN	vzeroupper; ret
 # else
 #  define VZEROUPPER
 # endif
 #endif
 
 #ifndef VZEROUPPER_SHORT_RETURN
-# if VEC_SIZE > 16
-#  define VZEROUPPER_SHORT_RETURN	vzeroupper
-# else
-#  define VZEROUPPER_SHORT_RETURN	rep
-# endif
+# define VZEROUPPER_SHORT_RETURN	rep; ret
 #endif
 
 #ifndef MOVQ
@@ -117,8 +114,7 @@ L(entry_from_bzero):
 	/* From VEC and to 2 * VEC.  No branch when size == VEC_SIZE.  */
 	VMOVU	%VEC(0), -VEC_SIZE(%rdi,%rdx)
 	VMOVU	%VEC(0), (%rdi)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 #if defined USE_MULTIARCH && IS_IN (libc)
 END (MEMSET_SYMBOL (__memset, unaligned))
 
@@ -141,14 +137,12 @@ ENTRY (__memset_erms)
 ENTRY (MEMSET_SYMBOL (__memset, erms))
 # endif
 L(stosb):
-	/* Issue vzeroupper before rep stosb.  */
-	VZEROUPPER
 	mov	%RDX_LP, %RCX_LP
 	movzbl	%sil, %eax
 	mov	%RDI_LP, %RDX_LP
 	rep stosb
 	mov	%RDX_LP, %RAX_LP
-	ret
+	VZEROUPPER_RETURN
 # if VEC_SIZE == 16
 END (__memset_erms)
 # else
@@ -175,8 +169,7 @@ ENTRY (MEMSET_SYMBOL (__memset, unaligned_erms))
 	/* From VEC and to 2 * VEC.  No branch when size == VEC_SIZE.  */
 	VMOVU	%VEC(0), -VEC_SIZE(%rdi,%rdx)
 	VMOVU	%VEC(0), (%rdi)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 L(stosb_more_2x_vec):
 	cmp	__x86_rep_stosb_threshold(%rip), %RDX_LP
@@ -190,8 +183,11 @@ L(more_2x_vec):
 	VMOVU	%VEC(0), -VEC_SIZE(%rdi,%rdx)
 	VMOVU	%VEC(0), -(VEC_SIZE * 2)(%rdi,%rdx)
 L(return):
-	VZEROUPPER
+#if VEC_SIZE > 16
+	ZERO_UPPER_VEC_REGISTERS_RETURN
+#else
 	ret
+#endif
 
 L(loop_start):
 	leaq	(VEC_SIZE * 4)(%rdi), %rcx
@@ -217,7 +213,6 @@ L(loop):
 	cmpq	%rcx, %rdx
 	jne	L(loop)
 	VZEROUPPER_SHORT_RETURN
-	ret
 L(less_vec):
 	/* Less than 1 VEC.  */
 # if VEC_SIZE != 16 && VEC_SIZE != 32 && VEC_SIZE != 64
@@ -241,40 +236,34 @@ L(less_vec):
 	jb	1f
 	movb	%cl, (%rdi)
 1:
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 # if VEC_SIZE > 32
 	/* From 32 to 63.  No branch when size == 32.  */
 L(between_32_63):
 	VMOVU	%YMM0, -32(%rdi,%rdx)
 	VMOVU	%YMM0, (%rdi)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 # endif
 # if VEC_SIZE > 16
 	/* From 16 to 31.  No branch when size == 16.  */
 L(between_16_31):
 	VMOVU	%XMM0, -16(%rdi,%rdx)
 	VMOVU	%XMM0, (%rdi)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 # endif
 	/* From 8 to 15.  No branch when size == 8.  */
 L(between_8_15):
 	movq	%rcx, -8(%rdi,%rdx)
 	movq	%rcx, (%rdi)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 L(between_4_7):
 	/* From 4 to 7.  No branch when size == 4.  */
 	movl	%ecx, -4(%rdi,%rdx)
 	movl	%ecx, (%rdi)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 L(between_2_3):
 	/* From 2 to 3.  No branch when size == 2.  */
 	movw	%cx, -2(%rdi,%rdx)
 	movw	%cx, (%rdi)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 END (MEMSET_SYMBOL (__memset, unaligned_erms))

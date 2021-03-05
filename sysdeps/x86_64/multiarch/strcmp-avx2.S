@@ -55,6 +55,10 @@
 #  define VZEROUPPER	vzeroupper
 # endif
 
+# ifndef SECTION
+#  define SECTION(p)	p##.avx
+# endif
+
 /* Warning!
            wcscmp/wcsncmp have to use SIGNED comparison for elements.
            strcmp/strncmp have to use UNSIGNED comparison for elements.
@@ -75,7 +79,7 @@
    the maximum offset is reached before a difference is found, zero is
    returned.  */
 
-	.section .text.avx,"ax",@progbits
+	.section SECTION(.text),"ax",@progbits
 ENTRY (STRCMP)
 # ifdef USE_AS_STRNCMP
 	/* Check for simple cases (0 or 1) in offset.  */
@@ -127,8 +131,8 @@ L(return):
 	movzbl	(%rsi, %rdx), %edx
 	subl	%edx, %eax
 # endif
-	VZEROUPPER
-	ret
+L(return_vzeroupper):
+	ZERO_UPPER_VEC_REGISTERS_RETURN
 
 	.p2align 4
 L(return_vec_size):
@@ -161,8 +165,7 @@ L(return_vec_size):
 	subl	%edx, %eax
 #  endif
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(return_2_vec_size):
@@ -195,8 +198,7 @@ L(return_2_vec_size):
 	subl	%edx, %eax
 #  endif
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(return_3_vec_size):
@@ -229,8 +231,7 @@ L(return_3_vec_size):
 	subl	%edx, %eax
 #  endif
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(next_3_vectors):
@@ -356,8 +357,7 @@ L(back_to_loop):
 	subl	%edx, %eax
 #  endif
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(test_vec):
@@ -400,8 +400,7 @@ L(test_vec):
 	subl	%edx, %eax
 #  endif
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(test_2_vec):
@@ -444,8 +443,7 @@ L(test_2_vec):
 	subl	%edx, %eax
 #  endif
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(test_3_vec):
@@ -486,8 +484,7 @@ L(test_3_vec):
 	subl	%edx, %eax
 #  endif
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(loop_cross_page):
@@ -556,8 +553,7 @@ L(loop_cross_page):
 	subl	%edx, %eax
 #  endif
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(loop_cross_page_2_vec):
@@ -631,8 +627,7 @@ L(loop_cross_page_2_vec):
 	subl	%edx, %eax
 #  endif
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 # ifdef USE_AS_STRNCMP
 L(string_nbyte_offset_check):
@@ -674,8 +669,7 @@ L(cross_page_loop):
 # ifndef USE_AS_WCSCMP
 L(different):
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 # ifdef USE_AS_WCSCMP
 	.p2align 4
@@ -685,16 +679,14 @@ L(different):
 	setl	%al
 	negl	%eax
 	orl	$1, %eax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 # endif
 
 # ifdef USE_AS_STRNCMP
 	.p2align 4
 L(zero):
 	xorl	%eax, %eax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(char0):
@@ -708,8 +700,7 @@ L(char0):
 	movzbl	(%rdi), %eax
 	subl	%ecx, %eax
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 # endif
 
 	.p2align 4
@@ -734,8 +725,7 @@ L(last_vector):
 	movzbl	(%rsi, %rdx), %edx
 	subl	%edx, %eax
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	/* Comparing on page boundary region requires special treatment:
 	   It must done one vector at the time, starting with the wider
@@ -856,7 +846,6 @@ L(cross_page_4bytes):
 	testl	%eax, %eax
 	jne	L(cross_page_loop)
 	subl	%ecx, %eax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 END (STRCMP)
 #endif
