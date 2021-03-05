@@ -36,9 +36,13 @@
 #  define VZEROUPPER	vzeroupper
 # endif
 
+# ifndef SECTION
+#  define SECTION(p)	p##.avx
+# endif
+
 # define VEC_SIZE	32
 
-	.section .text.avx,"ax",@progbits
+	.section SECTION(.text),"ax",@progbits
 ENTRY (STRRCHR)
 	movd	%esi, %xmm4
 	movl	%edi, %ecx
@@ -166,8 +170,8 @@ L(return_value):
 # endif
 	bsrl	%eax, %eax
 	leaq	-VEC_SIZE(%rdi, %rax), %rax
-	VZEROUPPER
-	ret
+L(return_vzeroupper):
+	ZERO_UPPER_VEC_REGISTERS_RETURN
 
 	.p2align 4
 L(match):
@@ -198,8 +202,7 @@ L(find_nul):
 	jz	L(return_value)
 	bsrl	%eax, %eax
 	leaq	-VEC_SIZE(%rdi, %rax), %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(char_and_nul):
@@ -222,14 +225,12 @@ L(char_and_nul_in_first_vec):
 	jz	L(return_null)
 	bsrl	%eax, %eax
 	leaq	-VEC_SIZE(%rdi, %rax), %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(return_null):
 	xorl	%eax, %eax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 END (STRRCHR)
 #endif

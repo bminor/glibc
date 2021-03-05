@@ -20,14 +20,22 @@
 
 # include <sysdep.h>
 
+# ifndef MEMRCHR
+#  define MEMRCHR	__memrchr_avx2
+# endif
+
 # ifndef VZEROUPPER
 #  define VZEROUPPER	vzeroupper
 # endif
 
+# ifndef SECTION
+#  define SECTION(p)	p##.avx
+# endif
+
 # define VEC_SIZE 32
 
-	.section .text.avx,"ax",@progbits
-ENTRY (__memrchr_avx2)
+	.section SECTION(.text),"ax",@progbits
+ENTRY (MEMRCHR)
 	/* Broadcast CHAR to YMM0.  */
 	vmovd	%esi, %xmm0
 	vpbroadcastb %xmm0, %ymm0
@@ -134,8 +142,8 @@ L(loop_4x_vec):
 	vpmovmskb %ymm1, %eax
 	bsrl	%eax, %eax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+L(return_vzeroupper):
+	ZERO_UPPER_VEC_REGISTERS_RETURN
 
 	.p2align 4
 L(last_4x_vec_or_less):
@@ -169,8 +177,7 @@ L(last_4x_vec_or_less):
 	addq	%rax, %rdx
 	jl	L(zero)
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(last_2x_vec):
@@ -191,31 +198,27 @@ L(last_2x_vec):
 	jl	L(zero)
 	addl	$(VEC_SIZE * 2), %eax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(last_vec_x0):
 	bsrl	%eax, %eax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(last_vec_x1):
 	bsrl	%eax, %eax
 	addl	$VEC_SIZE, %eax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(last_vec_x2):
 	bsrl	%eax, %eax
 	addl	$(VEC_SIZE * 2), %eax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(last_vec_x3):
@@ -232,8 +235,7 @@ L(last_vec_x1_check):
 	jl	L(zero)
 	addl	$VEC_SIZE, %eax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(last_vec_x3_check):
@@ -243,12 +245,14 @@ L(last_vec_x3_check):
 	jl	L(zero)
 	addl	$(VEC_SIZE * 3), %eax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(zero):
-	VZEROUPPER
+	xorl	%eax, %eax
+	VZEROUPPER_RETURN
+
+	.p2align 4
 L(null):
 	xorl	%eax, %eax
 	ret
@@ -273,8 +277,7 @@ L(last_vec_or_less_aligned):
 
 	bsrl	%eax, %eax
 	addq	%rdi, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(last_vec_or_less):
@@ -315,8 +318,7 @@ L(last_vec_or_less):
 	bsrl	%eax, %eax
 	addq	%rdi, %rax
 	addq	%r8, %rax
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(last_vec_2x_aligned):
@@ -353,7 +355,6 @@ L(last_vec_2x_aligned):
 	bsrl	%eax, %eax
 	addq	%rdi, %rax
 	addq	%r8, %rax
-	VZEROUPPER
-	ret
-END (__memrchr_avx2)
+	VZEROUPPER_RETURN
+END (MEMRCHR)
 #endif

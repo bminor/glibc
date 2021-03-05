@@ -37,6 +37,10 @@
 #  define VZEROUPPER	vzeroupper
 # endif
 
+# ifndef SECTION
+#  define SECTION(p)	p##.avx
+# endif
+
 /* zero register */
 #define xmmZ	xmm0
 #define ymmZ	ymm0
@@ -46,7 +50,7 @@
 
 # ifndef USE_AS_STRCAT
 
-	.section .text.avx,"ax",@progbits
+	.section SECTION(.text),"ax",@progbits
 ENTRY (STRCPY)
 #  ifdef USE_AS_STRNCPY
 	mov	%RDX_LP, %R8_LP
@@ -369,8 +373,8 @@ L(CopyVecSizeExit):
 	lea	1(%rdi), %rdi
 	jnz	L(StrncpyFillTailWithZero)
 # endif
-	VZEROUPPER
-	ret
+L(return_vzeroupper):
+	ZERO_UPPER_VEC_REGISTERS_RETURN
 
 	.p2align 4
 L(CopyTwoVecSize1):
@@ -553,8 +557,7 @@ L(Exit1):
 	lea	2(%rdi), %rdi
 	jnz	L(StrncpyFillTailWithZero)
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(Exit2):
@@ -569,8 +572,7 @@ L(Exit2):
 	lea	3(%rdi), %rdi
 	jnz	L(StrncpyFillTailWithZero)
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(Exit3):
@@ -584,8 +586,7 @@ L(Exit3):
 	lea	4(%rdi), %rdi
 	jnz	L(StrncpyFillTailWithZero)
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(Exit4_7):
@@ -602,8 +603,7 @@ L(Exit4_7):
 	lea	1(%rdi, %rdx), %rdi
 	jnz	L(StrncpyFillTailWithZero)
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(Exit8_15):
@@ -620,8 +620,7 @@ L(Exit8_15):
 	lea	1(%rdi, %rdx), %rdi
 	jnz	L(StrncpyFillTailWithZero)
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(Exit16_31):
@@ -638,8 +637,7 @@ L(Exit16_31):
 	lea 1(%rdi, %rdx), %rdi
 	jnz L(StrncpyFillTailWithZero)
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(Exit32_63):
@@ -656,8 +654,7 @@ L(Exit32_63):
 	lea	1(%rdi, %rdx), %rdi
 	jnz	L(StrncpyFillTailWithZero)
 # endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 # ifdef USE_AS_STRNCPY
 
@@ -671,8 +668,7 @@ L(StrncpyExit1):
 #  ifdef USE_AS_STRCAT
 	movb	$0, 1(%rdi)
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(StrncpyExit2):
@@ -684,8 +680,7 @@ L(StrncpyExit2):
 #  ifdef USE_AS_STRCAT
 	movb	$0, 2(%rdi)
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(StrncpyExit3_4):
@@ -699,8 +694,7 @@ L(StrncpyExit3_4):
 #  ifdef USE_AS_STRCAT
 	movb	$0, (%rdi, %r8)
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(StrncpyExit5_8):
@@ -714,8 +708,7 @@ L(StrncpyExit5_8):
 #  ifdef USE_AS_STRCAT
 	movb	$0, (%rdi, %r8)
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(StrncpyExit9_16):
@@ -729,8 +722,7 @@ L(StrncpyExit9_16):
 #  ifdef USE_AS_STRCAT
 	movb	$0, (%rdi, %r8)
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(StrncpyExit17_32):
@@ -744,8 +736,7 @@ L(StrncpyExit17_32):
 #  ifdef USE_AS_STRCAT
 	movb	$0, (%rdi, %r8)
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(StrncpyExit33_64):
@@ -760,8 +751,7 @@ L(StrncpyExit33_64):
 #  ifdef USE_AS_STRCAT
 	movb	$0, (%rdi, %r8)
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(StrncpyExit65):
@@ -778,50 +768,43 @@ L(StrncpyExit65):
 #  ifdef USE_AS_STRCAT
 	movb	$0, 65(%rdi)
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 #  ifndef USE_AS_STRCAT
 
 	.p2align 4
 L(Fill1):
 	mov	%dl, (%rdi)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(Fill2):
 	mov	%dx, (%rdi)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(Fill3_4):
 	mov	%dx, (%rdi)
 	mov     %dx, -2(%rdi, %r8)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(Fill5_8):
 	mov	%edx, (%rdi)
 	mov     %edx, -4(%rdi, %r8)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(Fill9_16):
 	mov	%rdx, (%rdi)
 	mov	%rdx, -8(%rdi, %r8)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(Fill17_32):
 	vmovdqu %xmmZ, (%rdi)
 	vmovdqu %xmmZ, -16(%rdi, %r8)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(CopyVecSizeUnalignedVec2):
@@ -898,8 +881,7 @@ L(Fill):
 	cmp	$1, %r8d
 	ja	L(Fill2)
 	je	L(Fill1)
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 /* end of ifndef USE_AS_STRCAT */
 #  endif
@@ -929,8 +911,7 @@ L(UnalignedFourVecSizeLeaveCase3):
 #  ifdef USE_AS_STRCAT
 	movb	$0, (VEC_SIZE * 4)(%rdi)
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(UnalignedFourVecSizeLeaveCase2):
@@ -1001,16 +982,14 @@ L(StrncpyExit):
 #  ifdef USE_AS_STRCAT
 	movb	$0, (%rdi)
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 	.p2align 4
 L(ExitZero):
 #  ifndef USE_AS_STRCAT
 	mov	%rdi, %rax
 #  endif
-	VZEROUPPER
-	ret
+	VZEROUPPER_RETURN
 
 # endif
 
