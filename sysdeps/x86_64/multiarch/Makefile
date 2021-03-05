@@ -41,6 +41,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c \
 		   memset-avx2-unaligned-erms \
 		   memset-avx512-unaligned-erms \
 		   memchr-evex \
+		   memmove-evex-unaligned-erms \
 		   memrchr-evex \
 		   rawmemchr-evex \
 		   stpcpy-evex \

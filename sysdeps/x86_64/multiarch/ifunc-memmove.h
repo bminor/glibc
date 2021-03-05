@@ -29,6 +29,10 @@ extern __typeof (REDIRECT_NAME) OPTIMIZE (ssse3_back) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx_unaligned) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx_unaligned_erms)
   attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (evex_unaligned)
+  attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (evex_unaligned_erms)
+  attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx512_unaligned)
   attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx512_unaligned_erms)
@@ -59,10 +63,21 @@ IFUNC_SELECTOR (void)
 
   if (CPU_FEATURES_ARCH_P (cpu_features, AVX_Fast_Unaligned_Load))
     {
-      if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
-	return OPTIMIZE (avx_unaligned_erms);
+      if (CPU_FEATURE_USABLE_P (cpu_features, AVX512VL))
+	{
+	  if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+	    return OPTIMIZE (evex_unaligned_erms);
 
-      return OPTIMIZE (avx_unaligned);
+	  return OPTIMIZE (evex_unaligned);
+	}
+
+      if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER))
+	{
+	  if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+	    return OPTIMIZE (avx_unaligned_erms);
+
+	  return OPTIMIZE (avx_unaligned);
+	}
     }
 
   if (!CPU_FEATURE_USABLE_P (cpu_features, SSSE3)

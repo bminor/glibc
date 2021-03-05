@@ -51,6 +51,14 @@
 # define MEMMOVE_CHK_SYMBOL(p,s)	MEMMOVE_SYMBOL(p, s)
 #endif
 
+#ifndef XMM0
+# define XMM0				xmm0
+#endif
+
+#ifndef YMM0
+# define YMM0				ymm0
+#endif
+
 #ifndef VZEROUPPER
 # if VEC_SIZE > 16
 #  define VZEROUPPER vzeroupper
@@ -301,20 +309,20 @@ L(less_vec):
 #if VEC_SIZE > 32
 L(between_32_63):
 	/* From 32 to 63.  No branch when size == 32.  */
-	vmovdqu	(%rsi), %ymm0
-	vmovdqu	-32(%rsi,%rdx), %ymm1
-	vmovdqu	%ymm0, (%rdi)
-	vmovdqu	%ymm1, -32(%rdi,%rdx)
+	VMOVU	(%rsi), %YMM0
+	VMOVU	-32(%rsi,%rdx), %YMM1
+	VMOVU	%YMM0, (%rdi)
+	VMOVU	%YMM1, -32(%rdi,%rdx)
 	VZEROUPPER
 	ret
 #endif
 #if VEC_SIZE > 16
 	/* From 16 to 31.  No branch when size == 16.  */
 L(between_16_31):
-	vmovdqu	(%rsi), %xmm0
-	vmovdqu	-16(%rsi,%rdx), %xmm1
-	vmovdqu	%xmm0, (%rdi)
-	vmovdqu	%xmm1, -16(%rdi,%rdx)
+	VMOVU	(%rsi), %XMM0
+	VMOVU	-16(%rsi,%rdx), %XMM1
+	VMOVU	%XMM0, (%rdi)
+	VMOVU	%XMM1, -16(%rdi,%rdx)
 	ret
 #endif
 L(between_8_15):

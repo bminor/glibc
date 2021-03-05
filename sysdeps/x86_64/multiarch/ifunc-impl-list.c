@@ -81,6 +81,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      CPU_FEATURE_USABLE (AVX),
 			      __memmove_chk_avx_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __memmove_chk_evex_unaligned)
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __memmove_chk_evex_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
 			      CPU_FEATURE_USABLE (SSSE3),
 			      __memmove_chk_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
@@ -102,6 +108,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memmove,
 			      CPU_FEATURE_USABLE (AVX),
 			      __memmove_avx_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, memmove,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __memmove_evex_unaligned)
+	      IFUNC_IMPL_ADD (array, i, memmove,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __memmove_evex_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, memmove,
 			      CPU_FEATURE_USABLE (AVX512F),
 			      __memmove_avx512_no_vzeroupper)
@@ -566,6 +578,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      CPU_FEATURE_USABLE (AVX),
 			      __memcpy_chk_avx_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __memcpy_chk_evex_unaligned)
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __memcpy_chk_evex_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
 			      CPU_FEATURE_USABLE (SSSE3),
 			      __memcpy_chk_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
@@ -587,6 +605,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcpy,
 			      CPU_FEATURE_USABLE (AVX),
 			      __memcpy_avx_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, memcpy,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __memcpy_evex_unaligned)
+	      IFUNC_IMPL_ADD (array, i, memcpy,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __memcpy_evex_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, memcpy, CPU_FEATURE_USABLE (SSSE3),
 			      __memcpy_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, memcpy, CPU_FEATURE_USABLE (SSSE3),
@@ -624,6 +648,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      CPU_FEATURE_USABLE (AVX),
 			      __mempcpy_chk_avx_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __mempcpy_chk_evex_unaligned)
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __mempcpy_chk_evex_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
 			      CPU_FEATURE_USABLE (SSSE3),
 			      __mempcpy_chk_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
@@ -654,6 +684,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, mempcpy,
 			      CPU_FEATURE_USABLE (AVX),
 			      __mempcpy_avx_unaligned_erms)
+	      IFUNC_IMPL_ADD (array, i, mempcpy,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __mempcpy_evex_unaligned)
+	      IFUNC_IMPL_ADD (array, i, mempcpy,
+			      CPU_FEATURE_USABLE (AVX512VL),
+			      __mempcpy_evex_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, CPU_FEATURE_USABLE (SSSE3),
 			      __mempcpy_ssse3_back)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, CPU_FEATURE_USABLE (SSSE3),
