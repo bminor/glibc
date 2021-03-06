@@ -32,6 +32,9 @@ __cache_sysconf (int name)
     case _SC_LEVEL1_ICACHE_SIZE:
       return cpu_features->level1_icache_size;
 
+    case _SC_LEVEL1_ICACHE_LINESIZE:
+      return cpu_features->level1_icache_linesize;
+
     case _SC_LEVEL1_DCACHE_SIZE:
       return cpu_features->level1_dcache_size;
 
