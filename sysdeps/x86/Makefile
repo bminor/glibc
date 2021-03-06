@@ -211,3 +211,11 @@ $(objpfx)check-cet.out: $(..)sysdeps/x86/check-cet.awk \
 generated += check-cet.out
 endif
 endif
+
+ifeq ($(subdir),posix)
+tests += \
+  tst-sysconf-cache-linesize \
+  tst-sysconf-cache-linesize-static
+tests-static += \
+  tst-sysconf-cache-linesize-static
+endif

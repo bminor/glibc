@@ -91,6 +91,8 @@ _dl_diagnostics_cpu (void)
                             cpu_features->rep_stosb_threshold);
   print_cpu_features_value ("level1_icache_size",
                             cpu_features->level1_icache_size);
+  print_cpu_features_value ("level1_icache_linesize",
+                            cpu_features->level1_icache_linesize);
   print_cpu_features_value ("level1_dcache_size",
                             cpu_features->level1_dcache_size);
   print_cpu_features_value ("level1_dcache_assoc",

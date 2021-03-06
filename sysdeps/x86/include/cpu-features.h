@@ -876,6 +876,8 @@ struct cpu_features
   unsigned long int rep_stosb_threshold;
   /* _SC_LEVEL1_ICACHE_SIZE.  */
   unsigned long int level1_icache_size;
+  /* _SC_LEVEL1_ICACHE_LINESIZE.  */
+  unsigned long int level1_icache_linesize;
   /* _SC_LEVEL1_DCACHE_SIZE.  */
   unsigned long int level1_dcache_size;
   /* _SC_LEVEL1_DCACHE_ASSOC.  */

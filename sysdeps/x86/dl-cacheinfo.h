@@ -707,6 +707,7 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   long int core = -1;
   unsigned int threads = 0;
   unsigned long int level1_icache_size = -1;
+  unsigned long int level1_icache_linesize = -1;
   unsigned long int level1_dcache_size = -1;
   unsigned long int level1_dcache_assoc = -1;
   unsigned long int level1_dcache_linesize = -1;
@@ -726,6 +727,8 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
 
       level1_icache_size
 	= handle_intel (_SC_LEVEL1_ICACHE_SIZE, cpu_features);
+      level1_icache_linesize
+	= handle_intel (_SC_LEVEL1_ICACHE_LINESIZE, cpu_features);
       level1_dcache_size = data;
       level1_dcache_assoc
 	= handle_intel (_SC_LEVEL1_DCACHE_ASSOC, cpu_features);
@@ -753,6 +756,7 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
       shared = handle_zhaoxin (_SC_LEVEL3_CACHE_SIZE);
 
       level1_icache_size = handle_zhaoxin (_SC_LEVEL1_ICACHE_SIZE);
+      level1_icache_linesize = handle_zhaoxin (_SC_LEVEL1_ICACHE_LINESIZE);
       level1_dcache_size = data;
       level1_dcache_assoc = handle_zhaoxin (_SC_LEVEL1_DCACHE_ASSOC);
       level1_dcache_linesize = handle_zhaoxin (_SC_LEVEL1_DCACHE_LINESIZE);
@@ -772,6 +776,7 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
       shared = handle_amd (_SC_LEVEL3_CACHE_SIZE);
 
       level1_icache_size = handle_amd (_SC_LEVEL1_ICACHE_SIZE);
+      level1_icache_linesize = handle_amd (_SC_LEVEL1_ICACHE_LINESIZE);
       level1_dcache_size = data;
       level1_dcache_assoc = handle_amd (_SC_LEVEL1_DCACHE_ASSOC);
       level1_dcache_linesize = handle_amd (_SC_LEVEL1_DCACHE_LINESIZE);
@@ -833,6 +838,7 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
     }
 
   cpu_features->level1_icache_size = level1_icache_size;
+  cpu_features->level1_icache_linesize = level1_icache_linesize;
   cpu_features->level1_dcache_size = level1_dcache_size;
   cpu_features->level1_dcache_assoc = level1_dcache_assoc;
   cpu_features->level1_dcache_linesize = level1_dcache_linesize;
