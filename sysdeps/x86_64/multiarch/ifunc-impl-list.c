@@ -211,10 +211,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			       && HAS_ARCH_FEATURE (AVX512BW_Usable)),
 			      __memset_chk_evex_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memset_chk,
-			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      (HAS_ARCH_FEATURE (AVX512VL_Usable)
+			       && HAS_ARCH_FEATURE (AVX512BW_Usable)),
 			      __memset_chk_avx512_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, __memset_chk,
-			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      (HAS_ARCH_FEATURE (AVX512VL_Usable)
+			       && HAS_ARCH_FEATURE (AVX512BW_Usable)),
 			      __memset_chk_avx512_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __memset_chk,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
@@ -252,10 +254,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			       && HAS_ARCH_FEATURE (AVX512BW_Usable)),
 			      __memset_evex_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, memset,
-			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      (HAS_ARCH_FEATURE (AVX512VL_Usable)
+			       && HAS_ARCH_FEATURE (AVX512BW_Usable)),
 			      __memset_avx512_unaligned_erms)
 	      IFUNC_IMPL_ADD (array, i, memset,
-			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      (HAS_ARCH_FEATURE (AVX512VL_Usable)
+			       && HAS_ARCH_FEATURE (AVX512BW_Usable)),
 			      __memset_avx512_unaligned)
 	      IFUNC_IMPL_ADD (array, i, memset,
 			      HAS_ARCH_FEATURE (AVX512F_Usable),
@@ -719,7 +723,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      HAS_ARCH_FEATURE (AVX512VL_Usable),
 			      __wmemset_evex_unaligned)
 	      IFUNC_IMPL_ADD (array, i, wmemset,
-			      HAS_ARCH_FEATURE (AVX512F_Usable),
+			      HAS_ARCH_FEATURE (AVX512VL_Usable),
 			      __wmemset_avx512_unaligned))
 
 #ifdef SHARED
