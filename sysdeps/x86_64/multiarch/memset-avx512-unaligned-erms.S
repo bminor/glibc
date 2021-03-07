@@ -1,22 +1,22 @@
 #if IS_IN (libc)
 # define VEC_SIZE	64
-# define VEC(i)		zmm##i
+# define XMM0		xmm16
+# define YMM0		ymm16
+# define VEC0		zmm16
+# define VEC(i)		VEC##i
 # define VMOVU		vmovdqu64
 # define VMOVA		vmovdqa64
+# define VZEROUPPER
 
 # define MEMSET_VDUP_TO_VEC0_AND_SET_RETURN(d, r) \
-  vmovd d, %xmm0; \
   movq r, %rax; \
-  vpbroadcastb %xmm0, %xmm0; \
-  vpbroadcastq %xmm0, %zmm0
+  vpbroadcastb d, %VEC0
 
 # define WMEMSET_VDUP_TO_VEC0_AND_SET_RETURN(d, r) \
-  vmovd d, %xmm0; \
   movq r, %rax; \
-  vpbroadcastd %xmm0, %xmm0; \
-  vpbroadcastq %xmm0, %zmm0
+  vpbroadcastd d, %VEC0
 
-# define SECTION(p)		p##.avx512
+# define SECTION(p)		p##.evex512
 # define MEMSET_SYMBOL(p,s)	p##_avx512_##s
 # define WMEMSET_SYMBOL(p,s)	p##_avx512_##s
 
