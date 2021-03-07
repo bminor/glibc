@@ -2,6 +2,7 @@
 
 # Maximal error of functions:
 Function: "acos":
+double: 1
 float: 1
 
 Function: "acos_downward":
@@ -33,6 +34,7 @@ double: 2
 float: 2
 
 Function: "asin":
+double: 1
 float: 1
 
 Function: "asin_downward":
@@ -67,7 +69,7 @@ Function: "atan":
 float: 1
 
 Function: "atan2":
-float: 1
+float: 2
 
 Function: "atan2_downward":
 double: 1
