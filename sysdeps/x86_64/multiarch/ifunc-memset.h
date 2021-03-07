@@ -53,13 +53,16 @@ IFUNC_SELECTOR (void)
   if (CPU_FEATURE_USABLE_P (cpu_features, AVX512F)
       && !CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_AVX512))
     {
-      if (CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER))
-	return OPTIMIZE (avx512_no_vzeroupper);
+      if (CPU_FEATURE_USABLE_P (cpu_features, AVX512VL)
+	  && CPU_FEATURE_USABLE_P (cpu_features, AVX512BW))
+	{
+	  if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+	    return OPTIMIZE (avx512_unaligned_erms);
 
-      if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
-	return OPTIMIZE (avx512_unaligned_erms);
+	  return OPTIMIZE (avx512_unaligned);
+	}
 
-      return OPTIMIZE (avx512_unaligned);
+      return OPTIMIZE (avx512_no_vzeroupper);
     }
 
   if (CPU_FEATURE_USABLE_P (cpu_features, AVX2))
