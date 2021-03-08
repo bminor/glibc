@@ -102,7 +102,7 @@ malloc_check_get_size (mchunkptr p)
 
   assert (using_malloc_checking == 1);
 
-  for (size = CHUNK_AVAILABLE_SIZE (p) - 1;
+  for (size = CHUNK_HDR_SZ + memsize (p) - 1;
        (c = *SAFE_CHAR_OFFSET (p, size)) != magic;
        size -= c)
     {
@@ -130,7 +130,7 @@ mem2mem_check (void *ptr, size_t req_sz)
 
   p = mem2chunk (ptr);
   magic = magicbyte (p);
-  max_sz = CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ;
+  max_sz = memsize (p);
 
   for (i = max_sz - 1; i > req_sz; i -= block_sz)
     {
@@ -175,7 +175,7 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
                                next_chunk (prev_chunk (p)) != p)))
         return NULL;
 
-      for (sz = CHUNK_AVAILABLE_SIZE (p) - 1;
+      for (sz = CHUNK_HDR_SZ + memsize (p) - 1;
 	   (c = *SAFE_CHAR_OFFSET (p, sz)) != magic;
 	   sz -= c)
         {
@@ -200,7 +200,7 @@ mem2chunk_check (void *mem, unsigned char **magic_p)
           ((prev_size (p) + sz) & page_mask) != 0)
         return NULL;
 
-      for (sz = CHUNK_AVAILABLE_SIZE (p) - 1;
+      for (sz = CHUNK_HDR_SZ + memsize (p) - 1;
 	   (c = *SAFE_CHAR_OFFSET (p, sz)) != magic;
 	   sz -= c)
         {
@@ -279,8 +279,7 @@ free_check (void *mem, const void *caller)
   else
     {
       /* Mark the chunk as belonging to the library again.  */
-      (void)tag_region (chunk2rawmem (p), CHUNK_AVAILABLE_SIZE (p)
-                                         - CHUNK_HDR_SZ);
+      (void)tag_region (chunk2rawmem (p), memsize (p));
       _int_free (&main_arena, p, 1);
       __libc_lock_unlock (main_arena.mutex);
     }

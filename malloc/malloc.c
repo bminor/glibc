@@ -1331,18 +1331,6 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    MINSIZE :                                                      \
    ((req) + SIZE_SZ + MALLOC_ALIGN_MASK) & ~MALLOC_ALIGN_MASK)
 
-/* Available size of chunk.  This is the size of the real usable data
-   in the chunk, plus the chunk header.  Note: If memory tagging is
-   enabled the layout changes to accomodate the granule size, this is
-   wasteful for small allocations so not done by default.  The logic
-   does not work if chunk headers are not granule aligned.  */
-_Static_assert (__MTAG_GRANULE_SIZE <= CHUNK_HDR_SZ,
-		"memory tagging is not supported with large granule.");
-#define CHUNK_AVAILABLE_SIZE(p)                                       \
-  (__MTAG_GRANULE_SIZE > SIZE_SZ && __glibc_unlikely (mtag_enabled) ? \
-    chunksize (p) :                                                   \
-    chunksize (p) + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))
-
 /* Check if REQ overflows when padded and aligned and if the resulting value
    is less than PTRDIFF_T.  Returns TRUE and the requested size or MINSIZE in
    case the value is less than MINSIZE on SZ or false if any of the previous
@@ -1465,14 +1453,26 @@ checked_request2size (size_t req, size_t *sz) __nonnull (1)
 #pragma GCC poison mchunk_size
 #pragma GCC poison mchunk_prev_size
 
+/* This is the size of the real usable data in the chunk.  Not valid for
+   dumped heap chunks.  */
+#define memsize(p)                                                    \
+  (__MTAG_GRANULE_SIZE > SIZE_SZ && __glibc_unlikely (mtag_enabled) ? \
+    chunksize (p) - CHUNK_HDR_SZ :                                    \
+    chunksize (p) - CHUNK_HDR_SZ + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))
+
+/* If memory tagging is enabled the layout changes to accomodate the granule
+   size, this is wasteful for small allocations so not done by default.
+   Both the chunk header and user data has to be granule aligned.  */
+_Static_assert (__MTAG_GRANULE_SIZE <= CHUNK_HDR_SZ,
+		"memory tagging is not supported with large granule.");
+
 static __always_inline void *
 tag_new_usable (void *ptr)
 {
   if (__glibc_unlikely (mtag_enabled) && ptr)
     {
       mchunkptr cp = mem2chunk(ptr);
-      ptr = __libc_mtag_tag_region (__libc_mtag_new_tag (ptr),
-				    CHUNK_AVAILABLE_SIZE (cp) - CHUNK_HDR_SZ);
+      ptr = __libc_mtag_tag_region (__libc_mtag_new_tag (ptr), memsize (cp));
     }
   return ptr;
 }
@@ -3316,8 +3316,7 @@ __libc_free (void *mem)
       MAYBE_INIT_TCACHE ();
 
       /* Mark the chunk as belonging to the library again.  */
-      (void)tag_region (chunk2rawmem (p),
-			CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
+      (void)tag_region (chunk2rawmem (p), memsize (p));
 
       ar_ptr = arena_for_chunk (p);
       _int_free (ar_ptr, p, 0);
@@ -3459,7 +3458,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       newp = __libc_malloc (bytes);
       if (newp != NULL)
         {
-	  size_t sz = CHUNK_AVAILABLE_SIZE (oldp) - CHUNK_HDR_SZ;
+	  size_t sz = memsize (oldp);
 	  memcpy (newp, oldmem, sz);
 	  (void) tag_region (chunk2rawmem (oldp), sz);
           _int_free (ar_ptr, oldp, 0);
@@ -3675,7 +3674,7 @@ __libc_calloc (size_t n, size_t elem_size)
      regardless of MORECORE_CLEARS, so we zero the whole block while
      doing so.  */
   if (__glibc_unlikely (mtag_enabled))
-    return tag_new_zero_region (mem, CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ);
+    return tag_new_zero_region (mem, memsize (p));
 
   INTERNAL_SIZE_T csz = chunksize (p);
 
@@ -4863,7 +4862,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
           else
             {
 	      void *oldmem = chunk2rawmem (oldp);
-	      size_t sz = CHUNK_AVAILABLE_SIZE (oldp) - CHUNK_HDR_SZ;
+	      size_t sz = memsize (oldp);
 	      (void) tag_region (oldmem, sz);
 	      newmem = tag_new_usable (newmem);
 	      memcpy (newmem, oldmem, sz);
@@ -5110,7 +5109,7 @@ musable (void *mem)
 	    result = chunksize (p) - CHUNK_HDR_SZ;
 	}
       else if (inuse (p))
-	result = CHUNK_AVAILABLE_SIZE (p) - CHUNK_HDR_SZ;
+	result = memsize (p);
 
       return result;
     }
