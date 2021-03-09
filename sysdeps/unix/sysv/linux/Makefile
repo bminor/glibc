@@ -108,7 +108,7 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-rlimit-infinity tst-ofdlocks tst-gettid tst-gettid-kill \
 	 tst-tgkill tst-sysvsem-linux tst-sysvmsg-linux tst-sysvshm-linux \
 	 tst-timerfd tst-ppoll tst-futimens tst-utime tst-utimes \
-	 tst-clock_adjtime tst-adjtimex tst-ntp_adjtime
+	 tst-clock_adjtime tst-adjtimex tst-ntp_adjtime tst-ntp_gettime
 
 # Test for the symbol version of fcntl that was replaced in glibc 2.28.
 ifeq ($(have-GLIBC_2.27)$(build-shared),yesyes)
