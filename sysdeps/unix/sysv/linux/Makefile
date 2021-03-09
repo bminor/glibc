@@ -266,8 +266,12 @@ inhibit-glue = yes
 ifeq ($(subdir),dirent)
 sysdep_routines += getdirentries getdirentries64
 tests += tst-getdents64
-tests-internal += tst-readdir64-compat
+
+# The tested readdir64 symbol was replaced in glibc 2.2.
+ifeq ($(have-GLIBC_2.1.3)$(build-shared),yesyes)
+tests += tst-readdir64-compat
 endif
+endif # $(subdir) == dirent
 
 ifeq ($(subdir),nis)
 CFLAGS-ypclnt.c = -DUSE_BINDINGDIR=1
