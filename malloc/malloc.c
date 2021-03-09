@@ -1286,18 +1286,26 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    headers have distinct tags.  Converting fully from one to the other
    involves extracting the tag at the other address and creating a
    suitable pointer using it.  That can be quite expensive.  There are
-   many occasions, though when the pointer will not be dereferenced
-   (for example, because we only want to assert that the pointer is
-   correctly aligned).  In these cases it is more efficient not
-   to extract the tag, since the answer will be the same either way.
-   chunk2rawmem() can be used in these cases.
- */
+   cases when the pointers are not dereferenced (for example only used
+   for alignment check) so the tags are not relevant, and there are
+   cases when user data is not tagged distinctly from malloc headers
+   (user data is untagged because tagging is done late in malloc and
+   early in free).  User memory tagging across internal interfaces:
+
+      sysmalloc: Returns untagged memory.
+      _int_malloc: Returns untagged memory.
+      _int_free: Takes untagged memory.
+      _int_memalign: Returns untagged memory.
+      _int_memalign: Returns untagged memory.
+      _mid_memalign: Returns tagged memory.
+      _int_realloc: Takes and returns tagged memory.
+*/
 
 /* The chunk header is two SIZE_SZ elements, but this is used widely, so
    we define it here for clarity later.  */
 #define CHUNK_HDR_SZ (2 * SIZE_SZ)
 
-/* Convert a user mem pointer to a chunk address without correcting
+/* Convert a chunk address to a user mem pointer without correcting
    the tag.  */
 #define chunk2rawmem(p) ((void*)((char*)(p) + CHUNK_HDR_SZ))
 
@@ -1320,7 +1328,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #define aligned_OK(m)  (((unsigned long)(m) & MALLOC_ALIGN_MASK) == 0)
 
 #define misaligned_chunk(p) \
-  ((uintptr_t)(MALLOC_ALIGNMENT == CHUNK_HDR_SZ ? (p) : chunk2mem (p)) \
+  ((uintptr_t)(MALLOC_ALIGNMENT == CHUNK_HDR_SZ ? (p) : chunk2rawmem (p)) \
    & MALLOC_ALIGN_MASK)
 
 /* pad request bytes into a usable size -- internal version */
@@ -2528,7 +2536,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
               check_chunk (av, p);
 
-              return chunk2mem (p);
+              return chunk2rawmem (p);
             }
         }
     }
@@ -2898,7 +2906,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
       set_head (p, nb | PREV_INUSE | (av != &main_arena ? NON_MAIN_ARENA : 0));
       set_head (remainder, remainder_size | PREV_INUSE);
       check_malloced_chunk (av, p, nb);
-      return chunk2mem (p);
+      return chunk2rawmem (p);
     }
 
   /* catch all failure paths */
@@ -3030,7 +3038,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
   assert (chunk_is_mmapped (p));
 
   uintptr_t block = (uintptr_t) p - offset;
-  uintptr_t mem = (uintptr_t) chunk2mem(p);
+  uintptr_t mem = (uintptr_t) chunk2rawmem(p);
   size_t total_size = offset + size;
   if (__glibc_unlikely ((block | total_size) & (pagesize - 1)) != 0
       || __glibc_unlikely (!powerof2 (mem & (pagesize - 1))))
@@ -3096,7 +3104,7 @@ static __thread tcache_perthread_struct *tcache = NULL;
 static __always_inline void
 tcache_put (mchunkptr chunk, size_t tc_idx)
 {
-  tcache_entry *e = (tcache_entry *) chunk2mem (chunk);
+  tcache_entry *e = (tcache_entry *) chunk2rawmem (chunk);
 
   /* Mark this chunk as "in the tcache" so the test in _int_free will
      detect a double free.  */
@@ -3411,7 +3419,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       newp = mremap_chunk (oldp, nb);
       if (newp)
 	{
-	  void *newmem = chunk2mem (newp);
+	  void *newmem = tag_at (chunk2rawmem (newp));
 	  /* Give the new block a different tag.  This helps to ensure
 	     that stale handles to the previous mapping are not
 	     reused.  There's a performance hit for both us and the
@@ -3852,7 +3860,7 @@ _int_malloc (mstate av, size_t bytes)
 		    }
 		}
 #endif
-	      void *p = chunk2mem (victim);
+	      void *p = chunk2rawmem (victim);
 	      alloc_perturb (p, bytes);
 	      return p;
 	    }
@@ -3910,7 +3918,7 @@ _int_malloc (mstate av, size_t bytes)
 		}
 	    }
 #endif
-          void *p = chunk2mem (victim);
+          void *p = chunk2rawmem (victim);
           alloc_perturb (p, bytes);
           return p;
         }
@@ -4011,7 +4019,7 @@ _int_malloc (mstate av, size_t bytes)
               set_foot (remainder, remainder_size);
 
               check_malloced_chunk (av, victim, nb);
-              void *p = chunk2mem (victim);
+              void *p = chunk2rawmem (victim);
               alloc_perturb (p, bytes);
               return p;
             }
@@ -4043,7 +4051,7 @@ _int_malloc (mstate av, size_t bytes)
 		{
 #endif
               check_malloced_chunk (av, victim, nb);
-              void *p = chunk2mem (victim);
+              void *p = chunk2rawmem (victim);
               alloc_perturb (p, bytes);
               return p;
 #if USE_TCACHE
@@ -4205,7 +4213,7 @@ _int_malloc (mstate av, size_t bytes)
                   set_foot (remainder, remainder_size);
                 }
               check_malloced_chunk (av, victim, nb);
-              void *p = chunk2mem (victim);
+              void *p = chunk2rawmem (victim);
               alloc_perturb (p, bytes);
               return p;
             }
@@ -4313,7 +4321,7 @@ _int_malloc (mstate av, size_t bytes)
                   set_foot (remainder, remainder_size);
                 }
               check_malloced_chunk (av, victim, nb);
-              void *p = chunk2mem (victim);
+              void *p = chunk2rawmem (victim);
               alloc_perturb (p, bytes);
               return p;
             }
@@ -4351,7 +4359,7 @@ _int_malloc (mstate av, size_t bytes)
           set_head (remainder, remainder_size | PREV_INUSE);
 
           check_malloced_chunk (av, victim, nb);
-          void *p = chunk2mem (victim);
+          void *p = chunk2rawmem (victim);
           alloc_perturb (p, bytes);
           return p;
         }
@@ -4419,7 +4427,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
     if (tcache != NULL && tc_idx < mp_.tcache_bins)
       {
 	/* Check to see if it's already in the tcache.  */
-	tcache_entry *e = (tcache_entry *) chunk2mem (p);
+	tcache_entry *e = (tcache_entry *) chunk2rawmem (p);
 
 	/* This test succeeds on double free.  However, we don't 100%
 	   trust it (it also matches random payload data at a 1 in
@@ -4491,7 +4499,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	  malloc_printerr ("free(): invalid next size (fast)");
       }
 
-    free_perturb (chunk2mem(p), size - CHUNK_HDR_SZ);
+    free_perturb (chunk2rawmem(p), size - CHUNK_HDR_SZ);
 
     atomic_store_relaxed (&av->have_fastchunks, true);
     unsigned int idx = fastbin_index(size);
@@ -4564,7 +4572,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	|| __builtin_expect (nextsize >= av->system_mem, 0))
       malloc_printerr ("free(): invalid next size (normal)");
 
-    free_perturb (chunk2mem(p), size - CHUNK_HDR_SZ);
+    free_perturb (chunk2rawmem(p), size - CHUNK_HDR_SZ);
 
     /* consolidate backward */
     if (!prev_inuse(p)) {
@@ -4964,7 +4972,7 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
         {
           set_prev_size (newp, prev_size (p) + leadsize);
           set_head (newp, newsize | IS_MMAPPED);
-          return chunk2mem (newp);
+          return chunk2rawmem (newp);
         }
 
       /* Otherwise, give back leader, use the rest */
@@ -4995,7 +5003,7 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
     }
 
   check_inuse_chunk (av, p);
-  return chunk2mem (p);
+  return chunk2rawmem (p);
 }
 
 
