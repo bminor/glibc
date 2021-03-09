@@ -104,9 +104,15 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-glob-tilde test-ssize-max tst-spawn4 bug-regex37 \
 		   bug-regex38 tst-regcomp-truncated tst-spawn-chdir \
 		   tst-wordexp-nocmd
+
+# Test for the glob symbol version that was replaced in glibc 2.27.
+ifeq ($(have-GLIBC_2.26)$(build-shared),yesyes)
+tests += tst-glob_lstat_compat
+endif
+
 tests-internal	:= bug-regex5 bug-regex20 bug-regex33 \
 		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3 \
-		   tst-glob_lstat_compat tst-spawn4-compat
+		   tst-spawn4-compat
 tests-container := bug-ga2
 xtests		:= tst-getaddrinfo4 tst-getaddrinfo5 tst-sched_rr_get_interval
 ifeq (yes,$(build-shared))

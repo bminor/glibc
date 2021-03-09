@@ -25,24 +25,22 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
+#include <stdbool.h>
 #include <stdio.h>
 
 #include <shlib-compat.h>
 #include <support/check.h>
 #include <support/temp_file.h>
 
-#if TEST_COMPAT (libc, GLIBC_2_0, GLIBC_2_27)
-
 __typeof (glob) glob;
 /* On alpha glob exists in version GLIBC_2_0, GLIBC_2_1, and GLIBC_2_27.
    This test needs to access the version prior to GLIBC_2_27, which is
    GLIBC_2_1 on alpha, GLIBC_2_0 elsewhere.  */
-# ifdef __alpha__
+#ifdef __alpha__
 compat_symbol_reference (libc, glob, glob, GLIBC_2_1);
-# else
+#else
 compat_symbol_reference (libc, glob, glob, GLIBC_2_0);
-# endif
+#endif
 
 /* Compat glob should not call gl_lstat since for some old binaries it
    might be unitialized (for instance GNUmake).  Check if it is indeed
@@ -255,14 +253,5 @@ do_test (void)
 
   return 0;
 }
-
-#else /* TEST_COMPAT (libc, GLIBC_2_0, GLIBC_2_27)  */
-
-static int
-do_test (void)
-{
-  return 77;
-}
-#endif
 
 #include <support/test-driver.c>
