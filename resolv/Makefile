@@ -94,7 +94,9 @@ endif # $(build-shared)
 tests-internal += tst-inet_pton
 
 # This test accesses the __p_secstodate compat symbol.
-tests-internal += tst-p_secstodate
+ifeq ($(have-GLIBC_2.26)$(build-shared),yesyes)
+tests += tst-p_secstodate
+endif
 
 # This test sends millions of packets and is rather slow.
 xtests += tst-resolv-qtypes

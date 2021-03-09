@@ -25,8 +25,6 @@
 
 #include <shlib-compat.h>
 
-#if TEST_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_27)
-
 char *__p_secstodate (unsigned long int);
 compat_symbol_reference (libresolv, __p_secstodate, __p_secstodate, GLIBC_2_0);
 
@@ -70,15 +68,5 @@ do_test (void)
     }
   return ret;
 }
-
-#else
-
-static int
-do_test (void)
-{
-  return 77;
-}
-
-#endif
 
 #include <support/test-driver.c>
