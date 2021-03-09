@@ -249,7 +249,11 @@ tests-static = test-fpucw-static test-fpucw-ieee-static \
 	       test-signgam-uchar-static test-signgam-uchar-init-static \
 	       test-signgam-uint-static test-signgam-uint-init-static \
 	       test-signgam-ullong-static test-signgam-ullong-init-static
-tests-internal = test-matherr test-matherr-2
+
+# The tested symbols matherr, _LIB_VERSION have been removed in glibc 2.27.
+ifeq ($(have-GLIBC_2.26)$(build-shared),yesyes)
+tests += test-matherr test-matherr-2
+endif
 
 # These tests use internal (unexported) GMP functions and are linked
 # statically to obtain access to these functions.
