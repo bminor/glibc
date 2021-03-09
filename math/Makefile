@@ -325,8 +325,7 @@ libm-tests-for-type = $(foreach f,$(libm-test-funcs-all),\
 
 libm-tests.o = $(addsuffix .o,$(libm-tests))
 
-tests += $(filter-out $(libm-tests-compat),$(libm-tests))
-tests-internal += $(libm-tests-compat)
+tests += $(libm-tests)
 generated += $(addsuffix .c,$(libm-tests)) \
 	     $(foreach t,$(test-types),libm-test-support-$(t).c)
 
