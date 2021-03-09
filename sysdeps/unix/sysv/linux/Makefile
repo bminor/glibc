@@ -109,7 +109,13 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-tgkill tst-sysvsem-linux tst-sysvmsg-linux tst-sysvshm-linux \
 	 tst-timerfd tst-ppoll tst-futimens tst-utime tst-utimes \
 	 tst-clock_adjtime tst-adjtimex tst-ntp_adjtime
-tests-internal += tst-ofdlocks-compat tst-sigcontext-get_pc
+
+# Test for the symbol version of fcntl that was replaced in glibc 2.28.
+ifeq ($(have-GLIBC_2.27)$(build-shared),yesyes)
+tests += tst-ofdlocks-compat
+endif
+
+tests-internal += tst-sigcontext-get_pc
 
 CFLAGS-tst-sigcontext-get_pc.c = -fasynchronous-unwind-tables
 
