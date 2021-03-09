@@ -330,7 +330,7 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
 #if HAVE_MREMAP
       mchunkptr newp = mremap_chunk (oldp, chnb);
       if (newp)
-        newmem = chunk2mem (newp);
+        newmem = tag_at (chunk2rawmem (newp));
       else
 #endif
       {
