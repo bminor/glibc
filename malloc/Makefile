@@ -47,7 +47,12 @@ tests-static := \
 	 tst-interpose-static-thread \
 	 tst-malloc-usable-static \
 
-tests-internal := tst-mallocstate tst-scratch_buffer
+# Test for the malloc_set_state symbol removed in glibc 2.25.
+ifeq ($(have-GLIBC_2.24)$(build-shared),yesyes)
+tests += tst-mallocstate
+endif
+
+tests-internal := tst-scratch_buffer
 
 # The dynarray framework is only available inside glibc.
 tests-internal += \
@@ -117,9 +122,6 @@ $(objpfx)tst-malloc-thread-exit-mcheck: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-fail-mcheck: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock-mcheck: $(shared-thread-library)
 $(objpfx)tst-malloc-stats-cancellation-mcheck: $(shared-thread-library)
-
-# Export the __malloc_initialize_hook variable to libc.so.
-LDFLAGS-tst-mallocstate = -rdynamic
 
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a

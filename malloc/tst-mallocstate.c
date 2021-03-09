@@ -29,8 +29,6 @@
 
 #include "malloc.h"
 
-#if TEST_COMPAT (libc, GLIBC_2_0, GLIBC_2_25)
-
 /* Make the compatibility symbols availabile to this test case.  */
 void *malloc_get_state (void);
 compat_symbol_reference (libc, malloc_get_state, malloc_get_state, GLIBC_2_0);
@@ -310,6 +308,8 @@ init_heap (void)
 
 /* Interpose the initialization callback.  */
 void (*volatile __malloc_initialize_hook) (void) = init_heap;
+compat_symbol_reference (libc, __malloc_initialize_hook,
+                         __malloc_initialize_hook, GLIBC_2_0);
 
 /* Simulate occasional unrelated heap activity in the non-dumped
    heap.  */
@@ -490,12 +490,5 @@ do_test (void)
 
   return errors;
 }
-#else
-static int
-do_test (void)
-{
-  return 77;
-}
-#endif
 
 #include <support/test-driver.c>
