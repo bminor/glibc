@@ -27,7 +27,6 @@
 #include <support/temp_file.h>
 
 #include <shlib-compat.h>
-#if TEST_COMPAT (libc, GLIBC_2_0, GLIBC_2_15)
 
 compat_symbol_reference (libc, posix_spawn, posix_spawn, GLIBC_2_2);
 compat_symbol_reference (libc, posix_spawnp, posix_spawnp, GLIBC_2_2);
@@ -66,12 +65,5 @@ do_test (void)
 
   return 0;
 }
-#else
-static int
-do_test (void)
-{
-  return 77;
-}
-#endif
 
 #include <support/test-driver.c>

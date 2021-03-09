@@ -110,9 +110,14 @@ ifeq ($(have-GLIBC_2.26)$(build-shared),yesyes)
 tests += tst-glob_lstat_compat
 endif
 
+# Test for the posix_spawn, posix_spawnp symbol versions replaced in
+# glibc 2.15.
+ifeq ($(have-GLIBC_2.14)$(build-shared),yesyes)
+tests += tst-spawn4-compat
+endif
+
 tests-internal	:= bug-regex5 bug-regex20 bug-regex33 \
-		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3 \
-		   tst-spawn4-compat
+		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3
 tests-container := bug-ga2
 xtests		:= tst-getaddrinfo4 tst-getaddrinfo5 tst-sched_rr_get_interval
 ifeq (yes,$(build-shared))
