@@ -284,6 +284,57 @@ of trying to close its underlying file descriptor with @code{close}.
 This flushes any buffered output and updates the stream object to
 indicate that it is closed.
 
+@deftypefun int close_range (unsigned int @var{lowfd}, unsigned int @var{maxfd}, int @var{flags})
+@standards{Linux, unistd.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
+@c This is a syscall for Linux v5.9.  There is no fallback emulation for
+@c older kernels.
+
+The function @code{close_range} closes the file descriptor from @var{lowfd}
+to @var{maxfd} (inclusive).  This function is similar to call @code{close} in
+specified file descriptor range depending on the @var{flags}.
+
+This is function is only supported on recent Linux versions and @theglibc{}
+does not provide any fallback (the application will need to handle possible
+@code{ENOSYS}).
+
+The @var{flags} add options on how the files are closes.  Linux currently
+supports:
+
+@vtable @code
+@item CLOSE_RANGE_UNSHARE
+Unshare the file descriptor table before closing file descriptors.
+
+@item CLOSE_RANGE_CLOEXEC
+Set the @code{FD_CLOEXEC} bit instead of closing the file descriptor.
+@end vtable
+
+The normal return value from @code{close_range} is @math{0}; a value
+of @math{-1} is returned in case of failure.  The following @code{errno} error
+conditions are defined for this function:
+
+@table @code
+@item EINVAL
+The @var{lowfd} value is larger than @var{maxfd} or an unsupported @var{flags}
+is used.
+
+@item ENOMEM
+Either there is not enough memory for the operation, or the process is
+out of address space.  It can only happnes when @code{CLOSE_RANGE_UNSHARED}
+flag is used.
+
+@item EMFILE
+The process has too many files open and it can only happens when
+@code{CLOSE_RANGE_UNSHARED} flag is used.
+The maximum number of file descriptors is controlled by the
+@code{RLIMIT_NOFILE} resource limit; @pxref{Limits on Resources}.
+
+@item ENOSYS
+The kernel does not implement the required functionality.
+@end table
+@end deftypefun
+
+
 @node I/O Primitives
 @section Input and Output Primitives
 

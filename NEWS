@@ -60,6 +60,9 @@ Major new features:
   to call async-signal-safe functions (such as raise or execve).  This function
   is currently a GNU extension.
 
+* On Linux, the close_range function has been added.  It allows efficiently
+  closing a range of file descriptors on recent kernels (version 5.9).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs

@@ -283,6 +283,7 @@ libc {
     __wait3_time64;
     __wait4_time64;
 %endif
+    close_range;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries
