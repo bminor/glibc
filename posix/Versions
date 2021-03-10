@@ -154,6 +154,7 @@ libc {
   GLIBC_2.34 {
     _Fork;
     execveat;
+    posix_spawn_file_actions_addclosefrom_np;
   }
   GLIBC_PRIVATE {
     __libc_fork; __libc_pread; __libc_pwrite;

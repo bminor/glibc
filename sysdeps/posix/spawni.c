@@ -231,6 +231,10 @@ __spawni_child (void *arguments)
 	      if (__fchdir (action->action.fchdir_action.fd) != 0)
 		goto fail;
 	      break;
+
+	    case spawn_do_closefrom:
+	      __set_errno (EINVAL);
+	      goto fail;
 	    }
 	}
     }

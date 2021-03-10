@@ -2242,6 +2242,7 @@ GLIBC_2.34 login_tty F
 GLIBC_2.34 logout F
 GLIBC_2.34 logwtmp F
 GLIBC_2.34 openpty F
+GLIBC_2.34 posix_spawn_file_actions_addclosefrom_np F
 GLIBC_2.34 shm_open F
 GLIBC_2.34 shm_unlink F
 GLIBC_2.34 timespec_getres F

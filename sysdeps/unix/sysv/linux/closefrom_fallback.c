@@ -22,9 +22,11 @@
 #include <stdbool.h>
 
 /* Fallback code: iterates over /proc/self/fd, closing each file descriptor
-   that fall on the criteria.  */
+   that fall on the criteria.  If DIRFD_FALLBACK is set, a failure on
+   /proc/self/fd open will trigger a fallback that tries to close a file
+   descriptor before proceed.  */
 _Bool
-__closefrom_fallback (int from)
+__closefrom_fallback (int from, _Bool dirfd_fallback)
 {
   bool ret = false;
 
@@ -33,7 +35,7 @@ __closefrom_fallback (int from)
   if (dirfd == -1)
     {
       /* The closefrom should work even when process can't open new files.  */
-      if (errno == ENOENT)
+      if (errno == ENOENT || !dirfd_fallback)
         goto err;
 
       for (int i = from; i < INT_MAX; i++)

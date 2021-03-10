@@ -16,22 +16,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <spawn.h>
-#include <fcntl.h>
-#include <paths.h>
-#include <string.h>
-#include <sys/resource.h>
-#include <sys/wait.h>
-#include <sys/param.h>
-#include <sys/mman.h>
-#include <not-cancel.h>
-#include <local-setxid.h>
-#include <shlib-compat.h>
-#include <pthreadP.h>
-#include <dl-sysdep.h>
-#include <libc-pointer-arith.h>
+#include <internal-signals.h>
 #include <ldsodefs.h>
-#include "spawn_int.h"
+#include <local-setxid.h>
+#include <not-cancel.h>
+#include <paths.h>
+#include <shlib-compat.h>
+#include <spawn.h>
+#include <spawn_int.h>
+#include <sysdep.h>
+#include <sys/resource.h>
 
 /* The Linux implementation of posix_spawn{p} uses the clone syscall directly
    with CLONE_VM and CLONE_VFORK flags and an allocated stack.  The new stack
@@ -280,6 +274,14 @@ __spawni_child (void *arguments)
 	      if (__fchdir (action->action.fchdir_action.fd) != 0)
 		goto fail;
 	      break;
+
+	    case spawn_do_closefrom:
+	      {
+		int lowfd = action->action.closefrom_action.from;
+	        int r = INLINE_SYSCALL_CALL (close_range, lowfd, ~0U, 0);
+		if (r != 0 && !__closefrom_fallback (lowfd, false))
+		  goto fail;
+	      } break;
 	    }
 	}
     }
@@ -344,7 +346,9 @@ __spawnix (pid_t * pid, const char *file,
   /* We need at least a few pages in case the compiler's stack checking is
      enabled.  In some configs, it is known to use at least 24KiB.  We use
      32KiB to be "safe" from anything the compiler might do.  Besides, the
-     extra pages won't actually be allocated unless they get used.  */
+     extra pages won't actually be allocated unless they get used.
+     It also acts the slack for spawn_closefrom (including MIPS64 getdents64
+     where it might use about 1k extra stack space).  */
   argv_size += (32 * 1024);
   size_t stack_size = ALIGN_UP (argv_size, GLRO(dl_pagesize));
   void *stack = __mmap (NULL, stack_size, prot,

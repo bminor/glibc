@@ -158,7 +158,7 @@ extern int __brk (void *__addr) attribute_hidden;
 extern int __close (int __fd);
 libc_hidden_proto (__close)
 extern int __libc_close (int __fd);
-extern _Bool __closefrom_fallback (int __lowfd) attribute_hidden;
+extern _Bool __closefrom_fallback (int __lowfd, _Bool) attribute_hidden;
 extern ssize_t __read (int __fd, void *__buf, size_t __nbytes);
 libc_hidden_proto (__read)
 extern ssize_t __write (int __fd, const void *__buf, size_t __n);

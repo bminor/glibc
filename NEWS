@@ -67,6 +67,11 @@ Major new features:
   greater than given integer.  This function is a GNU extension, although it
   also present in other systems.
 
+* The posix_spawn_file_actions_closefrom_np function has been added, enabling
+  posix_spawn and posix_spawnp to close all file descriptors great than or
+  equal to a giver integer.  This function is a GNU extension, although
+  Solaris also provides a similar function.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs

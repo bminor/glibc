@@ -1,4 +1,4 @@
-/* Close a range of file descriptors.  Linux version.
+/* Internal definitions for posix_spawn functionality.  Linux version.
    Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,21 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdbool.h>
-#include <stdio.h>
-#include <sys/param.h>
-#include <unistd.h>
+#ifndef _SPAWN_INT_DEF_H
+#define _SPAWN_INT_DEF_H
 
-void
-__closefrom (int lowfd)
-{
-  int l = MAX (0, lowfd);
+/* spawni.c implements closefrom by interacting over /proc/self/fd.  */
+#define __SPAWN_SUPPORT_CLOSEFROM 1
 
-  int r = __close_range (l, ~0U, 0);
-  if (r == 0)
-    return;
-
-  if (!__closefrom_fallback (l, true))
-    __fortify_fail ("closefrom failed to close a file descriptor");
-}
-weak_alias (__closefrom, closefrom)
+#endif /* _SPAWN_INT_H */
