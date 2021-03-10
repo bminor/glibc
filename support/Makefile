@@ -39,6 +39,7 @@ libsupport-routines = \
   resolv_response_context_free \
   resolv_test \
   set_fortify_handler \
+  support_stack_alloc \
   support-xfstat \
   support-xfstat-time64 \
   support-xstat \

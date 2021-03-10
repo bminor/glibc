@@ -164,6 +164,25 @@ timer_t support_create_timer (uint64_t sec, long int nsec, bool repeat,
 /* Disable the timer TIMER.  */
 void support_delete_timer (timer_t timer);
 
+struct support_stack
+{
+  void *stack;
+  size_t size;
+  size_t guardsize;
+};
+
+/* Allocate stack suitable to used with xclone or sigaltstack call. The stack
+   will have a minimum size of SIZE + MINSIGSTKSZ bytes, rounded up to a whole
+   number of pages.  There will be a large (at least 1 MiB) inaccessible guard
+   bands on either side of it.
+   The returned value on ALLOC_BASE and ALLOC_SIZE will be the usable stack
+   region, excluding the GUARD_SIZE allocated area.
+   It also terminates the process on error.  */
+struct support_stack support_stack_alloc (size_t size);
+
+/* Deallocate the STACK.  */
+void support_stack_free (struct support_stack *stack);
+
 __END_DECLS
 
 #endif /* SUPPORT_H */
