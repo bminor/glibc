@@ -103,6 +103,7 @@ libsupport-routines = \
   xclock_gettime_time64 \
   xclock_settime \
   xclock_settime_time64 \
+  xclone \
   xclose \
   xchmod \
   xconnect \
