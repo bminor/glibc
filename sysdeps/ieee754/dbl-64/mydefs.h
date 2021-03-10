@@ -28,7 +28,7 @@
 #define MY_H
 
 typedef int int4;
-typedef union { int4 i[2]; double x; } mynumber;
+typedef union { int4 i[2]; double x; double d; } mynumber;
 
 #define max(x, y)  (((y) > (x)) ? (y) : (x))
 #define min(x, y)  (((y) < (x)) ? (y) : (x))

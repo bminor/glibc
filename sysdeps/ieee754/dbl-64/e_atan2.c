@@ -39,6 +39,7 @@
 #include <dla.h>
 #include "mpa.h"
 #include "MathLib.h"
+#include "mydefs.h"
 #include "uatan.tbl"
 #include "atnat2.h"
 #include <fenv.h>

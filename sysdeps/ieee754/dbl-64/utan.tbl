@@ -23,7 +23,7 @@
 
 
 #ifdef BIG_ENDI
-static const number
+static const mynumber
       xfg[186][4] = {                             /* xi,Fi,Gi,FFi, i=16..201 */
 /**/                 {{{0x3fb00000, 0x1e519d60} },
 /**/                  {{0x3fb00557, 0x96c4e240} },
@@ -773,7 +773,7 @@ static const number
 
 #else
 #ifdef LITTLE_ENDI
-static const number
+static const mynumber
       xfg[186][4] = {                             /* xi,Fi,Gi,FFi, i=16..201 */
 /**/                 {{{0x1e519d60, 0x3fb00000} },
 /**/                  {{0x96c4e240, 0x3fb00557} },
