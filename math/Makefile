@@ -126,8 +126,7 @@ type-ldouble-yes := ldouble
 
 # double support
 type-double-suffix :=
-type-double-routines := branred doasin dosincos mpa mpatan2	\
-		       k_rem_pio2 mpatan mpsqrt mptan sincos32	\
+type-double-routines := branred k_rem_pio2 	\
 		       sincostab math_err e_exp_data e_log_data	\
 		       e_log2_data e_pow_log_data
 

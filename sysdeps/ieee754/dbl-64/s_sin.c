@@ -38,7 +38,6 @@
 #include "endian.h"
 #include "mydefs.h"
 #include "usncs.h"
-#include "MathLib.h"
 #include <math.h>
 #include <math_private.h>
 #include <fenv_private.h>

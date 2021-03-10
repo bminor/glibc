@@ -199,11 +199,5 @@ do {								\
 extern double __sin (double __x);
 extern double __cos (double __x);
 extern int __branred (double __x, double *__a, double *__aa);
-extern void __doasin (double __x, double __dx, double __v[]);
-extern void __dubsin (double __x, double __dx, double __v[]);
-extern void __dubcos (double __x, double __dx, double __v[]);
-extern double __mpsin (double __x, double __dx, bool __range_reduce);
-extern double __mpcos (double __x, double __dx, bool __range_reduce);
-extern void __docos (double __x, double __dx, double __v[]);
 
 #endif /* _MATH_PRIVATE_H_ */

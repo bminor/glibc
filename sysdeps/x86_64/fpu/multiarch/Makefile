@@ -9,25 +9,14 @@ libm-sysdep_routines += s_ceil-sse4_1 s_ceilf-sse4_1 s_floor-sse4_1 \
 			s_trunc-sse4_1 s_truncf-sse4_1
 
 libm-sysdep_routines += e_exp-fma e_log-fma e_pow-fma s_atan-fma \
-			e_asin-fma e_atan2-fma s_sin-fma s_tan-fma \
-			mpa-fma \
-			sincos32-fma doasin-fma dosincos-fma \
-			mpatan2-fma mpatan-fma mpsqrt-fma mptan-fma
+			e_asin-fma e_atan2-fma s_sin-fma s_tan-fma
 
-CFLAGS-doasin-fma.c = -mfma -mavx2
-CFLAGS-dosincos-fma.c = -mfma -mavx2
 CFLAGS-e_asin-fma.c = -mfma -mavx2
 CFLAGS-e_atan2-fma.c = -mfma -mavx2
 CFLAGS-e_exp-fma.c = -mfma -mavx2
 CFLAGS-e_log-fma.c = -mfma -mavx2
 CFLAGS-e_pow-fma.c = -mfma -mavx2
-CFLAGS-mpa-fma.c = -mfma -mavx2
-CFLAGS-mpatan-fma.c = -mfma -mavx2
-CFLAGS-mpatan2-fma.c = -mfma -mavx2
-CFLAGS-mpsqrt-fma.c = -mfma -mavx2
-CFLAGS-mptan-fma.c = -mfma -mavx2
 CFLAGS-s_atan-fma.c = -mfma -mavx2
-CFLAGS-sincos32-fma.c = -mfma -mavx2
 CFLAGS-s_sin-fma.c = -mfma -mavx2
 CFLAGS-s_tan-fma.c = -mfma -mavx2
 
@@ -46,36 +35,23 @@ CFLAGS-s_cosf-fma.c = -mfma -mavx2
 CFLAGS-s_sincosf-fma.c = -mfma -mavx2
 
 libm-sysdep_routines += e_exp-fma4 e_log-fma4 e_pow-fma4 s_atan-fma4 \
-			e_asin-fma4 e_atan2-fma4 s_sin-fma4 s_tan-fma4 \
-			mpa-fma4 \
-			sincos32-fma4 doasin-fma4 dosincos-fma4 \
-			mpatan2-fma4 mpatan-fma4 mpsqrt-fma4 mptan-fma4
+			e_asin-fma4 e_atan2-fma4 s_sin-fma4 s_tan-fma4
 
-CFLAGS-doasin-fma4.c = -mfma4
-CFLAGS-dosincos-fma4.c = -mfma4
 CFLAGS-e_asin-fma4.c = -mfma4
 CFLAGS-e_atan2-fma4.c = -mfma4
 CFLAGS-e_exp-fma4.c = -mfma4
 CFLAGS-e_log-fma4.c = -mfma4
 CFLAGS-e_pow-fma4.c = -mfma4
-CFLAGS-mpa-fma4.c = -mfma4
-CFLAGS-mpatan-fma4.c = -mfma4
-CFLAGS-mpatan2-fma4.c = -mfma4
-CFLAGS-mpsqrt-fma4.c = -mfma4
-CFLAGS-mptan-fma4.c = -mfma4
 CFLAGS-s_atan-fma4.c = -mfma4
-CFLAGS-sincos32-fma4.c = -mfma4
 CFLAGS-s_sin-fma4.c = -mfma4
 CFLAGS-s_tan-fma4.c = -mfma4
 
 libm-sysdep_routines += e_exp-avx e_log-avx s_atan-avx \
-			e_atan2-avx s_sin-avx s_tan-avx \
-			mpa-avx
+			e_atan2-avx s_sin-avx s_tan-avx
 
 CFLAGS-e_atan2-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-e_exp-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-e_log-avx.c = -msse2avx -DSSE2AVX
-CFLAGS-mpa-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-s_atan-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-s_sin-avx.c = -msse2avx -DSSE2AVX
 CFLAGS-s_tan-avx.c = -msse2avx -DSSE2AVX

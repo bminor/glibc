@@ -32,7 +32,6 @@
 #include "endian.h"
 #include "mydefs.h"
 #include "urem.h"
-#include "MathLib.h"
 #include <math.h>
 #include <math_private.h>
 #include <fenv_private.h>

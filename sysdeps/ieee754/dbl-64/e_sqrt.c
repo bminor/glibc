@@ -35,7 +35,6 @@
 #include "endian.h"
 #include "mydefs.h"
 #include <dla.h>
-#include "MathLib.h"
 #include "root.tbl"
 #include <math-barriers.h>
 #include <math_private.h>
