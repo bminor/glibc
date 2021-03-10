@@ -64,7 +64,8 @@ sysdep_routines += adjtimex clone umount umount2 readahead sysctl \
 		   pselect32 \
 		   xstat fxstat lxstat xstat64 fxstat64 lxstat64 \
 		   fxstatat fxstatat64 \
-		   xmknod xmknodat convert_scm_timestamps
+		   xmknod xmknodat convert_scm_timestamps \
+		   closefrom_fallback
 
 CFLAGS-gethostid.c = -fexceptions
 CFLAGS-tee.c = -fexceptions -fasynchronous-unwind-tables

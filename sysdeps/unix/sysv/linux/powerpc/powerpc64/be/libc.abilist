@@ -2309,6 +2309,7 @@ GLIBC_2.34 aio_write F
 GLIBC_2.34 aio_write64 F
 GLIBC_2.34 call_once F
 GLIBC_2.34 close_range F
+GLIBC_2.34 closefrom F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F
 GLIBC_2.34 cnd_init F

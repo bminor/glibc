@@ -137,6 +137,9 @@ libc {
     stat; stat64; fstat; fstat64; lstat; lstat64; fstatat; fstatat64;
     mknod; mknodat;
   }
+  GLIBC_2.34 {
+    closefrom;
+  }
   GLIBC_PRIVATE {
     __libc_fcntl64;
     __fcntl_nocancel;

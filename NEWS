@@ -63,6 +63,10 @@ Major new features:
 * On Linux, the close_range function has been added.  It allows efficiently
   closing a range of file descriptors on recent kernels (version 5.9).
 
+* The function closefrom has been added.  It closes all file descriptors
+  greater than given integer.  This function is a GNU extension, although it
+  also present in other systems.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs

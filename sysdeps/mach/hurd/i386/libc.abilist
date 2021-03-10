@@ -2225,6 +2225,7 @@ GLIBC_2.34 _Fork F
 GLIBC_2.34 __isnanf128 F
 GLIBC_2.34 __libc_start_main F
 GLIBC_2.34 _hurd_libc_proc_init F
+GLIBC_2.34 closefrom F
 GLIBC_2.34 dladdr F
 GLIBC_2.34 dladdr1 F
 GLIBC_2.34 dlclose F

@@ -56,7 +56,8 @@ routines :=								\
 	sendfile sendfile64 copy_file_range 				\
 	utimensat futimens file_change_detection			\
 	fts64-time64							\
-	ftw64-time64
+	ftw64-time64							\
+	closefrom
 
 others		:= pwd
 test-srcs	:= ftwtest ftwtest-time64
@@ -77,6 +78,7 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-lutimes \
 		   tst-futimens \
 		   tst-utimensat \
+		   tst-closefrom \
 
 tests-time64 := \
   tst-futimens-time64 \

@@ -357,6 +357,12 @@ extern __off64_t lseek64 (int __fd, __off64_t __offset, int __whence)
    __THROW.  */
 extern int close (int __fd);
 
+#ifdef __USE_MISC
+/* Close all open file descriptors greater than or equal to LOWFD.
+   Negative LOWFD is clamped to 0.  */
+extern void closefrom (int __lowfd) __THROW;
+#endif
+
 /* Read NBYTES into BUF from FD.  Return the
    number read, -1 for errors or 0 for EOF.
 
