@@ -86,6 +86,7 @@ libsupport-routines = \
   xchdir \
   xchroot \
   xclock_gettime \
+  xclone \
   xclose \
   xconnect \
   xcopy_file_range \
