@@ -29,7 +29,7 @@
 #define M 4
 
 #ifdef BIG_ENDI
-  static const number
+  static const mynumber
   /* polynomial I */
 /**/ d3             = {{0xbfd55555, 0x55555555} }, /* -0.333... */
 /**/ d5             = {{0x3fc99999, 0x999997fd} }, /*  0.199... */
@@ -79,7 +79,7 @@
 
 #else
 #ifdef LITTLE_ENDI
-  static const number
+  static const mynumber
   /* polynomial I */
 /**/ d3             = {{0x55555555, 0xbfd55555} }, /* -0.333... */
 /**/ d5             = {{0x999997fd, 0x3fc99999} }, /*  0.199... */

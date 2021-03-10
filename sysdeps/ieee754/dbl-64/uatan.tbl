@@ -25,7 +25,7 @@
 
 #ifdef BIG_ENDI
 
-  static const number
+  static const mynumber
       cij[241][7] = {                             /* x0,cij for (1/16,1) */
 /**/                 {{{0X3FB04006, 0X65E0244E} },
 /**/                  {{0X3FB03A73, 0X7B53DD20} },
@@ -1716,7 +1716,7 @@
 /**/                  {{0XBF99B9A7, 0X18A3BA58} } },
   };
 
-  static const number
+  static const mynumber
      hij[241][16] = {                             /* x0,hij for (1/16,1) */
 /**/                 {{{0x3fb04000, 0x00000000} },
 /**/                  {{0x3fb03a6d, 0x1c06693d} },
@@ -5579,7 +5579,7 @@
 #else
 #ifdef LITTLE_ENDI
 
-  static const number
+  static const mynumber
       cij[241][7] = {                             /* x0,cij for (1/16,1) */
 /**/                 {{{0X65E0244E, 0X3FB04006} },
 /**/                  {{0X7B53DD20, 0X3FB03A73} },
@@ -7270,7 +7270,7 @@
 /**/                  {{0X18A3BA58, 0XBF99B9A7} } },
   };
 
-  static const number
+  static const mynumber
      hij[241][16] = {                             /* x0,hij for (1/16,1) */
 /**/                 {{{0x00000000, 0x3fb04000} },
 /**/                  {{0x1c06693d, 0x3fb03a6d} },
