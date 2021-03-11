@@ -481,7 +481,7 @@ need_sync (char *ap, char *bp, struct stat *a, struct stat *b)
 }
 
 static void
-rsync_1 (path_buf * src, path_buf * dest, int and_delete)
+rsync_1 (path_buf * src, path_buf * dest, int and_delete, int force_copies)
 {
   DIR *dir;
   struct dirent *de;
@@ -491,8 +491,9 @@ rsync_1 (path_buf * src, path_buf * dest, int and_delete)
   r_append ("/", dest);
 
   if (verbose)
-    printf ("sync %s to %s %s\n", src->buf, dest->buf,
-	    and_delete ? "and delete" : "");
+    printf ("sync %s to %s%s%s\n", src->buf, dest->buf,
+	    and_delete ? " and delete" : "",
+	    force_copies ? " (forced)" : "");
 
   size_t staillen = src->len;
 
@@ -521,10 +522,10 @@ rsync_1 (path_buf * src, path_buf * dest, int and_delete)
 	 missing.  */
       lstat (dest->buf, &d);
 
-      if (! need_sync (src->buf, dest->buf, &s, &d))
+      if (! force_copies && ! need_sync (src->buf, dest->buf, &s, &d))
 	{
 	  if (S_ISDIR (s.st_mode))
-	    rsync_1 (src, dest, and_delete);
+	    rsync_1 (src, dest, and_delete, force_copies);
 	  continue;
 	}
 
@@ -559,7 +560,7 @@ rsync_1 (path_buf * src, path_buf * dest, int and_delete)
 	  if (verbose)
 	    printf ("+D %s\n", dest->buf);
 	  maybe_xmkdir (dest->buf, (s.st_mode & 0777) | 0700);
-	  rsync_1 (src, dest, and_delete);
+	  rsync_1 (src, dest, and_delete, force_copies);
 	  break;
 
 	case S_IFLNK:
@@ -639,12 +640,12 @@ rsync_1 (path_buf * src, path_buf * dest, int and_delete)
 }
 
 static void
-rsync (char *src, char *dest, int and_delete)
+rsync (char *src, char *dest, int and_delete, int force_copies)
 {
   r_setup (src, &spath);
   r_setup (dest, &dpath);
 
-  rsync_1 (&spath, &dpath, and_delete);
+  rsync_1 (&spath, &dpath, and_delete, force_copies);
 }
 
 
@@ -846,11 +847,11 @@ main (int argc, char **argv)
     do_ldconfig = true;
 
   rsync (pristine_root_path, new_root_path,
-	 file_exists (concat (command_root, "/preclean.req", NULL)));
+	 file_exists (concat (command_root, "/preclean.req", NULL)), 0);
 
   if (stat (command_root, &st) >= 0
       && S_ISDIR (st.st_mode))
-    rsync (command_root, new_root_path, 0);
+    rsync (command_root, new_root_path, 0, 1);
 
   new_objdir_path = xstrdup (concat (new_root_path,
 				    support_objdir_root, NULL));
@@ -1044,7 +1045,7 @@ main (int argc, char **argv)
 
 	  /* Child has exited, we can post-clean the test root.  */
 	  printf("running post-clean rsync\n");
-	  rsync (pristine_root_path, new_root_path, 1);
+	  rsync (pristine_root_path, new_root_path, 1, 0);
 
 	  if (WIFEXITED (status))
 	    exit (WEXITSTATUS (status));
