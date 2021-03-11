@@ -72,7 +72,8 @@ try:
     # The gdb version string is "GNU gdb <PKGVERSION><version>", where
     # PKGVERSION can be any text.  We assume that there'll always be a space
     # between PKGVERSION and the version number for the sake of the regexp.
-    version_match = re.search(r'GNU gdb .* ([1-9]+)\.([0-9]+)', gdb_version_out)
+    version_match = re.search(r'GNU gdb .* ([1-9][0-9]*)\.([0-9]+)',
+                              gdb_version_out)
 
     if not version_match:
         print('The gdb version string (gdb -v) is incorrectly formatted.')
