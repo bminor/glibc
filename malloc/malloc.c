@@ -4851,14 +4851,14 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
             }
           else
             {
-	      void *oldmem = chunk2mem (oldp);
+	      void *oldmem = chunk2rawmem (oldp);
+	      size_t sz = CHUNK_AVAILABLE_SIZE (oldp) - CHUNK_HDR_SZ;
+	      (void) TAG_REGION (oldmem, sz);
 	      newmem = TAG_NEW_USABLE (newmem);
-	      memcpy (newmem, oldmem,
-		      CHUNK_AVAILABLE_SIZE (oldp) - CHUNK_HDR_SZ);
-	      (void) TAG_REGION (chunk2rawmem (oldp), oldsize);
-              _int_free (av, oldp, 1);
-              check_inuse_chunk (av, newp);
-              return chunk2mem (newp);
+	      memcpy (newmem, oldmem, sz);
+	      _int_free (av, oldp, 1);
+	      check_inuse_chunk (av, newp);
+	      return newmem;
             }
         }
     }
