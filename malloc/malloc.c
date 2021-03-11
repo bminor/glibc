@@ -1307,12 +1307,12 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 /* Convert a chunk address to a user mem pointer without correcting
    the tag.  */
-#define chunk2rawmem(p) ((void*)((char*)(p) + CHUNK_HDR_SZ))
+#define chunk2mem(p) ((void*)((char*)(p) + CHUNK_HDR_SZ))
 
-/* Convert between user mem pointers and chunk pointers, updating any
-   memory tags on the pointer to respect the tag value at that
-   location.  */
-#define chunk2mem(p) ((void *)tag_at (((char*)(p) + CHUNK_HDR_SZ)))
+/* Convert a chunk address to a user mem pointer and extract the right tag.  */
+#define chunk2mem_tag(p) ((void*)tag_at ((char*)(p) + CHUNK_HDR_SZ))
+
+/* Convert a user mem pointer to a chunk address and extract the right tag.  */
 #define mem2chunk(mem) ((mchunkptr)tag_at (((char*)(mem) - CHUNK_HDR_SZ)))
 
 /* The smallest possible chunk */
@@ -1328,7 +1328,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 #define aligned_OK(m)  (((unsigned long)(m) & MALLOC_ALIGN_MASK) == 0)
 
 #define misaligned_chunk(p) \
-  ((uintptr_t)(MALLOC_ALIGNMENT == CHUNK_HDR_SZ ? (p) : chunk2rawmem (p)) \
+  ((uintptr_t)(MALLOC_ALIGNMENT == CHUNK_HDR_SZ ? (p) : chunk2mem (p)) \
    & MALLOC_ALIGN_MASK)
 
 /* pad request bytes into a usable size -- internal version */
@@ -2128,7 +2128,7 @@ do_check_chunk (mstate av, mchunkptr p)
       /* chunk is page-aligned */
       assert (((prev_size (p) + sz) & (GLRO (dl_pagesize) - 1)) == 0);
       /* mem is aligned */
-      assert (aligned_OK (chunk2rawmem (p)));
+      assert (aligned_OK (chunk2mem (p)));
     }
 }
 
@@ -2152,7 +2152,7 @@ do_check_free_chunk (mstate av, mchunkptr p)
   if ((unsigned long) (sz) >= MINSIZE)
     {
       assert ((sz & MALLOC_ALIGN_MASK) == 0);
-      assert (aligned_OK (chunk2rawmem (p)));
+      assert (aligned_OK (chunk2mem (p)));
       /* ... matching footer field */
       assert (prev_size (next_chunk (p)) == sz);
       /* ... and is fully consolidated */
@@ -2231,7 +2231,7 @@ do_check_remalloced_chunk (mstate av, mchunkptr p, INTERNAL_SIZE_T s)
   assert ((sz & MALLOC_ALIGN_MASK) == 0);
   assert ((unsigned long) (sz) >= MINSIZE);
   /* ... and alignment */
-  assert (aligned_OK (chunk2rawmem (p)));
+  assert (aligned_OK (chunk2mem (p)));
   /* chunk is less than MINSIZE more than request */
   assert ((long) (sz) - (long) (s) >= 0);
   assert ((long) (sz) - (long) (s + MINSIZE) < 0);
@@ -2501,16 +2501,16 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
               if (MALLOC_ALIGNMENT == CHUNK_HDR_SZ)
                 {
-                  /* For glibc, chunk2rawmem increases the address by
+                  /* For glibc, chunk2mem increases the address by
                      CHUNK_HDR_SZ and MALLOC_ALIGN_MASK is
                      CHUNK_HDR_SZ-1.  Each mmap'ed area is page
                      aligned and therefore definitely
                      MALLOC_ALIGN_MASK-aligned.  */
-                  assert (((INTERNAL_SIZE_T) chunk2rawmem (mm) & MALLOC_ALIGN_MASK) == 0);
+                  assert (((INTERNAL_SIZE_T) chunk2mem (mm) & MALLOC_ALIGN_MASK) == 0);
                   front_misalign = 0;
                 }
               else
-                front_misalign = (INTERNAL_SIZE_T) chunk2rawmem (mm) & MALLOC_ALIGN_MASK;
+                front_misalign = (INTERNAL_SIZE_T) chunk2mem (mm) & MALLOC_ALIGN_MASK;
               if (front_misalign > 0)
                 {
                   correction = MALLOC_ALIGNMENT - front_misalign;
@@ -2536,7 +2536,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
               check_chunk (av, p);
 
-              return chunk2rawmem (p);
+              return chunk2mem (p);
             }
         }
     }
@@ -2757,7 +2757,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
                   /* Guarantee alignment of first new chunk made from this space */
 
-                  front_misalign = (INTERNAL_SIZE_T) chunk2rawmem (brk) & MALLOC_ALIGN_MASK;
+                  front_misalign = (INTERNAL_SIZE_T) chunk2mem (brk) & MALLOC_ALIGN_MASK;
                   if (front_misalign > 0)
                     {
                       /*
@@ -2815,10 +2815,10 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
                 {
                   if (MALLOC_ALIGNMENT == CHUNK_HDR_SZ)
                     /* MORECORE/mmap must correctly align */
-                    assert (((unsigned long) chunk2rawmem (brk) & MALLOC_ALIGN_MASK) == 0);
+                    assert (((unsigned long) chunk2mem (brk) & MALLOC_ALIGN_MASK) == 0);
                   else
                     {
-                      front_misalign = (INTERNAL_SIZE_T) chunk2rawmem (brk) & MALLOC_ALIGN_MASK;
+                      front_misalign = (INTERNAL_SIZE_T) chunk2mem (brk) & MALLOC_ALIGN_MASK;
                       if (front_misalign > 0)
                         {
                           /*
@@ -2906,7 +2906,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
       set_head (p, nb | PREV_INUSE | (av != &main_arena ? NON_MAIN_ARENA : 0));
       set_head (remainder, remainder_size | PREV_INUSE);
       check_malloced_chunk (av, p, nb);
-      return chunk2rawmem (p);
+      return chunk2mem (p);
     }
 
   /* catch all failure paths */
@@ -3004,7 +3004,7 @@ munmap_chunk (mchunkptr p)
   if (DUMPED_MAIN_ARENA_CHUNK (p))
     return;
 
-  uintptr_t mem = (uintptr_t) chunk2rawmem (p);
+  uintptr_t mem = (uintptr_t) chunk2mem (p);
   uintptr_t block = (uintptr_t) p - prev_size (p);
   size_t total_size = prev_size (p) + size;
   /* Unfortunately we have to do the compilers job by hand here.  Normally
@@ -3038,7 +3038,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
   assert (chunk_is_mmapped (p));
 
   uintptr_t block = (uintptr_t) p - offset;
-  uintptr_t mem = (uintptr_t) chunk2rawmem(p);
+  uintptr_t mem = (uintptr_t) chunk2mem(p);
   size_t total_size = offset + size;
   if (__glibc_unlikely ((block | total_size) & (pagesize - 1)) != 0
       || __glibc_unlikely (!powerof2 (mem & (pagesize - 1))))
@@ -3059,7 +3059,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
   p = (mchunkptr) (cp + offset);
 
-  assert (aligned_OK (chunk2rawmem (p)));
+  assert (aligned_OK (chunk2mem (p)));
 
   assert (prev_size (p) == offset);
   set_head (p, (new_size - offset) | IS_MMAPPED);
@@ -3104,7 +3104,7 @@ static __thread tcache_perthread_struct *tcache = NULL;
 static __always_inline void
 tcache_put (mchunkptr chunk, size_t tc_idx)
 {
-  tcache_entry *e = (tcache_entry *) chunk2rawmem (chunk);
+  tcache_entry *e = (tcache_entry *) chunk2mem (chunk);
 
   /* Mark this chunk as "in the tcache" so the test in _int_free will
      detect a double free.  */
@@ -3324,7 +3324,7 @@ __libc_free (void *mem)
       MAYBE_INIT_TCACHE ();
 
       /* Mark the chunk as belonging to the library again.  */
-      (void)tag_region (chunk2rawmem (p), memsize (p));
+      (void)tag_region (chunk2mem (p), memsize (p));
 
       ar_ptr = arena_for_chunk (p);
       _int_free (ar_ptr, p, 0);
@@ -3419,7 +3419,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       newp = mremap_chunk (oldp, nb);
       if (newp)
 	{
-	  void *newmem = tag_at (chunk2rawmem (newp));
+	  void *newmem = chunk2mem_tag (newp);
 	  /* Give the new block a different tag.  This helps to ensure
 	     that stale handles to the previous mapping are not
 	     reused.  There's a performance hit for both us and the
@@ -3468,7 +3468,7 @@ __libc_realloc (void *oldmem, size_t bytes)
         {
 	  size_t sz = memsize (oldp);
 	  memcpy (newp, oldmem, sz);
-	  (void) tag_region (chunk2rawmem (oldp), sz);
+	  (void) tag_region (chunk2mem (oldp), sz);
           _int_free (ar_ptr, oldp, 0);
         }
     }
@@ -3860,7 +3860,7 @@ _int_malloc (mstate av, size_t bytes)
 		    }
 		}
 #endif
-	      void *p = chunk2rawmem (victim);
+	      void *p = chunk2mem (victim);
 	      alloc_perturb (p, bytes);
 	      return p;
 	    }
@@ -3918,7 +3918,7 @@ _int_malloc (mstate av, size_t bytes)
 		}
 	    }
 #endif
-          void *p = chunk2rawmem (victim);
+          void *p = chunk2mem (victim);
           alloc_perturb (p, bytes);
           return p;
         }
@@ -4019,7 +4019,7 @@ _int_malloc (mstate av, size_t bytes)
               set_foot (remainder, remainder_size);
 
               check_malloced_chunk (av, victim, nb);
-              void *p = chunk2rawmem (victim);
+              void *p = chunk2mem (victim);
               alloc_perturb (p, bytes);
               return p;
             }
@@ -4051,7 +4051,7 @@ _int_malloc (mstate av, size_t bytes)
 		{
 #endif
               check_malloced_chunk (av, victim, nb);
-              void *p = chunk2rawmem (victim);
+              void *p = chunk2mem (victim);
               alloc_perturb (p, bytes);
               return p;
 #if USE_TCACHE
@@ -4213,7 +4213,7 @@ _int_malloc (mstate av, size_t bytes)
                   set_foot (remainder, remainder_size);
                 }
               check_malloced_chunk (av, victim, nb);
-              void *p = chunk2rawmem (victim);
+              void *p = chunk2mem (victim);
               alloc_perturb (p, bytes);
               return p;
             }
@@ -4321,7 +4321,7 @@ _int_malloc (mstate av, size_t bytes)
                   set_foot (remainder, remainder_size);
                 }
               check_malloced_chunk (av, victim, nb);
-              void *p = chunk2rawmem (victim);
+              void *p = chunk2mem (victim);
               alloc_perturb (p, bytes);
               return p;
             }
@@ -4359,7 +4359,7 @@ _int_malloc (mstate av, size_t bytes)
           set_head (remainder, remainder_size | PREV_INUSE);
 
           check_malloced_chunk (av, victim, nb);
-          void *p = chunk2rawmem (victim);
+          void *p = chunk2mem (victim);
           alloc_perturb (p, bytes);
           return p;
         }
@@ -4427,7 +4427,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
     if (tcache != NULL && tc_idx < mp_.tcache_bins)
       {
 	/* Check to see if it's already in the tcache.  */
-	tcache_entry *e = (tcache_entry *) chunk2rawmem (p);
+	tcache_entry *e = (tcache_entry *) chunk2mem (p);
 
 	/* This test succeeds on double free.  However, we don't 100%
 	   trust it (it also matches random payload data at a 1 in
@@ -4499,7 +4499,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	  malloc_printerr ("free(): invalid next size (fast)");
       }
 
-    free_perturb (chunk2rawmem(p), size - CHUNK_HDR_SZ);
+    free_perturb (chunk2mem(p), size - CHUNK_HDR_SZ);
 
     atomic_store_relaxed (&av->have_fastchunks, true);
     unsigned int idx = fastbin_index(size);
@@ -4572,7 +4572,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	|| __builtin_expect (nextsize >= av->system_mem, 0))
       malloc_printerr ("free(): invalid next size (normal)");
 
-    free_perturb (chunk2rawmem(p), size - CHUNK_HDR_SZ);
+    free_perturb (chunk2mem(p), size - CHUNK_HDR_SZ);
 
     /* consolidate backward */
     if (!prev_inuse(p)) {
@@ -4836,7 +4836,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
           av->top = chunk_at_offset (oldp, nb);
           set_head (av->top, (newsize - nb) | PREV_INUSE);
           check_inuse_chunk (av, oldp);
-          return tag_new_usable (chunk2rawmem (oldp));
+          return tag_new_usable (chunk2mem (oldp));
         }
 
       /* Try to expand forward into next chunk;  split off remainder below */
@@ -4869,7 +4869,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
             }
           else
             {
-	      void *oldmem = chunk2rawmem (oldp);
+	      void *oldmem = chunk2mem (oldp);
 	      size_t sz = memsize (oldp);
 	      (void) tag_region (oldmem, sz);
 	      newmem = tag_new_usable (newmem);
@@ -4906,7 +4906,7 @@ _int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
     }
 
   check_inuse_chunk (av, newp);
-  return tag_new_usable (chunk2rawmem (newp));
+  return tag_new_usable (chunk2mem (newp));
 }
 
 /*
@@ -4972,7 +4972,7 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
         {
           set_prev_size (newp, prev_size (p) + leadsize);
           set_head (newp, newsize | IS_MMAPPED);
-          return chunk2rawmem (newp);
+          return chunk2mem (newp);
         }
 
       /* Otherwise, give back leader, use the rest */
@@ -4984,7 +4984,7 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
       p = newp;
 
       assert (newsize >= nb &&
-              (((unsigned long) (chunk2rawmem (p))) % alignment) == 0);
+              (((unsigned long) (chunk2mem (p))) % alignment) == 0);
     }
 
   /* Also give back spare room at the end */
@@ -5003,7 +5003,7 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
     }
 
   check_inuse_chunk (av, p);
-  return chunk2rawmem (p);
+  return chunk2mem (p);
 }
 
 
@@ -5038,7 +5038,7 @@ mtrim (mstate av, size_t pad)
                                                 + sizeof (struct malloc_chunk)
                                                 + psm1) & ~psm1);
 
-                assert ((char *) chunk2rawmem (p) + 2 * CHUNK_HDR_SZ
+                assert ((char *) chunk2mem (p) + 2 * CHUNK_HDR_SZ
 			<= paligned_mem);
                 assert ((char *) p + size > paligned_mem);
 
