@@ -16,10 +16,16 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/stat.h>
+#include <errno.h>
 
 int
 __fstat64 (int fd, struct stat64 *buf)
 {
+  if (fd < 0)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
   return __fstatat64 (fd, "", buf, AT_EMPTY_PATH);
 }
 hidden_def (__fstat64)

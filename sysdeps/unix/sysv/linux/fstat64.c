@@ -22,10 +22,16 @@
 #include <fcntl.h>
 #include <kernel_stat.h>
 #include <stat_t64_cp.h>
+#include <errno.h>
 
 int
 __fstat64_time64 (int fd, struct __stat64_t64 *buf)
 {
+  if (fd < 0)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
   return __fstatat64_time64 (fd, "", buf, AT_EMPTY_PATH);
 }
 #if __TIMESIZE != 64
@@ -34,6 +40,12 @@ hidden_def (__fstat64_time64)
 int
 __fstat64 (int fd, struct stat64 *buf)
 {
+  if (fd < 0)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
+
   struct __stat64_t64 st_t64;
   return __fstat64_time64 (fd, &st_t64)
 	 ?: __cp_stat64_t64_stat64 (&st_t64, buf);

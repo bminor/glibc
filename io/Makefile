@@ -68,7 +68,7 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-fts tst-fts-lfs tst-open-tmpfile \
 		   tst-copy_file_range tst-getcwd-abspath tst-lockf \
 		   tst-ftw-lnk tst-file_change_detection tst-lchmod \
-		   tst-ftw-bz26353
+		   tst-ftw-bz26353 tst-stat tst-stat-lfs
 
 # Likewise for statx, but we do not need static linking here.
 tests-internal += tst-statx
