@@ -19,11 +19,17 @@
 #include <sys/stat.h>
 #include <kernel_stat.h>
 #include <fcntl.h>
+#include <errno.h>
 
 #if !XSTAT_IS_XSTAT64
 int
 __fstat (int fd, struct stat *buf)
 {
+  if (fd < 0)
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
   return __fstatat (fd, "", buf, AT_EMPTY_PATH);
 }
 
