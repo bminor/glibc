@@ -21,10 +21,12 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <support/check.h>
+#include <support/support.h>
 #include <support/xunistd.h>
 #include <support/temp_file.h>
 
 static int temp_fd = -1;
+static char *testfile;
 
 /* struct timespec array with Y2038 threshold minus 2 and 1 seconds.  */
 const struct timespec t1[2] = { { 0x7FFFFFFE, 0 },  { 0x7FFFFFFF, 0 } };
@@ -39,13 +41,17 @@ const struct timespec t3[2] = { { 0x7FFFFFFE, 0 },  { 0x80000002ULL, 0 } };
 static void
 do_prepare (int argc, char *argv[])
 {
-  temp_fd = create_temp_file ("futimensat", NULL);
+  temp_fd = create_temp_file ("futimensat", &testfile);
   TEST_VERIFY_EXIT (temp_fd > 0);
 }
 
 static int
 test_futimens_helper (const struct timespec *ts)
 {
+  if (!support_path_support_time64 (testfile))
+    FAIL_UNSUPPORTED ("File %s does not support 64-bit timestamps",
+		      testfile);
+
   struct stat64 st;
   int result;
   time_t t;

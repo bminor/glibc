@@ -22,11 +22,12 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <support/check.h>
+#include <support/support.h>
 #include <support/xunistd.h>
 #include <support/temp_file.h>
 
 static int temp_fd = -1;
-char *testfile;
+static char *testfile;
 
 /* struct timeval array with Y2038 threshold minus 2 and 1 seconds.  */
 const static struct timeval t1[2] = { { 0x7FFFFFFE, 0 },  { 0x7FFFFFFF, 0 } };
@@ -50,6 +51,10 @@ do_prepare (int argc, char *argv[])
 static int
 test_utime_helper (const struct timeval *tv)
 {
+  if (!support_path_support_time64 (testfile))
+    FAIL_UNSUPPORTED ("File %s does not support 64-bit timestamps",
+		      testfile);
+
   struct stat64 st;
   int result;
   time_t t;
