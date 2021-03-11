@@ -279,7 +279,7 @@ free_check (void *mem, const void *caller)
   else
     {
       /* Mark the chunk as belonging to the library again.  */
-      (void)tag_region (chunk2rawmem (p), memsize (p));
+      (void)tag_region (chunk2mem (p), memsize (p));
       _int_free (&main_arena, p, 1);
       __libc_lock_unlock (main_arena.mutex);
     }
@@ -330,7 +330,7 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
 #if HAVE_MREMAP
       mchunkptr newp = mremap_chunk (oldp, chnb);
       if (newp)
-        newmem = tag_at (chunk2rawmem (newp));
+        newmem = chunk2mem_tag (newp);
       else
 #endif
       {
