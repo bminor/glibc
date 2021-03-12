@@ -3411,7 +3411,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       newp = mremap_chunk (oldp, nb);
       if (newp)
 	{
-	  void *newmem = chunk2rawmem (newp);
+	  void *newmem = chunk2mem (newp);
 	  /* Give the new block a different tag.  This helps to ensure
 	     that stale handles to the previous mapping are not
 	     reused.  There's a performance hit for both us and the
