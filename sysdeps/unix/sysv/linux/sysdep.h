@@ -95,10 +95,6 @@
  (long) (val), \
  (long) (((uint64_t) (val)) >> 32)
 
-/* Exports the __send symbol on send.c linux implementation (some ABI have
-   it missing due the usage of a old generic version without it).  */
-#define HAVE_INTERNAL_SEND_SYMBOL	1
-
 /* Export the ___brk_addr symbol on brk.c implementation (some ABIs export
    it due and old crtstuff.c code).  */
 #define HAVE_INTERNAL_BRK_ADDR_SYMBOL   0

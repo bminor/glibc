@@ -371,6 +371,7 @@ GLIBC_2.17 __sched_getscheduler F
 GLIBC_2.17 __sched_setscheduler F
 GLIBC_2.17 __sched_yield F
 GLIBC_2.17 __select F
+GLIBC_2.17 __send F
 GLIBC_2.17 __setmntent F
 GLIBC_2.17 __setpgid F
 GLIBC_2.17 __sigaction F

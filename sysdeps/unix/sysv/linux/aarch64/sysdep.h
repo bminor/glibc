@@ -164,10 +164,6 @@
 # define HAVE_CLOCK_GETTIME64_VSYSCALL	"__kernel_clock_gettime"
 # define HAVE_GETTIMEOFDAY_VSYSCALL	"__kernel_gettimeofday"
 
-/* Previously AArch64 used the generic version without the libc_hidden_def
-   which lead in a non existent __send symbol in libc.so.  */
-# undef HAVE_INTERNAL_SEND_SYMBOL
-
 # define SINGLE_THREAD_BY_GLOBAL		1
 
 # undef INTERNAL_SYSCALL_RAW

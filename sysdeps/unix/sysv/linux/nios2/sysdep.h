@@ -140,10 +140,6 @@
 /* In order to get __set_errno() definition in INLINE_SYSCALL.  */
 #include <errno.h>
 
-/* Previously Nios2 used the generic version without the libc_hidden_def
-   which lead in a non existent __send symbol in libc.so.  */
-# undef HAVE_INTERNAL_SEND_SYMBOL
-
 #undef INTERNAL_SYSCALL_RAW
 #define INTERNAL_SYSCALL_RAW(name, nr, args...)                 \
   ({ unsigned int _sys_result;                                  \

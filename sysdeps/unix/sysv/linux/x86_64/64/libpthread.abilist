@@ -39,7 +39,6 @@ GLIBC_2.2.5 __pthread_rwlock_wrlock F
 GLIBC_2.2.5 __pthread_setspecific F
 GLIBC_2.2.5 __pwrite64 F
 GLIBC_2.2.5 __res_state F
-GLIBC_2.2.5 __send F
 GLIBC_2.2.5 __sigaction F
 GLIBC_2.2.5 _pthread_cleanup_pop F
 GLIBC_2.2.5 _pthread_cleanup_pop_restore F
@@ -142,7 +141,6 @@ GLIBC_2.2.5 sem_timedwait F
 GLIBC_2.2.5 sem_trywait F
 GLIBC_2.2.5 sem_unlink F
 GLIBC_2.2.5 sem_wait F
-GLIBC_2.2.5 send F
 GLIBC_2.2.5 sigaction F
 GLIBC_2.2.5 siglongjmp F
 GLIBC_2.2.6 __libpthread_version_placeholder F

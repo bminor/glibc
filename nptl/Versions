@@ -120,7 +120,6 @@ libpthread {
     __pthread_mutexattr_settype;
     __pthread_once;
     __pthread_setspecific;
-    __send;
     __sigaction;
     _exit;
     _pthread_cleanup_pop;
@@ -170,7 +169,6 @@ libpthread {
     sem_post;
     sem_trywait;
     sem_wait;
-    send;
     sigaction;
     siglongjmp;
   }

@@ -37,7 +37,6 @@ GLIBC_2.33 __pthread_unregister_cancel_restore F
 GLIBC_2.33 __pthread_unwind_next F
 GLIBC_2.33 __pwrite64 F
 GLIBC_2.33 __res_state F
-GLIBC_2.33 __send F
 GLIBC_2.33 __sigaction F
 GLIBC_2.33 _pthread_cleanup_pop F
 GLIBC_2.33 _pthread_cleanup_pop_restore F
@@ -182,7 +181,6 @@ GLIBC_2.33 sem_timedwait F
 GLIBC_2.33 sem_trywait F
 GLIBC_2.33 sem_unlink F
 GLIBC_2.33 sem_wait F
-GLIBC_2.33 send F
 GLIBC_2.33 sigaction F
 GLIBC_2.33 thrd_create F
 GLIBC_2.33 thrd_detach F

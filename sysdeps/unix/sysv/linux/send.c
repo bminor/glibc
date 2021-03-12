@@ -32,6 +32,4 @@ __libc_send (int fd, const void *buf, size_t len, int flags)
 }
 weak_alias (__libc_send, send)
 weak_alias (__libc_send, __send)
-#ifdef HAVE_INTERNAL_SEND_SYMBOL
 libc_hidden_def (__send)
-#endif
