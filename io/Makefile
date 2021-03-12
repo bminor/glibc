@@ -105,6 +105,7 @@ CFLAGS-fallocate64.c += -fexceptions
 CFLAGS-read.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-write.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-close.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-accept.c += -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-test-stat.c += -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE
 CFLAGS-test-lfs.c += -D_LARGEFILE64_SOURCE

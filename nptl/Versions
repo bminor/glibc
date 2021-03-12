@@ -129,7 +129,6 @@ libpthread {
     _pthread_cleanup_pop_restore;
     _pthread_cleanup_push;
     _pthread_cleanup_push_defer;
-    accept;
     connect;
     fcntl;
     flockfile;

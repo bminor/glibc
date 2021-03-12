@@ -47,7 +47,6 @@ GLIBC_2.2 _pthread_cleanup_pop F
 GLIBC_2.2 _pthread_cleanup_pop_restore F
 GLIBC_2.2 _pthread_cleanup_push F
 GLIBC_2.2 _pthread_cleanup_push_defer F
-GLIBC_2.2 accept F
 GLIBC_2.2 connect F
 GLIBC_2.2 fcntl F
 GLIBC_2.2 flockfile F

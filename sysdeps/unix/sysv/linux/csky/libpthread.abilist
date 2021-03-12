@@ -44,7 +44,6 @@ GLIBC_2.29 _pthread_cleanup_pop F
 GLIBC_2.29 _pthread_cleanup_pop_restore F
 GLIBC_2.29 _pthread_cleanup_push F
 GLIBC_2.29 _pthread_cleanup_push_defer F
-GLIBC_2.29 accept F
 GLIBC_2.29 call_once F
 GLIBC_2.29 cnd_broadcast F
 GLIBC_2.29 cnd_destroy F
