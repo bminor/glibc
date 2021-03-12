@@ -174,7 +174,6 @@ GLIBC_2.32 pthread_yield F
 GLIBC_2.32 pwrite F
 GLIBC_2.32 pwrite64 F
 GLIBC_2.32 raise F
-GLIBC_2.32 recv F
 GLIBC_2.32 recvfrom F
 GLIBC_2.32 recvmsg F
 GLIBC_2.32 sem_clockwait F

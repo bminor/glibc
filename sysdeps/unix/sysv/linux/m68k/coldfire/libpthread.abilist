@@ -186,7 +186,6 @@ GLIBC_2.4 pthread_yield F
 GLIBC_2.4 pwrite F
 GLIBC_2.4 pwrite64 F
 GLIBC_2.4 raise F
-GLIBC_2.4 recv F
 GLIBC_2.4 recvfrom F
 GLIBC_2.4 recvmsg F
 GLIBC_2.4 sem_close F

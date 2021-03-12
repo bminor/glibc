@@ -36,3 +36,5 @@ tests := tst-accept4
 aux	 := sa_len
 
 include ../Rules
+
+CFLAGS-recv.c += -fexceptions -fasynchronous-unwind-tables
