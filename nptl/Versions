@@ -103,7 +103,6 @@ libpthread {
     _IO_flockfile;
     _IO_ftrylockfile;
     _IO_funlockfile;
-    __connect;
     __errno_location;
     __fcntl;
     __h_errno_location;
@@ -129,7 +128,6 @@ libpthread {
     _pthread_cleanup_pop_restore;
     _pthread_cleanup_push;
     _pthread_cleanup_push_defer;
-    connect;
     fcntl;
     flockfile;
     fsync;

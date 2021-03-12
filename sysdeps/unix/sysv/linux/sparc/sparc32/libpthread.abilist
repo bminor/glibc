@@ -1,7 +1,6 @@
 GLIBC_2.0 _IO_flockfile F
 GLIBC_2.0 _IO_ftrylockfile F
 GLIBC_2.0 _IO_funlockfile F
-GLIBC_2.0 __connect F
 GLIBC_2.0 __errno_location F
 GLIBC_2.0 __fcntl F
 GLIBC_2.0 __h_errno_location F
@@ -25,7 +24,6 @@ GLIBC_2.0 _pthread_cleanup_pop F
 GLIBC_2.0 _pthread_cleanup_pop_restore F
 GLIBC_2.0 _pthread_cleanup_push F
 GLIBC_2.0 _pthread_cleanup_push_defer F
-GLIBC_2.0 connect F
 GLIBC_2.0 fcntl F
 GLIBC_2.0 flockfile F
 GLIBC_2.0 fsync F

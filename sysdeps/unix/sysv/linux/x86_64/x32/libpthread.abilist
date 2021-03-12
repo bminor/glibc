@@ -1,7 +1,6 @@
 GLIBC_2.16 _IO_flockfile F
 GLIBC_2.16 _IO_ftrylockfile F
 GLIBC_2.16 _IO_funlockfile F
-GLIBC_2.16 __connect F
 GLIBC_2.16 __errno_location F
 GLIBC_2.16 __fcntl F
 GLIBC_2.16 __h_errno_location F
@@ -45,7 +44,6 @@ GLIBC_2.16 _pthread_cleanup_pop F
 GLIBC_2.16 _pthread_cleanup_pop_restore F
 GLIBC_2.16 _pthread_cleanup_push F
 GLIBC_2.16 _pthread_cleanup_push_defer F
-GLIBC_2.16 connect F
 GLIBC_2.16 fcntl F
 GLIBC_2.16 flockfile F
 GLIBC_2.16 fsync F
