@@ -57,7 +57,7 @@ float: 1
 ldouble: 1
 
 Function: "asin_upward":
-double: 1
+double: 2
 float: 1
 ldouble: 2
 
@@ -82,6 +82,7 @@ float: 3
 ldouble: 4
 
 Function: "atan":
+double: 1
 float: 1
 ldouble: 1
 
@@ -560,6 +561,7 @@ float: 3
 ldouble: 2
 
 Function: Imaginary part of "clog":
+double: 1
 float: 1
 ldouble: 1
 
