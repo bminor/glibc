@@ -14,7 +14,6 @@ GLIBC_2.2.5 __h_errno_location F
 GLIBC_2.2.5 __libc_allocate_rtsig F
 GLIBC_2.2.5 __libc_current_sigrtmax F
 GLIBC_2.2.5 __libc_current_sigrtmin F
-GLIBC_2.2.5 __lseek F
 GLIBC_2.2.5 __open F
 GLIBC_2.2.5 __open64 F
 GLIBC_2.2.5 __pread64 F
@@ -48,8 +47,6 @@ GLIBC_2.2.5 flockfile F
 GLIBC_2.2.5 ftrylockfile F
 GLIBC_2.2.5 funlockfile F
 GLIBC_2.2.5 longjmp F
-GLIBC_2.2.5 lseek F
-GLIBC_2.2.5 lseek64 F
 GLIBC_2.2.5 open F
 GLIBC_2.2.5 open64 F
 GLIBC_2.2.5 pread F

@@ -105,7 +105,6 @@ libpthread {
     _IO_funlockfile;
     __errno_location;
     __h_errno_location;
-    __lseek;
     __open;
     __pthread_atfork;
     __pthread_getspecific;
@@ -130,7 +129,6 @@ libpthread {
     ftrylockfile;
     funlockfile;
     longjmp;
-    lseek;
     open;
     pthread_atfork;
     pthread_cancel;
@@ -231,7 +229,6 @@ libpthread {
     __pthread_rwlock_wrlock;
     __pwrite64;
     __res_state;
-    lseek64;
     open64;
     pread64;
     pread;

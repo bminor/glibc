@@ -81,7 +81,6 @@ static-only-routines = pthread_atfork
 # We need to provide certain routines for compatibility with existing
 # binaries.
 pthread-compat-wrappers = \
-		      lseek lseek64 \
 		      open open64 \
 		      pread pread64 pwrite pwrite64 \
 		      msgrcv msgsnd \

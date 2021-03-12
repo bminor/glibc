@@ -6,7 +6,6 @@ GLIBC_2.32 __h_errno_location F
 GLIBC_2.32 __libc_allocate_rtsig F
 GLIBC_2.32 __libc_current_sigrtmax F
 GLIBC_2.32 __libc_current_sigrtmin F
-GLIBC_2.32 __lseek F
 GLIBC_2.32 __open F
 GLIBC_2.32 __open64 F
 GLIBC_2.32 __pread64 F
@@ -52,8 +51,6 @@ GLIBC_2.32 cnd_wait F
 GLIBC_2.32 flockfile F
 GLIBC_2.32 ftrylockfile F
 GLIBC_2.32 funlockfile F
-GLIBC_2.32 lseek F
-GLIBC_2.32 lseek64 F
 GLIBC_2.32 mtx_destroy F
 GLIBC_2.32 mtx_init F
 GLIBC_2.32 mtx_lock F

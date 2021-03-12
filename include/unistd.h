@@ -33,8 +33,7 @@ extern int __euidaccess (const char *__name, int __type);
 extern int __faccessat (int __fd, const char *__file, int __type, int __flag);
 extern int __faccessat_noerrno (int __fd, const char *__file, int __type,
 			        int __flag);
-extern __off64_t __lseek64 (int __fd, __off64_t __offset, int __whence)
-     attribute_hidden;
+extern __off64_t __lseek64 (int __fd, __off64_t __offset, int __whence);
 extern __off_t __lseek (int __fd, __off_t __offset, int __whence);
 libc_hidden_proto (__lseek)
 extern __off_t __libc_lseek (int __fd, __off_t __offset, int __whence);

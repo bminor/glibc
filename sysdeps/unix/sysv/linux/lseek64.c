@@ -48,6 +48,9 @@ strong_alias (__lseek64, __libc_lseek64)
 weak_alias (__lseek64, lseek64)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_28)
-strong_alias (__lseek64, __compat_llseek)
-compat_symbol (libc, __compat_llseek, llseek, GLIBC_2_0);
+compat_symbol (libc, __lseek64, llseek, GLIBC_2_0);
+#endif
+
+#if !IS_IN(rtld) && OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_2)
+compat_symbol (libc, __lseek64, lseek64, GLIBC_2_2);
 #endif

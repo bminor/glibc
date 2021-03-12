@@ -1896,6 +1896,7 @@ GLIBC_2.2 getwchar F
 GLIBC_2.2 getwchar_unlocked F
 GLIBC_2.2 iruserok_af F
 GLIBC_2.2 localeconv F
+GLIBC_2.2 lseek64 F
 GLIBC_2.2 mcheck_check_all F
 GLIBC_2.2 mcheck_pedantic F
 GLIBC_2.2 memrchr F

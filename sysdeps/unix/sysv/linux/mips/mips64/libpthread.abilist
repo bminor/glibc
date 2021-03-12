@@ -3,7 +3,6 @@ GLIBC_2.0 _IO_ftrylockfile F
 GLIBC_2.0 _IO_funlockfile F
 GLIBC_2.0 __errno_location F
 GLIBC_2.0 __h_errno_location F
-GLIBC_2.0 __lseek F
 GLIBC_2.0 __open F
 GLIBC_2.0 __pthread_getspecific F
 GLIBC_2.0 __pthread_key_create F
@@ -26,7 +25,6 @@ GLIBC_2.0 flockfile F
 GLIBC_2.0 ftrylockfile F
 GLIBC_2.0 funlockfile F
 GLIBC_2.0 longjmp F
-GLIBC_2.0 lseek F
 GLIBC_2.0 open F
 GLIBC_2.0 pthread_atfork F
 GLIBC_2.0 pthread_cancel F
@@ -88,7 +86,6 @@ GLIBC_2.2 __pthread_rwlock_unlock F
 GLIBC_2.2 __pthread_rwlock_wrlock F
 GLIBC_2.2 __pwrite64 F
 GLIBC_2.2 __res_state F
-GLIBC_2.2 lseek64 F
 GLIBC_2.2 open64 F
 GLIBC_2.2 pread F
 GLIBC_2.2 pread64 F
