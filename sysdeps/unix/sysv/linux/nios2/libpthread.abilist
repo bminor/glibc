@@ -43,7 +43,6 @@ GLIBC_2.21 __read F
 GLIBC_2.21 __res_state F
 GLIBC_2.21 __send F
 GLIBC_2.21 __sigaction F
-GLIBC_2.21 __write F
 GLIBC_2.21 _pthread_cleanup_pop F
 GLIBC_2.21 _pthread_cleanup_pop_restore F
 GLIBC_2.21 _pthread_cleanup_push F
@@ -188,7 +187,6 @@ GLIBC_2.21 siglongjmp F
 GLIBC_2.21 sigwait F
 GLIBC_2.21 system F
 GLIBC_2.21 tcdrain F
-GLIBC_2.21 write F
 GLIBC_2.28 call_once F
 GLIBC_2.28 cnd_broadcast F
 GLIBC_2.28 cnd_destroy F

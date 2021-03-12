@@ -126,7 +126,6 @@ libpthread {
     __read;
     __send;
     __sigaction;
-    __write;
     _exit;
     _pthread_cleanup_pop;
     _pthread_cleanup_pop_restore;
@@ -194,7 +193,6 @@ libpthread {
     sigwait;
     system;
     tcdrain;
-    write;
   }
 
   GLIBC_2.1 {

@@ -151,7 +151,7 @@ sem_open (const char *name, int oflag, ...)
 	  break;
 	}
 
-      if (TEMP_FAILURE_RETRY (__libc_write (fd, &sem.initsem, sizeof (sem_t)))
+      if (TEMP_FAILURE_RETRY (write (fd, &sem.initsem, sizeof (sem_t)))
 	  == sizeof (sem_t)
 	  /* Map the sem_t structure from the file.  */
 	  && (result = (sem_t *) mmap (NULL, sizeof (sem_t),

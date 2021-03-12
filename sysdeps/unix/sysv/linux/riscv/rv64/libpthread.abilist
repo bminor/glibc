@@ -43,7 +43,6 @@ GLIBC_2.27 __read F
 GLIBC_2.27 __res_state F
 GLIBC_2.27 __send F
 GLIBC_2.27 __sigaction F
-GLIBC_2.27 __write F
 GLIBC_2.27 _pthread_cleanup_pop F
 GLIBC_2.27 _pthread_cleanup_pop_restore F
 GLIBC_2.27 _pthread_cleanup_push F
@@ -185,7 +184,6 @@ GLIBC_2.27 sendto F
 GLIBC_2.27 sigaction F
 GLIBC_2.27 sigwait F
 GLIBC_2.27 tcdrain F
-GLIBC_2.27 write F
 GLIBC_2.28 call_once F
 GLIBC_2.28 cnd_broadcast F
 GLIBC_2.28 cnd_destroy F
