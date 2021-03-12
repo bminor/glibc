@@ -164,7 +164,8 @@ tests-static-normal := tst-leaks1-static tst-array1-static tst-array5-static \
 	       tst-dl-iter-static \
 	       tst-tlsalign-static tst-tlsalign-extern-static \
 	       tst-linkall-static tst-env-setuid tst-env-setuid-tunables \
-	       tst-single_threaded-static tst-single_threaded-pthread-static
+	       tst-single_threaded-static tst-single_threaded-pthread-static \
+	       tst-dst-static
 
 tests-static-internal := tst-tls1-static tst-tls2-static \
 	       tst-ptrguard1-static tst-stackguard1-static \
@@ -1904,3 +1905,5 @@ $(objpfx)list-tunables.out: tst-rtld-list-tunables.sh $(objpfx)ld.so
 	cmp tst-rtld-list-tunables.exp \
 	    $(objpfx)/tst-rtld-list-tunables.out > $@; \
 	$(evaluate-test)
+
+tst-dst-static-ENV = LD_LIBRARY_PATH='$$ORIGIN'
