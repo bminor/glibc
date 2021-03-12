@@ -3553,22 +3553,17 @@ libc_hidden_def (__libc_memalign)
 void *
 __libc_valloc (size_t bytes)
 {
-  void *p;
-
   if (__malloc_initialized < 0)
     ptmalloc_init ();
 
   void *address = RETURN_ADDRESS (0);
   size_t pagesize = GLRO (dl_pagesize);
-  p = _mid_memalign (pagesize, bytes, address);
-  return tag_new_usable (p);
+  return _mid_memalign (pagesize, bytes, address);
 }
 
 void *
 __libc_pvalloc (size_t bytes)
 {
-  void *p;
-
   if (__malloc_initialized < 0)
     ptmalloc_init ();
 
@@ -3585,8 +3580,7 @@ __libc_pvalloc (size_t bytes)
     }
   rounded_bytes = rounded_bytes & -(pagesize - 1);
 
-  p = _mid_memalign (pagesize, rounded_bytes, address);
-  return tag_new_usable (p);
+  return _mid_memalign (pagesize, rounded_bytes, address);
 }
 
 void *
