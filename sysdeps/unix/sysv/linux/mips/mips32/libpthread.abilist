@@ -31,7 +31,6 @@ GLIBC_2.0 funlockfile F
 GLIBC_2.0 longjmp F
 GLIBC_2.0 lseek F
 GLIBC_2.0 open F
-GLIBC_2.0 pause F
 GLIBC_2.0 pthread_atfork F
 GLIBC_2.0 pthread_cancel F
 GLIBC_2.0 pthread_cond_broadcast F

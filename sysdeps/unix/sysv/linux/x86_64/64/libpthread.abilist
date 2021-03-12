@@ -55,7 +55,6 @@ GLIBC_2.2.5 lseek F
 GLIBC_2.2.5 lseek64 F
 GLIBC_2.2.5 open F
 GLIBC_2.2.5 open64 F
-GLIBC_2.2.5 pause F
 GLIBC_2.2.5 pread F
 GLIBC_2.2.5 pread64 F
 GLIBC_2.2.5 pthread_atfork F

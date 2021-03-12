@@ -135,7 +135,6 @@ libpthread {
     longjmp;
     lseek;
     open;
-    pause;
     pthread_atfork;
     pthread_cancel;
     pthread_cond_broadcast;

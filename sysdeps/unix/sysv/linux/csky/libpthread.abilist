@@ -63,7 +63,6 @@ GLIBC_2.29 mtx_trylock F
 GLIBC_2.29 mtx_unlock F
 GLIBC_2.29 open F
 GLIBC_2.29 open64 F
-GLIBC_2.29 pause F
 GLIBC_2.29 pread F
 GLIBC_2.29 pread64 F
 GLIBC_2.29 pthread_attr_getaffinity_np F

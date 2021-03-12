@@ -83,7 +83,7 @@ static-only-routines = pthread_atfork
 pthread-compat-wrappers = \
 		      send \
 		      lseek lseek64 \
-		      open open64 pause \
+		      open open64 \
 		      pread pread64 pwrite pwrite64 \
 		      tcdrain msgrcv msgsnd \
 		      sigwait sigsuspend \
@@ -297,7 +297,6 @@ CFLAGS-msgsnd.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tcdrain.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-open.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-open64.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-pause.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-send.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvmsg.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendmsg.c += -fexceptions -fasynchronous-unwind-tables

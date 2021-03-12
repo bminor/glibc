@@ -52,7 +52,6 @@ GLIBC_2.27 lseek F
 GLIBC_2.27 lseek64 F
 GLIBC_2.27 open F
 GLIBC_2.27 open64 F
-GLIBC_2.27 pause F
 GLIBC_2.27 pread F
 GLIBC_2.27 pread64 F
 GLIBC_2.27 pthread_attr_getaffinity_np F

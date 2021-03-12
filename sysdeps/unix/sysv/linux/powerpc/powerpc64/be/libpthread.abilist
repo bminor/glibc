@@ -76,7 +76,6 @@ GLIBC_2.3 lseek F
 GLIBC_2.3 lseek64 F
 GLIBC_2.3 open F
 GLIBC_2.3 open64 F
-GLIBC_2.3 pause F
 GLIBC_2.3 pread F
 GLIBC_2.3 pread64 F
 GLIBC_2.3 pthread_attr_getguardsize F
