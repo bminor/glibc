@@ -51,7 +51,6 @@ GLIBC_2.29 cnd_signal F
 GLIBC_2.29 cnd_timedwait F
 GLIBC_2.29 cnd_wait F
 GLIBC_2.29 flockfile F
-GLIBC_2.29 fsync F
 GLIBC_2.29 ftrylockfile F
 GLIBC_2.29 funlockfile F
 GLIBC_2.29 lseek F

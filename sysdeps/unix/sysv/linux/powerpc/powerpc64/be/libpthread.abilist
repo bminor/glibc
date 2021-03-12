@@ -69,7 +69,6 @@ GLIBC_2.3 _pthread_cleanup_push F
 GLIBC_2.3 _pthread_cleanup_push_defer F
 GLIBC_2.3 fcntl F
 GLIBC_2.3 flockfile F
-GLIBC_2.3 fsync F
 GLIBC_2.3 ftrylockfile F
 GLIBC_2.3 funlockfile F
 GLIBC_2.3 longjmp F

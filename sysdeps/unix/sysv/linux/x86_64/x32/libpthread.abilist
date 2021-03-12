@@ -46,7 +46,6 @@ GLIBC_2.16 _pthread_cleanup_push F
 GLIBC_2.16 _pthread_cleanup_push_defer F
 GLIBC_2.16 fcntl F
 GLIBC_2.16 flockfile F
-GLIBC_2.16 fsync F
 GLIBC_2.16 ftrylockfile F
 GLIBC_2.16 funlockfile F
 GLIBC_2.16 longjmp F

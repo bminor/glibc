@@ -130,7 +130,6 @@ libpthread {
     _pthread_cleanup_push_defer;
     fcntl;
     flockfile;
-    fsync;
     ftrylockfile;
     funlockfile;
     longjmp;
