@@ -172,7 +172,6 @@ GLIBC_2.21 sem_unlink F
 GLIBC_2.21 sem_wait F
 GLIBC_2.21 send F
 GLIBC_2.21 sendmsg F
-GLIBC_2.21 sendto F
 GLIBC_2.21 sigaction F
 GLIBC_2.21 siglongjmp F
 GLIBC_2.21 sigwait F

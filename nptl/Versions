@@ -178,7 +178,6 @@ libpthread {
     sem_wait;
     send;
     sendmsg;
-    sendto;
     sigaction;
     siglongjmp;
     sigwait;
