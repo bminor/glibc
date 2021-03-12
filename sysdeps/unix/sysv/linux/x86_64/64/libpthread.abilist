@@ -9,7 +9,6 @@ GLIBC_2.18 pthread_setattr_default_np F
 GLIBC_2.2.5 _IO_flockfile F
 GLIBC_2.2.5 _IO_ftrylockfile F
 GLIBC_2.2.5 _IO_funlockfile F
-GLIBC_2.2.5 __close F
 GLIBC_2.2.5 __connect F
 GLIBC_2.2.5 __errno_location F
 GLIBC_2.2.5 __fcntl F
@@ -49,7 +48,6 @@ GLIBC_2.2.5 _pthread_cleanup_pop_restore F
 GLIBC_2.2.5 _pthread_cleanup_push F
 GLIBC_2.2.5 _pthread_cleanup_push_defer F
 GLIBC_2.2.5 accept F
-GLIBC_2.2.5 close F
 GLIBC_2.2.5 connect F
 GLIBC_2.2.5 fcntl F
 GLIBC_2.2.5 flockfile F

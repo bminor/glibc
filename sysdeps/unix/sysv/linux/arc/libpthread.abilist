@@ -1,7 +1,6 @@
 GLIBC_2.32 _IO_flockfile F
 GLIBC_2.32 _IO_ftrylockfile F
 GLIBC_2.32 _IO_funlockfile F
-GLIBC_2.32 __close F
 GLIBC_2.32 __connect F
 GLIBC_2.32 __errno_location F
 GLIBC_2.32 __h_errno_location F
@@ -47,7 +46,6 @@ GLIBC_2.32 _pthread_cleanup_push F
 GLIBC_2.32 _pthread_cleanup_push_defer F
 GLIBC_2.32 accept F
 GLIBC_2.32 call_once F
-GLIBC_2.32 close F
 GLIBC_2.32 cnd_broadcast F
 GLIBC_2.32 cnd_destroy F
 GLIBC_2.32 cnd_init F

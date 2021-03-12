@@ -81,7 +81,7 @@ static-only-routines = pthread_atfork
 # We need to provide certain routines for compatibility with existing
 # binaries.
 pthread-compat-wrappers = \
-		      close accept \
+		      accept \
 		      connect recv recvfrom send \
 		      sendto fsync lseek lseek64 \
 		      msync open open64 pause \
@@ -307,7 +307,6 @@ CFLAGS-connect.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvmsg.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendmsg.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-close.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sigsuspend.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-msync.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fdatasync.c += -fexceptions -fasynchronous-unwind-tables

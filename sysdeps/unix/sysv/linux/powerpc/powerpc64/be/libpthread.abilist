@@ -30,7 +30,6 @@ GLIBC_2.28 tss_set F
 GLIBC_2.3 _IO_flockfile F
 GLIBC_2.3 _IO_ftrylockfile F
 GLIBC_2.3 _IO_funlockfile F
-GLIBC_2.3 __close F
 GLIBC_2.3 __connect F
 GLIBC_2.3 __errno_location F
 GLIBC_2.3 __fcntl F
@@ -70,7 +69,6 @@ GLIBC_2.3 _pthread_cleanup_pop_restore F
 GLIBC_2.3 _pthread_cleanup_push F
 GLIBC_2.3 _pthread_cleanup_push_defer F
 GLIBC_2.3 accept F
-GLIBC_2.3 close F
 GLIBC_2.3 connect F
 GLIBC_2.3 fcntl F
 GLIBC_2.3 flockfile F

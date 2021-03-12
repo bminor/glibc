@@ -175,7 +175,7 @@ sem_open (const char *name, int oflag, ...)
 		  (void) unlink (tmpfname);
 
 		  /* Close the file.  */
-		  (void) __libc_close (fd);
+		  close (fd);
 
 		  goto try_again;
 		}
@@ -201,7 +201,7 @@ sem_open (const char *name, int oflag, ...)
     {
       /* Do not disturb errno.  */
       int save = errno;
-      __libc_close (fd);
+      close (fd);
       errno = save;
     }
 
