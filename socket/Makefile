@@ -38,3 +38,4 @@ aux	 := sa_len
 include ../Rules
 
 CFLAGS-recv.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recvfrom.c += -fexceptions -fasynchronous-unwind-tables

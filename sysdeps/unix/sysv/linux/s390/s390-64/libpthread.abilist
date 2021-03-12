@@ -139,7 +139,6 @@ GLIBC_2.2 pthread_yield F
 GLIBC_2.2 pwrite F
 GLIBC_2.2 pwrite64 F
 GLIBC_2.2 raise F
-GLIBC_2.2 recvfrom F
 GLIBC_2.2 recvmsg F
 GLIBC_2.2 sem_close F
 GLIBC_2.2 sem_destroy F

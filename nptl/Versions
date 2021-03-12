@@ -169,7 +169,6 @@ libpthread {
     pthread_sigmask;
     pthread_testcancel;
     raise;
-    recvfrom;
     recvmsg;
     sem_destroy;
     sem_getvalue;

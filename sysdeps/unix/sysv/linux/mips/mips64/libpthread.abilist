@@ -64,7 +64,6 @@ GLIBC_2.0 pthread_setcanceltype F
 GLIBC_2.0 pthread_setspecific F
 GLIBC_2.0 pthread_testcancel F
 GLIBC_2.0 raise F
-GLIBC_2.0 recvfrom F
 GLIBC_2.0 recvmsg F
 GLIBC_2.0 sem_destroy F
 GLIBC_2.0 sem_getvalue F
