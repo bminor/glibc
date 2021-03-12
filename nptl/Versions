@@ -134,7 +134,6 @@ libpthread {
     funlockfile;
     longjmp;
     lseek;
-    msync;
     open;
     pause;
     pthread_atfork;

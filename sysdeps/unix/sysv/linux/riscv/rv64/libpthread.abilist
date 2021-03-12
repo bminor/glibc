@@ -50,7 +50,6 @@ GLIBC_2.27 ftrylockfile F
 GLIBC_2.27 funlockfile F
 GLIBC_2.27 lseek F
 GLIBC_2.27 lseek64 F
-GLIBC_2.27 msync F
 GLIBC_2.27 open F
 GLIBC_2.27 open64 F
 GLIBC_2.27 pause F

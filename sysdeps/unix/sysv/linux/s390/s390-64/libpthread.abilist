@@ -55,7 +55,6 @@ GLIBC_2.2 funlockfile F
 GLIBC_2.2 longjmp F
 GLIBC_2.2 lseek F
 GLIBC_2.2 lseek64 F
-GLIBC_2.2 msync F
 GLIBC_2.2 open F
 GLIBC_2.2 open64 F
 GLIBC_2.2 pause F

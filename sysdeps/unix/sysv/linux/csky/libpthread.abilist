@@ -55,7 +55,6 @@ GLIBC_2.29 ftrylockfile F
 GLIBC_2.29 funlockfile F
 GLIBC_2.29 lseek F
 GLIBC_2.29 lseek64 F
-GLIBC_2.29 msync F
 GLIBC_2.29 mtx_destroy F
 GLIBC_2.29 mtx_init F
 GLIBC_2.29 mtx_lock F

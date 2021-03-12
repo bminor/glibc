@@ -30,7 +30,6 @@ GLIBC_2.0 ftrylockfile F
 GLIBC_2.0 funlockfile F
 GLIBC_2.0 longjmp F
 GLIBC_2.0 lseek F
-GLIBC_2.0 msync F
 GLIBC_2.0 open F
 GLIBC_2.0 pause F
 GLIBC_2.0 pthread_atfork F
