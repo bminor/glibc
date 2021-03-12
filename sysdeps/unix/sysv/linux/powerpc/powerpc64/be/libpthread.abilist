@@ -62,7 +62,6 @@ GLIBC_2.3 __pthread_rwlock_unlock F
 GLIBC_2.3 __pthread_rwlock_wrlock F
 GLIBC_2.3 __pthread_setspecific F
 GLIBC_2.3 __pwrite64 F
-GLIBC_2.3 __read F
 GLIBC_2.3 __res_state F
 GLIBC_2.3 __send F
 GLIBC_2.3 __sigaction F
@@ -163,7 +162,6 @@ GLIBC_2.3 pthread_yield F
 GLIBC_2.3 pwrite F
 GLIBC_2.3 pwrite64 F
 GLIBC_2.3 raise F
-GLIBC_2.3 read F
 GLIBC_2.3 recv F
 GLIBC_2.3 recvfrom F
 GLIBC_2.3 recvmsg F

@@ -20,7 +20,6 @@ GLIBC_2.0 __pthread_mutexattr_init F
 GLIBC_2.0 __pthread_mutexattr_settype F
 GLIBC_2.0 __pthread_once F
 GLIBC_2.0 __pthread_setspecific F
-GLIBC_2.0 __read F
 GLIBC_2.0 __send F
 GLIBC_2.0 __sigaction F
 GLIBC_2.0 _pthread_cleanup_pop F
@@ -70,7 +69,6 @@ GLIBC_2.0 pthread_setcanceltype F
 GLIBC_2.0 pthread_setspecific F
 GLIBC_2.0 pthread_testcancel F
 GLIBC_2.0 raise F
-GLIBC_2.0 read F
 GLIBC_2.0 recv F
 GLIBC_2.0 recvfrom F
 GLIBC_2.0 recvmsg F

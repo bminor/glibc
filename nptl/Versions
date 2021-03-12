@@ -123,7 +123,6 @@ libpthread {
     __pthread_mutexattr_settype;
     __pthread_once;
     __pthread_setspecific;
-    __read;
     __send;
     __sigaction;
     _exit;
@@ -175,7 +174,6 @@ libpthread {
     pthread_sigmask;
     pthread_testcancel;
     raise;
-    read;
     recv;
     recvfrom;
     recvmsg;

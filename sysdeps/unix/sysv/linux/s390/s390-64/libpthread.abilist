@@ -43,7 +43,6 @@ GLIBC_2.2 __pthread_rwlock_unlock F
 GLIBC_2.2 __pthread_rwlock_wrlock F
 GLIBC_2.2 __pthread_setspecific F
 GLIBC_2.2 __pwrite64 F
-GLIBC_2.2 __read F
 GLIBC_2.2 __res_state F
 GLIBC_2.2 __send F
 GLIBC_2.2 __sigaction F
@@ -145,7 +144,6 @@ GLIBC_2.2 pthread_yield F
 GLIBC_2.2 pwrite F
 GLIBC_2.2 pwrite64 F
 GLIBC_2.2 raise F
-GLIBC_2.2 read F
 GLIBC_2.2 recv F
 GLIBC_2.2 recvfrom F
 GLIBC_2.2 recvmsg F
