@@ -35,8 +35,6 @@ GLIBC_2.3 __h_errno_location F
 GLIBC_2.3 __libc_allocate_rtsig F
 GLIBC_2.3 __libc_current_sigrtmax F
 GLIBC_2.3 __libc_current_sigrtmin F
-GLIBC_2.3 __open F
-GLIBC_2.3 __open64 F
 GLIBC_2.3 __pread64 F
 GLIBC_2.3 __pthread_getspecific F
 GLIBC_2.3 __pthread_key_create F
@@ -68,8 +66,6 @@ GLIBC_2.3 flockfile F
 GLIBC_2.3 ftrylockfile F
 GLIBC_2.3 funlockfile F
 GLIBC_2.3 longjmp F
-GLIBC_2.3 open F
-GLIBC_2.3 open64 F
 GLIBC_2.3 pread F
 GLIBC_2.3 pread64 F
 GLIBC_2.3 pthread_attr_getguardsize F

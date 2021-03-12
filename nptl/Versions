@@ -105,7 +105,6 @@ libpthread {
     _IO_funlockfile;
     __errno_location;
     __h_errno_location;
-    __open;
     __pthread_atfork;
     __pthread_getspecific;
     __pthread_key_create;
@@ -129,7 +128,6 @@ libpthread {
     ftrylockfile;
     funlockfile;
     longjmp;
-    open;
     pthread_atfork;
     pthread_cancel;
     pthread_cond_broadcast;
@@ -218,7 +216,6 @@ libpthread {
   }
 
   GLIBC_2.2 {
-    __open64;
     __pread64;
     __pthread_rwlock_destroy;
     __pthread_rwlock_init;
@@ -229,7 +226,6 @@ libpthread {
     __pthread_rwlock_wrlock;
     __pwrite64;
     __res_state;
-    open64;
     pread64;
     pread;
     pthread_attr_getstack;

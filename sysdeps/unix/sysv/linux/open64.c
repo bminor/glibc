@@ -20,8 +20,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdarg.h>
-
 #include <sysdep-cancel.h>
+#include <shlib-compat.h>
 
 
 #ifdef __OFF_T_MATCHES_OFF64_T
@@ -58,4 +58,8 @@ strong_alias (__libc_open64, __libc_open)
 strong_alias (__libc_open64, __open)
 libc_hidden_weak (__open)
 weak_alias (__libc_open64, open)
+#endif
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_2)
+compat_symbol (libc, __libc_open64, open64, GLIBC_2_2);
 #endif

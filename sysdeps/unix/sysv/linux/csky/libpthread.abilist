@@ -6,8 +6,6 @@ GLIBC_2.29 __h_errno_location F
 GLIBC_2.29 __libc_allocate_rtsig F
 GLIBC_2.29 __libc_current_sigrtmax F
 GLIBC_2.29 __libc_current_sigrtmin F
-GLIBC_2.29 __open F
-GLIBC_2.29 __open64 F
 GLIBC_2.29 __pread64 F
 GLIBC_2.29 __pthread_cleanup_routine F
 GLIBC_2.29 __pthread_getspecific F
@@ -57,8 +55,6 @@ GLIBC_2.29 mtx_lock F
 GLIBC_2.29 mtx_timedlock F
 GLIBC_2.29 mtx_trylock F
 GLIBC_2.29 mtx_unlock F
-GLIBC_2.29 open F
-GLIBC_2.29 open64 F
 GLIBC_2.29 pread F
 GLIBC_2.29 pread64 F
 GLIBC_2.29 pthread_attr_getaffinity_np F

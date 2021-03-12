@@ -1870,6 +1870,7 @@ GLIBC_2.2 mkstemp64 F
 GLIBC_2.2 moncontrol F
 GLIBC_2.2 msgctl F
 GLIBC_2.2 ngettext F
+GLIBC_2.2 open64 F
 GLIBC_2.2 posix_fadvise F
 GLIBC_2.2 posix_fadvise64 F
 GLIBC_2.2 posix_fallocate F

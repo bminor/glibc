@@ -59,8 +59,8 @@ sem_open (const char *name, int oflag, ...)
   if ((oflag & O_CREAT) == 0 || (oflag & O_EXCL) == 0)
     {
     try_again:
-      fd = __libc_open (dirname.name,
-			(oflag & ~(O_CREAT|O_ACCMODE)) | O_NOFOLLOW | O_RDWR);
+      fd = open (dirname.name,
+		 (oflag & ~(O_CREAT|O_ACCMODE)) | O_NOFOLLOW | O_RDWR);
 
       if (fd == -1)
 	{
@@ -127,7 +127,7 @@ sem_open (const char *name, int oflag, ...)
 	    }
 
 	  /* Open the file.  Make sure we do not overwrite anything.  */
-	  fd = __libc_open (tmpfname, O_RDWR | O_CREAT | O_EXCL, mode);
+	  fd = open (tmpfname, O_RDWR | O_CREAT | O_EXCL, mode);
 	  if (fd == -1)
 	    {
 	      if (errno == EEXIST)
