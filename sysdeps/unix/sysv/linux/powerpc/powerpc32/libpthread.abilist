@@ -72,7 +72,6 @@ GLIBC_2.0 send F
 GLIBC_2.0 sendmsg F
 GLIBC_2.0 sigaction F
 GLIBC_2.0 siglongjmp F
-GLIBC_2.0 sigwait F
 GLIBC_2.0 system F
 GLIBC_2.1 __libc_allocate_rtsig F
 GLIBC_2.1 __libc_current_sigrtmax F

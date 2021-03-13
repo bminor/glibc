@@ -177,7 +177,6 @@ libpthread {
     sendmsg;
     sigaction;
     siglongjmp;
-    sigwait;
     system;
   }
 

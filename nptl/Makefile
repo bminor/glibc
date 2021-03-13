@@ -86,7 +86,7 @@ pthread-compat-wrappers = \
 		      open open64 \
 		      pread pread64 pwrite pwrite64 \
 		      msgrcv msgsnd \
-		      sigwait sigsuspend \
+		      sigsuspend \
 		      recvmsg sendmsg
 
 libpthread-routines = \
