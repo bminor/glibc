@@ -171,7 +171,6 @@ GLIBC_2.3 sigaction F
 GLIBC_2.3 siglongjmp F
 GLIBC_2.3 sigwait F
 GLIBC_2.3 system F
-GLIBC_2.3 tcdrain F
 GLIBC_2.3.2 pthread_cond_broadcast F
 GLIBC_2.3.2 pthread_cond_signal F
 GLIBC_2.3.2 pthread_cond_timedwait F

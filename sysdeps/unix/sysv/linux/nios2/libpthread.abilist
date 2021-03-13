@@ -173,7 +173,6 @@ GLIBC_2.21 sigaction F
 GLIBC_2.21 siglongjmp F
 GLIBC_2.21 sigwait F
 GLIBC_2.21 system F
-GLIBC_2.21 tcdrain F
 GLIBC_2.28 call_once F
 GLIBC_2.28 cnd_broadcast F
 GLIBC_2.28 cnd_destroy F

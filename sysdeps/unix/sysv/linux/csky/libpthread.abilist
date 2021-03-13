@@ -181,7 +181,6 @@ GLIBC_2.29 send F
 GLIBC_2.29 sendmsg F
 GLIBC_2.29 sigaction F
 GLIBC_2.29 sigwait F
-GLIBC_2.29 tcdrain F
 GLIBC_2.29 thrd_create F
 GLIBC_2.29 thrd_detach F
 GLIBC_2.29 thrd_exit F
