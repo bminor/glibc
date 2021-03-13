@@ -87,7 +87,7 @@ pthread-compat-wrappers = \
 		      pread pread64 pwrite pwrite64 \
 		      msgrcv msgsnd \
 		      sigsuspend \
-		      recvmsg sendmsg
+		      sendmsg
 
 libpthread-routines = \
   $(pthread-compat-wrappers) \
@@ -297,7 +297,6 @@ CFLAGS-msgsnd.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-open.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-open64.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-send.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-recvmsg.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendmsg.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sigsuspend.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fdatasync.c += -fexceptions -fasynchronous-unwind-tables

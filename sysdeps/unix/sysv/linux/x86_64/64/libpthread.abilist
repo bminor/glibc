@@ -134,7 +134,6 @@ GLIBC_2.2.5 pthread_yield F
 GLIBC_2.2.5 pwrite F
 GLIBC_2.2.5 pwrite64 F
 GLIBC_2.2.5 raise F
-GLIBC_2.2.5 recvmsg F
 GLIBC_2.2.5 sem_close F
 GLIBC_2.2.5 sem_destroy F
 GLIBC_2.2.5 sem_getvalue F

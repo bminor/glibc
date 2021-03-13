@@ -171,7 +171,6 @@ GLIBC_2.33 pthread_yield F
 GLIBC_2.33 pwrite F
 GLIBC_2.33 pwrite64 F
 GLIBC_2.33 raise F
-GLIBC_2.33 recvmsg F
 GLIBC_2.33 sem_clockwait F
 GLIBC_2.33 sem_close F
 GLIBC_2.33 sem_destroy F

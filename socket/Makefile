@@ -40,3 +40,4 @@ include ../Rules
 CFLAGS-recv.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendto.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recvmsg.c += -fexceptions -fasynchronous-unwind-tables
