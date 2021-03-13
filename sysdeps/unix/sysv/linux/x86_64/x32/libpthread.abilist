@@ -31,7 +31,6 @@ GLIBC_2.16 __pthread_setspecific F
 GLIBC_2.16 __pthread_unregister_cancel F
 GLIBC_2.16 __pthread_unregister_cancel_restore F
 GLIBC_2.16 __pthread_unwind_next F
-GLIBC_2.16 __pwrite64 F
 GLIBC_2.16 __res_state F
 GLIBC_2.16 __sigaction F
 GLIBC_2.16 _pthread_cleanup_pop F
@@ -138,8 +137,6 @@ GLIBC_2.16 pthread_testcancel F
 GLIBC_2.16 pthread_timedjoin_np F
 GLIBC_2.16 pthread_tryjoin_np F
 GLIBC_2.16 pthread_yield F
-GLIBC_2.16 pwrite F
-GLIBC_2.16 pwrite64 F
 GLIBC_2.16 raise F
 GLIBC_2.16 sem_close F
 GLIBC_2.16 sem_destroy F

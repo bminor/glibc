@@ -54,7 +54,6 @@ GLIBC_2.3 __pthread_rwlock_trywrlock F
 GLIBC_2.3 __pthread_rwlock_unlock F
 GLIBC_2.3 __pthread_rwlock_wrlock F
 GLIBC_2.3 __pthread_setspecific F
-GLIBC_2.3 __pwrite64 F
 GLIBC_2.3 __res_state F
 GLIBC_2.3 __sigaction F
 GLIBC_2.3 _pthread_cleanup_pop F
@@ -138,8 +137,6 @@ GLIBC_2.3 pthread_spin_trylock F
 GLIBC_2.3 pthread_spin_unlock F
 GLIBC_2.3 pthread_testcancel F
 GLIBC_2.3 pthread_yield F
-GLIBC_2.3 pwrite F
-GLIBC_2.3 pwrite64 F
 GLIBC_2.3 raise F
 GLIBC_2.3 sem_close F
 GLIBC_2.3 sem_destroy F

@@ -31,7 +31,6 @@ GLIBC_2.33 __pthread_setspecific F
 GLIBC_2.33 __pthread_unregister_cancel F
 GLIBC_2.33 __pthread_unregister_cancel_restore F
 GLIBC_2.33 __pthread_unwind_next F
-GLIBC_2.33 __pwrite64 F
 GLIBC_2.33 __res_state F
 GLIBC_2.33 __sigaction F
 GLIBC_2.33 _pthread_cleanup_pop F
@@ -157,8 +156,6 @@ GLIBC_2.33 pthread_testcancel F
 GLIBC_2.33 pthread_timedjoin_np F
 GLIBC_2.33 pthread_tryjoin_np F
 GLIBC_2.33 pthread_yield F
-GLIBC_2.33 pwrite F
-GLIBC_2.33 pwrite64 F
 GLIBC_2.33 raise F
 GLIBC_2.33 sem_clockwait F
 GLIBC_2.33 sem_close F

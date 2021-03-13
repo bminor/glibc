@@ -223,7 +223,6 @@ libpthread {
     __pthread_rwlock_trywrlock;
     __pthread_rwlock_unlock;
     __pthread_rwlock_wrlock;
-    __pwrite64;
     __res_state;
     pthread_attr_getstack;
     pthread_attr_setstack;
@@ -247,8 +246,6 @@ libpthread {
     pthread_spin_trylock;
     pthread_spin_unlock;
     pthread_yield;
-    pwrite64;
-    pwrite;
     sem_timedwait;
   }
 

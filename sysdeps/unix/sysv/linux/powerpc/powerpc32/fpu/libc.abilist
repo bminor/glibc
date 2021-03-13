@@ -1814,6 +1814,7 @@ GLIBC_2.2 __lxstat64 F
 GLIBC_2.2 __nl_langinfo_l F
 GLIBC_2.2 __open64 F
 GLIBC_2.2 __pread64 F
+GLIBC_2.2 __pwrite64 F
 GLIBC_2.2 __res_init F
 GLIBC_2.2 __res_nclose F
 GLIBC_2.2 __res_ninit F
@@ -1911,6 +1912,8 @@ GLIBC_2.2 putwc F
 GLIBC_2.2 putwc_unlocked F
 GLIBC_2.2 putwchar F
 GLIBC_2.2 putwchar_unlocked F
+GLIBC_2.2 pwrite F
+GLIBC_2.2 pwrite64 F
 GLIBC_2.2 rcmd_af F
 GLIBC_2.2 readdir64 F
 GLIBC_2.2 readdir64_r F
