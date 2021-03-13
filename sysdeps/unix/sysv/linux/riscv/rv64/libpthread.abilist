@@ -6,7 +6,6 @@ GLIBC_2.27 __h_errno_location F
 GLIBC_2.27 __libc_allocate_rtsig F
 GLIBC_2.27 __libc_current_sigrtmax F
 GLIBC_2.27 __libc_current_sigrtmin F
-GLIBC_2.27 __pread64 F
 GLIBC_2.27 __pthread_cleanup_routine F
 GLIBC_2.27 __pthread_getspecific F
 GLIBC_2.27 __pthread_key_create F
@@ -42,8 +41,6 @@ GLIBC_2.27 _pthread_cleanup_push_defer F
 GLIBC_2.27 flockfile F
 GLIBC_2.27 ftrylockfile F
 GLIBC_2.27 funlockfile F
-GLIBC_2.27 pread F
-GLIBC_2.27 pread64 F
 GLIBC_2.27 pthread_attr_getaffinity_np F
 GLIBC_2.27 pthread_attr_getguardsize F
 GLIBC_2.27 pthread_attr_getstack F

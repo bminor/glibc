@@ -18,6 +18,7 @@
 
 #include <unistd.h>
 #include <sysdep-cancel.h>
+#include <shlib-compat.h>
 
 #ifndef __OFF_T_MATCHES_OFF64_T
 
@@ -30,4 +31,9 @@ __libc_pread (int fd, void *buf, size_t count, off_t offset)
 strong_alias (__libc_pread, __pread)
 libc_hidden_weak (__pread)
 weak_alias (__libc_pread, pread)
+
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_2)
+compat_symbol (libc, __libc_pread, pread, GLIBC_2_2);
+#endif
+
 #endif

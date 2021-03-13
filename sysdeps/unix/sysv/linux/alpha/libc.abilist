@@ -1847,6 +1847,7 @@ GLIBC_2.2 __fwriting F
 GLIBC_2.2 __getmntent_r F
 GLIBC_2.2 __nl_langinfo_l F
 GLIBC_2.2 __open64 F
+GLIBC_2.2 __pread64 F
 GLIBC_2.2 __res_init F
 GLIBC_2.2 __res_nclose F
 GLIBC_2.2 __res_ninit F
@@ -1934,6 +1935,8 @@ GLIBC_2.2 posix_spawnattr_setschedpolicy F
 GLIBC_2.2 posix_spawnattr_setsigdefault F
 GLIBC_2.2 posix_spawnattr_setsigmask F
 GLIBC_2.2 posix_spawnp F
+GLIBC_2.2 pread F
+GLIBC_2.2 pread64 F
 GLIBC_2.2 putwc F
 GLIBC_2.2 putwc_unlocked F
 GLIBC_2.2 putwchar F

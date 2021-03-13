@@ -14,7 +14,6 @@ GLIBC_2.2.5 __h_errno_location F
 GLIBC_2.2.5 __libc_allocate_rtsig F
 GLIBC_2.2.5 __libc_current_sigrtmax F
 GLIBC_2.2.5 __libc_current_sigrtmin F
-GLIBC_2.2.5 __pread64 F
 GLIBC_2.2.5 __pthread_getspecific F
 GLIBC_2.2.5 __pthread_key_create F
 GLIBC_2.2.5 __pthread_mutex_destroy F
@@ -45,8 +44,6 @@ GLIBC_2.2.5 flockfile F
 GLIBC_2.2.5 ftrylockfile F
 GLIBC_2.2.5 funlockfile F
 GLIBC_2.2.5 longjmp F
-GLIBC_2.2.5 pread F
-GLIBC_2.2.5 pread64 F
 GLIBC_2.2.5 pthread_atfork F
 GLIBC_2.2.5 pthread_attr_getguardsize F
 GLIBC_2.2.5 pthread_attr_getstack F

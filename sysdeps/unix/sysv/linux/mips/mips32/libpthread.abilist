@@ -73,7 +73,6 @@ GLIBC_2.18 pthread_setattr_default_np F
 GLIBC_2.2 __libc_allocate_rtsig F
 GLIBC_2.2 __libc_current_sigrtmax F
 GLIBC_2.2 __libc_current_sigrtmin F
-GLIBC_2.2 __pread64 F
 GLIBC_2.2 __pthread_rwlock_destroy F
 GLIBC_2.2 __pthread_rwlock_init F
 GLIBC_2.2 __pthread_rwlock_rdlock F
@@ -83,8 +82,6 @@ GLIBC_2.2 __pthread_rwlock_unlock F
 GLIBC_2.2 __pthread_rwlock_wrlock F
 GLIBC_2.2 __pwrite64 F
 GLIBC_2.2 __res_state F
-GLIBC_2.2 pread F
-GLIBC_2.2 pread64 F
 GLIBC_2.2 pthread_attr_getguardsize F
 GLIBC_2.2 pthread_attr_getstack F
 GLIBC_2.2 pthread_attr_getstackaddr F

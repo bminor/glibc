@@ -216,7 +216,6 @@ libpthread {
   }
 
   GLIBC_2.2 {
-    __pread64;
     __pthread_rwlock_destroy;
     __pthread_rwlock_init;
     __pthread_rwlock_rdlock;
@@ -226,8 +225,6 @@ libpthread {
     __pthread_rwlock_wrlock;
     __pwrite64;
     __res_state;
-    pread64;
-    pread;
     pthread_attr_getstack;
     pthread_attr_setstack;
     pthread_barrier_destroy;
