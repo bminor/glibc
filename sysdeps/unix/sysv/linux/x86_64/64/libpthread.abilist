@@ -145,7 +145,6 @@ GLIBC_2.2.5 sem_trywait F
 GLIBC_2.2.5 sem_unlink F
 GLIBC_2.2.5 sem_wait F
 GLIBC_2.2.5 send F
-GLIBC_2.2.5 sendmsg F
 GLIBC_2.2.5 sigaction F
 GLIBC_2.2.5 siglongjmp F
 GLIBC_2.2.5 system F

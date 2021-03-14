@@ -183,7 +183,6 @@ GLIBC_2.33 sem_trywait F
 GLIBC_2.33 sem_unlink F
 GLIBC_2.33 sem_wait F
 GLIBC_2.33 send F
-GLIBC_2.33 sendmsg F
 GLIBC_2.33 sigaction F
 GLIBC_2.33 thrd_create F
 GLIBC_2.33 thrd_detach F

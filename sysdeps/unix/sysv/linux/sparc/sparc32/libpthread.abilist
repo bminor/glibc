@@ -68,7 +68,6 @@ GLIBC_2.0 sem_post F
 GLIBC_2.0 sem_trywait F
 GLIBC_2.0 sem_wait F
 GLIBC_2.0 send F
-GLIBC_2.0 sendmsg F
 GLIBC_2.0 sigaction F
 GLIBC_2.0 siglongjmp F
 GLIBC_2.0 system F

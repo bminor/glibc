@@ -177,7 +177,6 @@ GLIBC_2.29 sem_trywait F
 GLIBC_2.29 sem_unlink F
 GLIBC_2.29 sem_wait F
 GLIBC_2.29 send F
-GLIBC_2.29 sendmsg F
 GLIBC_2.29 sigaction F
 GLIBC_2.29 thrd_create F
 GLIBC_2.29 thrd_detach F

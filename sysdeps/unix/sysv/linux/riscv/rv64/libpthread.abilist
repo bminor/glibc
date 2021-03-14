@@ -166,7 +166,6 @@ GLIBC_2.27 sem_trywait F
 GLIBC_2.27 sem_unlink F
 GLIBC_2.27 sem_wait F
 GLIBC_2.27 send F
-GLIBC_2.27 sendmsg F
 GLIBC_2.27 sigaction F
 GLIBC_2.28 call_once F
 GLIBC_2.28 cnd_broadcast F

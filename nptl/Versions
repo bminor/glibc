@@ -173,7 +173,6 @@ libpthread {
     sem_trywait;
     sem_wait;
     send;
-    sendmsg;
     sigaction;
     siglongjmp;
     system;
