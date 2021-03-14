@@ -2,7 +2,6 @@ GLIBC_2.27 _IO_flockfile F
 GLIBC_2.27 _IO_ftrylockfile F
 GLIBC_2.27 _IO_funlockfile F
 GLIBC_2.27 __errno_location F
-GLIBC_2.27 __fcntl F
 GLIBC_2.27 __h_errno_location F
 GLIBC_2.27 __libc_allocate_rtsig F
 GLIBC_2.27 __libc_current_sigrtmax F
@@ -44,7 +43,6 @@ GLIBC_2.27 _pthread_cleanup_pop F
 GLIBC_2.27 _pthread_cleanup_pop_restore F
 GLIBC_2.27 _pthread_cleanup_push F
 GLIBC_2.27 _pthread_cleanup_push_defer F
-GLIBC_2.27 fcntl F
 GLIBC_2.27 flockfile F
 GLIBC_2.27 ftrylockfile F
 GLIBC_2.27 funlockfile F

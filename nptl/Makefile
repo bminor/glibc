@@ -111,7 +111,6 @@ libpthread-routines = \
   old_pthread_cond_wait \
   pt-allocrtsig \
   pt-cleanup \
-  pt-fcntl \
   pt-interp \
   pt-longjmp \
   pt-raise \
@@ -283,8 +282,6 @@ CFLAGS-sem_timedwait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_clockwait.c = -fexceptions -fasynchronous-unwind-tables
 
 # These are the function wrappers we have to duplicate here.
-CFLAGS-fcntl.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-fcntl64.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-lockf.c += -fexceptions
 CFLAGS-pread.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pread64.c += -fexceptions -fasynchronous-unwind-tables

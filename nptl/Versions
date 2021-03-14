@@ -104,7 +104,6 @@ libpthread {
     _IO_ftrylockfile;
     _IO_funlockfile;
     __errno_location;
-    __fcntl;
     __h_errno_location;
     __lseek;
     __open;
@@ -128,7 +127,6 @@ libpthread {
     _pthread_cleanup_pop_restore;
     _pthread_cleanup_push;
     _pthread_cleanup_push_defer;
-    fcntl;
     flockfile;
     ftrylockfile;
     funlockfile;
