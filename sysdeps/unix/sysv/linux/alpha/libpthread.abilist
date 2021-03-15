@@ -15,7 +15,6 @@ GLIBC_2.0 __pthread_mutexattr_init F
 GLIBC_2.0 __pthread_mutexattr_settype F
 GLIBC_2.0 __pthread_once F
 GLIBC_2.0 __pthread_setspecific F
-GLIBC_2.0 __sigaction F
 GLIBC_2.0 _pthread_cleanup_pop F
 GLIBC_2.0 _pthread_cleanup_pop_restore F
 GLIBC_2.0 _pthread_cleanup_push F
@@ -58,7 +57,6 @@ GLIBC_2.0 sem_init F
 GLIBC_2.0 sem_post F
 GLIBC_2.0 sem_trywait F
 GLIBC_2.0 sem_wait F
-GLIBC_2.0 sigaction F
 GLIBC_2.0 siglongjmp F
 GLIBC_2.1 __libc_allocate_rtsig F
 GLIBC_2.1 __libc_current_sigrtmax F

@@ -67,7 +67,6 @@ GLIBC_2.4 __pthread_unregister_cancel F
 GLIBC_2.4 __pthread_unregister_cancel_restore F
 GLIBC_2.4 __pthread_unwind_next F
 GLIBC_2.4 __res_state F
-GLIBC_2.4 __sigaction F
 GLIBC_2.4 _pthread_cleanup_pop F
 GLIBC_2.4 _pthread_cleanup_pop_restore F
 GLIBC_2.4 _pthread_cleanup_push F
@@ -175,5 +174,4 @@ GLIBC_2.4 sem_timedwait F
 GLIBC_2.4 sem_trywait F
 GLIBC_2.4 sem_unlink F
 GLIBC_2.4 sem_wait F
-GLIBC_2.4 sigaction F
 GLIBC_2.4 siglongjmp F
