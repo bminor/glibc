@@ -165,7 +165,6 @@ GLIBC_2.17 sem_wait F
 GLIBC_2.17 send F
 GLIBC_2.17 sigaction F
 GLIBC_2.17 siglongjmp F
-GLIBC_2.17 system F
 GLIBC_2.18 pthread_getattr_default_np F
 GLIBC_2.18 pthread_setattr_default_np F
 GLIBC_2.28 call_once F

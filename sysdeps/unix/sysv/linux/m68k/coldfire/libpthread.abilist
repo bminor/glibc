@@ -194,4 +194,3 @@ GLIBC_2.4 sem_wait F
 GLIBC_2.4 send F
 GLIBC_2.4 sigaction F
 GLIBC_2.4 siglongjmp F
-GLIBC_2.4 system F

@@ -145,7 +145,6 @@ GLIBC_2.2 sem_wait F
 GLIBC_2.2 send F
 GLIBC_2.2 sigaction F
 GLIBC_2.2 siglongjmp F
-GLIBC_2.2 system F
 GLIBC_2.2.3 __libpthread_version_placeholder F
 GLIBC_2.2.6 __libpthread_version_placeholder F
 GLIBC_2.28 call_once F

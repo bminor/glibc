@@ -114,7 +114,6 @@ libpthread-routines = \
   pt-interp \
   pt-longjmp \
   pt-raise \
-  pt-system \
   pthread_attr_getaffinity \
   pthread_attr_getguardsize \
   pthread_attr_getstack \
@@ -295,8 +294,6 @@ CFLAGS-open64.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-send.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sigsuspend.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fdatasync.c += -fexceptions -fasynchronous-unwind-tables
-
-CFLAGS-pt-system.c += -fexceptions
 
 CFLAGS-futex-internal.c += -fexceptions -fasynchronous-unwind-tables
 

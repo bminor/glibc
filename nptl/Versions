@@ -173,7 +173,6 @@ libpthread {
     send;
     sigaction;
     siglongjmp;
-    system;
   }
 
   GLIBC_2.1 {
