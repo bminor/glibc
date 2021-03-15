@@ -84,7 +84,7 @@ support_subprogram (const char *file, char *const argv[])
   xposix_spawn_file_actions_addclose (&fa, result.stdout_pipe[1]);
   xposix_spawn_file_actions_addclose (&fa, result.stderr_pipe[1]);
 
-  result.pid = xposix_spawn (file, &fa, NULL, argv, NULL);
+  result.pid = xposix_spawn (file, &fa, NULL, argv, environ);
 
   xclose (result.stdout_pipe[1]);
   xclose (result.stderr_pipe[1]);
