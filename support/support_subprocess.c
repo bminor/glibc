@@ -27,7 +27,7 @@
 #include <support/subprocess.h>
 
 static struct support_subprocess
-support_suprocess_init (void)
+support_subprocess_init (void)
 {
   struct support_subprocess result;
 
@@ -48,7 +48,7 @@ support_suprocess_init (void)
 struct support_subprocess
 support_subprocess (void (*callback) (void *), void *closure)
 {
-  struct support_subprocess result = support_suprocess_init ();
+  struct support_subprocess result = support_subprocess_init ();
 
   result.pid = xfork ();
   if (result.pid == 0)
@@ -71,7 +71,7 @@ support_subprocess (void (*callback) (void *), void *closure)
 struct support_subprocess
 support_subprogram (const char *file, char *const argv[])
 {
-  struct support_subprocess result = support_suprocess_init ();
+  struct support_subprocess result = support_subprocess_init ();
 
   posix_spawn_file_actions_t fa;
   /* posix_spawn_file_actions_init does not fail.  */
