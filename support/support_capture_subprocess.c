@@ -36,7 +36,7 @@ transfer (const char *what, struct pollfd *pfd, struct xmemstream *stream)
       if (ret < 0)
         {
           support_record_failure ();
-          printf ("error: reading from subprocess %s: %m", what);
+          printf ("error: reading from subprocess %s: %m\n", what);
           pfd->events = 0;
           pfd->revents = 0;
         }
