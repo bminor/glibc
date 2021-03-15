@@ -32,9 +32,6 @@ GLIBC_2.3 _IO_ftrylockfile F
 GLIBC_2.3 _IO_funlockfile F
 GLIBC_2.3 __errno_location F
 GLIBC_2.3 __h_errno_location F
-GLIBC_2.3 __libc_allocate_rtsig F
-GLIBC_2.3 __libc_current_sigrtmax F
-GLIBC_2.3 __libc_current_sigrtmin F
 GLIBC_2.3 __pthread_getspecific F
 GLIBC_2.3 __pthread_key_create F
 GLIBC_2.3 __pthread_mutex_destroy F

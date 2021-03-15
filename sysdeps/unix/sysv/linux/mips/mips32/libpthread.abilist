@@ -66,9 +66,6 @@ GLIBC_2.12 pthread_mutexattr_setrobust F
 GLIBC_2.12 pthread_setname_np F
 GLIBC_2.18 pthread_getattr_default_np F
 GLIBC_2.18 pthread_setattr_default_np F
-GLIBC_2.2 __libc_allocate_rtsig F
-GLIBC_2.2 __libc_current_sigrtmax F
-GLIBC_2.2 __libc_current_sigrtmin F
 GLIBC_2.2 __pthread_rwlock_destroy F
 GLIBC_2.2 __pthread_rwlock_init F
 GLIBC_2.2 __pthread_rwlock_rdlock F

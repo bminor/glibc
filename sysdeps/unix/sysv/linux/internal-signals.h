@@ -40,6 +40,11 @@
 #define SIGSETXID       (__SIGRTMIN + 1)
 
 
+/* How many signal numbers need to be reserved for libpthread's private uses
+   (SIGCANCEL and SIGSETXID).  */
+#define RESERVED_SIGRT  2
+
+
 /* Return is sig is used internally.  */
 static inline bool
 __is_internal_signal (int sig)

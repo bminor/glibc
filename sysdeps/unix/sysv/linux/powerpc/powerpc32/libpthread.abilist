@@ -58,9 +58,6 @@ GLIBC_2.0 sem_post F
 GLIBC_2.0 sem_trywait F
 GLIBC_2.0 sem_wait F
 GLIBC_2.0 siglongjmp F
-GLIBC_2.1 __libc_allocate_rtsig F
-GLIBC_2.1 __libc_current_sigrtmax F
-GLIBC_2.1 __libc_current_sigrtmin F
 GLIBC_2.1 pthread_attr_getguardsize F
 GLIBC_2.1 pthread_attr_getstackaddr F
 GLIBC_2.1 pthread_attr_getstacksize F

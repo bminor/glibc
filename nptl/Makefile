@@ -99,7 +99,6 @@ libpthread-routines = \
   old_pthread_cond_signal \
   old_pthread_cond_timedwait \
   old_pthread_cond_wait \
-  pt-allocrtsig \
   pt-cleanup \
   pt-interp \
   pt-longjmp \
