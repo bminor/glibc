@@ -35,7 +35,7 @@ headers := signal.h sys/signal.h \
 	   bits/sigstksz.h
 
 routines	:= signal raise killpg \
-		   sigaction sigprocmask kill \
+		   sigaction libc_sigaction sigprocmask kill \
 		   sigpending sigsuspend sigwait \
 		   sigblock sigsetmask sigpause sigvec \
 		   sigstack sigaltstack sigintr \

@@ -1,8 +1,6 @@
-/* POSIX.1 sigaction call for Linux/SPARC64.
-   Copyright (C) 1997-2021 Free Software Foundation, Inc.
+/* ARC specific sigaction.
+   Copyright (C) 2020-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Miguel de Icaza <miguel@nuclecu.unam.mx> and
-		  Jakub Jelinek <jj@ultra.linux.cz>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -15,18 +13,19 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
+   License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <string.h>
-#include <syscall.h>
-#include <sysdep.h>
+#define SA_RESTORER	0x04000000
 
-/* Defined on sigreturn_stub.S.  */
-void __rt_sigreturn_stub (void);
+extern void __default_rt_sa_restorer (void);
 
-#define STUB(act, sigsetsize) \
-  (((unsigned long) &__rt_sigreturn_stub) - 8),	\
-  (sigsetsize)
+#define SET_SA_RESTORER(kact, act)				\
+ ({								\
+   (kact)->sa_restorer = __default_rt_sa_restorer;		\
+   (kact)->sa_flags |= SA_RESTORER;				\
+ })
 
-#include <sysdeps/unix/sysv/linux/sigaction.c>
+#define RESET_SA_RESTORER(act, kact)
+
+#include <sysdeps/unix/sysv/linux/libc_sigaction.c>

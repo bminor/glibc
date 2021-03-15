@@ -30,7 +30,7 @@ extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
 
 #include <kernel_sigaction.h>
 
-#include <sysdeps/unix/sysv/linux/sigaction.c>
+#include <sysdeps/unix/sysv/linux/libc_sigaction.c>
 
 /* NOTE: Please think twice before making any changes to the bits of
    code below.  GDB needs some intimate knowledge about it to

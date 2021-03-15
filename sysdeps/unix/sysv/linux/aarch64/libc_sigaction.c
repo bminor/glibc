@@ -27,4 +27,4 @@
 #define RESET_SA_RESTORER(act, kact)		\
   (act)->sa_restorer = (kact)->sa_restorer;
 
-#include <sysdeps/unix/sysv/linux/sigaction.c>
+#include <sysdeps/unix/sysv/linux/libc_sigaction.c>

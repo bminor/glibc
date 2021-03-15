@@ -1,7 +1,8 @@
-/* POSIX.1 sigaction call for Linux/SPARC.
+/* POSIX.1 sigaction call for Linux/SPARC64.
    Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Miguel de Icaza <miguel@nuclecu.unam.mx>, 1997.
+   Contributed by Miguel de Icaza <miguel@nuclecu.unam.mx> and
+		  Jakub Jelinek <jj@ultra.linux.cz>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,19 +20,13 @@
 
 #include <string.h>
 #include <syscall.h>
-#include <sys/signal.h>
-#include <errno.h>
-#include <kernel_sigaction.h>
 #include <sysdep.h>
 
+/* Defined on sigreturn_stub.S.  */
 void __rt_sigreturn_stub (void);
-void __sigreturn_stub (void);
 
 #define STUB(act, sigsetsize) \
-  (act) ? ((unsigned long)((act->sa_flags & SA_SIGINFO)	\
-			    ? &__rt_sigreturn_stub	\
-			    : &__sigreturn_stub) - 8)	\
-	: 0,						\
+  (((unsigned long) &__rt_sigreturn_stub) - 8),	\
   (sigsetsize)
 
-#include <sysdeps/unix/sysv/linux/sigaction.c>
+#include <sysdeps/unix/sysv/linux/libc_sigaction.c>

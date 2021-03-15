@@ -225,6 +225,7 @@ libpthread-routines = \
   sem_unlink \
   sem_wait \
   sigaction \
+  libc_sigaction \
   tpp \
   unwind \
   unwind-forcedunwind \

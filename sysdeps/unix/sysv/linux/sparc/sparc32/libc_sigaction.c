@@ -1,6 +1,7 @@
-/* ARC specific sigaction.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+/* POSIX.1 sigaction call for Linux/SPARC.
+   Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Miguel de Icaza <miguel@nuclecu.unam.mx>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -13,19 +14,24 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define SA_RESTORER	0x04000000
+#include <string.h>
+#include <syscall.h>
+#include <sys/signal.h>
+#include <errno.h>
+#include <kernel_sigaction.h>
+#include <sysdep.h>
 
-extern void __default_rt_sa_restorer (void);
+void __rt_sigreturn_stub (void);
+void __sigreturn_stub (void);
 
-#define SET_SA_RESTORER(kact, act)				\
- ({								\
-   (kact)->sa_restorer = __default_rt_sa_restorer;		\
-   (kact)->sa_flags |= SA_RESTORER;				\
- })
+#define STUB(act, sigsetsize) \
+  (act) ? ((unsigned long)((act->sa_flags & SA_SIGINFO)	\
+			    ? &__rt_sigreturn_stub	\
+			    : &__sigreturn_stub) - 8)	\
+	: 0,						\
+  (sigsetsize)
 
-#define RESET_SA_RESTORER(act, kact)
-
-#include <sysdeps/unix/sysv/linux/sigaction.c>
+#include <sysdeps/unix/sysv/linux/libc_sigaction.c>

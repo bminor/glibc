@@ -39,7 +39,7 @@ extern void restore (void) asm ("__restore") attribute_hidden;
 #define RESET_SA_RESTORER(act, kact) \
   (act)->sa_restorer = (kact)->sa_restorer
 
-#include <sysdeps/unix/sysv/linux/sigaction.c>
+#include <sysdeps/unix/sysv/linux/libc_sigaction.c>
 
 /* NOTE: Please think twice before making any changes to the bits of
    code below.  GDB needs some intimate knowledge about it to

@@ -74,7 +74,6 @@ setsid		-	setsid		i:	__setsid	setsid
 setsockopt	-	setsockopt	i:iiibn	setsockopt	__setsockopt
 setuid		-	setuid		i:i	__setuid	setuid
 shutdown	-	shutdown	i:ii	shutdown
-sigaction	-	sigaction	i:ipp	__sigaction	sigaction
 sigsuspend	-	sigsuspend	Ci:p	sigsuspend
 socket		-	socket		i:iii	__socket	socket
 socketpair	-	socketpair	i:iiif	socketpair

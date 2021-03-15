@@ -24,16 +24,15 @@
 /* If ACT is not NULL, change the action for SIG to *ACT.
    If OACT is not NULL, put the old action for SIG in *OACT.  */
 int
-__sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
+__libc_sigaction (int sig, const struct sigaction *act,
+		  struct sigaction *oact)
 {
   struct hurd_sigstate *ss;
   struct sigaction a, old;
   sigset_t pending;
 
-  if (sig <= 0 || sig >= NSIG
-      || (act != NULL && act->sa_handler != SIG_DFL
-	  && ((__sigmask (sig) & _SIG_CANT_MASK)
-	      || act->sa_handler == SIG_ERR)))
+  if (act != NULL && act->sa_handler != SIG_DFL
+      && ((__sigmask (sig) & _SIG_CANT_MASK) || act->sa_handler == SIG_ERR))
     {
       errno = EINVAL;
       return -1;
@@ -87,5 +86,4 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 
   return 0;
 }
-libc_hidden_def (__sigaction)
-weak_alias (__sigaction, sigaction)
+libc_hidden_def (__libc_sigaction)

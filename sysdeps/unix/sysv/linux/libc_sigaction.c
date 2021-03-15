@@ -70,5 +70,3 @@ __libc_sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
   return result;
 }
 libc_hidden_def (__libc_sigaction)
-
-#include <nptl/sigaction.c>
