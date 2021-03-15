@@ -45,18 +45,20 @@ install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
 # code is compiled with special flags.
 tests =
 
-CFLAGS-.o += $(no-stack-protector)
-CFLAGS-.op += $(no-stack-protector)
-CFLAGS-.os += $(no-stack-protector)
-
-# Dummy object not actually used for anything.  It is linked into
-# crt1.o nevertheless, which in turn is statically linked into
+# static-reloc.os is a dummy object not actually used for anything.  It is
+# linked into crt1.o nevertheless, which in turn is statically linked into
 # applications, so that build flags matter.
 # See <https://sourceware.org/ml/libc-alpha/2018-07/msg00101.html>.
-# NB: Using $(stack-protector) in this way causes a wrong definition
-# STACK_PROTECTOR_LEVEL due to the preceding $(no-stack-protector),
-# but it does not matter for this source file.
-CFLAGS-static-reloc.os += $(stack-protector)
+#
+# libc-start.os is safe to be built with stack protector since
+# __libc_start_main is called after stack canary setup is done.
+ssp-safe.os = static-reloc libc-start
+
+CFLAGS-.o += $(call elide-stack-protector,.o,$(routines))
+CFLAGS-.op += $(call elide-stack-protector,.op,$(routines))
+CFLAGS-.oS += $(call elide-stack-protector,.oS,$(routines))
+CFLAGS-.os += $(call elide-stack-protector,.os,$(filter-out \
+						 $(ssp-safe.os),$(routines)))
 
 ifeq (yes,$(build-shared))
 extra-objs += S$(start-installed-name) gmon-start.os

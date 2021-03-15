@@ -856,6 +856,14 @@ ifneq ($(stack-protector),)
 +stack-protector=$(stack-protector)
 endif
 
+# Some routines are unsafe to build with stack-protection since they're called
+# before the stack check guard is set up.  Provide a way to disable stack
+# protector.  The first argument is the extension (.o, .os, .oS) and the second
+# is a list of routines that this path should be applied to.
+define elide-stack-protector
+$(if $(filter $(@F),$(patsubst %,%$(1),$(2))), $(no-stack-protector))
+endef
+
 # This is the program that generates makefile dependencies from C source files.
 # The -MP flag tells GCC >= 3.2 (which we now require) to produce dummy
 # targets for headers so that removed headers don't break the build.

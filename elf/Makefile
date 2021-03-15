@@ -83,10 +83,6 @@ endif
 # Also compile all routines in the static library that are elided from
 # the shared libc because they are in libc.a in the same way.
 
-define elide-stack-protector
-$(if $(filter $(@F),$(patsubst %,%$(1),$(2))), $(no-stack-protector))
-endef
-
 CFLAGS-.o += $(call elide-stack-protector,.o,$(elide-routines.os))
 CFLAGS-.op += $(call elide-stack-protector,.op,$(elide-routines.os))
 CFLAGS-.os += $(call elide-stack-protector,.os,$(all-rtld-routines))
