@@ -29,6 +29,7 @@ enum isa
 };
 
 enum isa
+__attribute__ ((__optimize__ ("-fno-stack-protector")))
 get_isa (void)
 {
   if (CPU_FEATURE_USABLE (AVX512F))
@@ -83,6 +84,7 @@ isa_none (void)
 int foo (void) __attribute__ ((ifunc ("foo_ifunc")));
 
 void *
+__attribute__ ((__optimize__ ("-fno-stack-protector")))
 foo_ifunc (void)
 {
   switch (get_isa ())

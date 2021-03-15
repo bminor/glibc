@@ -7,6 +7,8 @@ sysdep_routines += get-cpuid-feature-leaf
 sysdep-dl-routines += dl-get-cpu-features
 sysdep_headers += sys/platform/x86.h
 
+CFLAGS-get-cpuid-feature-leaf.o += $(no-stack-protector)
+
 tests += tst-get-cpu-features tst-get-cpu-features-static \
 	 tst-cpu-features-cpuinfo tst-cpu-features-cpuinfo-static \
 	 tst-cpu-features-supports tst-cpu-features-supports-static
