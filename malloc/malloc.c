@@ -1357,8 +1357,13 @@ checked_request2size (size_t req, size_t *sz) __nonnull (1)
      must be a macro that produces a compile time constant if passed
      a constant literal.  */
   if (__glibc_unlikely (mtag_enabled))
-    req = (req + (__MTAG_GRANULE_SIZE - 1)) &
-	  ~(size_t)(__MTAG_GRANULE_SIZE - 1);
+    {
+      /* Ensure this is not evaluated if !mtag_enabled, see gcc PR 99551.  */
+      asm ("");
+
+      req = (req + (__MTAG_GRANULE_SIZE - 1)) &
+	    ~(size_t)(__MTAG_GRANULE_SIZE - 1);
+    }
 
   *sz = request2size (req);
   return true;
