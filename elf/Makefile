@@ -245,7 +245,7 @@ tests += $(tests-execstack-$(have-z-execstack))
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-leaks1-mem.out \
 		 $(objpfx)tst-leaks1-static-mem.out $(objpfx)noload-mem.out \
-		 $(objpfx)tst-ldconfig-X.out
+		 $(objpfx)tst-ldconfig-X.out $(objpfx)tst-rtld-help.out
 endif
 tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 tlsmod18a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
@@ -433,7 +433,8 @@ endif
 ifeq (yes,$(build-shared))
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-pathopt.out $(objpfx)tst-rtld-load-self.out \
-		 $(objpfx)tst-rtld-preload.out $(objpfx)argv0test.out
+		 $(objpfx)tst-rtld-preload.out $(objpfx)argv0test.out \
+		 $(objpfx)tst-rtld-help.out
 endif
 tests-special += $(objpfx)check-textrel.out $(objpfx)check-execstack.out \
 		 $(objpfx)check-wx-segment.out \
@@ -1907,3 +1908,16 @@ $(objpfx)list-tunables.out: tst-rtld-list-tunables.sh $(objpfx)ld.so
 	$(evaluate-test)
 
 tst-dst-static-ENV = LD_LIBRARY_PATH='$$ORIGIN'
+
+$(objpfx)tst-rtld-help.out: $(objpfx)ld.so
+	$(test-wrapper) $(rtld-prefix) --help > $@; \
+	status=$$?; \
+	echo "info: ld.so exit status: $$status" >> $@; \
+	if ! grep -q 'Legacy HWCAP subdirectories under library search path directories' $@; then \
+	  echo "error: missing subdirectory pattern" >> $@; \
+	  if test $$status -eq 0; then \
+	    status=1; \
+	  fi; \
+	fi; \
+	(exit $$status); \
+	$(evaluate-test)
