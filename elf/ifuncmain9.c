@@ -43,6 +43,7 @@ implementation (void)
 }
 
 static __typeof__ (implementation) *
+inhibit_stack_protector
 resolver (void)
 {
   ++resolver_called;
