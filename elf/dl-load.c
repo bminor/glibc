@@ -758,8 +758,14 @@ _dl_init_paths (const char *llp, const char *source,
   max_dirnamelen = SYSTEM_DIRS_MAX_LEN;
   *aelem = NULL;
 
-  /* This points to the map of the main object.  */
+  /* This points to the map of the main object.  If there is no main
+     object (e.g., under --help, use the dynamic loader itself as a
+     stand-in.  */
   l = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
+#ifdef SHARED
+  if (l == NULL)
+    l = &GL (dl_rtld_map);
+#endif
   assert (l->l_type != lt_loaded);
 
   if (l->l_info[DT_RUNPATH])
