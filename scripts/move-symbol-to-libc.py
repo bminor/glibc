@@ -29,76 +29,25 @@ import argparse
 import os.path
 import sys
 
-def replace_file(path, new_contents):
-    """Atomically replace PATH with lines from NEW_CONTENTS.
+# Make available glibc Python modules.
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
-    NEW_CONTENTS must be a sequence of strings.
-
-    """
-    temppath = path + 'T'
-    with open(temppath, 'w') as out:
-        for line in new_contents:
-            out.write(line)
-    os.rename(temppath, path)
-
-class VersionedSymbol:
-    """A combination of a symbol and its version."""
-
-    def __init__(self, symbol, version):
-        """Construct a new versioned symbol."""
-        assert symbol
-        assert version
-        self.symbol = symbol
-        self.version = version
-
-    def __str__(self):
-        return self.symbol + '@' + self.version
-
-    def __eq__(self, other):
-        return self.symbol == other.symbol and self.version == other.version
-
-    def __hash__(self):
-        return hash(self.symbol) ^ hash(self.version)
-
-def read_abilist(path):
-    """Read the abilist file at PATH.
-
-    Return a dictionary from VersionedSymbols to their flags (as
-    strings).
-
-    """
-    result = {}
-    with open(path) as inp:
-        for line in inp:
-            version, symbol, flags = line.strip().split(' ', 2)
-            result[VersionedSymbol(symbol, version)] = flags
-    return result
-
-def abilist_lines(symbols):
-    """Build the abilist file contents (as a list of lines).
-
-    SYMBOLS is a dictionary from VersionedSymbols to their flags.
-
-    """
-    result = []
-    for versym, flags in symbols.items():
-        result.append('{} {} {}\n'.format(
-            versym.version, versym.symbol, flags))
-    result.sort()
-    return result
+import glibcsymbols
 
 def add_to_libc_path(path, new_symbols):
     """Add SYMBOLS to the abilist file PATH.
 
-    NEW_SYMBOLS is a dictionary from VersionedSymbols to their flags.
+    NEW_SYMBOLS is a dictionary from glibcsymbols.VersionedSymbol
+    objects to their flags.
 
     """
-    original_symbols = read_abilist(path)
+    original_symbols = glibcsymbols.read_abilist(path)
     updated_symbols = original_symbols.copy()
     updated_symbols.update(new_symbols)
     if updated_symbols != original_symbols:
         sys.stdout.write('updating libc abilist {}\n'.format(path))
-        replace_file(path, abilist_lines(updated_symbols))
+        glibcsymbols.replace_file(
+            path, glibcsymbols.abilist_lines(updated_symbols))
 
 # The name of the libc.so abilist file.
 libc_abilist = 'libc.abilist'
@@ -156,7 +105,7 @@ def move_symbols_1(path, to_move, moved_symbols):
     new_lines = []
     changed = False
 
-    old_symbols = read_abilist(path)
+    old_symbols = glibcsymbols.read_abilist(path)
     old_versions = set(versym.version for versym in old_symbols.keys())
     matching_symbols = dict(e for e in old_symbols.items()
                             if e[0].symbol in to_move)
@@ -169,9 +118,11 @@ def move_symbols_1(path, to_move, moved_symbols):
         # going away completely.
         new_versions = set(versym.version for versym in new_symbols.keys())
         for missing_version in old_versions - new_versions:
-            new_symbols[VersionedSymbol(placeholder, missing_version)] = 'F'
+            new_symbols[glibcsymbols.VersionedSymbol(
+                placeholder, missing_version)] = 'F'
 
-        replace_file(path, abilist_lines(new_symbols))
+        glibcsymbols.replace_file(
+            path, glibcsymbols.abilist_lines(new_symbols))
 
         moved_symbols.update(matching_symbols)
 
