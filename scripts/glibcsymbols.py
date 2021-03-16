@@ -63,7 +63,10 @@ def read_abilist(path):
     with open(path) as inp:
         for line in inp:
             version, symbol, flags = line.strip().split(' ', 2)
-            result[VersionedSymbol(symbol, version)] = flags
+            versym = VersionedSymbol(symbol, version)
+            if versym in result:
+                raise IOError("{}: duplicate symbol {}".format(path, versym))
+            result[versym] = flags
     return result
 
 def abilist_lines(symbols):
