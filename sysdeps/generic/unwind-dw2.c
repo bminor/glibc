@@ -177,14 +177,6 @@ _Unwind_GetGR (struct _Unwind_Context *context, int index)
   return * (_Unwind_Word *) context->reg[index];
 }
 
-/* Get the value of the CFA as saved in CONTEXT.  */
-
-_Unwind_Word
-_Unwind_GetCFA (struct _Unwind_Context *context)
-{
-  return (_Unwind_Ptr) context->cfa;
-}
-
 /* Overwrite the saved value for register REG in CONTEXT with VAL.  */
 
 inline void
