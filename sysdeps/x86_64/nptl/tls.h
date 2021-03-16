@@ -271,8 +271,11 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 		       "i" (offsetof (struct pthread, member)));	      \
      else /* 8 */							      \
        {								      \
+	 /* Since movq takes a signed 32-bit immediate or a register source   \
+	    operand, use "er" constraint for 32-bit signed integer constant   \
+	    or register.  */						      \
 	 asm volatile ("movq %q0,%%fs:%P1" :				      \
-		       : IMM_MODE ((uint64_t) cast_to_integer (value)),	      \
+		       : "er" ((uint64_t) cast_to_integer (value)),	      \
 			 "i" (offsetof (struct pthread, member)));	      \
        }})
 
@@ -296,8 +299,11 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 		       "r" (idx));					      \
      else /* 8 */							      \
        {								      \
+	 /* Since movq takes a signed 32-bit immediate or a register source   \
+	    operand, use "er" constraint for 32-bit signed integer constant   \
+	    or register.  */						      \
 	 asm volatile ("movq %q0,%%fs:%P1(,%q2,8)" :			      \
-		       : IMM_MODE ((uint64_t) cast_to_integer (value)),	      \
+		       : "er" ((uint64_t) cast_to_integer (value)),	      \
 			 "i" (offsetof (struct pthread, member[0])),	      \
 			 "r" (idx));					      \
        }})
