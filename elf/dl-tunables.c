@@ -107,32 +107,35 @@ do_tunable_update_val (tunable_t *cur, const tunable_val_t *valp,
       return;
     }
 
+  bool unsigned_cmp = unsigned_tunable_type (cur->type.type_code);
+
   val = valp->numval;
   min = minp != NULL ? *minp : cur->type.min;
   max = maxp != NULL ? *maxp : cur->type.max;
 
   /* We allow only increasingly restrictive bounds.  */
-  if (min < cur->type.min)
+  if (tunable_val_lt (min, cur->type.min, unsigned_cmp))
     min = cur->type.min;
 
-  if (max > cur->type.max)
+  if (tunable_val_gt (max, cur->type.max, unsigned_cmp))
     max = cur->type.max;
 
   /* Skip both bounds if they're inconsistent.  */
-  if (min > max)
+  if (tunable_val_gt (min, max, unsigned_cmp))
     {
       min = cur->type.min;
       max = cur->type.max;
     }
 
-  /* Write everything out if the value and the bounds are valid.  */
-  if (min <= val && val <= max)
-    {
-      cur->val.numval = val;
-      cur->type.min = min;
-      cur->type.max = max;
-      cur->initialized = true;
-    }
+  /* Bail out if the bounds are not valid.  */
+  if (tunable_val_lt (val, min, unsigned_cmp)
+      || tunable_val_lt (max, val, unsigned_cmp))
+    return;
+
+  cur->val.numval = val;
+  cur->type.min = min;
+  cur->type.max = max;
+  cur->initialized = true;
 }
 
 /* Validate range of the input value and initialize the tunable CUR if it looks
