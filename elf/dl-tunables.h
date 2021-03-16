@@ -115,6 +115,24 @@ rtld_hidden_proto (__tunable_set_val)
 /* The default value for TUNABLES_FRONTEND.  */
 # define TUNABLES_FRONTEND_yes TUNABLES_FRONTEND_valstring
 
+static __always_inline bool
+tunable_val_lt (tunable_num_t lhs, tunable_num_t rhs, bool unsigned_cmp)
+{
+  if (unsigned_cmp)
+    return (uintmax_t) lhs < (uintmax_t) rhs;
+  else
+    return lhs < rhs;
+}
+
+static __always_inline bool
+tunable_val_gt (tunable_num_t lhs, tunable_num_t rhs, bool unsigned_cmp)
+{
+  if (unsigned_cmp)
+    return (uintmax_t) lhs > (uintmax_t) rhs;
+  else
+    return lhs > rhs;
+}
+
 /* Compare two name strings, bounded by the name hardcoded in glibc.  */
 static __always_inline bool
 tunable_is_name (const char *orig, const char *envname)
