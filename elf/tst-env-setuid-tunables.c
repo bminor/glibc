@@ -45,11 +45,37 @@
 const char *teststrings[] =
 {
   "glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.check=2:glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096:glibc.malloc.check=2",
+  "glibc.malloc.perturb=0x800",
+  "glibc.malloc.perturb=0x800:glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.perturb=0x800:not_valid.malloc.check=2:glibc.malloc.mmap_threshold=4096",
+  "glibc.not_valid.check=2:glibc.malloc.mmap_threshold=4096",
+  "not_valid.malloc.check=2:glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.garbage=2:glibc.maoc.mmap_threshold=4096:glibc.malloc.check=2",
+  "glibc.malloc.check=4:glibc.malloc.garbage=2:glibc.maoc.mmap_threshold=4096",
+  ":glibc.malloc.garbage=2:glibc.malloc.check=1",
+  "glibc.malloc.check=1:glibc.malloc.check=2",
+  "not_valid.malloc.check=2",
+  "glibc.not_valid.check=2",
 };
 
 const char *resultstrings[] =
 {
   "glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.perturb=0x800",
+  "glibc.malloc.perturb=0x800:glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.perturb=0x800:glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.mmap_threshold=4096",
+  "glibc.malloc.mmap_threshold=4096",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
 };
 
 static int
