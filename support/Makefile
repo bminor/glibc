@@ -71,6 +71,7 @@ libsupport-routines = \
   support_set_small_thread_stack_size \
   support_shared_allocate \
   support_small_stack_thread_attribute \
+  support_stat_nanoseconds \
   support_subprocess \
   support_test_compare_blob \
   support_test_compare_failure \

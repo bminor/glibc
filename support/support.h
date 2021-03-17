@@ -134,6 +134,9 @@ extern ssize_t support_copy_file_range (int, off64_t *, int, off64_t *,
    operations (such as fstatat or utimensat).  */
 extern bool support_path_support_time64 (const char *path);
 
+/* Return true if stat supports nanoseconds resolution.  */
+extern bool support_stat_nanoseconds (void);
+
 __END_DECLS
 
 #endif /* SUPPORT_H */

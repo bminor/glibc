@@ -91,9 +91,12 @@ do_test (void)
       TEST_COMPARE (stx.stx_blocks, st.st_blocks);
 
       TEST_COMPARE (stx.stx_ctime.tv_sec, st.st_ctim.tv_sec);
-      TEST_COMPARE (stx.stx_ctime.tv_nsec, st.st_ctim.tv_nsec);
       TEST_COMPARE (stx.stx_mtime.tv_sec, st.st_mtim.tv_sec);
-      TEST_COMPARE (stx.stx_mtime.tv_nsec, st.st_mtim.tv_nsec);
+      if (support_stat_nanoseconds ())
+	{
+	  TEST_COMPARE (stx.stx_ctime.tv_nsec, st.st_ctim.tv_nsec);
+	  TEST_COMPARE (stx.stx_mtime.tv_nsec, st.st_mtim.tv_nsec);
+	}
     }
 
   return 0;
