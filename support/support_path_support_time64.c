@@ -31,7 +31,7 @@ utimesat_call (const char *path, const struct __timespec64 tsp[2])
 # ifndef __NR_utimensat_time64
 #  define __NR_utimensat_time64 __NR_utimensat
 # endif
-  return INLINE_SYSCALL_CALL (utimensat_time64, AT_FDCWD, path, &tsp[0], 0);
+  return syscall (__NR_utimensat_time64, AT_FDCWD, path, &tsp[0], 0);
 }
 #endif
 
