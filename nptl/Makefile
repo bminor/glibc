@@ -266,11 +266,6 @@ CFLAGS-sem_wait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_timedwait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sem_clockwait.c = -fexceptions -fasynchronous-unwind-tables
 
-# These are the function wrappers we have to duplicate here.
-CFLAGS-lockf.c += -fexceptions
-CFLAGS-sigwait.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-fdatasync.c += -fexceptions -fasynchronous-unwind-tables
-
 CFLAGS-futex-internal.c += -fexceptions -fasynchronous-unwind-tables
 
 LDLIBS-tst-once5 = -lstdc++
