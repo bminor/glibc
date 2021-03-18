@@ -81,7 +81,7 @@ static-only-routines = pthread_atfork
 # We need to provide certain routines for compatibility with existing
 # binaries.
 pthread-compat-wrappers = \
-		      msgrcv msgsnd \
+		      msgrcv \
 		      sigsuspend \
 
 libpthread-routines = \
@@ -281,7 +281,6 @@ CFLAGS-sem_clockwait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-lockf.c += -fexceptions
 CFLAGS-sigwait.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-msgrcv.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-msgsnd.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sigsuspend.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fdatasync.c += -fexceptions -fasynchronous-unwind-tables
 
