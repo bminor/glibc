@@ -61,22 +61,25 @@ LC_COLLATE
 copy "iso14651_t1"
 
 % CLDR collation rules for Swedish:
-% (see: https://unicode.org/cldr/trac/browser/trunk/common/collation/sv.xml)
+% (https://github.com/unicode-org/cldr/blob/master/common/collation/sv.xml)
 %
-% <collation type="standard">
+% We use the new "reformed" rules from the 13th edition of Svenska Akademiens
+% ordlista where 'W' is considered a distinct character sorting after 'V'.
+% This matches CLDR 1.5.0 released in 2007.
+%
+% <defaultCollation>reformed</defaultCollation>
+% <collation type="reformed">
 %   <cr><![CDATA[
 %     &D<<đ<<<Đ<<ð<<<Ð
 %     &t<<<þ/h
 %     &T<<<Þ/H
-%     &v<<<V<<w<<<W
 %     &Y<<ü<<<Ü<<ű<<<Ű
 %     &[before 1]ǀ<å<<<Å<ä<<<Ä<<æ<<<Æ<<ę<<<Ę<ö<<<Ö<<ø<<<Ø<<ő<<<Ő<<œ<<<Œ<<ô<<<Ô
 %   ]]></cr>
 % </collation>
 %
-% And CLDR also lists the following
-% index characters:
-% (see: https://unicode.org/cldr/trac/browser/trunk/common/main/sv.xml)
+% And CLDR also lists the following index characters:
+% (https://github.com/unicode-org/cldr/blob/master/common/main/sv.xml)
 %
 % <exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö]</exemplarCharacters>
 %
@@ -102,17 +105,6 @@ reorder-after <AFTER-Z>
 % &t<<<þ/h
 <U00DE> "<S0074><S0068>";"<BASE><BASE>";"<COMPATCAP><COMPATCAP>";IGNORE % Þ
 <U00FE> "<S0074><S0068>";"<BASE><BASE>";"<COMPAT><COMPAT>";IGNORE % þ
-
-% The letter w is normally not present in the Swedish alphabet. It
-% exists in some names in Swedish and foreign words, but is accounted
-% for as a variant of 'v'.  Words and names with 'w' are in Swedish
-% ordered alphabetically among the words and names with 'v'. If two
-% words or names are only to be distinguished by 'v' or % 'w', 'v' is
-% placed before 'w'.
-
-% &v<<<V<<w<<<W
-<U0057> <S0076>;"<BASE><VRNT1>";"<CAP><MIN>";IGNORE % W
-<U0077> <S0076>;"<BASE><VRNT1>";"<MIN><MIN>";IGNORE % w
 
 % &Y<<ü<<<Ü<<ű<<<Ű
 <U00DC> <S0079>;"<BASE><TREMA>";"<CAP><MIN>";IGNORE % Ü
