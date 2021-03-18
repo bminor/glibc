@@ -40,27 +40,25 @@ _Static_assert (sizeof (__blkcnt_t) == sizeof (__blkcnt64_t),
                 "__blkcnt_t and __blkcnt64_t must match");
 #endif
 
-int
-__fstatat64_time64 (int fd, const char *file, struct __stat64_t64 *buf,
-		    int flag)
+static inline int
+fstatat64_time64_statx (int fd, const char *file, struct __stat64_t64 *buf,
+			int flag)
 {
-  int r;
-
-#if (__WORDSIZE == 32 \
-     && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE == 32))
   /* 32-bit kABI with default 64-bit time_t, e.g. arc, riscv32.   Also
      64-bit time_t support is done through statx syscall.  */
   struct statx tmp;
-  r = INTERNAL_SYSCALL_CALL (statx, fd, file, AT_NO_AUTOMOUNT | flag,
-			     STATX_BASIC_STATS, &tmp);
+  int r = INTERNAL_SYSCALL_CALL (statx, fd, file, AT_NO_AUTOMOUNT | flag,
+				 STATX_BASIC_STATS, &tmp);
   if (r == 0)
-    {
-      __cp_stat64_t64_statx (buf, &tmp);
-      return 0;
-    }
-  if (-r != ENOSYS)
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
-#endif
+    __cp_stat64_t64_statx (buf, &tmp);
+  return r;
+}
+
+static inline int
+fstatat64_time64_stat (int fd, const char *file, struct __stat64_t64 *buf,
+		       int flag)
+{
+  int r;
 
 #if XSTAT_IS_XSTAT64
 # ifdef __NR_newfstatat
@@ -112,6 +110,32 @@ __fstatat64_time64 (int fd, const char *file, struct __stat64_t64 *buf,
   if (r == 0)
     __cp_kstat_stat64_t64 (&kst, buf);
 # endif
+#endif
+
+  return r;
+}
+
+#if (__WORDSIZE == 32 \
+     && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE == 32))
+# define FSTATAT_USE_STATX 1
+#else
+# define FSTATAT_USE_STATX 0
+#endif
+
+int
+__fstatat64_time64 (int fd, const char *file, struct __stat64_t64 *buf,
+		    int flag)
+{
+  int r;
+
+#if FSTATAT_USE_STATX
+  r = fstatat64_time64_statx (fd, file, buf, flag);
+# ifndef __ASSUME_STATX
+  if (r == -ENOSYS)
+    r = fstatat64_time64_stat (fd, file, buf, flag);
+# endif
+#else
+  r = fstatat64_time64_stat (fd, file, buf, flag);
 #endif
 
   return INTERNAL_SYSCALL_ERROR_P (r)
