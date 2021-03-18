@@ -26,33 +26,22 @@
 int
 __fstatat (int fd, const char *file, struct stat *buf, int flag)
 {
-  int r;
-
-# if STAT_IS_KERNEL_STAT
-  /* New kABIs which uses generic pre 64-bit time Linux ABI, e.g.
-     csky, nios2  */
-  r = INTERNAL_SYSCALL_CALL (fstatat64, fd, file, buf, flag);
-  if (r == 0 && (buf->__st_ino_pad != 0
-		 || buf->__st_size_pad != 0
-		 || buf->__st_blocks_pad != 0))
-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EOVERFLOW);
-# else
-#  ifdef __NR_fstatat64
-  /* Old KABIs with old non-LFS support, e.g. arm, i386, hppa, m68k, mips32,
-     microblaze, s390, sh, powerpc, and sparc.  */
-  struct stat64 st64;
-  r = INTERNAL_SYSCALL_CALL (fstatat64, fd, file, &st64, flag);
+  struct __stat64_t64 st64;
+  int r = __fstatat64_time64 (fd, file, &st64, flag);
   if (r == 0)
     {
       if (! in_ino_t_range (st64.st_ino)
 	  || ! in_off_t_range (st64.st_size)
-	  || ! in_blkcnt_t_range (st64.st_blocks))
+	  || ! in_blkcnt_t_range (st64.st_blocks)
+	  || ! in_time_t_range (st64.st_atim.tv_sec)
+	  || ! in_time_t_range (st64.st_mtim.tv_sec)
+	  || ! in_time_t_range (st64.st_ctim.tv_sec))
 	return INLINE_SYSCALL_ERROR_RETURN_VALUE (EOVERFLOW);
 
       /* Clear internal pad and reserved fields.  */
       memset (buf, 0, sizeof (*buf));
 
-      buf->st_dev = st64.st_dev,
+      buf->st_dev = st64.st_dev;
       buf->st_ino = st64.st_ino;
       buf->st_mode = st64.st_mode;
       buf->st_nlink = st64.st_nlink;
@@ -62,27 +51,11 @@ __fstatat (int fd, const char *file, struct stat *buf, int flag)
       buf->st_size = st64.st_size;
       buf->st_blksize = st64.st_blksize;
       buf->st_blocks  = st64.st_blocks;
-      buf->st_atim.tv_sec = st64.st_atim.tv_sec;
-      buf->st_atim.tv_nsec = st64.st_atim.tv_nsec;
-      buf->st_mtim.tv_sec = st64.st_mtim.tv_sec;
-      buf->st_mtim.tv_nsec = st64.st_mtim.tv_nsec;
-      buf->st_ctim.tv_sec = st64.st_ctim.tv_sec;
-      buf->st_ctim.tv_nsec = st64.st_ctim.tv_nsec;
-
-      return 0;
+      buf->st_atim = valid_timespec64_to_timespec (st64.st_atim);
+      buf->st_mtim = valid_timespec64_to_timespec (st64.st_mtim);
+      buf->st_ctim = valid_timespec64_to_timespec (st64.st_ctim);
     }
-#  else
-  /* 64-bit kabi outlier, e.g. mips64 and mips64-n32.  */
-  struct kernel_stat kst;
-  r = INTERNAL_SYSCALL_CALL (newfstatat, fd, file, &kst, flag);
-  if (r == 0)
-    r = __cp_kstat_stat (&kst, buf);
-#  endif /* __nr_fstatat64  */
-# endif /* STAT_IS_KERNEL_STAT  */
-
-  return INTERNAL_SYSCALL_ERROR_P (r)
-	 ? INLINE_SYSCALL_ERROR_RETURN_VALUE (-r)
-	 : 0;
+  return r;
 }
 
 weak_alias (__fstatat, fstatat)
