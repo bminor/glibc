@@ -53,6 +53,14 @@
 # define SHLIB_COMPAT(lib, introduced, obsoleted)			      \
   _LIB_COMPAT (lib, introduced, obsoleted)
 
+/* Like SHLIB_COMPAT, but it can check versions in other libraries.  It is
+   not always false for !IS_IN (LIB).  */
+#define OTHER_SHLIB_COMPAT(lib, introduced, obsoleted)	\
+  _OTHER_SHLIB_COMPAT (lib, introduced, obsoleted)
+#define _OTHER_SHLIB_COMPAT(lib, introduced, obsoleted)			\
+  (!(ABI_##lib##_##obsoleted - 0)					\
+   || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0)))
+
 /* That header also defines symbols like `VERSION_libm_GLIBC_2_1' to
    the version set name to use for e.g. symbols first introduced into
    libm in the GLIBC_2.1 version.  Definitions of symbols with explicit
@@ -106,6 +114,7 @@
 
 /* Not compiling ELF shared libraries at all, so never any old versions.  */
 # define SHLIB_COMPAT(lib, introduced, obsoleted)	0
+# define OTHER_SHLIB_COMPAT(lib, introduced, obsoleted)	0
 
 /* No versions to worry about, just make this the global definition.  */
 # define versioned_symbol(lib, local, symbol, version) \
