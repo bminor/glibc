@@ -336,7 +336,8 @@ typedef struct
 #define EM_BA2		202	/* Beyond BA2 */
 #define EM_XCORE	203	/* XMOS xCORE */
 #define EM_MCHP_PIC	204	/* Microchip 8-bit PIC(r) */
-				/* reserved 205-209 */
+#define EM_INTELGT	205	/* Intel Graphics Technology */
+				/* reserved 206-209 */
 #define EM_KM32		210	/* KM211 KM32 */
 #define EM_KMX32	211	/* KM211 KMX32 */
 #define EM_EMX16	212	/* KM211 KMX16 */
