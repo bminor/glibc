@@ -36,19 +36,15 @@ utimesat_call (const char *path, const struct __timespec64 tsp[2])
 #endif
 
 bool
-support_path_support_time64 (const char *path)
+support_path_support_time64_value (const char *path, int64_t at, int64_t mt)
 {
 #ifdef __linux__
   /* Obtain the original timestamps to restore at the end.  */
   struct statx ostx;
   TEST_VERIFY_EXIT (statx (AT_FDCWD, path, 0, STATX_BASIC_STATS, &ostx) == 0);
 
-  const struct __timespec64 tsp[] =
-  {
-    /* 1s and 2s after y2038 limit.  */
-    { 0x80000001ULL, 0 },
-    { 0x80000002ULL, 0 }
-  };
+  const struct __timespec64 tsp[] = { { at, 0 }, { mt, 0 } };
+
   /* Return is kernel does not support __NR_utimensat_time64.  */
   if (utimesat_call (path, tsp) == -1)
     return false;

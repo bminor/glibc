@@ -130,9 +130,16 @@ extern void support_copy_file (const char *from, const char *to);
 extern ssize_t support_copy_file_range (int, off64_t *, int, off64_t *,
 					size_t, unsigned int);
 
-/* Return true is PATH supports 64-bit time_t interfaces for file
+/* Return true if PATH supports 64-bit time_t interfaces for file
    operations (such as fstatat or utimensat).  */
-extern bool support_path_support_time64 (const char *path);
+extern bool support_path_support_time64_value (const char *path, int64_t at,
+					       int64_t mt);
+static __inline bool support_path_support_time64 (const char *path)
+{
+  /* 1s and 2s after y2038 limit.  */
+  return support_path_support_time64_value (path, 0x80000001ULL,
+					    0x80000002ULL);
+}
 
 /* Return true if stat supports nanoseconds resolution.  */
 extern bool support_stat_nanoseconds (void);
