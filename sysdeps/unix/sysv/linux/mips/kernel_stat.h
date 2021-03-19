@@ -67,5 +67,9 @@ struct kernel_stat
 #else
 # define STATFS_IS_STATFS64 0
 #endif
+/* MIPS64 has unsigned 32 bit timestamps fields, so use statx as well.  */
+#if _MIPS_SIM == _ABI64
+# define STAT_HAS_TIME32
+#endif
 
 #endif
