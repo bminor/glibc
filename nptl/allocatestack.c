@@ -31,7 +31,6 @@
 #include <lowlevellock.h>
 #include <futex-internal.h>
 #include <kernel-features.h>
-#include <stack-aliasing.h>
 
 
 #ifndef NEED_SEPARATE_REGISTER_STACK
@@ -547,15 +546,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       pd = get_cached_stack (&size, &mem);
       if (pd == NULL)
 	{
-	  /* To avoid aliasing effects on a larger scale than pages we
-	     adjust the allocated stack size if necessary.  This way
-	     allocations directly following each other will not have
-	     aliasing problems.  */
-#if MULTI_PAGE_ALIASING != 0
-	  if ((size % MULTI_PAGE_ALIASING) == 0)
-	    size += pagesize_m1 + 1;
-#endif
-
 	  /* If a guard page is required, avoid committing memory by first
 	     allocate with PROT_NONE and then reserve with required permission
 	     excluding the guard page.  */
