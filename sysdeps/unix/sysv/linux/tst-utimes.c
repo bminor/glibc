@@ -16,60 +16,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <support/check.h>
+#include <support/xunistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#include <support/check.h>
-#include <support/support.h>
-#include <support/xunistd.h>
-#include <support/temp_file.h>
-
-static int temp_fd = -1;
-static char *testfile;
-
-/* struct timeval array with Y2038 threshold minus 2 and 1 seconds.  */
-const static struct timeval t1[2] = { { 0x7FFFFFFE, 0 },  { 0x7FFFFFFF, 0 } };
-
-/* struct timeval array with Y2038 threshold plus 1 and 2 seconds.  */
-const static
-struct timeval t2[2] = { { 0x80000001ULL, 0 },  { 0x80000002ULL, 0 } };
-
-/* struct timeval array around Y2038 threshold.  */
-const static
-struct timeval t3[2] = { { 0x7FFFFFFE, 0 },  { 0x80000002ULL, 0 } };
-
-#define PREPARE do_prepare
-static void
-do_prepare (int argc, char *argv[])
-{
-  temp_fd = create_temp_file ("utimes", &testfile);
-  TEST_VERIFY_EXIT (temp_fd > 0);
-}
+#include <time.h>
 
 static int
-test_utime_helper (const struct timeval *tv)
+test_utimes_helper (const char *file, int fd, const struct timeval *tv)
 {
-  if (!support_path_support_time64 (testfile))
-    FAIL_UNSUPPORTED ("File %s does not support 64-bit timestamps",
-		      testfile);
-
-  struct stat64 st;
-  int result;
-  time_t t;
-
-  /* Check if we run on port with 32 bit time_t size */
-  if (__builtin_add_overflow (tv->tv_sec, 0, &t))
-    {
-      printf("time_t overflow!");
-      return 0;
-    }
-
-  result = utimes (testfile, tv);
+  int result = utimes (file, tv);
   TEST_VERIFY_EXIT (result == 0);
 
-  xfstat (temp_fd, &st);
+  struct stat64 st;
+  xfstat (fd, &st);
 
   /* Check if seconds for atime match */
   TEST_COMPARE (st.st_atime, tv[0].tv_sec);
@@ -80,14 +40,8 @@ test_utime_helper (const struct timeval *tv)
   return 0;
 }
 
-static int
-do_test (void)
-{
-  test_utime_helper (&t1[0]);
-  test_utime_helper (&t2[0]);
-  test_utime_helper (&t3[0]);
+#define TEST_CALL(fname, fd, v1, v2) \
+  test_utimes_helper (fname, fd, (struct timeval[]) { { v1, 0 }, \
+						      { v2, 0 } })
 
-  return 0;
-}
-
-#include <support/test-driver.c>
+#include "tst-utimensat-skeleton.c"
