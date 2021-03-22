@@ -72,6 +72,7 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-utime \
 		   tst-utimes \
 		   tst-futimes \
+		   tst-lutimes \
 		   tst-futimens \
 
 # Likewise for statx, but we do not need static linking here.

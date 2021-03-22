@@ -39,7 +39,7 @@ test_futimens_helper (const char *file, int fd, const struct timeval *tv)
   return 0;
 }
 
-#define TEST_CALL(fname, fd, v1, v2) \
+#define TEST_CALL(fname, fd, lname, v1, v2) \
   test_futimens_helper (fname, fd, (struct timeval[]) { { v1, 0 }, \
 							{ v2, 0 } })
 

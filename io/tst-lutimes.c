@@ -1,4 +1,4 @@
-/* Test for utime.
+/* Test for lutimes.
    Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,30 +16,38 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <utime.h>
 #include <support/check.h>
 #include <support/xunistd.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 
 static int
-test_utime_helper (const char *file, int fd, const struct utimbuf *ut)
+test_lutimes_helper (const char *testfile, int fd, const char *testlink,
+                     const struct timeval *tv)
 {
-  int result = utime (file, ut);
-  TEST_VERIFY_EXIT (result == 0);
+  struct stat64 stfile_orig;
+  xlstat (testfile, &stfile_orig);
 
-  struct stat64 st;
-  xfstat (fd, &st);
+  TEST_VERIFY_EXIT (lutimes (testlink, tv) == 0);
 
-  /* Check if seconds for actime match */
-  TEST_COMPARE (st.st_atime, ut->actime);
+  struct stat64 stlink;
+  xlstat (testlink, &stlink);
 
-  /* Check if seconds for modtime match */
-  TEST_COMPARE (st.st_mtime, ut->modtime);
+  TEST_COMPARE (stlink.st_atime, tv[0].tv_sec);
+  TEST_COMPARE (stlink.st_mtime, tv[1].tv_sec);
+
+  /* Check if the timestamp from original file is not changed.  */
+  struct stat64 stfile;
+  xlstat (testfile, &stfile);
+
+  TEST_COMPARE (stfile_orig.st_atime, stfile.st_atime);
+  TEST_COMPARE (stfile_orig.st_mtime, stfile.st_mtime);
 
   return 0;
 }
 
 #define TEST_CALL(fname, fd, lname, v1, v2) \
-  test_utime_helper (fname, fd, &(struct utimbuf) { (v1), (v2) })
+  test_lutimes_helper (fname, fd, lname, (struct timeval[]) { { v1, 0 }, \
+                                                              { v2, 0 } })
 
 #include "tst-utimensat-skeleton.c"

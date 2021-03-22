@@ -24,6 +24,7 @@
 
 static int temp_fd = -1;
 static char *testfile;
+static char *testlink;
 
 const static struct {
   int64_t v1;
@@ -49,6 +50,10 @@ do_prepare (int argc, char *argv[])
 {
   temp_fd = create_temp_file ("utime", &testfile);
   TEST_VERIFY_EXIT (temp_fd > 0);
+
+  testlink = xasprintf ("%s-symlink", testfile);
+  xsymlink (testfile, testlink);
+  add_temp_file (testlink);
 }
 
 static int
@@ -82,7 +87,7 @@ do_test (void)
 	  continue;
 	}
 
-      TEST_CALL (testfile, temp_fd, tests[i].v1, tests[i].v2);
+      TEST_CALL (testfile, temp_fd, testlink, tests[i].v1, tests[i].v2);
     }
 
   return 0;
