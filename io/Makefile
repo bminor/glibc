@@ -74,6 +74,7 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-futimes \
 		   tst-lutimes \
 		   tst-futimens \
+		   tst-utimensat \
 
 # Likewise for statx, but we do not need static linking here.
 tests-internal += tst-statx
