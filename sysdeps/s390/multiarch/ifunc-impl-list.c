@@ -171,7 +171,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
     IFUNC_IMPL (i, name, memmove,
 # if HAVE_MEMMOVE_ARCH13
 		IFUNC_IMPL_ADD (array, i, memmove,
-				S390_IS_ARCH13_MIE3 (stfle_bits),
+				((dl_hwcap & HWCAP_S390_VXRS_EXT2)
+				 && S390_IS_ARCH13_MIE3 (stfle_bits)),
 				MEMMOVE_ARCH13)
 # endif
 # if HAVE_MEMMOVE_Z13
