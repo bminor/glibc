@@ -43,7 +43,7 @@ extern __typeof (__redirect_memmove) MEMMOVE_ARCH13 attribute_hidden;
 s390_libc_ifunc_expr (__redirect_memmove, memmove,
 		      ({
 			s390_libc_ifunc_expr_stfle_init ();
-			(HAVE_MEMMOVE_ARCH13
+			(HAVE_MEMMOVE_ARCH13 && (hwcap & HWCAP_S390_VXRS_EXT2)
 			 && S390_IS_ARCH13_MIE3 (stfle_bits))
 			  ? MEMMOVE_ARCH13
 			  : (HAVE_MEMMOVE_Z13 && (hwcap & HWCAP_S390_VX))
