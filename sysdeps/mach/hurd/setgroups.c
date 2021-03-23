@@ -34,6 +34,7 @@ setgroups (size_t n, const gid_t *groups)
   for (i = 0; i < n; ++i)
     new[i] = groups[i];
 
+retry:
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_id.lock);
   err = _hurd_check_ids ();
@@ -50,6 +51,9 @@ setgroups (size_t n, const gid_t *groups)
     }
   __mutex_unlock (&_hurd_id.lock);
   HURD_CRITICAL_END;
+  if (err == EINTR)
+    /* Got a signal while inside an RPC of the critical section, retry again */
+    goto retry;
 
   if (err)
     return __hurd_fail (err);

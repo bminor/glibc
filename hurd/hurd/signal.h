@@ -277,6 +277,10 @@ _hurd_critical_section_unlock (void *our_lock)
   { void *__hurd_critical__ = _hurd_critical_section_lock ()
 #define HURD_CRITICAL_END \
       _hurd_critical_section_unlock (__hurd_critical__); } while (0)
+
+/* This one can be used inside the C scoping level, for early exits.  */
+#define HURD_CRITICAL_UNLOCK \
+      _hurd_critical_section_unlock (__hurd_critical__);
 
 /* Initialize the signal code, and start the signal thread.
    Arguments give the "init ints" from exec_startup.  */

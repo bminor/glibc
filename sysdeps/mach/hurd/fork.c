@@ -70,6 +70,7 @@ __fork (void)
   __run_fork_handlers (atfork_run_prepare, true);
 
   ss = _hurd_self_sigstate ();
+retry:
   __spin_lock (&ss->critical_section_lock);
 
 #undef	LOSE
@@ -718,6 +719,9 @@ __fork (void)
   }
 
   _hurd_critical_section_unlock (ss);
+  if (err == EINTR)
+    /* Got a signal while inside an RPC of the critical section, retry again */
+    goto retry;
 
   if (!err)
     {

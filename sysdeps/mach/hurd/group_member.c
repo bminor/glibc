@@ -28,6 +28,7 @@ __group_member (gid_t gid)
   error_t err;
   void *crit;
 
+retry:
   crit = _hurd_critical_section_lock ();
   __mutex_lock (&_hurd_id.lock);
 
@@ -45,6 +46,9 @@ __group_member (gid_t gid)
 
   __mutex_unlock (&_hurd_id.lock);
   _hurd_critical_section_unlock (crit);
+  if (err == EINTR)
+    /* Got a signal while inside an RPC of the critical section, retry again */
+    goto retry;
 
   if (err)
     __hurd_fail (err);

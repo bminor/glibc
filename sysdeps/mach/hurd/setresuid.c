@@ -29,6 +29,7 @@ __setresuid (uid_t ruid, uid_t euid, uid_t suid)
   auth_t newauth;
   error_t err;
 
+retry:
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_id.lock);
   err = _hurd_check_ids ();
@@ -111,6 +112,9 @@ __setresuid (uid_t ruid, uid_t euid, uid_t suid)
 
   __mutex_unlock (&_hurd_id.lock);
   HURD_CRITICAL_END;
+  if (err == EINTR)
+    /* Got a signal while inside an RPC of the critical section, retry again */
+    goto retry;
 
   if (err)
     return __hurd_fail (err);

@@ -26,6 +26,7 @@ geteuids (int n, uid_t *uidset)
   int nuids;
   void *crit;
 
+retry:
   crit = _hurd_critical_section_lock ();
   __mutex_lock (&_hurd_id.lock);
 
@@ -33,6 +34,9 @@ geteuids (int n, uid_t *uidset)
     {
       __mutex_unlock (&_hurd_id.lock);
       _hurd_critical_section_unlock (crit);
+      if (err == EINTR)
+	/* Got a signal while inside an RPC of the critical section, retry again */
+	goto retry;
       return __hurd_fail (err);
     }
 

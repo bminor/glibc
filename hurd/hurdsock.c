@@ -52,6 +52,7 @@ _hurd_socket_server (int domain, int dead)
       return MACH_PORT_NULL;
     }
 
+retry:
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&lock);
 
@@ -101,6 +102,9 @@ _hurd_socket_server (int domain, int dead)
 
   __mutex_unlock (&lock);
   HURD_CRITICAL_END;
+  if (server == MACH_PORT_NULL && errno == EINTR)
+    /* Got a signal while inside an RPC of the critical section, retry again */
+    goto retry;
 
   return server;
 }

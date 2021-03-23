@@ -27,6 +27,7 @@ __geteuid (void)
   error_t err;
   uid_t euid;
 
+retry:
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_id.lock);
 
@@ -49,6 +50,9 @@ __geteuid (void)
 
   __mutex_unlock (&_hurd_id.lock);
   HURD_CRITICAL_END;
+  if (euid == -1 && errno == EINTR)
+    /* Got a signal while inside an RPC of the critical section, retry again */
+    goto retry;
 
   return euid;
 }

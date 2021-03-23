@@ -123,6 +123,7 @@ _hurd_exec_paths (task_t task, file_t file,
 
   ss = _hurd_self_sigstate ();
 
+retry:
   assert (! __spin_lock_locked (&ss->critical_section_lock));
   __spin_lock (&ss->critical_section_lock);
 
@@ -429,6 +430,9 @@ _hurd_exec_paths (task_t task, file_t file,
 
   /* Safe to let signals happen now.  */
   _hurd_critical_section_unlock (ss);
+  if (err == EINTR)
+    /* Got a signal while inside an RPC of the critical section, retry again */
+    goto retry;
 
  outargs:
   free (args);

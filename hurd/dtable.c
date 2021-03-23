@@ -189,6 +189,7 @@ ctty_new_pgrp (void)
 {
   int i;
 
+retry:
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
@@ -224,8 +225,18 @@ ctty_new_pgrp (void)
 	    /* This fd has a ctty-special port.  We need a new one, to tell
 	       the io server of our different process group.  */
 	    io_t new;
-	    if (__term_open_ctty (port, _hurd_pid, _hurd_pgrp, &new))
-	      new = MACH_PORT_NULL;
+	    error_t err;
+	    if ((err = __term_open_ctty (port, _hurd_pid, _hurd_pgrp, &new)))
+	      {
+		if (err == EINTR)
+		  {
+		    /* Got a signal while inside an RPC of the critical section, retry again */
+		    __mutex_unlock (&_hurd_dtable_lock);
+		    HURD_CRITICAL_UNLOCK;
+		    goto retry;
+		  }
+		new = MACH_PORT_NULL;
+	      }
 	    _hurd_port_set (&d->ctty, new);
 	  }
 

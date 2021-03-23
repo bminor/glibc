@@ -32,6 +32,7 @@ _hurd_change_directory_port_from_fd (struct hurd_port *portcell, int fd)
   if (!d)
     return __hurd_fail (EBADF);
 
+retry:
   HURD_CRITICAL_BEGIN;
 
   ret = HURD_PORT_USE (&d->port,
@@ -53,6 +54,9 @@ _hurd_change_directory_port_from_fd (struct hurd_port *portcell, int fd)
 		       }));
 
   HURD_CRITICAL_END;
+  if (ret == -1 && errno == EINTR)
+    /* Got a signal while inside an RPC of the critical section, retry again */
+    goto retry;
 
   return ret;
 }

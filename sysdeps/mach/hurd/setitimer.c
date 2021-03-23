@@ -339,6 +339,7 @@ __setitimer (enum __itimer_which which, const struct itimerval *new,
 	     struct itimerval *old)
 {
   void *crit;
+  int ret;
 
   switch (which)
     {
@@ -353,9 +354,15 @@ __setitimer (enum __itimer_which which, const struct itimerval *new,
       break;
     }
 
+retry:
   crit = _hurd_critical_section_lock ();
   __spin_lock (&_hurd_itimer_lock);
-  return setitimer_locked (new, old, crit, 0);
+  ret = setitimer_locked (new, old, crit, 0);
+  if (ret == -1 && errno == EINTR)
+    /* Got a signal while inside an RPC of the critical section, retry again */
+    goto retry;
+
+  return ret;
 }
 
 static void

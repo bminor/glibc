@@ -32,6 +32,7 @@ __setsid (void)
   error_t err;
   unsigned int stamp;
 
+retry:
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_dtable_lock);
 
@@ -60,6 +61,9 @@ __setsid (void)
     }
 
   HURD_CRITICAL_END;
+  if (err == EINTR)
+    /* Got a signal while inside an RPC of the critical section, retry again */
+    goto retry;
 
   return err ? __hurd_fail (err) : _hurd_pgrp;
 }

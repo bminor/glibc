@@ -27,6 +27,7 @@ __getegid (void)
   error_t err;
   gid_t egid;
 
+retry:
   HURD_CRITICAL_BEGIN;
   __mutex_lock (&_hurd_id.lock);
 
@@ -49,6 +50,9 @@ __getegid (void)
 
   __mutex_unlock (&_hurd_id.lock);
   HURD_CRITICAL_END;
+  if (egid == -1 && errno == EINTR)
+    /* Got a signal while inside an RPC of the critical section, retry again */
+    goto retry;
 
   return egid;
 }
