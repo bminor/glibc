@@ -1770,6 +1770,7 @@ LIBC_CONFIG_VAR([have-ifunc], [$libc_cv_ld_gnu_indirect_function])
 if test x"$libc_cv_gcc_indirect_function" = xyes; then
   AC_DEFINE(HAVE_GCC_IFUNC)
 fi
+LIBC_CONFIG_VAR([have-gcc-ifunc], [$libc_cv_gcc_indirect_function])
 
 # This is far from the AC_ARG_ENABLE that sets it so that a sysdeps
 # configure fragment can override the value to prevent this AC_DEFINE.

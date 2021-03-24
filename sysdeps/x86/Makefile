@@ -16,6 +16,7 @@ tests-static += tst-get-cpu-features-static \
 		tst-cpu-features-cpuinfo-static \
 		tst-cpu-features-supports-static
 ifeq (yes,$(have-ifunc))
+ifeq (yes,$(have-gcc-ifunc))
 tests += \
   tst-ifunc-isa-1 \
   tst-ifunc-isa-1-static \
@@ -24,6 +25,7 @@ tests += \
 tests-static += \
   tst-ifunc-isa-1-static \
   tst-ifunc-isa-2-static
+endif
 endif
 ifeq (yes,$(enable-x86-isa-level))
 tests += tst-isa-level-1

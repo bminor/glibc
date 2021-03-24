@@ -395,8 +395,10 @@ tests-ifuncstatic := ifuncmain1static ifuncmain1picstatic \
 		ifuncmain2static ifuncmain2picstatic \
 		ifuncmain4static ifuncmain4picstatic \
 		ifuncmain5static ifuncmain5picstatic \
-		ifuncmain7static ifuncmain7picstatic \
-		ifuncmain9static ifuncmain9picstatic
+		ifuncmain7static ifuncmain7picstatic
+ifeq (yes,$(have-gcc-ifunc))
+tests-ifuncstatic += ifuncmain9static ifuncmain9picstatic
+endif
 tests-static += $(tests-ifuncstatic)
 tests-internal += $(tests-ifuncstatic)
 ifeq (yes,$(build-shared))
@@ -407,15 +409,20 @@ tests-internal += \
 	 ifuncmain1staticpic \
 	 ifuncmain2 ifuncmain2pic ifuncmain3 ifuncmain4 \
 	 ifuncmain5 ifuncmain5pic ifuncmain5staticpic \
-	 ifuncmain7 ifuncmain7pic \
-	 ifuncmain9 ifuncmain9pic
+	 ifuncmain7 ifuncmain7pic
+ifeq (yes,$(have-gcc-ifunc))
+tests-internal += ifuncmain9 ifuncmain9pic
+endif
 ifunc-test-modules = ifuncdep1 ifuncdep1pic ifuncdep2 ifuncdep2pic \
 		     ifuncdep5 ifuncdep5pic
 extra-test-objs += $(ifunc-test-modules:=.o)
 test-internal-extras += $(ifunc-test-modules)
 ifeq (yes,$(have-fpie))
 ifunc-pie-tests = ifuncmain1pie ifuncmain1vispie ifuncmain1staticpie \
-		  ifuncmain5pie ifuncmain6pie ifuncmain7pie ifuncmain9pie
+		  ifuncmain5pie ifuncmain6pie ifuncmain7pie
+ifeq (yes,$(have-gcc-ifunc))
+ifunc-pie-tests += ifuncmain9pie
+endif
 ifeq (yes,$(have-textrel_ifunc))
 ifunc-pie-tests += tst-ifunc-textrel
 endif
