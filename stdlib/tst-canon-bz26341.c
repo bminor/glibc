@@ -67,15 +67,16 @@ do_realpath (void *arg)
      for each symlink in the path, leading to MAXSYMLINKS times PATH_MAX
      maximum stack usage.
      This stack allocations tries fill the thread allocated stack minus
-     both the resolved path (plus some slack) and the realpath (plus some
-     slack).
+     the resolved path (plus some slack), the realpath (plus some
+     slack), and the system call usage (plus some slack).
      If realpath uses more than 2 * PATH_MAX plus some slack it will trigger
      a stackoverflow.  */
 
+  const size_t syscall_usage = 1 * PATH_MAX + 1024;
   const size_t realpath_usage = 2 * PATH_MAX + 1024;
   const size_t thread_usage = 1 * PATH_MAX + 1024;
   size_t stack_size = support_small_thread_stack_size ()
-		      - realpath_usage - thread_usage;
+		      - syscall_usage - realpath_usage - thread_usage;
   char stack[stack_size];
   char *resolved = stack + stack_size - thread_usage + 1024;
 
