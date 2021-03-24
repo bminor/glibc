@@ -17,36 +17,24 @@
 
 #include <sched.h>
 
+/* Counting bits set, Brian Kernighan's way.
+   Using a open-coded routine is slight better for architectures that
+   do not have a popcount instruction (compiler might emit a library
+   call).  */
+static inline int
+countbits (__cpu_mask v)
+{
+  int s = 0;
+  for (; v != 0; s++)
+    v &= v - 1;
+  return s;
+}
 
 int
 __sched_cpucount (size_t setsize, const cpu_set_t *setp)
 {
   int s = 0;
-  const __cpu_mask *p = setp->__bits;
-  const __cpu_mask *end = &setp->__bits[setsize / sizeof (__cpu_mask)];
-
-  while (p < end)
-    {
-      __cpu_mask l = *p++;
-
-#ifdef POPCNT
-      s += POPCNT (l);
-#else
-      if (l == 0)
-	continue;
-
-      _Static_assert (sizeof (l) == sizeof (unsigned int)
-		      || sizeof (l) == sizeof (unsigned long)
-		      || sizeof (l) == sizeof (unsigned long long),
-		      "sizeof (__cpu_mask");
-      if (sizeof (__cpu_mask) == sizeof (unsigned int))
-	s += __builtin_popcount (l);
-      else if (sizeof (__cpu_mask) == sizeof (unsigned long))
-	s += __builtin_popcountl (l);
-      else
-	s += __builtin_popcountll (l);
-#endif
-    }
-
+  for (int i = 0; i < setsize / sizeof (__cpu_mask); i++)
+    s += countbits (setp->__bits[i]);
   return s;
 }
