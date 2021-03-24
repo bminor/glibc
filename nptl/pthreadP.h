@@ -355,6 +355,12 @@ extern void __nptl_death_event (void);
 hidden_proto (__nptl_create_event)
 hidden_proto (__nptl_death_event)
 
+/* The fork generation counter, defined in libpthread.  */
+extern unsigned long int __fork_generation attribute_hidden;
+
+/* Pointer to the fork generation counter in the thread library.  */
+extern unsigned long int *__fork_generation_pointer attribute_hidden;
+
 /* Register the generation counter in the libpthread with the libc.  */
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
 extern void __libc_pthread_init (unsigned long int *ptr,

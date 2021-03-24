@@ -29,7 +29,6 @@
 #include <ldsodefs.h>
 #include <tls.h>
 #include <list.h>
-#include <fork.h>
 #include <version.h>
 #include <shlib-compat.h>
 #include <lowlevellock.h>

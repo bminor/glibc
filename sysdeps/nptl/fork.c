@@ -28,7 +28,7 @@
 #include <stdio-lock.h>
 #include <atomic.h>
 #include <nptl/pthreadP.h>
-#include <fork.h>
+#include <register-atfork.h>
 #include <arch-fork.h>
 #include <futex-internal.h>
 #include <malloc/malloc-internal.h>

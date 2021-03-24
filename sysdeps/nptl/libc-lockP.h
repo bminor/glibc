@@ -308,14 +308,6 @@ __libc_cleanup_routine (struct __pthread_cleanup_frame *f)
   __libc_ptf_call (__pthread_setspecific, (KEY, VALUE), 0)
 
 
-/* Register handlers to execute before and after `fork'.  Note that the
-   last parameter is NULL.  The handlers registered by the libc are
-   never removed so this is OK.  */
-extern int __register_atfork (void (*__prepare) (void),
-			      void (*__parent) (void),
-			      void (*__child) (void),
-			      void *__dso_handle);
-
 /* Functions that are used by this file and are internal to the GNU C
    library.  */
 

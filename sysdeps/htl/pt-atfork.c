@@ -18,7 +18,6 @@
 
 #include <pthread.h>
 #include <pt-internal.h>
-#include <fork.h>
 #include <dso_handle.h>
 #include <register-atfork.h>
 

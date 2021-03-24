@@ -34,7 +34,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
-#include <fork.h>
+#include <register-atfork.h>
 #include <dso_handle.h>
 
 

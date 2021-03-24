@@ -22,7 +22,6 @@
 #include <shlib-compat.h>
 #include <pthread-functions.h>
 #include <libc-lock.h>
-#include <fork.h>
 #include <pt-internal.h>
 
 /* Pointers to the libc functions.  */

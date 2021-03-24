@@ -18,7 +18,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include "exit.h"
-#include <fork.h>
+#include <register-atfork.h>
 #include <sysdep.h>
 #include <stdint.h>
 
@@ -102,9 +102,7 @@ __cxa_finalize (void *d)
 
   /* Remove the registered fork handlers.  We do not have to
      unregister anything if the program is going to terminate anyway.  */
-#ifdef UNREGISTER_ATFORK
   if (d != NULL)
     UNREGISTER_ATFORK (d);
-#endif
   __libc_lock_unlock (__exit_funcs_lock);
 }
