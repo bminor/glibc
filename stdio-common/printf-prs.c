@@ -72,11 +72,11 @@ parse_printf_format (const char *fmt, size_t n, int *argtypes)
       /* Parse this spec.  */
       nargs += __parse_one_specmb (f, nargs, &spec, &max_ref_arg);
 
-      /* If the width is determined by an argument this is an int.  */
+      /* If the width is determined by an argument, it is an int.  */
       if (spec.width_arg != -1 && (size_t) spec.width_arg < n)
 	argtypes[spec.width_arg] = PA_INT;
 
-      /* If the precision is determined by an argument this is an int.  */
+      /* If the precision is determined by an argument, it is an int.  */
       if (spec.prec_arg != -1 && (size_t) spec.prec_arg < n)
 	argtypes[spec.prec_arg] = PA_INT;
 
