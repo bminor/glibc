@@ -63,8 +63,6 @@ weak_alias (__get_nprocs, get_nprocs)
 int
 __get_nprocs_conf (void)
 {
-  /* XXX Here will come a test for the new system call.  */
-
   /* Try to use the sysfs filesystem.  It has actual information about
      online processors.  */
   DIR *dir = __opendir ("/sys/devices/system/cpu");
@@ -88,25 +86,7 @@ __get_nprocs_conf (void)
       return count;
     }
 
-  int result = 1;
-
-#ifdef GET_NPROCS_CONF_PARSER
-  /* If we haven't found an appropriate entry return 1.  */
-  FILE *fp = fopen ("/proc/cpuinfo", "rce");
-  if (fp != NULL)
-    {
-      char buffer[8192];
-
-      /* No threads use this stream.  */
-      __fsetlocking (fp, FSETLOCKING_BYCALLER);
-      GET_NPROCS_CONF_PARSER (fp, buffer, result);
-      fclose (fp);
-    }
-#else
-  result = __get_nprocs ();
-#endif
-
-  return result;
+  return 1;
 }
 libc_hidden_def (__get_nprocs_conf)
 weak_alias (__get_nprocs_conf, get_nprocs_conf)
