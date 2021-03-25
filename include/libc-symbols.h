@@ -59,19 +59,6 @@
 # define IN_MODULE (-1)
 #endif
 
-/* Use symbol_version_reference to specify the version a symbol
-   reference should link to.  Use symbol_version or
-   default_symbol_version for the definition of a versioned symbol.
-   The difference is that the latter is a no-op in non-shared
-   builds.  */
-#ifdef __ASSEMBLER__
-# define symbol_version_reference(real, name, version) \
-     .symver real, name##@##version
-#else  /* !__ASSEMBLER__ */
-# define symbol_version_reference(real, name, version) \
-  __asm__ (".symver " #real "," #name "@" #version)
-#endif
-
 #ifndef _ISOMAC
 
 /* This is defined for the compilation of all C library code.  features.h
@@ -96,6 +83,9 @@
 #endif
 
 #include <config.h>
+
+/* Obtain the definition of symbol_version_reference.  */
+#include <libc-symver.h>
 
 /* When PIC is defined and SHARED isn't defined, we are building PIE
    by default.  */
