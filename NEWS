@@ -21,6 +21,7 @@ The following bugs are resolved with this release:
   [27304] pthread_cond_destroy does not pass private flag to futex system calls
   [27537] test-container: Always copy test-specific support files
   [27577] elf/ld.so --help doesn't work
+  [27648] FAIL: misc/tst-select
 
 Version 2.33
 
