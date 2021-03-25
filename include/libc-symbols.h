@@ -404,12 +404,13 @@ for linking")
   symbol_version_reference(real, name, version)
 # define default_symbol_version(real, name, version) \
      _default_symbol_version(real, name, version)
+/* See <libc-symver.h>.  */
 # ifdef __ASSEMBLER__
 #  define _default_symbol_version(real, name, version) \
-     .symver real, name##@##@##version
+  _set_symbol_version (real, name@@version)
 # else
 #  define _default_symbol_version(real, name, version) \
-     __asm__ (".symver " #real "," #name "@@" #version)
+  _set_symbol_version (real, #name "@@" #version)
 # endif
 
 /* Evalutes to a string literal for VERSION in LIB.  */

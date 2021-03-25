@@ -1991,7 +1991,7 @@ static void *memalign_hook_ini (size_t alignment, size_t sz,
                                 const void *caller) __THROW;
 
 #if HAVE_MALLOC_INIT_HOOK
-void weak_variable (*__malloc_initialize_hook) (void) = NULL;
+void (*__malloc_initialize_hook) (void) __attribute__ ((nocommon));
 compat_symbol (libc, __malloc_initialize_hook,
 	       __malloc_initialize_hook, GLIBC_2_0);
 #endif

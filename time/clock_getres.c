@@ -32,8 +32,7 @@ versioned_symbol (libc, __clock_getres, clock_getres, GLIBC_2_17);
 /* clock_getres moved to libc in version 2.17;
    old binaries may expect the symbol version it had in librt.  */
 #if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_17)
-strong_alias (__clock_getres, __clock_getres_2);
-compat_symbol (libc, __clock_getres_2, clock_getres, GLIBC_2_2);
+compat_symbol (libc, __clock_getres, clock_getres, GLIBC_2_2);
 #endif
 
 stub_warning (clock_getres)

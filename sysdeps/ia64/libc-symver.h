@@ -1,5 +1,5 @@
-/* Set a clock to a given value.  Stub version.
-   Copyright (C) 1999-2021 Free Software Foundation, Inc.
+/* Symbol version management.  ia64 version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +16,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <time.h>
-#include <shlib-compat.h>
+#ifndef _LIBC_SYMVER_H
 
-/* Set CLOCK to value TP.  */
-int
-__clock_settime (clockid_t clock_id, const struct timespec *tp)
-{
-  __set_errno (ENOSYS);
-  return -1;
-}
-libc_hidden_def (__clock_settime)
+#include <sysdeps/generic/libc-symver.h>
 
-versioned_symbol (libc, __clock_settime, clock_settime, GLIBC_2_17);
-/* clock_settime moved to libc in version 2.17;
-   old binaries may expect the symbol version it had in librt.  */
-#if SHLIB_COMPAT (libc, GLIBC_2_2, GLIBC_2_17)
-compat_symbol (libc, __clock_settime, clock_settime, GLIBC_2_2);
+/* ia64 recognizes loc1 as a register name.  Add the # suffix to all
+   symbol references.  */
+#if !defined (__ASSEMBLER__) && SYMVER_NEEDS_ALIAS
+#undef _set_symbol_version_2
+# define _set_symbol_version_2(real, alias, name_version) \
+  __asm__ (".globl " #alias "#\n\t"                         \
+           ".equiv " #alias ", " #real "#\n\t"              \
+           ".symver " #alias "#," name_version)
 #endif
 
-stub_warning (clock_settime)
+#endif /* _LIBC_SYMVER_H */

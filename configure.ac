@@ -1673,6 +1673,29 @@ elif test "$libc_cv_ehdr_start" = broken; then
   AC_MSG_WARN([linker is broken -- you should upgrade])
 fi
 
+dnl Starting with binutils 2.35, GAS can attach multiple symbol versions
+dnl to one symbol (PR 23840).
+AC_CACHE_CHECK(whether the assembler requires one version per symbol,
+               libc_cv_symver_needs_alias, [dnl
+  cat > conftest.s <<EOF
+        .text
+testfunc:
+        .globl testfunc
+        .symver testfunc, testfunc1@VERSION1
+        .symver testfunc, testfunc1@VERSION2
+EOF
+  libc_cv_symver_needs_alias=no
+  if ${CC-cc} $ASFLAGS -c conftest.s 2>&AS_MESSAGE_LOG_FD; then
+    libc_cv_symver_needs_alias=no
+  else
+    libc_cv_symver_needs_alias=yes
+  fi
+  rm conftest.*
+])
+if test "$libc_cv_symver_needs_alias" = yes; then
+  AC_DEFINE(SYMVER_NEEDS_ALIAS)
+fi
+
 AC_CACHE_CHECK(for __builtin_trap with no external dependencies,
 	       libc_cv_builtin_trap, [dnl
 libc_cv_builtin_trap=no

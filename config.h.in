@@ -190,6 +190,10 @@
 /* Define if the linker defines __ehdr_start.  */
 #undef HAVE_EHDR_START
 
+/* Define to 1 if the assembler needs intermediate aliases to define
+   multiple symbol versions for one symbol.  */
+#define SYMVER_NEEDS_ALIAS 0
+
 /*
  */
 

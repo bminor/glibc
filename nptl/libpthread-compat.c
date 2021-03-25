@@ -20,10 +20,10 @@
 #include <shlib-compat.h>
 
 #ifdef SHARED
-static void
+void
 attribute_compat_text_section
 __attribute_used__
-__libpthread_version_placeholder (void)
+__libpthread_version_placeholder_1 (void)
 {
 }
 #endif
@@ -37,16 +37,16 @@ __libpthread_version_placeholder (void)
    there are plenty of other symbols which populate those later
    versions.  */
 #if (SHLIB_COMPAT (libpthread, GLIBC_2_1_2, GLIBC_2_2))
-compat_symbol_unique (libpthread,
-		      __libpthread_version_placeholder, GLIBC_2_1_2);
+compat_symbol (libpthread, __libpthread_version_placeholder_1,
+	       __libpthread_version_placeholder, GLIBC_2_1_2);
 #endif
 
 #if (SHLIB_COMPAT (libpthread, GLIBC_2_2_3, GLIBC_2_2_4))
-compat_symbol_unique (libpthread,
-		      __libpthread_version_placeholder, GLIBC_2_2_3);
+compat_symbol (libpthread, __libpthread_version_placeholder_1,
+	       __libpthread_version_placeholder, GLIBC_2_2_3);
 #endif
 
 #if (SHLIB_COMPAT (libpthread, GLIBC_2_2_6, GLIBC_2_3))
-compat_symbol_unique (libpthread,
-		      __libpthread_version_placeholder, GLIBC_2_2_6);
+compat_symbol (libpthread, __libpthread_version_placeholder_1,
+	       __libpthread_version_placeholder, GLIBC_2_2_6);
 #endif
