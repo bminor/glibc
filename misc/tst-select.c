@@ -16,54 +16,79 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <time.h>
 #include <errno.h>
-#include <stdbool.h>
-#include <sys/select.h>
+#include <support/capture_subprocess.h>
 #include <support/check.h>
-#include <support/xtime.h>
 #include <support/timespec.h>
+#include <support/xunistd.h>
+#include <support/xtime.h>
 
-#define TST_SELECT_TIMEOUT 1
-#define TST_SELECT_FD_ERR 2
-
-static int
-test_select_timeout (bool zero_tmo)
+struct child_args
 {
-  const int fds = TST_SELECT_FD_ERR;
-  int timeout = TST_SELECT_TIMEOUT;
-  struct timeval to = { 0, 0 };
-  struct timespec ts;
+  int fds[2][2];
+  struct timeval tmo;
+};
+
+static void
+do_test_child (void *clousure)
+{
+  struct child_args *args = (struct child_args *) clousure;
+
+  close (args->fds[0][1]);
+  close (args->fds[1][0]);
+
   fd_set rfds;
-
   FD_ZERO (&rfds);
-  FD_SET (fds, &rfds);
+  FD_SET (args->fds[0][0], &rfds);
 
-  if (zero_tmo)
-    timeout = 0;
+  struct timespec ts = xclock_now (CLOCK_REALTIME);
+  ts = timespec_add (ts, (struct timespec) { args->tmo.tv_sec, 0 });
 
-  to.tv_sec = timeout;
-  ts = xclock_now (CLOCK_REALTIME);
-  ts = timespec_add (ts, (struct timespec) { timeout, 0 });
-
-  /* Wait for timeout.  */
-  int ret = select (fds + 1, &rfds, NULL, NULL, &to);
-  if (ret == -1)
-    FAIL_EXIT1 ("select failed: %m\n");
+  int r = select (args->fds[0][0] + 1, &rfds, NULL, NULL, &args->tmo);
+  TEST_COMPARE (r, 0);
 
   TEST_TIMESPEC_NOW_OR_AFTER (CLOCK_REALTIME, ts);
 
-  return 0;
+  xwrite (args->fds[1][1], "foo", 3);
 }
 
 static int
 do_test (void)
 {
-  /* Check if select exits immediately.  */
-  test_select_timeout (true);
+  struct child_args args;
 
-  /* Check if select exits after specified timeout.  */
-  test_select_timeout (false);
+  xpipe (args.fds[0]);
+  xpipe (args.fds[1]);
+
+  /* The child select should timeout and write on its pipe end.  */
+  args.tmo = (struct timeval) { .tv_sec = 0, .tv_usec = 250000 };
+  {
+    struct support_capture_subprocess result;
+    result = support_capture_subprocess (do_test_child, &args);
+    support_capture_subprocess_check (&result, "tst-select-child", 0,
+				      sc_allow_none);
+  }
+
+  /* Same as before, but simulating polling.  */
+  args.tmo = (struct timeval) { .tv_sec = 0, .tv_usec = 0 };
+  {
+    struct support_capture_subprocess result;
+    result = support_capture_subprocess (do_test_child, &args);
+    support_capture_subprocess_check (&result, "tst-select-child", 0,
+				      sc_allow_none);
+  }
+
+  xclose (args.fds[0][0]);
+  xclose (args.fds[1][1]);
+
+  {
+    fd_set rfds;
+    FD_ZERO (&rfds);
+    FD_SET (args.fds[1][0], &rfds);
+
+    int r = select (args.fds[1][0] + 1, &rfds, NULL, NULL, &args.tmo);
+    TEST_COMPARE (r, 1);
+  }
 
   return 0;
 }
