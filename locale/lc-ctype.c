@@ -93,12 +93,14 @@ _nl_postload_ctype (void)
      We need those relocations so that a versioned definition with a COPY
      reloc in an executable will override the libc.so definition.  */
 
-compat_symbol (libc, __ctype_b, __ctype_b, GLIBC_2_0);
-compat_symbol (libc, __ctype_tolower, __ctype_tolower, GLIBC_2_0);
-compat_symbol (libc, __ctype_toupper, __ctype_toupper, GLIBC_2_0);
-compat_symbol (libc, __ctype32_b, __ctype32_b, GLIBC_2_0);
-compat_symbol (libc, __ctype32_tolower, __ctype32_tolower, GLIBC_2_2);
-compat_symbol (libc, __ctype32_toupper, __ctype32_toupper, GLIBC_2_2);
+compat_symbol_reference (libc, __ctype_b, __ctype_b, GLIBC_2_0);
+compat_symbol_reference (libc, __ctype_tolower, __ctype_tolower, GLIBC_2_0);
+compat_symbol_reference (libc, __ctype_toupper, __ctype_toupper, GLIBC_2_0);
+compat_symbol_reference (libc, __ctype32_b, __ctype32_b, GLIBC_2_0);
+compat_symbol_reference (libc, __ctype32_tolower, __ctype32_tolower,
+			  GLIBC_2_2);
+compat_symbol_reference (libc, __ctype32_toupper, __ctype32_toupper,
+			 GLIBC_2_2);
 
   __ctype_b = current (uint16_t, CLASS, 128);
   __ctype_toupper = current (int32_t, TOUPPER, 128);
