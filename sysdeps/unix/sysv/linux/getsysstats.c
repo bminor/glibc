@@ -17,215 +17,42 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <alloca.h>
-#include <assert.h>
-#include <ctype.h>
 #include <dirent.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <mntent.h>
-#include <paths.h>
+#include <not-cancel.h>
+#include <scratch_buffer.h>
 #include <stdio.h>
 #include <stdio_ext.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 #include <sys/sysinfo.h>
-
-#include <atomic.h>
-#include <not-cancel.h>
-
-
-/* How we can determine the number of available processors depends on
-   the configuration.  There is currently (as of version 2.0.21) no
-   system call to determine the number.  It is planned for the 2.1.x
-   series to add this, though.
-
-   One possibility to implement it for systems using Linux 2.0 is to
-   examine the pseudo file /proc/cpuinfo.  Here we have one entry for
-   each processor.
-
-   But not all systems have support for the /proc filesystem.  If it
-   is not available we simply return 1 since there is no way.  */
-
-
-/* Other architectures use different formats for /proc/cpuinfo.  This
-   provides a hook for alternative parsers.  */
-#ifndef GET_NPROCS_PARSER
-# define GET_NPROCS_PARSER(FD, BUFFER, CP, RE, BUFFER_END, RESULT) \
-  do									\
-    {									\
-      (RESULT) = 0;							\
-      /* Read all lines and count the lines starting with the string	\
-	 "processor".  We don't have to fear extremely long lines since	\
-	 the kernel will not generate them.  8192 bytes are really	\
-	 enough.  */							\
-      char *l;								\
-      while ((l = next_line (FD, BUFFER, &CP, &RE, BUFFER_END)) != NULL) \
-	if (strncmp (l, "processor", 9) == 0)				\
-	  ++(RESULT);							\
-    }									\
-  while (0)
-#endif
-
-
-static char *
-next_line (int fd, char *const buffer, char **cp, char **re,
-	   char *const buffer_end)
-{
-  char *res = *cp;
-  char *nl = memchr (*cp, '\n', *re - *cp);
-  if (nl == NULL)
-    {
-      if (*cp != buffer)
-	{
-	  if (*re == buffer_end)
-	    {
-	      memmove (buffer, *cp, *re - *cp);
-	      *re = buffer + (*re - *cp);
-	      *cp = buffer;
-
-	      ssize_t n = __read_nocancel (fd, *re, buffer_end - *re);
-	      if (n < 0)
-		return NULL;
-
-	      *re += n;
-
-	      nl = memchr (*cp, '\n', *re - *cp);
-	      while (nl == NULL && *re == buffer_end)
-		{
-		  /* Truncate too long lines.  */
-		  *re = buffer + 3 * (buffer_end - buffer) / 4;
-		  n = __read_nocancel (fd, *re, buffer_end - *re);
-		  if (n < 0)
-		    return NULL;
-
-		  nl = memchr (*re, '\n', n);
-		  **re = '\n';
-		  *re += n;
-		}
-	    }
-	  else
-	    nl = memchr (*cp, '\n', *re - *cp);
-
-	  res = *cp;
-	}
-
-      if (nl == NULL)
-	nl = *re - 1;
-    }
-
-  *cp = nl + 1;
-  assert (*cp <= *re);
-
-  return res == *re ? NULL : res;
-}
-
+#include <sysdep.h>
 
 int
 __get_nprocs (void)
 {
-  static int cached_result = -1;
-  static time_t timestamp;
+  struct scratch_buffer set;
+  scratch_buffer_init (&set);
 
-  time_t now = time_now ();
-  time_t prev = timestamp;
-  atomic_read_barrier ();
-  if (now == prev && cached_result > -1)
-    return cached_result;
-
-  /* XXX Here will come a test for the new system call.  */
-
-  const size_t buffer_size = __libc_use_alloca (8192) ? 8192 : 512;
-  char *buffer = alloca (buffer_size);
-  char *buffer_end = buffer + buffer_size;
-  char *cp = buffer_end;
-  char *re = buffer_end;
-
-  const int flags = O_RDONLY | O_CLOEXEC;
-  /* This file contains comma-separated ranges.  */
-  int fd = __open_nocancel ("/sys/devices/system/cpu/online", flags);
-  char *l;
-  int result = 0;
-  if (fd != -1)
+  int r;
+  while (true)
     {
-      l = next_line (fd, buffer, &cp, &re, buffer_end);
-      if (l != NULL)
-	do
-	  {
-	    char *endp;
-	    unsigned long int n = strtoul (l, &endp, 10);
-	    if (l == endp)
-	      {
-		result = 0;
-		break;
-	      }
+      /* The possible error are EFAULT for an invalid buffer or ESRCH for
+	 invalid pid, none could happen.  */
+      r = INTERNAL_SYSCALL_CALL (sched_getaffinity, 0, set.length,
+                                 set.data);
+      if (r > 0)
+        break;
 
-	    unsigned long int m = n;
-	    if (*endp == '-')
-	      {
-		l = endp + 1;
-		m = strtoul (l, &endp, 10);
-		if (l == endp)
-		  {
-		    result = 0;
-		    break;
-		  }
-	      }
-
-	    result += m - n + 1;
-
-	    l = endp;
-	    if (l < re && *l == ',')
-	      ++l;
-	  }
-	while (l < re && *l != '\n');
-
-      __close_nocancel_nostatus (fd);
-
-      if (result > 0)
-	goto out;
+      if (!scratch_buffer_grow (&set))
+        /* Default to an SMP system in case we cannot obtain an accurate
+           number.  */
+        return 2;
     }
 
-  cp = buffer_end;
-  re = buffer_end;
+  /* The scratch_buffer is aligned to max_align_t.  */
+  r = __sched_cpucount (r, (const cpu_set_t *) set.data);
 
-  /* Default to an SMP system in case we cannot obtain an accurate
-     number.  */
-  result = 2;
+  scratch_buffer_free (&set);
 
-  /* The /proc/stat format is more uniform, use it by default.  */
-  fd = __open_nocancel ("/proc/stat", flags);
-  if (fd != -1)
-    {
-      result = 0;
-
-      while ((l = next_line (fd, buffer, &cp, &re, buffer_end)) != NULL)
-	/* The current format of /proc/stat has all the cpu* entries
-	   at the front.  We assume here that stays this way.  */
-	if (strncmp (l, "cpu", 3) != 0)
-	  break;
-	else if (isdigit (l[3]))
-	  ++result;
-
-      __close_nocancel_nostatus (fd);
-    }
-  else
-    {
-      fd = __open_nocancel ("/proc/cpuinfo", flags);
-      if (fd != -1)
-	{
-	  GET_NPROCS_PARSER (fd, buffer, cp, re, buffer_end, result);
-	  __close_nocancel_nostatus (fd);
-	}
-    }
-
- out:
-  cached_result = result;
-  atomic_write_barrier ();
-  timestamp = now;
-
-  return result;
+  return r;
 }
 libc_hidden_def (__get_nprocs)
 weak_alias (__get_nprocs, get_nprocs)

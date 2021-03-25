@@ -18,25 +18,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 
-/* We need to define a special parser for /proc/cpuinfo.  */
-#define GET_NPROCS_PARSER(FD, BUFFER, CP, RE, BUFFER_END, RESULT)	   \
-  do									   \
-    {									   \
-      /* Find the line that contains the information about the number of   \
-	 active cpus.  We don't have to fear extremely long lines since	   \
-	 the kernel will not generate them.  8192 bytes are really enough. \
-	 If there is no "CPUs ..." line then we are on a UP system.  */	   \
-      char *l;								   \
-      (RESULT) = 1;							   \
-      while ((l = next_line (FD, BUFFER, &CP, &RE, BUFFER_END)) != NULL)  \
-	if ((sscanf (BUFFER, "cpus active : %d", &(RESULT)) == 1)	   \
-	    || (sscanf (BUFFER, "CPUs probed %*d active %d",		   \
-			&(RESULT)) == 1))  				   \
-	  break;							   \
-    }									   \
-  while (0)
-
-
 /* On the Alpha we can distinguish between the number of configured and
    active cpus.  */
 #define GET_NPROCS_CONF_PARSER(FP, BUFFER, RESULT)			   \

@@ -19,23 +19,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 
-/* We need to define a special parser for /proc/cpuinfo.  */
-#define GET_NPROCS_PARSER(FD, BUFFER, CP, RE, BUFFER_END, RESULT)	  \
-  do									  \
-    {									  \
-      (RESULT) = 0;							  \
-      /* Find the line that contains the information about the number of  \
-	 active cpus.  We don't have to fear extremely long lines since	  \
-	 the kernel will not generate them.  8192 bytes are really	  \
-	 enough.  */							  \
-      char *l;								  \
-      while ((l = next_line (FD, BUFFER, &CP, &RE, BUFFER_END)) != NULL)  \
-	if (sscanf (l, "ncpus active : %d", &(RESULT)) == 1)		  \
-	  break;							  \
-    }									  \
-  while (0)
-
-
 /* On the Sparc we can distinguish between the number of configured and
    active cpus.  */
 #define GET_NPROCS_CONF_PARSER(FP, BUFFER, RESULT)			 \

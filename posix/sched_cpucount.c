@@ -38,3 +38,4 @@ __sched_cpucount (size_t setsize, const cpu_set_t *setp)
     s += countbits (setp->__bits[i]);
   return s;
 }
+libc_hidden_def (__sched_cpucount)
