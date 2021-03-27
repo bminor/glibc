@@ -198,6 +198,35 @@ do_page_tests (void)
     }
 }
 
+/* Tests meant to unveil fail on implementations that access bytes
+   beyond the maxium length.  */
+
+static void
+do_page_2_tests (void)
+{
+  size_t i, exp_len, offset;
+  size_t last_offset = page_size / sizeof (CHAR);
+
+  CHAR *s = (CHAR *) buf2;
+  MEMSET (s, 65, last_offset);
+
+  /* Place short strings ending at page boundary without the null
+     byte.  */
+  offset = last_offset;
+  for (i = 0; i < 128; i++)
+    {
+      /* Decrease offset to stress several sizes and alignments.  */
+      offset--;
+      exp_len = last_offset - offset;
+      FOR_EACH_IMPL (impl, 0)
+	{
+	  /* If an implementation goes beyond EXP_LEN, it will trigger
+	     the segfault.  */
+	  do_one_test (impl, (CHAR *) (s + offset), exp_len, exp_len);
+	}
+    }
+}
+
 int
 test_main (void)
 {
@@ -244,6 +273,7 @@ test_main (void)
 
   do_random_tests ();
   do_page_tests ();
+  do_page_2_tests ();
   return ret;
 }
 
