@@ -27,6 +27,7 @@
 
 #ifndef WIDE
 # define STRNLEN strnlen
+# define MEMSET memset
 # define CHAR char
 # define BIG_CHAR CHAR_MAX
 # define MIDDLE_CHAR 127
@@ -34,6 +35,7 @@
 #else
 # include <wchar.h>
 # define STRNLEN wcsnlen
+# define MEMSET wmemset
 # define CHAR wchar_t
 # define BIG_CHAR WCHAR_MAX
 # define MIDDLE_CHAR 1121
@@ -153,7 +155,7 @@ do_page_tests (void)
   size_t last_offset = (page_size / sizeof (CHAR)) - 1;
 
   CHAR *s = (CHAR *) buf2;
-  memset (s, 65, (last_offset - 1));
+  MEMSET (s, 65, (last_offset - 1));
   s[last_offset] = 0;
 
   /* Place short strings ending at page boundary.  */
