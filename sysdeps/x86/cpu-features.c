@@ -130,6 +130,14 @@ get_common_indeces (struct cpu_features *cpu_features,
 		{
 		  cpu_features->feature[index_arch_AVX512F_Usable]
 		    |= bit_arch_AVX512F_Usable;
+		  /* Determine if AVX512VL is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512VL))
+		    cpu_features->feature[index_arch_AVX512VL_Usable]
+		      |= bit_arch_AVX512VL_Usable;
+		  /* Determine if AVX512BW is usable.  */
+		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512BW))
+		    cpu_features->feature[index_arch_AVX512BW_Usable]
+		      |= bit_arch_AVX512BW_Usable;
 		  /* Determine if AVX512DQ is usable.  */
 		  if (CPU_FEATURES_CPU_P (cpu_features, AVX512DQ))
 		    cpu_features->feature[index_arch_AVX512DQ_Usable]

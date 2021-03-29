@@ -42,6 +42,8 @@
 #define bit_arch_XSAVEC_Usable			(1 << 22)
 #define bit_arch_Prefer_FSRM			(1 << 23)
 #define bit_arch_Prefer_AVX2_STRCMP		(1 << 24)
+#define bit_arch_AVX512VL_Usable		(1 << 25)
+#define bit_arch_AVX512BW_Usable		(1 << 26)
 
 /* CPUID Feature flags.  */
 
@@ -268,6 +270,8 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_arch_XSAVEC_Usable	FEATURE_INDEX_1
 # define index_arch_Prefer_FSRM		FEATURE_INDEX_1
 # define index_arch_Prefer_AVX2_STRCMP	FEATURE_INDEX_1
+# define index_arch_AVX512VL_Usable	FEATURE_INDEX_1
+# define index_arch_AVX512BW_Usable	FEATURE_INDEX_1
 
 #endif	/* !__ASSEMBLER__ */
 
