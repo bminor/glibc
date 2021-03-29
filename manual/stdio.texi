@@ -3620,10 +3620,10 @@ function (@pxref{Parsing of Integers}) with the appropriate value
 The @samp{%X} conversion is identical to the @samp{%x} conversion.  They
 both permit either uppercase or lowercase letters to be used as digits.
 
-The default type of the corresponding argument for the @code{%d} and
-@code{%i} conversions is @code{int *}, and @code{unsigned int *} for the
-other integer conversions.  You can use the following type modifiers to
-specify other sizes of integer:
+The default type of the corresponding argument for the @code{%d},
+@code{%i}, and @code{%n} conversions is @code{int *}, and
+@code{unsigned int *} for the other integer conversions.  You can use
+the following type modifiers to specify other sizes of integer:
 
 @table @samp
 @item hh
@@ -3888,7 +3888,8 @@ The resulting pointer value is not guaranteed to be valid if it was not
 originally written during the same program execution that reads it in.
 
 The @samp{%n} conversion produces the number of characters read so far
-by this call.  The corresponding argument should be of type @code{int *}.
+by this call.  The corresponding argument should be of type @code{int *},
+unless a type modifier is in effect (@pxref{Numeric Input Conversions}).
 This conversion works in the same way as the @samp{%n} conversion for
 @code{printf}; see @ref{Other Output Conversions}, for an example.
 
