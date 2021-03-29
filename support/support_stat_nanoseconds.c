@@ -16,16 +16,42 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <errno.h>
+#include <fcntl.h>
+#include <support/check.h>
+#include <support/support.h>
+#include <support/timespec.h>
 #include <stdbool.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 bool
-support_stat_nanoseconds (void)
+support_stat_nanoseconds (const char *path)
 {
-  /* s390 stat64 compat symbol does not support nanoseconds resolution
-     and it used on non-LFS [f,l]stat[at] implementations.  */
-#if defined __linux__ && !defined __s390x__ && defined __s390__
-  return false;
-#else
-  return true;
+  bool support;
+#ifdef __linux__
+  /* Obtain the original timestamp to restore at the end.  */
+  struct stat ost;
+  TEST_VERIFY_EXIT (stat (path, &ost) == 0);
+
+  const struct timespec tsp[] = { { 0, TIMESPEC_HZ - 1 },
+				  { 0, TIMESPEC_HZ / 2 } };
+  TEST_VERIFY_EXIT (utimensat (AT_FDCWD, path, tsp, 0) == 0);
+
+  struct stat st;
+  TEST_VERIFY_EXIT (stat (path, &st) == 0);
+
+  support = st.st_atim.tv_nsec == tsp[0].tv_nsec
+	    && st.st_mtim.tv_nsec == tsp[1].tv_nsec;
+
+  /* Reset to original timestamps.  */
+  const struct timespec otsp[] =
+  {
+    { ost.st_atim.tv_sec, ost.st_atim.tv_nsec },
+    { ost.st_mtim.tv_sec, ost.st_mtim.tv_nsec },
+  };
+  TEST_VERIFY_EXIT (utimensat (AT_FDCWD, path, otsp, 0) == 0);
 #endif
+  return support;
 }

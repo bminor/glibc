@@ -142,7 +142,7 @@ static __inline bool support_path_support_time64 (const char *path)
 }
 
 /* Return true if stat supports nanoseconds resolution.  */
-extern bool support_stat_nanoseconds (void);
+extern bool support_stat_nanoseconds (const char *path);
 
 __END_DECLS
 

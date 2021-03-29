@@ -25,6 +25,7 @@
 #include <support/xunistd.h>
 #include <sys/stat.h>
 #include <sys/sysmacros.h>
+#include <stdio.h>
 #include <unistd.h>
 
 static void
@@ -73,6 +74,10 @@ do_test (void)
 
   test_t tests[] = { stat_check, lstat_check, fstat_check, fstatat_check };
 
+  bool check_ns = support_stat_nanoseconds (path);
+  if (!check_ns)
+    printf ("warning: timestamp with nanoseconds not supportted\n");
+
   for (int i = 0; i < array_length (tests); i++)
     {
       struct stat st;
@@ -92,7 +97,7 @@ do_test (void)
 
       TEST_COMPARE (stx.stx_ctime.tv_sec, st.st_ctim.tv_sec);
       TEST_COMPARE (stx.stx_mtime.tv_sec, st.st_mtim.tv_sec);
-      if (support_stat_nanoseconds ())
+      if (check_ns)
 	{
 	  TEST_COMPARE (stx.stx_ctime.tv_nsec, st.st_ctim.tv_nsec);
 	  TEST_COMPARE (stx.stx_mtime.tv_nsec, st.st_mtim.tv_nsec);
