@@ -195,6 +195,9 @@ calls = s_isinfF s_isnanF s_finiteF s_copysignF s_modfF s_scalbnF s_frexpF \
 gen-calls = s_ldexpF
 generated += $(foreach s,.c .S,$(call type-foreach, $(calls:s_%=m_%$(s))))
 routines = $(call type-foreach, $(calls))
+# The $(calls) that are shared between libm and libc are not included in static
+# libm so the symbols end up in exactly one place.
+libm-shared-only-routines = $(call type-foreach, $(calls:s_%=m_%))
 
 ifeq ($(build-mathvec),yes)
 # We need to install libm.so and libm.a as linker scripts
