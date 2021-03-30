@@ -1995,6 +1995,7 @@ GLIBC_2.25 gnu_dev_minor F
 GLIBC_2.25 strfromd F
 GLIBC_2.25 strfromf F
 GLIBC_2.25 strfroml F
+GLIBC_2.26 __isnanf128 F
 GLIBC_2.26 __strtof128_internal F
 GLIBC_2.26 __wcstof128_internal F
 GLIBC_2.26 _hurd_exec_paths F
@@ -2203,6 +2204,7 @@ GLIBC_2.33 mknod F
 GLIBC_2.33 mknodat F
 GLIBC_2.33 stat F
 GLIBC_2.33 stat64 F
+GLIBC_2.34 __isnanf128 F
 GLIBC_2.34 __libc_start_main F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F

@@ -478,7 +478,6 @@ GLIBC_2.26 __gammaf128_r_finite F
 GLIBC_2.26 __hypotf128_finite F
 GLIBC_2.26 __iseqsigf128 F
 GLIBC_2.26 __isinff128 F
-GLIBC_2.26 __isnanf128 F
 GLIBC_2.26 __issignalingf128 F
 GLIBC_2.26 __j0f128_finite F
 GLIBC_2.26 __j1f128_finite F

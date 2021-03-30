@@ -4,8 +4,12 @@
 %endif
 libc {
   FLOAT128_VERSION {
+    __isnanf128;
     __strtof128_internal;
     __wcstof128_internal;
+  }
+  GLIBC_2.34 {
+    __isnanf128;
   }
   GLIBC_PRIVATE {
     # For __nanf128.
@@ -30,7 +34,6 @@ libm {
     __hypotf128_finite;
     __iseqsigf128;
     __isinff128;
-    __isnanf128;
     __issignalingf128;
     __j0f128_finite;
     __j1f128_finite;
