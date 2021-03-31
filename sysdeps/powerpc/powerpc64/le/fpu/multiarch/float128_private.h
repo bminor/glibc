@@ -19,7 +19,7 @@
 #ifndef _FLOAT128_PRIVATE_PPC64LE
 #define _FLOAT128_PRIVATE_PPC64LE 1
 
-#if IS_IN(libc) || !defined(_F128_ENABLE_IFUNC)
+#ifndef _F128_ENABLE_IFUNC
 /* multiarch is not supported.  Do nothing and pass through.  */
 #include_next <float128_private.h>
 #else
@@ -94,6 +94,6 @@ F128_REDIR (__lgamma_productf128)
 #include <float128-ifunc-redirects-mp.h>
 #include <float128-ifunc-redirects.h>
 
-#endif /* !(IS_IN(libc) && defined(_F128_ENABLE_IFUNC) */
+#endif /* _F128_ENABLE_IFUNC */
 
 #endif /* _FLOAT128_PRIVATE_PPC64LE */

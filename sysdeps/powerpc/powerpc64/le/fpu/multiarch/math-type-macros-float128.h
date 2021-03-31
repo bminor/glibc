@@ -21,7 +21,7 @@
 
 #include_next <math-type-macros-float128.h>
 
-#if !IS_IN(libc) && defined(_F128_ENABLE_IFUNC)
+#ifdef _F128_ENABLE_IFUNC
 
 /* Include fenv.h now before turning off PLT bypass.  At
    minimum fereaiseexcept is used today.  */
@@ -115,6 +115,6 @@ F128_REDIR (__w_log1pf128);
 /* Include the redirects shared with math_private.h users.  */
 #include <float128-ifunc-redirects.h>
 
-#endif /* !IS_IN(libc) && defined(_F128_ENABLE_IFUNC) */
+#endif /* _F128_ENABLE_IFUNC */
 
 #endif /*_MATH_TYPE_MACROS_FLOAT128_PPC64_MULTI */

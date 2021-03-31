@@ -85,6 +85,7 @@ endif
 #
 ifeq ($(do_f128_multiarch),yes)
 
+f128-ifunc-calls = s_modff128 s_scalbnf128 s_frexpf128 s_ldexpf128
 gen-libm-f128-ifunc-routines = \
 	e_acosf128 e_acoshf128 e_asinf128 e_atan2f128 e_atanhf128 e_coshf128 \
 	e_expf128 e_fmodf128 e_hypotf128 e_j0f128 e_j1f128 e_jnf128 \
@@ -96,7 +97,7 @@ gen-libm-f128-ifunc-routines = \
 	s_tanhf128 s_truncf128 s_remquof128 e_log2f128 \
 	s_roundf128 s_nearbyintf128 s_sincosf128 s_fmaf128 s_lrintf128 \
 	s_llrintf128 s_lroundf128 s_llroundf128 e_exp10f128 \
-	m_modff128 m_scalbnf128 m_frexpf128 m_ldexpf128 x2y2m1f128 \
+	$(f128-ifunc-calls) $(f128-ifunc-calls:s_%=m_%) x2y2m1f128 \
 	gamma_productf128 lgamma_negf128 lgamma_productf128 s_roundevenf128 \
 	cargf128 conjf128 cimagf128 crealf128 cabsf128 e_scalbf128 s_cacosf128 \
 	s_cacoshf128 s_ccosf128 s_ccoshf128 s_casinf128 s_csinf128 \
@@ -118,19 +119,26 @@ f128-march-routines-ifunc = $(addsuffix -ifunc,$(gen-libm-f128-ifunc-routines))
 f128-march-routines = $(f128-march-routines-p9) $(f128-march-routines-ifunc)
 f128-march-cpus = power9
 
-libm-routines += $(f128-march-routines)
+f128-march-calls-p9 = $(addsuffix -power9,$(f128-ifunc-calls))
+f128-march-calls-ifunc = $(addsuffix -ifunc,$(f128-ifunc-calls))
+f128-march-calls = $(f128-march-calls-p9) $(f128-march-calls-ifunc)
+
+calls += $(f128-march-calls)
+libm-routines += $(filter-out $(f128-march-calls), $(f128-march-routines))
 generated += $(f128-march-routines)
 
 CFLAGS-float128-ifunc.c += $(type-float128-CFLAGS) $(no-gnu-attribute-CFLAGS)
 
 # Copy special CFLAGS for some functions
+CFLAGS-s_modff128-power9.c += -fsignaling-nans
 CFLAGS-m_modff128-power9.c += -fsignaling-nans
 
 # Generate ifunc wrapper files and target specific wrappers around
 # each routine above.  Note, m_%.c files are fixed up to include
 # s_%.c files.  This is an artifact of the makefile rules which allow
 # some files to be compiled for libc and libm.
-$(objpfx)gen-float128-ifuncs.stmp: Makefile
+$(objpfx)gen-float128-ifuncs.stmp: \
+  Makefile $(..)sysdeps/powerpc/powerpc64/le/fpu/multiarch/Makefile
 	$(make-target-directory)
 	for gcall in $(gen-libm-f128-ifunc-routines); do \
 	  ifile="$${gcall}";                             \
@@ -178,7 +186,8 @@ $(objpfx)gen-float128-ifuncs.stmp: Makefile
 	done;                                            \
 	echo > $(@)
 
-$(foreach f,$(f128-march-routines),$(objpfx)$(f).c): $(objpfx)gen-float128-ifuncs.stmp
+$(foreach f,$(f128-march-routines),$(objpfx)$(f).c): \
+  $(objpfx)gen-float128-ifuncs.stmp $(objpfx)gen-libm-templates.stmp
 
 enable-f128-ifunc-CFLAGS = -D_F128_ENABLE_IFUNC $(no-gnu-attributes-CFLAGS) $(type-float128-CFLAGS)
 
