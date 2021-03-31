@@ -33,12 +33,34 @@ int
 __select64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 	    struct __timeval64 *timeout)
 {
-  struct __timespec64 ts64, *pts64 = NULL;
-  if (timeout != NULL)
+  __time64_t s = timeout != NULL ? timeout->tv_sec : 0;
+  int32_t us = timeout != NULL ? timeout->tv_usec : 0;
+  int32_t ns;
+
+  if (s < 0 || us < 0)
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
+
+  /* Normalize the timeout, as legacy Linux __NR_select and __NR__newselect.
+     Different than syscall, it also handle possible overflow.  */
+  if (us / USEC_PER_SEC > INT64_MAX - s)
     {
-      ts64 = timeval64_to_timespec64 (*timeout);
-      pts64 = &ts64;
+      s = INT64_MAX;
+      ns = NSEC_PER_SEC - 1;
     }
+  else
+    {
+      s += us / USEC_PER_SEC;
+      us = us % USEC_PER_SEC;
+      ns = us * NSEC_PER_USEC;
+    }
+
+  struct __timespec64 ts64, *pts64 = NULL;
+   if (timeout != NULL)
+     {
+       ts64.tv_sec = s;
+       ts64.tv_nsec = ns;
+       pts64 = &ts64;
+     }
 
 #ifndef __NR_pselect6_time64
 # define __NR_pselect6_time64 __NR_pselect6
@@ -52,10 +74,10 @@ __select64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
          (though the pselect() glibc call suppresses this behavior).
          Since select() on Linux has the same behavior as the pselect6
          syscall, we update the timeout here.  */
-      if (r == 0 || errno != ENOSYS)
+      if (r >= 0 || errno != ENOSYS)
 	{
 	  if (timeout != NULL)
-	    TIMEVAL_TO_TIMESPEC (timeout, &ts64);
+	    TIMESPEC_TO_TIMEVAL (timeout, &ts64);
 	  return r;
 	}
 
@@ -64,14 +86,15 @@ __select64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 
 #ifndef __ASSUME_TIME64_SYSCALLS
   struct timespec ts32, *pts32 = NULL;
-  if (timeout != NULL)
+  if (pts64 != NULL)
     {
-      if (! in_time_t_range (timeout->tv_sec))
+      if (! in_time_t_range (pts64->tv_sec))
 	{
 	  __set_errno (EINVAL);
 	  return -1;
 	}
-      ts32 = valid_timespec64_to_timespec (ts64);
+      ts32.tv_sec = s;
+      ts32.tv_nsec = ns;
       pts32 = &ts32;
     }
 # ifndef __ASSUME_PSELECT

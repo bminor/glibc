@@ -58,7 +58,6 @@
 
 #define debug(msg)		/*printf("svcauth_des: %s\n", msg) */
 
-#define USEC_PER_SEC ((uint32_t) 1000000L)
 #define BEFORE(t1, t2) timercmp(t1, t2, <)
 
 /*
