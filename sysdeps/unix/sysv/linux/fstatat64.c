@@ -53,8 +53,8 @@ fstatat64_time64_statx (int fd, const char *file, struct __stat64_t64 *buf,
     return r;
 
   *buf = (struct __stat64_t64) {
-    .st_dev = makedev (tmp.stx_dev_major, tmp.stx_dev_minor),
-    .st_rdev = makedev (tmp.stx_rdev_major, tmp.stx_rdev_minor),
+    .st_dev = __gnu_dev_makedev (tmp.stx_dev_major, tmp.stx_dev_minor),
+    .st_rdev = __gnu_dev_makedev (tmp.stx_rdev_major, tmp.stx_rdev_minor),
     .st_ino = tmp.stx_ino,
     .st_mode = tmp.stx_mode,
     .st_nlink = tmp.stx_nlink,
