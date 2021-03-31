@@ -76,7 +76,7 @@ do_test (void)
 
   bool check_ns = support_stat_nanoseconds (path);
   if (!check_ns)
-    printf ("warning: timestamp with nanoseconds not supportted\n");
+    printf ("warning: timestamp with nanoseconds not supported\n");
 
   for (int i = 0; i < array_length (tests); i++)
     {
