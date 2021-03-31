@@ -21,13 +21,26 @@
 
 #ifdef HAVE_S390_VX_GCC_SUPPORT
 # define ASM_CONSTRAINT_VR "v"
+# ifdef __LONG_DOUBLE_VX__
+/* Starting with gcc 11, long double values can also be processed in vector
+   registers if build with -march >= z14.  Then GCC defines the
+   __LONG_DOUBLE_VX__ macro.  */
+#  define ASM_LONG_DOUBLE_IN_VR 1
+# else
+#  define ASM_LONG_DOUBLE_IN_VR 0
+# endif
 #else
 # define ASM_CONSTRAINT_VR
+# define ASM_LONG_DOUBLE_IN_VR 0
 #endif
 
 #define math_opt_barrier(x)						\
   ({ __typeof (x) __x = (x);						\
-    if (__builtin_types_compatible_p (__typeof (x), _Float128))		\
+    if (! ASM_LONG_DOUBLE_IN_VR						\
+	&& (__builtin_types_compatible_p (__typeof (x), _Float128)	\
+	    || __builtin_types_compatible_p (__typeof (x), long double)	\
+	    )								\
+	)								\
       __asm__ ("# math_opt_barrier_f128 %0" : "+fm" (__x));		\
     else								\
       __asm__ ("# math_opt_barrier %0"					\
@@ -35,7 +48,11 @@
     __x; })
 #define math_force_eval(x)						\
   ({ __typeof (x) __x = (x);						\
-    if (__builtin_types_compatible_p (__typeof (x), _Float128))		\
+    if (! ASM_LONG_DOUBLE_IN_VR						\
+	&& (__builtin_types_compatible_p (__typeof (x), _Float128)	\
+	    || __builtin_types_compatible_p (__typeof (x), long double) \
+	    )								\
+	)								\
       __asm__ __volatile__ ("# math_force_eval_f128 %0"			\
 			    : : "fm" (__x));				\
     else								\
