@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <support/capture_subprocess.h>
 #include <support/check.h>
+#include <support/support.h>
 #include <support/timespec.h>
 #include <support/xunistd.h>
 #include <support/xtime.h>
@@ -47,6 +48,12 @@ do_test_child (void *clousure)
   int r = select (args->fds[0][0] + 1, &rfds, NULL, NULL, &args->tmo);
   TEST_COMPARE (r, 0);
 
+  if (support_select_modifies_timeout ())
+    {
+      TEST_COMPARE (args->tmo.tv_sec, 0);
+      TEST_COMPARE (args->tmo.tv_usec, 0);
+    }
+
   TEST_TIMESPEC_NOW_OR_AFTER (CLOCK_REALTIME, ts);
 
   xwrite (args->fds[1][1], "foo", 3);
@@ -68,6 +75,16 @@ do_test (void)
     support_capture_subprocess_check (&result, "tst-select-child", 0,
 				      sc_allow_none);
   }
+
+  if (support_select_normalizes_timeout ())
+    {
+      /* This is handled as 1 second instead of failing with EINVAL.  */
+      args.tmo = (struct timeval) { .tv_sec = 0, .tv_usec = 1000000 };
+      struct support_capture_subprocess result;
+      result = support_capture_subprocess (do_test_child, &args);
+      support_capture_subprocess_check (&result, "tst-select-child", 0,
+					sc_allow_none);
+    }
 
   /* Same as before, but simulating polling.  */
   args.tmo = (struct timeval) { .tv_sec = 0, .tv_usec = 0 };

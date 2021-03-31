@@ -502,6 +502,11 @@ time_now (void)
   __clock_gettime (TIME_CLOCK_GETTIME_CLOCKID, &ts);
   return ts.tv_sec;
 }
+
+#define NSEC_PER_SEC    1000000000L  /* Nanoseconds per second.  */
+#define USEC_PER_SEC    1000000L     /* Microseconds per second.  */
+#define NSEC_PER_USEC   1000L        /* Nanoseconds per microsecond.  */
+
 #endif
 
 #endif
