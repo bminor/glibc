@@ -29,7 +29,7 @@
 bool
 support_stat_nanoseconds (const char *path)
 {
-  bool support;
+  bool support = true;
 #ifdef __linux__
   /* Obtain the original timestamp to restore at the end.  */
   struct stat ost;
