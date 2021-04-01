@@ -276,10 +276,10 @@ L(last_2x_vec):
 	.p2align 4
 L(first_vec_x0_check):
 	tzcntl	%eax, %eax
-# ifdef USE_AS_WCSLEN
+#  ifdef USE_AS_WCSLEN
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
 	sall	$2, %eax
-# endif
+#  endif
 	/* Check the end of data.  */
 	cmpq	%rax, %rsi
 	jbe	L(max)
@@ -293,10 +293,10 @@ L(first_vec_x0_check):
 	.p2align 4
 L(first_vec_x1_check):
 	tzcntl	%eax, %eax
-# ifdef USE_AS_WCSLEN
+#  ifdef USE_AS_WCSLEN
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
 	sall	$2, %eax
-# endif
+#  endif
 	/* Check the end of data.  */
 	cmpq	%rax, %rsi
 	jbe	L(max)
@@ -311,10 +311,10 @@ L(first_vec_x1_check):
 	.p2align 4
 L(first_vec_x2_check):
 	tzcntl	%eax, %eax
-# ifdef USE_AS_WCSLEN
+#  ifdef USE_AS_WCSLEN
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
 	sall	$2, %eax
-# endif
+#  endif
 	/* Check the end of data.  */
 	cmpq	%rax, %rsi
 	jbe	L(max)
@@ -329,10 +329,10 @@ L(first_vec_x2_check):
 	.p2align 4
 L(first_vec_x3_check):
 	tzcntl	%eax, %eax
-# ifdef USE_AS_WCSLEN
+#  ifdef USE_AS_WCSLEN
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
 	sall	$2, %eax
-# endif
+#  endif
 	/* Check the end of data.  */
 	cmpq	%rax, %rsi
 	jbe	L(max)
