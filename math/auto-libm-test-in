@@ -5790,8 +5790,11 @@ j0 -0x1.001000001p+593
 j0 0x1p1023
 j0 0x1p16382
 j0 0x1p16383
-# the next value generates larger error bounds on x86_64 (binary32)
+# the next values yield large errors for binary32
+# (cf BZ #27670 for the xfail entry)
 j0 0x2.602774p+0 xfail-rounding:ibm128-libgcc
+j0 0x1.04c39cp+6
+j0 0x1.4b7066p+7
 # the next value exercises the flt-32 code path for x >= 2^127
 j0 0x8.2f4ecp+124
 
@@ -5825,8 +5828,11 @@ j1 0x1p-60
 j1 0x1p-100
 j1 0x1p-600
 j1 0x1p-10000
-# the next value generates larger error bounds on x86_64 (binary32)
+# the next values yield large errors in the binary32 format
+# (cf BZ #27670 for the xfail entries)
 j1 0x3.ae4b2p+0 xfail-rounding:ibm128-libgcc
+j1 0x1.2f28eap+7 xfail-rounding:binary64 xfail-rounding:binary128 xfail-rounding:intel96 xfail-rounding:ibm128-libgcc
+j1 0x1.a1d20ap+6 xfail-rounding:binary128 xfail-rounding:intel96 xfail-rounding:ibm128-libgcc
 j1 min
 j1 -min
 j1 min_subnorm
@@ -8273,8 +8279,11 @@ y0 0x1p-100
 y0 0x1p-110
 y0 0x1p-600
 y0 0x1p-10000
-# the next value generates larger error bounds on x86_64 (binary32)
+# the next values yield large errors for binary32
+# (cf BZ #16492 for the xfail entries)
 y0 0xd.3432bp-4
+y0 0x1.33eaacp+5 xfail:binary64 xfail:intel96 xfail-rounding:ibm128-libgcc
+y0 0x1.a681cep-1 xfail-rounding:ibm128-libgcc
 y0 min
 y0 min_subnorm
 
@@ -8303,6 +8312,11 @@ y1 0x1p-100
 y1 0x1p-110
 y1 0x1p-600
 y1 0x1p-10000
+# the next three values yield the largest error in the binary32 format
+# (cf BZ #27670 for the xfail entries)
+y1 0x1.065194p+7 xfail-rounding:binary64 xfail-rounding:intel96 xfail-rounding:ibm128-libgcc
+y1 0x1.c1badep+0 xfail-rounding:ibm128-libgcc
+y1 0x1.c1bc2ep+0
 y1 min
 y1 min_subnorm
 
