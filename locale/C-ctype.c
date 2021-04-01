@@ -18,6 +18,7 @@
 
 #include "localeinfo.h"
 #include <endian.h>
+#include <stdalign.h>
 #include <stdint.h>
 
 #include "C-translit.h"
@@ -30,7 +31,7 @@
    In the `_nl_C_LC_CTYPE_class' array the value for EOF (== -1)
    is set to always return 0 and the conversion arrays return EOF.  */
 
-const char _nl_C_LC_CTYPE_class[768] attribute_hidden =
+alignas (uint16_t) const char _nl_C_LC_CTYPE_class[768] attribute_hidden =
   /* 0x80 */ "\000\000" "\000\000" "\000\000" "\000\000" "\000\000" "\000\000"
   /* 0x86 */ "\000\000" "\000\000" "\000\000" "\000\000" "\000\000" "\000\000"
   /* 0x8c */ "\000\000" "\000\000" "\000\000" "\000\000" "\000\000" "\000\000"
@@ -96,7 +97,7 @@ const char _nl_C_LC_CTYPE_class[768] attribute_hidden =
   /* 0xf4 */ "\000\000" "\000\000" "\000\000" "\000\000" "\000\000" "\000\000"
   /* 0xfa */ "\000\000" "\000\000" "\000\000" "\000\000" "\000\000" "\000\000"
 ;
-const char _nl_C_LC_CTYPE_class32[1024] attribute_hidden =
+alignas (uint32_t) const char _nl_C_LC_CTYPE_class32[1024] attribute_hidden =
   /* 0x00 */ "\000\000\002\000" "\000\000\002\000" "\000\000\002\000"
   /* 0x03 */ "\000\000\002\000" "\000\000\002\000" "\000\000\002\000"
   /* 0x06 */ "\000\000\002\000" "\000\000\002\000" "\000\000\002\000"
