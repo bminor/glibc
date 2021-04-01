@@ -2,6 +2,7 @@
 
 # Maximal error of functions:
 Function: "acos":
+double: 1
 float: 1
 
 Function: "acosh":
@@ -9,17 +10,19 @@ double: 2
 float: 2
 
 Function: "asin":
+double: 1
 float: 1
 
 Function: "asinh":
-double: 1
+double: 2
 float: 2
 
 Function: "atan":
+double: 1
 float: 1
 
 Function: "atan2":
-float: 1
+float: 2
 
 Function: "atanh":
 double: 2
@@ -80,7 +83,7 @@ double: 1
 float: 1
 
 Function: "cbrt":
-double: 3
+double: 4
 float: 1
 
 Function: Real part of "ccos":
@@ -112,6 +115,7 @@ double: 3
 float: 3
 
 Function: Imaginary part of "clog":
+double: 1
 float: 1
 
 Function: Real part of "clog10":
@@ -127,7 +131,7 @@ double: 1
 float: 1
 
 Function: "cosh":
-double: 1
+double: 2
 float: 2
 
 Function: Real part of "cpow":
@@ -177,10 +181,11 @@ double: 1
 float: 1
 
 Function: "erfc":
-double: 3
+double: 5
 float: 3
 
 Function: "exp":
+double: 1
 float: 1
 
 Function: "exp10":
@@ -256,7 +261,7 @@ double: 2
 float: 2
 
 Function: "tgamma":
-double: 5
+double: 9
 float: 8
 
 Function: "y0":
