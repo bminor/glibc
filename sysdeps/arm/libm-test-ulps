@@ -46,7 +46,7 @@ double: 1
 float: 1
 
 Function: "asin_upward":
-double: 1
+double: 2
 float: 1
 
 Function: "asinh":
@@ -66,6 +66,7 @@ double: 3
 float: 3
 
 Function: "atan":
+double: 1
 float: 1
 
 Function: "atan2":
@@ -447,6 +448,7 @@ double: 3
 float: 3
 
 Function: Imaginary part of "clog":
+double: 1
 float: 1
 
 Function: Real part of "clog10":
