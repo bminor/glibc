@@ -47,4 +47,69 @@ mul_split (double *hi, double *lo, double x, double y)
 #endif
 }
 
+/* Add a + b exactly, such that *hi + *lo = a + b.
+   Assumes |a| >= |b| and rounding to nearest.  */
+static inline void
+fast_two_sum (double *hi, double *lo, double a, double b)
+{
+  double e;
+
+  *hi = a + b;
+  e = *hi - a; /* exact  */
+  *lo = b - e; /* exact  */
+  /* Now *hi + *lo = a + b exactly.  */
+}
+
+/* Multiplication of two floating-point expansions: *hi + *lo is an
+   approximation of (h1+l1)*(h2+l2), assuming |l1| <= 1/2*ulp(h1)
+   and |l2| <= 1/2*ulp(h2) and rounding to nearest.  */
+static inline void
+mul_expansion (double *hi, double *lo, double h1, double l1,
+	       double h2, double l2)
+{
+  double r, e;
+
+  mul_split (hi, lo, h1, h2);
+  r = h1 * l2 + h2 * l1;
+  /* Now add r to (hi,lo) using fast two-sum, where we know |r| < |hi|.  */
+  fast_two_sum (hi, &e, *hi, r);
+  *lo -= e;
+}
+
+/* Calculate X / Y and store the approximate result in *HI + *LO.  It is
+   assumed that Y is not zero, that no overflow nor underflow occurs, and
+   rounding is to nearest.  */
+static inline void
+div_split (double *hi, double *lo, double x, double y)
+{
+  double a, b;
+
+  *hi = x / y;
+  mul_split (&a, &b, *hi, y);
+  /* a + b = hi*y, which should be near x.  */
+  a = x - a; /* huge cancellation  */
+  a = a - b;
+  /* Now x ~ hi*y + a thus x/y ~ hi + a/y.  */
+  *lo = a / y;
+}
+
+/* Division of two floating-point expansions: *hi + *lo is an
+   approximation of (h1+l1)/(h2+l2), assuming |l1| <= 1/2*ulp(h1)
+   and |l2| <= 1/2*ulp(h2), h2+l2 is not zero, and rounding to nearest.  */
+static inline void
+div_expansion (double *hi, double *lo, double h1, double l1,
+	       double h2, double l2)
+{
+  double r, e;
+
+  div_split (hi, lo, h1, h2);
+  /* (h1+l1)/(h2+l2) ~ h1/h2 + (l1*h2 - l2*h1)/h2^2  */
+  r = (l1 * h2 - l2 * h1) / (h2 * h2);
+  /* Now add r to (hi,lo) using fast two-sum, where we know |r| < |hi|.  */
+  fast_two_sum (hi, &e, *hi, r);
+  *lo += e;
+  /* Renormalize since |lo| might be larger than 0.5 ulp(hi).  */
+  fast_two_sum (hi, lo, *hi, *lo);
+}
+
 #endif /* _MUL_SPLIT_H */

@@ -8251,8 +8251,12 @@ tgamma -0x6.ce9158p+0
 tgamma -0xd.cbf53d0e7d06p+0
 # the next value generates larger error bounds on x86_64 (binary32)
 tgamma -0x3.0aa534p+0
-# the next value generates larger error bounds on x86_64 (binary64)
+# the next values generate large error bounds on x86_64 (binary64)
 tgamma -0x1.62b8c36c7180bp+4
+tgamma -0x1.62c4d519e8677p+3
+tgamma -0x1.c033cc426752fp+2
+tgamma -0x1.62cfd0d34ade2p+3
+tgamma -0x1.8814da6eb7dbp+5
 
 y0 0.125
 y0 0.75
