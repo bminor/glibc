@@ -247,7 +247,7 @@ do_random_tests (void)
 }
 
 static void
-do_test2 (void)
+do_test2 (size_t offset)
 {
   size_t size = 0x20000000;
   uint32_t * large_buf;
@@ -268,33 +268,45 @@ do_test2 (void)
     }
 
   size_t bytes_move = 0x80000000 - (uintptr_t) large_buf;
+  if (bytes_move + offset * sizeof (uint32_t) > size)
+    {
+      munmap ((void *) large_buf, size);
+      return;
+    }
   size_t arr_size = bytes_move / sizeof (uint32_t);
   size_t i;
-
-  FOR_EACH_IMPL (impl, 0)
+  size_t repeats;
+  uint32_t * src = large_buf;
+  uint32_t * dst = &large_buf[offset];
+  for (repeats = 0; repeats < 2; ++repeats)
     {
-      for (i = 0; i < arr_size; i++)
-        large_buf[i] = (uint32_t) i;
+      FOR_EACH_IMPL (impl, 0)
+        {
+          for (i = 0; i < arr_size; i++)
+            src[i] = (uint32_t) i;
 
-      uint32_t * dst = &large_buf[33];
 
-#ifdef TEST_BCOPY
-      CALL (impl, (char *) large_buf, (char *) dst, bytes_move);
-#else
-      CALL (impl, (char *) dst, (char *) large_buf, bytes_move);
-#endif
+    #ifdef TEST_BCOPY
+          CALL (impl, (char *) src, (char *) dst, bytes_move);
+    #else
+          CALL (impl, (char *) dst, (char *) src, bytes_move);
+    #endif
 
-      for (i = 0; i < arr_size; i++)
-	{
-	  if (dst[i] != (uint32_t) i)
-	    {
-	      error (0, 0,
-		     "Wrong result in function %s dst \"%p\" src \"%p\" offset \"%zd\"",
-		     impl->name, dst, large_buf, i);
-	      ret = 1;
-	      break;
-	    }
-	}
+          for (i = 0; i < arr_size; i++)
+        {
+          if (dst[i] != (uint32_t) i)
+            {
+              error (0, 0,
+                 "Wrong result in function %s dst \"%p\" src \"%p\" offset \"%zd\"",
+                 impl->name, dst, large_buf, i);
+              ret = 1;
+              munmap ((void *) large_buf, size);
+              return;
+            }
+        }
+        }
+      src = dst;
+      dst = large_buf;
     }
 
   munmap ((void *) large_buf, size);
@@ -340,8 +352,10 @@ test_main (void)
 
   do_random_tests ();
 
-  do_test2 ();
-
+  do_test2 (33);
+  do_test2 (0x200000);
+  do_test2 (0x4000000 - 1);
+  do_test2 (0x4000000);
   return ret;
 }
 

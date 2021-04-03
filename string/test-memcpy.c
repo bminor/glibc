@@ -82,11 +82,11 @@ do_test (size_t align1, size_t align2, size_t len)
   size_t i, j;
   char *s1, *s2;
 
-  align1 &= 63;
+  align1 &= 4095;
   if (align1 + len >= page_size)
     return;
 
-  align2 &= 63;
+  align2 &= 4095;
   if (align2 + len >= page_size)
     return;
 
@@ -213,11 +213,9 @@ do_random_tests (void)
 }
 
 static void
-do_test1 (void)
+do_test1 (size_t size)
 {
-  size_t size = 0x100000;
   void *large_buf;
-
   large_buf = mmap (NULL, size * 2 + page_size, PROT_READ | PROT_WRITE,
 		    MAP_PRIVATE | MAP_ANON, -1, 0);
   if (large_buf == MAP_FAILED)
@@ -233,27 +231,32 @@ do_test1 (void)
   uint32_t *dest = large_buf;
   uint32_t *src = large_buf + size + page_size;
   size_t i;
-
-  for (i = 0; i < arrary_size; i++)
-    src[i] = (uint32_t) i;
-
-  FOR_EACH_IMPL (impl, 0)
+  size_t repeats;
+  for(repeats = 0; repeats < 2; repeats++)
     {
-      memset (dest, -1, size);
-      CALL (impl, (char *) dest, (char *) src, size);
       for (i = 0; i < arrary_size; i++)
-	if (dest[i] != src[i])
-	  {
-	    error (0, 0,
-		   "Wrong result in function %s dst \"%p\" src \"%p\" offset \"%zd\"",
-		   impl->name, dest, src, i);
-	    ret = 1;
-	    break;
-	  }
-    }
+        src[i] = (uint32_t) i;
 
-  munmap ((void *) dest, size);
-  munmap ((void *) src, size);
+      FOR_EACH_IMPL (impl, 0)
+        {
+            printf ("\t\tRunning: %s\n", impl->name);
+          memset (dest, -1, size);
+          CALL (impl, (char *) dest, (char *) src, size);
+          for (i = 0; i < arrary_size; i++)
+        if (dest[i] != src[i])
+          {
+            error (0, 0,
+               "Wrong result in function %s dst \"%p\" src \"%p\" offset \"%zd\"",
+               impl->name, dest, src, i);
+            ret = 1;
+            munmap ((void *) large_buf, size * 2 + page_size);
+            return;
+          }
+        }
+      dest = src;
+      src = large_buf;
+    }
+  munmap ((void *) large_buf, size * 2 + page_size);
 }
 
 int
@@ -275,7 +278,6 @@ test_main (void)
       do_test (0, i, 1 << i);
       do_test (i, i, 1 << i);
     }
-
   for (i = 0; i < 32; ++i)
     {
       do_test (0, 0, i);
@@ -294,12 +296,19 @@ test_main (void)
       do_test (i, i, 16 * i);
     }
 
+  for (i = 19; i <= 25; ++i)
+    {
+      do_test (255, 0, 1 << i);
+      do_test (0, 255, i);
+      do_test (0, 4000, i);
+    }
+
   do_test (0, 0, getpagesize ());
 
   do_random_tests ();
 
-  do_test1 ();
-
+  do_test1 (0x100000);
+  do_test1 (0x2000000);
   return ret;
 }
 

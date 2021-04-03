@@ -57,11 +57,11 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len)
   size_t i, j;
   char *s1, *s2;
 
-  align1 &= 63;
+  align1 &= 4095;
   if (align1 + len >= page_size)
     return;
 
-  align2 &= 63;
+  align2 &= 4095;
   if (align2 + len >= page_size)
     return;
 
@@ -113,6 +113,10 @@ test_main (void)
       do_test (&json_ctx, 0, 3, i + 15);
       do_test (&json_ctx, 3, 0, i + 31);
       do_test (&json_ctx, 3, 5, i + 63);
+      do_test (&json_ctx, 0, 127, i);
+      do_test (&json_ctx, 0, 255, i);
+      do_test (&json_ctx, 0, 256, i);
+      do_test (&json_ctx, 0, 4064, i);
     }
 
   json_array_end (&json_ctx);
