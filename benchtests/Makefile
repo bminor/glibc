@@ -49,6 +49,7 @@ bench-math := \
   fmin \
   fminf \
   hypot \
+  hypotf \
   ilogb \
   ilogbf \
   isfinite \
