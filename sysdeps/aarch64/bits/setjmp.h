@@ -27,7 +27,10 @@
 /* Jump buffer contains:
    x19-x28, x29(fp), x30(lr), (x31)sp, d8-d15.  Other registers are not
    saved.  */
+# ifndef __CHERI_PURE_CAPABILITY__
 __extension__ typedef unsigned long long __jmp_buf [22];
-
+# else
+__extension__ typedef __uintcap_t __jmp_buf [22];
+# endif
 #endif
 #endif
