@@ -101,6 +101,15 @@ asdouble (uint64_t i)
   return u.f;
 }
 
+static inline int
+issignalingf_inline (float x)
+{
+  uint32_t ix = asuint (x);
+  if (HIGH_ORDER_BIT_IS_SET_FOR_SNAN)
+    return (ix & 0x7fc00000) == 0x7fc00000;
+  return 2 * (ix ^ 0x00400000) > 2 * 0x7fc00000UL;
+}
+
 #define NOINLINE __attribute__ ((noinline))
 
 attribute_hidden float __math_oflowf (uint32_t);
