@@ -34,18 +34,29 @@
 
    [1] https://arxiv.org/pdf/1904.09481.pdf  */
 
+#include <errno.h>
 #include <math.h>
 #include <math_private.h>
 #include <math-underflow.h>
 #include <math-narrow-eval.h>
 #include <math-use-builtins.h>
+#include <math-svid-compat.h>
 #include <libm-alias-finite.h>
+#include <libm-alias-double.h>
 #include "math_config.h"
 
 #define SCALE     0x1p-600
 #define LARGE_VAL 0x1p+511
 #define TINY_VAL  0x1p-459
 #define EPS       0x1p-54
+
+static inline double
+handle_errno (double r)
+{
+  if (isinf (r))
+    __set_errno (ERANGE);
+  return r;
+}
 
 /* Hypot kernel. The inputs must be adjusted so that ax >= ay >= 0
    and squaring ax, ay and (ax - ay) does not overflow or underflow.  */
@@ -83,7 +94,7 @@ kernel (double ax, double ay)
 }
 
 double
-__ieee754_hypot (double x, double y)
+__hypot (double x, double y)
 {
   if (!isfinite(x) || !isfinite(y))
     {
@@ -103,9 +114,10 @@ __ieee754_hypot (double x, double y)
   if (__glibc_unlikely (ax > LARGE_VAL))
     {
       if (__glibc_unlikely (ay <= ax * EPS))
-	return math_narrow_eval (ax + ay);
+	return handle_errno (math_narrow_eval (ax + ay));
 
-      return math_narrow_eval (kernel (ax * SCALE, ay * SCALE) / SCALE);
+      return handle_errno (math_narrow_eval (kernel (ax * SCALE, ay * SCALE)
+					     / SCALE));
     }
 
   /* If ay is tiny, scale both inputs up.  */
@@ -125,6 +137,11 @@ __ieee754_hypot (double x, double y)
 
   return kernel (ax, ay);
 }
-#ifndef __ieee754_hypot
+strong_alias (__hypot, __ieee754_hypot)
 libm_alias_finite (__ieee754_hypot, __hypot)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __hypot, hypot, GLIBC_2_35);
+libm_alias_double_other (__hypot, hypot)
+#else
+libm_alias_double (__hypot, hypot)
 #endif

@@ -20,9 +20,9 @@
 #include <libm-alias-double.h>
 
 
-#if LIBM_SVID_COMPAT
+#if LIBM_SVID_COMPAT && SHLIB_COMPAT (libm, GLIBC_2_0, GLIBC_2_35)
 double
-__hypot (double x, double y)
+__hypot_compat (double x, double y)
 {
 	double z = __ieee754_hypot(x,y);
 	if(__builtin_expect(!isfinite(z), 0)
@@ -31,5 +31,12 @@ __hypot (double x, double y)
 
 	return z;
 }
-libm_alias_double (__hypot, hypot)
+compat_symbol (libm, __hypot_compat, hypot, GLIBC_2_0);
+# ifdef NO_LONG_DOUBLE
+weak_alias (__hypot_compat, hypotl)
+# endif
+# ifdef LONG_DOUBLE_COMPAT
+LONG_DOUBLE_COMPAT_CHOOSE_libm_hypotl (
+  compat_symbol (libm, __hypot_compat, hypotl, FIRST_VERSION_libm_hypotl), );
+# endif
 #endif

@@ -628,5 +628,7 @@ libm {
     fminimum_numf64x; fminimum_numf128;
     fminimum_magf64x; fminimum_magf128;
     fminimum_mag_numf64x; fminimum_mag_numf128;
+    # No SVID compatible error handling.
+    hypotf; hypot;
   }
 }

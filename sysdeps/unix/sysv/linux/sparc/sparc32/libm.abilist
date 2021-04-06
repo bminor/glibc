@@ -1152,6 +1152,8 @@ GLIBC_2.35 fminimumf64x F
 GLIBC_2.35 fminimuml F
 GLIBC_2.35 fsqrt F
 GLIBC_2.35 fsqrtl F
+GLIBC_2.35 hypot F
+GLIBC_2.35 hypotf F
 GLIBC_2.4 __clog10l F
 GLIBC_2.4 __finitel F
 GLIBC_2.4 __fpclassifyl F
