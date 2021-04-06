@@ -91,8 +91,8 @@ buffer_threadproc (void *argp)
 }
 
 
-int
-main (void)
+static int
+do_test (void)
 {
   int result = 0, err, real_stderr_fd, bufpipe[2];
   pthread_t t_thr, b_thr;
@@ -214,3 +214,5 @@ main (void)
     }
   return result;
 }
+
+#include <support/test-driver.c>
