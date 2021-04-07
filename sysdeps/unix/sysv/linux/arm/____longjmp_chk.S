@@ -72,8 +72,8 @@ longjmp_msg:
 	ldr	r3, [sp, #8];			\
 	add	r2, r2, r3;			\
 	sub	r2, r2, reg;			\
-	cmp	r2, r3;				\
-	bhi	.Lok2;				\
+	cmp	r3, r2;				\
+	bls	.Lok2;				\
 .Lfail:						\
 	add	sp, sp, #12;			\
 	cfi_adjust_cfa_offset (-12);		\
