@@ -33,6 +33,9 @@
    actual value varies based on the stack size.  */
 #define legacy_ARG_MAX 131072
 
+/* Newer kernels (4.13) limit the maximum command line arguments lengths to
+   6MiB.  */
+#define maximum_ARG_MAX 6291456
 
 static long int posix_sysconf (int name);
 
@@ -55,7 +58,10 @@ __sysconf (int name)
         struct rlimit rlimit;
         /* Use getrlimit to get the stack limit.  */
         if (__getrlimit (RLIMIT_STACK, &rlimit) == 0)
-	  return MAX (legacy_ARG_MAX, rlimit.rlim_cur / 4);
+	  {
+	    const long int limit = MAX (legacy_ARG_MAX, rlimit.rlim_cur / 4);
+	    return MIN (limit, maximum_ARG_MAX);
+	  }
 
         return legacy_ARG_MAX;
       }
