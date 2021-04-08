@@ -28,6 +28,30 @@
 
 ENTRY (syscall)
 	uxtw	x8, w0
+#ifdef __CHERI_PURE_CAPABILITY__
+	cbz	x9, L(skip_args)
+	gclen   x10, c9
+	ldr	c0, [c9]
+	cmp	x10, 16
+	bls	L(skip_args)
+	ldr	c1, [c9,16]
+	cmp	x10, 32
+	bls	L(skip_args)
+	ldr	c2, [c9,32]
+	cmp	x10, 48
+	bls	L(skip_args)
+	ldr	c3, [c9,48]
+	cmp	x10, 64
+	bls	L(skip_args)
+	ldr	c4, [c9,64]
+	cmp	x10, 80
+	bls	L(skip_args)
+	ldr	c5, [c9,80]
+	cmp	x10, 96
+	bls	L(skip_args)
+	ldr	c6, [c9,96]
+L(skip_args):
+#else
 	mov	x0, x1
 	mov	x1, x2
 	mov	x2, x3
@@ -35,6 +59,7 @@ ENTRY (syscall)
 	mov	x4, x5
 	mov	x5, x6
 	mov	x6, x7
+#endif
 	svc	0x0
 	cmn	x0, #4095
 	b.cs	1f

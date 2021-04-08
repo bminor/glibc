@@ -22,6 +22,11 @@
 ENTRY(__ioctl)
 	mov	x8, #__NR_ioctl
 	sxtw	x0, w0
+#ifdef __CHERI_PURE_CAPABILITY__
+	cbz	x9, L(skip_arg3)
+	ldr	c2, [c9]
+L(skip_arg3):
+#endif
 	svc	#0x0
 	cmn	x0, #4095
 	b.cs	.Lsyscall_error

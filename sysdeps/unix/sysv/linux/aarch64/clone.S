@@ -23,41 +23,82 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-/* int clone(int (*fn)(void *arg),            x0
-	     void *child_stack,               x1
-	     int flags,                       x2
-	     void *arg,                       x3
-	     pid_t *ptid,                     x4
-	     struct user_desc *tls,           x5
-             pid_t *ctid);                    x6
+#ifdef __CHERI_PURE_CAPABILITY__
+# define arg0	c0
+# define arg1	c1
+# define arg2	c2
+# define arg3	c3
+# define arg4	c4
+# define arg5	c5
+# define arg6	c6
+# define tmp0	c10
+# define tmp1	c11
+# define tmp2	c12
+#else
+# define arg0	x0
+# define arg1	x1
+# define arg2	x2
+# define arg3	x3
+# define arg4	x4
+# define arg5	x5
+# define arg6	x6
+# define tmp0	x10
+# define tmp1	x11
+# define tmp2	x12
+#endif
+
+/* int clone(int (*fn)(void *arg),            arg0
+	     void *child_stack,               arg1
+	     int flags,                       arg2
+	     void *arg,                       arg3
+	     pid_t *ptid,                     arg4
+	     struct user_desc *tls,           arg5
+             pid_t *ctid);                    arg6
  */
         .text
 ENTRY(__clone)
+#ifndef __CHERI_PURE_CAPABILITY__
 	PTR_ARG (0)
 	PTR_ARG (1)
 	PTR_ARG (3)
 	PTR_ARG (4)
 	PTR_ARG (5)
 	PTR_ARG (6)
+#else
+	cbz	x9, L(skip_args)
+	gclen   x10, c9
+	ldr	c4, [c9]
+	cmp	x10, 16
+	bls	L(skip_args)
+	ldr	c5, [c9,16]
+	cmp	x10, 32
+	bls	L(skip_args)
+	ldr	c6, [c9,32]
+L(skip_args):
+#endif
 	/* Save args for the child.  */
-	mov	x10, x0
-	mov	x11, x2
-	mov	x12, x3
+	mov	tmp0, arg0
+	mov	tmp1, arg2
+	mov	tmp2, arg3
 
 	/* Sanity check args.  */
 	mov	x0, #-EINVAL
 	cbz	x10, .Lsyscall_error
 	/* Align sp.  */
+#ifndef __CHERI_PURE_CAPABILITY__
 	and	x1, x1, -16
+#else
+	alignd	c1, c1, 4
+#endif
 	cbz	x1, .Lsyscall_error
 
 	/* Do the system call.  */
 	/* X0:flags, x1:newsp, x2:parenttidptr, x3:newtls, x4:childtid.  */
-	mov	x0, x2                  /* flags  */
+	mov	arg0, arg2                  /* flags  */
 	/* New sp is already in x1.  */
-	mov	x2, x4			/* ptid  */
-	mov	x3, x5			/* tls  */
-	mov	x4, x6			/* ctid  */
+	mov	arg2, arg4			/* ptid  */
+	mov	arg3, arg5			/* tls  */
+	mov	arg4, arg6			/* ctid  */
 	mov	x8, #SYS_ify(clone)
 	svc	0x0
 
@@ -75,8 +116,8 @@ thread_start:
 	mov	x29, 0
 
 	/* Pick the function arg and execute.  */
-	mov	x0, x12
-	blr	x10
+	mov	arg0, tmp2
+	blr	tmp0
 
 	/* We are done, pass the return value through x0.  */
 	mov	x8, #SYS_ify(exit)
