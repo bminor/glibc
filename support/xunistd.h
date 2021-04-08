@@ -61,6 +61,7 @@ void xsymlink (const char *target, const char *linkpath);
 void xchdir (const char *path);
 void xfchmod (int fd, mode_t mode);
 void xchmod (const char *pathname, mode_t mode);
+void xmkfifo (const char *pathname, mode_t mode);
 
 /* Equivalent of "mkdir -p".  */
 void xmkdirp (const char *, mode_t);
