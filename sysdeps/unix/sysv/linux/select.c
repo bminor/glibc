@@ -107,7 +107,7 @@ __select64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
   r = SYSCALL_CANCEL (pselect6, nfds, readfds, writefds, exceptfds, pts32,
 		      NULL);
 # endif
-  if (r >= 0 && timeout != NULL)
+  if (timeout != NULL)
     *timeout = valid_timespec_to_timeval64 (ts32);
 #endif
 
@@ -128,7 +128,7 @@ __select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
       ptv64 = &tv64;
     }
   int r = __select64 (nfds, readfds, writefds, exceptfds, ptv64);
-  if (r >= 0 && timeout != NULL)
+  if (timeout != NULL)
     /* The remanining timeout will be always less the input TIMEOUT.  */
     *timeout = valid_timeval64_to_timeval (tv64);
   return r;
