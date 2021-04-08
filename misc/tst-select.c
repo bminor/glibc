@@ -23,12 +23,19 @@
 #include <support/timespec.h>
 #include <support/xunistd.h>
 #include <support/xtime.h>
+#include <support/xsignal.h>
 
 struct child_args
 {
   int fds[2][2];
   struct timeval tmo;
 };
+
+static void
+alarm_handler (int signum)
+{
+  /* Do nothing.  */
+}
 
 static void
 do_test_child (void *clousure)
@@ -57,6 +64,22 @@ do_test_child (void *clousure)
   TEST_TIMESPEC_NOW_OR_AFTER (CLOCK_REALTIME, ts);
 
   xwrite (args->fds[1][1], "foo", 3);
+}
+
+static void
+do_test_child_alarm (void *clousure)
+{
+  struct sigaction act = { .sa_handler = alarm_handler };
+  xsigaction (SIGALRM, &act, NULL);
+  alarm (1);
+
+  struct timeval tv = { .tv_sec = 10, .tv_usec = 0 };
+  int r = select (0, NULL, NULL, NULL, &tv);
+  TEST_COMPARE (r, -1);
+  TEST_COMPARE (errno, EINTR);
+
+  if (support_select_modifies_timeout ())
+    TEST_VERIFY (tv.tv_sec < 10);
 }
 
 static int
@@ -97,6 +120,13 @@ do_test (void)
 
   xclose (args.fds[0][0]);
   xclose (args.fds[1][1]);
+
+  {
+    struct support_capture_subprocess result;
+    result = support_capture_subprocess (do_test_child_alarm, NULL);
+    support_capture_subprocess_check (&result, "tst-select-child", 0,
+				      sc_allow_none);
+  }
 
   {
     fd_set rfds;
