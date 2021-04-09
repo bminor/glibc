@@ -144,6 +144,10 @@ static __inline bool support_path_support_time64 (const char *path)
 /* Return true if stat supports nanoseconds resolution.  */
 extern bool support_stat_nanoseconds (const char *path);
 
+/* Return true if select modify the timeout to reflect the amount of time
+   no slept.  */
+extern bool support_select_modifies_timeout (void);
+
 __END_DECLS
 
 #endif /* SUPPORT_H */
