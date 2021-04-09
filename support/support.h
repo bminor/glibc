@@ -148,6 +148,10 @@ extern bool support_stat_nanoseconds (const char *path);
    no slept.  */
 extern bool support_select_modifies_timeout (void);
 
+/* Return true if select normalize the timeout input by taking in account
+   tv_usec larger than 1000000.  */
+extern bool support_select_normalizes_timeout (void);
+
 __END_DECLS
 
 #endif /* SUPPORT_H */
