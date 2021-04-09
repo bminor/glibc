@@ -115,6 +115,8 @@ tests-special += $(objpfx)tst-error1-mem.out \
   $(objpfx)tst-allocate_once-mem.out
 endif
 
+tests-container := tst-syslog
+
 CFLAGS-select.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tsearch.c += $(uses-callbacks)
 CFLAGS-lsearch.c += $(uses-callbacks)
