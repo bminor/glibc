@@ -93,6 +93,19 @@ support_subprogram (const char *file, char *const argv[])
 }
 
 int
+support_subprogram_wait (const char *file, char *const argv[])
+{
+  posix_spawn_file_actions_t fa;
+
+  posix_spawn_file_actions_init (&fa);
+  struct support_subprocess res = support_subprocess_init ();
+
+  res.pid = xposix_spawn (file, &fa, NULL, argv, environ);
+
+  return support_process_wait (&res);
+}
+
+int
 support_process_wait (struct support_subprocess *proc)
 {
   xclose (proc->stdout_pipe[0]);
