@@ -20,11 +20,14 @@
 #include <support/capture_subprocess.h>
 
 #include <errno.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <support/check.h>
 #include <support/xunistd.h>
 #include <support/xsocket.h>
 #include <support/xspawn.h>
+#include <support/support.h>
+#include <support/test-driver.h>
 
 static void
 transfer (const char *what, struct pollfd *pfd, struct xmemstream *stream)
@@ -100,6 +103,129 @@ support_capture_subprogram (const char *file, char *const argv[])
 
   support_capture_poll (&result, &proc);
   return result;
+}
+
+/* Copies the executable into a restricted directory, so that we can
+   safely make it SGID with the TARGET group ID.  Then runs the
+   executable.  */
+static int
+copy_and_spawn_sgid (char *child_id, gid_t gid)
+{
+  char *dirname = xasprintf ("%s/tst-tunables-setuid.%jd",
+			     test_dir, (intmax_t) getpid ());
+  char *execname = xasprintf ("%s/bin", dirname);
+  int infd = -1;
+  int outfd = -1;
+  int ret = 1, status = 1;
+
+  TEST_VERIFY (mkdir (dirname, 0700) == 0);
+  if (support_record_failure_is_failed ())
+    goto err;
+
+  infd = open ("/proc/self/exe", O_RDONLY);
+  if (infd < 0)
+    FAIL_UNSUPPORTED ("unsupported: Cannot read binary from procfs\n");
+
+  outfd = open (execname, O_WRONLY | O_CREAT | O_EXCL, 0700);
+  TEST_VERIFY (outfd >= 0);
+  if (support_record_failure_is_failed ())
+    goto err;
+
+  char buf[4096];
+  for (;;)
+    {
+      ssize_t rdcount = read (infd, buf, sizeof (buf));
+      TEST_VERIFY (rdcount >= 0);
+      if (support_record_failure_is_failed ())
+	goto err;
+      if (rdcount == 0)
+	break;
+      char *p = buf;
+      char *end = buf + rdcount;
+      while (p != end)
+	{
+	  ssize_t wrcount = write (outfd, buf, end - p);
+	  if (wrcount == 0)
+	    errno = ENOSPC;
+	  TEST_VERIFY (wrcount > 0);
+	  if (support_record_failure_is_failed ())
+	    goto err;
+	  p += wrcount;
+	}
+    }
+  TEST_VERIFY (fchown (outfd, getuid (), gid) == 0);
+  if (support_record_failure_is_failed ())
+    goto err;
+  TEST_VERIFY (fchmod (outfd, 02750) == 0);
+  if (support_record_failure_is_failed ())
+    goto err;
+  TEST_VERIFY (close (outfd) == 0);
+  if (support_record_failure_is_failed ())
+    goto err;
+  TEST_VERIFY (close (infd) == 0);
+  if (support_record_failure_is_failed ())
+    goto err;
+
+  /* We have the binary, now spawn the subprocess.  Avoid using
+     support_subprogram because we only want the program exit status, not the
+     contents.  */
+  ret = 0;
+
+  char * const args[] = {execname, child_id, NULL};
+
+  status = support_subprogram_wait (args[0], args);
+
+err:
+  if (outfd >= 0)
+    close (outfd);
+  if (infd >= 0)
+    close (infd);
+  if (execname != NULL)
+    {
+      unlink (execname);
+      free (execname);
+    }
+  if (dirname != NULL)
+    {
+      rmdir (dirname);
+      free (dirname);
+    }
+
+  if (ret != 0)
+    FAIL_EXIT1("Failed to make sgid executable for test\n");
+
+  return status;
+}
+
+int
+support_capture_subprogram_self_sgid (char *child_id)
+{
+  gid_t target = 0;
+  const int count = 64;
+  gid_t groups[count];
+
+  /* Get a GID which is not our current GID, but is present in the
+     supplementary group list.  */
+  int ret = getgroups (count, groups);
+  if (ret < 0)
+    FAIL_UNSUPPORTED("Could not get group list for user %jd\n",
+		     (intmax_t) getuid ());
+
+  gid_t current = getgid ();
+  for (int i = 0; i < ret; ++i)
+    {
+      if (groups[i] != current)
+	{
+	  target = groups[i];
+	  break;
+	}
+    }
+
+  if (target == 0)
+    FAIL_UNSUPPORTED("Could not find a suitable GID for user %jd\n",
+		     (intmax_t) getuid ());
+
+  return copy_and_spawn_sgid (child_id, target);
 }
 
 void
