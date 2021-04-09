@@ -306,7 +306,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
     beq \JUMPFALSE
     .endm
 
-#if IS_IN(rtld)
+#if !defined(USE_PPC_SCV) || IS_IN(rtld)
 # define DO_CALL(syscall) \
     li r0,syscall; \
     DO_CALL_SC
@@ -323,7 +323,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
     b 1f; \
 0:  DO_CALL_SC; \
 1:
-#endif /* IS_IN(rtld) */
+#endif /* !defined(USE_PPC_SCV) || IS_IN(rtld) */
 
 /* DO_CALL_SC and DO_CALL_SCV expect the syscall number to be in r0.  */
 #define DO_CALL_SC \
@@ -378,7 +378,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
     .endif
 #endif
 
-#if IS_IN(rtld)
+#if !defined(USE_PPC_SCV) || IS_IN(rtld)
 # define PSEUDO_RET \
     RET_SC; \
     TAIL_CALL_SYSCALL_ERROR
@@ -395,7 +395,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
     b 1f; \
 0:  RET_SC; \
 1:  TAIL_CALL_SYSCALL_ERROR
-#endif
+#endif /* !defined(USE_PPC_SCV) || IS_IN(rtld) */
 
 #define RET_SCV \
     li r9,-4095; \
@@ -417,7 +417,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
   ENTRY (name);						\
   DO_CALL (SYS_ify (syscall_name))
 
-#if IS_IN(rtld)
+#if !defined(USE_PPC_SCV) || IS_IN(rtld)
 # define PSEUDO_RET_NOERRNO \
     blr
 #else
@@ -425,7 +425,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
 # define PSEUDO_RET_NOERRNO \
     NVOLREG_RESTORE; \
     blr
-#endif /* IS_IN(rtld) */
+#endif /* !defined(USE_PPC_SCV) || IS_IN(rtld) */
 
 #define ret_NOERRNO PSEUDO_RET_NOERRNO
 
@@ -438,7 +438,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
   ENTRY (name);						\
   DO_CALL (SYS_ify (syscall_name))
 
-#if IS_IN(rtld)
+#if !defined(USE_PPC_SCV) || IS_IN(rtld)
 # define PSEUDO_RET_ERRVAL \
     blr
 #else
@@ -446,7 +446,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
 # define PSEUDO_RET_ERRVAL \
     NVOLREG_RESTORE; \
     blr
-#endif /* IS_IN(rtld) */
+#endif /* !defined(USE_PPC_SCV) || IS_IN(rtld) */
 
 #define ret_ERRVAL PSEUDO_RET_ERRVAL
 

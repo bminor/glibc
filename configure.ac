@@ -470,6 +470,14 @@ AC_ARG_ENABLE([cet],
 	      [enable_cet=$enableval],
 	      [enable_cet=$libc_cv_compiler_default_cet])
 
+AC_ARG_ENABLE([scv],
+	      AC_HELP_STRING([--disable-scv],
+			     [syscalls will not use scv instruction, even if the kernel supports it, powerpc only]),
+	      [use_scv=$enableval],
+	      [use_scv=yes])
+
+AS_IF([[test "$use_scv" != "no"]],[AC_DEFINE(USE_PPC_SCV)])
+
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.

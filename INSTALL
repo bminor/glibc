@@ -253,6 +253,10 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      (set glibc.malloc.tcache_count to zero), this option can be used to
      remove it from the build completely.
 
+'--disable-scv'
+     Disable using 'scv' instruction for syscalls.  All syscalls will
+     use 'sc' instead, even if the kernel supports 'scv'.  PowerPC only.
+
 '--build=BUILD-SYSTEM'
 '--host=HOST-SYSTEM'
      These options are for cross-compiling.  If you specify both options

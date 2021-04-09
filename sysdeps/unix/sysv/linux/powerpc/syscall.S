@@ -25,7 +25,7 @@ ENTRY (syscall)
 	mr   r6,r7
 	mr   r7,r8
 	mr   r8,r9
-#if !IS_IN(rtld) && (defined(__PPC64__) || defined(__powerpc64__))
+#if defined(USE_PPC_SCV) && !IS_IN(rtld) && (defined(__PPC64__) || defined(__powerpc64__))
 	CHECK_SCV_SUPPORT r9 0f
 	DO_CALL_SCV
 	RET_SCV

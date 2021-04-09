@@ -125,7 +125,7 @@
 
 /* When inside the dynamic loader, the thread pointer may not have been
    initialized yet, so don't check for scv support in that case.  */
-# if !IS_IN(rtld)
+# if defined(USE_PPC_SCV) && !IS_IN(rtld)
 #  undef TRY_SYSCALL_SCV
 #  define TRY_SYSCALL_SCV(nr)						\
   CHECK_THREAD_POINTER && THREAD_GET_HWCAP() & PPC_FEATURE2_SCV ?	\

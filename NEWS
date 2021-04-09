@@ -31,6 +31,9 @@ Major new features:
   __STDC_WANT_IEC_60559_BFP_EXT__, as specified in TS 18661-1, is
   defined, and when _GNU_SOURCE is defined.
 
+* On powerpc64*, glibc can now be compiled without scv support using the
+  --disable-scv configure option.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs

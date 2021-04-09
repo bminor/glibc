@@ -38,11 +38,13 @@ ENTRY (__clone)
 	beq-	cr0,L(badargs)
 
 	/* Save some regs in the "red zone".  */
+#ifdef USE_PPC_SCV
 	std	r28,-32(r1)
+	cfi_offset(r28,-32)
+#endif
 	std	r29,-24(r1)
 	std	r30,-16(r1)
 	std	r31,-8(r1)
-	cfi_offset(r28,-32)
 	cfi_offset(r29,-24)
 	cfi_offset(r30,-16)
 	cfi_offset(r31,-8)
@@ -71,6 +73,7 @@ ENTRY (__clone)
 
 	/* Do the call.  */
 	li 	r0,SYS_ify(clone)
+#ifdef USE_PPC_SCV
 	CHECK_SCV_SUPPORT r28 0f
 	/* This is equivalent to DO_CALL_SCV, but we cannot use the macro here
 	because it uses CFI directives and we just called cfi_endproc.  */
@@ -87,6 +90,7 @@ ENTRY (__clone)
 	/* When using scv, error is indicated by negative r3.  */
 	cmpdi	cr1,r3,0
 	b 1f
+#endif /* USE_PPC_SCV */
 0:      DO_CALL_SC
 
 	/* Check for child process.  */
@@ -119,22 +123,26 @@ L(parent):
 	cmpdi cr1,r28,0
 
 	/* Parent.  Restore registers & return.  */
+#ifdef USE_PPC_SCV
 	cfi_offset(r28,-32)
+	ld	r28,-32(r1)
+	cfi_restore(r28)
+#endif
 	cfi_offset(r29,-24)
 	cfi_offset(r30,-16)
 	cfi_offset(r31,-8)
-	ld	r28,-32(r1)
 	ld	r29,-24(r1)
 	ld	r30,-16(r1)
 	ld	r31,-8(r1)
-	cfi_restore(r28)
 	cfi_restore(r29)
 	cfi_restore(r30)
 	cfi_restore(r31)
 
+#ifdef USE_PPC_SCV
 	beq cr1,0f
 	RET_SCV
 	b 1f
+#endif
 0:	RET_SC
 1:	TAIL_CALL_SYSCALL_ERROR
 
