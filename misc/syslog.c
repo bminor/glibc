@@ -74,13 +74,6 @@ __libc_lock_define_initialized (static, syslog_lock)
 
 static void openlog_internal(const char *, int, int);
 static void closelog_internal(void);
-#ifndef NO_SIGPIPE
-static void sigpipe_handler (int);
-#endif
-
-#ifndef send_flags
-# define send_flags 0
-#endif
 
 struct cleanup_arg
 {
@@ -95,15 +88,8 @@ cancel_handler (void *ptr)
   struct cleanup_arg *clarg = (struct cleanup_arg *) ptr;
 
   if (clarg != NULL)
-    {
-#ifndef NO_SIGPIPE
-      if (clarg->oldaction != NULL)
-	__sigaction (SIGPIPE, clarg->oldaction, NULL);
-#endif
-
-      /* Free the memstream buffer,  */
-      free (clarg->buf);
-    }
+    /* Free the memstream buffer,  */
+    free (clarg->buf);
 
   /* Free the lock.  */
   __libc_lock_unlock (syslog_lock);
@@ -160,10 +146,6 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 	char *buf = 0;
 	size_t bufsize = 0;
 	size_t msgoff;
-#ifndef NO_SIGPIPE
- 	struct sigaction action, oldaction;
- 	int sigpipe;
-#endif
 	int saved_errno = errno;
 	char failbuf[3 * sizeof (pid_t) + sizeof "out of memory []"];
 
@@ -273,16 +255,6 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 		(void)__writev(STDERR_FILENO, iov, v - iov + 1);
 	}
 
-#ifndef NO_SIGPIPE
-	/* Prepare for a broken connection.  */
- 	memset (&action, 0, sizeof (action));
- 	action.sa_handler = sigpipe_handler;
- 	sigemptyset (&action.sa_mask);
- 	sigpipe = __sigaction (SIGPIPE, &action, &oldaction);
-	if (sigpipe == 0)
-	  clarg.oldaction = &oldaction;
-#endif
-
 	/* Get connected, output the message to the local logger. */
 	if (!connected)
 		openlog_internal(NULL, LogStat | LOG_NDELAY, LogFacility);
@@ -292,7 +264,7 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 	if (LogType == SOCK_STREAM)
 	  ++bufsize;
 
-	if (!connected || __send(LogFile, buf, bufsize, send_flags) < 0)
+	if (!connected || __send(LogFile, buf, bufsize, MSG_NOSIGNAL) < 0)
 	  {
 	    if (connected)
 	      {
@@ -302,7 +274,7 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 		openlog_internal(NULL, LogStat | LOG_NDELAY, LogFacility);
 	      }
 
-	    if (!connected || __send(LogFile, buf, bufsize, send_flags) < 0)
+	    if (!connected || __send(LogFile, buf, bufsize, MSG_NOSIGNAL) < 0)
 	      {
 		closelog_internal ();	/* attempt re-open next time */
 		/*
@@ -319,11 +291,6 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 		  }
 	      }
 	  }
-
-#ifndef NO_SIGPIPE
-	if (sigpipe == 0)
-		__sigaction (SIGPIPE, &oldaction, (struct sigaction *) NULL);
-#endif
 
  out:
 	/* End of critical section.  */
@@ -395,14 +362,6 @@ openlog (const char *ident, int logstat, int logfac)
 
   __libc_cleanup_pop (1);
 }
-
-#ifndef NO_SIGPIPE
-static void
-sigpipe_handler (int signo)
-{
-  closelog_internal ();
-}
-#endif
 
 static void
 closelog_internal (void)
