@@ -62,7 +62,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 
 static int	LogType = SOCK_DGRAM;	/* type of socket connection */
 static int	LogFile = -1;		/* fd for log */
-static int	connected;		/* have done connect */
+static bool	connected;		/* have done connect */
 static int	LogStat;		/* status bits, set by openlog() */
 static const char *LogTag;		/* string to tag the entry with */
 static int	LogFacility = LOG_USER;	/* default facility code */
@@ -378,7 +378,7 @@ openlog_internal(const char *ident, int logstat, int logfac)
 					continue;
 				}
 			} else
-				connected = 1;
+				connected = true;
 		}
 		break;
 	}
@@ -412,7 +412,7 @@ closelog_internal (void)
 
   __close (LogFile);
   LogFile = -1;
-  connected = 0;
+  connected = false;
 }
 
 void
