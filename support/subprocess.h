@@ -38,6 +38,11 @@ struct support_subprocess support_subprocess
 struct support_subprocess support_subprogram
   (const char *file, char *const argv[]);
 
+/* Invoke program FILE with ARGV arguments by using posix_spawn and wait for it
+   to complete.  Return program exit status.  */
+int support_subprogram_wait
+  (const char *file, char *const argv[]);
+
 /* Wait for the subprocess indicated by PROC::PID.  Return the status
    indicate by waitpid call.  */
 int support_process_wait (struct support_subprocess *proc);
