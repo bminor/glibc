@@ -2206,6 +2206,7 @@ GLIBC_2.33 stat F
 GLIBC_2.33 stat64 F
 GLIBC_2.34 __isnanf128 F
 GLIBC_2.34 __libc_start_main F
+GLIBC_2.34 _hurd_libc_proc_init F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F
 GLIBC_2.4 __fgets_unlocked_chk F

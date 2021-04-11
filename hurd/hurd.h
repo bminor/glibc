@@ -275,6 +275,9 @@ extern void _hurd_init (int flags, char **argv,
 			mach_port_t *portarray, size_t portarraysize,
 			int *intarray, size_t intarraysize);
 
+/* Register the process to the proc server.  */
+extern void _hurd_libc_proc_init (char **argv);
+
 /* Do startup handshaking with the proc server, and initialize library data
    structures that require proc server interaction.  This includes
    initializing signals; see _hurdsig_init in <hurd/signal.h>.  */

@@ -138,6 +138,11 @@ libc {
     _hurd_port_move;
   }
 
+  GLIBC_2.34 {
+    # "quasi-internal" functions
+    _hurd_libc_proc_init;
+  }
+
   HURD_CTHREADS_0.3 {
     # weak refs to libthreads functions that libc calls iff libthreads in use
     __cthread_fork; __pthread_create; __cthread_detach; __pthread_detach;
