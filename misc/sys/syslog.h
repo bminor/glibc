@@ -62,7 +62,7 @@
 #define	LOG_PRI(p)	((p) & LOG_PRIMASK)
 #define	LOG_MAKEPRI(fac, pri)	((fac) | (pri))
 
-#ifdef SYSLOG_NAMES
+#if defined SYSLOG_NAMES && defined __USE_MISC
 #define	INTERNAL_NOPRI	0x10	/* the "no priority" priority */
 				/* mark "facility" */
 #define	INTERNAL_MARK	LOG_MAKEPRI(LOG_NFACILITIES << 3, 0)
@@ -118,7 +118,7 @@ CODE prioritynames[] =
 				/* facility of pri */
 #define	LOG_FAC(p)	(((p) & LOG_FACMASK) >> 3)
 
-#ifdef SYSLOG_NAMES
+#if defined SYSLOG_NAMES && defined __USE_MISC
 CODE facilitynames[] =
   {
     { "auth", LOG_AUTH },
