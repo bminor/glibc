@@ -302,8 +302,12 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 		free (buf);
 }
 
-static struct sockaddr_un SyslogAddr;	/* AF_UNIX address of local logger */
-
+/* AF_UNIX address of local logger  */
+static const struct sockaddr_un SyslogAddr =
+  {
+    .sun_family = AF_UNIX,
+    .sun_path = _PATH_LOG
+  };
 
 static void
 openlog_internal(const char *ident, int logstat, int logfac)
@@ -317,9 +321,6 @@ openlog_internal(const char *ident, int logstat, int logfac)
 	int retry = 0;
 	while (retry < 2) {
 		if (LogFile == -1) {
-			SyslogAddr.sun_family = AF_UNIX;
-			(void)strncpy(SyslogAddr.sun_path, _PATH_LOG,
-				      sizeof(SyslogAddr.sun_path));
 			if (LogStat & LOG_NDELAY) {
 			  LogFile = __socket(AF_UNIX, LogType | SOCK_CLOEXEC, 0);
 			  if (LogFile == -1)
