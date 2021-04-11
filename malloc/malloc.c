@@ -346,10 +346,13 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 #define REVEAL_PTR(ptr)  PROTECT_PTR (&ptr, ptr)
 
 /*
-  REALLOC_ZERO_BYTES_FREES should be set if a call to
-  realloc with zero bytes should be the same as a call to free.
-  This is required by the C standard. Otherwise, since this malloc
-  returns a unique pointer for malloc(0), so does realloc(p, 0).
+  REALLOC_ZERO_BYTES_FREES controls the behavior of realloc (p, 0)
+  when p is nonnull.  If nonzero, realloc (p, 0) should free p and
+  return NULL.  Otherwise, realloc (p, 0) should do the equivalent
+  of freeing p and returning what malloc (0) would return.
+
+  ISO C17 says the behavior is implementation-defined here; glibc
+  follows historical practice and defines it to be nonzero.
 */
 
 #ifndef REALLOC_ZERO_BYTES_FREES
