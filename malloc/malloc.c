@@ -346,13 +346,14 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
 #define REVEAL_PTR(ptr)  PROTECT_PTR (&ptr, ptr)
 
 /*
-  REALLOC_ZERO_BYTES_FREES controls the behavior of realloc (p, 0)
-  when p is nonnull.  If nonzero, realloc (p, 0) should free p and
-  return NULL.  Otherwise, realloc (p, 0) should do the equivalent
-  of freeing p and returning what malloc (0) would return.
+  The REALLOC_ZERO_BYTES_FREES macro controls the behavior of realloc (p, 0)
+  when p is nonnull.  If the macro is nonzero, the realloc call returns NULL;
+  otherwise, the call returns what malloc (0) would.  In either case,
+  p is freed.  Glibc uses a nonzero REALLOC_ZERO_BYTES_FREES, which
+  implements common historical practice.
 
-  ISO C17 says the behavior is implementation-defined here; glibc
-  follows historical practice and defines it to be nonzero.
+  ISO C17 says the realloc call has implementation-defined behavior,
+  and it might not even free p.
 */
 
 #ifndef REALLOC_ZERO_BYTES_FREES
