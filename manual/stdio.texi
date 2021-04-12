@@ -2428,31 +2428,29 @@ string.  Here is an example of doing this:
 char *
 make_message (char *name, char *value)
 @{
-  /* @r{Guess we need no more than 100 chars of space.} */
-  int size = 100;
-  char *buffer = (char *) xmalloc (size);
-  int nchars;
+  /* @r{Guess we need no more than 100 bytes of space.} */
+  size_t size = 100;
+  char *buffer = xmalloc (size);
 @end group
 @group
-  if (buffer == NULL)
-    return NULL;
-
  /* @r{Try to print in the allocated space.} */
-  nchars = snprintf (buffer, size, "value of %s is %s",
-		     name, value);
+  int buflen = snprintf (buffer, size, "value of %s is %s",
+		         name, value);
+  if (! (0 <= buflen && buflen < SIZE_MAX))
+    fatal ("integer overflow");
 @end group
 @group
-  if (nchars >= size)
+  if (buflen >= size)
     @{
       /* @r{Reallocate buffer now that we know
 	 how much space is needed.} */
-      size = nchars + 1;
-      buffer = (char *) xrealloc (buffer, size);
+      size = buflen;
+      size++;
+      buffer = xrealloc (buffer, size);
 
-      if (buffer != NULL)
-	/* @r{Try again.} */
-	snprintf (buffer, size, "value of %s is %s",
-		  name, value);
+      /* @r{Try again.} */
+      snprintf (buffer, size, "value of %s is %s",
+		name, value);
     @}
   /* @r{The last call worked, return the string.} */
   return buffer;

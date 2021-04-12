@@ -1469,7 +1469,7 @@ mbstowcs_alloc (const char *string)
   size = mbstowcs (buf, string, size);
   if (size == (size_t) -1)
     return NULL;
-  buf = xrealloc (buf, (size + 1) * sizeof (wchar_t));
+  buf = xreallocarray (buf, size + 1, sizeof *buf);
   return buf;
 @}
 @end smallexample

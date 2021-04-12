@@ -744,19 +744,17 @@ concat (const char *str, @dots{})
 @{
   va_list ap, ap2;
   size_t total = 1;
-  const char *s;
-  char *result;
 
   va_start (ap, str);
   va_copy (ap2, ap);
 
   /* @r{Determine how much space we need.}  */
-  for (s = str; s != NULL; s = va_arg (ap, const char *))
+  for (const char *s = str; s != NULL; s = va_arg (ap, const char *))
     total += strlen (s);
 
   va_end (ap);
 
-  result = (char *) malloc (total);
+  char *result = malloc (total);
   if (result != NULL)
     @{
       result[0] = '\0';
@@ -786,45 +784,44 @@ efficiently:
 char *
 concat (const char *str, @dots{})
 @{
-  va_list ap;
   size_t allocated = 100;
-  char *result = (char *) malloc (allocated);
+  char *result = malloc (allocated);
 
   if (result != NULL)
     @{
+      va_list ap;
+      size_t resultlen = 0;
       char *newp;
-      char *wp;
-      const char *s;
 
       va_start (ap, str);
 
-      wp = result;
-      for (s = str; s != NULL; s = va_arg (ap, const char *))
+      for (const char *s = str; s != NULL; s = va_arg (ap, const char *))
         @{
           size_t len = strlen (s);
 
           /* @r{Resize the allocated memory if necessary.}  */
-          if (wp + len + 1 > result + allocated)
+          if (resultlen + len + 1 > allocated)
             @{
-              allocated = (allocated + len) * 2;
-              newp = (char *) realloc (result, allocated);
+              allocated += len;
+              newp = reallocarray (result, allocated, 2);
+              allocated *= 2;
               if (newp == NULL)
                 @{
                   free (result);
                   return NULL;
                 @}
-              wp = newp + (wp - result);
               result = newp;
             @}
 
-          wp = mempcpy (wp, s, len);
+          memcpy (result + resultlen, s, len);
+          resultlen += len;
         @}
 
       /* @r{Terminate the result string.}  */
-      *wp++ = '\0';
+      result[resultlen++] = '\0';
 
       /* @r{Resize memory to the optimal size.}  */
-      newp = realloc (result, wp - result);
+      newp = realloc (result, resultlen);
       if (newp != NULL)
         result = newp;
 
@@ -1619,8 +1616,8 @@ sort_strings_fast (char **array, int nstrings)
         @{
           /* @r{Allocate the needed space. +1 for terminating}
              @r{@code{'\0'} byte.}  */
-          transformed = (char *) xrealloc (transformed,
-                                           transformed_length + 1);
+          transformed = xrealloc (transformed,
+                                  transformed_length + 1);
 
           /* @r{The return value is not interesting because we know}
              @r{how long the transformed string is.}  */
@@ -1663,9 +1660,9 @@ sort_strings_fast (wchar_t **array, int nstrings)
         @{
           /* @r{Allocate the needed space. +1 for terminating}
              @r{@code{L'\0'} wide character.}  */
-          transformed = (wchar_t *) xrealloc (transformed,
-                                              (transformed_length + 1)
-                                              * sizeof (wchar_t));
+          transformed = xreallocarray (transformed,
+                                       transformed_length + 1,
+                                       sizeof *transformed);
 
           /* @r{The return value is not interesting because we know}
              @r{how long the transformed string is.}  */

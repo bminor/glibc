@@ -735,7 +735,7 @@ the functions @code{alphasort} and @code{versionsort} below.
 
 The return value of the function is the number of entries placed in
 *@var{namelist}.  If it is @code{-1} an error occurred (either the
-directory could not be opened for reading or the malloc call failed) and
+directory could not be opened for reading or memory allocation failed) and
 the global variable @code{errno} contains more information on the error.
 @end deftypefun
 
@@ -1378,13 +1378,14 @@ call @code{readlink} again.  Here is an example:
 char *
 readlink_malloc (const char *filename)
 @{
-  int size = 100;
+  size_t size = 50;
   char *buffer = NULL;
 
   while (1)
     @{
-      buffer = (char *) xrealloc (buffer, size);
-      int nchars = readlink (filename, buffer, size);
+      buffer = xreallocarray (buffer, size, 2);
+      size *= 2;
+      ssize_t nchars = readlink (filename, buffer, size);
       if (nchars < 0)
         @{
           free (buffer);
@@ -1392,7 +1393,6 @@ readlink_malloc (const char *filename)
         @}
       if (nchars < size)
         return buffer;
-      size *= 2;
     @}
 @}
 @end smallexample

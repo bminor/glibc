@@ -1539,8 +1539,8 @@ gethostname (char *host)
                                  &hp, &herr)) == ERANGE)
     @{
       /* Enlarge the buffer.  */
+      tmphstbuf = reallocarray (tmphstbuf, hstbuflen, 2);
       hstbuflen *= 2;
-      tmphstbuf = realloc (tmphstbuf, hstbuflen);
     @}
 
   free (tmphstbuf);

@@ -254,8 +254,7 @@ address of the space.  Then you can use the operators @samp{*} and
 
 @smallexample
 @{
-  struct foobar *ptr
-     = (struct foobar *) malloc (sizeof (struct foobar));
+  struct foobar *ptr = malloc (sizeof *ptr);
   ptr->name = x;
   ptr->next = current_foobar;
   current_foobar = ptr;
@@ -268,7 +267,8 @@ address of the space.  Then you can use the operators @samp{*} and
 
 The @code{malloc} implementation in @theglibc{} is derived from ptmalloc
 (pthreads malloc), which in turn is derived from dlmalloc (Doug Lea malloc).
-This malloc may allocate memory in two different ways depending on their size
+This @code{malloc} may allocate memory
+in two different ways depending on their size
 and certain parameters that may be controlled by users. The most common way is
 to allocate portions of memory (called chunks) from a large contiguous area of
 memory and manage these areas to optimize their use and reduce wastage in the
@@ -583,29 +583,27 @@ this function is in @file{stdlib.h}.
 @c   chunk_non_main_arena ok
 @c   heap_for_ptr ok
 This function returns a pointer to a newly allocated block @var{size}
-bytes long, or a null pointer if the block could not be allocated.
+bytes long, or a null pointer (setting @code{errno})
+if the block could not be allocated.
 @end deftypefun
 
 The contents of the block are undefined; you must initialize it yourself
 (or use @code{calloc} instead; @pxref{Allocating Cleared Space}).
-Normally you would cast the value as a pointer to the kind of object
+Normally you would convert the value to a pointer to the kind of object
 that you want to store in the block.  Here we show an example of doing
 so, and of initializing the space with zeros using the library function
 @code{memset} (@pxref{Copying Strings and Arrays}):
 
 @smallexample
-struct foo *ptr;
-@dots{}
-ptr = (struct foo *) malloc (sizeof (struct foo));
+struct foo *ptr = malloc (sizeof *ptr);
 if (ptr == 0) abort ();
 memset (ptr, 0, sizeof (struct foo));
 @end smallexample
 
 You can store the result of @code{malloc} into any pointer variable
 without a cast, because @w{ISO C} automatically converts the type
-@code{void *} to another type of pointer when necessary.  But the cast
-is necessary in contexts other than assignment operators or if you might
-want your code to run in traditional C.
+@code{void *} to another type of pointer when necessary.  However, a cast
+is necessary if the type is needed but not specified by context.
 
 Remember that when allocating space for a string, the argument to
 @code{malloc} must be one plus the length of the string.  This is
@@ -613,9 +611,7 @@ because a string is terminated with a null character that doesn't count
 in the ``length'' of the string but does need space.  For example:
 
 @smallexample
-char *ptr;
-@dots{}
-ptr = (char *) malloc (length + 1);
+char *ptr = malloc (length + 1);
 @end smallexample
 
 @noindent
@@ -630,6 +626,7 @@ useful to write a subroutine that calls @code{malloc} and reports an
 error if the value is a null pointer, returning only if the value is
 nonzero.  This function is conventionally called @code{xmalloc}.  Here
 it is:
+@cindex @code{xmalloc} function
 
 @smallexample
 void *
@@ -651,9 +648,9 @@ a newly allocated null-terminated string:
 char *
 savestring (const char *ptr, size_t len)
 @{
-  char *value = (char *) xmalloc (len + 1);
+  char *value = xmalloc (len + 1);
   value[len] = '\0';
-  return (char *) memcpy (value, ptr, len);
+  return memcpy (value, ptr, len);
 @}
 @end group
 @end smallexample
@@ -673,6 +670,27 @@ you asked for it to be, you are liable to destroy the data that
 contents of another block.  If you have already allocated a block and
 discover you want it to be bigger, use @code{realloc} (@pxref{Changing
 Block Size}).
+
+@strong{Portability Notes:}
+
+@itemize @bullet
+@item
+In @theglibc{}, a successful @code{malloc (0)}
+returns a non-null pointer to a newly allocated size-zero block;
+other implementations may return @code{NULL} instead.
+POSIX and the ISO C standard allow both behaviors.
+
+@item
+In @theglibc{}, a failed @code{malloc} call sets @code{errno},
+but ISO C does not require this and non-POSIX implementations
+need not set @code{errno} when failing.
+
+@item
+In @theglibc{}, @code{malloc} always fails when @var{size} exceeds
+@code{PTRDIFF_MAX}, to avoid problems with programs that subtract
+pointers or use signed indexes.  Other implementations may succeed in
+this case, leading to undefined behavior later.
+@end itemize
 
 @node Freeing after Malloc
 @subsubsection Freeing Memory Allocated with @code{malloc}
@@ -817,10 +835,12 @@ block.  If the block needs to be moved, @code{realloc} copies the old
 contents.
 
 If you pass a null pointer for @var{ptr}, @code{realloc} behaves just
-like @samp{malloc (@var{newsize})}.  This can be convenient, but beware
-that older implementations (before @w{ISO C}) may not support this
-behavior, and will probably crash when @code{realloc} is passed a null
-pointer.
+like @samp{malloc (@var{newsize})}.
+Otherwise, if @var{newsize} is zero
+@code{realloc} frees the block and returns @code{NULL}.
+Otherwise, if @code{realloc} cannot reallocate the requested size
+it returns @code{NULL} and sets @code{errno}; the original block
+is left undisturbed.
 @end deftypefun
 
 @deftypefun {void *} reallocarray (void *@var{ptr}, size_t @var{nmemb}, size_t @var{size})
@@ -850,18 +870,26 @@ relocated.
 In most cases it makes no difference what happens to the original block
 when @code{realloc} fails, because the application program cannot continue
 when it is out of memory, and the only thing to do is to give a fatal error
-message.  Often it is convenient to write and use a subroutine,
-conventionally called @code{xrealloc}, that takes care of the error message
+message.  Often it is convenient to write and use subroutines,
+conventionally called @code{xrealloc} and @code{xreallocarray},
+that take care of the error message
 as @code{xmalloc} does for @code{malloc}:
+@cindex @code{xrealloc} and @code{xreallocarray} functions
 
 @smallexample
 void *
-xrealloc (void *ptr, size_t size)
+xreallocarray (void *ptr, size_t nmemb, size_t size)
 @{
-  void *value = realloc (ptr, size);
+  void *value = reallocarray (ptr, nmemb, size);
   if (value == 0)
     fatal ("Virtual memory exhausted");
   return value;
+@}
+
+void *
+xrealloc (void *ptr, size_t size)
+@{
+  return xreallocarray (ptr, 1, size);
 @}
 @end smallexample
 
@@ -873,9 +901,28 @@ space when only a little is needed.
 In several allocation implementations, making a block smaller sometimes
 necessitates copying it, so it can fail if no other space is available.
 
-If the new size you specify is the same as the old size, @code{realloc} and
+@strong{Portability Notes:}
+
+@itemize @bullet
+@item
+Portable programs should not attempt to reallocate blocks to be size zero.
+On other implementations if @var{ptr} is non-null, @code{realloc (ptr, 0)}
+might free the block and return a non-null pointer to a size-zero
+object, or it might fail and return @code{NULL} without freeing the block.
+The ISO C17 standard allows these variations.
+
+@item
+In @theglibc{}, reallocation fails if the resulting block
+would exceed @code{PTRDIFF_MAX} in size, to avoid problems with programs
+that subtract pointers or use signed indexes.  Other implementations may
+succeed, leading to undefined behavior later.
+
+@item
+In @theglibc{}, if the new size is the same as the old, @code{realloc} and
 @code{reallocarray} are guaranteed to change nothing and return the same
-address that you gave.
+address that you gave.  However, POSIX and ISO C allow the functions
+to relocate the object or fail in this situation.
+@end itemize
 
 @node Allocating Cleared Space
 @subsubsection Allocating Cleared Space
@@ -916,18 +963,20 @@ You could define @code{calloc} as follows:
 void *
 calloc (size_t count, size_t eltsize)
 @{
-  size_t size = count * eltsize;
-  void *value = malloc (size);
+  void *value = reallocarray (0, count, eltsize);
   if (value != 0)
-    memset (value, 0, size);
+    memset (value, 0, count * eltsize);
   return value;
 @}
 @end smallexample
 
 But in general, it is not guaranteed that @code{calloc} calls
-@code{malloc} internally.  Therefore, if an application provides its own
-@code{malloc}/@code{realloc}/@code{free} outside the C library, it
-should always define @code{calloc}, too.
+@code{reallocarray} and @code{memset} internally.  For example, if the
+@code{calloc} implementation knows for other reasons that the new
+memory block is zero, it need not zero out the block again with
+@code{memset}.  Also, if an application provides its own
+@code{reallocarray} outside the C library, @code{calloc} might not use
+that redefinition.  @xref{Replacing malloc}.
 
 @node Aligned Memory Blocks
 @subsubsection Allocating Aligned Memory Blocks
@@ -1421,15 +1470,15 @@ should make sure to restore all the hooks to their previous value.  When
 coming back from the recursive call, all the hooks should be resaved
 since a hook might modify itself.
 
-An issue to look out for is the time at which the malloc hook functions
-can be safely installed.  If the hook functions call the malloc-related
-functions recursively, it is necessary that malloc has already properly
+An issue to look out for is the time at which the hook functions
+can be safely installed.  If the hook functions call the @code{malloc}-related
+functions recursively, it is necessary that @code{malloc} has already properly
 initialized itself at the time when @code{__malloc_hook} etc. is
 assigned to.  On the other hand, if the hook functions provide a
-complete malloc implementation of their own, it is vital that the hooks
+complete @code{malloc} implementation of their own, it is vital that the hooks
 are assigned to @emph{before} the very first @code{malloc} call has
 completed, because otherwise a chunk obtained from the ordinary,
-un-hooked malloc may later be handed to @code{__free_hook}, for example.
+un-hooked @code{malloc} may later be handed to @code{__free_hook}, for example.
 
 Here is an example showing how to use @code{__malloc_hook} and
 @code{__free_hook} properly.  It installs a function that prints out
@@ -2867,7 +2916,7 @@ Here is how you would get the same results with @code{malloc} and
 int
 open2 (char *str1, char *str2, int flags, int mode)
 @{
-  char *name = (char *) malloc (strlen (str1) + strlen (str2) + 1);
+  char *name = malloc (strlen (str1) + strlen (str2) + 1);
   int desc;
   if (name == 0)
     fatal ("virtual memory exceeded");

@@ -578,7 +578,7 @@ supplementary_groups (char *user)
 
   if (getgrouplist (pw->pw_name, pw->pw_gid, groups, &ngroups) < 0)
     @{
-      groups = xrealloc (ngroups * sizeof (gid_t));
+      groups = xreallocarray (ngroups, sizeof *groups);
       getgrouplist (pw->pw_name, pw->pw_gid, groups, &ngroups);
     @}
   return groups;
