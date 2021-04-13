@@ -35,7 +35,7 @@
 
 /* Newer kernels (4.13) limit the maximum command line arguments lengths to
    6MiB.  */
-#define maximum_ARG_MAX 6291456
+#define maximum_ARG_MAX (6 * 1024 * 1024)
 
 static long int posix_sysconf (int name);
 
