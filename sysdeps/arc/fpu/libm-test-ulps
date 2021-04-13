@@ -46,7 +46,7 @@ double: 1
 float: 1
 
 Function: "asin_upward":
-double: 1
+double: 2
 float: 1
 
 Function: "asinh":
@@ -861,35 +861,35 @@ float: 1
 
 Function: "j0":
 double: 4
-float: 6
+float: 9
 
 Function: "j0_downward":
-double: 2
-float: 4
+double: 6
+float: 8
 
 Function: "j0_towardzero":
 double: 4
-float: 5
+float: 9
 
 Function: "j0_upward":
-double: 3
-float: 5
+double: 4
+float: 9
 
 Function: "j1":
 double: 5
 float: 9
 
 Function: "j1_downward":
-double: 4
-float: 6
+double: 9
+float: 8
 
 Function: "j1_towardzero":
-double: 4
-float: 3
+double: 5
+float: 8
 
 Function: "j1_upward":
 double: 5
-float: 5
+float: 7
 
 Function: "jn":
 double: 9
@@ -1093,35 +1093,35 @@ float: 9
 
 Function: "y0":
 double: 3
-float: 6
+float: 8
 
 Function: "y0_downward":
 double: 3
-float: 4
+float: 8
 
 Function: "y0_towardzero":
 double: 3
-float: 4
+float: 8
 
 Function: "y0_upward":
 double: 4
-float: 5
+float: 8
 
 Function: "y1":
 double: 7
-float: 6
+float: 9
 
 Function: "y1_downward":
 double: 6
-float: 6
+float: 8
 
 Function: "y1_towardzero":
 double: 7
-float: 7
+float: 9
 
 Function: "y1_upward":
 double: 7
-float: 7
+float: 9
 
 Function: "yn":
 double: 9
