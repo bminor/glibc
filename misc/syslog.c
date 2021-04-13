@@ -285,7 +285,7 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 
 	/* Get connected, output the message to the local logger. */
 	if (!connected)
-		openlog_internal(LogTag, LogStat | LOG_NDELAY, 0);
+		openlog_internal(NULL, LogStat | LOG_NDELAY, LogFacility);
 
 	/* If we have a SOCK_STREAM connection, also send ASCII NUL as
 	   a record terminator.  */
@@ -299,7 +299,7 @@ __vsyslog_internal(int pri, const char *fmt, va_list ap,
 		/* Try to reopen the syslog connection.  Maybe it went
 		   down.  */
 		closelog_internal ();
-		openlog_internal(LogTag, LogStat | LOG_NDELAY, 0);
+		openlog_internal(NULL, LogStat | LOG_NDELAY, LogFacility);
 	      }
 
 	    if (!connected || __send(LogFile, buf, bufsize, send_flags) < 0)
@@ -343,7 +343,7 @@ openlog_internal(const char *ident, int logstat, int logfac)
 	if (ident != NULL)
 		LogTag = ident;
 	LogStat = logstat;
-	if (logfac != 0 && (logfac &~ LOG_FACMASK) == 0)
+	if ((logfac &~ LOG_FACMASK) == 0)
 		LogFacility = logfac;
 
 	int retry = 0;
