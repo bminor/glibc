@@ -1578,13 +1578,13 @@ Function: "tgamma_downward":
 double: 6
 float: 7
 float128: 5
-ldouble: 5
+ldouble: 6
 
 Function: "tgamma_towardzero":
 double: 6
 float: 7
 float128: 5
-ldouble: 5
+ldouble: 6
 
 Function: "tgamma_upward":
 double: 6
