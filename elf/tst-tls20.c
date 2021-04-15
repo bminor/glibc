@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <support/check.h>
+#include <support/support.h>
 #include <support/xdlfcn.h>
 #include <support/xthread.h>
 
