@@ -1062,7 +1062,7 @@ double: 1
 ldouble: 1
 
 Function: "j0":
-double: 3
+double: 4
 float: 9
 ldouble: 2
 
@@ -1087,12 +1087,12 @@ float: 9
 ldouble: 4
 
 Function: "j1_downward":
-double: 3
+double: 9
 float: 8
 ldouble: 6
 
 Function: "j1_towardzero":
-double: 4
+double: 5
 float: 8
 ldouble: 9
 
