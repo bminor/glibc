@@ -171,6 +171,9 @@
 /* Define if gcc supports attribute ifunc.  */
 #undef HAVE_GCC_IFUNC
 
+/* Define if CC supports attribute retain.  */
+#undef HAVE_GNU_RETAIN
+
 #define WANT_FLOAT128 0
 
 /*
