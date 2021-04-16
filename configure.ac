@@ -707,6 +707,23 @@ fi
 rm -f conftest*])
 AC_SUBST(libc_cv_textrel_ifunc)
 
+# Check if CC supports attribute retain as it is used in attribute_used_retain macro.
+AC_CACHE_CHECK([for GNU attribute retain support],
+	       libc_cv_gnu_retain, [dnl
+cat > conftest.c <<EOF
+static int var  __attribute__ ((used, retain, section ("__libc_atexit")));
+EOF
+libc_cv_gnu_retain=no
+if ${CC-cc} -Werror -c conftest.c -o /dev/null 1>&AS_MESSAGE_LOG_FD \
+   2>&AS_MESSAGE_LOG_FD ; then
+  libc_cv_gnu_retain=yes
+fi
+rm -f conftest*])
+if test $libc_cv_gnu_retain = yes; then
+  AC_DEFINE(HAVE_GNU_RETAIN)
+fi
+LIBC_CONFIG_VAR([have-gnu-retain], [$libc_cv_gnu_retain])
+
 # Check if gcc warns about alias for function with incompatible types.
 AC_CACHE_CHECK([if compiler warns about alias for function with incompatible types],
 	       libc_cv_gcc_incompatible_alias, [dnl
@@ -1316,6 +1333,10 @@ AC_SUBST(libc_cv_z_combreloc)
 LIBC_LINKER_FEATURE([-z execstack], [-Wl,-z,execstack],
 		    [libc_cv_z_execstack=yes], [libc_cv_z_execstack=no])
 AC_SUBST(libc_cv_z_execstack)
+
+LIBC_LINKER_FEATURE([-z start-stop-gc], [-Wl,-z,start-stop-gc],
+		    [libc_cv_z_start_stop_gc=yes], [libc_cv_z_start_stop_gc=no])
+LIBC_CONFIG_VAR([have-z-start-stop-gc], [$libc_cv_z_start_stop_gc])
 
 LIBC_LINKER_FEATURE([--no-dynamic-linker],
 		    [-Wl,--no-dynamic-linker],

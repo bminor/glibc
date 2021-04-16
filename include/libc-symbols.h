@@ -352,6 +352,12 @@ for linking")
 
 */
 
+#ifdef HAVE_GNU_RETAIN
+# define attribute_used_retain __attribute__ ((__used__, __retain__))
+#else
+# define attribute_used_retain __attribute__ ((__used__))
+#endif
+
 /* Symbol set support macros.  */
 
 /* Make SYMBOL, which is in the text segment, an element of SET.  */
@@ -367,12 +373,12 @@ for linking")
 /* When building a shared library, make the set section writable,
    because it will need to be relocated at run time anyway.  */
 # define _elf_set_element(set, symbol) \
-  static const void *__elf_set_##set##_element_##symbol##__ \
-    __attribute__ ((used, section (#set))) = &(symbol)
+    static const void *__elf_set_##set##_element_##symbol##__ \
+      attribute_used_retain __attribute__ ((section (#set))) = &(symbol)
 #else
 # define _elf_set_element(set, symbol) \
-  static const void *const __elf_set_##set##_element_##symbol##__ \
-    __attribute__ ((used, section (#set))) = &(symbol)
+    static const void *const __elf_set_##set##_element_##symbol##__ \
+      attribute_used_retain __attribute__ ((section (#set))) = &(symbol)
 #endif
 
 /* Define SET as a symbol set.  This may be required (it is in a.out) to

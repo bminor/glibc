@@ -195,6 +195,26 @@ ifeq (yes,$(build-shared))
 tests-special += $(objpfx)tst-fopenloc-cmp.out $(objpfx)tst-fopenloc-mem.out \
 		 $(objpfx)tst-bz24228-mem.out
 endif
+
+tests += tst-cleanup-default tst-cleanup-default-static
+tests-static += tst-cleanup-default-static
+tests-special += $(objpfx)tst-cleanup-default-cmp.out $(objpfx)tst-cleanup-default-static-cmp.out
+LDFLAGS-tst-cleanup-default = -Wl,--gc-sections
+LDFLAGS-tst-cleanup-default-static = -Wl,--gc-sections
+
+ifeq ($(have-gnu-retain)$(have-z-start-stop-gc),yesyes)
+tests += tst-cleanup-start-stop-gc tst-cleanup-start-stop-gc-static \
+		tst-cleanup-nostart-stop-gc tst-cleanup-nostart-stop-gc-static
+tests-static += tst-cleanup-start-stop-gc-static tst-cleanup-nostart-stop-gc-static
+tests-special += $(objpfx)tst-cleanup-start-stop-gc-cmp.out \
+		$(objpfx)tst-cleanup-start-stop-gc-static-cmp.out \
+		$(objpfx)tst-cleanup-nostart-stop-gc-cmp.out \
+		$(objpfx)tst-cleanup-nostart-stop-gc-static-cmp.out
+LDFLAGS-tst-cleanup-start-stop-gc := -Wl,--gc-sections,-z,start-stop-gc
+LDFLAGS-tst-cleanup-start-stop-gc-static := -Wl,--gc-sections,-z,start-stop-gc
+LDFLAGS-tst-cleanup-nostart-stop-gc := -Wl,--gc-sections,-z,nostart-stop-gc
+LDFLAGS-tst-cleanup-nostart-stop-gc-static := -Wl,--gc-sections,-z,nostart-stop-gc
+endif
 endif
 
 include ../Rules
@@ -223,6 +243,14 @@ $(objpfx)tst-widetext.out: $(gen-locales)
 $(objpfx)tst_wprintf2.out: $(gen-locales)
 $(objpfx)tst-wfile-sync.out: $(gen-locales)
 endif
+
+define gen-tst-cleanup
+$(objpfx)tst-cleanup-$1-cmp.out: tst-cleanup.exp $(objpfx)tst-cleanup-$1.out
+	cmp $$^ > $$@; $$(evaluate-test)
+endef
+
+$(foreach t,default default-static start-stop-gc start-stop-gc-static nostart-stop-gc nostart-stop-gc-static, \
+  $(eval $(call gen-tst-cleanup,$(t))))
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'	\

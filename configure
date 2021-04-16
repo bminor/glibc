@@ -4105,6 +4105,31 @@ fi
 $as_echo "$libc_cv_textrel_ifunc" >&6; }
 
 
+# Check if CC supports attribute retain as it is used in attribute_used_retain macro.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GNU attribute retain support" >&5
+$as_echo_n "checking for GNU attribute retain support... " >&6; }
+if ${libc_cv_gnu_retain+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+static int var  __attribute__ ((used, retain, section ("__libc_atexit")));
+EOF
+libc_cv_gnu_retain=no
+if ${CC-cc} -Werror -c conftest.c -o /dev/null 1>&5 \
+   2>&5 ; then
+  libc_cv_gnu_retain=yes
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gnu_retain" >&5
+$as_echo "$libc_cv_gnu_retain" >&6; }
+if test $libc_cv_gnu_retain = yes; then
+  $as_echo "#define HAVE_GNU_RETAIN 1" >>confdefs.h
+
+fi
+config_vars="$config_vars
+have-gnu-retain = $libc_cv_gnu_retain"
+
 # Check if gcc warns about alias for function with incompatible types.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if compiler warns about alias for function with incompatible types" >&5
 $as_echo_n "checking if compiler warns about alias for function with incompatible types... " >&6; }
@@ -5870,6 +5895,40 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_linker_feature" >&5
 $as_echo "$libc_linker_feature" >&6; }
 
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for linker that supports -z start-stop-gc" >&5
+$as_echo_n "checking for linker that supports -z start-stop-gc... " >&6; }
+libc_linker_feature=no
+if test x"$gnu_ld" = x"yes"; then
+  libc_linker_check=`$LD -v --help 2>/dev/null | grep "\-z start-stop-gc"`
+  if test -n "$libc_linker_check"; then
+    cat > conftest.c <<EOF
+int _start (void) { return 42; }
+EOF
+    if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
+				-Wl,-z,start-stop-gc -nostdlib -nostartfiles
+				-fPIC -shared -o conftest.so conftest.c
+				1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+    then
+      libc_linker_feature=yes
+    fi
+    rm -f conftest*
+  fi
+fi
+if test $libc_linker_feature = yes; then
+  libc_cv_z_start_stop_gc=yes
+else
+  libc_cv_z_start_stop_gc=no
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_linker_feature" >&5
+$as_echo "$libc_linker_feature" >&6; }
+config_vars="$config_vars
+have-z-start-stop-gc = $libc_cv_z_start_stop_gc"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for linker that supports --no-dynamic-linker" >&5
 $as_echo_n "checking for linker that supports --no-dynamic-linker... " >&6; }

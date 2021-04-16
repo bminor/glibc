@@ -187,6 +187,9 @@
 /* Define if gcc supports attribute ifunc.  */
 #undef HAVE_GCC_IFUNC
 
+/* Define if CC supports attribute retain.  */
+#undef HAVE_GNU_RETAIN
+
 /* Define if the linker defines __ehdr_start.  */
 #undef HAVE_EHDR_START
 
