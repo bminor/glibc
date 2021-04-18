@@ -487,17 +487,20 @@ do_bench_2 (const char *name, test_t func, int filler, json_ctx_t *js)
     }
   stdev = sqrt (stdev / (RUN_COUNT - 1));
 
-  json_attr_object_begin (js, filler ? "filler" : "empty");
+  char buf[128];
+  snprintf (buf, sizeof buf, "%s-%s", name, filler ? "filler" : "empty");
+
+  json_attr_object_begin (js, buf);
 
   json_attr_double (js, "duration", (double) cur);
   json_attr_double (js, "iterations", (double) iters);
-  json_attr_double (js, "wall_sec", (double) td);
+  json_attr_double (js, "wall-sec", (double) td);
   json_attr_double (js, "mean", mean);
   json_attr_double (js, "stdev", stdev);
-  json_attr_double (js, "min_outlier", (double) curs[0] / (double) iters);
+  json_attr_double (js, "min-outlier", (double) curs[0] / (double) iters);
   json_attr_double (js, "min", (double) curs[1] / (double) iters);
   json_attr_double (js, "max", (double) curs[RUN_COUNT] / (double) iters);
-  json_attr_double (js, "max_outlier", (double) curs[RUN_COUNT + 1] / (double) iters);
+  json_attr_double (js, "max-outlier", (double) curs[RUN_COUNT + 1] / (double) iters);
 
   json_attr_object_end (js);
 
@@ -509,12 +512,8 @@ do_bench_1 (const char *name, test_t func, json_ctx_t *js)
 {
   int rv = 0;
 
-  json_attr_object_begin (js, name);
-
   rv += do_bench_2 (name, func, 0, js);
   rv += do_bench_2 (name, func, 1, js);
-
-  json_attr_object_end (js);
 
   return rv;
 }
