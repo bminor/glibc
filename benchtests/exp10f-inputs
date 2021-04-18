@@ -1,7 +1,7 @@
 ## args: float
 ## ret: float
 ## includes: math.h
-## name: workload-spec2017.wrf (adapted)
+## name: workload-spec2017.wrf-adapted
 0x0p+0
 -0x1.cca64ap+0
 -0x1.570ef6p-2
