@@ -27,9 +27,11 @@
 # ifdef USE_AS_WCSLEN
 #  define VPCMPEQ	vpcmpeqd
 #  define VPMINU	vpminud
+#  define CHAR_SIZE	4
 # else
 #  define VPCMPEQ	vpcmpeqb
 #  define VPMINU	vpminub
+#  define CHAR_SIZE	1
 # endif
 
 # ifndef VZEROUPPER
@@ -41,349 +43,459 @@
 # endif
 
 # define VEC_SIZE 32
+# define PAGE_SIZE 4096
 
 	.section SECTION(.text),"ax",@progbits
 ENTRY (STRLEN)
 # ifdef USE_AS_STRNLEN
-	/* Check for zero length.  */
+	/* Check zero length.  */
 	test	%RSI_LP, %RSI_LP
 	jz	L(zero)
+	/* Store max len in R8_LP before adjusting if using WCSLEN.  */
+	mov	%RSI_LP, %R8_LP
 #  ifdef USE_AS_WCSLEN
 	shl	$2, %RSI_LP
 #  elif defined __ILP32__
 	/* Clear the upper 32 bits.  */
 	movl	%esi, %esi
 #  endif
-	mov	%RSI_LP, %R8_LP
 # endif
-	movl	%edi, %ecx
+	movl	%edi, %eax
 	movq	%rdi, %rdx
 	vpxor	%xmm0, %xmm0, %xmm0
-
+	/* Clear high bits from edi. Only keeping bits relevant to page
+	   cross check.  */
+	andl	$(PAGE_SIZE - 1), %eax
 	/* Check if we may cross page boundary with one vector load.  */
-	andl	$(2 * VEC_SIZE - 1), %ecx
-	cmpl	$VEC_SIZE, %ecx
-	ja	L(cros_page_boundary)
+	cmpl	$(PAGE_SIZE - VEC_SIZE), %eax
+	ja	L(cross_page_boundary)
 
 	/* Check the first VEC_SIZE bytes.  */
-	VPCMPEQ (%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-
+	VPCMPEQ	(%rdi), %ymm0, %ymm1
+	vpmovmskb	%ymm1, %eax
 # ifdef USE_AS_STRNLEN
-	jnz	L(first_vec_x0_check)
-	/* Adjust length and check the end of data.  */
-	subq	$VEC_SIZE, %rsi
-	jbe	L(max)
-# else
-	jnz	L(first_vec_x0)
+	/* If length < VEC_SIZE handle special.  */
+	cmpq	$VEC_SIZE, %rsi
+	jbe	L(first_vec_x0)
 # endif
-
-	/* Align data for aligned loads in the loop.  */
-	addq	$VEC_SIZE, %rdi
-	andl	$(VEC_SIZE - 1), %ecx
-	andq	$-VEC_SIZE, %rdi
-
-# ifdef USE_AS_STRNLEN
-	/* Adjust length.  */
-	addq	%rcx, %rsi
-
-	subq	$(VEC_SIZE * 4), %rsi
-	jbe	L(last_4x_vec_or_less)
-# endif
-	jmp	L(more_4x_vec)
-
-	.p2align 4
-L(cros_page_boundary):
-	andl	$(VEC_SIZE - 1), %ecx
-	andq	$-VEC_SIZE, %rdi
-	VPCMPEQ (%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	/* Remove the leading bytes.  */
-	sarl	%cl, %eax
+	/* If empty continue to aligned_more. Otherwise return bit
+	   position of first match.  */
 	testl	%eax, %eax
 	jz	L(aligned_more)
 	tzcntl	%eax, %eax
-# ifdef USE_AS_STRNLEN
-	/* Check the end of data.  */
-	cmpq	%rax, %rsi
-	jbe	L(max)
-# endif
-	addq	%rdi, %rax
-	addq	%rcx, %rax
-	subq	%rdx, %rax
 # ifdef USE_AS_WCSLEN
-	shrq	$2, %rax
+	shrl	$2, %eax
 # endif
-L(return_vzeroupper):
-	ZERO_UPPER_VEC_REGISTERS_RETURN
-
-	.p2align 4
-L(aligned_more):
-# ifdef USE_AS_STRNLEN
-        /* "rcx" is less than VEC_SIZE.  Calculate "rdx + rcx - VEC_SIZE"
-	    with "rdx - (VEC_SIZE - rcx)" instead of "(rdx + rcx) - VEC_SIZE"
-	    to void possible addition overflow.  */
-	negq	%rcx
-	addq	$VEC_SIZE, %rcx
-
-	/* Check the end of data.  */
-	subq	%rcx, %rsi
-	jbe	L(max)
-# endif
-
-	addq	$VEC_SIZE, %rdi
+	VZEROUPPER_RETURN
 
 # ifdef USE_AS_STRNLEN
-	subq	$(VEC_SIZE * 4), %rsi
-	jbe	L(last_4x_vec_or_less)
-# endif
-
-L(more_4x_vec):
-	/* Check the first 4 * VEC_SIZE.  Only one VEC_SIZE at a time
-	   since data is only aligned to VEC_SIZE.  */
-	VPCMPEQ (%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(first_vec_x0)
-
-	VPCMPEQ VEC_SIZE(%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(first_vec_x1)
-
-	VPCMPEQ (VEC_SIZE * 2)(%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(first_vec_x2)
-
-	VPCMPEQ (VEC_SIZE * 3)(%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(first_vec_x3)
-
-	addq	$(VEC_SIZE * 4), %rdi
-
-# ifdef USE_AS_STRNLEN
-	subq	$(VEC_SIZE * 4), %rsi
-	jbe	L(last_4x_vec_or_less)
-# endif
-
-	/* Align data to 4 * VEC_SIZE.  */
-	movq	%rdi, %rcx
-	andl	$(4 * VEC_SIZE - 1), %ecx
-	andq	$-(4 * VEC_SIZE), %rdi
-
-# ifdef USE_AS_STRNLEN
-	/* Adjust length.  */
-	addq	%rcx, %rsi
-# endif
-
-	.p2align 4
-L(loop_4x_vec):
-	/* Compare 4 * VEC at a time forward.  */
-	vmovdqa (%rdi), %ymm1
-	vmovdqa	VEC_SIZE(%rdi), %ymm2
-	vmovdqa	(VEC_SIZE * 2)(%rdi), %ymm3
-	vmovdqa	(VEC_SIZE * 3)(%rdi), %ymm4
-	VPMINU	%ymm1, %ymm2, %ymm5
-	VPMINU	%ymm3, %ymm4, %ymm6
-	VPMINU	%ymm5, %ymm6, %ymm5
-
-	VPCMPEQ	%ymm5, %ymm0, %ymm5
-	vpmovmskb %ymm5, %eax
-	testl	%eax, %eax
-	jnz	L(4x_vec_end)
-
-	addq	$(VEC_SIZE * 4), %rdi
-
-# ifndef USE_AS_STRNLEN
-	jmp	L(loop_4x_vec)
-# else
-	subq	$(VEC_SIZE * 4), %rsi
-	ja	L(loop_4x_vec)
-
-L(last_4x_vec_or_less):
-	/* Less than 4 * VEC and aligned to VEC_SIZE.  */
-	addl	$(VEC_SIZE * 2), %esi
-	jle	L(last_2x_vec)
-
-	VPCMPEQ (%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(first_vec_x0)
-
-	VPCMPEQ VEC_SIZE(%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(first_vec_x1)
-
-	VPCMPEQ (VEC_SIZE * 2)(%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-
-	jnz	L(first_vec_x2_check)
-	subl	$VEC_SIZE, %esi
-	jle	L(max)
-
-	VPCMPEQ (VEC_SIZE * 3)(%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-
-	jnz	L(first_vec_x3_check)
-	movq	%r8, %rax
-#  ifdef USE_AS_WCSLEN
-	shrq	$2, %rax
-#  endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(last_2x_vec):
-	addl	$(VEC_SIZE * 2), %esi
-	VPCMPEQ (%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-
-	jnz	L(first_vec_x0_check)
-	subl	$VEC_SIZE, %esi
-	jle	L(max)
-
-	VPCMPEQ VEC_SIZE(%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(first_vec_x1_check)
-	movq	%r8, %rax
-#  ifdef USE_AS_WCSLEN
-	shrq	$2, %rax
-#  endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(first_vec_x0_check):
-	tzcntl	%eax, %eax
-	/* Check the end of data.  */
-	cmpq	%rax, %rsi
-	jbe	L(max)
-	addq	%rdi, %rax
-	subq	%rdx, %rax
-#  ifdef USE_AS_WCSLEN
-	shrq	$2, %rax
-#  endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(first_vec_x1_check):
-	tzcntl	%eax, %eax
-	/* Check the end of data.  */
-	cmpq	%rax, %rsi
-	jbe	L(max)
-	addq	$VEC_SIZE, %rax
-	addq	%rdi, %rax
-	subq	%rdx, %rax
-#  ifdef USE_AS_WCSLEN
-	shrq	$2, %rax
-#  endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(first_vec_x2_check):
-	tzcntl	%eax, %eax
-	/* Check the end of data.  */
-	cmpq	%rax, %rsi
-	jbe	L(max)
-	addq	$(VEC_SIZE * 2), %rax
-	addq	%rdi, %rax
-	subq	%rdx, %rax
-#  ifdef USE_AS_WCSLEN
-	shrq	$2, %rax
-#  endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(first_vec_x3_check):
-	tzcntl	%eax, %eax
-	/* Check the end of data.  */
-	cmpq	%rax, %rsi
-	jbe	L(max)
-	addq	$(VEC_SIZE * 3), %rax
-	addq	%rdi, %rax
-	subq	%rdx, %rax
-#  ifdef USE_AS_WCSLEN
-	shrq	$2, %rax
-#  endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(max):
-	movq	%r8, %rax
-#  ifdef USE_AS_WCSLEN
-	shrq	$2, %rax
-#  endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
 L(zero):
 	xorl	%eax, %eax
 	ret
-# endif
 
 	.p2align 4
 L(first_vec_x0):
+	/* Set bit for max len so that tzcnt will return min of max len
+	   and position of first match.  */
+	btsq	%rsi, %rax
 	tzcntl	%eax, %eax
-	addq	%rdi, %rax
-	subq	%rdx, %rax
-# ifdef USE_AS_WCSLEN
-	shrq	$2, %rax
-# endif
+#  ifdef USE_AS_WCSLEN
+	shrl	$2, %eax
+#  endif
 	VZEROUPPER_RETURN
+# endif
 
 	.p2align 4
 L(first_vec_x1):
 	tzcntl	%eax, %eax
-	addq	$VEC_SIZE, %rax
-	addq	%rdi, %rax
-	subq	%rdx, %rax
+	/* Safe to use 32 bit instructions as these are only called for
+	   size = [1, 159].  */
+# ifdef USE_AS_STRNLEN
+	/* Use ecx which was computed earlier to compute correct value.
+	 */
+	subl	$(VEC_SIZE * 4 + 1), %ecx
+	addl	%ecx, %eax
+# else
+	subl	%edx, %edi
+	incl	%edi
+	addl	%edi, %eax
+# endif
 # ifdef USE_AS_WCSLEN
-	shrq	$2, %rax
+	shrl	$2, %eax
 # endif
 	VZEROUPPER_RETURN
 
 	.p2align 4
 L(first_vec_x2):
 	tzcntl	%eax, %eax
-	addq	$(VEC_SIZE * 2), %rax
+	/* Safe to use 32 bit instructions as these are only called for
+	   size = [1, 159].  */
+# ifdef USE_AS_STRNLEN
+	/* Use ecx which was computed earlier to compute correct value.
+	 */
+	subl	$(VEC_SIZE * 3 + 1), %ecx
+	addl	%ecx, %eax
+# else
+	subl	%edx, %edi
+	addl	$(VEC_SIZE + 1), %edi
+	addl	%edi, %eax
+# endif
+# ifdef USE_AS_WCSLEN
+	shrl	$2, %eax
+# endif
+	VZEROUPPER_RETURN
+
+	.p2align 4
+L(first_vec_x3):
+	tzcntl	%eax, %eax
+	/* Safe to use 32 bit instructions as these are only called for
+	   size = [1, 159].  */
+# ifdef USE_AS_STRNLEN
+	/* Use ecx which was computed earlier to compute correct value.
+	 */
+	subl	$(VEC_SIZE * 2 + 1), %ecx
+	addl	%ecx, %eax
+# else
+	subl	%edx, %edi
+	addl	$(VEC_SIZE * 2 + 1), %edi
+	addl	%edi, %eax
+# endif
+# ifdef USE_AS_WCSLEN
+	shrl	$2, %eax
+# endif
+	VZEROUPPER_RETURN
+
+	.p2align 4
+L(first_vec_x4):
+	tzcntl	%eax, %eax
+	/* Safe to use 32 bit instructions as these are only called for
+	   size = [1, 159].  */
+# ifdef USE_AS_STRNLEN
+	/* Use ecx which was computed earlier to compute correct value.
+	 */
+	subl	$(VEC_SIZE + 1), %ecx
+	addl	%ecx, %eax
+# else
+	subl	%edx, %edi
+	addl	$(VEC_SIZE * 3 + 1), %edi
+	addl	%edi, %eax
+# endif
+# ifdef USE_AS_WCSLEN
+	shrl	$2, %eax
+# endif
+	VZEROUPPER_RETURN
+
+	.p2align 5
+L(aligned_more):
+	/* Align data to VEC_SIZE - 1. This is the same number of
+	   instructions as using andq with -VEC_SIZE but saves 4 bytes of
+	   code on the x4 check.  */
+	orq	$(VEC_SIZE - 1), %rdi
+L(cross_page_continue):
+	/* Check the first 4 * VEC_SIZE.  Only one VEC_SIZE at a time
+	   since data is only aligned to VEC_SIZE.  */
+# ifdef USE_AS_STRNLEN
+	/* + 1 because rdi is aligned to VEC_SIZE - 1. + CHAR_SIZE because
+	   it simplies the logic in last_4x_vec_or_less.  */
+	leaq	(VEC_SIZE * 4 + CHAR_SIZE + 1)(%rdi), %rcx
+	subq	%rdx, %rcx
+# endif
+	/* Load first VEC regardless.  */
+	VPCMPEQ	1(%rdi), %ymm0, %ymm1
+# ifdef USE_AS_STRNLEN
+	/* Adjust length. If near end handle specially.  */
+	subq	%rcx, %rsi
+	jb	L(last_4x_vec_or_less)
+# endif
+	vpmovmskb	%ymm1, %eax
+	testl	%eax, %eax
+	jnz	L(first_vec_x1)
+
+	VPCMPEQ	(VEC_SIZE + 1)(%rdi), %ymm0, %ymm1
+	vpmovmskb	%ymm1, %eax
+	testl	%eax, %eax
+	jnz	L(first_vec_x2)
+
+	VPCMPEQ	(VEC_SIZE * 2 + 1)(%rdi), %ymm0, %ymm1
+	vpmovmskb	%ymm1, %eax
+	testl	%eax, %eax
+	jnz	L(first_vec_x3)
+
+	VPCMPEQ	(VEC_SIZE * 3 + 1)(%rdi), %ymm0, %ymm1
+	vpmovmskb	%ymm1, %eax
+	testl	%eax, %eax
+	jnz	L(first_vec_x4)
+
+	/* Align data to VEC_SIZE * 4 - 1.  */
+# ifdef USE_AS_STRNLEN
+	/* Before adjusting length check if at last VEC_SIZE * 4.  */
+	cmpq	$(VEC_SIZE * 4 - 1), %rsi
+	jbe	L(last_4x_vec_or_less_load)
+	incq	%rdi
+	movl	%edi, %ecx
+	orq	$(VEC_SIZE * 4 - 1), %rdi
+	andl	$(VEC_SIZE * 4 - 1), %ecx
+	/* Readjust length.  */
+	addq	%rcx, %rsi
+# else
+	incq	%rdi
+	orq	$(VEC_SIZE * 4 - 1), %rdi
+# endif
+	/* Compare 4 * VEC at a time forward.  */
+	.p2align 4
+L(loop_4x_vec):
+# ifdef USE_AS_STRNLEN
+	/* Break if at end of length.  */
+	subq	$(VEC_SIZE * 4), %rsi
+	jb	L(last_4x_vec_or_less_cmpeq)
+# endif
+	/* Save some code size by microfusing VPMINU with the load. Since
+	   the matches in ymm2/ymm4 can only be returned if there where no
+	   matches in ymm1/ymm3 respectively there is no issue with overlap.
+	 */
+	vmovdqa	1(%rdi), %ymm1
+	VPMINU	(VEC_SIZE + 1)(%rdi), %ymm1, %ymm2
+	vmovdqa	(VEC_SIZE * 2 + 1)(%rdi), %ymm3
+	VPMINU	(VEC_SIZE * 3 + 1)(%rdi), %ymm3, %ymm4
+
+	VPMINU	%ymm2, %ymm4, %ymm5
+	VPCMPEQ	%ymm5, %ymm0, %ymm5
+	vpmovmskb	%ymm5, %ecx
+
+	subq	$-(VEC_SIZE * 4), %rdi
+	testl	%ecx, %ecx
+	jz	L(loop_4x_vec)
+
+
+	VPCMPEQ	%ymm1, %ymm0, %ymm1
+	vpmovmskb	%ymm1, %eax
+	subq	%rdx, %rdi
+	testl	%eax, %eax
+	jnz	L(last_vec_return_x0)
+
+	VPCMPEQ	%ymm2, %ymm0, %ymm2
+	vpmovmskb	%ymm2, %eax
+	testl	%eax, %eax
+	jnz	L(last_vec_return_x1)
+
+	/* Combine last 2 VEC.  */
+	VPCMPEQ	%ymm3, %ymm0, %ymm3
+	vpmovmskb	%ymm3, %eax
+	/* rcx has combined result from all 4 VEC. It will only be used if
+	   the first 3 other VEC all did not contain a match.  */
+	salq	$32, %rcx
+	orq	%rcx, %rax
+	tzcntq	%rax, %rax
+	subq	$(VEC_SIZE * 2 - 1), %rdi
 	addq	%rdi, %rax
-	subq	%rdx, %rax
+# ifdef USE_AS_WCSLEN
+	shrq	$2, %rax
+# endif
+	VZEROUPPER_RETURN
+
+
+# ifdef USE_AS_STRNLEN
+	.p2align 4
+L(last_4x_vec_or_less_load):
+	/* Depending on entry adjust rdi / prepare first VEC in ymm1.  */
+	subq	$-(VEC_SIZE * 4), %rdi
+L(last_4x_vec_or_less_cmpeq):
+	VPCMPEQ	1(%rdi), %ymm0, %ymm1
+L(last_4x_vec_or_less):
+
+	vpmovmskb	%ymm1, %eax
+	/* If remaining length > VEC_SIZE * 2. This works if esi is off by
+	   VEC_SIZE * 4.  */
+	testl	$(VEC_SIZE * 2), %esi
+	jnz	L(last_4x_vec)
+
+	/* length may have been negative or positive by an offset of
+	   VEC_SIZE * 4 depending on where this was called from. This fixes
+	   that.  */
+	andl	$(VEC_SIZE * 4 - 1), %esi
+	testl	%eax, %eax
+	jnz	L(last_vec_x1_check)
+
+	subl	$VEC_SIZE, %esi
+	jb	L(max)
+
+	VPCMPEQ	(VEC_SIZE + 1)(%rdi), %ymm0, %ymm1
+	vpmovmskb	%ymm1, %eax
+	tzcntl	%eax, %eax
+	/* Check the end of data.  */
+	cmpl	%eax, %esi
+	jb	L(max)
+	subq	%rdx, %rdi
+	addl	$(VEC_SIZE + 1), %eax
+	addq	%rdi, %rax
+#  ifdef USE_AS_WCSLEN
+	shrq	$2, %rax
+#  endif
+	VZEROUPPER_RETURN
+# endif
+
+	.p2align 4
+L(last_vec_return_x0):
+	tzcntl	%eax, %eax
+	subq	$(VEC_SIZE * 4 - 1), %rdi
+	addq	%rdi, %rax
 # ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 # endif
 	VZEROUPPER_RETURN
 
 	.p2align 4
-L(4x_vec_end):
-	VPCMPEQ	%ymm1, %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(first_vec_x0)
-	VPCMPEQ %ymm2, %ymm0, %ymm2
-	vpmovmskb %ymm2, %eax
-	testl	%eax, %eax
-	jnz	L(first_vec_x1)
-	VPCMPEQ %ymm3, %ymm0, %ymm3
-	vpmovmskb %ymm3, %eax
-	testl	%eax, %eax
-	jnz	L(first_vec_x2)
-	VPCMPEQ %ymm4, %ymm0, %ymm4
-	vpmovmskb %ymm4, %eax
-L(first_vec_x3):
+L(last_vec_return_x1):
 	tzcntl	%eax, %eax
-	addq	$(VEC_SIZE * 3), %rax
+	subq	$(VEC_SIZE * 3 - 1), %rdi
 	addq	%rdi, %rax
-	subq	%rdx, %rax
 # ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
 # endif
 	VZEROUPPER_RETURN
+
+# ifdef USE_AS_STRNLEN
+	.p2align 4
+L(last_vec_x1_check):
+
+	tzcntl	%eax, %eax
+	/* Check the end of data.  */
+	cmpl	%eax, %esi
+	jb	L(max)
+	subq	%rdx, %rdi
+	incl	%eax
+	addq	%rdi, %rax
+#  ifdef USE_AS_WCSLEN
+	shrq	$2, %rax
+#  endif
+	VZEROUPPER_RETURN
+
+L(max):
+	movq	%r8, %rax
+	VZEROUPPER_RETURN
+
+	.p2align 4
+L(last_4x_vec):
+	/* Test first 2x VEC normally.  */
+	testl	%eax, %eax
+	jnz	L(last_vec_x1)
+
+	VPCMPEQ	(VEC_SIZE + 1)(%rdi), %ymm0, %ymm1
+	vpmovmskb	%ymm1, %eax
+	testl	%eax, %eax
+	jnz	L(last_vec_x2)
+
+	/* Normalize length.  */
+	andl	$(VEC_SIZE * 4 - 1), %esi
+	VPCMPEQ	(VEC_SIZE * 2 + 1)(%rdi), %ymm0, %ymm1
+	vpmovmskb	%ymm1, %eax
+	testl	%eax, %eax
+	jnz	L(last_vec_x3)
+
+	subl	$(VEC_SIZE * 3), %esi
+	jb	L(max)
+
+	VPCMPEQ	(VEC_SIZE * 3 + 1)(%rdi), %ymm0, %ymm1
+	vpmovmskb	%ymm1, %eax
+	tzcntl	%eax, %eax
+	/* Check the end of data.  */
+	cmpl	%eax, %esi
+	jb	L(max)
+	subq	%rdx, %rdi
+	addl	$(VEC_SIZE * 3 + 1), %eax
+	addq	%rdi, %rax
+#  ifdef USE_AS_WCSLEN
+	shrq	$2, %rax
+#  endif
+	VZEROUPPER_RETURN
+
+
+	.p2align 4
+L(last_vec_x1):
+	/* essentially duplicates of first_vec_x1 but use 64 bit
+	   instructions.  */
+	tzcntl	%eax, %eax
+	subq	%rdx, %rdi
+	incl	%eax
+	addq	%rdi, %rax
+#  ifdef USE_AS_WCSLEN
+	shrq	$2, %rax
+#  endif
+	VZEROUPPER_RETURN
+
+	.p2align 4
+L(last_vec_x2):
+	/* essentially duplicates of first_vec_x1 but use 64 bit
+	   instructions.  */
+	tzcntl	%eax, %eax
+	subq	%rdx, %rdi
+	addl	$(VEC_SIZE + 1), %eax
+	addq	%rdi, %rax
+#  ifdef USE_AS_WCSLEN
+	shrq	$2, %rax
+#  endif
+	VZEROUPPER_RETURN
+
+	.p2align 4
+L(last_vec_x3):
+	tzcntl	%eax, %eax
+	subl	$(VEC_SIZE * 2), %esi
+	/* Check the end of data.  */
+	cmpl	%eax, %esi
+	jb	L(max_end)
+	subq	%rdx, %rdi
+	addl	$(VEC_SIZE * 2 + 1), %eax
+	addq	%rdi, %rax
+#  ifdef USE_AS_WCSLEN
+	shrq	$2, %rax
+#  endif
+	VZEROUPPER_RETURN
+L(max_end):
+	movq	%r8, %rax
+	VZEROUPPER_RETURN
+# endif
+
+	/* Cold case for crossing page with first load.	 */
+	.p2align 4
+L(cross_page_boundary):
+	/* Align data to VEC_SIZE - 1.  */
+	orq	$(VEC_SIZE - 1), %rdi
+	VPCMPEQ	-(VEC_SIZE - 1)(%rdi), %ymm0, %ymm1
+	vpmovmskb	%ymm1, %eax
+	/* Remove the leading bytes. sarxl only uses bits [5:0] of COUNT
+	   so no need to manually mod rdx.  */
+	sarxl	%edx, %eax, %eax
+# ifdef USE_AS_STRNLEN
+	testl	%eax, %eax
+	jnz	L(cross_page_less_vec)
+	leaq	1(%rdi), %rcx
+	subq	%rdx, %rcx
+	/* Check length.  */
+	cmpq	%rsi, %rcx
+	jb	L(cross_page_continue)
+	movq	%r8, %rax
+# else
+	testl	%eax, %eax
+	jz	L(cross_page_continue)
+	tzcntl	%eax, %eax
+#  ifdef USE_AS_WCSLEN
+	shrl	$2, %eax
+#  endif
+# endif
+L(return_vzeroupper):
+	ZERO_UPPER_VEC_REGISTERS_RETURN
+
+# ifdef USE_AS_STRNLEN
+	.p2align 4
+L(cross_page_less_vec):
+	tzcntl	%eax, %eax
+	cmpq	%rax, %rsi
+	cmovb	%esi, %eax
+#  ifdef USE_AS_WCSLEN
+	shrl	$2, %eax
+#  endif
+	VZEROUPPER_RETURN
+# endif
 
 END (STRLEN)
 #endif
