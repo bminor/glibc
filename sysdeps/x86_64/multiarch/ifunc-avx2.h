@@ -30,11 +30,11 @@ IFUNC_SELECTOR (void)
   const struct cpu_features* cpu_features = __get_cpu_features ();
 
   if (CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable)
+      && CPU_FEATURES_CPU_P (cpu_features, BMI2)
       && CPU_FEATURES_ARCH_P (cpu_features, AVX_Fast_Unaligned_Load))
     {
       if (CPU_FEATURES_ARCH_P (cpu_features, AVX512VL_Usable)
-	  && CPU_FEATURES_ARCH_P (cpu_features, AVX512BW_Usable)
-	  && CPU_FEATURES_CPU_P (cpu_features, BMI2))
+	  && CPU_FEATURES_ARCH_P (cpu_features, AVX512BW_Usable))
 	return OPTIMIZE (evex);
 
       if (CPU_FEATURES_CPU_P (cpu_features, RTM))
