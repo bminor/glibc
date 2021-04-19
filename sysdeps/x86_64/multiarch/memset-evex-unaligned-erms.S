@@ -19,6 +19,6 @@
 # define SECTION(p)		p##.evex
 # define MEMSET_SYMBOL(p,s)	p##_evex_##s
 # define WMEMSET_SYMBOL(p,s)	p##_evex_##s
-
+# define USE_LESS_VEC_MASK_STORE	1
 # include "memset-vec-unaligned-erms.S"
 #endif

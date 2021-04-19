@@ -63,6 +63,8 @@
 # endif
 #endif
 
+#define PAGE_SIZE 4096
+
 #ifndef SECTION
 # error SECTION is not defined!
 #endif
@@ -213,10 +215,37 @@ L(loop):
 	cmpq	%rcx, %rdx
 	jne	L(loop)
 	VZEROUPPER_SHORT_RETURN
+
+	.p2align 4
 L(less_vec):
 	/* Less than 1 VEC.  */
 # if VEC_SIZE != 16 && VEC_SIZE != 32 && VEC_SIZE != 64
 #  error Unsupported VEC_SIZE!
+# endif
+# ifdef USE_LESS_VEC_MASK_STORE
+	/* Clear high bits from edi. Only keeping bits relevant to page
+	   cross check. Note that we are using rax which is set in
+	   MEMSET_VDUP_TO_VEC0_AND_SET_RETURN as ptr from here on out.
+	 */
+	andl	$(PAGE_SIZE - 1), %edi
+	/* Check if VEC_SIZE store cross page. Mask stores suffer serious
+	   performance degradation when it has to fault supress.  */
+	cmpl	$(PAGE_SIZE - VEC_SIZE), %edi
+	ja	L(cross_page)
+# if VEC_SIZE > 32
+	movq	$-1, %rcx
+	bzhiq	%rdx, %rcx, %rcx
+	kmovq	%rcx, %k1
+# else
+	movl	$-1, %ecx
+	bzhil	%edx, %ecx, %ecx
+	kmovd	%ecx, %k1
+# endif
+	vmovdqu8	%VEC(0), (%rax) {%k1}
+	VZEROUPPER_RETURN
+
+	.p2align 4
+L(cross_page):
 # endif
 # if VEC_SIZE > 32
 	cmpb	$32, %dl
@@ -234,36 +263,36 @@ L(less_vec):
 	cmpb	$1, %dl
 	ja	L(between_2_3)
 	jb	1f
-	movb	%cl, (%rdi)
+	movb	%cl, (%rax)
 1:
 	VZEROUPPER_RETURN
 # if VEC_SIZE > 32
 	/* From 32 to 63.  No branch when size == 32.  */
 L(between_32_63):
-	VMOVU	%YMM0, -32(%rdi,%rdx)
-	VMOVU	%YMM0, (%rdi)
+	VMOVU	%YMM0, -32(%rax,%rdx)
+	VMOVU	%YMM0, (%rax)
 	VZEROUPPER_RETURN
 # endif
 # if VEC_SIZE > 16
 	/* From 16 to 31.  No branch when size == 16.  */
 L(between_16_31):
-	VMOVU	%XMM0, -16(%rdi,%rdx)
-	VMOVU	%XMM0, (%rdi)
+	VMOVU	%XMM0, -16(%rax,%rdx)
+	VMOVU	%XMM0, (%rax)
 	VZEROUPPER_RETURN
 # endif
 	/* From 8 to 15.  No branch when size == 8.  */
 L(between_8_15):
-	movq	%rcx, -8(%rdi,%rdx)
-	movq	%rcx, (%rdi)
+	movq	%rcx, -8(%rax,%rdx)
+	movq	%rcx, (%rax)
 	VZEROUPPER_RETURN
 L(between_4_7):
 	/* From 4 to 7.  No branch when size == 4.  */
-	movl	%ecx, -4(%rdi,%rdx)
-	movl	%ecx, (%rdi)
+	movl	%ecx, -4(%rax,%rdx)
+	movl	%ecx, (%rax)
 	VZEROUPPER_RETURN
 L(between_2_3):
 	/* From 2 to 3.  No branch when size == 2.  */
-	movw	%cx, -2(%rdi,%rdx)
-	movw	%cx, (%rdi)
+	movw	%cx, -2(%rax,%rdx)
+	movw	%cx, (%rax)
 	VZEROUPPER_RETURN
 END (MEMSET_SYMBOL (__memset, unaligned_erms))
