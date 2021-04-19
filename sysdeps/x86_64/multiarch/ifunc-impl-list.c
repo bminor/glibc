@@ -400,10 +400,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/strchr.c.  */
   IFUNC_IMPL (i, name, strchr,
 	      IFUNC_IMPL_ADD (array, i, strchr,
-			      HAS_ARCH_FEATURE (AVX2_Usable),
+			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)),
 			      __strchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, strchr,
 			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)
 			       && HAS_CPU_FEATURE (RTM)),
 			      __strchr_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, strchr,
@@ -417,10 +419,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/strchrnul.c.  */
   IFUNC_IMPL (i, name, strchrnul,
 	      IFUNC_IMPL_ADD (array, i, strchrnul,
-			      HAS_ARCH_FEATURE (AVX2_Usable),
+			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)),
 			      __strchrnul_avx2)
 	      IFUNC_IMPL_ADD (array, i, strchrnul,
 			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)
 			       && HAS_CPU_FEATURE (RTM)),
 			      __strchrnul_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, strchrnul,
@@ -574,10 +578,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/wcschr.c.  */
   IFUNC_IMPL (i, name, wcschr,
 	      IFUNC_IMPL_ADD (array, i, wcschr,
-			      HAS_ARCH_FEATURE (AVX2_Usable),
+			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)),
 			      __wcschr_avx2)
 	      IFUNC_IMPL_ADD (array, i, wcschr,
 			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)
 			       && HAS_CPU_FEATURE (RTM)),
 			      __wcschr_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, wcschr,
