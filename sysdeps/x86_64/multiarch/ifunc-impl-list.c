@@ -285,10 +285,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/strlen.c.  */
   IFUNC_IMPL (i, name, strlen,
 	      IFUNC_IMPL_ADD (array, i, strlen,
-			      HAS_ARCH_FEATURE (AVX2_Usable),
+			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)),
 			      __strlen_avx2)
 	      IFUNC_IMPL_ADD (array, i, strlen,
 			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)
 			       && HAS_CPU_FEATURE (RTM)),
 			      __strlen_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, strlen,
@@ -301,10 +303,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/strnlen.c.  */
   IFUNC_IMPL (i, name, strnlen,
 	      IFUNC_IMPL_ADD (array, i, strnlen,
-			      HAS_ARCH_FEATURE (AVX2_Usable),
+			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)),
 			      __strnlen_avx2)
 	      IFUNC_IMPL_ADD (array, i, strnlen,
 			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)
 			       && HAS_CPU_FEATURE (RTM)),
 			      __strnlen_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, strnlen,
@@ -604,10 +608,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/wcslen.c.  */
   IFUNC_IMPL (i, name, wcslen,
 	      IFUNC_IMPL_ADD (array, i, wcslen,
-			      HAS_ARCH_FEATURE (AVX2_Usable),
+			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)),
 			      __wcslen_avx2)
 	      IFUNC_IMPL_ADD (array, i, wcslen,
 			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)
 			       && HAS_CPU_FEATURE (RTM)),
 			      __wcslen_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, wcslen,
@@ -620,10 +626,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/wcsnlen.c.  */
   IFUNC_IMPL (i, name, wcsnlen,
 	      IFUNC_IMPL_ADD (array, i, wcsnlen,
-			      HAS_ARCH_FEATURE (AVX2_Usable),
+			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)),
 			      __wcsnlen_avx2)
 	      IFUNC_IMPL_ADD (array, i, wcsnlen,
 			      (HAS_ARCH_FEATURE (AVX2_Usable)
+			       && HAS_CPU_FEATURE (BMI2)
 			       && HAS_CPU_FEATURE (RTM)),
 			      __wcsnlen_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, wcsnlen,
