@@ -109,16 +109,24 @@ SIMPLE_MEMSET (CHAR *s, int c, size_t n)
 static void
 do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
 {
-  CHAR tstbuf[n];
+  CHAR buf[n + 2];
+  CHAR *tstbuf = buf + 1;
+  CHAR sentinel = c - 1;
+  buf[0] = sentinel;
+  buf[n + 1] = sentinel;
 #ifdef TEST_BZERO
   simple_bzero (tstbuf, n);
   CALL (impl, s, n);
-  if (memcmp (s, tstbuf, n) != 0)
+  if (memcmp (s, tstbuf, n) != 0
+      || buf[0] != sentinel
+      || buf[n + 1] != sentinel)
 #else
   CHAR *res = CALL (impl, s, c, n);
   if (res != s
       || SIMPLE_MEMSET (tstbuf, c, n) != tstbuf
-      || MEMCMP (s, tstbuf, n) != 0)
+      || MEMCMP (s, tstbuf, n) != 0
+      || buf[0] != sentinel
+      || buf[n + 1] != sentinel)
 #endif /* !TEST_BZERO */
     {
       error (0, 0, "Wrong result in function %s", impl->name);
@@ -130,7 +138,7 @@ do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
 static void
 do_test (size_t align, int c, size_t len)
 {
-  align &= 7;
+  align &= 4095;
   if ((align + len) * sizeof (CHAR) > page_size)
     return;
 
@@ -245,9 +253,11 @@ test_main (void)
     {
       for (i = 0; i < 18; ++i)
 	do_test (0, c, 1 << i);
-      for (i = 1; i < 32; ++i)
+      for (i = 1; i < 64; ++i)
 	{
 	  do_test (i, c, i);
+	  do_test (4096 - i, c, i);
+	  do_test (4095, c, i);
 	  if (i & (i - 1))
 	    do_test (0, c, i);
 	}
