@@ -293,7 +293,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strlen_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, strlen,
 			      (HAS_ARCH_FEATURE (AVX512VL_Usable)
-			       && HAS_ARCH_FEATURE (AVX512BW_Usable)),
+			       && HAS_ARCH_FEATURE (AVX512BW_Usable)
+			       && HAS_CPU_FEATURE (BMI2)),
 			      __strlen_evex)
 	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_sse2))
 
@@ -308,7 +309,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strnlen_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, strnlen,
 			      (HAS_ARCH_FEATURE (AVX512VL_Usable)
-			       && HAS_ARCH_FEATURE (AVX512BW_Usable)),
+			       && HAS_ARCH_FEATURE (AVX512BW_Usable)
+			       && HAS_CPU_FEATURE (BMI2)),
 			      __strnlen_evex)
 	      IFUNC_IMPL_ADD (array, i, strnlen, 1, __strnlen_sse2))
 
