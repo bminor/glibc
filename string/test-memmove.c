@@ -286,25 +286,25 @@ do_test2 (size_t offset)
             src[i] = (uint32_t) i;
 
 
-    #ifdef TEST_BCOPY
+#ifdef TEST_BCOPY
           CALL (impl, (char *) src, (char *) dst, bytes_move);
-    #else
+#else
           CALL (impl, (char *) dst, (char *) src, bytes_move);
-    #endif
+#endif
 
           for (i = 0; i < arr_size; i++)
-        {
-          if (dst[i] != (uint32_t) i)
-            {
-              error (0, 0,
-                 "Wrong result in function %s dst \"%p\" src \"%p\" offset \"%zd\"",
-                 impl->name, dst, large_buf, i);
-              ret = 1;
-              munmap ((void *) large_buf, size);
-              return;
-            }
-        }
-        }
+	    {
+	      if (dst[i] != (uint32_t) i)
+		{
+		  error (0, 0,
+			 "Wrong result in function %s dst \"%p\" src \"%p\" offset \"%zd\"",
+			 impl->name, dst, large_buf, i);
+		  ret = 1;
+		  munmap ((void *) large_buf, size);
+		  return;
+		}
+	    }
+	}
       src = dst;
       dst = large_buf;
     }
