@@ -1,5 +1,5 @@
-/* Pthread mutex tunable parameters.
-   Copyright (C) 2018-2021 Free Software Foundation, Inc.
+/* pthread initialization called from __libc_early_init.  NPTL version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,20 +15,19 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
-#ifndef _PTHREAD_MUTEX_CONF_H
-#define _PTHREAD_MUTEX_CONF_H 1
 
-#include <adaptive_spin_count.h>
+#ifndef _PTHREAD_EARLY_INIT_H
+#define _PTHREAD_EARLY_INIT_H 1
 
-#if HAVE_TUNABLES
-struct mutex_config
+#include <nptl/pthreadP.h>
+#include <pthread_mutex_conf.h>
+
+static inline void
+__pthread_early_init (void)
 {
-  int spin_count;
-};
-
-extern struct mutex_config __mutex_aconf attribute_hidden;
-
-extern void __pthread_tunables_init (void) attribute_hidden;
+#if HAVE_TUNABLES
+  __pthread_tunables_init ();
 #endif
+}
 
-#endif
+#endif  /* _PTHREAD_EARLY_INIT_H */

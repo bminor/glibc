@@ -268,10 +268,6 @@ __pthread_initialize_minimal_internal (void)
   __libc_multiple_threads_ptr =
 #endif
     __libc_pthread_init (__reclaim_stacks, ptr_pthread_functions);
-
-#if HAVE_TUNABLES
-  __pthread_tunables_init ();
-#endif
 }
 strong_alias (__pthread_initialize_minimal_internal,
 	      __pthread_initialize_minimal)

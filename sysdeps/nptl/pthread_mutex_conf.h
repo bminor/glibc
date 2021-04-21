@@ -15,33 +15,27 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
+#ifndef _PTHREAD_MUTEX_CONF_H
+#define _PTHREAD_MUTEX_CONF_H 1
+
+#include <adaptive_spin_count.h>
 
 #if HAVE_TUNABLES
-# define TUNABLE_NAMESPACE pthread
-#include <pthread_mutex_conf.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <unistd.h>  /* Get STDOUT_FILENO for _dl_printf.  */
-#include <elf/dl-tunables.h>
-
-struct mutex_config __mutex_aconf =
+struct mutex_config
 {
-  /* The maximum number of times a thread should spin on the lock before
-  calling into kernel to block.  */
-  .spin_count = DEFAULT_ADAPTIVE_COUNT,
+  int spin_count;
 };
-libc_hidden_data_def (__mutex_aconf)
 
-static void
-TUNABLE_CALLBACK (set_mutex_spin_count) (tunable_val_t *valp)
-{
-  __mutex_aconf.spin_count = (int32_t) (valp)->numval;
-}
+extern struct mutex_config __mutex_aconf;
+libc_hidden_proto (__mutex_aconf)
 
-void
+extern void __pthread_tunables_init (void) attribute_hidden;
+#else
+static inline void
 __pthread_tunables_init (void)
 {
-  TUNABLE_GET (mutex_spin_count, int32_t,
-               TUNABLE_CALLBACK (set_mutex_spin_count));
+  /* No tunables to initialize.  */
 }
+#endif
+
 #endif

@@ -1,4 +1,4 @@
-/* Pthread mutex tunable parameters.
+/* Pthread mutex tunable parameters.  Generic version.
    Copyright (C) 2018-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,32 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if HAVE_TUNABLES
-# define TUNABLE_NAMESPACE pthread
-#include <pthread_mutex_conf.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <unistd.h>  /* Get STDOUT_FILENO for _dl_printf.  */
-#include <elf/dl-tunables.h>
+#ifndef _PTHREAD_MUTEX_CONF_H
+#define _PTHREAD_MUTEX_CONF_H 1
 
-struct mutex_config __mutex_aconf =
-{
-  /* The maximum number of times a thread should spin on the lock before
-  calling into kernel to block.  */
-  .spin_count = DEFAULT_ADAPTIVE_COUNT,
-};
-libc_hidden_data_def (__mutex_aconf)
-
-static void
-TUNABLE_CALLBACK (set_mutex_spin_count) (tunable_val_t *valp)
-{
-  __mutex_aconf.spin_count = (int32_t) (valp)->numval;
-}
-
-void
+static inline void
 __pthread_tunables_init (void)
 {
-  TUNABLE_GET (mutex_spin_count, int32_t,
-               TUNABLE_CALLBACK (set_mutex_spin_count));
+  /* The generic version does not have any tunables to init.  */
 }
+
 #endif
