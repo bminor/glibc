@@ -24,6 +24,7 @@ The following bugs are resolved with this release:
   [27648] FAIL: misc/tst-select
   [27651] Performance regression after updating to 2.33
   [27706] select fails to update timeout on error
+  [27744] Support different libpthread/ld.so load orders for gdb -p
 
 Version 2.33
 

@@ -33,13 +33,14 @@ td_init (void)
 bool
 __td_ta_rtld_global (td_thragent_t *ta)
 {
-  if (ta->ta_addr__rtld_global == 0
-      && td_mod_lookup (ta->ph, LD_SO, SYM__rtld_global,
-                        &ta->ta_addr__rtld_global) != PS_OK)
+  if (ta->ta_addr__rtld_global == 0)
     {
-      ta->ta_addr__rtld_global = (void*)-1;
-      return false;
+      psaddr_t rtldglobalp;
+      if (DB_GET_VALUE (rtldglobalp, ta, __nptl_rtld_global, 0) == TD_OK)
+        ta->ta_addr__rtld_global = rtldglobalp;
+      else
+        ta->ta_addr__rtld_global = (void *) -1;
     }
-  else
-    return ta->ta_addr__rtld_global != (void*)-1;
+
+  return ta->ta_addr__rtld_global != (void *)-1;
 }
