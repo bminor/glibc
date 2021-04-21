@@ -893,6 +893,17 @@ extern int _dl_catch_error (const char **objname, const char **errstring,
 			    void *args);
 libc_hidden_proto (_dl_catch_error)
 
+
+/* libdl in a secondary namespace (after dlopen) must use
+   _dl_catch_error from the main namespace, so it has to be exported
+   in some way.  Initialized to _rtld_catch_error in rtld.c.  Not in
+   _rtld_global_ro to preserve structure layout.  */
+extern __typeof (_dl_catch_error) *_dl_catch_error_ptr attribute_relro;
+rtld_hidden_proto (_dl_catch_error_ptr)
+
+/* Used for initializing _dl_catch_error_ptr.  */
+extern __typeof__ (_dl_catch_error) _rtld_catch_error attribute_hidden;
+
 /* Call OPERATE (ARGS).  If no error occurs, set *EXCEPTION to zero.
    Otherwise, store a copy of the raised exception in *EXCEPTION,
    which has to be freed by _dl_exception_free.  As a special case, if

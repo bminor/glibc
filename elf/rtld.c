@@ -380,7 +380,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
 extern struct rtld_global_ro _rtld_local_ro
     __attribute__ ((alias ("_rtld_global_ro"), visibility ("hidden")));
 
-
 static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
 		     ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv);
 
