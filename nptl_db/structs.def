@@ -26,8 +26,13 @@
 # define DB_RTLD_VARIABLE(name) DB_VARIABLE (name)
 #endif
 
+/* DB_MAIN_VARIABLE and DB_MAIN_ARRAY_VARIABLE are not covered by the
+   libpthread symbol check in db-symbols.awk.  */
 #ifndef DB_MAIN_VARIABLE
 # define DB_MAIN_VARIABLE(name) DB_VARIABLE (name)
+#endif
+#ifndef DB_MAIN_ARRAY_VARIABLE
+# define DB_MAIN_ARRAY_VARIABLE(name) DB_ARRAY_VARIABLE (name)
 #endif
 
 #ifndef DB_RTLD_GLOBAL_FIELD
