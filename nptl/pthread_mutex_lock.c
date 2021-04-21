@@ -30,8 +30,27 @@
 /* Some of the following definitions differ when pthread_mutex_cond_lock.c
    includes this file.  */
 #ifndef LLL_MUTEX_LOCK
-# define LLL_MUTEX_LOCK(mutex) \
+/* lll_lock with single-thread optimization.  */
+static inline void
+lll_mutex_lock_optimized (pthread_mutex_t *mutex)
+{
+  /* The single-threaded optimization is only valid for private
+     mutexes.  For process-shared mutexes, the mutex could be in a
+     shared mapping, so synchronization with another process is needed
+     even without any threads.  If the lock is already marked as
+     acquired, POSIX requires that pthread_mutex_lock deadlocks for
+     normal mutexes, so skip the optimization in that case as
+     well.  */
+  int private = PTHREAD_MUTEX_PSHARED (mutex);
+  if (private == LLL_PRIVATE && SINGLE_THREAD_P && mutex->__data.__lock == 0)
+    mutex->__data.__lock = 1;
+  else
+    lll_lock (mutex->__data.__lock, private);
+}
+
+# define LLL_MUTEX_LOCK(mutex)						\
   lll_lock ((mutex)->__data.__lock, PTHREAD_MUTEX_PSHARED (mutex))
+# define LLL_MUTEX_LOCK_OPTIMIZED(mutex) lll_mutex_lock_optimized (mutex)
 # define LLL_MUTEX_TRYLOCK(mutex) \
   lll_trylock ((mutex)->__data.__lock)
 # define LLL_ROBUST_MUTEX_LOCK_MODIFIER 0
@@ -64,7 +83,7 @@ __pthread_mutex_lock (pthread_mutex_t *mutex)
       FORCE_ELISION (mutex, goto elision);
     simple:
       /* Normal mutex.  */
-      LLL_MUTEX_LOCK (mutex);
+      LLL_MUTEX_LOCK_OPTIMIZED (mutex);
       assert (mutex->__data.__owner == 0);
     }
 #if ENABLE_ELISION_SUPPORT
@@ -99,7 +118,7 @@ __pthread_mutex_lock (pthread_mutex_t *mutex)
 	}
 
       /* We have to get the mutex.  */
-      LLL_MUTEX_LOCK (mutex);
+      LLL_MUTEX_LOCK_OPTIMIZED (mutex);
 
       assert (mutex->__data.__owner == 0);
       mutex->__data.__count = 1;

@@ -28,6 +28,21 @@ static int
 __pthread_mutex_unlock_full (pthread_mutex_t *mutex, int decr)
      __attribute_noinline__;
 
+/* lll_lock with single-thread optimization.  */
+static inline void
+lll_mutex_unlock_optimized (pthread_mutex_t *mutex)
+{
+  /* The single-threaded optimization is only valid for private
+     mutexes.  For process-shared mutexes, the mutex could be in a
+     shared mapping, so synchronization with another process is needed
+     even without any threads.  */
+  int private = PTHREAD_MUTEX_PSHARED (mutex);
+  if (private == LLL_PRIVATE && SINGLE_THREAD_P)
+    mutex->__data.__lock = 0;
+  else
+    lll_unlock (mutex->__data.__lock, private);
+}
+
 int
 attribute_hidden
 __pthread_mutex_unlock_usercnt (pthread_mutex_t *mutex, int decr)
@@ -51,7 +66,7 @@ __pthread_mutex_unlock_usercnt (pthread_mutex_t *mutex, int decr)
 	--mutex->__data.__nusers;
 
       /* Unlock.  */
-      lll_unlock (mutex->__data.__lock, PTHREAD_MUTEX_PSHARED (mutex));
+      lll_mutex_unlock_optimized (mutex);
 
       LIBC_PROBE (mutex_release, 1, mutex);
 

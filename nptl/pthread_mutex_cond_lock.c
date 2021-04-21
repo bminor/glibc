@@ -2,6 +2,7 @@
 
 #define LLL_MUTEX_LOCK(mutex) \
   lll_cond_lock ((mutex)->__data.__lock, PTHREAD_MUTEX_PSHARED (mutex))
+#define LLL_MUTEX_LOCK_OPTIMIZED(mutex) LLL_MUTEX_LOCK (mutex)
 
 /* Not actually elided so far. Needed? */
 #define LLL_MUTEX_LOCK_ELISION(mutex)  \
