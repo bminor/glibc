@@ -38,7 +38,6 @@ routines = \
   elision-timed \
   elision-trylock \
   elision-unlock \
-  forward \
   futex-internal \
   libc-cancellation \
   libc-cleanup \

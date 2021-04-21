@@ -49,15 +49,6 @@ size_t __static_tls_align_m1;
 /* Version of the library, used in libthread_db to detect mismatches.  */
 static const char nptl_version[] __attribute_used__ = VERSION;
 
-#ifdef SHARED
-static const struct pthread_functions pthread_functions =
-  {
-  };
-# define ptr_pthread_functions &pthread_functions
-#else
-# define ptr_pthread_functions NULL
-#endif
-
 /* For asynchronous cancellation we use a signal.  This is the handler.  */
 static void
 sigcancel_handler (int sig, siginfo_t *si, void *ctx)
@@ -206,7 +197,7 @@ __pthread_initialize_minimal_internal (void)
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
   __libc_multiple_threads_ptr =
 #endif
-    __libc_pthread_init (__reclaim_stacks, ptr_pthread_functions);
+    __libc_pthread_init (__reclaim_stacks);
 }
 strong_alias (__pthread_initialize_minimal_internal,
 	      __pthread_initialize_minimal)

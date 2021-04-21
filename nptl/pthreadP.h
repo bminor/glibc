@@ -30,7 +30,6 @@
 #include <lowlevellock.h>
 #include <stackinfo.h>
 #include <internaltypes.h>
-#include <pthread-functions.h>
 #include <atomic.h>
 #include <kernel-features.h>
 #include <errno.h>
@@ -370,11 +369,9 @@ extern unsigned long int *__fork_generation_pointer attribute_hidden;
 
 /* Register the generation counter in the libpthread with the libc.  */
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
-extern void __libc_pthread_init (void (*reclaim) (void),
-				 const struct pthread_functions *functions);
+extern void __libc_pthread_init (void (*reclaim) (void));
 #else
-extern int *__libc_pthread_init (void (*reclaim) (void),
-				 const struct pthread_functions *functions);
+extern int *__libc_pthread_init (void (*reclaim) (void));
 
 /* Variable set to a nonzero value either if more than one thread runs or ran,
    or if a single-threaded process is trying to cancel itself.  See

@@ -32,7 +32,6 @@
    ld.so might be used on old kernels with a different libc.so.  */
 #include <lowlevellock.h>
 #include <tls.h>
-#include <pthread-functions.h>
 
 #if IS_IN (libpthread)
 /* This gets us the declarations of the __pthread_* internal names,
@@ -100,27 +99,12 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
   (FUNC != NULL ? FUNC ARGS : ELSE)
 #endif
 
-/* Call thread functions through the function pointer table.  */
-#if defined SHARED && IS_IN (libc)
-# define PTFAVAIL(NAME) __libc_pthread_functions_init
-# define __libc_ptf_call(FUNC, ARGS, ELSE) \
-  (__libc_pthread_functions_init ? PTHFCT_CALL (ptr_##FUNC, ARGS) : ELSE)
-# define __libc_ptf_call_always(FUNC, ARGS) \
-  PTHFCT_CALL (ptr_##FUNC, ARGS)
-#elif IS_IN (libpthread)
-# define PTFAVAIL(NAME) 1
-# define __libc_ptf_call(FUNC, ARGS, ELSE) \
-  FUNC ARGS
-# define __libc_ptf_call_always(FUNC, ARGS) \
-  FUNC ARGS
-#else
-# define PTFAVAIL(NAME) (NAME != NULL)
-# define __libc_ptf_call(FUNC, ARGS, ELSE) \
-  __libc_maybe_call (FUNC, ARGS, ELSE)
-# define __libc_ptf_call_always(FUNC, ARGS) \
-  FUNC ARGS
-#endif
-
+/* All previously forwarded functions are now called directly (either
+   via local call in libc, or through a __export), but __libc_ptf_call
+   is still used in generic code shared with Hurd.  */
+#define PTFAVAIL(NAME) 1
+#define __libc_ptf_call(FUNC, ARGS, ELSE) FUNC ARGS
+#define __libc_ptf_call_always(FUNC, ARGS) FUNC ARGS
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */
