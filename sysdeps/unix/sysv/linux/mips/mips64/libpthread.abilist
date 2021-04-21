@@ -12,10 +12,6 @@ GLIBC_2.0 ftrylockfile F
 GLIBC_2.0 funlockfile F
 GLIBC_2.0 pthread_atfork F
 GLIBC_2.0 pthread_cancel F
-GLIBC_2.0 pthread_cond_broadcast F
-GLIBC_2.0 pthread_cond_signal F
-GLIBC_2.0 pthread_cond_timedwait F
-GLIBC_2.0 pthread_cond_wait F
 GLIBC_2.0 pthread_create F
 GLIBC_2.0 pthread_detach F
 GLIBC_2.0 pthread_join F
@@ -120,10 +116,7 @@ GLIBC_2.28 tss_create F
 GLIBC_2.28 tss_delete F
 GLIBC_2.28 tss_get F
 GLIBC_2.28 tss_set F
-GLIBC_2.3.2 pthread_cond_broadcast F
-GLIBC_2.3.2 pthread_cond_signal F
-GLIBC_2.3.2 pthread_cond_timedwait F
-GLIBC_2.3.2 pthread_cond_wait F
+GLIBC_2.3.2 __libpthread_version_placeholder F
 GLIBC_2.3.3 __pthread_register_cancel F
 GLIBC_2.3.3 __pthread_register_cancel_defer F
 GLIBC_2.3.3 __pthread_unregister_cancel F
@@ -140,7 +133,6 @@ GLIBC_2.3.3 pthread_tryjoin_np F
 GLIBC_2.3.4 pthread_attr_getaffinity_np F
 GLIBC_2.3.4 pthread_setaffinity_np F
 GLIBC_2.3.4 pthread_setschedprio F
-GLIBC_2.30 pthread_cond_clockwait F
 GLIBC_2.30 pthread_mutex_clocklock F
 GLIBC_2.30 pthread_rwlock_clockrdlock F
 GLIBC_2.30 pthread_rwlock_clockwrlock F

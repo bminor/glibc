@@ -1376,6 +1376,7 @@ GLIBC_2.33 pthread_attr_setschedpolicy F
 GLIBC_2.33 pthread_attr_setscope F
 GLIBC_2.33 pthread_attr_setsigmask_np F
 GLIBC_2.33 pthread_cond_broadcast F
+GLIBC_2.33 pthread_cond_clockwait F
 GLIBC_2.33 pthread_cond_destroy F
 GLIBC_2.33 pthread_cond_init F
 GLIBC_2.33 pthread_cond_signal F
@@ -1972,6 +1973,7 @@ GLIBC_2.34 __pthread_mutex_unlock F
 GLIBC_2.34 __pthread_once F
 GLIBC_2.34 __pthread_setspecific F
 GLIBC_2.34 __pthread_unwind_next F
+GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_key_delete F

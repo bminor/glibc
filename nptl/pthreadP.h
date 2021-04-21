@@ -463,13 +463,16 @@ libc_hidden_proto (__pthread_rwlock_wrlock)
 extern int __pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_cond_broadcast (pthread_cond_t *cond);
+libc_hidden_proto (__pthread_cond_broadcast)
 extern int __pthread_cond_destroy (pthread_cond_t *cond);
 libc_hidden_proto (__pthread_cond_destroy)
 extern int __pthread_cond_init (pthread_cond_t *cond,
 				const pthread_condattr_t *cond_attr);
 libc_hidden_proto (__pthread_cond_init)
 extern int __pthread_cond_signal (pthread_cond_t *cond);
+libc_hidden_proto (__pthread_cond_signal)
 extern int __pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex);
+libc_hidden_proto (__pthread_cond_wait)
 
 #if __TIMESIZE == 64
 # define __pthread_clockjoin_np64 __pthread_clockjoin_np
@@ -493,12 +496,12 @@ libpthread_hidden_proto (__pthread_timedjoin_np64)
 extern int __pthread_cond_timedwait64 (pthread_cond_t *cond,
                                        pthread_mutex_t *mutex,
                                        const struct __timespec64 *abstime);
-libpthread_hidden_proto (__pthread_cond_timedwait64)
+libc_hidden_proto (__pthread_cond_timedwait64)
 extern int __pthread_cond_clockwait64 (pthread_cond_t *cond,
                                        pthread_mutex_t *mutex,
                                        clockid_t clockid,
                                        const struct __timespec64 *abstime);
-libpthread_hidden_proto (__pthread_cond_clockwait64)
+libc_hidden_proto (__pthread_cond_clockwait64)
 extern int __pthread_rwlock_clockrdlock64 (pthread_rwlock_t *rwlock,
                                            clockid_t clockid,
                                            const struct __timespec64 *abstime);
@@ -525,11 +528,13 @@ libpthread_hidden_proto (__pthread_mutex_timedlock64)
 extern int __pthread_cond_timedwait (pthread_cond_t *cond,
 				     pthread_mutex_t *mutex,
 				     const struct timespec *abstime);
+libc_hidden_proto (__pthread_cond_timedwait)
 extern int __pthread_cond_clockwait (pthread_cond_t *cond,
 				     pthread_mutex_t *mutex,
 				     clockid_t clockid,
 				     const struct timespec *abstime)
   __nonnull ((1, 2, 4));
+libc_hidden_proto (__pthread_cond_clockwait)
 extern int __pthread_condattr_destroy (pthread_condattr_t *attr);
 extern int __pthread_condattr_init (pthread_condattr_t *attr);
 extern int __pthread_key_create (pthread_key_t *key, void (*destr) (void *));

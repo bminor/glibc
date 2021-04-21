@@ -96,6 +96,9 @@ libc {
     thrd_sleep;
     thrd_yield;
   }
+  GLIBC_2.30 {
+    pthread_cond_clockwait;
+  }
   GLIBC_2.32 {
     pthread_attr_getsigmask_np;
     pthread_attr_setaffinity_np;
@@ -114,6 +117,7 @@ libc {
     __pthread_mutex_unlock;
     __pthread_once;
     __pthread_setspecific;
+    pthread_cond_clockwait;
     pthread_getspecific;
     pthread_key_create;
     pthread_key_delete;
@@ -151,8 +155,12 @@ libc {
     __pthread_cleanup_pop;
     __pthread_cleanup_push;
     __pthread_cleanup_upto;
+    __pthread_cond_broadcast; # Used by the C11 threads.
     __pthread_cond_destroy; # Used by the C11 threads.
     __pthread_cond_init; # Used by the C11 threads.
+    __pthread_cond_signal; # Used by the C11 threads.
+    __pthread_cond_timedwait; # Used by the C11 threads.
+    __pthread_cond_wait; # Used by the C11 threads.
     __pthread_current_priority;
     __pthread_exit;
     __pthread_force_elision;
@@ -187,10 +195,6 @@ libpthread {
     funlockfile;
     pthread_atfork;
     pthread_cancel;
-    pthread_cond_broadcast;
-    pthread_cond_signal;
-    pthread_cond_timedwait;
-    pthread_cond_wait;
     pthread_create;
     pthread_detach;
     pthread_join;
@@ -290,11 +294,7 @@ libpthread {
   }
 
   GLIBC_2.3.2 {
-    pthread_cond_broadcast;
-    pthread_cond_init;
-    pthread_cond_signal;
-    pthread_cond_timedwait;
-    pthread_cond_wait;
+    __libpthread_version_placeholder;
   }
 
   GLIBC_2.3.3 {
@@ -371,7 +371,6 @@ libpthread {
   }
 
   GLIBC_2.30 {
-    pthread_cond_clockwait;
     pthread_mutex_clocklock;
     pthread_rwlock_clockrdlock;
     pthread_rwlock_clockwrlock;

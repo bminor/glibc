@@ -32,7 +32,7 @@
 
 /* See __pthread_cond_wait for a high-level description of the algorithm.  */
 int
-__pthread_cond_signal (pthread_cond_t *cond)
+___pthread_cond_signal (pthread_cond_t *cond)
 {
   LIBC_PROBE (cond_signal, 1, cond);
 
@@ -95,6 +95,8 @@ __pthread_cond_signal (pthread_cond_t *cond)
 
   return 0;
 }
-
-versioned_symbol (libpthread, __pthread_cond_signal, pthread_cond_signal,
+versioned_symbol (libpthread, ___pthread_cond_signal, pthread_cond_signal,
 		  GLIBC_2_3_2);
+libc_hidden_ver (___pthread_cond_signal, __pthread_cond_signal)
+versioned_symbol (libpthread, ___pthread_cond_signal,
+		  __pthread_cond_signal, GLIBC_PRIVATE);

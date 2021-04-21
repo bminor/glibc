@@ -2219,6 +2219,7 @@ GLIBC_2.30 __nldbl_warn F
 GLIBC_2.30 __nldbl_warnx F
 GLIBC_2.30 getdents64 F
 GLIBC_2.30 gettid F
+GLIBC_2.30 pthread_cond_clockwait F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
 GLIBC_2.31 msgctl F
@@ -2257,6 +2258,7 @@ GLIBC_2.34 __pthread_mutex_unlock F
 GLIBC_2.34 __pthread_once F
 GLIBC_2.34 __pthread_setspecific F
 GLIBC_2.34 __pthread_unwind_next F
+GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_key_delete F

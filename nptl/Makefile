@@ -47,8 +47,12 @@ routines = \
   lowlevellock \
   nptl_deallocate_tsd \
   nptl_nthreads \
+  old_pthread_cond_broadcast \
   old_pthread_cond_destroy \
   old_pthread_cond_init \
+  old_pthread_cond_signal \
+  old_pthread_cond_timedwait \
+  old_pthread_cond_wait \
   pthread_atfork \
   pthread_attr_copy \
   pthread_attr_destroy \
@@ -69,8 +73,11 @@ routines = \
   pthread_attr_setsigmask \
   pthread_attr_setsigmask_internal \
   pthread_cleanup_upto \
+  pthread_cond_broadcast \
   pthread_cond_destroy \
   pthread_cond_init \
+  pthread_cond_signal \
+  pthread_cond_wait \
   pthread_condattr_destroy \
   pthread_condattr_init \
   pthread_equal \
@@ -83,6 +90,7 @@ routines = \
   pthread_key_delete \
   pthread_keys \
   pthread_kill \
+  pthread_mutex_cond_lock \
   pthread_mutex_conf \
   pthread_mutex_consistent \
   pthread_mutex_destroy \
@@ -118,10 +126,6 @@ libpthread-routines = \
   nptl-init \
   nptlfreeres \
   old_pthread_atfork \
-  old_pthread_cond_broadcast \
-  old_pthread_cond_signal \
-  old_pthread_cond_timedwait \
-  old_pthread_cond_wait \
   pt-interp \
   pthread_attr_getaffinity \
   pthread_attr_getguardsize \
@@ -141,9 +145,6 @@ libpthread-routines = \
   pthread_barrierattr_setpshared \
   pthread_cancel \
   pthread_clockjoin \
-  pthread_cond_broadcast \
-  pthread_cond_signal \
-  pthread_cond_wait \
   pthread_condattr_getclock \
   pthread_condattr_getpshared \
   pthread_condattr_setclock \
@@ -157,7 +158,6 @@ libpthread-routines = \
   pthread_join \
   pthread_join_common \
   pthread_kill_other_threads \
-  pthread_mutex_cond_lock \
   pthread_mutex_getprioceiling \
   pthread_mutex_setprioceiling \
   pthread_mutex_timedlock \

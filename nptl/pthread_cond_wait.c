@@ -613,16 +613,22 @@ __pthread_cond_wait_common (pthread_cond_t *cond, pthread_mutex_t *mutex,
 
 /* See __pthread_cond_wait_common.  */
 int
-__pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)
+___pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
   /* clockid is unused when abstime is NULL. */
   return __pthread_cond_wait_common (cond, mutex, 0, NULL);
 }
 
+versioned_symbol (libc, ___pthread_cond_wait, pthread_cond_wait,
+		  GLIBC_2_3_2);
+libc_hidden_ver (___pthread_cond_wait, __pthread_cond_wait)
+versioned_symbol (libc, ___pthread_cond_wait, __pthread_cond_wait,
+		  GLIBC_PRIVATE);
+
 /* See __pthread_cond_wait_common.  */
 int
-__pthread_cond_timedwait64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
-                            const struct __timespec64 *abstime)
+___pthread_cond_timedwait64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
+			     const struct __timespec64 *abstime)
 {
   /* Check parameter validity.  This should also tell the compiler that
      it can assume that abstime is not NULL.  */
@@ -637,29 +643,33 @@ __pthread_cond_timedwait64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
   return __pthread_cond_wait_common (cond, mutex, clockid, abstime);
 }
 
-#if __TIMESIZE != 64
-libpthread_hidden_def (__pthread_cond_timedwait64)
+#if __TIMESIZE == 64
+strong_alias (___pthread_cond_timedwait64, ___pthread_cond_timedwait)
+#else
+versioned_symbol (libc, ___pthread_cond_timedwait64,
+		  __pthread_cond_timedwait64, GLIBC_PRIVATE);
+libc_hidden_ver (___pthread_cond_timedwait64, __pthread_cond_timedwait64)
 
 int
-__pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
-                          const struct timespec *abstime)
+___pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
+			    const struct timespec *abstime)
 {
   struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
 
   return __pthread_cond_timedwait64 (cond, mutex, &ts64);
 }
-#endif
-
-versioned_symbol (libpthread, __pthread_cond_wait, pthread_cond_wait,
-		  GLIBC_2_3_2);
-versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
-		  GLIBC_2_3_2);
+#endif /* __TIMESIZE == 64 */
+versioned_symbol (libc, ___pthread_cond_timedwait,
+		  pthread_cond_timedwait, GLIBC_2_3_2);
+libc_hidden_ver (___pthread_cond_timedwait, __pthread_cond_timedwait)
+versioned_symbol (libc, ___pthread_cond_timedwait,
+		  __pthread_cond_timedwait, GLIBC_PRIVATE);
 
 /* See __pthread_cond_wait_common.  */
 int
-__pthread_cond_clockwait64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
-                            clockid_t clockid,
-                            const struct __timespec64 *abstime)
+___pthread_cond_clockwait64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
+			      clockid_t clockid,
+			      const struct __timespec64 *abstime)
 {
   /* Check parameter validity.  This should also tell the compiler that
      it can assume that abstime is not NULL.  */
@@ -672,11 +682,15 @@ __pthread_cond_clockwait64 (pthread_cond_t *cond, pthread_mutex_t *mutex,
   return __pthread_cond_wait_common (cond, mutex, clockid, abstime);
 }
 
-#if __TIMESIZE != 64
-libpthread_hidden_def (__pthread_cond_clockwait64)
+#if __TIMESIZE == 64
+strong_alias (___pthread_cond_clockwait64, ___pthread_cond_clockwait)
+#else
+versioned_symbol (libc, ___pthread_cond_clockwait64,
+		  __pthread_cond_clockwait64, GLIBC_PRIVATE);
+libc_hidden_ver (___pthread_cond_clockwait64, __pthread_cond_clockwait64)
 
 int
-__pthread_cond_clockwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
+___pthread_cond_clockwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
                           clockid_t clockid,
                           const struct timespec *abstime)
 {
@@ -684,5 +698,13 @@ __pthread_cond_clockwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
 
   return __pthread_cond_clockwait64 (cond, mutex, clockid, &ts64);
 }
+#endif /* __TIMESIZE == 64 */
+versioned_symbol (libc, ___pthread_cond_clockwait,
+		  __pthread_cond_clockwait, GLIBC_PRIVATE);
+libc_hidden_ver (___pthread_cond_clockwait, __pthread_cond_clockwait)
+versioned_symbol (libc, ___pthread_cond_clockwait,
+		  pthread_cond_clockwait, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_30, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_cond_clockwait,
+	       pthread_cond_clockwait, GLIBC_2_30);
 #endif
-weak_alias (__pthread_cond_clockwait, pthread_cond_clockwait);

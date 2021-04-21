@@ -23,7 +23,7 @@
 #include <shlib-compat.h>
 
 
-#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_3_2)
 int
 __pthread_cond_signal_2_0 (pthread_cond_2_0_t *cond)
 {

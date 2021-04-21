@@ -2189,6 +2189,7 @@ GLIBC_2.29 posix_spawn_file_actions_addchdir_np F
 GLIBC_2.29 posix_spawn_file_actions_addfchdir_np F
 GLIBC_2.30 getdents64 F
 GLIBC_2.30 gettid F
+GLIBC_2.30 pthread_cond_clockwait F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
 GLIBC_2.32 __libc_single_threaded D 0x1
@@ -2226,6 +2227,7 @@ GLIBC_2.34 __pthread_mutex_unlock F
 GLIBC_2.34 __pthread_once F
 GLIBC_2.34 __pthread_setspecific F
 GLIBC_2.34 __pthread_unwind_next F
+GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_key_delete F

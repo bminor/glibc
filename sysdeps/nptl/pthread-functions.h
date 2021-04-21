@@ -30,17 +30,6 @@ struct xid_command;
    the thread functions.  */
 struct pthread_functions
 {
-  int (*ptr___pthread_cond_broadcast) (pthread_cond_t *);
-  int (*ptr___pthread_cond_signal) (pthread_cond_t *);
-  int (*ptr___pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
-  int (*ptr___pthread_cond_timedwait) (pthread_cond_t *, pthread_mutex_t *,
-				       const struct timespec *);
-  int (*ptr___pthread_cond_broadcast_2_0) (pthread_cond_2_0_t *);
-  int (*ptr___pthread_cond_signal_2_0) (pthread_cond_2_0_t *);
-  int (*ptr___pthread_cond_wait_2_0) (pthread_cond_2_0_t *, pthread_mutex_t *);
-  int (*ptr___pthread_cond_timedwait_2_0) (pthread_cond_2_0_t *,
-					   pthread_mutex_t *,
-					   const struct timespec *);
   int (*ptr__nptl_setxid) (struct xid_command *);
 };
 
