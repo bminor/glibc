@@ -78,6 +78,7 @@ routines = \
   pthread_getaffinity \
   pthread_getattr_np \
   pthread_getschedparam \
+  pthread_getspecific \
   pthread_key_create \
   pthread_keys \
   pthread_kill \
@@ -142,7 +143,6 @@ libpthread-routines = \
   pthread_getconcurrency \
   pthread_getcpuclockid \
   pthread_getname \
-  pthread_getspecific \
   pthread_join \
   pthread_join_common \
   pthread_key_delete \

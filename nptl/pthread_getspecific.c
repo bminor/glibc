@@ -18,10 +18,10 @@
 
 #include <stdlib.h>
 #include "pthreadP.h"
-
+#include <shlib-compat.h>
 
 void *
-__pthread_getspecific (pthread_key_t key)
+___pthread_getspecific (pthread_key_t key)
 {
   struct pthread_key_data *data;
 
@@ -63,5 +63,15 @@ __pthread_getspecific (pthread_key_t key)
 
   return result;
 }
-weak_alias (__pthread_getspecific, pthread_getspecific)
-hidden_def (__pthread_getspecific)
+versioned_symbol (libc, ___pthread_getspecific, __pthread_getspecific,
+		  GLIBC_2_34);
+libc_hidden_ver (___pthread_getspecific, __pthread_getspecific)
+
+versioned_symbol (libc, ___pthread_getspecific, pthread_getspecific,
+		  GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_getspecific, __pthread_getspecific,
+	       GLIBC_2_0);
+compat_symbol (libpthread, ___pthread_getspecific, pthread_getspecific,
+	       GLIBC_2_0);
+#endif

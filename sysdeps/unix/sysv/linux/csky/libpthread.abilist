@@ -3,7 +3,6 @@ GLIBC_2.29 _IO_ftrylockfile F
 GLIBC_2.29 _IO_funlockfile F
 GLIBC_2.29 __errno_location F
 GLIBC_2.29 __h_errno_location F
-GLIBC_2.29 __pthread_getspecific F
 GLIBC_2.29 __pthread_mutex_destroy F
 GLIBC_2.29 __pthread_mutex_init F
 GLIBC_2.29 __pthread_mutex_lock F
@@ -72,7 +71,6 @@ GLIBC_2.29 pthread_getattr_default_np F
 GLIBC_2.29 pthread_getconcurrency F
 GLIBC_2.29 pthread_getcpuclockid F
 GLIBC_2.29 pthread_getname_np F
-GLIBC_2.29 pthread_getspecific F
 GLIBC_2.29 pthread_join F
 GLIBC_2.29 pthread_key_delete F
 GLIBC_2.29 pthread_kill_other_threads_np F

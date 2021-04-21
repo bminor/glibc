@@ -183,6 +183,7 @@ GLIBC_2.0 __printf_fp F
 GLIBC_2.0 __profile_frequency F
 GLIBC_2.0 __progname D 0x4
 GLIBC_2.0 __progname_full D 0x4
+GLIBC_2.0 __pthread_getspecific F
 GLIBC_2.0 __pthread_key_create F
 GLIBC_2.0 __pthread_once F
 GLIBC_2.0 __rcmd_errstr D 0x4
@@ -862,6 +863,7 @@ GLIBC_2.0 pthread_condattr_init F
 GLIBC_2.0 pthread_equal F
 GLIBC_2.0 pthread_exit F
 GLIBC_2.0 pthread_getschedparam F
+GLIBC_2.0 pthread_getspecific F
 GLIBC_2.0 pthread_key_create F
 GLIBC_2.0 pthread_kill F
 GLIBC_2.0 pthread_mutex_destroy F
@@ -2169,9 +2171,11 @@ GLIBC_2.33 stat F
 GLIBC_2.33 stat64 F
 GLIBC_2.34 __libc_start_main F
 GLIBC_2.34 __pthread_cleanup_routine F
+GLIBC_2.34 __pthread_getspecific F
 GLIBC_2.34 __pthread_key_create F
 GLIBC_2.34 __pthread_once F
 GLIBC_2.34 __pthread_unwind_next F
+GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_kill F
 GLIBC_2.34 pthread_mutex_consistent F

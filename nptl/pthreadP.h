@@ -524,6 +524,7 @@ extern int __pthread_condattr_init (pthread_condattr_t *attr);
 extern int __pthread_key_create (pthread_key_t *key, void (*destr) (void *));
 extern int __pthread_key_delete (pthread_key_t key);
 extern void *__pthread_getspecific (pthread_key_t key);
+libc_hidden_proto (__pthread_getspecific)
 extern int __pthread_setspecific (pthread_key_t key, const void *value);
 extern int __pthread_once (pthread_once_t *once_control,
 			   void (*init_routine) (void));
@@ -559,7 +560,6 @@ hidden_proto (__pthread_mutex_unlock)
 hidden_proto (__pthread_rwlock_rdlock)
 hidden_proto (__pthread_rwlock_wrlock)
 hidden_proto (__pthread_rwlock_unlock)
-hidden_proto (__pthread_getspecific)
 hidden_proto (__pthread_setspecific)
 hidden_proto (__pthread_testcancel)
 hidden_proto (__pthread_mutexattr_init)
