@@ -333,7 +333,7 @@ extern int __pthread_atfork (void (*__prepare) (void),
 			     void (*__child) (void));
 
 extern int __pthread_setcancelstate (int state, int *oldstate);
-
+libc_hidden_proto (__pthread_setcancelstate)
 
 /* Make the pthread functions weak so that we can elide them from
    single-threaded processes.  */
@@ -359,7 +359,6 @@ weak_extern (__pthread_setspecific)
 weak_extern (__pthread_getspecific)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
-weak_extern (__pthread_setcancelstate)
 # else
 #  pragma weak __pthread_mutex_init
 #  pragma weak __pthread_mutex_destroy
@@ -380,7 +379,6 @@ weak_extern (__pthread_setcancelstate)
 #  pragma weak __pthread_getspecific
 #  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
-#  pragma weak __pthread_setcancelstate
 # endif
 #endif
 

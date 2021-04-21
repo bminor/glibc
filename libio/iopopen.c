@@ -282,10 +282,9 @@ _IO_new_proc_close (FILE *fp)
   do
     {
       int state;
-      __libc_ptf_call (__pthread_setcancelstate,
-		       (PTHREAD_CANCEL_DISABLE, &state), 0);
+      __pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &state);
       wait_pid = __waitpid (((_IO_proc_file *) fp)->pid, &wstatus, 0);
-      __libc_ptf_call (__pthread_setcancelstate, (state, NULL), 0);
+      __pthread_setcancelstate (state, NULL);
     }
   while (wait_pid == -1 && errno == EINTR);
   if (wait_pid == -1)

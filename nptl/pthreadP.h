@@ -387,7 +387,6 @@ extern int __pthread_getschedparam (pthread_t thread_id, int *policy,
 				    struct sched_param *param);
 extern int __pthread_setschedparam (pthread_t thread_id, int policy,
 				    const struct sched_param *param);
-extern int __pthread_setcancelstate (int state, int *oldstate);
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
 				 const pthread_mutexattr_t *__mutexattr);
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
@@ -560,7 +559,6 @@ hidden_proto (__pthread_rwlock_unlock)
 hidden_proto (__pthread_key_create)
 hidden_proto (__pthread_getspecific)
 hidden_proto (__pthread_setspecific)
-hidden_proto (__pthread_setcancelstate)
 hidden_proto (__pthread_testcancel)
 hidden_proto (__pthread_mutexattr_init)
 hidden_proto (__pthread_mutexattr_settype)

@@ -122,6 +122,7 @@ libc {
     __pthread_force_elision;
     __pthread_getattr_default_np;
     __pthread_keys;
+    __pthread_setcancelstate;
     __pthread_unwind;
   }
 }
@@ -172,7 +173,6 @@ libpthread {
     pthread_mutexattr_getkind_np;
     pthread_mutexattr_init;
     pthread_mutexattr_setkind_np;
-    pthread_setcancelstate;
     pthread_setcanceltype;
     pthread_setspecific;
     pthread_sigmask;

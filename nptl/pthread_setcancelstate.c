@@ -19,7 +19,7 @@
 #include <errno.h>
 #include "pthreadP.h"
 #include <atomic.h>
-
+#include <libc-lockP.h>
 
 int
 __pthread_setcancelstate (int state, int *oldstate)
@@ -67,5 +67,5 @@ __pthread_setcancelstate (int state, int *oldstate)
 
   return 0;
 }
-strong_alias (__pthread_setcancelstate, pthread_setcancelstate)
-hidden_def (__pthread_setcancelstate)
+libc_hidden_def (__pthread_setcancelstate)
+weak_alias (__pthread_setcancelstate, pthread_setcancelstate)

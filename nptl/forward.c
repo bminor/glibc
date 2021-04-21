@@ -102,8 +102,4 @@ FORWARD (pthread_mutex_lock, (pthread_mutex_t *mutex), (mutex), 0)
 
 FORWARD (pthread_mutex_unlock, (pthread_mutex_t *mutex), (mutex), 0)
 
-FORWARD (__pthread_setcancelstate, (int state, int *oldstate),
-	 (state, oldstate), 0)
-strong_alias (__pthread_setcancelstate, pthread_setcancelstate)
-
 FORWARD (pthread_setcanceltype, (int type, int *oldtype), (type, oldtype), 0)

@@ -19,6 +19,4 @@
 
 /* We have to completely disable cancellation.  assert() must not be a
    cancellation point but the implementation uses write() etc.  */
-#define FATAL_PREPARE \
-  __libc_ptf_call (__pthread_setcancelstate, \
-		   (PTHREAD_CANCEL_DISABLE, NULL), 0)
+#define FATAL_PREPARE __pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, NULL)

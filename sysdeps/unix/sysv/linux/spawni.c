@@ -354,8 +354,7 @@ __spawnix (pid_t * pid, const char *file,
 
   /* Disable asynchronous cancellation.  */
   int state;
-  __libc_ptf_call (__pthread_setcancelstate,
-                   (PTHREAD_CANCEL_DISABLE, &state), 0);
+  __pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &state);
 
   /* Child must set args.err to something non-negative - we rely on
      the parent and child sharing VM.  */
@@ -413,7 +412,7 @@ __spawnix (pid_t * pid, const char *file,
 
   __libc_signal_restore_set (&args.oldmask);
 
-  __libc_ptf_call (__pthread_setcancelstate, (state, NULL), 0);
+  __pthread_setcancelstate (state, NULL);
 
   return ec;
 }

@@ -122,13 +122,10 @@ fmtmsg (long int classification, const char *label, int severity,
 	return MM_NOTOK;
     }
 
-#ifdef __libc_ptf_call
   /* We do not want this call to be cut short by a thread
      cancellation.  Therefore disable cancellation for now.  */
   int state = PTHREAD_CANCEL_ENABLE;
-  __libc_ptf_call (__pthread_setcancelstate,
-		   (PTHREAD_CANCEL_DISABLE, &state), 0);
-#endif
+  __pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &state);
 
   __libc_lock_lock (lock);
 
@@ -197,9 +194,7 @@ fmtmsg (long int classification, const char *label, int severity,
 
   __libc_lock_unlock (lock);
 
-#ifdef __libc_ptf_call
-  __libc_ptf_call (__pthread_setcancelstate, (state, NULL), 0);
-#endif
+  __pthread_setcancelstate (state, NULL);
 
   return result;
 }
