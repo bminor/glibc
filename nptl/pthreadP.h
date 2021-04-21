@@ -701,8 +701,8 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer
 extern void __nptl_deallocate_tsd (void);
 libc_hidden_proto (__nptl_deallocate_tsd)
 
-extern void __nptl_setxid_error (struct xid_command *cmdp, int error)
-  attribute_hidden;
+void __nptl_setxid_sighandler (int sig, siginfo_t *si, void *ctx);
+libc_hidden_proto (__nptl_setxid_sighandler)
 extern int __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
 
 extern void __nptl_stacks_freeres (void) attribute_hidden;

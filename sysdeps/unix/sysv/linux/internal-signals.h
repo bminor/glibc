@@ -110,8 +110,4 @@ __libc_signal_restore_set (const sigset_t *set)
   INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, set, NULL,
 			 __NSIG_BYTES);
 }
-
-/* Used to communicate with signal handler.  */
-extern struct xid_command *__xidcmd attribute_hidden;
-
 #endif

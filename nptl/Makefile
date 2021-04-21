@@ -47,6 +47,7 @@ routines = \
   lowlevellock \
   nptl_deallocate_tsd \
   nptl_nthreads \
+  nptl_setxid \
   old_pthread_cond_broadcast \
   old_pthread_cond_destroy \
   old_pthread_cond_init \

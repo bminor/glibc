@@ -52,7 +52,6 @@ static const char nptl_version[] __attribute_used__ = VERSION;
 #ifdef SHARED
 static const struct pthread_functions pthread_functions =
   {
-    .ptr__nptl_setxid = __nptl_setxid,
   };
 # define ptr_pthread_functions &pthread_functions
 #else
@@ -106,52 +105,6 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 }
 
 
-struct xid_command *__xidcmd attribute_hidden;
-
-/* We use the SIGSETXID signal in the setuid, setgid, etc. implementations to
-   tell each thread to call the respective setxid syscall on itself.  This is
-   the handler.  */
-static void
-sighandler_setxid (int sig, siginfo_t *si, void *ctx)
-{
-  int result;
-
-  /* Safety check.  It would be possible to call this function for
-     other signals and send a signal from another process.  This is not
-     correct and might even be a security problem.  Try to catch as
-     many incorrect invocations as possible.  */
-  if (sig != SIGSETXID
-      || si->si_pid != __getpid ()
-      || si->si_code != SI_TKILL)
-    return;
-
-  result = INTERNAL_SYSCALL_NCS (__xidcmd->syscall_no, 3, __xidcmd->id[0],
-				 __xidcmd->id[1], __xidcmd->id[2]);
-  int error = 0;
-  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (result)))
-    error = INTERNAL_SYSCALL_ERRNO (result);
-  __nptl_setxid_error (__xidcmd, error);
-
-  /* Reset the SETXID flag.  */
-  struct pthread *self = THREAD_SELF;
-  int flags, newval;
-  do
-    {
-      flags = THREAD_GETMEM (self, cancelhandling);
-      newval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
-					  flags & ~SETXID_BITMASK, flags);
-    }
-  while (flags != newval);
-
-  /* And release the futex.  */
-  self->setxid_futex = 1;
-  futex_wake (&self->setxid_futex, 1, FUTEX_PRIVATE);
-
-  if (atomic_decrement_val (&__xidcmd->cntr) == 0)
-    futex_wake ((unsigned int *) &__xidcmd->cntr, 1, FUTEX_PRIVATE);
-}
-
-
 /* When using __thread for this, we do it in libc so as not
    to give libpthread its own TLS segment just for this.  */
 extern void **__libc_dl_error_tsd (void) __attribute__ ((const));
@@ -183,7 +136,7 @@ __pthread_initialize_minimal_internal (void)
   (void) __libc_sigaction (SIGCANCEL, &sa, NULL);
 
   /* Install the handle to change the threads' uid/gid.  */
-  sa.sa_sigaction = sighandler_setxid;
+  sa.sa_sigaction = __nptl_setxid_sighandler;
   sa.sa_flags = SA_SIGINFO | SA_RESTART;
   (void) __libc_sigaction (SIGSETXID, &sa, NULL);
 

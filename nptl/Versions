@@ -147,6 +147,7 @@ libc {
     __mutex_aconf;
     __nptl_deallocate_tsd;
     __nptl_nthreads;
+    __nptl_setxid_sighandler;
     __pthread_attr_copy;
     __pthread_attr_destroy;
     __pthread_attr_init;

@@ -16,6 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <nptl/pthreadP.h>
+#include <sys/single_threaded.h>
 #include <sysdep.h>
 
 #define __SETXID_1(cmd, arg1) \
@@ -25,30 +26,10 @@
 #define __SETXID_3(cmd, arg1, arg2, arg3) \
   __SETXID_2 (cmd, arg1, arg2); cmd.id[2] = (long int) arg3
 
-#ifdef SINGLE_THREAD
-# define INLINE_SETXID_SYSCALL(name, nr, args...) \
-  INLINE_SYSCALL (name, nr, args)
-#elif defined SHARED
-# define INLINE_SETXID_SYSCALL(name, nr, args...) \
+#define INLINE_SETXID_SYSCALL(name, nr, args...) \
   ({									\
     int __result;							\
-    if (__builtin_expect (__libc_pthread_functions_init, 0))		\
-      {									\
-	struct xid_command __cmd;					\
-	__cmd.syscall_no = __NR_##name;					\
-	__SETXID_##nr (__cmd, args);					\
-	__result = PTHFCT_CALL (ptr__nptl_setxid, (&__cmd));		\
-	}								\
-    else								\
-      __result = INLINE_SYSCALL (name, nr, args);			\
-    __result;								\
-   })
-#else
-# define INLINE_SETXID_SYSCALL(name, nr, args...) \
-  ({									\
-    extern __typeof (__nptl_setxid) __nptl_setxid __attribute__((weak));\
-    int __result;							\
-    if (__glibc_unlikely (__nptl_setxid	!= NULL))			      \
+    if (!__libc_single_threaded)					\
       {									\
 	struct xid_command __cmd;					\
 	__cmd.syscall_no = __NR_##name;					\
@@ -59,4 +40,3 @@
       __result = INLINE_SYSCALL (name, nr, args);			\
     __result;								\
    })
-#endif

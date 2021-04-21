@@ -30,7 +30,6 @@ struct xid_command;
    the thread functions.  */
 struct pthread_functions
 {
-  int (*ptr__nptl_setxid) (struct xid_command *);
 };
 
 /* Variable in libc.so.  */
