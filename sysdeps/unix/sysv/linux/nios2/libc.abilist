@@ -1500,6 +1500,7 @@ GLIBC_2.21 pthread_getattr_np F
 GLIBC_2.21 pthread_getschedparam F
 GLIBC_2.21 pthread_getspecific F
 GLIBC_2.21 pthread_key_create F
+GLIBC_2.21 pthread_key_delete F
 GLIBC_2.21 pthread_kill F
 GLIBC_2.21 pthread_mutex_consistent F
 GLIBC_2.21 pthread_mutex_consistent_np F
@@ -2231,6 +2232,7 @@ GLIBC_2.34 __pthread_setspecific F
 GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_key_create F
+GLIBC_2.34 pthread_key_delete F
 GLIBC_2.34 pthread_kill F
 GLIBC_2.34 pthread_mutex_consistent F
 GLIBC_2.34 pthread_once F

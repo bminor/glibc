@@ -523,6 +523,7 @@ extern int __pthread_condattr_destroy (pthread_condattr_t *attr);
 extern int __pthread_condattr_init (pthread_condattr_t *attr);
 extern int __pthread_key_create (pthread_key_t *key, void (*destr) (void *));
 extern int __pthread_key_delete (pthread_key_t key);
+libc_hidden_proto (__pthread_key_delete)
 extern void *__pthread_getspecific (pthread_key_t key);
 libc_hidden_proto (__pthread_getspecific)
 extern int __pthread_setspecific (pthread_key_t key, const void *value);
