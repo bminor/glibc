@@ -22,9 +22,10 @@ include ../Makeconfig
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr dladdr1 dlinfo \
-		   dlmopen dlfcn dlfreeres
+		   dlmopen dlfcn
 routines	:= $(patsubst %,s%,$(filter-out dlfcn,$(libdl-routines)))
 elide-routines.os := $(routines)
+routines += libc_dlerror_result
 
 extra-libs-others := libdl
 

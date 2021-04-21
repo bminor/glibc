@@ -18,6 +18,8 @@
 
 #include <dlfcn.h>
 #include <stddef.h>
+#include <stdio.h>
+#include <string.h>
 #include <support/check.h>
 
 /* Note: This object is not linked into the main program, so we cannot
@@ -25,17 +27,32 @@
    to use FAIL_EXIT1 (or something else that calls exit).  */
 
 void
-call_dlsym (void)
+call_dlsym (const char *name)
 {
-  void *ptr = dlsym (NULL, "does not exist");
+  void *ptr = dlsym (NULL, name);
   if (ptr != NULL)
-    FAIL_EXIT1 ("dlsym did not fail as expected");
+    FAIL_EXIT1 ("dlsym did not fail as expected for: %s", name);
+  const char *message = dlerror ();
+  if (strstr (message, ": undefined symbol: does not exist X") == NULL)
+    FAIL_EXIT1 ("invalid dlsym error message for [[%s]]: %s", name, message);
+  message = dlerror ();
+  if (message != NULL)
+    FAIL_EXIT1 ("second dlsym for [[%s]]: %s", name, message);
 }
 
 void
-call_dlopen (void)
+call_dlopen (const char *name)
 {
-  void *handle = dlopen ("tst-dlmopen-dlerror does not exist", RTLD_NOW);
+  void *handle = dlopen (name, RTLD_NOW);
   if (handle != NULL)
-    FAIL_EXIT1 ("dlopen did not fail as expected");
+    FAIL_EXIT1 ("dlopen did not fail as expected for: %s", name);
+  const char *message = dlerror ();
+  if (strstr (message, "X: cannot open shared object file:"
+              " No such file or directory") == NULL
+      && strstr (message, "X: cannot open shared object file:"
+                 " File name too long") == NULL)
+    FAIL_EXIT1 ("invalid dlopen error message for [[%s]]: %s", name, message);
+  message = dlerror ();
+  if (message != NULL)
+    FAIL_EXIT1 ("second dlopen for [[%s]]: %s", name, message);
 }

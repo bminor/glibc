@@ -668,6 +668,9 @@ struct rtld_global_ro
   int (*_dl_catch_error) (const char **objname, const char **errstring,
 			  bool *mallocedp, void (*operate) (void *),
 			  void *args);
+  /* libdl in a secondary namespace must use free from the base
+     namespace.  */
+  void (*_dl_error_free) (void *);
   void *(*_dl_tls_get_addr_soft) (struct link_map *);
 #ifdef HAVE_DL_DISCOVER_OSVERSION
   int (*_dl_discover_osversion) (void);
@@ -822,6 +825,10 @@ void _dl_exception_create (struct dl_exception *, const char *object,
 			   const char *errstring)
   __attribute__ ((nonnull (1, 3)));
 rtld_hidden_proto (_dl_exception_create)
+
+/* Used internally to implement dlerror message freeing.  See
+   include/dlfcn.h and dlfcn/dlerror.c.  */
+void _dl_error_free (void *ptr) attribute_hidden;
 
 /* Like _dl_exception_create, but create errstring from a format
    string FMT.  Currently, only "%s" and "%%" are supported as format

@@ -25,6 +25,8 @@
 #include <libc-lock.h>
 #include <ldsodefs.h>
 #include <libc-symbols.h>
+#include <assert.h>
+#include <dlerror.h>
 
 #if !defined SHARED && IS_IN (libdl)
 
@@ -36,92 +38,75 @@ dlerror (void)
 
 #else
 
-/* Type for storing results of dynamic loading actions.  */
-struct dl_action_result
-  {
-    int errcode;
-    int returned;
-    bool malloced;
-    const char *objname;
-    const char *errstring;
-  };
-static struct dl_action_result last_result;
-static struct dl_action_result *static_buf;
-
-/* This is the key for the thread specific memory.  */
-static __libc_key_t key;
-__libc_once_define (static, once);
-
-/* Destructor for the thread-specific data.  */
-static void init (void);
-static void free_key_mem (void *mem);
-
-
 char *
 __dlerror (void)
 {
-  char *buf = NULL;
-  struct dl_action_result *result;
-
 # ifdef SHARED
   if (!rtld_active ())
     return _dlfcn_hook->dlerror ();
 # endif
 
-  /* If we have not yet initialized the buffer do it now.  */
-  __libc_once (once, init);
+  struct dl_action_result *result = __libc_dlerror_result;
 
-  /* Get error string.  */
-  if (static_buf != NULL)
-    result = static_buf;
+  /* No libdl function has been called.  No error is possible.  */
+  if (result == NULL)
+    return NULL;
+
+  /* For an early malloc failure, clear the error flag and return the
+     error message.  This marks the error as delivered.  */
+  if (result == dl_action_result_malloc_failed)
+    {
+      __libc_dlerror_result = NULL;
+      return (char *) "out of memory";
+    }
+
+  /* Placeholder object.  This can be observed in a recursive call,
+     e.g. from an ELF constructor.  */
+  if (result->errstring == NULL)
+    return NULL;
+
+  /* If we have already reported the error, we can free the result and
+     return NULL.  See __libc_dlerror_result_free.  */
+  if (result->returned)
+    {
+      __libc_dlerror_result = NULL;
+      dl_action_result_errstring_free (result);
+      free (result);
+      return NULL;
+    }
+
+  assert (result->errstring != NULL);
+
+  /* Create the combined error message.  */
+  char *buf;
+  int n;
+  if (result->errcode == 0)
+    n = __asprintf (&buf, "%s%s%s",
+		    result->objname,
+		    result->objname[0] == '\0' ? "" : ": ",
+		    _(result->errstring));
   else
-    {
-      /* init () has been run and we don't use the static buffer.
-	 So we have a valid key.  */
-      result = (struct dl_action_result *) __libc_getspecific (key);
-      if (result == NULL)
-	result = &last_result;
-    }
+    n = __asprintf (&buf, "%s%s%s: %s",
+		    result->objname,
+		    result->objname[0] == '\0' ? "" : ": ",
+		    _(result->errstring),
+		    strerror (result->errcode));
 
-  /* Test whether we already returned the string.  */
-  if (result->returned != 0)
-    {
-      /* We can now free the string.  */
-      if (result->errstring != NULL)
-	{
-	  if (strcmp (result->errstring, "out of memory") != 0)
-	    free ((char *) result->errstring);
-	  result->errstring = NULL;
-	}
-    }
-  else if (result->errstring != NULL)
-    {
-      buf = (char *) result->errstring;
-      int n;
-      if (result->errcode == 0)
-	n = __asprintf (&buf, "%s%s%s",
-			result->objname,
-			result->objname[0] == '\0' ? "" : ": ",
-			_(result->errstring));
-      else
-	n = __asprintf (&buf, "%s%s%s: %s",
-			result->objname,
-			result->objname[0] == '\0' ? "" : ": ",
-			_(result->errstring),
-			strerror (result->errcode));
-      if (n != -1)
-	{
-	  /* We don't need the error string anymore.  */
-	  if (strcmp (result->errstring, "out of memory") != 0)
-	    free ((char *) result->errstring);
-	  result->errstring = buf;
-	}
+  /* Mark the error as delivered.  */
+  result->returned = true;
 
-      /* Mark the error as returned.  */
-      result->returned = 1;
+  if (n >= 0)
+    {
+      /* Replace the error string with the newly allocated one.  */
+      dl_action_result_errstring_free (result);
+      result->errstring = buf;
+      result->errstring_source = dl_action_result_errstring_local;
+      return buf;
     }
-
-  return buf;
+  else
+    /* We could not create the combined error message, so use the
+       existing string as a fallback.  */
+    return result->errstring;
 }
 # ifdef SHARED
 strong_alias (__dlerror, dlerror)
@@ -130,129 +115,93 @@ strong_alias (__dlerror, dlerror)
 int
 _dlerror_run (void (*operate) (void *), void *args)
 {
-  struct dl_action_result *result;
+  struct dl_action_result *result = __libc_dlerror_result;
+  if (result != NULL)
+    {
+      if (result == dl_action_result_malloc_failed)
+	{
+	  /* Clear the previous error.  */
+	  __libc_dlerror_result = NULL;
+	  result = NULL;
+	}
+      else
+	{
+	  /* There is an existing object.  Free its error string, but
+	     keep the object.  */
+	  dl_action_result_errstring_free (result);
+	  /* Mark the object as not containing an error.  This ensures
+	     that call to dlerror from, for example, an ELF
+	     constructor will not notice this result object.  */
+	  result->errstring = NULL;
+	}
+    }
 
-  /* If we have not yet initialized the buffer do it now.  */
-  __libc_once (once, init);
+  const char *objname;
+  const char *errstring;
+  bool malloced;
+  int errcode = GLRO (dl_catch_error) (&objname, &errstring, &malloced,
+				       operate, args);
 
-  /* Get error string and number.  */
-  if (static_buf != NULL)
-    result = static_buf;
+  /* ELF constructors or destructors may have indirectly altered the
+     value of __libc_dlerror_result, therefore reload it.  */
+  result = __libc_dlerror_result;
+
+  if (errstring == NULL)
+    {
+      /* There is no error.  We no longer need the result object if it
+	 does not contain an error.  However, a recursive call may
+	 have added an error even if this call did not cause it.  Keep
+	 the other error.  */
+      if (result != NULL && result->errstring == NULL)
+	{
+	  __libc_dlerror_result = NULL;
+	  free (result);
+	}
+      return 0;
+    }
   else
     {
-      /* We don't use the static buffer and so we have a key.  Use it
-	 to get the thread-specific buffer.  */
-      result = __libc_getspecific (key);
-      if (result == NULL)
+      /* A new error occurred.  Check if a result object has to be
+	 allocated.  */
+      if (result == NULL || result == dl_action_result_malloc_failed)
 	{
-	  result = (struct dl_action_result *) calloc (1, sizeof (*result));
+	  /* Allocating storage for the error message after the fact
+	     is not ideal.  But this avoids an infinite recursion in
+	     case malloc itself calls libdl functions (without
+	     triggering errors).  */
+	  result = malloc (sizeof (*result));
 	  if (result == NULL)
-	    /* We are out of memory.  Since this is no really critical
-	       situation we carry on by using the global variable.
-	       This might lead to conflicts between the threads but
-	       they soon all will have memory problems.  */
-	    result = &last_result;
-	  else
-	    /* Set the tsd.  */
-	    __libc_setspecific (key, result);
+	    {
+	      /* Assume that the dlfcn failure was due to a malloc
+		 failure, too.  */
+	      if (malloced)
+		dl_error_free ((char *) errstring);
+	      __libc_dlerror_result = dl_action_result_malloc_failed;
+	      return 1;
+	    }
+	  __libc_dlerror_result = result;
 	}
+      else
+	/* Deallocate the existing error message from a recursive
+	   call, but reuse the result object.  */
+	dl_action_result_errstring_free (result);
+
+      result->errcode = errcode;
+      result->objname = objname;
+      result->errstring = (char *) errstring;
+      result->returned = false;
+      /* In case of an error, the malloced flag indicates whether the
+	 error string is constant or not.  */
+      if (malloced)
+	result->errstring_source = dl_action_result_errstring_rtld;
+      else
+	result->errstring_source = dl_action_result_errstring_constant;
+
+      return 1;
     }
-
-  if (result->errstring != NULL)
-    {
-      /* Free the error string from the last failed command.  This can
-	 happen if `dlerror' was not run after an error was found.  */
-      if (result->malloced)
-	free ((char *) result->errstring);
-      result->errstring = NULL;
-    }
-
-  result->errcode = GLRO (dl_catch_error) (&result->objname,
-					   &result->errstring,
-					   &result->malloced,
-					   operate, args);
-
-  /* If no error we mark that no error string is available.  */
-  result->returned = result->errstring == NULL;
-
-  return result->errstring != NULL;
-}
-
-
-/* Initialize buffers for results.  */
-static void
-init (void)
-{
-  if (__libc_key_create (&key, free_key_mem))
-    /* Creating the key failed.  This means something really went
-       wrong.  In any case use a static buffer which is better than
-       nothing.  */
-    static_buf = &last_result;
-}
-
-
-static void
-check_free (struct dl_action_result *rec)
-{
-  if (rec->errstring != NULL
-      && strcmp (rec->errstring, "out of memory") != 0)
-    {
-      /* We can free the string only if the allocation happened in the
-	 C library used by the dynamic linker.  This means, it is
-	 always the C library in the base namespace.  When we're statically
-         linked, the dynamic linker is part of the program and so always
-	 uses the same C library we use here.  */
-#ifdef SHARED
-      struct link_map *map = NULL;
-      Dl_info info;
-      if (_dl_addr (check_free, &info, &map, NULL) != 0 && map->l_ns == 0)
-#endif
-	{
-	  free ((char *) rec->errstring);
-	  rec->errstring = NULL;
-	}
-    }
-}
-
-
-static void
-__attribute__ ((destructor))
-fini (void)
-{
-  check_free (&last_result);
-}
-
-
-/* Free the thread specific data, this is done if a thread terminates.  */
-static void
-free_key_mem (void *mem)
-{
-  check_free ((struct dl_action_result *) mem);
-
-  free (mem);
-  __libc_setspecific (key, NULL);
 }
 
 # ifdef SHARED
-
-/* Free the dlerror-related resources.  */
-void
-__dlerror_main_freeres (void)
-{
-  /* Free the global memory if used.  */
-  check_free (&last_result);
-
-  if (__libc_once_get (once) && static_buf == NULL)
-    {
-      /* init () has been run and we don't use the static buffer.
-	 So we have a valid key.  */
-      void *mem;
-      /* Free the TSD memory if used.  */
-      mem = __libc_getspecific (key);
-      if (mem != NULL)
-	free_key_mem (mem);
-    }
-}
 
 struct dlfcn_hook *_dlfcn_hook __attribute__((nocommon));
 libdl_hidden_data_def (_dlfcn_hook)

@@ -30,6 +30,17 @@
    a pointer comparison.  See below and in dlfcn/dlerror.c.  */
 static const char _dl_out_of_memory[] = "out of memory";
 
+/* Call free in the main libc.so.  This allows other namespaces to
+   free pointers on the main libc heap, via GLRO (dl_error_free).  It
+   also avoids calling free on the special, pre-allocated
+   out-of-memory error message.  */
+void
+_dl_error_free (void *ptr)
+{
+  if (ptr != _dl_out_of_memory)
+    free (ptr);
+}
+
 /* Dummy allocation object used if allocating the message buffer
    fails.  */
 static void

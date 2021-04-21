@@ -17,6 +17,7 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <stddef.h>
+#include <string.h>
 #include <support/check.h>
 #include <support/xdlfcn.h>
 
@@ -25,11 +26,22 @@ do_test (void)
 {
   void *handle = xdlmopen (LM_ID_NEWLM, "tst-dlmopen-dlerror-mod.so",
                            RTLD_NOW);
-  void (*call_dlsym) (void) = xdlsym (handle, "call_dlsym");
-  void (*call_dlopen) (void) = xdlsym (handle, "call_dlopen");
+  void (*call_dlsym) (const char *name) = xdlsym (handle, "call_dlsym");
+  void (*call_dlopen) (const char *name) = xdlsym (handle, "call_dlopen");
 
-  call_dlsym ();
-  call_dlopen ();
+  /* Iterate over various name lengths.  This changes the size of
+     error messages allocated by ld.so and has been shown to trigger
+     detectable heap corruption if malloc/free calls in different
+     namespaces are mixed.  */
+  char buffer[2048];
+  char *buffer_end = &buffer[sizeof (buffer) - 2];
+  for (char *p = stpcpy (buffer, "does not exist "); p < buffer_end; ++p)
+    {
+      p[0] = 'X';
+      p[1] = '\0';
+      call_dlsym (buffer);
+      call_dlopen (buffer);
+    }
 
   return 0;
 }

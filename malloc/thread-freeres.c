@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <dlfcn/dlerror.h>
 #include <libc-internal.h>
 #include <malloc-internal.h>
 #include <resolv/resolv-internal.h>
@@ -36,6 +37,7 @@ __libc_thread_freeres (void)
 #endif
   call_function_static_weak (__res_thread_freeres);
   __glibc_tls_internal_free ();
+  call_function_static_weak (__libc_dlerror_result_free);
 
   /* This should come last because it shuts down malloc for this
      thread and the other shutdown functions might well call free.  */
