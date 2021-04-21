@@ -16,7 +16,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
-#include <lowlevellock.h>
 
 ENTRY (pthread_spin_lock)
 	mov	4(%esp), %eax
