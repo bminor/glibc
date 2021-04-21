@@ -48,13 +48,9 @@ __vmx__libc_siglongjmp (sigjmp_buf env, int val)
 
 strong_alias (__vmx__libc_siglongjmp, __vmx__libc_longjmp)
 libc_hidden_def (__vmx__libc_longjmp)
-weak_alias (__vmx__libc_siglongjmp, __vmx_longjmp)
-weak_alias (__vmx__libc_siglongjmp, __vmxlongjmp)
-weak_alias (__vmx__libc_siglongjmp, __vmxsiglongjmp)
 
-
-default_symbol_version (__vmx__libc_longjmp, __libc_longjmp, GLIBC_PRIVATE);
-default_symbol_version (__vmx__libc_siglongjmp, __libc_siglongjmp, GLIBC_PRIVATE);
-versioned_symbol (libc, __vmx_longjmp, _longjmp, GLIBC_2_3_4);
-versioned_symbol (libc, __vmxlongjmp, longjmp, GLIBC_2_3_4);
-versioned_symbol (libc, __vmxsiglongjmp, siglongjmp, GLIBC_2_3_4);
+strong_alias (__vmx__libc_longjmp, __libc_longjmp)
+strong_alias (__vmx__libc_siglongjmp, __libc_siglongjmp)
+versioned_symbol (libc, __vmx__libc_siglongjmp, _longjmp, GLIBC_2_3_4);
+versioned_symbol (libc, __vmx__libc_siglongjmp, longjmp, GLIBC_2_3_4);
+versioned_symbol (libc, __vmx__libc_siglongjmp, siglongjmp, GLIBC_2_3_4);

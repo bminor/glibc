@@ -81,6 +81,7 @@ routines = \
   pthread_self \
   pthread_setschedparam \
   pthread_sigmask \
+  unwind \
 
 shared-only-routines = forward
 static-only-routines = pthread_atfork
@@ -211,15 +212,12 @@ libpthread-routines = \
   sem_unlink \
   sem_wait \
   tpp \
-  unwind \
-  unwind-forcedunwind \
   vars \
   version \
 
 libpthread-shared-only-routines = \
   pt-allocrtsig \
   pt-interp \
-  unwind-forcedunwind \
   version \
 
 # Since cancellation handling is in large parts handled using exceptions

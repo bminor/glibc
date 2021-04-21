@@ -94,7 +94,6 @@ static const struct pthread_functions pthread_functions =
     .ptr___pthread_getspecific = __pthread_getspecific,
     .ptr___pthread_setspecific = __pthread_setspecific,
     .ptr_nthreads = &__nptl_nthreads,
-    .ptr___pthread_unwind = &__pthread_unwind,
     .ptr__nptl_deallocate_tsd = __nptl_deallocate_tsd,
     .ptr__nptl_setxid = __nptl_setxid,
     .ptr_set_robust = __nptl_set_robust

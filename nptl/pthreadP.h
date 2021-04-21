@@ -271,19 +271,21 @@ extern void __pthread_unwind (__pthread_unwind_buf_t *__buf)
      weak_function
 #endif
      ;
+libc_hidden_proto (__pthread_unwind)
 extern void __pthread_unwind_next (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute __attribute ((__noreturn__))
 #ifndef SHARED
      weak_function
 #endif
      ;
+/* NB: No hidden proto for __pthread_unwind_next: inside glibc, the
+   legacy unwinding mechanism is used.  */
+
+#if IS_IN (libpthread)
 extern void __pthread_register_cancel (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute;
 extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute;
-#if IS_IN (libpthread)
-hidden_proto (__pthread_unwind)
-hidden_proto (__pthread_unwind_next)
 hidden_proto (__pthread_register_cancel)
 hidden_proto (__pthread_unregister_cancel)
 # ifdef SHARED

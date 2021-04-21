@@ -25,6 +25,7 @@
 #include "pthreadP.h"
 #include <libc-diag.h>
 #include <jmpbuf-unwind.h>
+#include <shlib-compat.h>
 
 #ifdef _STACK_GROWS_DOWN
 # define FRAME_LEFT(frame, other, adj) \
@@ -134,15 +135,19 @@ __pthread_unwind (__pthread_unwind_buf_t *buf)
   /* We better do not get here.  */
   abort ();
 }
-hidden_def (__pthread_unwind)
-
+libc_hidden_def (__pthread_unwind)
 
 void
 __cleanup_fct_attribute __attribute ((noreturn))
-__pthread_unwind_next (__pthread_unwind_buf_t *buf)
+___pthread_unwind_next (__pthread_unwind_buf_t *buf)
 {
   struct pthread_unwind_buf *ibuf = (struct pthread_unwind_buf *) buf;
 
   __pthread_unwind ((__pthread_unwind_buf_t *) ibuf->priv.data.prev);
 }
-hidden_def (__pthread_unwind_next)
+versioned_symbol (libc, ___pthread_unwind_next, __pthread_unwind_next,
+		  GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_unwind_next, __pthread_unwind_next,
+	       GLIBC_2_3_3);
+#endif

@@ -63,8 +63,3 @@ ifeq ($(subdir),rt)
 librt-sysdep_routines += rt-aeabi_unwind_cpp_pr1 rt-arm-unwind-resume
 librt-shared-only-routines += rt-aeabi_unwind_cpp_pr1 rt-arm-unwind-resume
 endif
-
-ifeq ($(subdir),nptl)
-libpthread-sysdep_routines += pt-arm-unwind-resume
-libpthread-shared-only-routines += pt-arm-unwind-resume
-endif

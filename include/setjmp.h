@@ -20,9 +20,9 @@ extern int __sigjmp_save (jmp_buf __env, int __savemask);
 extern void _longjmp_unwind (jmp_buf env, int val);
 
 extern void __libc_siglongjmp (sigjmp_buf env, int val)
-	  __attribute__ ((noreturn));
+	  __attribute__ ((noreturn)) attribute_hidden;
 extern void __libc_longjmp (sigjmp_buf env, int val)
-     __attribute__ ((noreturn));
+     __attribute__ ((noreturn)) attribute_hidden;
 
 libc_hidden_proto (_setjmp)
 libc_hidden_proto (__sigsetjmp)

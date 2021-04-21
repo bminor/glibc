@@ -25,7 +25,6 @@ GLIBC_2.21 __pthread_rwlock_wrlock F
 GLIBC_2.21 __pthread_setspecific F
 GLIBC_2.21 __pthread_unregister_cancel F
 GLIBC_2.21 __pthread_unregister_cancel_restore F
-GLIBC_2.21 __pthread_unwind_next F
 GLIBC_2.21 __res_state F
 GLIBC_2.21 flockfile F
 GLIBC_2.21 ftrylockfile F

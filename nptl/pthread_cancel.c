@@ -23,6 +23,9 @@
 #include <atomic.h>
 #include <sysdep.h>
 #include <unistd.h>
+#include <unwind-link.h>
+#include <stdio.h>
+#include <gnu/lib-names.h>
 
 int
 __pthread_cancel (pthread_t th)
@@ -36,7 +39,12 @@ __pthread_cancel (pthread_t th)
 
 #ifdef SHARED
   /* Trigger an error if libgcc_s cannot be loaded.  */
-  __pthread_unwind_link_get ();
+  {
+    struct unwind_link *unwind_link = __libc_unwind_link_get ();
+    if (unwind_link == NULL)
+      __libc_fatal (LIBGCC_S_SO
+		    " must be installed for pthread_cancel to work\n");
+  }
 #endif
   int result = 0;
   int oldval;

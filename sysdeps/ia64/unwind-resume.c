@@ -16,11 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdeps/nptl/unwind-forcedunwind.c>
+#include <sysdeps/generic/unwind-resume.c>
 
 _Unwind_Word
 _Unwind_GetBSP (struct _Unwind_Context *context)
 {
-  return UNWIND_LINK_PTR (__pthread_unwind_link_get (), _Unwind_GetBSP)
-    (context);
+  return UNWIND_LINK_PTR (link (), _Unwind_GetBSP) (context);
 }

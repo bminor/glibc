@@ -57,6 +57,7 @@ libc {
   }
   GLIBC_2.3.3 {
     __pthread_cleanup_routine;
+    __pthread_unwind_next;
     pthread_attr_setaffinity_np;
     pthread_getaffinity_np;
   }
@@ -117,6 +118,7 @@ libc {
     __pthread_cond_init; # Used by the C11 threads.
     __pthread_force_elision;
     __pthread_getattr_default_np;
+    __pthread_unwind;
   }
 }
 
@@ -278,7 +280,6 @@ libpthread {
     __pthread_register_cancel_defer;
     __pthread_unregister_cancel;
     __pthread_unregister_cancel_restore;
-    __pthread_unwind_next;
     pthread_attr_getaffinity_np;
     pthread_barrierattr_getpshared;
     pthread_condattr_getclock;
@@ -367,6 +368,5 @@ libpthread {
     __pthread_clock_settime;
     __pthread_get_minstack;
     __pthread_initialize_minimal;
-    __pthread_unwind;
   }
 }

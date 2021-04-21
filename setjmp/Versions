@@ -9,8 +9,4 @@ libc {
     # s*
     setjmp;
   }
-  GLIBC_PRIVATE {
-    # helper functions
-    __libc_longjmp; __libc_siglongjmp;
-  }
 }

@@ -44,3 +44,17 @@ __gcc_personality_v0 PERSONALITY_PROTO
 {
   return UNWIND_LINK_PTR (link (), personality) PERSONALITY_ARGS;
 }
+
+_Unwind_Reason_Code
+_Unwind_ForcedUnwind (struct _Unwind_Exception *exc, _Unwind_Stop_Fn stop,
+                      void *stop_argument)
+{
+  return UNWIND_LINK_PTR (link (), _Unwind_ForcedUnwind)
+    (exc, stop, stop_argument);
+}
+
+_Unwind_Word
+_Unwind_GetCFA (struct _Unwind_Context *context)
+{
+  return UNWIND_LINK_PTR (link (), _Unwind_GetCFA) (context);
+}

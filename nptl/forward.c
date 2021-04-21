@@ -123,9 +123,3 @@ FORWARD (__pthread_setcancelstate, (int state, int *oldstate),
 strong_alias (__pthread_setcancelstate, pthread_setcancelstate)
 
 FORWARD (pthread_setcanceltype, (int type, int *oldtype), (type, oldtype), 0)
-
-FORWARD_NORETURN (__pthread_unwind,
-                  void attribute_hidden __attribute ((noreturn))
-                  __cleanup_fct_attribute attribute_compat_text_section,
-                  (__pthread_unwind_buf_t *buf), (buf),
-                  __safe_fatal ())
