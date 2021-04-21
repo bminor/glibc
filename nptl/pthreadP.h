@@ -231,12 +231,16 @@ rtld_hidden_proto (__nptl_set_robust_list_avail)
 #endif
 
 /* Thread Priority Protection.  */
-extern int __sched_fifo_min_prio attribute_hidden;
-extern int __sched_fifo_max_prio attribute_hidden;
-extern void __init_sched_fifo_prio (void) attribute_hidden;
-extern int __pthread_tpp_change_priority (int prev_prio, int new_prio)
-     attribute_hidden;
-extern int __pthread_current_priority (void) attribute_hidden;
+extern int __sched_fifo_min_prio;
+libc_hidden_proto (__sched_fifo_min_prio)
+extern int __sched_fifo_max_prio;
+libc_hidden_proto (__sched_fifo_max_prio)
+extern void __init_sched_fifo_prio (void);
+libc_hidden_proto (__init_sched_fifo_prio)
+extern int __pthread_tpp_change_priority (int prev_prio, int new_prio);
+libc_hidden_proto (__pthread_tpp_change_priority)
+extern int __pthread_current_priority (void);
+libc_hidden_proto (__pthread_current_priority)
 
 /* The library can run in debugging mode where it performs a lot more
    tests.  */

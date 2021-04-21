@@ -120,6 +120,7 @@ libc {
   GLIBC_PRIVATE {
     __futex_abstimed_wait64;
     __futex_abstimed_wait_cancelable64;
+    __init_sched_fifo_prio;
     __libc_alloca_cutoff;
     __libc_cleanup_pop_restore;
     __libc_cleanup_push_defer;
@@ -143,13 +144,17 @@ libc {
     __pthread_cleanup_upto;
     __pthread_cond_destroy; # Used by the C11 threads.
     __pthread_cond_init; # Used by the C11 threads.
+    __pthread_current_priority;
     __pthread_exit;
     __pthread_force_elision;
     __pthread_getattr_default_np;
     __pthread_key_delete;
     __pthread_keys;
     __pthread_setcancelstate;
+    __pthread_tpp_change_priority;
     __pthread_unwind;
+    __sched_fifo_max_prio;
+    __sched_fifo_min_prio;
   }
 }
 

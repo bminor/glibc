@@ -94,6 +94,7 @@ routines = \
   pthread_setschedparam \
   pthread_setspecific \
   pthread_sigmask \
+  tpp \
   unwind \
 
 shared-only-routines = forward
@@ -214,7 +215,6 @@ libpthread-routines = \
   sem_timedwait \
   sem_unlink \
   sem_wait \
-  tpp \
   vars \
   version \
 
