@@ -49,9 +49,6 @@ typedef int __libc_lock_t;
 typedef struct { pthread_mutex_t mutex; } __rtld_lock_recursive_t;
 typedef pthread_rwlock_t __libc_rwlock_t;
 
-/* Type for key to thread-specific data.  */
-typedef pthread_key_t __libc_key_t;
-
 /* Define a lock variable NAME with storage class CLASS.  The lock must be
    initialized with __libc_lock_init before it can be used (or define it
    with __libc_lock_define_initialized, below).  Use `extern' for CLASS to
@@ -267,18 +264,13 @@ __libc_cleanup_routine (struct __pthread_cleanup_frame *f)
   } while (0)
 #endif /* __EXCEPTIONS */
 
-/* Create thread-specific key.  */
-#define __libc_key_create(KEY, DESTRUCTOR) \
-  __libc_ptf_call (__pthread_key_create, (KEY, DESTRUCTOR), 1)
-
-/* Get thread-specific data.  */
-#define __libc_getspecific(KEY) \
-  __libc_ptf_call (__pthread_getspecific, (KEY), NULL)
-
-/* Set thread-specific data.  */
-#define __libc_setspecific(KEY, VALUE) \
-  __libc_ptf_call (__pthread_setspecific, (KEY, VALUE), 0)
-
+/* Register handlers to execute before and after `fork'.  Note that the
+   last parameter is NULL.  The handlers registered by the libc are
+   never removed so this is OK.  */
+extern int __register_atfork (void (*__prepare) (void),
+			      void (*__parent) (void),
+			      void (*__child) (void),
+			      void *__dso_handle);
 
 /* Functions that are used by this file and are internal to the GNU C
    library.  */
@@ -315,14 +307,6 @@ extern int __pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock);
 
 extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
-
-extern int __pthread_key_create (pthread_key_t *__key,
-				 void (*__destr_function) (void *));
-
-extern int __pthread_setspecific (pthread_key_t __key,
-				  const void *__pointer);
-
-extern void *__pthread_getspecific (pthread_key_t __key);
 
 extern int __pthread_once (pthread_once_t *__once_control,
 			   void (*__init_routine) (void));

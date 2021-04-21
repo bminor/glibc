@@ -22,9 +22,6 @@
 #include <pthread.h>
 #include <pthread-functions.h>
 
-/* Type for key to thread-specific data.  */
-typedef pthread_key_t __libc_key_t;
-
 /* If we check for a weakly referenced symbol and then perform a
    normal jump to it te code generated for some platforms in case of
    PIC is unnecessarily slow.  What would happen is that the function
@@ -108,16 +105,6 @@ extern int __pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock);
 
 extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
-
-extern int __pthread_key_create (pthread_key_t *__key,
-				 void (*__destr_function) (void *));
-
-extern int __pthread_key_delete (pthread_key_t __key);
-
-extern int __pthread_setspecific (pthread_key_t __key,
-				  const void *__pointer);
-
-extern void *__pthread_getspecific (pthread_key_t __key);
 
 extern int __pthread_once (pthread_once_t *__once_control,
 			   void (*__init_routine) (void));
