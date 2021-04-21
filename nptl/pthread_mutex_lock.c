@@ -26,6 +26,7 @@
 #include <atomic.h>
 #include <futex-internal.h>
 #include <stap-probe.h>
+#include <shlib-compat.h>
 
 /* Some of the following definitions differ when pthread_mutex_cond_lock.c
    includes this file.  */
@@ -60,13 +61,15 @@ lll_mutex_lock_optimized (pthread_mutex_t *mutex)
 # define LLL_MUTEX_TRYLOCK_ELISION(mutex) \
   lll_trylock_elision((mutex)->__data.__lock, (mutex)->__data.__elision, \
 		   PTHREAD_MUTEX_PSHARED (mutex))
+# define PTHREAD_MUTEX_LOCK ___pthread_mutex_lock
+# define PTHREAD_MUTEX_VERSIONS 1
 #endif
 
 static int __pthread_mutex_lock_full (pthread_mutex_t *mutex)
      __attribute_noinline__;
 
 int
-__pthread_mutex_lock (pthread_mutex_t *mutex)
+PTHREAD_MUTEX_LOCK (pthread_mutex_t *mutex)
 {
   /* See concurrency notes regarding mutex type which is loaded from __kind
      in struct __pthread_mutex_s in sysdeps/nptl/bits/thread-shared-types.h.  */
@@ -604,10 +607,19 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 
   return 0;
 }
-#ifndef __pthread_mutex_lock
-weak_alias (__pthread_mutex_lock, pthread_mutex_lock)
-hidden_def (__pthread_mutex_lock)
-#endif
+
+#if PTHREAD_MUTEX_VERSIONS
+versioned_symbol (libpthread, ___pthread_mutex_lock, __pthread_mutex_lock,
+		  GLIBC_2_34);
+libc_hidden_ver (___pthread_mutex_lock, __pthread_mutex_lock)
+versioned_symbol (libpthread, ___pthread_mutex_lock, pthread_mutex_lock,
+		  GLIBC_2_0);
+
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_mutex_lock, __pthread_mutex_lock,
+	       GLIBC_2_0);
+# endif
+#endif /* PTHREAD_MUTEX_VERSIONS */
 
 
 #ifdef NO_INCR

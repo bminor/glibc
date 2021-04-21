@@ -3,11 +3,7 @@ GLIBC_2.21 _IO_ftrylockfile F
 GLIBC_2.21 _IO_funlockfile F
 GLIBC_2.21 __errno_location F
 GLIBC_2.21 __h_errno_location F
-GLIBC_2.21 __pthread_mutex_destroy F
-GLIBC_2.21 __pthread_mutex_init F
-GLIBC_2.21 __pthread_mutex_lock F
 GLIBC_2.21 __pthread_mutex_trylock F
-GLIBC_2.21 __pthread_mutex_unlock F
 GLIBC_2.21 __pthread_mutexattr_destroy F
 GLIBC_2.21 __pthread_mutexattr_init F
 GLIBC_2.21 __pthread_mutexattr_settype F
@@ -56,14 +52,10 @@ GLIBC_2.21 pthread_getcpuclockid F
 GLIBC_2.21 pthread_getname_np F
 GLIBC_2.21 pthread_join F
 GLIBC_2.21 pthread_kill_other_threads_np F
-GLIBC_2.21 pthread_mutex_destroy F
 GLIBC_2.21 pthread_mutex_getprioceiling F
-GLIBC_2.21 pthread_mutex_init F
-GLIBC_2.21 pthread_mutex_lock F
 GLIBC_2.21 pthread_mutex_setprioceiling F
 GLIBC_2.21 pthread_mutex_timedlock F
 GLIBC_2.21 pthread_mutex_trylock F
-GLIBC_2.21 pthread_mutex_unlock F
 GLIBC_2.21 pthread_mutexattr_destroy F
 GLIBC_2.21 pthread_mutexattr_getkind_np F
 GLIBC_2.21 pthread_mutexattr_getprioceiling F

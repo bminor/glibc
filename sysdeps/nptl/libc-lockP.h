@@ -128,8 +128,7 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 # define __libc_lock_init(NAME) \
   ((void) ((NAME) = LLL_LOCK_INITIALIZER))
 #else
-# define __libc_lock_init(NAME) \
-  __libc_maybe_call (__pthread_mutex_init, (&(NAME), NULL), 0)
+# define __libc_lock_init(NAME) __pthread_mutex_init (&(NAME))
 #endif
 #if defined SHARED && IS_IN (libc)
 /* ((NAME) = (__libc_rwlock_t) PTHREAD_RWLOCK_INITIALIZER) is inefficient.  */
@@ -146,8 +145,7 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 #if IS_IN (libc) || IS_IN (libpthread)
 # define __libc_lock_fini(NAME) ((void) 0)
 #else
-# define __libc_lock_fini(NAME) \
-  __libc_maybe_call (__pthread_mutex_destroy, (&(NAME)), 0)
+# define __libc_lock_fini(NAME) __pthread_mutex_destroy (&(NAME))
 #endif
 #if defined SHARED && IS_IN (libc)
 # define __libc_rwlock_fini(NAME) ((void) 0)
@@ -164,8 +162,7 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 # endif
 #else
 # undef __libc_lock_lock
-# define __libc_lock_lock(NAME) \
-  __libc_maybe_call (__pthread_mutex_lock, (&(NAME)), 0)
+# define __libc_lock_lock(NAME) __pthread_mutex_lock (&(NAME))
 #endif
 #define __libc_rwlock_rdlock(NAME) __pthread_rwlock_rdlock (&(NAME))
 #define __libc_rwlock_wrlock(NAME) __pthread_rwlock_wrlock (&(NAME))
@@ -194,8 +191,7 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 # define __libc_lock_unlock(NAME) \
   lll_unlock (NAME, LLL_PRIVATE)
 #else
-# define __libc_lock_unlock(NAME) \
-  __libc_maybe_call (__pthread_mutex_unlock, (&(NAME)), 0)
+# define __libc_lock_unlock(NAME) __pthread_mutex_unlock (&(NAME))
 #endif
 #define __libc_rwlock_unlock(NAME) __pthread_rwlock_unlock (&(NAME))
 
@@ -213,10 +209,10 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
   GL(dl_rtld_unlock_recursive) (&(NAME).mutex)
 #else
 # define __rtld_lock_lock_recursive(NAME) \
-  __libc_maybe_call (__pthread_mutex_lock, (&(NAME).mutex), 0)
+  __pthread_mutex_lock (&(NAME).mutex)
 
 # define __rtld_lock_unlock_recursive(NAME) \
-  __libc_maybe_call (__pthread_mutex_unlock, (&(NAME).mutex), 0)
+  __pthread_mutex_unlock (&(NAME).mutex)
 #endif
 
 /* Define once control variable.  */
@@ -274,15 +270,15 @@ extern int __register_atfork (void (*__prepare) (void),
 
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
 				 const pthread_mutexattr_t *__mutex_attr);
-
+libc_hidden_proto (__pthread_mutex_init)
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
-
+libc_hidden_proto (__pthread_mutex_destroy)
 extern int __pthread_mutex_trylock (pthread_mutex_t *__mutex);
 
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
-
+libc_hidden_proto (__pthread_mutex_lock)
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
-
+libc_hidden_proto (__pthread_mutex_unlock)
 extern int __pthread_mutexattr_init (pthread_mutexattr_t *__attr);
 
 extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *__attr);
@@ -320,11 +316,7 @@ libc_hidden_proto (__pthread_setcancelstate)
    single-threaded processes.  */
 #ifndef __NO_WEAK_PTHREAD_ALIASES
 # ifdef weak_extern
-weak_extern (__pthread_mutex_init)
-weak_extern (__pthread_mutex_destroy)
-weak_extern (__pthread_mutex_lock)
 weak_extern (__pthread_mutex_trylock)
-weak_extern (__pthread_mutex_unlock)
 weak_extern (__pthread_mutexattr_init)
 weak_extern (__pthread_mutexattr_destroy)
 weak_extern (__pthread_mutexattr_settype)
@@ -335,11 +327,7 @@ weak_extern (__pthread_rwlock_trywrlock)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 # else
-#  pragma weak __pthread_mutex_init
-#  pragma weak __pthread_mutex_destroy
-#  pragma weak __pthread_mutex_lock
 #  pragma weak __pthread_mutex_trylock
-#  pragma weak __pthread_mutex_unlock
 #  pragma weak __pthread_mutexattr_init
 #  pragma weak __pthread_mutexattr_destroy
 #  pragma weak __pthread_mutexattr_settype

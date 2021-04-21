@@ -41,11 +41,6 @@ struct pthread_functions
   int (*ptr___pthread_cond_timedwait_2_0) (pthread_cond_2_0_t *,
 					   pthread_mutex_t *,
 					   const struct timespec *);
-  int (*ptr_pthread_mutex_destroy) (pthread_mutex_t *);
-  int (*ptr_pthread_mutex_init) (pthread_mutex_t *,
-				 const pthread_mutexattr_t *);
-  int (*ptr_pthread_mutex_lock) (pthread_mutex_t *);
-  int (*ptr_pthread_mutex_unlock) (pthread_mutex_t *);
   int (*ptr__nptl_setxid) (struct xid_command *);
 };
 

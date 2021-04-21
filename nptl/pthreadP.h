@@ -395,9 +395,12 @@ extern int __pthread_setschedparam (pthread_t thread_id, int policy,
 				    const struct sched_param *param);
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
 				 const pthread_mutexattr_t *__mutexattr);
+libc_hidden_proto (__pthread_mutex_init)
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
+libc_hidden_proto (__pthread_mutex_destroy)
 extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
+libc_hidden_proto (__pthread_mutex_lock)
 extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
      const struct timespec *__abstime);
 extern int __pthread_mutex_cond_lock (pthread_mutex_t *__mutex)
@@ -405,8 +408,10 @@ extern int __pthread_mutex_cond_lock (pthread_mutex_t *__mutex)
 extern void __pthread_mutex_cond_lock_adjust (pthread_mutex_t *__mutex)
      attribute_hidden;
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
+libc_hidden_proto (__pthread_mutex_unlock)
 extern int __pthread_mutex_unlock_usercnt (pthread_mutex_t *__mutex,
-					   int __decr) attribute_hidden;
+					   int __decr);
+libc_hidden_proto (__pthread_mutex_unlock_usercnt)
 extern int __pthread_mutexattr_init (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);
@@ -560,11 +565,7 @@ libc_hidden_proto (__pthread_sigmask);
 
 
 #if IS_IN (libpthread)
-hidden_proto (__pthread_mutex_init)
-hidden_proto (__pthread_mutex_destroy)
-hidden_proto (__pthread_mutex_lock)
 hidden_proto (__pthread_mutex_trylock)
-hidden_proto (__pthread_mutex_unlock)
 hidden_proto (__pthread_rwlock_unlock)
 hidden_proto (__pthread_testcancel)
 hidden_proto (__pthread_mutexattr_init)
