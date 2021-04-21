@@ -328,6 +328,7 @@ GLIBC_2.32 __profile_frequency F
 GLIBC_2.32 __progname D 0x4
 GLIBC_2.32 __progname_full D 0x4
 GLIBC_2.32 __pthread_cleanup_routine F
+GLIBC_2.32 __pthread_key_create F
 GLIBC_2.32 __pthread_once F
 GLIBC_2.32 __pthread_unwind_next F
 GLIBC_2.32 __ptsname_r_chk F
@@ -1376,6 +1377,7 @@ GLIBC_2.32 pthread_exit F
 GLIBC_2.32 pthread_getaffinity_np F
 GLIBC_2.32 pthread_getattr_np F
 GLIBC_2.32 pthread_getschedparam F
+GLIBC_2.32 pthread_key_create F
 GLIBC_2.32 pthread_kill F
 GLIBC_2.32 pthread_mutex_consistent F
 GLIBC_2.32 pthread_mutex_consistent_np F
@@ -1944,8 +1946,10 @@ GLIBC_2.33 stat F
 GLIBC_2.33 stat64 F
 GLIBC_2.34 __libc_start_main F
 GLIBC_2.34 __pthread_cleanup_routine F
+GLIBC_2.34 __pthread_key_create F
 GLIBC_2.34 __pthread_once F
 GLIBC_2.34 __pthread_unwind_next F
+GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_kill F
 GLIBC_2.34 pthread_mutex_consistent F
 GLIBC_2.34 pthread_once F

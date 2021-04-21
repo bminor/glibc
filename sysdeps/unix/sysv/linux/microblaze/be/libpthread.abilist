@@ -4,7 +4,6 @@ GLIBC_2.18 _IO_funlockfile F
 GLIBC_2.18 __errno_location F
 GLIBC_2.18 __h_errno_location F
 GLIBC_2.18 __pthread_getspecific F
-GLIBC_2.18 __pthread_key_create F
 GLIBC_2.18 __pthread_mutex_destroy F
 GLIBC_2.18 __pthread_mutex_init F
 GLIBC_2.18 __pthread_mutex_lock F
@@ -62,7 +61,6 @@ GLIBC_2.18 pthread_getcpuclockid F
 GLIBC_2.18 pthread_getname_np F
 GLIBC_2.18 pthread_getspecific F
 GLIBC_2.18 pthread_join F
-GLIBC_2.18 pthread_key_create F
 GLIBC_2.18 pthread_key_delete F
 GLIBC_2.18 pthread_kill_other_threads_np F
 GLIBC_2.18 pthread_mutex_destroy F

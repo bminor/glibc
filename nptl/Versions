@@ -1,5 +1,6 @@
 libc {
   GLIBC_2.0 {
+    __pthread_key_create;
     __pthread_once;
     _pthread_cleanup_pop;
     _pthread_cleanup_pop_restore;
@@ -28,6 +29,7 @@ libc {
     pthread_equal;
     pthread_exit;
     pthread_getschedparam;
+    pthread_key_create;
     pthread_kill;
     pthread_mutex_destroy;
     pthread_mutex_init;
@@ -87,7 +89,9 @@ libc {
   }
   GLIBC_2.34 {
     __pthread_cleanup_routine;
+    __pthread_key_create;
     __pthread_once;
+    pthread_key_create;
     pthread_kill;
     pthread_mutex_consistent;
     pthread_once;
@@ -137,7 +141,6 @@ libpthread {
     __h_errno_location;
     __pthread_atfork;
     __pthread_getspecific;
-    __pthread_key_create;
     __pthread_mutex_destroy;
     __pthread_mutex_init;
     __pthread_mutex_lock;
@@ -161,7 +164,6 @@ libpthread {
     pthread_detach;
     pthread_getspecific;
     pthread_join;
-    pthread_key_create;
     pthread_key_delete;
     pthread_kill_other_threads_np;
     pthread_mutex_destroy;

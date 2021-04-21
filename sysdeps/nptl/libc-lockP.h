@@ -338,7 +338,6 @@ weak_extern (__pthread_rwlock_tryrdlock)
 weak_extern (__pthread_rwlock_wrlock)
 weak_extern (__pthread_rwlock_trywrlock)
 weak_extern (__pthread_rwlock_unlock)
-weak_extern (__pthread_key_create)
 weak_extern (__pthread_setspecific)
 weak_extern (__pthread_getspecific)
 weak_extern (__pthread_initialize)
@@ -358,7 +357,6 @@ weak_extern (__pthread_atfork)
 #  pragma weak __pthread_rwlock_wrlock
 #  pragma weak __pthread_rwlock_trywrlock
 #  pragma weak __pthread_rwlock_unlock
-#  pragma weak __pthread_key_create
 #  pragma weak __pthread_setspecific
 #  pragma weak __pthread_getspecific
 #  pragma weak __pthread_initialize
