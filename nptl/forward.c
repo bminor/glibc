@@ -41,17 +41,6 @@ name decl								      \
   return PTHFCT_CALL (ptr_##name, params);				      \
 }
 
-/* Same as FORWARD2, only without return.  */
-#define FORWARD_NORETURN(name, rettype, decl, params, defaction) \
-rettype									      \
-name decl								      \
-{									      \
-  if (!__libc_pthread_functions_init)					      \
-    defaction;								      \
-									      \
-  PTHFCT_CALL (ptr_##name, params);					      \
-}
-
 #define FORWARD(name, decl, params, defretval) \
   FORWARD2 (name, int, decl, params, return defretval)
 
@@ -101,11 +90,6 @@ FORWARD (__pthread_cond_timedwait,
 	  const struct timespec *abstime), (cond, mutex, abstime), 0)
 versioned_symbol (libc, __pthread_cond_timedwait, pthread_cond_timedwait,
 		  GLIBC_2_3_2);
-
-
-FORWARD_NORETURN (__pthread_exit, void, (void *retval), (retval),
-		  exit (EXIT_SUCCESS))
-strong_alias (__pthread_exit, pthread_exit);
 
 
 FORWARD (pthread_mutex_destroy, (pthread_mutex_t *mutex), (mutex), 0)

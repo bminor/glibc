@@ -118,6 +118,7 @@ libc {
     __pthread_cleanup_upto;
     __pthread_cond_destroy; # Used by the C11 threads.
     __pthread_cond_init; # Used by the C11 threads.
+    __pthread_exit;
     __pthread_force_elision;
     __pthread_getattr_default_np;
     __pthread_keys;
@@ -157,7 +158,6 @@ libpthread {
     pthread_cond_wait;
     pthread_create;
     pthread_detach;
-    pthread_exit;
     pthread_getspecific;
     pthread_join;
     pthread_key_create;

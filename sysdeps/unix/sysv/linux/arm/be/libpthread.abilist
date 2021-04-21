@@ -90,7 +90,6 @@ GLIBC_2.4 pthread_condattr_setclock F
 GLIBC_2.4 pthread_condattr_setpshared F
 GLIBC_2.4 pthread_create F
 GLIBC_2.4 pthread_detach F
-GLIBC_2.4 pthread_exit F
 GLIBC_2.4 pthread_getconcurrency F
 GLIBC_2.4 pthread_getcpuclockid F
 GLIBC_2.4 pthread_getspecific F

@@ -74,6 +74,7 @@ routines = \
   pthread_condattr_destroy \
   pthread_condattr_init \
   pthread_equal \
+  pthread_exit \
   pthread_getaffinity \
   pthread_getattr_np \
   pthread_getschedparam \
@@ -134,7 +135,6 @@ libpthread-routines = \
   pthread_condattr_setpshared \
   pthread_create \
   pthread_detach \
-  pthread_exit \
   pthread_getattr_default_np \
   pthread_getconcurrency \
   pthread_getcpuclockid \
@@ -313,7 +313,13 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-pthread-defaultattr-free \
 	tst-pthread-attr-sigmask \
 	tst-pthread-timedlock-lockloop \
-	tst-pthread-gdb-attach tst-pthread-gdb-attach-static
+	tst-pthread-gdb-attach tst-pthread-gdb-attach-static \
+	tst-pthread_exit-nothreads \
+	tst-pthread_exit-nothreads-static \
+
+tests-nolibpthread = \
+  tst-pthread_exit-nothreads \
+  tst-pthread_exit-nothreads-static \
 
 tests-container =  tst-pthread-getattr
 
@@ -452,7 +458,8 @@ tests-static += tst-stackguard1-static \
 		tst-cancel24-static \
 		tst-mutex8-static tst-mutexpi8-static tst-sem11-static \
 		tst-sem12-static tst-cond11-static \
-		tst-pthread-gdb-attach-static
+		tst-pthread-gdb-attach-static \
+		tst-pthread_exit-nothreads-static
 
 tests += tst-cancel24-static
 

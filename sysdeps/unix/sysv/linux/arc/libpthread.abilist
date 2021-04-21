@@ -71,7 +71,6 @@ GLIBC_2.32 pthread_condattr_setclock F
 GLIBC_2.32 pthread_condattr_setpshared F
 GLIBC_2.32 pthread_create F
 GLIBC_2.32 pthread_detach F
-GLIBC_2.32 pthread_exit F
 GLIBC_2.32 pthread_getattr_default_np F
 GLIBC_2.32 pthread_getconcurrency F
 GLIBC_2.32 pthread_getcpuclockid F

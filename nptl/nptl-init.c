@@ -80,7 +80,6 @@ static const struct pthread_functions pthread_functions =
     .ptr___pthread_cond_wait_2_0 = __pthread_cond_wait_2_0,
     .ptr___pthread_cond_timedwait_2_0 = __pthread_cond_timedwait_2_0,
 # endif
-    .ptr___pthread_exit = __pthread_exit,
     .ptr_pthread_mutex_destroy = __pthread_mutex_destroy,
     .ptr_pthread_mutex_init = __pthread_mutex_init,
     .ptr_pthread_mutex_lock = __pthread_mutex_lock,
