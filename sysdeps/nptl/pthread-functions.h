@@ -57,10 +57,6 @@ struct pthread_functions
   int (*ptr___pthread_key_create) (pthread_key_t *, void (*) (void *));
   void *(*ptr___pthread_getspecific) (pthread_key_t);
   int (*ptr___pthread_setspecific) (pthread_key_t, const void *);
-  void (*ptr__pthread_cleanup_push_defer) (struct _pthread_cleanup_buffer *,
-					   void (*) (void *), void *);
-  void (*ptr__pthread_cleanup_pop_restore) (struct _pthread_cleanup_buffer *,
-					    int);
 #define HAVE_PTR_NTHREADS
   unsigned int *ptr_nthreads;
   void (*ptr___pthread_unwind) (__pthread_unwind_buf_t *)

@@ -17,41 +17,15 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
-
+#include <libc-lock.h>
 
 void
 _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
 			     void (*routine) (void *), void *arg)
 {
-  struct pthread *self = THREAD_SELF;
-
   buffer->__routine = routine;
   buffer->__arg = arg;
-  buffer->__prev = THREAD_GETMEM (self, cleanup);
-
-  int cancelhandling = THREAD_GETMEM (self, cancelhandling);
-
-  /* Disable asynchronous cancellation for now.  */
-  if (__glibc_unlikely (cancelhandling & CANCELTYPE_BITMASK))
-    while (1)
-      {
-	int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
-						cancelhandling
-						& ~CANCELTYPE_BITMASK,
-						cancelhandling);
-	if (__glibc_likely (curval == cancelhandling))
-	  /* Successfully replaced the value.  */
-	  break;
-
-	/* Prepare for the next round.  */
-	cancelhandling = curval;
-      }
-
-  buffer->__canceltype = (cancelhandling & CANCELTYPE_BITMASK
-			  ? PTHREAD_CANCEL_ASYNCHRONOUS
-			  : PTHREAD_CANCEL_DEFERRED);
-
-  THREAD_SETMEM (self, cleanup, buffer);
+  __libc_cleanup_push_defer (buffer);
 }
 strong_alias (_pthread_cleanup_push_defer, __pthread_cleanup_push_defer)
 
@@ -60,31 +34,7 @@ void
 _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
 			      int execute)
 {
-  struct pthread *self = THREAD_SELF;
-
-  THREAD_SETMEM (self, cleanup, buffer->__prev);
-
-  int cancelhandling;
-  if (__builtin_expect (buffer->__canceltype != PTHREAD_CANCEL_DEFERRED, 0)
-      && ((cancelhandling = THREAD_GETMEM (self, cancelhandling))
-	  & CANCELTYPE_BITMASK) == 0)
-    {
-      while (1)
-	{
-	  int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
-						  cancelhandling
-						  | CANCELTYPE_BITMASK,
-						  cancelhandling);
-	  if (__glibc_likely (curval == cancelhandling))
-	    /* Successfully replaced the value.  */
-	    break;
-
-	  /* Prepare for the next round.  */
-	  cancelhandling = curval;
-	}
-
-      CANCELLATION_P (self);
-    }
+  __libc_cleanup_pop_restore (buffer);
 
   /* If necessary call the cleanup routine after we removed the
      current cleanup block from the list.  */

@@ -17,11 +17,69 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
-
+#include <tls.h>
+#include <libc-lock.h>
 
 void
-__libc_cleanup_routine (struct __pthread_cleanup_frame *f)
+__libc_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer)
 {
-  if (f->__do_it)
-    f->__cancel_routine (f->__cancel_arg);
+  struct pthread *self = THREAD_SELF;
+
+  buffer->__prev = THREAD_GETMEM (self, cleanup);
+
+  int cancelhandling = THREAD_GETMEM (self, cancelhandling);
+
+  /* Disable asynchronous cancellation for now.  */
+  if (__glibc_unlikely (cancelhandling & CANCELTYPE_BITMASK))
+    while (1)
+      {
+	int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
+						cancelhandling
+						& ~CANCELTYPE_BITMASK,
+						cancelhandling);
+	if (__glibc_likely (curval == cancelhandling))
+	  /* Successfully replaced the value.  */
+	  break;
+
+	/* Prepare for the next round.  */
+	cancelhandling = curval;
+      }
+
+  buffer->__canceltype = (cancelhandling & CANCELTYPE_BITMASK
+			  ? PTHREAD_CANCEL_ASYNCHRONOUS
+			  : PTHREAD_CANCEL_DEFERRED);
+
+  THREAD_SETMEM (self, cleanup, buffer);
 }
+libc_hidden_def (__libc_cleanup_push_defer)
+
+void
+__libc_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer)
+{
+  struct pthread *self = THREAD_SELF;
+
+  THREAD_SETMEM (self, cleanup, buffer->__prev);
+
+  int cancelhandling;
+  if (__builtin_expect (buffer->__canceltype != PTHREAD_CANCEL_DEFERRED, 0)
+      && ((cancelhandling = THREAD_GETMEM (self, cancelhandling))
+	  & CANCELTYPE_BITMASK) == 0)
+    {
+      while (1)
+	{
+	  int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling,
+						  cancelhandling
+						  | CANCELTYPE_BITMASK,
+						  cancelhandling);
+	  if (__glibc_likely (curval == cancelhandling))
+	    /* Successfully replaced the value.  */
+	    break;
+
+	  /* Prepare for the next round.  */
+	  cancelhandling = curval;
+	}
+
+      CANCELLATION_P (self);
+    }
+}
+libc_hidden_def (__libc_cleanup_pop_restore)

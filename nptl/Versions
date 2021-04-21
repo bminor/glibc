@@ -87,6 +87,8 @@ libc {
     __futex_abstimed_wait64;
     __futex_abstimed_wait_cancelable64;
     __libc_alloca_cutoff;
+    __libc_cleanup_pop_restore;
+    __libc_cleanup_push_defer;
     __libc_dl_error_tsd;
     __libc_pthread_init;
     __lll_clocklock_elision;

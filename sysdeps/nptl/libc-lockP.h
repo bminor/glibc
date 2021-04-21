@@ -251,32 +251,12 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 /* Get once control variable.  */
 #define __libc_once_get(ONCE_CONTROL)	((ONCE_CONTROL) != PTHREAD_ONCE_INIT)
 
-/* Note that for I/O cleanup handling we are using the old-style
-   cancel handling.  It does not have to be integrated with C++ snce
-   no C++ code is called in the middle.  The old-style handling is
-   faster and the support is not going away.  */
-extern void _pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
-				   void (*routine) (void *), void *arg);
-extern void _pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer,
-				  int execute);
-extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
-					 void (*routine) (void *), void *arg);
-extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
-					  int execute);
-
-/* Sometimes we have to exit the block in the middle.  */
-#define __libc_cleanup_end(DOIT) \
-    if (_avail) {							      \
-      __libc_ptf_call_always (_pthread_cleanup_pop_restore, (&_buffer, DOIT));\
-    } else if (DOIT)							      \
-      _buffer.__routine (_buffer.__arg)
-
 /* __libc_cleanup_push and __libc_cleanup_pop depend on exception
    handling and stack unwinding.  */
 #ifdef __EXCEPTIONS
 
 /* Normal cleanup handling, based on C cleanup attribute.  */
-__extern_inline void
+static __always_inline void
 __libc_cleanup_routine (struct __pthread_cleanup_frame *f)
 {
   if (f->__do_it)
@@ -388,8 +368,6 @@ weak_extern (__pthread_once)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 weak_extern (__pthread_setcancelstate)
-weak_extern (_pthread_cleanup_push_defer)
-weak_extern (_pthread_cleanup_pop_restore)
 # else
 #  pragma weak __pthread_mutex_init
 #  pragma weak __pthread_mutex_destroy
@@ -412,8 +390,6 @@ weak_extern (_pthread_cleanup_pop_restore)
 #  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
 #  pragma weak __pthread_setcancelstate
-#  pragma weak _pthread_cleanup_push_defer
-#  pragma weak _pthread_cleanup_pop_restore
 # endif
 #endif
 
