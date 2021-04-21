@@ -447,8 +447,10 @@ extern int __pthread_rwlock_init (pthread_rwlock_t *__restrict __rwlock,
 				  __attr);
 extern int __pthread_rwlock_destroy (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock);
+libc_hidden_proto (__pthread_rwlock_rdlock)
 extern int __pthread_rwlock_tryrdlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock);
+libc_hidden_proto (__pthread_rwlock_wrlock)
 extern int __pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
 extern int __pthread_cond_broadcast (pthread_cond_t *cond);
@@ -559,8 +561,6 @@ hidden_proto (__pthread_mutex_destroy)
 hidden_proto (__pthread_mutex_lock)
 hidden_proto (__pthread_mutex_trylock)
 hidden_proto (__pthread_mutex_unlock)
-hidden_proto (__pthread_rwlock_rdlock)
-hidden_proto (__pthread_rwlock_wrlock)
 hidden_proto (__pthread_rwlock_unlock)
 hidden_proto (__pthread_testcancel)
 hidden_proto (__pthread_mutexattr_init)

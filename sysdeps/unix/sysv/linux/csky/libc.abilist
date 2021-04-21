@@ -335,6 +335,9 @@ GLIBC_2.29 __pthread_cleanup_routine F
 GLIBC_2.29 __pthread_getspecific F
 GLIBC_2.29 __pthread_key_create F
 GLIBC_2.29 __pthread_once F
+GLIBC_2.29 __pthread_rwlock_rdlock F
+GLIBC_2.29 __pthread_rwlock_unlock F
+GLIBC_2.29 __pthread_rwlock_wrlock F
 GLIBC_2.29 __pthread_setspecific F
 GLIBC_2.29 __pthread_unwind_next F
 GLIBC_2.29 __ptsname_r_chk F
@@ -1451,6 +1454,9 @@ GLIBC_2.29 pthread_mutex_init F
 GLIBC_2.29 pthread_mutex_lock F
 GLIBC_2.29 pthread_mutex_unlock F
 GLIBC_2.29 pthread_once F
+GLIBC_2.29 pthread_rwlock_rdlock F
+GLIBC_2.29 pthread_rwlock_unlock F
+GLIBC_2.29 pthread_rwlock_wrlock F
 GLIBC_2.29 pthread_self F
 GLIBC_2.29 pthread_setcancelstate F
 GLIBC_2.29 pthread_setcanceltype F
@@ -2146,4 +2152,7 @@ GLIBC_2.34 pthread_key_delete F
 GLIBC_2.34 pthread_kill F
 GLIBC_2.34 pthread_mutex_consistent F
 GLIBC_2.34 pthread_once F
+GLIBC_2.34 pthread_rwlock_rdlock F
+GLIBC_2.34 pthread_rwlock_unlock F
+GLIBC_2.34 pthread_rwlock_wrlock F
 GLIBC_2.34 pthread_setspecific F

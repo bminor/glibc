@@ -20,7 +20,7 @@
 
 /* See pthread_rwlock_common.c.  */
 int
-__pthread_rwlock_wrlock (pthread_rwlock_t *rwlock)
+___pthread_rwlock_wrlock (pthread_rwlock_t *rwlock)
 {
   LIBC_PROBE (wrlock_entry, 1, rwlock);
 
@@ -28,6 +28,16 @@ __pthread_rwlock_wrlock (pthread_rwlock_t *rwlock)
   LIBC_PROBE (wrlock_acquire_write, 1, rwlock);
   return result;
 }
+versioned_symbol (libc, ___pthread_rwlock_wrlock, pthread_rwlock_wrlock,
+		  GLIBC_2_34);
+strong_alias (___pthread_rwlock_wrlock, __pthread_rwlock_wrlock)
+libc_hidden_ver (___pthread_rwlock_wrlock, __pthread_rwlock_wrlock)
 
-weak_alias (__pthread_rwlock_wrlock, pthread_rwlock_wrlock)
-hidden_def (__pthread_rwlock_wrlock)
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_rwlock_wrlock, pthread_rwlock_wrlock,
+	       GLIBC_2_1);
+#endif
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_rwlock_wrlock, __pthread_rwlock_wrlock,
+	       GLIBC_2_2);
+#endif

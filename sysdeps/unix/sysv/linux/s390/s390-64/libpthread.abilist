@@ -21,11 +21,8 @@ GLIBC_2.2 __pthread_mutexattr_init F
 GLIBC_2.2 __pthread_mutexattr_settype F
 GLIBC_2.2 __pthread_rwlock_destroy F
 GLIBC_2.2 __pthread_rwlock_init F
-GLIBC_2.2 __pthread_rwlock_rdlock F
 GLIBC_2.2 __pthread_rwlock_tryrdlock F
 GLIBC_2.2 __pthread_rwlock_trywrlock F
-GLIBC_2.2 __pthread_rwlock_unlock F
-GLIBC_2.2 __pthread_rwlock_wrlock F
 GLIBC_2.2 __res_state F
 GLIBC_2.2 flockfile F
 GLIBC_2.2 ftrylockfile F
@@ -74,13 +71,10 @@ GLIBC_2.2 pthread_mutexattr_setpshared F
 GLIBC_2.2 pthread_mutexattr_settype F
 GLIBC_2.2 pthread_rwlock_destroy F
 GLIBC_2.2 pthread_rwlock_init F
-GLIBC_2.2 pthread_rwlock_rdlock F
 GLIBC_2.2 pthread_rwlock_timedrdlock F
 GLIBC_2.2 pthread_rwlock_timedwrlock F
 GLIBC_2.2 pthread_rwlock_tryrdlock F
 GLIBC_2.2 pthread_rwlock_trywrlock F
-GLIBC_2.2 pthread_rwlock_unlock F
-GLIBC_2.2 pthread_rwlock_wrlock F
 GLIBC_2.2 pthread_rwlockattr_destroy F
 GLIBC_2.2 pthread_rwlockattr_getkind_np F
 GLIBC_2.2 pthread_rwlockattr_getpshared F

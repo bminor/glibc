@@ -1554,6 +1554,9 @@ GLIBC_2.1 pread64 F
 GLIBC_2.1 printf_size F
 GLIBC_2.1 printf_size_info F
 GLIBC_2.1 pthread_attr_init F
+GLIBC_2.1 pthread_rwlock_rdlock F
+GLIBC_2.1 pthread_rwlock_unlock F
+GLIBC_2.1 pthread_rwlock_wrlock F
 GLIBC_2.1 ptsname F
 GLIBC_2.1 ptsname_r F
 GLIBC_2.1 putgrent F
@@ -1825,6 +1828,9 @@ GLIBC_2.2 __lxstat64 F
 GLIBC_2.2 __nl_langinfo_l F
 GLIBC_2.2 __open64 F
 GLIBC_2.2 __pread64 F
+GLIBC_2.2 __pthread_rwlock_rdlock F
+GLIBC_2.2 __pthread_rwlock_unlock F
+GLIBC_2.2 __pthread_rwlock_wrlock F
 GLIBC_2.2 __pwrite64 F
 GLIBC_2.2 __res_init F
 GLIBC_2.2 __res_nclose F
@@ -2240,6 +2246,9 @@ GLIBC_2.34 pthread_key_delete F
 GLIBC_2.34 pthread_kill F
 GLIBC_2.34 pthread_mutex_consistent F
 GLIBC_2.34 pthread_once F
+GLIBC_2.34 pthread_rwlock_rdlock F
+GLIBC_2.34 pthread_rwlock_unlock F
+GLIBC_2.34 pthread_rwlock_wrlock F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.4 _IO_fprintf F
 GLIBC_2.4 _IO_printf F

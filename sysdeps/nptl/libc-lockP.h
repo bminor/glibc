@@ -167,10 +167,8 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 # define __libc_lock_lock(NAME) \
   __libc_maybe_call (__pthread_mutex_lock, (&(NAME)), 0)
 #endif
-#define __libc_rwlock_rdlock(NAME) \
-  __libc_ptf_call (__pthread_rwlock_rdlock, (&(NAME)), 0)
-#define __libc_rwlock_wrlock(NAME) \
-  __libc_ptf_call (__pthread_rwlock_wrlock, (&(NAME)), 0)
+#define __libc_rwlock_rdlock(NAME) __pthread_rwlock_rdlock (&(NAME))
+#define __libc_rwlock_wrlock(NAME) __pthread_rwlock_wrlock (&(NAME))
 
 /* Try to lock the named lock variable.  */
 #if IS_IN (libc) || IS_IN (libpthread)
@@ -199,8 +197,7 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 # define __libc_lock_unlock(NAME) \
   __libc_maybe_call (__pthread_mutex_unlock, (&(NAME)), 0)
 #endif
-#define __libc_rwlock_unlock(NAME) \
-  __libc_ptf_call (__pthread_rwlock_unlock, (&(NAME)), 0)
+#define __libc_rwlock_unlock(NAME) __pthread_rwlock_unlock (&(NAME))
 
 #ifdef SHARED
 # define __rtld_lock_default_lock_recursive(lock) \
@@ -299,15 +296,15 @@ extern int __pthread_rwlock_init (pthread_rwlock_t *__rwlock,
 extern int __pthread_rwlock_destroy (pthread_rwlock_t *__rwlock);
 
 extern int __pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock);
-
+libc_hidden_proto (__pthread_rwlock_rdlock)
 extern int __pthread_rwlock_tryrdlock (pthread_rwlock_t *__rwlock);
 
 extern int __pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock);
-
+libc_hidden_proto (__pthread_rwlock_wrlock)
 extern int __pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock);
 
 extern int __pthread_rwlock_unlock (pthread_rwlock_t *__rwlock);
-
+libc_hidden_proto (__pthread_rwlock_unlock)
 extern int __pthread_once (pthread_once_t *__once_control,
 			   void (*__init_routine) (void));
 libc_hidden_proto (__pthread_once)
@@ -333,11 +330,8 @@ weak_extern (__pthread_mutexattr_destroy)
 weak_extern (__pthread_mutexattr_settype)
 weak_extern (__pthread_rwlock_init)
 weak_extern (__pthread_rwlock_destroy)
-weak_extern (__pthread_rwlock_rdlock)
 weak_extern (__pthread_rwlock_tryrdlock)
-weak_extern (__pthread_rwlock_wrlock)
 weak_extern (__pthread_rwlock_trywrlock)
-weak_extern (__pthread_rwlock_unlock)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 # else
@@ -350,11 +344,8 @@ weak_extern (__pthread_atfork)
 #  pragma weak __pthread_mutexattr_destroy
 #  pragma weak __pthread_mutexattr_settype
 #  pragma weak __pthread_rwlock_destroy
-#  pragma weak __pthread_rwlock_rdlock
 #  pragma weak __pthread_rwlock_tryrdlock
-#  pragma weak __pthread_rwlock_wrlock
 #  pragma weak __pthread_rwlock_trywrlock
-#  pragma weak __pthread_rwlock_unlock
 #  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
 # endif

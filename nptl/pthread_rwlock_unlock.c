@@ -27,7 +27,7 @@
 
 /* See pthread_rwlock_common.c for an overview.  */
 int
-__pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
+___pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 {
   LIBC_PROBE (rwlock_unlock, 1, rwlock);
 
@@ -43,6 +43,16 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
     __pthread_rwlock_rdunlock (rwlock);
   return 0;
 }
+versioned_symbol (libc, ___pthread_rwlock_unlock, pthread_rwlock_unlock,
+		  GLIBC_2_34);
+strong_alias (___pthread_rwlock_unlock, __pthread_rwlock_unlock)
+libc_hidden_ver (___pthread_rwlock_unlock, __pthread_rwlock_unlock)
 
-weak_alias (__pthread_rwlock_unlock, pthread_rwlock_unlock)
-hidden_def (__pthread_rwlock_unlock)
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_rwlock_unlock, pthread_rwlock_unlock,
+	       GLIBC_2_1);
+#endif
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_rwlock_unlock, __pthread_rwlock_unlock,
+	       GLIBC_2_2);
+#endif

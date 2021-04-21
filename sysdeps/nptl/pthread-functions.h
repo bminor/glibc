@@ -46,9 +46,6 @@ struct pthread_functions
 				 const pthread_mutexattr_t *);
   int (*ptr_pthread_mutex_lock) (pthread_mutex_t *);
   int (*ptr_pthread_mutex_unlock) (pthread_mutex_t *);
-  int (*ptr___pthread_rwlock_rdlock) (pthread_rwlock_t *);
-  int (*ptr___pthread_rwlock_wrlock) (pthread_rwlock_t *);
-  int (*ptr___pthread_rwlock_unlock) (pthread_rwlock_t *);
   int (*ptr__nptl_setxid) (struct xid_command *);
 };
 
