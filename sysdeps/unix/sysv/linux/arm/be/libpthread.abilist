@@ -65,7 +65,6 @@ GLIBC_2.4 __res_state F
 GLIBC_2.4 flockfile F
 GLIBC_2.4 ftrylockfile F
 GLIBC_2.4 funlockfile F
-GLIBC_2.4 longjmp F
 GLIBC_2.4 pthread_attr_getaffinity_np F
 GLIBC_2.4 pthread_attr_getguardsize F
 GLIBC_2.4 pthread_attr_getstack F
@@ -164,4 +163,3 @@ GLIBC_2.4 sem_timedwait F
 GLIBC_2.4 sem_trywait F
 GLIBC_2.4 sem_unlink F
 GLIBC_2.4 sem_wait F
-GLIBC_2.4 siglongjmp F

@@ -102,7 +102,6 @@ libpthread-routines = \
   old_pthread_cond_wait \
   pt-cleanup \
   pt-interp \
-  pt-longjmp \
   pthread_attr_getaffinity \
   pthread_attr_getguardsize \
   pthread_attr_getstack \

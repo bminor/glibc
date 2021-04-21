@@ -31,7 +31,6 @@ GLIBC_2.17 __res_state F
 GLIBC_2.17 flockfile F
 GLIBC_2.17 ftrylockfile F
 GLIBC_2.17 funlockfile F
-GLIBC_2.17 longjmp F
 GLIBC_2.17 pthread_attr_getaffinity_np F
 GLIBC_2.17 pthread_attr_getguardsize F
 GLIBC_2.17 pthread_attr_getstack F
@@ -135,7 +134,6 @@ GLIBC_2.17 sem_timedwait F
 GLIBC_2.17 sem_trywait F
 GLIBC_2.17 sem_unlink F
 GLIBC_2.17 sem_wait F
-GLIBC_2.17 siglongjmp F
 GLIBC_2.18 pthread_getattr_default_np F
 GLIBC_2.18 pthread_setattr_default_np F
 GLIBC_2.28 call_once F

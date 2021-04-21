@@ -140,7 +140,6 @@ libpthread {
     flockfile;
     ftrylockfile;
     funlockfile;
-    longjmp;
     pthread_atfork;
     pthread_cancel;
     pthread_cond_broadcast;
@@ -176,7 +175,6 @@ libpthread {
     sem_post;
     sem_trywait;
     sem_wait;
-    siglongjmp;
   }
 
   GLIBC_2.1 {

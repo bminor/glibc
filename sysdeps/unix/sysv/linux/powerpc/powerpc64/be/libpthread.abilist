@@ -54,7 +54,6 @@ GLIBC_2.3 __res_state F
 GLIBC_2.3 flockfile F
 GLIBC_2.3 ftrylockfile F
 GLIBC_2.3 funlockfile F
-GLIBC_2.3 longjmp F
 GLIBC_2.3 pthread_attr_getguardsize F
 GLIBC_2.3 pthread_attr_getstack F
 GLIBC_2.3 pthread_attr_getstackaddr F
@@ -137,7 +136,6 @@ GLIBC_2.3 sem_timedwait F
 GLIBC_2.3 sem_trywait F
 GLIBC_2.3 sem_unlink F
 GLIBC_2.3 sem_wait F
-GLIBC_2.3 siglongjmp F
 GLIBC_2.3.2 pthread_cond_broadcast F
 GLIBC_2.3.2 pthread_cond_signal F
 GLIBC_2.3.2 pthread_cond_timedwait F
@@ -154,11 +152,9 @@ GLIBC_2.3.3 pthread_condattr_setclock F
 GLIBC_2.3.3 pthread_setaffinity_np F
 GLIBC_2.3.3 pthread_timedjoin_np F
 GLIBC_2.3.3 pthread_tryjoin_np F
-GLIBC_2.3.4 longjmp F
 GLIBC_2.3.4 pthread_attr_getaffinity_np F
 GLIBC_2.3.4 pthread_setaffinity_np F
 GLIBC_2.3.4 pthread_setschedprio F
-GLIBC_2.3.4 siglongjmp F
 GLIBC_2.30 pthread_cond_clockwait F
 GLIBC_2.30 pthread_mutex_clocklock F
 GLIBC_2.30 pthread_rwlock_clockrdlock F
