@@ -14,10 +14,10 @@ tf (void *data)
   int err = pthread_mutex_lock (&m);
   if (err == EOWNERDEAD)
     {
-      err = pthread_mutex_consistent_np (&m);
+      err = pthread_mutex_consistent (&m);
       if (err)
 	{
-	  puts ("pthread_mutex_consistent_np");
+	  puts ("pthread_mutex_consistent");
 	  exit (1);
 	}
     }

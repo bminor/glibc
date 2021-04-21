@@ -1446,6 +1446,8 @@ GLIBC_2.18 pthread_getaffinity_np F
 GLIBC_2.18 pthread_getattr_np F
 GLIBC_2.18 pthread_getschedparam F
 GLIBC_2.18 pthread_kill F
+GLIBC_2.18 pthread_mutex_consistent F
+GLIBC_2.18 pthread_mutex_consistent_np F
 GLIBC_2.18 pthread_mutex_destroy F
 GLIBC_2.18 pthread_mutex_init F
 GLIBC_2.18 pthread_mutex_lock F
@@ -2169,3 +2171,4 @@ GLIBC_2.33 stat F
 GLIBC_2.33 stat64 F
 GLIBC_2.34 __libc_start_main F
 GLIBC_2.34 pthread_kill F
+GLIBC_2.34 pthread_mutex_consistent F

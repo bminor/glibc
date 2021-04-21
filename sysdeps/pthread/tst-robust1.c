@@ -241,14 +241,14 @@ do_test (void)
 #endif
 
 #ifndef NOT_CONSISTENT
-      e = pthread_mutex_consistent_np (&m1);
+      e = pthread_mutex_consistent (&m1);
       if (e != 0)
 	{
 	  printf ("%ld: mutex_consistent m1 failed with error %d\n", round, e);
 	  return 1;
 	}
 
-      e = pthread_mutex_consistent_np (&m2);
+      e = pthread_mutex_consistent (&m2);
       if (e != 0)
 	{
 	  printf ("%ld: mutex_consistent m2 failed with error %d\n", round, e);

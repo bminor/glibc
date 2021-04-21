@@ -1,6 +1,5 @@
 GLIBC_2.11 pthread_sigqueue F
 GLIBC_2.12 pthread_getname_np F
-GLIBC_2.12 pthread_mutex_consistent F
 GLIBC_2.12 pthread_mutexattr_getrobust F
 GLIBC_2.12 pthread_mutexattr_setrobust F
 GLIBC_2.12 pthread_setname_np F
@@ -107,7 +106,6 @@ GLIBC_2.4 pthread_join F
 GLIBC_2.4 pthread_key_create F
 GLIBC_2.4 pthread_key_delete F
 GLIBC_2.4 pthread_kill_other_threads_np F
-GLIBC_2.4 pthread_mutex_consistent_np F
 GLIBC_2.4 pthread_mutex_destroy F
 GLIBC_2.4 pthread_mutex_getprioceiling F
 GLIBC_2.4 pthread_mutex_init F

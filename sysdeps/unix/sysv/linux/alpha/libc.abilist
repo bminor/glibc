@@ -1750,6 +1750,7 @@ GLIBC_2.11 mkstemps64 F
 GLIBC_2.12 _sys_errlist D 0x458
 GLIBC_2.12 _sys_nerr D 0x4
 GLIBC_2.12 ntp_gettimex F
+GLIBC_2.12 pthread_mutex_consistent F
 GLIBC_2.12 recvmmsg F
 GLIBC_2.12 sys_errlist D 0x458
 GLIBC_2.12 sys_nerr D 0x4
@@ -2264,6 +2265,7 @@ GLIBC_2.33 stat F
 GLIBC_2.33 stat64 F
 GLIBC_2.34 __libc_start_main F
 GLIBC_2.34 pthread_kill F
+GLIBC_2.34 pthread_mutex_consistent F
 GLIBC_2.4 _IO_fprintf F
 GLIBC_2.4 _IO_printf F
 GLIBC_2.4 _IO_sprintf F
@@ -2447,6 +2449,7 @@ GLIBC_2.4 openat64 F
 GLIBC_2.4 ppoll F
 GLIBC_2.4 printf F
 GLIBC_2.4 printf_size F
+GLIBC_2.4 pthread_mutex_consistent_np F
 GLIBC_2.4 qecvt F
 GLIBC_2.4 qecvt_r F
 GLIBC_2.4 qfcvt F

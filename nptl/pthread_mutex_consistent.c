@@ -18,10 +18,10 @@
 
 #include <errno.h>
 #include <pthreadP.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_mutex_consistent (pthread_mutex_t *mutex)
+__pthread_mutex_consistent (pthread_mutex_t *mutex)
 {
   /* Test whether this is a robust mutex with a dead owner.
      See concurrency notes regarding __kind in struct __pthread_mutex_s
@@ -35,4 +35,16 @@ pthread_mutex_consistent (pthread_mutex_t *mutex)
 
   return 0;
 }
-weak_alias (pthread_mutex_consistent, pthread_mutex_consistent_np)
+versioned_symbol (libc, __pthread_mutex_consistent, pthread_mutex_consistent,
+                  GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_4, GLIBC_2_34)
+# undef pthread_mutex_consistent_np
+compat_symbol (libpthread, __pthread_mutex_consistent,
+               pthread_mutex_consistent_np, GLIBC_2_4);
+#endif
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_mutex_consistent,
+               pthread_mutex_consistent, GLIBC_2_12);
+#endif

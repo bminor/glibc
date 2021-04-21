@@ -20,7 +20,9 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* The function pthread_mutex_consistent_np has been deprecated; programs
+  should use the equivalent standard function pthread_mutex_consistent
+  instead.
 
 Changes to build and runtime requirements:
 

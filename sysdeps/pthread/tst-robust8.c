@@ -92,7 +92,7 @@ mutex_timedlock of %d in thread %ld failed with %d\n",
 	    }
 
 	  if (e == EOWNERDEAD)
-	    pthread_mutex_consistent_np (&map[r]);
+	    pthread_mutex_consistent (&map[r]);
 
 	  if (e == 0 || e == EOWNERDEAD)
 	    state[r] = 1;
