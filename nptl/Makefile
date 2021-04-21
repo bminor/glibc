@@ -45,6 +45,7 @@ routines = \
   libc_multiple_threads \
   libc_pthread_init \
   lowlevellock \
+  nptl_nthreads \
   old_pthread_cond_destroy \
   old_pthread_cond_init \
   pthread_atfork \

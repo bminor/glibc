@@ -59,10 +59,6 @@ static struct rtld_global *__nptl_rtld_global __attribute_used__
   = &_rtld_global;
 #endif
 
-/* Number of threads running.  */
-unsigned int __nptl_nthreads = 1;
-
-
 /* Code to allocate and deallocate a stack.  */
 #include "allocatestack.c"
 

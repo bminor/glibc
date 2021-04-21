@@ -220,7 +220,8 @@ extern struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX];
 hidden_proto (__pthread_keys)
 
 /* Number of threads running.  */
-extern unsigned int __nptl_nthreads attribute_hidden;
+extern unsigned int __nptl_nthreads;
+libc_hidden_proto (__nptl_nthreads)
 
 #ifndef __ASSUME_SET_ROBUST_LIST
 /* Negative if we do not have the system call and we can use it.  */

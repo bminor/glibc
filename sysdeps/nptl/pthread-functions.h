@@ -55,8 +55,6 @@ struct pthread_functions
   int (*ptr___pthread_key_create) (pthread_key_t *, void (*) (void *));
   void *(*ptr___pthread_getspecific) (pthread_key_t);
   int (*ptr___pthread_setspecific) (pthread_key_t, const void *);
-#define HAVE_PTR_NTHREADS
-  unsigned int *ptr_nthreads;
   void (*ptr__nptl_deallocate_tsd) (void);
   int (*ptr__nptl_setxid) (struct xid_command *);
   void (*ptr_set_robust) (struct pthread *);

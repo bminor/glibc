@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <atomic.h>
+#include <nptl/pthreadP.h>
 
 _Noreturn static void
 __libc_start_call_main (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
@@ -69,17 +70,7 @@ __libc_start_call_main (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
       /* One less thread.  Decrement the counter.  If it is zero we
          terminate the entire process.  */
       result = 0;
-# ifdef SHARED
-      unsigned int *ptr = __libc_pthread_functions.ptr_nthreads;
-#  ifdef PTR_DEMANGLE
-      PTR_DEMANGLE (ptr);
-#  endif
-# else
-      extern unsigned int __nptl_nthreads __attribute ((weak));
-      unsigned int *const ptr = &__nptl_nthreads;
-# endif
-
-      if (! atomic_decrement_and_test (ptr))
+      if (! atomic_decrement_and_test (&__nptl_nthreads))
         /* Not much left to do but to exit the thread, not the process.  */
         __exit_thread ();
     }
