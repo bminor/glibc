@@ -519,7 +519,7 @@ environment SPEC.\n\n"));
       else
 	{
 	  argv += 1;
-	  argc += 1;
+	  argc -= 1;
 	}
     }
 #else
@@ -544,7 +544,7 @@ environment SPEC.\n\n"));
 	{
 	  spec = &argv[1][2];
 	  argv += 1;
-	  argc += 1;
+	  argc -= 1;
 	}
     }
   else
