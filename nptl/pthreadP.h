@@ -332,9 +332,7 @@ extern int __make_stacks_executable (void **stack_endp) attribute_hidden;
 
 /* longjmp handling.  */
 extern void __pthread_cleanup_upto (__jmp_buf target, char *targetframe);
-#if IS_IN (libpthread)
-hidden_proto (__pthread_cleanup_upto)
-#endif
+libc_hidden_proto (__pthread_cleanup_upto)
 
 
 /* Functions with versioned interfaces.  */

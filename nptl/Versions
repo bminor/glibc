@@ -108,6 +108,7 @@ libc {
     __pthread_attr_setsigmask_internal;
     __pthread_cleanup_pop;
     __pthread_cleanup_push;
+    __pthread_cleanup_upto;
     __pthread_cond_destroy; # Used by the C11 threads.
     __pthread_cond_init; # Used by the C11 threads.
     __pthread_force_elision;

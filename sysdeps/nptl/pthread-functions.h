@@ -49,7 +49,6 @@ struct pthread_functions
   int (*ptr_pthread_mutex_unlock) (pthread_mutex_t *);
   int (*ptr___pthread_setcancelstate) (int, int *);
   int (*ptr_pthread_setcanceltype) (int, int *);
-  void (*ptr___pthread_cleanup_upto) (__jmp_buf, char *);
   int (*ptr___pthread_once) (pthread_once_t *, void (*) (void));
   int (*ptr___pthread_rwlock_rdlock) (pthread_rwlock_t *);
   int (*ptr___pthread_rwlock_wrlock) (pthread_rwlock_t *);

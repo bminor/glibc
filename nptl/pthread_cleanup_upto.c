@@ -59,4 +59,4 @@ __pthread_cleanup_upto (__jmp_buf target, char *targetframe)
 
   THREAD_SETMEM (self, cleanup, cbuf);
 }
-hidden_def (__pthread_cleanup_upto)
+libc_hidden_def (__pthread_cleanup_upto)

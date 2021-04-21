@@ -87,7 +87,6 @@ static const struct pthread_functions pthread_functions =
     .ptr_pthread_mutex_unlock = __pthread_mutex_unlock,
     .ptr___pthread_setcancelstate = __pthread_setcancelstate,
     .ptr_pthread_setcanceltype = __pthread_setcanceltype,
-    .ptr___pthread_cleanup_upto = __pthread_cleanup_upto,
     .ptr___pthread_once = __pthread_once,
     .ptr___pthread_rwlock_rdlock = __pthread_rwlock_rdlock,
     .ptr___pthread_rwlock_wrlock = __pthread_rwlock_wrlock,

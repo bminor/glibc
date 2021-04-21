@@ -66,6 +66,7 @@ routines = \
   pthread_attr_setscope \
   pthread_attr_setsigmask \
   pthread_attr_setsigmask_internal \
+  pthread_cleanup_upto \
   pthread_cond_destroy \
   pthread_cond_init \
   pthread_condattr_destroy \
@@ -100,7 +101,6 @@ libpthread-routines = \
   old_pthread_cond_signal \
   old_pthread_cond_timedwait \
   old_pthread_cond_wait \
-  pt-cleanup \
   pt-interp \
   pthread_attr_getaffinity \
   pthread_attr_getguardsize \

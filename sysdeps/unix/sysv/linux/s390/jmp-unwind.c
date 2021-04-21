@@ -19,15 +19,12 @@
 #include <setjmp.h>
 #include <stddef.h>
 #include <libc-lock.h>
-
-extern void __pthread_cleanup_upto (__jmp_buf env, char *targetframe);
-#pragma weak __pthread_cleanup_upto
-
+#include <nptl/pthreadP.h>
 
 void
 _longjmp_unwind (jmp_buf env, int val)
 {
   char local_var;
 
-  __libc_ptf_call (__pthread_cleanup_upto, (env->__jmpbuf, &local_var), 0);
+  __pthread_cleanup_upto (env->__jmpbuf, &local_var);
 }
