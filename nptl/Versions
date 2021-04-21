@@ -106,6 +106,7 @@ libc {
     __lll_lock_wait_private;
     __lll_trylock_elision;
     __lll_unlock_elision;
+    __nptl_deallocate_tsd;
     __nptl_nthreads;
     __pthread_attr_copy;
     __pthread_attr_destroy;

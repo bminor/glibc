@@ -686,7 +686,8 @@ extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
 extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
 					  int execute);
 
-extern void __nptl_deallocate_tsd (void) attribute_hidden;
+extern void __nptl_deallocate_tsd (void);
+libc_hidden_proto (__nptl_deallocate_tsd)
 
 extern void __nptl_setxid_error (struct xid_command *cmdp, int error)
   attribute_hidden;

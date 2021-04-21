@@ -60,12 +60,7 @@ __libc_start_call_main (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   else
     {
       /* Remove the thread-local data.  */
-# ifdef SHARED
-      PTHFCT_CALL (ptr__nptl_deallocate_tsd, ());
-# else
-      extern void __nptl_deallocate_tsd (void) __attribute ((weak));
       __nptl_deallocate_tsd ();
-# endif
 
       /* One less thread.  Decrement the counter.  If it is zero we
          terminate the entire process.  */
