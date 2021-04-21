@@ -28,10 +28,6 @@ GLIBC_2.29 __pthread_unregister_cancel F
 GLIBC_2.29 __pthread_unregister_cancel_restore F
 GLIBC_2.29 __pthread_unwind_next F
 GLIBC_2.29 __res_state F
-GLIBC_2.29 _pthread_cleanup_pop F
-GLIBC_2.29 _pthread_cleanup_pop_restore F
-GLIBC_2.29 _pthread_cleanup_push F
-GLIBC_2.29 _pthread_cleanup_push_defer F
 GLIBC_2.29 call_once F
 GLIBC_2.29 cnd_broadcast F
 GLIBC_2.29 cnd_destroy F

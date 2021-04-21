@@ -547,6 +547,10 @@ GLIBC_2.2 _obstack_begin_1 F
 GLIBC_2.2 _obstack_free F
 GLIBC_2.2 _obstack_memory_used F
 GLIBC_2.2 _obstack_newchunk F
+GLIBC_2.2 _pthread_cleanup_pop F
+GLIBC_2.2 _pthread_cleanup_pop_restore F
+GLIBC_2.2 _pthread_cleanup_push F
+GLIBC_2.2 _pthread_cleanup_push_defer F
 GLIBC_2.2 _res D 0x238
 GLIBC_2.2 _res_hconf D 0x48
 GLIBC_2.2 _rpc_dtablesize F

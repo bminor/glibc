@@ -51,10 +51,6 @@ GLIBC_2.3 __pthread_rwlock_unlock F
 GLIBC_2.3 __pthread_rwlock_wrlock F
 GLIBC_2.3 __pthread_setspecific F
 GLIBC_2.3 __res_state F
-GLIBC_2.3 _pthread_cleanup_pop F
-GLIBC_2.3 _pthread_cleanup_pop_restore F
-GLIBC_2.3 _pthread_cleanup_push F
-GLIBC_2.3 _pthread_cleanup_push_defer F
 GLIBC_2.3 flockfile F
 GLIBC_2.3 ftrylockfile F
 GLIBC_2.3 funlockfile F

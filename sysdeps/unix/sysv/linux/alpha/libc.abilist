@@ -277,6 +277,10 @@ GLIBC_2.0 _obstack_newchunk F
 GLIBC_2.0 _outb F
 GLIBC_2.0 _outl F
 GLIBC_2.0 _outw F
+GLIBC_2.0 _pthread_cleanup_pop F
+GLIBC_2.0 _pthread_cleanup_pop_restore F
+GLIBC_2.0 _pthread_cleanup_push F
+GLIBC_2.0 _pthread_cleanup_push_defer F
 GLIBC_2.0 _res D 0x238
 GLIBC_2.0 _rpc_dtablesize F
 GLIBC_2.0 _seterr_reply F

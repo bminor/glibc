@@ -591,11 +591,10 @@ libc_hidden_proto (__pthread_attr_setsigmask_internal)
 extern __typeof (pthread_attr_getsigmask_np) __pthread_attr_getsigmask_np;
 libc_hidden_proto (__pthread_attr_getsigmask_np)
 
-#if IS_IN (libpthread)
 /* Special versions which use non-exported functions.  */
 extern void __pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
-				    void (*routine) (void *), void *arg)
-     attribute_hidden;
+				    void (*routine) (void *), void *arg);
+libc_hidden_proto (__pthread_cleanup_push)
 
 /* Replace cleanup macros defined in <pthread.h> with internal
    versions that don't depend on unwind info and better support
@@ -606,12 +605,13 @@ extern void __pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
   __pthread_cleanup_push (&_buffer, (routine), (arg));
 
 extern void __pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer,
-				   int execute) attribute_hidden;
+				   int execute);
+libc_hidden_proto (__pthread_cleanup_pop)
 # undef pthread_cleanup_pop
 # define pthread_cleanup_pop(execute)                   \
   __pthread_cleanup_pop (&_buffer, (execute)); }
 
-# if defined __EXCEPTIONS && !defined __cplusplus
+#if defined __EXCEPTIONS && !defined __cplusplus
 /* Structure to hold the cleanup handler information.  */
 struct __pthread_cleanup_combined_frame
 {
@@ -652,7 +652,7 @@ __pthread_cleanup_combined_routine_voidptr (void *__arg)
     }
 }
 
-#  define pthread_cleanup_combined_push(routine, arg) \
+# define pthread_cleanup_combined_push(routine, arg) \
   do {									      \
     void (*__cancel_routine) (void *) = (routine);			      \
     struct __pthread_cleanup_combined_frame __clframe			      \
@@ -663,15 +663,14 @@ __pthread_cleanup_combined_routine_voidptr (void *__arg)
 			    __pthread_cleanup_combined_routine_voidptr,	      \
 			    &__clframe);
 
-#  define pthread_cleanup_combined_pop(execute) \
+# define pthread_cleanup_combined_pop(execute) \
     __pthread_cleanup_pop (&__clframe.__buffer, 0);			      \
     __clframe.__do_it = 0;						      \
     if (execute)							      \
       __cancel_routine (__clframe.__cancel_arg);			      \
   } while (0)
 
-# endif
-#endif
+#endif /* __EXCEPTIONS && !defined __cplusplus */
 
 extern void __pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
 					  void (*routine) (void *), void *arg);

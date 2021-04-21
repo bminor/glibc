@@ -1,5 +1,9 @@
 libc {
   GLIBC_2.0 {
+    _pthread_cleanup_pop;
+    _pthread_cleanup_pop_restore;
+    _pthread_cleanup_push;
+    _pthread_cleanup_push_defer;
     pthread_attr_destroy;
     pthread_attr_getdetachstate;
     pthread_attr_getinheritsched;
@@ -102,6 +106,8 @@ libc {
     __pthread_attr_init;
     __pthread_attr_setaffinity_np;
     __pthread_attr_setsigmask_internal;
+    __pthread_cleanup_pop;
+    __pthread_cleanup_push;
     __pthread_cond_destroy; # Used by the C11 threads.
     __pthread_cond_init; # Used by the C11 threads.
     __pthread_force_elision;
@@ -131,10 +137,6 @@ libpthread {
     __pthread_once;
     __pthread_setspecific;
     _exit;
-    _pthread_cleanup_pop;
-    _pthread_cleanup_pop_restore;
-    _pthread_cleanup_push;
-    _pthread_cleanup_push_defer;
     flockfile;
     ftrylockfile;
     funlockfile;

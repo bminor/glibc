@@ -16,12 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <shlib-compat.h>
 #include <stdlib.h>
 #include "pthreadP.h"
 
-
 void
-_pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
+__pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
 		       void (*routine) (void *), void *arg)
 {
   struct pthread *self = THREAD_SELF;
@@ -32,11 +32,10 @@ _pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
 
   THREAD_SETMEM (self, cleanup, buffer);
 }
-strong_alias (_pthread_cleanup_push, __pthread_cleanup_push)
-
+libc_hidden_def (__pthread_cleanup_push)
 
 void
-_pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer, int execute)
+__pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer, int execute)
 {
   struct pthread *self __attribute ((unused)) = THREAD_SELF;
 
@@ -47,4 +46,11 @@ _pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer, int execute)
   if (execute)
     buffer->__routine (buffer->__arg);
 }
-strong_alias (_pthread_cleanup_pop, __pthread_cleanup_pop)
+libc_hidden_def (__pthread_cleanup_pop)
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_cleanup_push, _pthread_cleanup_push,
+	       GLIBC_2_0);
+compat_symbol (libpthread, __pthread_cleanup_pop, _pthread_cleanup_pop,
+	       GLIBC_2_0);
+#endif

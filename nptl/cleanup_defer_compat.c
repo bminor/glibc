@@ -16,10 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "pthreadP.h"
-#include <libc-lock.h>
+#include <shlib-compat.h>
 
-void
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
+# include "pthreadP.h"
+# include <libc-lock.h>
+
+void attribute_compat_text_section
 _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
 			     void (*routine) (void *), void *arg)
 {
@@ -27,10 +30,10 @@ _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
   buffer->__arg = arg;
   __libc_cleanup_push_defer (buffer);
 }
-strong_alias (_pthread_cleanup_push_defer, __pthread_cleanup_push_defer)
+compat_symbol (libpthread, _pthread_cleanup_push_defer,
+	       _pthread_cleanup_push_defer, GLIBC_2_0);
 
-
-void
+void attribute_compat_text_section
 _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
 			      int execute)
 {
@@ -41,4 +44,7 @@ _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
   if (execute)
     buffer->__routine (buffer->__arg);
 }
-strong_alias (_pthread_cleanup_pop_restore, __pthread_cleanup_pop_restore)
+compat_symbol (libpthread, _pthread_cleanup_pop_restore,
+	       _pthread_cleanup_pop_restore, GLIBC_2_0);
+
+#endif /* OTHER_SHLIB_COMPAT */

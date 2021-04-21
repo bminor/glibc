@@ -15,10 +15,6 @@ GLIBC_2.0 __pthread_mutexattr_init F
 GLIBC_2.0 __pthread_mutexattr_settype F
 GLIBC_2.0 __pthread_once F
 GLIBC_2.0 __pthread_setspecific F
-GLIBC_2.0 _pthread_cleanup_pop F
-GLIBC_2.0 _pthread_cleanup_pop_restore F
-GLIBC_2.0 _pthread_cleanup_push F
-GLIBC_2.0 _pthread_cleanup_push_defer F
 GLIBC_2.0 flockfile F
 GLIBC_2.0 ftrylockfile F
 GLIBC_2.0 funlockfile F
