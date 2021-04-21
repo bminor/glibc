@@ -53,7 +53,6 @@ struct pthread_functions
   void *(*ptr___pthread_getspecific) (pthread_key_t);
   int (*ptr___pthread_setspecific) (pthread_key_t, const void *);
   int (*ptr__nptl_setxid) (struct xid_command *);
-  void (*ptr_set_robust) (struct pthread *);
 };
 
 /* Variable in libc.so.  */

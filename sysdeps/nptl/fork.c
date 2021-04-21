@@ -104,15 +104,8 @@ __libc_fork (void)
       self->robust_prev = &self->robust_head;
 #endif
       self->robust_head.list = &self->robust_head;
-#ifdef SHARED
-      if (__builtin_expect (__libc_pthread_functions_init, 0))
-	PTHFCT_CALL (ptr_set_robust, (self));
-#else
-      extern __typeof (__nptl_set_robust) __nptl_set_robust
-	__attribute__((weak));
-      if (__builtin_expect (__nptl_set_robust != NULL, 0))
-	__nptl_set_robust (self);
-#endif
+      INTERNAL_SYSCALL_CALL (set_robust_list, &self->robust_head,
+			     sizeof (struct robust_list_head));
 
       /* Reset the lock state in the multi-threaded case.  */
       if (multiple_threads)

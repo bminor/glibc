@@ -692,9 +692,6 @@ libc_hidden_proto (__nptl_deallocate_tsd)
 extern void __nptl_setxid_error (struct xid_command *cmdp, int error)
   attribute_hidden;
 extern int __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
-#ifndef SHARED
-extern void __nptl_set_robust (struct pthread *self);
-#endif
 
 extern void __nptl_stacks_freeres (void) attribute_hidden;
 

@@ -59,14 +59,6 @@ int __set_robust_list_avail;
 /* Version of the library, used in libthread_db to detect mismatches.  */
 static const char nptl_version[] __attribute_used__ = VERSION;
 
-
-#ifdef SHARED
-static
-#else
-extern
-#endif
-void __nptl_set_robust (struct pthread *);
-
 #ifdef SHARED
 static const struct pthread_functions pthread_functions =
   {
@@ -91,24 +83,11 @@ static const struct pthread_functions pthread_functions =
     .ptr___pthread_getspecific = __pthread_getspecific,
     .ptr___pthread_setspecific = __pthread_setspecific,
     .ptr__nptl_setxid = __nptl_setxid,
-    .ptr_set_robust = __nptl_set_robust
   };
 # define ptr_pthread_functions &pthread_functions
 #else
 # define ptr_pthread_functions NULL
 #endif
-
-
-#ifdef SHARED
-static
-#endif
-void
-__nptl_set_robust (struct pthread *self)
-{
-  INTERNAL_SYSCALL_CALL (set_robust_list, &self->robust_head,
-			 sizeof (struct robust_list_head));
-}
-
 
 /* For asynchronous cancellation we use a signal.  This is the handler.  */
 static void
