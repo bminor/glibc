@@ -58,12 +58,6 @@ uintptr_t __pointer_chk_guard_local
 # endif
 #endif
 
-#ifdef HAVE_PTR_NTHREADS
-/* We need atomic operations.  */
-# include <atomic.h>
-#endif
-
-
 #ifndef SHARED
 # include <link.h>
 # include <dl-irel.h>
@@ -122,6 +116,9 @@ apply_irel (void)
 #ifndef ARCH_INIT_CPU_FEATURES
 # define ARCH_INIT_CPU_FEATURES()
 #endif
+
+/* Obtain the definition of __libc_start_call_main.  */
+#include <libc_start_call_main.h>
 
 #ifdef SHARED
 /* Initialization for dynamic executables.  Find the main executable
@@ -245,9 +242,6 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 		 void (*fini) (void),
 		 void (*rtld_fini) (void), void *stack_end)
 {
-  /* Result of the 'main' function.  */
-  int result;
-
 #ifndef SHARED
   char **ev = &argv[argc + 1];
 
@@ -413,68 +407,8 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 #ifndef SHARED
   _dl_debug_initialize (0, LM_ID_BASE);
 #endif
-#ifdef HAVE_CLEANUP_JMP_BUF
-  /* Memory for the cancellation buffer.  */
-  struct pthread_unwind_buf unwind_buf;
 
-  int not_first_call;
-  DIAG_PUSH_NEEDS_COMMENT;
-#if __GNUC_PREREQ (7, 0)
-  /* This call results in a -Wstringop-overflow warning because struct
-     pthread_unwind_buf is smaller than jmp_buf.  setjmp and longjmp
-     do not use anything beyond the common prefix (they never access
-     the saved signal mask), so that is a false positive.  */
-  DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overflow=");
-#endif
-  not_first_call = setjmp ((struct __jmp_buf_tag *) unwind_buf.cancel_jmp_buf);
-  DIAG_POP_NEEDS_COMMENT;
-  if (__glibc_likely (! not_first_call))
-    {
-      struct pthread *self = THREAD_SELF;
-
-      /* Store old info.  */
-      unwind_buf.priv.data.prev = THREAD_GETMEM (self, cleanup_jmp_buf);
-      unwind_buf.priv.data.cleanup = THREAD_GETMEM (self, cleanup);
-
-      /* Store the new cleanup handler info.  */
-      THREAD_SETMEM (self, cleanup_jmp_buf, &unwind_buf);
-
-      /* Run the program.  */
-      result = main (argc, argv, __environ MAIN_AUXVEC_PARAM);
-    }
-  else
-    {
-      /* Remove the thread-local data.  */
-# ifdef SHARED
-      PTHFCT_CALL (ptr__nptl_deallocate_tsd, ());
-# else
-      extern void __nptl_deallocate_tsd (void) __attribute ((weak));
-      __nptl_deallocate_tsd ();
-# endif
-
-      /* One less thread.  Decrement the counter.  If it is zero we
-	 terminate the entire process.  */
-      result = 0;
-# ifdef SHARED
-      unsigned int *ptr = __libc_pthread_functions.ptr_nthreads;
-#  ifdef PTR_DEMANGLE
-      PTR_DEMANGLE (ptr);
-#  endif
-# else
-      extern unsigned int __nptl_nthreads __attribute ((weak));
-      unsigned int *const ptr = &__nptl_nthreads;
-# endif
-
-      if (! atomic_decrement_and_test (ptr))
-	/* Not much left to do but to exit the thread, not the process.  */
-	__exit_thread ();
-    }
-#else
-  /* Nothing fancy, just call the function.  */
-  result = main (argc, argv, __environ MAIN_AUXVEC_PARAM);
-#endif
-
-  exit (result);
+  __libc_start_call_main (main, argc, argv MAIN_AUXVEC_PARAM);
 }
 
 /* Starting with glibc 2.34, the init parameter is always NULL.  Older
