@@ -1163,6 +1163,11 @@ extern void _dl_determine_tlsoffset (void) attribute_hidden;
    number of audit modules are loaded.  */
 void _dl_tls_static_surplus_init (size_t naudit) attribute_hidden;
 
+/* This function is called after processor-specific initialization of
+   the TCB and thread pointer via TLS_INIT_TP, to complete very early
+   initialization of the thread library.  */
+void __tls_init_tp (void) attribute_hidden;
+
 #ifndef SHARED
 /* Set up the TCB for statically linked applications.  This is called
    early during startup because we always use TLS (for errno and the
