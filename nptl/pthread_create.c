@@ -51,6 +51,14 @@ static td_thr_events_t __nptl_threads_events __attribute_used__;
 /* Pointer to descriptor with the last event.  */
 static struct pthread *__nptl_last_event __attribute_used__;
 
+#ifdef SHARED
+/* This variable is used to access _rtld_global from libthread_db.  If
+   GDB loads libpthread before ld.so, it is not possible to resolve
+   _rtld_global directly during libpthread initialization.  */
+static struct rtld_global *__nptl_rtld_global __attribute_used__
+  = &_rtld_global;
+#endif
+
 /* Number of threads running.  */
 unsigned int __nptl_nthreads = 1;
 

@@ -108,6 +108,8 @@ struct td_thragent
 # undef DB_SYMBOL
 # undef DB_VARIABLE
 
+  psaddr_t ta_addr__rtld_global;
+
   /* The method of locating a thread's th_unique value.  */
   enum
     {

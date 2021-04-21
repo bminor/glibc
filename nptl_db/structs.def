@@ -100,8 +100,7 @@ DB_STRUCT_FIELD (pthread, dtvp)
 #endif
 
 #if !(IS_IN (libpthread) && !defined SHARED)
-DB_STRUCT (rtld_global)
-DB_RTLD_VARIABLE (_rtld_global)
+DB_VARIABLE (__nptl_rtld_global)
 #endif
 DB_RTLD_GLOBAL_FIELD (dl_tls_dtv_slotinfo_list)
 DB_RTLD_GLOBAL_FIELD (dl_stack_user)
