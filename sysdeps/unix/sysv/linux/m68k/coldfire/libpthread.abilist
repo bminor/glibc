@@ -37,7 +37,6 @@ GLIBC_2.4 _IO_ftrylockfile F
 GLIBC_2.4 _IO_funlockfile F
 GLIBC_2.4 __errno_location F
 GLIBC_2.4 __h_errno_location F
-GLIBC_2.4 __pthread_cleanup_routine F
 GLIBC_2.4 __pthread_getspecific F
 GLIBC_2.4 __pthread_key_create F
 GLIBC_2.4 __pthread_mutex_destroy F

@@ -339,6 +339,7 @@ GLIBC_2.18 __printf_fp F
 GLIBC_2.18 __profile_frequency F
 GLIBC_2.18 __progname D 0x4
 GLIBC_2.18 __progname_full D 0x4
+GLIBC_2.18 __pthread_cleanup_routine F
 GLIBC_2.18 __ptsname_r_chk F
 GLIBC_2.18 __pwrite64 F
 GLIBC_2.18 __rawmemchr F
@@ -2167,5 +2168,6 @@ GLIBC_2.33 mknodat F
 GLIBC_2.33 stat F
 GLIBC_2.33 stat64 F
 GLIBC_2.34 __libc_start_main F
+GLIBC_2.34 __pthread_cleanup_routine F
 GLIBC_2.34 pthread_kill F
 GLIBC_2.34 pthread_mutex_consistent F
