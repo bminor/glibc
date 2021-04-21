@@ -223,7 +223,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-single_threaded tst-single_threaded-pthread \
 	 tst-tls-ie tst-tls-ie-dlmopen argv0test \
 	 tst-glibc-hwcaps tst-glibc-hwcaps-prepend tst-glibc-hwcaps-mask \
-	 tst-tls20
+	 tst-tls20 tst-dlmopen-dlerror
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -345,7 +345,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		libmarkermod2-1 libmarkermod2-2 \
 		libmarkermod3-1 libmarkermod3-2 libmarkermod3-3 \
 		libmarkermod4-1 libmarkermod4-2 libmarkermod4-3 libmarkermod4-4 \
-		tst-tls20mod-bad
+		tst-tls20mod-bad tst-dlmopen-dlerror-mod \
 
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
@@ -1588,6 +1588,10 @@ $(objpfx)tst-sonamemove-dlopen: $(libdl)
 $(objpfx)tst-sonamemove-dlopen.out: \
   $(objpfx)tst-sonamemove-runmod1.so \
   $(objpfx)tst-sonamemove-runmod2.so
+
+$(objpfx)tst-dlmopen-dlerror: $(libdl)
+$(objpfx)tst-dlmopen-dlerror-mod.so: $(libdl) $(libsupport)
+$(objpfx)tst-dlmopen-dlerror.out: $(objpfx)tst-dlmopen-dlerror-mod.so
 
 # Override -z defs, so that we can reference an undefined symbol.
 # Force lazy binding for the same reason.

@@ -248,4 +248,16 @@ _dl_receive_error (receiver_fct fct, void (*operate) (void *), void *args)
   catch_hook = old_catch;
   receiver = old_receiver;
 }
+
+/* Forwarder used for initializing GLRO (_dl_catch_error).  */
+int
+_rtld_catch_error (const char **objname, const char **errstring,
+		   bool *mallocedp, void (*operate) (void *),
+		   void *args)
+{
+  /* The reference to _dl_catch_error will eventually be relocated to
+     point to the implementation in libc.so.  */
+  return _dl_catch_error (objname, errstring, mallocedp, operate, args);
+}
+
 #endif /* DL_ERROR_BOOTSTRAP */

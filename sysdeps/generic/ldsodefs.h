@@ -662,6 +662,12 @@ struct rtld_global_ro
   void *(*_dl_open) (const char *file, int mode, const void *caller_dlopen,
 		     Lmid_t nsid, int argc, char *argv[], char *env[]);
   void (*_dl_close) (void *map);
+  /* libdl in a secondary namespace (after dlopen) must use
+     _dl_catch_error from the main namespace, so it has to be
+     exported in some way.  */
+  int (*_dl_catch_error) (const char **objname, const char **errstring,
+			  bool *mallocedp, void (*operate) (void *),
+			  void *args);
   void *(*_dl_tls_get_addr_soft) (struct link_map *);
 #ifdef HAVE_DL_DISCOVER_OSVERSION
   int (*_dl_discover_osversion) (void);
@@ -899,6 +905,9 @@ extern int _dl_catch_error (const char **objname, const char **errstring,
 			    bool *mallocedp, void (*operate) (void *),
 			    void *args);
 libc_hidden_proto (_dl_catch_error)
+
+/* Used for initializing GLRO (_dl_catch_error).  */
+extern __typeof__ (_dl_catch_error) _rtld_catch_error attribute_hidden;
 
 /* Call OPERATE (ARGS).  If no error occurs, set *EXCEPTION to zero.
    Otherwise, store a copy of the raised exception in *EXCEPTION,

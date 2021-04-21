@@ -167,8 +167,10 @@ _dlerror_run (void (*operate) (void *), void *args)
       result->errstring = NULL;
     }
 
-  result->errcode = _dl_catch_error (&result->objname, &result->errstring,
-				     &result->malloced, operate, args);
+  result->errcode = GLRO (dl_catch_error) (&result->objname,
+					   &result->errstring,
+					   &result->malloced,
+					   operate, args);
 
   /* If no error we mark that no error string is available.  */
   result->returned = result->errstring == NULL;

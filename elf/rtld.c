@@ -368,6 +368,7 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_lookup_symbol_x = _dl_lookup_symbol_x,
     ._dl_open = _dl_open,
     ._dl_close = _dl_close,
+    ._dl_catch_error = _rtld_catch_error,
     ._dl_tls_get_addr_soft = _dl_tls_get_addr_soft,
 #ifdef HAVE_DL_DISCOVER_OSVERSION
     ._dl_discover_osversion = _dl_discover_osversion
