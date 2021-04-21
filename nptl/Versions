@@ -173,7 +173,6 @@ libpthread {
     pthread_mutexattr_getkind_np;
     pthread_mutexattr_init;
     pthread_mutexattr_setkind_np;
-    pthread_setcanceltype;
     pthread_setspecific;
     pthread_sigmask;
     pthread_testcancel;

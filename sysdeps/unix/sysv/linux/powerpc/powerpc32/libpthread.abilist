@@ -39,7 +39,6 @@ GLIBC_2.0 pthread_mutexattr_destroy F
 GLIBC_2.0 pthread_mutexattr_getkind_np F
 GLIBC_2.0 pthread_mutexattr_init F
 GLIBC_2.0 pthread_mutexattr_setkind_np F
-GLIBC_2.0 pthread_setcanceltype F
 GLIBC_2.0 pthread_setspecific F
 GLIBC_2.0 pthread_testcancel F
 GLIBC_2.0 sem_destroy F
