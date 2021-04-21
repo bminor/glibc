@@ -13,7 +13,6 @@ GLIBC_2.0 __pthread_mutex_unlock F
 GLIBC_2.0 __pthread_mutexattr_destroy F
 GLIBC_2.0 __pthread_mutexattr_init F
 GLIBC_2.0 __pthread_mutexattr_settype F
-GLIBC_2.0 __pthread_once F
 GLIBC_2.0 __pthread_setspecific F
 GLIBC_2.0 flockfile F
 GLIBC_2.0 ftrylockfile F
@@ -41,7 +40,6 @@ GLIBC_2.0 pthread_mutexattr_destroy F
 GLIBC_2.0 pthread_mutexattr_getkind_np F
 GLIBC_2.0 pthread_mutexattr_init F
 GLIBC_2.0 pthread_mutexattr_setkind_np F
-GLIBC_2.0 pthread_once F
 GLIBC_2.0 pthread_setcancelstate F
 GLIBC_2.0 pthread_setcanceltype F
 GLIBC_2.0 pthread_setspecific F

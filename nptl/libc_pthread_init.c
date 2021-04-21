@@ -28,9 +28,6 @@
 #include <ldsodefs.h>
 
 
-unsigned long int *__fork_generation_pointer;
-
-
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
 void
 #else
@@ -38,12 +35,9 @@ extern int __libc_multiple_threads attribute_hidden;
 
 int *
 #endif
-__libc_pthread_init (unsigned long int *ptr, void (*reclaim) (void),
+__libc_pthread_init (void (*reclaim) (void),
 		     const struct pthread_functions *functions)
 {
-  /* Remember the pointer to the generation counter in libpthread.  */
-  __fork_generation_pointer = ptr;
-
   /* Called by a child after fork.  */
   __register_atfork (NULL, NULL, reclaim, NULL);
 

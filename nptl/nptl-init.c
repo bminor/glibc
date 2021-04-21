@@ -87,7 +87,6 @@ static const struct pthread_functions pthread_functions =
     .ptr_pthread_mutex_unlock = __pthread_mutex_unlock,
     .ptr___pthread_setcancelstate = __pthread_setcancelstate,
     .ptr_pthread_setcanceltype = __pthread_setcanceltype,
-    .ptr___pthread_once = __pthread_once,
     .ptr___pthread_rwlock_rdlock = __pthread_rwlock_rdlock,
     .ptr___pthread_rwlock_wrlock = __pthread_rwlock_wrlock,
     .ptr___pthread_rwlock_unlock = __pthread_rwlock_unlock,
@@ -333,8 +332,7 @@ __pthread_initialize_minimal_internal (void)
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
   __libc_multiple_threads_ptr =
 #endif
-    __libc_pthread_init (&__fork_generation, __reclaim_stacks,
-			 ptr_pthread_functions);
+    __libc_pthread_init (__reclaim_stacks, ptr_pthread_functions);
 
 #if HAVE_TUNABLES
   __pthread_tunables_init ();

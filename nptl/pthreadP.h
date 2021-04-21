@@ -361,12 +361,10 @@ extern unsigned long int *__fork_generation_pointer attribute_hidden;
 
 /* Register the generation counter in the libpthread with the libc.  */
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
-extern void __libc_pthread_init (unsigned long int *ptr,
-				 void (*reclaim) (void),
+extern void __libc_pthread_init (void (*reclaim) (void),
 				 const struct pthread_functions *functions);
 #else
-extern int *__libc_pthread_init (unsigned long int *ptr,
-				 void (*reclaim) (void),
+extern int *__libc_pthread_init (void (*reclaim) (void),
 				 const struct pthread_functions *functions);
 
 /* Variable set to a nonzero value either if more than one thread runs or ran,
@@ -525,6 +523,7 @@ extern void *__pthread_getspecific (pthread_key_t key);
 extern int __pthread_setspecific (pthread_key_t key, const void *value);
 extern int __pthread_once (pthread_once_t *once_control,
 			   void (*init_routine) (void));
+libc_hidden_proto (__pthread_once)
 extern int __pthread_atfork (void (*prepare) (void), void (*parent) (void),
 			     void (*child) (void));
 extern pthread_t __pthread_self (void);
@@ -557,7 +556,6 @@ hidden_proto (__pthread_rwlock_unlock)
 hidden_proto (__pthread_key_create)
 hidden_proto (__pthread_getspecific)
 hidden_proto (__pthread_setspecific)
-hidden_proto (__pthread_once)
 hidden_proto (__pthread_setcancelstate)
 hidden_proto (__pthread_testcancel)
 hidden_proto (__pthread_mutexattr_init)

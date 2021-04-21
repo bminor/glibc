@@ -360,6 +360,7 @@ GLIBC_2.2 __printf_fp F
 GLIBC_2.2 __profile_frequency F
 GLIBC_2.2 __progname D 0x8
 GLIBC_2.2 __progname_full D 0x8
+GLIBC_2.2 __pthread_once F
 GLIBC_2.2 __pwrite64 F
 GLIBC_2.2 __rawmemchr F
 GLIBC_2.2 __rcmd_errstr D 0x8
@@ -1297,6 +1298,7 @@ GLIBC_2.2 pthread_mutex_destroy F
 GLIBC_2.2 pthread_mutex_init F
 GLIBC_2.2 pthread_mutex_lock F
 GLIBC_2.2 pthread_mutex_unlock F
+GLIBC_2.2 pthread_once F
 GLIBC_2.2 pthread_self F
 GLIBC_2.2 pthread_setcancelstate F
 GLIBC_2.2 pthread_setcanceltype F
@@ -2117,8 +2119,10 @@ GLIBC_2.33 stat64 F
 GLIBC_2.34 __isnanf128 F
 GLIBC_2.34 __libc_start_main F
 GLIBC_2.34 __pthread_cleanup_routine F
+GLIBC_2.34 __pthread_once F
 GLIBC_2.34 pthread_kill F
 GLIBC_2.34 pthread_mutex_consistent F
+GLIBC_2.34 pthread_once F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F
 GLIBC_2.4 __fgets_unlocked_chk F

@@ -88,8 +88,7 @@ __libc_fork (void)
       struct pthread *self = THREAD_SELF;
 
       /* See __pthread_once.  */
-      if (__fork_generation_pointer != NULL)
-	*__fork_generation_pointer += __PTHREAD_ONCE_FORK_GEN_INCR;
+      __fork_generation += __PTHREAD_ONCE_FORK_GEN_INCR;
 
       /* Initialize the robust mutex list setting in the kernel which has
 	 been reset during the fork.  We do not check for errors because if

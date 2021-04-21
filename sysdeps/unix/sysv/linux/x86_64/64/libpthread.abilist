@@ -20,7 +20,6 @@ GLIBC_2.2.5 __pthread_mutex_unlock F
 GLIBC_2.2.5 __pthread_mutexattr_destroy F
 GLIBC_2.2.5 __pthread_mutexattr_init F
 GLIBC_2.2.5 __pthread_mutexattr_settype F
-GLIBC_2.2.5 __pthread_once F
 GLIBC_2.2.5 __pthread_rwlock_destroy F
 GLIBC_2.2.5 __pthread_rwlock_init F
 GLIBC_2.2.5 __pthread_rwlock_rdlock F
@@ -79,7 +78,6 @@ GLIBC_2.2.5 pthread_mutexattr_init F
 GLIBC_2.2.5 pthread_mutexattr_setkind_np F
 GLIBC_2.2.5 pthread_mutexattr_setpshared F
 GLIBC_2.2.5 pthread_mutexattr_settype F
-GLIBC_2.2.5 pthread_once F
 GLIBC_2.2.5 pthread_rwlock_destroy F
 GLIBC_2.2.5 pthread_rwlock_init F
 GLIBC_2.2.5 pthread_rwlock_rdlock F

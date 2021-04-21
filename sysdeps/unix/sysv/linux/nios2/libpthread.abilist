@@ -13,7 +13,6 @@ GLIBC_2.21 __pthread_mutex_unlock F
 GLIBC_2.21 __pthread_mutexattr_destroy F
 GLIBC_2.21 __pthread_mutexattr_init F
 GLIBC_2.21 __pthread_mutexattr_settype F
-GLIBC_2.21 __pthread_once F
 GLIBC_2.21 __pthread_register_cancel F
 GLIBC_2.21 __pthread_register_cancel_defer F
 GLIBC_2.21 __pthread_rwlock_destroy F
@@ -92,7 +91,6 @@ GLIBC_2.21 pthread_mutexattr_setpshared F
 GLIBC_2.21 pthread_mutexattr_setrobust F
 GLIBC_2.21 pthread_mutexattr_setrobust_np F
 GLIBC_2.21 pthread_mutexattr_settype F
-GLIBC_2.21 pthread_once F
 GLIBC_2.21 pthread_rwlock_destroy F
 GLIBC_2.21 pthread_rwlock_init F
 GLIBC_2.21 pthread_rwlock_rdlock F

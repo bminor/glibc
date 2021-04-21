@@ -1,5 +1,6 @@
 libc {
   GLIBC_2.0 {
+    __pthread_once;
     _pthread_cleanup_pop;
     _pthread_cleanup_pop_restore;
     _pthread_cleanup_push;
@@ -32,6 +33,7 @@ libc {
     pthread_mutex_init;
     pthread_mutex_lock;
     pthread_mutex_unlock;
+    pthread_once;
     pthread_self;
     pthread_setcancelstate;
     pthread_setcanceltype;
@@ -84,8 +86,10 @@ libc {
   }
   GLIBC_2.34 {
     __pthread_cleanup_routine;
+    __pthread_once;
     pthread_kill;
     pthread_mutex_consistent;
+    pthread_once;
   }
   GLIBC_PRIVATE {
     __futex_abstimed_wait64;
@@ -135,7 +139,6 @@ libpthread {
     __pthread_mutexattr_destroy;
     __pthread_mutexattr_init;
     __pthread_mutexattr_settype;
-    __pthread_once;
     __pthread_setspecific;
     _exit;
     flockfile;
@@ -164,7 +167,6 @@ libpthread {
     pthread_mutexattr_getkind_np;
     pthread_mutexattr_init;
     pthread_mutexattr_setkind_np;
-    pthread_once;
     pthread_setcancelstate;
     pthread_setcanceltype;
     pthread_setspecific;

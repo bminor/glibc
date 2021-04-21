@@ -77,6 +77,7 @@ routines = \
   pthread_getschedparam \
   pthread_kill \
   pthread_mutex_consistent \
+  pthread_once \
   pthread_self \
   pthread_setschedparam \
   pthread_sigmask \
@@ -162,7 +163,6 @@ libpthread-routines = \
   pthread_mutexattr_setpshared \
   pthread_mutexattr_setrobust \
   pthread_mutexattr_settype \
-  pthread_once \
   pthread_rwlock_clockrdlock \
   pthread_rwlock_clockwrlock \
   pthread_rwlock_destroy \
