@@ -224,8 +224,10 @@ extern unsigned int __nptl_nthreads;
 libc_hidden_proto (__nptl_nthreads)
 
 #ifndef __ASSUME_SET_ROBUST_LIST
-/* Negative if we do not have the system call and we can use it.  */
-extern int __set_robust_list_avail attribute_hidden;
+/* True if the set_robust_list system call works.  Initialized in
+   __tls_init_tp.  */
+extern bool __nptl_set_robust_list_avail;
+rtld_hidden_proto (__nptl_set_robust_list_avail)
 #endif
 
 /* Thread Priority Protection.  */

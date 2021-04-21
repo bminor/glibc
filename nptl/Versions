@@ -372,3 +372,9 @@ libpthread {
     __pthread_initialize_minimal;
   }
 }
+
+ld {
+  GLIBC_PRIVATE {
+     __nptl_set_robust_list_avail;
+  }
+}

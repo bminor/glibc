@@ -297,7 +297,7 @@ START_THREAD_DEFN
   __ctype_init ();
 
 #ifndef __ASSUME_SET_ROBUST_LIST
-  if (__set_robust_list_avail >= 0)
+  if (__nptl_set_robust_list_avail)
 #endif
     {
       /* This call should never fail because the initial call in init.c
@@ -447,7 +447,7 @@ START_THREAD_DEFN
   /* We let the kernel do the notification if it is able to do so.
      If we have to do it here there for sure are no PI mutexes involved
      since the kernel support for them is even more recent.  */
-  if (__set_robust_list_avail < 0
+  if (!__nptl_set_robust_list_avail
       && __builtin_expect (robust != (void *) &pd->robust_head, 0))
     {
       do

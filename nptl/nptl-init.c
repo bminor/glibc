@@ -35,7 +35,6 @@
 #include <futex-internal.h>
 #include <kernel-features.h>
 #include <libc-pointer-arith.h>
-#include <pthread-pids.h>
 #include <pthread_mutex_conf.h>
 
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
@@ -46,15 +45,6 @@ int *__libc_multiple_threads_ptr attribute_hidden;
 /* Size and alignment of static TLS block.  */
 size_t __static_tls_size;
 size_t __static_tls_align_m1;
-
-#ifndef __ASSUME_SET_ROBUST_LIST
-/* Negative if we do not have the system call and we can use it.  */
-int __set_robust_list_avail;
-# define set_robust_list_not_avail() \
-  __set_robust_list_avail = -1
-#else
-# define set_robust_list_not_avail() do { } while (0)
-#endif
 
 /* Version of the library, used in libthread_db to detect mismatches.  */
 static const char nptl_version[] __attribute_used__ = VERSION;
@@ -193,31 +183,9 @@ static bool __nptl_initial_report_events __attribute_used__;
 void
 __pthread_initialize_minimal_internal (void)
 {
-  /* Minimal initialization of the thread descriptor.  */
+  /* Partial initialization of the TCB already happened in TLS_INIT_TP
+     and __tls_init_tp.  */
   struct pthread *pd = THREAD_SELF;
-  __pthread_initialize_pids (pd);
-  THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
-  THREAD_SETMEM (pd, user_stack, true);
-
-  /* Initialize the robust mutex data.  */
-  {
-#if __PTHREAD_MUTEX_HAVE_PREV
-    pd->robust_prev = &pd->robust_head;
-#endif
-    pd->robust_head.list = &pd->robust_head;
-    pd->robust_head.futex_offset = (offsetof (pthread_mutex_t, __data.__lock)
-				    - offsetof (pthread_mutex_t,
-						__data.__list.__next));
-    int res = INTERNAL_SYSCALL_CALL (set_robust_list, &pd->robust_head,
-				     sizeof (struct robust_list_head));
-    if (INTERNAL_SYSCALL_ERROR_P (res))
-      set_robust_list_not_avail ();
-  }
-
-  /* Set initial thread's stack block from 0 up to __libc_stack_end.
-     It will be bigger than it actually is, but for unwind.c/pt-longjmp.c
-     purposes this is good enough.  */
-  THREAD_SETMEM (pd, stackblock_size, (size_t) __libc_stack_end);
 
   /* Before initializing GL (dl_stack_user), the debugger could not
      find us and had to set __nptl_initial_report_events.  Propagate
