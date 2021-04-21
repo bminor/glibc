@@ -82,7 +82,7 @@ DB_MAIN_VARIABLE (__nptl_nthreads)
 DB_VARIABLE (__nptl_last_event)
 DB_VARIABLE (__nptl_initial_report_events)
 
-DB_ARRAY_VARIABLE (__pthread_keys)
+DB_MAIN_ARRAY_VARIABLE (__pthread_keys)
 DB_STRUCT (pthread_key_struct)
 DB_STRUCT_FIELD (pthread_key_struct, seq)
 DB_STRUCT_FIELD (pthread_key_struct, destr)

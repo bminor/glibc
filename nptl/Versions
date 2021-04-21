@@ -119,6 +119,7 @@ libc {
     __pthread_cond_init; # Used by the C11 threads.
     __pthread_force_elision;
     __pthread_getattr_default_np;
+    __pthread_keys;
     __pthread_unwind;
   }
 }

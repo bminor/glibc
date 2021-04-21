@@ -76,6 +76,7 @@ routines = \
   pthread_getaffinity \
   pthread_getattr_np \
   pthread_getschedparam \
+  pthread_keys \
   pthread_kill \
   pthread_mutex_consistent \
   pthread_once \

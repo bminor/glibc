@@ -217,7 +217,7 @@ extern int __concurrency_level attribute_hidden;
 
 /* Thread-local data key handling.  */
 extern struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX];
-hidden_proto (__pthread_keys)
+libc_hidden_proto (__pthread_keys)
 
 /* Number of threads running.  */
 extern unsigned int __nptl_nthreads;
