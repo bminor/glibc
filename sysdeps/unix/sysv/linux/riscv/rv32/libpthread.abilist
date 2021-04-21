@@ -20,7 +20,6 @@ GLIBC_2.33 __pthread_rwlock_tryrdlock F
 GLIBC_2.33 __pthread_rwlock_trywrlock F
 GLIBC_2.33 __pthread_rwlock_unlock F
 GLIBC_2.33 __pthread_rwlock_wrlock F
-GLIBC_2.33 __pthread_setspecific F
 GLIBC_2.33 __pthread_unregister_cancel F
 GLIBC_2.33 __pthread_unregister_cancel_restore F
 GLIBC_2.33 __res_state F
@@ -123,7 +122,6 @@ GLIBC_2.33 pthread_setattr_default_np F
 GLIBC_2.33 pthread_setconcurrency F
 GLIBC_2.33 pthread_setname_np F
 GLIBC_2.33 pthread_setschedprio F
-GLIBC_2.33 pthread_setspecific F
 GLIBC_2.33 pthread_sigqueue F
 GLIBC_2.33 pthread_spin_destroy F
 GLIBC_2.33 pthread_spin_init F

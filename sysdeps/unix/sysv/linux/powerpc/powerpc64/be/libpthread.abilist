@@ -46,7 +46,6 @@ GLIBC_2.3 __pthread_rwlock_tryrdlock F
 GLIBC_2.3 __pthread_rwlock_trywrlock F
 GLIBC_2.3 __pthread_rwlock_unlock F
 GLIBC_2.3 __pthread_rwlock_wrlock F
-GLIBC_2.3 __pthread_setspecific F
 GLIBC_2.3 __res_state F
 GLIBC_2.3 flockfile F
 GLIBC_2.3 ftrylockfile F
@@ -109,7 +108,6 @@ GLIBC_2.3 pthread_rwlockattr_init F
 GLIBC_2.3 pthread_rwlockattr_setkind_np F
 GLIBC_2.3 pthread_rwlockattr_setpshared F
 GLIBC_2.3 pthread_setconcurrency F
-GLIBC_2.3 pthread_setspecific F
 GLIBC_2.3 pthread_spin_destroy F
 GLIBC_2.3 pthread_spin_init F
 GLIBC_2.3 pthread_spin_lock F

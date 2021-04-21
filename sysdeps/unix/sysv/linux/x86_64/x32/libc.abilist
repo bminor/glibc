@@ -343,6 +343,7 @@ GLIBC_2.16 __pthread_cleanup_routine F
 GLIBC_2.16 __pthread_getspecific F
 GLIBC_2.16 __pthread_key_create F
 GLIBC_2.16 __pthread_once F
+GLIBC_2.16 __pthread_setspecific F
 GLIBC_2.16 __pthread_unwind_next F
 GLIBC_2.16 __ptsname_r_chk F
 GLIBC_2.16 __pwrite64 F
@@ -1473,6 +1474,7 @@ GLIBC_2.16 pthread_self F
 GLIBC_2.16 pthread_setcancelstate F
 GLIBC_2.16 pthread_setcanceltype F
 GLIBC_2.16 pthread_setschedparam F
+GLIBC_2.16 pthread_setspecific F
 GLIBC_2.16 pthread_sigmask F
 GLIBC_2.16 ptrace F
 GLIBC_2.16 ptsname F
@@ -2207,9 +2209,11 @@ GLIBC_2.34 __pthread_cleanup_routine F
 GLIBC_2.34 __pthread_getspecific F
 GLIBC_2.34 __pthread_key_create F
 GLIBC_2.34 __pthread_once F
+GLIBC_2.34 __pthread_setspecific F
 GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_kill F
 GLIBC_2.34 pthread_mutex_consistent F
 GLIBC_2.34 pthread_once F
+GLIBC_2.34 pthread_setspecific F
