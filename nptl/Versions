@@ -40,6 +40,7 @@ libc {
     pthread_key_create;
     pthread_key_delete;
     pthread_kill;
+    pthread_kill_other_threads_np;
     pthread_mutex_destroy;
     pthread_mutex_init;
     pthread_mutex_lock;
@@ -198,7 +199,6 @@ libpthread {
     pthread_create;
     pthread_detach;
     pthread_join;
-    pthread_kill_other_threads_np;
     pthread_mutex_trylock;
     pthread_mutexattr_destroy;
     pthread_mutexattr_getkind_np;

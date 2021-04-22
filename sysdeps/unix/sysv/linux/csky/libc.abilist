@@ -1451,6 +1451,7 @@ GLIBC_2.29 pthread_getspecific F
 GLIBC_2.29 pthread_key_create F
 GLIBC_2.29 pthread_key_delete F
 GLIBC_2.29 pthread_kill F
+GLIBC_2.29 pthread_kill_other_threads_np F
 GLIBC_2.29 pthread_mutex_consistent F
 GLIBC_2.29 pthread_mutex_consistent_np F
 GLIBC_2.29 pthread_mutex_destroy F

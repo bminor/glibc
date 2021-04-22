@@ -18,8 +18,7 @@
 
 #include <shlib-compat.h>
 
-
-#ifdef SHARED
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
 /* This function does not serve a useful purpose in the thread library
    implementation anymore.  It used to be necessary when then kernel
    could not shut down "processes" but this is not the case anymore.

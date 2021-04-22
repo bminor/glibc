@@ -1302,6 +1302,7 @@ GLIBC_2.2.5 pthread_getspecific F
 GLIBC_2.2.5 pthread_key_create F
 GLIBC_2.2.5 pthread_key_delete F
 GLIBC_2.2.5 pthread_kill F
+GLIBC_2.2.5 pthread_kill_other_threads_np F
 GLIBC_2.2.5 pthread_mutex_destroy F
 GLIBC_2.2.5 pthread_mutex_init F
 GLIBC_2.2.5 pthread_mutex_lock F
