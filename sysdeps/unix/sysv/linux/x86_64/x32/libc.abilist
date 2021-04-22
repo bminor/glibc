@@ -1516,6 +1516,7 @@ GLIBC_2.16 pthread_setcanceltype F
 GLIBC_2.16 pthread_setschedparam F
 GLIBC_2.16 pthread_setspecific F
 GLIBC_2.16 pthread_sigmask F
+GLIBC_2.16 pthread_spin_destroy F
 GLIBC_2.16 ptrace F
 GLIBC_2.16 ptsname F
 GLIBC_2.16 ptsname_r F
@@ -2292,3 +2293,4 @@ GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F
 GLIBC_2.34 pthread_rwlock_wrlock F
 GLIBC_2.34 pthread_setspecific F
+GLIBC_2.34 pthread_spin_destroy F

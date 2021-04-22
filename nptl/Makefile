@@ -129,6 +129,7 @@ routines = \
   pthread_setschedparam \
   pthread_setspecific \
   pthread_sigmask \
+  pthread_spin_destroy \
   tpp \
   unwind \
 
@@ -194,7 +195,6 @@ libpthread-routines = \
   pthread_setname \
   pthread_setschedprio \
   pthread_sigqueue \
-  pthread_spin_destroy \
   pthread_spin_init \
   pthread_spin_lock \
   pthread_spin_trylock \
