@@ -20,8 +20,12 @@
    whether libthread_db can be loaded, and that access to thread-local
    variables works.  */
 
+#include <elf.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include <support/check.h>
 #include <support/support.h>
 #include <support/temp_file.h>
@@ -34,6 +38,49 @@
 /* Starts out as zero, changed to 1 or 2 by the debugger, depending on
    the thread.  */
 __thread volatile int altered_by_debugger;
+
+/* Common prefix between 32-bit and 64-bit ELF.  */
+struct elf_prefix
+{
+  unsigned char e_ident[EI_NIDENT];
+  uint16_t e_type;
+  uint16_t e_machine;
+  uint32_t e_version;
+};
+_Static_assert (sizeof (struct elf_prefix) == EI_NIDENT + 8,
+                "padding in struct elf_prefix");
+
+/* Reads the ELF header from PATH.  Returns true if the header can be
+   read, false if the file is too short.  */
+static bool
+read_elf_header (const char *path, struct elf_prefix *elf)
+{
+  int fd = xopen (path, O_RDONLY, 0);
+  bool result = read (fd, elf, sizeof (*elf)) == sizeof (*elf);
+  xclose (fd);
+  return result;
+}
+
+/* Searches for "gdb" alongside the path variable.  See execvpe.  */
+static char *
+find_gdb (void)
+{
+  const char *path = getenv ("PATH");
+  if (path == NULL)
+    return NULL;
+  while (true)
+    {
+      const char *colon = strchrnul (path, ':');
+      char *candidate = xasprintf ("%.*s/gdb", (int) (colon - path), path);
+      if (access (candidate, X_OK) == 0)
+        return candidate;
+      free (candidate);
+      if (*colon == '\0')
+        break;
+      path = colon + 1;
+    }
+  return NULL;
+}
 
 /* Writes the GDB script to run the test to PATH.  */
 static void
@@ -105,6 +152,33 @@ in_subprocess (void)
 static int
 do_test (void)
 {
+  char *gdb_path = find_gdb ();
+  if (gdb_path == NULL)
+    FAIL_UNSUPPORTED ("gdb command not found in PATH: %s", getenv ("PATH"));
+
+  /* Check that libthread_db is compatible with the gdb architecture
+     because gdb loads it via dlopen.  */
+  {
+    char *threaddb_path = xasprintf ("%s/nptl_db/libthread_db.so",
+                                     support_objdir_root);
+    struct elf_prefix elf_threaddb;
+    TEST_VERIFY_EXIT (read_elf_header (threaddb_path, &elf_threaddb));
+    struct elf_prefix elf_gdb;
+    /* If the ELF header cannot be read or "gdb" is not an ELF file,
+       assume this is a wrapper script that can run.  */
+    if (read_elf_header (gdb_path, &elf_gdb)
+        && memcmp (&elf_gdb, ELFMAG, SELFMAG) == 0)
+      {
+        if (elf_gdb.e_ident[EI_CLASS] != elf_threaddb.e_ident[EI_CLASS])
+          FAIL_UNSUPPORTED ("GDB at %s has wrong class", gdb_path);
+        if (elf_gdb.e_ident[EI_DATA] != elf_threaddb.e_ident[EI_DATA])
+          FAIL_UNSUPPORTED ("GDB at %s has wrong data", gdb_path);
+        if (elf_gdb.e_machine != elf_threaddb.e_machine)
+          FAIL_UNSUPPORTED ("GDB at %s has wrong machine", gdb_path);
+      }
+    free (threaddb_path);
+  }
+
   pid_t tested_pid = xfork ();
   if (tested_pid == 0)
     in_subprocess ();
@@ -117,9 +191,8 @@ do_test (void)
   pid_t gdb_pid = xfork ();
   if (gdb_pid == 0)
     {
-      clearenv ();
       xdup2 (STDOUT_FILENO, STDERR_FILENO);
-      execlp ("gdb", "gdb", "-nx", "-batch", "-x", gdbscript, NULL);
+      execl (gdb_path, "gdb", "-nx", "-batch", "-x", gdbscript, NULL);
       if (errno == ENOENT)
         _exit (EXIT_UNSUPPORTED);
       else
@@ -137,6 +210,7 @@ do_test (void)
 
   free (tested_pid_string);
   free (gdbscript);
+  free (gdb_path);
   return 0;
 }
 
