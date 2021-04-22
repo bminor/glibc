@@ -59,9 +59,9 @@ do_test (int argc, char **argv)
   fails += CHECK_SUPPORTS (aes, AES);
 #endif
 #if __GNUC_PREREQ (11, 1)
-  fails += CHECK_SUPPORTS (amx_bf16, AMX_BF16);
-  fails += CHECK_SUPPORTS (amx_int8, AMX_INT8);
-  fails += CHECK_SUPPORTS (amx_tile, AMX_TILE);
+  fails += CHECK_SUPPORTS (amx-bf16, AMX_BF16);
+  fails += CHECK_SUPPORTS (amx-int8, AMX_INT8);
+  fails += CHECK_SUPPORTS (amx-tile, AMX_TILE);
 #endif
   fails += CHECK_SUPPORTS (avx, AVX);
   fails += CHECK_SUPPORTS (avx2, AVX2);
