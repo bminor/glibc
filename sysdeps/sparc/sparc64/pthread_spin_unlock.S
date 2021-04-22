@@ -16,13 +16,21 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <shlib-compat.h>
 
 	.text
-ENTRY(pthread_spin_unlock)
+ENTRY(__pthread_spin_unlock)
 	membar		#StoreStore | #LoadStore
 	stb		%g0, [%o0]
 	retl
 	 clr		%o0
-END(pthread_spin_unlock)
+END(__pthread_spin_unlock)
+versioned_symbol (libc, __pthread_spin_unlock, pthread_spin_unlock, GLIBC_2_34)
+/* The implementation of pthread_spin_init is identical.  */
+versioned_symbol (libc, __pthread_spin_unlock, pthread_spin_init, GLIBC_2_34)
 
-strong_alias (pthread_spin_unlock, pthread_spin_init)
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_unlock, pthread_spin_unlock,
+	       GLIBC_2_2)
+compat_symbol (libpthread, __pthread_spin_unlock, pthread_spin_init, GLIBC_2_2)
+#endif

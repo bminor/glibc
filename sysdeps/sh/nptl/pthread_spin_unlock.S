@@ -15,15 +15,22 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-	.globl	pthread_spin_unlock
-	.type	pthread_spin_unlock,@function
+#include <shlib-compat.h>
+
+	.globl	__pthread_spin_unlock
+	.type	__pthread_spin_unlock,@function
 	.align	5
-pthread_spin_unlock:
+__pthread_spin_unlock:
 	mov	#0,r0
 	rts
 	 mov.l	r0,@r4
-	.size	pthread_spin_unlock,.-pthread_spin_unlock
+	.size	__pthread_spin_unlock,.-__pthread_spin_unlock
+versioned_symbol (libc, __pthread_spin_unlock, pthread_spin_unlock, GLIBC_2_34)
+/* The implementation of pthread_spin_init is identical.  */
+versioned_symbol (libc, __pthread_spin_unlock, pthread_spin_init, GLIBC_2_34)
 
-	/* The implementation of pthread_spin_init is identical.  */
-	.globl	pthread_spin_init
-pthread_spin_init = pthread_spin_unlock
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_unlock, pthread_spin_unlock,
+	       GLIBC_2_2)
+compat_symbol (libpthread, __pthread_spin_unlock, pthread_spin_init, GLIBC_2_2)
+#endif

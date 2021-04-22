@@ -17,13 +17,19 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <shlib-compat.h>
 
-ENTRY(pthread_spin_unlock)
+ENTRY(__pthread_spin_unlock)
 	movl	$1, (%rdi)
 	xorl	%eax, %eax
 	retq
-END(pthread_spin_unlock)
+END(__pthread_spin_unlock)
+versioned_symbol (libc, __pthread_spin_unlock, pthread_spin_unlock, GLIBC_2_34)
+/* The implementation of pthread_spin_init is identical.  */
+versioned_symbol (libc, __pthread_spin_unlock, pthread_spin_init, GLIBC_2_34)
 
-	/* The implementation of pthread_spin_init is identical.  */
-	.globl	pthread_spin_init
-pthread_spin_init = pthread_spin_unlock
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_unlock, pthread_spin_unlock,
+	       GLIBC_2_2)
+compat_symbol (libpthread, __pthread_spin_unlock, pthread_spin_init, GLIBC_2_2)
+#endif

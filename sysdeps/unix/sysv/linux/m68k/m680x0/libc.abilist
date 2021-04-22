@@ -1949,6 +1949,8 @@ GLIBC_2.2 pthread_mutex_timedlock F
 GLIBC_2.2 pthread_mutexattr_getpshared F
 GLIBC_2.2 pthread_mutexattr_setpshared F
 GLIBC_2.2 pthread_spin_destroy F
+GLIBC_2.2 pthread_spin_init F
+GLIBC_2.2 pthread_spin_unlock F
 GLIBC_2.2 putwc F
 GLIBC_2.2 putwc_unlocked F
 GLIBC_2.2 putwchar F
@@ -2293,6 +2295,8 @@ GLIBC_2.34 pthread_rwlock_unlock F
 GLIBC_2.34 pthread_rwlock_wrlock F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.34 pthread_spin_destroy F
+GLIBC_2.34 pthread_spin_init F
+GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F
 GLIBC_2.4 __fgets_unlocked_chk F

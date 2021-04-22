@@ -57,10 +57,8 @@ GLIBC_2.21 pthread_setconcurrency F
 GLIBC_2.21 pthread_setname_np F
 GLIBC_2.21 pthread_setschedprio F
 GLIBC_2.21 pthread_sigqueue F
-GLIBC_2.21 pthread_spin_init F
 GLIBC_2.21 pthread_spin_lock F
 GLIBC_2.21 pthread_spin_trylock F
-GLIBC_2.21 pthread_spin_unlock F
 GLIBC_2.21 pthread_testcancel F
 GLIBC_2.21 pthread_timedjoin_np F
 GLIBC_2.21 pthread_tryjoin_np F

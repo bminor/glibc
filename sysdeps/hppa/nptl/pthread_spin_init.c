@@ -16,9 +16,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 int
-pthread_spin_init (pthread_spinlock_t *lock, int pshared)
+__pthread_spin_init (pthread_spinlock_t *lock, int pshared)
 {
   /* CONCURRENCTY NOTES:
 
@@ -42,3 +43,10 @@ pthread_spin_init (pthread_spinlock_t *lock, int pshared)
   atomic_exchange_rel (lock, 0);
   return 0;
 }
+versioned_symbol (libc, __pthread_spin_init, pthread_spin_init,
+                  GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_init, pthread_spin_init,
+               GLIBC_2_2);
+#endif

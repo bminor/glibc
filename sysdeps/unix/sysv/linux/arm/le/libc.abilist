@@ -204,6 +204,8 @@ GLIBC_2.34 pthread_rwlock_unlock F
 GLIBC_2.34 pthread_rwlock_wrlock F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.34 pthread_spin_destroy F
+GLIBC_2.34 pthread_spin_init F
+GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.4 _Exit F
 GLIBC_2.4 _IO_2_1_stderr_ D 0xa0
 GLIBC_2.4 _IO_2_1_stdin_ D 0xa0
@@ -1647,6 +1649,8 @@ GLIBC_2.4 pthread_setschedparam F
 GLIBC_2.4 pthread_setspecific F
 GLIBC_2.4 pthread_sigmask F
 GLIBC_2.4 pthread_spin_destroy F
+GLIBC_2.4 pthread_spin_init F
+GLIBC_2.4 pthread_spin_unlock F
 GLIBC_2.4 ptrace F
 GLIBC_2.4 ptsname F
 GLIBC_2.4 ptsname_r F
