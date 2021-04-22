@@ -377,6 +377,9 @@ endif
 CFLAGS-tst-pthread-gdb-attach-static.c := $(CFLAGS-printers-tests)
 CPPFLAGS-tst-pthread-gdb-attach-static.c := \
   $(CFLAGS-printers-tests) -DDO_ADD_SYMBOL_FILE=0
+# As of version 9.2, GDB cannot attach properly to PIE programs that
+# were launched with an explicit ld.so invocation.
+tst-pthread-gdb-attach-no-pie = yes
 
 ifeq ($(build-shared),yes)
 tests-printers-libs := $(shared-thread-library)
