@@ -23,7 +23,7 @@
 #include <tls.h>
 
 #ifndef __ASSUME_SET_ROBUST_LIST
-bool __nptl_set_robust_list_avail;
+bool __nptl_set_robust_list_avail __attribute__ ((nocommon));
 rtld_hidden_data_def (__nptl_set_robust_list_avail)
 #endif
 
