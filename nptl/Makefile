@@ -47,6 +47,7 @@ routines = \
   nptl_deallocate_tsd \
   nptl_nthreads \
   nptl_setxid \
+  old_pthread_atfork \
   old_pthread_cond_broadcast \
   old_pthread_cond_destroy \
   old_pthread_cond_init \
@@ -125,7 +126,6 @@ libpthread-routines = \
   libpthread-compat \
   nptl-init \
   nptlfreeres \
-  old_pthread_atfork \
   pt-interp \
   pthread_attr_getaffinity \
   pthread_attr_getguardsize \

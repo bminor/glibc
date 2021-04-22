@@ -22,7 +22,6 @@ GLIBC_2.2.5 __res_state F
 GLIBC_2.2.5 flockfile F
 GLIBC_2.2.5 ftrylockfile F
 GLIBC_2.2.5 funlockfile F
-GLIBC_2.2.5 pthread_atfork F
 GLIBC_2.2.5 pthread_attr_getguardsize F
 GLIBC_2.2.5 pthread_attr_getstack F
 GLIBC_2.2.5 pthread_attr_getstackaddr F

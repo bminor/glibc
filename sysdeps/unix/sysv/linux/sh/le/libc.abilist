@@ -1263,6 +1263,7 @@ GLIBC_2.2 program_invocation_name D 0x4
 GLIBC_2.2 program_invocation_short_name D 0x4
 GLIBC_2.2 pselect F
 GLIBC_2.2 psignal F
+GLIBC_2.2 pthread_atfork F
 GLIBC_2.2 pthread_attr_destroy F
 GLIBC_2.2 pthread_attr_getdetachstate F
 GLIBC_2.2 pthread_attr_getinheritsched F

@@ -12,6 +12,7 @@ libc {
     _pthread_cleanup_pop_restore;
     _pthread_cleanup_push;
     _pthread_cleanup_push_defer;
+    pthread_atfork;
     pthread_attr_destroy;
     pthread_attr_getdetachstate;
     pthread_attr_getinheritsched;
@@ -185,7 +186,6 @@ libpthread {
     _IO_funlockfile;
     __errno_location;
     __h_errno_location;
-    __pthread_atfork;
     __pthread_mutex_trylock;
     __pthread_mutexattr_destroy;
     __pthread_mutexattr_init;
@@ -194,7 +194,6 @@ libpthread {
     flockfile;
     ftrylockfile;
     funlockfile;
-    pthread_atfork;
     pthread_cancel;
     pthread_create;
     pthread_detach;
