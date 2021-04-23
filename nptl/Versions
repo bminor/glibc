@@ -94,6 +94,7 @@ libc {
     __pthread_cleanup_routine;
     __pthread_unwind_next;
     pthread_attr_setaffinity_np;
+    pthread_condattr_getclock;
     pthread_getaffinity_np;
   }
   GLIBC_2.3.4 {
@@ -147,6 +148,7 @@ libc {
     __pthread_once;
     __pthread_setspecific;
     pthread_cond_clockwait;
+    pthread_condattr_getclock;
     pthread_getspecific;
     pthread_key_create;
     pthread_key_delete;
@@ -332,7 +334,6 @@ libpthread {
     __pthread_unregister_cancel_restore;
     pthread_attr_getaffinity_np;
     pthread_barrierattr_getpshared;
-    pthread_condattr_getclock;
     pthread_condattr_setclock;
     pthread_setaffinity_np;
     pthread_timedjoin_np;

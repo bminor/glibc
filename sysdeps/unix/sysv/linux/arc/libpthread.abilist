@@ -46,7 +46,6 @@ GLIBC_2.32 pthread_barrierattr_init F
 GLIBC_2.32 pthread_barrierattr_setpshared F
 GLIBC_2.32 pthread_cancel F
 GLIBC_2.32 pthread_clockjoin_np F
-GLIBC_2.32 pthread_condattr_getclock F
 GLIBC_2.32 pthread_condattr_getpshared F
 GLIBC_2.32 pthread_condattr_setclock F
 GLIBC_2.32 pthread_condattr_setpshared F

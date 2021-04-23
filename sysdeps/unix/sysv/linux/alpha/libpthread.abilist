@@ -108,7 +108,6 @@ GLIBC_2.3.3 pthread_attr_getaffinity_np F
 GLIBC_2.3.3 pthread_attr_setstack F
 GLIBC_2.3.3 pthread_attr_setstacksize F
 GLIBC_2.3.3 pthread_barrierattr_getpshared F
-GLIBC_2.3.3 pthread_condattr_getclock F
 GLIBC_2.3.3 pthread_condattr_setclock F
 GLIBC_2.3.3 pthread_setaffinity_np F
 GLIBC_2.3.3 pthread_timedjoin_np F

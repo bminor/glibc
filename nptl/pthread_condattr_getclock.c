@@ -17,12 +17,20 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
-
+#include <shlib-compat.h>
 
 int
-pthread_condattr_getclock (const pthread_condattr_t *attr, clockid_t *clock_id)
+__pthread_condattr_getclock (const pthread_condattr_t *attr,
+			      clockid_t *clock_id)
 {
   *clock_id = (((((const struct pthread_condattr *) attr)->value) >> 1)
 	       & ((1 << COND_CLOCK_BITS) - 1));
   return 0;
 }
+versioned_symbol (libc, __pthread_condattr_getclock,
+		  pthread_condattr_getclock, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_condattr_getclock,
+	       pthread_condattr_getclock, GLIBC_2_3_3);
+#endif

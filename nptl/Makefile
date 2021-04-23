@@ -80,6 +80,7 @@ routines = \
   pthread_cond_signal \
   pthread_cond_wait \
   pthread_condattr_destroy \
+  pthread_condattr_getclock \
   pthread_condattr_init \
   pthread_equal \
   pthread_exit \
@@ -162,7 +163,6 @@ libpthread-routines = \
   pthread_barrierattr_setpshared \
   pthread_cancel \
   pthread_clockjoin \
-  pthread_condattr_getclock \
   pthread_condattr_getpshared \
   pthread_condattr_setclock \
   pthread_condattr_setpshared \
