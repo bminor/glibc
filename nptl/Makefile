@@ -148,7 +148,6 @@ libpthread-routines = \
   flockfile \
   ftrylockfile \
   funlockfile \
-  herrno \
   libpthread-compat \
   nptl-init \
   nptlfreeres \

@@ -246,7 +246,6 @@ libpthread {
     _IO_ftrylockfile;
     _IO_funlockfile;
     __errno_location;
-    __h_errno_location;
     _exit;
     flockfile;
     ftrylockfile;

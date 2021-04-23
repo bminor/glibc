@@ -7,7 +7,6 @@ GLIBC_2.2.5 _IO_flockfile F
 GLIBC_2.2.5 _IO_ftrylockfile F
 GLIBC_2.2.5 _IO_funlockfile F
 GLIBC_2.2.5 __errno_location F
-GLIBC_2.2.5 __h_errno_location F
 GLIBC_2.2.5 __pthread_rwlock_destroy F
 GLIBC_2.2.5 __pthread_rwlock_init F
 GLIBC_2.2.5 __pthread_rwlock_tryrdlock F
