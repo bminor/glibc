@@ -89,7 +89,7 @@ do_test (void)
       return 1;
     }
 
-  if (pthread_mutexattr_setrobust_np (&a, PTHREAD_MUTEX_ROBUST_NP) != 0)
+  if (pthread_mutexattr_setrobust (&a, PTHREAD_MUTEX_ROBUST_NP) != 0)
     {
       puts ("mutexattr_setrobust failed");
       return 1;
