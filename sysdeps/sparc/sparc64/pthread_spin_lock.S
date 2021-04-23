@@ -16,9 +16,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <shlib-compat.h>
 
 	.text
-ENTRY(pthread_spin_lock)
+ENTRY(__pthread_spin_lock)
 1:	ldstub		[%o0], %g1
 	brnz,pn		%g1, 2f
 	 membar		#StoreLoad | #StoreStore
@@ -28,4 +29,9 @@ ENTRY(pthread_spin_lock)
 	brnz,pt		%g1, 2b
 	 membar		#LoadLoad
 	ba,a,pt		%xcc, 1b
-END(pthread_spin_lock)
+END(__pthread_spin_lock)
+versioned_symbol (libc, __pthread_spin_lock, pthread_spin_lock, GLIBC_2_34)
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_lock, pthread_spin_lock, GLIBC_2_2)
+#endif

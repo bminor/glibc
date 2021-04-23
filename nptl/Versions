@@ -81,6 +81,7 @@ libc {
     pthread_mutexattr_setpshared;
     pthread_spin_destroy;
     pthread_spin_init;
+    pthread_spin_lock;
     pthread_spin_unlock;
   }
   GLIBC_2.2.3 {
@@ -184,6 +185,7 @@ libc {
     pthread_setspecific;
     pthread_spin_destroy;
     pthread_spin_init;
+    pthread_spin_lock;
     pthread_spin_unlock;
   }
   GLIBC_PRIVATE {
@@ -316,7 +318,6 @@ libpthread {
     pthread_getcpuclockid;
     pthread_rwlock_timedrdlock;
     pthread_rwlock_timedwrlock;
-    pthread_spin_lock;
     pthread_spin_trylock;
     pthread_yield;
     sem_timedwait;

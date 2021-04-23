@@ -16,8 +16,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <shlib-compat.h>
 
-ENTRY (pthread_spin_lock)
+ENTRY (__pthread_spin_lock)
 	mov	4(%esp), %eax
 1:	LOCK
 	decl	0(%eax)
@@ -31,4 +32,9 @@ ENTRY (pthread_spin_lock)
 	cmpl	$0, 0(%eax)
 	jg	1b
 	jmp	2b
-END (pthread_spin_lock)
+END (__pthread_spin_lock)
+versioned_symbol (libc, __pthread_spin_lock, pthread_spin_lock, GLIBC_2_34)
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_lock, pthread_spin_lock, GLIBC_2_2)
+#endif

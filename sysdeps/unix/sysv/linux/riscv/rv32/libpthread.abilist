@@ -73,7 +73,6 @@ GLIBC_2.33 pthread_setconcurrency F
 GLIBC_2.33 pthread_setname_np F
 GLIBC_2.33 pthread_setschedprio F
 GLIBC_2.33 pthread_sigqueue F
-GLIBC_2.33 pthread_spin_lock F
 GLIBC_2.33 pthread_spin_trylock F
 GLIBC_2.33 pthread_testcancel F
 GLIBC_2.33 pthread_timedjoin_np F

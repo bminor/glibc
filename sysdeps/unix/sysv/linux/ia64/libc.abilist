@@ -1343,6 +1343,7 @@ GLIBC_2.2 pthread_setspecific F
 GLIBC_2.2 pthread_sigmask F
 GLIBC_2.2 pthread_spin_destroy F
 GLIBC_2.2 pthread_spin_init F
+GLIBC_2.2 pthread_spin_lock F
 GLIBC_2.2 pthread_spin_unlock F
 GLIBC_2.2 ptrace F
 GLIBC_2.2 ptsname F
@@ -2210,6 +2211,7 @@ GLIBC_2.34 pthread_rwlock_wrlock F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.34 pthread_spin_destroy F
 GLIBC_2.34 pthread_spin_init F
+GLIBC_2.34 pthread_spin_lock F
 GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F

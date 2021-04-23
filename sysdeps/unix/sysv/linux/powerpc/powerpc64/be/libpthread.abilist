@@ -70,7 +70,6 @@ GLIBC_2.3 pthread_rwlockattr_init F
 GLIBC_2.3 pthread_rwlockattr_setkind_np F
 GLIBC_2.3 pthread_rwlockattr_setpshared F
 GLIBC_2.3 pthread_setconcurrency F
-GLIBC_2.3 pthread_spin_lock F
 GLIBC_2.3 pthread_spin_trylock F
 GLIBC_2.3 pthread_testcancel F
 GLIBC_2.3 pthread_yield F
