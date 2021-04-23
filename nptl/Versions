@@ -103,6 +103,7 @@ libc {
     pthread_mutexattr_getprotocol;
     pthread_mutexattr_getrobust_np;
     pthread_mutexattr_setprioceiling;
+    pthread_mutexattr_setprotocol;
   }
   GLIBC_2.12 {
     pthread_mutex_consistent;
@@ -154,6 +155,7 @@ libc {
     pthread_mutexattr_gettype;
     pthread_mutexattr_init;
     pthread_mutexattr_setprioceiling;
+    pthread_mutexattr_setprotocol;
     pthread_once;
     pthread_rwlock_rdlock;
     pthread_rwlock_unlock;
@@ -339,7 +341,6 @@ libpthread {
   }
 
   GLIBC_2.4 {
-    pthread_mutexattr_setprotocol;
     pthread_mutexattr_setrobust_np;
   };
 

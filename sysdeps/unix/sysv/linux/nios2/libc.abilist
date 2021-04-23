@@ -1533,6 +1533,7 @@ GLIBC_2.21 pthread_mutexattr_getrobust_np F
 GLIBC_2.21 pthread_mutexattr_gettype F
 GLIBC_2.21 pthread_mutexattr_init F
 GLIBC_2.21 pthread_mutexattr_setprioceiling F
+GLIBC_2.21 pthread_mutexattr_setprotocol F
 GLIBC_2.21 pthread_once F
 GLIBC_2.21 pthread_rwlock_rdlock F
 GLIBC_2.21 pthread_rwlock_unlock F
@@ -2285,6 +2286,7 @@ GLIBC_2.34 pthread_mutexattr_getrobust F
 GLIBC_2.34 pthread_mutexattr_gettype F
 GLIBC_2.34 pthread_mutexattr_init F
 GLIBC_2.34 pthread_mutexattr_setprioceiling F
+GLIBC_2.34 pthread_mutexattr_setprotocol F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F

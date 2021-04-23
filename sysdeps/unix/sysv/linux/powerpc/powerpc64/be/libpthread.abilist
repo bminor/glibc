@@ -113,7 +113,6 @@ GLIBC_2.30 pthread_rwlock_clockrdlock F
 GLIBC_2.30 pthread_rwlock_clockwrlock F
 GLIBC_2.30 sem_clockwait F
 GLIBC_2.31 pthread_clockjoin_np F
-GLIBC_2.4 pthread_mutexattr_setprotocol F
 GLIBC_2.4 pthread_mutexattr_setrobust_np F
 GLIBC_2.6 pthread_attr_setstack F
 GLIBC_2.6 pthread_attr_setstacksize F
