@@ -20,10 +20,10 @@
 #include <errno.h>
 #include <pthreadP.h>
 #include <atomic.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_mutexattr_setprioceiling (pthread_mutexattr_t *attr, int prioceiling)
+__pthread_mutexattr_setprioceiling (pthread_mutexattr_t *attr, int prioceiling)
 {
   /* See __init_sched_fifo_prio.  */
   if (atomic_load_relaxed (&__sched_fifo_min_prio) == -1
@@ -47,3 +47,10 @@ pthread_mutexattr_setprioceiling (pthread_mutexattr_t *attr, int prioceiling)
 
   return 0;
 }
+versioned_symbol (libc, __pthread_mutexattr_setprioceiling,
+		  pthread_mutexattr_setprioceiling, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_4, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_mutexattr_setprioceiling,
+               pthread_mutexattr_setprioceiling, GLIBC_2_4);
+#endif

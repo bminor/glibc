@@ -110,6 +110,7 @@ routines = \
   pthread_mutexattr_getrobust \
   pthread_mutexattr_gettype \
   pthread_mutexattr_init \
+  pthread_mutexattr_setprioceiling \
   pthread_once \
   pthread_rwlock_rdlock \
   pthread_rwlock_unlock \
@@ -169,7 +170,6 @@ libpthread-routines = \
   pthread_getname \
   pthread_join \
   pthread_join_common \
-  pthread_mutexattr_setprioceiling \
   pthread_mutexattr_setprotocol \
   pthread_mutexattr_setpshared \
   pthread_mutexattr_setrobust \
