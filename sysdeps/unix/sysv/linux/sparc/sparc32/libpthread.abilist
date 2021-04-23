@@ -80,7 +80,6 @@ GLIBC_2.2 pthread_barrierattr_setpshared F
 GLIBC_2.2 pthread_condattr_getpshared F
 GLIBC_2.2 pthread_condattr_setpshared F
 GLIBC_2.2 pthread_getcpuclockid F
-GLIBC_2.2 pthread_mutex_timedlock F
 GLIBC_2.2 pthread_mutexattr_getpshared F
 GLIBC_2.2 pthread_mutexattr_setpshared F
 GLIBC_2.2 pthread_rwlock_timedrdlock F
@@ -132,7 +131,6 @@ GLIBC_2.3.3 pthread_tryjoin_np F
 GLIBC_2.3.4 pthread_attr_getaffinity_np F
 GLIBC_2.3.4 pthread_setaffinity_np F
 GLIBC_2.3.4 pthread_setschedprio F
-GLIBC_2.30 pthread_mutex_clocklock F
 GLIBC_2.30 pthread_rwlock_clockrdlock F
 GLIBC_2.30 pthread_rwlock_clockwrlock F
 GLIBC_2.30 sem_clockwait F

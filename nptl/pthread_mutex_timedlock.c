@@ -571,9 +571,9 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 }
 
 int
-__pthread_mutex_clocklock64 (pthread_mutex_t *mutex,
-			     clockid_t clockid,
-			     const struct __timespec64 *abstime)
+___pthread_mutex_clocklock64 (pthread_mutex_t *mutex,
+			      clockid_t clockid,
+			      const struct __timespec64 *abstime)
 {
   if (__glibc_unlikely (!futex_abstimed_supported_clockid (clockid)))
     return EINVAL;
@@ -582,39 +582,61 @@ __pthread_mutex_clocklock64 (pthread_mutex_t *mutex,
   return __pthread_mutex_clocklock_common (mutex, clockid, abstime);
 }
 
-#if __TIMESIZE != 64
-libpthread_hidden_def (__pthread_mutex_clocklock64)
+#if __TIMESIZE == 64
+strong_alias (___pthread_mutex_clocklock64, ___pthread_mutex_clocklock)
+#else /* __TIMESPEC64 != 64 */
+libc_hidden_ver (___pthread_mutex_clocklock64, __pthread_mutex_clocklock64)
 
 int
-__pthread_mutex_clocklock (pthread_mutex_t *mutex,
-			   clockid_t clockid,
-			   const struct timespec *abstime)
+___pthread_mutex_clocklock (pthread_mutex_t *mutex,
+			    clockid_t clockid,
+			    const struct timespec *abstime)
 {
   struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
 
-  return __pthread_mutex_clocklock64 (mutex, clockid, &ts64);
+  return ___pthread_mutex_clocklock64 (mutex, clockid, &ts64);
 }
+#endif /* __TIMESPEC64 != 64 */
+versioned_symbol (libc, ___pthread_mutex_clocklock,
+		  __pthread_mutex_clocklock, GLIBC_PRIVATE);
+libc_hidden_ver (___pthread_mutex_clocklock, __pthread_mutex_clocklock)
+versioned_symbol (libc, ___pthread_mutex_clocklock,
+		  pthread_mutex_clocklock, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_30, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_mutex_clocklock,
+	       pthread_mutex_clocklock, GLIBC_2_30);
 #endif
-weak_alias (__pthread_mutex_clocklock, pthread_mutex_clocklock)
 
 int
-__pthread_mutex_timedlock64 (pthread_mutex_t *mutex,
+___pthread_mutex_timedlock64 (pthread_mutex_t *mutex,
 			     const struct __timespec64 *abstime)
 {
   LIBC_PROBE (mutex_timedlock_entry, 2, mutex, abstime);
   return __pthread_mutex_clocklock_common (mutex, CLOCK_REALTIME, abstime);
 }
 
-#if __TIMESIZE != 64
-libpthread_hidden_def (__pthread_mutex_timedlock64)
+#if __TIMESIZE == 64
+strong_alias (___pthread_mutex_timedlock64, ___pthread_mutex_timedlock)
+#else /* __TIMESPEC64 != 64 */
+versioned_symbol (libc, ___pthread_mutex_timedlock64,
+		  __pthread_mutex_timedlock64, GLIBC_PRIVATE);
+libc_hidden_ver (___pthread_mutex_timedlock64, __pthread_mutex_timedlock64)
 
 int
-__pthread_mutex_timedlock (pthread_mutex_t *mutex,
+___pthread_mutex_timedlock (pthread_mutex_t *mutex,
 			   const struct timespec *abstime)
 {
   struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
 
   return __pthread_mutex_timedlock64 (mutex, &ts64);
 }
+#endif /* __TIMESPEC64 != 64 */
+versioned_symbol (libc, ___pthread_mutex_timedlock,
+		  __pthread_mutex_timedlock, GLIBC_PRIVATE);
+libc_hidden_ver (___pthread_mutex_timedlock, __pthread_mutex_timedlock)
+versioned_symbol (libc, ___pthread_mutex_timedlock,
+		  pthread_mutex_timedlock, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_mutex_timedlock,
+	       pthread_mutex_timedlock, GLIBC_2_2);
 #endif
-weak_alias (__pthread_mutex_timedlock, pthread_mutex_timedlock)

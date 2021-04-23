@@ -63,6 +63,7 @@ libc {
     __pthread_rwlock_rdlock;
     __pthread_rwlock_unlock;
     __pthread_rwlock_wrlock;
+    pthread_mutex_timedlock;
   }
   GLIBC_2.2.3 {
     pthread_getattr_np;
@@ -102,6 +103,7 @@ libc {
   }
   GLIBC_2.30 {
     pthread_cond_clockwait;
+    pthread_mutex_clocklock;
   }
   GLIBC_2.32 {
     pthread_attr_getsigmask_np;
@@ -126,6 +128,7 @@ libc {
     pthread_key_create;
     pthread_key_delete;
     pthread_kill;
+    pthread_mutex_clocklock;
     pthread_mutex_consistent;
     pthread_mutex_getprioceiling;
     pthread_mutex_setprioceiling;
@@ -174,6 +177,7 @@ libc {
     __pthread_getattr_default_np;
     __pthread_key_delete;
     __pthread_keys;
+    __pthread_mutex_timedlock;
     __pthread_mutex_unlock_usercnt;
     __pthread_setcancelstate;
     __pthread_tpp_change_priority;
@@ -275,7 +279,6 @@ libpthread {
     pthread_condattr_getpshared;
     pthread_condattr_setpshared;
     pthread_getcpuclockid;
-    pthread_mutex_timedlock;
     pthread_mutexattr_getpshared;
     pthread_mutexattr_setpshared;
     pthread_rwlock_timedrdlock;
@@ -373,7 +376,6 @@ libpthread {
   }
 
   GLIBC_2.30 {
-    pthread_mutex_clocklock;
     pthread_rwlock_clockrdlock;
     pthread_rwlock_clockwrlock;
     sem_clockwait;

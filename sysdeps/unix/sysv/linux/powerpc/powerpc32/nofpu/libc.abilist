@@ -1939,6 +1939,7 @@ GLIBC_2.2 posix_spawnattr_setsigmask F
 GLIBC_2.2 posix_spawnp F
 GLIBC_2.2 pread F
 GLIBC_2.2 pread64 F
+GLIBC_2.2 pthread_mutex_timedlock F
 GLIBC_2.2 putwc F
 GLIBC_2.2 putwc_unlocked F
 GLIBC_2.2 putwchar F
@@ -2260,6 +2261,7 @@ GLIBC_2.30 __nldbl_warnx F
 GLIBC_2.30 getdents64 F
 GLIBC_2.30 gettid F
 GLIBC_2.30 pthread_cond_clockwait F
+GLIBC_2.30 pthread_mutex_clocklock F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
 GLIBC_2.32 __libc_single_threaded D 0x1
@@ -2300,9 +2302,11 @@ GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_key_delete F
 GLIBC_2.34 pthread_kill F
+GLIBC_2.34 pthread_mutex_clocklock F
 GLIBC_2.34 pthread_mutex_consistent F
 GLIBC_2.34 pthread_mutex_getprioceiling F
 GLIBC_2.34 pthread_mutex_setprioceiling F
+GLIBC_2.34 pthread_mutex_timedlock F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F

@@ -1394,6 +1394,7 @@ GLIBC_2.33 pthread_key_create F
 GLIBC_2.33 pthread_key_delete F
 GLIBC_2.33 pthread_kill F
 GLIBC_2.33 pthread_kill_other_threads_np F
+GLIBC_2.33 pthread_mutex_clocklock F
 GLIBC_2.33 pthread_mutex_consistent F
 GLIBC_2.33 pthread_mutex_consistent_np F
 GLIBC_2.33 pthread_mutex_destroy F
@@ -1401,6 +1402,7 @@ GLIBC_2.33 pthread_mutex_getprioceiling F
 GLIBC_2.33 pthread_mutex_init F
 GLIBC_2.33 pthread_mutex_lock F
 GLIBC_2.33 pthread_mutex_setprioceiling F
+GLIBC_2.33 pthread_mutex_timedlock F
 GLIBC_2.33 pthread_mutex_unlock F
 GLIBC_2.33 pthread_once F
 GLIBC_2.33 pthread_rwlock_rdlock F
@@ -1981,9 +1983,11 @@ GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_key_delete F
 GLIBC_2.34 pthread_kill F
+GLIBC_2.34 pthread_mutex_clocklock F
 GLIBC_2.34 pthread_mutex_consistent F
 GLIBC_2.34 pthread_mutex_getprioceiling F
 GLIBC_2.34 pthread_mutex_setprioceiling F
+GLIBC_2.34 pthread_mutex_timedlock F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F
