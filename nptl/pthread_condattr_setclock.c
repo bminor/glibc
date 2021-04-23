@@ -25,7 +25,7 @@
 
 
 int
-pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock_id)
+__pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock_id)
 {
   /* Only a few clocks are allowed.  */
   if (clock_id != CLOCK_MONOTONIC && clock_id != CLOCK_REALTIME)
@@ -43,3 +43,10 @@ pthread_condattr_setclock (pthread_condattr_t *attr, clockid_t clock_id)
 
   return 0;
 }
+versioned_symbol (libc, __pthread_condattr_setclock,
+		  pthread_condattr_setclock, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_condattr_setclock,
+	       pthread_condattr_setclock, GLIBC_2_3_3);
+#endif

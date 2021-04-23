@@ -106,7 +106,6 @@ GLIBC_2.3.3 __pthread_unregister_cancel F
 GLIBC_2.3.3 __pthread_unregister_cancel_restore F
 GLIBC_2.3.3 pthread_attr_getaffinity_np F
 GLIBC_2.3.3 pthread_barrierattr_getpshared F
-GLIBC_2.3.3 pthread_condattr_setclock F
 GLIBC_2.3.3 pthread_setaffinity_np F
 GLIBC_2.3.3 pthread_timedjoin_np F
 GLIBC_2.3.3 pthread_tryjoin_np F

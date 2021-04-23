@@ -2035,6 +2035,7 @@ GLIBC_2.3.3 nftw F
 GLIBC_2.3.3 nftw64 F
 GLIBC_2.3.3 pthread_attr_setaffinity_np F
 GLIBC_2.3.3 pthread_condattr_getclock F
+GLIBC_2.3.3 pthread_condattr_setclock F
 GLIBC_2.3.3 pthread_getaffinity_np F
 GLIBC_2.3.3 remap_file_pages F
 GLIBC_2.3.3 sched_getaffinity F
@@ -2141,6 +2142,7 @@ GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F
+GLIBC_2.34 pthread_condattr_setclock F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_key_delete F
