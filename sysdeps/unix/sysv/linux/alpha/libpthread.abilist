@@ -12,7 +12,6 @@ GLIBC_2.0 pthread_cancel F
 GLIBC_2.0 pthread_create F
 GLIBC_2.0 pthread_detach F
 GLIBC_2.0 pthread_join F
-GLIBC_2.0 pthread_mutexattr_getkind_np F
 GLIBC_2.0 pthread_mutexattr_init F
 GLIBC_2.0 pthread_mutexattr_setkind_np F
 GLIBC_2.0 pthread_testcancel F
@@ -30,7 +29,6 @@ GLIBC_2.1 pthread_attr_setstackaddr F
 GLIBC_2.1 pthread_attr_setstacksize F
 GLIBC_2.1 pthread_create F
 GLIBC_2.1 pthread_getconcurrency F
-GLIBC_2.1 pthread_mutexattr_gettype F
 GLIBC_2.1 pthread_mutexattr_settype F
 GLIBC_2.1 pthread_rwlock_destroy F
 GLIBC_2.1 pthread_rwlock_init F

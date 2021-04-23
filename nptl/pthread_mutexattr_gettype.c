@@ -17,10 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthreadP.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_mutexattr_gettype (const pthread_mutexattr_t *attr, int *kind)
+__pthread_mutexattr_gettype (const pthread_mutexattr_t *attr, int *kind)
 {
   const struct pthread_mutexattr *iattr;
 
@@ -31,4 +31,15 @@ pthread_mutexattr_gettype (const pthread_mutexattr_t *attr, int *kind)
 
   return 0;
 }
-weak_alias (pthread_mutexattr_gettype, pthread_mutexattr_getkind_np)
+versioned_symbol (libc, __pthread_mutexattr_gettype,
+		  pthread_mutexattr_gettype, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_mutexattr_gettype,
+	       pthread_mutexattr_getkind_np, GLIBC_2_0);
+#endif
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_mutexattr_gettype,
+	       pthread_mutexattr_gettype, GLIBC_2_1);
+#endif

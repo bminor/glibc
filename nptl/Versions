@@ -49,6 +49,7 @@ libc {
     pthread_mutex_trylock;
     pthread_mutex_unlock;
     pthread_mutexattr_destroy;
+    pthread_mutexattr_getkind_np;
     pthread_once;
     pthread_self;
     pthread_setcancelstate;
@@ -59,6 +60,7 @@ libc {
   }
   GLIBC_2.1 {
     pthread_attr_init;
+    pthread_mutexattr_gettype;
     pthread_rwlock_rdlock;
     pthread_rwlock_unlock;
     pthread_rwlock_wrlock;
@@ -145,6 +147,7 @@ libc {
     pthread_mutexattr_getprioceiling;
     pthread_mutexattr_getprotocol;
     pthread_mutexattr_getrobust;
+    pthread_mutexattr_gettype;
     pthread_once;
     pthread_rwlock_rdlock;
     pthread_rwlock_unlock;
@@ -218,7 +221,6 @@ libpthread {
     pthread_create;
     pthread_detach;
     pthread_join;
-    pthread_mutexattr_getkind_np;
     pthread_mutexattr_init;
     pthread_mutexattr_setkind_np;
     pthread_sigmask;
@@ -240,7 +242,6 @@ libpthread {
     pthread_attr_setstacksize;
     pthread_create;
     pthread_getconcurrency;
-    pthread_mutexattr_gettype;
     pthread_mutexattr_settype;
     pthread_rwlock_destroy;
     pthread_rwlock_init;
