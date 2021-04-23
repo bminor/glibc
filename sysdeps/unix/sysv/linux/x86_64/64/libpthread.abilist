@@ -49,7 +49,6 @@ GLIBC_2.2.5 pthread_rwlockattr_init F
 GLIBC_2.2.5 pthread_rwlockattr_setkind_np F
 GLIBC_2.2.5 pthread_rwlockattr_setpshared F
 GLIBC_2.2.5 pthread_setconcurrency F
-GLIBC_2.2.5 pthread_spin_trylock F
 GLIBC_2.2.5 pthread_testcancel F
 GLIBC_2.2.5 pthread_yield F
 GLIBC_2.2.5 sem_close F

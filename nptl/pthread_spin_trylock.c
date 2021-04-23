@@ -19,9 +19,10 @@
 #include <errno.h>
 #include <atomic.h>
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 int
-pthread_spin_trylock (pthread_spinlock_t *lock)
+__pthread_spin_trylock (pthread_spinlock_t *lock)
 {
   /* For the spin try lock, we have the following possibilities:
 
@@ -77,3 +78,10 @@ pthread_spin_trylock (pthread_spinlock_t *lock)
 
   return EBUSY;
 }
+versioned_symbol (libc, __pthread_spin_trylock, pthread_spin_trylock,
+		  GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_trylock, pthread_spin_trylock,
+	       GLIBC_2_2);
+#endif

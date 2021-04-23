@@ -17,13 +17,21 @@
 
 #include <sysdep.h>
 #include <errno.h>
+#include <shlib-compat.h>
 
 	.text
-ENTRY(pthread_spin_trylock)
+ENTRY(__pthread_spin_trylock)
 	ldstub		[%o0], %o0
 	cmp		%o0, 0
 	bne,a		1f
 	 mov		EBUSY, %o0
 1:	retl
 	 nop
-END(pthread_spin_trylock)
+END(__pthread_spin_trylock)
+versioned_symbol (libc, __pthread_spin_trylock, pthread_spin_trylock,
+		  GLIBC_2_34)
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_trylock, pthread_spin_trylock,
+	       GLIBC_2_2)
+#endif

@@ -18,9 +18,9 @@
 
 #include <sysdep.h>
 #include <errno.h>
+#include <shlib-compat.h>
 
-
-ENTRY (pthread_spin_trylock)
+ENTRY (__pthread_spin_trylock)
 	movl	4(%esp), %edx
 	movl	$1, %eax
 	xorl	%ecx, %ecx
@@ -35,4 +35,11 @@ ENTRY (pthread_spin_trylock)
 0:
 #endif
 	ret
-END (pthread_spin_trylock)
+END (__pthread_spin_trylock)
+versioned_symbol (libc, __pthread_spin_trylock, pthread_spin_trylock,
+		  GLIBC_2_34)
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_trylock, pthread_spin_trylock,
+	       GLIBC_2_2)
+#endif

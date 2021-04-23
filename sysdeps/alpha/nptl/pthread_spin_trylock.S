@@ -16,6 +16,7 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <shlib-compat.h>
 
 #define _ERRNO_H 1
 #include <bits/errno.h>
@@ -23,9 +24,9 @@
 	.text
 	.align	4
 
-	.globl	pthread_spin_trylock
-	.ent	pthread_spin_trylock
-pthread_spin_trylock:
+	.globl	__pthread_spin_trylock
+	.ent	__pthread_spin_trylock
+__pthread_spin_trylock:
 	.frame	$sp, 0, $26, 0
 	.prologue 0
 
@@ -42,4 +43,11 @@ pthread_spin_trylock:
 1:	ret
 2:	br	0b
 
-	.end	pthread_spin_trylock
+	.end	__pthread_spin_trylock
+versioned_symbol (libc, __pthread_spin_trylock, pthread_spin_trylock,
+		  GLIBC_2_34)
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_trylock, pthread_spin_trylock,
+	       GLIBC_2_2)
+#endif

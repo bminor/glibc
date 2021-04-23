@@ -18,9 +18,10 @@
 
 #include <errno.h>
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 int
-pthread_spin_trylock (pthread_spinlock_t *lock)
+__pthread_spin_trylock (pthread_spinlock_t *lock)
 {
   unsigned int old;
   int err = EBUSY;
@@ -39,3 +40,10 @@ pthread_spin_trylock (pthread_spinlock_t *lock)
 
   return err;
 }
+versioned_symbol (libc, __pthread_spin_trylock, pthread_spin_trylock,
+		  GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_trylock, pthread_spin_trylock,
+	       GLIBC_2_2);
+#endif

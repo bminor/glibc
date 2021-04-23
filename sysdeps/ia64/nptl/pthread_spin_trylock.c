@@ -18,9 +18,17 @@
 
 #include <errno.h>
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 int
-pthread_spin_trylock (pthread_spinlock_t *lock)
+__pthread_spin_trylock (pthread_spinlock_t *lock)
 {
   return __sync_val_compare_and_swap ((int *) lock, 0, 1) == 0 ? 0 : EBUSY;
 }
+versioned_symbol (libc, __pthread_spin_trylock, pthread_spin_trylock,
+                  GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_spin_trylock, pthread_spin_trylock,
+               GLIBC_2_2);
+#endif
