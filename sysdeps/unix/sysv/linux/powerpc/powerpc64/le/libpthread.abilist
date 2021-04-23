@@ -44,7 +44,6 @@ GLIBC_2.17 pthread_getcpuclockid F
 GLIBC_2.17 pthread_getname_np F
 GLIBC_2.17 pthread_join F
 GLIBC_2.17 pthread_mutexattr_setkind_np F
-GLIBC_2.17 pthread_mutexattr_setpshared F
 GLIBC_2.17 pthread_mutexattr_setrobust F
 GLIBC_2.17 pthread_mutexattr_setrobust_np F
 GLIBC_2.17 pthread_mutexattr_settype F

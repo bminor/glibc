@@ -73,6 +73,7 @@ libc {
     __pthread_rwlock_wrlock;
     pthread_mutex_timedlock;
     pthread_mutexattr_getpshared;
+    pthread_mutexattr_setpshared;
   }
   GLIBC_2.2.3 {
     pthread_getattr_np;
@@ -156,6 +157,7 @@ libc {
     pthread_mutexattr_init;
     pthread_mutexattr_setprioceiling;
     pthread_mutexattr_setprotocol;
+    pthread_mutexattr_setpshared;
     pthread_once;
     pthread_rwlock_rdlock;
     pthread_rwlock_unlock;
@@ -295,7 +297,6 @@ libpthread {
     pthread_condattr_getpshared;
     pthread_condattr_setpshared;
     pthread_getcpuclockid;
-    pthread_mutexattr_setpshared;
     pthread_rwlock_timedrdlock;
     pthread_rwlock_timedwrlock;
     pthread_spin_destroy;

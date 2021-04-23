@@ -1946,6 +1946,7 @@ GLIBC_2.2 pread F
 GLIBC_2.2 pread64 F
 GLIBC_2.2 pthread_mutex_timedlock F
 GLIBC_2.2 pthread_mutexattr_getpshared F
+GLIBC_2.2 pthread_mutexattr_setpshared F
 GLIBC_2.2 putwc F
 GLIBC_2.2 putwc_unlocked F
 GLIBC_2.2 putwchar F
@@ -2296,6 +2297,7 @@ GLIBC_2.34 pthread_mutexattr_gettype F
 GLIBC_2.34 pthread_mutexattr_init F
 GLIBC_2.34 pthread_mutexattr_setprioceiling F
 GLIBC_2.34 pthread_mutexattr_setprotocol F
+GLIBC_2.34 pthread_mutexattr_setpshared F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F
