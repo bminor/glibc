@@ -26,7 +26,6 @@ GLIBC_2.2 __pthread_rwlock_destroy F
 GLIBC_2.2 __pthread_rwlock_init F
 GLIBC_2.2 __pthread_rwlock_tryrdlock F
 GLIBC_2.2 __pthread_rwlock_trywrlock F
-GLIBC_2.2 __res_state F
 GLIBC_2.2 pthread_attr_getguardsize F
 GLIBC_2.2 pthread_attr_getstack F
 GLIBC_2.2 pthread_attr_getstackaddr F

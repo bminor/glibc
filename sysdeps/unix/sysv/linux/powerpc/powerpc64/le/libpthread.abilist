@@ -11,7 +11,6 @@ GLIBC_2.17 __pthread_rwlock_tryrdlock F
 GLIBC_2.17 __pthread_rwlock_trywrlock F
 GLIBC_2.17 __pthread_unregister_cancel F
 GLIBC_2.17 __pthread_unregister_cancel_restore F
-GLIBC_2.17 __res_state F
 GLIBC_2.17 flockfile F
 GLIBC_2.17 ftrylockfile F
 GLIBC_2.17 funlockfile F

@@ -12,7 +12,6 @@ GLIBC_2.2.5 __pthread_rwlock_destroy F
 GLIBC_2.2.5 __pthread_rwlock_init F
 GLIBC_2.2.5 __pthread_rwlock_tryrdlock F
 GLIBC_2.2.5 __pthread_rwlock_trywrlock F
-GLIBC_2.2.5 __res_state F
 GLIBC_2.2.5 flockfile F
 GLIBC_2.2.5 ftrylockfile F
 GLIBC_2.2.5 funlockfile F

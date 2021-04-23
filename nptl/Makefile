@@ -203,7 +203,6 @@ libpthread-routines = \
   pthread_timedjoin \
   pthread_tryjoin \
   pthread_yield \
-  res \
   sem_clockwait \
   sem_close \
   sem_destroy \

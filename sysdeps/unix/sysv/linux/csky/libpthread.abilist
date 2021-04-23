@@ -11,7 +11,6 @@ GLIBC_2.29 __pthread_rwlock_tryrdlock F
 GLIBC_2.29 __pthread_rwlock_trywrlock F
 GLIBC_2.29 __pthread_unregister_cancel F
 GLIBC_2.29 __pthread_unregister_cancel_restore F
-GLIBC_2.29 __res_state F
 GLIBC_2.29 call_once F
 GLIBC_2.29 cnd_broadcast F
 GLIBC_2.29 cnd_destroy F

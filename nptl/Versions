@@ -308,7 +308,6 @@ libpthread {
     __pthread_rwlock_init;
     __pthread_rwlock_tryrdlock;
     __pthread_rwlock_trywrlock;
-    __res_state;
     pthread_attr_getstack;
     pthread_attr_setstack;
     pthread_barrier_destroy;

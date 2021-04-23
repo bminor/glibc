@@ -33,7 +33,6 @@ GLIBC_2.3 __pthread_rwlock_destroy F
 GLIBC_2.3 __pthread_rwlock_init F
 GLIBC_2.3 __pthread_rwlock_tryrdlock F
 GLIBC_2.3 __pthread_rwlock_trywrlock F
-GLIBC_2.3 __res_state F
 GLIBC_2.3 flockfile F
 GLIBC_2.3 ftrylockfile F
 GLIBC_2.3 funlockfile F
