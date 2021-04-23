@@ -76,7 +76,6 @@ GLIBC_2.4 pthread_getconcurrency F
 GLIBC_2.4 pthread_getcpuclockid F
 GLIBC_2.4 pthread_join F
 GLIBC_2.4 pthread_mutexattr_getkind_np F
-GLIBC_2.4 pthread_mutexattr_getpshared F
 GLIBC_2.4 pthread_mutexattr_getrobust_np F
 GLIBC_2.4 pthread_mutexattr_gettype F
 GLIBC_2.4 pthread_mutexattr_init F

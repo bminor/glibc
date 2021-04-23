@@ -53,7 +53,6 @@ GLIBC_2.2 pthread_condattr_setpshared F
 GLIBC_2.2 pthread_create F
 GLIBC_2.2 pthread_getconcurrency F
 GLIBC_2.2 pthread_getcpuclockid F
-GLIBC_2.2 pthread_mutexattr_getpshared F
 GLIBC_2.2 pthread_mutexattr_gettype F
 GLIBC_2.2 pthread_mutexattr_setpshared F
 GLIBC_2.2 pthread_mutexattr_settype F

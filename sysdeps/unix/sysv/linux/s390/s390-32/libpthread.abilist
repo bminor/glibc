@@ -77,7 +77,6 @@ GLIBC_2.2 pthread_barrierattr_setpshared F
 GLIBC_2.2 pthread_condattr_getpshared F
 GLIBC_2.2 pthread_condattr_setpshared F
 GLIBC_2.2 pthread_getcpuclockid F
-GLIBC_2.2 pthread_mutexattr_getpshared F
 GLIBC_2.2 pthread_mutexattr_setpshared F
 GLIBC_2.2 pthread_rwlock_timedrdlock F
 GLIBC_2.2 pthread_rwlock_timedwrlock F

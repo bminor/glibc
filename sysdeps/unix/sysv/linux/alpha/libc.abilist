@@ -1970,6 +1970,7 @@ GLIBC_2.2 posix_spawnp F
 GLIBC_2.2 pread F
 GLIBC_2.2 pread64 F
 GLIBC_2.2 pthread_mutex_timedlock F
+GLIBC_2.2 pthread_mutexattr_getpshared F
 GLIBC_2.2 putwc F
 GLIBC_2.2 putwc_unlocked F
 GLIBC_2.2 putwchar F
@@ -2323,6 +2324,7 @@ GLIBC_2.34 pthread_mutex_trylock F
 GLIBC_2.34 pthread_mutexattr_destroy F
 GLIBC_2.34 pthread_mutexattr_getprioceiling F
 GLIBC_2.34 pthread_mutexattr_getprotocol F
+GLIBC_2.34 pthread_mutexattr_getpshared F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F

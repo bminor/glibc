@@ -17,10 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthreadP.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_mutexattr_getpshared (const pthread_mutexattr_t *attr, int *pshared)
+__pthread_mutexattr_getpshared (const pthread_mutexattr_t *attr, int *pshared)
 {
   const struct pthread_mutexattr *iattr;
 
@@ -31,3 +31,10 @@ pthread_mutexattr_getpshared (const pthread_mutexattr_t *attr, int *pshared)
 
   return 0;
 }
+versioned_symbol (libc, __pthread_mutexattr_getpshared,
+		  pthread_mutexattr_getpshared, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_mutexattr_getpshared,
+               pthread_mutexattr_getpshared, GLIBC_2_2);
+#endif
