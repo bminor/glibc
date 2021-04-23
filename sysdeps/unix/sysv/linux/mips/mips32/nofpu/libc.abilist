@@ -2215,6 +2215,7 @@ GLIBC_2.34 pthread_mutex_setprioceiling F
 GLIBC_2.34 pthread_mutex_timedlock F
 GLIBC_2.34 pthread_mutex_trylock F
 GLIBC_2.34 pthread_mutexattr_destroy F
+GLIBC_2.34 pthread_mutexattr_getprioceiling F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F
@@ -2290,6 +2291,7 @@ GLIBC_2.4 ppoll F
 GLIBC_2.4 pthread_mutex_consistent_np F
 GLIBC_2.4 pthread_mutex_getprioceiling F
 GLIBC_2.4 pthread_mutex_setprioceiling F
+GLIBC_2.4 pthread_mutexattr_getprioceiling F
 GLIBC_2.4 readlinkat F
 GLIBC_2.4 renameat F
 GLIBC_2.4 symlinkat F

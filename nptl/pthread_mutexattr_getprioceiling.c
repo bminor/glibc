@@ -19,11 +19,11 @@
 
 #include <pthreadP.h>
 #include <atomic.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_mutexattr_getprioceiling (const pthread_mutexattr_t *attr,
-				  int *prioceiling)
+__pthread_mutexattr_getprioceiling (const pthread_mutexattr_t *attr,
+				    int *prioceiling)
 {
   const struct pthread_mutexattr *iattr;
   int ceiling;
@@ -46,3 +46,10 @@ pthread_mutexattr_getprioceiling (const pthread_mutexattr_t *attr,
 
   return 0;
 }
+versioned_symbol (libc, __pthread_mutexattr_getprioceiling,
+		  pthread_mutexattr_getprioceiling, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_4, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_mutexattr_getprioceiling,
+               pthread_mutexattr_getprioceiling, GLIBC_2_4);
+#endif

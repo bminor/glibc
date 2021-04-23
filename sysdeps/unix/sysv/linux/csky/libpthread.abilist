@@ -59,7 +59,6 @@ GLIBC_2.29 pthread_getcpuclockid F
 GLIBC_2.29 pthread_getname_np F
 GLIBC_2.29 pthread_join F
 GLIBC_2.29 pthread_mutexattr_getkind_np F
-GLIBC_2.29 pthread_mutexattr_getprioceiling F
 GLIBC_2.29 pthread_mutexattr_getprotocol F
 GLIBC_2.29 pthread_mutexattr_getpshared F
 GLIBC_2.29 pthread_mutexattr_getrobust F
