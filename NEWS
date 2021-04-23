@@ -28,6 +28,10 @@ Deprecated and removed features, and other changes affecting compatibility:
   programs should use the equivalent standard function
   pthread_mutexattr_getrobust instead.
 
+* The function pthread_mutexattr_setrobust_np has been deprecated;
+  programs should use the equivalent standard function
+  pthread_mutexattr_setrobust instead.
+
 Changes to build and runtime requirements:
 
 * On Linux, the shm_open, sem_open, and related functions now expect the

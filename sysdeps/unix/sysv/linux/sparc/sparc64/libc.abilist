@@ -39,6 +39,7 @@ GLIBC_2.12 _sys_nerr D 0x4
 GLIBC_2.12 ntp_gettimex F
 GLIBC_2.12 pthread_mutex_consistent F
 GLIBC_2.12 pthread_mutexattr_getrobust F
+GLIBC_2.12 pthread_mutexattr_setrobust F
 GLIBC_2.12 recvmmsg F
 GLIBC_2.12 sys_errlist D 0x438
 GLIBC_2.12 sys_nerr D 0x4
@@ -2206,6 +2207,7 @@ GLIBC_2.34 pthread_mutexattr_init F
 GLIBC_2.34 pthread_mutexattr_setprioceiling F
 GLIBC_2.34 pthread_mutexattr_setprotocol F
 GLIBC_2.34 pthread_mutexattr_setpshared F
+GLIBC_2.34 pthread_mutexattr_setrobust F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F
@@ -2288,6 +2290,7 @@ GLIBC_2.4 pthread_mutexattr_getprotocol F
 GLIBC_2.4 pthread_mutexattr_getrobust_np F
 GLIBC_2.4 pthread_mutexattr_setprioceiling F
 GLIBC_2.4 pthread_mutexattr_setprotocol F
+GLIBC_2.4 pthread_mutexattr_setrobust_np F
 GLIBC_2.4 readlinkat F
 GLIBC_2.4 renameat F
 GLIBC_2.4 symlinkat F

@@ -901,12 +901,17 @@ extern int pthread_mutexattr_setrobust (pthread_mutexattr_t *__attr,
 					int __robustness)
      __THROW __nonnull ((1));
 # ifdef __USE_GNU
-extern int pthread_mutexattr_setrobust_np (pthread_mutexattr_t *__attr,
-					   int __robustness)
-     __THROW __nonnull ((1));
+#  ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (pthread_mutexattr_setrobust_np,
+			   (pthread_mutex_t *, int),
+			   pthread_mutexattr_setrobust) __nonnull ((1))
+  __attribute_deprecated_msg__ ("\
+pthread_mutexattr_setrobust_np is deprecated, use pthread_mutexattr_setrobust");
+#  else
+#   define pthread_mutexattr_setrobust_np pthread_mutexattr_setrobust
+#  endif
 # endif
 #endif
-
 
 #if defined __USE_UNIX98 || defined __USE_XOPEN2K
 /* Functions for handling read-write locks.  */
