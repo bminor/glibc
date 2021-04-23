@@ -87,6 +87,7 @@ libc {
   }
   GLIBC_2.4 {
     pthread_mutex_consistent_np;
+    pthread_mutex_getprioceiling;
   }
   GLIBC_2.12 {
     pthread_mutex_consistent;
@@ -125,6 +126,7 @@ libc {
     pthread_key_delete;
     pthread_kill;
     pthread_mutex_consistent;
+    pthread_mutex_getprioceiling;
     pthread_once;
     pthread_rwlock_rdlock;
     pthread_rwlock_unlock;
@@ -319,7 +321,6 @@ libpthread {
   }
 
   GLIBC_2.4 {
-    pthread_mutex_getprioceiling;
     pthread_mutex_setprioceiling;
     pthread_mutexattr_getprioceiling;
     pthread_mutexattr_getprotocol;

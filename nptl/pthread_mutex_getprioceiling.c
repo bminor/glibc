@@ -19,10 +19,10 @@
 
 #include <errno.h>
 #include <pthreadP.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_mutex_getprioceiling (const pthread_mutex_t *mutex, int *prioceiling)
+__pthread_mutex_getprioceiling (const pthread_mutex_t *mutex, int *prioceiling)
 {
   /* See concurrency notes regarding __kind in struct __pthread_mutex_s
      in sysdeps/nptl/bits/thread-shared-types.h.  */
@@ -35,3 +35,10 @@ pthread_mutex_getprioceiling (const pthread_mutex_t *mutex, int *prioceiling)
 
   return 0;
 }
+versioned_symbol (libc, __pthread_mutex_getprioceiling,
+		  pthread_mutex_getprioceiling, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_4, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_mutex_getprioceiling,
+               pthread_mutex_getprioceiling, GLIBC_2_4);
+#endif
