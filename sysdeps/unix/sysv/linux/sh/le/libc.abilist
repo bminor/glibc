@@ -366,6 +366,7 @@ GLIBC_2.2 __pthread_mutex_init F
 GLIBC_2.2 __pthread_mutex_lock F
 GLIBC_2.2 __pthread_mutex_trylock F
 GLIBC_2.2 __pthread_mutex_unlock F
+GLIBC_2.2 __pthread_mutexattr_destroy F
 GLIBC_2.2 __pthread_once F
 GLIBC_2.2 __pthread_rwlock_rdlock F
 GLIBC_2.2 __pthread_rwlock_unlock F
@@ -1299,6 +1300,7 @@ GLIBC_2.2 pthread_mutex_lock F
 GLIBC_2.2 pthread_mutex_timedlock F
 GLIBC_2.2 pthread_mutex_trylock F
 GLIBC_2.2 pthread_mutex_unlock F
+GLIBC_2.2 pthread_mutexattr_destroy F
 GLIBC_2.2 pthread_once F
 GLIBC_2.2 pthread_rwlock_rdlock F
 GLIBC_2.2 pthread_rwlock_unlock F
@@ -2135,6 +2137,7 @@ GLIBC_2.34 pthread_mutex_getprioceiling F
 GLIBC_2.34 pthread_mutex_setprioceiling F
 GLIBC_2.34 pthread_mutex_timedlock F
 GLIBC_2.34 pthread_mutex_trylock F
+GLIBC_2.34 pthread_mutexattr_destroy F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F
