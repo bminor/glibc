@@ -18,10 +18,10 @@
 
 #include <string.h>
 #include <pthreadP.h>
-
+#include <shlib-compat.h>
 
 int
-__pthread_mutexattr_init (pthread_mutexattr_t *attr)
+___pthread_mutexattr_init (pthread_mutexattr_t *attr)
 {
   ASSERT_TYPE_SIZE (pthread_mutexattr_t, __SIZEOF_PTHREAD_MUTEXATTR_T);
   ASSERT_PTHREAD_INTERNAL_SIZE (pthread_mutexattr_t,
@@ -37,5 +37,14 @@ __pthread_mutexattr_init (pthread_mutexattr_t *attr)
 
   return 0;
 }
-weak_alias (__pthread_mutexattr_init, pthread_mutexattr_init)
-hidden_def (__pthread_mutexattr_init)
+versioned_symbol (libc, ___pthread_mutexattr_init,
+		  pthread_mutexattr_init, GLIBC_2_34);
+versioned_symbol (libc, ___pthread_mutexattr_init,
+		  __pthread_mutexattr_init, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_mutexattr_init,
+	       pthread_mutexattr_init, GLIBC_2_0);
+compat_symbol (libpthread, ___pthread_mutexattr_init,
+	       __pthread_mutexattr_init, GLIBC_2_0);
+#endif

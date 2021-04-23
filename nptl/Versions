@@ -8,6 +8,7 @@ libc {
     __pthread_mutex_trylock;
     __pthread_mutex_unlock;
     __pthread_mutexattr_destroy;
+    __pthread_mutexattr_init;
     __pthread_once;
     __pthread_setspecific;
     _pthread_cleanup_pop;
@@ -50,6 +51,7 @@ libc {
     pthread_mutex_unlock;
     pthread_mutexattr_destroy;
     pthread_mutexattr_getkind_np;
+    pthread_mutexattr_init;
     pthread_once;
     pthread_self;
     pthread_setcancelstate;
@@ -132,6 +134,7 @@ libc {
     __pthread_mutex_init;
     __pthread_mutex_lock;
     __pthread_mutex_unlock;
+    __pthread_mutexattr_init;
     __pthread_once;
     __pthread_setspecific;
     pthread_cond_clockwait;
@@ -148,6 +151,7 @@ libc {
     pthread_mutexattr_getprotocol;
     pthread_mutexattr_getrobust;
     pthread_mutexattr_gettype;
+    pthread_mutexattr_init;
     pthread_once;
     pthread_rwlock_rdlock;
     pthread_rwlock_unlock;
@@ -211,7 +215,6 @@ libpthread {
     _IO_funlockfile;
     __errno_location;
     __h_errno_location;
-    __pthread_mutexattr_init;
     __pthread_mutexattr_settype;
     _exit;
     flockfile;
@@ -221,7 +224,6 @@ libpthread {
     pthread_create;
     pthread_detach;
     pthread_join;
-    pthread_mutexattr_init;
     pthread_mutexattr_setkind_np;
     pthread_sigmask;
     pthread_testcancel;

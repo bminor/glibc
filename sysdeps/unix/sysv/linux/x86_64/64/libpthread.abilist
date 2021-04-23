@@ -9,7 +9,6 @@ GLIBC_2.2.5 _IO_ftrylockfile F
 GLIBC_2.2.5 _IO_funlockfile F
 GLIBC_2.2.5 __errno_location F
 GLIBC_2.2.5 __h_errno_location F
-GLIBC_2.2.5 __pthread_mutexattr_init F
 GLIBC_2.2.5 __pthread_mutexattr_settype F
 GLIBC_2.2.5 __pthread_rwlock_destroy F
 GLIBC_2.2.5 __pthread_rwlock_init F
@@ -41,7 +40,6 @@ GLIBC_2.2.5 pthread_detach F
 GLIBC_2.2.5 pthread_getconcurrency F
 GLIBC_2.2.5 pthread_getcpuclockid F
 GLIBC_2.2.5 pthread_join F
-GLIBC_2.2.5 pthread_mutexattr_init F
 GLIBC_2.2.5 pthread_mutexattr_setkind_np F
 GLIBC_2.2.5 pthread_mutexattr_setpshared F
 GLIBC_2.2.5 pthread_mutexattr_settype F

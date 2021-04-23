@@ -579,7 +579,6 @@ libc_hidden_proto (__pthread_sigmask);
 #if IS_IN (libpthread)
 hidden_proto (__pthread_rwlock_unlock)
 hidden_proto (__pthread_testcancel)
-hidden_proto (__pthread_mutexattr_init)
 hidden_proto (__pthread_mutexattr_settype)
 #endif
 

@@ -3,7 +3,6 @@ GLIBC_2.27 _IO_ftrylockfile F
 GLIBC_2.27 _IO_funlockfile F
 GLIBC_2.27 __errno_location F
 GLIBC_2.27 __h_errno_location F
-GLIBC_2.27 __pthread_mutexattr_init F
 GLIBC_2.27 __pthread_mutexattr_settype F
 GLIBC_2.27 __pthread_register_cancel F
 GLIBC_2.27 __pthread_register_cancel_defer F
@@ -45,7 +44,6 @@ GLIBC_2.27 pthread_getconcurrency F
 GLIBC_2.27 pthread_getcpuclockid F
 GLIBC_2.27 pthread_getname_np F
 GLIBC_2.27 pthread_join F
-GLIBC_2.27 pthread_mutexattr_init F
 GLIBC_2.27 pthread_mutexattr_setkind_np F
 GLIBC_2.27 pthread_mutexattr_setprioceiling F
 GLIBC_2.27 pthread_mutexattr_setprotocol F
