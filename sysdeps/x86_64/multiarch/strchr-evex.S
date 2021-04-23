@@ -32,13 +32,15 @@
 #  define VPCMP		vpcmpd
 #  define VPMINU	vpminud
 #  define CHAR_REG	esi
-#  define SHIFT_REG	r8d
+#  define SHIFT_REG	ecx
+#  define CHAR_SIZE	4
 # else
 #  define VPBROADCAST	vpbroadcastb
 #  define VPCMP		vpcmpb
 #  define VPMINU	vpminub
 #  define CHAR_REG	sil
-#  define SHIFT_REG	ecx
+#  define SHIFT_REG	edx
+#  define CHAR_SIZE	1
 # endif
 
 # define XMMZERO	xmm16
@@ -56,23 +58,20 @@
 
 # define VEC_SIZE 32
 # define PAGE_SIZE 4096
+# define CHAR_PER_VEC (VEC_SIZE / CHAR_SIZE)
 
 	.section .text.evex,"ax",@progbits
 ENTRY (STRCHR)
-	movl	%edi, %ecx
-# ifndef USE_AS_STRCHRNUL
-	xorl	%edx, %edx
-# endif
-
 	/* Broadcast CHAR to YMM0.	*/
-	VPBROADCAST %esi, %YMM0
-
+	VPBROADCAST	%esi, %YMM0
+	movl	%edi, %eax
+	andl	$(PAGE_SIZE - 1), %eax
 	vpxorq	%XMMZERO, %XMMZERO, %XMMZERO
 
-	/* Check if we cross page boundary with one vector load.  */
-	andl	$(PAGE_SIZE - 1), %ecx
-	cmpl	$(PAGE_SIZE - VEC_SIZE), %ecx
-	ja  L(cross_page_boundary)
+	/* Check if we cross page boundary with one vector load.
+	   Otherwise it is safe to use an unaligned load.  */
+	cmpl	$(PAGE_SIZE - VEC_SIZE), %eax
+	ja	L(cross_page_boundary)
 
 	/* Check the first VEC_SIZE bytes. Search for both CHAR and the
 	   null bytes.  */
@@ -83,44 +82,115 @@ ENTRY (STRCHR)
 	VPMINU	%YMM2, %YMM1, %YMM2
 	/* Each bit in K0 represents a CHAR or a null byte in YMM1.  */
 	VPCMP	$0, %YMMZERO, %YMM2, %k0
-	ktestd	%k0, %k0
-	jz	L(more_vecs)
 	kmovd	%k0, %eax
+	testl	%eax, %eax
+	jz	L(aligned_more)
 	tzcntl	%eax, %eax
-	/* Found CHAR or the null byte.	 */
 # ifdef USE_AS_WCSCHR
-	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
-	leaq	(%rdi, %rax, 4), %rax
+	/* NB: Multiply wchar_t count by 4 to get the number of bytes.
+	 */
+	leaq	(%rdi, %rax, CHAR_SIZE), %rax
 # else
 	addq	%rdi, %rax
 # endif
 # ifndef USE_AS_STRCHRNUL
-	cmp (%rax), %CHAR_REG
-	cmovne	%rdx, %rax
+	/* Found CHAR or the null byte.	 */
+	cmp	(%rax), %CHAR_REG
+	jne	L(zero)
 # endif
 	ret
 
+	/* .p2align 5 helps keep performance more consistent if ENTRY()
+	   alignment % 32 was either 16 or 0. As well this makes the
+	   alignment % 32 of the loop_4x_vec fixed which makes tuning it
+	   easier.  */
+	.p2align 5
+L(first_vec_x3):
+	tzcntl	%eax, %eax
+# ifndef USE_AS_STRCHRNUL
+	/* Found CHAR or the null byte.	 */
+	cmp	(VEC_SIZE * 3)(%rdi, %rax, CHAR_SIZE), %CHAR_REG
+	jne	L(zero)
+# endif
+	/* NB: Multiply sizeof char type (1 or 4) to get the number of
+	   bytes.  */
+	leaq	(VEC_SIZE * 3)(%rdi, %rax, CHAR_SIZE), %rax
+	ret
+
+# ifndef USE_AS_STRCHRNUL
+L(zero):
+	xorl	%eax, %eax
+	ret
+# endif
+
 	.p2align 4
-L(more_vecs):
-	/* Align data for aligned loads in the loop.  */
-	andq	$-VEC_SIZE, %rdi
-L(aligned_more):
-
-	/* Check the next 4 * VEC_SIZE.	 Only one VEC_SIZE at a time
-	   since data is only aligned to VEC_SIZE.	*/
-	VMOVA	VEC_SIZE(%rdi), %YMM1
-	addq	$VEC_SIZE, %rdi
-
-	/* Leaves only CHARS matching esi as 0.  */
-	vpxorq	%YMM1, %YMM0, %YMM2
-	VPMINU	%YMM2, %YMM1, %YMM2
-	/* Each bit in K0 represents a CHAR or a null byte in YMM1.  */
-	VPCMP	$0, %YMMZERO, %YMM2, %k0
+L(first_vec_x4):
+# ifndef USE_AS_STRCHRNUL
+	/* Check to see if first match was CHAR (k0) or null (k1).  */
 	kmovd	%k0, %eax
-	testl	%eax, %eax
-	jnz	L(first_vec_x0)
+	tzcntl	%eax, %eax
+	kmovd	%k1, %ecx
+	/* bzhil will not be 0 if first match was null.  */
+	bzhil	%eax, %ecx, %ecx
+	jne	L(zero)
+# else
+	/* Combine CHAR and null matches.  */
+	kord	%k0, %k1, %k0
+	kmovd	%k0, %eax
+	tzcntl	%eax, %eax
+# endif
+	/* NB: Multiply sizeof char type (1 or 4) to get the number of
+	   bytes.  */
+	leaq	(VEC_SIZE * 4)(%rdi, %rax, CHAR_SIZE), %rax
+	ret
 
-	VMOVA	VEC_SIZE(%rdi), %YMM1
+	.p2align 4
+L(first_vec_x1):
+	tzcntl	%eax, %eax
+# ifndef USE_AS_STRCHRNUL
+	/* Found CHAR or the null byte.	 */
+	cmp	(VEC_SIZE)(%rdi, %rax, CHAR_SIZE), %CHAR_REG
+	jne	L(zero)
+
+# endif
+	/* NB: Multiply sizeof char type (1 or 4) to get the number of
+	   bytes.  */
+	leaq	(VEC_SIZE)(%rdi, %rax, CHAR_SIZE), %rax
+	ret
+
+	.p2align 4
+L(first_vec_x2):
+# ifndef USE_AS_STRCHRNUL
+	/* Check to see if first match was CHAR (k0) or null (k1).  */
+	kmovd	%k0, %eax
+	tzcntl	%eax, %eax
+	kmovd	%k1, %ecx
+	/* bzhil will not be 0 if first match was null.  */
+	bzhil	%eax, %ecx, %ecx
+	jne	L(zero)
+# else
+	/* Combine CHAR and null matches.  */
+	kord	%k0, %k1, %k0
+	kmovd	%k0, %eax
+	tzcntl	%eax, %eax
+# endif
+	/* NB: Multiply sizeof char type (1 or 4) to get the number of
+	   bytes.  */
+	leaq	(VEC_SIZE * 2)(%rdi, %rax, CHAR_SIZE), %rax
+	ret
+
+	.p2align 4
+L(aligned_more):
+	/* Align data to VEC_SIZE.  */
+	andq	$-VEC_SIZE, %rdi
+L(cross_page_continue):
+	/* Check the next 4 * VEC_SIZE. Only one VEC_SIZE at a time since
+	   data is only aligned to VEC_SIZE. Use two alternating methods
+	   for checking VEC to balance latency and port contention.  */
+
+	/* This method has higher latency but has better port
+	   distribution.  */
+	VMOVA	(VEC_SIZE)(%rdi), %YMM1
 	/* Leaves only CHARS matching esi as 0.  */
 	vpxorq	%YMM1, %YMM0, %YMM2
 	VPMINU	%YMM2, %YMM1, %YMM2
@@ -130,14 +200,14 @@ L(aligned_more):
 	testl	%eax, %eax
 	jnz	L(first_vec_x1)
 
+	/* This method has higher latency but has better port
+	   distribution.  */
 	VMOVA	(VEC_SIZE * 2)(%rdi), %YMM1
-	/* Leaves only CHARS matching esi as 0.  */
-	vpxorq	%YMM1, %YMM0, %YMM2
-	VPMINU	%YMM2, %YMM1, %YMM2
-	/* Each bit in K0 represents a CHAR or a null byte in YMM1.  */
-	VPCMP	$0, %YMMZERO, %YMM2, %k0
-	kmovd	%k0, %eax
-	testl	%eax, %eax
+	/* Each bit in K0 represents a CHAR in YMM1.  */
+	VPCMP	$0, %YMM1, %YMM0, %k0
+	/* Each bit in K1 represents a CHAR in YMM1.  */
+	VPCMP	$0, %YMM1, %YMMZERO, %k1
+	kortestd	%k0, %k1
 	jnz	L(first_vec_x2)
 
 	VMOVA	(VEC_SIZE * 3)(%rdi), %YMM1
@@ -146,188 +216,162 @@ L(aligned_more):
 	VPMINU	%YMM2, %YMM1, %YMM2
 	/* Each bit in K0 represents a CHAR or a null byte in YMM1.  */
 	VPCMP	$0, %YMMZERO, %YMM2, %k0
-	ktestd	%k0, %k0
-	jz	L(prep_loop_4x)
-
 	kmovd	%k0, %eax
-	tzcntl	%eax, %eax
-	/* Found CHAR or the null byte.	 */
-# ifdef USE_AS_WCSCHR
-	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
-	leaq	(VEC_SIZE * 3)(%rdi, %rax, 4), %rax
-# else
-	leaq	(VEC_SIZE * 3)(%rdi, %rax), %rax
-# endif
-# ifndef USE_AS_STRCHRNUL
-	cmp (%rax), %CHAR_REG
-	cmovne	%rdx, %rax
-# endif
-	ret
+	testl	%eax, %eax
+	jnz	L(first_vec_x3)
 
-	.p2align 4
-L(first_vec_x0):
-	tzcntl	%eax, %eax
-	/* Found CHAR or the null byte.	 */
-# ifdef USE_AS_WCSCHR
-	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
-	leaq	(%rdi, %rax, 4), %rax
-# else
-	addq	%rdi, %rax
-# endif
-# ifndef USE_AS_STRCHRNUL
-	cmp (%rax), %CHAR_REG
-	cmovne	%rdx, %rax
-# endif
-	ret
+	VMOVA	(VEC_SIZE * 4)(%rdi), %YMM1
+	/* Each bit in K0 represents a CHAR in YMM1.  */
+	VPCMP	$0, %YMM1, %YMM0, %k0
+	/* Each bit in K1 represents a CHAR in YMM1.  */
+	VPCMP	$0, %YMM1, %YMMZERO, %k1
+	kortestd	%k0, %k1
+	jnz	L(first_vec_x4)
 
-	.p2align 4
-L(first_vec_x1):
-	tzcntl	%eax, %eax
-	/* Found CHAR or the null byte.	 */
-# ifdef USE_AS_WCSCHR
-	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
-	leaq	VEC_SIZE(%rdi, %rax, 4), %rax
-# else
-	leaq	VEC_SIZE(%rdi, %rax), %rax
-# endif
-# ifndef USE_AS_STRCHRNUL
-	cmp (%rax), %CHAR_REG
-	cmovne	%rdx, %rax
-# endif
-	ret
-
-	.p2align 4
-L(first_vec_x2):
-	tzcntl	%eax, %eax
-	/* Found CHAR or the null byte.	 */
-# ifdef USE_AS_WCSCHR
-	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
-	leaq	(VEC_SIZE * 2)(%rdi, %rax, 4), %rax
-# else
-	leaq	(VEC_SIZE * 2)(%rdi, %rax), %rax
-# endif
-# ifndef USE_AS_STRCHRNUL
-	cmp (%rax), %CHAR_REG
-	cmovne	%rdx, %rax
-# endif
-	ret
-
-L(prep_loop_4x):
-	/* Align data to 4 * VEC_SIZE.	*/
+	/* Align data to VEC_SIZE * 4 for the loop.  */
+	addq	$VEC_SIZE, %rdi
 	andq	$-(VEC_SIZE * 4), %rdi
 
 	.p2align 4
 L(loop_4x_vec):
-	/* Compare 4 * VEC at a time forward.  */
+	/* Check 4x VEC at a time. No penalty to imm32 offset with evex
+	   encoding.  */
 	VMOVA	(VEC_SIZE * 4)(%rdi), %YMM1
 	VMOVA	(VEC_SIZE * 5)(%rdi), %YMM2
 	VMOVA	(VEC_SIZE * 6)(%rdi), %YMM3
 	VMOVA	(VEC_SIZE * 7)(%rdi), %YMM4
 
-	/* Leaves only CHARS matching esi as 0.  */
+	/* For YMM1 and YMM3 use xor to set the CHARs matching esi to
+	   zero.  */
 	vpxorq	%YMM1, %YMM0, %YMM5
-	vpxorq	%YMM2, %YMM0, %YMM6
+	/* For YMM2 and YMM4 cmp not equals to CHAR and store result in
+	   k register. Its possible to save either 1 or 2 instructions
+	   using cmp no equals method for either YMM1 or YMM1 and YMM3
+	   respectively but bottleneck on p5 makes it not worth it.  */
+	VPCMP	$4, %YMM0, %YMM2, %k2
 	vpxorq	%YMM3, %YMM0, %YMM7
-	vpxorq	%YMM4, %YMM0, %YMM8
+	VPCMP	$4, %YMM0, %YMM4, %k4
 
-	VPMINU	%YMM5, %YMM1, %YMM5
-	VPMINU	%YMM6, %YMM2, %YMM6
-	VPMINU	%YMM7, %YMM3, %YMM7
-	VPMINU	%YMM8, %YMM4, %YMM8
+	/* Use min to select all zeros from either xor or end of string).
+	 */
+	VPMINU	%YMM1, %YMM5, %YMM1
+	VPMINU	%YMM3, %YMM7, %YMM3
 
-	VPMINU	%YMM5, %YMM6, %YMM1
-	VPMINU	%YMM7, %YMM8, %YMM2
+	/* Use min + zeromask to select for zeros. Since k2 and k4 will
+	   have 0 as positions that matched with CHAR which will set
+	   zero in the corresponding destination bytes in YMM2 / YMM4.
+	 */
+	VPMINU	%YMM1, %YMM2, %YMM2{%k2}{z}
+	VPMINU	%YMM3, %YMM4, %YMM4
+	VPMINU	%YMM2, %YMM4, %YMM4{%k4}{z}
 
-	VPMINU	%YMM1, %YMM2, %YMM1
-
-	/* Each bit in K0 represents a CHAR or a null byte.  */
-	VPCMP	$0, %YMMZERO, %YMM1, %k0
-
-	addq	$(VEC_SIZE * 4), %rdi
-
-	ktestd	%k0, %k0
+	VPCMP	$0, %YMMZERO, %YMM4, %k1
+	kmovd	%k1, %ecx
+	subq	$-(VEC_SIZE * 4), %rdi
+	testl	%ecx, %ecx
 	jz	L(loop_4x_vec)
 
-	/* Each bit in K0 represents a CHAR or a null byte in YMM1.  */
-	VPCMP	$0, %YMMZERO, %YMM5, %k0
+	VPCMP	$0, %YMMZERO, %YMM1, %k0
 	kmovd	%k0, %eax
 	testl	%eax, %eax
-	jnz	L(first_vec_x0)
+	jnz	L(last_vec_x1)
 
-	/* Each bit in K1 represents a CHAR or a null byte in YMM2.  */
-	VPCMP	$0, %YMMZERO, %YMM6, %k1
-	kmovd	%k1, %eax
+	VPCMP	$0, %YMMZERO, %YMM2, %k0
+	kmovd	%k0, %eax
 	testl	%eax, %eax
-	jnz	L(first_vec_x1)
+	jnz	L(last_vec_x2)
 
-	/* Each bit in K2 represents a CHAR or a null byte in YMM3.  */
-	VPCMP	$0, %YMMZERO, %YMM7, %k2
-	/* Each bit in K3 represents a CHAR or a null byte in YMM4.  */
-	VPCMP	$0, %YMMZERO, %YMM8, %k3
-
+	VPCMP	$0, %YMMZERO, %YMM3, %k0
+	kmovd	%k0, %eax
+	/* Combine YMM3 matches (eax) with YMM4 matches (ecx).  */
 # ifdef USE_AS_WCSCHR
-	/* NB: Each bit in K2/K3 represents 4-byte element.  */
-	kshiftlw $8, %k3, %k1
+	sall	$8, %ecx
+	orl	%ecx, %eax
+	tzcntl	%eax, %eax
 # else
-	kshiftlq $32, %k3, %k1
-# endif
-
-	/* Each bit in K1 represents a NULL or a mismatch.  */
-	korq	%k1, %k2, %k1
-	kmovq	%k1, %rax
-
-	tzcntq  %rax, %rax
-# ifdef USE_AS_WCSCHR
-	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
-	leaq	(VEC_SIZE * 2)(%rdi, %rax, 4), %rax
-# else
-	leaq	(VEC_SIZE * 2)(%rdi, %rax), %rax
+	salq	$32, %rcx
+	orq	%rcx, %rax
+	tzcntq	%rax, %rax
 # endif
 # ifndef USE_AS_STRCHRNUL
-	cmp (%rax), %CHAR_REG
-	cmovne	%rdx, %rax
+	/* Check if match was CHAR or null.  */
+	cmp	(VEC_SIZE * 2)(%rdi, %rax, CHAR_SIZE), %CHAR_REG
+	jne	L(zero_end)
 # endif
+	/* NB: Multiply sizeof char type (1 or 4) to get the number of
+	   bytes.  */
+	leaq	(VEC_SIZE * 2)(%rdi, %rax, CHAR_SIZE), %rax
+	ret
+
+# ifndef USE_AS_STRCHRNUL
+L(zero_end):
+	xorl	%eax, %eax
+	ret
+# endif
+
+	.p2align 4
+L(last_vec_x1):
+	tzcntl	%eax, %eax
+# ifndef USE_AS_STRCHRNUL
+	/* Check if match was null.  */
+	cmp	(%rdi, %rax, CHAR_SIZE), %CHAR_REG
+	jne	L(zero_end)
+# endif
+	/* NB: Multiply sizeof char type (1 or 4) to get the number of
+	   bytes.  */
+	leaq	(%rdi, %rax, CHAR_SIZE), %rax
+	ret
+
+	.p2align 4
+L(last_vec_x2):
+	tzcntl	%eax, %eax
+# ifndef USE_AS_STRCHRNUL
+	/* Check if match was null.  */
+	cmp	(VEC_SIZE)(%rdi, %rax, CHAR_SIZE), %CHAR_REG
+	jne	L(zero_end)
+# endif
+	/* NB: Multiply sizeof char type (1 or 4) to get the number of
+	   bytes.  */
+	leaq	(VEC_SIZE)(%rdi, %rax, CHAR_SIZE), %rax
 	ret
 
 	/* Cold case for crossing page with first load.	 */
 	.p2align 4
 L(cross_page_boundary):
+	movq	%rdi, %rdx
+	/* Align rdi.  */
 	andq	$-VEC_SIZE, %rdi
-	andl	$(VEC_SIZE - 1), %ecx
-
 	VMOVA	(%rdi), %YMM1
-
 	/* Leaves only CHARS matching esi as 0.  */
 	vpxorq	%YMM1, %YMM0, %YMM2
 	VPMINU	%YMM2, %YMM1, %YMM2
 	/* Each bit in K0 represents a CHAR or a null byte in YMM1.  */
 	VPCMP	$0, %YMMZERO, %YMM2, %k0
 	kmovd	%k0, %eax
-	testl	%eax, %eax
-
+	/* Remove the leading bits.	 */
 # ifdef USE_AS_WCSCHR
+	movl	%edx, %SHIFT_REG
 	/* NB: Divide shift count by 4 since each bit in K1 represent 4
 	   bytes.  */
-	movl	%ecx, %SHIFT_REG
-	sarl    $2, %SHIFT_REG
+	sarl	$2, %SHIFT_REG
+	andl	$(CHAR_PER_VEC - 1), %SHIFT_REG
 # endif
-
-	/* Remove the leading bits.	 */
 	sarxl	%SHIFT_REG, %eax, %eax
+	/* If eax is zero continue.  */
 	testl	%eax, %eax
-
-	jz	L(aligned_more)
+	jz	L(cross_page_continue)
 	tzcntl	%eax, %eax
-	addq	%rcx, %rdi
-# ifdef USE_AS_WCSCHR
-	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
-	leaq	(%rdi, %rax, 4), %rax
-# else
-	addq	%rdi, %rax
-# endif
 # ifndef USE_AS_STRCHRNUL
-	cmp (%rax), %CHAR_REG
-	cmovne	%rdx, %rax
+	/* Check to see if match was CHAR or null.  */
+	cmp	(%rdx, %rax, CHAR_SIZE), %CHAR_REG
+	jne	L(zero_end)
+# endif
+# ifdef USE_AS_WCSCHR
+	/* NB: Multiply wchar_t count by 4 to get the number of
+	   bytes.  */
+	leaq	(%rdx, %rax, CHAR_SIZE), %rax
+# else
+	addq	%rdx, %rax
 # endif
 	ret
 
