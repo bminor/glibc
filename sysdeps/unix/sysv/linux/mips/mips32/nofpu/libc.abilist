@@ -1369,6 +1369,7 @@ GLIBC_2.11 mkstemps F
 GLIBC_2.11 mkstemps64 F
 GLIBC_2.12 ntp_gettimex F
 GLIBC_2.12 pthread_mutex_consistent F
+GLIBC_2.12 pthread_mutexattr_getrobust F
 GLIBC_2.12 recvmmsg F
 GLIBC_2.13 fanotify_init F
 GLIBC_2.13 fanotify_mark F
@@ -2219,6 +2220,7 @@ GLIBC_2.34 pthread_mutexattr_destroy F
 GLIBC_2.34 pthread_mutexattr_getprioceiling F
 GLIBC_2.34 pthread_mutexattr_getprotocol F
 GLIBC_2.34 pthread_mutexattr_getpshared F
+GLIBC_2.34 pthread_mutexattr_getrobust F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F
@@ -2296,6 +2298,7 @@ GLIBC_2.4 pthread_mutex_getprioceiling F
 GLIBC_2.4 pthread_mutex_setprioceiling F
 GLIBC_2.4 pthread_mutexattr_getprioceiling F
 GLIBC_2.4 pthread_mutexattr_getprotocol F
+GLIBC_2.4 pthread_mutexattr_getrobust_np F
 GLIBC_2.4 readlinkat F
 GLIBC_2.4 renameat F
 GLIBC_2.4 symlinkat F

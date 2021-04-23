@@ -1488,6 +1488,8 @@ GLIBC_2.16 pthread_mutexattr_destroy F
 GLIBC_2.16 pthread_mutexattr_getprioceiling F
 GLIBC_2.16 pthread_mutexattr_getprotocol F
 GLIBC_2.16 pthread_mutexattr_getpshared F
+GLIBC_2.16 pthread_mutexattr_getrobust F
+GLIBC_2.16 pthread_mutexattr_getrobust_np F
 GLIBC_2.16 pthread_once F
 GLIBC_2.16 pthread_rwlock_rdlock F
 GLIBC_2.16 pthread_rwlock_unlock F
@@ -2255,6 +2257,7 @@ GLIBC_2.34 pthread_mutexattr_destroy F
 GLIBC_2.34 pthread_mutexattr_getprioceiling F
 GLIBC_2.34 pthread_mutexattr_getprotocol F
 GLIBC_2.34 pthread_mutexattr_getpshared F
+GLIBC_2.34 pthread_mutexattr_getrobust F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F

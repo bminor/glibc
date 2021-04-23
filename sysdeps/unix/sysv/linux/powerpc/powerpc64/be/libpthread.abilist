@@ -1,6 +1,5 @@
 GLIBC_2.11 pthread_sigqueue F
 GLIBC_2.12 pthread_getname_np F
-GLIBC_2.12 pthread_mutexattr_getrobust F
 GLIBC_2.12 pthread_mutexattr_setrobust F
 GLIBC_2.12 pthread_setname_np F
 GLIBC_2.18 pthread_getattr_default_np F
@@ -118,7 +117,6 @@ GLIBC_2.30 pthread_rwlock_clockrdlock F
 GLIBC_2.30 pthread_rwlock_clockwrlock F
 GLIBC_2.30 sem_clockwait F
 GLIBC_2.31 pthread_clockjoin_np F
-GLIBC_2.4 pthread_mutexattr_getrobust_np F
 GLIBC_2.4 pthread_mutexattr_setprioceiling F
 GLIBC_2.4 pthread_mutexattr_setprotocol F
 GLIBC_2.4 pthread_mutexattr_setrobust_np F

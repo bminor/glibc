@@ -17,10 +17,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <pthreadP.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_mutexattr_getrobust (const pthread_mutexattr_t *attr, int *robustness)
+__pthread_mutexattr_getrobust (const pthread_mutexattr_t *attr,
+			       int *robustness)
 {
   const struct pthread_mutexattr *iattr;
 
@@ -31,4 +32,15 @@ pthread_mutexattr_getrobust (const pthread_mutexattr_t *attr, int *robustness)
 
   return 0;
 }
-weak_alias (pthread_mutexattr_getrobust, pthread_mutexattr_getrobust_np)
+versioned_symbol (libc, __pthread_mutexattr_getrobust,
+		  pthread_mutexattr_getrobust, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_4, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_mutexattr_getrobust,
+               pthread_mutexattr_getrobust_np, GLIBC_2_4);
+#endif
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_mutexattr_getrobust,
+               pthread_mutexattr_getrobust, GLIBC_2_12);
+#endif
