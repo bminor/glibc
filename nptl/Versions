@@ -5,6 +5,7 @@ libc {
     __pthread_mutex_destroy;
     __pthread_mutex_init;
     __pthread_mutex_lock;
+    __pthread_mutex_trylock;
     __pthread_mutex_unlock;
     __pthread_once;
     __pthread_setspecific;
@@ -44,6 +45,7 @@ libc {
     pthread_mutex_destroy;
     pthread_mutex_init;
     pthread_mutex_lock;
+    pthread_mutex_trylock;
     pthread_mutex_unlock;
     pthread_once;
     pthread_self;
@@ -195,7 +197,6 @@ libpthread {
     _IO_funlockfile;
     __errno_location;
     __h_errno_location;
-    __pthread_mutex_trylock;
     __pthread_mutexattr_destroy;
     __pthread_mutexattr_init;
     __pthread_mutexattr_settype;
@@ -207,7 +208,6 @@ libpthread {
     pthread_create;
     pthread_detach;
     pthread_join;
-    pthread_mutex_trylock;
     pthread_mutexattr_destroy;
     pthread_mutexattr_getkind_np;
     pthread_mutexattr_init;

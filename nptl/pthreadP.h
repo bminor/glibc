@@ -396,6 +396,7 @@ libc_hidden_proto (__pthread_mutex_init)
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 libc_hidden_proto (__pthread_mutex_destroy)
 extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
+libc_hidden_proto (__pthread_mutex_trylock)
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
 libc_hidden_proto (__pthread_mutex_lock)
 extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
@@ -576,7 +577,6 @@ libc_hidden_proto (__pthread_sigmask);
 
 
 #if IS_IN (libpthread)
-hidden_proto (__pthread_mutex_trylock)
 hidden_proto (__pthread_rwlock_unlock)
 hidden_proto (__pthread_testcancel)
 hidden_proto (__pthread_mutexattr_init)

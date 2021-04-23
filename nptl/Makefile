@@ -101,6 +101,7 @@ routines = \
   pthread_mutex_lock \
   pthread_mutex_setprioceiling \
   pthread_mutex_timedlock \
+  pthread_mutex_trylock \
   pthread_mutex_unlock \
   pthread_once \
   pthread_rwlock_rdlock \
@@ -161,7 +162,6 @@ libpthread-routines = \
   pthread_getname \
   pthread_join \
   pthread_join_common \
-  pthread_mutex_trylock \
   pthread_mutexattr_destroy \
   pthread_mutexattr_getprioceiling \
   pthread_mutexattr_getprotocol \
