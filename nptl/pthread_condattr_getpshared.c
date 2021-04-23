@@ -17,13 +17,20 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
-
+#include <shlib-compat.h>
 
 int
-pthread_condattr_getpshared (const pthread_condattr_t *attr, int *pshared)
+__pthread_condattr_getpshared (const pthread_condattr_t *attr, int *pshared)
 {
   *pshared = (((const struct pthread_condattr *) attr)->value & 1
 	      ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE);
 
   return 0;
 }
+versioned_symbol (libc, __pthread_condattr_getpshared,
+		  pthread_condattr_getpshared, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_condattr_getpshared,
+	       pthread_condattr_getpshared, GLIBC_2_2);
+#endif
