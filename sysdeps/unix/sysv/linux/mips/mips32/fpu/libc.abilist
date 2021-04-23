@@ -1835,6 +1835,7 @@ GLIBC_2.2 printf_size F
 GLIBC_2.2 printf_size_info F
 GLIBC_2.2 pthread_attr_init F
 GLIBC_2.2 pthread_condattr_getpshared F
+GLIBC_2.2 pthread_condattr_setpshared F
 GLIBC_2.2 pthread_mutex_timedlock F
 GLIBC_2.2 pthread_mutexattr_getpshared F
 GLIBC_2.2 pthread_mutexattr_gettype F
@@ -2225,6 +2226,7 @@ GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F
 GLIBC_2.34 pthread_condattr_setclock F
+GLIBC_2.34 pthread_condattr_setpshared F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_key_delete F

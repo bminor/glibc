@@ -1291,6 +1291,7 @@ GLIBC_2.2 pthread_cond_wait F
 GLIBC_2.2 pthread_condattr_destroy F
 GLIBC_2.2 pthread_condattr_getpshared F
 GLIBC_2.2 pthread_condattr_init F
+GLIBC_2.2 pthread_condattr_setpshared F
 GLIBC_2.2 pthread_equal F
 GLIBC_2.2 pthread_exit F
 GLIBC_2.2 pthread_getschedparam F
@@ -2146,6 +2147,7 @@ GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F
 GLIBC_2.34 pthread_condattr_setclock F
+GLIBC_2.34 pthread_condattr_setpshared F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_key_delete F

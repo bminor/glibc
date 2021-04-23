@@ -75,6 +75,7 @@ libc {
     __pthread_rwlock_unlock;
     __pthread_rwlock_wrlock;
     pthread_condattr_getpshared;
+    pthread_condattr_setpshared;
     pthread_mutex_timedlock;
     pthread_mutexattr_getpshared;
     pthread_mutexattr_setpshared;
@@ -153,6 +154,7 @@ libc {
     pthread_condattr_getclock;
     pthread_condattr_getpshared;
     pthread_condattr_setclock;
+    pthread_condattr_setpshared;
     pthread_getspecific;
     pthread_key_create;
     pthread_key_delete;
@@ -305,7 +307,6 @@ libpthread {
     pthread_barrierattr_destroy;
     pthread_barrierattr_init;
     pthread_barrierattr_setpshared;
-    pthread_condattr_setpshared;
     pthread_getcpuclockid;
     pthread_rwlock_timedrdlock;
     pthread_rwlock_timedwrlock;
