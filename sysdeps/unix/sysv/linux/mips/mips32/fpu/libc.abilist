@@ -192,6 +192,7 @@ GLIBC_2.0 __pthread_mutex_trylock F
 GLIBC_2.0 __pthread_mutex_unlock F
 GLIBC_2.0 __pthread_mutexattr_destroy F
 GLIBC_2.0 __pthread_mutexattr_init F
+GLIBC_2.0 __pthread_mutexattr_settype F
 GLIBC_2.0 __pthread_once F
 GLIBC_2.0 __pthread_setspecific F
 GLIBC_2.0 __rcmd_errstr D 0x4
@@ -885,6 +886,7 @@ GLIBC_2.0 pthread_mutex_unlock F
 GLIBC_2.0 pthread_mutexattr_destroy F
 GLIBC_2.0 pthread_mutexattr_getkind_np F
 GLIBC_2.0 pthread_mutexattr_init F
+GLIBC_2.0 pthread_mutexattr_setkind_np F
 GLIBC_2.0 pthread_once F
 GLIBC_2.0 pthread_self F
 GLIBC_2.0 pthread_setcancelstate F
@@ -1836,6 +1838,7 @@ GLIBC_2.2 pthread_mutex_timedlock F
 GLIBC_2.2 pthread_mutexattr_getpshared F
 GLIBC_2.2 pthread_mutexattr_gettype F
 GLIBC_2.2 pthread_mutexattr_setpshared F
+GLIBC_2.2 pthread_mutexattr_settype F
 GLIBC_2.2 pthread_rwlock_rdlock F
 GLIBC_2.2 pthread_rwlock_unlock F
 GLIBC_2.2 pthread_rwlock_wrlock F
@@ -2211,6 +2214,7 @@ GLIBC_2.34 __pthread_mutex_lock F
 GLIBC_2.34 __pthread_mutex_trylock F
 GLIBC_2.34 __pthread_mutex_unlock F
 GLIBC_2.34 __pthread_mutexattr_init F
+GLIBC_2.34 __pthread_mutexattr_settype F
 GLIBC_2.34 __pthread_once F
 GLIBC_2.34 __pthread_setspecific F
 GLIBC_2.34 __pthread_unwind_next F
@@ -2236,6 +2240,7 @@ GLIBC_2.34 pthread_mutexattr_setprioceiling F
 GLIBC_2.34 pthread_mutexattr_setprotocol F
 GLIBC_2.34 pthread_mutexattr_setpshared F
 GLIBC_2.34 pthread_mutexattr_setrobust F
+GLIBC_2.34 pthread_mutexattr_settype F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F

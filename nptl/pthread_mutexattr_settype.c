@@ -18,10 +18,10 @@
 
 #include <errno.h>
 #include <pthreadP.h>
-
+#include <shlib-compat.h>
 
 int
-__pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind)
+___pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind)
 {
   struct pthread_mutexattr *iattr;
 
@@ -39,6 +39,19 @@ __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind)
 
   return 0;
 }
-weak_alias (__pthread_mutexattr_settype, pthread_mutexattr_setkind_np)
-weak_alias (__pthread_mutexattr_settype, pthread_mutexattr_settype)
-hidden_def (__pthread_mutexattr_settype)
+versioned_symbol (libc, ___pthread_mutexattr_settype,
+                  pthread_mutexattr_settype, GLIBC_2_34);
+versioned_symbol (libc, ___pthread_mutexattr_settype,
+                  __pthread_mutexattr_settype, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_mutexattr_settype,
+               pthread_mutexattr_setkind_np, GLIBC_2_0);
+compat_symbol (libpthread, ___pthread_mutexattr_settype,
+               __pthread_mutexattr_settype, GLIBC_2_0);
+#endif
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_mutexattr_settype,
+               pthread_mutexattr_settype, GLIBC_2_1);
+#endif

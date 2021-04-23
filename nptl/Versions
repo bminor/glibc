@@ -9,6 +9,7 @@ libc {
     __pthread_mutex_unlock;
     __pthread_mutexattr_destroy;
     __pthread_mutexattr_init;
+    __pthread_mutexattr_settype;
     __pthread_once;
     __pthread_setspecific;
     _pthread_cleanup_pop;
@@ -52,6 +53,7 @@ libc {
     pthread_mutexattr_destroy;
     pthread_mutexattr_getkind_np;
     pthread_mutexattr_init;
+    pthread_mutexattr_setkind_np;
     pthread_once;
     pthread_self;
     pthread_setcancelstate;
@@ -63,6 +65,7 @@ libc {
   GLIBC_2.1 {
     pthread_attr_init;
     pthread_mutexattr_gettype;
+    pthread_mutexattr_settype;
     pthread_rwlock_rdlock;
     pthread_rwlock_unlock;
     pthread_rwlock_wrlock;
@@ -140,6 +143,7 @@ libc {
     __pthread_mutex_lock;
     __pthread_mutex_unlock;
     __pthread_mutexattr_init;
+    __pthread_mutexattr_settype;
     __pthread_once;
     __pthread_setspecific;
     pthread_cond_clockwait;
@@ -161,6 +165,7 @@ libc {
     pthread_mutexattr_setprotocol;
     pthread_mutexattr_setpshared;
     pthread_mutexattr_setrobust;
+    pthread_mutexattr_settype;
     pthread_once;
     pthread_rwlock_rdlock;
     pthread_rwlock_unlock;
@@ -224,7 +229,6 @@ libpthread {
     _IO_funlockfile;
     __errno_location;
     __h_errno_location;
-    __pthread_mutexattr_settype;
     _exit;
     flockfile;
     ftrylockfile;
@@ -233,7 +237,6 @@ libpthread {
     pthread_create;
     pthread_detach;
     pthread_join;
-    pthread_mutexattr_setkind_np;
     pthread_sigmask;
     pthread_testcancel;
     sem_destroy;
@@ -253,7 +256,6 @@ libpthread {
     pthread_attr_setstacksize;
     pthread_create;
     pthread_getconcurrency;
-    pthread_mutexattr_settype;
     pthread_rwlock_destroy;
     pthread_rwlock_init;
     pthread_rwlock_tryrdlock;

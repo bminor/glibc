@@ -3,7 +3,6 @@ GLIBC_2.33 _IO_ftrylockfile F
 GLIBC_2.33 _IO_funlockfile F
 GLIBC_2.33 __errno_location F
 GLIBC_2.33 __h_errno_location F
-GLIBC_2.33 __pthread_mutexattr_settype F
 GLIBC_2.33 __pthread_register_cancel F
 GLIBC_2.33 __pthread_register_cancel_defer F
 GLIBC_2.33 __pthread_rwlock_destroy F
@@ -58,8 +57,6 @@ GLIBC_2.33 pthread_getconcurrency F
 GLIBC_2.33 pthread_getcpuclockid F
 GLIBC_2.33 pthread_getname_np F
 GLIBC_2.33 pthread_join F
-GLIBC_2.33 pthread_mutexattr_setkind_np F
-GLIBC_2.33 pthread_mutexattr_settype F
 GLIBC_2.33 pthread_rwlock_clockrdlock F
 GLIBC_2.33 pthread_rwlock_clockwrlock F
 GLIBC_2.33 pthread_rwlock_destroy F
