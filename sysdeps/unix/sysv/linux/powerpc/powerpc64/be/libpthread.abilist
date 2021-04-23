@@ -119,7 +119,6 @@ GLIBC_2.30 pthread_rwlock_clockrdlock F
 GLIBC_2.30 pthread_rwlock_clockwrlock F
 GLIBC_2.30 sem_clockwait F
 GLIBC_2.31 pthread_clockjoin_np F
-GLIBC_2.4 pthread_mutexattr_getprotocol F
 GLIBC_2.4 pthread_mutexattr_getrobust_np F
 GLIBC_2.4 pthread_mutexattr_setprioceiling F
 GLIBC_2.4 pthread_mutexattr_setprotocol F
