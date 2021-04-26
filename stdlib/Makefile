@@ -81,7 +81,8 @@ tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   tst-width-stdint tst-strfrom tst-strfrom-locale	    \
 		   tst-getrandom tst-atexit tst-at_quick_exit 		    \
 		   tst-cxa_atexit tst-on_exit test-atexit-race 		    \
-		   test-at_quick_exit-race test-cxa_atexit-race             \
+		   test-at_quick_exit-race test-cxa_atexit-race		    \
+		   test-cxa_atexit-race2				    \
 		   test-on_exit-race test-dlclose-exit-race 		    \
 		   tst-makecontext-align test-bz22786 tst-strtod-nan-sign \
 		   tst-swapcontext1 tst-setcontext4 tst-setcontext5 \
@@ -100,6 +101,7 @@ endif
 LDLIBS-test-atexit-race = $(shared-thread-library)
 LDLIBS-test-at_quick_exit-race = $(shared-thread-library)
 LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
+LDLIBS-test-cxa_atexit-race2 = $(shared-thread-library)
 LDLIBS-test-on_exit-race = $(shared-thread-library)
 LDLIBS-tst-canon-bz26341 = $(shared-thread-library)
 
