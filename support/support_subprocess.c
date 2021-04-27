@@ -27,7 +27,7 @@
 #include <support/subprocess.h>
 
 static struct support_subprocess
-support_suprocess_init (void)
+support_subprocess_init (void)
 {
   struct support_subprocess result;
 
@@ -48,7 +48,7 @@ support_suprocess_init (void)
 struct support_subprocess
 support_subprocess (void (*callback) (void *), void *closure)
 {
-  struct support_subprocess result = support_suprocess_init ();
+  struct support_subprocess result = support_subprocess_init ();
 
   result.pid = xfork ();
   if (result.pid == 0)
@@ -71,7 +71,7 @@ support_subprocess (void (*callback) (void *), void *closure)
 struct support_subprocess
 support_subprogram (const char *file, char *const argv[])
 {
-  struct support_subprocess result = support_suprocess_init ();
+  struct support_subprocess result = support_subprocess_init ();
 
   posix_spawn_file_actions_t fa;
   /* posix_spawn_file_actions_init does not fail.  */
@@ -84,12 +84,25 @@ support_subprogram (const char *file, char *const argv[])
   xposix_spawn_file_actions_addclose (&fa, result.stdout_pipe[1]);
   xposix_spawn_file_actions_addclose (&fa, result.stderr_pipe[1]);
 
-  result.pid = xposix_spawn (file, &fa, NULL, argv, NULL);
+  result.pid = xposix_spawn (file, &fa, NULL, argv, environ);
 
   xclose (result.stdout_pipe[1]);
   xclose (result.stderr_pipe[1]);
 
   return result;
+}
+
+int
+support_subprogram_wait (const char *file, char *const argv[])
+{
+  posix_spawn_file_actions_t fa;
+
+  posix_spawn_file_actions_init (&fa);
+  struct support_subprocess res = support_subprocess_init ();
+
+  res.pid = xposix_spawn (file, &fa, NULL, argv, environ);
+
+  return support_process_wait (&res);
 }
 
 int

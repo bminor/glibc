@@ -1381,6 +1381,8 @@ CFLAGS-ifuncmain7pie.c += $(pie-ccflag)
 CFLAGS-ifuncmain9pie.c += $(pie-ccflag)
 CFLAGS-tst-ifunc-textrel.c += $(pic-ccflag)
 
+LDFLAGS-ifuncmain6pie = -Wl,-z,lazy
+
 $(objpfx)ifuncmain1pie: $(objpfx)ifuncmod1.so
 $(objpfx)ifuncmain1staticpie: $(objpfx)ifuncdep1pic.o
 $(objpfx)ifuncmain1vispie: $(objpfx)ifuncmod1.so
@@ -1630,8 +1632,6 @@ $(objpfx)tst-nodelete-dlclose.out: $(objpfx)tst-nodelete-dlclose-dso.so \
 
 tst-env-setuid-ENV = MALLOC_CHECK_=2 MALLOC_MMAP_THRESHOLD_=4096 \
 		     LD_HWCAP_MASK=0x1
-tst-env-setuid-tunables-ENV = \
-	GLIBC_TUNABLES=glibc.malloc.check=2:glibc.malloc.mmap_threshold=4096
 
 $(objpfx)tst-debug1: $(libdl)
 $(objpfx)tst-debug1.out: $(objpfx)tst-debug1mod1.so

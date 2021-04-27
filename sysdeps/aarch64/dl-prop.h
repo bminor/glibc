@@ -19,6 +19,8 @@
 #ifndef _DL_PROP_H
 #define _DL_PROP_H
 
+extern void _dl_bti_protect (struct link_map *, int) attribute_hidden;
+
 extern void _dl_bti_check (struct link_map *, const char *)
     attribute_hidden;
 
@@ -35,14 +37,18 @@ _dl_open_check (struct link_map *m)
 }
 
 static inline void __attribute__ ((always_inline))
-_dl_process_pt_note (struct link_map *l, const ElfW(Phdr) *ph)
+_dl_process_pt_note (struct link_map *l, int fd, const ElfW(Phdr) *ph)
 {
 }
 
 static inline int
-_dl_process_gnu_property (struct link_map *l, uint32_t type, uint32_t datasz,
-			  void *data)
+_dl_process_gnu_property (struct link_map *l, int fd, uint32_t type,
+			  uint32_t datasz, void *data)
 {
+  if (!GLRO(dl_aarch64_cpu_features).bti)
+    /* Skip note processing.  */
+    return 0;
+
   if (type == GNU_PROPERTY_AARCH64_FEATURE_1_AND)
     {
       /* Stop if the property note is ill-formed.  */
@@ -51,7 +57,7 @@ _dl_process_gnu_property (struct link_map *l, uint32_t type, uint32_t datasz,
 
       unsigned int feature_1 = *(unsigned int *) data;
       if (feature_1 & GNU_PROPERTY_AARCH64_FEATURE_1_BTI)
-	l->l_mach.bti = true;
+	_dl_bti_protect (l, fd);
 
       /* Stop if we processed the property note.  */
       return 0;

@@ -47,7 +47,10 @@ dl_cet_check (struct link_map *m, const char *program)
   /* No legacy object check if both IBT and SHSTK are always on.  */
   if (enable_ibt_type == cet_always_on
       && enable_shstk_type == cet_always_on)
-    return;
+    {
+      THREAD_SETMEM (THREAD_SELF, header.feature_1, GL(dl_x86_feature_1));
+      return;
+    }
 
   /* Check if IBT is enabled by kernel.  */
   bool ibt_enabled

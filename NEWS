@@ -7,6 +7,7 @@ using `glibc' in the "product" field.
 
 The following bugs are resolved with this release:
 
+  [20019] NULL pointer dereference in libc.so.6 IFUNC due to uninitialized GOT
   [26224] iconv hangs when converting some invalid inputs from several IBM
     character sets (CVE-2020-27618)
   [26534] libm.so 2.32 SIGILL in pow() due to FMA4 instruction on non-FMA4
@@ -20,6 +21,8 @@ The following bugs are resolved with this release:
   [26639] libc: msgctl IPC_INFO and MSG_INFO return garbage
   [26853] aarch64: Missing unwind information in statically linked startup code
   [26932] libc: sh: Multiple floating point functions defined as stubs only
+  [27130] "rep movsb" performance issue
+  [27177] GLIBC_TUNABLES=glibc.cpu.x86_ibt=on:glibc.cpu.x86_shstk=on doesn't work
 
 Version 2.32
 
