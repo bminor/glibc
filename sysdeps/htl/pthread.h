@@ -822,7 +822,7 @@ extern void *pthread_getspecific (pthread_key_t __key) __THROW;
 
 /* Set the caller thread's thread specific value of KEY to VALUE.  */
 extern int pthread_setspecific (pthread_key_t __key, const void *__value)
-	__THROW;
+	__THROW __attr_access_none (2);
 
 
 /* Dynamic package initialization.  */

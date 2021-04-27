@@ -1182,7 +1182,8 @@ extern void *pthread_getspecific (pthread_key_t __key) __THROW;
 
 /* Store POINTER in the thread-specific data slot identified by KEY. */
 extern int pthread_setspecific (pthread_key_t __key,
-				const void *__pointer) __THROW ;
+				const void *__pointer)
+  __THROW __attr_access_none (2);
 
 
 #ifdef __USE_XOPEN2K

@@ -592,9 +592,15 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
    array according to access mode, or at least one element when
    size-index is not provided:
      access (access-mode, <ref-index> [, <size-index>])  */
-#define __attr_access(x) __attribute__ ((__access__ x))
+#  define __attr_access(x) __attribute__ ((__access__ x))
+#  if __GNUC_PREREQ (11, 0)
+#    define __attr_access_none(argno) __attribute__ ((__access__ (__none__, argno)))
+#  else
+#    define __attr_access_none(argno)
+#  endif
 #else
 #  define __attr_access(x)
+#  define __attr_access_none(argno)
 #endif
 
 /* Specify that a function such as setjmp or vfork may return
