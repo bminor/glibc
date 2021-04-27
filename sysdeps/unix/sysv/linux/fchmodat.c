@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <fd_to_filename.h>
 #include <not-cancel.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -69,16 +70,8 @@ fchmodat (int fd, const char *file, mode_t mode, int flag)
 
       /* For most file systems, fchmod does not operate on O_PATH
 	 descriptors, so go through /proc.  */
-      char buf[32];
-      if (__snprintf (buf, sizeof (buf), "/proc/self/fd/%d", pathfd) < 0)
-	{
-	  /* This also may report strange error codes to the caller
-	     (although snprintf really should not fail).  */
-	  __close_nocancel (pathfd);
-	  return -1;
-	}
-
-      int ret = __chmod (buf, mode);
+      struct fd_to_filename filename;
+      int ret = __chmod (__fd_to_filename (pathfd, &filename), mode);
       if (ret != 0)
 	{
 	  if (errno == ENOENT)
