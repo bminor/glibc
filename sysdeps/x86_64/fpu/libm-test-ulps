@@ -1316,19 +1316,19 @@ float128: 1
 ldouble: 1
 
 Function: "j0":
-double: 2
+double: 3
 float: 9
 float128: 2
 ldouble: 8
 
 Function: "j0_downward":
-double: 5
+double: 6
 float: 9
 float128: 9
 ldouble: 6
 
 Function: "j0_towardzero":
-double: 6
+double: 7
 float: 9
 float128: 9
 ldouble: 6
