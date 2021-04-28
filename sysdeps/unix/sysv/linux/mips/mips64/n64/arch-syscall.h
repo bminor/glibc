@@ -158,6 +158,7 @@
 #define __NR_mlockall 5148
 #define __NR_mmap 5009
 #define __NR_mount 5160
+#define __NR_mount_setattr 5442
 #define __NR_move_mount 5429
 #define __NR_move_pages 5267
 #define __NR_mprotect 5010

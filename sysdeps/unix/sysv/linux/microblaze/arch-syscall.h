@@ -193,6 +193,7 @@
 #define __NR_mmap2 192
 #define __NR_modify_ldt 123
 #define __NR_mount 21
+#define __NR_mount_setattr 442
 #define __NR_move_mount 429
 #define __NR_move_pages 317
 #define __NR_mprotect 125
