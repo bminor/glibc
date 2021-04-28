@@ -17,7 +17,8 @@ tf (void *arg)
   for (int i = 0; i < NKEYS; ++i)
     {
       void *p = pthread_getspecific (keys[i]);
-      pthread_setspecific (keys[i], (void *) 7);
+      /* Use an arbitrary but valid pointer as the value.  */
+      pthread_setspecific (keys[i], (void *) keys);
       if (p != NULL)
 	res = p;
     }

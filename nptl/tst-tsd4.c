@@ -34,7 +34,8 @@ destr (void *arg)
 {
   ++rounds;
 
-  if (pthread_setspecific (key, (void *) 1l) != 0)
+  /* Use an arbirary but valid pointer to avoid GCC warnings.  */
+  if (pthread_setspecific (key, (void *) &rounds) != 0)
     {
       puts ("destr: setspecific failed");
       exit (1);
@@ -45,7 +46,8 @@ destr (void *arg)
 static void *
 tf (void *arg)
 {
-  if (pthread_setspecific (key, (void *) 1l) != 0)
+  /* Use an arbirary but valid pointer to avoid GCC warnings.  */
+  if (pthread_setspecific (key, (void *) &rounds) != 0)
     {
       puts ("tf: setspecific failed");
       exit (1);

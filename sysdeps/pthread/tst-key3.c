@@ -59,7 +59,7 @@ tf (void *arg)
 {
   pthread_key_t *key = (pthread_key_t *) arg;
 
-  if (pthread_setspecific (*key, (void *) -1l) != 0)
+  if (pthread_setspecific (*key, arg) != 0)
     {
       write_message ("setspecific failed\n");
       _exit (1);

@@ -37,7 +37,8 @@ destr1 (void *arg)
     {
       puts ("set key2");
 
-      if (pthread_setspecific (key2, (void *) 1l) != 0)
+      /* Use an arbirary but valid pointer to avoid GCC warnings.  */
+      if (pthread_setspecific (key2, (void *) &left) != 0)
 	{
 	  puts ("destr1: setspecific failed");
 	  exit (1);
@@ -53,7 +54,8 @@ destr2 (void *arg)
     {
       puts ("set key1");
 
-      if (pthread_setspecific (key1, (void *) 1l) != 0)
+      /* Use an arbirary but valid pointer to avoid GCC warnings.  */
+      if (pthread_setspecific (key1, (void *) &left) != 0)
 	{
 	  puts ("destr2: setspecific failed");
 	  exit (1);
@@ -68,8 +70,9 @@ tf (void *arg)
   /* Let the destructors work.  */
   left = 7;
 
-  if (pthread_setspecific (key1, (void *) 1l) != 0
-      || pthread_setspecific (key2, (void *) 1l) != 0)
+  /* Use an arbirary but valid pointer to avoid GCC warnings.  */
+  if (pthread_setspecific (key1, (void *) &left) != 0
+      || pthread_setspecific (key2, (void *) &left) != 0)
     {
       puts ("tf: setspecific failed");
       exit (1);

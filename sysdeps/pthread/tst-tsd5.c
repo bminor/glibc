@@ -53,7 +53,8 @@ do_test (void)
       puts ("key_create failed");
       return 1;
     }
-  if (pthread_setspecific (k, (void *) 1) != 0)
+  /* Use an arbitrary but valid pointer as the value.  */
+  if (pthread_setspecific (k, (void *) &k) != 0)
     {
       puts ("setspecific failed");
       return 1;

@@ -27,7 +27,7 @@ static int result;
 static void
 destr (void *arg)
 {
-  if (arg != (void *) -2l)
+  if (arg != (void *) &result)
     result = 2;
   else
     result = 0;
@@ -40,7 +40,8 @@ tf (void *arg)
   pthread_key_t key = (pthread_key_t) (long int) arg;
   int err;
 
-  err = pthread_setspecific (key, (void *) -2l);
+  /* Use an arbirary but valid pointer to avoid GCC warnings.  */
+  err = pthread_setspecific (key, &result);
   if (err != 0)
     result = 3;
 

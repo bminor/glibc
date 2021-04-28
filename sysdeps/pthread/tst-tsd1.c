@@ -27,6 +27,9 @@ do_test (void)
   pthread_key_t key1;
   pthread_key_t key2;
   void *value;
+  /* Addresses of val1 and val2 are used as arbitrary but valid pointers
+     in calls to pthread_setspecific to avoid GCC warnings.  */
+  char val1 = 0, val2 = 0;
   int result = 0;
   int err;
 
@@ -45,7 +48,7 @@ do_test (void)
       result = 1;
     }
 
-  err = pthread_setspecific (key1, (void *) -2l);
+  err = pthread_setspecific (key1, (void *) &val1);
   if (err != 0)
     {
       printf ("1st setspecific failed: %s\n", strerror (err));
@@ -58,13 +61,13 @@ do_test (void)
       puts ("2nd getspecific == NULL\n");
       result = 1;
     }
-  else if (value != (void *) -2l)
+  else if (value != (void *) &val1)
     {
-      puts ("2nd getspecific != -2l\n");
+      puts ("2nd getspecific != &val1l\n");
       result = 1;
     }
 
-  err = pthread_setspecific (key1, (void *) -3l);
+  err = pthread_setspecific (key1, (void *) &val2);
   if (err != 0)
     {
       printf ("2nd setspecific failed: %s\n", strerror (err));
@@ -77,9 +80,9 @@ do_test (void)
       puts ("3rd getspecific == NULL\n");
       result = 1;
     }
-  else if (value != (void *) -3l)
+  else if (value != (void *) &val2)
     {
-      puts ("3rd getspecific != -2l\n");
+      puts ("3rd getspecific != &val2\n");
       result = 1;
     }
 
