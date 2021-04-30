@@ -891,6 +891,10 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
       minimum_rep_movsb_threshold = 16 * 8;
 #endif
     }
+  /* NB: The default REP MOVSB threshold is 2112 on processors with fast
+     short REP MOVSB (FSRM).  */
+  if (CPU_FEATURE_USABLE_P (cpu_features, FSRM))
+    rep_movsb_threshold = 2112;
 
   unsigned long int rep_movsb_stop_threshold;
   /* ERMS feature is implemented from AMD Zen3 architecture and it is
