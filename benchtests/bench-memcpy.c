@@ -145,6 +145,14 @@ test_main (void)
 
   do_test (&json_ctx, 0, 0, getpagesize ());
 
+  for (i = 0; i <= 32; ++i)
+    {
+      do_test (&json_ctx, 0, 0, 2048 + 64 * i);
+      do_test (&json_ctx, i, 0, 2048 + 64 * i);
+      do_test (&json_ctx, 0, i, 2048 + 64 * i);
+      do_test (&json_ctx, i, i, 2048 + 64 * i);
+    }
+
   json_array_end (&json_ctx);
   json_attr_object_end (&json_ctx);
   json_attr_object_end (&json_ctx);
