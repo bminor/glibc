@@ -33,10 +33,18 @@ extern __typeof (__redirect_memset) __memset_power4 attribute_hidden;
 extern __typeof (__redirect_memset) __memset_power6 attribute_hidden;
 extern __typeof (__redirect_memset) __memset_power7 attribute_hidden;
 extern __typeof (__redirect_memset) __memset_power8 attribute_hidden;
+# ifdef __LITTLE_ENDIAN__
+extern __typeof (__redirect_memset) __memset_power10 attribute_hidden;
+# endif
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
 libc_ifunc (__libc_memset,
+# ifdef __LITTLE_ENDIAN__
+	    (hwcap2 & (PPC_FEATURE2_ARCH_3_1 | PPC_FEATURE2_HAS_ISEL)
+	     && hwcap & PPC_FEATURE_HAS_VSX)
+	    ? __memset_power10 :
+# endif
             (hwcap2 & PPC_FEATURE2_ARCH_2_07)
             ? __memset_power8 :
 	      (hwcap & PPC_FEATURE_HAS_VSX)
