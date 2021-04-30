@@ -36,8 +36,15 @@ extern __typeof (__redirect_memcpy) __memcpy_power6 attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_a2 attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_power7 attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_power8_cached attribute_hidden;
+# if defined __LITTLE_ENDIAN__
+extern __typeof (__redirect_memcpy) __memcpy_power10 attribute_hidden;
+# endif
 
 libc_ifunc (__libc_memcpy,
+# if defined __LITTLE_ENDIAN__
+	    (hwcap2 & PPC_FEATURE2_ARCH_3_1 && hwcap & PPC_FEATURE_HAS_VSX)
+	    ? __memcpy_power10 :
+# endif
 	    ((hwcap2 & PPC_FEATURE2_ARCH_2_07) && use_cached_memopt)
 	    ? __memcpy_power8_cached :
 	      (hwcap & PPC_FEATURE_HAS_VSX)
