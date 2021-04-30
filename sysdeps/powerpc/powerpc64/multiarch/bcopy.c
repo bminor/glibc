@@ -22,8 +22,17 @@
 extern __typeof (bcopy) __bcopy_ppc attribute_hidden;
 /* __bcopy_power7 symbol is implemented at memmove-power7.S  */
 extern __typeof (bcopy) __bcopy_power7 attribute_hidden;
+#ifdef __LITTLE_ENDIAN__
+extern __typeof (bcopy) __bcopy_power10 attribute_hidden;
+#endif
 
 libc_ifunc (bcopy,
+#ifdef __LITTLE_ENDIAN__
+	     hwcap2 & (PPC_FEATURE2_ARCH_3_1 |
+		       PPC_FEATURE2_HAS_ISEL)
+	     && (hwcap & PPC_FEATURE_HAS_VSX)
+	     ? __bcopy_power10 :
+#endif
             (hwcap & PPC_FEATURE_HAS_VSX)
             ? __bcopy_power7
             : __bcopy_ppc);

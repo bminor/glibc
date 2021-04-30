@@ -28,14 +28,22 @@
 # include "init-arch.h"
 
 extern __typeof (__redirect_memmove) __libc_memmove;
-
 extern __typeof (__redirect_memmove) __memmove_ppc attribute_hidden;
 extern __typeof (__redirect_memmove) __memmove_power7 attribute_hidden;
+#ifdef __LITTLE_ENDIAN__
+extern __typeof (__redirect_memmove) __memmove_power10 attribute_hidden;
+#endif
 
 libc_ifunc (__libc_memmove,
-            (hwcap & PPC_FEATURE_HAS_VSX)
-            ? __memmove_power7
-            : __memmove_ppc);
+#ifdef __LITTLE_ENDIAN__
+	     hwcap2 & (PPC_FEATURE2_ARCH_3_1 |
+		       PPC_FEATURE2_HAS_ISEL)
+	     && (hwcap & PPC_FEATURE_HAS_VSX)
+	     ? __memmove_power10 :
+#endif
+		     (hwcap & PPC_FEATURE_HAS_VSX)
+		     ? __memmove_power7
+		     : __memmove_ppc);
 
 #undef memmove
 strong_alias (__libc_memmove, memmove);

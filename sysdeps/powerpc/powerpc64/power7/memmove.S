@@ -832,4 +832,6 @@ ENTRY_TOCLESS (__bcopy)
 	mr	r4,r6
 	b	L(_memmove)
 END (__bcopy)
+#ifndef __bcopy
 weak_alias (__bcopy, bcopy)
+#endif
