@@ -38,7 +38,6 @@ GLIBC_2.32 pthread_getconcurrency F
 GLIBC_2.32 pthread_getcpuclockid F
 GLIBC_2.32 pthread_getname_np F
 GLIBC_2.32 pthread_join F
-GLIBC_2.32 pthread_rwlock_clockrdlock F
 GLIBC_2.32 pthread_rwlock_clockwrlock F
 GLIBC_2.32 pthread_rwlock_destroy F
 GLIBC_2.32 pthread_rwlock_init F

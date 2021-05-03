@@ -18,25 +18,34 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthread_rwlock_common.c"
+#include <shlib-compat.h>
 
 /* See pthread_rwlock_common.c.  */
 int
-__pthread_rwlock_clockrdlock64 (pthread_rwlock_t *rwlock, clockid_t clockid,
-                                const struct __timespec64 *abstime)
+___pthread_rwlock_clockrdlock64 (pthread_rwlock_t *rwlock, clockid_t clockid,
+				 const struct __timespec64 *abstime)
 {
   return __pthread_rwlock_rdlock_full64 (rwlock, clockid, abstime);
 }
 
-#if __TIMESIZE != 64
-libpthread_hidden_def (__pthread_rwlock_clockrdlock64)
+#if __TIMESIZE == 64
+strong_alias (___pthread_rwlock_clockrdlock64, ___pthread_rwlock_clockrdlock)
+#else /* __TIMESPEC64 != 64 */
+libc_hidden_ver (___pthread_rwlock_clockrdlock64,
+		 __pthread_rwlock_clockrdlock64)
 
 int
-__pthread_rwlock_clockrdlock (pthread_rwlock_t *rwlock, clockid_t clockid,
-                              const struct timespec *abstime)
+___pthread_rwlock_clockrdlock (pthread_rwlock_t *rwlock, clockid_t clockid,
+			       const struct timespec *abstime)
 {
   struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
 
   return __pthread_rwlock_clockrdlock64 (rwlock, clockid, &ts64);
 }
+#endif /* __TIMESPEC64 != 64 */
+versioned_symbol (libc, ___pthread_rwlock_clockrdlock,
+		  pthread_rwlock_clockrdlock, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_30, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_rwlock_clockrdlock,
+	       pthread_rwlock_clockrdlock, GLIBC_2_30);
 #endif
-weak_alias (__pthread_rwlock_clockrdlock, pthread_rwlock_clockrdlock)

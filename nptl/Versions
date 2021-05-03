@@ -152,6 +152,7 @@ libc {
   GLIBC_2.30 {
     pthread_cond_clockwait;
     pthread_mutex_clocklock;
+    pthread_rwlock_clockrdlock;
   }
   GLIBC_2.32 {
     pthread_attr_getsigmask_np;
@@ -204,6 +205,7 @@ libc {
     pthread_mutexattr_setrobust;
     pthread_mutexattr_settype;
     pthread_once;
+    pthread_rwlock_clockrdlock;
     pthread_rwlock_rdlock;
     pthread_rwlock_unlock;
     pthread_rwlock_wrlock;
@@ -399,7 +401,6 @@ libpthread {
   }
 
   GLIBC_2.30 {
-    pthread_rwlock_clockrdlock;
     pthread_rwlock_clockwrlock;
     sem_clockwait;
   }
