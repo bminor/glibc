@@ -41,11 +41,12 @@ ___pthread_mutex_destroy (pthread_mutex_t *mutex)
 
   return 0;
 }
-versioned_symbol (libc, ___pthread_mutex_destroy, __pthread_mutex_destroy,
-                  GLIBC_2_34);
-libc_hidden_ver (___pthread_mutex_destroy, __pthread_mutex_destroy)
 versioned_symbol (libc, ___pthread_mutex_destroy, pthread_mutex_destroy,
                   GLIBC_2_0);
+libc_hidden_ver (___pthread_mutex_destroy, __pthread_mutex_destroy)
+#ifndef SHARED
+strong_alias (___pthread_mutex_destroy, __pthread_mutex_destroy)
+#endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
 compat_symbol (libpthread, ___pthread_mutex_destroy, __pthread_mutex_destroy,

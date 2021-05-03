@@ -133,6 +133,7 @@ libc {
     cnd_signal;
     cnd_timedwait;
     cnd_wait;
+    mtx_destroy;
     thrd_current;
     thrd_equal;
     thrd_sleep;
@@ -154,7 +155,6 @@ libc {
     __pthread_cleanup_routine;
     __pthread_getspecific;
     __pthread_key_create;
-    __pthread_mutex_destroy;
     __pthread_mutex_init;
     __pthread_mutex_lock;
     __pthread_mutex_unlock;
@@ -168,6 +168,7 @@ libc {
     cnd_signal;
     cnd_timedwait;
     cnd_wait;
+    mtx_destroy;
     pthread_cond_clockwait;
     pthread_condattr_getclock;
     pthread_condattr_getpshared;
@@ -380,7 +381,6 @@ libpthread {
 
   # C11 thread symbols.
   GLIBC_2.28 {
-    mtx_destroy;
     mtx_init;
     mtx_lock;
     mtx_timedlock;

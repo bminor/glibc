@@ -1265,6 +1265,7 @@ GLIBC_2.33 msgrcv F
 GLIBC_2.33 msgsnd F
 GLIBC_2.33 msync F
 GLIBC_2.33 mtrace F
+GLIBC_2.33 mtx_destroy F
 GLIBC_2.33 munlock F
 GLIBC_2.33 munlockall F
 GLIBC_2.33 munmap F
@@ -2008,7 +2009,6 @@ GLIBC_2.34 __libc_start_main F
 GLIBC_2.34 __pthread_cleanup_routine F
 GLIBC_2.34 __pthread_getspecific F
 GLIBC_2.34 __pthread_key_create F
-GLIBC_2.34 __pthread_mutex_destroy F
 GLIBC_2.34 __pthread_mutex_init F
 GLIBC_2.34 __pthread_mutex_lock F
 GLIBC_2.34 __pthread_mutex_trylock F
@@ -2024,6 +2024,7 @@ GLIBC_2.34 cnd_init F
 GLIBC_2.34 cnd_signal F
 GLIBC_2.34 cnd_timedwait F
 GLIBC_2.34 cnd_wait F
+GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F

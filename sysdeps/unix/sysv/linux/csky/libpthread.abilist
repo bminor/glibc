@@ -13,7 +13,6 @@ GLIBC_2.29 __pthread_unregister_cancel_restore F
 GLIBC_2.29 flockfile F
 GLIBC_2.29 ftrylockfile F
 GLIBC_2.29 funlockfile F
-GLIBC_2.29 mtx_destroy F
 GLIBC_2.29 mtx_init F
 GLIBC_2.29 mtx_lock F
 GLIBC_2.29 mtx_timedlock F
