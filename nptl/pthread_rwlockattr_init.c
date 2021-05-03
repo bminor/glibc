@@ -17,10 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
-
+#include <shlib-compat.h>
 
 int
-pthread_rwlockattr_init (pthread_rwlockattr_t *attr)
+__pthread_rwlockattr_init (pthread_rwlockattr_t *attr)
 {
   ASSERT_TYPE_SIZE (pthread_rwlockattr_t, __SIZEOF_PTHREAD_RWLOCKATTR_T);
   ASSERT_PTHREAD_INTERNAL_SIZE (pthread_rwlockattr_t,
@@ -35,3 +35,10 @@ pthread_rwlockattr_init (pthread_rwlockattr_t *attr)
 
   return 0;
 }
+versioned_symbol (libc, __pthread_rwlockattr_init,
+                  pthread_rwlockattr_init, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_rwlockattr_init,
+               pthread_rwlockattr_init, GLIBC_2_1);
+#endif

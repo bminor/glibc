@@ -1327,6 +1327,7 @@ GLIBC_2.2 pthread_rwlock_wrlock F
 GLIBC_2.2 pthread_rwlockattr_destroy F
 GLIBC_2.2 pthread_rwlockattr_getkind_np F
 GLIBC_2.2 pthread_rwlockattr_getpshared F
+GLIBC_2.2 pthread_rwlockattr_init F
 GLIBC_2.2 pthread_self F
 GLIBC_2.2 pthread_setcancelstate F
 GLIBC_2.2 pthread_setcanceltype F
@@ -2224,6 +2225,7 @@ GLIBC_2.34 pthread_rwlock_wrlock F
 GLIBC_2.34 pthread_rwlockattr_destroy F
 GLIBC_2.34 pthread_rwlockattr_getkind_np F
 GLIBC_2.34 pthread_rwlockattr_getpshared F
+GLIBC_2.34 pthread_rwlockattr_init F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.34 pthread_spin_destroy F
 GLIBC_2.34 pthread_spin_init F
