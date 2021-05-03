@@ -13,7 +13,6 @@ GLIBC_2.33 __pthread_unregister_cancel_restore F
 GLIBC_2.33 flockfile F
 GLIBC_2.33 ftrylockfile F
 GLIBC_2.33 funlockfile F
-GLIBC_2.33 mtx_timedlock F
 GLIBC_2.33 mtx_trylock F
 GLIBC_2.33 mtx_unlock F
 GLIBC_2.33 pthread_attr_getaffinity_np F

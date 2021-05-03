@@ -136,6 +136,7 @@ libc {
     mtx_destroy;
     mtx_init;
     mtx_lock;
+    mtx_timedlock;
     thrd_current;
     thrd_equal;
     thrd_sleep;
@@ -170,6 +171,7 @@ libc {
     mtx_destroy;
     mtx_init;
     mtx_lock;
+    mtx_timedlock;
     pthread_cond_clockwait;
     pthread_condattr_getclock;
     pthread_condattr_getpshared;
@@ -238,7 +240,6 @@ libc {
     __pthread_getattr_default_np;
     __pthread_key_delete;
     __pthread_keys;
-    __pthread_mutex_timedlock;
     __pthread_mutex_unlock_usercnt;
     __pthread_setcancelstate;
     __pthread_tpp_change_priority;
@@ -382,7 +383,6 @@ libpthread {
 
   # C11 thread symbols.
   GLIBC_2.28 {
-    mtx_timedlock;
     mtx_trylock;
     mtx_unlock;
     thrd_create;

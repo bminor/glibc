@@ -69,7 +69,6 @@ GLIBC_2.2 pthread_yield F
 GLIBC_2.2 sem_timedwait F
 GLIBC_2.2.3 __libpthread_version_placeholder F
 GLIBC_2.2.6 __libpthread_version_placeholder F
-GLIBC_2.28 mtx_timedlock F
 GLIBC_2.28 mtx_trylock F
 GLIBC_2.28 mtx_unlock F
 GLIBC_2.28 thrd_create F
