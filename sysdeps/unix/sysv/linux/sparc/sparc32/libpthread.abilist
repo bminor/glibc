@@ -24,7 +24,6 @@ GLIBC_2.1 pthread_attr_setstackaddr F
 GLIBC_2.1 pthread_attr_setstacksize F
 GLIBC_2.1 pthread_create F
 GLIBC_2.1 pthread_getconcurrency F
-GLIBC_2.1 pthread_rwlockattr_setkind_np F
 GLIBC_2.1 pthread_rwlockattr_setpshared F
 GLIBC_2.1 pthread_setconcurrency F
 GLIBC_2.1 sem_destroy F

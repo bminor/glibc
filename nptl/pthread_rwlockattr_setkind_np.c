@@ -18,10 +18,10 @@
 
 #include <errno.h>
 #include "pthreadP.h"
-
+#include <shlib-compat.h>
 
 int
-pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *attr, int pref)
+__pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *attr, int pref)
 {
   struct pthread_rwlockattr *iattr;
 
@@ -36,3 +36,10 @@ pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *attr, int pref)
 
   return 0;
 }
+versioned_symbol (libc, __pthread_rwlockattr_setkind_np,
+                  pthread_rwlockattr_setkind_np, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_rwlockattr_setkind_np,
+               pthread_rwlockattr_setkind_np, GLIBC_2_1);
+#endif
