@@ -19,10 +19,11 @@
 #include <errno.h>
 #include "pthreadP.h"
 #include <atomic.h>
+#include <shlib-compat.h>
 
 /* See pthread_rwlock_common.c for an overview.  */
 int
-__pthread_rwlock_trywrlock (pthread_rwlock_t *rwlock)
+___pthread_rwlock_trywrlock (pthread_rwlock_t *rwlock)
 {
   /* When in a trywrlock, we can acquire the write lock if it is in states
      #1 (idle and read phase) and #5 (idle and write phase), and also in #6
@@ -64,5 +65,15 @@ __pthread_rwlock_trywrlock (pthread_rwlock_t *rwlock)
     }
   return EBUSY;
 }
+versioned_symbol (libc, ___pthread_rwlock_trywrlock,
+		  pthread_rwlock_trywrlock, GLIBC_2_34);
+libc_hidden_ver (___pthread_rwlock_trywrlock, __pthread_rwlock_trywrlock)
 
-strong_alias (__pthread_rwlock_trywrlock, pthread_rwlock_trywrlock)
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_rwlock_trywrlock,
+	       pthread_rwlock_trywrlock, GLIBC_2_1);
+#endif
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_rwlock_trywrlock,
+	       __pthread_rwlock_trywrlock, GLIBC_2_2);
+#endif
