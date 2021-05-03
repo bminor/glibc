@@ -2030,6 +2030,7 @@ GLIBC_2.28 mtx_destroy F
 GLIBC_2.28 mtx_init F
 GLIBC_2.28 mtx_lock F
 GLIBC_2.28 mtx_timedlock F
+GLIBC_2.28 mtx_trylock F
 GLIBC_2.28 renameat2 F
 GLIBC_2.28 statx F
 GLIBC_2.28 thrd_current F
@@ -2229,7 +2230,6 @@ GLIBC_2.34 __pthread_cleanup_routine F
 GLIBC_2.34 __pthread_getspecific F
 GLIBC_2.34 __pthread_key_create F
 GLIBC_2.34 __pthread_mutex_lock F
-GLIBC_2.34 __pthread_mutex_trylock F
 GLIBC_2.34 __pthread_mutex_unlock F
 GLIBC_2.34 __pthread_setspecific F
 GLIBC_2.34 __pthread_unwind_next F
@@ -2244,6 +2244,7 @@ GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
 GLIBC_2.34 mtx_lock F
 GLIBC_2.34 mtx_timedlock F
+GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F

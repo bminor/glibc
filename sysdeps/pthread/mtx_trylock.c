@@ -16,11 +16,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <shlib-compat.h>
 #include "thrd_priv.h"
 
 int
-mtx_trylock (mtx_t *mutex)
+__mtx_trylock (mtx_t *mutex)
 {
   int err_code = __pthread_mutex_trylock ((pthread_mutex_t *) mutex);
   return thrd_err_map (err_code);
 }
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __mtx_trylock, mtx_trylock, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
+compat_symbol (libpthread, __mtx_trylock, mtx_trylock, GLIBC_2_28);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__mtx_trylock, mtx_trylock)
+#endif

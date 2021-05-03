@@ -69,7 +69,6 @@ GLIBC_2.27 sem_timedwait F
 GLIBC_2.27 sem_trywait F
 GLIBC_2.27 sem_unlink F
 GLIBC_2.27 sem_wait F
-GLIBC_2.28 mtx_trylock F
 GLIBC_2.28 mtx_unlock F
 GLIBC_2.28 thrd_create F
 GLIBC_2.28 thrd_detach F
