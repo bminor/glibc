@@ -126,6 +126,7 @@ routines = \
   pthread_rwlock_init \
   pthread_rwlock_rdlock \
   pthread_rwlock_timedrdlock \
+  pthread_rwlock_timedwrlock \
   pthread_rwlock_unlock \
   pthread_rwlock_wrlock \
   pthread_self \
@@ -183,7 +184,6 @@ libpthread-routines = \
   pthread_getname \
   pthread_join \
   pthread_join_common \
-  pthread_rwlock_timedwrlock \
   pthread_rwlock_tryrdlock \
   pthread_rwlock_trywrlock \
   pthread_rwlockattr_destroy \

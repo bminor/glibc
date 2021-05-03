@@ -515,7 +515,7 @@ extern int __pthread_rwlock_timedrdlock64 (pthread_rwlock_t *rwlock,
 libc_hidden_proto (__pthread_rwlock_timedrdlock64)
 extern int __pthread_rwlock_timedwrlock64 (pthread_rwlock_t *rwlock,
                                            const struct __timespec64 *abstime);
-libpthread_hidden_proto (__pthread_rwlock_timedwrlock64)
+libc_hidden_proto (__pthread_rwlock_timedwrlock64)
 extern int __pthread_mutex_clocklock64 (pthread_mutex_t *mutex,
                                         clockid_t clockid,
                                         const struct __timespec64 *abstime);
