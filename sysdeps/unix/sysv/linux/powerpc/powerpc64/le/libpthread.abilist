@@ -69,7 +69,6 @@ GLIBC_2.17 sem_unlink F
 GLIBC_2.17 sem_wait F
 GLIBC_2.18 pthread_getattr_default_np F
 GLIBC_2.18 pthread_setattr_default_np F
-GLIBC_2.28 mtx_init F
 GLIBC_2.28 mtx_lock F
 GLIBC_2.28 mtx_timedlock F
 GLIBC_2.28 mtx_trylock F

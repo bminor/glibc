@@ -411,8 +411,10 @@ extern int __pthread_mutex_unlock_usercnt (pthread_mutex_t *__mutex,
 					   int __decr);
 libc_hidden_proto (__pthread_mutex_unlock_usercnt)
 extern int __pthread_mutexattr_init (pthread_mutexattr_t *attr);
+libc_hidden_proto (__pthread_mutexattr_init)
 extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);
+libc_hidden_proto (__pthread_mutexattr_settype)
 extern int __pthread_attr_destroy (pthread_attr_t *attr);
 libc_hidden_proto (__pthread_attr_destroy)
 extern int __pthread_attr_getdetachstate (const pthread_attr_t *attr,

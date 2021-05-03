@@ -151,11 +151,13 @@ ___pthread_mutex_init (pthread_mutex_t *mutex,
 
   return 0;
 }
-versioned_symbol (libpthread, ___pthread_mutex_init, __pthread_mutex_init,
-		  GLIBC_2_34);
-libc_hidden_ver (___pthread_mutex_init, __pthread_mutex_init)
 versioned_symbol (libpthread, ___pthread_mutex_init, pthread_mutex_init,
 		  GLIBC_2_0);
+libc_hidden_ver (___pthread_mutex_init, __pthread_mutex_init)
+#ifndef SHARED
+strong_alias (___pthread_mutex_init, __pthread_mutex_init)
+#endif
+
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
 compat_symbol (libpthread, ___pthread_mutex_init, __pthread_mutex_init,
 	       GLIBC_2_0);

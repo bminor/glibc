@@ -17,11 +17,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdalign.h>
+#include <shlib-compat.h>
 
 #include "thrd_priv.h"
 
 int
-mtx_init (mtx_t *mutex, int type)
+__mtx_init (mtx_t *mutex, int type)
 {
   _Static_assert (sizeof (mtx_t) == sizeof (pthread_mutex_t),
 		  "sizeof (mtx_t) != sizeof (pthread_mutex_t)");
@@ -51,3 +52,11 @@ mtx_init (mtx_t *mutex, int type)
   /* pthread_mutexattr_destroy implementation is a noop.  */
   return thrd_err_map (err_code);
 }
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __mtx_init, mtx_init, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
+compat_symbol (libpthread, __mtx_init, mtx_init, GLIBC_2_28);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__mtx_init, mtx_init)
+#endif

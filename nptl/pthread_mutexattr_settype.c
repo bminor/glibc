@@ -41,8 +41,10 @@ ___pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind)
 }
 versioned_symbol (libc, ___pthread_mutexattr_settype,
                   pthread_mutexattr_settype, GLIBC_2_34);
-versioned_symbol (libc, ___pthread_mutexattr_settype,
-                  __pthread_mutexattr_settype, GLIBC_2_34);
+libc_hidden_ver (___pthread_mutexattr_settype, __pthread_mutexattr_settype)
+#ifndef SHARED
+strong_alias (___pthread_mutexattr_settype, __pthread_mutexattr_settype)
+#endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
 compat_symbol (libpthread, ___pthread_mutexattr_settype,
