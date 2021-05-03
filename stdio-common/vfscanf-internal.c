@@ -2479,11 +2479,6 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 	  else
 	    not_in = 0;
 
-	  if (width < 0)
-	    /* There is no width given so there is also no limit on the
-	       number of characters we read.  Therefore we set width to
-	       a very high value to make the algorithm easier.  */
-	    width = INT_MAX;
 
 #ifdef COMPILE_WSCANF
 	  /* Find the beginning and the end of the scanlist.  We are not
@@ -2647,7 +2642,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 			}
 		    }
 		}
-	      while (--width > 0 && inchar () != WEOF);
+	      while ((width < 0 || --width > 0) && inchar () != WEOF);
 	    out:
 #else
 	      char buf[MB_LEN_MAX];
@@ -2732,7 +2727,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 			}
 		    }
 
-		  if (--width <= 0)
+		  if (width >= 0 && --width <= 0)
 		    break;
 		}
 	      while (inchar () != EOF);
@@ -2884,7 +2879,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		  assert (n <= MB_LEN_MAX);
 		  str += n;
 		}
-	      while (--width > 0 && inchar () != WEOF);
+	      while ((width < 0 || --width > 0) && inchar () != WEOF);
 	    out2:
 #else
 	      do
@@ -2938,7 +2933,7 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 			}
 		    }
 		}
-	      while (--width > 0 && inchar () != EOF);
+	      while ((width < 0 || --width > 0) && inchar () != EOF);
 #endif
 
 	      if (__glibc_unlikely (now == read_in))
