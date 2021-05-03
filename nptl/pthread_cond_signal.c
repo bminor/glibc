@@ -98,5 +98,6 @@ ___pthread_cond_signal (pthread_cond_t *cond)
 versioned_symbol (libpthread, ___pthread_cond_signal, pthread_cond_signal,
 		  GLIBC_2_3_2);
 libc_hidden_ver (___pthread_cond_signal, __pthread_cond_signal)
-versioned_symbol (libpthread, ___pthread_cond_signal,
-		  __pthread_cond_signal, GLIBC_PRIVATE);
+#ifndef SHARED
+strong_alias (___pthread_cond_signal, __pthread_cond_signal)
+#endif

@@ -70,7 +70,6 @@ GLIBC_2.2 pthread_yield F
 GLIBC_2.2 sem_timedwait F
 GLIBC_2.2.3 __libpthread_version_placeholder F
 GLIBC_2.2.6 __libpthread_version_placeholder F
-GLIBC_2.28 cnd_signal F
 GLIBC_2.28 cnd_timedwait F
 GLIBC_2.28 cnd_wait F
 GLIBC_2.28 mtx_destroy F
