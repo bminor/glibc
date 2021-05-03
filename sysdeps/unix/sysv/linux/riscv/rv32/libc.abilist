@@ -623,6 +623,7 @@ GLIBC_2.33 cnd_broadcast F
 GLIBC_2.33 cnd_destroy F
 GLIBC_2.33 cnd_init F
 GLIBC_2.33 cnd_signal F
+GLIBC_2.33 cnd_timedwait F
 GLIBC_2.33 confstr F
 GLIBC_2.33 connect F
 GLIBC_2.33 copy_file_range F
@@ -2020,6 +2021,7 @@ GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F
 GLIBC_2.34 cnd_init F
 GLIBC_2.34 cnd_signal F
+GLIBC_2.34 cnd_timedwait F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F
