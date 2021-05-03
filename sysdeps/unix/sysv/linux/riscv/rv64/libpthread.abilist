@@ -4,7 +4,6 @@ GLIBC_2.27 _IO_funlockfile F
 GLIBC_2.27 __errno_location F
 GLIBC_2.27 __pthread_register_cancel F
 GLIBC_2.27 __pthread_register_cancel_defer F
-GLIBC_2.27 __pthread_rwlock_destroy F
 GLIBC_2.27 __pthread_rwlock_init F
 GLIBC_2.27 __pthread_rwlock_tryrdlock F
 GLIBC_2.27 __pthread_rwlock_trywrlock F
@@ -37,7 +36,6 @@ GLIBC_2.27 pthread_getconcurrency F
 GLIBC_2.27 pthread_getcpuclockid F
 GLIBC_2.27 pthread_getname_np F
 GLIBC_2.27 pthread_join F
-GLIBC_2.27 pthread_rwlock_destroy F
 GLIBC_2.27 pthread_rwlock_init F
 GLIBC_2.27 pthread_rwlock_timedrdlock F
 GLIBC_2.27 pthread_rwlock_timedwrlock F

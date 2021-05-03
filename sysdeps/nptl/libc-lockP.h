@@ -131,12 +131,7 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 #else
 # define __libc_lock_fini(NAME) __pthread_mutex_destroy (&(NAME))
 #endif
-#if defined SHARED && IS_IN (libc)
-# define __libc_rwlock_fini(NAME) ((void) 0)
-#else
-# define __libc_rwlock_fini(NAME) \
-  __libc_maybe_call (__pthread_rwlock_destroy, (&(NAME)), 0)
-#endif
+#define __libc_rwlock_fini(NAME) ((void) 0)
 
 /* Lock the named lock variable.  */
 #if IS_IN (libc) || IS_IN (libpthread)
@@ -305,7 +300,6 @@ libc_hidden_proto (__pthread_setcancelstate)
 weak_extern (__pthread_mutex_trylock)
 weak_extern (__pthread_mutexattr_destroy)
 weak_extern (__pthread_rwlock_init)
-weak_extern (__pthread_rwlock_destroy)
 weak_extern (__pthread_rwlock_tryrdlock)
 weak_extern (__pthread_rwlock_trywrlock)
 weak_extern (__pthread_initialize)
@@ -313,7 +307,6 @@ weak_extern (__pthread_atfork)
 # else
 #  pragma weak __pthread_mutex_trylock
 #  pragma weak __pthread_mutexattr_destroy
-#  pragma weak __pthread_rwlock_destroy
 #  pragma weak __pthread_rwlock_tryrdlock
 #  pragma weak __pthread_rwlock_trywrlock
 #  pragma weak __pthread_initialize
