@@ -19,7 +19,7 @@
 #include "pthreadP.h"
 #include <string.h>
 #include <pthread-offsets.h>
-
+#include <shlib-compat.h>
 
 static const struct pthread_rwlockattr default_rwlockattr =
   {
@@ -30,7 +30,7 @@ static const struct pthread_rwlockattr default_rwlockattr =
 
 /* See pthread_rwlock_common.c.  */
 int
-__pthread_rwlock_init (pthread_rwlock_t *rwlock,
+___pthread_rwlock_init (pthread_rwlock_t *rwlock,
 		       const pthread_rwlockattr_t *attr)
 {
   ASSERT_TYPE_SIZE (pthread_rwlock_t, __SIZEOF_PTHREAD_RWLOCK_T);
@@ -55,4 +55,18 @@ __pthread_rwlock_init (pthread_rwlock_t *rwlock,
 
   return 0;
 }
-strong_alias (__pthread_rwlock_init, pthread_rwlock_init)
+versioned_symbol (libc, ___pthread_rwlock_init, pthread_rwlock_init,
+                  GLIBC_2_34);
+libc_hidden_ver (___pthread_rwlock_init, __pthread_rwlock_init)
+#ifndef SHARED
+strong_alias (___pthread_rwlock_init, __pthread_rwlock_init)
+#endif
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_rwlock_init, pthread_rwlock_init,
+               GLIBC_2_1);
+#endif
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_rwlock_init, __pthread_rwlock_init,
+               GLIBC_2_2);
+#endif

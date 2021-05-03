@@ -1579,6 +1579,7 @@ GLIBC_2.1 pthread_attr_init F
 GLIBC_2.1 pthread_mutexattr_gettype F
 GLIBC_2.1 pthread_mutexattr_settype F
 GLIBC_2.1 pthread_rwlock_destroy F
+GLIBC_2.1 pthread_rwlock_init F
 GLIBC_2.1 pthread_rwlock_rdlock F
 GLIBC_2.1 pthread_rwlock_unlock F
 GLIBC_2.1 pthread_rwlock_wrlock F
@@ -1857,6 +1858,7 @@ GLIBC_2.2 __nl_langinfo_l F
 GLIBC_2.2 __open64 F
 GLIBC_2.2 __pread64 F
 GLIBC_2.2 __pthread_rwlock_destroy F
+GLIBC_2.2 __pthread_rwlock_init F
 GLIBC_2.2 __pthread_rwlock_rdlock F
 GLIBC_2.2 __pthread_rwlock_unlock F
 GLIBC_2.2 __pthread_rwlock_wrlock F
@@ -2382,6 +2384,7 @@ GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_clockrdlock F
 GLIBC_2.34 pthread_rwlock_clockwrlock F
 GLIBC_2.34 pthread_rwlock_destroy F
+GLIBC_2.34 pthread_rwlock_init F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F
 GLIBC_2.34 pthread_rwlock_wrlock F

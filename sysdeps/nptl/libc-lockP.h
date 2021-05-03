@@ -114,14 +114,7 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 #else
 # define __libc_lock_init(NAME) __pthread_mutex_init (&(NAME))
 #endif
-#if defined SHARED && IS_IN (libc)
-/* ((NAME) = (__libc_rwlock_t) PTHREAD_RWLOCK_INITIALIZER) is inefficient.  */
-# define __libc_rwlock_init(NAME) \
-  ((void) __builtin_memset (&(NAME), '\0', sizeof (NAME)))
-#else
-# define __libc_rwlock_init(NAME) \
-  __libc_maybe_call (__pthread_rwlock_init, (&(NAME), NULL), 0)
-#endif
+#define __libc_rwlock_init(NAME) __pthread_rwlock_init (&(NAME), NULL)
 
 /* Finalize the named lock variable, which must be locked.  It cannot be
    used again until __libc_lock_init is called again on it.  This must be
@@ -269,6 +262,7 @@ extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *__attr);
 
 extern int __pthread_rwlock_init (pthread_rwlock_t *__rwlock,
 				  const pthread_rwlockattr_t *__attr);
+libc_hidden_proto (__pthread_rwlock_init)
 
 extern int __pthread_rwlock_destroy (pthread_rwlock_t *__rwlock);
 
@@ -299,7 +293,6 @@ libc_hidden_proto (__pthread_setcancelstate)
 # ifdef weak_extern
 weak_extern (__pthread_mutex_trylock)
 weak_extern (__pthread_mutexattr_destroy)
-weak_extern (__pthread_rwlock_init)
 weak_extern (__pthread_rwlock_tryrdlock)
 weak_extern (__pthread_rwlock_trywrlock)
 weak_extern (__pthread_initialize)
