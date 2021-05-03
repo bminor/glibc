@@ -18,9 +18,18 @@
 
 #include "thrd_priv.h"
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 void
-cnd_destroy (cnd_t *cond)
+__cnd_destroy (cnd_t *cond)
 {
   __pthread_cond_destroy ((pthread_cond_t *) cond);
 }
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __cnd_destroy, cnd_destroy, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
+compat_symbol (libpthread, __cnd_destroy, cnd_destroy, GLIBC_2_28);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__cnd_destroy, cnd_destroy)
+#endif

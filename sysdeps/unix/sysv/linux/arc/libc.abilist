@@ -627,6 +627,7 @@ GLIBC_2.32 close F
 GLIBC_2.32 closedir F
 GLIBC_2.32 closelog F
 GLIBC_2.32 cnd_broadcast F
+GLIBC_2.32 cnd_destroy F
 GLIBC_2.32 confstr F
 GLIBC_2.32 connect F
 GLIBC_2.32 copy_file_range F
@@ -2012,6 +2013,7 @@ GLIBC_2.34 __pthread_setspecific F
 GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
+GLIBC_2.34 cnd_destroy F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F

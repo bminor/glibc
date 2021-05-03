@@ -10,7 +10,6 @@ GLIBC_2.32 __pthread_rwlock_tryrdlock F
 GLIBC_2.32 __pthread_rwlock_trywrlock F
 GLIBC_2.32 __pthread_unregister_cancel F
 GLIBC_2.32 __pthread_unregister_cancel_restore F
-GLIBC_2.32 cnd_destroy F
 GLIBC_2.32 cnd_init F
 GLIBC_2.32 cnd_signal F
 GLIBC_2.32 cnd_timedwait F
