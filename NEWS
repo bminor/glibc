@@ -18,6 +18,11 @@ Major new features:
   a dump of information related to IFUNC resolver operation and
   glibc-hwcaps subdirectory selection.
 
+* On Linux, the function execveat has been added.  It operates similar to
+  execve and it is is already used to implement fexecve without requiring
+  /proc to be mounted.  However, different than fexecve, if the syscall is not
+  supported by the kernel an error is returned instead of trying a fallback.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs

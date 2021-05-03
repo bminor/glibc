@@ -147,6 +147,9 @@ libc {
   }
   GLIBC_2.30 {
   }
+  GLIBC_2.34 {
+    execveat;
+  }
   GLIBC_PRIVATE {
     __libc_fork; __libc_pread; __libc_pwrite;
     __nanosleep_nocancel; __pause_nocancel;

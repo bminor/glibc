@@ -66,7 +66,8 @@ routines :=								      \
 	posix_madvise							      \
 	get_child_max sched_cpucount sched_cpualloc sched_cpufree \
 	streams-compat \
-	shm-directory
+	shm-directory                                                         \
+	execveat
 
 aux		:= init-posix environ
 tests		:= test-errno tstgetopt testfnm runtests runptests \
@@ -103,7 +104,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-sysconf-empty-chroot tst-glob_symlinks tst-fexecve \
 		   tst-glob-tilde test-ssize-max tst-spawn4 bug-regex37 \
 		   bug-regex38 tst-regcomp-truncated tst-spawn-chdir \
-		   tst-wordexp-nocmd
+		   tst-wordexp-nocmd tst-execveat
 
 # Test for the glob symbol version that was replaced in glibc 2.27.
 ifeq ($(have-GLIBC_2.26)$(build-shared),yesyes)
