@@ -1950,6 +1950,7 @@ GLIBC_2.29 truncate F
 GLIBC_2.29 truncate64 F
 GLIBC_2.29 tsearch F
 GLIBC_2.29 tss_create F
+GLIBC_2.29 tss_delete F
 GLIBC_2.29 ttyname F
 GLIBC_2.29 ttyname_r F
 GLIBC_2.29 ttyslot F
@@ -2254,3 +2255,4 @@ GLIBC_2.34 pthread_spin_trylock F
 GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
+GLIBC_2.34 tss_delete F

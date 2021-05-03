@@ -42,9 +42,9 @@ ___pthread_key_delete (pthread_key_t key)
 versioned_symbol (libc, ___pthread_key_delete, pthread_key_delete,
 		  GLIBC_2_34);
 libc_hidden_ver (___pthread_key_delete, __pthread_key_delete)
-
-versioned_symbol (libc, ___pthread_key_delete, __pthread_key_delete,
-		  GLIBC_PRIVATE);
+#ifndef SHARED
+strong_alias (___pthread_key_delete, __pthread_key_delete)
+#endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
 compat_symbol (libpthread, ___pthread_key_delete, pthread_key_delete,
