@@ -2033,6 +2033,7 @@ GLIBC_2.28 renameat2 F
 GLIBC_2.28 statx F
 GLIBC_2.28 thrd_current F
 GLIBC_2.28 thrd_equal F
+GLIBC_2.28 thrd_exit F
 GLIBC_2.28 thrd_sleep F
 GLIBC_2.28 thrd_yield F
 GLIBC_2.29 getcpu F
@@ -2282,6 +2283,7 @@ GLIBC_2.34 pthread_spin_init F
 GLIBC_2.34 pthread_spin_lock F
 GLIBC_2.34 pthread_spin_trylock F
 GLIBC_2.34 pthread_spin_unlock F
+GLIBC_2.34 thrd_exit F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F
 GLIBC_2.4 __fgets_unlocked_chk F

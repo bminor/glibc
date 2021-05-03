@@ -1834,6 +1834,7 @@ GLIBC_2.33 tfind F
 GLIBC_2.33 tgkill F
 GLIBC_2.33 thrd_current F
 GLIBC_2.33 thrd_equal F
+GLIBC_2.33 thrd_exit F
 GLIBC_2.33 thrd_sleep F
 GLIBC_2.33 thrd_yield F
 GLIBC_2.33 time F
@@ -2068,3 +2069,4 @@ GLIBC_2.34 pthread_spin_init F
 GLIBC_2.34 pthread_spin_lock F
 GLIBC_2.34 pthread_spin_trylock F
 GLIBC_2.34 pthread_spin_unlock F
+GLIBC_2.34 thrd_exit F

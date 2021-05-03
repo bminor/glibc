@@ -141,6 +141,7 @@ libc {
     mtx_unlock;
     thrd_current;
     thrd_equal;
+    thrd_exit;
     thrd_sleep;
     thrd_yield;
   }
@@ -210,6 +211,7 @@ libc {
     pthread_spin_lock;
     pthread_spin_trylock;
     pthread_spin_unlock;
+    thrd_exit;
   }
   GLIBC_PRIVATE {
     __futex_abstimed_wait64;
@@ -239,7 +241,6 @@ libc {
     __pthread_cleanup_push;
     __pthread_cleanup_upto;
     __pthread_current_priority;
-    __pthread_exit;
     __pthread_force_elision;
     __pthread_getattr_default_np;
     __pthread_key_delete;
@@ -389,7 +390,6 @@ libpthread {
   GLIBC_2.28 {
     thrd_create;
     thrd_detach;
-    thrd_exit;
     thrd_join;
     tss_create;
     tss_delete;

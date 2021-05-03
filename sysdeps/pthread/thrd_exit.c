@@ -16,10 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <shlib-compat.h>
 #include "thrd_priv.h"
 
 _Noreturn void
-thrd_exit (int res)
+__thrd_exit (int res)
 {
   __pthread_exit ((void*)(uintptr_t) res);
 }
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __thrd_exit, thrd_exit, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
+compat_symbol (libpthread, __thrd_exit, thrd_exit, GLIBC_2_28);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__thrd_exit, thrd_exit)
+#endif
