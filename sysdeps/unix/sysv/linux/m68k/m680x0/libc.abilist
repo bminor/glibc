@@ -1577,6 +1577,7 @@ GLIBC_2.1 pthread_rwlock_tryrdlock F
 GLIBC_2.1 pthread_rwlock_trywrlock F
 GLIBC_2.1 pthread_rwlock_unlock F
 GLIBC_2.1 pthread_rwlock_wrlock F
+GLIBC_2.1 pthread_rwlockattr_destroy F
 GLIBC_2.1 ptsname F
 GLIBC_2.1 ptsname_r F
 GLIBC_2.1 putgrent F
@@ -2338,6 +2339,7 @@ GLIBC_2.34 pthread_rwlock_tryrdlock F
 GLIBC_2.34 pthread_rwlock_trywrlock F
 GLIBC_2.34 pthread_rwlock_unlock F
 GLIBC_2.34 pthread_rwlock_wrlock F
+GLIBC_2.34 pthread_rwlockattr_destroy F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.34 pthread_spin_destroy F
 GLIBC_2.34 pthread_spin_init F
