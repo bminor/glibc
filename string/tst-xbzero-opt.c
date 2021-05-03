@@ -119,17 +119,17 @@ static void
 setup_no_clear (void)
 {
   unsigned char buf[TEST_BUFFER_SIZE];
-  prepare_test_buffer (buf);
   vol_glob = buf;
+  prepare_test_buffer (buf);
 }
 
 static void
 setup_ordinary_clear (void)
 {
   unsigned char buf[TEST_BUFFER_SIZE];
+  vol_glob = buf;
   prepare_test_buffer (buf);
   memset (buf, 0, TEST_BUFFER_SIZE);
-  vol_glob = buf;
 }
 
 static void
