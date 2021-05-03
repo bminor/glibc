@@ -71,7 +71,6 @@ GLIBC_2.2.6 __libpthread_version_placeholder F
 GLIBC_2.28 thrd_create F
 GLIBC_2.28 thrd_detach F
 GLIBC_2.28 thrd_join F
-GLIBC_2.28 tss_set F
 GLIBC_2.3.2 __libpthread_version_placeholder F
 GLIBC_2.3.3 __pthread_register_cancel F
 GLIBC_2.3.3 __pthread_register_cancel_defer F

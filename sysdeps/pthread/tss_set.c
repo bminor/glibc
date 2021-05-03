@@ -16,11 +16,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <shlib-compat.h>
 #include "thrd_priv.h"
 
 int
-tss_set (tss_t tss_id, void *val)
+__tss_set (tss_t tss_id, void *val)
 {
   int err_code = __pthread_setspecific (tss_id, val);
   return thrd_err_map (err_code);
 }
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __tss_set, tss_set, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
+compat_symbol (libpthread, __tss_set, tss_set, GLIBC_2_28);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__tss_set, tss_set)
+#endif

@@ -147,6 +147,7 @@ libc {
     tss_create;
     tss_delete;
     tss_get;
+    tss_set;
   }
   GLIBC_2.30 {
     pthread_cond_clockwait;
@@ -165,7 +166,6 @@ libc {
     __pthread_key_create;
     __pthread_mutex_lock;
     __pthread_mutex_unlock;
-    __pthread_setspecific;
     call_once;
     cnd_broadcast;
     cnd_destroy;
@@ -217,6 +217,7 @@ libc {
     tss_create;
     tss_delete;
     tss_get;
+    tss_set;
   }
   GLIBC_PRIVATE {
     __futex_abstimed_wait64;
@@ -395,7 +396,6 @@ libpthread {
     thrd_create;
     thrd_detach;
     thrd_join;
-    tss_set;
   }
 
   GLIBC_2.30 {

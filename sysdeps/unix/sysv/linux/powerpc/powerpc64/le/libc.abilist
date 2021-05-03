@@ -2312,6 +2312,7 @@ GLIBC_2.28 thrd_yield F
 GLIBC_2.28 tss_create F
 GLIBC_2.28 tss_delete F
 GLIBC_2.28 tss_get F
+GLIBC_2.28 tss_set F
 GLIBC_2.29 getcpu F
 GLIBC_2.29 posix_spawn_file_actions_addchdir_np F
 GLIBC_2.29 posix_spawn_file_actions_addfchdir_np F
@@ -2454,7 +2455,6 @@ GLIBC_2.34 __pthread_cleanup_routine F
 GLIBC_2.34 __pthread_key_create F
 GLIBC_2.34 __pthread_mutex_lock F
 GLIBC_2.34 __pthread_mutex_unlock F
-GLIBC_2.34 __pthread_setspecific F
 GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
@@ -2510,3 +2510,4 @@ GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F
 GLIBC_2.34 tss_get F
+GLIBC_2.34 tss_set F
