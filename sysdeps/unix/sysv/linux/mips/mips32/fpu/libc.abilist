@@ -1859,6 +1859,7 @@ GLIBC_2.2 pthread_rwlockattr_getkind_np F
 GLIBC_2.2 pthread_rwlockattr_getpshared F
 GLIBC_2.2 pthread_rwlockattr_init F
 GLIBC_2.2 pthread_rwlockattr_setkind_np F
+GLIBC_2.2 pthread_rwlockattr_setpshared F
 GLIBC_2.2 pthread_spin_destroy F
 GLIBC_2.2 pthread_spin_init F
 GLIBC_2.2 pthread_spin_lock F
@@ -2311,6 +2312,7 @@ GLIBC_2.34 pthread_rwlockattr_getkind_np F
 GLIBC_2.34 pthread_rwlockattr_getpshared F
 GLIBC_2.34 pthread_rwlockattr_init F
 GLIBC_2.34 pthread_rwlockattr_setkind_np F
+GLIBC_2.34 pthread_rwlockattr_setpshared F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.34 pthread_spin_destroy F
 GLIBC_2.34 pthread_spin_init F

@@ -19,10 +19,10 @@
 #include <errno.h>
 #include "pthreadP.h"
 #include <futex-internal.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_rwlockattr_setpshared (pthread_rwlockattr_t *attr, int pshared)
+__pthread_rwlockattr_setpshared (pthread_rwlockattr_t *attr, int pshared)
 {
   struct pthread_rwlockattr *iattr;
 
@@ -36,3 +36,10 @@ pthread_rwlockattr_setpshared (pthread_rwlockattr_t *attr, int pshared)
 
   return 0;
 }
+versioned_symbol (libc, __pthread_rwlockattr_setpshared,
+                  pthread_rwlockattr_setpshared, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_rwlockattr_setpshared,
+               pthread_rwlockattr_setpshared, GLIBC_2_1);
+#endif

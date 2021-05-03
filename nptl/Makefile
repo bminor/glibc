@@ -136,6 +136,7 @@ routines = \
   pthread_rwlockattr_getpshared \
   pthread_rwlockattr_init \
   pthread_rwlockattr_setkind_np \
+  pthread_rwlockattr_setpshared \
   pthread_self \
   pthread_setcancelstate \
   pthread_setcanceltype \
@@ -191,7 +192,6 @@ libpthread-routines = \
   pthread_getname \
   pthread_join \
   pthread_join_common \
-  pthread_rwlockattr_setpshared \
   pthread_setaffinity \
   pthread_setattr_default_np \
   pthread_setconcurrency \
