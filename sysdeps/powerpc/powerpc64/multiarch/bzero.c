@@ -33,7 +33,8 @@ extern __typeof (bzero) __bzero_power10 attribute_hidden;
 
 libc_ifunc (__bzero,
 # ifdef __LITTLE_ENDIAN__
-	    (hwcap2 & (PPC_FEATURE2_ARCH_3_1 | PPC_FEATURE2_HAS_ISEL)
+	    (hwcap2 & PPC_FEATURE2_ARCH_3_1
+	     && hwcap2 & PPC_FEATURE2_HAS_ISEL
 	     && hwcap & PPC_FEATURE_HAS_VSX)
 	    ? __bzero_power10 :
 # endif

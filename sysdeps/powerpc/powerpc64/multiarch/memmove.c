@@ -36,10 +36,10 @@ extern __typeof (__redirect_memmove) __memmove_power10 attribute_hidden;
 
 libc_ifunc (__libc_memmove,
 #ifdef __LITTLE_ENDIAN__
-	     hwcap2 & (PPC_FEATURE2_ARCH_3_1 |
-		       PPC_FEATURE2_HAS_ISEL)
-	     && (hwcap & PPC_FEATURE_HAS_VSX)
-	     ? __memmove_power10 :
+	    (hwcap2 & PPC_FEATURE2_ARCH_3_1
+	     && hwcap2 & PPC_FEATURE2_HAS_ISEL
+	     && hwcap & PPC_FEATURE_HAS_VSX)
+	    ? __memmove_power10 :
 #endif
 		     (hwcap & PPC_FEATURE_HAS_VSX)
 		     ? __memmove_power7

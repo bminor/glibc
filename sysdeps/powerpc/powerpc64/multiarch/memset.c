@@ -41,7 +41,8 @@ extern __typeof (__redirect_memset) __memset_power10 attribute_hidden;
    ifunc symbol properly.  */
 libc_ifunc (__libc_memset,
 # ifdef __LITTLE_ENDIAN__
-	    (hwcap2 & (PPC_FEATURE2_ARCH_3_1 | PPC_FEATURE2_HAS_ISEL)
+	    (hwcap2 & PPC_FEATURE2_ARCH_3_1
+	     && hwcap2 & PPC_FEATURE2_HAS_ISEL
 	     && hwcap & PPC_FEATURE_HAS_VSX)
 	    ? __memset_power10 :
 # endif
