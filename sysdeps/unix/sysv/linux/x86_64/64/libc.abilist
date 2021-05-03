@@ -1952,6 +1952,7 @@ GLIBC_2.28 cnd_destroy F
 GLIBC_2.28 cnd_init F
 GLIBC_2.28 cnd_signal F
 GLIBC_2.28 cnd_timedwait F
+GLIBC_2.28 cnd_wait F
 GLIBC_2.28 fcntl64 F
 GLIBC_2.28 renameat2 F
 GLIBC_2.28 statx F
@@ -2171,6 +2172,7 @@ GLIBC_2.34 cnd_destroy F
 GLIBC_2.34 cnd_init F
 GLIBC_2.34 cnd_signal F
 GLIBC_2.34 cnd_timedwait F
+GLIBC_2.34 cnd_wait F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F

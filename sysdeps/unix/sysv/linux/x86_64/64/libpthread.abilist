@@ -60,7 +60,6 @@ GLIBC_2.2.5 sem_trywait F
 GLIBC_2.2.5 sem_unlink F
 GLIBC_2.2.5 sem_wait F
 GLIBC_2.2.6 __libpthread_version_placeholder F
-GLIBC_2.28 cnd_wait F
 GLIBC_2.28 mtx_destroy F
 GLIBC_2.28 mtx_init F
 GLIBC_2.28 mtx_lock F

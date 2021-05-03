@@ -622,8 +622,6 @@ ___pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mutex)
 versioned_symbol (libc, ___pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2);
 libc_hidden_ver (___pthread_cond_wait, __pthread_cond_wait)
-versioned_symbol (libc, ___pthread_cond_wait, __pthread_cond_wait,
-		  GLIBC_PRIVATE);
 
 /* See __pthread_cond_wait_common.  */
 int
