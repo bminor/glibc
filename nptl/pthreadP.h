@@ -509,7 +509,7 @@ libc_hidden_proto (__pthread_rwlock_clockrdlock64)
 extern int __pthread_rwlock_clockwrlock64 (pthread_rwlock_t *rwlock,
                                            clockid_t clockid,
                                            const struct __timespec64 *abstime);
-libpthread_hidden_proto (__pthread_rwlock_clockwrlock64)
+libc_hidden_proto (__pthread_rwlock_clockwrlock64)
 extern int __pthread_rwlock_timedrdlock64 (pthread_rwlock_t *rwlock,
                                            const struct __timespec64 *abstime);
 libpthread_hidden_proto (__pthread_rwlock_timedrdlock64)

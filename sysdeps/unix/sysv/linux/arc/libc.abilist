@@ -1442,6 +1442,7 @@ GLIBC_2.32 pthread_mutexattr_setrobust_np F
 GLIBC_2.32 pthread_mutexattr_settype F
 GLIBC_2.32 pthread_once F
 GLIBC_2.32 pthread_rwlock_clockrdlock F
+GLIBC_2.32 pthread_rwlock_clockwrlock F
 GLIBC_2.32 pthread_rwlock_rdlock F
 GLIBC_2.32 pthread_rwlock_unlock F
 GLIBC_2.32 pthread_rwlock_wrlock F
@@ -2062,6 +2063,7 @@ GLIBC_2.34 pthread_mutexattr_setrobust F
 GLIBC_2.34 pthread_mutexattr_settype F
 GLIBC_2.34 pthread_once F
 GLIBC_2.34 pthread_rwlock_clockrdlock F
+GLIBC_2.34 pthread_rwlock_clockwrlock F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_unlock F
 GLIBC_2.34 pthread_rwlock_wrlock F
