@@ -34,7 +34,6 @@ GLIBC_2.33 pthread_getconcurrency F
 GLIBC_2.33 pthread_getcpuclockid F
 GLIBC_2.33 pthread_getname_np F
 GLIBC_2.33 pthread_join F
-GLIBC_2.33 pthread_rwlockattr_getpshared F
 GLIBC_2.33 pthread_rwlockattr_init F
 GLIBC_2.33 pthread_rwlockattr_setkind_np F
 GLIBC_2.33 pthread_rwlockattr_setpshared F
