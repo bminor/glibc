@@ -2051,6 +2051,7 @@ GLIBC_2.27 wcstof32x_l F
 GLIBC_2.27 wcstof64 F
 GLIBC_2.27 wcstof64_l F
 GLIBC_2.28 call_once F
+GLIBC_2.28 cnd_broadcast F
 GLIBC_2.28 fcntl F
 GLIBC_2.28 fcntl64 F
 GLIBC_2.28 renameat2 F
@@ -2292,6 +2293,7 @@ GLIBC_2.34 __pthread_mutexattr_settype F
 GLIBC_2.34 __pthread_setspecific F
 GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 call_once F
+GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F

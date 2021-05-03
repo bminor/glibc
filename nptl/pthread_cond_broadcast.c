@@ -90,5 +90,6 @@ ___pthread_cond_broadcast (pthread_cond_t *cond)
 versioned_symbol (libc, ___pthread_cond_broadcast,
 		  pthread_cond_broadcast, GLIBC_2_3_2);
 libc_hidden_ver (___pthread_cond_broadcast, __pthread_cond_broadcast)
-versioned_symbol (libc, ___pthread_cond_broadcast,
-		  __pthread_cond_broadcast, GLIBC_PRIVATE);
+#ifndef SHARED
+strong_alias (___pthread_cond_broadcast, __pthread_cond_broadcast)
+#endif
