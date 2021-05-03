@@ -759,8 +759,7 @@ do_test (void)
           }
 
         struct stat64 cstat;
-        xstat (path, &cstat);
-        if (cstat.st_dev == instat.st_dev)
+        if (stat (path, &cstat) != 0 || cstat.st_dev == instat.st_dev)
           {
             free (to_free);
             continue;
