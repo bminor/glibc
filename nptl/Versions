@@ -129,6 +129,7 @@ libc {
     call_once;
     cnd_broadcast;
     cnd_destroy;
+    cnd_init;
     thrd_current;
     thrd_equal;
     thrd_sleep;
@@ -160,6 +161,7 @@ libc {
     call_once;
     cnd_broadcast;
     cnd_destroy;
+    cnd_init;
     pthread_cond_clockwait;
     pthread_condattr_getclock;
     pthread_condattr_getpshared;
@@ -222,7 +224,6 @@ libc {
     __pthread_cleanup_pop;
     __pthread_cleanup_push;
     __pthread_cleanup_upto;
-    __pthread_cond_init; # Used by the C11 threads.
     __pthread_cond_signal; # Used by the C11 threads.
     __pthread_cond_timedwait; # Used by the C11 threads.
     __pthread_cond_wait; # Used by the C11 threads.
@@ -376,7 +377,6 @@ libpthread {
 
   # C11 thread symbols.
   GLIBC_2.28 {
-    cnd_init;
     cnd_signal;
     cnd_timedwait;
     cnd_wait;

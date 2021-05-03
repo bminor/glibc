@@ -69,7 +69,6 @@ GLIBC_2.18 sem_timedwait F
 GLIBC_2.18 sem_trywait F
 GLIBC_2.18 sem_unlink F
 GLIBC_2.18 sem_wait F
-GLIBC_2.28 cnd_init F
 GLIBC_2.28 cnd_signal F
 GLIBC_2.28 cnd_timedwait F
 GLIBC_2.28 cnd_wait F
