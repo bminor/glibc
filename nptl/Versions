@@ -93,13 +93,13 @@ libc {
     pthread_mutex_timedlock;
     pthread_mutexattr_getpshared;
     pthread_mutexattr_setpshared;
+    pthread_rwlock_timedrdlock;
+    pthread_rwlock_timedwrlock;
     pthread_spin_destroy;
     pthread_spin_init;
     pthread_spin_lock;
     pthread_spin_trylock;
     pthread_spin_unlock;
-    pthread_rwlock_timedrdlock;
-    pthread_rwlock_timedwrlock;
     pthread_yield;
   }
   GLIBC_2.2.3 {
