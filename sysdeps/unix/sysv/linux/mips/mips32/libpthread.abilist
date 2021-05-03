@@ -38,7 +38,6 @@ GLIBC_2.2 pthread_barrierattr_setpshared F
 GLIBC_2.2 pthread_create F
 GLIBC_2.2 pthread_getconcurrency F
 GLIBC_2.2 pthread_getcpuclockid F
-GLIBC_2.2 pthread_rwlockattr_getkind_np F
 GLIBC_2.2 pthread_rwlockattr_getpshared F
 GLIBC_2.2 pthread_rwlockattr_init F
 GLIBC_2.2 pthread_rwlockattr_setkind_np F

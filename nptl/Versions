@@ -74,6 +74,7 @@ libc {
     pthread_rwlock_unlock;
     pthread_rwlock_wrlock;
     pthread_rwlockattr_destroy;
+    pthread_rwlockattr_getkind_np;
   }
   GLIBC_2.2 {
     __pthread_rwlock_destroy;
@@ -228,6 +229,7 @@ libc {
     pthread_rwlock_unlock;
     pthread_rwlock_wrlock;
     pthread_rwlockattr_destroy;
+    pthread_rwlockattr_getkind_np;
     pthread_setspecific;
     pthread_spin_destroy;
     pthread_spin_init;
@@ -314,7 +316,6 @@ libpthread {
     pthread_attr_setstacksize;
     pthread_create;
     pthread_getconcurrency;
-    pthread_rwlockattr_getkind_np;
     pthread_rwlockattr_getpshared;
     pthread_rwlockattr_init;
     pthread_rwlockattr_setkind_np;
