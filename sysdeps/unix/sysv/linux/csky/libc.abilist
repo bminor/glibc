@@ -1951,6 +1951,7 @@ GLIBC_2.29 truncate64 F
 GLIBC_2.29 tsearch F
 GLIBC_2.29 tss_create F
 GLIBC_2.29 tss_delete F
+GLIBC_2.29 tss_get F
 GLIBC_2.29 ttyname F
 GLIBC_2.29 ttyname_r F
 GLIBC_2.29 ttyslot F
@@ -2197,7 +2198,6 @@ GLIBC_2.33 stat F
 GLIBC_2.33 stat64 F
 GLIBC_2.34 __libc_start_main F
 GLIBC_2.34 __pthread_cleanup_routine F
-GLIBC_2.34 __pthread_getspecific F
 GLIBC_2.34 __pthread_key_create F
 GLIBC_2.34 __pthread_mutex_lock F
 GLIBC_2.34 __pthread_mutex_unlock F
@@ -2256,3 +2256,4 @@ GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F
+GLIBC_2.34 tss_get F

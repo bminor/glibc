@@ -16,10 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <shlib-compat.h>
 #include "thrd_priv.h"
 
 void *
-tss_get (tss_t tss_id)
+__tss_get (tss_t tss_id)
 {
   return __pthread_getspecific (tss_id);
 }
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __tss_get, tss_get, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
+compat_symbol (libpthread, __tss_get, tss_get, GLIBC_2_28);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__tss_get, tss_get)
+#endif
