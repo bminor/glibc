@@ -200,6 +200,9 @@
    multiple symbol versions for one symbol.  */
 #define SYMVER_NEEDS_ALIAS 0
 
+/* Define to 1 if libpthread actually resides in libc.  */
+#define PTHREAD_IN_LIBC 0
+
 /*
  */
 
