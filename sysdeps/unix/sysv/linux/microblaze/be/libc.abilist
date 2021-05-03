@@ -1507,6 +1507,7 @@ GLIBC_2.18 pthread_once F
 GLIBC_2.18 pthread_rwlock_destroy F
 GLIBC_2.18 pthread_rwlock_init F
 GLIBC_2.18 pthread_rwlock_rdlock F
+GLIBC_2.18 pthread_rwlock_timedrdlock F
 GLIBC_2.18 pthread_rwlock_unlock F
 GLIBC_2.18 pthread_rwlock_wrlock F
 GLIBC_2.18 pthread_self F
@@ -2306,6 +2307,7 @@ GLIBC_2.34 pthread_rwlock_clockwrlock F
 GLIBC_2.34 pthread_rwlock_destroy F
 GLIBC_2.34 pthread_rwlock_init F
 GLIBC_2.34 pthread_rwlock_rdlock F
+GLIBC_2.34 pthread_rwlock_timedrdlock F
 GLIBC_2.34 pthread_rwlock_unlock F
 GLIBC_2.34 pthread_rwlock_wrlock F
 GLIBC_2.34 pthread_setspecific F

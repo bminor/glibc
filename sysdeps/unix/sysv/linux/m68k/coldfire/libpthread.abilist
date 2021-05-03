@@ -44,7 +44,6 @@ GLIBC_2.4 pthread_detach F
 GLIBC_2.4 pthread_getconcurrency F
 GLIBC_2.4 pthread_getcpuclockid F
 GLIBC_2.4 pthread_join F
-GLIBC_2.4 pthread_rwlock_timedrdlock F
 GLIBC_2.4 pthread_rwlock_timedwrlock F
 GLIBC_2.4 pthread_rwlock_tryrdlock F
 GLIBC_2.4 pthread_rwlock_trywrlock F

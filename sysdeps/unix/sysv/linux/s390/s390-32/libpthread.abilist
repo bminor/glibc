@@ -60,7 +60,6 @@ GLIBC_2.2 pthread_barrierattr_destroy F
 GLIBC_2.2 pthread_barrierattr_init F
 GLIBC_2.2 pthread_barrierattr_setpshared F
 GLIBC_2.2 pthread_getcpuclockid F
-GLIBC_2.2 pthread_rwlock_timedrdlock F
 GLIBC_2.2 pthread_rwlock_timedwrlock F
 GLIBC_2.2 pthread_yield F
 GLIBC_2.2 sem_timedwait F

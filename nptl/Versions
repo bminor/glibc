@@ -88,6 +88,7 @@ libc {
     pthread_spin_lock;
     pthread_spin_trylock;
     pthread_spin_unlock;
+    pthread_rwlock_timedrdlock;
   }
   GLIBC_2.2.3 {
     pthread_getattr_np;
@@ -214,6 +215,7 @@ libc {
     pthread_rwlock_clockwrlock;
     pthread_rwlock_destroy;
     pthread_rwlock_rdlock;
+    pthread_rwlock_timedrdlock;
     pthread_rwlock_unlock;
     pthread_rwlock_wrlock;
     pthread_setspecific;
@@ -341,7 +343,6 @@ libpthread {
     pthread_barrierattr_init;
     pthread_barrierattr_setpshared;
     pthread_getcpuclockid;
-    pthread_rwlock_timedrdlock;
     pthread_rwlock_timedwrlock;
     pthread_yield;
     sem_timedwait;
