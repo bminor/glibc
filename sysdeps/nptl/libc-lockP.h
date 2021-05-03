@@ -210,9 +210,15 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
   CLASS pthread_once_t NAME = PTHREAD_ONCE_INIT
 #endif
 
-/* Call handler iff the first call.  */
-#define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
+/* Call handler iff the first call.  Use a local call in libc, but the
+   global pthread_once symbol elsewhere.  */
+#if IS_IN (libc)
+# define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
   __pthread_once (&(ONCE_CONTROL), INIT_FUNCTION)
+#else
+# define __libc_once(ONCE_CONTROL, INIT_FUNCTION) \
+  pthread_once (&(ONCE_CONTROL), INIT_FUNCTION)
+#endif
 
 /* Get once control variable.  */
 #define __libc_once_get(ONCE_CONTROL)	((ONCE_CONTROL) != PTHREAD_ONCE_INIT)

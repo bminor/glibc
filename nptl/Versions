@@ -126,6 +126,7 @@ libc {
   }
   # C11 thread symbols.
   GLIBC_2.28 {
+    call_once;
     thrd_current;
     thrd_equal;
     thrd_sleep;
@@ -153,8 +154,8 @@ libc {
     __pthread_mutex_unlock;
     __pthread_mutexattr_init;
     __pthread_mutexattr_settype;
-    __pthread_once;
     __pthread_setspecific;
+    call_once;
     pthread_cond_clockwait;
     pthread_condattr_getclock;
     pthread_condattr_getpshared;
@@ -373,7 +374,6 @@ libpthread {
 
   # C11 thread symbols.
   GLIBC_2.28 {
-    call_once;
     cnd_broadcast;
     cnd_destroy;
     cnd_init;

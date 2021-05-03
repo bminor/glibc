@@ -593,6 +593,7 @@ GLIBC_2.32 bzero F
 GLIBC_2.32 c16rtomb F
 GLIBC_2.32 c32rtomb F
 GLIBC_2.32 cacheflush F
+GLIBC_2.32 call_once F
 GLIBC_2.32 calloc F
 GLIBC_2.32 canonicalize_file_name F
 GLIBC_2.32 capget F
@@ -2006,9 +2007,9 @@ GLIBC_2.34 __pthread_mutex_trylock F
 GLIBC_2.34 __pthread_mutex_unlock F
 GLIBC_2.34 __pthread_mutexattr_init F
 GLIBC_2.34 __pthread_mutexattr_settype F
-GLIBC_2.34 __pthread_once F
 GLIBC_2.34 __pthread_setspecific F
 GLIBC_2.34 __pthread_unwind_next F
+GLIBC_2.34 call_once F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F

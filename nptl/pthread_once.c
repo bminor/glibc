@@ -143,8 +143,10 @@ ___pthread_once (pthread_once_t *once_control, void (*init_routine) (void))
   else
     return __pthread_once_slow (once_control, init_routine);
 }
-versioned_symbol (libc, ___pthread_once, __pthread_once, GLIBC_2_34);
 libc_hidden_ver (___pthread_once, __pthread_once)
+#ifndef SHARED
+strong_alias (___pthread_once, __pthread_once)
+#endif
 
 versioned_symbol (libc, ___pthread_once, pthread_once, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
