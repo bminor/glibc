@@ -1323,6 +1323,7 @@ GLIBC_2.29 mtx_init F
 GLIBC_2.29 mtx_lock F
 GLIBC_2.29 mtx_timedlock F
 GLIBC_2.29 mtx_trylock F
+GLIBC_2.29 mtx_unlock F
 GLIBC_2.29 munlock F
 GLIBC_2.29 munlockall F
 GLIBC_2.29 munmap F
@@ -2211,6 +2212,7 @@ GLIBC_2.34 mtx_init F
 GLIBC_2.34 mtx_lock F
 GLIBC_2.34 mtx_timedlock F
 GLIBC_2.34 mtx_trylock F
+GLIBC_2.34 mtx_unlock F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F

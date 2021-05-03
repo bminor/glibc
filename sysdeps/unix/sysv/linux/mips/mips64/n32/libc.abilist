@@ -2036,6 +2036,7 @@ GLIBC_2.28 mtx_init F
 GLIBC_2.28 mtx_lock F
 GLIBC_2.28 mtx_timedlock F
 GLIBC_2.28 mtx_trylock F
+GLIBC_2.28 mtx_unlock F
 GLIBC_2.28 renameat2 F
 GLIBC_2.28 statx F
 GLIBC_2.28 thrd_current F
@@ -2251,6 +2252,7 @@ GLIBC_2.34 mtx_init F
 GLIBC_2.34 mtx_lock F
 GLIBC_2.34 mtx_timedlock F
 GLIBC_2.34 mtx_trylock F
+GLIBC_2.34 mtx_unlock F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F
