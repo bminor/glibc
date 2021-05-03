@@ -135,12 +135,25 @@ test_main (void)
       do_test (i, i, 256, 0);
 #endif
     }
+  for (i = 1; i < 8; ++i)
+    {
+      do_test (i, i << 5, 192, 23);
+      do_test (i, i << 5, 192, 0);
+      do_test (i, i << 5, 256, 23);
+      do_test (i, i << 5, 256, 0);
+      do_test (i, i << 5, 512, 23);
+      do_test (i, i << 5, 512, 0);
+    }
   for (i = 1; i < 32; ++i)
     {
       do_test (0, i, i + 1, 23);
       do_test (0, i, i + 1, 0);
       do_test (i, i, i + 1, 23);
       do_test (i, i, i + 1, 0);
+      do_test (0, i, i - 1, 23);
+      do_test (0, i, i - 1, 0);
+      do_test (i, i, i - 1, 23);
+      do_test (i, i, i - 1, 0);
 #ifdef USE_AS_MEMRCHR
       /* Also test the position close to the beginning for memrchr.  */
       do_test (0, 1, i + 1, 23);
