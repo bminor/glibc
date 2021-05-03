@@ -1545,6 +1545,7 @@ GLIBC_2.2 __pread64 F
 GLIBC_2.2 __pthread_rwlock_destroy F
 GLIBC_2.2 __pthread_rwlock_init F
 GLIBC_2.2 __pthread_rwlock_rdlock F
+GLIBC_2.2 __pthread_rwlock_tryrdlock F
 GLIBC_2.2 __pthread_rwlock_unlock F
 GLIBC_2.2 __pthread_rwlock_wrlock F
 GLIBC_2.2 __pwrite64 F
@@ -1846,6 +1847,7 @@ GLIBC_2.2 pthread_rwlock_init F
 GLIBC_2.2 pthread_rwlock_rdlock F
 GLIBC_2.2 pthread_rwlock_timedrdlock F
 GLIBC_2.2 pthread_rwlock_timedwrlock F
+GLIBC_2.2 pthread_rwlock_tryrdlock F
 GLIBC_2.2 pthread_rwlock_unlock F
 GLIBC_2.2 pthread_rwlock_wrlock F
 GLIBC_2.2 pthread_spin_destroy F
@@ -2291,6 +2293,7 @@ GLIBC_2.34 pthread_rwlock_init F
 GLIBC_2.34 pthread_rwlock_rdlock F
 GLIBC_2.34 pthread_rwlock_timedrdlock F
 GLIBC_2.34 pthread_rwlock_timedwrlock F
+GLIBC_2.34 pthread_rwlock_tryrdlock F
 GLIBC_2.34 pthread_rwlock_unlock F
 GLIBC_2.34 pthread_rwlock_wrlock F
 GLIBC_2.34 pthread_setspecific F

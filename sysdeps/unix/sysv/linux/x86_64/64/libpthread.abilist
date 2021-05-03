@@ -7,7 +7,6 @@ GLIBC_2.2.5 _IO_flockfile F
 GLIBC_2.2.5 _IO_ftrylockfile F
 GLIBC_2.2.5 _IO_funlockfile F
 GLIBC_2.2.5 __errno_location F
-GLIBC_2.2.5 __pthread_rwlock_tryrdlock F
 GLIBC_2.2.5 __pthread_rwlock_trywrlock F
 GLIBC_2.2.5 flockfile F
 GLIBC_2.2.5 ftrylockfile F
@@ -32,7 +31,6 @@ GLIBC_2.2.5 pthread_detach F
 GLIBC_2.2.5 pthread_getconcurrency F
 GLIBC_2.2.5 pthread_getcpuclockid F
 GLIBC_2.2.5 pthread_join F
-GLIBC_2.2.5 pthread_rwlock_tryrdlock F
 GLIBC_2.2.5 pthread_rwlock_trywrlock F
 GLIBC_2.2.5 pthread_rwlockattr_destroy F
 GLIBC_2.2.5 pthread_rwlockattr_getkind_np F

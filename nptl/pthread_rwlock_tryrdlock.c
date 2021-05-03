@@ -25,7 +25,7 @@
 
 /* See pthread_rwlock_common.c for an overview.  */
 int
-__pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
+___pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
 {
   /* For tryrdlock, we could speculate that we will succeed and go ahead and
      register as a reader.  However, if we misspeculate, we have to do the
@@ -116,4 +116,15 @@ __pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
 
 
 }
-strong_alias (__pthread_rwlock_tryrdlock, pthread_rwlock_tryrdlock)
+versioned_symbol (libc, ___pthread_rwlock_tryrdlock,
+		  pthread_rwlock_tryrdlock, GLIBC_2_34);
+libc_hidden_ver (___pthread_rwlock_tryrdlock, __pthread_rwlock_tryrdlock)
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_rwlock_tryrdlock,
+	       pthread_rwlock_tryrdlock, GLIBC_2_1);
+#endif
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_rwlock_tryrdlock,
+	       __pthread_rwlock_tryrdlock, GLIBC_2_2);
+#endif

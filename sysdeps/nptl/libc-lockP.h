@@ -150,8 +150,6 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 # define __libc_lock_trylock(NAME) \
   __libc_maybe_call (__pthread_mutex_trylock, (&(NAME)), 0)
 #endif
-#define __libc_rwlock_tryrdlock(NAME) \
-  __libc_maybe_call (__pthread_rwlock_tryrdlock, (&(NAME)), 0)
 #define __libc_rwlock_trywrlock(NAME) \
   __libc_maybe_call (__pthread_rwlock_trywrlock, (&(NAME)), 0)
 
@@ -268,7 +266,6 @@ extern int __pthread_rwlock_destroy (pthread_rwlock_t *__rwlock);
 
 extern int __pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock);
 libc_hidden_proto (__pthread_rwlock_rdlock)
-extern int __pthread_rwlock_tryrdlock (pthread_rwlock_t *__rwlock);
 
 extern int __pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock);
 libc_hidden_proto (__pthread_rwlock_wrlock)
@@ -293,14 +290,12 @@ libc_hidden_proto (__pthread_setcancelstate)
 # ifdef weak_extern
 weak_extern (__pthread_mutex_trylock)
 weak_extern (__pthread_mutexattr_destroy)
-weak_extern (__pthread_rwlock_tryrdlock)
 weak_extern (__pthread_rwlock_trywrlock)
 weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 # else
 #  pragma weak __pthread_mutex_trylock
 #  pragma weak __pthread_mutexattr_destroy
-#  pragma weak __pthread_rwlock_tryrdlock
 #  pragma weak __pthread_rwlock_trywrlock
 #  pragma weak __pthread_initialize
 #  pragma weak __pthread_atfork
