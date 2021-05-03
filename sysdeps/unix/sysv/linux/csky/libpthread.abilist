@@ -42,7 +42,6 @@ GLIBC_2.29 pthread_sigqueue F
 GLIBC_2.29 pthread_testcancel F
 GLIBC_2.29 pthread_timedjoin_np F
 GLIBC_2.29 pthread_tryjoin_np F
-GLIBC_2.29 pthread_yield F
 GLIBC_2.29 sem_close F
 GLIBC_2.29 sem_destroy F
 GLIBC_2.29 sem_getvalue F

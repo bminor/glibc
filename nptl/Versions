@@ -100,6 +100,7 @@ libc {
     pthread_spin_unlock;
     pthread_rwlock_timedrdlock;
     pthread_rwlock_timedwrlock;
+    pthread_yield;
   }
   GLIBC_2.2.3 {
     pthread_getattr_np;
@@ -354,6 +355,8 @@ libpthread {
     pthread_barrierattr_setpshared;
     pthread_getcpuclockid;
     pthread_yield;
+    pthread_rwlock_timedrdlock;
+    pthread_rwlock_timedwrlock;
     sem_timedwait;
   }
 

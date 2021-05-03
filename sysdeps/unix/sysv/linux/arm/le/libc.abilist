@@ -1715,6 +1715,7 @@ GLIBC_2.4 pthread_spin_init F
 GLIBC_2.4 pthread_spin_lock F
 GLIBC_2.4 pthread_spin_trylock F
 GLIBC_2.4 pthread_spin_unlock F
+GLIBC_2.4 pthread_yield F
 GLIBC_2.4 ptrace F
 GLIBC_2.4 ptsname F
 GLIBC_2.4 ptsname_r F

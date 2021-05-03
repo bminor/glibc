@@ -454,11 +454,14 @@ extern int pthread_setconcurrency (int __level) __THROW;
 #endif
 
 #ifdef __USE_GNU
-/* Yield the processor to another thread or process.
-   This function is similar to the POSIX `sched_yield' function but
-   might be differently implemented in the case of a m-on-n thread
-   implementation.  */
 extern int pthread_yield (void) __THROW;
+# ifdef __REDIRECT_NTH
+extern int __REDIRECT_NTH (pthread_yield, (void), sched_yield)
+  __attribute_deprecated_msg__ ("\
+pthread_yield is deprecated, use sched_yield instead");
+# else
+#  define pthread_yield sched_yield
+# endif
 
 
 /* Limit specified thread TH to run only on the processors represented

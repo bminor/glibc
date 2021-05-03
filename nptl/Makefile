@@ -148,6 +148,7 @@ routines = \
   pthread_spin_lock \
   pthread_spin_trylock \
   pthread_spin_unlock \
+  pthread_yield \
   tpp \
   unwind \
 
@@ -201,7 +202,6 @@ libpthread-routines = \
   pthread_testcancel \
   pthread_timedjoin \
   pthread_tryjoin \
-  pthread_yield \
   sem_clockwait \
   sem_close \
   sem_destroy \

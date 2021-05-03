@@ -32,6 +32,9 @@ Deprecated and removed features, and other changes affecting compatibility:
   programs should use the equivalent standard function
   pthread_mutexattr_setrobust instead.
 
+* The function pthread_yield has been deprecated; programs should use
+  the equivalent standard function sched_yield instead.
+
 Changes to build and runtime requirements:
 
 * On Linux, the shm_open, sem_open, and related functions now expect the
