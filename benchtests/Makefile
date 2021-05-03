@@ -28,6 +28,10 @@ bench-math := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2   \
 	      exp10f ilogb ilogbf cbrt erf erfc exp10 expm1 j0 j1 lgamma    \
 	      log10 log1p tgamma y0 y1 atan2
 
+ifneq (,$(filter yes,$(float96-fcts)))
+bench-math += cbrtl
+endif
+
 ifneq (,$(filter yes,$(float128-fcts) $(float128-alias-fcts)))
 bench-math += expf128 powf128 sinf128 ilogbf128
 endif
