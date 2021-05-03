@@ -144,6 +144,7 @@ libc {
     thrd_exit;
     thrd_sleep;
     thrd_yield;
+    tss_create;
   }
   GLIBC_2.30 {
     pthread_cond_clockwait;
@@ -212,6 +213,7 @@ libc {
     pthread_spin_trylock;
     pthread_spin_unlock;
     thrd_exit;
+    tss_create;
   }
   GLIBC_PRIVATE {
     __futex_abstimed_wait64;
@@ -391,7 +393,6 @@ libpthread {
     thrd_create;
     thrd_detach;
     thrd_join;
-    tss_create;
     tss_delete;
     tss_get;
     tss_set;

@@ -2210,6 +2210,7 @@ GLIBC_2.28 thrd_equal F
 GLIBC_2.28 thrd_exit F
 GLIBC_2.28 thrd_sleep F
 GLIBC_2.28 thrd_yield F
+GLIBC_2.28 tss_create F
 GLIBC_2.29 getcpu F
 GLIBC_2.29 posix_spawn_file_actions_addchdir_np F
 GLIBC_2.29 posix_spawn_file_actions_addfchdir_np F
@@ -2303,3 +2304,4 @@ GLIBC_2.34 pthread_spin_lock F
 GLIBC_2.34 pthread_spin_trylock F
 GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.34 thrd_exit F
+GLIBC_2.34 tss_create F

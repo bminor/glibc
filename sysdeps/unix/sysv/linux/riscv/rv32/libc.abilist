@@ -1865,6 +1865,7 @@ GLIBC_2.33 tr_break F
 GLIBC_2.33 truncate F
 GLIBC_2.33 truncate64 F
 GLIBC_2.33 tsearch F
+GLIBC_2.33 tss_create F
 GLIBC_2.33 ttyname F
 GLIBC_2.33 ttyname_r F
 GLIBC_2.33 ttyslot F
@@ -2070,3 +2071,4 @@ GLIBC_2.34 pthread_spin_lock F
 GLIBC_2.34 pthread_spin_trylock F
 GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.34 thrd_exit F
+GLIBC_2.34 tss_create F

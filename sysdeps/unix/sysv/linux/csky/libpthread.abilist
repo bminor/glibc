@@ -72,7 +72,6 @@ GLIBC_2.29 sem_wait F
 GLIBC_2.29 thrd_create F
 GLIBC_2.29 thrd_detach F
 GLIBC_2.29 thrd_join F
-GLIBC_2.29 tss_create F
 GLIBC_2.29 tss_delete F
 GLIBC_2.29 tss_get F
 GLIBC_2.29 tss_set F
