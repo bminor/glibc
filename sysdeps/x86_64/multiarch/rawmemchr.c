@@ -26,7 +26,7 @@
 # undef __rawmemchr
 
 # define SYMBOL_NAME rawmemchr
-# include "ifunc-avx2.h"
+# include "ifunc-evex.h"
 
 libc_ifunc_redirected (__redirect_rawmemchr, __rawmemchr,
 		       IFUNC_SELECTOR ());

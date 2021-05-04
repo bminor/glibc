@@ -26,7 +26,7 @@
 # undef __wmemchr
 
 # define SYMBOL_NAME wmemchr
-# include "ifunc-avx2.h"
+# include "ifunc-evex.h"
 
 libc_ifunc_redirected (__redirect_wmemchr, __wmemchr, IFUNC_SELECTOR ());
 weak_alias (__wmemchr, wmemchr)
