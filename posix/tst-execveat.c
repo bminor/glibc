@@ -78,9 +78,12 @@ static int
 do_test (void)
 {
   DIR *dirp;
-  int fd, fd_out;
+  int fd;
+#ifdef O_PATH
+  int fd_out;
   char *tmp_dir, *symlink_name, *tmp_sh;
   struct stat64 st;
+#endif
 
   dirp = opendir ("/bin");
   if (dirp == NULL)
