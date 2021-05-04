@@ -77,7 +77,9 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c \
 		   strncmp-evex \
 		   strncpy-evex \
 		   strnlen-evex \
-		   strrchr-evex
+		   strrchr-evex \
+		   memchr-evex-rtm \
+		   rawmemchr-evex-rtm
 CFLAGS-varshift.c += -msse4
 CFLAGS-strcspn-c.c += -msse4
 CFLAGS-strpbrk-c.c += -msse4
@@ -110,7 +112,8 @@ sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c \
 		   wcsnlen-evex \
 		   wcsrchr-evex \
 		   wmemchr-evex \
-		   wmemcmp-evex-movbe
+		   wmemcmp-evex-movbe \
+		   wmemchr-evex-rtm
 endif
 
 ifeq ($(subdir),debug)

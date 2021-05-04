@@ -52,6 +52,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			       && CPU_FEATURE_USABLE (AVX512BW)
 			       && CPU_FEATURE_USABLE (BMI2)),
 			      __memchr_evex)
+	      IFUNC_IMPL_ADD (array, i, memchr,
+			      (CPU_FEATURE_USABLE (AVX512VL)
+			       && CPU_FEATURE_USABLE (AVX512BW)
+			       && CPU_FEATURE_USABLE (BMI2)),
+			      __memchr_evex_rtm)
 	      IFUNC_IMPL_ADD (array, i, memchr, 1, __memchr_sse2))
 
   /* Support sysdeps/x86_64/multiarch/memcmp.c.  */
@@ -288,6 +293,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			       && CPU_FEATURE_USABLE (AVX512BW)
 			       && CPU_FEATURE_USABLE (BMI2)),
 			      __rawmemchr_evex)
+	      IFUNC_IMPL_ADD (array, i, rawmemchr,
+			      (CPU_FEATURE_USABLE (AVX512VL)
+			       && CPU_FEATURE_USABLE (AVX512BW)
+			       && CPU_FEATURE_USABLE (BMI2)),
+			      __rawmemchr_evex_rtm)
 	      IFUNC_IMPL_ADD (array, i, rawmemchr, 1, __rawmemchr_sse2))
 
   /* Support sysdeps/x86_64/multiarch/strlen.c.  */
@@ -708,6 +718,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			       && CPU_FEATURE_USABLE (AVX512BW)
 			       && CPU_FEATURE_USABLE (BMI2)),
 			      __wmemchr_evex)
+	      IFUNC_IMPL_ADD (array, i, wmemchr,
+			      (CPU_FEATURE_USABLE (AVX512VL)
+			       && CPU_FEATURE_USABLE (AVX512BW)
+			       && CPU_FEATURE_USABLE (BMI2)),
+			      __wmemchr_evex_rtm)
 	      IFUNC_IMPL_ADD (array, i, wmemchr, 1, __wmemchr_sse2))
 
   /* Support sysdeps/x86_64/multiarch/wmemcmp.c.  */

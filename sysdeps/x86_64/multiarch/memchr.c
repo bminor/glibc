@@ -24,7 +24,7 @@
 # undef memchr
 
 # define SYMBOL_NAME memchr
-# include "ifunc-avx2.h"
+# include "ifunc-evex.h"
 
 libc_ifunc_redirected (__redirect_memchr, memchr, IFUNC_SELECTOR ());
 strong_alias (memchr, __memchr)
