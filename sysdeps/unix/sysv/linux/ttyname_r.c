@@ -26,7 +26,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <_itoa.h>
+#include <fd_to_filename.h>
 
 #include "ttyname.h"
 
@@ -92,7 +92,7 @@ getttyname_r (char *buf, size_t buflen, const struct stat64 *mytty,
 int
 __ttyname_r (int fd, char *buf, size_t buflen)
 {
-  char procname[30];
+  struct fd_to_filename filename;
   struct stat64 st, st1;
   int dostat = 0;
   int doispty = 0;
@@ -122,9 +122,7 @@ __ttyname_r (int fd, char *buf, size_t buflen)
     return errno;
 
   /* We try using the /proc filesystem.  */
-  *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';
-
-  ssize_t ret = __readlink (procname, buf, buflen - 1);
+  ssize_t ret = __readlink (__fd_to_filename (fd, &filename), buf, buflen - 1);
   if (__glibc_unlikely (ret == -1 && errno == ENAMETOOLONG))
     {
       __set_errno (ERANGE);
