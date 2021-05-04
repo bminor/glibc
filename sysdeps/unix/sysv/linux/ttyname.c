@@ -17,188 +17,42 @@
 
 #include <errno.h>
 #include <limits.h>
-#include <stddef.h>
-#include <dirent.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <termios.h>
-#include <unistd.h>
-#include <string.h>
 #include <stdlib.h>
-
-#include <_itoa.h>
 
 #include "ttyname.h"
 
-#if 0
-/* Is this used anywhere?  It is not exported.  */
-char *__ttyname;
-#endif
+static char *ttyname_buf = NULL;
 
-static char *getttyname (const char *dev, const struct stat64 *mytty,
-			 int save, int *dostat);
-
-libc_freeres_ptr (static char *getttyname_name);
-
-static char *
-attribute_compat_text_section
-getttyname (const char *dev, const struct stat64 *mytty, int save, int *dostat)
+libc_freeres_fn (free_mem)
 {
-  static size_t namelen;
-  struct stat64 st;
-  DIR *dirstream;
-  struct dirent64 *d;
-  size_t devlen = strlen (dev) + 1;
-
-  dirstream = __opendir (dev);
-  if (dirstream == NULL)
-    {
-      *dostat = -1;
-      return NULL;
-    }
-
-  /* Prepare for the loop.  If we already have a buffer copy the directory
-     name we look at into it.  */
-  if (devlen < namelen)
-    *((char *) __mempcpy (getttyname_name, dev, devlen - 1)) = '/';
-
-  while ((d = __readdir64 (dirstream)) != NULL)
-    if ((d->d_fileno == mytty->st_ino || *dostat)
-	&& strcmp (d->d_name, "stdin")
-	&& strcmp (d->d_name, "stdout")
-	&& strcmp (d->d_name, "stderr"))
-      {
-	size_t dlen = _D_ALLOC_NAMLEN (d);
-	if (devlen + dlen > namelen)
-	  {
-	    free (getttyname_name);
-	    namelen = 2 * (devlen + dlen); /* Big enough.  */
-	    getttyname_name = malloc (namelen);
-	    if (! getttyname_name)
-	      {
-		*dostat = -1;
-		/* Perhaps it helps to free the directory stream buffer.  */
-		(void) __closedir (dirstream);
-		return NULL;
-	      }
-	    *((char *) __mempcpy (getttyname_name, dev, devlen - 1)) = '/';
-	  }
-	memcpy (&getttyname_name[devlen], d->d_name, dlen);
-	if (__stat64 (getttyname_name, &st) == 0
-	    && is_mytty (mytty, &st))
-	  {
-	    (void) __closedir (dirstream);
-#if 0
-	    __ttyname = getttyname_name;
-#endif
-	    __set_errno (save);
-	    return getttyname_name;
-	  }
-      }
-
-  (void) __closedir (dirstream);
-  __set_errno (save);
-  return NULL;
+  free (ttyname_buf);
 }
-
-
-/* Static buffer in `ttyname'.  */
-libc_freeres_ptr (static char *ttyname_buf);
-
 
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
    The returned storage is good only until the next call to this function.  */
 char *
 ttyname (int fd)
 {
-  static size_t buflen;
-  char procname[30];
-  struct stat64 st, st1;
-  int dostat = 0;
-  int doispty = 0;
-  char *name;
-  int save = errno;
-  struct termios term;
-
   /* isatty check, tcgetattr is used because it sets the correct
-     errno (EBADF resp. ENOTTY) on error.  */
+     errno (EBADF resp. ENOTTY) on error.  Fast error path to avoid the
+     allocation  */
+  struct termios term;
   if (__glibc_unlikely (__tcgetattr (fd, &term) < 0))
     return NULL;
 
-  if (__fstat64 (fd, &st) < 0)
-    return NULL;
-
-  /* We try using the /proc filesystem.  */
-  *_fitoa_word (fd, __stpcpy (procname, "/proc/self/fd/"), 10, 0) = '\0';
-
-  if (buflen == 0)
+  if (ttyname_buf == NULL)
     {
-      buflen = 4095;
-      ttyname_buf = (char *) malloc (buflen + 1);
+      ttyname_buf = malloc (PATH_MAX);
       if (ttyname_buf == NULL)
-	{
-	  buflen = 0;
-	  return NULL;
-	}
-    }
-
-  ssize_t len = __readlink (procname, ttyname_buf, buflen);
-  if (__glibc_likely (len != -1))
-    {
-      if ((size_t) len >= buflen)
 	return NULL;
-
-#define UNREACHABLE_LEN strlen ("(unreachable)")
-      if (len > UNREACHABLE_LEN
-	  && memcmp (ttyname_buf, "(unreachable)", UNREACHABLE_LEN) == 0)
-	{
-	  memmove (ttyname_buf, ttyname_buf + UNREACHABLE_LEN,
-		   len - UNREACHABLE_LEN);
-	  len -= UNREACHABLE_LEN;
-	}
-
-      /* readlink need not terminate the string.  */
-      ttyname_buf[len] = '\0';
-
-      /* Verify readlink result, fall back on iterating through devices.  */
-      if (ttyname_buf[0] == '/'
-	  && __stat64 (ttyname_buf, &st1) == 0
-	  && is_mytty (&st, &st1))
-	return ttyname_buf;
-
-      doispty = 1;
     }
 
-  if (__stat64 ("/dev/pts", &st1) == 0 && S_ISDIR (st1.st_mode))
+  int result = __ttyname_r (fd, ttyname_buf, PATH_MAX);
+  if (result != 0)
     {
-      name = getttyname ("/dev/pts", &st, save, &dostat);
-    }
-  else
-    {
-      __set_errno (save);
-      name = NULL;
-    }
-
-  if (!name && dostat != -1)
-    {
-      name = getttyname ("/dev", &st, save, &dostat);
-    }
-
-  if (!name && dostat != -1)
-    {
-      dostat = 1;
-      name = getttyname ("/dev", &st, save, &dostat);
-    }
-
-  if (!name && doispty && is_pty (&st))
-    {
-      /* We failed to figure out the TTY's name, but we can at least
-         signal that we did verify that it really is a PTY slave.
-         This happens when we have inherited the file descriptor from
-         a different mount namespace.  */
-      __set_errno (ENODEV);
+      __set_errno (result);
       return NULL;
     }
-
-  return name;
+  return ttyname_buf;
 }

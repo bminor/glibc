@@ -194,5 +194,5 @@ __ttyname_r (int fd, char *buf, size_t buflen)
 
   return ret;
 }
-
+libc_hidden_def (__ttyname_r)
 weak_alias (__ttyname_r, ttyname_r)
