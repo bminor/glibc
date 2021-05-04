@@ -20,6 +20,7 @@
 
 #include <assert.h>
 #include <string.h>
+#include <_itoa.h>
 
 char *
 __fd_to_filename (int descriptor, struct fd_to_filename *storage)
@@ -28,11 +29,7 @@ __fd_to_filename (int descriptor, struct fd_to_filename *storage)
 
   char *p = mempcpy (storage->buffer, FD_TO_FILENAME_PREFIX,
                      strlen (FD_TO_FILENAME_PREFIX));
+  *_fitoa_word (descriptor, p, 10, 0) = '\0';
 
-  for (int d = descriptor; p++, (d /= 10) != 0; )
-    continue;
-  *p = '\0';
-  for (int d = descriptor; *--p = '0' + d % 10, (d /= 10) != 0; )
-    continue;
   return storage->buffer;
 }
