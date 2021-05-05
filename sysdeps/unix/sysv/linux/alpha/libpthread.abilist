@@ -9,8 +9,6 @@ GLIBC_2.0 pthread_cancel F
 GLIBC_2.0 pthread_create F
 GLIBC_2.0 pthread_detach F
 GLIBC_2.0 pthread_join F
-GLIBC_2.0 sem_trywait F
-GLIBC_2.0 sem_wait F
 GLIBC_2.1 pthread_attr_getguardsize F
 GLIBC_2.1 pthread_attr_getstackaddr F
 GLIBC_2.1 pthread_attr_getstacksize F
@@ -20,8 +18,6 @@ GLIBC_2.1 pthread_attr_setstacksize F
 GLIBC_2.1 pthread_create F
 GLIBC_2.1 pthread_getconcurrency F
 GLIBC_2.1 pthread_setconcurrency F
-GLIBC_2.1 sem_trywait F
-GLIBC_2.1 sem_wait F
 GLIBC_2.1.1 __libpthread_version_placeholder F
 GLIBC_2.1.2 __libpthread_version_placeholder F
 GLIBC_2.11 pthread_sigqueue F

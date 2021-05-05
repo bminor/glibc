@@ -9,8 +9,6 @@ GLIBC_2.0 pthread_cancel F
 GLIBC_2.0 pthread_create F
 GLIBC_2.0 pthread_detach F
 GLIBC_2.0 pthread_join F
-GLIBC_2.0 sem_trywait F
-GLIBC_2.0 sem_wait F
 GLIBC_2.11 pthread_sigqueue F
 GLIBC_2.12 pthread_getname_np F
 GLIBC_2.12 pthread_setname_np F
@@ -34,8 +32,6 @@ GLIBC_2.2 pthread_create F
 GLIBC_2.2 pthread_getconcurrency F
 GLIBC_2.2 pthread_getcpuclockid F
 GLIBC_2.2 pthread_setconcurrency F
-GLIBC_2.2 sem_trywait F
-GLIBC_2.2 sem_wait F
 GLIBC_2.2.3 __libpthread_version_placeholder F
 GLIBC_2.2.6 __libpthread_version_placeholder F
 GLIBC_2.28 thrd_create F

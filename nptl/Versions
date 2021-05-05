@@ -66,6 +66,8 @@ libc {
     sem_getvalue;
     sem_init;
     sem_post;
+    sem_trywait;
+    sem_wait;
   }
   GLIBC_2.1 {
     pthread_attr_init;
@@ -88,6 +90,8 @@ libc {
     sem_getvalue;
     sem_init;
     sem_post;
+    sem_trywait;
+    sem_wait;
   }
   GLIBC_2.1.1 {
     sem_close;
@@ -270,7 +274,9 @@ libc {
     sem_open;
     sem_post;
     sem_timedwait;
+    sem_trywait;
     sem_unlink;
+    sem_wait;
     thrd_exit;
     tss_create;
     tss_delete;
@@ -336,8 +342,6 @@ libpthread {
     pthread_detach;
     pthread_join;
     pthread_sigmask;
-    sem_trywait;
-    sem_wait;
   }
 
   GLIBC_2.1 {
@@ -350,8 +354,6 @@ libpthread {
     pthread_create;
     pthread_getconcurrency;
     pthread_setconcurrency;
-    sem_trywait;
-    sem_wait;
   }
 
   GLIBC_2.1.1 {

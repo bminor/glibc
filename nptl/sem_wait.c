@@ -43,9 +43,13 @@ __new_sem_wait (sem_t *sem)
     return __new_sem_wait_slow64 ((struct new_sem *) sem,
 				  CLOCK_REALTIME, NULL);
 }
-versioned_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);
+versioned_symbol (libc, __new_sem_wait, sem_wait, GLIBC_2_34);
 
-#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);
+#endif
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
 int
 attribute_compat_text_section
 __old_sem_wait (sem_t *sem)
@@ -80,8 +84,13 @@ __new_sem_trywait (sem_t *sem)
   __set_errno (EAGAIN);
   return -1;
 }
-versioned_symbol (libpthread, __new_sem_trywait, sem_trywait, GLIBC_2_1);
-#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
+versioned_symbol (libc, __new_sem_trywait, sem_trywait, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, __new_sem_trywait, sem_trywait, GLIBC_2_1);
+#endif
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
 int
 __old_sem_trywait (sem_t *sem)
 {

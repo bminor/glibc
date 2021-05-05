@@ -1673,7 +1673,9 @@ GLIBC_2.16 sem_init F
 GLIBC_2.16 sem_open F
 GLIBC_2.16 sem_post F
 GLIBC_2.16 sem_timedwait F
+GLIBC_2.16 sem_trywait F
 GLIBC_2.16 sem_unlink F
+GLIBC_2.16 sem_wait F
 GLIBC_2.16 semctl F
 GLIBC_2.16 semget F
 GLIBC_2.16 semop F
@@ -2378,7 +2380,9 @@ GLIBC_2.34 sem_init F
 GLIBC_2.34 sem_open F
 GLIBC_2.34 sem_post F
 GLIBC_2.34 sem_timedwait F
+GLIBC_2.34 sem_trywait F
 GLIBC_2.34 sem_unlink F
+GLIBC_2.34 sem_wait F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F
