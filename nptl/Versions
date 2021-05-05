@@ -92,6 +92,7 @@ libc {
   GLIBC_2.1.1 {
     sem_close;
     sem_open;
+    sem_unlink;
   }
   GLIBC_2.2 {
     __pthread_rwlock_destroy;
@@ -269,6 +270,7 @@ libc {
     sem_open;
     sem_post;
     sem_timedwait;
+    sem_unlink;
     thrd_exit;
     tss_create;
     tss_delete;
@@ -353,7 +355,7 @@ libpthread {
   }
 
   GLIBC_2.1.1 {
-    sem_unlink;
+    __libpthread_version_placeholder;
   }
 
   GLIBC_2.1.2 {

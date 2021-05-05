@@ -1691,6 +1691,7 @@ GLIBC_2.1.1 imaxabs F
 GLIBC_2.1.1 imaxdiv F
 GLIBC_2.1.1 sem_close F
 GLIBC_2.1.1 sem_open F
+GLIBC_2.1.1 sem_unlink F
 GLIBC_2.1.1 strchrnul F
 GLIBC_2.1.1 xdr_hyper F
 GLIBC_2.1.1 xdr_int64_t F
@@ -2396,6 +2397,7 @@ GLIBC_2.34 sem_init F
 GLIBC_2.34 sem_open F
 GLIBC_2.34 sem_post F
 GLIBC_2.34 sem_timedwait F
+GLIBC_2.34 sem_unlink F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

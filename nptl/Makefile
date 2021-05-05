@@ -159,6 +159,7 @@ routines = \
   sem_post \
   sem_routines \
   sem_timedwait \
+  sem_unlink \
   tpp \
   unwind \
 
@@ -210,7 +211,6 @@ libpthread-routines = \
   pthread_sigqueue \
   pthread_timedjoin \
   pthread_tryjoin \
-  sem_unlink \
   sem_wait \
   vars \
   version \

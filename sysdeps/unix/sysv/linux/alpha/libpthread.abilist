@@ -22,7 +22,7 @@ GLIBC_2.1 pthread_getconcurrency F
 GLIBC_2.1 pthread_setconcurrency F
 GLIBC_2.1 sem_trywait F
 GLIBC_2.1 sem_wait F
-GLIBC_2.1.1 sem_unlink F
+GLIBC_2.1.1 __libpthread_version_placeholder F
 GLIBC_2.1.2 __libpthread_version_placeholder F
 GLIBC_2.11 pthread_sigqueue F
 GLIBC_2.12 pthread_getname_np F

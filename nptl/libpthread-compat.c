@@ -36,6 +36,10 @@ __libpthread_version_placeholder_1 (void)
    version or later, the placeholder symbol is not needed because
    there are plenty of other symbols which populate those later
    versions.  */
+#if (SHLIB_COMPAT (libpthread, GLIBC_2_1_1, GLIBC_2_1_2))
+compat_symbol (libpthread, __libpthread_version_placeholder_1,
+	       __libpthread_version_placeholder, GLIBC_2_1_1);
+#endif
 #if (SHLIB_COMPAT (libpthread, GLIBC_2_1_2, GLIBC_2_2))
 compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_1_2);

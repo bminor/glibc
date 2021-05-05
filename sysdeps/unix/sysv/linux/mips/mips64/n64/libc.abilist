@@ -1893,6 +1893,7 @@ GLIBC_2.2 sem_init F
 GLIBC_2.2 sem_open F
 GLIBC_2.2 sem_post F
 GLIBC_2.2 sem_timedwait F
+GLIBC_2.2 sem_unlink F
 GLIBC_2.2 sendfile F
 GLIBC_2.2 setrlimit64 F
 GLIBC_2.2 setutxent F
@@ -2343,6 +2344,7 @@ GLIBC_2.34 sem_init F
 GLIBC_2.34 sem_open F
 GLIBC_2.34 sem_post F
 GLIBC_2.34 sem_timedwait F
+GLIBC_2.34 sem_unlink F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

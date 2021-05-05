@@ -24,8 +24,13 @@
 #include "semaphoreP.h"
 #include <shm-directory.h>
 
+#if !PTHREAD_IN_LIBC
+/* The private name is not exported from libc.  */
+# define __unlink unlink
+#endif
+
 int
-sem_unlink (const char *name)
+__sem_unlink (const char *name)
 {
   struct shmdir_name dirname;
   if (__shm_get_name (&dirname, name, true) != 0)
@@ -35,8 +40,16 @@ sem_unlink (const char *name)
     }
 
   /* Now try removing it.  */
-  int ret = unlink (dirname.name);
+  int ret = __unlink (dirname.name);
   if (ret < 0 && errno == EPERM)
     __set_errno (EACCES);
   return ret;
 }
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __sem_unlink, sem_unlink, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1_1, GLIBC_2_34)
+compat_symbol (libpthread, __sem_unlink, sem_unlink, GLIBC_2_1_1);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__sem_unlink, sem_unlink)
+#endif

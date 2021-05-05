@@ -42,7 +42,6 @@ GLIBC_2.27 pthread_sigqueue F
 GLIBC_2.27 pthread_timedjoin_np F
 GLIBC_2.27 pthread_tryjoin_np F
 GLIBC_2.27 sem_trywait F
-GLIBC_2.27 sem_unlink F
 GLIBC_2.27 sem_wait F
 GLIBC_2.28 thrd_create F
 GLIBC_2.28 thrd_detach F
