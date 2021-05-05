@@ -39,7 +39,6 @@ GLIBC_2.16 pthread_setschedprio F
 GLIBC_2.16 pthread_sigqueue F
 GLIBC_2.16 pthread_timedjoin_np F
 GLIBC_2.16 pthread_tryjoin_np F
-GLIBC_2.16 sem_timedwait F
 GLIBC_2.16 sem_trywait F
 GLIBC_2.16 sem_unlink F
 GLIBC_2.16 sem_wait F

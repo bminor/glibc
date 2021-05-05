@@ -114,6 +114,7 @@ libc {
     pthread_spin_trylock;
     pthread_spin_unlock;
     pthread_yield;
+    sem_timedwait;
   }
   GLIBC_2.2.3 {
     pthread_getattr_np;
@@ -267,6 +268,7 @@ libc {
     sem_init;
     sem_open;
     sem_post;
+    sem_timedwait;
     thrd_exit;
     tss_create;
     tss_delete;
@@ -371,7 +373,6 @@ libpthread {
     pthread_yield;
     pthread_rwlock_timedrdlock;
     pthread_rwlock_timedwrlock;
-    sem_timedwait;
   }
 
   GLIBC_2.2.3 {

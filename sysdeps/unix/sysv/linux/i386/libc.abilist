@@ -2038,6 +2038,7 @@ GLIBC_2.2 rexec_af F
 GLIBC_2.2 rresvport_af F
 GLIBC_2.2 ruserok_af F
 GLIBC_2.2 scandir64 F
+GLIBC_2.2 sem_timedwait F
 GLIBC_2.2 semctl F
 GLIBC_2.2 setrlimit F
 GLIBC_2.2 shmctl F
@@ -2435,6 +2436,7 @@ GLIBC_2.34 sem_getvalue F
 GLIBC_2.34 sem_init F
 GLIBC_2.34 sem_open F
 GLIBC_2.34 sem_post F
+GLIBC_2.34 sem_timedwait F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

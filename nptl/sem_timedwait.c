@@ -24,7 +24,7 @@
 /* This is in a separate file because because sem_timedwait is only provided
    if __USE_XOPEN2K is defined.  */
 int
-__sem_timedwait64 (sem_t *sem, const struct __timespec64 *abstime)
+___sem_timedwait64 (sem_t *sem, const struct __timespec64 *abstime)
 {
   if (! valid_nanoseconds (abstime->tv_nsec))
     {
@@ -42,15 +42,23 @@ __sem_timedwait64 (sem_t *sem, const struct __timespec64 *abstime)
 				  CLOCK_REALTIME, abstime);
 }
 
-#if __TIMESIZE != 64
-libpthread_hidden_def (__sem_timedwait64)
+#if __TIMESIZE == 64
+strong_alias (___sem_timedwait64, ___sem_timedwait)
+#else /* __TIMESPEC64 != 64 */
+libc_hidden_ver (___sem_timedwait64, __sem_timedwait64)
+#ifndef SHARED
+strong_alias (___sem_timedwait64, __sem_timedwait64)
+#endif
 
 int
-__sem_timedwait (sem_t *sem, const struct timespec *abstime)
+___sem_timedwait (sem_t *sem, const struct timespec *abstime)
 {
   struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
 
   return __sem_timedwait64 (sem, &ts64);
 }
+#endif /* __TIMESPEC64 != 64 */
+versioned_symbol (libc, ___sem_timedwait, sem_timedwait, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, ___sem_timedwait, sem_timedwait, GLIBC_2_2);
 #endif
-weak_alias (__sem_timedwait, sem_timedwait)

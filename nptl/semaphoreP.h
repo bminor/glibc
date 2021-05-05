@@ -57,5 +57,5 @@ __sem_clockwait64 (sem_t *sem, clockid_t clockid,
 libc_hidden_proto (__sem_clockwait64)
 extern int
 __sem_timedwait64 (sem_t *sem, const struct __timespec64 *abstime);
-libpthread_hidden_proto (__sem_timedwait64)
+libc_hidden_proto (__sem_timedwait64)
 #endif
