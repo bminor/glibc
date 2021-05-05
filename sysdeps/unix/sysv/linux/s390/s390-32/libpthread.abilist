@@ -30,8 +30,6 @@ GLIBC_2.1 sem_init F
 GLIBC_2.1 sem_post F
 GLIBC_2.1 sem_trywait F
 GLIBC_2.1 sem_wait F
-GLIBC_2.1.1 sem_close F
-GLIBC_2.1.1 sem_open F
 GLIBC_2.1.1 sem_unlink F
 GLIBC_2.1.2 __libpthread_version_placeholder F
 GLIBC_2.11 pthread_sigqueue F

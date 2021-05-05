@@ -42,5 +42,6 @@ __shm_get_name (struct shmdir_name *result, const char *name, bool sem_prefix)
     return -1;
   return 0;
 }
+libc_hidden_def (__shm_get_name)
 
 #endif

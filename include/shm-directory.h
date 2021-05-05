@@ -37,5 +37,6 @@ struct shmdir_name
    SEM_PREFIX is true.  */
 int __shm_get_name (struct shmdir_name *result, const char *name,
 		    bool sem_prefix);
+libc_hidden_proto (__shm_get_name)
 
 #endif  /* shm-directory.h */

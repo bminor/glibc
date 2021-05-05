@@ -30,6 +30,7 @@ __mktemp (char *template)
 
   return template;
 }
+libc_hidden_def (__mktemp)
 weak_alias (__mktemp, mktemp)
 
 link_warning (mktemp, "the use of `mktemp' is dangerous, "

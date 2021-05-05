@@ -27,8 +27,14 @@
 #include <futex-internal.h>
 #include <libc-lock.h>
 
+#if !PTHREAD_IN_LIBC
+/* The private names are not exported from libc.  */
+# define __link link
+# define __unlink unlink
+#endif
+
 sem_t *
-sem_open (const char *name, int oflag, ...)
+__sem_open (const char *name, int oflag, ...)
 {
   int fd;
   sem_t *result;
@@ -59,8 +65,8 @@ sem_open (const char *name, int oflag, ...)
   if ((oflag & O_CREAT) == 0 || (oflag & O_EXCL) == 0)
     {
     try_again:
-      fd = open (dirname.name,
-		 (oflag & ~(O_CREAT|O_ACCMODE)) | O_NOFOLLOW | O_RDWR);
+      fd = __open (dirname.name,
+		   (oflag & ~(O_CREAT|O_ACCMODE)) | O_NOFOLLOW | O_RDWR);
 
       if (fd == -1)
 	{
@@ -127,7 +133,7 @@ sem_open (const char *name, int oflag, ...)
 	    }
 
 	  /* Open the file.  Make sure we do not overwrite anything.  */
-	  fd = open (tmpfname, O_RDWR | O_CREAT | O_EXCL, mode);
+	  fd = __open (tmpfname, O_RDWR | O_CREAT | O_EXCL, mode);
 	  if (fd == -1)
 	    {
 	      if (errno == EEXIST)
@@ -154,15 +160,15 @@ sem_open (const char *name, int oflag, ...)
       if (TEMP_FAILURE_RETRY (write (fd, &sem.initsem, sizeof (sem_t)))
 	  == sizeof (sem_t)
 	  /* Map the sem_t structure from the file.  */
-	  && (result = (sem_t *) mmap (NULL, sizeof (sem_t),
-				       PROT_READ | PROT_WRITE, MAP_SHARED,
-				       fd, 0)) != MAP_FAILED)
+	  && (result = (sem_t *) __mmap (NULL, sizeof (sem_t),
+					 PROT_READ | PROT_WRITE, MAP_SHARED,
+					 fd, 0)) != MAP_FAILED)
 	{
 	  /* Create the file.  Don't overwrite an existing file.  */
-	  if (link (tmpfname, dirname.name) != 0)
+	  if (__link (tmpfname, dirname.name) != 0)
 	    {
 	      /* Undo the mapping.  */
-	      (void) munmap (result, sizeof (sem_t));
+	      __munmap (result, sizeof (sem_t));
 
 	      /* Reinitialize 'result'.  */
 	      result = SEM_FAILED;
@@ -172,10 +178,10 @@ sem_open (const char *name, int oflag, ...)
 	      if ((oflag & O_EXCL) == 0 && errno == EEXIST)
 		{
 		  /* Remove the file.  */
-		  (void) unlink (tmpfname);
+		  __unlink (tmpfname);
 
 		  /* Close the file.  */
-		  close (fd);
+		  __close (fd);
 
 		  goto try_again;
 		}
@@ -189,7 +195,7 @@ sem_open (const char *name, int oflag, ...)
 
       /* Now remove the temporary name.  This should never fail.  If
 	 it fails we leak a file name.  Better fix the kernel.  */
-      (void) unlink (tmpfname);
+      __unlink (tmpfname);
     }
 
   /* Map the mmap error to the error we need.  */
@@ -201,7 +207,7 @@ sem_open (const char *name, int oflag, ...)
     {
       /* Do not disturb errno.  */
       int save = errno;
-      close (fd);
+      __close (fd);
       errno = save;
     }
 
@@ -212,3 +218,11 @@ out:
 
   return result;
 }
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __sem_open, sem_open, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1_1, GLIBC_2_34)
+compat_symbol (libpthread, __sem_open, sem_open, GLIBC_2_1_1);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__sem_open, sem_open)
+#endif

@@ -106,9 +106,9 @@ __sem_check_add_mapping (const char *name, int fd, sem_t *existing)
 	    {
 	      /* If the caller hasn't provided any map it now.  */
 	      if (existing == SEM_FAILED)
-		existing = (sem_t *) mmap (NULL, sizeof (sem_t),
-					   PROT_READ | PROT_WRITE, MAP_SHARED,
-					   fd, 0);
+		existing = (sem_t *) __mmap (NULL, sizeof (sem_t),
+					     PROT_READ | PROT_WRITE,
+					     MAP_SHARED, fd, 0);
 
 	      newp->dev = st.st_dev;
 	      newp->ino = st.st_ino;
@@ -136,7 +136,7 @@ __sem_check_add_mapping (const char *name, int fd, sem_t *existing)
     {
       /* Do not disturb errno.  */
       int save = errno;
-      munmap (existing, sizeof (sem_t));
+      __munmap (existing, sizeof (sem_t));
       errno = save;
     }
 
@@ -183,7 +183,7 @@ __sem_remove_mapping (sem_t *sem)
 	  /* Remove the record from the tree.  */
 	  __tdelete (rec, &sem_mappings, sem_search);
 
-	  if (munmap (rec->sem, sizeof (sem_t)) == -1)
+	  if (__munmap (rec->sem, sizeof (sem_t)) == -1)
 	    ret = false;
 
 	  free (rec);

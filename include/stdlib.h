@@ -91,6 +91,7 @@ extern int __setenv (const char *__name, const char *__value, int __replace)
 extern int __unsetenv (const char *__name) attribute_hidden;
 extern int __clearenv (void) attribute_hidden;
 extern char *__mktemp (char *__template) __THROW __nonnull ((1));
+libc_hidden_proto (__mktemp)
 extern char *__canonicalize_file_name (const char *__name);
 extern char *__realpath (const char *__name, char *__resolved);
 libc_hidden_proto (__realpath)

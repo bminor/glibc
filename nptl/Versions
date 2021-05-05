@@ -81,6 +81,10 @@ libc {
     pthread_rwlockattr_setkind_np;
     pthread_rwlockattr_setpshared;
   }
+  GLIBC_2.1.1 {
+    sem_close;
+    sem_open;
+  }
   GLIBC_2.2 {
     __pthread_rwlock_destroy;
     __pthread_rwlock_init;
@@ -249,6 +253,8 @@ libc {
     pthread_spin_unlock;
     pthread_testcancel;
     sem_clockwait;
+    sem_close;
+    sem_open;
     thrd_exit;
     tss_create;
     tss_delete;
@@ -341,8 +347,6 @@ libpthread {
   }
 
   GLIBC_2.1.1 {
-    sem_close;
-    sem_open;
     sem_unlink;
   }
 

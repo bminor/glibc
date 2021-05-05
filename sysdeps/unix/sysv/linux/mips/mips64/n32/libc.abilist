@@ -1886,6 +1886,8 @@ GLIBC_2.2 rresvport_af F
 GLIBC_2.2 rtime F
 GLIBC_2.2 ruserok_af F
 GLIBC_2.2 scandir64 F
+GLIBC_2.2 sem_close F
+GLIBC_2.2 sem_open F
 GLIBC_2.2 sendfile F
 GLIBC_2.2 setrlimit64 F
 GLIBC_2.2 setutxent F
@@ -2331,6 +2333,8 @@ GLIBC_2.34 pthread_spin_trylock F
 GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.34 pthread_testcancel F
 GLIBC_2.34 sem_clockwait F
+GLIBC_2.34 sem_close F
+GLIBC_2.34 sem_open F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

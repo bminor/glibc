@@ -1683,6 +1683,8 @@ GLIBC_2.1.1 getutmp F
 GLIBC_2.1.1 getutmpx F
 GLIBC_2.1.1 imaxabs F
 GLIBC_2.1.1 imaxdiv F
+GLIBC_2.1.1 sem_close F
+GLIBC_2.1.1 sem_open F
 GLIBC_2.1.1 strchrnul F
 GLIBC_2.1.1 xdr_hyper F
 GLIBC_2.1.1 xdr_int64_t F
@@ -2362,6 +2364,8 @@ GLIBC_2.34 pthread_spin_trylock F
 GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.34 pthread_testcancel F
 GLIBC_2.34 sem_clockwait F
+GLIBC_2.34 sem_close F
+GLIBC_2.34 sem_open F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F
