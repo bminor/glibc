@@ -41,7 +41,6 @@ GLIBC_2.18 pthread_setschedprio F
 GLIBC_2.18 pthread_sigqueue F
 GLIBC_2.18 pthread_timedjoin_np F
 GLIBC_2.18 pthread_tryjoin_np F
-GLIBC_2.18 sem_getvalue F
 GLIBC_2.18 sem_init F
 GLIBC_2.18 sem_post F
 GLIBC_2.18 sem_timedwait F

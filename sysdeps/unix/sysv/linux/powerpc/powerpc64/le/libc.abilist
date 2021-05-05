@@ -1750,6 +1750,7 @@ GLIBC_2.17 seekdir F
 GLIBC_2.17 select F
 GLIBC_2.17 sem_close F
 GLIBC_2.17 sem_destroy F
+GLIBC_2.17 sem_getvalue F
 GLIBC_2.17 sem_open F
 GLIBC_2.17 semctl F
 GLIBC_2.17 semget F
@@ -2549,6 +2550,7 @@ GLIBC_2.34 pthread_testcancel F
 GLIBC_2.34 sem_clockwait F
 GLIBC_2.34 sem_close F
 GLIBC_2.34 sem_destroy F
+GLIBC_2.34 sem_getvalue F
 GLIBC_2.34 sem_open F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F

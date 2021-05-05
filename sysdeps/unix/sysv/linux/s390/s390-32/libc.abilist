@@ -987,6 +987,7 @@ GLIBC_2.0 seed48_r F
 GLIBC_2.0 seekdir F
 GLIBC_2.0 select F
 GLIBC_2.0 sem_destroy F
+GLIBC_2.0 sem_getvalue F
 GLIBC_2.0 semctl F
 GLIBC_2.0 semget F
 GLIBC_2.0 semop F
@@ -1599,6 +1600,7 @@ GLIBC_2.1 readdir64_r F
 GLIBC_2.1 rtime F
 GLIBC_2.1 scandir64 F
 GLIBC_2.1 sem_destroy F
+GLIBC_2.1 sem_getvalue F
 GLIBC_2.1 sendfile F
 GLIBC_2.1 setrlimit64 F
 GLIBC_2.1 setutxent F
@@ -2393,6 +2395,7 @@ GLIBC_2.34 pthread_testcancel F
 GLIBC_2.34 sem_clockwait F
 GLIBC_2.34 sem_close F
 GLIBC_2.34 sem_destroy F
+GLIBC_2.34 sem_getvalue F
 GLIBC_2.34 sem_open F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F

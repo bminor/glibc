@@ -63,6 +63,7 @@ libc {
     pthread_sigmask;
     pthread_testcancel;
     sem_destroy;
+    sem_getvalue;
   }
   GLIBC_2.1 {
     pthread_attr_init;
@@ -82,6 +83,7 @@ libc {
     pthread_rwlockattr_setkind_np;
     pthread_rwlockattr_setpshared;
     sem_destroy;
+    sem_getvalue;
   }
   GLIBC_2.1.1 {
     sem_close;
@@ -257,6 +259,7 @@ libc {
     sem_clockwait;
     sem_close;
     sem_destroy;
+    sem_getvalue;
     sem_open;
     thrd_exit;
     tss_create;
@@ -323,7 +326,6 @@ libpthread {
     pthread_detach;
     pthread_join;
     pthread_sigmask;
-    sem_getvalue;
     sem_init;
     sem_post;
     sem_trywait;
@@ -340,7 +342,6 @@ libpthread {
     pthread_create;
     pthread_getconcurrency;
     pthread_setconcurrency;
-    sem_getvalue;
     sem_init;
     sem_post;
     sem_trywait;

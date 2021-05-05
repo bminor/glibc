@@ -47,7 +47,6 @@ GLIBC_2.4 pthread_setconcurrency F
 GLIBC_2.4 pthread_setschedprio F
 GLIBC_2.4 pthread_timedjoin_np F
 GLIBC_2.4 pthread_tryjoin_np F
-GLIBC_2.4 sem_getvalue F
 GLIBC_2.4 sem_init F
 GLIBC_2.4 sem_post F
 GLIBC_2.4 sem_timedwait F
