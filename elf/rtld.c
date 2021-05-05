@@ -1139,7 +1139,9 @@ dl_main (const ElfW(Phdr) *phdr,
   struct dl_main_state state;
   dl_main_state_init (&state);
 
+#if !THREAD_GSCOPE_IN_TCB
   GL(dl_init_static_tls) = &_dl_nothread_init_static_tls;
+#endif
 
 #if defined SHARED && defined _LIBC_REENTRANT \
     && defined __rtld_lock_default_lock_recursive

@@ -951,38 +951,3 @@ __reclaim_stacks (void)
   GL (dl_stack_cache_lock) = LLL_LOCK_INITIALIZER;
   __default_pthread_attr_lock = LLL_LOCK_INITIALIZER;
 }
-
-
-static inline void __attribute__((always_inline))
-init_one_static_tls (struct pthread *curp, struct link_map *map)
-{
-# if TLS_TCB_AT_TP
-  void *dest = (char *) curp - map->l_tls_offset;
-# elif TLS_DTV_AT_TP
-  void *dest = (char *) curp + map->l_tls_offset + TLS_PRE_TCB_SIZE;
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
-
-  /* Initialize the memory.  */
-  memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
-	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
-}
-
-void
-attribute_hidden
-__pthread_init_static_tls (struct link_map *map)
-{
-  lll_lock (GL (dl_stack_cache_lock), LLL_PRIVATE);
-
-  /* Iterate over the list with system-allocated threads first.  */
-  list_t *runp;
-  list_for_each (runp, &GL (dl_stack_used))
-    init_one_static_tls (list_entry (runp, struct pthread, list), map);
-
-  /* Now the list with threads using user-allocated stacks.  */
-  list_for_each (runp, &GL (dl_stack_user))
-    init_one_static_tls (list_entry (runp, struct pthread, list), map);
-
-  lll_unlock (GL (dl_stack_cache_lock), LLL_PRIVATE);
-}

@@ -191,8 +191,6 @@ __pthread_initialize_minimal_internal (void)
   GL(dl_make_stack_executable_hook) = &__make_stacks_executable;
 #endif
 
-  GL(dl_init_static_tls) = &__pthread_init_static_tls;
-
   /* Register the fork generation counter with the libc.  */
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
   __libc_multiple_threads_ptr =

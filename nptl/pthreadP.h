@@ -381,8 +381,6 @@ extern int __pthread_multiple_threads attribute_hidden;
 extern int *__libc_multiple_threads_ptr attribute_hidden;
 #endif
 
-extern void __pthread_init_static_tls (struct link_map *) attribute_hidden;
-
 extern size_t __pthread_get_minstack (const pthread_attr_t *attr);
 
 /* Namespace save aliases.  */

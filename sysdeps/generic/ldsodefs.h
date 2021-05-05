@@ -464,7 +464,9 @@ struct rtld_global
   /* Generation counter for the dtv.  */
   EXTERN size_t _dl_tls_generation;
 
+#if !THREAD_GSCOPE_IN_TCB
   EXTERN void (*_dl_init_static_tls) (struct link_map *);
+#endif
 
   /* Scopes to free after next THREAD_GSCOPE_WAIT ().  */
   EXTERN struct dl_scope_free_list
@@ -1269,6 +1271,23 @@ extern void _dl_non_dynamic_init (void)
 /* Used by static binaries to check the auxiliary vector.  */
 extern void _dl_aux_init (ElfW(auxv_t) *av)
      attribute_hidden;
+
+/* Initialize the static TLS space for the link map in all existing
+   threads. */
+#if THREAD_GSCOPE_IN_TCB
+void _dl_init_static_tls (struct link_map *map) attribute_hidden;
+#endif
+static inline void
+dl_init_static_tls (struct link_map *map)
+{
+#if THREAD_GSCOPE_IN_TCB
+  /* The stack list is available to ld.so, so the initialization can
+     be handled within ld.so directly.  */
+  _dl_init_static_tls (map);
+#else
+  GL (dl_init_static_tls) (map);
+#endif
+}
 
 /* Return true if the ld.so copy in this namespace is actually active
    and working.  If false, the dl_open/dlfcn hooks have to be used to

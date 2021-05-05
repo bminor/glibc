@@ -138,8 +138,6 @@ void *_dl_random;
 #include <dl-procruntime.c>
 #include <dl-procinfo.c>
 
-void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
-
 size_t _dl_pagesize = EXEC_PAGESIZE;
 
 size_t _dl_minsigstacksize = CONSTANT_MINSIGSTKSZ;
@@ -197,6 +195,7 @@ list_t _dl_stack_user;
 int _dl_stack_cache_lock;
 #else
 int _dl_thread_gscope_count;
+void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
 #endif
 struct dl_scope_free_list *_dl_scope_free_list;
 
