@@ -41,7 +41,6 @@ GLIBC_2.27 pthread_setschedprio F
 GLIBC_2.27 pthread_sigqueue F
 GLIBC_2.27 pthread_timedjoin_np F
 GLIBC_2.27 pthread_tryjoin_np F
-GLIBC_2.27 sem_post F
 GLIBC_2.27 sem_timedwait F
 GLIBC_2.27 sem_trywait F
 GLIBC_2.27 sem_unlink F

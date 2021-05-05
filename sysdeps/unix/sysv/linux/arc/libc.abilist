@@ -1607,6 +1607,7 @@ GLIBC_2.32 sem_destroy F
 GLIBC_2.32 sem_getvalue F
 GLIBC_2.32 sem_init F
 GLIBC_2.32 sem_open F
+GLIBC_2.32 sem_post F
 GLIBC_2.32 semctl F
 GLIBC_2.32 semget F
 GLIBC_2.32 semop F
@@ -2117,6 +2118,7 @@ GLIBC_2.34 sem_destroy F
 GLIBC_2.34 sem_getvalue F
 GLIBC_2.34 sem_init F
 GLIBC_2.34 sem_open F
+GLIBC_2.34 sem_post F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F
