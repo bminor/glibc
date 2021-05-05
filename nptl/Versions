@@ -61,6 +61,7 @@ libc {
     pthread_setschedparam;
     pthread_setspecific;
     pthread_sigmask;
+    pthread_testcancel;
   }
   GLIBC_2.1 {
     pthread_attr_init;
@@ -245,6 +246,7 @@ libc {
     pthread_spin_lock;
     pthread_spin_trylock;
     pthread_spin_unlock;
+    pthread_testcancel;
     thrd_exit;
     tss_create;
     tss_delete;
@@ -284,6 +286,7 @@ libc {
     __pthread_keys;
     __pthread_mutex_unlock_usercnt;
     __pthread_setcancelstate;
+    __pthread_testcancel;
     __pthread_tpp_change_priority;
     __pthread_unwind;
     __sched_fifo_max_prio;
@@ -307,7 +310,6 @@ libpthread {
     pthread_detach;
     pthread_join;
     pthread_sigmask;
-    pthread_testcancel;
     sem_destroy;
     sem_getvalue;
     sem_init;

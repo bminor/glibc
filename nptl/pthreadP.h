@@ -570,6 +570,7 @@ libc_hidden_proto (__pthread_setcanceltype)
 extern int __pthread_enable_asynccancel (void) attribute_hidden;
 extern void __pthread_disable_asynccancel (int oldtype) attribute_hidden;
 extern void __pthread_testcancel (void);
+libc_hidden_proto (__pthread_testcancel)
 extern int __pthread_clockjoin_ex (pthread_t, void **, clockid_t,
 				   const struct __timespec64 *, bool)
   attribute_hidden;
@@ -579,7 +580,6 @@ libc_hidden_proto (__pthread_sigmask);
 
 #if IS_IN (libpthread)
 hidden_proto (__pthread_rwlock_unlock)
-hidden_proto (__pthread_testcancel)
 #endif
 
 extern int __pthread_cond_broadcast_2_0 (pthread_cond_2_0_t *cond);

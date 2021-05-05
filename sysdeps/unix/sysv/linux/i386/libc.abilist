@@ -898,6 +898,7 @@ GLIBC_2.0 pthread_setcanceltype F
 GLIBC_2.0 pthread_setschedparam F
 GLIBC_2.0 pthread_setspecific F
 GLIBC_2.0 pthread_sigmask F
+GLIBC_2.0 pthread_testcancel F
 GLIBC_2.0 ptrace F
 GLIBC_2.0 putc F
 GLIBC_2.0 putc_unlocked F
@@ -2415,6 +2416,7 @@ GLIBC_2.34 pthread_spin_init F
 GLIBC_2.34 pthread_spin_lock F
 GLIBC_2.34 pthread_spin_trylock F
 GLIBC_2.34 pthread_spin_unlock F
+GLIBC_2.34 pthread_testcancel F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

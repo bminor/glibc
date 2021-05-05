@@ -1532,6 +1532,7 @@ GLIBC_2.18 pthread_spin_init F
 GLIBC_2.18 pthread_spin_lock F
 GLIBC_2.18 pthread_spin_trylock F
 GLIBC_2.18 pthread_spin_unlock F
+GLIBC_2.18 pthread_testcancel F
 GLIBC_2.18 pthread_yield F
 GLIBC_2.18 ptrace F
 GLIBC_2.18 ptsname F
@@ -2338,6 +2339,7 @@ GLIBC_2.34 pthread_spin_init F
 GLIBC_2.34 pthread_spin_lock F
 GLIBC_2.34 pthread_spin_trylock F
 GLIBC_2.34 pthread_spin_unlock F
+GLIBC_2.34 pthread_testcancel F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

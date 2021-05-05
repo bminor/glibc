@@ -39,7 +39,6 @@ GLIBC_2.18 pthread_setconcurrency F
 GLIBC_2.18 pthread_setname_np F
 GLIBC_2.18 pthread_setschedprio F
 GLIBC_2.18 pthread_sigqueue F
-GLIBC_2.18 pthread_testcancel F
 GLIBC_2.18 pthread_timedjoin_np F
 GLIBC_2.18 pthread_tryjoin_np F
 GLIBC_2.18 sem_close F
