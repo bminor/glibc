@@ -23,7 +23,7 @@
 #include "sem_waitcommon.c"
 
 int
-__sem_clockwait64 (sem_t *sem, clockid_t clockid,
+___sem_clockwait64 (sem_t *sem, clockid_t clockid,
                    const struct __timespec64 *abstime)
 {
   /* Check that supplied clockid is one we support, even if we don't end up
@@ -46,15 +46,20 @@ __sem_clockwait64 (sem_t *sem, clockid_t clockid,
     return __new_sem_wait_slow64 ((struct new_sem *) sem, clockid, abstime);
 }
 
-#if __TIMESIZE != 64
-libpthread_hidden_def (__sem_clockwait64)
+#if __TIMESIZE == 64
+strong_alias (___sem_clockwait64, ___sem_clockwait)
+#else /* __TIMESPEC64 != 64 */
+libc_hidden_ver (___sem_clockwait64, __sem_clockwait64)
 
 int
-__sem_clockwait (sem_t *sem, clockid_t clockid, const struct timespec *abstime)
+___sem_clockwait (sem_t *sem, clockid_t clockid, const struct timespec *abstime)
 {
   struct __timespec64 ts64 = valid_timespec_to_timespec64 (*abstime);
 
   return __sem_clockwait64 (sem, clockid, &ts64);
 }
+#endif /* __TIMESPEC64 != 64 */
+versioned_symbol (libc, ___sem_clockwait, sem_clockwait, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_30, GLIBC_2_34)
+compat_symbol (libpthread, ___sem_clockwait, sem_clockwait, GLIBC_2_30);
 #endif
-weak_alias (__sem_clockwait, sem_clockwait)

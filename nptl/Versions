@@ -172,6 +172,7 @@ libc {
     pthread_mutex_clocklock;
     pthread_rwlock_clockrdlock;
     pthread_rwlock_clockwrlock;
+    sem_clockwait;
   }
   GLIBC_2.32 {
     pthread_attr_getsigmask_np;
@@ -247,6 +248,7 @@ libc {
     pthread_spin_trylock;
     pthread_spin_unlock;
     pthread_testcancel;
+    sem_clockwait;
     thrd_exit;
     tss_create;
     tss_delete;
@@ -421,7 +423,7 @@ libpthread {
   }
 
   GLIBC_2.30 {
-    sem_clockwait;
+    __libpthread_version_placeholder;
   }
 
   GLIBC_2.31 {

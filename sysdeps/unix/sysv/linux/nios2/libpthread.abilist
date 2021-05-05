@@ -54,5 +54,5 @@ GLIBC_2.21 sem_wait F
 GLIBC_2.28 thrd_create F
 GLIBC_2.28 thrd_detach F
 GLIBC_2.28 thrd_join F
-GLIBC_2.30 sem_clockwait F
+GLIBC_2.30 __libpthread_version_placeholder F
 GLIBC_2.31 pthread_clockjoin_np F

@@ -2291,6 +2291,7 @@ GLIBC_2.30 pthread_cond_clockwait F
 GLIBC_2.30 pthread_mutex_clocklock F
 GLIBC_2.30 pthread_rwlock_clockrdlock F
 GLIBC_2.30 pthread_rwlock_clockwrlock F
+GLIBC_2.30 sem_clockwait F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
 GLIBC_2.32 __libc_single_threaded D 0x1
@@ -2387,6 +2388,7 @@ GLIBC_2.34 pthread_spin_lock F
 GLIBC_2.34 pthread_spin_trylock F
 GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.34 pthread_testcancel F
+GLIBC_2.34 sem_clockwait F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

@@ -150,6 +150,7 @@ routines = \
   pthread_spin_unlock \
   pthread_testcancel \
   pthread_yield \
+  sem_clockwait \
   tpp \
   unwind \
 
@@ -201,7 +202,6 @@ libpthread-routines = \
   pthread_sigqueue \
   pthread_timedjoin \
   pthread_tryjoin \
-  sem_clockwait \
   sem_close \
   sem_destroy \
   sem_getvalue \

@@ -60,3 +60,8 @@ compat_symbol (libpthread, __libpthread_version_placeholder_1,
 compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_4);
 #endif
+
+#if (SHLIB_COMPAT (libpthread, GLIBC_2_30, GLIBC_2_31))
+compat_symbol (libpthread, __libpthread_version_placeholder_1,
+	       __libpthread_version_placeholder, GLIBC_2_30);
+#endif
