@@ -31,7 +31,6 @@ GLIBC_2.2.5 pthread_getconcurrency F
 GLIBC_2.2.5 pthread_getcpuclockid F
 GLIBC_2.2.5 pthread_join F
 GLIBC_2.2.5 pthread_setconcurrency F
-GLIBC_2.2.5 sem_destroy F
 GLIBC_2.2.5 sem_getvalue F
 GLIBC_2.2.5 sem_init F
 GLIBC_2.2.5 sem_post F
