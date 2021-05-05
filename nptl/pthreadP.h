@@ -567,8 +567,6 @@ libc_hidden_proto (__pthread_exit)
 extern int __pthread_join (pthread_t threadid, void **thread_return);
 extern int __pthread_setcanceltype (int type, int *oldtype);
 libc_hidden_proto (__pthread_setcanceltype)
-extern int __pthread_enable_asynccancel (void) attribute_hidden;
-extern void __pthread_disable_asynccancel (int oldtype) attribute_hidden;
 extern void __pthread_testcancel (void);
 libc_hidden_proto (__pthread_testcancel)
 extern int __pthread_clockjoin_ex (pthread_t, void **, clockid_t,

@@ -2534,13 +2534,13 @@ aiocb64}, since the LFS transparently replaces the old interface.
 @c     sigemptyset ok
 @c     sigaddset ok
 @c     setjmp ok
-@c     CANCEL_ASYNC -> pthread_enable_asynccancel ok
+@c     LIBC_CANCEL_ASYNC -> __pthread_enable_asynccancel ok
 @c      do_cancel ok
 @c       pthread_unwind ok
 @c        Unwind_ForcedUnwind or longjmp ok [@ascuheap @acsmem?]
 @c     lll_lock @asulock @aculock
 @c     lll_unlock @asulock @aculock
-@c     CANCEL_RESET -> pthread_disable_asynccancel ok
+@c     LIBC_CANCEL_RESET -> __pthread_disable_asynccancel ok
 @c      lll_futex_wait ok
 @c     ->start_routine ok -----
 @c     call_tls_dtors @asulock @ascuheap @aculock @acsmem

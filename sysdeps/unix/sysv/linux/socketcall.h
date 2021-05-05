@@ -89,11 +89,6 @@
   })
 
 
-#if IS_IN (libc)
-# define __pthread_enable_asynccancel  __libc_enable_asynccancel
-# define __pthread_disable_asynccancel __libc_disable_asynccancel
-#endif
-
 #define SOCKETCALL_CANCEL(name, args...)				\
   ({									\
     int oldtype = LIBC_CANCEL_ASYNC ();					\

@@ -281,6 +281,8 @@ libc {
     __pthread_cleanup_push;
     __pthread_cleanup_upto;
     __pthread_current_priority;
+    __pthread_disable_asynccancel;
+    __pthread_enable_asynccancel;
     __pthread_force_elision;
     __pthread_getattr_default_np;
     __pthread_keys;

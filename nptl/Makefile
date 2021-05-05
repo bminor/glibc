@@ -30,6 +30,7 @@ extra-libs-others := $(extra-libs)
 
 routines = \
   alloca_cutoff \
+  cancellation \
   cleanup_compat \
   cleanup_defer_compat \
   cleanup_routine \
@@ -39,7 +40,6 @@ routines = \
   elision-trylock \
   elision-unlock \
   futex-internal \
-  libc-cancellation \
   libc-cleanup \
   libc_multiple_threads \
   libc_pthread_init \
@@ -157,7 +157,6 @@ shared-only-routines = forward
 static-only-routines = pthread_atfork
 
 libpthread-routines = \
-  cancellation \
   cleanup \
   cleanup_defer \
   events \
@@ -239,7 +238,6 @@ CFLAGS-pthread_setcanceltype.c += -fexceptions -fasynchronous-unwind-tables
 # These are internal functions which similar functionality as setcancelstate
 # and setcanceltype.
 CFLAGS-cancellation.c += -fasynchronous-unwind-tables
-CFLAGS-libc-cancellation.c += -fasynchronous-unwind-tables
 
 # Calling pthread_exit() must cause the registered cancel handlers to
 # be executed.  Therefore exceptions have to be thrown through this

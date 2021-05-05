@@ -28,7 +28,6 @@
    AS-safe, with the exception of the actual cancellation, because they
    are called by wrappers around AS-safe functions like write().*/
 int
-attribute_hidden
 __pthread_enable_asynccancel (void)
 {
   struct pthread *self = THREAD_SELF;
@@ -60,11 +59,11 @@ __pthread_enable_asynccancel (void)
 
   return oldval;
 }
+libc_hidden_def (__pthread_enable_asynccancel)
 
 /* See the comment for __pthread_enable_asynccancel regarding
    the AS-safety of this function.  */
 void
-attribute_hidden
 __pthread_disable_asynccancel (int oldtype)
 {
   /* If asynchronous cancellation was enabled before we do not have
@@ -102,3 +101,4 @@ __pthread_disable_asynccancel (int oldtype)
       newval = THREAD_GETMEM (self, cancelhandling);
     }
 }
+libc_hidden_def (__pthread_disable_asynccancel)
