@@ -154,6 +154,7 @@ routines = \
   sem_close \
   sem_destroy \
   sem_getvalue \
+  sem_init \
   sem_open \
   sem_routines \
   tpp \
@@ -207,7 +208,6 @@ libpthread-routines = \
   pthread_sigqueue \
   pthread_timedjoin \
   pthread_tryjoin \
-  sem_init \
   sem_post \
   sem_timedwait \
   sem_unlink \
