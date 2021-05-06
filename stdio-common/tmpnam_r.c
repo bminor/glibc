@@ -20,7 +20,7 @@
 /* Generate a unique filename in P_tmpdir.  If S is NULL return NULL.
    This makes this function thread safe.  */
 char *
-tmpnam_r (char *s)
+tmpnam_r (char s[L_tmpnam])
 {
   if (s == NULL)
     return NULL;

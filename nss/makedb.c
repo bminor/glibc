@@ -747,7 +747,8 @@ write_output (int fd)
   header->valstrlen = valstrlen;
 
   size_t filled_dbs = 0;
-  struct iovec iov[2 + ndatabases * 3];
+  size_t iov_nelts = 2 + ndatabases * 3;
+  struct iovec iov[iov_nelts];
   iov[0].iov_base = header;
   iov[0].iov_len = file_offset;
 
@@ -791,7 +792,9 @@ write_output (int fd)
 			  + nhashentries_total * sizeof (stridx_t)));
   header->allocate = file_offset;
 
-  if (writev (fd, iov, 2 + ndatabases * 3) != keydataoffset)
+  /* Help GCC 10 see iov_nelts doesn't overflow the writev argument.  */
+  assert (iov_nelts <= INT_MAX);
+  if (writev (fd, iov, iov_nelts) != keydataoffset)
     {
       error (0, errno, gettext ("failed to write new database file"));
       return EXIT_FAILURE;

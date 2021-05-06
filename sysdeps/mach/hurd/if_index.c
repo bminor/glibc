@@ -166,7 +166,7 @@ libc_hidden_weak (if_nameindex)
    IFNAME (which has space for at least IFNAMSIZ characters).  Return
    IFNAME, or NULL on error.  */
 char *
-__if_indextoname (unsigned int ifindex, char *ifname)
+__if_indextoname (unsigned int ifindex, char ifname[IF_NAMESIZE])
 {
   struct ifreq ifr;
   int fd = __opensock ();

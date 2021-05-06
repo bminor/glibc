@@ -44,6 +44,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <libc-diag.h>
 
 /* This is not an exhaustive test: only system calls that can be
    persuaded to fail with a consistent error code and no side effects
@@ -171,7 +172,18 @@ do_test (void)
      allocation.  */
   fails |= test_wrp2 (LIST (EINVAL, ENOMEM), mlock, (void *) -1, 1);
   fails |= test_wrp (EINVAL, nanosleep, &ts, &ts);
+
+  DIAG_POP_NEEDS_COMMENT;
+
+#if __GNUC_PREREQ (9, 0)
+  /* Suppress valid GCC warning:
+     'poll' specified size 18446744073709551608 exceeds maximum object size
+  */
+  DIAG_IGNORE_NEEDS_COMMENT (9, "-Wstringop-overflow=");
+#endif
   fails |= test_wrp (EINVAL, poll, &pollfd, -1, 0);
+  DIAG_POP_NEEDS_COMMENT;
+
   /* quotactl returns ENOSYS for kernels not configured with
      CONFIG_QUOTA, and may return EPERM if called within certain types
      of containers.  Linux 5.4 added additional argument validation

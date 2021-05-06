@@ -51,7 +51,8 @@ __BEGIN_DECLS
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-extern int poll (struct pollfd *__fds, nfds_t __nfds, int __timeout);
+extern int poll (struct pollfd *__fds, nfds_t __nfds, int __timeout)
+    __attr_access ((__write_only__, 1, 2));
 
 #ifdef __USE_GNU
 /* Like poll, but before waiting the threads signal mask is replaced
@@ -62,7 +63,9 @@ extern int poll (struct pollfd *__fds, nfds_t __nfds, int __timeout);
    __THROW.  */
 extern int ppoll (struct pollfd *__fds, nfds_t __nfds,
 		  const struct timespec *__timeout,
-		  const __sigset_t *__ss);
+		  const __sigset_t *__ss)
+    __attr_access ((__write_only__, 1, 2));
+
 #endif
 
 __END_DECLS

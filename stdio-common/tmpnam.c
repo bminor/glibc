@@ -24,7 +24,7 @@ static char tmpnam_buffer[L_tmpnam];
 
    This function is *not* thread safe!  */
 char *
-tmpnam (char *s)
+tmpnam (char s[L_tmpnam])
 {
   /* By using two buffers we manage to be thread safe in the case
      where S != NULL.  */

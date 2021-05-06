@@ -31,7 +31,7 @@ libc_hidden_weak (if_nametoindex)
 stub_warning (if_nametoindex)
 
 char *
-__if_indextoname (unsigned int ifindex, char *ifname)
+__if_indextoname (unsigned int ifindex, char ifname[IF_NAMESIZE])
 {
   __set_errno (ENOSYS);
   return NULL;

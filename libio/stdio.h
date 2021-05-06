@@ -184,12 +184,12 @@ extern FILE *tmpfile64 (void) __wur;
 #endif
 
 /* Generate a temporary filename.  */
-extern char *tmpnam (char *__s) __THROW __wur;
+extern char *tmpnam (char[L_tmpnam]) __THROW __wur;
 
 #ifdef __USE_MISC
 /* This is the reentrant variant of `tmpnam'.  The only difference is
    that it does not allow S to be NULL.  */
-extern char *tmpnam_r (char *__s) __THROW __wur;
+extern char *tmpnam_r (char __s[L_tmpnam]) __THROW __wur;
 #endif
 
 
@@ -808,13 +808,15 @@ extern int pclose (FILE *__stream);
 
 #ifdef	__USE_POSIX
 /* Return the name of the controlling terminal.  */
-extern char *ctermid (char *__s) __THROW;
+extern char *ctermid (char *__s) __THROW
+  __attr_access ((__write_only__, 1));
 #endif /* Use POSIX.  */
 
 
 #if (defined __USE_XOPEN && !defined __USE_XOPEN2K) || defined __USE_GNU
 /* Return the name of the current user.  */
-extern char *cuserid (char *__s);
+extern char *cuserid (char *__s)
+  __attr_access ((__write_only__, 1));
 #endif /* Use X/Open, but not issue 6.  */
 
 

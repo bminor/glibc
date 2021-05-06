@@ -105,7 +105,7 @@ do_test (void)
                 /* 新処圭新, \xb7\xbd here really matches 圭,
                  * this is a reproducer of bug-regex25 */
   e = re_search (&r, "\xbf\xb7\xbd\xe8\xb7\xbd\xbf\xb7",
-                 10, 0, 10, &s);
+                 9, 0, 9, &s);
   if (e != 4)
     {
       printf ("bug-regex33.7: no match or false match: re_search() returned %d, should return 4\n", e);
