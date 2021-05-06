@@ -179,7 +179,6 @@ libpthread-routines = \
   cleanup \
   cleanup_defer \
   events \
-  flockfile \
   ftrylockfile \
   funlockfile \
   libpthread-compat \
@@ -447,7 +446,6 @@ extra-objs += $(crti-objs) $(crtn-objs)
 extra-objs += pt-crti.o
 endif
 
-CFLAGS-flockfile.c += $(libio-mtsafe)
 CFLAGS-ftrylockfile.c += $(libio-mtsafe)
 CFLAGS-funlockfile.c += $(libio-mtsafe)
 

@@ -17,13 +17,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
-
-#undef _IO_flockfile
+#include <stdio-lock.h>
 
 void
 __flockfile (FILE *stream)
 {
-  /* Do nothing.  Using this version does not do any locking.  */
+  stream->_flags2 |= _IO_FLAGS2_NEED_LOCK;
+  _IO_lock_lock (*stream->_lock);
 }
 weak_alias (__flockfile, flockfile);
 weak_alias (__flockfile, _IO_flockfile)

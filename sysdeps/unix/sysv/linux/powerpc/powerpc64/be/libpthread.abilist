@@ -6,11 +6,9 @@ GLIBC_2.18 pthread_setattr_default_np F
 GLIBC_2.28 thrd_create F
 GLIBC_2.28 thrd_detach F
 GLIBC_2.28 thrd_join F
-GLIBC_2.3 _IO_flockfile F
 GLIBC_2.3 _IO_ftrylockfile F
 GLIBC_2.3 _IO_funlockfile F
 GLIBC_2.3 __errno_location F
-GLIBC_2.3 flockfile F
 GLIBC_2.3 ftrylockfile F
 GLIBC_2.3 funlockfile F
 GLIBC_2.3 pthread_attr_getguardsize F
