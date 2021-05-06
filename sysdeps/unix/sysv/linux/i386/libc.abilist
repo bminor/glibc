@@ -2019,6 +2019,7 @@ GLIBC_2.2 pread F
 GLIBC_2.2 pread64 F
 GLIBC_2.2 pthread_barrier_destroy F
 GLIBC_2.2 pthread_barrier_init F
+GLIBC_2.2 pthread_barrier_wait F
 GLIBC_2.2 pthread_condattr_getpshared F
 GLIBC_2.2 pthread_condattr_setpshared F
 GLIBC_2.2 pthread_mutex_timedlock F
@@ -2386,6 +2387,7 @@ GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
 GLIBC_2.34 pthread_barrier_destroy F
 GLIBC_2.34 pthread_barrier_init F
+GLIBC_2.34 pthread_barrier_wait F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F

@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <futex-internal.h>
 #include <pthreadP.h>
+#include <shlib-compat.h>
 
 
 /* Wait on the barrier.
@@ -92,7 +93,7 @@
    If we do not spin, it is quite likely that at least some other threads will
    have called futex_wait already.  */
 int
-__pthread_barrier_wait (pthread_barrier_t *barrier)
+___pthread_barrier_wait (pthread_barrier_t *barrier)
 {
   struct pthread_barrier *bar = (struct pthread_barrier *) barrier;
 
@@ -220,4 +221,13 @@ __pthread_barrier_wait (pthread_barrier_t *barrier)
   /* Return a special value for exactly one thread per round.  */
   return i % count == 0 ?  PTHREAD_BARRIER_SERIAL_THREAD : 0;
 }
-weak_alias (__pthread_barrier_wait, pthread_barrier_wait)
+versioned_symbol (libc, ___pthread_barrier_wait, pthread_barrier_wait,
+                  GLIBC_2_34);
+versioned_symbol (libc, ___pthread_barrier_wait, __pthread_barrier_wait,
+                  GLIBC_PRIVATE);
+libc_hidden_ver (___pthread_barrier_wait, __pthread_barrier_wait)
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_barrier_wait, pthread_barrier_wait,
+               GLIBC_2_2);
+#endif
