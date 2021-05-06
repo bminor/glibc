@@ -173,7 +173,7 @@ do_test (void)
   fails |= test_wrp2 (LIST (EINVAL, ENOMEM), mlock, (void *) -1, 1);
   fails |= test_wrp (EINVAL, nanosleep, &ts, &ts);
 
-  DIAG_POP_NEEDS_COMMENT;
+  DIAG_PUSH_NEEDS_COMMENT;
 
 #if __GNUC_PREREQ (9, 0)
   /* Suppress valid GCC warning:
