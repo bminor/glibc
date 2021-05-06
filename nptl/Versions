@@ -142,6 +142,7 @@ libc {
     __pthread_cleanup_routine;
     __pthread_unwind_next;
     pthread_attr_setaffinity_np;
+    pthread_barrierattr_getpshared;
     pthread_condattr_getclock;
     pthread_condattr_setclock;
     pthread_getaffinity_np;
@@ -227,6 +228,7 @@ libc {
     pthread_barrier_init;
     pthread_barrier_wait;
     pthread_barrierattr_destroy;
+    pthread_barrierattr_getpshared;
     pthread_barrierattr_init;
     pthread_cond_clockwait;
     pthread_condattr_getclock;
@@ -404,7 +406,6 @@ libpthread {
     __pthread_unregister_cancel;
     __pthread_unregister_cancel_restore;
     pthread_attr_getaffinity_np;
-    pthread_barrierattr_getpshared;
     pthread_setaffinity_np;
     pthread_timedjoin_np;
     pthread_tryjoin_np;

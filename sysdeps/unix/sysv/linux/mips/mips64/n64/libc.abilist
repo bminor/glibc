@@ -2200,6 +2200,7 @@ GLIBC_2.3.3 nftw F
 GLIBC_2.3.3 nftw64 F
 GLIBC_2.3.3 posix_fadvise64 F
 GLIBC_2.3.3 pthread_attr_setaffinity_np F
+GLIBC_2.3.3 pthread_barrierattr_getpshared F
 GLIBC_2.3.3 pthread_condattr_getclock F
 GLIBC_2.3.3 pthread_condattr_setclock F
 GLIBC_2.3.3 pthread_getaffinity_np F
@@ -2297,6 +2298,7 @@ GLIBC_2.34 pthread_barrier_destroy F
 GLIBC_2.34 pthread_barrier_init F
 GLIBC_2.34 pthread_barrier_wait F
 GLIBC_2.34 pthread_barrierattr_destroy F
+GLIBC_2.34 pthread_barrierattr_getpshared F
 GLIBC_2.34 pthread_barrierattr_init F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
