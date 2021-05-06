@@ -17,13 +17,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
-
-#undef _IO_funlockfile
+#include <stdio-lock.h>
+#include <sys/single_threaded.h>
 
 void
 __funlockfile (FILE *stream)
 {
-  /* Do nothing.  Using this version does not do any locking.  */
+  _IO_lock_unlock (*stream->_lock);
 }
 weak_alias (__funlockfile, _IO_funlockfile)
 weak_alias (__funlockfile, funlockfile);

@@ -179,7 +179,6 @@ libpthread-routines = \
   cleanup \
   cleanup_defer \
   events \
-  funlockfile \
   libpthread-compat \
   nptl-init \
   nptlfreeres \
