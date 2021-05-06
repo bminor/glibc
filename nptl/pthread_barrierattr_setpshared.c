@@ -19,10 +19,10 @@
 #include <errno.h>
 #include "pthreadP.h"
 #include <futex-internal.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_barrierattr_setpshared (pthread_barrierattr_t *attr, int pshared)
+__pthread_barrierattr_setpshared (pthread_barrierattr_t *attr, int pshared)
 {
   int err = futex_supports_pshared (pshared);
   if (err != 0)
@@ -32,3 +32,10 @@ pthread_barrierattr_setpshared (pthread_barrierattr_t *attr, int pshared)
 
   return 0;
 }
+versioned_symbol (libc, __pthread_barrierattr_setpshared,
+                  pthread_barrierattr_setpshared, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_barrierattr_setpshared,
+               pthread_barrierattr_setpshared, GLIBC_2_2);
+#endif

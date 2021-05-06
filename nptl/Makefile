@@ -79,6 +79,7 @@ routines = \
   pthread_barrierattr_destroy \
   pthread_barrierattr_getpshared \
   pthread_barrierattr_init \
+  pthread_barrierattr_setpshared \
   pthread_cleanup_upto \
   pthread_cond_broadcast \
   pthread_cond_destroy \
@@ -193,7 +194,6 @@ libpthread-routines = \
   pthread_attr_setstack \
   pthread_attr_setstackaddr \
   pthread_attr_setstacksize \
-  pthread_barrierattr_setpshared \
   pthread_cancel \
   pthread_clockjoin \
   pthread_create \

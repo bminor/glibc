@@ -18,7 +18,6 @@ GLIBC_2.32 pthread_attr_setguardsize F
 GLIBC_2.32 pthread_attr_setstack F
 GLIBC_2.32 pthread_attr_setstackaddr F
 GLIBC_2.32 pthread_attr_setstacksize F
-GLIBC_2.32 pthread_barrierattr_setpshared F
 GLIBC_2.32 pthread_cancel F
 GLIBC_2.32 pthread_clockjoin_np F
 GLIBC_2.32 pthread_create F
