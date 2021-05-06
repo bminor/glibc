@@ -1546,6 +1546,7 @@ GLIBC_2.17 pthread_attr_setscope F
 GLIBC_2.17 pthread_barrier_destroy F
 GLIBC_2.17 pthread_barrier_init F
 GLIBC_2.17 pthread_barrier_wait F
+GLIBC_2.17 pthread_barrierattr_destroy F
 GLIBC_2.17 pthread_cond_broadcast F
 GLIBC_2.17 pthread_cond_destroy F
 GLIBC_2.17 pthread_cond_init F
@@ -2507,6 +2508,7 @@ GLIBC_2.34 mtx_unlock F
 GLIBC_2.34 pthread_barrier_destroy F
 GLIBC_2.34 pthread_barrier_init F
 GLIBC_2.34 pthread_barrier_wait F
+GLIBC_2.34 pthread_barrierattr_destroy F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F

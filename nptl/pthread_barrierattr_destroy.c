@@ -17,12 +17,19 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
-
+#include <shlib-compat.h>
 
 int
-pthread_barrierattr_destroy (pthread_barrierattr_t *attr)
+__pthread_barrierattr_destroy (pthread_barrierattr_t *attr)
 {
   /* Nothing to do.  */
 
   return 0;
 }
+versioned_symbol (libc, __pthread_barrierattr_destroy,
+                  pthread_barrierattr_destroy, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_barrierattr_destroy,
+               pthread_barrierattr_destroy, GLIBC_2_2);
+#endif
