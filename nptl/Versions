@@ -110,6 +110,7 @@ libc {
     pthread_barrier_init;
     pthread_barrier_wait;
     pthread_barrierattr_destroy;
+    pthread_barrierattr_init;
     pthread_condattr_getpshared;
     pthread_condattr_setpshared;
     pthread_mutex_timedlock;
@@ -226,6 +227,7 @@ libc {
     pthread_barrier_init;
     pthread_barrier_wait;
     pthread_barrierattr_destroy;
+    pthread_barrierattr_init;
     pthread_cond_clockwait;
     pthread_condattr_getclock;
     pthread_condattr_getpshared;
@@ -377,7 +379,6 @@ libpthread {
   GLIBC_2.2 {
     pthread_attr_getstack;
     pthread_attr_setstack;
-    pthread_barrierattr_init;
     pthread_barrierattr_setpshared;
     pthread_getcpuclockid;
     pthread_yield;
