@@ -184,6 +184,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/powerpc/powerpc64/multiarch/memcmp.c.  */
   IFUNC_IMPL (i, name, memcmp,
+#ifdef __LITTLE_ENDIAN__
+	      IFUNC_IMPL_ADD (array, i, memcmp,
+            hwcap2 & PPC_FEATURE2_ARCH_3_1
+            && hwcap & PPC_FEATURE_HAS_VSX,
+			      __memcmp_power10)
+#endif
 	      IFUNC_IMPL_ADD (array, i, memcmp, hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __memcmp_power8)
 	      IFUNC_IMPL_ADD (array, i, memcmp, hwcap & PPC_FEATURE_HAS_VSX,
