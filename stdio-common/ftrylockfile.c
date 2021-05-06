@@ -17,14 +17,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
-
-#undef _IO_ftrylockfile
+#include <stdio-lock.h>
+#include <sys/single_threaded.h>
 
 int
 __ftrylockfile (FILE *stream)
 {
-  /* Do nothing.  Using this version does not do any locking.  */
-  return 1;
+  return _IO_lock_trylock (*stream->_lock);
 }
 weak_alias (__ftrylockfile, ftrylockfile);
 weak_alias (__ftrylockfile, _IO_ftrylockfile)
