@@ -20,10 +20,10 @@
 #include "pthreadP.h"
 #include <atomic.h>
 #include <futex-internal.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_barrier_destroy (pthread_barrier_t *barrier)
+__pthread_barrier_destroy (pthread_barrier_t *barrier)
 {
   struct pthread_barrier *bar = (struct pthread_barrier *) barrier;
 
@@ -59,3 +59,10 @@ pthread_barrier_destroy (pthread_barrier_t *barrier)
 
   return 0;
 }
+versioned_symbol (libc, __pthread_barrier_destroy, pthread_barrier_destroy,
+                  GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_barrier_destroy, pthread_barrier_destroy,
+               GLIBC_2_2);
+#endif

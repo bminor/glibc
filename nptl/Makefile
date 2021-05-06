@@ -73,6 +73,7 @@ routines = \
   pthread_attr_setscope \
   pthread_attr_setsigmask \
   pthread_attr_setsigmask_internal \
+  pthread_barrier_destroy \
   pthread_cleanup_upto \
   pthread_cond_broadcast \
   pthread_cond_destroy \
@@ -187,7 +188,6 @@ libpthread-routines = \
   pthread_attr_setstack \
   pthread_attr_setstackaddr \
   pthread_attr_setstacksize \
-  pthread_barrier_destroy \
   pthread_barrier_init \
   pthread_barrier_wait \
   pthread_barrierattr_destroy \
