@@ -271,7 +271,7 @@ L(loop_4x_vec):
 	vpxorq	(VEC_SIZE * 6)(%rdi), %YMMMATCH, %YMM3
 	VPCMP	$0, (VEC_SIZE * 7)(%rdi), %YMMMATCH, %k3
 	/* Reduce VEC2 / VEC3 with min and VEC1 with zero mask.  */
-	VPMINU	%YMM2, %YMM3, %YMM3 {%k1} {z}
+	VPMINU	%YMM2, %YMM3, %YMM3{%k1}{z}
 	VPCMP	$0, %YMM3, %YMMZERO, %k2
 # ifdef USE_AS_RAWMEMCHR
 	subq	$-(VEC_SIZE * 4), %rdi
