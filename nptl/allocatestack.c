@@ -293,13 +293,10 @@ queue_stack (struct pthread *stack)
 
 
 static int
-change_stack_perm (struct pthread *pd
-#ifdef NEED_SEPARATE_REGISTER_STACK
-		   , size_t pagemask
-#endif
-		   )
+change_stack_perm (struct pthread *pd)
 {
 #ifdef NEED_SEPARATE_REGISTER_STACK
+  size_t pagemask = __getpagesize () - 1;
   void *stack = (pd->stackblock
 		 + (((((pd->stackblock_size - pd->guardsize) / 2)
 		      & pagemask) + pd->guardsize) & pagemask));
@@ -628,11 +625,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  if (__builtin_expect ((GL(dl_stack_flags) & PF_X) != 0
 				&& (prot & PROT_EXEC) == 0, 0))
 	    {
-	      int err = change_stack_perm (pd
-#ifdef NEED_SEPARATE_REGISTER_STACK
-					   , ~pagesize_m1
-#endif
-					   );
+	      int err = change_stack_perm (pd);
 	      if (err != 0)
 		{
 		  /* Free the stack memory we just allocated.  */
@@ -796,20 +789,12 @@ __make_stacks_executable (void **stack_endp)
   if (err != 0)
     return err;
 
-#ifdef NEED_SEPARATE_REGISTER_STACK
-  const size_t pagemask = ~(__getpagesize () - 1);
-#endif
-
   lll_lock (GL (dl_stack_cache_lock), LLL_PRIVATE);
 
   list_t *runp;
   list_for_each (runp, &GL (dl_stack_used))
     {
-      err = change_stack_perm (list_entry (runp, struct pthread, list)
-#ifdef NEED_SEPARATE_REGISTER_STACK
-			       , pagemask
-#endif
-			       );
+      err = change_stack_perm (list_entry (runp, struct pthread, list));
       if (err != 0)
 	break;
     }
@@ -820,11 +805,7 @@ __make_stacks_executable (void **stack_endp)
   if (err == 0)
     list_for_each (runp, &GL (dl_stack_cache))
       {
-	err = change_stack_perm (list_entry (runp, struct pthread, list)
-#ifdef NEED_SEPARATE_REGISTER_STACK
-				 , pagemask
-#endif
-				 );
+	err = change_stack_perm (list_entry (runp, struct pthread, list));
 	if (err != 0)
 	  break;
       }
