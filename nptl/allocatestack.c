@@ -799,6 +799,8 @@ __reclaim_stacks (void)
 	  elem->next->prev = elem->prev;
 	  elem->prev->next = elem->next;
 	}
+
+      GL (dl_in_flight_stack) = 0;
     }
 
   /* Mark all stacks except the still running one as free.  */
@@ -842,7 +844,7 @@ __reclaim_stacks (void)
   /* Remove the entry for the current thread to from the cache list
      and add it to the list of running threads.  Which of the two
      lists is decided by the user_stack flag.  */
-  stack_list_del (&self->list);
+  list_del (&self->list);
 
   /* Re-initialize the lists for all the threads.  */
   INIT_LIST_HEAD (&GL (dl_stack_used));
@@ -855,8 +857,6 @@ __reclaim_stacks (void)
 
   /* There is one thread running.  */
   __nptl_nthreads = 1;
-
-  GL (dl_in_flight_stack) = 0;
 
   /* Initialize locks.  */
   GL (dl_stack_cache_lock) = LLL_LOCK_INITIALIZER;
