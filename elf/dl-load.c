@@ -1368,7 +1368,11 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       check_consistency ();
 #endif
 
+#if PTHREAD_IN_LIBC
+      errval = _dl_make_stacks_executable (stack_endp);
+#else
       errval = (*GL(dl_make_stack_executable_hook)) (stack_endp);
+#endif
       if (errval)
 	{
 	  errstring = N_("\

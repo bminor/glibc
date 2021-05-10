@@ -416,10 +416,12 @@ struct rtld_global
 #endif
 #include <dl-procruntime.c>
 
+#if !PTHREAD_IN_LIBC
   /* If loading a shared object requires that we make the stack executable
      when it was not, we do it by calling this function.
      It returns an errno code or zero on success.  */
   EXTERN int (*_dl_make_stack_executable_hook) (void **);
+#endif
 
   /* Prevailing state of the stack, PF_X indicating it's executable.  */
   EXTERN ElfW(Word) _dl_stack_flags;
@@ -717,10 +719,17 @@ extern const ElfW(Phdr) *_dl_phdr;
 extern size_t _dl_phnum;
 #endif
 
+#if PTHREAD_IN_LIBC
+/* This function changes the permissions of all stacks (not just those
+   of the main stack).  */
+int _dl_make_stacks_executable (void **stack_endp) attribute_hidden;
+#else
 /* This is the initial value of GL(dl_make_stack_executable_hook).
-   A threads library can change it.  */
+   A threads library can change it.  The ld.so implementation changes
+   the permissions of the main stack only.  */
 extern int _dl_make_stack_executable (void **stack_endp);
 rtld_hidden_proto (_dl_make_stack_executable)
+#endif
 
 /* Variable pointing to the end of the stack (or close to it).  This value
    must be constant over the runtime of the application.  Some programs

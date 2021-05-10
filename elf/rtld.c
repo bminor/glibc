@@ -1125,9 +1125,11 @@ dl_main (const ElfW(Phdr) *phdr,
 
   __tls_pre_init_tp ();
 
+#if !PTHREAD_IN_LIBC
   /* The explicit initialization here is cheaper than processing the reloc
      in the _rtld_local definition's initializer.  */
   GL(dl_make_stack_executable_hook) = &_dl_make_stack_executable;
+#endif
 
   /* Process the environment variable which control the behaviour.  */
   process_envvars (&state);

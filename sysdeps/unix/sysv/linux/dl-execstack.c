@@ -16,20 +16,21 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <ldsodefs.h>
-#include <sys/mman.h>
 #include <errno.h>
+#include <ldsodefs.h>
 #include <libintl.h>
-#include <stdbool.h>
+#include <list.h>
+#include <nptl/pthreadP.h>
 #include <stackinfo.h>
+#include <stdbool.h>
+#include <sys/mman.h>
 #include <sysdep.h>
-
+#include <unistd.h>
 
 extern int __stack_prot attribute_relro attribute_hidden;
 
-
-int
-_dl_make_stack_executable (void **stack_endp)
+static int
+make_main_stack_executable (void **stack_endp)
 {
   /* This gives us the highest/lowest page that needs to be changed.  */
   uintptr_t page = ((uintptr_t) *stack_endp
@@ -56,4 +57,63 @@ _dl_make_stack_executable (void **stack_endp)
 
   return result;
 }
-rtld_hidden_def (_dl_make_stack_executable)
+
+int
+_dl_make_stacks_executable (void **stack_endp)
+{
+  /* First the main thread's stack.  */
+  int err = make_main_stack_executable (stack_endp);
+  if (err != 0)
+    return err;
+
+  lll_lock (GL (dl_stack_cache_lock), LLL_PRIVATE);
+
+  list_t *runp;
+  list_for_each (runp, &GL (dl_stack_used))
+    {
+      err = __nptl_change_stack_perm (list_entry (runp, struct pthread, list));
+      if (err != 0)
+	break;
+    }
+
+  /* Also change the permission for the currently unused stacks.  This
+     might be wasted time but better spend it here than adding a check
+     in the fast path.  */
+  if (err == 0)
+    list_for_each (runp, &GL (dl_stack_cache))
+      {
+	err = __nptl_change_stack_perm (list_entry (runp, struct pthread,
+						    list));
+	if (err != 0)
+	  break;
+      }
+
+  lll_unlock (GL (dl_stack_cache_lock), LLL_PRIVATE);
+
+  return err;
+}
+
+int
+__nptl_change_stack_perm (struct pthread *pd)
+{
+#ifdef NEED_SEPARATE_REGISTER_STACK
+  size_t pagemask = __getpagesize () - 1;
+  void *stack = (pd->stackblock
+		 + (((((pd->stackblock_size - pd->guardsize) / 2)
+		      & pagemask) + pd->guardsize) & pagemask));
+  size_t len = pd->stackblock + pd->stackblock_size - stack;
+#elif _STACK_GROWS_DOWN
+  void *stack = pd->stackblock + pd->guardsize;
+  size_t len = pd->stackblock_size - pd->guardsize;
+#elif _STACK_GROWS_UP
+  void *stack = pd->stackblock;
+  size_t len = (uintptr_t) pd - pd->guardsize - (uintptr_t) pd->stackblock;
+#else
+# error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
+#endif
+  if (__mprotect (stack, len, PROT_READ | PROT_WRITE | PROT_EXEC) != 0)
+    return errno;
+
+  return 0;
+}
+rtld_hidden_def (__nptl_change_stack_perm)

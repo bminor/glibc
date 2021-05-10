@@ -335,8 +335,11 @@ extern void __deallocate_stack (struct pthread *pd) attribute_hidden;
    function also re-initializes the lock for the stack cache.  */
 extern void __reclaim_stacks (void) attribute_hidden;
 
-/* Make all threads's stacks executable.  */
-extern int __make_stacks_executable (void **stack_endp) attribute_hidden;
+/* Change the permissions of a thread stack.  Called from
+   _dl_make_stacks_executable and pthread_create.  */
+int
+__nptl_change_stack_perm (struct pthread *pd);
+rtld_hidden_proto (__nptl_change_stack_perm)
 
 /* longjmp handling.  */
 extern void __pthread_cleanup_upto (__jmp_buf target, char *targetframe);

@@ -173,10 +173,6 @@ __pthread_initialize_minimal_internal (void)
   __default_pthread_attr.internal.guardsize = GLRO (dl_pagesize);
   lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
 
-#ifdef SHARED
-  GL(dl_make_stack_executable_hook) = &__make_stacks_executable;
-#endif
-
   /* Register the fork generation counter with the libc.  */
   __libc_pthread_init (__reclaim_stacks);
 }

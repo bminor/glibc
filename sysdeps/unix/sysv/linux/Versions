@@ -181,3 +181,9 @@ libc {
     __netlink_assert_response;
   }
 }
+
+ld {
+  GLIBC_PRIVATE {
+    __nptl_change_stack_perm;
+  }
+}
