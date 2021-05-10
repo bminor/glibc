@@ -23,9 +23,6 @@
 #include <lowlevellock.h>
 
 
-/* The locking here is very inexpensive, even for inlining.  */
-#define _IO_lock_inexpensive	1
-
 typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
 #define _IO_lock_t_defined 1
 

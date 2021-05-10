@@ -24,9 +24,6 @@
 #include <tls.h>
 #include <lowlevellock.h>
 
-/* The locking here is very inexpensive, even for inlining.  */
-#define _IO_lock_inexpensive   1
-
 typedef unsigned int __libc_lock_t;
 typedef struct
 {
