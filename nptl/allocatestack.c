@@ -103,15 +103,6 @@
 
 /* Maximum size in kB of cache.  */
 static size_t stack_cache_maxsize = 40 * 1024 * 1024; /* 40MiBi by default.  */
-static size_t stack_cache_actsize;
-
-/* List of queued stack frames.  */
-static LIST_HEAD (stack_cache);
-
-/* We need to record what list operations we are going to do so that,
-   in case of an asynchronous interruption due to a fork() call, we
-   can correct for the work.  */
-static uintptr_t in_flight_stack;
 
 /* Check whether the stack is still used or not.  */
 #define FREE_P(descr) ((descr)->tid <= 0)
@@ -120,7 +111,7 @@ static uintptr_t in_flight_stack;
 static void
 stack_list_del (list_t *elem)
 {
-  in_flight_stack = (uintptr_t) elem;
+  GL (dl_in_flight_stack) = (uintptr_t) elem;
 
   atomic_write_barrier ();
 
@@ -128,14 +119,14 @@ stack_list_del (list_t *elem)
 
   atomic_write_barrier ();
 
-  in_flight_stack = 0;
+  GL (dl_in_flight_stack) = 0;
 }
 
 
 static void
 stack_list_add (list_t *elem, list_t *list)
 {
-  in_flight_stack = (uintptr_t) elem | 1;
+  GL (dl_in_flight_stack) = (uintptr_t) elem | 1;
 
   atomic_write_barrier ();
 
@@ -143,7 +134,7 @@ stack_list_add (list_t *elem, list_t *list)
 
   atomic_write_barrier ();
 
-  in_flight_stack = 0;
+  GL (dl_in_flight_stack) = 0;
 }
 
 
@@ -168,7 +159,7 @@ get_cached_stack (size_t *sizep, void **memp)
      same.  As the very least there are only a few different sizes.
      Therefore this loop will exit early most of the time with an
      exact match.  */
-  list_for_each (entry, &stack_cache)
+  list_for_each (entry, &GL (dl_stack_cache))
     {
       struct pthread *curr;
 
@@ -208,7 +199,7 @@ get_cached_stack (size_t *sizep, void **memp)
   stack_list_add (&result->list, &GL (dl_stack_used));
 
   /* And decrease the cache size.  */
-  stack_cache_actsize -= result->stackblock_size;
+  GL (dl_stack_cache_actsize) -= result->stackblock_size;
 
   /* Release the lock early.  */
   lll_unlock (GL (dl_stack_cache_lock), LLL_PRIVATE);
@@ -249,7 +240,7 @@ free_stacks (size_t limit)
   list_t *prev;
 
   /* Search from the end of the list.  */
-  list_for_each_prev_safe (entry, prev, &stack_cache)
+  list_for_each_prev_safe (entry, prev, &GL (dl_stack_cache))
     {
       struct pthread *curr;
 
@@ -260,7 +251,7 @@ free_stacks (size_t limit)
 	  stack_list_del (entry);
 
 	  /* Account for the freed memory.  */
-	  stack_cache_actsize -= curr->stackblock_size;
+	  GL (dl_stack_cache_actsize) -= curr->stackblock_size;
 
 	  /* Free the memory associated with the ELF TLS.  */
 	  _dl_deallocate_tls (TLS_TPADJ (curr), false);
@@ -271,7 +262,7 @@ free_stacks (size_t limit)
 	    abort ();
 
 	  /* Maybe we have freed enough.  */
-	  if (stack_cache_actsize <= limit)
+	  if (GL (dl_stack_cache_actsize) <= limit)
 	    break;
 	}
     }
@@ -293,10 +284,10 @@ queue_stack (struct pthread *stack)
   /* We unconditionally add the stack to the list.  The memory may
      still be in use but it will not be reused until the kernel marks
      the stack as not used anymore.  */
-  stack_list_add (&stack->list, &stack_cache);
+  stack_list_add (&stack->list, &GL (dl_stack_cache));
 
-  stack_cache_actsize += stack->stackblock_size;
-  if (__glibc_unlikely (stack_cache_actsize > stack_cache_maxsize))
+  GL (dl_stack_cache_actsize) += stack->stackblock_size;
+  if (__glibc_unlikely (GL (dl_stack_cache_actsize) > stack_cache_maxsize))
     free_stacks (stack_cache_maxsize);
 }
 
@@ -827,7 +818,7 @@ __make_stacks_executable (void **stack_endp)
      might be wasted time but better spend it here than adding a check
      in the fast path.  */
   if (err == 0)
-    list_for_each (runp, &stack_cache)
+    list_for_each (runp, &GL (dl_stack_cache))
       {
 	err = change_stack_perm (list_entry (runp, struct pthread, list)
 #ifdef NEED_SEPARATE_REGISTER_STACK
@@ -857,10 +848,10 @@ __reclaim_stacks (void)
      we have to be aware that we might have interrupted a list
      operation.  */
 
-  if (in_flight_stack != 0)
+  if (GL (dl_in_flight_stack) != 0)
     {
-      bool add_p = in_flight_stack & 1;
-      list_t *elem = (list_t *) (in_flight_stack & ~(uintptr_t) 1);
+      bool add_p = GL (dl_in_flight_stack) & 1;
+      list_t *elem = (list_t *) (GL (dl_in_flight_stack) & ~(uintptr_t) 1);
 
       if (add_p)
 	{
@@ -871,8 +862,8 @@ __reclaim_stacks (void)
 
 	  if (GL (dl_stack_used).next->prev != &GL (dl_stack_used))
 	    l = &GL (dl_stack_used);
-	  else if (stack_cache.next->prev != &stack_cache)
-	    l = &stack_cache;
+	  else if (GL (dl_stack_cache).next->prev != &GL (dl_stack_cache))
+	    l = &GL (dl_stack_cache);
 
 	  if (l != NULL)
 	    {
@@ -901,7 +892,7 @@ __reclaim_stacks (void)
 	  curp->tid = 0;
 
 	  /* Account for the size of the stack.  */
-	  stack_cache_actsize += curp->stackblock_size;
+	  GL (dl_stack_cache_actsize) += curp->stackblock_size;
 
 	  if (curp->specific_used)
 	    {
@@ -926,7 +917,7 @@ __reclaim_stacks (void)
     }
 
   /* Add the stack of all running threads to the cache.  */
-  list_splice (&GL (dl_stack_used), &stack_cache);
+  list_splice (&GL (dl_stack_used), &GL (dl_stack_cache));
 
   /* Remove the entry for the current thread to from the cache list
      and add it to the list of running threads.  Which of the two
@@ -945,7 +936,7 @@ __reclaim_stacks (void)
   /* There is one thread running.  */
   __nptl_nthreads = 1;
 
-  in_flight_stack = 0;
+  GL (dl_in_flight_stack) = 0;
 
   /* Initialize locks.  */
   GL (dl_stack_cache_lock) = LLL_LOCK_INITIALIZER;

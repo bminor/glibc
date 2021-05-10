@@ -192,6 +192,9 @@ int (*_dl_make_stack_executable_hook) (void **) = _dl_make_stack_executable;
 #if THREAD_GSCOPE_IN_TCB
 list_t _dl_stack_used;
 list_t _dl_stack_user;
+list_t _dl_stack_cache;
+size_t _dl_stack_cache_actsize;
+uintptr_t _dl_in_flight_stack;
 int _dl_stack_cache_lock;
 #else
 int _dl_thread_gscope_count;

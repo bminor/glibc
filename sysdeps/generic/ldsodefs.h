@@ -481,6 +481,17 @@ struct rtld_global
   /* List of thread stacks that were allocated by the application.  */
   EXTERN list_t _dl_stack_user;
 
+  /* List of queued thread stacks.  */
+  EXTERN list_t _dl_stack_cache;
+
+  /* Total size of all stacks in the cache (sum over stackblock_size).  */
+  EXTERN size_t _dl_stack_cache_actsize;
+
+  /* We need to record what list operations we are going to do so
+     that, in case of an asynchronous interruption due to a fork()
+     call, we can correct for the work.  */
+  EXTERN uintptr_t _dl_in_flight_stack;
+
   /* Mutex protecting the stack lists.  */
   EXTERN int _dl_stack_cache_lock;
 #else

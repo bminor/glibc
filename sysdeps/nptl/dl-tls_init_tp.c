@@ -43,6 +43,7 @@ __tls_pre_init_tp (void)
      initialized.  */
   INIT_LIST_HEAD (&GL (dl_stack_used));
   INIT_LIST_HEAD (&GL (dl_stack_user));
+  INIT_LIST_HEAD (&GL (dl_stack_cache));
 
 #ifdef SHARED
   ___rtld_mutex_lock = rtld_mutex_dummy;
