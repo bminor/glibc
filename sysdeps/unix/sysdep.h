@@ -88,10 +88,17 @@
 #define INLINE_SYSCALL_CALL(...) \
   __INLINE_SYSCALL_DISP (__INLINE_SYSCALL, __VA_ARGS__)
 
+#if IS_IN (rtld)
+/* All cancellation points are compiled out in the dynamic loader.  */
+# define NO_SYSCALL_CANCEL_CHECKING 1
+#else
+# define NO_SYSCALL_CANCEL_CHECKING SINGLE_THREAD_P
+#endif
+
 #define SYSCALL_CANCEL(...) \
   ({									     \
     long int sc_ret;							     \
-    if (SINGLE_THREAD_P) 						     \
+    if (NO_SYSCALL_CANCEL_CHECKING)					     \
       sc_ret = INLINE_SYSCALL_CALL (__VA_ARGS__); 			     \
     else								     \
       {									     \
@@ -107,7 +114,7 @@
 #define INTERNAL_SYSCALL_CANCEL(...) \
   ({									     \
     long int sc_ret;							     \
-    if (SINGLE_THREAD_P) 						     \
+    if (NO_SYSCALL_CANCEL_CHECKING) 					     \
       sc_ret = INTERNAL_SYSCALL_CALL (__VA_ARGS__); 			     \
     else								     \
       {									     \
