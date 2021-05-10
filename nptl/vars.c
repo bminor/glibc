@@ -26,10 +26,3 @@ union pthread_attr_transparent __default_pthread_attr attribute_hidden;
 
 /* Mutex protecting __default_pthread_attr.  */
 int __default_pthread_attr_lock = LLL_LOCK_INITIALIZER;
-
-#ifndef TLS_MULTIPLE_THREADS_IN_TCB
-/* Variable set to a nonzero value either if more than one thread runs or ran,
-   or if a single-threaded process is trying to cancel itself.  See
-   nptl/descr.h for more context on the single-threaded process case.  */
-int __pthread_multiple_threads attribute_hidden;
-#endif
