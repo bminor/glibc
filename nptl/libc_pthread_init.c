@@ -27,20 +27,9 @@
 #include <sysdep.h>
 #include <ldsodefs.h>
 
-
-#ifdef TLS_MULTIPLE_THREADS_IN_TCB
 void
-#else
-extern int __libc_multiple_threads attribute_hidden;
-
-int *
-#endif
 __libc_pthread_init (void (*reclaim) (void))
 {
   /* Called by a child after fork.  */
   __register_atfork (NULL, NULL, reclaim, NULL);
-
-#ifndef TLS_MULTIPLE_THREADS_IN_TCB
-  return &__libc_multiple_threads;
-#endif
 }

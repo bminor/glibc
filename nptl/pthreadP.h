@@ -368,17 +368,13 @@ extern unsigned long int __fork_generation attribute_hidden;
 extern unsigned long int *__fork_generation_pointer attribute_hidden;
 
 /* Register the generation counter in the libpthread with the libc.  */
-#ifdef TLS_MULTIPLE_THREADS_IN_TCB
 extern void __libc_pthread_init (void (*reclaim) (void));
-#else
-extern int *__libc_pthread_init (void (*reclaim) (void));
 
+#ifndef TLS_MULTIPLE_THREADS_IN_TCB
 /* Variable set to a nonzero value either if more than one thread runs or ran,
    or if a single-threaded process is trying to cancel itself.  See
    nptl/descr.h for more context on the single-threaded process case.  */
 extern int __pthread_multiple_threads attribute_hidden;
-/* Pointer to the corresponding variable in libc.  */
-extern int *__libc_multiple_threads_ptr attribute_hidden;
 #endif
 
 extern size_t __pthread_get_minstack (const pthread_attr_t *attr);

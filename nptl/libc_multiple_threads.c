@@ -23,6 +23,7 @@
 /* Variable set to a nonzero value either if more than one thread runs or ran,
    or if a single-threaded process is trying to cancel itself.  See
    nptl/descr.h for more context on the single-threaded process case.  */
-int __libc_multiple_threads attribute_hidden;
+int __libc_multiple_threads __attribute__ ((nocommon));
+libc_hidden_data_def (__libc_multiple_threads)
 # endif
 #endif

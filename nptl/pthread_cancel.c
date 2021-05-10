@@ -90,7 +90,7 @@ __pthread_cancel (pthread_t th)
 	   points get executed.  */
 	THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
-	__pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
+	__pthread_multiple_threads = __libc_multiple_threads = 1;
 #endif
     }
   /* Mark the thread as canceled.  This has to be done

@@ -27,9 +27,13 @@
    The ABI might define SINGLE_THREAD_BY_GLOBAL to enable the single thread
    check to use global variables instead of the pthread_t field.  */
 
+#ifndef __ASSEMBLER__
+extern int __libc_multiple_threads;
+libc_hidden_proto (__libc_multiple_threads)
+#endif
+
 #ifdef SINGLE_THREAD_BY_GLOBAL
 # if IS_IN (libc)
-extern int __libc_multiple_threads;
 #  define SINGLE_THREAD_P \
   __glibc_likely (__libc_multiple_threads == 0)
 # elif IS_IN (libpthread)

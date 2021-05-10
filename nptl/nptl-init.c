@@ -37,11 +37,6 @@
 #include <libc-pointer-arith.h>
 #include <pthread_mutex_conf.h>
 
-#ifndef TLS_MULTIPLE_THREADS_IN_TCB
-/* Pointer to the corresponding variable in libc.  */
-int *__libc_multiple_threads_ptr attribute_hidden;
-#endif
-
 /* Size and alignment of static TLS block.  */
 size_t __static_tls_size;
 size_t __static_tls_align_m1;
@@ -183,10 +178,7 @@ __pthread_initialize_minimal_internal (void)
 #endif
 
   /* Register the fork generation counter with the libc.  */
-#ifndef TLS_MULTIPLE_THREADS_IN_TCB
-  __libc_multiple_threads_ptr =
-#endif
-    __libc_pthread_init (__reclaim_stacks);
+  __libc_pthread_init (__reclaim_stacks);
 }
 strong_alias (__pthread_initialize_minimal_internal,
 	      __pthread_initialize_minimal)
