@@ -172,9 +172,6 @@ __pthread_initialize_minimal_internal (void)
   __default_pthread_attr.internal.stacksize = limit.rlim_cur;
   __default_pthread_attr.internal.guardsize = GLRO (dl_pagesize);
   lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
-
-  /* Register the fork generation counter with the libc.  */
-  __libc_pthread_init (__reclaim_stacks);
 }
 strong_alias (__pthread_initialize_minimal_internal,
 	      __pthread_initialize_minimal)

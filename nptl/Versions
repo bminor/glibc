@@ -308,7 +308,6 @@ libc {
     __libc_cleanup_push_defer;
     __libc_dl_error_tsd;
     __libc_multiple_threads;
-    __libc_pthread_init;
     __lll_clocklock_elision;
     __lll_lock_elision;
     __lll_lock_wait;

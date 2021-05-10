@@ -333,10 +333,6 @@ extern void __free_tcb (struct pthread *pd) attribute_hidden;
 /* Free allocated stack.  */
 extern void __deallocate_stack (struct pthread *pd) attribute_hidden;
 
-/* Mark all the stacks except for the current one as available.  This
-   function also re-initializes the lock for the stack cache.  */
-extern void __reclaim_stacks (void) attribute_hidden;
-
 /* Change the permissions of a thread stack.  Called from
    _dl_make_stacks_executable and pthread_create.  */
 int
@@ -371,9 +367,6 @@ extern unsigned long int __fork_generation attribute_hidden;
 
 /* Pointer to the fork generation counter in the thread library.  */
 extern unsigned long int *__fork_generation_pointer attribute_hidden;
-
-/* Register the generation counter in the libpthread with the libc.  */
-extern void __libc_pthread_init (void (*reclaim) (void));
 
 extern size_t __pthread_get_minstack (const pthread_attr_t *attr);
 
