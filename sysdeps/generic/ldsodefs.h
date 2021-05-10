@@ -403,7 +403,7 @@ struct rtld_global
   struct auditstate _dl_rtld_auditstate[DL_NNS];
 #endif
 
-#if defined SHARED && defined _LIBC_REENTRANT \
+#if !PTHREAD_IN_LIBC && defined SHARED \
     && defined __rtld_lock_default_lock_recursive
   EXTERN void (*_dl_rtld_lock_recursive) (void *);
   EXTERN void (*_dl_rtld_unlock_recursive) (void *);
@@ -1317,6 +1317,29 @@ link_map_audit_state (struct link_map *l, size_t index)
     }
 }
 #endif /* SHARED */
+
+#if PTHREAD_IN_LIBC && defined SHARED
+/* Recursive locking implementation for use within the dynamic loader.
+   Used to define the __rtld_lock_lock_recursive and
+   __rtld_lock_unlock_recursive via <libc-lock.h>.  Initialized to a
+   no-op dummy implementation early.  Similar
+   to GL (dl_rtld_lock_recursive) and GL (dl_rtld_unlock_recursive)
+   in !PTHREAD_IN_LIBC builds.  */
+extern int (*___rtld_mutex_lock) (pthread_mutex_t *) attribute_hidden;
+extern int (*___rtld_mutex_unlock) (pthread_mutex_t *lock) attribute_hidden;
+
+/* Called after libc has been loaded, but before RELRO is activated.
+   Used to initialize the function pointers to the actual
+   implementations.  */
+void __rtld_mutex_init (void) attribute_hidden;
+#else /* !PTHREAD_IN_LIBC */
+static inline void
+__rtld_mutex_init (void)
+{
+  /* The initialization happens later (!PTHREAD_IN_LIBC) or is not
+     needed at all (!SHARED).  */
+}
+#endif /* !PTHREAD_IN_LIBC */
 
 #if THREAD_GSCOPE_IN_TCB
 void __thread_gscope_wait (void) attribute_hidden;

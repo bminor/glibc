@@ -151,9 +151,6 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
   __libc_maybe_call (__pthread_mutex_trylock, (&(NAME)), 0)
 #endif
 
-#define __rtld_lock_trylock_recursive(NAME) \
-  __libc_maybe_call (__pthread_mutex_trylock, (&(NAME).mutex), 0)
-
 /* Unlock the named lock variable.  */
 #if IS_IN (libc) || IS_IN (libpthread)
 # define __libc_lock_unlock(NAME) \
@@ -163,19 +160,13 @@ _Static_assert (LLL_LOCK_INITIALIZER == 0, "LLL_LOCK_INITIALIZER != 0");
 #endif
 #define __libc_rwlock_unlock(NAME) __pthread_rwlock_unlock (&(NAME))
 
-#ifdef SHARED
-# define __rtld_lock_default_lock_recursive(lock) \
-  ++((pthread_mutex_t *)(lock))->__data.__count;
-
-# define __rtld_lock_default_unlock_recursive(lock) \
-  --((pthread_mutex_t *)(lock))->__data.__count;
-
+#if IS_IN (rtld)
 # define __rtld_lock_lock_recursive(NAME) \
-  GL(dl_rtld_lock_recursive) (&(NAME).mutex)
+  ___rtld_mutex_lock (&(NAME).mutex)
 
 # define __rtld_lock_unlock_recursive(NAME) \
-  GL(dl_rtld_unlock_recursive) (&(NAME).mutex)
-#else
+  ___rtld_mutex_unlock (&(NAME).mutex)
+#else /* Not in the dynamic loader.  */
 # define __rtld_lock_lock_recursive(NAME) \
   __pthread_mutex_lock (&(NAME).mutex)
 

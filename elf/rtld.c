@@ -857,6 +857,14 @@ rtld_lock_default_unlock_recursive (void *lock)
   __rtld_lock_default_unlock_recursive (lock);
 }
 #endif
+#if PTHREAD_IN_LIBC
+/* Dummy implementation.  See __rtld_mutex_init.  */
+static int
+rtld_mutex_dummy (pthread_mutex_t *lock)
+{
+  return 0;
+}
+#endif
 
 
 static void
@@ -1147,6 +1155,10 @@ dl_main (const ElfW(Phdr) *phdr,
     && defined __rtld_lock_default_lock_recursive
   GL(dl_rtld_lock_recursive) = rtld_lock_default_lock_recursive;
   GL(dl_rtld_unlock_recursive) = rtld_lock_default_unlock_recursive;
+#endif
+#if PTHREAD_IN_LIBC
+  ___rtld_mutex_lock = rtld_mutex_dummy;
+  ___rtld_mutex_unlock = rtld_mutex_dummy;
 #endif
 
   /* The explicit initialization here is cheaper than processing the reloc
@@ -2363,6 +2375,9 @@ dl_main (const ElfW(Phdr) *phdr,
 	 loader.  */
       __rtld_malloc_init_real (main_map);
 
+      /* Likewise for the locking implementation.  */
+      __rtld_mutex_init ();
+
       /* Mark all the objects so we know they have been already relocated.  */
       for (struct link_map *l = main_map; l != NULL; l = l->l_next)
 	{
@@ -2467,6 +2482,9 @@ dl_main (const ElfW(Phdr) *phdr,
 	 its symbols (and potentially calling IFUNC resolvers) is safe
 	 at this point.  */
       __rtld_malloc_init_real (main_map);
+
+      /* Likewise for the locking implementation.  */
+      __rtld_mutex_init ();
 
       RTLD_TIMING_VAR (start);
       rtld_timer_start (&start);
