@@ -49,5 +49,5 @@ __ttyname_r (int fd, char *buf, size_t buflen)
   memcpy (buf, nodename, len);
   return 0;
 }
-
+libc_hidden_def (__ttyname_r)
 weak_alias (__ttyname_r, ttyname_r)
