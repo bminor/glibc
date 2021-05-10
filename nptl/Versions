@@ -298,6 +298,8 @@ libc {
     tss_set;
   }
   GLIBC_PRIVATE {
+    __default_pthread_attr;
+    __default_pthread_attr_lock;
     __futex_abstimed_wait64;
     __futex_abstimed_wait_cancelable64;
     __init_sched_fifo_prio;

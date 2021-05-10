@@ -22,7 +22,11 @@
 
 /* Default thread attributes for the case when the user does not
    provide any.  */
-union pthread_attr_transparent __default_pthread_attr attribute_hidden;
+union pthread_attr_transparent __default_pthread_attr
+  __attribute__ ((nocommon));
+libc_hidden_data_def (__default_pthread_attr)
 
 /* Mutex protecting __default_pthread_attr.  */
-int __default_pthread_attr_lock = LLL_LOCK_INITIALIZER;
+int __default_pthread_attr_lock __attribute__ ((nocommon))
+  = LLL_LOCK_INITIALIZER;
+libc_hidden_data_def (__default_pthread_attr_lock)

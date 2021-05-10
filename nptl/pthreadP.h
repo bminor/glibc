@@ -198,9 +198,11 @@ enum
 
 
 /* Default pthread attributes.  */
-extern union pthread_attr_transparent __default_pthread_attr attribute_hidden;
-extern int __default_pthread_attr_lock attribute_hidden;
-/* Called from __libpthread_freeres to deallocate the default attribute.  */
+extern union pthread_attr_transparent __default_pthread_attr;
+libc_hidden_proto (__default_pthread_attr)
+extern int __default_pthread_attr_lock;
+libc_hidden_proto (__default_pthread_attr_lock)
+/* Called from __libc_freeres to deallocate the default attribute.  */
 extern void __default_pthread_attr_freeres (void) attribute_hidden;
 
 /* Size and alignment of static TLS block.  */

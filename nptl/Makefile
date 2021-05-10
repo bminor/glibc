@@ -170,6 +170,7 @@ routines = \
   sem_wait \
   tpp \
   unwind \
+  vars \
 
 shared-only-routines = forward
 static-only-routines = pthread_atfork
@@ -212,7 +213,6 @@ libpthread-routines = \
   pthread_sigqueue \
   pthread_timedjoin \
   pthread_tryjoin \
-  vars \
   version \
 
 libpthread-shared-only-routines = \
