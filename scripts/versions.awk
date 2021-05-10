@@ -32,6 +32,29 @@ BEGIN {
   sort = "sort -t. -k 1,1 -k 2n,2n -k 3 > " tmpfile;
 }
 
+# GNU awk does not implement the ord and chr functions.
+# <https://www.gnu.org/software/gawk/manual/html_node/Ordinal-Functions.html>
+# says that they are "written very nicely", using code similar to what
+# is included here.
+function chr(c) {
+    return sprintf("%c", c)
+}
+
+BEGIN {
+    for (c = 1; c < 127; c++) {
+	ord_table[chr(c)] = c;
+    }
+}
+
+function ord(c) {
+    if (ord_table[c]) {
+	return ord_table[c];
+    } else {
+	printf("Invalid character reference: '%c'\n", c) > "/dev/stderr";
+	++lossage;
+    }
+}
+
 # Remove comment lines.
 /^ *#/ {
   next;
@@ -90,6 +113,17 @@ function close_and_move(name, real_name) {
   system(move_if_change " " name " " real_name " >&2");
 }
 
+# ELF hash, for use with symbol versions.
+function elf_hash(s, i, acc) {
+  acc = 0;
+  for (i = 1; i <= length(s); ++i) {
+      acc = and(lshift(acc, 4) + ord(substr(s, i, 1)), 0xffffffff);
+      top = and(acc, 0xf0000000);
+      acc = and(xor(acc, rshift(top, 24)), compl(top));
+  }
+  return acc;
+}
+
 # Now print the accumulated information.
 END {
   close(sort);
@@ -145,6 +179,8 @@ END {
 	  && oldver ~ "^GLIBC_[0-9]" \
 	  && sym ~ "^[A-Za-z0-9_]*$") {
 	ver_val = oldver;
+	printf("#define %s_STRING \"%s\"\n", first_ver_macro, ver_val) > first_ver_header;
+	printf("#define %s_HASH 0x%x\n", first_ver_macro, elf_hash(ver_val)) > first_ver_header;
 	gsub("\\.", "_", ver_val);
 	printf("#define %s %s\n", first_ver_macro, ver_val) > first_ver_header;
 	first_ver_seen[first_ver_macro] = 1;
