@@ -114,6 +114,8 @@ __libc_setup_tls (void)
 
   struct link_map *main_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
+  __tls_pre_init_tp ();
+
   /* Look through the TLS segment if there is any.  */
   if (_dl_phdr != NULL)
     for (phdr = _dl_phdr; phdr < &_dl_phdr[_dl_phnum]; ++phdr)

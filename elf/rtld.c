@@ -843,30 +843,6 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded (%s): ignored.\n",
   return 0;
 }
 
-#if defined SHARED && defined _LIBC_REENTRANT \
-    && defined __rtld_lock_default_lock_recursive
-static void
-rtld_lock_default_lock_recursive (void *lock)
-{
-  __rtld_lock_default_lock_recursive (lock);
-}
-
-static void
-rtld_lock_default_unlock_recursive (void *lock)
-{
-  __rtld_lock_default_unlock_recursive (lock);
-}
-#endif
-#if PTHREAD_IN_LIBC
-/* Dummy implementation.  See __rtld_mutex_init.  */
-static int
-rtld_mutex_dummy (pthread_mutex_t *lock)
-{
-  return 0;
-}
-#endif
-
-
 static void
 security_init (void)
 {
@@ -1147,19 +1123,7 @@ dl_main (const ElfW(Phdr) *phdr,
   struct dl_main_state state;
   dl_main_state_init (&state);
 
-#if !THREAD_GSCOPE_IN_TCB
-  GL(dl_init_static_tls) = &_dl_nothread_init_static_tls;
-#endif
-
-#if defined SHARED && defined _LIBC_REENTRANT \
-    && defined __rtld_lock_default_lock_recursive
-  GL(dl_rtld_lock_recursive) = rtld_lock_default_lock_recursive;
-  GL(dl_rtld_unlock_recursive) = rtld_lock_default_unlock_recursive;
-#endif
-#if PTHREAD_IN_LIBC
-  ___rtld_mutex_lock = rtld_mutex_dummy;
-  ___rtld_mutex_unlock = rtld_mutex_dummy;
-#endif
+  __tls_pre_init_tp ();
 
   /* The explicit initialization here is cheaper than processing the reloc
      in the _rtld_local definition's initializer.  */

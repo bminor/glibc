@@ -27,12 +27,33 @@ bool __nptl_set_robust_list_avail __attribute__ ((nocommon));
 rtld_hidden_data_def (__nptl_set_robust_list_avail)
 #endif
 
+#ifdef SHARED
+/* Dummy implementation.  See __rtld_mutex_init.  */
+static int
+rtld_mutex_dummy (pthread_mutex_t *lock)
+{
+  return 0;
+}
+#endif
+
+void
+__tls_pre_init_tp (void)
+{
+  /* The list data structures are not consistent until
+     initialized.  */
+  INIT_LIST_HEAD (&GL (dl_stack_used));
+  INIT_LIST_HEAD (&GL (dl_stack_user));
+
+#ifdef SHARED
+  ___rtld_mutex_lock = rtld_mutex_dummy;
+  ___rtld_mutex_unlock = rtld_mutex_dummy;
+#endif
+}
+
 void
 __tls_init_tp (void)
 {
   /* Set up thread stack list management.  */
-  INIT_LIST_HEAD (&GL (dl_stack_used));
-  INIT_LIST_HEAD (&GL (dl_stack_user));
   list_add (&THREAD_SELF->list, &GL (dl_stack_user));
 
    /* Early initialization of the TCB.   */

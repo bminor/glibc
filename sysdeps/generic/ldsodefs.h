@@ -1165,6 +1165,10 @@ extern void _dl_determine_tlsoffset (void) attribute_hidden;
    number of audit modules are loaded.  */
 void _dl_tls_static_surplus_init (size_t naudit) attribute_hidden;
 
+/* This function is called very early from dl_main to set up TLS and
+   other thread-related data structures.  */
+void __tls_pre_init_tp (void) attribute_hidden;
+
 /* This function is called after processor-specific initialization of
    the TCB and thread pointer via TLS_INIT_TP, to complete very early
    initialization of the thread library.  */

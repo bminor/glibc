@@ -16,4 +16,4 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* The generic version initialization happpens in dl_main.  */
+/* Initialization happens in __tls_pre_init_tp in dl-tls_init_tp.c.  */
