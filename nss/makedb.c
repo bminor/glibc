@@ -792,13 +792,23 @@ write_output (int fd)
 			  + nhashentries_total * sizeof (stridx_t)));
   header->allocate = file_offset;
 
-  /* Help GCC 10 see iov_nelts doesn't overflow the writev argument.  */
+#if __GNUC_PREREQ (10, 0) && !__GNUC_PREREQ (11, 0)
+  DIAG_PUSH_NEEDS_COMMENT;
+  /* Avoid GCC 10 false positive warning: specified size exceeds maximum
+     object size.  */
+  DIAG_IGNORE_NEEDS_COMMENT (10, "-Wstringop-overflow");
+#endif
+
   assert (iov_nelts <= INT_MAX);
   if (writev (fd, iov, iov_nelts) != keydataoffset)
     {
       error (0, errno, gettext ("failed to write new database file"));
       return EXIT_FAILURE;
     }
+
+#if __GNUC_PREREQ (10, 0) && !__GNUC_PREREQ (11, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
 
   return EXIT_SUCCESS;
 }
