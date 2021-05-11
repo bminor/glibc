@@ -1309,6 +1309,7 @@ GLIBC_2.2 pthread_attr_setinheritsched F
 GLIBC_2.2 pthread_attr_setschedparam F
 GLIBC_2.2 pthread_attr_setschedpolicy F
 GLIBC_2.2 pthread_attr_setscope F
+GLIBC_2.2 pthread_attr_setstack F
 GLIBC_2.2 pthread_barrier_destroy F
 GLIBC_2.2 pthread_barrier_init F
 GLIBC_2.2 pthread_barrier_wait F
@@ -2156,6 +2157,7 @@ GLIBC_2.3.3 nftw F
 GLIBC_2.3.3 nftw64 F
 GLIBC_2.3.3 pthread_attr_getaffinity_np F
 GLIBC_2.3.3 pthread_attr_setaffinity_np F
+GLIBC_2.3.3 pthread_attr_setstack F
 GLIBC_2.3.3 pthread_barrierattr_getpshared F
 GLIBC_2.3.3 pthread_condattr_getclock F
 GLIBC_2.3.3 pthread_condattr_setclock F
@@ -2261,6 +2263,7 @@ GLIBC_2.34 pthread_attr_getstack F
 GLIBC_2.34 pthread_attr_getstackaddr F
 GLIBC_2.34 pthread_attr_getstacksize F
 GLIBC_2.34 pthread_attr_setguardsize F
+GLIBC_2.34 pthread_attr_setstack F
 GLIBC_2.34 pthread_barrier_destroy F
 GLIBC_2.34 pthread_barrier_init F
 GLIBC_2.34 pthread_barrier_wait F

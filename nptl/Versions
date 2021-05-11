@@ -113,6 +113,7 @@ libc {
     __pthread_rwlock_unlock;
     __pthread_rwlock_wrlock;
     pthread_attr_getstack;
+    pthread_attr_setstack;
     pthread_barrier_destroy;
     pthread_barrier_init;
     pthread_barrier_wait;
@@ -250,6 +251,7 @@ libc {
     pthread_attr_getstackaddr;
     pthread_attr_getstacksize;
     pthread_attr_setguardsize;
+    pthread_attr_setstack;
     pthread_barrier_destroy;
     pthread_barrier_init;
     pthread_barrier_wait;
@@ -414,7 +416,6 @@ libpthread {
   }
 
   GLIBC_2.2 {
-    pthread_attr_setstack;
     pthread_getcpuclockid;
     pthread_yield;
     pthread_rwlock_timedrdlock;

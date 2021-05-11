@@ -1986,6 +1986,7 @@ GLIBC_2.2 posix_spawnp F
 GLIBC_2.2 pread F
 GLIBC_2.2 pread64 F
 GLIBC_2.2 pthread_attr_getstack F
+GLIBC_2.2 pthread_attr_setstack F
 GLIBC_2.2 pthread_barrier_destroy F
 GLIBC_2.2 pthread_barrier_init F
 GLIBC_2.2 pthread_barrier_wait F
@@ -2380,6 +2381,7 @@ GLIBC_2.34 pthread_attr_getstack F
 GLIBC_2.34 pthread_attr_getstackaddr F
 GLIBC_2.34 pthread_attr_getstacksize F
 GLIBC_2.34 pthread_attr_setguardsize F
+GLIBC_2.34 pthread_attr_setstack F
 GLIBC_2.34 pthread_barrier_destroy F
 GLIBC_2.34 pthread_barrier_init F
 GLIBC_2.34 pthread_barrier_wait F
@@ -2719,6 +2721,7 @@ GLIBC_2.5 vmsplice F
 GLIBC_2.6 __sched_cpucount F
 GLIBC_2.6 epoll_pwait F
 GLIBC_2.6 futimens F
+GLIBC_2.6 pthread_attr_setstack F
 GLIBC_2.6 sched_getcpu F
 GLIBC_2.6 strerror_l F
 GLIBC_2.6 sync_file_range F
