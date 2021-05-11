@@ -1576,6 +1576,7 @@ GLIBC_2.1 pread F
 GLIBC_2.1 pread64 F
 GLIBC_2.1 printf_size F
 GLIBC_2.1 printf_size_info F
+GLIBC_2.1 pthread_attr_getguardsize F
 GLIBC_2.1 pthread_attr_init F
 GLIBC_2.1 pthread_mutexattr_gettype F
 GLIBC_2.1 pthread_mutexattr_settype F
@@ -2343,6 +2344,7 @@ GLIBC_2.34 mtx_timedlock F
 GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
 GLIBC_2.34 pthread_attr_getaffinity_np F
+GLIBC_2.34 pthread_attr_getguardsize F
 GLIBC_2.34 pthread_barrier_destroy F
 GLIBC_2.34 pthread_barrier_init F
 GLIBC_2.34 pthread_barrier_wait F

@@ -17,10 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
-
+#include <shlib-compat.h>
 
 int
-pthread_attr_getguardsize (const pthread_attr_t *attr, size_t *guardsize)
+__pthread_attr_getguardsize (const pthread_attr_t *attr, size_t *guardsize)
 {
   struct pthread_attr *iattr;
 
@@ -30,3 +30,9 @@ pthread_attr_getguardsize (const pthread_attr_t *attr, size_t *guardsize)
 
   return 0;
 }
+versioned_symbol (libpthread, __pthread_attr_getguardsize,
+                  pthread_attr_getguardsize, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_attr_getguardsize,
+               pthread_attr_getguardsize, GLIBC_2_1);
+#endif
