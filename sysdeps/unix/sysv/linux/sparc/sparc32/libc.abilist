@@ -1585,6 +1585,7 @@ GLIBC_2.1 pthread_attr_init F
 GLIBC_2.1 pthread_attr_setguardsize F
 GLIBC_2.1 pthread_attr_setstackaddr F
 GLIBC_2.1 pthread_attr_setstacksize F
+GLIBC_2.1 pthread_getconcurrency F
 GLIBC_2.1 pthread_mutexattr_gettype F
 GLIBC_2.1 pthread_mutexattr_settype F
 GLIBC_2.1 pthread_rwlock_destroy F
@@ -1600,6 +1601,7 @@ GLIBC_2.1 pthread_rwlockattr_getpshared F
 GLIBC_2.1 pthread_rwlockattr_init F
 GLIBC_2.1 pthread_rwlockattr_setkind_np F
 GLIBC_2.1 pthread_rwlockattr_setpshared F
+GLIBC_2.1 pthread_setconcurrency F
 GLIBC_2.1 ptsname F
 GLIBC_2.1 ptsname_r F
 GLIBC_2.1 putgrent F
@@ -2401,6 +2403,7 @@ GLIBC_2.34 pthread_condattr_getpshared F
 GLIBC_2.34 pthread_condattr_setclock F
 GLIBC_2.34 pthread_condattr_setpshared F
 GLIBC_2.34 pthread_detach F
+GLIBC_2.34 pthread_getconcurrency F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_join F
 GLIBC_2.34 pthread_key_create F
@@ -2443,6 +2446,7 @@ GLIBC_2.34 pthread_rwlockattr_init F
 GLIBC_2.34 pthread_rwlockattr_setkind_np F
 GLIBC_2.34 pthread_rwlockattr_setpshared F
 GLIBC_2.34 pthread_setattr_default_np F
+GLIBC_2.34 pthread_setconcurrency F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.34 pthread_spin_destroy F
 GLIBC_2.34 pthread_spin_init F

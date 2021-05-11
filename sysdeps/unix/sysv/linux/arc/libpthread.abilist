@@ -1,11 +1,9 @@
 GLIBC_2.32 __errno_location F
 GLIBC_2.32 pthread_create F
 GLIBC_2.32 pthread_getattr_default_np F
-GLIBC_2.32 pthread_getconcurrency F
 GLIBC_2.32 pthread_getcpuclockid F
 GLIBC_2.32 pthread_getname_np F
 GLIBC_2.32 pthread_setaffinity_np F
-GLIBC_2.32 pthread_setconcurrency F
 GLIBC_2.32 pthread_setname_np F
 GLIBC_2.32 pthread_setschedprio F
 GLIBC_2.32 pthread_sigqueue F

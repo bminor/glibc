@@ -1581,6 +1581,7 @@ GLIBC_2.17 pthread_equal F
 GLIBC_2.17 pthread_exit F
 GLIBC_2.17 pthread_getaffinity_np F
 GLIBC_2.17 pthread_getattr_np F
+GLIBC_2.17 pthread_getconcurrency F
 GLIBC_2.17 pthread_getschedparam F
 GLIBC_2.17 pthread_getspecific F
 GLIBC_2.17 pthread_join F
@@ -1633,6 +1634,7 @@ GLIBC_2.17 pthread_rwlockattr_setpshared F
 GLIBC_2.17 pthread_self F
 GLIBC_2.17 pthread_setcancelstate F
 GLIBC_2.17 pthread_setcanceltype F
+GLIBC_2.17 pthread_setconcurrency F
 GLIBC_2.17 pthread_setschedparam F
 GLIBC_2.17 pthread_setspecific F
 GLIBC_2.17 pthread_sigmask F
@@ -2558,6 +2560,7 @@ GLIBC_2.34 pthread_condattr_getpshared F
 GLIBC_2.34 pthread_condattr_setclock F
 GLIBC_2.34 pthread_condattr_setpshared F
 GLIBC_2.34 pthread_detach F
+GLIBC_2.34 pthread_getconcurrency F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_join F
 GLIBC_2.34 pthread_key_create F
@@ -2600,6 +2603,7 @@ GLIBC_2.34 pthread_rwlockattr_init F
 GLIBC_2.34 pthread_rwlockattr_setkind_np F
 GLIBC_2.34 pthread_rwlockattr_setpshared F
 GLIBC_2.34 pthread_setattr_default_np F
+GLIBC_2.34 pthread_setconcurrency F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.34 pthread_spin_destroy F
 GLIBC_2.34 pthread_spin_init F

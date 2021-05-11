@@ -113,6 +113,7 @@ routines = \
   pthread_exit \
   pthread_getaffinity \
   pthread_getattr_np \
+  pthread_getconcurrency \
   pthread_getschedparam \
   pthread_getspecific \
   pthread_join \
@@ -167,6 +168,7 @@ routines = \
   pthread_setattr_default_np \
   pthread_setcancelstate \
   pthread_setcanceltype \
+  pthread_setconcurrency \
   pthread_setschedparam \
   pthread_setspecific \
   pthread_sigmask \
@@ -204,11 +206,9 @@ libpthread-routines = \
   pt-interp \
   pthread_create \
   pthread_getattr_default_np \
-  pthread_getconcurrency \
   pthread_getcpuclockid \
   pthread_getname \
   pthread_setaffinity \
-  pthread_setconcurrency \
   pthread_setname \
   pthread_setschedprio \
   pthread_sigqueue \

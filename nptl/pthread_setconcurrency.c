@@ -18,14 +18,14 @@
 
 #include <errno.h>
 #include "pthreadP.h"
-
+#include <shlib-compat.h>
 
 /* Global definition.  Needed in pthread_getconcurrency as well.  */
 int __concurrency_level;
 
 
 int
-pthread_setconcurrency (int level)
+__pthread_setconcurrency (int level)
 {
   if (level < 0)
     return EINVAL;
@@ -37,3 +37,10 @@ pthread_setconcurrency (int level)
 
   return 0;
 }
+versioned_symbol (libc, __pthread_setconcurrency, pthread_setconcurrency,
+                  GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_setconcurrency, pthread_setconcurrency,
+               GLIBC_2_1);
+#endif

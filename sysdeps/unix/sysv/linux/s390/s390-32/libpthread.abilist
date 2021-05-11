@@ -1,8 +1,6 @@
 GLIBC_2.0 __errno_location F
 GLIBC_2.0 pthread_create F
 GLIBC_2.1 pthread_create F
-GLIBC_2.1 pthread_getconcurrency F
-GLIBC_2.1 pthread_setconcurrency F
 GLIBC_2.1.1 __libpthread_version_placeholder F
 GLIBC_2.1.2 __libpthread_version_placeholder F
 GLIBC_2.11 pthread_sigqueue F

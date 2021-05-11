@@ -80,6 +80,7 @@ libc {
     pthread_attr_setguardsize;
     pthread_attr_setstackaddr;
     pthread_attr_setstacksize;
+    pthread_getconcurrency;
     pthread_mutexattr_gettype;
     pthread_mutexattr_settype;
     pthread_rwlock_destroy;
@@ -95,6 +96,7 @@ libc {
     pthread_rwlockattr_init;
     pthread_rwlockattr_setkind_np;
     pthread_rwlockattr_setpshared;
+    pthread_setconcurrency;
     sem_destroy;
     sem_getvalue;
     sem_init;
@@ -280,6 +282,7 @@ libc {
     pthread_condattr_setclock;
     pthread_condattr_setpshared;
     pthread_detach;
+    pthread_getconcurrency;
     pthread_getspecific;
     pthread_join;
     pthread_key_create;
@@ -318,6 +321,7 @@ libc {
     pthread_rwlockattr_setkind_np;
     pthread_rwlockattr_setpshared;
     pthread_setattr_default_np;
+    pthread_setconcurrency;
     pthread_setspecific;
     pthread_spin_destroy;
     pthread_spin_init;
@@ -414,8 +418,6 @@ libpthread {
 
   GLIBC_2.1 {
     pthread_create;
-    pthread_getconcurrency;
-    pthread_setconcurrency;
   }
 
   GLIBC_2.1.1 {

@@ -4,9 +4,7 @@ GLIBC_2.12 pthread_setname_np F
 GLIBC_2.18 pthread_getattr_default_np F
 GLIBC_2.2.5 __errno_location F
 GLIBC_2.2.5 pthread_create F
-GLIBC_2.2.5 pthread_getconcurrency F
 GLIBC_2.2.5 pthread_getcpuclockid F
-GLIBC_2.2.5 pthread_setconcurrency F
 GLIBC_2.2.6 __libpthread_version_placeholder F
 GLIBC_2.28 thrd_create F
 GLIBC_2.3.2 __libpthread_version_placeholder F
