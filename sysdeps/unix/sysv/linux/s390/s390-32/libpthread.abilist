@@ -1,7 +1,6 @@
 GLIBC_2.0 __errno_location F
 GLIBC_2.0 pthread_cancel F
 GLIBC_2.0 pthread_create F
-GLIBC_2.0 pthread_detach F
 GLIBC_2.0 pthread_join F
 GLIBC_2.1 pthread_attr_getguardsize F
 GLIBC_2.1 pthread_attr_getstackaddr F
@@ -25,7 +24,6 @@ GLIBC_2.2 pthread_getcpuclockid F
 GLIBC_2.2.3 __libpthread_version_placeholder F
 GLIBC_2.2.6 __libpthread_version_placeholder F
 GLIBC_2.28 thrd_create F
-GLIBC_2.28 thrd_detach F
 GLIBC_2.28 thrd_join F
 GLIBC_2.3.2 __libpthread_version_placeholder F
 GLIBC_2.3.3 __pthread_register_cancel F

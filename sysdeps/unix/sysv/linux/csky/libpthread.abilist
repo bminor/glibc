@@ -14,7 +14,6 @@ GLIBC_2.29 pthread_attr_setstackaddr F
 GLIBC_2.29 pthread_attr_setstacksize F
 GLIBC_2.29 pthread_cancel F
 GLIBC_2.29 pthread_create F
-GLIBC_2.29 pthread_detach F
 GLIBC_2.29 pthread_getattr_default_np F
 GLIBC_2.29 pthread_getconcurrency F
 GLIBC_2.29 pthread_getcpuclockid F
@@ -28,7 +27,6 @@ GLIBC_2.29 pthread_sigqueue F
 GLIBC_2.29 pthread_timedjoin_np F
 GLIBC_2.29 pthread_tryjoin_np F
 GLIBC_2.29 thrd_create F
-GLIBC_2.29 thrd_detach F
 GLIBC_2.29 thrd_join F
 GLIBC_2.30 __libpthread_version_placeholder F
 GLIBC_2.31 pthread_clockjoin_np F

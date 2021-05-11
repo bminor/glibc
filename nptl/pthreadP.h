@@ -529,6 +529,7 @@ extern int __pthread_atfork (void (*prepare) (void), void (*parent) (void),
 extern pthread_t __pthread_self (void);
 extern int __pthread_equal (pthread_t thread1, pthread_t thread2);
 extern int __pthread_detach (pthread_t th);
+libc_hidden_proto (__pthread_detach)
 extern int __pthread_cancel (pthread_t th);
 extern int __pthread_kill (pthread_t threadid, int signo);
 extern void __pthread_exit (void *value) __attribute__ ((__noreturn__));

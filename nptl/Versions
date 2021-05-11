@@ -37,6 +37,7 @@ libc {
     pthread_cond_wait;
     pthread_condattr_destroy;
     pthread_condattr_init;
+    pthread_detach;
     pthread_equal;
     pthread_exit;
     pthread_getschedparam;
@@ -186,6 +187,7 @@ libc {
     mtx_trylock;
     mtx_unlock;
     thrd_current;
+    thrd_detach;
     thrd_equal;
     thrd_exit;
     thrd_sleep;
@@ -240,6 +242,7 @@ libc {
     pthread_condattr_getpshared;
     pthread_condattr_setclock;
     pthread_condattr_setpshared;
+    pthread_detach;
     pthread_getspecific;
     pthread_key_create;
     pthread_key_delete;
@@ -295,6 +298,7 @@ libc {
     sem_trywait;
     sem_unlink;
     sem_wait;
+    thrd_detach;
     thrd_exit;
     tss_create;
     tss_delete;
@@ -365,7 +369,6 @@ libpthread {
     funlockfile;
     pthread_cancel;
     pthread_create;
-    pthread_detach;
     pthread_join;
     pthread_sigmask;
   }
@@ -449,7 +452,6 @@ libpthread {
   # C11 thread symbols.
   GLIBC_2.28 {
     thrd_create;
-    thrd_detach;
     thrd_join;
   }
 

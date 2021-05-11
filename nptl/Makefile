@@ -95,6 +95,7 @@ routines = \
   pthread_condattr_init \
   pthread_condattr_setclock \
   pthread_condattr_setpshared \
+  pthread_detach \
   pthread_equal \
   pthread_exit \
   pthread_getaffinity \
@@ -198,7 +199,6 @@ libpthread-routines = \
   pthread_cancel \
   pthread_clockjoin \
   pthread_create \
-  pthread_detach \
   pthread_getattr_default_np \
   pthread_getconcurrency \
   pthread_getcpuclockid \
