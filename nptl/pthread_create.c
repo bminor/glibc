@@ -42,9 +42,6 @@
 #include <stap-probe.h>
 
 
-/* Nozero if debugging mode is enabled.  */
-int __pthread_debug;
-
 /* Globally enabled events.  */
 static td_thr_events_t __nptl_threads_events __attribute_used__;
 
@@ -210,46 +207,6 @@ static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
 
 #include <createthread.c>
 
-
-struct pthread *
-__find_in_stack_list (struct pthread *pd)
-{
-  list_t *entry;
-  struct pthread *result = NULL;
-
-  lll_lock (GL (dl_stack_cache_lock), LLL_PRIVATE);
-
-  list_for_each (entry, &GL (dl_stack_used))
-    {
-      struct pthread *curp;
-
-      curp = list_entry (entry, struct pthread, list);
-      if (curp == pd)
-	{
-	  result = curp;
-	  break;
-	}
-    }
-
-  if (result == NULL)
-    list_for_each (entry, &GL (dl_stack_user))
-      {
-	struct pthread *curp;
-
-	curp = list_entry (entry, struct pthread, list);
-	if (curp == pd)
-	  {
-	    result = curp;
-	    break;
-	  }
-      }
-
-  lll_unlock (GL (dl_stack_cache_lock), LLL_PRIVATE);
-
-  return result;
-}
-
-
 /* Deallocate a thread's stack after optionally making sure the thread
    descriptor is still valid.  */
 void
@@ -259,12 +216,6 @@ __free_tcb (struct pthread *pd)
   if (__builtin_expect (atomic_bit_test_set (&pd->cancelhandling,
 					     TERMINATED_BIT) == 0, 1))
     {
-      /* Remove the descriptor from the list.  */
-      if (DEBUGGING_P && __find_in_stack_list (pd) == NULL)
-	/* Something is really wrong.  The descriptor for a still
-	   running thread is gone.  */
-	abort ();
-
       /* Free TPP data.  */
       if (__glibc_unlikely (pd->tpp != NULL))
 	{

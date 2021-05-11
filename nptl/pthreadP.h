@@ -243,23 +243,11 @@ libc_hidden_proto (__pthread_tpp_change_priority)
 extern int __pthread_current_priority (void);
 libc_hidden_proto (__pthread_current_priority)
 
-/* The library can run in debugging mode where it performs a lot more
-   tests.  */
-extern int __pthread_debug attribute_hidden;
-/** For now disable debugging support.  */
-#if 0
-# define DEBUGGING_P __builtin_expect (__pthread_debug, 0)
-# define INVALID_TD_P(pd) (DEBUGGING_P && __find_in_stack_list (pd) == NULL)
-# define INVALID_NOT_TERMINATED_TD_P(pd) INVALID_TD_P (pd)
-#else
-# define DEBUGGING_P 0
-/* Simplified test.  This will not catch all invalid descriptors but
-   is better than nothing.  And if the test triggers the thread
-   descriptor is guaranteed to be invalid.  */
-# define INVALID_TD_P(pd) __builtin_expect ((pd)->tid <= 0, 0)
-# define INVALID_NOT_TERMINATED_TD_P(pd) __builtin_expect ((pd)->tid < 0, 0)
-#endif
-
+/* This will not catch all invalid descriptors but is better than
+   nothing.  And if the test triggers the thread descriptor is
+   guaranteed to be invalid.  */
+#define INVALID_TD_P(pd) __builtin_expect ((pd)->tid <= 0, 0)
+#define INVALID_NOT_TERMINATED_TD_P(pd) __builtin_expect ((pd)->tid < 0, 0)
 
 /* Cancellation test.  */
 #define CANCELLATION_P(self) \
@@ -321,10 +309,6 @@ __do_cancel (void)
 
 
 /* Internal prototypes.  */
-
-/* Thread list handling.  */
-extern struct pthread *__find_in_stack_list (struct pthread *pd)
-     attribute_hidden;
 
 /* Deallocate a thread's stack after optionally making sure the thread
    descriptor is still valid.  */
