@@ -351,6 +351,7 @@ GLIBC_2.18 __pthread_mutexattr_destroy F
 GLIBC_2.18 __pthread_mutexattr_init F
 GLIBC_2.18 __pthread_mutexattr_settype F
 GLIBC_2.18 __pthread_once F
+GLIBC_2.18 __pthread_register_cancel F
 GLIBC_2.18 __pthread_rwlock_destroy F
 GLIBC_2.18 __pthread_rwlock_init F
 GLIBC_2.18 __pthread_rwlock_rdlock F
@@ -359,6 +360,7 @@ GLIBC_2.18 __pthread_rwlock_trywrlock F
 GLIBC_2.18 __pthread_rwlock_unlock F
 GLIBC_2.18 __pthread_rwlock_wrlock F
 GLIBC_2.18 __pthread_setspecific F
+GLIBC_2.18 __pthread_unregister_cancel F
 GLIBC_2.18 __pthread_unwind_next F
 GLIBC_2.18 __ptsname_r_chk F
 GLIBC_2.18 __pwrite64 F
@@ -2305,6 +2307,8 @@ GLIBC_2.34 __pthread_cleanup_routine F
 GLIBC_2.34 __pthread_key_create F
 GLIBC_2.34 __pthread_mutex_lock F
 GLIBC_2.34 __pthread_mutex_unlock F
+GLIBC_2.34 __pthread_register_cancel F
+GLIBC_2.34 __pthread_unregister_cancel F
 GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F

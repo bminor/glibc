@@ -31,6 +31,7 @@ extra-libs-others := $(extra-libs)
 routines = \
   alloca_cutoff \
   cancellation \
+  cleanup \
   cleanup_compat \
   cleanup_defer_compat \
   cleanup_routine \
@@ -195,7 +196,6 @@ shared-only-routines = forward
 static-only-routines = pthread_atfork
 
 libpthread-routines = \
-  cleanup \
   cleanup_defer \
   events \
   libpthread-compat \

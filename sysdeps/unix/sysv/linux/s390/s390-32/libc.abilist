@@ -2247,6 +2247,8 @@ GLIBC_2.3.2 pthread_cond_timedwait F
 GLIBC_2.3.2 pthread_cond_wait F
 GLIBC_2.3.2 strptime_l F
 GLIBC_2.3.3 __pthread_cleanup_routine F
+GLIBC_2.3.3 __pthread_register_cancel F
+GLIBC_2.3.3 __pthread_unregister_cancel F
 GLIBC_2.3.3 __pthread_unwind_next F
 GLIBC_2.3.3 _sys_siglist D 0x104
 GLIBC_2.3.3 gnu_dev_major F
@@ -2360,6 +2362,8 @@ GLIBC_2.34 __pthread_cleanup_routine F
 GLIBC_2.34 __pthread_key_create F
 GLIBC_2.34 __pthread_mutex_lock F
 GLIBC_2.34 __pthread_mutex_unlock F
+GLIBC_2.34 __pthread_register_cancel F
+GLIBC_2.34 __pthread_unregister_cancel F
 GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F

@@ -277,21 +277,12 @@ extern void __pthread_unwind_next (__pthread_unwind_buf_t *__buf)
 /* NB: No hidden proto for __pthread_unwind_next: inside glibc, the
    legacy unwinding mechanism is used.  */
 
-#if IS_IN (libpthread)
 extern void __pthread_register_cancel (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute;
+libc_hidden_proto (__pthread_register_cancel)
 extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
      __cleanup_fct_attribute;
-hidden_proto (__pthread_register_cancel)
-hidden_proto (__pthread_unregister_cancel)
-# ifdef SHARED
-/* The difference from __libc_unwind_link_get is that here, errors
-   terminate the process.  */
-struct unwind_link ;
-struct unwind_link *__pthread_unwind_link_get (void) attribute_hidden;
-# endif
-#endif
-
+libc_hidden_proto (__pthread_unregister_cancel)
 
 /* Called when a thread reacts on a cancellation request.  */
 static inline void

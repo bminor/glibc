@@ -151,6 +151,8 @@ libc {
   }
   GLIBC_2.3.3 {
     __pthread_cleanup_routine;
+    __pthread_register_cancel;
+    __pthread_unregister_cancel;
     __pthread_unwind_next;
     pthread_attr_getaffinity_np;
     pthread_attr_setaffinity_np;
@@ -234,6 +236,8 @@ libc {
     __pthread_key_create;
     __pthread_mutex_lock;
     __pthread_mutex_unlock;
+    __pthread_register_cancel;
+    __pthread_unregister_cancel;
     call_once;
     cnd_broadcast;
     cnd_destroy;
@@ -437,9 +441,7 @@ libpthread {
   }
 
   GLIBC_2.3.3 {
-    __pthread_register_cancel;
     __pthread_register_cancel_defer;
-    __pthread_unregister_cancel;
     __pthread_unregister_cancel_restore;
     pthread_setaffinity_np;
   }
