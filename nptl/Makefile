@@ -94,6 +94,7 @@ routines = \
   pthread_barrierattr_getpshared \
   pthread_barrierattr_init \
   pthread_barrierattr_setpshared \
+  pthread_cancel \
   pthread_cleanup_upto \
   pthread_clockjoin \
   pthread_cond_broadcast \
@@ -201,7 +202,6 @@ libpthread-routines = \
   libpthread-compat \
   nptl-init \
   pt-interp \
-  pthread_cancel \
   pthread_create \
   pthread_getattr_default_np \
   pthread_getconcurrency \

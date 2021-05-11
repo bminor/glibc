@@ -889,6 +889,7 @@ GLIBC_2.0 pthread_attr_setinheritsched F
 GLIBC_2.0 pthread_attr_setschedparam F
 GLIBC_2.0 pthread_attr_setschedpolicy F
 GLIBC_2.0 pthread_attr_setscope F
+GLIBC_2.0 pthread_cancel F
 GLIBC_2.0 pthread_cond_broadcast F
 GLIBC_2.0 pthread_cond_destroy F
 GLIBC_2.0 pthread_cond_init F
@@ -2443,6 +2444,7 @@ GLIBC_2.34 pthread_barrierattr_destroy F
 GLIBC_2.34 pthread_barrierattr_getpshared F
 GLIBC_2.34 pthread_barrierattr_init F
 GLIBC_2.34 pthread_barrierattr_setpshared F
+GLIBC_2.34 pthread_cancel F
 GLIBC_2.34 pthread_clockjoin_np F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F

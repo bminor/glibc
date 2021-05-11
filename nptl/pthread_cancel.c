@@ -100,6 +100,10 @@ __pthread_cancel (pthread_t th)
 
   return result;
 }
-weak_alias (__pthread_cancel, pthread_cancel)
+versioned_symbol (libc, __pthread_cancel, pthread_cancel, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_cancel, pthread_cancel, GLIBC_2_0);
+#endif
 
 PTHREAD_STATIC_FN_REQUIRE (__pthread_create)

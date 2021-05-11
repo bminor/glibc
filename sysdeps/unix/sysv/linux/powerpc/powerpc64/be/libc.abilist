@@ -1422,6 +1422,7 @@ GLIBC_2.3 pthread_barrier_wait F
 GLIBC_2.3 pthread_barrierattr_destroy F
 GLIBC_2.3 pthread_barrierattr_init F
 GLIBC_2.3 pthread_barrierattr_setpshared F
+GLIBC_2.3 pthread_cancel F
 GLIBC_2.3 pthread_cond_broadcast F
 GLIBC_2.3 pthread_cond_destroy F
 GLIBC_2.3 pthread_cond_init F
@@ -2249,6 +2250,7 @@ GLIBC_2.34 pthread_barrierattr_destroy F
 GLIBC_2.34 pthread_barrierattr_getpshared F
 GLIBC_2.34 pthread_barrierattr_init F
 GLIBC_2.34 pthread_barrierattr_setpshared F
+GLIBC_2.34 pthread_cancel F
 GLIBC_2.34 pthread_clockjoin_np F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F

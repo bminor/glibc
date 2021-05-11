@@ -29,6 +29,7 @@ libc {
     pthread_attr_setschedparam;
     pthread_attr_setschedpolicy;
     pthread_attr_setscope;
+    pthread_cancel;
     pthread_cond_broadcast;
     pthread_cond_destroy;
     pthread_cond_init;
@@ -271,6 +272,7 @@ libc {
     pthread_barrierattr_getpshared;
     pthread_barrierattr_init;
     pthread_barrierattr_setpshared;
+    pthread_cancel;
     pthread_clockjoin_np;
     pthread_cond_clockwait;
     pthread_condattr_getclock;
@@ -406,7 +408,6 @@ libpthread {
     flockfile;
     ftrylockfile;
     funlockfile;
-    pthread_cancel;
     pthread_create;
     pthread_sigmask;
   }

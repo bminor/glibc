@@ -1,5 +1,4 @@
 GLIBC_2.29 __errno_location F
-GLIBC_2.29 pthread_cancel F
 GLIBC_2.29 pthread_create F
 GLIBC_2.29 pthread_getattr_default_np F
 GLIBC_2.29 pthread_getconcurrency F

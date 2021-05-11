@@ -1,5 +1,4 @@
 GLIBC_2.0 __errno_location F
-GLIBC_2.0 pthread_cancel F
 GLIBC_2.0 pthread_create F
 GLIBC_2.11 pthread_sigqueue F
 GLIBC_2.12 pthread_getname_np F
