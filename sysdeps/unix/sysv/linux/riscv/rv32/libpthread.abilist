@@ -1,6 +1,4 @@
 GLIBC_2.33 __errno_location F
-GLIBC_2.33 __pthread_register_cancel_defer F
-GLIBC_2.33 __pthread_unregister_cancel_restore F
 GLIBC_2.33 pthread_cancel F
 GLIBC_2.33 pthread_create F
 GLIBC_2.33 pthread_getattr_default_np F

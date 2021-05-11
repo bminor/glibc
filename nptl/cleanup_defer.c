@@ -18,11 +18,11 @@
 
 #include <stdlib.h>
 #include "pthreadP.h"
-
+#include <shlib-compat.h>
 
 void
 __cleanup_fct_attribute
-__pthread_register_cancel_defer (__pthread_unwind_buf_t *buf)
+___pthread_register_cancel_defer (__pthread_unwind_buf_t *buf)
 {
   struct pthread_unwind_buf *ibuf = (struct pthread_unwind_buf *) buf;
   struct pthread *self = THREAD_SELF;
@@ -56,11 +56,17 @@ __pthread_register_cancel_defer (__pthread_unwind_buf_t *buf)
   /* Store the new cleanup handler info.  */
   THREAD_SETMEM (self, cleanup_jmp_buf, (struct pthread_unwind_buf *) buf);
 }
+versioned_symbol (libc, ___pthread_register_cancel_defer,
+		  __pthread_register_cancel_defer, GLIBC_2_34);
 
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_register_cancel_defer,
+	       __pthread_register_cancel_defer, GLIBC_2_3_3);
+#endif
 
 void
 __cleanup_fct_attribute
-__pthread_unregister_cancel_restore (__pthread_unwind_buf_t *buf)
+___pthread_unregister_cancel_restore (__pthread_unwind_buf_t *buf)
 {
   struct pthread *self = THREAD_SELF;
   struct pthread_unwind_buf *ibuf = (struct pthread_unwind_buf *) buf;
@@ -89,3 +95,10 @@ __pthread_unregister_cancel_restore (__pthread_unwind_buf_t *buf)
       CANCELLATION_P (self);
     }
 }
+versioned_symbol (libc, ___pthread_unregister_cancel_restore,
+		  __pthread_unregister_cancel_restore, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_unregister_cancel_restore,
+	       __pthread_unregister_cancel_restore, GLIBC_2_3_3);
+#endif

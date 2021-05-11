@@ -33,6 +33,7 @@ routines = \
   cancellation \
   cleanup \
   cleanup_compat \
+  cleanup_defer \
   cleanup_defer_compat \
   cleanup_routine \
   elision-conf \
@@ -196,7 +197,6 @@ shared-only-routines = forward
 static-only-routines = pthread_atfork
 
 libpthread-routines = \
-  cleanup_defer \
   events \
   libpthread-compat \
   nptl-init \
