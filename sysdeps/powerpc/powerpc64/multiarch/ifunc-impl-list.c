@@ -258,6 +258,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_IMPL (i, name, rawmemchr,
 #ifdef __LITTLE_ENDIAN__
 	      IFUNC_IMPL_ADD (array, i, rawmemchr,
+			      (hwcap2 & PPC_FEATURE2_ARCH_3_1)
+                              && (hwcap & PPC_FEATURE_HAS_VSX),
+                              __rawmemchr_power10)
+	      IFUNC_IMPL_ADD (array, i, rawmemchr,
 			      hwcap2 & PPC_FEATURE2_ARCH_3_00,
 			      __rawmemchr_power9)
 #endif

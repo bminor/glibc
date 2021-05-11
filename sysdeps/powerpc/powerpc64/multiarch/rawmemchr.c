@@ -26,6 +26,7 @@ extern __typeof (__rawmemchr) __rawmemchr_ppc attribute_hidden;
 extern __typeof (__rawmemchr) __rawmemchr_power7 attribute_hidden;
 # ifdef __LITTLE_ENDIAN__
 extern __typeof (__rawmemchr) __rawmemchr_power9 attribute_hidden;
+extern __typeof (__rawmemchr) __rawmemchr_power10 attribute_hidden;
 # endif
 
 # undef __rawmemchr
@@ -34,6 +35,9 @@ extern __typeof (__rawmemchr) __rawmemchr_power9 attribute_hidden;
    ifunc symbol properly.  */
 libc_ifunc_redirected (__redirect___rawmemchr, __rawmemchr,
 # ifdef __LITTLE_ENDIAN__
+		     (hwcap2 & PPC_FEATURE2_ARCH_3_1)
+		     && (hwcap & PPC_FEATURE_HAS_VSX)
+		     ? __rawmemchr_power10 :
 		       (hwcap2 & PPC_FEATURE2_ARCH_3_00)
 		       ? __rawmemchr_power9 :
 # endif
