@@ -1850,6 +1850,7 @@ GLIBC_2.2 pthread_attr_getstack F
 GLIBC_2.2 pthread_attr_getstackaddr F
 GLIBC_2.2 pthread_attr_getstacksize F
 GLIBC_2.2 pthread_attr_init F
+GLIBC_2.2 pthread_attr_setguardsize F
 GLIBC_2.2 pthread_barrier_destroy F
 GLIBC_2.2 pthread_barrier_init F
 GLIBC_2.2 pthread_barrier_wait F
@@ -2312,6 +2313,7 @@ GLIBC_2.34 pthread_attr_getguardsize F
 GLIBC_2.34 pthread_attr_getstack F
 GLIBC_2.34 pthread_attr_getstackaddr F
 GLIBC_2.34 pthread_attr_getstacksize F
+GLIBC_2.34 pthread_attr_setguardsize F
 GLIBC_2.34 pthread_barrier_destroy F
 GLIBC_2.34 pthread_barrier_init F
 GLIBC_2.34 pthread_barrier_wait F

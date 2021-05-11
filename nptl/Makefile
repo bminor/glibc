@@ -75,6 +75,7 @@ routines = \
   pthread_attr_init \
   pthread_attr_setaffinity \
   pthread_attr_setdetachstate \
+  pthread_attr_setguardsize \
   pthread_attr_setinheritsched \
   pthread_attr_setschedparam \
   pthread_attr_setschedpolicy \
@@ -197,7 +198,6 @@ libpthread-routines = \
   libpthread-compat \
   nptl-init \
   pt-interp \
-  pthread_attr_setguardsize \
   pthread_attr_setstack \
   pthread_attr_setstackaddr \
   pthread_attr_setstacksize \

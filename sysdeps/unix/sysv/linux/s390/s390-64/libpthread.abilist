@@ -4,7 +4,6 @@ GLIBC_2.12 pthread_setname_np F
 GLIBC_2.18 pthread_getattr_default_np F
 GLIBC_2.19 __libpthread_version_placeholder F
 GLIBC_2.2 __errno_location F
-GLIBC_2.2 pthread_attr_setguardsize F
 GLIBC_2.2 pthread_attr_setstack F
 GLIBC_2.2 pthread_attr_setstackaddr F
 GLIBC_2.2 pthread_attr_setstacksize F
