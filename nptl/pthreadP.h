@@ -203,7 +203,7 @@ libc_hidden_proto (__default_pthread_attr)
 extern int __default_pthread_attr_lock;
 libc_hidden_proto (__default_pthread_attr_lock)
 /* Called from __libc_freeres to deallocate the default attribute.  */
-extern void __default_pthread_attr_freeres (void) attribute_hidden;
+extern void __default_pthread_attr_freeres (void);
 
 /* Size and alignment of static TLS block.  */
 extern size_t __static_tls_size attribute_hidden;

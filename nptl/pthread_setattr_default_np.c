@@ -20,10 +20,10 @@
 #include <stdlib.h>
 #include <pthreadP.h>
 #include <string.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_setattr_default_np (const pthread_attr_t *in)
+__pthread_setattr_default_np (const pthread_attr_t *in)
 {
   const struct pthread_attr *real_in;
   int ret;
@@ -81,6 +81,12 @@ pthread_setattr_default_np (const pthread_attr_t *in)
   lll_unlock (__default_pthread_attr_lock, LLL_PRIVATE);
   return ret;
 }
+versioned_symbol (libc, __pthread_setattr_default_np,
+		  pthread_setattr_default_np, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_18, GLIBC_2_34)
+compat_symbol (libc, __pthread_setattr_default_np,
+	       pthread_setattr_default_np, GLIBC_2_18);
+#endif
 
 /* This is placed in the same file as pthread_setattr_default_np
    because only this function can trigger allocation of attribute

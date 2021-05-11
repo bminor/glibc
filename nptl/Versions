@@ -167,6 +167,9 @@ libc {
     pthread_mutexattr_getrobust;
     pthread_mutexattr_setrobust;
   }
+  GLIBC_2.18 {
+    pthread_setattr_default_np;
+  }
   # C11 thread symbols.
   GLIBC_2.28 {
     call_once;
@@ -230,8 +233,8 @@ libc {
     pthread_barrier_wait;
     pthread_barrierattr_destroy;
     pthread_barrierattr_getpshared;
-    pthread_barrierattr_setpshared;
     pthread_barrierattr_init;
+    pthread_barrierattr_setpshared;
     pthread_cond_clockwait;
     pthread_condattr_getclock;
     pthread_condattr_getpshared;
@@ -273,6 +276,7 @@ libc {
     pthread_rwlockattr_init;
     pthread_rwlockattr_setkind_np;
     pthread_rwlockattr_setpshared;
+    pthread_setattr_default_np;
     pthread_setspecific;
     pthread_spin_destroy;
     pthread_spin_init;
@@ -299,6 +303,7 @@ libc {
   }
   GLIBC_PRIVATE {
     __default_pthread_attr;
+    __default_pthread_attr_freeres;
     __default_pthread_attr_lock;
     __futex_abstimed_wait64;
     __futex_abstimed_wait_cancelable64;
@@ -436,7 +441,6 @@ libpthread {
 
   GLIBC_2.18 {
     pthread_getattr_default_np;
-    pthread_setattr_default_np;
   }
 
   # C11 thread symbols.

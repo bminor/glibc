@@ -145,6 +145,7 @@ routines = \
   pthread_rwlockattr_setkind_np \
   pthread_rwlockattr_setpshared \
   pthread_self \
+  pthread_setattr_default_np \
   pthread_setcancelstate \
   pthread_setcanceltype \
   pthread_setschedparam \
@@ -203,7 +204,6 @@ libpthread-routines = \
   pthread_join \
   pthread_join_common \
   pthread_setaffinity \
-  pthread_setattr_default_np \
   pthread_setconcurrency \
   pthread_setname \
   pthread_setschedprio \
