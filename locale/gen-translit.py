@@ -92,7 +92,7 @@ for lineno, line in enumerate(sys.stdin):
     if translits \
        and translit.codepoints.decoded <= translits[-1].codepoints.decoded:
         raise IOError("unexpected codepoint {!r} on line {}: {!r}".format(
-            translit.codeponts.decoded, lineno + 1, line))
+            translit.codepoints.decoded, lineno + 1, line))
     translits.append(translit)
 
 # Generate the C sources.
