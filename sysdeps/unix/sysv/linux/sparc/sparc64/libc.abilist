@@ -1325,6 +1325,7 @@ GLIBC_2.2 pthread_attr_getinheritsched F
 GLIBC_2.2 pthread_attr_getschedparam F
 GLIBC_2.2 pthread_attr_getschedpolicy F
 GLIBC_2.2 pthread_attr_getscope F
+GLIBC_2.2 pthread_attr_getstack F
 GLIBC_2.2 pthread_attr_init F
 GLIBC_2.2 pthread_attr_setdetachstate F
 GLIBC_2.2 pthread_attr_setinheritsched F
@@ -2274,6 +2275,7 @@ GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
 GLIBC_2.34 pthread_attr_getaffinity_np F
 GLIBC_2.34 pthread_attr_getguardsize F
+GLIBC_2.34 pthread_attr_getstack F
 GLIBC_2.34 pthread_barrier_destroy F
 GLIBC_2.34 pthread_barrier_init F
 GLIBC_2.34 pthread_barrier_wait F

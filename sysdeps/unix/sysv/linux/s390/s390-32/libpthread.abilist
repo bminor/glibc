@@ -16,7 +16,6 @@ GLIBC_2.12 pthread_getname_np F
 GLIBC_2.12 pthread_setname_np F
 GLIBC_2.18 pthread_getattr_default_np F
 GLIBC_2.19 __libpthread_version_placeholder F
-GLIBC_2.2 pthread_attr_getstack F
 GLIBC_2.2 pthread_attr_setstack F
 GLIBC_2.2 pthread_getcpuclockid F
 GLIBC_2.2.3 __libpthread_version_placeholder F

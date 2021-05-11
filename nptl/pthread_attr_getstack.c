@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
-
+#include <shlib-compat.h>
 
 int
 __pthread_attr_getstack (const pthread_attr_t *attr, void **stackaddr,
@@ -37,4 +37,9 @@ __pthread_attr_getstack (const pthread_attr_t *attr, void **stackaddr,
 
   return 0;
 }
-strong_alias (__pthread_attr_getstack, pthread_attr_getstack)
+versioned_symbol (libpthread, __pthread_attr_getstack,
+                  pthread_attr_getstack, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_attr_getstack,
+               pthread_attr_getstack, GLIBC_2_2);
+#endif
