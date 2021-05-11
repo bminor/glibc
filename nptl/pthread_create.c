@@ -228,7 +228,7 @@ __free_tcb (struct pthread *pd)
       /* Queue the stack memory block for reuse and exit the process.  The
 	 kernel will signal via writing to the address returned by
 	 QUEUE-STACK when the stack is available.  */
-      __deallocate_stack (pd);
+      __nptl_deallocate_stack (pd);
     }
 }
 
@@ -711,7 +711,7 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 	    futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
 
 	  /* Free the resources.  */
-	  __deallocate_stack (pd);
+	  __nptl_deallocate_stack (pd);
 	}
 
       /* We have to translate error codes.  */

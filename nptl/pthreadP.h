@@ -203,7 +203,7 @@ libc_hidden_proto (__default_pthread_attr)
 extern int __default_pthread_attr_lock;
 libc_hidden_proto (__default_pthread_attr_lock)
 /* Called from __libc_freeres to deallocate the default attribute.  */
-extern void __default_pthread_attr_freeres (void);
+extern void __default_pthread_attr_freeres (void) attribute_hidden;
 
 /* Size and alignment of static TLS block.  */
 extern size_t __static_tls_size attribute_hidden;
@@ -313,9 +313,6 @@ __do_cancel (void)
 /* Deallocate a thread's stack after optionally making sure the thread
    descriptor is still valid.  */
 extern void __free_tcb (struct pthread *pd) attribute_hidden;
-
-/* Free allocated stack.  */
-extern void __deallocate_stack (struct pthread *pd) attribute_hidden;
 
 /* Change the permissions of a thread stack.  Called from
    _dl_make_stacks_executable and pthread_create.  */
@@ -678,8 +675,6 @@ libc_hidden_proto (__nptl_deallocate_tsd)
 void __nptl_setxid_sighandler (int sig, siginfo_t *si, void *ctx);
 libc_hidden_proto (__nptl_setxid_sighandler)
 extern int __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
-
-extern void __nptl_stacks_freeres (void) attribute_hidden;
 
 extern void __wait_lookup_done (void) attribute_hidden;
 

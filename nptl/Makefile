@@ -44,9 +44,11 @@ routines = \
   libc_multiple_threads \
   libc_pthread_init \
   lowlevellock \
+  nptl-stack \
   nptl_deallocate_tsd \
   nptl_nthreads \
   nptl_setxid \
+  nptlfreeres \
   old_pthread_atfork \
   old_pthread_cond_broadcast \
   old_pthread_cond_destroy \
@@ -182,7 +184,6 @@ libpthread-routines = \
   events \
   libpthread-compat \
   nptl-init \
-  nptlfreeres \
   pt-interp \
   pthread_attr_getaffinity \
   pthread_attr_getguardsize \

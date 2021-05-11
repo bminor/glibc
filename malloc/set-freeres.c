@@ -29,7 +29,15 @@ DEFINE_HOOK (__libc_subfreeres, (void));
 
 symbol_set_define (__libc_freeres_ptrs);
 
-extern __attribute__ ((weak)) void __libpthread_freeres (void);
+extern void __libpthread_freeres (void)
+#if PTHREAD_IN_LIBC && defined SHARED
+/* It is possible to call __libpthread_freeres directly in shared
+   builds with an integrated libpthread.  */
+  attribute_hidden
+#else
+  __attribute__ ((weak))
+#endif
+  ;
 
 void __libc_freeres_fn_section
 __libc_freeres (void)
@@ -51,10 +59,7 @@ __libc_freeres (void)
       /* We run the resource freeing after IO cleanup.  */
       RUN_HOOK (__libc_subfreeres, ());
 
-      /* Call the libpthread list of cleanup functions
-	 (weak-ref-and-check).  */
-      if (&__libpthread_freeres != NULL)
-	__libpthread_freeres ();
+      call_function_static_weak (__libpthread_freeres);
 
 #ifdef SHARED
       __libc_unwind_link_freeres ();

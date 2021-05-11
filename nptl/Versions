@@ -303,7 +303,6 @@ libc {
   }
   GLIBC_PRIVATE {
     __default_pthread_attr;
-    __default_pthread_attr_freeres;
     __default_pthread_attr_lock;
     __futex_abstimed_wait64;
     __futex_abstimed_wait_cancelable64;
@@ -320,9 +319,12 @@ libc {
     __lll_trylock_elision;
     __lll_unlock_elision;
     __mutex_aconf;
+    __nptl_deallocate_stack;
     __nptl_deallocate_tsd;
     __nptl_nthreads;
     __nptl_setxid_sighandler;
+    __nptl_stack_list_add;
+    __nptl_stack_list_del;
     __pthread_attr_copy;
     __pthread_attr_destroy;
     __pthread_attr_init;
@@ -459,7 +461,6 @@ libpthread {
   }
 
   GLIBC_PRIVATE {
-    __libpthread_freeres;
     __pthread_clock_gettime;
     __pthread_clock_settime;
     __pthread_get_minstack;

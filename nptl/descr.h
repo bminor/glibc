@@ -416,5 +416,11 @@ struct pthread
   (sizeof (struct pthread) - offsetof (struct pthread, end_padding))
 } __attribute ((aligned (TCB_ALIGNMENT)));
 
+/* This yields the pointer that TLS support code calls the thread pointer.  */
+#if TLS_TCB_AT_TP
+# define TLS_TPADJ(pd) (pd)
+#elif TLS_DTV_AT_TP
+# define TLS_TPADJ(pd) ((struct pthread *)((char *) (pd) + TLS_PRE_TCB_SIZE))
+#endif
 
 #endif	/* descr.h */

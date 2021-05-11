@@ -19,6 +19,7 @@
 #include <set-hooks.h>
 #include <libc-symbols.h>
 #include <pthreadP.h>
+#include <nptl-stack.h>
 
 /* Free libpthread.so resources.
    Note: Caller ensures we are called only once.  */
@@ -26,5 +27,5 @@ void
 __libpthread_freeres (void)
 {
   call_function_static_weak (__default_pthread_attr_freeres);
-  call_function_static_weak (__nptl_stacks_freeres);
+  __nptl_free_stacks (0);
 }
