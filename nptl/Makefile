@@ -61,6 +61,7 @@ routines = \
   pthread_attr_copy \
   pthread_attr_destroy \
   pthread_attr_extension \
+  pthread_attr_getaffinity \
   pthread_attr_getdetachstate \
   pthread_attr_getinheritsched \
   pthread_attr_getschedparam \
@@ -192,7 +193,6 @@ libpthread-routines = \
   libpthread-compat \
   nptl-init \
   pt-interp \
-  pthread_attr_getaffinity \
   pthread_attr_getguardsize \
   pthread_attr_getstack \
   pthread_attr_getstackaddr \

@@ -24,9 +24,7 @@ GLIBC_2.3.3 __pthread_register_cancel F
 GLIBC_2.3.3 __pthread_register_cancel_defer F
 GLIBC_2.3.3 __pthread_unregister_cancel F
 GLIBC_2.3.3 __pthread_unregister_cancel_restore F
-GLIBC_2.3.3 pthread_attr_getaffinity_np F
 GLIBC_2.3.3 pthread_setaffinity_np F
-GLIBC_2.3.4 pthread_attr_getaffinity_np F
 GLIBC_2.3.4 pthread_setaffinity_np F
 GLIBC_2.3.4 pthread_setschedprio F
 GLIBC_2.30 __libpthread_version_placeholder F

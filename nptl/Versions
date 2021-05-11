@@ -144,6 +144,7 @@ libc {
   GLIBC_2.3.3 {
     __pthread_cleanup_routine;
     __pthread_unwind_next;
+    pthread_attr_getaffinity_np;
     pthread_attr_setaffinity_np;
     pthread_barrierattr_getpshared;
     pthread_condattr_getclock;
@@ -153,6 +154,7 @@ libc {
     pthread_tryjoin_np;
   }
   GLIBC_2.3.4 {
+    pthread_attr_getaffinity_np;
     pthread_attr_setaffinity_np;
   }
   GLIBC_2.4 {
@@ -237,6 +239,7 @@ libc {
     mtx_timedlock;
     mtx_trylock;
     mtx_unlock;
+    pthread_attr_getaffinity_np;
     pthread_barrier_destroy;
     pthread_barrier_init;
     pthread_barrier_wait;
@@ -430,12 +433,10 @@ libpthread {
     __pthread_register_cancel_defer;
     __pthread_unregister_cancel;
     __pthread_unregister_cancel_restore;
-    pthread_attr_getaffinity_np;
     pthread_setaffinity_np;
   }
 
   GLIBC_2.3.4 {
-    pthread_attr_getaffinity_np;
     pthread_getaffinity_np;
     pthread_setaffinity_np;
     pthread_setschedprio;

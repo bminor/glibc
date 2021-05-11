@@ -1380,6 +1380,7 @@ GLIBC_2.32 pselect F
 GLIBC_2.32 psiginfo F
 GLIBC_2.32 psignal F
 GLIBC_2.32 pthread_attr_destroy F
+GLIBC_2.32 pthread_attr_getaffinity_np F
 GLIBC_2.32 pthread_attr_getdetachstate F
 GLIBC_2.32 pthread_attr_getinheritsched F
 GLIBC_2.32 pthread_attr_getschedparam F
@@ -2079,6 +2080,7 @@ GLIBC_2.34 mtx_lock F
 GLIBC_2.34 mtx_timedlock F
 GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
+GLIBC_2.34 pthread_attr_getaffinity_np F
 GLIBC_2.34 pthread_barrier_destroy F
 GLIBC_2.34 pthread_barrier_init F
 GLIBC_2.34 pthread_barrier_wait F
