@@ -240,6 +240,7 @@ _dl_exception_create_format (struct dl_exception *exception, const char *objname
     if (len_objname != end - wptr)
       length_mismatch ();
     exception->objname = memcpy (wptr, objname, len_objname);
+    va_end (ap);
   }
 }
 rtld_hidden_def (_dl_exception_create_format)
