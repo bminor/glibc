@@ -49,7 +49,7 @@ __pthread_detach (pthread_t th)
     if ((pd->cancelhandling & EXITING_BITMASK) != 0)
       /* Note that the code in __free_tcb makes sure each thread
 	 control block is freed only once.  */
-      __free_tcb (pd);
+      __nptl_free_tcb (pd);
 
   return result;
 }

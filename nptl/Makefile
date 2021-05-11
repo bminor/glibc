@@ -46,6 +46,7 @@ routines = \
   lowlevellock \
   nptl-stack \
   nptl_deallocate_tsd \
+  nptl_free_tcb \
   nptl_nthreads \
   nptl_setxid \
   nptlfreeres \

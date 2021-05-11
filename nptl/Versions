@@ -321,6 +321,7 @@ libc {
     __mutex_aconf;
     __nptl_deallocate_stack;
     __nptl_deallocate_tsd;
+    __nptl_free_tcb;
     __nptl_nthreads;
     __nptl_setxid_sighandler;
     __nptl_stack_list_add;

@@ -207,31 +207,6 @@ static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
 
 #include <createthread.c>
 
-/* Deallocate a thread's stack after optionally making sure the thread
-   descriptor is still valid.  */
-void
-__free_tcb (struct pthread *pd)
-{
-  /* The thread is exiting now.  */
-  if (__builtin_expect (atomic_bit_test_set (&pd->cancelhandling,
-					     TERMINATED_BIT) == 0, 1))
-    {
-      /* Free TPP data.  */
-      if (__glibc_unlikely (pd->tpp != NULL))
-	{
-	  struct priority_protection_data *tpp = pd->tpp;
-
-	  pd->tpp = NULL;
-	  free (tpp);
-	}
-
-      /* Queue the stack memory block for reuse and exit the process.  The
-	 kernel will signal via writing to the address returned by
-	 QUEUE-STACK when the stack is available.  */
-      __nptl_deallocate_stack (pd);
-    }
-}
-
 /* Local function to start thread and handle cleanup.
    createthread.c defines the macro START_THREAD_DEFN to the
    declaration that its create_thread function will refer to, and
@@ -444,7 +419,7 @@ START_THREAD_DEFN
   /* If the thread is detached free the TCB.  */
   if (IS_DETACHED (pd))
     /* Free the TCB.  */
-    __free_tcb (pd);
+    __nptl_free_tcb (pd);
 
   /* We cannot call '_exit' here.  '_exit' will terminate the process.
 

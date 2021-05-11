@@ -122,7 +122,7 @@ __pthread_clockjoin_ex (pthread_t threadid, void **thread_return,
 	*thread_return = pd_result;
 
       /* Free the TCB.  */
-      __free_tcb (pd);
+      __nptl_free_tcb (pd);
     }
   else
     pd->joinid = NULL;

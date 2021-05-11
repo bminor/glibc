@@ -312,7 +312,8 @@ __do_cancel (void)
 
 /* Deallocate a thread's stack after optionally making sure the thread
    descriptor is still valid.  */
-extern void __free_tcb (struct pthread *pd) attribute_hidden;
+extern void __nptl_free_tcb (struct pthread *pd);
+libc_hidden_proto (__nptl_free_tcb)
 
 /* Change the permissions of a thread stack.  Called from
    _dl_make_stacks_executable and pthread_create.  */
