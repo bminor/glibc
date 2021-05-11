@@ -73,6 +73,7 @@ libc {
   }
   GLIBC_2.1 {
     pthread_attr_getguardsize;
+    pthread_attr_getstackaddr;
     pthread_attr_init;
     pthread_mutexattr_gettype;
     pthread_mutexattr_settype;
@@ -244,6 +245,7 @@ libc {
     pthread_attr_getaffinity_np;
     pthread_attr_getguardsize;
     pthread_attr_getstack;
+    pthread_attr_getstackaddr;
     pthread_barrier_destroy;
     pthread_barrier_init;
     pthread_barrier_wait;
@@ -392,7 +394,6 @@ libpthread {
   }
 
   GLIBC_2.1 {
-    pthread_attr_getstackaddr;
     pthread_attr_getstacksize;
     pthread_attr_setguardsize;
     pthread_attr_setstackaddr;

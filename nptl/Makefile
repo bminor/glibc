@@ -70,6 +70,7 @@ routines = \
   pthread_attr_getscope \
   pthread_attr_getsigmask \
   pthread_attr_getstack \
+  pthread_attr_getstackaddr \
   pthread_attr_init \
   pthread_attr_setaffinity \
   pthread_attr_setdetachstate \
@@ -195,7 +196,6 @@ libpthread-routines = \
   libpthread-compat \
   nptl-init \
   pt-interp \
-  pthread_attr_getstackaddr \
   pthread_attr_getstacksize \
   pthread_attr_setguardsize \
   pthread_attr_setstack \

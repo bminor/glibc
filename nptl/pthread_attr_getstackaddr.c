@@ -18,7 +18,7 @@
 
 #include <errno.h>
 #include "pthreadP.h"
-
+#include <shlib-compat.h>
 
 int
 __pthread_attr_getstackaddr (const pthread_attr_t *attr, void **stackaddr)
@@ -34,7 +34,12 @@ __pthread_attr_getstackaddr (const pthread_attr_t *attr, void **stackaddr)
 
   return 0;
 }
-strong_alias (__pthread_attr_getstackaddr, pthread_attr_getstackaddr)
+versioned_symbol (libc, __pthread_attr_getstackaddr,
+                  pthread_attr_getstackaddr, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_attr_getstackaddr,
+               pthread_attr_getstackaddr, GLIBC_2_1);
+#endif
 
 link_warning (pthread_attr_getstackaddr,
               "the use of `pthread_attr_getstackaddr' is deprecated, use `pthread_attr_getstack'")

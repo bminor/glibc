@@ -3,7 +3,6 @@ GLIBC_2.33 __pthread_register_cancel F
 GLIBC_2.33 __pthread_register_cancel_defer F
 GLIBC_2.33 __pthread_unregister_cancel F
 GLIBC_2.33 __pthread_unregister_cancel_restore F
-GLIBC_2.33 pthread_attr_getstackaddr F
 GLIBC_2.33 pthread_attr_getstacksize F
 GLIBC_2.33 pthread_attr_setguardsize F
 GLIBC_2.33 pthread_attr_setstack F
