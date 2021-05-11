@@ -19,10 +19,12 @@
 #include <time.h>
 #include <futex-internal.h>
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 int
-__pthread_clockjoin_np64 (pthread_t threadid, void **thread_return,
-                          clockid_t clockid, const struct __timespec64 *abstime)
+___pthread_clockjoin_np64 (pthread_t threadid, void **thread_return,
+			   clockid_t clockid,
+			   const struct __timespec64 *abstime)
 {
   if (!futex_abstimed_supported_clockid (clockid))
     return EINVAL;
@@ -31,12 +33,14 @@ __pthread_clockjoin_np64 (pthread_t threadid, void **thread_return,
                                  clockid, abstime, true);
 }
 
-#if __TIMESIZE != 64
-libpthread_hidden_def (__pthread_clockjoin_np64)
+#if __TIMESIZE == 64
+strong_alias (___pthread_clockjoin_np64, ___pthread_clockjoin_np)
+#else /* __TIMESPEC64 != 64 */
+libc_hidden_ver (___pthread_clockjoin_np64, __pthread_clockjoin_np64)
 
 int
-__pthread_clockjoin_np (pthread_t threadid, void **thread_return,
-                        clockid_t clockid, const struct timespec *abstime)
+___pthread_clockjoin_np (pthread_t threadid, void **thread_return,
+			 clockid_t clockid, const struct timespec *abstime)
 {
   if (abstime != NULL)
     {
@@ -45,8 +49,13 @@ __pthread_clockjoin_np (pthread_t threadid, void **thread_return,
 				       &ts64);
     }
   else
-      return __pthread_clockjoin_np64 (threadid, thread_return, clockid,
-				       NULL);
+    return __pthread_clockjoin_np64 (threadid, thread_return, clockid,
+				     NULL);
 }
+#endif /* __TIMESPEC64 != 64 */
+versioned_symbol (libc, ___pthread_clockjoin_np, pthread_clockjoin_np,
+		  GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_31, GLIBC_2_34)
+compat_symbol (libpthread, ___pthread_clockjoin_np, pthread_clockjoin_np,
+	       GLIBC_2_31);
 #endif
-weak_alias (__pthread_clockjoin_np, pthread_clockjoin_np)

@@ -42,6 +42,7 @@ libc {
     pthread_exit;
     pthread_getschedparam;
     pthread_getspecific;
+    pthread_join;
     pthread_key_create;
     pthread_key_delete;
     pthread_kill;
@@ -148,6 +149,8 @@ libc {
     pthread_condattr_getclock;
     pthread_condattr_setclock;
     pthread_getaffinity_np;
+    pthread_timedjoin_np;
+    pthread_tryjoin_np;
   }
   GLIBC_2.3.4 {
     pthread_attr_setaffinity_np;
@@ -190,6 +193,7 @@ libc {
     thrd_detach;
     thrd_equal;
     thrd_exit;
+    thrd_join;
     thrd_sleep;
     thrd_yield;
     tss_create;
@@ -203,6 +207,9 @@ libc {
     pthread_rwlock_clockrdlock;
     pthread_rwlock_clockwrlock;
     sem_clockwait;
+  }
+  GLIBC_2.31 {
+    pthread_clockjoin_np;
   }
   GLIBC_2.32 {
     pthread_attr_getsigmask_np;
@@ -237,6 +244,7 @@ libc {
     pthread_barrierattr_getpshared;
     pthread_barrierattr_init;
     pthread_barrierattr_setpshared;
+    pthread_clockjoin_np;
     pthread_cond_clockwait;
     pthread_condattr_getclock;
     pthread_condattr_getpshared;
@@ -244,6 +252,7 @@ libc {
     pthread_condattr_setpshared;
     pthread_detach;
     pthread_getspecific;
+    pthread_join;
     pthread_key_create;
     pthread_key_delete;
     pthread_kill;
@@ -287,6 +296,8 @@ libc {
     pthread_spin_trylock;
     pthread_spin_unlock;
     pthread_testcancel;
+    pthread_timedjoin_np;
+    pthread_tryjoin_np;
     sem_clockwait;
     sem_close;
     sem_destroy;
@@ -300,6 +311,7 @@ libc {
     sem_wait;
     thrd_detach;
     thrd_exit;
+    thrd_join;
     tss_create;
     tss_delete;
     tss_get;
@@ -369,7 +381,6 @@ libpthread {
     funlockfile;
     pthread_cancel;
     pthread_create;
-    pthread_join;
     pthread_sigmask;
   }
 
@@ -421,8 +432,6 @@ libpthread {
     __pthread_unregister_cancel_restore;
     pthread_attr_getaffinity_np;
     pthread_setaffinity_np;
-    pthread_timedjoin_np;
-    pthread_tryjoin_np;
   }
 
   GLIBC_2.3.4 {
@@ -452,7 +461,6 @@ libpthread {
   # C11 thread symbols.
   GLIBC_2.28 {
     thrd_create;
-    thrd_join;
   }
 
   GLIBC_2.30 {
@@ -460,7 +468,7 @@ libpthread {
   }
 
   GLIBC_2.31 {
-    pthread_clockjoin_np;
+    __libpthread_version_placeholder;
   }
 
   GLIBC_PRIVATE {

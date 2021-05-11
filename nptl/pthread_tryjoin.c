@@ -17,9 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 int
-pthread_tryjoin_np (pthread_t threadid, void **thread_return)
+__pthread_tryjoin_np (pthread_t threadid, void **thread_return)
 {
   /* Return right away if the thread hasn't terminated yet.  */
   struct pthread *pd = (struct pthread *) threadid;
@@ -31,3 +32,8 @@ pthread_tryjoin_np (pthread_t threadid, void **thread_return)
   return __pthread_clockjoin_ex (threadid, thread_return, 0 /* Ignored */,
 				 NULL, false);
 }
+versioned_symbol (libc, __pthread_tryjoin_np, pthread_tryjoin_np, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_3_3, GLIBC_2_34)
+compat_symbol (libc, __pthread_tryjoin_np, pthread_tryjoin_np, GLIBC_2_3_3);
+#endif

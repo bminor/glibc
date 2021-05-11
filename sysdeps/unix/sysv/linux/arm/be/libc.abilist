@@ -140,6 +140,7 @@ GLIBC_2.28 thrd_current F
 GLIBC_2.28 thrd_detach F
 GLIBC_2.28 thrd_equal F
 GLIBC_2.28 thrd_exit F
+GLIBC_2.28 thrd_join F
 GLIBC_2.28 thrd_sleep F
 GLIBC_2.28 thrd_yield F
 GLIBC_2.28 tss_create F
@@ -159,6 +160,7 @@ GLIBC_2.30 sem_clockwait F
 GLIBC_2.30 tgkill F
 GLIBC_2.30 twalk_r F
 GLIBC_2.31 msgctl F
+GLIBC_2.31 pthread_clockjoin_np F
 GLIBC_2.31 semctl F
 GLIBC_2.31 shmctl F
 GLIBC_2.32 __libc_single_threaded D 0x1
@@ -210,6 +212,7 @@ GLIBC_2.34 pthread_barrierattr_destroy F
 GLIBC_2.34 pthread_barrierattr_getpshared F
 GLIBC_2.34 pthread_barrierattr_init F
 GLIBC_2.34 pthread_barrierattr_setpshared F
+GLIBC_2.34 pthread_clockjoin_np F
 GLIBC_2.34 pthread_cond_clockwait F
 GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F
@@ -217,6 +220,7 @@ GLIBC_2.34 pthread_condattr_setclock F
 GLIBC_2.34 pthread_condattr_setpshared F
 GLIBC_2.34 pthread_detach F
 GLIBC_2.34 pthread_getspecific F
+GLIBC_2.34 pthread_join F
 GLIBC_2.34 pthread_key_create F
 GLIBC_2.34 pthread_key_delete F
 GLIBC_2.34 pthread_kill F
@@ -264,6 +268,8 @@ GLIBC_2.34 pthread_spin_lock F
 GLIBC_2.34 pthread_spin_trylock F
 GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.34 pthread_testcancel F
+GLIBC_2.34 pthread_timedjoin_np F
+GLIBC_2.34 pthread_tryjoin_np F
 GLIBC_2.34 sem_clockwait F
 GLIBC_2.34 sem_close F
 GLIBC_2.34 sem_destroy F
@@ -277,6 +283,7 @@ GLIBC_2.34 sem_unlink F
 GLIBC_2.34 sem_wait F
 GLIBC_2.34 thrd_detach F
 GLIBC_2.34 thrd_exit F
+GLIBC_2.34 thrd_join F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F
 GLIBC_2.34 tss_get F
@@ -1698,6 +1705,7 @@ GLIBC_2.4 pthread_getaffinity_np F
 GLIBC_2.4 pthread_getattr_np F
 GLIBC_2.4 pthread_getschedparam F
 GLIBC_2.4 pthread_getspecific F
+GLIBC_2.4 pthread_join F
 GLIBC_2.4 pthread_key_create F
 GLIBC_2.4 pthread_key_delete F
 GLIBC_2.4 pthread_kill F
@@ -1753,6 +1761,8 @@ GLIBC_2.4 pthread_spin_lock F
 GLIBC_2.4 pthread_spin_trylock F
 GLIBC_2.4 pthread_spin_unlock F
 GLIBC_2.4 pthread_testcancel F
+GLIBC_2.4 pthread_timedjoin_np F
+GLIBC_2.4 pthread_tryjoin_np F
 GLIBC_2.4 pthread_yield F
 GLIBC_2.4 ptrace F
 GLIBC_2.4 ptsname F

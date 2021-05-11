@@ -456,10 +456,10 @@ libc_hidden_proto (__pthread_cond_wait)
 extern int __pthread_clockjoin_np64 (pthread_t threadid, void **thread_return,
                                      clockid_t clockid,
                                      const struct __timespec64 *abstime);
-libpthread_hidden_proto (__pthread_clockjoin_np64)
+libc_hidden_proto (__pthread_clockjoin_np64)
 extern int __pthread_timedjoin_np64 (pthread_t threadid, void **thread_return,
                                      const struct __timespec64 *abstime);
-libpthread_hidden_proto (__pthread_timedjoin_np64)
+libc_hidden_proto (__pthread_timedjoin_np64)
 extern int __pthread_cond_timedwait64 (pthread_cond_t *cond,
                                        pthread_mutex_t *mutex,
                                        const struct __timespec64 *abstime);
@@ -535,6 +535,7 @@ extern int __pthread_kill (pthread_t threadid, int signo);
 extern void __pthread_exit (void *value) __attribute__ ((__noreturn__));
 libc_hidden_proto (__pthread_exit)
 extern int __pthread_join (pthread_t threadid, void **thread_return);
+libc_hidden_proto (__pthread_join)
 extern int __pthread_setcanceltype (int type, int *oldtype);
 libc_hidden_proto (__pthread_setcanceltype)
 extern void __pthread_testcancel (void);

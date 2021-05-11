@@ -17,9 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "thrd_priv.h"
+#include <shlib-compat.h>
 
 int
-thrd_join (thrd_t thr, int *res)
+__thrd_join (thrd_t thr, int *res)
 {
   void *pthread_res;
   int err_code = __pthread_join (thr, &pthread_res);
@@ -28,3 +29,11 @@ thrd_join (thrd_t thr, int *res)
 
   return thrd_err_map (err_code);
 }
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __thrd_join, thrd_join, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_34)
+compat_symbol (libc, __thrd_join, thrd_join, GLIBC_2_28);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__thrd_join, thrd_join)
+#endif

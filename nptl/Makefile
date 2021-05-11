@@ -84,6 +84,7 @@ routines = \
   pthread_barrierattr_init \
   pthread_barrierattr_setpshared \
   pthread_cleanup_upto \
+  pthread_clockjoin \
   pthread_cond_broadcast \
   pthread_cond_destroy \
   pthread_cond_init \
@@ -102,6 +103,8 @@ routines = \
   pthread_getattr_np \
   pthread_getschedparam \
   pthread_getspecific \
+  pthread_join \
+  pthread_join_common \
   pthread_key_create \
   pthread_key_delete \
   pthread_keys \
@@ -161,6 +164,8 @@ routines = \
   pthread_spin_trylock \
   pthread_spin_unlock \
   pthread_testcancel \
+  pthread_timedjoin \
+  pthread_tryjoin \
   pthread_yield \
   sem_clockwait \
   sem_close \
@@ -197,21 +202,16 @@ libpthread-routines = \
   pthread_attr_setstackaddr \
   pthread_attr_setstacksize \
   pthread_cancel \
-  pthread_clockjoin \
   pthread_create \
   pthread_getattr_default_np \
   pthread_getconcurrency \
   pthread_getcpuclockid \
   pthread_getname \
-  pthread_join \
-  pthread_join_common \
   pthread_setaffinity \
   pthread_setconcurrency \
   pthread_setname \
   pthread_setschedprio \
   pthread_sigqueue \
-  pthread_timedjoin \
-  pthread_tryjoin \
   version \
 
 libpthread-shared-only-routines = \

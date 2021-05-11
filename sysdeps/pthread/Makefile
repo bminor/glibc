@@ -31,7 +31,7 @@ headers += threads.h
 
 routines += thrd_current thrd_equal thrd_sleep thrd_yield
 
-libpthread-routines += thrd_create thrd_join
+libpthread-routines += thrd_create
 
 $(libpthread-routines-var) += \
   call_once \
@@ -49,6 +49,7 @@ $(libpthread-routines-var) += \
   mtx_unlock \
   thrd_detach \
   thrd_exit \
+  thrd_join \
   tss_create \
   tss_delete \
   tss_get \

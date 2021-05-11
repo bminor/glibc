@@ -17,11 +17,20 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include "pthreadP.h"
+#include <shlib-compat.h>
 
 int
-__pthread_join (pthread_t threadid, void **thread_return)
+___pthread_join (pthread_t threadid, void **thread_return)
 {
   return __pthread_clockjoin_ex (threadid, thread_return, 0 /* Ignored */,
 				 NULL, true);
 }
-weak_alias (__pthread_join, pthread_join)
+versioned_symbol (libc, ___pthread_join, pthread_join, GLIBC_2_34);
+libc_hidden_ver (___pthread_join, __pthread_join)
+#ifndef SHARED
+strong_alias (___pthread_join, __pthread_join)
+#endif
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libc, ___pthread_join, pthread_join, GLIBC_2_0);
+#endif
