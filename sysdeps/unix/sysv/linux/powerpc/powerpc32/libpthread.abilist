@@ -1,7 +1,6 @@
 GLIBC_2.0 __errno_location F
 GLIBC_2.0 pthread_cancel F
 GLIBC_2.0 pthread_create F
-GLIBC_2.1 pthread_attr_setstacksize F
 GLIBC_2.1 pthread_create F
 GLIBC_2.1 pthread_getconcurrency F
 GLIBC_2.1 pthread_setconcurrency F
@@ -26,4 +25,4 @@ GLIBC_2.3.4 pthread_setschedprio F
 GLIBC_2.30 __libpthread_version_placeholder F
 GLIBC_2.31 __libpthread_version_placeholder F
 GLIBC_2.4 __libpthread_version_placeholder F
-GLIBC_2.6 pthread_attr_setstacksize F
+GLIBC_2.6 __libpthread_version_placeholder F

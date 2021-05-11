@@ -78,6 +78,7 @@ libc {
     pthread_attr_init;
     pthread_attr_setguardsize;
     pthread_attr_setstackaddr;
+    pthread_attr_setstacksize;
     pthread_mutexattr_gettype;
     pthread_mutexattr_settype;
     pthread_rwlock_destroy;
@@ -254,6 +255,7 @@ libc {
     pthread_attr_setguardsize;
     pthread_attr_setstack;
     pthread_attr_setstackaddr;
+    pthread_attr_setstacksize;
     pthread_barrier_destroy;
     pthread_barrier_init;
     pthread_barrier_wait;
@@ -402,7 +404,6 @@ libpthread {
   }
 
   GLIBC_2.1 {
-    pthread_attr_setstacksize;
     pthread_create;
     pthread_getconcurrency;
     pthread_setconcurrency;

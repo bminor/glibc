@@ -84,6 +84,7 @@ routines = \
   pthread_attr_setsigmask_internal \
   pthread_attr_setstack \
   pthread_attr_setstackaddr \
+  pthread_attr_setstacksize \
   pthread_barrier_destroy \
   pthread_barrier_init \
   pthread_barrier_wait \
@@ -200,7 +201,6 @@ libpthread-routines = \
   libpthread-compat \
   nptl-init \
   pt-interp \
-  pthread_attr_setstacksize \
   pthread_cancel \
   pthread_create \
   pthread_getattr_default_np \

@@ -1304,6 +1304,7 @@ GLIBC_2.2.5 pthread_attr_setschedpolicy F
 GLIBC_2.2.5 pthread_attr_setscope F
 GLIBC_2.2.5 pthread_attr_setstack F
 GLIBC_2.2.5 pthread_attr_setstackaddr F
+GLIBC_2.2.5 pthread_attr_setstacksize F
 GLIBC_2.2.5 pthread_barrier_destroy F
 GLIBC_2.2.5 pthread_barrier_init F
 GLIBC_2.2.5 pthread_barrier_wait F
@@ -2247,6 +2248,7 @@ GLIBC_2.34 pthread_attr_getstacksize F
 GLIBC_2.34 pthread_attr_setguardsize F
 GLIBC_2.34 pthread_attr_setstack F
 GLIBC_2.34 pthread_attr_setstackaddr F
+GLIBC_2.34 pthread_attr_setstacksize F
 GLIBC_2.34 pthread_barrier_destroy F
 GLIBC_2.34 pthread_barrier_init F
 GLIBC_2.34 pthread_barrier_wait F
