@@ -713,6 +713,8 @@ write_archive_locales (void **all_datap, char *linebuf)
 			  locrec->record[LC_CTYPE].len);
 	}
 
+      free (names);
+
       ret = used;
     }
 
