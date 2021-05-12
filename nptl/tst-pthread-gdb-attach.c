@@ -23,10 +23,14 @@
 #include <elf.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <support/capture_subprocess.h>
 #include <support/check.h>
+#include <support/xptrace.h>
+#include <support/subprocess.h>
 #include <support/support.h>
 #include <support/temp_file.h>
 #include <support/test-driver.h>
@@ -141,12 +145,32 @@ subprocess_thread (void *closure)
    second thread, waiting for its value to change to 2, and checks
    that the main thread also changed its value to 1.  */
 static void
-in_subprocess (void)
+in_subprocess (void *arg)
 {
   pthread_t thr = xpthread_create (NULL, subprocess_thread, NULL);
   TEST_VERIFY (xpthread_join (thr) == NULL);
   TEST_COMPARE (altered_by_debugger, 1);
   _exit (0);
+}
+
+static void
+gdb_process (const char *gdb_path, const char *gdbscript, pid_t *tested_pid)
+{
+  /* Create a copy of current test to check with gdb.  As the
+     target_process is a child of this gdb_process, gdb is also able
+     to attach to target_process if YAMA is configured to 1 =
+     "restricted ptrace".  */
+  struct support_subprocess target = support_subprocess (in_subprocess, NULL);
+
+  write_gdbscript (gdbscript, target.pid);
+  *tested_pid = target.pid;
+
+  xdup2 (STDOUT_FILENO, STDERR_FILENO);
+  execl (gdb_path, "gdb", "-nx", "-batch", "-x", gdbscript, NULL);
+  if (errno == ENOENT)
+    _exit (EXIT_UNSUPPORTED);
+  else
+    _exit (1);
 }
 
 static int
@@ -179,25 +203,23 @@ do_test (void)
     free (threaddb_path);
   }
 
-  pid_t tested_pid = xfork ();
-  if (tested_pid == 0)
-    in_subprocess ();
-  char *tested_pid_string = xasprintf ("%d", tested_pid);
+  /* Check if our subprocess can be debugged with ptrace.  */
+  {
+    int ptrace_scope = support_ptrace_scope ();
+    if (ptrace_scope >= 2)
+      FAIL_UNSUPPORTED ("/proc/sys/kernel/yama/ptrace_scope >= 2");
+  }
 
   char *gdbscript;
   xclose (create_temp_file ("tst-pthread-gdb-attach-", &gdbscript));
-  write_gdbscript (gdbscript, tested_pid);
+
+  /* Run 'gdb' on test subprocess which will be created in gdb_process.
+     The pid of the subprocess will be written to 'tested_pid'.  */
+  pid_t *tested_pid = support_shared_allocate (sizeof (pid_t));
 
   pid_t gdb_pid = xfork ();
   if (gdb_pid == 0)
-    {
-      xdup2 (STDOUT_FILENO, STDERR_FILENO);
-      execl (gdb_path, "gdb", "-nx", "-batch", "-x", gdbscript, NULL);
-      if (errno == ENOENT)
-        _exit (EXIT_UNSUPPORTED);
-      else
-        _exit (1);
-    }
+    gdb_process (gdb_path, gdbscript, tested_pid);
 
   int status;
   TEST_COMPARE (xwaitpid (gdb_pid, &status, 0), gdb_pid);
@@ -205,10 +227,10 @@ do_test (void)
     /* gdb is not installed.  */
     return EXIT_UNSUPPORTED;
   TEST_COMPARE (status, 0);
-  TEST_COMPARE (xwaitpid (tested_pid, &status, 0), tested_pid);
-  TEST_COMPARE (status, 0);
 
-  free (tested_pid_string);
+  kill (*tested_pid, SIGKILL);
+
+  support_shared_free (tested_pid);
   free (gdbscript);
   free (gdb_path);
   return 0;
