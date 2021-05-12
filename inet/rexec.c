@@ -76,13 +76,13 @@ rexec_af (char **ahost, int rport, const char *name, const char *pass,
 		ahostbuf = __strdup (res0->ai_canonname);
 		if (ahostbuf == NULL) {
 			perror ("rexec: strdup");
-			return (-1);
+			goto bad2;
 		}
 		*ahost = ahostbuf;
 	} else {
 		*ahost = NULL;
 		__set_errno (ENOENT);
-		return -1;
+		goto bad2;
 	}
 	ruserpass(res0->ai_canonname, &name, &pass);
 retry:
@@ -90,7 +90,7 @@ retry:
 	s = __socket(res0->ai_family, res0->ai_socktype, 0);
 	if (s < 0) {
 		perror("rexec: socket");
-		return (-1);
+		goto bad2;
 	}
 	if (__connect(s, res0->ai_addr, res0->ai_addrlen) < 0) {
 		if (errno == ECONNREFUSED && timo <= 16) {
@@ -100,7 +100,7 @@ retry:
 			goto retry;
 		}
 		perror(res0->ai_canonname);
-		return (-1);
+		goto bad;
 	}
 	if (fd2p == 0) {
 		(void) __write(s, "", 1);
@@ -116,10 +116,9 @@ retry:
 		socklen_t sa2len;
 
 		s2 = __socket(res0->ai_family, res0->ai_socktype, 0);
-		if (s2 < 0) {
-			(void) __close(s);
-			return (-1);
-		}
+		if (s2 < 0)
+			goto bad;
+
 		__listen(s2, 1);
 		sa2len = sizeof (sa2);
 		if (__getsockname(s2, &sa2.sa, &sa2len) < 0) {
@@ -185,6 +184,7 @@ bad:
 	if (port)
 		(void) __close(*fd2p);
 	(void) __close(s);
+bad2:
 	freeaddrinfo(res0);
 	return (-1);
 }

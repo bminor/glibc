@@ -153,6 +153,7 @@ rcmd_af (char **ahost, u_short rport, const char *locuser, const char *remuser,
 		free (ahostbuf);
 		ahostbuf = __strdup (res->ai_canonname);
 		if (ahostbuf == NULL) {
+			freeaddrinfo (res);
 			__fxprintf(NULL, "%s",
 				   _("rcmd: Cannot allocate memory\n"));
 			return -1;
