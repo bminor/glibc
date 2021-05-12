@@ -1,4 +1,4 @@
-#! @BASH@
+#!/bin/bash
 # Copyright (C) 1999-2021 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@gnu.org>, 1999.
