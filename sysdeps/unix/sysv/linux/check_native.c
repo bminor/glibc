@@ -48,11 +48,14 @@ __check_native (uint32_t a1_index, int *a1_native,
   nladdr.nl_family = AF_NETLINK;
 
   socklen_t addr_len = sizeof (nladdr);
+  bool use_malloc = false;
 
-  if (fd < 0
-      || __bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) != 0
-      || __getsockname (fd, (struct sockaddr *) &nladdr, &addr_len) != 0)
+  if (fd < 0)
     return;
+
+  if (__bind (fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) != 0
+      || __getsockname (fd, (struct sockaddr *) &nladdr, &addr_len) != 0)
+    goto out;
 
   pid_t pid = nladdr.nl_pid;
   struct req
@@ -85,7 +88,6 @@ __check_native (uint32_t a1_index, int *a1_native,
 #else
   const size_t buf_size = __getpagesize ();
 #endif
-  bool use_malloc = false;
   char *buf;
 
   if (__libc_use_alloca (buf_size))
@@ -96,7 +98,7 @@ __check_native (uint32_t a1_index, int *a1_native,
       if (buf != NULL)
 	use_malloc = true;
       else
-	goto out_fail;
+	goto out;
     }
 
   struct iovec iov = { buf, buf_size };
@@ -104,7 +106,7 @@ __check_native (uint32_t a1_index, int *a1_native,
   if (TEMP_FAILURE_RETRY (__sendto (fd, (void *) &req, sizeof (req), 0,
 				    (struct sockaddr *) &nladdr,
 				    sizeof (nladdr))) < 0)
-    goto out_fail;
+    goto out;
 
   bool done = false;
   do
@@ -123,10 +125,10 @@ __check_native (uint32_t a1_index, int *a1_native,
       ssize_t read_len = TEMP_FAILURE_RETRY (__recvmsg (fd, &msg, 0));
       __netlink_assert_response (fd, read_len);
       if (read_len < 0)
-	goto out_fail;
+	goto out;
 
       if (msg.msg_flags & MSG_TRUNC)
-	goto out_fail;
+	goto out;
 
       struct nlmsghdr *nlmh;
       for (nlmh = (struct nlmsghdr *) buf;
@@ -166,12 +168,9 @@ __check_native (uint32_t a1_index, int *a1_native,
     }
   while (! done);
 
- out:
+out:
   __close_nocancel_nostatus (fd);
 
-  return;
-
-out_fail:
   if (use_malloc)
     free (buf);
 }
