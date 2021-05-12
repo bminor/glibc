@@ -221,6 +221,7 @@ run_test_function (int argc, char **argv, const struct test_config *config)
       fprintf (gdb_script, "attach %ld\n", (long int) mypid);
       fprintf (gdb_script, "set wait_for_debugger = 0\n");
       fclose (gdb_script);
+      free (gdb_script_name);
     }
 
   /* Wait for the debugger to set wait_for_debugger to zero.  */
