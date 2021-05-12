@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define MIN_PAGE_SIZE (512*1024+4096)
+#define MIN_PAGE_SIZE (512*1024+getpagesize())
 #define TEST_MAIN
 #define TEST_NAME "memcpy"
 #include "bench-string.h"
@@ -160,7 +160,7 @@ do_test (json_ctx_t *json_ctx, size_t max_size)
     }
 
   json_element_object_begin (json_ctx);
-  json_attr_uint (json_ctx, "max-size", (double) max_size);
+  json_attr_uint (json_ctx, "length", (double) max_size);
   json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
