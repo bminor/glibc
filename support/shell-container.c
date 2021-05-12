@@ -93,8 +93,9 @@ copy_func (char **argv)
 {
   char *sname = argv[0];
   char *dname = argv[1];
-  int sfd, dfd;
+  int sfd = -1, dfd = -1;
   struct stat st;
+  int ret = 1;
 
   sfd = open (sname, O_RDONLY);
   if (sfd < 0)
@@ -108,7 +109,7 @@ copy_func (char **argv)
     {
       fprintf (stderr, "cp: unable to fstat %s: %s\n",
 	       sname, strerror (errno));
-      return 1;
+      goto out;
     }
 
   dfd = open (dname, O_WRONLY | O_TRUNC | O_CREAT, 0600);
@@ -116,22 +117,26 @@ copy_func (char **argv)
     {
       fprintf (stderr, "cp: unable to open %s for writing: %s\n",
 	       dname, strerror (errno));
-      return 1;
+      goto out;
     }
 
   if (support_copy_file_range (sfd, 0, dfd, 0, st.st_size, 0) != st.st_size)
     {
       fprintf (stderr, "cp: cannot copy file %s to %s: %s\n",
 	       sname, dname, strerror (errno));
-      return 1;
+      goto out;
     }
 
-  close (sfd);
-  close (dfd);
-
+  ret = 0;
   chmod (dname, st.st_mode & 0777);
 
-  return 0;
+out:
+  if (sfd >= 0)
+    close (sfd);
+  if (dfd >= 0)
+    close (dfd);
+
+  return ret;
 
 }
 
