@@ -291,6 +291,8 @@ struct libc_do_syscall_args
 # define HAVE_TIME_VSYSCALL             "__vdso_time"
 # define HAVE_CLOCK_GETRES_VSYSCALL     "__vdso_clock_getres"
 
+# define HAVE_CLONE3_WAPPER		1
+
 # undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
 # define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
 
