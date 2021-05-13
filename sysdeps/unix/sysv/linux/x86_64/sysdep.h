@@ -377,6 +377,8 @@
 # define HAVE_GETCPU_VSYSCALL		"__vdso_getcpu"
 # define HAVE_CLOCK_GETRES64_VSYSCALL   "__vdso_clock_getres"
 
+# define HAVE_CLONE3_WAPPER			1
+
 # define SINGLE_THREAD_BY_GLOBAL		1
 
 #endif	/* __ASSEMBLER__ */
