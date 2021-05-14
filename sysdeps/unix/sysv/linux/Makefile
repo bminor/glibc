@@ -139,6 +139,15 @@ tests-time64 += \
   tst-sigtimedwait-time64 \
   tst-timerfd-time64 \
 
+tests-clone-internal = \
+  tst-align-clone-internal \
+  tst-clone2-internal \
+  tst-clone3-internal \
+  tst-getpid1-internal \
+  tst-misalign-clone-internal
+tests-internal += $(tests-clone-internal)
+tests-static += $(tests-clone-internal)
+
 CFLAGS-tst-sigcontext-get_pc.c = -fasynchronous-unwind-tables
 
 # Generate the list of SYS_* macros for the system calls (__NR_*
