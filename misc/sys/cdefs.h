@@ -603,6 +603,17 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
 #  define __attr_access_none(argno)
 #endif
 
+#if __GNUC_PREREQ (11, 0)
+/* Designates dealloc as a function to call to deallocate objects
+   allocated by the declared function.  */
+# define __attr_dealloc(dealloc, argno) \
+    __attribute__ ((__malloc__ (dealloc, argno)))
+# define __attr_dealloc_free __attr_dealloc (__builtin_free, 1)
+#else
+# define __attr_dealloc(dealloc, argno)
+# define __attr_dealloc_free
+#endif
+
 /* Specify that a function such as setjmp or vfork may return
    twice.  */
 #if __GNUC_PREREQ (4, 1)

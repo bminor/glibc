@@ -21,7 +21,7 @@ do_test (void)
 	  res = 1;
 	}
 
-      fclose (fp);
+      pclose (fp);
     }
 
   fp = popen ("echo hello", "re");
@@ -39,7 +39,7 @@ do_test (void)
 	  res = 1;
 	}
 
-      fclose (fp);
+      pclose (fp);
     }
 
   return res;

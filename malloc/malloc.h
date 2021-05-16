@@ -56,22 +56,25 @@ __THROW __attribute_warn_unused_result__ __attribute_alloc_size__ ((2));
    the same pointer that was passed to it, aliasing needs to be allowed
    between objects pointed by the old and new pointers.  */
 extern void *reallocarray (void *__ptr, size_t __nmemb, size_t __size)
-__THROW __attribute_warn_unused_result__ __attribute_alloc_size__ ((2, 3));
+  __THROW __attribute_warn_unused_result__ __attribute_alloc_size__ ((2, 3))
+  __attr_dealloc_free;
 
 /* Free a block allocated by `malloc', `realloc' or `calloc'.  */
 extern void free (void *__ptr) __THROW;
 
 /* Allocate SIZE bytes allocated to ALIGNMENT bytes.  */
 extern void *memalign (size_t __alignment, size_t __size)
-__THROW __attribute_malloc__ __attribute_alloc_size__ ((2)) __wur;
+  __THROW __attribute_malloc__ __attribute_alloc_size__ ((2)) __wur
+  __attr_dealloc_free;
 
 /* Allocate SIZE bytes on a page boundary.  */
 extern void *valloc (size_t __size) __THROW __attribute_malloc__
-     __attribute_alloc_size__ ((1)) __wur;
+     __attribute_alloc_size__ ((1)) __wur __attr_dealloc_free;
 
 /* Equivalent to valloc(minimum-page-that-holds(n)), that is, round up
    __size to nearest pagesize. */
-extern void *pvalloc (size_t __size) __THROW __attribute_malloc__ __wur;
+extern void *pvalloc (size_t __size) __THROW __attribute_malloc__
+  __wur __attr_dealloc_free;
 
 /* Underlying allocation function; successive calls should return
    contiguous pieces of memory.  */
