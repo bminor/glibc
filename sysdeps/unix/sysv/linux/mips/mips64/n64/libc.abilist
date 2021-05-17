@@ -1420,6 +1420,7 @@ GLIBC_2.17 clock_nanosleep F
 GLIBC_2.17 clock_settime F
 GLIBC_2.17 secure_getenv F
 GLIBC_2.18 __cxa_thread_atexit_impl F
+GLIBC_2.18 pthread_getattr_default_np F
 GLIBC_2.18 pthread_setattr_default_np F
 GLIBC_2.2 _Exit F
 GLIBC_2.2 _IO_2_1_stderr_ D 0xe0
@@ -2350,6 +2351,7 @@ GLIBC_2.34 pthread_condattr_getpshared F
 GLIBC_2.34 pthread_condattr_setclock F
 GLIBC_2.34 pthread_condattr_setpshared F
 GLIBC_2.34 pthread_detach F
+GLIBC_2.34 pthread_getattr_default_np F
 GLIBC_2.34 pthread_getconcurrency F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_join F

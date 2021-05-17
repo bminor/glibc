@@ -113,6 +113,7 @@ routines = \
   pthread_equal \
   pthread_exit \
   pthread_getaffinity \
+  pthread_getattr_default_np \
   pthread_getattr_np \
   pthread_getconcurrency \
   pthread_getschedparam \
@@ -205,7 +206,6 @@ libpthread-routines = \
   nptl-init \
   pt-interp \
   pthread_create \
-  pthread_getattr_default_np \
   pthread_getcpuclockid \
   pthread_getname \
   pthread_setaffinity \

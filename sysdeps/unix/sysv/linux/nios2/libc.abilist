@@ -1537,6 +1537,7 @@ GLIBC_2.21 pthread_detach F
 GLIBC_2.21 pthread_equal F
 GLIBC_2.21 pthread_exit F
 GLIBC_2.21 pthread_getaffinity_np F
+GLIBC_2.21 pthread_getattr_default_np F
 GLIBC_2.21 pthread_getattr_np F
 GLIBC_2.21 pthread_getconcurrency F
 GLIBC_2.21 pthread_getschedparam F
@@ -2397,6 +2398,7 @@ GLIBC_2.34 pthread_condattr_getpshared F
 GLIBC_2.34 pthread_condattr_setclock F
 GLIBC_2.34 pthread_condattr_setpshared F
 GLIBC_2.34 pthread_detach F
+GLIBC_2.34 pthread_getattr_default_np F
 GLIBC_2.34 pthread_getconcurrency F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_join F

@@ -189,6 +189,7 @@ libc {
     pthread_mutexattr_setrobust;
   }
   GLIBC_2.18 {
+    pthread_getattr_default_np;
     pthread_setattr_default_np;
   }
   # C11 thread symbols.
@@ -282,6 +283,7 @@ libc {
     pthread_condattr_setclock;
     pthread_condattr_setpshared;
     pthread_detach;
+    pthread_getattr_default_np;
     pthread_getconcurrency;
     pthread_getspecific;
     pthread_join;
@@ -392,6 +394,7 @@ libc {
     __pthread_enable_asynccancel;
     __pthread_force_elision;
     __pthread_getattr_default_np;
+    __pthread_getattr_default_np;
     __pthread_keys;
     __pthread_mutex_unlock_usercnt;
     __pthread_setcancelstate;
@@ -473,7 +476,10 @@ libpthread {
   };
 
   GLIBC_2.18 {
-    pthread_getattr_default_np;
+    __libpthread_version_placeholder;
+  }
+
+  GLIBC_2.19 {
   }
 
   # C11 thread symbols.
