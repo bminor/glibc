@@ -1782,6 +1782,7 @@ GLIBC_2.12 __m68k_read_tp F
 GLIBC_2.12 _sys_errlist D 0x21c
 GLIBC_2.12 _sys_nerr D 0x4
 GLIBC_2.12 ntp_gettimex F
+GLIBC_2.12 pthread_getname_np F
 GLIBC_2.12 pthread_mutex_consistent F
 GLIBC_2.12 pthread_mutexattr_getrobust F
 GLIBC_2.12 pthread_mutexattr_setrobust F
@@ -2390,6 +2391,7 @@ GLIBC_2.34 pthread_detach F
 GLIBC_2.34 pthread_getattr_default_np F
 GLIBC_2.34 pthread_getconcurrency F
 GLIBC_2.34 pthread_getcpuclockid F
+GLIBC_2.34 pthread_getname_np F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_join F
 GLIBC_2.34 pthread_key_create F

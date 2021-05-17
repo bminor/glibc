@@ -1,6 +1,5 @@
 GLIBC_2.29 __errno_location F
 GLIBC_2.29 pthread_create F
-GLIBC_2.29 pthread_getname_np F
 GLIBC_2.29 pthread_setaffinity_np F
 GLIBC_2.29 pthread_setname_np F
 GLIBC_2.29 pthread_setschedprio F

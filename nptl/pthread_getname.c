@@ -23,12 +23,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/prctl.h>
-
 #include <not-cancel.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_getname_np (pthread_t th, char *buf, size_t len)
+__pthread_getname_np (pthread_t th, char *buf, size_t len)
 {
   const struct pthread *pd = (const struct pthread *) th;
 
@@ -39,7 +38,7 @@ pthread_getname_np (pthread_t th, char *buf, size_t len)
     return ERANGE;
 
   if (pd == THREAD_SELF)
-    return prctl (PR_GET_NAME, buf) ? errno : 0;
+    return __prctl (PR_GET_NAME, buf) ? errno : 0;
 
 #define FMT "/proc/self/task/%u/comm"
   char fname[sizeof (FMT) + 8];
@@ -67,3 +66,10 @@ pthread_getname_np (pthread_t th, char *buf, size_t len)
 
   return res;
 }
+versioned_symbol (libc, __pthread_getname_np, pthread_getname_np,
+		  GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_getname_np, pthread_getname_np,
+	       GLIBC_2_12);
+#endif

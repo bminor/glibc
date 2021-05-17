@@ -1383,6 +1383,7 @@ GLIBC_2.11 mkostemps64 F
 GLIBC_2.11 mkstemps F
 GLIBC_2.11 mkstemps64 F
 GLIBC_2.12 ntp_gettimex F
+GLIBC_2.12 pthread_getname_np F
 GLIBC_2.12 pthread_mutex_consistent F
 GLIBC_2.12 pthread_mutexattr_getrobust F
 GLIBC_2.12 pthread_mutexattr_setrobust F
@@ -2361,6 +2362,7 @@ GLIBC_2.34 pthread_detach F
 GLIBC_2.34 pthread_getattr_default_np F
 GLIBC_2.34 pthread_getconcurrency F
 GLIBC_2.34 pthread_getcpuclockid F
+GLIBC_2.34 pthread_getname_np F
 GLIBC_2.34 pthread_getspecific F
 GLIBC_2.34 pthread_join F
 GLIBC_2.34 pthread_key_create F

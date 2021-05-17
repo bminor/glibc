@@ -185,6 +185,7 @@ libc {
     pthread_mutexattr_setrobust_np;
   }
   GLIBC_2.12 {
+    pthread_getname_np;
     pthread_mutex_consistent;
     pthread_mutexattr_getrobust;
     pthread_mutexattr_setrobust;
@@ -287,6 +288,7 @@ libc {
     pthread_getattr_default_np;
     pthread_getconcurrency;
     pthread_getcpuclockid;
+    pthread_getname_np;
     pthread_getspecific;
     pthread_join;
     pthread_key_create;
@@ -470,7 +472,6 @@ libpthread {
   };
 
   GLIBC_2.12 {
-    pthread_getname_np;
     pthread_setname_np;
   };
 
