@@ -174,6 +174,7 @@ routines = \
   pthread_setcancelstate \
   pthread_setcanceltype \
   pthread_setconcurrency \
+  pthread_setname \
   pthread_setschedparam \
   pthread_setspecific \
   pthread_sigmask \
@@ -209,7 +210,6 @@ libpthread-routines = \
   nptl-init \
   pt-interp \
   pthread_create \
-  pthread_setname \
   pthread_setschedprio \
   pthread_sigqueue \
   version \

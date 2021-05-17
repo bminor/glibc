@@ -28,7 +28,7 @@
 
 
 int
-pthread_setname_np (pthread_t th, const char *name)
+__pthread_setname_np (pthread_t th, const char *name)
 {
   const struct pthread *pd = (const struct pthread *) th;
 
@@ -40,7 +40,7 @@ pthread_setname_np (pthread_t th, const char *name)
     return ERANGE;
 
   if (pd == THREAD_SELF)
-    return prctl (PR_SET_NAME, name) ? errno : 0;
+    return __prctl (PR_SET_NAME, name) ? errno : 0;
 
 #define FMT "/proc/self/task/%u/comm"
   char fname[sizeof (FMT) + 8];
@@ -61,3 +61,10 @@ pthread_setname_np (pthread_t th, const char *name)
 
   return res;
 }
+versioned_symbol (libc, __pthread_setname_np, pthread_setname_np,
+                  GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_setname_np, pthread_setname_np,
+               GLIBC_2_12);
+#endif

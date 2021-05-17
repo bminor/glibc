@@ -191,6 +191,7 @@ libc {
     pthread_mutex_consistent;
     pthread_mutexattr_getrobust;
     pthread_mutexattr_setrobust;
+    pthread_setname_np;
   }
   GLIBC_2.18 {
     pthread_getattr_default_np;
@@ -330,6 +331,7 @@ libc {
     pthread_rwlockattr_setpshared;
     pthread_setattr_default_np;
     pthread_setconcurrency;
+    pthread_setname_np;
     pthread_setspecific;
     pthread_spin_destroy;
     pthread_spin_init;
@@ -473,8 +475,11 @@ libpthread {
   };
 
   GLIBC_2.12 {
-    pthread_setname_np;
+    __libpthread_version_placeholder;
   };
+
+  GLIBC_2.13 {
+  }
 
   GLIBC_2.18 {
     __libpthread_version_placeholder;

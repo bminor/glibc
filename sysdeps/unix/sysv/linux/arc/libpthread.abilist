@@ -1,6 +1,5 @@
 GLIBC_2.32 __errno_location F
 GLIBC_2.32 pthread_create F
-GLIBC_2.32 pthread_setname_np F
 GLIBC_2.32 pthread_setschedprio F
 GLIBC_2.32 pthread_sigqueue F
 GLIBC_2.32 thrd_create F

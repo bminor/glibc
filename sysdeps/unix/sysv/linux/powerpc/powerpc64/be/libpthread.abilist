@@ -1,5 +1,5 @@
 GLIBC_2.11 pthread_sigqueue F
-GLIBC_2.12 pthread_setname_np F
+GLIBC_2.12 __libpthread_version_placeholder F
 GLIBC_2.18 __libpthread_version_placeholder F
 GLIBC_2.28 thrd_create F
 GLIBC_2.3 __errno_location F

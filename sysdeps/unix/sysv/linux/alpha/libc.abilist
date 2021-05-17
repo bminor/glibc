@@ -1824,6 +1824,7 @@ GLIBC_2.12 pthread_getname_np F
 GLIBC_2.12 pthread_mutex_consistent F
 GLIBC_2.12 pthread_mutexattr_getrobust F
 GLIBC_2.12 pthread_mutexattr_setrobust F
+GLIBC_2.12 pthread_setname_np F
 GLIBC_2.12 recvmmsg F
 GLIBC_2.12 sys_errlist D 0x458
 GLIBC_2.12 sys_nerr D 0x4
@@ -2507,6 +2508,7 @@ GLIBC_2.34 pthread_rwlockattr_setpshared F
 GLIBC_2.34 pthread_setaffinity_np F
 GLIBC_2.34 pthread_setattr_default_np F
 GLIBC_2.34 pthread_setconcurrency F
+GLIBC_2.34 pthread_setname_np F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.34 pthread_spin_destroy F
 GLIBC_2.34 pthread_spin_init F
