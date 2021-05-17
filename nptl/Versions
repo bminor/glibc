@@ -127,6 +127,7 @@ libc {
     pthread_barrierattr_setpshared;
     pthread_condattr_getpshared;
     pthread_condattr_setpshared;
+    pthread_getcpuclockid;
     pthread_mutex_timedlock;
     pthread_mutexattr_getpshared;
     pthread_mutexattr_setpshared;
@@ -285,6 +286,7 @@ libc {
     pthread_detach;
     pthread_getattr_default_np;
     pthread_getconcurrency;
+    pthread_getcpuclockid;
     pthread_getspecific;
     pthread_join;
     pthread_key_create;
@@ -434,10 +436,7 @@ libpthread {
   }
 
   GLIBC_2.2 {
-    pthread_getcpuclockid;
-    pthread_yield;
-    pthread_rwlock_timedrdlock;
-    pthread_rwlock_timedwrlock;
+    __libpthread_version_placeholder;
   }
 
   GLIBC_2.2.3 {

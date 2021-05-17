@@ -1,6 +1,5 @@
 GLIBC_2.32 __errno_location F
 GLIBC_2.32 pthread_create F
-GLIBC_2.32 pthread_getcpuclockid F
 GLIBC_2.32 pthread_getname_np F
 GLIBC_2.32 pthread_setaffinity_np F
 GLIBC_2.32 pthread_setname_np F

@@ -45,6 +45,16 @@ compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_1_2);
 #endif
 
+/* Do not create the placeholder symbol version if there are other
+   symbols left that keep the version around (because GLIBC_2.0 got
+   promoted to GLIBC_2.2).  */
+#if SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_2_3) \
+  && ABI_libpthread_GLIBC_2_2 != ABI_libpthread_GLIBC_2_0 \
+  && ABI_libpthread_GLIBC_2_2 != ABI_libpthread_GLIBC_2_1_3
+compat_symbol (libpthread, __libpthread_version_placeholder_1,
+	       __libpthread_version_placeholder, GLIBC_2_2);
+#endif
+
 #if (SHLIB_COMPAT (libpthread, GLIBC_2_2_3, GLIBC_2_2_4))
 compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_2_3);

@@ -21,10 +21,10 @@
 #include <sys/time.h>
 #include <tls.h>
 #include <kernel-posix-cpu-timers.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_getcpuclockid (pthread_t threadid, clockid_t *clockid)
+__pthread_getcpuclockid (pthread_t threadid, clockid_t *clockid)
 {
   struct pthread *pd = (struct pthread *) threadid;
 
@@ -40,3 +40,10 @@ pthread_getcpuclockid (pthread_t threadid, clockid_t *clockid)
   *clockid = tidclock;
   return 0;
 }
+versioned_symbol (libc, __pthread_getcpuclockid, pthread_getcpuclockid,
+                  GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_getcpuclockid, pthread_getcpuclockid,
+               GLIBC_2_2);
+#endif
