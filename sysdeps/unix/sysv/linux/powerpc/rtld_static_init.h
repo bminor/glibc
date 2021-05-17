@@ -1,6 +1,5 @@
-/* Run-time dynamic linker data structures for loaded ELF shared objects.
-   PowerPC version.
-   Copyright (C) 2013-2021 Free Software Foundation, Inc.
+/* Partial initialization of ld.so loaded via static dlopen.  powerpc helper.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,17 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _LDSODEFS_H
+static inline void
+__rtld_static_init_arch (struct link_map *map, struct rtld_global_ro *dl)
+{
+  /* This field does not exist in the generic _rtld_global_ro version.  */
 
-/* Get the real definitions.  */
-#include_next <ldsodefs.h>
-
-/* Now define our stuff.  */
-
-/* We need special support to initialize DSO loaded for statically linked
-   binaries.  */
-extern void _dl_static_init (struct link_map *map);
-#undef DL_STATIC_INIT
-#define DL_STATIC_INIT(map) _dl_static_init (map)
-
-#endif /* ldsodefs.h */
+  extern __typeof (dl->_dl_cache_line_size) _dl_cache_line_size
+    attribute_hidden;
+  dl->_dl_cache_line_size = _dl_cache_line_size;
+}
