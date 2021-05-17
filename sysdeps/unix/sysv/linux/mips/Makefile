@@ -57,10 +57,6 @@ abi-n64_hard_2008-condition := defined(__mips_nan2008) \
 			       && (_MIPS_SIM == _MIPS_SIM_ABI64)
 
 ifeq ($(subdir),elf)
-ifeq ($(build-shared),yes)
-# This is needed for DSO loading from static binaries.
-sysdep-dl-routines += dl-static
-endif
 # If the compiler doesn't use GNU.stack note,
 # this test is expected to fail.
 ifneq ($(mips-has-gnustack),yes)

@@ -23,12 +23,6 @@
 
 /* Now define our stuff.  */
 
-/* We need special support to initialize DSO loaded for statically linked
-   binaries.  */
-extern void _dl_static_init (struct link_map *map);
-#undef DL_STATIC_INIT
-#define DL_STATIC_INIT(map) _dl_static_init (map)
-
 /* Allow ABIVERSION == 1, meaning PLTs and copy relocations are
    required, with ELFOSABI_SYSV, and ELFOSABI_GNU.  */
 #undef VALID_ELF_ABIVERSION
