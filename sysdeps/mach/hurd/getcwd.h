@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2021 Free Software Foundation, Inc.
+/* Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,18 +15,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <unistd.h>
+#ifndef	_GETCWD_H
+#define	_GETCWD_H	1
+
 #include <hurd.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <stdio.h>
 
-/* Replace the current process, executing FILE_NAME with arguments ARGV and
-   environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
-int
-__execve (const char *file_name, char *const argv[], char *const envp[])
-{
-  return __execveat (AT_FDCWD, file_name, argv, envp, 0);
-}
+char *
+__hurd_canonicalize_directory_name_internal (file_t thisdir,
+					     char *buf,
+					     size_t size);
 
-weak_alias (__execve, execve)
+#endif /* getcwd.h */

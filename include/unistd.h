@@ -103,6 +103,8 @@ extern int __dup3 (int __fd, int __fd2, int flags);
 libc_hidden_proto (__dup3)
 extern int __execve (const char *__path, char *const __argv[],
 		     char *const __envp[]) attribute_hidden;
+extern int __execveat (int dirfd, const char *__path, char *const __argv[],
+		       char *const __envp[], int flags) attribute_hidden;
 extern long int __pathconf (const char *__path, int __name);
 extern long int __fpathconf (int __fd, int __name);
 extern long int __sysconf (int __name);
