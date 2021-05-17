@@ -2322,6 +2322,7 @@ GLIBC_2.3.3 pthread_barrierattr_getpshared F
 GLIBC_2.3.3 pthread_condattr_getclock F
 GLIBC_2.3.3 pthread_condattr_setclock F
 GLIBC_2.3.3 pthread_getaffinity_np F
+GLIBC_2.3.3 pthread_setaffinity_np F
 GLIBC_2.3.3 pthread_timedjoin_np F
 GLIBC_2.3.3 pthread_tryjoin_np F
 GLIBC_2.3.3 remap_file_pages F
@@ -2355,6 +2356,7 @@ GLIBC_2.3.4 getsourcefilter F
 GLIBC_2.3.4 pthread_attr_getaffinity_np F
 GLIBC_2.3.4 pthread_attr_setaffinity_np F
 GLIBC_2.3.4 pthread_getaffinity_np F
+GLIBC_2.3.4 pthread_setaffinity_np F
 GLIBC_2.3.4 regexec F
 GLIBC_2.3.4 sched_getaffinity F
 GLIBC_2.3.4 sched_setaffinity F
@@ -2490,6 +2492,7 @@ GLIBC_2.34 pthread_rwlockattr_getpshared F
 GLIBC_2.34 pthread_rwlockattr_init F
 GLIBC_2.34 pthread_rwlockattr_setkind_np F
 GLIBC_2.34 pthread_rwlockattr_setpshared F
+GLIBC_2.34 pthread_setaffinity_np F
 GLIBC_2.34 pthread_setattr_default_np F
 GLIBC_2.34 pthread_setconcurrency F
 GLIBC_2.34 pthread_setspecific F

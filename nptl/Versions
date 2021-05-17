@@ -166,12 +166,14 @@ libc {
     pthread_condattr_getclock;
     pthread_condattr_setclock;
     pthread_getaffinity_np;
+    pthread_setaffinity_np;
     pthread_timedjoin_np;
     pthread_tryjoin_np;
   }
   GLIBC_2.3.4 {
     pthread_attr_getaffinity_np;
     pthread_attr_setaffinity_np;
+    pthread_setaffinity_np;
   }
   GLIBC_2.4 {
     pthread_mutex_consistent_np;
@@ -454,12 +456,11 @@ libpthread {
   }
 
   GLIBC_2.3.3 {
-    pthread_setaffinity_np;
+    __libpthread_version_placeholder;
   }
 
   GLIBC_2.3.4 {
     pthread_getaffinity_np;
-    pthread_setaffinity_np;
     pthread_setschedprio;
   }
 
