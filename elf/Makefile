@@ -25,7 +25,7 @@ headers		= elf.h bits/elfclass.h link.h bits/link.h
 routines	= $(all-dl-routines) dl-support dl-iteratephdr \
 		  dl-addr dl-addr-obj enbl-secure dl-profstub \
 		  dl-origin dl-libc dl-sym dl-sysdep dl-error \
-		  dl-reloc-static-pie libc_early_init
+		  dl-reloc-static-pie libc_early_init rtld_static_init
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
@@ -60,7 +60,7 @@ all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin \
 		    dl-sysdep dl-exception dl-reloc-static-pie \
-		    thread_gscope_wait
+		    thread_gscope_wait rtld_static_init
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
@@ -161,7 +161,7 @@ tests-static-normal := tst-leaks1-static tst-array1-static tst-array5-static \
 	       tst-tlsalign-static tst-tlsalign-extern-static \
 	       tst-linkall-static tst-env-setuid tst-env-setuid-tunables \
 	       tst-single_threaded-static tst-single_threaded-pthread-static \
-	       tst-dst-static
+	       tst-dst-static tst-getauxval-static
 
 tests-static-internal := tst-tls1-static tst-tls2-static \
 	       tst-ptrguard1-static tst-stackguard1-static \
@@ -346,6 +346,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		libmarkermod3-1 libmarkermod3-2 libmarkermod3-3 \
 		libmarkermod4-1 libmarkermod4-2 libmarkermod4-3 libmarkermod4-4 \
 		tst-tls20mod-bad tst-tls21mod tst-dlmopen-dlerror-mod \
+		tst-auxvalmod \
 
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
@@ -1942,3 +1943,7 @@ $(objpfx)tst-tls20.out: $(objpfx)tst-tls20mod-bad.so \
 $(objpfx)tst-tls21: $(libdl) $(shared-thread-library)
 $(objpfx)tst-tls21.out: $(objpfx)tst-tls21mod.so
 $(objpfx)tst-tls21mod.so: $(tst-tls-many-dynamic-modules:%=$(objpfx)%.so)
+
+$(objpfx)tst-getauxval-static: $(common-objpfx)dlfcn/libdl.a
+$(objpfx)tst-getauxval-static.out: $(objpfx)tst-auxvalmod.so
+tst-getauxval-static-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx)

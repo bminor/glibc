@@ -1313,6 +1313,13 @@ dl_init_static_tls (struct link_map *map)
 #endif
 }
 
+#ifndef SHARED
+/* Called before relocating ld.so during static dlopen.  This can be
+   used to partly initialize the dormant ld.so copy in the static
+   dlopen namespace.  */
+void __rtld_static_init (struct link_map *map) attribute_hidden;
+#endif
+
 /* Return true if the ld.so copy in this namespace is actually active
    and working.  If false, the dl_open/dlfcn hooks have to be used to
    call into the outer dynamic linker (which happens after static

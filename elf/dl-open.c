@@ -35,6 +35,7 @@
 #include <libc-internal.h>
 #include <array_length.h>
 #include <libc-early-init.h>
+#include <gnu/lib-names.h>
 
 #include <dl-dst.h>
 #include <dl-prop.h>
@@ -590,8 +591,20 @@ dl_open_worker (void *a)
   /* So far, so good.  Now check the versions.  */
   for (unsigned int i = 0; i < new->l_searchlist.r_nlist; ++i)
     if (new->l_searchlist.r_list[i]->l_real->l_versions == NULL)
-      (void) _dl_check_map_versions (new->l_searchlist.r_list[i]->l_real,
-				     0, 0);
+      {
+	struct link_map *map = new->l_searchlist.r_list[i]->l_real;
+	_dl_check_map_versions (map, 0, 0);
+#ifndef SHARED
+	/* During static dlopen, check if ld.so has been loaded.
+	   Perform partial initialization in this case.  This must
+	   come after the symbol versioning initialization in
+	   _dl_check_map_versions.  */
+	if (map->l_info[DT_SONAME] != NULL
+	    && strcmp (((const char *) D_PTR (map, l_info[DT_STRTAB])
+			+ map->l_info[DT_SONAME]->d_un.d_val), LD_SO) == 0)
+	  __rtld_static_init (map);
+#endif
+      }
 
 #ifdef SHARED
   /* Auditing checkpoint: we have added all objects.  */
