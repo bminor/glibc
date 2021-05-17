@@ -1,4 +1,5 @@
-/* Copyright (C) 2000-2021 Free Software Foundation, Inc.
+/* pthread_getcpuclockid -- Get POSIX clockid_t for a pthread_t.  Linux version
+   Copyright (C) 2000-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +20,7 @@
 #include <pthreadP.h>
 #include <sys/time.h>
 #include <tls.h>
+#include <kernel-posix-cpu-timers.h>
 
 
 int
@@ -31,24 +33,10 @@ pthread_getcpuclockid (pthread_t threadid, clockid_t *clockid)
     /* Not a valid thread handle.  */
     return ESRCH;
 
-#ifdef CLOCK_THREAD_CPUTIME_ID
-  /* We need to store the thread ID in the CLOCKID variable together
-     with a number identifying the clock.  We reserve the low 3 bits
-     for the clock ID and the rest for the thread ID.  This is
-     problematic if the thread ID is too large.  But 29 bits should be
-     fine.
+  /* The clockid_t value is a simple computation from the TID.  */
 
-     If some day more clock IDs are needed the ID part can be
-     enlarged.  The IDs are entirely internal.  */
-  if (pd->tid >= 1 << (8 * sizeof (*clockid) - CLOCK_IDFIELD_SIZE))
-    return ERANGE;
+  const clockid_t tidclock = MAKE_THREAD_CPUCLOCK (pd->tid, CPUCLOCK_SCHED);
 
-  /* Store the number.  */
-  *clockid = CLOCK_THREAD_CPUTIME_ID | (pd->tid << CLOCK_IDFIELD_SIZE);
-
+  *clockid = tidclock;
   return 0;
-#else
-  /* We don't have a timer for that.  */
-  return ENOENT;
-#endif
 }
