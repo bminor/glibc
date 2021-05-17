@@ -72,7 +72,7 @@ test-srcs = tst-mtrace
 # with MALLOC_CHECK_=3 because they expect a specific failure.
 tests-exclude-mcheck = tst-mcheck tst-malloc-usable \
 	tst-interpose-nothread tst-interpose-static-nothread \
-	tst-interpose-static-thread tst-malloc-too-large \
+	tst-interpose-static-thread \
 	tst-mxfast tst-safe-linking
 
 # Run all tests with MALLOC_CHECK_=3

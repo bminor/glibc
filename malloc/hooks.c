@@ -321,7 +321,10 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
   const INTERNAL_SIZE_T oldsize = chunksize (oldp);
 
   if (!checked_request2size (rb, &chnb))
-    goto invert;
+    {
+      __set_errno (ENOMEM);
+      goto invert;
+    }
 
   __libc_lock_lock (main_arena.mutex);
 
