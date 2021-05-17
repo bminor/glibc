@@ -13,10 +13,6 @@ sysdep_routines += ioperm clone2
 gen-as-const-headers += sigaltstack-offsets.sym
 endif
 
-ifeq ($(subdir),elf)
-sysdep-dl-routines += dl-static
-endif
-
 ifeq ($(subdir),rt)
 librt-routines += rt-sysdep
 librt-shared-only-routines += rt-sysdep
