@@ -17,7 +17,6 @@ sysdep_headers += sys/reg.h
 endif
 
 ifeq ($(subdir),elf)
-sysdep-dl-routines += dl-static
 sysdep-others += lddlibc4
 install-bin += lddlibc4
 endif
