@@ -174,6 +174,7 @@ libc {
     pthread_attr_getaffinity_np;
     pthread_attr_setaffinity_np;
     pthread_setaffinity_np;
+    pthread_setschedprio;
   }
   GLIBC_2.4 {
     pthread_mutex_consistent_np;
@@ -332,6 +333,7 @@ libc {
     pthread_setattr_default_np;
     pthread_setconcurrency;
     pthread_setname_np;
+    pthread_setschedprio;
     pthread_setspecific;
     pthread_spin_destroy;
     pthread_spin_init;
@@ -462,8 +464,7 @@ libpthread {
   }
 
   GLIBC_2.3.4 {
-    pthread_getaffinity_np;
-    pthread_setschedprio;
+    __libpthread_version_placeholder;
   }
 
   GLIBC_2.4 {

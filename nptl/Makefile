@@ -176,6 +176,7 @@ routines = \
   pthread_setconcurrency \
   pthread_setname \
   pthread_setschedparam \
+  pthread_setschedprio \
   pthread_setspecific \
   pthread_sigmask \
   pthread_spin_destroy \
@@ -210,7 +211,6 @@ libpthread-routines = \
   nptl-init \
   pt-interp \
   pthread_create \
-  pthread_setschedprio \
   pthread_sigqueue \
   version \
 

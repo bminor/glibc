@@ -1554,6 +1554,7 @@ GLIBC_2.29 pthread_setcanceltype F
 GLIBC_2.29 pthread_setconcurrency F
 GLIBC_2.29 pthread_setname_np F
 GLIBC_2.29 pthread_setschedparam F
+GLIBC_2.29 pthread_setschedprio F
 GLIBC_2.29 pthread_setspecific F
 GLIBC_2.29 pthread_sigmask F
 GLIBC_2.29 pthread_spin_destroy F
@@ -2361,6 +2362,7 @@ GLIBC_2.34 pthread_setaffinity_np F
 GLIBC_2.34 pthread_setattr_default_np F
 GLIBC_2.34 pthread_setconcurrency F
 GLIBC_2.34 pthread_setname_np F
+GLIBC_2.34 pthread_setschedprio F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.34 pthread_spin_destroy F
 GLIBC_2.34 pthread_spin_init F

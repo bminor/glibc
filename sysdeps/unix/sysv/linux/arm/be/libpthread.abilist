@@ -7,4 +7,3 @@ GLIBC_2.31 __libpthread_version_placeholder F
 GLIBC_2.4 __errno_location F
 GLIBC_2.4 __libpthread_version_placeholder F
 GLIBC_2.4 pthread_create F
-GLIBC_2.4 pthread_setschedprio F

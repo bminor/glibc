@@ -2275,6 +2275,7 @@ GLIBC_2.3.4 pthread_attr_getaffinity_np F
 GLIBC_2.3.4 pthread_attr_setaffinity_np F
 GLIBC_2.3.4 pthread_getaffinity_np F
 GLIBC_2.3.4 pthread_setaffinity_np F
+GLIBC_2.3.4 pthread_setschedprio F
 GLIBC_2.3.4 regexec F
 GLIBC_2.3.4 sched_getaffinity F
 GLIBC_2.3.4 sched_setaffinity F
@@ -2411,6 +2412,7 @@ GLIBC_2.34 pthread_setaffinity_np F
 GLIBC_2.34 pthread_setattr_default_np F
 GLIBC_2.34 pthread_setconcurrency F
 GLIBC_2.34 pthread_setname_np F
+GLIBC_2.34 pthread_setschedprio F
 GLIBC_2.34 pthread_setspecific F
 GLIBC_2.34 pthread_spin_destroy F
 GLIBC_2.34 pthread_spin_init F
