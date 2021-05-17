@@ -3,7 +3,7 @@ GLIBC_2.0 pthread_create F
 GLIBC_2.1 pthread_create F
 GLIBC_2.1.1 __libpthread_version_placeholder F
 GLIBC_2.1.2 __libpthread_version_placeholder F
-GLIBC_2.11 pthread_sigqueue F
+GLIBC_2.11 __libpthread_version_placeholder F
 GLIBC_2.12 __libpthread_version_placeholder F
 GLIBC_2.18 __libpthread_version_placeholder F
 GLIBC_2.19 __libpthread_version_placeholder F

@@ -85,6 +85,11 @@ compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_4);
 #endif
 
+#if SHLIB_COMPAT (libpthread, GLIBC_2_11, GLIBC_2_12)
+compat_symbol (libpthread, __libpthread_version_placeholder_1,
+	       __libpthread_version_placeholder, GLIBC_2_11);
+#endif
+
 #if SHLIB_COMPAT (libpthread, GLIBC_2_12, GLIBC_2_13)
 compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_12);

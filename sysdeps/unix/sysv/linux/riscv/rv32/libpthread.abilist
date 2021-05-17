@@ -1,4 +1,3 @@
 GLIBC_2.33 __errno_location F
 GLIBC_2.33 pthread_create F
-GLIBC_2.33 pthread_sigqueue F
 GLIBC_2.33 thrd_create F

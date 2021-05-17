@@ -1501,6 +1501,7 @@ GLIBC_2.32 pthread_setschedparam F
 GLIBC_2.32 pthread_setschedprio F
 GLIBC_2.32 pthread_setspecific F
 GLIBC_2.32 pthread_sigmask F
+GLIBC_2.32 pthread_sigqueue F
 GLIBC_2.32 pthread_spin_destroy F
 GLIBC_2.32 pthread_spin_init F
 GLIBC_2.32 pthread_spin_lock F
@@ -2180,6 +2181,7 @@ GLIBC_2.34 pthread_setconcurrency F
 GLIBC_2.34 pthread_setname_np F
 GLIBC_2.34 pthread_setschedprio F
 GLIBC_2.34 pthread_setspecific F
+GLIBC_2.34 pthread_sigqueue F
 GLIBC_2.34 pthread_spin_destroy F
 GLIBC_2.34 pthread_spin_init F
 GLIBC_2.34 pthread_spin_lock F

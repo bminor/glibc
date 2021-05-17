@@ -1382,6 +1382,7 @@ GLIBC_2.11 mkostemps F
 GLIBC_2.11 mkostemps64 F
 GLIBC_2.11 mkstemps F
 GLIBC_2.11 mkstemps64 F
+GLIBC_2.11 pthread_sigqueue F
 GLIBC_2.12 ntp_gettimex F
 GLIBC_2.12 pthread_getname_np F
 GLIBC_2.12 pthread_mutex_consistent F
@@ -2406,6 +2407,7 @@ GLIBC_2.34 pthread_setconcurrency F
 GLIBC_2.34 pthread_setname_np F
 GLIBC_2.34 pthread_setschedprio F
 GLIBC_2.34 pthread_setspecific F
+GLIBC_2.34 pthread_sigqueue F
 GLIBC_2.34 pthread_spin_destroy F
 GLIBC_2.34 pthread_spin_init F
 GLIBC_2.34 pthread_spin_lock F

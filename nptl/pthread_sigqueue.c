@@ -23,10 +23,10 @@
 #include <pthreadP.h>
 #include <tls.h>
 #include <sysdep.h>
-
+#include <shlib-compat.h>
 
 int
-pthread_sigqueue (pthread_t threadid, int signo, const union sigval value)
+__pthread_sigqueue (pthread_t threadid, int signo, const union sigval value)
 {
 #ifdef __NR_rt_tgsigqueueinfo
   struct pthread *pd = (struct pthread *) threadid;
@@ -52,7 +52,7 @@ pthread_sigqueue (pthread_t threadid, int signo, const union sigval value)
   info.si_signo = signo;
   info.si_code = SI_QUEUE;
   info.si_pid = pid;
-  info.si_uid = getuid ();
+  info.si_uid = __getuid ();
   info.si_value = value;
 
   /* We have a special syscall to do the work.  */
@@ -64,3 +64,8 @@ pthread_sigqueue (pthread_t threadid, int signo, const union sigval value)
   return ENOSYS;
 #endif
 }
+versioned_symbol (libc, __pthread_sigqueue, pthread_sigqueue, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_11, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_sigqueue, pthread_sigqueue, GLIBC_2_11);
+#endif

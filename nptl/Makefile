@@ -179,6 +179,7 @@ routines = \
   pthread_setschedprio \
   pthread_setspecific \
   pthread_sigmask \
+  pthread_sigqueue \
   pthread_spin_destroy \
   pthread_spin_init \
   pthread_spin_lock \
@@ -211,7 +212,6 @@ libpthread-routines = \
   nptl-init \
   pt-interp \
   pthread_create \
-  pthread_sigqueue \
   version \
 
 libpthread-shared-only-routines = \
