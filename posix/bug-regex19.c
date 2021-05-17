@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
+#include <libc-diag.h>
 
 #define BRE RE_SYNTAX_POSIX_BASIC
 #define ERE RE_SYNTAX_POSIX_EXTENDED
@@ -268,8 +269,17 @@ do_one_test (const struct test_s *test, const char *fail)
       return 1;
     }
 
+#if __GNUC_PREREQ (10, 0) && !__GNUC_PREREQ (11, 0)
+  DIAG_PUSH_NEEDS_COMMENT;
+  /* Avoid GCC 10 false positive warning: specified size exceeds maximum
+     object size.  */
+  DIAG_IGNORE_NEEDS_COMMENT (10, "-Wstringop-overflow");
+#endif
   res = re_search (&regbuf, test->string, strlen (test->string),
 		   test->start, strlen (test->string) - test->start, NULL);
+#if __GNUC_PREREQ (10, 0) && !__GNUC_PREREQ (11, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
   if (res != test->res)
     {
       printf ("%sre_search \"%s\" \"%s\" failed: %d (expected %d)\n",
@@ -280,8 +290,17 @@ do_one_test (const struct test_s *test, const char *fail)
 
   if (test->res > 0 && test->start == 0)
     {
+#if __GNUC_PREREQ (10, 0) && !__GNUC_PREREQ (11, 0)
+  DIAG_PUSH_NEEDS_COMMENT;
+  /* Avoid GCC 10 false positive warning: specified size exceeds maximum
+     object size.  */
+  DIAG_IGNORE_NEEDS_COMMENT (10, "-Wstringop-overflow");
+#endif
       res = re_search (&regbuf, test->string, strlen (test->string),
 		       test->res, strlen (test->string) - test->res, NULL);
+#if __GNUC_PREREQ (10, 0) && !__GNUC_PREREQ (11, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
       if (res != test->res)
 	{
 	  printf ("%sre_search from expected \"%s\" \"%s\" failed: %d (expected %d)\n",
