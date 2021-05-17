@@ -63,16 +63,19 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_IMPL (i, name, memcmp,
 	      IFUNC_IMPL_ADD (array, i, memcmp,
 			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)
 			       && CPU_FEATURE_USABLE (MOVBE)),
 			      __memcmp_avx2_movbe)
 	      IFUNC_IMPL_ADD (array, i, memcmp,
 			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)
 			       && CPU_FEATURE_USABLE (MOVBE)
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __memcmp_avx2_movbe_rtm)
 	      IFUNC_IMPL_ADD (array, i, memcmp,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)
+			       && CPU_FEATURE_USABLE (BMI2)
 			       && CPU_FEATURE_USABLE (MOVBE)),
 			      __memcmp_evex_movbe)
 	      IFUNC_IMPL_ADD (array, i, memcmp, CPU_FEATURE_USABLE (SSE4_1),
@@ -729,16 +732,19 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_IMPL (i, name, wmemcmp,
 	      IFUNC_IMPL_ADD (array, i, wmemcmp,
 			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)
 			       && CPU_FEATURE_USABLE (MOVBE)),
 			      __wmemcmp_avx2_movbe)
 	      IFUNC_IMPL_ADD (array, i, wmemcmp,
 			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)
 			       && CPU_FEATURE_USABLE (MOVBE)
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __wmemcmp_avx2_movbe_rtm)
 	      IFUNC_IMPL_ADD (array, i, wmemcmp,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)
+			       && CPU_FEATURE_USABLE (BMI2)
 			       && CPU_FEATURE_USABLE (MOVBE)),
 			      __wmemcmp_evex_movbe)
 	      IFUNC_IMPL_ADD (array, i, wmemcmp, CPU_FEATURE_USABLE (SSE4_1),
