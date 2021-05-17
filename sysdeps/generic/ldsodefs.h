@@ -135,12 +135,6 @@ dl_symbol_visibility_binds_local_p (const ElfW(Sym) *sym)
 # define DL_UNMAP(map)	_dl_unmap_segments (map)
 #endif
 
-/* By default we do not need special support to initialize DSOs loaded
-   by statically linked binaries.  */
-#ifndef DL_STATIC_INIT
-# define DL_STATIC_INIT(map)
-#endif
-
 /* Reloc type classes as returned by elf_machine_type_class().
    ELF_RTYPE_CLASS_PLT means this reloc should not be satisfied by
    some PLT symbol, ELF_RTYPE_CLASS_COPY means this reloc should not be

@@ -781,10 +781,6 @@ dl_open_worker (void *a)
       _dl_call_libc_early_init (libc_map, initial);
     }
 
-#ifndef SHARED
-  DL_STATIC_INIT (new);
-#endif
-
   /* Run the initializer functions of new objects.  Temporarily
      disable the exception handler, so that lazy binding failures are
      fatal.  */
