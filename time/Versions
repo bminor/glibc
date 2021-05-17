@@ -74,6 +74,9 @@ libc {
     clock_getres; clock_gettime; clock_settime; clock_getcpuclockid;
     clock_nanosleep;
   }
+  GLIBC_2.34 {
+    timespec_getres;
+  }
   GLIBC_PRIVATE {
     # same as clock_gettime; used in other libraries
     __clock_gettime;

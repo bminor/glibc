@@ -28,6 +28,9 @@ libc_hidden_proto (__clock_gettime)
 extern __typeof (clock_settime) __clock_settime;
 libc_hidden_proto (__clock_settime)
 
+extern __typeof (clock_getres) __clock_getres;
+libc_hidden_proto (__clock_getres)
+
 extern __typeof (clock_nanosleep) __clock_nanosleep;
 libc_hidden_proto (__clock_nanosleep);
 
@@ -306,6 +309,7 @@ extern double __difftime (time_t time1, time_t time0);
 # define __clock_nanosleep_time64 __clock_nanosleep
 # define __clock_gettime64 __clock_gettime
 # define __timespec_get64 __timespec_get
+# define __timespec_getres64 __timespec_getres
 #else
 extern int __clock_nanosleep_time64 (clockid_t clock_id,
                                      int flags, const struct __timespec64 *req,
@@ -315,6 +319,8 @@ extern int __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp);
 libc_hidden_proto (__clock_gettime64)
 extern int __timespec_get64 (struct __timespec64 *ts, int base);
 libc_hidden_proto (__timespec_get64)
+extern int __timespec_getres64 (struct __timespec64 *ts, int base);
+libc_hidden_proto (__timespec_getres64)
 #endif
 
 #if __TIMESIZE == 64

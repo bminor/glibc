@@ -36,7 +36,7 @@ routines := offtime asctime clock ctime ctime_r difftime \
 	    stime dysize timegm ftime			 \
 	    getdate strptime strptime_l			 \
 	    strftime wcsftime strftime_l wcsftime_l	 \
-	    timespec_get				 \
+	    timespec_get timespec_getres		 \
 	    clock_getcpuclockid clock_getres		 \
 	    clock_gettime clock_settime clock_nanosleep
 
@@ -50,7 +50,7 @@ tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
 	   tst-clock tst-clock2 tst-clock_nanosleep tst-cpuclock1 \
 	   tst-adjtime tst-ctime tst-difftime tst-mktime4 tst-clock_settime \
 	   tst-settimeofday tst-itimer tst-gmtime tst-timegm \
-	   tst-timespec_get
+	   tst-timespec_get tst-timespec_getres
 
 include ../Rules
 

@@ -23,6 +23,8 @@ Major new features:
   /proc to be mounted.  However, different than fexecve, if the syscall is not
   supported by the kernel an error is returned instead of trying a fallback.
 
+* The ISO C2X function timespec_getres has been added.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs

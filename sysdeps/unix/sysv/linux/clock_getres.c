@@ -79,6 +79,7 @@ __clock_getres (clockid_t clock_id, struct timespec *res)
   return retval;
 }
 #endif
+libc_hidden_def (__clock_getres)
 
 versioned_symbol (libc, __clock_getres, clock_getres, GLIBC_2_17);
 /* clock_getres moved to libc in version 2.17;

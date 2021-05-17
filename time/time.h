@@ -259,6 +259,13 @@ extern int timespec_get (struct timespec *__ts, int __base)
 #endif
 
 
+#if __GLIBC_USE (ISOC2X)
+/* Set TS to resolution of time base BASE.  */
+extern int timespec_getres (struct timespec *__ts, int __base)
+     __THROW;
+#endif
+
+
 #ifdef __USE_XOPEN_EXTENDED
 /* Set to one of the following values to indicate an error.
      1  the DATEMSK environment variable is null or undefined,
