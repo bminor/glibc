@@ -53,14 +53,14 @@ _dl_try_allocate_static_tls (struct link_map *map, bool optional)
   /* If we've already used the variable with dynamic access, or if the
      alignment requirements are too high, fail.  */
   if (map->l_tls_offset == FORCED_DYNAMIC_TLS_OFFSET
-      || map->l_tls_align > GL(dl_tls_static_align))
+      || map->l_tls_align > GLRO (dl_tls_static_align))
     {
     fail:
       return -1;
     }
 
 #if TLS_TCB_AT_TP
-  size_t freebytes = GL(dl_tls_static_size) - GL(dl_tls_static_used);
+  size_t freebytes = GLRO (dl_tls_static_size) - GL(dl_tls_static_used);
   if (freebytes < TLS_TCB_SIZE)
     goto fail;
   freebytes -= TLS_TCB_SIZE;
@@ -89,7 +89,7 @@ _dl_try_allocate_static_tls (struct link_map *map, bool optional)
 		   + map->l_tls_firstbyte_offset);
   size_t used = offset + map->l_tls_blocksize;
 
-  if (used > GL(dl_tls_static_size))
+  if (used > GLRO (dl_tls_static_size))
     goto fail;
 
   /* Account optional static TLS surplus usage.  */

@@ -437,12 +437,8 @@ struct rtld_global
   } *_dl_tls_dtv_slotinfo_list;
   /* Number of modules in the static TLS block.  */
   EXTERN size_t _dl_tls_static_nelem;
-  /* Size of the static TLS block.  */
-  EXTERN size_t _dl_tls_static_size;
   /* Size actually allocated in the static TLS block.  */
   EXTERN size_t _dl_tls_static_used;
-  /* Alignment requirement of the static TLS block.  */
-  EXTERN size_t _dl_tls_static_align;
   /* Remaining amount of static TLS that may be used for optimizing
      dynamic TLS access (e.g. with TLSDESC).  */
   EXTERN size_t _dl_tls_static_optional;
@@ -609,6 +605,12 @@ struct rtld_global_ro
      0 if not, -2 use the default (honor biases for normal
      binaries, don't honor for PIEs).  */
   EXTERN ElfW(Addr) _dl_use_load_bias;
+
+  /* Size of the static TLS block.  */
+  EXTERN size_t _dl_tls_static_size;
+
+  /* Alignment requirement of the static TLS block.  */
+  EXTERN size_t _dl_tls_static_align;
 
   /* Size of surplus space in the static TLS area for dynamically
      loaded modules with IE-model TLS or for TLSDESC optimization.

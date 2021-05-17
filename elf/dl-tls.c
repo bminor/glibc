@@ -300,9 +300,9 @@ _dl_determine_tlsoffset (void)
     }
 
   GL(dl_tls_static_used) = offset;
-  GL(dl_tls_static_size) = (roundup (offset + GLRO(dl_tls_static_surplus),
-				     max_align)
-			    + TLS_TCB_SIZE);
+  GLRO (dl_tls_static_size) = (roundup (offset + GLRO(dl_tls_static_surplus),
+					max_align)
+			       + TLS_TCB_SIZE);
 #elif TLS_DTV_AT_TP
   /* The TLS blocks start right after the TCB.  */
   size_t offset = TLS_TCB_SIZE;
@@ -345,14 +345,14 @@ _dl_determine_tlsoffset (void)
     }
 
   GL(dl_tls_static_used) = offset;
-  GL(dl_tls_static_size) = roundup (offset + GLRO(dl_tls_static_surplus),
-				    TLS_TCB_ALIGN);
+  GLRO (dl_tls_static_size) = roundup (offset + GLRO(dl_tls_static_surplus),
+				       TLS_TCB_ALIGN);
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif
 
   /* The alignment requirement for the static TLS block.  */
-  GL(dl_tls_static_align) = max_align;
+  GLRO (dl_tls_static_align) = max_align;
 }
 #endif /* SHARED */
 
@@ -391,8 +391,8 @@ allocate_dtv (void *result)
 void
 _dl_get_tls_static_info (size_t *sizep, size_t *alignp)
 {
-  *sizep = GL(dl_tls_static_size);
-  *alignp = GL(dl_tls_static_align);
+  *sizep = GLRO (dl_tls_static_size);
+  *alignp = GLRO (dl_tls_static_align);
 }
 
 /* Derive the location of the pointer to the start of the original
@@ -416,7 +416,7 @@ void *
 _dl_allocate_tls_storage (void)
 {
   void *result;
-  size_t size = GL(dl_tls_static_size);
+  size_t size = GLRO (dl_tls_static_size);
 
 #if TLS_DTV_AT_TP
   /* Memory layout is:
@@ -427,7 +427,7 @@ _dl_allocate_tls_storage (void)
 
   /* Perform the allocation.  Reserve space for the required alignment
      and the pointer to the original allocation.  */
-  size_t alignment = GL(dl_tls_static_align);
+  size_t alignment = GLRO (dl_tls_static_align);
   void *allocated = malloc (size + alignment + sizeof (void *));
   if (__glibc_unlikely (allocated == NULL))
     return NULL;
@@ -436,7 +436,7 @@ _dl_allocate_tls_storage (void)
 #if TLS_TCB_AT_TP
   /* The TCB follows the TLS blocks, which determine the alignment.
      (TCB alignment requirements have been taken into account when
-     calculating GL(dl_tls_static_align).)  */
+     calculating GLRO (dl_tls_static_align).)  */
   void *aligned = (void *) roundup ((uintptr_t) allocated, alignment);
   result = aligned + size - TLS_TCB_SIZE;
 
