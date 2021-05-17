@@ -26,10 +26,13 @@
 # define DB_RTLD_VARIABLE(name) DB_VARIABLE (name)
 #endif
 
-/* DB_MAIN_VARIABLE and DB_MAIN_ARRAY_VARIABLE are not covered by the
-   libpthread symbol check in db-symbols.awk.  */
+/* DB_MAIN_VARIABLE, DB_MAIN_SYMBOL, DB_MAIN_ARRAY_VARIABLE are not
+   covered by the libpthread symbol check in db-symbols.awk.  */
 #ifndef DB_MAIN_VARIABLE
 # define DB_MAIN_VARIABLE(name) DB_VARIABLE (name)
+#endif
+#ifndef DB_MAIN_SYMBOL
+# define DB_MAIN_SYMBOL(name) DB_SYMBOL (name)
 #endif
 #ifndef DB_MAIN_ARRAY_VARIABLE
 # define DB_MAIN_ARRAY_VARIABLE(name) DB_ARRAY_VARIABLE (name)
@@ -75,8 +78,8 @@ DB_STRUCT_FIELD (td_eventbuf_t, eventnum)
 DB_STRUCT_FIELD (td_eventbuf_t, eventdata)
 
 DB_SYMBOL (nptl_version)
-DB_FUNCTION (__nptl_create_event)
-DB_FUNCTION (__nptl_death_event)
+DB_MAIN_SYMBOL (__nptl_create_event)
+DB_MAIN_SYMBOL (__nptl_death_event)
 DB_SYMBOL (__nptl_threads_events)
 DB_MAIN_VARIABLE (__nptl_nthreads)
 DB_VARIABLE (__nptl_last_event)

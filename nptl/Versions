@@ -351,6 +351,8 @@ libc {
     tss_set;
   }
   GLIBC_PRIVATE {
+     __nptl_create_event;
+     __nptl_death_event;
     __default_pthread_attr;
     __default_pthread_attr_lock;
     __futex_abstimed_wait64;

@@ -337,8 +337,8 @@ rtld_hidden_proto (__nptl_initial_report_events)
 /* Event handlers for libthread_db interface.  */
 extern void __nptl_create_event (void);
 extern void __nptl_death_event (void);
-hidden_proto (__nptl_create_event)
-hidden_proto (__nptl_death_event)
+libc_hidden_proto (__nptl_create_event)
+libc_hidden_proto (__nptl_death_event)
 
 /* The fork generation counter, defined in libpthread.  */
 extern unsigned long int __fork_generation attribute_hidden;

@@ -41,6 +41,7 @@ routines = \
   elision-timed \
   elision-trylock \
   elision-unlock \
+  events \
   futex-internal \
   libc-cleanup \
   libc_multiple_threads \
@@ -200,7 +201,6 @@ shared-only-routines = forward
 static-only-routines = pthread_atfork
 
 libpthread-routines = \
-  events \
   libpthread-compat \
   nptl-init \
   pt-interp \
