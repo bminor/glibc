@@ -96,21 +96,9 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 extern void **__libc_dl_error_tsd (void) __attribute__ ((const));
 
 
-/* This can be set by the debugger before initialization is complete.  */
-static bool __nptl_initial_report_events __attribute_used__;
-
 void
 __pthread_initialize_minimal_internal (void)
 {
-  /* Partial initialization of the TCB already happened in TLS_INIT_TP
-     and __tls_init_tp.  */
-  struct pthread *pd = THREAD_SELF;
-
-  /* Before initializing GL (dl_stack_user), the debugger could not
-     find us and had to set __nptl_initial_report_events.  Propagate
-     its setting.  */
-  THREAD_SETMEM (pd, report_events, __nptl_initial_report_events);
-
   struct sigaction sa;
   __sigemptyset (&sa.sa_mask);
 

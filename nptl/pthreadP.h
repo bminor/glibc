@@ -328,6 +328,11 @@ extern int __pthread_attr_init (pthread_attr_t *attr);
 libc_hidden_proto (__pthread_attr_init)
 extern int __pthread_attr_init_2_0 (pthread_attr_t *attr);
 
+/* Part of the legacy thread events interface (which has been
+   superseded by PTRACE_O_TRACECLONE).  This can be set by the
+   debugger before initialization is complete.  */
+extern bool __nptl_initial_report_events;
+rtld_hidden_proto (__nptl_initial_report_events)
 
 /* Event handlers for libthread_db interface.  */
 extern void __nptl_create_event (void);

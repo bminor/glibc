@@ -27,6 +27,9 @@ bool __nptl_set_robust_list_avail __attribute__ ((nocommon));
 rtld_hidden_data_def (__nptl_set_robust_list_avail)
 #endif
 
+bool __nptl_initial_report_events __attribute__ ((nocommon));
+rtld_hidden_def (__nptl_initial_report_events)
+
 #ifdef SHARED
 /* Dummy implementation.  See __rtld_mutex_init.  */
 static int
@@ -62,6 +65,11 @@ __tls_init_tp (void)
    pd->tid = INTERNAL_SYSCALL_CALL (set_tid_address, &pd->tid);
    THREAD_SETMEM (pd, specific[0], &pd->specific_1stblock[0]);
    THREAD_SETMEM (pd, user_stack, true);
+
+  /* Before initializing GL (dl_stack_user), the debugger could not
+     find us and had to set __nptl_initial_report_events.  Propagate
+     its setting.  */
+  THREAD_SETMEM (pd, report_events, __nptl_initial_report_events);
 
   /* Initialize the robust mutex data.  */
   {

@@ -80,7 +80,7 @@ DB_FUNCTION (__nptl_death_event)
 DB_SYMBOL (__nptl_threads_events)
 DB_MAIN_VARIABLE (__nptl_nthreads)
 DB_VARIABLE (__nptl_last_event)
-DB_VARIABLE (__nptl_initial_report_events)
+DB_RTLD_VARIABLE (__nptl_initial_report_events)
 
 DB_MAIN_ARRAY_VARIABLE (__pthread_keys)
 DB_STRUCT (pthread_key_struct)
