@@ -88,11 +88,11 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
   if (len == 0)
     return;
 
-  align1 &= 63;
+  align1 &= (4096 - CHARBYTES);
   if (align1 + (len + 1) * CHARBYTES >= page_size)
     return;
 
-  align2 &= 63;
+  align2 &= (4096 - CHARBYTES);
   if (align2 + (len + 1) * CHARBYTES >= page_size)
     return;
 
@@ -100,6 +100,7 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
   json_attr_uint (json_ctx, "length", (double) len);
   json_attr_uint (json_ctx, "align1", (double) align1);
   json_attr_uint (json_ctx, "align2", (double) align2);
+  json_attr_uint (json_ctx, "result", (double) exp_result);
   json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
@@ -145,18 +146,31 @@ test_main (void)
   json_array_end (&json_ctx);
 
   json_array_begin (&json_ctx, "results");
-  for (i = 1; i < 16; ++i)
+  for (i = 1; i < 32; ++i)
     {
       do_test (&json_ctx, i * CHARBYTES, i * CHARBYTES, i, 0);
       do_test (&json_ctx, i * CHARBYTES, i * CHARBYTES, i, 1);
       do_test (&json_ctx, i * CHARBYTES, i * CHARBYTES, i, -1);
     }
 
-  for (i = 0; i < 16; ++i)
+  for (i = 0; i < 32; ++i)
     {
       do_test (&json_ctx, 0, 0, i, 0);
       do_test (&json_ctx, 0, 0, i, 1);
       do_test (&json_ctx, 0, 0, i, -1);
+      do_test (&json_ctx, 4096 - i, 0, i, 0);
+      do_test (&json_ctx, 4096 - i, 0, i, 1);
+      do_test (&json_ctx, 4096 - i, 0, i, -1);
+    }
+
+  for (i = 33; i < 385; i += 32)
+    {
+      do_test (&json_ctx, 0, 0, i, 0);
+      do_test (&json_ctx, 0, 0, i, 1);
+      do_test (&json_ctx, 0, 0, i, -1);
+      do_test (&json_ctx, i, 0, i, 0);
+      do_test (&json_ctx, 0, i, i, 1);
+      do_test (&json_ctx, i, i, i, -1);
     }
 
   for (i = 1; i < 10; ++i)
@@ -164,13 +178,19 @@ test_main (void)
       do_test (&json_ctx, 0, 0, 2 << i, 0);
       do_test (&json_ctx, 0, 0, 2 << i, 1);
       do_test (&json_ctx, 0, 0, 2 << i, -1);
-      do_test (&json_ctx, 0, 0, 16 << i, 0);
       do_test (&json_ctx, (8 - i) * CHARBYTES, (2 * i) * CHARBYTES, 16 << i, 0);
+      do_test (&json_ctx, 0, 0, 16 << i, 0);
       do_test (&json_ctx, 0, 0, 16 << i, 1);
       do_test (&json_ctx, 0, 0, 16 << i, -1);
+      do_test (&json_ctx, i, 0, 2 << i, 0);
+      do_test (&json_ctx, 0, i, 2 << i, 1);
+      do_test (&json_ctx, i, i, 2 << i, -1);
+      do_test (&json_ctx, i, 0, 16 << i, 0);
+      do_test (&json_ctx, 0, i, 16 << i, 1);
+      do_test (&json_ctx, i, i, 16 << i, -1);
     }
 
-  for (i = 1; i < 8; ++i)
+  for (i = 1; i < 10; ++i)
     {
       do_test (&json_ctx, i * CHARBYTES, 2 * (i * CHARBYTES), 8 << i, 0);
       do_test (&json_ctx, i * CHARBYTES, 2 * (i * CHARBYTES), 8 << i, 1);
