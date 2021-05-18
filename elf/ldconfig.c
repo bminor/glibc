@@ -505,7 +505,7 @@ add_dir_1 (const char *line, const char *from_file, int from_line)
     return;
 
   char *path = entry->path;
-  if (opt_chroot)
+  if (opt_chroot != NULL)
     path = chroot_canon (opt_chroot, path);
 
   struct stat64 stat_buf;
@@ -526,7 +526,7 @@ add_dir_1 (const char *line, const char *from_file, int from_line)
 	add_glibc_hwcaps_subdirectories (entry, path);
     }
 
-  if (opt_chroot)
+  if (opt_chroot != NULL)
     free (path);
 }
 
@@ -575,7 +575,7 @@ create_links (const char *real_path, const char *path, const char *libname,
   full_soname = alloca (strlen (path) + strlen (soname) + 2);
   sprintf (full_libname, "%s/%s", path, libname);
   sprintf (full_soname, "%s/%s", path, soname);
-  if (opt_chroot)
+  if (opt_chroot != NULL)
     {
       real_full_libname = alloca (strlen (real_path) + strlen (libname) + 2);
       real_full_soname = alloca (strlen (real_path) + strlen (soname) + 2);
@@ -687,7 +687,7 @@ manual_link (char *library)
       strcpy (path, ".");
     }
 
-  if (opt_chroot)
+  if (opt_chroot != NULL)
     {
       real_path = chroot_canon (opt_chroot, path);
       if (real_path == NULL)
@@ -804,7 +804,7 @@ search_dir (const struct dir_entry *entry)
   size_t real_file_name_len;
   size_t file_name_len = PATH_MAX;
   char *file_name = alloca (file_name_len);
-  if (opt_chroot)
+  if (opt_chroot != NULL)
     {
       dir_name = chroot_canon (opt_chroot, entry->path);
       real_file_name_len = PATH_MAX;
@@ -822,7 +822,7 @@ search_dir (const struct dir_entry *entry)
     {
       if (opt_verbose)
 	error (0, errno, _("Can't open directory %s"), entry->path);
-      if (opt_chroot && dir_name)
+      if (opt_chroot != NULL && dir_name != NULL)
 	free (dir_name);
       return;
     }
@@ -872,7 +872,7 @@ search_dir (const struct dir_entry *entry)
 	    real_file_name = file_name;
 	}
       sprintf (file_name, "%s/%s", entry->path, direntry->d_name);
-      if (opt_chroot)
+      if (opt_chroot != NULL)
 	{
 	  len = strlen (dir_name) + strlen (direntry->d_name) + 2;
 	  if (len > real_file_name_len)
@@ -902,7 +902,7 @@ search_dir (const struct dir_entry *entry)
 	  /* In case of symlink, we check if the symlink refers to
 	     a directory. */
 	  char *target_name = real_file_name;
-	  if (opt_chroot)
+	  if (opt_chroot != NULL)
 	    {
 	      target_name = chroot_canon (opt_chroot, file_name);
 	      if (target_name == NULL)
@@ -964,7 +964,7 @@ search_dir (const struct dir_entry *entry)
 	continue;
 
       char *real_name;
-      if (opt_chroot && is_link)
+      if (opt_chroot != NULL && is_link)
 	{
 	  real_name = chroot_canon (opt_chroot, file_name);
 	  if (real_name == NULL)
@@ -1178,7 +1178,7 @@ search_dir (const struct dir_entry *entry)
       free (dlib_ptr);
     }
 
-  if (opt_chroot && dir_name)
+  if (opt_chroot != NULL && dir_name != NULL)
     free (dir_name);
 }
 
@@ -1297,7 +1297,7 @@ static void
 parse_conf_include (const char *config_file, unsigned int lineno,
 		    bool do_chroot, const char *pattern)
 {
-  if (opt_chroot && pattern[0] != '/')
+  if (opt_chroot != NULL && pattern[0] != '/')
     error (EXIT_FAILURE, 0,
 	   _("need absolute file name for configuration file when using -r"));
 
@@ -1395,7 +1395,7 @@ main (int argc, char **argv)
 
   set_hwcap ();
 
-  if (opt_chroot)
+  if (opt_chroot != NULL)
     {
       /* Normalize the path a bit, we might need it for printing later.  */
       char *endp = rawmemchr (opt_chroot, '\0');
@@ -1405,7 +1405,7 @@ main (int argc, char **argv)
       if (endp == opt_chroot)
 	opt_chroot = NULL;
 
-      if (opt_chroot)
+      if (opt_chroot != NULL)
 	{
 	  /* It is faster to use chroot if we can.  */
 	  if (!chroot (opt_chroot))
@@ -1428,7 +1428,7 @@ main (int argc, char **argv)
 
   if (opt_print_cache)
     {
-      if (opt_chroot)
+      if (opt_chroot != NULL)
 	{
 	  char *p = chroot_canon (opt_chroot, cache_file);
 	  if (p == NULL)
@@ -1437,12 +1437,12 @@ main (int argc, char **argv)
 	  cache_file = p;
 	}
       print_cache (cache_file);
-      if (opt_chroot)
+      if (opt_chroot != NULL)
 	free (cache_file);
       exit (0);
     }
 
-  if (opt_chroot)
+  if (opt_chroot != NULL)
     {
       /* Canonicalize the directory name of cache_file, not cache_file,
 	 because we'll rename a temporary cache file to it.  */
@@ -1491,7 +1491,7 @@ main (int argc, char **argv)
     }
 
   const char *aux_cache_file = _PATH_LDCONFIG_AUX_CACHE;
-  if (opt_chroot)
+  if (opt_chroot != NULL)
     aux_cache_file = chroot_canon (opt_chroot, aux_cache_file);
 
   if (! opt_ignore_aux_cache && aux_cache_file)
