@@ -547,6 +547,7 @@ write_extensions (int fd, uint32_t str_offset,
       || write (fd, generator, strlen (generator)) != strlen (generator))
     error (EXIT_FAILURE, errno, _("Writing of cache extension data failed"));
 
+  free (hwcaps_array);
   free (ext);
 }
 
@@ -778,6 +779,7 @@ save_cache (const char *cache_name)
   free (file_entries_new);
   free (file_entries);
   free (strings_finalized.strings);
+  free (temp_name);
 
   while (entries)
     {
@@ -1034,6 +1036,9 @@ load_aux_cache (const char *aux_cache_name)
 			    + aux_cache->nlibs * sizeof (struct aux_cache_file_entry)
 			    + aux_cache->len_strings))
     {
+      if (aux_cache != MAP_FAILED)
+	munmap (aux_cache, aux_cache_size);
+
       close (fd);
       init_aux_cache ();
       return;
@@ -1143,10 +1148,13 @@ save_aux_cache (const char *aux_cache_name)
   if (fd < 0)
     goto out_fail;
 
-  if (write (fd, file_entries, file_entries_size + total_strlen)
-      != (ssize_t) (file_entries_size + total_strlen)
-      || fdatasync (fd) != 0
-      || close (fd) != 0)
+  bool fail = ((write (fd, file_entries, file_entries_size + total_strlen)
+		!= (ssize_t) (file_entries_size + total_strlen))
+	       || fdatasync (fd) != 0);
+
+  fail |= close (fd) != 0;
+
+  if (fail)
     {
       unlink (temp_name);
       goto out_fail;
