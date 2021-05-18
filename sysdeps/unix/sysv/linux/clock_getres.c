@@ -56,7 +56,7 @@ __clock_getres64 (clockid_t clock_id, struct __timespec64 *res)
 # else
   r = INLINE_SYSCALL_CALL (clock_getres, clock_id, &ts32);
 # endif
-  if (r == 0)
+  if (r == 0 && res != NULL)
     *res = valid_timespec_to_timespec64 (ts32);
 #endif
 
