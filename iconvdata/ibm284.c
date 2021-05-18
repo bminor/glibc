@@ -23,6 +23,6 @@
 #define TABLES <ibm284.h>
 
 #define CHARSET_NAME	"IBM284//"
-#define HAS_HOLES	1	/* Not all 256 character are defined.  */
+#define HAS_HOLES	0
 
 #include <8bit-gap.c>

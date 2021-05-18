@@ -195,7 +195,7 @@ CHARMAP
 <U00BE>     /xb9         VULGAR FRACTION THREE QUARTERS
 <U005E>     /xba         CIRCUMFLEX ACCENT
 <U0021>     /xbb         EXCLAMATION MARK
-<U203E>     /xbc         OVERLINE
+<U00AF>     /xbc         MACRON
 <U007E>     /xbd         TILDE
 <U00B4>     /xbe         ACUTE ACCENT
 <U00D7>     /xbf         MULTIPLICATION SIGN
