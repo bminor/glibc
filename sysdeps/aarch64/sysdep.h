@@ -21,12 +21,19 @@
 
 #include <sysdeps/generic/sysdep.h>
 
-#ifdef __LP64__
+#if defined __LP64__ || defined __CHERI_PURE_CAPABILITY__
 # define AARCH64_R(NAME)	R_AARCH64_ ## NAME
 # define PTR_REG(n)		x##n
 # define PTR_LOG_SIZE		3
 # define PTR_ARG(n)
 # define SIZE_ARG(n)
+# ifdef __CHERI_PURE_CAPABILITY__
+#  define MORELLO_R(NAME)	R_MORELLO_ ## NAME
+#  undef PTR_REG
+#  define PTR_REG(n)		c##n
+#  undef PTR_LOG_SIZE
+#  define PTR_LOG_SIZE		4
+# endif
 #else
 # define AARCH64_R(NAME)	R_AARCH64_P32_ ## NAME
 # define PTR_REG(n)		w##n
@@ -145,6 +152,9 @@ GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI)
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF
+# ifdef __CHERI_PURE_CAPABILITY__
+#  error mcount profiling is not supported with purecap ABI
+# endif
 # define CALL_MCOUNT						\
 	str	x30, [sp, #-80]!;				\
 	cfi_adjust_cfa_offset (80);				\
@@ -200,9 +210,15 @@ GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI)
 	ldr	PTR_REG (T), [x##T, #:got_lo12:EXPR];	\
 	OP	PTR_REG (R), [x##T];
 
+#ifdef __CHERI_PURE_CAPABILITY__
+/* These are not used in purecap asm.  */
+# undef LDST_PCREL
+# undef LDST_GLOBAL
+#endif
+
 /* Load an immediate into R.
    Note R is a register number and not a register name.  */
-#ifdef __LP64__
+#if defined __LP64__ || defined __CHERI_PURE_CAPABILITY__
 # define MOVL(R, NAME)					\
 	movz	x##R, #:abs_g3:NAME;			\
 	movk	x##R, #:abs_g2_nc:NAME;			\
