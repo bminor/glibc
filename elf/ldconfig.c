@@ -709,16 +709,14 @@ manual_link (char *library)
   if (lstat64 (real_library, &stat_buf))
     {
       error (0, errno, _("Cannot lstat %s"), library);
-      free (path);
-      return;
+      goto out;
     }
   /* We don't want links here!  */
   else if (!S_ISREG (stat_buf.st_mode))
     {
       error (0, 0, _("Ignored file %s since it is not a regular file."),
 	     library);
-      free (path);
-      return;
+      goto out;
     }
 
   if (process_file (real_library, library, libname, &flag, &osversion,
@@ -726,14 +724,16 @@ manual_link (char *library)
     {
       error (0, 0, _("No link created since soname could not be found for %s"),
 	     library);
-      free (path);
-      return;
+      goto out;
     }
   if (soname == NULL)
     soname = implicit_soname (libname, flag);
   create_links (real_path, path, libname, soname);
   free (soname);
+out:
   free (path);
+  if (path != real_path)
+    free (real_path);
 }
 
 
@@ -920,8 +920,16 @@ search_dir (const struct dir_entry *entry)
 	      /* Remove stale symlinks.  */
 	      if (opt_link && strstr (direntry->d_name, ".so."))
 		unlink (real_file_name);
+
+	      if (opt_chroot != NULL)
+		free (target_name);
+
 	      continue;
 	    }
+
+	  if (opt_chroot != NULL)
+	    free (target_name);
+
 	  is_dir = S_ISDIR (stat_buf.st_mode);
 
 	  /* lstat_buf is later stored, update contents.  */
