@@ -53,6 +53,12 @@ allocate_table (void)
   return (struct convtable *) xcalloc (1, sizeof (struct convtable));
 }
 
+static inline void
+free_table (struct convtable *tbl)
+{
+  free (tbl);
+}
+
 
 static inline int
 is_term (struct convtable *tbl, unsigned int idx)
@@ -228,6 +234,7 @@ charmap_conversion (const char *from_code, struct charmap_t *from_charmap,
     while (++remaining < argc);
 
   /* All done.  */
+  free_table (cvtbl);
   return status;
 }
 
