@@ -1742,6 +1742,7 @@ show_archive_content (const char *fname, int verbose)
 			: locnames[idx]);
 	      }
 	}
+      free (files);
     }
   else
     for (cnt = 0; cnt < used; ++cnt)
