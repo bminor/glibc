@@ -46,6 +46,7 @@
 
 #include <dl-tunables.h>
 #include <dl-auxv.h>
+#include <dl-hwcap-check.h>
 
 extern char **_environ attribute_hidden;
 extern char _end[] attribute_hidden;
@@ -189,6 +190,8 @@ _dl_sysdep_start (void **start_argptr,
 	break;
       DL_PLATFORM_AUXV
       }
+
+  dl_hwcap_check ();
 
 #ifndef HAVE_AUX_SECURE
   if (seen != -1)
