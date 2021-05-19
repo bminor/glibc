@@ -770,7 +770,6 @@ enable_profile
 enable_static_pie
 enable_timezone_tools
 enable_hardcoded_path_in_tests
-enable_stackguard_randomization
 enable_hidden_plt
 enable_bind_now
 enable_stack_protector
@@ -1430,9 +1429,6 @@ Optional Features:
   --enable-hardcoded-path-in-tests
                           hardcode newly built glibc path in tests
                           [default=no]
-  --enable-stackguard-randomization
-                          initialize __stack_chk_guard canary with a random
-                          number at program start
   --disable-hidden-plt    do not hide internal function calls to avoid PLT
   --enable-bind-now       disable lazy relocations in DSOs
   --enable-stack-protector=[yes|no|all|strong]
@@ -3396,18 +3392,6 @@ else
 fi
 
 
-
-# Check whether --enable-stackguard-randomization was given.
-if test "${enable_stackguard_randomization+set}" = set; then :
-  enableval=$enable_stackguard_randomization; enable_stackguard_randomize=$enableval
-else
-  enable_stackguard_randomize=no
-fi
-
-if test "$enable_stackguard_randomize" = yes; then
-  $as_echo "#define ENABLE_STACKGUARD_RANDOMIZE 1" >>confdefs.h
-
-fi
 
 # Check whether --enable-hidden-plt was given.
 if test "${enable_hidden_plt+set}" = set; then :

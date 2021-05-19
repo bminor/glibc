@@ -198,15 +198,6 @@ AC_ARG_ENABLE([hardcoded-path-in-tests],
 	      [hardcoded_path_in_tests=no])
 AC_SUBST(hardcoded_path_in_tests)
 
-AC_ARG_ENABLE([stackguard-randomization],
-	      AS_HELP_STRING([--enable-stackguard-randomization],
-			     [initialize __stack_chk_guard canary with a random number at program start]),
-	      [enable_stackguard_randomize=$enableval],
-	      [enable_stackguard_randomize=no])
-if test "$enable_stackguard_randomize" = yes; then
-  AC_DEFINE(ENABLE_STACKGUARD_RANDOMIZE)
-fi
-
 AC_ARG_ENABLE([hidden-plt],
 	      AS_HELP_STRING([--disable-hidden-plt],
 			     [do not hide internal function calls to avoid PLT]),
