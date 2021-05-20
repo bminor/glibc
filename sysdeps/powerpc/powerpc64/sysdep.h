@@ -398,8 +398,9 @@ LT_LABELSUFFIX(name,_name_end): ; \
 #endif
 
 #define RET_SCV \
-    cmpdi r3,0; \
-    bgelr+; \
+    li r9,-4095; \
+    cmpld r3,r9; \
+    bltlr+; \
     neg r3,r3;
 
 #define RET_SC \
