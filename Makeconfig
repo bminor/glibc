@@ -866,6 +866,13 @@ endif
 # -fno-math-errno.
 +extra-math-flags = $(if $(filter libm,$(in-module)),-fno-math-errno,-fmath-errno)
 
+# Use 64 bit time_t support for installed programs
+installed-modules = nonlib nscd lddlibc4 libresolv ldconfig locale_programs \
+		    iconvprogs libnss_files libnss_compat libnss_db libnss_hesiod \
+		    libutil libpcprofile libSegFault
++extra-time-flags = $(if $(filter $(installed-modules),\
+                           $(in-module)),-D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64)
+
 # We might want to compile with some stack-protection flag.
 ifneq ($(stack-protector),)
 +stack-protector=$(stack-protector)
@@ -963,7 +970,7 @@ libio-include = -I$(..)libio
 built-modules = iconvprogs iconvdata ldconfig lddlibc4 libmemusage \
 		libSegFault libpcprofile librpcsvc locale-programs \
 		memusagestat nonlib nscd extramodules libnldbl libsupport \
-		testsuite
+		testsuite testsuite-internal
 
 in-module = $(subst -,_,$(firstword $(libof-$(basename $(@F))) \
 				    $(libof-$(<F)) \
@@ -1003,7 +1010,7 @@ endif
 
 override CFLAGS	= -std=gnu11 -fgnu89-inline $(config-extra-cflags) \
 		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
-		  $(+extra-math-flags) \
+		  $(+extra-math-flags) $(+extra-time-flags) \
 		  $(sysdep-CFLAGS) $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) \
 		  $(CFLAGS-$(@F)) $(tls-model) \
 		  $(foreach lib,$(libof-$(basename $(@F))) \
