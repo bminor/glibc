@@ -380,6 +380,10 @@ the same syntax as 'test-wrapper-env', the only difference in its
 semantics being starting with an empty set of environment variables
 rather than the ambient set.
 
+   For AArch64 with SVE, when testing the GNU C Library, 'test-wrapper'
+may be set to "SRCDIR/sysdeps/unix/sysv/linux/aarch64/vltest.py
+VECTOR-LENGTH" to change Vector Length.
+
 Installing the C Library
 ========================
 

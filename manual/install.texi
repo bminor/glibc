@@ -418,6 +418,9 @@ use has the same syntax as @samp{test-wrapper-env}, the only
 difference in its semantics being starting with an empty set of
 environment variables rather than the ambient set.
 
+For AArch64 with SVE, when testing @theglibc{}, @samp{test-wrapper}
+may be set to "@var{srcdir}/sysdeps/unix/sysv/linux/aarch64/vltest.py
+@var{vector-length}" to change Vector Length.
 
 @node Running make install
 @appendixsec Installing the C Library
