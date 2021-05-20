@@ -49,6 +49,9 @@ __rtld_static_init (struct link_map *map)
   dl->_dl_hwcap = _dl_hwcap;
   extern __typeof (dl->_dl_hwcap2) _dl_hwcap2 attribute_hidden;
   dl->_dl_hwcap2 = _dl_hwcap2;
+  extern __typeof (dl->_dl_minsigstacksize) _dl_minsigstacksize
+    attribute_hidden;
+  dl->_dl_minsigstacksize = _dl_minsigstacksize;
   extern __typeof (dl->_dl_pagesize) _dl_pagesize attribute_hidden;
   dl->_dl_pagesize = _dl_pagesize;
   extern __typeof (dl->_dl_tls_static_align) _dl_tls_static_align
