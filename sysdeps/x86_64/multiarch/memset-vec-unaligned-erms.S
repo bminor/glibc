@@ -173,17 +173,22 @@ ENTRY (MEMSET_SYMBOL (__memset, unaligned_erms))
 	VMOVU	%VEC(0), (%rdi)
 	VZEROUPPER_RETURN
 
+	.p2align 4
 L(stosb_more_2x_vec):
 	cmp	__x86_rep_stosb_threshold(%rip), %RDX_LP
 	ja	L(stosb)
+#else
+	.p2align 4
 #endif
 L(more_2x_vec):
-	cmpq  $(VEC_SIZE * 4), %rdx
-	ja	L(loop_start)
+	/* Stores to first 2x VEC before cmp as any path forward will
+	   require it.  */
 	VMOVU	%VEC(0), (%rdi)
 	VMOVU	%VEC(0), VEC_SIZE(%rdi)
-	VMOVU	%VEC(0), -VEC_SIZE(%rdi,%rdx)
+	cmpq	$(VEC_SIZE * 4), %rdx
+	ja	L(loop_start)
 	VMOVU	%VEC(0), -(VEC_SIZE * 2)(%rdi,%rdx)
+	VMOVU	%VEC(0), -VEC_SIZE(%rdi,%rdx)
 L(return):
 #if VEC_SIZE > 16
 	ZERO_UPPER_VEC_REGISTERS_RETURN
@@ -192,28 +197,29 @@ L(return):
 #endif
 
 L(loop_start):
-	leaq	(VEC_SIZE * 4)(%rdi), %rcx
-	VMOVU	%VEC(0), (%rdi)
-	andq	$-(VEC_SIZE * 4), %rcx
-	VMOVU	%VEC(0), -VEC_SIZE(%rdi,%rdx)
-	VMOVU	%VEC(0), VEC_SIZE(%rdi)
-	VMOVU	%VEC(0), -(VEC_SIZE * 2)(%rdi,%rdx)
 	VMOVU	%VEC(0), (VEC_SIZE * 2)(%rdi)
-	VMOVU	%VEC(0), -(VEC_SIZE * 3)(%rdi,%rdx)
 	VMOVU	%VEC(0), (VEC_SIZE * 3)(%rdi)
-	VMOVU	%VEC(0), -(VEC_SIZE * 4)(%rdi,%rdx)
-	addq	%rdi, %rdx
-	andq	$-(VEC_SIZE * 4), %rdx
-	cmpq	%rdx, %rcx
-	je	L(return)
+	cmpq	$(VEC_SIZE * 8), %rdx
+	jbe	L(loop_end)
+	andq	$-(VEC_SIZE * 2), %rdi
+	subq	$-(VEC_SIZE * 4), %rdi
+	leaq	-(VEC_SIZE * 4)(%rax, %rdx), %rcx
+	.p2align 4
 L(loop):
-	VMOVA	%VEC(0), (%rcx)
-	VMOVA	%VEC(0), VEC_SIZE(%rcx)
-	VMOVA	%VEC(0), (VEC_SIZE * 2)(%rcx)
-	VMOVA	%VEC(0), (VEC_SIZE * 3)(%rcx)
-	addq	$(VEC_SIZE * 4), %rcx
-	cmpq	%rcx, %rdx
-	jne	L(loop)
+	VMOVA	%VEC(0), (%rdi)
+	VMOVA	%VEC(0), VEC_SIZE(%rdi)
+	VMOVA	%VEC(0), (VEC_SIZE * 2)(%rdi)
+	VMOVA	%VEC(0), (VEC_SIZE * 3)(%rdi)
+	subq	$-(VEC_SIZE * 4), %rdi
+	cmpq	%rcx, %rdi
+	jb	L(loop)
+L(loop_end):
+	/* NB: rax is set as ptr in MEMSET_VDUP_TO_VEC0_AND_SET_RETURN.
+	       rdx as length is also unchanged.  */
+	VMOVU	%VEC(0), -(VEC_SIZE * 4)(%rax, %rdx)
+	VMOVU	%VEC(0), -(VEC_SIZE * 3)(%rax, %rdx)
+	VMOVU	%VEC(0), -(VEC_SIZE * 2)(%rax, %rdx)
+	VMOVU	%VEC(0), -VEC_SIZE(%rax, %rdx)
 	VZEROUPPER_SHORT_RETURN
 
 	.p2align 4
