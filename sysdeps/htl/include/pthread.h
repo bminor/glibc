@@ -1,6 +1,9 @@
 #ifndef	_PTHREAD_H
 #include_next <pthread.h>
 #ifndef _ISOMAC
+
+# define ARCH_MIN_GUARD_SIZE 0
+
 # if defined __USE_EXTERN_INLINES && defined _LIBC && !IS_IN (libsupport)
 #  include <bits/spin-lock-inline.h>
 
