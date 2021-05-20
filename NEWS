@@ -51,6 +51,7 @@ The following bugs are resolved with this release:
   [11053] regex: Wrong results with backreferences
   [12154] Do not fail DNS resolution for CNAMEs which are not host names
   [12889] nptl: Fix race between pthread_kill and thread exit
+  [15333] libc: Use 64-bit stat functions in installed programs
   [15533] dynamic-link: LD_AUDIT introduces an avoidable performance
     degradation
   [19193] nptl: pthread_kill, pthread_cancel should not fail after exit
