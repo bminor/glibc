@@ -340,8 +340,9 @@ struct pthread
   /* True if thread must stop at startup time.  */
   bool stopped_start;
 
-  /* Formerly used for dealing with cancellation.  */
-  int parent_cancelhandling_unsed;
+  /* Indicate that a thread creation setup has failed (for instance the
+     scheduler or affinity).  */
+  int setup_failed;
 
   /* Lock to synchronize access to the descriptor.  */
   int lock;

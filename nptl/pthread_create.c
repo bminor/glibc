@@ -158,33 +158,27 @@ late_init (void)
        or joinable (default PTHREAD_CREATE_JOINABLE) state and
        STOPPED_START is true, then the creating thread has ownership of
        PD until the PD->lock is released by pthread_create.  If any
-       errors occur we are in states (c), (d), or (e) below.
+       errors occur we are in states (c) or (d) below.
 
    (b) If the created thread is in a detached state
        (PTHREAD_CREATED_DETACHED), and STOPPED_START is false, then the
        creating thread has ownership of PD until it invokes the OS
        kernel's thread creation routine.  If this routine returns
        without error, then the created thread owns PD; otherwise, see
-       (c) and (e) below.
+       (c) or (d) below.
 
-   (c) If the detached thread setup failed and THREAD_RAN is true, then
-       the creating thread releases ownership to the new thread by
-       sending a cancellation signal.  All threads set THREAD_RAN to
-       true as quickly as possible after returning from the OS kernel's
-       thread creation routine.
+   (c) If either a joinable or detached thread setup failed and THREAD_RAN
+       is true, then the creating thread releases ownership to the new thread,
+       the created thread sees the failed setup through PD->setup_failed
+       member, releases the PD ownership, and exits.  The creating thread will
+       be responsible for cleanup the allocated resources.  The THREAD_RAN is
+       local to creating thread and indicate whether thread creation or setup
+       has failed.
 
-   (d) If the joinable thread setup failed and THREAD_RAN is true, then
-       then the creating thread retains ownership of PD and must cleanup
-       state.  Ownership cannot be released to the process via the
-       return of pthread_create since a non-zero result entails PD is
-       undefined and therefore cannot be joined to free the resources.
-       We privately call pthread_join on the thread to finish handling
-       the resource shutdown (Or at least we should, see bug 19511).
-
-   (e) If the thread creation failed and THREAD_RAN is false, then the
-       creating thread retains ownership of PD and must cleanup state.
-       No waiting for the new thread is required because it never
-       started.
+   (d) If the thread creation failed and THREAD_RAN is false (meaning
+       ARCH_CLONE has failed), then the creating thread retains ownership
+       of PD and must cleanup he allocated resource.  No waiting for the new
+       thread is required because it never started.
 
    The nptl_db interface:
 
@@ -239,8 +233,8 @@ late_init (void)
    The return value is zero for success or an errno code for failure.
    If the return value is ENOMEM, that will be translated to EAGAIN,
    so create_thread need not do that.  On failure, *THREAD_RAN should
-   be set to true iff the thread actually started up and then got
-   canceled before calling user code (*PD->start_routine).  */
+   be set to true iff the thread actually started up but before calling
+   the user code (*PD->start_routine).  */
 
 static int _Noreturn start_thread (void *arg);
 
@@ -308,35 +302,23 @@ static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
 			== -1))
     return errno;
 
-  /* It's started now, so if we fail below, we'll have to cancel it
-     and let it clean itself up.  */
+  /* It's started now, so if we fail below, we'll have to let it clean itself
+     up.  */
   *thread_ran = true;
 
   /* Now we have the possibility to set scheduling parameters etc.  */
   if (attr != NULL)
     {
-      int res;
-
       /* Set the affinity mask if necessary.  */
       if (need_setaffinity)
 	{
 	  assert (*stopped_start);
 
-	  res = INTERNAL_SYSCALL_CALL (sched_setaffinity, pd->tid,
-				       attr->extension->cpusetsize,
-				       attr->extension->cpuset);
-
+	  int res = INTERNAL_SYSCALL_CALL (sched_setaffinity, pd->tid,
+					   attr->extension->cpusetsize,
+					   attr->extension->cpuset);
 	  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res)))
-	  err_out:
-	    {
-	      /* The operation failed.  We have to kill the thread.
-		 We let the normal cancellation mechanism do the work.  */
-
-	      pid_t pid = __getpid ();
-	      INTERNAL_SYSCALL_CALL (tgkill, pid, pd->tid, SIGCANCEL);
-
-	      return INTERNAL_SYSCALL_ERRNO (res);
-	    }
+	    return INTERNAL_SYSCALL_ERRNO (res);
 	}
 
       /* Set the scheduling parameters.  */
@@ -344,11 +326,10 @@ static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
 	{
 	  assert (*stopped_start);
 
-	  res = INTERNAL_SYSCALL_CALL (sched_setscheduler, pd->tid,
-				       pd->schedpolicy, &pd->schedparam);
-
+	  int res = INTERNAL_SYSCALL_CALL (sched_setscheduler, pd->tid,
+					   pd->schedpolicy, &pd->schedparam);
 	  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res)))
-	    goto err_out;
+	    return INTERNAL_SYSCALL_ERRNO (res);
 	}
     }
 
@@ -360,6 +341,31 @@ static int _Noreturn
 start_thread (void *arg)
 {
   struct pthread *pd = arg;
+
+  /* We are either in (a) or (b), and in either case we either own PD already
+     (2) or are about to own PD (1), and so our only restriction would be that
+     we can't free PD until we know we have ownership (see CONCURRENCY NOTES
+     above).  */
+  if (pd->stopped_start)
+    {
+      bool setup_failed = false;
+
+      /* Get the lock the parent locked to force synchronization.  */
+      lll_lock (pd->lock, LLL_PRIVATE);
+
+      /* We have ownership of PD now, for detached threads with setup failure
+	 we set it as joinable so the creating thread could synchronous join
+         and free any resource prior return to the pthread_create caller.  */
+      setup_failed = pd->setup_failed == 1;
+      if (setup_failed)
+	pd->joinid = NULL;
+
+      /* And give it up right away.  */
+      lll_unlock (pd->lock, LLL_PRIVATE);
+
+      if (setup_failed)
+	goto out;
+    }
 
   /* Initialize resolver state pointer.  */
   __resp = &pd->res;
@@ -417,25 +423,6 @@ start_thread (void *arg)
     {
       /* Store the new cleanup handler info.  */
       THREAD_SETMEM (pd, cleanup_jmp_buf, &unwind_buf);
-
-      /* We are either in (a) or (b), and in either case we either own
-         PD already (2) or are about to own PD (1), and so our only
-	 restriction would be that we can't free PD until we know we
-	 have ownership (see CONCURRENCY NOTES above).  */
-      if (__glibc_unlikely (pd->stopped_start))
-	{
-	  int oldtype = LIBC_CANCEL_ASYNC ();
-
-	  /* Get the lock the parent locked to force synchronization.  */
-	  lll_lock (pd->lock, LLL_PRIVATE);
-
-	  /* We have ownership of PD now.  */
-
-	  /* And give it up right away.  */
-	  lll_unlock (pd->lock, LLL_PRIVATE);
-
-	  LIBC_CANCEL_RESET (oldtype);
-	}
 
       LIBC_PROBE (pthread_start, 3, (pthread_t) pd, pd->start_routine, pd->arg);
 
@@ -566,6 +553,7 @@ start_thread (void *arg)
     /* Free the TCB.  */
     __nptl_free_tcb (pd);
 
+out:
   /* We cannot call '_exit' here.  '_exit' will terminate the process.
 
      The 'exit' implementation in the kernel will signal when the
@@ -759,7 +747,6 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 	 signal mask of this thread, so save it in the startup
 	 information.  */
       pd->sigmask = original_sigmask;
-
       /* Reset the cancellation signal mask in case this thread is
 	 running cancellation.  */
       __sigdelset (&pd->sigmask, SIGCANCEL);
@@ -814,30 +801,33 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
   if (__glibc_unlikely (retval != 0))
     {
       if (thread_ran)
-	/* State (c) or (d) and we may not have PD ownership (see
-	   CONCURRENCY NOTES above).  We can assert that STOPPED_START
-	   must have been true because thread creation didn't fail, but
-	   thread attribute setting did.  */
-	/* See bug 19511 which explains why doing nothing here is a
-	   resource leak for a joinable thread.  */
-	assert (stopped_start);
-      else
-	{
-	  /* State (e) and we have ownership of PD (see CONCURRENCY
-	     NOTES above).  */
+	/* State (c) and we not have PD ownership (see CONCURRENCY NOTES
+	   above).  We can assert that STOPPED_START must have been true
+	   because thread creation didn't fail, but thread attribute setting
+	   did.  */
+        {
+	  assert (stopped_start);
+	  /* Signal the created thread to release PD ownership and early
+	     exit so it could be joined.  */
+	  pd->setup_failed = 1;
+	  lll_unlock (pd->lock, LLL_PRIVATE);
 
-	  /* Oops, we lied for a second.  */
-	  atomic_decrement (&__nptl_nthreads);
+	  /* Similar to pthread_join, but since thread creation has failed at
+	     startup there is no need to handle all the steps.  */
+	  pid_t tid;
+	  while ((tid = atomic_load_acquire (&pd->tid)) != 0)
+	    __futex_abstimed_wait_cancelable64 ((unsigned int *) &pd->tid,
+						tid, 0, NULL, LLL_SHARED);
+        }
 
-	  /* Perhaps a thread wants to change the IDs and is waiting for this
-	     stillborn thread.  */
-	  if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0)
-				== -2))
-	    futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
+      /* State (c) or (d) and we have ownership of PD (see CONCURRENCY
+	 NOTES above).  */
 
-	  /* Free the resources.  */
-	  __nptl_deallocate_stack (pd);
-	}
+      /* Oops, we lied for a second.  */
+      atomic_decrement (&__nptl_nthreads);
+
+      /* Free the resources.  */
+      __nptl_deallocate_stack (pd);
 
       /* We have to translate error codes.  */
       if (retval == ENOMEM)

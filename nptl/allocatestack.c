@@ -161,6 +161,7 @@ get_cached_stack (size_t *sizep, void **memp)
   /* Cancellation handling is back to the default.  */
   result->cancelhandling = 0;
   result->cleanup = NULL;
+  result->setup_failed = 0;
 
   /* No pending event.  */
   result->nextevent = NULL;
