@@ -19,12 +19,40 @@
 #ifndef _PTHREAD_EARLY_INIT_H
 #define _PTHREAD_EARLY_INIT_H 1
 
+#include <nptl/nptl-stack.h>
 #include <nptl/pthreadP.h>
 #include <pthread_mutex_conf.h>
+#include <sys/resource.h>
 
 static inline void
 __pthread_early_init (void)
 {
+  /* Determine the default allowed stack size.  This is the size used
+     in case the user does not specify one.  */
+  struct rlimit limit;
+  if (__getrlimit (RLIMIT_STACK, &limit) != 0
+      || limit.rlim_cur == RLIM_INFINITY)
+    /* The system limit is not usable.  Use an architecture-specific
+       default.  */
+    limit.rlim_cur = ARCH_STACK_DEFAULT_SIZE;
+  else if (limit.rlim_cur < PTHREAD_STACK_MIN)
+    /* The system limit is unusably small.
+       Use the minimal size acceptable.  */
+    limit.rlim_cur = PTHREAD_STACK_MIN;
+
+  /* Make sure it meets the minimum size that allocate_stack
+     (allocatestack.c) will demand, which depends on the page size.  */
+  const uintptr_t pagesz = GLRO(dl_pagesize);
+  const size_t minstack = (pagesz + __nptl_tls_static_size_for_stack ()
+                           + MINIMAL_REST_STACK);
+  if (limit.rlim_cur < minstack)
+    limit.rlim_cur = minstack;
+
+  /* Round the resource limit up to page size.  */
+  limit.rlim_cur = ALIGN_UP (limit.rlim_cur, pagesz);
+  __default_pthread_attr.internal.stacksize = limit.rlim_cur;
+  __default_pthread_attr.internal.guardsize = GLRO (dl_pagesize);
+
 #if HAVE_TUNABLES
   __pthread_tunables_init ();
 #endif

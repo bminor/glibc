@@ -254,6 +254,8 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
   struct pthread *pd;
   size_t size;
   size_t pagesize_m1 = __getpagesize () - 1;
+  size_t tls_static_size_for_stack = __nptl_tls_static_size_for_stack ();
+  size_t tls_static_align_m1 = GLRO (dl_tls_static_align) - 1;
 
   assert (powerof2 (pagesize_m1 + 1));
   assert (TCB_ALIGNMENT >= STACK_ALIGN);
@@ -284,17 +286,18 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* If the user also specified the size of the stack make sure it
 	 is large enough.  */
       if (attr->stacksize != 0
-	  && attr->stacksize < (__static_tls_size + MINIMAL_REST_STACK))
+	  && attr->stacksize < (tls_static_size_for_stack
+				+ MINIMAL_REST_STACK))
 	return EINVAL;
 
       /* Adjust stack size for alignment of the TLS block.  */
 #if TLS_TCB_AT_TP
       adj = ((uintptr_t) stackaddr - TLS_TCB_SIZE)
-	    & __static_tls_align_m1;
+	    & tls_static_align_m1;
       assert (size > adj + TLS_TCB_SIZE);
 #elif TLS_DTV_AT_TP
-      adj = ((uintptr_t) stackaddr - __static_tls_size)
-	    & __static_tls_align_m1;
+      adj = ((uintptr_t) stackaddr - tls_static_size_for_stack)
+	    & tls_static_align_m1;
       assert (size > adj);
 #endif
 
@@ -307,7 +310,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 			       - TLS_TCB_SIZE - adj);
 #elif TLS_DTV_AT_TP
       pd = (struct pthread *) (((uintptr_t) stackaddr
-				- __static_tls_size - adj)
+				- tls_static_size_for_stack - adj)
 			       - TLS_PRE_TCB_SIZE);
 #endif
 
@@ -366,7 +369,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 			| ((GL(dl_stack_flags) & PF_X) ? PROT_EXEC : 0));
 
       /* Adjust the stack size for alignment.  */
-      size &= ~__static_tls_align_m1;
+      size &= ~tls_static_align_m1;
       assert (size != 0);
 
       /* Make sure the size of the stack is enough for the guard and
@@ -385,7 +388,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	/* Arithmetic overflow.  */
 	return EINVAL;
       size += guardsize;
-      if (__builtin_expect (size < ((guardsize + __static_tls_size
+      if (__builtin_expect (size < ((guardsize + tls_static_size_for_stack
 				     + MINIMAL_REST_STACK + pagesize_m1)
 				    & ~pagesize_m1),
 			    0))
@@ -414,11 +417,11 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 #if TLS_TCB_AT_TP
 	  pd = (struct pthread *) ((((uintptr_t) mem + size)
 				    - TLS_TCB_SIZE)
-				   & ~__static_tls_align_m1);
+				   & ~tls_static_align_m1);
 #elif TLS_DTV_AT_TP
 	  pd = (struct pthread *) ((((uintptr_t) mem + size
-				    - __static_tls_size)
-				    & ~__static_tls_align_m1)
+				    - tls_static_size_for_stack)
+				    & ~tls_static_align_m1)
 				   - TLS_PRE_TCB_SIZE);
 #endif
 
@@ -602,7 +605,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 
 # if TLS_TCB_AT_TP
   /* The stack begins before the TCB and the static TLS block.  */
-  stacktop = ((char *) (pd + 1) - __static_tls_size);
+  stacktop = ((char *) (pd + 1) - tls_static_size_for_stack);
 # elif TLS_DTV_AT_TP
   stacktop = (char *) (pd - 1);
 # endif

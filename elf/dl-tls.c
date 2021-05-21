@@ -386,8 +386,9 @@ allocate_dtv (void *result)
   return result;
 }
 
-
-/* Get size and alignment requirements of the static TLS block.  */
+/* Get size and alignment requirements of the static TLS block.  This
+   function is no longer used by glibc itself, but the GCC sanitizers
+   use it despite the GLIBC_PRIVATE status.  */
 void
 _dl_get_tls_static_info (size_t *sizep, size_t *alignp)
 {

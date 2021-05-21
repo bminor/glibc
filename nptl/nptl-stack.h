@@ -20,7 +20,8 @@
 #ifndef _NPTL_STACK_H
 #define _NPTL_STACK_H
 
-#include <descr.h>
+#include <nptl/descr.h>
+#include <ldsodefs.h>
 #include <list.h>
 #include <stdbool.h>
 
@@ -46,5 +47,13 @@ libc_hidden_proto (__nptl_deallocate_stack)
 
 /* Free stacks until cache size is lower than LIMIT.  */
 void __nptl_free_stacks (size_t limit) attribute_hidden;
+
+/* Compute the size of the static TLS area based on data from the
+   dynamic loader.  */
+static inline size_t
+__nptl_tls_static_size_for_stack (void)
+{
+  return roundup (GLRO (dl_tls_static_size), GLRO (dl_tls_static_align));
+}
 
 #endif /* _NPTL_STACK_H */
