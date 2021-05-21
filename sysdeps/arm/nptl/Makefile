@@ -20,9 +20,6 @@ gen-as-const-headers += tcb-offsets.sym
 endif
 
 ifeq ($(subdir),nptl)
-libpthread-sysdep_routines += nptl-aeabi_unwind_cpp_pr1
-libpthread-shared-only-routines += nptl-aeabi_unwind_cpp_pr1
-
 # This test relies on compiling part of the binary with EH information,
 # part without, and unwinding through.  The .ARM.exidx tables have
 # start addresses for EH regions, but no end addresses.  Every

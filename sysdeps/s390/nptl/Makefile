@@ -18,8 +18,3 @@
 ifeq ($(subdir),csu)
 gen-as-const-headers += tcb-offsets.sym
 endif
-
-ifeq ($(subdir),nptl)
-libpthread-routines += sysdep
-libpthread-shared-only-routines += sysdep
-endif

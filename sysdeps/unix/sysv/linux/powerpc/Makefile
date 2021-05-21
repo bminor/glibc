@@ -25,8 +25,3 @@ tests += $(tests-static)
 tests += test-gettimebasefreq
 tests += test-powerpc-linux-sysconf
 endif
-
-ifeq ($(subdir),nptl)
-libpthread-routines += sysdep
-libpthread-shared-only-routines += sysdep
-endif

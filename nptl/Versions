@@ -426,17 +426,7 @@ libc {
 
 libpthread {
   GLIBC_2.0 {
-    _Exit;
-    _IO_flockfile;
-    _IO_ftrylockfile;
-    _IO_funlockfile;
-    __errno_location;
-    _exit;
-    flockfile;
-    ftrylockfile;
-    funlockfile;
-    pthread_create;
-    pthread_sigmask;
+    __libpthread_version_placeholder;
   }
 
   GLIBC_2.1 {

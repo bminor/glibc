@@ -28,6 +28,11 @@ __libpthread_version_placeholder_1 (void)
 }
 #endif
 
+#if SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libpthread, __libpthread_version_placeholder_1,
+	       __libpthread_version_placeholder, GLIBC_2_0);
+#endif
+
 #if (SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_2))
 compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_1);
@@ -42,7 +47,7 @@ compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_1_2);
 #endif
 
-#if SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_2_3) \
+#if SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_3) \
   && ABI_libpthread_GLIBC_2_2 != ABI_libpthread_GLIBC_2_0
 compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_2);
@@ -88,8 +93,7 @@ compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_12);
 #endif
 
-#if SHLIB_COMPAT (libpthread, GLIBC_2_18, GLIBC_2_19) \
-  && ABI_libpthread_GLIBC_2_18 != ABI_libpthread_GLIBC_2_0
+#if SHLIB_COMPAT (libpthread, GLIBC_2_18, GLIBC_2_19)
 compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_18);
 #endif

@@ -18,11 +18,6 @@ ifeq ($(subdir),io)
 sysdep_routines += libc-do-syscall
 endif
 
-ifeq ($(subdir),nptl)
-libpthread-sysdep_routines += libc-do-syscall
-libpthread-shared-only-routines += libc-do-syscall
-endif
-
 ifeq ($(subdir),stdlib)
 gen-as-const-headers += ucontext_i.sym
 endif
@@ -34,12 +29,6 @@ sysdep_routines += divdi3
 shared-only-routines += divdi3
 CPPFLAGS-divdi3.c = -Din_divdi3_c
 endif
-endif
-
-ifeq ($(subdir),nptl)
-# pull in __syscall_error routine
-libpthread-routines += sysdep
-libpthread-shared-only-routines += sysdep
 endif
 
 ifeq ($(subdir),rt)

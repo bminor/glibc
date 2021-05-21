@@ -30,9 +30,5 @@ ifeq ($(subdir),nscd)
 routines += cpu_relax
 endif
 
-ifeq ($(subdir), nptl)
-libpthread-routines += cpu_relax
-endif
-
 # The assembler on SPARC needs the -fPIC flag even when it's assembler code.
 ASFLAGS-.os += -fPIC

@@ -1,4 +1,4 @@
-GLIBC_2.0 __errno_location F
+GLIBC_2.0 __libpthread_version_placeholder F
 GLIBC_2.1 __libpthread_version_placeholder F
 GLIBC_2.1.1 __libpthread_version_placeholder F
 GLIBC_2.1.2 __libpthread_version_placeholder F

@@ -16,10 +16,6 @@
 # License along with the GNU C Library; if not, see
 # <https://www.gnu.org/licenses/>.
 
-ifeq ($(subdir),nptl)
-libpthread-sysdep_routines += errno-loc
-endif
-
 ifeq ($(subdir),rt)
 librt-sysdep_routines += timer_routines
 
