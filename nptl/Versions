@@ -367,8 +367,6 @@ libc {
     tss_set;
   }
   GLIBC_PRIVATE {
-     __nptl_create_event;
-     __nptl_death_event;
     __default_pthread_attr;
     __default_pthread_attr_lock;
     __futex_abstimed_wait64;
@@ -386,11 +384,14 @@ libc {
     __lll_trylock_elision;
     __lll_unlock_elision;
     __mutex_aconf;
+    __nptl_create_event;
     __nptl_deallocate_stack;
     __nptl_deallocate_tsd;
+    __nptl_death_event;
     __nptl_free_tcb;
     __nptl_nthreads;
     __nptl_setxid_sighandler;
+    __nptl_sigcancel_handler;
     __nptl_stack_list_add;
     __nptl_stack_list_del;
     __pthread_attr_copy;

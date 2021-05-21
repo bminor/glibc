@@ -44,84 +44,9 @@ size_t __static_tls_align_m1;
 /* Version of the library, used in libthread_db to detect mismatches.  */
 static const char nptl_version[] __attribute_used__ = VERSION;
 
-/* For asynchronous cancellation we use a signal.  This is the handler.  */
-static void
-sigcancel_handler (int sig, siginfo_t *si, void *ctx)
-{
-  /* Safety check.  It would be possible to call this function for
-     other signals and send a signal from another process.  This is not
-     correct and might even be a security problem.  Try to catch as
-     many incorrect invocations as possible.  */
-  if (sig != SIGCANCEL
-      || si->si_pid != __getpid()
-      || si->si_code != SI_TKILL)
-    return;
-
-  struct pthread *self = THREAD_SELF;
-
-  int oldval = THREAD_GETMEM (self, cancelhandling);
-  while (1)
-    {
-      /* We are canceled now.  When canceled by another thread this flag
-	 is already set but if the signal is directly send (internally or
-	 from another process) is has to be done here.  */
-      int newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
-
-      if (oldval == newval || (oldval & EXITING_BITMASK) != 0)
-	/* Already canceled or exiting.  */
-	break;
-
-      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
-					      oldval);
-      if (curval == oldval)
-	{
-	  /* Set the return value.  */
-	  THREAD_SETMEM (self, result, PTHREAD_CANCELED);
-
-	  /* Make sure asynchronous cancellation is still enabled.  */
-	  if ((newval & CANCELTYPE_BITMASK) != 0)
-	    /* Run the registered destructors and terminate the thread.  */
-	    __do_cancel ();
-
-	  break;
-	}
-
-      oldval = curval;
-    }
-}
-
-
-/* When using __thread for this, we do it in libc so as not
-   to give libpthread its own TLS segment just for this.  */
-extern void **__libc_dl_error_tsd (void) __attribute__ ((const));
-
-
 void
 __pthread_initialize_minimal_internal (void)
 {
-  struct sigaction sa;
-  __sigemptyset (&sa.sa_mask);
-
-  /* Install the cancellation signal handler.  If for some reason we
-     cannot install the handler we do not abort.  Maybe we should, but
-     it is only asynchronous cancellation which is affected.  */
-  sa.sa_sigaction = sigcancel_handler;
-  sa.sa_flags = SA_SIGINFO;
-  (void) __libc_sigaction (SIGCANCEL, &sa, NULL);
-
-  /* Install the handle to change the threads' uid/gid.  */
-  sa.sa_sigaction = __nptl_setxid_sighandler;
-  sa.sa_flags = SA_SIGINFO | SA_RESTART;
-  (void) __libc_sigaction (SIGSETXID, &sa, NULL);
-
-  /* The parent process might have left the signals blocked.  Just in
-     case, unblock it.  We reuse the signal mask in the sigaction
-     structure.  It is already cleared.  */
-  __sigaddset (&sa.sa_mask, SIGCANCEL);
-  __sigaddset (&sa.sa_mask, SIGSETXID);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_UNBLOCK, &sa.sa_mask,
-			 NULL, __NSIG_BYTES);
-
   /* Get the size of the static and alignment requirements for the TLS
      block.  */
   size_t static_tls_align;

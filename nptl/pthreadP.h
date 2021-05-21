@@ -571,6 +571,12 @@ libc_hidden_proto (__pthread_attr_setsigmask_internal)
 extern __typeof (pthread_attr_getsigmask_np) __pthread_attr_getsigmask_np;
 libc_hidden_proto (__pthread_attr_getsigmask_np)
 
+/* The cancellation signal handler defined alongside with
+   pthread_cancel.  This is included in statically linked binaries
+   only if pthread_cancel is linked in.  */
+void __nptl_sigcancel_handler (int sig, siginfo_t *si, void *ctx);
+libc_hidden_proto (__nptl_sigcancel_handler)
+
 /* Special versions which use non-exported functions.  */
 extern void __pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
 				    void (*routine) (void *), void *arg);
