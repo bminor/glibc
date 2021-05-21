@@ -128,6 +128,7 @@ libsupport-routines = \
   xpthread_attr_init \
   xpthread_attr_setdetachstate \
   xpthread_attr_setguardsize \
+  xpthread_attr_setaffinity_np \
   xpthread_attr_setstack \
   xpthread_attr_setstacksize \
   xpthread_barrier_destroy \
