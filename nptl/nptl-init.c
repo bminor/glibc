@@ -38,28 +38,9 @@
 #include <pthread_mutex_conf.h>
 #include <nptl-stack.h>
 
-/* Version of the library, used in libthread_db to detect mismatches.  */
-static const char nptl_version[] __attribute_used__ = VERSION;
-
 void
 __pthread_initialize_minimal_internal (void)
 {
 }
 strong_alias (__pthread_initialize_minimal_internal,
 	      __pthread_initialize_minimal)
-
-
-/* This function is internal (it has a GLIBC_PRIVATE) version, but it
-   is widely used (either via weak symbol, or dlsym) to obtain the
-   __static_tls_size value.  This value is then used to adjust the
-   value of the stack size attribute, so that applications receive the
-   full requested stack size, not diminished by the TCB and static TLS
-   allocation on the stack.  Once the TCB is separately allocated,
-   this function should be removed or renamed (if it is still
-   necessary at that point).  */
-size_t
-__pthread_get_minstack (const pthread_attr_t *attr)
-{
-  return (GLRO(dl_pagesize) + __nptl_tls_static_size_for_stack ()
-	  + PTHREAD_STACK_MIN);
-}

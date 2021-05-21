@@ -36,6 +36,7 @@
 #include <tls-setup.h>
 #include "libioP.h"
 #include <sys/single_threaded.h>
+#include <version.h>
 
 #include <shlib-compat.h>
 
@@ -55,6 +56,9 @@ static struct pthread *__nptl_last_event __attribute_used__;
 static struct rtld_global *__nptl_rtld_global __attribute_used__
   = &_rtld_global;
 #endif
+
+/* Version of the library, used in libthread_db to detect mismatches.  */
+static const char nptl_version[] __attribute_used__ = VERSION;
 
 /* This performs the initialization necessary when going from
    single-threaded to multi-threaded mode for the first time.  */

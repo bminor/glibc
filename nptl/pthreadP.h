@@ -343,6 +343,7 @@ extern unsigned long int __fork_generation attribute_hidden;
 extern unsigned long int *__fork_generation_pointer attribute_hidden;
 
 extern size_t __pthread_get_minstack (const pthread_attr_t *attr);
+libc_hidden_proto (__pthread_get_minstack)
 
 /* Namespace save aliases.  */
 extern int __pthread_getschedparam (pthread_t thread_id, int *policy,
