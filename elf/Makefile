@@ -334,7 +334,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-auditmanymod7 tst-auditmanymod8 tst-auditmanymod9 \
 		tst-initlazyfailmod tst-finilazyfailmod \
 		tst-dlopenfailmod1 tst-dlopenfaillinkmod tst-dlopenfailmod2 \
-		tst-dlopenfailmod3 tst-ldconfig-ld-mod \
+		tst-dlopenfailmod3 tst-dlopenfailnodelmod tst-ldconfig-ld-mod \
 		tst-filterobj-flt tst-filterobj-aux tst-filterobj-filtee \
 		tst-auditlogmod-1 tst-auditlogmod-2 tst-auditlogmod-3 \
 		tst-single_threaded-mod1 tst-single_threaded-mod2 \
@@ -1733,11 +1733,18 @@ LDFLAGS-tst-dlopenfailmod1.so = -Wl,--no-as-needed
 $(objpfx)tst-dlopenfailmod1.so: \
   $(shared-thread-library) $(objpfx)tst-dlopenfaillinkmod.so
 LDFLAGS-tst-dlopenfaillinkmod.so = -Wl,-soname,tst-dlopenfail-missingmod.so
-$(objpfx)tst-dlopenfailmod2.so: $(shared-thread-library)
+$(objpfx)tst-dlopenfailmod2.so: $(objpfx)tst-dlopenfailnodelmod.so
 $(objpfx)tst-dlopenfail-2: $(libdl)
 $(objpfx)tst-dlopenfail-2.out: \
   $(objpfx)tst-dlopenfailmod1.so $(objpfx)tst-dlopenfailmod2.so \
   $(objpfx)tst-dlopenfailmod3.so
+# tst-dlopenfailnodelmod.so emulates how libpthread was linked.
+$(objpfx)tst-dlopenfailnodelmod.so: $(libsupport)
+LDFLAGS-tst-dlopenfailnodelmod.so = \
+  -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
+# tst-dlopenfail should export the libsupport symbols, so that
+# tst-dlopenfailnodelmod.so uses them for error reporting.
+LDFLAGS-tst-dlopenfail = -Wl,-E
 
 $(objpfx)tst-dlopen-nodelete-reloc: $(libdl)
 $(objpfx)tst-dlopen-nodelete-reloc.out: \

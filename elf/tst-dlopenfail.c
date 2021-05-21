@@ -18,7 +18,6 @@
 
 #include <dlfcn.h>
 #include <errno.h>
-#include <gnu/lib-names.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
@@ -28,10 +27,7 @@
 static int
 do_test (void)
 {
-  /* This test uses libpthread as the canonical NODELETE module.  If
-     libpthread is no longer NODELETE because it has been merged into
-     libc, the test needs to be updated.  */
-  TEST_VERIFY (dlsym (NULL, "pthread_create") == NULL);
+  TEST_VERIFY (dlsym (NULL, "no_delete_mod_function") == NULL);
 
   /* This is expected to fail because of the missing dependency.  */
   puts ("info: attempting to load tst-dlopenfailmod1.so");
@@ -42,36 +38,32 @@ do_test (void)
                        " cannot open shared object file:"
                        " No such file or directory");
 
-  /* Do not probe for the presence of libpthread at this point because
-     that might trigger relocation if bug 20839 is present, obscuring
-     a subsequent crash.  */
+  /* Do not probe for the presence of the tst-dlopenfailnodelmod.so at
+     this point because that might trigger relocation if bug 20839 is
+     present, obscuring a subsequent crash.  */
 
   /* This is expected to succeed.  */
   puts ("info: loading tst-dlopenfailmod2.so");
   void *handle = xdlopen ("tst-dlopenfailmod2.so", RTLD_NOW);
   xdlclose (handle);
 
-  /* libpthread should remain loaded.  */
-  TEST_VERIFY (dlopen (LIBPTHREAD_SO, RTLD_LAZY | RTLD_NOLOAD) != NULL);
-  TEST_VERIFY (dlsym (NULL, "pthread_create") == NULL);
+  /* The NODELETE module should remain loaded.  */
+  TEST_VERIFY (dlopen ("tst-dlopenfailnodelmod.so", RTLD_LAZY | RTLD_NOLOAD)
+               != NULL);
+  /* But the symbol is not in the global scope.  */
+  TEST_VERIFY (dlsym (NULL, "no_delete_mod_function") == NULL);
 
-  /* We can make libpthread global, and then the symbol should become
-     available.  */
-  TEST_VERIFY (dlopen (LIBPTHREAD_SO, RTLD_LAZY | RTLD_GLOBAL) != NULL);
-  TEST_VERIFY (dlsym (NULL, "pthread_create") != NULL);
+  /* We can make tst-dlopenfailnodelmod.so global, and then the symbol
+     should become available.  */
+  TEST_VERIFY (dlopen ("tst-dlopenfailnodelmod.so", RTLD_LAZY | RTLD_GLOBAL)
+               != NULL);
+  void (*no_delete_mod_function) (void)
+    = dlsym (NULL, "no_delete_mod_function");
+  TEST_VERIFY_EXIT (no_delete_mod_function != NULL);
 
-  /* sem_open is sufficiently complex to depend on relocations.  */
-  void *(*sem_open_ptr) (const char *, int flag, ...)
-    = dlsym (NULL, "sem_open");
-  if (sem_open_ptr == NULL)
-    /* Hurd does not implement sem_open.  */
-    puts ("warning: sem_open not found, further testing not possible");
-  else
-    {
-      errno = 0;
-      TEST_VERIFY (sem_open_ptr ("/", 0) == NULL);
-      TEST_COMPARE (errno, EINVAL);
-    }
+  /* Hopefully, no_delete_mod_function is sufficiently complex to
+     depend on relocations.  */
+  no_delete_mod_function ();
 
   return 0;
 }

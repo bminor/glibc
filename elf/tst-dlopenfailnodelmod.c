@@ -1,5 +1,5 @@
-/* Module which depends on on a NODELETE module, and can be loaded.
-   Copyright (C) 2019-2021 Free Software Foundation, Inc.
+/* NODELETE module for tst-dlopenfail, tst-dlopenfail-2.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdio.h>
+#include <support/check.h>
 
-/* Force linking against tst-dlopenfailnodelmod.so.  */
-void no_delete_mod_function (void);
-void *function_reference = no_delete_mod_function;
+/* Introduce some relocation dependencies.  */
+const char test_string[] = "test string";
+const char *test_string_ptr = test_string;
 
-static void __attribute__ ((constructor))
-init (void)
+void
+no_delete_mod_function (void)
 {
-  puts ("info: tst-dlopenfailmod2.so constructor invoked");
+  TEST_COMPARE_STRING (test_string, test_string_ptr);
 }
