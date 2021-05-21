@@ -45,7 +45,6 @@ routines = \
   futex-internal \
   libc-cleanup \
   libc_multiple_threads \
-  libc_pthread_init \
   lowlevellock \
   nptl-stack \
   nptl_deallocate_tsd \
