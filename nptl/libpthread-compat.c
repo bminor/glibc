@@ -28,14 +28,11 @@ __libpthread_version_placeholder_1 (void)
 }
 #endif
 
-/* This is an unused compatibility symbol definition, to prevent ld
-   from creating a weak version definition for GLIBC_2.1.2.  (__vfork
-   used to be defined at that version, but it is now provided by libc,
-   and there are no versions left in libpthread for that symbol
-   version.)  If the ABI baseline for glibc is the GLIBC_2.2 symbol
-   version or later, the placeholder symbol is not needed because
-   there are plenty of other symbols which populate those later
-   versions.  */
+#if (SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_2))
+compat_symbol (libpthread, __libpthread_version_placeholder_1,
+	       __libpthread_version_placeholder, GLIBC_2_1);
+#endif
+
 #if (SHLIB_COMPAT (libpthread, GLIBC_2_1_1, GLIBC_2_1_2))
 compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_1_1);
@@ -45,12 +42,8 @@ compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_1_2);
 #endif
 
-/* Do not create the placeholder symbol version if there are other
-   symbols left that keep the version around (because GLIBC_2.0 got
-   promoted to GLIBC_2.2).  */
 #if SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_2_3) \
-  && ABI_libpthread_GLIBC_2_2 != ABI_libpthread_GLIBC_2_0 \
-  && ABI_libpthread_GLIBC_2_2 != ABI_libpthread_GLIBC_2_1_3
+  && ABI_libpthread_GLIBC_2_2 != ABI_libpthread_GLIBC_2_0
 compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_2);
 #endif
@@ -99,6 +92,11 @@ compat_symbol (libpthread, __libpthread_version_placeholder_1,
   && ABI_libpthread_GLIBC_2_18 != ABI_libpthread_GLIBC_2_0
 compat_symbol (libpthread, __libpthread_version_placeholder_1,
 	       __libpthread_version_placeholder, GLIBC_2_18);
+#endif
+
+#if (SHLIB_COMPAT (libpthread, GLIBC_2_28, GLIBC_2_29))
+compat_symbol (libpthread, __libpthread_version_placeholder_1,
+	       __libpthread_version_placeholder, GLIBC_2_28);
 #endif
 
 #if (SHLIB_COMPAT (libpthread, GLIBC_2_30, GLIBC_2_31))

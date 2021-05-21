@@ -1431,6 +1431,7 @@ GLIBC_2.33 pthread_condattr_getpshared F
 GLIBC_2.33 pthread_condattr_init F
 GLIBC_2.33 pthread_condattr_setclock F
 GLIBC_2.33 pthread_condattr_setpshared F
+GLIBC_2.33 pthread_create F
 GLIBC_2.33 pthread_detach F
 GLIBC_2.33 pthread_equal F
 GLIBC_2.33 pthread_exit F
@@ -1899,6 +1900,7 @@ GLIBC_2.33 tempnam F
 GLIBC_2.33 textdomain F
 GLIBC_2.33 tfind F
 GLIBC_2.33 tgkill F
+GLIBC_2.33 thrd_create F
 GLIBC_2.33 thrd_current F
 GLIBC_2.33 thrd_detach F
 GLIBC_2.33 thrd_equal F
@@ -2131,6 +2133,7 @@ GLIBC_2.34 pthread_condattr_getclock F
 GLIBC_2.34 pthread_condattr_getpshared F
 GLIBC_2.34 pthread_condattr_setclock F
 GLIBC_2.34 pthread_condattr_setpshared F
+GLIBC_2.34 pthread_create F
 GLIBC_2.34 pthread_detach F
 GLIBC_2.34 pthread_getattr_default_np F
 GLIBC_2.34 pthread_getconcurrency F
@@ -2203,6 +2206,7 @@ GLIBC_2.34 sem_timedwait F
 GLIBC_2.34 sem_trywait F
 GLIBC_2.34 sem_unlink F
 GLIBC_2.34 sem_wait F
+GLIBC_2.34 thrd_create F
 GLIBC_2.34 thrd_detach F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 thrd_join F

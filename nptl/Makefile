@@ -108,6 +108,7 @@ routines = \
   pthread_condattr_init \
   pthread_condattr_setclock \
   pthread_condattr_setpshared \
+  pthread_create \
   pthread_detach \
   pthread_equal \
   pthread_exit \
@@ -210,7 +211,6 @@ libpthread-routines = \
   libpthread-compat \
   nptl-init \
   pt-interp \
-  pthread_create \
   version \
 
 libpthread-shared-only-routines = \

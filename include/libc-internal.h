@@ -38,7 +38,11 @@ extern void __libc_freeres (void);
 libc_hidden_proto (__libc_freeres)
 
 /* Free resources stored in thread-local variables on thread exit.  */
-extern void __libc_thread_freeres (void);
+extern void __libc_thread_freeres (void)
+#if PTHREAD_IN_LIBC
+  attribute_hidden
+#endif
+  ;
 
 /* Define and initialize `__progname' et. al.  */
 extern void __init_misc (int, char **, char **) attribute_hidden;

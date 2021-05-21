@@ -762,10 +762,17 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 
   return retval;
 }
-versioned_symbol (libpthread, __pthread_create_2_1, pthread_create, GLIBC_2_1);
+versioned_symbol (libc, __pthread_create_2_1, pthread_create, GLIBC_2_34);
+libc_hidden_ver (__pthread_create_2_1, __pthread_create)
+#ifndef SHARED
+strong_alias (__pthread_create_2_1, __pthread_create)
+#endif
 
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libpthread, __pthread_create_2_1, pthread_create, GLIBC_2_1);
+#endif
 
-#if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_1)
+#if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_1)
 int
 __pthread_create_2_0 (pthread_t *newthread, const pthread_attr_t *attr,
 		      void *(*start_routine) (void *), void *arg)

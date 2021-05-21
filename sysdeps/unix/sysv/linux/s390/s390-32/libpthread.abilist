@@ -1,6 +1,5 @@
 GLIBC_2.0 __errno_location F
-GLIBC_2.0 pthread_create F
-GLIBC_2.1 pthread_create F
+GLIBC_2.1 __libpthread_version_placeholder F
 GLIBC_2.1.1 __libpthread_version_placeholder F
 GLIBC_2.1.2 __libpthread_version_placeholder F
 GLIBC_2.11 __libpthread_version_placeholder F
@@ -10,7 +9,7 @@ GLIBC_2.19 __libpthread_version_placeholder F
 GLIBC_2.2 __libpthread_version_placeholder F
 GLIBC_2.2.3 __libpthread_version_placeholder F
 GLIBC_2.2.6 __libpthread_version_placeholder F
-GLIBC_2.28 thrd_create F
+GLIBC_2.28 __libpthread_version_placeholder F
 GLIBC_2.3.2 __libpthread_version_placeholder F
 GLIBC_2.3.3 __libpthread_version_placeholder F
 GLIBC_2.3.4 __libpthread_version_placeholder F
