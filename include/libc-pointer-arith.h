@@ -37,6 +37,9 @@
 /* Cast an integer or a pointer VAL to integer with proper type.  */
 # define cast_to_integer(val) ((__integer_if_pointer_type (val)) (val))
 
+/* Cast an integer VAL to void * pointer.  */
+# define cast_to_pointer(val) ((void *) (uintptr_t) (val))
+
 /* Align a value by rounding down to closest size.
    e.g. Using size of 4096, we get this behavior:
 	{4095, 4096, 4097} = {0, 4096, 4096}.  */
