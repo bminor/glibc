@@ -218,15 +218,12 @@ late_init (void)
 
 /* CREATE THREAD NOTES:
 
-   createthread.c defines the create_thread function, and two macros:
-   START_THREAD_DEFN and START_THREAD_SELF (see below).
-
    create_thread must initialize PD->stopped_start.  It should be true
    if the STOPPED_START parameter is true, or if create_thread needs the
    new thread to synchronize at startup for some other implementation
    reason.  If STOPPED_START will be true, then create_thread is obliged
    to lock PD->lock before starting the thread.  Then pthread_create
-   unlocks PD->lock which synchronizes-with START_THREAD_DEFN in the
+   unlocks PD->lock which synchronizes-with create_thread in the
    child thread which does an acquire/release of PD->lock as the last
    action before calling the user entry point.  The goal of all of this
    is to ensure that the required initial thread attributes are applied
@@ -245,20 +242,125 @@ late_init (void)
    so create_thread need not do that.  On failure, *THREAD_RAN should
    be set to true iff the thread actually started up and then got
    canceled before calling user code (*PD->start_routine).  */
+
+static int _Noreturn start_thread (void *arg);
+
 static int create_thread (struct pthread *pd, const struct pthread_attr *attr,
 			  bool *stopped_start, STACK_VARIABLES_PARMS,
-			  bool *thread_ran);
-
-#include <createthread.c>
-
-/* Local function to start thread and handle cleanup.
-   createthread.c defines the macro START_THREAD_DEFN to the
-   declaration that its create_thread function will refer to, and
-   START_THREAD_SELF to the expression to optimally deliver the new
-   thread's THREAD_SELF value.  */
-START_THREAD_DEFN
+			  bool *thread_ran)
 {
-  struct pthread *pd = START_THREAD_SELF;
+  /* Determine whether the newly created threads has to be started
+     stopped since we have to set the scheduling parameters or set the
+     affinity.  */
+  bool need_setaffinity = (attr != NULL && attr->extension != NULL
+			   && attr->extension->cpuset != 0);
+  if (attr != NULL
+      && (__glibc_unlikely (need_setaffinity)
+	  || __glibc_unlikely ((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0)))
+    *stopped_start = true;
+
+  pd->stopped_start = *stopped_start;
+  if (__glibc_unlikely (*stopped_start))
+    lll_lock (pd->lock, LLL_PRIVATE);
+
+  /* We rely heavily on various flags the CLONE function understands:
+
+     CLONE_VM, CLONE_FS, CLONE_FILES
+	These flags select semantics with shared address space and
+	file descriptors according to what POSIX requires.
+
+     CLONE_SIGHAND, CLONE_THREAD
+	This flag selects the POSIX signal semantics and various
+	other kinds of sharing (itimers, POSIX timers, etc.).
+
+     CLONE_SETTLS
+	The sixth parameter to CLONE determines the TLS area for the
+	new thread.
+
+     CLONE_PARENT_SETTID
+	The kernels writes the thread ID of the newly created thread
+	into the location pointed to by the fifth parameters to CLONE.
+
+	Note that it would be semantically equivalent to use
+	CLONE_CHILD_SETTID but it is be more expensive in the kernel.
+
+     CLONE_CHILD_CLEARTID
+	The kernels clears the thread ID of a thread that has called
+	sys_exit() in the location pointed to by the seventh parameter
+	to CLONE.
+
+     The termination signal is chosen to be zero which means no signal
+     is sent.  */
+  const int clone_flags = (CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SYSVSEM
+			   | CLONE_SIGHAND | CLONE_THREAD
+			   | CLONE_SETTLS | CLONE_PARENT_SETTID
+			   | CLONE_CHILD_CLEARTID
+			   | 0);
+
+  TLS_DEFINE_INIT_TP (tp, pd);
+
+#ifdef __NR_clone2
+# define ARCH_CLONE __clone2
+#else
+# define ARCH_CLONE __clone
+#endif
+  if (__glibc_unlikely (ARCH_CLONE (&start_thread, STACK_VARIABLES_ARGS,
+				    clone_flags, pd, &pd->tid, tp, &pd->tid)
+			== -1))
+    return errno;
+
+  /* It's started now, so if we fail below, we'll have to cancel it
+     and let it clean itself up.  */
+  *thread_ran = true;
+
+  /* Now we have the possibility to set scheduling parameters etc.  */
+  if (attr != NULL)
+    {
+      int res;
+
+      /* Set the affinity mask if necessary.  */
+      if (need_setaffinity)
+	{
+	  assert (*stopped_start);
+
+	  res = INTERNAL_SYSCALL_CALL (sched_setaffinity, pd->tid,
+				       attr->extension->cpusetsize,
+				       attr->extension->cpuset);
+
+	  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res)))
+	  err_out:
+	    {
+	      /* The operation failed.  We have to kill the thread.
+		 We let the normal cancellation mechanism do the work.  */
+
+	      pid_t pid = __getpid ();
+	      INTERNAL_SYSCALL_CALL (tgkill, pid, pd->tid, SIGCANCEL);
+
+	      return INTERNAL_SYSCALL_ERRNO (res);
+	    }
+	}
+
+      /* Set the scheduling parameters.  */
+      if ((attr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0)
+	{
+	  assert (*stopped_start);
+
+	  res = INTERNAL_SYSCALL_CALL (sched_setscheduler, pd->tid,
+				       pd->schedpolicy, &pd->schedparam);
+
+	  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (res)))
+	    goto err_out;
+	}
+    }
+
+  return 0;
+}
+
+/* Local function to start thread and handle cleanup.  */
+static int _Noreturn
+start_thread (void *arg)
+{
+  struct pthread *pd = arg;
 
   /* Initialize resolver state pointer.  */
   __resp = &pd->res;
