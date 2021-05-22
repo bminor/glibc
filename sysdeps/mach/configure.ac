@@ -25,8 +25,8 @@ dnl If not, compile with -Dfoo_t=bar_t.
 dnl
 AC_DEFUN([mach_TYPE_CHECK], [dnl
 AC_CACHE_CHECK(for $1 in mach/mach_types.h, libc_cv_mach_$1,
-AC_TRY_COMPILE([#include <mach/mach_types.h>], [extern $1 foo;],
-libc_cv_mach_$1=$1, libc_cv_mach_$1=$2))
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <mach/mach_types.h>]], [[extern $1 foo;]])],
+[libc_cv_mach_$1=$1], [libc_cv_mach_$1=$2]))
 if test [$]libc_cv_mach_$1 != $1; then
   DEFINES="$DEFINES -D$1=$2"
 fi])
@@ -42,10 +42,10 @@ dnl The creation_time field is a GNU Mach addition the other variants lack.
 dnl
 AC_CACHE_CHECK(for creation_time in task_basic_info,
 	       libc_cv_mach_task_creation_time, [dnl
-AC_TRY_COMPILE([#include <mach/task_info.h>], [
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <mach/task_info.h>]], [[
 extern struct task_basic_info *i;
 long s = i->creation_time.seconds;
-], libc_cv_mach_task_creation_time=yes, libc_cv_mach_task_creation_time=no)])
+]])], [libc_cv_mach_task_creation_time=yes], [libc_cv_mach_task_creation_time=no])])
 if test $libc_cv_mach_task_creation_time = no; then
   AC_MSG_ERROR([you need Mach headers supporting task_info.creation_time])
 fi

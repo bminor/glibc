@@ -8,12 +8,12 @@ if test -n "$sysheaders"; then
 fi
 define([libc_cv_linuxVER], [libc_cv_linux]patsubst(LIBC_LINUX_VERSION,[\.]))dnl
 AC_CACHE_CHECK(installed Linux kernel header files, libc_cv_linuxVER, [dnl
-AC_TRY_COMPILE([#include <linux/version.h>
+AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[#include <linux/version.h>
 #if !defined LINUX_VERSION_CODE || LINUX_VERSION_CODE < ]dnl
 patsubst(LIBC_LINUX_VERSION,[^\([^.]*\)\.\([^.]*\)\.\([^.]*\)$],dnl
 [ (\1 *65536+ \2 *256+ \3) /* \1.\2.\3 */])[
 # error kernel headers missing or too old
-#endif], [],
+#endif]], [[]])],
 	       [libc_cv_linuxVER='LIBC_LINUX_VERSION or later'],
 	       [libc_cv_linuxVER='missing or too old!'])])
 if test "$libc_cv_linuxVER" != 'LIBC_LINUX_VERSION or later'; then
@@ -52,10 +52,10 @@ changequote(,)dnl
 decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
 abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
 changequote([,])dnl
-AC_TRY_COMPILE([#include <linux/version.h>
+AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[#include <linux/version.h>
 #if LINUX_VERSION_CODE < $decnum
 # error kernel headers too old
-#endif], [], [libc_minimum_kernel=ok], [libc_minimum_kernel='too old!'])
+#endif]], [[]])], [libc_minimum_kernel=ok], [libc_minimum_kernel='too old!'])
 AC_MSG_RESULT($libc_minimum_kernel)
 if test "$libc_minimum_kernel" = ok; then
   AC_DEFINE_UNQUOTED(__LINUX_KERNEL_VERSION, $decnum)

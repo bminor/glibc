@@ -6,11 +6,11 @@ AC_CACHE_CHECK(whether $CC $CFLAGS -mlong-double-128 uses IBM extended format,
 	       libc_cv_mlong_double_128ibm, [dnl
 save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -mlong-double-128"
-AC_TRY_COMPILE([#include <float.h>], [
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <float.h>]], [[
 #if LDBL_MANT_DIG != 106
 # error "compiler doesn't implement IBM extended format of long double"
 #endif
-long double foobar (long double x) { return x; }],
+long double foobar (long double x) { return x; }]])],
 	       libc_cv_mlong_double_128ibm=yes,
 	       libc_cv_mlong_double_128ibm=no)
 CFLAGS="$save_CFLAGS"])
@@ -20,11 +20,11 @@ if test "$libc_cv_mlong_double_128ibm" = no; then
 		 libc_cv_mabi_ibmlongdouble, [dnl
   save_CFLAGS="$CFLAGS"
   CFLAGS="$CFLAGS -mlong-double-128 -mabi=ibmlongdouble"
-  AC_TRY_COMPILE([#include <float.h>], [
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <float.h>]], [[
 #if LDBL_MANT_DIG != 106
 # error "compiler doesn't implement IBM extended format of long double"
 #endif
-long double foobar (long double x) { return x; }],
+long double foobar (long double x) { return x; }]])],
 		 libc_cv_mabi_ibmlongdouble=yes,
 		 libc_cv_mabi_ibmlongdouble=no)
   CFLAGS="$save_CFLAGS"])

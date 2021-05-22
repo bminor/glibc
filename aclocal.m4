@@ -34,6 +34,7 @@ AC_PROVIDE([AS_SHELL_FN_as_fn_set_status])dnl
 AC_PROVIDE([AS_SHELL_FN_as_fn_exit])dnl
 AC_PROVIDE([AS_SHELL_FN_as_fn_arith])dnl
 AC_PROVIDE([AS_SHELL_FN_ac_fn_c_try_compile])dnl
+AC_PROVIDE([AS_SHELL_FN_ac_fn_c_try_cpp])dnl
 define([AS_MESSAGE_LOG_FD],5)dnl
 define([AS_MESSAGE_FD],6)dnl
 dnl Ripped out of AS_INIT, which does more cruft we do not want.

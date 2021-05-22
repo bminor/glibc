@@ -457,10 +457,10 @@ AC_ARG_ENABLE([mathvec],
 	      [build_mathvec=$enableval],
 	      [build_mathvec=notset])
 
-AC_TRY_COMPILE([], [
+AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[]], [[
 #ifndef __CET__
 # error no CET compiler support
-#endif],
+#endif]])],
 	       [libc_cv_compiler_default_cet=yes],
 	       [libc_cv_compiler_default_cet=no])
 
@@ -1025,10 +1025,10 @@ AC_CHECK_PROG_VER(BISON, bison, --version,
   [2.7*|[3-9].*|[1-9][0-9]*], critic_missing="$critic_missing bison")
 
 AC_CACHE_CHECK([if $CC is sufficient to build libc], libc_cv_compiler_ok, [
-AC_TRY_COMPILE([], [
+AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[]], [[
 #if !defined __GNUC__ || __GNUC__ < 6 || (__GNUC__ == 6 && __GNUC_MINOR__ < 2)
 #error insufficient compiler
-#endif],
+#endif]])],
 	       [libc_cv_compiler_ok=yes],
 	       [libc_cv_compiler_ok=no])])
 AS_IF([test $libc_cv_compiler_ok != yes],
@@ -1639,11 +1639,14 @@ CPPUNDEFS=
 dnl Check for silly hacked compilers predefining _FORTIFY_SOURCE.
 dnl Since we are building the implementations of the fortified functions here,
 dnl having the macro defined interacts very badly.
+dnl _FORTIFY_SOURCE requires compiler optimization level 1 (gcc -O1)
+dnl and above (see "man FEATURE_TEST_MACROS").
+dnl So do NOT replace AC_COMPILE_IFELSE with AC_PREPROC_IFELSE.
 AC_CACHE_CHECK([for _FORTIFY_SOURCE predefine], libc_cv_predef_fortify_source,
-[AC_TRY_COMPILE([], [
+[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[
 #ifdef _FORTIFY_SOURCE
 # error bogon
-#endif],
+#endif]])],
 		[libc_cv_predef_fortify_source=no],
 		[libc_cv_predef_fortify_source=yes])])
 if test $libc_cv_predef_fortify_source = yes; then
@@ -1711,7 +1714,7 @@ fi
 AC_CACHE_CHECK(for __builtin_trap with no external dependencies,
 	       libc_cv_builtin_trap, [dnl
 libc_cv_builtin_trap=no
-AC_TRY_COMPILE([], [__builtin_trap ()], [
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[__builtin_trap ()]])],[
 libc_undefs=`$NM -u conftest.o |
   LC_ALL=C $AWK '$1 == "U" { print $2 | "sort -u"; next } { exit(1) }' \
     2>&AS_MESSAGE_LOG_FD` || {
@@ -1720,7 +1723,7 @@ libc_undefs=`$NM -u conftest.o |
 echo >&AS_MESSAGE_LOG_FD "libc_undefs='$libc_undefs'"
 if test -z "$libc_undefs"; then
   libc_cv_builtin_trap=yes
-fi])])
+fi],[])])
 if test $libc_cv_builtin_trap = yes; then
   AC_DEFINE([HAVE_BUILTIN_TRAP])
 fi

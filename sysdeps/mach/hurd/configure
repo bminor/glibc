@@ -9,6 +9,7 @@ if test -n "$sysheaders"; then
 fi
 
 
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking Hurd header version" >&5
 $as_echo_n "checking Hurd header version... " >&6; }
 if ${libc_cv_hurd_version+:} false; then :
@@ -29,12 +30,12 @@ main ()
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
+if ac_fn_c_try_cpp "$LINENO"; then :
   libc_cv_hurd_version=ok
 else
   libc_cv_hurd_version=bad
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+rm -f conftest.err conftest.i conftest.$ac_ext
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_hurd_version" >&5
 $as_echo "$libc_cv_hurd_version" >&6; }

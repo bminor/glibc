@@ -6,6 +6,7 @@ if test -n "$sysheaders"; then
   CPPFLAGS="$CPPFLAGS $SYSINCLUDES"
 fi
 
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking installed Linux kernel header files" >&5
 $as_echo_n "checking installed Linux kernel header files... " >&6; }
 if ${libc_cv_linux320+:} false; then :
@@ -25,12 +26,12 @@ main ()
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
+if ac_fn_c_try_cpp "$LINENO"; then :
   libc_cv_linux320='3.2.0 or later'
 else
   libc_cv_linux320='missing or too old!'
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+rm -f conftest.err conftest.i conftest.$ac_ext
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_linux320" >&5
 $as_echo "$libc_cv_linux320" >&6; }
@@ -84,12 +85,12 @@ main ()
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
+if ac_fn_c_try_cpp "$LINENO"; then :
   libc_minimum_kernel=ok
 else
   libc_minimum_kernel='too old!'
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+rm -f conftest.err conftest.i conftest.$ac_ext
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_minimum_kernel" >&5
 $as_echo "$libc_minimum_kernel" >&6; }
 if test "$libc_minimum_kernel" = ok; then

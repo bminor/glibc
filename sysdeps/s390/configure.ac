@@ -222,11 +222,11 @@ dnl overflow
 dnl (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=98269)
 AC_CACHE_CHECK([if $CC is sufficient to build libc on s390x],
 libc_cv_compiler_ok_on_s390x, [
-AC_TRY_COMPILE([], [
+AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[]], [[
 #if !defined __GNUC__ || __GNUC__ < 7 || (__GNUC__ == 7 && __GNUC_MINOR__ < 1)
 #error insufficient compiler for building on s390x
 #endif
-],
+]])],
 	[libc_cv_compiler_ok_on_s390x=yes],
 	[libc_cv_compiler_ok_on_s390x=no])])
 if test "$libc_cv_compiler_ok_on_s390x" != yes; then

@@ -11,14 +11,14 @@ if test -n "$sysheaders"; then
 fi
 
 AC_CACHE_CHECK(Hurd header version, libc_cv_hurd_version, [dnl
-AC_TRY_COMPILE(dnl
-[#include <hurd/version.h>], [
+AC_PREPROC_IFELSE([AC_LANG_PROGRAM(dnl
+[[#include <hurd/version.h>]], [[
 #define NEED_VERSION 20020609
 #if HURD_INTERFACE_VERSION < NEED_VERSION
 # error Hurd version too old: HURD_INTERFACE_VERSION < NEED_VERSION
-#endif],
-	       libc_cv_hurd_version=ok,
-	       libc_cv_hurd_version=bad)])
+#endif]])],
+	       [libc_cv_hurd_version=ok],
+	       [libc_cv_hurd_version=bad])])
 if test "x$libc_cv_hurd_version" != xok; then
   AC_MSG_ERROR(Hurd headers not installed or too old)
 fi
