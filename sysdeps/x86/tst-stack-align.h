@@ -1,5 +1,5 @@
-/* Check stack alignment.  PowerPC version.
-   Copyright (C) 2005-2021 Free Software Foundation, Inc.
+/* Check stack alignment.  X86 version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+typedef struct { int i[16]; } int_al16 __attribute__((aligned (16)));
+
 #define TEST_STACK_ALIGN_INIT() \
-  ({									     \
-    /* Altivec __vector int etc. needs 16byte aligned stack.		     \
-       Instead of using altivec.h here, use aligned attribute instead.  */   \
-    struct _S								     \
-      {									     \
-        int _i __attribute__((aligned (16)));				     \
-	int _j[3];							     \
-      } _s = { ._i = 18, ._j[0] = 19, ._j[1] = 20, ._j[2] = 21 };	     \
-    printf ("__vector int:  { %d, %d, %d, %d } %p %zu\n", _s._i, _s._j[0],   \
-            _s._j[1], _s._j[2], &_s, __alignof (_s));			     \
-    is_aligned (&_s, __alignof (_s));					     \
+  ({								\
+    int_al16 _m;						\
+    printf ("int_al16:  %p %zu\n", &_m, __alignof (int_al16));	\
+    is_aligned (&_m, __alignof (int_al16));			\
    })
 
 #include_next <tst-stack-align.h>

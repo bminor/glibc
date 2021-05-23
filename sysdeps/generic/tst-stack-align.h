@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2021 Free Software Foundation, Inc.
+/* Check stack alignment.  Generic version.
+   Copyright (C) 2003-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,17 +19,28 @@
 #include <stdio.h>
 #include <stdint.h>
 
+int
+__attribute__ ((weak, noclone, noinline))
+is_aligned (void *p, int align)
+{
+  return (((uintptr_t) p) & (align - 1)) != 0;
+}
+
+#ifndef TEST_STACK_ALIGN_INIT
+# define TEST_STACK_ALIGN_INIT() 0
+#endif
+
 #define TEST_STACK_ALIGN() \
-  ({									     \
-    double _d = 12.0;							     \
-    long double _ld = 15.0;						     \
-    int _ret = 0;							     \
-    printf ("double:  %g %p %zu\n", _d, &_d, __alignof (double));	     \
-    if ((((uintptr_t) &_d) & (__alignof (double) - 1)) != 0)		     \
-      _ret = 1;								     \
-									     \
-    printf ("ldouble: %Lg %p %zu\n", _ld, &_ld, __alignof (long double));    \
-    if ((((uintptr_t) &_ld) & (__alignof (long double) - 1)) != 0)	     \
-      _ret = 1;								     \
-    _ret;								     \
-    })
+  ({								     \
+    double _d = 12.0;						     \
+    long double _ld = 15.0;					     \
+    int _ret = TEST_STACK_ALIGN_INIT ();			     \
+								     \
+    printf ("double:  %g %p %zu\n", _d, &_d, __alignof (double));    \
+    _ret += is_aligned (&_d, __alignof (double));		     \
+								     \
+    printf ("ldouble: %Lg %p %zu\n", _ld, &_ld,			     \
+	    __alignof (long double));				     \
+    _ret += is_aligned (&_ld, __alignof (long double));		     \
+    _ret;							     \
+   })
