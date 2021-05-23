@@ -54,11 +54,12 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, const char *src,
 }
 
 static void
-do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len)
+do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
+         int both_ways)
 {
   size_t i, j;
   char *s1, *s2;
-
+  size_t repeats;
   align1 &= 63;
   if (align1 + len >= page_size)
     return;
@@ -70,20 +71,27 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len)
   s1 = (char *) (buf1 + align1);
   s2 = (char *) (buf2 + align2);
 
-  for (i = 0, j = 1; i < len; i++, j += 23)
-    s1[i] = j;
+  for (repeats = both_ways ? 2 : 1; repeats; --repeats)
+    {
+      for (i = 0, j = 1; i < len; i++, j += 23)
+        s1[i] = j;
 
-  json_element_object_begin (json_ctx);
-  json_attr_uint (json_ctx, "length", (double) len);
-  json_attr_uint (json_ctx, "align1", (double) align1);
-  json_attr_uint (json_ctx, "align2", (double) align2);
-  json_array_begin (json_ctx, "timings");
+      json_element_object_begin (json_ctx);
+      json_attr_uint (json_ctx, "length", (double) len);
+      json_attr_uint (json_ctx, "align1", (double) align1);
+      json_attr_uint (json_ctx, "align2", (double) align2);
+      json_attr_uint (json_ctx, "dst > src", (double) (s2 > s1));
+      json_array_begin (json_ctx, "timings");
 
-  FOR_EACH_IMPL (impl, 0)
-    do_one_test (json_ctx, impl, s2, s1, len);
+      FOR_EACH_IMPL (impl, 0)
+        do_one_test (json_ctx, impl, s2, s1, len);
 
-  json_array_end (json_ctx);
-  json_element_object_end (json_ctx);
+      json_array_end (json_ctx);
+      json_element_object_end (json_ctx);
+
+      s1 = (char *) (buf2 + align1);
+      s2 = (char *) (buf1 + align2);
+    }
 }
 
 int
@@ -111,46 +119,46 @@ test_main (void)
   json_array_begin (&json_ctx, "results");
   for (i = 0; i < 18; ++i)
     {
-      do_test (&json_ctx, 0, 0, 1 << i);
-      do_test (&json_ctx, i, 0, 1 << i);
-      do_test (&json_ctx, 0, i, 1 << i);
-      do_test (&json_ctx, i, i, 1 << i);
+      do_test (&json_ctx, 0, 0, 1 << i, 1);
+      do_test (&json_ctx, i, 0, 1 << i, 1);
+      do_test (&json_ctx, 0, i, 1 << i, 1);
+      do_test (&json_ctx, i, i, 1 << i, 1);
     }
 
   for (i = 0; i < 32; ++i)
     {
-      do_test (&json_ctx, 0, 0, i);
-      do_test (&json_ctx, i, 0, i);
-      do_test (&json_ctx, 0, i, i);
-      do_test (&json_ctx, i, i, i);
+      do_test (&json_ctx, 0, 0, i, 0);
+      do_test (&json_ctx, i, 0, i, 0);
+      do_test (&json_ctx, 0, i, i, 0);
+      do_test (&json_ctx, i, i, i, 0);
     }
 
   for (i = 3; i < 32; ++i)
     {
       if ((i & (i - 1)) == 0)
 	continue;
-      do_test (&json_ctx, 0, 0, 16 * i);
-      do_test (&json_ctx, i, 0, 16 * i);
-      do_test (&json_ctx, 0, i, 16 * i);
-      do_test (&json_ctx, i, i, 16 * i);
+      do_test (&json_ctx, 0, 0, 16 * i, 1);
+      do_test (&json_ctx, i, 0, 16 * i, 1);
+      do_test (&json_ctx, 0, i, 16 * i, 1);
+      do_test (&json_ctx, i, i, 16 * i, 1);
     }
 
   for (i = 32; i < 64; ++i)
     {
-      do_test (&json_ctx, 0, 0, 32 * i);
-      do_test (&json_ctx, i, 0, 32 * i);
-      do_test (&json_ctx, 0, i, 32 * i);
-      do_test (&json_ctx, i, i, 32 * i);
+      do_test (&json_ctx, 0, 0, 32 * i, 1);
+      do_test (&json_ctx, i, 0, 32 * i, 1);
+      do_test (&json_ctx, 0, i, 32 * i, 1);
+      do_test (&json_ctx, i, i, 32 * i, 1);
     }
 
-  do_test (&json_ctx, 0, 0, getpagesize ());
+  do_test (&json_ctx, 0, 0, getpagesize (), 1);
 
   for (i = 0; i <= 32; ++i)
     {
-      do_test (&json_ctx, 0, 0, 2048 + 64 * i);
-      do_test (&json_ctx, i, 0, 2048 + 64 * i);
-      do_test (&json_ctx, 0, i, 2048 + 64 * i);
-      do_test (&json_ctx, i, i, 2048 + 64 * i);
+      do_test (&json_ctx, 0, 0, 2048 + 64 * i, 1);
+      do_test (&json_ctx, i, 0, 2048 + 64 * i, 1);
+      do_test (&json_ctx, 0, i, 2048 + 64 * i, 1);
+      do_test (&json_ctx, i, i, 2048 + 64 * i, 1);
     }
 
   json_array_end (&json_ctx);

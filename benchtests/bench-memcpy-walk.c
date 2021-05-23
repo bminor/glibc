@@ -66,17 +66,30 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, char *src,
 }
 
 static void
-do_test (json_ctx_t *json_ctx, size_t len)
+do_test (json_ctx_t *json_ctx, size_t len, int both_ways)
 {
-  json_element_object_begin (json_ctx);
-  json_attr_uint (json_ctx, "length", (double) len);
-  json_array_begin (json_ctx, "timings");
 
-  FOR_EACH_IMPL (impl, 0)
-    do_one_test (json_ctx, impl, (char *) buf2, (char *) buf1, len);
+  char *s1, *s2;
+  size_t repeats;
+  s1 = (char *) (buf1);
+  s2 = (char *) (buf2);
 
-  json_array_end (json_ctx);
-  json_element_object_end (json_ctx);
+  for (repeats = both_ways ? 2 : 1; repeats; --repeats)
+    {
+      json_element_object_begin (json_ctx);
+      json_attr_uint (json_ctx, "length", (double) len);
+      json_attr_uint (json_ctx, "dst > src", (double) (s2 > s1));
+      json_array_begin (json_ctx, "timings");
+
+      FOR_EACH_IMPL (impl, 0)
+        do_one_test (json_ctx, impl, s2, s1, len);
+
+      json_array_end (json_ctx);
+      json_element_object_end (json_ctx);
+
+      s1 = (char *) (buf2);
+      s2 = (char *) (buf1);
+    }
 }
 
 int
@@ -103,8 +116,8 @@ test_main (void)
   json_array_begin (&json_ctx, "results");
   for (size_t i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
     {
-      do_test (&json_ctx, i);
-      do_test (&json_ctx, i + 1);
+      do_test (&json_ctx, i, 1);
+      do_test (&json_ctx, i + 1, 1);
     }
 
   json_array_end (&json_ctx);
