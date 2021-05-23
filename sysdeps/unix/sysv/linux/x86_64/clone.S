@@ -54,12 +54,15 @@ ENTRY (__clone)
 	movq	$-EINVAL,%rax
 	testq	%rdi,%rdi		/* no NULL function pointers */
 	jz	SYSCALL_ERROR_LABEL
-	testq	%rsi,%rsi		/* no NULL stack pointers */
-	jz	SYSCALL_ERROR_LABEL
+
+	/* Align stack to 16 bytes per the x86-64 psABI.  */
+	andq	$-16, %rsi
+	jz	SYSCALL_ERROR_LABEL	/* no NULL stack pointers */
 
 	/* Insert the argument onto the new stack.  */
+	movq	%rcx,-8(%rsi)
+
 	subq	$16,%rsi
-	movq	%rcx,8(%rsi)
 
 	/* Save the function pointer.  It will be popped off in the
 	   child.  */
