@@ -420,8 +420,8 @@ L(more_2x_vec):
 	cmpq	$(VEC_SIZE * 8), %rdx
 	ja	L(more_8x_vec)
 	cmpq	$(VEC_SIZE * 4), %rdx
-	jb	L(last_4x_vec)
-	/* Copy from 4 * VEC to 8 * VEC, inclusively. */
+	jbe	L(last_4x_vec)
+	/* Copy from 4 * VEC + 1 to 8 * VEC, inclusively. */
 	VMOVU	(%rsi), %VEC(0)
 	VMOVU	VEC_SIZE(%rsi), %VEC(1)
 	VMOVU	(VEC_SIZE * 2)(%rsi), %VEC(2)
@@ -440,7 +440,7 @@ L(more_2x_vec):
 	VMOVU	%VEC(7), -(VEC_SIZE * 4)(%rdi,%rdx)
 	VZEROUPPER_RETURN
 L(last_4x_vec):
-	/* Copy from 2 * VEC to 4 * VEC. */
+	/* Copy from 2 * VEC + 1 to 4 * VEC, inclusively. */
 	VMOVU	(%rsi), %VEC(0)
 	VMOVU	VEC_SIZE(%rsi), %VEC(1)
 	VMOVU	-VEC_SIZE(%rsi,%rdx), %VEC(2)
