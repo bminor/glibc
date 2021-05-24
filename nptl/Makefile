@@ -286,6 +286,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-exec4 tst-exec5 \
 	tst-stack2 tst-stack3 tst-stack4 \
 	tst-pthread-attr-affinity \
+	tst-pthread-attr-affinity-fail \
 	tst-dlsym1 \
 	tst-context1 \
 	tst-sched1 \
