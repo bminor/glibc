@@ -28,11 +28,19 @@
 #include <gnu/lib-names.h>
 #include <sys/single_threaded.h>
 
-/* For asynchronous cancellation we use a signal.  This is the core
-   logic of the signal handler.  */
+/* For asynchronous cancellation we use a signal.  */
 static void
-sigcancel_handler (void)
+sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 {
+  /* Safety check.  It would be possible to call this function for
+     other signals and send a signal from another process.  This is not
+     correct and might even be a security problem.  Try to catch as
+     many incorrect invocations as possible.  */
+  if (sig != SIGCANCEL
+      || si->si_pid != __getpid()
+      || si->si_code != SI_TKILL)
+    return;
+
   struct pthread *self = THREAD_SELF;
 
   int oldval = THREAD_GETMEM (self, cancelhandling);
@@ -66,24 +74,6 @@ sigcancel_handler (void)
     }
 }
 
-/* This is the actually installed SIGCANCEL handler.  It adds some
-   safety checks before performing the cancellation.  */
-void
-__nptl_sigcancel_handler (int sig, siginfo_t *si, void *ctx)
-{
-  /* Safety check.  It would be possible to call this function for
-     other signals and send a signal from another process.  This is not
-     correct and might even be a security problem.  Try to catch as
-     many incorrect invocations as possible.  */
-  if (sig != SIGCANCEL
-      || si->si_pid != __getpid()
-      || si->si_code != SI_TKILL)
-    return;
-
-  sigcancel_handler ();
-}
-libc_hidden_def (__nptl_sigcancel_handler)
-
 int
 __pthread_cancel (pthread_t th)
 {
@@ -93,6 +83,17 @@ __pthread_cancel (pthread_t th)
   if (INVALID_TD_P (pd))
     /* Not a valid thread handle.  */
     return ESRCH;
+
+  static int init_sigcancel = 0;
+  if (atomic_load_relaxed (&init_sigcancel) == 0)
+    {
+      struct sigaction sa;
+      sa.sa_sigaction = sigcancel_handler;
+      sa.sa_flags = SA_SIGINFO;
+      __sigemptyset (&sa.sa_mask);
+      __libc_sigaction (SIGCANCEL, &sa, NULL);
+      atomic_store_relaxed (&init_sigcancel, 1);
+    }
 
 #ifdef SHARED
   /* Trigger an error if libgcc_s cannot be loaded.  */
@@ -134,7 +135,11 @@ __pthread_cancel (pthread_t th)
 	       call pthread_cancel (pthread_self ()) without calling
 	       pthread_create, so the signal handler may not have been
 	       set up for a self-cancel.  */
-	    sigcancel_handler ();
+	    {
+	      THREAD_SETMEM (pd, result, PTHREAD_CANCELED);
+	      if ((newval & CANCELTYPE_BITMASK) != 0)
+		__do_cancel ();
+	    }
 	  else
 	    {
 	      /* The cancellation handler will take care of marking the

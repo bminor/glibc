@@ -67,21 +67,6 @@ late_init (void)
   struct sigaction sa;
   __sigemptyset (&sa.sa_mask);
 
-  /* Install the cancellation signal handler (in static builds only if
-     pthread_cancel has been linked in).  If for some reason we cannot
-     install the handler we do not abort.  Maybe we should, but it is
-     only asynchronous cancellation which is affected.  */
-#ifndef SHARED
-  extern __typeof (__nptl_sigcancel_handler) __nptl_sigcancel_handler
-    __attribute__ ((weak));
-  if (__nptl_sigcancel_handler != NULL)
-#endif
-    {
-      sa.sa_sigaction = __nptl_sigcancel_handler;
-      sa.sa_flags = SA_SIGINFO;
-      (void) __libc_sigaction (SIGCANCEL, &sa, NULL);
-    }
-
   /* Install the handle to change the threads' uid/gid.  Use
      SA_ONSTACK because the signal may be sent to threads that are
      running with custom stacks.  (This is less likely for

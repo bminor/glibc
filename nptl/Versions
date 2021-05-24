@@ -403,7 +403,6 @@ libc {
     __nptl_free_tcb;
     __nptl_nthreads;
     __nptl_setxid_sighandler;
-    __nptl_sigcancel_handler;
     __nptl_stack_list_add;
     __nptl_stack_list_del;
     __pthread_attr_copy;
