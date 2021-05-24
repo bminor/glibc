@@ -30,6 +30,7 @@
 #include <math-use-builtins-ceil.h>
 #include <math-use-builtins-trunc.h>
 #include <math-use-builtins-round.h>
+#include <math-use-builtins-roundeven.h>
 #include <math-use-builtins-copysign.h>
 #include <math-use-builtins-sqrt.h>
 #include <math-use-builtins-fma.h>
