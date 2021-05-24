@@ -38,7 +38,6 @@ libm_hidden_proto (__issignaling)
 libm_hidden_proto (__issignalingf)
 libm_hidden_proto (__exp)
 libm_hidden_proto (__expf)
-libm_hidden_proto (__roundeven)
 
 #  if !defined __NO_LONG_DOUBLE_MATH \
       && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0
@@ -159,6 +158,7 @@ fabsf128 (_Float128 x)
 MATH_REDIRECT (sqrt, "__ieee754_", MATH_REDIRECT_UNARY_ARGS)
 MATH_REDIRECT (ceil, "__", MATH_REDIRECT_UNARY_ARGS)
 MATH_REDIRECT (floor, "__", MATH_REDIRECT_UNARY_ARGS)
+MATH_REDIRECT (roundeven, "__", MATH_REDIRECT_UNARY_ARGS)
 MATH_REDIRECT (rint, "__", MATH_REDIRECT_UNARY_ARGS)
 MATH_REDIRECT (trunc, "__", MATH_REDIRECT_UNARY_ARGS)
 MATH_REDIRECT (round, "__", MATH_REDIRECT_UNARY_ARGS)
