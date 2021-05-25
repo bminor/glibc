@@ -179,8 +179,6 @@ $(objpfx)tst-glibcsyscalls.out: \
 # Separate object file for access to the constant from the UAPI header.
 $(objpfx)tst-sysconf-iov_max: $(objpfx)tst-sysconf-iov_max-uapi.o
 
-$(objpfx)tst-pkey: $(shared-thread-library)
-
 tests-special += $(objpfx)tst-mman-consts.out
 $(objpfx)tst-mman-consts.out: ../sysdeps/unix/sysv/linux/tst-mman-consts.py
 	$(sysdeps-linux-python) \
@@ -188,10 +186,6 @@ $(objpfx)tst-mman-consts.out: ../sysdeps/unix/sysv/linux/tst-mman-consts.py
 	    $(sysdeps-linux-python-cc) \
 	  < /dev/null > $@ 2>&1; $(evaluate-test)
 $(objpfx)tst-mman-consts.out: $(sysdeps-linux-python-deps)
-
-$(objpfx)tst-gettid: $(shared-thread-library)
-$(objpfx)tst-gettid-kill: $(shared-thread-library)
-$(objpfx)tst-tgkill: $(shared-thread-library)
 
 endif # $(subdir) == misc
 

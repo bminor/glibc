@@ -371,12 +371,6 @@ CPPFLAGS-tst-pthread-gdb-attach-static.c := \
 # were launched with an explicit ld.so invocation.
 tst-pthread-gdb-attach-no-pie = yes
 
-ifeq ($(build-shared),yes)
-tests-printers-libs := $(shared-thread-library)
-else
-tests-printers-libs := $(static-thread-library)
-endif
-
 tests += tst-cancelx7 tst-cancelx17
 
 ifeq ($(build-shared),yes)
@@ -502,7 +496,7 @@ $(objpfx)tst-stack3-mem.out: $(objpfx)tst-stack3.out
 	$(evaluate-test)
 generated += tst-stack3-mem.out tst-stack3.mtrace
 
-$(objpfx)tst-stack4: $(libdl) $(shared-thread-library)
+$(objpfx)tst-stack4: $(libdl)
 tst-stack4mod.sos=$(shell for i in 0 1 2 3 4 5 6 7 8 9 10 \
 				   11 12 13 14 15 16 17 18 19; do \
 			    for j in 0 1 2 3 4 5 6 7 8 9 10 \
@@ -515,19 +509,18 @@ $(tst-stack4mod.sos): $(objpfx)tst-stack4mod.so
 clean:
 	rm -f $(tst-stack4mod.sos)
 
-$(objpfx)tst-cleanup4: $(objpfx)tst-cleanup4aux.o $(shared-thread-library)
-$(objpfx)tst-cleanupx4: $(objpfx)tst-cleanupx4aux.o $(shared-thread-library)
+$(objpfx)tst-cleanup4: $(objpfx)tst-cleanup4aux.o
+$(objpfx)tst-cleanupx4: $(objpfx)tst-cleanupx4aux.o
 
-$(objpfx)tst-tls3: $(libdl) $(shared-thread-library)
+$(objpfx)tst-tls3: $(libdl)
 LDFLAGS-tst-tls3 = -rdynamic
 $(objpfx)tst-tls3.out: $(objpfx)tst-tls3mod.so
-$(objpfx)tst-tls3mod.so: $(shared-thread-library)
 
-$(objpfx)tst-tls3-malloc: $(libdl) $(shared-thread-library)
+$(objpfx)tst-tls3-malloc: $(libdl)
 LDFLAGS-tst-tls3-malloc = -rdynamic
 $(objpfx)tst-tls3-malloc.out: $(objpfx)tst-tls3mod.so
 
-$(objpfx)tst-tls5: $(objpfx)tst-tls5mod.so $(shared-thread-library)
+$(objpfx)tst-tls5: $(objpfx)tst-tls5mod.so
 LDFLAGS-tst-tls5 = -Wl,--no-as-needed
 LDFLAGS-tst-tls5mod.so = -Wl,-soname,tst-tls5mod.so
 
@@ -541,7 +534,7 @@ $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
 	$(evaluate-test)
 endif
 
-$(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
+$(objpfx)tst-dlsym1: $(libdl)
 
 ifeq (yes,$(build-shared))
 librt = $(common-objpfx)rt/librt.so

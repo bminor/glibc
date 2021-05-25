@@ -72,8 +72,6 @@ endif
 ifeq ($(mips-mode-switch),yes)
 ifeq ($(o32-fpabi),xx)
 tests += tst-mode-switch-1 tst-mode-switch-2 tst-mode-switch-3
-$(objpfx)tst-mode-switch-1: $(shared-thread-library)
-$(objpfx)tst-mode-switch-2: $(shared-thread-library)
 endif
 endif
 endif
