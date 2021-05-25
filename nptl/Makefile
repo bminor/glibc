@@ -204,11 +204,14 @@ routines = \
   unwind \
   vars \
 
-shared-only-routines = forward
 static-only-routines = pthread_atfork
-
 libpthread-routines = libpthread-compat
 libpthread-shared-only-routines = libpthread-compat
+
+# Pretend that libpthread.so is a linker script, so that the symbolic
+# link is not installed.
+install-lib-ldscripts = libpthread.so
+$(inst_libdir)/libpthread.so:
 
 # Since cancellation handling is in large parts handled using exceptions
 # we have to compile some files with exception handling enabled, some
@@ -373,8 +376,6 @@ tests-printers-libs := $(shared-thread-library)
 else
 tests-printers-libs := $(static-thread-library)
 endif
-
-LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete
 
 tests += tst-cancelx7 tst-cancelx17
 
@@ -548,35 +549,15 @@ else
 librt = $(common-objpfx)rt/librt.a
 endif
 
-# `make check' sometimes triggers a rebuild of librt.so using this Makefile,
-# which ignores librt's dependence on libpthread
-$(common-objpfx)rt/librt.so: $(shared-thread-library)
-
 $(objpfx)tst-cancel17: $(librt)
 $(objpfx)tst-cancelx17: $(librt)
 
 LDLIBS-tst-cancel24 = -Wl,--no-as-needed -lstdc++
 LDLIBS-tst-cancel24-static = $(LDLIBS-tst-cancel24)
 
-# Make sure we link with the thread library.
 ifeq ($(build-shared),yes)
-$(addprefix $(objpfx), \
-  $(filter-out $(tests-static) $(xtests-static) $(tests-reverse) \
-    $(tests-nolibpthread), \
-    $(tests) $(tests-internal) $(xtests) $(test-srcs) $(tests-container))): \
-	$(objpfx)libpthread.so
 $(objpfx)tst-unload: $(libdl)
-# $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
-# since otherwise libpthread.so comes before libc.so when linking.
-$(addprefix $(objpfx), $(tests-reverse)): \
-  $(objpfx)../libc.so $(objpfx)libpthread.so
-$(objpfx)../libc.so: $(common-objpfx)libc.so ;
-$(addprefix $(objpfx),$(tests-static) $(xtests-static)): $(objpfx)libpthread.a
-else
-$(addprefix $(objpfx),$(tests) $(test-srcs)): $(objpfx)libpthread.a
-endif
 
-ifeq ($(build-shared),yes)
 generated += multidir.mk tst-tls6.out
 endif
 

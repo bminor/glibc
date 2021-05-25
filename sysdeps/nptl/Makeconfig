@@ -21,7 +21,11 @@
 
 have-thread-library = yes
 
-shared-thread-library = $(common-objpfx)nptl/libpthread.so
-static-thread-library = $(common-objpfx)nptl/libpthread.a
+# The thread library is integrated.
+shared-thread-library =
+static-thread-library =
 
+# Some tests need this to load their own test objects, and system
+# libraries used by memusagestat need to link against the empty
+# libpthread.so.0, not the (potentially non-empty) system version.
 rpath-dirs += nptl
