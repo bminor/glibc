@@ -144,8 +144,13 @@ builddir=`dirname "$$0"`
 GCONV_PATH="$${builddir}/iconvdata"
 
 usage () {
-  echo "usage: $$0 [--tool=strace] PROGRAM [ARGUMENTS...]" 2>&1
-  echo "       $$0 --tool=valgrind PROGRAM [ARGUMENTS...]" 2>&1
+cat << EOF
+Usage: $$0 [OPTIONS] <program> [ARGUMENTS...]
+
+  --tool=TOOL  Run with the specified TOOL. It can be strace, valgrind or
+               container. The container will run within support/test-container.
+EOF
+
   exit 1
 }
 
