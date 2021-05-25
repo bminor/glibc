@@ -283,9 +283,6 @@ struct pthread
   /* Bit set if asynchronous cancellation mode is selected.  */
 #define CANCELTYPE_BIT		1
 #define CANCELTYPE_BITMASK	(0x01 << CANCELTYPE_BIT)
-  /* Bit set if canceling has been initiated.  */
-#define CANCELING_BIT		2
-#define CANCELING_BITMASK	(0x01 << CANCELING_BIT)
   /* Bit set if canceled.  */
 #define CANCELED_BIT		3
 #define CANCELED_BITMASK	(0x01 << CANCELED_BIT)

@@ -43,35 +43,18 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 
   struct pthread *self = THREAD_SELF;
 
-  int oldval = THREAD_GETMEM (self, cancelhandling);
-  while (1)
-    {
-      /* We are canceled now.  When canceled by another thread this flag
-	 is already set but if the signal is directly send (internally or
-	 from another process) is has to be done here.  */
-      int newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
+  int ch = atomic_load_relaxed (&self->cancelhandling);
+  /* Cancelation not enabled, not cancelled, or already exitting.  */
+  if ((ch & CANCELSTATE_BITMASK) != 0
+      || (ch & CANCELED_BITMASK) == 0
+      || (ch & EXITING_BITMASK) != 0)
+    return;
 
-      if (oldval == newval || (oldval & EXITING_BITMASK) != 0)
-	/* Already canceled or exiting.  */
-	break;
-
-      int curval = THREAD_ATOMIC_CMPXCHG_VAL (self, cancelhandling, newval,
-					      oldval);
-      if (curval == oldval)
-	{
-	  /* Set the return value.  */
-	  THREAD_SETMEM (self, result, PTHREAD_CANCELED);
-
-	  /* Make sure asynchronous cancellation is still enabled.  */
-	  if ((newval & CANCELTYPE_BITMASK) != 0)
-	    /* Run the registered destructors and terminate the thread.  */
-	    __do_cancel ();
-
-	  break;
-	}
-
-      oldval = curval;
-    }
+  /* Set the return value.  */
+  THREAD_SETMEM (self, result, PTHREAD_CANCELED);
+  /* Make sure asynchronous cancellation is still enabled.  */
+  if ((ch & CANCELTYPE_BITMASK) != 0)
+    __do_cancel ();
 }
 
 int
@@ -104,72 +87,34 @@ __pthread_cancel (pthread_t th)
 		    " must be installed for pthread_cancel to work\n");
   }
 #endif
-  int result = 0;
-  int oldval;
-  int newval;
-  do
+
+  int oldch = atomic_fetch_or_acquire (&pd->cancelhandling, CANCELED_BITMASK);
+  if ((oldch & CANCELED_BITMASK) != 0)
+    return 0;
+
+  if (pd == THREAD_SELF)
     {
-    again:
-      oldval = pd->cancelhandling;
-      newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
-
-      /* Avoid doing unnecessary work.  The atomic operation can
-	 potentially be expensive if the bug has to be locked and
-	 remote cache lines have to be invalidated.  */
-      if (oldval == newval)
-	break;
-
-      /* If the cancellation is handled asynchronously just send a
-	 signal.  We avoid this if possible since it's more
-	 expensive.  */
-      if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
-	{
-	  /* Mark the cancellation as "in progress".  */
-	  if (atomic_compare_and_exchange_bool_acq (&pd->cancelhandling,
-						    oldval | CANCELING_BITMASK,
-						    oldval))
-	    goto again;
-
-	  if (pd == THREAD_SELF)
-	    /* This is not merely an optimization: An application may
-	       call pthread_cancel (pthread_self ()) without calling
-	       pthread_create, so the signal handler may not have been
-	       set up for a self-cancel.  */
-	    {
-	      THREAD_SETMEM (pd, result, PTHREAD_CANCELED);
-	      if ((newval & CANCELTYPE_BITMASK) != 0)
-		__do_cancel ();
-	    }
-	  else
-	    {
-	      /* The cancellation handler will take care of marking the
-		 thread as canceled.  */
-	      pid_t pid = __getpid ();
-
-	      int val = INTERNAL_SYSCALL_CALL (tgkill, pid, pd->tid,
-					       SIGCANCEL);
-	      if (INTERNAL_SYSCALL_ERROR_P (val))
-		result = INTERNAL_SYSCALL_ERRNO (val);
-	    }
-
-	  break;
-	}
-
-	/* A single-threaded process should be able to kill itself, since
-	   there is nothing in the POSIX specification that says that it
-	   cannot.  So we set multiple_threads to true so that cancellation
-	   points get executed.  */
-	THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
+      /* A single-threaded process should be able to kill itself, since there
+	 is nothing in the POSIX specification that says that it cannot.  So
+	 we set multiple_threads to true so that cancellation points get
+	 executed.  */
+      THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
-	__libc_multiple_threads = 1;
+      __libc_multiple_threads = 1;
 #endif
-    }
-  /* Mark the thread as canceled.  This has to be done
-     atomically since other bits could be modified as well.  */
-  while (atomic_compare_and_exchange_bool_acq (&pd->cancelhandling, newval,
-					       oldval));
 
-  return result;
+      THREAD_SETMEM (pd, result, PTHREAD_CANCELED);
+      if ((oldch & CANCELSTATE_BITMASK) == 0
+	  && (oldch & CANCELTYPE_BITMASK) != 0)
+	__do_cancel ();
+      return 0;
+    }
+
+  pid_t pid = __getpid ();
+  int val = INTERNAL_SYSCALL_CALL (tgkill, pid, pd->tid, SIGCANCEL);
+  return INTERNAL_SYSCALL_ERROR_P (val)
+	 ? INTERNAL_SYSCALL_ERRNO (val)
+	 : 0;
 }
 versioned_symbol (libc, __pthread_cancel, pthread_cancel, GLIBC_2_34);
 

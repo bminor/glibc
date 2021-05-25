@@ -88,17 +88,5 @@ __pthread_disable_asynccancel (int oldtype)
       /* Prepare the next round.  */
       oldval = curval;
     }
-
-  /* We cannot return when we are being canceled.  Upon return the
-     thread might be things which would have to be undone.  The
-     following loop should loop until the cancellation signal is
-     delivered.  */
-  while (__builtin_expect ((newval & (CANCELING_BITMASK | CANCELED_BITMASK))
-			   == CANCELING_BITMASK, 0))
-    {
-      futex_wait_simple ((unsigned int *) &self->cancelhandling, newval,
-			 FUTEX_PRIVATE);
-      newval = THREAD_GETMEM (self, cancelhandling);
-    }
 }
 libc_hidden_def (__pthread_disable_asynccancel)
