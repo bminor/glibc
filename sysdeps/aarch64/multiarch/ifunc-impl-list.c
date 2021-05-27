@@ -37,7 +37,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   INIT_ARCH ();
 
-  /* Support sysdeps/aarch64/multiarch/memcpy.c and memmove.c.  */
+  /* Support sysdeps/aarch64/multiarch/memcpy.c, memmove.c and memset.c.  */
   IFUNC_IMPL (i, name, memcpy,
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_thunderx)
 	      IFUNC_IMPL_ADD (array, i, memcpy, !bti, __memcpy_thunderx2)
@@ -62,6 +62,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memset, (zva_size == 64), __memset_falkor)
 	      IFUNC_IMPL_ADD (array, i, memset, (zva_size == 64), __memset_emag)
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_kunpeng)
+#if HAVE_AARCH64_SVE_ASM
+	      IFUNC_IMPL_ADD (array, i, memset, sve, __memset_a64fx)
+#endif
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_generic))
   IFUNC_IMPL (i, name, memchr,
 	      IFUNC_IMPL_ADD (array, i, memchr, !mte, __memchr_nosimd)
