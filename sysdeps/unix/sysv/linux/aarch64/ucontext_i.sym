@@ -18,6 +18,9 @@ RT_SIGFRAME_UCONTEXT		rt_sigframe (uc)
 
 RT_SIGFRAME_SIZE		sizeof (struct kernel_rt_sigframe)
 FPSIMD_CONTEXT_SIZE             sizeof (struct fpsimd_context)
+#ifdef __CHERI_PURE_CAPABILITY__
+MORELLO_CONTEXT_SIZE		sizeof (struct morello_context)
+#endif
 
 #define ucontext(member)	offsetof (ucontext_t, member)
 #define stack(member)		ucontext (uc_stack.member)
@@ -53,3 +56,15 @@ oMAGIC                          aarch64_ctx (magic)
 oSIZE                           aarch64_ctx (size)
 
 FPSIMD_MAGIC
+
+#ifdef __CHERI_PURE_CAPABILITY__
+#define morello_context(member) offsetof (struct morello_context, member)
+
+oCHEAD				morello_context (head)
+oC0				morello_context (cregs)
+oCSP				morello_context (csp)
+oRCSP				morello_context (rcsp)
+oPCC				morello_context (pcc)
+
+MORELLO_MAGIC
+#endif

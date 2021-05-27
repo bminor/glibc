@@ -33,3 +33,8 @@ typedef elf_greg_t elf_gregset_t[ELF_NGREG];
 
 /* Register set for the floating-point registers.  */
 typedef struct user_fpsimd_struct elf_fpregset_t;
+
+#ifdef __CHERI_PURE_CAPABILITY__
+/* Register set for the capability registers.  */
+typedef struct user_morello_struct elf_cregset_t;
+#endif

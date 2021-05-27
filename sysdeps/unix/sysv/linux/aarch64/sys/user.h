@@ -34,4 +34,14 @@ struct user_fpsimd_struct
   unsigned int fpcr;
 };
 
+# ifdef __CHERI_PURE_CAPABILITY__
+struct user_morello_struct
+{
+  __uintcap_t cregs[31];
+  __uintcap_t csp;
+  __uintcap_t rcsp;
+  __uintcap_t pcc;
+};
+# endif
+
 #endif

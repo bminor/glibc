@@ -43,6 +43,10 @@ typedef elf_gregset_t gregset_t;
 
 /* Structure to describe FPU registers.  */
 typedef elf_fpregset_t	fpregset_t;
+# ifdef __CHERI_PURE_CAPABILITY__
+/* Structure to describe capability registers.  */
+typedef elf_cregset_t cregset_t;
+# endif
 #endif
 
 /* Context to describe whole processor state.  This only describes
