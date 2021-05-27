@@ -83,9 +83,12 @@ late_init (void)
       (void) __libc_sigaction (SIGCANCEL, &sa, NULL);
     }
 
-  /* Install the handle to change the threads' uid/gid.  */
+  /* Install the handle to change the threads' uid/gid.  Use
+     SA_ONSTACK because the signal may be sent to threads that are
+     running with custom stacks.  (This is less likely for
+     SIGCANCEL.)  */
   sa.sa_sigaction = __nptl_setxid_sighandler;
-  sa.sa_flags = SA_SIGINFO | SA_RESTART;
+  sa.sa_flags = SA_ONSTACK | SA_SIGINFO | SA_RESTART;
   (void) __libc_sigaction (SIGSETXID, &sa, NULL);
 
   /* The parent process might have left the signals blocked.  Just in
