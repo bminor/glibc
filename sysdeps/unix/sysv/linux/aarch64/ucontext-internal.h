@@ -23,6 +23,11 @@
 /* Size of an X regiser in bytes. */
 #define SZREG                8
 
+#ifdef __CHERI_PURE_CAPABILITY__
+/* Size of a C register in bytes. */
+# define SZCREG             16
+#endif
+
 /* Size of a V register in bytes. */
 #define SZVREG              16
 
