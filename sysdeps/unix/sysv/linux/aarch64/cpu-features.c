@@ -46,6 +46,7 @@ static struct cpu_list cpu_list[] = {
       {"ares",		 0x411FD0C0},
       {"emag",		 0x503F0001},
       {"kunpeng920", 	 0x481FD010},
+      {"a64fx",		 0x460F0010},
       {"generic", 	 0x0}
 };
 
@@ -116,4 +117,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 	     (PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_ASYNC | MTE_ALLOWED_TAGS),
 	     0, 0, 0);
 #endif
+
+  /* Check if SVE is supported.  */
+  cpu_features->sve = GLRO (dl_hwcap) & HWCAP_SVE;
 }

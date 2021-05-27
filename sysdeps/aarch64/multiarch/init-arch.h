@@ -33,4 +33,6 @@
   bool __attribute__((unused)) bti =					      \
     HAVE_AARCH64_BTI && GLRO(dl_aarch64_cpu_features).bti;		      \
   bool __attribute__((unused)) mte =					      \
-    MTE_ENABLED ();
+    MTE_ENABLED ();							      \
+  bool __attribute__((unused)) sve =					      \
+    GLRO(dl_aarch64_cpu_features).sve;
