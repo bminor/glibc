@@ -439,13 +439,6 @@ start_thread (void *arg)
   /* Clean up any state libc stored in thread-local variables.  */
   __libc_thread_freeres ();
 
-  /* If this is the last thread we terminate the process now.  We
-     do not notify the debugger, it might just irritate it if there
-     is no thread left.  */
-  if (__glibc_unlikely (atomic_decrement_and_test (&__nptl_nthreads)))
-    /* This was the last thread.  */
-    exit (0);
-
   /* Report the death of the thread if this is wanted.  */
   if (__glibc_unlikely (pd->report_events))
     {
@@ -479,6 +472,10 @@ start_thread (void *arg)
      the event-reporting breakpoint, so that td_thr_get_info on us while at
      the breakpoint reports TD_THR_RUN state rather than TD_THR_ZOMBIE.  */
   atomic_bit_set (&pd->cancelhandling, EXITING_BIT);
+
+  if (__glibc_unlikely (atomic_decrement_and_test (&__nptl_nthreads)))
+    /* This was the last thread.  */
+    exit (0);
 
 #ifndef __ASSUME_SET_ROBUST_LIST
   /* If this thread has any robust mutexes locked, handle them now.  */
