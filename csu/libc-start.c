@@ -30,7 +30,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-#include <exit-thread.h>
 #include <libc-diag.h>
 #include <libc-internal.h>
 #include <elf/libc-early-init.h>

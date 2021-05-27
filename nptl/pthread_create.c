@@ -30,7 +30,6 @@
 #include <libc-internal.h>
 #include <resolv.h>
 #include <kernel-features.h>
-#include <exit-thread.h>
 #include <default-sched.h>
 #include <futex-internal.h>
 #include <tls-setup.h>
@@ -575,7 +574,8 @@ start_thread (void *arg)
 
      The exit code is zero since in case all threads exit by calling
      'pthread_exit' the exit status must be 0 (zero).  */
-  __exit_thread ();
+  while (1)
+    INTERNAL_SYSCALL_CALL (exit, 0);
 
   /* NOTREACHED */
 }

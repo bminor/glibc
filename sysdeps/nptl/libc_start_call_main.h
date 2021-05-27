@@ -67,7 +67,8 @@ __libc_start_call_main (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
       result = 0;
       if (! atomic_decrement_and_test (&__nptl_nthreads))
         /* Not much left to do but to exit the thread, not the process.  */
-        __exit_thread ();
+	while (1)
+	  INTERNAL_SYSCALL_CALL (exit, 0);
     }
 
   exit (result);
