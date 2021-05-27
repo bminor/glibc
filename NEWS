@@ -13,6 +13,12 @@ Major new features:
   a dump of information related to IFUNC resolver operation and
   glibc-hwcaps subdirectory selection.
 
+Security related changes:
+
+  CVE-2021-33574: The mq_notify function has a potential use-after-free
+  issue when using a notification type of SIGEV_THREAD and a thread
+  attribute with a non-default affinity mask.
+
 The following bugs are resolved with this release:
 
   [15271] dlfcn function failure after dlmopen terminates process
