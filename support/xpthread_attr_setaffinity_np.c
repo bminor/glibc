@@ -18,6 +18,7 @@
 
 #include <support/xthread.h>
 
+#ifdef __linux__
 void
 xpthread_attr_setaffinity_np (pthread_attr_t *attr,
                               size_t cpusetsize, const cpu_set_t *cpuset)
@@ -26,3 +27,4 @@ xpthread_attr_setaffinity_np (pthread_attr_t *attr,
 			 pthread_attr_setaffinity_np (attr, cpusetsize,
 						      cpuset));
 }
+#endif
