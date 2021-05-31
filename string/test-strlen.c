@@ -79,7 +79,7 @@ do_test (size_t align, size_t len)
 {
   size_t i;
 
-  align &= 63;
+  align &= (getpagesize () / sizeof (CHAR)) - 1;
   if (align + sizeof (CHAR) * len >= page_size)
     return;
 
@@ -158,6 +158,19 @@ test_main (void)
       do_test (sizeof (CHAR) * 7, 1 << i);
       do_test (sizeof (CHAR) * i, 1 << i);
       do_test (sizeof (CHAR) * i, (size_t)((1 << i) / 1.5));
+    }
+
+  /* Test strings near page boundary */
+
+  size_t maxlength = 64 / sizeof (CHAR) - 1;
+  size_t pagesize = getpagesize () / sizeof (CHAR);
+
+  for (i = maxlength ; i > 1; --i)
+    {
+      /* String stays on the same page.  */
+      do_test (pagesize - i, i - 1);
+      /* String crosses page boundary.  */
+      do_test (pagesize - i, maxlength);
     }
 
   do_random_tests ();
