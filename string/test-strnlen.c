@@ -230,7 +230,7 @@ do_page_2_tests (void)
 int
 test_main (void)
 {
-  size_t i;
+  size_t i, length, char_per_page;
 
   test_init ();
 
@@ -270,6 +270,15 @@ test_main (void)
       do_test (0, 1 << i, 5000, BIG_CHAR);
       do_test (1, 1 << i, 5000, BIG_CHAR);
     }
+
+  char_per_page = getpagesize () / sizeof (CHAR);
+
+  for (i = 0; i <= 127; i++)
+    for (length = i; length <= 512; length++)
+      {
+	do_test (i, length, 512, BIG_CHAR);
+	do_test (char_per_page - i, length, 512, BIG_CHAR);
+      }
 
   do_random_tests ();
   do_page_tests ();
