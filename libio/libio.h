@@ -254,8 +254,6 @@ weak_extern (_IO_stdin_used);
        __result = _IO_fwide (__fp, __result);				      \
      __result; })
 
-extern int _IO_vfwscanf (FILE * __restrict, const wchar_t * __restrict,
-			 __gnuc_va_list, int *__restrict);
 extern __ssize_t _IO_wpadn (FILE *, wint_t, __ssize_t);
 extern void _IO_free_wbackup_area (FILE *) __THROW;
 

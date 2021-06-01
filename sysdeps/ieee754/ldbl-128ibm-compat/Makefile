@@ -325,7 +325,6 @@ ldbl-ibm128-files := $(objpfx)test-%-ibm128^ \
 		     $(objpfx)iovsscanf^ \
 		     $(objpfx)iovswscanf^ \
 		     $(objpfx)iovfscanf^ \
-		     $(objpfx)iovfwscanf^ \
 		     $(objpfx)mpn2ldbl^ \
 		     $(objpfx)ldbl2mpn^ \
 		     $(objpfx)strtold_nan^ \
