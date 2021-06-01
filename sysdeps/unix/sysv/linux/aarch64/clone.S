@@ -47,6 +47,8 @@ ENTRY(__clone)
 	/* Sanity check args.  */
 	mov	x0, #-EINVAL
 	cbz	x10, .Lsyscall_error
+	/* Align sp.  */
+	and	x1, x1, -16
 	cbz	x1, .Lsyscall_error
 
 	/* Do the system call.  */
