@@ -25,6 +25,12 @@ Major new features:
 
 * The ISO C2X function timespec_getres has been added.
 
+* The feature test macro __STDC_WANT_IEC_60559_EXT__, from draft ISO
+  C2X, is supported to enable declarations of functions defined in Annex F
+  of C2X.  Those declarations are also enabled when
+  __STDC_WANT_IEC_60559_BFP_EXT__, as specified in TS 18661-1, is
+  defined, and when _GNU_SOURCE is defined.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs

@@ -215,6 +215,13 @@ enabled.  Only some of the features from this TS are supported by
 @theglibc{}.
 @end defvr
 
+@defvr Macro __STDC_WANT_IEC_60559_EXT__
+@standards{ISO, (none)}
+If you define this macro, ISO C2X features defined in Annex F of that
+standard are enabled.  This affects declarations of the
+@code{totalorder} functions and functions related to NaN payloads.
+@end defvr
+
 @defvr Macro _GNU_SOURCE
 @standards{GNU, (none)}
 If you define this macro, everything is included: @w{ISO C89}, @w{ISO
