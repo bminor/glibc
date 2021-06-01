@@ -258,7 +258,14 @@ mq_notify (mqd_t mqdes, const struct sigevent *notification)
       if (data.attr == NULL)
 	return -1;
 
-      __pthread_attr_copy (data.attr, notification->sigev_notify_attributes);
+      int ret = __pthread_attr_copy (data.attr,
+				     notification->sigev_notify_attributes);
+      if (ret != 0)
+	{
+	  free (data.attr);
+	  __set_errno (ret);
+	  return -1;
+	}
     }
 
   /* Construct the new request.  */
@@ -271,7 +278,7 @@ mq_notify (mqd_t mqdes, const struct sigevent *notification)
   int retval = INLINE_SYSCALL (mq_notify, 2, mqdes, &se);
 
   /* If it failed, free the allocated memory.  */
-  if (__glibc_unlikely (retval != 0))
+  if (retval != 0 && data.attr != NULL)
     {
       pthread_attr_destroy (data.attr);
       free (data.attr);
