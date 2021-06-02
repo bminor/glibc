@@ -95,10 +95,7 @@ function ord(c) {
 
 
 function closeversion(name, oldname) {
-  if (firstinfile) {
-    printf("  local:\n    *;\n") > outfile;
-    firstinfile = 0;
-  }
+  printf("  local:\n    *;\n") > outfile;
   # This version inherits from the last one only if they
   # have the same nonnumeric prefix, i.e. GLIBC_x.y and GLIBC_x.z
   # or FOO_x and FOO_y but not GLIBC_x and FOO_y.
@@ -157,7 +154,6 @@ END {
       oldlib = $1;
       real_outfile = buildroot oldlib ".map";
       outfile = real_outfile "T";
-      firstinfile = 1;
       veryoldver = "";
       printf(" %s.map", oldlib);
     }
