@@ -1477,7 +1477,7 @@ checked_request2size (size_t req, size_t *sz) __nonnull (1)
     chunksize (p) - CHUNK_HDR_SZ :                                    \
     chunksize (p) - CHUNK_HDR_SZ + (chunk_is_mmapped (p) ? 0 : SIZE_SZ))
 
-/* If memory tagging is enabled the layout changes to accomodate the granule
+/* If memory tagging is enabled the layout changes to accommodate the granule
    size, this is wasteful for small allocations so not done by default.
    Both the chunk header and user data has to be granule aligned.  */
 _Static_assert (__MTAG_GRANULE_SIZE <= CHUNK_HDR_SZ,

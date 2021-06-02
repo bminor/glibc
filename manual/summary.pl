@@ -374,7 +374,7 @@ outside @*x lists ("Misplaced @standardsx").  "Spurious @standardsx"
 refers to otherwise valid @standardsx macros that were not matched to
 an element in an @*x list.  "Invalid syntax" means just that.
 
-The syntax of @standards annotations is designed to accomodate
+The syntax of @standards annotations is designed to accommodate
 multiple header and standards annotations, as necessary.
 
 Examples:
