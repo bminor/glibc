@@ -656,6 +656,7 @@ GLIBC_2.33 dirfd F
 GLIBC_2.33 dirname F
 GLIBC_2.33 div F
 GLIBC_2.33 dl_iterate_phdr F
+GLIBC_2.33 dlerror F
 GLIBC_2.33 dngettext F
 GLIBC_2.33 dprintf F
 GLIBC_2.33 drand48 F
@@ -2103,6 +2104,7 @@ GLIBC_2.34 cnd_init F
 GLIBC_2.34 cnd_signal F
 GLIBC_2.34 cnd_timedwait F
 GLIBC_2.34 cnd_wait F
+GLIBC_2.34 dlerror F
 GLIBC_2.34 execveat F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F

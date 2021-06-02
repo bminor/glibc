@@ -1,6 +1,5 @@
 GLIBC_2.2 dladdr F
 GLIBC_2.2 dlclose F
-GLIBC_2.2 dlerror F
 GLIBC_2.2 dlopen F
 GLIBC_2.2 dlsym F
 GLIBC_2.2 dlvsym F

@@ -741,6 +741,7 @@ GLIBC_2.2.6 dirfd F
 GLIBC_2.2.6 dirname F
 GLIBC_2.2.6 div F
 GLIBC_2.2.6 dl_iterate_phdr F
+GLIBC_2.2.6 dlerror F
 GLIBC_2.2.6 dngettext F
 GLIBC_2.2.6 dprintf F
 GLIBC_2.2.6 drand48 F
@@ -2207,6 +2208,7 @@ GLIBC_2.33 stat64 F
 GLIBC_2.34 __isnanf128 F
 GLIBC_2.34 __libc_start_main F
 GLIBC_2.34 _hurd_libc_proc_init F
+GLIBC_2.34 dlerror F
 GLIBC_2.34 execveat F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.4 __confstr_chk F

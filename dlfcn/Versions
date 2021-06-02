@@ -1,11 +1,22 @@
 libc {
+  GLIBC_2.0 {
+    dlerror;
+  }
+  GLIBC_2.34 {
+    dlerror;
+  }
   GLIBC_PRIVATE {
     __libc_dlerror_result;
+    _dlerror_run;
+    _dlfcn_hook;
   }
 }
 libdl {
   GLIBC_2.0 {
-    dladdr; dlclose; dlerror; dlopen; dlsym;
+    dladdr;
+    dlclose;
+    dlopen;
+    dlsym;
   }
   GLIBC_2.1 {
     dlopen; dlvsym;
@@ -15,8 +26,5 @@ libdl {
   }
   GLIBC_2.3.4 {
     dlmopen;
-  }
-  GLIBC_PRIVATE {
-    _dlfcn_hook;
   }
 }

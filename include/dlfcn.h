@@ -96,8 +96,8 @@ extern void *_dl_vsym (void *handle, const char *name, const char *version,
    _dl_catch_error.  Returns zero for success, nonzero for failure; and
    arranges for `dlerror' to return the error details.
    ARGS is passed as argument to OPERATE.  */
-extern int _dlerror_run (void (*operate) (void *), void *args)
-    attribute_hidden;
+extern int _dlerror_run (void (*operate) (void *), void *args);
+libc_hidden_proto (_dlerror_run)
 
 #ifdef SHARED
 # define DL_CALLER_DECL /* Nothing */
@@ -124,7 +124,7 @@ struct dlfcn_hook
 };
 
 extern struct dlfcn_hook *_dlfcn_hook;
-libdl_hidden_proto (_dlfcn_hook)
+libc_hidden_proto (_dlfcn_hook)
 
 extern void *__dlopen (const char *file, int mode DL_CALLER_DECL)
      attribute_hidden;
@@ -136,8 +136,6 @@ extern void *__dlsym (void *handle, const char *name DL_CALLER_DECL)
      attribute_hidden;
 extern void *__dlvsym (void *handle, const char *name, const char *version
 		       DL_CALLER_DECL)
-     attribute_hidden;
-extern char *__dlerror (void)
      attribute_hidden;
 extern int __dladdr (const void *address, Dl_info *info)
      attribute_hidden;
