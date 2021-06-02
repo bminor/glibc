@@ -21,22 +21,20 @@ libc {
     scandir64;
   }
   GLIBC_2.3.3 {
-    posix_fadvise64; posix_fallocate64;
     setcontext; getcontext; swapcontext; makecontext;
   }
   GLIBC_2.3.4 {
-    setcontext; getcontext; swapcontext; makecontext;
+    getcontext;
+    longjmp;
+    makecontext;
+    setcontext;
+    siglongjmp;
+    swapcontext;
   }
   GLIBC_2.11 {
     fallocate64;
   }
   GLIBC_2.17 {
     __ppc_get_timebase_freq;
-  }
-}
-
-libpthread {
-  GLIBC_2.3.4 {
-    longjmp; siglongjmp;
   }
 }

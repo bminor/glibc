@@ -138,6 +138,10 @@ libc {
   GLIBC_2.11 {
     execvpe;
   }
+  GLIBC_2.15 {
+    posix_spawn;
+    posix_spawnp;
+  }
   GLIBC_2.27 {
     glob; glob64;
   }

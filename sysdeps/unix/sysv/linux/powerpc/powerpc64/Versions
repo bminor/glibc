@@ -16,7 +16,9 @@ libc {
   }
   GLIBC_2.3.4 {
     getcontext;
+    longjmp;
     setcontext;
+    siglongjmp;
     swapcontext;
   }
   GLIBC_2.17 {
@@ -29,11 +31,5 @@ librt {
     # Changed timer_t.
     timer_create; timer_delete; timer_getoverrun; timer_gettime;
     timer_settime;
-  }
-}
-
-libpthread {
-  GLIBC_2.3.4 {
-    longjmp; siglongjmp;
   }
 }

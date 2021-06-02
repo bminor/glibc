@@ -54,6 +54,8 @@ libc {
     gethostbyname_r; gethostent_r; getnetbyaddr_r; getnetbyname_r;
     getnetent_r; getnetgrent_r; getprotobyname_r; getprotobynumber_r;
     getprotoent_r; getservbyname_r;
+    getservbyport_r;
+    getservent_r;
   }
   GLIBC_2.2 {
     # i*

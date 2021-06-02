@@ -175,6 +175,7 @@ libc {
   GLIBC_2.3.4 {
     pthread_attr_getaffinity_np;
     pthread_attr_setaffinity_np;
+    pthread_getaffinity_np;
     pthread_setaffinity_np;
     pthread_setschedprio;
   }
@@ -258,6 +259,7 @@ libc {
     __pthread_register_cancel_defer;
     __pthread_unregister_cancel;
     __pthread_unregister_cancel_restore;
+    __pthread_unwind_next;
     call_once;
     cnd_broadcast;
     cnd_destroy;
@@ -294,6 +296,7 @@ libc {
     pthread_condattr_getpshared;
     pthread_condattr_setclock;
     pthread_condattr_setpshared;
+    pthread_create;
     pthread_detach;
     pthread_getattr_default_np;
     pthread_getconcurrency;
@@ -308,9 +311,12 @@ libc {
     pthread_mutex_consistent;
     pthread_mutex_getprioceiling;
     pthread_mutex_setprioceiling;
+    pthread_mutex_timedlock;
+    pthread_mutex_trylock;
     pthread_mutexattr_destroy;
     pthread_mutexattr_getprioceiling;
     pthread_mutexattr_getprotocol;
+    pthread_mutexattr_getpshared;
     pthread_mutexattr_getrobust;
     pthread_mutexattr_gettype;
     pthread_mutexattr_init;
@@ -323,6 +329,7 @@ libc {
     pthread_rwlock_clockrdlock;
     pthread_rwlock_clockwrlock;
     pthread_rwlock_destroy;
+    pthread_rwlock_init;
     pthread_rwlock_rdlock;
     pthread_rwlock_timedrdlock;
     pthread_rwlock_timedwrlock;
@@ -336,6 +343,7 @@ libc {
     pthread_rwlockattr_init;
     pthread_rwlockattr_setkind_np;
     pthread_rwlockattr_setpshared;
+    pthread_setaffinity_np;
     pthread_setattr_default_np;
     pthread_setconcurrency;
     pthread_setname_np;

@@ -129,6 +129,7 @@ libc {
     copy_file_range;
   }
   GLIBC_2.28 {
+    fcntl;
     fcntl64;
     statx;
   }

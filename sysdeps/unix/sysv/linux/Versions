@@ -86,6 +86,16 @@ libc {
 
     # ipc ctl interface change.
     semctl; shmctl; msgctl;
+
+    # Old symbol versions from libpthread.
+    __pread64;
+    __pwrite64;
+    lseek64;
+    open64;
+    pread;
+    pread64;
+    pwrite;
+    pwrite64;
   }
   GLIBC_2.2.1 {
     # p*
@@ -102,7 +112,14 @@ libc {
     epoll_create; epoll_ctl; epoll_wait;
   }
   GLIBC_2.3.3 {
-    gnu_dev_major; gnu_dev_minor; gnu_dev_makedev;
+    _sys_siglist;
+    gnu_dev_major;
+    gnu_dev_makedev;
+    gnu_dev_minor;
+    posix_fadvise64;
+    posix_fallocate64;
+    sys_sigabbrev;
+    sys_siglist;
   }
   GLIBC_2.3.4 {
     sched_getaffinity; sched_setaffinity;

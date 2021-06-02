@@ -33,10 +33,6 @@ libc {
     # v*
     versionsort64;
   }
-  GLIBC_2.3.3 {
-    # p*
-    posix_fadvise64; posix_fallocate64;
-  }
   GLIBC_2.3.4 {
     # v*
     vm86;

@@ -7,4 +7,8 @@ libc {
   GLIBC_2.2.6 {
     ioperm;
   }
+  GLIBC_2.3.3 {
+    posix_fadvise64;
+    posix_fallocate64;
+  }
 }

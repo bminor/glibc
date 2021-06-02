@@ -21,6 +21,11 @@ libc {
     # _*
     _test_and_set;
   }
+  GLIBC_2.3.3 {
+    # Changed PTHREAD_STACK_MIN.
+    pthread_attr_setstack;
+    pthread_attr_setstacksize;
+  }
   GLIBC_2.11 {
     fallocate64;
   }

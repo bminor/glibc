@@ -8,6 +8,11 @@ libc {
   GLIBC_2.3 {
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
+  GLIBC_2.3.3 {
+    # Changed PTHREAD_STACK_MIN.
+    pthread_attr_setstack;
+    pthread_attr_setstacksize;
+  }
   GLIBC_2.4 {
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
@@ -22,13 +27,6 @@ libc {
   GLIBC_PRIVATE {
     # nptl/pthread_cond_timedwait.c uses INTERNAL_VSYSCALL(clock_gettime).
     __vdso_clock_gettime;
-  }
-}
-
-libpthread {
-  GLIBC_2.3.3 {
-    # Changed PTHREAD_STACK_MIN.
-    pthread_attr_setstack; pthread_attr_setstacksize;
   }
 }
 

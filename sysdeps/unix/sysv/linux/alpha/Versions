@@ -64,6 +64,11 @@ libc {
   GLIBC_2.3 {
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
+  GLIBC_2.3.3 {
+    # Changed PTHREAD_STACK_MIN.
+    pthread_attr_setstack;
+    pthread_attr_setstacksize;
+  }
   GLIBC_2.4 {
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
@@ -83,12 +88,6 @@ libc {
 ld {
   GLIBC_PRIVATE {
     __libc_alpha_cache_shape;
-  }
-}
-libpthread {
-  GLIBC_2.3.3 {
-    # Changed PTHREAD_STACK_MIN.
-    pthread_attr_setstack; pthread_attr_setstacksize;
   }
 }
 librt {
