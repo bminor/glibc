@@ -1,3 +1,4 @@
+!libc_pre_versions
 libc {
   GLIBC_2.1 {
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;

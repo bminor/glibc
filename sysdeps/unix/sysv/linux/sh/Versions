@@ -1,3 +1,4 @@
+!libc_pre_versions
 libc {
   GLIBC_2.2 {
     # functions used in other libraries
