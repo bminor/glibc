@@ -132,8 +132,7 @@ libc_hidden_proto (_dlfcn_hook)
    libraries.  Internal calls in glibc should use the __libc_dl*
    functions defined in elf/dl-libc.c instead.  */
 
-extern void *__dlopen (const char *file, int mode DL_CALLER_DECL)
-     attribute_hidden;
+extern void *__dlopen (const char *file, int mode, void *caller);
 extern void *__dlmopen (Lmid_t nsid, const char *file, int mode,
 			void *dl_caller);
 extern int __dlclose (void *handle);

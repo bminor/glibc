@@ -728,6 +728,7 @@ GLIBC_2.16 dlclose F
 GLIBC_2.16 dlerror F
 GLIBC_2.16 dlinfo F
 GLIBC_2.16 dlmopen F
+GLIBC_2.16 dlopen F
 GLIBC_2.16 dlsym F
 GLIBC_2.16 dlvsym F
 GLIBC_2.16 dngettext F
@@ -2371,6 +2372,7 @@ GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
 GLIBC_2.34 dlinfo F
 GLIBC_2.34 dlmopen F
+GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F

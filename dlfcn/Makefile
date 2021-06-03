@@ -21,8 +21,7 @@ include ../Makeconfig
 
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
-libdl-routines	:= dlopen \
-		   dlfcn
+libdl-routines	:= dlfcn
 routines	:= $(patsubst %,s%,$(filter-out dlfcn,$(libdl-routines)))
 elide-routines.os := $(routines)
 routines += \
@@ -32,6 +31,7 @@ routines += \
   dlerror \
   dlinfo \
   dlmopen \
+  dlopen \
   dlsym \
   dlvsym \
   libc_dlerror_result \
@@ -39,8 +39,8 @@ routines += \
 extra-libs-others := libdl
 
 ifeq ($(build-shared),yes)
-libdl-routines	+= dlopenold
-libdl-shared-only-routines := dlopenold dlfcn
+routines += dlopenold
+shared-only-routines := dlopenold dlfcn
 endif
 
 ifeq (yes,$(build-shared))

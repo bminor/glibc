@@ -397,6 +397,7 @@ GLIBC_2.0 div F
 GLIBC_2.0 dladdr F
 GLIBC_2.0 dlclose F
 GLIBC_2.0 dlerror F
+GLIBC_2.0 dlopen F
 GLIBC_2.0 dlsym F
 GLIBC_2.0 dprintf F
 GLIBC_2.0 drand48 F
@@ -1680,6 +1681,7 @@ GLIBC_2.2 clock_settime F
 GLIBC_2.2 creat64 F
 GLIBC_2.2 dcngettext F
 GLIBC_2.2 des_setparity F
+GLIBC_2.2 dlopen F
 GLIBC_2.2 dlvsym F
 GLIBC_2.2 dngettext F
 GLIBC_2.2 ecb_crypt F
@@ -2344,6 +2346,7 @@ GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
 GLIBC_2.34 dlinfo F
 GLIBC_2.34 dlmopen F
+GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F

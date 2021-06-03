@@ -21,17 +21,7 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-
-#if !defined SHARED && IS_IN (libdl)
-
-void *
-dlopen (const char *file, int mode)
-{
-  return __dlopen (file, mode, RETURN_ADDRESS (0));
-}
-static_link_warning (dlopen)
-
-#else
+#include <shlib-compat.h>
 
 struct dlopen_args
 {
@@ -46,11 +36,11 @@ struct dlopen_args
 
 
 /* Non-shared code has no support for multiple namespaces.  */
-# ifdef SHARED
-#  define NS __LM_ID_CALLER
-# else
-#  define NS LM_ID_BASE
-# endif
+#ifdef SHARED
+# define NS __LM_ID_CALLER
+#else
+# define NS LM_ID_BASE
+#endif
 
 
 static void
@@ -66,38 +56,54 @@ dlopen_doit (void *a)
   args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
 			     args->caller,
 			     args->file == NULL ? LM_ID_BASE : NS,
-			     __dlfcn_argc, __dlfcn_argv, __environ);
+			     __libc_argc, __libc_argv, __environ);
 }
 
 
-void *
-__dlopen (const char *file, int mode DL_CALLER_DECL)
+static void *
+dlopen_implementation (const char *file, int mode, void *dl_caller)
 {
-# ifdef SHARED
-  if (!rtld_active ())
-    return _dlfcn_hook->dlopen (file, mode, DL_CALLER);
-# endif
-
   struct dlopen_args args;
   args.file = file;
   args.mode = mode;
-  args.caller = DL_CALLER;
+  args.caller = dl_caller;
 
-# ifdef SHARED
   return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
-# else
-  if (_dlerror_run (dlopen_doit, &args))
-    return NULL;
-
-  __libc_register_dl_open_hook ((struct link_map *) args.new);
-  __libc_register_dlfcn_hook ((struct link_map *) args.new);
-
-  return args.new;
-# endif
 }
-# ifdef SHARED
-#  include <shlib-compat.h>
-strong_alias (__dlopen, __dlopen_check)
-versioned_symbol (libdl, __dlopen_check, dlopen, GLIBC_2_1);
+
+#ifdef SHARED
+void *
+___dlopen (const char *file, int mode)
+{
+  if (!rtld_active ())
+    return _dlfcn_hook->dlopen (file, mode, RETURN_ADDRESS (0));
+  else
+    return dlopen_implementation (file, mode, RETURN_ADDRESS (0));
+}
+versioned_symbol (libc, ___dlopen, dlopen, GLIBC_2_34);
+
+# if OTHER_SHLIB_COMPAT (libdl, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libdl, ___dlopen, dlopen, GLIBC_2_1);
 # endif
-#endif
+#else /* !SHARED */
+/* Also used with _dlfcn_hook.  */
+void *
+__dlopen (const char *file, int mode, void *dl_caller)
+{
+  return dlopen_implementation (file, mode, RETURN_ADDRESS (0));
+}
+
+void *
+___dlopen (const char *file, int mode)
+{
+  struct link_map *l = __dlopen (file, mode, RETURN_ADDRESS (0));
+  if (l != NULL)
+    {
+      __libc_register_dl_open_hook (l);
+      __libc_register_dlfcn_hook (l);
+    }
+  return l;
+}
+weak_alias (___dlopen, dlopen)
+static_link_warning (dlopen)
+#endif /* !SHARED */

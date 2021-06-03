@@ -1,7 +1,9 @@
 GLIBC_2.0 dladdr F
 GLIBC_2.0 dlclose F
 GLIBC_2.0 dlerror F
+GLIBC_2.0 dlopen F
 GLIBC_2.0 dlsym F
+GLIBC_2.1 dlopen F
 GLIBC_2.1 dlvsym F
 GLIBC_2.10 __cxa_at_quick_exit F
 GLIBC_2.10 __posix_getopt F
@@ -2252,6 +2254,7 @@ GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
 GLIBC_2.34 dlinfo F
 GLIBC_2.34 dlmopen F
+GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
