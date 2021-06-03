@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gnu/lib-names.h>
+#include <first-versions.h>
 
 static int
 do_test (void)
@@ -115,9 +116,16 @@ do_test (void)
       exit (1);
     }
 
-  if (dlvsym (handle2, "_dlfcn_hook", "GLIBC_PRIVATE") == NULL)
+  /* _exit is very unlikely to receive a second symbol version.  */
+  void *exit_ptr = dlvsym (handle2, "_exit", FIRST_VERSION_libc__exit_STRING);
+  if (exit_ptr == NULL)
     {
       printf ("dlvsym: %s\n", dlerror ());
+      exit (1);
+    }
+  if (exit_ptr != dlsym (handle2, "_exit"))
+    {
+      printf ("dlvsym for _exit does not match dlsym\n");
       exit (1);
     }
 
