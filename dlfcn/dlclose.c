@@ -25,7 +25,7 @@ __dlclose (void *handle)
 {
 #ifdef SHARED
   if (!rtld_active ())
-    return _dlfcn_hook->dlclose (handle);
+    return GLRO (dl_dlfcn_hook)->dlclose (handle);
 #endif
 
   return _dlerror_run (GLRO (dl_close), handle) ? -1 : 0;

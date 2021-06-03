@@ -91,8 +91,12 @@ libc_hidden_proto (_dl_vsym)
 extern int _dlerror_run (void (*operate) (void *), void *args);
 libc_hidden_proto (_dlerror_run)
 
+/* This structure is used to make the outer (statically linked)
+   implementation of dlopen and related functions to the inner libc
+   after static dlopen, via the GLRO (dl_dlfcn_hook) pointer.  */
 struct dlfcn_hook
 {
+  /* Public interfaces.  */
   void *(*dlopen) (const char *file, int mode, void *dl_caller);
   int (*dlclose) (void *handle);
   void *(*dlsym) (void *handle, const char *name, void *dl_caller);
@@ -104,15 +108,17 @@ struct dlfcn_hook
 		  void **extra_info, int flags);
   int (*dlinfo) (void *handle, int request, void *arg);
   void *(*dlmopen) (Lmid_t nsid, const char *file, int mode, void *dl_caller);
-  void *pad[4];
+
+  /* Internal interfaces.  */
+  void* (*libc_dlopen_mode)  (const char *__name, int __mode);
+  void* (*libc_dlsym)  (void *map, const char *name);
+  void* (*libc_dlvsym)  (void *map, const char *name, const char *version);
+  int   (*libc_dlclose) (void *map);
 };
 
-extern struct dlfcn_hook *_dlfcn_hook;
-libc_hidden_proto (_dlfcn_hook)
-
-/* Note: These prototypes are for initializing _dflcn_hook in static
-   libraries.  Internal calls in glibc should use the __libc_dl*
-   functions defined in elf/dl-libc.c instead.  */
+/* Note: These prototypes are for initializing _dlfcn_hook in static
+   builds; see __rtld_static_init.  Internal calls in glibc should use
+   the __libc_dl* functions defined in elf/dl-libc.c instead.  */
 
 extern void *__dlopen (const char *file, int mode, void *caller);
 extern void *__dlmopen (Lmid_t nsid, const char *file, int mode,
@@ -125,16 +131,7 @@ extern int __dladdr (const void *address, Dl_info *info);
 extern int __dladdr1 (const void *address, Dl_info *info,
 		      void **extra_info, int flags);
 extern int __dlinfo (void *handle, int request, void *arg);
-
-#ifndef SHARED
-struct link_map;
-extern void * __libc_dlsym_private (struct link_map *map, const char *name)
-     attribute_hidden;
-extern void __libc_register_dl_open_hook (struct link_map *map)
-     attribute_hidden;
-extern void __libc_register_dlfcn_hook (struct link_map *map)
-     attribute_hidden;
-#endif
+extern char *__dlerror (void);
 
 #endif
 #endif

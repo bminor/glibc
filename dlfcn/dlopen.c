@@ -76,7 +76,7 @@ void *
 ___dlopen (const char *file, int mode)
 {
   if (!rtld_active ())
-    return _dlfcn_hook->dlopen (file, mode, RETURN_ADDRESS (0));
+    return GLRO (dl_dlfcn_hook)->dlopen (file, mode, RETURN_ADDRESS (0));
   else
     return dlopen_implementation (file, mode, RETURN_ADDRESS (0));
 }
@@ -96,13 +96,7 @@ __dlopen (const char *file, int mode, void *dl_caller)
 void *
 ___dlopen (const char *file, int mode)
 {
-  struct link_map *l = __dlopen (file, mode, RETURN_ADDRESS (0));
-  if (l != NULL)
-    {
-      __libc_register_dl_open_hook (l);
-      __libc_register_dlfcn_hook (l);
-    }
-  return l;
+  return __dlopen (file, mode, RETURN_ADDRESS (0));
 }
 weak_alias (___dlopen, dlopen)
 static_link_warning (dlopen)

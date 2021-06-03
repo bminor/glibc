@@ -81,7 +81,7 @@ void *
 ___dlmopen (Lmid_t nsid, const char *file, int mode)
 {
   if (!rtld_active ())
-    return _dlfcn_hook->dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
+    return GLRO (dl_dlfcn_hook)->dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
   else
     return dlmopen_implementation (nsid, file, mode, RETURN_ADDRESS (0));
 }
@@ -101,13 +101,7 @@ __dlmopen (Lmid_t nsid, const char *file, int mode, void *dl_caller)
 void *
 ___dlmopen (Lmid_t nsid, const char *file, int mode)
 {
-  struct link_map *l = __dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
-  if (l != NULL)
-    {
-      __libc_register_dl_open_hook (l);
-      __libc_register_dlfcn_hook (l);
-    }
-  return l;
+  return __dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
 }
 weak_alias (___dlmopen, dlmopen)
 static_link_warning (dlmopen)

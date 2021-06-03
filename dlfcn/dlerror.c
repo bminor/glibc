@@ -33,7 +33,7 @@ __dlerror (void)
 {
 # ifdef SHARED
   if (!rtld_active ())
-    return _dlfcn_hook->dlerror ();
+    return GLRO (dl_dlfcn_hook)->dlerror ();
 # endif
 
   struct dl_action_result *result = __libc_dlerror_result;
@@ -197,33 +197,3 @@ _dlerror_run (void (*operate) (void *), void *args)
     }
 }
 libc_hidden_def (_dlerror_run)
-
-#ifdef SHARED
-struct dlfcn_hook *_dlfcn_hook __attribute__((nocommon));
-libc_hidden_data_def (_dlfcn_hook)
-
-#else /* !SHARED */
-
-static struct dlfcn_hook _dlfcn_hooks =
-  {
-    .dlopen = __dlopen,
-    .dlclose = __dlclose,
-    .dlsym = __dlsym,
-    .dlvsym = __dlvsym,
-    .dlerror = __dlerror,
-    .dladdr = __dladdr,
-    .dladdr1 = __dladdr1,
-    .dlinfo = __dlinfo,
-    .dlmopen = __dlmopen
-  };
-
-void
-__libc_register_dlfcn_hook (struct link_map *map)
-{
-  struct dlfcn_hook **hook;
-
-  hook = (struct dlfcn_hook **) __libc_dlsym_private (map, "_dlfcn_hook");
-  if (hook != NULL)
-    *hook = &_dlfcn_hooks;
-}
-#endif /* !SHARED */

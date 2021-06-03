@@ -687,6 +687,9 @@ struct rtld_global_ro
   int (*_dl_discover_osversion) (void);
 #endif
 
+  /* Dynamic linker operations used after static dlopen.  */
+  const struct dlfcn_hook *_dl_dlfcn_hook;
+
   /* List of auditing interfaces.  */
   struct audit_ifaces *_dl_audit;
   unsigned int _dl_naudit;

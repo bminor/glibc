@@ -71,7 +71,7 @@ __dlopen_nocheck (const char *file, int mode)
   args.mode = mode;
 
   if (!rtld_active ())
-    return _dlfcn_hook->dlopen (file, mode, RETURN_ADDRESS (0));
+    return GLRO (dl_dlfcn_hook)->dlopen (file, mode, RETURN_ADDRESS (0));
 
   return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
 }

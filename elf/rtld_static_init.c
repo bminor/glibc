@@ -25,6 +25,23 @@
 
 #include <rtld_static_init.h>
 
+static const struct dlfcn_hook _dlfcn_hook =
+  {
+    .dlopen = __dlopen,
+    .dlclose = __dlclose,
+    .dlsym = __dlsym,
+    .dlvsym = __dlvsym,
+    .dlerror = __dlerror,
+    .dladdr = __dladdr,
+    .dladdr1 = __dladdr1,
+    .dlinfo = __dlinfo,
+    .dlmopen = __dlmopen,
+    .libc_dlopen_mode = __libc_dlopen_mode,
+    .libc_dlsym = __libc_dlsym,
+    .libc_dlvsym = __libc_dlvsym,
+    .libc_dlclose = __libc_dlclose,
+  };
+
 void
 __rtld_static_init (struct link_map *map)
 {
@@ -45,6 +62,7 @@ __rtld_static_init (struct link_map *map)
   extern __typeof (dl->_dl_clktck) _dl_clktck attribute_hidden;
   dl->_dl_clktck = _dl_clktck;
 #endif
+  dl->_dl_dlfcn_hook = &_dlfcn_hook;
   extern __typeof (dl->_dl_hwcap) _dl_hwcap attribute_hidden;
   dl->_dl_hwcap = _dl_hwcap;
   extern __typeof (dl->_dl_hwcap2) _dl_hwcap2 attribute_hidden;

@@ -66,7 +66,8 @@ void *
 ___dlvsym (void *handle, const char *name, const char *version)
 {
   if (!rtld_active ())
-    return _dlfcn_hook->dlvsym (handle, name, version, RETURN_ADDRESS (0));
+    return GLRO (dl_dlfcn_hook)->dlvsym (handle, name, version,
+					 RETURN_ADDRESS (0));
   else
     return dlvsym_implementation (handle, name, version, RETURN_ADDRESS (0));
 }

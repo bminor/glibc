@@ -25,7 +25,7 @@ __dladdr (const void *address, Dl_info *info)
 {
 #ifdef SHARED
   if (!rtld_active ())
-    return _dlfcn_hook->dladdr (address, info);
+    return GLRO (dl_dlfcn_hook)->dladdr (address, info);
 #endif
   return _dl_addr (address, info, NULL, NULL);
 }

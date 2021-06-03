@@ -63,7 +63,7 @@ void *
 ___dlsym (void *handle, const char *name)
 {
   if (!rtld_active ())
-    return _dlfcn_hook->dlsym (handle, name, RETURN_ADDRESS (0));
+    return GLRO (dl_dlfcn_hook)->dlsym (handle, name, RETURN_ADDRESS (0));
   else
     return dlsym_implementation (handle, name, RETURN_ADDRESS (0));
 }

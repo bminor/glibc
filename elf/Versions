@@ -23,7 +23,6 @@ libc {
   GLIBC_PRIVATE {
     # functions used in other libraries
     _dl_addr;
-    _dl_open_hook; _dl_open_hook2;
     _dl_sym; _dl_vsym;
     __libc_dlclose; __libc_dlopen_mode; __libc_dlsym; __libc_dlvsym;
     __libc_early_init;
