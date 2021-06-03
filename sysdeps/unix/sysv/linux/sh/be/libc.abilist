@@ -2183,6 +2183,7 @@ GLIBC_2.3.4 __vprintf_chk F
 GLIBC_2.3.4 __vsnprintf_chk F
 GLIBC_2.3.4 __vsprintf_chk F
 GLIBC_2.3.4 __xpg_strerror_r F
+GLIBC_2.3.4 dlmopen F
 GLIBC_2.3.4 getipv4sourcefilter F
 GLIBC_2.3.4 getsourcefilter F
 GLIBC_2.3.4 pthread_attr_getaffinity_np F
@@ -2252,6 +2253,7 @@ GLIBC_2.34 cnd_wait F
 GLIBC_2.34 dladdr F
 GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
+GLIBC_2.34 dlmopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 execveat F
 GLIBC_2.34 mtx_destroy F

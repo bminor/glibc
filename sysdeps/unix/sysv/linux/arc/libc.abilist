@@ -666,6 +666,7 @@ GLIBC_2.32 dl_iterate_phdr F
 GLIBC_2.32 dladdr F
 GLIBC_2.32 dlclose F
 GLIBC_2.32 dlerror F
+GLIBC_2.32 dlmopen F
 GLIBC_2.32 dlsym F
 GLIBC_2.32 dngettext F
 GLIBC_2.32 dprintf F
@@ -2108,6 +2109,7 @@ GLIBC_2.34 cnd_wait F
 GLIBC_2.34 dladdr F
 GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
+GLIBC_2.34 dlmopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 execveat F
 GLIBC_2.34 mtx_destroy F

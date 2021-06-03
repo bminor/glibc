@@ -22,17 +22,7 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <ldsodefs.h>
-
-#if !defined SHARED && IS_IN (libdl)
-
-void *
-dlmopen (Lmid_t nsid, const char *file, int mode)
-{
-  return __dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
-}
-static_link_warning (dlmopen)
-
-#else
+#include <shlib-compat.h>
 
 struct dlmopen_args
 {
@@ -70,38 +60,55 @@ dlmopen_doit (void *a)
 
   args->new = GLRO(dl_open) (args->file ?: "", args->mode | __RTLD_DLOPEN,
 			     args->caller,
-			     args->nsid, __dlfcn_argc, __dlfcn_argv,
-			     __environ);
+			     args->nsid, __libc_argc, __libc_argv, __environ);
 }
 
-
-void *
-__dlmopen (Lmid_t nsid, const char *file, int mode DL_CALLER_DECL)
+static void *
+dlmopen_implementation (Lmid_t nsid, const char *file, int mode,
+			void *dl_caller)
 {
-# ifdef SHARED
-  if (!rtld_active ())
-    return _dlfcn_hook->dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
-# endif
-
   struct dlmopen_args args;
   args.nsid = nsid;
   args.file = file;
   args.mode = mode;
-  args.caller = DL_CALLER;
+  args.caller = dl_caller;
 
-# ifdef SHARED
   return _dlerror_run (dlmopen_doit, &args) ? NULL : args.new;
-# else
-  if (_dlerror_run (dlmopen_doit, &args))
-    return NULL;
-
-  __libc_register_dl_open_hook ((struct link_map *) args.new);
-  __libc_register_dlfcn_hook ((struct link_map *) args.new);
-
-  return args.new;
-# endif
 }
-# ifdef SHARED
-strong_alias (__dlmopen, dlmopen)
+
+#ifdef SHARED
+void *
+___dlmopen (Lmid_t nsid, const char *file, int mode)
+{
+  if (!rtld_active ())
+    return _dlfcn_hook->dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
+  else
+    return dlmopen_implementation (nsid, file, mode, RETURN_ADDRESS (0));
+}
+versioned_symbol (libc, ___dlmopen, dlmopen, GLIBC_2_34);
+
+# if OTHER_SHLIB_COMPAT (libdl, GLIBC_2_3_4, GLIBC_2_34)
+compat_symbol (libdl, ___dlmopen, dlmopen, GLIBC_2_3_4);
 # endif
-#endif
+#else /* !SHARED */
+/* Also used with _dlfcn_hook.  */
+void *
+__dlmopen (Lmid_t nsid, const char *file, int mode, void *dl_caller)
+{
+  return dlmopen_implementation (nsid, file, mode, RETURN_ADDRESS (0));
+}
+
+void *
+___dlmopen (Lmid_t nsid, const char *file, int mode)
+{
+  struct link_map *l = __dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
+  if (l != NULL)
+    {
+      __libc_register_dl_open_hook (l);
+      __libc_register_dlfcn_hook (l);
+    }
+  return l;
+}
+weak_alias (___dlmopen, dlmopen)
+static_link_warning (dlmopen)
+#endif /* !SHARED */

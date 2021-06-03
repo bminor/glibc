@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <dlfcn.h>
-
+#include <shlib-compat.h>
 
 int __dlfcn_argc attribute_hidden;
 char **__dlfcn_argv attribute_hidden;
@@ -36,3 +36,20 @@ static void (*const init_array []) (int argc, char *argv[])
 {
   init
 };
+
+/* The remainder of this file is used to keep specific symbol versions
+   occupied, so that ld does not generate weak symbol version
+   definitions.  */
+
+void
+attribute_compat_text_section
+__attribute_used__
+__libdl_version_placeholder_1 (void)
+{
+}
+
+#if SHLIB_COMPAT (libdl, GLIBC_2_3_4, GLIBC_2_34) \
+  && ABI_libdl_GLIBC_2_3_4 != ABI_libdl_GLIBC_2_1
+compat_symbol (libdl, __libdl_version_placeholder_1,
+               __libdl_version_placeholder, GLIBC_2_3_4);
+#endif

@@ -15,15 +15,15 @@
 
 #define __LM_ID_CALLER	-2
 
+/* These variables are defined and initialized in the startup code.  */
+extern int __libc_argc attribute_hidden;
+extern char **__libc_argv attribute_hidden;
+
 #ifdef SHARED
 /* Locally stored program arguments.  */
 extern int __dlfcn_argc attribute_hidden;
 extern char **__dlfcn_argv attribute_hidden;
 #else
-/* These variables are defined and initialized in the startup code.  */
-extern int __libc_argc attribute_hidden;
-extern char **__libc_argv attribute_hidden;
-
 # define __dlfcn_argc __libc_argc
 # define __dlfcn_argv __libc_argv
 #endif
@@ -133,8 +133,8 @@ libc_hidden_proto (_dlfcn_hook)
 
 extern void *__dlopen (const char *file, int mode DL_CALLER_DECL)
      attribute_hidden;
-extern void *__dlmopen (Lmid_t nsid, const char *file, int mode DL_CALLER_DECL)
-     attribute_hidden;
+extern void *__dlmopen (Lmid_t nsid, const char *file, int mode,
+			void *dl_caller);
 extern int __dlclose (void *handle);
 extern void *__dlsym (void *handle, const char *name, void *dl_caller);
 extern void *__dlvsym (void *handle, const char *name, const char *version
