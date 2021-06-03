@@ -48,6 +48,12 @@ __libdl_version_placeholder_1 (void)
 {
 }
 
+#if SHLIB_COMPAT (libdl, GLIBC_2_3_3, GLIBC_2_34) \
+  && ABI_libdl_GLIBC_2_3_3 != ABI_libdl_GLIBC_2_1
+compat_symbol (libdl, __libdl_version_placeholder_1,
+               __libdl_version_placeholder, GLIBC_2_3_3);
+#endif
+
 #if SHLIB_COMPAT (libdl, GLIBC_2_3_4, GLIBC_2_34) \
   && ABI_libdl_GLIBC_2_3_4 != ABI_libdl_GLIBC_2_1
 compat_symbol (libdl, __libdl_version_placeholder_1,

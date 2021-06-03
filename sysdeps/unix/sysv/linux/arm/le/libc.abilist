@@ -208,6 +208,7 @@ GLIBC_2.34 dladdr F
 GLIBC_2.34 dladdr1 F
 GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
+GLIBC_2.34 dlinfo F
 GLIBC_2.34 dlmopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 execveat F
@@ -1024,6 +1025,7 @@ GLIBC_2.4 dladdr F
 GLIBC_2.4 dladdr1 F
 GLIBC_2.4 dlclose F
 GLIBC_2.4 dlerror F
+GLIBC_2.4 dlinfo F
 GLIBC_2.4 dlmopen F
 GLIBC_2.4 dlsym F
 GLIBC_2.4 dngettext F

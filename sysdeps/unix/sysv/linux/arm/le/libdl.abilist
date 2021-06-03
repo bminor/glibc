@@ -1,3 +1,2 @@
-GLIBC_2.4 dlinfo F
 GLIBC_2.4 dlopen F
 GLIBC_2.4 dlvsym F

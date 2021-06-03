@@ -7,6 +7,7 @@ libc {
   }
   GLIBC_2.3.3 {
     dladdr1;
+    dlinfo;
   }
   GLIBC_2.3.4 {
     dlmopen;
@@ -16,6 +17,7 @@ libc {
     dladdr;
     dlclose;
     dlerror;
+    dlinfo;
     dlmopen;
     dlsym;
   }
@@ -33,7 +35,7 @@ libdl {
     dlopen; dlvsym;
   }
   GLIBC_2.3.3 {
-    dlinfo;
+    __libdl_version_placeholder;
   }
   GLIBC_2.3.4 {
     __libdl_version_placeholder;

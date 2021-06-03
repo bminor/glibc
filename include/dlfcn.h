@@ -143,7 +143,7 @@ extern void *__dlvsym (void *handle, const char *name, const char *version
 extern int __dladdr (const void *address, Dl_info *info);
 extern int __dladdr1 (const void *address, Dl_info *info,
 		      void **extra_info, int flags);
-extern int __dlinfo (void *handle, int request, void *arg) attribute_hidden;
+extern int __dlinfo (void *handle, int request, void *arg);
 
 #ifndef SHARED
 struct link_map;

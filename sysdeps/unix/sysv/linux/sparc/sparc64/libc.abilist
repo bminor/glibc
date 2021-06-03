@@ -2187,6 +2187,7 @@ GLIBC_2.3.3 __pthread_unregister_cancel_restore F
 GLIBC_2.3.3 __pthread_unwind_next F
 GLIBC_2.3.3 _sys_siglist D 0x208
 GLIBC_2.3.3 dladdr1 F
+GLIBC_2.3.3 dlinfo F
 GLIBC_2.3.3 gnu_dev_major F
 GLIBC_2.3.3 gnu_dev_makedev F
 GLIBC_2.3.3 gnu_dev_minor F
@@ -2305,6 +2306,7 @@ GLIBC_2.34 dladdr F
 GLIBC_2.34 dladdr1 F
 GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
+GLIBC_2.34 dlinfo F
 GLIBC_2.34 dlmopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 execveat F
