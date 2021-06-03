@@ -1,5 +1,4 @@
 GLIBC_2.3 dlopen F
-GLIBC_2.3 dlsym F
 GLIBC_2.3 dlvsym F
 GLIBC_2.3.3 dladdr1 F
 GLIBC_2.3.3 dlinfo F

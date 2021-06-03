@@ -17,19 +17,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <dlfcn.h>
-#include <stddef.h>
-
 #include <ldsodefs.h>
-
-#if !defined SHARED && IS_IN (libdl)
-
-void *
-dlsym (void *handle, const char *name)
-{
-  return __dlsym (handle, name, RETURN_ADDRESS (0));
-}
-
-#else
+#include <shlib-compat.h>
+#include <stddef.h>
 
 struct dlsym_args
 {
@@ -50,17 +40,11 @@ dlsym_doit (void *a)
   args->sym = _dl_sym (args->handle, args->name, args->who);
 }
 
-
-void *
-__dlsym (void *handle, const char *name DL_CALLER_DECL)
+static void *
+dlsym_implementation (void *handle, const char *name, void *dl_caller)
 {
-# ifdef SHARED
-  if (!rtld_active ())
-    return _dlfcn_hook->dlsym (handle, name, DL_CALLER);
-# endif
-
   struct dlsym_args args;
-  args.who = DL_CALLER;
+  args.who = dl_caller;
   args.handle = handle;
   args.name = name;
 
@@ -73,7 +57,34 @@ __dlsym (void *handle, const char *name DL_CALLER_DECL)
 
   return result;
 }
-# ifdef SHARED
-strong_alias (__dlsym, dlsym)
+
+#ifdef SHARED
+void *
+___dlsym (void *handle, const char *name)
+{
+  if (!rtld_active ())
+    return _dlfcn_hook->dlsym (handle, name, RETURN_ADDRESS (0));
+  else
+    return dlsym_implementation (handle, name, RETURN_ADDRESS (0));
+}
+versioned_symbol (libc, ___dlsym, dlsym, GLIBC_2_34);
+
+# if OTHER_SHLIB_COMPAT (libdl, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libdl, ___dlsym, dlsym, GLIBC_2_0);
 # endif
-#endif
+
+#else /* !SHARED */
+/* Also used with _dlfcn_hook.  */
+void *
+__dlsym (void *handle, const char *name, void *dl_caller)
+{
+  return dlsym_implementation (handle, name, dl_caller);
+}
+
+void *
+___dlsym (void *handle, const char *name)
+{
+  return __dlsym (handle, name, RETURN_ADDRESS (0));
+}
+weak_alias (___dlsym, dlsym)
+#endif /* !SHARED */

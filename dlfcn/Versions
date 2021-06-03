@@ -3,11 +3,13 @@ libc {
     dladdr;
     dlclose;
     dlerror;
+    dlsym;
   }
   GLIBC_2.34 {
     dladdr;
     dlclose;
     dlerror;
+    dlsym;
   }
   GLIBC_PRIVATE {
     __libc_dlerror_result;
@@ -18,7 +20,6 @@ libc {
 libdl {
   GLIBC_2.0 {
     dlopen;
-    dlsym;
   }
   GLIBC_2.1 {
     dlopen; dlvsym;

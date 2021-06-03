@@ -211,6 +211,7 @@ GLIBC_2.34 cnd_wait F
 GLIBC_2.34 dladdr F
 GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
+GLIBC_2.34 dlsym F
 GLIBC_2.34 execveat F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
@@ -1012,6 +1013,7 @@ GLIBC_2.4 dl_iterate_phdr F
 GLIBC_2.4 dladdr F
 GLIBC_2.4 dlclose F
 GLIBC_2.4 dlerror F
+GLIBC_2.4 dlsym F
 GLIBC_2.4 dngettext F
 GLIBC_2.4 dprintf F
 GLIBC_2.4 drand48 F

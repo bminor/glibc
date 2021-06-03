@@ -195,3 +195,4 @@ _dl_sym (void *handle, const char *name, void *who)
 {
   return do_sym (handle, name, who, NULL, DL_LOOKUP_RETURN_NEWEST);
 }
+libc_hidden_def (_dl_sym)

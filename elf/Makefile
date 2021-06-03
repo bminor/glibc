@@ -699,7 +699,6 @@ include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(strip $(modules-names))))
 generated += $(addsuffix .so,$(strip $(modules-names)))
 
-$(objpfx)testobj1.so: $(libdl)
 $(objpfx)testobj1_1.so: $(objpfx)testobj1.so $(libdl)
 $(objpfx)testobj2.so: $(objpfx)testobj1.so $(libdl)
 $(objpfx)testobj3.so: $(libdl)

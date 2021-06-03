@@ -84,6 +84,7 @@ extern void _dl_close_worker (struct link_map *map, bool force)
    RTLD_NEXT).  WHO is the calling function, for RTLD_NEXT.  Returns
    the symbol value, which may be NULL.  */
 extern void *_dl_sym (void *handle, const char *name, void *who);
+libc_hidden_proto (_dl_sym)
 
 /* Look up version VERSION of symbol NAME in shared object HANDLE
    (which may be RTLD_DEFAULT or RTLD_NEXT).  WHO is the calling
@@ -135,8 +136,7 @@ extern void *__dlopen (const char *file, int mode DL_CALLER_DECL)
 extern void *__dlmopen (Lmid_t nsid, const char *file, int mode DL_CALLER_DECL)
      attribute_hidden;
 extern int __dlclose (void *handle);
-extern void *__dlsym (void *handle, const char *name DL_CALLER_DECL)
-     attribute_hidden;
+extern void *__dlsym (void *handle, const char *name, void *dl_caller);
 extern void *__dlvsym (void *handle, const char *name, const char *version
 		       DL_CALLER_DECL)
      attribute_hidden;
