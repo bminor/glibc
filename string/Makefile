@@ -80,7 +80,6 @@ xtests = tst-strcoll-overflow
 # This test needs libdl.
 ifeq (yes,$(build-shared))
 tests += test-strerror-errno
-LDLIBS-test-strerror-errno = $(libdl)
 endif
 
 ifeq ($(run-built-tests),yes)

@@ -149,7 +149,7 @@ $(objpfx)libnss_dns.so: $(objpfx)libresolv.so
 # The asynchronous name lookup code needs the thread library.
 $(objpfx)libanl.so: $(shared-thread-library)
 
-$(objpfx)tst-res_hconf_reorder: $(libdl) $(shared-thread-library)
+$(objpfx)tst-res_hconf_reorder: $(shared-thread-library)
 tst-res_hconf_reorder-ENV = RESOLV_REORDER=on
 
 $(objpfx)tst-leaks: $(objpfx)libresolv.so
@@ -173,12 +173,11 @@ $(objpfx)mtrace-tst-resolv-res_ninit.out: $(objpfx)tst-resolv-res_ninit.out
 
 $(objpfx)tst-bug18665-tcp: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-bug18665: $(objpfx)libresolv.so $(shared-thread-library)
-$(objpfx)tst-resolv-ai_idn: \
-  $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-ai_idn: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-ai_idn-latin1: \
-  $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
+  $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-ai_idn-nolibidn2: \
-  $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
+  $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-ai_idn.out: $(gen-locales)
 $(objpfx)tst-resolv-ai_idn-latin1.out: $(gen-locales)
 $(objpfx)tst-resolv-ai_idn-nolibidn2.out: \
@@ -187,22 +186,20 @@ $(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-binary: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-edns: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-network: $(objpfx)libresolv.so $(shared-thread-library)
-$(objpfx)tst-resolv-res_init: $(libdl) $(objpfx)libresolv.so
+$(objpfx)tst-resolv-res_init: $(objpfx)libresolv.so
 $(objpfx)tst-resolv-res_init-multi: $(objpfx)libresolv.so \
   $(shared-thread-library)
-$(objpfx)tst-resolv-res_init-thread: $(libdl) $(objpfx)libresolv.so \
+$(objpfx)tst-resolv-res_init-thread: $(objpfx)libresolv.so \
   $(shared-thread-library)
 $(objpfx)tst-resolv-nondecimal: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-qtypes: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-rotate: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-search: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-trailing: $(objpfx)libresolv.so $(shared-thread-library)
-$(objpfx)tst-resolv-threads: \
-  $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-threads: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-txnid-collision: $(objpfx)libresolv.a \
   $(static-thread-library)
-$(objpfx)tst-resolv-canonname: \
-  $(libdl) $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-canonname: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-trustad: $(objpfx)libresolv.so $(shared-thread-library)
 
 $(objpfx)tst-ns_name: $(objpfx)libresolv.so

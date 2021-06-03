@@ -244,9 +244,6 @@ $(objpfx)memusage: memusage.sh
 	&& rm -f $@ && mv $@.new $@ && chmod +x $@
 
 
-# The implementation uses `dlsym'
-$(objpfx)libmemusage.so: $(libdl)
-
 # Extra dependencies
 $(foreach o,$(all-object-suffixes),$(objpfx)malloc$(o)): arena.c hooks.c
 

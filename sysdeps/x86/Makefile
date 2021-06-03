@@ -51,7 +51,6 @@ CFLAGS-tst-isa-level-mod-1-v4.c += -DINCLUDE_X86_ISA_LEVEL \
 				   -DISA_LEVEL=0xf \
 				   -march=x86-64
 
-$(objpfx)tst-isa-level-1: $(libdl)
 $(objpfx)tst-isa-level-1.out: $(objpfx)tst-isa-level-mod-1-baseline.so \
 			      $(objpfx)tst-isa-level-mod-1-v2.so \
 			      $(objpfx)tst-isa-level-mod-1-v3.so \
@@ -162,38 +161,30 @@ $(objpfx)tst-cet-legacy-1: $(objpfx)tst-cet-legacy-mod-1.so \
 		       $(objpfx)tst-cet-legacy-mod-2.so
 $(objpfx)tst-cet-legacy-1a: $(objpfx)tst-cet-legacy-mod-1.so \
 		       $(objpfx)tst-cet-legacy-mod-2.so
-$(objpfx)tst-cet-legacy-2: $(objpfx)tst-cet-legacy-mod-2.so $(libdl)
+$(objpfx)tst-cet-legacy-2: $(objpfx)tst-cet-legacy-mod-2.so
 $(objpfx)tst-cet-legacy-2.out: $(objpfx)tst-cet-legacy-mod-1.so
-$(objpfx)tst-cet-legacy-2a: $(objpfx)tst-cet-legacy-mod-2.so $(libdl)
+$(objpfx)tst-cet-legacy-2a: $(objpfx)tst-cet-legacy-mod-2.so
 $(objpfx)tst-cet-legacy-2a.out: $(objpfx)tst-cet-legacy-mod-1.so
-$(objpfx)tst-cet-legacy-4: $(libdl)
 $(objpfx)tst-cet-legacy-4.out: $(objpfx)tst-cet-legacy-mod-4.so
-$(objpfx)tst-cet-legacy-5a: $(libdl)
 $(objpfx)tst-cet-legacy-5a.out: $(objpfx)tst-cet-legacy-mod-5a.so \
 				$(objpfx)tst-cet-legacy-mod-5b.so
 $(objpfx)tst-cet-legacy-mod-5a.so: $(objpfx)tst-cet-legacy-mod-5c.so
 $(objpfx)tst-cet-legacy-mod-5b.so: $(objpfx)tst-cet-legacy-mod-5c.so
-$(objpfx)tst-cet-legacy-6a: $(libdl)
 $(objpfx)tst-cet-legacy-6a.out: $(objpfx)tst-cet-legacy-mod-6a.so \
 				$(objpfx)tst-cet-legacy-mod-6b.so
 $(objpfx)tst-cet-legacy-mod-6a.so: $(objpfx)tst-cet-legacy-mod-6c.so
 $(objpfx)tst-cet-legacy-mod-6b.so: $(objpfx)tst-cet-legacy-mod-6c.so
 LDFLAGS-tst-cet-legacy-mod-6c.so = -Wl,--enable-new-dtags,-z,nodelete
 ifneq (no,$(have-tunables))
-$(objpfx)tst-cet-legacy-4a: $(libdl)
 $(objpfx)tst-cet-legacy-4a.out: $(objpfx)tst-cet-legacy-mod-4.so
 tst-cet-legacy-4a-ENV = GLIBC_TUNABLES=glibc.cpu.x86_shstk=permissive
-$(objpfx)tst-cet-legacy-4b: $(libdl)
 $(objpfx)tst-cet-legacy-4b.out: $(objpfx)tst-cet-legacy-mod-4.so
 tst-cet-legacy-4b-ENV = GLIBC_TUNABLES=glibc.cpu.x86_shstk=on
-$(objpfx)tst-cet-legacy-4c: $(libdl)
 $(objpfx)tst-cet-legacy-4c.out: $(objpfx)tst-cet-legacy-mod-4.so
 tst-cet-legacy-4c-ENV = GLIBC_TUNABLES=glibc.cpu.x86_shstk=off
-$(objpfx)tst-cet-legacy-5b: $(libdl)
 $(objpfx)tst-cet-legacy-5b.out: $(objpfx)tst-cet-legacy-mod-5a.so \
 				$(objpfx)tst-cet-legacy-mod-5b.so
 tst-cet-legacy-5b-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
-$(objpfx)tst-cet-legacy-6b: $(libdl)
 $(objpfx)tst-cet-legacy-6b.out: $(objpfx)tst-cet-legacy-mod-6a.so \
 				$(objpfx)tst-cet-legacy-mod-6b.so
 tst-cet-legacy-6b-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK

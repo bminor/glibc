@@ -181,10 +181,5 @@ ifeq (yes,$(have-thread-library))
 $(objpfx)tst-cancel-getpwuid_r: $(shared-thread-library)
 endif
 
-$(objpfx)tst-nss-files-hosts-erange: $(libdl)
-$(objpfx)tst-nss-files-hosts-multi: $(libdl)
-$(objpfx)tst-nss-files-hosts-getent: $(libdl)
-$(objpfx)tst-nss-files-alias-leak: $(libdl)
 $(objpfx)tst-nss-files-alias-leak.out: $(objpfx)/libnss_files.so
-$(objpfx)tst-nss-files-alias-truncated: $(libdl)
 $(objpfx)tst-nss-files-alias-truncated.out: $(objpfx)/libnss_files.so

@@ -1256,12 +1256,6 @@ endif # build-shared
 
 
 ifeq ($(build-shared),yes)
-libdl = $(common-objpfx)dlfcn/libdl.so$(libdl.so-version)
-else
-libdl = $(common-objpfx)dlfcn/libdl.a
-endif
-
-ifeq ($(build-shared),yes)
 libm = $(common-objpfx)math/libm.so$(libm.so-version)
 libmvec = $(common-objpfx)mathvec/libmvec.so$(libmvec.so-version)
 else

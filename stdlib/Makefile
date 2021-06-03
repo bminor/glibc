@@ -106,7 +106,7 @@ LDLIBS-test-cxa_atexit-race2 = $(shared-thread-library)
 LDLIBS-test-on_exit-race = $(shared-thread-library)
 LDLIBS-tst-canon-bz26341 = $(shared-thread-library)
 
-LDLIBS-test-dlclose-exit-race = $(shared-thread-library) $(libdl)
+LDLIBS-test-dlclose-exit-race = $(shared-thread-library)
 LDFLAGS-test-dlclose-exit-race = $(LDFLAGS-rdynamic)
 LDLIBS-test-dlclose-exit-race-helper.so = $(libsupport) $(shared-thread-library)
 
@@ -233,10 +233,10 @@ $(objpfx)tst-strtod-nan-sign: $(libm)
 tst-tls-atexit-lib.so-no-z-defs = yes
 test-dlclose-exit-race-helper.so-no-z-defs = yes
 
-$(objpfx)tst-tls-atexit: $(shared-thread-library) $(libdl)
+$(objpfx)tst-tls-atexit: $(shared-thread-library)
 $(objpfx)tst-tls-atexit.out: $(objpfx)tst-tls-atexit-lib.so
 
-$(objpfx)tst-tls-atexit-nodelete: $(shared-thread-library) $(libdl)
+$(objpfx)tst-tls-atexit-nodelete: $(shared-thread-library)
 $(objpfx)tst-tls-atexit-nodelete.out: $(objpfx)tst-tls-atexit-lib.so
 
 $(objpfx)tst-setcontext3.out: tst-setcontext3.sh $(objpfx)tst-setcontext3
@@ -244,5 +244,3 @@ $(objpfx)tst-setcontext3.out: tst-setcontext3.sh $(objpfx)tst-setcontext3
 		 '$(run-program-env)' '$(test-program-prefix-after-env)' \
 		 $(common-objpfx)stdlib/; \
 	$(evaluate-test)
-
-$(objpfx)tst-makecontext: $(libdl)

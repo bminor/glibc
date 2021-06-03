@@ -307,7 +307,6 @@ $(objpfx)bug-iconv1.out: $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so))
 $(objpfx)bug-iconv2.out: $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so))
-$(objpfx)bug-iconv3: $(libdl)
 $(objpfx)bug-iconv3.out: $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so))
 $(objpfx)bug-iconv5.out: $(objpfx)gconv-modules \

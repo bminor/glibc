@@ -64,7 +64,6 @@ fpabi_list=$(subst $(space),$(comma),$(patsubst tst-abi-%mod,o_%,\
 CPPFLAGS-tst-abi-interlink.c += -DFPABI_LIST=$(fpabi_list)
 CPPFLAGS-tst-abi-interlink.c += -DFPABI_COUNT=$(words $(fpabi-modules-names))
 CPPFLAGS-tst-abi-interlink.c += -DFPABI_NATIVE=o_fp$(o32-fpabi)
-$(objpfx)tst-abi-interlink: $(libdl)
 $(objpfx)tst-abi-interlink.out: $(patsubst %,$(objpfx)%.so,\
 					   $(fpabi-modules-names))
 endif

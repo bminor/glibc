@@ -19,16 +19,6 @@
 extern int __libc_argc attribute_hidden;
 extern char **__libc_argv attribute_hidden;
 
-#ifdef SHARED
-/* Locally stored program arguments.  */
-extern int __dlfcn_argc attribute_hidden;
-extern char **__dlfcn_argv attribute_hidden;
-#else
-# define __dlfcn_argc __libc_argc
-# define __dlfcn_argv __libc_argv
-#endif
-
-
 /* Now define the internal interfaces.  */
 
 /* Use RTLD_NOW here because:
@@ -100,14 +90,6 @@ libc_hidden_proto (_dl_vsym)
    ARGS is passed as argument to OPERATE.  */
 extern int _dlerror_run (void (*operate) (void *), void *args);
 libc_hidden_proto (_dlerror_run)
-
-#ifdef SHARED
-# define DL_CALLER_DECL /* Nothing */
-# define DL_CALLER RETURN_ADDRESS (0)
-#else
-# define DL_CALLER_DECL , void *dl_caller
-# define DL_CALLER dl_caller
-#endif
 
 struct dlfcn_hook
 {

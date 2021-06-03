@@ -203,7 +203,7 @@ CFLAGS-tst-pt-align3.c += $(stack-align-test-flags)
 
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp
 
-$(objpfx)tst-atfork2: $(libdl) $(shared-thread-library)
+$(objpfx)tst-atfork2: $(shared-thread-library)
 LDFLAGS-tst-atfork2 = -rdynamic
 tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace
 $(objpfx)tst-atfork2mod.so: $(shared-thread-library)
@@ -236,7 +236,7 @@ LDFLAGS-tst-_res1mod2.so = -Wl,-soname,tst-_res1mod2.so
 $(objpfx)tst-_res1: $(objpfx)tst-_res1mod1.so $(objpfx)tst-_res1mod2.so \
 		    $(shared-thread-library)
 
-$(objpfx)tst-pt-tls4: $(libdl) $(shared-thread-library)
+$(objpfx)tst-pt-tls4: $(shared-thread-library)
 $(objpfx)tst-pt-tls4.out: $(objpfx)tst-tls4moda.so $(objpfx)tst-tls4modb.so
 
 generated += tst-atfork2.mtrace
@@ -260,7 +260,7 @@ CFLAGS-tst-oncex4.c += -fexceptions
 CFLAGS-tst-oncey3.c += -fno-exceptions -fno-asynchronous-unwind-tables
 CFLAGS-tst-oncey4.c += -fno-exceptions -fno-asynchronous-unwind-tables
 
-$(objpfx)tst-join7: $(libdl) $(shared-thread-library)
+$(objpfx)tst-join7: $(shared-thread-library)
 $(objpfx)tst-join7.out: $(objpfx)tst-join7mod.so
 $(objpfx)tst-join7mod.so: $(shared-thread-library)
 LDFLAGS-tst-join7mod.so = -Wl,-soname,tst-join7mod.so

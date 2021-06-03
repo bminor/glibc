@@ -215,7 +215,6 @@ $(addprefix $(objpfx), \
     $(tests-nolibpthread), \
     $(tests) $(tests-internal) $(xtests) $(test-srcs) $(tests-container))): \
 	$(objpfx)libpthread.so
-$(objpfx)tst-unload: $(libdl)
 # $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
 # since otherwise libpthread.so comes before libc.so when linking.
 $(addprefix $(objpfx), $(tests-reverse)): \

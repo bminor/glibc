@@ -21,10 +21,8 @@ include ../Makeconfig
 
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
-libdl-routines	:= dlfcn
-routines	:= $(patsubst %,s%,$(filter-out dlfcn,$(libdl-routines)))
-elide-routines.os := $(routines)
-routines += \
+libdl-routines	:= libdl-compat
+routines = \
   dladdr \
   dladdr1 \
   dlclose \
@@ -38,9 +36,16 @@ routines += \
 
 extra-libs-others := libdl
 
+libdl-shared-only-routines += libdl-compat
+
+# Pretend that libdl.so is a linker script, so that the symbolic
+# link is not installed.
+install-lib-ldscripts = libdl.so
+$(inst_libdir)/libdl.so:
+
 ifeq ($(build-shared),yes)
 routines += dlopenold
-shared-only-routines := dlopenold dlfcn
+shared-only-routines := dlopenold
 endif
 
 ifeq (yes,$(build-shared))
@@ -87,77 +92,54 @@ ifeq ($(build-shared),yes)
 tests: $(test-modules)
 endif
 
-$(objpfx)glrefmain: $(libdl)
 $(objpfx)glrefmain.out: $(objpfx)glrefmain \
 			$(objpfx)glreflib1.so $(objpfx)glreflib2.so
 
-$(objpfx)failtest: $(libdl)
 $(objpfx)failtest.out: $(objpfx)failtestmod.so
 
-$(objpfx)tst-dladdr: $(libdl)
 $(objpfx)tst-dladdr.out: $(objpfx)glreflib1.so
 
-$(objpfx)tst-dlinfo: $(libdl)
 $(objpfx)tst-dlinfo.out: $(objpfx)glreflib3.so
 LDFLAGS-glreflib3.so = -Wl,-rpath,:
 
 LDFLAGS-default = $(LDFLAGS-rdynamic)
-$(objpfx)default: $(libdl) $(objpfx)defaultmod1.so $(objpfx)defaultmod2.so
-$(objpfx)defaultmod1.so: $(libdl)
+$(objpfx)default: $(objpfx)defaultmod1.so $(objpfx)defaultmod2.so
 LDFLAGS-defaultmod2.so = $(LDFLAGS-Bsymbolic)
-$(objpfx)defaultmod2.so: $(libdl)
 
-$(objpfx)errmsg1: $(libdl)
 $(objpfx)errmsg1.out: $(objpfx)errmsg1 $(objpfx)errmsg1mod.so
 
-$(objpfx)tstatexit: $(libdl)
 $(objpfx)tstatexit.out: $(objpfx)tstatexit $(objpfx)modatexit.so
 
-$(objpfx)tstcxaatexit: $(libdl)
 $(objpfx)tstcxaatexit.out: $(objpfx)tstcxaatexit $(objpfx)modcxaatexit.so
 
-$(objpfx)tststatic: $(objpfx)libdl.a
 $(objpfx)tststatic.out: $(objpfx)tststatic $(objpfx)modstatic.so
 
-$(objpfx)tststatic2: $(objpfx)libdl.a
 $(objpfx)tststatic2.out: $(objpfx)tststatic2 $(objpfx)modstatic.so \
 			 $(objpfx)modstatic2.so
 
-$(objpfx)modstatic2.so: $(libdl)
-
-$(objpfx)tststatic3: $(objpfx)libdl.a
 $(objpfx)tststatic3.out: $(objpfx)tststatic3 $(objpfx)modstatic3.so
 
-$(objpfx)tststatic4: $(objpfx)libdl.a
 $(objpfx)tststatic4.out: $(objpfx)tststatic4 $(objpfx)modstatic3.so
 
-$(objpfx)tststatic5: $(objpfx)libdl.a
 $(objpfx)tststatic5.out: $(objpfx)tststatic5 $(objpfx)modstatic5.so
 
-$(objpfx)bug-dlopen1: $(libdl)
-
-$(objpfx)bug-dlsym1: $(libdl) $(objpfx)bug-dlsym1-lib2.so
+$(objpfx)bug-dlsym1: $(objpfx)bug-dlsym1-lib2.so
 $(objpfx)bug-dlsym1.out: $(objpfx)bug-dlsym1-lib1.so \
 			 $(objpfx)bug-dlsym1-lib2.so
 $(objpfx)bug-dlsym1-lib1.so: $(objpfx)bug-dlsym1-lib2.so
 
-$(objpfx)bug-atexit1: $(libdl)
 $(objpfx)bug-atexit1.out: $(objpfx)bug-atexit1-lib.so
 
-$(objpfx)bug-atexit2: $(libdl)
 $(objpfx)bug-atexit2.out: $(objpfx)bug-atexit2-lib.so
 
 ifneq (,$(CXX))
 LDLIBS-bug-atexit3-lib.so = -lstdc++ -lgcc_eh
 $(objpfx)bug-atexit3-lib.so: $(libsupport)
-$(objpfx)bug-atexit3: $(libdl)
 $(objpfx)bug-atexit3.out: $(objpfx)bug-atexit3-lib.so
 endif
 
 $(objpfx)bug-dl-leaf: $(objpfx)bug-dl-leaf-lib.so
 $(objpfx)bug-dl-leaf.out: $(objpfx)bug-dl-leaf-lib-cb.so
-$(objpfx)bug-dl-leaf-lib.so: $(libdl)
 $(objpfx)bug-dl-leaf-lib-cb.so: $(objpfx)bug-dl-leaf-lib.so
 
-$(objpfx)tst-rec-dlopen: $(libdl)
 $(objpfx)tst-rec-dlopen.out: $(objpfx)moddummy1.so $(objpfx)moddummy2.so
