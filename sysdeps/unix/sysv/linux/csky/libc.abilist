@@ -700,6 +700,7 @@ GLIBC_2.29 dirname F
 GLIBC_2.29 div F
 GLIBC_2.29 dl_iterate_phdr F
 GLIBC_2.29 dladdr F
+GLIBC_2.29 dladdr1 F
 GLIBC_2.29 dlclose F
 GLIBC_2.29 dlerror F
 GLIBC_2.29 dlmopen F
@@ -2291,6 +2292,7 @@ GLIBC_2.34 cnd_signal F
 GLIBC_2.34 cnd_timedwait F
 GLIBC_2.34 cnd_wait F
 GLIBC_2.34 dladdr F
+GLIBC_2.34 dladdr1 F
 GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
 GLIBC_2.34 dlmopen F

@@ -657,6 +657,7 @@ GLIBC_2.33 dirname F
 GLIBC_2.33 div F
 GLIBC_2.33 dl_iterate_phdr F
 GLIBC_2.33 dladdr F
+GLIBC_2.33 dladdr1 F
 GLIBC_2.33 dlclose F
 GLIBC_2.33 dlerror F
 GLIBC_2.33 dlmopen F
@@ -2109,6 +2110,7 @@ GLIBC_2.34 cnd_signal F
 GLIBC_2.34 cnd_timedwait F
 GLIBC_2.34 cnd_wait F
 GLIBC_2.34 dladdr F
+GLIBC_2.34 dladdr1 F
 GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
 GLIBC_2.34 dlmopen F

@@ -5,10 +5,14 @@ libc {
     dlerror;
     dlsym;
   }
+  GLIBC_2.3.3 {
+    dladdr1;
+  }
   GLIBC_2.3.4 {
     dlmopen;
   }
   GLIBC_2.34 {
+    dladdr1;
     dladdr;
     dlclose;
     dlerror;
@@ -29,7 +33,7 @@ libdl {
     dlopen; dlvsym;
   }
   GLIBC_2.3.3 {
-    dladdr1; dlinfo;
+    dlinfo;
   }
   GLIBC_2.3.4 {
     __libdl_version_placeholder;

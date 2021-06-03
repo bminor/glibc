@@ -18,24 +18,15 @@
 
 #include <dlfcn.h>
 #include <ldsodefs.h>
-
-#if !defined SHARED && IS_IN (libdl)
-
-int
-dladdr1 (const void *address, Dl_info *info, void **extra, int flags)
-{
-  return __dladdr1 (address, info, extra, flags);
-}
-
-#else
+#include <shlib-compat.h>
 
 int
 __dladdr1 (const void *address, Dl_info *info, void **extra, int flags)
 {
-# ifdef SHARED
+#ifdef SHARED
   if (!rtld_active ())
     return _dlfcn_hook->dladdr1 (address, info, extra, flags);
-# endif
+#endif
 
   switch (flags)
     {
@@ -48,7 +39,8 @@ __dladdr1 (const void *address, Dl_info *info, void **extra, int flags)
       return _dl_addr (address, info, (struct link_map **) extra, NULL);
     }
 }
-# ifdef SHARED
-strong_alias (__dladdr1, dladdr1)
-# endif
+versioned_symbol (libc, __dladdr1, dladdr1, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT  (libdl, GLIBC_2_3_3, GLIBC_2_34)
+compat_symbol (libdl, __dladdr1, dladdr1, GLIBC_2_3_3);
 #endif
