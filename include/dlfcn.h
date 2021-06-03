@@ -126,12 +126,15 @@ struct dlfcn_hook
 extern struct dlfcn_hook *_dlfcn_hook;
 libc_hidden_proto (_dlfcn_hook)
 
+/* Note: These prototypes are for initializing _dflcn_hook in static
+   libraries.  Internal calls in glibc should use the __libc_dl*
+   functions defined in elf/dl-libc.c instead.  */
+
 extern void *__dlopen (const char *file, int mode DL_CALLER_DECL)
      attribute_hidden;
 extern void *__dlmopen (Lmid_t nsid, const char *file, int mode DL_CALLER_DECL)
      attribute_hidden;
-extern int __dlclose (void *handle)
-     attribute_hidden;
+extern int __dlclose (void *handle);
 extern void *__dlsym (void *handle, const char *name DL_CALLER_DECL)
      attribute_hidden;
 extern void *__dlvsym (void *handle, const char *name, const char *version

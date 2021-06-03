@@ -18,34 +18,20 @@
 
 #include <dlfcn.h>
 #include <ldsodefs.h>
-
-#if !defined SHARED && IS_IN (libdl)
-
-int
-dlclose (void *handle)
-{
-  return __dlclose (handle);
-}
-
-#else
-
-static void
-dlclose_doit (void *handle)
-{
-  GLRO(dl_close) (handle);
-}
+#include <shlib-compat.h>
 
 int
 __dlclose (void *handle)
 {
-# ifdef SHARED
+#ifdef SHARED
   if (!rtld_active ())
     return _dlfcn_hook->dlclose (handle);
-# endif
+#endif
 
-  return _dlerror_run (dlclose_doit, handle) ? -1 : 0;
+  return _dlerror_run (GLRO (dl_close), handle) ? -1 : 0;
 }
-# ifdef SHARED
-strong_alias (__dlclose, dlclose)
-# endif
+versioned_symbol (libc, __dlclose, dlclose, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (libdl, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libdl, __dlclose, dlclose, GLIBC_2_0);
 #endif

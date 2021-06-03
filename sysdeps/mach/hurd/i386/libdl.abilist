@@ -1,5 +1,4 @@
 GLIBC_2.2.6 dladdr F
-GLIBC_2.2.6 dlclose F
 GLIBC_2.2.6 dlopen F
 GLIBC_2.2.6 dlsym F
 GLIBC_2.2.6 dlvsym F

@@ -1,6 +1,5 @@
 GLIBC_2.4 dladdr F
 GLIBC_2.4 dladdr1 F
-GLIBC_2.4 dlclose F
 GLIBC_2.4 dlinfo F
 GLIBC_2.4 dlmopen F
 GLIBC_2.4 dlopen F
