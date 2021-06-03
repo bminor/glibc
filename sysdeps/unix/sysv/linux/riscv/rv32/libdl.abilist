@@ -1,4 +1,3 @@
-GLIBC_2.33 dladdr F
 GLIBC_2.33 dladdr1 F
 GLIBC_2.33 dlinfo F
 GLIBC_2.33 dlmopen F

@@ -1,9 +1,11 @@
 libc {
   GLIBC_2.0 {
+    dladdr;
     dlclose;
     dlerror;
   }
   GLIBC_2.34 {
+    dladdr;
     dlclose;
     dlerror;
   }
@@ -15,7 +17,6 @@ libc {
 }
 libdl {
   GLIBC_2.0 {
-    dladdr;
     dlopen;
     dlsym;
   }

@@ -1,4 +1,3 @@
-GLIBC_2.0 dladdr F
 GLIBC_2.0 dlopen F
 GLIBC_2.0 dlsym F
 GLIBC_2.2 dlopen F

@@ -2,6 +2,7 @@ GCC_3.0 _Unwind_Find_FDE F
 GCC_3.0 __deregister_frame_info_bases F
 GCC_3.0 __register_frame_info_bases F
 GCC_3.0 __register_frame_info_table_bases F
+GLIBC_2.0 dladdr F
 GLIBC_2.0 dlclose F
 GLIBC_2.0 dlerror F
 GLIBC_2.10 __cxa_at_quick_exit F
@@ -2244,6 +2245,7 @@ GLIBC_2.34 cnd_init F
 GLIBC_2.34 cnd_signal F
 GLIBC_2.34 cnd_timedwait F
 GLIBC_2.34 cnd_wait F
+GLIBC_2.34 dladdr F
 GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
 GLIBC_2.34 execveat F

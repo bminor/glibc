@@ -1,3 +1,4 @@
+GLIBC_2.0 dladdr F
 GLIBC_2.0 dlclose F
 GLIBC_2.0 dlerror F
 GLIBC_2.10 __cxa_at_quick_exit F
@@ -2240,6 +2241,7 @@ GLIBC_2.34 cnd_init F
 GLIBC_2.34 cnd_signal F
 GLIBC_2.34 cnd_timedwait F
 GLIBC_2.34 cnd_wait F
+GLIBC_2.34 dladdr F
 GLIBC_2.34 dlclose F
 GLIBC_2.34 dlerror F
 GLIBC_2.34 execveat F

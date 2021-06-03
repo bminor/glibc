@@ -140,8 +140,7 @@ extern void *__dlsym (void *handle, const char *name DL_CALLER_DECL)
 extern void *__dlvsym (void *handle, const char *name, const char *version
 		       DL_CALLER_DECL)
      attribute_hidden;
-extern int __dladdr (const void *address, Dl_info *info)
-     attribute_hidden;
+extern int __dladdr (const void *address, Dl_info *info);
 extern int __dladdr1 (const void *address, Dl_info *info,
 		      void **extra_info, int flags)
      attribute_hidden;
