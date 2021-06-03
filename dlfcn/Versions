@@ -5,6 +5,9 @@ libc {
     dlerror;
     dlsym;
   }
+  GLIBC_2.1 {
+    dlvsym;
+  }
   GLIBC_2.3.3 {
     dladdr1;
     dlinfo;
@@ -20,6 +23,7 @@ libc {
     dlinfo;
     dlmopen;
     dlsym;
+    dlvsym;
   }
   GLIBC_PRIVATE {
     __libc_dlerror_result;
@@ -32,7 +36,7 @@ libdl {
     dlopen;
   }
   GLIBC_2.1 {
-    dlopen; dlvsym;
+    dlopen;
   }
   GLIBC_2.3.3 {
     __libdl_version_placeholder;

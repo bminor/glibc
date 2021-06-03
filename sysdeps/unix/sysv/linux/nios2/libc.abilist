@@ -770,6 +770,7 @@ GLIBC_2.21 dlerror F
 GLIBC_2.21 dlinfo F
 GLIBC_2.21 dlmopen F
 GLIBC_2.21 dlsym F
+GLIBC_2.21 dlvsym F
 GLIBC_2.21 dngettext F
 GLIBC_2.21 dprintf F
 GLIBC_2.21 drand48 F
@@ -2389,6 +2390,7 @@ GLIBC_2.34 dlerror F
 GLIBC_2.34 dlinfo F
 GLIBC_2.34 dlmopen F
 GLIBC_2.34 dlsym F
+GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F

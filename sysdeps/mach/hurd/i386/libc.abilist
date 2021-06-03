@@ -745,6 +745,7 @@ GLIBC_2.2.6 dladdr F
 GLIBC_2.2.6 dlclose F
 GLIBC_2.2.6 dlerror F
 GLIBC_2.2.6 dlsym F
+GLIBC_2.2.6 dlvsym F
 GLIBC_2.2.6 dngettext F
 GLIBC_2.2.6 dprintf F
 GLIBC_2.2.6 drand48 F
@@ -2221,6 +2222,7 @@ GLIBC_2.34 dlerror F
 GLIBC_2.34 dlinfo F
 GLIBC_2.34 dlmopen F
 GLIBC_2.34 dlsym F
+GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.4 __confstr_chk F

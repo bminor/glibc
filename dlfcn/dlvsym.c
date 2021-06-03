@@ -17,20 +17,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <dlfcn.h>
-#include <stddef.h>
-
 #include <ldsodefs.h>
-
-#if !defined SHARED && IS_IN (libdl)
-
-void *
-weak_function
-dlvsym (void *handle, const char *name, const char *version_str)
-{
-  return __dlvsym (handle, name, version_str, RETURN_ADDRESS (0));
-}
-
-#else
+#include <shlib-compat.h>
+#include <stddef.h>
 
 struct dlvsym_args
 {
@@ -44,29 +33,23 @@ struct dlvsym_args
   void *sym;
 };
 
-
 static void
 dlvsym_doit (void *a)
 {
-  struct dlvsym_args *args = (struct dlvsym_args *)a;
+  struct dlvsym_args *args = (struct dlvsym_args *) a;
 
   args->sym = _dl_vsym (args->handle, args->name, args->version, args->who);
 }
 
-void *
-__dlvsym (void *handle, const char *name, const char *version_str
-	  DL_CALLER_DECL)
+static void *
+dlvsym_implementation (void *handle, const char *name, const char *version,
+		       void *dl_caller)
 {
-# ifdef SHARED
-  if (!rtld_active ())
-    return _dlfcn_hook->dlvsym (handle, name, version_str, DL_CALLER);
-# endif
-
   struct dlvsym_args args;
+  args.who = dl_caller;
   args.handle = handle;
   args.name = name;
-  args.who = DL_CALLER;
-  args.version = version_str;
+  args.version = version;
 
   /* Protect against concurrent loads and unloads.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
@@ -77,7 +60,34 @@ __dlvsym (void *handle, const char *name, const char *version_str
 
   return result;
 }
-# ifdef SHARED
-weak_alias (__dlvsym, dlvsym)
+
+#ifdef SHARED
+void *
+___dlvsym (void *handle, const char *name, const char *version)
+{
+  if (!rtld_active ())
+    return _dlfcn_hook->dlvsym (handle, name, version, RETURN_ADDRESS (0));
+  else
+    return dlvsym_implementation (handle, name, version, RETURN_ADDRESS (0));
+}
+versioned_symbol (libc, ___dlvsym, dlvsym, GLIBC_2_34);
+
+# if OTHER_SHLIB_COMPAT (libdl, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (libdl, ___dlvsym, dlvsym, GLIBC_2_1);
 # endif
-#endif
+
+#else /* !SHARED */
+/* Also used with _dlfcn_hook.  */
+void *
+__dlvsym (void *handle, const char *name, const char *version, void *dl_caller)
+{
+  return dlvsym_implementation (handle, name, version, dl_caller);
+}
+
+void *
+___dlvsym (void *handle, const char *name, const char *version)
+{
+  return __dlvsym (handle, name, version, RETURN_ADDRESS (0));
+}
+weak_alias (___dlvsym, dlvsym)
+#endif /* !SHARED */

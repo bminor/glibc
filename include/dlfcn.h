@@ -92,6 +92,7 @@ libc_hidden_proto (_dl_sym)
    NULL.  */
 extern void *_dl_vsym (void *handle, const char *name, const char *version,
 		       void *who);
+libc_hidden_proto (_dl_vsym)
 
 /* Helper function for <dlfcn.h> functions.  Runs the OPERATE function via
    _dl_catch_error.  Returns zero for success, nonzero for failure; and
@@ -137,9 +138,8 @@ extern void *__dlmopen (Lmid_t nsid, const char *file, int mode,
 			void *dl_caller);
 extern int __dlclose (void *handle);
 extern void *__dlsym (void *handle, const char *name, void *dl_caller);
-extern void *__dlvsym (void *handle, const char *name, const char *version
-		       DL_CALLER_DECL)
-     attribute_hidden;
+extern void *__dlvsym (void *handle, const char *name, const char *version,
+		       void *dl_caller);
 extern int __dladdr (const void *address, Dl_info *info);
 extern int __dladdr1 (const void *address, Dl_info *info,
 		      void **extra_info, int flags);

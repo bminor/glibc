@@ -1503,6 +1503,7 @@ GLIBC_2.1 chown F
 GLIBC_2.1 clntunix_create F
 GLIBC_2.1 creat64 F
 GLIBC_2.1 des_setparity F
+GLIBC_2.1 dlvsym F
 GLIBC_2.1 ecb_crypt F
 GLIBC_2.1 endutxent F
 GLIBC_2.1 fattach F
@@ -2439,6 +2440,7 @@ GLIBC_2.34 dlerror F
 GLIBC_2.34 dlinfo F
 GLIBC_2.34 dlmopen F
 GLIBC_2.34 dlsym F
+GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
