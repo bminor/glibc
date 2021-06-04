@@ -18,43 +18,47 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <pthread.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 #include <getopt.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <semaphore.h>
+#include <sys/mman.h>
 
+#include <support/check.h>
+#include <support/support.h>
+#include <support/temp_file.h>
+#include <support/xstdio.h>
+#include <support/xunistd.h>
 #include <support/xthread.h>
 
-const char *command;
-const char *pidfile;
-char pidfilename[] = "/tmp/tst-cancel7-XXXXXX";
+static const char *command;
+static const char *pidfile;
+static const char *semfile;
+static char *pidfilename;
+static char *semfilename;
+
+static sem_t *sem;
 
 static void *
 tf (void *arg)
 {
-  const char *args = " --direct --pidfile ";
-  char *cmd = alloca (strlen (command) + strlen (args)
-		      + strlen (pidfilename) + 1);
-
-  strcpy (stpcpy (stpcpy (cmd, command), args), pidfilename);
+  char *cmd = xasprintf ("%s --direct --sem %s --pidfile %s",
+			 command, semfilename, pidfilename);
   system (cmd);
   /* This call should never return.  */
   return NULL;
 }
 
-
 static void
 sl (void)
 {
-  FILE *f = fopen (pidfile, "w");
-  if (f == NULL)
-    exit (1);
+  FILE *f = xfopen (pidfile, "w");
 
   fprintf (f, "%lld\n", (long long) getpid ());
   fflush (f);
+
+  if (sem_post (sem) != 0)
+    FAIL_EXIT1 ("sem_post: %m");
 
   struct flock fl =
     {
@@ -64,7 +68,7 @@ sl (void)
       .l_len = 1
     };
   if (fcntl (fileno (f), F_SETLK, &fl) != 0)
-    exit (1);
+    FAIL_EXIT1 ("fcntl (F_SETFL): %m");
 
   sigset_t ss;
   sigfillset (&ss);
@@ -76,57 +80,57 @@ sl (void)
 static void
 do_prepare (int argc, char *argv[])
 {
+  int semfd;
+  if (semfile == NULL)
+    semfd = create_temp_file ("tst-cancel7.", &semfilename);
+  else
+    semfd = open (semfile, O_RDWR);
+  TEST_VERIFY_EXIT (semfd != -1);
+
+  sem = xmmap (NULL, sizeof (sem_t), PROT_READ | PROT_WRITE, MAP_SHARED,
+	       semfd);
+  TEST_VERIFY_EXIT (sem != SEM_FAILED);
+  if (semfile == NULL)
+    {
+      xftruncate (semfd, sizeof (sem_t));
+      TEST_VERIFY_EXIT (sem_init (sem, 1, 0) != -1);
+    }
+
   if (command == NULL)
     command = argv[0];
 
   if (pidfile)
     sl ();
 
-  int fd = mkstemp (pidfilename);
+  int fd = create_temp_file ("tst-cancel7-pid-", &pidfilename);
   if (fd == -1)
-    {
-      puts ("mkstemp failed");
-      exit (1);
-    }
+    FAIL_EXIT1 ("create_temp_file failed: %m");
 
-  write (fd, " ", 1);
-  close (fd);
+  xwrite (fd, " ", 1);
+  xclose (fd);
 }
 
 
 static int
 do_test (void)
 {
-  pthread_t th;
-  if (pthread_create (&th, NULL, tf, NULL) != 0)
-    {
-      puts ("pthread_create failed");
-      return 1;
-    }
+  pthread_t th = xpthread_create (NULL, tf, NULL);
 
   do
-    sleep (1);
+    nanosleep (&(struct timespec) { .tv_sec = 0, .tv_nsec = 100000000 }, NULL);
   while (access (pidfilename, R_OK) != 0);
 
   xpthread_cancel (th);
   void *r = xpthread_join (th);
 
-  sleep (1);
+  if (sem_wait (sem) != 0)
+    FAIL_EXIT1 ("sem_wait: %m");
 
-  FILE *f = fopen (pidfilename, "r+");
-  if (f == NULL)
-    {
-      puts ("no pidfile");
-      return 1;
-    }
+  FILE *f = xfopen (pidfilename, "r+");
 
   long long ll;
   if (fscanf (f, "%lld\n", &ll) != 1)
-    {
-      puts ("could not read pid");
-      unlink (pidfilename);
-      return 1;
-    }
+    FAIL_EXIT1 ("fscanf: %m");
 
   struct flock fl =
     {
@@ -136,11 +140,7 @@ do_test (void)
       .l_len = 1
     };
   if (fcntl (fileno (f), F_GETLK, &fl) != 0)
-    {
-      puts ("F_GETLK failed");
-      unlink (pidfilename);
-      return 1;
-    }
+    FAIL_EXIT1 ("fcntl: %m");
 
   if (fl.l_type != F_UNLCK)
     {
@@ -148,13 +148,10 @@ do_test (void)
       if (fl.l_pid == ll)
 	kill (fl.l_pid, SIGKILL);
 
-      unlink (pidfilename);
       return 1;
     }
 
-  fclose (f);
-
-  unlink (pidfilename);
+  xfclose (f);
 
   return r != PTHREAD_CANCELED;
 }
@@ -180,15 +177,15 @@ do_cleanup (void)
 
       fclose (f);
     }
-
-  unlink (pidfilename);
 }
 
 #define OPT_COMMAND	10000
 #define OPT_PIDFILE	10001
+#define OPT_SEMFILE	10002
 #define CMDLINE_OPTIONS \
   { "command", required_argument, NULL, OPT_COMMAND },	\
-  { "pidfile", required_argument, NULL, OPT_PIDFILE },
+  { "pidfile", required_argument, NULL, OPT_PIDFILE },  \
+  { "sem",     required_argument, NULL, OPT_SEMFILE },
 static void
 cmdline_process (int c)
 {
@@ -199,6 +196,9 @@ cmdline_process (int c)
       break;
     case OPT_PIDFILE:
       pidfile = optarg;
+      break;
+    case OPT_SEMFILE:
+      semfile = optarg;
       break;
     }
 }
