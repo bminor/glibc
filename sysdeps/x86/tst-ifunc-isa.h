@@ -1,4 +1,4 @@
-/* IFUNC resolver with CPU_FEATURE_USABLE.
+/* IFUNC resolver with CPU_FEATURE_ACTIVE.
    Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -32,15 +32,15 @@ enum isa
 __attribute__ ((__optimize__ ("-fno-stack-protector")))
 get_isa (void)
 {
-  if (CPU_FEATURE_USABLE (AVX512F))
+  if (CPU_FEATURE_ACTIVE (AVX512F))
     return avx512f;
-  if (CPU_FEATURE_USABLE (AVX2))
+  if (CPU_FEATURE_ACTIVE (AVX2))
     return avx2;
-  if (CPU_FEATURE_USABLE (AVX))
+  if (CPU_FEATURE_ACTIVE (AVX))
     return avx;
-  if (CPU_FEATURE_USABLE (SSE4_2))
+  if (CPU_FEATURE_ACTIVE (SSE4_2))
     return sse4_2;
-  if (CPU_FEATURE_USABLE (SSE2))
+  if (CPU_FEATURE_ACTIVE (SSE2))
     return sse2;
   return none;
 }

@@ -1,4 +1,4 @@
-/* Check CPU_FEATURE_USABLE on IBT and SHSTK.
+/* Check CPU_FEATURE_ACTIVE on IBT and SHSTK.
    Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -21,19 +21,19 @@
 #include <support/test-driver.h>
 #include <support/xunistd.h>
 
-/* Check that CPU_FEATURE_USABLE on IBT and SHSTK matches _get_ssp.  */
+/* Check that CPU_FEATURE_ACTIVE on IBT and SHSTK matches _get_ssp.  */
 
 static int
 do_test (void)
 {
   if (_get_ssp () != 0)
     {
-      if (CPU_FEATURE_USABLE (IBT) && CPU_FEATURE_USABLE (SHSTK))
+      if (CPU_FEATURE_ACTIVE (IBT) && CPU_FEATURE_ACTIVE (SHSTK))
 	return EXIT_SUCCESS;
     }
   else
     {
-      if (!CPU_FEATURE_USABLE (IBT) && !CPU_FEATURE_USABLE (SHSTK))
+      if (!CPU_FEATURE_ACTIVE (IBT) && !CPU_FEATURE_ACTIVE (SHSTK))
 	return EXIT_SUCCESS;
     }
 

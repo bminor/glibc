@@ -40,69 +40,69 @@ extern void TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *)
 #endif
 
 static void
-update_usable (struct cpu_features *cpu_features)
+update_active (struct cpu_features *cpu_features)
 {
-  /* Copy the cpuid bits to usable bits for CPU featuress whose usability
+  /* Copy the cpuid bits to active bits for CPU featuress whose usability
      in user space can be detected without additonal OS support.  */
-  CPU_FEATURE_SET_USABLE (cpu_features, SSE3);
-  CPU_FEATURE_SET_USABLE (cpu_features, PCLMULQDQ);
-  CPU_FEATURE_SET_USABLE (cpu_features, SSSE3);
-  CPU_FEATURE_SET_USABLE (cpu_features, CMPXCHG16B);
-  CPU_FEATURE_SET_USABLE (cpu_features, SSE4_1);
-  CPU_FEATURE_SET_USABLE (cpu_features, SSE4_2);
-  CPU_FEATURE_SET_USABLE (cpu_features, MOVBE);
-  CPU_FEATURE_SET_USABLE (cpu_features, POPCNT);
-  CPU_FEATURE_SET_USABLE (cpu_features, AES);
-  CPU_FEATURE_SET_USABLE (cpu_features, OSXSAVE);
-  CPU_FEATURE_SET_USABLE (cpu_features, TSC);
-  CPU_FEATURE_SET_USABLE (cpu_features, CX8);
-  CPU_FEATURE_SET_USABLE (cpu_features, CMOV);
-  CPU_FEATURE_SET_USABLE (cpu_features, CLFSH);
-  CPU_FEATURE_SET_USABLE (cpu_features, MMX);
-  CPU_FEATURE_SET_USABLE (cpu_features, FXSR);
-  CPU_FEATURE_SET_USABLE (cpu_features, SSE);
-  CPU_FEATURE_SET_USABLE (cpu_features, SSE2);
-  CPU_FEATURE_SET_USABLE (cpu_features, HTT);
-  CPU_FEATURE_SET_USABLE (cpu_features, BMI1);
-  CPU_FEATURE_SET_USABLE (cpu_features, HLE);
-  CPU_FEATURE_SET_USABLE (cpu_features, BMI2);
-  CPU_FEATURE_SET_USABLE (cpu_features, ERMS);
-  CPU_FEATURE_SET_USABLE (cpu_features, RDSEED);
-  CPU_FEATURE_SET_USABLE (cpu_features, ADX);
-  CPU_FEATURE_SET_USABLE (cpu_features, CLFLUSHOPT);
-  CPU_FEATURE_SET_USABLE (cpu_features, CLWB);
-  CPU_FEATURE_SET_USABLE (cpu_features, SHA);
-  CPU_FEATURE_SET_USABLE (cpu_features, PREFETCHWT1);
-  CPU_FEATURE_SET_USABLE (cpu_features, OSPKE);
-  CPU_FEATURE_SET_USABLE (cpu_features, WAITPKG);
-  CPU_FEATURE_SET_USABLE (cpu_features, GFNI);
-  CPU_FEATURE_SET_USABLE (cpu_features, RDPID);
-  CPU_FEATURE_SET_USABLE (cpu_features, RDRAND);
-  CPU_FEATURE_SET_USABLE (cpu_features, CLDEMOTE);
-  CPU_FEATURE_SET_USABLE (cpu_features, MOVDIRI);
-  CPU_FEATURE_SET_USABLE (cpu_features, MOVDIR64B);
-  CPU_FEATURE_SET_USABLE (cpu_features, FSRM);
-  CPU_FEATURE_SET_USABLE (cpu_features, RTM_ALWAYS_ABORT);
-  CPU_FEATURE_SET_USABLE (cpu_features, SERIALIZE);
-  CPU_FEATURE_SET_USABLE (cpu_features, TSXLDTRK);
-  CPU_FEATURE_SET_USABLE (cpu_features, LAHF64_SAHF64);
-  CPU_FEATURE_SET_USABLE (cpu_features, LZCNT);
-  CPU_FEATURE_SET_USABLE (cpu_features, SSE4A);
-  CPU_FEATURE_SET_USABLE (cpu_features, PREFETCHW);
-  CPU_FEATURE_SET_USABLE (cpu_features, TBM);
-  CPU_FEATURE_SET_USABLE (cpu_features, RDTSCP);
-  CPU_FEATURE_SET_USABLE (cpu_features, WBNOINVD);
-  CPU_FEATURE_SET_USABLE (cpu_features, FZLRM);
-  CPU_FEATURE_SET_USABLE (cpu_features, FSRS);
-  CPU_FEATURE_SET_USABLE (cpu_features, FSRCS);
-  CPU_FEATURE_SET_USABLE (cpu_features, PTWRITE);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, SSE3);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, PCLMULQDQ);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, SSSE3);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, CMPXCHG16B);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, SSE4_1);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, SSE4_2);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, MOVBE);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, POPCNT);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, AES);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, OSXSAVE);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, TSC);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, CX8);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, CMOV);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, CLFSH);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, MMX);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, FXSR);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, SSE);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, SSE2);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, HTT);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, BMI1);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, HLE);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, BMI2);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, ERMS);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, RDSEED);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, ADX);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, CLFLUSHOPT);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, CLWB);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, SHA);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, PREFETCHWT1);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, OSPKE);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, WAITPKG);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, GFNI);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, RDPID);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, RDRAND);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, CLDEMOTE);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, MOVDIRI);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, MOVDIR64B);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, FSRM);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, RTM_ALWAYS_ABORT);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, SERIALIZE);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, TSXLDTRK);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, LAHF64_SAHF64);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, LZCNT);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, SSE4A);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, PREFETCHW);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, TBM);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, RDTSCP);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, WBNOINVD);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, FZLRM);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, FSRS);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, FSRCS);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, PTWRITE);
 
   if (!CPU_FEATURES_CPU_P (cpu_features, RTM_ALWAYS_ABORT))
-    CPU_FEATURE_SET_USABLE (cpu_features, RTM);
+    CPU_FEATURE_SET_ACTIVE (cpu_features, RTM);
 
 #if CET_ENABLED
-  CPU_FEATURE_SET_USABLE (cpu_features, IBT);
-  CPU_FEATURE_SET_USABLE (cpu_features, SHSTK);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, IBT);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, SHSTK);
 #endif
 
   /* Can we call xgetbv?  */
@@ -131,17 +131,17 @@ update_usable (struct cpu_features *cpu_features)
 		    |= bit_arch_AVX_Fast_Unaligned_Load;
 		}
 	      /* Determine if AVX-VNNI is usable.  */
-	      CPU_FEATURE_SET_USABLE (cpu_features, AVX_VNNI);
+	      CPU_FEATURE_SET_ACTIVE (cpu_features, AVX_VNNI);
 	      /* Determine if FMA is usable.  */
-	      CPU_FEATURE_SET_USABLE (cpu_features, FMA);
+	      CPU_FEATURE_SET_ACTIVE (cpu_features, FMA);
 	      /* Determine if VAES is usable.  */
-	      CPU_FEATURE_SET_USABLE (cpu_features, VAES);
+	      CPU_FEATURE_SET_ACTIVE (cpu_features, VAES);
 	      /* Determine if VPCLMULQDQ is usable.  */
-	      CPU_FEATURE_SET_USABLE (cpu_features, VPCLMULQDQ);
+	      CPU_FEATURE_SET_ACTIVE (cpu_features, VPCLMULQDQ);
 	      /* Determine if XOP is usable.  */
-	      CPU_FEATURE_SET_USABLE (cpu_features, XOP);
+	      CPU_FEATURE_SET_ACTIVE (cpu_features, XOP);
 	      /* Determine if F16C is usable.  */
-	      CPU_FEATURE_SET_USABLE (cpu_features, F16C);
+	      CPU_FEATURE_SET_ACTIVE (cpu_features, F16C);
 	    }
 
 	  /* Check if OPMASK state, upper 256-bit of ZMM0-ZMM15 and
@@ -155,41 +155,41 @@ update_usable (struct cpu_features *cpu_features)
 		{
 		  CPU_FEATURE_SET (cpu_features, AVX512F);
 		  /* Determine if AVX512CD is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512CD);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512CD);
 		  /* Determine if AVX512ER is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512ER);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512ER);
 		  /* Determine if AVX512PF is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512PF);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512PF);
 		  /* Determine if AVX512VL is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512VL);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512VL);
 		  /* Determine if AVX512DQ is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512DQ);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512DQ);
 		  /* Determine if AVX512BW is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512BW);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512BW);
 		  /* Determine if AVX512_4FMAPS is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_4FMAPS);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512_4FMAPS);
 		  /* Determine if AVX512_4VNNIW is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_4VNNIW);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512_4VNNIW);
 		  /* Determine if AVX512_BITALG is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_BITALG);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512_BITALG);
 		  /* Determine if AVX512_IFMA is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_IFMA);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512_IFMA);
 		  /* Determine if AVX512_VBMI is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_VBMI);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512_VBMI);
 		  /* Determine if AVX512_VBMI2 is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_VBMI2);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512_VBMI2);
 		  /* Determine if is AVX512_VNNI usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_VNNI);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512_VNNI);
 		  /* Determine if AVX512_VPOPCNTDQ is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features,
+		  CPU_FEATURE_SET_ACTIVE (cpu_features,
 					  AVX512_VPOPCNTDQ);
 		  /* Determine if AVX512_VP2INTERSECT is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features,
+		  CPU_FEATURE_SET_ACTIVE (cpu_features,
 					  AVX512_VP2INTERSECT);
 		  /* Determine if AVX512_BF16 is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_BF16);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512_BF16);
 		  /* Determine if AVX512_FP16 is usable.  */
-		  CPU_FEATURE_SET_USABLE (cpu_features, AVX512_FP16);
+		  CPU_FEATURE_SET_ACTIVE (cpu_features, AVX512_FP16);
 		}
 	    }
 	}
@@ -199,19 +199,19 @@ update_usable (struct cpu_features *cpu_features)
 	  == (bit_XTILECFG_state | bit_XTILEDATA_state))
 	{
 	  /* Determine if AMX_BF16 is usable.  */
-	  CPU_FEATURE_SET_USABLE (cpu_features, AMX_BF16);
+	  CPU_FEATURE_SET_ACTIVE (cpu_features, AMX_BF16);
 	  /* Determine if AMX_TILE is usable.  */
-	  CPU_FEATURE_SET_USABLE (cpu_features, AMX_TILE);
+	  CPU_FEATURE_SET_ACTIVE (cpu_features, AMX_TILE);
 	  /* Determine if AMX_INT8 is usable.  */
-	  CPU_FEATURE_SET_USABLE (cpu_features, AMX_INT8);
+	  CPU_FEATURE_SET_ACTIVE (cpu_features, AMX_INT8);
 	}
 
       /* These features are usable only when OSXSAVE is enabled.  */
       CPU_FEATURE_SET (cpu_features, XSAVE);
-      CPU_FEATURE_SET_USABLE (cpu_features, XSAVEOPT);
-      CPU_FEATURE_SET_USABLE (cpu_features, XSAVEC);
-      CPU_FEATURE_SET_USABLE (cpu_features, XGETBV_ECX_1);
-      CPU_FEATURE_SET_USABLE (cpu_features, XFD);
+      CPU_FEATURE_SET_ACTIVE (cpu_features, XSAVEOPT);
+      CPU_FEATURE_SET_ACTIVE (cpu_features, XSAVEC);
+      CPU_FEATURE_SET_ACTIVE (cpu_features, XGETBV_ECX_1);
+      CPU_FEATURE_SET_ACTIVE (cpu_features, XFD);
 
       /* For _dl_runtime_resolve, set xsave_state_size to xsave area
 	 size + integer register save size and align it to 64 bytes.  */
@@ -289,8 +289,8 @@ update_usable (struct cpu_features *cpu_features)
   if (CPU_FEATURES_CPU_P (cpu_features, AESKLE))
     {
       CPU_FEATURE_SET (cpu_features, AESKLE);
-      CPU_FEATURE_SET_USABLE (cpu_features, KL);
-      CPU_FEATURE_SET_USABLE (cpu_features, WIDE_KL);
+      CPU_FEATURE_SET_ACTIVE (cpu_features, KL);
+      CPU_FEATURE_SET_ACTIVE (cpu_features, WIDE_KL);
     }
 
   cpu_features->isa_1 = get_isa_level (cpu_features);
@@ -426,7 +426,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 
       get_extended_indices (cpu_features);
 
-      update_usable (cpu_features);
+      update_active (cpu_features);
 
       if (family == 0x06)
 	{
@@ -569,7 +569,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 
       get_extended_indices (cpu_features);
 
-      update_usable (cpu_features);
+      update_active (cpu_features);
 
       ecx = cpu_features->features[CPUID_INDEX_1].cpuid.ecx;
 
@@ -577,7 +577,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 	{
 	  /* Since the FMA4 bit is in CPUID_INDEX_80000001 and
 	     FMA4 requires AVX, determine if FMA4 is usable here.  */
-	  CPU_FEATURE_SET_USABLE (cpu_features, FMA4);
+	  CPU_FEATURE_SET_ACTIVE (cpu_features, FMA4);
 	}
 
       if (family == 0x15)
@@ -608,7 +608,7 @@ init_cpu_features (struct cpu_features *cpu_features)
 
       get_extended_indices (cpu_features);
 
-      update_usable (cpu_features);
+      update_active (cpu_features);
 
       model += extended_model;
       if (family == 0x6)
@@ -652,7 +652,7 @@ init_cpu_features (struct cpu_features *cpu_features)
     {
       kind = arch_kind_other;
       get_common_indices (cpu_features, NULL, NULL, NULL, NULL);
-      update_usable (cpu_features);
+      update_active (cpu_features);
     }
 
   /* Support i586 if CX8 is available.  */

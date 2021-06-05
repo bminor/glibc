@@ -55,7 +55,7 @@ get_cpuinfo (void)
 
 int
 check_proc (const char *proc_name, const char *search_name, int flag,
-	    int usable, const char *name)
+	    int active, const char *name)
 {
   int found = 0;
 
@@ -79,7 +79,7 @@ check_proc (const char *proc_name, const char *search_name, int flag,
 
   if (found != flag)
     {
-      if (found || usable)
+      if (found || active)
 	printf (" *** failure ***\n");
       else
 	{

@@ -62,8 +62,8 @@ _dl_diagnostics_cpu (void)
            cpu_features->features[index].cpuid_array[reg]);
       for (unsigned int reg = 0; reg < 4; ++reg)
         print_cpu_feature_internal
-          (index, "usable", reg,
-           cpu_features->features[index].usable_array[reg]);
+          (index, "active", reg,
+           cpu_features->features[index].active_array[reg]);
     }
 
   /* The preferred indicators are not part of the ABI and need to be

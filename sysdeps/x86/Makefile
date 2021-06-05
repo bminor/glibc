@@ -5,7 +5,7 @@ endif
 ifeq ($(subdir),elf)
 sysdep_routines += get-cpuid-feature-leaf
 sysdep-dl-routines += dl-get-cpu-features
-sysdep_headers += sys/platform/x86.h
+sysdep_headers += sys/platform/x86.h bits/platform/x86.h
 
 CFLAGS-get-cpuid-feature-leaf.o += $(no-stack-protector)
 

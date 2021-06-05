@@ -148,14 +148,16 @@ Return a pointer to x86 CPU feature structure used by query macros for x86
 CPU feature @var{leaf}.
 @end deftypefun
 
-@deftypefn Macro int HAS_CPU_FEATURE (@var{name})
+@deftypefn Macro int CPU_FEATURE_PRESENT (@var{name})
 This macro returns a nonzero value (true) if the processor has the feature
 @var{name}.
 @end deftypefn
 
-@deftypefn Macro int CPU_FEATURE_USABLE (@var{name})
+@deftypefn Macro int CPU_FEATURE_ACTIVE (@var{name})
 This macro returns a nonzero value (true) if the processor has the feature
-@var{name} and the feature is supported by the operating system.
+@var{name} and the feature is active.  There may be other preconditions,
+like sufficient stack space or further setup for AMX, which must be
+satisfied before the feature can be used.
 @end deftypefn
 
 The supported processor features are:
@@ -685,20 +687,20 @@ You could query if a processor supports @code{AVX} with:
 #include <sys/platform/x86.h>
 
 int
-support_avx (void)
+avx_present (void)
 @{
-  return HAS_CPU_FEATURE (AVX);
+  return CPU_FEATURE_PRESENT (AVX);
 @}
 @end smallexample
 
-and if @code{AVX} is usable with:
+and if @code{AVX} is active and may be used with:
 
 @smallexample
 #include <sys/platform/x86.h>
 
 int
-usable_avx (void)
+avx_active (void)
 @{
-  return CPU_FEATURE_USABLE (AVX);
+  return CPU_FEATURE_ACTIVE (AVX);
 @}
 @end smallexample

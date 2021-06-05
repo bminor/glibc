@@ -24,7 +24,7 @@
 # define CHECK_ARCH_EXT                                        \
   do                                                           \
     {                                                          \
-      if (!CPU_FEATURE_USABLE (AVX)) return;                   \
+      if (!CPU_FEATURE_ACTIVE (AVX)) return;                   \
     }                                                          \
   while (0)
 
@@ -34,7 +34,7 @@
 # define CHECK_ARCH_EXT                                        \
   do                                                           \
     {                                                          \
-      if (!CPU_FEATURE_USABLE (AVX2)) return;                  \
+      if (!CPU_FEATURE_ACTIVE (AVX2)) return;                  \
     }                                                          \
   while (0)
 
@@ -44,7 +44,7 @@
 # define CHECK_ARCH_EXT                                        \
   do                                                           \
     {                                                          \
-      if (!CPU_FEATURE_USABLE (AVX512F)) return;               \
+      if (!CPU_FEATURE_ACTIVE (AVX512F)) return;               \
     }                                                          \
   while (0)
 

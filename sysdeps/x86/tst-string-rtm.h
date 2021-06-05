@@ -26,7 +26,7 @@ static int
 do_test_1 (const char *name, unsigned int loop, int (*prepare) (void),
 	   int (*function) (void))
 {
-  if (!CPU_FEATURE_USABLE (RTM))
+  if (!CPU_FEATURE_ACTIVE (RTM))
     return EXIT_UNSUPPORTED;
 
   int status = prepare ();

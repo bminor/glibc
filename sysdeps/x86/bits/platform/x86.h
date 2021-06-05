@@ -36,7 +36,7 @@ enum
 struct cpuid_feature
 {
   unsigned int cpuid_array[4];
-  unsigned int usable_array[4];
+  unsigned int active_array[4];
 };
 
 enum cpuid_register_index
