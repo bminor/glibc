@@ -644,37 +644,17 @@ add_module (char *rp, const char *directory)
 	      cost, need_ext);
 }
 
-
-/* Read the config file and add the data for this directory to that.  */
-static int
-handle_dir (const char *dir)
+/* Read a gconv-modules configuration file.  */
+static bool
+handle_file (const char *dir, const char *infile)
 {
-  char *cp;
   FILE *fp;
   char *line = NULL;
   size_t linelen = 0;
-  size_t dirlen = strlen (dir);
-
-  if (dir[dirlen - 1] != '/')
-    {
-      char *newp = (char *) xmalloc (dirlen + 2);
-      dir = memcpy (newp, dir, dirlen);
-      newp[dirlen++] = '/';
-      newp[dirlen] = '\0';
-    }
-
-  char infile[prefix_len + dirlen + sizeof "gconv-modules"];
-  cp = infile;
-  if (dir[0] == '/')
-    cp = mempcpy (cp, prefix, prefix_len);
-  strcpy (mempcpy (cp, dir, dirlen), "gconv-modules");
 
   fp = fopen (infile, "r");
   if (fp == NULL)
-    {
-      error (0, errno, "cannot open `%s'", infile);
-      return 1;
-    }
+    return false;
 
   /* No threads present.  */
   __fsetlocking (fp, FSETLOCKING_BYCALLER);
@@ -723,7 +703,42 @@ handle_dir (const char *dir)
 
   fclose (fp);
 
-  return 0;
+  return true;
+}
+
+/* Read config files and add the data for this directory to cache.  */
+static int
+handle_dir (const char *dir)
+{
+  char *cp;
+  size_t dirlen = strlen (dir);
+  bool found = false;
+
+  if (dir[dirlen - 1] != '/')
+    {
+      char *newp = (char *) xmalloc (dirlen + 2);
+      dir = memcpy (newp, dir, dirlen);
+      newp[dirlen++] = '/';
+      newp[dirlen] = '\0';
+    }
+
+  char infile[prefix_len + dirlen + sizeof "gconv-modules"];
+  cp = infile;
+  if (dir[0] == '/')
+    cp = mempcpy (cp, prefix, prefix_len);
+  strcpy (mempcpy (cp, dir, dirlen), "gconv-modules");
+
+  found |= handle_file (dir, infile);
+
+  if (!found)
+    {
+      error (0, errno, "failed to open gconv configuration file in `%s'",
+	     dir);
+      error (0, 0,
+	     "ensure that the directory contains a valid gconv-modules file.");
+    }
+
+  return found ? 0 : 1;
 }
 
 
