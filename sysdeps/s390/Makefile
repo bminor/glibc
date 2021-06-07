@@ -21,13 +21,25 @@ lib := iconvdata
 include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
 extra-objs      += $(addsuffix .so, $(s390x-iconv-modules))
-install-others  += $(patsubst %, $(inst_gconvdir)/%.so, $(s390x-iconv-modules))
+install-others  += $(patsubst %, $(inst_gconvdir)/%.so, \
+				 $(s390x-iconv-modules)) \
+		   $(inst_gconvdir)/gconv-modules.d/gconv-modules-s390.conf
 
 $(patsubst %, $(inst_gconvdir)/%.so, $(s390x-iconv-modules)) : \
 $(inst_gconvdir)/%.so: $(objpfx)%.so $(+force)
 	$(do-install-program)
 
-sysdeps-gconv-modules = ../sysdeps/s390/gconv-modules
+ifdef objpfx
+generated += gconv-modules.d/gconv-modules-s390.conf
+endif
+
+$(inst_gconvdir)/gconv-modules.d/gconv-modules-s390.conf: \
+		$(modpfx)gconv-modules-s390.conf $(+force)
+	$(do-install)
+
+$(modpfx)gconv-modules-s390.conf: ../sysdeps/s390/gconv-modules-s390.conf \
+				  $(modpfx)
+	cp $< $@
 endif
 
 ifeq ($(subdir),elf)
