@@ -18,6 +18,7 @@
 
 #include <argp.h>
 #include <assert.h>
+#include <dirent.h>
 #include <error.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -33,6 +34,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/cdefs.h>
+#include <sys/types.h>
 #include <sys/uio.h>
 
 #include "iconvconfig.h"
@@ -710,6 +712,7 @@ handle_file (const char *dir, const char *infile)
 static int
 handle_dir (const char *dir)
 {
+#define BUF_LEN prefix_len + dirlen + sizeof "gconv-modules.d"
   char *cp;
   size_t dirlen = strlen (dir);
   bool found = false;
@@ -722,20 +725,55 @@ handle_dir (const char *dir)
       newp[dirlen] = '\0';
     }
 
-  char infile[prefix_len + dirlen + sizeof "gconv-modules"];
-  cp = infile;
+  /* First, look for a gconv-modules file.  */
+  char buf[BUF_LEN];
+  cp = buf;
   if (dir[0] == '/')
     cp = mempcpy (cp, prefix, prefix_len);
-  strcpy (mempcpy (cp, dir, dirlen), "gconv-modules");
+  cp = mempcpy (cp, dir, dirlen);
+  cp = stpcpy (cp, "gconv-modules");
 
-  found |= handle_file (dir, infile);
+  found |= handle_file (dir, buf);
+
+  /* Next, see if there is a gconv-modules.d directory containing configuration
+     files and if it is non-empty.  */
+  cp[0] = '.';
+  cp[1] = 'd';
+  cp[2] = '\0';
+
+  DIR *confdir = opendir (buf);
+  if (confdir != NULL)
+    {
+      struct dirent *ent;
+      while ((ent = readdir (confdir)) != NULL)
+	{
+	  if (ent->d_type != DT_REG)
+	    continue;
+
+	  size_t len = strlen (ent->d_name);
+	  const char *suffix = ".conf";
+
+	  if (len > strlen (suffix)
+	      && strcmp (ent->d_name + len - strlen (suffix), suffix) == 0)
+	    {
+	      /* LEN <= PATH_MAX so this alloca is not unbounded.  */
+	      char *conf = alloca (BUF_LEN + len + 1);
+	      cp = stpcpy (conf, buf);
+	      sprintf (cp, "/%s", ent->d_name);
+	      found |= handle_file (dir, conf);
+	    }
+	}
+      closedir (confdir);
+    }
 
   if (!found)
     {
-      error (0, errno, "failed to open gconv configuration file in `%s'",
+      error (0, errno, "failed to open gconv configuration files in `%s'",
 	     dir);
       error (0, 0,
-	     "ensure that the directory contains a valid gconv-modules file.");
+	     "ensure that the directory contains either a valid "
+	     "gconv-modules file or a gconv-modules.d directory with "
+	     "configuration files with names ending in .conf.");
     }
 
   return found ? 0 : 1;
