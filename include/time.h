@@ -11,6 +11,7 @@
 # include <sys/time.h>
 # include <time-clockid.h>
 # include <sys/time.h>
+# include <stdint.h>
 
 extern __typeof (strftime_l) __strftime_l;
 libc_hidden_proto (__strftime_l)
@@ -342,11 +343,12 @@ libc_hidden_proto (__time64)
    actual clock ID.  */
 #define CLOCK_IDFIELD_SIZE	3
 
-/* Check whether T fits in time_t.  */
+/* Check whether T fits in int32_t, assume all usages are for
+   sizeof(time_t) == 32.  */
 static inline bool
 in_time_t_range (__time64_t t)
 {
-  time_t s = t;
+  int32_t s = t;
   return s == t;
 }
 
@@ -453,8 +455,8 @@ timespec64_to_timeval64 (const struct __timespec64 ts64)
    and suseconds_t.  */
 struct __timeval32
 {
-  __int32_t tv_sec;         /* Seconds.  */
-  __int32_t tv_usec;        /* Microseconds.  */
+  int32_t tv_sec;         /* Seconds.  */
+  int32_t tv_usec;        /* Microseconds.  */
 };
 
 /* Conversion functions for converting to/from __timeval32  */
