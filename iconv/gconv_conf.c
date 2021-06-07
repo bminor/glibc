@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <dirent.h>
 #include <errno.h>
 #include <limits.h>
 #include <locale.h>
@@ -30,6 +31,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/param.h>
+#include <sys/types.h>
 
 #include <libc-lock.h>
 #include <gconv_int.h>
@@ -57,6 +59,7 @@ static const struct path_elem empty_path_elem = { NULL, 0 };
 /* Name of the file containing the module information in the directories
    along the path.  */
 static const char gconv_conf_filename[] = "gconv-modules";
+static const char gconv_conf_dirname[] = "gconv-modules.d";
 
 /* Filename extension for the modules.  */
 #ifndef MODULE_EXT
@@ -556,18 +559,52 @@ __gconv_read_conf (void)
 
   for (cnt = 0; __gconv_path_elem[cnt].name != NULL; ++cnt)
     {
+#define BUF_LEN elem_len + sizeof (gconv_conf_dirname)
+
       const char *elem = __gconv_path_elem[cnt].name;
       size_t elem_len = __gconv_path_elem[cnt].len;
-      char *filename;
+      char *buf;
 
       /* No slash needs to be inserted between elem and gconv_conf_filename;
 	 elem already ends in a slash.  */
-      filename = alloca (elem_len + sizeof (gconv_conf_filename));
-      __mempcpy (__mempcpy (filename, elem, elem_len),
-		 gconv_conf_filename, sizeof (gconv_conf_filename));
+      buf = alloca (BUF_LEN);
+      char *cp = __mempcpy (__mempcpy (buf, elem, elem_len),
+			    gconv_conf_filename, sizeof (gconv_conf_filename));
 
-      /* Read the next configuration file.  */
-      read_conf_file (filename, elem, elem_len, &modules, &nmodules);
+      /* Read the gconv-modules configuration file first.  */
+      read_conf_file (buf, elem, elem_len, &modules, &nmodules);
+
+      /* Next, see if there is a gconv-modules.d directory containing
+	 configuration files and if it is non-empty.  */
+      cp--;
+      cp[0] = '.';
+      cp[1] = 'd';
+      cp[2] = '\0';
+
+      DIR *confdir = __opendir (buf);
+      if (confdir != NULL)
+	{
+	  struct dirent *ent;
+	  while ((ent = __readdir (confdir)) != NULL)
+	    {
+	      if (ent->d_type != DT_REG)
+		continue;
+
+	      size_t len = strlen (ent->d_name);
+	      const char *suffix = ".conf";
+
+	      if (len > strlen (suffix)
+		  && strcmp (ent->d_name + len - strlen (suffix), suffix) == 0)
+		{
+		  /* LEN <= PATH_MAX so this alloca is not unbounded.  */
+		  char *conf = alloca (BUF_LEN + len + 1);
+		  cp = stpcpy (conf, buf);
+		  sprintf (cp, "/%s", ent->d_name);
+		  read_conf_file (conf, elem, elem_len, &modules, &nmodules);
+		}
+	    }
+	  __closedir (confdir);
+	}
     }
 #endif
 
