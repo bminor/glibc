@@ -137,7 +137,7 @@ charmaps = ../localedata/charmaps
 extra-modules-left := $(modules)
 include extra-module.mk
 
-gconv-modules = gconv-modules.conf
+gconv-modules = gconv-modules.conf gconv-modules-extra.conf
 modpfx = $(objpfx)gconv-modules.d/
 
 extra-objs	+= $(modules.so)
