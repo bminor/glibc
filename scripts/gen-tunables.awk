@@ -177,7 +177,7 @@ END {
     n = indices[2];
     m = indices[3];
     printf ("  {TUNABLE_NAME_S(%s, %s, %s)", t, n, m)
-    printf (", {TUNABLE_TYPE_%s, %s, %s}, {%s}, NULL, TUNABLE_SECLEVEL_%s, %s},\n",
+    printf (", {TUNABLE_TYPE_%s, %s, %s}, {%s}, false, TUNABLE_SECLEVEL_%s, %s},\n",
 	    types[t,n,m], minvals[t,n,m], maxvals[t,n,m],
 	    default_val[t,n,m], security_level[t,n,m], env_alias[t,n,m]);
   }
