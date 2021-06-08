@@ -54,6 +54,13 @@
 				  model, __ATOMIC_RELAXED);		\
   })
 
+#  define __arch_compare_and_exchange_bool_128_int(mem, newval, oldval, model) \
+  ({									\
+    typeof (*mem) __oldval = (oldval);					\
+    !__atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0,	\
+				  model, __ATOMIC_RELAXED);		\
+  })
+
 # define __arch_compare_and_exchange_val_8_int(mem, newval, oldval, model) \
   ({									\
     typeof (*mem) __oldval = (oldval);					\
@@ -79,6 +86,14 @@
   })
 
 #  define __arch_compare_and_exchange_val_64_int(mem, newval, oldval, model) \
+  ({									\
+    typeof (*mem) __oldval = (oldval);					\
+    __atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0,	\
+				 model, __ATOMIC_RELAXED);		\
+    __oldval;								\
+  })
+
+#  define __arch_compare_and_exchange_val_128_int(mem, newval, oldval, model) \
   ({									\
     typeof (*mem) __oldval = (oldval);					\
     __atomic_compare_exchange_n (mem, (void *) &__oldval, newval, 0,	\
@@ -118,6 +133,9 @@
 #  define __arch_exchange_64_int(mem, newval, model)	\
   __atomic_exchange_n (mem, newval, model)
 
+#  define __arch_exchange_128_int(mem, newval, model)	\
+  __atomic_exchange_n (mem, newval, model)
+
 # define atomic_exchange_acq(mem, value)				\
   __atomic_val_bysize (__arch_exchange, int, mem, value, __ATOMIC_ACQUIRE)
 
@@ -137,6 +155,9 @@
   __atomic_fetch_add (mem, value, model)
 
 #  define __arch_exchange_and_add_64_int(mem, value, model)	\
+  __atomic_fetch_add (mem, value, model)
+
+#  define __arch_exchange_and_add_128_int(mem, value, model)	\
   __atomic_fetch_add (mem, value, model)
 
 # define atomic_exchange_and_add_acq(mem, value)			\
