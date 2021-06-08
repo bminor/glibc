@@ -34,11 +34,13 @@
 ENTRY(__clone)
 	stg	%r6,48(%r15)		/* store %r6 to save area */
 	cfi_offset (%r6,-112)
-	lgr	%r0,%r5			/* move *arg out of the way */
 	ltgr    %r1,%r2			/* check fn and move to %r1 */
 	jz      error			/* no NULL function pointers */
-	ltgr    %r2,%r3			/* check child_stack and move to %r2 */
-	jz	error			/* no NULL stack pointers */
+	lghi	%r0,-16			/* Align the child_stack to a ...  */
+	ngr	%r3,%r0			/* double word boundary and ...  */
+	jz	error			/* avoid NULL stack pointers.  */
+	lgr	%r0,%r5			/* move *arg out of the way */
+	lgr	%r2,%r3			/* move child_stack to %r2  */
 	lgr	%r3,%r4			/* move flags to %r3 */
 	lgr	%r4,%r6			/* move parent_tid to %r4 */
 	lg	%r5,168(%r15)		/* load child_tid from stack */
