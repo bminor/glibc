@@ -62,6 +62,8 @@
       __atg1_result = pre##_32_##post (mem, __VA_ARGS__);		      \
     else if (sizeof (*mem) == 8)					      \
       __atg1_result = pre##_64_##post (mem, __VA_ARGS__);		      \
+    else if (sizeof (*mem) == 16)					      \
+      __atg1_result = pre##_128_##post (mem, __VA_ARGS__);		      \
     else								      \
       abort ();								      \
     __atg1_result;							      \
@@ -77,6 +79,8 @@
       __atg2_result = pre##_32_##post (mem, __VA_ARGS__);		      \
     else if (sizeof (*mem) == 8)					      \
       __atg2_result = pre##_64_##post (mem, __VA_ARGS__);		      \
+    else if (sizeof (*mem) == 16)					      \
+      __atg2_result = pre##_128_##post (mem, __VA_ARGS__);		      \
     else								      \
       abort ();								      \
     __atg2_result;							      \
@@ -540,7 +544,11 @@
 /* We require 32b atomic operations; some archs also support 64b atomic
    operations.  */
 void __atomic_link_error (void);
-# if __HAVE_64B_ATOMICS == 1
+# if defined __CHERI_PURE_CAPABILITY__
+#  define __atomic_check_size(mem) \
+   if ((sizeof (*mem) != 4) && (sizeof (*mem) != 8) && (sizeof (*mem) != 16)) \
+     __atomic_link_error ();
+# elif __HAVE_64B_ATOMICS == 1
 #  define __atomic_check_size(mem) \
    if ((sizeof (*mem) != 4) && (sizeof (*mem) != 8))			      \
      __atomic_link_error ();
@@ -553,7 +561,12 @@ void __atomic_link_error (void);
    need other atomic operations of such sizes, and restricting the support to
    loads and stores makes this easier for archs that do not have native
    support for atomic operations to less-than-word-sized data.  */
-# if __HAVE_64B_ATOMICS == 1
+# if defined __CHERI_PURE_CAPABILITY__
+#  define __atomic_check_size_ls(mem) \
+   if ((sizeof (*mem) != 1) && (sizeof (*mem) != 2) && (sizeof (*mem) != 4)   \
+       && (sizeof (*mem) != 8) && (sizeof (*mem) != 16))		      \
+     __atomic_link_error ();
+# elif __HAVE_64B_ATOMICS == 1
 #  define __atomic_check_size_ls(mem) \
    if ((sizeof (*mem) != 1) && (sizeof (*mem) != 2) && (sizeof (*mem) != 4)   \
        && (sizeof (*mem) != 8))						      \
