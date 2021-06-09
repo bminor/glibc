@@ -135,6 +135,66 @@ do_test (size_t align1, size_t align2, size_t len1, size_t len2,
 }
 
 static void
+do_overflow_tests (void)
+{
+  size_t i, j, len;
+  const size_t one = 1;
+  CHAR *s1, *s2;
+  uintptr_t s1_addr;
+  s1 = (CHAR *) buf1;
+  s2 = (CHAR *) buf2;
+  s1_addr = (uintptr_t)s1;
+ for (j = 0; j < 200; ++j)
+      s2[j] = 32 + 23 * j % (BIG_CHAR - 32);
+ s2[200] = 0;
+  for (i = 0; i < 750; ++i) {
+    for (j = 0; j < i; ++j)
+      s1[j] = 32 + 23 * j % (BIG_CHAR - 32);
+    s1[i] = '\0';
+
+       FOR_EACH_IMPL (impl, 0)
+    {
+      s2[200] = '\0';
+      do_one_test (impl, s2, s1, SIZE_MAX - i);
+      s2[200] = '\0';
+      do_one_test (impl, s2, s1, i - s1_addr);
+      s2[200] = '\0';
+      do_one_test (impl, s2, s1, -s1_addr - i);
+      s2[200] = '\0';
+      do_one_test (impl, s2, s1, SIZE_MAX - s1_addr - i);
+      s2[200] = '\0';
+      do_one_test (impl, s2, s1, SIZE_MAX - s1_addr + i);
+    }
+
+    len = 0;
+    for (j = 8 * sizeof(size_t) - 1; j ; --j)
+      {
+        len |= one << j;
+        FOR_EACH_IMPL (impl, 0)
+          {
+            s2[200] = '\0';
+            do_one_test (impl, s2, s1, len - i);
+            s2[200] = '\0';
+            do_one_test (impl, s2, s1, len + i);
+            s2[200] = '\0';
+            do_one_test (impl, s2, s1, len - s1_addr - i);
+            s2[200] = '\0';
+            do_one_test (impl, s2, s1, len - s1_addr + i);
+
+            s2[200] = '\0';
+            do_one_test (impl, s2, s1, ~len - i);
+            s2[200] = '\0';
+            do_one_test (impl, s2, s1, ~len + i);
+            s2[200] = '\0';
+            do_one_test (impl, s2, s1, ~len - s1_addr - i);
+            s2[200] = '\0';
+            do_one_test (impl, s2, s1, ~len - s1_addr + i);
+          }
+      }
+  }
+}
+
+static void
 do_random_tests (void)
 {
   size_t i, j, n, align1, align2, len1, len2, N;
@@ -316,6 +376,7 @@ test_main (void)
     }
 
   do_random_tests ();
+  do_overflow_tests ();
   return ret;
 }
 

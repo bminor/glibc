@@ -90,6 +90,38 @@ do_test (size_t align, size_t len, size_t maxlen, int max_char)
 }
 
 static void
+do_overflow_tests (void)
+{
+  size_t i, j, len;
+  const size_t one = 1;
+  uintptr_t buf_addr = (uintptr_t) buf1;
+
+  for (i = 0; i < 750; ++i)
+    {
+      do_test (0, i, SIZE_MAX - i, BIG_CHAR);
+      do_test (0, i, i - buf_addr, BIG_CHAR);
+      do_test (0, i, -buf_addr - i, BIG_CHAR);
+      do_test (0, i, SIZE_MAX - buf_addr - i, BIG_CHAR);
+      do_test (0, i, SIZE_MAX - buf_addr + i, BIG_CHAR);
+
+      len = 0;
+      for (j = 8 * sizeof(size_t) - 1; j ; --j)
+        {
+          len |= one << j;
+          do_test (0, i, len - i, BIG_CHAR);
+          do_test (0, i, len + i, BIG_CHAR);
+          do_test (0, i, len - buf_addr - i, BIG_CHAR);
+          do_test (0, i, len - buf_addr + i, BIG_CHAR);
+
+          do_test (0, i, ~len - i, BIG_CHAR);
+          do_test (0, i, ~len + i, BIG_CHAR);
+          do_test (0, i, ~len - buf_addr - i, BIG_CHAR);
+          do_test (0, i, ~len - buf_addr + i, BIG_CHAR);
+        }
+    }
+}
+
+static void
 do_random_tests (void)
 {
   size_t i, j, n, align, len;
@@ -283,6 +315,7 @@ test_main (void)
   do_random_tests ();
   do_page_tests ();
   do_page_2_tests ();
+  do_overflow_tests ();
   return ret;
 }
 
