@@ -1447,6 +1447,7 @@ class Config(object):
         # removed once glibc no longer supports building with older
         # GCC versions).
         cfg_opts = list(self.gcc_cfg)
+        cfg_opts += ['--enable-initfini-array']
         cfg_opts += ['--disable-libssp', '--disable-libcilkrts']
         host_libs = self.ctx.host_libraries_installdir
         cfg_opts += ['--with-gmp=%s' % host_libs,
