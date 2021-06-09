@@ -125,7 +125,7 @@ __libc_setup_tls (void)
 	  /* Remember the values we need.  */
 	  memsz = phdr->p_memsz;
 	  filesz = phdr->p_filesz;
-	  initimage = (void *) phdr->p_vaddr + main_map->l_addr;
+	  initimage = (void *) dl_rx_ptr (main_map, phdr->p_vaddr);
 	  align = phdr->p_align;
 	  if (phdr->p_align > max_align)
 	    max_align = phdr->p_align;
