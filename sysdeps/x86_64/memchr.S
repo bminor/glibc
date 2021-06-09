@@ -21,9 +21,11 @@
 #ifdef USE_AS_WMEMCHR
 # define MEMCHR		wmemchr
 # define PCMPEQ		pcmpeqd
+# define CHAR_PER_VEC	4
 #else
 # define MEMCHR		memchr
 # define PCMPEQ		pcmpeqb
+# define CHAR_PER_VEC	16
 #endif
 
 /* fast SSE2 version with using pmaxub and 64 byte loop */
@@ -33,15 +35,14 @@ ENTRY(MEMCHR)
 	movd	%esi, %xmm1
 	mov	%edi, %ecx
 
+#ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+#endif
 #ifdef USE_AS_WMEMCHR
 	test	%RDX_LP, %RDX_LP
 	jz	L(return_null)
-	shl	$2, %RDX_LP
 #else
-# ifdef __ILP32__
-	/* Clear the upper 32 bits.  */
-	movl	%edx, %edx
-# endif
 	punpcklbw %xmm1, %xmm1
 	test	%RDX_LP, %RDX_LP
 	jz	L(return_null)
@@ -60,13 +61,16 @@ ENTRY(MEMCHR)
 	test	%eax, %eax
 
 	jnz	L(matches_1)
-	sub	$16, %rdx
+	sub	$CHAR_PER_VEC, %rdx
 	jbe	L(return_null)
 	add	$16, %rdi
 	and	$15, %ecx
 	and	$-16, %rdi
+#ifdef USE_AS_WMEMCHR
+	shr	$2, %ecx
+#endif
 	add	%rcx, %rdx
-	sub	$64, %rdx
+	sub	$(CHAR_PER_VEC * 4), %rdx
 	jbe	L(exit_loop)
 	jmp	L(loop_prolog)
 
@@ -77,16 +81,21 @@ L(crosscache):
 	movdqa	(%rdi), %xmm0
 
 	PCMPEQ	%xmm1, %xmm0
-/* Check if there is a match.  */
+	/* Check if there is a match.  */
 	pmovmskb %xmm0, %eax
-/* Remove the leading bytes.  */
+	/* Remove the leading bytes.  */
 	sar	%cl, %eax
 	test	%eax, %eax
 	je	L(unaligned_no_match)
-/* Check which byte is a match.  */
+	/* Check which byte is a match.  */
 	bsf	%eax, %eax
-
+#ifdef USE_AS_WMEMCHR
+	mov	%eax, %esi
+	shr	$2, %esi
+	sub	%rsi, %rdx
+#else
 	sub	%rax, %rdx
+#endif
 	jbe	L(return_null)
 	add	%rdi, %rax
 	add	%rcx, %rax
@@ -94,15 +103,18 @@ L(crosscache):
 
 	.p2align 4
 L(unaligned_no_match):
-        /* "rcx" is less than 16.  Calculate "rdx + rcx - 16" by using
+	/* "rcx" is less than 16.  Calculate "rdx + rcx - 16" by using
 	   "rdx - (16 - rcx)" instead of "(rdx + rcx) - 16" to void
 	   possible addition overflow.  */
 	neg	%rcx
 	add	$16, %rcx
+#ifdef USE_AS_WMEMCHR
+	shr	$2, %ecx
+#endif
 	sub	%rcx, %rdx
 	jbe	L(return_null)
 	add	$16, %rdi
-	sub	$64, %rdx
+	sub	$(CHAR_PER_VEC * 4), %rdx
 	jbe	L(exit_loop)
 
 	.p2align 4
@@ -135,7 +147,7 @@ L(loop_prolog):
 	test	$0x3f, %rdi
 	jz	L(align64_loop)
 
-	sub	$64, %rdx
+	sub	$(CHAR_PER_VEC * 4), %rdx
 	jbe	L(exit_loop)
 
 	movdqa	(%rdi), %xmm0
@@ -167,11 +179,14 @@ L(loop_prolog):
 	mov	%rdi, %rcx
 	and	$-64, %rdi
 	and	$63, %ecx
+#ifdef USE_AS_WMEMCHR
+	shr	$2, %ecx
+#endif
 	add	%rcx, %rdx
 
 	.p2align 4
 L(align64_loop):
-	sub	$64, %rdx
+	sub	$(CHAR_PER_VEC * 4), %rdx
 	jbe	L(exit_loop)
 	movdqa	(%rdi), %xmm0
 	movdqa	16(%rdi), %xmm2
@@ -218,7 +233,7 @@ L(align64_loop):
 
 	.p2align 4
 L(exit_loop):
-	add	$32, %edx
+	add	$(CHAR_PER_VEC * 2), %edx
 	jle	L(exit_loop_32)
 
 	movdqa	(%rdi), %xmm0
@@ -238,7 +253,7 @@ L(exit_loop):
 	pmovmskb %xmm3, %eax
 	test	%eax, %eax
 	jnz	L(matches32_1)
-	sub	$16, %edx
+	sub	$CHAR_PER_VEC, %edx
 	jle	L(return_null)
 
 	PCMPEQ	48(%rdi), %xmm1
@@ -250,13 +265,13 @@ L(exit_loop):
 
 	.p2align 4
 L(exit_loop_32):
-	add	$32, %edx
+	add	$(CHAR_PER_VEC * 2), %edx
 	movdqa	(%rdi), %xmm0
 	PCMPEQ	%xmm1, %xmm0
 	pmovmskb %xmm0, %eax
 	test	%eax, %eax
 	jnz	L(matches_1)
-	sub	$16, %edx
+	sub	$CHAR_PER_VEC, %edx
 	jbe	L(return_null)
 
 	PCMPEQ	16(%rdi), %xmm1
@@ -293,7 +308,13 @@ L(matches32):
 	.p2align 4
 L(matches_1):
 	bsf	%eax, %eax
+#ifdef USE_AS_WMEMCHR
+	mov	%eax, %esi
+	shr	$2, %esi
+	sub	%rsi, %rdx
+#else
 	sub	%rax, %rdx
+#endif
 	jbe	L(return_null)
 	add	%rdi, %rax
 	ret
@@ -301,7 +322,13 @@ L(matches_1):
 	.p2align 4
 L(matches16_1):
 	bsf	%eax, %eax
+#ifdef USE_AS_WMEMCHR
+	mov	%eax, %esi
+	shr	$2, %esi
+	sub	%rsi, %rdx
+#else
 	sub	%rax, %rdx
+#endif
 	jbe	L(return_null)
 	lea	16(%rdi, %rax), %rax
 	ret
@@ -309,7 +336,13 @@ L(matches16_1):
 	.p2align 4
 L(matches32_1):
 	bsf	%eax, %eax
+#ifdef USE_AS_WMEMCHR
+	mov	%eax, %esi
+	shr	$2, %esi
+	sub	%rsi, %rdx
+#else
 	sub	%rax, %rdx
+#endif
 	jbe	L(return_null)
 	lea	32(%rdi, %rax), %rax
 	ret
@@ -317,7 +350,13 @@ L(matches32_1):
 	.p2align 4
 L(matches48_1):
 	bsf	%eax, %eax
+#ifdef USE_AS_WMEMCHR
+	mov	%eax, %esi
+	shr	$2, %esi
+	sub	%rsi, %rdx
+#else
 	sub	%rax, %rdx
+#endif
 	jbe	L(return_null)
 	lea	48(%rdi, %rax), %rax
 	ret
