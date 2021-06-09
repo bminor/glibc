@@ -712,7 +712,6 @@ handle_file (const char *dir, const char *infile)
 static int
 handle_dir (const char *dir)
 {
-#define BUF_LEN prefix_len + dirlen + sizeof "gconv-modules.d"
   char *cp;
   size_t dirlen = strlen (dir);
   bool found = false;
@@ -726,7 +725,10 @@ handle_dir (const char *dir)
     }
 
   /* First, look for a gconv-modules file.  */
-  char buf[BUF_LEN];
+  char *buf = malloc (prefix_len + dirlen + sizeof "gconv-modules.d");
+  if (buf == NULL)
+    goto out;
+
   cp = buf;
   if (dir[0] == '/')
     cp = mempcpy (cp, prefix, prefix_len);
@@ -756,16 +758,19 @@ handle_dir (const char *dir)
 	  if (len > strlen (suffix)
 	      && strcmp (ent->d_name + len - strlen (suffix), suffix) == 0)
 	    {
-	      /* LEN <= PATH_MAX so this alloca is not unbounded.  */
-	      char *conf = alloca (BUF_LEN + len + 1);
-	      cp = stpcpy (conf, buf);
-	      sprintf (cp, "/%s", ent->d_name);
+	      char *conf;
+	      if (asprintf (&conf, "%s/%s", buf, ent->d_name) < 0)
+		continue;
 	      found |= handle_file (dir, conf);
+	      free (conf);
 	    }
 	}
       closedir (confdir);
     }
 
+  free (buf);
+
+out:
   if (!found)
     {
       error (0, errno, "failed to open gconv configuration files in `%s'",

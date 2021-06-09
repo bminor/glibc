@@ -559,15 +559,15 @@ __gconv_read_conf (void)
 
   for (cnt = 0; __gconv_path_elem[cnt].name != NULL; ++cnt)
     {
-#define BUF_LEN elem_len + sizeof (gconv_conf_dirname)
-
       const char *elem = __gconv_path_elem[cnt].name;
       size_t elem_len = __gconv_path_elem[cnt].len;
-      char *buf;
 
       /* No slash needs to be inserted between elem and gconv_conf_filename;
 	 elem already ends in a slash.  */
-      buf = alloca (BUF_LEN);
+      char *buf = malloc (elem_len + sizeof (gconv_conf_dirname));
+      if (buf == NULL)
+	continue;
+
       char *cp = __mempcpy (__mempcpy (buf, elem, elem_len),
 			    gconv_conf_filename, sizeof (gconv_conf_filename));
 
@@ -596,15 +596,16 @@ __gconv_read_conf (void)
 	      if (len > strlen (suffix)
 		  && strcmp (ent->d_name + len - strlen (suffix), suffix) == 0)
 		{
-		  /* LEN <= PATH_MAX so this alloca is not unbounded.  */
-		  char *conf = alloca (BUF_LEN + len + 1);
-		  cp = stpcpy (conf, buf);
-		  sprintf (cp, "/%s", ent->d_name);
+		  char *conf;
+		  if (__asprintf (&conf, "%s/%s", buf, ent->d_name) < 0)
+		    continue;
 		  read_conf_file (conf, elem, elem_len, &modules, &nmodules);
+		  free (conf);
 		}
 	    }
 	  __closedir (confdir);
 	}
+      free (buf);
     }
 #endif
 
