@@ -54,21 +54,19 @@
 
 # define VEC_SIZE 32
 # define PAGE_SIZE 4096
+# define CHAR_PER_VEC	(VEC_SIZE / CHAR_SIZE)
 
 	.section SECTION(.text),"ax",@progbits
 ENTRY (MEMCHR)
 # ifndef USE_AS_RAWMEMCHR
 	/* Check for zero length.  */
-	test	%RDX_LP, %RDX_LP
-	jz	L(null)
-# endif
-# ifdef USE_AS_WMEMCHR
-	shl	$2, %RDX_LP
-# else
 #  ifdef __ILP32__
-	/* Clear the upper 32 bits.  */
-	movl	%edx, %edx
+	/* Clear upper bits.  */
+	and	%RDX_LP, %RDX_LP
+#  else
+	test	%RDX_LP, %RDX_LP
 #  endif
+	jz	L(null)
 # endif
 	/* Broadcast CHAR to YMMMATCH.  */
 	vmovd	%esi, %xmm0
@@ -84,7 +82,7 @@ ENTRY (MEMCHR)
 	vpmovmskb %ymm1, %eax
 # ifndef USE_AS_RAWMEMCHR
 	/* If length < CHAR_PER_VEC handle special.  */
-	cmpq	$VEC_SIZE, %rdx
+	cmpq	$CHAR_PER_VEC, %rdx
 	jbe	L(first_vec_x0)
 # endif
 	testl	%eax, %eax
@@ -98,6 +96,10 @@ ENTRY (MEMCHR)
 L(first_vec_x0):
 	/* Check if first match was before length.  */
 	tzcntl	%eax, %eax
+#  ifdef USE_AS_WMEMCHR
+	/* NB: Multiply length by 4 to get byte count.  */
+	sall	$2, %edx
+#  endif
 	xorl	%ecx, %ecx
 	cmpl	%eax, %edx
 	leaq	(%rdi, %rax), %rax
@@ -110,12 +112,12 @@ L(null):
 # endif
 	.p2align 4
 L(cross_page_boundary):
-	/* Save pointer before aligning as its original value is necessary
-	   for computer return address if byte is found or adjusting length
-	   if it is not and this is memchr.  */
+	/* Save pointer before aligning as its original value is
+	   necessary for computer return address if byte is found or
+	   adjusting length if it is not and this is memchr.  */
 	movq	%rdi, %rcx
-	/* Align data to VEC_SIZE - 1. ALGN_PTR_REG is rcx for memchr and
-	   rdi for rawmemchr.  */
+	/* Align data to VEC_SIZE - 1. ALGN_PTR_REG is rcx for memchr
+	   and rdi for rawmemchr.  */
 	orq	$(VEC_SIZE - 1), %ALGN_PTR_REG
 	VPCMPEQ	-(VEC_SIZE - 1)(%ALGN_PTR_REG), %ymm0, %ymm1
 	vpmovmskb %ymm1, %eax
@@ -124,6 +126,10 @@ L(cross_page_boundary):
 	   match).  */
 	leaq	1(%ALGN_PTR_REG), %rsi
 	subq	%RRAW_PTR_REG, %rsi
+#  ifdef USE_AS_WMEMCHR
+	/* NB: Divide bytes by 4 to get wchar_t count.  */
+	shrl	$2, %esi
+#  endif
 # endif
 	/* Remove the leading bytes.  */
 	sarxl	%ERAW_PTR_REG, %eax, %eax
@@ -181,6 +187,10 @@ L(cross_page_continue):
 	orq	$(VEC_SIZE - 1), %rdi
 	/* esi is for adjusting length to see if near the end.  */
 	leal	(VEC_SIZE * 4 + 1)(%rdi, %rcx), %esi
+#  ifdef USE_AS_WMEMCHR
+	/* NB: Divide bytes by 4 to get the wchar_t count.  */
+	sarl	$2, %esi
+#  endif
 # else
 	orq	$(VEC_SIZE - 1), %rdi
 L(cross_page_continue):
@@ -213,7 +223,7 @@ L(cross_page_continue):
 
 # ifndef USE_AS_RAWMEMCHR
 	/* Check if at last VEC_SIZE * 4 length.  */
-	subq	$(VEC_SIZE * 4), %rdx
+	subq	$(CHAR_PER_VEC * 4), %rdx
 	jbe	L(last_4x_vec_or_less_cmpeq)
 	/* Align data to VEC_SIZE * 4 - 1 for the loop and readjust
 	   length.  */
@@ -221,6 +231,10 @@ L(cross_page_continue):
 	movl	%edi, %ecx
 	orq	$(VEC_SIZE * 4 - 1), %rdi
 	andl	$(VEC_SIZE * 4 - 1), %ecx
+#  ifdef USE_AS_WMEMCHR
+	/* NB: Divide bytes by 4 to get the wchar_t count.  */
+	sarl	$2, %ecx
+#  endif
 	addq	%rcx, %rdx
 # else
 	/* Align data to VEC_SIZE * 4 - 1 for loop.  */
@@ -250,15 +264,19 @@ L(loop_4x_vec):
 
 	subq	$-(VEC_SIZE * 4), %rdi
 
-	subq	$(VEC_SIZE * 4), %rdx
+	subq	$(CHAR_PER_VEC * 4), %rdx
 	ja	L(loop_4x_vec)
 
-	/* Fall through into less than 4 remaining vectors of length case.
-	 */
+	/* Fall through into less than 4 remaining vectors of length
+	   case.  */
 	VPCMPEQ	(VEC_SIZE * 0 + 1)(%rdi), %ymm0, %ymm1
 	vpmovmskb %ymm1, %eax
 	.p2align 4
 L(last_4x_vec_or_less):
+#  ifdef USE_AS_WMEMCHR
+	/* NB: Multiply length by 4 to get byte count.  */
+	sall	$2, %edx
+#  endif
 	/* Check if first VEC contained match.  */
 	testl	%eax, %eax
 	jnz	L(first_vec_x1_check)
@@ -355,6 +373,10 @@ L(last_vec_x2_return):
 L(last_4x_vec_or_less_cmpeq):
 	VPCMPEQ	(VEC_SIZE * 4 + 1)(%rdi), %ymm0, %ymm1
 	vpmovmskb %ymm1, %eax
+#  ifdef USE_AS_WMEMCHR
+	/* NB: Multiply length by 4 to get byte count.  */
+	sall	$2, %edx
+#  endif
 	subq	$-(VEC_SIZE * 4), %rdi
 	/* Check first VEC regardless.  */
 	testl	%eax, %eax
