@@ -59,7 +59,6 @@ tests += tst-setjmp-bug21895-static
 tests-static += tst-setjmp-bug21895-static
 modules-names += setjmp-bug21895
 
-$(objpfx)tst-setjmp-bug21895-static: $(common-objpfx)dlfcn/libdl.a
 $(objpfx)tst-setjmp-bug21895-static.out: $(objpfx)setjmp-bug21895.so
 
 tst-setjmp-bug21895-static-ENV = \

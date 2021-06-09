@@ -25,7 +25,6 @@ test-internal-extras += mod-cache-ppc
 
 mod-cache-ppc.so-no-z-defs = yes
 tst-cache-ppc-static-dlopen-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx):$(common-objpfx)elf
-$(objpfx)tst-cache-ppc-static-dlopen: $(common-objpfx)dlfcn/libdl.a
 $(objpfx)tst-cache-ppc-static-dlopen.out: $(objpfx)mod-cache-ppc.so
 
 $(objpfx)tst-cache-ppc: $(objpfx)mod-cache-ppc.so

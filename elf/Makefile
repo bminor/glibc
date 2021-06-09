@@ -1050,7 +1050,6 @@ unload7-ENV = MALLOC_PERTURB_=85
 
 $(objpfx)unload8.out: $(objpfx)unload8mod1.so $(objpfx)unload8mod1x.so
 
-$(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a
 $(objpfx)tst-tls9-static.out: $(objpfx)tst-tlsmod5.so $(objpfx)tst-tlsmod6.so
 
 ifeq ($(have-z-execstack),yes)
@@ -1276,7 +1275,6 @@ $(objpfx)tst-leaks1-mem.out: $(objpfx)tst-leaks1.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1.mtrace > $@; \
 	$(evaluate-test)
 
-$(objpfx)tst-leaks1-static: $(common-objpfx)dlfcn/libdl.a
 $(objpfx)tst-leaks1-static-mem.out: $(objpfx)tst-leaks1-static.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1-static.mtrace > $@; \
 	$(evaluate-test)
@@ -1533,7 +1531,6 @@ $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
 $(objpfx)tst-linkall-static: \
   $(common-objpfx)math/libm.a \
   $(common-objpfx)resolv/libresolv.a \
-  $(common-objpfx)dlfcn/libdl.a \
   $(common-objpfx)login/libutil.a \
   $(common-objpfx)rt/librt.a \
   $(common-objpfx)resolv/libanl.a \
@@ -1591,7 +1588,6 @@ $(objpfx)tst-absolute-zero: $(objpfx)tst-absolute-zero-lib.so
 # against libdl.
 $(objpfx)tst-libc_dlvsym-dso.so: $(libsupport)
 $(objpfx)tst-libc_dlvsym.out: $(objpfx)tst-libc_dlvsym-dso.so
-$(objpfx)tst-libc_dlvsym-static: $(common-objpfx)dlfcn/libdl.a
 tst-libc_dlvsym-static-ENV = \
   LD_LIBRARY_PATH=$(ld-library-path):$(common-objpfx)dlfcn
 $(objpfx)tst-libc_dlvsym-static.out: $(objpfx)tst-libc_dlvsym-dso.so
@@ -1696,7 +1692,7 @@ $(objpfx)tst-single_threaded: $(objpfx)tst-single_threaded-mod1.so
 $(objpfx)tst-single_threaded.out: \
   $(objpfx)tst-single_threaded-mod2.so $(objpfx)tst-single_threaded-mod3.so
 $(objpfx)tst-single_threaded-static-dlopen: \
-  $(objpfx)tst-single_threaded-mod1.o $(common-objpfx)dlfcn/libdl.a
+  $(objpfx)tst-single_threaded-mod1.o
 $(objpfx)tst-single_threaded-static-dlopen.out: \
   $(objpfx)tst-single_threaded-mod2.so
 $(objpfx)tst-single_threaded-pthread: \
@@ -1834,6 +1830,5 @@ $(objpfx)tst-tls21: $(shared-thread-library)
 $(objpfx)tst-tls21.out: $(objpfx)tst-tls21mod.so
 $(objpfx)tst-tls21mod.so: $(tst-tls-many-dynamic-modules:%=$(objpfx)%.so)
 
-$(objpfx)tst-getauxval-static: $(common-objpfx)dlfcn/libdl.a
 $(objpfx)tst-getauxval-static.out: $(objpfx)tst-auxvalmod.so
 tst-getauxval-static-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx)
