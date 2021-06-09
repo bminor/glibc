@@ -1050,10 +1050,8 @@ unload7-ENV = MALLOC_PERTURB_=85
 
 $(objpfx)unload8.out: $(objpfx)unload8mod1.so $(objpfx)unload8mod1x.so
 
-ifdef libdl
 $(objpfx)tst-tls9-static: $(common-objpfx)dlfcn/libdl.a
 $(objpfx)tst-tls9-static.out: $(objpfx)tst-tlsmod5.so $(objpfx)tst-tlsmod6.so
-endif
 
 ifeq ($(have-z-execstack),yes)
 $(objpfx)tst-execstack.out: $(objpfx)tst-execstack-mod.so
