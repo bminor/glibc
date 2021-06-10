@@ -1159,6 +1159,14 @@ typedef struct
 
 typedef struct
 {
+#if defined __CHERI_PURE_CAPABILITY__
+  uint64_t a_type;
+  uint64_t __pad;
+  union
+    {
+      __uintcap_t a_val;
+    } a_un;
+#else
   uint64_t a_type;		/* Entry type */
   union
     {
@@ -1167,6 +1175,7 @@ typedef struct
 	 though, since it does not work when using 32-bit definitions
 	 on 64-bit platforms and vice versa.  */
     } a_un;
+#endif
 } Elf64_auxv_t;
 
 /* Legal values for a_type (entry type).  */
