@@ -19,7 +19,6 @@
 
 #include <assert.h>
 #include <ctype.h>
-#include <dirent.h>
 #include <errno.h>
 #include <limits.h>
 #include <locale.h>
@@ -31,11 +30,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/param.h>
-#include <sys/types.h>
 
 #include <libc-lock.h>
 #include <gconv_int.h>
-
+#include <gconv_parseconfdir.h>
 
 /* This is the default path where we look for module lists.  */
 static const char default_gconv_path[] = GCONV_PATH;
@@ -55,11 +53,6 @@ size_t __gconv_max_path_elem_len;
 
 /* We use the following struct if we couldn't allocate memory.  */
 static const struct path_elem empty_path_elem = { NULL, 0 };
-
-/* Name of the file containing the module information in the directories
-   along the path.  */
-static const char gconv_conf_filename[] = "gconv-modules";
-static const char gconv_conf_dirname[] = "gconv-modules.d";
 
 /* Filename extension for the modules.  */
 #ifndef MODULE_EXT
@@ -98,9 +91,6 @@ static const char builtin_aliases[] =
 #undef BUILTIN_TRANSFORMATION
 #undef BUILTIN_ALIAS
 };
-
-#include <libio/libioP.h>
-#define __getdelim(line, len, c, fp) _IO_getdelim (line, len, c, fp)
 
 
 /* Value of the GCONV_PATH environment variable.  */
@@ -361,72 +351,6 @@ add_module (char *rp, const char *directory, size_t dir_len, int modcounter)
 }
 
 
-/* Read the next configuration file.  */
-static void
-read_conf_file (const char *filename, const char *directory, size_t dir_len)
-{
-  /* Note the file is opened with cancellation in the I/O functions
-     disabled.  */
-  FILE *fp = fopen (filename, "rce");
-  char *line = NULL;
-  size_t line_len = 0;
-  static int modcounter;
-
-  /* Don't complain if a file is not present or readable, simply silently
-     ignore it.  */
-  if (fp == NULL)
-    return;
-
-  /* No threads reading from this stream.  */
-  __fsetlocking (fp, FSETLOCKING_BYCALLER);
-
-  /* Process the known entries of the file.  Comments start with `#' and
-     end with the end of the line.  Empty lines are ignored.  */
-  while (!__feof_unlocked (fp))
-    {
-      char *rp, *endp, *word;
-      ssize_t n = __getdelim (&line, &line_len, '\n', fp);
-      if (n < 0)
-	/* An error occurred.  */
-	break;
-
-      rp = line;
-      /* Terminate the line (excluding comments or newline) by an NUL byte
-	 to simplify the following code.  */
-      endp = strchr (rp, '#');
-      if (endp != NULL)
-	*endp = '\0';
-      else
-	if (rp[n - 1] == '\n')
-	  rp[n - 1] = '\0';
-
-      while (__isspace_l (*rp, _nl_C_locobj_ptr))
-	++rp;
-
-      /* If this is an empty line go on with the next one.  */
-      if (rp == endp)
-	continue;
-
-      word = rp;
-      while (*rp != '\0' && !__isspace_l (*rp, _nl_C_locobj_ptr))
-	++rp;
-
-      if (rp - word == sizeof ("alias") - 1
-	  && memcmp (word, "alias", sizeof ("alias") - 1) == 0)
-	add_alias (rp);
-      else if (rp - word == sizeof ("module") - 1
-	       && memcmp (word, "module", sizeof ("module") - 1) == 0)
-	add_module (rp, directory, dir_len, modcounter++);
-      /* else */
-	/* Otherwise ignore the line.  */
-    }
-
-  free (line);
-
-  fclose (fp);
-}
-
-
 /* Determine the directories we are looking for data in.  This function should
    only be called from __gconv_read_conf.  */
 static void
@@ -554,55 +478,8 @@ __gconv_read_conf (void)
   __gconv_get_path ();
 
   for (cnt = 0; __gconv_path_elem[cnt].name != NULL; ++cnt)
-    {
-      const char *elem = __gconv_path_elem[cnt].name;
-      size_t elem_len = __gconv_path_elem[cnt].len;
-
-      /* No slash needs to be inserted between elem and gconv_conf_filename;
-	 elem already ends in a slash.  */
-      char *buf = malloc (elem_len + sizeof (gconv_conf_dirname));
-      if (buf == NULL)
-	continue;
-
-      char *cp = __mempcpy (__mempcpy (buf, elem, elem_len),
-			    gconv_conf_filename, sizeof (gconv_conf_filename));
-
-      /* Read the gconv-modules configuration file first.  */
-      read_conf_file (buf, elem, elem_len);
-
-      /* Next, see if there is a gconv-modules.d directory containing
-	 configuration files and if it is non-empty.  */
-      cp--;
-      cp[0] = '.';
-      cp[1] = 'd';
-      cp[2] = '\0';
-
-      DIR *confdir = __opendir (buf);
-      if (confdir != NULL)
-	{
-	  struct dirent *ent;
-	  while ((ent = __readdir (confdir)) != NULL)
-	    {
-	      if (ent->d_type != DT_REG)
-		continue;
-
-	      size_t len = strlen (ent->d_name);
-	      const char *suffix = ".conf";
-
-	      if (len > strlen (suffix)
-		  && strcmp (ent->d_name + len - strlen (suffix), suffix) == 0)
-		{
-		  char *conf;
-		  if (__asprintf (&conf, "%s/%s", buf, ent->d_name) < 0)
-		    continue;
-		  read_conf_file (conf, elem, elem_len);
-		  free (conf);
-		}
-	    }
-	  __closedir (confdir);
-	}
-      free (buf);
-    }
+    gconv_parseconfdir (__gconv_path_elem[cnt].name,
+			__gconv_path_elem[cnt].len);
 #endif
 
   /* Add the internal modules.  */
