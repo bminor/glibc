@@ -426,8 +426,12 @@ for linking")
 
 #define attribute_tls_model_ie __attribute__ ((tls_model ("initial-exec")))
 
+#if defined __CHERI_PURE_CAPABILITY__
+/* avoid readonly caps at startup when relro has to be writable */
+#define attribute_relro
+#else
 #define attribute_relro __attribute__ ((section (".data.rel.ro")))
-
+#endif
 
 /* Used to disable stack protection in sensitive places, like ifunc
    resolvers and early static TLS init.  */
