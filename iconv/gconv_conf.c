@@ -132,7 +132,7 @@ detect_conflict (const char *alias)
 
 /* The actual code to add aliases.  */
 static void
-add_alias2 (const char *from, const char *to, const char *wp, void *modules)
+add_alias2 (const char *from, const char *to, const char *wp)
 {
   /* Test whether this alias conflicts with any available module.  */
   if (detect_conflict (from))
@@ -161,7 +161,7 @@ add_alias2 (const char *from, const char *to, const char *wp, void *modules)
 
 /* Add new alias.  */
 static void
-add_alias (char *rp, void *modules)
+add_alias (char *rp)
 {
   /* We now expect two more string.  The strings are normalized
      (converted to UPPER case) and strored in the alias database.  */
@@ -186,7 +186,7 @@ add_alias (char *rp, void *modules)
     return;
   *wp++ = '\0';
 
-  add_alias2 (from, to, wp, modules);
+  add_alias2 (from, to, wp);
 }
 
 
@@ -250,8 +250,7 @@ insert_module (struct gconv_module *newp, int tobefreed)
 
 /* Add new module.  */
 static void
-add_module (char *rp, const char *directory, size_t dir_len, void **modules,
-	    size_t *nmodules, int modcounter)
+add_module (char *rp, const char *directory, size_t dir_len, int modcounter)
 {
   /* We expect now
      1. `from' name
@@ -364,8 +363,7 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 
 /* Read the next configuration file.  */
 static void
-read_conf_file (const char *filename, const char *directory, size_t dir_len,
-		void **modules, size_t *nmodules)
+read_conf_file (const char *filename, const char *directory, size_t dir_len)
 {
   /* Note the file is opened with cancellation in the I/O functions
      disabled.  */
@@ -415,10 +413,10 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 
       if (rp - word == sizeof ("alias") - 1
 	  && memcmp (word, "alias", sizeof ("alias") - 1) == 0)
-	add_alias (rp, *modules);
+	add_alias (rp);
       else if (rp - word == sizeof ("module") - 1
 	       && memcmp (word, "module", sizeof ("module") - 1) == 0)
-	add_module (rp, directory, dir_len, modules, nmodules, modcounter++);
+	add_module (rp, directory, dir_len, modcounter++);
       /* else */
 	/* Otherwise ignore the line.  */
     }
@@ -540,8 +538,6 @@ __gconv_get_path (void)
 static void
 __gconv_read_conf (void)
 {
-  void *modules = NULL;
-  size_t nmodules = 0;
   int save_errno = errno;
   size_t cnt;
 
@@ -572,7 +568,7 @@ __gconv_read_conf (void)
 			    gconv_conf_filename, sizeof (gconv_conf_filename));
 
       /* Read the gconv-modules configuration file first.  */
-      read_conf_file (buf, elem, elem_len, &modules, &nmodules);
+      read_conf_file (buf, elem, elem_len);
 
       /* Next, see if there is a gconv-modules.d directory containing
 	 configuration files and if it is non-empty.  */
@@ -599,7 +595,7 @@ __gconv_read_conf (void)
 		  char *conf;
 		  if (__asprintf (&conf, "%s/%s", buf, ent->d_name) < 0)
 		    continue;
-		  read_conf_file (conf, elem, elem_len, &modules, &nmodules);
+		  read_conf_file (conf, elem, elem_len);
 		  free (conf);
 		}
 	    }
@@ -633,7 +629,7 @@ __gconv_read_conf (void)
       const char *to = __rawmemchr (from, '\0') + 1;
       cp = __rawmemchr (to, '\0') + 1;
 
-      add_alias2 (from, to, cp, modules);
+      add_alias2 (from, to, cp);
     }
   while (*cp != '\0');
 
