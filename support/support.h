@@ -141,7 +141,8 @@ static __inline bool support_path_support_time64 (const char *path)
 					    0x80000002ULL);
 }
 
-/* Return true if stat supports nanoseconds resolution.  */
+/* Return true if stat supports nanoseconds resolution.  PATH is used
+   for tests and its ctime may change.  */
 extern bool support_stat_nanoseconds (const char *path);
 
 /* Return true if select modify the timeout to reflect the amount of time

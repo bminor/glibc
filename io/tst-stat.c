@@ -69,14 +69,14 @@ do_test (void)
   TEST_VERIFY_EXIT (fd >= 0);
   support_write_file_string (path, "abc");
 
+  bool check_ns = support_stat_nanoseconds (path);
+  if (!check_ns)
+    printf ("warning: timestamp with nanoseconds not supported\n");
+
   struct statx stx;
   TEST_COMPARE (statx (fd, path, 0, STATX_BASIC_STATS, &stx), 0);
 
   test_t tests[] = { stat_check, lstat_check, fstat_check, fstatat_check };
-
-  bool check_ns = support_stat_nanoseconds (path);
-  if (!check_ns)
-    printf ("warning: timestamp with nanoseconds not supported\n");
 
   for (int i = 0; i < array_length (tests); i++)
     {
