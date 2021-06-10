@@ -39,6 +39,14 @@ Major new features:
   supported when LFS (_FILE_OFFSET_BITS=64) is also enabled.  It is only
   enabled for Linux and the full support requires a minimum version of 5.1.
 
+* The main gconv-modules file in glibc now contains only a small set of
+  essential converter modules and the rest have been moved into a supplementary
+  configuration file gconv-modules-extra.conf in the gconv-modules.d directory
+  in the same GCONV_PATH.  Similarly, external converter modules directories
+  may have supplementary configuration files in a gconv-modules.d directory
+  with names ending with .conf to logically classify the converter modules in
+  that directory.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs
