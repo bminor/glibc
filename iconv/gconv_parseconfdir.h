@@ -32,6 +32,7 @@
 # define readdir __readdir
 # define closedir __closedir
 # define mempcpy __mempcpy
+# define lstat64 __lstat64
 #endif
 
 /* Name of the file containing the module information in the directories
@@ -138,7 +139,7 @@ gconv_parseconfdir (const char *dir, size_t dir_len)
       struct dirent *ent;
       while ((ent = readdir (confdir)) != NULL)
 	{
-	  if (ent->d_type != DT_REG)
+	  if (ent->d_type != DT_REG && ent->d_type != DT_UNKNOWN)
 	    continue;
 
 	  size_t len = strlen (ent->d_name);
@@ -148,8 +149,14 @@ gconv_parseconfdir (const char *dir, size_t dir_len)
 	      && strcmp (ent->d_name + len - strlen (suffix), suffix) == 0)
 	    {
 	      char *conf;
+	      struct stat64 st;
 	      if (asprintf (&conf, "%s/%s", buf, ent->d_name) < 0)
 		continue;
+	      if (ent->d_type == DT_UNKNOWN
+		  && (lstat64 (conf, &st) == -1
+		      || !S_ISREG (st.st_mode)))
+		continue;
+
 	      found |= read_conf_file (conf, dir, dir_len);
 	      free (conf);
 	    }
