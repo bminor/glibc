@@ -204,7 +204,11 @@ typedef __off64_t __loff_t;	/* Type of file sizes and offsets (LFS).  */
 typedef char *__caddr_t;
 
 /* Duplicates info from stdint.h but this is used in unistd.h.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+__STD_TYPE __intcap_t __intptr_t;
+#else
 __STD_TYPE __SWORD_TYPE __intptr_t;
+#endif
 
 /* Duplicate info from sys/socket.h.  */
 __STD_TYPE __U32_TYPE __socklen_t;
