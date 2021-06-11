@@ -83,6 +83,7 @@ struct r_search_path_struct
 extern struct r_search_path_struct __rtld_search_dirs attribute_hidden;
 extern struct r_search_path_struct __rtld_env_path_list attribute_hidden;
 
+
 /* Structure describing a loaded shared object.  The `l_next' and `l_prev'
    members form a chain of all the shared objects loaded at startup.
 
@@ -96,9 +97,9 @@ struct link_map
   {
     /* These first few members are part of the protocol with the debugger.
        This is the same format used in SVR4.  */
-
-    ElfW(Addr) l_addr;		/* Difference between the address in the ELF
+    elfptr_t l_addr;		/* Difference between the address in the ELF
 				   file and the addresses in memory.  */
+
     char *l_name;		/* Absolute file name object was found in.  */
     ElfW(Dyn) *l_ld;		/* Dynamic section of the shared object.  */
     struct link_map *l_next, *l_prev; /* Chain of loaded objects.  */
