@@ -183,7 +183,7 @@ install-others := $(addprefix $(inst_i18ndir)/, \
 			      $(locales))
 endif
 
-tests: $(objdir)/iconvdata/gconv-modules.d/gconv-modules.conf
+tests: $(objdir)/iconvdata/gconv-modules
 
 tests-static += tst-langinfo-newlocale-static tst-langinfo-setlocale-static
 
@@ -464,5 +464,5 @@ $(objpfx)mtrace-tst-leaks.out: $(objpfx)tst-leaks.out
 bug-setlocale1-ENV-only = LOCPATH=$(objpfx) LC_CTYPE=de_DE.UTF-8
 bug-setlocale1-static-ENV-only = $(bug-setlocale1-ENV-only)
 
-$(objdir)/iconvdata/gconv-modules.d/gconv-modules.conf:
+$(objdir)/iconvdata/gconv-modules:
 	$(MAKE) -C ../iconvdata subdir=iconvdata $@
