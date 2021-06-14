@@ -183,6 +183,8 @@ extern int __truncate (const char *path, __off_t __length);
 extern void *__sbrk (intptr_t __delta);
 libc_hidden_proto (__sbrk)
 
+extern int __tcsetpgrp (int fd, __pid_t pgrp);
+libc_hidden_proto (__tcsetpgrp)
 
 /* This variable is set nonzero at startup if the process's effective
    IDs differ from its real IDs, or it is otherwise indicated that

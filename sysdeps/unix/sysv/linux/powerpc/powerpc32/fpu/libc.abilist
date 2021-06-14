@@ -2754,6 +2754,8 @@ GLIBC_2.35 __epoll_pwait2_time64 F
 GLIBC_2.35 __memcmpeq F
 GLIBC_2.35 _dl_find_object F
 GLIBC_2.35 epoll_pwait2 F
+GLIBC_2.35 posix_spawnattr_tcgetpgrp_np F
+GLIBC_2.35 posix_spawnattr_tcsetpgrp_np F
 GLIBC_2.4 _IO_fprintf F
 GLIBC_2.4 _IO_printf F
 GLIBC_2.4 _IO_sprintf F

@@ -390,6 +390,19 @@ retry:
   if (!err && (flags & POSIX_SPAWN_SETPGROUP) != 0)
     err = __proc_setpgrp (proc, new_pid, attrp->__pgrp);
 
+  /* Set the controlling terminal.  */
+  if (!err && (flags & POSIX_SPAWN_TCSETPGROUP) != 0)
+    {
+      pid_t pgrp;
+      /* Check if it is possible to avoid an extra syscall.  */
+      if ((attrp->__flags & POSIX_SPAWN_SETPGROUP) != 0 && attrp->__pgrp != 0)
+	pgrp = attrp->__pgrp;
+      else
+	err = __proc_getpgrp (proc, new_pid, &pgrp);
+      if (!err)
+        err = __tcsetpgrp (attrp->__ctty_fd, pgrp);
+    }
+
   /* Set the effective user and group IDs.  */
   if (!err && (flags & POSIX_SPAWN_RESETIDS) != 0)
     {

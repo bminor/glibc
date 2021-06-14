@@ -34,7 +34,8 @@ typedef struct
   sigset_t __ss;
   struct sched_param __sp;
   int __policy;
-  int __pad[16];
+  int __ctty_fd;
+  int __pad[15];
 } posix_spawnattr_t;
 
 
@@ -59,6 +60,7 @@ typedef struct
 #ifdef __USE_GNU
 # define POSIX_SPAWN_USEVFORK		0x40
 # define POSIX_SPAWN_SETSID		0x80
+# define POSIX_SPAWN_TCSETPGROUP	0x100
 #endif
 
 
@@ -166,6 +168,18 @@ extern int posix_spawnattr_setschedparam (posix_spawnattr_t *__restrict __attr,
 					  __restrict __schedparam)
      __THROW __nonnull ((1, 2));
 
+#ifdef __USE_GNU
+/* Make the spawned process the foreground process group on the terminal
+   associated with FD (which must be a controlling terminal, and still be
+   associated with its session).  */
+extern int posix_spawnattr_tcsetpgrp_np (posix_spawnattr_t *__attr, int fd)
+     __THROW __nonnull ((1));
+
+/* Return the associated terminal FD in the attribute structure.  */
+extern int posix_spawnattr_tcgetpgrp_np (const posix_spawnattr_t *
+					 __restrict __attr, int *fd)
+     __THROW __nonnull ((1, 2));
+#endif
 
 /* Initialize data structure for file attribute for `spawn' call.  */
 extern int posix_spawn_file_actions_init (posix_spawn_file_actions_t *

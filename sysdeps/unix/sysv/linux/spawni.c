@@ -164,6 +164,17 @@ __spawni_child (void *arguments)
       && __setpgid (0, attr->__pgrp) != 0)
     goto fail;
 
+  /* Set the controlling terminal.  */
+  if ((attr->__flags & POSIX_SPAWN_TCSETPGROUP) != 0)
+    {
+      /* Check if it is possible to avoid an extra syscall.  */
+      pid_t pgrp = (attr->__flags & POSIX_SPAWN_SETPGROUP) != 0
+		    && attr->__pgrp != 0
+		   ? attr->__pgrp : __getpgid (0);
+      if (__tcsetpgrp (attr->__ctty_fd, pgrp) != 0)
+	goto fail;
+    }
+
   /* Set the effective user and group IDs.  */
   if ((attr->__flags & POSIX_SPAWN_RESETIDS) != 0
       && (local_seteuid (__getuid ()) != 0

@@ -1395,6 +1395,8 @@ GLIBC_2.35 posix_spawnattr_setschedparam F
 GLIBC_2.35 posix_spawnattr_setschedpolicy F
 GLIBC_2.35 posix_spawnattr_setsigdefault F
 GLIBC_2.35 posix_spawnattr_setsigmask F
+GLIBC_2.35 posix_spawnattr_tcgetpgrp_np F
+GLIBC_2.35 posix_spawnattr_tcsetpgrp_np F
 GLIBC_2.35 posix_spawnp F
 GLIBC_2.35 ppoll F
 GLIBC_2.35 prctl F

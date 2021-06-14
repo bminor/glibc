@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+/* Get the controlling terminal option.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,24 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <unistd.h>
-#include <sys/types.h>
+#include <spawn.h>
 
-/* Set the foreground process group ID of FD set PGRP_ID.  */
 int
-__tcsetpgrp (int fd, pid_t pgrp_id)
+posix_spawnattr_tcgetpgrp_np (const posix_spawnattr_t *attr, int *fd)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
-    }
-
-  __set_errno (ENOSYS);
-  return -1;
+  *fd = attr->__ctty_fd;
+  return 0;
 }
-weak_alias (__tcsetpgrp, tcsetpgrp);
-libc_hidden_def (__tcsetpgrp)
-
-stub_warning (tcsetpgrp)
