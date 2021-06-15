@@ -19,9 +19,11 @@
 #include <time.h>
 #include <poll.h>
 #include <errno.h>
+#include <intprops.h>
 #include <support/check.h>
 #include <support/xtime.h>
 #include <support/timespec.h>
+#include <support/support.h>
 #include <stdbool.h>
 
 static int test_ppoll_timeout (bool zero_tmo)
@@ -41,6 +43,16 @@ static int test_ppoll_timeout (bool zero_tmo)
   return 0;
 }
 
+static void
+test_ppoll_large_timeout (void)
+{
+  support_create_timer (0, 100000000, false, NULL);
+  struct timespec ts = { TYPE_MAXIMUM (time_t), 0 };
+  struct pollfd fds = { -1, 0, 0 };
+  TEST_COMPARE (ppoll (&fds, 1, &ts, 0), -1);
+  TEST_VERIFY (errno == EINTR || errno == EOVERFLOW);
+}
+
 static int
 do_test (void)
 {
@@ -49,6 +61,9 @@ do_test (void)
 
   /* Check if ppoll exits after specified timeout.  */
   test_ppoll_timeout (false);
+
+  /* Check if ppoll with large timeout.  */
+  test_ppoll_large_timeout ();
 
   return 0;
 }
