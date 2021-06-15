@@ -2324,6 +2324,8 @@ GLIBC_2.34 __utimensat64 F
 GLIBC_2.34 __utimes64 F
 GLIBC_2.34 __wait3_time64 F
 GLIBC_2.34 __wait4_time64 F
+GLIBC_2.34 _pthread_cleanup_pop F
+GLIBC_2.34 _pthread_cleanup_push F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F

@@ -33,6 +33,8 @@ __pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
   THREAD_SETMEM (self, cleanup, buffer);
 }
 libc_hidden_def (__pthread_cleanup_push)
+versioned_symbol (libc, __pthread_cleanup_push, _pthread_cleanup_push,
+		  GLIBC_2_34);
 
 void
 __pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer, int execute)
@@ -47,6 +49,8 @@ __pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer, int execute)
     buffer->__routine (buffer->__arg);
 }
 libc_hidden_def (__pthread_cleanup_pop)
+versioned_symbol (libc, __pthread_cleanup_pop, _pthread_cleanup_pop,
+		  GLIBC_2_34);
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
 compat_symbol (libpthread, __pthread_cleanup_push, _pthread_cleanup_push,

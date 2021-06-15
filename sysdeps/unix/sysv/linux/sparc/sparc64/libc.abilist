@@ -2298,6 +2298,8 @@ GLIBC_2.34 __pthread_register_cancel_defer F
 GLIBC_2.34 __pthread_unregister_cancel F
 GLIBC_2.34 __pthread_unregister_cancel_restore F
 GLIBC_2.34 __pthread_unwind_next F
+GLIBC_2.34 _pthread_cleanup_pop F
+GLIBC_2.34 _pthread_cleanup_push F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F
