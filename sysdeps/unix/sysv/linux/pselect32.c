@@ -29,12 +29,6 @@ __pselect32 (int nfds, fd_set *readfds, fd_set *writefds,
   struct timespec ts32, *pts32 = NULL;
   if (timeout != NULL)
     {
-      if (! in_time_t_range (timeout->tv_sec))
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
-
       ts32 = valid_timespec64_to_timespec (*timeout);
       pts32 = &ts32;
     }

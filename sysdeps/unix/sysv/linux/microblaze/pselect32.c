@@ -35,8 +35,7 @@ __pselect32 (int nfds, fd_set *readfds, fd_set *writefds,
   struct timeval tv32, *ptv32 = NULL;
   if (timeout != NULL)
     {
-      if (! in_time_t_range (timeout->tv_sec)
-	  || ! valid_nanoseconds (timeout->tv_nsec))
+      if (! valid_nanoseconds (timeout->tv_nsec))
 	{
 	  __set_errno (EINVAL);
 	  return -1;

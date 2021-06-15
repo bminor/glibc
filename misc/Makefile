@@ -148,6 +148,12 @@ CFLAGS-brk.op = $(no-stack-protector)
 
 include ../Rules
 
+ifeq (yes,$(build-shared))
+librt = $(common-objpfx)rt/librt.so
+else
+librt = $(common-objpfx)rt/librt.a
+endif
+
 $(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)
 
 $(objpfx)tst-tsearch: $(libm)
@@ -162,3 +168,6 @@ tst-allocate_once-ENV = MALLOC_TRACE=$(objpfx)tst-allocate_once.mtrace
 $(objpfx)tst-allocate_once-mem.out: $(objpfx)tst-allocate_once.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-allocate_once.mtrace > $@; \
 	$(evaluate-test)
+
+$(objpfx)tst-pselect: $(librt)
+$(objpfx)tst-pselect-time64: $(librt)

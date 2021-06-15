@@ -16,13 +16,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <signal.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/select.h>
-#include <sys/wait.h>
+#include <intprops.h>
+#include <support/check.h>
+#include <support/support.h>
+#include <support/xsignal.h>
+#include <support/xunistd.h>
+#include <support/xtime.h>
 #include <stdlib.h>
-
 
 static volatile int handler_called;
 
@@ -33,59 +33,43 @@ handler (int sig)
 }
 
 
-static int
-do_test (void)
+static void
+test_pselect_basic (void)
 {
   struct sigaction sa;
   sa.sa_handler = handler;
   sa.sa_flags = 0;
   sigemptyset (&sa.sa_mask);
 
-  if (sigaction (SIGUSR1, &sa, NULL) != 0)
-    {
-      puts ("sigaction failed");
-      return 1;
-    }
+  xsigaction (SIGUSR1, &sa, NULL);
 
   sa.sa_handler = SIG_IGN;
-  if (sigaction (SIGCHLD, &sa, NULL) != 0)
-    {
-      puts ("2nd sigaction failed");
-      return 1;
-    }
+  xsigaction (SIGCHLD, &sa, NULL);
 
   sigset_t ss_usr1;
   sigemptyset (&ss_usr1);
   sigaddset (&ss_usr1, SIGUSR1);
-  if (sigprocmask (SIG_BLOCK, &ss_usr1, NULL) != 0)
-    {
-      puts ("sigprocmask failed");
-      return 1;
-    }
+  TEST_COMPARE (sigprocmask (SIG_BLOCK, &ss_usr1, NULL), 0);
 
   int fds[2][2];
-
-  if (pipe (fds[0]) != 0 || pipe (fds[1]) != 0)
-    {
-      puts ("pipe failed");
-      return 1;
-    }
+  xpipe (fds[0]);
+  xpipe (fds[1]);
 
   fd_set rfds;
   FD_ZERO (&rfds);
 
   sigset_t ss;
-  sigprocmask (SIG_SETMASK, NULL, &ss);
+  TEST_COMPARE (sigprocmask (SIG_SETMASK, NULL, &ss), 0);
   sigdelset (&ss, SIGUSR1);
 
   struct timespec to = { .tv_sec = 0, .tv_nsec = 500000000 };
 
   pid_t parent = getpid ();
-  pid_t p = fork ();
+  pid_t p = xfork ();
   if (p == 0)
     {
-      close (fds[0][1]);
-      close (fds[1][0]);
+      xclose (fds[0][1]);
+      xclose (fds[1][0]);
 
       FD_SET (fds[0][0], &rfds);
 
@@ -93,55 +77,63 @@ do_test (void)
       do
 	{
 	  if (getppid () != parent)
-	    exit (2);
+	    FAIL_EXIT1 ("getppid()=%d != parent=%d", getppid(), parent);
 
 	  errno = 0;
 	  e = pselect (fds[0][0] + 1, &rfds, NULL, NULL, &to, &ss);
 	}
       while (e == 0);
 
-      if (e != -1)
-	{
-	  puts ("child: pselect did not fail");
-	  return 0;
-	}
-      if (errno != EINTR)
-	{
-	  puts ("child: pselect did not set errno to EINTR");
-	  return 0;
-	}
+      TEST_COMPARE (e, -1);
+      TEST_COMPARE (errno, EINTR);
 
       TEMP_FAILURE_RETRY (write (fds[1][1], "foo", 3));
 
       exit (0);
     }
 
-  close (fds[0][0]);
-  close (fds[1][1]);
+  xclose (fds[0][0]);
+  xclose (fds[1][1]);
 
   FD_SET (fds[1][0], &rfds);
 
-  kill (p, SIGUSR1);
+  TEST_COMPARE (kill (p, SIGUSR1), 0);
 
   int e = pselect (fds[1][0] + 1, &rfds, NULL, NULL, NULL, &ss);
-  if (e == -1)
-    {
-      puts ("parent: pselect failed");
-      return 1;
-    }
-  if (e != 1)
-    {
-      puts ("parent: pselect did not report readable fd");
-      return 1;
-    }
-  if (!FD_ISSET (fds[1][0], &rfds))
-    {
-      puts ("parent: pselect reports wrong fd");
-      return 1;
-    }
+  TEST_COMPARE (e, 1);
+  TEST_VERIFY (FD_ISSET (fds[1][0], &rfds));
+}
+
+static void
+test_pselect_large_timeout (void)
+{
+  support_create_timer (0, 100000000, false, NULL);
+
+  int fds[2];
+  xpipe (fds);
+
+  fd_set rfds;
+  FD_ZERO (&rfds);
+  FD_SET (fds[0], &rfds);
+
+  sigset_t ss;
+  TEST_COMPARE (sigprocmask (SIG_SETMASK, NULL, &ss), 0);
+  sigdelset (&ss, SIGALRM);
+
+  struct timespec ts = { TYPE_MAXIMUM (time_t), 0 };
+
+  TEST_COMPARE (pselect (fds[0] + 1, &rfds, NULL, NULL, &ts, &ss), -1);
+  TEST_VERIFY (errno == EINTR || errno == EOVERFLOW);
+}
+
+static int
+do_test (void)
+{
+  test_pselect_basic ();
+
+  test_pselect_large_timeout ();
 
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
