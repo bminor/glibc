@@ -32,9 +32,6 @@ __futex_abstimed_wait_common32 (unsigned int* futex_word,
   struct timespec ts32, *pts32 = NULL;
   if (abstime != NULL)
     {
-      if (! in_time_t_range (abstime->tv_sec))
-	return -EOVERFLOW;
-
       ts32 = valid_timespec64_to_timespec (*abstime);
       pts32 = &ts32;
     }
@@ -52,12 +49,28 @@ __futex_abstimed_wait_common32 (unsigned int* futex_word,
 
 static int
 __futex_abstimed_wait_common64 (unsigned int* futex_word,
-                                unsigned int expected, clockid_t clockid,
+                                unsigned int expected, int op,
                                 const struct __timespec64* abstime,
                                 int private, bool cancel)
 {
-  unsigned int clockbit;
+  if (cancel)
+    return INTERNAL_SYSCALL_CANCEL (futex_time64, futex_word, op, expected,
+				    abstime, NULL /* Unused.  */,
+				    FUTEX_BITSET_MATCH_ANY);
+  else
+    return INTERNAL_SYSCALL_CALL (futex_time64, futex_word, op, expected,
+				  abstime, NULL /* Ununsed.  */,
+				  FUTEX_BITSET_MATCH_ANY);
+}
+
+static int
+__futex_abstimed_wait_common (unsigned int* futex_word,
+                              unsigned int expected, clockid_t clockid,
+                              const struct __timespec64* abstime,
+                              int private, bool cancel)
+{
   int err;
+  unsigned int clockbit;
 
   /* Work around the fact that the kernel rejects negative timeout values
      despite them being valid.  */
@@ -70,16 +83,19 @@ __futex_abstimed_wait_common64 (unsigned int* futex_word,
   clockbit = (clockid == CLOCK_REALTIME) ? FUTEX_CLOCK_REALTIME : 0;
   int op = __lll_private_flag (FUTEX_WAIT_BITSET | clockbit, private);
 
-  if (cancel)
-    err = INTERNAL_SYSCALL_CANCEL (futex_time64, futex_word, op, expected,
-                                   abstime, NULL /* Unused.  */,
-                                   FUTEX_BITSET_MATCH_ANY);
+#ifdef __ASSUME_TIME64_SYSCALLS
+  err = __futex_abstimed_wait_common64 (futex_word, expected, op, abstime,
+					private, cancel);
+#else
+  bool need_time64 = abstime != NULL && !in_time_t_range (abstime->tv_sec);
+  if (need_time64)
+    {
+      err = __futex_abstimed_wait_common64 (futex_word, expected, op, abstime,
+					    private, cancel);
+      if (err == -ENOSYS)
+	err = -EOVERFLOW;
+    }
   else
-    err = INTERNAL_SYSCALL_CALL (futex_time64, futex_word, op, expected,
-                                 abstime, NULL /* Ununsed.  */,
-                                 FUTEX_BITSET_MATCH_ANY);
-#ifndef __ASSUME_TIME64_SYSCALLS
-  if (err == -ENOSYS)
     err = __futex_abstimed_wait_common32 (futex_word, expected, op, abstime,
                                           private, cancel);
 #endif
@@ -109,8 +125,8 @@ __futex_abstimed_wait64 (unsigned int* futex_word, unsigned int expected,
                          clockid_t clockid,
                          const struct __timespec64* abstime, int private)
 {
-  return __futex_abstimed_wait_common64 (futex_word, expected, clockid,
-                                         abstime, private, false);
+  return __futex_abstimed_wait_common (futex_word, expected, clockid,
+                                       abstime, private, false);
 }
 libc_hidden_def (__futex_abstimed_wait64)
 
@@ -120,7 +136,7 @@ __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
                                     const struct __timespec64* abstime,
                                     int private)
 {
-  return __futex_abstimed_wait_common64 (futex_word, expected, clockid,
-                                         abstime, private, true);
+  return __futex_abstimed_wait_common (futex_word, expected, clockid,
+                                       abstime, private, true);
 }
 libc_hidden_def (__futex_abstimed_wait_cancelable64)
