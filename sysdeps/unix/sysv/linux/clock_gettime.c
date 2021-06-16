@@ -22,7 +22,6 @@
 #include <time.h>
 #include "kernel-posix-cpu-timers.h"
 #include <sysdep-vdso.h>
-#include <time64-support.h>
 #include <shlib-compat.h>
 
 /* Get current value of CLOCK and store it in TP.  */
@@ -35,19 +34,14 @@ __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp)
 # define __NR_clock_gettime64 __NR_clock_gettime
 #endif
 
-  if (supports_time64 ())
-    {
 #ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
-      r = INLINE_VSYSCALL (clock_gettime64, 2, clock_id, tp);
+  r = INLINE_VSYSCALL (clock_gettime64, 2, clock_id, tp);
 #else
-      r = INLINE_SYSCALL_CALL (clock_gettime64, clock_id, tp);
+  r = INLINE_SYSCALL_CALL (clock_gettime64, clock_id, tp);
 #endif
 
-      if (r == 0 || errno != ENOSYS)
-	return r;
-
-      mark_time64_unsupported ();
-   }
+  if (r == 0 || errno != ENOSYS)
+    return r;
 
 #ifndef __ASSUME_TIME64_SYSCALLS
   /* Fallback code that uses 32-bit support.  */
