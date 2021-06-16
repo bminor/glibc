@@ -169,5 +169,7 @@ $(objpfx)tst-allocate_once-mem.out: $(objpfx)tst-allocate_once.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-allocate_once.mtrace > $@; \
 	$(evaluate-test)
 
+$(objpfx)tst-select: $(librt)
+$(objpfx)tst-select-time64: $(librt)
 $(objpfx)tst-pselect: $(librt)
 $(objpfx)tst-pselect-time64: $(librt)

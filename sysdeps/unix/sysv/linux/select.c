@@ -21,7 +21,6 @@
 #include <sys/select.h>
 #include <errno.h>
 #include <sysdep-cancel.h>
-#include <time64-support.h>
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
@@ -65,53 +64,56 @@ __select64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 #ifndef __NR_pselect6_time64
 # define __NR_pselect6_time64 __NR_pselect6
 #endif
-  int r;
-  if (supports_time64 ())
-    {
-      r = SYSCALL_CANCEL (pselect6_time64, nfds, readfds, writefds, exceptfds,
-			  pts64, NULL);
-      /* Linux by default will update the timeout after a pselect6 syscall
-         (though the pselect() glibc call suppresses this behavior).
-         Since select() on Linux has the same behavior as the pselect6
-         syscall, we update the timeout here.  */
-      if (r >= 0 || errno != ENOSYS)
-	{
-	  if (timeout != NULL)
-	    TIMESPEC_TO_TIMEVAL (timeout, &ts64);
-	  return r;
-	}
 
-      mark_time64_unsupported ();
+#ifdef __ASSUME_TIME64_SYSCALLS
+  int r = SYSCALL_CANCEL (pselect6_time64, nfds, readfds, writefds, exceptfds,
+			  pts64, NULL);
+  if (timeout != NULL)
+    TIMESPEC_TO_TIMEVAL (timeout, pts64);
+  return r;
+#else
+  bool need_time64 = timeout != NULL && !in_time_t_range (timeout->tv_sec);
+  if (need_time64)
+    {
+      int r = SYSCALL_CANCEL (pselect6_time64, nfds, readfds, writefds,
+			      exceptfds, pts64, NULL);
+      if ((r >= 0 || errno != ENOSYS) && timeout != NULL)
+	{
+	  TIMESPEC_TO_TIMEVAL (timeout, &ts64);
+	}
+      else
+	__set_errno (EOVERFLOW);
+      return r;
     }
 
-#ifndef __ASSUME_TIME64_SYSCALLS
+# ifdef __ASSUME_PSELECT
   struct timespec ts32, *pts32 = NULL;
   if (pts64 != NULL)
     {
-      if (! in_time_t_range (pts64->tv_sec))
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
-      ts32.tv_sec = s;
-      ts32.tv_nsec = ns;
+      ts32.tv_sec = pts64->tv_sec;
+      ts32.tv_nsec = pts64->tv_nsec;
       pts32 = &ts32;
     }
-# ifndef __ASSUME_PSELECT
-#  ifdef __NR__newselect
-#   undef __NR_select
-#   define __NR_select __NR__newselect
-#  endif
-  r = SYSCALL_CANCEL (select, nfds, readfds, writefds, exceptfds, pts32);
-# else
-  r = SYSCALL_CANCEL (pselect6, nfds, readfds, writefds, exceptfds, pts32,
-		      NULL);
-# endif
-  if (timeout != NULL)
-    *timeout = valid_timespec_to_timeval64 (ts32);
-#endif
 
+  int r = SYSCALL_CANCEL (pselect6, nfds, readfds, writefds, exceptfds, pts32,
+			  NULL);
+  if (timeout != NULL)
+    TIMESPEC_TO_TIMEVAL (timeout, pts32);
   return r;
+# else
+  struct timeval tv32, *ptv32 = NULL;
+  if (pts64 != NULL)
+    {
+      tv32 = valid_timespec64_to_timeval (*pts64);
+      ptv32 = &tv32;
+    }
+
+  int r = SYSCALL_CANCEL (select, nfds, readfds, writefds, exceptfds, ptv32);
+  if (timeout != NULL)
+    *timeout = valid_timeval_to_timeval64 (tv32);
+  return r;
+# endif /* __ASSUME_PSELECT  */
+#endif
 }
 
 #if __TIMESIZE != 64

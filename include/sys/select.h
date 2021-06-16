@@ -21,6 +21,11 @@ extern int __pselect32 (int __nfds, fd_set *__readfds,
 			const struct __timespec64 *__timeout,
 			const __sigset_t *__sigmask)
   attribute_hidden;
+extern int __select32 (int __nfds, fd_set *__readfds,
+		       fd_set *__writefds, fd_set *__exceptfds,
+		       const struct __timespec64 *ts64,
+		       struct __timeval64 *timeout)
+  attribute_hidden;
 
 extern int __select64 (int __nfds, fd_set *__readfds,
 		       fd_set *__writefds, fd_set *__exceptfds,

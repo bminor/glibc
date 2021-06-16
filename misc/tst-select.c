@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <intprops.h>
 #include <support/capture_subprocess.h>
 #include <support/check.h>
 #include <support/support.h>
@@ -30,12 +31,6 @@ struct child_args
   int fds[2][2];
   struct timeval tmo;
 };
-
-static void
-alarm_handler (int signum)
-{
-  /* Do nothing.  */
-}
 
 static void
 do_test_child (void *clousure)
@@ -69,17 +64,20 @@ do_test_child (void *clousure)
 static void
 do_test_child_alarm (void *clousure)
 {
-  struct sigaction act = { .sa_handler = alarm_handler };
-  xsigaction (SIGALRM, &act, NULL);
-  alarm (1);
+  struct child_args *args = (struct child_args *) clousure;
 
-  struct timeval tv = { .tv_sec = 10, .tv_usec = 0 };
+  support_create_timer (0, 100000000, false, NULL);
+  struct timeval tv = { .tv_sec = args->tmo.tv_sec, .tv_usec = 0 };
   int r = select (0, NULL, NULL, NULL, &tv);
   TEST_COMPARE (r, -1);
-  TEST_COMPARE (errno, EINTR);
-
-  if (support_select_modifies_timeout ())
-    TEST_VERIFY (tv.tv_sec < 10);
+  if (args->tmo.tv_sec > INT_MAX)
+    TEST_VERIFY (errno == EINTR || errno == EOVERFLOW);
+  else
+    {
+      TEST_COMPARE (errno, EINTR);
+      if (support_select_modifies_timeout ())
+       TEST_VERIFY (tv.tv_sec < args->tmo.tv_sec);
+    }
 }
 
 static int
@@ -121,13 +119,24 @@ do_test (void)
   xclose (args.fds[0][0]);
   xclose (args.fds[1][1]);
 
+  args.tmo = (struct timeval) { .tv_sec = 10, .tv_usec = 0 };
   {
     struct support_capture_subprocess result;
-    result = support_capture_subprocess (do_test_child_alarm, NULL);
+    result = support_capture_subprocess (do_test_child_alarm, &args);
     support_capture_subprocess_check (&result, "tst-select-child", 0,
 				      sc_allow_none);
   }
 
+  args.tmo = (struct timeval) { .tv_sec = TYPE_MAXIMUM (time_t),
+				.tv_usec = 0 };
+  {
+    struct support_capture_subprocess result;
+    result = support_capture_subprocess (do_test_child_alarm, &args);
+    support_capture_subprocess_check (&result, "tst-select-child", 0,
+				      sc_allow_none);
+  }
+
+  args.tmo = (struct timeval) { .tv_sec = 0, .tv_usec = 0 };
   {
     fd_set rfds;
     FD_ZERO (&rfds);
