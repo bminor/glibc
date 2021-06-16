@@ -29,31 +29,34 @@ __timerfd_settime64 (int fd, int flags, const struct __itimerspec64 *value,
 #ifndef __NR_timerfd_settime64
 # define __NR_timerfd_settime64 __NR_timerfd_settime
 #endif
-  int ret = INLINE_SYSCALL_CALL (timerfd_settime64, fd, flags, value, ovalue);
-#ifndef __ASSUME_TIME64_SYSCALLS
-  if (ret == 0 || errno != ENOSYS)
-    return ret;
 
-  if (! in_time_t_range ((value->it_value).tv_sec)
-      || ! in_time_t_range ((value->it_interval).tv_sec))
+#ifdef __ASSUME_TIME64_SYSCALLS
+  return INLINE_SYSCALL_CALL (timerfd_settime64, fd, flags, value, ovalue);
+#else
+  bool need_time64 = !in_time_t_range (value->it_value.tv_sec)
+		     || !in_time_t_range (value->it_interval.tv_sec);
+  if (need_time64)
     {
+      int r = INLINE_SYSCALL_CALL (timerfd_settime64, fd, flags, value,
+				   ovalue);
+      if (r == 0 || errno != ENOSYS)
+	return r;
       __set_errno (EOVERFLOW);
-      return -1;
+      return r;
     }
 
   struct itimerspec its32, oits32;
   its32.it_interval = valid_timespec64_to_timespec (value->it_interval);
   its32.it_value = valid_timespec64_to_timespec (value->it_value);
-
-  ret = INLINE_SYSCALL_CALL (timerfd_settime, fd, flags,
-			     &its32, ovalue ? &oits32 : NULL);
+  int ret = INLINE_SYSCALL_CALL (timerfd_settime, fd, flags,
+				 &its32, ovalue != NULL ? &oits32 : NULL);
   if (ret == 0 && ovalue != NULL)
     {
       ovalue->it_interval = valid_timespec_to_timespec64 (oits32.it_interval);
       ovalue->it_value = valid_timespec_to_timespec64 (oits32.it_value);
     }
-#endif
   return ret;
+#endif
 }
 
 #if __TIMESIZE != 64

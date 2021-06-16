@@ -145,6 +145,8 @@ endif
 
 $(objpfx)tst-ppoll: $(librt)
 $(objpfx)tst-ppoll-time64: $(librt)
+$(objpfx)tst-timerfd: $(librt)
+$(objpfx)tst-timerfd-time64: $(librt)
 
 # Generate the list of SYS_* macros for the system calls (__NR_*
 # macros).  The file syscall-names.list contains all possible system
