@@ -86,6 +86,15 @@ $(objpfx)tst-strftime2.out: $(gen-locales)
 $(objpfx)tst-strftime3.out: $(gen-locales)
 endif
 
+ifeq (yes,$(build-shared))
+librt = $(common-objpfx)rt/librt.so
+else
+librt = $(common-objpfx)rt/librt.a
+endif
+
+$(objpfx)tst-clock_nanosleep: $(librt)
+$(objpfx)tst-clock_nanosleep-time64: $(librt)
+
 tz-cflags = -DTZDIR='"$(zonedir)"' \
 	    -DTZDEFAULT='"$(localtime-file)"' \
 	    -DTZDEFRULES='"$(posixrules-file)"'

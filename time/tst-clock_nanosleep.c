@@ -20,38 +20,48 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <time.h>
-
+#include <intprops.h>
+#include <support/support.h>
+#include <support/check.h>
 
 /* Test that clock_nanosleep() does sleep.  */
-static int
-do_test (void)
+static void
+clock_nanosleep_test (void)
 {
   /* Current time.  */
   struct timeval tv1;
-  (void) gettimeofday (&tv1, NULL);
+  gettimeofday (&tv1, NULL);
 
-  struct timespec ts;
-  ts.tv_sec = 1;
-  ts.tv_nsec = 0;
+  struct timespec ts = { 1, 0 };
   TEMP_FAILURE_RETRY (clock_nanosleep (CLOCK_REALTIME, 0, &ts, &ts));
 
   /* At least one second must have passed.  */
   struct timeval tv2;
-  (void) gettimeofday (&tv2, NULL);
+  gettimeofday (&tv2, NULL);
 
   tv2.tv_sec -= tv1.tv_sec;
   tv2.tv_usec -= tv1.tv_usec;
   if (tv2.tv_usec < 0)
     --tv2.tv_sec;
 
-  if (tv2.tv_sec < 1)
-    {
-      puts ("clock_nanosleep didn't sleep long enough");
-      return 1;
-    }
+  TEST_VERIFY (tv2.tv_sec >= 1);
+}
 
+static void
+clock_nanosleep_large_timeout (void)
+{
+  support_create_timer (0, 100000000, false, NULL);
+  struct timespec ts = { TYPE_MAXIMUM (time_t), 0 };
+  int r = clock_nanosleep (CLOCK_REALTIME, 0, &ts, NULL);
+  TEST_VERIFY (r == EINTR || r == EOVERFLOW);
+}
+
+static int
+do_test (void)
+{
+  clock_nanosleep_test ();
+  clock_nanosleep_large_timeout ();
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
