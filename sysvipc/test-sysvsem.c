@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <intprops.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -30,6 +31,8 @@
 #include <support/support.h>
 #include <support/check.h>
 #include <support/temp_file.h>
+#include <support/xtime.h>
+#include <support/xsignal.h>
 
 /* These are for the temporary file we generate.  */
 static char *name;
@@ -112,11 +115,20 @@ do_test (void)
 #ifdef _GNU_SOURCE
   /* Set a time for half a second.  The semaphore operation should timeout
      with EAGAIN.  */
-  struct timespec ts = { 0 /* sec */, 500000000 /* nsec */ };
-  if (semtimedop (semid, &sb2, 1, &ts) != -1
-      || (errno != EAGAIN && errno != ENOSYS))
-    FAIL_EXIT1 ("semtimedop succeed or returned errno != {EAGAIN,ENOSYS} "
-		"(errno=%i)", errno);
+  {
+    struct timespec ts = { 0 /* sec */, 500000000 /* nsec */ };
+    if (semtimedop (semid, &sb2, 1, &ts) != -1
+        || (errno != EAGAIN && errno != ENOSYS))
+      FAIL_EXIT1 ("semtimedop succeed or returned errno != {EAGAIN,ENOSYS} "
+		  "(errno=%i)", errno);
+  }
+
+  {
+    support_create_timer (0, 100000000, false, NULL);
+    struct timespec ts = { TYPE_MAXIMUM (time_t), 0 };
+    TEST_COMPARE (semtimedop (semid, &sb2, 1, &ts), -1);
+    TEST_VERIFY (errno == EINTR || errno == EOVERFLOW);
+  }
 #endif
 
   /* Finally free up the semnaphore resource.  */
