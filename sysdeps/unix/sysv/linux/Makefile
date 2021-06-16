@@ -61,7 +61,7 @@ sysdep_routines += adjtimex clone umount umount2 readahead sysctl \
 		   open_by_handle_at mlock2 pkey_mprotect pkey_set pkey_get \
 		   timerfd_gettime timerfd_settime prctl \
 		   process_vm_readv process_vm_writev clock_adjtime \
-		   time64-support pselect32 \
+		   pselect32 \
 		   xstat fxstat lxstat xstat64 fxstat64 lxstat64 \
 		   fxstatat fxstatat64 \
 		   xmknod xmknodat convert_scm_timestamps
