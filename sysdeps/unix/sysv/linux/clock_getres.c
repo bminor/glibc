@@ -21,7 +21,6 @@
 #include <time.h>
 
 #include <sysdep-vdso.h>
-#include <time64-support.h>
 #include <shlib-compat.h>
 #include <kernel-features.h>
 
@@ -34,19 +33,14 @@ __clock_getres64 (clockid_t clock_id, struct __timespec64 *res)
 #ifndef __NR_clock_getres_time64
 # define __NR_clock_getres_time64 __NR_clock_getres
 #endif
-  if (supports_time64 ())
-    {
+
 #ifdef HAVE_CLOCK_GETRES64_VSYSCALL
-      r = INLINE_VSYSCALL (clock_getres_time64, 2, clock_id, res);
+  r = INLINE_VSYSCALL (clock_getres_time64, 2, clock_id, res);
 #else
-      r = INLINE_SYSCALL_CALL (clock_getres_time64, clock_id, res);
+  r = INLINE_SYSCALL_CALL (clock_getres_time64, clock_id, res);
 #endif
-
-      if (r == 0 || errno != ENOSYS)
-	return r;
-
-      mark_time64_unsupported ();
-    }
+  if (r == 0 || errno != ENOSYS)
+    return r;
 
 #ifndef __ASSUME_TIME64_SYSCALLS
   /* Fallback code that uses 32-bit support.  */
