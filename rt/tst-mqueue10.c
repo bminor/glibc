@@ -54,6 +54,16 @@ do_test (void)
     support_delete_timer (timer);
   }
 
+  {
+    timer_t timer = support_create_timer (0, 100000000, false, NULL);
+    /* Fill the internal buffer first.  */
+    TEST_COMPARE (mq_timedsend (q, msg, sizeof (msg), 0,
+				&(struct timespec) { 0, 0 }), 0);
+    TEST_COMPARE (mq_timedsend (q, msg, sizeof (msg), 0, &ts), -1);
+    TEST_VERIFY (errno == EINTR || errno == EOVERFLOW);
+    support_delete_timer (timer);
+  }
+
   mq_unlink (name);
 
   return 0;
