@@ -25,20 +25,27 @@ __sigtimedwait64 (const sigset_t *set, siginfo_t *info,
 #ifndef __NR_rt_sigtimedwait_time64
 # define __NR_rt_sigtimedwait_time64 __NR_rt_sigtimedwait
 #endif
-  int result = SYSCALL_CANCEL (rt_sigtimedwait_time64, set, info, timeout,
-			       __NSIG_BYTES);
 
-#ifndef __ASSUME_TIME64_SYSCALLS
-  if (result != 0 && errno == ENOSYS)
+  int result;
+#ifdef __ASSUME_TIME64_SYSCALLS
+  result = SYSCALL_CANCEL (rt_sigtimedwait_time64, set, info, timeout,
+			   __NSIG_BYTES);
+#else
+  bool need_time64 = timeout != NULL && !in_time_t_range (timeout->tv_sec);
+  if (need_time64)
+    {
+      result = SYSCALL_CANCEL (rt_sigtimedwait_time64, set, info, timeout,
+			       __NSIG_BYTES);
+      if (result == 0 || errno != ENOSYS)
+	return result;
+      __set_errno (EOVERFLOW);
+      return -1;
+    }
+  else
     {
       struct timespec ts32, *pts32 = NULL;
       if (timeout != NULL)
 	{
-	  if (! in_time_t_range (timeout->tv_sec))
-	    {
-	      __set_errno (EINVAL);
-	      return -1;
-	    }
 	  ts32 = valid_timespec64_to_timespec (*timeout);
 	  pts32 = &ts32;
 	}

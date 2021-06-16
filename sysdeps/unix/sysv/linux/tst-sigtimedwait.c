@@ -17,11 +17,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <time.h>
+#include <intprops.h>
 #include <errno.h>
 #include <signal.h>
 #include <support/check.h>
 #include <support/xtime.h>
 #include <support/timespec.h>
+#include <support/support.h>
 #include <stdbool.h>
 
 static int
@@ -47,6 +49,20 @@ test_sigtimedwait_timeout (bool zero_tmo)
   return 0;
 }
 
+static void
+test_sigtimedwait_large_timeout (void)
+{
+  support_create_timer (0, 100000000, false, NULL);
+  struct timespec ts = { TYPE_MAXIMUM (time_t), 0 };
+
+  sigset_t ss_usr1;
+  sigemptyset (&ss_usr1);
+  sigaddset (&ss_usr1, SIGUSR1);
+
+  TEST_COMPARE (sigtimedwait (&ss_usr1, NULL, &ts), -1);
+  TEST_VERIFY (errno == EINTR || errno == EOVERFLOW);
+}
+
 static int
 do_test (void)
 {
@@ -55,6 +71,8 @@ do_test (void)
 
   /* Check if sigtimedwait exits after specified timeout.  */
   test_sigtimedwait_timeout (false);
+
+  test_sigtimedwait_large_timeout ();
 
   return 0;
 }

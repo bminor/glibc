@@ -145,6 +145,8 @@ endif
 
 $(objpfx)tst-ppoll: $(librt)
 $(objpfx)tst-ppoll-time64: $(librt)
+$(objpfx)tst-sigtimedwait: $(librt)
+$(objpfx)tst-sigtimedwait-time64: $(librt)
 $(objpfx)tst-timerfd: $(librt)
 $(objpfx)tst-timerfd-time64: $(librt)
 
