@@ -24,6 +24,7 @@
 #define SUPPORT_H
 
 #include <stdbool.h>
+#include <stdint.h>
 #include <stddef.h>
 #include <sys/cdefs.h>
 /* For mode_t.  */
@@ -152,6 +153,16 @@ extern bool support_select_modifies_timeout (void);
 /* Return true if select normalize the timeout input by taking in account
    tv_usec larger than 1000000.  */
 extern bool support_select_normalizes_timeout (void);
+
+/* Create a timer that trigger after SEC seconds and NSEC nanoseconds.  If
+   REPEAT is true the timer will repeat indefinitely.  If CALLBACK is not
+   NULL, the function will be called when the timer expires; otherwise a
+   dummy empty function is used instead.
+   This is implemented with POSIX per-process timer with SIGEV_SIGNAL.  */
+timer_t support_create_timer (uint64_t sec, long int nsec, bool repeat,
+			      void (*callback)(int));
+/* Disable the timer TIMER.  */
+void support_delete_timer (timer_t timer);
 
 __END_DECLS
 
