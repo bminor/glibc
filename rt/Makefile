@@ -68,7 +68,8 @@ tests := tst-shm tst-timer tst-timer2 \
 	 tst-mqueue5 tst-mqueue6 tst-mqueue7 tst-mqueue8 tst-mqueue9 \
 	 tst-timer3 tst-timer4 tst-timer5 \
 	 tst-cpuclock2 tst-cputimer1 tst-cputimer2 tst-cputimer3 \
-	 tst-shm-cancel
+	 tst-shm-cancel \
+	 tst-mqueue10
 tests-internal := tst-timer-sigmask
 
 tests-time64 := \
@@ -78,6 +79,7 @@ tests-time64 := \
   tst-mqueue2-time64 \
   tst-mqueue4-time64 \
   tst-mqueue8-time64 \
+  tst-mqueue10-time64 \
   tst-timer4-time64
 
 extra-libs := librt

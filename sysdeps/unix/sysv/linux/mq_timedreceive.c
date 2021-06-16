@@ -29,30 +29,33 @@ __mq_timedreceive_time64 (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
 #ifndef __NR_mq_timedreceive_time64
 # define __NR_mq_timedreceive_time64 __NR_mq_timedreceive
 #endif
-  int ret = SYSCALL_CANCEL (mq_timedreceive_time64, mqdes, msg_ptr, msg_len,
-                            msg_prio, abs_timeout);
 
-#ifndef __ASSUME_TIME64_SYSCALLS
-  if (ret == 0 || errno != ENOSYS)
-    return ret;
-
-  struct timespec ts32;
-  if (abs_timeout != NULL)
+#ifdef __ASSUME_TIME64_SYSCALLS
+  return SYSCALL_CANCEL (mq_timedreceive_time64, mqdes, msg_ptr, msg_len,
+			 msg_prio, abs_timeout);
+#else
+  bool need_time64 = abs_timeout != NULL
+		     && !in_time_t_range (abs_timeout->tv_sec);
+  if (need_time64)
     {
-      if (! in_time_t_range (abs_timeout->tv_sec))
-        {
-          __set_errno (EOVERFLOW);
-          return -1;
-        }
-
-      ts32 = valid_timespec64_to_timespec (*abs_timeout);
+      int r = SYSCALL_CANCEL (mq_timedreceive_time64, mqdes, msg_ptr, msg_len,
+			      msg_prio, abs_timeout);
+      if (r == 0 || errno != ENOSYS)
+	return r;
+      __set_errno (EOVERFLOW);
+      return -1;
     }
 
-  ret = SYSCALL_CANCEL (mq_timedreceive, mqdes, msg_ptr, msg_len, msg_prio,
-			abs_timeout != NULL ? &ts32 : NULL);
-#endif
+  struct timespec ts32, *pts32 = NULL;
+  if (abs_timeout != NULL)
+    {
+      ts32 = valid_timespec64_to_timespec (*abs_timeout);
+      pts32 = &ts32;
+    }
 
-  return ret;
+  return SYSCALL_CANCEL (mq_timedreceive, mqdes, msg_ptr, msg_len, msg_prio,
+			 pts32);
+#endif
 }
 
 #if __TIMESIZE != 64
