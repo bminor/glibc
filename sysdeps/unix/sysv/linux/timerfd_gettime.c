@@ -25,17 +25,16 @@
 int
 __timerfd_gettime64 (int fd, struct __itimerspec64 *value)
 {
+#ifndef __NR_timerfd_gettime64
+# define __NR_timerfd_gettime64 __NR_timerfd_gettime
+#endif
+
 #ifdef __ASSUME_TIME64_SYSCALLS
-# ifndef __NR_timerfd_gettime64
-#  define __NR_timerfd_gettime64 __NR_timerfd_gettime
-# endif
   return INLINE_SYSCALL_CALL (timerfd_gettime64, fd, value);
 #else
-# ifdef __NR_timerfd_gettime64
   int ret = INLINE_SYSCALL_CALL (timerfd_gettime64, fd, value);
   if (ret == 0 || errno != ENOSYS)
     return ret;
-# endif
   struct itimerspec its32;
   int retval = INLINE_SYSCALL_CALL (timerfd_gettime, fd, &its32);
   if (retval == 0)
