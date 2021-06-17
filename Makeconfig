@@ -970,7 +970,7 @@ module-cppflags-real = -include $(common-objpfx)libc-modules.h \
 # facility.  In fact, shlib-versions should not use it because that will
 # create a circular dependency as libc-modules.h is generated from
 # shlib-versions.
-module-cppflags = $(if $(filter %.v.i,$(@F)),,$(module-cppflags-real))
+module-cppflags = $(if $(filter %.mk.i %.v.i,$(@F)),,$(module-cppflags-real))
 
 # These are the variables that the implicit compilation rules use.
 # Note that we can't use -std=* in CPPFLAGS, because it overrides
@@ -1239,11 +1239,11 @@ endif # $(build-shared) = yes
 -include $(common-objpfx)time64-compat.mk
 postclean-generated += time64-compat.mk
 
-$(common-objpfx)time64-compat.mk: $(sysd-versions-force) \
-				  $(common-objpfx)time64-compat.i
+$(common-objpfx)time64-compat.mk: $(common-objpfx)time64-compat.mk.i \
+				  $(sysd-versions-force)
 	sed '/^[        ]*#/d;/^[       ]*$$/d' $< > $@T
 	mv -f $@T $@
-$(common-objpfx)time64-compat.i: $(..)Makeconfig
+$(common-objpfx)time64-compat.mk.i: $(..)Makeconfig
 	printf "#include <time64-compat.h>\n#ifdef TIME64_NON_DEFAULT\nhave-time64-compat = yes\n#endif" \
 	| $(CC) -E -undef $(CPPFLAGS) -x assembler-with-cpp - > $@T
 	mv -f $@T $@
