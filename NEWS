@@ -28,6 +28,7 @@ The following bugs are resolved with this release:
   [27304] pthread_cond_destroy does not pass private flag to futex system calls
   [27537] test-container: Always copy test-specific support files
   [27577] elf/ld.so --help doesn't work
+  [27646] gethostbyname and NSS crashes after dlmopen
   [27648] FAIL: misc/tst-select
   [27651] Performance regression after updating to 2.33
   [27706] select fails to update timeout on error

@@ -227,7 +227,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-single_threaded tst-single_threaded-pthread \
 	 tst-tls-ie tst-tls-ie-dlmopen argv0test \
 	 tst-glibc-hwcaps tst-glibc-hwcaps-prepend tst-glibc-hwcaps-mask \
-	 tst-dlmopen-dlerror
+	 tst-dlmopen-dlerror tst-dlmopen-gethostbyname
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -349,7 +349,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		libmarkermod2-1 libmarkermod2-2 \
 		libmarkermod3-1 libmarkermod3-2 libmarkermod3-3 \
 		libmarkermod4-1 libmarkermod4-2 libmarkermod4-3 libmarkermod4-4 \
-		tst-dlmopen-dlerror-mod \
+		tst-dlmopen-dlerror-mod tst-dlmopen-gethostbyname-mod \
 
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
@@ -1926,3 +1926,6 @@ $(objpfx)tst-rtld-help.out: $(objpfx)ld.so
 	fi; \
 	(exit $$status); \
 	$(evaluate-test)
+
+$(objpfx)tst-dlmopen-gethostbyname: $(libdl)
+$(objpfx)tst-dlmopen-gethostbyname.out: $(objpfx)tst-dlmopen-gethostbyname-mod.so
