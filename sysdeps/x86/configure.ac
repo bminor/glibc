@@ -98,30 +98,32 @@ cat > conftest2.S <<EOF
 4:
 EOF
 libc_cv_include_x86_isa_level=no
-libc_cv_have_x86_lahf_sahf=no
-libc_cv_have_x86_movbe=no
 if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS -nostartfiles -nostdlib -r -o conftest conftest1.S conftest2.S); then
   count=`LC_ALL=C $READELF -n conftest | grep NT_GNU_PROPERTY_TYPE_0 | wc -l`
   if test "$count" = 1; then
     libc_cv_include_x86_isa_level=yes
-    cat > conftest.c <<EOF
-EOF
-    if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - conftest.c) | grep -q "\-msahf"; then
-      libc_cv_have_x86_lahf_sahf=yes
-    fi
-    if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - conftest.c) | grep -q "\-mmovbe"; then
-      libc_cv_have_x86_movbe=yes
-    fi
   fi
 fi
 rm -f conftest*])
 if test $libc_cv_include_x86_isa_level = yes; then
   AC_DEFINE(INCLUDE_X86_ISA_LEVEL)
-fi
-if test $libc_cv_have_x86_lahf_sahf = yes; then
-  AC_DEFINE(HAVE_X86_LAHF_SAHF)
-fi
-if test $libc_cv_have_x86_movbe = yes; then
-  AC_DEFINE(HAVE_X86_MOVBE)
+  AC_CACHE_CHECK([for LAHF/SAHF instruction support],
+		 libc_cv_have_x86_lahf_sahf, [dnl
+    libc_cv_have_x86_lahf_sahf=no
+    if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - -x c /dev/null) | grep -q "\-msahf"; then
+      libc_cv_have_x86_lahf_sahf=yes
+    fi])
+  if test $libc_cv_have_x86_lahf_sahf = yes; then
+    AC_DEFINE(HAVE_X86_LAHF_SAHF)
+  fi
+  AC_CACHE_CHECK([for MOVBE instruction support],
+		 libc_cv_have_x86_movbe, [dnl
+    libc_cv_have_x86_movbe=no
+    if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - -x c /dev/null) | grep -q "\-mmovbe"; then
+      libc_cv_have_x86_movbe=yes
+    fi])
+  if test $libc_cv_have_x86_movbe = yes; then
+    AC_DEFINE(HAVE_X86_MOVBE)
+  fi
 fi
 LIBC_CONFIG_VAR([enable-x86-isa-level], [$libc_cv_include_x86_isa_level])
