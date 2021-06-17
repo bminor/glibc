@@ -72,7 +72,11 @@ __pthread_cancel (pthread_t th)
     {
       struct sigaction sa;
       sa.sa_sigaction = sigcancel_handler;
-      sa.sa_flags = SA_SIGINFO;
+      /* The signal handle should be non-interruptible to avoid the risk of
+	 spurious EINTR caused by SIGCANCEL sent to process or if
+	 pthread_cancel() is called while cancellation is disabled in the
+	 target thread.  */
+      sa.sa_flags = SA_SIGINFO | SA_RESTART;
       __sigemptyset (&sa.sa_mask);
       __libc_sigaction (SIGCANCEL, &sa, NULL);
       atomic_store_relaxed (&init_sigcancel, 1);

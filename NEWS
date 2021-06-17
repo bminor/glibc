@@ -64,6 +64,14 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The function pthread_yield has been deprecated; programs should use
   the equivalent standard function sched_yield instead.
 
+* The pthread cancellation handler is now installed with SA_RESTART and
+  pthread_cancel will always send the internal SIGCANCEL on a cancellation
+  request.  It should not be visible to application since the cancellation
+  handler should either act upon cancellation (if asynchronous cancellation
+  is enabled) or ignore the cancellation internal signal.  However there are
+  buggy kernel interfaces (for instance some CIFS version) that could still
+  see spurious EINTR error when cancellation interrupts a blocking syscall.
+
 Changes to build and runtime requirements:
 
 * On Linux, the shm_open, sem_open, and related functions now expect the
