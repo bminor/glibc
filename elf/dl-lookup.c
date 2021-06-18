@@ -24,6 +24,7 @@
 #include <ldsodefs.h>
 #include <dl-hash.h>
 #include <dl-machine.h>
+#include <dl-protected.h>
 #include <sysdep-cancel.h>
 #include <libc-lock.h>
 #include <tls.h>
@@ -526,6 +527,10 @@ do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
 	  /* Hidden and internal symbols are local, ignore them.  */
 	  if (__glibc_unlikely (dl_symbol_visibility_binds_local_p (sym)))
 	    goto skip;
+
+	  if (ELFW(ST_VISIBILITY) (sym->st_other) == STV_PROTECTED)
+	    _dl_check_protected_symbol (undef_name, undef_map, ref, map,
+					type_class);
 
 	  switch (ELFW(ST_BIND) (sym->st_info))
 	    {
