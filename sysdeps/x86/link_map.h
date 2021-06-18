@@ -29,3 +29,5 @@ unsigned int l_x86_feature_1_and;
 
 /* GNU_PROPERTY_X86_ISA_1_NEEDED of this object.  */
 unsigned int l_x86_isa_1_needed;
+
+#include <sysdeps/generic/link_map.h>

@@ -97,6 +97,7 @@ _dl_process_property_note (struct link_map *l, const ElfW(Nhdr) *note,
 
   const ElfW(Addr) start = (ElfW(Addr)) note;
 
+  unsigned int needed_1 = 0;
   unsigned int feature_1_and = 0;
   unsigned int isa_1_needed = 0;
   unsigned int last_type = 0;
@@ -141,7 +142,8 @@ _dl_process_property_note (struct link_map *l, const ElfW(Nhdr) *note,
 	      last_type = type;
 
 	      if (type == GNU_PROPERTY_X86_FEATURE_1_AND
-		  || type == GNU_PROPERTY_X86_ISA_1_NEEDED)
+		  || type == GNU_PROPERTY_X86_ISA_1_NEEDED
+		  || type == GNU_PROPERTY_1_NEEDED)
 		{
 		  /* The sizes of types which we are searching for are
 		     4 bytes.  There is no point to continue if this
@@ -151,12 +153,18 @@ _dl_process_property_note (struct link_map *l, const ElfW(Nhdr) *note,
 
 		  /* NB: Stop the scan only after seeing all types which
 		     we are searching for.  */
-		  _Static_assert ((GNU_PROPERTY_X86_ISA_1_NEEDED >
-				   GNU_PROPERTY_X86_FEATURE_1_AND),
+		  _Static_assert (((GNU_PROPERTY_X86_ISA_1_NEEDED
+				    > GNU_PROPERTY_X86_FEATURE_1_AND)
+				   && (GNU_PROPERTY_X86_FEATURE_1_AND
+				       > GNU_PROPERTY_1_NEEDED)),
 				  "GNU_PROPERTY_X86_ISA_1_NEEDED > "
-				  "GNU_PROPERTY_X86_FEATURE_1_AND");
+				  "GNU_PROPERTY_X86_FEATURE_1_AND && "
+				  "GNU_PROPERTY_X86_FEATURE_1_AND > "
+				  "GNU_PROPERTY_1_NEEDED");
 		  if (type == GNU_PROPERTY_X86_FEATURE_1_AND)
 		    feature_1_and = *(unsigned int *) ptr;
+		  else if (type == GNU_PROPERTY_1_NEEDED)
+		    needed_1 = *(unsigned int *) ptr;
 		  else
 		    {
 		      isa_1_needed = *(unsigned int *) ptr;
@@ -187,9 +195,10 @@ _dl_process_property_note (struct link_map *l, const ElfW(Nhdr) *note,
     }
 
   /* We get here only if there is one or no GNU property note.  */
-  if (isa_1_needed != 0 || feature_1_and != 0)
+  if (needed_1 != 0 || isa_1_needed != 0 || feature_1_and != 0)
     {
       l->l_property = lc_property_valid;
+      l->l_1_needed = needed_1;
       l->l_x86_isa_1_needed = isa_1_needed;
       l->l_x86_feature_1_and = feature_1_and;
     }
