@@ -1871,6 +1871,7 @@ GLIBC_2.17 sgetsgent F
 GLIBC_2.17 sgetsgent_r F
 GLIBC_2.17 sgetspent F
 GLIBC_2.17 sgetspent_r F
+GLIBC_2.17 shm_open F
 GLIBC_2.17 shmat F
 GLIBC_2.17 shmctl F
 GLIBC_2.17 shmdt F
@@ -2661,6 +2662,7 @@ GLIBC_2.34 sem_timedwait F
 GLIBC_2.34 sem_trywait F
 GLIBC_2.34 sem_unlink F
 GLIBC_2.34 sem_wait F
+GLIBC_2.34 shm_open F
 GLIBC_2.34 thrd_create F
 GLIBC_2.34 thrd_detach F
 GLIBC_2.34 thrd_exit F

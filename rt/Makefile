@@ -24,6 +24,9 @@ include ../Makeconfig
 
 headers	:= aio.h mqueue.h bits/mqueue.h bits/mqueue2.h
 
+routines = \
+  shm_open \
+
 librt-routines = \
   aio_cancel \
   aio_error \
@@ -49,7 +52,6 @@ librt-routines = \
   mq_timedreceive \
   mq_timedsend \
   mq_unlink \
-  shm_open \
   shm_unlink \
   timer_create \
   timer_delete \

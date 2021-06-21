@@ -1,3 +1,11 @@
+libc {
+  GLIBC_2.2 {
+    shm_open;
+  }
+  GLIBC_2.34 {
+    shm_open;
+  }
+}
 librt {
   GLIBC_2.1 {
     aio_cancel;
@@ -19,7 +27,6 @@ librt {
     lio_listio64;
   }
   GLIBC_2.2 {
-    shm_open;
     shm_unlink;
     timer_create;
     timer_delete;

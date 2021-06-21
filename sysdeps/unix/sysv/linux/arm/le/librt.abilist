@@ -30,7 +30,6 @@ GLIBC_2.4 mq_setattr F
 GLIBC_2.4 mq_timedreceive F
 GLIBC_2.4 mq_timedsend F
 GLIBC_2.4 mq_unlink F
-GLIBC_2.4 shm_open F
 GLIBC_2.4 shm_unlink F
 GLIBC_2.4 timer_create F
 GLIBC_2.4 timer_delete F

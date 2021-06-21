@@ -15,7 +15,6 @@ GLIBC_2.2 aio_write F
 GLIBC_2.2 aio_write64 F
 GLIBC_2.2 lio_listio F
 GLIBC_2.2 lio_listio64 F
-GLIBC_2.2 shm_open F
 GLIBC_2.2 shm_unlink F
 GLIBC_2.2 timer_create F
 GLIBC_2.2 timer_delete F

@@ -26,7 +26,6 @@ GLIBC_2.17 mq_setattr F
 GLIBC_2.17 mq_timedreceive F
 GLIBC_2.17 mq_timedsend F
 GLIBC_2.17 mq_unlink F
-GLIBC_2.17 shm_open F
 GLIBC_2.17 shm_unlink F
 GLIBC_2.17 timer_create F
 GLIBC_2.17 timer_delete F

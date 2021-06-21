@@ -1939,6 +1939,7 @@ GLIBC_2.2 sem_wait F
 GLIBC_2.2 sendfile F
 GLIBC_2.2 setrlimit64 F
 GLIBC_2.2 setutxent F
+GLIBC_2.2 shm_open F
 GLIBC_2.2 sighold F
 GLIBC_2.2 sigignore F
 GLIBC_2.2 sigqueue F
@@ -2536,6 +2537,7 @@ GLIBC_2.34 sem_timedwait F
 GLIBC_2.34 sem_trywait F
 GLIBC_2.34 sem_unlink F
 GLIBC_2.34 sem_wait F
+GLIBC_2.34 shm_open F
 GLIBC_2.34 thrd_create F
 GLIBC_2.34 thrd_detach F
 GLIBC_2.34 thrd_exit F
