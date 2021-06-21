@@ -395,6 +395,7 @@ GLIBC_2.34 sem_trywait F
 GLIBC_2.34 sem_unlink F
 GLIBC_2.34 sem_wait F
 GLIBC_2.34 shm_open F
+GLIBC_2.34 shm_unlink F
 GLIBC_2.34 thrd_create F
 GLIBC_2.34 thrd_detach F
 GLIBC_2.34 thrd_exit F
@@ -2100,6 +2101,7 @@ GLIBC_2.4 setxattr F
 GLIBC_2.4 sgetspent F
 GLIBC_2.4 sgetspent_r F
 GLIBC_2.4 shm_open F
+GLIBC_2.4 shm_unlink F
 GLIBC_2.4 shmat F
 GLIBC_2.4 shmctl F
 GLIBC_2.4 shmdt F

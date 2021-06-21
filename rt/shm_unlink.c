@@ -17,13 +17,14 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <shlib-compat.h>
 #include <shm-directory.h>
 #include <string.h>
 #include <unistd.h>
 
 /* Remove shared memory object.  */
 int
-shm_unlink (const char *name)
+__shm_unlink (const char *name)
 {
   struct shmdir_name dirname;
   if (__shm_get_name (&dirname, name, false) != 0)
@@ -32,8 +33,13 @@ shm_unlink (const char *name)
       return -1;
     }
 
-  int result = unlink (dirname.name);
+  int result = __unlink (dirname.name);
   if (result < 0 && errno == EPERM)
     __set_errno (EACCES);
   return result;
 }
+versioned_symbol (libc, __shm_unlink, shm_unlink, GLIBC_2_34);
+
+#if OTHER_SHLIB_COMPAT (librt, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libc, __shm_unlink, shm_unlink, GLIBC_2_2);
+#endif

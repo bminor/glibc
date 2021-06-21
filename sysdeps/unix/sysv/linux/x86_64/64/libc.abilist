@@ -1570,6 +1570,7 @@ GLIBC_2.2.5 setvbuf F
 GLIBC_2.2.5 sgetspent F
 GLIBC_2.2.5 sgetspent_r F
 GLIBC_2.2.5 shm_open F
+GLIBC_2.2.5 shm_unlink F
 GLIBC_2.2.5 shmat F
 GLIBC_2.2.5 shmctl F
 GLIBC_2.2.5 shmdt F
@@ -2379,6 +2380,7 @@ GLIBC_2.34 sem_trywait F
 GLIBC_2.34 sem_unlink F
 GLIBC_2.34 sem_wait F
 GLIBC_2.34 shm_open F
+GLIBC_2.34 shm_unlink F
 GLIBC_2.34 thrd_create F
 GLIBC_2.34 thrd_detach F
 GLIBC_2.34 thrd_exit F

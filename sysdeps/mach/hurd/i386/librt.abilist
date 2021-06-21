@@ -15,7 +15,6 @@ GLIBC_2.2.6 aio_write F
 GLIBC_2.2.6 aio_write64 F
 GLIBC_2.2.6 lio_listio F
 GLIBC_2.2.6 lio_listio64 F
-GLIBC_2.2.6 shm_unlink F
 GLIBC_2.2.6 timer_create F
 GLIBC_2.2.6 timer_delete F
 GLIBC_2.2.6 timer_getoverrun F

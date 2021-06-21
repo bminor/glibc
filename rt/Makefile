@@ -26,6 +26,7 @@ headers	:= aio.h mqueue.h bits/mqueue.h bits/mqueue2.h
 
 routines = \
   shm_open \
+  shm_unlink \
 
 librt-routines = \
   aio_cancel \
@@ -52,7 +53,6 @@ librt-routines = \
   mq_timedreceive \
   mq_timedsend \
   mq_unlink \
-  shm_unlink \
   timer_create \
   timer_delete \
   timer_getoverr \

@@ -1567,6 +1567,7 @@ GLIBC_2.2.6 setvbuf F
 GLIBC_2.2.6 sgetspent F
 GLIBC_2.2.6 sgetspent_r F
 GLIBC_2.2.6 shm_open F
+GLIBC_2.2.6 shm_unlink F
 GLIBC_2.2.6 shmat F
 GLIBC_2.2.6 shmctl F
 GLIBC_2.2.6 shmdt F
@@ -2228,6 +2229,7 @@ GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
 GLIBC_2.34 shm_open F
+GLIBC_2.34 shm_unlink F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F
