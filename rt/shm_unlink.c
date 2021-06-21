@@ -1,4 +1,5 @@
-/* Copyright (C) 2000-2021 Free Software Foundation, Inc.
+/* shm_unlink -- remove a POSIX shared memory object.  Generic POSIX version.
+   Copyright (C) 2001-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +17,23 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <sys/mman.h>
+#include <shm-directory.h>
+#include <string.h>
+#include <unistd.h>
 
 /* Remove shared memory object.  */
 int
 shm_unlink (const char *name)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  struct shmdir_name dirname;
+  if (__shm_get_name (&dirname, name, false) != 0)
+    {
+      __set_errno (ENOENT);
+      return -1;
+    }
+
+  int result = unlink (dirname.name);
+  if (result < 0 && errno == EPERM)
+    __set_errno (EACCES);
+  return result;
 }
-stub_warning (shm_unlink)
