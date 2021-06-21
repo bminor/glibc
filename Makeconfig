@@ -1344,7 +1344,7 @@ libpthread-routines-var = routines
 librt-routines-var = routines
 else
 libpthread-routines-var = libpthread-routines
-librt-routines-var = libpthread-routines
+librt-routines-var = librt-routines
 endif
 
 # A sysdeps Makeconfig fragment may set libc-reentrant to yes.
