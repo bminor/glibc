@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ucontext.h>
+#include <support/support.h>
 
 #define N	4
 #if __WORDSIZE == 64
@@ -36,7 +37,8 @@ typedef struct {
        unsigned long	guard[3];
    } tst_context_t;
 
-static char stacks[N][2 * PTHREAD_STACK_MIN];
+static char *stacks[N];
+static size_t stack_size;
 static tst_context_t ctx[N][2];
 static volatile int failures;
 
@@ -79,7 +81,7 @@ fct (long int n)
       exit (1);
     }
 
-  if (on_stack < stacks[n] || on_stack >= stacks[n] + sizeof (stacks[0]))
+  if (on_stack < stacks[n] || on_stack >= stacks[n] + stack_size)
     {
       printf ("%ld: on_stack not on appropriate stack\n", n);
       exit (1);
@@ -109,7 +111,7 @@ tf (void *arg)
   printf ("%d: %s: before makecontext\n", n, __FUNCTION__);
 
   ctx[n][1].uctx.uc_stack.ss_sp = stacks[n];
-  ctx[n][1].uctx.uc_stack.ss_size = sizeof (stacks[n]);
+  ctx[n][1].uctx.uc_stack.ss_size = stack_size;
   ctx[n][1].uctx.uc_link = &ctx[n][0].uctx;
   makecontext (&ctx[n][1].uctx, (void (*) (void)) fct, 1, (long int) n);
 
@@ -136,6 +138,10 @@ do_test (void)
   int n;
   pthread_t th[N];
   ucontext_t mctx;
+
+  stack_size = 2 * PTHREAD_STACK_MIN;
+  for (int i = 0; i < N; i++)
+    stacks[i] = xmalloc (stack_size);
 
   puts ("making contexts");
   if (getcontext (&mctx) != 0)
@@ -197,6 +203,9 @@ do_test (void)
 	puts ("join failed");
 	exit (1);
       }
+
+  for (int i = 0; i < N; i++)
+    free (stacks[i]);
 
   return failures;
 }

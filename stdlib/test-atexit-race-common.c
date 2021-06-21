@@ -38,11 +38,6 @@
 
 const size_t kNumThreads = 1024;
 const size_t kNumHandlers = 1024;
-const size_t kStacksize =
-#ifdef PTHREAD_STACK_MIN
-	0x20000 < PTHREAD_STACK_MIN ? PTHREAD_STACK_MIN :
-#endif
-		0x20000;
 
 static void *
 threadfunc (void *unused)
@@ -66,6 +61,12 @@ do_test (void)
   /* With default 8MiB Linux stack size, creating 1024 threads can cause
      VM exhausiton on 32-bit machines.  Reduce stack size of each thread to
      128KiB for a maximum required VM size of 128MiB.  */
+  size_t kStacksize =
+#ifdef PTHREAD_STACK_MIN
+    0x20000 < PTHREAD_STACK_MIN ? PTHREAD_STACK_MIN :
+#endif
+    0x20000;
+
   xpthread_attr_setstacksize (&attr, kStacksize);
 
   for (i = 0; i < kNumThreads; ++i) {

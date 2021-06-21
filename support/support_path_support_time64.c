@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fcntl.h>
+#include <unistd.h>
 #include <support/check.h>
 #include <support/support.h>
 #include <sys/stat.h>

@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <regex.h>
+#include <sysconf-pthread_stack_min.h>
 
 #define NEED_SPEC_ARRAY 0
 #include <posix-conf-vars.h>
@@ -569,11 +570,7 @@ __sysconf (int name)
 #endif
 
     case _SC_THREAD_STACK_MIN:
-#ifdef	PTHREAD_STACK_MIN
-      return PTHREAD_STACK_MIN;
-#else
-      return -1;
-#endif
+      return __get_pthread_stack_min ();
 
     case _SC_THREAD_THREADS_MAX:
 #ifdef	PTHREAD_THREADS_MAX

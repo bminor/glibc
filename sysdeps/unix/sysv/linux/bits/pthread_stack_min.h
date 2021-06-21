@@ -1,5 +1,5 @@
-/* Definition of MINSIGSTKSZ and SIGSTKSZ.  Linux version.
-   Copyright (C) 2020 Free Software Foundation, Inc.
+/* Definition of PTHREAD_STACK_MIN.  Linux version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +16,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _SIGNAL_H
-# error "Never include <bits/sigstksz.h> directly; use <signal.h> instead."
-#endif
-
-#if defined __USE_DYNAMIC_STACK_SIZE && __USE_DYNAMIC_STACK_SIZE
-# include <unistd.h>
-
-/* Default stack size for a signal handler: sysconf (SC_SIGSTKSZ).  */
-# undef SIGSTKSZ
-# define SIGSTKSZ sysconf (_SC_SIGSTKSZ)
-
-/* Minimum stack size for a signal handler: SIGSTKSZ.  */
-# undef MINSIGSTKSZ
-# define MINSIGSTKSZ SIGSTKSZ
-#endif
+/* Minimum size for a thread.  We are free to choose a reasonable value.  */
+#define PTHREAD_STACK_MIN	16384
