@@ -353,10 +353,10 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 void
 _dl_protect_relro (struct link_map *l)
 {
-  ElfW(Addr) start = ALIGN_DOWN((l->l_addr
+  elfptr_t start = ALIGN_DOWN((l->l_addr
 				 + l->l_relro_addr),
 				GLRO(dl_pagesize));
-  ElfW(Addr) end = ALIGN_DOWN((l->l_addr
+  elfptr_t end = ALIGN_DOWN((l->l_addr
 			       + l->l_relro_addr
 			       + l->l_relro_size),
 			      GLRO(dl_pagesize));
