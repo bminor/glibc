@@ -24,20 +24,38 @@ include ../Makeconfig
 
 headers	:= aio.h mqueue.h bits/mqueue.h bits/mqueue2.h
 
-aio-routines   := aio_cancel aio_error aio_fsync aio_misc aio_read	\
-		  aio_read64 aio_return aio_suspend aio_write		\
-		  aio_write64 lio_listio lio_listio64 aio_sigqueue	\
-		  aio_notify
-timer-routines := timer_create timer_delete timer_getoverr		\
-		  timer_gettime timer_settime
-shm-routines   := shm_open shm_unlink
-mq-routines    := mq_open mq_close mq_unlink mq_getattr mq_setattr	\
-		  mq_notify mq_send mq_receive mq_timedsend		\
-		  mq_timedreceive
-
-librt-routines = $(aio-routines) \
-		 $(timer-routines) \
-		 $(shm-routines) $(mq-routines)
+librt-routines = \
+  aio_cancel \
+  aio_error \
+  aio_fsync \
+  aio_misc \
+  aio_notify \
+  aio_read \
+  aio_read64 \
+  aio_return \
+  aio_sigqueue \
+  aio_suspend \
+  aio_write \
+  aio_write64 \
+  lio_listio \
+  lio_listio64 \
+  mq_close \
+  mq_getattr \
+  mq_notify \
+  mq_open \
+  mq_receive \
+  mq_send \
+  mq_setattr \
+  mq_timedreceive \
+  mq_timedsend \
+  mq_unlink \
+  shm_open \
+  shm_unlink \
+  timer_create \
+  timer_delete \
+  timer_getoverr \
+  timer_gettime \
+  timer_settime \
 
 $(librt-routines-var) = \
 
