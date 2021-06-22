@@ -28,11 +28,21 @@
 /* And undo the hack.  */
 #undef aio_error64
 
+#include <aio_misc.h>
+
 
 int
 aio_error (const struct aiocb *aiocbp)
 {
-  return aiocbp->__error_code;
+  int ret;
+
+  /* Acquire the mutex to make sure all operations for this request are
+     complete.  */
+  pthread_mutex_lock(&__aio_requests_mutex);
+  ret = aiocbp->__error_code;
+  pthread_mutex_unlock(&__aio_requests_mutex);
+
+  return ret;
 }
 
 weak_alias (aio_error, aio_error64)

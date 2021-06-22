@@ -1,6 +1,6 @@
 #define aio_read64 __renamed_aio_read64
 
-#include "../../../../pthread/aio_read.c"
+#include <rt/aio_read.c>
 
 #undef aio_read64
 

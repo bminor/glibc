@@ -1,6 +1,6 @@
 #define lio_listio64 __renamed_lio_listio64
 
-#include "../../../../pthread/lio_listio.c"
+#include <rt/lio_listio.c>
 
 #undef lio_listio64
 

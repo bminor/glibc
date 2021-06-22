@@ -1,6 +1,7 @@
-/* Asynchronous read.  Stub version.
-   Copyright (C) 2001-2021 Free Software Foundation, Inc.
+/* Asynchronous read.
+   Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,18 +18,13 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <aio.h>
-#include <errno.h>
 
-#ifdef BE_AIO64
-#define aiocb		aiocb64
-#define aio_read	aio_read64
-#endif
+#include <aio_misc.h>
+
 
 int
 aio_read (struct aiocb *aiocbp)
 {
-  __set_errno (ENOSYS);
-  return -1;
+  return (__aio_enqueue_request ((aiocb_union *) aiocbp, LIO_READ) == NULL
+	  ? -1 : 0);
 }
-
-stub_warning (aio_read)

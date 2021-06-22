@@ -10,7 +10,7 @@ extern __typeof (aio_cancel) __old_aio_cancel;
 
 #define aio_cancel	__new_aio_cancel
 
-#include <sysdeps/pthread/aio_cancel.c>
+#include <rt/aio_cancel.c>
 
 #undef aio_cancel
 strong_alias (__new_aio_cancel, __new_aio_cancel64);
@@ -23,7 +23,7 @@ versioned_symbol (librt, __new_aio_cancel64, aio_cancel64, GLIBC_2_3);
 #define aio_cancel	__old_aio_cancel
 #define ECANCELED	125
 
-#include <sysdeps/pthread/aio_cancel.c>
+#include <rt/aio_cancel.c>
 
 #undef aio_cancel
 strong_alias (__old_aio_cancel, __old_aio_cancel64);

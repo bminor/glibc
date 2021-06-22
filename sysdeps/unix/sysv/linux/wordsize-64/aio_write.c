@@ -1,6 +1,6 @@
 #define aio_write64 __renamed_aio_write64
 
-#include "../../../../pthread/aio_write.c"
+#include <rt/aio_write.c>
 
 #undef aio_write64
 

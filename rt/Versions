@@ -47,6 +47,10 @@ librt {
     mq_timedsend;
     mq_unlink;
   }
+  GLIBC_2.4 {
+    lio_listio;
+    lio_listio64;
+  }
   GLIBC_2.7 {
    __mq_open_2;
   }
