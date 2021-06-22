@@ -25,3 +25,4 @@ fdatasync (int fildes)
 {
   return fsync (fildes);
 }
+libc_hidden_def (fdatasync)

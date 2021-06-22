@@ -26,3 +26,4 @@ fsync (int fd)
 {
   return SYSCALL_CANCEL (fsync, fd);
 }
+libc_hidden_def (fsync)

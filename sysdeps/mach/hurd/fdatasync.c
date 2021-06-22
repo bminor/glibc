@@ -41,3 +41,4 @@ fdatasync (int fd)
     }
   return 0;
 }
+libc_hidden_def (fdatasync)
