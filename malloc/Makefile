@@ -25,7 +25,7 @@ include ../Makeconfig
 dist-headers := malloc.h
 headers := $(dist-headers) obstack.h mcheck.h
 tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
-	 tst-mcheck tst-mallocfork tst-trim1 \
+	 tst-malloc-check tst-mallocfork tst-trim1 \
 	 tst-malloc-usable tst-realloc tst-reallocarray tst-posix_memalign \
 	 tst-pvalloc tst-pvalloc-fortify tst-memalign tst-mallopt \
 	 tst-malloc-backtrace tst-malloc-thread-exit \
@@ -70,7 +70,7 @@ test-srcs = tst-mtrace
 
 # These tests either are run with MALLOC_CHECK_=3 by default or do not work
 # with MALLOC_CHECK_=3 because they expect a specific failure.
-tests-exclude-mcheck = tst-mcheck tst-malloc-usable \
+tests-exclude-mcheck = tst-malloc-check tst-malloc-usable \
 	tst-interpose-nothread tst-interpose-static-nothread \
 	tst-interpose-static-thread \
 	tst-mxfast tst-safe-linking
@@ -210,7 +210,7 @@ endif
 endif
 endif
 
-tst-mcheck-ENV = MALLOC_CHECK_=3
+tst-malloc-check-ENV = MALLOC_CHECK_=3
 tst-malloc-usable-ENV = MALLOC_CHECK_=3
 tst-malloc-usable-static-ENV = $(tst-malloc-usable-ENV)
 tst-malloc-usable-tunables-ENV = GLIBC_TUNABLES=glibc.malloc.check=3
