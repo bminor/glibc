@@ -9,7 +9,7 @@ libc {
     __libc_valloc;
     __malloc_initialize_hook; __free_hook; __malloc_hook; __realloc_hook;
     __memalign_hook; __after_morecore_hook;
-    __malloc_initialized; __default_morecore; __morecore;
+    __default_morecore; __morecore;
 
     # functions used in inline functions or macros
     _obstack_allocated_p; _obstack_begin; _obstack_begin_1;
