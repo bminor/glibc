@@ -70,13 +70,11 @@ test-srcs = tst-mtrace
 
 # These tests either are run with MALLOC_CHECK_=3 by default or do not work
 # with MALLOC_CHECK_=3 because they expect a specific failure.
-tests-exclude-mcheck = tst-malloc-check tst-malloc-usable \
-	tst-interpose-nothread tst-interpose-static-nothread \
-	tst-interpose-static-thread \
+tests-exclude-malloc-check = tst-malloc-check tst-malloc-usable \
 	tst-mxfast tst-safe-linking
 
 # Run all tests with MALLOC_CHECK_=3
-tests-mcheck = $(filter-out $(tests-exclude-mcheck),$(tests))
+tests-malloc-check = $(filter-out $(tests-exclude-malloc-check),$(tests))
 
 routines = malloc morecore mcheck mtrace obstack reallocarray \
   scratch_buffer_dupfree \
@@ -117,11 +115,11 @@ $(objpfx)tst-malloc-thread-exit: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-fail: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock: $(shared-thread-library)
 $(objpfx)tst-malloc-stats-cancellation: $(shared-thread-library)
-$(objpfx)tst-malloc-backtrace-mcheck: $(shared-thread-library)
-$(objpfx)tst-malloc-thread-exit-mcheck: $(shared-thread-library)
-$(objpfx)tst-malloc-thread-fail-mcheck: $(shared-thread-library)
-$(objpfx)tst-malloc-fork-deadlock-mcheck: $(shared-thread-library)
-$(objpfx)tst-malloc-stats-cancellation-mcheck: $(shared-thread-library)
+$(objpfx)tst-malloc-backtrace-malloc-check: $(shared-thread-library)
+$(objpfx)tst-malloc-thread-exit-malloc-check: $(shared-thread-library)
+$(objpfx)tst-malloc-thread-fail-malloc-check: $(shared-thread-library)
+$(objpfx)tst-malloc-fork-deadlock-malloc-check: $(shared-thread-library)
+$(objpfx)tst-malloc-stats-cancellation-malloc-check: $(shared-thread-library)
 
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
@@ -252,12 +250,18 @@ $(foreach o,$(all-object-suffixes),$(objpfx)malloc$(o)): arena.c hooks.c
 $(tests:%=$(objpfx)%.o): CPPFLAGS += -DTEST_NO_MALLOPT
 
 $(objpfx)tst-interpose-nothread: $(objpfx)tst-interpose-aux-nothread.o
+$(objpfx)tst-interpose-nothread-malloc-check: \
+	$(objpfx)tst-interpose-aux-nothread.o
 $(objpfx)tst-interpose-thread: \
   $(objpfx)tst-interpose-aux-thread.o $(shared-thread-library)
-$(objpfx)tst-interpose-thread-mcheck: \
+$(objpfx)tst-interpose-thread-malloc-check: \
   $(objpfx)tst-interpose-aux-thread.o $(shared-thread-library)
 $(objpfx)tst-interpose-static-nothread: $(objpfx)tst-interpose-aux-nothread.o
+$(objpfx)tst-interpose-static-nothread-malloc-check: \
+	$(objpfx)tst-interpose-aux-nothread.o
 $(objpfx)tst-interpose-static-thread: \
+  $(objpfx)tst-interpose-aux-thread.o $(static-thread-library)
+$(objpfx)tst-interpose-static-thread-malloc-check: \
   $(objpfx)tst-interpose-aux-thread.o $(static-thread-library)
 
 tst-dynarray-ENV = MALLOC_TRACE=$(objpfx)tst-dynarray.mtrace
@@ -273,6 +277,6 @@ $(objpfx)tst-dynarray-fail-mem.out: $(objpfx)tst-dynarray-fail.out
 $(objpfx)tst-malloc-tcache-leak: $(shared-thread-library)
 $(objpfx)tst-malloc_info: $(shared-thread-library)
 $(objpfx)tst-mallocfork2: $(shared-thread-library)
-$(objpfx)tst-malloc-tcache-leak-mcheck: $(shared-thread-library)
-$(objpfx)tst-malloc_info-mcheck: $(shared-thread-library)
-$(objpfx)tst-mallocfork2-mcheck: $(shared-thread-library)
+$(objpfx)tst-malloc-tcache-leak-malloc-check: $(shared-thread-library)
+$(objpfx)tst-malloc_info-malloc-check: $(shared-thread-library)
+$(objpfx)tst-mallocfork2-malloc-check: $(shared-thread-library)

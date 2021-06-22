@@ -155,7 +155,7 @@ xtests: tests $(xtests-special)
 else
 tests: $(tests:%=$(objpfx)%.out) $(tests-internal:%=$(objpfx)%.out) \
        $(tests-container:%=$(objpfx)%.out) \
-       $(tests-mcheck:%=$(objpfx)%-mcheck.out) \
+       $(tests-malloc-check:%=$(objpfx)%-malloc-check.out) \
        $(tests-special) $(tests-printers-out)
 xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-special)
 endif
@@ -166,7 +166,7 @@ ifeq ($(run-built-tests),no)
 tests-expected =
 else
 tests-expected = $(tests) $(tests-internal) $(tests-printers) \
-	$(tests-container) $(tests-mcheck:%=%-mcheck)
+	$(tests-container) $(tests-malloc-check:%=%-malloc-check)
 endif
 tests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
@@ -192,7 +192,7 @@ else
 binaries-pie-tests =
 binaries-pie-notests =
 endif
-binaries-mcheck-tests = $(tests-mcheck:%=%-mcheck)
+binaries-malloc-check-tests = $(tests-malloc-check:%=%-malloc-check)
 else
 binaries-all-notests =
 binaries-all-tests = $(tests) $(tests-internal) $(xtests) $(test-srcs)
@@ -202,7 +202,7 @@ binaries-static-tests =
 binaries-static =
 binaries-pie-tests =
 binaries-pie-notests =
-binaries-mcheck-tests =
+binaries-malloc-check-tests =
 endif
 
 binaries-pie = $(binaries-pie-tests) $(binaries-pie-notests)
@@ -226,8 +226,8 @@ $(addprefix $(objpfx),$(binaries-shared-tests)): %: %.o \
 	$(+link-tests)
 endif
 
-ifneq "$(strip $(binaries-mcheck-tests))" ""
-$(addprefix $(objpfx),$(binaries-mcheck-tests)): %-mcheck: %.o \
+ifneq "$(strip $(binaries-malloc-check-tests))" ""
+$(addprefix $(objpfx),$(binaries-malloc-check-tests)): %-malloc-check: %.o \
   $(link-extra-libs-tests) \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
@@ -264,11 +264,11 @@ $(addprefix $(objpfx),$(binaries-static-tests)): %: %.o \
 	$(+link-static-tests)
 endif
 
-# All mcheck tests will be run with MALLOC_CHECK_=3
-define mcheck-ENVS
-$(1)-mcheck-ENV = MALLOC_CHECK_=3
+# All malloc-check tests will be run with MALLOC_CHECK_=3
+define malloc-check-ENVS
+$(1)-malloc-check-ENV = MALLOC_CHECK_=3
 endef
-$(foreach t,$(tests-mcheck),$(eval $(call mcheck-ENVS,$(t))))
+$(foreach t,$(tests-malloc-check),$(eval $(call malloc-check-ENVS,$(t))))
 
 ifneq "$(strip $(tests) $(tests-internal) $(xtests) $(test-srcs))" ""
 # These are the implicit rules for making test outputs
