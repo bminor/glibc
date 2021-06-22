@@ -289,6 +289,10 @@ enum
 
 /* EBX.  */
 #define bit_cpu_WBNOINVD	(1u << 9)
+#define bit_cpu_AMD_IBPB	(1u << 12)
+#define bit_cpu_AMD_IBRS	(1u << 14)
+#define bit_cpu_AMD_STIBP	(1u << 15)
+#define bit_cpu_AMD_SSBD	(1u << 24)
 
 /* CPUID_INDEX_7_ECX_1.  */
 
@@ -519,6 +523,10 @@ enum
 
 /* EBX.  */
 #define index_cpu_WBNOINVD	CPUID_INDEX_80000008
+#define index_cpu_AMD_IBPB	CPUID_INDEX_80000008
+#define index_cpu_AMD_IBRS	CPUID_INDEX_80000008
+#define index_cpu_AMD_STIBP	CPUID_INDEX_80000008
+#define index_cpu_AMD_SSBD	CPUID_INDEX_80000008
 
 /* CPUID_INDEX_7_ECX_1.  */
 
@@ -749,6 +757,10 @@ enum
 
 /* EBX.  */
 #define reg_WBNOINVD		ebx
+#define reg_AMD_IBPB		ebx
+#define reg_AMD_IBRS		ebx
+#define reg_AMD_STIBP		ebx
+#define reg_AMD_SSBD		ebx
 
 /* CPUID_INDEX_7_ECX_1.  */
 

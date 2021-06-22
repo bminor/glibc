@@ -178,6 +178,18 @@ The supported processor features are:
 @code{AESKLE} -- AES Key Locker instructions are enabled by OS.
 
 @item
+@code{AMD_IBPB} -- Indirect branch predictor barrier (IBPB) for AMD cpus.
+
+@item
+@code{AMD_IBRS} -- Indirect branch restricted speculation (IBPB) for AMD cpus.
+
+@item
+@code{AMD_SSBD} -- Speculative Store Bypass Disable (SSBD) for AMD cpus.
+
+@item
+@code{AMD_STIBP} -- Single thread indirect branch predictors (STIBP) for AMD cpus.
+
+@item
 @code{AMX_BF16} -- Tile computational operations on bfloat16 numbers.
 
 @item

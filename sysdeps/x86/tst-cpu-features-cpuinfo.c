@@ -16,10 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/platform/x86.h>
+#include <cpu-features.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 static char *cpu_flags;
 
@@ -99,6 +100,7 @@ static int
 do_test (int argc, char **argv)
 {
   int fails = 0;
+  const struct cpu_features *cpu_features = __get_cpu_features ();
 
   get_cpuinfo ();
   fails += CHECK_PROC (acpi, ACPI);
@@ -159,7 +161,17 @@ do_test (int argc, char **argv)
   fails += CHECK_PROC (hle, HLE);
   fails += CHECK_PROC (ht, HTT);
   fails += CHECK_PROC (hybrid, HYBRID);
-  fails += CHECK_PROC (ibrs, IBRS_IBPB);
+  if (cpu_features->basic.kind == arch_kind_intel)
+    {
+      fails += CHECK_PROC (ibrs, IBRS_IBPB);
+      fails += CHECK_PROC (stibp, STIBP);
+    }
+  else if (cpu_features->basic.kind == arch_kind_amd)
+    {
+      fails += CHECK_PROC (ibpb, AMD_IBPB);
+      fails += CHECK_PROC (ibrs, AMD_IBRS);
+      fails += CHECK_PROC (stibp, AMD_STIBP);
+    }
   fails += CHECK_PROC (ibt, IBT);
   fails += CHECK_PROC (invariant_tsc, INVARIANT_TSC);
   fails += CHECK_PROC (invpcid, INVPCID);
@@ -221,7 +233,10 @@ do_test (int argc, char **argv)
   fails += CHECK_PROC (smep, SMEP);
   fails += CHECK_PROC (smx, SMX);
   fails += CHECK_PROC (ss, SS);
-  fails += CHECK_PROC (ssbd, SSBD);
+  if (cpu_features->basic.kind == arch_kind_intel)
+    fails += CHECK_PROC (ssbd, SSBD);
+  else if (cpu_features->basic.kind == arch_kind_amd)
+    fails += CHECK_PROC (ssbd, AMD_SSBD);
   fails += CHECK_PROC (sse, SSE);
   fails += CHECK_PROC (sse2, SSE2);
   fails += CHECK_PROC (pni, SSE3);
@@ -229,7 +244,6 @@ do_test (int argc, char **argv)
   fails += CHECK_PROC (sse4_2, SSE4_2);
   fails += CHECK_PROC (sse4a, SSE4A);
   fails += CHECK_PROC (ssse3, SSSE3);
-  fails += CHECK_PROC (stibp, STIBP);
   fails += CHECK_PROC (svm, SVM);
 #ifdef __x86_64__
   /* NB: SYSCALL_SYSRET is 64-bit only.  */
