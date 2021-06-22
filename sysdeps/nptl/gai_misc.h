@@ -22,7 +22,7 @@
 
 #include <assert.h>
 #include <signal.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 #include <futex-internal.h>
 
 #define DONT_NEED_GAI_MISC_COND	1

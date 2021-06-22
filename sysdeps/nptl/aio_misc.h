@@ -21,7 +21,7 @@
    correct aio_suspend and lio_listio implementations.  */
 
 #include <assert.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 #include <futex-internal.h>
 
 #define DONT_NEED_AIO_MISC_COND	1

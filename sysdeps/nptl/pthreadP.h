@@ -25,7 +25,7 @@
 #include <setjmp.h>
 #include <stdbool.h>
 #include <sys/syscall.h>
-#include "descr.h"
+#include <nptl/descr.h>
 #include <tls.h>
 #include <lowlevellock.h>
 #include <stackinfo.h>

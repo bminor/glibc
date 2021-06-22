@@ -20,7 +20,7 @@
 #define _PTHREAD_EARLY_INIT_H 1
 
 #include <nptl/nptl-stack.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 #include <pthread_mutex_conf.h>
 #include <sys/resource.h>
 

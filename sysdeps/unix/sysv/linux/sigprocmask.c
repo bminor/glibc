@@ -16,7 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <signal.h>
-#include <nptl/pthreadP.h>              /* SIGCANCEL, SIGSETXID */
+#include <pthreadP.h>              /* SIGCANCEL, SIGSETXID */
 
 /* Get and/or change the set of blocked signals.  */
 int

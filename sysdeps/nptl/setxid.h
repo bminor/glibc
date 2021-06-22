@@ -15,7 +15,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 #include <sys/single_threaded.h>
 #include <sysdep.h>
 

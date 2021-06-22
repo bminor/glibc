@@ -28,7 +28,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <not-cancel.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 
 
 /* Defined in the kernel headers: */

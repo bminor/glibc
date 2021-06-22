@@ -24,7 +24,7 @@
 #include <time.h>
 #include <sysdep.h>
 #include <internaltypes.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 #include "kernel-posix-timers.h"
 #include "kernel-posix-cpu-timers.h"
 

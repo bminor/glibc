@@ -21,7 +21,7 @@
 #include <signal.h>
 #include <stdbool.h>
 #include <sysdep-cancel.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 #include "kernel-posix-timers.h"
 
 

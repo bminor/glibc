@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <atomic.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 
 _Noreturn static void
 __libc_start_call_main (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),

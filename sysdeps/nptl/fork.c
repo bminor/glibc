@@ -27,7 +27,7 @@
 #include <ldsodefs.h>
 #include <stdio-lock.h>
 #include <atomic.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 #include <register-atfork.h>
 #include <arch-fork.h>
 #include <futex-internal.h>

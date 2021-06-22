@@ -19,7 +19,7 @@
 #include <kernel-features.h>
 #include <ldsodefs.h>
 #include <list.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 #include <tls.h>
 
 #ifndef __ASSUME_SET_ROBUST_LIST

@@ -19,7 +19,7 @@
 #include <setjmp.h>
 #include <stddef.h>
 #include <libc-lock.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 
 void
 _longjmp_unwind (jmp_buf env, int val)

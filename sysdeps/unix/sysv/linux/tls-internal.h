@@ -20,7 +20,7 @@
 #define _TLS_INTERNAL_H 1
 
 #include <stdlib.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 
 static inline struct tls_internal_t *
 __glibc_tls_internal (void)

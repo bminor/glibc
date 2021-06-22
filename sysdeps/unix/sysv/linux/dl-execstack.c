@@ -20,7 +20,7 @@
 #include <ldsodefs.h>
 #include <libintl.h>
 #include <list.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 #include <stackinfo.h>
 #include <stdbool.h>
 #include <sys/mman.h>

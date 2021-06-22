@@ -18,7 +18,7 @@
 
 #include <sysdeps/x86/longjmp.c>
 
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 #include <jmp_buf-ssp.h>
 
 #ifdef __x86_64__

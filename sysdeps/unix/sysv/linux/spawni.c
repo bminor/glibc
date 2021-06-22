@@ -27,7 +27,7 @@
 #include <not-cancel.h>
 #include <local-setxid.h>
 #include <shlib-compat.h>
-#include <nptl/pthreadP.h>
+#include <pthreadP.h>
 #include <dl-sysdep.h>
 #include <libc-pointer-arith.h>
 #include <ldsodefs.h>

@@ -36,7 +36,7 @@
 #if IS_IN (libpthread)
 /* This gets us the declarations of the __pthread_* internal names,
    and hidden_proto for them.  */
-# include <nptl/pthreadP.h>
+# include <pthreadP.h>
 #endif
 
 /* Mutex type.  */
