@@ -2,4 +2,4 @@
 #define AS_STRNLEN
 #define strlen	__wcsnlen_sse4_1
 
-#include "../strlen.S"
+#include "strlen-vec.S"
