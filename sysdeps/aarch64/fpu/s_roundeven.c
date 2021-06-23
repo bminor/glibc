@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#define NO_MATH_REDIRECT
 #include <math.h>
 #include <libm-alias-double.h>
 
@@ -25,5 +26,4 @@ __roundeven (double x)
   asm volatile ("frintn \t%d0, %d1" : "=w" (x) : "w" (x));
   return x;
 }
-hidden_def (__roundeven)
 libm_alias_double (__roundeven, roundeven)
