@@ -117,6 +117,10 @@ do_overflow_tests (void)
           do_test (0, i, ~len + i, BIG_CHAR);
           do_test (0, i, ~len - buf_addr - i, BIG_CHAR);
           do_test (0, i, ~len - buf_addr + i, BIG_CHAR);
+
+          do_test (0, i, -buf_addr, BIG_CHAR);
+          do_test (0, i, j - buf_addr, BIG_CHAR);
+          do_test (0, i, -buf_addr - j, BIG_CHAR);
         }
     }
 }
