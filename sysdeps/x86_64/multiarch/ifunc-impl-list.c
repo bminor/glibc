@@ -657,6 +657,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			       && HAS_ARCH_FEATURE (AVX512BW_Usable)
 			       && HAS_CPU_FEATURE (BMI2)),
 			      __wcslen_evex)
+	      IFUNC_IMPL_ADD (array, i, wcsnlen,
+			      CPU_FEATURE_USABLE (SSE4_1),
+			      __wcsnlen_sse4_1)
 	      IFUNC_IMPL_ADD (array, i, wcslen, 1, __wcslen_sse2))
 
   /* Support sysdeps/x86_64/multiarch/wcsnlen.c.  */
