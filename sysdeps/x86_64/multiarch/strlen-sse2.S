@@ -20,4 +20,4 @@
 # define strlen __strlen_sse2
 #endif
 
-#include "../strlen.S"
+#include "strlen-vec.S"
