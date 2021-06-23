@@ -34,7 +34,7 @@ Major new features:
 * On powerpc64*, glibc can now be compiled without scv support using the
   --disable-scv configure option.
 
-* Add support for 64-bit time_t for ABIs with defaults to 32-bit time_t.
+* Add support for 64-bit time_t for ABIs with defaults currently unchanged.
   This is enabled with the _TIME_BITS preprocessor set to 64 and only
   supported when LFS (_FILE_OFFSET_BITS=64) is also enabled.  It is only
   enabled for Linux and the full support requires a minimum version of 5.1.

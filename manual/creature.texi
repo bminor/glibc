@@ -146,8 +146,8 @@ bit} interface available as an additional interface,
 @code{_FILE_OFFSET_BITS} allows the @w{64 bit} interface to
 replace the old interface.
 
-If @code{_FILE_OFFSET_BITS} is undefined, or if it is defined to the
-value @code{32}, nothing changes.  The @w{32 bit} interface is used and
+If @code{_FILE_OFFSET_BITS} is defined to the
+value @code{32}, the @w{32 bit} interface is used and
 types like @code{off_t} have a size of @w{32 bits} on @w{32 bit}
 systems.
 
@@ -156,6 +156,11 @@ replaces the old interface.  I.e., the functions are not made available
 under different names (as they are with @code{_LARGEFILE64_SOURCE}).
 Instead the old function names now reference the new functions, e.g., a
 call to @code{fseeko} now indeed calls @code{fseeko64}.
+
+If the macro is not defined it currently defaults to @code{32}, but
+this default is planned to change due to a need to update
+@code{time_t} for Y2038 safety, and applications should not rely on
+the default.
 
 This macro should only be selected if the system provides mechanisms for
 handling large files.  On @w{64 bit} systems this macro has no effect
@@ -166,47 +171,41 @@ This macro was introduced as part of the Large File Support extension
 @end defvr
 
 @defvr Macro _TIME_BITS
-This macro determines the bit size of @code{time_t} (and therefore the
-bit size of all @code{time_t} derived types and the prototypes of all
-related functions).  If @code{_TIME_BITS} is undefined, the bit size of
-@code{time_t} is architecture dependent.
+This macro determines the bit size of @code{time_t}, and therefore the
+bit size of all @code{time_t}-derived types and the prototypes of all
+related functions.
 
-Possible values of @code{_TIME_BITS}:
 @enumerate
-@item
-@code{_TIME_BITS=64} and port from the outset uses 64-bit
-@code{time_t} and word size equals to @w{64 bits} (e.g. x86_64) - no
-action
 
 @item
-@code{_TIME_BITS=32} and port from the outset uses 32-bit
-@code{time_t} and word size equals to @w{64 bits} (e.g. ARM) - no
-action
+If @code{_TIME_BITS} is undefined, the bit size of @code{time_t} is
+architecture dependent.  Currently it defaults to 64 bits on most
+architectures.  Although it defaults to 32 bits on some traditional
+architectures (i686, ARM), this is planned to change and applications
+should not rely on this.
 
 @item
-@code{_TIME_BITS=64} and port from the outset uses 64-bit
-@code{time_t} and word size equals to @w{32 bits} (e.g. ARC, RV32)
-- no action
-
-@item
-@code{_TIME_BITS=64} and port from the outset uses 32-bit
-@code{time_t} and word size equals to @w{32 bits} (e.g. ARM)
-- the @code{time_t} is modified to be able to hold 64-bit time.
-
-@item
-For any other use case the compile-time error is emitted.
-@end enumerate
-
-The @code{_TIME_BITS} can be only used when @code{_FILE_OFFSET_BITS=64}
-is also defined.
-
-For the point @b{4} above, calls to proper syscalls depend on the
+If @code{_TIME_BITS} is defined to be 64, @code{time_t} is defined
+to be a 64-bit integer.  On platforms where @code{time_t} was
+traditionally 32 bits, calls to proper syscalls depend on the
 Linux kernel version on which the system is running. For Linux kernel
 version above @b{5.1} syscalls supporting 64-bit time are used. Otherwise,
 a fallback code is used with legacy (i.e. 32-bit) syscalls.
 
+@item
+If @code{_TIME_BITS} is defined to be 32, @code{time_t} is defined to
+be a 32-bit integer where that is supported.  This is not recommended,
+as 32-bit @code{time_t} stops working in the year 2038.
+
+@item
+For any other use case a compile-time error is emitted.
+@end enumerate
+
+@code{_TIME_BITS=64} can be defined only when
+@code{_FILE_OFFSET_BITS=64} is also defined.
+
 By using this macro certain ports gain support for 64-bit time and as
-a result become immune to Y2038 problem.
+a result become immune to the Y2038 problem.
 @end defvr
 
 @defvr Macro _ISOC99_SOURCE
