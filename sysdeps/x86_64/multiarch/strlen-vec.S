@@ -65,12 +65,25 @@ ENTRY(strlen)
 	ret
 L(n_nonzero):
 # ifdef AS_WCSLEN
-	shl	$2, %RSI_LP
+/* Check for overflow from maxlen * sizeof(wchar_t). If it would
+   overflow the only way this program doesn't have undefined behavior 
+   is if there is a null terminator in valid memory so wcslen will 
+   suffice.  */
+	mov	%RSI_LP, %R10_LP
+	sar	$62, %R10_LP
+	test	%R10_LP, %R10_LP
+	jnz	__wcslen_sse4_1
+	sal	$2, %RSI_LP
 # endif
+
 
 /* Initialize long lived registers.  */
 
 	add	%RDI_LP, %RSI_LP
+# ifdef AS_WCSLEN
+/* Check for overflow again from s + maxlen * sizeof(wchar_t).  */
+	jbe	__wcslen_sse4_1
+# endif
 	mov	%RSI_LP, %R10_LP
 	and	$-64, %R10_LP
 	mov	%RSI_LP, %R11_LP
