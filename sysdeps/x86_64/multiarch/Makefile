@@ -95,8 +95,8 @@ sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c \
 		   wcscpy-ssse3 wcscpy-c \
 		   wcschr-sse2 wcschr-avx2 \
 		   wcsrchr-sse2 wcsrchr-avx2 \
-		   wcsnlen-sse4_1 wcsnlen-c \
-		   wcslen-sse2 wcslen-avx2 wcsnlen-avx2 \
+		   wcslen-sse2 wcslen-sse4_1 wcslen-avx2 \
+		   wcsnlen-c wcsnlen-sse4_1 wcsnlen-avx2 \
 		   wcschr-avx2-rtm \
 		   wcscmp-avx2-rtm \
 		   wcslen-avx2-rtm \
