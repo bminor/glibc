@@ -71,19 +71,12 @@ L(n_nonzero):
    suffice.  */
 	mov	%RSI_LP, %R10_LP
 	sar	$62, %R10_LP
-	test	%R10_LP, %R10_LP
 	jnz	__wcslen_sse4_1
 	sal	$2, %RSI_LP
 # endif
 
-
 /* Initialize long lived registers.  */
-
 	add	%RDI_LP, %RSI_LP
-# ifdef AS_WCSLEN
-/* Check for overflow again from s + maxlen * sizeof(wchar_t).  */
-	jbe	__wcslen_sse4_1
-# endif
 	mov	%RSI_LP, %R10_LP
 	and	$-64, %R10_LP
 	mov	%RSI_LP, %R11_LP
