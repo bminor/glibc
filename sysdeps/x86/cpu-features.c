@@ -76,7 +76,6 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_USABLE (cpu_features, PREFETCHWT1);
   CPU_FEATURE_SET_USABLE (cpu_features, OSPKE);
   CPU_FEATURE_SET_USABLE (cpu_features, WAITPKG);
-  CPU_FEATURE_SET_USABLE (cpu_features, SHSTK);
   CPU_FEATURE_SET_USABLE (cpu_features, GFNI);
   CPU_FEATURE_SET_USABLE (cpu_features, RDPID);
   CPU_FEATURE_SET_USABLE (cpu_features, RDRAND);
@@ -86,7 +85,6 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_USABLE (cpu_features, FSRM);
   CPU_FEATURE_SET_USABLE (cpu_features, SERIALIZE);
   CPU_FEATURE_SET_USABLE (cpu_features, TSXLDTRK);
-  CPU_FEATURE_SET_USABLE (cpu_features, IBT);
   CPU_FEATURE_SET_USABLE (cpu_features, LAHF64_SAHF64);
   CPU_FEATURE_SET_USABLE (cpu_features, LZCNT);
   CPU_FEATURE_SET_USABLE (cpu_features, SSE4A);
@@ -98,6 +96,11 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_USABLE (cpu_features, FSRS);
   CPU_FEATURE_SET_USABLE (cpu_features, FSRCS);
   CPU_FEATURE_SET_USABLE (cpu_features, PTWRITE);
+
+#if CET_ENABLED
+  CPU_FEATURE_SET_USABLE (cpu_features, IBT);
+  CPU_FEATURE_SET_USABLE (cpu_features, SHSTK);
+#endif
 
   /* Can we call xgetbv?  */
   if (CPU_FEATURES_CPU_P (cpu_features, OSXSAVE))
