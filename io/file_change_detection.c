@@ -56,8 +56,10 @@ __file_change_detection_for_stat (struct file_change_detection *file,
     {
       file->size = st->st_size;
       file->ino = st->st_ino;
-      file->mtime = st->st_mtim;
-      file->ctime = st->st_ctim;
+      file->mtime = (struct __timespec64) { st->st_mtim.tv_sec,
+					    st->st_mtim.tv_nsec };
+      file->ctime = (struct __timespec64) { st->st_ctim.tv_sec,
+					    st->st_ctim.tv_nsec };
     }
 }
 libc_hidden_def (__file_change_detection_for_stat)

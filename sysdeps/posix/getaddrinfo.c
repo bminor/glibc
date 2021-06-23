@@ -1641,7 +1641,8 @@ static struct __timespec64 gaiconf_mtime;
 static inline void
 save_gaiconf_mtime (const struct __stat64_t64 *st)
 {
-  gaiconf_mtime = st->st_mtim;
+  gaiconf_mtime = (struct __timespec64) { st->st_mtim.tv_sec,
+					  st->st_mtim.tv_nsec };
 }
 
 static inline bool
