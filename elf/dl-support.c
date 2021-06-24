@@ -248,6 +248,14 @@ _dl_aux_init (ElfW(auxv_t) *av)
   GL(dl_sysinfo) = DL_SYSINFO_DEFAULT;
 #endif
 
+#ifdef __CHERI_PURE_CAPABILITY__
+  /* Base is 0 in non-pie static executable, but it needs to be a valid
+     capability. Use the zero capability instead of AT_BASE.  */
+  elfptr_t zerocap;
+  asm volatile ("cvtd %0,xzr" : "=r"(zerocap));
+  _dl_main_map.l_addr = zerocap;
+#endif
+
   _dl_auxv = av;
   dl_parse_auxv_t auxv_values;
   /* Use an explicit initialization loop here because memset may not
