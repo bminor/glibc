@@ -183,6 +183,7 @@ struct test_case_struct
     { 0, NULL, "$var", 0, 0, { NULL, }, IFS },
     { 0, NULL, "\"\\n\"", 0, 1, { "\\n", }, IFS },
     { 0, NULL, "", 0, 0, { NULL, }, IFS },
+    { 0, NULL, "${1234567890123456789012}", 0, 0, { NULL, }, IFS },
 
     /* Flags not already covered (testit() has special handling for these) */
     { 0, NULL, "one two", WRDE_DOOFFS, 2, { "one", "two", }, IFS },
