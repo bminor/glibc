@@ -1,7 +1,6 @@
-/* Enqueue and list of read or write requests, 64bit offset version.
-   Copyright (C) 1997-2021 Free Software Foundation, Inc.
+/* Enqueue and list of read or write requests.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,17 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <aio.h>
-#include <assert.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include <bits/wordsize.h>
+#if __WORDSIZE != 64
+# define AIOCB aiocb64
+# define LIO_LISTIO lio_listio64
+# define LIO_LISTIO_OLD __lio_listio64_21
+# define LIO_LISTIO_NEW __lio_listio64_24
+# define LIO_OPCODE_BASE 128
 
-#include <aio_misc.h>
-
-#define lio_listio lio_listio64
-#define __lio_listio_21 __lio_listio64_21
-#define __lio_listio_item_notify __lio_listio64_item_notify
-#define aiocb aiocb64
-#define LIO_OPCODE_BASE 128
-#include <lio_listio.c>
+# include <rt/lio_listio-common.c>
+#endif
