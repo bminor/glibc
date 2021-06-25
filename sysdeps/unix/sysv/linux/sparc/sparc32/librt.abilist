@@ -5,7 +5,6 @@ GLIBC_2.2 timer_getoverrun F
 GLIBC_2.2 timer_gettime F
 GLIBC_2.2 timer_settime F
 GLIBC_2.3 __librt_version_placeholder F
-GLIBC_2.3.4 mq_notify F
 GLIBC_2.3.4 mq_open F
 GLIBC_2.3.4 mq_receive F
 GLIBC_2.3.4 mq_send F

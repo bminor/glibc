@@ -29,7 +29,7 @@
 #include <sys/socket.h>
 #include <not-cancel.h>
 #include <pthreadP.h>
-
+#include <shlib-compat.h>
 
 /* Defined in the kernel headers: */
 #define NOTIFY_COOKIE_LEN	32	/* Length of the cookie used.  */
@@ -75,7 +75,7 @@ change_sigmask (int how, sigset_t *oss)
 {
   sigset_t ss;
   sigfillset (&ss);
-  return pthread_sigmask (how, &ss, oss);
+  return __pthread_sigmask (how, &ss, oss);
 }
 
 
@@ -93,7 +93,7 @@ notification_function (void *arg)
   (void) __pthread_barrier_wait (&notify_barrier);
 
   /* Make the thread detached.  */
-  (void) pthread_detach (pthread_self ());
+  __pthread_detach (__pthread_self ());
 
   /* The parent thread has all signals blocked.  This is probably a
      bit surprising for this thread.  So we unblock all of them.  */
@@ -125,9 +125,8 @@ helper_thread (void *arg)
 	  /* Just create the thread as instructed.  There is no way to
 	     report a problem with creating a thread.  */
 	  pthread_t th;
-	  if (__builtin_expect (pthread_create (&th, data.attr,
-						notification_function, &data)
-				== 0, 0))
+	  if (__pthread_create (&th, data.attr, notification_function, &data)
+	      == 0)
 	    /* Since we passed a pointer to DATA to the new thread we have
 	       to wait until it is done with it.  */
 	    (void) __pthread_barrier_wait (&notify_barrier);
@@ -135,7 +134,7 @@ helper_thread (void *arg)
       else if (data.raw[NOTIFY_COOKIE_LEN - 1] == NOTIFY_REMOVED)
 	{
 	  /* The only state we keep is the copy of the thread attributes.  */
-	  pthread_attr_destroy (data.attr);
+	  __pthread_attr_destroy (data.attr);
 	  free (data.attr);
 	}
     }
@@ -143,8 +142,8 @@ helper_thread (void *arg)
 }
 
 
-static void
-reset_once (void)
+void
+__mq_notify_fork_subprocess (void)
 {
   once = PTHREAD_ONCE_INIT;
 }
@@ -167,15 +166,14 @@ init_mq_netlink (void)
   int err = 1;
 
   /* Initialize the barrier.  */
-  if (__builtin_expect (__pthread_barrier_init (&notify_barrier, NULL, 2) == 0,
-			0))
+  if (__pthread_barrier_init (&notify_barrier, NULL, 2) == 0)
     {
       /* Create the helper thread.  */
       pthread_attr_t attr;
-      (void) pthread_attr_init (&attr);
-      (void) pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+      __pthread_attr_init (&attr);
+      __pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
       /* We do not need much stack space, the bare minimum will be enough.  */
-      (void) pthread_attr_setstacksize (&attr, __pthread_get_minstack (&attr));
+      __pthread_attr_setstacksize (&attr, __pthread_get_minstack (&attr));
 
       /* Temporarily block all signals so that the newly created
 	 thread inherits the mask.  */
@@ -183,29 +181,13 @@ init_mq_netlink (void)
       int have_no_oss = change_sigmask (SIG_BLOCK, &oss);
 
       pthread_t th;
-      err = pthread_create (&th, &attr, helper_thread, NULL);
+      err = __pthread_create (&th, &attr, helper_thread, NULL);
 
       /* Reset the signal mask.  */
       if (!have_no_oss)
-	pthread_sigmask (SIG_SETMASK, &oss, NULL);
+	__pthread_sigmask (SIG_SETMASK, &oss, NULL);
 
-      (void) pthread_attr_destroy (&attr);
-
-      if (err == 0)
-	{
-	  static int added_atfork;
-
-	  if (added_atfork == 0
-	      && pthread_atfork (NULL, NULL, reset_once) != 0)
-	    {
-	      /* The child thread will call recv() which is a
-		 cancellation point.  */
-	      (void) pthread_cancel (th);
-	      err = 1;
-	    }
-	  else
-	    added_atfork = 1;
-	}
+      __pthread_attr_destroy (&attr);
     }
 
   if (err != 0)
@@ -219,7 +201,7 @@ init_mq_netlink (void)
 /* Register notification upon message arrival to an empty message queue
    MQDES.  */
 int
-mq_notify (mqd_t mqdes, const struct sigevent *notification)
+__mq_notify (mqd_t mqdes, const struct sigevent *notification)
 {
   /* Make sure the type is correctly defined.  */
   assert (sizeof (union notify_data) == NOTIFY_COOKIE_LEN);
@@ -235,7 +217,7 @@ mq_notify (mqd_t mqdes, const struct sigevent *notification)
      response.  */
 
   /* Initialize only once.  */
-  pthread_once (&once, init_mq_netlink);
+  __pthread_once (&once, init_mq_netlink);
 
   /* If we cannot create the netlink socket we cannot provide
      SIGEV_THREAD support.  */
@@ -280,9 +262,14 @@ mq_notify (mqd_t mqdes, const struct sigevent *notification)
   /* If it failed, free the allocated memory.  */
   if (retval != 0 && data.attr != NULL)
     {
-      pthread_attr_destroy (data.attr);
+      __pthread_attr_destroy (data.attr);
       free (data.attr);
     }
 
   return retval;
 }
+versioned_symbol (libc, __mq_notify, mq_notify, GLIBC_2_34);
+libc_hidden_ver (__mq_notify, mq_notify)
+#if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
+compat_symbol (librt, __mq_notify, mq_notify, GLIBC_2_3_4);
+#endif

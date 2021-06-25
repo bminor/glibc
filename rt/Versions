@@ -28,6 +28,7 @@ libc {
 %if PTHREAD_IN_LIBC
     mq_close;
     mq_getattr;
+    mq_notify;
     mq_setattr;
 %endif
   }
@@ -58,6 +59,7 @@ libc {
     lio_listio64;
     mq_close;
     mq_getattr;
+    mq_notify;
     mq_setattr;
 %endif
     shm_open;
@@ -112,9 +114,9 @@ librt {
 %if !PTHREAD_IN_LIBC
     mq_close;
     mq_getattr;
+    mq_notify;
     mq_setattr;
 %endif
-    mq_notify;
     mq_open;
     mq_receive;
     mq_send;

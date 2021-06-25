@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <ldsodefs.h>
 #include <list.h>
+#include <mqueue.h>
 #include <pthreadP.h>
 #include <sysdep.h>
 
@@ -41,6 +42,8 @@ fork_system_setup_after_fork (void)
   /* Initialize thread library locks.  */
   GL (dl_stack_cache_lock) = LLL_LOCK_INITIALIZER;
   __default_pthread_attr_lock = LLL_LOCK_INITIALIZER;
+
+  call_function_static_weak (__mq_notify_fork_subprocess);
 }
 
 /* In case of a fork() call the memory allocation in the child will be

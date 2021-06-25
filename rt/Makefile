@@ -30,7 +30,6 @@ routines = \
 
 librt-routines = \
   librt-compat \
-  mq_notify \
   mq_open \
   mq_receive \
   mq_send \
@@ -62,6 +61,7 @@ $(librt-routines-var) += \
   lio_listio64 \
   mq_close \
   mq_getattr \
+  mq_notify \
   mq_setattr \
 
 tests := tst-shm tst-timer tst-timer2 \

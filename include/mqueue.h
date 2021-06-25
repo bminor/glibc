@@ -15,6 +15,10 @@ hidden_proto (mq_setattr)
 
 # if PTHREAD_IN_LIBC
 libc_hidden_proto (mq_setattr)
+
+/* Called from fork so that the new subprocess re-creates the
+   notification thread if necessary.  */
+void __mq_notify_fork_subprocess (void) attribute_hidden;
 # endif
 
 #include <struct___timespec64.h>

@@ -1345,6 +1345,7 @@ GLIBC_2.29 mprobe F
 GLIBC_2.29 mprotect F
 GLIBC_2.29 mq_close F
 GLIBC_2.29 mq_getattr F
+GLIBC_2.29 mq_notify F
 GLIBC_2.29 mq_setattr F
 GLIBC_2.29 mrand48 F
 GLIBC_2.29 mrand48_r F
@@ -2424,6 +2425,7 @@ GLIBC_2.34 lio_listio F
 GLIBC_2.34 lio_listio64 F
 GLIBC_2.34 mq_close F
 GLIBC_2.34 mq_getattr F
+GLIBC_2.34 mq_notify F
 GLIBC_2.34 mq_setattr F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
