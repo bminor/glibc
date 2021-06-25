@@ -26,10 +26,13 @@
 
 
 /* List of active SIGEV_THREAD timers.  */
-struct timer *__active_timer_sigev_thread;
-/* Lock for the __active_timer_sigev_thread.  */
-pthread_mutex_t __active_timer_sigev_thread_lock = PTHREAD_MUTEX_INITIALIZER;
+struct timer *__timer_active_sigev_thread __attribute__ ((nocommon));
+libc_hidden_data_def (__timer_active_sigev_thread)
 
+/* Lock for _timer_active_sigev_thread.  */
+pthread_mutex_t __timer_active_sigev_thread_lock __attribute__ ((nocommon))
+  = PTHREAD_MUTEX_INITIALIZER;
+libc_hidden_data_def (__timer_active_sigev_thread_lock)
 
 struct thread_start_data
 {
@@ -59,7 +62,7 @@ timer_sigev_thread (void *arg)
 
 
 /* Helper function to support starting threads for SIGEV_THREAD.  */
-static void *
+static _Noreturn void *
 timer_helper_thread (void *arg)
 {
   /* Endless loop of waiting for signals.  The loop is only ended when
@@ -68,16 +71,16 @@ timer_helper_thread (void *arg)
     {
       siginfo_t si;
 
-      while (sigwaitinfo (&sigtimer_set, &si) < 0);
+      while (__sigwaitinfo (&sigtimer_set, &si) < 0);
       if (si.si_code == SI_TIMER)
 	{
 	  struct timer *tk = (struct timer *) si.si_ptr;
 
 	  /* Check the timer is still used and will not go away
 	     while we are reading the values here.  */
-	  pthread_mutex_lock (&__active_timer_sigev_thread_lock);
+	  __pthread_mutex_lock (&__timer_active_sigev_thread_lock);
 
-	  struct timer *runp = __active_timer_sigev_thread;
+	  struct timer *runp = __timer_active_sigev_thread;
 	  while (runp != NULL)
 	    if (runp == tk)
 	      break;
@@ -96,45 +99,44 @@ timer_helper_thread (void *arg)
 		  td->sival = tk->sival;
 
 		  pthread_t th;
-		  pthread_create (&th, &tk->attr, timer_sigev_thread, td);
+		  __pthread_create (&th, &tk->attr, timer_sigev_thread, td);
 		}
 	    }
 
-	  pthread_mutex_unlock (&__active_timer_sigev_thread_lock);
+	  __pthread_mutex_unlock (&__timer_active_sigev_thread_lock);
 	}
-      else if (si.si_code == SI_TKILL)
-	/* The thread is canceled.  */
-	pthread_exit (NULL);
     }
 }
 
 
 /* Control variable for helper thread creation.  */
-pthread_once_t __helper_once attribute_hidden;
+pthread_once_t __timer_helper_once __attribute__ ((nocommon))
+  = PTHREAD_ONCE_INIT;
+libc_hidden_data_def (__timer_helper_once)
 
 
 /* TID of the helper thread.  */
-pid_t __helper_tid attribute_hidden;
+pid_t __timer_helper_tid __attribute__ ((nocommon));
+libc_hidden_data_def (__timer_helper_tid)
 
 
 /* Reset variables so that after a fork a new helper thread gets started.  */
-static void
-reset_helper_control (void)
+void
+__timer_fork_subprocess (void)
 {
-  __helper_once = PTHREAD_ONCE_INIT;
-  __helper_tid = 0;
+  __timer_helper_once = PTHREAD_ONCE_INIT;
+  __timer_helper_tid = 0;
 }
 
 
 void
-attribute_hidden
-__start_helper_thread (void)
+__timer_start_helper_thread (void)
 {
   /* The helper thread needs only very little resources
      and should go away automatically when canceled.  */
   pthread_attr_t attr;
-  (void) pthread_attr_init (&attr);
-  (void) pthread_attr_setstacksize (&attr, __pthread_get_minstack (&attr));
+  __pthread_attr_init (&attr);
+  __pthread_attr_setstacksize (&attr, __pthread_get_minstack (&attr));
 
   /* Block all signals in the helper thread but SIGSETXID.  */
   sigset_t ss;
@@ -143,21 +145,18 @@ __start_helper_thread (void)
   int res = __pthread_attr_setsigmask_internal (&attr, &ss);
   if (res != 0)
     {
-      pthread_attr_destroy (&attr);
+      __pthread_attr_destroy (&attr);
       return;
     }
 
   /* Create the helper thread for this timer.  */
   pthread_t th;
-  res = pthread_create (&th, &attr, timer_helper_thread, NULL);
+  res = __pthread_create (&th, &attr, timer_helper_thread, NULL);
   if (res == 0)
     /* We managed to start the helper thread.  */
-    __helper_tid = ((struct pthread *) th)->tid;
+    __timer_helper_tid = ((struct pthread *) th)->tid;
 
   /* No need for the attribute anymore.  */
-  (void) pthread_attr_destroy (&attr);
-
-  /* We have to make sure that after fork()ing a new helper thread can
-     be created.  */
-  pthread_atfork (NULL, NULL, reset_helper_control);
+  __pthread_attr_destroy (&attr);
 }
+libc_hidden_def (__timer_start_helper_thread)

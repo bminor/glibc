@@ -20,6 +20,7 @@
 #define _FORK_H
 
 #include <assert.h>
+#include <kernel-posix-timers.h>
 #include <ldsodefs.h>
 #include <list.h>
 #include <mqueue.h>
@@ -44,6 +45,7 @@ fork_system_setup_after_fork (void)
   __default_pthread_attr_lock = LLL_LOCK_INITIALIZER;
 
   call_function_static_weak (__mq_notify_fork_subprocess);
+  call_function_static_weak (__timer_fork_subprocess);
 }
 
 /* In case of a fork() call the memory allocation in the child will be

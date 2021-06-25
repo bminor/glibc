@@ -74,8 +74,8 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
     else
       {
 	/* Create the helper thread.  */
-	pthread_once (&__helper_once, __start_helper_thread);
-	if (__helper_tid == 0)
+	pthread_once (&__timer_helper_once, __timer_start_helper_thread);
+	if (__timer_helper_tid == 0)
 	  {
 	    /* No resources to start the helper thread.  */
 	    __set_errno (EAGAIN);
@@ -118,7 +118,7 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 	  { .sigev_value.sival_ptr = newp,
 	    .sigev_signo = SIGTIMER,
 	    .sigev_notify = SIGEV_SIGNAL | SIGEV_THREAD_ID,
-	    ._sigev_un = { ._pad = { [0] = __helper_tid } } };
+	    ._sigev_un = { ._pad = { [0] = __timer_helper_tid } } };
 
 	/* Create the timer.  */
 	int res;
@@ -132,10 +132,10 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 	  }
 
 	/* Add to the queue of active timers with thread delivery.  */
-	pthread_mutex_lock (&__active_timer_sigev_thread_lock);
-	newp->next = __active_timer_sigev_thread;
-	__active_timer_sigev_thread = newp;
-	pthread_mutex_unlock (&__active_timer_sigev_thread_lock);
+	pthread_mutex_lock (&__timer_active_sigev_thread_lock);
+	newp->next = __timer_active_sigev_thread;
+	__timer_active_sigev_thread = newp;
+	pthread_mutex_unlock (&__timer_active_sigev_thread_lock);
 
 	*timerid = timer_to_timerid (newp);
       }

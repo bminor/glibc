@@ -42,12 +42,12 @@ timer_delete (timer_t timerid)
 	  struct timer *kt = timerid_to_timer (timerid);
 
 	  /* Remove the timer from the list.  */
-	  pthread_mutex_lock (&__active_timer_sigev_thread_lock);
-	  if (__active_timer_sigev_thread == kt)
-	    __active_timer_sigev_thread = kt->next;
+	  pthread_mutex_lock (&__timer_active_sigev_thread_lock);
+	  if (__timer_active_sigev_thread == kt)
+	    __timer_active_sigev_thread = kt->next;
 	  else
 	    {
-	      struct timer *prevp = __active_timer_sigev_thread;
+	      struct timer *prevp = __timer_active_sigev_thread;
 	      while (prevp->next != NULL)
 		if (prevp->next == kt)
 		  {
@@ -57,7 +57,7 @@ timer_delete (timer_t timerid)
 		else
 		  prevp = prevp->next;
 	    }
-	  pthread_mutex_unlock (&__active_timer_sigev_thread_lock);
+	  pthread_mutex_unlock (&__timer_active_sigev_thread_lock);
 
 	  free (kt);
 	}

@@ -26,19 +26,27 @@
 extern int __no_posix_timers attribute_hidden;
 
 /* Callback to start helper thread.  */
-extern void __start_helper_thread (void) attribute_hidden;
+extern void __timer_start_helper_thread (void);
+libc_hidden_proto (__timer_start_helper_thread)
 
 /* Control variable for helper thread creation.  */
-extern pthread_once_t __helper_once attribute_hidden;
+extern pthread_once_t __timer_helper_once;
+libc_hidden_proto (__timer_helper_once)
+
+/* Called from fork so that the new subprocess re-creates the
+   notification thread if necessary.  */
+void __timer_fork_subprocess (void) attribute_hidden;
 
 /* TID of the helper thread.  */
-extern pid_t __helper_tid attribute_hidden;
+extern pid_t __timer_helper_tid;
+libc_hidden_proto (__timer_helper_tid)
 
 /* List of active SIGEV_THREAD timers.  */
-extern struct timer *__active_timer_sigev_thread attribute_hidden;
-/* Lock for the __active_timer_sigev_thread.  */
-extern pthread_mutex_t __active_timer_sigev_thread_lock attribute_hidden;
-
+extern struct timer *__timer_active_sigev_thread;
+libc_hidden_proto (__timer_active_sigev_thread)
+/* Lock for __timer_active_sigev_thread.  */
+extern pthread_mutex_t __timer_active_sigev_thread_lock;
+libc_hidden_proto (__timer_active_sigev_thread_lock)
 
 /* Type of timers in the kernel.  */
 typedef int kernel_timer_t;
