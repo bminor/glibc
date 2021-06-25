@@ -8,7 +8,6 @@ GLIBC_2.3.3 timer_delete F
 GLIBC_2.3.3 timer_getoverrun F
 GLIBC_2.3.3 timer_gettime F
 GLIBC_2.3.3 timer_settime F
-GLIBC_2.3.4 mq_getattr F
 GLIBC_2.3.4 mq_notify F
 GLIBC_2.3.4 mq_open F
 GLIBC_2.3.4 mq_receive F

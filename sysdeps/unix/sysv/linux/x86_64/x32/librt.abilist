@@ -1,5 +1,4 @@
 GLIBC_2.16 __mq_open_2 F
-GLIBC_2.16 mq_getattr F
 GLIBC_2.16 mq_notify F
 GLIBC_2.16 mq_open F
 GLIBC_2.16 mq_receive F

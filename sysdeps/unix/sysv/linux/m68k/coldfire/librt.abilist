@@ -2,7 +2,6 @@ GLIBC_2.34 __mq_timedreceive_time64 F
 GLIBC_2.34 __mq_timedsend_time64 F
 GLIBC_2.34 __timer_gettime64 F
 GLIBC_2.34 __timer_settime64 F
-GLIBC_2.4 mq_getattr F
 GLIBC_2.4 mq_notify F
 GLIBC_2.4 mq_open F
 GLIBC_2.4 mq_receive F

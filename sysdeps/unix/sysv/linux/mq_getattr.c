@@ -19,10 +19,16 @@
 #include <mqueue.h>
 #include <stddef.h>
 #include <sysdep.h>
+#include <shlib-compat.h>
 
 /* Query status and attributes of message queue MQDES.  */
 int
-mq_getattr (mqd_t mqdes, struct mq_attr *mqstat)
+__mq_getattr (mqd_t mqdes, struct mq_attr *mqstat)
 {
   return mq_setattr (mqdes, NULL, mqstat);
 }
+versioned_symbol (libc, __mq_getattr, mq_getattr, GLIBC_2_34);
+libc_hidden_ver (__mq_getattr, mq_getattr)
+#if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
+compat_symbol (librt, __mq_getattr, mq_getattr, GLIBC_2_3_4);
+#endif
