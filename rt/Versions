@@ -35,6 +35,7 @@ libc {
     mq_setattr;
     mq_timedreceive;
     mq_timedsend;
+    mq_unlink;
 %endif
   }
   GLIBC_2.4 {
@@ -77,6 +78,7 @@ libc {
     mq_setattr;
     mq_timedreceive;
     mq_timedsend;
+    mq_unlink;
 %endif
     shm_open;
     shm_unlink;
@@ -127,7 +129,9 @@ librt {
     timer_settime;
   }
   GLIBC_2.3.4 {
-%if !PTHREAD_IN_LIBC
+%if PTHREAD_IN_LIBC
+    __librt_version_placeholder;
+%else
     mq_close;
     mq_getattr;
     mq_notify;
@@ -137,8 +141,8 @@ librt {
     mq_setattr;
     mq_timedreceive;
     mq_timedsend;
-%endif
     mq_unlink;
+%endif
   }
   GLIBC_2.4 {
 %if PTHREAD_IN_LIBC

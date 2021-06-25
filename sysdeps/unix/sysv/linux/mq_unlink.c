@@ -18,10 +18,11 @@
 #include <errno.h>
 #include <mqueue.h>
 #include <sysdep.h>
+#include <shlib-compat.h>
 
 /* Remove message queue named NAME.  */
 int
-mq_unlink (const char *name)
+__mq_unlink (const char *name)
 {
   if (name[0] != '/')
     return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
@@ -40,3 +41,7 @@ mq_unlink (const char *name)
 
   return ret;
 }
+versioned_symbol (libc, __mq_unlink, mq_unlink, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
+compat_symbol (libc, __mq_unlink, mq_unlink, GLIBC_2_3_4);
+#endif

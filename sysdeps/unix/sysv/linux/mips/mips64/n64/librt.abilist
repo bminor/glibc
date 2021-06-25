@@ -3,6 +3,6 @@ GLIBC_2.2 timer_delete F
 GLIBC_2.2 timer_getoverrun F
 GLIBC_2.2 timer_gettime F
 GLIBC_2.2 timer_settime F
-GLIBC_2.3.4 mq_unlink F
+GLIBC_2.3.4 __librt_version_placeholder F
 GLIBC_2.4 __librt_version_placeholder F
 GLIBC_2.7 __librt_version_placeholder F

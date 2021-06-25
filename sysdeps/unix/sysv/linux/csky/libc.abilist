@@ -1353,6 +1353,7 @@ GLIBC_2.29 mq_send F
 GLIBC_2.29 mq_setattr F
 GLIBC_2.29 mq_timedreceive F
 GLIBC_2.29 mq_timedsend F
+GLIBC_2.29 mq_unlink F
 GLIBC_2.29 mrand48 F
 GLIBC_2.29 mrand48_r F
 GLIBC_2.29 mremap F
@@ -2441,6 +2442,7 @@ GLIBC_2.34 mq_send F
 GLIBC_2.34 mq_setattr F
 GLIBC_2.34 mq_timedreceive F
 GLIBC_2.34 mq_timedsend F
+GLIBC_2.34 mq_unlink F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
 GLIBC_2.34 mtx_lock F
