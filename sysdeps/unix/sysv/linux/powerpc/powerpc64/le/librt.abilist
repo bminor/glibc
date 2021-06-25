@@ -1,5 +1,3 @@
-GLIBC_2.17 __mq_open_2 F
-GLIBC_2.17 mq_open F
 GLIBC_2.17 mq_receive F
 GLIBC_2.17 mq_send F
 GLIBC_2.17 mq_timedreceive F

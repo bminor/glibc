@@ -29,6 +29,7 @@ libc {
     mq_close;
     mq_getattr;
     mq_notify;
+    mq_open;
     mq_setattr;
 %endif
   }
@@ -38,8 +39,14 @@ libc {
     lio_listio64;
 %endif
   }
+  GLIBC_2.7 {
+%if PTHREAD_IN_LIBC
+   __mq_open_2;
+%endif
+  }
   GLIBC_2.34 {
 %if PTHREAD_IN_LIBC
+    __mq_open_2;
     aio_cancel;
     aio_cancel64;
     aio_init;
@@ -60,6 +67,7 @@ libc {
     mq_close;
     mq_getattr;
     mq_notify;
+    mq_open;
     mq_setattr;
 %endif
     shm_open;
@@ -115,9 +123,9 @@ librt {
     mq_close;
     mq_getattr;
     mq_notify;
+    mq_open;
     mq_setattr;
 %endif
-    mq_open;
     mq_receive;
     mq_send;
     mq_timedreceive;
@@ -133,6 +141,10 @@ librt {
 %endif
   }
   GLIBC_2.7 {
+%if PTHREAD_IN_LIBC
+    __librt_version_placeholder;
+%else
    __mq_open_2;
+%endif
   }
 }

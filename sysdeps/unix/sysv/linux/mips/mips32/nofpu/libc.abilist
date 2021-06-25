@@ -2299,6 +2299,7 @@ GLIBC_2.3.4 getsourcefilter F
 GLIBC_2.3.4 mq_close F
 GLIBC_2.3.4 mq_getattr F
 GLIBC_2.3.4 mq_notify F
+GLIBC_2.3.4 mq_open F
 GLIBC_2.3.4 mq_setattr F
 GLIBC_2.3.4 pthread_attr_getaffinity_np F
 GLIBC_2.3.4 pthread_attr_setaffinity_np F
@@ -2380,6 +2381,7 @@ GLIBC_2.34 __localtime64_r F
 GLIBC_2.34 __lstat64_time64 F
 GLIBC_2.34 __lutimes64 F
 GLIBC_2.34 __mktime64 F
+GLIBC_2.34 __mq_open_2 F
 GLIBC_2.34 __msgctl64 F
 GLIBC_2.34 __mtx_timedlock64 F
 GLIBC_2.34 __nanosleep64 F
@@ -2470,6 +2472,7 @@ GLIBC_2.34 lio_listio64 F
 GLIBC_2.34 mq_close F
 GLIBC_2.34 mq_getattr F
 GLIBC_2.34 mq_notify F
+GLIBC_2.34 mq_open F
 GLIBC_2.34 mq_setattr F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
@@ -2705,6 +2708,7 @@ GLIBC_2.7 __isoc99_vsscanf F
 GLIBC_2.7 __isoc99_vswscanf F
 GLIBC_2.7 __isoc99_vwscanf F
 GLIBC_2.7 __isoc99_wscanf F
+GLIBC_2.7 __mq_open_2 F
 GLIBC_2.7 __open64_2 F
 GLIBC_2.7 __open_2 F
 GLIBC_2.7 __openat64_2 F

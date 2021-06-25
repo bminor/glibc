@@ -21,6 +21,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <sysdep.h>
+#include <shlib-compat.h>
 
 /* Establish connection between a process and a message queue NAME and
    return message queue descriptor or (mqd_t) -1 on error.  OFLAG determines
@@ -49,13 +50,20 @@ __mq_open (const char *name, int oflag, ...)
 
   return INLINE_SYSCALL (mq_open, 4, name + 1, oflag, mode, attr);
 }
-strong_alias (__mq_open, mq_open);
+versioned_symbol (libc, __mq_open, mq_open, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
+compat_symbol (libc, __mq_open, mq_open, GLIBC_2_3_4);
+#endif
 
 mqd_t
-__mq_open_2 (const char *name, int oflag)
+___mq_open_2 (const char *name, int oflag)
 {
   if (oflag & O_CREAT)
     __fortify_fail ("invalid mq_open call: O_CREAT without mode and attr");
 
   return __mq_open (name, oflag);
 }
+versioned_symbol (libc, ___mq_open_2, __mq_open_2, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (librt, GLIBC_2_7, GLIBC_2_34)
+compat_symbol (libc, ___mq_open_2, __mq_open_2, GLIBC_2_7);
+#endif

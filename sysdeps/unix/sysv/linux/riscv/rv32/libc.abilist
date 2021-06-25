@@ -297,6 +297,7 @@ GLIBC_2.33 __mempcpy_chk F
 GLIBC_2.33 __memset_chk F
 GLIBC_2.33 __monstartup F
 GLIBC_2.33 __morecore D 0x4
+GLIBC_2.33 __mq_open_2 F
 GLIBC_2.33 __nanosleep F
 GLIBC_2.33 __newlocale F
 GLIBC_2.33 __nl_langinfo_l F
@@ -1293,6 +1294,7 @@ GLIBC_2.33 mprotect F
 GLIBC_2.33 mq_close F
 GLIBC_2.33 mq_getattr F
 GLIBC_2.33 mq_notify F
+GLIBC_2.33 mq_open F
 GLIBC_2.33 mq_setattr F
 GLIBC_2.33 mrand48 F
 GLIBC_2.33 mrand48_r F
@@ -2119,6 +2121,7 @@ GLIBC_2.33 write F
 GLIBC_2.33 writev F
 GLIBC_2.33 wscanf F
 GLIBC_2.34 __libc_start_main F
+GLIBC_2.34 __mq_open_2 F
 GLIBC_2.34 __pthread_cleanup_routine F
 GLIBC_2.34 __pthread_key_create F
 GLIBC_2.34 __pthread_mutex_lock F
@@ -2167,6 +2170,7 @@ GLIBC_2.34 lio_listio64 F
 GLIBC_2.34 mq_close F
 GLIBC_2.34 mq_getattr F
 GLIBC_2.34 mq_notify F
+GLIBC_2.34 mq_open F
 GLIBC_2.34 mq_setattr F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F

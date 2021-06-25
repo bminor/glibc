@@ -38,4 +38,10 @@ compat_symbol (librt, __librt_version_placeholder_1,
                __librt_version_placeholder, GLIBC_2_4);
 # endif
 
+# if SHLIB_COMPAT (librt, GLIBC_2_7, GLIBC_2_34) \
+  && ABI_librt_GLIBC_2_7 != ABI_librt_GLIBC_2_4
+compat_symbol (librt, __librt_version_placeholder_1,
+               __librt_version_placeholder, GLIBC_2_7);
+# endif
+
 #endif
