@@ -30,8 +30,6 @@ routines = \
 
 librt-routines = \
   librt-compat \
-  mq_send \
-  mq_timedsend \
   mq_unlink \
   timer_create \
   timer_delete \
@@ -61,8 +59,10 @@ $(librt-routines-var) += \
   mq_notify \
   mq_open \
   mq_receive \
+  mq_send \
   mq_setattr \
   mq_timedreceive \
+  mq_timedsend \
 
 tests := tst-shm tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \

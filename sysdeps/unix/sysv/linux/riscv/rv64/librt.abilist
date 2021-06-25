@@ -1,5 +1,3 @@
-GLIBC_2.27 mq_send F
-GLIBC_2.27 mq_timedsend F
 GLIBC_2.27 mq_unlink F
 GLIBC_2.27 timer_create F
 GLIBC_2.27 timer_delete F

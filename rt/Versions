@@ -31,8 +31,10 @@ libc {
     mq_notify;
     mq_open;
     mq_receive;
+    mq_send;
     mq_setattr;
     mq_timedreceive;
+    mq_timedsend;
 %endif
   }
   GLIBC_2.4 {
@@ -71,8 +73,10 @@ libc {
     mq_notify;
     mq_open;
     mq_receive;
+    mq_send;
     mq_setattr;
     mq_timedreceive;
+    mq_timedsend;
 %endif
     shm_open;
     shm_unlink;
@@ -129,11 +133,11 @@ librt {
     mq_notify;
     mq_open;
     mq_receive;
+    mq_send;
     mq_setattr;
     mq_timedreceive;
-%endif
-    mq_send;
     mq_timedsend;
+%endif
     mq_unlink;
   }
   GLIBC_2.4 {

@@ -227,6 +227,7 @@ libc {
     __lutimes64;
     __mktime64;
     __mq_timedreceive_time64;
+    __mq_timedsend_time64;
     __msgctl64;
     __mtx_timedlock64;
     __nanosleep64;
@@ -296,7 +297,6 @@ librt {
   GLIBC_2.34 {
 %ifdef TIME64_NON_DEFAULT
     # 64-bit time_t support
-    __mq_timedsend_time64;
     __timer_gettime64;
     __timer_settime64;
 %endif

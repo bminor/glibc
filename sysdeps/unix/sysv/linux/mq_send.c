@@ -17,13 +17,18 @@
 
 #include <errno.h>
 #include <mqueue.h>
+#include <shlib-compat.h>
 #include <stddef.h>
 #include <sysdep.h>
 
 /* Add message pointed by MSG_PTR to message queue MQDES.  */
 int
-mq_send (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
+__mq_send (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
 	 unsigned int msg_prio)
 {
   return __mq_timedsend (mqdes, msg_ptr, msg_len, msg_prio, NULL);
 }
+versioned_symbol (libc, __mq_send, mq_send, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
+compat_symbol (librt, __mq_send, mq_send, GLIBC_2_3_4);
+#endif

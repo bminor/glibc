@@ -18,13 +18,14 @@
 
 #include <mqueue.h>
 #include <sysdep-cancel.h>
+#include <shlib-compat.h>
 
 /* Add message pointed by MSG_PTR to message queue MQDES, stop blocking
    on full message queue if ABS_TIMEOUT expires.  */
 int
-__mq_timedsend_time64 (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
-                       unsigned int msg_prio,
-                       const struct __timespec64 *abs_timeout)
+___mq_timedsend_time64 (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
+			unsigned int msg_prio,
+			const struct __timespec64 *abs_timeout)
 {
 # ifndef __NR_mq_timedsend_time64
 #  define __NR_mq_timedsend_time64 __NR_mq_timedsend
@@ -58,11 +59,23 @@ __mq_timedsend_time64 (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
 #endif
 }
 
-#if __TIMESIZE != 64
-librt_hidden_def (__mq_timedsend_time64)
+#if __TIMESIZE == 64
+versioned_symbol (libc, ___mq_timedsend_time64, mq_timedsend, GLIBC_2_34);
+libc_hidden_ver (___mq_timedsend_time64, __mq_timedsend)
+# ifndef SHARED
+strong_alias (___mq_timedsend_time64, __mq_timedsend)
+# endif
+# if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
+compat_symbol (librt, ___mq_timedsend_time64, mq_timedsend, GLIBC_2_3_4);
+# endif
+
+#else /* __TIMESIZE != 64 */
+libc_hidden_ver (___mq_timedsend_time64, __mq_timedsend_time64)
+versioned_symbol (libc, ___mq_timedsend_time64, __mq_timedsend_time64,
+		  GLIBC_2_34);
 
 int
-__mq_timedsend (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
+___mq_timedsend (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
                 unsigned int msg_prio, const struct timespec *abs_timeout)
 {
   struct __timespec64 ts64;
@@ -72,8 +85,13 @@ __mq_timedsend (mqd_t mqdes, const char *msg_ptr, size_t msg_len,
   return __mq_timedsend_time64 (mqdes, msg_ptr, msg_len, msg_prio,
                                 abs_timeout != NULL ? &ts64 : NULL);
 }
-#endif
+versioned_symbol (libc, ___mq_timedsend, mq_timedsend, GLIBC_2_34);
+libc_hidden_ver (___mq_timedsend, __mq_timedsend)
+# ifndef SHARED
+strong_alias (___mq_timedsend, __mq_timedsend)
+# endif
+# if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
+compat_symbol (librt, ___mq_timedsend, mq_timedsend, GLIBC_2_3_4);
+# endif
 
-hidden_def (__mq_timedsend)
-weak_alias (__mq_timedsend, mq_timedsend)
-hidden_weak (mq_timedsend)
+#endif /* __TIMESIZE != 64 */

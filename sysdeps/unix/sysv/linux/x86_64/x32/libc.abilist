@@ -1370,8 +1370,10 @@ GLIBC_2.16 mq_getattr F
 GLIBC_2.16 mq_notify F
 GLIBC_2.16 mq_open F
 GLIBC_2.16 mq_receive F
+GLIBC_2.16 mq_send F
 GLIBC_2.16 mq_setattr F
 GLIBC_2.16 mq_timedreceive F
+GLIBC_2.16 mq_timedsend F
 GLIBC_2.16 mrand48 F
 GLIBC_2.16 mrand48_r F
 GLIBC_2.16 mremap F
@@ -2428,8 +2430,10 @@ GLIBC_2.34 mq_getattr F
 GLIBC_2.34 mq_notify F
 GLIBC_2.34 mq_open F
 GLIBC_2.34 mq_receive F
+GLIBC_2.34 mq_send F
 GLIBC_2.34 mq_setattr F
 GLIBC_2.34 mq_timedreceive F
+GLIBC_2.34 mq_timedsend F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
 GLIBC_2.34 mtx_lock F
