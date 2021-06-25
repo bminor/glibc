@@ -564,6 +564,8 @@ GLIBC_2.29 addmntent F
 GLIBC_2.29 addseverity F
 GLIBC_2.29 adjtime F
 GLIBC_2.29 adjtimex F
+GLIBC_2.29 aio_cancel F
+GLIBC_2.29 aio_cancel64 F
 GLIBC_2.29 aio_init F
 GLIBC_2.29 alarm F
 GLIBC_2.29 aligned_alloc F
@@ -2368,6 +2370,8 @@ GLIBC_2.34 __wait3_time64 F
 GLIBC_2.34 __wait4_time64 F
 GLIBC_2.34 _pthread_cleanup_pop F
 GLIBC_2.34 _pthread_cleanup_push F
+GLIBC_2.34 aio_cancel F
+GLIBC_2.34 aio_cancel64 F
 GLIBC_2.34 aio_init F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F

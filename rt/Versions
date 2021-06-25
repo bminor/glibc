@@ -2,6 +2,8 @@ libc {
   GLIBC_2.1 {
 %if PTHREAD_IN_LIBC
     aio_init;
+    aio_cancel;
+    aio_cancel64;
 %endif
   }
   GLIBC_2.2 {
@@ -10,6 +12,8 @@ libc {
   }
   GLIBC_2.34 {
 %if PTHREAD_IN_LIBC
+    aio_cancel;
+    aio_cancel64;
     aio_init;
 %endif
     shm_open;
@@ -31,8 +35,10 @@ libc {
 }
 librt {
   GLIBC_2.1 {
+%if !PTHREAD_IN_LIBC
     aio_cancel;
     aio_cancel64;
+%endif
     aio_error;
     aio_error64;
     aio_fsync;

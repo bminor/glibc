@@ -62,7 +62,12 @@ libc {
     wordexp;
   }
   GLIBC_2.3 {
-    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+    _sys_errlist;
+    _sys_nerr;
+    aio_cancel64;
+    aio_cancel;
+    sys_errlist;
+    sys_nerr;
   }
   GLIBC_2.3.3 {
     # Changed PTHREAD_STACK_MIN.
@@ -81,6 +86,9 @@ libc {
   GLIBC_2.27 {
     getrlimit; setrlimit; getrlimit64; setrlimit64;
   }
+  GLIBC_2.34 {
+    aio_cancel64;
+  }
   GLIBC_PRIVATE {
     __libc_alpha_cache_shape;
   }
@@ -92,8 +100,7 @@ ld {
 }
 librt {
   GLIBC_2.3 {
-    # AIO functions.
-    aio_cancel; aio_cancel64;
+    __librt_version_placeholder;
   }
   GLIBC_2.3.3 {
     # Changed timer_t.

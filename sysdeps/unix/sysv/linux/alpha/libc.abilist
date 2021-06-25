@@ -1502,6 +1502,8 @@ GLIBC_2.1 _sys_siglist D 0x200
 GLIBC_2.1 addseverity F
 GLIBC_2.1 adjtime F
 GLIBC_2.1 adjtimex F
+GLIBC_2.1 aio_cancel F
+GLIBC_2.1 aio_cancel64 F
 GLIBC_2.1 aio_init F
 GLIBC_2.1 alphasort64 F
 GLIBC_2.1 argp_err_exit_status D 0x4
@@ -2202,6 +2204,8 @@ GLIBC_2.3 __uselocale F
 GLIBC_2.3 __wcsftime_l F
 GLIBC_2.3 _sys_errlist D 0x420
 GLIBC_2.3 _sys_nerr D 0x4
+GLIBC_2.3 aio_cancel F
+GLIBC_2.3 aio_cancel64 F
 GLIBC_2.3 duplocale F
 GLIBC_2.3 fgetxattr F
 GLIBC_2.3 flistxattr F
@@ -2442,6 +2446,8 @@ GLIBC_2.34 __pthread_unregister_cancel_restore F
 GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 _pthread_cleanup_pop F
 GLIBC_2.34 _pthread_cleanup_push F
+GLIBC_2.34 aio_cancel F
+GLIBC_2.34 aio_cancel64 F
 GLIBC_2.34 aio_init F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F

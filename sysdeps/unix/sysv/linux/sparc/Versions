@@ -6,7 +6,12 @@ libc {
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
   GLIBC_2.3 {
-    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+    _sys_errlist;
+    _sys_nerr;
+    aio_cancel64;
+    aio_cancel;
+    sys_errlist;
+    sys_nerr;
   }
   GLIBC_2.3.3 {
     # Changed PTHREAD_STACK_MIN.
@@ -29,10 +34,8 @@ libc {
     __vdso_clock_gettime;
   }
 }
-
 librt {
   GLIBC_2.3 {
-    # AIO functions.
-    aio_cancel; aio_cancel64;
+    __librt_version_placeholder;
   }
 }

@@ -29,7 +29,6 @@ routines = \
   shm_unlink \
 
 librt-routines = \
-  aio_cancel \
   aio_error \
   aio_fsync \
   aio_read \
@@ -38,6 +37,7 @@ librt-routines = \
   aio_suspend \
   aio_write \
   aio_write64 \
+  librt-compat \
   lio_listio \
   lio_listio64 \
   mq_close \
@@ -56,7 +56,10 @@ librt-routines = \
   timer_gettime \
   timer_settime \
 
+librt-shared-only-routines = librt-compat
+
 $(librt-routines-var) += \
+  aio_cancel \
   aio_misc \
   aio_notify \
   aio_sigqueue \

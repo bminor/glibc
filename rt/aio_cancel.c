@@ -35,23 +35,24 @@
 #include <fcntl.h>
 
 #include <aio_misc.h>
+#include <pthreadP.h>
 
 
 int
-aio_cancel (int fildes, struct aiocb *aiocbp)
+__aio_cancel (int fildes, struct aiocb *aiocbp)
 {
   struct requestlist *req = NULL;
   int result = AIO_ALLDONE;
 
   /* If fildes is invalid, error. */
-  if (fcntl (fildes, F_GETFL) < 0)
+  if (__fcntl (fildes, F_GETFL) < 0)
     {
       __set_errno (EBADF);
       return -1;
     }
 
   /* Request the mutex.  */
-  pthread_mutex_lock (&__aio_requests_mutex);
+  __pthread_mutex_lock (&__aio_requests_mutex);
 
   /* We are asked to cancel a specific AIO request.  */
   if (aiocbp != NULL)
@@ -60,7 +61,7 @@ aio_cancel (int fildes, struct aiocb *aiocbp)
 	 to look for the request block.  */
       if (aiocbp->aio_fildes != fildes)
 	{
-	  pthread_mutex_unlock (&__aio_requests_mutex);
+	  __pthread_mutex_unlock (&__aio_requests_mutex);
 	  __set_errno (EINVAL);
 	  return -1;
 	}
@@ -73,7 +74,7 @@ aio_cancel (int fildes, struct aiocb *aiocbp)
 	  if (req == NULL)
 	    {
 	    not_found:
-	      pthread_mutex_unlock (&__aio_requests_mutex);
+	      __pthread_mutex_unlock (&__aio_requests_mutex);
 	      __set_errno (EINVAL);
 	      return -1;
 	    }
@@ -147,11 +148,20 @@ aio_cancel (int fildes, struct aiocb *aiocbp)
     }
 
   /* Release the mutex.  */
-  pthread_mutex_unlock (&__aio_requests_mutex);
+  __pthread_mutex_unlock (&__aio_requests_mutex);
 
   return result;
 }
-
-#ifndef aio_cancel
-weak_alias (aio_cancel, aio_cancel64)
+#if PTHREAD_IN_LIBC
+# ifndef __aio_cancel
+versioned_symbol (libc, __aio_cancel, aio_cancel, GLIBC_2_34);
+versioned_symbol (libc, __aio_cancel, aio_cancel64, GLIBC_2_34);
+#  if OTHER_SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (librt, __aio_cancel, aio_cancel, GLIBC_2_1);
+compat_symbol (librt, __aio_cancel, aio_cancel64, GLIBC_2_1);
+#  endif
+# endif /* __aio_cancel */
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__aio_cancel, aio_cancel)
+weak_alias (__aio_cancel, aio_cancel64)
 #endif

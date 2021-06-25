@@ -278,6 +278,8 @@ GLIBC_2.34 __wait3_time64 F
 GLIBC_2.34 __wait4_time64 F
 GLIBC_2.34 _pthread_cleanup_pop F
 GLIBC_2.34 _pthread_cleanup_push F
+GLIBC_2.34 aio_cancel F
+GLIBC_2.34 aio_cancel64 F
 GLIBC_2.34 aio_init F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
@@ -982,6 +984,8 @@ GLIBC_2.4 addseverity F
 GLIBC_2.4 adjtime F
 GLIBC_2.4 adjtimex F
 GLIBC_2.4 advance F
+GLIBC_2.4 aio_cancel F
+GLIBC_2.4 aio_cancel64 F
 GLIBC_2.4 aio_init F
 GLIBC_2.4 alarm F
 GLIBC_2.4 alphasort F
