@@ -421,7 +421,8 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 	    int private = (robust
 			   ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
 			   : PTHREAD_MUTEX_PSHARED (mutex));
-	    int e = futex_lock_pi64 (&mutex->__data.__lock, NULL, private);
+	    int e = __futex_lock_pi64 (&mutex->__data.__lock, 0 /* ununsed  */,
+				       NULL, private);
 	    if (e == ESRCH || e == EDEADLK)
 	      {
 		assert (e != EDEADLK

@@ -369,7 +369,8 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 	    int private = (robust
 			   ? PTHREAD_ROBUST_MUTEX_PSHARED (mutex)
 			   : PTHREAD_MUTEX_PSHARED (mutex));
-	    int e = futex_lock_pi64 (&mutex->__data.__lock, abstime, private);
+	    int e = __futex_lock_pi64 (&mutex->__data.__lock, clockid, abstime,
+				       private);
 	    if (e == ETIMEDOUT)
 	      return ETIMEDOUT;
 	    else if (e == ESRCH || e == EDEADLK)

@@ -140,3 +140,66 @@ __futex_abstimed_wait_cancelable64 (unsigned int* futex_word,
                                        abstime, private, true);
 }
 libc_hidden_def (__futex_abstimed_wait_cancelable64)
+
+int
+__futex_lock_pi64 (int *futex_word, clockid_t clockid,
+		   const struct __timespec64 *abstime, int private)
+{
+  int err;
+
+  unsigned int clockbit = clockid == CLOCK_REALTIME
+			  ? FUTEX_CLOCK_REALTIME : 0;
+  int op_pi2 = __lll_private_flag (FUTEX_LOCK_PI2 | clockbit, private);
+#if __ASSUME_FUTEX_LOCK_PI2
+  /* Assume __ASSUME_TIME64_SYSCALLS since FUTEX_LOCK_PI2 was added later.  */
+  err = INTERNAL_SYSCALL_CALL (futex_time64, futex_word, op_pi2, 0, abstime);
+#else
+  /* FUTEX_LOCK_PI does not support clock selection, so for CLOCK_MONOTONIC
+     the only option is to use FUTEX_LOCK_PI2.  */
+  int op_pi1 = __lll_private_flag (FUTEX_LOCK_PI, private);
+  int op_pi = abstime != NULL && clockid != CLOCK_REALTIME ? op_pi2 : op_pi1;
+
+# ifdef __ASSUME_TIME64_SYSCALLS
+  err = INTERNAL_SYSCALL_CALL (futex_time64, futex_word, op_pi, 0, abstime);
+# else
+  bool need_time64 = abstime != NULL && !in_time_t_range (abstime->tv_sec);
+  if (need_time64)
+    err = INTERNAL_SYSCALL_CALL (futex_time64, futex_word, op_pi, 0, abstime);
+  else
+    {
+      struct timespec ts32, *pts32 = NULL;
+      if (abstime != NULL)
+	{
+	  ts32 = valid_timespec64_to_timespec (*abstime);
+	  pts32 = &ts32;
+	}
+      err = INTERNAL_SYSCALL_CALL (futex, futex_word, op_pi, 0, pts32);
+    }
+# endif	 /* __ASSUME_TIME64_SYSCALLS */
+   /* FUTEX_LOCK_PI2 is not available on this kernel.  */
+   if (err == -ENOSYS)
+     err = -EINVAL;
+#endif /* __ASSUME_FUTEX_LOCK_PI2  */
+
+  switch (err)
+    {
+    case 0:
+    case -EAGAIN:
+    case -EINTR:
+    case -ETIMEDOUT:
+    case -ESRCH:
+    case -EDEADLK:
+    case -EINVAL: /* This indicates either state corruption or that the kernel
+                     found a waiter on futex address which is waiting via
+                     FUTEX_WAIT or FUTEX_WAIT_BITSET.  This is reported on
+                     some futex_lock_pi usage (pthread_mutex_timedlock for
+                     instance).  */
+      return -err;
+
+    case -EFAULT: /* Must have been caused by a glibc or application bug.  */
+    case -ENOSYS: /* Must have been caused by a glibc bug.  */
+    /* No other errors are documented at this time.  */
+    default:
+      futex_fatal_error ();
+    }
+}
