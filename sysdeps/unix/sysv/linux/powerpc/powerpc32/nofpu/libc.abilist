@@ -1493,6 +1493,8 @@ GLIBC_2.1 aio_return F
 GLIBC_2.1 aio_return64 F
 GLIBC_2.1 aio_suspend F
 GLIBC_2.1 aio_suspend64 F
+GLIBC_2.1 aio_write F
+GLIBC_2.1 aio_write64 F
 GLIBC_2.1 alphasort64 F
 GLIBC_2.1 argp_err_exit_status D 0x4
 GLIBC_2.1 argp_error F
@@ -2535,6 +2537,8 @@ GLIBC_2.34 aio_return F
 GLIBC_2.34 aio_return64 F
 GLIBC_2.34 aio_suspend F
 GLIBC_2.34 aio_suspend64 F
+GLIBC_2.34 aio_write F
+GLIBC_2.34 aio_write64 F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F

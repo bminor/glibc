@@ -292,6 +292,8 @@ GLIBC_2.34 aio_return F
 GLIBC_2.34 aio_return64 F
 GLIBC_2.34 aio_suspend F
 GLIBC_2.34 aio_suspend64 F
+GLIBC_2.34 aio_write F
+GLIBC_2.34 aio_write64 F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F
@@ -1008,6 +1010,8 @@ GLIBC_2.4 aio_return F
 GLIBC_2.4 aio_return64 F
 GLIBC_2.4 aio_suspend F
 GLIBC_2.4 aio_suspend64 F
+GLIBC_2.4 aio_write F
+GLIBC_2.4 aio_write64 F
 GLIBC_2.4 alarm F
 GLIBC_2.4 alphasort F
 GLIBC_2.4 alphasort64 F

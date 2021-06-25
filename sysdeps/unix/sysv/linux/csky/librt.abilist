@@ -1,6 +1,4 @@
 GLIBC_2.29 __mq_open_2 F
-GLIBC_2.29 aio_write F
-GLIBC_2.29 aio_write64 F
 GLIBC_2.29 lio_listio F
 GLIBC_2.29 lio_listio64 F
 GLIBC_2.29 mq_close F
