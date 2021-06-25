@@ -220,4 +220,12 @@
 # define __ASSUME_FACCESSAT2 0
 #endif
 
+/* The FUTEX_LOCK_PI2 operation was introduced across all architectures in Linux
+   5.14.  */
+#if __LINUX_KERNEL_VERSION >= 0x050e00
+# define __ASSUME_FUTEX_LOCK_PI2 1
+#else
+# define __ASSUME_FUTEX_LOCK_PI2 0
+#endif
+
 #endif /* kernel-features.h */
