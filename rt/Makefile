@@ -30,8 +30,6 @@ routines = \
 
 librt-routines = \
   librt-compat \
-  lio_listio \
-  lio_listio64 \
   mq_close \
   mq_getattr \
   mq_notify \
@@ -63,6 +61,8 @@ $(librt-routines-var) += \
   aio_suspend \
   aio_write \
   aio_write64 \
+  lio_listio \
+  lio_listio64 \
 
 tests := tst-shm tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \

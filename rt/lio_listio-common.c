@@ -42,6 +42,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <pthreadP.h>
 
 #include <aio_misc.h>
 
@@ -87,7 +88,7 @@ lio_listio_internal (int mode, struct AIOCB *const list[], int nent,
     }
 
   /* Request the mutex.  */
-  pthread_mutex_lock (&__aio_requests_mutex);
+  __pthread_mutex_lock (&__aio_requests_mutex);
 
   /* Now we can enqueue all requests.  Since we already acquired the
      mutex the enqueue function need not do this.  */
@@ -120,7 +121,7 @@ lio_listio_internal (int mode, struct AIOCB *const list[], int nent,
       /* Release the mutex.  We do this before raising a signal since the
 	 signal handler might do a `siglongjmp' and then the mutex is
 	 locked forever.  */
-      pthread_mutex_unlock (&__aio_requests_mutex);
+      __pthread_mutex_unlock (&__aio_requests_mutex);
 
       if (LIO_MODE (mode) == LIO_NOWAIT)
 	__aio_notify_only (sig);
@@ -223,13 +224,13 @@ lio_listio_internal (int mode, struct AIOCB *const list[], int nent,
     }
 
   /* Release the mutex.  */
-  pthread_mutex_unlock (&__aio_requests_mutex);
+  __pthread_mutex_unlock (&__aio_requests_mutex);
 
   return result;
 }
 
 
-#if SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_4)
+#if OTHER_SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_4)
 int
 attribute_compat_text_section
 LIO_LISTIO_OLD (int mode, struct AIOCB *const list[], int nent,
@@ -248,7 +249,7 @@ compat_symbol (librt, LIO_LISTIO_OLD, LIO_LISTIO, GLIBC_2_1);
 # if __WORDSIZE == 64
 compat_symbol (librt, LIO_LISTIO_OLD, lio_listio64, GLIBC_2_1);
 # endif
-#endif /* SHLIB_COMPAT */
+#endif /* OTHER_SHLIB_COMPAT */
 
 
 int
@@ -264,7 +265,21 @@ LIO_LISTIO_NEW (int mode, struct AIOCB *const list[], int nent,
 
   return lio_listio_internal (mode, list, nent, sig);
 }
+
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, LIO_LISTIO_NEW, LIO_LISTIO, GLIBC_2_34);
+# if __WORDSIZE == 64
+versioned_symbol (libc, LIO_LISTIO_NEW, lio_listio64, GLIBC_2_34);
+# endif
+# if OTHER_SHLIB_COMPAT (librt, GLIBC_2_4, GLIBC_2_34)
+compat_symbol (librt, LIO_LISTIO_NEW, LIO_LISTIO, GLIBC_2_4);
+#  if __WORDSIZE == 64
+compat_symbol (librt, LIO_LISTIO_NEW, lio_listio64, GLIBC_2_4);
+#  endif
+# endif /* OTHER_SHLIB_COMPAT */
+#else /* !PTHREAD_IN_LIBC */
 versioned_symbol (librt, LIO_LISTIO_NEW, LIO_LISTIO, GLIBC_2_4);
-#if __WORDSIZE == 64
+# if __WORDSIZE == 64
 versioned_symbol (librt, LIO_LISTIO_NEW, lio_listio64, GLIBC_2_4);
-#endif
+# endif
+#endif /* !PTHREAD_IN_LIBC */

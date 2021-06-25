@@ -1138,6 +1138,8 @@ GLIBC_2.2.5 ldexpl F
 GLIBC_2.2.5 ldiv F
 GLIBC_2.2.5 lfind F
 GLIBC_2.2.5 link F
+GLIBC_2.2.5 lio_listio F
+GLIBC_2.2.5 lio_listio64 F
 GLIBC_2.2.5 listen F
 GLIBC_2.2.5 llabs F
 GLIBC_2.2.5 lldiv F
@@ -2307,6 +2309,8 @@ GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
+GLIBC_2.34 lio_listio F
+GLIBC_2.34 lio_listio64 F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
 GLIBC_2.34 mtx_lock F
@@ -2483,6 +2487,8 @@ GLIBC_2.4 inotify_add_watch F
 GLIBC_2.4 inotify_init F
 GLIBC_2.4 inotify_rm_watch F
 GLIBC_2.4 linkat F
+GLIBC_2.4 lio_listio F
+GLIBC_2.4 lio_listio64 F
 GLIBC_2.4 mkdirat F
 GLIBC_2.4 mkfifoat F
 GLIBC_2.4 open_wmemstream F

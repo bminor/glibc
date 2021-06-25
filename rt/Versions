@@ -16,11 +16,19 @@ libc {
     aio_suspend64;
     aio_write;
     aio_write64;
+    lio_listio;
+    lio_listio64;
 %endif
   }
   GLIBC_2.2 {
     shm_open;
     shm_unlink;
+  }
+  GLIBC_2.4 {
+%if PTHREAD_IN_LIBC
+    lio_listio;
+    lio_listio64;
+%endif
   }
   GLIBC_2.34 {
 %if PTHREAD_IN_LIBC
@@ -39,6 +47,8 @@ libc {
     aio_suspend64;
     aio_write;
     aio_write64;
+    lio_listio;
+    lio_listio64;
 %endif
     shm_open;
     shm_unlink;
@@ -59,7 +69,9 @@ libc {
 }
 librt {
   GLIBC_2.1 {
-%if !PTHREAD_IN_LIBC
+%if PTHREAD_IN_LIBC
+    __librt_version_placeholder;
+%else
     aio_cancel;
     aio_cancel64;
     aio_error;
@@ -75,9 +87,9 @@ librt {
     aio_suspend64;
     aio_write;
     aio_write64;
-%endif
     lio_listio;
     lio_listio64;
+%endif
   }
   GLIBC_2.2 {
     timer_create;
@@ -99,8 +111,12 @@ librt {
     mq_unlink;
   }
   GLIBC_2.4 {
+%if PTHREAD_IN_LIBC
+    __librt_version_placeholder;
+%else
     lio_listio;
     lio_listio64;
+%endif
   }
   GLIBC_2.7 {
    __mq_open_2;

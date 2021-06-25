@@ -20,6 +20,8 @@ GLIBC_2.1 aio_write F
 GLIBC_2.1 aio_write64 F
 GLIBC_2.1 dlopen F
 GLIBC_2.1 dlvsym F
+GLIBC_2.1 lio_listio F
+GLIBC_2.1 lio_listio64 F
 GLIBC_2.10 __cxa_at_quick_exit F
 GLIBC_2.10 __posix_getopt F
 GLIBC_2.10 accept4 F
@@ -2369,6 +2371,8 @@ GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
+GLIBC_2.34 lio_listio F
+GLIBC_2.34 lio_listio64 F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
 GLIBC_2.34 mtx_lock F
@@ -2545,6 +2549,8 @@ GLIBC_2.4 inotify_add_watch F
 GLIBC_2.4 inotify_init F
 GLIBC_2.4 inotify_rm_watch F
 GLIBC_2.4 linkat F
+GLIBC_2.4 lio_listio F
+GLIBC_2.4 lio_listio64 F
 GLIBC_2.4 mkdirat F
 GLIBC_2.4 mkfifoat F
 GLIBC_2.4 open_wmemstream F

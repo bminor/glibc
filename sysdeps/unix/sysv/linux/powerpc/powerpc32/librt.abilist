@@ -1,5 +1,4 @@
-GLIBC_2.1 lio_listio F
-GLIBC_2.1 lio_listio64 F
+GLIBC_2.1 __librt_version_placeholder F
 GLIBC_2.2 timer_create F
 GLIBC_2.2 timer_delete F
 GLIBC_2.2 timer_getoverrun F
@@ -19,6 +18,5 @@ GLIBC_2.34 __mq_timedreceive_time64 F
 GLIBC_2.34 __mq_timedsend_time64 F
 GLIBC_2.34 __timer_gettime64 F
 GLIBC_2.34 __timer_settime64 F
-GLIBC_2.4 lio_listio F
-GLIBC_2.4 lio_listio64 F
+GLIBC_2.4 __librt_version_placeholder F
 GLIBC_2.7 __mq_open_2 F

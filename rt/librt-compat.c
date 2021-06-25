@@ -26,4 +26,16 @@ __attribute_used__
 __librt_version_placeholder_1 (void)
 {
 }
+
+# if SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_2)
+compat_symbol (librt, __librt_version_placeholder_1,
+               __librt_version_placeholder, GLIBC_2_1);
+# endif
+
+# if SHLIB_COMPAT (librt, GLIBC_2_4, GLIBC_2_34) \
+  && ABI_librt_GLIBC_2_4 != ABI_librt_GLIBC_2_1
+compat_symbol (librt, __librt_version_placeholder_1,
+               __librt_version_placeholder, GLIBC_2_4);
+# endif
+
 #endif

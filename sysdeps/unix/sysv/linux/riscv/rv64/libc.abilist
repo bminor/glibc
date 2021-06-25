@@ -1254,6 +1254,8 @@ GLIBC_2.27 lfind F
 GLIBC_2.27 lgetxattr F
 GLIBC_2.27 link F
 GLIBC_2.27 linkat F
+GLIBC_2.27 lio_listio F
+GLIBC_2.27 lio_listio64 F
 GLIBC_2.27 listen F
 GLIBC_2.27 listxattr F
 GLIBC_2.27 llabs F
@@ -2356,6 +2358,8 @@ GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
+GLIBC_2.34 lio_listio F
+GLIBC_2.34 lio_listio64 F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
 GLIBC_2.34 mtx_lock F
