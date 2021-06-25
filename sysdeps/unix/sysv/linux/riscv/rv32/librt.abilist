@@ -1,6 +1,4 @@
 GLIBC_2.33 __mq_open_2 F
-GLIBC_2.33 aio_error F
-GLIBC_2.33 aio_error64 F
 GLIBC_2.33 aio_fsync F
 GLIBC_2.33 aio_fsync64 F
 GLIBC_2.33 aio_read F
