@@ -18,11 +18,12 @@
 
 #include <mqueue.h>
 #include <sysdep-cancel.h>
+#include <shlib-compat.h>
 
 /* Receive the oldest from highest priority messages in message queue
    MQDES, stop waiting if ABS_TIMEOUT expires.  */
 ssize_t
-__mq_timedreceive_time64 (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
+___mq_timedreceive_time64 (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
                           unsigned int *__restrict msg_prio,
                           const struct __timespec64 *__restrict abs_timeout)
 {
@@ -58,13 +59,25 @@ __mq_timedreceive_time64 (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
 #endif
 }
 
-#if __TIMESIZE != 64
-librt_hidden_def (__mq_timedreceive_time64)
+#if __TIMESIZE == 64
+versioned_symbol (libc, ___mq_timedreceive_time64, mq_timedreceive, GLIBC_2_34);
+libc_hidden_ver (___mq_timedreceive_time64, __mq_timedreceive)
+# ifndef SHARED
+strong_alias (___mq_timedreceive_time64, __mq_timedreceive)
+# endif
+# if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
+compat_symbol (librt, ___mq_timedreceive_time64, mq_timedreceive, GLIBC_2_3_4);
+# endif
+
+#else /* __TIMESIZE != 64 */
+libc_hidden_ver (___mq_timedreceive_time64, __mq_timedreceive_time64)
+versioned_symbol (libc, ___mq_timedreceive_time64, __mq_timedreceive_time64,
+		  GLIBC_2_34);
 
 ssize_t
-__mq_timedreceive (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
-                   unsigned int *__restrict msg_prio,
-                   const struct timespec *__restrict abs_timeout)
+___mq_timedreceive (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
+		    unsigned int *__restrict msg_prio,
+		    const struct timespec *__restrict abs_timeout)
 {
   struct __timespec64 ts64;
   if (abs_timeout != NULL)
@@ -73,8 +86,13 @@ __mq_timedreceive (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
   return __mq_timedreceive_time64 (mqdes, msg_ptr, msg_len, msg_prio,
                                    abs_timeout != NULL ? &ts64 : NULL);
 }
-#endif
+versioned_symbol (libc, ___mq_timedreceive, mq_timedreceive, GLIBC_2_34);
+libc_hidden_ver (___mq_timedreceive, __mq_timedreceive)
+# ifndef SHARED
+strong_alias (___mq_timedreceive, __mq_timedreceive)
+# endif
+# if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
+compat_symbol (librt, ___mq_timedreceive, mq_timedreceive, GLIBC_2_3_4);
+# endif
 
-hidden_def (__mq_timedreceive)
-weak_alias (__mq_timedreceive, mq_timedreceive)
-hidden_weak (mq_timedreceive)
+#endif /* __TIMESIZE != 64 */

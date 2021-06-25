@@ -1,20 +1,22 @@
 #include <rt/mqueue.h>
 
 #ifndef _ISOMAC
+extern __typeof (mq_timedreceive) __mq_timedreceive __nonnull ((2, 5));
+
 # if IS_IN (librt)
 hidden_proto (mq_timedsend)
 extern __typeof (mq_timedsend) __mq_timedsend __nonnull ((2, 5));
 hidden_proto (__mq_timedsend)
-hidden_proto (mq_timedreceive)
-extern __typeof (mq_timedreceive) __mq_timedreceive __nonnull ((2, 5));
-hidden_proto (__mq_timedreceive)
 #  if !PTHREAD_IN_LIBC
 hidden_proto (mq_setattr)
+hidden_proto (mq_timedreceive)
+hidden_proto (__mq_timedreceive)
 #  endif
 # endif /* IS_IN (librt) */
 
 # if PTHREAD_IN_LIBC
 libc_hidden_proto (mq_setattr)
+libc_hidden_proto (__mq_timedreceive)
 
 /* Called from fork so that the new subprocess re-creates the
    notification thread if necessary.  */
@@ -36,6 +38,10 @@ extern ssize_t __mq_timedreceive_time64 (mqd_t mqdes,
                                          unsigned int *__restrict msg_prio,
                                          const struct __timespec64 *__restrict
                                          abs_timeout);
+#  if PTHREAD_IN_LIBC
+libc_hidden_proto (__mq_timedreceive_time64)
+#  else
 librt_hidden_proto (__mq_timedreceive_time64)
+#  endif
 #endif
 #endif

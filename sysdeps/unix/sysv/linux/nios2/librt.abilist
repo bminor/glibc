@@ -1,6 +1,4 @@
-GLIBC_2.21 mq_receive F
 GLIBC_2.21 mq_send F
-GLIBC_2.21 mq_timedreceive F
 GLIBC_2.21 mq_timedsend F
 GLIBC_2.21 mq_unlink F
 GLIBC_2.21 timer_create F
@@ -8,7 +6,6 @@ GLIBC_2.21 timer_delete F
 GLIBC_2.21 timer_getoverrun F
 GLIBC_2.21 timer_gettime F
 GLIBC_2.21 timer_settime F
-GLIBC_2.34 __mq_timedreceive_time64 F
 GLIBC_2.34 __mq_timedsend_time64 F
 GLIBC_2.34 __timer_gettime64 F
 GLIBC_2.34 __timer_settime64 F

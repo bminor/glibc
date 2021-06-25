@@ -1,6 +1,4 @@
-GLIBC_2.17 mq_receive F
 GLIBC_2.17 mq_send F
-GLIBC_2.17 mq_timedreceive F
 GLIBC_2.17 mq_timedsend F
 GLIBC_2.17 mq_unlink F
 GLIBC_2.17 timer_create F
