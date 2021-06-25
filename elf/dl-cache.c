@@ -269,81 +269,77 @@ search_cache (const char *string_table, uint32_t string_table_size,
 	      if (_dl_cache_check_flags (flags)
 		  && _dl_cache_verify_ptr (lib->value, string_table_size))
 		{
-		  if (best == NULL || flags == GLRO (dl_correct_cache_id))
-		    {
-		      /* Named/extension hwcaps get slightly different
-			 treatment: We keep searching for a better
-			 match.  */
-		      bool named_hwcap = false;
+		  /* Named/extension hwcaps get slightly different
+		     treatment: We keep searching for a better
+		     match.  */
+		  bool named_hwcap = false;
 
-		      if (entry_size >= sizeof (struct file_entry_new))
-			{
-			  /* The entry is large enough to include
-			     HWCAP data.  Check it.  */
-			  struct file_entry_new *libnew
-			    = (struct file_entry_new *) lib;
+		  if (entry_size >= sizeof (struct file_entry_new))
+		    {
+		      /* The entry is large enough to include
+			 HWCAP data.  Check it.  */
+		      struct file_entry_new *libnew
+			= (struct file_entry_new *) lib;
 
 #ifdef SHARED
-			  named_hwcap = dl_cache_hwcap_extension (libnew);
-			  if (named_hwcap
-			      && !dl_cache_hwcap_isa_level_compatible (libnew))
-			    continue;
+		      named_hwcap = dl_cache_hwcap_extension (libnew);
+		      if (named_hwcap
+			  && !dl_cache_hwcap_isa_level_compatible (libnew))
+			continue;
 #endif
 
-			  /* The entries with named/extension hwcaps
-			     have been exhausted.  Return the best
-			     match encountered so far if there is
-			     one.  */
-			  if (!named_hwcap && best != NULL)
-			    break;
+		      /* The entries with named/extension hwcaps have
+			 been exhausted (they are listed before all
+			 other entries).  Return the best match
+			 encountered so far if there is one.  */
+		      if (!named_hwcap && best != NULL)
+			break;
 
-			  if ((libnew->hwcap & hwcap_exclude) && !named_hwcap)
-			    continue;
-			  if (GLRO (dl_osversion)
-			      && libnew->osversion > GLRO (dl_osversion))
-			    continue;
-			  if (_DL_PLATFORMS_COUNT
-			      && (libnew->hwcap & _DL_HWCAP_PLATFORM) != 0
-			      && ((libnew->hwcap & _DL_HWCAP_PLATFORM)
-				  != platform))
-			    continue;
+		      if ((libnew->hwcap & hwcap_exclude) && !named_hwcap)
+			continue;
+		      if (GLRO (dl_osversion)
+			  && libnew->osversion > GLRO (dl_osversion))
+			continue;
+		      if (_DL_PLATFORMS_COUNT
+			  && (libnew->hwcap & _DL_HWCAP_PLATFORM) != 0
+			  && ((libnew->hwcap & _DL_HWCAP_PLATFORM)
+			      != platform))
+			continue;
 
 #ifdef SHARED
-			  /* For named hwcaps, determine the priority
-			     and see if beats what has been found so
-			     far.  */
-			  if (named_hwcap)
-			    {
-			      uint32_t entry_priority
-				= glibc_hwcaps_priority (libnew->hwcap);
-			      if (entry_priority == 0)
-				/* Not usable at all.  Skip.  */
-				continue;
-			      else if (best == NULL
-				       || entry_priority < best_priority)
-				/* This entry is of higher priority
-				   than the previous one, or it is the
-				   first entry.  */
-				best_priority = entry_priority;
-			      else
-				/* An entry has already been found,
-				   but it is a better match.  */
-				continue;
-			    }
-#endif /* SHARED */
+		      /* For named hwcaps, determine the priority and
+			 see if beats what has been found so far.  */
+		      if (named_hwcap)
+			{
+			  uint32_t entry_priority
+			    = glibc_hwcaps_priority (libnew->hwcap);
+			  if (entry_priority == 0)
+			    /* Not usable at all.  Skip.  */
+			    continue;
+			  else if (best == NULL
+				   || entry_priority < best_priority)
+			    /* This entry is of higher priority
+			       than the previous one, or it is the
+			       first entry.  */
+			    best_priority = entry_priority;
+			  else
+			    /* An entry has already been found,
+			       but it is a better match.  */
+			    continue;
 			}
-
-		      best = string_table + lib->value;
-
-		      if (flags == GLRO (dl_correct_cache_id)
-			  && !named_hwcap)
-			/* We've found an exact match for the shared
-			   object and no general `ELF' release.  Stop
-			   searching, but not if a named (extension)
-			   hwcap is used.  In this case, an entry with
-			   a higher priority may come up later.  */
-			break;
+#endif /* SHARED */
 		    }
+
+		  best = string_table + lib->value;
+
+		  if (!named_hwcap && flags == _DL_CACHE_DEFAULT_ID)
+		    /* With named hwcaps, we need to keep searching to
+		       see if we find a better match.  A better match
+		       is also possible if the flags of the current
+		       entry do not match the expected cache flags.
+		       But if the flags match, no better entry will be
+		       found.  */
+		    break;
 		}
 	    }
 	  while (++middle <= right);
