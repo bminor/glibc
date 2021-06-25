@@ -86,8 +86,6 @@ removexattr	-	removexattr	i:ss	removexattr
 lremovexattr	-	lremovexattr	i:ss	lremovexattr
 fremovexattr	-	fremovexattr	i:is	fremovexattr
 
-mq_setattr	-	mq_getsetattr	i:ipp	mq_setattr
-
 timerfd_create	EXTRA	timerfd_create	i:ii	timerfd_create
 
 fanotify_init	EXTRA	fanotify_init	i:ii	fanotify_init

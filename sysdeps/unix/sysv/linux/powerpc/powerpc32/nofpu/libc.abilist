@@ -2378,6 +2378,7 @@ GLIBC_2.3.4 getsourcefilter F
 GLIBC_2.3.4 longjmp F
 GLIBC_2.3.4 makecontext F
 GLIBC_2.3.4 mq_close F
+GLIBC_2.3.4 mq_setattr F
 GLIBC_2.3.4 pthread_attr_getaffinity_np F
 GLIBC_2.3.4 pthread_attr_setaffinity_np F
 GLIBC_2.3.4 pthread_getaffinity_np F
@@ -2562,6 +2563,7 @@ GLIBC_2.34 execveat F
 GLIBC_2.34 lio_listio F
 GLIBC_2.34 lio_listio64 F
 GLIBC_2.34 mq_close F
+GLIBC_2.34 mq_setattr F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
 GLIBC_2.34 mtx_lock F

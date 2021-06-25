@@ -1341,6 +1341,7 @@ GLIBC_2.27 mount F
 GLIBC_2.27 mprobe F
 GLIBC_2.27 mprotect F
 GLIBC_2.27 mq_close F
+GLIBC_2.27 mq_setattr F
 GLIBC_2.27 mrand48 F
 GLIBC_2.27 mrand48_r F
 GLIBC_2.27 mremap F
@@ -2362,6 +2363,7 @@ GLIBC_2.34 execveat F
 GLIBC_2.34 lio_listio F
 GLIBC_2.34 lio_listio64 F
 GLIBC_2.34 mq_close F
+GLIBC_2.34 mq_setattr F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
 GLIBC_2.34 mtx_lock F

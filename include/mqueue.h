@@ -8,8 +8,15 @@ hidden_proto (__mq_timedsend)
 hidden_proto (mq_timedreceive)
 extern __typeof (mq_timedreceive) __mq_timedreceive __nonnull ((2, 5));
 hidden_proto (__mq_timedreceive)
+#  if !PTHREAD_IN_LIBC
 hidden_proto (mq_setattr)
+#  endif
+# endif /* IS_IN (librt) */
+
+# if PTHREAD_IN_LIBC
+libc_hidden_proto (mq_setattr)
 # endif
+
 #include <struct___timespec64.h>
 #if __TIMESIZE == 64
 # define __mq_timedsend_time64 __mq_timedsend

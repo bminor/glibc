@@ -13,7 +13,6 @@ GLIBC_2.3.4 mq_notify F
 GLIBC_2.3.4 mq_open F
 GLIBC_2.3.4 mq_receive F
 GLIBC_2.3.4 mq_send F
-GLIBC_2.3.4 mq_setattr F
 GLIBC_2.3.4 mq_timedreceive F
 GLIBC_2.3.4 mq_timedsend F
 GLIBC_2.3.4 mq_unlink F
