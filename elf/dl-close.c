@@ -88,11 +88,7 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
       /* If this is not the last currently used entry no need to look
 	 further.  */
       if (idx != GL(dl_tls_max_dtv_idx))
-	{
-	  /* There is an unused dtv entry in the middle.  */
-	  GL(dl_tls_dtv_gaps) = true;
-	  return true;
-	}
+	return true;
     }
 
   while (idx - disp > (disp == 0 ? 1 + GL(dl_tls_static_nelem) : 0))

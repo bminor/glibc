@@ -191,7 +191,10 @@ _dl_next_tls_modid (void)
 size_t
 _dl_count_modids (void)
 {
-  /* The count is the max unless dlclose or failed dlopen created gaps.  */
+  /* It is rare that we have gaps; see elf/dl-open.c (_dl_open) where
+     we fail to load a module and unload it leaving a gap.  If we don't
+     have gaps then the number of modids is the current maximum so
+     return that.  */
   if (__glibc_likely (!GL(dl_tls_dtv_gaps)))
     return GL(dl_tls_max_dtv_idx);
 
