@@ -31,10 +31,10 @@
 #include <fcntl.h>
 
 #include <aio_misc.h>
-
+#include <shlib-compat.h>
 
 int
-aio_fsync (int op, struct aiocb *aiocbp)
+__aio_fsync (int op, struct aiocb *aiocbp)
 {
   if (op != O_DSYNC && __builtin_expect (op != O_SYNC, 0))
     {
@@ -43,7 +43,7 @@ aio_fsync (int op, struct aiocb *aiocbp)
     }
 
   /* Verify that this is an open file descriptor.  */
-  if (__glibc_unlikely (fcntl (aiocbp->aio_fildes, F_GETFL) == -1))
+  if (__glibc_unlikely (__fcntl (aiocbp->aio_fildes, F_GETFL) == -1))
     {
       __set_errno (EBADF);
       return -1;
@@ -54,4 +54,14 @@ aio_fsync (int op, struct aiocb *aiocbp)
 	  ? -1 : 0);
 }
 
-weak_alias (aio_fsync, aio_fsync64)
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __aio_fsync, aio_fsync, GLIBC_2_34);
+versioned_symbol (libc, __aio_fsync, aio_fsync64, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (librt, __aio_fsync, aio_fsync, GLIBC_2_1);
+compat_symbol (librt, __aio_fsync, aio_fsync64, GLIBC_2_1);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__aio_fsync, aio_fsync)
+weak_alias (__aio_fsync, aio_fsync64)
+#endif /* !PTHREAD_IN_LIBC */

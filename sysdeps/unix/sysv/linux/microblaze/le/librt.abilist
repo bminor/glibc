@@ -1,6 +1,4 @@
 GLIBC_2.18 __mq_open_2 F
-GLIBC_2.18 aio_fsync F
-GLIBC_2.18 aio_fsync64 F
 GLIBC_2.18 aio_read F
 GLIBC_2.18 aio_read64 F
 GLIBC_2.18 aio_return F

@@ -1,5 +1,3 @@
-GLIBC_2.2.5 aio_fsync F
-GLIBC_2.2.5 aio_fsync64 F
 GLIBC_2.2.5 aio_read F
 GLIBC_2.2.5 aio_read64 F
 GLIBC_2.2.5 aio_return F

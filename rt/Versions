@@ -6,6 +6,8 @@ libc {
     aio_cancel64;
     aio_error;
     aio_error64;
+    aio_fsync;
+    aio_fsync64;
 %endif
   }
   GLIBC_2.2 {
@@ -19,6 +21,8 @@ libc {
     aio_init;
     aio_error;
     aio_error64;
+    aio_fsync;
+    aio_fsync64;
 %endif
     shm_open;
     shm_unlink;
@@ -44,10 +48,8 @@ librt {
     aio_cancel64;
     aio_error;
     aio_error64;
-%endif
     aio_fsync;
     aio_fsync64;
-%if !PTHREAD_IN_LIBC
     aio_init;
 %endif
     aio_read;

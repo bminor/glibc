@@ -637,6 +637,8 @@ GLIBC_2.21 aio_cancel F
 GLIBC_2.21 aio_cancel64 F
 GLIBC_2.21 aio_error F
 GLIBC_2.21 aio_error64 F
+GLIBC_2.21 aio_fsync F
+GLIBC_2.21 aio_fsync64 F
 GLIBC_2.21 aio_init F
 GLIBC_2.21 alarm F
 GLIBC_2.21 aligned_alloc F
@@ -2466,6 +2468,8 @@ GLIBC_2.34 aio_cancel F
 GLIBC_2.34 aio_cancel64 F
 GLIBC_2.34 aio_error F
 GLIBC_2.34 aio_error64 F
+GLIBC_2.34 aio_fsync F
+GLIBC_2.34 aio_fsync64 F
 GLIBC_2.34 aio_init F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
