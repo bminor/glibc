@@ -126,8 +126,8 @@ oom (void)
 }
 
 
-size_t
-_dl_next_tls_modid (void)
+void
+_dl_assign_tls_modid (struct link_map *l)
 {
   size_t result;
 
@@ -157,7 +157,11 @@ _dl_next_tls_modid (void)
 	      }
 
 	    if (result - disp < runp->len)
-	      break;
+	      {
+		/* Mark the entry as used, so any dependency see it.  */
+		atomic_store_relaxed (&runp->slotinfo[result - disp].map, l);
+		break;
+	      }
 
 	    disp += runp->len;
 	  }
@@ -184,17 +188,14 @@ _dl_next_tls_modid (void)
       atomic_store_relaxed (&GL(dl_tls_max_dtv_idx), result);
     }
 
-  return result;
+  l->l_tls_modid = result;
 }
 
 
 size_t
 _dl_count_modids (void)
 {
-  /* It is rare that we have gaps; see elf/dl-open.c (_dl_open) where
-     we fail to load a module and unload it leaving a gap.  If we don't
-     have gaps then the number of modids is the current maximum so
-     return that.  */
+  /* The count is the max unless dlclose or failed dlopen created gaps.  */
   if (__glibc_likely (!GL(dl_tls_dtv_gaps)))
     return GL(dl_tls_max_dtv_idx);
 

@@ -899,16 +899,6 @@ no more namespaces available for dlmopen()"));
 	 state if relocation failed, for example.  */
       if (args.map)
 	{
-	  /* Maybe some of the modules which were loaded use TLS.
-	     Since it will be removed in the following _dl_close call
-	     we have to mark the dtv array as having gaps to fill the
-	     holes.  This is a pessimistic assumption which won't hurt
-	     if not true.  There is no need to do this when we are
-	     loading the auditing DSOs since TLS has not yet been set
-	     up.  */
-	  if ((mode & __RTLD_AUDIT) == 0)
-	    GL(dl_tls_dtv_gaps) = true;
-
 	  _dl_close_worker (args.map, true);
 
 	  /* All l_nodelete_pending objects should have been deleted

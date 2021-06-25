@@ -1171,8 +1171,8 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 extern void _dl_sysdep_start_cleanup (void) attribute_hidden;
 
 
-/* Determine next available module ID.  */
-extern size_t _dl_next_tls_modid (void) attribute_hidden;
+/* Determine next available module ID and set the L l_tls_modid.  */
+extern void _dl_assign_tls_modid (struct link_map *l) attribute_hidden;
 
 /* Count the modules with TLS segments.  */
 extern size_t _dl_count_modids (void) attribute_hidden;

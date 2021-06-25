@@ -77,8 +77,6 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
 	 object that wasn't fully set up.  */
       if (__glibc_likely (old_map != NULL))
 	{
-	  assert (old_map->l_tls_modid == idx);
-
 	  /* Mark the entry as unused.  These can be read concurrently.  */
 	  atomic_store_relaxed (&listp->slotinfo[idx - disp].gen,
 				GL(dl_tls_generation) + 1);
@@ -88,7 +86,11 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
       /* If this is not the last currently used entry no need to look
 	 further.  */
       if (idx != GL(dl_tls_max_dtv_idx))
-	return true;
+	{
+	  /* There is an unused dtv entry in the middle.  */
+	  GL(dl_tls_dtv_gaps) = true;
+	  return true;
+	}
     }
 
   while (idx - disp > (disp == 0 ? 1 + GL(dl_tls_static_nelem) : 0))

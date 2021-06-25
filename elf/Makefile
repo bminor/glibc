@@ -253,6 +253,13 @@ one-hundred = $(foreach x,0 1 2 3 4 5 6 7 8 9, \
   0$x 1$x 2$x 3$x 4$x 5$x 6$x 7$x 8$x 9$x)
 tst-tls-many-dynamic-modules := \
   $(foreach n,$(one-hundred),tst-tls-manydynamic$(n)mod)
+tst-tls-many-dynamic-modules-dep-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 \
+					    14 15 16 17 18 19
+tst-tls-many-dynamic-modules-dep = \
+  $(foreach n,$(tst-tls-many-dynamic-modules-dep-suffixes),tst-tls-manydynamic$(n)mod-dep)
+tst-tls-many-dynamic-modules-dep-bad-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+tst-tls-many-dynamic-modules-dep-bad = \
+  $(foreach n,$(tst-tls-many-dynamic-modules-dep-bad-suffixes),tst-tls-manydynamic$(n)mod-dep-bad)
 extra-test-objs += $(tlsmod17a-modules:=.os) $(tlsmod18a-modules:=.os) \
 		   tst-tlsalign-vars.o
 test-extras += tst-tlsmod17a tst-tlsmod18a tst-tlsalign-vars
@@ -325,6 +332,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-audit11mod1 tst-audit11mod2 tst-auditmod11 \
 		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12 \
 		tst-latepthreadmod $(tst-tls-many-dynamic-modules) \
+		$(tst-tls-many-dynamic-modules-dep) \
+		$(tst-tls-many-dynamic-modules-dep-bad) \
 		tst-nodelete-dlclose-dso tst-nodelete-dlclose-plugin \
 		tst-main1mod tst-absolute-sym-lib \
 		tst-absolute-zero-lib tst-big-note-lib tst-unwind-ctor-lib \
@@ -1812,10 +1821,63 @@ $(objpfx)tst-rtld-help.out: $(objpfx)ld.so
 	$(evaluate-test)
 
 # Reuses tst-tls-many-dynamic-modules
+$(patsubst %,$(objpfx)%.os,$(tst-tls-many-dynamic-modules-dep)): \
+  $(objpfx)tst-tls-manydynamic%mod-dep.os : tst-tls-manydynamicmod.c
+	$(compile-command.c) \
+	  -DNAME=tls_global_$* -DSETTER=set_value_$* -DGETTER=get_value_$*
+$(patsubst %,$(objpfx)%.os,$(tst-tls-many-dynamic-modules-dep-bad)): \
+  $(objpfx)tst-tls-manydynamic%mod-dep-bad.os : tst-tls-manydynamicmod.c
+	$(compile-command.c) \
+	  -DNAME=tls_global_$* -DSETTER=set_value_$* -DGETTER=get_value_$*
 tst-tls20mod-bad.so-no-z-defs = yes
+# Single dependency.
+$(objpfx)tst-tls-manydynamic0mod-dep.so: $(objpfx)tst-tls-manydynamic1mod-dep.so
+# Double dependencies.
+$(objpfx)tst-tls-manydynamic2mod-dep.so: $(objpfx)tst-tls-manydynamic3mod-dep.so \
+					 $(objpfx)tst-tls-manydynamic4mod-dep.so
+# Double dependencies with each dependency depent of another module.
+$(objpfx)tst-tls-manydynamic5mod-dep.so: $(objpfx)tst-tls-manydynamic6mod-dep.so \
+					 $(objpfx)tst-tls-manydynamic7mod-dep.so
+$(objpfx)tst-tls-manydynamic6mod-dep.so: $(objpfx)tst-tls-manydynamic8mod-dep.so
+$(objpfx)tst-tls-manydynamic7mod-dep.so: $(objpfx)tst-tls-manydynamic8mod-dep.so
+# Long chain with one double dependency in the middle
+$(objpfx)tst-tls-manydynamic9mod-dep.so: $(objpfx)tst-tls-manydynamic10mod-dep.so \
+					 $(objpfx)tst-tls-manydynamic11mod-dep.so
+$(objpfx)tst-tls-manydynamic10mod-dep.so: $(objpfx)tst-tls-manydynamic12mod-dep.so
+$(objpfx)tst-tls-manydynamic12mod-dep.so: $(objpfx)tst-tls-manydynamic13mod-dep.so
+# Long chain with two double depedencies in the middle
+$(objpfx)tst-tls-manydynamic14mod-dep.so: $(objpfx)tst-tls-manydynamic15mod-dep.so
+$(objpfx)tst-tls-manydynamic15mod-dep.so: $(objpfx)tst-tls-manydynamic16mod-dep.so \
+					  $(objpfx)tst-tls-manydynamic17mod-dep.so
+$(objpfx)tst-tls-manydynamic16mod-dep.so: $(objpfx)tst-tls-manydynamic18mod-dep.so \
+					  $(objpfx)tst-tls-manydynamic19mod-dep.so
+# Same but with an invalid module.
+# Single dependency.
+$(objpfx)tst-tls-manydynamic0mod-dep-bad.so: $(objpfx)tst-tls20mod-bad.so
+# Double dependencies.
+$(objpfx)tst-tls-manydynamic1mod-dep-bad.so: $(objpfx)tst-tls-manydynamic2mod-dep-bad.so \
+					     $(objpfx)tst-tls20mod-bad.so
+# Double dependencies with each dependency depent of another module.
+$(objpfx)tst-tls-manydynamic3mod-dep-bad.so: $(objpfx)tst-tls-manydynamic4mod-dep-bad.so \
+					     $(objpfx)tst-tls-manydynamic5mod-dep-bad.so
+$(objpfx)tst-tls-manydynamic4mod-dep-bad.so: $(objpfx)tst-tls20mod-bad.so
+$(objpfx)tst-tls-manydynamic5mod-dep-bad.so: $(objpfx)tst-tls20mod-bad.so
+# Long chain with one double dependency in the middle
+$(objpfx)tst-tls-manydynamic6mod-dep-bad.so: $(objpfx)tst-tls-manydynamic7mod-dep-bad.so \
+					     $(objpfx)tst-tls-manydynamic8mod-dep-bad.so
+$(objpfx)tst-tls-manydynamic7mod-dep-bad.so: $(objpfx)tst-tls-manydynamic9mod-dep-bad.so
+$(objpfx)tst-tls-manydynamic9mod-dep-bad.so: $(objpfx)tst-tls20mod-bad.so
+# Long chain with two double depedencies in the middle
+$(objpfx)tst-tls-manydynamic10mod-dep-bad.so: $(objpfx)tst-tls-manydynamic11mod-dep-bad.so
+$(objpfx)tst-tls-manydynamic11mod-dep-bad.so: $(objpfx)tst-tls-manydynamic12mod-dep-bad.so \
+					      $(objpfx)tst-tls-manydynamic13mod-dep-bad.so
+$(objpfx)tst-tls-manydynamic12mod-dep-bad.so: $(objpfx)tst-tls-manydynamic14mod-dep-bad.so \
+					      $(objpfx)tst-tls20mod-bad.so
 $(objpfx)tst-tls20: $(shared-thread-library)
 $(objpfx)tst-tls20.out: $(objpfx)tst-tls20mod-bad.so \
-			$(tst-tls-many-dynamic-modules:%=$(objpfx)%.so)
+			$(tst-tls-many-dynamic-modules:%=$(objpfx)%.so) \
+			$(tst-tls-many-dynamic-modules-dep:%=$(objpfx)%.so) \
+			$(tst-tls-many-dynamic-modules-dep-bad:%=$(objpfx)%.so) \
 
 # Reuses tst-tls-many-dynamic-modules
 $(objpfx)tst-tls21: $(shared-thread-library)

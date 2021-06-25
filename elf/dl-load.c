@@ -1498,7 +1498,7 @@ cannot enable executable stack as shared object requires");
 	     not set up TLS data structures, so don't use them now.  */
 	  || __glibc_likely (GL(dl_tls_dtv_slotinfo_list) != NULL)))
     /* Assign the next available module ID.  */
-    l->l_tls_modid = _dl_next_tls_modid ();
+    _dl_assign_tls_modid (l);
 
 #ifdef DL_AFTER_LOAD
   DL_AFTER_LOAD (l);

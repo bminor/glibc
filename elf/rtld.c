@@ -1721,7 +1721,7 @@ dl_main (const ElfW(Phdr) *phdr,
   /* Add the dynamic linker to the TLS list if it also uses TLS.  */
   if (GL(dl_rtld_map).l_tls_blocksize != 0)
     /* Assign a module ID.  Do this before loading any audit modules.  */
-    GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
+    _dl_assign_tls_modid (&GL(dl_rtld_map));
 
   audit_list_add_dynamic_tag (&state.audit_list, main_map, DT_AUDIT);
   audit_list_add_dynamic_tag (&state.audit_list, main_map, DT_DEPAUDIT);
