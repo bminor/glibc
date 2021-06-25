@@ -557,6 +557,8 @@ GLIBC_2.32 aio_error64 F
 GLIBC_2.32 aio_fsync F
 GLIBC_2.32 aio_fsync64 F
 GLIBC_2.32 aio_init F
+GLIBC_2.32 aio_read F
+GLIBC_2.32 aio_read64 F
 GLIBC_2.32 alarm F
 GLIBC_2.32 aligned_alloc F
 GLIBC_2.32 alphasort F
@@ -2121,6 +2123,8 @@ GLIBC_2.34 aio_error64 F
 GLIBC_2.34 aio_fsync F
 GLIBC_2.34 aio_fsync64 F
 GLIBC_2.34 aio_init F
+GLIBC_2.34 aio_read F
+GLIBC_2.34 aio_read64 F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F

@@ -17,14 +17,40 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <aio.h>
+#include <bits/wordsize.h>
+#if __WORDSIZE == 64
+# define aio_read64 XXX
+# include <aio.h>
+/* And undo the hack.  */
+# undef aio_read64
+#else
+# include <aio.h>
+#endif
 
 #include <aio_misc.h>
-
+#include <shlib-compat.h>
 
 int
-aio_read (struct aiocb *aiocbp)
+__aio_read (struct aiocb *aiocbp)
 {
   return (__aio_enqueue_request ((aiocb_union *) aiocbp, LIO_READ) == NULL
 	  ? -1 : 0);
 }
+
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __aio_read, aio_read, GLIBC_2_34);
+# if __WORDSIZE == 64
+versioned_symbol (libc, __aio_read, aio_read64, GLIBC_2_34);
+# endif
+# if OTHER_SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (librt, __aio_read, aio_read, GLIBC_2_1);
+#  if __WORDSIZE == 64
+compat_symbol (librt, __aio_read, aio_read64, GLIBC_2_1);
+#  endif
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__aio_read, aio_read)
+# if __WORDSIZE == 64
+weak_alias (__aio_read, aio_read64)
+#endif
+#endif  /* !PTHREAD_IN_LIBC */

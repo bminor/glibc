@@ -29,8 +29,6 @@ routines = \
   shm_unlink \
 
 librt-routines = \
-  aio_read \
-  aio_read64 \
   aio_return \
   aio_suspend \
   aio_write \
@@ -62,6 +60,8 @@ $(librt-routines-var) += \
   aio_fsync \
   aio_misc \
   aio_notify \
+  aio_read \
+  aio_read64 \
   aio_sigqueue \
 
 tests := tst-shm tst-timer tst-timer2 \

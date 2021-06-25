@@ -10,6 +10,8 @@ GLIBC_2.1 aio_error64 F
 GLIBC_2.1 aio_fsync F
 GLIBC_2.1 aio_fsync64 F
 GLIBC_2.1 aio_init F
+GLIBC_2.1 aio_read F
+GLIBC_2.1 aio_read64 F
 GLIBC_2.1 dlopen F
 GLIBC_2.1 dlvsym F
 GLIBC_2.10 __cxa_at_quick_exit F
@@ -2295,6 +2297,8 @@ GLIBC_2.34 aio_error64 F
 GLIBC_2.34 aio_fsync F
 GLIBC_2.34 aio_fsync64 F
 GLIBC_2.34 aio_init F
+GLIBC_2.34 aio_read F
+GLIBC_2.34 aio_read64 F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F
