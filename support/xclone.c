@@ -30,15 +30,14 @@ xclone (int (*fn) (void *arg), void *arg, void *stack, size_t stack_size,
 # ifdef __ia64__
   extern int __clone2 (int (*fn) (void *arg), void *stack, size_t stack_size,
 		       int flags, void *arg, ...);
-  r = __clone2 (f, stack, stack_size, flags, arg, /* ptid */ NULL,
-		/* tls */ NULL, /* ctid  */ ctid);
+  r = __clone2 (fn, stack, stack_size, flags, arg, /* ptid */ NULL,
+		/* tls */ NULL, /* ctid  */ NULL);
 # else
 #  if _STACK_GROWS_DOWN
   r = clone (fn, stack + stack_size, flags, arg, /* ptid */ NULL,
 	     /* tls */ NULL, /* ctid */  NULL);
 #  elif _STACK_GROWS_UP
-  r = clone (fn, stack, flags, arg, /* ptid */ NULL, /* tls */ NULL,
-	     &ctid);
+  r = clone (fn, stack, flags, arg, /* ptid */ NULL, /* tls */ NULL, NULL);
 #  endif
 # endif
 
