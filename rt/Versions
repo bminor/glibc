@@ -24,6 +24,11 @@ libc {
     shm_open;
     shm_unlink;
   }
+  GLIBC_2.3.4 {
+%if PTHREAD_IN_LIBC
+    mq_close;
+%endif
+  }
   GLIBC_2.4 {
 %if PTHREAD_IN_LIBC
     lio_listio;
@@ -49,6 +54,7 @@ libc {
     aio_write64;
     lio_listio;
     lio_listio64;
+    mq_close;
 %endif
     shm_open;
     shm_unlink;
@@ -99,7 +105,9 @@ librt {
     timer_settime;
   }
   GLIBC_2.3.4 {
+%if !PTHREAD_IN_LIBC
     mq_close;
+%endif
     mq_getattr;
     mq_notify;
     mq_open;

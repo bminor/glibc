@@ -30,7 +30,6 @@ routines = \
 
 librt-routines = \
   librt-compat \
-  mq_close \
   mq_getattr \
   mq_notify \
   mq_open \
@@ -63,6 +62,7 @@ $(librt-routines-var) += \
   aio_write64 \
   lio_listio \
   lio_listio64 \
+  mq_close \
 
 tests := tst-shm tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \

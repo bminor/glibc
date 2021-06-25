@@ -2304,6 +2304,7 @@ GLIBC_2.3.4 __xpg_strerror_r F
 GLIBC_2.3.4 dlmopen F
 GLIBC_2.3.4 getipv4sourcefilter F
 GLIBC_2.3.4 getsourcefilter F
+GLIBC_2.3.4 mq_close F
 GLIBC_2.3.4 pthread_attr_getaffinity_np F
 GLIBC_2.3.4 pthread_attr_setaffinity_np F
 GLIBC_2.3.4 pthread_getaffinity_np F
@@ -2471,6 +2472,7 @@ GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
 GLIBC_2.34 lio_listio F
 GLIBC_2.34 lio_listio64 F
+GLIBC_2.34 mq_close F
 GLIBC_2.34 mtx_destroy F
 GLIBC_2.34 mtx_init F
 GLIBC_2.34 mtx_lock F

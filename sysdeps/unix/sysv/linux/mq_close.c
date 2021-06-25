@@ -18,11 +18,16 @@
 #include <errno.h>
 #include <mqueue.h>
 #include <sysdep.h>
+#include <shlib-compat.h>
 
 /* Removes the association between message queue descriptor MQDES and its
    message queue.  */
 int
-mq_close (mqd_t mqdes)
+__mq_close (mqd_t mqdes)
 {
   return INLINE_SYSCALL (close, 1, mqdes);
 }
+versioned_symbol (libc, __mq_close, mq_close, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (librt, GLIBC_2_3_4, GLIBC_2_34)
+compat_symbol (libc, __mq_close, mq_close, GLIBC_2_3_4);
+#endif
