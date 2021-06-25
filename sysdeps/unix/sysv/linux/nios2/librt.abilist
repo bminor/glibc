@@ -5,7 +5,6 @@ GLIBC_2.21 aio_error F
 GLIBC_2.21 aio_error64 F
 GLIBC_2.21 aio_fsync F
 GLIBC_2.21 aio_fsync64 F
-GLIBC_2.21 aio_init F
 GLIBC_2.21 aio_read F
 GLIBC_2.21 aio_read64 F
 GLIBC_2.21 aio_return F

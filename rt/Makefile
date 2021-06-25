@@ -32,12 +32,9 @@ librt-routines = \
   aio_cancel \
   aio_error \
   aio_fsync \
-  aio_misc \
-  aio_notify \
   aio_read \
   aio_read64 \
   aio_return \
-  aio_sigqueue \
   aio_suspend \
   aio_write \
   aio_write64 \
@@ -60,6 +57,9 @@ librt-routines = \
   timer_settime \
 
 $(librt-routines-var) += \
+  aio_misc \
+  aio_notify \
+  aio_sigqueue \
 
 tests := tst-shm tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \

@@ -1,12 +1,33 @@
 libc {
+  GLIBC_2.1 {
+%if PTHREAD_IN_LIBC
+    aio_init;
+%endif
+  }
   GLIBC_2.2 {
     shm_open;
     shm_unlink;
   }
   GLIBC_2.34 {
+%if PTHREAD_IN_LIBC
+    aio_init;
+%endif
     shm_open;
     shm_unlink;
   }
+%if PTHREAD_IN_LIBC
+  GLIBC_PRIVATE {
+    __aio_enqueue_request;
+    __aio_find_req;
+    __aio_find_req_fd;
+    __aio_free_request;
+    __aio_notify;
+    __aio_notify_only;
+    __aio_remove_request;
+    __aio_requests_mutex;
+    __aio_sigqueue;
+  }
+%endif
 }
 librt {
   GLIBC_2.1 {
@@ -16,7 +37,9 @@ librt {
     aio_error64;
     aio_fsync;
     aio_fsync64;
+%if !PTHREAD_IN_LIBC
     aio_init;
+%endif
     aio_read;
     aio_read64;
     aio_return;

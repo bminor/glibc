@@ -18,11 +18,16 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
-#include <pthread.h>
+#include <pthreadP.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <aio_misc.h>
 #include <signal.h>
+
+#if !PTHREAD_IN_LIBC
+# define __pthread_attr_init pthread_attr_init
+# define __pthread_attr_setdetachstate pthread_attr_setdetachstate
+#endif
 
 #ifndef aio_start_notify_thread
 # define aio_start_notify_thread() do { } while (0)
@@ -62,8 +67,8 @@ __aio_notify_only (struct sigevent *sigev)
       pattr = (pthread_attr_t *) sigev->sigev_notify_attributes;
       if (pattr == NULL)
 	{
-	  pthread_attr_init (&attr);
-	  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+	  __pthread_attr_init (&attr);
+	  __pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 	  pattr = &attr;
 	}
 
@@ -81,7 +86,7 @@ __aio_notify_only (struct sigevent *sigev)
 	{
 	  nf->func = sigev->sigev_notify_function;
 	  nf->value = sigev->sigev_value;
-	  if (pthread_create (&tid, pattr, notify_func_wrapper, nf) < 0)
+	  if (__pthread_create (&tid, pattr, notify_func_wrapper, nf) < 0)
 	    {
 	      free (nf);
 	      result = -1;
@@ -155,3 +160,11 @@ __aio_notify (struct requestlist *req)
       waitlist = next;
     }
 }
+
+#if PTHREAD_IN_LIBC
+libc_hidden_def (__aio_notify)
+libc_hidden_def (__aio_notify_only)
+#else
+librt_hidden_def (__aio_notify)
+librt_hidden_def (__aio_notify_only)
+#endif

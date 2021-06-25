@@ -42,11 +42,11 @@ __aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   pthread_attr_t attr;
 
   /* Make sure the thread is created detached.  */
-  pthread_attr_init (&attr);
-  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+  __pthread_attr_init (&attr);
+  __pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
   /* The helper thread needs only very little resources.  */
-  (void) pthread_attr_setstacksize (&attr, __pthread_get_minstack (&attr));
+  __pthread_attr_setstacksize (&attr, __pthread_get_minstack (&attr));
 
   /* Block all signals in the helper thread.  To do this thoroughly we
      temporarily have to block all signals here.  */
@@ -56,13 +56,13 @@ __aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, &ss, &oss,
 			 __NSIG_BYTES);
 
-  int ret = pthread_create (threadp, &attr, tf, arg);
+  int ret = __pthread_create (threadp, &attr, tf, arg);
 
   /* Restore the signal mask.  */
   INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_SETMASK, &oss, NULL,
 			 __NSIG_BYTES);
 
-  (void) pthread_attr_destroy (&attr);
+  __pthread_attr_destroy (&attr);
   return ret;
 }
 #endif

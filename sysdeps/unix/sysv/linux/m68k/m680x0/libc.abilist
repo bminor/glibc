@@ -1473,6 +1473,7 @@ GLIBC_2.1 _sys_errlist D 0x1f4
 GLIBC_2.1 _sys_nerr D 0x4
 GLIBC_2.1 _sys_siglist D 0x100
 GLIBC_2.1 addseverity F
+GLIBC_2.1 aio_init F
 GLIBC_2.1 alphasort64 F
 GLIBC_2.1 argp_err_exit_status D 0x4
 GLIBC_2.1 argp_error F
@@ -2448,6 +2449,7 @@ GLIBC_2.34 __wait3_time64 F
 GLIBC_2.34 __wait4_time64 F
 GLIBC_2.34 _pthread_cleanup_pop F
 GLIBC_2.34 _pthread_cleanup_push F
+GLIBC_2.34 aio_init F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F

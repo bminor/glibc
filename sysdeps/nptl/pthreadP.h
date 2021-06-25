@@ -337,6 +337,7 @@ libc_hidden_proto (__pthread_get_minstack)
 /* Namespace save aliases.  */
 extern int __pthread_getschedparam (pthread_t thread_id, int *policy,
 				    struct sched_param *param);
+libc_hidden_proto (__pthread_getschedparam)
 extern int __pthread_setschedparam (pthread_t thread_id, int policy,
 				    const struct sched_param *param);
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex,

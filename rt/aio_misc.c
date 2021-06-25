@@ -21,13 +21,27 @@
 #include <assert.h>
 #include <errno.h>
 #include <limits.h>
-#include <pthread.h>
+#include <pthreadP.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <aio_misc.h>
+
+#if !PTHREAD_IN_LIBC
+/* The available function names differ outside of libc.  (In libc, we
+   need to use hidden aliases to avoid the PLT.)  */
+# define __pread __libc_pread
+# define __pthread_attr_destroy pthread_attr_destroy
+# define __pthread_attr_init pthread_attr_init
+# define __pthread_attr_setdetachstate pthread_attr_setdetachstate
+# define __pthread_cond_signal pthread_cond_signal
+# define __pthread_cond_timedwait pthread_cond_timedwait
+# define __pthread_getschedparam pthread_getschedparam
+# define __pthread_setschedparam pthread_setschedparam
+# define __pwrite __libc_pwrite
+#endif
 
 #ifndef aio_create_helper_thread
 # define aio_create_helper_thread __aio_create_helper_thread
@@ -38,12 +52,12 @@ __aio_create_helper_thread (pthread_t *threadp, void *(*tf) (void *), void *arg)
   pthread_attr_t attr;
 
   /* Make sure the thread is created detached.  */
-  pthread_attr_init (&attr);
-  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+  __pthread_attr_init (&attr);
+  __pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
-  int ret = pthread_create (threadp, &attr, tf, arg);
+  int ret = __pthread_create (threadp, &attr, tf, arg);
 
-  (void) pthread_attr_destroy (&attr);
+  __pthread_attr_destroy (&attr);
   return ret;
 }
 #endif
@@ -271,7 +285,7 @@ void
 __aio_init (const struct aioinit *init)
 {
   /* Get the mutex.  */
-  pthread_mutex_lock (&__aio_requests_mutex);
+  __pthread_mutex_lock (&__aio_requests_mutex);
 
   /* Only allow writing new values if the table is not yet allocated.  */
   if (pool == NULL)
@@ -287,9 +301,8 @@ __aio_init (const struct aioinit *init)
     optim.aio_idle_time = init->aio_idle_time;
 
   /* Release the mutex.  */
-  pthread_mutex_unlock (&__aio_requests_mutex);
+  __pthread_mutex_unlock (&__aio_requests_mutex);
 }
-weak_alias (__aio_init, aio_init)
 
 
 /* The main function of the async I/O handling.  It enqueues requests
@@ -319,11 +332,11 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
     }
 
   /* Compute priority for this request.  */
-  pthread_getschedparam (pthread_self (), &policy, &param);
+  __pthread_getschedparam (__pthread_self (), &policy, &param);
   prio = param.sched_priority - aiocbp->aiocb.aio_reqprio;
 
   /* Get the mutex.  */
-  pthread_mutex_lock (&__aio_requests_mutex);
+  __pthread_mutex_lock (&__aio_requests_mutex);
 
   last = NULL;
   runp = requests;
@@ -340,7 +353,7 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
   newp = get_elem ();
   if (newp == NULL)
     {
-      pthread_mutex_unlock (&__aio_requests_mutex);
+      __pthread_mutex_unlock (&__aio_requests_mutex);
       __set_errno (EAGAIN);
       return NULL;
     }
@@ -454,7 +467,7 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
       /* If there is a thread waiting for work, then let it know that we
 	 have just given it something to do. */
       if (idle_thread_count > 0)
-	pthread_cond_signal (&__aio_new_request_notification);
+	__pthread_cond_signal (&__aio_new_request_notification);
     }
 
   if (result == 0)
@@ -469,7 +482,7 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
     }
 
   /* Release the mutex.  */
-  pthread_mutex_unlock (&__aio_requests_mutex);
+  __pthread_mutex_unlock (&__aio_requests_mutex);
 
   return newp;
 }
@@ -478,14 +491,14 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 static void *
 handle_fildes_io (void *arg)
 {
-  pthread_t self = pthread_self ();
+  pthread_t self = __pthread_self ();
   struct sched_param param;
   struct requestlist *runp = (struct requestlist *) arg;
   aiocb_union *aiocbp;
   int policy;
   int fildes;
 
-  pthread_getschedparam (self, &policy, &param);
+  __pthread_getschedparam (self, &policy, &param);
 
   do
     {
@@ -495,7 +508,7 @@ handle_fildes_io (void *arg)
 	 "get work off the work queue" part of this loop, which is near the
 	 end. */
       if (runp == NULL)
-	pthread_mutex_lock (&__aio_requests_mutex);
+	__pthread_mutex_lock (&__aio_requests_mutex);
       else
 	{
 	  /* Hopefully this request is marked as running.  */
@@ -511,7 +524,7 @@ handle_fildes_io (void *arg)
 	    {
 	      param.sched_priority = aiocbp->aiocb.__abs_prio;
 	      policy = aiocbp->aiocb.__policy;
-	      pthread_setschedparam (self, policy, &param);
+	      __pthread_setschedparam (self, policy, &param);
 	    }
 
 	  /* Process request pointed to by RUNP.  We must not be disturbed
@@ -527,11 +540,11 @@ handle_fildes_io (void *arg)
 						 aiocbp->aiocb64.aio_offset));
 	      else
 		aiocbp->aiocb.__return_value =
-		  TEMP_FAILURE_RETRY (__libc_pread (fildes,
-						    (void *)
-						    aiocbp->aiocb.aio_buf,
-						    aiocbp->aiocb.aio_nbytes,
-						    aiocbp->aiocb.aio_offset));
+		  TEMP_FAILURE_RETRY (__pread (fildes,
+					       (void *)
+					       aiocbp->aiocb.aio_buf,
+					       aiocbp->aiocb.aio_nbytes,
+					       aiocbp->aiocb.aio_offset));
 
 	      if (aiocbp->aiocb.__return_value == -1 && errno == ESPIPE)
 		/* The Linux kernel is different from others.  It returns
@@ -554,10 +567,10 @@ handle_fildes_io (void *arg)
 						  aiocbp->aiocb64.aio_offset));
 	      else
 		aiocbp->aiocb.__return_value =
-		  TEMP_FAILURE_RETRY (__libc_pwrite (fildes, (const void *)
-					      aiocbp->aiocb.aio_buf,
-					      aiocbp->aiocb.aio_nbytes,
-					      aiocbp->aiocb.aio_offset));
+		  TEMP_FAILURE_RETRY (__pwrite (fildes, (const void *)
+						aiocbp->aiocb.aio_buf,
+						aiocbp->aiocb.aio_nbytes,
+						aiocbp->aiocb.aio_offset));
 
 	      if (aiocbp->aiocb.__return_value == -1 && errno == ESPIPE)
 		/* The Linux kernel is different from others.  It returns
@@ -583,7 +596,7 @@ handle_fildes_io (void *arg)
 	    }
 
 	  /* Get the mutex.  */
-	  pthread_mutex_lock (&__aio_requests_mutex);
+	  __pthread_mutex_lock (&__aio_requests_mutex);
 
 	  if (aiocbp->aiocb.__return_value == -1)
 	    aiocbp->aiocb.__error_code = errno;
@@ -626,9 +639,9 @@ handle_fildes_io (void *arg)
 	      wakeup_time.tv_nsec -= 1000000000;
 	      ++wakeup_time.tv_sec;
 	    }
-	  pthread_cond_timedwait (&__aio_new_request_notification,
-				  &__aio_requests_mutex,
-				  &wakeup_time);
+	  __pthread_cond_timedwait (&__aio_new_request_notification,
+				    &__aio_requests_mutex,
+				    &wakeup_time);
 	  --idle_thread_count;
 	  runp = runlist;
 	}
@@ -651,20 +664,21 @@ handle_fildes_io (void *arg)
 		 up for these other work elements; otherwise, we should try
 		 to create a new thread. */
 	      if (idle_thread_count > 0)
-		pthread_cond_signal (&__aio_new_request_notification);
+		__pthread_cond_signal (&__aio_new_request_notification);
 	      else if (nthreads < optim.aio_threads)
 		{
 		  pthread_t thid;
 		  pthread_attr_t attr;
 
 		  /* Make sure the thread is created detached.  */
-		  pthread_attr_init (&attr);
-		  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+		  __pthread_attr_init (&attr);
+		  __pthread_attr_setdetachstate (&attr,
+						 PTHREAD_CREATE_DETACHED);
 
 		  /* Now try to start a thread. If we fail, no big deal,
 		     because we know that there is at least one thread (us)
 		     that is working on AIO operations. */
-		  if (pthread_create (&thid, &attr, handle_fildes_io, NULL)
+		  if (__pthread_create (&thid, &attr, handle_fildes_io, NULL)
 		      == 0)
 		    ++nthreads;
 		}
@@ -672,7 +686,7 @@ handle_fildes_io (void *arg)
 	}
 
       /* Release the mutex.  */
-      pthread_mutex_unlock (&__aio_requests_mutex);
+      __pthread_mutex_unlock (&__aio_requests_mutex);
     }
   while (runp != NULL);
 
@@ -719,3 +733,26 @@ add_request_to_runlist (struct requestlist *newrequest)
       runp->next_run = newrequest;
     }
 }
+
+#if PTHREAD_IN_LIBC
+libc_hidden_data_def (__aio_requests_mutex)
+libc_hidden_def (__aio_enqueue_request)
+libc_hidden_def (__aio_find_req)
+libc_hidden_def (__aio_find_req_fd)
+libc_hidden_def (__aio_free_request)
+libc_hidden_def (__aio_remove_request)
+
+versioned_symbol (libc, __aio_init, aio_init, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (librt, __aio_init, aio_init, GLIBC_2_1);
+# endif
+
+#else /* !PTHREAD_IN_LIBC */
+librt_hidden_data_def (__aio_requests_mutex)
+librt_hidden_def (__aio_enqueue_request)
+librt_hidden_def (__aio_find_req)
+librt_hidden_def (__aio_find_req_fd)
+librt_hidden_def (__aio_free_request)
+librt_hidden_def (__aio_remove_request)
+weak_alias (__aio_init, aio_init)
+#endif /* !PTHREAD_IN_LIBC */

@@ -28,5 +28,5 @@ __aio_sigqueue (int sig, const union sigval val, pid_t caller_pid)
   __set_errno (ENOSYS);
   return -1;
 }
-
+librt_hidden_def (__aio_sigqueue)
 stub_warning (__aio_sigqueue)

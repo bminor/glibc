@@ -589,6 +589,7 @@ GLIBC_2.17 addseverity F
 GLIBC_2.17 adjtime F
 GLIBC_2.17 adjtimex F
 GLIBC_2.17 advance F
+GLIBC_2.17 aio_init F
 GLIBC_2.17 alarm F
 GLIBC_2.17 aligned_alloc F
 GLIBC_2.17 alphasort F
@@ -2348,6 +2349,7 @@ GLIBC_2.34 __pthread_unregister_cancel_restore F
 GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 _pthread_cleanup_pop F
 GLIBC_2.34 _pthread_cleanup_push F
+GLIBC_2.34 aio_init F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F

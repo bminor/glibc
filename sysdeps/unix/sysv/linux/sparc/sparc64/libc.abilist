@@ -7,6 +7,7 @@ GLIBC_2.0 dlclose F
 GLIBC_2.0 dlerror F
 GLIBC_2.0 dlopen F
 GLIBC_2.0 dlsym F
+GLIBC_2.1 aio_init F
 GLIBC_2.1 dlopen F
 GLIBC_2.1 dlvsym F
 GLIBC_2.10 __cxa_at_quick_exit F
@@ -2302,6 +2303,7 @@ GLIBC_2.34 __pthread_unregister_cancel_restore F
 GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 _pthread_cleanup_pop F
 GLIBC_2.34 _pthread_cleanup_push F
+GLIBC_2.34 aio_init F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F

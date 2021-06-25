@@ -70,4 +70,5 @@ __pthread_getschedparam (pthread_t threadid, int *policy,
 
   return result;
 }
+libc_hidden_def (__pthread_getschedparam)
 strong_alias (__pthread_getschedparam, pthread_getschedparam)

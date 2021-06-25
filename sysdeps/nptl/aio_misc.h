@@ -39,7 +39,7 @@
 									      \
     if (oldval != 0)							      \
       {									      \
-	pthread_mutex_unlock (&__aio_requests_mutex);			      \
+	__pthread_mutex_unlock (&__aio_requests_mutex);			      \
 									      \
 	int status;							      \
 	do								      \
@@ -67,7 +67,7 @@
 	else								      \
 	  assert (status == 0 || status == EAGAIN);			      \
 									      \
-	pthread_mutex_lock (&__aio_requests_mutex);			      \
+	__pthread_mutex_lock (&__aio_requests_mutex);			      \
       }									      \
   } while (0)
 
