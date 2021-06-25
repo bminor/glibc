@@ -1,6 +1,4 @@
 GLIBC_2.29 __mq_open_2 F
-GLIBC_2.29 aio_suspend F
-GLIBC_2.29 aio_suspend64 F
 GLIBC_2.29 aio_write F
 GLIBC_2.29 aio_write64 F
 GLIBC_2.29 lio_listio F
@@ -20,7 +18,6 @@ GLIBC_2.29 timer_delete F
 GLIBC_2.29 timer_getoverrun F
 GLIBC_2.29 timer_gettime F
 GLIBC_2.29 timer_settime F
-GLIBC_2.34 __aio_suspend_time64 F
 GLIBC_2.34 __mq_timedreceive_time64 F
 GLIBC_2.34 __mq_timedsend_time64 F
 GLIBC_2.34 __timer_gettime64 F

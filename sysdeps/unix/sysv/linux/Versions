@@ -192,6 +192,7 @@ libc {
     # 64-bit time_t support
     __adjtime64;
     ___adjtimex64;
+    __aio_suspend_time64;
     __clock_adjtime64;
     __clock_getres64;
     __clock_gettime64;
@@ -294,7 +295,6 @@ librt {
   GLIBC_2.34 {
 %ifdef TIME64_NON_DEFAULT
     # 64-bit time_t support
-    __aio_suspend_time64;
     __mq_timedsend_time64;
     __mq_timedreceive_time64;
     __timer_gettime64;

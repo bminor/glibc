@@ -603,6 +603,8 @@ GLIBC_2.16 aio_read F
 GLIBC_2.16 aio_read64 F
 GLIBC_2.16 aio_return F
 GLIBC_2.16 aio_return64 F
+GLIBC_2.16 aio_suspend F
+GLIBC_2.16 aio_suspend64 F
 GLIBC_2.16 alarm F
 GLIBC_2.16 aligned_alloc F
 GLIBC_2.16 alphasort F
@@ -2385,6 +2387,8 @@ GLIBC_2.34 aio_read F
 GLIBC_2.34 aio_read64 F
 GLIBC_2.34 aio_return F
 GLIBC_2.34 aio_return64 F
+GLIBC_2.34 aio_suspend F
+GLIBC_2.34 aio_suspend64 F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F

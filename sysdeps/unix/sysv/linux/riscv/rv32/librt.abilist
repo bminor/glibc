@@ -1,6 +1,4 @@
 GLIBC_2.33 __mq_open_2 F
-GLIBC_2.33 aio_suspend F
-GLIBC_2.33 aio_suspend64 F
 GLIBC_2.33 aio_write F
 GLIBC_2.33 aio_write64 F
 GLIBC_2.33 lio_listio F

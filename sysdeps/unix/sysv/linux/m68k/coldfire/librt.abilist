@@ -1,10 +1,7 @@
-GLIBC_2.34 __aio_suspend_time64 F
 GLIBC_2.34 __mq_timedreceive_time64 F
 GLIBC_2.34 __mq_timedsend_time64 F
 GLIBC_2.34 __timer_gettime64 F
 GLIBC_2.34 __timer_settime64 F
-GLIBC_2.4 aio_suspend F
-GLIBC_2.4 aio_suspend64 F
 GLIBC_2.4 aio_write F
 GLIBC_2.4 aio_write64 F
 GLIBC_2.4 lio_listio F

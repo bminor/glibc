@@ -15,7 +15,11 @@ extern void __aio_init (const struct aioinit *__init);
 # else
 extern int __aio_suspend_time64 (const struct aiocb *const list[], int nent,
                                  const struct __timespec64 *timeout);
+#  if PTHREAD_IN_LIBC
+libc_hidden_proto (__aio_suspend_time64)
+#  else
 librt_hidden_proto (__aio_suspend_time64)
+#endif
 # endif
 #endif
 

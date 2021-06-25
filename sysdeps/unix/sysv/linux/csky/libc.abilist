@@ -575,6 +575,8 @@ GLIBC_2.29 aio_read F
 GLIBC_2.29 aio_read64 F
 GLIBC_2.29 aio_return F
 GLIBC_2.29 aio_return64 F
+GLIBC_2.29 aio_suspend F
+GLIBC_2.29 aio_suspend64 F
 GLIBC_2.29 alarm F
 GLIBC_2.29 aligned_alloc F
 GLIBC_2.29 alphasort F
@@ -2292,6 +2294,7 @@ GLIBC_2.33 stat F
 GLIBC_2.33 stat64 F
 GLIBC_2.34 ___adjtimex64 F
 GLIBC_2.34 __adjtime64 F
+GLIBC_2.34 __aio_suspend_time64 F
 GLIBC_2.34 __clock_adjtime64 F
 GLIBC_2.34 __clock_getres64 F
 GLIBC_2.34 __clock_gettime64 F
@@ -2389,6 +2392,8 @@ GLIBC_2.34 aio_read F
 GLIBC_2.34 aio_read64 F
 GLIBC_2.34 aio_return F
 GLIBC_2.34 aio_return64 F
+GLIBC_2.34 aio_suspend F
+GLIBC_2.34 aio_suspend64 F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F

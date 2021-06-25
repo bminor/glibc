@@ -36,6 +36,8 @@
 
 #include <libc-lock.h>
 #include <aio_misc.h>
+#include <pthreadP.h>
+#include <shlib-compat.h>
 
 
 struct clparam
@@ -56,7 +58,7 @@ cleanup (void *arg)
 #ifdef DONT_NEED_AIO_MISC_COND
   /* Acquire the mutex.  If pthread_cond_*wait is used this would
      happen implicitly.  */
-  pthread_mutex_lock (&__aio_requests_mutex);
+  __pthread_mutex_lock (&__aio_requests_mutex);
 #endif
 
   const struct clparam *param = (const struct clparam *) arg;
@@ -88,7 +90,7 @@ cleanup (void *arg)
 #endif
 
   /* Release the mutex.  */
-  pthread_mutex_unlock (&__aio_requests_mutex);
+  __pthread_mutex_unlock (&__aio_requests_mutex);
 }
 
 #ifdef DONT_NEED_AIO_MISC_COND
@@ -105,7 +107,7 @@ do_aio_misc_wait (unsigned int *cntr, const struct __timespec64 *timeout)
 #endif
 
 int
-__aio_suspend_time64 (const struct aiocb *const list[], int nent,
+___aio_suspend_time64 (const struct aiocb *const list[], int nent,
 		      const struct __timespec64 *timeout)
 {
   if (__glibc_unlikely (nent < 0))
@@ -125,7 +127,7 @@ __aio_suspend_time64 (const struct aiocb *const list[], int nent,
   unsigned int cntr = 1;
 
   /* Request the mutex.  */
-  pthread_mutex_lock (&__aio_requests_mutex);
+  __pthread_mutex_lock (&__aio_requests_mutex);
 
   /* There is not yet a finished request.  Signal the request that
      we are working for it.  */
@@ -184,7 +186,11 @@ __aio_suspend_time64 (const struct aiocb *const list[], int nent,
 	  .nent = nent
 	};
 
-      pthread_cleanup_push (cleanup, &clparam);
+#if PTHREAD_IN_LIBC
+      __libc_cleanup_region_start (1, cleanup, &clparam);
+#else
+      __pthread_cleanup_push (cleanup, &clparam);
+#endif
 
 #ifdef DONT_NEED_AIO_MISC_COND
       result = do_aio_misc_wait (&cntr, timeout == NULL ? NULL : &ts);
@@ -194,7 +200,11 @@ __aio_suspend_time64 (const struct aiocb *const list[], int nent,
 				       timeout == NULL ? NULL : &ts32);
 #endif
 
+#if PTHREAD_IN_LIBC
+      __libc_cleanup_region_end (0);
+#else
       pthread_cleanup_pop (0);
+#endif
     }
 
   /* Now remove the entry in the waiting list for all requests
@@ -239,13 +249,22 @@ __aio_suspend_time64 (const struct aiocb *const list[], int nent,
     }
 
   /* Release the mutex.  */
-  pthread_mutex_unlock (&__aio_requests_mutex);
+  __pthread_mutex_unlock (&__aio_requests_mutex);
 
   return result;
 }
 
-#if __TIMESIZE != 64
-librt_hidden_def (__aio_suspend_time64)
+#if __TIMESIZE == 64
+strong_alias (___aio_suspend_time64, __aio_suspend)
+#else /* __TIMESIZE != 64 */
+# if PTHREAD_IN_LIBC
+libc_hidden_ver (___aio_suspend_time64, __aio_suspend_time64)
+/* The conditional is slightly wrong: PTHREAD_IN_LIBC is a stand-in
+   for whether time64 support is needed.  */
+versioned_symbol (libc, ___aio_suspend_time64, __aio_suspend_time64, GLIBC_2_34);
+# else
+librt_hidden_ver (___aio_suspend_time64, __aio_suspend_time64)
+# endif
 
 int
 __aio_suspend (const struct aiocb *const list[], int nent,
@@ -258,6 +277,16 @@ __aio_suspend (const struct aiocb *const list[], int nent,
 
   return __aio_suspend_time64 (list, nent, timeout != NULL ? &ts64 : NULL);
 }
-#endif
+#endif /* __TIMESPEC64 != 64 */
+
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __aio_suspend, aio_suspend, GLIBC_2_34);
+versioned_symbol (libc, __aio_suspend, aio_suspend64, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (librt, __aio_suspend, aio_suspend, GLIBC_2_1);
+compat_symbol (librt, __aio_suspend, aio_suspend64, GLIBC_2_1);
+# endif
+#else /* !PTHREAD_IN_LIBC */
 weak_alias (__aio_suspend, aio_suspend)
-weak_alias (aio_suspend, aio_suspend64)
+weak_alias (__aio_suspend, aio_suspend64)
+#endif /* !PTHREAD_IN_LIBC */
