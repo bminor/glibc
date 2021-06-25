@@ -31,6 +31,8 @@
 ENTRY(__clone)
 	@ sanity check args
 	cmp	r0, #0
+	@ align sp
+	and	r1, r1, #-8
 	ite	ne
 	cmpne	r1, #0
 	moveq	r0, #-EINVAL
