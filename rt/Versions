@@ -10,6 +10,8 @@ libc {
     aio_fsync64;
     aio_read;
     aio_read64;
+    aio_return;
+    aio_return64;
 %endif
   }
   GLIBC_2.2 {
@@ -27,6 +29,8 @@ libc {
     aio_fsync64;
     aio_read;
     aio_read64;
+    aio_return;
+    aio_return64;
 %endif
     shm_open;
     shm_unlink;
@@ -57,9 +61,9 @@ librt {
     aio_init;
     aio_read;
     aio_read64;
-%endif
     aio_return;
     aio_return64;
+%endif
     aio_suspend;
     aio_suspend64;
     aio_write;

@@ -28,11 +28,22 @@
 /* And undo the hack.  */
 #undef aio_return64
 
+#include <shlib-compat.h>
 
 ssize_t
-aio_return (struct aiocb *aiocbp)
+__aio_return (struct aiocb *aiocbp)
 {
   return aiocbp->__return_value;
 }
 
-weak_alias (aio_return, aio_return64)
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __aio_return, aio_return, GLIBC_2_34);
+versioned_symbol (libc, __aio_return, aio_return64, GLIBC_2_34);
+# if OTHER_SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_34)
+compat_symbol (librt, __aio_return, aio_return, GLIBC_2_1);
+compat_symbol (librt, __aio_return, aio_return64, GLIBC_2_1);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__aio_return, aio_return)
+weak_alias (__aio_return, aio_return64)
+#endif

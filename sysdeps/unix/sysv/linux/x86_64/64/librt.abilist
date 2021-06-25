@@ -1,5 +1,3 @@
-GLIBC_2.2.5 aio_return F
-GLIBC_2.2.5 aio_return64 F
 GLIBC_2.2.5 aio_suspend F
 GLIBC_2.2.5 aio_suspend64 F
 GLIBC_2.2.5 aio_write F

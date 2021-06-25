@@ -1655,6 +1655,8 @@ GLIBC_2.2 aio_fsync64 F
 GLIBC_2.2 aio_init F
 GLIBC_2.2 aio_read F
 GLIBC_2.2 aio_read64 F
+GLIBC_2.2 aio_return F
+GLIBC_2.2 aio_return64 F
 GLIBC_2.2 alphasort64 F
 GLIBC_2.2 argp_err_exit_status D 0x4
 GLIBC_2.2 argp_error F
@@ -2355,6 +2357,8 @@ GLIBC_2.34 aio_fsync64 F
 GLIBC_2.34 aio_init F
 GLIBC_2.34 aio_read F
 GLIBC_2.34 aio_read64 F
+GLIBC_2.34 aio_return F
+GLIBC_2.34 aio_return64 F
 GLIBC_2.34 call_once F
 GLIBC_2.34 cnd_broadcast F
 GLIBC_2.34 cnd_destroy F

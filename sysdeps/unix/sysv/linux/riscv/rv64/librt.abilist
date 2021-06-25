@@ -1,6 +1,4 @@
 GLIBC_2.27 __mq_open_2 F
-GLIBC_2.27 aio_return F
-GLIBC_2.27 aio_return64 F
 GLIBC_2.27 aio_suspend F
 GLIBC_2.27 aio_suspend64 F
 GLIBC_2.27 aio_write F
