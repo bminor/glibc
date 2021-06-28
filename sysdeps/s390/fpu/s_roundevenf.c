@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifdef HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT
+# define NO_MATH_REDIRECT
 # include <math.h>
 # include <libm-alias-float.h>
 
