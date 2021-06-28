@@ -39,7 +39,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   LOG ("td_ta_new");
 
   /* Check whether the versions match.  */
-  if (td_lookup (ps, SYM_nptl_version, &versaddr) != PS_OK)
+  if (td_lookup (ps, SYM___nptl_version, &versaddr) != PS_OK)
     return TD_NOLIBTHREAD;
   if (ps_pdread (ps, versaddr, versbuf, sizeof (versbuf)) != PS_OK)
     return TD_ERR;

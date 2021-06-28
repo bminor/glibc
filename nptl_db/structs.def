@@ -73,7 +73,7 @@ DB_STRUCT (td_eventbuf_t)
 DB_STRUCT_FIELD (td_eventbuf_t, eventnum)
 DB_STRUCT_FIELD (td_eventbuf_t, eventdata)
 
-DB_SYMBOL (nptl_version)
+DB_SYMBOL (__nptl_version)
 DB_SYMBOL (__nptl_create_event)
 DB_SYMBOL (__nptl_death_event)
 DB_SYMBOL (__nptl_threads_events)
