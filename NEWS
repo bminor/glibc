@@ -74,6 +74,14 @@ Deprecated and removed features, and other changes affecting compatibility:
   buggy kernel interfaces (for instance some CIFS version) that could still
   see spurious EINTR error when cancellation interrupts a blocking syscall.
 
+* Previously, glibc installed its various shared objects under versioned
+  file names such as libc-2.33.so.  The ABI sonames (e.g., libc.so.6)
+  were provided as symbolic links.  Starting with glibc 2.34, the shared
+  objects are installed under their ABI sonames directly, without
+  symbolic links.  This increases compatibility with distribution
+  package managers that delete removed files late during the package
+  upgrade or downgrade process.
+
 Changes to build and runtime requirements:
 
 * On Linux, the shm_open, sem_open, and related functions now expect the

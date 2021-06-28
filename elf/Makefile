@@ -630,20 +630,14 @@ $(objpfx)trusted-dirs.st: Makefile $(..)Makeconfig
 CPPFLAGS-dl-load.c += -I$(objpfx). -I$(csu-objpfx).
 
 ifeq (yes,$(build-shared))
-$(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so $(+force)
+$(inst_rtlddir)/$(rtld-installed-name): $(objpfx)ld.so $(+force)
 	$(make-target-directory)
 	$(do-install-program)
-
-$(inst_rtlddir)/$(rtld-installed-name): \
-  $(inst_slibdir)/$(rtld-version-installed-name) \
-  $(inst_slibdir)/libc-$(version).so
-	$(make-target-directory)
-	$(make-shlib-link)
 
 # Special target called by parent to install just the dynamic linker.
 .PHONY: ldso_install
 ldso_install: $(inst_rtlddir)/$(rtld-installed-name)
-endif
+endif # $(build-shared)
 
 
 # Workarounds for ${exec_prefix} expansion in configure variables.

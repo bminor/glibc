@@ -990,14 +990,12 @@ versioned := $(strip $(foreach so,$(install-lib.so),\
 install-lib.so-versioned := $(filter $(versioned), $(install-lib.so))
 install-lib.so-unversioned := $(filter-out $(versioned), $(install-lib.so))
 
-# For libraries whose soname have version numbers, we install three files:
+# For libraries whose soname have version numbers, we install two files:
 #	$(inst_libdir)/libfoo.so	-- for linking, symlink or ld script
-#	$(inst_slibdir)/libfoo.so.NN	-- for loading by SONAME, symlink
-#	$(inst_slibdir)/libfoo-X.Y.Z.so -- the real shared object file
+#	$(inst_slibdir)/libfoo.so.NN	-- for loading by SONAME
 install-lib-nosubdir: $(install-lib.so-unversioned:%=$(inst_slibdir)/%) \
 		      $(foreach L,$(install-lib.so-versioned),\
 				$(inst_libdir)/$L \
-				$(inst_slibdir)/$(L:.so=)-$(version).so \
 				$(inst_slibdir)/$L$($L-version))
 
 # Install all the unversioned shared libraries.
@@ -1030,35 +1028,10 @@ ln -f $(objpfx)/$(@F) $@
 endef
 endif
 
-ifeq (yes,$(build-shared))
-ifeq (no,$(cross-compiling))
-symbolic-link-prog := $(elf-objpfx)sln
-symbolic-link-list := $(elf-objpfx)symlink.list
-define make-shlib-link
-echo `$(..)scripts/rellns-sh -p $< $@` $@ >> $(symbolic-link-list)
-endef
-else # cross-compiling
-# We need a definition that can be used by elf/Makefile's install rules.
-symbolic-link-prog = $(LN_S)
-endif
-endif
-ifndef make-shlib-link
-define make-shlib-link
-rm -f $@
-$(LN_S) `$(..)scripts/rellns-sh -p $< $@` $@
-endef
-endif
-
 ifdef libc.so-version
-# For a library specified to be version N, install three files:
-# libc.so	->	libc.so.N	(e.g. libc.so.6)
-# libc.so.6	->	libc-VERSION.so	(e.g. libc-1.10.so)
-
-$(inst_slibdir)/libc.so$(libc.so-version): $(inst_slibdir)/libc-$(version).so \
-					   $(+force)
-	$(make-shlib-link)
-$(inst_slibdir)/libc-$(version).so: $(common-objpfx)libc.so $(+force)
+$(inst_slibdir)/libc.so$(libc.so-version): $(common-objpfx)libc.so $(+force)
 	$(do-install-program)
+
 install: $(inst_slibdir)/libc.so$(libc.so-version)
 
 # This fragment of linker script gives the OUTPUT_FORMAT statement
@@ -1126,15 +1099,7 @@ include $(o-iterator)
 generated += $(foreach o,$(versioned),$o$($o-version))
 
 define o-iterator-doit
-$(inst_slibdir)/$o$($o-version): $(inst_slibdir)/$(o:.so=)-$(version).so \
-				 $(+force);
-	$$(make-shlib-link)
-endef
-object-suffixes-left := $(versioned)
-include $(o-iterator)
-
-define o-iterator-doit
-$(inst_slibdir)/$(o:.so=)-$(version).so: $(objpfx)$o $(+force);
+$(inst_slibdir)/$o$($o-version): $(objpfx)$o $(+force);
 	$$(do-install-program)
 endef
 object-suffixes-left := $(versioned)

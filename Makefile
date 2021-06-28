@@ -109,12 +109,6 @@ elf/ldso_install:
 # Ignore the error if we cannot update /etc/ld.so.cache.
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
-install: install-symbolic-link
-.PHONY: install-symbolic-link
-install-symbolic-link: subdir_install
-	$(symbolic-link-prog) $(symbolic-link-list)
-	rm -f $(symbolic-link-list)
-
 install:
 	-test ! -x $(elf-objpfx)ldconfig || LC_ALL=C \
 	  $(elf-objpfx)ldconfig $(addprefix -r ,$(install_root)) \
