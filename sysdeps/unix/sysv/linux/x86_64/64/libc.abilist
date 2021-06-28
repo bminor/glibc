@@ -1764,6 +1764,7 @@ GLIBC_2.2.5 timer_create F
 GLIBC_2.2.5 timer_delete F
 GLIBC_2.2.5 timer_getoverrun F
 GLIBC_2.2.5 timer_gettime F
+GLIBC_2.2.5 timer_settime F
 GLIBC_2.2.5 times F
 GLIBC_2.2.5 timezone D 0x8
 GLIBC_2.2.5 tmpfile F
@@ -2204,6 +2205,7 @@ GLIBC_2.3.3 timer_create F
 GLIBC_2.3.3 timer_delete F
 GLIBC_2.3.3 timer_getoverrun F
 GLIBC_2.3.3 timer_gettime F
+GLIBC_2.3.3 timer_settime F
 GLIBC_2.3.4 __chk_fail F
 GLIBC_2.3.4 __fprintf_chk F
 GLIBC_2.3.4 __gets_chk F
@@ -2452,6 +2454,7 @@ GLIBC_2.34 timer_create F
 GLIBC_2.34 timer_delete F
 GLIBC_2.34 timer_getoverrun F
 GLIBC_2.34 timer_gettime F
+GLIBC_2.34 timer_settime F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

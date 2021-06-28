@@ -1954,6 +1954,7 @@ GLIBC_2.33 timer_create F
 GLIBC_2.33 timer_delete F
 GLIBC_2.33 timer_getoverrun F
 GLIBC_2.33 timer_gettime F
+GLIBC_2.33 timer_settime F
 GLIBC_2.33 timerfd_create F
 GLIBC_2.33 timerfd_gettime F
 GLIBC_2.33 timerfd_settime F
@@ -2298,6 +2299,7 @@ GLIBC_2.34 timer_create F
 GLIBC_2.34 timer_delete F
 GLIBC_2.34 timer_getoverrun F
 GLIBC_2.34 timer_gettime F
+GLIBC_2.34 timer_settime F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

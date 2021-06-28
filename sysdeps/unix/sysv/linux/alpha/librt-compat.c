@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <rt/librt-compat.c>
+#include <sysdeps/unix/sysv/linux/librt-compat.c>
 
 #if SHLIB_COMPAT (librt, GLIBC_2_3, GLIBC_2_34)
 compat_symbol (librt, __librt_version_placeholder_1,

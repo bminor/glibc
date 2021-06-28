@@ -1989,6 +1989,7 @@ GLIBC_2.2 timer_create F
 GLIBC_2.2 timer_delete F
 GLIBC_2.2 timer_getoverrun F
 GLIBC_2.2 timer_gettime F
+GLIBC_2.2 timer_settime F
 GLIBC_2.2 tmpfile F
 GLIBC_2.2 tmpfile64 F
 GLIBC_2.2 truncate64 F
@@ -2525,6 +2526,7 @@ GLIBC_2.34 timer_create F
 GLIBC_2.34 timer_delete F
 GLIBC_2.34 timer_getoverrun F
 GLIBC_2.34 timer_gettime F
+GLIBC_2.34 timer_settime F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

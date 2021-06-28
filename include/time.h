@@ -236,7 +236,11 @@ extern int __timer_settime64 (timer_t timerid, int flags,
 extern int __timerfd_settime64 (int fd, int flags,
                                 const struct __itimerspec64 *value,
                                 struct __itimerspec64 *ovalue);
-librt_hidden_proto (__timer_settime64);
+# if PTHREAD_IN_LIBC
+libc_hidden_proto (__timer_settime64)
+#else
+librt_hidden_proto (__timer_settime64)
+#endif
 libc_hidden_proto (__timerfd_settime64);
 #endif
 

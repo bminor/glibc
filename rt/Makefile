@@ -30,7 +30,6 @@ routines = \
 
 librt-routines = \
   librt-compat \
-  timer_settime \
 
 librt-shared-only-routines = librt-compat
 
@@ -63,6 +62,7 @@ $(librt-routines-var) += \
   timer_delete \
   timer_getoverr \
   timer_gettime \
+  timer_settime \
 
 tests := tst-shm tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \

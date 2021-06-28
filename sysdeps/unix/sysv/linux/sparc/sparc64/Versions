@@ -10,10 +10,3 @@ libc {
     wordexp;
   }
 }
-
-librt {
-  GLIBC_2.3.3 {
-    # Changed timer_t.
-    timer_settime;
-  }
-}

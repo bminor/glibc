@@ -26,6 +26,7 @@ libc {
     timer_delete;
     timer_getoverrun;
     timer_gettime;
+    timer_settime;
 %endif
     shm_open;
     shm_unlink;
@@ -89,6 +90,7 @@ libc {
     timer_delete;
     timer_getoverrun;
     timer_gettime;
+    timer_settime;
 %endif
     shm_open;
     shm_unlink;
@@ -132,13 +134,15 @@ librt {
 %endif
   }
   GLIBC_2.2 {
-%if !PTHREAD_IN_LIBC
+%if PTHREAD_IN_LIBC
+    __librt_version_placeholder;
+%else
     timer_create;
     timer_delete;
     timer_getoverrun;
     timer_gettime;
-%endif
     timer_settime;
+%endif
   }
   GLIBC_2.3.4 {
 %if PTHREAD_IN_LIBC
