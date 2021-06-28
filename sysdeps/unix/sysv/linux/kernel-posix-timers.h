@@ -103,3 +103,7 @@ timerid_to_kernel_timer (timer_t timerid)
   else
     return (kernel_timer_t) ((uintptr_t) timerid);
 }
+
+/* New targets use int instead of timer_t.  The difference only
+   matters on 64-bit targets.  */
+#include <timer_t_was_int_compat.h>
