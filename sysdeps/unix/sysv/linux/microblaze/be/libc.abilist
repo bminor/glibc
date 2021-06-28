@@ -2013,6 +2013,7 @@ GLIBC_2.18 timelocal F
 GLIBC_2.18 timer_create F
 GLIBC_2.18 timer_delete F
 GLIBC_2.18 timer_getoverrun F
+GLIBC_2.18 timer_gettime F
 GLIBC_2.18 timerfd_create F
 GLIBC_2.18 timerfd_gettime F
 GLIBC_2.18 timerfd_settime F
@@ -2442,6 +2443,7 @@ GLIBC_2.34 __stat64_time64 F
 GLIBC_2.34 __thrd_sleep64 F
 GLIBC_2.34 __time64 F
 GLIBC_2.34 __timegm64 F
+GLIBC_2.34 __timer_gettime64 F
 GLIBC_2.34 __timerfd_gettime64 F
 GLIBC_2.34 __timerfd_settime64 F
 GLIBC_2.34 __timespec_get64 F
@@ -2608,6 +2610,7 @@ GLIBC_2.34 thrd_join F
 GLIBC_2.34 timer_create F
 GLIBC_2.34 timer_delete F
 GLIBC_2.34 timer_getoverrun F
+GLIBC_2.34 timer_gettime F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

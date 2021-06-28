@@ -1,5 +1,3 @@
-GLIBC_2.34 __timer_gettime64 F
 GLIBC_2.34 __timer_settime64 F
-GLIBC_2.4 timer_gettime F
 GLIBC_2.4 timer_settime F
 GLIBC_2.7 __librt_version_placeholder F

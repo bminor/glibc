@@ -1,6 +1,4 @@
-GLIBC_2.2.5 timer_gettime F
 GLIBC_2.2.5 timer_settime F
-GLIBC_2.3.3 timer_gettime F
 GLIBC_2.3.3 timer_settime F
 GLIBC_2.3.4 __librt_version_placeholder F
 GLIBC_2.4 __librt_version_placeholder F

@@ -218,7 +218,11 @@ libc_hidden_proto (__futimens64);
 #else
 extern int __timer_gettime64 (timer_t timerid, struct __itimerspec64 *value);
 extern int __timerfd_gettime64 (int fd, struct __itimerspec64 *value);
-librt_hidden_proto (__timer_gettime64);
+# if PTHREAD_IN_LIBC
+libc_hidden_proto (__timer_gettime64)
+# else
+librt_hidden_proto (__timer_gettime64)
+# endif
 libc_hidden_proto (__timerfd_gettime64);
 #endif
 

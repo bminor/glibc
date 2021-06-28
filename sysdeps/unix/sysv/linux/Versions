@@ -126,6 +126,7 @@ libc {
     timer_create;
     timer_delete;
     timer_getoverrun;
+    timer_gettime;
   }
   GLIBC_2.3.4 {
     sched_getaffinity; sched_setaffinity;
@@ -267,6 +268,7 @@ libc {
     __thrd_sleep64;
     __time64;
     __timegm64;
+    __timer_gettime64;
     __timerfd_gettime64;
     __timerfd_settime64;
     __timespec_get64;
@@ -308,7 +310,6 @@ librt {
   GLIBC_2.34 {
 %ifdef TIME64_NON_DEFAULT
     # 64-bit time_t support
-    __timer_gettime64;
     __timer_settime64;
 %endif
   }

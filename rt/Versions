@@ -25,6 +25,7 @@ libc {
     timer_create;
     timer_delete;
     timer_getoverrun;
+    timer_gettime;
 %endif
     shm_open;
     shm_unlink;
@@ -87,6 +88,7 @@ libc {
     timer_create;
     timer_delete;
     timer_getoverrun;
+    timer_gettime;
 %endif
     shm_open;
     shm_unlink;
@@ -134,8 +136,8 @@ librt {
     timer_create;
     timer_delete;
     timer_getoverrun;
-%endif
     timer_gettime;
+%endif
     timer_settime;
   }
   GLIBC_2.3.4 {
