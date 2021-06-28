@@ -2062,6 +2062,7 @@ GLIBC_2.2 swprintf F
 GLIBC_2.2 swscanf F
 GLIBC_2.2 timer_create F
 GLIBC_2.2 timer_delete F
+GLIBC_2.2 timer_getoverrun F
 GLIBC_2.2 ungetwc F
 GLIBC_2.2 vfwprintf F
 GLIBC_2.2 vfwscanf F
@@ -2655,6 +2656,7 @@ GLIBC_2.34 thrd_exit F
 GLIBC_2.34 thrd_join F
 GLIBC_2.34 timer_create F
 GLIBC_2.34 timer_delete F
+GLIBC_2.34 timer_getoverrun F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

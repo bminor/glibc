@@ -52,6 +52,8 @@ extern __typeof (timer_create) __timer_create;
 libc_hidden_proto (__timer_create)
 extern __typeof (timer_delete) __timer_delete;
 libc_hidden_proto (__timer_delete)
+extern __typeof (timer_getoverrun) __timer_getoverrun;
+libc_hidden_proto (__timer_getoverrun)
 
 /* Type of timers in the kernel.  */
 typedef int kernel_timer_t;

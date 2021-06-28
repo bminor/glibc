@@ -24,6 +24,7 @@ libc {
 %if PTHREAD_IN_LIBC
     timer_create;
     timer_delete;
+    timer_getoverrun;
 %endif
     shm_open;
     shm_unlink;
@@ -85,6 +86,7 @@ libc {
     mq_unlink;
     timer_create;
     timer_delete;
+    timer_getoverrun;
 %endif
     shm_open;
     shm_unlink;
@@ -131,8 +133,8 @@ librt {
 %if !PTHREAD_IN_LIBC
     timer_create;
     timer_delete;
-%endif
     timer_getoverrun;
+%endif
     timer_gettime;
     timer_settime;
   }

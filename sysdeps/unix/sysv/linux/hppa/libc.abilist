@@ -1746,6 +1746,7 @@ GLIBC_2.2 timegm F
 GLIBC_2.2 timelocal F
 GLIBC_2.2 timer_create F
 GLIBC_2.2 timer_delete F
+GLIBC_2.2 timer_getoverrun F
 GLIBC_2.2 times F
 GLIBC_2.2 timezone D 0x4
 GLIBC_2.2 tmpfile F
@@ -2508,6 +2509,7 @@ GLIBC_2.34 thrd_exit F
 GLIBC_2.34 thrd_join F
 GLIBC_2.34 timer_create F
 GLIBC_2.34 timer_delete F
+GLIBC_2.34 timer_getoverrun F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F
