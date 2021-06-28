@@ -402,6 +402,15 @@ is acquired.
 The default value of this tunable is @samp{100}.
 @end deftp
 
+@deftp Tunable glibc.pthread.stack_cache_size
+This tunable configures the maximum size of the stack cache.  Once the
+stack cache exceeds this size, unused thread stacks are returned to
+the kernel, to bring the cache size below this limit.
+
+The value is measured in bytes.  The default is @samp{41943040}
+(fourty mibibytes).
+@end deftp
+
 @node Hardware Capability Tunables
 @section Hardware Capability Tunables
 @cindex hardware capability tunables

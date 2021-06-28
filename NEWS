@@ -49,6 +49,9 @@ Major new features:
   with names ending with .conf to logically classify the converter modules in
   that directory.
 
+* On Linux, a new tunable, glibc.pthread.stack_cache_size, can be used
+  to configure the size of the thread stack cache.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs

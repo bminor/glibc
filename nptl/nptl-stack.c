@@ -21,8 +21,7 @@
 #include <ldsodefs.h>
 #include <pthreadP.h>
 
-/* Maximum size in kB of cache.  40MiBi by default.  */
-static const size_t stack_cache_maxsize = 40 * 1024 * 1024;
+size_t __nptl_stack_cache_maxsize = 40 * 1024 * 1024;
 
 void
 __nptl_stack_list_del (list_t *elem)
@@ -103,8 +102,9 @@ queue_stack (struct pthread *stack)
   __nptl_stack_list_add (&stack->list, &GL (dl_stack_cache));
 
   GL (dl_stack_cache_actsize) += stack->stackblock_size;
-  if (__glibc_unlikely (GL (dl_stack_cache_actsize) > stack_cache_maxsize))
-    __nptl_free_stacks (stack_cache_maxsize);
+  if (__glibc_unlikely (GL (dl_stack_cache_actsize)
+			> __nptl_stack_cache_maxsize))
+    __nptl_free_stacks (__nptl_stack_cache_maxsize);
 }
 
 void

@@ -23,5 +23,9 @@ glibc {
       maxval: 32767
       default: 100
     }
+    stack_cache_size {
+      type: SIZE_T
+      default: 41943040
+    }
   }
 }

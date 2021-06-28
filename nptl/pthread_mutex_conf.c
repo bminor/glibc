@@ -23,6 +23,7 @@
 #include <stdbool.h>
 #include <unistd.h>  /* Get STDOUT_FILENO for _dl_printf.  */
 #include <elf/dl-tunables.h>
+#include <nptl-stack.h>
 
 struct mutex_config __mutex_aconf =
 {
@@ -38,10 +39,18 @@ TUNABLE_CALLBACK (set_mutex_spin_count) (tunable_val_t *valp)
   __mutex_aconf.spin_count = (int32_t) (valp)->numval;
 }
 
+static void
+TUNABLE_CALLBACK (set_stack_cache_size) (tunable_val_t *valp)
+{
+  __nptl_stack_cache_maxsize = valp->numval;
+}
+
 void
 __pthread_tunables_init (void)
 {
   TUNABLE_GET (mutex_spin_count, int32_t,
                TUNABLE_CALLBACK (set_mutex_spin_count));
+  TUNABLE_GET (stack_cache_size, size_t,
+               TUNABLE_CALLBACK (set_stack_cache_size));
 }
 #endif

@@ -25,6 +25,9 @@
 #include <list.h>
 #include <stdbool.h>
 
+/* Maximum size of the cache, in bytes.  40 MiB by default.  */
+extern size_t __nptl_stack_cache_maxsize attribute_hidden;
+
 /* Check whether the stack is still used or not.  */
 static inline bool
 __nptl_stack_in_use (struct pthread *pd)
