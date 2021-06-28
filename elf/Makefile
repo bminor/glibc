@@ -223,7 +223,8 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-single_threaded tst-single_threaded-pthread \
 	 tst-tls-ie tst-tls-ie-dlmopen argv0test \
 	 tst-glibc-hwcaps tst-glibc-hwcaps-prepend tst-glibc-hwcaps-mask \
-	 tst-tls20 tst-tls21 tst-dlmopen-dlerror tst-dlmopen-gethostbyname
+	 tst-tls20 tst-tls21 tst-dlmopen-dlerror tst-dlmopen-gethostbyname \
+	 tst-dl-is_dso
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \

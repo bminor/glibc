@@ -43,6 +43,7 @@
 #include <ldconfig.h>
 #include <dl-cache.h>
 #include <dl-hwcaps.h>
+#include <dl-is_dso.h>
 
 #include <dl-procinfo.h>
 
@@ -842,9 +843,7 @@ search_dir (const struct dir_entry *entry)
 	 subdirectory (if not already processing a glibc-hwcaps
 	 subdirectory)?  The dynamic linker is also considered as
 	 shared library.  */
-      if (((strncmp (direntry->d_name, "lib", 3) != 0
-	    && strncmp (direntry->d_name, "ld-", 3) != 0)
-	   || strstr (direntry->d_name, ".so") == NULL)
+      if (!_dl_is_dso (direntry->d_name)
 	  && (direntry->d_type == DT_REG
 	      || (entry->hwcaps == NULL
 		  && !is_hwcap_platform (direntry->d_name))))
