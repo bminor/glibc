@@ -43,21 +43,24 @@
 
 
 /* Globally enabled events.  */
-static td_thr_events_t __nptl_threads_events __attribute_used__;
+td_thr_events_t __nptl_threads_events __attribute__ ((nocommon));
+libc_hidden_proto (__nptl_threads_events)
+libc_hidden_data_def (__nptl_threads_events)
 
 /* Pointer to descriptor with the last event.  */
-static struct pthread *__nptl_last_event __attribute_used__;
+struct pthread *__nptl_last_event __attribute__ ((nocommon));
+libc_hidden_proto (__nptl_last_event)
+libc_hidden_data_def (__nptl_last_event)
 
 #ifdef SHARED
 /* This variable is used to access _rtld_global from libthread_db.  If
    GDB loads libpthread before ld.so, it is not possible to resolve
    _rtld_global directly during libpthread initialization.  */
-static struct rtld_global *__nptl_rtld_global __attribute_used__
-  = &_rtld_global;
+struct rtld_global *__nptl_rtld_global = &_rtld_global;
 #endif
 
 /* Version of the library, used in libthread_db to detect mismatches.  */
-static const char nptl_version[] __attribute_used__ = VERSION;
+const char __nptl_version[] = VERSION;
 
 /* This performs the initialization necessary when going from
    single-threaded to multi-threaded mode for the first time.  */

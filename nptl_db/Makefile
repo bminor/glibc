@@ -55,7 +55,7 @@ include ../Rules
 
 $(objpfx)db-symbols.out: $(objpfx)db-symbols.v.i \
 			 $(common-objpfx)libc.so
-	LC_ALL=C $(READELF) -W -s $(filter %.so,$^) | $(AWK) -f $< > $@; \
+	LC_ALL=C $(READELF) -W -D -s $(filter %.so,$^) | $(AWK) -f $< > $@; \
 	$(evaluate-test)
 
 $(objpfx)db-symbols.v.i: db-symbols.awk
