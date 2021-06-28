@@ -39,11 +39,5 @@ include ../Rules
 CFLAGS-msgrcv.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-msgsnd.c += -fexceptions -fasynchronous-unwind-tables
 
-ifeq (yes,$(build-shared))
-librt = $(common-objpfx)rt/librt.so
-else
-librt = $(common-objpfx)rt/librt.a
-endif
-
 $(objpfx)test-sysvsem: $(librt)
 $(objpfx)test-sysvsem-time64: $(librt)

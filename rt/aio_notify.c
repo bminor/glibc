@@ -160,11 +160,3 @@ __aio_notify (struct requestlist *req)
       waitlist = next;
     }
 }
-
-#if PTHREAD_IN_LIBC
-libc_hidden_def (__aio_notify)
-libc_hidden_def (__aio_notify_only)
-#else
-librt_hidden_def (__aio_notify)
-librt_hidden_def (__aio_notify_only)
-#endif

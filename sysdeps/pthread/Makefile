@@ -17,13 +17,7 @@
 # <https://www.gnu.org/licenses/>.
 
 ifeq ($(subdir),rt)
-
-ifeq (yes,$(build-shared))
-$(objpfx)tst-timer: $(objpfx)librt.so $(shared-thread-library)
-else
-$(objpfx)tst-timer: $(objpfx)librt.a $(static-thread-library)
-endif
-
+$(objpfx)tst-timer: $(librt)
 endif
 
 ifneq (,$(filter $(subdir),htl nptl))
@@ -232,11 +226,9 @@ $(objpfx)tst-cleanup0.out: /dev/null $(objpfx)tst-cleanup0
 $(objpfx)tst-cleanup0-cmp.out: $(..)sysdeps/pthread/tst-cleanup0.expect $(objpfx)tst-cleanup0.out
 	cmp $^ > $@; \
 	$(evaluate-test)
-
-$(objpfx)tst-cancel28: $(common-objpfx)rt/librt.so
-else
-$(objpfx)tst-cancel28: $(common-objpfx)rt/librt.a
 endif
+
+$(objpfx)tst-cancel28: $(librt)
 
 $(objpfx)tst-fini1: $(shared-thread-library) $(objpfx)tst-fini1mod.so
 

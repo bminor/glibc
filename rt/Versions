@@ -95,19 +95,6 @@ libc {
     shm_open;
     shm_unlink;
   }
-%if PTHREAD_IN_LIBC
-  GLIBC_PRIVATE {
-    __aio_enqueue_request;
-    __aio_find_req;
-    __aio_find_req_fd;
-    __aio_free_request;
-    __aio_notify;
-    __aio_notify_only;
-    __aio_remove_request;
-    __aio_requests_mutex;
-    __aio_sigqueue;
-  }
-%endif
 }
 librt {
   GLIBC_2.1 {

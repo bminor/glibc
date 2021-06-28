@@ -148,12 +148,6 @@ CFLAGS-brk.op = $(no-stack-protector)
 
 include ../Rules
 
-ifeq (yes,$(build-shared))
-librt = $(common-objpfx)rt/librt.so
-else
-librt = $(common-objpfx)rt/librt.a
-endif
-
 $(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)
 
 $(objpfx)tst-tsearch: $(libm)

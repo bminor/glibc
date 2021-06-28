@@ -146,8 +146,7 @@ compat_symbol (librt, ___timer_create, timer_create, GLIBC_2_3_3);
 # endif
 
 # if OTHER_SHLIB_COMPAT (librt, GLIBC_2_2, GLIBC_2_3_3)
-timer_t __timer_compat_list[OLD_TIMER_MAX] __attribute__ ((nocommon));
-libc_hidden_data_def (__timer_compat_list)
+timer_t __timer_compat_list[OLD_TIMER_MAX];
 
 int
 __timer_create_old (clockid_t clock_id, struct sigevent *evp, int *timerid)

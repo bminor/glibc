@@ -735,24 +735,10 @@ add_request_to_runlist (struct requestlist *newrequest)
 }
 
 #if PTHREAD_IN_LIBC
-libc_hidden_data_def (__aio_requests_mutex)
-libc_hidden_def (__aio_enqueue_request)
-libc_hidden_def (__aio_find_req)
-libc_hidden_def (__aio_find_req_fd)
-libc_hidden_def (__aio_free_request)
-libc_hidden_def (__aio_remove_request)
-
 versioned_symbol (libc, __aio_init, aio_init, GLIBC_2_34);
 # if OTHER_SHLIB_COMPAT (librt, GLIBC_2_1, GLIBC_2_34)
 compat_symbol (librt, __aio_init, aio_init, GLIBC_2_1);
 # endif
-
 #else /* !PTHREAD_IN_LIBC */
-librt_hidden_data_def (__aio_requests_mutex)
-librt_hidden_def (__aio_enqueue_request)
-librt_hidden_def (__aio_find_req)
-librt_hidden_def (__aio_find_req_fd)
-librt_hidden_def (__aio_free_request)
-librt_hidden_def (__aio_remove_request)
 weak_alias (__aio_init, aio_init)
 #endif /* !PTHREAD_IN_LIBC */

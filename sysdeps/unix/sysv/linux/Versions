@@ -291,12 +291,6 @@ libc {
     __pread64_nocancel;
     __close_nocancel;
     __sigtimedwait;
-    __timer_active_sigev_thread;
-    __timer_active_sigev_thread_lock;
-    __timer_compat_list;
-    __timer_helper_once;
-    __timer_helper_tid;
-    __timer_start_helper_thread;
     # functions used by nscd
     __netlink_assert_response;
   }

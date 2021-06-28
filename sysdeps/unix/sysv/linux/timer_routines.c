@@ -26,13 +26,10 @@
 
 
 /* List of active SIGEV_THREAD timers.  */
-struct timer *__timer_active_sigev_thread __attribute__ ((nocommon));
-libc_hidden_data_def (__timer_active_sigev_thread)
+struct timer *__timer_active_sigev_thread;
 
 /* Lock for _timer_active_sigev_thread.  */
-pthread_mutex_t __timer_active_sigev_thread_lock __attribute__ ((nocommon))
-  = PTHREAD_MUTEX_INITIALIZER;
-libc_hidden_data_def (__timer_active_sigev_thread_lock)
+pthread_mutex_t __timer_active_sigev_thread_lock = PTHREAD_MUTEX_INITIALIZER;
 
 struct thread_start_data
 {
@@ -112,12 +109,10 @@ timer_helper_thread (void *arg)
 /* Control variable for helper thread creation.  */
 pthread_once_t __timer_helper_once __attribute__ ((nocommon))
   = PTHREAD_ONCE_INIT;
-libc_hidden_data_def (__timer_helper_once)
 
 
 /* TID of the helper thread.  */
 pid_t __timer_helper_tid __attribute__ ((nocommon));
-libc_hidden_data_def (__timer_helper_tid)
 
 
 /* Reset variables so that after a fork a new helper thread gets started.  */
@@ -159,4 +154,3 @@ __timer_start_helper_thread (void)
   /* No need for the attribute anymore.  */
   __pthread_attr_destroy (&attr);
 }
-libc_hidden_def (__timer_start_helper_thread)

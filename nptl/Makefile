@@ -535,15 +535,6 @@ $(objpfx)tst-tls6.out: tst-tls6.sh $(objpfx)tst-tls5 \
 	$(evaluate-test)
 endif
 
-ifeq (yes,$(build-shared))
-librt = $(common-objpfx)rt/librt.so
-else
-librt = $(common-objpfx)rt/librt.a
-endif
-
-$(objpfx)tst-cancel17: $(librt)
-$(objpfx)tst-cancelx17: $(librt)
-
 LDLIBS-tst-cancel24 = -Wl,--no-as-needed -lstdc++
 LDLIBS-tst-cancel24-static = $(LDLIBS-tst-cancel24)
 

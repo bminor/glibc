@@ -28,9 +28,7 @@ routines = \
   shm_open \
   shm_unlink \
 
-librt-routines = \
-  librt-compat \
-
+librt-routines = librt-compat
 librt-shared-only-routines = librt-compat
 
 $(librt-routines-var) += \
@@ -63,6 +61,13 @@ $(librt-routines-var) += \
   timer_getoverr \
   timer_gettime \
   timer_settime \
+
+ifeq ($(pthread-in-libc),yes)
+# Pretend that librt.so is a linker script, so that the symbolic
+# link is not installed.
+install-lib-ldscripts = librt.so
+$(inst_libdir)/librt.so:
+endif
 
 tests := tst-shm tst-timer tst-timer2 \
 	 tst-aio tst-aio64 tst-aio2 tst-aio3 tst-aio4 tst-aio5 tst-aio6 \
@@ -98,6 +103,7 @@ LDFLAGS-rt.so = -Wl,--enable-new-dtags,-z,nodelete
 
 $(objpfx)librt.so: $(shared-thread-library)
 
+ifneq ($(pthread-in-libc),yes)
 ifeq (yes,$(build-shared))
 $(addprefix $(objpfx),$(tests) $(tests-internal)): \
 	$(objpfx)librt.so $(shared-thread-library)
@@ -105,5 +111,6 @@ else
 $(addprefix $(objpfx),$(tests)) $(tests-internal): \
 	$(objpfx)librt.a $(static-thread-library)
 endif
+endif # !$(pthread-in-libc)
 
 tst-mqueue7-ARGS = -- $(host-test-program-cmd)

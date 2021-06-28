@@ -87,55 +87,36 @@ struct requestlist
 
 
 /* Lock for global I/O list of requests.  */
-extern pthread_mutex_t __aio_requests_mutex;
+extern pthread_mutex_t __aio_requests_mutex attribute_hidden;
 
 
 /* Enqueue request.  */
 extern struct requestlist *__aio_enqueue_request (aiocb_union *aiocbp,
-						  int operation);
+						  int operation)
+  attribute_hidden;
 
 /* Find request entry for given AIO control block.  */
-extern struct requestlist *__aio_find_req (aiocb_union *elem);
+extern struct requestlist *__aio_find_req (aiocb_union *elem) attribute_hidden;
 
 /* Find request entry for given file descriptor.  */
-extern struct requestlist *__aio_find_req_fd (int fildes);
+extern struct requestlist *__aio_find_req_fd (int fildes) attribute_hidden;
 
 /* Remove request from the list.  */
 extern void __aio_remove_request (struct requestlist *last,
-				  struct requestlist *req, int all);
+				  struct requestlist *req, int all)
+  attribute_hidden;
 
 /* Release the entry for the request.  */
-extern void __aio_free_request (struct requestlist *req);
+extern void __aio_free_request (struct requestlist *req) attribute_hidden;
 
 /* Notify initiator of request and tell this everybody listening.  */
-extern void __aio_notify (struct requestlist *req);
+extern void __aio_notify (struct requestlist *req) attribute_hidden;
 
 /* Notify initiator of request.  */
-extern int __aio_notify_only (struct sigevent *sigev);
+extern int __aio_notify_only (struct sigevent *sigev) attribute_hidden;
 
 /* Send the signal.  */
-extern int __aio_sigqueue (int sig, const union sigval val, pid_t caller_pid);
-
-#if PTHREAD_IN_LIBC
-libc_hidden_proto (__aio_enqueue_request)
-libc_hidden_proto (__aio_find_req)
-libc_hidden_proto (__aio_find_req_fd)
-libc_hidden_proto (__aio_free_request)
-libc_hidden_proto (__aio_notify)
-libc_hidden_proto (__aio_notify_only)
-libc_hidden_proto (__aio_remove_request)
-libc_hidden_proto (__aio_requests_mutex)
-libc_hidden_proto (__aio_sigqueue)
-#else
-librt_hidden_proto (__aio_enqueue_request)
-librt_hidden_proto (__aio_find_req)
-librt_hidden_proto (__aio_find_req_fd)
-librt_hidden_proto (__aio_free_request)
-librt_hidden_proto (__aio_notify)
-librt_hidden_proto (__aio_notify_only)
-librt_hidden_proto (__aio_remove_request)
-librt_hidden_proto (__aio_requests_mutex)
-librt_hidden_proto (__aio_sigqueue)
-#endif
+extern int __aio_sigqueue (int sig, const union sigval val, pid_t caller_pid)
+  attribute_hidden;
 
 #endif /* aio_misc.h */

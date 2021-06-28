@@ -7,4 +7,10 @@ shared-thread-library = $(common-objpfx)htl/libpthread.so
 static-thread-library = $(..)htl/libpthread_syms.a $(common-objpfx)htl/libpthread.a
 bounded-thread-library = $(static-thread-library)
 
+ifeq (yes,$(build-shared))
+librt = $(common-objpfx)rt/librt.so
+else
+librt = $(common-objpfx)rt/librt.a $(static-thread-library)
+endif
+
 rpath-dirs += htl

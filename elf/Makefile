@@ -1174,7 +1174,6 @@ localplt-built-dso := $(addprefix $(common-objpfx),\
 				  libc.so \
 				  elf/ld.so \
 				  math/libm.so \
-				  rt/librt.so \
 				  dlfcn/libdl.so \
 				  resolv/libresolv.so \
 		       )
@@ -1186,6 +1185,9 @@ localplt-built-dso += $(filter-out %_nonshared.a, $(shared-thread-library))
 endif
 ifeq ($(build-crypt),yes)
 localplt-built-dso += $(addprefix $(common-objpfx), crypt/libcrypt.so)
+endif
+ifneq ($(pthread-in-libc),yes)
+localplt-built-dso += $(addprefix $(common-objpfx), rt/librt.so)
 endif
 
 vpath localplt.data $(+sysdep_dirs)

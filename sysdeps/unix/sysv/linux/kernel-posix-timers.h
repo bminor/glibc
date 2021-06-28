@@ -26,27 +26,23 @@
 extern int __no_posix_timers attribute_hidden;
 
 /* Callback to start helper thread.  */
-extern void __timer_start_helper_thread (void);
-libc_hidden_proto (__timer_start_helper_thread)
+extern void __timer_start_helper_thread (void) attribute_hidden;
 
 /* Control variable for helper thread creation.  */
-extern pthread_once_t __timer_helper_once;
-libc_hidden_proto (__timer_helper_once)
+extern pthread_once_t __timer_helper_once attribute_hidden;
 
 /* Called from fork so that the new subprocess re-creates the
    notification thread if necessary.  */
 void __timer_fork_subprocess (void) attribute_hidden;
 
 /* TID of the helper thread.  */
-extern pid_t __timer_helper_tid;
-libc_hidden_proto (__timer_helper_tid)
+extern pid_t __timer_helper_tid attribute_hidden;
 
 /* List of active SIGEV_THREAD timers.  */
-extern struct timer *__timer_active_sigev_thread;
-libc_hidden_proto (__timer_active_sigev_thread)
+extern struct timer *__timer_active_sigev_thread attribute_hidden;
+
 /* Lock for __timer_active_sigev_thread.  */
-extern pthread_mutex_t __timer_active_sigev_thread_lock;
-libc_hidden_proto (__timer_active_sigev_thread_lock)
+extern pthread_mutex_t __timer_active_sigev_thread_lock attribute_hidden;
 
 extern __typeof (timer_create) __timer_create;
 libc_hidden_proto (__timer_create)
@@ -118,5 +114,4 @@ timerid_to_kernel_timer (timer_t timerid)
 #if TIMER_T_WAS_INT_COMPAT
 # define OLD_TIMER_MAX 256
 extern timer_t __timer_compat_list[OLD_TIMER_MAX];
-libc_hidden_proto (__timer_compat_list)
 #endif

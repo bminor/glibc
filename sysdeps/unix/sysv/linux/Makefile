@@ -137,19 +137,6 @@ tests-time64 += \
 
 CFLAGS-tst-sigcontext-get_pc.c = -fasynchronous-unwind-tables
 
-ifeq (yes,$(build-shared))
-librt = $(common-objpfx)rt/librt.so
-else
-librt = $(common-objpfx)rt/librt.a
-endif
-
-$(objpfx)tst-ppoll: $(librt)
-$(objpfx)tst-ppoll-time64: $(librt)
-$(objpfx)tst-sigtimedwait: $(librt)
-$(objpfx)tst-sigtimedwait-time64: $(librt)
-$(objpfx)tst-timerfd: $(librt)
-$(objpfx)tst-timerfd-time64: $(librt)
-
 # Generate the list of SYS_* macros for the system calls (__NR_*
 # macros).  The file syscall-names.list contains all possible system
 # call names, and the generated header file produces SYS_* macros for
