@@ -1940,6 +1940,8 @@ GLIBC_2.32 thrd_yield F
 GLIBC_2.32 time F
 GLIBC_2.32 timegm F
 GLIBC_2.32 timelocal F
+GLIBC_2.32 timer_create F
+GLIBC_2.32 timer_delete F
 GLIBC_2.32 timerfd_create F
 GLIBC_2.32 timerfd_gettime F
 GLIBC_2.32 timerfd_settime F
@@ -2288,6 +2290,8 @@ GLIBC_2.34 thrd_create F
 GLIBC_2.34 thrd_detach F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 thrd_join F
+GLIBC_2.34 timer_create F
+GLIBC_2.34 timer_delete F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

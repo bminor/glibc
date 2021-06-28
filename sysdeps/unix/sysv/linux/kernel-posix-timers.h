@@ -48,6 +48,11 @@ libc_hidden_proto (__timer_active_sigev_thread)
 extern pthread_mutex_t __timer_active_sigev_thread_lock;
 libc_hidden_proto (__timer_active_sigev_thread_lock)
 
+extern __typeof (timer_create) __timer_create;
+libc_hidden_proto (__timer_create)
+extern __typeof (timer_delete) __timer_delete;
+libc_hidden_proto (__timer_delete)
+
 /* Type of timers in the kernel.  */
 typedef int kernel_timer_t;
 
@@ -107,3 +112,9 @@ timerid_to_kernel_timer (timer_t timerid)
 /* New targets use int instead of timer_t.  The difference only
    matters on 64-bit targets.  */
 #include <timer_t_was_int_compat.h>
+
+#if TIMER_T_WAS_INT_COMPAT
+# define OLD_TIMER_MAX 256
+extern timer_t __timer_compat_list[OLD_TIMER_MAX];
+libc_hidden_proto (__timer_compat_list)
+#endif

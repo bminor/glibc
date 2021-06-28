@@ -434,6 +434,8 @@ GLIBC_2.34 thrd_create F
 GLIBC_2.34 thrd_detach F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 thrd_join F
+GLIBC_2.34 timer_create F
+GLIBC_2.34 timer_delete F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F
@@ -2350,6 +2352,8 @@ GLIBC_2.4 tfind F
 GLIBC_2.4 time F
 GLIBC_2.4 timegm F
 GLIBC_2.4 timelocal F
+GLIBC_2.4 timer_create F
+GLIBC_2.4 timer_delete F
 GLIBC_2.4 times F
 GLIBC_2.4 timezone D 0x4
 GLIBC_2.4 tmpfile F

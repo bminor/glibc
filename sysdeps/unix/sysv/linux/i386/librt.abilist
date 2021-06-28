@@ -1,6 +1,4 @@
 GLIBC_2.1 __librt_version_placeholder F
-GLIBC_2.2 timer_create F
-GLIBC_2.2 timer_delete F
 GLIBC_2.2 timer_getoverrun F
 GLIBC_2.2 timer_gettime F
 GLIBC_2.2 timer_settime F

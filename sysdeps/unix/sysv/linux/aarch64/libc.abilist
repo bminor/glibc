@@ -2006,6 +2006,8 @@ GLIBC_2.17 tfind F
 GLIBC_2.17 time F
 GLIBC_2.17 timegm F
 GLIBC_2.17 timelocal F
+GLIBC_2.17 timer_create F
+GLIBC_2.17 timer_delete F
 GLIBC_2.17 timerfd_create F
 GLIBC_2.17 timerfd_gettime F
 GLIBC_2.17 timerfd_settime F
@@ -2529,6 +2531,8 @@ GLIBC_2.34 thrd_create F
 GLIBC_2.34 thrd_detach F
 GLIBC_2.34 thrd_exit F
 GLIBC_2.34 thrd_join F
+GLIBC_2.34 timer_create F
+GLIBC_2.34 timer_delete F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F

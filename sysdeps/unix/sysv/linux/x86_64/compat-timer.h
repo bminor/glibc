@@ -20,14 +20,6 @@
 #include <time.h>
 #include <sys/types.h>
 
-#define OLD_TIMER_MAX	256
-
-extern timer_t __compat_timer_list[OLD_TIMER_MAX] attribute_hidden;
-
-
-extern int __timer_create_new (clockid_t clock_id, struct sigevent *evp,
-			       timer_t *timerid);
-extern int __timer_delete_new (timer_t timerid);
 extern int __timer_getoverrun_new (timer_t timerid);
 extern int __timer_gettime_new (timer_t timerid, struct itimerspec *value);
 extern int __timer_settime_new (timer_t timerid, int flags,

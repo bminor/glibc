@@ -37,7 +37,7 @@ int
 __timer_settime_old (int timerid, int flags, const struct itimerspec *value,
 		     struct itimerspec *ovalue)
 {
-  return __timer_settime_new (__compat_timer_list[timerid], flags,
+  return __timer_settime_new (__timer_compat_list[timerid], flags,
 			      value, ovalue);
 }
 compat_symbol (librt, __timer_settime_old, timer_settime, GLIBC_2_2);

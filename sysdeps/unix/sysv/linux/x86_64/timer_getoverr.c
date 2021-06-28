@@ -32,7 +32,7 @@ versioned_symbol (librt, __timer_getoverrun_new, timer_getoverrun,
 int
 __timer_getoverrun_old (int timerid)
 {
-  return __timer_getoverrun_new (__compat_timer_list[timerid]);
+  return __timer_getoverrun_new (__timer_compat_list[timerid]);
 }
 compat_symbol (librt, __timer_getoverrun_old, timer_getoverrun, GLIBC_2_2);
 #endif

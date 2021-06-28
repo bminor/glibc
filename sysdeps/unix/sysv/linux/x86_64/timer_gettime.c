@@ -35,7 +35,7 @@ versioned_symbol (librt, __timer_gettime_new, timer_gettime, GLIBC_2_3_3);
 int
 __timer_gettime_old (int timerid, struct itimerspec *value)
 {
-  return __timer_gettime_new (__compat_timer_list[timerid], value);
+  return __timer_gettime_new (__timer_compat_list[timerid], value);
 }
 compat_symbol (librt, __timer_gettime_old, timer_gettime, GLIBC_2_2);
 #endif

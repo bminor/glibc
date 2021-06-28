@@ -1,10 +1,6 @@
-GLIBC_2.2.5 timer_create F
-GLIBC_2.2.5 timer_delete F
 GLIBC_2.2.5 timer_getoverrun F
 GLIBC_2.2.5 timer_gettime F
 GLIBC_2.2.5 timer_settime F
-GLIBC_2.3.3 timer_create F
-GLIBC_2.3.3 timer_delete F
 GLIBC_2.3.3 timer_getoverrun F
 GLIBC_2.3.3 timer_gettime F
 GLIBC_2.3.3 timer_settime F

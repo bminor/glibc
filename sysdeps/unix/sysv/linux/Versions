@@ -121,6 +121,10 @@ libc {
     posix_fallocate64;
     sys_sigabbrev;
     sys_siglist;
+
+    # Changed timer_t.  Only used by some 64-bit targets.
+    timer_create;
+    timer_delete;
   }
   GLIBC_2.3.4 {
     sched_getaffinity; sched_setaffinity;
@@ -284,6 +288,7 @@ libc {
     __sigtimedwait;
     __timer_active_sigev_thread;
     __timer_active_sigev_thread_lock;
+    __timer_compat_list;
     __timer_helper_once;
     __timer_helper_tid;
     __timer_start_helper_thread;
