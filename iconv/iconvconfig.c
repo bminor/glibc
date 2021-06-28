@@ -250,6 +250,7 @@ static const char gconv_module_ext[] = MODULE_EXT;
 
 
 #include <programs/xmalloc.h>
+#include <programs/xasprintf.h>
 
 
 /* C string table handling.  */
@@ -519,11 +520,12 @@ module_compare (const void *p1, const void *p2)
 /* Create new module record.  */
 static void
 new_module (const char *fromname, size_t fromlen, const char *toname,
-	    size_t tolen, const char *directory,
+	    size_t tolen, const char *dir_in,
 	    const char *filename, size_t filelen, int cost, size_t need_ext)
 {
   struct module *new_module;
-  size_t dirlen = strlen (directory) + 1;
+  size_t dirlen = strlen (dir_in) + 1;
+  const char *directory = xstrdup (dir_in);
   char *tmp;
   void **inserted;
 
@@ -654,20 +656,10 @@ handle_dir (const char *dir)
   size_t dirlen = strlen (dir);
   bool found = false;
 
-  /* Add the prefix before sending it off to the parser.  */
-  char *fulldir = xmalloc (prefix_len + dirlen + 2);
-  char *cp = mempcpy (mempcpy (fulldir, prefix, prefix_len), dir, dirlen);
+  char *fulldir = xasprintf ("%s%s%s", dir[0] == '/' ? prefix : "",
+			     dir, dir[dirlen - 1] != '/' ? "/" : "");
 
-  if (dir[dirlen - 1] != '/')
-    {
-      *cp++ = '/';
-      *cp = '\0';
-      dirlen++;
-    }
-
-  found = gconv_parseconfdir (fulldir, dirlen + prefix_len);
-
-  free (fulldir);
+  found = gconv_parseconfdir (fulldir, strlen (fulldir));
 
   if (!found)
     {
@@ -678,6 +670,8 @@ handle_dir (const char *dir)
 	     "gconv-modules file or a gconv-modules.d directory with "
 	     "configuration files with names ending in .conf.");
     }
+
+  free (fulldir);
 
   return found ? 0 : 1;
 }
