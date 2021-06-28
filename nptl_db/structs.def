@@ -22,10 +22,6 @@
 # define STRUCTS_DEF_DEFAULTS 1
 #endif
 
-#ifndef DB_RTLD_VARIABLE
-# define DB_RTLD_VARIABLE(name) DB_VARIABLE (name)
-#endif
-
 /* DB_MAIN_VARIABLE, DB_MAIN_SYMBOL, DB_MAIN_ARRAY_VARIABLE are not
    covered by the libc symbol check in db-symbols.awk.  */
 #ifndef DB_MAIN_VARIABLE
@@ -78,14 +74,14 @@ DB_STRUCT_FIELD (td_eventbuf_t, eventnum)
 DB_STRUCT_FIELD (td_eventbuf_t, eventdata)
 
 DB_SYMBOL (nptl_version)
-DB_MAIN_SYMBOL (__nptl_create_event)
-DB_MAIN_SYMBOL (__nptl_death_event)
+DB_SYMBOL (__nptl_create_event)
+DB_SYMBOL (__nptl_death_event)
 DB_SYMBOL (__nptl_threads_events)
-DB_MAIN_VARIABLE (__nptl_nthreads)
+DB_VARIABLE (__nptl_nthreads)
 DB_VARIABLE (__nptl_last_event)
-DB_RTLD_VARIABLE (__nptl_initial_report_events)
+DB_MAIN_VARIABLE (__nptl_initial_report_events)
 
-DB_MAIN_ARRAY_VARIABLE (__pthread_keys)
+DB_ARRAY_VARIABLE (__pthread_keys)
 DB_STRUCT (pthread_key_struct)
 DB_STRUCT_FIELD (pthread_key_struct, seq)
 DB_STRUCT_FIELD (pthread_key_struct, destr)
