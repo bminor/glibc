@@ -44,12 +44,25 @@ ENTRY(MEMCHR_Z900_G5)
 	LGHI  %r0,0xff
 	NGR   %r0,%r3
 	LGR   %r1,%r2
+# if ! defined __s390x__
+	tmlh  %r4,32768
+	jo    3f		/* Jump away if n >= 0x80000000  */
+# endif
 	la    %r2,0(%r4,%r1)
 0:	srst  %r2,%r1
 	jo    0b
 	brc   13,1f
 	SLGR  %r2,%r2
 1:	br    %r14
+# if ! defined __s390x__
+	/* On s390 (31bit), the pointer to the first byte after s (stored in
+	   r2) always wraps around with n >= 0x80000000 and can lead to stop
+	   searching before end of s.  Thus just use r2=0 in this case.
+	   If r2 < r1, the srst instruction stops searching with cc=2 "not
+	   found" when wrapping around from top address to zero.  */
+3:	SLGR  %r2,%r2
+	j     0b
+# endif
 END(MEMCHR_Z900_G5)
 
 # if ! HAVE_MEMCHR_IFUNC
