@@ -54,8 +54,13 @@ tests-special += $(objpfx)db-symbols.out
 include ../Rules
 
 $(objpfx)db-symbols.out: $(objpfx)db-symbols.v.i \
-			 $(common-objpfx)libc.so
-	LC_ALL=C $(READELF) -W -D -s $(filter %.so,$^) | $(AWK) -f $< > $@; \
+			 $(objpfx)libc.symlist-private
+	LC_ALL=C $(AWK) -f $^ > $@; \
 	$(evaluate-test)
 
 $(objpfx)db-symbols.v.i: db-symbols.awk
+
+$(objpfx)libc.symlist-private: $(..)scripts/abilist.awk \
+  $(common-objpfx)libc.dynsym
+	LC_ALL=C $(AWK) -v include_private=1 -f $^ > $@T
+	mv -f $@T $@
