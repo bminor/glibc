@@ -67,7 +67,6 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_USABLE (cpu_features, HLE);
   CPU_FEATURE_SET_USABLE (cpu_features, BMI2);
   CPU_FEATURE_SET_USABLE (cpu_features, ERMS);
-  CPU_FEATURE_SET_USABLE (cpu_features, RTM);
   CPU_FEATURE_SET_USABLE (cpu_features, RDSEED);
   CPU_FEATURE_SET_USABLE (cpu_features, ADX);
   CPU_FEATURE_SET_USABLE (cpu_features, CLFLUSHOPT);
@@ -83,6 +82,7 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_USABLE (cpu_features, MOVDIRI);
   CPU_FEATURE_SET_USABLE (cpu_features, MOVDIR64B);
   CPU_FEATURE_SET_USABLE (cpu_features, FSRM);
+  CPU_FEATURE_SET_USABLE (cpu_features, RTM_ALWAYS_ABORT);
   CPU_FEATURE_SET_USABLE (cpu_features, SERIALIZE);
   CPU_FEATURE_SET_USABLE (cpu_features, TSXLDTRK);
   CPU_FEATURE_SET_USABLE (cpu_features, LAHF64_SAHF64);
@@ -96,6 +96,9 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_USABLE (cpu_features, FSRS);
   CPU_FEATURE_SET_USABLE (cpu_features, FSRCS);
   CPU_FEATURE_SET_USABLE (cpu_features, PTWRITE);
+
+  if (!CPU_FEATURES_CPU_P (cpu_features, RTM_ALWAYS_ABORT))
+    CPU_FEATURE_SET_USABLE (cpu_features, RTM);
 
 #if CET_ENABLED
   CPU_FEATURE_SET_USABLE (cpu_features, IBT);

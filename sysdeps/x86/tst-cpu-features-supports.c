@@ -153,7 +153,7 @@ do_test (int argc, char **argv)
   fails += CHECK_SUPPORTS (rdpid, RDPID);
   fails += CHECK_SUPPORTS (rdrnd, RDRAND);
   fails += CHECK_SUPPORTS (rdseed, RDSEED);
-  fails += CHECK_SUPPORTS (rtm, RTM);
+  fails += CHECK_CPU_SUPPORTS (rtm, RTM);
   fails += CHECK_SUPPORTS (serialize, SERIALIZE);
   fails += CHECK_SUPPORTS (sha, SHA);
   fails += CHECK_CPU_SUPPORTS (shstk, SHSTK);

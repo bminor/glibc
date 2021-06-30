@@ -229,7 +229,7 @@ enum
 #define bit_cpu_AVX512_VP2INTERSECT (1u << 8)
 #define bit_cpu_INDEX_7_EDX_9	(1u << 9)
 #define bit_cpu_MD_CLEAR	(1u << 10)
-#define bit_cpu_INDEX_7_EDX_11	(1u << 11)
+#define bit_cpu_RTM_ALWAYS_ABORT (1u << 11)
 #define bit_cpu_INDEX_7_EDX_12	(1u << 12)
 #define bit_cpu_INDEX_7_EDX_13	(1u << 13)
 #define bit_cpu_SERIALIZE	(1u << 14)
@@ -463,7 +463,7 @@ enum
 #define index_cpu_AVX512_VP2INTERSECT CPUID_INDEX_7
 #define index_cpu_INDEX_7_EDX_9	CPUID_INDEX_7
 #define index_cpu_MD_CLEAR	CPUID_INDEX_7
-#define index_cpu_INDEX_7_EDX_11 CPUID_INDEX_7
+#define index_cpu_RTM_ALWAYS_ABORT CPUID_INDEX_7
 #define index_cpu_INDEX_7_EDX_12 CPUID_INDEX_7
 #define index_cpu_INDEX_7_EDX_13 CPUID_INDEX_7
 #define index_cpu_SERIALIZE	CPUID_INDEX_7
@@ -697,7 +697,7 @@ enum
 #define reg_AVX512_VP2INTERSECT	edx
 #define reg_INDEX_7_EDX_9	edx
 #define reg_MD_CLEAR		edx
-#define reg_INDEX_7_EDX_11	edx
+#define reg_RTM_ALWAYS_ABORT	edx
 #define reg_INDEX_7_EDX_12	edx
 #define reg_INDEX_7_EDX_13	edx
 #define reg_SERIALIZE		edx

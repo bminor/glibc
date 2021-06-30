@@ -526,6 +526,9 @@ capability.
 @code{RTM} -- RTM instruction extensions.
 
 @item
+@code{RTM_ALWAYS_ABORT} -- Transactions always abort, making RTM unusable.
+
+@item
 @code{SDBG} -- IA32_DEBUG_INTERFACE MSR for silicon debug.
 
 @item

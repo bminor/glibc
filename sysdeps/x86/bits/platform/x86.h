@@ -211,7 +211,7 @@ enum
   x86_cpu_AVX512_VP2INTERSECT	= x86_cpu_index_7_edx + 8,
   x86_cpu_INDEX_7_EDX_9		= x86_cpu_index_7_edx + 9,
   x86_cpu_MD_CLEAR		= x86_cpu_index_7_edx + 10,
-  x86_cpu_INDEX_7_EDX_11	= x86_cpu_index_7_edx + 11,
+  x86_cpu_RTM_ALWAYS_ABORT	= x86_cpu_index_7_edx + 11,
   x86_cpu_INDEX_7_EDX_12	= x86_cpu_index_7_edx + 12,
   x86_cpu_INDEX_7_EDX_13	= x86_cpu_index_7_edx + 13,
   x86_cpu_SERIALIZE		= x86_cpu_index_7_edx + 14,
