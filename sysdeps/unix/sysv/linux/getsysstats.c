@@ -17,42 +17,73 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <array_length.h>
 #include <dirent.h>
+#include <errno.h>
+#include <ldsodefs.h>
+#include <limits.h>
 #include <not-cancel.h>
-#include <scratch_buffer.h>
 #include <stdio.h>
 #include <stdio_ext.h>
+#include <sys/mman.h>
 #include <sys/sysinfo.h>
 #include <sysdep.h>
+
+/* Compute the population count of the entire array.  */
+static int
+__get_nprocs_count (const unsigned long int *array, size_t length)
+{
+  int count = 0;
+  for (size_t i = 0; i < length; ++i)
+    if (__builtin_add_overflow (count,  __builtin_popcountl (array[i]),
+				&count))
+      return INT_MAX;
+  return count;
+}
+
+/* __get_nprocs with a large buffer.  */
+static int
+__get_nprocs_large (void)
+{
+  /* This code cannot use scratch_buffer because it is used during
+     malloc initialization.  */
+  size_t pagesize = GLRO (dl_pagesize);
+  unsigned long int *page = __mmap (0, pagesize, PROT_READ | PROT_WRITE,
+				    MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+  if (page == MAP_FAILED)
+    return 2;
+  int r = INTERNAL_SYSCALL_CALL (sched_getaffinity, 0, pagesize, page);
+  int count;
+  if (r > 0)
+    count = __get_nprocs_count (page, pagesize / sizeof (unsigned long int));
+  else if (r == -EINVAL)
+    /* One page is still not enough to store the bits.  A more-or-less
+       arbitrary value.  This assumes t hat such large systems never
+       happen in practice.  */
+    count = GLRO (dl_pagesize) * CHAR_BIT;
+  else
+    count = 2;
+  __munmap (page, GLRO (dl_pagesize));
+  return count;
+}
 
 int
 __get_nprocs (void)
 {
-  struct scratch_buffer set;
-  scratch_buffer_init (&set);
-
-  int r;
-  while (true)
-    {
-      /* The possible error are EFAULT for an invalid buffer or ESRCH for
-	 invalid pid, none could happen.  */
-      r = INTERNAL_SYSCALL_CALL (sched_getaffinity, 0, set.length,
-                                 set.data);
-      if (r > 0)
-        break;
-
-      if (!scratch_buffer_grow (&set))
-        /* Default to an SMP system in case we cannot obtain an accurate
-           number.  */
-        return 2;
-    }
-
-  /* The scratch_buffer is aligned to max_align_t.  */
-  r = __sched_cpucount (r, (const cpu_set_t *) set.data);
-
-  scratch_buffer_free (&set);
-
-  return r;
+  /* Fast path for most systems.  The kernel expects a buffer size
+     that is a multiple of 8.  */
+  unsigned long int small_buffer[1024 / CHAR_BIT / sizeof (unsigned long int)];
+  int r = INTERNAL_SYSCALL_CALL (sched_getaffinity, 0,
+				 sizeof (small_buffer), small_buffer);
+  if (r > 0)
+    return __get_nprocs_count (small_buffer, r / sizeof (unsigned long int));
+  else if (r == -EINVAL)
+    /* The kernel requests a larger buffer to store the data.  */
+    return __get_nprocs_large ();
+  else
+    /* Some other error.  2 is conservative (not a uniprocessor
+       system, so atomics are needed). */
+    return 2;
 }
 libc_hidden_def (__get_nprocs)
 weak_alias (__get_nprocs, get_nprocs)
