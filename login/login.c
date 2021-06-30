@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <utmp.h>
-
+#include <shlib-compat.h>
 
 /* Return the result of ttyname in the buffer pointed to by TTY, which should
    be of length BUF_LEN.  If it is too long to fit in this buffer, a
@@ -41,7 +41,7 @@ tty_name (int fd, char **tty, size_t buf_len)
 
       if (buf_len)
 	{
-	  rv = ttyname_r (fd, buf, buf_len);
+	  rv = __ttyname_r (fd, buf, buf_len);
 
 	  if (rv != 0 || memchr (buf, '\0', buf_len))
 	    /* We either got an error, or we succeeded and the
@@ -78,7 +78,7 @@ tty_name (int fd, char **tty, size_t buf_len)
 }
 
 void
-login (const struct utmp *ut)
+__login (const struct utmp *ut)
 {
 #ifdef PATH_MAX
   char _tty[PATH_MAX + UT_LINESIZE];
@@ -114,16 +114,16 @@ login (const struct utmp *ut)
       strncpy (copy.ut_line, ttyp, UT_LINESIZE);
 
       /* Tell that we want to use the UTMP file.  */
-      if (utmpname (_PATH_UTMP) == 0)
+      if (__utmpname (_PATH_UTMP) == 0)
 	{
 	  /* Open UTMP file.  */
-	  setutent ();
+	  __setutent ();
 
 	  /* Write the entry.  */
-	  pututline (&copy);
+	  __pututline (&copy);
 
 	  /* Close UTMP file.  */
-	  endutent ();
+	  __endutent ();
 	}
 
       if (tty != _tty)
@@ -135,5 +135,11 @@ login (const struct utmp *ut)
     strncpy (copy.ut_line, "???", UT_LINESIZE);
 
   /* Update the WTMP file.  Here we have to add a new entry.  */
-  updwtmp (_PATH_WTMP, &copy);
+  __updwtmp (_PATH_WTMP, &copy);
 }
+versioned_symbol (libc, __login, login, GLIBC_2_34);
+libc_hidden_ver (__login, login)
+
+#if OTHER_SHLIB_COMPAT (libutil, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libutil, __login, login, GLIBC_2_0);
+#endif

@@ -29,7 +29,10 @@ extern int __getutline_r (const struct utmp *__line,
 			  struct utmp *__buffer, struct utmp **__result);
 libc_hidden_proto (__getutline_r)
 
-libutil_hidden_proto (login_tty)
+libc_hidden_proto (login)
+libc_hidden_proto (login_tty)
+libc_hidden_proto (logout)
+libc_hidden_proto (logwtmp)
 
 # endif /* !_ISOMAC */
 #endif

@@ -21,27 +21,28 @@
 #include <utmp.h>
 #include <time.h>
 #include <sys/time.h>
+#include <shlib-compat.h>
 
 int
-logout (const char *line)
+__logout (const char *line)
 {
   struct utmp tmp, utbuf;
   struct utmp *ut;
   int result = 0;
 
   /* Tell that we want to use the UTMP file.  */
-  if (utmpname (_PATH_UTMP) == -1)
+  if (__utmpname (_PATH_UTMP) == -1)
     return 0;
 
   /* Open UTMP file.  */
-  setutent ();
+  __setutent ();
 
   /* Fill in search information.  */
   tmp.ut_type = USER_PROCESS;
   strncpy (tmp.ut_line, line, sizeof tmp.ut_line);
 
   /* Read the record.  */
-  if (getutline_r (&tmp, &utbuf, &ut) >= 0)
+  if (__getutline_r (&tmp, &utbuf, &ut) >= 0)
     {
       /* Clear information about who & from where.  */
       memset (ut->ut_name, '\0', sizeof ut->ut_name);
@@ -52,12 +53,18 @@ logout (const char *line)
       TIMESPEC_TO_TIMEVAL (&ut->ut_tv, &ts);
       ut->ut_type = DEAD_PROCESS;
 
-      if (pututline (ut) != NULL)
+      if (__pututline (ut) != NULL)
 	result = 1;
     }
 
   /* Close UTMP file.  */
-  endutent ();
+  __endutent ();
 
   return result;
 }
+versioned_symbol (libc, __logout, logout, GLIBC_2_34);
+libc_hidden_ver (__logout, logout)
+
+#if OTHER_SHLIB_COMPAT (libutil, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libutil, __logout, logout, GLIBC_2_0);
+#endif

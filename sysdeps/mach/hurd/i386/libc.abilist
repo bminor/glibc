@@ -863,6 +863,7 @@ GLIBC_2.2.6 fopen64 F
 GLIBC_2.2.6 fopencookie F
 GLIBC_2.2.6 fopenport F
 GLIBC_2.2.6 fork F
+GLIBC_2.2.6 forkpty F
 GLIBC_2.2.6 fpathconf F
 GLIBC_2.2.6 fprintf F
 GLIBC_2.2.6 fputc F
@@ -1215,6 +1216,10 @@ GLIBC_2.2.6 localtime_r F
 GLIBC_2.2.6 lockf F
 GLIBC_2.2.6 lockf64 F
 GLIBC_2.2.6 locs D 0x4
+GLIBC_2.2.6 login F
+GLIBC_2.2.6 login_tty F
+GLIBC_2.2.6 logout F
+GLIBC_2.2.6 logwtmp F
 GLIBC_2.2.6 longjmp F
 GLIBC_2.2.6 lrand48 F
 GLIBC_2.2.6 lrand48_r F
@@ -1337,6 +1342,7 @@ GLIBC_2.2.6 open_memstream F
 GLIBC_2.2.6 opendir F
 GLIBC_2.2.6 openlog F
 GLIBC_2.2.6 openport F
+GLIBC_2.2.6 openpty F
 GLIBC_2.2.6 optarg D 0x4
 GLIBC_2.2.6 opterr D 0x4
 GLIBC_2.2.6 optind D 0x4
@@ -2229,6 +2235,12 @@ GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
+GLIBC_2.34 forkpty F
+GLIBC_2.34 login F
+GLIBC_2.34 login_tty F
+GLIBC_2.34 logout F
+GLIBC_2.34 logwtmp F
+GLIBC_2.34 openpty F
 GLIBC_2.34 shm_open F
 GLIBC_2.34 shm_unlink F
 GLIBC_2.34 timespec_getres F

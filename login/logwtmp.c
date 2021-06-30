@@ -22,10 +22,10 @@
 #include <unistd.h>
 #include <utmp.h>
 #include <struct___timespec64.h>
-
+#include <shlib-compat.h>
 
 void
-logwtmp (const char *line, const char *name, const char *host)
+__logwtmp (const char *line, const char *name, const char *host)
 {
   struct utmp ut;
 
@@ -41,5 +41,11 @@ logwtmp (const char *line, const char *name, const char *host)
   __clock_gettime64 (CLOCK_REALTIME, &ts);
   TIMESPEC_TO_TIMEVAL (&ut.ut_tv, &ts);
 
-  updwtmp (_PATH_WTMP, &ut);
+  __updwtmp (_PATH_WTMP, &ut);
 }
+versioned_symbol (libc, __logwtmp, logwtmp, GLIBC_2_34);
+libc_hidden_ver (__logwtmp, logwtmp)
+
+#if OTHER_SHLIB_COMPAT (libutil, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libutil, __logwtmp, logwtmp, GLIBC_2_0);
+#endif

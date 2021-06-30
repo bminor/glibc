@@ -7,6 +7,12 @@ GLIBC_2.0 dlclose F
 GLIBC_2.0 dlerror F
 GLIBC_2.0 dlopen F
 GLIBC_2.0 dlsym F
+GLIBC_2.0 forkpty F
+GLIBC_2.0 login F
+GLIBC_2.0 login_tty F
+GLIBC_2.0 logout F
+GLIBC_2.0 logwtmp F
+GLIBC_2.0 openpty F
 GLIBC_2.1 aio_cancel F
 GLIBC_2.1 aio_cancel64 F
 GLIBC_2.1 aio_error F
@@ -2375,8 +2381,13 @@ GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
+GLIBC_2.34 forkpty F
 GLIBC_2.34 lio_listio F
 GLIBC_2.34 lio_listio64 F
+GLIBC_2.34 login F
+GLIBC_2.34 login_tty F
+GLIBC_2.34 logout F
+GLIBC_2.34 logwtmp F
 GLIBC_2.34 mq_close F
 GLIBC_2.34 mq_getattr F
 GLIBC_2.34 mq_notify F
@@ -2393,6 +2404,7 @@ GLIBC_2.34 mtx_lock F
 GLIBC_2.34 mtx_timedlock F
 GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
+GLIBC_2.34 openpty F
 GLIBC_2.34 pthread_attr_getaffinity_np F
 GLIBC_2.34 pthread_attr_getguardsize F
 GLIBC_2.34 pthread_attr_getstack F

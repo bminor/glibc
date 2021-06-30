@@ -1,5 +1,5 @@
-/* Copyright (C) 2008-2021 Free Software Foundation, Inc.
-   Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
+/* Placeholder compatibility symbols for libutil.  s390 version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <assert.h>
-#include <errno.h>
-#include <limits.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <utmp.h>
-#include <shlib-compat.h>
-
 #include "utmp-compat.h"
+#include <login/libutil-compat.c>
 
-#undef compat_symbol
-#define compat_symbol(...)
-#include "login/login.c"
-
-/* Compatibility symbol as formerly found in libutil.  login@GLIBC_2.0
-   is supplied by login32.c.  */
-symbol_version (__login, login, UTMP_COMPAT_BASE);
+symbol_version (__libutil_version_placeholder_1,
+                __libutil_version_placeholder, UTMP_COMPAT_BASE);

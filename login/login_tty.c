@@ -37,13 +37,14 @@ static char sccsid[] = "@(#)login_tty.c	8.1 (Berkeley) 6/4/93";
 #include <unistd.h>
 #include <fcntl.h>
 #include <utmp.h>
+#include <shlib-compat.h>
 
 int
-login_tty (int fd)
+__login_tty (int fd)
 {
-	(void) setsid();
+	__setsid();
 #ifdef TIOCSCTTY
-	if (ioctl(fd, TIOCSCTTY, (char *)NULL) == -1)
+	if (__ioctl(fd, TIOCSCTTY, NULL) == -1)
 		return (-1);
 #else
 	{
@@ -53,24 +54,29 @@ login_tty (int fd)
 	  if (fdname)
 	    {
 	      if (fd != 0)
-		(void) close (0);
+		_close (0);
 	      if (fd != 1)
-		(void) close (1);
+		__close (1);
 	      if (fd != 2)
-		(void) close (2);
-	      newfd = open (fdname, O_RDWR);
-	      (void) close (newfd);
+		__close (2);
+	      newfd = __open64 (fdname, O_RDWR);
+	      __close (newfd);
 	    }
 	}
 #endif
-	while (dup2(fd, 0) == -1 && errno == EBUSY)
+	while (__dup2(fd, 0) == -1 && errno == EBUSY)
 	  ;
-	while (dup2(fd, 1) == -1 && errno == EBUSY)
+	while (__dup2(fd, 1) == -1 && errno == EBUSY)
 	  ;
-	while (dup2(fd, 2) == -1 && errno == EBUSY)
+	while (__dup2(fd, 2) == -1 && errno == EBUSY)
 	  ;
 	if (fd > 2)
-		(void) close(fd);
+		__close(fd);
 	return (0);
 }
-libutil_hidden_def (login_tty)
+versioned_symbol (libc, __login_tty, login_tty, GLIBC_2_34);
+libc_hidden_ver (__login_tty, login_tty)
+
+#if OTHER_SHLIB_COMPAT (libutil, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libutil, __login_tty, login_tty, GLIBC_2_0);
+#endif

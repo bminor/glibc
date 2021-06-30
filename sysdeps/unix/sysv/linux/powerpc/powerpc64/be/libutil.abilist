@@ -1,6 +1,1 @@
-GLIBC_2.3 forkpty F
-GLIBC_2.3 login F
-GLIBC_2.3 login_tty F
-GLIBC_2.3 logout F
-GLIBC_2.3 logwtmp F
-GLIBC_2.3 openpty F
+GLIBC_2.3 __libutil_version_placeholder F

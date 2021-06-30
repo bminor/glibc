@@ -966,6 +966,7 @@ GLIBC_2.17 fopen F
 GLIBC_2.17 fopen64 F
 GLIBC_2.17 fopencookie F
 GLIBC_2.17 fork F
+GLIBC_2.17 forkpty F
 GLIBC_2.17 fpathconf F
 GLIBC_2.17 fprintf F
 GLIBC_2.17 fputc F
@@ -1373,6 +1374,10 @@ GLIBC_2.17 localtime_r F
 GLIBC_2.17 lockf F
 GLIBC_2.17 lockf64 F
 GLIBC_2.17 locs D 0x8
+GLIBC_2.17 login F
+GLIBC_2.17 login_tty F
+GLIBC_2.17 logout F
+GLIBC_2.17 logwtmp F
 GLIBC_2.17 longjmp F
 GLIBC_2.17 lrand48 F
 GLIBC_2.17 lrand48_r F
@@ -1503,6 +1508,7 @@ GLIBC_2.17 openat F
 GLIBC_2.17 openat64 F
 GLIBC_2.17 opendir F
 GLIBC_2.17 openlog F
+GLIBC_2.17 openpty F
 GLIBC_2.17 optarg D 0x8
 GLIBC_2.17 opterr D 0x4
 GLIBC_2.17 optind D 0x4
@@ -2611,8 +2617,13 @@ GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
+GLIBC_2.34 forkpty F
 GLIBC_2.34 lio_listio F
 GLIBC_2.34 lio_listio64 F
+GLIBC_2.34 login F
+GLIBC_2.34 login_tty F
+GLIBC_2.34 logout F
+GLIBC_2.34 logwtmp F
 GLIBC_2.34 mq_close F
 GLIBC_2.34 mq_getattr F
 GLIBC_2.34 mq_notify F
@@ -2629,6 +2640,7 @@ GLIBC_2.34 mtx_lock F
 GLIBC_2.34 mtx_timedlock F
 GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
+GLIBC_2.34 openpty F
 GLIBC_2.34 pthread_attr_getaffinity_np F
 GLIBC_2.34 pthread_attr_getguardsize F
 GLIBC_2.34 pthread_attr_getstack F

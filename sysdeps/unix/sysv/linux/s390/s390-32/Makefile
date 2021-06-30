@@ -2,8 +2,7 @@
 default-abi := 32
 
 ifeq ($(subdir),login)
-sysdep_routines += utmp32 utmpx32
-libutil-routines += login32
+sysdep_routines += utmp32 utmpx32 login32
 endif
 
 ifeq ($(subdir),misc)

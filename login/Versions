@@ -16,6 +16,14 @@ libc {
 
     # u*
     updwtmp; utmpname;
+
+    # Symbols formerly in libutil.
+    forkpty;
+    login;
+    login_tty;
+    logout;
+    logwtmp;
+    openpty;
   }
   GLIBC_2.1 {
     # e*
@@ -45,10 +53,19 @@ libc {
     __getlogin_r_chk;
     __ptsname_r_chk;
   }
+  GLIBC_2.34 {
+    # Symbols formerly in libutil.
+    forkpty;
+    login;
+    login_tty;
+    logout;
+    logwtmp;
+    openpty;
+  }
 }
 
 libutil {
   GLIBC_2.0 {
-    forkpty; login; login_tty; logout; logwtmp; openpty;
+    __libutil_version_placeholder;
   }
 }

@@ -25,7 +25,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include <sys/types.h>
-
+#include <shlib-compat.h>
 
 /* Return the result of ptsname_r in the buffer pointed to by PTS,
    which should be of length BUF_LEN.  If it is too long to fit in
@@ -43,7 +43,7 @@ pts_name (int fd, char **pts, size_t buf_len)
 
       if (buf_len)
 	{
-	  rv = ptsname_r (fd, buf, buf_len);
+	  rv = __ptsname_r (fd, buf, buf_len);
 
 	  if (rv != 0 || memchr (buf, '\0', buf_len))
 	    /* We either got an error, or we succeeded and the
@@ -79,12 +79,12 @@ pts_name (int fd, char **pts, size_t buf_len)
   return rv;
 }
 
-/* Create pseudo tty master slave pair and set terminal attributes
+/* Create pseudo tty multiplexer/terminal pair and set terminal attributes
    according to TERMP and WINP.  Return handles for both ends in
-   AMASTER and ASLAVE, and return the name of the slave end in NAME.  */
+   *PPTMX and *PTERMINAL, and return the name of the terminal end in NAME.  */
 int
-openpty (int *amaster, int *aslave, char *name,
-	 const struct termios *termp, const struct winsize *winp)
+__openpty (int *pptmx, int *pterminal, char *name,
+	   const struct termios *termp, const struct winsize *winp)
 {
 #ifdef PATH_MAX
   char _buf[PATH_MAX];
@@ -92,51 +92,51 @@ openpty (int *amaster, int *aslave, char *name,
   char _buf[512];
 #endif
   char *buf = _buf;
-  int master, ret = -1, slave = -1;
+  int ptmx, ret = -1, terminal = -1;
 
   *buf = '\0';
 
-  master = getpt ();
-  if (master == -1)
+  ptmx = __getpt ();
+  if (ptmx == -1)
     return -1;
 
-  if (grantpt (master))
+  if (grantpt (ptmx))
     goto on_error;
 
-  if (unlockpt (master))
+  if (unlockpt (ptmx))
     goto on_error;
 
 #ifdef TIOCGPTPEER
-  /* Try to allocate slave fd solely based on master fd first. */
-  slave = ioctl (master, TIOCGPTPEER, O_RDWR | O_NOCTTY);
+  /* Try to allocate terminal fd solely based on PTMX fd first. */
+  terminal = __ioctl (ptmx, TIOCGPTPEER, O_RDWR | O_NOCTTY);
 #endif
-  if (slave == -1)
+  if (terminal == -1)
     {
-      /* Fallback to path-based slave fd allocation in case kernel doesn't
+      /* Fallback to path-based terminal fd allocation in case kernel doesn't
        * support TIOCGPTPEER.
        */
-      if (pts_name (master, &buf, sizeof (_buf)))
+      if (pts_name (ptmx, &buf, sizeof (_buf)))
         goto on_error;
 
-      slave = open (buf, O_RDWR | O_NOCTTY);
-      if (slave == -1)
+      terminal = __open64 (buf, O_RDWR | O_NOCTTY);
+      if (terminal == -1)
         goto on_error;
     }
 
   /* XXX Should we ignore errors here?  */
   if (termp)
-    tcsetattr (slave, TCSAFLUSH, termp);
+    tcsetattr (terminal, TCSAFLUSH, termp);
 #ifdef TIOCSWINSZ
   if (winp)
-    ioctl (slave, TIOCSWINSZ, winp);
+    __ioctl (terminal, TIOCSWINSZ, winp);
 #endif
 
-  *amaster = master;
-  *aslave = slave;
+  *pptmx = ptmx;
+  *pterminal = terminal;
   if (name != NULL)
     {
       if (*buf == '\0')
-        if (pts_name (master, &buf, sizeof (_buf)))
+        if (pts_name (ptmx, &buf, sizeof (_buf)))
           goto on_error;
 
       strcpy (name, buf);
@@ -146,10 +146,10 @@ openpty (int *amaster, int *aslave, char *name,
 
  on_error:
   if (ret == -1) {
-    close (master);
+    __close (ptmx);
 
-    if (slave != -1)
-      close (slave);
+    if (terminal != -1)
+      __close (terminal);
   }
 
   if (buf != _buf)
@@ -157,4 +157,9 @@ openpty (int *amaster, int *aslave, char *name,
 
   return ret;
 }
-libutil_hidden_def (openpty)
+versioned_symbol (libc, __openpty, openpty, GLIBC_2_34);
+libc_hidden_ver (__openpty, openpty)
+
+#if OTHER_SHLIB_COMPAT (libutil, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libutil, __openpty, openpty, GLIBC_2_0);
+#endif
