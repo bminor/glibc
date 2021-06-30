@@ -71,7 +71,6 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_6);
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_7);
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_9);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_11);
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_12);
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_13);
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_17);
@@ -318,6 +317,9 @@ update_usable (struct cpu_features *cpu_features)
   /* Determine if PKU is usable.  */
   if (CPU_FEATURES_CPU_P (cpu_features, OSPKE))
     CPU_FEATURE_SET (cpu_features, PKU);
+
+  if (CPU_FEATURES_CPU_P (cpu_features, RTM_ALWAYS_ABORT))
+    CPU_FEATURE_UNSET (cpu_features, RTM);
 }
 
 static void
