@@ -358,8 +358,10 @@ struct auditstate
 
 #if __ELF_NATIVE_CLASS == 32
 # define symbind symbind32
+# define LA_SYMBIND "la_symbind32"
 #elif __ELF_NATIVE_CLASS == 64
 # define symbind symbind64
+# define LA_SYMBIND "la_symbind64"
 #else
 # error "__ELF_NATIVE_CLASS must be defined"
 #endif

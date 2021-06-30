@@ -7,6 +7,11 @@ using `glibc' in the "product" field.
 
 Version 2.34.1
 
+Major new features:
+
+* The audit libraries will avoid unnecessary slowdown if it is not required
+  PLT tracking (by not implementing the la_pltenter or la_pltexit callbacks).
+
 Security related changes:
 
   CVE-2022-23219: Passing an overlong file name to the clnt_create
