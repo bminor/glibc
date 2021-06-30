@@ -914,8 +914,6 @@ no more namespaces available for dlmopen()"));
 	     the flag here.  */
 	}
 
-      assert (_dl_debug_update (args.nsid)->r_state == RT_CONSISTENT);
-
       /* Release the lock.  */
       __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
