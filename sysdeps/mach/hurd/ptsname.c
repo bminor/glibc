@@ -88,4 +88,5 @@ __ptsname_r (int fd, char *buf, size_t buflen)
 {
   return __ptsname_internal (fd, buf, buflen, NULL);
 }
+libc_hidden_def (__ptsname_r)
 weak_alias (__ptsname_r, ptsname_r)

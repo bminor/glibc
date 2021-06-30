@@ -27,6 +27,7 @@ __getpt (void)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__getpt)
 weak_alias (__getpt, getpt)
 
 /* We cannot define posix_openpt in general for BSD systems.  */

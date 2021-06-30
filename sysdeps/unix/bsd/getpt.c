@@ -20,7 +20,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <stdlib.h>
 
 /* Prefix for master pseudo terminal nodes.  */
 #define _PATH_PTY "/dev/pty"
@@ -79,6 +79,7 @@ __getpt (void)
 {
   return __bsd_openpt (O_RDWR);
 }
+libc_hidden_def (__getpt)
 weak_alias (__getpt, getpt)
 
 int

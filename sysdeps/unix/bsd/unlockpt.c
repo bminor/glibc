@@ -39,3 +39,4 @@ unlockpt (int fd)
     }
   return __revoke (buf);
 }
+libc_hidden_def (unlockpt)

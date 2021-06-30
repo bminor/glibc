@@ -38,6 +38,7 @@ __ptsname_r (int fd __attribute__ ((unused)),
   __set_errno (ENOSYS);
   return ENOSYS;
 }
+libc_hidden_def (__ptsname_r)
 weak_alias (__ptsname_r, ptsname_r)
 
 stub_warning(ptsname)

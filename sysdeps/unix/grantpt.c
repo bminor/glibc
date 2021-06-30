@@ -258,3 +258,4 @@ grantpt (int fd)
 
   return retval;
 }
+libc_hidden_def (grantpt)

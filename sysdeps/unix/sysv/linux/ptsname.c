@@ -79,4 +79,5 @@ __ptsname_r (int fd, char *buf, size_t buflen)
   __set_errno (save_errno);
   return 0;
 }
+libc_hidden_def (__ptsname_r)
 weak_alias (__ptsname_r, ptsname_r)

@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <paths.h>
+#include <stdlib.h>
 
 /* Path to the master pseudo terminal cloning device.  */
 #define _PATH_DEVPTMX _PATH_DEV "ptmx"
@@ -37,4 +38,5 @@ __getpt (void)
 {
   return __posix_openpt (O_RDWR);
 }
+libc_hidden_def (__getpt)
 weak_alias (__getpt, getpt)

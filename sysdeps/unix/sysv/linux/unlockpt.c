@@ -35,3 +35,4 @@ unlockpt (int fd)
     __set_errno (EINVAL);
   return ret;
 }
+libc_hidden_def (unlockpt)

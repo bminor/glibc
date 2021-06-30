@@ -28,5 +28,5 @@ grantpt (int fd __attribute__ ((unused)))
   __set_errno (ENOSYS);
   return -1;
 }
-
+libc_hidden_def (grantpt)
 stub_warning (grantpt)
