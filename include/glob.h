@@ -31,6 +31,7 @@ typedef struct
 extern int __glob64_time64 (const char *pattern, int flags,
 			    int (*errfunc) (const char *, int),
 			    glob64_time64_t *pglob);
+libc_hidden_proto (__glob64_time64)
 void __globfree64_time64 (glob64_time64_t *pglob);
 libc_hidden_proto (__globfree64_time64)
 # endif

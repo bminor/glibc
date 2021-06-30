@@ -43,6 +43,7 @@ __glob64_time64 (const char *pattern, int flags,
   __set_errno (ENOSYS);
   return GLOB_NOSYS;
 }
+libc_hidden_def (__glob64_time64)
 
 stub_warning (glob64)
 

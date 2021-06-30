@@ -41,4 +41,5 @@
 # define COMPILE_GLOB64	1
 
 # include <posix/glob.c>
+libc_hidden_def (__glob64_time64)
 #endif
