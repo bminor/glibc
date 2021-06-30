@@ -124,6 +124,37 @@ _dl_fixup (
       && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0))
     value = elf_ifunc_invoke (DL_FIXUP_VALUE_ADDR (value));
 
+#ifdef SHARED
+  /* Auditing checkpoint: we have a new binding.  Provide the auditing
+     libraries the possibility to change the value and tell us whether further
+     auditing is wanted.
+     The l_reloc_result is only allocated if there is an audit module which
+     provides a la_symbind.  */
+  if (l->l_reloc_result != NULL)
+    {
+      /* This is the address in the array where we store the result of previous
+	 relocations.  */
+      struct reloc_result *reloc_result
+	= &l->l_reloc_result[reloc_index (pltgot, reloc_arg, sizeof (PLTREL))];
+      unsigned int init = atomic_load_acquire (&reloc_result->init);
+      if (init == 0)
+	{
+	  _dl_audit_symbind (l, reloc_result, sym, &value, result);
+
+	  /* Store the result for later runs.  */
+	  if (__glibc_likely (! GLRO(dl_bind_not)))
+	    {
+	      reloc_result->addr = value;
+	      /* Guarantee all previous writes complete before init is
+		 updated.  See CONCURRENCY NOTES below.  */
+	      atomic_store_release (&reloc_result->init, 1);
+	    }
+	}
+      else
+	value = reloc_result->addr;
+    }
+#endif
+
   /* Finally, fix up the plt itself.  */
   if (__glibc_unlikely (GLRO(dl_bind_not)))
     return value;

@@ -1017,13 +1017,7 @@ ERROR: audit interface '%s' requires version %d (maximum supported version %d); 
     "la_objsearch\0"
     "la_objopen\0"
     "la_preinit\0"
-#if __ELF_NATIVE_CLASS == 32
-    "la_symbind32\0"
-#elif __ELF_NATIVE_CLASS == 64
-    "la_symbind64\0"
-#else
-# error "__ELF_NATIVE_CLASS must be defined"
-#endif
+    LA_SYMBIND "\0"
 #define STRING(s) __STRING (s)
     "la_" STRING (ARCH_LA_PLTENTER) "\0"
     "la_" STRING (ARCH_LA_PLTEXIT) "\0"

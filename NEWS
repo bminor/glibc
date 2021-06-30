@@ -230,6 +230,9 @@ Major new features:
   execute programs that do not have any dynamic dependency (that is,
   they are statically linked).  This feature is Linux-specific.
 
+* The audit libraries will avoid unnecessary slowdown if it is not required
+  PLT tracking (by not implementing the la_pltenter or la_pltexit callbacks).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs
