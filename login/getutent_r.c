@@ -36,6 +36,7 @@ __setutent (void)
 
   __libc_lock_unlock (__libc_utmp_lock);
 }
+libc_hidden_def (__setutent)
 weak_alias (__setutent, setutent)
 
 
@@ -82,4 +83,5 @@ __endutent (void)
 
   __libc_lock_unlock (__libc_utmp_lock);
 }
+libc_hidden_def (__endutent)
 weak_alias (__endutent, endutent)

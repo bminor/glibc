@@ -72,4 +72,5 @@ done:
   __libc_lock_unlock (__libc_utmp_lock);
   return result;
 }
+libc_hidden_def (__utmpname)
 weak_alias (__utmpname, utmpname)
