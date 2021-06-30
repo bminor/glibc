@@ -219,7 +219,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-dlopen-self tst-auditmany tst-initfinilazyfail tst-dlopenfail \
 	 tst-dlopenfail-2 \
 	 tst-filterobj tst-filterobj-dlopen tst-auxobj tst-auxobj-dlopen \
-	 tst-audit14 tst-audit15 tst-audit16 \
+	 tst-audit14 tst-audit15 tst-audit16 tst-audit17 \
 	 tst-single_threaded tst-single_threaded-pthread \
 	 tst-tls-ie tst-tls-ie-dlmopen argv0test \
 	 tst-glibc-hwcaps tst-glibc-hwcaps-prepend tst-glibc-hwcaps-mask \
@@ -1475,6 +1475,16 @@ $(objpfx)tst-auditlogmod-3.so: $(libsupport)
 $(objpfx)tst-audit16.out: \
   $(objpfx)tst-auditlogmod-1.so $(objpfx)tst-auditlogmod-2.so \
   $(objpfx)tst-auditlogmod-3.so
+$(objpfx)tst-audit17.out: $(objpfx)tst-auditmod17.so
+# The test check if a audit library without libc.so on DT_NEEDED works as
+# intended, so it uses an explicit link rule.
+$(objpfx)tst-auditmod17.so: $(objpfx)tst-auditmod17.os
+	$(CC) -nostdlib -nostartfiles -shared -o $@.new \
+	$(filter-out $(map-file),$^)
+	$(call after-link,$@.new)
+	mv -f $@.new $@
+CFLAGS-.os += $(call elide-stack-protector,.os,tst-auditmod17)
+tst-audit17-ENV = LD_AUDIT=$(objpfx)tst-auditmod17.so
 
 # tst-sonamemove links against an older implementation of the library.
 LDFLAGS-tst-sonamemove-linkmod1.so = \

@@ -769,16 +769,9 @@ dl_open_worker (void *a)
      namespace.  */
   if (!args->libc_already_loaded)
     {
+      /* dlopen cannot be used to load an initial libc by design.  */
       struct link_map *libc_map = GL(dl_ns)[args->nsid].libc_map;
-#ifdef SHARED
-      bool initial = libc_map->l_ns == LM_ID_BASE;
-#else
-      /* In the static case, there is only one namespace, but it
-	 contains a secondary libc (the primary libc is statically
-	 linked).  */
-      bool initial = false;
-#endif
-      _dl_call_libc_early_init (libc_map, initial);
+      _dl_call_libc_early_init (libc_map, false);
     }
 
   /* Run the initializer functions of new objects.  Temporarily
