@@ -248,6 +248,9 @@ init_cpu_features (struct cpu_features *cpu_features)
 
       get_extended_indices (cpu_features);
 
+      if (CPU_FEATURES_CPU_P (cpu_features, RTM_ALWAYS_ABORT))
+	cpu_features->cpuid[index_cpu_RTM].reg_RTM &= ~bit_cpu_RTM;
+
       if (family == 0x06)
 	{
 	  model += extended_model;

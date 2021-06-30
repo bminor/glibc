@@ -81,6 +81,7 @@
 #define bit_cpu_IBT		(1u << 20)
 #define bit_cpu_SHSTK		(1u << 7)
 #define bit_cpu_FSRM		(1 << 4)
+#define bit_cpu_RTM_ALWAYS_ABORT (1 << 11)
 
 /* XCR0 Feature flags.  */
 #define bit_XMM_state		(1 << 1)
@@ -213,6 +214,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define index_cpu_IBT		COMMON_CPUID_INDEX_7
 # define index_cpu_SHSTK	COMMON_CPUID_INDEX_7
 # define index_cpu_FSRM		COMMON_CPUID_INDEX_7
+# define index_cpu_RTM_ALWAYS_ABORT COMMON_CPUID_INDEX_7
 
 # define reg_CX8		edx
 # define reg_CMOV		edx
@@ -245,6 +247,7 @@ extern const struct cpu_features *__get_cpu_features (void)
 # define reg_IBT		edx
 # define reg_SHSTK		ecx
 # define reg_FSRM		edx
+# define reg_RTM_ALWAYS_ABORT	edx
 
 # define index_arch_Fast_Rep_String	FEATURE_INDEX_1
 # define index_arch_Fast_Copy_Backward	FEATURE_INDEX_1
