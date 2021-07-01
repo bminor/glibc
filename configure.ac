@@ -52,6 +52,7 @@ fi
 AC_SUBST(cross_compiling)
 AC_PROG_CPP
 AC_CHECK_TOOL(READELF, readelf, false)
+AC_CHECK_TOOL(OBJDUMP, objdump, false)
 
 # We need the C++ compiler only for testing.
 AC_PROG_CXX

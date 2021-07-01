@@ -122,8 +122,6 @@ AS=`$CC -print-prog-name=as`
 LD=`$CC -print-prog-name=$LDNAME`
 AR=`$CC -print-prog-name=ar`
 AC_SUBST(AR)
-OBJDUMP=`$CC -print-prog-name=objdump`
-AC_SUBST(OBJDUMP)
 OBJCOPY=`$CC -print-prog-name=objcopy`
 AC_SUBST(OBJCOPY)
 GPROF=`$CC -print-prog-name=gprof`
