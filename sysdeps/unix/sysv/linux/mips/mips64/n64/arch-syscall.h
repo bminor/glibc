@@ -131,6 +131,9 @@
 #define __NR_kexec_load 5270
 #define __NR_keyctl 5241
 #define __NR_kill 5060
+#define __NR_landlock_add_rule 5445
+#define __NR_landlock_create_ruleset 5444
+#define __NR_landlock_restrict_self 5446
 #define __NR_lchown 5092
 #define __NR_lgetxattr 5184
 #define __NR_link 5084

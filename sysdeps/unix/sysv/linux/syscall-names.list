@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 5.12.
-kernel 5.12
+# The list of system calls is current as of Linux 5.13.
+kernel 5.13
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -224,6 +224,9 @@ kexec_file_load
 kexec_load
 keyctl
 kill
+landlock_add_rule
+landlock_create_ruleset
+landlock_restrict_self
 lchown
 lchown32
 lgetxattr
