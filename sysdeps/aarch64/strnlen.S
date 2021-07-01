@@ -22,197 +22,105 @@
 
 /* Assumptions:
  *
- * ARMv8-a, AArch64
+ * ARMv8-a, AArch64, Advanced SIMD.
+ * MTE compatible.
  */
 
-/* Arguments and results.  */
 #define srcin		x0
-#define len		x0
-#define limit		x1
+#define cntin		x1
+#define result		x0
 
-/* Locals and temporaries.  */
 #define src		x2
-#define data1		x3
-#define data2		x4
-#define data2a		x5
-#define has_nul1	x6
-#define has_nul2	x7
-#define tmp1		x8
-#define tmp2		x9
-#define tmp3		x10
-#define tmp4		x11
-#define zeroones	x12
-#define pos		x13
-#define limit_wd	x14
+#define synd		x3
+#define	shift		x4
+#define wtmp		w4
+#define tmp		x4
+#define cntrem		x5
 
-#define dataq		q2
-#define datav		v2
-#define datab2		b3
-#define dataq2		q3
-#define datav2		v3
-#define REP8_01 0x0101010101010101
-#define REP8_7f 0x7f7f7f7f7f7f7f7f
-#define REP8_80 0x8080808080808080
+#define qdata		q0
+#define vdata		v0
+#define vhas_chr	v1
+#define vrepmask	v2
+#define vend		v3
+#define dend		d3
 
-ENTRY_ALIGN_AND_PAD (__strnlen, 6, 9)
+/*
+   Core algorithm:
+
+   For each 16-byte chunk we calculate a 64-bit syndrome value with four bits
+   per byte. For even bytes, bits 0-3 are set if the relevant byte matched the
+   requested character or the byte is NUL. Bits 4-7 must be zero. Bits 4-7 are
+   set likewise for odd bytes so that adjacent bytes can be merged. Since the
+   bits in the syndrome reflect the order in which things occur in the original
+   string, counting trailing zeros identifies exactly which byte matched.  */
+
+ENTRY (__strnlen)
 	PTR_ARG (0)
 	SIZE_ARG (1)
-	cbz	limit, L(hit_limit)
-	mov	zeroones, #REP8_01
-	bic	src, srcin, #15
-	ands	tmp1, srcin, #15
-	b.ne	L(misaligned)
-	/* Calculate the number of full and partial words -1.  */
-	sub	limit_wd, limit, #1	/* Limit != 0, so no underflow.  */
-	lsr	limit_wd, limit_wd, #4	/* Convert to Qwords.  */
+	bic	src, srcin, 15
+	mov	wtmp, 0xf00f
+	cbz	cntin, L(nomatch)
+	ld1	{vdata.16b}, [src], 16
+	dup	vrepmask.8h, wtmp
+	cmeq	vhas_chr.16b, vdata.16b, 0
+	lsl	shift, srcin, 2
+	and	vhas_chr.16b, vhas_chr.16b, vrepmask.16b
+	addp	vend.16b, vhas_chr.16b, vhas_chr.16b		/* 128->64 */
+	fmov	synd, dend
+	lsr	synd, synd, shift
+	cbz	synd, L(start_loop)
+L(finish):
+	rbit	synd, synd
+	clz	synd, synd
+	lsr	result, synd, 2
+	cmp	cntin, result
+	csel	result, cntin, result, ls
+	ret
 
-	/* NUL detection works on the principle that (X - 1) & (~X) & 0x80
-	   (=> (X - 1) & ~(X | 0x7f)) is non-zero iff a byte is zero, and
-	   can be done in parallel across the entire word.  */
-	/* The inner loop deals with two Dwords at a time.  This has a
-	   slightly higher start-up cost, but we should win quite quickly,
-	   especially on cores with a high number of issue slots per
-	   cycle, as we get much better parallelism out of the operations.  */
+L(start_loop):
+	sub	tmp, src, srcin
+	subs	cntrem, cntin, tmp
+	b.ls	L(nomatch)
 
-	/* Start of critial section -- keep to one 64Byte cache line.  */
+	/* Make sure that it won't overread by a 16-byte chunk */
+	add	tmp, cntrem, 15
+	tbnz	tmp, 4, L(loop32_2)
 
-	ldp	data1, data2, [src], #16
-L(realigned):
-	sub	tmp1, data1, zeroones
-	orr	tmp2, data1, #REP8_7f
-	sub	tmp3, data2, zeroones
-	orr	tmp4, data2, #REP8_7f
-	bic	has_nul1, tmp1, tmp2
-	bic	has_nul2, tmp3, tmp4
-	subs	limit_wd, limit_wd, #1
-	orr	tmp1, has_nul1, has_nul2
-	ccmp	tmp1, #0, #0, pl	/* NZCV = 0000  */
-	b.eq	L(loop)
-	/* End of critical section -- keep to one 64Byte cache line.  */
+	.p2align 5
+L(loop32):
+	ldr	qdata, [src], 16
+	cmeq	vhas_chr.16b, vdata.16b, 0
+	umaxp	vend.16b, vhas_chr.16b, vhas_chr.16b		/* 128->64 */
+	fmov	synd, dend
+	cbnz	synd, L(end)
+L(loop32_2):
+	ldr	qdata, [src], 16
+	subs	cntrem, cntrem, 32
+	cmeq	vhas_chr.16b, vdata.16b, 0
+	b.ls	L(end)
+	umaxp	vend.16b, vhas_chr.16b, vhas_chr.16b		/* 128->64 */
+	fmov	synd, dend
+	cbz	synd, L(loop32)
 
-	orr	tmp1, has_nul1, has_nul2
-	cbz	tmp1, L(hit_limit)	/* No null in final Qword.  */
-
-	/* We know there's a null in the final Qword.  The easiest thing
-	   to do now is work out the length of the string and return
-	   MIN (len, limit).  */
-
-	sub	len, src, srcin
-	cbz	has_nul1, L(nul_in_data2)
-#ifdef __AARCH64EB__
-	mov	data2, data1
+L(end):
+	and	vhas_chr.16b, vhas_chr.16b, vrepmask.16b
+	addp	vend.16b, vhas_chr.16b, vhas_chr.16b		/* 128->64 */
+	sub	src, src, 16
+	mov	synd, vend.d[0]
+	sub	result, src, srcin
+#ifndef __AARCH64EB__
+	rbit	synd, synd
 #endif
-	sub	len, len, #8
-	mov	has_nul2, has_nul1
-L(nul_in_data2):
-#ifdef __AARCH64EB__
-	/* For big-endian, carry propagation (if the final byte in the
-	   string is 0x01) means we cannot use has_nul directly.  The
-	   easiest way to get the correct byte is to byte-swap the data
-	   and calculate the syndrome a second time.  */
-	rev	data2, data2
-	sub	tmp1, data2, zeroones
-	orr	tmp2, data2, #REP8_7f
-	bic	has_nul2, tmp1, tmp2
-#endif
-	sub	len, len, #8
-	rev	has_nul2, has_nul2
-	clz	pos, has_nul2
-	add	len, len, pos, lsr #3		/* Bits to bytes.  */
-	cmp	len, limit
-	csel	len, len, limit, ls		/* Return the lower value.  */
-	RET
+	clz	synd, synd
+	add	result, result, synd, lsr 2
+	cmp	cntin, result
+	csel	result, cntin, result, ls
+	ret
 
-L(loop):
-	ldr	dataq, [src], #16
-	uminv	datab2, datav.16b
-	mov	tmp1, datav2.d[0]
-	subs	limit_wd, limit_wd, #1
-	ccmp	tmp1, #0, #4, pl	/* NZCV = 0000  */
-	b.eq	L(loop_end)
-	ldr	dataq, [src], #16
-	uminv	datab2, datav.16b
-	mov	tmp1, datav2.d[0]
-	subs	limit_wd, limit_wd, #1
-	ccmp	tmp1, #0, #4, pl	/* NZCV = 0000  */
-	b.ne	L(loop)
-L(loop_end):
-	/* End of critical section -- keep to one 64Byte cache line.  */
+L(nomatch):
+	mov	result, cntin
+	ret
 
-	cbnz	tmp1, L(hit_limit)	/* No null in final Qword.  */
-
-	/* We know there's a null in the final Qword.  The easiest thing
-	   to do now is work out the length of the string and return
-	   MIN (len, limit).  */
-
-#ifdef __AARCH64EB__
-	rev64	datav.16b, datav.16b
-#endif
-	/* Set te NULL byte as 0xff and the rest as 0x00, move the data into a
-	   pair of scalars and then compute the length from the earliest NULL
-	   byte.  */
-
-	cmeq	datav.16b, datav.16b, #0
-#ifdef __AARCH64EB__
-	mov	data1, datav.d[1]
-	mov	data2, datav.d[0]
-#else
-	mov	data1, datav.d[0]
-	mov	data2, datav.d[1]
-#endif
-	cmp	data1, 0
-	csel	data1, data1, data2, ne
-	sub	len, src, srcin
-	sub	len, len, #16
-	rev	data1, data1
-	add	tmp2, len, 8
-	clz	tmp1, data1
-	csel	len, len, tmp2, ne
-	add	len, len, tmp1, lsr 3
-	cmp	len, limit
-	csel	len, len, limit, ls		/* Return the lower value.  */
-	RET
-
-L(misaligned):
-	/* Deal with a partial first word.
-	   We're doing two things in parallel here;
-	   1) Calculate the number of words (but avoiding overflow if
-	      limit is near ULONG_MAX) - to do this we need to work out
-	      limit + tmp1 - 1 as a 65-bit value before shifting it;
-	   2) Load and mask the initial data words - we force the bytes
-	      before the ones we are interested in to 0xff - this ensures
-	      early bytes will not hit any zero detection.  */
-	sub	limit_wd, limit, #1
-	neg	tmp4, tmp1
-	cmp	tmp1, #8
-
-	and	tmp3, limit_wd, #15
-	lsr	limit_wd, limit_wd, #4
-	mov	tmp2, #~0
-
-	ldp	data1, data2, [src], #16
-	lsl	tmp4, tmp4, #3		/* Bytes beyond alignment -> bits.  */
-	add	tmp3, tmp3, tmp1
-
-#ifdef __AARCH64EB__
-	/* Big-endian.  Early bytes are at MSB.  */
-	lsl	tmp2, tmp2, tmp4	/* Shift (tmp1 & 63).  */
-#else
-	/* Little-endian.  Early bytes are at LSB.  */
-	lsr	tmp2, tmp2, tmp4	/* Shift (tmp1 & 63).  */
-#endif
-	add	limit_wd, limit_wd, tmp3, lsr #4
-
-	orr	data1, data1, tmp2
-	orr	data2a, data2, tmp2
-
-	csinv	data1, data1, xzr, le
-	csel	data2, data2, data2a, le
-	b	L(realigned)
-
-L(hit_limit):
-	mov	len, limit
-	RET
 END (__strnlen)
 libc_hidden_def (__strnlen)
 weak_alias (__strnlen, strnlen)
