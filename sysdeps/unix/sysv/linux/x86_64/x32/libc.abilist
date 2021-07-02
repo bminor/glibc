@@ -941,7 +941,10 @@ GLIBC_2.16 fwprintf F
 GLIBC_2.16 fwrite F
 GLIBC_2.16 fwrite_unlocked F
 GLIBC_2.16 fwscanf F
+GLIBC_2.16 gai_cancel F
+GLIBC_2.16 gai_error F
 GLIBC_2.16 gai_strerror F
+GLIBC_2.16 gai_suspend F
 GLIBC_2.16 gcvt F
 GLIBC_2.16 get_avphys_pages F
 GLIBC_2.16 get_current_dir_name F
@@ -951,6 +954,7 @@ GLIBC_2.16 get_nprocs F
 GLIBC_2.16 get_nprocs_conf F
 GLIBC_2.16 get_phys_pages F
 GLIBC_2.16 getaddrinfo F
+GLIBC_2.16 getaddrinfo_a F
 GLIBC_2.16 getaliasbyname F
 GLIBC_2.16 getaliasbyname_r F
 GLIBC_2.16 getaliasent F
@@ -2437,6 +2441,10 @@ GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
 GLIBC_2.34 forkpty F
+GLIBC_2.34 gai_cancel F
+GLIBC_2.34 gai_error F
+GLIBC_2.34 gai_suspend F
+GLIBC_2.34 getaddrinfo_a F
 GLIBC_2.34 lio_listio F
 GLIBC_2.34 lio_listio64 F
 GLIBC_2.34 login F

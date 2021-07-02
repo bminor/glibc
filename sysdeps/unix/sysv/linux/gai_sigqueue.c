@@ -44,3 +44,4 @@ __gai_sigqueue (int sig, const union sigval val, pid_t caller_pid)
 
   return INLINE_SYSCALL (rt_sigqueueinfo, 3, info.si_pid, sig, &info);
 }
+libc_hidden_def (__gai_sigqueue)

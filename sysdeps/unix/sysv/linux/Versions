@@ -221,6 +221,7 @@ libc {
     __fts64_children_time64;
     __ftw64_time64;
     __nftw64_time64;
+    __gai_suspend_time64;
     __getitimer64;
     __getrusage64;
     __gettimeofday64;
@@ -309,12 +310,4 @@ ld {
   GLIBC_PRIVATE {
     __nptl_change_stack_perm;
   }
-}
-
-libanl {
-%ifdef TIME64_NON_DEFAULT
-  GLIBC_2.34 {
-    __gai_suspend_time64;
-  }
-%endif
 }

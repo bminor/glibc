@@ -35,7 +35,7 @@ struct async_waitlist
 
 
 int
-getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
+__getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
 {
   struct sigevent defsigev;
   struct requestlist *requests[ent];
@@ -57,7 +57,7 @@ getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
     }
 
   /* Request the mutex.  */
-  pthread_mutex_lock (&__gai_requests_mutex);
+  __pthread_mutex_lock (&__gai_requests_mutex);
 
   /* Now we can enqueue all requests.  Since we already acquired the
      mutex the enqueue function need not do this.  */
@@ -85,7 +85,7 @@ getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
       /* Release the mutex.  We do this before raising a signal since the
 	 signal handler might do a `siglongjmp' and then the mutex is
 	 locked forever.  */
-      pthread_mutex_unlock (&__gai_requests_mutex);
+      __pthread_mutex_unlock (&__gai_requests_mutex);
 
       if (mode == GAI_NOWAIT)
 	__gai_notify_only (sig,
@@ -119,7 +119,7 @@ getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
       /* Since `pthread_cond_wait'/`pthread_cond_timedwait' are cancelation
 	 points we must be careful.  We added entries to the waiting lists
 	 which we must remove.  So defer cancelation for now.  */
-      pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
+      __pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
 
       while (total > 0)
 	{
@@ -132,7 +132,7 @@ getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
 	}
 
       /* Now it's time to restore the cancelation state.  */
-      pthread_setcancelstate (oldstate, NULL);
+      __pthread_setcancelstate (oldstate, NULL);
 
 #ifndef DONT_NEED_GAI_MISC_COND
       /* Release the conditional variable.  */
@@ -176,7 +176,16 @@ getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
     }
 
   /* Release the mutex.  */
-  pthread_mutex_unlock (&__gai_requests_mutex);
+  __pthread_mutex_unlock (&__gai_requests_mutex);
 
   return result;
 }
+#if PTHREAD_IN_LIBC
+versioned_symbol (libc, __getaddrinfo_a, getaddrinfo_a, GLIBC_2_34);
+
+# if OTHER_SHLIB_COMPAT (libanl, GLIBC_2_2_3, GLIBC_2_34)
+compat_symbol (libanl, __getaddrinfo_a, getaddrinfo_a, GLIBC_2_2_3);
+# endif
+#else /* !PTHREAD_IN_LIBC */
+strong_alias (__getaddrinfo_a, getaddrinfo_a)
+#endif /* !PTHREAD_IN_LIBC */

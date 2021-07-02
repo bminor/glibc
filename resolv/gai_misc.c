@@ -24,7 +24,16 @@
 
 #include <gai_misc.h>
 
-
+#if !PTHREAD_IN_LIBC
+/* The available function names differ outside of libc.  (In libc, we
+   need to use hidden aliases to avoid the PLT.)  */
+#define __pthread_attr_init pthread_attr_init
+#define __pthread_attr_setdetachstate pthread_attr_setdetachstate
+#define __pthread_cond_signal pthread_cond_signal
+#define __pthread_cond_timedwait pthread_cond_timedwait
+#define __pthread_create pthread_create
+#define __pthread_exit pthread_exit
+#endif
 
 #ifndef gai_create_helper_thread
 # define gai_create_helper_thread __gai_create_helper_thread
@@ -36,12 +45,12 @@ __gai_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   pthread_attr_t attr;
 
   /* Make sure the thread is created detached.  */
-  pthread_attr_init (&attr);
-  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+  __pthread_attr_init (&attr);
+  __pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
-  int ret = pthread_create (threadp, &attr, tf, arg);
+  int ret = __pthread_create (threadp, &attr, tf, arg);
 
-  (void) pthread_attr_destroy (&attr);
+  (void) __pthread_attr_destroy (&attr);
   return ret;
 }
 #endif
@@ -216,13 +225,13 @@ __gai_enqueue_request (struct gaicb *gaicbp)
   struct requestlist *lastp;
 
   /* Get the mutex.  */
-  pthread_mutex_lock (&__gai_requests_mutex);
+  __pthread_mutex_lock (&__gai_requests_mutex);
 
   /* Get a new element for the waiting list.  */
   newp = get_elem ();
   if (newp == NULL)
     {
-      pthread_mutex_unlock (&__gai_requests_mutex);
+      __pthread_mutex_unlock (&__gai_requests_mutex);
       __set_errno (EAGAIN);
       return NULL;
     }
@@ -285,11 +294,11 @@ __gai_enqueue_request (struct gaicb *gaicbp)
       /* If there is a thread waiting for work, then let it know that we
 	 have just given it something to do. */
       if (idle_thread_count > 0)
-	pthread_cond_signal (&__gai_new_request_notification);
+	__pthread_cond_signal (&__gai_new_request_notification);
     }
 
   /* Release the mutex.  */
-  pthread_mutex_unlock (&__gai_requests_mutex);
+  __pthread_mutex_unlock (&__gai_requests_mutex);
 
   return newp;
 }
@@ -309,7 +318,7 @@ handle_requests (void *arg)
 	 "get work off the work queue" part of this loop, which is near the
 	 end. */
       if (runp == NULL)
-	pthread_mutex_lock (&__gai_requests_mutex);
+	__pthread_mutex_lock (&__gai_requests_mutex);
       else
 	{
 	  /* Make the request.  */
@@ -321,7 +330,7 @@ handle_requests (void *arg)
 				       req->ar_request, &req->ar_result);
 
 	  /* Get the mutex.  */
-	  pthread_mutex_lock (&__gai_requests_mutex);
+	  __pthread_mutex_lock (&__gai_requests_mutex);
 
 	  /* Send the signal to notify about finished processing of the
 	     request.  */
@@ -369,8 +378,8 @@ handle_requests (void *arg)
 	      wakeup_time.tv_nsec -= 1000000000;
 	      ++wakeup_time.tv_sec;
 	    }
-	  pthread_cond_timedwait (&__gai_new_request_notification,
-				  &__gai_requests_mutex, &wakeup_time);
+	  __pthread_cond_timedwait (&__gai_new_request_notification,
+				    &__gai_requests_mutex, &wakeup_time);
 	  --idle_thread_count;
 	  runp = requests;
 	  while (runp != NULL && runp->running != 0)
@@ -395,20 +404,21 @@ handle_requests (void *arg)
 		 up for these other work elements; otherwise, we should try
 		 to create a new thread. */
 	      if (idle_thread_count > 0)
-		pthread_cond_signal (&__gai_new_request_notification);
+		__pthread_cond_signal (&__gai_new_request_notification);
 	      else if (nthreads < optim.gai_threads)
 		{
 		  pthread_t thid;
 		  pthread_attr_t attr;
 
 		  /* Make sure the thread is created detached.  */
-		  pthread_attr_init (&attr);
-		  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+		  __pthread_attr_init (&attr);
+		  __pthread_attr_setdetachstate (&attr,
+						 PTHREAD_CREATE_DETACHED);
 
 		  /* Now try to start a thread. If we fail, no big deal,
 		     because we know that there is at least one thread (us)
 		     that is working on lookup operations. */
-		  if (pthread_create (&thid, &attr, handle_requests, NULL)
+		  if (__pthread_create (&thid, &attr, handle_requests, NULL)
 		      == 0)
 		    ++nthreads;
 		}
@@ -416,11 +426,11 @@ handle_requests (void *arg)
 	}
 
       /* Release the mutex.  */
-      pthread_mutex_unlock (&__gai_requests_mutex);
+      __pthread_mutex_unlock (&__gai_requests_mutex);
     }
   while (runp != NULL);
 
-  pthread_exit (NULL);
+  __pthread_exit (NULL);
 }
 
 

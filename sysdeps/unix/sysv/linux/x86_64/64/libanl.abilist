@@ -1,4 +1,1 @@
-GLIBC_2.2.5 gai_cancel F
-GLIBC_2.2.5 gai_error F
-GLIBC_2.2.5 gai_suspend F
-GLIBC_2.2.5 getaddrinfo_a F
+GLIBC_2.2.5 __libanl_version_placeholder F

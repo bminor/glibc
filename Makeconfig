@@ -1342,9 +1342,11 @@ sysd-rules-targets := $(sort $(foreach p,$(sysd-rules-patterns),\
 ifeq ($(pthread-in-libc),yes)
 libpthread-routines-var = routines
 librt-routines-var = routines
+libanl-routines-var = routines
 else
 libpthread-routines-var = libpthread-routines
 librt-routines-var = librt-routines
+libanl-routines-var = libanl-routines
 endif
 
 # A sysdeps Makeconfig fragment may set libc-reentrant to yes.

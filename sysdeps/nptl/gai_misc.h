@@ -40,7 +40,7 @@
 									      \
     if (oldval != 0)							      \
       {									      \
-	pthread_mutex_unlock (&__gai_requests_mutex);			      \
+	__pthread_mutex_unlock (&__gai_requests_mutex);			      \
 									      \
 	int status;							      \
 	do								      \
@@ -68,7 +68,7 @@
 	else								      \
 	  assert (status == 0 || status == EAGAIN);			      \
 									      \
-	pthread_mutex_lock (&__gai_requests_mutex);			      \
+	__pthread_mutex_lock (&__gai_requests_mutex);			      \
       }									      \
   } while (0)
 
@@ -82,7 +82,7 @@ __gai_start_notify_thread (void)
   sigset_t ss;
   sigemptyset (&ss);
   int sigerr __attribute__ ((unused));
-  sigerr = pthread_sigmask (SIG_SETMASK, &ss, NULL);
+  sigerr = __pthread_sigmask (SIG_SETMASK, &ss, NULL);
   assert_perror (sigerr);
 }
 
@@ -93,13 +93,13 @@ __gai_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   pthread_attr_t attr;
 
   /* Make sure the thread is created detached.  */
-  pthread_attr_init (&attr);
-  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+  __pthread_attr_init (&attr);
+  __pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 
   /* The helper thread needs only very little resources.  */
-  (void) pthread_attr_setstacksize (&attr,
-				    __pthread_get_minstack (&attr)
-				    + 4 * PTHREAD_STACK_MIN);
+  (void) __pthread_attr_setstacksize (&attr,
+				      __pthread_get_minstack (&attr)
+				      + 4 * PTHREAD_STACK_MIN);
 
   /* Block all signals in the helper thread.  To do this thoroughly we
      temporarily have to block all signals here.  */
@@ -107,16 +107,16 @@ __gai_create_helper_thread (pthread_t *threadp, void *(*tf) (void *),
   sigset_t oss;
   sigfillset (&ss);
   int sigerr __attribute__ ((unused));
-  sigerr = pthread_sigmask (SIG_SETMASK, &ss, &oss);
+  sigerr = __pthread_sigmask (SIG_SETMASK, &ss, &oss);
   assert_perror (sigerr);
 
-  int ret = pthread_create (threadp, &attr, tf, arg);
+  int ret = __pthread_create (threadp, &attr, tf, arg);
 
   /* Restore the signal mask.  */
-  sigerr = pthread_sigmask (SIG_SETMASK, &oss, NULL);
+  sigerr = __pthread_sigmask (SIG_SETMASK, &oss, NULL);
   assert_perror (sigerr);
 
-  (void) pthread_attr_destroy (&attr);
+  (void) __pthread_attr_destroy (&attr);
   return ret;
 }
 

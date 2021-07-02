@@ -2064,6 +2064,10 @@ GLIBC_2.2.3 __rpc_thread_svc_fdset F
 GLIBC_2.2.3 __rpc_thread_svc_max_pollfd F
 GLIBC_2.2.3 __rpc_thread_svc_pollfd F
 GLIBC_2.2.3 fnmatch F
+GLIBC_2.2.3 gai_cancel F
+GLIBC_2.2.3 gai_error F
+GLIBC_2.2.3 gai_suspend F
+GLIBC_2.2.3 getaddrinfo_a F
 GLIBC_2.2.3 pthread_getattr_np F
 GLIBC_2.2.3 sprofil F
 GLIBC_2.2.4 dl_iterate_phdr F
@@ -2387,6 +2391,7 @@ GLIBC_2.34 __ftw64_time64 F
 GLIBC_2.34 __futimens64 F
 GLIBC_2.34 __futimes64 F
 GLIBC_2.34 __futimesat64 F
+GLIBC_2.34 __gai_suspend_time64 F
 GLIBC_2.34 __getitimer64 F
 GLIBC_2.34 __getrusage64 F
 GLIBC_2.34 __gettimeofday64 F
@@ -2491,6 +2496,10 @@ GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 execveat F
 GLIBC_2.34 forkpty F
+GLIBC_2.34 gai_cancel F
+GLIBC_2.34 gai_error F
+GLIBC_2.34 gai_suspend F
+GLIBC_2.34 getaddrinfo_a F
 GLIBC_2.34 lio_listio F
 GLIBC_2.34 lio_listio64 F
 GLIBC_2.34 login F

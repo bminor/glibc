@@ -21,6 +21,15 @@
 #include <stdlib.h>
 #include <gai_misc.h>
 
+#if !PTHREAD_IN_LIBC
+/* The available function names differ outside of libc.  (In libc, we
+   need to use hidden aliases to avoid the PLT.)  */
+#define __pthread_attr_init pthread_attr_init
+#define __pthread_attr_setdetachstate pthread_attr_setdetachstate
+#define __pthread_cond_signal pthread_cond_signal
+#define __pthread_cond_timedwait pthread_cond_timedwait
+#define __pthread_create pthread_create
+#endif
 
 struct notify_func
   {
@@ -56,8 +65,8 @@ __gai_notify_only (struct sigevent *sigev, pid_t caller_pid)
       pattr = (pthread_attr_t *) sigev->sigev_notify_attributes;
       if (pattr == NULL)
 	{
-	  pthread_attr_init (&attr);
-	  pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
+	  __pthread_attr_init (&attr);
+	  __pthread_attr_setdetachstate (&attr, PTHREAD_CREATE_DETACHED);
 	  pattr = &attr;
 	}
 
@@ -75,7 +84,7 @@ __gai_notify_only (struct sigevent *sigev, pid_t caller_pid)
 	{
 	  nf->func = sigev->sigev_notify_function;
 	  nf->value = sigev->sigev_value;
-	  if (pthread_create (&tid, pattr, notify_func_wrapper, nf) < 0)
+	  if (__pthread_create (&tid, pattr, notify_func_wrapper, nf) < 0)
 	    {
 	      free (nf);
 	      result = -1;

@@ -112,8 +112,11 @@ libresolv-routines := res_comp res_debug \
 		      ns_samedomain ns_date res_enable_icmp \
 		      compat-hooks compat-gethnamaddr
 
-libanl-routines := gai_cancel gai_error gai_misc gai_notify gai_suspend \
-		   getaddrinfo_a
+$(libanl-routines-var) += \
+  gai_cancel gai_error gai_misc gai_notify gai_suspend getaddrinfo_a
+
+libanl-routines += libanl-compat
+libanl-shared-only-routines += libanl-compat
 
 subdir-dirs = nss_dns
 vpath %.c nss_dns
