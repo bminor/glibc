@@ -25,7 +25,7 @@ __libc_recvmsg (int fd, struct msghdr *msg, int flags)
 {
   ssize_t r;
 #ifndef __ASSUME_TIME64_SYSCALLS
-  socklen_t orig_controllen = msg->msg_controllen;
+  socklen_t orig_controllen = msg != NULL ? msg->msg_controllen : 0;
 #endif
 
 #ifdef __ASSUME_RECVMSG_SYSCALL
@@ -35,7 +35,7 @@ __libc_recvmsg (int fd, struct msghdr *msg, int flags)
 #endif
 
 #ifndef __ASSUME_TIME64_SYSCALLS
-  if (r >= 0)
+  if (r >= 0 && orig_controllen != 0)
     __convert_scm_timestamps (msg, orig_controllen);
 #endif
 

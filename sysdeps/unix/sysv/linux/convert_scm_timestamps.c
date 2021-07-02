@@ -87,6 +87,8 @@ __convert_scm_timestamps (struct msghdr *msg, socklen_t msgsize)
 
   msg->msg_controllen += CMSG_SPACE (sizeof tvts);
   cmsg = CMSG_NXTHDR(msg, last);
+  if (cmsg == NULL)
+    return;
   cmsg->cmsg_level = SOL_SOCKET;
   cmsg->cmsg_type = type;
   cmsg->cmsg_len = CMSG_LEN (sizeof tvts);
