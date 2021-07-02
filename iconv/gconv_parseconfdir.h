@@ -33,6 +33,7 @@
 # define closedir __closedir
 # define mempcpy __mempcpy
 # define lstat64 __lstat64
+# define feof_unlocked __feof_unlocked
 #endif
 
 /* Name of the file containing the module information in the directories
@@ -64,7 +65,7 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len)
 
   /* Process the known entries of the file.  Comments start with `#' and
      end with the end of the line.  Empty lines are ignored.  */
-  while (!__feof_unlocked (fp))
+  while (!feof_unlocked (fp))
     {
       char *rp, *endp, *word;
       ssize_t n = __getdelim (&line, &line_len, '\n', fp);
