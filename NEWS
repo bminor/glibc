@@ -93,6 +93,10 @@ Deprecated and removed features, and other changes affecting compatibility:
   package managers that delete removed files late during the package
   upgrade or downgrade process.
 
+* The symbols mallwatch and tr_break are now deprecated and no longer used in
+  mtrace.  Similar functionality can be achieved by using conditional
+  breakpoints within mtrace functions from within gdb.
+
 Changes to build and runtime requirements:
 
 * On Linux, the shm_open, sem_open, and related functions now expect the

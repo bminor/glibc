@@ -50,8 +50,25 @@ static char *malloc_trace_buffer;
 
 __libc_lock_define_initialized (static, lock);
 
-/* Address to breakpoint on accesses to... */
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_34)
+/* Compatibility symbols that were introduced to help break at allocation sites
+   for specific memory allocations.  This is unusable with ASLR, although gdb
+   may allow predictable allocation addresses.  Even then, gdb has watchpoint
+   and conditional breakpoint support which should provide the same
+   functionality without having this kludge.  These symbols are preserved in
+   case some applications ended up linking against them but they don't actually
+   do anything anymore; not that they did much before anyway.  */
+
 void *mallwatch;
+compat_symbol (libc, mallwatch, mallwatch, GLIBC_2_0);
+
+void
+tr_break (void)
+{
+}
+compat_symbol (libc, tr_break, tr_break, GLIBC_2_0);
+#endif
+
 
 /* Old hook values.  */
 static void (*tr_old_free_hook) (void *ptr, const void *);
@@ -60,19 +77,6 @@ static void *(*tr_old_realloc_hook) (void *ptr, size_t size,
 				     const void *);
 static void *(*tr_old_memalign_hook) (size_t __alignment, size_t __size,
 				      const void *);
-
-/* This function is called when the block being alloc'd, realloc'd, or
-   freed has an address matching the variable "mallwatch".  In a debugger,
-   set "mallwatch" to the address of interest, then put a breakpoint on
-   tr_break.  */
-
-extern void tr_break (void) __THROW;
-libc_hidden_proto (tr_break)
-void
-tr_break (void)
-{
-}
-libc_hidden_def (tr_break)
 
 static void
 tr_where (const void *caller, Dl_info *info)
@@ -167,12 +171,6 @@ tr_freehook (void *ptr, const void *caller)
   tr_where (caller, info);
   /* Be sure to print it first.  */
   fprintf (mallstream, "- %p\n", ptr);
-  if (ptr == mallwatch)
-    {
-      __libc_lock_unlock (lock);
-      tr_break ();
-      __libc_lock_lock (lock);
-    }
   set_default_hooks ();
   if (tr_old_free_hook != NULL)
     (*tr_old_free_hook)(ptr, caller);
@@ -203,9 +201,6 @@ tr_mallochook (size_t size, const void *caller)
 
   __libc_lock_unlock (lock);
 
-  if (hdr == mallwatch)
-    tr_break ();
-
   return hdr;
 }
 
@@ -213,9 +208,6 @@ static void *
 tr_reallochook (void *ptr, size_t size, const void *caller)
 {
   void *hdr;
-
-  if (ptr == mallwatch)
-    tr_break ();
 
   Dl_info mem;
   Dl_info *info = lock_and_info (caller, &mem);
@@ -247,9 +239,6 @@ tr_reallochook (void *ptr, size_t size, const void *caller)
 
   __libc_lock_unlock (lock);
 
-  if (hdr == mallwatch)
-    tr_break ();
-
   return hdr;
 }
 
@@ -274,9 +263,6 @@ tr_memalignhook (size_t alignment, size_t size, const void *caller)
 
   __libc_lock_unlock (lock);
 
-  if (hdr == mallwatch)
-    tr_break ();
-
   return hdr;
 }
 
@@ -296,10 +282,7 @@ release_libc_mem (void)
 #endif
 
 
-/* We enable tracing if either the environment variable MALLOC_TRACE
-   is set, or if the variable mallwatch has been patched to an address
-   that the debugging user wants us to stop on.  When patching mallwatch,
-   don't forget to set a breakpoint on tr_break!  */
+/* We enable tracing if the environment variable MALLOC_TRACE is set.  */
 
 void
 mtrace (void)
@@ -321,7 +304,7 @@ mtrace (void)
 #else
   mallfile = getenv (mallenv);
 #endif
-  if (mallfile != NULL || mallwatch != NULL)
+  if (mallfile != NULL)
     {
       char *mtb = malloc (TRACE_BUFFER_SIZE);
       if (mtb == NULL)
