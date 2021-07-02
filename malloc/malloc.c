@@ -3144,12 +3144,13 @@ tcache_thread_shutdown (void)
   int i;
   tcache_perthread_struct *tcache_tmp = tcache;
 
+  tcache_shutting_down = true;
+
   if (!tcache)
     return;
 
   /* Disable the tcache and prevent it from being reinitialized.  */
   tcache = NULL;
-  tcache_shutting_down = true;
 
   /* Free all of the entries and the tcache itself back to the arena
      heap for coalescing.  */
