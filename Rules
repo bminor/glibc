@@ -155,6 +155,7 @@ xtests: tests $(xtests-special)
 else
 tests: $(tests:%=$(objpfx)%.out) $(tests-internal:%=$(objpfx)%.out) \
        $(tests-container:%=$(objpfx)%.out) \
+       $(tests-mcheck:%=$(objpfx)%-mcheck.out) \
        $(tests-malloc-check:%=$(objpfx)%-malloc-check.out) \
        $(tests-special) $(tests-printers-out)
 xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-special)
@@ -166,7 +167,8 @@ ifeq ($(run-built-tests),no)
 tests-expected =
 else
 tests-expected = $(tests) $(tests-internal) $(tests-printers) \
-	$(tests-container) $(tests-malloc-check:%=%-malloc-check)
+	$(tests-container) $(tests-malloc-check:%=%-malloc-check) \
+	$(tests-mcheck:%=%-mcheck)
 endif
 tests:
 	$(..)scripts/merge-test-results.sh -s $(objpfx) $(subdir) \
@@ -192,6 +194,7 @@ else
 binaries-pie-tests =
 binaries-pie-notests =
 endif
+binaries-mcheck-tests = $(tests-mcheck:%=%-mcheck)
 binaries-malloc-check-tests = $(tests-malloc-check:%=%-malloc-check)
 else
 binaries-all-notests =
@@ -202,6 +205,7 @@ binaries-static-tests =
 binaries-static =
 binaries-pie-tests =
 binaries-pie-notests =
+binaries-mcheck-tests =
 binaries-malloc-check-tests =
 endif
 
@@ -222,6 +226,15 @@ ifneq "$(strip $(binaries-shared-tests))" ""
 $(addprefix $(objpfx),$(binaries-shared-tests)): %: %.o \
   $(link-extra-libs-tests) \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link-tests)
+endif
+
+ifneq "$(strip $(binaries-mcheck-tests))" ""
+$(addprefix $(objpfx),$(binaries-mcheck-tests)): %-mcheck: %.o \
+  $(link-extra-libs-tests) \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
+  $(common-objpfx)malloc/libmcheck.a \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-tests)
 endif
