@@ -17,10 +17,6 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <https://www.gnu.org/licenses/>.  */
 
-/* What to do if the standard debugging hooks are in place and a
-   corrupt pointer is detected: do nothing (0), print an error message
-   (1), or call abort() (2). */
-
 /* Hooks for debugging versions.  The initial hooks just call the
    initialization routine, then do the normal work. */
 
