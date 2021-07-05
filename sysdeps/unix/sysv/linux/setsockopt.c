@@ -78,7 +78,9 @@ setsockopt32 (int fd, int level, int optname, const void *optval,
 	  optname = COMPAT_SO_TIMESTAMP_OLD;
 	if (optname == COMPAT_SO_TIMESTAMPNS_NEW)
 	  optname = COMPAT_SO_TIMESTAMPNS_OLD;
-	r = setsockopt_syscall (fd, level, optname, NULL, 0);
+	/* The expected type for the option is an 'int' for both types of
+	   timestamp formats, so there is no need to convert it.  */
+	r = setsockopt_syscall (fd, level, optname, optval, len);
       }
       break;
     }
