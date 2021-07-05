@@ -25,7 +25,6 @@ personality	EXTRA	personality	Ei:i	__personality	personality
 bind		-	bind		i:ipi	__bind		bind
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
-getsockopt	-	getsockopt	i:iiiBN	__getsockopt	getsockopt
 listen		-	listen		i:ii	__listen	listen
 setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
 shutdown	-	shutdown	i:ii	__shutdown	shutdown

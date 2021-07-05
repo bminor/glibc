@@ -23,7 +23,6 @@
 # define __ASSUME_SOCKETPAIR_SYSCALL         1
 # define __ASSUME_BIND_SYSCALL               1
 # define __ASSUME_LISTEN_SYSCALL             1
-# define __ASSUME_GETSOCKOPT_SYSCALL         1
 # define __ASSUME_SETSOCKOPT_SYSCALL         1
 # define __ASSUME_GETSOCKNAME_SYSCALL        1
 # define __ASSUME_GETPEERNAME_SYSCALL        1
@@ -43,6 +42,7 @@
 # undef __ASSUME_CONNECT_SYSCALL
 # undef __ASSUME_RECVFROM_SYSCALL
 # undef __ASSUME_SENDTO_SYSCALL
+# undef __ASSUME_GETSOCKOPT_SYSCALL
 #endif
 
 /* s390 only supports ipc syscall before 5.1.  */
