@@ -7,5 +7,4 @@ bind		-	bind		i:ipi	__bind		bind
 listen		-	listen		i:ii	__listen	listen
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
-setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt
 shutdown	-	shutdown	i:ii	__shutdown	shutdown
