@@ -114,7 +114,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_compiler_powerpc64le_ldbl128_mabi" >&5
 $as_echo "$libc_cv_compiler_powerpc64le_ldbl128_mabi" >&6; }
 if test "$libc_cv_compiler_powerpc64le_ldbl128_mabi" == "no"; then :
-  critic_missing="$critic_missing The compiler must support -mabi=ieeelongdouble and -mlongdouble simultaneously."
+  critic_missing="$critic_missing The compiler must support -mabi=ieeelongdouble and -mlong-double-128 simultaneously."
 fi
 
 for ac_prog in $OBJCOPY
