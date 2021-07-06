@@ -93,7 +93,8 @@ tests-exclude-mcheck = tst-mallocstate \
 	tst-malloc-usable-tunables \
 	tst-malloc_info \
 	tst-memalign \
-	tst-posix_memalign
+	tst-posix_memalign \
+	tst-posix-realloc
 
 tests-mcheck = $(filter-out $(tests-exclude-mcheck), $(tests))
 
