@@ -48,7 +48,7 @@ dlerror_run (void (*operate) (void *), void *args)
 		?: last_errstring != NULL);
 
   if (result && malloced)
-    free ((char *) last_errstring);
+    GLRO (dl_error_free) ((char *) last_errstring);
 
   return result;
 }
