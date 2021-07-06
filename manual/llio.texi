@@ -1161,7 +1161,7 @@ error.  The possible errors are the same as in @code{write}.
 
 This function is similar to the @code{readv} function, with the difference
 it adds an extra @var{offset} parameter of type @code{off_t} similar to
-@code{pread}.  The data is written to the file starting at position
+@code{pread}.  The data is read from the file starting at position
 @var{offset}.  The position of the file descriptor itself is not affected
 by the operation.  The value is the same as before the call.
 
