@@ -23,7 +23,7 @@
 
 #if IS_IN (libc)
 # include <libio/libioP.h>
-# define __getdelim(line, len, c, fp) _IO_getdelim (line, len, c, fp)
+# define __getdelim(line, len, c, fp) __getdelim (line, len, c, fp)
 
 # undef isspace
 # define isspace(__c) __isspace_l ((__c), _nl_C_locobj_ptr)

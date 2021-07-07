@@ -55,7 +55,7 @@ __readonly_area (const char *ptr, size_t size)
 
   while (! __feof_unlocked (fp))
     {
-      if (_IO_getdelim (&line, &linelen, '\n', fp) <= 0)
+      if (__getdelim (&line, &linelen, '\n', fp) <= 0)
 	break;
 
       char *p;
