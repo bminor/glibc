@@ -24,44 +24,30 @@
 
 NSS_DECLARE_MODULE_FUNCTIONS (files)
 
-#define PWD_FILENAME "/etc/passwd"
-define_traced_file (pwd, PWD_FILENAME);
-
-#define GRP_FILENAME "/etc/group"
-define_traced_file (grp, GRP_FILENAME);
-
-#define HST_FILENAME "/etc/hosts"
-define_traced_file (hst, HST_FILENAME);
-
-#define RESOLV_FILENAME "/etc/resolv.conf"
-define_traced_file (resolv, RESOLV_FILENAME);
-
-#define SERV_FILENAME "/etc/services"
-define_traced_file (serv, SERV_FILENAME);
-
-#define NETGR_FILENAME "/etc/netgroup"
-define_traced_file (netgr, NETGR_FILENAME);
+static void
+register_file (void (*cb) (size_t, struct traced_file *),
+               int db, const char *path, int crinit)
+{
+  size_t pathlen = strlen (path) + 1;
+  struct traced_file *file = malloc (sizeof (struct traced_file) + pathlen);
+  /* Do not register anything on memory allocation failure.  nscd will
+     fail soon anyway.  */
+  if (file != NULL)
+    {
+      init_traced_file (file, path, crinit);
+      cb (db, file);
+    }
+}
 
 void
 _nss_files_init (void (*cb) (size_t, struct traced_file *))
 {
-  init_traced_file (&pwd_traced_file.file, PWD_FILENAME, 0);
-  cb (pwddb, &pwd_traced_file.file);
-
-  init_traced_file (&grp_traced_file.file, GRP_FILENAME, 0);
-  cb (grpdb, &grp_traced_file.file);
-
-  init_traced_file (&hst_traced_file.file, HST_FILENAME, 0);
-  cb (hstdb, &hst_traced_file.file);
-
-  init_traced_file (&resolv_traced_file.file, RESOLV_FILENAME, 1);
-  cb (hstdb, &resolv_traced_file.file);
-
-  init_traced_file (&serv_traced_file.file, SERV_FILENAME, 0);
-  cb (servdb, &serv_traced_file.file);
-
-  init_traced_file (&netgr_traced_file.file, NETGR_FILENAME, 0);
-  cb (netgrdb, &netgr_traced_file.file);
+  register_file (cb, pwddb, "/etc/passwd", 0);
+  register_file (cb, grpdb, "/etc/group", 0);
+  register_file (cb, hstdb, "/etc/hosts", 0);
+  register_file (cb, hstdb, "/etc/resolv.conf", 1);
+  register_file (cb, servdb, "/etc/services", 0);
+  register_file (cb, netgrdb, "/etc/netgroup", 0);
 }
 
 #endif
