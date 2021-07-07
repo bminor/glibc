@@ -12,4 +12,6 @@ libc_hidden_proto (__inet_pton)
 extern __typeof (inet_makeaddr) __inet_makeaddr;
 libc_hidden_proto (__inet_makeaddr)
 libc_hidden_proto (inet_netof)
+extern __typeof (inet_network) __inet_network;
+libc_hidden_proto (__inet_network)
 #endif
