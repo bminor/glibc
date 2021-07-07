@@ -26,7 +26,7 @@ libc {
 
     # m*
     mallinfo; malloc; malloc_get_state; malloc_set_state; malloc_stats;
-    malloc_trim; malloc_usable_size; mallopt; memalign; mprobe; mtrace;
+    malloc_trim; malloc_usable_size; mallopt; mcheck; memalign; mprobe; mtrace;
     muntrace;
 
     # o*

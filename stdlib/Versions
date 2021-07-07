@@ -40,7 +40,7 @@ libc {
 
     # m*
     mblen; mbrlen; mbrtowc; mbsinit; mbsnrtowcs; mbsrtowcs; mbstowcs;
-    mbtowc; mcheck; mcount; mrand48; mrand48_r;
+    mbtowc; mcount; mrand48; mrand48_r;
 
     # n*
     nrand48; nrand48_r;
