@@ -33,15 +33,10 @@
 
 NSS_DECLARE_MODULE_FUNCTIONS (files)
 
-/* Locks the static variables in this file.  */
-__libc_lock_define_initialized (static, lock)
 
 /* Maintenance of the stream open on the database file.  For getXXent
    operations the stream needs to be held open across calls, the other
    getXXbyYY operations all use their own stream.  */
-
-static FILE *stream;
-
 
 static enum nss_status
 internal_setent (FILE **stream)
@@ -66,41 +61,13 @@ internal_setent (FILE **stream)
 enum nss_status
 _nss_files_setaliasent (void)
 {
-  enum nss_status status;
-
-  __libc_lock_lock (lock);
-
-  status = internal_setent (&stream);
-
-  __libc_lock_unlock (lock);
-
-  return status;
+  return __nss_files_data_setent (nss_file_aliasent, "/etc/aliases");
 }
 
-
-/* Close the database file.  */
-static void
-internal_endent (FILE **stream)
-{
-  if (*stream != NULL)
-    {
-      fclose (*stream);
-      *stream = NULL;
-    }
-}
-
-
-/* Thread-safe, exported version of that.  */
 enum nss_status
 _nss_files_endaliasent (void)
 {
-  __libc_lock_lock (lock);
-
-  internal_endent (&stream);
-
-  __libc_lock_unlock (lock);
-
-  return NSS_STATUS_SUCCESS;
+  return __nss_files_data_endent (nss_file_aliasent);
 }
 
 /* Parsing the database file into `struct aliasent' data structures.  */
@@ -369,26 +336,22 @@ _nss_files_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen,
 			  int *errnop)
 {
   /* Return next entry in host file.  */
-  enum nss_status status = NSS_STATUS_SUCCESS;
 
-  __libc_lock_lock (lock);
+  struct nss_files_per_file_data *data;
+  enum nss_status status = __nss_files_data_open (&data, nss_file_aliasent,
+						  "/etc/aliases", errnop, NULL);
+  if (status != NSS_STATUS_SUCCESS)
+    return status;
 
-  /* Be prepared that the set*ent function was not called before.  */
-  if (stream == NULL)
-    status = internal_setent (&stream);
+  result->alias_local = 1;
 
-  if (status == NSS_STATUS_SUCCESS)
-    {
-      result->alias_local = 1;
+  /* Read lines until we get a definite result.  */
+  do
+    status = get_next_alias (data->stream, NULL, result, buffer, buflen,
+			     errnop);
+  while (status == NSS_STATUS_RETURN);
 
-      /* Read lines until we get a definite result.  */
-      do
-	status = get_next_alias (stream, NULL, result, buffer, buflen, errnop);
-      while (status == NSS_STATUS_RETURN);
-    }
-
-  __libc_lock_unlock (lock);
-
+  __nss_files_data_put (data);
   return status;
 }
 
@@ -418,9 +381,9 @@ _nss_files_getaliasbyname_r (const char *name, struct aliasent *result,
       do
 	status = get_next_alias (stream, name, result, buffer, buflen, errnop);
       while (status == NSS_STATUS_RETURN);
-    }
 
-  internal_endent (&stream);
+      fclose (stream);
+    }
 
   return status;
 }

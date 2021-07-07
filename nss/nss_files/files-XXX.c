@@ -45,10 +45,12 @@
 # include <netdb.h>
 # define H_ERRNO_PROTO	, int *herrnop
 # define H_ERRNO_ARG	, herrnop
+# define H_ERRNO_ARG_OR_NULL herrnop
 # define H_ERRNO_SET(val) (*herrnop = (val))
 #else
 # define H_ERRNO_PROTO
 # define H_ERRNO_ARG
+# define H_ERRNO_ARG_OR_NULL NULL
 # define H_ERRNO_SET(val) ((void) 0)
 #endif
 
@@ -58,14 +60,10 @@
 # define EXTRA_ARGS_VALUE
 #endif
 
-/* Locks the static variables in this file.  */
-__libc_lock_define_initialized (static, lock)
 
 /* Maintenance of the stream open on the database file.  For getXXent
    operations the stream needs to be held open across calls, the other
    getXXbyYY operations all use their own stream.  */
-
-static FILE *stream;
 
 /* Open database file if not already opened.  */
 static enum nss_status
@@ -91,41 +89,13 @@ internal_setent (FILE **stream)
 enum nss_status
 CONCAT(_nss_files_set,ENTNAME) (int stayopen)
 {
-  enum nss_status status;
-
-  __libc_lock_lock (lock);
-
-  status = internal_setent (&stream);
-
-  __libc_lock_unlock (lock);
-
-  return status;
+  return __nss_files_data_setent (CONCAT (nss_file_, ENTNAME), DATAFILE);
 }
 
-
-/* Close the database file.  */
-static void
-internal_endent (FILE **stream)
-{
-  if (*stream != NULL)
-    {
-      fclose (*stream);
-      *stream = NULL;
-    }
-}
-
-
-/* Thread-safe, exported version of that.  */
 enum nss_status
 CONCAT(_nss_files_end,ENTNAME) (void)
 {
-  __libc_lock_lock (lock);
-
-  internal_endent (&stream);
-
-  __libc_lock_unlock (lock);
-
-  return NSS_STATUS_SUCCESS;
+  return __nss_files_data_endent (CONCAT (nss_file_, ENTNAME));
 }
 
 
@@ -194,26 +164,19 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
 				  size_t buflen, int *errnop H_ERRNO_PROTO)
 {
   /* Return next entry in host file.  */
-  enum nss_status status = NSS_STATUS_SUCCESS;
 
-  __libc_lock_lock (lock);
+  struct nss_files_per_file_data *data;
+  enum nss_status status = __nss_files_data_open (&data,
+						  CONCAT (nss_file_, ENTNAME),
+						  DATAFILE,
+						  errnop, H_ERRNO_ARG_OR_NULL);
+  if (status != NSS_STATUS_SUCCESS)
+    return status;
 
-  /* Be prepared that the set*ent function was not called before.  */
-  if (stream == NULL)
-    {
-      int save_errno = errno;
+  status = internal_getent (data->stream, result, buffer, buflen, errnop
+			    H_ERRNO_ARG EXTRA_ARGS_VALUE);
 
-      status = internal_setent (&stream);
-
-      __set_errno (save_errno);
-    }
-
-  if (status == NSS_STATUS_SUCCESS)
-    status = internal_getent (stream, result, buffer, buflen, errnop
-			      H_ERRNO_ARG EXTRA_ARGS_VALUE);
-
-  __libc_lock_unlock (lock);
-
+  __nss_files_data_put (data);
   return status;
 }
 
@@ -248,7 +211,7 @@ _nss_files_get##name##_r (proto,					      \
 	     == NSS_STATUS_SUCCESS)					      \
 	{ break_if_match }						      \
 									      \
-      internal_endent (&stream);					      \
+      fclose (stream);							      \
     }									      \
 									      \
   return status;							      \

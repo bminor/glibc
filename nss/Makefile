@@ -31,7 +31,7 @@ routines		= nsswitch getnssent getnssent_r digits_dots \
 			  compat-lookup nss_hash nss_files_fopen \
 			  nss_readline nss_parse_line_result \
 			  nss_fgetent_r nss_module nss_action \
-			  nss_action_parse nss_database
+			  nss_action_parse nss_database nss_files_data
 
 # These are the databases that go through nss dispatch.
 # Caution: if you add a database here, you must add its real name

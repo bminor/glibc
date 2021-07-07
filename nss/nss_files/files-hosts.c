@@ -349,7 +349,7 @@ _nss_files_gethostbyname3_r (const char *name, int af, struct hostent *result,
 	status = gethostbyname3_multi
 	  (stream, name, af, result, buffer, buflen, errnop, herrnop);
 
-      internal_endent (&stream);
+      fclose (stream);
     }
 
   if (canonp && status == NSS_STATUS_SUCCESS)
@@ -475,7 +475,7 @@ _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 	  status = NSS_STATUS_SUCCESS;
 	}
 
-      internal_endent (&stream);
+      fclose (stream);
     }
   else if (status == NSS_STATUS_TRYAGAIN)
     {
