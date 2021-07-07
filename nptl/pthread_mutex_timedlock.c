@@ -598,9 +598,10 @@ ___pthread_mutex_clocklock (pthread_mutex_t *mutex,
   return ___pthread_mutex_clocklock64 (mutex, clockid, &ts64);
 }
 #endif /* __TIMESPEC64 != 64 */
-versioned_symbol (libc, ___pthread_mutex_clocklock,
-		  __pthread_mutex_clocklock, GLIBC_PRIVATE);
 libc_hidden_ver (___pthread_mutex_clocklock, __pthread_mutex_clocklock)
+#ifndef SHARED
+strong_alias (___pthread_mutex_clocklock, __pthread_mutex_clocklock)
+#endif
 versioned_symbol (libc, ___pthread_mutex_clocklock,
 		  pthread_mutex_clocklock, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_30, GLIBC_2_34)

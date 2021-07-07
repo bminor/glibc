@@ -223,9 +223,10 @@ ___pthread_barrier_wait (pthread_barrier_t *barrier)
 }
 versioned_symbol (libc, ___pthread_barrier_wait, pthread_barrier_wait,
                   GLIBC_2_34);
-versioned_symbol (libc, ___pthread_barrier_wait, __pthread_barrier_wait,
-                  GLIBC_PRIVATE);
 libc_hidden_ver (___pthread_barrier_wait, __pthread_barrier_wait)
+#ifndef SHARED
+strong_alias (___pthread_barrier_wait, __pthread_barrier_wait)
+#endif
 
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_2, GLIBC_2_34)
 compat_symbol (libpthread, ___pthread_barrier_wait, pthread_barrier_wait,

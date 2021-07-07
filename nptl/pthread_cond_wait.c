@@ -699,9 +699,10 @@ ___pthread_cond_clockwait (pthread_cond_t *cond, pthread_mutex_t *mutex,
   return __pthread_cond_clockwait64 (cond, mutex, clockid, &ts64);
 }
 #endif /* __TIMESIZE == 64 */
-versioned_symbol (libc, ___pthread_cond_clockwait,
-		  __pthread_cond_clockwait, GLIBC_PRIVATE);
 libc_hidden_ver (___pthread_cond_clockwait, __pthread_cond_clockwait)
+#ifndef SHARED
+strong_alias (___pthread_cond_clockwait, __pthread_cond_clockwait)
+#endif
 versioned_symbol (libc, ___pthread_cond_clockwait,
 		  pthread_cond_clockwait, GLIBC_2_34);
 #if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_30, GLIBC_2_34)
