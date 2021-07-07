@@ -91,12 +91,14 @@ CONCAT(_nss_files_set,ENTNAME) (int stayopen)
 {
   return __nss_files_data_setent (CONCAT (nss_file_, ENTNAME), DATAFILE);
 }
+libc_hidden_def (CONCAT (_nss_files_set,ENTNAME))
 
 enum nss_status
 CONCAT(_nss_files_end,ENTNAME) (void)
 {
   return __nss_files_data_endent (CONCAT (nss_file_, ENTNAME));
 }
+libc_hidden_def (CONCAT (_nss_files_end,ENTNAME))
 
 
 /* Parsing the database file into `struct STRUCTURE' data structures.  */
@@ -179,6 +181,7 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
   __nss_files_data_put (data);
   return status;
 }
+libc_hidden_def (CONCAT (_nss_files_get,ENTNAME_r))
 
 /* Macro for defining lookup functions for this file-based database.
 
@@ -215,4 +218,5 @@ _nss_files_get##name##_r (proto,					      \
     }									      \
 									      \
   return status;							      \
-}
+}									      \
+libc_hidden_def (_nss_files_get##name##_r)

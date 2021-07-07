@@ -19,8 +19,6 @@
 #include <shadow.h>
 #include <nss.h>
 
-NSS_DECLARE_MODULE_FUNCTIONS (files)
-
 #define STRUCTURE	spwd
 #define ENTNAME		spent
 #define DATABASE	"shadow"

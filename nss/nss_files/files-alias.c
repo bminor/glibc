@@ -31,8 +31,6 @@
 #include "nsswitch.h"
 #include <nss_files.h>
 
-NSS_DECLARE_MODULE_FUNCTIONS (files)
-
 
 /* Maintenance of the stream open on the database file.  For getXXent
    operations the stream needs to be held open across calls, the other
@@ -63,12 +61,14 @@ _nss_files_setaliasent (void)
 {
   return __nss_files_data_setent (nss_file_aliasent, "/etc/aliases");
 }
+libc_hidden_def (_nss_files_setaliasent)
 
 enum nss_status
 _nss_files_endaliasent (void)
 {
   return __nss_files_data_endent (nss_file_aliasent);
 }
+libc_hidden_def (_nss_files_endaliasent)
 
 /* Parsing the database file into `struct aliasent' data structures.  */
 static enum nss_status
@@ -354,7 +354,7 @@ _nss_files_getaliasent_r (struct aliasent *result, char *buffer, size_t buflen,
   __nss_files_data_put (data);
   return status;
 }
-
+libc_hidden_def (_nss_files_getaliasent_r)
 
 enum nss_status
 _nss_files_getaliasbyname_r (const char *name, struct aliasent *result,
@@ -387,3 +387,4 @@ _nss_files_getaliasbyname_r (const char *name, struct aliasent *result,
 
   return status;
 }
+libc_hidden_def (_nss_files_getaliasbyname_r)

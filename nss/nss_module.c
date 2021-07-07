@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <nss_files.h>
 
 /* Suffix after .so of NSS service modules.  This is a bit of magic,
    but we assume LIBNSS_FILES_SO looks like "libnss_files.so.2" and we
@@ -110,10 +111,45 @@ static const function_name nss_function_name_array[] =
 #include "function.def"
   };
 
+static bool
+module_load_nss_files (struct nss_module *module)
+{
+  if (is_nscd)
+    {
+      void (*cb) (size_t, struct traced_file *) = nscd_init_cb;
+#  ifdef PTR_DEMANGLE
+      PTR_DEMANGLE (cb);
+#  endif
+      _nss_files_init (cb);
+    }
+
+  /* Initialize the function pointers, following the double-checked
+     locking idiom.  */
+  __libc_lock_lock (nss_module_list_lock);
+  switch ((enum nss_module_state) atomic_load_acquire (&module->state))
+    {
+    case nss_module_uninitialized:
+    case nss_module_failed:
+      __nss_files_functions (module->functions.untyped);
+      module->handle = NULL;
+      /* Synchronizes with unlocked __nss_module_load atomic_load_acquire.  */
+      atomic_store_release (&module->state, nss_module_loaded);
+      break;
+    case nss_module_loaded:
+      /* Nothing to clean up.  */
+      break;
+    }
+  __libc_lock_unlock (nss_module_list_lock);
+  return true;
+}
+
 /* Internal implementation of __nss_module_load.  */
 static bool
 module_load (struct nss_module *module)
 {
+  if (strcmp (module->name, "files") == 0)
+    return module_load_nss_files (module);
+
   void *handle;
   {
     char *shlib_name;
@@ -360,7 +396,7 @@ __nss_module_freeres (void)
   struct nss_module *current = nss_module_list;
   while (current != NULL)
     {
-      if (current->state == nss_module_loaded)
+      if (current->state == nss_module_loaded && current->handle != NULL)
         __libc_dlclose (current->handle);
 
       struct nss_module *next = current->next;

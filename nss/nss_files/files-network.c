@@ -21,7 +21,6 @@
 #include <netdb.h>
 #include <stdint.h>
 #include <nss.h>
-#include <nss_files.h>
 
 #define ENTNAME		netent
 #define DATABASE	"networks"

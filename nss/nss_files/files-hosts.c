@@ -26,8 +26,6 @@
 #include <alloc_buffer.h>
 #include <nss.h>
 
-NSS_DECLARE_MODULE_FUNCTIONS (files)
-
 /* Get implementation for some internal functions.  */
 #include "../resolv/res_hconf.h"
 
@@ -358,6 +356,7 @@ _nss_files_gethostbyname3_r (const char *name, int af, struct hostent *result,
 
   return status;
 }
+libc_hidden_def (_nss_files_gethostbyname3_r)
 
 enum nss_status
 _nss_files_gethostbyname_r (const char *name, struct hostent *result,
@@ -367,6 +366,7 @@ _nss_files_gethostbyname_r (const char *name, struct hostent *result,
   return _nss_files_gethostbyname3_r (name, AF_INET, result, buffer, buflen,
 				      errnop, herrnop, NULL, NULL);
 }
+libc_hidden_def (_nss_files_gethostbyname_r)
 
 enum nss_status
 _nss_files_gethostbyname2_r (const char *name, int af, struct hostent *result,
@@ -376,6 +376,7 @@ _nss_files_gethostbyname2_r (const char *name, int af, struct hostent *result,
   return _nss_files_gethostbyname3_r (name, af, result, buffer, buflen,
 				      errnop, herrnop, NULL, NULL);
 }
+libc_hidden_def (_nss_files_gethostbyname2_r)
 
 enum nss_status
 _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
@@ -491,3 +492,4 @@ _nss_files_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
 
   return status;
 }
+libc_hidden_def (_nss_files_gethostbyname4_r)

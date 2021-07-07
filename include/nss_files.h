@@ -19,6 +19,7 @@
 #ifndef _NSS_FILES_H
 #define _NSS_FILES_H
 
+#include <nss.h>
 #include <stdio.h>
 #if IS_IN (libc)
 #include <libc-lock.h>
@@ -133,6 +134,15 @@ libc_hidden_proto (_nss_files_parse_rpcent)
 libc_hidden_proto (_nss_files_parse_servent)
 libc_hidden_proto (_nss_files_parse_sgent)
 libc_hidden_proto (_nss_files_parse_spent)
+
+NSS_DECLARE_MODULE_FUNCTIONS (files)
+#undef DEFINE_NSS_FUNCTION
+#define DEFINE_NSS_FUNCTION(x) libc_hidden_proto (_nss_files_##x)
+#include <nss/function.def>
+#undef DEFINE_NSS_FUNCTION
+
+void _nss_files_init (void (*cb) (size_t, struct traced_file *));
+libc_hidden_proto (_nss_files_init)
 
 /* Generic implementation of fget*ent_r.  Reads lines from FP until
    EOF or a successful parse into *RESULT using PARSER.  Returns 0 on

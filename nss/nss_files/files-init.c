@@ -21,8 +21,7 @@
 #include <string.h>
 #include <nscd/nscd.h>
 #include <nss.h>
-
-NSS_DECLARE_MODULE_FUNCTIONS (files)
+#include <nss_files.h>
 
 static void
 register_file (void (*cb) (size_t, struct traced_file *),
@@ -49,5 +48,6 @@ _nss_files_init (void (*cb) (size_t, struct traced_file *))
   register_file (cb, servdb, "/etc/services", 0);
   register_file (cb, netgrdb, "/etc/netgroup", 0);
 }
+libc_hidden_def (_nss_files_init)
 
 #endif

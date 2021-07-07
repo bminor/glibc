@@ -20,8 +20,6 @@
 #include <netinet/if_ether.h>
 #include <nss.h>
 
-NSS_DECLARE_MODULE_FUNCTIONS (files)
-
 struct etherent_data {};
 
 #define ENTNAME		etherent

@@ -38,6 +38,10 @@ struct nss_module_functions
 typedef void *nss_module_functions_untyped[sizeof (struct nss_module_functions)
                                            / sizeof (void *)];
 
+/* Locate the nss_files functions, as if by dlopen/dlsym.  */
+void __nss_files_functions (nss_module_functions_untyped pointers)
+  attribute_hidden;
+
 /* Initialization state of a NSS module.  */
 enum nss_module_state
 {

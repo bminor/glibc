@@ -28,8 +28,6 @@
 #include <nss.h>
 #include <nss_files.h>
 
-NSS_DECLARE_MODULE_FUNCTIONS (files)
-
 enum nss_status
 _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
 			   long int *size, gid_t **groupsp, long int limit,
@@ -129,3 +127,4 @@ _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
 
   return status == NSS_STATUS_SUCCESS && !any ? NSS_STATUS_NOTFOUND : status;
 }
+libc_hidden_def (_nss_files_initgroups_dyn)

@@ -19,8 +19,6 @@
 #include <pwd.h>
 #include <nss.h>
 
-NSS_DECLARE_MODULE_FUNCTIONS (files)
-
 #define STRUCTURE	passwd
 #define ENTNAME		pwent
 #define DATABASE	"passwd"

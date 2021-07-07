@@ -28,8 +28,6 @@
 #include "netgroup.h"
 #include <nss_files.h>
 
-NSS_DECLARE_MODULE_FUNCTIONS (files)
-
 #define DATAFILE	"/etc/netgroup"
 
 libc_hidden_proto (_nss_files_endnetgrent)
@@ -152,7 +150,7 @@ _nss_files_setnetgrent (const char *group, struct __netgrent *result)
 
   return status;
 }
-
+libc_hidden_def (_nss_files_setnetgrent)
 
 enum nss_status
 _nss_files_endnetgrent (struct __netgrent *result)
@@ -293,3 +291,4 @@ _nss_files_getnetgrent_r (struct __netgrent *result, char *buffer,
 
   return status;
 }
+libc_hidden_def (_nss_files_getnetgrent_r)

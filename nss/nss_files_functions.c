@@ -1,5 +1,5 @@
-/* Protocols file parser in nss_files module.
-   Copyright (C) 1996-2021 Free Software Foundation, Inc.
+/* Direct access for nss_files functions for NSS module loading.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,31 +16,28 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <netdb.h>
-#include <nss.h>
+#include <nss_module.h>
+#include <nss_files.h>
 
-#define ENTNAME		protoent
-#define DATABASE	"protocols"
+void
+__nss_files_functions (nss_module_functions_untyped pointers)
+{
+  void **fptr = pointers;
 
-struct protoent_data {};
+  /* Functions which are not implemented.  */
+#define _nss_files_getcanonname_r NULL
+#define _nss_files_gethostbyaddr2_r NULL
+#define _nss_files_getpublickey NULL
+#define _nss_files_getsecretkey NULL
+#define _nss_files_netname2user NULL
 
-#define TRAILING_LIST_MEMBER		p_aliases
-#define TRAILING_LIST_SEPARATOR_P	isspace
-#include "files-parse.c"
-LINE_PARSER
-("#",
- STRING_FIELD (result->p_name, isspace, 1);
- INT_FIELD (result->p_proto, isspace, 1, 10,);
- )
+#undef DEFINE_NSS_FUNCTION
+#define DEFINE_NSS_FUNCTION(x) *fptr++ = _nss_files_##x;
+#include "function.def"
 
-#include GENERIC
-
-DB_LOOKUP (protobyname, '.', 0, ("%s", name),
-	   LOOKUP_NAME (p_name, p_aliases),
-	   const char *name)
-
-DB_LOOKUP (protobynumber, '=', 20, ("%zd", (ssize_t) proto),
-	   {
-	     if (result->p_proto == proto)
-	       break;
-	   }, int proto)
+#ifdef PTR_MANGLE
+  void **end = fptr;
+  for (fptr = pointers; fptr != end; ++fptr)
+    PTR_MANGLE (*fptr);
+#endif
+}

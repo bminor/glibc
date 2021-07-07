@@ -19,8 +19,6 @@
 #include <gshadow.h>
 #include <nss.h>
 
-NSS_DECLARE_MODULE_FUNCTIONS (files)
-
 #define STRUCTURE	sgrp
 #define ENTNAME		sgent
 #define DATABASE	"gshadow"
