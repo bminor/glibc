@@ -4822,8 +4822,8 @@ static void malloc_consolidate(mstate av)
   ------------------------------ realloc ------------------------------
 */
 
-void*
-_int_realloc(mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
+static void *
+_int_realloc (mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
 	     INTERNAL_SIZE_T nb)
 {
   mchunkptr        newp;            /* chunk to return */
