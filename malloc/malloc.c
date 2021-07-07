@@ -252,6 +252,10 @@
 
 #include <libc-internal.h>
 
+/* For tcache double-free check.  */
+#include <random-bits.h>
+#include <sys/random.h>
+
 /*
   Debugging:
 
@@ -3091,7 +3095,7 @@ typedef struct tcache_entry
 {
   struct tcache_entry *next;
   /* This field exists to detect double frees.  */
-  struct tcache_perthread_struct *key;
+  uintptr_t key;
 } tcache_entry;
 
 /* There is one of these for each thread, which contains the
@@ -3108,6 +3112,31 @@ typedef struct tcache_perthread_struct
 static __thread bool tcache_shutting_down = false;
 static __thread tcache_perthread_struct *tcache = NULL;
 
+/* Process-wide key to try and catch a double-free in the same thread.  */
+static uintptr_t tcache_key;
+
+/* The value of tcache_key does not really have to be a cryptographically
+   secure random number.  It only needs to be arbitrary enough so that it does
+   not collide with values present in applications.  If a collision does happen
+   consistently enough, it could cause a degradation in performance since the
+   entire list is checked to check if the block indeed has been freed the
+   second time.  The odds of this happening are exceedingly low though, about 1
+   in 2^wordsize.  There is probably a higher chance of the performance
+   degradation being due to a double free where the first free happened in a
+   different thread; that's a case this check does not cover.  */
+static void
+tcache_key_initialize (void)
+{
+  if (__getrandom (&tcache_key, sizeof(tcache_key), GRND_NONBLOCK)
+      != sizeof (tcache_key))
+    {
+      tcache_key = random_bits ();
+#if __WORDSIZE == 64
+      tcache_key = (tcache_key << 32) | random_bits ();
+#endif
+    }
+}
+
 /* Caller must ensure that we know tc_idx is valid and there's room
    for more chunks.  */
 static __always_inline void
@@ -3117,7 +3146,7 @@ tcache_put (mchunkptr chunk, size_t tc_idx)
 
   /* Mark this chunk as "in the tcache" so the test in _int_free will
      detect a double free.  */
-  e->key = tcache;
+  e->key = tcache_key;
 
   e->next = PROTECT_PTR (&e->next, tcache->entries[tc_idx]);
   tcache->entries[tc_idx] = e;
@@ -3134,7 +3163,7 @@ tcache_get (size_t tc_idx)
     malloc_printerr ("malloc(): unaligned tcache chunk detected");
   tcache->entries[tc_idx] = REVEAL_PTR (e->next);
   --(tcache->counts[tc_idx]);
-  e->key = NULL;
+  e->key = 0;
   return (void *) e;
 }
 
@@ -4437,7 +4466,7 @@ _int_free (mstate av, mchunkptr p, int have_lock)
 	   trust it (it also matches random payload data at a 1 in
 	   2^<size_t> chance), so verify it's not an unlikely
 	   coincidence before aborting.  */
-	if (__glibc_unlikely (e->key == tcache))
+	if (__glibc_unlikely (e->key == tcache_key))
 	  {
 	    tcache_entry *tmp;
 	    size_t cnt = 0;
