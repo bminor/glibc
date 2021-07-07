@@ -368,9 +368,10 @@ ___pthread_mutex_unlock (pthread_mutex_t *mutex)
 {
   return __pthread_mutex_unlock_usercnt (mutex, 1);
 }
-versioned_symbol (libpthread, ___pthread_mutex_unlock, __pthread_mutex_unlock,
-		  GLIBC_2_34);
 libc_hidden_ver (___pthread_mutex_unlock, __pthread_mutex_unlock)
+#ifndef SHARED
+strong_alias (___pthread_mutex_unlock, __pthread_mutex_unlock)
+#endif
 versioned_symbol (libpthread, ___pthread_mutex_unlock, pthread_mutex_unlock,
 		  GLIBC_2_0);
 

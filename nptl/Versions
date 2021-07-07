@@ -253,8 +253,6 @@ libc {
   GLIBC_2.34 {
     __pthread_cleanup_routine;
     __pthread_key_create;
-    __pthread_mutex_lock;
-    __pthread_mutex_unlock;
     __pthread_register_cancel;
     __pthread_register_cancel_defer;
     __pthread_unregister_cancel;

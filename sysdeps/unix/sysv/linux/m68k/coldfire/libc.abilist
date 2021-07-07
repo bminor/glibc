@@ -246,9 +246,7 @@ GLIBC_2.34 __pthread_cond_clockwait64 F
 GLIBC_2.34 __pthread_cond_timedwait64 F
 GLIBC_2.34 __pthread_key_create F
 GLIBC_2.34 __pthread_mutex_clocklock64 F
-GLIBC_2.34 __pthread_mutex_lock F
 GLIBC_2.34 __pthread_mutex_timedlock64 F
-GLIBC_2.34 __pthread_mutex_unlock F
 GLIBC_2.34 __pthread_register_cancel F
 GLIBC_2.34 __pthread_register_cancel_defer F
 GLIBC_2.34 __pthread_rwlock_clockrdlock64 F
