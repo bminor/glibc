@@ -115,7 +115,7 @@ following tunables in the @code{malloc} namespace:
 This tunable supersedes the @env{MALLOC_CHECK_} environment variable and is
 identical in features.
 
-Setting this tunable to a non-zero value enables a special (less
+Setting this tunable to a non-zero value less than 4 enables a special (less
 efficient) memory allocator for the @code{malloc} family of functions that is
 designed to be tolerant against simple errors such as double calls of
 free with the same argument, or overruns of a single byte (off-by-one
