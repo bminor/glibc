@@ -142,4 +142,3 @@ _dl_addr (const void *address, Dl_info *info,
 
   return result;
 }
-libc_hidden_def (_dl_addr)

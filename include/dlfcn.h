@@ -45,20 +45,20 @@ extern char **__libc_argv attribute_hidden;
    better error handling semantics for the library.  */
 #define __libc_dlopen(name) \
   __libc_dlopen_mode (name, RTLD_NOW | __RTLD_DLOPEN)
-extern void *__libc_dlopen_mode  (const char *__name, int __mode);
-extern void *__libc_dlsym   (void *__map, const char *__name);
-extern void *__libc_dlvsym (void *map, const char *name, const char *version);
-extern int   __libc_dlclose (void *__map);
-libc_hidden_proto (__libc_dlopen_mode)
-libc_hidden_proto (__libc_dlsym)
-libc_hidden_proto (__libc_dlvsym)
-libc_hidden_proto (__libc_dlclose)
+extern void *__libc_dlopen_mode  (const char *__name, int __mode)
+  attribute_hidden;
+extern void *__libc_dlsym   (void *__map, const char *__name)
+  attribute_hidden;
+extern void *__libc_dlvsym (void *map, const char *name, const char *version)
+  attribute_hidden;
+extern int   __libc_dlclose (void *__map)
+  attribute_hidden;
 
 /* Locate shared object containing the given address.  */
 #ifdef ElfW
 extern int _dl_addr (const void *address, Dl_info *info,
-		     struct link_map **mapp, const ElfW(Sym) **symbolp);
-libc_hidden_proto (_dl_addr)
+		     struct link_map **mapp, const ElfW(Sym) **symbolp)
+  attribute_hidden;
 #endif
 
 struct link_map;
@@ -73,23 +73,21 @@ extern void _dl_close_worker (struct link_map *map, bool force)
 /* Look up NAME in shared object HANDLE (which may be RTLD_DEFAULT or
    RTLD_NEXT).  WHO is the calling function, for RTLD_NEXT.  Returns
    the symbol value, which may be NULL.  */
-extern void *_dl_sym (void *handle, const char *name, void *who);
-libc_hidden_proto (_dl_sym)
+extern void *_dl_sym (void *handle, const char *name, void *who)
+  attribute_hidden;
 
 /* Look up version VERSION of symbol NAME in shared object HANDLE
    (which may be RTLD_DEFAULT or RTLD_NEXT).  WHO is the calling
    function, for RTLD_NEXT.  Returns the symbol value, which may be
    NULL.  */
 extern void *_dl_vsym (void *handle, const char *name, const char *version,
-		       void *who);
-libc_hidden_proto (_dl_vsym)
+		       void *who) attribute_hidden;
 
 /* Helper function for <dlfcn.h> functions.  Runs the OPERATE function via
    _dl_catch_error.  Returns zero for success, nonzero for failure; and
    arranges for `dlerror' to return the error details.
    ARGS is passed as argument to OPERATE.  */
-extern int _dlerror_run (void (*operate) (void *), void *args);
-libc_hidden_proto (_dlerror_run)
+extern int _dlerror_run (void (*operate) (void *), void *args) attribute_hidden;
 
 /* This structure is used to make the outer (statically linked)
    implementation of dlopen and related functions to the inner libc

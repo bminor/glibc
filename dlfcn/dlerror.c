@@ -196,4 +196,3 @@ _dlerror_run (void (*operate) (void *), void *args)
       return 1;
     }
 }
-libc_hidden_def (_dlerror_run)

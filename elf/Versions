@@ -22,9 +22,6 @@ libc {
 %endif
   GLIBC_PRIVATE {
     # functions used in other libraries
-    _dl_addr;
-    _dl_sym; _dl_vsym;
-    __libc_dlclose; __libc_dlopen_mode; __libc_dlsym; __libc_dlvsym;
     __libc_early_init;
 
     # Internal error handling support.  Interposes the functions in ld.so.

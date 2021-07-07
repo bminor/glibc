@@ -165,7 +165,7 @@ tests-static-normal := tst-leaks1-static tst-array1-static tst-array5-static \
 
 tests-static-internal := tst-tls1-static tst-tls2-static \
 	       tst-ptrguard1-static tst-stackguard1-static \
-	       tst-tls1-static-non-pie tst-libc_dlvsym-static
+	       tst-tls1-static-non-pie
 
 CRT-tst-tls1-static-non-pie := $(csu-objpfx)crt1.o
 tst-tls1-static-non-pie-no-pie = yes
@@ -229,7 +229,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
 	 tst-tls3 tst-tls6 tst-tls7 tst-tls8 tst-dlmopen2 \
-	 tst-ptrguard1 tst-stackguard1 tst-libc_dlvsym \
+	 tst-ptrguard1 tst-stackguard1 \
 	 tst-create_format1 tst-tls-surplus tst-dl-hwcaps_split
 tests-container += tst-pldd tst-dlopen-tlsmodid-container \
   tst-dlopen-self-container tst-preload-pthread-libc
@@ -326,7 +326,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12 \
 		tst-latepthreadmod $(tst-tls-many-dynamic-modules) \
 		tst-nodelete-dlclose-dso tst-nodelete-dlclose-plugin \
-		tst-main1mod tst-libc_dlvsym-dso tst-absolute-sym-lib \
+		tst-main1mod tst-absolute-sym-lib \
 		tst-absolute-zero-lib tst-big-note-lib tst-unwind-ctor-lib \
 		tst-audit13mod1 tst-sonamemove-linkmod1 \
 		tst-sonamemove-runmod1 tst-sonamemove-runmod2 \
@@ -352,7 +352,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
-modules-names-tests = $(filter-out ifuncmod% tst-libc_dlvsym-dso tst-tlsmod%,\
+modules-names-tests = $(filter-out ifuncmod% tst-tlsmod%,\
 				   $(modules-names))
 
 ifeq (yes,$(have-mtls-dialect-gnu2))
@@ -1581,14 +1581,6 @@ $(objpfx)tst-absolute-sym: $(objpfx)tst-absolute-sym-lib.so
 LDLIBS-tst-absolute-zero-lib.so = tst-absolute-zero-lib.lds
 $(objpfx)tst-absolute-zero-lib.so: $(LDLIBS-tst-absolute-zero-lib.so)
 $(objpfx)tst-absolute-zero: $(objpfx)tst-absolute-zero-lib.so
-
-# Both the main program and the DSO for tst-libc_dlvsym need to link
-# against libdl.
-$(objpfx)tst-libc_dlvsym-dso.so: $(libsupport)
-$(objpfx)tst-libc_dlvsym.out: $(objpfx)tst-libc_dlvsym-dso.so
-tst-libc_dlvsym-static-ENV = \
-  LD_LIBRARY_PATH=$(ld-library-path):$(common-objpfx)dlfcn
-$(objpfx)tst-libc_dlvsym-static.out: $(objpfx)tst-libc_dlvsym-dso.so
 
 $(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so
 # Avoid creating an ABI tag note, which may come before the

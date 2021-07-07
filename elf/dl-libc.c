@@ -162,7 +162,6 @@ __libc_dlopen_mode (const char *name, int mode)
 #endif
   return dlerror_run (do_dlopen, &args) ? NULL : (void *) args.map;
 }
-libc_hidden_def (__libc_dlopen_mode)
 
 #ifndef SHARED
 void *
@@ -192,7 +191,6 @@ __libc_dlsym (void *map, const char *name)
   return (dlerror_run (do_dlsym, &args) ? NULL
 	  : (void *) (DL_SYMBOL_ADDRESS (args.loadbase, args.ref)));
 }
-libc_hidden_def (__libc_dlsym)
 
 /* Replacement for dlvsym.  MAP must be a real map.  This function
    returns NULL without setting the dlerror value in case of static
@@ -219,7 +217,6 @@ __libc_dlvsym (void *map, const char *name, const char *version)
 	  : (void *) (DL_SYMBOL_ADDRESS (args.dlsym.loadbase,
 					 args.dlsym.ref)));
 }
-libc_hidden_def (__libc_dlvsym)
 
 int
 __libc_dlclose (void *map)
@@ -230,7 +227,6 @@ __libc_dlclose (void *map)
 #endif
   return dlerror_run (do_dlclose, map);
 }
-libc_hidden_def (__libc_dlclose)
 
 
 static bool __libc_freeres_fn_section
