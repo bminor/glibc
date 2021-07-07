@@ -341,8 +341,12 @@ Fatal glibc error: malloc assertion failure in %s: %s\n",
    It assumes a minimum page size of 4096 bytes (12 bits).  Systems with
    larger pages provide less entropy, although the pointer mangling
    still works.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+#define PROTECT_PTR(pos, ptr) (ptr)
+#else
 #define PROTECT_PTR(pos, ptr) \
   ((__typeof (ptr)) ((((size_t) pos) >> 12) ^ ((size_t) ptr)))
+#endif
 #define REVEAL_PTR(ptr)  PROTECT_PTR (&ptr, ptr)
 
 /*
