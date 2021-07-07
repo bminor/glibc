@@ -40,7 +40,7 @@ __nss_readline (FILE *fp, char *buf, size_t len, off64_t *poffset)
       *poffset = __ftello64 (fp);
 
       buf[len - 1] = '\xff';        /* Marker to recognize truncation.  */
-      if (fgets_unlocked (buf, len, fp) == NULL)
+      if (__fgets_unlocked (buf, len, fp) == NULL)
         {
           if (feof_unlocked (fp))
             {
@@ -61,7 +61,7 @@ __nss_readline (FILE *fp, char *buf, size_t len, off64_t *poffset)
            line on the next call.  */
         return __nss_readline_seek (fp, *poffset);
 
-      /* fgets_unlocked succeeded.  */
+      /* __fgets_unlocked succeeded.  */
 
       /* Remove leading whitespace.  */
       char *p = buf;

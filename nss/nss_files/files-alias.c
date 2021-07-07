@@ -98,7 +98,7 @@ get_next_alias (FILE *stream, const char *match, struct aliasent *result,
       /* Read the first line.  It must contain the alias name and
 	 possibly some alias names.  */
       first_unused[room_left - 1] = '\xff';
-      line = fgets_unlocked (first_unused, room_left, stream);
+      line = __fgets_unlocked (first_unused, room_left, stream);
       if (line == NULL)
 	/* Nothing to read.  */
 	break;
@@ -187,7 +187,7 @@ get_next_alias (FILE *stream, const char *match, struct aliasent *result,
 		      /* If the file does not exist we simply ignore
 			 the statement.  */
 		      if (listfile != NULL
-			  && (old_line = strdup (line)) != NULL)
+			  && (old_line = __strdup (line)) != NULL)
 			{
 			  while (! feof_unlocked (listfile))
 			    {
@@ -199,8 +199,8 @@ get_next_alias (FILE *stream, const char *match, struct aliasent *result,
 				}
 
 			      first_unused[room_left - 1] = '\xff';
-			      line = fgets_unlocked (first_unused, room_left,
-						     listfile);
+			      line = __fgets_unlocked (first_unused, room_left,
+						       listfile);
 			      if (line == NULL)
 				break;
 			      if (first_unused[room_left - 1] != '\xff')
@@ -302,7 +302,7 @@ get_next_alias (FILE *stream, const char *match, struct aliasent *result,
 		  /* The just read character is a white space and so
 		     can be ignored.  */
 		  first_unused[room_left - 1] = '\xff';
-		  line = fgets_unlocked (first_unused, room_left, stream);
+		  line = __fgets_unlocked (first_unused, room_left, stream);
 		  if (line == NULL)
 		    {
 		      /* Continuation line without any data and

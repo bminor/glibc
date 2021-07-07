@@ -32,7 +32,7 @@ NSS_DECLARE_MODULE_FUNCTIONS (files)
 
 #define DATAFILE	"/etc/netgroup"
 
-libnss_files_hidden_proto (_nss_files_endnetgrent)
+libc_hidden_proto (_nss_files_endnetgrent)
 
 #define EXPAND(needed)							      \
   do									      \
@@ -164,7 +164,7 @@ _nss_files_endnetgrent (struct __netgrent *result)
   result->cursor = NULL;
   return NSS_STATUS_SUCCESS;
 }
-libnss_files_hidden_def (_nss_files_endnetgrent)
+libc_hidden_def (_nss_files_endnetgrent)
 
 static char *
 strip_whitespace (char *str)
@@ -279,7 +279,7 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
 
   return status;
 }
-libnss_files_hidden_def (_nss_netgroup_parseline)
+libc_hidden_def (_nss_netgroup_parseline)
 
 
 enum nss_status

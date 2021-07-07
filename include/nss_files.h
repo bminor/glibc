@@ -124,13 +124,13 @@ extern nss_files_parse_line _nss_files_parse_servent;
 extern nss_files_parse_line _nss_files_parse_sgent;
 extern nss_files_parse_line _nss_files_parse_spent;
 
-libnss_files_hidden_proto (_nss_files_parse_etherent)
+libc_hidden_proto (_nss_files_parse_etherent)
 libc_hidden_proto (_nss_files_parse_grent)
-libnss_files_hidden_proto (_nss_files_parse_netent)
-libnss_files_hidden_proto (_nss_files_parse_protoent)
+libc_hidden_proto (_nss_files_parse_netent)
+libc_hidden_proto (_nss_files_parse_protoent)
 libc_hidden_proto (_nss_files_parse_pwent)
-libnss_files_hidden_proto (_nss_files_parse_rpcent)
-libnss_files_hidden_proto (_nss_files_parse_servent)
+libc_hidden_proto (_nss_files_parse_rpcent)
+libc_hidden_proto (_nss_files_parse_servent)
 libc_hidden_proto (_nss_files_parse_sgent)
 libc_hidden_proto (_nss_files_parse_spent)
 

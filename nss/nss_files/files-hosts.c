@@ -57,12 +57,13 @@ LINE_PARSER
    STRING_FIELD (addr, isspace, 1);
 
    /* Parse address.  */
-   if (inet_pton (af == AF_UNSPEC ? AF_INET : af, addr, entdata->host_addr)
+   if (__inet_pton (af == AF_UNSPEC ? AF_INET : af, addr, entdata->host_addr)
        > 0)
      af = af == AF_UNSPEC ? AF_INET : af;
    else
      {
-       if (af == AF_INET && inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+       if (af == AF_INET
+	   && __inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
 	 {
 	   if (IN6_IS_ADDR_V4MAPPED (entdata->host_addr))
 	     memcpy (entdata->host_addr, entdata->host_addr + 12, INADDRSZ);
@@ -76,7 +77,7 @@ LINE_PARSER
 	     return 0;
 	 }
        else if (af == AF_UNSPEC
-		&& inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
+		&& __inet_pton (AF_INET6, addr, entdata->host_addr) > 0)
 	 af = AF_INET6;
        else
 	 /* Illegal address: ignore line.  */

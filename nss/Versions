@@ -23,11 +23,8 @@ libc {
     __nss_files_data_open;
     __nss_files_data_put;
     __nss_files_data_setent;
-  }
-}
 
-libnss_files {
-  GLIBC_PRIVATE {
+    # Routines formerly in libnss_files.so.2.
     _nss_files_setaliasent;
     _nss_files_endaliasent;
     _nss_files_getaliasbyname_r;
@@ -110,6 +107,14 @@ libnss_files {
     _nss_files_initgroups_dyn;
 
     _nss_files_init;
+  }
+}
+
+libnss_files {
+  GLIBC_PRIVATE {
+    # Keep a version node (with a synthesized local: * directive) so that
+    # __bss_* symbols are hidden on targets that need it.
+    __libnss_files_version_placeholder;
   }
 }
 
