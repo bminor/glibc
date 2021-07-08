@@ -105,6 +105,14 @@ routines += \
   files-initgroups \
   # routines
 
+# Build only an empty shared libnss_files.
+libnss_files-inhibit-o = $(filter-out .os,$(object-suffixes))
+
+# Pretend that libnss_files.so is a linker script, so that the symbolic link
+# is not installed.
+install-lib-ldscripts = libnss_files.so
+$(inst_libdir)/libnss_files.so:
+
 libnss_db-dbs		:= $(addprefix db-,\
 				       $(filter-out hosts network key alias,\
 						    $(databases))) \
