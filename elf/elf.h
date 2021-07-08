@@ -816,6 +816,8 @@ typedef struct
 					   generic key.  */
 #define NT_ARM_TAGGED_ADDR_CTRL	0x409	/* AArch64 tagged address
 					   control.  */
+#define NT_ARM_PAC_ENABLED_KEYS	0x40a	/* AArch64 pointer authentication
+					   enabled keys.  */
 #define NT_VMCOREDD	0x700		/* Vmcore Device Dump Note.  */
 #define NT_MIPS_DSP	0x800		/* MIPS DSP ASE registers.  */
 #define NT_MIPS_FP_MODE	0x801		/* MIPS floating-point mode.  */
