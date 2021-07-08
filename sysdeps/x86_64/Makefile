@@ -20,6 +20,8 @@ endif
 ifeq ($(subdir),string)
 sysdep_routines += strcasecmp_l-nonascii strncase_l-nonascii
 gen-as-const-headers += locale-defines.sym
+tests += \
+  tst-rsi-strlen
 endif
 
 ifeq ($(subdir),elf)
@@ -189,6 +191,11 @@ endif # $(subdir) == elf
 
 ifeq ($(subdir),csu)
 gen-as-const-headers += tlsdesc.sym rtld-offsets.sym
+endif
+
+ifeq ($(subdir),wcsmbs)
+tests += \
+  tst-rsi-wcslen
 endif
 
 $(objpfx)x86_64/tst-x86_64mod-1.os: $(objpfx)tst-x86_64mod-1.os
