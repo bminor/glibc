@@ -1281,6 +1281,8 @@ tst-leaks1-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1.mtrace
 tst-leaks1-static-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1-static.mtrace
 
 $(objpfx)tst-thrlock: $(shared-thread-library)
+$(objpfx)tst-thrlock.out: $(libm)
+$(objpfx)tst-noload.out: $(libm)
 
 tst-tst-dlopen-tlsmodid-no-pie = yes
 $(objpfx)tst-dlopen-tlsmodid: $(shared-thread-library)
