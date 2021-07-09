@@ -40,6 +40,7 @@ static int restart;
 /* Hold the four initial argument used to respawn the process, plus
    the extra '--direct' and '--restart', and a final NULL.  */
 static char *initial_argv[7];
+static int initial_argv_count;
 
 #define CMDLINE_OPTIONS \
   { "restart", no_argument, &restart, 1 },
@@ -133,11 +134,16 @@ static void
 spawn_closefrom_test (posix_spawn_file_actions_t *fa, int lowfd, int highfd,
 		      int *extrafds, size_t nextrafds)
 {
-  /* 6 elements from initial_argv (path to ld.so, '--library-path', the
-     path', application name', '--direct', and '--restart'), up to
-     2 * maximum_fd arguments (the expected open file descriptors), plus
-     NULL.  */
-  enum { argv_size = array_length (initial_argv) + 2 * NFDS + 1 };
+  /* 3 or 6 elements from initial_argv:
+       + path to ld.so          optional
+       + --library-path         optional
+       + the library path       optional
+       + application name
+       + --direct
+       + --restart
+     up to 2 * maximum_fd arguments (the expected open file descriptors),
+     plus NULL.  */
+  int argv_size = initial_argv_count + 2 * NFDS + 1;
   char *args[argv_size];
   int argc = 0;
 
@@ -268,12 +274,16 @@ do_test (int argc, char *argv[])
   if (restart)
     handle_restart (argc, argv);
 
-  initial_argv[0] = argv[1]; /* path for ld.so  */
-  initial_argv[1] = argv[2]; /* "--library-path"  */
-  initial_argv[2] = argv[3]; /* the library path  */
-  initial_argv[3] = argv[4]; /* the application name  */
-  initial_argv[4] = (char *) "--direct";
-  initial_argv[5] = (char *) "--restart";
+  TEST_VERIFY_EXIT (argc == 2 || argc == 5);
+
+  int i;
+
+  for (i = 0; i < argc - 1; i++)
+    initial_argv[i] = argv[i + 1];
+  initial_argv[i++] = (char *) "--direct";
+  initial_argv[i++] = (char *) "--restart";
+
+  initial_argv_count = i;
 
   do_test_closefrom ();
 
