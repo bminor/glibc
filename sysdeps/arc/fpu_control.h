@@ -81,21 +81,20 @@ typedef unsigned int fpu_control_t;
 #  define _FPU_SETCW(cw) __asm__ volatile ("sr %0, [0x300]" : : "r" (cw))
 
 /*  Macros for accessing the hardware status word.
-    FWE bit is special as it controls if actual status bits could be wrritten
-    explicitly (other than FPU instructions). We handle it here to keep the
-    callers agnostic of it:
-      - clear it out when reporting status bits
-      - always set it when changing status bits.  */
+    Writing to FPU_STATUS requires a "control" bit FWE to be able to set the
+    exception flags directly (as opposed to side-effects of FP instructions).
+    That is done in the macro here to keeps callers agnostic of this detail.
+    And given FWE is write-only and RAZ, no need to "clear" it in _FPU_GETS
+    macro.  */
 #  define _FPU_GETS(cw)				\
     __asm__ volatile ("lr   %0, [0x301]	\r\n" 	\
-                      "bclr %0, %0, 31	\r\n" 	\
                       : "=r" (cw))
 
 #  define _FPU_SETS(cw)				\
     do {					\
-      unsigned int __tmp = 0x80000000 | (cw);	\
+      unsigned int __fwe = 0x80000000 | (cw);	\
       __asm__ volatile ("sr  %0, [0x301] \r\n" 	\
-                        : : "r" (__tmp));	\
+                        : : "r" (__fwe));	\
     } while (0)
 
 /* Default control word set at startup.  */
