@@ -163,8 +163,8 @@ int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 ElfW(auxv_t) *_dl_auxv;
 const ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
-uint64_t _dl_hwcap __attribute__ ((nocommon));
-uint64_t _dl_hwcap2 __attribute__ ((nocommon));
+uint64_t _dl_hwcap;
+uint64_t _dl_hwcap2;
 
 /* The value of the FPU control word the kernel will preset in hardware.  */
 fpu_control_t _dl_fpu_control = _FPU_DEFAULT;
@@ -176,7 +176,7 @@ fpu_control_t _dl_fpu_control = _FPU_DEFAULT;
    file.  Since there is no way to set this nonzero (we don't grok the
    LD_HWCAP_MASK environment variable here), there is no real point in
    setting _dl_hwcap nonzero below, but we do anyway.  */
-uint64_t _dl_hwcap_mask __attribute__ ((nocommon));
+uint64_t _dl_hwcap_mask;
 #endif
 
 /* Prevailing state of the stack.  Generally this includes PF_X, indicating it's

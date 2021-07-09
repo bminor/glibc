@@ -163,8 +163,7 @@ uintptr_t __stack_chk_guard attribute_relro;
 
 /* Only exported for architectures that don't store the pointer guard
    value in thread local area.  */
-uintptr_t __pointer_chk_guard_local
-     attribute_relro attribute_hidden __attribute__ ((nocommon));
+uintptr_t __pointer_chk_guard_local attribute_relro attribute_hidden;
 #ifndef THREAD_SET_POINTER_GUARD
 strong_alias (__pointer_chk_guard_local, __pointer_chk_guard)
 #endif

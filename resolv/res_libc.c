@@ -88,7 +88,7 @@ res_init (void)
    This differs from plain `struct __res_state _res;' in that it doesn't
    create a common definition, but a plain symbol that resides in .bss,
    which can have an alias.  */
-struct __res_state _res __attribute__ ((nocommon));
+struct __res_state _res;
 
 #undef __resp
 __thread struct __res_state *__resp = &_res;

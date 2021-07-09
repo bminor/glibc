@@ -93,7 +93,7 @@ struct
     u_long ncachereplays;	/* times cache hit, and is replay */
     u_long ncachemisses;	/* times cache missed */
   }
-svcauthdes_stats __attribute__ ((nocommon));
+svcauthdes_stats;
 #ifdef SHARED
 compat_symbol (libc, svcauthdes_stats, svcauthdes_stats, GLIBC_2_0);
 #endif

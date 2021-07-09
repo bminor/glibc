@@ -923,8 +923,12 @@ ifeq	"$(strip $(+cflags))" ""
 +cflags	:= $(default_cflags)
 endif	# $(+cflags) == ""
 
+# Force building with -fno-common because hidden_def, compat_symbol
+# and other constructs do not work for common symbols (and would
+# otherwise require specifying __attribute__ ((nocommon)) on a
+# case-by-case basis).
 +cflags += $(cflags-cpu) $(+gccwarn) $(+merge-constants) $(+math-flags) \
-	   $(+stack-protector)
+	   $(+stack-protector) -fno-common
 +gcc-nowarn := -w
 
 # Each sysdeps directory can contain header files that both will be

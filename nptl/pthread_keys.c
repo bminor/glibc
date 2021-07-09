@@ -19,6 +19,5 @@
 #include <pthreadP.h>
 
 /* Table of the key information.  */
-struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX]
-  __attribute__ ((nocommon));
+struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX];
 libc_hidden_data_def (__pthread_keys)

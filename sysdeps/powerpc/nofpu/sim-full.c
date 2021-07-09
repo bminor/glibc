@@ -22,18 +22,18 @@
 #include "soft-supp.h"
 
 /* Thread-local to store sticky exceptions.  */
-__thread int __sim_exceptions_thread __attribute__ ((nocommon));
+__thread int __sim_exceptions_thread;
 libc_hidden_tls_def (__sim_exceptions_thread);
 
 /* By default, no exceptions should trap.  */
 __thread int __sim_disabled_exceptions_thread = 0xffffffff;
 libc_hidden_tls_def (__sim_disabled_exceptions_thread);
 
-__thread int __sim_round_mode_thread __attribute__ ((nocommon));
+__thread int __sim_round_mode_thread;
 libc_hidden_tls_def (__sim_round_mode_thread);
 
 #if SIM_GLOBAL_COMPAT
-int __sim_exceptions_global __attribute__ ((nocommon));
+int __sim_exceptions_global;
 libc_hidden_data_def (__sim_exceptions_global);
 SIM_COMPAT_SYMBOL (__sim_exceptions_global, __sim_exceptions);
 
@@ -42,7 +42,7 @@ libc_hidden_data_def (__sim_disabled_exceptions_global);
 SIM_COMPAT_SYMBOL (__sim_disabled_exceptions_global,
 		   __sim_disabled_exceptions);
 
-int __sim_round_mode_global __attribute__ ((nocommon));
+int __sim_round_mode_global;
 libc_hidden_data_def (__sim_round_mode_global);
 SIM_COMPAT_SYMBOL (__sim_round_mode_global, __sim_round_mode);
 #endif

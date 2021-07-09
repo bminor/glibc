@@ -42,15 +42,13 @@
 /* We are very tricky here.  We want to have _null_auth in a read-only
    section but we cannot add const to the type because this isn't how
    the variable is declared.  So we use the section attribute.  */
-struct opaque_auth _null_auth __attribute__ ((nocommon));
+struct opaque_auth _null_auth;
 libc_hidden_nolink_sunrpc (_null_auth, GLIBC_2_0)
 
-/* The variables need the nocommon attribute, so that it is possible
-   to create aliases and specify symbol versions.  */
-fd_set svc_fdset  __attribute__ ((nocommon));
-struct rpc_createerr rpc_createerr  __attribute__ ((nocommon));
-struct pollfd *svc_pollfd  __attribute__ ((nocommon));
-int svc_max_pollfd  __attribute__ ((nocommon));
+fd_set svc_fdset;
+struct rpc_createerr rpc_createerr;
+struct pollfd *svc_pollfd;
+int svc_max_pollfd;
 #ifdef SHARED
 # ifndef EXPORT_RPC_SYMBOLS
 compat_symbol (libc, svc_fdset, svc_fdset, GLIBC_2_0);

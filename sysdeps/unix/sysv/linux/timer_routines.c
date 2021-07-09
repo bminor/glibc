@@ -107,12 +107,11 @@ timer_helper_thread (void *arg)
 
 
 /* Control variable for helper thread creation.  */
-pthread_once_t __timer_helper_once __attribute__ ((nocommon))
-  = PTHREAD_ONCE_INIT;
+pthread_once_t __timer_helper_once = PTHREAD_ONCE_INIT;
 
 
 /* TID of the helper thread.  */
-pid_t __timer_helper_tid __attribute__ ((nocommon));
+pid_t __timer_helper_tid;
 
 
 /* Reset variables so that after a fork a new helper thread gets started.  */

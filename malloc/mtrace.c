@@ -59,7 +59,7 @@ __libc_lock_define_initialized (static, lock);
    case some applications ended up linking against them but they don't actually
    do anything anymore; not that they did much before anyway.  */
 
-void *mallwatch __attribute__ ((nocommon));
+void *mallwatch;
 compat_symbol (libc, mallwatch, mallwatch, GLIBC_2_0);
 
 void

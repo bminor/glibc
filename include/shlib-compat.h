@@ -79,11 +79,7 @@
    unspecified whether SYMBOL@VERSION is associated with LOCAL, or if
    an intermediate alias is created.  If LOCAL and SYMBOL are
    distinct, and LOCAL is also intended for export, its version should
-   be specified explicitly with versioned_symbol, too.
-
-   If LOCAL is a data symbol and does not have a non-zero initializer,
-   it should be defined with __attribute__ ((nocommon)) for
-   compatibility with GCC versions that default to -fcommon.  */
+   be specified explicitly with versioned_symbol, too.  */
 # define versioned_symbol(lib, local, symbol, version) \
   versioned_symbol_1 (lib, local, symbol, version)
 # define versioned_symbol_1(lib, local, symbol, version) \

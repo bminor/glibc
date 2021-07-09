@@ -43,12 +43,12 @@
 
 
 /* Globally enabled events.  */
-td_thr_events_t __nptl_threads_events __attribute__ ((nocommon));
+td_thr_events_t __nptl_threads_events;
 libc_hidden_proto (__nptl_threads_events)
 libc_hidden_data_def (__nptl_threads_events)
 
 /* Pointer to descriptor with the last event.  */
-struct pthread *__nptl_last_event __attribute__ ((nocommon));
+struct pthread *__nptl_last_event;
 libc_hidden_proto (__nptl_last_event)
 libc_hidden_data_def (__nptl_last_event)
 

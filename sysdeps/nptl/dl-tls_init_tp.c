@@ -23,11 +23,11 @@
 #include <tls.h>
 
 #ifndef __ASSUME_SET_ROBUST_LIST
-bool __nptl_set_robust_list_avail __attribute__ ((nocommon));
+bool __nptl_set_robust_list_avail;
 rtld_hidden_data_def (__nptl_set_robust_list_avail)
 #endif
 
-bool __nptl_initial_report_events __attribute__ ((nocommon));
+bool __nptl_initial_report_events;
 rtld_hidden_def (__nptl_initial_report_events)
 
 #ifdef SHARED

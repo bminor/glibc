@@ -67,6 +67,6 @@ __lll_lock_wake (int *futex, int private)
 libc_hidden_def (__lll_lock_wake)
 
 #if ENABLE_ELISION_SUPPORT
-int __pthread_force_elision __attribute__ ((nocommon));
+int __pthread_force_elision;
 libc_hidden_data_def (__pthread_force_elision)
 #endif

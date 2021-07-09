@@ -290,11 +290,9 @@ libc_hidden_nolink_sunrpc (key_get_conv, GLIBC_2_1)
  * implementations of these functions, and to call those in key_call().
  */
 
-cryptkeyres *(*__key_encryptsession_pk_LOCAL) (uid_t, char *)
-  __attribute__ ((nocommon));
-cryptkeyres *(*__key_decryptsession_pk_LOCAL) (uid_t, char *)
-  __attribute__ ((nocommon));
-des_block *(*__key_gendes_LOCAL) (uid_t, char *) __attribute__ ((nocommon));
+cryptkeyres *(*__key_encryptsession_pk_LOCAL) (uid_t, char *);
+cryptkeyres *(*__key_decryptsession_pk_LOCAL) (uid_t, char *);
+des_block *(*__key_gendes_LOCAL) (uid_t, char *);
 #ifdef SHARED
 # ifndef EXPORT_RPC_SYMBOLS
 compat_symbol (libc, __key_encryptsession_pk_LOCAL,

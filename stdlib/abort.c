@@ -32,7 +32,7 @@
 #endif
 
 /* Exported variable to locate abort message in core files etc.  */
-struct abort_msg_s *__abort_msg __attribute__ ((nocommon));
+struct abort_msg_s *__abort_msg;
 libc_hidden_def (__abort_msg)
 
 /* We must avoid to run in circles.  Therefore we remember how far we
