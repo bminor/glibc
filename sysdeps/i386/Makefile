@@ -5,6 +5,10 @@ asm-CPPFLAGS += -DGAS_SYNTAX
 # The i386 `long double' is a distinct type we support.
 long-double-fcts = yes
 
+ifeq ($(subdir),malloc)
+tests-exclude-mcheck += tst-mallocalign1
+endif
+
 ifeq ($(subdir),math)
 # These functions change the rounding mode internally and need to
 # update both the SSE2 rounding mode and the 387 rounding mode.  See

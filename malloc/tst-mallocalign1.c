@@ -1,4 +1,5 @@
-/* Copyright (C) 2012-2021 Free Software Foundation, Inc.
+/* Verify that MALLOC_ALIGNMENT is honored by malloc.
+   Copyright (C) 2012-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,17 +18,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
+#include <malloc-size.h>
 
-/* Specified by x86-64 psABI.  */
-#define ALIGN_MASK (16 - 1)
-
-void *
+static void *
 test (size_t s)
 {
   void *p = malloc (s);
 
-  printf ("malloc: %ld, %p: %ld\n", (unsigned long) s, p,
-	  ((unsigned long) p) & ALIGN_MASK);
+  printf ("malloc: %zu, %p: %zu\n", s, p,
+	  ((uintptr_t) p) & MALLOC_ALIGN_MASK);
   return p;
 }
 
@@ -38,35 +38,34 @@ do_test (void)
   int ret = 0;
 
   p = test (2);
-  ret |= (unsigned long) p & ALIGN_MASK;
+  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
   free (p);
 
   p = test (8);
-  ret |= (unsigned long) p & ALIGN_MASK;
+  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
   free (p);
 
   p = test (13);
-  ret |= (unsigned long) p & ALIGN_MASK;
+  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
   free (p);
 
   p = test (16);
-  ret |= (unsigned long) p & ALIGN_MASK;
+  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
   free (p);
 
   p = test (23);
-  ret |= (unsigned long) p & ALIGN_MASK;
+  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
   free (p);
 
   p = test (43);
-  ret |= (unsigned long) p & ALIGN_MASK;
+  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
   free (p);
 
   p = test (123);
-  ret |= (unsigned long) p & ALIGN_MASK;
+  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
   free (p);
 
   return ret;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
