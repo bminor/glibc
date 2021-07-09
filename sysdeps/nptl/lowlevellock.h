@@ -125,6 +125,11 @@ libc_hidden_proto (__lll_lock_wait)
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
 
 
+extern void __lll_lock_wake_private (int *futex);
+libc_hidden_proto (__lll_lock_wake_private)
+extern void __lll_lock_wake (int *futex, int private);
+libc_hidden_proto (__lll_lock_wake)
+
 /* This is an expression rather than a statement even though its value is
    void, so that it can be used in a comma expression or as an expression
    that's cast to void.  */
@@ -137,14 +142,19 @@ libc_hidden_proto (__lll_lock_wait)
    acquires the lock and when there will be no further lock acquisitions;
    thus, we must not access the lock after releasing it, or those accesses
    could be concurrent with mutex destruction or reuse of the memory.  */
-#define __lll_unlock(futex, private)                    \
-  ((void)                                               \
-   ({                                                   \
-     int *__futex = (futex);                            \
-     int __private = (private);                         \
-     int __oldval = atomic_exchange_rel (__futex, 0);   \
-     if (__glibc_unlikely (__oldval > 1))               \
-       lll_futex_wake (__futex, 1, __private);          \
+#define __lll_unlock(futex, private)					\
+  ((void)								\
+  ({									\
+     int *__futex = (futex);						\
+     int __private = (private);						\
+     int __oldval = atomic_exchange_rel (__futex, 0);			\
+     if (__glibc_unlikely (__oldval > 1))				\
+       {								\
+         if (__builtin_constant_p (private) && (private) == LLL_PRIVATE) \
+           __lll_lock_wake_private (__futex);                           \
+         else                                                           \
+           __lll_lock_wake (__futex, __private);			\
+       }								\
    }))
 #define lll_unlock(futex, private)	\
   __lll_unlock (&(futex), private)

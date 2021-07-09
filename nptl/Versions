@@ -380,6 +380,7 @@ libc {
   }
   GLIBC_PRIVATE {
     __libc_alloca_cutoff;
+    __lll_lock_wake_private;
     __lll_lock_wait_private;
     __nptl_create_event;
     __nptl_death_event;
