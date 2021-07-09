@@ -188,6 +188,9 @@ class Context(object):
                         gcc_cfg=['--with-float=hard', '--with-cpu=arm926ej-s'],
                         extra_glibcs=[{'variant': 'v7a',
                                        'ccopts': '-march=armv7-a -mfpu=vfpv3'},
+                                      {'variant': 'thumb',
+                                       'ccopts':
+                                       '-mthumb -march=armv7-a -mfpu=vfpv3'},
                                       {'variant': 'v7a-disable-multi-arch',
                                        'ccopts': '-march=armv7-a -mfpu=vfpv3',
                                        'cfg': ['--disable-multi-arch']}])
