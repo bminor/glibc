@@ -39,10 +39,10 @@ support_stack_alloc (size_t size)
   if (pagesize == -1)
     FAIL_EXIT1 ("sysconf (_SC_PAGESIZE): %m\n");
 
-  /* Always supply at least sysconf (_SC_MINSIGSTKSZ) space; passing 0
+  /* Always supply at least sysconf (_SC_SIGSTKSZ) space; passing 0
      as size means only that much space.  No matter what the number is,
      round it up to a whole number of pages.  */
-  size_t stacksize = roundup (size + sysconf (_SC_MINSIGSTKSZ),
+  size_t stacksize = roundup (size + sysconf (_SC_SIGSTKSZ),
 			      pagesize);
 
   /* The guard bands need to be large enough to intercept offset
