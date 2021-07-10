@@ -213,6 +213,12 @@ ifeq ($(subdir),time)
 sysdep_headers += sys/timex.h bits/timex.h
 
 sysdep_routines += ntp_gettime ntp_gettimex
+
+tests += \
+  tst-clock_gettime-clobber \
+  tst-gettimeofday-clobber \
+  tst-time-clobber \
+  # tests
 endif
 
 ifeq ($(subdir),signal)

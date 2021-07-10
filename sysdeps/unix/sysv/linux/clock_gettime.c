@@ -35,27 +35,54 @@ __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp)
 #endif
 
 #ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
-  r = INLINE_VSYSCALL (clock_gettime64, 2, clock_id, tp);
-#else
-  r = INLINE_SYSCALL_CALL (clock_gettime64, clock_id, tp);
+  int (*vdso_time64) (clockid_t clock_id, struct __timespec64 *tp)
+    = GLRO(dl_vdso_clock_gettime64);
+  if (vdso_time64 != NULL)
+    {
+      r = INTERNAL_VSYSCALL_CALL (vdso_time64, 2, clock_id, tp);
+      if (r == 0)
+	return 0;
+      return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
+    }
 #endif
 
-  if (r == 0 || errno != ENOSYS)
-    return r;
+#ifdef HAVE_CLOCK_GETTIME_VSYSCALL
+  int (*vdso_time) (clockid_t clock_id, struct timespec *tp)
+    = GLRO(dl_vdso_clock_gettime);
+  if (vdso_time != NULL)
+    {
+      struct timespec tp32;
+      r = INTERNAL_VSYSCALL_CALL (vdso_time, 2, clock_id, &tp32);
+      if (r == 0 && tp32.tv_sec > 0)
+	{
+	  *tp = valid_timespec_to_timespec64 (tp32);
+	  return 0;
+	}
+      else if (r != 0)
+	return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
+
+      /* Fallback to syscall if the 32-bit time_t vDSO returns overflows.  */
+    }
+#endif
+
+  r = INTERNAL_SYSCALL_CALL (clock_gettime64, clock_id, tp);
+  if (r == 0)
+    return 0;
+  if (r != -ENOSYS)
+    return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
 
 #ifndef __ASSUME_TIME64_SYSCALLS
   /* Fallback code that uses 32-bit support.  */
   struct timespec tp32;
-# ifdef HAVE_CLOCK_GETTIME_VSYSCALL
-  r = INLINE_VSYSCALL (clock_gettime, 2, clock_id, &tp32);
-# else
-  r = INLINE_SYSCALL_CALL (clock_gettime, clock_id, &tp32);
-# endif
+  r = INTERNAL_SYSCALL_CALL (clock_gettime, clock_id, &tp32);
   if (r == 0)
-    *tp = valid_timespec_to_timespec64 (tp32);
+    {
+      *tp = valid_timespec_to_timespec64 (tp32);
+      return 0;
+    }
 #endif
 
-  return r;
+  return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
 }
 
 #if __TIMESIZE != 64
