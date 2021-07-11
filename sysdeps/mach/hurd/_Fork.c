@@ -119,7 +119,6 @@ retry:
 	 handlers may use malloc, and the libio list lock has an
 	 indirect malloc dependency as well (via the getdelim
 	 function).  */
-      call_function_static_weak (__malloc_fork_lock_parent);
       _hurd_malloc_fork_prepare ();
 
       newtask = MACH_PORT_NULL;
@@ -588,7 +587,6 @@ retry:
 
       /* Release malloc locks.  */
       _hurd_malloc_fork_parent ();
-      call_function_static_weak (__malloc_fork_unlock_parent);
 
       /* Run things that want to run in the parent to restore it to
 	 normality.  Usually prepare hooks and parent hooks are
@@ -662,7 +660,6 @@ retry:
 
       /* Release malloc locks.  */
       _hurd_malloc_fork_child ();
-      call_function_static_weak (__malloc_fork_unlock_child);
 
       /* Run things that want to run in the child task to set up.  */
       RUN_HOOK (_hurd_fork_child_hook, ());
