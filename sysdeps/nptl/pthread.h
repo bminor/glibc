@@ -29,7 +29,9 @@
 #include <bits/types/struct_timespec.h>
 #include <bits/types/__sigset_t.h>
 #include <bits/types/struct___jmp_buf_tag.h>
-
+#ifdef __USE_MISC
+# include <bits/pthread_stack_min-dynamic.h>
+#endif
 
 /* Detach state.  */
 enum

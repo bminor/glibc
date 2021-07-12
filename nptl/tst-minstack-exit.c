@@ -24,6 +24,9 @@
 #include <support/check.h>
 #include <support/xthread.h>
 
+_Static_assert (__SC_THREAD_STACK_MIN_VALUE == _SC_THREAD_STACK_MIN,
+                "__SC_THREAD_STACK_MIN_VALUE is correct");
+
 static void *
 threadfunc (void *closure)
 {
