@@ -20,6 +20,7 @@
 #ifndef _MALLOC_INTERNAL
 # define _MALLOC_INTERNAL
 # include <malloc.h>
+# include <malloc-size.h>
 # include <mcheck.h>
 # include <stdint.h>
 # include <stdio.h>
@@ -53,7 +54,7 @@ struct hdr
   struct hdr *next;
   void *block;                  /* Real block allocated, for memalign.  */
   unsigned long int magic2;     /* Extra, keeps us doubleword aligned.  */
-};
+} __attribute__ ((aligned (MALLOC_ALIGNMENT)));
 
 /* This is the beginning of the list of all memory blocks allocated.
    It is only constructed if the pedantic testing is requested.  */
