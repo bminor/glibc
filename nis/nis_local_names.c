@@ -31,6 +31,7 @@ nis_local_group (void)
   char *cptr;
   if (__nisgroup[0] == '\0'
       && (cptr = getenv ("NIS_GROUP")) != NULL
+      && cptr[0] != '\0'
       && strlen (cptr) < NIS_MAXNAMELEN)
     {
       char *cp = stpcpy (__nisgroup, cptr);
