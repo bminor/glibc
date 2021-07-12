@@ -30,6 +30,8 @@ const static struct {
   int64_t v1;
   int64_t v2;
 } tests[] = {
+  /* Some arbitrary date before Y2038.  */
+  { 0x60ECA720LL, 0x60eca721LL },
   /* Y2038 threshold minus 2 and 1 seconds.  */
   { 0x7FFFFFFELL, 0x7FFFFFFFLL },
   /* Y2038 threshold plus 1 and 2 seconds.  */
@@ -59,7 +61,7 @@ do_prepare (int argc, char *argv[])
 static int
 do_test (void)
 {
-  if (!support_path_support_time64 (testfile))
+  if (sizeof (time_t) == 8 && !support_path_support_time64 (testfile))
     FAIL_UNSUPPORTED ("File %s does not support 64-bit timestamps",
 		      testfile);
 
