@@ -289,6 +289,10 @@ __qsort_r (void *b, size_t n, size_t s, __compar_d_fn_t cmp, void *arg)
 		   && ((char *) b - (char *) 0) % __alignof__ (uint64_t) == 0)
 	    p.var = 1;
 	  else if ((s & (sizeof (unsigned long) - 1)) == 0
+#ifdef __CHERI_PURE_CAPABILITY__
+		   && ((char *) b - (char *) 0)
+		      % __alignof__ (void *) != 0
+#endif
 		   && ((char *) b - (char *) 0)
 		      % __alignof__ (unsigned long) == 0)
 	    p.var = 2;
