@@ -114,14 +114,16 @@ static const function_name nss_function_name_array[] =
 static bool
 module_load_nss_files (struct nss_module *module)
 {
+#ifdef USE_NSCD
   if (is_nscd)
     {
       void (*cb) (size_t, struct traced_file *) = nscd_init_cb;
-#  ifdef PTR_DEMANGLE
+# ifdef PTR_DEMANGLE
       PTR_DEMANGLE (cb);
-#  endif
+# endif
       _nss_files_init (cb);
     }
+#endif
 
   /* Initialize the function pointers, following the double-checked
      locking idiom.  */
