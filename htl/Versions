@@ -187,6 +187,7 @@ libpthread {
     __pthread_enable_asynccancel;
     __pthread_disable_asynccancel;
 
+    __pthread_mutex_lock; __pthread_mutex_trylock; __pthread_mutex_unlock;
     _pthread_mutex_lock; _pthread_mutex_trylock; _pthread_mutex_unlock;
     _pthread_rwlock_destroy; _pthread_rwlock_init;
   }

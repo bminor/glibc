@@ -36,10 +36,13 @@ extern struct __pthread **__pthread_threads;
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex, const pthread_mutexattr_t *__attr);
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
+hidden_proto (__pthread_mutex_lock)
 extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
+hidden_proto (__pthread_mutex_trylock)
 extern int __pthread_mutex_timedlock (pthread_mutex_t *__mutex,
      const struct timespec *__abstime);
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
+hidden_proto (__pthread_mutex_unlock)
 extern int __pthread_mutexattr_init (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);
 
