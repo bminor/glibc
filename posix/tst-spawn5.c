@@ -58,11 +58,24 @@ open_multiple_temp_files (void)
   return lowfd;
 }
 
+static int
+parse_fd (const char *str)
+{
+  char *endptr;
+  long unsigned int fd = strtoul (str, &endptr, 10);
+  if (*endptr != '\0' || fd > INT_MAX)
+    FAIL_EXIT1 ("invalid file descriptor value: %s", str);
+  return fd;
+}
+
 /* Called on process re-execution.  The arguments are the expected opened
    file descriptors.  */
 _Noreturn static void
 handle_restart (int argc, char *argv[])
 {
+  TEST_VERIFY (argc > 0);
+  int lowfd = parse_fd (argv[0]);
+
   size_t nfds = argc > 1 ? argc - 1 : 0;
   struct fd_t
   {
@@ -71,12 +84,7 @@ handle_restart (int argc, char *argv[])
   } *fds = xmalloc (sizeof (struct fd_t) * nfds);
   for (int i = 0; i < nfds; i++)
     {
-      char *endptr;
-      long unsigned int fd = strtoul (argv[i+1], &endptr, 10);
-      if (*endptr != '\0' || fd > INT_MAX)
-	FAIL_EXIT1 ("argv[%d]: invalid file descriptor value: %s", i, argv[i]);
-
-      fds[i].fd = fd;
+      fds[i].fd = parse_fd (argv[i + 1]);
       fds[i].found = false;
     }
 
@@ -104,12 +112,9 @@ handle_restart (int argc, char *argv[])
         FAIL_EXIT1 ("readdir: invalid file descriptor name: /proc/self/fd/%s",
                     e->d_name);
 
-      /* Skip the descriptor which is used to enumerate the descriptors.  */
-      if (fd == dirfd (dirp)
-          || fd == STDIN_FILENO
-	  || fd == STDOUT_FILENO
-	  || fd == STDERR_FILENO)
-        continue;
+      /* Ignore the descriptors not in the range of the opened files.  */
+      if (fd < lowfd || fd == dirfd (dirp))
+	continue;
 
       bool found = false;
       for (int i = 0; i < nfds; i++)
@@ -117,7 +122,11 @@ handle_restart (int argc, char *argv[])
 	  fds[i].found = found = true;
 
       if (!found)
-        FAIL_EXIT1 ("unexpected open file descriptor: %ld", fd);
+	{
+	  char *path = xasprintf ("/proc/self/fd/%s", e->d_name);
+	  char *resolved = xreadlink (path);
+	  FAIL_EXIT1 ("unexpected open file descriptor %ld: %s", fd, resolved);
+	}
     }
   closedir (dirp);
 
@@ -134,21 +143,25 @@ static void
 spawn_closefrom_test (posix_spawn_file_actions_t *fa, int lowfd, int highfd,
 		      int *extrafds, size_t nextrafds)
 {
-  /* 3 or 6 elements from initial_argv:
+  /* 3 or 7 elements from initial_argv:
        + path to ld.so          optional
        + --library-path         optional
        + the library path       optional
        + application name
        + --direct
        + --restart
-     up to 2 * maximum_fd arguments (the expected open file descriptors),
-     plus NULL.  */
+       + lowest opened file descriptor
+       + up to 2 * maximum_fd arguments (the expected open file descriptors),
+	 plus NULL.  */
+
   int argv_size = initial_argv_count + 2 * NFDS + 1;
   char *args[argv_size];
   int argc = 0;
 
   for (char **arg = initial_argv; *arg != NULL; arg++)
     args[argc++] = *arg;
+
+  args[argc++] = xasprintf ("%d", lowfd);
 
   for (int i = lowfd; i < highfd; i++)
     args[argc++] = xasprintf ("%d", i);
@@ -265,14 +278,16 @@ do_test (int argc, char *argv[])
 
      - six parameters left if called through re-execution:
        + argv[1]: the application name
-       + argv[2]: first expected open file descriptor
-       + argv[n]: last expected open file descritptor
+       + argv[2]: the lowest file descriptor expected
+       + argv[3]: first expected open file descriptor   optional
+       + argv[n]: last expected open file descritptor   optional
 
      * When built with --enable-hardcoded-path-in-tests or issued without
        using the loader directly.  */
 
   if (restart)
-    handle_restart (argc, argv);
+    /* Ignore the application name. */
+    handle_restart (argc - 1, &argv[1]);
 
   TEST_VERIFY_EXIT (argc == 2 || argc == 5);
 
