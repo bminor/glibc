@@ -55,10 +55,10 @@ _nss_files_initgroups_dyn (const char *user, gid_t group, long int *start,
     {
       fpos_t pos;
       fgetpos (stream, &pos);
-      ssize_t n = getline (&line, &linelen, stream);
+      ssize_t n = __getline (&line, &linelen, stream);
       if (n < 0)
 	{
-	  if (! feof_unlocked (stream))
+	  if (! __feof_unlocked (stream))
 	    status = ((*errnop = errno) == ENOMEM
 		      ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL);
 	  break;

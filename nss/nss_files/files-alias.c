@@ -189,7 +189,7 @@ get_next_alias (FILE *stream, const char *match, struct aliasent *result,
 		      if (listfile != NULL
 			  && (old_line = __strdup (line)) != NULL)
 			{
-			  while (! feof_unlocked (listfile))
+			  while (! __feof_unlocked (listfile))
 			    {
 			      if (room_left < 2)
 				{
@@ -269,7 +269,7 @@ get_next_alias (FILE *stream, const char *match, struct aliasent *result,
 		     just read character.  */
 		  int ch;
 
-		  ch = fgetc_unlocked (stream);
+		  ch = __getc_unlocked (stream);
 		  if (ch == EOF || ch == '\n' || !isspace (ch))
 		    {
 		      size_t cnt;

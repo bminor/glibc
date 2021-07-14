@@ -42,7 +42,7 @@ __nss_readline (FILE *fp, char *buf, size_t len, off64_t *poffset)
       buf[len - 1] = '\xff';        /* Marker to recognize truncation.  */
       if (__fgets_unlocked (buf, len, fp) == NULL)
         {
-          if (feof_unlocked (fp))
+          if (__feof_unlocked (fp))
             {
               __set_errno (ENOENT);
               return ENOENT;

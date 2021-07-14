@@ -77,9 +77,9 @@ _nss_files_setnetgrent (const char *group, struct __netgrent *result)
       status = NSS_STATUS_NOTFOUND;
       result->cursor = result->data;
 
-      while (!feof_unlocked (fp))
+      while (!__feof_unlocked (fp))
 	{
-	  ssize_t curlen = getline (&line, &line_len, fp);
+	  ssize_t curlen = __getline (&line, &line_len, fp);
 	  int found;
 
 	  if (curlen < 0)
@@ -111,7 +111,7 @@ _nss_files_setnetgrent (const char *group, struct __netgrent *result)
 		result->cursor -= 2;
 
 	      /* Get next line.  */
-	      curlen = getline (&line, &line_len, fp);
+	      curlen = __getline (&line, &line_len, fp);
 	      if (curlen <= 0)
 		break;
 
