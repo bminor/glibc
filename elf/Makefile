@@ -1854,25 +1854,36 @@ $(objpfx)tst-tls-manydynamic16mod-dep.so: $(objpfx)tst-tls-manydynamic18mod-dep.
 # Same but with an invalid module.
 # Single dependency.
 $(objpfx)tst-tls-manydynamic0mod-dep-bad.so: $(objpfx)tst-tls20mod-bad.so
+LDFLAGS-tst-tls-manydynamic0mod-dep-bad.so = -Wl,--no-as-needed
 # Double dependencies.
 $(objpfx)tst-tls-manydynamic1mod-dep-bad.so: $(objpfx)tst-tls-manydynamic2mod-dep-bad.so \
 					     $(objpfx)tst-tls20mod-bad.so
+LDFLAGS-tst-tls-manydynamic1mod-dep-bad.so = -Wl,--no-as-needed
 # Double dependencies with each dependency depent of another module.
 $(objpfx)tst-tls-manydynamic3mod-dep-bad.so: $(objpfx)tst-tls-manydynamic4mod-dep-bad.so \
 					     $(objpfx)tst-tls-manydynamic5mod-dep-bad.so
+LDFLAGS-tst-tls-manydynamic3mod-dep-bad.so = -Wl,--no-as-needed
 $(objpfx)tst-tls-manydynamic4mod-dep-bad.so: $(objpfx)tst-tls20mod-bad.so
+LDFLAGS-tst-tls-manydynamic4mod-dep-bad.so = -Wl,--no-as-needed
 $(objpfx)tst-tls-manydynamic5mod-dep-bad.so: $(objpfx)tst-tls20mod-bad.so
+LDFLAGS-tst-tls-manydynamic5mod-dep-bad.so = -Wl,--no-as-needed
 # Long chain with one double dependency in the middle
 $(objpfx)tst-tls-manydynamic6mod-dep-bad.so: $(objpfx)tst-tls-manydynamic7mod-dep-bad.so \
 					     $(objpfx)tst-tls-manydynamic8mod-dep-bad.so
+LDFLAGS-tst-tls-manydynamic6mod-dep-bad.so = -Wl,--no-as-needed
 $(objpfx)tst-tls-manydynamic7mod-dep-bad.so: $(objpfx)tst-tls-manydynamic9mod-dep-bad.so
+LDFLAGS-tst-tls-manydynamic7mod-dep-bad.so = -Wl,--no-as-needed
 $(objpfx)tst-tls-manydynamic9mod-dep-bad.so: $(objpfx)tst-tls20mod-bad.so
+LDFLAGS-tst-tls-manydynamic9mod-dep-bad.so = -Wl,--no-as-needed
 # Long chain with two double depedencies in the middle
 $(objpfx)tst-tls-manydynamic10mod-dep-bad.so: $(objpfx)tst-tls-manydynamic11mod-dep-bad.so
+LDFLAGS-tst-tls-manydynamic10mod-dep-bad.so = -Wl,--no-as-needed
 $(objpfx)tst-tls-manydynamic11mod-dep-bad.so: $(objpfx)tst-tls-manydynamic12mod-dep-bad.so \
 					      $(objpfx)tst-tls-manydynamic13mod-dep-bad.so
+LDFLAGS-tst-tls-manydynamic11mod-dep-bad.so = -Wl,--no-as-needed
 $(objpfx)tst-tls-manydynamic12mod-dep-bad.so: $(objpfx)tst-tls-manydynamic14mod-dep-bad.so \
 					      $(objpfx)tst-tls20mod-bad.so
+LDFLAGS-tst-tls-manydynamic12mod-dep-bad.so = -Wl,--no-as-needed
 $(objpfx)tst-tls20: $(shared-thread-library)
 $(objpfx)tst-tls20.out: $(objpfx)tst-tls20mod-bad.so \
 			$(tst-tls-many-dynamic-modules:%=$(objpfx)%.so) \
