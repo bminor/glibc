@@ -1343,12 +1343,6 @@ send_dg(res_state statp,
 			return close_and_return_error (statp, resplen2);
 		}
 
-		/* Paranoia check.  Due to the connected UDP socket,
-		   the kernel has already filtered invalid addresses
-		   for us.  */
-		if (!res_ourserver_p(statp, &from))
-		  goto wait;
-
 		/* Check for the correct header layout and a matching
 		   question.  */
 		int matching_query = 0; /* Default to no matching query.  */
