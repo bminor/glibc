@@ -1,115 +1,182 @@
 libc {
   GLIBC_2.0 {
-    _res;
-
-    # helper functions
     __h_errno_location;
-
-    # functions used in other libraries
     __res_randomid;
-
-    # variables in normal name space
-    h_errlist; h_nerr;
-
-    # h*
-    herror; hstrerror;
-
-    # r*
+    _res;
+    h_errlist;
+    h_nerr;
+    herror;
+    hstrerror;
     res_init;
   }
   GLIBC_2.2 {
-    # r*
-    __res_state; __res_init; __res_nclose; __res_ninit; _res_hconf;
+    __res_init;
+    __res_nclose;
+    __res_ninit;
+    __res_state;
+    _res_hconf;
   }
   GLIBC_2.2.3 {
 %if PTHREAD_IN_LIBC
-    gai_cancel; gai_error; gai_suspend; getaddrinfo_a;
+    gai_cancel;
+    gai_error;
+    gai_suspend;
+    getaddrinfo_a;
 %endif
   }
   GLIBC_2.34 {
 %if PTHREAD_IN_LIBC
-    gai_cancel; gai_error; gai_suspend; getaddrinfo_a;
+    gai_cancel;
+    gai_error;
+    gai_suspend;
+    getaddrinfo_a;
 %endif
   }
   GLIBC_PRIVATE {
 %if !PTHREAD_IN_LIBC
     __gai_sigqueue;
 %endif
-
-    __h_errno; __resp;
-
-    __res_iclose;
+    __h_errno;
     __inet_aton_exact;
     __inet_pton_length;
+    __res_iclose;
     __resolv_context_get;
-    __resolv_context_get_preinit;
     __resolv_context_get_override;
+    __resolv_context_get_preinit;
     __resolv_context_put;
+    __resp;
   }
 }
 
 libresolv {
   GLIBC_2.0 {
-    _gethtbyaddr; _gethtbyname; _gethtbyname2; _gethtent; _getlong;
-    _getshort; _res_opcodes; _res_resultcodes; _sethtent; dn_expand;
-    inet_net_ntop; inet_net_pton; inet_neta; res_gethostbyaddr;
-    res_gethostbyname; res_gethostbyname2; res_mkquery; res_query;
-    res_querydomain; res_search; res_send_setqhook; res_send_setrhook;
-    # Variables
-    __p_class_syms; __p_type_syms;
-    # Private routines shared between libc/net, named, nslookup and others.
-    __b64_ntop; __b64_pton;
-    __dn_comp;  __dn_count_labels; __dn_skipname;
-    __fp_nquery; __fp_query; __fp_resstat; __hostalias;
-    __loc_aton; __loc_ntoa;
-    __p_cdname; __p_cdnname; __p_class; __p_fqname; __p_fqnname; __p_option;
-    __p_query; __p_rr; __p_secstodate; __p_time; __p_type;
-    __putlong; __putshort;
-    __res_close; __res_dnok; __res_hnok; __res_isourserver; __res_mailok;
-    __res_nameinquery; __res_ownok; __res_queriesmatch;
+    __b64_ntop;
+    __b64_pton;
+    __dn_comp;
+    __dn_count_labels;
+    __dn_skipname;
+    __fp_nquery;
+    __fp_query;
+    __fp_resstat;
+    __hostalias;
+    __loc_aton;
+    __loc_ntoa;
+    __p_cdname;
+    __p_cdnname;
+    __p_class;
+    __p_class_syms;
+    __p_fqname;
+    __p_fqnname;
+    __p_option;
+    __p_query;
+    __p_rr;
+    __p_secstodate;
+    __p_time;
+    __p_type;
+    __p_type_syms;
+    __putlong;
+    __putshort;
+    __res_close;
+    __res_dnok;
+    __res_hnok;
+    __res_isourserver;
+    __res_mailok;
+    __res_nameinquery;
+    __res_ownok;
+    __res_queriesmatch;
     __res_send;
-    __sym_ntop; __sym_ntos; __sym_ston;
+    __sym_ntop;
+    __sym_ntos;
+    __sym_ston;
+    _gethtbyaddr;
+    _gethtbyname2;
+    _gethtbyname;
+    _gethtent;
+    _getlong;
+    _getshort;
+    _res_opcodes;
+    _res_resultcodes;
+    _sethtent;
+    dn_expand;
+    inet_net_ntop;
+    inet_net_pton;
+    inet_neta;
+    res_gethostbyaddr;
+    res_gethostbyname2;
+    res_gethostbyname;
+    res_mkquery;
+    res_query;
+    res_querydomain;
+    res_search;
+    res_send_setqhook;
+    res_send_setrhook;
   }
   GLIBC_2.2 {
     __dn_expand;
-    __res_hostalias; __res_mkquery; __res_nmkquery; __res_nquery;
-    __res_nquerydomain; __res_nsearch; __res_nsend; __res_query;
-    __res_querydomain; __res_search;
+    __res_hostalias;
+    __res_mkquery;
+    __res_nmkquery;
+    __res_nquery;
+    __res_nquerydomain;
+    __res_nsearch;
+    __res_nsend;
+    __res_query;
+    __res_querydomain;
+    __res_search;
   }
   GLIBC_2.3.2 {
     __p_rcode;
   }
   GLIBC_2.9 {
-    ns_msg_getflag;
-    ns_get16; ns_get32; ns_put16; ns_put32;
-    ns_initparse; ns_skiprr; ns_parserr;
-    ns_sprintrr; ns_sprintrrf;
-    ns_format_ttl; ns_parse_ttl;
     ns_datetosecs;
-    ns_name_ntol; ns_name_ntop; ns_name_pton;
-    ns_name_unpack; ns_name_pack;
-    ns_name_uncompress; ns_name_compress;
-    ns_name_skip; ns_name_rollback;
-    ns_samedomain; ns_subdomain; ns_makecanon; ns_samename;
+    ns_format_ttl;
+    ns_get16;
+    ns_get32;
+    ns_initparse;
+    ns_makecanon;
+    ns_msg_getflag;
+    ns_name_compress;
+    ns_name_ntol;
+    ns_name_ntop;
+    ns_name_pack;
+    ns_name_pton;
+    ns_name_rollback;
+    ns_name_skip;
+    ns_name_uncompress;
+    ns_name_unpack;
+    ns_parse_ttl;
+    ns_parserr;
+    ns_put16;
+    ns_put32;
+    ns_samedomain;
+    ns_samename;
+    ns_skiprr;
+    ns_sprintrr;
+    ns_sprintrrf;
+    ns_subdomain;
   }
   GLIBC_PRIVATE {
-    # Needed in libnss_dns.
-    __ns_name_unpack; __ns_name_ntop;
-    __ns_get16; __ns_get32;
+    __ns_get16;
+    __ns_get32;
+    __ns_name_ntop;
+    __ns_name_unpack;
+    __res_context_hostalias;
     __res_context_query;
     __res_context_search;
-    __res_context_hostalias;
   }
 }
 
 libnss_dns {
   GLIBC_PRIVATE {
-    _nss_dns_gethostbyaddr_r; _nss_dns_gethostbyname2_r;
-    _nss_dns_gethostbyname3_r;
-    _nss_dns_gethostbyname_r; _nss_dns_getnetbyaddr_r;
-    _nss_dns_getnetbyname_r; _nss_dns_getcanonname_r;
+    _nss_dns_getcanonname_r;
     _nss_dns_gethostbyaddr2_r;
+    _nss_dns_gethostbyaddr_r;
+    _nss_dns_gethostbyname2_r;
+    _nss_dns_gethostbyname3_r;
     _nss_dns_gethostbyname4_r;
+    _nss_dns_gethostbyname_r;
+    _nss_dns_getnetbyaddr_r;
+    _nss_dns_getnetbyname_r;
   }
 }
 
@@ -118,7 +185,10 @@ libanl {
 %if PTHREAD_IN_LIBC
     __libanl_version_placeholder;
 %else
-    gai_cancel; gai_error; gai_suspend; getaddrinfo_a;
+    gai_cancel;
+    gai_error;
+    gai_suspend;
+    getaddrinfo_a;
 %endif
   }
 }

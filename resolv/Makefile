@@ -27,9 +27,21 @@ headers	:= resolv.h bits/types/res_state.h \
 	   arpa/nameser.h arpa/nameser_compat.h \
 	   sys/bitypes.h
 
-routines := herror inet_addr inet_ntop inet_pton nsap_addr res_init \
-	    res_hconf res_libc res-state res_randomid res-close \
-	    resolv_context resolv_conf
+routines := \
+  herror \
+  inet_addr \
+  inet_ntop \
+  inet_pton \
+  nsap_addr \
+  res-close \
+  res-state \
+  res_hconf \
+  res_init \
+  res_libc \
+  res_randomid \
+  resolv_conf \
+  resolv_context \
+  # routines
 
 tests = tst-aton tst-leaks tst-inet_ntop
 tests-container = tst-leaks2
@@ -105,15 +117,37 @@ xtests += tst-resolv-qtypes
 xtests += tst-resolv-rotate
 endif
 extra-libs-others = $(extra-libs)
-libresolv-routines := res_comp res_debug \
-		      res_data res_mkquery res_query res_send		\
-		      inet_net_ntop inet_net_pton inet_neta base64	\
-		      ns_parse ns_name ns_netint ns_ttl ns_print	\
-		      ns_samedomain ns_date res_enable_icmp \
-		      compat-hooks compat-gethnamaddr
+libresolv-routines := \
+  base64 \
+  compat-gethnamaddr \
+  compat-hooks \
+  inet_net_ntop \
+  inet_net_pton \
+  inet_neta \
+  ns_date \
+  ns_name \
+  ns_netint \
+  ns_parse \
+  ns_print \
+  ns_samedomain \
+  ns_ttl \
+  res_comp \
+  res_data \
+  res_debug \
+  res_enable_icmp \
+  res_mkquery \
+  res_query \
+  res_send \
+  # libresolv-routines
 
 $(libanl-routines-var) += \
-  gai_cancel gai_error gai_misc gai_notify gai_suspend getaddrinfo_a
+  gai_cancel \
+  gai_error \
+  gai_misc \
+  gai_notify \
+  gai_suspend \
+  getaddrinfo_a \
+  # $(libanl-routines-var)
 
 libanl-routines += libanl-compat
 libanl-shared-only-routines += libanl-compat
@@ -121,7 +155,12 @@ libanl-shared-only-routines += libanl-compat
 subdir-dirs = nss_dns
 vpath %.c nss_dns
 
-libnss_dns-routines	:= dns-host dns-network dns-canon
+libnss_dns-routines := \
+  dns-canon \
+  dns-host \
+  dns-network \
+  # libnss_dns-routines
+
 libnss_dns-inhibit-o	= $(filter-out .os,$(object-suffixes))
 ifeq ($(build-static-nss),yes)
 routines                += $(libnss_dns-routines) $(libresolv-routines)
