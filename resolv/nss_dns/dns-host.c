@@ -782,14 +782,11 @@ getanswer_r (struct resolv_context *ctx,
 	  continue;
 	}
 
-      type = __ns_get16 (cp);
-      cp += INT16SZ;			/* type */
-      class = __ns_get16 (cp);
-      cp += INT16SZ;			/* class */
-      int32_t ttl = __ns_get32 (cp);
-      cp += INT32SZ;			/* TTL */
-      n = __ns_get16 (cp);
-      cp += INT16SZ;			/* len */
+      NS_GET16 (type, cp);
+      NS_GET16 (class, cp);
+      int32_t ttl;
+      NS_GET32 (ttl, cp);
+      NS_GET16 (n, cp);		/* RDATA length.  */
 
       if (end_of_message - cp < n)
 	{
@@ -1116,14 +1113,13 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 	  continue;
 	}
 
-      int type = __ns_get16 (cp);
-      cp += INT16SZ;			/* type */
-      int class = __ns_get16 (cp);
-      cp += INT16SZ;			/* class */
-      int32_t ttl = __ns_get32 (cp);
-      cp += INT32SZ;			/* TTL */
-      n = __ns_get16 (cp);
-      cp += INT16SZ;			/* len */
+      uint16_t type;
+      NS_GET16 (type, cp);
+      uint16_t class;
+      NS_GET16 (class, cp);
+      int32_t ttl;
+      NS_GET32 (ttl, cp);
+      NS_GET16 (n, cp);		/* RDATA length.  */
 
       if (end_of_message - cp < n)
 	{

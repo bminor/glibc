@@ -150,15 +150,18 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
 	      if (type != ns_t_cname)
 		goto unavail;
 
-	      if (__ns_get16 (ptr) != ns_c_in)
+	      uint16_t rrclass;
+	      NS_GET16 (rrclass, ptr);
+	      if (rrclass != ns_c_in)
 		goto unavail;
 
-	      /* Also skip over class and TTL.  */
-	      ptr += sizeof (uint16_t) + sizeof (uint32_t);
+	      /* Skip over TTL.  */
+	      ptr += sizeof (uint32_t);
 
 	      /* Skip over RDATA length and RDATA itself.  */
-	      uint16_t rdatalen = __ns_get16 (ptr);
-	      ptr += sizeof (uint16_t);
+	      uint16_t rdatalen;
+	      NS_GET16 (rdatalen, ptr);
+
 	      /* Not enough room for RDATA.  */
 	      if (endptr - ptr < rdatalen)
 		goto unavail;
