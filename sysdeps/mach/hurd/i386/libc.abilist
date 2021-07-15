@@ -2242,6 +2242,7 @@ GLIBC_2.34 login_tty F
 GLIBC_2.34 logout F
 GLIBC_2.34 logwtmp F
 GLIBC_2.34 ns_name_ntop F
+GLIBC_2.34 ns_name_unpack F
 GLIBC_2.34 openpty F
 GLIBC_2.34 posix_spawn_file_actions_addclosefrom_np F
 GLIBC_2.34 shm_open F
@@ -2364,6 +2365,7 @@ GLIBC_2.8 __vdprintf_chk F
 GLIBC_2.8 qsort_r F
 GLIBC_2.9 dup3 F
 GLIBC_2.9 ns_name_ntop F
+GLIBC_2.9 ns_name_unpack F
 GLIBC_2.9 pipe2 F
 HURD_CTHREADS_0.3 __cthread_getspecific F
 HURD_CTHREADS_0.3 __cthread_keycreate F

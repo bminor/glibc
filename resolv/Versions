@@ -26,6 +26,7 @@ libc {
   }
   GLIBC_2.9 {
     ns_name_ntop;
+    ns_name_unpack;
   }
   GLIBC_2.34 {
 %if PTHREAD_IN_LIBC
@@ -35,6 +36,7 @@ libc {
     getaddrinfo_a;
 %endif
     ns_name_ntop;
+    ns_name_unpack;
   }
   GLIBC_PRIVATE {
 %if !PTHREAD_IN_LIBC
@@ -45,6 +47,7 @@ libc {
     __inet_pton_length;
     __res_iclose;
     __ns_name_ntop;
+    __ns_name_unpack;
     __resolv_context_get;
     __resolv_context_get_override;
     __resolv_context_get_preinit;
@@ -147,7 +150,6 @@ libresolv {
     ns_name_rollback;
     ns_name_skip;
     ns_name_uncompress;
-    ns_name_unpack;
     ns_parse_ttl;
     ns_parserr;
     ns_put16;
@@ -162,7 +164,6 @@ libresolv {
   GLIBC_PRIVATE {
     __ns_get16;
     __ns_get32;
-    __ns_name_unpack;
     __res_context_hostalias;
     __res_context_query;
     __res_context_search;
