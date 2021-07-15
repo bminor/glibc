@@ -32,6 +32,7 @@ routines := \
   inet_addr \
   inet_ntop \
   inet_pton \
+  ns_name_ntop \
   nsap_addr \
   res-close \
   res-state \

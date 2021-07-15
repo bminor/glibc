@@ -1404,6 +1404,7 @@ GLIBC_2.17 nl_langinfo F
 GLIBC_2.17 nl_langinfo_l F
 GLIBC_2.17 nrand48 F
 GLIBC_2.17 nrand48_r F
+GLIBC_2.17 ns_name_ntop F
 GLIBC_2.17 ntohl F
 GLIBC_2.17 ntohs F
 GLIBC_2.17 ntp_adjtime F
@@ -2452,6 +2453,7 @@ GLIBC_2.34 mtx_lock F
 GLIBC_2.34 mtx_timedlock F
 GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
+GLIBC_2.34 ns_name_ntop F
 GLIBC_2.34 openpty F
 GLIBC_2.34 posix_spawn_file_actions_addclosefrom_np F
 GLIBC_2.34 pthread_attr_getaffinity_np F

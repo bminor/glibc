@@ -67,7 +67,6 @@ GLIBC_2.17 ns_makecanon F
 GLIBC_2.17 ns_msg_getflag F
 GLIBC_2.17 ns_name_compress F
 GLIBC_2.17 ns_name_ntol F
-GLIBC_2.17 ns_name_ntop F
 GLIBC_2.17 ns_name_pack F
 GLIBC_2.17 ns_name_pton F
 GLIBC_2.17 ns_name_rollback F

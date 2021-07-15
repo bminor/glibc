@@ -24,6 +24,9 @@ libc {
     getaddrinfo_a;
 %endif
   }
+  GLIBC_2.9 {
+    ns_name_ntop;
+  }
   GLIBC_2.34 {
 %if PTHREAD_IN_LIBC
     gai_cancel;
@@ -31,6 +34,7 @@ libc {
     gai_suspend;
     getaddrinfo_a;
 %endif
+    ns_name_ntop;
   }
   GLIBC_PRIVATE {
 %if !PTHREAD_IN_LIBC
@@ -40,6 +44,7 @@ libc {
     __inet_aton_exact;
     __inet_pton_length;
     __res_iclose;
+    __ns_name_ntop;
     __resolv_context_get;
     __resolv_context_get_override;
     __resolv_context_get_preinit;
@@ -137,7 +142,6 @@ libresolv {
     ns_msg_getflag;
     ns_name_compress;
     ns_name_ntol;
-    ns_name_ntop;
     ns_name_pack;
     ns_name_pton;
     ns_name_rollback;
@@ -158,7 +162,6 @@ libresolv {
   GLIBC_PRIVATE {
     __ns_get16;
     __ns_get32;
-    __ns_name_ntop;
     __ns_name_unpack;
     __res_context_hostalias;
     __res_context_query;

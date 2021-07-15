@@ -65,7 +65,6 @@ libresolv_hidden_proto (ns_put32)
 libresolv_hidden_proto (ns_initparse)
 libresolv_hidden_proto (ns_skiprr)
 libresolv_hidden_proto (ns_parserr)
-libresolv_hidden_proto (ns_name_ntop)
 libresolv_hidden_proto (ns_name_pton)
 libresolv_hidden_proto (ns_name_pack)
 libresolv_hidden_proto (ns_name_skip)
@@ -78,6 +77,9 @@ libresolv_hidden_proto (ns_samedomain)
 libresolv_hidden_proto (ns_samename)
 libresolv_hidden_proto (ns_makecanon)
 libresolv_hidden_proto (ns_format_ttl)
+
+extern __typeof (ns_name_ntop) __ns_name_ntop;
+libc_hidden_proto (__ns_name_ntop)
 
 # endif /* !_ISOMAC */
 #endif
