@@ -877,6 +877,7 @@ lib_hash_addname (const char *name, struct link_map *lib)
   *p = n;
 }
 
+/* 'name' must be the exact pointer originally passed to lib_hash_addname(). */
 static void
 lib_hash_delname (const char *name, struct link_map *lib)
 {
@@ -885,8 +886,7 @@ lib_hash_delname (const char *name, struct link_map *lib)
   while (*p)
     {
       struct lib_hash_namenode *n = *p;
-      if (n->hash == hash && n->lib == lib &&
-          (n->name == name || !strcmp (n->name, name))) {
+      if (n->hash == hash && n->lib == lib && n->name == name) {
         *p = n->next;
         free (n);
         return;
@@ -1018,16 +1018,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd, off_t of
          Just bump its reference count and return it.  */
       __close (fd);
 
-      /* If the name is not in the list of names for this object add
-         it.  */
       free (realname);
-      if (offset == 0)
-        {
-          /* If offset!=0, foo.so/@0x<offset> should be the *only*
-             name for this object. b/20141439.  */
-          add_name_to_object (l, name);
-          lib_hash_addname (name, l);
-        }
 
       return l;
     }
