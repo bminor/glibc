@@ -38,5 +38,5 @@ __setsockopt (int fd,
     return __hurd_dfail (fd, err);
   return 0;
 }
-
+libc_hidden_def (__setsockopt)
 weak_alias (__setsockopt, setsockopt)

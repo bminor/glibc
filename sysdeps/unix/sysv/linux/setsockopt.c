@@ -90,7 +90,7 @@ setsockopt32 (int fd, int level, int optname, const void *optval,
 #endif
 
 int
-setsockopt (int fd, int level, int optname, const void *optval, socklen_t len)
+__setsockopt (int fd, int level, int optname, const void *optval, socklen_t len)
 {
   int r = setsockopt_syscall (fd, level, optname, optval, len);
 
@@ -101,4 +101,5 @@ setsockopt (int fd, int level, int optname, const void *optval, socklen_t len)
 
   return r;
 }
-weak_alias (setsockopt, __setsockopt)
+libc_hidden_def (__setsockopt)
+weak_alias (__setsockopt, setsockopt)
