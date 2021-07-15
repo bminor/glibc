@@ -652,7 +652,7 @@ $(objpfx)unload6mod2.so: $(libdl)
 $(objpfx)unload6mod3.so: $(libdl)
 $(objpfx)unload7mod1.so: $(libdl)
 $(objpfx)unload7mod2.so: $(objpfx)unload7mod1.so
-$(objpfx)unload8mod1.so: $(objpfx)unload8mod2.so
+$(objpfx)unload8mod1.so: $(objpfx)unload8mod2.so $(libdl)
 $(objpfx)unload8mod2.so: $(objpfx)unload8mod3.so
 $(objpfx)unload8mod3.so: $(libdl)
 $(objpfx)tst-initordera2.so: $(objpfx)tst-initordera1.so
