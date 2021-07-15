@@ -45,6 +45,8 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
     if (run_dtors)
       __call_tls_dtors ();
 
+  __libc_lock_lock (__exit_funcs_lock);
+
   /* We do it this way to handle recursive calls to exit () made by
      the functions registered with `atexit' and `on_exit'. We call
      everyone on the list and use the status value in the last
@@ -52,8 +54,6 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
   while (true)
     {
       struct exit_function_list *cur;
-
-      __libc_lock_lock (__exit_funcs_lock);
 
     restart:
       cur = *listp;
@@ -63,7 +63,6 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 	  /* Exit processing complete.  We will not allow any more
 	     atexit/on_exit registrations.  */
 	  __exit_funcs_done = true;
-	  __libc_lock_unlock (__exit_funcs_lock);
 	  break;
 	}
 
@@ -72,44 +71,52 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 	  struct exit_function *const f = &cur->fns[--cur->idx];
 	  const uint64_t new_exitfn_called = __new_exitfn_called;
 
-	  /* Unlock the list while we call a foreign function.  */
-	  __libc_lock_unlock (__exit_funcs_lock);
 	  switch (f->flavor)
 	    {
 	      void (*atfct) (void);
 	      void (*onfct) (int status, void *arg);
 	      void (*cxafct) (void *arg, int status);
+	      void *arg;
 
 	    case ef_free:
 	    case ef_us:
 	      break;
 	    case ef_on:
 	      onfct = f->func.on.fn;
+	      arg = f->func.on.arg;
 #ifdef PTR_DEMANGLE
 	      PTR_DEMANGLE (onfct);
 #endif
-	      onfct (status, f->func.on.arg);
+	      /* Unlock the list while we call a foreign function.  */
+	      __libc_lock_unlock (__exit_funcs_lock);
+	      onfct (status, arg);
+	      __libc_lock_lock (__exit_funcs_lock);
 	      break;
 	    case ef_at:
 	      atfct = f->func.at;
 #ifdef PTR_DEMANGLE
 	      PTR_DEMANGLE (atfct);
 #endif
+	      /* Unlock the list while we call a foreign function.  */
+	      __libc_lock_unlock (__exit_funcs_lock);
 	      atfct ();
+	      __libc_lock_lock (__exit_funcs_lock);
 	      break;
 	    case ef_cxa:
 	      /* To avoid dlclose/exit race calling cxafct twice (BZ 22180),
 		 we must mark this function as ef_free.  */
 	      f->flavor = ef_free;
 	      cxafct = f->func.cxa.fn;
+	      arg = f->func.cxa.arg;
 #ifdef PTR_DEMANGLE
 	      PTR_DEMANGLE (cxafct);
 #endif
-	      cxafct (f->func.cxa.arg, status);
+	      /* Unlock the list while we call a foreign function.  */
+	      __libc_lock_unlock (__exit_funcs_lock);
+	      cxafct (arg, status);
+	      __libc_lock_lock (__exit_funcs_lock);
 	      break;
 	    }
-	  /* Re-lock again before looking at global state.  */
-	  __libc_lock_lock (__exit_funcs_lock);
 
 	  if (__glibc_unlikely (new_exitfn_called != __new_exitfn_called))
 	    /* The last exit function, or another thread, has registered
@@ -123,8 +130,9 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 	   allocate element.  */
 	free (cur);
 
-      __libc_lock_unlock (__exit_funcs_lock);
     }
+
+  __libc_lock_unlock (__exit_funcs_lock);
 
   if (run_list_atexit)
     RUN_HOOK (__libc_atexit, ());
