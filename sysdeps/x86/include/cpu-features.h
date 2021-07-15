@@ -293,6 +293,7 @@ enum
 #define bit_cpu_AMD_IBRS	(1u << 14)
 #define bit_cpu_AMD_STIBP	(1u << 15)
 #define bit_cpu_AMD_SSBD	(1u << 24)
+#define bit_cpu_AMD_VIRT_SSBD	(1u << 25)
 
 /* CPUID_INDEX_7_ECX_1.  */
 
@@ -527,6 +528,7 @@ enum
 #define index_cpu_AMD_IBRS	CPUID_INDEX_80000008
 #define index_cpu_AMD_STIBP	CPUID_INDEX_80000008
 #define index_cpu_AMD_SSBD	CPUID_INDEX_80000008
+#define index_cpu_AMD_VIRT_SSBD	CPUID_INDEX_80000008
 
 /* CPUID_INDEX_7_ECX_1.  */
 
@@ -761,6 +763,7 @@ enum
 #define reg_AMD_IBRS		ebx
 #define reg_AMD_STIBP		ebx
 #define reg_AMD_SSBD		ebx
+#define reg_AMD_VIRT_SSBD	ebx
 
 /* CPUID_INDEX_7_ECX_1.  */
 

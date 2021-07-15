@@ -190,6 +190,9 @@ The supported processor features are:
 @code{AMD_STIBP} -- Single thread indirect branch predictors (STIBP) for AMD cpus.
 
 @item
+@code{AMD_VIRT_SSBD} -- Speculative Store Bypass Disable (SSBD) for AMD cpus (older systems).
+
+@item
 @code{AMX_BF16} -- Tile computational operations on bfloat16 numbers.
 
 @item

@@ -236,7 +236,18 @@ do_test (int argc, char **argv)
   if (cpu_features->basic.kind == arch_kind_intel)
     fails += CHECK_PROC (ssbd, SSBD);
   else if (cpu_features->basic.kind == arch_kind_amd)
-    fails += CHECK_PROC (ssbd, AMD_SSBD);
+    {
+      /* This feature is implemented in 2 different ways on AMD processors:
+	 newer systems provides AMD_SSBD (function 8000_0008, EBX[24]),
+	 while older system proviseds AMD_VIRT_SSBD (function 8000_008,
+	 EBX[25]).  However for AMD_VIRT_SSBD, kernel shows both 'ssbd'
+	 and 'virt_ssbd' on /proc/cpuinfo; while for AMD_SSBD only 'ssbd'
+	 is provided.  */
+      if (HAS_CPU_FEATURE (AMD_SSBD))
+	fails += CHECK_PROC (ssbd, AMD_SSBD);
+      else if (HAS_CPU_FEATURE (AMD_VIRT_SSBD))
+	fails += CHECK_PROC (virt_ssbd, AMD_VIRT_SSBD);
+    }
   fails += CHECK_PROC (sse, SSE);
   fails += CHECK_PROC (sse2, SSE2);
   fails += CHECK_PROC (pni, SSE3);

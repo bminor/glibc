@@ -282,6 +282,7 @@ enum
   x86_cpu_AMD_IBRS	        = x86_cpu_index_80000008_ebx + 14,
   x86_cpu_AMD_STIBP	        = x86_cpu_index_80000008_ebx + 15,
   x86_cpu_AMD_SSBD	        = x86_cpu_index_80000008_ebx + 24,
+  x86_cpu_AMD_VIRT_SSBD	        = x86_cpu_index_80000008_ebx + 25,
 
   x86_cpu_index_7_ecx_1_eax
     = (CPUID_INDEX_7_ECX_1 * 8 * 4 * sizeof (unsigned int)
