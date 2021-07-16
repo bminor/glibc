@@ -226,12 +226,12 @@ do_test_dependency (void)
       int mods[nmods];
       /* We use '0' as indication for a gap, to avoid the dlclose on iteration
 	 cleanup.  */
-      for (int n = 1; n <= nmods; n++)
+      for (int n = 1; n < nmods; n++)
 	{
 	  load_mod (n);
 	   mods[n] = n;
 	}
-      for (int n = 1; n <= nmods; n++)
+      for (int n = 1; n < nmods; n++)
 	{
 	  if (!is_mod_set (g, n))
 	    {
@@ -304,12 +304,12 @@ do_test_invalid_dependency (bool bind_now)
       int mods[nmods];
       /* We use '0' as indication for a gap, to avoid the dlclose on iteration
 	 cleanup.  */
-      for (int n = 1; n <= nmods; n++)
+      for (int n = 1; n < nmods; n++)
 	{
 	  load_mod (n);
 	   mods[n] = n;
 	}
-      for (int n = 1; n <= nmods; n++)
+      for (int n = 1; n < nmods; n++)
 	{
 	  if (!is_mod_set (g, n))
 	    {
