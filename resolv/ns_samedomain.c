@@ -139,31 +139,9 @@ libresolv_hidden_def (ns_samedomain)
  *	is "a" a subdomain of "b"?
  */
 int
-ns_subdomain(const char *a, const char *b) {
-	return (ns_samename(a, b) != 1 && ns_samedomain(a, b));
+ns_subdomain (const char *a, const char *b)
+{
+  return __libc_ns_samename (a, b) != 1 && ns_samedomain (a, b);
 }
-
-/*%
- *	determine whether domain name "a" is the same as domain name "b"
- *
- * return:
- *\li	-1 on error
- *\li	0 if names differ
- *\li	1 if names are the same
- */
-
-int
-ns_samename(const char *a, const char *b) {
-	char ta[NS_MAXDNAME], tb[NS_MAXDNAME];
-
-	if (__libc_ns_makecanon(a, ta, sizeof ta) < 0 ||
-	    __libc_ns_makecanon(b, tb, sizeof tb) < 0)
-		return (-1);
-	if (strcasecmp(ta, tb) == 0)
-		return (1);
-	else
-		return (0);
-}
-libresolv_hidden_def (ns_samename)
 
 /*! \file */

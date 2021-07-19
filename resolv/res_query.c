@@ -656,7 +656,7 @@ __res_context_hostalias (struct resolv_context *ctx,
 		if (!*cp1)
 			break;
 		*cp1 = '\0';
-		if (ns_samename(buf, name) == 1) {
+		if (__libc_ns_samename(buf, name) == 1) {
 			while (isspace(*++cp1))
 				;
 			if (!*cp1)

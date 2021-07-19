@@ -43,6 +43,7 @@ routines := \
   ns_name_skip \
   ns_name_uncompress \
   ns_name_unpack \
+  ns_samename \
   nsap_addr \
   res-close \
   res-name-checking \

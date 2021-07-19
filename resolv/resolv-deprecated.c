@@ -33,3 +33,9 @@ ns_makecanon (const char *src, char *dst, size_t dstsize)
 {
   return __libc_ns_makecanon (src, dst, dstsize);
 }
+
+int
+ns_samename (const char *a, const char *b)
+{
+  return __libc_ns_samename (a, b);
+}

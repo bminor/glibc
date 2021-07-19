@@ -68,7 +68,6 @@ libresolv_hidden_proto (ns_parserr)
 libresolv_hidden_proto (ns_sprintrr)
 libresolv_hidden_proto (ns_sprintrrf)
 libresolv_hidden_proto (ns_samedomain)
-libresolv_hidden_proto (ns_samename)
 libresolv_hidden_proto (ns_format_ttl)
 
 extern __typeof (ns_makecanon) __libc_ns_makecanon;
@@ -87,6 +86,8 @@ extern __typeof (ns_name_uncompress) __ns_name_uncompress;
 libc_hidden_proto (__ns_name_uncompress)
 extern __typeof (ns_name_unpack) __ns_name_unpack;
 libc_hidden_proto (__ns_name_unpack)
+extern __typeof (ns_samename) __libc_ns_samename;
+libc_hidden_proto (__libc_ns_samename)
 
 # endif /* !_ISOMAC */
 #endif

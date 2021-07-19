@@ -224,8 +224,8 @@ res_nameinquery(const char *name, int type, int class,
 			return (-1);
 		NS_GET16(ttype, cp);
 		NS_GET16(tclass, cp);
-		if (ttype == type && tclass == class &&
-		    ns_samename(tname, name) == 1)
+		if (ttype == type && tclass == class
+		    && __libc_ns_samename (tname, name) == 1)
 			return (1);
 	}
 	return (0);
