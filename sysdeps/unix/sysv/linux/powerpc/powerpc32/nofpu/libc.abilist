@@ -410,6 +410,7 @@ GLIBC_2.0 dlclose F
 GLIBC_2.0 dlerror F
 GLIBC_2.0 dlopen F
 GLIBC_2.0 dlsym F
+GLIBC_2.0 dn_expand F
 GLIBC_2.0 dprintf F
 GLIBC_2.0 drand48 F
 GLIBC_2.0 drand48_r F
@@ -1913,6 +1914,7 @@ GLIBC_2.2 __ctype32_tolower D 0x4
 GLIBC_2.2 __ctype32_toupper D 0x4
 GLIBC_2.2 __cyg_profile_func_enter F
 GLIBC_2.2 __cyg_profile_func_exit F
+GLIBC_2.2 __dn_expand F
 GLIBC_2.2 __endmntent F
 GLIBC_2.2 __fbufsize F
 GLIBC_2.2 __flbf F
@@ -2589,6 +2591,7 @@ GLIBC_2.34 dlmopen F
 GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
+GLIBC_2.34 dn_expand F
 GLIBC_2.34 execveat F
 GLIBC_2.34 forkpty F
 GLIBC_2.34 gai_cancel F

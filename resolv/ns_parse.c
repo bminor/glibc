@@ -154,8 +154,8 @@ ns_parserr(ns_msg *handle, ns_sect section, int rrnum, ns_rr *rr) {
 	}
 
 	/* Do the parse. */
-	b = dn_expand(handle->_msg, handle->_eom,
-		      handle->_msg_ptr, rr->name, NS_MAXDNAME);
+	b = __libc_dn_expand (handle->_msg, handle->_eom,
+			      handle->_msg_ptr, rr->name, NS_MAXDNAME);
 	if (b < 0)
 		return (-1);
 	handle->_msg_ptr += b;

@@ -693,7 +693,7 @@ addname(const u_char *msg, size_t msglen,
 	char *save_buf = *buf;
 	int n;
 
-	n = dn_expand(msg, msg + msglen, *pp, *buf, *buflen);
+	n = __libc_dn_expand (msg, msg + msglen, *pp, *buf, *buflen);
 	if (n < 0)
 		goto enospc;	/*%< Guess. */
 	newlen = prune_origin(*buf, origin);

@@ -1,4 +1,4 @@
-/* Domain name processing functions.
+/* Expanding a compressed DNS domain name to its presentation form.
    Copyright (C) 1995-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -82,170 +82,31 @@
  * SOFTWARE.
  */
 
-#include <sys/types.h>
-#include <sys/param.h>
-#include <netinet/in.h>
 #include <arpa/nameser.h>
-#include <ctype.h>
 #include <resolv.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
+#include <shlib-compat.h>
 
-/*
- * Pack domain name 'exp_dn' in presentation form into 'comp_dn'.
- * Return the size of the compressed name or -1.
- * 'length' is the size of the array pointed to by 'comp_dn'.
- */
+/* Expand compressed domain name COMP_DN to full domain name.  MSG is
+   a pointer to the beginning of the message, EOMORIG points to the
+   first location after the message, EXP_DN is a pointer to a buffer
+   of size LENGTH for the result.  Returns size of compressed name or
+   -1 if there was an error.  */
 int
-dn_comp(const char *src, u_char *dst, int dstsiz,
-	u_char **dnptrs, u_char **lastdnptr)
+___dn_expand (const unsigned char *msg, const unsigned char *eom,
+              const unsigned char *src, char *dst, int dstsiz)
 {
-	return (ns_name_compress(src, dst, (size_t)dstsiz,
-				 (const u_char **)dnptrs,
-				 (const u_char **)lastdnptr));
+  int n = __ns_name_uncompress (msg, eom, src, dst, (size_t) dstsiz);
+  if (n > 0 && dst[0] == '.')
+    dst[0] = '\0';
+  return n;
 }
-libresolv_hidden_def (dn_comp)
+versioned_symbol (libc, ___dn_expand, dn_expand, GLIBC_2_34);
+versioned_symbol (libc, ___dn_expand, __libc_dn_expand, GLIBC_PRIVATE);
+libc_hidden_ver (___dn_expand, __libc_dn_expand);
 
-/*
- * Skip over a compressed domain name. Return the size or -1.
- */
-int
-dn_skipname(const u_char *ptr, const u_char *eom) {
-	const u_char *saveptr = ptr;
-
-	if (ns_name_skip(&ptr, eom) == -1)
-		return (-1);
-	return (ptr - saveptr);
-}
-libresolv_hidden_def (dn_skipname)
-
-/* Return true if the string consists of printable ASCII characters
-   only.  */
-static bool
-printable_string (const char *dn)
-{
-  while (true)
-    {
-      char ch = *dn;
-      if (ch == '\0')
-	return true;
-      if (ch <= ' ' || ch > '~')
-	return false;
-      ++dn;
-    }
-}
-
-/* Return true if DN points to a name consisting only of [0-9a-zA-Z_-]
-   characters.  DN must be in DNS wire format, without
-   compression.  */
-static bool
-binary_hnok (const unsigned char *dn)
-{
-  while (true)
-    {
-      size_t label_length = *dn;
-      if (label_length == 0)
-	break;
-      ++dn;
-      const unsigned char *label_end = dn + label_length;
-      do
-	{
-	  unsigned char ch = *dn;
-	  if (!(('0' <= ch && ch <= '9')
-		|| ('A' <= ch && ch <= 'Z')
-		|| ('a' <= ch && ch <= 'z')
-		|| ch == '-' || ch == '_'))
-	    return false;
-	  ++dn;
-	}
-      while (dn < label_end);
-    }
-  return true;
-}
-
-/* Return true if the binary domain name has a first labels which
-   starts with '-'.  */
-static inline bool
-binary_leading_dash (const unsigned char *dn)
-{
-  return dn[0] > 0 && dn[1] == '-';
-}
-
-/* Return 1 if res_hnok is a valid host name.  Labels must only
-   contain [0-9a-zA-Z_-] characters, and the name must not start with
-   a '-'.  The latter is to avoid confusion with program options.  */
-int
-res_hnok (const char *dn)
-{
-  unsigned char buf[NS_MAXCDNAME];
-  if (!printable_string (dn)
-      || ns_name_pton (dn, buf, sizeof (buf)) < 0
-      || binary_leading_dash (buf))
-    return 0;
-  return binary_hnok (buf);
-}
-libresolv_hidden_def (res_hnok)
-
-/* Hostname-like (A, MX, WKS) owners can have "*" as their first label
-   but must otherwise be as a host name.  */
-int
-res_ownok (const char *dn)
-{
-  unsigned char buf[NS_MAXCDNAME];
-  if (!printable_string (dn)
-      || ns_name_pton (dn, buf, sizeof (buf)) < 0
-      || binary_leading_dash (buf))
-    return 0;
-  if (buf[0] == 1 && buf [1] == '*')
-    /* Skip over the leading "*." part.  */
-    return binary_hnok (buf + 2);
-  else
-    return binary_hnok (buf);
-}
-
-/* SOA RNAMEs and RP RNAMEs can have any byte in their first label,
-   but the rest of the name has to look like a host name.  */
-int
-res_mailok (const char *dn)
-{
-  unsigned char buf[NS_MAXCDNAME];
-  if (!printable_string (dn)
-      || ns_name_pton (dn, buf, sizeof (buf)) < 0)
-    return 0;
-  unsigned char label_length = buf[0];
-  /* "." is a valid missing representation */
-  if (label_length == 0)
-    return 1;
-  /* Skip over the first label.  */
-  unsigned char *tail = buf + 1 + label_length;
-  if (*tail == 0)
-    /* More than one label is required (except for ".").  */
-    return 0;
-  return binary_hnok (tail);
-}
-
-/* Return 1 if DN is a syntactically valid domain name.  Empty names
-   are accepted.  */
-int
-res_dnok (const char *dn)
-{
-  unsigned char buf[NS_MAXCDNAME];
-  return printable_string (dn) && ns_name_pton (dn, buf, sizeof (buf)) >= 0;
-}
-libresolv_hidden_def (res_dnok)
-
-/*
- * This module must export the following externally-visible symbols:
- *	___putlong
- *	___putshort
- *	__getlong
- *	__getshort
- * Note that one _ comes from C and the others come from us.
- */
-void __putlong(uint32_t src, u_char *dst) { ns_put32(src, dst); }
-libresolv_hidden_def (__putlong)
-void __putshort(uint16_t src, u_char *dst) { ns_put16(src, dst); }
-libresolv_hidden_def (__putshort)
-uint32_t _getlong(const u_char *src) { return (ns_get32(src)); }
-uint16_t _getshort(const u_char *src) { return (ns_get16(src)); }
+#if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_2)
+compat_symbol (libresolv, ___dn_expand, dn_expand, GLIBC_2_0);
+#endif
+#if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libresolv, ___dn_expand, __dn_expand, GLIBC_2_2);
+#endif

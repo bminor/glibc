@@ -3,6 +3,7 @@ libc {
     __h_errno_location;
     __res_randomid;
     _res;
+    dn_expand;
     h_errlist;
     h_nerr;
     herror;
@@ -10,6 +11,7 @@ libc {
     res_init;
   }
   GLIBC_2.2 {
+    __dn_expand;
     __res_init;
     __res_nclose;
     __res_ninit;
@@ -40,6 +42,7 @@ libc {
     gai_suspend;
     getaddrinfo_a;
 %endif
+    dn_expand;
     ns_name_compress;
     ns_name_ntop;
     ns_name_pack;
@@ -55,6 +58,7 @@ libc {
     __h_errno;
     __inet_aton_exact;
     __inet_pton_length;
+    __libc_dn_expand;
     __ns_name_compress;
     __ns_name_ntop;
     __ns_name_pack;
@@ -120,7 +124,6 @@ libresolv {
     _res_opcodes;
     _res_resultcodes;
     _sethtent;
-    dn_expand;
     inet_net_ntop;
     inet_net_pton;
     inet_neta;
@@ -135,7 +138,6 @@ libresolv {
     res_send_setrhook;
   }
   GLIBC_2.2 {
-    __dn_expand;
     __res_hostalias;
     __res_mkquery;
     __res_nmkquery;

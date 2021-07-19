@@ -7,6 +7,7 @@ GLIBC_2.0 dlclose F
 GLIBC_2.0 dlerror F
 GLIBC_2.0 dlopen F
 GLIBC_2.0 dlsym F
+GLIBC_2.0 dn_expand F
 GLIBC_2.0 forkpty F
 GLIBC_2.0 login F
 GLIBC_2.0 login_tty F
@@ -317,6 +318,7 @@ GLIBC_2.2 __default_morecore F
 GLIBC_2.2 __deregister_frame F
 GLIBC_2.2 __deregister_frame_info F
 GLIBC_2.2 __dgettext F
+GLIBC_2.2 __dn_expand F
 GLIBC_2.2 __dup2 F
 GLIBC_2.2 __duplocale F
 GLIBC_2.2 __endmntent F
@@ -2384,6 +2386,7 @@ GLIBC_2.34 dlmopen F
 GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
+GLIBC_2.34 dn_expand F
 GLIBC_2.34 execveat F
 GLIBC_2.34 forkpty F
 GLIBC_2.34 gai_cancel F

@@ -2,7 +2,6 @@ GLIBC_2.21 __b64_ntop F
 GLIBC_2.21 __b64_pton F
 GLIBC_2.21 __dn_comp F
 GLIBC_2.21 __dn_count_labels F
-GLIBC_2.21 __dn_expand F
 GLIBC_2.21 __dn_skipname F
 GLIBC_2.21 __fp_nquery F
 GLIBC_2.21 __fp_query F

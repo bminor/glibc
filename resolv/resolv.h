@@ -212,7 +212,6 @@ __END_DECLS
 #define b64_pton		__b64_pton
 #define dn_comp			__dn_comp
 #define dn_count_labels		__dn_count_labels
-#define dn_expand		__dn_expand
 #define dn_skipname		__dn_skipname
 #define fp_resstat		__fp_resstat
 #define loc_aton		__loc_aton

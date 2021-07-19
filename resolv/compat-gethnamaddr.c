@@ -179,7 +179,7 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 		__set_h_errno (NO_RECOVERY);
 		return (NULL);
 	}
-	n = dn_expand(answer->buf, eom, cp, bp, buflen);
+	n = __libc_dn_expand (answer->buf, eom, cp, bp, buflen);
 	if ((n < 0) || !(*name_ok)(bp)) {
 		__set_h_errno (NO_RECOVERY);
 		return (NULL);
@@ -210,7 +210,7 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 	haveanswer = 0;
 	had_error = 0;
 	while (ancount-- > 0 && cp < eom && !had_error) {
-		n = dn_expand(answer->buf, eom, cp, bp, buflen);
+		n = __libc_dn_expand (answer->buf, eom, cp, bp, buflen);
 		if ((n < 0) || !(*name_ok)(bp)) {
 			had_error++;
 			continue;
@@ -233,7 +233,8 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 		if ((qtype == T_A || qtype == T_AAAA) && type == T_CNAME) {
 			if (ap >= &host_aliases[MAXALIASES-1])
 				continue;
-			n = dn_expand(answer->buf, eom, cp, tbuf, sizeof tbuf);
+			n = __libc_dn_expand (answer->buf, eom, cp,
+					      tbuf, sizeof tbuf);
 			if ((n < 0) || !(*name_ok)(tbuf)) {
 				had_error++;
 				continue;
@@ -265,7 +266,8 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 			continue;
 		}
 		if (qtype == T_PTR && type == T_CNAME) {
-			n = dn_expand(answer->buf, eom, cp, tbuf, sizeof tbuf);
+			n = __libc_dn_expand (answer->buf, eom, cp,
+					      tbuf, sizeof tbuf);
 			if (n < 0 || !res_dnok(tbuf)) {
 				had_error++;
 				continue;
@@ -302,7 +304,8 @@ getanswer (const querybuf *answer, int anslen, const char *qname, int qtype)
 				cp += n;
 				continue;	/* XXX - had_error++ ? */
 			}
-			n = dn_expand(answer->buf, eom, cp, bp, buflen);
+			n = __libc_dn_expand (answer->buf, eom, cp,
+					      bp, buflen);
 			if ((n < 0) || !res_hnok(bp)) {
 				had_error++;
 				break;

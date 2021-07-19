@@ -125,8 +125,8 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
 	      if (type == qtypes[i])
 		{
 		  /* We found the record.  */
-		  s = __dn_expand (ansp.buf->buf, endptr, namestart,
-				   buffer, buflen);
+		  s = __libc_dn_expand (ansp.buf->buf, endptr, namestart,
+					buffer, buflen);
 		  if (s < 0)
 		    {
 		      if (errno != EMSGSIZE)

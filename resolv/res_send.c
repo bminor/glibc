@@ -268,7 +268,7 @@ res_nameinquery(const char *name, int type, int class,
 		char tname[MAXDNAME+1];
 		int n, ttype, tclass;
 
-		n = dn_expand(buf, eom, cp, tname, sizeof tname);
+		n = __libc_dn_expand (buf, eom, cp, tname, sizeof tname);
 		if (n < 0)
 			return (-1);
 		cp += n;
@@ -381,7 +381,7 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 		char tname[MAXDNAME+1];
 		int n, ttype, tclass;
 
-		n = dn_expand(buf1, eom1, cp, tname, sizeof tname);
+		n = __libc_dn_expand (buf1, eom1, cp, tname, sizeof tname);
 		if (n < 0)
 			return (-1);
 		cp += n;

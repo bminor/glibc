@@ -44,7 +44,6 @@ libresolv_hidden_proto (_sethtent)
 libresolv_hidden_proto (_gethtent)
 libresolv_hidden_proto (_gethtbyaddr)
 libresolv_hidden_proto (_gethtbyname2)
-libresolv_hidden_proto (__dn_expand)
 libresolv_hidden_proto (__dn_comp)
 libresolv_hidden_proto (__dn_skipname)
 libresolv_hidden_proto (__res_hnok)
@@ -65,6 +64,9 @@ libresolv_hidden_proto (__res_nameinquery)
 libresolv_hidden_proto (__res_queriesmatch)
 libresolv_hidden_proto (__b64_ntop)
 libresolv_hidden_proto (__dn_count_labels)
+
+extern __typeof (dn_expand) __libc_dn_expand;
+libc_hidden_proto (__libc_dn_expand)
 
 # endif /* _RESOLV_H_ && !_ISOMAC */
 #endif
