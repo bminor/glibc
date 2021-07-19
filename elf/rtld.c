@@ -1065,25 +1065,6 @@ ERROR: audit interface '%s' requires version %d (maximum supported version %d); 
   dlmargs.map->l_auditing = 1;
 }
 
-/* Notify the the audit modules that the object MAP has already been
-   loaded.  */
-static void
-notify_audit_modules_of_loaded_object (struct link_map *map)
-{
-  struct audit_ifaces *afct = GLRO(dl_audit);
-  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-    {
-      if (afct->objopen != NULL)
-	{
-	  struct auditstate *state = link_map_audit_state (map, cnt);
-	  state->bindflags = afct->objopen (map, LM_ID_BASE, &state->cookie);
-	  map->l_audit_any_plt |= state->bindflags != 0;
-	}
-
-      afct = afct->next;
-    }
-}
-
 /* Load all audit modules.  */
 static void
 load_audit_modules (struct link_map *main_map, struct audit_list *audit_list)
@@ -1102,8 +1083,8 @@ load_audit_modules (struct link_map *main_map, struct audit_list *audit_list)
      program and the dynamic linker itself).  */
   if (GLRO(dl_naudit) > 0)
     {
-      notify_audit_modules_of_loaded_object (main_map);
-      notify_audit_modules_of_loaded_object (&GL(dl_rtld_map));
+      _dl_audit_objopen (main_map, LM_ID_BASE);
+      _dl_audit_objopen (&GL(dl_rtld_map), LM_ID_BASE);
     }
 }
 

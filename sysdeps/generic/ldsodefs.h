@@ -1395,6 +1395,11 @@ link_map_audit_state (struct link_map *l, size_t index)
       return &base[index];
     }
 }
+
+/* Call the la_objopen from the audit modules for the link_map L on the
+   namespace identification NSID.  */
+void _dl_audit_objopen (struct link_map *l, Lmid_t nsid)
+  attribute_hidden;
 #endif /* SHARED */
 
 #if PTHREAD_IN_LIBC && defined SHARED

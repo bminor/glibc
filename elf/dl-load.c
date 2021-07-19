@@ -1516,22 +1516,8 @@ cannot enable executable stack as shared object requires");
 
 #ifdef SHARED
   /* Auditing checkpoint: we have a new object.  */
-  if (__glibc_unlikely (GLRO(dl_naudit) > 0)
-      && !GL(dl_ns)[l->l_ns]._ns_loaded->l_auditing)
-    {
-      struct audit_ifaces *afct = GLRO(dl_audit);
-      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-	{
-	  if (afct->objopen != NULL)
-	    {
-	      struct auditstate *state = link_map_audit_state (l, cnt);
-	      state->bindflags = afct->objopen (l, nsid, &state->cookie);
-	      l->l_audit_any_plt |= state->bindflags != 0;
-	    }
-
-	  afct = afct->next;
-	}
-    }
+  if (!GL(dl_ns)[l->l_ns]._ns_loaded->l_auditing)
+    _dl_audit_objopen (l, nsid);
 #endif
 
   return l;
