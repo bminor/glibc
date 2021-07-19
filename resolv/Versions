@@ -77,6 +77,7 @@ libc {
     __libc_res_dnok;
     __libc_res_hnok;
     __libc_res_nameinquery;
+    __libc_res_queriesmatch;
     __ns_name_compress;
     __ns_name_ntop;
     __ns_name_pack;

@@ -248,61 +248,6 @@ mask_ad_bit (struct resolv_context *ctx, void *buf)
     ((HEADER *) buf)->ad = 0;
 }
 
-/* int
- * res_queriesmatch(buf1, eom1, buf2, eom2)
- *	is there a 1:1 mapping of (name,type,class)
- *	in (buf1,eom1) and (buf2,eom2)?
- * returns:
- *	-1 : format error
- *	0  : not a 1:1 mapping
- *	>0 : is a 1:1 mapping
- * author:
- *	paul vixie, 29may94
- */
-int
-res_queriesmatch(const u_char *buf1, const u_char *eom1,
-		 const u_char *buf2, const u_char *eom2)
-{
-	if (buf1 + HFIXEDSZ > eom1 || buf2 + HFIXEDSZ > eom2)
-		return (-1);
-
-	/*
-	 * Only header section present in replies to
-	 * dynamic update packets.
-	 */
-	if ((((HEADER *)buf1)->opcode == ns_o_update) &&
-	    (((HEADER *)buf2)->opcode == ns_o_update))
-		return (1);
-
-	/* Note that we initially do not convert QDCOUNT to the host byte
-	   order.  We can compare it with the second buffer's QDCOUNT
-	   value without doing this.  */
-	int qdcount = ((HEADER*)buf1)->qdcount;
-	if (qdcount != ((HEADER*)buf2)->qdcount)
-		return (0);
-
-	qdcount = htons (qdcount);
-	const u_char *cp = buf1 + HFIXEDSZ;
-
-	while (qdcount-- > 0) {
-		char tname[MAXDNAME+1];
-		int n, ttype, tclass;
-
-		n = __libc_dn_expand (buf1, eom1, cp, tname, sizeof tname);
-		if (n < 0)
-			return (-1);
-		cp += n;
-		if (cp + 2 * INT16SZ > eom1)
-			return (-1);
-		NS_GET16(ttype, cp);
-		NS_GET16(tclass, cp);
-		if (!__libc_res_nameinquery (tname, ttype, tclass, buf2, eom2))
-			return (0);
-	}
-	return (1);
-}
-libresolv_hidden_def (res_queriesmatch)
-
 int
 __res_context_send (struct resolv_context *ctx,
 		    const unsigned char *buf, int buflen,
@@ -1239,13 +1184,15 @@ send_dg(res_state statp,
 		int matching_query = 0; /* Default to no matching query.  */
 		if (!recvresp1
 		    && anhp->id == hp->id
-		    && res_queriesmatch (buf, buf + buflen,
-					 *thisansp, *thisansp + *thisanssizp))
+		    && __libc_res_queriesmatch (buf, buf + buflen,
+						*thisansp,
+						*thisansp + *thisanssizp))
 		  matching_query = 1;
 		if (!recvresp2
 		    && anhp->id == hp2->id
-		    && res_queriesmatch (buf2, buf2 + buflen2,
-					 *thisansp, *thisansp + *thisanssizp))
+		    && __libc_res_queriesmatch (buf2, buf2 + buflen2,
+						*thisansp,
+						*thisansp + *thisanssizp))
 		  matching_query = 2;
 		if (matching_query == 0)
 		  /* Spurious UDP packet.  Drop it and continue

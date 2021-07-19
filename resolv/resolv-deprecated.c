@@ -47,3 +47,10 @@ res_nameinquery (const char *name, int type, int class,
 {
   return __libc_res_nameinquery (name, type, class, buf, eom);
 }
+
+int
+res_queriesmatch (const unsigned char *buf1, const unsigned char *eom1,
+                  const unsigned char *buf2, const unsigned char *eom2)
+{
+  return __libc_res_queriesmatch (buf1, eom1, buf2, eom2);
+}

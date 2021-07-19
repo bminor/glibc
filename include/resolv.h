@@ -54,7 +54,6 @@ libresolv_hidden_proto (__p_type)
 libresolv_hidden_proto (__loc_ntoa)
 libresolv_hidden_proto (__fp_nquery)
 libresolv_hidden_proto (__fp_query)
-libresolv_hidden_proto (__res_queriesmatch)
 libresolv_hidden_proto (__b64_ntop)
 libresolv_hidden_proto (__dn_count_labels)
 
@@ -68,6 +67,8 @@ extern __typeof (res_hnok) __libc_res_hnok;
 libc_hidden_proto (__libc_res_hnok)
 extern __typeof (__res_nameinquery) __libc_res_nameinquery;
 libc_hidden_proto (__libc_res_nameinquery)
+extern __typeof (__res_queriesmatch) __libc_res_queriesmatch;
+libc_hidden_proto (__libc_res_queriesmatch)
 
 # endif /* _RESOLV_H_ && !_ISOMAC */
 #endif

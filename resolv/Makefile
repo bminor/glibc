@@ -53,6 +53,7 @@ routines := \
   res_init \
   res_libc \
   res_nameinquery \
+  res_queriesmatch \
   res_randomid \
   resolv_conf \
   resolv_context \
