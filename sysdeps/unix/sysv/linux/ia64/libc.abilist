@@ -1,4 +1,5 @@
 GLIBC_2.0 __dn_comp F
+GLIBC_2.0 __dn_skipname F
 GLIBC_2.0 dladdr F
 GLIBC_2.0 dlclose F
 GLIBC_2.0 dlerror F
@@ -2366,6 +2367,7 @@ GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 dn_comp F
 GLIBC_2.34 dn_expand F
+GLIBC_2.34 dn_skipname F
 GLIBC_2.34 execveat F
 GLIBC_2.34 forkpty F
 GLIBC_2.34 gai_cancel F

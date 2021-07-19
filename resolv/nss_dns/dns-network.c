@@ -322,7 +322,7 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
   /* Skip the question part.  */
   while (question_count-- > 0)
     {
-      int n = __dn_skipname (cp, end_of_message);
+      int n = __libc_dn_skipname (cp, end_of_message);
       if (n < 0 || end_of_message - (cp + n) < QFIXEDSZ)
        {
          __set_h_errno (NO_RECOVERY);

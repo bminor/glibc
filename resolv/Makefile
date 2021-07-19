@@ -30,6 +30,7 @@ headers	:= resolv.h bits/types/res_state.h \
 routines := \
   dn_comp \
   dn_expand \
+  dn_skipname \
   herror \
   inet_addr \
   inet_ntop \

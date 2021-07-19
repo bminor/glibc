@@ -90,7 +90,7 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
 	  unsigned char *endptr = ansp.ptr + r;
 
 	  /* Skip over the query.  This is the name, type, and class.  */
-	  int s = __dn_skipname (ptr, endptr);
+	  int s = __libc_dn_skipname (ptr, endptr);
 	  if (s < 0)
 	    {
 	    unavail:
@@ -108,7 +108,7 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
 		 then type, class, TTL, and the length of the RDATA.
 		 We remember the name start.  */
 	      unsigned char *namestart = ptr;
-	      s = __dn_skipname (ptr, endptr);
+	      s = __libc_dn_skipname (ptr, endptr);
 	      if (s < 0)
 		goto unavail;
 

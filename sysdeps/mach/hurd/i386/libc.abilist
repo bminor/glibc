@@ -246,6 +246,7 @@ GLIBC_2.2.6 __dgettext F
 GLIBC_2.2.6 __divdi3 F
 GLIBC_2.2.6 __dn_comp F
 GLIBC_2.2.6 __dn_expand F
+GLIBC_2.2.6 __dn_skipname F
 GLIBC_2.2.6 __dup2 F
 GLIBC_2.2.6 __duplocale F
 GLIBC_2.2.6 __environ D 0x4
@@ -2239,6 +2240,7 @@ GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
 GLIBC_2.34 dn_comp F
 GLIBC_2.34 dn_expand F
+GLIBC_2.34 dn_skipname F
 GLIBC_2.34 execveat F
 GLIBC_2.34 forkpty F
 GLIBC_2.34 login F

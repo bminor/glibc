@@ -1,6 +1,7 @@
 libc {
   GLIBC_2.0 {
     __dn_comp;
+    __dn_skipname;
     __h_errno_location;
     __res_randomid;
     _res;
@@ -45,6 +46,7 @@ libc {
 %endif
     dn_comp;
     dn_expand;
+    dn_skipname;
     ns_name_compress;
     ns_name_ntop;
     ns_name_pack;
@@ -61,6 +63,7 @@ libc {
     __inet_aton_exact;
     __inet_pton_length;
     __libc_dn_expand;
+    __libc_dn_skipname;
     __ns_name_compress;
     __ns_name_ntop;
     __ns_name_pack;
@@ -82,7 +85,6 @@ libresolv {
     __b64_ntop;
     __b64_pton;
     __dn_count_labels;
-    __dn_skipname;
     __fp_nquery;
     __fp_query;
     __fp_resstat;
