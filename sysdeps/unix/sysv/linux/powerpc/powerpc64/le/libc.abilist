@@ -165,6 +165,7 @@ GLIBC_2.17 __daylight D 0x4
 GLIBC_2.17 __dcgettext F
 GLIBC_2.17 __default_morecore F
 GLIBC_2.17 __dgettext F
+GLIBC_2.17 __dn_comp F
 GLIBC_2.17 __dn_expand F
 GLIBC_2.17 __dprintf_chk F
 GLIBC_2.17 __dup2 F
@@ -2628,6 +2629,7 @@ GLIBC_2.34 dlmopen F
 GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
+GLIBC_2.34 dn_comp F
 GLIBC_2.34 dn_expand F
 GLIBC_2.34 execveat F
 GLIBC_2.34 forkpty F

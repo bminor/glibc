@@ -124,6 +124,7 @@ GLIBC_2.0 __divl F
 GLIBC_2.0 __divlu F
 GLIBC_2.0 __divq F
 GLIBC_2.0 __divqu F
+GLIBC_2.0 __dn_comp F
 GLIBC_2.0 __dup2 F
 GLIBC_2.0 __environ D 0x8
 GLIBC_2.0 __errno_location F
@@ -2525,6 +2526,7 @@ GLIBC_2.34 dlmopen F
 GLIBC_2.34 dlopen F
 GLIBC_2.34 dlsym F
 GLIBC_2.34 dlvsym F
+GLIBC_2.34 dn_comp F
 GLIBC_2.34 dn_expand F
 GLIBC_2.34 execveat F
 GLIBC_2.34 forkpty F

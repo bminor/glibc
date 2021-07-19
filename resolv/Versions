@@ -1,5 +1,6 @@
 libc {
   GLIBC_2.0 {
+    __dn_comp;
     __h_errno_location;
     __res_randomid;
     _res;
@@ -42,6 +43,7 @@ libc {
     gai_suspend;
     getaddrinfo_a;
 %endif
+    dn_comp;
     dn_expand;
     ns_name_compress;
     ns_name_ntop;
@@ -79,7 +81,6 @@ libresolv {
   GLIBC_2.0 {
     __b64_ntop;
     __b64_pton;
-    __dn_comp;
     __dn_count_labels;
     __dn_skipname;
     __fp_nquery;

@@ -1,6 +1,5 @@
 GLIBC_2.33 __b64_ntop F
 GLIBC_2.33 __b64_pton F
-GLIBC_2.33 __dn_comp F
 GLIBC_2.33 __dn_count_labels F
 GLIBC_2.33 __dn_skipname F
 GLIBC_2.33 __fp_nquery F

@@ -28,6 +28,7 @@ headers	:= resolv.h bits/types/res_state.h \
 	   sys/bitypes.h
 
 routines := \
+  dn_comp \
   dn_expand \
   herror \
   inet_addr \
