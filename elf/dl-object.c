@@ -59,16 +59,19 @@ _dl_new_object (char *realname, const char *libname, int type,
 {
 #ifdef SHARED
   unsigned int naudit;
-  if (__glibc_unlikely ((mode & __RTLD_OPENEXEC) != 0))
+  if (__glibc_unlikely ((mode & (__RTLD_OPENEXEC | __RTLD_VDSO)) != 0))
     {
-      assert (type == lt_executable);
-      assert (nsid == LM_ID_BASE);
+      if (mode & __RTLD_OPENEXEC)
+	{
+	  assert (type == lt_executable);
+	  assert (nsid == LM_ID_BASE);
 
-      /* Ignore the specified libname for the main executable.  It is
-	 only known with an explicit loader invocation.  */
-      libname = "";
+	  /* Ignore the specified libname for the main executable.  It is
+	     only known with an explicit loader invocation.  */
+	  libname = "";
+	}
 
-      /* We create the map for the executable before we know whether
+      /* We create the map for the executable and vDSO before we know whether
 	 we have auditing libraries and if yes, how many.  Assume the
 	 worst.  */
       naudit = DL_NNS;
