@@ -139,6 +139,7 @@ libresolv-routines := \
   ns_print \
   ns_samedomain \
   ns_ttl \
+  res-putget \
   res_comp \
   res_data \
   res_debug \
