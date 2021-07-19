@@ -354,6 +354,7 @@ tests += \
   tst-audit17 \
   tst-audit18 \
   tst-audit19b \
+  tst-audit22 \
   tst-auditmany \
   tst-auxobj \
   tst-auxobj-dlopen \
@@ -632,6 +633,7 @@ modules-names = \
   tst-auditmod18 \
   tst-auditmod19a \
   tst-auditmod19b \
+  tst-auditmod22 \
   tst-auxvalmod \
   tst-big-note-lib \
   tst-deep1mod1 \
@@ -1989,6 +1991,9 @@ tst-audit19a-ENV = LD_AUDIT=$(objpfx)tst-auditmod19a.so
 $(objpfx)tst-audit19b.out: $(objpfx)tst-auditmod19b.so
 $(objpfx)tst-audit19b: $(objpfx)tst-audit19bmod.so
 tst-audit19b-ARGS = -- $(host-test-program-cmd)
+
+$(objpfx)tst-audit22.out: $(objpfx)tst-auditmod22.so
+tst-audit22-ARGS = -- $(host-test-program-cmd)
 
 # tst-sonamemove links against an older implementation of the library.
 LDFLAGS-tst-sonamemove-linkmod1.so = \
