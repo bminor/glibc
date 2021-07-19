@@ -22,12 +22,8 @@ GLIBC_2.0 __p_type_syms D 0x450
 GLIBC_2.0 __putlong F
 GLIBC_2.0 __putshort F
 GLIBC_2.0 __res_close F
-GLIBC_2.0 __res_dnok F
-GLIBC_2.0 __res_hnok F
 GLIBC_2.0 __res_isourserver F
-GLIBC_2.0 __res_mailok F
 GLIBC_2.0 __res_nameinquery F
-GLIBC_2.0 __res_ownok F
 GLIBC_2.0 __res_queriesmatch F
 GLIBC_2.0 __res_send F
 GLIBC_2.0 __sym_ntop F

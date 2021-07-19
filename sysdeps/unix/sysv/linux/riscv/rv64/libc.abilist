@@ -377,9 +377,13 @@ GLIBC_2.27 __realpath_chk F
 GLIBC_2.27 __recv_chk F
 GLIBC_2.27 __recvfrom_chk F
 GLIBC_2.27 __register_atfork F
+GLIBC_2.27 __res_dnok F
+GLIBC_2.27 __res_hnok F
 GLIBC_2.27 __res_init F
+GLIBC_2.27 __res_mailok F
 GLIBC_2.27 __res_nclose F
 GLIBC_2.27 __res_ninit F
+GLIBC_2.27 __res_ownok F
 GLIBC_2.27 __res_randomid F
 GLIBC_2.27 __res_state F
 GLIBC_2.27 __riscv_flush_icache F
@@ -2520,6 +2524,10 @@ GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.34 pthread_testcancel F
 GLIBC_2.34 pthread_timedjoin_np F
 GLIBC_2.34 pthread_tryjoin_np F
+GLIBC_2.34 res_dnok F
+GLIBC_2.34 res_hnok F
+GLIBC_2.34 res_mailok F
+GLIBC_2.34 res_ownok F
 GLIBC_2.34 sem_clockwait F
 GLIBC_2.34 sem_close F
 GLIBC_2.34 sem_destroy F

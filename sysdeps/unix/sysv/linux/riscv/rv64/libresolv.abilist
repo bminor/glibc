@@ -22,11 +22,8 @@ GLIBC_2.27 __p_type_syms D 0x450
 GLIBC_2.27 __putlong F
 GLIBC_2.27 __putshort F
 GLIBC_2.27 __res_close F
-GLIBC_2.27 __res_dnok F
-GLIBC_2.27 __res_hnok F
 GLIBC_2.27 __res_hostalias F
 GLIBC_2.27 __res_isourserver F
-GLIBC_2.27 __res_mailok F
 GLIBC_2.27 __res_mkquery F
 GLIBC_2.27 __res_nameinquery F
 GLIBC_2.27 __res_nmkquery F
@@ -34,7 +31,6 @@ GLIBC_2.27 __res_nquery F
 GLIBC_2.27 __res_nquerydomain F
 GLIBC_2.27 __res_nsearch F
 GLIBC_2.27 __res_nsend F
-GLIBC_2.27 __res_ownok F
 GLIBC_2.27 __res_queriesmatch F
 GLIBC_2.27 __res_query F
 GLIBC_2.27 __res_querydomain F

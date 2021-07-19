@@ -1,4 +1,4 @@
-/* Domain name processing functions.
+/* Syntax checking for DNS domain names.
    Copyright (C) 1995-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -82,15 +82,9 @@
  * SOFTWARE.
  */
 
-#include <sys/types.h>
-#include <sys/param.h>
-#include <netinet/in.h>
 #include <arpa/nameser.h>
-#include <ctype.h>
 #include <resolv.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
+#include <shlib-compat.h>
 
 /* Return true if the string consists of printable ASCII characters
    only.  */
@@ -148,25 +142,30 @@ binary_leading_dash (const unsigned char *dn)
    contain [0-9a-zA-Z_-] characters, and the name must not start with
    a '-'.  The latter is to avoid confusion with program options.  */
 int
-res_hnok (const char *dn)
+___res_hnok (const char *dn)
 {
   unsigned char buf[NS_MAXCDNAME];
   if (!printable_string (dn)
-      || ns_name_pton (dn, buf, sizeof (buf)) < 0
+      || __ns_name_pton (dn, buf, sizeof (buf)) < 0
       || binary_leading_dash (buf))
     return 0;
   return binary_hnok (buf);
 }
-libresolv_hidden_def (res_hnok)
+versioned_symbol (libc, ___res_hnok, res_hnok, GLIBC_2_34);
+versioned_symbol (libc, ___res_hnok, __libc_res_hnok, GLIBC_PRIVATE);
+libc_hidden_ver (___res_hnok, __libc_res_hnok)
+#if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libresolv, ___res_hnok, __res_hnok, GLIBC_2_0);
+#endif
 
 /* Hostname-like (A, MX, WKS) owners can have "*" as their first label
    but must otherwise be as a host name.  */
 int
-res_ownok (const char *dn)
+___res_ownok (const char *dn)
 {
   unsigned char buf[NS_MAXCDNAME];
   if (!printable_string (dn)
-      || ns_name_pton (dn, buf, sizeof (buf)) < 0
+      || __ns_name_pton (dn, buf, sizeof (buf)) < 0
       || binary_leading_dash (buf))
     return 0;
   if (buf[0] == 1 && buf [1] == '*')
@@ -175,15 +174,19 @@ res_ownok (const char *dn)
   else
     return binary_hnok (buf);
 }
+versioned_symbol (libc, ___res_ownok, res_ownok, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libresolv, ___res_ownok, __res_ownok, GLIBC_2_0);
+#endif
 
 /* SOA RNAMEs and RP RNAMEs can have any byte in their first label,
    but the rest of the name has to look like a host name.  */
 int
-res_mailok (const char *dn)
+___res_mailok (const char *dn)
 {
   unsigned char buf[NS_MAXCDNAME];
   if (!printable_string (dn)
-      || ns_name_pton (dn, buf, sizeof (buf)) < 0)
+      || __ns_name_pton (dn, buf, sizeof (buf)) < 0)
     return 0;
   unsigned char label_length = buf[0];
   /* "." is a valid missing representation */
@@ -196,13 +199,22 @@ res_mailok (const char *dn)
     return 0;
   return binary_hnok (tail);
 }
+versioned_symbol (libc, ___res_mailok, res_mailok, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libresolv, ___res_mailok, __res_mailok, GLIBC_2_0);
+#endif
 
 /* Return 1 if DN is a syntactically valid domain name.  Empty names
    are accepted.  */
 int
-res_dnok (const char *dn)
+___res_dnok (const char *dn)
 {
   unsigned char buf[NS_MAXCDNAME];
-  return printable_string (dn) && ns_name_pton (dn, buf, sizeof (buf)) >= 0;
+  return printable_string (dn) && __ns_name_pton (dn, buf, sizeof (buf)) >= 0;
 }
-libresolv_hidden_def (res_dnok)
+versioned_symbol (libc, ___res_dnok, res_dnok, GLIBC_2_34);
+versioned_symbol (libc, ___res_dnok, __libc_res_dnok, GLIBC_PRIVATE);
+libc_hidden_ver (___res_dnok, __libc_res_dnok)
+#if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libresolv, ___res_dnok, __res_dnok, GLIBC_2_0);
+#endif

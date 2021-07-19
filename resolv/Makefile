@@ -44,6 +44,7 @@ routines := \
   ns_name_unpack \
   nsap_addr \
   res-close \
+  res-name-checking \
   res-state \
   res_hconf \
   res_init \
@@ -142,7 +143,6 @@ libresolv-routines := \
   ns_samedomain \
   ns_ttl \
   res-putget \
-  res_comp \
   res_data \
   res_debug \
   res_enable_icmp \

@@ -3,6 +3,10 @@ libc {
     __dn_comp;
     __dn_skipname;
     __h_errno_location;
+    __res_dnok;
+    __res_hnok;
+    __res_mailok;
+    __res_ownok;
     __res_randomid;
     _res;
     dn_expand;
@@ -54,6 +58,10 @@ libc {
     ns_name_skip;
     ns_name_uncompress;
     ns_name_unpack;
+    res_dnok;
+    res_hnok;
+    res_mailok;
+    res_ownok;
   }
   GLIBC_PRIVATE {
 %if !PTHREAD_IN_LIBC
@@ -64,6 +72,8 @@ libc {
     __inet_pton_length;
     __libc_dn_expand;
     __libc_dn_skipname;
+    __libc_res_dnok;
+    __libc_res_hnok;
     __ns_name_compress;
     __ns_name_ntop;
     __ns_name_pack;
@@ -107,12 +117,8 @@ libresolv {
     __putlong;
     __putshort;
     __res_close;
-    __res_dnok;
-    __res_hnok;
     __res_isourserver;
-    __res_mailok;
     __res_nameinquery;
-    __res_ownok;
     __res_queriesmatch;
     __res_send;
     __sym_ntop;

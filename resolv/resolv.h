@@ -225,10 +225,7 @@ __END_DECLS
 #define p_rcode			__p_rcode
 #define putlong			__putlong
 #define putshort		__putshort
-#define res_dnok		__res_dnok
-#define res_hnok		__res_hnok
 #define res_hostalias		__res_hostalias
-#define res_mailok		__res_mailok
 #define res_nameinquery		__res_nameinquery
 #define res_nclose		__res_nclose
 #define res_ninit		__res_ninit
@@ -237,7 +234,6 @@ __END_DECLS
 #define res_nquerydomain	__res_nquerydomain
 #define res_nsearch		__res_nsearch
 #define res_nsend		__res_nsend
-#define res_ownok		__res_ownok
 #define res_queriesmatch	__res_queriesmatch
 #define res_randomid		__res_randomid
 #define sym_ntop		__sym_ntop

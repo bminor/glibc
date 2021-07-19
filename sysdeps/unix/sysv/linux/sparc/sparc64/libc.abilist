@@ -4,6 +4,10 @@ GCC_3.0 __register_frame_info_bases F
 GCC_3.0 __register_frame_info_table_bases F
 GLIBC_2.0 __dn_comp F
 GLIBC_2.0 __dn_skipname F
+GLIBC_2.0 __res_dnok F
+GLIBC_2.0 __res_hnok F
+GLIBC_2.0 __res_mailok F
+GLIBC_2.0 __res_ownok F
 GLIBC_2.0 dladdr F
 GLIBC_2.0 dlclose F
 GLIBC_2.0 dlerror F
@@ -2513,6 +2517,10 @@ GLIBC_2.34 pthread_spin_unlock F
 GLIBC_2.34 pthread_testcancel F
 GLIBC_2.34 pthread_timedjoin_np F
 GLIBC_2.34 pthread_tryjoin_np F
+GLIBC_2.34 res_dnok F
+GLIBC_2.34 res_hnok F
+GLIBC_2.34 res_mailok F
+GLIBC_2.34 res_ownok F
 GLIBC_2.34 sem_clockwait F
 GLIBC_2.34 sem_close F
 GLIBC_2.34 sem_destroy F
