@@ -77,7 +77,6 @@ GLIBC_2.9 ns_makecanon F
 GLIBC_2.9 ns_msg_getflag F
 GLIBC_2.9 ns_name_compress F
 GLIBC_2.9 ns_name_ntol F
-GLIBC_2.9 ns_name_pack F
 GLIBC_2.9 ns_name_rollback F
 GLIBC_2.9 ns_parse_ttl F
 GLIBC_2.9 ns_parserr F
