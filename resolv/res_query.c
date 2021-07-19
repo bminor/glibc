@@ -635,36 +635,6 @@ res_querydomain (const char *name, const char *domain, int class, int type,
     (__resolv_context_get (), name, domain, class, type, answer, anslen);
 }
 
-/* Common part of res_hostalias and hostalias.  */
-static const char *
-context_hostalias_common (struct resolv_context *ctx,
-			  const char *name, char *dst, size_t siz)
-{
-  if (ctx == NULL)
-    {
-      RES_SET_H_ERRNO (&_res, NETDB_INTERNAL);
-      return NULL;
-    }
-  const char *result = __res_context_hostalias (ctx, name, dst, siz);
-  __resolv_context_put (ctx);
-  return result;
-}
-
-const char *
-res_hostalias (res_state statp, const char *name, char *dst, size_t siz)
-{
-  return context_hostalias_common
-    (__resolv_context_get_override (statp), name, dst, siz);
-}
-
-const char *
-hostalias (const char *name)
-{
-  static char abuf[MAXDNAME];
-  return context_hostalias_common
-    (__resolv_context_get (), name, abuf, sizeof (abuf));
-}
-
 #if SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_2)
 # undef res_query
 # undef res_querydomain

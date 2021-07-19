@@ -152,6 +152,7 @@ libresolv-routines := \
   res_data \
   res_debug \
   res_enable_icmp \
+  res_hostalias \
   res_isourserver \
   res_mkquery \
   res_query \
