@@ -85,6 +85,7 @@ libc {
     __ns_name_skip;
     __ns_name_uncompress;
     __ns_name_unpack;
+    __res_context_hostalias;
     __res_get_nsaddr;
     __res_iclose;
     __resolv_context_get;
@@ -192,7 +193,6 @@ libresolv {
   GLIBC_PRIVATE {
     __ns_get16;
     __ns_get32;
-    __res_context_hostalias;
     __res_context_query;
     __res_context_search;
   }

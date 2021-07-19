@@ -48,6 +48,7 @@ routines := \
   res-close \
   res-name-checking \
   res-state \
+  res_context_hostalias \
   res_get_nsaddr \
   res_hconf \
   res_init \

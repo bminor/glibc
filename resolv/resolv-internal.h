@@ -79,7 +79,7 @@ int __res_context_send (struct resolv_context *, const unsigned char *, int,
 /* Internal function similar to res_hostalias.  */
 const char *__res_context_hostalias (struct resolv_context *,
                                      const char *, char *, size_t);
-libresolv_hidden_proto (__res_context_hostalias);
+libc_hidden_proto (__res_context_hostalias);
 
 /* Add an OPT record to a DNS query.  */
 int __res_nopt (struct resolv_context *, int n0,
