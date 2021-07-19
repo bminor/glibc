@@ -25,9 +25,7 @@ GLIBC_2.16 __putshort F
 GLIBC_2.16 __res_close F
 GLIBC_2.16 __res_hostalias F
 GLIBC_2.16 __res_isourserver F
-GLIBC_2.16 __res_mkquery F
 GLIBC_2.16 __res_nameinquery F
-GLIBC_2.16 __res_nmkquery F
 GLIBC_2.16 __res_nquery F
 GLIBC_2.16 __res_nquerydomain F
 GLIBC_2.16 __res_nsearch F

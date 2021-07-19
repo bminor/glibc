@@ -141,9 +141,9 @@ __res_context_mkquery (struct resolv_context *ctx, int op, const char *dname,
       if ((buflen -= QFIXEDSZ) < 0)
         return -1;
     compose:
-      n = ns_name_compress (dname, cp, buflen,
-                            (const unsigned char **) dnptrs,
-                            (const unsigned char **) lastdnptr);
+      n = __ns_name_compress (dname, cp, buflen,
+                              (const unsigned char **) dnptrs,
+                              (const unsigned char **) lastdnptr);
       if (n < 0)
         return -1;
       cp += n;
@@ -155,9 +155,9 @@ __res_context_mkquery (struct resolv_context *ctx, int op, const char *dname,
         break;
 
       /* Make an additional record for completion domain.  */
-      n = ns_name_compress ((char *)data, cp, buflen,
-                            (const unsigned char **) dnptrs,
-                            (const unsigned char **) lastdnptr);
+      n = __ns_name_compress ((char *)data, cp, buflen,
+                              (const unsigned char **) dnptrs,
+                              (const unsigned char **) lastdnptr);
       if (__glibc_unlikely (n < 0))
         return -1;
       cp += n;
@@ -174,6 +174,7 @@ __res_context_mkquery (struct resolv_context *ctx, int op, const char *dname,
     }
   return cp - buf;
 }
+libc_hidden_def (__res_context_mkquery)
 
 /* Common part of res_nmkquery and res_mkquery.  */
 static int
@@ -203,27 +204,38 @@ context_mkquery_common (struct resolv_context *ctx,
 
    DATALEN and NEWRR_IN are currently ignored.  */
 int
-res_nmkquery (res_state statp, int op, const char *dname,
-              int class, int type,
-              const unsigned char *data, int datalen,
-              const unsigned char *newrr_in,
-              unsigned char *buf, int buflen)
+___res_nmkquery (res_state statp, int op, const char *dname,
+                 int class, int type,
+                 const unsigned char *data, int datalen,
+                 const unsigned char *newrr_in,
+                 unsigned char *buf, int buflen)
 {
   return context_mkquery_common
     (__resolv_context_get_override (statp),
      op, dname, class, type, data, buf, buflen);
 }
+versioned_symbol (libc, ___res_nmkquery, res_nmkquery, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libresolv, ___res_nmkquery, __res_nmkquery, GLIBC_2_2);
+#endif
 
 int
-res_mkquery (int op, const char *dname, int class, int type,
-             const unsigned char *data, int datalen,
-             const unsigned char *newrr_in,
-             unsigned char *buf, int buflen)
+___res_mkquery (int op, const char *dname, int class, int type,
+                const unsigned char *data, int datalen,
+                const unsigned char *newrr_in,
+                unsigned char *buf, int buflen)
 {
   return context_mkquery_common
     (__resolv_context_get_preinit (),
      op, dname, class, type, data, buf, buflen);
 }
+versioned_symbol (libc, ___res_mkquery, res_mkquery, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_2)
+compat_symbol (libresolv, ___res_mkquery, res_mkquery, GLIBC_2_0);
+#endif
+#if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libresolv, ___res_mkquery, __res_mkquery, GLIBC_2_2);
+#endif
 
 /* Create an OPT resource record.  Return the length of the final
    packet, or -1 on error.
@@ -285,8 +297,4 @@ __res_nopt (struct resolv_context *ctx,
 
   return cp - buf;
 }
-
-#if SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_2)
-# undef res_mkquery
-weak_alias (__res_mkquery, res_mkquery);
-#endif
+libc_hidden_def (__res_nopt)

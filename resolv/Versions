@@ -17,12 +17,15 @@ libc {
     herror;
     hstrerror;
     res_init;
+    res_mkquery;
   }
   GLIBC_2.2 {
     __dn_expand;
     __res_init;
+    __res_mkquery;
     __res_nclose;
     __res_ninit;
+    __res_nmkquery;
     __res_nsend;
     __res_state;
     _res_hconf;
@@ -64,6 +67,8 @@ libc {
     res_dnok;
     res_hnok;
     res_mailok;
+    res_mkquery;
+    res_nmkquery;
     res_nsend;
     res_ownok;
     res_send;
@@ -91,9 +96,11 @@ libc {
     __ns_name_uncompress;
     __ns_name_unpack;
     __res_context_hostalias;
+    __res_context_mkquery;
     __res_context_send;
     __res_get_nsaddr;
     __res_iclose;
+    __res_nopt;
     __resolv_context_get;
     __resolv_context_get_override;
     __resolv_context_get_preinit;
@@ -150,7 +157,6 @@ libresolv {
     res_gethostbyaddr;
     res_gethostbyname2;
     res_gethostbyname;
-    res_mkquery;
     res_query;
     res_querydomain;
     res_search;
@@ -159,8 +165,6 @@ libresolv {
   }
   GLIBC_2.2 {
     __res_hostalias;
-    __res_mkquery;
-    __res_nmkquery;
     __res_nquery;
     __res_nquerydomain;
     __res_nsearch;

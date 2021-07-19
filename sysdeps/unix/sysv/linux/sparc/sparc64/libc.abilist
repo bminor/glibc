@@ -21,6 +21,7 @@ GLIBC_2.0 login_tty F
 GLIBC_2.0 logout F
 GLIBC_2.0 logwtmp F
 GLIBC_2.0 openpty F
+GLIBC_2.0 res_mkquery F
 GLIBC_2.1 aio_cancel F
 GLIBC_2.1 aio_cancel64 F
 GLIBC_2.1 aio_error F
@@ -472,8 +473,10 @@ GLIBC_2.2 __register_frame_info F
 GLIBC_2.2 __register_frame_info_table F
 GLIBC_2.2 __register_frame_table F
 GLIBC_2.2 __res_init F
+GLIBC_2.2 __res_mkquery F
 GLIBC_2.2 __res_nclose F
 GLIBC_2.2 __res_ninit F
+GLIBC_2.2 __res_nmkquery F
 GLIBC_2.2 __res_nsend F
 GLIBC_2.2 __res_randomid F
 GLIBC_2.2 __res_state F
@@ -2522,6 +2525,8 @@ GLIBC_2.34 pthread_tryjoin_np F
 GLIBC_2.34 res_dnok F
 GLIBC_2.34 res_hnok F
 GLIBC_2.34 res_mailok F
+GLIBC_2.34 res_mkquery F
+GLIBC_2.34 res_nmkquery F
 GLIBC_2.34 res_nsend F
 GLIBC_2.34 res_ownok F
 GLIBC_2.34 res_send F

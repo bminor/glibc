@@ -55,7 +55,8 @@ struct resolv_context;
    Also used by __res_context_query.  */
 int __res_context_mkquery (struct resolv_context *, int op, const char *dname,
                            int class, int type, const unsigned char *data,
-                           unsigned char *buf, int buflen) attribute_hidden;
+                           unsigned char *buf, int buflen);
+libc_hidden_proto (__res_context_mkquery)
 
 /* Main resolver query function for use within glibc.  */
 int __res_context_search (struct resolv_context *, const char *, int, int,
@@ -84,7 +85,8 @@ libc_hidden_proto (__res_context_hostalias);
 
 /* Add an OPT record to a DNS query.  */
 int __res_nopt (struct resolv_context *, int n0,
-                unsigned char *buf, int buflen, int anslen) attribute_hidden;
+                unsigned char *buf, int buflen, int anslen);
+libc_hidden_proto (__res_nopt)
 
 /* Convert from presentation format (which usually means ASCII
    printable) to network format (which is usually some kind of binary

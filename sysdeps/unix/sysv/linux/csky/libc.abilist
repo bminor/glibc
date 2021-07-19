@@ -377,8 +377,10 @@ GLIBC_2.29 __res_dnok F
 GLIBC_2.29 __res_hnok F
 GLIBC_2.29 __res_init F
 GLIBC_2.29 __res_mailok F
+GLIBC_2.29 __res_mkquery F
 GLIBC_2.29 __res_nclose F
 GLIBC_2.29 __res_ninit F
+GLIBC_2.29 __res_nmkquery F
 GLIBC_2.29 __res_nsend F
 GLIBC_2.29 __res_ownok F
 GLIBC_2.29 __res_randomid F
@@ -2593,6 +2595,8 @@ GLIBC_2.34 pthread_tryjoin_np F
 GLIBC_2.34 res_dnok F
 GLIBC_2.34 res_hnok F
 GLIBC_2.34 res_mailok F
+GLIBC_2.34 res_mkquery F
+GLIBC_2.34 res_nmkquery F
 GLIBC_2.34 res_nsend F
 GLIBC_2.34 res_ownok F
 GLIBC_2.34 res_send F

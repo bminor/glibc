@@ -54,6 +54,7 @@ routines := \
   res_hconf \
   res_init \
   res_libc \
+  res_mkquery \
   res_nameinquery \
   res_queriesmatch \
   res_randomid \
@@ -155,7 +156,6 @@ libresolv-routines := \
   res_debug \
   res_hostalias \
   res_isourserver \
-  res_mkquery \
   res_query \
   resolv-deprecated \
   # libresolv-routines
