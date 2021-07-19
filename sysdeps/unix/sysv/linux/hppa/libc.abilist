@@ -2430,6 +2430,7 @@ GLIBC_2.34 mtx_lock F
 GLIBC_2.34 mtx_timedlock F
 GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
+GLIBC_2.34 ns_name_compress F
 GLIBC_2.34 ns_name_ntop F
 GLIBC_2.34 ns_name_pack F
 GLIBC_2.34 ns_name_pton F
@@ -2701,6 +2702,7 @@ GLIBC_2.8 timerfd_settime F
 GLIBC_2.9 dup3 F
 GLIBC_2.9 epoll_create1 F
 GLIBC_2.9 inotify_init1 F
+GLIBC_2.9 ns_name_compress F
 GLIBC_2.9 ns_name_ntop F
 GLIBC_2.9 ns_name_pack F
 GLIBC_2.9 ns_name_pton F

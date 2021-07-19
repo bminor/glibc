@@ -25,6 +25,7 @@ libc {
 %endif
   }
   GLIBC_2.9 {
+    ns_name_compress;
     ns_name_ntop;
     ns_name_pack;
     ns_name_pton;
@@ -39,6 +40,7 @@ libc {
     gai_suspend;
     getaddrinfo_a;
 %endif
+    ns_name_compress;
     ns_name_ntop;
     ns_name_pack;
     ns_name_pton;
@@ -53,6 +55,7 @@ libc {
     __h_errno;
     __inet_aton_exact;
     __inet_pton_length;
+    __ns_name_compress;
     __ns_name_ntop;
     __ns_name_pack;
     __ns_name_pton;
@@ -155,7 +158,6 @@ libresolv {
     ns_initparse;
     ns_makecanon;
     ns_msg_getflag;
-    ns_name_compress;
     ns_name_ntol;
     ns_name_pton;
     ns_name_rollback;

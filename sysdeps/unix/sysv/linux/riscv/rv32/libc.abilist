@@ -1340,6 +1340,7 @@ GLIBC_2.33 nl_langinfo F
 GLIBC_2.33 nl_langinfo_l F
 GLIBC_2.33 nrand48 F
 GLIBC_2.33 nrand48_r F
+GLIBC_2.33 ns_name_compress F
 GLIBC_2.33 ns_name_ntop F
 GLIBC_2.33 ns_name_pack F
 GLIBC_2.33 ns_name_pton F
@@ -2219,6 +2220,7 @@ GLIBC_2.34 mtx_lock F
 GLIBC_2.34 mtx_timedlock F
 GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
+GLIBC_2.34 ns_name_compress F
 GLIBC_2.34 ns_name_ntop F
 GLIBC_2.34 ns_name_pack F
 GLIBC_2.34 ns_name_pton F

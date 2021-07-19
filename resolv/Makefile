@@ -32,6 +32,7 @@ routines := \
   inet_addr \
   inet_ntop \
   inet_pton \
+  ns_name_compress \
   ns_name_ntop \
   ns_name_pack \
   ns_name_pton \

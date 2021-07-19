@@ -2241,6 +2241,7 @@ GLIBC_2.34 login F
 GLIBC_2.34 login_tty F
 GLIBC_2.34 logout F
 GLIBC_2.34 logwtmp F
+GLIBC_2.34 ns_name_compress F
 GLIBC_2.34 ns_name_ntop F
 GLIBC_2.34 ns_name_pack F
 GLIBC_2.34 ns_name_pton F
@@ -2368,6 +2369,7 @@ GLIBC_2.8 __vasprintf_chk F
 GLIBC_2.8 __vdprintf_chk F
 GLIBC_2.8 qsort_r F
 GLIBC_2.9 dup3 F
+GLIBC_2.9 ns_name_compress F
 GLIBC_2.9 ns_name_ntop F
 GLIBC_2.9 ns_name_pack F
 GLIBC_2.9 ns_name_pton F

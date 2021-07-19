@@ -90,33 +90,6 @@ ns_name_ntol(const u_char *src, u_char *dst, size_t dstsiz)
 }
 
 /*%
- *	Compress a domain name into wire format, using compression pointers.
- *
- * return:
- *\li	Number of bytes consumed in `dst' or -1 (with errno set).
- *
- * notes:
- *\li	'dnptrs' is an array of pointers to previous compressed names.
- *\li	dnptrs[0] is a pointer to the beginning of the message.
- *\li	The list ends with NULL.  'lastdnptr' is a pointer to the end of the
- *	array pointed to by 'dnptrs'. Side effect is to update the list of
- *	pointers for labels inserted into the message as we compress the name.
- *\li	If 'dnptr' is NULL, we don't try to compress names. If 'lastdnptr'
- *	is NULL, we don't update the list.
- */
-int
-ns_name_compress(const char *src, u_char *dst, size_t dstsiz,
-		 const u_char **dnptrs, const u_char **lastdnptr)
-{
-	u_char tmp[NS_MAXCDNAME];
-
-	if (ns_name_pton(src, tmp, sizeof tmp) == -1)
-		return (-1);
-	return (ns_name_pack(tmp, dst, dstsiz, dnptrs, lastdnptr));
-}
-libresolv_hidden_def (ns_name_compress)
-
-/*%
  * Reset dnptrs so that there are no active references to pointers at or
  * after src.
  */

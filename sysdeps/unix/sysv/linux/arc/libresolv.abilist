@@ -58,7 +58,6 @@ GLIBC_2.32 ns_get32 F
 GLIBC_2.32 ns_initparse F
 GLIBC_2.32 ns_makecanon F
 GLIBC_2.32 ns_msg_getflag F
-GLIBC_2.32 ns_name_compress F
 GLIBC_2.32 ns_name_ntol F
 GLIBC_2.32 ns_name_rollback F
 GLIBC_2.32 ns_parse_ttl F
