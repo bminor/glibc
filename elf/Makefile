@@ -115,6 +115,7 @@ elide-routines.os = \
 # interpreter and operating independent of libc.
 rtld-routines = \
   $(all-dl-routines) \
+  dl-audit \
   dl-compat \
   dl-conflict \
   dl-diagnostics \
