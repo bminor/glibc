@@ -74,7 +74,8 @@ libresolv_hidden_proto (__res_context_query)
 int __res_context_send (struct resolv_context *, const unsigned char *, int,
                         const unsigned char *, int, unsigned char *,
                         int, unsigned char **, unsigned char **,
-                        int *, int *, int *) attribute_hidden;
+                        int *, int *, int *);
+libc_hidden_proto (__res_context_send)
 
 /* Internal function similar to res_hostalias.  */
 const char *__res_context_hostalias (struct resolv_context *,

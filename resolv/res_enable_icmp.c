@@ -27,9 +27,9 @@ __res_enable_icmp (int family, int fd)
   switch (family)
     {
     case AF_INET:
-      return setsockopt (fd, SOL_IP, IP_RECVERR, &one, sizeof (one));
+      return __setsockopt (fd, SOL_IP, IP_RECVERR, &one, sizeof (one));
     case AF_INET6:
-      return setsockopt (fd, SOL_IPV6, IPV6_RECVERR, &one, sizeof (one));
+      return __setsockopt (fd, SOL_IPV6, IPV6_RECVERR, &one, sizeof (one));
     default:
       __set_errno (EAFNOSUPPORT);
       return -1;

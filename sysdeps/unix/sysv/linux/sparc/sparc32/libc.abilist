@@ -215,6 +215,7 @@ GLIBC_2.0 __res_hnok F
 GLIBC_2.0 __res_mailok F
 GLIBC_2.0 __res_ownok F
 GLIBC_2.0 __res_randomid F
+GLIBC_2.0 __res_send F
 GLIBC_2.0 __sbrk F
 GLIBC_2.0 __sched_get_priority_max F
 GLIBC_2.0 __sched_get_priority_min F
@@ -1940,6 +1941,7 @@ GLIBC_2.2 __pwrite64 F
 GLIBC_2.2 __res_init F
 GLIBC_2.2 __res_nclose F
 GLIBC_2.2 __res_ninit F
+GLIBC_2.2 __res_nsend F
 GLIBC_2.2 __res_state F
 GLIBC_2.2 __setmntent F
 GLIBC_2.2 __statfs F
@@ -2685,7 +2687,9 @@ GLIBC_2.34 pthread_tryjoin_np F
 GLIBC_2.34 res_dnok F
 GLIBC_2.34 res_hnok F
 GLIBC_2.34 res_mailok F
+GLIBC_2.34 res_nsend F
 GLIBC_2.34 res_ownok F
+GLIBC_2.34 res_send F
 GLIBC_2.34 sem_clockwait F
 GLIBC_2.34 sem_close F
 GLIBC_2.34 sem_destroy F

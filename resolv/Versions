@@ -6,8 +6,10 @@ libc {
     __res_dnok;
     __res_hnok;
     __res_mailok;
+    __res_nsend;
     __res_ownok;
     __res_randomid;
+    __res_send;
     _res;
     dn_expand;
     h_errlist;
@@ -21,6 +23,7 @@ libc {
     __res_init;
     __res_nclose;
     __res_ninit;
+    __res_nsend;
     __res_state;
     _res_hconf;
   }
@@ -61,7 +64,9 @@ libc {
     res_dnok;
     res_hnok;
     res_mailok;
+    res_nsend;
     res_ownok;
+    res_send;
   }
   GLIBC_PRIVATE {
 %if !PTHREAD_IN_LIBC
@@ -86,6 +91,7 @@ libc {
     __ns_name_uncompress;
     __ns_name_unpack;
     __res_context_hostalias;
+    __res_context_send;
     __res_get_nsaddr;
     __res_iclose;
     __resolv_context_get;
@@ -126,7 +132,6 @@ libresolv {
     __res_isourserver;
     __res_nameinquery;
     __res_queriesmatch;
-    __res_send;
     __sym_ntop;
     __sym_ntos;
     __sym_ston;
@@ -159,7 +164,6 @@ libresolv {
     __res_nquery;
     __res_nquerydomain;
     __res_nsearch;
-    __res_nsend;
     __res_query;
     __res_querydomain;
     __res_search;

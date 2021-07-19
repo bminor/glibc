@@ -425,6 +425,7 @@ __res_context_send (struct resolv_context *ctx,
 		__set_errno (terrno);
 	return (-1);
 }
+libc_hidden_def (__res_context_send)
 
 /* Common part of res_nsend and res_send.  */
 static int
@@ -444,19 +445,28 @@ context_send_common (struct resolv_context *ctx,
 }
 
 int
-res_nsend (res_state statp, const unsigned char *buf, int buflen,
-	   unsigned char *ans, int anssiz)
+___res_nsend (res_state statp, const unsigned char *buf, int buflen,
+	      unsigned char *ans, int anssiz)
 {
   return context_send_common
     (__resolv_context_get_override (statp), buf, buflen, ans, anssiz);
 }
+versioned_symbol (libc, ___res_nsend, res_nsend, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_2, GLIBC_2_34)
+compat_symbol (libresolv, ___res_nsend, __res_nsend, GLIBC_2_2);
+#endif
 
 int
-res_send (const unsigned char *buf, int buflen, unsigned char *ans, int anssiz)
+___res_send (const unsigned char *buf, int buflen, unsigned char *ans,
+	     int anssiz)
 {
   return context_send_common
     (__resolv_context_get (), buf, buflen, ans, anssiz);
 }
+versioned_symbol (libc, ___res_send, res_send, GLIBC_2_34);
+#if OTHER_SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libresolv, ___res_send, __res_send, GLIBC_2_0);
+#endif
 
 /* Private */
 
@@ -582,9 +592,9 @@ send_vc(res_state statp,
 		struct sockaddr_in6 peer;
 		socklen_t size = sizeof peer;
 
-		if (getpeername(statp->_vcsock,
-				(struct sockaddr *)&peer, &size) < 0 ||
-		    !sock_eq(&peer, (struct sockaddr_in6 *) nsap)) {
+		if (__getpeername (statp->_vcsock,
+				   (struct sockaddr *) &peer, &size) < 0
+		    || !sock_eq (&peer, (struct sockaddr_in6 *) nsap)) {
 			__res_iclose(statp, false);
 			statp->_flags &= ~RES_F_VC;
 		}
@@ -594,7 +604,7 @@ send_vc(res_state statp,
 		if (statp->_vcsock >= 0)
 		  __res_iclose(statp, false);
 
-		statp->_vcsock = socket
+		statp->_vcsock = __socket
 		  (nsap->sa_family, SOCK_STREAM | SOCK_CLOEXEC, 0);
 		if (statp->_vcsock < 0) {
 			*terrno = errno;
@@ -603,10 +613,10 @@ send_vc(res_state statp,
 			return (-1);
 		}
 		__set_errno (0);
-		if (connect(statp->_vcsock, nsap,
-			    nsap->sa_family == AF_INET
-			    ? sizeof (struct sockaddr_in)
-			    : sizeof (struct sockaddr_in6)) < 0) {
+		if (__connect (statp->_vcsock, nsap,
+			       nsap->sa_family == AF_INET
+			       ? sizeof (struct sockaddr_in)
+			       : sizeof (struct sockaddr_in6)) < 0) {
 			*terrno = errno;
 			return close_and_return_error (statp, resplen2);
 		}
@@ -628,7 +638,8 @@ send_vc(res_state statp,
 		niov = 4;
 		explen += INT16SZ + buflen2;
 	}
-	if (TEMP_FAILURE_RETRY (writev(statp->_vcsock, iov, niov)) != explen) {
+	if (TEMP_FAILURE_RETRY (__writev (statp->_vcsock, iov, niov))
+	    != explen) {
 		*terrno = errno;
 		return close_and_return_error (statp, resplen2);
 	}
@@ -789,14 +800,14 @@ reopen (res_state statp, int *terrno, int ns)
 
 		/* only try IPv6 if IPv6 NS and if not failed before */
 		if (nsap->sa_family == AF_INET6 && !statp->ipv6_unavail) {
-			EXT(statp).nssocks[ns] = socket
+			EXT (statp).nssocks[ns] = __socket
 			  (PF_INET6,
 			   SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC, 0);
 			if (EXT(statp).nssocks[ns] < 0)
 			    statp->ipv6_unavail = errno == EAFNOSUPPORT;
 			slen = sizeof (struct sockaddr_in6);
 		} else if (nsap->sa_family == AF_INET) {
-			EXT(statp).nssocks[ns] = socket
+			EXT (statp).nssocks[ns] = __socket
 			  (PF_INET,
 			   SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC, 0);
 			slen = sizeof (struct sockaddr_in);
@@ -837,7 +848,7 @@ reopen (res_state statp, int *terrno, int ns)
 		   the call to connect with slen.  */
 		DIAG_PUSH_NEEDS_COMMENT;
 		DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
-		if (connect(EXT(statp).nssocks[ns], nsap, slen) < 0) {
+		if (__connect (EXT (statp).nssocks[ns], nsap, slen) < 0) {
 		DIAG_POP_NEEDS_COMMENT;
 			__res_iclose(statp, false);
 			return (0);
@@ -1090,9 +1101,9 @@ send_dg(res_state statp,
 		  try_send:
 #endif
 		    if (nwritten != 0)
-		      sr = send (pfd[0].fd, buf2, buflen2, MSG_NOSIGNAL);
+		      sr = __send (pfd[0].fd, buf2, buflen2, MSG_NOSIGNAL);
 		    else
-		      sr = send (pfd[0].fd, buf, buflen, MSG_NOSIGNAL);
+		      sr = __send (pfd[0].fd, buf, buflen, MSG_NOSIGNAL);
 
 		    if (sr != (nwritten != 0 ? buflen2 : buflen)) {
 		      if (errno == EINTR || errno == EAGAIN)
@@ -1133,7 +1144,7 @@ send_dg(res_state statp,
 		    && (thisansp != NULL && thisansp != ansp)
 #ifdef FIONREAD
 		    /* Is the size too small?  */
-		    && (ioctl (pfd[0].fd, FIONREAD, thisresplenp) < 0
+		    && (__ioctl (pfd[0].fd, FIONREAD, thisresplenp) < 0
 			|| *thisanssizp < *thisresplenp)
 #endif
                     ) {
@@ -1160,9 +1171,10 @@ send_dg(res_state statp,
 		HEADER *anhp = (HEADER *) *thisansp;
 		socklen_t fromlen = sizeof(struct sockaddr_in6);
 		assert (sizeof(from) <= fromlen);
-		*thisresplenp = recvfrom(pfd[0].fd, (char*)*thisansp,
-					 *thisanssizp, 0,
-					(struct sockaddr *)&from, &fromlen);
+		*thisresplenp = __recvfrom (pfd[0].fd, (char *) *thisansp,
+					    *thisanssizp, 0,
+					    (struct sockaddr *) &from,
+					    &fromlen);
 		if (__glibc_unlikely (*thisresplenp <= 0))       {
 			if (errno == EINTR || errno == EAGAIN) {
 				need_recompute = 1;

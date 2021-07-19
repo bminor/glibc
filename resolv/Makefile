@@ -49,6 +49,7 @@ routines := \
   res-name-checking \
   res-state \
   res_context_hostalias \
+  res_enable_icmp \
   res_get_nsaddr \
   res_hconf \
   res_init \
@@ -56,6 +57,7 @@ routines := \
   res_nameinquery \
   res_queriesmatch \
   res_randomid \
+  res_send \
   resolv_conf \
   resolv_context \
   # routines
@@ -151,12 +153,10 @@ libresolv-routines := \
   res-putget \
   res_data \
   res_debug \
-  res_enable_icmp \
   res_hostalias \
   res_isourserver \
   res_mkquery \
   res_query \
-  res_send \
   resolv-deprecated \
   # libresolv-routines
 

@@ -172,7 +172,6 @@ __END_DECLS
 #define res_query		__res_query
 #define res_querydomain		__res_querydomain
 #define res_search		__res_search
-#define res_send		__res_send
 
 #ifdef _LIBC
 # define __RESOLV_DEPRECATED
@@ -233,7 +232,6 @@ __END_DECLS
 #define res_nquery		__res_nquery
 #define res_nquerydomain	__res_nquerydomain
 #define res_nsearch		__res_nsearch
-#define res_nsend		__res_nsend
 #define res_queriesmatch	__res_queriesmatch
 #define res_randomid		__res_randomid
 #define sym_ntop		__sym_ntop

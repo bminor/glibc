@@ -8,6 +8,7 @@ GLIBC_2.0 __res_dnok F
 GLIBC_2.0 __res_hnok F
 GLIBC_2.0 __res_mailok F
 GLIBC_2.0 __res_ownok F
+GLIBC_2.0 __res_send F
 GLIBC_2.0 dladdr F
 GLIBC_2.0 dlclose F
 GLIBC_2.0 dlerror F
@@ -432,6 +433,7 @@ GLIBC_2.2 __register_frame_info F
 GLIBC_2.2 __res_init F
 GLIBC_2.2 __res_nclose F
 GLIBC_2.2 __res_ninit F
+GLIBC_2.2 __res_nsend F
 GLIBC_2.2 __res_randomid F
 GLIBC_2.2 __res_state F
 GLIBC_2.2 __sbrk F
@@ -2545,7 +2547,9 @@ GLIBC_2.34 pthread_tryjoin_np F
 GLIBC_2.34 res_dnok F
 GLIBC_2.34 res_hnok F
 GLIBC_2.34 res_mailok F
+GLIBC_2.34 res_nsend F
 GLIBC_2.34 res_ownok F
+GLIBC_2.34 res_send F
 GLIBC_2.34 sem_clockwait F
 GLIBC_2.34 sem_close F
 GLIBC_2.34 sem_destroy F
