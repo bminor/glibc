@@ -26,11 +26,13 @@
 #include <dlfcn.h>
 #include <gnu/lib-names.h>
 #include <libc-lock.h>
+#include <nss_dns.h>
+#include <nss_files.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <nss_files.h>
+#include <sysdep.h>
 
 /* Suffix after .so of NSS service modules.  This is a bit of magic,
    but we assume LIBNSS_FILES_SO looks like "libnss_files.so.2" and we
@@ -111,6 +113,39 @@ static const function_name nss_function_name_array[] =
 #include "function.def"
   };
 
+/* Loads a built-in module, binding the symbols using the supplied
+   callback function.  Always returns true.  */
+static bool
+module_load_builtin (struct nss_module *module,
+		     void (*bind) (nss_module_functions_untyped))
+{
+  /* Initialize the function pointers, following the double-checked
+     locking idiom.  */
+  __libc_lock_lock (nss_module_list_lock);
+  switch ((enum nss_module_state) atomic_load_acquire (&module->state))
+    {
+    case nss_module_uninitialized:
+    case nss_module_failed:
+      bind (module->functions.untyped);
+
+#ifdef PTR_MANGLE
+      for (int i = 0; i < nss_module_functions_count; ++i)
+	PTR_MANGLE (module->functions.untyped[i]);
+#endif
+
+      module->handle = NULL;
+      /* Synchronizes with unlocked __nss_module_load atomic_load_acquire.  */
+      atomic_store_release (&module->state, nss_module_loaded);
+      break;
+    case nss_module_loaded:
+      /* Nothing to clean up.  */
+      break;
+    }
+  __libc_lock_unlock (nss_module_list_lock);
+  return true;
+}
+
+/* Loads the built-in nss_files module.  */
 static bool
 module_load_nss_files (struct nss_module *module)
 {
@@ -124,25 +159,14 @@ module_load_nss_files (struct nss_module *module)
       _nss_files_init (cb);
     }
 #endif
+  return module_load_builtin (module, __nss_files_functions);
+}
 
-  /* Initialize the function pointers, following the double-checked
-     locking idiom.  */
-  __libc_lock_lock (nss_module_list_lock);
-  switch ((enum nss_module_state) atomic_load_acquire (&module->state))
-    {
-    case nss_module_uninitialized:
-    case nss_module_failed:
-      __nss_files_functions (module->functions.untyped);
-      module->handle = NULL;
-      /* Synchronizes with unlocked __nss_module_load atomic_load_acquire.  */
-      atomic_store_release (&module->state, nss_module_loaded);
-      break;
-    case nss_module_loaded:
-      /* Nothing to clean up.  */
-      break;
-    }
-  __libc_lock_unlock (nss_module_list_lock);
-  return true;
+/* Loads the built-in nss_dns module.  */
+static bool
+module_load_nss_dns (struct nss_module *module)
+{
+  return module_load_builtin (module, __nss_dns_functions);
 }
 
 /* Internal implementation of __nss_module_load.  */
@@ -151,6 +175,8 @@ module_load (struct nss_module *module)
 {
   if (strcmp (module->name, "files") == 0)
     return module_load_nss_files (module);
+  if (strcmp (module->name, "dns") == 0)
+    return module_load_nss_dns (module);
 
   void *handle;
   {
@@ -398,7 +424,9 @@ __nss_module_freeres (void)
   struct nss_module *current = nss_module_list;
   while (current != NULL)
     {
-      if (current->state == nss_module_loaded && current->handle != NULL)
+      /* Ignore built-in modules (which have a NULL handle).  */
+      if (current->state == nss_module_loaded
+	  && current->handle != NULL)
         __libc_dlclose (current->handle);
 
       struct nss_module *next = current->next;

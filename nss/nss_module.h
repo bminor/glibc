@@ -33,10 +33,16 @@ struct nss_module_functions
 #include "function.def"
 };
 
+/* Number of elements of the nss_module_functions_untyped array.  */
+enum
+  {
+    nss_module_functions_count = (sizeof (struct nss_module_functions)
+                                  / sizeof (void *))
+  };
+
 /* Untyped version of struct nss_module_functions, for consistent
    processing purposes.  */
-typedef void *nss_module_functions_untyped[sizeof (struct nss_module_functions)
-                                           / sizeof (void *)];
+typedef void *nss_module_functions_untyped[nss_module_functions_count];
 
 /* Locate the nss_files functions, as if by dlopen/dlsym.  */
 void __nss_files_functions (nss_module_functions_untyped pointers)

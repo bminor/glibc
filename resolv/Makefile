@@ -48,6 +48,7 @@ routines := \
   ns_name_unpack \
   ns_samename \
   nsap_addr \
+  nss_dns_functions \
   res-close \
   res-name-checking \
   res-state \

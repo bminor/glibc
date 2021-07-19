@@ -24,13 +24,16 @@
 NSS_DECLARE_MODULE_FUNCTIONS (dns)
 
 libc_hidden_proto (_nss_dns_getcanonname_r)
-libc_hidden_proto (_nss_dns_gethostbyname3_r)
-libc_hidden_proto (_nss_dns_gethostbyname2_r)
-libc_hidden_proto (_nss_dns_gethostbyname_r)
-libc_hidden_proto (_nss_dns_gethostbyname4_r)
 libc_hidden_proto (_nss_dns_gethostbyaddr2_r)
 libc_hidden_proto (_nss_dns_gethostbyaddr_r)
-libc_hidden_proto (_nss_dns_getnetbyname_r)
+libc_hidden_proto (_nss_dns_gethostbyname2_r)
+libc_hidden_proto (_nss_dns_gethostbyname3_r)
+libc_hidden_proto (_nss_dns_gethostbyname4_r)
+libc_hidden_proto (_nss_dns_gethostbyname_r)
 libc_hidden_proto (_nss_dns_getnetbyaddr_r)
+libc_hidden_proto (_nss_dns_getnetbyname_r)
+
+void __nss_dns_functions (nss_module_functions_untyped pointers)
+  attribute_hidden;
 
 #endif

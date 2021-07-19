@@ -1,4 +1,4 @@
-/* Direct access for nss_files functions for NSS module loading.
+/* Direct access for nss_dns functions for NSS module loading.
    Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,22 +16,25 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <nss_module.h>
-#include <nss_files.h>
+#include <nss/nss_module.h>
+#include <nss_dns.h>
+#include <string.h>
 
 void
-__nss_files_functions (nss_module_functions_untyped pointers)
+__nss_dns_functions (nss_module_functions_untyped pointers)
 {
-  void **fptr = pointers;
+  struct nss_module_functions typed =
+    {
+      .getcanonname_r = &_nss_dns_getcanonname_r,
+      .gethostbyname3_r = &_nss_dns_gethostbyname3_r,
+      .gethostbyname2_r = &_nss_dns_gethostbyname2_r,
+      .gethostbyname_r = &_nss_dns_gethostbyname_r,
+      .gethostbyname4_r = &_nss_dns_gethostbyname4_r,
+      .gethostbyaddr2_r = &_nss_dns_gethostbyaddr2_r,
+      .gethostbyaddr_r = &_nss_dns_gethostbyaddr_r,
+      .getnetbyname_r = &_nss_dns_getnetbyname_r,
+      .getnetbyaddr_r = &_nss_dns_getnetbyaddr_r,
+    };
 
-  /* Functions which are not implemented.  */
-#define _nss_files_getcanonname_r NULL
-#define _nss_files_gethostbyaddr2_r NULL
-#define _nss_files_getpublickey NULL
-#define _nss_files_getsecretkey NULL
-#define _nss_files_netname2user NULL
-
-#undef DEFINE_NSS_FUNCTION
-#define DEFINE_NSS_FUNCTION(x) *fptr++ = _nss_files_##x;
-#include "function.def"
+  memcpy (pointers, &typed, sizeof (nss_module_functions_untyped));
 }
