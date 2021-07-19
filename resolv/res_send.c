@@ -194,57 +194,6 @@ static int		sock_eq(struct sockaddr_in6 *, struct sockaddr_in6 *);
 /* Public. */
 
 /* int
- * res_isourserver(ina)
- *	looks up "ina" in _res.ns_addr_list[]
- * returns:
- *	0  : not found
- *	>0 : found
- * author:
- *	paul vixie, 29may94
- */
-int
-res_ourserver_p(const res_state statp, const struct sockaddr_in6 *inp)
-{
-	int ns;
-
-	if (inp->sin6_family == AF_INET) {
-	    struct sockaddr_in *in4p = (struct sockaddr_in *) inp;
-	    in_port_t port = in4p->sin_port;
-	    in_addr_t addr = in4p->sin_addr.s_addr;
-
-	    for (ns = 0;  ns < statp->nscount;  ns++) {
-		const struct sockaddr_in *srv =
-		    (struct sockaddr_in *) __res_get_nsaddr (statp, ns);
-
-		if ((srv->sin_family == AF_INET) &&
-		    (srv->sin_port == port) &&
-		    (srv->sin_addr.s_addr == INADDR_ANY ||
-		     srv->sin_addr.s_addr == addr))
-		    return (1);
-	    }
-	} else if (inp->sin6_family == AF_INET6) {
-	    for (ns = 0;  ns < statp->nscount;  ns++) {
-		const struct sockaddr_in6 *srv
-		  = (struct sockaddr_in6 *) __res_get_nsaddr (statp, ns);
-		if ((srv->sin6_family == AF_INET6) &&
-		    (srv->sin6_port == inp->sin6_port) &&
-		    !(memcmp(&srv->sin6_addr, &in6addr_any,
-			     sizeof (struct in6_addr)) &&
-		      memcmp(&srv->sin6_addr, &inp->sin6_addr,
-			     sizeof (struct in6_addr))))
-		    return (1);
-	    }
-	}
-	return (0);
-}
-
-int
-res_isourserver (const struct sockaddr_in *inp)
-{
-  return res_ourserver_p (&_res, (const struct sockaddr_in6 *) inp);
-}
-
-/* int
  * res_nameinquery(name, type, class, buf, eom)
  *	look for (name,type,class) in the query section of packet (buf,eom)
  * requires:
