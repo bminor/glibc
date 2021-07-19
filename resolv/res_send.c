@@ -180,7 +180,6 @@ evNowTime(struct timespec *res) {
 
 /* Forward. */
 
-static struct sockaddr *get_nsaddr (res_state, unsigned int);
 static int		send_vc(res_state, const u_char *, int,
 				const u_char *, int,
 				u_char **, int *, int *, int, u_char **,
@@ -215,7 +214,7 @@ res_ourserver_p(const res_state statp, const struct sockaddr_in6 *inp)
 
 	    for (ns = 0;  ns < statp->nscount;  ns++) {
 		const struct sockaddr_in *srv =
-		    (struct sockaddr_in *) get_nsaddr (statp, ns);
+		    (struct sockaddr_in *) __res_get_nsaddr (statp, ns);
 
 		if ((srv->sin_family == AF_INET) &&
 		    (srv->sin_port == port) &&
@@ -226,7 +225,7 @@ res_ourserver_p(const res_state statp, const struct sockaddr_in6 *inp)
 	} else if (inp->sin6_family == AF_INET6) {
 	    for (ns = 0;  ns < statp->nscount;  ns++) {
 		const struct sockaddr_in6 *srv
-		  = (struct sockaddr_in6 *) get_nsaddr (statp, ns);
+		  = (struct sockaddr_in6 *) __res_get_nsaddr (statp, ns);
 		if ((srv->sin6_family == AF_INET6) &&
 		    (srv->sin6_port == inp->sin6_port) &&
 		    !(memcmp(&srv->sin6_addr, &in6addr_any,
@@ -608,22 +607,6 @@ res_send (const unsigned char *buf, int buflen, unsigned char *ans, int anssiz)
 
 /* Private */
 
-static struct sockaddr *
-get_nsaddr (res_state statp, unsigned int n)
-{
-  assert (n < statp->nscount);
-
-  if (statp->nsaddr_list[n].sin_family == 0 && EXT(statp).nsaddrs[n] != NULL)
-    /* EXT(statp).nsaddrs[n] holds an address that is larger than
-       struct sockaddr, and user code did not update
-       statp->nsaddr_list[n].  */
-    return (struct sockaddr *) EXT(statp).nsaddrs[n];
-  else
-    /* User code updated statp->nsaddr_list[n], or statp->nsaddr_list[n]
-       has the same content as EXT(statp).nsaddrs[n].  */
-    return (struct sockaddr *) (void *) &statp->nsaddr_list[n];
-}
-
 /* Close the resolver structure, assign zero to *RESPLEN2 if RESPLEN2
    is not NULL, and return zero.  */
 static int
@@ -717,7 +700,7 @@ send_vc(res_state statp,
 	const HEADER *hp = (HEADER *) buf;
 	const HEADER *hp2 = (HEADER *) buf2;
 	HEADER *anhp = (HEADER *) *ansp;
-	struct sockaddr *nsap = get_nsaddr (statp, ns);
+	struct sockaddr *nsap = __res_get_nsaddr (statp, ns);
 	int truncating, connreset, n;
 	/* On some architectures compiler might emit a warning indicating
 	   'resplen' may be used uninitialized.  However if buf2 == NULL
@@ -948,7 +931,7 @@ static int
 reopen (res_state statp, int *terrno, int ns)
 {
 	if (EXT(statp).nssocks[ns] == -1) {
-		struct sockaddr *nsap = get_nsaddr (statp, ns);
+		struct sockaddr *nsap = __res_get_nsaddr (statp, ns);
 		socklen_t slen;
 
 		/* only try IPv6 if IPv6 NS and if not failed before */

@@ -103,4 +103,10 @@ void __res_thread_freeres (void) attribute_hidden;
    success, -1 on failure.  */
 int __res_enable_icmp (int family, int fd) attribute_hidden;
 
+
+/* Returns the name server address for the indicated index.  */
+struct sockaddr *__res_get_nsaddr (res_state statp, unsigned int n);
+libc_hidden_proto (__res_get_nsaddr)
+
+
 #endif  /* _RESOLV_INTERNAL_H */

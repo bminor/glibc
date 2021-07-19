@@ -46,6 +46,7 @@ routines := \
   res-close \
   res-name-checking \
   res-state \
+  res_get_nsaddr \
   res_hconf \
   res_init \
   res_libc \

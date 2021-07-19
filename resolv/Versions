@@ -81,6 +81,7 @@ libc {
     __ns_name_skip;
     __ns_name_uncompress;
     __ns_name_unpack;
+    __res_get_nsaddr;
     __res_iclose;
     __resolv_context_get;
     __resolv_context_get_override;
