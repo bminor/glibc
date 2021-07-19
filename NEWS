@@ -93,6 +93,20 @@ Deprecated and removed features, and other changes affecting compatibility:
 * The function pthread_yield has been deprecated; programs should use
   the equivalent standard function sched_yield instead.
 
+* The function inet_neta declared in <arpa/inet.h> has been deprecated.
+
+* Various rarely-used functions declared in <resolv.h> and
+  <arpa/nameser.h> have been deprecated.  Applications are encouraged to
+  use dedicated DNS processing libraries if applicable.  For <resolv.h>,
+  this affects the functions dn_count_labels, fp_nquery, fp_query,
+  fp_resstat, hostalias, loc_aton, loc_ntoa, p_cdname, p_cdnname,
+  p_class, p_fqname, p_fqnname, p_option, p_query, p_rcode, p_time,
+  p_type, putlong, putshort, res_hostalias, res_isourserver,
+  res_nameinquery, res_queriesmatch, res_randomid, sym_ntop, sym_ntos,
+  sym_ston.  For <arpa/nameser.h>, the functions ns_datetosecs,
+  ns_format_ttl, ns_makecanon, ns_parse_ttl, ns_samedomain, ns_samename,
+  ns_sprintrr, ns_sprintrrf, ns_subdomain have been deprecated.
+
 * The pthread cancellation handler is now installed with SA_RESTART and
   pthread_cancel will always send the internal SIGCANCEL on a cancellation
   request.  It should not be visible to application since the cancellation

@@ -174,14 +174,27 @@ __END_DECLS
 #define res_search		__res_search
 #define res_send		__res_send
 
+#ifdef _LIBC
+# define __RESOLV_DEPRECATED
+# define __RESOLV_DEPRECATED_MSG(msg)
+#else
+# define __RESOLV_DEPRECATED __attribute_deprecated__
+# define __RESOLV_DEPRECATED_MSG(msg) __attribute_deprecated_msg__ (msg)
+#endif
+
 __BEGIN_DECLS
-void		fp_nquery (const unsigned char *, int, FILE *) __THROW;
-void		fp_query (const unsigned char *, FILE *) __THROW;
-const char *	hostalias (const char *) __THROW;
-void		p_query (const unsigned char *) __THROW;
+void		fp_nquery (const unsigned char *, int, FILE *) __THROW
+  __RESOLV_DEPRECATED;
+void		fp_query (const unsigned char *, FILE *) __THROW
+  __RESOLV_DEPRECATED;
+const char *	hostalias (const char *) __THROW
+  __RESOLV_DEPRECATED_MSG ("use getaddrinfo instead");
+void		p_query (const unsigned char *) __THROW
+  __RESOLV_DEPRECATED;
 void		res_close (void) __THROW;
 int		res_init (void) __THROW;
-int		res_isourserver (const struct sockaddr_in *) __THROW;
+int		res_isourserver (const struct sockaddr_in *) __THROW
+  __RESOLV_DEPRECATED;
 int		res_mkquery (int, const char *, int, int,
 			     const unsigned char *, int, const unsigned char *,
 			     unsigned char *, int) __THROW;
@@ -238,50 +251,61 @@ int		res_hnok (const char *) __THROW;
 int		res_ownok (const char *) __THROW;
 int		res_mailok (const char *) __THROW;
 int		res_dnok (const char *) __THROW;
-int		sym_ston (const struct res_sym *, const char *, int *) __THROW;
-const char *	sym_ntos (const struct res_sym *, int, int *) __THROW;
-const char *	sym_ntop (const struct res_sym *, int, int *) __THROW;
+int		sym_ston (const struct res_sym *, const char *, int *) __THROW
+  __RESOLV_DEPRECATED;
+const char *	sym_ntos (const struct res_sym *, int, int *) __THROW
+  __RESOLV_DEPRECATED;
+const char *	sym_ntop (const struct res_sym *, int, int *) __THROW
+  __RESOLV_DEPRECATED;
 int		b64_ntop (const unsigned char *, size_t, char *, size_t)
-     __THROW;
+  __THROW;
 int		b64_pton (char const *, unsigned char *, size_t) __THROW;
-int		loc_aton (const char *__ascii, unsigned char *__binary) __THROW;
-const char *	loc_ntoa (const unsigned char *__binary, char *__ascii) __THROW;
+int		loc_aton (const char *__ascii, unsigned char *__binary) __THROW
+  __RESOLV_DEPRECATED;
+const char *	loc_ntoa (const unsigned char *__binary, char *__ascii) __THROW
+  __RESOLV_DEPRECATED;
 int		dn_skipname (const unsigned char *, const unsigned char *)
-     __THROW;
-void		putlong (uint32_t, unsigned char *) __THROW;
-void		putshort (uint16_t, unsigned char *) __THROW;
-const char *	p_class (int) __THROW;
-const char *	p_time (uint32_t) __THROW;
-const char *	p_type (int) __THROW;
-const char *	p_rcode (int) __THROW;
-const unsigned char * p_cdnname (const unsigned char *,
-				 const unsigned char *, int, FILE *) __THROW;
+  __THROW;
+void		putlong (uint32_t, unsigned char *) __THROW
+  __RESOLV_DEPRECATED_MSG ("use NS_PUT16 instead");
+void		putshort (uint16_t, unsigned char *) __THROW
+  __RESOLV_DEPRECATED_MSG ("use NS_PUT32 instead");
+const char *	p_class (int) __THROW __RESOLV_DEPRECATED;
+const char *	p_time (uint32_t) __THROW __RESOLV_DEPRECATED;
+const char *	p_type (int) __THROW __RESOLV_DEPRECATED;
+const char *	p_rcode (int) __THROW __RESOLV_DEPRECATED;
+const unsigned char * p_cdnname (const unsigned char *, const unsigned char *,
+				 int, FILE *) __THROW __RESOLV_DEPRECATED;
 const unsigned char * p_cdname (const unsigned char *, const unsigned char *,
-				FILE *) __THROW;
+				FILE *) __THROW __RESOLV_DEPRECATED;
 const unsigned char * p_fqnname (const unsigned char *__cp,
 				 const unsigned char *__msg,
-				 int, char *, int) __THROW;
-const unsigned char * p_fqname (const unsigned char *,
-				const unsigned char *, FILE *) __THROW;
-const char *	p_option (unsigned long __option) __THROW;
-int		dn_count_labels (const char *) __THROW;
+				 int, char *, int) __THROW __RESOLV_DEPRECATED;
+const unsigned char * p_fqname (const unsigned char *, const unsigned char *,
+				FILE *) __THROW __RESOLV_DEPRECATED;
+const char *	p_option (unsigned long __option) __THROW __RESOLV_DEPRECATED;
+int		dn_count_labels (const char *) __THROW __RESOLV_DEPRECATED;
 int		dn_comp (const char *, unsigned char *, int, unsigned char **,
 			 unsigned char **) __THROW;
 int		dn_expand (const unsigned char *, const unsigned char *,
 			   const unsigned char *, char *, int) __THROW;
-unsigned int	res_randomid (void) __THROW;
+unsigned int	res_randomid (void) __THROW
+  __RESOLV_DEPRECATED_MSG ("use getentropy instead");
 int		res_nameinquery (const char *, int, int,
 				 const unsigned char *,
-				 const unsigned char *) __THROW;
+				 const unsigned char *) __THROW
+  __RESOLV_DEPRECATED;
 int		res_queriesmatch (const unsigned char *,
 				  const unsigned char *,
 				  const unsigned char *,
-				  const unsigned char *) __THROW;
+				  const unsigned char *) __THROW
+  __RESOLV_DEPRECATED;
 /* Things involving a resolver context. */
 int		res_ninit (res_state) __THROW;
-void		fp_resstat (const res_state, FILE *) __THROW;
+void		fp_resstat (const res_state, FILE *) __THROW
+  __RESOLV_DEPRECATED;
 const char *	res_hostalias (const res_state, const char *, char *, size_t)
-     __THROW;
+     __THROW __RESOLV_DEPRECATED_MSG ("use getaddrinfo instead");
 int		res_nquery (res_state, const char *, int, int,
 			    unsigned char *, int) __THROW;
 int		res_nsearch (res_state, const char *, int, int,
