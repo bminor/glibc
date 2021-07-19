@@ -168,9 +168,6 @@ __END_DECLS
 #define res_close		__res_close
 #define res_init		__res_init
 #define res_isourserver		__res_isourserver
-#define res_query		__res_query
-#define res_querydomain		__res_querydomain
-#define res_search		__res_search
 
 #ifdef _LIBC
 # define __RESOLV_DEPRECATED
@@ -227,9 +224,6 @@ __END_DECLS
 #define res_nameinquery		__res_nameinquery
 #define res_nclose		__res_nclose
 #define res_ninit		__res_ninit
-#define res_nquery		__res_nquery
-#define res_nquerydomain	__res_nquerydomain
-#define res_nsearch		__res_nsearch
 #define res_queriesmatch	__res_queriesmatch
 #define res_randomid		__res_randomid
 #define sym_ntop		__sym_ntop

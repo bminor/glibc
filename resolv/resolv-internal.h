@@ -62,13 +62,13 @@ libc_hidden_proto (__res_context_mkquery)
 int __res_context_search (struct resolv_context *, const char *, int, int,
                           unsigned char *, int, unsigned char **,
                           unsigned char **, int *, int *, int *);
-libresolv_hidden_proto (__res_context_search)
+libc_hidden_proto (__res_context_search)
 
 /* Main resolver query function for use within glibc.  */
 int __res_context_query (struct resolv_context *, const char *, int, int,
                          unsigned char *, int, unsigned char **,
                          unsigned char **, int *, int *, int *);
-libresolv_hidden_proto (__res_context_query)
+libc_hidden_proto (__res_context_query)
 
 /* Internal function used to implement the query and search
    functions.  */

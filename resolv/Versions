@@ -18,6 +18,9 @@ libc {
     hstrerror;
     res_init;
     res_mkquery;
+    res_query;
+    res_querydomain;
+    res_search;
   }
   GLIBC_2.2 {
     __dn_expand;
@@ -26,7 +29,13 @@ libc {
     __res_nclose;
     __res_ninit;
     __res_nmkquery;
+    __res_nquery;
+    __res_nquerydomain;
+    __res_nsearch;
     __res_nsend;
+    __res_query;
+    __res_querydomain;
+    __res_search;
     __res_state;
     _res_hconf;
   }
@@ -69,8 +78,14 @@ libc {
     res_mailok;
     res_mkquery;
     res_nmkquery;
+    res_nquery;
+    res_nquerydomain;
+    res_nsearch;
     res_nsend;
     res_ownok;
+    res_query;
+    res_querydomain;
+    res_search;
     res_send;
   }
   GLIBC_PRIVATE {
@@ -97,6 +112,8 @@ libc {
     __ns_name_unpack;
     __res_context_hostalias;
     __res_context_mkquery;
+    __res_context_query;
+    __res_context_search;
     __res_context_send;
     __res_get_nsaddr;
     __res_iclose;
@@ -157,20 +174,11 @@ libresolv {
     res_gethostbyaddr;
     res_gethostbyname2;
     res_gethostbyname;
-    res_query;
-    res_querydomain;
-    res_search;
     res_send_setqhook;
     res_send_setrhook;
   }
   GLIBC_2.2 {
     __res_hostalias;
-    __res_nquery;
-    __res_nquerydomain;
-    __res_nsearch;
-    __res_query;
-    __res_querydomain;
-    __res_search;
   }
   GLIBC_2.3.2 {
     __p_rcode;
@@ -201,8 +209,6 @@ libresolv {
   GLIBC_PRIVATE {
     __ns_get16;
     __ns_get32;
-    __res_context_query;
-    __res_context_search;
   }
 }
 
