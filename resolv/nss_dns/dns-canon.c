@@ -25,8 +25,7 @@
 #include <nsswitch.h>
 #include <resolv/resolv_context.h>
 #include <resolv/resolv-internal.h>
-
-NSS_DECLARE_MODULE_FUNCTIONS (dns)
+#include <nss_dns.h>
 
 #if PACKETSZ > 65536
 # define MAXPACKET	PACKETSZ
@@ -185,3 +184,4 @@ _nss_dns_getcanonname_r (const char *name, char *buffer, size_t buflen,
   __resolv_context_put (ctx);
   return status;
 }
+libc_hidden_def (_nss_dns_getcanonname_r)

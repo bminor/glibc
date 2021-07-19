@@ -123,6 +123,15 @@ libc {
     __resolv_context_get_preinit;
     __resolv_context_put;
     __resp;
+    _nss_dns_getcanonname_r;
+    _nss_dns_gethostbyaddr2_r;
+    _nss_dns_gethostbyaddr_r;
+    _nss_dns_gethostbyname2_r;
+    _nss_dns_gethostbyname3_r;
+    _nss_dns_gethostbyname4_r;
+    _nss_dns_gethostbyname_r;
+    _nss_dns_getnetbyaddr_r;
+    _nss_dns_getnetbyname_r;
   }
 }
 
@@ -214,15 +223,9 @@ libresolv {
 
 libnss_dns {
   GLIBC_PRIVATE {
-    _nss_dns_getcanonname_r;
-    _nss_dns_gethostbyaddr2_r;
-    _nss_dns_gethostbyaddr_r;
-    _nss_dns_gethostbyname2_r;
-    _nss_dns_gethostbyname3_r;
-    _nss_dns_gethostbyname4_r;
-    _nss_dns_gethostbyname_r;
-    _nss_dns_getnetbyaddr_r;
-    _nss_dns_getnetbyname_r;
+    # Keep a version node (with a synthesized local: * directive) so that
+    # __bss_* symbols are hidden on targets that need it.
+    __libnss_dns_version_placeholder;
   }
 }
 

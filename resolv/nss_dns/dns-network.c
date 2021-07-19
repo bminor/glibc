@@ -67,10 +67,9 @@
 #include "nsswitch.h"
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
+#include <nss_dns.h>
 #include <resolv/resolv-internal.h>
 #include <resolv/resolv_context.h>
-
-NSS_DECLARE_MODULE_FUNCTIONS (dns)
 
 /* Maximum number of aliases we allow.  */
 #define MAX_NR_ALIASES	48
@@ -152,7 +151,7 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
   __resolv_context_put (ctx);
   return status;
 }
-
+libc_hidden_def (_nss_dns_getnetbyname_r)
 
 enum nss_status
 _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
@@ -246,7 +245,7 @@ _nss_dns_getnetbyaddr_r (uint32_t net, int type, struct netent *result,
   __resolv_context_put (ctx);
   return status;
 }
-
+libc_hidden_def (_nss_dns_getnetbyaddr_r)
 
 static enum nss_status
 getanswer_r (const querybuf *answer, int anslen, struct netent *result,
@@ -347,7 +346,7 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 	  n = -1;
 	}
 
-      if (n < 0 || res_dnok (bp) == 0)
+      if (n < 0 || __libc_res_dnok (bp) == 0)
 	break;
       cp += n;
 
@@ -381,7 +380,7 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 	      n = -1;
 	    }
 
-	  if (n < 0 || !res_hnok (bp))
+	  if (n < 0 || !__libc_res_hnok (bp))
 	    {
 	      /* XXX What does this mean?  The original form from bind
 		 returns NULL. Incrementing cp has no effect in any case.
@@ -469,7 +468,7 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 		    /* If we are out of digits now, there are two cases:
 		       1. We are done with digits and now see "in-addr.arpa".
 		       2. This is not the droid we are looking for.  */
-		    if (!isdigit (*p) && !strcasecmp (p, "in-addr.arpa"))
+		    if (!isdigit (*p) && !__strcasecmp (p, "in-addr.arpa"))
 		      {
 			result->n_net = val;
 			return NSS_STATUS_SUCCESS;

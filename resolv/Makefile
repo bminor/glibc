@@ -31,6 +31,9 @@ routines := \
   dn_comp \
   dn_expand \
   dn_skipname \
+  dns-canon \
+  dns-host \
+  dns-network \
   herror \
   inet_addr \
   inet_ntop \
@@ -174,18 +177,6 @@ libanl-shared-only-routines += libanl-compat
 
 subdir-dirs = nss_dns
 vpath %.c nss_dns
-
-libnss_dns-routines := \
-  dns-canon \
-  dns-host \
-  dns-network \
-  # libnss_dns-routines
-
-libnss_dns-inhibit-o	= $(filter-out .os,$(object-suffixes))
-ifeq ($(build-static-nss),yes)
-routines                += $(libnss_dns-routines) $(libresolv-routines)
-static-only-routines    += $(libnss_dns-routines) $(libresolv-routines)
-endif
 
 ifeq ($(run-built-tests),yes)
 ifneq (no,$(PERL))
