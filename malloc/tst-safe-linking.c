@@ -33,32 +33,39 @@ check (const char *test, void (*callback) (void *),
        const char *expected)
 {
   int i, rand_mask;
-  bool success = false;
+  int success = 0;	/* 0 == fail, 1 == other check 2 == safe linking */
   /* There is a chance of 1/16 that a corrupted pointer will be aligned.
      Try multiple times so that statistical failure will be improbable.  */
-  for (i = 0; i < 10 && !success; ++i)
+  for (i = 0; i < 16; ++i)
     {
       rand_mask = rand () & 0xFF;
       struct support_capture_subprocess result
 	= support_capture_subprocess (callback, &rand_mask);
+      printf ("%s\n", result.out.buffer);
       /* Did not crash, could happen.  Try again.  */
       if (strlen (result.err.buffer) == 0)
 	continue;
-      /* Crashed, must be the expected result.  */
+      /* Crashed, it may either be safe linking or some other check.  If it's
+	 not safe linking then try again.  */
       if (strcmp (result.err.buffer, expected) != 0)
 	{
-	  support_record_failure ();
-	  printf ("error: test %s unexpected standard error data\n"
+	  printf ("test %s failed with a different error\n"
 	          "  expected: %s\n"
 	          "  actual:   %s\n",
 	          test, expected, result.err.buffer);
+	  success = 1;
+	  continue;
 	}
       TEST_VERIFY (WIFSIGNALED (result.status));
       if (WIFSIGNALED (result.status))
 	TEST_VERIFY (WTERMSIG (result.status) == SIGABRT);
       support_capture_subprocess_free (&result);
-      success = true;
+      success = 2;
+      break;
     }
+  /* The test fails only if the corruption was not caught by any of the malloc
+     mechanisms in all those iterations.  This has a lower than 1 in 2^64
+     chance of a false positive.  */
   TEST_VERIFY (success);
 }
 
@@ -74,10 +81,13 @@ test_tcache (void *closure)
   int mask = ((int *)closure)[0];
   size_t size = TCACHE_ALLOC_SIZE;
 
+  printf ("++ tcache ++\n");
+
   /* Populate the tcache list.  */
   void * volatile a = malloc (size);
   void * volatile b = malloc (size);
   void * volatile c = malloc (size);
+  printf ("a=%p, b=%p, c=%p\n", a, b, c);
   free (a);
   free (b);
   free (c);
@@ -88,6 +98,7 @@ test_tcache (void *closure)
   printf ("After: c=%p, c[0]=%p\n", c, ((void **)c)[0]);
 
   c = malloc (size);
+  printf ("Allocated: c=%p\n", c);
   /* This line will trigger the Safe-Linking check.  */
   b = malloc (size);
   printf ("b=%p\n", b);
@@ -101,10 +112,13 @@ test_fastbin (void *closure)
   int mask = ((int *)closure)[0];
   size_t size = TCACHE_ALLOC_SIZE;
 
+  printf ("++ fastbin ++\n");
+
   /* Take the tcache out of the game.  */
   for (i = 0; i < TCACHE_FILL_COUNT; ++i)
     {
       void * volatile p = calloc (1, size);
+      printf ("p=%p\n", p);
       free (p);
     }
 
@@ -112,6 +126,7 @@ test_fastbin (void *closure)
   void * volatile a = calloc (1, size);
   void * volatile b = calloc (1, size);
   void * volatile c = calloc (1, size);
+  printf ("a=%p, b=%p, c=%p\n", a, b, c);
   free (a);
   free (b);
   free (c);
@@ -122,6 +137,7 @@ test_fastbin (void *closure)
   printf ("After: c=%p, c[0]=%p\n", c, ((void **)c)[0]);
 
   c = calloc (1, size);
+  printf ("Allocated: c=%p\n", c);
   /* This line will trigger the Safe-Linking check.  */
   b = calloc (1, size);
   printf ("b=%p\n", b);
@@ -135,6 +151,8 @@ test_fastbin_consolidate (void *closure)
   int mask = ((int*)closure)[0];
   size_t size = TCACHE_ALLOC_SIZE;
 
+  printf ("++ fastbin consolidate ++\n");
+
   /* Take the tcache out of the game.  */
   for (i = 0; i < TCACHE_FILL_COUNT; ++i)
     {
@@ -146,6 +164,7 @@ test_fastbin_consolidate (void *closure)
   void * volatile a = calloc (1, size);
   void * volatile b = calloc (1, size);
   void * volatile c = calloc (1, size);
+  printf ("a=%p, b=%p, c=%p\n", a, b, c);
   free (a);
   free (b);
   free (c);
