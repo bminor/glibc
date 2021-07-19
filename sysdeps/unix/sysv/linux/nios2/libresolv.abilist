@@ -68,7 +68,6 @@ GLIBC_2.21 ns_msg_getflag F
 GLIBC_2.21 ns_name_compress F
 GLIBC_2.21 ns_name_ntol F
 GLIBC_2.21 ns_name_pack F
-GLIBC_2.21 ns_name_pton F
 GLIBC_2.21 ns_name_rollback F
 GLIBC_2.21 ns_parse_ttl F
 GLIBC_2.21 ns_parserr F

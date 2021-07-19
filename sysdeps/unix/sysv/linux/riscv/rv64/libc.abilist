@@ -1388,6 +1388,7 @@ GLIBC_2.27 nl_langinfo_l F
 GLIBC_2.27 nrand48 F
 GLIBC_2.27 nrand48_r F
 GLIBC_2.27 ns_name_ntop F
+GLIBC_2.27 ns_name_pton F
 GLIBC_2.27 ns_name_skip F
 GLIBC_2.27 ns_name_uncompress F
 GLIBC_2.27 ns_name_unpack F
@@ -2418,6 +2419,7 @@ GLIBC_2.34 mtx_timedlock F
 GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
 GLIBC_2.34 ns_name_ntop F
+GLIBC_2.34 ns_name_pton F
 GLIBC_2.34 ns_name_skip F
 GLIBC_2.34 ns_name_uncompress F
 GLIBC_2.34 ns_name_unpack F

@@ -26,6 +26,7 @@ libc {
   }
   GLIBC_2.9 {
     ns_name_ntop;
+    ns_name_pton;
     ns_name_skip;
     ns_name_uncompress;
     ns_name_unpack;
@@ -38,6 +39,7 @@ libc {
     getaddrinfo_a;
 %endif
     ns_name_ntop;
+    ns_name_pton;
     ns_name_skip;
     ns_name_uncompress;
     ns_name_unpack;
@@ -50,6 +52,7 @@ libc {
     __inet_aton_exact;
     __inet_pton_length;
     __ns_name_ntop;
+    __ns_name_pton;
     __ns_name_skip;
     __ns_name_uncompress;
     __ns_name_unpack;

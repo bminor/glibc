@@ -29,10 +29,6 @@
 
 # define SPRINTF(x) ((size_t)sprintf x)
 
-/* Data. */
-
-static const char	digits[] = "0123456789";
-
 /* Forward. */
 
 static int		dn_find(const u_char *, const u_char *,
@@ -41,127 +37,6 @@ static int		dn_find(const u_char *, const u_char *,
 static int		labellen(const u_char *);
 
 /* Public. */
-
-
-/*%
- *	Convert an ascii string into an encoded domain name as per RFC1035.
- *
- * return:
- *
- *\li	-1 if it fails
- *\li	1 if string was fully qualified
- *\li	0 is string was not fully qualified
- *
- * notes:
- *\li	Enforces label and domain length limits.
- */
-
-int
-ns_name_pton(const char *src, u_char *dst, size_t dstsiz)
-{
-	u_char *label, *bp, *eom;
-	int c, n, escaped;
-	char *cp;
-
-	escaped = 0;
-	bp = dst;
-	eom = dst + dstsiz;
-	label = bp++;
-
-	while ((c = *src++) != 0) {
-		if (escaped) {
-			if ((cp = strchr(digits, c)) != NULL) {
-				n = (cp - digits) * 100;
-				if ((c = *src++) == 0 ||
-				    (cp = strchr(digits, c)) == NULL) {
-					__set_errno (EMSGSIZE);
-					return (-1);
-				}
-				n += (cp - digits) * 10;
-				if ((c = *src++) == 0 ||
-				    (cp = strchr(digits, c)) == NULL) {
-					__set_errno (EMSGSIZE);
-					return (-1);
-				}
-				n += (cp - digits);
-				if (n > 255) {
-					__set_errno (EMSGSIZE);
-					return (-1);
-				}
-				c = n;
-			}
-			escaped = 0;
-		} else if (c == '\\') {
-			escaped = 1;
-			continue;
-		} else if (c == '.') {
-			c = (bp - label - 1);
-			if ((c & NS_CMPRSFLGS) != 0) {	/*%< Label too big. */
-				__set_errno (EMSGSIZE);
-				return (-1);
-			}
-			if (label >= eom) {
-				__set_errno (EMSGSIZE);
-				return (-1);
-			}
-			*label = c;
-			/* Fully qualified ? */
-			if (*src == '\0') {
-				if (c != 0) {
-					if (bp >= eom) {
-						__set_errno (EMSGSIZE);
-						return (-1);
-					}
-					*bp++ = '\0';
-				}
-				if ((bp - dst) > MAXCDNAME) {
-					__set_errno (EMSGSIZE);
-					return (-1);
-				}
-				return (1);
-			}
-			if (c == 0 || *src == '.') {
-				__set_errno (EMSGSIZE);
-				return (-1);
-			}
-			label = bp++;
-			continue;
-		}
-		if (bp >= eom) {
-			__set_errno (EMSGSIZE);
-			return (-1);
-		}
-		*bp++ = (u_char)c;
-	}
-	if (escaped) {
-		/* Trailing backslash.  */
-		__set_errno (EMSGSIZE);
-		return -1;
-	}
-	c = (bp - label - 1);
-	if ((c & NS_CMPRSFLGS) != 0) {		/*%< Label too big. */
-		__set_errno (EMSGSIZE);
-		return (-1);
-	}
-	if (label >= eom) {
-		__set_errno (EMSGSIZE);
-		return (-1);
-	}
-	*label = c;
-	if (c != 0) {
-		if (bp >= eom) {
-			__set_errno (EMSGSIZE);
-			return (-1);
-		}
-		*bp++ = 0;
-	}
-	if ((bp - dst) > MAXCDNAME) {	/*%< src too big */
-		__set_errno (EMSGSIZE);
-		return (-1);
-	}
-	return (0);
-}
-libresolv_hidden_def (ns_name_pton)
 
 /*%
  *	Convert a network strings labels into all lowercase.
