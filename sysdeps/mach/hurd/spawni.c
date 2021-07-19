@@ -505,6 +505,19 @@ retry:
 	    return EBADF;
 	  }
 
+	/* Close file descriptors in the child.  */
+	error_t do_closefrom (int lowfd)
+	  {
+	    while ((unsigned int) lowfd < dtablesize)
+	      {
+		error_t err = do_close (lowfd);
+		if (err != 0 && err != EBADF)
+		  return err;
+		lowfd++;
+	      }
+	    return 0;
+	  }
+
 	/* Make sure the dtable can hold NEWFD.  */
 #define EXPAND_DTABLE(newfd)						      \
 	({								      \
@@ -615,7 +628,7 @@ retry:
 	    break;
 
 	  case spawn_do_closefrom:
-	    err = EINVAL;
+	    err = do_closefrom (action->action.closefrom_action.from);
 	    break;
 	  }
 
