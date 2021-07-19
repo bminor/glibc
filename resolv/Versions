@@ -26,6 +26,7 @@ libc {
   }
   GLIBC_2.9 {
     ns_name_ntop;
+    ns_name_skip;
     ns_name_unpack;
   }
   GLIBC_2.34 {
@@ -36,6 +37,7 @@ libc {
     getaddrinfo_a;
 %endif
     ns_name_ntop;
+    ns_name_skip;
     ns_name_unpack;
   }
   GLIBC_PRIVATE {
@@ -45,9 +47,10 @@ libc {
     __h_errno;
     __inet_aton_exact;
     __inet_pton_length;
-    __res_iclose;
     __ns_name_ntop;
+    __ns_name_skip;
     __ns_name_unpack;
+    __res_iclose;
     __resolv_context_get;
     __resolv_context_get_override;
     __resolv_context_get_preinit;

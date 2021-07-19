@@ -397,43 +397,6 @@ ns_name_rollback(const u_char *src, const u_char **dnptrs,
 	}
 }
 
-/*%
- *	Advance *ptrptr to skip over the compressed name it points at.
- *
- * return:
- *\li	0 on success, -1 (with errno set) on failure.
- */
-int
-ns_name_skip(const u_char **ptrptr, const u_char *eom)
-{
-	const u_char *cp;
-	u_int n;
-
-	cp = *ptrptr;
-	while (cp < eom && (n = *cp++) != 0) {
-		/* Check for indirection. */
-		switch (n & NS_CMPRSFLGS) {
-		case 0:			/*%< normal case, n == len */
-			cp += n;
-			continue;
-		case NS_CMPRSFLGS:	/*%< indirection */
-			cp++;
-			break;
-		default:		/*%< illegal type */
-			__set_errno (EMSGSIZE);
-			return (-1);
-		}
-		break;
-	}
-	if (cp > eom) {
-		__set_errno (EMSGSIZE);
-		return (-1);
-	}
-	*ptrptr = cp;
-	return (0);
-}
-libresolv_hidden_def (ns_name_skip)
-
 /* Private. */
 
 /*%

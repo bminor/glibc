@@ -1341,6 +1341,7 @@ GLIBC_2.33 nl_langinfo_l F
 GLIBC_2.33 nrand48 F
 GLIBC_2.33 nrand48_r F
 GLIBC_2.33 ns_name_ntop F
+GLIBC_2.33 ns_name_skip F
 GLIBC_2.33 ns_name_unpack F
 GLIBC_2.33 ntohl F
 GLIBC_2.33 ntohs F
@@ -2216,6 +2217,7 @@ GLIBC_2.34 mtx_timedlock F
 GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
 GLIBC_2.34 ns_name_ntop F
+GLIBC_2.34 ns_name_skip F
 GLIBC_2.34 ns_name_unpack F
 GLIBC_2.34 openpty F
 GLIBC_2.34 posix_spawn_file_actions_addclosefrom_np F
