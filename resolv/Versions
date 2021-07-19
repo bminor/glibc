@@ -27,6 +27,7 @@ libc {
   GLIBC_2.9 {
     ns_name_ntop;
     ns_name_skip;
+    ns_name_uncompress;
     ns_name_unpack;
   }
   GLIBC_2.34 {
@@ -38,6 +39,7 @@ libc {
 %endif
     ns_name_ntop;
     ns_name_skip;
+    ns_name_uncompress;
     ns_name_unpack;
   }
   GLIBC_PRIVATE {
@@ -49,6 +51,7 @@ libc {
     __inet_pton_length;
     __ns_name_ntop;
     __ns_name_skip;
+    __ns_name_uncompress;
     __ns_name_unpack;
     __res_iclose;
     __resolv_context_get;
@@ -152,7 +155,6 @@ libresolv {
     ns_name_pton;
     ns_name_rollback;
     ns_name_skip;
-    ns_name_uncompress;
     ns_parse_ttl;
     ns_parserr;
     ns_put16;

@@ -34,6 +34,7 @@ routines := \
   inet_pton \
   ns_name_ntop \
   ns_name_skip \
+  ns_name_uncompress \
   ns_name_unpack \
   nsap_addr \
   res-close \

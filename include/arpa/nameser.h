@@ -68,7 +68,6 @@ libresolv_hidden_proto (ns_parserr)
 libresolv_hidden_proto (ns_name_pton)
 libresolv_hidden_proto (ns_name_pack)
 libresolv_hidden_proto (ns_name_compress)
-libresolv_hidden_proto (ns_name_uncompress)
 libresolv_hidden_proto (ns_sprintrr)
 libresolv_hidden_proto (ns_sprintrrf)
 libresolv_hidden_proto (ns_samedomain)
@@ -80,6 +79,8 @@ extern __typeof (ns_name_ntop) __ns_name_ntop;
 libc_hidden_proto (__ns_name_ntop)
 extern __typeof (ns_name_skip) __ns_name_skip;
 libc_hidden_proto (__ns_name_skip)
+extern __typeof (ns_name_uncompress) __ns_name_uncompress;
+libc_hidden_proto (__ns_name_uncompress)
 extern __typeof (ns_name_unpack) __ns_name_unpack;
 libc_hidden_proto (__ns_name_unpack)
 

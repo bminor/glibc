@@ -330,30 +330,6 @@ cleanup:
 libresolv_hidden_def (ns_name_pack)
 
 /*%
- *	Expand compressed domain name to presentation format.
- *
- * return:
- *\li	Number of bytes read out of `src', or -1 (with errno set).
- *
- * note:
- *\li	Root domain returns as "." not "".
- */
-int
-ns_name_uncompress(const u_char *msg, const u_char *eom, const u_char *src,
-		   char *dst, size_t dstsiz)
-{
-	u_char tmp[NS_MAXCDNAME];
-	int n;
-
-	if ((n = ns_name_unpack(msg, eom, src, tmp, sizeof tmp)) == -1)
-		return (-1);
-	if (__ns_name_ntop (tmp, dst, dstsiz) == -1)
-		return (-1);
-	return (n);
-}
-libresolv_hidden_def (ns_name_uncompress)
-
-/*%
  *	Compress a domain name into wire format, using compression pointers.
  *
  * return:

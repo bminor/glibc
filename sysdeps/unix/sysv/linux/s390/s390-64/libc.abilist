@@ -2392,6 +2392,7 @@ GLIBC_2.34 mtx_trylock F
 GLIBC_2.34 mtx_unlock F
 GLIBC_2.34 ns_name_ntop F
 GLIBC_2.34 ns_name_skip F
+GLIBC_2.34 ns_name_uncompress F
 GLIBC_2.34 ns_name_unpack F
 GLIBC_2.34 openpty F
 GLIBC_2.34 posix_spawn_file_actions_addclosefrom_np F
@@ -2829,5 +2830,6 @@ GLIBC_2.9 epoll_create1 F
 GLIBC_2.9 inotify_init1 F
 GLIBC_2.9 ns_name_ntop F
 GLIBC_2.9 ns_name_skip F
+GLIBC_2.9 ns_name_uncompress F
 GLIBC_2.9 ns_name_unpack F
 GLIBC_2.9 pipe2 F
