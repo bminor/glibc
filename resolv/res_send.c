@@ -191,47 +191,6 @@ static int		send_dg(res_state, const u_char *, int,
 				u_char **, int *, int *, int *);
 static int		sock_eq(struct sockaddr_in6 *, struct sockaddr_in6 *);
 
-/* Public. */
-
-/* int
- * res_nameinquery(name, type, class, buf, eom)
- *	look for (name,type,class) in the query section of packet (buf,eom)
- * requires:
- *	buf + HFIXEDSZ <= eom
- * returns:
- *	-1 : format error
- *	0  : not found
- *	>0 : found
- * author:
- *	paul vixie, 29may94
- */
-int
-res_nameinquery(const char *name, int type, int class,
-		const u_char *buf, const u_char *eom)
-{
-	const u_char *cp = buf + HFIXEDSZ;
-	int qdcount = ntohs(((HEADER*)buf)->qdcount);
-
-	while (qdcount-- > 0) {
-		char tname[MAXDNAME+1];
-		int n, ttype, tclass;
-
-		n = __libc_dn_expand (buf, eom, cp, tname, sizeof tname);
-		if (n < 0)
-			return (-1);
-		cp += n;
-		if (cp + 2 * INT16SZ > eom)
-			return (-1);
-		NS_GET16(ttype, cp);
-		NS_GET16(tclass, cp);
-		if (ttype == type && tclass == class
-		    && __libc_ns_samename (tname, name) == 1)
-			return (1);
-	}
-	return (0);
-}
-libresolv_hidden_def (res_nameinquery)
-
 /* Returns a shift value for the name server index.  Used to implement
    RES_ROTATE.  */
 static unsigned int
@@ -337,7 +296,7 @@ res_queriesmatch(const u_char *buf1, const u_char *eom1,
 			return (-1);
 		NS_GET16(ttype, cp);
 		NS_GET16(tclass, cp);
-		if (!res_nameinquery(tname, ttype, tclass, buf2, eom2))
+		if (!__libc_res_nameinquery (tname, ttype, tclass, buf2, eom2))
 			return (0);
 	}
 	return (1);

@@ -27,6 +27,7 @@
    functions.  */
 
 #include <arpa/nameser.h>
+#include <resolv.h>
 
 int
 ns_makecanon (const char *src, char *dst, size_t dstsize)
@@ -38,4 +39,11 @@ int
 ns_samename (const char *a, const char *b)
 {
   return __libc_ns_samename (a, b);
+}
+
+int
+res_nameinquery (const char *name, int type, int class,
+                 const unsigned char *buf, const unsigned char *eom)
+{
+  return __libc_res_nameinquery (name, type, class, buf, eom);
 }

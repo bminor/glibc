@@ -52,6 +52,7 @@ routines := \
   res_hconf \
   res_init \
   res_libc \
+  res_nameinquery \
   res_randomid \
   resolv_conf \
   resolv_context \
