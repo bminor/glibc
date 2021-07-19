@@ -35,6 +35,7 @@ routines := \
   inet_addr \
   inet_ntop \
   inet_pton \
+  ns_makecanon \
   ns_name_compress \
   ns_name_ntop \
   ns_name_pack \
@@ -151,6 +152,7 @@ libresolv-routines := \
   res_mkquery \
   res_query \
   res_send \
+  resolv-deprecated \
   # libresolv-routines
 
 $(libanl-routines-var) += \

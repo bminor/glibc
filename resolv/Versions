@@ -72,6 +72,7 @@ libc {
     __inet_pton_length;
     __libc_dn_expand;
     __libc_dn_skipname;
+    __libc_ns_makecanon;
     __libc_res_dnok;
     __libc_res_hnok;
     __ns_name_compress;
