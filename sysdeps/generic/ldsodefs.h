@@ -1417,6 +1417,10 @@ void _dl_audit_activity_nsid (Lmid_t nsid, int action)
    namespace identification NSID.  */
 void _dl_audit_objopen (struct link_map *l, Lmid_t nsid)
   attribute_hidden;
+
+/* Call the la_objclose from the audit modules for the link_map L.  */
+void _dl_audit_objclose (struct link_map *l)
+  attribute_hidden;
 #endif /* SHARED */
 
 #if PTHREAD_IN_LIBC && defined SHARED

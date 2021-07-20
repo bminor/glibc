@@ -260,9 +260,6 @@ _dl_close_worker (struct link_map *map, bool force)
   _dl_sort_maps (maps, nloaded, (nsid == LM_ID_BASE), true);
 
   /* Call all termination functions at once.  */
-#ifdef SHARED
-  bool do_audit = GLRO(dl_naudit) > 0 && !ns->_ns_loaded->l_auditing;
-#endif
   bool unload_any = false;
   bool scope_mem_left = false;
   unsigned int unload_global = 0;
@@ -296,22 +293,7 @@ _dl_close_worker (struct link_map *map, bool force)
 
 #ifdef SHARED
 	  /* Auditing checkpoint: we remove an object.  */
-	  if (__glibc_unlikely (do_audit))
-	    {
-	      struct audit_ifaces *afct = GLRO(dl_audit);
-	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-		{
-		  if (afct->objclose != NULL)
-		    {
-		      struct auditstate *state
-			= link_map_audit_state (imap, cnt);
-		      /* Return value is ignored.  */
-		      (void) afct->objclose (&state->cookie);
-		    }
-
-		  afct = afct->next;
-		}
-	    }
+	  _dl_audit_objclose (imap);
 #endif
 
 	  /* This object must not be used anymore.  */
