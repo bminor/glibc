@@ -85,3 +85,24 @@ _dl_audit_objopen (struct link_map *l, Lmid_t nsid)
       afct = afct->next;
    }
 }
+
+void
+_dl_audit_objclose (struct link_map *l)
+{
+  if (__glibc_likely (GLRO(dl_naudit) == 0)
+      || GL(dl_ns)[l->l_ns]._ns_loaded->l_auditing)
+    return;
+
+  struct audit_ifaces *afct = GLRO(dl_audit);
+  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+    {
+      if (afct->objclose != NULL)
+	{
+	  struct auditstate *state= link_map_audit_state (l, cnt);
+	  /* Return value is ignored.  */
+	  afct->objclose (&state->cookie);
+	}
+
+      afct = afct->next;
+    }
+}
