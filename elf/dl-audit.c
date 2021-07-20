@@ -44,6 +44,28 @@ _dl_audit_activity_nsid (Lmid_t nsid, int action)
   _dl_audit_activity_map (head, action);
 }
 
+const char *
+_dl_audit_objsearch (const char *name, struct link_map *l, unsigned int code)
+{
+  if (l == NULL || l->l_auditing || code == 0)
+    return name;
+
+  struct audit_ifaces *afct = GLRO(dl_audit);
+  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+    {
+      if (afct->objsearch != NULL)
+	{
+	  struct auditstate *state = link_map_audit_state (l, cnt);
+	  name = afct->objsearch (name, &state->cookie, code);
+	  if (name == NULL)
+	    return NULL;
+	}
+      afct = afct->next;
+   }
+
+  return name;
+}
+
 void
 _dl_audit_objopen (struct link_map *l, Lmid_t nsid)
 {

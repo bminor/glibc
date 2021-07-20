@@ -1396,6 +1396,13 @@ link_map_audit_state (struct link_map *l, size_t index)
     }
 }
 
+/* Call the la_objsearch from the audit modules from the link map L.  If
+   ORIGNAME is non NULL, it is updated with the revious name prior calling
+   la_objsearch.  */
+const char *_dl_audit_objsearch (const char *name, struct link_map *l,
+				 unsigned int code)
+   attribute_hidden;
+
 /* Call the la_activity from the audit modules from the link map L and issues
    the ACTION argument.  */
 void _dl_audit_activity_map (struct link_map *l, int action)

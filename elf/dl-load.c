@@ -1597,32 +1597,20 @@ open_verify (const char *name, int fd,
 
 #ifdef SHARED
   /* Give the auditing libraries a chance.  */
-  if (__glibc_unlikely (GLRO(dl_naudit) > 0) && whatcode != 0
-      && loader->l_auditing == 0)
+  if (__glibc_unlikely (GLRO(dl_naudit) > 0))
     {
       const char *original_name = name;
-      struct audit_ifaces *afct = GLRO(dl_audit);
-      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-	{
-	  if (afct->objsearch != NULL)
-	    {
-	      struct auditstate *state = link_map_audit_state (loader, cnt);
-	      name = afct->objsearch (name, &state->cookie, whatcode);
-	      if (name == NULL)
-		/* Ignore the path.  */
-		return -1;
-	    }
-
-	  afct = afct->next;
-	}
+      name = _dl_audit_objsearch (name, loader, whatcode);
+      if (name == NULL)
+	return -1;
 
       if (fd != -1 && name != original_name && strcmp (name, original_name))
-        {
-          /* An audit library changed what we're supposed to open,
-             so FD no longer matches it.  */
-          __close_nocancel (fd);
-          fd = -1;
-        }
+	{
+	  /* An audit library changed what we're supposed to open,
+	     so FD no longer matches it.  */
+	  __close_nocancel (fd);
+	  fd = -1;
+	}
     }
 #endif
 
@@ -2061,36 +2049,17 @@ _dl_map_object (struct link_map *loader, const char *name,
 #ifdef SHARED
   /* Give the auditing libraries a chance to change the name before we
      try anything.  */
-  if (__glibc_unlikely (GLRO(dl_naudit) > 0)
-      && (loader == NULL || loader->l_auditing == 0))
+  if (__glibc_unlikely (GLRO(dl_naudit) > 0))
     {
-      struct audit_ifaces *afct = GLRO(dl_audit);
-      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+      const char *before = name;
+      name = _dl_audit_objsearch (name, loader, LA_SER_ORIG);
+      if (name == NULL)
 	{
-	  if (afct->objsearch != NULL)
-	    {
-	      const char *before = name;
-	      struct auditstate *state = link_map_audit_state (loader, cnt);
-	      name = afct->objsearch (name, &state->cookie, LA_SER_ORIG);
-	      if (name == NULL)
-		{
-		  /* Do not try anything further.  */
-		  fd = -1;
-		  goto no_file;
-		}
-	      if (before != name && strcmp (before, name) != 0)
-		{
-		  if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_FILES))
-		    _dl_debug_printf ("audit changed filename %s -> %s\n",
-				      before, name);
-
-		  if (origname == NULL)
-		    origname = before;
-		}
-	    }
-
-	  afct = afct->next;
+	  fd = -1;
+	  goto no_file;
 	}
+      if (before != name && strcmp (before, name) != 0)
+	origname = before;
     }
 #endif
 
