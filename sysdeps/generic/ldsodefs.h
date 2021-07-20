@@ -1396,6 +1396,16 @@ link_map_audit_state (struct link_map *l, size_t index)
     }
 }
 
+/* Call the la_activity from the audit modules from the link map L and issues
+   the ACTION argument.  */
+void _dl_audit_activity_map (struct link_map *l, int action)
+  attribute_hidden;
+
+/* Call the la_activity from the audit modules from the link map from the
+   namespace NSID and issues the ACTION argument.  */
+void _dl_audit_activity_nsid (Lmid_t nsid, int action)
+  attribute_hidden;
+
 /* Call the la_objopen from the audit modules for the link_map L on the
    namespace identification NSID.  */
 void _dl_audit_objopen (struct link_map *l, Lmid_t nsid)

@@ -1483,24 +1483,8 @@ cannot enable executable stack as shared object requires");
       /* Auditing checkpoint: we are going to add new objects.  Since this
          is called after _dl_add_to_namespace_list the namespace is guaranteed
 	 to not be empty.  */
-      if ((mode & __RTLD_AUDIT) == 0
-	  && __glibc_unlikely (GLRO(dl_naudit) > 0))
-	{
-	  struct link_map *head = GL(dl_ns)[nsid]._ns_loaded;
-	  /* Do not call the functions for any auditing object.  */
-	  if (head->l_auditing == 0)
-	    {
-	      struct audit_ifaces *afct = GLRO(dl_audit);
-	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-		{
-		  if (afct->activity != NULL)
-		    afct->activity (&link_map_audit_state (head, cnt)->cookie,
-				    LA_ACT_ADD);
-
-		  afct = afct->next;
-		}
-	    }
-	}
+      if ((mode & __RTLD_AUDIT) == 0)
+	_dl_audit_activity_nsid (nsid, LA_ACT_ADD);
 #endif
 
       /* Notify the debugger we have added some objects.  We need to

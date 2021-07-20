@@ -472,25 +472,7 @@ _dl_close_worker (struct link_map *map, bool force)
 
 #ifdef SHARED
   /* Auditing checkpoint: we will start deleting objects.  */
-  if (__glibc_unlikely (do_audit))
-    {
-      struct link_map *head = ns->_ns_loaded;
-      struct audit_ifaces *afct = GLRO(dl_audit);
-      /* Do not call the functions for any auditing object.  */
-      if (head->l_auditing == 0)
-	{
-	  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-	    {
-	      if (afct->activity != NULL)
-		{
-		  struct auditstate *state = link_map_audit_state (head, cnt);
-		  afct->activity (&state->cookie, LA_ACT_DELETE);
-		}
-
-	      afct = afct->next;
-	    }
-	}
-    }
+  _dl_audit_activity_nsid (nsid, LA_ACT_DELETE);
 #endif
 
   /* Notify the debugger we are about to remove some loaded objects.  */
@@ -785,32 +767,9 @@ _dl_close_worker (struct link_map *map, bool force)
   __rtld_lock_unlock_recursive (GL(dl_load_tls_lock));
 
 #ifdef SHARED
-  /* Auditing checkpoint: we have deleted all objects.  */
-  if (__glibc_unlikely (do_audit))
-    {
-      struct link_map *head = ns->_ns_loaded;
-      /* If head is NULL, the namespace has become empty, and the
-	 audit interface does not give us a way to signal
-	 LA_ACT_CONSISTENT for it because the first loaded module is
-	 used to identify the namespace.
-
-	 Furthermore, do not notify auditors of the cleanup of a
-	 failed audit module loading attempt.  */
-      if (head != NULL && head->l_auditing == 0)
-	{
-	  struct audit_ifaces *afct = GLRO(dl_audit);
-	  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-	    {
-	      if (afct->activity != NULL)
-		{
-		  struct auditstate *state = link_map_audit_state (head, cnt);
-		  afct->activity (&state->cookie, LA_ACT_CONSISTENT);
-		}
-
-	      afct = afct->next;
-	    }
-	}
-    }
+  /* Auditing checkpoint: we have deleted all objects.  Also, do not notify
+     auditors of the cleanup of a failed audit module loading attempt.  */
+  _dl_audit_activity_nsid (nsid, LA_ACT_CONSISTENT);
 #endif
 
   if (__builtin_expect (ns->_ns_loaded == NULL, 0)

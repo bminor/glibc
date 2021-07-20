@@ -1794,18 +1794,7 @@ dl_main (const ElfW(Phdr) *phdr,
 
   /* Auditing checkpoint: we are ready to signal that the initial map
      is being constructed.  */
-  if (__glibc_unlikely (GLRO(dl_naudit) > 0))
-    {
-      struct audit_ifaces *afct = GLRO(dl_audit);
-      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-	{
-	  if (afct->activity != NULL)
-	    afct->activity (&link_map_audit_state (main_map, cnt)->cookie,
-			    LA_ACT_ADD);
-
-	  afct = afct->next;
-	}
-    }
+  _dl_audit_activity_map (main_map, LA_ACT_ADD);
 
   /* We have two ways to specify objects to preload: via environment
      variable and via the file /etc/ld.so.preload.  The latter can also
@@ -2486,23 +2475,7 @@ dl_main (const ElfW(Phdr) *phdr,
 
 #ifdef SHARED
   /* Auditing checkpoint: we have added all objects.  */
-  if (__glibc_unlikely (GLRO(dl_naudit) > 0))
-    {
-      struct link_map *head = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
-      /* Do not call the functions for any auditing object.  */
-      if (head->l_auditing == 0)
-	{
-	  struct audit_ifaces *afct = GLRO(dl_audit);
-	  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-	    {
-	      if (afct->activity != NULL)
-		afct->activity (&link_map_audit_state (head, cnt)->cookie,
-				LA_ACT_CONSISTENT);
-
-	      afct = afct->next;
-	    }
-	}
-    }
+  _dl_audit_activity_nsid (LM_ID_BASE, LA_ACT_CONSISTENT);
 #endif
 
   /* Notify the debugger all new objects are now ready to go.  We must re-get

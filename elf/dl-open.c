@@ -611,25 +611,7 @@ dl_open_worker_begin (void *a)
 
 #ifdef SHARED
   /* Auditing checkpoint: we have added all objects.  */
-  if (__glibc_unlikely (GLRO(dl_naudit) > 0))
-    {
-      struct link_map *head = GL(dl_ns)[new->l_ns]._ns_loaded;
-      /* Do not call the functions for any auditing object.  */
-      if (head->l_auditing == 0)
-	{
-	  struct audit_ifaces *afct = GLRO(dl_audit);
-	  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-	    {
-	      if (afct->activity != NULL)
-		{
-		  struct auditstate *state = link_map_audit_state (head, cnt);
-		  afct->activity (&state->cookie, LA_ACT_CONSISTENT);
-		}
-
-	      afct = afct->next;
-	    }
-	}
-    }
+  _dl_audit_activity_nsid (new->l_ns, LA_ACT_CONSISTENT);
 #endif
 
   /* Notify the debugger all new objects are now ready to go.  */
