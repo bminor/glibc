@@ -1421,6 +1421,16 @@ void _dl_audit_objopen (struct link_map *l, Lmid_t nsid)
 /* Call the la_objclose from the audit modules for the link_map L.  */
 void _dl_audit_objclose (struct link_map *l)
   attribute_hidden;
+
+/* Call the la_symbind{32,64} from the audit modules for the link_map L.  */
+void _dl_audit_symbind (struct link_map *l, struct reloc_result *reloc_result,
+			const ElfW(Sym) *defsym, DL_FIXUP_VALUE_TYPE *value,
+			lookup_t result)
+  attribute_hidden;
+/* Same as _dl_audit_symbind, but also sets LA_SYMB_DLSYM flag.  */
+void _dl_audit_symbind_alt (struct link_map *l, const ElfW(Sym) *ref,
+			    void **value, lookup_t result);
+rtld_hidden_proto (_dl_audit_symbind_alt)
 #endif /* SHARED */
 
 #if PTHREAD_IN_LIBC && defined SHARED
