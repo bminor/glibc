@@ -179,6 +179,14 @@ libanl-shared-only-routines += libanl-compat
 subdir-dirs = nss_dns
 vpath %.c nss_dns
 
+# Build only an empty shared libnss_dns.
+libnss_dns-inhibit-o = $(filter-out .os,$(object-suffixes))
+
+# Pretend that libnss_dns.so is a linker script, so that the symbolic link
+# is not installed.
+install-lib-ldscripts = libnss_dns.so
+$(inst_libdir)/libnss_dns.so:
+
 ifeq ($(run-built-tests),yes)
 ifneq (no,$(PERL))
 tests-special += $(objpfx)mtrace-tst-leaks.out $(objpfx)mtrace-tst-leaks2.out \
