@@ -2329,6 +2329,7 @@ GLIBC_2.34 __glob64_time64 F
 GLIBC_2.34 __globfree64_time64 F
 GLIBC_2.34 __gmtime64 F
 GLIBC_2.34 __gmtime64_r F
+GLIBC_2.34 __ioctl_time64 F
 GLIBC_2.34 __libc_start_main F
 GLIBC_2.34 __localtime64 F
 GLIBC_2.34 __localtime64_r F

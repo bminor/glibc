@@ -63,3 +63,6 @@ __ioctl (int fd, unsigned long int request, ...)
 }
 libc_hidden_def (__ioctl)
 weak_alias (__ioctl, ioctl)
+#if __TIMESIZE != 64
+weak_alias (__ioctl, __ioctl_time64)
+#endif

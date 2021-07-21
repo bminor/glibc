@@ -229,6 +229,7 @@ libc {
     __globfree64_time64;
     __gmtime64;
     __gmtime64_r;
+    __ioctl_time64;
     __localtime64;
     __localtime64_r;
     __lstat64_time64;
