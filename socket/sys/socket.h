@@ -200,7 +200,18 @@ extern int __sendmmsg64 (int __fd, struct mmsghdr *__vmessages,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
+#ifndef __USE_TIME_BITS64
 extern ssize_t recvmsg (int __fd, struct msghdr *__message, int __flags);
+#else
+# ifdef __REDIRECT
+extern ssize_t __REDIRECT (recvmsg,
+			   (int __fd, struct msghdr *__message, int __flags),
+			   __recvmsg64);
+# else
+extern ssize_t __recvmsg64 (int __fd, struct msghdr *__message, int __flags);
+#  define recvmsg __recvmsg64
+# endif
+#endif
 
 #ifdef __USE_GNU
 /* Receive up to VLEN messages as described by VMESSAGES from socket FD.

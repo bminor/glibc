@@ -43,3 +43,6 @@ __libc_recvmsg (int fd, struct msghdr *msg, int flags)
 }
 weak_alias (__libc_recvmsg, recvmsg)
 weak_alias (__libc_recvmsg, __recvmsg)
+#if __TIMESIZE != 64
+weak_alias (__recvmsg, __recvmsg64)
+#endif

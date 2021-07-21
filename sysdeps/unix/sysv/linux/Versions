@@ -259,6 +259,7 @@ libc {
     __pthread_rwlock_timedwrlock64;
     __pthread_timedjoin_np64;
     __recvmmsg64;
+    __recvmsg64;
     __sched_rr_get_interval64;
     __select64;
     __sem_clockwait64;

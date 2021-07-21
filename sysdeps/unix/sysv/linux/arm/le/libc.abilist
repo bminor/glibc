@@ -257,6 +257,7 @@ GLIBC_2.34 __pthread_unregister_cancel F
 GLIBC_2.34 __pthread_unregister_cancel_restore F
 GLIBC_2.34 __pthread_unwind_next F
 GLIBC_2.34 __recvmmsg64 F
+GLIBC_2.34 __recvmsg64 F
 GLIBC_2.34 __sched_rr_get_interval64 F
 GLIBC_2.34 __select64 F
 GLIBC_2.34 __sem_clockwait64 F
