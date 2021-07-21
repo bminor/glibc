@@ -38,7 +38,17 @@
 __BEGIN_DECLS
 
 /* Control process execution.  */
+#ifndef __USE_TIME_BITS64
 extern int prctl (int __option, ...) __THROW;
+#else
+# ifdef __REDIRECT
+extern int __REDIRECT (prctl, (int __option, ...), __prctl_time64) __THROW;
+# else
+extern int __prctl_time64 (int __option,d ...) __THROW;
+#  define ioctl __prctl_time64
+# endif
+#endif
+
 
 __END_DECLS
 

@@ -2494,6 +2494,7 @@ GLIBC_2.34 __nftw64_time64 F
 GLIBC_2.34 __ntp_gettime64 F
 GLIBC_2.34 __ntp_gettimex64 F
 GLIBC_2.34 __ppoll64 F
+GLIBC_2.34 __prctl_time64 F
 GLIBC_2.34 __pselect64 F
 GLIBC_2.34 __pthread_cleanup_routine F
 GLIBC_2.34 __pthread_clockjoin_np64 F

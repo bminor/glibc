@@ -40,3 +40,6 @@ __prctl (int option, ...)
 
 libc_hidden_def (__prctl)
 weak_alias (__prctl, prctl)
+#if __TIMESIZE != 64
+weak_alias (__prctl, __prctl_time64)
+#endif

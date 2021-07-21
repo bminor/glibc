@@ -245,6 +245,7 @@ libc {
     __ntp_gettime64;
     __ntp_gettimex64;
     __ppoll64;
+    __prctl_time64;
     __pselec64;
     __pselect64;
     __pthread_clockjoin_np64;

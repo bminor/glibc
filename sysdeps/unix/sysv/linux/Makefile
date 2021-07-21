@@ -120,7 +120,9 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-timerfd tst-ppoll \
 	 tst-clock_adjtime tst-adjtimex tst-ntp_adjtime tst-ntp_gettime \
 	 tst-ntp_gettimex tst-sigtimedwait tst-misalign-clone \
-	 tst-close_range
+  tst-close_range \
+  tst-prctl \
+  # tests
 
 # Test for the symbol version of fcntl that was replaced in glibc 2.28.
 ifeq ($(have-GLIBC_2.27)$(build-shared),yesyes)
@@ -138,6 +140,8 @@ tests-time64 += \
   tst-ppoll-time64 \
   tst-sigtimedwait-time64 \
   tst-timerfd-time64 \
+  tst-prctl-time64 \
+  # tests-time64
 
 tests-clone-internal = \
   tst-align-clone-internal \
