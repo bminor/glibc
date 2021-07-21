@@ -2377,6 +2377,7 @@ GLIBC_2.34 __sem_clockwait64 F
 GLIBC_2.34 __sem_timedwait64 F
 GLIBC_2.34 __semctl64 F
 GLIBC_2.34 __semtimedop64 F
+GLIBC_2.34 __sendmmsg64 F
 GLIBC_2.34 __setitimer64 F
 GLIBC_2.34 __settimeofday64 F
 GLIBC_2.34 __shmctl64 F

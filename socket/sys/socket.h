@@ -179,9 +179,21 @@ extern ssize_t sendmsg (int __fd, const struct msghdr *__message,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
+# ifndef __USE_TIME_BITS64
 extern int sendmmsg (int __fd, struct mmsghdr *__vmessages,
 		     unsigned int __vlen, int __flags);
-#endif
+# else
+#  ifdef __REDIRECT
+extern int __REDIRECT (sendmmsg, (int __fd, struct mmsghdr *__vmessages,
+				  unsigned int __vlen, int __flags),
+		       __sendmmsg64);
+#  else
+extern int __sendmmsg64 (int __fd, struct mmsghdr *__vmessages,
+			 unsigned int __vlen, int __flags);
+#   define sendmmsg __sendmmsg64
+#  endif
+# endif	 /* __USE_TIME_BITS64 */
+#endif /* __USE_GNU */
 
 /* Receive a message as described by MESSAGE from socket FD.
    Returns the number of bytes read or -1 for errors.

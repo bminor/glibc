@@ -35,3 +35,6 @@ __sendmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags)
 }
 libc_hidden_def (__sendmmsg)
 weak_alias (__sendmmsg, sendmmsg)
+#if __TIMESIZE != 64
+weak_alias (__sendmmsg, __sendmmsg64)
+#endif

@@ -122,6 +122,7 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-ntp_gettimex tst-sigtimedwait tst-misalign-clone \
   tst-close_range \
   tst-prctl \
+  tst-scm_rights \
   # tests
 
 # Test for the symbol version of fcntl that was replaced in glibc 2.28.
@@ -141,6 +142,7 @@ tests-time64 += \
   tst-sigtimedwait-time64 \
   tst-timerfd-time64 \
   tst-prctl-time64 \
+  tst-scm_rights-time64 \
   # tests-time64
 
 tests-clone-internal = \
