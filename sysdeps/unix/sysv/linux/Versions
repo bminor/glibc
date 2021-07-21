@@ -209,6 +209,7 @@ libc {
     __ctime64;
     __ctime64_r;
     __difftime64;
+    __fcntl_time64;
     __fstat64_time64;
     __fstatat64_time64;
     __futimens64;

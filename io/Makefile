@@ -90,6 +90,8 @@ tests-time64 := \
   tst-utime-time64 \
   tst-utimensat-time64 \
   tst-utimes-time64 \
+  tst-fcntl-time64 \
+  # tests-time64
 
 # Likewise for statx, but we do not need static linking here.
 tests-internal += tst-statx tst-file_change_detection

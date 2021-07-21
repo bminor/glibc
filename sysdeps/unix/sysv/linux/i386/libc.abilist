@@ -2493,6 +2493,7 @@ GLIBC_2.34 __cnd_timedwait64 F
 GLIBC_2.34 __ctime64 F
 GLIBC_2.34 __ctime64_r F
 GLIBC_2.34 __difftime64 F
+GLIBC_2.34 __fcntl_time64 F
 GLIBC_2.34 __fstat64_time64 F
 GLIBC_2.34 __fstatat64_time64 F
 GLIBC_2.34 __fts64_children_time64 F
