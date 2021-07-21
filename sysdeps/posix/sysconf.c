@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <regex.h>
+#include <signal.h>
 #include <sysconf-pthread_stack_min.h>
 
 #define NEED_SPEC_ARRAY 0
@@ -1187,6 +1188,20 @@ __sysconf (int name)
     case _SC_RAW_SOCKETS:
 #if CONF_IS_DEFINED_SET (_POSIX_RAW_SOCKETS)
       return _POSIX_RAW_SOCKETS;
+#else
+      return -1;
+#endif
+
+    case _SC_SIGSTKSZ:
+#ifdef SIGSTKSZ
+      return SIGSTKSZ;
+#else
+      return -1;
+#endif
+
+    case _SC_MINSIGSTKSZ:
+#ifdef MINSIGSTKSZ
+      return MINSIGSTKSZ;
 #else
       return -1;
 #endif
