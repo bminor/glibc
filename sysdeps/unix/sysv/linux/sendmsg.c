@@ -32,3 +32,6 @@ __libc_sendmsg (int fd, const struct msghdr *msg, int flags)
 }
 weak_alias (__libc_sendmsg, sendmsg)
 weak_alias (__libc_sendmsg, __sendmsg)
+#if __TIMESIZE != 64
+weak_alias (__sendmsg, __sendmsg64)
+#endif

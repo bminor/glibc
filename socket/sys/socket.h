@@ -170,8 +170,20 @@ extern ssize_t recvfrom (int __fd, void *__restrict __buf, size_t __n,
 
    This function is a cancellation point and therefore not marked with
    __THROW.  */
+#ifndef __USE_TIME_BITS64
 extern ssize_t sendmsg (int __fd, const struct msghdr *__message,
 			int __flags);
+#else
+# ifdef __REDIRECT
+extern ssize_t __REDIRECT (sendmsg, (int __fd, const struct msghdr *__message,
+				     int __flags),
+			   __sendmsg64);
+# else
+extern ssize_t __sendmsg64 (int __fd, const struct msghdr *__message,
+			    int __flags);
+#  defien sendmsg __sendmsg64
+# endif
+#endif
 
 #ifdef __USE_GNU
 /* Send a VLEN messages as described by VMESSAGES to socket FD.
