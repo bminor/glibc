@@ -1434,6 +1434,10 @@ void _dl_audit_symbind (struct link_map *l, struct reloc_result *reloc_result,
 void _dl_audit_symbind_alt (struct link_map *l, const ElfW(Sym) *ref,
 			    void **value, lookup_t result);
 rtld_hidden_proto (_dl_audit_symbind_alt)
+void _dl_audit_pltenter (struct link_map *l, struct reloc_result *reloc_result,
+			 DL_FIXUP_VALUE_TYPE *value, void *regs,
+			 long int *framesize)
+  attribute_hidden;
 #endif /* SHARED */
 
 #if PTHREAD_IN_LIBC && defined SHARED
