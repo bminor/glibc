@@ -1,8 +1,16 @@
+GLIBC_2.33 __free_hook D 0x4
+GLIBC_2.33 __malloc_hook D 0x4
+GLIBC_2.33 __memalign_hook D 0x4
+GLIBC_2.33 __realloc_hook D 0x4
 GLIBC_2.33 aligned_alloc F
 GLIBC_2.33 calloc F
 GLIBC_2.33 free F
 GLIBC_2.33 malloc F
+GLIBC_2.33 mcheck F
+GLIBC_2.33 mcheck_check_all F
+GLIBC_2.33 mcheck_pedantic F
 GLIBC_2.33 memalign F
+GLIBC_2.33 mprobe F
 GLIBC_2.33 posix_memalign F
 GLIBC_2.33 pvalloc F
 GLIBC_2.33 realloc F

@@ -92,9 +92,6 @@ tests-exclude-mcheck = tst-mallocstate \
 	tst-malloc-thread-fail \
 	tst-malloc-usable-tunables \
 	tst-malloc_info \
-	tst-memalign \
-	tst-posix_memalign \
-	tst-realloc \
 	tst-pvalloc-fortify \
 	tst-reallocarray \
 	tst-compathooks-off tst-compathooks-on

@@ -110,8 +110,17 @@ libc_malloc_debug {
     realloc;
     valloc;
 
+    __free_hook;
+    __malloc_hook;
+    __memalign_hook;
+    __realloc_hook;
+
+    mcheck;
+    mprobe;
   }
   GLIBC_2.2 {
+    mcheck_check_all;
+    mcheck_pedantic;
     posix_memalign;
   }
   GLIBC_2.16 {

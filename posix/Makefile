@@ -87,7 +87,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   bug-regex29 bug-regex30 bug-regex31 bug-regex32 \
 		   tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
-		   bug-ga1 tst-vfork1 tst-vfork2 tst-vfork3 \
+		   bug-ga1 tst-vfork1 tst-vfork2 \
 		   tst-waitid tst-wait4 tst-wait3 \
 		   tst-getaddrinfo2 bug-glob2 bug-glob3 tst-sysconf \
 		   tst-execvp1 tst-execvp2 tst-execlp1 tst-execlp2 \
@@ -122,7 +122,7 @@ endif
 
 tests-internal	:= bug-regex5 bug-regex20 bug-regex33 \
 		   tst-rfc3484 tst-rfc3484-2 tst-rfc3484-3
-tests-container := bug-ga2
+tests-container := bug-ga2 tst-vfork3
 tests-time64	:= tst-wait4-time64 tst-wait3-time64 tst-gnuglob64-time64
 xtests		:= tst-getaddrinfo4 tst-getaddrinfo5 tst-sched_rr_get_interval
 xtests-time64	:= tst-sched_rr_get_interval-time64
@@ -359,7 +359,9 @@ tst-vfork3-ENV = MALLOC_TRACE=$(objpfx)tst-vfork3.mtrace \
 		 LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 
 $(objpfx)tst-vfork3-mem.out: $(objpfx)tst-vfork3.out
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-vfork3.mtrace > $@; \
+	{ test -r $(objpfx)tst-vfork3.mtrace \
+	|| ( echo "tst-vfork3.mtrace does not exist"; exit 77; ) \
+	&& $(common-objpfx)malloc/mtrace $(objpfx)tst-vfork3.mtrace; } > $@; \
 	$(evaluate-test)
 
 # tst-rxspencer.mtrace is not generated, only
