@@ -78,6 +78,8 @@ tests-exclude-malloc-check = tst-malloc-check tst-malloc-usable \
 # Run all tests with MALLOC_CHECK_=3
 tests-malloc-check = $(filter-out $(tests-exclude-malloc-check),$(tests))
 
+# -lmcheck needs __malloc_initialize_hook, which was deprecated in 2.24.
+ifeq ($(have-GLIBC_2.23)$(build-shared),yesyes)
 # Tests that don't play well with mcheck.  They are either bugs in mcheck or
 # the tests expect specific internal behavior that is changed due to linking to
 # libmcheck.a.
@@ -100,6 +102,7 @@ tests-exclude-mcheck = tst-mallocstate \
 	tst-reallocarray
 
 tests-mcheck = $(filter-out $(tests-exclude-mcheck), $(tests))
+endif
 
 routines = malloc morecore mcheck mtrace obstack reallocarray \
   scratch_buffer_dupfree \
