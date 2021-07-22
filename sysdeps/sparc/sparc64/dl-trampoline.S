@@ -196,7 +196,7 @@ _dl_profile_invoke:
 	mov	%l5, %o0
 	mov	%l6, %o1
 	add	%sp, STACK_BIAS + (24 * 8), %o2
-	call	_dl_call_pltexit
+	call	_dl_audit_pltexit
 	 add	%sp, STACK_BIAS + (16 * 8), %o3
 
 	ldx	[%sp + STACK_BIAS + (16 * 8)], %i0

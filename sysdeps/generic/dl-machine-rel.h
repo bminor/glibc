@@ -23,5 +23,7 @@
 #define ELF_MACHINE_NO_REL 1
 /* Defined if the architecture supports Elf{32,64}_Rela relocations.  */
 #define ELF_MACHINE_NO_RELA 0
+/* Used to calculate the index of link_map l_reloc_result.  */
+#define PLTREL ElfW(Rela)
 
 #endif

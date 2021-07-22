@@ -423,8 +423,8 @@ _dl_runtime_profile:
 	.align 2
 #ifdef SHARED
 7:	.long _GLOBAL_OFFSET_TABLE_
-8:	.long _dl_call_pltexit@GOTOFF
+8:	.long _dl_audit_pltexit@GOTOFF
 #else
-8:	.long _dl_call_pltexit
+8:	.long _dl_audit_pltexit
 #endif
 	.size _dl_runtime_profile, .-_dl_runtime_profile

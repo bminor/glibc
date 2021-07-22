@@ -133,7 +133,7 @@ END(_dl_runtime_resolve)
 
 
 /* The fourth argument to _dl_profile_fixup and the third one to
-   _dl_call_pltexit are a pointer to La_ia64_regs:
+   _dl_audit_pltexit are a pointer to La_ia64_regs:
 
    8byte r8
    8byte r9
@@ -159,7 +159,7 @@ END(_dl_runtime_resolve)
    8byte sp
 
    The fifth argument to _dl_profile_fixup is a pointer to long int.
-   The fourth argument to _dl_call_pltexit is a pointer to
+   The fourth argument to _dl_audit_pltexit is a pointer to
    La_ia64_retval:
 
    8byte r8
@@ -261,7 +261,7 @@ ENTRY(_dl_runtime_profile)
 	}
 	{ .mii
 	  mov r18 = ar.unat	/* save it in La_ia64_regs */
-	  mov loc7 = out3	/* save it for _dl_call_pltexit */
+	  mov loc7 = out3	/* save it for _dl_audit_pltexit */
 	  mov loc5 = r11	/* preserve language specific register */
 	}
 	{ .mmi
@@ -272,7 +272,7 @@ ENTRY(_dl_runtime_profile)
 	}
 	{ .mii
 	  mov ar.unat = r17	/* restore it for function call */
-	  mov loc8 = r16	/* save it for _dl_call_pltexit */
+	  mov loc8 = r16	/* save it for _dl_audit_pltexit */
 	  nop.i 0x0
 	}
 	{ .mmi
@@ -291,7 +291,7 @@ ENTRY(_dl_runtime_profile)
 	{ .mmi
 	  stf.spill [r2] = f14, 32
 	  stf.spill [r3] = f15, 24
-	  mov loc9 = out1	/* save it for _dl_call_pltexit */
+	  mov loc9 = out1	/* save it for _dl_audit_pltexit */
 	  ;;
 	}
 	{ .mmb
@@ -426,7 +426,7 @@ ENTRY(_dl_runtime_profile)
 	  br.call.sptk.many b0 = b6
 	}
 	{ .mii
-	  /* Prepare stack for _dl_call_pltexit. Loc10 has the original
+	  /* Prepare stack for _dl_audit_pltexit. Loc10 has the original
 	     stack pointer.  */
 	  adds r12 = -PLTEXIT_FRAME_SIZE, loc10
 	  adds r2 = -(PLTEXIT_FRAME_SIZE - 16), loc10
@@ -461,14 +461,14 @@ ENTRY(_dl_runtime_profile)
 	{ .mmi
 	  stf.spill [r2] = f12, 32
 	  stf.spill [r3] = f13, 32
-	  /* We need to restore gp for _dl_call_pltexit. */
+	  /* We need to restore gp for _dl_audit_pltexit. */
 	  mov gp = loc11
 	  ;;
 	}
 	{ .mmb
 	  stf.spill [r2] = f14
 	  stf.spill [r3] = f15
-	  br.call.sptk.many b0 = _dl_call_pltexit
+	  br.call.sptk.many b0 = _dl_audit_pltexit
 	}
 	{ .mmi
 	  /* Load all the non-floating and floating return values. Skip

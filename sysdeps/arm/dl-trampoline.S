@@ -194,7 +194,7 @@ _dl_runtime_profile:
 	ldmia	ip, {r0,r1}
 	add	r2, r7, #72
 	add	r3, r7, #0
-	bl	_dl_call_pltexit
+	bl	_dl_audit_pltexit
 
 	@ Return to caller.
 	ldmia	r7, {r0-r3}

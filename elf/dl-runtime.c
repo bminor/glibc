@@ -16,8 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define IN_DL_RUNTIME 1		/* This can be tested in dl-machine.h.  */
-
 #include <alloca.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -31,19 +29,6 @@
 #include <dl-runtime.h>
 
 
-#if (!ELF_MACHINE_NO_RELA && !defined ELF_MACHINE_PLT_REL) \
-    || ELF_MACHINE_NO_REL
-# define PLTREL  ElfW(Rela)
-#else
-# define PLTREL  ElfW(Rel)
-#endif
-
-/* The fixup functions might have need special attributes.  If none
-   are provided define the macro as empty.  */
-#ifndef ARCH_FIXUP_ATTRIBUTE
-# define ARCH_FIXUP_ATTRIBUTE
-#endif
-
 /* This function is called through a special trampoline from the PLT the
    first time each PLT entry is called.  We must perform the relocation
    specified in the PLT of the given shared object, and return the resolved
@@ -52,7 +37,7 @@
    function.  */
 
 DL_FIXUP_VALUE_TYPE
-attribute_hidden __attribute ((noinline)) ARCH_FIXUP_ATTRIBUTE
+attribute_hidden __attribute ((noinline)) DL_ARCH_FIXUP_ATTRIBUTE
 _dl_fixup (
 # ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
 	   ELF_MACHINE_RUNTIME_FIXUP_ARGS,
@@ -148,7 +133,8 @@ _dl_fixup (
 
 #ifndef PROF
 DL_FIXUP_VALUE_TYPE
-__attribute ((noinline)) ARCH_FIXUP_ATTRIBUTE
+__attribute ((noinline))
+DL_ARCH_FIXUP_ATTRIBUTE
 _dl_profile_fixup (
 #ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
 		   ELF_MACHINE_RUNTIME_FIXUP_ARGS,
@@ -332,52 +318,3 @@ _dl_profile_fixup (
 }
 
 #endif /* PROF */
-
-
-#include <stdio.h>
-void
-ARCH_FIXUP_ATTRIBUTE
-_dl_call_pltexit (struct link_map *l, ElfW(Word) reloc_arg,
-		  const void *inregs, void *outregs)
-{
-#ifdef SHARED
-  const uintptr_t pltgot = (uintptr_t) D_PTR (l, l_info[DT_PLTGOT]);
-
-  /* This is the address in the array where we store the result of previous
-     relocations.  */
-  // XXX Maybe the bound information must be stored on the stack since
-  // XXX with bind_not a new value could have been stored in the meantime.
-  struct reloc_result *reloc_result =
-    &l->l_reloc_result[reloc_index (pltgot, reloc_arg, sizeof (PLTREL))];
-  ElfW(Sym) *defsym = ((ElfW(Sym) *) D_PTR (reloc_result->bound,
-					    l_info[DT_SYMTAB])
-		       + reloc_result->boundndx);
-
-  /* Set up the sym parameter.  */
-  ElfW(Sym) sym = *defsym;
-  sym.st_value = DL_FIXUP_VALUE_ADDR (reloc_result->addr);
-
-  /* Get the symbol name.  */
-  const char *strtab = (const void *) D_PTR (reloc_result->bound,
-					     l_info[DT_STRTAB]);
-  const char *symname = strtab + sym.st_name;
-
-  struct audit_ifaces *afct = GLRO(dl_audit);
-  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-    {
-      if (afct->ARCH_LA_PLTEXIT != NULL
-	  && (reloc_result->enterexit
-	      & (LA_SYMB_NOPLTEXIT >> (2 * cnt))) == 0)
-	{
-	  struct auditstate *l_state = link_map_audit_state (l, cnt);
-	  struct auditstate *bound_state
-	    = link_map_audit_state (reloc_result->bound, cnt);
-	  afct->ARCH_LA_PLTEXIT (&sym, reloc_result->boundndx,
-				 &l_state->cookie, &bound_state->cookie,
-				 inregs, outregs, symname);
-	}
-
-      afct = afct->next;
-    }
-#endif
-}
