@@ -101,3 +101,6 @@ __getsockopt (int fd, int level, int optname, void *optval, socklen_t *len)
  return r;
 }
 weak_alias (__getsockopt, getsockopt)
+#if __TIMESIZE != 64
+weak_alias (__getsockopt, __getsockopt64)
+#endif

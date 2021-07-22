@@ -2420,6 +2420,7 @@ GLIBC_2.34 __futimesat64 F
 GLIBC_2.34 __gai_suspend_time64 F
 GLIBC_2.34 __getitimer64 F
 GLIBC_2.34 __getrusage64 F
+GLIBC_2.34 __getsockopt64 F
 GLIBC_2.34 __gettimeofday64 F
 GLIBC_2.34 __glob64_time64 F
 GLIBC_2.34 __globfree64_time64 F

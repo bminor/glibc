@@ -251,9 +251,24 @@ extern int __REDIRECT (recvmmsg, (int __fd, struct mmsghdr *__vmessages,
 /* Put the current value for socket FD's option OPTNAME at protocol level LEVEL
    into OPTVAL (which is *OPTLEN bytes long), and set *OPTLEN to the value's
    actual length.  Returns 0 on success, -1 for errors.  */
+#ifndef __USE_TIME_BITS64
 extern int getsockopt (int __fd, int __level, int __optname,
 		       void *__restrict __optval,
 		       socklen_t *__restrict __optlen) __THROW;
+#else
+# ifdef __REDIRECT
+extern int __REDIRECT_NTH (getsockopt,
+			   (int __fd, int __level, int __optname,
+			    void *__restrict __optval,
+			    socklen_t *__restrict __optlen),
+			   __getsockopt64);
+# else
+extern int __getsockopt64 (int __fd, int __level, int __optname,
+			   void *__restrict __optval,
+			   socklen_t *__restrict __optlen) __THROW;
+#  define getsockopt __getsockopt64
+# endif
+#endif
 
 /* Set socket FD's option OPTNAME at protocol level LEVEL
    to *OPTVAL (which is OPTLEN bytes long).

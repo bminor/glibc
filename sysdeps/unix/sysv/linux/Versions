@@ -225,6 +225,7 @@ libc {
     __gai_suspend_time64;
     __getitimer64;
     __getrusage64;
+    __getsockopt64;
     __gettimeofday64;
     __glob64_time64;
     __globfree64_time64;

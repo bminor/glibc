@@ -31,7 +31,14 @@ routines := accept bind connect getpeername getsockname getsockopt	\
 	    setsockopt shutdown socket socketpair isfdtype opensock	\
 	    sockatmark accept4 recvmmsg sendmmsg
 
-tests := tst-accept4
+tests := \
+  tst-accept4 \
+  tst-sockopt \
+  # tests
+
+tests-time64 := \
+  tst-sockopt-time64 \
+  # tests
 
 aux	 := sa_len
 
