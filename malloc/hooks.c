@@ -32,12 +32,16 @@ void weak_variable (*__after_morecore_hook) (void) = NULL;
 compat_symbol (libc, __after_morecore_hook, __after_morecore_hook, GLIBC_2_0);
 void *(*__morecore)(ptrdiff_t);
 compat_symbol (libc, __morecore, __morecore, GLIBC_2_0);
-#endif
 
 void weak_variable (*__free_hook) (void *, const void *) = NULL;
 void *weak_variable (*__malloc_hook) (size_t, const void *) = NULL;
 void *weak_variable (*__realloc_hook) (void *, size_t, const void *) = NULL;
 void *weak_variable (*__memalign_hook) (size_t, size_t, const void *) = NULL;
+compat_symbol (libc, __free_hook, __free_hook, GLIBC_2_0);
+compat_symbol (libc, __malloc_hook, __malloc_hook, GLIBC_2_0);
+compat_symbol (libc, __realloc_hook, __realloc_hook, GLIBC_2_0);
+compat_symbol (libc, __memalign_hook, __memalign_hook, GLIBC_2_0);
+#endif
 
 /*
  * Local variables:

@@ -156,21 +156,5 @@ extern void malloc_stats (void) __THROW;
 /* Output information about state of allocator to stream FP.  */
 extern int malloc_info (int __options, FILE *__fp) __THROW;
 
-/* Hooks for debugging and user-defined versions. */
-extern void (*__MALLOC_HOOK_VOLATILE __free_hook) (void *__ptr,
-                                                   const void *)
-__MALLOC_DEPRECATED;
-extern void *(*__MALLOC_HOOK_VOLATILE __malloc_hook)(size_t __size,
-                                                     const void *)
-__MALLOC_DEPRECATED;
-extern void *(*__MALLOC_HOOK_VOLATILE __realloc_hook)(void *__ptr,
-                                                      size_t __size,
-                                                      const void *)
-__MALLOC_DEPRECATED;
-extern void *(*__MALLOC_HOOK_VOLATILE __memalign_hook)(size_t __alignment,
-                                                       size_t __size,
-                                                       const void *)
-__MALLOC_DEPRECATED;
-
 __END_DECLS
 #endif /* malloc.h */

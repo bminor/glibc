@@ -143,6 +143,16 @@ Deprecated and removed features, and other changes affecting compatibility:
   that still use these functions will now need to preload libc_malloc_debug.so
   in their environment using the LD_PRELOAD environment variable.
 
+* The deprecated memory allocation hooks __malloc_hook, __realloc_hook,
+  __memalign_hook and __free_hook are now removed from the API.  Compatibility
+  symbols are present to support legacy programs but new applications can no
+  longer link to these symbols.  These hooks no longer have any effect on glibc
+  functionality.  The malloc debugging DSO libc_malloc_debug.so currently
+  supports hooks and can be preloaded to get this functionality back for older
+  programs.  However this is a transitional measure and may be removed in a
+  future release of the GNU C Library.  Users may port away from these hooks by
+  writing and preloading their own malloc interposition library.
+
 Changes to build and runtime requirements:
 
 * On Linux, the shm_open, sem_open, and related functions now expect the

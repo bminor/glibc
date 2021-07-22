@@ -328,8 +328,6 @@ any time (or never).
 * Malloc Tunable Parameters::   Use @code{mallopt} to adjust allocation
                                  parameters.
 * Heap Consistency Checking::   Automatic checking for errors.
-* Hooks for Malloc::            You can use these hooks for debugging
-				 programs that use @code{malloc}.
 * Statistics of Malloc::        Getting information about how much
 				 memory your program is using.
 * Summary of Malloc::           Summary of @code{malloc} and related functions.
@@ -1392,170 +1390,6 @@ compatibility.  Both @code{MALLOC_CHECK_} and @samp{-lmcheck} should
 uncover the same bugs - but using @code{MALLOC_CHECK_} you don't need to
 recompile your application.
 
-@node Hooks for Malloc
-@subsubsection Memory Allocation Hooks
-@cindex allocation hooks, for @code{malloc}
-
-@Theglibc{} lets you modify the behavior of @code{malloc},
-@code{realloc}, and @code{free} by specifying appropriate hook
-functions.  You can use these hooks to help you debug programs that use
-dynamic memory allocation, for example.
-
-The hook variables are declared in @file{malloc.h}.
-@pindex malloc.h
-
-@defvar __malloc_hook
-@standards{GNU, malloc.h}
-The value of this variable is a pointer to the function that
-@code{malloc} uses whenever it is called.  You should define this
-function to look like @code{malloc}; that is, like:
-
-@smallexample
-void *@var{function} (size_t @var{size}, const void *@var{caller})
-@end smallexample
-
-The value of @var{caller} is the return address found on the stack when
-the @code{malloc} function was called.  This value allows you to trace
-the memory consumption of the program.
-@end defvar
-
-@defvar __realloc_hook
-@standards{GNU, malloc.h}
-The value of this variable is a pointer to function that @code{realloc}
-uses whenever it is called.  You should define this function to look
-like @code{realloc}; that is, like:
-
-@smallexample
-void *@var{function} (void *@var{ptr}, size_t @var{size}, const void *@var{caller})
-@end smallexample
-
-The value of @var{caller} is the return address found on the stack when
-the @code{realloc} function was called.  This value allows you to trace the
-memory consumption of the program.
-@end defvar
-
-@defvar __free_hook
-@standards{GNU, malloc.h}
-The value of this variable is a pointer to function that @code{free}
-uses whenever it is called.  You should define this function to look
-like @code{free}; that is, like:
-
-@smallexample
-void @var{function} (void *@var{ptr}, const void *@var{caller})
-@end smallexample
-
-The value of @var{caller} is the return address found on the stack when
-the @code{free} function was called.  This value allows you to trace the
-memory consumption of the program.
-@end defvar
-
-@defvar __memalign_hook
-@standards{GNU, malloc.h}
-The value of this variable is a pointer to function that @code{aligned_alloc},
-@code{memalign}, @code{posix_memalign} and @code{valloc} use whenever they
-are called.  You should define this function to look like @code{aligned_alloc};
-that is, like:
-
-@smallexample
-void *@var{function} (size_t @var{alignment}, size_t @var{size}, const void *@var{caller})
-@end smallexample
-
-The value of @var{caller} is the return address found on the stack when
-the @code{aligned_alloc}, @code{memalign}, @code{posix_memalign} or
-@code{valloc} functions are called.  This value allows you to trace the
-memory consumption of the program.
-@end defvar
-
-You must make sure that the function you install as a hook for one of
-these functions does not call that function recursively without restoring
-the old value of the hook first!  Otherwise, your program will get stuck
-in an infinite recursion.  Before calling the function recursively, one
-should make sure to restore all the hooks to their previous value.  When
-coming back from the recursive call, all the hooks should be resaved
-since a hook might modify itself.
-
-An issue to look out for is the time at which the hook functions
-can be safely installed.  If the hook functions call the @code{malloc}-related
-functions recursively, it is necessary that @code{malloc} has already properly
-initialized itself at the time when @code{__malloc_hook} etc. is
-assigned to.  On the other hand, if the hook functions provide a
-complete @code{malloc} implementation of their own, it is vital that the hooks
-are assigned to @emph{before} the very first @code{malloc} call has
-completed, because otherwise a chunk obtained from the ordinary,
-un-hooked @code{malloc} may later be handed to @code{__free_hook}, for example.
-
-Here is an example showing how to use @code{__malloc_hook} and
-@code{__free_hook} properly.  It installs a function that prints out
-information every time @code{malloc} or @code{free} is called.  We just
-assume here that @code{realloc} and @code{memalign} are not used in our
-program.
-
-@smallexample
-/* Prototypes for __malloc_hook, __free_hook */
-#include <malloc.h>
-
-/* Prototypes for our hooks.  */
-static void my_init_hook (void);
-static void *my_malloc_hook (size_t, const void *);
-static void my_free_hook (void*, const void *);
-
-static void
-my_init (void)
-@{
-  old_malloc_hook = __malloc_hook;
-  old_free_hook = __free_hook;
-  __malloc_hook = my_malloc_hook;
-  __free_hook = my_free_hook;
-@}
-
-static void *
-my_malloc_hook (size_t size, const void *caller)
-@{
-  void *result;
-  /* Restore all old hooks */
-  __malloc_hook = old_malloc_hook;
-  __free_hook = old_free_hook;
-  /* Call recursively */
-  result = malloc (size);
-  /* Save underlying hooks */
-  old_malloc_hook = __malloc_hook;
-  old_free_hook = __free_hook;
-  /* @r{@code{printf} might call @code{malloc}, so protect it too.} */
-  printf ("malloc (%u) returns %p\n", (unsigned int) size, result);
-  /* Restore our own hooks */
-  __malloc_hook = my_malloc_hook;
-  __free_hook = my_free_hook;
-  return result;
-@}
-
-static void
-my_free_hook (void *ptr, const void *caller)
-@{
-  /* Restore all old hooks */
-  __malloc_hook = old_malloc_hook;
-  __free_hook = old_free_hook;
-  /* Call recursively */
-  free (ptr);
-  /* Save underlying hooks */
-  old_malloc_hook = __malloc_hook;
-  old_free_hook = __free_hook;
-  /* @r{@code{printf} might call @code{free}, so protect it too.} */
-  printf ("freed pointer %p\n", ptr);
-  /* Restore our own hooks */
-  __malloc_hook = my_malloc_hook;
-  __free_hook = my_free_hook;
-@}
-
-main ()
-@{
-  my_init ();
-  @dots{}
-@}
-@end smallexample
-
-The @code{mcheck} function (@pxref{Heap Consistency Checking}) works by
-installing such hooks.
-
 @c __morecore, __after_morecore_hook are undocumented
 @c It's not clear whether to document them.
 
@@ -1690,19 +1524,6 @@ Tell @code{malloc} to perform occasional consistency checks on
 dynamically allocated memory, and to call @var{abortfn} when an
 inconsistency is found.  @xref{Heap Consistency Checking}.
 
-@item void *(*__malloc_hook) (size_t @var{size}, const void *@var{caller})
-A pointer to a function that @code{malloc} uses whenever it is called.
-
-@item void *(*__realloc_hook) (void *@var{ptr}, size_t @var{size}, const void *@var{caller})
-A pointer to a function that @code{realloc} uses whenever it is called.
-
-@item void (*__free_hook) (void *@var{ptr}, const void *@var{caller})
-A pointer to a function that @code{free} uses whenever it is called.
-
-@item void (*__memalign_hook) (size_t @var{size}, size_t @var{alignment}, const void *@var{caller})
-A pointer to a function that @code{aligned_alloc}, @code{memalign},
-@code{posix_memalign} and @code{valloc} use whenever they are called.
-
 @item struct mallinfo2 mallinfo2 (void)
 Return information about the current dynamic memory usage.
 @xref{Statistics of Malloc}.
@@ -1737,7 +1558,7 @@ penalties for the program if the debugging mode is not enabled.
 
 @deftypefun void mtrace (void)
 @standards{GNU, mcheck.h}
-@safety{@prelim{}@mtunsafe{@mtsenv{} @mtasurace{:mtrace} @mtasuconst{:malloc_hooks} @mtuinit{}}@asunsafe{@asuinit{} @ascuheap{} @asucorrupt{} @asulock{}}@acunsafe{@acuinit{} @acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
+@safety{@prelim{}@mtunsafe{@mtsenv{} @mtasurace{:mtrace} @mtuinit{}}@asunsafe{@asuinit{} @ascuheap{} @asucorrupt{} @asulock{}}@acunsafe{@acuinit{} @acucorrupt{} @aculock{} @acsfd{} @acsmem{}}}
 @c Like the mcheck hooks, these are not designed with thread safety in
 @c mind, because the hook pointers are temporarily modified without
 @c regard to other threads, signals or cancellation.
@@ -1768,10 +1589,10 @@ with the SUID or SGID bit set.
 
 If the named file is successfully opened, @code{mtrace} installs special
 handlers for the functions @code{malloc}, @code{realloc}, and
-@code{free} (@pxref{Hooks for Malloc}).  From then on, all uses of these
-functions are traced and protocolled into the file.  There is now of
-course a speed penalty for all calls to the traced functions so tracing
-should not be enabled during normal use.
+@code{free}.  From then on, all uses of these functions are traced and
+protocolled into the file.  There is now of course a speed penalty for all
+calls to the traced functions so tracing should not be enabled during normal
+use.
 
 This function is a GNU extension and generally not available on other
 systems.  The prototype can be found in @file{mcheck.h}.
@@ -1779,7 +1600,7 @@ systems.  The prototype can be found in @file{mcheck.h}.
 
 @deftypefun void muntrace (void)
 @standards{GNU, mcheck.h}
-@safety{@prelim{}@mtunsafe{@mtasurace{:mtrace} @mtasuconst{:malloc_hooks} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{} @aculock{} @acsfd{}}}
+@safety{@prelim{}@mtunsafe{@mtasurace{:mtrace} @mtslocale{}}@asunsafe{@asucorrupt{} @ascuheap{}}@acunsafe{@acucorrupt{} @acsmem{} @aculock{} @acsfd{}}}
 
 @c muntrace @mtasurace:mtrace @mtslocale @asucorrupt @ascuheap @acucorrupt @acsmem @aculock @acsfd
 @c  fprintf (fputs) dup @mtslocale @asucorrupt @ascuheap @acsmem @aculock @acucorrupt
