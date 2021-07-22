@@ -73,3 +73,6 @@ libgcc_s=1
 
 # The vector math library
 libmvec=1
+
+# The malloc debug library
+libc_malloc_debug=0

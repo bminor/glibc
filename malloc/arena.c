@@ -404,13 +404,6 @@ ptmalloc_init (void)
   if (s && s[0] != '\0' && s[0] != '0')
     __malloc_check_init ();
 #endif
-
-#if HAVE_MALLOC_INIT_HOOK
-  void (*hook) (void) = atomic_forced_read (__malloc_initialize_hook);
-  if (hook != NULL)
-    (*hook)();
-#endif
-  __malloc_initialized = 1;
 }
 
 /* Managing heaps and arenas (for concurrent threads) */

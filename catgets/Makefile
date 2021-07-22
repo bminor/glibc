@@ -56,7 +56,9 @@ generated += tst-catgets.mtrace tst-catgets-mem.out
 
 generated-dirs += de
 
-tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de MALLOC_TRACE=$(objpfx)tst-catgets.mtrace
+tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de \
+		  MALLOC_TRACE=$(objpfx)tst-catgets.mtrace \
+		  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 
 ifeq ($(run-built-tests),yes)
 # This test just checks whether the program produces any error or not.

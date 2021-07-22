@@ -22,6 +22,7 @@
 # define _MALLOC_INTERNAL
 # include <malloc.h>
 # include <mcheck.h>
+# include <malloc-internal.h>
 # include <libc-lock.h>
 #endif
 

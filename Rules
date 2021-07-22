@@ -279,9 +279,16 @@ endif
 
 # All malloc-check tests will be run with MALLOC_CHECK_=3
 define malloc-check-ENVS
-$(1)-malloc-check-ENV = MALLOC_CHECK_=3
+$(1)-malloc-check-ENV = MALLOC_CHECK_=3 \
+			LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 endef
 $(foreach t,$(tests-malloc-check),$(eval $(call malloc-check-ENVS,$(t))))
+
+# mcheck tests need the debug DSO to support -lmcheck.
+define mcheck-ENVS
+$(1)-mcheck-ENV = LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+endef
+$(foreach t,$(tests-mcheck),$(eval $(call mcheck-ENVS,$(t))))
 
 ifneq "$(strip $(tests) $(tests-internal) $(xtests) $(test-srcs))" ""
 # These are the implicit rules for making test outputs

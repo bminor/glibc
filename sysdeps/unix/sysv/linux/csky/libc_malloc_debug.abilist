@@ -1,0 +1,9 @@
+GLIBC_2.29 aligned_alloc F
+GLIBC_2.29 calloc F
+GLIBC_2.29 free F
+GLIBC_2.29 malloc F
+GLIBC_2.29 memalign F
+GLIBC_2.29 posix_memalign F
+GLIBC_2.29 pvalloc F
+GLIBC_2.29 realloc F
+GLIBC_2.29 valloc F

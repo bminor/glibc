@@ -155,13 +155,15 @@ $(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)
 
 $(objpfx)tst-tsearch: $(libm)
 
-tst-error1-ENV = MALLOC_TRACE=$(objpfx)tst-error1.mtrace
+tst-error1-ENV = MALLOC_TRACE=$(objpfx)tst-error1.mtrace \
+		 LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 tst-error1-ARGS = $(objpfx)tst-error1.out
 $(objpfx)tst-error1-mem.out: $(objpfx)tst-error1.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-error1.mtrace > $@; \
 	$(evaluate-test)
 
-tst-allocate_once-ENV = MALLOC_TRACE=$(objpfx)tst-allocate_once.mtrace
+tst-allocate_once-ENV = MALLOC_TRACE=$(objpfx)tst-allocate_once.mtrace \
+			LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 $(objpfx)tst-allocate_once-mem.out: $(objpfx)tst-allocate_once.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-allocate_once.mtrace > $@; \
 	$(evaluate-test)

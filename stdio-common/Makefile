@@ -110,15 +110,20 @@ $(objpfx)tst-swprintf.out: $(gen-locales)
 $(objpfx)tst-vfprintf-mbs-prec.out: $(gen-locales)
 endif
 
-tst-printf-bz18872-ENV = MALLOC_TRACE=$(objpfx)tst-printf-bz18872.mtrace
+tst-printf-bz18872-ENV = MALLOC_TRACE=$(objpfx)tst-printf-bz18872.mtrace \
+			LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 tst-vfprintf-width-prec-ENV = \
-  MALLOC_TRACE=$(objpfx)tst-vfprintf-width-prec.mtrace
+  MALLOC_TRACE=$(objpfx)tst-vfprintf-width-prec.mtrace \
+  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 tst-printf-bz25691-ENV = \
-  MALLOC_TRACE=$(objpfx)tst-printf-bz25691.mtrace
+  MALLOC_TRACE=$(objpfx)tst-printf-bz25691.mtrace \
+  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 tst-printf-fp-free-ENV = \
-  MALLOC_TRACE=$(objpfx)tst-printf-fp-free.mtrace
+  MALLOC_TRACE=$(objpfx)tst-printf-fp-free.mtrace \
+  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 tst-printf-fp-leak-ENV = \
-  MALLOC_TRACE=$(objpfx)tst-printf-fp-leak.mtrace
+  MALLOC_TRACE=$(objpfx)tst-printf-fp-leak.mtrace \
+  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 
 $(objpfx)tst-unbputc.out: tst-unbputc.sh $(objpfx)tst-unbputc
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \

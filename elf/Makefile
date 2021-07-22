@@ -156,7 +156,7 @@ $(inst_auditdir)/sotruss-lib.so: $(objpfx)sotruss-lib.so $(+force)
 	$(do-install-program)
 endif
 
-tests-static-normal := tst-leaks1-static tst-array1-static tst-array5-static \
+tests-static-normal := tst-array1-static tst-array5-static \
 	       tst-dl-iter-static \
 	       tst-tlsalign-static tst-tlsalign-extern-static \
 	       tst-linkall-static tst-env-setuid tst-env-setuid-tunables \
@@ -242,7 +242,7 @@ endif
 tests += $(tests-execstack-$(have-z-execstack))
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-leaks1-mem.out \
-		 $(objpfx)tst-leaks1-static-mem.out $(objpfx)noload-mem.out \
+		 $(objpfx)noload-mem.out \
 		 $(objpfx)tst-ldconfig-X.out $(objpfx)tst-rtld-help.out
 endif
 tlsmod17a-suffixes = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
@@ -904,7 +904,8 @@ $(objpfx)noload.out: $(objpfx)testobj5.so
 $(objpfx)noload-mem.out: $(objpfx)noload.out
 	$(common-objpfx)malloc/mtrace $(objpfx)noload.mtrace > $@; \
 	$(evaluate-test)
-noload-ENV = MALLOC_TRACE=$(objpfx)noload.mtrace
+noload-ENV = MALLOC_TRACE=$(objpfx)noload.mtrace \
+	     LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 
 LDFLAGS-nodelete = -rdynamic
 LDFLAGS-nodelmod1.so = -Wl,--enable-new-dtags,-z,nodelete
@@ -1282,12 +1283,8 @@ $(objpfx)tst-leaks1-mem.out: $(objpfx)tst-leaks1.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1.mtrace > $@; \
 	$(evaluate-test)
 
-$(objpfx)tst-leaks1-static-mem.out: $(objpfx)tst-leaks1-static.out
-	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks1-static.mtrace > $@; \
-	$(evaluate-test)
-
-tst-leaks1-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1.mtrace
-tst-leaks1-static-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1-static.mtrace
+tst-leaks1-ENV = MALLOC_TRACE=$(objpfx)tst-leaks1.mtrace \
+		 LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 
 $(objpfx)tst-thrlock: $(shared-thread-library)
 $(objpfx)tst-thrlock.out: $(libm)

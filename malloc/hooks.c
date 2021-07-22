@@ -1,4 +1,4 @@
-/* Malloc implementation for multiple threads without lock contention.
+/* Compatibility code for malloc debugging and state management.
    Copyright (C) 2001-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
@@ -17,6 +17,16 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <https://www.gnu.org/licenses/>.  */
 
+#ifndef weak_variable
+# define weak_variable weak_function
+#endif
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_24)
+void (*__malloc_initialize_hook) (void);
+compat_symbol (libc, __malloc_initialize_hook,
+	       __malloc_initialize_hook, GLIBC_2_0);
+#endif
+
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_34)
 void weak_variable (*__after_morecore_hook) (void) = NULL;
 compat_symbol (libc, __after_morecore_hook, __after_morecore_hook, GLIBC_2_0);
@@ -24,32 +34,64 @@ void *(*__morecore)(ptrdiff_t);
 compat_symbol (libc, __morecore, __morecore, GLIBC_2_0);
 #endif
 
+static void *malloc_hook_ini (size_t, const void *) __THROW;
+static void *realloc_hook_ini (void *, size_t, const void *) __THROW;
+static void *memalign_hook_ini (size_t, size_t, const void *) __THROW;
+
+void weak_variable (*__free_hook) (void *, const void *) = NULL;
+void *weak_variable (*__malloc_hook)
+  (size_t, const void *) = malloc_hook_ini;
+void *weak_variable (*__realloc_hook)
+  (void *, size_t, const void *) = realloc_hook_ini;
+void *weak_variable (*__memalign_hook)
+  (size_t, size_t, const void *) = memalign_hook_ini;
+
 /* Hooks for debugging versions.  The initial hooks just call the
    initialization routine, then do the normal work. */
+
+/* These hooks will get executed only through the interposed allocator
+   functions in libc_malloc_debug.so.  This means that the calls to malloc,
+   realloc, etc. will lead back into the interposed functions, which is what we
+   want.
+
+   These initial hooks are assumed to be called in a single-threaded context,
+   so it is safe to reset all hooks at once upon initialization.  */
+
+static void
+generic_hook_ini (void)
+{
+  __malloc_hook = NULL;
+  __realloc_hook = NULL;
+  __memalign_hook = NULL;
+  ptmalloc_init ();
+
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_24)
+  void (*hook) (void) = atomic_forced_read (__malloc_initialize_hook);
+  if (hook != NULL)
+    (*hook)();
+#endif
+  __malloc_initialized = 1;
+}
 
 static void *
 malloc_hook_ini (size_t sz, const void *caller)
 {
-  __malloc_hook = NULL;
-  ptmalloc_init ();
-  return __libc_malloc (sz);
+  generic_hook_ini ();
+  return malloc (sz);
 }
 
 static void *
 realloc_hook_ini (void *ptr, size_t sz, const void *caller)
 {
-  __malloc_hook = NULL;
-  __realloc_hook = NULL;
-  ptmalloc_init ();
-  return __libc_realloc (ptr, sz);
+  generic_hook_ini ();
+  return realloc (ptr, sz);
 }
 
 static void *
 memalign_hook_ini (size_t alignment, size_t sz, const void *caller)
 {
-  __memalign_hook = NULL;
-  ptmalloc_init ();
-  return __libc_memalign (alignment, sz);
+  generic_hook_ini ();
+  return memalign (alignment, sz);
 }
 
 #include "malloc-check.c"

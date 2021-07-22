@@ -301,7 +301,8 @@ cpp-srcs-left := $(modules) $(generated-modules) $(libJIS-routines) \
 lib := iconvdata
 include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
-tst-loading-ENV = MALLOC_TRACE=$(objpfx)tst-loading.mtrace
+tst-loading-ENV = MALLOC_TRACE=$(objpfx)tst-loading.mtrace \
+		  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 $(objpfx)mtrace-tst-loading.out: $(objpfx)tst-loading.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-loading.mtrace > $@; \
 	$(evaluate-test)

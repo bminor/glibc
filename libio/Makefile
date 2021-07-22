@@ -165,10 +165,14 @@ LDFLAGS-tst-bz24228 = -Wl,--version-script=tst-bz24228.map
 
 tst_wprintf2-ARGS = "Some Text"
 
-test-fmemopen-ENV = MALLOC_TRACE=$(objpfx)test-fmemopen.mtrace
-tst-fopenloc-ENV = MALLOC_TRACE=$(objpfx)tst-fopenloc.mtrace
-tst-bz22415-ENV = MALLOC_TRACE=$(objpfx)tst-bz22415.mtrace
-tst-bz24228-ENV = MALLOC_TRACE=$(objpfx)tst-bz24228.mtrace
+test-fmemopen-ENV = MALLOC_TRACE=$(objpfx)test-fmemopen.mtrace \
+		    LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+tst-fopenloc-ENV = MALLOC_TRACE=$(objpfx)tst-fopenloc.mtrace \
+		   LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+tst-bz22415-ENV = MALLOC_TRACE=$(objpfx)tst-bz22415.mtrace \
+		  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+tst-bz24228-ENV = MALLOC_TRACE=$(objpfx)tst-bz24228.mtrace \
+		  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 
 generated += test-fmemopen.mtrace test-fmemopen.check
 generated += tst-fopenloc.mtrace tst-fopenloc.check

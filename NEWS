@@ -132,6 +132,12 @@ Deprecated and removed features, and other changes affecting compatibility:
   applications will continue to link against these symbols but the interfaces
   no longer have any effect on malloc.
 
+* Debugging features in malloc such as the MALLOC_CHECK_ environment variable
+  (or the glibc.malloc.check tunable), mtrace() and mcheck() have now been
+  disabled by default in the main C library.  Users looking to use these
+  features now need to preload a new debugging DSO libc_malloc_debug.so to get
+  this functionality back.
+
 Changes to build and runtime requirements:
 
 * On Linux, the shm_open, sem_open, and related functions now expect the

@@ -211,7 +211,8 @@ tst-umask1-ARGS = $(objpfx)tst-umask1.temp
 
 $(objpfx)tst-atfork2: $(shared-thread-library)
 LDFLAGS-tst-atfork2 = -rdynamic
-tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace
+tst-atfork2-ENV = MALLOC_TRACE=$(objpfx)tst-atfork2.mtrace \
+		  LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 $(objpfx)tst-atfork2mod.so: $(shared-thread-library)
 
 ifeq ($(build-shared),yes)

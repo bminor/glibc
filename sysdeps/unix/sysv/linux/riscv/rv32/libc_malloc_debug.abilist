@@ -1,0 +1,9 @@
+GLIBC_2.33 aligned_alloc F
+GLIBC_2.33 calloc F
+GLIBC_2.33 free F
+GLIBC_2.33 malloc F
+GLIBC_2.33 memalign F
+GLIBC_2.33 posix_memalign F
+GLIBC_2.33 pvalloc F
+GLIBC_2.33 realloc F
+GLIBC_2.33 valloc F

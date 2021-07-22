@@ -98,3 +98,23 @@ libc {
     __libc_alloc_buffer_create_failure;
   }
 }
+
+# Keep in sync with symbols in libc.
+libc_malloc_debug {
+  GLIBC_2.0 {
+    calloc;
+    free;
+    malloc;
+    memalign;
+    pvalloc;
+    realloc;
+    valloc;
+
+  }
+  GLIBC_2.2 {
+    posix_memalign;
+  }
+  GLIBC_2.16 {
+    aligned_alloc;
+  }
+}

@@ -573,16 +573,6 @@ tag_at (void *ptr)
 #define HAVE_MREMAP 0
 #endif
 
-/* We may need to support __malloc_initialize_hook for backwards
-   compatibility.  */
-
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_24)
-# define HAVE_MALLOC_INIT_HOOK 1
-#else
-# define HAVE_MALLOC_INIT_HOOK 0
-#endif
-
-
 /*
   This version of malloc supports the standard SVID/XPG mallinfo
   routine that returns a struct containing usage properties and
@@ -2008,38 +1998,6 @@ static void     malloc_consolidate (mstate);
 
 /* -------------- Early definitions for debugging hooks ---------------- */
 
-/* Define and initialize the hook variables.  These weak definitions must
-   appear before any use of the variables in a function (arena.c uses one).  */
-#ifndef weak_variable
-/* In GNU libc we want the hook variables to be weak definitions to
-   avoid a problem with Emacs.  */
-# define weak_variable weak_function
-#endif
-
-/* Forward declarations.  */
-static void *malloc_hook_ini (size_t sz,
-                              const void *caller) __THROW;
-static void *realloc_hook_ini (void *ptr, size_t sz,
-                               const void *caller) __THROW;
-static void *memalign_hook_ini (size_t alignment, size_t sz,
-                                const void *caller) __THROW;
-
-#if HAVE_MALLOC_INIT_HOOK
-void (*__malloc_initialize_hook) (void);
-compat_symbol (libc, __malloc_initialize_hook,
-	       __malloc_initialize_hook, GLIBC_2_0);
-#endif
-
-void weak_variable (*__free_hook) (void *__ptr,
-                                   const void *) = NULL;
-void *weak_variable (*__malloc_hook)
-  (size_t __size, const void *) = malloc_hook_ini;
-void *weak_variable (*__realloc_hook)
-  (void *__ptr, size_t __size, const void *)
-  = realloc_hook_ini;
-void *weak_variable (*__memalign_hook)
-  (size_t __alignment, size_t __size, const void *)
-  = memalign_hook_ini;
 /* This function is called from the arena shutdown hook, to free the
    thread cache (if it exists).  */
 static void tcache_thread_shutdown (void);
@@ -3237,10 +3195,8 @@ __libc_malloc (size_t bytes)
   _Static_assert (PTRDIFF_MAX <= SIZE_MAX / 2,
                   "PTRDIFF_MAX is not more than half of SIZE_MAX");
 
-  void *(*hook) (size_t, const void *)
-    = atomic_forced_read (__malloc_hook);
-  if (__builtin_expect (hook != NULL, 0))
-    return (*hook)(bytes, RETURN_ADDRESS (0));
+  if (__malloc_initialized < 0)
+    ptmalloc_init ();
 #if USE_TCACHE
   /* int_free also calls request2size, be careful to not pad twice.  */
   size_t tbytes;
@@ -3301,14 +3257,6 @@ __libc_free (void *mem)
   mstate ar_ptr;
   mchunkptr p;                          /* chunk corresponding to mem */
 
-  void (*hook) (void *, const void *)
-    = atomic_forced_read (__free_hook);
-  if (__builtin_expect (hook != NULL, 0))
-    {
-      (*hook)(mem, RETURN_ADDRESS (0));
-      return;
-    }
-
   if (mem == 0)                              /* free(0) has no effect */
     return;
 
@@ -3360,10 +3308,8 @@ __libc_realloc (void *oldmem, size_t bytes)
 
   void *newp;             /* chunk to return */
 
-  void *(*hook) (void *, size_t, const void *) =
-    atomic_forced_read (__realloc_hook);
-  if (__builtin_expect (hook != NULL, 0))
-    return (*hook)(oldmem, bytes, RETURN_ADDRESS (0));
+  if (__malloc_initialized < 0)
+    ptmalloc_init ();
 
 #if REALLOC_ZERO_BYTES_FREES
   if (bytes == 0 && oldmem != NULL)
@@ -3498,6 +3444,9 @@ libc_hidden_def (__libc_realloc)
 void *
 __libc_memalign (size_t alignment, size_t bytes)
 {
+  if (__malloc_initialized < 0)
+    ptmalloc_init ();
+
   void *address = RETURN_ADDRESS (0);
   return _mid_memalign (alignment, bytes, address);
 }
@@ -3507,11 +3456,6 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
 {
   mstate ar_ptr;
   void *p;
-
-  void *(*hook) (size_t, size_t, const void *) =
-    atomic_forced_read (__memalign_hook);
-  if (__builtin_expect (hook != NULL, 0))
-    return (*hook)(alignment, bytes, address);
 
   /* If we need less alignment than we give anyway, just relay to malloc.  */
   if (alignment <= MALLOC_ALIGNMENT)
@@ -3621,16 +3565,8 @@ __libc_calloc (size_t n, size_t elem_size)
 
   sz = bytes;
 
-  void *(*hook) (size_t, const void *) =
-    atomic_forced_read (__malloc_hook);
-  if (__builtin_expect (hook != NULL, 0))
-    {
-      mem = (*hook)(sz, RETURN_ADDRESS (0));
-      if (mem == 0)
-        return 0;
-
-      return memset (mem, 0, sz);
-    }
+  if (__malloc_initialized < 0)
+    ptmalloc_init ();
 
   MAYBE_INIT_TCACHE ();
 
@@ -5658,6 +5594,9 @@ int
 __posix_memalign (void **memptr, size_t alignment, size_t size)
 {
   void *mem;
+
+  if (__malloc_initialized < 0)
+    ptmalloc_init ();
 
   /* Test whether the SIZE argument is valid.  It must be a power of
      two multiple of sizeof (void *).  */

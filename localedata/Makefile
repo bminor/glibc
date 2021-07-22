@@ -456,7 +456,8 @@ $(INSTALL-SUPPORTED-LOCALE-FILES): install-locales-dir
 tst-setlocale-ENV = LC_ALL=ja_JP.EUC-JP
 tst-wctype-ENV = LC_ALL=ja_JP.EUC-JP
 
-tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace
+tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace \
+		LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 $(objpfx)mtrace-tst-leaks.out: $(objpfx)tst-leaks.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@; \
 	$(evaluate-test)

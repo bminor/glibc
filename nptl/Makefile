@@ -494,7 +494,8 @@ CFLAGS-tst-initializers1-gnu11.c += $(CFLAGS-tst-initializers1-<)
 tst-cancel7-ARGS = --command "exec $(host-test-program-cmd)"
 tst-cancelx7-ARGS = $(tst-cancel7-ARGS)
 
-tst-stack3-ENV = MALLOC_TRACE=$(objpfx)tst-stack3.mtrace
+tst-stack3-ENV = MALLOC_TRACE=$(objpfx)tst-stack3.mtrace \
+		 LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 $(objpfx)tst-stack3-mem.out: $(objpfx)tst-stack3.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-stack3.mtrace > $@; \
 	$(evaluate-test)

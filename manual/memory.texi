@@ -1256,8 +1256,9 @@ environment variable @env{MALLOC_ARENA_MAX} to the desired value.
 @cindex consistency checking, of heap
 
 You can ask @code{malloc} to check the consistency of dynamic memory by
-using the @code{mcheck} function.  This function is a GNU extension,
-declared in @file{mcheck.h}.
+using the @code{mcheck} function and preloading the malloc debug library
+@file{libc_malloc_debug.so} using the @var{LD_PRELOAD} environment variable.
+This function is a GNU extension, declared in @file{mcheck.h}.
 @pindex mcheck.h
 
 @deftypefun int mcheck (void (*@var{abortfn}) (enum mcheck_status @var{status}))
@@ -1368,7 +1369,10 @@ non-zero value less than 4, a special (less efficient) implementation is
 used which is designed to be tolerant against simple errors, such as
 double calls of @code{free} with the same argument, or overruns of a
 single byte (off-by-one bugs).  Not all such errors can be protected
-against, however, and memory leaks can result.
+against, however, and memory leaks can result.  Like in the case of
+@code{mcheck}, one would need to preload the @file{libc_malloc_debug.so}
+library to enable @code{MALLOC_CHECK_} functionality.  Without this
+preloaded library, setting @code{MALLOC_CHECK_} will have no effect.
 
 Any detected heap corruption results in immediate termination of the
 process.
@@ -1747,6 +1751,12 @@ penalties for the program if the debugging mode is not enabled.
 @c  fprintf dup (on newly-created stream) @aculock
 @c  __cxa_atexit (once) dup @asulock @aculock @acsmem
 @c  free dup @ascuheap @acsmem
+The @code{mtrace} function provides a way to trace memory allocation
+events in the program that calls it.  It is disabled by default in the
+library and can be enabled by preloading the debugging library
+@file{libc_malloc_debug.so} using the @code{LD_PRELOAD} environment
+variable.
+
 When the @code{mtrace} function is called it looks for an environment
 variable named @code{MALLOC_TRACE}.  This variable is supposed to
 contain a valid file name.  The user must have write access.  If the

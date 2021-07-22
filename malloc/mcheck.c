@@ -26,6 +26,7 @@
 # include <stdio.h>
 # include <libintl.h>
 # include <errno.h>
+# include <malloc-internal.h>
 #endif
 
 /* Old hook values.  */

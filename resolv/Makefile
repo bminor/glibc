@@ -215,19 +215,22 @@ $(objpfx)tst-res_hconf_reorder: $(shared-thread-library)
 tst-res_hconf_reorder-ENV = RESOLV_REORDER=on
 
 $(objpfx)tst-leaks: $(objpfx)libresolv.so
-tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace
+tst-leaks-ENV = MALLOC_TRACE=$(objpfx)tst-leaks.mtrace \
+		LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 $(objpfx)mtrace-tst-leaks.out: $(objpfx)tst-leaks.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-leaks.mtrace > $@; \
 	$(evaluate-test)
 
-tst-leaks2-ENV = MALLOC_TRACE=$(objpfx)tst-leaks2.mtrace
+tst-leaks2-ENV = MALLOC_TRACE=$(objpfx)tst-leaks2.mtrace \
+		 LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 $(objpfx)mtrace-tst-leaks2.out: $(objpfx)tst-leaks2.out
 	{ test -r $(objpfx)tst-leaks2.mtrace \
 	|| ( echo "tst-leaks2.mtrace does not exist"; exit 77; ) \
 	&& $(common-objpfx)malloc/mtrace $(objpfx)tst-leaks2.mtrace; } > $@; \
 	$(evaluate-test)
 
-tst-resolv-res_ninit-ENV = MALLOC_TRACE=$(objpfx)tst-resolv-res_ninit.mtrace
+tst-resolv-res_ninit-ENV = MALLOC_TRACE=$(objpfx)tst-resolv-res_ninit.mtrace \
+			LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
 $(objpfx)mtrace-tst-resolv-res_ninit.out: $(objpfx)tst-resolv-res_ninit.out
 	$(common-objpfx)malloc/mtrace \
 	  $(objpfx)tst-resolv-res_ninit.mtrace > $@; \

@@ -222,5 +222,6 @@ CFLAGS-ypclnt.c += -DUSE_BINDINGDIR=1
 endif
 
 LDLIBS-pthread.so += $(objdir)/hurd/libhurduser.so
+LDLIBS-c_malloc_debug.so += $(link-rpcuserlibs)
 
 endif	# in-Makerules
