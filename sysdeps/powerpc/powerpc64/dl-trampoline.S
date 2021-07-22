@@ -197,7 +197,7 @@ END(_dl_runtime_resolve)
 #ifndef PROF
 ENTRY (_dl_profile_resolve, 4)
 /* Spill r30, r31 to preserve the link_map* and reloc_addr, in case we
-   need to call _dl_call_pltexit.  */
+   need to call _dl_audit_pltexit.  */
 	std	r31,-8(r1)
 	std	r30,-16(r1)
 /* We need to save the registers used to pass parameters, ie. r3 thru
@@ -452,7 +452,7 @@ L(restoreFXR2):
 L(callpltexit):
 	addi	r5,r1,INT_PARMS
 	addi	r6,r1,INT_RTN
-	bl	JUMPTARGET(_dl_call_pltexit)
+	bl	JUMPTARGET(_dl_audit_pltexit)
 #ifndef SHARED
 	nop
 #endif

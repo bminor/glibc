@@ -20,6 +20,8 @@
 #include <link.h>
 #include <ldsodefs.h>
 #include <dl-machine.h>
+#include <dl-runtime.h>
+#include <dl-fixup-attribute.h>
 
 void
 _dl_audit_activity_map (struct link_map *l, int action)
@@ -319,4 +321,49 @@ _dl_audit_pltenter (struct link_map *l, struct reloc_result *reloc_result,
     }
 
   *value = DL_FIXUP_ADDR_VALUE (sym.st_value);
+}
+
+void
+DL_ARCH_FIXUP_ATTRIBUTE
+_dl_audit_pltexit (struct link_map *l, ElfW(Word) reloc_arg,
+		   const void *inregs, void *outregs)
+{
+  const uintptr_t pltgot = (uintptr_t) D_PTR (l, l_info[DT_PLTGOT]);
+
+  /* This is the address in the array where we store the result of previous
+     relocations.  */
+  // XXX Maybe the bound information must be stored on the stack since
+  // XXX with bind_not a new value could have been stored in the meantime.
+  struct reloc_result *reloc_result =
+    &l->l_reloc_result[reloc_index (pltgot, reloc_arg, sizeof (PLTREL))];
+  ElfW(Sym) *defsym = ((ElfW(Sym) *) D_PTR (reloc_result->bound,
+					    l_info[DT_SYMTAB])
+		       + reloc_result->boundndx);
+
+  /* Set up the sym parameter.  */
+  ElfW(Sym) sym = *defsym;
+  sym.st_value = DL_FIXUP_VALUE_ADDR (reloc_result->addr);
+
+  /* Get the symbol name.  */
+  const char *strtab = (const void *) D_PTR (reloc_result->bound,
+					     l_info[DT_STRTAB]);
+  const char *symname = strtab + sym.st_name;
+
+  struct audit_ifaces *afct = GLRO(dl_audit);
+  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+    {
+      if (afct->ARCH_LA_PLTEXIT != NULL
+	  && (reloc_result->enterexit
+	      & (LA_SYMB_NOPLTEXIT >> (2 * cnt))) == 0)
+	{
+	  struct auditstate *l_state = link_map_audit_state (l, cnt);
+	  struct auditstate *bound_state
+	    = link_map_audit_state (reloc_result->bound, cnt);
+	  afct->ARCH_LA_PLTEXIT (&sym, reloc_result->boundndx,
+				 &l_state->cookie, &bound_state->cookie,
+				 inregs, outregs, symname);
+	}
+
+      afct = afct->next;
+    }
 }

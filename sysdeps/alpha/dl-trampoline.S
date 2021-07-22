@@ -187,7 +187,7 @@ _dl_runtime_profile_new:
 	jsr	$26, ($27), 0
 	ldgp	$29, 0($26)
 
-	/* Set up for call to _dl_call_pltexit.  */
+	/* Set up for call to _dl_audit_pltexit.  */
 	ldq	$16, 16*8($15)
 	ldq	$17, 17*8($15)
 	stq	$0, 16*8($15)
@@ -196,7 +196,7 @@ _dl_runtime_profile_new:
 	lda	$19, 16*8($15)
 	stt	$f0, 18*8($15)
 	stt	$f1, 19*8($15)
-	bsr	$26, _dl_call_pltexit	!samegp
+	bsr	$26, _dl_audit_pltexit	!samegp
 
 	mov	$15, $30
 	cfi_def_cfa_register (30)
@@ -518,7 +518,7 @@ _dl_runtime_profile_old:
 	jsr	$26, ($27), 0
 	ldgp	$29, 0($26)
 
-	/* Set up for call to _dl_call_pltexit.  */
+	/* Set up for call to _dl_audit_pltexit.  */
 	ldq	$16, 48*8($15)
 	ldq	$17, 49*8($15)
 	stq	$0, 46*8($15)
@@ -527,7 +527,7 @@ _dl_runtime_profile_old:
 	lda	$19, 46*8($15)
 	stt	$f0, 48*8($15)
 	stt	$f1, 49*8($15)
-	bsr	$26, _dl_call_pltexit	!samegp
+	bsr	$26, _dl_audit_pltexit	!samegp
 
 	mov	$15, $30
 	cfi_def_cfa_register (30)

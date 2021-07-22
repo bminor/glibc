@@ -252,7 +252,7 @@ _dl_runtime_profile:
 	movl (LRV_SIZE + 4 + LR_SIZE)(%esp), %eax
 	# PLT1
 	movl (LRV_SIZE + 4 + LR_SIZE + 4)(%esp), %edx
-	call _dl_call_pltexit
+	call _dl_audit_pltexit
 	movl LRV_EAX_OFFSET(%esp), %eax
 	movl LRV_EDX_OFFSET(%esp), %edx
 	fldt LRV_ST1_OFFSET(%esp)

@@ -284,7 +284,7 @@ _dl_runtime_profile:
 	lmg    %r2,%r4,CFA_OFF+PLT1_OFF(%r12)	# r2, r3: args saved by PLT
 						# r4: struct La_s390_64_regs *
 	la     %r5,CFA_OFF+RETVAL_OFF(%r12)	# struct La_s390_64_retval *
-	brasl  %r14,_dl_call_pltexit
+	brasl  %r14,_dl_audit_pltexit
 
 	lgr    %r15,%r12			# remove stack frame
 # undef FRAME_SIZE

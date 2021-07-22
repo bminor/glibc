@@ -357,7 +357,7 @@ _dl_runtime_profile:
 	jns 3f
 
 	/* There's nothing in the frame size, so there
-	   will be no call to the _dl_call_pltexit. */
+	   will be no call to the _dl_audit_pltexit. */
 
 	/* Get back registers content.  */
 	movq LR_RCX_OFFSET(%rsp), %rcx
@@ -403,7 +403,7 @@ _dl_runtime_profile:
 	mov 24(%rbx), %RSP_LP	# Drop the copied stack content
 
 	/* Now we have to prepare the La_x86_64_retval structure for the
-	   _dl_call_pltexit.  The La_x86_64_regs is being pointed by rsp now,
+	   _dl_audit_pltexit.  The La_x86_64_regs is being pointed by rsp now,
 	   so we just need to allocate the sizeof(La_x86_64_retval) space on
 	   the stack, since the alignment has already been taken care of. */
 # ifdef RESTORE_AVX
@@ -448,7 +448,7 @@ _dl_runtime_profile:
 	movq 24(%rbx), %rdx	# La_x86_64_regs argument to %rdx.
 	movq 40(%rbx), %rsi	# Copy args pushed by PLT in register.
 	movq 32(%rbx), %rdi	# %rdi: link_map, %rsi: reloc_index
-	call _dl_call_pltexit
+	call _dl_audit_pltexit
 
 	/* Restore return registers.  */
 	movq LRV_RAX_OFFSET(%rsp), %rax

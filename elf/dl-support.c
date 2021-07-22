@@ -436,3 +436,11 @@ _dl_get_dl_main_map (void)
   return &_dl_main_map;
 }
 #endif
+
+/* This is used by _dl_runtime_profile, not used on static code.  */
+void
+DL_ARCH_FIXUP_ATTRIBUTE
+_dl_audit_pltexit (struct link_map *l, ElfW(Word) reloc_arg,
+		   const void *inregs, void *outregs)
+{
+}
