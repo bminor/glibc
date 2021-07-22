@@ -145,6 +145,19 @@ memalign_hook_ini (size_t alignment, size_t sz, const void *caller)
 
 static size_t pagesize;
 
+/* These variables are used for undumping support.  Chunked are marked
+   as using mmap, but we leave them alone if they fall into this
+   range.  NB: The chunk size for these chunks only includes the
+   initial size field (of SIZE_SZ bytes), there is no trailing size
+   field (unlike with regular mmapped chunks).  */
+static mchunkptr dumped_main_arena_start; /* Inclusive.  */
+static mchunkptr dumped_main_arena_end;   /* Exclusive.  */
+
+/* True if the pointer falls into the dumped arena.  Use this after
+   chunk_is_mmapped indicates a chunk is mmapped.  */
+#define DUMPED_MAIN_ARENA_CHUNK(p) \
+  ((p) >= dumped_main_arena_start && (p) < dumped_main_arena_end)
+
 /* The allocator functions.  */
 
 static void *
@@ -184,7 +197,9 @@ __debug_free (void *mem)
   if (__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK))
     mem = free_mcheck (mem);
 
-  if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
+  if (DUMPED_MAIN_ARENA_CHUNK (mem2chunk (mem)))
+    /* Do nothing.  */;
+  else if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
     free_check (mem);
   else
     __libc_free (mem);
@@ -207,7 +222,32 @@ __debug_realloc (void *oldmem, size_t bytes)
   if ((!__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK)
        || !realloc_mcheck_before (&oldmem, &bytes, &oldsize, &victim)))
     {
-      if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
+      mchunkptr oldp = mem2chunk (oldmem);
+
+      /* If this is a faked mmapped chunk from the dumped main arena,
+	 always make a copy (and do not free the old chunk).  */
+      if (DUMPED_MAIN_ARENA_CHUNK (oldp))
+	{
+	  if (bytes == 0 && oldmem != NULL)
+	    victim = NULL;
+	  else
+	    {
+	      const INTERNAL_SIZE_T osize = chunksize (oldp);
+	      /* Must alloc, copy, free. */
+	      victim = __debug_malloc (bytes);
+	      /* Copy as many bytes as are available from the old chunk
+		 and fit into the new size.  NB: The overhead for faked
+		 mmapped chunks is only SIZE_SZ, not CHUNK_HDR_SZ as for
+		 regular mmapped chunks.  */
+	      if (victim != NULL)
+		{
+		  if (bytes > osize - SIZE_SZ)
+		    bytes = osize - SIZE_SZ;
+		  memcpy (victim, oldmem, bytes);
+		}
+	    }
+	}
+      else if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
 	victim =  realloc_check (oldmem, bytes);
       else
 	victim = __libc_realloc (oldmem, bytes);
@@ -357,6 +397,13 @@ malloc_usable_size (void *mem)
   if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
     return malloc_check_get_size (mem);
 
+  if (mem != NULL)
+    {
+      mchunkptr p = mem2chunk (mem);
+     if (DUMPED_MAIN_ARENA_CHUNK (p))
+       return chunksize (p) - SIZE_SZ;
+    }
+
   return musable (mem);
 }
 
@@ -453,3 +500,134 @@ malloc_trim (size_t s)
 
   return LIBC_SYMBOL (malloc_trim) (s);
 }
+
+#if SHLIB_COMPAT (libc_malloc_debug, GLIBC_2_0, GLIBC_2_25)
+
+/* Support for restoring dumped heaps contained in historic Emacs
+   executables.  The heap saving feature (malloc_get_state) is no
+   longer implemented in this version of glibc, but we have a heap
+   rewriter in malloc_set_state which transforms the heap into a
+   version compatible with current malloc.  */
+
+#define MALLOC_STATE_MAGIC   0x444c4541l
+#define MALLOC_STATE_VERSION (0 * 0x100l + 5l) /* major*0x100 + minor */
+
+struct malloc_save_state
+{
+  long magic;
+  long version;
+  mbinptr av[NBINS * 2 + 2];
+  char *sbrk_base;
+  int sbrked_mem_bytes;
+  unsigned long trim_threshold;
+  unsigned long top_pad;
+  unsigned int n_mmaps_max;
+  unsigned long mmap_threshold;
+  int check_action;
+  unsigned long max_sbrked_mem;
+  unsigned long max_total_mem;	/* Always 0, for backwards compatibility.  */
+  unsigned int n_mmaps;
+  unsigned int max_n_mmaps;
+  unsigned long mmapped_mem;
+  unsigned long max_mmapped_mem;
+  int using_malloc_checking;
+  unsigned long max_fast;
+  unsigned long arena_test;
+  unsigned long arena_max;
+  unsigned long narenas;
+};
+
+/* Dummy implementation which always fails.  We need to provide this
+   symbol so that existing Emacs binaries continue to work with
+   BIND_NOW.  */
+void *
+malloc_get_state (void)
+{
+  __set_errno (ENOSYS);
+  return NULL;
+}
+compat_symbol (libc_malloc_debug, malloc_get_state, malloc_get_state,
+	       GLIBC_2_0);
+
+int
+malloc_set_state (void *msptr)
+{
+  struct malloc_save_state *ms = (struct malloc_save_state *) msptr;
+
+  if (ms->magic != MALLOC_STATE_MAGIC)
+    return -1;
+
+  /* Must fail if the major version is too high. */
+  if ((ms->version & ~0xffl) > (MALLOC_STATE_VERSION & ~0xffl))
+    return -2;
+
+  if (debug_initialized == 1)
+    return -1;
+
+  bool check_was_enabled = __is_malloc_debug_enabled (MALLOC_CHECK_HOOK);
+
+  /* It's not too late, so disable MALLOC_CHECK_ and all of the hooks.  */
+  __malloc_hook = NULL;
+  __realloc_hook = NULL;
+  __free_hook = NULL;
+  __memalign_hook = NULL;
+  __malloc_debug_disable (MALLOC_CHECK_HOOK);
+
+  /* We do not need to perform locking here because malloc_set_state
+     must be called before the first call into the malloc subsytem (usually via
+     __malloc_initialize_hook).  pthread_create always calls calloc and thus
+     must be called only afterwards, so there cannot be more than one thread
+     when we reach this point.  Also handle initialization if either we ended
+     up being called before the first malloc or through the hook when
+     malloc-check was enabled.  */
+  if (debug_initialized < 0)
+    generic_hook_ini ();
+  else if (check_was_enabled)
+    __libc_free (__libc_malloc (0));
+
+  /* Patch the dumped heap.  We no longer try to integrate into the
+     existing heap.  Instead, we mark the existing chunks as mmapped.
+     Together with the update to dumped_main_arena_start and
+     dumped_main_arena_end, realloc and free will recognize these
+     chunks as dumped fake mmapped chunks and never free them.  */
+
+  /* Find the chunk with the lowest address with the heap.  */
+  mchunkptr chunk = NULL;
+  {
+    size_t *candidate = (size_t *) ms->sbrk_base;
+    size_t *end = (size_t *) (ms->sbrk_base + ms->sbrked_mem_bytes);
+    while (candidate < end)
+      if (*candidate != 0)
+	{
+	  chunk = mem2chunk ((void *) (candidate + 1));
+	  break;
+	}
+      else
+	++candidate;
+  }
+  if (chunk == NULL)
+    return 0;
+
+  /* Iterate over the dumped heap and patch the chunks so that they
+     are treated as fake mmapped chunks.  */
+  mchunkptr top = ms->av[2];
+  while (chunk < top)
+    {
+      if (inuse (chunk))
+	{
+	  /* Mark chunk as mmapped, to trigger the fallback path.  */
+	  size_t size = chunksize (chunk);
+	  set_head (chunk, size | IS_MMAPPED);
+	}
+      chunk = next_chunk (chunk);
+    }
+
+  /* The dumped fake mmapped chunks all lie in this address range.  */
+  dumped_main_arena_start = (mchunkptr) ms->sbrk_base;
+  dumped_main_arena_end = top;
+
+  return 0;
+}
+compat_symbol (libc_malloc_debug, malloc_set_state, malloc_set_state,
+	       GLIBC_2_0);
+#endif

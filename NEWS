@@ -138,6 +138,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   features now need to preload a new debugging DSO libc_malloc_debug.so to get
   this functionality back.
 
+* The deprecated functions malloc_get_state and malloc_set_state have been
+  moved from the core C library into libc_malloc_debug.so.  Legacy applications
+  that still use these functions will now need to preload libc_malloc_debug.so
+  in their environment using the LD_PRELOAD environment variable.
+
 Changes to build and runtime requirements:
 
 * On Linux, the shm_open, sem_open, and related functions now expect the

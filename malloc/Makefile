@@ -331,3 +331,8 @@ tst-compathooks-on-malloc-check-ENV = \
 	LD_PRELOAD=$(objpfx)libc_malloc_debug.so
 tst-mallocstate-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
 tst-mallocstate-malloc-check-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
+
+# The test needs malloc_get_state/malloc_set_state which is in
+# libc_malloc_debug.so.
+$(objpfx)tst-mallocstate: $(objpfx)libc_malloc_debug.so
+$(objpfx)tst-mallocstate-malloc-check: $(objpfx)libc_malloc_debug.so

@@ -7,7 +7,9 @@ GLIBC_2.21 calloc F
 GLIBC_2.21 free F
 GLIBC_2.21 mallinfo F
 GLIBC_2.21 malloc F
+GLIBC_2.21 malloc_get_state F
 GLIBC_2.21 malloc_info F
+GLIBC_2.21 malloc_set_state F
 GLIBC_2.21 malloc_stats F
 GLIBC_2.21 malloc_trim F
 GLIBC_2.21 malloc_usable_size F

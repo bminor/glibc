@@ -1301,8 +1301,6 @@ GLIBC_2.3 madvise F
 GLIBC_2.3 makecontext F
 GLIBC_2.3 mallinfo F
 GLIBC_2.3 malloc F
-GLIBC_2.3 malloc_get_state F
-GLIBC_2.3 malloc_set_state F
 GLIBC_2.3 malloc_stats F
 GLIBC_2.3 malloc_trim F
 GLIBC_2.3 malloc_usable_size F

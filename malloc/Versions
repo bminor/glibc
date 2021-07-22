@@ -25,7 +25,7 @@ libc {
     free;
 
     # m*
-    mallinfo; malloc; malloc_get_state; malloc_set_state; malloc_stats;
+    mallinfo; malloc; malloc_stats;
     malloc_trim; malloc_usable_size; mallopt; mcheck; memalign; mprobe; mtrace;
     muntrace;
 
@@ -121,6 +121,8 @@ libc_malloc_debug {
     muntrace;
 
     mallinfo;
+    malloc_get_state;
+    malloc_set_state;
     malloc_stats;
     malloc_trim;
     malloc_usable_size;

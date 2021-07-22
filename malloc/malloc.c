@@ -1921,19 +1921,6 @@ static struct malloc_state main_arena =
   .attached_threads = 1
 };
 
-/* These variables are used for undumping support.  Chunked are marked
-   as using mmap, but we leave them alone if they fall into this
-   range.  NB: The chunk size for these chunks only includes the
-   initial size field (of SIZE_SZ bytes), there is no trailing size
-   field (unlike with regular mmapped chunks).  */
-static mchunkptr dumped_main_arena_start; /* Inclusive.  */
-static mchunkptr dumped_main_arena_end;   /* Exclusive.  */
-
-/* True if the pointer falls into the dumped arena.  Use this after
-   chunk_is_mmapped indicates a chunk is mmapped.  */
-#define DUMPED_MAIN_ARENA_CHUNK(p) \
-  ((p) >= dumped_main_arena_start && (p) < dumped_main_arena_end)
-
 /* There is only one instance of the malloc parameters.  */
 
 static struct malloc_par mp_ =
@@ -2083,7 +2070,7 @@ do_check_chunk (mstate av, mchunkptr p)
           assert (prev_inuse (p));
         }
     }
-  else if (!DUMPED_MAIN_ARENA_CHUNK (p))
+  else
     {
       /* address is outside main heap  */
       if (contiguous (av) && av->top != initial_top (av))
@@ -2948,11 +2935,6 @@ munmap_chunk (mchunkptr p)
 
   assert (chunk_is_mmapped (p));
 
-  /* Do nothing if the chunk is a faked mmapped chunk in the dumped
-     main arena.  We never free this memory.  */
-  if (DUMPED_MAIN_ARENA_CHUNK (p))
-    return;
-
   uintptr_t mem = (uintptr_t) chunk2mem (p);
   uintptr_t block = (uintptr_t) p - prev_size (p);
   size_t total_size = prev_size (p) + size;
@@ -3275,8 +3257,7 @@ __libc_free (void *mem)
 	 Dumped fake mmapped chunks do not affect the threshold.  */
       if (!mp_.no_dyn_threshold
           && chunksize_nomask (p) > mp_.mmap_threshold
-          && chunksize_nomask (p) <= DEFAULT_MMAP_THRESHOLD_MAX
-	  && !DUMPED_MAIN_ARENA_CHUNK (p))
+          && chunksize_nomask (p) <= DEFAULT_MMAP_THRESHOLD_MAX)
         {
           mp_.mmap_threshold = chunksize (p);
           mp_.trim_threshold = 2 * mp_.mmap_threshold;
@@ -3343,12 +3324,9 @@ __libc_realloc (void *oldmem, size_t bytes)
   /* Little security check which won't hurt performance: the allocator
      never wrapps around at the end of the address space.  Therefore
      we can exclude some size values which might appear here by
-     accident or by "design" from some intruder.  We need to bypass
-     this check for dumped fake mmap chunks from the old main arena
-     because the new malloc may provide additional alignment.  */
+     accident or by "design" from some intruder.  */
   if ((__builtin_expect ((uintptr_t) oldp > (uintptr_t) -oldsize, 0)
-       || __builtin_expect (misaligned_chunk (oldp), 0))
-      && !DUMPED_MAIN_ARENA_CHUNK (oldp))
+       || __builtin_expect (misaligned_chunk (oldp), 0)))
       malloc_printerr ("realloc(): invalid pointer");
 
   if (!checked_request2size (bytes, &nb))
@@ -3359,24 +3337,6 @@ __libc_realloc (void *oldmem, size_t bytes)
 
   if (chunk_is_mmapped (oldp))
     {
-      /* If this is a faked mmapped chunk from the dumped main arena,
-	 always make a copy (and do not free the old chunk).  */
-      if (DUMPED_MAIN_ARENA_CHUNK (oldp))
-	{
-	  /* Must alloc, copy, free. */
-	  void *newmem = __libc_malloc (bytes);
-	  if (newmem == 0)
-	    return NULL;
-	  /* Copy as many bytes as are available from the old chunk
-	     and fit into the new size.  NB: The overhead for faked
-	     mmapped chunks is only SIZE_SZ, not CHUNK_HDR_SZ as for
-	     regular mmapped chunks.  */
-	  if (bytes > oldsize - SIZE_SZ)
-	    bytes = oldsize - SIZE_SZ;
-	  memcpy (newmem, oldmem, bytes);
-	  return newmem;
-	}
-
       void *newmem;
 
 #if HAVE_MREMAP
@@ -5056,12 +5016,7 @@ musable (void *mem)
       p = mem2chunk (mem);
 
       if (chunk_is_mmapped (p))
-	{
-	  if (DUMPED_MAIN_ARENA_CHUNK (p))
-	    result = chunksize (p) - SIZE_SZ;
-	  else
-	    result = chunksize (p) - CHUNK_HDR_SZ;
-	}
+	result = chunksize (p) - CHUNK_HDR_SZ;
       else if (inuse (p))
 	result = memsize (p);
 
