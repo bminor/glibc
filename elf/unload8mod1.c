@@ -8,7 +8,7 @@ mod1 (void)
   mod2 ();
 }
 
-void
+int
 mod1b (void)
 {
   void *h = dlopen ("$ORIGIN/unload8mod3.so", RTLD_LAZY);
@@ -17,4 +17,5 @@ mod1b (void)
       puts ("dlopen unload8mod3.so failed");
       return 1;
     }
+  return 0;
 }
