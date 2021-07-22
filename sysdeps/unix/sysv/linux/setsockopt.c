@@ -103,3 +103,6 @@ __setsockopt (int fd, int level, int optname, const void *optval, socklen_t len)
 }
 libc_hidden_def (__setsockopt)
 weak_alias (__setsockopt, setsockopt)
+#if __TIMESIZE != 64
+weak_alias (__setsockopt, __setsockopt64)
+#endif

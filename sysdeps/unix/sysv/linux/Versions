@@ -270,6 +270,7 @@ libc {
     __sendmmsg64;
     __sendmsg64;
     __setitimer64;
+    __setsockopt64;
     __settimeofday64;
     __shmctl64;
     __sigtimedwait64;

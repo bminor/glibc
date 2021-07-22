@@ -273,8 +273,21 @@ extern int __getsockopt64 (int __fd, int __level, int __optname,
 /* Set socket FD's option OPTNAME at protocol level LEVEL
    to *OPTVAL (which is OPTLEN bytes long).
    Returns 0 on success, -1 for errors.  */
+#ifndef __USE_TIME_BITS64
 extern int setsockopt (int __fd, int __level, int __optname,
 		       const void *__optval, socklen_t __optlen) __THROW;
+#else
+# ifdef __REDIRECT
+extern int __REDIRECT_NTH (setsockopt,
+			   (int __fd, int __level, int __optname,
+			    const void *__optval, socklen_t __optlen),
+			   __setsockopt64);
+# else
+extern int __setsockopt64 (int __fd, int __level, int __optname,
+			   const void *__optval, socklen_t __optlen) __THROW;
+#  define setsockopt __setsockopt64
+# endif
+#endif
 
 
 /* Prepare to accept connections on socket FD.
