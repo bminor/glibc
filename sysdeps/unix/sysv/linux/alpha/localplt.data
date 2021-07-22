@@ -18,7 +18,6 @@ libc.so: _Unwind_Find_FDE
 libc.so: calloc + RELA R_ALPHA_GLOB_DAT
 libc.so: free + RELA R_ALPHA_GLOB_DAT
 libc.so: malloc + RELA R_ALPHA_GLOB_DAT
-libc.so: memalign + RELA R_ALPHA_GLOB_DAT
 libc.so: realloc + RELA R_ALPHA_GLOB_DAT
 libm.so: matherr + RELA R_ALPHA_GLOB_DAT
 # We used to offer inline functions that used this, so it must be exported.

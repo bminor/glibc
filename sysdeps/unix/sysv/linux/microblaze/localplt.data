@@ -2,7 +2,6 @@ libc.so: __errno_location
 libc.so: calloc
 libc.so: free
 libc.so: malloc
-libc.so: memalign
 libc.so: realloc
 libm.so: matherr
 # The dynamic loader needs __tls_get_addr for TLS.

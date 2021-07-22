@@ -117,6 +117,8 @@ libc_malloc_debug {
 
     mcheck;
     mprobe;
+    mtrace;
+    muntrace;
   }
   GLIBC_2.2 {
     mcheck_check_all;

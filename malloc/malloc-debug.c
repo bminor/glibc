@@ -49,6 +49,7 @@ enum malloc_debug_hooks
 {
   MALLOC_NONE_HOOK = 0,
   MALLOC_MCHECK_HOOK = 1 << 0, /* mcheck()  */
+  MALLOC_MTRACE_HOOK = 1 << 1, /* mtrace()  */
 };
 static unsigned __malloc_debugging_hooks;
 
@@ -71,6 +72,7 @@ __malloc_debug_disable (enum malloc_debug_hooks flag)
 }
 
 #include "mcheck.c"
+#include "mtrace.c"
 
 extern void (*__malloc_initialize_hook) (void);
 compat_symbol_reference (libc, __malloc_initialize_hook,
@@ -154,6 +156,8 @@ __debug_malloc (size_t bytes)
     }
   if (__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK) && victim != NULL)
     victim = malloc_mcheck_after (victim, orig_bytes);
+  if (__is_malloc_debug_enabled (MALLOC_MTRACE_HOOK))
+    malloc_mtrace_after (victim, orig_bytes, RETURN_ADDRESS (0));
 
   return victim;
 }
@@ -171,6 +175,8 @@ __debug_free (void *mem)
 
   if (__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK))
     mem = free_mcheck (mem);
+  if (__is_malloc_debug_enabled (MALLOC_MTRACE_HOOK))
+    free_mtrace (mem, RETURN_ADDRESS (0));
 
   __libc_free (mem);
 }
@@ -195,6 +201,8 @@ __debug_realloc (void *oldmem, size_t bytes)
   if (__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK) && victim != NULL)
     victim = realloc_mcheck_after (victim, oldmem, orig_bytes,
 				   oldsize);
+  if (__is_malloc_debug_enabled (MALLOC_MTRACE_HOOK))
+    realloc_mtrace_after (victim, oldmem, orig_bytes, RETURN_ADDRESS (0));
 
   return victim;
 }
@@ -218,6 +226,8 @@ _debug_mid_memalign (size_t alignment, size_t bytes, const void *address)
     }
   if (__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK) && victim != NULL)
     victim = memalign_mcheck_after (victim, alignment, orig_bytes);
+  if (__is_malloc_debug_enabled (MALLOC_MTRACE_HOOK))
+    memalign_mtrace_after (victim, orig_bytes, address);
 
   return victim;
 }
@@ -317,6 +327,9 @@ __debug_calloc (size_t nmemb, size_t size)
 	victim = malloc_mcheck_after (victim, orig_bytes);
       memset (victim, 0, orig_bytes);
     }
+  if (__is_malloc_debug_enabled (MALLOC_MTRACE_HOOK))
+    malloc_mtrace_after (victim, orig_bytes, RETURN_ADDRESS (0));
+
   return victim;
 }
 strong_alias (__debug_calloc, calloc)

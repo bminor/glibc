@@ -6,7 +6,6 @@ libc.so: __gedf2
 libc.so: malloc
 libc.so: __gtsf2 ?
 libc.so: __nesf2
-libc.so: memalign
 libc.so: __mulsf3
 libc.so: __floatunsisf
 libc.so: __addsf3

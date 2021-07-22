@@ -6,7 +6,6 @@
 libc.so: calloc + REL R_386_GLOB_DAT
 libc.so: free + REL R_386_GLOB_DAT
 libc.so: malloc + REL R_386_GLOB_DAT
-libc.so: memalign + REL R_386_GLOB_DAT
 libc.so: realloc + REL R_386_GLOB_DAT
 libm.so: matherr + REL R_386_GLOB_DAT
 # The TLS-enabled version of these functions is interposed from libc.so.

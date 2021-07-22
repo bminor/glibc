@@ -8,6 +8,8 @@ GLIBC_2.0 malloc F
 GLIBC_2.0 mcheck F
 GLIBC_2.0 memalign F
 GLIBC_2.0 mprobe F
+GLIBC_2.0 mtrace F
+GLIBC_2.0 muntrace F
 GLIBC_2.0 pvalloc F
 GLIBC_2.0 realloc F
 GLIBC_2.0 valloc F

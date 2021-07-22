@@ -11,6 +11,8 @@ GLIBC_2.32 mcheck_check_all F
 GLIBC_2.32 mcheck_pedantic F
 GLIBC_2.32 memalign F
 GLIBC_2.32 mprobe F
+GLIBC_2.32 mtrace F
+GLIBC_2.32 muntrace F
 GLIBC_2.32 posix_memalign F
 GLIBC_2.32 pvalloc F
 GLIBC_2.32 realloc F
