@@ -377,32 +377,15 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
     /* This is a current program.  Use the dynamic segment to find
        constructors.  */
     call_init (argc, argv, __environ);
-#else /* !SHARED */
-  call_init (argc, argv, __environ);
-#endif /* SHARED */
 
-#ifdef SHARED
   /* Auditing checkpoint: we have a new object.  */
-  if (__glibc_unlikely (GLRO(dl_naudit) > 0))
-    {
-      struct audit_ifaces *afct = GLRO(dl_audit);
-      struct link_map *head = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
-      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-	{
-	  if (afct->preinit != NULL)
-	    afct->preinit (&link_map_audit_state (head, cnt)->cookie);
+  _dl_audit_preinit (GL(dl_ns)[LM_ID_BASE]._ns_loaded);
 
-	  afct = afct->next;
-	}
-    }
-#endif
-
-#ifdef SHARED
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS))
     GLRO(dl_debug_printf) ("\ntransferring control: %s\n\n", argv[0]);
-#endif
+#else /* !SHARED */
+  call_init (argc, argv, __environ);
 
-#ifndef SHARED
   _dl_debug_initialize (0, LM_ID_BASE);
 #endif
 

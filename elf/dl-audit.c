@@ -109,6 +109,21 @@ _dl_audit_objclose (struct link_map *l)
 }
 
 void
+_dl_audit_preinit (struct link_map *l)
+{
+  if (__glibc_likely (GLRO(dl_naudit) == 0))
+    return;
+
+  struct audit_ifaces *afct = GLRO(dl_audit);
+  for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+    {
+      if (afct->preinit != NULL)
+	afct->preinit (&link_map_audit_state (l, cnt)->cookie);
+      afct = afct->next;
+    }
+}
+
+void
 _dl_audit_symbind_alt (struct link_map *l, const ElfW(Sym) *ref, void **value,
 		       lookup_t result)
 {
