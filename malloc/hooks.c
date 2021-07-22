@@ -39,8 +39,6 @@ void *weak_variable (*__malloc_hook) (size_t, const void *) = NULL;
 void *weak_variable (*__realloc_hook) (void *, size_t, const void *) = NULL;
 void *weak_variable (*__memalign_hook) (size_t, size_t, const void *) = NULL;
 
-#include "malloc-check.c"
-
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_25)
 
 /* Support for restoring dumped heaps contained in historic Emacs
@@ -107,13 +105,6 @@ malloc_set_state (void *msptr)
      (usually via __malloc_initialize_hook).  pthread_create always
      calls calloc and thus must be called only afterwards, so there
      cannot be more than one thread when we reach this point.  */
-
-  /* Disable the malloc hooks (and malloc checking).  */
-  __malloc_hook = NULL;
-  __realloc_hook = NULL;
-  __free_hook = NULL;
-  __memalign_hook = NULL;
-  using_malloc_checking = 0;
 
   /* Patch the dumped heap.  We no longer try to integrate into the
      existing heap.  Instead, we mark the existing chunks as mmapped.

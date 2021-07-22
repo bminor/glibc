@@ -133,7 +133,7 @@ test-extras = \
 libmemusage-routines = memusage
 libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
 
-libc_malloc_debug-routines = malloc-debug
+libc_malloc_debug-routines = malloc-debug $(sysdep_malloc_debug_routines)
 libc_malloc_debug-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 $(objpfx)tst-malloc-backtrace: $(shared-thread-library)
@@ -251,6 +251,7 @@ tst-malloc-usable-tunables-ENV = GLIBC_TUNABLES=glibc.malloc.check=3 \
 
 tst-mxfast-ENV = GLIBC_TUNABLES=glibc.malloc.tcache_count=0:glibc.malloc.mxfast=0
 
+CPPFLAGS-malloc-debug.c += -DUSE_TCACHE=0
 ifeq ($(experimental-malloc),yes)
 CPPFLAGS-malloc.c += -DUSE_TCACHE=1
 else

@@ -288,6 +288,7 @@
 #define MALLOC_DEBUG 0
 #endif
 
+#if IS_IN (libc)
 #ifndef NDEBUG
 # define __assert_fail(assertion, file, line, function)			\
 	 __malloc_assert(assertion, file, line, function)
@@ -306,6 +307,7 @@ __malloc_assert (const char *assertion, const char *file, unsigned int line,
   fflush (stderr);
   abort ();
 }
+#endif
 #endif
 
 #if USE_TCACHE
@@ -592,6 +594,7 @@ tag_at (void *ptr)
 
 /* ---------- description of public routines ------------ */
 
+#if IS_IN (libc)
 /*
   malloc(size_t n)
   Returns a pointer to a newly allocated chunk of at least n bytes, or null
@@ -815,6 +818,7 @@ void     __malloc_stats(void);
   POSIX wrapper like memalign(), checking for validity of size.
 */
 int      __posix_memalign(void **, size_t, size_t);
+#endif /* IS_IN (libc) */
 
 /* mallopt tuning options */
 
@@ -1106,23 +1110,16 @@ static void     _int_free(mstate, mchunkptr, int);
 static void*  _int_realloc(mstate, mchunkptr, INTERNAL_SIZE_T,
 			   INTERNAL_SIZE_T);
 static void*  _int_memalign(mstate, size_t, size_t);
+#if IS_IN (libc)
 static void*  _mid_memalign(size_t, size_t, void *);
+#endif
 
 static void malloc_printerr(const char *str) __attribute__ ((noreturn));
 
-static void* mem2mem_check(void *p, size_t sz);
-static void top_check(void);
 static void munmap_chunk(mchunkptr p);
 #if HAVE_MREMAP
 static mchunkptr mremap_chunk(mchunkptr p, size_t new_size);
 #endif
-
-static void*   malloc_check(size_t sz, const void *caller);
-static void      free_check(void* mem, const void *caller);
-static void*   realloc_check(void* oldmem, size_t bytes,
-			       const void *caller);
-static void*   memalign_check(size_t alignment, size_t bytes,
-				const void *caller);
 
 /* ------------------ MMAP support ------------------  */
 
@@ -2385,7 +2382,9 @@ do_check_malloc_state (mstate av)
 
 
 /* ----------------- Support for debugging hooks -------------------- */
+#if IS_IN (libc)
 #include "hooks.c"
+#endif
 
 
 /* ----------- Routines dealing with system allocation -------------- */
@@ -3186,6 +3185,7 @@ tcache_thread_shutdown (void)
 
 #endif /* !USE_TCACHE  */
 
+#if IS_IN (libc)
 void *
 __libc_malloc (size_t bytes)
 {
@@ -3686,6 +3686,7 @@ __libc_calloc (size_t n, size_t elem_size)
 
   return mem;
 }
+#endif /* IS_IN (libc) */
 
 /*
    ------------------------------ malloc ------------------------------
@@ -5054,9 +5055,6 @@ musable (void *mem)
 
       p = mem2chunk (mem);
 
-      if (__builtin_expect (using_malloc_checking == 1, 0))
-	return malloc_check_get_size (p);
-
       if (chunk_is_mmapped (p))
 	{
 	  if (DUMPED_MAIN_ARENA_CHUNK (p))
@@ -5072,7 +5070,7 @@ musable (void *mem)
   return 0;
 }
 
-
+#if IS_IN (libc)
 size_t
 __malloc_usable_size (void *m)
 {
@@ -5081,12 +5079,12 @@ __malloc_usable_size (void *m)
   result = musable (m);
   return result;
 }
+#endif
 
 /*
    ------------------------------ mallinfo ------------------------------
    Accumulate malloc statistics for arena AV into M.
  */
-
 static void
 int_mallinfo (mstate av, struct mallinfo2 *m)
 {
@@ -5585,10 +5583,15 @@ extern char **__libc_argv attribute_hidden;
 static void
 malloc_printerr (const char *str)
 {
+#if IS_IN (libc)
   __libc_message (do_abort, "%s\n", str);
+#else
+  __libc_fatal (str);
+#endif
   __builtin_unreachable ();
 }
 
+#if IS_IN (libc)
 /* We need a wrapper function for one of the additions of POSIX.  */
 int
 __posix_memalign (void **memptr, size_t alignment, size_t size)
@@ -5618,6 +5621,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
   return ENOMEM;
 }
 weak_alias (__posix_memalign, posix_memalign)
+#endif
 
 
 int
@@ -5821,8 +5825,8 @@ __malloc_info (int options, FILE *fp)
 
   return 0;
 }
+#if IS_IN (libc)
 weak_alias (__malloc_info, malloc_info)
-
 
 strong_alias (__libc_calloc, __calloc) weak_alias (__libc_calloc, calloc)
 strong_alias (__libc_free, __free) strong_alias (__libc_free, free)
@@ -5841,6 +5845,7 @@ strong_alias (__libc_mallopt, __mallopt) weak_alias (__libc_mallopt, mallopt)
 weak_alias (__malloc_stats, malloc_stats)
 weak_alias (__malloc_usable_size, malloc_usable_size)
 weak_alias (__malloc_trim, malloc_trim)
+#endif
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_26)
 compat_symbol (libc, __libc_free, cfree, GLIBC_2_0);

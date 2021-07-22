@@ -79,7 +79,9 @@ static __thread mstate thread_arena attribute_tls_model_ie;
    acquired after free_list_lock has been acquired.  */
 
 __libc_lock_define_initialized (static, free_list_lock);
+#if IS_IN (libc)
 static size_t narenas = 1;
+#endif
 static mstate free_list;
 
 /* list_lock prevents concurrent writes to the next member of struct
@@ -207,14 +209,6 @@ __malloc_fork_unlock_child (void)
 }
 
 #if HAVE_TUNABLES
-static void
-TUNABLE_CALLBACK (set_mallopt_check) (tunable_val_t *valp)
-{
-  int32_t value = (int32_t) valp->numval;
-  if (value != 0)
-    __malloc_check_init ();
-}
-
 # define TUNABLE_CALLBACK_FNDECL(__name, __type) \
 static inline int do_ ## __name (__type value);				      \
 static void									      \
@@ -309,7 +303,7 @@ ptmalloc_init (void)
     }
 #endif
 
-#ifdef SHARED
+#if defined SHARED && IS_IN (libc)
   /* In case this libc copy is in a non-default namespace, never use
      brk.  Likewise if dlopened from statically linked program.  The
      generic sbrk implementation also enforces this, but it is not
@@ -323,7 +317,6 @@ ptmalloc_init (void)
   malloc_init_state (&main_arena);
 
 #if HAVE_TUNABLES
-  TUNABLE_GET (check, int32_t, TUNABLE_CALLBACK (set_mallopt_check));
   TUNABLE_GET (top_pad, size_t, TUNABLE_CALLBACK (set_top_pad));
   TUNABLE_GET (perturb, int32_t, TUNABLE_CALLBACK (set_perturb_byte));
   TUNABLE_GET (mmap_threshold, size_t, TUNABLE_CALLBACK (set_mmap_threshold));
@@ -401,8 +394,6 @@ ptmalloc_init (void)
             }
         }
     }
-  if (s && s[0] != '\0' && s[0] != '0')
-    __malloc_check_init ();
 #endif
 }
 
@@ -672,6 +663,7 @@ heap_trim (heap_info *heap, size_t pad)
 
 /* Create a new arena with initial size "size".  */
 
+#if IS_IN (libc)
 /* If REPLACED_ARENA is not NULL, detach it from this thread.  Must be
    called while free_list_lock is held.  */
 static void
@@ -947,6 +939,7 @@ arena_get_retry (mstate ar_ptr, size_t bytes)
 
   return ar_ptr;
 }
+#endif
 
 void
 __malloc_arena_thread_freeres (void)

@@ -50,6 +50,7 @@ enum malloc_debug_hooks
   MALLOC_NONE_HOOK = 0,
   MALLOC_MCHECK_HOOK = 1 << 0, /* mcheck()  */
   MALLOC_MTRACE_HOOK = 1 << 1, /* mtrace()  */
+  MALLOC_CHECK_HOOK = 1 << 2,  /* MALLOC_CHECK_ or glibc.malloc.check.  */
 };
 static unsigned __malloc_debugging_hooks;
 
@@ -73,6 +74,7 @@ __malloc_debug_disable (enum malloc_debug_hooks flag)
 
 #include "mcheck.c"
 #include "mtrace.c"
+#include "malloc-check.c"
 
 extern void (*__malloc_initialize_hook) (void);
 compat_symbol_reference (libc, __malloc_initialize_hook,
@@ -105,13 +107,18 @@ generic_hook_ini (void)
   __malloc_hook = NULL;
   __realloc_hook = NULL;
   __memalign_hook = NULL;
-  /* The compiler does not know that these functions are allocators, so it will
-     not try to optimize it away.  */
-  __libc_free (__libc_malloc (0));
+
+  /* malloc check does not quite co-exist with libc malloc, so initialize
+     either on or the other.  */
+  if (!initialize_malloc_check ())
+    /* The compiler does not know that these functions are allocators, so it
+       will not try to optimize it away.  */
+    __libc_free (__libc_malloc (0));
 
   void (*hook) (void) = __malloc_initialize_hook;
   if (hook != NULL)
     (*hook)();
+
   debug_initialized = 1;
 }
 
@@ -149,10 +156,11 @@ __debug_malloc (size_t bytes)
 
   void *victim = NULL;
   size_t orig_bytes = bytes;
-  if (!__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK)
-      || !malloc_mcheck_before (&bytes, &victim))
+  if ((!__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK)
+       || !malloc_mcheck_before (&bytes, &victim)))
     {
-      victim = __libc_malloc (bytes);
+      victim = (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK)
+		? malloc_check (bytes) : __libc_malloc (bytes));
     }
   if (__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK) && victim != NULL)
     victim = malloc_mcheck_after (victim, orig_bytes);
@@ -175,10 +183,13 @@ __debug_free (void *mem)
 
   if (__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK))
     mem = free_mcheck (mem);
+
+  if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
+    free_check (mem);
+  else
+    __libc_free (mem);
   if (__is_malloc_debug_enabled (MALLOC_MTRACE_HOOK))
     free_mtrace (mem, RETURN_ADDRESS (0));
-
-  __libc_free (mem);
 }
 strong_alias (__debug_free, free)
 
@@ -193,10 +204,13 @@ __debug_realloc (void *oldmem, size_t bytes)
   size_t orig_bytes = bytes, oldsize = 0;
   void *victim = NULL;
 
-  if (!__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK)
-      || !realloc_mcheck_before (&oldmem, &bytes, &oldsize, &victim))
+  if ((!__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK)
+       || !realloc_mcheck_before (&oldmem, &bytes, &oldsize, &victim)))
     {
-      victim = __libc_realloc (oldmem, bytes);
+      if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
+	victim =  realloc_check (oldmem, bytes);
+      else
+	victim = __libc_realloc (oldmem, bytes);
     }
   if (__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK) && victim != NULL)
     victim = realloc_mcheck_after (victim, oldmem, orig_bytes,
@@ -219,10 +233,12 @@ _debug_mid_memalign (size_t alignment, size_t bytes, const void *address)
   void *victim = NULL;
   size_t orig_bytes = bytes;
 
-  if (!__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK)
-      || !memalign_mcheck_before (alignment, &bytes, &victim))
+  if ((!__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK)
+       || !memalign_mcheck_before (alignment, &bytes, &victim)))
     {
-      victim = __libc_memalign (alignment, bytes);
+      victim = (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK)
+		? memalign_check (alignment, bytes)
+		: __libc_memalign (alignment, bytes));
     }
   if (__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK) && victim != NULL)
     victim = memalign_mcheck_after (victim, alignment, orig_bytes);
@@ -316,10 +332,11 @@ __debug_calloc (size_t nmemb, size_t size)
   size_t orig_bytes = bytes;
   void *victim = NULL;
 
-  if (!__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK)
-      || !malloc_mcheck_before (&bytes, &victim))
+  if ((!__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK)
+       || !malloc_mcheck_before (&bytes, &victim)))
     {
-      victim = __libc_malloc (bytes);
+      victim = (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK)
+		? malloc_check (bytes) : __libc_malloc (bytes));
     }
   if (victim != NULL)
     {
@@ -333,3 +350,106 @@ __debug_calloc (size_t nmemb, size_t size)
   return victim;
 }
 strong_alias (__debug_calloc, calloc)
+
+size_t
+malloc_usable_size (void *mem)
+{
+  if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
+    return malloc_check_get_size (mem);
+
+  return musable (mem);
+}
+
+#define LIBC_SYMBOL(sym) libc_ ## sym
+#define SYMHANDLE(sym) sym ## _handle
+
+#define LOAD_SYM(sym) ({ \
+  static void *SYMHANDLE (sym);						      \
+  if (SYMHANDLE (sym) == NULL)						      \
+    SYMHANDLE (sym) = dlsym (RTLD_NEXT, #sym);				      \
+  SYMHANDLE (sym);							      \
+})
+
+int
+malloc_info (int options, FILE *fp)
+{
+  if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
+    return __malloc_info (options, fp);
+
+  int (*LIBC_SYMBOL (malloc_info)) (int, FILE *) = LOAD_SYM (malloc_info);
+  if (LIBC_SYMBOL (malloc_info) == NULL)
+    return -1;
+
+  return LIBC_SYMBOL (malloc_info) (options, fp);
+}
+
+int
+mallopt (int param_number, int value)
+{
+  if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
+    return __libc_mallopt (param_number, value);
+
+  int (*LIBC_SYMBOL (mallopt)) (int, int) = LOAD_SYM (mallopt);
+  if (LIBC_SYMBOL (mallopt) == NULL)
+    return 0;
+
+  return LIBC_SYMBOL (mallopt) (param_number, value);
+}
+
+void
+malloc_stats (void)
+{
+  if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
+    return __malloc_stats ();
+
+  void (*LIBC_SYMBOL (malloc_stats)) (void) = LOAD_SYM (malloc_stats);
+  if (LIBC_SYMBOL (malloc_stats) == NULL)
+    return;
+
+  LIBC_SYMBOL (malloc_stats) ();
+}
+
+struct mallinfo2
+mallinfo2 (void)
+{
+  if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
+    return __libc_mallinfo2 ();
+
+  struct mallinfo2 (*LIBC_SYMBOL (mallinfo2)) (void) = LOAD_SYM (mallinfo2);
+  if (LIBC_SYMBOL (mallinfo2) == NULL)
+    {
+      struct mallinfo2 ret = {0};
+      return ret;
+    }
+
+  return LIBC_SYMBOL (mallinfo2) ();
+}
+
+struct mallinfo
+mallinfo (void)
+{
+  if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
+    return __libc_mallinfo ();
+
+  struct mallinfo (*LIBC_SYMBOL (mallinfo)) (void) = LOAD_SYM (mallinfo);
+  if (LIBC_SYMBOL (mallinfo) == NULL)
+    {
+      struct mallinfo ret = {0};
+      return ret;
+    }
+
+  return LIBC_SYMBOL (mallinfo) ();
+}
+
+int
+malloc_trim (size_t s)
+{
+  if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
+    return __malloc_trim (s);
+
+  int (*LIBC_SYMBOL (malloc_trim)) (size_t) = LOAD_SYM (malloc_trim);
+  if (LIBC_SYMBOL (malloc_trim) == NULL)
+    return 0;
+
+  return LIBC_SYMBOL (malloc_trim) (s);
+}

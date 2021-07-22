@@ -17,20 +17,8 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <https://www.gnu.org/licenses/>.  */
 
-
-/* Whether we are using malloc checking.  */
-static int using_malloc_checking;
-
-/* Activate a standard set of debugging hooks. */
-void
-__malloc_check_init (void)
-{
-  using_malloc_checking = 1;
-  __malloc_hook = malloc_check;
-  __free_hook = free_check;
-  __realloc_hook = realloc_check;
-  __memalign_hook = memalign_check;
-}
+#define __mremap mremap
+#include "malloc.c"
 
 /* When memory is tagged, the checking data is stored in the user part
    of the chunk.  We can't rely on the user not having modified the
@@ -63,13 +51,12 @@ magicbyte (const void *p)
    must reach it with this iteration, otherwise we have witnessed a memory
    corruption.  */
 static size_t
-malloc_check_get_size (mchunkptr p)
+malloc_check_get_size (void *mem)
 {
   size_t size;
   unsigned char c;
+  mchunkptr p = mem2chunk (mem);
   unsigned char magic = magicbyte (p);
-
-  assert (using_malloc_checking == 1);
 
   for (size = CHUNK_HDR_SZ + memsize (p) - 1;
        (c = *SAFE_CHAR_OFFSET (p, size)) != magic;
@@ -203,7 +190,7 @@ top_check (void)
 }
 
 static void *
-malloc_check (size_t sz, const void *caller)
+malloc_check (size_t sz)
 {
   void *victim;
   size_t nb;
@@ -222,7 +209,7 @@ malloc_check (size_t sz, const void *caller)
 }
 
 static void
-free_check (void *mem, const void *caller)
+free_check (void *mem)
 {
   mchunkptr p;
 
@@ -256,7 +243,7 @@ free_check (void *mem, const void *caller)
 }
 
 static void *
-realloc_check (void *oldmem, size_t bytes, const void *caller)
+realloc_check (void *oldmem, size_t bytes)
 {
   INTERNAL_SIZE_T chnb;
   void *newmem = 0;
@@ -269,11 +256,11 @@ realloc_check (void *oldmem, size_t bytes, const void *caller)
       return NULL;
     }
   if (oldmem == 0)
-    return malloc_check (bytes, NULL);
+    return malloc_check (bytes);
 
   if (bytes == 0)
     {
-      free_check (oldmem, NULL);
+      free_check (oldmem);
       return NULL;
     }
 
@@ -348,12 +335,12 @@ invert:
 }
 
 static void *
-memalign_check (size_t alignment, size_t bytes, const void *caller)
+memalign_check (size_t alignment, size_t bytes)
 {
   void *mem;
 
   if (alignment <= MALLOC_ALIGNMENT)
-    return malloc_check (bytes, NULL);
+    return malloc_check (bytes);
 
   if (alignment < MINSIZE)
     alignment = MINSIZE;
@@ -363,14 +350,14 @@ memalign_check (size_t alignment, size_t bytes, const void *caller)
   if (alignment > SIZE_MAX / 2 + 1)
     {
       __set_errno (EINVAL);
-      return 0;
+      return NULL;
     }
 
   /* Check for overflow.  */
   if (bytes > SIZE_MAX - alignment - MINSIZE)
     {
       __set_errno (ENOMEM);
-      return 0;
+      return NULL;
     }
 
   /* Make sure alignment is power of 2.  */
@@ -387,4 +374,28 @@ memalign_check (size_t alignment, size_t bytes, const void *caller)
   mem = _int_memalign (&main_arena, alignment, bytes + 1);
   __libc_lock_unlock (main_arena.mutex);
   return mem2mem_check (tag_new_usable (mem), bytes);
+}
+
+static void
+TUNABLE_CALLBACK (set_mallopt_check) (tunable_val_t *valp)
+{
+  int32_t value = (int32_t) valp->numval;
+  if (value != 0)
+    __malloc_debug_enable (MALLOC_CHECK_HOOK);
+}
+
+static bool
+initialize_malloc_check (void)
+{
+  /* This is the copy of the malloc initializer that we pulled in along with
+     malloc-check.  This does not affect any of the libc malloc structures.  */
+  ptmalloc_init ();
+#if HAVE_TUNABLES
+  TUNABLE_GET (check, int32_t, TUNABLE_CALLBACK (set_mallopt_check));
+#else
+  const char *s = secure_getenv ("MALLOC_CHECK_");
+  if (s && s[0] != '\0' && s[0] != '0')
+    __malloc_debug_enable (MALLOC_CHECK_HOOK);
+#endif
+  return __is_malloc_debug_enabled (MALLOC_CHECK_HOOK);
 }
