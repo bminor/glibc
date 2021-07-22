@@ -83,7 +83,7 @@ ifeq ($(have-GLIBC_2.23)$(build-shared),yesyes)
 # the tests expect specific internal behavior that is changed due to linking to
 # libmcheck.a.
 tests-exclude-mcheck = tst-mallocstate \
-	tst-safe-linking tst-malloc-usable \
+	tst-safe-linking \
 	tst-malloc-backtrace \
 	tst-malloc-fork-deadlock \
 	tst-malloc-stats-cancellation \
@@ -92,8 +92,6 @@ tests-exclude-mcheck = tst-mallocstate \
 	tst-malloc-thread-fail \
 	tst-malloc-usable-tunables \
 	tst-malloc_info \
-	tst-pvalloc-fortify \
-	tst-reallocarray \
 	tst-compathooks-off tst-compathooks-on
 
 tests-mcheck = $(filter-out $(tests-exclude-mcheck), $(tests))

@@ -404,3 +404,9 @@ __mcheck_initialize (void (*func) (enum mcheck_status), bool in_pedantic)
   pedantic = in_pedantic;
   return 0;
 }
+
+static int
+mcheck_usable_size (struct hdr *h)
+{
+  return (h - 1)->size;
+}
