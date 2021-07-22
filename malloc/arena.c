@@ -97,7 +97,7 @@ static mstate free_list;
 __libc_lock_define_initialized (static, list_lock);
 
 /* Already initialized? */
-int __malloc_initialized = -1;
+static bool __malloc_initialized = false;
 
 /**************************************************************************/
 
@@ -143,7 +143,7 @@ int __malloc_initialized = -1;
 void
 __malloc_fork_lock_parent (void)
 {
-  if (__malloc_initialized < 1)
+  if (!__malloc_initialized)
     return;
 
   /* We do not acquire free_list_lock here because we completely
@@ -163,7 +163,7 @@ __malloc_fork_lock_parent (void)
 void
 __malloc_fork_unlock_parent (void)
 {
-  if (__malloc_initialized < 1)
+  if (!__malloc_initialized)
     return;
 
   for (mstate ar_ptr = &main_arena;; )
@@ -179,7 +179,7 @@ __malloc_fork_unlock_parent (void)
 void
 __malloc_fork_unlock_child (void)
 {
-  if (__malloc_initialized < 1)
+  if (!__malloc_initialized)
     return;
 
   /* Push all arenas to the free list, except thread_arena, which is
@@ -286,10 +286,10 @@ static void tcache_key_initialize (void);
 static void
 ptmalloc_init (void)
 {
-  if (__malloc_initialized >= 0)
+  if (__malloc_initialized)
     return;
 
-  __malloc_initialized = 0;
+  __malloc_initialized = true;
 
 #if USE_TCACHE
   tcache_key_initialize ();

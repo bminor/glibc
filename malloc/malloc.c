@@ -3195,7 +3195,7 @@ __libc_malloc (size_t bytes)
   _Static_assert (PTRDIFF_MAX <= SIZE_MAX / 2,
                   "PTRDIFF_MAX is not more than half of SIZE_MAX");
 
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
 #if USE_TCACHE
   /* int_free also calls request2size, be careful to not pad twice.  */
@@ -3308,7 +3308,7 @@ __libc_realloc (void *oldmem, size_t bytes)
 
   void *newp;             /* chunk to return */
 
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
 
 #if REALLOC_ZERO_BYTES_FREES
@@ -3444,7 +3444,7 @@ libc_hidden_def (__libc_realloc)
 void *
 __libc_memalign (size_t alignment, size_t bytes)
 {
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
 
   void *address = RETURN_ADDRESS (0);
@@ -3515,7 +3515,7 @@ libc_hidden_def (__libc_memalign)
 void *
 __libc_valloc (size_t bytes)
 {
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
 
   void *address = RETURN_ADDRESS (0);
@@ -3526,7 +3526,7 @@ __libc_valloc (size_t bytes)
 void *
 __libc_pvalloc (size_t bytes)
 {
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
 
   void *address = RETURN_ADDRESS (0);
@@ -3565,7 +3565,7 @@ __libc_calloc (size_t n, size_t elem_size)
 
   sz = bytes;
 
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
 
   MAYBE_INIT_TCACHE ();
@@ -5022,7 +5022,7 @@ __malloc_trim (size_t s)
 {
   int result = 0;
 
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
 
   mstate ar_ptr = &main_arena;
@@ -5157,7 +5157,7 @@ __libc_mallinfo2 (void)
   struct mallinfo2 m;
   mstate ar_ptr;
 
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
 
   memset (&m, 0, sizeof (m));
@@ -5208,7 +5208,7 @@ __malloc_stats (void)
   mstate ar_ptr;
   unsigned int in_use_b = mp_.mmapped_mem, system_b = in_use_b;
 
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
   _IO_flockfile (stderr);
   int old_flags2 = stderr->_flags2;
@@ -5377,7 +5377,7 @@ __libc_mallopt (int param_number, int value)
   mstate av = &main_arena;
   int res = 1;
 
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
   __libc_lock_lock (av->mutex);
 
@@ -5595,7 +5595,7 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
 {
   void *mem;
 
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
 
   /* Test whether the SIZE argument is valid.  It must be a power of
@@ -5639,7 +5639,7 @@ __malloc_info (int options, FILE *fp)
 
 
 
-  if (__malloc_initialized < 0)
+  if (!__malloc_initialized)
     ptmalloc_init ();
 
   fputs ("<malloc version=\"1\">\n", fp);
