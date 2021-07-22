@@ -28,4 +28,6 @@
    Prelinked libraries may use Elf32_Rela though.  */
 #define ELF_MACHINE_PLT_REL 1
 
+#define PLTREL ElfW(Rel)
+
 #endif

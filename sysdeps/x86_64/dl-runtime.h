@@ -18,7 +18,7 @@
    02111-1307 USA.  */
 
 /* The ABI calls for the PLT stubs to pass the index of the relocation
-   and not its offset.  In _dl_profile_fixup and _dl_call_pltexit we
+   and not its offset.  In _dl_profile_fixup and _dl_audit_pltexit we
    also use the index.  Therefore it is wasteful to compute the offset
    in the trampoline just to reverse the operation immediately
    afterwards.  */

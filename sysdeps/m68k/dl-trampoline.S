@@ -202,7 +202,7 @@ _dl_runtime_profile:
 	cfi_adjust_cfa_offset (4)
 	move.l (32+FPSPACE)(%sp), -(%sp)
 	cfi_adjust_cfa_offset (4)
-	jbsr _dl_call_pltexit
+	jbsr _dl_audit_pltexit
 	lea 16(%sp), %sp
 	cfi_adjust_cfa_offset (-16)
 	move.l (%sp)+, %d0

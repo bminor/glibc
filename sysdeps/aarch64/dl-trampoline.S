@@ -293,7 +293,7 @@ _dl_runtime_profile:
 	ldp	x0, x1, [x29, #OFFSET_SAVED_CALL_X0]
 	add	x2, x29, #OFFSET_RG
 	add	x3, x29, #OFFSET_RV
-	bl	_dl_call_pltexit
+	bl	_dl_audit_pltexit
 
 	ldp	x0, x1, [x29, #OFFSET_RV + DL_OFFSET_RV_X0]
 	ldp	d0, d1, [x29, #OFFSET_RV + DL_OFFSET_RV_D0 + 16*0]
