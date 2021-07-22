@@ -179,9 +179,6 @@ extern void *(*__MALLOC_HOOK_VOLATILE __memalign_hook)(size_t __alignment,
                                                        size_t __size,
                                                        const void *)
 __MALLOC_DEPRECATED;
-extern void (*__MALLOC_HOOK_VOLATILE __after_morecore_hook) (void)
-  __MALLOC_DEPRECATED;
-
 
 __END_DECLS
 #endif /* malloc.h */
