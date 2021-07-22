@@ -20,6 +20,8 @@
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_34)
 void weak_variable (*__after_morecore_hook) (void) = NULL;
 compat_symbol (libc, __after_morecore_hook, __after_morecore_hook, GLIBC_2_0);
+void *(*__morecore)(ptrdiff_t);
+compat_symbol (libc, __morecore, __morecore, GLIBC_2_0);
 #endif
 
 /* Hooks for debugging versions.  The initial hooks just call the

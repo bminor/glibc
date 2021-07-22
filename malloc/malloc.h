@@ -76,14 +76,6 @@ extern void *valloc (size_t __size) __THROW __attribute_malloc__
 extern void *pvalloc (size_t __size) __THROW __attribute_malloc__
   __wur __attr_dealloc_free;
 
-/* Underlying allocation function; successive calls should return
-   contiguous pieces of memory.  */
-extern void *(*__morecore) (ptrdiff_t __size) __MALLOC_DEPRECATED;
-
-/* Default value of `__morecore'.  */
-extern void *__default_morecore (ptrdiff_t __size)
-__THROW __attribute_malloc__  __MALLOC_DEPRECATED;
-
 /* SVID2/XPG mallinfo structure */
 
 struct mallinfo

@@ -274,14 +274,6 @@ next_env_entry (char ***position)
 #endif
 
 
-#if defined(SHARED) || defined(USE_MTAG)
-static void *
-__failing_morecore (ptrdiff_t d)
-{
-  return (void *) MORECORE_FAILURE;
-}
-#endif
-
 #ifdef SHARED
 extern struct dl_open_hook *_dl_open_hook;
 libc_hidden_proto (_dl_open_hook);
@@ -310,7 +302,7 @@ ptmalloc_init (void)
 	 and that morecore does not support tagged regions, then
 	 disable it.  */
       if (__MTAG_SBRK_UNTAGGED)
-	__morecore = __failing_morecore;
+	__always_fail_morecore = true;
 
       mtag_enabled = true;
       mtag_mmap_flags = __MTAG_MMAP_FLAGS;
@@ -323,7 +315,7 @@ ptmalloc_init (void)
      generic sbrk implementation also enforces this, but it is not
      used on Hurd.  */
   if (!__libc_initial)
-    __morecore = __failing_morecore;
+    __always_fail_morecore = true;
 #endif
 
   thread_arena = &main_arena;

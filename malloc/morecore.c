@@ -15,39 +15,27 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _MALLOC_INTERNAL
-# define _MALLOC_INTERNAL
-# include <malloc.h>
-#endif
-
-#ifndef __GNU_LIBRARY__
-# define __sbrk  sbrk
-#endif
-
-#ifdef __GNU_LIBRARY__
-/* It is best not to declare this and cast its result on foreign operating
-   systems with potentially hostile include files.  */
-
-# include <stddef.h>
-# include <stdlib.h>
-extern void *__sbrk (ptrdiff_t increment) __THROW;
-libc_hidden_proto (__sbrk)
-#endif
-
-#ifndef NULL
-# define NULL 0
+#if defined(SHARED) || defined(USE_MTAG)
+static bool __always_fail_morecore = false;
 #endif
 
 /* Allocate INCREMENT more bytes of data space,
    and return the start of data space, or NULL on errors.
    If INCREMENT is negative, shrink data space.  */
 void *
-__default_morecore (ptrdiff_t increment)
+__glibc_morecore (ptrdiff_t increment)
 {
+#if defined(SHARED) || defined(USE_MTAG)
+  if (__always_fail_morecore)
+    return NULL;
+#endif
+
   void *result = (void *) __sbrk (increment);
   if (result == (void *) -1)
     return NULL;
 
   return result;
 }
-libc_hidden_def (__default_morecore)
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_34)
+compat_symbol (libc, __glibc_morecore, __default_morecore, GLIBC_2_0);
+#endif

@@ -306,9 +306,6 @@ libc_hidden_proto (__qfcvt_r)
 #  define MB_CUR_MAX (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX))
 # endif
 
-extern void *__default_morecore (ptrdiff_t) __THROW;
-libc_hidden_proto (__default_morecore)
-
 struct abort_msg_s
 {
   unsigned int size;

@@ -127,6 +127,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   mtrace.  Similar functionality can be achieved by using conditional
   breakpoints within mtrace functions from within gdb.
 
+* The __morecore and __after_morecore_hook malloc hooks and the default
+  implementation __default_morecore have been removed from the API.  Existing
+  applications will continue to link against these symbols but the interfaces
+  no longer have any effect on malloc.
+
 Changes to build and runtime requirements:
 
 * On Linux, the shm_open, sem_open, and related functions now expect the
