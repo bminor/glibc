@@ -1864,6 +1864,13 @@ when a replacement @code{malloc} is in use.  However, failure to replace
 these functions typically does not result in crashes or other incorrect
 application behavior, but may result in static linking failures.
 
+There are other functions (@code{reallocarray}, @code{strdup}, etc.) in
+@theglibc{} that are not listed above but return newly allocated memory to
+callers.  Replacement of these functions is not supported and may produce
+incorrect results.  @Theglibc{} implementations of these functions call
+the replacement allocator functions whenever available, so they will work
+correctly with @code{malloc} replacement.
+
 @node Obstacks
 @subsection Obstacks
 @cindex obstacks
