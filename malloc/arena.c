@@ -332,7 +332,6 @@ ptmalloc_init (void)
 # endif
   TUNABLE_GET (mxfast, size_t, TUNABLE_CALLBACK (set_mxfast));
 #else
-  const char *s = NULL;
   if (__glibc_likely (_environ != NULL))
     {
       char **runp = _environ;
@@ -351,10 +350,6 @@ ptmalloc_init (void)
 
           switch (len)
             {
-            case 6:
-              if (memcmp (envline, "CHECK_", 6) == 0)
-                s = &envline[7];
-              break;
             case 8:
               if (!__builtin_expect (__libc_enable_secure, 0))
                 {

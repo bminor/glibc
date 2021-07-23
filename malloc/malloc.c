@@ -688,31 +688,6 @@ void*  __libc_valloc(size_t);
 
 
 /*
-  mallopt(int parameter_number, int parameter_value)
-  Sets tunable parameters The format is to provide a
-  (parameter-number, parameter-value) pair.  mallopt then sets the
-  corresponding parameter to the argument value if it can (i.e., so
-  long as the value is meaningful), and returns 1 if successful else
-  0.  SVID/XPG/ANSI defines four standard param numbers for mallopt,
-  normally defined in malloc.h.  Only one of these (M_MXFAST) is used
-  in this malloc. The others (M_NLBLKS, M_GRAIN, M_KEEP) don't apply,
-  so setting them has no effect. But this malloc also supports four
-  other options in mallopt. See below for details.  Briefly, supported
-  parameters are as follows (listed defaults are for "typical"
-  configurations).
-
-  Symbol            param #   default    allowed param values
-  M_MXFAST          1         64         0-80  (0 disables fastbins)
-  M_TRIM_THRESHOLD -1         128*1024   any   (-1U disables trimming)
-  M_TOP_PAD        -2         0          any
-  M_MMAP_THRESHOLD -3         128*1024   any   (or 0 if no MMAP support)
-  M_MMAP_MAX       -4         65536      any   (0 disables use of mmap)
-*/
-int      __libc_mallopt(int, int);
-libc_hidden_proto (__libc_mallopt)
-
-
-/*
   mallinfo()
   Returns (by copy) a struct containing various summary statistics:
 
@@ -819,6 +794,32 @@ void     __malloc_stats(void);
 */
 int      __posix_memalign(void **, size_t, size_t);
 #endif /* IS_IN (libc) */
+
+/*
+  mallopt(int parameter_number, int parameter_value)
+  Sets tunable parameters The format is to provide a
+  (parameter-number, parameter-value) pair.  mallopt then sets the
+  corresponding parameter to the argument value if it can (i.e., so
+  long as the value is meaningful), and returns 1 if successful else
+  0.  SVID/XPG/ANSI defines four standard param numbers for mallopt,
+  normally defined in malloc.h.  Only one of these (M_MXFAST) is used
+  in this malloc. The others (M_NLBLKS, M_GRAIN, M_KEEP) don't apply,
+  so setting them has no effect. But this malloc also supports four
+  other options in mallopt. See below for details.  Briefly, supported
+  parameters are as follows (listed defaults are for "typical"
+  configurations).
+
+  Symbol            param #   default    allowed param values
+  M_MXFAST          1         64         0-80  (0 disables fastbins)
+  M_TRIM_THRESHOLD -1         128*1024   any   (-1U disables trimming)
+  M_TOP_PAD        -2         0          any
+  M_MMAP_THRESHOLD -3         128*1024   any   (or 0 if no MMAP support)
+  M_MMAP_MAX       -4         65536      any   (0 disables use of mmap)
+*/
+int      __libc_mallopt(int, int);
+#if IS_IN (libc)
+libc_hidden_proto (__libc_mallopt)
+#endif
 
 /* mallopt tuning options */
 

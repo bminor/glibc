@@ -376,6 +376,7 @@ memalign_check (size_t alignment, size_t bytes)
   return mem2mem_check (tag_new_usable (mem), bytes);
 }
 
+#if HAVE_TUNABLES
 static void
 TUNABLE_CALLBACK (set_mallopt_check) (tunable_val_t *valp)
 {
@@ -383,6 +384,7 @@ TUNABLE_CALLBACK (set_mallopt_check) (tunable_val_t *valp)
   if (value != 0)
     __malloc_debug_enable (MALLOC_CHECK_HOOK);
 }
+#endif
 
 static bool
 initialize_malloc_check (void)

@@ -19,12 +19,16 @@ ifeq (yes,$(have-ifunc))
 ifeq (yes,$(have-gcc-ifunc))
 tests += \
   tst-ifunc-isa-1 \
-  tst-ifunc-isa-1-static \
+  tst-ifunc-isa-1-static
+tests-static += \
+  tst-ifunc-isa-1-static
+ifneq ($(have-tunables),no)
+tests += \
   tst-ifunc-isa-2 \
   tst-ifunc-isa-2-static
 tests-static += \
-  tst-ifunc-isa-1-static \
   tst-ifunc-isa-2-static
+endif
 endif
 endif
 ifeq (yes,$(enable-x86-isa-level))
