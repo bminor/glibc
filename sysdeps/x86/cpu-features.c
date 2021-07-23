@@ -555,6 +555,11 @@ init_cpu_features (struct cpu_features *cpu_features)
 	    cpu_features->preferred[index_arch_Prefer_AVX2_STRCMP]
 	      |= bit_arch_Prefer_AVX2_STRCMP;
 	}
+
+      /* Avoid avoid short distance REP MOVSB on processor with FSRM.  */
+      if (CPU_FEATURES_CPU_P (cpu_features, FSRM))
+	cpu_features->preferred[index_arch_Avoid_Short_Distance_REP_MOVSB]
+	  |= bit_arch_Avoid_Short_Distance_REP_MOVSB;
     }
   /* This spells out "AuthenticAMD" or "HygonGenuine".  */
   else if ((ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)

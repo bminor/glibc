@@ -325,12 +325,16 @@ L(movsb):
 	/* Avoid slow backward REP MOVSB.  */
 	jb	L(more_8x_vec_backward)
 # if AVOID_SHORT_DISTANCE_REP_MOVSB
+	andl	$X86_STRING_CONTROL_AVOID_SHORT_DISTANCE_REP_MOVSB, __x86_string_control(%rip)
+	jz	3f
 	movq	%rdi, %rcx
 	subq	%rsi, %rcx
 	jmp	2f
 # endif
 1:
 # if AVOID_SHORT_DISTANCE_REP_MOVSB
+	andl	$X86_STRING_CONTROL_AVOID_SHORT_DISTANCE_REP_MOVSB, __x86_string_control(%rip)
+	jz	3f
 	movq	%rsi, %rcx
 	subq	%rdi, %rcx
 2:
@@ -338,6 +342,7 @@ L(movsb):
    is N*4GB + [1..63] with N >= 0.  */
 	cmpl	$63, %ecx
 	jbe	L(more_2x_vec)	/* Avoid "rep movsb" if ECX <= 63.  */
+3:
 # endif
 	mov	%RDX_LP, %RCX_LP
 	rep movsb
