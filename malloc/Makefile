@@ -75,7 +75,8 @@ tests-exclude-malloc-check = tst-malloc-check tst-malloc-usable \
 	tst-compathooks-off tst-compathooks-on
 
 # Run all tests with MALLOC_CHECK_=3
-tests-malloc-check = $(filter-out $(tests-exclude-malloc-check),$(tests))
+tests-malloc-check = $(filter-out $(tests-exclude-malloc-check) \
+				  $(tests-static),$(tests))
 
 # -lmcheck needs __malloc_initialize_hook, which was deprecated in 2.24.
 ifeq ($(have-GLIBC_2.23)$(build-shared),yesyes)
@@ -94,7 +95,7 @@ tests-exclude-mcheck = tst-mallocstate \
 	tst-malloc_info \
 	tst-compathooks-off tst-compathooks-on
 
-tests-mcheck = $(filter-out $(tests-exclude-mcheck), $(tests))
+tests-mcheck = $(filter-out $(tests-exclude-mcheck) $(tests-static), $(tests))
 endif
 
 routines = malloc mcheck mtrace obstack reallocarray \
@@ -290,15 +291,7 @@ $(objpfx)tst-interpose-thread-mcheck: \
 $(objpfx)tst-interpose-thread-malloc-check: \
   $(objpfx)tst-interpose-aux-thread.o $(shared-thread-library)
 $(objpfx)tst-interpose-static-nothread: $(objpfx)tst-interpose-aux-nothread.o
-$(objpfx)tst-interpose-static-nothread-mcheck: \
-	$(objpfx)tst-interpose-aux-nothread.o
-$(objpfx)tst-interpose-static-nothread-malloc-check: \
-	$(objpfx)tst-interpose-aux-nothread.o
 $(objpfx)tst-interpose-static-thread: \
-  $(objpfx)tst-interpose-aux-thread.o $(static-thread-library)
-$(objpfx)tst-interpose-static-thread-mcheck: \
-  $(objpfx)tst-interpose-aux-thread.o $(static-thread-library)
-$(objpfx)tst-interpose-static-thread-malloc-check: \
   $(objpfx)tst-interpose-aux-thread.o $(static-thread-library)
 
 tst-dynarray-ENV = MALLOC_TRACE=$(objpfx)tst-dynarray.mtrace \
