@@ -95,7 +95,9 @@ struct _IO_FILE_complete
   size_t __pad5;
   int _mode;
   /* Make sure we don't get into trouble again.  */
-  char _unused2[15 * sizeof (int) - 4 * sizeof (void *) - sizeof (size_t)];
+  char _unused2[sizeof (void *) == 4 * sizeof (int)
+		? 9 * sizeof (int)
+		: 15 * sizeof (int) - 4 * sizeof (void *) - sizeof (size_t)];
 };
 
 /* These macros are used by bits/stdio.h and internal headers.  */
