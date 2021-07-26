@@ -2701,9 +2701,6 @@
 0x1.eb1881275a5fap-1
 0x1.e5a3c6b686c17p-1
 -0x1.5abd34f01cc55p-25
-# acos multiple precision fallback.
-# Implemented in __cos32 in sysdeps/ieee754/dbl-64/sincos32.c
-## name: slow
 0x1.91744378d312fp-25
 0x1.e31933dfcae5ep-6
 0x1.560a94c69898dp-28
