@@ -35,6 +35,9 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   unsigned long int hwcap = GLRO(dl_hwcap);
   unsigned long int hwcap2 = GLRO(dl_hwcap2);
+#ifdef SHARED
+  int cacheline_size = GLRO(dl_cache_line_size);
+#endif
 
   /* hwcap contains only the latest supported ISA, the code checks which is
      and fills the previous supported ones.  */
@@ -90,16 +93,21 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memset,
 			      hwcap2 & PPC_FEATURE2_ARCH_3_1
 			      && hwcap2 & PPC_FEATURE2_HAS_ISEL
-			      && hwcap & PPC_FEATURE_HAS_VSX,
+			      && hwcap & PPC_FEATURE_HAS_VSX
+			      && cacheline_size == 128,
 			      __memset_power10)
 #endif
-	      IFUNC_IMPL_ADD (array, i, memset, hwcap2 & PPC_FEATURE2_ARCH_2_07,
+	      IFUNC_IMPL_ADD (array, i, memset, hwcap2 & PPC_FEATURE2_ARCH_2_07
+			      && cacheline_size == 128,
 			      __memset_power8)
-	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_ARCH_2_06,
+	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_ARCH_2_06
+			      && cacheline_size == 128,
 			      __memset_power7)
-	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_ARCH_2_05,
+	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_ARCH_2_05
+			      && cacheline_size == 128,
 			      __memset_power6)
-	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_POWER4,
+	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_POWER4
+			      && cacheline_size == 128,
 			      __memset_power4)
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_ppc))
 
