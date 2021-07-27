@@ -660,6 +660,7 @@ retry:
 
       /* Release malloc locks.  */
       _hurd_malloc_fork_child ();
+      call_function_static_weak (__malloc_fork_unlock_child);
 
       /* Run things that want to run in the child task to set up.  */
       RUN_HOOK (_hurd_fork_child_hook, ());
