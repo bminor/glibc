@@ -1851,6 +1851,66 @@ scopecmp (const void *p1, const void *p2)
   return 1;
 }
 
+static bool
+add_prefixlist (struct prefixlist **listp, size_t *lenp, bool *nullbitsp,
+		char *val1, char *val2, char **pos)
+{
+  struct in6_addr prefix;
+  unsigned long int bits;
+  unsigned long int val;
+  char *endp;
+
+  bits = 128;
+  __set_errno (0);
+  char *cp = strchr (val1, '/');
+  if (cp != NULL)
+    *cp++ = '\0';
+  *pos = cp;
+  if (inet_pton (AF_INET6, val1, &prefix)
+      && (cp == NULL
+	  || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
+	  || errno != ERANGE)
+      && *endp == '\0'
+      && bits <= 128
+      && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
+	  || errno != ERANGE)
+      && *endp == '\0'
+      && val <= INT_MAX)
+    {
+      struct prefixlist *newp = malloc (sizeof (*newp));
+      if (newp == NULL)
+	return false;
+
+      memcpy (&newp->entry.prefix, &prefix, sizeof (prefix));
+      newp->entry.bits = bits;
+      newp->entry.val = val;
+      newp->next = *listp;
+      *listp = newp;
+      ++*lenp;
+      *nullbitsp |= bits == 0;
+    }
+  return true;
+}
+
+static bool
+add_scopelist (struct scopelist **listp, size_t *lenp, bool *nullbitsp,
+	       const struct in6_addr *prefixp, unsigned long int bits,
+	       unsigned long int val)
+{
+  struct scopelist *newp = malloc (sizeof (*newp));
+  if (newp == NULL)
+    return false;
+
+  newp->entry.netmask = htonl (bits != 96 ? (0xffffffff << (128 - bits)) : 0);
+  newp->entry.addr32 = (prefixp->s6_addr32[3] & newp->entry.netmask);
+  newp->entry.scope = val;
+  newp->next = *listp;
+  *listp = newp;
+  ++*lenp;
+  *nullbitsp |= bits == 96;
+
+  return true;
+}
 
 static void
 gaiconf_init (void)
@@ -1926,55 +1986,17 @@ gaiconf_init (void)
 	  /*  Ignore the rest of the line.  */
 	  *cp = '\0';
 
-	  struct prefixlist **listp;
-	  size_t *lenp;
-	  bool *nullbitsp;
 	  switch (cmdlen)
 	    {
 	    case 5:
 	      if (strcmp (cmd, "label") == 0)
 		{
-		  struct in6_addr prefix;
-		  unsigned long int bits;
-		  unsigned long int val;
-		  char *endp;
-
-		  listp = &labellist;
-		  lenp = &nlabellist;
-		  nullbitsp = &labellist_nullbits;
-
-		new_elem:
-		  bits = 128;
-		  __set_errno (0);
-		  cp = strchr (val1, '/');
-		  if (cp != NULL)
-		    *cp++ = '\0';
-		  if (inet_pton (AF_INET6, val1, &prefix)
-		      && (cp == NULL
-			  || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
-			  || errno != ERANGE)
-		      && *endp == '\0'
-		      && bits <= 128
-		      && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
-			  || errno != ERANGE)
-		      && *endp == '\0'
-		      && val <= INT_MAX)
+		  if (!add_prefixlist (&labellist, &nlabellist,
+				       &labellist_nullbits, val1, val2, &cp))
 		    {
-		      struct prefixlist *newp = malloc (sizeof (*newp));
-		      if (newp == NULL)
-			{
-			  free (line);
-			  fclose (fp);
-			  goto no_file;
-			}
-
-		      memcpy (&newp->entry.prefix, &prefix, sizeof (prefix));
-		      newp->entry.bits = bits;
-		      newp->entry.val = val;
-		      newp->next = *listp;
-		      *listp = newp;
-		      ++*lenp;
-		      *nullbitsp |= bits == 0;
+		      free (line);
+		      fclose (fp);
+		      goto no_file;
 		    }
 		}
 	      break;
@@ -2016,27 +2038,14 @@ gaiconf_init (void)
 			  && *endp == '\0'
 			  && val <= INT_MAX)
 			{
-			  struct scopelist *newp;
-			new_scope:
-			  newp = malloc (sizeof (*newp));
-			  if (newp == NULL)
+			  if (!add_scopelist (&scopelist, &nscopelist,
+					      &scopelist_nullbits, &prefix,
+					      bits, val))
 			    {
 			      free (line);
 			      fclose (fp);
 			      goto no_file;
 			    }
-
-			  newp->entry.netmask = htonl (bits != 96
-						       ? (0xffffffff
-							  << (128 - bits))
-						       : 0);
-			  newp->entry.addr32 = (prefix.s6_addr32[3]
-						& newp->entry.netmask);
-			  newp->entry.scope = val;
-			  newp->next = scopelist;
-			  scopelist = newp;
-			  ++nscopelist;
-			  scopelist_nullbits |= bits == 96;
 			}
 		    }
 		  else if (inet_pton (AF_INET, val1, &prefix.s6_addr32[3])
@@ -2050,8 +2059,14 @@ gaiconf_init (void)
 			   && *endp == '\0'
 			   && val <= INT_MAX)
 		    {
-		      bits += 96;
-		      goto new_scope;
+		      if (!add_scopelist (&scopelist, &nscopelist,
+					  &scopelist_nullbits, &prefix,
+					  bits + 96, val))
+			{
+			  free (line);
+			  fclose (fp);
+			  goto no_file;
+			}
 		    }
 		}
 	      break;
@@ -2059,10 +2074,14 @@ gaiconf_init (void)
 	    case 10:
 	      if (strcmp (cmd, "precedence") == 0)
 		{
-		  listp = &precedencelist;
-		  lenp = &nprecedencelist;
-		  nullbitsp = &precedencelist_nullbits;
-		  goto new_elem;
+		  if (!add_prefixlist (&precedencelist, &nprecedencelist,
+				       &precedencelist_nullbits, val1, val2,
+				       &cp))
+		    {
+		      free (line);
+		      fclose (fp);
+		      goto no_file;
+		    }
 		}
 	      break;
 	    }
