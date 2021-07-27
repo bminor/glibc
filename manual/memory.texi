@@ -1255,7 +1255,7 @@ environment variable @env{MALLOC_ARENA_MAX} to the desired value.
 
 You can ask @code{malloc} to check the consistency of dynamic memory by
 using the @code{mcheck} function and preloading the malloc debug library
-@file{libc_malloc_debug.so} using the @var{LD_PRELOAD} environment variable.
+@file{libc_malloc_debug} using the @var{LD_PRELOAD} environment variable.
 This function is a GNU extension, declared in @file{mcheck.h}.
 @pindex mcheck.h
 
@@ -1368,7 +1368,7 @@ used which is designed to be tolerant against simple errors, such as
 double calls of @code{free} with the same argument, or overruns of a
 single byte (off-by-one bugs).  Not all such errors can be protected
 against, however, and memory leaks can result.  Like in the case of
-@code{mcheck}, one would need to preload the @file{libc_malloc_debug.so}
+@code{mcheck}, one would need to preload the @file{libc_malloc_debug}
 library to enable @code{MALLOC_CHECK_} functionality.  Without this
 preloaded library, setting @code{MALLOC_CHECK_} will have no effect.
 
@@ -1575,7 +1575,7 @@ penalties for the program if the debugging mode is not enabled.
 The @code{mtrace} function provides a way to trace memory allocation
 events in the program that calls it.  It is disabled by default in the
 library and can be enabled by preloading the debugging library
-@file{libc_malloc_debug.so} using the @code{LD_PRELOAD} environment
+@file{libc_malloc_debug} using the @code{LD_PRELOAD} environment
 variable.
 
 When the @code{mtrace} function is called it looks for an environment

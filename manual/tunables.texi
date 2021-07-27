@@ -114,7 +114,7 @@ following tunables in the @code{malloc} namespace:
 @deftp Tunable glibc.malloc.check
 This tunable supersedes the @env{MALLOC_CHECK_} environment variable and is
 identical in features. This tunable has no effect by default and needs the
-debug library @file{libc_malloc_debug.so} to be preloaded using the
+debug library @file{libc_malloc_debug} to be preloaded using the
 @code{LD_PRELOAD} environment variable.
 
 Setting this tunable to a non-zero value less than 4 enables a special (less
