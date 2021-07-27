@@ -41,7 +41,8 @@ libc_ifunc (__libc_memmove,
 	     && hwcap & PPC_FEATURE_HAS_VSX)
 	    ? __memmove_power10 :
 #endif
-		     (hwcap & PPC_FEATURE_HAS_VSX)
+		     (hwcap & PPC_FEATURE_ARCH_2_06
+		      && hwcap & PPC_FEATURE_HAS_ALTIVEC)
 		     ? __memmove_power7
 		     : __memmove_ppc);
 

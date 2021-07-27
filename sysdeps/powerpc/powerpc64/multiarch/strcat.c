@@ -28,9 +28,11 @@ extern __typeof (strcat) __strcat_power8 attribute_hidden;
 # undef strcat
 
 libc_ifunc_redirected (__redirect_strcat, strcat,
-		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+		       (hwcap2 & PPC_FEATURE2_ARCH_2_07
+			&& hwcap & PPC_FEATURE_HAS_VSX)
 		       ? __strcat_power8
-		       : (hwcap & PPC_FEATURE_HAS_VSX)
+		       : (hwcap & PPC_FEATURE_ARCH_2_06
+			  && hwcap & PPC_FEATURE_HAS_VSX)
 			 ? __strcat_power7
 			 : __strcat_ppc);
 #endif

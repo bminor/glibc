@@ -38,7 +38,8 @@ libc_ifunc_redirected (__redirect_memcmp, memcmp,
 				 && hwcap & PPC_FEATURE_HAS_VSX)
 				 ? __memcmp_power10 :
 #endif
-		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+		       (hwcap2 & PPC_FEATURE2_ARCH_2_07
+			&& hwcap & PPC_FEATURE_HAS_ALTIVEC)
 		       ? __memcmp_power8 :
 		       (hwcap & PPC_FEATURE_ARCH_2_06)
 		       ? __memcmp_power7

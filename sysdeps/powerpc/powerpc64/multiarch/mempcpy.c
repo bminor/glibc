@@ -33,7 +33,8 @@ extern __typeof (__mempcpy) __mempcpy_power7 attribute_hidden;
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
 libc_ifunc_redirected (__redirect___mempcpy, __mempcpy,
-		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       (hwcap & PPC_FEATURE_ARCH_2_06
+			&& hwcap & PPC_FEATURE_HAS_ALTIVEC)
 		       ? __mempcpy_power7
 		       : __mempcpy_ppc);
 

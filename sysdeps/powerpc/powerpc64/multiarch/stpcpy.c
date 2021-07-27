@@ -32,12 +32,15 @@ extern __typeof (__stpcpy) __stpcpy_power9 attribute_hidden;
 
 libc_ifunc_hidden (__stpcpy, __stpcpy,
 # ifdef __LITTLE_ENDIAN__
-		   (hwcap2 & PPC_FEATURE2_ARCH_3_00)
+		   (hwcap2 & PPC_FEATURE2_ARCH_3_00
+		    && hwcap & PPC_FEATURE_HAS_VSX)
 		   ? __stpcpy_power9 :
 # endif
-		     (hwcap2 & PPC_FEATURE2_ARCH_2_07)
+		     (hwcap2 & PPC_FEATURE2_ARCH_2_07
+		      && hwcap & PPC_FEATURE_HAS_ALTIVEC)
 		     ? __stpcpy_power8
-		     : (hwcap & PPC_FEATURE_HAS_VSX)
+		     : (hwcap & PPC_FEATURE_ARCH_2_06
+		        && hwcap & PPC_FEATURE_HAS_VSX)
 		       ? __stpcpy_power7
 		       : __stpcpy_ppc);
 
