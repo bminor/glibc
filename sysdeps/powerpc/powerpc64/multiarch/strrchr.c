@@ -33,7 +33,7 @@ extern __typeof (strrchr) __strrchr_power8 attribute_hidden;
 libc_ifunc_redirected (__redirect_strrchr, strrchr,
 		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
 		       ? __strrchr_power8 :
-		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       (hwcap & PPC_FEATURE_ARCH_2_06)
 		       ? __strrchr_power7
 		       : __strrchr_ppc);
 weak_alias (strrchr, rindex)

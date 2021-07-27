@@ -34,7 +34,7 @@ extern __typeof (__strncasecmp_l) __strncasecmp_l_power7 attribute_hidden;
    ifunc symbol properly.  */
 extern __typeof (__strncasecmp_l) __libc_strncasecmp_l;
 libc_ifunc (__libc_strncasecmp_l,
-	     (hwcap & PPC_FEATURE_HAS_VSX)
+	     (hwcap & PPC_FEATURE_ARCH_2_06)
              ? __strncasecmp_l_power7
              : __strncasecmp_l_ppc);
 

@@ -40,7 +40,7 @@ libc_ifunc_redirected (__redirect_strcmp, strcmp,
 # endif
 		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
 		       ? __strcmp_power8
-		       : (hwcap & PPC_FEATURE_HAS_VSX)
+		       : (hwcap & PPC_FEATURE_ARCH_2_06)
 			 ? __strcmp_power7
 			 : __strcmp_ppc);
 #endif

@@ -30,7 +30,7 @@ extern __typeof (__memchr) __memchr_power8 attribute_hidden;
 libc_ifunc (__memchr,
 	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
 	    ? __memchr_power8 :
-	    (hwcap & PPC_FEATURE_HAS_VSX)
+	    (hwcap & PPC_FEATURE_ARCH_2_06)
             ? __memchr_power7
             : __memchr_ppc);
 

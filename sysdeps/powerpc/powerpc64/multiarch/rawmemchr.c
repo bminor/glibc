@@ -41,7 +41,7 @@ libc_ifunc_redirected (__redirect___rawmemchr, __rawmemchr,
 		       (hwcap2 & PPC_FEATURE2_ARCH_3_00)
 		       ? __rawmemchr_power9 :
 # endif
-		         (hwcap & PPC_FEATURE_HAS_VSX)
+		         (hwcap & PPC_FEATURE_ARCH_2_06)
 		         ? __rawmemchr_power7
 		       : __rawmemchr_ppc);
 

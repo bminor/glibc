@@ -30,7 +30,7 @@ extern __typeof (__strchrnul) __strchrnul_power8 attribute_hidden;
 libc_ifunc (__strchrnul,
 	    (hwcap2 & PPC_FEATURE2_ARCH_2_07)
 	    ? __strchrnul_power8 :
-	    (hwcap & PPC_FEATURE_HAS_VSX)
+	    (hwcap & PPC_FEATURE_ARCH_2_06)
             ? __strchrnul_power7
             : __strchrnul_ppc);
 

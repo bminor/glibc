@@ -30,7 +30,7 @@ extern __typeof (strstr) __strstr_power7 attribute_hidden;
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
 libc_ifunc_redirected (__redirect_strstr, strstr,
-		       (hwcap & PPC_FEATURE_HAS_VSX)
+		       (hwcap & PPC_FEATURE_ARCH_2_06)
 		       ? __strstr_power7
 		       : __strstr_ppc);
 #endif

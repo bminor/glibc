@@ -32,7 +32,7 @@ extern __typeof (__strcasecmp_l) __strcasecmp_l_power7 attribute_hidden;
 
 extern __typeof (__strcasecmp_l) __libc_strcasecmp_l;
 libc_ifunc (__libc_strcasecmp_l,
-	    (hwcap & PPC_FEATURE_HAS_VSX)
+	    (hwcap & PPC_FEATURE_ARCH_2_06)
             ? __strcasecmp_l_power7
             : __strcasecmp_l_ppc);
 

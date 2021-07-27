@@ -95,7 +95,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 #endif
 	      IFUNC_IMPL_ADD (array, i, memset, hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __memset_power8)
-	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_HAS_VSX,
+	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_ARCH_2_06,
 			      __memset_power7)
 	      IFUNC_IMPL_ADD (array, i, memset, hwcap & PPC_FEATURE_ARCH_2_05,
 			      __memset_power6)
@@ -139,7 +139,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 #endif
 	      IFUNC_IMPL_ADD (array, i, strlen, hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strlen_power8)
-	      IFUNC_IMPL_ADD (array, i, strlen, hwcap & PPC_FEATURE_HAS_VSX,
+	      IFUNC_IMPL_ADD (array, i, strlen, hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strlen_power7)
 	      IFUNC_IMPL_ADD (array, i, strlen, 1,
 			      __strlen_ppc))
@@ -152,7 +152,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 #endif
 	      IFUNC_IMPL_ADD (array, i, strncmp, hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strncmp_power8)
-	      IFUNC_IMPL_ADD (array, i, strncmp, hwcap & PPC_FEATURE_HAS_VSX,
+	      IFUNC_IMPL_ADD (array, i, strncmp, hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strncmp_power7)
 	      IFUNC_IMPL_ADD (array, i, strncmp, hwcap & PPC_FEATURE_POWER4,
 			      __strncmp_power4)
@@ -165,7 +165,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strchr_power8)
 	      IFUNC_IMPL_ADD (array, i, strchr,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strchr_power7)
 	      IFUNC_IMPL_ADD (array, i, strchr, 1,
 			      __strchr_ppc))
@@ -176,7 +176,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strchrnul_power8)
 	      IFUNC_IMPL_ADD (array, i, strchrnul,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strchrnul_power7)
 	      IFUNC_IMPL_ADD (array, i, strchrnul, 1,
 			      __strchrnul_ppc))
@@ -192,7 +192,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 #endif
 	      IFUNC_IMPL_ADD (array, i, memcmp, hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __memcmp_power8)
-	      IFUNC_IMPL_ADD (array, i, memcmp, hwcap & PPC_FEATURE_HAS_VSX,
+	      IFUNC_IMPL_ADD (array, i, memcmp, hwcap & PPC_FEATURE_ARCH_2_06,
 			      __memcmp_power7)
 	      IFUNC_IMPL_ADD (array, i, memcmp, hwcap & PPC_FEATURE_POWER4,
 			      __memcmp_power4)
@@ -244,7 +244,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __memchr_power8)
 	      IFUNC_IMPL_ADD (array, i, memchr,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __memchr_power7)
 	      IFUNC_IMPL_ADD (array, i, memchr, 1,
 			      __memchr_ppc))
@@ -255,7 +255,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __memrchr_power8)
 	      IFUNC_IMPL_ADD (array, i, memrchr,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __memrchr_power7)
 	      IFUNC_IMPL_ADD (array, i, memrchr, 1,
 			      __memrchr_ppc))
@@ -272,7 +272,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __rawmemchr_power9)
 #endif
 	      IFUNC_IMPL_ADD (array, i, rawmemchr,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __rawmemchr_power7)
 	      IFUNC_IMPL_ADD (array, i, rawmemchr, 1,
 			      __rawmemchr_ppc))
@@ -282,7 +282,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strnlen,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strnlen_power8)
-	      IFUNC_IMPL_ADD (array, i, strnlen, hwcap & PPC_FEATURE_HAS_VSX,
+	      IFUNC_IMPL_ADD (array, i, strnlen, hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strnlen_power7)
 	      IFUNC_IMPL_ADD (array, i, strnlen, 1,
 			      __strnlen_ppc))
@@ -293,14 +293,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strcasecmp_power8)
 	      IFUNC_IMPL_ADD (array, i, strcasecmp,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strcasecmp_power7)
 	      IFUNC_IMPL_ADD (array, i, strcasecmp, 1, __strcasecmp_ppc))
 
   /* Support sysdeps/powerpc/powerpc64/multiarch/strcasecmp_l.c.  */
   IFUNC_IMPL (i, name, strcasecmp_l,
 	      IFUNC_IMPL_ADD (array, i, strcasecmp_l,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strcasecmp_l_power7)
 	      IFUNC_IMPL_ADD (array, i, strcasecmp_l, 1,
 			      __strcasecmp_l_ppc))
@@ -311,14 +311,14 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strncasecmp_power8)
 	      IFUNC_IMPL_ADD (array, i, strncasecmp,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strncasecmp_power7)
 	      IFUNC_IMPL_ADD (array, i, strncasecmp, 1, __strncasecmp_ppc))
 
   /* Support sysdeps/powerpc/powerpc64/multiarch/strncase_l.c.  */
   IFUNC_IMPL (i, name, strncasecmp_l,
 	      IFUNC_IMPL_ADD (array, i, strncasecmp_l,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strncasecmp_l_power7)
 	      IFUNC_IMPL_ADD (array, i, strncasecmp_l, 1,
 			      __strncasecmp_l_ppc))
@@ -329,7 +329,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strrchr_power8)
 	      IFUNC_IMPL_ADD (array, i, strrchr,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strrchr_power7)
 	      IFUNC_IMPL_ADD (array, i, strrchr, 1,
 			      __strrchr_ppc))
@@ -357,7 +357,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strncpy_power8)
 	      IFUNC_IMPL_ADD (array, i, strncpy,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strncpy_power7)
 	      IFUNC_IMPL_ADD (array, i, strncpy, 1,
 			     __strncpy_ppc))
@@ -374,7 +374,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __stpncpy_power8)
 	      IFUNC_IMPL_ADD (array, i, stpncpy,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __stpncpy_power7)
 	      IFUNC_IMPL_ADD (array, i, stpncpy, 1,
 			     __stpncpy_ppc))
@@ -390,7 +390,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      hwcap2 & PPC_FEATURE2_ARCH_2_07,
 			      __strcmp_power8)
 	      IFUNC_IMPL_ADD (array, i, strcmp,
-			      hwcap & PPC_FEATURE_HAS_VSX,
+			      hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strcmp_power7)
 	      IFUNC_IMPL_ADD (array, i, strcmp, 1,
 			     __strcmp_ppc))
@@ -425,7 +425,7 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/powerpc/powerpc64/multiarch/strstr.c.  */
   IFUNC_IMPL (i, name, strstr,
              IFUNC_IMPL_ADD (array, i, strstr,
-                             hwcap & PPC_FEATURE_HAS_VSX,
+                             hwcap & PPC_FEATURE_ARCH_2_06,
                              __strstr_power7)
              IFUNC_IMPL_ADD (array, i, strstr, 1,
                              __strstr_ppc))
