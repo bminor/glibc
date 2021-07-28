@@ -18,6 +18,7 @@
 
 #include <getopt.h>
 #include <sys/cdefs.h>
+#include <programs/xmalloc.h>
 
 /* We are compiled under _ISOMAC, so libc-symbols.h does not do this
    for us.  */
@@ -200,8 +201,8 @@ static impl_t *impl_array;
 		 skip = impl;						      \
 	       else							      \
 		 impl_count++;						      \
-	     a = impl_array = malloc ((impl_count + func_count) *	      \
-				   sizeof (impl_t));			      \
+	     a = impl_array = xmalloc ((impl_count + func_count) *	      \
+				       sizeof (impl_t));		      \
 	     for (impl = __start_impls; impl < __stop_impls; ++impl)	      \
 	       if (impl != skip)					      \
 		 *a++ = *impl;						      \

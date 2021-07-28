@@ -87,14 +87,24 @@ int support_descriptor_supports_holes (int fd);
 /* Error-checking wrapper functions which terminate the process on
    error.  */
 
-void *xmalloc (size_t) __attribute__ ((malloc));
-void *xcalloc (size_t n, size_t s) __attribute__ ((malloc));
-void *xrealloc (void *p, size_t n);
-void *xposix_memalign (size_t alignment, size_t n);
+extern void *xmalloc (size_t n)
+  __attribute_malloc__ __attribute_alloc_size__ ((1)) __attr_dealloc_free
+  __returns_nonnull;
+extern void *xcalloc (size_t n, size_t s)
+  __attribute_malloc__ __attribute_alloc_size__ ((1, 2)) __attr_dealloc_free
+  __returns_nonnull;
+extern void *xrealloc (void *o, size_t n)
+  __attribute_malloc__ __attribute_alloc_size__ ((2)) __attr_dealloc_free;
+extern char *xstrdup (const char *) __attribute_malloc__ __attr_dealloc_free
+  __returns_nonnull;
+void *xposix_memalign (size_t alignment, size_t n)
+  __attribute_malloc__ __attribute_alloc_size__ ((2)) __attr_dealloc_free
+  __returns_nonnull;
 char *xasprintf (const char *format, ...)
-  __attribute__ ((format (printf, 1, 2), malloc));
-char *xstrdup (const char *);
-char *xstrndup (const char *, size_t);
+  __attribute__ ((format (printf, 1, 2), malloc)) __attr_dealloc_free
+  __returns_nonnull;
+char *xstrdup (const char *) __attr_dealloc_free __returns_nonnull;
+char *xstrndup (const char *, size_t) __attr_dealloc_free __returns_nonnull;
 char *xsetlocale (int category, const char *locale);
 locale_t xnewlocale (int category_mask, const char *locale, locale_t base);
 char *xuselocale (locale_t newloc);

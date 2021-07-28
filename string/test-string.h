@@ -18,6 +18,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/cdefs.h>
+#include <support/support.h>
 
 typedef struct
 {
@@ -146,8 +147,8 @@ static impl_t *impl_array;
 	      skip = impl;						\
 	    else							\
 	      impl_count++;						\
-	  a = impl_array = malloc ((impl_count + func_count) *		\
-				   sizeof (impl_t));			\
+	  a = impl_array = xmalloc ((impl_count + func_count) *		\
+				    sizeof (impl_t));			\
 	  for (impl = __start_impls; impl < __stop_impls; ++impl)	\
 	    if (impl != skip)						\
 	      *a++ = *impl;						\
