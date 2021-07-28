@@ -48,7 +48,7 @@ __clone_internal (struct clone_args *cl_args,
 		  int (*func) (void *arg), void *arg)
 {
   int ret;
-#ifdef HAVE_CLONE3_WAPPER
+#ifdef HAVE_CLONE3_WRAPPER
   /* Try clone3 first.  */
   int saved_errno = errno;
   ret = __clone3 (cl_args, sizeof (*cl_args), func, arg);
