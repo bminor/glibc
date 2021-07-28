@@ -330,6 +330,16 @@
 # define __nonnull(params) _GL_ATTRIBUTE_NONNULL (params)
 #endif
 
+/* The returns_nonnull function attribute marks the return type of the function
+   as always being non-null.  */
+#ifndef __returns_nonnull
+# if __GNUC_PREREQ (4, 9) || __glibc_has_attribute (__returns_nonnull__)
+# define __returns_nonnull __attribute__ ((__returns_nonnull__))
+# else
+# define __returns_nonnull
+# endif
+#endif
+
 /* If fortification mode, we warn about unused results of certain
    function calls which can lead to problems.  */
 #if __GNUC_PREREQ (3,4) || __glibc_has_attribute (__warn_unused_result__)
