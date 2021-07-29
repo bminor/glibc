@@ -195,6 +195,9 @@ struct name_list
 /* The real definition of the struct for the LC_COLLATE locale.  */
 struct locale_collate_t
 {
+  /* Does the locale use strcmp to compare the encoding?  */
+  bool strcmp_collation;
+
   int col_weight_max;
   int cur_weight_max;
 
@@ -1510,6 +1513,7 @@ collate_startup (struct linereader *ldfile, struct localedef_t *locale,
 	  obstack_init (&collate->mempool);
 
 	  collate->col_weight_max = -1;
+	  collate->strcmp_collation = false;
 	}
       else
 	/* Reuse the copy_locale's data structures.  */
@@ -1567,6 +1571,10 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
 		      "LC_COLLATE");
       return;
     }
+
+  /* No data required.  */
+  if (collate->strcmp_collation)
+    return;
 
   /* If this assertion is hit change the type in `element_t'.  */
   assert (nrules <= sizeof (runp->used_in_level) * 8);
@@ -2115,7 +2123,7 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
   add_locale_uint32 (&file, nrules);
 
   /* If we have no LC_COLLATE data emit only the number of rules as zero.  */
-  if (collate == NULL)
+  if (collate == NULL || collate->strcmp_collation)
     {
       size_t idx;
       for (idx = 1; idx < nelems; idx++)
@@ -2123,6 +2131,10 @@ collate_output (struct localedef_t *locale, const struct charmap_t *charmap,
 	  /* The words have to be handled specially.  */
 	  if (idx == _NL_ITEM_INDEX (_NL_COLLATE_SYMB_HASH_SIZEMB))
 	    add_locale_uint32 (&file, 0);
+	  else if (idx == _NL_ITEM_INDEX (_NL_COLLATE_CODESET)
+		   && collate != NULL)
+	    /* A valid LC_COLLATE must have a code set name.  */
+	    add_locale_string (&file, charmap->code_set_name);
 	  else
 	    add_locale_empty (&file);
 	}
@@ -2672,6 +2684,10 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 
       switch (nowtok)
 	{
+	case tok_strcmp_collation:
+	  collate->strcmp_collation = true;
+	  break;
+
 	case tok_copy:
 	  /* Allow copying other locales.  */
 	  now = lr_token (ldfile, charmap, result, NULL, verbose);
@@ -3742,9 +3758,11 @@ error while adding equivalent collating symbol"));
 	  /* Next we assume `LC_COLLATE'.  */
 	  if (!ignore_content)
 	    {
-	      if (state == 0 && copy_locale == NULL)
+	      if (state == 0
+		  && copy_locale == NULL
+		  && !collate->strcmp_collation)
 		/* We must either see a copy statement or have
-		   ordering values.  */
+		   ordering values, or strcmp_collation.  */
 		lr_error (ldfile,
 			  _("%s: empty category description not allowed"),
 			  "LC_COLLATE");

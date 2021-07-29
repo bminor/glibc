@@ -91,6 +91,7 @@ enum token_t
   tok_translit_ignore,
   tok_default_missing,
   tok_lc_collate,
+  tok_strcmp_collation,
   tok_coll_weight_max,
   tok_section_symbol,
   tok_collating_element,
