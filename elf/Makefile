@@ -24,6 +24,7 @@ include ../Makeconfig
 headers = \
   bits/elfclass.h \
   bits/link.h \
+  bits/link_lavcurrent.h \
   elf.h \
   link.h \
   # headers
