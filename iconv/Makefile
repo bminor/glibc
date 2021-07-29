@@ -43,8 +43,19 @@ CFLAGS-charmap.c += -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
 CFLAGS-linereader.c += -DNO_TRANSLITERATION
 CFLAGS-simple-hash.c += -I../locale
 
-tests	= tst-iconv1 tst-iconv2 tst-iconv3 tst-iconv4 tst-iconv5 tst-iconv6 \
-	  tst-iconv7 tst-iconv8 tst-iconv-mt tst-iconv-opt
+tests = \
+	tst-iconv1 \
+	tst-iconv2 \
+	tst-iconv3 \
+	tst-iconv4 \
+	tst-iconv5 \
+	tst-iconv6 \
+	tst-iconv7 \
+	tst-iconv8 \
+	tst-iconv9 \
+	tst-iconv-mt \
+	tst-iconv-opt \
+	# tests
 
 others		= iconv_prog iconvconfig
 install-others-programs	= $(inst_bindir)/iconv
@@ -83,10 +94,15 @@ endif
 include ../Rules
 
 ifeq ($(run-built-tests),yes)
-LOCALES := en_US.UTF-8
+# We have to generate locales (list sorted alphabetically)
+LOCALES := \
+	C.UTF-8 \
+	en_US.UTF-8 \
+	# LOCALES
 include ../gen-locales.mk
 
 $(objpfx)tst-iconv-opt.out: $(gen-locales)
+$(objpfx)tst-iconv9.out: $(gen-locales)
 endif
 
 $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)

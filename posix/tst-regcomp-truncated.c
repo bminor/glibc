@@ -37,6 +37,7 @@
 static const char locales[][17] =
   {
     "C",
+    "C.UTF-8",
     "en_US.UTF-8",
     "de_DE.ISO-8859-1",
   };
