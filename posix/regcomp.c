@@ -2889,7 +2889,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 	  if (MB_CUR_MAX == 1)
 	  */
 	  if (nrules == 0)
-	    return collseqmb[br_elem->opr.ch];
+	    return br_elem->opr.ch;
 	  else
 	    {
 	      wint_t wc = __btowc (br_elem->opr.ch);
@@ -2900,6 +2900,8 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 	{
 	  if (nrules != 0)
 	    return __collseq_table_lookup (collseqwc, br_elem->opr.wch);
+	  else
+	    return br_elem->opr.wch;
 	}
       else if (br_elem->type == COLL_SYM)
 	{
@@ -2935,7 +2937,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 		}
 	    }
 	  else if (sym_name_len == 1)
-	    return collseqmb[br_elem->opr.name[0]];
+	    return br_elem->opr.name[0];
 	}
       return UINT_MAX;
     }
@@ -3017,7 +3019,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 	  if (MB_CUR_MAX == 1)
 	  */
 	  if (nrules == 0)
-	    ch_collseq = collseqmb[ch];
+	    ch_collseq = ch;
 	  else
 	    ch_collseq = __collseq_table_lookup (collseqwc, __btowc (ch));
 	  if (start_collseq <= ch_collseq && ch_collseq <= end_collseq)
@@ -3103,11 +3105,11 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
   int token_len;
   bool first_round = true;
 #ifdef _LIBC
-  collseqmb = (const unsigned char *)
-    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_COLLSEQMB);
   nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
   if (nrules)
     {
+      collseqmb = (const unsigned char *)
+	_NL_CURRENT (LC_COLLATE, _NL_COLLATE_COLLSEQMB);
       /*
       if (MB_CUR_MAX > 1)
       */

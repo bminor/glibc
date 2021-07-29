@@ -51,6 +51,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
     _NL_CURRENT(LC_COLLATE, _NL_COLLATE_COLLSEQMB);
 # endif
 #endif
+  uint32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
 
   while ((c = *p++) != L_('\0'))
     {
@@ -324,8 +325,6 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
                        diagnose a "used initialized" in a dead branch in the
                        findidx function.  */
                     UCHAR str;
-                    uint32_t nrules =
-                      _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
                     const CHAR *startp = p;
 
                     c = *++p;
@@ -437,8 +436,6 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 
                     if (c == L_('[') && *p == L_('.'))
                       {
-                        uint32_t nrules =
-                          _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
                         const CHAR *startp = p;
                         size_t c1 = 0;
 
@@ -600,42 +597,51 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
                     if (c == L_('-') && *p != L_(']'))
                       {
 #if _LIBC
-                        /* We have to find the collation sequence
-                           value for C.  Collation sequence is nothing
-                           we can regularly access.  The sequence
-                           value is defined by the order in which the
-                           definitions of the collation values for the
-                           various characters appear in the source
-                           file.  A strange concept, nowhere
-                           documented.  */
-                        uint32_t fcollseq;
-                        uint32_t lcollseq;
+			/* We must find the collation sequence values for
+			   the low part of the range, the high part of the
+			   range and the searched value FN.  We do this by
+			   using the POSIX concept of Collation Element
+			   Ordering, which is the defined order of elements
+			   in the source locale.  FCOLLSEQ is the searched
+			   element in the range, while LCOLLSEQ is the low
+			   element in the range.  If we have no collation
+			   rules (nrules == 0) then we must fall back to a
+			   basic code point value for the collation
+			   sequence value (which is correct for ASCII and
+			   UTF-8).  We must never use collseq if nrules ==
+			   0 since none of the tables we need will be
+			   present in the compiled binary locale.  We start
+			   with fcollseq and lcollseq at unknown collation
+			   sequences.  We only compute hcollseq, the high
+			   part of the range if required.  */
+                        uint32_t fcollseq = ~((uint32_t) 0);
+                        uint32_t lcollseq = ~((uint32_t) 0);
                         UCHAR cend = *p++;
 
+			if (nrules != 0)
+			  {
 # if WIDE_CHAR_VERSION
-                        /* Search in the 'names' array for the characters.  */
-                        fcollseq = __collseq_table_lookup (collseq, fn);
-                        if (fcollseq == ~((uint32_t) 0))
-                          /* XXX We don't know anything about the character
-                             we are supposed to match.  This means we are
-                             failing.  */
-                          goto range_not_matched;
+			    /* Search the collation data for the character.  */
+			    fcollseq = __collseq_table_lookup (collseq, fn);
+			    if (fcollseq == ~((uint32_t) 0))
+			      /* We don't know anything about the character
+				 we are supposed to match.  This means we are
+				 failing.  */
+			      goto range_not_matched;
 
-                        if (is_seqval)
-                          lcollseq = cold;
-                        else
-                          lcollseq = __collseq_table_lookup (collseq, cold);
+			    if (is_seqval)
+			      lcollseq = cold;
+			    else
+			      lcollseq = __collseq_table_lookup (collseq, cold);
 # else
-                        fcollseq = collseq[fn];
-                        lcollseq = is_seqval ? cold : collseq[(UCHAR) cold];
+			    fcollseq = collseq[fn];
+			    lcollseq = is_seqval ? cold : collseq[(UCHAR) cold];
 # endif
+			  }
 
                         is_seqval = false;
                         if (cend == L_('[') && *p == L_('.'))
                           {
-                            uint32_t nrules =
-                              _NL_CURRENT_WORD (LC_COLLATE,
-                                                _NL_COLLATE_NRULES);
                             const CHAR *startp = p;
                             size_t c1 = 0;
 
@@ -752,14 +758,20 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
                             cend = FOLD (cend);
                           }
 
-                        /* XXX It is not entirely clear to me how to handle
-                           characters which are not mentioned in the
-                           collation specification.  */
-                        if (
+			/* If we have rules, and the low sequence is lower than
+			   the value of the searched sequence then we must
+			   lookup the high collation sequence value and
+			   determine if the fcollseq falls within the range.
+			   If hcollseq is unknown then we could still match
+			   fcollseq on the low end of the range.  If lcollseq
+			   if unknown (0xffffffff) we will still fail to
+			   match, but in the future we might consider matching
+			   the high end of the range on an exact match.  */
+                        if (nrules != 0 && (
 # if WIDE_CHAR_VERSION
                             lcollseq == 0xffffffff ||
 # endif
-                            lcollseq <= fcollseq)
+                            lcollseq <= fcollseq))
                           {
                             /* We have to look at the upper bound.  */
                             uint32_t hcollseq;
@@ -789,6 +801,17 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
                             if (lcollseq <= hcollseq && fcollseq <= hcollseq)
                               goto matched;
                           }
+
+			/* No rules, but we have a range.  */
+			if (nrules == 0)
+			  {
+			    if (cend == L_('\0'))
+			      return FNM_NOMATCH;
+
+			    /* Compare that fn is within the range.  */
+			    if ((UCHAR) cold <= fn && fn <= cend)
+			      goto matched;
+			  }
 # if WIDE_CHAR_VERSION
                       range_not_matched:
 # endif
