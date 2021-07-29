@@ -21,7 +21,7 @@ subdir		:= elf
 
 include ../Makeconfig
 
-headers		= elf.h bits/elfclass.h link.h bits/link.h
+headers		= elf.h bits/elfclass.h link.h bits/link.h bits/link_lavcurrent.h
 routines	= $(all-dl-routines) dl-support dl-iteratephdr \
 		  dl-addr dl-addr-obj enbl-secure dl-profstub \
 		  dl-origin dl-libc dl-sym dl-sysdep dl-error \

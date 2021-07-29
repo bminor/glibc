@@ -113,7 +113,7 @@ struct link_map
 #ifdef __USE_GNU
 
 /* Version numbers for la_version handshake interface.  */
-#define LAV_CURRENT	1
+#include <bits/link_lavcurrent.h>
 
 /* Activity types signaled through la_activity.  */
 enum
