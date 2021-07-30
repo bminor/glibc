@@ -53,6 +53,7 @@ translit_end,           tok_translit_end,           0
 translit_ignore,        tok_translit_ignore,        0
 default_missing,        tok_default_missing,        0
 LC_COLLATE,             tok_lc_collate,             0
+codepoint_collation,    tok_codepoint_collation,    0
 coll_weight_max,        tok_coll_weight_max,        0
 section-symbol,         tok_section_symbol,         0
 collating-element,      tok_collating_element,      0
