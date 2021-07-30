@@ -110,11 +110,23 @@ else
 bench-malloc := $(filter malloc-%,${BENCHSET})
 endif
 
-$(addprefix $(objpfx)bench-,$(bench-math)): $(libm)
-$(addprefix $(objpfx)bench-,$(math-benchset)): $(libm)
-$(addprefix $(objpfx)bench-,$(bench-pthread)): $(shared-thread-library)
-$(addprefix $(objpfx)bench-,$(bench-malloc)): $(shared-thread-library)
-$(addprefix $(objpfx)bench-,pthread-locks): $(libm)
+ifeq (${STATIC-BENCHTESTS},yes)
++link-benchtests = $(+link-static-tests)
+link-libc-benchtests = $(link-libc-static)
+libm-benchtests = $(common-objpfx)math/libm.a
+thread-library-benchtests = $(static-thread-library)
+else
+link-libc-benchtests = $(link-libc)
++link-benchtests = $(+link-tests)
+thread-library-benchtests = $(shared-thread-library)
+libm-benchtests = $(libm)
+endif
+
+$(addprefix $(objpfx)bench-,$(bench-math)): $(libm-benchtests)
+$(addprefix $(objpfx)bench-,$(math-benchset)): $(libm-benchtests)
+$(addprefix $(objpfx)bench-,$(bench-pthread)): $(thread-library-benchtests)
+$(addprefix $(objpfx)bench-,$(bench-malloc)): $(thread-library-benchtests)
+$(addprefix $(objpfx)bench-,pthread-locks): $(libm-benchtests)
 
 
 
@@ -270,9 +282,9 @@ bench-link-targets = $(timing-type) $(binaries-bench) $(binaries-benchset) \
 
 $(bench-link-targets): %: %.o $(objpfx)json-lib.o \
 	$(link-extra-libs-tests) \
-  $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc-benchtests))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
-	$(+link-tests)
+	$(+link-benchtests)
 
 $(bench-link-targets): LDFLAGS += $(link-bench-bind-now)
 

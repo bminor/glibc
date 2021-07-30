@@ -62,6 +62,16 @@ otherwise the above command may try to build the benchmark again.  Benchmarks
 that require generated code to be executed during the build are skipped when
 cross-building.
 
+Building benchmarks as static executables:
+=========================================
+
+To build benchmarks as static executables, on the build system, run:
+
+  $ make STATIC-BENCHTESTS=yes bench-build
+
+You can copy benchmark executables to another machine and run them
+without copying the source nor build directories.
+
 Running subsets of benchmarks:
 ==============================
 
