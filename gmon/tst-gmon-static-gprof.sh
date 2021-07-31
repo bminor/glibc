@@ -39,6 +39,7 @@ trap cleanup 0
 cat > "$expected" <<EOF
 f1 2000
 f2 1000
+f3 1
 main 1
 EOF
 
@@ -46,6 +47,7 @@ EOF
 cat > "$expected_dot" <<EOF
 .f1 2000
 .f2 1000
+.f3 1
 .main 1
 EOF
 

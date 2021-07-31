@@ -52,6 +52,11 @@ extern char ENTRY_POINT[];
 #endif
 extern char etext[];
 
+/* Use __executable_start as the lowest address to keep profiling records
+   if it provided by the linker.  */
+extern const char executable_start[] asm ("__executable_start")
+  __attribute__ ((weak, visibility ("hidden")));
+
 #ifndef TEXT_START
 # ifdef ENTRY_POINT_DECL
 #  define TEXT_START ENTRY_POINT
@@ -92,7 +97,10 @@ __gmon_start__ (void)
   called = 1;
 
   /* Start keeping profiling records.  */
-  __monstartup ((u_long) TEXT_START, (u_long) &etext);
+  if (&executable_start != NULL)
+    __monstartup ((u_long) &executable_start, (u_long) &etext);
+  else
+    __monstartup ((u_long) TEXT_START, (u_long) &etext);
 
   /* Call _mcleanup before exiting; it will write out gmon.out from the
      collected data.  */
