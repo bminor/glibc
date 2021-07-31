@@ -41,9 +41,10 @@ Major new features:
 * Add support for 64-bit time_t on configurations like x86 where time_t
   is traditionally 32-bit.  Although time_t still defaults to 32-bit on
   these configurations, this default may change in future versions.
-  This is enabled with the _TIME_BITS preprocessor set to 64 and only
-  supported when LFS (_FILE_OFFSET_BITS=64) is also enabled.  It is only
-  enabled for Linux and the full support requires a minimum version of 5.1.
+  This is enabled with the _TIME_BITS preprocessor macro set to 64 and is
+  only supported when LFS (_FILE_OFFSET_BITS=64) is also enabled.  It is
+  only enabled for Linux and the full support requires a minimum kernel
+  version of 5.1.
 
 * The main gconv-modules file in glibc now contains only a small set of
   essential converter modules and the rest have been moved into a supplementary
@@ -68,13 +69,13 @@ Major new features:
   closing a range of file descriptors on recent kernels (version 5.9).
 
 * The function closefrom has been added.  It closes all file descriptors
-  greater than given integer.  This function is a GNU extension, although it
-  also present in other systems.
+  greater than or equal to a given integer.  This function is a GNU extension,
+  although it is also present in other systems.
 
-* The posix_spawn_file_actions_closefrom_np function has been added, enabling
-  posix_spawn and posix_spawnp to close all file descriptors great than or
-  equal to a giver integer.  This function is a GNU extension, although
-  Solaris also provides a similar function.
+* The posix_spawn_file_actions_addclosefrom_np function has been added,
+  enabling posix_spawn and posix_spawnp to close all file descriptors greater
+  than or equal to a given integer.  This function is a GNU extension,
+  although Solaris also provides a similar function.
 
 Deprecated and removed features, and other changes affecting compatibility:
 
@@ -109,11 +110,11 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 * The pthread cancellation handler is now installed with SA_RESTART and
   pthread_cancel will always send the internal SIGCANCEL on a cancellation
-  request.  It should not be visible to application since the cancellation
+  request.  It should not be visible to applications since the cancellation
   handler should either act upon cancellation (if asynchronous cancellation
   is enabled) or ignore the cancellation internal signal.  However there are
-  buggy kernel interfaces (for instance some CIFS version) that could still
-  see spurious EINTR error when cancellation interrupts a blocking syscall.
+  buggy kernel interfaces (for instance some CIFS versions) that could still
+  see a spurious EINTR error when cancellation interrupts a blocking syscall.
 
 * Previously, glibc installed its various shared objects under versioned
   file names such as libc-2.33.so.  The ABI sonames (e.g., libc.so.6)
