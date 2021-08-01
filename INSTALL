@@ -491,7 +491,7 @@ build the GNU C Library:
      GCC 6.2 or higher is required.  In general it is recommended to use
      the newest version of the compiler that is known to work for
      building the GNU C Library, as newer compilers usually produce
-     better code.  As of release time, GCC 10.2 is the newest compiler
+     better code.  As of release time, GCC 11.2 is the newest compiler
      verified to work to build the GNU C Library.
 
      For PowerPC 64-bits little-endian (powerpc64le), a GCC version with
@@ -563,7 +563,7 @@ build the GNU C Library:
 
      Perl is not required, but if present it is used in some tests and
      the 'mtrace' program, to build the GNU C Library manual.  As of
-     release time 'perl' version 5.32.0 is the newest verified to work
+     release time 'perl' version 5.32.1 is the newest verified to work
      to build the GNU C Library.
 
    * GNU 'sed' 3.02 or newer
@@ -575,7 +575,7 @@ build the GNU C Library:
    * Python 3.4 or later
 
      Python is required to build the GNU C Library.  As of release time,
-     Python 3.8.6 is the newest verified to work for building and
+     Python 3.9.6 is the newest verified to work for building and
      testing the GNU C Library.
 
    * PExpect 4.0
@@ -592,7 +592,7 @@ build the GNU C Library:
      use the pretty printers.  Notice that your system having Python
      available doesn't imply that GDB supports it, nor that your
      system's Python and GDB's have the same version.  As of release
-     time GNU 'debugger' 10.1 is the newest verified to work to test the
+     time GNU 'debugger' 10.2 is the newest verified to work to test the
      pretty printers.
 
      Unless Python, PExpect and GDB with Python support are present, the
