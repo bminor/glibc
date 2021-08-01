@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.2\n"
-"POT-Creation-Date: 2021-01-27 17:07-0300\n"
+"POT-Creation-Date: 2021-07-28 22:02-0400\n"
 "PO-Revision-Date: 2003-08-28 09:27+0100\n"
 "Last-Translator: Eivind Tagseth <eivindt@multinet.no>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
@@ -17,43 +17,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 
-#: argp/argp-help.c:227
+#: argp/argp-help.c:229
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
 msgstr "%.*s: ARGP_HELP_FMT-parameteren krever en verdi"
 
-#: argp/argp-help.c:237
+#: argp/argp-help.c:239
 #, c-format
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
 msgstr "%.*s: Ukjent ARGP_HELP_FMT-parameter"
 
-#: argp/argp-help.c:250
+#: argp/argp-help.c:252
 #, c-format
 msgid "Garbage in ARGP_HELP_FMT: %s"
 msgstr "Søppel i ARGP_HELP_FMT: %s"
 
-#: argp/argp-help.c:1214
+#: argp/argp-help.c:1350
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
 msgstr "Obligatoriske eller frivillige argumenter til lange flagg er også obligatoriske eller frivillige for tilsvarende korte flagg."
 
-#: argp/argp-help.c:1600
+#: argp/argp-help.c:1713
 msgid "Usage:"
 msgstr "Bruk:"
 
-#: argp/argp-help.c:1604
+#: argp/argp-help.c:1717
 msgid "  or: "
 msgstr "  eller: "
 
-#: argp/argp-help.c:1616
+#: argp/argp-help.c:1729
 msgid " [OPTION...]"
 msgstr " [FLAGG...]"
 
-#: argp/argp-help.c:1643
+#: argp/argp-help.c:1756
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr "Prøv «%s --help» eller «%s --usage» for mer informasjon.\n"
 
-#: argp/argp-help.c:1671
+#: argp/argp-help.c:1784
 #, c-format
 msgid "Report bugs to %s.\n"
 msgstr "Rapporter bugs til %s.\n"
@@ -114,8 +114,8 @@ msgstr ""
 "[UTFIL [INNFIL]...]"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
-#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
+#: elf/ldconfig.c:328 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:398
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
 #: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
@@ -132,8 +132,8 @@ msgstr ""
 "TIL NOEN SPESIELL OPPGAVE.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
-#: iconv/iconvconfig.c:401 locale/programs/locale.c:298
+#: elf/ldconfig.c:333 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: iconv/iconvconfig.c:403 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
 #: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
@@ -145,7 +145,7 @@ msgstr "Skrevet av %s.\n"
 msgid "*standard input*"
 msgstr "*standard inn*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
+#: catgets/gencat.c:287 iconv/iconv_charmap.c:173 iconv/iconv_prog.c:273
 #: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
@@ -199,7 +199,7 @@ msgstr "uavsluttet melding"
 msgid "while opening old catalog file"
 msgstr "da den gamle katalogfilen ble åpnet"
 
-#: elf/dl-open.c:802
+#: elf/dl-open.c:814
 msgid "invalid mode for dlopen()"
 msgstr "ugyldig modus for dlopen()"
 
@@ -207,7 +207,7 @@ msgstr "ugyldig modus for dlopen()"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT brukt i kode som ikke er dynamisk lastet"
 
-#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1308 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
@@ -221,7 +221,7 @@ msgstr "minnet oppbrukt"
 msgid "No such file or directory"
 msgstr "Ingen slik fil eller filkatalog"
 
-#: elf/ldd.bash.in:150 inet/rcmd.c:480
+#: elf/ldd.bash.in:150 inet/rcmd.c:481
 msgid "not regular file"
 msgstr "ikke en vanlig fil"
 
@@ -289,23 +289,23 @@ msgstr "«%s» er ikke korrekt profildatafil for «%s»"
 msgid "cannot allocate symbol data"
 msgstr "kan ikke allokere symboldata"
 
-#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:428
+#: iconv/iconv_charmap.c:147 iconv/iconv_prog.c:428
 #, c-format
 msgid "cannot open output file"
 msgstr "kan ikke åpne utfil"
 
-#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:291
+#: iconv/iconv_charmap.c:193 iconv/iconv_prog.c:291
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "feil ved lukking av input «%s»"
 
-#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:562
+#: iconv/iconv_charmap.c:506 iconv/iconv_charmap.c:542 iconv/iconv_prog.c:562
 #: iconv/iconv_prog.c:598
 #, c-format
 msgid "error while reading the input"
 msgstr "feil under lesing av inndata"
 
-#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:580
+#: iconv/iconv_charmap.c:524 iconv/iconv_prog.c:580
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "ikke istand til å allokere buffer to inndata"
@@ -395,77 +395,77 @@ msgstr "intern feil (ulovlig deskriptor)"
 msgid "unknown iconv() error %d"
 msgstr "ukjent iconv()-feil %d"
 
-#: iconv/iconvconfig.c:109
+#: iconv/iconvconfig.c:110
 msgid "Create fastloading iconv module configuration file."
 msgstr "Opprett hurtiglastende moduloppsettsfil for iconv"
 
-#: iconv/iconvconfig.c:113
+#: iconv/iconvconfig.c:114
 msgid "[DIR...]"
 msgstr "[KATALOG...]"
 
-#: iconv/iconvconfig.c:127
+#: iconv/iconvconfig.c:128
 msgid "Prefix used for all file accesses"
 msgstr "Prefiks brukt for all filaksessering"
 
-#: iconv/iconvconfig.c:430
+#: iconv/iconvconfig.c:432
 #, c-format
 msgid "while inserting in search tree"
 msgstr "ved innsetting i søketre"
 
-#: iconv/iconvconfig.c:1238
+#: iconv/iconvconfig.c:1188
 #, c-format
 msgid "cannot generate output file"
 msgstr "kan ikke opprette utfil"
 
-#: inet/rcmd.c:174
+#: inet/rcmd.c:175
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: Alle porter i bruk\n"
 
-#: inet/rcmd.c:202
+#: inet/rcmd.c:203
 #, c-format
 msgid "connect to address %s: "
 msgstr "koble til adresse %s: "
 
-#: inet/rcmd.c:215
+#: inet/rcmd.c:216
 #, c-format
 msgid "Trying %s...\n"
 msgstr "Prøver %s...\n"
 
-#: inet/rcmd.c:251
+#: inet/rcmd.c:252
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write: (setter opp standard error): %m\n"
 
-#: inet/rcmd.c:267
+#: inet/rcmd.c:268
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (setter opp stderr): %m\n"
 
-#: inet/rcmd.c:302
+#: inet/rcmd.c:303
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: protokollfeil i oppsetting av forbindelse\n"
 
-#: inet/rcmd.c:478
+#: inet/rcmd.c:479
 msgid "lstat failed"
 msgstr "lstat feilet"
 
-#: inet/rcmd.c:485
+#: inet/rcmd.c:486
 msgid "cannot open"
 msgstr "kan ikke åpne"
 
-#: inet/rcmd.c:487
+#: inet/rcmd.c:488
 msgid "fstat failed"
 msgstr "fstat feilet"
 
-#: inet/rcmd.c:489
+#: inet/rcmd.c:490
 msgid "bad owner"
 msgstr "feil eier"
 
-#: inet/rcmd.c:491
+#: inet/rcmd.c:492
 msgid "writeable by other than owner"
 msgstr "skrivbar av andre enn eier"
 
-#: inet/rcmd.c:493
+#: inet/rcmd.c:494
 msgid "hard linked somewhere"
 msgstr "hardlinket et eller annet sted"
 
@@ -564,7 +564,7 @@ msgid "no symbolic name given for end of range"
 msgstr "ikke noe symbolsk navn gitt for slutten på området"
 
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
-#: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
+#: locale/programs/ld-collate.c:2619 locale/programs/ld-collate.c:3777
 #: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
 #: locale/programs/ld-identification.c:397 locale/programs/ld-measurement.c:213
 #: locale/programs/ld-messages.c:295 locale/programs/ld-monetary.c:748
@@ -590,7 +590,7 @@ msgid "%s: error in state machine"
 msgstr "%s: feil i tilstandsmaskinen"
 
 #: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
-#: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
+#: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3970
 #: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
 #: locale/programs/ld-identification.c:413 locale/programs/ld-measurement.c:229
 #: locale/programs/ld-messages.c:311 locale/programs/ld-monetary.c:764
@@ -612,7 +612,7 @@ msgstr "ukjent tegn «%s»"
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr "antall bytes for bytesekvens på begynnelse og slutt av område er ikke de samme: %d mot %d"
 
-#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2893
+#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2896
 #: locale/programs/repertoire.c:418
 msgid "invalid names for character range"
 msgstr "ulovlige navn for tegnområde"
@@ -625,7 +625,7 @@ msgstr "heksadesimalt områdeformat skal bare bruke store bokstaver"
 msgid "resulting bytes for range not representable."
 msgstr "resulterende bytes for område kan ikke representerbare"
 
-#: locale/programs/ld-address.c:133 locale/programs/ld-collate.c:1563
+#: locale/programs/ld-address.c:133 locale/programs/ld-collate.c:1566
 #: locale/programs/ld-ctype.c:430 locale/programs/ld-identification.c:131
 #: locale/programs/ld-measurement.c:92 locale/programs/ld-messages.c:96
 #: locale/programs/ld-monetary.c:192 locale/programs/ld-name.c:93
@@ -701,7 +701,7 @@ msgstr "%s: felt «%s» deklarert mer enn en gang"
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: ukjent tegn i felt «%s»"
 
-#: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3772
+#: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3775
 #: locale/programs/ld-ctype.c:2827 locale/programs/ld-identification.c:394
 #: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
 #: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
@@ -713,8 +713,8 @@ msgstr "%s: ugyldig «END»-linje"
 
 #: locale/programs/ld-address.c:531 locale/programs/ld-collate.c:550
 #: locale/programs/ld-collate.c:602 locale/programs/ld-collate.c:898
-#: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2582
-#: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
+#: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2585
+#: locale/programs/ld-collate.c:2606 locale/programs/ld-collate.c:3960
 #: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
 #: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
 #: locale/programs/ld-identification.c:404 locale/programs/ld-measurement.c:220
@@ -802,7 +802,7 @@ msgstr "%s: symbolsk område-ellipse må ikke følge direkte etter «order_start
 msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
 msgstr "%s: symbolsk område-ellipse må ikke følges direkte av «order_end»"
 
-#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:3708
+#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:3711
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr "%s: rekkefølge for «%.*s» er allerede definert ved %s:%Zu"
@@ -812,102 +812,102 @@ msgstr "%s: rekkefølge for «%.*s» er allerede definert ved %s:%Zu"
 msgid "%s: `%s' must be a character"
 msgstr "%s: «%s» må være et tegn"
 
-#: locale/programs/ld-collate.c:1580
+#: locale/programs/ld-collate.c:1583
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr "%s: «position» må bli brukt for et spesielt nivå i alle seksjoner eller ingen"
 
-#: locale/programs/ld-collate.c:1604
+#: locale/programs/ld-collate.c:1607
 #, c-format
 msgid "symbol `%s' not defined"
 msgstr "symbol «%s» ikke definert"
 
-#: locale/programs/ld-collate.c:1680 locale/programs/ld-collate.c:1785
+#: locale/programs/ld-collate.c:1683 locale/programs/ld-collate.c:1788
 #, c-format
 msgid "symbol `%s' has the same encoding as"
 msgstr "symbol «%s» har samme koding som"
 
-#: locale/programs/ld-collate.c:1684 locale/programs/ld-collate.c:1789
+#: locale/programs/ld-collate.c:1687 locale/programs/ld-collate.c:1792
 #, c-format
 msgid "symbol `%s'"
 msgstr "symbol «%s»"
 
-#: locale/programs/ld-collate.c:1852
+#: locale/programs/ld-collate.c:1855
 msgid "too many errors; giving up"
 msgstr "for mange feil: gir opp"
 
-#: locale/programs/ld-collate.c:2701
+#: locale/programs/ld-collate.c:2704
 #, c-format
 msgid "%s: duplicate definition of `%s'"
 msgstr "%s: duplisert definisjon av «%s»"
 
-#: locale/programs/ld-collate.c:2737
+#: locale/programs/ld-collate.c:2740
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
 msgstr "%s: duplisert definisjon av seksjon «%s»"
 
-#: locale/programs/ld-collate.c:2873
+#: locale/programs/ld-collate.c:2876
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr "%s: ukjent tegn i navn på sorteringssymbol"
 
-#: locale/programs/ld-collate.c:3147
+#: locale/programs/ld-collate.c:3150
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr "%s: flere rekkefølgedefinisjoner for seksjon «%s»"
 
-#: locale/programs/ld-collate.c:3175
+#: locale/programs/ld-collate.c:3178
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: ugyldig antall sorteringsregler"
 
-#: locale/programs/ld-collate.c:3202
+#: locale/programs/ld-collate.c:3205
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr "%s: flere rekkefølgedefinisjoner for ikke navngitt seksjon"
 
-#: locale/programs/ld-collate.c:3257 locale/programs/ld-collate.c:3387
-#: locale/programs/ld-collate.c:3750
+#: locale/programs/ld-collate.c:3260 locale/programs/ld-collate.c:3390
+#: locale/programs/ld-collate.c:3753
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr "%s: mangler «order_end»-nøkkelord"
 
-#: locale/programs/ld-collate.c:3320
+#: locale/programs/ld-collate.c:3323
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr "%s: rekkefølge for sorteringssymbol %.*s ennå ikke definert"
 
-#: locale/programs/ld-collate.c:3338
+#: locale/programs/ld-collate.c:3341
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr "%s: rekkefølge for sorteringselement %.*s ennå ikke definert"
 
-#: locale/programs/ld-collate.c:3401 locale/programs/ld-collate.c:3762
+#: locale/programs/ld-collate.c:3404 locale/programs/ld-collate.c:3765
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr "%s: mangler «reorder-end»-nøkkelord"
 
-#: locale/programs/ld-collate.c:3435 locale/programs/ld-collate.c:3633
+#: locale/programs/ld-collate.c:3438 locale/programs/ld-collate.c:3636
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr "%s: seksjon «%.*s» er ukjent"
 
-#: locale/programs/ld-collate.c:3500
+#: locale/programs/ld-collate.c:3503
 #, c-format
 msgid "%s: bad symbol <%.*s>"
 msgstr "%s: ugyldig symbol <%.*s>"
 
-#: locale/programs/ld-collate.c:3696
+#: locale/programs/ld-collate.c:3699
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr "%s: kan ikke ha «%s» som avslutning av ellipse-område"
 
-#: locale/programs/ld-collate.c:3746
+#: locale/programs/ld-collate.c:3749
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr "%s: tom kategori-beskrivelse ikke tillatt"
 
-#: locale/programs/ld-collate.c:3765
+#: locale/programs/ld-collate.c:3768
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr "%s: mangler «reorder-sections-end»-nøkkelord"
@@ -1092,23 +1092,23 @@ msgstr "syntaksfeil i ferdeighetskart-definisjon: %s"
 msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr "ingen <Uxxxx>- eller <Uxxxxxxxx>-verdi gitt"
 
-#: malloc/mcheck.c:344
+#: malloc/mcheck-impl.c:355
 msgid "memory is consistent, library is buggy\n"
 msgstr "minnet er konsistent, biblioteket er bugget\n"
 
-#: malloc/mcheck.c:347
+#: malloc/mcheck-impl.c:358
 msgid "memory clobbered before allocated block\n"
 msgstr "området foran tildelt minneblokk tilgriset\n"
 
-#: malloc/mcheck.c:350
+#: malloc/mcheck-impl.c:361
 msgid "memory clobbered past end of allocated block\n"
 msgstr "området etter tildelt minneblokk tilgriset\n"
 
-#: malloc/mcheck.c:353
+#: malloc/mcheck-impl.c:364
 msgid "block freed twice\n"
 msgstr "blokk frigjort to ganger\n"
 
-#: malloc/mcheck.c:356
+#: malloc/mcheck-impl.c:367
 msgid "bogus mcheck_status, library is buggy\n"
 msgstr "feilaktig mcheck_status, biblioteket er bugget\n"
 
@@ -1246,7 +1246,7 @@ msgstr "Ikke mer plass på enheten"
 msgid "Unable to create process on server"
 msgstr "Ikke i stand til å opprette prosess på tjeneren"
 
-#: nis/nis_local_names.c:122
+#: nis/nis_local_names.c:123
 #, c-format
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
 msgstr "LOKALT innslag for UID %d i katalog %s er ikke unikt\n"
@@ -1670,7 +1670,7 @@ msgstr "avkortet lesing ved lesing av forespørsel: %s"
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: forespørsel mottatt (versjon = %d)"
 
-#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:379
+#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:378
 #: nscd/pwdcache.c:363 nscd/servicescache.c:310
 #, c-format
 msgid "short write in %s: %s"

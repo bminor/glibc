@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.3\n"
-"POT-Creation-Date: 2021-01-27 17:07-0300\n"
+"POT-Creation-Date: 2021-07-28 22:02-0400\n"
 "PO-Revision-Date: 2004-08-05 22:19+0200\n"
 "Last-Translator: Marcel Telka <marcel@telka.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -16,43 +16,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 
-#: argp/argp-help.c:227
+#: argp/argp-help.c:229
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
 msgstr "%.*s: Parameter ARGP_HELP_FMT vyžaduje hodnotu"
 
-#: argp/argp-help.c:237
+#: argp/argp-help.c:239
 #, c-format
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
 msgstr "%.*s: Neznámy parameter ARGP_HELP_FMT"
 
-#: argp/argp-help.c:250
+#: argp/argp-help.c:252
 #, c-format
 msgid "Garbage in ARGP_HELP_FMT: %s"
 msgstr "Nezmysly v ARGP_HELP_FMT: %s"
 
-#: argp/argp-help.c:1214
+#: argp/argp-help.c:1350
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
 msgstr "Povinné alebo voliteľné argumenty dlhých tvarov volieb sú povinné alebo voliteľné pre ľubovoľné zodpovedajúce krátke voľby."
 
-#: argp/argp-help.c:1600
+#: argp/argp-help.c:1713
 msgid "Usage:"
 msgstr "Použitie:"
 
-#: argp/argp-help.c:1604
+#: argp/argp-help.c:1717
 msgid "  or: "
 msgstr "  alebo: "
 
-#: argp/argp-help.c:1616
+#: argp/argp-help.c:1729
 msgid " [OPTION...]"
 msgstr " [VOĽBA...]"
 
-#: argp/argp-help.c:1643
+#: argp/argp-help.c:1756
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr "Použite `%s --help' alebo `%s --usage' pre viac informácií.\n"
 
-#: argp/argp-help.c:1671
+#: argp/argp-help.c:1784
 #, c-format
 msgid "Report bugs to %s.\n"
 msgstr "Chyby hláste na adrese %s.\n"
@@ -125,8 +125,8 @@ msgstr ""
 "[VÝSTUPNÝ_SÚBOR [VSTUPNÝ_SÚBOR]...]"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
-#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
+#: elf/ldconfig.c:328 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:398
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
 #: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
@@ -143,8 +143,8 @@ msgstr ""
 "NA KONKRÉTNY ÚČEL.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
-#: iconv/iconvconfig.c:401 locale/programs/locale.c:298
+#: elf/ldconfig.c:333 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: iconv/iconvconfig.c:403 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
 #: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
@@ -156,7 +156,7 @@ msgstr "Autor: %s.\n"
 msgid "*standard input*"
 msgstr "*štandardný vstup*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
+#: catgets/gencat.c:287 iconv/iconv_charmap.c:173 iconv/iconv_prog.c:273
 #: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
@@ -263,7 +263,7 @@ msgstr "nie je možné prečítať hlavičku"
 msgid "invalid pointer size"
 msgstr "neprípustná veľkostť ukazovateľa"
 
-#: dlfcn/dlinfo.c:53
+#: dlfcn/dlinfo.c:43
 msgid "unsupported dlinfo request"
 msgstr "nepodporovaná žiadosť dlinfo"
 
@@ -280,7 +280,7 @@ msgstr "Neznámy OS"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:320 elf/ldconfig.c:1427
+#: elf/cache.c:320 elf/ldconfig.c:1434
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Nie je možné otvoriť cache súbor %s\n"
@@ -300,32 +300,32 @@ msgstr "Súbor nie je cache súborom.\n"
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d knižníc nájdených v cache `%s'\n"
 
-#: elf/cache.c:725
+#: elf/cache.c:726
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Nie je možné vytvoriť dočasný cache súbor %s"
 
-#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
-#: elf/cache.c:770
+#: elf/cache.c:734 elf/cache.c:744 elf/cache.c:748 elf/cache.c:753
+#: elf/cache.c:771
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Zápi údajov do cache zlyhal"
 
-#: elf/cache.c:765
+#: elf/cache.c:766
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Zmena prístupových práv %s na %#o zlyhala"
 
-#: elf/cache.c:774
+#: elf/cache.c:775
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Premenovanie %s na %s zlyhalo"
 
-#: elf/dl-close.c:406 elf/dl-open.c:293
+#: elf/dl-close.c:409 elf/dl-open.c:294
 msgid "cannot create scope list"
 msgstr "nie je možné vytvoriť zoznam pôsobnosti"
 
-#: elf/dl-close.c:862
+#: elf/dl-close.c:870
 msgid "shared object not open"
 msgstr "zdieľaný objekt nie je otvorený"
 
@@ -370,111 +370,111 @@ msgstr "nie je možné vytvoriť zoznam zlučiteľnosti"
 msgid "cannot allocate name record"
 msgstr "nie je možné prideliť pamäť pre záznam názvu"
 
-#: elf/dl-load.c:518 elf/dl-load.c:631 elf/dl-load.c:725 elf/dl-load.c:821
+#: elf/dl-load.c:534 elf/dl-load.c:647 elf/dl-load.c:741 elf/dl-load.c:838
 msgid "cannot create cache for search path"
 msgstr "Nie je možné vytvoriť cache pre hľadanie v ceste"
 
-#: elf/dl-load.c:614
+#: elf/dl-load.c:630
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "nie je možné vytvoriť kópiu RUNPATH/RPATH"
 
-#: elf/dl-load.c:711
+#: elf/dl-load.c:727
 msgid "cannot create search path array"
 msgstr "nie je možné vytvoriť pole ciest"
 
-#: elf/dl-load.c:951
+#: elf/dl-load.c:968
 msgid "cannot stat shared object"
 msgstr "nepodarilo sa zistiť stav zdieľaného objektu"
 
-#: elf/dl-load.c:1082 elf/dl-load.c:2293
+#: elf/dl-load.c:1099 elf/dl-load.c:2314
 msgid "cannot create shared object descriptor"
 msgstr "nie je možné vytvoriť deskriptor zdieľaného objektu"
 
-#: elf/dl-load.c:1101 elf/dl-load.c:1668 elf/dl-load.c:1770
+#: elf/dl-load.c:1118 elf/dl-load.c:1689 elf/dl-load.c:1791
 msgid "cannot read file data"
 msgstr "nie je možné načítať údaje súboru"
 
-#: elf/dl-load.c:1147
+#: elf/dl-load.c:1164
 msgid "ELF load command alignment not page-aligned"
 msgstr "ELF zarovnanie príkazu nie je zarovnané na stránku"
 
-#: elf/dl-load.c:1154
+#: elf/dl-load.c:1171
 msgid "ELF load command address/offset not properly aligned"
 msgstr "ELF zavádzacia adresa/posunutie nie je správne zarovnaná"
 
-#: elf/dl-load.c:1233
+#: elf/dl-load.c:1250
 msgid "object file has no loadable segments"
 msgstr "objektový súbor neobsahuje žiadny nahrateľný segment"
 
-#: elf/dl-load.c:1246
+#: elf/dl-load.c:1263
 msgid "cannot dynamically load executable"
 msgstr "nie je možné dynamicky načítať spustiteľný súbor"
 
-#: elf/dl-load.c:1271
+#: elf/dl-load.c:1288
 msgid "object file has no dynamic section"
 msgstr "objektový súbor neobsahuje žiadnu dynamickú sekciu"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1308
 msgid "shared object cannot be dlopen()ed"
 msgstr "zdieľaný objekt nemôže byť otvorený pomocou dlopen()"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1321
 msgid "cannot allocate memory for program header"
 msgstr "nie je možné prideliť pamäť pre hlavičku programu"
 
-#: elf/dl-load.c:1337 elf/dl-load.h:130
+#: elf/dl-load.c:1354 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "nie je možné zmeniť ochranu pamäti"
 
-#: elf/dl-load.c:1357
+#: elf/dl-load.c:1378
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nie je možné povoliť spustiteľný zásobník ako vyžaduje zdieľaný objekt"
 
-#: elf/dl-load.c:1668
+#: elf/dl-load.c:1689
 msgid "file too short"
 msgstr "súbor je príliš krátky"
 
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1725
 msgid "invalid ELF header"
 msgstr "neprípustná ELF hlavička"
 
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1737
 msgid "ELF file data encoding not big-endian"
 msgstr "Kódovanie dát v ELF súbore nie je big-endian"
 
-#: elf/dl-load.c:1718
+#: elf/dl-load.c:1739
 msgid "ELF file data encoding not little-endian"
 msgstr "Kódovanie dát v ELF súbore nie je little-endian"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1743
 msgid "ELF file version ident does not match current one"
 msgstr "Identifikácia verzie ELF súboru sa nezhoduje s aktuálnou"
 
-#: elf/dl-load.c:1726
+#: elf/dl-load.c:1747
 msgid "ELF file OS ABI invalid"
 msgstr "Neplatný OS ABI ELF súboru"
 
-#: elf/dl-load.c:1729
+#: elf/dl-load.c:1750
 msgid "ELF file ABI version invalid"
 msgstr "Neplatná verzia ABI ELF súboru"
 
-#: elf/dl-load.c:1735
+#: elf/dl-load.c:1756
 msgid "internal error"
 msgstr "interná chyba"
 
-#: elf/dl-load.c:1742
+#: elf/dl-load.c:1763
 msgid "ELF file version does not match current one"
 msgstr "Verzia súboru ELF sa nezhoduje s aktuálnou"
 
-#: elf/dl-load.c:1750
+#: elf/dl-load.c:1771
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "iba ET_DYN a ET_EXEC môžu byť načítané"
 
-#: elf/dl-load.c:1755
+#: elf/dl-load.c:1776
 msgid "ELF file's phentsize not the expected size"
 msgstr "phentsize ELF súboru nie je očakávaná"
 
-#: elf/dl-load.c:2316
+#: elf/dl-load.c:2337
 msgid "cannot open shared object file"
 msgstr "nie je možné otvoriť súbor zdieľaného objektu"
 
@@ -486,11 +486,11 @@ msgstr "nepodarilo sa namapovať segment zo zdieľaného objektu"
 msgid "cannot map zero-fill pages"
 msgstr "nie je možné namapovať stránky vyplnené nulami"
 
-#: elf/dl-open.c:79
+#: elf/dl-open.c:80
 msgid "cannot extend global scope"
 msgstr "nie je možné rozšíriť globálny rozsah"
 
-#: elf/dl-open.c:802
+#: elf/dl-open.c:814
 msgid "invalid mode for dlopen()"
 msgstr "neprípustný mód pre dlopen()"
 
@@ -498,11 +498,11 @@ msgstr "neprípustný mód pre dlopen()"
 msgid "cannot allocate memory in static TLS block"
 msgstr "nie je možné prideliť pamäť v statickom bloku TLS"
 
-#: elf/dl-reloc.c:232
+#: elf/dl-reloc.c:233
 msgid "cannot make segment writable for relocation"
 msgstr "nie je možné zmeniť segment na zapisovateľný pre relokáciu"
 
-#: elf/dl-reloc.c:308
+#: elf/dl-reloc.c:309
 msgid "cannot restore segment prot after reloc"
 msgstr "nie je možné obnoviť segment prot po reloc"
 
@@ -510,7 +510,7 @@ msgstr "nie je možné obnoviť segment prot po reloc"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT je použité pre kód, ktorý nie je dynamicky zavedený"
 
-#: elf/dl-tls.c:1011
+#: elf/dl-tls.c:1039
 msgid "cannot create TLS data structures"
 msgstr "nie je možné dátové štruktúry TLS"
 
@@ -518,91 +518,91 @@ msgstr "nie je možné dátové štruktúry TLS"
 msgid "cannot allocate version reference table"
 msgstr "nie je možné prideliť pamäť pre referenčnú tabuľku verzií"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:151
 msgid "Print cache"
 msgstr "Vypísať cache"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:152
 msgid "Generate verbose messages"
 msgstr "Vypísovať podrobnejšie správy"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:153
 msgid "Don't build cache"
 msgstr "Nevytvoriť cache"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:155
 msgid "Change to and use ROOT as root directory"
 msgstr "Zmeniť adresár na ROOT a použiť ho ako koreňový adresár"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:156
 msgid "Use CACHE as cache file"
 msgstr "Použiť CACHE ako cache súbor"
 
-#: elf/ldconfig.c:156
+#: elf/ldconfig.c:157
 msgid "Use CONF as configuration file"
 msgstr "Použiť CONF ako konfiguračný súbor"
 
-#: elf/ldconfig.c:157
+#: elf/ldconfig.c:158
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Na príkazovom riadku sú zadané iba adresáre procesov. Nevytvárať cache."
 
-#: elf/ldconfig.c:158
+#: elf/ldconfig.c:159
 msgid "Manually link individual libraries."
 msgstr "Ručne linkovať jednotlivé knižnice."
 
-#: elf/ldconfig.c:168
+#: elf/ldconfig.c:169
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Konfigurácia runtime väzieb dynamického linkera."
 
-#: elf/ldconfig.c:371
+#: elf/ldconfig.c:372
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Cesta `%s' bola zadaná viac ako raz"
 
-#: elf/ldconfig.c:487
+#: elf/ldconfig.c:488
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s nie je známy typ knižnice"
 
-#: elf/ldconfig.c:515
+#: elf/ldconfig.c:516
 #, c-format
 msgid "Can't stat %s"
 msgstr "Zlyhal stat %s"
 
-#: elf/ldconfig.c:596
+#: elf/ldconfig.c:597
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Zlyhal stat %s\n"
 
-#: elf/ldconfig.c:606
+#: elf/ldconfig.c:607
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s nie je symbolický odkaz\n"
 
-#: elf/ldconfig.c:625
+#: elf/ldconfig.c:626
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Nie je možné odstrániť %s"
 
-#: elf/ldconfig.c:631
+#: elf/ldconfig.c:632
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Nie je možné vytvoriť odkaz %s na %s"
 
-#: elf/ldconfig.c:637
+#: elf/ldconfig.c:638
 msgid " (changed)\n"
 msgstr " (zmenené)\n"
 
-#: elf/ldconfig.c:639
+#: elf/ldconfig.c:640
 msgid " (SKIPPED)\n"
 msgstr " (VYNECHANÉ)\n"
 
-#: elf/ldconfig.c:695
+#: elf/ldconfig.c:696
 #, c-format
 msgid "Can't find %s"
 msgstr "Nie je možné nájsť %s"
 
-#: elf/ldconfig.c:711 elf/ldconfig.c:893 elf/ldconfig.c:945 elf/ldconfig.c:977
+#: elf/ldconfig.c:712 elf/ldconfig.c:892 elf/ldconfig.c:952 elf/ldconfig.c:984
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Zlyhal lstat %s"
@@ -612,64 +612,64 @@ msgstr "Zlyhal lstat %s"
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Súbor %s ignorovaný, keďže nie je regulérnym súborom."
 
-#: elf/ldconfig.c:727
+#: elf/ldconfig.c:726
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Odkaz nebol vytvorený, keďže pre %s nebolo možné nájsť soname"
 
-#: elf/ldconfig.c:824
+#: elf/ldconfig.c:825
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Nie je možné otvoriť adresár %s"
 
-#: elf/ldconfig.c:911 elf/ldconfig.c:965 elf/readlib.c:98
+#: elf/ldconfig.c:910 elf/ldconfig.c:972 elf/readlib.c:98
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Vstupný súbor %s nebol nájdený.\n"
 
-#: elf/ldconfig.c:918
+#: elf/ldconfig.c:917
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Zlyhal stat %s"
 
-#: elf/ldconfig.c:1063
+#: elf/ldconfig.c:1070
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5 knižnica %s je v nesprávnom adresári"
 
-#: elf/ldconfig.c:1066
+#: elf/ldconfig.c:1073
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 knižnica %s je v nesprávnom adresári"
 
-#: elf/ldconfig.c:1069
+#: elf/ldconfig.c:1076
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4 knižnica %s je v nesprávnom adresári"
 
-#: elf/ldconfig.c:1097
+#: elf/ldconfig.c:1104
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "knižnice %s a %s v adresári %s majú rovnaké soname, ale odlišný typ."
 
-#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1308 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "nedostatok pamäti"
 
-#: elf/ldconfig.c:1382
+#: elf/ldconfig.c:1389
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "relatívna cesta `%s' použitá na vytvorenie cache"
 
-#: elf/ldconfig.c:1406
+#: elf/ldconfig.c:1413
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Nie je možné zmeniť adresár na /"
 
-#: elf/ldconfig.c:1447
+#: elf/ldconfig.c:1454
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Nie je možné otvoriť adresár cache súboru %s\n"
@@ -681,7 +681,7 @@ msgstr "Nie je možné otvoriť adresár cache súboru %s\n"
 msgid "No such file or directory"
 msgstr "Adresár alebo súbor neexistuje"
 
-#: elf/ldd.bash.in:150 inet/rcmd.c:480
+#: elf/ldd.bash.in:150 inet/rcmd.c:481
 msgid "not regular file"
 msgstr "nie je regulérny súbor"
 
@@ -815,33 +815,33 @@ msgstr "`%s' nie sú správne profilovacie údaje pre `%s'"
 msgid "cannot allocate symbol data"
 msgstr "nie je možné prideliť pamäť pre symbolické údaje"
 
-#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:428
+#: iconv/iconv_charmap.c:147 iconv/iconv_prog.c:428
 #, c-format
 msgid "cannot open output file"
 msgstr "nie je možné otvoriť výstupný súbor"
 
-#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:291
+#: iconv/iconv_charmap.c:193 iconv/iconv_prog.c:291
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "chyba počas zatvárania vstupu `%s'"
 
-#: iconv/iconv_charmap.c:435
+#: iconv/iconv_charmap.c:442
 #, c-format
 msgid "illegal input sequence at position %Zd"
 msgstr "neprípustná vstupná sekvencia na pozícii %Zd"
 
-#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:519
+#: iconv/iconv_charmap.c:461 iconv/iconv_prog.c:519
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "nekompletný znak alebo preraďovacia sekvencia na konci vyrovnávacej pamäti"
 
-#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:562
+#: iconv/iconv_charmap.c:506 iconv/iconv_charmap.c:542 iconv/iconv_prog.c:562
 #: iconv/iconv_prog.c:598
 #, c-format
 msgid "error while reading the input"
 msgstr "počas čítania vstupu"
 
-#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:580
+#: iconv/iconv_charmap.c:524 iconv/iconv_prog.c:580
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "nie je možné prideliť vyrovnávaciu pamäť pre vstup"
@@ -939,90 +939,90 @@ msgstr "vnútorná chyba (nesprávny deskriptor)"
 msgid "unknown iconv() error %d"
 msgstr "neznáma iconv() chyba %d"
 
-#: iconv/iconvconfig.c:109
+#: iconv/iconvconfig.c:110
 msgid "Create fastloading iconv module configuration file."
 msgstr "Nie je možné rýchlo načítať konfiguračný súbor iconv modulu."
 
-#: iconv/iconvconfig.c:113
+#: iconv/iconvconfig.c:114
 msgid "[DIR...]"
 msgstr "[ADRESÁR...]"
 
-#: iconv/iconvconfig.c:127
+#: iconv/iconvconfig.c:128
 msgid "Prefix used for all file accesses"
 msgstr "Predpona použitá pre všetky prístupy k súborom"
 
-#: iconv/iconvconfig.c:430
+#: iconv/iconvconfig.c:432
 #, c-format
 msgid "while inserting in search tree"
 msgstr "počas vkladania do vyhľadávacieho stromu"
 
-#: iconv/iconvconfig.c:1238
+#: iconv/iconvconfig.c:1188
 #, c-format
 msgid "cannot generate output file"
 msgstr "nie je možné vygenerovať výstupný súbor"
 
-#: inet/rcmd.c:157
+#: inet/rcmd.c:158
 msgid "rcmd: Cannot allocate memory\n"
 msgstr "rcmd: Nie je možné prideliť pamäť\n"
 
-#: inet/rcmd.c:174
+#: inet/rcmd.c:175
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: Všetky porty sú použité\n"
 
-#: inet/rcmd.c:202
+#: inet/rcmd.c:203
 #, c-format
 msgid "connect to address %s: "
 msgstr "spojiť sa s adresou %s: "
 
-#: inet/rcmd.c:215
+#: inet/rcmd.c:216
 #, c-format
 msgid "Trying %s...\n"
 msgstr "Skúšam %s...\n"
 
-#: inet/rcmd.c:251
+#: inet/rcmd.c:252
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write (nastavenie stderr): %m\n"
 
-#: inet/rcmd.c:267
+#: inet/rcmd.c:268
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (nastavenie stderr): %m\n"
 
-#: inet/rcmd.c:270
+#: inet/rcmd.c:271
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: chyba protokolu počas prípravy okruhu\n"
 
-#: inet/rcmd.c:302
+#: inet/rcmd.c:303
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: chyba protokolu pri príprave okruhu\n"
 
-#: inet/rcmd.c:326
+#: inet/rcmd.c:327
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: krátke čítanie"
 
-#: inet/rcmd.c:478
+#: inet/rcmd.c:479
 msgid "lstat failed"
 msgstr "lstat zlyhal"
 
-#: inet/rcmd.c:485
+#: inet/rcmd.c:486
 msgid "cannot open"
 msgstr "nie je možné otvoriť"
 
-#: inet/rcmd.c:487
+#: inet/rcmd.c:488
 msgid "fstat failed"
 msgstr "fstat sa nepodaril"
 
-#: inet/rcmd.c:489
+#: inet/rcmd.c:490
 msgid "bad owner"
 msgstr "chybný vlastník"
 
-#: inet/rcmd.c:491
+#: inet/rcmd.c:492
 msgid "writeable by other than owner"
 msgstr "zapisovateľný nielen pre vlastníka"
 
-#: inet/rcmd.c:493
+#: inet/rcmd.c:494
 msgid "hard linked somewhere"
 msgstr "niekde existuje pevný odkaz"
 
@@ -1129,7 +1129,7 @@ msgid "no symbolic name given for end of range"
 msgstr "nebolo zadané žiadne symbolické meno pre koniec rozsahu"
 
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
-#: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
+#: locale/programs/ld-collate.c:2619 locale/programs/ld-collate.c:3777
 #: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
 #: locale/programs/ld-identification.c:397 locale/programs/ld-measurement.c:213
 #: locale/programs/ld-messages.c:295 locale/programs/ld-monetary.c:748
@@ -1155,7 +1155,7 @@ msgid "%s: error in state machine"
 msgstr "%s: chyba v stavovom automate"
 
 #: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
-#: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
+#: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3970
 #: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
 #: locale/programs/ld-identification.c:413 locale/programs/ld-measurement.c:229
 #: locale/programs/ld-messages.c:311 locale/programs/ld-monetary.c:764
@@ -1177,7 +1177,7 @@ msgstr "neznámy znak `%s'"
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr "počet bajtov pre postupnosť bajtov začiatku a konca rozsahu nie sú rovnaké: %d a %d"
 
-#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2893
+#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2896
 #: locale/programs/repertoire.c:418
 msgid "invalid names for character range"
 msgstr "neprípustné mená pre rozsah znakov"
@@ -1195,7 +1195,7 @@ msgstr "<%s> a <%s> sú neprípustné názvy pre rozsah"
 msgid "resulting bytes for range not representable."
 msgstr "výsledné bajty rozsahu nie sú zobraziteľné"
 
-#: locale/programs/ld-address.c:133 locale/programs/ld-collate.c:1563
+#: locale/programs/ld-address.c:133 locale/programs/ld-collate.c:1566
 #: locale/programs/ld-ctype.c:430 locale/programs/ld-identification.c:131
 #: locale/programs/ld-measurement.c:92 locale/programs/ld-messages.c:96
 #: locale/programs/ld-monetary.c:192 locale/programs/ld-name.c:93
@@ -1276,7 +1276,7 @@ msgstr "%s: pole `%s' deklarované viac ako raz"
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: neznámy znak v poli `%s'"
 
-#: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3772
+#: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3775
 #: locale/programs/ld-ctype.c:2827 locale/programs/ld-identification.c:394
 #: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
 #: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
@@ -1288,8 +1288,8 @@ msgstr "%s: nekompletný riadok `END'"
 
 #: locale/programs/ld-address.c:531 locale/programs/ld-collate.c:550
 #: locale/programs/ld-collate.c:602 locale/programs/ld-collate.c:898
-#: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2582
-#: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
+#: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2585
+#: locale/programs/ld-collate.c:2606 locale/programs/ld-collate.c:3960
 #: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
 #: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
 #: locale/programs/ld-identification.c:404 locale/programs/ld-measurement.c:220
@@ -1382,7 +1382,7 @@ msgstr "%s: pokračovanie symbolického rozsahu nesmie priamo nasledoť `order_s
 msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
 msgstr "%s: pokračovanie symbolického rozsahu nesmie byť priamo nasledované `order_end'"
 
-#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:3708
+#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:3711
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr "%s: poradie pre `%.*s' je už definované na %s:%Zu"
@@ -1392,131 +1392,131 @@ msgstr "%s: poradie pre `%.*s' je už definované na %s:%Zu"
 msgid "%s: `%s' must be a character"
 msgstr "%s: `%s' musí byť znak"
 
-#: locale/programs/ld-collate.c:1580
+#: locale/programs/ld-collate.c:1583
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr "%s: `position' musí byť pre danú úroveň použitá vo všetkých sekciách, alebo v žiadnej"
 
-#: locale/programs/ld-collate.c:1604
+#: locale/programs/ld-collate.c:1607
 #, c-format
 msgid "symbol `%s' not defined"
 msgstr "symbol `%s' nie je definovaný"
 
-#: locale/programs/ld-collate.c:1680 locale/programs/ld-collate.c:1785
+#: locale/programs/ld-collate.c:1683 locale/programs/ld-collate.c:1788
 #, c-format
 msgid "symbol `%s' has the same encoding as"
 msgstr "symbol `%s' má rovnaké kódovanie ako"
 
-#: locale/programs/ld-collate.c:1684 locale/programs/ld-collate.c:1789
+#: locale/programs/ld-collate.c:1687 locale/programs/ld-collate.c:1792
 #, c-format
 msgid "symbol `%s'"
 msgstr "symbol `%s'"
 
-#: locale/programs/ld-collate.c:1852
+#: locale/programs/ld-collate.c:1855
 msgid "too many errors; giving up"
 msgstr "príliš veľa chýb; vzdávam to"
 
-#: locale/programs/ld-collate.c:2701
+#: locale/programs/ld-collate.c:2704
 #, c-format
 msgid "%s: duplicate definition of `%s'"
 msgstr "%s: duplicitná definícia `%s'"
 
-#: locale/programs/ld-collate.c:2737
+#: locale/programs/ld-collate.c:2740
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
 msgstr "%s: duplicitná deklarácia sekcie `%s'"
 
-#: locale/programs/ld-collate.c:2873
+#: locale/programs/ld-collate.c:2876
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr "%s: neznámy znak v názve symbolu triedenia"
 
-#: locale/programs/ld-collate.c:3002
+#: locale/programs/ld-collate.c:3005
 #, c-format
 msgid "%s: unknown character in equivalent definition name"
 msgstr "%s: neznámy znak v názve ekvivalentnej definície"
 
-#: locale/programs/ld-collate.c:3013
+#: locale/programs/ld-collate.c:3016
 #, c-format
 msgid "%s: unknown character in equivalent definition value"
 msgstr "%s: neznámy znak v hodnote ekvivalentnej definície"
 
-#: locale/programs/ld-collate.c:3023
+#: locale/programs/ld-collate.c:3026
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: neznámy symbol `%s' v ekvivalentnej definícii"
 
-#: locale/programs/ld-collate.c:3032
+#: locale/programs/ld-collate.c:3035
 msgid "error while adding equivalent collating symbol"
 msgstr "chyba pri pridávaní ekvivalentného symbolu triedenia"
 
-#: locale/programs/ld-collate.c:3070
+#: locale/programs/ld-collate.c:3073
 #, c-format
 msgid "duplicate definition of script `%s'"
 msgstr "duplicitná definícia skriptu `%s'"
 
-#: locale/programs/ld-collate.c:3147
+#: locale/programs/ld-collate.c:3150
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr "%s: viacnásobná definícia poradia pre sekciu `%s'"
 
-#: locale/programs/ld-collate.c:3175
+#: locale/programs/ld-collate.c:3178
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: chybný počet pravidiel triedenia"
 
-#: locale/programs/ld-collate.c:3202
+#: locale/programs/ld-collate.c:3205
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr "%s: viacnásobná definícia poradia pre sekciu bez mena"
 
-#: locale/programs/ld-collate.c:3257 locale/programs/ld-collate.c:3387
-#: locale/programs/ld-collate.c:3750
+#: locale/programs/ld-collate.c:3260 locale/programs/ld-collate.c:3390
+#: locale/programs/ld-collate.c:3753
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr "%s: chýbajúce kľúčové slovo `order_end'"
 
-#: locale/programs/ld-collate.c:3320
+#: locale/programs/ld-collate.c:3323
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr "%s: poradie pre symbol triedenia `%.*s' ešte nebolo definované"
 
-#: locale/programs/ld-collate.c:3338
+#: locale/programs/ld-collate.c:3341
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr "%s: poradie pre element triedenia `%.*s' ešte nebolo definované"
 
-#: locale/programs/ld-collate.c:3349
+#: locale/programs/ld-collate.c:3352
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr "%s: nie je možné preradiť za %.*s: neznámy symbol"
 
-#: locale/programs/ld-collate.c:3401 locale/programs/ld-collate.c:3762
+#: locale/programs/ld-collate.c:3404 locale/programs/ld-collate.c:3765
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr "%s: chýbajúce kľúčové slovo `reorder-end'"
 
-#: locale/programs/ld-collate.c:3435 locale/programs/ld-collate.c:3633
+#: locale/programs/ld-collate.c:3438 locale/programs/ld-collate.c:3636
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr "%s: neznáma sekcia `%.*s'"
 
-#: locale/programs/ld-collate.c:3500
+#: locale/programs/ld-collate.c:3503
 #, c-format
 msgid "%s: bad symbol <%.*s>"
 msgstr "%s: zlý symbol <%.*s>"
 
-#: locale/programs/ld-collate.c:3696
+#: locale/programs/ld-collate.c:3699
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr "%s: `%s' nemôže byť koncovým znakom rozsahu pokračovania"
 
-#: locale/programs/ld-collate.c:3746
+#: locale/programs/ld-collate.c:3749
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr "%s: prázdny popis kategórie nie je povolený"
 
-#: locale/programs/ld-collate.c:3765
+#: locale/programs/ld-collate.c:3768
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr "%s: chýbajúce kľúčové slovo `reorder-sections-end'"
@@ -2215,23 +2215,23 @@ msgstr "nezadaná <Uxxxx> alebo <Uxxxxxxxx> hodnota"
 msgid "repertoire map file `%s' not found"
 msgstr "súbor mapy repertoáru `%s' nebol nájdený"
 
-#: malloc/mcheck.c:344
+#: malloc/mcheck-impl.c:355
 msgid "memory is consistent, library is buggy\n"
 msgstr "pamäť je konzistentná, knižnica je chybná\n"
 
-#: malloc/mcheck.c:347
+#: malloc/mcheck-impl.c:358
 msgid "memory clobbered before allocated block\n"
 msgstr "pamäť pred prideleným blokom prepísaná\n"
 
-#: malloc/mcheck.c:350
+#: malloc/mcheck-impl.c:361
 msgid "memory clobbered past end of allocated block\n"
 msgstr "pamäť za koncom prideleného bloku prepísaná\n"
 
-#: malloc/mcheck.c:353
+#: malloc/mcheck-impl.c:364
 msgid "block freed twice\n"
 msgstr "blok uvoľnený dvakrát\n"
 
-#: malloc/mcheck.c:356
+#: malloc/mcheck-impl.c:367
 msgid "bogus mcheck_status, library is buggy\n"
 msgstr "pochybný mcheck_status, knižnica má chyby\n"
 
@@ -2461,7 +2461,7 @@ msgstr "Nie je možné vytvoriť proces na serveri"
 msgid "Master server busy, full dump rescheduled."
 msgstr "Hlavný server zaneprázdnený, úplný prenos preplánovaný."
 
-#: nis/nis_local_names.c:122
+#: nis/nis_local_names.c:123
 #, c-format
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
 msgstr "LOCAL záznam pre UID %d v adresári %s nie je jednoznačný\n"
@@ -2923,7 +2923,7 @@ msgstr "getgrouplist zlyhalo"
 msgid "setgroups failed"
 msgstr "setgroups zlyhalo"
 
-#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:379
+#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:378
 #: nscd/pwdcache.c:363 nscd/servicescache.c:310
 #, c-format
 msgid "short write in %s: %s"

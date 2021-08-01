@@ -25,7 +25,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.30.9000\n"
-"POT-Creation-Date: 2021-01-27 17:07-0300\n"
+"POT-Creation-Date: 2021-07-28 22:02-0400\n"
 "PO-Revision-Date: 2020-01-10 23:26+0200\n"
 "Last-Translator: Lauri Nurmi <lanurmi@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -37,43 +37,43 @@ msgstr ""
 "X-Generator: Poedit 2.2.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: argp/argp-help.c:227
+#: argp/argp-help.c:229
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
 msgstr "%.*s: parametri ARGP_HELP_FMT vaatii arvon"
 
-#: argp/argp-help.c:237
+#: argp/argp-help.c:239
 #, c-format
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
 msgstr "%.*s: Tuntematon ARGP_HELP_FMT-parametri"
 
-#: argp/argp-help.c:250
+#: argp/argp-help.c:252
 #, c-format
 msgid "Garbage in ARGP_HELP_FMT: %s"
 msgstr "ARGP_HELP_FMT:ssä roskaa: %s"
 
-#: argp/argp-help.c:1214
+#: argp/argp-help.c:1350
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
 msgstr "Pakolliset tai valinnaiset argumentit pitkille valitsimille ovat pakollisia tai valinnaisia kaikille vastaaville lyhyille valitsimille."
 
-#: argp/argp-help.c:1600
+#: argp/argp-help.c:1713
 msgid "Usage:"
 msgstr "Käyttö:"
 
-#: argp/argp-help.c:1604
+#: argp/argp-help.c:1717
 msgid "  or: "
 msgstr "  tai: "
 
-#: argp/argp-help.c:1616
+#: argp/argp-help.c:1729
 msgid " [OPTION...]"
 msgstr " [VALITSIN...]"
 
-#: argp/argp-help.c:1643
+#: argp/argp-help.c:1756
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr "Kokeile ”%s --help” tai ”%s --usage” saadaksesi lisää tietoa.\n"
 
-#: argp/argp-help.c:1671
+#: argp/argp-help.c:1784
 #, c-format
 msgid "Report bugs to %s.\n"
 msgstr "Ilmoita ohjelmistovirheistä osoitteeseen %s.\n"
@@ -167,9 +167,9 @@ msgstr ""
 "-o TULOSTIEDOSTO [SYÖTETIEDOSTO]...\n"
 "[TULOSTIEDOSTO [SYÖTETIEDOSTO]...]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:311
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:312
 #: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:388
-#: iconv/iconvconfig.c:379 locale/programs/locale.c:276
+#: iconv/iconvconfig.c:381 locale/programs/locale.c:276
 #: locale/programs/localedef.c:438 login/programs/pt_chown.c:89
 #: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:370
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
@@ -182,8 +182,8 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
-#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
+#: elf/ldconfig.c:328 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:398
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
 #: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
@@ -199,8 +199,8 @@ msgstr ""
 "ole, ei edes KAUPALLISESTI HYVÄKSYTTÄVÄSTÄ LAADUSTA tai SOPIVUUDESTA TIETTYYN TARKOITUKSEEN.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
-#: iconv/iconvconfig.c:401 locale/programs/locale.c:298
+#: elf/ldconfig.c:333 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: iconv/iconvconfig.c:403 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
 #: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
@@ -212,7 +212,7 @@ msgstr "Kirjoittanut %s.\n"
 msgid "*standard input*"
 msgstr "*vakiosyöte*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
+#: catgets/gencat.c:287 iconv/iconv_charmap.c:173 iconv/iconv_prog.c:273
 #: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
@@ -374,15 +374,15 @@ msgstr "Ohjelman nimeä ei annettu\\n"
 msgid "\\`$program' is no executable\\n"
 msgstr "\\”$program” ei ole käynnistettävä\\n"
 
-#: dlfcn/dlmopen.c:63
+#: dlfcn/dlmopen.c:53
 msgid "invalid namespace"
 msgstr "virheellinen nimiavaruus"
 
-#: dlfcn/dlmopen.c:68
+#: dlfcn/dlmopen.c:58
 msgid "invalid mode"
 msgstr "virheellinen tila"
 
-#: dlfcn/dlopen.c:64
+#: dlfcn/dlopen.c:54
 msgid "invalid mode parameter"
 msgstr "virheellinen tilaparametri"
 
@@ -399,7 +399,7 @@ msgstr "Tuntematon käyttöjärjestelmä"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:320 elf/ldconfig.c:1427
+#: elf/cache.c:320 elf/ldconfig.c:1434
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Välimuistitiedostoa %s ei voi avata\n"
@@ -419,32 +419,32 @@ msgstr "Tiedosto ei ole välimuistitiedosto.\n"
 msgid "%d libs found in cache `%s'\n"
 msgstr "Välimuistista ”%2$s” löytyi %1$d kirjastoa\n"
 
-#: elf/cache.c:725
+#: elf/cache.c:726
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Tilapäistä välimuistitiedostoa %s ei voi luoda"
 
-#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
-#: elf/cache.c:770
+#: elf/cache.c:734 elf/cache.c:744 elf/cache.c:748 elf/cache.c:753
+#: elf/cache.c:771
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Välimuistidatan kirjoitus epäonnistui"
 
-#: elf/cache.c:765
+#: elf/cache.c:766
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Tiedoston %s oikeuksien muutos arvoon %#o epäonnistui"
 
-#: elf/cache.c:774
+#: elf/cache.c:775
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Uudelleennimeäminen %s -> %s epäonnistui"
 
-#: elf/dl-close.c:406 elf/dl-open.c:293
+#: elf/dl-close.c:409 elf/dl-open.c:294
 msgid "cannot create scope list"
 msgstr "aluelistaa ei voi luoda"
 
-#: elf/dl-close.c:862
+#: elf/dl-close.c:870
 msgid "shared object not open"
 msgstr "jaettu objekti ei ole avoin"
 
@@ -493,115 +493,115 @@ msgstr "kykylistaa ei voi luoda"
 msgid "cannot allocate name record"
 msgstr "nimitietueelle ei voi varata muistia"
 
-#: elf/dl-load.c:518 elf/dl-load.c:631 elf/dl-load.c:725 elf/dl-load.c:821
+#: elf/dl-load.c:534 elf/dl-load.c:647 elf/dl-load.c:741 elf/dl-load.c:838
 msgid "cannot create cache for search path"
 msgstr "hakupolulle ei voi luoda välimuistia"
 
-#: elf/dl-load.c:614
+#: elf/dl-load.c:630
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "RUNPATH/RPATH-kopiota ei voi luoda"
 
-#: elf/dl-load.c:711
+#: elf/dl-load.c:727
 msgid "cannot create search path array"
 msgstr "hakupolkutaulukkoa ei voi luoda"
 
-#: elf/dl-load.c:951
+#: elf/dl-load.c:968
 msgid "cannot stat shared object"
 msgstr "jaetun objektin tilaa ei voi lukea"
 
-#: elf/dl-load.c:1082 elf/dl-load.c:2293
+#: elf/dl-load.c:1099 elf/dl-load.c:2314
 msgid "cannot create shared object descriptor"
 msgstr "jaettua objektikahvaa ei voi luoda"
 
-#: elf/dl-load.c:1101 elf/dl-load.c:1668 elf/dl-load.c:1770
+#: elf/dl-load.c:1118 elf/dl-load.c:1689 elf/dl-load.c:1791
 msgid "cannot read file data"
 msgstr "tiedoston dataa ei voi lukea"
 
-#: elf/dl-load.c:1147
+#: elf/dl-load.c:1164
 msgid "ELF load command alignment not page-aligned"
 msgstr "ELF-latauskomennon tasaus ei ole sivutasattu"
 
-#: elf/dl-load.c:1154
+#: elf/dl-load.c:1171
 msgid "ELF load command address/offset not properly aligned"
 msgstr "ELF-latauskomennon osoite/siirtymä ei ole tasattu oikein"
 
-#: elf/dl-load.c:1246
+#: elf/dl-load.c:1263
 msgid "cannot dynamically load executable"
 msgstr "suoritettavaa tiedostoa ei voi ladata dynaamisesti"
 
-#: elf/dl-load.c:1271
+#: elf/dl-load.c:1288
 msgid "object file has no dynamic section"
 msgstr "objektitiedostossa ei ole dynaamista osaa"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1308
 msgid "shared object cannot be dlopen()ed"
 msgstr "jaettua objektia ei voi avata funktiolla dlopen()"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1321
 msgid "cannot allocate memory for program header"
 msgstr "ohjelman otsakkeelle ei voi varata muistia"
 
-#: elf/dl-load.c:1337 elf/dl-load.h:130
+#: elf/dl-load.c:1354 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "muistin suojausta ei voi muuttaa"
 
-#: elf/dl-load.c:1385
+#: elf/dl-load.c:1406
 msgid "cannot close file descriptor"
 msgstr "tiedostokahvaa ei voi sulkea"
 
-#: elf/dl-load.c:1668
+#: elf/dl-load.c:1689
 msgid "file too short"
 msgstr "tiedosto on liian lyhyt"
 
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1725
 msgid "invalid ELF header"
 msgstr "virheellinen ELF-otsikko"
 
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1737
 msgid "ELF file data encoding not big-endian"
 msgstr "ELF-tiedoston tavujärjestys ei ole ”big-endian”"
 
-#: elf/dl-load.c:1718
+#: elf/dl-load.c:1739
 msgid "ELF file data encoding not little-endian"
 msgstr "ELF-tiedoston tavujärjestys ei ole ”little-endian”"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1743
 msgid "ELF file version ident does not match current one"
 msgstr "ELF-tiedoston versiotunnus ei vastaa nykyistä"
 
-#: elf/dl-load.c:1726
+#: elf/dl-load.c:1747
 msgid "ELF file OS ABI invalid"
 msgstr "ELF-tiedoston OS ABI on virheellinen"
 
-#: elf/dl-load.c:1729
+#: elf/dl-load.c:1750
 msgid "ELF file ABI version invalid"
 msgstr "ELF-tiedoston ABI-versio virheellinen"
 
-#: elf/dl-load.c:1735
+#: elf/dl-load.c:1756
 msgid "internal error"
 msgstr "sisäinen virhe"
 
-#: elf/dl-load.c:1742
+#: elf/dl-load.c:1763
 msgid "ELF file version does not match current one"
 msgstr "ELF-tiedoston versio ei vastaa nykyistä"
 
-#: elf/dl-load.c:1750
+#: elf/dl-load.c:1771
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "vain ET_DYN ja ET_EXEC voidaan ladata"
 
-#: elf/dl-load.c:1755
+#: elf/dl-load.c:1776
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF-tiedoston phent-koko ei ole odotetun kokoinen"
 
-#: elf/dl-load.c:2312
+#: elf/dl-load.c:2333
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "väärä ELF-luokka: ELFCLASS64"
 
-#: elf/dl-load.c:2313
+#: elf/dl-load.c:2334
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "väärä ELF-luokka: ELFCLASS32"
 
-#: elf/dl-load.c:2316
+#: elf/dl-load.c:2337
 msgid "cannot open shared object file"
 msgstr "jaettua objektitiedostoa ei voi avata"
 
@@ -617,23 +617,23 @@ msgstr "nollatäytteisiä sivuja ei voi kartoittaa"
 msgid "symbol lookup error"
 msgstr "virhe symbolien haussa"
 
-#: elf/dl-open.c:79
+#: elf/dl-open.c:80
 msgid "cannot extend global scope"
 msgstr "globaalia aluetta ei voi laajentaa"
 
-#: elf/dl-open.c:399
+#: elf/dl-open.c:401
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "TLS-luontilaskurin ylivuoto! Lähetä tästä raportti."
 
-#: elf/dl-open.c:802
+#: elf/dl-open.c:814
 msgid "invalid mode for dlopen()"
 msgstr "virheellinen tila funktiolle dlopen()"
 
-#: elf/dl-reloc.c:232
+#: elf/dl-reloc.c:233
 msgid "cannot make segment writable for relocation"
 msgstr "segmenttiä ei voi muuttaa kirjoitettavaksi uudelleensijoitusta varten"
 
-#: elf/dl-reloc.c:308
+#: elf/dl-reloc.c:309
 msgid "cannot restore segment prot after reloc"
 msgstr "segmentin suojausta ei voi palauttaa uudelleensijoituksen jälkeen"
 
@@ -641,7 +641,7 @@ msgstr "segmentin suojausta ei voi palauttaa uudelleensijoituksen jälkeen"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT:iä käytetty koodissa, jota ei ole ladattu dynaamisesti"
 
-#: elf/dl-tls.c:1011
+#: elf/dl-tls.c:1039
 msgid "cannot create TLS data structures"
 msgstr "TLS-tietorakenteita ei voi luoda"
 
@@ -653,107 +653,107 @@ msgstr "virhe version selvittämisessä"
 msgid "cannot allocate version reference table"
 msgstr "versioviitetaulukolle ei voi varata muistia"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:151
 msgid "Print cache"
 msgstr "Näytä välimuisti"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:152
 msgid "Generate verbose messages"
 msgstr "Luo monisanaiset viestit"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:153
 msgid "Don't build cache"
 msgstr "Älä luo välimuistia"
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:154
 msgid "Don't update symbolic links"
 msgstr "Älä päivitä symbolisia linkkejä"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:155
 msgid "Change to and use ROOT as root directory"
 msgstr "Siirry ja käytä ROOTia juurihakemistona"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:155
 msgid "ROOT"
 msgstr "JUURI"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:156
 msgid "Use CACHE as cache file"
 msgstr "Käytä CACHEa välimuistitiedostona"
 
-#: elf/ldconfig.c:156
+#: elf/ldconfig.c:157
 msgid "Use CONF as configuration file"
 msgstr "Käytä CONFia asetustiedostona"
 
-#: elf/ldconfig.c:157
+#: elf/ldconfig.c:158
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Käsittele vain komentorivillä annetut hakemistot. Älä luo välimuistia."
 
-#: elf/ldconfig.c:158
+#: elf/ldconfig.c:159
 msgid "Manually link individual libraries."
 msgstr "Linkitä yksittäisiä kirjastoja käsin."
 
-#: elf/ldconfig.c:159
+#: elf/ldconfig.c:160
 msgid "FORMAT"
 msgstr "MUOTO"
 
-#: elf/ldconfig.c:160
+#: elf/ldconfig.c:161
 msgid "Ignore auxiliary cache file"
 msgstr "Jätä huomiotta apuvälimuistitiedosto"
 
-#: elf/ldconfig.c:168
+#: elf/ldconfig.c:169
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Säädä dynaamisen linkittäjän ajonaikaiset sidonnat."
 
-#: elf/ldconfig.c:371
+#: elf/ldconfig.c:372
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Polku ”%s” on annettu useammin kuin kerran"
 
-#: elf/ldconfig.c:487
+#: elf/ldconfig.c:488
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s ei ole tunnettu kirjastotyyppi"
 
-#: elf/ldconfig.c:515
+#: elf/ldconfig.c:516
 #, c-format
 msgid "Can't stat %s"
 msgstr "Tiedoston %s tilaa ei voi lukea"
 
-#: elf/ldconfig.c:596
+#: elf/ldconfig.c:597
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Tiedoston %s tilaa ei voi lukea\n"
 
-#: elf/ldconfig.c:606
+#: elf/ldconfig.c:607
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s ei ole symbolinen linkki\n"
 
-#: elf/ldconfig.c:625
+#: elf/ldconfig.c:626
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Tiedoston %s linkitystä ei voi poistaa"
 
-#: elf/ldconfig.c:631
+#: elf/ldconfig.c:632
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Linkitys %s -> %s ei onnistu"
 
-#: elf/ldconfig.c:637
+#: elf/ldconfig.c:638
 msgid " (changed)\n"
 msgstr " (muutettu)\n"
 
-#: elf/ldconfig.c:639
+#: elf/ldconfig.c:640
 msgid " (SKIPPED)\n"
 msgstr " (OHITETTU)\n"
 
-#: elf/ldconfig.c:695
+#: elf/ldconfig.c:696
 #, c-format
 msgid "Can't find %s"
 msgstr "%s ei löydy"
 
-#: elf/ldconfig.c:711 elf/ldconfig.c:893 elf/ldconfig.c:945 elf/ldconfig.c:977
+#: elf/ldconfig.c:712 elf/ldconfig.c:892 elf/ldconfig.c:952 elf/ldconfig.c:984
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Tiedoston %s tilaa ei voi lukea"
@@ -763,74 +763,74 @@ msgstr "Tiedoston %s tilaa ei voi lukea"
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Tiedostoa %s ei huomioitu, koska se ei ole tavallinen tiedosto."
 
-#: elf/ldconfig.c:727
+#: elf/ldconfig.c:726
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Linkkiä ei luotu, koska tiedostolle %s ei löytynyt so-nimeä"
 
-#: elf/ldconfig.c:824
+#: elf/ldconfig.c:825
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Hakemistoa %s ei voi avata"
 
-#: elf/ldconfig.c:911 elf/ldconfig.c:965 elf/readlib.c:98
+#: elf/ldconfig.c:910 elf/ldconfig.c:972 elf/readlib.c:98
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Syötetiedostoa %s ei löydy.\n"
 
-#: elf/ldconfig.c:918
+#: elf/ldconfig.c:917
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Tiedoston %s tilaa ei voi lukea"
 
-#: elf/ldconfig.c:1063
+#: elf/ldconfig.c:1070
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5-kirjasto %s on väärässä hakemistossa"
 
-#: elf/ldconfig.c:1066
+#: elf/ldconfig.c:1073
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6-kirjasto %s on väärässä hakemistossa"
 
-#: elf/ldconfig.c:1069
+#: elf/ldconfig.c:1076
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4-kirjasto %s on väärässä hakemistossa"
 
-#: elf/ldconfig.c:1097
+#: elf/ldconfig.c:1104
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "kirjastoilla %s ja %s hakemistossa %s on sama so-nimi, mutta eri tyypit."
 
-#: elf/ldconfig.c:1227
+#: elf/ldconfig.c:1234
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Varoitus: jätetään huomioimatta asetustiedosto, jota ei voi avata: %s"
 
-#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1308 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "muisti lopussa"
 
-#: elf/ldconfig.c:1334
+#: elf/ldconfig.c:1341
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: hakemistoa %s ei voi lukea"
 
-#: elf/ldconfig.c:1382
+#: elf/ldconfig.c:1389
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "suhteellista polkua ”%s” käytetään välimuistin luomiseen"
 
-#: elf/ldconfig.c:1406
+#: elf/ldconfig.c:1413
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Juurihakemistoon / siirtyminen ei onnistu"
 
-#: elf/ldconfig.c:1447
+#: elf/ldconfig.c:1454
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Välimuistihakemistoa %s ei voi avata\n"
@@ -881,7 +881,7 @@ msgstr "tiedostoargumentit puuttuvat"
 msgid "No such file or directory"
 msgstr "Tiedostoa tai hakemistoa ei ole"
 
-#: elf/ldd.bash.in:150 inet/rcmd.c:480
+#: elf/ldd.bash.in:150 inet/rcmd.c:481
 msgid "not regular file"
 msgstr "ei ole tavallinen tiedosto"
 
@@ -1168,33 +1168,33 @@ msgstr "”%s” ei ole oikea profiilidatatiedosto ”%s”:lle"
 msgid "cannot allocate symbol data"
 msgstr "symbolidatalle ei voi varata muistia"
 
-#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:428
+#: iconv/iconv_charmap.c:147 iconv/iconv_prog.c:428
 #, c-format
 msgid "cannot open output file"
 msgstr "tulostiedostoa ei voi avata"
 
-#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:291
+#: iconv/iconv_charmap.c:193 iconv/iconv_prog.c:291
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "virhe suljettaessa syötettä ”%s”"
 
-#: iconv/iconv_charmap.c:435
+#: iconv/iconv_charmap.c:442
 #, c-format
 msgid "illegal input sequence at position %Zd"
 msgstr "virheellinen syötesarja kohdassa %Zd"
 
-#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:519
+#: iconv/iconv_charmap.c:461 iconv/iconv_prog.c:519
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "epätäydellinen merkki- tai siirtosarja puskurin lopussa"
 
-#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:562
+#: iconv/iconv_charmap.c:506 iconv/iconv_charmap.c:542 iconv/iconv_prog.c:562
 #: iconv/iconv_prog.c:598
 #, c-format
 msgid "error while reading the input"
 msgstr "virhe luettaessa syötettä"
 
-#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:580
+#: iconv/iconv_charmap.c:524 iconv/iconv_prog.c:580
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "muistin varaaminen syötepuskurille ei onnistu"
@@ -1227,7 +1227,7 @@ msgstr "Tulosteen hallinta:"
 msgid "omit invalid characters from output"
 msgstr "jätä virheelliset merkit pois tulosteesta"
 
-#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:128
+#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:129
 #: locale/programs/localedef.c:117 locale/programs/localedef.c:119
 #: locale/programs/localedef.c:121 locale/programs/localedef.c:150
 #: malloc/memusagestat.c:56
@@ -1320,107 +1320,107 @@ msgstr ""
 "\n"
 "  "
 
-#: iconv/iconvconfig.c:109
+#: iconv/iconvconfig.c:110
 msgid "Create fastloading iconv module configuration file."
 msgstr "Luo nopeasti latautuva iconv-moduuliasetustiedosto."
 
-#: iconv/iconvconfig.c:113
+#: iconv/iconvconfig.c:114
 msgid "[DIR...]"
 msgstr "[HAKEMISTO...]"
 
-#: iconv/iconvconfig.c:126 locale/programs/localedef.c:129
+#: iconv/iconvconfig.c:127 locale/programs/localedef.c:129
 msgid "PATH"
 msgstr "POLKU"
 
-#: iconv/iconvconfig.c:127
+#: iconv/iconvconfig.c:128
 msgid "Prefix used for all file accesses"
 msgstr "Jokaisen tiedoston käsittelyssä käytettävä etuliite"
 
-#: iconv/iconvconfig.c:128
+#: iconv/iconvconfig.c:129
 msgid "Put output in FILE instead of installed location (--prefix does not apply to FILE)"
 msgstr "Ohjaa tuloste TIEDostoon eikä asennussijaintiin (--prefix ei päde TIEDostoon)"
 
-#: iconv/iconvconfig.c:132
+#: iconv/iconvconfig.c:133
 msgid "Do not search standard directories, only those on the command line"
 msgstr "Älä etsi vakiohakemistoista, vain komentorivillä annetuista"
 
-#: iconv/iconvconfig.c:341
+#: iconv/iconvconfig.c:343
 #, c-format
 msgid "no output file produced because warnings were issued"
 msgstr "tulostiedostoa ei tuotettu varoituksen takia"
 
-#: iconv/iconvconfig.c:430
+#: iconv/iconvconfig.c:432
 #, c-format
 msgid "while inserting in search tree"
 msgstr "lisättäessä hakupuuhun"
 
-#: iconv/iconvconfig.c:1238
+#: iconv/iconvconfig.c:1188
 #, c-format
 msgid "cannot generate output file"
 msgstr "tulostiedostoa ei voi luoda"
 
-#: inet/rcmd.c:157
+#: inet/rcmd.c:158
 msgid "rcmd: Cannot allocate memory\n"
 msgstr "rcmd: Muistin varaaminen ei onnistu\n"
 
-#: inet/rcmd.c:174
+#: inet/rcmd.c:175
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: Kaikki portit käytössä\n"
 
-#: inet/rcmd.c:202
+#: inet/rcmd.c:203
 #, c-format
 msgid "connect to address %s: "
 msgstr "yhdistä osoitteeseen %s: "
 
-#: inet/rcmd.c:215
+#: inet/rcmd.c:216
 #, c-format
 msgid "Trying %s...\n"
 msgstr "Yritetään %s...\n"
 
-#: inet/rcmd.c:251
+#: inet/rcmd.c:252
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write (alustetaan vakiovirhetuloste): %m\n"
 
-#: inet/rcmd.c:267
+#: inet/rcmd.c:268
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (alustetaan vakiovirhetuloste): %m\n"
 
-#: inet/rcmd.c:270
+#: inet/rcmd.c:271
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: protokollavirhe piiriasetuksissa\n"
 
-#: inet/rcmd.c:302
+#: inet/rcmd.c:303
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: protokollavirhe piiriasetuksissa\n"
 
-#: inet/rcmd.c:326
+#: inet/rcmd.c:327
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: vajaa luku"
 
-#: inet/rcmd.c:478
+#: inet/rcmd.c:479
 msgid "lstat failed"
 msgstr "tiedoston tilan luku epäonnistui"
 
-#: inet/rcmd.c:485
+#: inet/rcmd.c:486
 msgid "cannot open"
 msgstr "ei voi avata"
 
-#: inet/rcmd.c:487
+#: inet/rcmd.c:488
 msgid "fstat failed"
 msgstr "tiedoston tilan luku epäonnistui"
 
-#: inet/rcmd.c:489
+#: inet/rcmd.c:490
 msgid "bad owner"
 msgstr "virheellinen omistaja"
 
-#: inet/rcmd.c:491
+#: inet/rcmd.c:492
 msgid "writeable by other than owner"
 msgstr "kirjoitusoikeus muulla kuin omistajalla"
 
-#: inet/rcmd.c:493
+#: inet/rcmd.c:494
 msgid "hard linked somewhere"
 msgstr "kovalinkitetty johonkin"
 
@@ -1530,7 +1530,7 @@ msgid "no symbolic name given for end of range"
 msgstr "välin lopulle ei ole annettu symbolista nimeä"
 
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
-#: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
+#: locale/programs/ld-collate.c:2619 locale/programs/ld-collate.c:3777
 #: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
 #: locale/programs/ld-identification.c:397 locale/programs/ld-measurement.c:213
 #: locale/programs/ld-messages.c:295 locale/programs/ld-monetary.c:748
@@ -1556,7 +1556,7 @@ msgid "%s: error in state machine"
 msgstr "%s: virhe tilakoneessa"
 
 #: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
-#: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
+#: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3970
 #: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
 #: locale/programs/ld-identification.c:413 locale/programs/ld-measurement.c:229
 #: locale/programs/ld-messages.c:311 locale/programs/ld-monetary.c:764
@@ -1578,7 +1578,7 @@ msgstr "tuntematon merkki ”%s”"
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr "välin alku- ja lopputavusarjojen tavumäärä ei ole sama: %d vs %d"
 
-#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2893
+#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2896
 #: locale/programs/repertoire.c:418
 msgid "invalid names for character range"
 msgstr "virheelliset nimet merkkivälille"
@@ -1600,7 +1600,7 @@ msgstr "välin yläraja on pienempi kuin alaraja"
 msgid "resulting bytes for range not representable."
 msgstr "välin tulostavut eivät ole esitettävissä."
 
-#: locale/programs/ld-address.c:133 locale/programs/ld-collate.c:1563
+#: locale/programs/ld-address.c:133 locale/programs/ld-collate.c:1566
 #: locale/programs/ld-ctype.c:430 locale/programs/ld-identification.c:131
 #: locale/programs/ld-measurement.c:92 locale/programs/ld-messages.c:96
 #: locale/programs/ld-monetary.c:192 locale/programs/ld-name.c:93
@@ -1686,7 +1686,7 @@ msgstr "%s: kenttä ”%s” määritelty useammin kuin kerran"
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: tuntematon merkki kentässä ”%s”"
 
-#: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3772
+#: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3775
 #: locale/programs/ld-ctype.c:2827 locale/programs/ld-identification.c:394
 #: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
 #: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
@@ -1698,8 +1698,8 @@ msgstr "%s: epätäydellinen ”END”-rivi"
 
 #: locale/programs/ld-address.c:531 locale/programs/ld-collate.c:550
 #: locale/programs/ld-collate.c:602 locale/programs/ld-collate.c:898
-#: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2582
-#: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
+#: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2585
+#: locale/programs/ld-collate.c:2606 locale/programs/ld-collate.c:3960
 #: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
 #: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
 #: locale/programs/ld-identification.c:404 locale/programs/ld-measurement.c:220
@@ -1797,7 +1797,7 @@ msgstr "%s: symbolisen välin sanankatkaisua ei saa suoraan seurata ”order_end
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "”%s” ja ”%.*s” eivät ole kelvollisia nimiä symboliselle välille"
 
-#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:3708
+#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:3711
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr "%s: järjestys ”%.*s”:lle on jo määritelty kohdassa %s:%Zu"
@@ -1807,141 +1807,141 @@ msgstr "%s: järjestys ”%.*s”:lle on jo määritelty kohdassa %s:%Zu"
 msgid "%s: `%s' must be a character"
 msgstr "%s: ”%s” on oltava merkki"
 
-#: locale/programs/ld-collate.c:1580
+#: locale/programs/ld-collate.c:1583
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr "%s: ”position” on käytetävä tietylle tasolle kaikissa osissa tai ei yhdessäkään"
 
-#: locale/programs/ld-collate.c:1604
+#: locale/programs/ld-collate.c:1607
 #, c-format
 msgid "symbol `%s' not defined"
 msgstr "symbolia ”%s” ei ole määritelty"
 
-#: locale/programs/ld-collate.c:1680 locale/programs/ld-collate.c:1785
+#: locale/programs/ld-collate.c:1683 locale/programs/ld-collate.c:1788
 #, c-format
 msgid "symbol `%s' has the same encoding as"
 msgstr "symbolilla ”%s” on sama koodaus kuin"
 
-#: locale/programs/ld-collate.c:1684 locale/programs/ld-collate.c:1789
+#: locale/programs/ld-collate.c:1687 locale/programs/ld-collate.c:1792
 #, c-format
 msgid "symbol `%s'"
 msgstr "symboli ”%s”"
 
-#: locale/programs/ld-collate.c:1852
+#: locale/programs/ld-collate.c:1855
 msgid "too many errors; giving up"
 msgstr "liian monta virhettä; luovutetaan"
 
-#: locale/programs/ld-collate.c:2526
+#: locale/programs/ld-collate.c:2529
 #, c-format
 msgid "%s: more than one 'else'"
 msgstr "%s: useampi kuin yksi ”else”"
 
-#: locale/programs/ld-collate.c:2701
+#: locale/programs/ld-collate.c:2704
 #, c-format
 msgid "%s: duplicate definition of `%s'"
 msgstr "%s: kaksinkertainen määrittely ”%s”"
 
-#: locale/programs/ld-collate.c:2737
+#: locale/programs/ld-collate.c:2740
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
 msgstr "%s: kaksinkertainen määrittely osalle ”%s”"
 
-#: locale/programs/ld-collate.c:2873
+#: locale/programs/ld-collate.c:2876
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr "%s: tuntematon merkki vertailusymbolin nimessä"
 
-#: locale/programs/ld-collate.c:3002
+#: locale/programs/ld-collate.c:3005
 #, c-format
 msgid "%s: unknown character in equivalent definition name"
 msgstr "%s: tuntematon merkki yhtäläisyysmäärittelyn nimessä"
 
-#: locale/programs/ld-collate.c:3013
+#: locale/programs/ld-collate.c:3016
 #, c-format
 msgid "%s: unknown character in equivalent definition value"
 msgstr "%s: tuntematon merkki yhtäläisyysmäärittelyn arvossa"
 
-#: locale/programs/ld-collate.c:3023
+#: locale/programs/ld-collate.c:3026
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: tuntematon symboli ”%s” yhtäläisyysmäärittelyssä"
 
-#: locale/programs/ld-collate.c:3032
+#: locale/programs/ld-collate.c:3035
 msgid "error while adding equivalent collating symbol"
 msgstr "virhe lisättäessä yhtäläisyysvertailusymbolia"
 
-#: locale/programs/ld-collate.c:3070
+#: locale/programs/ld-collate.c:3073
 #, c-format
 msgid "duplicate definition of script `%s'"
 msgstr "kaksinkertainen skriptin ”%s” määrittely"
 
-#: locale/programs/ld-collate.c:3118
+#: locale/programs/ld-collate.c:3121
 #, c-format
 msgid "%s: unknown section name `%.*s'"
 msgstr "%s: tuntematon osan nimi ”%.*s”"
 
-#: locale/programs/ld-collate.c:3147
+#: locale/programs/ld-collate.c:3150
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr "%s: useita järjestysmäärittelyjä osalle ”%s”"
 
-#: locale/programs/ld-collate.c:3175
+#: locale/programs/ld-collate.c:3178
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: virheellinen määrä lajittelusääntöjä"
 
-#: locale/programs/ld-collate.c:3202
+#: locale/programs/ld-collate.c:3205
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr "%s: useita järjestysmäärittelyjä nimettömälle osalle"
 
-#: locale/programs/ld-collate.c:3257 locale/programs/ld-collate.c:3387
-#: locale/programs/ld-collate.c:3750
+#: locale/programs/ld-collate.c:3260 locale/programs/ld-collate.c:3390
+#: locale/programs/ld-collate.c:3753
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr "%s: avainsana ”order_end” puuttuu"
 
-#: locale/programs/ld-collate.c:3320
+#: locale/programs/ld-collate.c:3323
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr "%s: vertailusymbolin %.*s järjestystä ei ole vielä määritelty"
 
-#: locale/programs/ld-collate.c:3338
+#: locale/programs/ld-collate.c:3341
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr "%s: vertailuelementin %.*s järjestystä ei ole vielä määritelty"
 
-#: locale/programs/ld-collate.c:3349
+#: locale/programs/ld-collate.c:3352
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr "%s: uudelleenjärjestys kohdan %.*s jälkeen ei onnistu: tuntematon symboli"
 
-#: locale/programs/ld-collate.c:3401 locale/programs/ld-collate.c:3762
+#: locale/programs/ld-collate.c:3404 locale/programs/ld-collate.c:3765
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr "%s: avainsana ”reorder-end” puuttuu"
 
-#: locale/programs/ld-collate.c:3435 locale/programs/ld-collate.c:3633
+#: locale/programs/ld-collate.c:3438 locale/programs/ld-collate.c:3636
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr "%s: osaa ”%.*s” ei tunneta"
 
-#: locale/programs/ld-collate.c:3500
+#: locale/programs/ld-collate.c:3503
 #, c-format
 msgid "%s: bad symbol <%.*s>"
 msgstr "%s: virheellinen symboli <%.*s>"
 
-#: locale/programs/ld-collate.c:3696
+#: locale/programs/ld-collate.c:3699
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr "%s: ”%s” ei voi olla sanankatkaisuvälin loppuna"
 
-#: locale/programs/ld-collate.c:3746
+#: locale/programs/ld-collate.c:3749
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr "%s: tyhjää kategoriakuvausta ei sallita"
 
-#: locale/programs/ld-collate.c:3765
+#: locale/programs/ld-collate.c:3768
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr "%s: avainsana ”reorder-sections-end” puuttuu"
@@ -2696,23 +2696,23 @@ msgstr ""
 msgid "too many arguments"
 msgstr "liian monta argumenttia"
 
-#: malloc/mcheck.c:344
+#: malloc/mcheck-impl.c:355
 msgid "memory is consistent, library is buggy\n"
 msgstr "muisti on yhtenäinen, kirjastossa on ohjelmistovirheitä\n"
 
-#: malloc/mcheck.c:347
+#: malloc/mcheck-impl.c:358
 msgid "memory clobbered before allocated block\n"
 msgstr "muisti kärsinyt ennen varattuja lohkoja\n"
 
-#: malloc/mcheck.c:350
+#: malloc/mcheck-impl.c:361
 msgid "memory clobbered past end of allocated block\n"
 msgstr "muisti kärsinyt varattujen lohkojen jälkeen\n"
 
-#: malloc/mcheck.c:353
+#: malloc/mcheck-impl.c:364
 msgid "block freed twice\n"
 msgstr "lohko vapautettu kahdesti\n"
 
-#: malloc/mcheck.c:356
+#: malloc/mcheck-impl.c:367
 msgid "bogus mcheck_status, library is buggy\n"
 msgstr "väärä mcheck_status, kirjastossa on ohjelmavirhe\n"
 
@@ -3040,7 +3040,7 @@ msgstr "Palvelimelle ei voi luoda prosessia"
 msgid "Master server busy, full dump rescheduled."
 msgstr "Pääpalvelin on varattu, täysi vedostus ajastettu uudelleen."
 
-#: nis/nis_local_names.c:122
+#: nis/nis_local_names.c:123
 #, c-format
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
 msgstr "PAIKALLINEN merkintä UID:lle %d hakemistossa %s ei ole ainutkertainen\n"
@@ -3573,7 +3573,7 @@ msgstr "getgrouplist epäonnistui"
 msgid "setgroups failed"
 msgstr "setgroups epäonnistui"
 
-#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:379
+#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:378
 #: nscd/pwdcache.c:363 nscd/servicescache.c:310
 #, c-format
 msgid "short write in %s: %s"
@@ -3876,17 +3876,17 @@ msgstr "avaimen kaksoiskappale"
 msgid "problems while reading `%s'"
 msgstr "ongelmia luettaessa tiedostoa ”%s”"
 
-#: nss/makedb.c:796
+#: nss/makedb.c:805
 #, c-format
 msgid "failed to write new database file"
 msgstr "uuden tietokantatiedoston kirjoittaminen epäonnistui"
 
-#: nss/makedb.c:809
+#: nss/makedb.c:822
 #, c-format
 msgid "cannot stat database file"
 msgstr "tietokantatiedoston tilaa ei voi lukea"
 
-#: nss/makedb.c:817
+#: nss/makedb.c:830
 #, c-format
 msgid "file not a database file"
 msgstr "tiedosto ei ole tietokantatiedosto"

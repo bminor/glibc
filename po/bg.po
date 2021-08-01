@@ -3,16 +3,16 @@
 # This file is distributed under the same license as the glibc package.
 #
 # Anton Zinoviev <zinoviev@debian.org>, 2007
-# Roumen Petrov <transl@roumenpetrov.info>, 2008,2009,2011,2012,2017,2018,2019,2020
+# Roumen Petrov <transl@roumenpetrov.info>, 2008,2009,2011,2012,2017,2018,2019,2020,2021
 #
 # Abbreviations:
 #  CET - Control-Flow Enforcement Technology
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.31.9000\n"
-"POT-Creation-Date: 2021-01-27 17:07-0300\n"
-"PO-Revision-Date: 2020-07-23 22:38+0300\n"
+"Project-Id-Version: libc 2.33.9000\n"
+"POT-Creation-Date: 2021-07-28 22:02-0400\n"
+"PO-Revision-Date: 2021-07-29 20:38+0300\n"
 "Last-Translator: Roumen Petrov <transl@roumenpetrov.info>\n"
 "Language-Team: Bulgarian <dict@ludost.net>\n"
 "Language: bg\n"
@@ -22,43 +22,43 @@ msgstr ""
 "X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: argp/argp-help.c:227
+#: argp/argp-help.c:229
 #, c-format
 msgid "%.*s: ARGP_HELP_FMT parameter requires a value"
 msgstr "%.*s: изисква се стойност за параметърът ARGP_HELP_FMT"
 
-#: argp/argp-help.c:237
+#: argp/argp-help.c:239
 #, c-format
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
 msgstr "%.*s: Неизвестен параметър на ARGP_HELP_FMT"
 
-#: argp/argp-help.c:250
+#: argp/argp-help.c:252
 #, c-format
 msgid "Garbage in ARGP_HELP_FMT: %s"
 msgstr "Боклук при ARGP_HELP_FMT: %s"
 
-#: argp/argp-help.c:1214
+#: argp/argp-help.c:1350
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
 msgstr "Задължителни или незадължителни аргументи за \"дълги\" опции са също задължителни или незадължителни за всички съответстващи \"къси\" опции."
 
-#: argp/argp-help.c:1600
+#: argp/argp-help.c:1713
 msgid "Usage:"
 msgstr "Употреба:"
 
-#: argp/argp-help.c:1604
+#: argp/argp-help.c:1717
 msgid "  or: "
 msgstr "    или: "
 
-#: argp/argp-help.c:1616
+#: argp/argp-help.c:1729
 msgid " [OPTION...]"
 msgstr " [ОПЦИЯ...]"
 
-#: argp/argp-help.c:1643
+#: argp/argp-help.c:1756
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr "За повече сведения, опитайте \"%s --help\" или \"%s --usage\".\n"
 
-#: argp/argp-help.c:1671
+#: argp/argp-help.c:1784
 #, c-format
 msgid "Report bugs to %s.\n"
 msgstr "Подавайте доклади за грешки на %s.\n"
@@ -153,9 +153,9 @@ msgstr ""
 "-o ИЗХОДЕН-ФАЙЛ [ВХОДЕН_ФАЙЛ]...\n"
 "[ИЗХОДЕН-ФАЙЛ [ВХОДЕН_ФАЙЛ]...]"
 
-#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:311
+#: catgets/gencat.c:229 debug/pcprofiledump.c:209 elf/ldconfig.c:312
 #: elf/pldd.c:247 elf/sln.c:77 elf/sprof.c:372 iconv/iconv_prog.c:388
-#: iconv/iconvconfig.c:379 locale/programs/locale.c:276
+#: iconv/iconvconfig.c:381 locale/programs/locale.c:276
 #: locale/programs/localedef.c:438 login/programs/pt_chown.c:89
 #: malloc/memusagestat.c:563 nss/getent.c:953 nss/makedb.c:370
 #: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:61
@@ -168,8 +168,8 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
-#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:396
+#: elf/ldconfig.c:328 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
+#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:398
 #: locale/programs/locale.c:293 locale/programs/localedef.c:460
 #: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
 #: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
@@ -185,8 +185,8 @@ msgstr ""
 "ГАРАНЦИИ, включително без предполагаемите гаранции за полезност и пригодност.\n"
 
 #: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:332 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
-#: iconv/iconvconfig.c:401 locale/programs/locale.c:298
+#: elf/ldconfig.c:333 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
+#: iconv/iconvconfig.c:403 locale/programs/locale.c:298
 #: locale/programs/localedef.c:465 malloc/memusage.sh:75
 #: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
 #: posix/getconf.c:490
@@ -198,7 +198,7 @@ msgstr "Автори: %s.\n"
 msgid "*standard input*"
 msgstr "*стандартен изход*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:167 iconv/iconv_prog.c:273
+#: catgets/gencat.c:287 iconv/iconv_charmap.c:173 iconv/iconv_prog.c:273
 #: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
@@ -248,7 +248,7 @@ msgstr "неправилен ред"
 
 #: catgets/gencat.c:820
 msgid "malformed line ignored"
-msgstr "пренебрегнат деформиран ред"
+msgstr "уродливия ред е пренебрегнат"
 
 #: catgets/gencat.c:984 catgets/gencat.c:1025
 #, c-format
@@ -367,19 +367,19 @@ msgstr "изпълнимият файл \"$program\" не е намерен\\n"
 msgid "\\`$program' is no executable\\n"
 msgstr "\"$program\" не е изпълним файл\\n"
 
-#: dlfcn/dlinfo.c:53
+#: dlfcn/dlinfo.c:43
 msgid "unsupported dlinfo request"
 msgstr "неподдържана dlinfo заявка"
 
-#: dlfcn/dlmopen.c:63
+#: dlfcn/dlmopen.c:53
 msgid "invalid namespace"
 msgstr "неправилно пространство от имена"
 
-#: dlfcn/dlmopen.c:68
+#: dlfcn/dlmopen.c:58
 msgid "invalid mode"
 msgstr "неправилен начин"
 
-#: dlfcn/dlopen.c:64
+#: dlfcn/dlopen.c:54
 msgid "invalid mode parameter"
 msgstr "неправилен параметър за начин"
 
@@ -396,7 +396,16 @@ msgstr "Неизвестна ОС"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ОС ДПИ(двоичен програмен интерфейс): %s %d.%d.%d"
 
-#: elf/cache.c:320 elf/ldconfig.c:1427
+#: elf/cache.c:297
+#, c-format
+msgid "Cache file has wrong endianness.\n"
+msgstr "Файла за складиране е грешен порядък на битовете.\n"
+
+#: elf/cache.c:306
+msgid "Cache generated by: "
+msgstr "Складът е създаден от: "
+
+#: elf/cache.c:320 elf/ldconfig.c:1434
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Не може да се отвори файлът за складиране %s\n"
@@ -416,32 +425,52 @@ msgstr "Файлът не е файл за складиране.\n"
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d библиотеки са налични в склад \"%s\"\n"
 
-#: elf/cache.c:725
+#: elf/cache.c:405
+#, c-format
+msgid "Malformed extension data in cache file %s\n"
+msgstr "Уродливи допълнителни данни за складиране във файл %s\n"
+
+#: elf/cache.c:548
+#, c-format
+msgid "Writing of cache extension data failed"
+msgstr "Пропадна записването на допълнителни данни за складиране"
+
+#: elf/cache.c:559
+#, c-format
+msgid "%s: ISA level is too high (%d > %d)"
+msgstr "%s: твърде голямо ISA ниво (%d > %d)"
+
+#: elf/cache.c:726
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Не може да се създаде временен файл за складиране %s"
 
-#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
-#: elf/cache.c:770
+#: elf/cache.c:734 elf/cache.c:744 elf/cache.c:748 elf/cache.c:753
+#: elf/cache.c:771
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Пропадна записването на данните за складиране"
 
-#: elf/cache.c:765
+#: elf/cache.c:766
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Пропадна смяната па правата за достъп от %s към %#o"
 
-#: elf/cache.c:774
+#: elf/cache.c:775
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Пропадна преименуването от %s към %s"
 
-#: elf/dl-close.c:406 elf/dl-open.c:293
+#: elf/cache.c:806
+#, c-format
+msgid "Could not create library path"
+msgstr "Не може да се създаде път към библиотека"
+
+#: elf/dl-close.c:409 elf/dl-open.c:294
 msgid "cannot create scope list"
 msgstr "не може да се създаде списък на обхватът"
 
-#: elf/dl-close.c:862
+#: elf/dl-close.c:870
 msgid "shared object not open"
 msgstr "не е отворен споделеният обект"
 
@@ -494,6 +523,10 @@ msgstr "не може да се изобразят страници за таб�
 msgid "internal error: symidx out of range of fptr table"
 msgstr "вътрешна грешка: symidx е извън границите на таблицата fptr"
 
+#: elf/dl-hwcaps.c:104
+msgid "cannot create HWCAP priorities"
+msgstr "не може да се създадат HWCAP предимства"
+
 #: elf/dl-hwcaps.c:247 elf/dl-hwcaps.c:262
 msgid "cannot create capability list"
 msgstr "не може да се създаде списък за възможности"
@@ -502,131 +535,131 @@ msgstr "не може да се създаде списък за възможн�
 msgid "cannot allocate name record"
 msgstr "не може да се задели памет за записите с имена"
 
-#: elf/dl-load.c:518 elf/dl-load.c:631 elf/dl-load.c:725 elf/dl-load.c:821
+#: elf/dl-load.c:534 elf/dl-load.c:647 elf/dl-load.c:741 elf/dl-load.c:838
 msgid "cannot create cache for search path"
 msgstr "не може да се създаде склад на директориите за търсене"
 
-#: elf/dl-load.c:614
+#: elf/dl-load.c:630
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "не може да се създаде копие на RUNPATH/RPATH"
 
-#: elf/dl-load.c:711
+#: elf/dl-load.c:727
 msgid "cannot create search path array"
 msgstr "не може да се създаде масив на директориите за търсене"
 
-#: elf/dl-load.c:951
+#: elf/dl-load.c:968
 msgid "cannot stat shared object"
 msgstr "не може да се определят атрибутите на споделен обект"
 
-#: elf/dl-load.c:1082 elf/dl-load.c:2293
+#: elf/dl-load.c:1099 elf/dl-load.c:2314
 msgid "cannot create shared object descriptor"
 msgstr "не може да се създаде описание за споделен обект"
 
-#: elf/dl-load.c:1101 elf/dl-load.c:1668 elf/dl-load.c:1770
+#: elf/dl-load.c:1118 elf/dl-load.c:1689 elf/dl-load.c:1791
 msgid "cannot read file data"
 msgstr "не може да се прочетат данни от файлът"
 
-#: elf/dl-load.c:1147
+#: elf/dl-load.c:1164
 msgid "ELF load command alignment not page-aligned"
 msgstr "подравняването, в командата за зареждане на ELF, не е подравнено на страници"
 
-#: elf/dl-load.c:1154
+#: elf/dl-load.c:1171
 msgid "ELF load command address/offset not properly aligned"
 msgstr "адресът/отместването, в командата за зареждане на ELF, не е подравнен правилно"
 
-#: elf/dl-load.c:1233
+#: elf/dl-load.c:1250
 msgid "object file has no loadable segments"
 msgstr "обектният файл е без дялове за свързване"
 
-#: elf/dl-load.c:1246
+#: elf/dl-load.c:1263
 msgid "cannot dynamically load executable"
 msgstr "изпълнимият файл не може да се свърже динамично"
 
-#: elf/dl-load.c:1271
+#: elf/dl-load.c:1288
 msgid "object file has no dynamic section"
 msgstr "обектният файл е без дял за динамично свързване"
 
-#: elf/dl-load.c:1289
+#: elf/dl-load.c:1306
 msgid "cannot dynamically load position-independent executable"
 msgstr "не може да се зареди изпълним файл независим от местоположение"
 
-#: elf/dl-load.c:1291
+#: elf/dl-load.c:1308
 msgid "shared object cannot be dlopen()ed"
 msgstr "не е възможно dlopen() за споделеният обект"
 
-#: elf/dl-load.c:1304
+#: elf/dl-load.c:1321
 msgid "cannot allocate memory for program header"
 msgstr "не може да се задели памет за заглавието на програмата"
 
-#: elf/dl-load.c:1337 elf/dl-load.h:130
+#: elf/dl-load.c:1354 elf/dl-load.h:130
 msgid "cannot change memory protections"
 msgstr "не може да се промени защитата на паметта"
 
-#: elf/dl-load.c:1357
+#: elf/dl-load.c:1378
 msgid "cannot enable executable stack as shared object requires"
 msgstr "стекът не може да се разреши за изпълнение, както е поискано от споделения обект"
 
-#: elf/dl-load.c:1385
+#: elf/dl-load.c:1406
 msgid "cannot close file descriptor"
 msgstr "не може да се затвори описанието на файлът"
 
-#: elf/dl-load.c:1668
+#: elf/dl-load.c:1689
 msgid "file too short"
 msgstr "файлът е твърде къс"
 
-#: elf/dl-load.c:1704
+#: elf/dl-load.c:1725
 msgid "invalid ELF header"
 msgstr "неправилен ELF заглавен блок"
 
-#: elf/dl-load.c:1716
+#: elf/dl-load.c:1737
 msgid "ELF file data encoding not big-endian"
 msgstr "данните от ELF файлът не са кодирани със старши байт първи(big-endian)"
 
-#: elf/dl-load.c:1718
+#: elf/dl-load.c:1739
 msgid "ELF file data encoding not little-endian"
 msgstr "данните от ELF файлът не са кодирани с младши байт първи(little-endian)"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1743
 msgid "ELF file version ident does not match current one"
 msgstr "номерът на версия от ELF-файла не съответства на текущата"
 
-#: elf/dl-load.c:1726
+#: elf/dl-load.c:1747
 msgid "ELF file OS ABI invalid"
 msgstr "ELF файлът е с неправилен номер на ДПИ(ABI-двоичен програмен интерфейс) за ОС "
 
-#: elf/dl-load.c:1729
+#: elf/dl-load.c:1750
 msgid "ELF file ABI version invalid"
 msgstr "ELF файлът е с неправилна версия за ДПИ(двоичен програмен интерфейс)"
 
-#: elf/dl-load.c:1732
+#: elf/dl-load.c:1753
 msgid "nonzero padding in e_ident"
 msgstr "ненулево допълване при e_ident"
 
-#: elf/dl-load.c:1735
+#: elf/dl-load.c:1756
 msgid "internal error"
 msgstr "вътрешна грешка"
 
-#: elf/dl-load.c:1742
+#: elf/dl-load.c:1763
 msgid "ELF file version does not match current one"
 msgstr "версията, на ELF файлът, не съответства на текущата"
 
-#: elf/dl-load.c:1750
+#: elf/dl-load.c:1771
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "само ET_DYN и ET_EXEC могат да се свържат"
 
-#: elf/dl-load.c:1755
+#: elf/dl-load.c:1776
 msgid "ELF file's phentsize not the expected size"
 msgstr "неочакван размер на елемент(phentsize) в заглавието на ELF файл"
 
-#: elf/dl-load.c:2312
+#: elf/dl-load.c:2333
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "неправилен ELF клас: ELFCLASS64"
 
-#: elf/dl-load.c:2313
+#: elf/dl-load.c:2334
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "неправилен ELF клас: ELFCLASS32"
 
-#: elf/dl-load.c:2316
+#: elf/dl-load.c:2337
 msgid "cannot open shared object file"
 msgstr "не може да се отвори файлът със споделения обект"
 
@@ -642,23 +675,23 @@ msgstr "не може да се изобразят страници запълн
 msgid "symbol lookup error"
 msgstr "грешка при търсене на символ"
 
-#: elf/dl-open.c:79
+#: elf/dl-open.c:80
 msgid "cannot extend global scope"
 msgstr "не може да се увеличи общата област"
 
-#: elf/dl-open.c:399
+#: elf/dl-open.c:401
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "Превъртян брояч за пораждане на TLS! Моля докладвайте го."
 
-#: elf/dl-open.c:802
+#: elf/dl-open.c:814
 msgid "invalid mode for dlopen()"
 msgstr "неправилен режим за dlopen()"
 
-#: elf/dl-open.c:819
+#: elf/dl-open.c:831
 msgid "no more namespaces available for dlmopen()"
 msgstr "не са налични повече именувани пространства за dlmopen()"
 
-#: elf/dl-open.c:843
+#: elf/dl-open.c:855
 msgid "invalid target namespace in dlmopen()"
 msgstr "неправилно именувано целево пространство в dlmopen()"
 
@@ -666,20 +699,20 @@ msgstr "неправилно именувано целево пространс�
 msgid "cannot allocate memory in static TLS block"
 msgstr "не може да се задели памет в статичен TSL блок"
 
-#: elf/dl-reloc.c:232
+#: elf/dl-reloc.c:233
 msgid "cannot make segment writable for relocation"
 msgstr "дялът не може да се маркира като записваем за \"преместваем код\""
 
-#: elf/dl-reloc.c:292
+#: elf/dl-reloc.c:293
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: недостиг на памет за съхраняване на резултата за \"преместваем код\" на %s\n"
 
-#: elf/dl-reloc.c:308
+#: elf/dl-reloc.c:309
 msgid "cannot restore segment prot after reloc"
 msgstr "не може да се възстанови защитата на дяла след преместване"
 
-#: elf/dl-reloc.c:339
+#: elf/dl-reloc.c:340
 msgid "cannot apply additional memory protection after relocation"
 msgstr "след преместването не може да се постави допълнителна защита на паметта"
 
@@ -687,7 +720,7 @@ msgstr "след преместването не може да се постав
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT е използван в код, който не е за динамично свързване"
 
-#: elf/dl-tls.c:1011
+#: elf/dl-tls.c:1039
 msgid "cannot create TLS data structures"
 msgstr "не може да се създадат структури за TLS данни"
 
@@ -699,124 +732,134 @@ msgstr "грешка при търсене на версия"
 msgid "cannot allocate version reference table"
 msgstr "не може да се създаде таблица с препратки за версиите"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:151
 msgid "Print cache"
 msgstr "Разпечатване на склад"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:152
 msgid "Generate verbose messages"
 msgstr "Извеждане на допълнителни съобщения"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:153
 msgid "Don't build cache"
 msgstr "Да не се създава склад"
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:154
 msgid "Don't update symbolic links"
 msgstr "Да не се обновяват символни връзки"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:155
 msgid "Change to and use ROOT as root directory"
 msgstr "Преместване в и използване на ГЛАВЕН като \"коренова\" директория"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:155
 msgid "ROOT"
 msgstr "ГЛАВЕН"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:156
 msgid "CACHE"
 msgstr "КЕШ"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:156
 msgid "Use CACHE as cache file"
 msgstr "Използване на КЕШ като файл за складиране"
 
-#: elf/ldconfig.c:156
+#: elf/ldconfig.c:157
 msgid "CONF"
 msgstr "НАСТ"
 
-#: elf/ldconfig.c:156
+#: elf/ldconfig.c:157
 msgid "Use CONF as configuration file"
 msgstr "Използване на НАСТ за настройващ файл"
 
-#: elf/ldconfig.c:157
+#: elf/ldconfig.c:158
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Да се обработят само директориите зададени от командния ред. Да не се създава склад."
 
-#: elf/ldconfig.c:158
+#: elf/ldconfig.c:159
 msgid "Manually link individual libraries."
 msgstr "Ръчно ще се създадат връзки за отделните библиотеки."
 
-#: elf/ldconfig.c:159
+#: elf/ldconfig.c:160
 msgid "FORMAT"
 msgstr "ФОРМАТ"
 
-#: elf/ldconfig.c:159
+#: elf/ldconfig.c:160
 msgid "Format to use: new (default), old, or compat"
 msgstr "Използване на формат: new(по подразбиране), old или compat"
 
-#: elf/ldconfig.c:160
+#: elf/ldconfig.c:161
 msgid "Ignore auxiliary cache file"
 msgstr "Игнориране на помощният файл за складиране"
 
-#: elf/ldconfig.c:168
+#: elf/ldconfig.c:169
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Настройване на свръзките при изпълнение на програмата за динамично свързване."
 
-#: elf/ldconfig.c:371
+#: elf/ldconfig.c:372
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Пътят \"%s\" е зададен повече от един веднъж"
 
-#: elf/ldconfig.c:372
+#: elf/ldconfig.c:373
 #, c-format
 msgid "(from %s:%d and %s:%d)\n"
 msgstr "(от %s:%d и %s:%d)\n"
 
-#: elf/ldconfig.c:487
+#: elf/ldconfig.c:405 elf/ldconfig.c:446
+#, c-format
+msgid "Could not form glibc-hwcaps path"
+msgstr "Не може да се създаде път за hwcaps"
+
+#: elf/ldconfig.c:419
+#, c-format
+msgid "Listing directory %s"
+msgstr "Изброяване на директория '%s'"
+
+#: elf/ldconfig.c:488
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s е библиотека от непознат тип"
 
-#: elf/ldconfig.c:515
+#: elf/ldconfig.c:516
 #, c-format
 msgid "Can't stat %s"
 msgstr "Не може да се определят атрибутите на %s"
 
-#: elf/ldconfig.c:596
+#: elf/ldconfig.c:597
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Не може да се определят атрибутите на %s\n"
 
-#: elf/ldconfig.c:606
+#: elf/ldconfig.c:607
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s не е символна връзка\n"
 
-#: elf/ldconfig.c:625
+#: elf/ldconfig.c:626
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Не може да се развърже(изтрие) %s"
 
-#: elf/ldconfig.c:631
+#: elf/ldconfig.c:632
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Не може да се създаде символна връзка от %s към %s"
 
-#: elf/ldconfig.c:637
+#: elf/ldconfig.c:638
 msgid " (changed)\n"
 msgstr " (променен)\n"
 
-#: elf/ldconfig.c:639
+#: elf/ldconfig.c:640
 msgid " (SKIPPED)\n"
 msgstr " (ПРЕСКОЧЕН)\n"
 
-#: elf/ldconfig.c:695
+#: elf/ldconfig.c:696
 #, c-format
 msgid "Can't find %s"
 msgstr "%s не е открит"
 
-#: elf/ldconfig.c:711 elf/ldconfig.c:893 elf/ldconfig.c:945 elf/ldconfig.c:977
+#: elf/ldconfig.c:712 elf/ldconfig.c:892 elf/ldconfig.c:952 elf/ldconfig.c:984
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Не може да се определят атрибутите(lstat) на %s"
@@ -826,89 +869,89 @@ msgstr "Не може да се определят атрибутите(lstat) �
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Пренебрегване на файл %s, защото не е обикновен."
 
-#: elf/ldconfig.c:727
+#: elf/ldconfig.c:726
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Не е създадена връзка, защото не е намерен soname за %s"
 
-#: elf/ldconfig.c:800
+#: elf/ldconfig.c:801
 #, c-format
 msgid " (from %s:%d)\n"
 msgstr " (от %s:%d)\n"
 
-#: elf/ldconfig.c:824
+#: elf/ldconfig.c:825
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Не може да се отвори директория %s"
 
-#: elf/ldconfig.c:911 elf/ldconfig.c:965 elf/readlib.c:98
+#: elf/ldconfig.c:910 elf/ldconfig.c:972 elf/readlib.c:98
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Входния файл %s не е намерен.\n"
 
-#: elf/ldconfig.c:918
+#: elf/ldconfig.c:917
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Не може да се определят атрибутите на %s"
 
-#: elf/ldconfig.c:1063
+#: elf/ldconfig.c:1070
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5 библиотека %s в неправилна директория"
 
-#: elf/ldconfig.c:1066
+#: elf/ldconfig.c:1073
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 библиотека %s в неправилна директория"
 
-#: elf/ldconfig.c:1069
+#: elf/ldconfig.c:1076
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4 библиотека %s в неправилна директория"
 
-#: elf/ldconfig.c:1097
+#: elf/ldconfig.c:1104
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "библиотеките %s и %s от директория %s са с еднакво SONAME, но с различен тип."
 
-#: elf/ldconfig.c:1227
+#: elf/ldconfig.c:1234
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Предупреждение: пренебрегване на файл с настройки, който не може да се отвори: %s"
 
-#: elf/ldconfig.c:1275
+#: elf/ldconfig.c:1282
 #, c-format
 msgid "%s:%u: hwcap directive ignored"
 msgstr "%s:%u: пренебрегнато hwcap напътствие"
 
-#: elf/ldconfig.c:1294
+#: elf/ldconfig.c:1301
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "изисква се абсолютно име на настройващ файл когато се използва -r"
 
-#: elf/ldconfig.c:1301 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1308 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "паметта е изчерпана"
 
-#: elf/ldconfig.c:1334
+#: elf/ldconfig.c:1341
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: не може да се чете директорията %s "
 
-#: elf/ldconfig.c:1382
+#: elf/ldconfig.c:1389
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "използван е относителен път %s за създаване на склад"
 
-#: elf/ldconfig.c:1406
+#: elf/ldconfig.c:1413
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Не може да се смени директорията на /"
 
-#: elf/ldconfig.c:1447
+#: elf/ldconfig.c:1454
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Не може да се отвори директорията '%s' с файл за складиране\n"
@@ -958,7 +1001,7 @@ msgstr "липсва аргумент за файл"
 msgid "No such file or directory"
 msgstr "Няма такъв файл или директория"
 
-#: elf/ldd.bash.in:150 inet/rcmd.c:480
+#: elf/ldd.bash.in:150 inet/rcmd.c:481
 msgid "not regular file"
 msgstr "не е обикновен файл"
 
@@ -1340,33 +1383,48 @@ msgstr "\"%s\" не е подходящ файл с диагностични д�
 msgid "cannot allocate symbol data"
 msgstr "не може да се памет за данни за символи"
 
-#: iconv/iconv_charmap.c:141 iconv/iconv_prog.c:428
+#: elf/stringtable.c:90
+#, c-format
+msgid "String table string is too long"
+msgstr "Твърде голяма таблица за низове"
+
+#: elf/stringtable.c:103
+#, c-format
+msgid "String table has too many entries"
+msgstr "Таблицата за низове има твърде много записи"
+
+#: elf/stringtable.c:188 elf/stringtable.c:196
+#, c-format
+msgid "String table is too large"
+msgstr "Таблицата за низове е твърде голяма"
+
+#: iconv/iconv_charmap.c:147 iconv/iconv_prog.c:428
 #, c-format
 msgid "cannot open output file"
 msgstr "не може да се отвори изходният файл"
 
-#: iconv/iconv_charmap.c:187 iconv/iconv_prog.c:291
+#: iconv/iconv_charmap.c:193 iconv/iconv_prog.c:291
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "грешка при затваряне на входа \"%s\""
 
-#: iconv/iconv_charmap.c:435
+#: iconv/iconv_charmap.c:442
 #, c-format
 msgid "illegal input sequence at position %Zd"
 msgstr "незаконна входна последователност на позиция %Zd"
 
-#: iconv/iconv_charmap.c:454 iconv/iconv_prog.c:519
+#: iconv/iconv_charmap.c:461 iconv/iconv_prog.c:519
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "непълен знак или изместваща последователност в края на буфера"
 
-#: iconv/iconv_charmap.c:499 iconv/iconv_charmap.c:535 iconv/iconv_prog.c:562
+#: iconv/iconv_charmap.c:506 iconv/iconv_charmap.c:542 iconv/iconv_prog.c:562
 #: iconv/iconv_prog.c:598
 #, c-format
 msgid "error while reading the input"
 msgstr "грешка при прочитането на входа"
 
-#: iconv/iconv_charmap.c:517 iconv/iconv_prog.c:580
+#: iconv/iconv_charmap.c:524 iconv/iconv_prog.c:580
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "не може да се задели входен буфер"
@@ -1399,7 +1457,7 @@ msgstr "Управление на изхода:"
 msgid "omit invalid characters from output"
 msgstr "изпускане на неправилни знаци при извеждане"
 
-#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:128
+#: iconv/iconv_prog.c:67 iconv/iconvconfig.c:129
 #: locale/programs/localedef.c:117 locale/programs/localedef.c:119
 #: locale/programs/localedef.c:121 locale/programs/localedef.c:150
 #: malloc/memusagestat.c:56
@@ -1492,112 +1550,112 @@ msgstr ""
 "\n"
 "  "
 
-#: iconv/iconvconfig.c:109
+#: iconv/iconvconfig.c:110
 msgid "Create fastloading iconv module configuration file."
 msgstr "Създава настройващ файл за бързо зареждане на iconv модул."
 
-#: iconv/iconvconfig.c:113
+#: iconv/iconvconfig.c:114
 msgid "[DIR...]"
 msgstr "[ДИР...]"
 
-#: iconv/iconvconfig.c:126 locale/programs/localedef.c:129
+#: iconv/iconvconfig.c:127 locale/programs/localedef.c:129
 msgid "PATH"
 msgstr "ПЪТ"
 
-#: iconv/iconvconfig.c:127
+#: iconv/iconvconfig.c:128
 msgid "Prefix used for all file accesses"
 msgstr "Префикс използван при всички достъпи до файл"
 
-#: iconv/iconvconfig.c:128
+#: iconv/iconvconfig.c:129
 msgid "Put output in FILE instead of installed location (--prefix does not apply to FILE)"
 msgstr "Поставяне на изхода в FILE вместо на инсталираното местоположението (--prefix не се прилага за FILE)"
 
-#: iconv/iconvconfig.c:132
+#: iconv/iconvconfig.c:133
 msgid "Do not search standard directories, only those on the command line"
 msgstr "Да не се търси в стандартните директории, а само в тези от командния ред"
 
-#: iconv/iconvconfig.c:299
+#: iconv/iconvconfig.c:301
 #, c-format
 msgid "Directory arguments required when using --nostdlib"
 msgstr "Нужен е аргумент за директория, когато се използва --nostdlib"
 
-#: iconv/iconvconfig.c:341
+#: iconv/iconvconfig.c:343
 #, c-format
 msgid "no output file produced because warnings were issued"
 msgstr "не е създаден изходен файл, като следствие от предупрежденията"
 
-#: iconv/iconvconfig.c:430
+#: iconv/iconvconfig.c:432
 #, c-format
 msgid "while inserting in search tree"
 msgstr "при вмъкване е дървото за търсене"
 
-#: iconv/iconvconfig.c:1238
+#: iconv/iconvconfig.c:1188
 #, c-format
 msgid "cannot generate output file"
 msgstr "не може да се създаде изходен файл"
 
-#: inet/rcmd.c:157
+#: inet/rcmd.c:158
 msgid "rcmd: Cannot allocate memory\n"
 msgstr "rcmd: Не може да се задели памет\n"
 
-#: inet/rcmd.c:174
+#: inet/rcmd.c:175
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: Всички портове се използват\n"
 
-#: inet/rcmd.c:202
+#: inet/rcmd.c:203
 #, c-format
 msgid "connect to address %s: "
 msgstr "свързване към адрес %s: "
 
-#: inet/rcmd.c:215
+#: inet/rcmd.c:216
 #, c-format
 msgid "Trying %s...\n"
 msgstr "Опитва се %s...\n"
 
-#: inet/rcmd.c:251
+#: inet/rcmd.c:252
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write (установяване на стандартния изход за грешки): %m\n"
 
-#: inet/rcmd.c:267
+#: inet/rcmd.c:268
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (установяване на стандартния изход за грешки): %m\n"
 
-#: inet/rcmd.c:270
+#: inet/rcmd.c:271
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: неуспех на протокола, при установяване на веригата\n"
 
-#: inet/rcmd.c:302
+#: inet/rcmd.c:303
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: неуспех на протокола, при установяване на веригата\n"
 
-#: inet/rcmd.c:326
+#: inet/rcmd.c:327
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: недостиг при четене"
 
-#: inet/rcmd.c:478
+#: inet/rcmd.c:479
 msgid "lstat failed"
 msgstr "пропадна lstat"
 
-#: inet/rcmd.c:485
+#: inet/rcmd.c:486
 msgid "cannot open"
 msgstr "не може да се отвори"
 
-#: inet/rcmd.c:487
+#: inet/rcmd.c:488
 msgid "fstat failed"
 msgstr "пропадна fstat"
 
-#: inet/rcmd.c:489
+#: inet/rcmd.c:490
 msgid "bad owner"
 msgstr "неправилен собственик"
 
-#: inet/rcmd.c:491
+#: inet/rcmd.c:492
 msgid "writeable by other than owner"
 msgstr "освен собственика, може да се записва и от други"
 
-#: inet/rcmd.c:493
+#: inet/rcmd.c:494
 msgid "hard linked somewhere"
 msgstr "твърдо свързан нанякъде"
 
@@ -1713,7 +1771,7 @@ msgid "no symbolic name given for end of range"
 msgstr "не е зададено символично име за край на диапазон"
 
 #: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
-#: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3774
+#: locale/programs/ld-collate.c:2619 locale/programs/ld-collate.c:3777
 #: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
 #: locale/programs/ld-identification.c:397 locale/programs/ld-measurement.c:213
 #: locale/programs/ld-messages.c:295 locale/programs/ld-monetary.c:748
@@ -1739,7 +1797,7 @@ msgid "%s: error in state machine"
 msgstr "%s: грешка в състоянието на машината"
 
 #: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
-#: locale/programs/ld-collate.c:2613 locale/programs/ld-collate.c:3967
+#: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3970
 #: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
 #: locale/programs/ld-identification.c:413 locale/programs/ld-measurement.c:229
 #: locale/programs/ld-messages.c:311 locale/programs/ld-monetary.c:764
@@ -1761,7 +1819,7 @@ msgstr "неизвестен знак \"%s\""
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr "боя на байтовете, в последователност от байтове за начало и край на диапазон, не е същия: %d с/у %d"
 
-#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2893
+#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2896
 #: locale/programs/repertoire.c:418
 msgid "invalid names for character range"
 msgstr "неправилни имена за диапазон от знаци"
@@ -1783,7 +1841,7 @@ msgstr "горната граница за диапазон е по-малка �
 msgid "resulting bytes for range not representable."
 msgstr "резултата от байтове за диапазона не може да се представят."
 
-#: locale/programs/ld-address.c:133 locale/programs/ld-collate.c:1563
+#: locale/programs/ld-address.c:133 locale/programs/ld-collate.c:1566
 #: locale/programs/ld-ctype.c:430 locale/programs/ld-identification.c:131
 #: locale/programs/ld-measurement.c:92 locale/programs/ld-messages.c:96
 #: locale/programs/ld-monetary.c:192 locale/programs/ld-name.c:93
@@ -1869,7 +1927,7 @@ msgstr "%s: полето \"%s\" е обявено повече от веднъж
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: неизвестен знак в полето \"%s\""
 
-#: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3772
+#: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3775
 #: locale/programs/ld-ctype.c:2827 locale/programs/ld-identification.c:394
 #: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
 #: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
@@ -1881,8 +1939,8 @@ msgstr "%s: непълен ред \"END\""
 
 #: locale/programs/ld-address.c:531 locale/programs/ld-collate.c:550
 #: locale/programs/ld-collate.c:602 locale/programs/ld-collate.c:898
-#: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2582
-#: locale/programs/ld-collate.c:2603 locale/programs/ld-collate.c:3957
+#: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2585
+#: locale/programs/ld-collate.c:2606 locale/programs/ld-collate.c:3960
 #: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
 #: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
 #: locale/programs/ld-identification.c:404 locale/programs/ld-measurement.c:220
@@ -1985,7 +2043,7 @@ msgstr "%s: многоточие за символичен диапазон не
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "\"%s\" и \"%.*s\" не са правилни имена за символичен диапазон"
 
-#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:3708
+#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:3711
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr "%s: редът за \"%.*s\" е вече определен при %s:%Zu"
@@ -1995,156 +2053,156 @@ msgstr "%s: редът за \"%.*s\" е вече определен при %s:%Z
 msgid "%s: `%s' must be a character"
 msgstr "%s: \"%s\" трябва да е знак"
 
-#: locale/programs/ld-collate.c:1580
+#: locale/programs/ld-collate.c:1583
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr "%s: \"position\" трябва да се използва на точно определено ниво във всички дялове или в нито един"
 
-#: locale/programs/ld-collate.c:1604
+#: locale/programs/ld-collate.c:1607
 #, c-format
 msgid "symbol `%s' not defined"
 msgstr "символът \"%s\" е неопределен"
 
-#: locale/programs/ld-collate.c:1680 locale/programs/ld-collate.c:1785
+#: locale/programs/ld-collate.c:1683 locale/programs/ld-collate.c:1788
 #, c-format
 msgid "symbol `%s' has the same encoding as"
 msgstr "символът \"%s\" е с същото кодиране като"
 
-#: locale/programs/ld-collate.c:1684 locale/programs/ld-collate.c:1789
+#: locale/programs/ld-collate.c:1687 locale/programs/ld-collate.c:1792
 #, c-format
 msgid "symbol `%s'"
 msgstr "символа \"%s\""
 
-#: locale/programs/ld-collate.c:1852
+#: locale/programs/ld-collate.c:1855
 msgid "too many errors; giving up"
 msgstr "твърде много грешки; отказване"
 
-#: locale/programs/ld-collate.c:2508 locale/programs/ld-collate.c:3896
+#: locale/programs/ld-collate.c:2511 locale/programs/ld-collate.c:3899
 #, c-format
 msgid "%s: nested conditionals not supported"
 msgstr "%s: не се поддържа вграждане на условия"
 
-#: locale/programs/ld-collate.c:2526
+#: locale/programs/ld-collate.c:2529
 #, c-format
 msgid "%s: more than one 'else'"
 msgstr "%s: повече от един 'else'"
 
-#: locale/programs/ld-collate.c:2701
+#: locale/programs/ld-collate.c:2704
 #, c-format
 msgid "%s: duplicate definition of `%s'"
 msgstr "%s: повторно определяне на \"%s\""
 
-#: locale/programs/ld-collate.c:2737
+#: locale/programs/ld-collate.c:2740
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
 msgstr "%s: повторно обявяване на дял \"%s\""
 
-#: locale/programs/ld-collate.c:2873
+#: locale/programs/ld-collate.c:2876
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr "%s: неизвестен знак за име на символ за подреждане"
 
-#: locale/programs/ld-collate.c:3002
+#: locale/programs/ld-collate.c:3005
 #, c-format
 msgid "%s: unknown character in equivalent definition name"
 msgstr "%s: неизвестен знак за име в определение за равностойност"
 
-#: locale/programs/ld-collate.c:3013
+#: locale/programs/ld-collate.c:3016
 #, c-format
 msgid "%s: unknown character in equivalent definition value"
 msgstr "%s: неизвестен знак за стойност в определение за равностойност"
 
-#: locale/programs/ld-collate.c:3023
+#: locale/programs/ld-collate.c:3026
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: неизвестен символ \"%s\" в определение за равностойност"
 
-#: locale/programs/ld-collate.c:3032
+#: locale/programs/ld-collate.c:3035
 msgid "error while adding equivalent collating symbol"
 msgstr "грешка при добавяне на равностоен символ за подреждане"
 
-#: locale/programs/ld-collate.c:3070
+#: locale/programs/ld-collate.c:3073
 #, c-format
 msgid "duplicate definition of script `%s'"
 msgstr "повторно определение за писменост \"%s\""
 
-#: locale/programs/ld-collate.c:3118
+#: locale/programs/ld-collate.c:3121
 #, c-format
 msgid "%s: unknown section name `%.*s'"
 msgstr "%s: неизвестно име на дял \"%.*s\""
 
-#: locale/programs/ld-collate.c:3147
+#: locale/programs/ld-collate.c:3150
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr "%s: многократни определения за ред в дял \"%s\""
 
-#: locale/programs/ld-collate.c:3175
+#: locale/programs/ld-collate.c:3178
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: неправилен брой правила за подреждане"
 
-#: locale/programs/ld-collate.c:3202
+#: locale/programs/ld-collate.c:3205
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr "%s: многократни определения за ред в безимен дял"
 
-#: locale/programs/ld-collate.c:3257 locale/programs/ld-collate.c:3387
-#: locale/programs/ld-collate.c:3750
+#: locale/programs/ld-collate.c:3260 locale/programs/ld-collate.c:3390
+#: locale/programs/ld-collate.c:3753
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr "%s: липсващ ключ \"order_end\""
 
-#: locale/programs/ld-collate.c:3320
+#: locale/programs/ld-collate.c:3323
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr "%s: все още не е определен редът на символа за подреждане %.*s"
 
-#: locale/programs/ld-collate.c:3338
+#: locale/programs/ld-collate.c:3341
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr "%s: все още не е определен редът на елемента за подреждане %.*s"
 
-#: locale/programs/ld-collate.c:3349
+#: locale/programs/ld-collate.c:3352
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr "%s: не може да се пренареди след %.*s: символът е неизвестен"
 
-#: locale/programs/ld-collate.c:3401 locale/programs/ld-collate.c:3762
+#: locale/programs/ld-collate.c:3404 locale/programs/ld-collate.c:3765
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr "%s: липсва ключ \"reorder-end\""
 
-#: locale/programs/ld-collate.c:3435 locale/programs/ld-collate.c:3633
+#: locale/programs/ld-collate.c:3438 locale/programs/ld-collate.c:3636
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr "%s: неизвестен дял \"%.*s\""
 
-#: locale/programs/ld-collate.c:3500
+#: locale/programs/ld-collate.c:3503
 #, c-format
 msgid "%s: bad symbol <%.*s>"
 msgstr "%s: неправилен символ <%.*s>"
 
-#: locale/programs/ld-collate.c:3696
+#: locale/programs/ld-collate.c:3699
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr "%s: \"%s\" не може да бъде край на диапазон с многоточие"
 
-#: locale/programs/ld-collate.c:3746
+#: locale/programs/ld-collate.c:3749
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr "%s: не е разрешено празно описание на категория"
 
-#: locale/programs/ld-collate.c:3765
+#: locale/programs/ld-collate.c:3768
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr "%s: липсва ключ \"reorder-sections-end\""
 
-#: locale/programs/ld-collate.c:3929
+#: locale/programs/ld-collate.c:3932
 #, c-format
 msgid "%s: '%s' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: '%s' е без съответстващ 'ifdef' или 'ifndef'"
 
-#: locale/programs/ld-collate.c:3947
+#: locale/programs/ld-collate.c:3950
 #, c-format
 msgid "%s: 'endif' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: 'endif' без съответстващ 'ifdef' или 'ifndef'"
@@ -2596,12 +2654,12 @@ msgstr ""
 msgid "while preparing output"
 msgstr "при подготвяне на изхода"
 
-#: locale/programs/locale.c:998
+#: locale/programs/locale.c:1000
 #, c-format
 msgid "Cannot set %s to default locale"
 msgstr "Не може да се зададе %s на езиковата настройка по подразбиране"
 
-#: locale/programs/locale.c:1096
+#: locale/programs/locale.c:1098
 #, c-format
 msgid "warning: The LOCPATH variable is set to \"%s\"\n"
 msgstr "предупреждение: Променливата LOCPATH е зададена като \"%s\"\n"
@@ -2982,23 +3040,23 @@ msgstr "твърде много аргументи"
 msgid "needs to be installed setuid `root'"
 msgstr "нежно е да се инсталира setuid \"root\""
 
-#: malloc/mcheck.c:344
+#: malloc/mcheck-impl.c:355
 msgid "memory is consistent, library is buggy\n"
 msgstr "паметта е ненарушена - библиотеката е \"пълна с дървеници\"\n"
 
-#: malloc/mcheck.c:347
+#: malloc/mcheck-impl.c:358
 msgid "memory clobbered before allocated block\n"
 msgstr "паметта, преди заделения блок, е съсипана\n"
 
-#: malloc/mcheck.c:350
+#: malloc/mcheck-impl.c:361
 msgid "memory clobbered past end of allocated block\n"
 msgstr "паметта, след заделения блок, е съсипана\n"
 
-#: malloc/mcheck.c:353
+#: malloc/mcheck-impl.c:364
 msgid "block freed twice\n"
 msgstr "блокът е освободен два пъти\n"
 
-#: malloc/mcheck.c:356
+#: malloc/mcheck-impl.c:367
 msgid "bogus mcheck_status, library is buggy\n"
 msgstr "фалшив mcheck_status - библиотеката е \"пълна с дървеници\"\n"
 
@@ -3206,7 +3264,7 @@ msgstr "Неправилен обект за операцията"
 
 #: nis/nis_error.h:18
 msgid "Malformed name, or illegal name"
-msgstr "Деформирано или незаконно име"
+msgstr "Уродливо или незаконно име"
 
 #: nis/nis_error.h:19
 msgid "Unable to create callback"
@@ -3254,7 +3312,7 @@ msgstr "Грешка в RPC подсистемата"
 
 #: nis/nis_error.h:30
 msgid "Missing or malformed attribute"
-msgstr "Липсващ или деформиран атрибут"
+msgstr "Липсващ или уродлив атрибут"
 
 # TODO
 #: nis/nis_error.h:31
@@ -3329,7 +3387,7 @@ msgstr "Не може да се създаде процес на сървъра"
 msgid "Master server busy, full dump rescheduled."
 msgstr "Главния сървър е зает, пълното разтоварване на паметта е планирано отново."
 
-#: nis/nis_local_names.c:122
+#: nis/nis_local_names.c:123
 #, c-format
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
 msgstr "Записа LOCAL за потребител с номер %d в каталога %s не е неповторим\n"
@@ -4034,7 +4092,7 @@ msgstr "getgrouplist не успя"
 msgid "setgroups failed"
 msgstr "setgroups не успя"
 
-#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:379
+#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:378
 #: nscd/pwdcache.c:363 nscd/servicescache.c:310
 #, c-format
 msgid "short write in %s: %s"
@@ -4650,27 +4708,27 @@ msgstr "повторение на ключ"
 msgid "problems while reading `%s'"
 msgstr "проблеми при прочитането на \"%s\""
 
-#: nss/makedb.c:796
+#: nss/makedb.c:805
 #, c-format
 msgid "failed to write new database file"
 msgstr "не може да се запише новия файл на базата данни"
 
-#: nss/makedb.c:809
+#: nss/makedb.c:822
 #, c-format
 msgid "cannot stat database file"
 msgstr "не може да се получи сведение за файла на базата данни"
 
-#: nss/makedb.c:814
+#: nss/makedb.c:827
 #, c-format
 msgid "cannot map database file"
 msgstr "не може да се изобрази, в паметта, файлът на базата данни"
 
-#: nss/makedb.c:817
+#: nss/makedb.c:830
 #, c-format
 msgid "file not a database file"
 msgstr "файла не е за базата данни"
 
-#: nss/makedb.c:875
+#: nss/makedb.c:888
 #, c-format
 msgid "cannot set file creation context for `%s'"
 msgstr "не може зададе обкръжение за създаване на \"%s\""
@@ -5345,6 +5403,10 @@ msgstr "svc_unix.c - проблем при създаване на Юникс д
 #: sunrpc/svc_unix.c:179
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c - getsockname или listen не успя"
+
+#: sysdeps/aarch64/dl-bti.c:72
+msgid "failed to turn on BTI protection"
+msgstr "не успя включването на BTI защита"
 
 #: sysdeps/generic/siglist.h:29
 msgid "Hangup"
@@ -6454,6 +6516,10 @@ msgstr "пресъздаване на споделен обект с разре�
 #: sysdeps/x86/dl-cet.c:194
 msgid "can't disable CET"
 msgstr "не може да се забрани технологията за изпълнение на управляващия поток (CET)"
+
+#: sysdeps/x86/dl-prop.h:61
+msgid "CPU ISA level is lower than required"
+msgstr "По-нисто от необходимото ниво на ЦПУ ISA"
 
 #: timezone/zdump.c:332
 msgid "has characters other than ASCII alphanumerics, '-' or '+'"
