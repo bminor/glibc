@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <array>
 #include <functional>
 #include <string>
 #include <thread>
