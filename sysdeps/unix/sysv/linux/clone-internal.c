@@ -32,6 +32,7 @@
 #define offsetofend(TYPE, MEMBER) \
   (offsetof (TYPE, MEMBER) + sizeof_field (TYPE, MEMBER))
 
+#ifndef __CHERI_PURE_CAPABILITY__
 _Static_assert (__alignof (struct clone_args) == 8,
 		"__alignof (struct clone_args) != 8");
 _Static_assert (offsetofend (struct clone_args, tls) == CLONE_ARGS_SIZE_VER0,
@@ -42,6 +43,7 @@ _Static_assert (offsetofend (struct clone_args, cgroup) == CLONE_ARGS_SIZE_VER2,
 		"offsetofend (struct clone_args, cgroup) != CLONE_ARGS_SIZE_VER2");
 _Static_assert (sizeof (struct clone_args) == CLONE_ARGS_SIZE_VER2,
 		"sizeof (struct clone_args) != CLONE_ARGS_SIZE_VER2");
+#endif
 
 int
 __clone_internal (struct clone_args *cl_args,
