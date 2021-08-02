@@ -34,6 +34,30 @@ typedef __U64_TYPE __aligned_uint64_t __attribute__ ((__aligned__ (8)));
 
 struct clone_args
 {
+#ifdef __CHERI_PURE_CAPABILITY__
+  /* Flags bit mask.  */
+  __uint64_t flags;
+  /* Where to store PID file descriptor (pid_t *).  */
+  __uintcap_t pidfd;
+  /* Where to store child TID, in child's memory (pid_t *).  */
+  __uintcap_t child_tid;
+  /* Where to store child TID, in parent's memory (int *). */
+  __uintcap_t parent_tid;
+  /* Signal to deliver to parent on child termination */
+  __uint64_t exit_signal;
+  /* The lowest address of stack.  */
+  __uintcap_t stack;
+  /* Size of stack.  */
+  __uint64_t stack_size;
+  /* Location of new TLS.  */
+  __uintcap_t tls;
+  /* Pointer to a pid_t array (since Linux 5.5).  */
+  __uintcap_t set_tid;
+  /* Number of elements in set_tid (since Linux 5.5). */
+  __uint64_t set_tid_size;
+  /* File descriptor for target cgroup of child (since Linux 5.7).  */
+  __uint64_t cgroup;
+#else
   /* Flags bit mask.  */
   __aligned_uint64_t flags;
   /* Where to store PID file descriptor (pid_t *).  */
@@ -56,6 +80,7 @@ struct clone_args
   __aligned_uint64_t set_tid_size;
   /* File descriptor for target cgroup of child (since Linux 5.7).  */
   __aligned_uint64_t cgroup;
+#endif
 };
 
 /* The wrapper of clone3.  */
