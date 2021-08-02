@@ -2501,9 +2501,6 @@
 -0x1.e8ac5756ef915p-1
 -0x1.0f9400d75348bp-16
 0x1.916dc64eee2aap-1
-# asin multiple precision fallback path
-# Implemented in __sin32 in sysdeps/ieee754/dbl-64/sincos32.c
-## name: slow
 0x1.c88b2415431cbp-23
 0x1.84a360ccf288dp-20
 0x1.7eff5496b7ed2p-21

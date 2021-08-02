@@ -3244,10 +3244,6 @@
 -0x1.2a3e75ea2ae07p2
 -0x1.90fb35edc8d06p0
 0x1.9a76161e739c7p0
-# tan slow path at 240 bits
-# Implemented in sysdeps/ieee754/dbl-64/mptan.c
-# Range reduction is done using mp arithmetic.
-## name: 240bits
 0x1.ee5a221c1ec30p750
 0x1.d0b7237b90954p983
 0x1.50aee539c99e6p817
@@ -3448,9 +3444,6 @@
 -0x1.8698a10662bffp544
 0x1.a07c20fa799d8p622
 -0x1.d126c657c582bp880
-# tan slowest path at 768 bits
-# Implemented in sysdeps/ieee754/dbl-64/mptan.c
-## name: 768bits
 0x1.dffffffffff1fp-22
 0x1.810f60836538dp143
 -0x1.e877a52501e08p134
