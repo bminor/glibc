@@ -1926,142 +1926,122 @@ gaiconf_init (void)
   bool scopelist_nullbits = false;
 
   FILE *fp = fopen (GAICONF_FNAME, "rce");
-  if (fp != NULL)
+  if (fp == NULL)
+    goto no_file;
+
+  struct __stat64_t64 st;
+  if (__fstat64_time64 (fileno (fp), &st) != 0)
     {
-      struct __stat64_t64 st;
-      if (__fstat64_time64 (fileno (fp), &st) != 0)
+      fclose (fp);
+      goto no_file;
+    }
+
+  char *line = NULL;
+  size_t linelen = 0;
+
+  __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
+  while (!feof_unlocked (fp))
+    {
+      ssize_t n = __getline (&line, &linelen, fp);
+      if (n <= 0)
+	break;
+
+      /* Handle comments.  No escaping possible so this is easy.  */
+      char *cp = strchr (line, '#');
+      if (cp != NULL)
+	*cp = '\0';
+
+      cp = line;
+      while (isspace (*cp))
+	++cp;
+
+      char *cmd = cp;
+      while (*cp != '\0' && !isspace (*cp))
+	++cp;
+      size_t cmdlen = cp - cmd;
+
+      if (*cp != '\0')
+	*cp++ = '\0';
+      while (isspace (*cp))
+	++cp;
+
+      char *val1 = cp;
+      while (*cp != '\0' && !isspace (*cp))
+	++cp;
+      size_t val1len = cp - cmd;
+
+      /* We always need at least two values.  */
+      if (val1len == 0)
+	continue;
+
+      if (*cp != '\0')
+	*cp++ = '\0';
+      while (isspace (*cp))
+	++cp;
+
+      char *val2 = cp;
+      while (*cp != '\0' && !isspace (*cp))
+	++cp;
+
+      /*  Ignore the rest of the line.  */
+      *cp = '\0';
+
+      switch (cmdlen)
 	{
-	  fclose (fp);
-	  goto no_file;
-	}
-
-      char *line = NULL;
-      size_t linelen = 0;
-
-      __fsetlocking (fp, FSETLOCKING_BYCALLER);
-
-      while (!feof_unlocked (fp))
-	{
-	  ssize_t n = __getline (&line, &linelen, fp);
-	  if (n <= 0)
-	    break;
-
-	  /* Handle comments.  No escaping possible so this is easy.  */
-	  char *cp = strchr (line, '#');
-	  if (cp != NULL)
-	    *cp = '\0';
-
-	  cp = line;
-	  while (isspace (*cp))
-	    ++cp;
-
-	  char *cmd = cp;
-	  while (*cp != '\0' && !isspace (*cp))
-	    ++cp;
-	  size_t cmdlen = cp - cmd;
-
-	  if (*cp != '\0')
-	    *cp++ = '\0';
-	  while (isspace (*cp))
-	    ++cp;
-
-	  char *val1 = cp;
-	  while (*cp != '\0' && !isspace (*cp))
-	    ++cp;
-	  size_t val1len = cp - cmd;
-
-	  /* We always need at least two values.  */
-	  if (val1len == 0)
-	    continue;
-
-	  if (*cp != '\0')
-	    *cp++ = '\0';
-	  while (isspace (*cp))
-	    ++cp;
-
-	  char *val2 = cp;
-	  while (*cp != '\0' && !isspace (*cp))
-	    ++cp;
-
-	  /*  Ignore the rest of the line.  */
-	  *cp = '\0';
-
-	  switch (cmdlen)
+	case 5:
+	  if (strcmp (cmd, "label") == 0)
 	    {
-	    case 5:
-	      if (strcmp (cmd, "label") == 0)
+	      if (!add_prefixlist (&labellist, &nlabellist,
+				   &labellist_nullbits, val1, val2, &cp))
 		{
-		  if (!add_prefixlist (&labellist, &nlabellist,
-				       &labellist_nullbits, val1, val2, &cp))
-		    {
-		      free (line);
-		      fclose (fp);
-		      goto no_file;
-		    }
+		  free (line);
+		  fclose (fp);
+		  goto no_file;
 		}
-	      break;
+	    }
+	  break;
 
-	    case 6:
-	      if (strcmp (cmd, "reload") == 0)
+	case 6:
+	  if (strcmp (cmd, "reload") == 0)
+	    {
+	      gaiconf_reload_flag = strcmp (val1, "yes") == 0;
+	      if (gaiconf_reload_flag)
+		gaiconf_reload_flag_ever_set = 1;
+	    }
+	  break;
+
+	case 7:
+	  if (strcmp (cmd, "scopev4") == 0)
+	    {
+	      struct in6_addr prefix;
+	      unsigned long int bits;
+	      unsigned long int val;
+	      char *endp;
+
+	      bits = 32;
+	      __set_errno (0);
+	      cp = strchr (val1, '/');
+	      if (cp != NULL)
+		*cp++ = '\0';
+	      if (inet_pton (AF_INET6, val1, &prefix))
 		{
-		  gaiconf_reload_flag = strcmp (val1, "yes") == 0;
-		  if (gaiconf_reload_flag)
-		    gaiconf_reload_flag_ever_set = 1;
-		}
-	      break;
-
-	    case 7:
-	      if (strcmp (cmd, "scopev4") == 0)
-		{
-		  struct in6_addr prefix;
-		  unsigned long int bits;
-		  unsigned long int val;
-		  char *endp;
-
-		  bits = 32;
-		  __set_errno (0);
-		  cp = strchr (val1, '/');
-		  if (cp != NULL)
-		    *cp++ = '\0';
-		  if (inet_pton (AF_INET6, val1, &prefix))
-		    {
-		      bits = 128;
-		      if (IN6_IS_ADDR_V4MAPPED (&prefix)
-			  && (cp == NULL
-			      || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
-			      || errno != ERANGE)
-			  && *endp == '\0'
-			  && bits >= 96
-			  && bits <= 128
-			  && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
-			      || errno != ERANGE)
-			  && *endp == '\0'
-			  && val <= INT_MAX)
-			{
-			  if (!add_scopelist (&scopelist, &nscopelist,
-					      &scopelist_nullbits, &prefix,
-					      bits, val))
-			    {
-			      free (line);
-			      fclose (fp);
-			      goto no_file;
-			    }
-			}
-		    }
-		  else if (inet_pton (AF_INET, val1, &prefix.s6_addr32[3])
-			   && (cp == NULL
-			       || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
-			       || errno != ERANGE)
-			   && *endp == '\0'
-			   && bits <= 32
-			   && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
-			       || errno != ERANGE)
-			   && *endp == '\0'
-			   && val <= INT_MAX)
+		  bits = 128;
+		  if (IN6_IS_ADDR_V4MAPPED (&prefix)
+		      && (cp == NULL
+			  || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
+			  || errno != ERANGE)
+		      && *endp == '\0'
+		      && bits >= 96
+		      && bits <= 128
+		      && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
+			  || errno != ERANGE)
+		      && *endp == '\0'
+		      && val <= INT_MAX)
 		    {
 		      if (!add_scopelist (&scopelist, &nscopelist,
 					  &scopelist_nullbits, &prefix,
-					  bits + 96, val))
+					  bits, val))
 			{
 			  free (line);
 			  fclose (fp);
@@ -2069,173 +2049,191 @@ gaiconf_init (void)
 			}
 		    }
 		}
-	      break;
-
-	    case 10:
-	      if (strcmp (cmd, "precedence") == 0)
+	      else if (inet_pton (AF_INET, val1, &prefix.s6_addr32[3])
+		       && (cp == NULL
+			   || (bits = strtoul (cp, &endp, 10)) != ULONG_MAX
+			   || errno != ERANGE)
+		       && *endp == '\0'
+		       && bits <= 32
+		       && ((val = strtoul (val2, &endp, 10)) != ULONG_MAX
+			   || errno != ERANGE)
+		       && *endp == '\0'
+		       && val <= INT_MAX)
 		{
-		  if (!add_prefixlist (&precedencelist, &nprecedencelist,
-				       &precedencelist_nullbits, val1, val2,
-				       &cp))
+		  if (!add_scopelist (&scopelist, &nscopelist,
+				      &scopelist_nullbits, &prefix,
+				      bits + 96, val))
 		    {
 		      free (line);
 		      fclose (fp);
 		      goto no_file;
 		    }
 		}
-	      break;
 	    }
+	  break;
+
+	case 10:
+	  if (strcmp (cmd, "precedence") == 0)
+	    {
+	      if (!add_prefixlist (&precedencelist, &nprecedencelist,
+				   &precedencelist_nullbits, val1, val2,
+				   &cp))
+		{
+		  free (line);
+		  fclose (fp);
+		  goto no_file;
+		}
+	    }
+	  break;
 	}
+    }
 
-      free (line);
+  free (line);
 
-      fclose (fp);
+  fclose (fp);
 
-      /* Create the array for the labels.  */
-      struct prefixentry *new_labels;
-      if (nlabellist > 0)
+  /* Create the array for the labels.  */
+  struct prefixentry *new_labels;
+  if (nlabellist > 0)
+    {
+      if (!labellist_nullbits)
+	++nlabellist;
+      new_labels = malloc (nlabellist * sizeof (*new_labels));
+      if (new_labels == NULL)
+	goto no_file;
+
+      int i = nlabellist;
+      if (!labellist_nullbits)
 	{
-	  if (!labellist_nullbits)
-	    ++nlabellist;
-	  new_labels = malloc (nlabellist * sizeof (*new_labels));
-	  if (new_labels == NULL)
-	    goto no_file;
-
-	  int i = nlabellist;
-	  if (!labellist_nullbits)
-	    {
-	      --i;
-	      memset (&new_labels[i].prefix, '\0', sizeof (struct in6_addr));
-	      new_labels[i].bits = 0;
-	      new_labels[i].val = 1;
-	    }
-
-	  struct prefixlist *l = labellist;
-	  while (i-- > 0)
-	    {
-	      new_labels[i] = l->entry;
-	      l = l->next;
-	    }
-	  free_prefixlist (labellist);
-	  labellist = NULL;
-
-	  /* Sort the entries so that the most specific ones are at
-	     the beginning.  */
-	  qsort (new_labels, nlabellist, sizeof (*new_labels), prefixcmp);
+	  --i;
+	  memset (&new_labels[i].prefix, '\0', sizeof (struct in6_addr));
+	  new_labels[i].bits = 0;
+	  new_labels[i].val = 1;
 	}
-      else
-	new_labels = (struct prefixentry *) default_labels;
 
-      struct prefixentry *new_precedence;
-      if (nprecedencelist > 0)
+      struct prefixlist *l = labellist;
+      while (i-- > 0)
 	{
-	  if (!precedencelist_nullbits)
-	    ++nprecedencelist;
-	  new_precedence = malloc (nprecedencelist * sizeof (*new_precedence));
-	  if (new_precedence == NULL)
-	    {
-	      if (new_labels != default_labels)
-		free (new_labels);
-	      goto no_file;
-	    }
-
-	  int i = nprecedencelist;
-	  if (!precedencelist_nullbits)
-	    {
-	      --i;
-	      memset (&new_precedence[i].prefix, '\0',
-		      sizeof (struct in6_addr));
-	      new_precedence[i].bits = 0;
-	      new_precedence[i].val = 40;
-	    }
-
-	  struct prefixlist *l = precedencelist;
-	  while (i-- > 0)
-	    {
-	      new_precedence[i] = l->entry;
-	      l = l->next;
-	    }
-	  free_prefixlist (precedencelist);
-	  precedencelist = NULL;
-
-	  /* Sort the entries so that the most specific ones are at
-	     the beginning.  */
-	  qsort (new_precedence, nprecedencelist, sizeof (*new_precedence),
-		 prefixcmp);
+	  new_labels[i] = l->entry;
+	  l = l->next;
 	}
-      else
-	new_precedence = (struct prefixentry *) default_precedence;
+      free_prefixlist (labellist);
+      labellist = NULL;
 
-      struct scopeentry *new_scopes;
-      if (nscopelist > 0)
-	{
-	  if (!scopelist_nullbits)
-	    ++nscopelist;
-	  new_scopes = malloc (nscopelist * sizeof (*new_scopes));
-	  if (new_scopes == NULL)
-	    {
-	      if (new_labels != default_labels)
-		free (new_labels);
-	      if (new_precedence != default_precedence)
-		free (new_precedence);
-	      goto no_file;
-	    }
-
-	  int i = nscopelist;
-	  if (!scopelist_nullbits)
-	    {
-	      --i;
-	      new_scopes[i].addr32 = 0;
-	      new_scopes[i].netmask = 0;
-	      new_scopes[i].scope = 14;
-	    }
-
-	  struct scopelist *l = scopelist;
-	  while (i-- > 0)
-	    {
-	      new_scopes[i] = l->entry;
-	      l = l->next;
-	    }
-	  free_scopelist (scopelist);
-
-	  /* Sort the entries so that the most specific ones are at
-	     the beginning.  */
-	  qsort (new_scopes, nscopelist, sizeof (*new_scopes),
-		 scopecmp);
-	}
-      else
-	new_scopes = (struct scopeentry *) default_scopes;
-
-      /* Now we are ready to replace the values.  */
-      const struct prefixentry *old = labels;
-      labels = new_labels;
-      if (old != default_labels)
-	free ((void *) old);
-
-      old = precedence;
-      precedence = new_precedence;
-      if (old != default_precedence)
-	free ((void *) old);
-
-      const struct scopeentry *oldscope = scopes;
-      scopes = new_scopes;
-      if (oldscope != default_scopes)
-	free ((void *) oldscope);
-
-      save_gaiconf_mtime (&st);
+      /* Sort the entries so that the most specific ones are at
+	 the beginning.  */
+      qsort (new_labels, nlabellist, sizeof (*new_labels), prefixcmp);
     }
   else
+    new_labels = (struct prefixentry *) default_labels;
+
+  struct prefixentry *new_precedence;
+  if (nprecedencelist > 0)
     {
-    no_file:
-      free_prefixlist (labellist);
+      if (!precedencelist_nullbits)
+	++nprecedencelist;
+      new_precedence = malloc (nprecedencelist * sizeof (*new_precedence));
+      if (new_precedence == NULL)
+	{
+	  if (new_labels != default_labels)
+	    free (new_labels);
+	  goto no_file;
+	}
+
+      int i = nprecedencelist;
+      if (!precedencelist_nullbits)
+	{
+	  --i;
+	  memset (&new_precedence[i].prefix, '\0',
+		  sizeof (struct in6_addr));
+	  new_precedence[i].bits = 0;
+	  new_precedence[i].val = 40;
+	}
+
+      struct prefixlist *l = precedencelist;
+      while (i-- > 0)
+	{
+	  new_precedence[i] = l->entry;
+	  l = l->next;
+	}
       free_prefixlist (precedencelist);
+      precedencelist = NULL;
+
+      /* Sort the entries so that the most specific ones are at
+	 the beginning.  */
+      qsort (new_precedence, nprecedencelist, sizeof (*new_precedence),
+	     prefixcmp);
+    }
+  else
+    new_precedence = (struct prefixentry *) default_precedence;
+
+  struct scopeentry *new_scopes;
+  if (nscopelist > 0)
+    {
+      if (!scopelist_nullbits)
+	++nscopelist;
+      new_scopes = malloc (nscopelist * sizeof (*new_scopes));
+      if (new_scopes == NULL)
+	{
+	  if (new_labels != default_labels)
+	    free (new_labels);
+	  if (new_precedence != default_precedence)
+	    free (new_precedence);
+	  goto no_file;
+	}
+
+      int i = nscopelist;
+      if (!scopelist_nullbits)
+	{
+	  --i;
+	  new_scopes[i].addr32 = 0;
+	  new_scopes[i].netmask = 0;
+	  new_scopes[i].scope = 14;
+	}
+
+      struct scopelist *l = scopelist;
+      while (i-- > 0)
+	{
+	  new_scopes[i] = l->entry;
+	  l = l->next;
+	}
       free_scopelist (scopelist);
 
-      /* If we previously read the file but it is gone now, free the
-	 old data and use the builtin one.  Leave the reload flag
-	 alone.  */
-      fini ();
+      /* Sort the entries so that the most specific ones are at
+	 the beginning.  */
+      qsort (new_scopes, nscopelist, sizeof (*new_scopes),
+	     scopecmp);
     }
+  else
+    new_scopes = (struct scopeentry *) default_scopes;
+
+  /* Now we are ready to replace the values.  */
+  const struct prefixentry *old = labels;
+  labels = new_labels;
+  if (old != default_labels)
+    free ((void *) old);
+
+  old = precedence;
+  precedence = new_precedence;
+  if (old != default_precedence)
+    free ((void *) old);
+
+  const struct scopeentry *oldscope = scopes;
+  scopes = new_scopes;
+  if (oldscope != default_scopes)
+    free ((void *) oldscope);
+
+  save_gaiconf_mtime (&st);
+  return;
+
+no_file:
+  free_prefixlist (labellist);
+  free_prefixlist (precedencelist);
+  free_scopelist (scopelist);
+
+  /* If we previously read the file but it is gone now, free the old data and
+     use the builtin one.  Leave the reload flag alone.  */
+  fini ();
 }
 
 
