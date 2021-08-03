@@ -67,7 +67,7 @@ _hurd_select (int nfds,
       int error;
     } d[nfds];
   sigset_t oset;
-  struct hurd_sigstate *ss;
+  struct hurd_sigstate *ss = NULL;
 
   union typeword		/* Use this to avoid unkosher casts.  */
     {
