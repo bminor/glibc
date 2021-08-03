@@ -29,6 +29,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <semaphore.h>
 #include <support/check.h>
 #include <support/xdlfcn.h>
@@ -64,6 +65,7 @@ last (void)
 int
 main (void)
 {
+  int value;
   void *dso;
   pthread_t thread;
 
@@ -71,7 +73,17 @@ main (void)
 
   dso = xdlopen ("$ORIGIN/test-dlclose-exit-race-helper.so",
 		 RTLD_NOW|RTLD_GLOBAL);
-  thread = xpthread_create (NULL, exit_thread, NULL);
+  if ((value = pthread_create (&thread, NULL, exit_thread, NULL)) != 0)
+    {
+      /* If pthread_create fails, then exit() is called in the main
+	 thread instead of a second thread, so the semaphore post that
+	 would have happened in 'last' gets blocked behind the call to
+	 first() - which is waiting on the semaphore, and thus
+	 hangs.  */
+      sem_post (&order2);
+      errno = value;
+      FAIL_EXIT1 ("pthread_create: %m");
+    }
 
   xdlclose (dso);
   xpthread_join (thread);
