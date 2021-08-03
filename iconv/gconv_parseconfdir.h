@@ -153,12 +153,11 @@ gconv_parseconfdir (const char *dir, size_t dir_len)
 	      struct stat64 st;
 	      if (asprintf (&conf, "%s/%s", buf, ent->d_name) < 0)
 		continue;
-	      if (ent->d_type == DT_UNKNOWN
-		  && (lstat64 (conf, &st) == -1
-		      || !S_ISREG (st.st_mode)))
-		continue;
 
-	      found |= read_conf_file (conf, dir, dir_len);
+	      if (ent->d_type != DT_UNKNOWN
+		  || (lstat64 (conf, &st) != -1 && S_ISREG (st.st_mode)))
+		found |= read_conf_file (conf, dir, dir_len);
+
 	      free (conf);
 	    }
 	}
