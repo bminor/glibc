@@ -93,7 +93,8 @@ tests-exclude-mcheck = tst-mallocstate \
 	tst-malloc-thread-fail \
 	tst-malloc-usable-tunables \
 	tst-malloc_info \
-	tst-compathooks-off tst-compathooks-on
+	tst-compathooks-off tst-compathooks-on \
+	tst-mxfast
 
 tests-mcheck = $(filter-out $(tests-exclude-mcheck) $(tests-static), $(tests))
 endif
