@@ -503,7 +503,11 @@ add_dir_1 (const char *line, const char *from_file, int from_line)
     entry->path[--i] = '\0';
 
   if (i == 0)
-    return;
+    {
+      free (entry->path);
+      free (entry);
+      return;
+    }
 
   char *path = entry->path;
   if (opt_chroot != NULL)
