@@ -234,6 +234,8 @@ charmap_conversion (const char *from_code, struct charmap_t *from_charmap,
     while (++remaining < argc);
 
   /* All done.  */
+  if (output != stdout)
+    fclose (output);
   free_table (cvtbl);
   return status;
 }
