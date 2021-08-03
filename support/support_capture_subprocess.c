@@ -170,6 +170,7 @@ copy_and_spawn_sgid (char *child_id, gid_t gid)
      support_subprogram because we only want the program exit status, not the
      contents.  */
   ret = 0;
+  infd = outfd = -1;
 
   char * const args[] = {execname, child_id, NULL};
 
