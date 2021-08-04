@@ -25,7 +25,7 @@
 #include <support/temp_file.h>
 #include <unistd.h>
 
-static char name[sizeof "/tst-mqueue2-" + INT_BUFSIZE_BOUND (pid_t)];
+static char name[sizeof "/tst-mqueue10-" + INT_BUFSIZE_BOUND (pid_t)];
 
 static void
 do_cleanup (void)
@@ -37,7 +37,7 @@ do_cleanup (void)
 static int
 do_test (void)
 {
-  snprintf (name, sizeof (name), "/tst-mqueue2-%u", getpid ());
+  snprintf (name, sizeof (name), "/tst-mqueue10-%u", getpid ());
 
   char msg[8] = { 0x55 };
 
