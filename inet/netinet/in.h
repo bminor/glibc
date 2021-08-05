@@ -196,6 +196,9 @@ enum
 #define	INADDR_BROADCAST	((in_addr_t) 0xffffffff)
 /* Address indicating an error return.  */
 #define	INADDR_NONE		((in_addr_t) 0xffffffff)
+/* Dummy address for source of ICMPv6 errors converted to IPv4 (RFC
+   7600).  */
+#define	INADDR_DUMMY		((in_addr_t) 0xc0000008)
 
 /* Network number for local host loopback.  */
 #define	IN_LOOPBACKNET		127
