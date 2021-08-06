@@ -84,9 +84,10 @@
 
 #include <resolv.h>
 #include <unistd.h>
+#include <random-bits.h>
 
 unsigned int
 res_randomid (void) {
-  return 0xffff & __getpid ();
+  return 0xffff & random_bits ();
 }
 libc_hidden_def (__res_randomid)
