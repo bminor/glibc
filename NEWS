@@ -5,6 +5,13 @@ See the end for copying conditions.
 Please send GNU C library bug reports via <https://sourceware.org/bugzilla/>
 using `glibc' in the "product" field.
 
+Version 2.34.1
+
+The following bugs are resolved with this release:
+
+  [28182] _TIME_BITS=64 in C++ has issues with fcntl, ioctl, prctl
+
+
 Version 2.34
 
 Major new features:
