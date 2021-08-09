@@ -131,7 +131,7 @@ helper_thread (void *arg)
 	       to wait until it is done with it.  */
 	    (void) __pthread_barrier_wait (&notify_barrier);
 	}
-      else if (data.raw[NOTIFY_COOKIE_LEN - 1] == NOTIFY_REMOVED)
+      else if (data.raw[NOTIFY_COOKIE_LEN - 1] == NOTIFY_REMOVED && data.attr != NULL)
 	{
 	  /* The only state we keep is the copy of the thread attributes.  */
 	  __pthread_attr_destroy (data.attr);
