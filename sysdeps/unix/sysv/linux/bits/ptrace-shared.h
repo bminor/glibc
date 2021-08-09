@@ -120,6 +120,16 @@ struct __ptrace_syscall_info
   };
 };
 
+/* Results of PTRACE_GET_RSEQ_CONFIGURATION.  */
+struct __ptrace_rseq_configuration
+{
+  __uint64_t rseq_abi_pointer;
+  __uint32_t rseq_abi_size;
+  __uint32_t signature;
+  __uint32_t flags;
+  __uint32_t pad;
+};
+
 /* Perform process tracing functions.  REQUEST is one of the values
    above, and determines the action to be taken.
    For all requests except PTRACE_TRACEME, PID specifies the process to be

@@ -86,6 +86,7 @@ __BEGIN_DECLS
 # undef PTRACE_SYSCALL_INFO_ENTRY
 # undef PTRACE_SYSCALL_INFO_EXIT
 # undef PTRACE_SYSCALL_INFO_SECCOMP
+# undef PTRACE_GET_RSEQ_CONFIGURATION
 #endif
 /* Type of the REQUEST argument to `ptrace.'  */
 enum __ptrace_request
@@ -216,6 +217,10 @@ enum __ptrace_request
   /* Get information about system call.  */
   PTRACE_GET_SYSCALL_INFO = 0x420e,
 #define PTRACE_GET_SYSCALL_INFO PTRACE_GET_SYSCALL_INFO
+
+  /* Get rseq configuration information.  */
+  PTRACE_GET_RSEQ_CONFIGURATION = 0x420f,
+#define PTRACE_GET_RSEQ_CONFIGURATION PTRACE_GET_RSEQ_CONFIGURATION
 
   PTRACE_PEEKUSR_AREA = 0x5000,
 #define PTRACE_PEEKUSR_AREA PTRACE_PEEKUSR_AREA
