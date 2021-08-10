@@ -27,28 +27,17 @@
  */
 
 #define L1_SIZE		(64*1024)	// L1 64KB
-#define L2_SIZE         (8*1024*1024)	// L2 8MB - 1MB
+#define L2_SIZE         (8*1024*1024)	// L2 8MB
 #define CACHE_LINE_SIZE	256
 #define PF_DIST_L1	(CACHE_LINE_SIZE * 16)	// Prefetch distance L1
-#define ZF_DIST		(CACHE_LINE_SIZE * 21)	// Zerofill distance
-#define rest		x8
+#define rest		x2
 #define vector_length	x9
-#define vl_remainder	x10	// vector_length remainder
-#define cl_remainder	x11	// CACHE_LINE_SIZE remainder
 
 #if HAVE_AARCH64_SVE_ASM
 # if IS_IN (libc)
 #  define MEMSET __memset_a64fx
 
 	.arch armv8.2-a+sve
-
-	.macro dc_zva times
-	dc	zva, tmp1
-	add	tmp1, tmp1, CACHE_LINE_SIZE
-	.if \times-1
-	dc_zva "(\times-1)"
-	.endif
-	.endm
 
 	.macro st1b_unroll first=0, last=7
 	st1b	z0.b, p0, [dst, \first, mul vl]
@@ -188,54 +177,30 @@ L(L1_prefetch): // if rest >= L1_SIZE
 	cbnz	rest, L(unroll32)
 	ret
 
-L(L2):
-	// align dst address at vector_length byte boundary
-	sub	tmp1, vector_length, 1
-	ands	tmp2, dst, tmp1
-	// if vl_remainder == 0
-	b.eq	1f
-	sub	vl_remainder, vector_length, tmp2
-	// process remainder until the first vector_length boundary
-	whilelt	p2.b, xzr, vl_remainder
-	st1b	z0.b, p2, [dst]
-	add	dst, dst, vl_remainder
-	sub	rest, rest, vl_remainder
-	// align dstin address at CACHE_LINE_SIZE byte boundary
-1:	mov	tmp1, CACHE_LINE_SIZE
-	ands	tmp2, dst, CACHE_LINE_SIZE - 1
-	// if cl_remainder == 0
-	b.eq	L(L2_dc_zva)
-	sub	cl_remainder, tmp1, tmp2
-	// process remainder until the first CACHE_LINE_SIZE boundary
-	mov	tmp1, xzr       // index
-2:	whilelt	p2.b, tmp1, cl_remainder
-	st1b	z0.b, p2, [dst, tmp1]
-	incb	tmp1
-	cmp	tmp1, cl_remainder
-	b.lo	2b
-	add	dst, dst, cl_remainder
-	sub	rest, rest, cl_remainder
-
-L(L2_dc_zva):
-	// zero fill
-	mov	tmp1, dst
-	dc_zva	(ZF_DIST / CACHE_LINE_SIZE) - 1
-	mov	zva_len, ZF_DIST
-	add	tmp1, zva_len, CACHE_LINE_SIZE * 2
-	// unroll
+	// count >= L2_SIZE
 	.p2align 3
-1:	st1b_unroll 0, 3
-	add	tmp2, dst, zva_len
-	dc	 zva, tmp2
-	st1b_unroll 4, 7
-	add	tmp2, tmp2, CACHE_LINE_SIZE
-	dc	zva, tmp2
-	add	dst, dst, CACHE_LINE_SIZE * 2
-	sub	rest, rest, CACHE_LINE_SIZE * 2
-	cmp	rest, tmp1	// ZF_DIST + CACHE_LINE_SIZE * 2
-	b.ge	1b
-	cbnz	rest, L(unroll8)
-	ret
+L(L2):
+	tst	valw, 255
+	b.ne	L(unroll8)
+        // align dst to CACHE_LINE_SIZE byte boundary
+	and	tmp2, dst, CACHE_LINE_SIZE - 1
+	st1b	z0.b, p0, [dst, 0, mul vl]
+	st1b	z0.b, p0, [dst, 1, mul vl]
+	st1b	z0.b, p0, [dst, 2, mul vl]
+	st1b	z0.b, p0, [dst, 3, mul vl]
+	sub	dst, dst, tmp2
+	add	count, count, tmp2
+
+	// clear cachelines using DC ZVA
+	sub	count, count, CACHE_LINE_SIZE * 2
+	.p2align 4
+1:	add	dst, dst, CACHE_LINE_SIZE
+	dc	zva, dst
+	subs	count, count, CACHE_LINE_SIZE
+	b.hi	1b
+	add	count, count, CACHE_LINE_SIZE
+	add	dst, dst, CACHE_LINE_SIZE
+	b	L(last)
 
 END (MEMSET)
 libc_hidden_builtin_def (MEMSET)
