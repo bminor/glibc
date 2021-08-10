@@ -130,38 +130,19 @@ L(unroll8):
 	b	1b
 
 L(last):
-	whilelo	p0.b, xzr, rest
-	whilelo	p1.b, vector_length, rest
-	b.last	1f
-	st1b	z0.b, p0, [dst, #0, mul vl]
-	st1b	z0.b, p1, [dst, #1, mul vl]
-	ret
-1:	lsl	tmp1, vector_length, 1	// vector_length * 2
-	whilelo	p2.b, tmp1, rest
-	incb	tmp1
-	whilelo	p3.b, tmp1, rest
-	b.last	1f
-	st1b	z0.b, p0, [dst, #0, mul vl]
-	st1b	z0.b, p1, [dst, #1, mul vl]
-	st1b	z0.b, p2, [dst, #2, mul vl]
-	st1b	z0.b, p3, [dst, #3, mul vl]
-	ret
-1:	lsl	tmp1, vector_length, 2	// vector_length * 4
-	whilelo	p4.b, tmp1, rest
-	incb	tmp1
-	whilelo	p5.b, tmp1, rest
-	incb	tmp1
-	whilelo	p6.b, tmp1, rest
-	incb	tmp1
-	whilelo	p7.b, tmp1, rest
-	st1b	z0.b, p0, [dst, #0, mul vl]
-	st1b	z0.b, p1, [dst, #1, mul vl]
-	st1b	z0.b, p2, [dst, #2, mul vl]
-	st1b	z0.b, p3, [dst, #3, mul vl]
-	st1b	z0.b, p4, [dst, #4, mul vl]
-	st1b	z0.b, p5, [dst, #5, mul vl]
-	st1b	z0.b, p6, [dst, #6, mul vl]
-	st1b	z0.b, p7, [dst, #7, mul vl]
+	cmp	count, vector_length, lsl 1
+	b.ls	2f
+	add	tmp2, vector_length, vector_length, lsl 2
+	cmp	count, tmp2
+	b.ls	5f
+	st1b	z0.b, p0, [dstend, -8, mul vl]
+	st1b	z0.b, p0, [dstend, -7, mul vl]
+	st1b	z0.b, p0, [dstend, -6, mul vl]
+5:	st1b	z0.b, p0, [dstend, -5, mul vl]
+	st1b	z0.b, p0, [dstend, -4, mul vl]
+	st1b	z0.b, p0, [dstend, -3, mul vl]
+2:	st1b	z0.b, p0, [dstend, -2, mul vl]
+	st1b	z0.b, p0, [dstend, -1, mul vl]
 	ret
 
 L(L1_prefetch): // if rest >= L1_SIZE
@@ -199,7 +180,6 @@ L(L2):
 	subs	count, count, CACHE_LINE_SIZE
 	b.hi	1b
 	add	count, count, CACHE_LINE_SIZE
-	add	dst, dst, CACHE_LINE_SIZE
 	b	L(last)
 
 END (MEMSET)
