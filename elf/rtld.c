@@ -1684,21 +1684,16 @@ dl_main (const ElfW(Phdr) *phdr,
   if (GLRO(dl_use_load_bias) == (ElfW(Addr)) -2)
     GLRO(dl_use_load_bias) = main_map->l_addr == 0 ? -1 : 0;
 
-  /* Set up the program header information for the dynamic linker
-     itself.  It is needed in the dl_iterate_phdr callbacks.  */
-  const ElfW(Ehdr) *rtld_ehdr;
-
   /* Starting from binutils-2.23, the linker will define the magic symbol
      __ehdr_start to point to our own ELF header if it is visible in a
      segment that also includes the phdrs.  If that's not available, we use
      the old method that assumes the beginning of the file is part of the
      lowest-addressed PT_LOAD segment.  */
-#ifdef HAVE_EHDR_START
   extern const ElfW(Ehdr) __ehdr_start __attribute__ ((visibility ("hidden")));
-  rtld_ehdr = &__ehdr_start;
-#else
-  rtld_ehdr = (void *) GL(dl_rtld_map).l_map_start;
-#endif
+
+  /* Set up the program header information for the dynamic linker
+     itself.  It is needed in the dl_iterate_phdr callbacks.  */
+  const ElfW(Ehdr) *rtld_ehdr = &__ehdr_start;
   assert (rtld_ehdr->e_ehsize == sizeof *rtld_ehdr);
   assert (rtld_ehdr->e_phentsize == sizeof (ElfW(Phdr)));
 

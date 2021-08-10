@@ -6636,58 +6636,6 @@ if test $libc_cv_predef_fortify_source = yes; then
 fi
 
 
-# Some linkers on some architectures support __ehdr_start but with
-# bugs.  Make sure usage of it does not create relocations in the
-# output (as the linker should resolve them all for us).
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the linker provides working __ehdr_start" >&5
-$as_echo_n "checking whether the linker provides working __ehdr_start... " >&6; }
-if ${libc_cv_ehdr_start+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-old_CFLAGS="$CFLAGS"
-old_LDFLAGS="$LDFLAGS"
-old_LIBS="$LIBS"
-CFLAGS="$CFLAGS -fPIC"
-LDFLAGS="$LDFLAGS -nostdlib -nostartfiles -shared $no_ssp"
-LIBS=
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-typedef struct {
-  char foo;
-  long val;
-} Ehdr;
-extern const Ehdr __ehdr_start __attribute__ ((visibility ("hidden")));
-long ehdr (void) { return __ehdr_start.val; }
-
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  if $READELF -r conftest | grep -F __ehdr_start >/dev/null; then
-		  libc_cv_ehdr_start=broken
-		else
-		  libc_cv_ehdr_start=yes
-		fi
-else
-  libc_cv_ehdr_start=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-CFLAGS="$old_CFLAGS"
-LDFLAGS="$old_LDFLAGS"
-LIBS="$old_LIBS"
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ehdr_start" >&5
-$as_echo "$libc_cv_ehdr_start" >&6; }
-if test "$libc_cv_ehdr_start" = yes; then
-  $as_echo "#define HAVE_EHDR_START 1" >>confdefs.h
-
-elif test "$libc_cv_ehdr_start" = broken; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: linker is broken -- you should upgrade" >&5
-$as_echo "$as_me: WARNING: linker is broken -- you should upgrade" >&2;}
-fi
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the assembler requires one version per symbol" >&5
 $as_echo_n "checking whether the assembler requires one version per symbol... " >&6; }
 if ${libc_cv_symver_needs_alias+:} false; then :
