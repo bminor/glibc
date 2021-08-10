@@ -51,78 +51,54 @@
 	.endm
 
 	.macro st1b_unroll first=0, last=7
-	st1b	z0.b, p0, [dst, #\first, mul vl]
+	st1b	z0.b, p0, [dst, \first, mul vl]
 	.if \last-\first
 	st1b_unroll "(\first+1)", \last
 	.endif
 	.endm
 
-	.macro shortcut_for_small_size exit
-	// if rest <= vector_length * 2
-	whilelo	p0.b, xzr, count
-	whilelo	p1.b, vector_length, count
-	b.last	1f
-	st1b	z0.b, p0, [dstin, #0, mul vl]
-	st1b	z0.b, p1, [dstin, #1, mul vl]
-	ret
-1:	// if rest > vector_length * 8
-	cmp	count, vector_length, lsl 3	// vector_length * 8
-	b.hi	\exit
-	// if rest <= vector_length * 4
-	lsl	tmp1, vector_length, 1	// vector_length * 2
-	whilelo	p2.b, tmp1, count
-	incb	tmp1
-	whilelo	p3.b, tmp1, count
-	b.last	1f
-	st1b	z0.b, p0, [dstin, #0, mul vl]
-	st1b	z0.b, p1, [dstin, #1, mul vl]
-	st1b	z0.b, p2, [dstin, #2, mul vl]
-	st1b	z0.b, p3, [dstin, #3, mul vl]
-	ret
-1:	// if rest <= vector_length * 8
-	lsl	tmp1, vector_length, 2	// vector_length * 4
-	whilelo	p4.b, tmp1, count
-	incb	tmp1
-	whilelo	p5.b, tmp1, count
-	b.last	1f
-	st1b	z0.b, p0, [dstin, #0, mul vl]
-	st1b	z0.b, p1, [dstin, #1, mul vl]
-	st1b	z0.b, p2, [dstin, #2, mul vl]
-	st1b	z0.b, p3, [dstin, #3, mul vl]
-	st1b	z0.b, p4, [dstin, #4, mul vl]
-	st1b	z0.b, p5, [dstin, #5, mul vl]
-	ret
-1:	lsl	tmp1, vector_length, 2	// vector_length * 4
-	incb	tmp1			// vector_length * 5
-	incb	tmp1			// vector_length * 6
-	whilelo	p6.b, tmp1, count
-	incb	tmp1
-	whilelo	p7.b, tmp1, count
-	st1b	z0.b, p0, [dstin, #0, mul vl]
-	st1b	z0.b, p1, [dstin, #1, mul vl]
-	st1b	z0.b, p2, [dstin, #2, mul vl]
-	st1b	z0.b, p3, [dstin, #3, mul vl]
-	st1b	z0.b, p4, [dstin, #4, mul vl]
-	st1b	z0.b, p5, [dstin, #5, mul vl]
-	st1b	z0.b, p6, [dstin, #6, mul vl]
-	st1b	z0.b, p7, [dstin, #7, mul vl]
-	ret
-	.endm
+
+#undef BTI_C
+#define BTI_C
 
 ENTRY (MEMSET)
-
 	PTR_ARG (0)
 	SIZE_ARG (2)
 
-	cbnz	count, 1f
-	ret
-1:	dup	z0.b, valw
 	cntb	vector_length
-	// shortcut for less than vector_length * 8
-	// gives a free ptrue to p0.b for n >= vector_length
-	shortcut_for_small_size L(vl_agnostic)
-	// end of shortcut
+	dup	z0.b, valw
+	whilelo	p0.b, vector_length, count
+	b.last	1f
+	whilelo	p1.b, xzr, count
+	st1b	z0.b, p1, [dstin, 0, mul vl]
+	st1b	z0.b, p0, [dstin, 1, mul vl]
+	ret
 
+	// count >= vector_length * 2
+1:	cmp	count, vector_length, lsl 2
+	add	dstend, dstin, count
+	b.hi	1f
+	st1b	z0.b, p0, [dstin, 0, mul vl]
+	st1b	z0.b, p0, [dstin, 1, mul vl]
+	st1b	z0.b, p0, [dstend, -2, mul vl]
+	st1b	z0.b, p0, [dstend, -1, mul vl]
+	ret
+
+	// count > vector_length * 4
+1:	lsl	tmp1, vector_length, 3
+	cmp	count, tmp1
+	b.hi	L(vl_agnostic)
+	st1b	z0.b, p0, [dstin, 0, mul vl]
+	st1b	z0.b, p0, [dstin, 1, mul vl]
+	st1b	z0.b, p0, [dstin, 2, mul vl]
+	st1b	z0.b, p0, [dstin, 3, mul vl]
+	st1b	z0.b, p0, [dstend, -4, mul vl]
+	st1b	z0.b, p0, [dstend, -3, mul vl]
+	st1b	z0.b, p0, [dstend, -2, mul vl]
+	st1b	z0.b, p0, [dstend, -1, mul vl]
+	ret
+
+	.p2align 4
 L(vl_agnostic): // VL Agnostic
 	mov	rest, count
 	mov	dst, dstin
