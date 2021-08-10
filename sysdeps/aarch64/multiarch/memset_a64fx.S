@@ -102,22 +102,6 @@ L(vl_agnostic): // VL Agnostic
 	ccmp	vector_length, tmp1, 0, cs
 	b.eq	L(L1_prefetch)
 
-L(unroll32):
-	lsl	tmp1, vector_length, 3	// vector_length * 8
-	lsl	tmp2, vector_length, 5	// vector_length * 32
-	.p2align 3
-1:	cmp	rest, tmp2
-	b.cc	L(unroll8)
-	st1b_unroll
-	add	dst, dst, tmp1
-	st1b_unroll
-	add	dst, dst, tmp1
-	st1b_unroll
-	add	dst, dst, tmp1
-	st1b_unroll
-	add	dst, dst, tmp1
-	sub	rest, rest, tmp2
-	b	1b
 
 L(unroll8):
 	lsl	tmp1, vector_length, 3
@@ -155,7 +139,7 @@ L(L1_prefetch): // if rest >= L1_SIZE
 	sub	rest, rest, CACHE_LINE_SIZE * 2
 	cmp	rest, L1_SIZE
 	b.ge	1b
-	cbnz	rest, L(unroll32)
+	cbnz	rest, L(unroll8)
 	ret
 
 	// count >= L2_SIZE
