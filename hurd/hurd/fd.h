@@ -295,9 +295,15 @@ __hurd_at_flags (int *at_flags, int *flags)
 
   *flags |= (*at_flags & AT_SYMLINK_NOFOLLOW) ? O_NOLINK : 0;
   *at_flags &= ~AT_SYMLINK_NOFOLLOW;
+
   if (*at_flags & AT_SYMLINK_FOLLOW)
     *flags &= ~O_NOLINK;
   *at_flags &= ~AT_SYMLINK_FOLLOW;
+
+  if (*at_flags & AT_NO_AUTOMOUNT)
+    *flags |= O_NOTRANS;
+  *at_flags &= ~AT_NO_AUTOMOUNT;
+
   if (*at_flags != 0)
     return EINVAL;
 
