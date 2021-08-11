@@ -37,6 +37,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
   vm_prot_t vmprot;
   memory_object_t memobj;
   vm_address_t mapaddr;
+  boolean_t copy;
 
   mapaddr = (vm_address_t) addr;
 
@@ -51,6 +52,8 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
     vmprot |= VM_PROT_WRITE;
   if (prot & PROT_EXEC)
     vmprot |= VM_PROT_EXECUTE;
+
+  copy = ! (flags & MAP_SHARED);
 
   switch (flags & MAP_TYPE)
     {
@@ -98,7 +101,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 		__mach_port_deallocate (__mach_task_self (), memobj);
 	      }
 	    else if (wobj == MACH_PORT_NULL /* Not writable by mapping.  */
-		     && !(flags & MAP_SHARED))
+		     && copy)
 	      /* The file can only be mapped for reading.  Since we are
 		 making a private mapping, we will never try to write the
 		 object anyway, so we don't care.  */
@@ -123,9 +126,8 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 		  &mapaddr, (vm_size_t) len, (vm_address_t) 0,
 		  mapaddr == 0,
 		  memobj, (vm_offset_t) offset,
-		  ! (flags & MAP_SHARED),
-		  vmprot, VM_PROT_ALL,
-		  (flags & MAP_SHARED) ? VM_INHERIT_SHARE : VM_INHERIT_COPY);
+		  copy, vmprot, VM_PROT_ALL,
+		  copy ? VM_INHERIT_COPY : VM_INHERIT_SHARE);
 
   if (flags & MAP_FIXED)
     {
@@ -138,10 +140,8 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 	    err = __vm_map (__mach_task_self (),
 			    &mapaddr, (vm_size_t) len, (vm_address_t) 0,
 			    0, memobj, (vm_offset_t) offset,
-			    ! (flags & MAP_SHARED),
-			    vmprot, VM_PROT_ALL,
-			    (flags & MAP_SHARED) ? VM_INHERIT_SHARE
-			    : VM_INHERIT_COPY);
+			    copy, vmprot, VM_PROT_ALL,
+			    copy ? VM_INHERIT_COPY : VM_INHERIT_SHARE);
 	}
     }
   else
@@ -150,10 +150,8 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 	err = __vm_map (__mach_task_self (),
 			&mapaddr, (vm_size_t) len, (vm_address_t) 0,
 			1, memobj, (vm_offset_t) offset,
-			! (flags & MAP_SHARED),
-			vmprot, VM_PROT_ALL,
-			(flags & MAP_SHARED) ? VM_INHERIT_SHARE
-			: VM_INHERIT_COPY);
+			copy, vmprot, VM_PROT_ALL,
+			copy ? VM_INHERIT_COPY : VM_INHERIT_SHARE);
     }
 
   if (memobj != MACH_PORT_NULL)
