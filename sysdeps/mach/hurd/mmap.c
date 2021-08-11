@@ -34,7 +34,7 @@ void *
 __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   error_t err;
-  vm_prot_t vmprot;
+  vm_prot_t vmprot, max_vmprot;
   memory_object_t memobj;
   vm_address_t mapaddr;
   boolean_t copy;
@@ -62,6 +62,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 
     case MAP_ANON:
       memobj = MACH_PORT_NULL;
+      max_vmprot = VM_PROT_ALL;
       break;
 
     case MAP_FILE:
@@ -84,16 +85,23 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 	     anonymous or not when selecting addresses.  */
 	  case PROT_NONE:
 	  case PROT_READ:
+            max_vmprot = VM_PROT_READ|VM_PROT_EXECUTE;
+            if (wobj == robj)
+              max_vmprot |= VM_PROT_WRITE;
 	    memobj = robj;
 	    if (wobj != MACH_PORT_NULL)
 	      __mach_port_deallocate (__mach_task_self (), wobj);
 	    break;
 	  case PROT_WRITE:
+            max_vmprot = VM_PROT_WRITE;
+            if (robj == wobj)
+              max_vmprot |= VM_PROT_READ|VM_PROT_EXECUTE;
 	    memobj = wobj;
 	    if (robj != MACH_PORT_NULL)
 	      __mach_port_deallocate (__mach_task_self (), robj);
 	    break;
 	  case PROT_READ|PROT_WRITE:
+            max_vmprot = VM_PROT_ALL;
 	    if (robj == wobj)
 	      {
 		memobj = wobj;
@@ -122,11 +130,14 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 
   /* XXX handle MAP_INHERIT */
 
+  if (copy)
+    max_vmprot = VM_PROT_ALL;
+
   err = __vm_map (__mach_task_self (),
 		  &mapaddr, (vm_size_t) len, (vm_address_t) 0,
 		  mapaddr == 0,
 		  memobj, (vm_offset_t) offset,
-		  copy, vmprot, VM_PROT_ALL,
+		  copy, vmprot, max_vmprot,
 		  copy ? VM_INHERIT_COPY : VM_INHERIT_SHARE);
 
   if (flags & MAP_FIXED)
@@ -140,7 +151,7 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 	    err = __vm_map (__mach_task_self (),
 			    &mapaddr, (vm_size_t) len, (vm_address_t) 0,
 			    0, memobj, (vm_offset_t) offset,
-			    copy, vmprot, VM_PROT_ALL,
+			    copy, vmprot, max_vmprot,
 			    copy ? VM_INHERIT_COPY : VM_INHERIT_SHARE);
 	}
     }
@@ -150,12 +161,15 @@ __mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 	err = __vm_map (__mach_task_self (),
 			&mapaddr, (vm_size_t) len, (vm_address_t) 0,
 			1, memobj, (vm_offset_t) offset,
-			copy, vmprot, VM_PROT_ALL,
+			copy, vmprot, max_vmprot,
 			copy ? VM_INHERIT_COPY : VM_INHERIT_SHARE);
     }
 
   if (memobj != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), memobj);
+
+  if (err == KERN_PROTECTION_FAILURE)
+    err = EACCES;
 
   if (err)
     return (void *) (long int) __hurd_fail (err);
