@@ -299,13 +299,6 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
     case PTHREAD_MUTEX_PI_ROBUST_NORMAL_NP:
     case PTHREAD_MUTEX_PI_ROBUST_ADAPTIVE_NP:
       {
-	/* Currently futex FUTEX_LOCK_PI operation only provides support for
-	   CLOCK_REALTIME and trying to emulate by converting a
-	   CLOCK_MONOTONIC to CLOCK_REALTIME will take in account possible
-	   changes to the wall clock.  */
-	if (__glibc_unlikely (clockid != CLOCK_REALTIME))
-	  return EINVAL;
-
 	int kind, robust;
 	{
 	  /* See concurrency notes regarding __kind in struct __pthread_mutex_s

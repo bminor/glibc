@@ -28,6 +28,7 @@
 #include <support/check.h>
 #include <support/timespec.h>
 #include <support/xunistd.h>
+#include <support/xthread.h>
 
 #ifdef ENABLE_PP
 #include "tst-tpp.h"
@@ -39,7 +40,7 @@
 #define CLOCK_USE_TIMEDLOCK (-1)
 
 static void
-do_test_clock (clockid_t clockid)
+do_test_clock (clockid_t clockid, int tmo_result)
 {
   const clockid_t clockid_for_get =
     (clockid == CLOCK_USE_TIMEDLOCK) ? CLOCK_REALTIME : clockid;
@@ -111,9 +112,9 @@ do_test_clock (clockid_t clockid)
                                                make_timespec (0, 500000000));
 
       if (clockid == CLOCK_USE_TIMEDLOCK)
-        TEST_COMPARE (pthread_mutex_timedlock (m, &ts), ETIMEDOUT);
+        TEST_COMPARE (pthread_mutex_timedlock (m, &ts), tmo_result);
       else
-        TEST_COMPARE (pthread_mutex_clocklock (m, clockid, &ts), ETIMEDOUT);
+        TEST_COMPARE (pthread_mutex_clocklock (m, clockid, &ts), tmo_result);
 
       alarm (1);
 
@@ -141,11 +142,16 @@ do_test (void)
   init_tpp_test ();
 #endif
 
-  do_test_clock (CLOCK_USE_TIMEDLOCK);
-  do_test_clock (CLOCK_REALTIME);
-#ifndef ENABLE_PI
-  do_test_clock (CLOCK_MONOTONIC);
+  int monotonic_result =
+#ifdef ENABLE_PI
+    support_mutex_pi_monotonic () ? ETIMEDOUT : EINVAL;
+#else
+    ETIMEDOUT;
 #endif
+
+  do_test_clock (CLOCK_USE_TIMEDLOCK, ETIMEDOUT);
+  do_test_clock (CLOCK_REALTIME, ETIMEDOUT);
+  do_test_clock (CLOCK_MONOTONIC, monotonic_result);
   return 0;
 }
 

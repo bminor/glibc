@@ -38,29 +38,39 @@ do_test (void)
     PTHREAD_MUTEX_STALLED,
     PTHREAD_MUTEX_ROBUST
   };
-
+  const struct {
+    int clk;
+    int r;
+  } clocks[] = {
+    { CLOCK_REALTIME,         0 },
+    { CLOCK_MONOTONIC,        0 },
+    { CLOCK_REALTIME_COARSE,  EINVAL }
+  };
 
   for (int t = 0; t < array_length (types); t++)
     for (int r = 0; r < array_length (robust); r++)
-      {
-	pthread_mutexattr_t attr;
+      for (int c = 0; c < array_length (clocks); c++)
+	{
+	  pthread_mutexattr_t attr;
+	  xpthread_mutexattr_init (&attr);
+	  xpthread_mutexattr_setprotocol (&attr, PTHREAD_PRIO_INHERIT);
+	  xpthread_mutexattr_settype (&attr, types[t]);
+	  xpthread_mutexattr_setrobust (&attr, robust[r]);
 
-	xpthread_mutexattr_init (&attr);
-	xpthread_mutexattr_setprotocol (&attr, PTHREAD_PRIO_INHERIT);
-	xpthread_mutexattr_settype (&attr, types[t]);
-	xpthread_mutexattr_setrobust (&attr, robust[r]);
+	  pthread_mutex_t mtx;
+	  xpthread_mutex_init (&mtx, &attr);
 
-	pthread_mutex_t mtx;
-	xpthread_mutex_init (&mtx, &attr);
+	  /* Uncontended case does not trigger any futex call.  */
+	  struct timespec tmo = timespec_add (xclock_now (clocks[c].clk),
+					      make_timespec (0, 100000000));
 
-	struct timespec tmo = timespec_add (xclock_now (CLOCK_MONOTONIC),
-					    make_timespec (0, 100000000));
+	  TEST_COMPARE (pthread_mutex_clocklock (&mtx, clocks[c].clk, &tmo),
+			clocks[c].r);
+	  if (clocks[c].r == 0)
+	    TEST_COMPARE (pthread_mutex_unlock (&mtx), 0);
 
-	TEST_COMPARE (pthread_mutex_clocklock (&mtx, CLOCK_MONOTONIC, &tmo),
-		      EINVAL);
-
-	xpthread_mutex_destroy (&mtx);
-      }
+	  xpthread_mutex_destroy (&mtx);
+	}
 
   return 0;
 }
