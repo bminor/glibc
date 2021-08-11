@@ -37,28 +37,22 @@ elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
   return ehdr->e_machine == EM_AARCH64;
 }
 
-/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
-   first element of the GOT. */
-static inline ElfW(Addr) __attribute__ ((unused))
-elf_machine_dynamic (void)
-{
-  extern const ElfW(Addr) _GLOBAL_OFFSET_TABLE_[] attribute_hidden;
-  return _GLOBAL_OFFSET_TABLE_[0];
-}
-
 /* Return the run-time load address of the shared object.  */
 
 static inline ElfW(Addr) __attribute__ ((unused))
 elf_machine_load_address (void)
 {
-  /* To figure out the load address we use the definition that for any symbol:
-     dynamic_addr(symbol) = static_addr(symbol) + load_addr
+  extern const ElfW(Ehdr) __ehdr_start attribute_hidden;
+  return (ElfW(Addr)) &__ehdr_start;
+}
 
-    _DYNAMIC sysmbol is used here as its link-time address stored in
-    the special unrelocated first GOT entry.  */
+/* Return the link-time address of _DYNAMIC.  */
 
-    extern ElfW(Dyn) _DYNAMIC[] attribute_hidden;
-    return (ElfW(Addr)) &_DYNAMIC - elf_machine_dynamic ();
+static inline ElfW(Addr) __attribute__ ((unused))
+elf_machine_dynamic (void)
+{
+  extern ElfW(Dyn) _DYNAMIC[] attribute_hidden;
+  return (ElfW(Addr)) _DYNAMIC - elf_machine_load_address ();
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
