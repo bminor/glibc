@@ -34,11 +34,8 @@
 
 #include <kernel-features.h>
 
-#define TRACE_BUFFER_SIZE 512
-
 static FILE *mallstream;
 static const char mallenv[] = "MALLOC_TRACE";
-static char *malloc_trace_buffer;
 
 static void
 tr_where (const void *caller, Dl_info *info)
@@ -184,16 +181,13 @@ do_mtrace (void)
   mallfile = secure_getenv (mallenv);
   if (mallfile != NULL)
     {
-      char *mtb = malloc (TRACE_BUFFER_SIZE);
-      if (mtb == NULL)
-        return;
-
       mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "wce");
       if (mallstream != NULL)
         {
           /* Be sure it doesn't malloc its buffer!  */
-          malloc_trace_buffer = mtb;
-          setvbuf (mallstream, malloc_trace_buffer, _IOFBF, TRACE_BUFFER_SIZE);
+	  static char tracebuf [512];
+
+	  setvbuf (mallstream, tracebuf, _IOFBF, sizeof (tracebuf));
           fprintf (mallstream, "= Start\n");
           if (!added_atexit_handler)
             {
@@ -203,8 +197,6 @@ do_mtrace (void)
             }
 	  __malloc_debug_enable (MALLOC_MTRACE_HOOK);
         }
-      else
-        free (mtb);
     }
 }
 
