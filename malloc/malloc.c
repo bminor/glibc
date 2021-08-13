@@ -2023,6 +2023,16 @@ madvise_thp (void *p, INTERNAL_SIZE_T size)
      not active.  */
   if (mp_.thp_pagesize == 0 || size < mp_.thp_pagesize)
     return;
+
+  /* Linux requires the input address to be page-aligned, and unaligned
+     inputs happens only for initial data segment.  */
+  if (__glibc_unlikely (!PTR_IS_ALIGNED (p, GLRO (dl_pagesize))))
+    {
+      void *q = PTR_ALIGN_DOWN (p, GLRO (dl_pagesize));
+      size += PTR_DIFF (p, q);
+      p = q;
+    }
+
   __madvise (p, size, MADV_HUGEPAGE);
 #endif
 }
@@ -2609,14 +2619,25 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
         size -= old_size;
 
       /*
-         Round to a multiple of page size.
+         Round to a multiple of page size or huge page size.
          If MORECORE is not contiguous, this ensures that we only call it
          with whole-page arguments.  And if MORECORE is contiguous and
          this is not first time through, this preserves page-alignment of
          previous calls. Otherwise, we correct to page-align below.
        */
 
-      size = ALIGN_UP (size, pagesize);
+#if HAVE_TUNABLES && defined (MADV_HUGEPAGE)
+      /* Defined in brk.c.  */
+      extern void *__curbrk;
+      if (__glibc_unlikely (mp_.thp_pagesize != 0))
+	{
+	  uintptr_t top = ALIGN_UP ((uintptr_t) __curbrk + size,
+				    mp_.thp_pagesize);
+	  size = top - (uintptr_t) __curbrk;
+	}
+      else
+#endif
+	size = ALIGN_UP (size, GLRO(dl_pagesize));
 
       /*
          Don't try to call MORECORE if argument is so big as to appear
@@ -2899,10 +2920,8 @@ systrim (size_t pad, mstate av)
   long released;         /* Amount actually released */
   char *current_brk;     /* address returned by pre-check sbrk call */
   char *new_brk;         /* address returned by post-check sbrk call */
-  size_t pagesize;
   long top_area;
 
-  pagesize = GLRO (dl_pagesize);
   top_size = chunksize (av->top);
 
   top_area = top_size - MINSIZE - 1;
@@ -2910,7 +2929,12 @@ systrim (size_t pad, mstate av)
     return 0;
 
   /* Release in pagesize units and round down to the nearest page.  */
-  extra = ALIGN_DOWN(top_area - pad, pagesize);
+#if HAVE_TUNABLES && defined (MADV_HUGEPAGE)
+  if (__glibc_unlikely (mp_.thp_pagesize != 0))
+    extra = ALIGN_DOWN (top_area - pad, mp_.thp_pagesize);
+  else
+#endif
+    extra = ALIGN_DOWN (top_area - pad, GLRO(dl_pagesize));
 
   if (extra == 0)
     return 0;
