@@ -78,6 +78,22 @@ tests-exclude-malloc-check = tst-malloc-check tst-malloc-usable \
 tests-malloc-check = $(filter-out $(tests-exclude-malloc-check) \
 				  $(tests-static),$(tests))
 
+# Run all testes with GLIBC_TUNABLES=glibc.malloc.hugetlb=1 that check the
+# Transparent Huge Pages support.  We need exclude some tests that define
+# the ENV vars.
+tests-exclude-hugetlb1 = \
+	tst-compathooks-off \
+	tst-compathooks-on \
+	tst-interpose-nothread \
+	tst-interpose-thread \
+	tst-interpose-static-nothread \
+	tst-interpose-static-thread \
+	tst-malloc-usable \
+	tst-malloc-usable-tunables \
+	tst-mallocstate
+tests-malloc-hugetlb1 = \
+	$(filter-out $(tests-exclude-hugetlb1), $(tests))
+
 # -lmcheck needs __malloc_initialize_hook, which was deprecated in 2.24.
 ifeq ($(have-GLIBC_2.23)$(build-shared),yesyes)
 # Tests that don't play well with mcheck.  They are either bugs in mcheck or

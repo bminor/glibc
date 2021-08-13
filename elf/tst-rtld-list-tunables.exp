@@ -1,6 +1,7 @@
 glibc.malloc.arena_max: 0x0 (min: 0x1, max: 0x[f]+)
 glibc.malloc.arena_test: 0x0 (min: 0x1, max: 0x[f]+)
 glibc.malloc.check: 0 (min: 0, max: 3)
+glibc.malloc.hugetlb: 0 (min: 0, max: 1)
 glibc.malloc.mmap_max: 0 (min: 0, max: 2147483647)
 glibc.malloc.mmap_threshold: 0x0 (min: 0x0, max: 0x[f]+)
 glibc.malloc.mxfast: 0x0 (min: 0x0, max: 0x[f]+)

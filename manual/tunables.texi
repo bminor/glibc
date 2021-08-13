@@ -270,6 +270,16 @@ pointer, so add 4 on 32-bit systems or 8 on 64-bit systems to the size
 passed to @code{malloc} for the largest bin size to enable.
 @end deftp
 
+@deftp Tunable glibc.malloc.hugetlb
+This tunable controls the usage of Huge Pages on @code{malloc} calls.  The
+default value is @code{0}, which disables any additional support on
+@code{malloc}.
+
+Setting its value to @code{1} enables the use of @code{madvise} with
+@code{MADV_HUGEPAGE} after memory allocation with @code{mmap}.  It is enabled
+only if the system supports Transparent Huge Page (currently only on Linux).
+@end deftp
+
 @node Dynamic Linking Tunables
 @section Dynamic Linking Tunables
 @cindex dynamic linking tunables

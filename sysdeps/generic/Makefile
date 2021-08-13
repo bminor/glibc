@@ -27,3 +27,11 @@ sysdep_routines += framestate unwind-pe
 shared-only-routines += framestate unwind-pe
 endif
 endif
+
+ifeq ($(subdir),malloc)
+sysdep_malloc_debug_routines += malloc-hugepages
+endif
+
+ifeq ($(subdir),misc)
+sysdep_routines += malloc-hugepages
+endif

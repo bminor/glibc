@@ -1880,6 +1880,11 @@ struct malloc_par
   INTERNAL_SIZE_T arena_test;
   INTERNAL_SIZE_T arena_max;
 
+#if HAVE_TUNABLES
+  /* Transparent Large Page support.  */
+  INTERNAL_SIZE_T thp_pagesize;
+#endif
+
   /* Memory map support */
   int n_mmaps;
   int n_mmaps_max;
@@ -2007,6 +2012,20 @@ free_perturb (char *p, size_t n)
 
 
 #include <stap-probe.h>
+
+/* ----------- Routines dealing with transparent huge pages ----------- */
+
+static inline void
+madvise_thp (void *p, INTERNAL_SIZE_T size)
+{
+#if HAVE_TUNABLES && defined (MADV_HUGEPAGE)
+  /* Do not consider areas smaller than a huge page or if the tunable is
+     not active.  */
+  if (mp_.thp_pagesize == 0 || size < mp_.thp_pagesize)
+    return;
+  __madvise (p, size, MADV_HUGEPAGE);
+#endif
+}
 
 /* ------------------- Support for multiple arenas -------------------- */
 #include "arena.c"
@@ -2445,6 +2464,8 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
           if (mm != MAP_FAILED)
             {
+	      madvise_thp (mm, size);
+
               /*
                  The offset to the start of the mmapped region is stored
                  in the prev_size field of the chunk. This allows us to adjust
@@ -2606,6 +2627,8 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
       if (size > 0)
         {
           brk = (char *) (MORECORE (size));
+	  if (brk != (char *) (MORECORE_FAILURE))
+	    madvise_thp (brk, size);
           LIBC_PROBE (memory_sbrk_more, 2, brk, size);
         }
 
@@ -2637,6 +2660,8 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 
               if (mbrk != MAP_FAILED)
                 {
+		  madvise_thp (mbrk, size);
+
                   /* We do not need, and cannot use, another sbrk call to find end */
                   brk = mbrk;
                   snd_brk = brk + size;
@@ -2748,6 +2773,8 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
                       correction = 0;
                       snd_brk = (char *) (MORECORE (0));
                     }
+		  else
+		    madvise_thp (snd_brk, correction);
                 }
 
               /* handle non-contiguous cases */
@@ -2987,6 +3014,8 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
   if (cp == MAP_FAILED)
     return 0;
+
+  madvise_thp (cp, new_size);
 
   p = (mchunkptr) (cp + offset);
 
@@ -5315,6 +5344,24 @@ do_set_mxfast (size_t value)
     }
   return 0;
 }
+
+#if HAVE_TUNABLES
+static __always_inline int
+do_set_hugetlb (int32_t value)
+{
+  if (value == 1)
+    {
+      enum malloc_thp_mode_t thp_mode = __malloc_thp_mode ();
+      /*
+	 Only enable THP madvise usage if system does support it and
+	 has 'madvise' mode.  Otherwise the madvise() call is wasteful.
+       */
+      if (thp_mode == malloc_thp_mode_madvise)
+	mp_.thp_pagesize = __malloc_default_thp_pagesize ();
+    }
+  return 0;
+}
+#endif
 
 int
 __libc_mallopt (int param_number, int value)

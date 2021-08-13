@@ -92,6 +92,11 @@ Major new features:
   --enable-static-pie, which no longer has any effect on the build
   configuration.
 
+* On Linux, a new tunable, glibc.malloc.hugetlb, can be used to
+  make malloc issue madvise plus MADV_HUGEPAGE on mmap and sbrk calls.
+  Setting this might improve performance with Transparent Huge Pages madvise
+  mode depending of the workload.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On x86-64, the LD_PREFER_MAP_32BIT_EXEC environment variable support

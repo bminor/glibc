@@ -92,6 +92,11 @@ glibc {
       minval: 0
       security_level: SXID_IGNORE
     }
+    hugetlb {
+      type: INT_32
+      minval: 0
+      maxval: 1
+    }
   }
   cpu {
     hwcap_mask {
