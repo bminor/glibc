@@ -55,11 +55,11 @@ NESTED(__clone,4*SZREG,sp)
 	.set		at
 #endif
 
-	/* Align stack to 4/8 bytes per the ABI.  */
+	/* Align stack to 8/16 bytes per the ABI.  */
 #if _MIPS_SIM == _ABIO32
-	li		t0,-4
-#else
 	li		t0,-8
+#else
+	li		t0,-16
 #endif
 	and		a1,a1,t0
 
