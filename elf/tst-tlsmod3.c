@@ -1,10 +1,10 @@
 #include <stdio.h>
 
-#include "tls-macros.h"
 
 extern int in_dso (int n, int *caller_foop);
 
-COMMON_INT_DEF(comm_n);
+extern __thread int foo;
+__thread int comm_n;
 
 
 
@@ -20,8 +20,8 @@ in_dso2 (void)
   puts ("foo");			/* Make sure PLT is used before macros.  */
   asm ("" ::: "memory");
 
-  foop = TLS_GD (foo);
-  np = TLS_GD (comm_n);
+  foop = &foo;
+  np = &comm_n;
 
   if (n != *np)
     {

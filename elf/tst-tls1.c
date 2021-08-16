@@ -1,13 +1,14 @@
 /* glibc test for TLS in ld.so.  */
 #include <stdio.h>
 
-#include "tls-macros.h"
 
-
-/* Two common 'int' variables in TLS.  */
-COMMON_INT_DEF(foo);
-COMMON_INT_DEF(bar);
-
+__thread int foo, bar __attribute__ ((tls_model("local-exec")));
+extern __thread int foo_gd asm ("foo") __attribute__ ((tls_model("global-dynamic")));
+extern __thread int foo_ld asm ("foo") __attribute__ ((tls_model("local-dynamic")));
+extern __thread int foo_ie asm ("foo") __attribute__ ((tls_model("initial-exec")));
+extern __thread int bar_gd asm ("bar") __attribute__ ((tls_model("global-dynamic")));
+extern __thread int bar_ld asm ("bar") __attribute__ ((tls_model("local-dynamic")));
+extern __thread int bar_ie asm ("bar") __attribute__ ((tls_model("initial-exec")));
 
 static int
 do_test (void)
@@ -18,62 +19,47 @@ do_test (void)
 
   /* Set the variable using the local exec model.  */
   puts ("set bar to 1 (LE)");
-  ap = TLS_LE (bar);
-  *ap = 1;
+  bar = 1;
 
 
   /* Get variables using initial exec model.  */
   fputs ("get sum of foo and bar (IE)", stdout);
-  ap = TLS_IE (foo);
-  bp = TLS_IE (bar);
+  ap = &foo_ie;
+  bp = &bar_ie;
   printf (" = %d\n", *ap + *bp);
   result |= *ap + *bp != 1;
-  if (*ap != 0)
+  if (*ap != 0 || *bp != 1)
     {
-      printf ("foo = %d\n", *ap);
-      result = 1;
-    }
-  if (*bp != 1)
-    {
-      printf ("bar = %d\n", *bp);
+      printf ("foo = %d\nbar = %d\n", *ap, *bp);
       result = 1;
     }
 
 
-  /* Get variables using local dynamic model.  */
-  fputs ("get sum of foo and bar (LD)", stdout);
-  ap = TLS_LD (foo);
-  bp = TLS_LD (bar);
+  /* Get variables using local dynamic model or TLSDESC.  */
+  fputs ("get sum of foo and bar (LD or TLSDESC)", stdout);
+  ap = &foo_ld;
+  bp = &bar_ld;
   printf (" = %d\n", *ap + *bp);
   result |= *ap + *bp != 1;
-  if (*ap != 0)
+  if (*ap != 0 || *bp != 1)
     {
-      printf ("foo = %d\n", *ap);
-      result = 1;
-    }
-  if (*bp != 1)
-    {
-      printf ("bar = %d\n", *bp);
+      printf ("foo = %d\nbar = %d\n", *ap, *bp);
       result = 1;
     }
 
 
-  /* Get variables using generic dynamic model.  */
-  fputs ("get sum of foo and bar (GD)", stdout);
-  ap = TLS_GD (foo);
-  bp = TLS_GD (bar);
+  /* Get variables using general dynamic model or TLSDESC.  */
+  fputs ("get sum of foo and bar (GD or TLSDESC)", stdout);
+  ap = &foo_gd;
+  bp = &bar_gd;
   printf (" = %d\n", *ap + *bp);
   result |= *ap + *bp != 1;
-  if (*ap != 0)
+  if (*ap != 0 || *bp != 1)
     {
-      printf ("foo = %d\n", *ap);
+      printf ("foo = %d\nbar = %d\n", *ap, *bp);
       result = 1;
     }
-  if (*bp != 1)
-    {
-      printf ("bar = %d\n", *bp);
-      result = 1;
-    }
+
 
   return result;
 }

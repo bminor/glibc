@@ -163,7 +163,7 @@ tests-static-normal := tst-array1-static tst-array5-static \
 	       tst-single_threaded-static tst-single_threaded-pthread-static \
 	       tst-dst-static tst-getauxval-static
 
-tests-static-internal := tst-tls1-static tst-tls2-static \
+tests-static-internal := tst-tls1-static \
 	       tst-ptrguard1-static tst-stackguard1-static \
 	       tst-tls1-static-non-pie
 
@@ -183,7 +183,7 @@ endif
 tests := tst-tls9 tst-leaks1 \
 	tst-array1 tst-array2 tst-array3 tst-array4 tst-array5 \
 	tst-auxv tst-stringtable
-tests-internal := tst-tls1 tst-tls2 $(tests-static-internal)
+tests-internal := tst-tls1 $(tests-static-internal)
 tests-static := $(tests-static-normal) $(tests-static-internal)
 
 ifeq (yes,$(build-shared))
