@@ -66,37 +66,6 @@ void *_dl_random attribute_relro = NULL;
 
 struct hurd_startup_data *_dl_hurd_data;
 
-#define FMH defined(__i386__)
-#if ! FMH
-# define fmh()		((void)0)
-# define unfmh()	((void)0)
-#else
-/* XXX loser kludge for vm_map kernel bug, fixed by gnumach's 0650a4ee30e3 */
-#undef	ELF_MACHINE_USER_ADDRESS_MASK
-#define ELF_MACHINE_USER_ADDRESS_MASK	0
-static vm_address_t fmha;
-static vm_size_t fmhs;
-static void unfmh(void){
-__vm_deallocate(__mach_task_self(),fmha,fmhs);}
-static void fmh(void) {
-    error_t err;int x;vm_offset_t o;mach_port_t p;
-    vm_address_t a=0x08000000U,max=VM_MAX_ADDRESS;
-    while (!(err=__vm_region(__mach_task_self(),&a,&fmhs,&x,&x,&x,&x,&p,&o))){
-      __mach_port_deallocate(__mach_task_self(),p);
-      if (a+fmhs>=0x80000000U){
-	max=a; break;}
-      fmha=a+=fmhs;}
-    if (err) assert(err==KERN_NO_SPACE);
-    if (!fmha)fmhs=0;else{
-    fmhs=max-fmha;
-    err = __vm_map (__mach_task_self (),
-		    &fmha, fmhs, 0, 0, MACH_PORT_NULL, 0, 1,
-		    VM_PROT_NONE, VM_PROT_NONE, VM_INHERIT_COPY);
-    assert_perror(err);}
-  }
-/* XXX loser kludge for vm_map kernel bug */
-#endif
-
 
 ElfW(Addr)
 _dl_sysdep_start (void **start_argptr,
@@ -146,8 +115,6 @@ _dl_sysdep_start (void **start_argptr,
       if (_dl_hurd_data->flags & EXEC_STACK_ARGS
 	  && _dl_hurd_data->user_entry == 0)
 	_dl_hurd_data->user_entry = (vm_address_t) ENTRY_POINT;
-
-unfmh();			/* XXX */
 
 #if 0				/* XXX make this work for real someday... */
       if (_dl_hurd_data->user_entry == (vm_address_t) ENTRY_POINT)
@@ -256,8 +223,6 @@ unfmh();			/* XXX */
 
   /* Initialize frequently used global variable.  */
   GLRO(dl_pagesize) = __getpagesize ();
-
-fmh();				/* XXX */
 
   /* See hurd/hurdstartup.c; this deals with getting information
      from the exec server and slicing up the arguments.
