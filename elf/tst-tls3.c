@@ -1,13 +1,12 @@
 /* glibc test for TLS in ld.so.  */
 #include <stdio.h>
 
-#include "tls-macros.h"
 
-
-/* One define int variable, two externs.  */
-COMMON_INT_DECL(foo);
-VAR_INT_DECL(bar);
-VAR_INT_DEF(baz);
+__thread int foo, bar __attribute__ ((tls_model("initial-exec")));
+__thread int baz __attribute__ ((tls_model("local-exec")));
+extern __thread int foo_gd __attribute__ ((alias("foo"), tls_model("global-dynamic")));
+extern __thread int bar_gd __attribute__ ((alias("bar"), tls_model("global-dynamic")));
+extern __thread int baz_ld __attribute__ ((alias("baz"), tls_model("local-dynamic")));
 
 
 extern int in_dso (void);
@@ -22,23 +21,20 @@ do_test (void)
 
   /* Set the variable using the local exec model.  */
   puts ("set baz to 3 (LE)");
-  ap = TLS_LE (baz);
-  *ap = 3;
+  baz = 3;
 
 
   /* Get variables using initial exec model.  */
   puts ("set variables foo and bar (IE)");
-  ap = TLS_IE (foo);
-  *ap = 1;
-  bp = TLS_IE (bar);
-  *bp = 2;
+  foo = 1;
+  bar = 2;
 
 
   /* Get variables using local dynamic model.  */
   fputs ("get sum of foo, bar (GD) and baz (LD)", stdout);
-  ap = TLS_GD (foo);
-  bp = TLS_GD (bar);
-  cp = TLS_LD (baz);
+  ap = &foo_gd;
+  bp = &bar_gd;
+  cp = &baz_ld;
   printf (" = %d\n", *ap + *bp + *cp);
   result |= *ap + *bp + *cp != 6;
   if (*ap != 1)

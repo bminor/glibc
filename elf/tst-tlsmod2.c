@@ -1,9 +1,7 @@
 #include <stdio.h>
 
-#include "tls-macros.h"
 
-
-COMMON_INT_DEF(foo);
+__thread int foo;
 
 
 int
@@ -15,7 +13,7 @@ in_dso (int n, int *caller_foop)
   puts ("foo");			/* Make sure PLT is used before macros.  */
   asm ("" ::: "memory");
 
-  foop = TLS_GD (foo);
+  foop = &foo;
 
   if (caller_foop != NULL && foop != caller_foop)
     {

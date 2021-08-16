@@ -1,11 +1,9 @@
 /* shared library to test for __tls_get_addr optimization.  */
 #include <stdio.h>
 
-#include "../../elf/tls-macros.h"
 #include "dl-tls.h"
 
-/* common 'int' variable in TLS.  */
-COMMON_INT_DEF(foo);
+__thread int foo __attribute__ ((tls_model("global-dynamic")));
 
 
 int
@@ -14,7 +12,7 @@ tls_get_addr_opt_test (void)
   int result = 0;
 
   /* Get variable using general dynamic model.  */
-  int *ap = TLS_GD (foo);
+  int *ap = &foo;
   if (*ap != 0)
     {
       printf ("foo = %d\n", *ap);

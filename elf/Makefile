@@ -265,7 +265,6 @@ tests-static-internal := \
   tst-stackguard1-static \
   tst-tls1-static \
   tst-tls1-static-non-pie \
-  tst-tls2-static \
   # tests-static-internal
 
 CRT-tst-tls1-static-non-pie := $(csu-objpfx)crt1.o
@@ -297,7 +296,6 @@ tests := \
 tests-internal := \
   $(tests-static-internal) \
   tst-tls1 \
-  tst-tls2 \
   # tests-internal
 
 tests-static := $(tests-static-normal) $(tests-static-internal)
