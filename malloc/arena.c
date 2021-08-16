@@ -230,7 +230,7 @@ TUNABLE_CALLBACK_FNDECL (set_tcache_count, size_t)
 TUNABLE_CALLBACK_FNDECL (set_tcache_unsorted_limit, size_t)
 #endif
 TUNABLE_CALLBACK_FNDECL (set_mxfast, size_t)
-TUNABLE_CALLBACK_FNDECL (set_hugetlb, int32_t)
+TUNABLE_CALLBACK_FNDECL (set_hugetlb, size_t)
 #else
 /* Initialization routine. */
 #include <string.h>
@@ -331,7 +331,7 @@ ptmalloc_init (void)
 	       TUNABLE_CALLBACK (set_tcache_unsorted_limit));
 # endif
   TUNABLE_GET (mxfast, size_t, TUNABLE_CALLBACK (set_mxfast));
-  TUNABLE_GET (hugetlb, int32_t, TUNABLE_CALLBACK (set_hugetlb));
+  TUNABLE_GET (hugetlb, size_t, TUNABLE_CALLBACK (set_hugetlb));
 #else
   if (__glibc_likely (_environ != NULL))
     {

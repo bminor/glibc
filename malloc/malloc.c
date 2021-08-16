@@ -1883,6 +1883,10 @@ struct malloc_par
 #if HAVE_TUNABLES
   /* Transparent Large Page support.  */
   INTERNAL_SIZE_T thp_pagesize;
+  /* A value different than 0 means to align mmap allocation to hp_pagesize
+     add hp_flags on flags.  */
+  INTERNAL_SIZE_T hp_pagesize;
+  int hp_flags;
 #endif
 
   /* Memory map support */
@@ -2440,7 +2444,10 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags, mstate av)
   if (mm == MAP_FAILED)
     return mm;
 
-  madvise_thp (mm, size);
+#ifdef MAP_HUGETLB
+  if (!(extra_flags & MAP_HUGETLB))
+    madvise_thp (mm, size);
+#endif
 
   /*
     The offset to the start of the mmapped region is stored in the prev_size
@@ -2528,7 +2535,18 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
       || ((unsigned long) (nb) >= (unsigned long) (mp_.mmap_threshold)
 	  && (mp_.n_mmaps < mp_.n_mmaps_max)))
     {
-      char *mm = sysmalloc_mmap (nb, pagesize, 0, av);
+      char *mm;
+#if HAVE_TUNABLES
+      if (mp_.hp_pagesize > 0 && nb >= mp_.hp_pagesize)
+	{
+	  /* There is no need to isse the THP madvise call if Huge Pages are
+	     used directly.  */
+	  mm = sysmalloc_mmap (nb, mp_.hp_pagesize, mp_.hp_flags, av);
+	  if (mm != MAP_FAILED)
+	    return mm;
+	}
+#endif
+      mm = sysmalloc_mmap (nb, pagesize, 0, av);
       if (mm != MAP_FAILED)
 	return mm;
       tried_mmap = true;
@@ -2609,7 +2627,9 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
         }
       else if (!tried_mmap)
 	{
-	  /* We can at least try to use to mmap memory.  */
+	  /* We can at least try to use to mmap memory.  If new_heap fails
+	     it is unlikely that trying to allocate huge pages will
+	     succeed.  */
 	  char *mm = sysmalloc_mmap (nb, pagesize, 0, av);
 	  if (mm != MAP_FAILED)
 	    return mm;
@@ -5383,7 +5403,7 @@ do_set_mxfast (size_t value)
 
 #if HAVE_TUNABLES
 static __always_inline int
-do_set_hugetlb (int32_t value)
+do_set_hugetlb (size_t value)
 {
   if (value == 1)
     {
@@ -5395,6 +5415,9 @@ do_set_hugetlb (int32_t value)
       if (thp_mode == malloc_thp_mode_madvise)
 	mp_.thp_pagesize = __malloc_default_thp_pagesize ();
     }
+  else if (value >= 2)
+    __malloc_hugepage_config (value == 2 ? 0 : value, &mp_.hp_pagesize,
+			      &mp_.hp_flags);
   return 0;
 }
 #endif

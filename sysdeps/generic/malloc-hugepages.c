@@ -29,3 +29,11 @@ __malloc_thp_mode (void)
 {
   return malloc_thp_mode_not_supported;
 }
+
+/* Return the default transparent huge page size.  */
+void
+__malloc_hugepage_config (size_t requested, size_t *pagesize, int *flags)
+{
+  *pagesize = 0;
+  *flags = 0;
+}

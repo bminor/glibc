@@ -278,6 +278,13 @@ default value is @code{0}, which disables any additional support on
 Setting its value to @code{1} enables the use of @code{madvise} with
 @code{MADV_HUGEPAGE} after memory allocation with @code{mmap}.  It is enabled
 only if the system supports Transparent Huge Page (currently only on Linux).
+
+Setting its value to @code{2} enables the use of Huge Page directly with
+@code{mmap} with the use of @code{MAP_HUGETLB} flag.  The huge page size
+to use will be the default one provided by the system.  A value larger than
+@code{2} specifies huge page size, which will be matched against the system
+supported ones.  If provided value is invalid, @code{MAP_HUGETLB} will not
+be used.
 @end deftp
 
 @node Dynamic Linking Tunables

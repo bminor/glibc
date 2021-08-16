@@ -158,6 +158,7 @@ tests: $(tests:%=$(objpfx)%.out) $(tests-internal:%=$(objpfx)%.out) \
        $(tests-mcheck:%=$(objpfx)%-mcheck.out) \
        $(tests-malloc-check:%=$(objpfx)%-malloc-check.out) \
        $(tests-malloc-hugetlb1:%=$(objpfx)%-malloc-hugetlb1.out) \
+       $(tests-malloc-hugetlb2:%=$(objpfx)%-malloc-hugetlb2.out) \
        $(tests-special) $(tests-printers-out)
 xtests: tests $(xtests:%=$(objpfx)%.out) $(xtests-special)
 endif
@@ -170,6 +171,7 @@ else
 tests-expected = $(tests) $(tests-internal) $(tests-printers) \
 	$(tests-container) $(tests-malloc-check:%=%-malloc-check) \
 	$(tests-malloc-hugetlb1:%=%-malloc-hugetlb1) \
+	$(tests-malloc-hugetlb2:%=%-malloc-hugetlb2) \
 	$(tests-mcheck:%=%-mcheck)
 endif
 tests:
@@ -199,6 +201,7 @@ endif
 binaries-mcheck-tests = $(tests-mcheck:%=%-mcheck)
 binaries-malloc-check-tests = $(tests-malloc-check:%=%-malloc-check)
 binaries-malloc-hugetlb1-tests = $(tests-malloc-hugetlb1:%=%-malloc-hugetlb1)
+binaries-malloc-hugetlb2-tests = $(tests-malloc-hugetlb2:%=%-malloc-hugetlb2)
 else
 binaries-all-notests =
 binaries-all-tests = $(tests) $(tests-internal) $(xtests) $(test-srcs)
@@ -211,6 +214,7 @@ binaries-pie-notests =
 binaries-mcheck-tests =
 binaries-malloc-check-tests =
 binaries-malloc-hugetlb1-tests =
+binaries-malloc-hugetlb2-tests =
 endif
 
 binaries-pie = $(binaries-pie-tests) $(binaries-pie-notests)
@@ -253,6 +257,14 @@ endif
 
 ifneq "$(strip $(binaries-malloc-hugetlb1-tests))" ""
 $(addprefix $(objpfx),$(binaries-malloc-hugetlb1-tests)): %-malloc-hugetlb1: %.o \
+  $(link-extra-libs-tests) \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
+  $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
+	$(+link-tests)
+endif
+
+ifneq "$(strip $(binaries-malloc-hugetlb2-tests))" ""
+$(addprefix $(objpfx),$(binaries-malloc-hugetlb2-tests)): %-malloc-hugetlb2: %.o \
   $(link-extra-libs-tests) \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
@@ -302,6 +314,11 @@ $(1)-malloc-hugetlb1-ENV += GLIBC_TUNABLES=glibc.malloc.hugetlb=1
 endef
 $(foreach t,$(tests-malloc-hugetlb1),$(eval $(call malloc-hugetlb1-ENVS,$(t))))
 
+# All malloc-hugetlb2 tests will be run with GLIBC_TUNABLE=glibc.malloc.hugetlb=2
+define malloc-hugetlb2-ENVS
+$(1)-malloc-hugetlb2-ENV += GLIBC_TUNABLES=glibc.malloc.hugetlb=2
+endef
+$(foreach t,$(tests-malloc-hugetlb2),$(eval $(call malloc-hugetlb2-ENVS,$(t))))
 
 # mcheck tests need the debug DSO to support -lmcheck.
 define mcheck-ENVS

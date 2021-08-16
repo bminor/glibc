@@ -93,9 +93,8 @@ glibc {
       security_level: SXID_IGNORE
     }
     hugetlb {
-      type: INT_32
+      type: SIZE_T
       minval: 0
-      maxval: 1
     }
   }
   cpu {

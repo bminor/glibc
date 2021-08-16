@@ -34,4 +34,11 @@ enum malloc_thp_mode_t
 
 enum malloc_thp_mode_t __malloc_thp_mode (void) attribute_hidden;
 
+/* Return the supported huge page size from the REQUESTED sizes on PAGESIZE
+   along with the required extra mmap flags on FLAGS,  Requesting the value
+   of 0 returns the default huge page size, otherwise the value will be
+   matched against the sizes supported by the system.  */
+void __malloc_hugepage_config (size_t requested, size_t *pagesize, int *flags)
+     attribute_hidden;
+
 #endif /* _MALLOC_HUGEPAGES_H */

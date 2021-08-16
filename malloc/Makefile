@@ -78,9 +78,9 @@ tests-exclude-malloc-check = tst-malloc-check tst-malloc-usable \
 tests-malloc-check = $(filter-out $(tests-exclude-malloc-check) \
 				  $(tests-static),$(tests))
 
-# Run all testes with GLIBC_TUNABLES=glibc.malloc.hugetlb=1 that check the
-# Transparent Huge Pages support.  We need exclude some tests that define
-# the ENV vars.
+# Run all tests with GLIBC_TUNABLES=glibc.malloc.hugetlb={1,2} which check
+# the Transparent Huge Pages support (1) or automatic huge page support (2).
+# We need exclude some tests that define the ENV vars.
 tests-exclude-hugetlb1 = \
 	tst-compathooks-off \
 	tst-compathooks-on \
@@ -92,6 +92,8 @@ tests-exclude-hugetlb1 = \
 	tst-malloc-usable-tunables \
 	tst-mallocstate
 tests-malloc-hugetlb1 = \
+	$(filter-out $(tests-exclude-hugetlb1), $(tests))
+tests-malloc-hugetlb2 = \
 	$(filter-out $(tests-exclude-hugetlb1), $(tests))
 
 # -lmcheck needs __malloc_initialize_hook, which was deprecated in 2.24.

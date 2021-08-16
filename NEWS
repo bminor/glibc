@@ -93,9 +93,11 @@ Major new features:
   configuration.
 
 * On Linux, a new tunable, glibc.malloc.hugetlb, can be used to
-  make malloc issue madvise plus MADV_HUGEPAGE on mmap and sbrk calls.
-  Setting this might improve performance with Transparent Huge Pages madvise
-  mode depending of the workload.
+  either make malloc issue madvise plus MADV_HUGEPAGE on mmap and sbrk
+  or to use huge pages directly with mmap calls with the MAP_HUGETLB
+  flags).  The former can improve performance when Transparent Huge Pages
+  is set to 'madvise' mode while the latter uses the system reserved
+  huge pages.
 
 Deprecated and removed features, and other changes affecting compatibility:
 
