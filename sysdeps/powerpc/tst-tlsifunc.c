@@ -21,9 +21,9 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <libc-symbols.h>
-#include <tls-macros.h>
 
 __thread int bar;
+extern __thread int bar_gd asm ("bar") __attribute__ ((tls_model("global-dynamic")));
 static int *bar_ptr = NULL;
 
 static uint32_t resolver_platform = 0;
@@ -57,7 +57,7 @@ get_platform (void)
 void
 init_foo (void)
 {
-  bar_ptr = TLS_GD (bar);
+  bar_ptr = &bar_gd;
 }
 
 int

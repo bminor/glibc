@@ -1,12 +1,12 @@
 #include <stdio.h>
 
-#include "tls-macros.h"
 
+__thread int foo, bar __attribute__ ((tls_model("global-dynamic")));
+extern __thread int baz __attribute__ ((tls_model("global-dynamic")));
+extern __thread int foo_ie asm ("foo") __attribute__ ((tls_model("initial-exec")));
+extern __thread int bar_ie asm ("bar") __attribute__ ((tls_model("initial-exec")));
+extern __thread int baz_ie asm ("baz") __attribute__ ((tls_model("initial-exec")));
 
-/* One define int variable, two externs.  */
-COMMON_INT_DEF(foo);
-VAR_INT_DEF(bar);
-VAR_INT_DECL(baz);
 
 extern int in_dso (void);
 
@@ -19,8 +19,8 @@ in_dso (void)
   /* Get variables using initial exec model.  */
   fputs ("get sum of foo and bar (IE)", stdout);
   asm ("" ::: "memory");
-  ap = TLS_IE (foo);
-  bp = TLS_IE (bar);
+  ap = &foo_ie;
+  bp = &bar_ie;
   printf (" = %d\n", *ap + *bp);
   result |= *ap + *bp != 3;
   if (*ap != 1)
@@ -35,11 +35,11 @@ in_dso (void)
     }
 
 
-  /* Get variables using generic dynamic model.  */
-  fputs ("get sum of foo and bar and baz (GD)", stdout);
-  ap = TLS_GD (foo);
-  bp = TLS_GD (bar);
-  cp = TLS_GD (baz);
+  /* Get variables using generic dynamic model or TLSDESC.  */
+  fputs ("get sum of foo and bar and baz (GD or TLSDESC)", stdout);
+  ap = &foo;
+  bp = &bar;
+  cp = &baz;
   printf (" = %d\n", *ap + *bp + *cp);
   result |= *ap + *bp + *cp != 6;
   if (*ap != 1)
