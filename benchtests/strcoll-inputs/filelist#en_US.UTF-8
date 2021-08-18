@@ -3195,7 +3195,6 @@ Implies
 submul_1.S
 sysdep.h
 add_n.S
-tls-macros.h
 libc-tls.c
 sub_n.S
 libgcc-compat.c
@@ -3443,7 +3442,6 @@ libresolv.abilist
 thread_state.h
 pty-private.h
 ldconfig.h
-tls-macros.h
 fd_to_filename.h
 not-cancel.h
 safe-fatal.h
@@ -3605,7 +3603,6 @@ start.S
 tst-mode-switch-3.c
 addmul_1.S
 add_n.S
-tls-macros.h
 libc-tls.c
 sub_n.S
 strcmp.S
@@ -3921,7 +3918,6 @@ addmul_1.S
 pthread_spin_trylock.S
 add_n.S
 e_sqrt.c
-tls-macros.h
 sub_n.S
 strcmp.S
 strlen.S
@@ -4138,7 +4134,6 @@ addmul_1.S
 pthread_spin_trylock.S
 add_n.S
 rtld-memset.c
-tls-macros.h
 sub_n.S
 strcmp.S
 strlen.S
@@ -4651,7 +4646,6 @@ addmul_1.S
 sysdep.h
 strlen.c
 add_n.S
-tls-macros.h
 sub_n.S
 i786
 Implies
@@ -4712,7 +4706,6 @@ Makefile
 start.S
 libm-test-ulps
 sysdep.h
-tls-macros.h
 libc-tls.c
 tst-audit.h
 dl-machine.h
@@ -5071,7 +5064,6 @@ addmul_1.S
 sysdep.h
 add_n.S
 wcschr.S
-tls-macros.h
 sub_n.S
 tst-quad2.c
 strcmp.S
@@ -6337,7 +6329,6 @@ Makefile
 start.S
 libm-test-ulps
 sysdep.h
-tls-macros.h
 libc-tls.c
 strlen.S
 tst-audit.h
@@ -6447,7 +6438,6 @@ strstr.c
 string-endian.h
 memcmp.c
 sysdep.h
-tls-macros.h
 tst-audit.h
 dl-machine.h
 dl-tls.h
@@ -6581,7 +6571,6 @@ Makefile
 start.S
 libm-test-ulps
 sysdep.h
-tls-macros.h
 libc-tls.c
 strcmp.S
 strrchr.S
@@ -7004,7 +6993,6 @@ addmul_1.S
 Implies
 sysdep.h
 rtld-memset.c
-tls-macros.h
 strcmp.S
 strlen.S
 tst-audit.h
@@ -7124,7 +7112,6 @@ wcschr.c
 Makefile
 ffs.c
 sysdep.h
-tls-macros.h
 test-arithf.c
 nofpu
 atomic-feupdateenv.c
@@ -7386,7 +7373,6 @@ gprrest0.S
 sysdep.h
 add_n.S
 rtld-memset.c
-tls-macros.h
 sub_n.S
 strcmp.S
 strlen.S
@@ -7969,7 +7955,6 @@ memcmp.S
 Makefile
 start.S
 sysdep.h
-tls-macros.h
 libc-tls.c
 strcmp.S
 sched_cpucount.c
@@ -8197,7 +8182,6 @@ start.S
 addmul_1.S
 nscd-types.h
 add_n.S
-tls-macros.h
 libc-tls.c
 sub_n.S
 divqu.S
@@ -8318,7 +8302,6 @@ Makefile
 ffs.c
 start.S
 sysdep.h
-tls-macros.h
 libc-tls.c
 tst-audit.h
 wcpcpy.c
@@ -8628,7 +8611,6 @@ Makefile
 start.S
 sysdep.h
 add_n.S
-tls-macros.h
 sub_n.S
 strcmp.S
 tst-audit.h
@@ -8690,7 +8672,6 @@ start.S
 addmul_1.S
 sysdep.h
 add_n.S
-tls-macros.h
 sub_n.S
 strcmp.S
 tst-audit.h
@@ -8796,7 +8777,6 @@ ftestexcept.c
 rt-aeabi_unwind_cpp_pr1.c
 sysdep.h
 add_n.S
-tls-macros.h
 libc-tls.c
 sub_n.S
 strlen.S
@@ -8879,7 +8859,6 @@ Makefile
 start.S
 libm-test-ulps
 sysdep.h
-tls-macros.h
 libc-tls.c
 tst-audit.h
 dl-machine.h
@@ -12064,7 +12043,6 @@ nodelmod4.c
 dl-fini.c
 unload2dep.c
 unload8.c
-tls-macros.h
 unload4.c
 tst-array5.exp
 unload4mod2.c
