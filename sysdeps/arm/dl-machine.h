@@ -37,48 +37,21 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
   return ehdr->e_machine == EM_ARM;
 }
 
-
-/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
-   first element of the GOT.  */
-static inline Elf32_Addr __attribute__ ((unused))
-elf_machine_dynamic (void)
-{
-  /* Declaring this hidden ensures that a PC-relative reference is used.  */
-  extern const Elf32_Addr _GLOBAL_OFFSET_TABLE_[] attribute_hidden;
-  return _GLOBAL_OFFSET_TABLE_[0];
-}
-
-
 /* Return the run-time load address of the shared object.  */
-static inline Elf32_Addr __attribute__ ((unused))
+static inline ElfW(Addr) __attribute__ ((unused))
 elf_machine_load_address (void)
 {
-  Elf32_Addr pcrel_addr;
-#ifdef SHARED
-  extern Elf32_Addr __dl_start (void *) asm ("_dl_start");
-  Elf32_Addr got_addr = (Elf32_Addr) &__dl_start;
-  asm ("adr %0, _dl_start" : "=r" (pcrel_addr));
-#else
-  extern Elf32_Addr __dl_relocate_static_pie (void *)
-    asm ("_dl_relocate_static_pie") attribute_hidden;
-  Elf32_Addr got_addr = (Elf32_Addr) &__dl_relocate_static_pie;
-  asm ("adr %0, _dl_relocate_static_pie" : "=r" (pcrel_addr));
-#endif
-#ifdef __thumb__
-  /* Clear the low bit of the function address.
-
-     NOTE: got_addr is from GOT table whose lsb is always set by linker if it's
-     Thumb function address.  PCREL_ADDR comes from PC-relative calculation
-     which will finish during assembling.  GAS assembler before the fix for
-     PR gas/21458 was not setting the lsb but does after that.  Always do the
-     strip for both, so the code works with various combinations of glibc and
-     Binutils.  */
-  got_addr &= ~(Elf32_Addr) 1;
-  pcrel_addr &= ~(Elf32_Addr) 1;
-#endif
-  return pcrel_addr - got_addr;
+  extern const ElfW(Ehdr) __ehdr_start attribute_hidden;
+  return (ElfW(Addr)) &__ehdr_start;
 }
 
+/* Return the link-time address of _DYNAMIC.  */
+static inline ElfW(Addr) __attribute__ ((unused))
+elf_machine_dynamic (void)
+{
+  extern ElfW(Dyn) _DYNAMIC[] attribute_hidden;
+  return (ElfW(Addr)) _DYNAMIC - elf_machine_load_address ();
+}
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
