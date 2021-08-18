@@ -30,37 +30,80 @@ extern const int verify_link_map_members[(VERIFY_MEMBER (l_addr)
 					  && VERIFY_MEMBER (l_prev))
 					 ? 1 : -1];
 
-/* This structure communicates dl state to the debugger.  The debugger
-   normally finds it via the DT_DEBUG entry in the dynamic section, but in
-   a statically-linked program there is no dynamic section for the debugger
-   to examine and it looks for this particular symbol name.  */
-struct r_debug _r_debug;
+/* Update the `r_map' member and return the address of `struct r_debug'
+   of the namespace NS. */
 
+struct r_debug *
+_dl_debug_update (Lmid_t ns)
+{
+  struct r_debug_extended *r;
+  if (ns == LM_ID_BASE)
+    r = &_r_debug_extended;
+  else
+    r = &GL(dl_ns)[ns]._ns_debug;
+  if (r->base.r_map == NULL)
+    atomic_store_release (&r->base.r_map,
+			  (void *) GL(dl_ns)[ns]._ns_loaded);
+  return &r->base;
+}
 
-/* Initialize _r_debug if it has not already been done.  The argument is
-   the run-time load address of the dynamic linker, to be put in
-   _r_debug.r_ldbase.  Returns the address of _r_debug.  */
+/* Initialize _r_debug_extended for the namespace NS.  LDBASE is the
+   run-time load address of the dynamic linker, to be put in
+   _r_debug_extended.r_ldbase.  Return the address of _r_debug.  */
 
 struct r_debug *
 _dl_debug_initialize (ElfW(Addr) ldbase, Lmid_t ns)
 {
-  struct r_debug *r;
+  struct r_debug_extended *r, **pp = NULL;
 
   if (ns == LM_ID_BASE)
-    r = &_r_debug;
-  else
-    r = &GL(dl_ns)[ns]._ns_debug;
-
-  if (r->r_map == NULL || ldbase != 0)
     {
-      /* Tell the debugger where to find the map of loaded objects.  */
-      r->r_version = 1	/* R_DEBUG_VERSION XXX */;
-      r->r_ldbase = ldbase ?: _r_debug.r_ldbase;
-      r->r_map = (void *) GL(dl_ns)[ns]._ns_loaded;
-      r->r_brk = (ElfW(Addr)) &_dl_debug_state;
+      r = &_r_debug_extended;
+      /* Initialize r_version to 1.  */
+      if (_r_debug_extended.base.r_version == 0)
+	_r_debug_extended.base.r_version = 1;
+    }
+  else if (DL_NNS > 1)
+    {
+      r = &GL(dl_ns)[ns]._ns_debug;
+      if (r->base.r_brk == 0)
+	{
+	  /* Add the new namespace to the linked list.  After a namespace
+	     is initialized, r_brk becomes non-zero.  A namespace becomes
+	     empty (r_map == NULL) when it is unused.  But it is never
+	     removed from the linked list.  */
+	  struct r_debug_extended *p;
+	  for (pp = &_r_debug_extended.r_next;
+	       (p = *pp) != NULL;
+	       pp = &p->r_next)
+	    ;
+
+	  r->base.r_version = 2;
+	}
     }
 
-  return r;
+  if (r->base.r_brk == 0)
+    {
+      /* Tell the debugger where to find the map of loaded objects.
+	 This function is called from dlopen.  Initialize the namespace
+	 only once.  */
+      r->base.r_ldbase = ldbase ?: _r_debug_extended.base.r_ldbase;
+      r->base.r_brk = (ElfW(Addr)) &_dl_debug_state;
+      r->r_next = NULL;
+    }
+
+  if (r->base.r_map == NULL)
+    atomic_store_release (&r->base.r_map,
+			  (void *) GL(dl_ns)[ns]._ns_loaded);
+
+  if (pp != NULL)
+    {
+      atomic_store_release (pp, r);
+      /* Bump r_version to 2 for the new namespace.  */
+      atomic_store_release (&_r_debug_extended.base.r_version, 2);
+    }
+
+  return &r->base;
 }
 
 

@@ -51,7 +51,7 @@ _dl_relocate_static_pie (void)
   ELF_DYNAMIC_RELOCATE (main_map, 0, 0, 0);
   main_map->l_relocated = 1;
 
-  /* Initialize _r_debug.  */
+  /* Initialize _r_debug_extended.  */
   struct r_debug *r = _dl_debug_initialize (0, LM_ID_BASE);
   r->r_state = RT_CONSISTENT;
 

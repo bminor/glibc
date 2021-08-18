@@ -35,7 +35,8 @@ dl-routines	= $(addprefix dl-,load lookup object reloc deps \
 				  execstack open close trampoline \
 				  exception sort-maps lookup-direct \
 				  call-libc-early-init write \
-				  thread_gscope_wait tls_init_tp)
+				  thread_gscope_wait tls_init_tp \
+				  debug-symbols)
 ifeq (yes,$(use-ldconfig))
 dl-routines += dl-cache
 endif
@@ -203,7 +204,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tls16 tst-tls17 tst-tls18 tst-tls19 tst-tls-dlinfo \
 	 tst-align tst-align2 \
 	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
-	 tst-dlmopen1 tst-dlmopen3 \
+	 tst-dlmopen1 tst-dlmopen3 tst-dlmopen4 \
 	 unload3 unload4 unload5 unload6 unload7 unload8 tst-global1 order2 \
 	 tst-audit1 tst-audit2 tst-audit8 tst-audit9 \
 	 tst-addr1 tst-thrlock \
@@ -1243,6 +1244,8 @@ $(objpfx)tst-dlmopen1.out: $(objpfx)tst-dlmopen1mod.so
 $(objpfx)tst-dlmopen2.out: $(objpfx)tst-dlmopen1mod.so
 
 $(objpfx)tst-dlmopen3.out: $(objpfx)tst-dlmopen1mod.so
+
+$(objpfx)tst-dlmopen4.out: $(objpfx)tst-dlmopen1mod.so
 
 $(objpfx)tst-audit1.out: $(objpfx)tst-auditmod1.so
 tst-audit1-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so

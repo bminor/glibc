@@ -353,6 +353,10 @@ struct auditstate
 };
 
 
+/* This is the hidden instance of struct r_debug_extended used by the
+   dynamic linker.  */
+extern struct r_debug_extended _r_debug_extended attribute_hidden;
+
 #if __ELF_NATIVE_CLASS == 32
 # define symbind symbind32
 #elif __ELF_NATIVE_CLASS == 64

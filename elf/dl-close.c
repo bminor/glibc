@@ -500,7 +500,7 @@ _dl_close_worker (struct link_map *map, bool force)
 #endif
 
   /* Notify the debugger we are about to remove some loaded objects.  */
-  struct r_debug *r = _dl_debug_initialize (0, nsid);
+  struct r_debug *r = _dl_debug_update (nsid);
   r->r_state = RT_DELETE;
   _dl_debug_state ();
   LIBC_PROBE (unmap_start, 2, nsid, r);

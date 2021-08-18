@@ -574,7 +574,7 @@ dl_open_worker (void *a)
       if ((mode & RTLD_GLOBAL) && new->l_global == 0)
 	add_to_global_update (new);
 
-      assert (_dl_debug_initialize (0, args->nsid)->r_state == RT_CONSISTENT);
+      assert (_dl_debug_update (args->nsid)->r_state == RT_CONSISTENT);
 
       return;
     }
@@ -630,7 +630,7 @@ dl_open_worker (void *a)
 #endif
 
   /* Notify the debugger all new objects are now ready to go.  */
-  struct r_debug *r = _dl_debug_initialize (0, args->nsid);
+  struct r_debug *r = _dl_debug_update (args->nsid);
   r->r_state = RT_CONSISTENT;
   _dl_debug_state ();
   LIBC_PROBE (map_complete, 3, args->nsid, r, new);
@@ -830,7 +830,7 @@ no more namespaces available for dlmopen()"));
 	  ++GL(dl_nns);
 	}
 
-      _dl_debug_initialize (0, nsid)->r_state = RT_CONSISTENT;
+      _dl_debug_update (nsid)->r_state = RT_CONSISTENT;
     }
   /* Never allow loading a DSO in a namespace which is empty.  Such
      direct placements is only causing problems.  Also don't allow
@@ -899,7 +899,7 @@ no more namespaces available for dlmopen()"));
 	     the flag here.  */
 	}
 
-      assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);
+      assert (_dl_debug_update (args.nsid)->r_state == RT_CONSISTENT);
 
       /* Release the lock.  */
       __rtld_lock_unlock_recursive (GL(dl_load_lock));
@@ -908,7 +908,7 @@ no more namespaces available for dlmopen()"));
       _dl_signal_exception (errcode, &exception, NULL);
     }
 
-  assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);
+  assert (_dl_debug_update (args.nsid)->r_state == RT_CONSISTENT);
 
   /* Release the lock.  */
   __rtld_lock_unlock_recursive (GL(dl_load_lock));

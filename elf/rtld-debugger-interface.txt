@@ -9,6 +9,9 @@ structure can be found.
 
 The r_debug structure contains (amongst others) the following fields:
 
+  int r_version:
+    Version number for this protocol.  It should be greater than 0.
+
   struct link_map *r_map:
     A linked list of loaded objects.
 
@@ -31,6 +34,18 @@ debugger is notified that a new object has been added, for instance,
 but there is no way for the debugger to discover whether any of the
 objects in the link-map have been relocated or not.
 
+
+Extension to the r_debug structure
+==================================
+
+The r_debug_extended structure is an extension of the r_debug interface.
+If r_version is 2, one additional field is available:
+
+  struct r_debug_extended *r_next;
+    Link to the next r_debug_extended structure.  Each r_debug_extended
+    structure represents a different namespace.  A namespace is active
+    if its r_map field isn't NULL.  The first r_debug_extended structure
+    is for the default namespace.
 
 Probe-based debugger interface
 ==============================

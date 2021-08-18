@@ -9,6 +9,9 @@ Version 2.35
 
 Major new features:
 
+* Bump r_version in the debugger interface to 2 and add a new field,
+  r_next, support multiple namespaces.
+
 * Support for the C.UTF-8 locale has been added to glibc.  The locale
   supports full code-point sorting for all valid Unicode code points.  A
   limitation in the framework for fnmatch, regexec, and regcomp requires
@@ -28,7 +31,13 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* The r_version update in the debugger interface makes the glibc binary
+  incompatible with GDB binaries built without the following commits:
+
+  c0154a4a21a gdb: Don't assume r_ldsomap when r_version > 1 on Linux
+  4eb629d50d4 gdbserver: Check r_version < 1 for Linux debugger interface
+
+  when audit modules or dlmopen are used.
 
 Changes to build and runtime requirements:
 
