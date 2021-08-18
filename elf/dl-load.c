@@ -1026,6 +1026,10 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       /* Refer to the real descriptor.  */
       l->l_real = &GL(dl_rtld_map);
 
+      /* Copy l_addr and l_ld to avoid a GDB warning with dlmopen().  */
+      l->l_addr = l->l_real->l_addr;
+      l->l_ld = l->l_real->l_ld;
+
       /* No need to bump the refcount of the real object, ld.so will
 	 never be unloaded.  */
       __close_nocancel (fd);
