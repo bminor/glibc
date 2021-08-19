@@ -152,6 +152,18 @@ static __inline bool support_path_support_time64 (const char *path)
 					    0x80000002ULL);
 }
 
+/* Return true if the setitimer and getitimer syscalls support 64-bit time_t
+   values without resulting in overflow.  This is not true on some linux systems
+   which have 64-bit time_t due to legacy kernel API's.  */
+static __inline bool support_itimer_support_time64 (void)
+{
+#ifdef __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64
+  return __KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64;
+#else
+  return sizeof (__time_t) == 8;
+#endif
+}
+
 /* Return true if stat supports nanoseconds resolution.  PATH is used
    for tests and its ctime may change.  */
 extern bool support_stat_nanoseconds (const char *path);

@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <support/check.h>
+#include <support/support.h>
 #include <support/xsignal.h>
 #include <unistd.h>
 #include <time.h>
@@ -100,7 +101,7 @@ do_test (void)
 
       /* Linux does not provide 64 bit time_t support for getitimer and
 	 setitimer on architectures with 32 bit time_t support.  */
-      if (__KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64)
+      if (support_itimer_support_time64())
 	{
 	  TEST_COMPARE (setitimer (timers[i], &it, NULL), 0);
 	  TEST_COMPARE (setitimer (timers[i], &(struct itimerval) { 0 },
@@ -131,7 +132,7 @@ do_test (void)
       it.it_interval.tv_usec = 20;
       it.it_value.tv_sec = 30;
       it.it_value.tv_usec = 40;
-      if (__KERNEL_OLD_TIMEVAL_MATCHES_TIMEVAL64)
+      if (support_itimer_support_time64())
 	{
 	  TEST_COMPARE (setitimer (timers[i], &it, NULL), 0);
 
