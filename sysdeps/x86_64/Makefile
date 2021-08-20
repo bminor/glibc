@@ -134,14 +134,12 @@ CFLAGS-tst-auditmod6c.c += $(AVX-CFLAGS)
 CFLAGS-tst-auditmod7b.c += $(AVX-CFLAGS)
 CFLAGS-tst-avx-aux.c += $(AVX-CFLAGS)
 CFLAGS-tst-avxmod.c += $(AVX-CFLAGS)
-ifeq (yes,$(config-cflags-avx512))
 AVX512-CFLAGS = -mavx512f
 CFLAGS-tst-audit10-aux.c += $(AVX512-CFLAGS)
 CFLAGS-tst-auditmod10a.c += $(AVX512-CFLAGS)
 CFLAGS-tst-auditmod10b.c += $(AVX512-CFLAGS)
 CFLAGS-tst-avx512-aux.c += $(AVX512-CFLAGS)
 CFLAGS-tst-avx512mod.c += $(AVX512-CFLAGS)
-endif
 
 $(objpfx)tst-glibc-hwcaps: $(objpfx)libmarkermod2-1.so \
   $(objpfx)libmarkermod3-1.so $(objpfx)libmarkermod4-1.so

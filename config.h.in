@@ -62,9 +62,6 @@
 /* Define if _rtld_local structure should be forced into .sdata section.  */
 #undef	HAVE_SDATA_SECTION
 
-/* Define if compiler supports AVX512.  */
-#undef  HAVE_AVX512_SUPPORT
-
 /* Define if assembler supports AVX512DQ.  */
 #undef  HAVE_AVX512DQ_ASM_SUPPORT
 

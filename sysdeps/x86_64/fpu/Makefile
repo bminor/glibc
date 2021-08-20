@@ -68,7 +68,6 @@ $(objpfx)test-float-libmvec-sincosf-avx2: \
   $(objpfx)test-float-libmvec-sincosf-avx2.o \
   $(objpfx)test-float-libmvec-sincosf-avx2-main.o $(libmvec)
 
-ifeq (yes,$(config-cflags-avx512))
 libmvec-tests += double-vlen8 float-vlen16
 tests += test-double-libmvec-sincos-avx512 \
 	 test-float-libmvec-sincosf-avx512
@@ -84,7 +83,6 @@ $(objpfx)test-double-libmvec-sincos-avx512: \
 $(objpfx)test-float-libmvec-sincosf-avx512: \
   $(objpfx)test-float-libmvec-sincosf-avx512.o \
   $(objpfx)test-float-libmvec-sincosf-avx512-main.o $(libmvec)
-endif
 
 double-vlen2-funcs = cos exp log pow sin sincos
 double-vlen4-funcs = cos exp log pow sin sincos
