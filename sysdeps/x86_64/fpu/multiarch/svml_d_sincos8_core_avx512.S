@@ -430,7 +430,7 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN4vl8l8_sincos
 
 /* SinPoly = SinR*SinPoly */
         vfmadd213pd %zmm5, %zmm5, %zmm4
-        vpbroadcastq .L_2il0floatpacket.15(%rip), %zmm3
+        vpternlogd $0xff, %zmm3, %zmm3, %zmm3
 
 /* Update Cos result's sign */
         vxorpd    %zmm2, %zmm1, %zmm1
@@ -741,8 +741,3 @@ END (_ZGVeN8vvv_sincos_knl)
 ENTRY (_ZGVeN8vvv_sincos_skx)
 WRAPPER_AVX512_vvv_vl8l8 _ZGVeN8vl8l8_sincos_skx
 END (_ZGVeN8vvv_sincos_skx)
-
-	.section .rodata, "a"
-.L_2il0floatpacket.15:
-	.long	0xffffffff,0xffffffff
-	.type	.L_2il0floatpacket.15,@object

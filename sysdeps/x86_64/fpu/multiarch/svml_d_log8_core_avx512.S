@@ -274,7 +274,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_log
 
 /* preserve mantissa, set input exponent to 2^(-10) */
         vpternlogq $248, _ExpMask(%rax), %zmm3, %zmm2
-        vpbroadcastq .L_2il0floatpacket.12(%rip), %zmm1
+        vpternlogd $0xff, %zmm1, %zmm1, %zmm1
         vpsrlq    $32, %zmm4, %zmm6
 
 /* reciprocal approximation good to at least 11 bits */
@@ -461,8 +461,3 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_log
         jmp       .LBL_2_7
 #endif
 END (_ZGVeN8v_log_skx)
-
-	.section .rodata, "a"
-.L_2il0floatpacket.12:
-	.long	0xffffffff,0xffffffff
-	.type	.L_2il0floatpacket.12,@object
