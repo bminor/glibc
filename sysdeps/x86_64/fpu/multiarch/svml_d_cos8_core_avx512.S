@@ -265,7 +265,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_cos
         vmovaps   %zmm0, %zmm8
 
 /* Check for large arguments path */
-        vpbroadcastq .L_2il0floatpacket.16(%rip), %zmm2
+        vpternlogd $0xff, %zmm2, %zmm2, %zmm2
 
 /*
   ARGUMENT RANGE REDUCTION:
@@ -456,8 +456,3 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_cos
         jmp       .LBL_2_7
 #endif
 END (_ZGVeN8v_cos_skx)
-
-	.section .rodata, "a"
-.L_2il0floatpacket.16:
-	.long	0xffffffff,0xffffffff
-	.type	.L_2il0floatpacket.16,@object

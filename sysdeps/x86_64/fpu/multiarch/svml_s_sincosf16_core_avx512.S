@@ -317,7 +317,7 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN8vvv_sincosf
 
 /* Result sign calculations */
         vpternlogd $150, %zmm0, %zmm14, %zmm1
-        vmovups   .L_2il0floatpacket.13(%rip), %zmm14
+        vpternlogd $0xff, %zmm14, %zmm14, %zmm14
 
 /* Add correction term 0.5 for cos() part */
         vaddps    %zmm8, %zmm5, %zmm15
@@ -748,8 +748,3 @@ END (_ZGVeN16vvv_sincosf_knl)
 ENTRY (_ZGVeN16vvv_sincosf_skx)
 WRAPPER_AVX512_vvv_vl4l4 _ZGVeN16vl4l4_sincosf_skx
 END (_ZGVeN16vvv_sincosf_skx)
-
-	.section .rodata, "a"
-.L_2il0floatpacket.13:
-	.long	0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff
-	.type	.L_2il0floatpacket.13,@object

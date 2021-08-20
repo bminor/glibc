@@ -385,7 +385,7 @@ WRAPPER_IMPL_AVX512_ff _ZGVdN8vv_powf
         vpsrlq    $32, %zmm3, %zmm2
         vpmovqd   %zmm2, %ymm11
         vcvtps2pd %ymm14, %zmm13
-        vmovups   .L_2il0floatpacket.23(%rip), %zmm14
+        vpternlogd $0xff, %zmm14, %zmm14, %zmm14
         vmovaps   %zmm14, %zmm26
         vpandd _ABSMASK(%rax), %zmm1, %zmm8
         vpcmpd    $1, _INF(%rax), %zmm8, %k2
@@ -427,7 +427,7 @@ WRAPPER_IMPL_AVX512_ff _ZGVdN8vv_powf
         vpmovqd   %zmm11, %ymm5
         vpxord    %zmm10, %zmm10, %zmm10
         vgatherdpd _Log2Rcp_lookup(%rax,%ymm4), %zmm10{%k3}
-        vpbroadcastq .L_2il0floatpacket.24(%rip), %zmm4
+        vpternlogd $0xff, %zmm4, %zmm4, %zmm4
         vpxord    %zmm11, %zmm11, %zmm11
         vcvtdq2pd %ymm7, %zmm7
         vgatherdpd _Log2Rcp_lookup(%rax,%ymm5), %zmm11{%k1}
@@ -643,11 +643,3 @@ WRAPPER_IMPL_AVX512_ff _ZGVdN8vv_powf
         jmp       .LBL_2_7
 #endif
 END (_ZGVeN16vv_powf_skx)
-
-	.section .rodata, "a"
-.L_2il0floatpacket.23:
-	.long	0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff
-	.type	.L_2il0floatpacket.23,@object
-.L_2il0floatpacket.24:
-	.long	0xffffffff,0xffffffff
-	.type	.L_2il0floatpacket.24,@object
