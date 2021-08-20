@@ -22,9 +22,6 @@
 
 	.text
 ENTRY (_ZGVeN16v_cosf_knl)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512 _ZGVdN8v_cosf
-#else
 /*
   ALGORITHM DESCRIPTION:
 
@@ -235,13 +232,9 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_cosf
         call      JUMPTARGET(cosf)
         vmovss    %xmm0, 1216(%rsp,%r15,8)
         jmp       .LBL_1_7
-#endif
 END (_ZGVeN16v_cosf_knl)
 
 ENTRY (_ZGVeN16v_cosf_skx)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512 _ZGVdN8v_cosf
-#else
 /*
   ALGORITHM DESCRIPTION:
 
@@ -451,5 +444,4 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_cosf
         call      JUMPTARGET(cosf)
         vmovss    %xmm0, 1216(%rsp,%r15,8)
         jmp       .LBL_2_7
-#endif
 END (_ZGVeN16v_cosf_skx)

@@ -22,9 +22,6 @@
 
 	.text
 ENTRY (_ZGVeN8v_sin_knl)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512 _ZGVdN4v_sin
-#else
 /*
    ALGORITHM DESCRIPTION:
 
@@ -233,13 +230,9 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_sin
         call      JUMPTARGET(sin)
         vmovsd    %xmm0, 1216(%rsp,%r15)
         jmp       .LBL_1_7
-#endif
 END (_ZGVeN8v_sin_knl)
 
 ENTRY (_ZGVeN8v_sin_skx)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512 _ZGVdN4v_sin
-#else
 /*
    ALGORITHM DESCRIPTION:
 
@@ -456,5 +449,4 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_sin
 
         vmovsd    %xmm0, 1216(%rsp,%r15)
         jmp       .LBL_2_7
-#endif
 END (_ZGVeN8v_sin_skx)

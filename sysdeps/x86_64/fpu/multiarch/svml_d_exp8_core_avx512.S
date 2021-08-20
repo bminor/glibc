@@ -22,9 +22,6 @@
 
 	.text
 ENTRY (_ZGVeN8v_exp_knl)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
-#else
 /*
    ALGORITHM DESCRIPTION:
 
@@ -234,13 +231,9 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
         call      JUMPTARGET(exp)
         vmovsd    %xmm0, 1216(%rsp,%r15)
         jmp       .LBL_1_7
-#endif
 END (_ZGVeN8v_exp_knl)
 
 ENTRY (_ZGVeN8v_exp_skx)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
-#else
 /*
    ALGORITHM DESCRIPTION:
 
@@ -452,5 +445,4 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_exp
         vmovsd    %xmm0, 1216(%rsp,%r15)
         jmp       .LBL_2_7
 
-#endif
 END (_ZGVeN8v_exp_skx)

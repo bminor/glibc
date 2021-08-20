@@ -22,9 +22,6 @@
 
 	.text
 ENTRY (_ZGVeN16v_expf_knl)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512 _ZGVdN8v_expf
-#else
 /*
    ALGORITHM DESCRIPTION:
 
@@ -223,13 +220,9 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_expf
         vmovss    %xmm0, 1216(%rsp,%r15,8)
         jmp       .LBL_1_7
 
-#endif
 END (_ZGVeN16v_expf_knl)
 
 ENTRY (_ZGVeN16v_expf_skx)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512 _ZGVdN8v_expf
-#else
 /*
    ALGORITHM DESCRIPTION:
 
@@ -438,5 +431,4 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_expf
         vmovss    %xmm0, 1216(%rsp,%r15,8)
         jmp       .LBL_2_7
 
-#endif
 END (_ZGVeN16v_expf_skx)

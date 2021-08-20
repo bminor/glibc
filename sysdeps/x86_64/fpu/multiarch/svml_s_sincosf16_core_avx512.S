@@ -50,9 +50,6 @@
 
 	.text
 ENTRY (_ZGVeN16vl4l4_sincosf_knl)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512_fFF _ZGVdN8vl4l4_sincosf
-#else
         pushq     %rbp
         cfi_adjust_cfa_offset (8)
         cfi_rel_offset (%rbp, 0)
@@ -266,14 +263,10 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN8vl4l4_sincosf
 
         vmovss    %xmm0, 1280(%rsp,%r15,8)
         jmp       .LBL_1_7
-#endif
 END (_ZGVeN16vl4l4_sincosf_knl)
 libmvec_hidden_def(_ZGVeN16vl4l4_sincosf_knl)
 
 ENTRY (_ZGVeN16vl4l4_sincosf_skx)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512_fFF _ZGVdN8vvv_sincosf
-#else
         pushq     %rbp
         cfi_adjust_cfa_offset (8)
         cfi_rel_offset (%rbp, 0)
@@ -496,7 +489,6 @@ WRAPPER_IMPL_AVX512_fFF _ZGVdN8vvv_sincosf
 
         vmovss    %xmm0, 1280(%rsp,%r15,8)
         jmp       .LBL_2_7
-#endif
 END (_ZGVeN16vl4l4_sincosf_skx)
 libmvec_hidden_def(_ZGVeN16vl4l4_sincosf_skx)
 

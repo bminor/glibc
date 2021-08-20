@@ -22,9 +22,6 @@
 
 	.text
 ENTRY (_ZGVeN8v_cos_knl)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512 _ZGVdN4v_cos
-#else
 /*
   ALGORITHM DESCRIPTION:
 
@@ -232,13 +229,9 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_cos
         call      JUMPTARGET(cos)
         vmovsd    %xmm0, 1216(%rsp,%r15)
         jmp       .LBL_1_7
-#endif
 END (_ZGVeN8v_cos_knl)
 
 ENTRY (_ZGVeN8v_cos_skx)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512 _ZGVdN4v_cos
-#else
 /*
    ALGORITHM DESCRIPTION:
 
@@ -454,5 +447,4 @@ WRAPPER_IMPL_AVX512 _ZGVdN4v_cos
 
         vmovsd    %xmm0, 1216(%rsp,%r15)
         jmp       .LBL_2_7
-#endif
 END (_ZGVeN8v_cos_skx)

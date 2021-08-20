@@ -82,9 +82,6 @@
 
 	.text
 ENTRY (_ZGVeN8vv_pow_knl)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512_ff _ZGVdN4vv_pow
-#else
         pushq     %rbp
         cfi_adjust_cfa_offset (8)
         cfi_rel_offset (%rbp, 0)
@@ -405,13 +402,9 @@ WRAPPER_IMPL_AVX512_ff _ZGVdN4vv_pow
         vmovsd    %xmm0, 1280(%rsp,%r15)
         jmp       .LBL_1_7
 
-#endif
 END (_ZGVeN8vv_pow_knl)
 
 ENTRY (_ZGVeN8vv_pow_skx)
-#ifndef HAVE_AVX512DQ_ASM_SUPPORT
-WRAPPER_IMPL_AVX512_ff _ZGVdN4vv_pow
-#else
         pushq     %rbp
         cfi_adjust_cfa_offset (8)
         cfi_rel_offset (%rbp, 0)
@@ -737,5 +730,4 @@ WRAPPER_IMPL_AVX512_ff _ZGVdN4vv_pow
         vmovsd    %xmm0, 1280(%rsp,%r15)
         jmp       .LBL_2_7
 
-#endif
 END (_ZGVeN8vv_pow_skx)
