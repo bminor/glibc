@@ -235,7 +235,7 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_logf
         andq      $-64, %rsp
         subq      $1280, %rsp
         movq      __svml_slog_data@GOTPCREL(%rip), %rax
-        vmovups   .L_2il0floatpacket.7(%rip), %zmm6
+        vpternlogd $0xff, %zmm6, %zmm6, %zmm6
         vmovups _iBrkValue(%rax), %zmm4
         vmovups _sPoly_7(%rax), %zmm8
 
@@ -409,8 +409,3 @@ WRAPPER_IMPL_AVX512 _ZGVdN8v_logf
 
 #endif
 END (_ZGVeN16v_logf_skx)
-
-	.section .rodata, "a"
-.L_2il0floatpacket.7:
-	.long	0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff
-	.type	.L_2il0floatpacket.7,@object
