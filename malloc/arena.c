@@ -41,6 +41,29 @@
    mmap threshold, so that requests with a size just below that
    threshold can be fulfilled without creating too many heaps.  */
 
+/* When huge pages are used to create new arenas, the maximum and minumum
+   size are based on the runtime defined huge page size.  */
+
+static inline size_t
+heap_min_size (void)
+{
+#if HAVE_TUNABLES
+  return mp_.hp_pagesize == 0 ? HEAP_MIN_SIZE : mp_.hp_pagesize;
+#else
+  return HEAP_MIN_SIZE;
+#endif
+}
+
+static inline size_t
+heap_max_size (void)
+{
+#if HAVE_TUNABLES
+  return mp_.hp_pagesize == 0 ? HEAP_MAX_SIZE : mp_.hp_pagesize * 4;
+#else
+  return HEAP_MAX_SIZE;
+#endif
+}
+
 /***************************************************************************/
 
 #define top(ar_ptr) ((ar_ptr)->top)
@@ -56,10 +79,11 @@ typedef struct _heap_info
   size_t size;   /* Current size in bytes. */
   size_t mprotect_size; /* Size in bytes that has been mprotected
                            PROT_READ|PROT_WRITE.  */
+  size_t pagesize; /* Page size used when allocating the arena.  */
   /* Make sure the following data is properly aligned, particularly
      that sizeof (heap_info) + 2 * SIZE_SZ is a multiple of
      MALLOC_ALIGNMENT. */
-  char pad[-6 * SIZE_SZ & MALLOC_ALIGN_MASK];
+  char pad[-3 * SIZE_SZ & MALLOC_ALIGN_MASK];
 } heap_info;
 
 /* Get a compile-time error if the heap_info padding is not correct
@@ -125,10 +149,18 @@ static bool __malloc_initialized = false;
 
 /* find the heap and corresponding arena for a given ptr */
 
-#define heap_for_ptr(ptr) \
-  ((heap_info *) ((unsigned long) (ptr) & ~(HEAP_MAX_SIZE - 1)))
-#define arena_for_chunk(ptr) \
-  (chunk_main_arena (ptr) ? &main_arena : heap_for_ptr (ptr)->ar_ptr)
+static inline heap_info *
+heap_for_ptr (void *ptr)
+{
+  size_t max_size = heap_max_size ();
+  return PTR_ALIGN_DOWN (ptr, max_size);
+}
+
+static inline struct malloc_state *
+arena_for_chunk (mchunkptr ptr)
+{
+  return chunk_main_arena (ptr) ? &main_arena : heap_for_ptr (ptr)->ar_ptr;
+}
 
 
 /**************************************************************************/
@@ -443,71 +475,72 @@ static char *aligned_heap_area;
    of the page size. */
 
 static heap_info *
-new_heap (size_t size, size_t top_pad)
+alloc_new_heap  (size_t size, size_t top_pad, size_t pagesize,
+		 int mmap_flags)
 {
-  size_t pagesize = GLRO (dl_pagesize);
   char *p1, *p2;
   unsigned long ul;
   heap_info *h;
+  size_t min_size = heap_min_size ();
+  size_t max_size = heap_max_size ();
 
-  if (size + top_pad < HEAP_MIN_SIZE)
-    size = HEAP_MIN_SIZE;
-  else if (size + top_pad <= HEAP_MAX_SIZE)
+  if (size + top_pad < min_size)
+    size = min_size;
+  else if (size + top_pad <= max_size)
     size += top_pad;
-  else if (size > HEAP_MAX_SIZE)
+  else if (size > max_size)
     return 0;
   else
-    size = HEAP_MAX_SIZE;
+    size = max_size;
   size = ALIGN_UP (size, pagesize);
 
-  /* A memory region aligned to a multiple of HEAP_MAX_SIZE is needed.
+  /* A memory region aligned to a multiple of max_size is needed.
      No swap space needs to be reserved for the following large
      mapping (on Linux, this is the case for all non-writable mappings
      anyway). */
   p2 = MAP_FAILED;
   if (aligned_heap_area)
     {
-      p2 = (char *) MMAP (aligned_heap_area, HEAP_MAX_SIZE, PROT_NONE,
-                          MAP_NORESERVE);
+      p2 = (char *) MMAP (aligned_heap_area, max_size, PROT_NONE, mmap_flags);
       aligned_heap_area = NULL;
-      if (p2 != MAP_FAILED && ((unsigned long) p2 & (HEAP_MAX_SIZE - 1)))
+      if (p2 != MAP_FAILED && ((unsigned long) p2 & (max_size - 1)))
         {
-          __munmap (p2, HEAP_MAX_SIZE);
+          __munmap (p2, max_size);
           p2 = MAP_FAILED;
         }
     }
   if (p2 == MAP_FAILED)
     {
-      p1 = (char *) MMAP (0, HEAP_MAX_SIZE << 1, PROT_NONE, MAP_NORESERVE);
+      p1 = (char *) MMAP (0, max_size << 1, PROT_NONE, mmap_flags);
       if (p1 != MAP_FAILED)
         {
-          p2 = (char *) (((unsigned long) p1 + (HEAP_MAX_SIZE - 1))
-                         & ~(HEAP_MAX_SIZE - 1));
+          p2 = (char *) (((unsigned long) p1 + (max_size - 1))
+                         & ~(max_size - 1));
           ul = p2 - p1;
           if (ul)
             __munmap (p1, ul);
           else
-            aligned_heap_area = p2 + HEAP_MAX_SIZE;
-          __munmap (p2 + HEAP_MAX_SIZE, HEAP_MAX_SIZE - ul);
+            aligned_heap_area = p2 + max_size;
+          __munmap (p2 + max_size, max_size - ul);
         }
       else
         {
-          /* Try to take the chance that an allocation of only HEAP_MAX_SIZE
+          /* Try to take the chance that an allocation of only max_size
              is already aligned. */
-          p2 = (char *) MMAP (0, HEAP_MAX_SIZE, PROT_NONE, MAP_NORESERVE);
+          p2 = (char *) MMAP (0, max_size, PROT_NONE, mmap_flags);
           if (p2 == MAP_FAILED)
             return 0;
 
-          if ((unsigned long) p2 & (HEAP_MAX_SIZE - 1))
+          if ((unsigned long) p2 & (max_size - 1))
             {
-              __munmap (p2, HEAP_MAX_SIZE);
+              __munmap (p2, max_size);
               return 0;
             }
         }
     }
   if (__mprotect (p2, size, mtag_mmap_flags | PROT_READ | PROT_WRITE) != 0)
     {
-      __munmap (p2, HEAP_MAX_SIZE);
+      __munmap (p2, max_size);
       return 0;
     }
 
@@ -516,8 +549,27 @@ new_heap (size_t size, size_t top_pad)
   h = (heap_info *) p2;
   h->size = size;
   h->mprotect_size = size;
+  h->pagesize = pagesize;
   LIBC_PROBE (memory_heap_new, 2, h, h->size);
   return h;
+}
+
+static heap_info *
+new_heap (size_t size, size_t top_pad)
+{
+#if HAVE_TUNABLES
+  if (__glibc_unlikely (mp_.hp_pagesize != 0))
+    {
+      /* MAP_NORESERVE is not used for huge pages because some kernel may
+	 not reserve the mmap region and a subsequent access may trigger
+	 a SIGBUS if there is no free pages in the pool.  */
+      heap_info *h = alloc_new_heap (size, top_pad, mp_.hp_pagesize,
+				     mp_.hp_flags);
+      if (h != NULL)
+	return h;
+    }
+#endif
+  return alloc_new_heap (size, top_pad, GLRO (dl_pagesize), MAP_NORESERVE);
 }
 
 /* Grow a heap.  size is automatically rounded up to a
@@ -526,12 +578,13 @@ new_heap (size_t size, size_t top_pad)
 static int
 grow_heap (heap_info *h, long diff)
 {
-  size_t pagesize = GLRO (dl_pagesize);
+  size_t pagesize = h->pagesize;
+  size_t max_size = heap_max_size ();
   long new_size;
 
   diff = ALIGN_UP (diff, pagesize);
   new_size = (long) h->size + diff;
-  if ((unsigned long) new_size > (unsigned long) HEAP_MAX_SIZE)
+  if ((unsigned long) new_size > (unsigned long) max_size)
     return -1;
 
   if ((unsigned long) new_size > h->mprotect_size)
@@ -581,21 +634,14 @@ shrink_heap (heap_info *h, long diff)
 
 /* Delete a heap. */
 
-#define delete_heap(heap) \
-  do {									      \
-      if ((char *) (heap) + HEAP_MAX_SIZE == aligned_heap_area)		      \
-        aligned_heap_area = NULL;					      \
-      __munmap ((char *) (heap), HEAP_MAX_SIZE);			      \
-    } while (0)
-
 static int
 heap_trim (heap_info *heap, size_t pad)
 {
   mstate ar_ptr = heap->ar_ptr;
-  unsigned long pagesz = GLRO (dl_pagesize);
   mchunkptr top_chunk = top (ar_ptr), p;
   heap_info *prev_heap;
   long new_size, top_size, top_area, extra, prev_size, misalign;
+  size_t max_size = heap_max_size ();
 
   /* Can this heap go away completely? */
   while (top_chunk == chunk_at_offset (heap, sizeof (*heap)))
@@ -612,19 +658,23 @@ heap_trim (heap_info *heap, size_t pad)
       assert (new_size > 0 && new_size < (long) (2 * MINSIZE));
       if (!prev_inuse (p))
         new_size += prev_size (p);
-      assert (new_size > 0 && new_size < HEAP_MAX_SIZE);
-      if (new_size + (HEAP_MAX_SIZE - prev_heap->size) < pad + MINSIZE + pagesz)
+      assert (new_size > 0 && new_size < max_size);
+      if (new_size + (max_size - prev_heap->size) < pad + MINSIZE
+						    + heap->pagesize)
         break;
       ar_ptr->system_mem -= heap->size;
       LIBC_PROBE (memory_heap_free, 2, heap, heap->size);
-      delete_heap (heap);
+      if ((char *) heap + max_size == aligned_heap_area)
+	aligned_heap_area = NULL;
+      __munmap (heap, max_size);
       heap = prev_heap;
       if (!prev_inuse (p)) /* consolidate backward */
         {
           p = prev_chunk (p);
           unlink_chunk (ar_ptr, p);
         }
-      assert (((unsigned long) ((char *) p + new_size) & (pagesz - 1)) == 0);
+      assert (((unsigned long) ((char *) p + new_size) & (heap->pagesize - 1))
+	      == 0);
       assert (((char *) p + new_size) == ((char *) heap + heap->size));
       top (ar_ptr) = top_chunk = p;
       set_head (top_chunk, new_size | PREV_INUSE);
@@ -644,7 +694,7 @@ heap_trim (heap_info *heap, size_t pad)
     return 0;
 
   /* Release in pagesize units and round down to the nearest page.  */
-  extra = ALIGN_DOWN(top_area - pad, pagesz);
+  extra = ALIGN_DOWN(top_area - pad, heap->pagesize);
   if (extra == 0)
     return 0;
 

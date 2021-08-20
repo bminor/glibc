@@ -91,10 +91,15 @@ tests-exclude-hugetlb1 = \
 	tst-malloc-usable \
 	tst-malloc-usable-tunables \
 	tst-mallocstate
+# The tst-free-errno relies on the used malloc page size to mmap an
+# overlapping region.
+tests-exclude-hugetlb2 = \
+	$(tests-exclude-hugetlb1) \
+	tst-free-errno
 tests-malloc-hugetlb1 = \
 	$(filter-out $(tests-exclude-hugetlb1), $(tests))
 tests-malloc-hugetlb2 = \
-	$(filter-out $(tests-exclude-hugetlb1), $(tests))
+	$(filter-out $(tests-exclude-hugetlb2), $(tests))
 
 # -lmcheck needs __malloc_initialize_hook, which was deprecated in 2.24.
 ifeq ($(have-GLIBC_2.23)$(build-shared),yesyes)
