@@ -63,6 +63,12 @@ do_test (void)
     TEST_COMPARE (r, EINVAL);
   }
 
+  {
+    char thread_name[16];
+    int r = pthread_getname_np (thr, thread_name, sizeof (thread_name));
+    TEST_COMPARE (r, EINVAL);
+  }
+
   xpthread_join (thr);
 
   return 0;
