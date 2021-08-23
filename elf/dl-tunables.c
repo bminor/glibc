@@ -56,8 +56,6 @@ tunables_strdup (const char *in)
   if (out == (void *)-1)
     _dl_fatal_printf ("sbrk() failure while processing tunables\n");
 
-  i--;
-
   while (i-- > 0)
     out[i] = in[i];
 
