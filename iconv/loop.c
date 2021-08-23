@@ -436,6 +436,12 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
     return __GCONV_FULL_OUTPUT;
 
   /*  Now add characters from the normal input buffer.  */
+  if (inlen >= MAX_NEEDED_INPUT)
+    /* Avoid a -Wstringop-overflow= warning when this loop is
+       unrolled.  The compiler cannot otherwise see that this is
+       unreachable because it depends on (state->__count & 7) not
+       being too large after a previous conversion step.  */
+    __builtin_unreachable ();
   do
     bytebuf[inlen++] = *inptr++;
   while (inlen < MAX_NEEDED_INPUT && inptr < inend);
