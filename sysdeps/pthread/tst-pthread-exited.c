@@ -50,6 +50,12 @@ do_test (void)
     TEST_COMPARE (r, EINVAL);
   }
 
+  {
+    struct sched_param sch = { 0 };
+    int r = pthread_setschedparam (thr, SCHED_FIFO, &sch);
+    TEST_COMPARE (r, EINVAL);
+  }
+
   xpthread_join (thr);
 
   return 0;

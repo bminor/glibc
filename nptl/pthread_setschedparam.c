@@ -15,26 +15,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sched.h>
-#include <string.h>
-#include "pthreadP.h"
-#include <lowlevellock.h>
+#include <libc-lock.h>
+#include <kernel-posix-cpu-timers.h>
+#include <pthreadP.h>
 
 
-int
-__pthread_setschedparam (pthread_t threadid, int policy,
-			 const struct sched_param *param)
+static int
+setschedparam (struct pthread *pd, int policy,
+	       const struct sched_param *param)
 {
-  struct pthread *pd = (struct pthread *) threadid;
-
-  /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
-    /* Not a valid thread handle.  */
-    return ESRCH;
-
-  int result = 0;
-
   /* See CREATE THREAD NOTES in nptl/pthread_create.c.  */
   lll_lock (pd->lock, LLL_PRIVATE);
 
@@ -43,8 +32,7 @@ __pthread_setschedparam (pthread_t threadid, int policy,
 
   /* If the thread should have higher priority because of some
      PTHREAD_PRIO_PROTECT mutexes it holds, adjust the priority.  */
-  if (__builtin_expect (pd->tpp != NULL, 0)
-      && pd->tpp->priomax > param->sched_priority)
+  if (pd->tpp != NULL && pd->tpp->priomax > param->sched_priority)
     {
       p = *param;
       p.sched_priority = pd->tpp->priomax;
@@ -52,10 +40,8 @@ __pthread_setschedparam (pthread_t threadid, int policy,
     }
 
   /* Try to set the scheduler information.  */
-  if (__builtin_expect (__sched_setscheduler (pd->tid, policy,
-					      param) == -1, 0))
-    result = errno;
-  else
+  int r = INTERNAL_SYSCALL_CALL (sched_setscheduler, pd->tid, policy, param);
+  if (r == 0)
     {
       /* We succeeded changing the kernel information.  Reflect this
 	 change in the thread descriptor.  */
@@ -65,6 +51,25 @@ __pthread_setschedparam (pthread_t threadid, int policy,
     }
 
   lll_unlock (pd->lock, LLL_PRIVATE);
+
+  return -r;
+}
+
+int
+__pthread_setschedparam (pthread_t threadid, int policy,
+			 const struct sched_param *param)
+{
+  struct pthread *pd = (struct pthread *) threadid;
+
+  /* Block all signals, as required by pd->exit_lock.  */
+  internal_sigset_t old_mask;
+  internal_signal_block_all (&old_mask);
+  __libc_lock_lock (pd->exit_lock);
+
+  int result = pd->tid != 0 ? setschedparam (pd, policy, param) : EINVAL;
+
+  __libc_lock_unlock (pd->exit_lock);
+  internal_signal_restore_set (&old_mask);
 
   return result;
 }
