@@ -65,9 +65,9 @@ tr_where (const void *caller, Dl_info *info)
 		       offset);
             }
 
-	  fprintf (mallstream, "@ %s%s%s[%p] ", info->dli_fname ? : "",
-		   info->dli_fname ? ":" : "",
-                   buf, caller);
+	  fprintf (mallstream, "@ %s%s%s[0x%" PRIxPTR "] ",
+		   info->dli_fname ? : "", info->dli_fname ? ":" : "", buf,
+		   caller - info->dli_fbase);
         }
       else
         fprintf (mallstream, "@ [%p] ", caller);

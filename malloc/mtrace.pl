@@ -75,11 +75,15 @@ if ($#ARGV == 0) {
     } else {
 	$prog = "./$binary";
     }
-    if (open (LOCS, "env LD_TRACE_LOADED_OBJECTS=1 $prog |")) {
+    # Set the environment variable LD_TRACE_PRELINKING to an empty string so
+    # that we trigger tracing but do not match with the executable or any of
+    # its dependencies.
+    if (open (LOCS, "env LD_TRACE_PRELINKING= $prog |")) {
 	while (<LOCS>) {
 	    chop;
-	    if (/^.*=> (.*) .(0x[0123456789abcdef]*).$/) {
+	    if (/^.*=> (.*) \((0x[0123456789abcdef]*), (0x[0123456789abcdef]*).*/) {
 		$locs{$1} = $2;
+		$rel{$1} = hex($2) - hex($3);
 	    }
 	}
 	close (LOCS);
@@ -110,12 +114,7 @@ sub location {
 	my $addr = $2;
 	my $searchaddr;
 	return $cache{$addr} if (exists $cache{$addr});
-	if ($locs{$prog} ne "") {
-	    $searchaddr = sprintf "%#x", $addr - $locs{$prog};
-	} else {
-	    $searchaddr = $addr;
-	    $prog = $binary;
-	}
+	$searchaddr = sprintf "%#x", hex($addr) + $rel{$prog};
 	if ($binary ne "" && open (ADDR, "addr2line -e $prog $searchaddr|")) {
 	    my $line = <ADDR>;
 	    chomp $line;
