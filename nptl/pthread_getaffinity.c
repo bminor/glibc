@@ -15,25 +15,33 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <limits.h>
+#include <libc-lock.h>
 #include <pthreadP.h>
-#include <string.h>
-#include <sysdep.h>
-#include <sys/param.h>
-#include <sys/types.h>
 #include <shlib-compat.h>
 
 
 int
 __pthread_getaffinity_np (pthread_t th, size_t cpusetsize, cpu_set_t *cpuset)
 {
-  const struct pthread *pd = (const struct pthread *) th;
+  struct pthread *pd = (struct pthread *) th;
 
-  int res = INTERNAL_SYSCALL_CALL (sched_getaffinity, pd->tid,
-				   MIN (INT_MAX, cpusetsize), cpuset);
-  if (INTERNAL_SYSCALL_ERROR_P (res))
-    return INTERNAL_SYSCALL_ERRNO (res);
+  /* Block all signals, as required by pd->exit_lock.  */
+  internal_sigset_t old_mask;
+  internal_signal_block_all (&old_mask);
+  __libc_lock_lock (pd->exit_lock);
+
+  int res= 0;
+  if (pd->tid > 0)
+    res = INTERNAL_SYSCALL_CALL (sched_getaffinity, pd->tid,
+				 MIN (INT_MAX, cpusetsize), cpuset);
+  else
+    res = -EINVAL;
+
+  __libc_lock_unlock (pd->exit_lock);
+  internal_signal_restore_set (&old_mask);
+
+  if (res < 0)
+    return -res;
 
   /* Clean the rest of the memory the kernel didn't do.  */
   memset ((char *) cpuset + res, '\0', cpusetsize - res);
