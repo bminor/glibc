@@ -23,6 +23,7 @@
 #include <support/check.h>
 #include <support/support.h>
 #include <support/xthread.h>
+#include <time.h>
 
 static void *
 noop_thread (void *closure)
@@ -40,6 +41,12 @@ do_test (void)
   {
     cpu_set_t cpuset;
     int r = pthread_getaffinity_np (thr, sizeof (cpuset), &cpuset);
+    TEST_COMPARE (r, EINVAL);
+  }
+
+  {
+    clockid_t clkid;
+    int r = pthread_getcpuclockid (thr, &clkid);
     TEST_COMPARE (r, EINVAL);
   }
 

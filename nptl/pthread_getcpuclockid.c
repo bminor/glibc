@@ -16,11 +16,9 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <pthreadP.h>
-#include <sys/time.h>
-#include <tls.h>
+#include <libc-lock.h>
 #include <kernel-posix-cpu-timers.h>
+#include <pthreadP.h>
 #include <shlib-compat.h>
 
 int
@@ -28,17 +26,21 @@ __pthread_getcpuclockid (pthread_t threadid, clockid_t *clockid)
 {
   struct pthread *pd = (struct pthread *) threadid;
 
-  /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
-    /* Not a valid thread handle.  */
-    return ESRCH;
+  /* Block all signals, as required by pd->exit_lock.  */
+  internal_sigset_t old_mask;
+  internal_signal_block_all (&old_mask);
+  __libc_lock_lock (pd->exit_lock);
 
-  /* The clockid_t value is a simple computation from the TID.  */
+  int res = 0;
+  if (pd->tid )
+    *clockid = make_thread_cpuclock (pd->tid, CPUCLOCK_SCHED);
+  else
+    res = EINVAL;
 
-  const clockid_t tidclock = make_thread_cpuclock (pd->tid, CPUCLOCK_SCHED);
+  __libc_lock_unlock (pd->exit_lock);
+  internal_signal_restore_set (&old_mask);
 
-  *clockid = tidclock;
-  return 0;
+  return res;
 }
 versioned_symbol (libc, __pthread_getcpuclockid, pthread_getcpuclockid,
                   GLIBC_2_34);
