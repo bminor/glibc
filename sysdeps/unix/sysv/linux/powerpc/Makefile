@@ -19,7 +19,9 @@ ifeq ($(build-shared),yes)
 sysdep-dl-routines += dl-static
 endif
 # Otherwise tst-tls-dlinfo fails due to tst-tlsmod2.so using static tls.
+ifeq ($(have-tls-get-addr-optimize),yes)
 LDFLAGS-tst-tlsmod2.so += -Wl,--no-tls-get-addr-optimize
+endif
 endif
 
 ifeq ($(subdir),misc)
