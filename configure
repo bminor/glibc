@@ -5969,6 +5969,40 @@ $as_echo "$libc_linker_feature" >&6; }
 config_vars="$config_vars
 have-z-start-stop-gc = $libc_cv_z_start_stop_gc"
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for linker that supports --depaudit" >&5
+$as_echo_n "checking for linker that supports --depaudit... " >&6; }
+libc_linker_feature=no
+if test x"$gnu_ld" = x"yes"; then
+  libc_linker_check=`$LD -v --help 2>/dev/null | grep "\--depaudit"`
+  if test -n "$libc_linker_check"; then
+    cat > conftest.c <<EOF
+int _start (void) { return 42; }
+EOF
+    if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
+				-Wl,--depaudit,x -nostdlib -nostartfiles
+				-fPIC -shared -o conftest.so conftest.c
+				1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+    then
+      libc_linker_feature=yes
+    fi
+    rm -f conftest*
+  fi
+fi
+if test $libc_linker_feature = yes; then
+  libc_cv_depaudit=yes
+else
+  libc_cv_depaudit=no
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_linker_feature" >&5
+$as_echo "$libc_linker_feature" >&6; }
+config_vars="$config_vars
+have-depaudit = $libc_cv_depaudit"
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for linker that supports --no-dynamic-linker" >&5
 $as_echo_n "checking for linker that supports --no-dynamic-linker... " >&6; }
 libc_linker_feature=no

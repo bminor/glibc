@@ -1337,6 +1337,10 @@ LIBC_LINKER_FEATURE([-z start-stop-gc], [-Wl,-z,start-stop-gc],
 		    [libc_cv_z_start_stop_gc=yes], [libc_cv_z_start_stop_gc=no])
 LIBC_CONFIG_VAR([have-z-start-stop-gc], [$libc_cv_z_start_stop_gc])
 
+LIBC_LINKER_FEATURE([--depaudit], [-Wl,--depaudit,x],
+		    [libc_cv_depaudit=yes], [libc_cv_depaudit=no])
+LIBC_CONFIG_VAR([have-depaudit], [$libc_cv_depaudit])
+
 LIBC_LINKER_FEATURE([--no-dynamic-linker],
 		    [-Wl,--no-dynamic-linker],
 		    [libc_cv_no_dynamic_linker=yes],

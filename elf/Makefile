@@ -219,7 +219,6 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-dlopen-self tst-auditmany tst-initfinilazyfail tst-dlopenfail \
 	 tst-dlopenfail-2 \
 	 tst-filterobj tst-filterobj-dlopen tst-auxobj tst-auxobj-dlopen \
-	 tst-audit14 tst-audit15 tst-audit16 tst-audit17 \
 	 tst-single_threaded tst-single_threaded-pthread \
 	 tst-tls-ie tst-tls-ie-dlmopen argv0test \
 	 tst-glibc-hwcaps tst-glibc-hwcaps-prepend tst-glibc-hwcaps-mask \
@@ -237,6 +236,9 @@ test-srcs = tst-pathopt
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
 ifneq ($(selinux-enabled),1)
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
+endif
+ifeq ($(have-depaudit),yes)
+tests += tst-audit14 tst-audit15 tst-audit16
 endif
 endif
 tests += $(tests-execstack-$(have-z-execstack))
