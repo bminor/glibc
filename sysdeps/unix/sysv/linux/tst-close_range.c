@@ -36,23 +36,12 @@
 
 #define NFDS 100
 
-static int
-open_multiple_temp_files (void)
-{
-  /* Check if the temporary file descriptor has no no gaps.  */
-  int lowfd = xopen ("/dev/null", O_RDONLY, 0600);
-  for (int i = 1; i <= NFDS; i++)
-    TEST_COMPARE (xopen ("/dev/null", O_RDONLY, 0600),
-		  lowfd + i);
-  return lowfd;
-}
-
 static void
 close_range_test_max_upper_limit (void)
 {
   struct support_descriptors *descrs = support_descriptors_list ();
 
-  int lowfd = open_multiple_temp_files ();
+  int lowfd = support_open_dev_null_range (NFDS, O_RDONLY, 0600);
 
   {
     int r = close_range (lowfd, ~0U, 0);
@@ -68,7 +57,7 @@ close_range_test_max_upper_limit (void)
 static void
 close_range_test_common (int lowfd, unsigned int flags)
 {
-  const int maximum_fd = lowfd + NFDS;
+  const int maximum_fd = lowfd + NFDS - 1;
   const int half_fd = lowfd + NFDS / 2;
   const int gap_1 = maximum_fd - 8;
 
@@ -121,7 +110,7 @@ close_range_test (void)
   struct support_descriptors *descrs = support_descriptors_list ();
 
   /* Check if the temporary file descriptor has no no gaps.  */
-  int lowfd = open_multiple_temp_files ();
+  int lowfd = support_open_dev_null_range (NFDS, O_RDONLY, 0600);
 
   close_range_test_common (lowfd, 0);
 
@@ -146,7 +135,7 @@ close_range_test_subprocess (void)
   struct support_descriptors *descrs = support_descriptors_list ();
 
   /* Check if the temporary file descriptor has no no gaps.  */
-  int lowfd = open_multiple_temp_files ();
+  int lowfd = support_open_dev_null_range (NFDS, O_RDONLY, 0600);
 
   struct support_stack stack = support_stack_alloc (4096);
 
@@ -184,7 +173,7 @@ close_range_unshare_test (void)
   struct support_descriptors *descrs1 = support_descriptors_list ();
 
   /* Check if the temporary file descriptor has no no gaps.  */
-  int lowfd = open_multiple_temp_files ();
+  int lowfd = support_open_dev_null_range (NFDS, O_RDONLY, 0600);
 
   struct support_descriptors *descrs2 = support_descriptors_list ();
 
@@ -200,7 +189,7 @@ close_range_unshare_test (void)
 
   support_stack_free (&stack);
 
-  for (int i = 0; i < NFDS; i++)
+  for (int i = lowfd; i < lowfd + NFDS; i++)
     TEST_VERIFY (fcntl (i, F_GETFL) > -1);
 
   support_descriptors_check (descrs2);
@@ -226,9 +215,9 @@ static void
 close_range_cloexec_test (void)
 {
   /* Check if the temporary file descriptor has no no gaps.  */
-  const int lowfd = open_multiple_temp_files ();
+  int lowfd = support_open_dev_null_range (NFDS, O_RDONLY, 0600);
 
-  const int maximum_fd = lowfd + NFDS;
+  const int maximum_fd = lowfd + NFDS - 1;
   const int half_fd = lowfd + NFDS / 2;
   const int gap_1 = maximum_fd - 8;
 
@@ -251,13 +240,13 @@ close_range_cloexec_test (void)
   /* Create some gaps, close up to a threshold, and check result.  */
   static int gap_close[] = { 57, 78, 81, 82, 84, 90 };
   for (int i = 0; i < array_length (gap_close); i++)
-    xclose (gap_close[i]);
+    xclose (lowfd + gap_close[i]);
 
   TEST_COMPARE (close_range (half_fd + 1, gap_1, CLOSE_RANGE_CLOEXEC), 0);
   for (int i = half_fd + 1; i < gap_1; i++)
     {
       int flags = fcntl (i, F_GETFD);
-      if (is_in_array (gap_close, array_length (gap_close), i))
+      if (is_in_array (gap_close, array_length (gap_close), i - lowfd))
         TEST_COMPARE (flags, -1);
       else
         {
