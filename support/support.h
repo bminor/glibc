@@ -193,6 +193,14 @@ struct support_stack support_stack_alloc (size_t size);
 /* Deallocate the STACK.  */
 void support_stack_free (struct support_stack *stack);
 
+
+/* Create a range of NUM opened '/dev/null' file descriptors using FLAGS and
+   MODE.  The function takes care of restarting the open range if a file
+   descriptor is found within the specified range and also increases
+   RLIMIT_NOFILE if required.
+   The returned value is the lowest file descriptor number.  */
+int support_open_dev_null_range (int num, int flags, mode_t mode);
+
 __END_DECLS
 
 #endif /* SUPPORT_H */

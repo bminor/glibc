@@ -66,6 +66,7 @@ libsupport-routines = \
   support_path_support_time64 \
   support_process_state \
   support_ptrace \
+  support-open-dev-null-range \
   support_openpty \
   support_paths \
   support_quote_blob \
@@ -264,6 +265,7 @@ tests = \
   tst-support_capture_subprocess \
   tst-support_descriptors \
   tst-support_format_dns_packet \
+  tst-support-open-dev-null-range \
   tst-support-process_state \
   tst-support_quote_blob \
   tst-support_quote_string \
