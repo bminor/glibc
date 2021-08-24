@@ -36,4 +36,8 @@ long double foobar (long double x) { return x; }]])],
   fi
 fi
 
+LIBC_LINKER_FEATURE([--no-tls-get-addr-optimize], [-Wl,--no-tls-get-addr-optimize],
+                    [libc_cv_tls_get_addr_optimize=yes], [libc_cv_tls_get_addr_optimize=no])
+LIBC_CONFIG_VAR([have-tls-get-addr-optimize], [$libc_cv_tls_get_addr_optimize])
+
 ldd_rewrite_script=sysdeps/unix/sysv/linux/powerpc/ldd-rewrite.sed
