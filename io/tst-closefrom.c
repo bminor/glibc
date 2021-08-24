@@ -24,31 +24,22 @@
 #include <support/check.h>
 #include <support/descriptors.h>
 #include <support/xunistd.h>
+#include <support/support.h>
 
 #include <array_length.h>
 
 #define NFDS 100
 
 static int
-open_multiple_temp_files (void)
-{
-  /* Check if the temporary file descriptor has no no gaps.  */
-  int lowfd = xopen ("/dev/null", O_RDONLY, 0600);
-  for (int i = 1; i <= NFDS; i++)
-    TEST_COMPARE (xopen ("/dev/null", O_RDONLY, 0600), lowfd + i);
-  return lowfd;
-}
-
-static int
 closefrom_test (void)
 {
   struct support_descriptors *descrs = support_descriptors_list ();
 
-  int lowfd = open_multiple_temp_files ();
+  int lowfd = support_open_dev_null_range (NFDS, O_RDONLY, 0600);
 
-  const int maximum_fd = lowfd + NFDS;
+  const int maximum_fd = lowfd + NFDS - 1;
   const int half_fd = lowfd + NFDS / 2;
-  const int gap = maximum_fd / 4;
+  const int gap = lowfd + NFDS / 4;
 
   /* Close half of the descriptors and check result.  */
   closefrom (half_fd);
@@ -58,7 +49,7 @@ closefrom_test (void)
       TEST_COMPARE (fcntl (i, F_GETFL), -1);
       TEST_COMPARE (errno, EBADF);
     }
-  for (int i = 0; i < half_fd; i++)
+  for (int i = lowfd; i < half_fd; i++)
     TEST_VERIFY (fcntl (i, F_GETFL) > -1);
 
   /* Create some gaps, close up to a threshold, and check result.  */
@@ -74,7 +65,7 @@ closefrom_test (void)
       TEST_COMPARE (fcntl (i, F_GETFL), -1);
       TEST_COMPARE (errno, EBADF);
     }
-  for (int i = 0; i < gap; i++)
+  for (int i = lowfd; i < gap; i++)
     TEST_VERIFY (fcntl (i, F_GETFL) > -1);
 
   /* Close the remmaining but the last one.  */
