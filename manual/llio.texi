@@ -338,8 +338,8 @@ The kernel does not implement the required functionality.
 @standards{GNU, unistd.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
 
-The function @code{closefrom} closes all file descriptors larger than or equal
-to @var{lowfd} then @var{lowfd}.  This function is similar to calling
+The function @code{closefrom} closes all file descriptors greater than or equal
+to @var{lowfd}.  This function is similar to calling
 @code{close} for all open file descriptors not less than @var{lowfd}.
 
 Already closed file descriptors are ignored.
