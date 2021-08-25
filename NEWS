@@ -65,6 +65,7 @@ The following bugs are resolved with this release:
   [28062] dynamic-link: Suppress audit calls when a (new) namespace is
     empty
   [28096] elf: audit calls that uses static tls might fail
+  [28126] nftw aborts for paths longer than PATH_MAX
   [28182] _TIME_BITS=64 in C++ has issues with fcntl, ioctl, prctl
   [28223] mips: clone does not align stack
   [28310] Do not use affinity mask for sysconf (_SC_NPROCESSORS_CONF)
