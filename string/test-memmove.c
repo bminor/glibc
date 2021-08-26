@@ -298,7 +298,7 @@ do_test2 (size_t offset)
 		{
 		  error (0, 0,
 			 "Wrong result in function %s dst \"%p\" src \"%p\" offset \"%zd\"",
-			 impl->name, dst, large_buf, i);
+			 impl->name, dst, src, i);
 		  ret = 1;
 		  munmap ((void *) large_buf, size);
 		  return;
