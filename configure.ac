@@ -1665,40 +1665,6 @@ if test $libc_cv_predef_fortify_source = yes; then
 fi
 AC_SUBST(CPPUNDEFS)
 
-# Some linkers on some architectures support __ehdr_start but with
-# bugs.  Make sure usage of it does not create relocations in the
-# output (as the linker should resolve them all for us).
-AC_CACHE_CHECK([whether the linker provides working __ehdr_start],
-	       libc_cv_ehdr_start, [
-old_CFLAGS="$CFLAGS"
-old_LDFLAGS="$LDFLAGS"
-old_LIBS="$LIBS"
-CFLAGS="$CFLAGS -fPIC"
-LDFLAGS="$LDFLAGS -nostdlib -nostartfiles -shared $no_ssp"
-LIBS=
-AC_LINK_IFELSE([AC_LANG_SOURCE([
-typedef struct {
-  char foo;
-  long val;
-} Ehdr;
-extern const Ehdr __ehdr_start __attribute__ ((visibility ("hidden")));
-long ehdr (void) { return __ehdr_start.val; }
-])],
-	       [if $READELF -r conftest | grep -F __ehdr_start >/dev/null; then
-		  libc_cv_ehdr_start=broken
-		else
-		  libc_cv_ehdr_start=yes
-		fi], [libc_cv_ehdr_start=no])
-CFLAGS="$old_CFLAGS"
-LDFLAGS="$old_LDFLAGS"
-LIBS="$old_LIBS"
-])
-if test "$libc_cv_ehdr_start" = yes; then
-  AC_DEFINE([HAVE_EHDR_START])
-elif test "$libc_cv_ehdr_start" = broken; then
-  AC_MSG_WARN([linker is broken -- you should upgrade])
-fi
-
 AC_CACHE_CHECK(for __builtin_trap with no external dependencies,
 	       libc_cv_builtin_trap, [dnl
 libc_cv_builtin_trap=no

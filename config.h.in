@@ -171,9 +171,6 @@
 /* Define if gcc supports attribute ifunc.  */
 #undef HAVE_GCC_IFUNC
 
-/* Define if the linker defines __ehdr_start.  */
-#undef HAVE_EHDR_START
-
 #define WANT_FLOAT128 0
 
 /*
