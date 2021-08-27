@@ -377,15 +377,21 @@ tests += tst-atfork2 tst-tls4 tst-_res1 tst-fini1 tst-compat-forwarder
 tests-internal += tst-tls3 tst-tls3-malloc tst-tls5 tst-stackguard1
 tests-nolibpthread += tst-fini1
 ifeq ($(have-z-execstack),yes)
+# Test depends on a nested function, can't compile without rewrite
+ifneq ($(with-clang),yes)
 tests += tst-execstack
+endif
 endif
 endif
 
 modules-names = tst-atfork2mod tst-tls3mod tst-tls4moda tst-tls4modb \
 		tst-tls5mod tst-tls5moda tst-tls5modb tst-tls5modc \
 		tst-tls5modd tst-tls5mode tst-tls5modf tst-stack4mod \
-		tst-_res1mod1 tst-_res1mod2 tst-execstack-mod tst-fini1mod \
+		tst-_res1mod1 tst-_res1mod2 tst-fini1mod \
 		tst-join7mod tst-compat-forwarder-mod
+ifneq ($(with-clang),yes)
+modules-names += tst-execstack-mod
+endif
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names))) \
 		   tst-cleanup4aux.o tst-cleanupx4aux.o
 test-extras += tst-cleanup4aux tst-cleanupx4aux
@@ -410,10 +416,11 @@ ifeq ($(build-shared),yes)
 
 # Set the `multidir' variable by grabbing the variable from the compiler.
 # We do it once and save the result in a generated makefile.
+# Suppress not-working clang attempt to include 32 and x32 multidirs.
 -include $(objpfx)multidir.mk
 $(objpfx)multidir.mk: $(common-objpfx)config.make
 	$(make-target-directory)
-	dir=`$(CC) $(CFLAGS) $(CPPFLAGS) -print-multi-directory`; \
+	dir="."; \
 	echo "multidir := $$dir" > $@T
 	mv -f $@T $@
 
