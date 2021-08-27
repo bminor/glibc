@@ -43,11 +43,18 @@ __logbf (float x)
     return -1.0 / __builtin_fabsf (x);
 
   /* ret = x & 0x7f800000;  */
+#if !defined __clang__
   asm (
     "xxland %x0,%x1,%x2\n"
     "fcfid  %0,%0"
     : "=f"(ret)
     : "f" (x), "f" (mask.d));
+#else
+  int32_t inum;
+  GET_FLOAT_WORD(inum, x);
+  inum = (inum & 0x7ff0000000000000);
+  SET_FLOAT_WORD(ret, inum);
+#endif
   /* ret = (ret >> 52) - 1023.0, since ret is double.  */
   ret = (ret * two1div52) + two10m1;
   if (__builtin_expect (ret > -two7m1, 0))

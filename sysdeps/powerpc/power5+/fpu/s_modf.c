@@ -23,12 +23,22 @@
 double
 __modf (double x, double *iptr)
 {
+  /* Google-specific: Fix for clang. */
+#if defined __clang__
+  if (__isinf (x))
+#else
   if (__builtin_isinf (x))
+#endif
     {
       *iptr = x;
       return __copysign (0.0, x);
     }
+  /* Google-specific: Fix for clang. */
+#if defined __clang__
+  else if (__isnan (x))
+#else
   else if (__builtin_isnan (x))
+#endif
     {
       *iptr = NAN;
       return NAN;

@@ -22,12 +22,22 @@
 float
 __modff (float x, float *iptr)
 {
+  /* Google-specific: Fix for clang. */
+#if defined __clang__
+  if (__isinff (x))
+#else
   if (__builtin_isinff (x))
+#endif
     {
       *iptr = x;
       return __copysignf (0.0, x);
     }
+  /* Google-specific: Fix for clang. */
+#if defined __clang__
+  else if (__isnanf (x))
+#else
   else if (__builtin_isnanf (x))
+#endif
     {
       *iptr = NAN;
       return NAN;
