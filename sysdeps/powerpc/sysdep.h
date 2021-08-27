@@ -166,6 +166,12 @@
 #define ALIGNARG(log2) log2
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name
 
+#if defined __clang__
+#define DOT_MACHINE(str)
+#else
+#define DOT_MACHINE(str) .machine str
+#endif
+
 #else
 
 /* Linux kernel powerpc documentation [1] states issuing a syscall inside a

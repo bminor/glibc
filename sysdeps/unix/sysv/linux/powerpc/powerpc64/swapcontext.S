@@ -787,7 +787,7 @@ L(error_exit):
      R1 pointing at the dummy frame) state.  We do have the ucontext
      address in R3, so simply copy R3 to R1 before the syscall.  */
 L(do_sigret):
-  mr   r1,r3,
+  mr   r1,r3
   li   r0,SYS_ify(rt_sigreturn)
   sc
   /* No return.  */
