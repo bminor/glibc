@@ -624,6 +624,14 @@ class HeaderTests(object):
                     continue
                 if re.match(r'# [1-9]', line):
                     continue
+                if line.startswith('#pragma GCC '):
+                    # No GCC pragma uses macro expansion, so no
+                    # namespace issues arise from such pragmas.  (Some
+                    # pragmas not in the GCC namespace do macro-expand
+                    # their arguments and so could be affected by
+                    # macros defined by user code including the
+                    # header.)
+                    continue
                 match = re.match(r'#define (.*)', line)
                 if match:
                     self.check_token(bad_tokens, match.group(1))
