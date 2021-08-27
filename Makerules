@@ -260,7 +260,7 @@ $(py-const): $(py-const-dir)%.py: %.pysym $(py-const-script) \
 	     $(common-before-compile)
 	$(make-target-directory)
 	$(AWK) -f $(py-const-script) $< \
-	       | $(CC) -S -o $@.tmp $(CFLAGS) $(CPPFLAGS) -x c -
+	       | $(CC) -S $(MOARFLAGS) -o $@.tmp $(CFLAGS) $(CPPFLAGS) -x c -
 	echo '# GENERATED FILE\n' > $@.tmp2
 	echo '# Constant definitions for pretty printers.' >> $@.tmp2
 	echo '# See gen-py-const.awk for details.\n' >> $@.tmp2
@@ -276,10 +276,11 @@ ifdef gen-as-const-headers
 # Generating headers for assembly constants.
 # We need this defined early to get into before-compile before
 # it's used in sysd-rules, below.
+# clang's integrated assembler doesn't like the freaky tokens.
 $(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
 					   %.sym $(common-before-compile)
 	$(AWK) -f $< $(filter %.sym,$^) \
-	| $(CC) -S -o $(@:.h.d=.h)T3 $(CFLAGS) $(CPPFLAGS) -x c - \
+	| $(CC) -S $(MOARFLAGS) -o $(@:.h.d=.h)T3 $(CFLAGS) $(CPPFLAGS) -x c - \
 		-MD -MP -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)'
 	sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^0-9Xxa-fA-F-]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' \
 		$(@:.h.d=.h)T3 > $(@:.h.d=.h)T
