@@ -22,12 +22,16 @@ tests += \
   tst-ifunc-isa-1-static
 tests-static += \
   tst-ifunc-isa-1-static
+test-xfail-tst-ifunc-isa-1 = $(with-lld)
+test-xfail-tst-ifunc-isa-1-static = $(with-lld)
 ifneq ($(have-tunables),no)
 tests += \
   tst-ifunc-isa-2 \
   tst-ifunc-isa-2-static
 tests-static += \
   tst-ifunc-isa-2-static
+test-xfail-tst-ifunc-isa-2 = $(with-lld)
+test-xfail-tst-ifunc-isa-2-static = $(with-lld)
 endif
 endif
 endif
