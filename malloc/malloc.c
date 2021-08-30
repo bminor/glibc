@@ -2498,6 +2498,51 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags, mstate av)
   return chunk2mem (p);
 }
 
+/*
+   Allocate memory using mmap() based on S and NB requested size, aligning to
+   PAGESIZE if required.  The EXTRA_FLAGS is used on mmap() call.  If the call
+   succeedes S is updated with the allocated size.  This is used as a fallback
+   if MORECORE fails.
+ */
+static void *
+sysmalloc_mmap_fallback (long int *s, INTERNAL_SIZE_T nb,
+			 INTERNAL_SIZE_T old_size, size_t minsize,
+			 size_t pagesize, int extra_flags, mstate av)
+{
+  long int size = *s;
+
+  /* Cannot merge with old top, so add its size back in */
+  if (contiguous (av))
+    size = ALIGN_UP (size + old_size, pagesize);
+
+  /* If we are relying on mmap as backup, then use larger units */
+  if ((unsigned long) (size) < minsize)
+    size = minsize;
+
+  /* Don't try if size wraps around 0 */
+  if ((unsigned long) (size) <= (unsigned long) (nb))
+    return MORECORE_FAILURE;
+
+  char *mbrk = (char *) (MMAP (0, size,
+			       mtag_mmap_flags | PROT_READ | PROT_WRITE,
+			       extra_flags));
+  if (mbrk == MAP_FAILED)
+    return MAP_FAILED;
+
+#ifdef MAP_HUGETLB
+  if (!(extra_flags & MAP_HUGETLB))
+    madvise_thp (mbrk, size);
+#endif
+
+  /* Record that we no longer have a contiguous sbrk region.  After the first
+     time mmap is used as backup, we do not ever rely on contiguous space
+     since this could incorrectly bridge regions.  */
+  set_noncontiguous (av);
+
+  *s = size;
+  return mbrk;
+}
+
 static void *
 sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 {
@@ -2696,38 +2741,14 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
              segregated mmap region.
            */
 
-          /* Cannot merge with old top, so add its size back in */
-          if (contiguous (av))
-            size = ALIGN_UP (size + old_size, pagesize);
-
-          /* If we are relying on mmap as backup, then use larger units */
-          if ((unsigned long) (size) < (unsigned long) (MMAP_AS_MORECORE_SIZE))
-            size = MMAP_AS_MORECORE_SIZE;
-
-          /* Don't try if size wraps around 0 */
-          if ((unsigned long) (size) > (unsigned long) (nb))
-            {
-              char *mbrk = (char *) (MMAP (0, size,
-					   mtag_mmap_flags | PROT_READ | PROT_WRITE,
-					   0));
-
-              if (mbrk != MAP_FAILED)
-                {
-		  madvise_thp (mbrk, size);
-
-                  /* We do not need, and cannot use, another sbrk call to find end */
-                  brk = mbrk;
-                  snd_brk = brk + size;
-
-                  /*
-                     Record that we no longer have a contiguous sbrk region.
-                     After the first time mmap is used as backup, we do not
-                     ever rely on contiguous space since this could incorrectly
-                     bridge regions.
-                   */
-                  set_noncontiguous (av);
-                }
-            }
+	  char *mbrk = sysmalloc_mmap_fallback (&size, nb, old_size, pagesize,
+						MMAP_AS_MORECORE_SIZE, 0, av);
+	  if (mbrk != MAP_FAILED)
+	    {
+	      /* We do not need, and cannot use, another sbrk call to find end */
+	      brk = mbrk;
+	      snd_brk = brk + size;
+	    }
         }
 
       if (brk != (char *) (MORECORE_FAILURE))
