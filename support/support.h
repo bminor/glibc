@@ -174,6 +174,10 @@ timer_t support_create_timer (uint64_t sec, long int nsec, bool repeat,
 /* Disable the timer TIMER.  */
 void support_delete_timer (timer_t timer);
 
+/* Wait until all threads except the current thread have exited (as
+   far as the kernel is concerned).  */
+void support_wait_for_thread_exit (void);
+
 struct support_stack
 {
   void *stack;
