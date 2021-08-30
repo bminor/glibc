@@ -83,9 +83,10 @@ libsupport-routines = \
   support_test_compare_blob \
   support_test_compare_failure \
   support_test_compare_string \
-  support_write_file_string \
   support_test_main \
   support_test_verify_impl \
+  support_wait_for_thread_exit \
+  support_write_file_string \
   temp_file \
   timespec \
   timespec-time64 \
