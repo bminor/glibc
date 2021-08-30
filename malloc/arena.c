@@ -364,6 +364,10 @@ ptmalloc_init (void)
 # endif
   TUNABLE_GET (mxfast, size_t, TUNABLE_CALLBACK (set_mxfast));
   TUNABLE_GET (hugetlb, size_t, TUNABLE_CALLBACK (set_hugetlb));
+  if (mp_.hp_pagesize > 0)
+    /* Force mmap for main arena instead of sbrk, so hugepages are explicitly
+       used.  */
+    __always_fail_morecore = true;
 #else
   if (__glibc_likely (_environ != NULL))
     {

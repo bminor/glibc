@@ -15,9 +15,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if defined(SHARED) || defined(USE_MTAG)
 static bool __always_fail_morecore = false;
-#endif
 
 /* Allocate INCREMENT more bytes of data space,
    and return the start of data space, or NULL on errors.
@@ -25,10 +23,8 @@ static bool __always_fail_morecore = false;
 void *
 __glibc_morecore (ptrdiff_t increment)
 {
-#if defined(SHARED) || defined(USE_MTAG)
   if (__always_fail_morecore)
     return NULL;
-#endif
 
   void *result = (void *) __sbrk (increment);
   if (result == (void *) -1)

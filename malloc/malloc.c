@@ -2741,8 +2741,16 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
              segregated mmap region.
            */
 
-	  char *mbrk = sysmalloc_mmap_fallback (&size, nb, old_size, pagesize,
-						MMAP_AS_MORECORE_SIZE, 0, av);
+	  char *mbrk = MAP_FAILED;
+#if HAVE_TUNABLES
+	  if (mp_.hp_pagesize > 0)
+	    mbrk = sysmalloc_mmap_fallback (&size, nb, old_size,
+					    mp_.hp_pagesize, mp_.hp_pagesize,
+					    mp_.hp_flags, av);
+#endif
+	  if (mbrk == MAP_FAILED)
+	    mbrk = sysmalloc_mmap_fallback (&size, nb, old_size, pagesize,
+					    MMAP_AS_MORECORE_SIZE, 0, av);
 	  if (mbrk != MAP_FAILED)
 	    {
 	      /* We do not need, and cannot use, another sbrk call to find end */
