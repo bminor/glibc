@@ -47,7 +47,7 @@ msync (void *addr, size_t length, int flags)
   kern_return_t err;
   int cancel_oldtype;
 
-  if (flags & (MS_SYNC | MS_ASYNC) == (MS_SYNC | MS_ASYNC))
+  if ((flags & (MS_SYNC | MS_ASYNC)) == (MS_SYNC | MS_ASYNC))
     return __hurd_fail (EINVAL);
 
   while (cur < target)
