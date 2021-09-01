@@ -193,6 +193,19 @@ next_input (char **line, int first, int last)
 	      *wp++ = '\t';
 	    else if (*cp == 'n')
 	      *wp++ = '\n';
+	    else if (*cp >= '0' && *cp <= '7')
+	      {
+		int ndigits = 0;
+		int cval = 0;
+		while (ndigits < 3 && *cp >= '0' && *cp <= '7')
+		  {
+		    cval *= 8;
+		    cval += (*cp++) - '0';
+		    ndigits ++;
+		  }
+		*wp++ = cval;
+		--cp;
+	      }
 	    else
 	      *wp++ = *cp;
 

@@ -23,7 +23,7 @@ main (void)
 
   puts ("in C locale");
   setlocale (LC_ALL, "C");
-  s = re_compile_pattern ("[anù]*n", 7, &regex);
+  s = re_compile_pattern ("[an\371]*n", 7, &regex);
   if (s != NULL)
     {
       puts ("re_compile_pattern return non-NULL value");
@@ -43,7 +43,7 @@ main (void)
 
   puts ("in de_DE.ISO-8859-1 locale");
   setlocale (LC_ALL, "de_DE.ISO-8859-1");
-  s = re_compile_pattern ("[anù]*n", 7, &regex);
+  s = re_compile_pattern ("[an\371]*n", 7, &regex);
   if (s != NULL)
     {
       puts ("re_compile_pattern return non-NULL value");
