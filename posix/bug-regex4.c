@@ -31,7 +31,32 @@ main (void)
 
   memset (&regex, '\0', sizeof (regex));
 
+  printf ("INFO: Checking C.\n");
   setlocale (LC_ALL, "C");
+
+  s = re_compile_pattern ("ab[cde]", 7, &regex);
+  if (s != NULL)
+    {
+      puts ("re_compile_pattern returned non-NULL value");
+      result = 1;
+    }
+  else
+    {
+      match[0] = re_search_2 (&regex, "xyabez", 6, "", 0, 1, 5, NULL, 6);
+      match[1] = re_search_2 (&regex, NULL, 0, "abc", 3, 0, 3, NULL, 3);
+      match[2] = re_search_2 (&regex, "xya", 3, "bd", 2, 2, 3, NULL, 5);
+      if (match[0] != 2 || match[1] != 0 || match[2] != 2)
+	{
+	  printf ("re_search_2 returned %d,%d,%d, expected 2,0,2\n",
+		  match[0], match[1], match[2]);
+	  result = 1;
+	}
+      else
+	puts (" -> OK");
+    }
+
+  printf ("INFO: Checking C.UTF-8.\n");
+  setlocale (LC_ALL, "C.UTF-8");
 
   s = re_compile_pattern ("ab[cde]", 7, &regex);
   if (s != NULL)

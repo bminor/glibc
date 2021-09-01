@@ -116,16 +116,32 @@ do_test (void)
   static const char lower[] = "[[:lower:]]+";
   static const char upper[] = "[[:upper:]]+";
   struct re_registers regs[4];
+  int result = 0;
 
+#define CHECK(exp) \
+  if (exp) { puts (#exp); result = 1; }
+
+  printf ("INFO: Checking C.\n");
   setlocale (LC_ALL, "C");
 
   (void) re_set_syntax (RE_SYNTAX_GNU_AWK);
 
-  int result;
-#define CHECK(exp) \
-  if (exp) { puts (#exp); result = 1; }
+  result |= run_test (lower, regs);
+  result |= run_test (upper, &regs[2]);
+  if (! result)
+    {
+      CHECK (regs[0].start[0] != regs[2].start[0]);
+      CHECK (regs[0].end[0] != regs[2].end[0]);
+      CHECK (regs[1].start[0] != regs[3].start[0]);
+      CHECK (regs[1].end[0] != regs[3].end[0]);
+    }
 
-  result = run_test (lower, regs);
+  printf ("INFO: Checking C.UTF-8.\n");
+  setlocale (LC_ALL, "C.UTF-8");
+
+  (void) re_set_syntax (RE_SYNTAX_GNU_AWK);
+
+  result |= run_test (lower, regs);
   result |= run_test (upper, &regs[2]);
   if (! result)
     {

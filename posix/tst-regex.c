@@ -32,6 +32,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <regex.h>
+#include <support/support.h>
 
 
 #if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
@@ -58,7 +59,7 @@ do_test (void)
   const char *file;
   int fd;
   struct stat st;
-  int result;
+  int result = 0;
   char *inmem;
   char *outmem;
   size_t inlen;
@@ -123,7 +124,7 @@ do_test (void)
 
   /* Run the actual tests.  All tests are run in a single-byte and a
      multi-byte locale.  */
-  result = test_expr ("[äáàâéèêíìîñöóòôüúùû]", 4, 4);
+  result |= test_expr ("[äáàâéèêíìîñöóòôüúùû]", 4, 4);
   result |= test_expr ("G.ran", 2, 3);
   result |= test_expr ("G.\\{1\\}ran", 2, 3);
   result |= test_expr ("G.*ran", 3, 44);
@@ -143,19 +144,33 @@ do_test (void)
 static int
 test_expr (const char *expr, int expected, int expectedicase)
 {
-  int result;
+  int result = 0;
   char *inmem;
   char *outmem;
   size_t inlen;
   size_t outlen;
   char *uexpr;
 
-  /* First test: search with an UTF-8 locale.  */
-  if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL)
-    error (EXIT_FAILURE, 0, "cannot set locale de_DE.UTF-8");
+  /* First test: search with basic C.UTF-8 locale.  */
+  printf ("INFO: Testing C.UTF-8.\n");
+  xsetlocale (LC_ALL, "C.UTF-8");
 
   printf ("\nTest \"%s\" with multi-byte locale\n", expr);
-  result = run_test (expr, mem, memlen, 0, expected);
+  result |= run_test (expr, mem, memlen, 0, expected);
+  printf ("\nTest \"%s\" with multi-byte locale, case insensitive\n", expr);
+  result |= run_test (expr, mem, memlen, 1, expectedicase);
+  printf ("\nTest \"%s\" backwards with multi-byte locale\n", expr);
+  result |= run_test_backwards (expr, mem, memlen, 0, expected);
+  printf ("\nTest \"%s\" backwards with multi-byte locale, case insensitive\n",
+	  expr);
+  result |= run_test_backwards (expr, mem, memlen, 1, expectedicase);
+
+  /* Second test: search with an UTF-8 locale.  */
+  printf ("INFO: Testing de_DE.UTF-8.\n");
+  xsetlocale (LC_ALL, "de_DE.UTF-8");
+
+  printf ("\nTest \"%s\" with multi-byte locale\n", expr);
+  result |= run_test (expr, mem, memlen, 0, expected);
   printf ("\nTest \"%s\" with multi-byte locale, case insensitive\n", expr);
   result |= run_test (expr, mem, memlen, 1, expectedicase);
   printf ("\nTest \"%s\" backwards with multi-byte locale\n", expr);
@@ -165,8 +180,8 @@ test_expr (const char *expr, int expected, int expectedicase)
   result |= run_test_backwards (expr, mem, memlen, 1, expectedicase);
 
   /* Second test: search with an ISO-8859-1 locale.  */
-  if (setlocale (LC_ALL, "de_DE.ISO-8859-1") == NULL)
-    error (EXIT_FAILURE, 0, "cannot set locale de_DE.ISO-8859-1");
+  printf ("INFO: Testing de_DE.ISO-8859-1.\n");
+  xsetlocale (LC_ALL, "de_DE.ISO-8859-1");
 
   inmem = (char *) expr;
   inlen = strlen (expr);

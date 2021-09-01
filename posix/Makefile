@@ -190,9 +190,19 @@ $(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
 	$(evaluate-test)
 endif
 
-LOCALES := cs_CZ.UTF-8 da_DK.ISO-8859-1 de_DE.ISO-8859-1 de_DE.UTF-8 \
-	   en_US.UTF-8 es_US.ISO-8859-1 es_US.UTF-8 ja_JP.EUC-JP tr_TR.UTF-8 \
-	   cs_CZ.ISO-8859-2
+LOCALES := \
+	cs_CZ.ISO-8859-2 \
+	cs_CZ.UTF-8 \
+	C.UTF-8 \
+	da_DK.ISO-8859-1 \
+	de_DE.ISO-8859-1 \
+	de_DE.UTF-8 \
+	en_US.UTF-8 \
+	es_US.ISO-8859-1 \
+	es_US.UTF-8 \
+	ja_JP.EUC-JP \
+	tr_TR.UTF-8 \
+	# LOCALES
 include ../gen-locales.mk
 
 $(objpfx)bug-regex1.out: $(gen-locales)

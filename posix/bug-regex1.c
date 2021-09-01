@@ -40,6 +40,26 @@ main (void)
 	puts (" -> OK");
     }
 
+  puts ("in C.UTF-8 locale");
+  setlocale (LC_ALL, "C.UTF-8");
+  s = re_compile_pattern ("[an\371]*n", 7, &regex);
+  if (s != NULL)
+    {
+      puts ("re_compile_pattern return non-NULL value");
+      result = 1;
+    }
+  else
+    {
+      match = re_match (&regex, "an", 2, 0, &regs);
+      if (match != 2)
+	{
+	  printf ("re_match returned %d, expected 2\n", match);
+	  result = 1;
+	}
+      else
+	puts (" -> OK");
+    }
+
   puts ("in de_DE.ISO-8859-1 locale");
   setlocale (LC_ALL, "de_DE.ISO-8859-1");
   s = re_compile_pattern ("[an\371]*n", 7, &regex);

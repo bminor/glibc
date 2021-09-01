@@ -9,7 +9,15 @@ Version 2.35
 
 Major new features:
 
-  [Add new features here]
+* Support for the C.UTF-8 locale has been added to glibc.  The locale
+  supports full code-point sorting for all valid Unicode code points.  A
+  limitation in the framework for fnmatch, regexec, and regcomp requires
+  a compromise to save space and only ASCII-based range expressions are
+  supported for now (see bug 28255).  The full size of the locale is
+  only ~400KiB, with 346KiB coming from LC_CTYPE information for
+  Unicode.  This locale harmonizes downstream C.UTF-8 already shipping
+  in various downstream distributions.  The locale is not built into
+  glibc, and must be installed.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

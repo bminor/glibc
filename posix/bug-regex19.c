@@ -24,6 +24,7 @@
 #include <string.h>
 #include <locale.h>
 #include <libc-diag.h>
+#include <support/support.h>
 
 #define BRE RE_SYNTAX_POSIX_BASIC
 #define ERE RE_SYNTAX_POSIX_EXTENDED
@@ -406,8 +407,8 @@ do_mb_tests (const struct test_s *test)
   return 0;
 }
 
-int
-main (void)
+static int
+do_test (void)
 {
   size_t i;
   int ret = 0;
@@ -416,20 +417,17 @@ main (void)
 
   for (i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
     {
-      if (setlocale (LC_ALL, "de_DE.ISO-8859-1") == NULL)
-	{
-	  puts ("setlocale de_DE.ISO-8859-1 failed");
-	  ret = 1;
-	}
+      xsetlocale (LC_ALL, "de_DE.ISO-8859-1");
       ret |= do_one_test (&tests[i], "");
-      if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL)
-	{
-	  puts ("setlocale de_DE.UTF-8 failed");
-	  ret = 1;
-	}
+      xsetlocale (LC_ALL, "de_DE.UTF-8");
+      ret |= do_one_test (&tests[i], "UTF-8 ");
+      ret |= do_mb_tests (&tests[i]);
+      xsetlocale (LC_ALL, "C.UTF-8");
       ret |= do_one_test (&tests[i], "UTF-8 ");
       ret |= do_mb_tests (&tests[i]);
     }
 
   return ret;
 }
+
+#include <support/test-driver.c>
