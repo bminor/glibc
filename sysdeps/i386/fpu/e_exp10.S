@@ -1,6 +1,3 @@
-/*
- * Written by Ulrich Drepper <drepper@cygnus.com>.
- */
 
 #include <machine/asm.h>
 #include <i386-math-asm.h>

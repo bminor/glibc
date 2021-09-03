@@ -1,6 +1,4 @@
 /* s_isnanl.c -- long double version for i387 of s_isnan.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

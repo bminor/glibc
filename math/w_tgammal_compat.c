@@ -1,6 +1,4 @@
 /* w_gammal.c -- long double version of w_gamma.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

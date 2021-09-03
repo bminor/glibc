@@ -1,7 +1,6 @@
 /* Save and set current context.
    Copyright (C) 2009-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Maciej W. Rozycki <macro@codesourcery.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

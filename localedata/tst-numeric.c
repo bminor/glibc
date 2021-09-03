@@ -1,9 +1,7 @@
 /* Testing the implementation of LC_NUMERIC and snprintf().
    Copyright (C) 2003-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Petter Reinholdtsen <pere@hungry.com>, 2003
 
-   Based on tst-fmon.c by Jochen Hein <jochen.hein@delphi.central.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

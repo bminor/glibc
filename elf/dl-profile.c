@@ -1,7 +1,6 @@
 /* Profiling of shared libraries.
    Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on the BSD mcount implementation.
 
    The GNU C Library is free software; you can redistribute it and/or

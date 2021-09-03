@@ -1,7 +1,6 @@
 /* POSIX.1 sigaction call for Linux/SPARC.
    Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Miguel de Icaza <miguel@nuclecu.unam.mx>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

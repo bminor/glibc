@@ -1,5 +1,4 @@
 /* Test program for random(), srandom(), initstate(), setstate()
-   Written by Michael J. Fischer, August 21, 2000
    Placed in the public domain.  */
 
 /* This program primarily tests the correct functioning of srandom()

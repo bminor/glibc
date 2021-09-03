@@ -1,5 +1,4 @@
 /* s_fabsf.c -- float version of s_fabs.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

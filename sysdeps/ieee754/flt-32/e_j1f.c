@@ -1,5 +1,4 @@
 /* e_j1f.c -- float version of e_j1.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

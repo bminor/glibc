@@ -9,9 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Bhojpuri language locale for India.
-% Contributed by Alok Ranjan <ranjan_aalok@yahoo.com>,
-% Dr.Chandra Mohan <cmkumar1@rediffmail.com>,
-% Rajesh Ranjan <rajeshkajha@yahoo.com> and Pravin Satpute <psatpute@redhat.com>
 
 LC_IDENTIFICATION
 title      "Bhojpuri language locale for India"

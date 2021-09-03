@@ -1,7 +1,6 @@
 /* Mapping table for IBM1155.
    Copyright (C) 2005-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jiro SEKIBA <sekiba@jp.ibm.com>, 2005.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

@@ -1,5 +1,4 @@
 /* w_lgammaf_r.c -- float version of w_lgamma_r.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

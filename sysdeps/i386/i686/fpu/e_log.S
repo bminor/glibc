@@ -1,5 +1,4 @@
 /*
- * Written by J.T. Conklin <jtc@netbsd.org>.
  * Public domain.
  *
  * Adapted for i686 instructions.

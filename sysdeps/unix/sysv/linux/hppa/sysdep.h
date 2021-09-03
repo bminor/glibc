@@ -1,8 +1,6 @@
 /* Assembler macros for PA-RISC.
    Copyright (C) 1999-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper, <drepper@cygnus.com>, August 1999.
-   Linux/PA-RISC changes by Philipp Rumpf, <prumpf@tux.org>, March 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

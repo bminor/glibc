@@ -15,7 +15,6 @@
    You should have received a copy of the GNU Lesser General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-/* Written by Paul Eggert.  */
 
 #ifndef _GL_INTPROPS_H
 #define _GL_INTPROPS_H

@@ -1,4 +1,3 @@
-/* Test case by Jim Meyering <jim@meyering.net>.  */
 #include <locale.h>
 #include <stdio.h>
 #include <string.h>

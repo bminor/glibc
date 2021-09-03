@@ -1,5 +1,4 @@
 /* e_sinhf.c -- float version of e_sinh.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

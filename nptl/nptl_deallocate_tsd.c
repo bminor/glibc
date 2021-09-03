@@ -1,6 +1,5 @@
 /* Deallocation thread-specific data structures related to pthread_key_create.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

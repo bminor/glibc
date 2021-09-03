@@ -1,5 +1,4 @@
 /* s_modff.c -- float version of s_modf.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

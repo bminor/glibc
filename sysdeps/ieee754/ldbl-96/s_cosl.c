@@ -1,6 +1,4 @@
 /* s_cosl.c -- long double version of s_cos.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

@@ -1,7 +1,3 @@
-/*
- * Written by Joe Keane <jgk@jgk.org>.
- * Adopted for x86-64 by Andreas Jaeger <aj@suse.de>.
- */
 
 #include <machine/asm.h>
 

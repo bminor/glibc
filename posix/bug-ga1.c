@@ -1,4 +1,3 @@
-/* Test case by Anders Carlsson <andersca@gnome.org>.  */
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>

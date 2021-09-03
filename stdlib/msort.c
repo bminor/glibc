@@ -1,7 +1,6 @@
 /* An alternative to qsort, with an identical interface.
    This file is part of the GNU C Library.
    Copyright (C) 1992-2021 Free Software Foundation, Inc.
-   Written by Mike Haertel, September 1988.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

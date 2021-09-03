@@ -9,7 +9,7 @@ escape_char /
 % otherwise be governed by that license.
 
 % Chechen locale for RUSSIAN FEDERATION.
-% Contributed by Kentaroh Noji  Arslanbek Astemirov <s-o-f-t AT mail DOT ru>
+
 LC_IDENTIFICATION
 title      "Chechen locale for RUSSIAN FEDERATION"
 source       "ANCHR"

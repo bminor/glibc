@@ -9,7 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % South Azerbaijani Language Locale for Iran
-% Contributed by Mousa Moradi <mousamk@gmail.com>
 
 % FIXME: Azerbaijani O in the arabic script which should have a circle above WAW,
 % was not found in the unicode table, so we're using the simple WAW and the Sukun

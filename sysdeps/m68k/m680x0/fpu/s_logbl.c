@@ -1,6 +1,4 @@
 /* s_logbl.c -- long double version of s_logb.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

@@ -2,7 +2,6 @@ comment_char %
 escape_char /
 
 % Tongan language locale for Tonga
-% Contributed by Akhilesh Kumar <akhilesh.k@samsung.com>.
 
 LC_IDENTIFICATION
 title        "Tongan language locale for Tonga"

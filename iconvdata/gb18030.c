@@ -1,7 +1,6 @@
 /* Mapping tables for GBK handling.
    Copyright (C) 1999-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Sean Chen <seanc@turbolinux.com.cn>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,22 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/*	This file is added for supporting gb18030-2000 code.
-	by Wang ShouHua & Wu Jian
-	Redflag Linux company
-	www.redflag-linux.com
-*/
-
 /* The GB18030 standard was re-released on Nov. 2000 and many code values
  * were changed. The reimplementation of this module is based on the info
  * from Markus Scherer's site:
  * http://oss.software.ibm.com/cvs/icu/~checkout~/icu/source/tools/makeconv/gb18030/gb18030.html
  *
  *   Original - Yong Li <rigel863@yahoo.com>  Jan. 28, 2001
- */
-
-/*   Dec 20 2001 Yu Shao <yshao@redhat.com>
- *   Revision, fixing bugs, adding missing entries.
  */
 
 #include <dlfcn.h>

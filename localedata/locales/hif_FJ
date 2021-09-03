@@ -2,7 +2,6 @@ comment_char %
 escape_char /
 
 % Fiji Hindi language locale same as Hindi for Fiji.
-% Contributed by Akhilesh Kumar <akhilesh.k@samsung.com>.
 % Words translated from  https://en.wikipedia.org/wiki/Fiji_Hindi
 
 LC_IDENTIFICATION

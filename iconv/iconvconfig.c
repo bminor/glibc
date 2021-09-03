@@ -1,7 +1,6 @@
 /* Generate fastloading iconv module configuration files.
    Copyright (C) 2000-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published

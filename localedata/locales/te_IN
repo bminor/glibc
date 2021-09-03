@@ -9,10 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Telugu language locale for India.
-% Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
-% Tetsuji Orita <orita@jp.ibm.com>.
-%
-% Updated by Sunil Mohan Adapa <sunil AT atc tcs co in>
 
 LC_IDENTIFICATION
 title      "Telugu language locale for India"

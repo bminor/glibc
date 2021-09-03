@@ -1,6 +1,4 @@
 /* s_tanhl.c -- long double version of s_tanh.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

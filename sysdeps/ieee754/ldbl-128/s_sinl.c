@@ -1,5 +1,4 @@
 /* s_sinl.c -- long double version of s_sin.c.
- * Conversion to long double by Jakub Jelinek, jj@ultra.linux.cz.
  */
 
 /*

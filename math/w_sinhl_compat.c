@@ -1,6 +1,4 @@
 /* w_sinhl.c -- long double version of w_sinh.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

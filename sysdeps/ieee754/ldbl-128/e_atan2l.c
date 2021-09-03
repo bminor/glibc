@@ -1,5 +1,4 @@
 /* e_atan2l.c -- long double version of e_atan2.c.
- * Conversion to long double by Jakub Jelinek, jj@ultra.linux.cz.
  */
 
 /*

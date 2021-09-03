@@ -1,6 +1,5 @@
-/* Test case by Bruno Haible.  It test whether the dynamic string
-   token expansion can handle $ signs which do not start one of the
-   recognized keywords.  */
+/* Test whether the dynamic string token expansion can handle $ signs which do
+   not start one of the recognized keywords.  */
 
 #include <dlfcn.h>
 

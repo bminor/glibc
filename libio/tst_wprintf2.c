@@ -1,4 +1,3 @@
-/* Test case by Yoshito Kawada <KAWADA@jp.ibm.com>.  */
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>

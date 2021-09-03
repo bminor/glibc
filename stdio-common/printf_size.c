@@ -1,8 +1,6 @@
 /* Print size value using units for orders of magnitude.
    Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
-   Based on a proposal by Larry McVoy <lm@sgi.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

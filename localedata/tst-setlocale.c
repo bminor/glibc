@@ -1,4 +1,3 @@
-/* Test case by Jakub Jelinek <jakub@redhat.com>.  */
 #include <locale.h>
 #include <stdio.h>
 #include <string.h>

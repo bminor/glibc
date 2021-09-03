@@ -1,6 +1,5 @@
 /* s_nexttowardf.c -- float version of s_nextafter.c.
  * Special i387 version.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

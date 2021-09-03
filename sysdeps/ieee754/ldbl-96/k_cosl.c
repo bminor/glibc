@@ -1,7 +1,6 @@
 /* Extended-precision floating point cosine on <-pi/4,pi/4>.
    Copyright (C) 1999-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Based on quad-precision cosine by Jakub Jelinek <jj@ultra.linux.cz>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

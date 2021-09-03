@@ -12,14 +12,6 @@ escape_char /
 %
 % Haitian Kreyol (Kreyòl Ayisyen) language locale for Haiti
 %
-% Prepared and contributed to glibc by Bastien Guerry <bzg@laptop.org> and
-% Chris Leonard <cjl@sugarlabs.org>
-% This locale data has been developed in collaboration between:
-% Sugar Labs,  http://www.sugarlabs.org/
-% One Laptop Per Child, http://one.laptop.org/
-% OLPC France, http://olpc-france.org
-% and members of the OLPC Haiti volunteer team
-%
 % build with: localedef -f UTF-8 -i ht_HT ht_HT
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

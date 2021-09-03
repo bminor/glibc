@@ -1,7 +1,6 @@
 /* Mips version of processor capability information handling macros.
    Copyright (C) 2007-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Robert Millan <rmh@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

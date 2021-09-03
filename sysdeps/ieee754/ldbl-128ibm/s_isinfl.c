@@ -1,6 +1,4 @@
 /*
- * Written by J.T. Conklin <jtc@netbsd.org>.
- * Change for long double by Jakub Jelinek <jj@ultra.linux.cz>
  * Public domain.
  */
 

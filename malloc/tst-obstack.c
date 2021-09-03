@@ -1,4 +1,3 @@
-/* Test case by Alexandre Duret-Lutz <duret_g@epita.fr>.  */
 #include <obstack.h>
 #include <stdint.h>
 #include <stdio.h>

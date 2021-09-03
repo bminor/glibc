@@ -1,5 +1,4 @@
 /* s_ceill.c -- long double version of s_ceil.c.
- * Conversion to IEEE quad long double by Jakub Jelinek, jj@ultra.linux.cz.
  */
 
 /*

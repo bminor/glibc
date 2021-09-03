@@ -9,7 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Nepali language locale for Nepal.
-% Contributed by Pawan Chitrakar <pc@info.com.np>
 
 LC_IDENTIFICATION
 title      "Nepali language locale for Nepal"

@@ -1,5 +1,3 @@
-/* Test case by Horst von Brand <vonbrand@sleipnir.valparaiso.cl>
-   and Ulrich Drepper <drepper@cygnus.com>.  */
 #include <mntent.h>
 #include <stdio.h>
 #include <string.h>

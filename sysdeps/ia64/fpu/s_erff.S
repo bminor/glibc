@@ -4,7 +4,6 @@
 // Copyright (c) 2001 - 2005, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2001 by the Intel Numerics Group, Intel Corporation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are

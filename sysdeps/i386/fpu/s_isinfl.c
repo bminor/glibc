@@ -1,6 +1,4 @@
 /*
- * Written by J.T. Conklin <jtc@netbsd.org>.
- * Change for long double by Ulrich Drepper <drepper@cygnus.com>.
  * Intel i387 specific version.
  * Public domain.
  */

@@ -9,7 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Locale for English locale in the Seychelles
-% Contributed by Akhilesh Kumar <akhilesh.k@samsung.com>
 
 LC_IDENTIFICATION
 title      "English locale for the Seychelles"

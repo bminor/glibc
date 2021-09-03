@@ -1,7 +1,6 @@
 /* Data for s390 version of processor capability information.
    Copyright (C) 2006-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2006.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

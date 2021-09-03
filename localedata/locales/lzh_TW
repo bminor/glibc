@@ -12,8 +12,6 @@ escape_char /
 %
 % Literary Chinese locale for the Republic of China
 %
-% Prepared and contributed to glibc by Wei-Lun Chao <bluebat@member.fsf.org>
-%
 % build with: localedef -f UTF-8 -i lzh_TW lzh_TW
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,6 +1,4 @@
 /* s_frexpl.c -- long double version of s_frexp.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

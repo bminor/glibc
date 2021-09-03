@@ -2,7 +2,6 @@
    For AMD x86-64.
    This file is part of the GNU C Library.
    Copyright (C) 1991-2021 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

@@ -1,6 +1,4 @@
 /* e_acoshl.c -- long double version of e_acosh.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

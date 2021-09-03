@@ -1,5 +1,4 @@
 /* w_gammaf.c -- float version of w_gamma.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

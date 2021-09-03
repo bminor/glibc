@@ -2,7 +2,6 @@
    For Intel 80x86, x>=6.
    This file is part of the GNU C Library.
    Copyright (C) 2003-2021 Free Software Foundation, Inc.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 2003.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

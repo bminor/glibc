@@ -1,6 +1,4 @@
-/* Verify longjmp fortify checking does not reject signal stacks.
-
-   Test case mostly written by Paolo Bonzini <pbonzini@redhat.com>.  */
+/* Verify longjmp fortify checking does not reject signal stacks.  */
 #include <assert.h>
 #include <setjmp.h>
 #include <signal.h>

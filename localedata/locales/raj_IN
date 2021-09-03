@@ -9,8 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Rajasthani language locale for India.
-% Contributed by Meghraj Suthar <meghrajsuthar03@gmail.com>
-% Rajesh Ranjan <rajeshkajha@yahoo.com>, Chandan Kumar <chandankumar.093047@gmail.com>
 
 LC_IDENTIFICATION
 title      "Rajasthani language locale for India"

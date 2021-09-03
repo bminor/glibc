@@ -9,11 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Maltese language locale for Malta.
-% Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
-% Tetsuji Orita <orita@jp.ibm.com>.
-%
-% collating order changes by Ramon Casha <ramon.casha@linux.org.mt>
-% and Pablo Saratxaga <pablo@mandrakesoft.com> -- 2002-05-08
 
 LC_IDENTIFICATION
 title      "Maltese language locale for Malta"

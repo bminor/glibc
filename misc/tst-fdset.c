@@ -1,7 +1,6 @@
 /* Test FD* macros.
    Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Robert Bihlmeyer <robbe@orcus.priv.at>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

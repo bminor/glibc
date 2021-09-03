@@ -9,7 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Karbi Language Locale for India.
-% Contributed  by Jor Teron <jor.teron@gmail.com>.
 
 LC_IDENTIFICATION
 title      "Karbi language locale for India"

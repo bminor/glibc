@@ -1,7 +1,5 @@
 /* Copyright (C) 1993-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Written by Ulrich Drepper <drepper@cygnus.com>.
-   Based on the single byte version by Per Bothner <bothner@cygnus.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

@@ -3,8 +3,6 @@
 // Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
 //
-// Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
-// and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are

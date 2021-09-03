@@ -9,8 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Arabic language locale for United Arab Emirates.
-% Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
-% Tetsuji Orita <orita@jp.ibm.com>.
 
 LC_IDENTIFICATION
 title      "Arabic language locale for United Arab Emirates"

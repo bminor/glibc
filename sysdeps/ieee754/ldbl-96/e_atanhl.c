@@ -1,6 +1,4 @@
 /* s_atanhl.c -- long double version of s_atan.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

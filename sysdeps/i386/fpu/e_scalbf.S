@@ -1,9 +1,5 @@
 /*
- * Written by J.T. Conklin <jtc@netbsd.org>.
  * Public domain.
- * Adapted for float type by Ulrich Drepper <drepper@cygnus.com>.
- *
- * Correct handling of y==-inf <drepper@gnu>
  */
 
 #include <machine/asm.h>

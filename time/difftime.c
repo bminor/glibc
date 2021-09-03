@@ -15,7 +15,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Written by Paul Eggert <eggert@cs.ucla.edu>.  */
 
 #include <time.h>
 

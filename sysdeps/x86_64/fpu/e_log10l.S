@@ -1,11 +1,6 @@
 /*
- * Written by J.T. Conklin <jtc@netbsd.org>.
  * Public domain.
  *
- * Adapted for `long double' by Ulrich Drepper <drepper@cygnus.com>.
- *
- * Changed to use fyl2xp1 for values near 1, <drepper@cygnus.com>.
- * Adapted for x86-64 by Andreas Jaeger <aj@suse.de>.
  */
 
 #include <machine/asm.h>

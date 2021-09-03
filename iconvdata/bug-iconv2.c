@@ -1,4 +1,3 @@
-/* Test case by Akira Higuchi <a@kondara.org>.  */
 
 #include <stdio.h>
 #include <stdlib.h>

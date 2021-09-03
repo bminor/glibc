@@ -1,6 +1,4 @@
 /* w_expl.c -- long double version of w_exp.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

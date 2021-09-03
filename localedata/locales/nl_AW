@@ -9,7 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Dutch language locale for Aruba.
-% Contributed by Ulrich Drepper <drepper@redhat.com>, 2008
 
 LC_IDENTIFICATION
 title      "Dutch language locale for Aruba"

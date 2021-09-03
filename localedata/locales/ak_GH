@@ -12,13 +12,6 @@ escape_char /
 %
 % Akan locale for Ghana
 %
-% Prepared and contributed to glibc by Chris Leonard <cjl@sugarlabs.org>
-% and Jojoo Imbeah <jojoo.imbeah@kasahorow.com>
-%
-% This locale data has been developed by:
-% Sugar Labs,  http://www.sugarlabs.org/
-% kasahorow, http://www.kasahorow.org/
-%
 % build with: localedef -f UTF-8 -i ak_GH ak_GH
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -9,7 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Tharu language locale for Nepal.
-% Contributed by Arun Kumar Pyasi <arun@chitwanix.com>
 
 LC_IDENTIFICATION
 title      "Tharu language locale for Nepal"

@@ -9,8 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Konkani language locale for India.
-% Contributed by Pravin Satpute <psatpute@redhat.com> and
-% Shailendra Bandodkar <sbandodk@redhat.com>.
 
 LC_IDENTIFICATION
 title      "Konkani language locale for India"

@@ -1,5 +1,4 @@
 /* Test of perror.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
    To be used only for testing glibc.  */
 
 #include <errno.h>

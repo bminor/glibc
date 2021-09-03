@@ -1,5 +1,4 @@
 /* e_acosf.c -- float version of e_acos.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

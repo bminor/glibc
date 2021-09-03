@@ -1,6 +1,5 @@
 /* Copyright (C) 2003-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Carlos O'Donell <carlos@baldric.uwo.ca>, 2005.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

@@ -3,7 +3,6 @@
 
 # Copyright (C) 2017-2021 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
-# Contributed by Rical Jasan <ricaljasan@pacific.net>, 2017.
 
 # The GNU C Library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License

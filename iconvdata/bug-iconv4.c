@@ -1,4 +1,3 @@
-/* Contributed by Jiro SEKIBA <jir@yamato.ibm.com>.  */
 #include <errno.h>
 #include <iconv.h>
 #include <stdbool.h>

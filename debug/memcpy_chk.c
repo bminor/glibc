@@ -2,7 +2,6 @@
    has been copied with error checking.  Overlap is NOT handled correctly.
    Copyright (C) 1991-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Torbjorn Granlund (tege@sics.se).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

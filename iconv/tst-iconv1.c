@@ -1,4 +1,3 @@
-/* Test case by yaoz@nih.gov.  */
 
 #include <iconv.h>
 #include <stddef.h>

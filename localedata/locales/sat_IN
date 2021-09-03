@@ -9,7 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Santali language locale for India.
-% Contributed by Mr. Pravin Satpute <psatpute AT redhat DOT com>  and Mr. Thakur Prasad Murmu <tp_murmu AT yahoo DOT com>
 
 LC_IDENTIFICATION
 title      "Santali language locale for India"

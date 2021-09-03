@@ -1,5 +1,4 @@
 /* e_acoshl.c -- long double version of e_acosh.c.
- * Conversion to long double by Jakub Jelinek, jj@ultra.linux.cz.
  */
 
 /*

@@ -9,8 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Sanskrit language locale for India.
-% Contributed by Vidya Ayer <svaksha@gmail.com>
-% and Christian Perrier <bubulle@debian.org>
 
 LC_IDENTIFICATION
 title      "Sanskrit language locale for India"

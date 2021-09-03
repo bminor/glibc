@@ -1,4 +1,3 @@
-/* Test case by Paul Eggert <eggert@twinsun.com> */
 #include <stdio.h>
 #include <stdlib.h>
 #include <tst-stack-align.h>

@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Written by H. Bergman <hennus@cybercomm.nl>.  */
 
 #ifndef _SYS_MTIO_H
 #define _SYS_MTIO_H	1

@@ -1,7 +1,5 @@
 /* s_nextafterl.c -- long double version of s_nextafter.c.
  * Special version for i387.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

@@ -1,4 +1,3 @@
-/* Test case by Hui Huang <hui.huang@sun.com>.  */
 #include <dlfcn.h>
 #include <pthread.h>
 #include <stdio.h>

@@ -1,7 +1,4 @@
 /* s_nextafterl.c -- long double version of s_nextafter.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
- * Fixed for m68k by Andreas Schwab <schwab@suse.de>.
  */
 
 /*

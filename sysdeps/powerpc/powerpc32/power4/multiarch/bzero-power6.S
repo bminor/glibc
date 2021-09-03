@@ -1,6 +1,5 @@
 /* Optimized bzero implementation for PowerPC32/POWER6.
    Copyright (C) 2010-2021 Free Software Foundation, Inc.
-   Contributed by Luis Machado <luisgpm@br.ibm.com>.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

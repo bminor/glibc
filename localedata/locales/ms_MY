@@ -9,9 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Malay language locale for Malaysia.
-% Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
-% Tetsuji Orita <orita@jp.ibm.com>.
-% Modified by Hasbullah Bin Pit (sebol)<sebol@ikhlas.com> 2001, December, 10
 
 LC_IDENTIFICATION
 title      "Malay language locale for Malaysia"

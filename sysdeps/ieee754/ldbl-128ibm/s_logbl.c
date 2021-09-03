@@ -1,5 +1,4 @@
 /* s_logbl.c -- long double version of s_logb.c.
- * Conversion to IEEE quad long double by Jakub Jelinek, jj@ultra.linux.cz.
  */
 
 /*

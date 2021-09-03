@@ -1,5 +1,4 @@
 /* e_log10f.c -- float version of e_log10.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

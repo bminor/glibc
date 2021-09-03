@@ -1,5 +1,4 @@
 /* s_rintf.c -- float version of s_rint.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

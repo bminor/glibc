@@ -1,6 +1,4 @@
 /* w_coshf.c -- float version of w_cosh.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
- * Optimizations by Ulrich Drepper <drepper@gmail.com>, 2011.
  */
 
 /*

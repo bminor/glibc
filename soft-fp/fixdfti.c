@@ -2,7 +2,6 @@
    Convert IEEE double to 128bit signed integer
    Copyright (C) 2007-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Uroš Bizjak (ubizjak@gmail.com).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

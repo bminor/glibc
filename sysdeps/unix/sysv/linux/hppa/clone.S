@@ -1,7 +1,5 @@
 /* Copyright (C) 1996-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by David Huggins-Daines <dhd@debian.org>, 2000.
-   Based on the Alpha version by Richard Henderson <rth@tamu.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

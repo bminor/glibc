@@ -1,5 +1,4 @@
 /* s_tanf.c -- float version of s_tan.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

@@ -2,8 +2,6 @@
    For Intel 80x86, x>=4.
    Copyright (C) 1994-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@ipd.info.uni-karlsruhe.de>.
-   Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

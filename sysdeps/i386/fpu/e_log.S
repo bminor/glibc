@@ -1,8 +1,5 @@
 /*
- * Written by J.T. Conklin <jtc@netbsd.org>.
  * Public domain.
- *
- * Changed to use fyl2xp1 for values near 1, <drepper@cygnus.com>.
  */
 
 #include <machine/asm.h>

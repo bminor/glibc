@@ -2,7 +2,6 @@ comment_char %
 escape_char /
 
 % Samoan language locale for Samoa.
-% Contributed by Akhilesh Kumar <akhilesh.k@samsung.com>.
 % Words translated from  https://glosbe.com/sm/en/asu
 
 LC_IDENTIFICATION

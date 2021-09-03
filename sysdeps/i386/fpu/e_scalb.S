@@ -1,8 +1,5 @@
 /*
- * Written by J.T. Conklin <jtc@netbsd.org>.
  * Public domain.
- *
- * Correct handling of y==-inf <drepper@gnu>
  */
 
 #include <machine/asm.h>

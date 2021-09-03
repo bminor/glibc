@@ -12,14 +12,6 @@ escape_char /
 %
 % Cusco Quechua language locale for Peru
 %
-% Prepared and contributed to glibc by Chris Leonard <cjl@sugarlabs.org>
-% and Amos Batto
-%
-% This locale data has been developed in collaboration between:
-% Sugar Labs,  http://www.sugarlabs.org/
-% Instituto de Lenguas y Literaturas Andinas-Amazonicas
-% http://www.illa-a.org/wp/illa/
-%
 % build with: localedef -f UTF-8 -i quz_PE quz_PE
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

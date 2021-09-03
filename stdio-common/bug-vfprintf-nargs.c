@@ -1,7 +1,6 @@
 /* Test for vfprintf nargs allocation overflow (BZ #13656).
    Copyright (C) 2012-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Kees Cook <keescook@chromium.org>, 2012.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

@@ -1,6 +1,3 @@
-/*
- * Written by Joe Keane <jgk@jgk.org>.
- */
 
 #include <machine/asm.h>
 

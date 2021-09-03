@@ -1,6 +1,5 @@
 /* Copyright (C) 2000-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -28,8 +27,7 @@
 
 static int check_ascii (const char *locname);
 
-/* UTF-8 single byte feeding test for mbrtowc(),
-   contributed by Markus Kuhn <mkuhn@acm.org>.  */
+/* UTF-8 single byte feeding test for mbrtowc().  */
 static int
 utf8_test_1 (void)
 {

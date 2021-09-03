@@ -9,7 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Locale for English locale in Israel
-% Contributed by Guy Rutenberg <guyrutenberg@gmail.com>, 2016
 
 LC_IDENTIFICATION
 title      "English locale for Israel"

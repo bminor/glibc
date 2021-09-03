@@ -1,5 +1,4 @@
 /* s_floorf.c -- float version of s_floor.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

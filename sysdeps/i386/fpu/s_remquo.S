@@ -1,6 +1,4 @@
 /*
- * Written by Ulrich Drepper <drepper@cygnus.com>.
- * Based on e_remainder by J.T. Conklin <jtc@netbsd.org>.
  * Public domain.
  */
 

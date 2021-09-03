@@ -1,6 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PA-RISC version.
    Copyright (C) 1995-2021 Free Software Foundation, Inc.
-   Contributed by David Huggins-Daines <dhd@debian.org>
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

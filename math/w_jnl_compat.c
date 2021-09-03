@@ -1,6 +1,4 @@
 /* w_jnl.c -- long double version of w_jn.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

@@ -1,6 +1,3 @@
-/*
- * Written by Joe Keane <jgk@jgk.org>.
- */
 
 #include <machine/asm.h>
 
@@ -14,4 +11,3 @@ ENTRY(__finite)
 END (__finite)
 weak_alias (__finite, finite)
 hidden_def (__finite)
-

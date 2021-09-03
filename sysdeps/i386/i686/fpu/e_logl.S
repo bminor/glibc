@@ -1,9 +1,6 @@
 /*
- * Written by J.T. Conklin <jtc@netbsd.org>.
  * Public domain.
  *
- * Adapted for `long double' by Ulrich Drepper <drepper@cygnus.com>.
- * Changed to use fyl2xp1 for values near 1, <drepper@cygnus.com>.
  * Adapted for i686 instructions.
  */
 

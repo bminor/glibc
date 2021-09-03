@@ -1,7 +1,4 @@
 /* w_acoshl.c -- long double version of w_acosh.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
- * Optimizations by Ulrich Drepper <drepper@gmail.com>, 2011.
  */
 
 /*

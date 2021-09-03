@@ -1,6 +1,4 @@
 /* s_modfl.c -- long double version of s_modf.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

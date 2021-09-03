@@ -1,4 +1,3 @@
-/* Contributed by Owen Taylor <otaylor@redhat.com>.  */
 
 #include <iconv.h>
 #include <errno.h>

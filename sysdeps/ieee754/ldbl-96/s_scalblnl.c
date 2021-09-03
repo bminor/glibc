@@ -1,6 +1,4 @@
 /* s_scalbnl.c -- long double version of s_scalbn.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

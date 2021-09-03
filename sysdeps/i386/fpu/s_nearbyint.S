@@ -1,8 +1,6 @@
 /*
- * Written by J.T. Conklin <jtc@netbsd.org>.
  * Public domain.
  */
-/* Adapted for use as nearbyint by Ulrich Drepper <drepper@cygnus.com>.  */
 
 #include <machine/asm.h>
 #include <libm-alias-double.h>

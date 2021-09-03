@@ -1,6 +1,4 @@
 /* s_copysignl.c -- long double version of s_copysign.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

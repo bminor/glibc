@@ -9,8 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Nynorsk language locale for Norway.
-% Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
-% Tetsuji Orita <orita@jp.ibm.com>.
 
 LC_IDENTIFICATION
 title      "Nynorsk language locale for Norway"

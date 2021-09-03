@@ -12,18 +12,6 @@ escape_char /
 %
 % Niuean, Vagahau Niue language locale for Niue
 %
-% Niuean terms provided by Emani Fakaotimanava-Lui <emani@niue.nu>
-%
-% Prepared and contributed to glibc by Chris Leonard <cjl@sugarlabs.org> and
-% Emani Fakaotimanava-Lui <emani@niue.nu>
-%
-% This locale data has been developed in collaboration between:
-% Sugar Labs,  http://www.sugarlabs.org/
-% RockET Systems, http://rocketsystems.nu/
-%
-% with support from the Internet Society (ISOC)
-% http://pacific.scoop.co.nz/2012/06/internet-society-funds-niue-language-lifeline/
-%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 LC_IDENTIFICATION

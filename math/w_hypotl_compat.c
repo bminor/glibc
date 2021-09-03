@@ -1,6 +1,4 @@
 /* w_hypotl.c -- long double version of w_hypot.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

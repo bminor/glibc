@@ -1,6 +1,4 @@
 /*
- * Written by J.T. Conklin <jtc@netbsd.org>.
- * Adapted for exp2 by Ulrich Drepper <drepper@cygnus.com>.
  * Public domain.
  */
 

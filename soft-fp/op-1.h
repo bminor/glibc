@@ -2,10 +2,6 @@
    Basic one-word fraction declaration and manipulation.
    Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson (rth@cygnus.com),
-		  Jakub Jelinek (jj@ultra.linux.cz),
-		  David S. Miller (davem@redhat.com) and
-		  Peter Maydell (pmaydell@chiark.greenend.org.uk).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

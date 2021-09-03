@@ -1,5 +1,4 @@
 /* s_cosl.c -- long double version of s_cos.c.
- * Conversion to long double by Jakub Jelinek, jj@ultra.linux.cz.
  */
 
 /*

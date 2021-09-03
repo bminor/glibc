@@ -4,12 +4,6 @@
    instructions.
    Copyright (C) 1997-2021 Free Software Foundation, Inc.
 
-   Author: Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
-   Based on the work by Ulrich Drepper  <drepper@cygnus.com>, 1997.
-
-   Thanks to Daniel Appich who covered the relevant performance work
-   in his diploma thesis.
-
    This is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
    License as published by the Free Software Foundation; either

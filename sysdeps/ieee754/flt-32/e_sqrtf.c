@@ -1,5 +1,4 @@
 /* e_sqrtf.c -- float version of e_sqrt.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

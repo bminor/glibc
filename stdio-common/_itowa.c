@@ -1,8 +1,6 @@
 /* Internal function for converting integers to ASCII.
    Copyright (C) 1994-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Torbjorn Granlund <tege@matematik.su.se>
-   and Ulrich Drepper <drepper@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

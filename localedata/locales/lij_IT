@@ -9,7 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Locale for Ligurian locale in Italy
-% Contributed by Alessio Gastaldi <alessio.gastaldi@libero.it>, 2010
 
 LC_IDENTIFICATION
 title      "Ligurian locale for Italy"

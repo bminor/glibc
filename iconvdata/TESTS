@@ -1,7 +1,6 @@
 # Available tests for iconv(1) (and therefore iconv(3)) in GNU libc.
 # Copyright (C) 1998-2021 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
-# Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 #
 
 # The GNU C Library is free software; you can redistribute it and/or

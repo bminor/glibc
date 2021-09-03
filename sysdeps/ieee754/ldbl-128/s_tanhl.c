@@ -1,6 +1,4 @@
 /* s_tanhl.c -- long double version of s_tanh.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*
@@ -13,9 +11,6 @@
  * is preserved.
  * ====================================================
  */
-
-/* Changes for 128-bit long double contributed by
-   Stephen L. Moshier <moshier@na-net.ornl.gov> */
 
 /* tanhl(x)
  * Return the Hyperbolic Tangent of x

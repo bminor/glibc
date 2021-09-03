@@ -1,4 +1,3 @@
-/* Rewritten for 64-bit machines by Ulrich Drepper <drepper@gmail.com>.  */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.

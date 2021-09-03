@@ -1,5 +1,4 @@
 /* s_nearbyintl.c -- long double version of s_nearbyint.c.
- * Conversion to IEEE quad long double by Jakub Jelinek, jj@ultra.linux.cz.
  */
 
 /*

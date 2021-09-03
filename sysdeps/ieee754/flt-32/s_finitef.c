@@ -1,5 +1,4 @@
 /* s_finitef.c -- float version of s_finite.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

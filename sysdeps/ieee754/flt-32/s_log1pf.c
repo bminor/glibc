@@ -1,5 +1,4 @@
 /* s_log1pf.c -- float version of s_log1p.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

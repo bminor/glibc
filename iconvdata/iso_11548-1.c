@@ -1,8 +1,6 @@
 /* Conversion to and from ISO 11548-1.
    Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997,
-	Samuel Thibault <samuel.thibault@ens-lyon.org>, 2005.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

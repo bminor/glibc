@@ -1,4 +1,3 @@
-/* Test case by Sam Varshavchik <mrsam@courier-mta.com>.  */
 #include <mcheck.h>
 #include <netdb.h>
 #include <stdio.h>

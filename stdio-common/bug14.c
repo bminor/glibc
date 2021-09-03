@@ -1,4 +1,3 @@
-/* Test case by Al Viro <aviro@redhat.com>.  */
 #include <locale.h>
 #include <wchar.h>
 #include <stdio.h>

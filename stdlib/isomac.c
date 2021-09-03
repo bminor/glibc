@@ -1,7 +1,6 @@
 /* Check system header files for ISO 9899:1990 (ISO C) compliance.
    Copyright (C) 1996-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jens Schweikhardt <schweikh@noc.dfn.de>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

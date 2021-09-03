@@ -1,5 +1,4 @@
 /* s_scalblnl.c -- long double version of s_scalbln.c.
- * Conversion to IEEE quad long double by Jakub Jelinek, jj@ultra.linux.cz.
  */
 
 /* @(#)s_scalbln.c 5.1 93/09/24 */

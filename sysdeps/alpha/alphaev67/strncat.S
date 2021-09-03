@@ -1,6 +1,4 @@
 /* Copyright (C) 2000-2021 Free Software Foundation, Inc.
-   Contributed by Richard Henderson <rth@tamu.edu>, 1996.
-   EV67 optimized by Rick Gorton <rick.gorton@alpha-processor.com>.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

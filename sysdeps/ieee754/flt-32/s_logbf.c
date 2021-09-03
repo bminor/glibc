@@ -1,5 +1,4 @@
 /* s_logbf.c -- float version of s_logb.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

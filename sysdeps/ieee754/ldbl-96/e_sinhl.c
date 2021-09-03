@@ -1,6 +1,4 @@
 /* e_asinhl.c -- long double version of e_asinh.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

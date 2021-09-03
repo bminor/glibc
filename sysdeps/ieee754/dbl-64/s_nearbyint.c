@@ -1,4 +1,3 @@
-/* Adapted for use as nearbyint by Ulrich Drepper <drepper@cygnus.com>.  */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.

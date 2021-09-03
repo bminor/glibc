@@ -9,10 +9,6 @@ escape_char /
 % otherwise be governed by that license.
 
 % Tamil language locale for India.
-% Contributed by Kentaroh Noji <knoji@jp.ibm.com> and
-% Tetsuji Orita <orita@jp.ibm.com>.
-% Fixed day and month abbr & LC_NAME <sivaraj_d@hotmail.com>
-% Added Madras Tamil Lexicon Collation Order: T. Vaseeharan <t_vasee@yahoo.com>
 
 LC_IDENTIFICATION
 title      "Tamil language locale for India"

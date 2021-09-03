@@ -2,14 +2,6 @@
    For SPARC v9.
    Copyright (C) 1999-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jj@ultra.linux.cz>.
-   This version is developed using the same algorithm as the fast C
-   version which carries the following introduction:
-   Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
-   with help from Dan Sahlin (dan@sics.se) and
-   commentary by Jim Blandy (jimb@ai.mit.edu);
-   adaptation to memchr suggested by Dick Karpinski (dick@cca.ucsf.edu),
-   and implemented by Roland McGrath (roland@ai.mit.edu).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

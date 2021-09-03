@@ -1,6 +1,4 @@
 /* w_lgammal_r.c -- long double version of w_lgamma_r.c.
- * Conversion to long double by Ulrich Drepper,
- * Cygnus Support, drepper@cygnus.com.
  */
 
 /*

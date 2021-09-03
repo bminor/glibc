@@ -1,6 +1,5 @@
 /* Optimized memcpy implementation for PowerPC A2.
    Copyright (C) 2010-2021 Free Software Foundation, Inc.
-   Contributed by Michael Brutman <brutman@us.ibm.com>.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

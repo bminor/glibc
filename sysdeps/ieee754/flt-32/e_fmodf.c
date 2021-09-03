@@ -1,5 +1,4 @@
 /* e_fmodf.c -- float version of e_fmod.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*

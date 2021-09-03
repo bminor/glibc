@@ -2,7 +2,6 @@
    different threads operate in different locales with the same encoding.
    Copyright (C) 2005-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Bruno Haible <bruno@clisp.org>, 2005.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

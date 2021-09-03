@@ -8,9 +8,6 @@ escape_char /
 % exempt you from the conditions of the license if your use would
 % otherwise be governed by that license.
 
-% Contributed by Kentaro Noji   (knoji@jp.ibm.com)
-% Tetsuji Oriata (Oriata@jp.ibm.com) and Others, 2000
-
 LC_IDENTIFICATION
 
 title       "Arabic language locale for India"

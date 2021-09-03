@@ -1,9 +1,6 @@
 /* Highly optimized version for x86-64.
    Copyright (C) 1999-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Based on i686 version contributed by Ulrich Drepper
-   <drepper@cygnus.com>, 1999.
-   Updated with SSE2 support contributed by Intel Corporation.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

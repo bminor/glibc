@@ -1,7 +1,6 @@
 /* Cache handling for services lookup.
    Copyright (C) 2007-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@drepper.com>, 2007.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published

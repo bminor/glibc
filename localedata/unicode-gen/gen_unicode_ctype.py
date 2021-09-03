@@ -3,7 +3,6 @@
 # Generate a Unicode conforming LC_CTYPE category from a UnicodeData file.
 # Copyright (C) 2014-2021 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
-# Based on gen-unicode-ctype.c by Bruno Haible <haible@clisp.cons.org>, 2000.
 #
 # The GNU C Library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public

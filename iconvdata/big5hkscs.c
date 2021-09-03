@@ -1,8 +1,6 @@
 /* Mapping tables for Big5-HKSCS handling.
    Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
-   Modified for Big5-HKSCS by Roger So <spacehunt@e-fever.org>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

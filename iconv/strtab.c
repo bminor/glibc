@@ -1,6 +1,5 @@
 /* C string table handling.
    Copyright (C) 2000-2021 Free Software Foundation, Inc.
-   Written by Ulrich Drepper <drepper@redhat.com>, 2000.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

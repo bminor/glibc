@@ -1,5 +1,4 @@
 /* e_hypotf.c -- float version of e_hypot.c.
- * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
 
 /*
