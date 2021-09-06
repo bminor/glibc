@@ -96,14 +96,7 @@ L(vl_agnostic): // VL Agnostic
 L(unroll8):
 	sub	count, count, tmp1
 	.p2align 4
-	// The 2 instructions at the beginning of the following loop,
-	// cmp and branch, are a workaround so as not to degrade at
-	// the peak performance 16KB.
-	// It is found heuristically and the branch condition, b.ne,
-	// is chosen intentionally never to jump.
-1:	cmp	xzr, xzr
-	b.ne	1b
-	st1b_unroll 0, 7
+1:	st1b_unroll 0, 7
 	add	dst, dst, tmp1
 	subs	count, count, tmp1
 	b.hi	1b
