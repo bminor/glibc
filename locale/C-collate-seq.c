@@ -55,7 +55,7 @@ static const char collseqmb[] =
 
 /* This table must be 256 bytes in size. We index bytes into the
    table to find the collation sequence.  */
-_Static_assert (sizeof (collseqmb) == 256);
+_Static_assert (sizeof (collseqmb) == 256, "sizeof (collseqmb)");
 
 static const uint32_t collseqwc[] =
 {
