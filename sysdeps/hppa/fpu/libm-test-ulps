@@ -1104,7 +1104,7 @@ float: 8
 ldouble: 1
 
 Function: "tgamma_downward":
-double: 8
+double: 9
 float: 7
 
 Function: "tgamma_towardzero":
