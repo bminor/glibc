@@ -62,6 +62,12 @@ __get_nprocs (void)
 libc_hidden_def (__get_nprocs)
 weak_alias (__get_nprocs, get_nprocs)
 
+int
+__get_nprocs_sched (void)
+{
+  return __get_nprocs ();
+}
+
 /* Return the number of physical pages on the system. */
 long int
 __get_phys_pages (void)
