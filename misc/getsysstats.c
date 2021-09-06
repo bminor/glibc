@@ -44,6 +44,12 @@ weak_alias (__get_nprocs, get_nprocs)
 link_warning (get_nprocs, "warning: get_nprocs will always return 1")
 
 
+int
+__get_nprocs_sched (void)
+{
+  return 1;
+}
+
 long int
 __get_phys_pages (void)
 {

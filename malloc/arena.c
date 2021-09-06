@@ -878,7 +878,7 @@ arena_get2 (size_t size, mstate avoid_arena)
             narenas_limit = mp_.arena_max;
           else if (narenas > mp_.arena_test)
             {
-              int n = __get_nprocs ();
+              int n = __get_nprocs_sched ();
 
               if (n >= 1)
                 narenas_limit = NARENAS_FROM_NCORES (n);

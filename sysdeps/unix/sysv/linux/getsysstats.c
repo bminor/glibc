@@ -87,6 +87,12 @@ __get_nprocs (void)
 libc_hidden_def (__get_nprocs)
 weak_alias (__get_nprocs, get_nprocs)
 
+int
+__get_nprocs_sched (void)
+{
+  return __get_nprocs ();
+}
+
 
 /* On some architectures it is possible to distinguish between configured
    and active cpus.  */
