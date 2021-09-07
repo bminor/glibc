@@ -141,8 +141,9 @@ usage () {
 cat << EOF
 Usage: $$0 [OPTIONS] <program> [ARGUMENTS...]
 
-  --tool=TOOL  Run with the specified TOOL. It can be strace, valgrind or
-               container. The container will run within support/test-container.
+  --tool=TOOL  Run with the specified TOOL. It can be strace, rpctrace,
+               valgrind or container. The container will run within
+               support/test-container.
 EOF
 
   exit 1
@@ -175,6 +176,10 @@ case "$$toolname" in
     ;;
   strace)
     exec strace $(patsubst %, -E%, $(run-program-env)) \
+      $(test-via-rtld-prefix) $${1+"$$@"}
+    ;;
+  rpctrace)
+    exec rpctrace $(patsubst %, -E%, $(run-program-env)) \
       $(test-via-rtld-prefix) $${1+"$$@"}
     ;;
   valgrind)
