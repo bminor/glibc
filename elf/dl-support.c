@@ -183,7 +183,7 @@ uint64_t _dl_hwcap_mask;
  * executable but this isn't true for all platforms.  */
 ElfW(Word) _dl_stack_flags = DEFAULT_STACK_PERMS;
 
-#if THREAD_GSCOPE_IN_TCB
+#if PTHREAD_IN_LIBC
 list_t _dl_stack_used;
 list_t _dl_stack_user;
 list_t _dl_stack_cache;
@@ -195,8 +195,10 @@ int _dl_stack_cache_lock;
    when it was not, we do it by calling this function.
    It returns an errno code or zero on success.  */
 int (*_dl_make_stack_executable_hook) (void **) = _dl_make_stack_executable;
-int _dl_thread_gscope_count;
 void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
+#endif
+#if !THREAD_GSCOPE_IN_TCB
+int _dl_thread_gscope_count;
 #endif
 struct dl_scope_free_list *_dl_scope_free_list;
 

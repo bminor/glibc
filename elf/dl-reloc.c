@@ -141,7 +141,7 @@ cannot allocate memory in static TLS block"));
     }
 }
 
-#if !THREAD_GSCOPE_IN_TCB
+#if !PTHREAD_IN_LIBC
 /* Initialize static TLS area and DTV for current (only) thread.
    libpthread implementations should provide their own hook
    to handle all threads.  */
@@ -160,7 +160,7 @@ _dl_nothread_init_static_tls (struct link_map *map)
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
 	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
 }
-#endif /* !THREAD_GSCOPE_IN_TCB */
+#endif /* !PTHREAD_IN_LIBC */
 
 void
 _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],

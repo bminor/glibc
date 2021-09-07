@@ -29,7 +29,7 @@
 #include <dl-tls.h>
 #include <ldsodefs.h>
 
-#if THREAD_GSCOPE_IN_TCB
+#if PTHREAD_IN_LIBC
 # include <list.h>
 #endif
 
@@ -1058,7 +1058,7 @@ cannot create TLS data structures"));
     }
 }
 
-#if THREAD_GSCOPE_IN_TCB
+#if PTHREAD_IN_LIBC
 static inline void __attribute__((always_inline))
 init_one_static_tls (struct pthread *curp, struct link_map *map)
 {
@@ -1091,4 +1091,4 @@ _dl_init_static_tls (struct link_map *map)
 
   lll_unlock (GL (dl_stack_cache_lock), LLL_PRIVATE);
 }
-#endif /* THREAD_GSCOPE_IN_TCB */
+#endif /* PTHREAD_IN_LIBC */

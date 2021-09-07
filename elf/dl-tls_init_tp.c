@@ -36,7 +36,7 @@ rtld_lock_default_unlock_recursive (void *lock)
 void
 __tls_pre_init_tp (void)
 {
-#if !THREAD_GSCOPE_IN_TCB
+#if !PTHREAD_IN_LIBC
   GL(dl_init_static_tls) = &_dl_nothread_init_static_tls;
 #endif
 

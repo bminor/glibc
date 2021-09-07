@@ -456,7 +456,7 @@ struct rtld_global
   /* Generation counter for the dtv.  */
   EXTERN size_t _dl_tls_generation;
 
-#if !THREAD_GSCOPE_IN_TCB
+#if !PTHREAD_IN_LIBC
   EXTERN void (*_dl_init_static_tls) (struct link_map *);
 #endif
 
@@ -466,7 +466,7 @@ struct rtld_global
     size_t count;
     void *list[50];
   } *_dl_scope_free_list;
-#if THREAD_GSCOPE_IN_TCB
+#if PTHREAD_IN_LIBC
   /* List of active thread stacks, with memory managed by glibc.  */
   EXTERN list_t _dl_stack_used;
 
@@ -486,7 +486,8 @@ struct rtld_global
 
   /* Mutex protecting the stack lists.  */
   EXTERN int _dl_stack_cache_lock;
-#else
+#endif
+#if !THREAD_GSCOPE_IN_TCB
   EXTERN int _dl_thread_gscope_count;
 #endif
 #ifdef SHARED
@@ -1297,13 +1298,13 @@ extern void _dl_aux_init (ElfW(auxv_t) *av)
 
 /* Initialize the static TLS space for the link map in all existing
    threads. */
-#if THREAD_GSCOPE_IN_TCB
+#if PTHREAD_IN_LIBC
 void _dl_init_static_tls (struct link_map *map) attribute_hidden;
 #endif
 static inline void
 dl_init_static_tls (struct link_map *map)
 {
-#if THREAD_GSCOPE_IN_TCB
+#if PTHREAD_IN_LIBC
   /* The stack list is available to ld.so, so the initialization can
      be handled within ld.so directly.  */
   _dl_init_static_tls (map);
