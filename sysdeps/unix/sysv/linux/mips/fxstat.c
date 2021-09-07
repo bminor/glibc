@@ -35,7 +35,9 @@ __fxstat (int vers, int fd, struct stat *buf)
       {
 	struct kernel_stat kbuf;
 	int r = INTERNAL_SYSCALL_CALL (fstat, fd, &kbuf);
-	return r ?: __xstat_conv (vers, &kbuf, buf);
+	if (r == 0)
+	  return  __xstat_conv (vers, &kbuf, buf);
+	return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
       }
     }
 }
