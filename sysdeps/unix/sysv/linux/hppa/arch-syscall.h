@@ -231,6 +231,7 @@
 #define __NR_pwritev 316
 #define __NR_pwritev2 348
 #define __NR_quotactl 131
+#define __NR_quotactl_fd 443
 #define __NR_read 3
 #define __NR_readahead 207
 #define __NR_readlink 85

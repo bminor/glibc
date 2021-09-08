@@ -183,6 +183,7 @@
 #define __NR_mbind 274
 #define __NR_membarrier 375
 #define __NR_memfd_create 356
+#define __NR_memfd_secret 447
 #define __NR_migrate_pages 294
 #define __NR_mincore 218
 #define __NR_mkdir 39
@@ -266,6 +267,7 @@
 #define __NR_pwritev2 379
 #define __NR_query_module 167
 #define __NR_quotactl 131
+#define __NR_quotactl_fd 443
 #define __NR_read 3
 #define __NR_readahead 225
 #define __NR_readdir 89

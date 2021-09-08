@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 5.13.
-kernel 5.13
+# The list of system calls is current as of Linux 5.14.
+kernel 5.14
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -247,6 +247,7 @@ madvise
 mbind
 membarrier
 memfd_create
+memfd_secret
 memory_ordering
 migrate_pages
 mincore
@@ -452,6 +453,7 @@ pwritev
 pwritev2
 query_module
 quotactl
+quotactl_fd
 read
 readahead
 readdir
