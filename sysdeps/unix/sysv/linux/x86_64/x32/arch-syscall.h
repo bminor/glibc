@@ -148,6 +148,7 @@
 #define __NR_mbind 1073742061
 #define __NR_membarrier 1073742148
 #define __NR_memfd_create 1073742143
+#define __NR_memfd_secret 1073742271
 #define __NR_migrate_pages 1073742080
 #define __NR_mincore 1073741851
 #define __NR_mkdir 1073741907
@@ -216,6 +217,7 @@
 #define __NR_pwritev 1073742359
 #define __NR_pwritev2 1073742371
 #define __NR_quotactl 1073742003
+#define __NR_quotactl_fd 1073742267
 #define __NR_read 1073741824
 #define __NR_readahead 1073742011
 #define __NR_readlink 1073741913
