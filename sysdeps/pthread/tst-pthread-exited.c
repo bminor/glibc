@@ -75,6 +75,12 @@ do_test (void)
     TEST_COMPARE (r, EINVAL);
   }
 
+  {
+    union sigval value = { 0 };
+    int r = pthread_sigqueue (thr, SIGUSR1, value);
+    TEST_COMPARE (r, EINVAL);
+  }
+
   xpthread_join (thr);
 
   return 0;

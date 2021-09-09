@@ -16,6 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <errno.h>
+#include <libc-lock.h>
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
@@ -27,41 +28,40 @@
 int
 __pthread_sigqueue (pthread_t threadid, int signo, const union sigval value)
 {
-#ifdef __NR_rt_tgsigqueueinfo
-  struct pthread *pd = (struct pthread *) threadid;
-
-  /* Force load of pd->tid into local variable or register.  Otherwise
-     if a thread exits between ESRCH test and tgkill, we might return
-     EINVAL, because pd->tid would be cleared by the kernel.  */
-  pid_t tid = atomic_forced_read (pd->tid);
-  if (__glibc_unlikely (tid <= 0))
-    /* Not a valid thread handle.  */
-    return ESRCH;
-
   /* Disallow sending the signal we use for cancellation, timers,
      for the setxid implementation.  */
   if (signo == SIGCANCEL || signo == SIGTIMER || signo == SIGSETXID)
     return EINVAL;
 
-  pid_t pid = getpid ();
+  struct pthread *pd = (struct pthread *) threadid;
 
-  /* Set up the siginfo_t structure.  */
-  siginfo_t info;
-  memset (&info, '\0', sizeof (siginfo_t));
-  info.si_signo = signo;
-  info.si_code = SI_QUEUE;
-  info.si_pid = pid;
-  info.si_uid = __getuid ();
-  info.si_value = value;
+  /* Block all signals, as required by pd->exit_lock.  */
+  internal_sigset_t old_mask;
+  internal_signal_block_all (&old_mask);
+  __libc_lock_lock (pd->exit_lock);
 
-  /* We have a special syscall to do the work.  */
-  int val = INTERNAL_SYSCALL_CALL (rt_tgsigqueueinfo, pid, tid, signo,
-				   &info);
-  return (INTERNAL_SYSCALL_ERROR_P (val)
-	  ? INTERNAL_SYSCALL_ERRNO (val) : 0);
-#else
-  return ENOSYS;
-#endif
+  int res;
+  if (pd->tid != 0)
+    {
+      pid_t pid = getpid ();
+
+      siginfo_t info = { 0 };
+      info.si_signo = signo;
+      info.si_code = SI_QUEUE;
+      info.si_pid = pid;
+      info.si_uid = __getuid ();
+      info.si_value = value;
+
+      res = -INTERNAL_SYSCALL_CALL (rt_tgsigqueueinfo, pid, pd->tid, signo,
+				    &info);
+    }
+  else
+    res = EINVAL;
+
+  __libc_lock_unlock (pd->exit_lock);
+  internal_signal_restore_set (&old_mask);
+
+  return res;
 }
 versioned_symbol (libc, __pthread_sigqueue, pthread_sigqueue, GLIBC_2_34);
 
