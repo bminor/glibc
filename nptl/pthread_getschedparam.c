@@ -15,24 +15,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <string.h>
-#include "pthreadP.h"
-#include <lowlevellock.h>
+#include <libc-lock.h>
+#include <kernel-posix-cpu-timers.h>
+#include <pthreadP.h>
 
-
-int
-__pthread_getschedparam (pthread_t threadid, int *policy,
-			 struct sched_param *param)
+static int
+getschedparam (struct pthread *pd, int *policy, struct sched_param *param)
 {
-  struct pthread *pd = (struct pthread *) threadid;
-
-  /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
-    /* Not a valid thread handle.  */
-    return ESRCH;
-
-  int result = 0;
+  int r = 0;
 
   /* See CREATE THREAD NOTES in nptl/pthread_create.c.  */
   lll_lock (pd->lock, LLL_PRIVATE);
@@ -44,28 +34,43 @@ __pthread_getschedparam (pthread_t threadid, int *policy,
      not yet been retrieved do it now.  */
   if ((pd->flags & ATTR_FLAG_SCHED_SET) == 0)
     {
-      if (__sched_getparam (pd->tid, &pd->schedparam) != 0)
-	result = 1;
-      else
+      r = INTERNAL_SYSCALL_CALL (sched_getparam, pd->tid, &pd->schedparam);
+      if (r == 0)
 	pd->flags |= ATTR_FLAG_SCHED_SET;
     }
-
   if ((pd->flags & ATTR_FLAG_POLICY_SET) == 0)
     {
-      pd->schedpolicy = __sched_getscheduler (pd->tid);
-      if (pd->schedpolicy == -1)
-	result = 1;
-      else
+      r = pd->schedpolicy = INTERNAL_SYSCALL_CALL (sched_getscheduler, pd->tid);
+      if (r >= 0)
 	pd->flags |= ATTR_FLAG_POLICY_SET;
     }
 
-  if (result == 0)
+  if (r >= 0)
     {
       *policy = pd->schedpolicy;
       memcpy (param, &pd->schedparam, sizeof (struct sched_param));
     }
 
   lll_unlock (pd->lock, LLL_PRIVATE);
+
+  return -r;
+}
+
+int
+__pthread_getschedparam (pthread_t threadid, int *policy,
+			 struct sched_param *param)
+{
+  struct pthread *pd = (struct pthread *) threadid;
+
+  /* Block all signals, as required by pd->exit_lock.  */
+  internal_sigset_t old_mask;
+  internal_signal_block_all (&old_mask);
+  __libc_lock_lock (pd->exit_lock);
+
+  int result = pd->tid != 0 ? getschedparam (pd, policy, param) : EINVAL;
+
+  __libc_lock_unlock (pd->exit_lock);
+  internal_signal_restore_set (&old_mask);
 
   return result;
 }
