@@ -81,6 +81,11 @@ do_test (void)
     TEST_COMPARE (r, EINVAL);
   }
 
+  {
+    int r = pthread_setschedprio (thr, 0);
+    TEST_COMPARE (r, EINVAL);
+  }
+
   xpthread_join (thr);
 
   return 0;

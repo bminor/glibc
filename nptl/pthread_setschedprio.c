@@ -15,25 +15,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <sched.h>
-#include <string.h>
-#include <sched.h>
-#include "pthreadP.h"
-#include <lowlevellock.h>
+#include <libc-lock.h>
+#include <pthreadP.h>
 #include <shlib-compat.h>
 
-int
-__pthread_setschedprio (pthread_t threadid, int prio)
+static int
+setschedprio (struct pthread *pd, int prio)
 {
-  struct pthread *pd = (struct pthread *) threadid;
-
-  /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
-    /* Not a valid thread handle.  */
-    return ESRCH;
-
-  int result = 0;
   struct sched_param param;
   param.sched_priority = prio;
 
@@ -42,13 +30,12 @@ __pthread_setschedprio (pthread_t threadid, int prio)
 
   /* If the thread should have higher priority because of some
      PTHREAD_PRIO_PROTECT mutexes it holds, adjust the priority.  */
-  if (__builtin_expect (pd->tpp != NULL, 0) && pd->tpp->priomax > prio)
+  if (pd->tpp != NULL && pd->tpp->priomax > prio)
     param.sched_priority = pd->tpp->priomax;
 
   /* Try to set the scheduler information.  */
-  if (__glibc_unlikely (__sched_setparam (pd->tid, &param) == -1))
-    result = errno;
-  else
+  int r = INTERNAL_SYSCALL_CALL (sched_setparam, pd->tid, &param);
+  if (r == 0)
     {
       /* We succeeded changing the kernel information.  Reflect this
 	 change in the thread descriptor.  */
@@ -58,6 +45,24 @@ __pthread_setschedprio (pthread_t threadid, int prio)
     }
 
   lll_unlock (pd->lock, LLL_PRIVATE);
+
+  return -r;
+}
+
+int
+__pthread_setschedprio (pthread_t threadid, int prio)
+{
+  struct pthread *pd = (struct pthread *) threadid;
+
+  /* Block all signals, as required by pd->exit_lock.  */
+  internal_sigset_t old_mask;
+  internal_signal_block_all (&old_mask);
+  __libc_lock_lock (pd->exit_lock);
+
+  int result = pd->tid != 0 ? setschedprio (pd, prio) : EINVAL;
+
+  __libc_lock_unlock (pd->exit_lock);
+  internal_signal_restore_set (&old_mask);
 
   return result;
 }
