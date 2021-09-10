@@ -48,7 +48,9 @@ endif
 endif
 
 ifeq ($(subdir),csu)
-gen-as-const-headers += tlsdesc.sym
+gen-as-const-headers += \
+  tlsdesc.sym \
+  rtld-global-offsets.sym
 endif
 
 ifeq ($(subdir),gmon)
@@ -62,8 +64,10 @@ endif
 
 ifeq ($(subdir),misc)
 sysdep_headers += sys/ifunc.h
-sysdep_routines += __mtag_tag_zero_region \
-		   __mtag_tag_region
+sysdep_routines += \
+  __mtag_tag_zero_region \
+  __mtag_tag_region \
+  __arm_za_disable
 endif
 
 ifeq ($(subdir),malloc)
