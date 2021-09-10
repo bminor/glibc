@@ -42,6 +42,10 @@
       This exposes the appropriate symbol(s) for a
       function f_r of type FLOAT.
 
+  declare_mgen_alias_narrow(from,to)
+      This exposes the appropriate symbol(s) for narrowing aliases of a
+      function f of type FLOAT.
+
   SET_NAN_PAYLOAD(flt, mant)
       Set the NaN payload bits of the variable FLT of type FLOAT to
       the mantissa MANT.  */
@@ -69,6 +73,9 @@
 #endif
 #ifndef declare_mgen_alias_r
 # error "declare_mgen_alias_r must be defined."
+#endif
+#ifndef declare_mgen_alias_narrow
+# error "declare_mgen_alias_narrow must be defined."
 #endif
 #ifndef SET_NAN_PAYLOAD
 # error "SET_NAN_PAYLOAD must be defined."

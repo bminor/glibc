@@ -29,5 +29,8 @@ __MATHCALL_NARROW (__MATHCALL_NAME (div), __MATHCALL_REDIR_NAME (div), 2);
 /* Multiply.  */
 __MATHCALL_NARROW (__MATHCALL_NAME (mul), __MATHCALL_REDIR_NAME (mul), 2);
 
+/* Square root.  */
+__MATHCALL_NARROW (__MATHCALL_NAME (sqrt), __MATHCALL_REDIR_NAME2 (sqrt), 1);
+
 /* Subtract.  */
 __MATHCALL_NARROW (__MATHCALL_NAME (sub), __MATHCALL_REDIR_NAME (sub), 2);

@@ -5,6 +5,7 @@
 # include <libm-alias-float.h>
 # include <libm-alias-double.h>
 # include <libm-alias-ldouble.h>
+# include <math-narrow-alias.h>
 
 /* Support for compatible assembler handling.  */
 

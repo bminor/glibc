@@ -573,11 +573,13 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # define __MATHCALL_NAME(name) f ## name ## l
 # ifdef __LDBL_COMPAT
 #  define __MATHCALL_REDIR_NAME(name) f ## name
+#  define __MATHCALL_REDIR_NAME2(name) f ## name
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_REDIR (func, redir, nargs)
 # elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  define __MATHCALL_REDIR_NAME(name) __ ## f32 ## name ## ieee128
+#  define __MATHCALL_REDIR_NAME2(name) __ ## f32 ## name ## ieee128
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_REDIR (func, redir, nargs)
@@ -589,6 +591,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # if defined __LDBL_COMPAT \
      || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  undef __MATHCALL_REDIR_NAME
+#  undef __MATHCALL_REDIR_NAME2
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_NORMAL (func, nargs)
@@ -599,11 +602,13 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # define __MATHCALL_NAME(name) d ## name ## l
 # ifdef __LDBL_COMPAT
 #  define __MATHCALL_REDIR_NAME(name) __nldbl_d ## name ## l
+#  define __MATHCALL_REDIR_NAME2(name) name
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_REDIR (func, redir, nargs)
 # elif __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  define __MATHCALL_REDIR_NAME(name) __ ## f64 ## name ## ieee128
+#  define __MATHCALL_REDIR_NAME2(name) __ ## f64 ## name ## ieee128
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_REDIR (func, redir, nargs)
@@ -615,6 +620,7 @@ extern double __REDIRECT_NTH (nexttoward, (double __x, long double __y),
 # if defined __LDBL_COMPAT \
      || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
 #  undef __MATHCALL_REDIR_NAME
+#  undef __MATHCALL_REDIR_NAME2
 #  undef __MATHCALL_NARROW
 #  define __MATHCALL_NARROW(func, redir, nargs) \
   __MATHCALL_NARROW_NORMAL (func, nargs)

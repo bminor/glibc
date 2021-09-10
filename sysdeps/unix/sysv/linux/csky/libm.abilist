@@ -763,3 +763,9 @@ GLIBC_2.31 totalordermagf32 F
 GLIBC_2.31 totalordermagf32x F
 GLIBC_2.31 totalordermagf64 F
 GLIBC_2.31 totalordermagl F
+GLIBC_2.35 dsqrtl F
+GLIBC_2.35 f32sqrtf32x F
+GLIBC_2.35 f32sqrtf64 F
+GLIBC_2.35 f32xsqrtf64 F
+GLIBC_2.35 fsqrt F
+GLIBC_2.35 fsqrtl F

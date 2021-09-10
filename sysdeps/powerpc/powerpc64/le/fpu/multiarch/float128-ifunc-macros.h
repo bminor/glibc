@@ -32,6 +32,7 @@
 #undef declare_mgen_finite_alias
 #undef declare_mgen_alias
 #undef declare_mgen_alias_r
+#undef declare_mgen_alias_narrow
 
 #define libm_alias_finite(from, to)
 #define libm_alias_float128_r(from, to, r)
@@ -40,6 +41,7 @@
 #define declare_mgen_finite_alias(from, to)
 #define declare_mgen_alias(from, to)
 #define declare_mgen_alias_r(from, to)
+#define declare_mgen_alias_narrow(from, to)
 
 /*  Likewise, disable hidden symbol support.  This is not needed
     for the implementation objects as the redirects already give

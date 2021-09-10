@@ -41,6 +41,10 @@
 # define declare_mgen_alias_r(from, to) libm_alias_float_r (from, to, _r)
 #endif
 
+#ifndef declare_mgen_alias_narrow
+# define declare_mgen_alias_narrow(from, to)
+#endif
+
 /* Supply the generic macros.  */
 #include <math-type-macros.h>
 

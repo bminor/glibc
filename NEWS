@@ -19,6 +19,13 @@ Major new features:
   in various downstream distributions.  The locale is not built into
   glibc, and must be installed.
 
+* <math.h> functions that round their results to a narrower type, and
+  corresponding <tgmath.h> macros, are added from TS 18661-1:2014, TS
+  18661-3:2015 and draft ISO C2X:
+
+  - fsqrt, fsqrtl, dsqrtl and corresponding fMsqrtfN, fMsqrtfNx,
+    fMxsqrtfN and fMxsqrtfNx functions.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
   [Add deprecations, removals and changes affecting compatibility here]

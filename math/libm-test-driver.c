@@ -169,6 +169,16 @@ struct test_fj_f_data
   } rd, rn, rz, ru;
 };
 #ifdef ARG_FLOAT
+struct test_a_f_data
+{
+  const char *arg_str;
+  ARG_FLOAT arg;
+  struct
+  {
+    FLOAT expected;
+    int exceptions;
+  } rd, rn, rz, ru;
+};
 struct test_aa_f_data
 {
   const char *arg_str;
@@ -459,7 +469,7 @@ struct test_Ff_b1_data
 
 /* Run an individual test, including any required setup and checking
    of results, or loop over all tests in an array.  */
-#define RUN_TEST_f_f(ARG_STR, FUNC_NAME, ARG, EXPECTED,			\
+#define RUN_TEST_1_f(ARG_STR, FUNC_NAME, ARG, EXPECTED,			\
 		     EXCEPTIONS)					\
   do									\
     if (enable_test (EXCEPTIONS))					\
@@ -470,13 +480,15 @@ struct test_Ff_b1_data
 	COMMON_TEST_CLEANUP;						\
       }									\
   while (0)
-#define RUN_TEST_LOOP_f_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
+#define RUN_TEST_LOOP_1_f(FUNC_NAME, ARRAY, ROUNDING_MODE)		\
   IF_ROUND_INIT_ ## ROUNDING_MODE					\
     for (size_t i = 0; i < sizeof (ARRAY) / sizeof (ARRAY)[0]; i++)	\
-      RUN_TEST_f_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
+      RUN_TEST_1_f ((ARRAY)[i].arg_str, FUNC_NAME, (ARRAY)[i].arg,	\
 		    (ARRAY)[i].RM_##ROUNDING_MODE.expected,		\
 		    (ARRAY)[i].RM_##ROUNDING_MODE.exceptions);		\
   ROUND_RESTORE_ ## ROUNDING_MODE
+#define RUN_TEST_LOOP_f_f RUN_TEST_LOOP_1_f
+#define RUN_TEST_LOOP_a_f RUN_TEST_LOOP_1_f
 #define RUN_TEST_fp_f(ARG_STR, FUNC_NAME, ARG, EXPECTED,		\
 		     EXCEPTIONS)					\
   do									\

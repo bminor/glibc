@@ -24,8 +24,15 @@
 # define NO_MATH_REDIRECT
 # include <errno.h>
 # include <fenv.h>
+# define dsqrtl __hide_dsqrtl
+# define f32xsqrtf64 __hide_f32xsqrtf64
+# define f64xsqrtf128 __hide_f64xsqrtf128
 # include <math.h>
+# undef dsqrtl
+# undef f32xsqrtf64
+# undef f64xsqrtf128
 # include <math_private.h>
+# include <math-narrow-alias.h>
 
 FLOAT
 M_DECL_FUNC (__sqrt) (FLOAT x)
@@ -36,5 +43,6 @@ M_DECL_FUNC (__sqrt) (FLOAT x)
   return M_SUF (__ieee754_sqrt) (x);
 }
 declare_mgen_alias (__sqrt, sqrt)
+declare_mgen_alias_narrow (__sqrt, sqrt)
 
 #endif /* __USE_WRAPPER_TEMPLATE.  */

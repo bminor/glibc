@@ -1623,6 +1623,9 @@ ldouble: 1
 Function: "sqrt_downward":
 ldouble: 1
 
+Function: "sqrt_ldouble":
+double: 1
+
 Function: "sqrt_towardzero":
 ldouble: 1
 

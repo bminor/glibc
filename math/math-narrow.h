@@ -27,16 +27,20 @@
 #include <math-barriers.h>
 #include <math_private.h>
 #include <fenv_private.h>
+#include <math-narrow-alias.h>
 
 /* Carry out a computation using round-to-odd.  The computation is
    EXPR; the union type in which to store the result is UNION and the
    subfield of the "ieee" field of that union with the low part of the
-   mantissa is MANTISSA; SUFFIX is the suffix for the libc_fe* macros
-   to ensure that the correct rounding mode is used, for platforms
-   with multiple rounding modes where those macros set only the
-   relevant mode.  This macro does not work correctly if the sign of
-   an exact zero result depends on the rounding mode, so that case
-   must be checked for separately.  */
+   mantissa is MANTISSA; SUFFIX is the suffix for both underlying libm
+   functions for the argument type (for computations where a libm
+   function rather than a C operator is used when argument and result
+   types are the same) and the libc_fe* macros to ensure that the
+   correct rounding mode is used, for platforms with multiple rounding
+   modes where those macros set only the relevant mode.  This macro
+   does not work correctly if the sign of an exact zero result depends
+   on the rounding mode, so that case must be checked for
+   separately.  */
 #define ROUND_TO_ODD(EXPR, UNION, SUFFIX, MANTISSA)			\
   ({									\
     fenv_t env;								\
@@ -273,85 +277,58 @@
     }						\
   while (0)
 
-/* The following macros declare aliases for a narrowing function.  The
-   sole argument is the base name of a family of functions, such as
-   "add".  If any platform changes long double format after the
-   introduction of narrowing functions, in a way requiring symbol
-   versioning compatibility, additional variants of these macros will
-   be needed.  */
+/* Check for error conditions from a narrowing square root function
+   returning RET with argument X and set errno as needed.  Overflow
+   and underflow can occur for finite positive arguments and a domain
+   error for negative arguments.  */
+#define CHECK_NARROW_SQRT(RET, X)		\
+  do						\
+    {						\
+      if (!isfinite (RET))			\
+	{					\
+	  if (isnan (RET))			\
+	    {					\
+	      if (!isnan (X))			\
+		__set_errno (EDOM);		\
+	    }					\
+	  else if (isfinite (X))		\
+	    __set_errno (ERANGE);		\
+	}					\
+      else if ((RET) == 0 && (X) != 0)		\
+	__set_errno (ERANGE);			\
+    }						\
+  while (0)
 
-#define libm_alias_float_double_main(func)	\
-  weak_alias (__f ## func, f ## func)		\
-  weak_alias (__f ## func, f32 ## func ## f64)	\
-  weak_alias (__f ## func, f32 ## func ## f32x)
+/* Implement narrowing square root using round-to-odd.  The argument
+   is X, the return type is TYPE and UNION, MANTISSA and SUFFIX are as
+   for ROUND_TO_ODD.  */
+#define NARROW_SQRT_ROUND_TO_ODD(X, TYPE, UNION, SUFFIX, MANTISSA)	\
+  do									\
+    {									\
+      TYPE ret;								\
+									\
+      ret = (TYPE) ROUND_TO_ODD (sqrt ## SUFFIX (math_opt_barrier (X)),	\
+				 UNION, SUFFIX, MANTISSA);		\
+									\
+      CHECK_NARROW_SQRT (ret, (X));					\
+      return ret;							\
+    }									\
+  while (0)
 
-#ifdef NO_LONG_DOUBLE
-# define libm_alias_float_double(func)		\
-  libm_alias_float_double_main (func)		\
-  weak_alias (__f ## func, f ## func ## l)
-#else
-# define libm_alias_float_double(func)		\
-  libm_alias_float_double_main (func)
-#endif
-
-#define libm_alias_float32x_float64_main(func)			\
-  weak_alias (__f32x ## func ## f64, f32x ## func ## f64)
-
-#ifdef NO_LONG_DOUBLE
-# define libm_alias_float32x_float64(func)		\
-  libm_alias_float32x_float64_main (func)		\
-  weak_alias (__f32x ## func ## f64, d ## func ## l)
-#elif defined __LONG_DOUBLE_MATH_OPTIONAL
-# define libm_alias_float32x_float64(func)			\
-  libm_alias_float32x_float64_main (func)			\
-  weak_alias (__f32x ## func ## f64, __nldbl_d ## func ## l)
-#else
-# define libm_alias_float32x_float64(func)	\
-  libm_alias_float32x_float64_main (func)
-#endif
-
-#if __HAVE_FLOAT128 && !__HAVE_DISTINCT_FLOAT128
-# define libm_alias_float_ldouble_f128(func)		\
-  weak_alias (__f ## func ## l, f32 ## func ## f128)
-# define libm_alias_double_ldouble_f128(func)		\
-  weak_alias (__d ## func ## l, f32x ## func ## f128)	\
-  weak_alias (__d ## func ## l, f64 ## func ## f128)
-#else
-# define libm_alias_float_ldouble_f128(func)
-# define libm_alias_double_ldouble_f128(func)
-#endif
-
-#if __HAVE_FLOAT64X_LONG_DOUBLE
-# define libm_alias_float_ldouble_f64x(func)		\
-  weak_alias (__f ## func ## l, f32 ## func ## f64x)
-# define libm_alias_double_ldouble_f64x(func)		\
-  weak_alias (__d ## func ## l, f32x ## func ## f64x)	\
-  weak_alias (__d ## func ## l, f64 ## func ## f64x)
-#else
-# define libm_alias_float_ldouble_f64x(func)
-# define libm_alias_double_ldouble_f64x(func)
-#endif
-
-#define libm_alias_float_ldouble(func)		\
-  weak_alias (__f ## func ## l, f ## func ## l) \
-  libm_alias_float_ldouble_f128 (func)		\
-  libm_alias_float_ldouble_f64x (func)
-
-#define libm_alias_double_ldouble(func)		\
-  weak_alias (__d ## func ## l, d ## func ## l) \
-  libm_alias_double_ldouble_f128 (func)		\
-  libm_alias_double_ldouble_f64x (func)
-
-#define libm_alias_float64x_float128(func)			\
-  weak_alias (__f64x ## func ## f128, f64x ## func ## f128)
-
-#define libm_alias_float32_float128_main(func)			\
-  weak_alias (__f32 ## func ## f128, f32 ## func ## f128)
-
-#define libm_alias_float64_float128_main(func)			\
-  weak_alias (__f64 ## func ## f128, f64 ## func ## f128)	\
-  weak_alias (__f64 ## func ## f128, f32x ## func ## f128)
-
-#include <math-narrow-alias-float128.h>
+/* Implement a narrowing square root function where no attempt is made
+   to be correctly rounding (this only applies to IBM long double; the
+   case where the function is not actually narrowing is handled by
+   aliasing other sqrt functions in libm, not using this macro).  The
+   argument is X and the return type is TYPE.  */
+#define NARROW_SQRT_TRIVIAL(X, TYPE, SUFFIX)	\
+  do						\
+    {						\
+      TYPE ret;					\
+						\
+      ret = (TYPE) (sqrt ## SUFFIX (X));	\
+      CHECK_NARROW_SQRT (ret, (X));		\
+      return ret;				\
+    }						\
+  while (0)
 
 #endif /* math-narrow.h.  */

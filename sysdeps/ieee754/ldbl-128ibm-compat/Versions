@@ -123,6 +123,10 @@ libm {
     __y1ieee128;
     __ynieee128;
   }
+  GLIBC_2.35 {
+    __f32sqrtieee128;
+    __f64sqrtieee128;
+  }
 }
 libc {
   LDBL_IBM128_VERSION {
