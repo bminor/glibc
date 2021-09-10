@@ -528,8 +528,7 @@ extern int fchdir (int __fd) __THROW __wur;
    an array is allocated with `malloc'; the array is SIZE
    bytes long, unless SIZE == 0, in which case it is as
    big as necessary.  */
-extern char *getcwd (char *__buf, size_t __size) __THROW __wur
-    __attr_access ((__write_only__, 1, 2));
+extern char *getcwd (char *__buf, size_t __size) __THROW __wur;
 
 #ifdef	__USE_GNU
 /* Return a malloc'd string containing the current directory name.

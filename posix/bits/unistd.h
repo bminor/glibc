@@ -199,10 +199,9 @@ __NTH (readlinkat (int __fd, const char *__restrict __path,
 #endif
 
 extern char *__getcwd_chk (char *__buf, size_t __size, size_t __buflen)
-     __THROW __wur __attr_access ((__write_only__, 1, 2));
+     __THROW __wur;
 extern char *__REDIRECT_NTH (__getcwd_alias,
-			     (char *__buf, size_t __size), getcwd)
-  __wur __attr_access ((__write_only__, 1, 2));
+			     (char *__buf, size_t __size), getcwd) __wur;
 extern char *__REDIRECT_NTH (__getcwd_chk_warn,
 			     (char *__buf, size_t __size, size_t __buflen),
 			     __getcwd_chk)
