@@ -23,7 +23,6 @@
 #define TIMEOUT (20 * 60)
 #include "bench-string.h"
 
-#include <assert.h>
 #include "json-lib.h"
 
 void *generic_memset (void *, int, size_t);
