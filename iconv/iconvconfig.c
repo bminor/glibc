@@ -652,13 +652,21 @@ add_module (char *rp, const char *directory,
 static int
 handle_dir (const char *dir)
 {
+  char *newp = NULL;
   size_t dirlen = strlen (dir);
   bool found = false;
 
-  char *fulldir = xasprintf ("%s%s%s", dir[0] == '/' ? prefix : "",
-			     dir, dir[dirlen - 1] != '/' ? "/" : "");
+  /* End directory path with a '/' if it doesn't already.  */
+  if (dir[dirlen - 1] != '/')
+    {
+      newp = xmalloc (dirlen + 2);
+      memcpy (newp, dir, dirlen);
+      newp[dirlen++] = '/';
+      newp[dirlen] = '\0';
+      dir = newp;
+    }
 
-  found = gconv_parseconfdir (fulldir, strlen (fulldir));
+  found = gconv_parseconfdir (dir[0] == '/' ? prefix : NULL, dir, dirlen);
 
   if (!found)
     {
@@ -670,7 +678,7 @@ handle_dir (const char *dir)
 	     "configuration files with names ending in .conf.");
     }
 
-  free (fulldir);
+  free (newp);
 
   return found ? 0 : 1;
 }

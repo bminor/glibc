@@ -477,7 +477,7 @@ __gconv_read_conf (void)
   __gconv_get_path ();
 
   for (cnt = 0; __gconv_path_elem[cnt].name != NULL; ++cnt)
-    gconv_parseconfdir (__gconv_path_elem[cnt].name,
+    gconv_parseconfdir (NULL, __gconv_path_elem[cnt].name,
 			__gconv_path_elem[cnt].len);
 #endif
 
