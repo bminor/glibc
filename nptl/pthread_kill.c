@@ -46,7 +46,12 @@ __pthread_kill_internal (pthread_t threadid, int signo)
 	    ? INTERNAL_SYSCALL_ERRNO (val) : 0);
     }
   else
-    val = ESRCH;
+    /* The kernel reports that the thread has exited.  POSIX specifies
+       the ESRCH error only for the case when the lifetime of a thread
+       ID has ended, but calling pthread_kill on such a thread ID is
+       undefined in glibc.  Therefore, do not treat kernel thread exit
+       as an error.  */
+    val = 0;
 
   return val;
 }

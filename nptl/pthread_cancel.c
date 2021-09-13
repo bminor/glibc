@@ -61,10 +61,11 @@ __pthread_cancel (pthread_t th)
 {
   volatile struct pthread *pd = (volatile struct pthread *) th;
 
-  /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
-    /* Not a valid thread handle.  */
-    return ESRCH;
+  if (pd->tid == 0)
+    /* The thread has already exited on the kernel side.  Its outcome
+       (regular exit, other cancelation) has already been
+       determined.  */
+    return 0;
 
   static int init_sigcancel = 0;
   if (atomic_load_relaxed (&init_sigcancel) == 0)
