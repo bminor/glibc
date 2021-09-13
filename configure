@@ -5793,7 +5793,7 @@ if ${libc_cv_insert+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat > conftest.c <<EOF
-		const int __attribute__ ((section(".bar"))) bar = 0x12345678;
+		int __attribute__ ((section(".bar"))) bar = 0x12345678;
 		int test (void) { return bar; }
 EOF
 		cat > conftest.t <<EOF

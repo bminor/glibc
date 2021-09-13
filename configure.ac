@@ -1217,7 +1217,7 @@ AC_SUBST(libc_cv_protected_data)
 AC_CACHE_CHECK(linker support for INSERT in linker script,
 	       libc_cv_insert,
 	       [cat > conftest.c <<EOF
-		const int __attribute__ ((section(".bar"))) bar = 0x12345678;
+		int __attribute__ ((section(".bar"))) bar = 0x12345678;
 		int test (void) { return bar; }
 EOF
 		cat > conftest.t <<EOF
