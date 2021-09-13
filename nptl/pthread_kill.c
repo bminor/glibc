@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <libc-lock.h>
 #include <unistd.h>
 #include <pthreadP.h>
 #include <shlib-compat.h>
@@ -23,37 +24,51 @@
 int
 __pthread_kill_internal (pthread_t threadid, int signo)
 {
-  pid_t tid;
   struct pthread *pd = (struct pthread *) threadid;
-
   if (pd == THREAD_SELF)
-    /* It is a special case to handle raise() implementation after a vfork
-       call (which does not update the PD tid field).  */
-    tid = INLINE_SYSCALL_CALL (gettid);
-  else
-    /* Force load of pd->tid into local variable or register.  Otherwise
-       if a thread exits between ESRCH test and tgkill, we might return
-       EINVAL, because pd->tid would be cleared by the kernel.  */
-    tid = atomic_forced_read (pd->tid);
-
-  int val;
-  if (__glibc_likely (tid > 0))
     {
-      pid_t pid = __getpid ();
-
-      val = INTERNAL_SYSCALL_CALL (tgkill, pid, tid, signo);
-      val = (INTERNAL_SYSCALL_ERROR_P (val)
-	    ? INTERNAL_SYSCALL_ERRNO (val) : 0);
+      /* Use the actual TID from the kernel, so that it refers to the
+         current thread even if called after vfork.  There is no
+         signal blocking in this case, so that the signal is delivered
+         immediately, before __pthread_kill_internal returns: a signal
+         sent to the thread itself needs to be delivered
+         synchronously.  (It is unclear if Linux guarantees the
+         delivery of all pending signals after unblocking in the code
+         below.  POSIX only guarantees delivery of a single signal,
+         which may not be the right one.)  */
+      pid_t tid = INTERNAL_SYSCALL_CALL (gettid);
+      int ret = INTERNAL_SYSCALL_CALL (kill, tid, signo);
+      return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_ERRNO (ret) : 0;
     }
-  else
-    /* The kernel reports that the thread has exited.  POSIX specifies
-       the ESRCH error only for the case when the lifetime of a thread
-       ID has ended, but calling pthread_kill on such a thread ID is
-       undefined in glibc.  Therefore, do not treat kernel thread exit
-       as an error.  */
-    val = 0;
 
-  return val;
+  /* Block all signals, as required by pd->exit_lock.  */
+  sigset_t old_mask;
+  __libc_signal_block_all (&old_mask);
+  __libc_lock_lock (pd->exit_lock);
+
+  int ret;
+  if (pd->exiting)
+    /* The thread is about to exit (or has exited).  Sending the
+       signal is either not observable (the target thread has already
+       blocked signals at this point), or it will fail, or it might be
+       delivered to a new, unrelated thread that has reused the TID.
+       So do not actually send the signal.  Do not report an error
+       because the threadid argument is still valid (the thread ID
+       lifetime has not ended), and ESRCH (for example) would be
+       misleading.  */
+    ret = 0;
+  else
+    {
+      /* Using tgkill is a safety measure.  pd->exit_lock ensures that
+	 the target thread cannot exit.  */
+      ret = INTERNAL_SYSCALL_CALL (tgkill, __getpid (), pd->tid, signo);
+      ret = INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_ERRNO (ret) : 0;
+    }
+
+  __libc_lock_unlock (pd->exit_lock);
+  __libc_signal_restore_set (&old_mask);
+
+  return ret;
 }
 
 int
