@@ -31,6 +31,7 @@ import json
 import matplotlib as mpl
 import numpy as np
 import os
+import sys
 
 try:
     import jsonschema as validator
@@ -331,8 +332,11 @@ def main(args):
     for filename in args.bench:
         bench = None
 
-        with open(filename, "r") as f:
-            bench = json.load(f)
+        if filename == '-':
+            bench = json.load(sys.stdin)
+        else:
+            with open(filename, "r") as f:
+                bench = json.load(f)
 
         validator.validate(bench, schema)
 
@@ -354,7 +358,8 @@ if __name__ == "__main__":
 
     # Required parameter
     parser.add_argument("bench", nargs="+",
-                        help="benchmark results file(s) in json format")
+                        help="benchmark results file(s) in json format, " \
+                        "and/or '-' as a benchmark result file from stdin")
 
     # Optional parameters
     parser.add_argument("-b", "--baseline", type=str,
