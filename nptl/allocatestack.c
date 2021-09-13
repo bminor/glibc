@@ -31,6 +31,7 @@
 #include <futex-internal.h>
 #include <kernel-features.h>
 #include <nptl-stack.h>
+#include <libc-lock.h>
 
 /* Default alignment of stack.  */
 #ifndef STACK_ALIGN
@@ -126,6 +127,8 @@ get_cached_stack (size_t *sizep, void **memp)
   /* No pending event.  */
   result->nextevent = NULL;
 
+  result->exiting = false;
+  __libc_lock_init (result->exit_lock);
   result->tls_state = (struct tls_internal_t) { 0 };
 
   /* Clear the DTV.  */

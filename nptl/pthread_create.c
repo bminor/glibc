@@ -36,6 +36,7 @@
 #include <sys/single_threaded.h>
 #include <version.h>
 #include <clone_internal.h>
+#include <futex-internal.h>
 
 #include <shlib-compat.h>
 
@@ -483,6 +484,19 @@ start_thread (void *arg)
   if (__glibc_unlikely (atomic_decrement_and_test (&__nptl_nthreads)))
     /* This was the last thread.  */
     exit (0);
+
+  /* This prevents sending a signal from this thread to itself during
+     its final stages.  This must come after the exit call above
+     because atexit handlers must not run with signals blocked.  */
+  __libc_signal_block_all (NULL);
+
+  /* Tell __pthread_kill_internal that this thread is about to exit.
+     If there is a __pthread_kill_internal in progress, this delays
+     the thread exit until the signal has been queued by the kernel
+     (so that the TID used to send it remains valid).  */
+  __libc_lock_lock (pd->exit_lock);
+  pd->exiting = true;
+  __libc_lock_unlock (pd->exit_lock);
 
 #ifndef __ASSUME_SET_ROBUST_LIST
   /* If this thread has any robust mutexes locked, handle them now.  */

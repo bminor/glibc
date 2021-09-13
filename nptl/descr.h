@@ -395,6 +395,12 @@ struct pthread
      PTHREAD_CANCEL_ASYNCHRONOUS).  */
   unsigned char canceltype;
 
+  /* Used in __pthread_kill_internal to detected a thread that has
+     exited or is about to exit.  exit_lock must only be acquired
+     after blocking signals.  */
+  bool exiting;
+  int exit_lock; /* A low-level lock (for use with __libc_lock_init etc).  */
+
   /* Used on strsignal.  */
   struct tls_internal_t tls_state;
 
