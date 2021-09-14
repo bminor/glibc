@@ -50,6 +50,7 @@ do_test (void)
   /* Set SAT bit in VSCR register.  */
   asm volatile (".machine push;\n"
 		".machine \"power5\";\n"
+		".machine altivec;\n"
 		"vspltisb %0,0;\n"
 		"vspltisb %1,-1;\n"
 		"vpkuwus %0,%0,%1;\n"
