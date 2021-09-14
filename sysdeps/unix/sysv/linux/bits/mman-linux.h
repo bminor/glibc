@@ -89,6 +89,10 @@
 # define MADV_KEEPONFORK  19	/* Undo MADV_WIPEONFORK.  */
 # define MADV_COLD        20	/* Deactivate these pages.  */
 # define MADV_PAGEOUT     21	/* Reclaim these pages.  */
+# define MADV_POPULATE_READ 22	/* Populate (prefault) page tables
+				   readable.  */
+# define MADV_POPULATE_WRITE 23	/* Populate (prefault) page tables
+				   writable.  */
 # define MADV_HWPOISON	  100	/* Poison a page for testing.  */
 #endif
 
