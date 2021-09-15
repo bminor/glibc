@@ -99,6 +99,9 @@ __libc_fork (void)
       /* Reset the lock the dynamic loader uses to protect its data.  */
       __rtld_lock_initialize (GL(dl_load_lock));
 
+      /* Reset the lock protecting dynamic TLS related data.  */
+      __rtld_lock_initialize (GL(dl_load_tls_lock));
+
       reclaim_stacks ();
 
       /* Run the handlers registered for the child.  */

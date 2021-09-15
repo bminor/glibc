@@ -152,15 +152,17 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx6 tst-cancelx8 tst-cancelx9 \
 	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3
 
 ifeq ($(build-shared),yes)
-tests += tst-atfork2 tst-pt-tls4 tst-_res1 tst-fini1
+tests += tst-atfork2 tst-pt-tls4 tst-_res1 tst-fini1 tst-create1
 tests-nolibpthread += tst-fini1
 endif
 
 modules-names += tst-atfork2mod tst-tls4moda tst-tls4modb \
-		 tst-_res1mod1 tst-_res1mod2 tst-fini1mod
+		 tst-_res1mod1 tst-_res1mod2 tst-fini1mod \
+		 tst-create1mod
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 
 tst-atfork2mod.so-no-z-defs = yes
+tst-create1mod.so-no-z-defs = yes
 
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
@@ -278,5 +280,9 @@ $(objpfx)tst-join7mod.so: $(shared-thread-library)
 LDFLAGS-tst-join7mod.so = -Wl,-soname,tst-join7mod.so
 
 CFLAGS-tst-unwind-thread.c += -funwind-tables
+
+LDFLAGS-tst-create1 = -Wl,-export-dynamic
+$(objpfx)tst-create1: $(shared-thread-library)
+$(objpfx)tst-create1.out: $(objpfx)tst-create1mod.so
 
 endif
