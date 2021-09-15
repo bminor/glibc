@@ -66,6 +66,9 @@ struct dl_open_args
      libc_map value in the namespace in case of a dlopen failure.  */
   bool libc_already_loaded;
 
+  /* Set to true if the end of dl_open_worker_begin was reached.  */
+  bool worker_continue;
+
   /* Original parameters to the program and the current environment.  */
   int argc;
   char **argv;
@@ -482,7 +485,7 @@ call_dl_init (void *closure)
 }
 
 static void
-dl_open_worker (void *a)
+dl_open_worker_begin (void *a)
 {
   struct dl_open_args *args = a;
   const char *file = args->file;
@@ -773,6 +776,36 @@ dl_open_worker (void *a)
       struct link_map *libc_map = GL(dl_ns)[args->nsid].libc_map;
       _dl_call_libc_early_init (libc_map, false);
     }
+
+  args->worker_continue = true;
+}
+
+static void
+dl_open_worker (void *a)
+{
+  struct dl_open_args *args = a;
+
+  args->worker_continue = false;
+
+  {
+    /* Protects global and module specific TLS state.  */
+    __rtld_lock_lock_recursive (GL(dl_load_tls_lock));
+
+    struct dl_exception ex;
+    int err = _dl_catch_exception (&ex, dl_open_worker_begin, args);
+
+    __rtld_lock_unlock_recursive (GL(dl_load_tls_lock));
+
+    if (__glibc_unlikely (ex.errstring != NULL))
+      /* Reraise the error.  */
+      _dl_signal_exception (err, &ex, NULL);
+  }
+
+  if (!args->worker_continue)
+    return;
+
+  int mode = args->mode;
+  struct link_map *new = args->map;
 
   /* Run the initializer functions of new objects.  Temporarily
      disable the exception handler, so that lazy binding failures are
