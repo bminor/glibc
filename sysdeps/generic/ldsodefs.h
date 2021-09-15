@@ -495,10 +495,6 @@ struct rtld_global
   EXTERN struct __pthread **_dl_pthread_threads;
   __libc_rwlock_define (EXTERN, _dl_pthread_threads_lock)
 #endif
-
-#if !THREAD_GSCOPE_IN_TCB
-  EXTERN int _dl_thread_gscope_count;
-#endif
 #ifdef SHARED
 };
 # define __rtld_global_attribute__
@@ -1381,10 +1377,8 @@ __rtld_mutex_init (void)
 }
 #endif /* !PTHREAD_IN_LIBC */
 
-#if THREAD_GSCOPE_IN_TCB
 void __thread_gscope_wait (void) attribute_hidden;
 # define THREAD_GSCOPE_WAIT() __thread_gscope_wait ()
-#endif
 
 __END_DECLS
 

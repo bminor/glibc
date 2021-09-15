@@ -197,9 +197,6 @@ int _dl_stack_cache_lock;
 int (*_dl_make_stack_executable_hook) (void **) = _dl_make_stack_executable;
 void (*_dl_init_static_tls) (struct link_map *) = &_dl_nothread_init_static_tls;
 #endif
-#if !THREAD_GSCOPE_IN_TCB
-int _dl_thread_gscope_count;
-#endif
 struct dl_scope_free_list *_dl_scope_free_list;
 
 #ifdef NEED_DL_SYSINFO

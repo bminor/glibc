@@ -370,8 +370,6 @@ _hurd_tls_new (thread_t child, struct i386_thread_state *state, tcbhead_t *tcb)
 }
 
 /* Global scope switch support.  */
-# define THREAD_GSCOPE_IN_TCB      1
-
 # define THREAD_GSCOPE_FLAG_UNUSED 0
 # define THREAD_GSCOPE_FLAG_USED   1
 # define THREAD_GSCOPE_FLAG_WAIT   2
