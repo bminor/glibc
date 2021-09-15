@@ -168,8 +168,6 @@ libpthread {
   GLIBC_PRIVATE {
     __pthread_initialize_minimal;
 
-    __pthread_threads;
-
     __cthread_detach;
     __cthread_fork;
     __pthread_detach;

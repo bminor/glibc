@@ -45,7 +45,7 @@ _init_routine (void *stack)
   int err;
   pthread_attr_t attr, *attrp = 0;
 
-  if (__pthread_threads != NULL)
+  if (GL (dl_pthread_threads) != NULL)
     /* Already initialized */
     return;
 

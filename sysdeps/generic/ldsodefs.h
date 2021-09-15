@@ -486,7 +486,16 @@ struct rtld_global
 
   /* Mutex protecting the stack lists.  */
   EXTERN int _dl_stack_cache_lock;
+#else
+  /* The total number of thread IDs currently in use, or on the list of
+     available thread IDs.  */
+  EXTERN int _dl_pthread_num_threads;
+
+  /* Array of __pthread structures and its lock.  */
+  EXTERN struct __pthread **_dl_pthread_threads;
+  __libc_rwlock_define (EXTERN, _dl_pthread_threads_lock)
 #endif
+
 #if !THREAD_GSCOPE_IN_TCB
   EXTERN int _dl_thread_gscope_count;
 #endif

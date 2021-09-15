@@ -166,33 +166,24 @@ __pthread_dequeue (struct __pthread *thread)
 /* The total number of threads currently active.  */
 extern unsigned int __pthread_total;
 
-/* The total number of thread IDs currently in use, or on the list of
-   available thread IDs.  */
-extern int __pthread_num_threads;
-
 /* Concurrency hint.  */
 extern int __pthread_concurrency;
 
-/* Array of __pthread structures and its lock.  Indexed by the pthread
-   id minus one.  (Why not just use the pthread id?  Because some
-   brain-dead users of the pthread interface incorrectly assume that 0
-   is an invalid pthread id.)  */
-extern struct __pthread **__pthread_threads;
+/* The size of the thread ID lookup table.  */
 extern int __pthread_max_threads;
-extern pthread_rwlock_t __pthread_threads_lock;
 
 #define __pthread_getid(thread) \
   ({ struct __pthread *__t = NULL;                                           \
-     __pthread_rwlock_rdlock (&__pthread_threads_lock);                      \
+     __libc_rwlock_rdlock (GL (dl_pthread_threads_lock));                    \
      if (thread <= __pthread_max_threads)                                    \
-       __t = __pthread_threads[thread - 1];                                  \
-     __pthread_rwlock_unlock (&__pthread_threads_lock);                      \
+       __t = GL (dl_pthread_threads)[thread - 1];                            \
+     __libc_rwlock_unlock (GL (dl_pthread_threads_lock));                    \
      __t; })
 
 #define __pthread_setid(thread, pthread) \
-  __pthread_rwlock_wrlock (&__pthread_threads_lock);                         \
-  __pthread_threads[thread - 1] = pthread;                                   \
-  __pthread_rwlock_unlock (&__pthread_threads_lock);
+  __libc_rwlock_wrlock (GL (dl_pthread_threads_lock));                       \
+  GL (dl_pthread_threads)[thread - 1] = pthread;                             \
+  __libc_rwlock_unlock (GL (dl_pthread_threads_lock));
 
 /* Similar to pthread_self, but returns the thread descriptor instead
    of the thread ID.  */

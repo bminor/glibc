@@ -1,5 +1,5 @@
-/* C11 threads current thread implementation.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+/* Support for dynamic linking code in static libc.
+   Copyright (C) 2007-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "thrd_priv.h"
-#include <ldsodefs.h>
+#include <elf/dl-support.c>
 
-#pragma weak __pthread_self
-#pragma weak __pthread_threads
-
-#ifndef SHARED
-#pragma weak _dl_pthread_threads
-#endif
-
-thrd_t
-thrd_current (void)
-{
-  if (GL (dl_pthread_threads))
-    return (thrd_t) __pthread_self ();
-
-  return (thrd_t) 0;
-}
+int _dl_pthread_num_threads;
+struct __pthread **_dl_pthread_threads;
+__libc_rwlock_define_initialized (, _dl_pthread_threads_lock)

@@ -37,7 +37,7 @@ extern __thread struct __pthread *___pthread_self;
 	({                                                         \
 	  struct __pthread *thread;                                \
 	                                                           \
-	  assert (__pthread_threads);                              \
+	  assert (GL (dl_pthread_threads));                        \
 	  thread = ___pthread_self;                                \
 	                                                           \
 	  assert (thread);                                         \

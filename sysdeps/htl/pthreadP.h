@@ -31,8 +31,6 @@ extern void __pthread_init_static_tls (struct link_map *) attribute_hidden;
 
 /* These represent the interface used by glibc itself.  */
 
-extern struct __pthread **__pthread_threads;
-
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex, const pthread_mutexattr_t *__attr);
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);

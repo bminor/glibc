@@ -39,12 +39,12 @@ __pthread_key_delete (pthread_key_t key)
       __pthread_key_destructors[key] = PTHREAD_KEY_INVALID;
       __pthread_key_invalid_count++;
 
-      __pthread_rwlock_rdlock (&__pthread_threads_lock);
-      for (i = 0; i < __pthread_num_threads; ++i)
+      __libc_rwlock_rdlock (GL (dl_pthread_threads_lock));
+      for (i = 0; i < GL (dl_pthread_num_threads); ++i)
 	{
 	  struct __pthread *t;
 
-	  t = __pthread_threads[i];
+	  t = GL (dl_pthread_threads)[i];
 
 	  if (t == NULL)
 	    continue;
@@ -54,7 +54,7 @@ __pthread_key_delete (pthread_key_t key)
 	  if (key < t->thread_specifics_size)
 	    t->thread_specifics[key] = 0;
 	}
-      __pthread_rwlock_unlock (&__pthread_threads_lock);
+      __libc_rwlock_unlock (GL (dl_pthread_threads_lock));
     }
 
   __pthread_mutex_unlock (&__pthread_key_lock);
