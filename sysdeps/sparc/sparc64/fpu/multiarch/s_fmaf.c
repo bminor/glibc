@@ -1,3 +1,4 @@
+#define NO_MATH_REDIRECT
 #include <sparc-ifunc.h>
 #include <math.h>
 #include <libm-alias-float.h>
