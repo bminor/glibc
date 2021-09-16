@@ -1553,15 +1553,13 @@ class GlibcPolicyForBuild(GlibcPolicyDefault):
 
     def extra_commands(self, cmdlist):
         if self.strip:
-            # Avoid picking up libc.so and libpthread.so, which are
-            # linker scripts stored in /lib on Hurd.  libc and
-            # libpthread are still stripped via their libc-X.YY.so
-            # implementation files.
-            find_command = (('find %s/lib* -name "*.so"'
-                             + r' \! -name libc.so \! -name libpthread.so')
-                            % self.installdir)
-            cmdlist.add_command('strip', ['sh', '-c', ('%s $(%s)' %
-                                  (self.strip, find_command))])
+            # Avoid stripping libc.so and libpthread.so, which are
+            # linker scripts stored in /lib on Hurd.
+            find_command = 'find %s/lib* -name "*.so*"' % self.installdir
+            cmdlist.add_command('strip', ['sh', '-c', (
+                'set -e; for f in $(%s); do '
+                'if ! head -c16 $f | grep -q "GNU ld script"; then %s $f; fi; '
+                'done' % (find_command, self.strip))])
         cmdlist.add_command('check', ['make', 'check'])
         cmdlist.add_command('save-logs', [self.save_logs], always_run=True)
 
