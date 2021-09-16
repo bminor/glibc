@@ -136,6 +136,4 @@ def parse_bench(filename, schema_filename):
         with open(filename, 'r') as benchfile:
             bench = json.load(benchfile)
             validator.validate(bench, schema)
-            do_for_all_timings(bench, lambda b, f, v:
-                    b['functions'][f][v]['timings'].sort())
             return bench

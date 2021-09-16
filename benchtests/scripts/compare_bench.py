@@ -163,7 +163,11 @@ def plot_graphs(bench1, bench2):
 
 def main(bench1, bench2, schema, threshold, stats):
     bench1 = bench.parse_bench(bench1, schema)
+    bench.do_for_all_timings(bench1, lambda b, f, v:
+        b['functions'][f][v]['timings'].sort())
     bench2 = bench.parse_bench(bench2, schema)
+    bench.do_for_all_timings(bench2, lambda b, f, v:
+        b['functions'][f][v]['timings'].sort())
 
     plot_graphs(bench1, bench2)
 
