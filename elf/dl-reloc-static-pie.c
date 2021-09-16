@@ -40,7 +40,17 @@ _dl_relocate_static_pie (void)
 
   /* Read our own dynamic section and fill in the info array.  */
   main_map->l_ld = ((void *) main_map->l_addr + elf_machine_dynamic ());
-  elf_get_dynamic_info (main_map, NULL);
+
+  const ElfW(Phdr) *ph, *phdr = GL(dl_phdr);
+  size_t phnum = GL(dl_phnum);
+  for (ph = phdr; ph < &phdr[phnum]; ++ph)
+    if (ph->p_type == PT_DYNAMIC)
+      {
+	main_map->l_ld_readonly = (ph->p_flags & PF_W) == 0;
+	break;
+      }
+
+  elf_get_dynamic_info (main_map);
 
 # ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
   ELF_MACHINE_BEFORE_RTLD_RELOC (main_map->l_info);

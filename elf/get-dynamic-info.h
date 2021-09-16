@@ -28,7 +28,7 @@ static
 auto
 #endif
 inline void __attribute__ ((unused, always_inline))
-elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
+elf_get_dynamic_info (struct link_map *l)
 {
 #if __ELF_NATIVE_CLASS == 32
   typedef Elf32_Word d_tag_utype;
@@ -69,28 +69,15 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
       info[i] = dyn;
     }
 
-#define DL_RO_DYN_TEMP_CNT	8
-
-#ifndef DL_RO_DYN_SECTION
   /* Don't adjust .dynamic unnecessarily.  */
-  if (l->l_addr != 0)
+  if (l->l_addr != 0 && dl_relocate_ld (l))
     {
       ElfW(Addr) l_addr = l->l_addr;
-      int cnt = 0;
 
 # define ADJUST_DYN_INFO(tag) \
       do								      \
 	if (info[tag] != NULL)						      \
-	  {								      \
-	    if (temp)							      \
-	      {								      \
-		temp[cnt].d_tag = info[tag]->d_tag;			      \
-		temp[cnt].d_un.d_ptr = info[tag]->d_un.d_ptr + l_addr;	      \
-		info[tag] = temp + cnt++;				      \
-	      }								      \
-	    else							      \
-	      info[tag]->d_un.d_ptr += l_addr;				      \
-	  }								      \
+         info[tag]->d_un.d_ptr += l_addr;				      \
       while (0)
 
       ADJUST_DYN_INFO (DT_HASH);
@@ -107,9 +94,7 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
       ADJUST_DYN_INFO (VERSYMIDX (DT_VERSYM));
       ADJUST_DYN_INFO (ADDRIDX (DT_GNU_HASH));
 # undef ADJUST_DYN_INFO
-      assert (cnt <= DL_RO_DYN_TEMP_CNT);
     }
-#endif
   if (info[DT_PLTREL] != NULL)
     {
 #if ELF_MACHINE_NO_RELA

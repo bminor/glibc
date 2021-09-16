@@ -75,10 +75,6 @@ struct La_mips_64_retval;
 					  struct La_mips_64_retval *,	    \
 					  const char *);
 
-/* The MIPS ABI specifies that the dynamic section has to be read-only.  */
-
-#define DL_RO_DYN_SECTION 1
-
 #include_next <ldsodefs.h>
 
 /* The 64-bit MIPS ELF ABI uses an unusual reloc format.  Each
