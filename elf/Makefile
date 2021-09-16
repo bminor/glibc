@@ -224,7 +224,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tls-ie tst-tls-ie-dlmopen argv0test \
 	 tst-glibc-hwcaps tst-glibc-hwcaps-prepend tst-glibc-hwcaps-mask \
 	 tst-tls20 tst-tls21 tst-dlmopen-dlerror tst-dlmopen-gethostbyname \
-	 tst-dl-is_dso
+	 tst-dl-is_dso tst-ro-dynamic
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -360,7 +360,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		libmarkermod4-1 libmarkermod4-2 libmarkermod4-3 libmarkermod4-4 \
 		tst-tls20mod-bad tst-tls21mod tst-dlmopen-dlerror-mod \
 		tst-auxvalmod \
-		tst-dlmopen-gethostbyname-mod \
+		tst-dlmopen-gethostbyname-mod tst-ro-dynamic-mod \
 
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
@@ -1911,3 +1911,10 @@ $(objpfx)tst-getauxval-static.out: $(objpfx)tst-auxvalmod.so
 tst-getauxval-static-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx)
 
 $(objpfx)tst-dlmopen-gethostbyname.out: $(objpfx)tst-dlmopen-gethostbyname-mod.so
+
+$(objpfx)tst-ro-dynamic: $(objpfx)tst-ro-dynamic-mod.so
+$(objpfx)tst-ro-dynamic-mod.so: $(objpfx)tst-ro-dynamic-mod.os \
+  tst-ro-dynamic-mod.map
+	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
+		-Wl,--script=tst-ro-dynamic-mod.map \
+		$(objpfx)tst-ro-dynamic-mod.os

@@ -463,6 +463,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 #ifndef DONT_USE_BOOTSTRAP_MAP
   GL(dl_rtld_map).l_addr = info->l.l_addr;
   GL(dl_rtld_map).l_ld = info->l.l_ld;
+  GL(dl_rtld_map).l_ld_readonly = info->l.l_ld_readonly;
   memcpy (GL(dl_rtld_map).l_info, info->l.l_info,
 	  sizeof GL(dl_rtld_map).l_info);
   GL(dl_rtld_map).l_mach = info->l.l_mach;
@@ -546,7 +547,7 @@ _dl_start (void *arg)
 
   /* Read our own dynamic section and fill in the info array.  */
   bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + elf_machine_dynamic ();
-  elf_get_dynamic_info (&bootstrap_map, NULL);
+  elf_get_dynamic_info (&bootstrap_map);
 
 #if NO_TLS_OFFSET != 0
   bootstrap_map.l_tls_offset = NO_TLS_OFFSET;
@@ -1468,6 +1469,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	/* This tells us where to find the dynamic section,
 	   which tells us everything we need to do.  */
 	main_map->l_ld = (void *) main_map->l_addr + ph->p_vaddr;
+	main_map->l_ld_readonly = (ph->p_flags & PF_W) == 0;
 	break;
       case PT_INTERP:
 	/* This "interpreter segment" was used by the program loader to
@@ -1613,7 +1615,7 @@ dl_main (const ElfW(Phdr) *phdr,
   if (! rtld_is_main)
     {
       /* Extract the contents of the dynamic section for easy access.  */
-      elf_get_dynamic_info (main_map, NULL);
+      elf_get_dynamic_info (main_map);
 
       /* If the main map is libc.so, update the base namespace to
 	 refer to this map.  If libc.so is loaded later, this happens

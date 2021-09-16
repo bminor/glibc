@@ -1149,6 +1149,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 		 such a segment to avoid a crash later.  */
 	      l->l_ld = (void *) ph->p_vaddr;
 	      l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
+	      l->l_ld_readonly = (ph->p_flags & PF_W) == 0;
 	    }
 	  break;
 
@@ -1292,7 +1293,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
   else
     l->l_ld = (ElfW(Dyn) *) ((ElfW(Addr)) l->l_ld + l->l_addr);
 
-  elf_get_dynamic_info (l, NULL);
+  elf_get_dynamic_info (l);
 
   /* Make sure we are not dlopen'ing an object that has the
      DF_1_NOOPEN flag set, or a PIE object.  */
