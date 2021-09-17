@@ -176,6 +176,9 @@ $(conformtest-header-tests): $(objpfx)%/conform.out: \
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
 	 mkdir -p $(@D); \
 	 $(PYTHON) $< --cc='$(CC)' --flags='$(conformtest-cc-flags)' \
+		   --ldflags='$(+link-tests-before-inputs)' \
+		   --libs='$(+link-tests-after-inputs)' \
+		   --run-program-prefix='$(run-program-prefix)' \
 		   --standard=$$std --header=$$hdr $(conformtest-xfail) \
 		   $(conformtest-cross) \
 		   > $@ 2>&1); \
