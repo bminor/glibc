@@ -381,12 +381,16 @@ class MacroStrTest(object):
 class HeaderTests(object):
     """The set of tests run for a header."""
 
-    def __init__(self, header, standard, cc, flags, cross, xfail):
+    def __init__(self, header, standard, cc, flags, ldflags, libs,
+                 run_program_prefix, cross, xfail):
         """Initialize a HeaderTests object."""
         self.header = header
         self.standard = standard
         self.cc = cc
         self.flags = flags
+        self.ldflags = ldflags
+        self.libs = libs
+        self.run_program_prefix = run_program_prefix
         self.cross = cross
         self.xfail_str = xfail
         self.cflags_namespace = ('%s -fno-builtin %s -D_ISOMAC'
@@ -590,7 +594,8 @@ class HeaderTests(object):
         exe_file = os.path.join(self.temp_dir, 'test')
         with open(c_file, 'w') as c_file_out:
             c_file_out.write('#include <%s>\n%s' % (self.header, text))
-        cmd = ('%s %s %s -o %s' % (self.cc, self.cflags, c_file, exe_file))
+        cmd = ('%s %s %s %s %s -o %s' % (self.cc, self.cflags, self.ldflags,
+                                         c_file, self.libs, exe_file))
         try:
             subprocess.check_call(cmd, shell=True)
         except subprocess.CalledProcessError:
@@ -600,7 +605,9 @@ class HeaderTests(object):
             self.note_skip(name)
             return
         try:
-            subprocess.check_call(exe_file, shell=True)
+            subprocess.check_call('%s %s' % (self.run_program_prefix,
+                                             exe_file),
+                                  shell=True)
         except subprocess.CalledProcessError:
             self.note_error(name, self.group_xfail)
             return
@@ -727,12 +734,19 @@ def main():
                         help='C compiler to use')
     parser.add_argument('--flags', metavar='CFLAGS',
                         help='Compiler flags to use with CC')
+    parser.add_argument('--ldflags', metavar='LDFLAGS',
+                        help='Compiler arguments for linking before inputs')
+    parser.add_argument('--libs', metavar='LIBS',
+                        help='Compiler arguments for linking after inputs')
+    parser.add_argument('--run-program-prefix', metavar='RUN-PROGRAM-PREFIX',
+                        help='Wrapper for running newly built program')
     parser.add_argument('--cross', action='store_true',
                         help='Do not run compiled test programs')
     parser.add_argument('--xfail', metavar='COND',
                         help='Name of condition for XFAILs')
     args = parser.parse_args()
     tests = HeaderTests(args.header, args.standard, args.cc, args.flags,
+                        args.ldflags, args.libs, args.run_program_prefix,
                         args.cross, args.xfail)
     tests.run()
 
