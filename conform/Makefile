@@ -175,7 +175,8 @@ $(conformtest-header-tests): $(objpfx)%/conform.out: \
 			     conformtest.py $(conformtest-headers-data)
 	(set -e; std_hdr=$*; std=$${std_hdr%%/*}; hdr=$${std_hdr#*/}; \
 	 mkdir -p $(@D); \
-	 $(PYTHON) $< --cc='$(CC)' --flags='$(conformtest-cc-flags)' \
+	 $(PYTHON) $< --cc='$(CC) $(pie-default)' \
+		   --flags='$(conformtest-cc-flags)' \
 		   --ldflags='$(+link-tests-before-inputs)' \
 		   --libs='$(+link-tests-after-inputs)' \
 		   --run-program-prefix='$(run-program-prefix)' \
