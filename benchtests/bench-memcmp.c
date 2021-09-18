@@ -63,7 +63,7 @@ static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s1,
 	     const CHAR *s2, size_t len, int exp_result)
 {
-  size_t i, iters = INNER_LOOP_ITERS8;
+  size_t i, iters = INNER_LOOP_ITERS_LARGE;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
@@ -103,20 +103,19 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
   json_attr_uint (json_ctx, "result", (double) exp_result);
   json_array_begin (json_ctx, "timings");
 
+  s1 = (CHAR *)(buf1 + align1);
+  s2 = (CHAR *)(buf2 + align2);
+
+  for (i = 0; i < len; i++)
+    s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % MAX_CHAR;
+
+  s1[len] = align1;
+  s2[len] = align2;
+  s2[len - 1] -= exp_result;
+
   FOR_EACH_IMPL (impl, 0)
     {
-      s1 = (CHAR *) (buf1 + align1);
-      s2 = (CHAR *) (buf2 + align2);
-
-      for (i = 0; i < len; i++)
-	s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % MAX_CHAR;
-
-      s1[len] = align1;
-      s2[len] = align2;
-      s2[len - 1] -= exp_result;
-
       do_one_test (json_ctx, impl, s1, s2, len, exp_result);
-      alloc_bufs ();
     }
 
   json_array_end (json_ctx);
