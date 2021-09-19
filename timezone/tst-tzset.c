@@ -25,6 +25,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <support/check.h>
+#include <inttypes.h>
 
 static int do_test (void);
 #define TEST_FUNCTION do_test ()
@@ -103,6 +104,13 @@ static void
 test_tz_file (off64_t size)
 {
   char *path = create_tz_file (size);
+  if (path == NULL)
+   {
+     printf ("creating timezone file of size: %" PRId64 "MiB failed.\n",
+	     size / (1024 * 1024));
+     exit (1);
+   }
+
   if (setenv ("TZ", path, 1) < 0)
     {
       printf ("setenv failed: %m\n");
