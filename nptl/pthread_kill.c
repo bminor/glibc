@@ -21,8 +21,11 @@
 #include <pthreadP.h>
 #include <shlib-compat.h>
 
-int
-__pthread_kill_internal (pthread_t threadid, int signo)
+/* Sends SIGNO to THREADID.  If the thread is about to exit or has
+   already exited on the kernel side, return NO_TID.  Otherwise return
+   0 or an error code. */
+static int
+__pthread_kill_implementation (pthread_t threadid, int signo, int no_tid)
 {
   struct pthread *pd = (struct pthread *) threadid;
   if (pd == THREAD_SELF)
@@ -52,11 +55,8 @@ __pthread_kill_internal (pthread_t threadid, int signo)
        signal is either not observable (the target thread has already
        blocked signals at this point), or it will fail, or it might be
        delivered to a new, unrelated thread that has reused the TID.
-       So do not actually send the signal.  Do not report an error
-       because the threadid argument is still valid (the thread ID
-       lifetime has not ended), and ESRCH (for example) would be
-       misleading.  */
-    ret = 0;
+       So do not actually send the signal.  */
+    ret = no_tid;
   else
     {
       /* Using tgkill is a safety measure.  pd->exit_lock ensures that
@@ -72,6 +72,15 @@ __pthread_kill_internal (pthread_t threadid, int signo)
 }
 
 int
+__pthread_kill_internal (pthread_t threadid, int signo)
+{
+  /* Do not report an error in the no-tid case because the threadid
+     argument is still valid (the thread ID lifetime has not ended),
+     and ESRCH (for example) would be misleading.  */
+  return __pthread_kill_implementation (threadid, signo, 0);
+}
+
+int
 __pthread_kill (pthread_t threadid, int signo)
 {
   /* Disallow sending the signal we use for cancellation, timers,
@@ -81,6 +90,7 @@ __pthread_kill (pthread_t threadid, int signo)
 
   return __pthread_kill_internal (threadid, signo);
 }
+
 /* Some architectures (for instance arm) might pull raise through libgcc, so
    avoid the symbol version if it ends up being used on ld.so.  */
 #if !IS_IN(rtld)
@@ -88,6 +98,17 @@ libc_hidden_def (__pthread_kill)
 versioned_symbol (libc, __pthread_kill, pthread_kill, GLIBC_2_34);
 
 # if OTHER_SHLIB_COMPAT (libpthread, GLIBC_2_0, GLIBC_2_34)
-compat_symbol (libc, __pthread_kill, pthread_kill, GLIBC_2_0);
+/* Variant which returns ESRCH in the no-TID case, for backwards
+   compatibility.  */
+int
+attribute_compat_text_section
+__pthread_kill_esrch (pthread_t threadid, int signo)
+{
+  if (__is_internal_signal (signo))
+    return EINVAL;
+
+  return __pthread_kill_implementation (threadid, signo, ESRCH);
+}
+compat_symbol (libc, __pthread_kill_esrch, pthread_kill, GLIBC_2_0);
 # endif
 #endif
