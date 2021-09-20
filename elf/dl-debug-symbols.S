@@ -18,6 +18,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <rtld-sizes.h>
+#include <sysdep.h>
+
+/* Some targets define a macro to denote the zero register.  */
+#undef zero
 
 /* Define 2 symbols, _r_debug_extended and _r_debug, which is an alias
    of _r_debug_extended, but with the size of struct r_debug.  */
