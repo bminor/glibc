@@ -1,8 +1,14 @@
 #if IS_IN (libc)
+# define USE_WITH_AVX2	1
+
 # define VEC_SIZE	32
+# define MOV_SIZE	4
+# define RET_SIZE	4
+
 # define VEC(i)		ymm##i
-# define VMOVU		vmovdqu
-# define VMOVA		vmovdqa
+
+# define VMOVU     vmovdqu
+# define VMOVA     vmovdqa
 
 # define MEMSET_VDUP_TO_VEC0_AND_SET_RETURN(d, r) \
   vmovd d, %xmm0; \
