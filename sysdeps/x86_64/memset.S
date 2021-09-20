@@ -18,13 +18,15 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#define USE_WITH_SSE2	1
 
 #define VEC_SIZE	16
+#define MOV_SIZE	3
+#define RET_SIZE	1
+
 #define VEC(i)		xmm##i
-/* Don't use movups and movaps since it will get larger nop paddings for
-   alignment.  */
-#define VMOVU		movdqu
-#define VMOVA		movdqa
+#define VMOVU     movups
+#define VMOVA     movaps
 
 #define MEMSET_VDUP_TO_VEC0_AND_SET_RETURN(d, r) \
   movd d, %xmm0; \
