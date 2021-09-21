@@ -28,6 +28,7 @@
 #include <math_private.h>
 #include <fenv_private.h>
 #include <math-narrow-alias.h>
+#include <stdbool.h>
 
 /* Carry out a computation using round-to-odd.  The computation is
    EXPR; the union type in which to store the result is UNION and the
@@ -37,11 +38,15 @@
    function rather than a C operator is used when argument and result
    types are the same) and the libc_fe* macros to ensure that the
    correct rounding mode is used, for platforms with multiple rounding
-   modes where those macros set only the relevant mode.  This macro
-   does not work correctly if the sign of an exact zero result depends
-   on the rounding mode, so that case must be checked for
-   separately.  */
-#define ROUND_TO_ODD(EXPR, UNION, SUFFIX, MANTISSA)			\
+   modes where those macros set only the relevant mode.
+   CLEAR_UNDERFLOW indicates whether underflow exceptions must be
+   cleared (in the case where a round-toward-zero underflow might not
+   indicate an underflow after narrowing, when that narrowing only
+   reduces precision not exponent range and the architecture uses
+   before-rounding tininess detection).  This macro does not work
+   correctly if the sign of an exact zero result depends on the
+   rounding mode, so that case must be checked for separately.  */
+#define ROUND_TO_ODD(EXPR, UNION, SUFFIX, MANTISSA, CLEAR_UNDERFLOW)	\
   ({									\
     fenv_t env;								\
     UNION u;								\
@@ -49,6 +54,8 @@
     libc_feholdexcept_setround ## SUFFIX (&env, FE_TOWARDZERO);		\
     u.d = (EXPR);							\
     math_force_eval (u.d);						\
+    if (CLEAR_UNDERFLOW)						\
+      feclearexcept (FE_UNDERFLOW);					\
     u.ieee.MANTISSA							\
       |= libc_feupdateenv_test ## SUFFIX (&env, FE_INEXACT) != 0;	\
 									\
@@ -91,7 +98,7 @@
 	ret = (TYPE) ((X) + (Y));					\
       else								\
 	ret = (TYPE) ROUND_TO_ODD (math_opt_barrier (X) + (Y),		\
-				   UNION, SUFFIX, MANTISSA);		\
+				   UNION, SUFFIX, MANTISSA, false);	\
 									\
       CHECK_NARROW_ADD (ret, (X), (Y));					\
       return ret;							\
@@ -149,7 +156,7 @@
 	ret = (TYPE) ((X) - (Y));					\
       else								\
 	ret = (TYPE) ROUND_TO_ODD (math_opt_barrier (X) - (Y),		\
-				   UNION, SUFFIX, MANTISSA);		\
+				   UNION, SUFFIX, MANTISSA, false);	\
 									\
       CHECK_NARROW_SUB (ret, (X), (Y));					\
       return ret;							\
@@ -194,15 +201,17 @@
   while (0)
 
 /* Implement narrowing multiply using round-to-odd.  The arguments are
-   X and Y, the return type is TYPE and UNION, MANTISSA and SUFFIX are
-   as for ROUND_TO_ODD.  */
-#define NARROW_MUL_ROUND_TO_ODD(X, Y, TYPE, UNION, SUFFIX, MANTISSA)	\
+   X and Y, the return type is TYPE and UNION, MANTISSA, SUFFIX and
+   CLEAR_UNDERFLOW are as for ROUND_TO_ODD.  */
+#define NARROW_MUL_ROUND_TO_ODD(X, Y, TYPE, UNION, SUFFIX, MANTISSA,	\
+				CLEAR_UNDERFLOW)			\
   do									\
     {									\
       TYPE ret;								\
 									\
       ret = (TYPE) ROUND_TO_ODD (math_opt_barrier (X) * (Y),		\
-				 UNION, SUFFIX, MANTISSA);		\
+				 UNION, SUFFIX, MANTISSA,		\
+				 CLEAR_UNDERFLOW);			\
 									\
       CHECK_NARROW_MUL (ret, (X), (Y));					\
       return ret;							\
@@ -246,16 +255,18 @@
     }							\
   while (0)
 
-/* Implement narrowing divide using round-to-odd.  The arguments are
-   X and Y, the return type is TYPE and UNION, MANTISSA and SUFFIX are
-   as for ROUND_TO_ODD.  */
-#define NARROW_DIV_ROUND_TO_ODD(X, Y, TYPE, UNION, SUFFIX, MANTISSA)	\
+/* Implement narrowing divide using round-to-odd.  The arguments are X
+   and Y, the return type is TYPE and UNION, MANTISSA, SUFFIX and
+   CLEAR_UNDERFLOW are as for ROUND_TO_ODD.  */
+#define NARROW_DIV_ROUND_TO_ODD(X, Y, TYPE, UNION, SUFFIX, MANTISSA,	\
+				CLEAR_UNDERFLOW)			\
   do									\
     {									\
       TYPE ret;								\
 									\
       ret = (TYPE) ROUND_TO_ODD (math_opt_barrier (X) / (Y),		\
-				 UNION, SUFFIX, MANTISSA);		\
+				 UNION, SUFFIX, MANTISSA,		\
+				 CLEAR_UNDERFLOW);			\
 									\
       CHECK_NARROW_DIV (ret, (X), (Y));					\
       return ret;							\
@@ -308,7 +319,7 @@
       TYPE ret;								\
 									\
       ret = (TYPE) ROUND_TO_ODD (sqrt ## SUFFIX (math_opt_barrier (X)),	\
-				 UNION, SUFFIX, MANTISSA);		\
+				 UNION, SUFFIX, MANTISSA, false);	\
 									\
       CHECK_NARROW_SQRT (ret, (X));					\
       return ret;							\

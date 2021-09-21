@@ -28,6 +28,6 @@ double
 __ddivl (long double x, long double y)
 {
   NARROW_DIV_ROUND_TO_ODD (x, y, double, union ieee854_long_double, l,
-			   mantissa1);
+			   mantissa1, false);
 }
 libm_alias_double_ldouble (div)

@@ -4870,6 +4870,21 @@ div 0x1.0000000000008001000000000001p0 0x1.0000000000008p0
 # Similar, for double rounding to 64-bit of a division of 53-bit values.
 div 0x1ffe1p0 0xfffp0
 
+# Cases where there is underflow before rounding (for some format) but
+# might not be after rounding, depending on the rounding mode.
+div 0x1p-126 0x1.0000001p0
+div 0x1p-126 -0x1.0000001p0
+div -0x1p-126 0x1.0000001p0
+div -0x1p-126 -0x1.0000001p0
+div 0x1p-1022 0x1.00000000000001p0
+div 0x1p-1022 -0x1.00000000000001p0
+div -0x1p-1022 0x1.00000000000001p0
+div -0x1p-1022 -0x1.00000000000001p0
+div 0x1p-16382 0x1.00000000000000001p0
+div 0x1p-16382 -0x1.00000000000000001p0
+div -0x1p-16382 0x1.00000000000000001p0
+div -0x1p-16382 -0x1.00000000000000001p0
+
 erf 0
 erf -0
 erf 0.125
@@ -6644,6 +6659,21 @@ mul 0x50000000000000005p-64 0xcccccccccccccccccccccccccccdp-114
 # Similar, for double rounding to 64 bit of a product of 53-bit values.
 # This product equals 2^64 + 2^11 + 1.
 mul 97689974585 188829449
+
+# Cases where there is underflow before rounding (for some format) but
+# might not be after rounding, depending on the rounding mode.
+mul 0x0.ffffff8p-126 0x1.0000001p0
+mul 0x0.ffffff8p-126 -0x1.0000001p0
+mul -0x0.ffffff8p-126 0x1.0000001p0
+mul -0x0.ffffff8p-126 -0x1.0000001p0
+mul 0x0.fffffffffffffcp-1022 0x1.00000000000001p0
+mul 0x0.fffffffffffffcp-1022 -0x1.00000000000001p0
+mul -0x0.fffffffffffffcp-1022 0x1.00000000000001p0
+mul -0x0.fffffffffffffcp-1022 -0x1.00000000000001p0
+mul 0x0.ffffffffffffffff8p-16382 0x1.00000000000000001p0
+mul 0x0.ffffffffffffffff8p-16382 -0x1.00000000000000001p0
+mul -0x0.ffffffffffffffff8p-16382 0x1.00000000000000001p0
+mul -0x0.ffffffffffffffff8p-16382 -0x1.00000000000000001p0
 
 pow 0 0
 pow 0 -0

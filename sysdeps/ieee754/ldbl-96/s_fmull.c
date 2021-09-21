@@ -26,6 +26,6 @@ float
 __fmull (long double x, long double y)
 {
   NARROW_MUL_ROUND_TO_ODD (x, y, float, union ieee854_long_double, l,
-			   mantissa1);
+			   mantissa1, false);
 }
 libm_alias_float_ldouble (mul)

@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <math-narrow.h>
+#include <tininess.h>
 
 /* math_ldbl.h defines _Float128 to long double for this directory,
    but when they are different, this function must be defined with
@@ -30,7 +31,7 @@ __f64xmulf128 (_Float128 x, _Float128 y)
 {
 #if __HAVE_FLOAT64X_LONG_DOUBLE && __HAVE_DISTINCT_FLOAT128
   NARROW_MUL_ROUND_TO_ODD (x, y, _Float64x, union ieee854_long_double, l,
-			   mantissa3);
+			   mantissa3, TININESS_AFTER_ROUNDING);
 #else
   NARROW_MUL_TRIVIAL (x, y, _Float64x);
 #endif
