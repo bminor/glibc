@@ -11,6 +11,7 @@ The following bugs are resolved with this release:
 
   [12889] nptl: Fix race between pthread_kill and thread exit
   [19193] nptl: pthread_kill, pthread_cancel should not fail after exit
+  [28036] Incorrect types for pthread_mutexattr_set/getrobust_np
   [28182] _TIME_BITS=64 in C++ has issues with fcntl, ioctl, prctl
 
 
