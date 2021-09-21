@@ -37,7 +37,8 @@ extern int __regcomp (regex_t *__preg, const char *__pattern, int __cflags);
 libc_hidden_proto (__regcomp)
 
 extern int __regexec (const regex_t *__preg, const char *__string,
-		      size_t __nmatch, regmatch_t __pmatch[], int __eflags);
+		      size_t __nmatch, regmatch_t __pmatch[__nmatch],
+		      int __eflags);
 libc_hidden_proto (__regexec)
 
 extern size_t __regerror (int __errcode, const regex_t *__preg,
