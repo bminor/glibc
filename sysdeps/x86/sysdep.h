@@ -78,14 +78,17 @@ enum cf_protection_level
 #define ASM_SIZE_DIRECTIVE(name) .size name,.-name;
 
 /* Define an entry point visible from C.  */
-#define	ENTRY(name)							      \
+#define	ENTRY_P2ALIGN(name, alignment)					      \
   .globl C_SYMBOL_NAME(name);						      \
   .type C_SYMBOL_NAME(name),@function;					      \
-  .align ALIGNARG(4);							      \
+  .align ALIGNARG(alignment);						      \
   C_LABEL(name)								      \
   cfi_startproc;							      \
   _CET_ENDBR;								      \
   CALL_MCOUNT
+
+/* Common entry 16 byte aligns.  */
+#define ENTRY(name) ENTRY_P2ALIGN (name, 4)
 
 #undef	END
 #define END(name)							      \
