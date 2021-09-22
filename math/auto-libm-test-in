@@ -4876,14 +4876,14 @@ div 0x1p-126 0x1.0000001p0
 div 0x1p-126 -0x1.0000001p0
 div -0x1p-126 0x1.0000001p0
 div -0x1p-126 -0x1.0000001p0
-div 0x1p-1022 0x1.00000000000001p0
-div 0x1p-1022 -0x1.00000000000001p0
-div -0x1p-1022 0x1.00000000000001p0
-div -0x1p-1022 -0x1.00000000000001p0
-div 0x1p-16382 0x1.00000000000000001p0
-div 0x1p-16382 -0x1.00000000000000001p0
-div -0x1p-16382 0x1.00000000000000001p0
-div -0x1p-16382 -0x1.00000000000000001p0
+div 0x1p-1022 0x1.00000000000001p0 missing-underflow:arg-ibm128
+div 0x1p-1022 -0x1.00000000000001p0 missing-underflow:arg-ibm128
+div -0x1p-1022 0x1.00000000000001p0 missing-underflow:arg-ibm128
+div -0x1p-1022 -0x1.00000000000001p0 missing-underflow:arg-ibm128
+div 0x1p-16382 0x1.00000000000000001p0 missing-underflow:arg-ibm128 xfail-rounding:ibm128-libgcc
+div 0x1p-16382 -0x1.00000000000000001p0 missing-underflow:arg-ibm128 xfail-rounding:ibm128-libgcc
+div -0x1p-16382 0x1.00000000000000001p0 missing-underflow:arg-ibm128 xfail-rounding:ibm128-libgcc
+div -0x1p-16382 -0x1.00000000000000001p0 missing-underflow:arg-ibm128 xfail-rounding:ibm128-libgcc
 
 erf 0
 erf -0
@@ -6666,14 +6666,14 @@ mul 0x0.ffffff8p-126 0x1.0000001p0
 mul 0x0.ffffff8p-126 -0x1.0000001p0
 mul -0x0.ffffff8p-126 0x1.0000001p0
 mul -0x0.ffffff8p-126 -0x1.0000001p0
-mul 0x0.fffffffffffffcp-1022 0x1.00000000000001p0
-mul 0x0.fffffffffffffcp-1022 -0x1.00000000000001p0
-mul -0x0.fffffffffffffcp-1022 0x1.00000000000001p0
-mul -0x0.fffffffffffffcp-1022 -0x1.00000000000001p0
-mul 0x0.ffffffffffffffff8p-16382 0x1.00000000000000001p0
-mul 0x0.ffffffffffffffff8p-16382 -0x1.00000000000000001p0
-mul -0x0.ffffffffffffffff8p-16382 0x1.00000000000000001p0
-mul -0x0.ffffffffffffffff8p-16382 -0x1.00000000000000001p0
+mul 0x0.fffffffffffffcp-1022 0x1.00000000000001p0 missing-underflow:arg-ibm128
+mul 0x0.fffffffffffffcp-1022 -0x1.00000000000001p0 missing-underflow:arg-ibm128
+mul -0x0.fffffffffffffcp-1022 0x1.00000000000001p0 missing-underflow:arg-ibm128
+mul -0x0.fffffffffffffcp-1022 -0x1.00000000000001p0 missing-underflow:arg-ibm128
+mul 0x0.ffffffffffffffff8p-16382 0x1.00000000000000001p0 missing-underflow:arg-ibm128
+mul 0x0.ffffffffffffffff8p-16382 -0x1.00000000000000001p0 missing-underflow:arg-ibm128
+mul -0x0.ffffffffffffffff8p-16382 0x1.00000000000000001p0 missing-underflow:arg-ibm128
+mul -0x0.ffffffffffffffff8p-16382 -0x1.00000000000000001p0 missing-underflow:arg-ibm128
 
 pow 0 0
 pow 0 -0

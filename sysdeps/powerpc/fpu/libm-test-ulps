@@ -1103,6 +1103,9 @@ ldouble: 10
 Function: "div_ldouble":
 float: 1
 
+Function: "div_towardzero_ldouble":
+double: 1
+
 Function: "erf":
 double: 1
 float: 1
