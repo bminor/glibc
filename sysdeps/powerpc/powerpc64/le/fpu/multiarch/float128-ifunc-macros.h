@@ -24,11 +24,13 @@
    from _Float128 implementation objects.  */
 #include <libm-alias-float128.h>
 #include <libm-alias-finite.h>
+#include <math-narrow-alias.h>
 
 #undef libm_alias_float128_r
 #undef libm_alias_finite
 #undef libm_alias_exclusive_ldouble
 #undef libm_alias_float128_other_r_ldbl
+#undef libm_alias_float128_narrow
 #undef declare_mgen_finite_alias
 #undef declare_mgen_alias
 #undef declare_mgen_alias_r
@@ -38,6 +40,7 @@
 #define libm_alias_float128_r(from, to, r)
 #define libm_alias_exclusive_ldouble(from, to)
 #define libm_alias_float128_other_r_ldbl(from, to, r)
+#define libm_alias_float128_narrow(from, to)
 #define declare_mgen_finite_alias(from, to)
 #define declare_mgen_alias(from, to)
 #define declare_mgen_alias_r(from, to)

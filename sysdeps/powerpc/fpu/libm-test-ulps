@@ -1250,11 +1250,27 @@ ldouble: 1
 Function: "fma_downward":
 ldouble: 1
 
+Function: "fma_downward_ldouble":
+double: 1
+float: 1
+
+Function: "fma_ldouble":
+double: 1
+float: 1
+
 Function: "fma_towardzero":
 ldouble: 2
 
+Function: "fma_towardzero_ldouble":
+double: 1
+float: 1
+
 Function: "fma_upward":
 ldouble: 3
+
+Function: "fma_upward_ldouble":
+double: 1
+float: 1
 
 Function: "fmod":
 ldouble: 1

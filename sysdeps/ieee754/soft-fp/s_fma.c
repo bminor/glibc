@@ -26,9 +26,14 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define NO_MATH_REDIRECT
+#define dfmal __hide_dfmal
+#define f32xfmaf64 __hide_f32xfmaf64
 #include <math.h>
+#undef dfmal
+#undef f32xfmaf64
 #include <libc-diag.h>
 #include <libm-alias-double.h>
+#include <math-narrow-alias.h>
 
 /* R_e is not set in cases where it is not used in packing, but the
    compiler does not see that it is set in all cases where it is
@@ -66,4 +71,5 @@ DIAG_POP_NEEDS_COMMENT;
 
 #ifndef __fma
 libm_alias_double (__fma, fma)
+libm_alias_double_narrow (__fma, fma)
 #endif

@@ -696,8 +696,8 @@ class Tests(object):
         self.add_tests('fromfpx', 'intmax_t', ['r', 'int', 'unsigned int'])
         self.add_tests('ufromfp', 'uintmax_t', ['r', 'int', 'unsigned int'])
         self.add_tests('ufromfpx', 'uintmax_t', ['r', 'int', 'unsigned int'])
-        for fn, args in (('add', 2), ('div', 2), ('mul', 2), ('sqrt', 1),
-                         ('sub', 2)):
+        for fn, args in (('add', 2), ('div', 2), ('fma', 3), ('mul', 2),
+                         ('sqrt', 1), ('sub', 2)):
             for ret, prefix in (('float', 'f'),
                                 ('double', 'd'),
                                 ('_Float16', 'f16'),

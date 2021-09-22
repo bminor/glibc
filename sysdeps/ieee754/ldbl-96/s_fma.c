@@ -18,11 +18,16 @@
 
 #define NO_MATH_REDIRECT
 #include <float.h>
+#define dfmal __hide_dfmal
+#define f32xfmaf64 __hide_f32xfmaf64
 #include <math.h>
+#undef dfmal
+#undef f32xfmaf64
 #include <fenv.h>
 #include <ieee754.h>
 #include <math-barriers.h>
 #include <libm-alias-double.h>
+#include <math-narrow-alias.h>
 
 /* This implementation uses rounding to odd to avoid problems with
    double rounding.  See a paper by Boldo and Melquiond:
@@ -97,4 +102,5 @@ __fma (double x, double y, double z)
 }
 #ifndef __fma
 libm_alias_double (__fma, fma)
+libm_alias_double_narrow (__fma, fma)
 #endif

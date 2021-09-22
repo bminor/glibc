@@ -17,8 +17,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define NO_MATH_REDIRECT
+#define f64xfmaf128 __hide_f64xfmaf128
 #include <math.h>
+#undef f64xfmaf128
 #include <libm-alias-ldouble.h>
+#include <math-narrow-alias.h>
 
 long double
 __fmal (long double x, long double y, long double z)
@@ -26,3 +29,4 @@ __fmal (long double x, long double y, long double z)
   return (x * y) + z;
 }
 libm_alias_ldouble (__fma, fma)
+libm_alias_ldouble_narrow (__fma, fma)

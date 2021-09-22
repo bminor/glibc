@@ -29,6 +29,9 @@ Major new features:
   - fsqrt, fsqrtl, dsqrtl and corresponding fMsqrtfN, fMsqrtfNx,
     fMxsqrtfN and fMxsqrtfNx functions.
 
+  - ffma, ffmal, dfmal and corresponding fMfmafN, fMfmafNx, fMxfmafN and
+    fMxfmafNx functions.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The r_version update in the debugger interface makes the glibc binary

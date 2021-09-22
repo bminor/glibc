@@ -91,7 +91,7 @@ libm-compat-calls =							\
 	w_lgammaF_r_compat w_lgammaF_compat2 w_expF_compat		\
 	w_lgamma_compatF k_standardF
 
-libm-narrow-fns = add div mul sqrt sub
+libm-narrow-fns = add div fma mul sqrt sub
 libm-narrow-types-basic = s_fF s_f32xFf64
 libm-narrow-types-ldouble-yes = s_fFl s_dFl
 libm-narrow-types-float128-yes = s_f32Ff128 s_f64Ff128 s_f64xFf128
@@ -299,7 +299,7 @@ libm-test-funcs-noauto = canonicalize ceil cimag conj copysign cproj creal \
 			 significand totalorder totalordermag trunc ufromfp \
 			 ufromfpx compat_totalorder compat_totalordermag
 libm-test-funcs-compat = compat_totalorder compat_totalordermag
-libm-test-funcs-narrow = add div mul sqrt sub
+libm-test-funcs-narrow = add div fma mul sqrt sub
 libm-test-funcs-all = $(libm-test-funcs-auto) $(libm-test-funcs-noauto)
 libm-test-c-auto = $(foreach f,$(libm-test-funcs-auto),libm-test-$(f).c)
 libm-test-c-noauto = $(foreach f,$(libm-test-funcs-noauto),libm-test-$(f).c)
@@ -663,6 +663,7 @@ CFLAGS-s_ctan.c += -fno-builtin-ctanl
 CFLAGS-s_ctanh.c += -fno-builtin-ctanhl
 CFLAGS-s_dadd.c += -fno-builtin-daddl
 CFLAGS-s_ddiv.c += -fno-builtin-ddivl
+CFLAGS-s_dfma.c += -fno-builtin-dfmal
 CFLAGS-s_dmul.c += -fno-builtin-dmull
 CFLAGS-s_dsqrt.c += -fno-builtin-dsqrtl
 CFLAGS-s_dsub.c += -fno-builtin-dsubl
@@ -676,6 +677,7 @@ CFLAGS-s_fabs.c += -fno-builtin-fabsl
 CFLAGS-s_fadd.c += -fno-builtin-faddl
 CFLAGS-s_fdim.c += -fno-builtin-fdiml
 CFLAGS-s_fdiv.c += -fno-builtin-fdivl
+CFLAGS-s_ffma.c += -fno-builtin-ffmal
 CFLAGS-s_finite.c += -fno-builtin-finitel
 CFLAGS-s_floor.c += -fno-builtin-floorl
 CFLAGS-s_fma.c += -fno-builtin-fmal

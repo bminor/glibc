@@ -285,6 +285,8 @@
 #define __daddl __f64addf128
 #define __fdivl __f32divf128
 #define __ddivl __f64divf128
+#define __ffmal __f32fmaf128
+#define __dfmal __f64fmaf128
 #define __fmull __f32mulf128
 #define __dmull __f64mulf128
 #define __fsqrtl __f32sqrtf128

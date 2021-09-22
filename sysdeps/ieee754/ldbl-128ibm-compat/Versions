@@ -124,6 +124,8 @@ libm {
     __ynieee128;
   }
   GLIBC_2.35 {
+    __f32fmaieee128;
+    __f64fmaieee128;
     __f32sqrtieee128;
     __f64sqrtieee128;
   }

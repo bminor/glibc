@@ -19,9 +19,14 @@
 #define NO_MATH_REDIRECT
 #include <config.h>
 
+#define dfmal __hide_dfmal
+#define f32xfmaf64 __hide_f32xfmaf64
 #include <math.h>
+#undef dfmal
+#undef f32xfmaf64
 #include <init-arch.h>
 #include <libm-alias-double.h>
+#include <math-narrow-alias.h>
 
 extern double __fma_ia32 (double x, double y, double z) attribute_hidden;
 extern double __fma_fma (double x, double y, double z) attribute_hidden;
@@ -29,6 +34,7 @@ extern double __fma_fma (double x, double y, double z) attribute_hidden;
 libm_ifunc (__fma,
 	    CPU_FEATURE_USABLE (FMA) ? __fma_fma : __fma_ia32);
 libm_alias_double (__fma, fma)
+libm_alias_double_narrow (__fma, fma)
 
 #define __fma __fma_ia32
 

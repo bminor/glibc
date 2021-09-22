@@ -342,4 +342,57 @@
     }						\
   while (0)
 
+/* Check for error conditions from a narrowing fused multiply-add
+   function returning RET with arguments X, Y and Z and set errno as
+   needed.  Checking for error conditions for fma (either narrowing or
+   not) and setting errno is not currently implemented.  See bug
+   6801.  */
+#define CHECK_NARROW_FMA(RET, X, Y, Z)		\
+  do						\
+    {						\
+    }						\
+  while (0)
+
+/* Implement narrowing fused multiply-add using round-to-odd.  The
+   arguments are X, Y and Z, the return type is TYPE and UNION,
+   MANTISSA, SUFFIX and CLEAR_UNDERFLOW are as for ROUND_TO_ODD.  */
+#define NARROW_FMA_ROUND_TO_ODD(X, Y, Z, TYPE, UNION, SUFFIX, MANTISSA, \
+				CLEAR_UNDERFLOW)			\
+  do									\
+    {									\
+      typeof (X) tmp;							\
+      TYPE ret;								\
+									\
+      tmp = ROUND_TO_ODD (fma ## SUFFIX (math_opt_barrier (X), (Y),	\
+					 (Z)),				\
+			  UNION, SUFFIX, MANTISSA, CLEAR_UNDERFLOW);	\
+      /* If the round-to-odd result is zero, the result is an exact	\
+	 zero and must be recomputed in the original rounding mode.  */ \
+      if (tmp == 0)							\
+	ret = (TYPE) (math_opt_barrier (X) * (Y) + (Z));		\
+      else								\
+	ret = (TYPE) tmp;						\
+									\
+      CHECK_NARROW_FMA (ret, (X), (Y), (Z));				\
+      return ret;							\
+    }									\
+  while (0)
+
+/* Implement a narrowing fused multiply-add function where no attempt
+   is made to be correctly rounding (this only applies to IBM long
+   double; the case where the function is not actually narrowing is
+   handled by aliasing other fma functions in libm, not using this
+   macro).  The arguments are X, Y and Z and the return type is
+   TYPE.  */
+#define NARROW_FMA_TRIVIAL(X, Y, Z, TYPE, SUFFIX)	\
+  do							\
+    {							\
+      TYPE ret;						\
+							\
+      ret = (TYPE) (fma ## SUFFIX ((X), (Y), (Z)));	\
+      CHECK_NARROW_FMA (ret, (X), (Y), (Z));		\
+      return ret;					\
+    }							\
+  while (0)
+
 #endif /* math-narrow.h.  */

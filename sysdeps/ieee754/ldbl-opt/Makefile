@@ -45,7 +45,7 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 nextup nextdown totalorder totalordermag getpayload \
 		 canonicalize setpayload setpayloadsig llogb fmaxmag fminmag \
 		 roundeven fromfp ufromfp fromfpx ufromfpx fadd dadd \
-		 fdiv ddiv fmul dmul fsqrt dsqrt fsub dsub
+		 fdiv ddiv ffma dfma fmul dmul fsqrt dsqrt fsub dsub
 libnldbl-routines = $(libnldbl-calls:%=nldbl-%)
 libnldbl-inhibit-o = $(object-suffixes)
 libnldbl-static-only-routines = $(libnldbl-routines)
@@ -89,6 +89,7 @@ CFLAGS-nldbl-ctan.c = -fno-builtin-ctanl
 CFLAGS-nldbl-ctanh.c = -fno-builtin-ctanhl
 CFLAGS-nldbl-dadd.c = -fno-builtin-daddl
 CFLAGS-nldbl-ddiv.c = -fno-builtin-ddivl
+CFLAGS-nldbl-dfma.c = -fno-builtin-dfmal
 CFLAGS-nldbl-dmul.c = -fno-builtin-dmull
 CFLAGS-nldbl-dsqrt.c = -fno-builtin-dsqrtl
 CFLAGS-nldbl-dsub.c = -fno-builtin-dsubl
@@ -102,6 +103,7 @@ CFLAGS-nldbl-fabs.c = -fno-builtin-fabsl
 CFLAGS-nldbl-fadd.c = -fno-builtin-faddl
 CFLAGS-nldbl-fdim.c = -fno-builtin-fdiml
 CFLAGS-nldbl-fdiv.c = -fno-builtin-fdivl
+CFLAGS-nldbl-ffma.c = -fno-builtin-ffmal
 CFLAGS-nldbl-finite.c = -fno-builtin-finitel
 CFLAGS-nldbl-floor.c = -fno-builtin-floorl
 CFLAGS-nldbl-fma.c = -fno-builtin-fmal

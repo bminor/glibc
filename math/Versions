@@ -595,9 +595,14 @@ libm {
   }
   GLIBC_2.35 {
     # Functions not involving _Float64x or _Float128, for all configurations.
+    ffma; ffmal; dfmal;
+    f32fmaf32x; f32fmaf64; f32xfmaf64;
     fsqrt; fsqrtl; dsqrtl;
     f32sqrtf32x; f32sqrtf64; f32xsqrtf64;
     # Functions involving _Float64x or _Float128, for some configurations.
+    f32fmaf64x; f32fmaf128;
+    f32xfmaf64x; f32xfmaf128; f64fmaf64x; f64fmaf128;
+    f64xfmaf128;
     f32sqrtf64x; f32sqrtf128;
     f32xsqrtf64x; f32xsqrtf128; f64sqrtf64x; f64sqrtf128;
     f64xsqrtf128;

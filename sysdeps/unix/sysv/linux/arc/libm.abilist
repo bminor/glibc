@@ -697,9 +697,15 @@ GLIBC_2.32 ynf32 F
 GLIBC_2.32 ynf32x F
 GLIBC_2.32 ynf64 F
 GLIBC_2.32 ynl F
+GLIBC_2.35 dfmal F
 GLIBC_2.35 dsqrtl F
+GLIBC_2.35 f32fmaf32x F
+GLIBC_2.35 f32fmaf64 F
 GLIBC_2.35 f32sqrtf32x F
 GLIBC_2.35 f32sqrtf64 F
+GLIBC_2.35 f32xfmaf64 F
 GLIBC_2.35 f32xsqrtf64 F
+GLIBC_2.35 ffma F
+GLIBC_2.35 ffmal F
 GLIBC_2.35 fsqrt F
 GLIBC_2.35 fsqrtl F
