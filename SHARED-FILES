@@ -31,6 +31,10 @@ gnulib:
   crypt/md5.h
   dirent/alphasort.c
   dirent/scandir.c
+  # Merged from gnulib 2021-09-21
+  include/intprops.h
+  # Merged from gnulib 2021-09-21
+  include/regex.h
   locale/programs/3level.h
   # Merged from gnulib 2014-6-23
   malloc/obstack.c
@@ -41,6 +45,8 @@ gnulib:
   misc/error.h
   misc/getpass.c
   misc/mkdtemp.c
+  # Merged from gnulib 2021-09-21
+  misc/sys/cdefs.h
   posix/fnmatch_loop.c
   # Intended to be the same. Gnulib copy contains glibc changes.
   posix/getopt.c
@@ -49,11 +55,17 @@ gnulib:
   # Intended to be the same. Gnulib copy contains glibc changes.
   posix/getopt_int.h
   posix/glob.c
+  # Merged from gnulib 2021-09-21
   posix/regcomp.c
+  # Merged from gnulib 2021-09-21
   posix/regex.c
+  # Merged from gnulib 2021-09-21
   posix/regex.h
+  # Merged from gnulib 2021-09-21
   posix/regex_internal.c
+  # Merged from gnulib 2021-09-21
   posix/regex_internal.h
+  # Merged from gnulib 2021-09-21
   posix/regexec.c
   posix/spawn.c
   posix/spawn_faction_addclose.c
