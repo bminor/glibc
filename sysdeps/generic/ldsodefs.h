@@ -69,6 +69,16 @@ __BEGIN_DECLS
    `ElfW(TYPE)' is used in place of `Elf32_TYPE' or `Elf64_TYPE'.  */
 #define ELFW(type)	_ElfW (ELF, __ELF_NATIVE_CLASS, type)
 
+/* Return true if dynamic section in the shared library L should be
+   relocated.  */
+
+static inline bool
+dl_relocate_ld (const struct link_map *l)
+{
+  /* Don't relocate dynamic section if it is readonly  */
+  return !(l->l_ld_readonly || DL_RO_DYN_SECTION);
+}
+
 /* All references to the value of l_info[DT_PLTGOT],
   l_info[DT_STRTAB], l_info[DT_SYMTAB], l_info[DT_RELA],
   l_info[DT_REL], l_info[DT_JMPREL], and l_info[VERSYMIDX (DT_VERSYM)]
