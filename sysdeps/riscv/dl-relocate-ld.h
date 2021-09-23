@@ -19,14 +19,7 @@
 #ifndef _DL_RELOCATE_LD_H
 #define _DL_RELOCATE_LD_H
 
-/* Return true if dynamic section in the shared library L should be
-   relocated.  */
-
-static inline bool
-dl_relocate_ld (const struct link_map *l)
-{
-  /* Never relocate dynamic section for ABI compatibility.  */
-  return false;
-}
+/* The dynamic section is readonly for ABI compatibility.  */
+#define DL_RO_DYN_SECTION 1
 
 #endif /* _DL_RELOCATE_LD_H */
