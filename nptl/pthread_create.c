@@ -487,8 +487,16 @@ start_thread (void *arg)
 
   /* This prevents sending a signal from this thread to itself during
      its final stages.  This must come after the exit call above
-     because atexit handlers must not run with signals blocked.  */
-  __libc_signal_block_all (NULL);
+     because atexit handlers must not run with signals blocked.
+
+     Do not block SIGSETXID.  The setxid handshake below expects the
+     signal to be delivered.  (SIGSETXID cannot run application code,
+     nor does it use pthread_kill.)  Reuse the pd->sigmask space for
+     computing the signal mask, to save stack space.  */
+  __sigfillset (&pd->sigmask);
+  __sigdelset (&pd->sigmask, SIGSETXID);
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_BLOCK, &pd->sigmask, NULL,
+			 __NSIG_BYTES);
 
   /* Tell __pthread_kill_internal that this thread is about to exit.
      If there is a __pthread_kill_internal in progress, this delays
