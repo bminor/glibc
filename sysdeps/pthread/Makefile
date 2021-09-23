@@ -118,6 +118,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-unload \
 	 tst-unwind-thread \
 	 tst-pt-vfork1 tst-pt-vfork2 tst-vfork1x tst-vfork2x \
+	 tst-pthread-setuid-loop \
 	 tst-pthread_cancel-exited \
 	 tst-pthread_cancel-select-loop \
 	 tst-pthread_kill-exited \
