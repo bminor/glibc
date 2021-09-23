@@ -342,6 +342,18 @@ outstring_converted_wide_string (FILE *s, const OTHER_CHAR_T *src, int prec,
   return done;
 }
 
+/* Calls __printf_fp or __printf_fphex based on the value of the
+   format specifier INFO->spec.  */
+static inline int
+__printf_fp_spec (FILE *fp, const struct printf_info *info,
+		  const void *const *args)
+{
+  if (info->spec == 'a' || info->spec == 'A')
+    return __printf_fphex (fp, info, args);
+  else
+    return __printf_fp (fp, info, args);
+}
+
 /* For handling long_double and longlong we use the same flag.  If
    `long' and `long long' are effectively the same type define it to
    zero.  */
@@ -901,116 +913,6 @@ static const uint8_t jump_table[] =
 	  PAD (L_(' '));						      \
 	  break;							      \
 	}								      \
-									      \
-    LABEL (form_float):							      \
-      {									      \
-	/* Floating-point number.  This is handled by printf_fp.c.  */	      \
-	const void *ptr;						      \
-	int function_done;						      \
-									      \
-	if (fspec == NULL)						      \
-	  {								      \
-	    if (__glibc_unlikely ((mode_flags & PRINTF_LDBL_IS_DBL) != 0))    \
-	      is_long_double = 0;					      \
-									      \
-	    struct printf_info info = { .prec = prec,			      \
-					.width = width,			      \
-					.spec = spec,			      \
-					.is_long_double = is_long_double,     \
-					.is_short = is_short,		      \
-					.is_long = is_long,		      \
-					.alt = alt,			      \
-					.space = space,			      \
-					.left = left,			      \
-					.showsign = showsign,		      \
-					.group = group,			      \
-					.pad = pad,			      \
-					.extra = 0,			      \
-					.i18n = use_outdigits,		      \
-					.wide = sizeof (CHAR_T) != 1,	      \
-					.is_binary128 = 0};		      \
-									      \
-	    PARSE_FLOAT_VA_ARG_EXTENDED (info);				      \
-	    ptr = (const void *) &the_arg;				      \
-									      \
-	    function_done = __printf_fp (s, &info, &ptr);		      \
-	  }								      \
-	else								      \
-	  {								      \
-	    ptr = (const void *) &args_value[fspec->data_arg];		      \
-	    if (__glibc_unlikely ((mode_flags & PRINTF_LDBL_IS_DBL) != 0))    \
-	      {								      \
-		fspec->data_arg_type = PA_DOUBLE;			      \
-		fspec->info.is_long_double = 0;				      \
-	      }								      \
-	    SETUP_FLOAT128_INFO (fspec->info);				      \
-									      \
-	    function_done = __printf_fp (s, &fspec->info, &ptr);	      \
-	  }								      \
-									      \
-	if (function_done < 0)						      \
-	  {								      \
-	    /* Error in print handler; up to handler to set errno.  */	      \
-	    done = -1;							      \
-	    goto all_done;						      \
-	  }								      \
-									      \
-	done_add (function_done);					      \
-      }									      \
-      break;								      \
-									      \
-    LABEL (form_floathex):						      \
-      {									      \
-	/* Floating point number printed as hexadecimal number.  */	      \
-	const void *ptr;						      \
-	int function_done;						      \
-									      \
-	if (fspec == NULL)						      \
-	  {								      \
-	    if (__glibc_unlikely ((mode_flags & PRINTF_LDBL_IS_DBL) != 0))    \
-	      is_long_double = 0;					      \
-									      \
-	    struct printf_info info = { .prec = prec,			      \
-					.width = width,			      \
-					.spec = spec,			      \
-					.is_long_double = is_long_double,     \
-					.is_short = is_short,		      \
-					.is_long = is_long,		      \
-					.alt = alt,			      \
-					.space = space,			      \
-					.left = left,			      \
-					.showsign = showsign,		      \
-					.group = group,			      \
-					.pad = pad,			      \
-					.extra = 0,			      \
-					.wide = sizeof (CHAR_T) != 1,	      \
-					.is_binary128 = 0};		      \
-									      \
-	    PARSE_FLOAT_VA_ARG_EXTENDED (info);				      \
-	    ptr = (const void *) &the_arg;				      \
-									      \
-	    function_done = __printf_fphex (s, &info, &ptr);		      \
-	  }								      \
-	else								      \
-	  {								      \
-	    ptr = (const void *) &args_value[fspec->data_arg];		      \
-	    if (__glibc_unlikely ((mode_flags & PRINTF_LDBL_IS_DBL) != 0))    \
-	      fspec->info.is_long_double = 0;				      \
-	    SETUP_FLOAT128_INFO (fspec->info);				      \
-									      \
-	    function_done = __printf_fphex (s, &fspec->info, &ptr);	      \
-	  }								      \
-									      \
-	if (function_done < 0)						      \
-	  {								      \
-	    /* Error in print handler; up to handler to set errno.  */	      \
-	    done = -1;							      \
-	    goto all_done;						      \
-	  }								      \
-									      \
-	done_add (function_done);					      \
-      }									      \
-      break;								      \
 									      \
     LABEL (form_pointer):						      \
       /* Generic pointer.  */						      \
@@ -1646,6 +1548,45 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap, unsigned int mode_flags)
 	  process_arg (((struct printf_spec *) NULL));
 	  process_string_arg (((struct printf_spec *) NULL));
 
+	LABEL (form_float):
+	LABEL (form_floathex):
+	  {
+	    if (__glibc_unlikely ((mode_flags & PRINTF_LDBL_IS_DBL) != 0))
+	      is_long_double = 0;
+
+	    struct printf_info info =
+	      {
+		.prec = prec,
+		.width = width,
+		.spec = spec,
+		.is_long_double = is_long_double,
+		.is_short = is_short,
+		.is_long = is_long,
+		.alt = alt,
+		.space = space,
+		.left = left,
+		.showsign = showsign,
+		.group = group,
+		.pad = pad,
+		.extra = 0,
+		.i18n = use_outdigits,
+		.wide = sizeof (CHAR_T) != 1,
+		.is_binary128 = 0
+	      };
+
+	    PARSE_FLOAT_VA_ARG_EXTENDED (info);
+	    const void *ptr = &the_arg;
+
+	    int function_done = __printf_fp_spec (s, &info, &ptr);
+	    if (function_done < 0)
+	      {
+		done = -1;
+		goto all_done;
+	      }
+	    done_add (function_done);
+	  }
+	  break;
+
 	LABEL (form_unknown):
 	  if (spec == L_('\0'))
 	    {
@@ -1901,7 +1842,6 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
 	unsigned long int word;
       } number;
       int base;
-      union printf_arg the_arg;
       CHAR_T *string;		/* Pointer to argument string.  */
 
       /* Fill variables from values in struct.  */
@@ -1995,6 +1935,30 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
 
 	  process_arg ((&specs[nspecs_done]));
 	  process_string_arg ((&specs[nspecs_done]));
+
+	  LABEL (form_float):
+	  LABEL (form_floathex):
+	  {
+	    const void *ptr
+	      = (const void *) &args_value[specs[nspecs_done].data_arg];
+	    if (__glibc_unlikely ((mode_flags & PRINTF_LDBL_IS_DBL) != 0))
+	      {
+		specs[nspecs_done].data_arg_type = PA_DOUBLE;
+		specs[nspecs_done].info.is_long_double = 0;
+	      }
+	    SETUP_FLOAT128_INFO (specs[nspecs_done].info);
+
+	    int function_done
+	      = __printf_fp_spec (s, &specs[nspecs_done].info, &ptr);
+	    if (function_done < 0)
+	      {
+		/* Error in print handler; up to handler to set errno.  */
+		done = -1;
+		goto all_done;
+	      }
+	    done_add (function_done);
+	  }
+	  break;
 
 	  LABEL (form_unknown):
 	  {
