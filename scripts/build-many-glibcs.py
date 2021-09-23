@@ -350,7 +350,9 @@ class Context(object):
                         gcc_cfg=['--disable-multilib', '--enable-secureplt'])
         self.add_config(arch='powerpc64le',
                         os_name='linux-gnu',
-                        gcc_cfg=['--disable-multilib', '--enable-secureplt'])
+                        gcc_cfg=['--disable-multilib', '--enable-secureplt'],
+                        extra_glibcs=[{'variant': 'disable-multi-arch',
+                                       'cfg': ['--disable-multi-arch']}])
         self.add_config(arch='riscv32',
                         os_name='linux-gnu',
                         variant='rv32imac-ilp32',
