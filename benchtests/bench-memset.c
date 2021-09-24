@@ -43,7 +43,7 @@ static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, CHAR *s,
 	     int c __attribute ((unused)), size_t n)
 {
-  size_t i, iters = INNER_LOOP_ITERS;
+  size_t i, iters = INNER_LOOP_ITERS_LARGE;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
@@ -118,7 +118,7 @@ test_main (void)
 	  if (i & (i - 1))
 	    do_test (&json_ctx, 0, c, i);
 	}
-      for (i = 32; i < 512; i+=32)
+      for (i = 32; i < 1024; i+=32)
 	{
 	  do_test (&json_ctx, 0, c, i);
 	  do_test (&json_ctx, i, c, i);
