@@ -32,6 +32,9 @@ Major new features:
   - ffma, ffmal, dfmal and corresponding fMfmafN, fMfmafNx, fMxfmafN and
     fMxfmafNx functions.
 
+* The __STDC_IEC_60559_BFP__ and __STDC_IEC_60559_COMPLEX__ macros are
+  predefined as specified in TS 18661-1:2014.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The r_version update in the debugger interface makes the glibc binary
