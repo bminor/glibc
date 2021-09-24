@@ -27,10 +27,14 @@
 
 #include <math-narrow.h>
 
-#if defined __SSE2_MATH__ && !defined __FP_FAST_FMA
+#ifndef __FP_FAST_FMA
 /* Depending on the details of the glibc configuration, fma might use
    either SSE or 387 arithmetic; ensure that both parts of the
-   floating-point state are handled in the round-to-odd code.  */
+   floating-point state are handled in the round-to-odd code.  If
+   __FP_FAST_FMA is defined, that implies that the compiler is using
+   SSE floating point and that the fma call will be inlined, so the
+   x86 macros will work with only the SSE state and that is
+   sufficient.  */
 # undef libc_feholdexcept_setround
 # define libc_feholdexcept_setround	default_libc_feholdexcept_setround
 # undef libc_feupdateenv_test
