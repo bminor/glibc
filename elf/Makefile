@@ -402,8 +402,9 @@ endif
 modules-execstack-yes = tst-execstack-mod
 extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 
-# filtmod1.so, tst-big-note-lib.so have special rules.
-modules-names-nobuild := filtmod1 tst-big-note-lib
+# filtmod1.so, tst-big-note-lib.so, tst-ro-dynamic-mod.so have special
+# rules.
+modules-names-nobuild := filtmod1 tst-big-note-lib tst-ro-dynamic-mod
 
 tests += $(tests-static)
 
