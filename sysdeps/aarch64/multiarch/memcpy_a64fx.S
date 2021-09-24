@@ -19,6 +19,9 @@
 
 #include <sysdep.h>
 
+#undef BTI_C
+#define BTI_C
+
 /* Assumptions:
  *
  * ARMv8.2-a, AArch64, unaligned accesses, sve
