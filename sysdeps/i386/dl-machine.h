@@ -34,27 +34,20 @@ elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 }
 
 
-/* Return the link-time address of _DYNAMIC.  Conveniently, this is the
-   first element of the GOT, a special entry that is never relocated.  */
-static inline Elf32_Addr __attribute__ ((unused, const))
-elf_machine_dynamic (void)
-{
-  /* This produces a GOTOFF reloc that resolves to zero at link time, so in
-     fact just loads from the GOT register directly.  By doing it without
-     an asm we can let the compiler choose any register.  */
-  extern const Elf32_Addr _GLOBAL_OFFSET_TABLE_[] attribute_hidden;
-  return _GLOBAL_OFFSET_TABLE_[0];
-}
-
 /* Return the run-time load address of the shared object.  */
 static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
-  /* Compute the difference between the runtime address of _DYNAMIC as seen
-     by a GOTOFF reference, and the link-time address found in the special
-     unrelocated first GOT entry.  */
-  extern Elf32_Dyn bygotoff[] asm ("_DYNAMIC") attribute_hidden;
-  return (Elf32_Addr) &bygotoff - elf_machine_dynamic ();
+  extern const Elf32_Ehdr __ehdr_start attribute_hidden;
+  return (Elf32_Addr) &__ehdr_start;
+}
+
+/* Return the link-time address of _DYNAMIC.  */
+static inline Elf32_Addr __attribute__ ((unused))
+elf_machine_dynamic (void)
+{
+  extern Elf32_Dyn _DYNAMIC[] attribute_hidden;
+  return (Elf32_Addr) _DYNAMIC - elf_machine_load_address ();
 }
 
 /* Set up the loaded object described by L so its unrelocated PLT
