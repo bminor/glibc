@@ -48,7 +48,7 @@ __closefrom_fallback (int from, _Bool dirfd_fallback)
       dirfd = __open_nocancel (FD_TO_FILENAME_PREFIX, O_RDONLY | O_DIRECTORY,
                                0);
       if (dirfd == -1)
-        goto err;
+        return false;
     }
 
   char buffer[1024];
