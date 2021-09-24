@@ -29,7 +29,7 @@ xsysconf (int name)
   int old_errno = errno;
   errno = 0;
   long result = sysconf (name);
-  if (errno != 0)
+  if (result == -1 && errno != 0)
     FAIL_EXIT1 ("sysconf (%d): %m", name);
   errno = old_errno;
   return result;
