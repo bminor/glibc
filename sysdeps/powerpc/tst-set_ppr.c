@@ -44,7 +44,8 @@ get_thread_priority (void)
 {
   /* Read the PPR.  */
   ppr_t ppr;
-  asm volatile (MFPPR" %0" : "=r"(ppr));
+  asm volatile (".machine push; .machine power7; "MFPPR" %0; .machine pop"
+		: "=r"(ppr));
   /* Return the thread priority value.  */
   return EXTRACT_THREAD_PRIORITY (ppr);
 }
