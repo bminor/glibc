@@ -61,11 +61,6 @@ ifeq ($(subdir),misc)
 sysdep_headers += sys/platform/ppc.h
 tests += test-gettimebase
 tests += tst-set_ppr
-
-# This test is expected to run and exit with EXIT_UNSUPPORTED on
-# processors that do not implement the Power ISA 2.06 or greater.
-# But the test makes use of instructions from Power ISA 2.06 and 2.07.
-CFLAGS-tst-set_ppr.c += -Wa,-many
 endif
 
 ifeq ($(subdir),wcsmbs)
