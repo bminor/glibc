@@ -69,7 +69,6 @@ do_test (void)
 
   xpthread_cancel (timer_thread);
 
-  xpthread_barrier_init (&barrier, NULL, 2);
   xpthread_barrier_wait (&barrier);
 
   return 0;
