@@ -30,30 +30,33 @@ __pthread_sigstate (struct __pthread *thread, int how,
 {
   error_t err = 0;
   struct hurd_sigstate *ss;
+  sigset_t old, new;
   sigset_t pending;
+
+  if (set != NULL)
+    new = *set;
 
   ss = _hurd_thread_sigstate (thread->kernel_thread);
   assert (ss);
 
   _hurd_sigstate_lock (ss);
 
-  if (oset != NULL)
-    *oset = ss->blocked;
+  old = ss->blocked;
 
   if (set != NULL)
     {
       switch (how)
 	{
 	case SIG_BLOCK:
-	  ss->blocked |= *set;
+	  ss->blocked |= new;
 	  break;
 
 	case SIG_SETMASK:
-	  ss->blocked = *set;
+	  ss->blocked = new;
 	  break;
 
 	case SIG_UNBLOCK:
-	  ss->blocked &= ~*set;
+	  ss->blocked &= ~new;
 	  break;
 
 	default:
@@ -68,6 +71,9 @@ __pthread_sigstate (struct __pthread *thread, int how,
 
   pending = _hurd_sigstate_pending (ss) & ~ss->blocked;
   _hurd_sigstate_unlock (ss);
+
+  if (!err && oset != NULL)
+    *oset = old;
 
   if (!err && pending)
     /* Send a message to the signal thread so it
