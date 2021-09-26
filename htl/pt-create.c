@@ -213,8 +213,11 @@ __pthread_create_internal (struct __pthread **thread,
     err = __pthread_sigstate (_pthread_self (), 0, 0, &pthread->init_sigset, 0);
   assert_perror (err);
 
-  /* But block the signals for now, until the thread is fully initialized.  */
-  __sigfillset (&sigset);
+  if (start_routine)
+    /* But block the signals for now, until the thread is fully initialized.  */
+    __sigfillset (&sigset);
+  else
+    sigset = pthread->init_sigset;
   err = __pthread_sigstate (pthread, SIG_SETMASK, &sigset, 0, 1);
   assert_perror (err);
 
