@@ -9,6 +9,10 @@ Version 2.35
 
 Major new features:
 
+* Unicode 14.0.0 Support: Character encoding, character type info, and
+  transliteration tables are all updated to Unicode 14.0.0, using
+  generator scripts contributed by Mike FABIAN (Red Hat).
+
 * Bump r_version in the debugger interface to 2 and add a new field,
   r_next, support multiple namespaces.
 
