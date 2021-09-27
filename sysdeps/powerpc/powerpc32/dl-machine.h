@@ -109,8 +109,6 @@ elf_machine_load_address (void)
   return runtime_dynamic - elf_machine_dynamic ();
 }
 
-#define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) /* nothing */
-
 /* The PLT uses Elf32_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
 
