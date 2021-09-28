@@ -1,4 +1,5 @@
-/* Copyright (C) 1999-2021 Free Software Foundation, Inc.
+/* Create socket with an unspecified address family for use with ioctl.
+   Copyright (C) 1999-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,56 +16,34 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdio.h>
+#include <errno.h>
 #include <sys/socket.h>
-#include <libc-lock.h>
 
 /* Return a socket of any type.  The socket can be used in subsequent
    ioctl calls to talk to the kernel.  */
 int
 __opensock (void)
 {
-  /* Cache the last AF that worked, to avoid many redundant calls to
-     socket().  */
-  static int sock_af = -1;
-  int fd = -1;
-  __libc_lock_define_initialized (static, lock);
+  /* SOCK_DGRAM is supported by all address families.  (Netlink does
+     not support SOCK_STREAM.)  */
+  int type = SOCK_DGRAM | SOCK_CLOEXEC;
+  int fd;
 
-  if (sock_af != -1)
-    {
-      fd = __socket (sock_af, SOCK_DGRAM, 0);
-      if (fd != -1)
-        return fd;
-    }
+#ifdef AF_NETLINK
+  fd = __socket (AF_NETLINK, type, 0);
+  if (fd >= 0)
+    return fd;
+#endif
 
-  __libc_lock_lock (lock);
-
-  if (sock_af != -1)
-    fd = __socket (sock_af, SOCK_DGRAM, 0);
-
-  if (fd == -1)
-    {
-#ifdef AF_INET
-      fd = __socket (sock_af = AF_INET, SOCK_DGRAM, 0);
-#endif
-#ifdef AF_INET6
-      if (fd < 0)
-	fd = __socket (sock_af = AF_INET6, SOCK_DGRAM, 0);
-#endif
-#ifdef AF_IPX
-      if (fd < 0)
-	fd = __socket (sock_af = AF_IPX, SOCK_DGRAM, 0);
-#endif
-#ifdef AF_AX25
-      if (fd < 0)
-	fd = __socket (sock_af = AF_AX25, SOCK_DGRAM, 0);
-#endif
-#ifdef AF_APPLETALK
-      if (fd < 0)
-	fd = __socket (sock_af = AF_APPLETALK, SOCK_DGRAM, 0);
-#endif
-    }
-
-  __libc_lock_unlock (lock);
+  fd = __socket (AF_UNIX, type, 0);
+  if (fd >= 0)
+    return fd;
+  fd = __socket (AF_INET, type, 0);
+  if (fd >= 0)
+    return fd;
+  fd = __socket (AF_INET6, type, 0);
+  if (fd >= 0)
+    return fd;
+  __set_errno (ENOENT);
   return fd;
 }
