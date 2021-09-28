@@ -599,6 +599,20 @@ libm {
     f32fmaf32x; f32fmaf64; f32xfmaf64;
     fsqrt; fsqrtl; dsqrtl;
     f32sqrtf32x; f32sqrtf64; f32xsqrtf64;
+    fmaximum; fmaximumf; fmaximuml; fmaximumf32; fmaximumf64; fmaximumf32x;
+    fmaximum_num; fmaximum_numf; fmaximum_numl;
+    fmaximum_numf32; fmaximum_numf64; fmaximum_numf32x;
+    fmaximum_mag; fmaximum_magf; fmaximum_magl;
+    fmaximum_magf32; fmaximum_magf64; fmaximum_magf32x;
+    fmaximum_mag_num; fmaximum_mag_numf; fmaximum_mag_numl;
+    fmaximum_mag_numf32; fmaximum_mag_numf64; fmaximum_mag_numf32x;
+    fminimum; fminimumf; fminimuml; fminimumf32; fminimumf64; fminimumf32x;
+    fminimum_num; fminimum_numf; fminimum_numl;
+    fminimum_numf32; fminimum_numf64; fminimum_numf32x;
+    fminimum_mag; fminimum_magf; fminimum_magl;
+    fminimum_magf32; fminimum_magf64; fminimum_magf32x;
+    fminimum_mag_num; fminimum_mag_numf; fminimum_mag_numl;
+    fminimum_mag_numf32; fminimum_mag_numf64; fminimum_mag_numf32x;
     # Functions involving _Float64x or _Float128, for some configurations.
     f32fmaf64x; f32fmaf128;
     f32xfmaf64x; f32xfmaf128; f64fmaf64x; f64fmaf128;
@@ -606,5 +620,13 @@ libm {
     f32sqrtf64x; f32sqrtf128;
     f32xsqrtf64x; f32xsqrtf128; f64sqrtf64x; f64sqrtf128;
     f64xsqrtf128;
+    fmaximumf64x; fmaximumf128;
+    fmaximum_numf64x; fmaximum_numf128;
+    fmaximum_magf64x; fmaximum_magf128;
+    fmaximum_mag_numf64x; fmaximum_mag_numf128;
+    fminimumf64x; fminimumf128;
+    fminimum_numf64x; fminimum_numf128;
+    fminimum_magf64x; fminimum_magf128;
+    fminimum_mag_numf64x; fminimum_mag_numf128;
   }
 }

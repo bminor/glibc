@@ -707,6 +707,15 @@ class Tests(object):
                                 ('_Float32x', 'f32x'),
                                 ('_Float64x', 'f64x')):
                 self.add_tests(prefix + fn, ret, ['r'] * args)
+        # C2X functions.
+        self.add_tests('fmaximum', 'r', ['r', 'r'])
+        self.add_tests('fmaximum_mag', 'r', ['r', 'r'])
+        self.add_tests('fmaximum_num', 'r', ['r', 'r'])
+        self.add_tests('fmaximum_mag_num', 'r', ['r', 'r'])
+        self.add_tests('fminimum', 'r', ['r', 'r'])
+        self.add_tests('fminimum_mag', 'r', ['r', 'r'])
+        self.add_tests('fminimum_num', 'r', ['r', 'r'])
+        self.add_tests('fminimum_mag_num', 'r', ['r', 'r'])
         # Miscellaneous functions.
         self.add_tests('scalb', 's', ['s', 's'])
 

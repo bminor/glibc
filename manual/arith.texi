@@ -2097,8 +2097,8 @@ and @var{y}.  It is similar to the expression
 @end smallexample
 except that @var{x} and @var{y} are only evaluated once.
 
-If an argument is NaN, the other argument is returned.  If both arguments
-are NaN, NaN is returned.
+If an argument is a quiet NaN, the other argument is returned.  If both arguments
+are NaN, or either is a signaling NaN, NaN is returned.
 @end deftypefun
 
 @deftypefun double fmax (double @var{x}, double @var{y})
@@ -2113,8 +2113,58 @@ are NaN, NaN is returned.
 The @code{fmax} function returns the greater of the two values @var{x}
 and @var{y}.
 
-If an argument is NaN, the other argument is returned.  If both arguments
-are NaN, NaN is returned.
+If an argument is a quiet NaN, the other argument is returned.  If both arguments
+are NaN, or either is a signaling NaN, NaN is returned.
+@end deftypefun
+
+@deftypefun double fminimum (double @var{x}, double @var{y})
+@deftypefunx float fminimumf (float @var{x}, float @var{y})
+@deftypefunx {long double} fminimuml (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fminimumfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fminimumfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@standards{C2X, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+The @code{fminimum} function returns the lesser of the two values @var{x}
+and @var{y}.  Unlike @code{fmin}, if either argument is a NaN, NaN is returned.
+Positive zero is treated as greater than negative zero.
+@end deftypefun
+
+@deftypefun double fmaximum (double @var{x}, double @var{y})
+@deftypefunx float fmaximumf (float @var{x}, float @var{y})
+@deftypefunx {long double} fmaximuml (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fmaximumfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fmaximumfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@standards{C2X, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+The @code{fmaximum} function returns the greater of the two values @var{x}
+and @var{y}.  Unlike @code{fmax}, if either argument is a NaN, NaN is returned.
+Positive zero is treated as greater than negative zero.
+@end deftypefun
+
+@deftypefun double fminimum_num (double @var{x}, double @var{y})
+@deftypefunx float fminimum_numf (float @var{x}, float @var{y})
+@deftypefunx {long double} fminimum_numl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fminimum_numfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fminimum_numfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@standards{C2X, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+The @code{fminimum_num} function returns the lesser of the two values
+@var{x} and @var{y}.  If one argument is a number and the other is a
+NaN, even a signaling NaN, the number is returned.  Positive zero is
+treated as greater than negative zero.
+@end deftypefun
+
+@deftypefun double fmaximum_num (double @var{x}, double @var{y})
+@deftypefunx float fmaximum_numf (float @var{x}, float @var{y})
+@deftypefunx {long double} fmaximum_numl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fmaximum_numfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fmaximum_numfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@standards{C2X, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+The @code{fmaximum_num} function returns the greater of the two values
+@var{x} and @var{y}.  If one argument is a number and the other is a
+NaN, even a signaling NaN, the number is returned.  Positive zero is
+treated as greater than negative zero.
 @end deftypefun
 
 @deftypefun double fminmag (double @var{x}, double @var{y})
@@ -2145,6 +2195,58 @@ These functions, from TS 18661-1:2014, return whichever of the two
 values @var{x} and @var{y} has the greater absolute value.  If both
 have the same absolute value, or either is NaN, they behave the same
 as the @code{fmax} functions.
+@end deftypefun
+
+@deftypefun double fminimum_mag (double @var{x}, double @var{y})
+@deftypefunx float fminimum_magf (float @var{x}, float @var{y})
+@deftypefunx {long double} fminimum_magl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fminimum_magfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fminimum_magfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@standards{C2X, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions return whichever of the two values @var{x} and @var{y}
+has the smaller absolute value.  If both have the same absolute value,
+or either is NaN, they behave the same as the @code{fminimum}
+functions.
+@end deftypefun
+
+@deftypefun double fmaximum_mag (double @var{x}, double @var{y})
+@deftypefunx float fmaximum_magf (float @var{x}, float @var{y})
+@deftypefunx {long double} fmaximum_magl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fmaximum_magfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fmaximum_magfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@standards{C2X, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions return whichever of the two values @var{x} and @var{y}
+has the greater absolute value.  If both have the same absolute value,
+or either is NaN, they behave the same as the @code{fmaximum}
+functions.
+@end deftypefun
+
+@deftypefun double fminimum_mag_num (double @var{x}, double @var{y})
+@deftypefunx float fminimum_mag_numf (float @var{x}, float @var{y})
+@deftypefunx {long double} fminimum_mag_numl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fminimum_mag_numfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fminimum_mag_numfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@standards{C2X, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions return whichever of the two values @var{x} and @var{y}
+has the smaller absolute value.  If both have the same absolute value,
+or either is NaN, they behave the same as the @code{fminimum_num}
+functions.
+@end deftypefun
+
+@deftypefun double fmaximum_mag_num (double @var{x}, double @var{y})
+@deftypefunx float fmaximum_mag_numf (float @var{x}, float @var{y})
+@deftypefunx {long double} fmaximum_mag_numl (long double @var{x}, long double @var{y})
+@deftypefunx _FloatN fmaximum_mag_numfN (_Float@var{N} @var{x}, _Float@var{N} @var{y})
+@deftypefunx _FloatNx fmaximum_mag_numfNx (_Float@var{N}x @var{x}, _Float@var{N}x @var{y})
+@standards{C2X, math.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
+These functions return whichever of the two values @var{x} and @var{y}
+has the greater absolute value.  If both have the same absolute value,
+or either is NaN, they behave the same as the @code{fmaximum_num}
+functions.
 @end deftypefun
 
 @deftypefun double fdim (double @var{x}, double @var{y})

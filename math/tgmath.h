@@ -929,6 +929,38 @@
 # define fminmag(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fminmag)
 #endif
 
+#if __GLIBC_USE (ISOC2X)
+/* Return maximum value from X and Y.  */
+# define fmaximum(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmaximum)
+
+/* Return minimum value from X and Y.  */
+# define fminimum(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fminimum)
+
+/* Return maximum numeric value from X and Y.  */
+# define fmaximum_num(Val1, Val2)			\
+  __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmaximum_num)
+
+/* Return minimum numeric value from X and Y.  */
+# define fminimum_num(Val1, Val2)			\
+  __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fminimum_num)
+
+/* Return value with maximum magnitude.  */
+# define fmaximum_mag(Val1, Val2)			\
+  __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmaximum_mag)
+
+/* Return value with minimum magnitude.  */
+# define fminimum_mag(Val1, Val2)			\
+  __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fminimum_mag)
+
+/* Return numeric value with maximum magnitude.  */
+# define fmaximum_mag_num(Val1, Val2)				\
+  __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmaximum_mag_num)
+
+/* Return numeric value with minimum magnitude.  */
+# define fminimum_mag_num(Val1, Val2)				\
+  __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fminimum_mag_num)
+#endif
+
 
 /* Absolute value, conjugates, and projection.  */
 

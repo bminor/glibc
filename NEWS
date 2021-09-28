@@ -32,6 +32,13 @@ Major new features:
   - ffma, ffmal, dfmal and corresponding fMfmafN, fMfmafNx, fMxfmafN and
     fMxfmafNx functions.
 
+* <math.h> functions for floating-point maximum and minimum,
+  corresponding to new operations in IEEE 754-2019, and corresponding
+  <tgmath.h> macros, are added from draft ISO C2X: fmaximum,
+  fmaximum_num, fmaximum_mag, fmaximum_mag_num, fminimum, fminimum_num,
+  fminimum_mag, fminimum_mag_num and corresponding functions for float,
+  long double, _FloatN and _FloatNx.
+
 * The __STDC_IEC_60559_BFP__ and __STDC_IEC_60559_COMPLEX__ macros are
   predefined as specified in TS 18661-1:2014.
 

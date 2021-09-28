@@ -50,4 +50,8 @@ CFLAGS-e_log2l.c += -fno-builtin-fabsl
 CFLAGS-e_remainderl.c += -fno-builtin-fabsl
 CFLAGS-s_fmaxmagl.c += -fno-builtin-fabsl
 CFLAGS-s_fminmagl.c += -fno-builtin-fabsl
+CFLAGS-s_fmaximum_magl.c += -fno-builtin-fabsl
+CFLAGS-s_fmaximum_mag_numl.c += -fno-builtin-fabsl
+CFLAGS-s_fminimum_magl.c += -fno-builtin-fabsl
+CFLAGS-s_fminimum_mag_numl.c += -fno-builtin-fabsl
 endif

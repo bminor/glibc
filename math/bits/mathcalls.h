@@ -378,6 +378,32 @@ __MATHCALLX (fmaxmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 __MATHCALLX (fminmag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 #endif
 
+#if __GLIBC_USE (ISOC2X)
+/* Return maximum value from X and Y.  */
+__MATHCALLX (fmaximum,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+
+/* Return minimum value from X and Y.  */
+__MATHCALLX (fminimum,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+
+/* Return maximum numeric value from X and Y.  */
+__MATHCALLX (fmaximum_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+
+/* Return minimum numeric value from X and Y.  */
+__MATHCALLX (fminimum_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+
+/* Return value with maximum magnitude.  */
+__MATHCALLX (fmaximum_mag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+
+/* Return value with minimum magnitude.  */
+__MATHCALLX (fminimum_mag,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+
+/* Return numeric value with maximum magnitude.  */
+__MATHCALLX (fmaximum_mag_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+
+/* Return numeric value with minimum magnitude.  */
+__MATHCALLX (fminimum_mag_num,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+#endif
+
 #if __GLIBC_USE (IEC_60559_EXT) || __MATH_DECLARING_FLOATN
 /* Total order operation.  */
 __MATHDECL_1 (int, totalorder,, (const _Mdouble_ *__x,

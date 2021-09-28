@@ -128,6 +128,14 @@ libm {
     __f64fmaieee128;
     __f32sqrtieee128;
     __f64sqrtieee128;
+    __fmaximumieee128;
+    __fmaximum_numieee128;
+    __fmaximum_magieee128;
+    __fmaximum_mag_numieee128;
+    __fminimumieee128;
+    __fminimum_numieee128;
+    __fminimum_magieee128;
+    __fminimum_mag_numieee128;
   }
 }
 libc {
