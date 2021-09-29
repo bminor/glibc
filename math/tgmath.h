@@ -892,12 +892,20 @@
 /* Return positive difference between X and Y.  */
 #define fdim(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fdim)
 
+#if __GLIBC_USE (ISOC2X) && !defined __USE_GNU
 /* Return maximum numeric value from X and Y.  */
-#define fmax(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmax)
+# define fmax(Val1, Val2) __TGMATH_BINARY_REAL_STD_ONLY (Val1, Val2, fmax)
 
 /* Return minimum numeric value from X and Y.  */
-#define fmin(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmin)
+# define fmin(Val1, Val2) __TGMATH_BINARY_REAL_STD_ONLY (Val1, Val2, fmin)
+#else
+/* Return maximum numeric value from X and Y.  */
+# define fmax(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmax)
 
+/* Return minimum numeric value from X and Y.  */
+# define fmin(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmin)
+#endif
+  
 
 /* Multiply-add function computed as a ternary operation.  */
 #define fma(Val1, Val2, Val3) \

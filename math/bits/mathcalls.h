@@ -328,11 +328,13 @@ __MATHDECL (long long int,llround,, (_Mdouble_ __x));
 /* Return positive difference between X and Y.  */
 __MATHCALL (fdim,, (_Mdouble_ __x, _Mdouble_ __y));
 
+# if !__MATH_DECLARING_FLOATN || defined __USE_GNU || !__GLIBC_USE (ISOC2X)
 /* Return maximum numeric value from X and Y.  */
 __MATHCALLX (fmax,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
 
 /* Return minimum numeric value from X and Y.  */
 __MATHCALLX (fmin,, (_Mdouble_ __x, _Mdouble_ __y), (__const__));
+# endif
 
 /* Multiply-add function computed as a ternary operation.  */
 __MATHCALL (fma,, (_Mdouble_ __x, _Mdouble_ __y, _Mdouble_ __z));
