@@ -886,7 +886,7 @@ no more namespaces available for dlmopen()"));
       /* Avoid keeping around a dangling reference to the libc.so link
 	 map in case it has been cached in libc_map.  */
       if (!args.libc_already_loaded)
-	GL(dl_ns)[nsid].libc_map = NULL;
+	GL(dl_ns)[args.nsid].libc_map = NULL;
 
       /* Remove the object from memory.  It may be in an inconsistent
 	 state if relocation failed, for example.  */
