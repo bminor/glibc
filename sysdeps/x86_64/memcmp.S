@@ -49,34 +49,63 @@ L(s2b):
 	movzwl	(%rdi),	%eax
 	movzwl	(%rdi, %rsi), %edx
 	subq    $2, %r10
+#ifdef USE_AS_MEMCMPEQ
+	je	L(finz1)
+#else
 	je	L(fin2_7)
+#endif
 	addq	$2, %rdi
 	cmpl	%edx, %eax
+#ifdef USE_AS_MEMCMPEQ
+	jnz	L(neq_early)
+#else
 	jnz	L(fin2_7)
+#endif
 L(s4b):
 	testq	$4, %r10
 	jz	L(s8b)
 	movl	(%rdi),	%eax
 	movl	(%rdi, %rsi), %edx
 	subq    $4, %r10
+#ifdef USE_AS_MEMCMPEQ
+	je	L(finz1)
+#else
 	je	L(fin2_7)
+#endif
 	addq	$4, %rdi
 	cmpl	%edx, %eax
+#ifdef USE_AS_MEMCMPEQ
+	jnz	L(neq_early)
+#else
 	jnz	L(fin2_7)
+#endif
 L(s8b):
 	testq	$8, %r10
 	jz	L(s16b)
 	movq	(%rdi),	%rax
 	movq	(%rdi, %rsi), %rdx
 	subq    $8, %r10
+#ifdef USE_AS_MEMCMPEQ
+	je	L(sub_return8)
+#else
 	je	L(fin2_7)
+#endif
 	addq	$8, %rdi
 	cmpq	%rdx, %rax
+#ifdef USE_AS_MEMCMPEQ
+	jnz	L(neq_early)
+#else
 	jnz	L(fin2_7)
+#endif
 L(s16b):
 	movdqu    (%rdi), %xmm1
 	movdqu    (%rdi, %rsi), %xmm0
 	pcmpeqb   %xmm0, %xmm1
+#ifdef USE_AS_MEMCMPEQ
+	pmovmskb  %xmm1, %eax
+	subl      $0xffff, %eax
+	ret
+#else
 	pmovmskb  %xmm1, %edx
 	xorl	  %eax, %eax
 	subl      $0xffff, %edx
@@ -86,7 +115,7 @@ L(s16b):
 	movzbl	 (%rcx), %eax
 	movzbl	 (%rsi, %rcx), %edx
 	jmp	 L(finz1)
-
+#endif
 	.p2align 4,, 4
 L(finr1b):
 	movzbl	(%rdi), %eax
@@ -95,7 +124,15 @@ L(finz1):
 	subl	%edx, %eax
 L(exit):
 	ret
-
+#ifdef USE_AS_MEMCMPEQ
+	.p2align 4,, 4
+L(sub_return8):
+	subq	%rdx, %rax
+	movl	%eax, %edx
+	shrq	$32, %rax
+	orl	%edx, %eax
+	ret
+#else
 	.p2align 4,, 4
 L(fin2_7):
 	cmpq	%rdx, %rax
@@ -111,12 +148,17 @@ L(fin2_7):
 	movzbl  %dl, %edx
 	subl	%edx, %eax
 	ret
-
+#endif
 	.p2align 4,, 4
 L(finz):
 	xorl	%eax, %eax
 	ret
-
+#ifdef USE_AS_MEMCMPEQ
+	.p2align 4,, 4
+L(neq_early):
+	movl	$1, %eax
+	ret
+#endif
 	/* For blocks bigger than 32 bytes
 	   1. Advance one of the addr pointer to be 16B aligned.
 	   2. Treat the case of both addr pointers aligned to 16B
@@ -246,11 +288,16 @@ L(mt16):
 
 	.p2align 4,, 4
 L(neq):
+#ifdef USE_AS_MEMCMPEQ
+	movl	$1, %eax
+    ret
+#else
 	bsfl      %edx, %ecx
 	movzbl	 (%rdi, %rcx), %eax
 	addq	 %rdi, %rsi
 	movzbl	 (%rsi,%rcx), %edx
 	jmp	 L(finz1)
+#endif
 
 	.p2align 4,, 4
 L(ATR):
