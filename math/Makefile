@@ -374,9 +374,9 @@ $(foreach t,$(libm-tests-base),\
 tgmath3-narrow-types = f d f16 f32 f64 f128 f32x f64x
 tgmath3-narrow-macros = $(foreach t,$(tgmath3-narrow-types), \
 				    $(foreach f,$(libm-narrow-fns),$(t)$(f)))
-tgmath3-macros = atan2 cbrt ceil copysign erf erfc exp2 expm1 fdim floor \
-		 fma fmax fmin fmod frexp hypot ilogb ldexp lgamma llrint \
-		 llround log10 log1p log2 logb lrint lround nearbyint \
+tgmath3-macros = atan2 cbrt ceil copysign erf erfc exp10 exp2 expm1 fdim \
+		 floor fma fmax fmin fmod frexp hypot ilogb ldexp lgamma \
+		 llrint llround log10 log1p log2 logb lrint lround nearbyint \
 		 nextafter nexttoward remainder remquo rint round scalbn \
 		 scalbln tgamma trunc acos asin atan acosh asinh atanh cos \
 		 sin tan cosh sinh tanh exp log pow sqrt fabs carg cimag conj \

@@ -707,6 +707,8 @@ class Tests(object):
                                 ('_Float32x', 'f32x'),
                                 ('_Float64x', 'f64x')):
                 self.add_tests(prefix + fn, ret, ['r'] * args)
+        # TS 18661-4 functions.
+        self.add_tests('exp10', 'r', ['r'])
         # C2X functions.
         self.add_tests('fmaximum', 'r', ['r', 'r'])
         self.add_tests('fmaximum_mag', 'r', ['r', 'r'])

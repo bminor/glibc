@@ -42,6 +42,9 @@ Major new features:
 * The __STDC_IEC_60559_BFP__ and __STDC_IEC_60559_COMPLEX__ macros are
   predefined as specified in TS 18661-1:2014.
 
+* The exp10 functions in <math.h> now have a corresponding type-generic
+  macro in <tgmath.h>.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The r_version update in the debugger interface makes the glibc binary

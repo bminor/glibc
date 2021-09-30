@@ -785,6 +785,11 @@
 /* Compute base-2 logarithm of X.  */
 #define log2(Val) __TGMATH_UNARY_REAL_ONLY (Val, log2)
 
+#if __GLIBC_USE (IEC_60559_FUNCS_EXT_C2X)
+/* Compute exponent to base ten.  */
+#define exp10(Val) __TGMATH_UNARY_REAL_ONLY (Val, exp10)
+#endif
+
 
 /* Power functions.  */
 
