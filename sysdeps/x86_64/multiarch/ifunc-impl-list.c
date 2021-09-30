@@ -52,7 +52,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, __memcmpeq,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)
-                   && CPU_FEATURE_USABLE (MOVBE)
 			       && CPU_FEATURE_USABLE (BMI2)),
 			      __memcmpeq_evex)
 	      IFUNC_IMPL_ADD (array, i, __memcmpeq, 1, __memcmpeq_sse2))
