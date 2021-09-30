@@ -1,5 +1,5 @@
-#ifndef MEMCMP
-# define MEMCMP __memcmpeq_avx2_rtm
+#ifndef MEMCMPEQ
+# define MEMCMPEQ __memcmpeq_avx2_rtm
 #endif
 
 #define ZERO_UPPER_VEC_REGISTERS_RETURN \

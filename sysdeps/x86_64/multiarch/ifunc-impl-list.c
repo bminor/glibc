@@ -42,13 +42,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_IMPL (i, name, __memcmpeq,
 	      IFUNC_IMPL_ADD (array, i, __memcmpeq,
 			      (CPU_FEATURE_USABLE (AVX2)
-                   && CPU_FEATURE_USABLE (MOVBE)
 			       && CPU_FEATURE_USABLE (BMI2)),
 			      __memcmpeq_avx2)
 	      IFUNC_IMPL_ADD (array, i, __memcmpeq,
 			      (CPU_FEATURE_USABLE (AVX2)
 			       && CPU_FEATURE_USABLE (BMI2)
-                   && CPU_FEATURE_USABLE (MOVBE)
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __memcmpeq_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, __memcmpeq,
