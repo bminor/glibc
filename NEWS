@@ -45,6 +45,8 @@ Major new features:
 * The exp10 functions in <math.h> now have a corresponding type-generic
   macro in <tgmath.h>.
 
+* The ISO C2X macro _PRINTF_NAN_LEN_MAX has been added to <stdio.h>.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The r_version update in the debugger interface makes the glibc binary

@@ -2108,7 +2108,10 @@ If the value to be printed represents infinity or a NaN, the output is
 @w{[@code{-}]@code{inf}} or @code{nan} respectively if the conversion
 specifier is @samp{%a}, @samp{%e}, @samp{%f}, or @samp{%g} and it is
 @w{[@code{-}]@code{INF}} or @code{NAN} respectively if the conversion is
-@samp{%A}, @samp{%E}, or @samp{%G}.
+@samp{%A}, @samp{%E}, or @samp{%G}.  On some implementations, a NaN
+may result in longer output with information about the payload of the
+NaN; ISO C2X defines a macro @code{_PRINTF_NAN_LEN_MAX} giving the
+maximum length of such output.
 
 The following flags can be used to modify the behavior:
 

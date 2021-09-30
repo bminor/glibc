@@ -133,6 +133,12 @@ typedef __fpos64_t fpos64_t;
 #include <bits/stdio_lim.h>
 
 
+#if __GLIBC_USE (ISOC2X)
+/* Maximum length of printf output for a NaN.  */
+# define _PRINTF_NAN_LEN_MAX 4
+#endif
+
+
 /* Standard streams.  */
 extern FILE *stdin;		/* Standard input stream.  */
 extern FILE *stdout;		/* Standard output stream.  */
