@@ -36,14 +36,16 @@ bsearch (const void *__key, const void *__base, size_t __nmemb, size_t __size,
       else if (__comparison > 0)
 	__l = __idx + 1;
       else
+	{
 #if __GNUC_PREREQ(4, 6)
 # pragma GCC diagnostic push
 # pragma GCC diagnostic ignored "-Wcast-qual"
 #endif
-	return (void *) __p;
+	  return (void *) __p;
 #if __GNUC_PREREQ(4, 6)
 # pragma GCC diagnostic pop
 #endif
+	}
     }
 
   return NULL;
