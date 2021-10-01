@@ -121,6 +121,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-pthread-setuid-loop \
 	 tst-pthread_cancel-exited \
 	 tst-pthread_cancel-select-loop \
+	 tst-pthread-raise-blocked-self \
 	 tst-pthread_kill-exited \
 	 tst-pthread_kill-exiting \
 	 # tests
