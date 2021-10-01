@@ -43,7 +43,10 @@ support_wait_for_thread_exit (void)
           return;
         }
 
-      if (strcmp (e->d_name, ".") == 0 || strcmp (e->d_name, "..") == 0)
+      /* In some kernels, "0" entries denote a thread that has just
+         exited.  */
+      if (strcmp (e->d_name, ".") == 0 || strcmp (e->d_name, "..") == 0
+          || strcmp (e->d_name, "0") == 0)
         continue;
 
       int task_tid = atoi (e->d_name);
