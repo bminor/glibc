@@ -87,12 +87,6 @@ do_test (void)
   }
   {
     wchar_t result[100];
-    if (result == NULL)
-      {
-        printf ("error: calloc (%d, %zu): %m", ret + 1, sizeof (wchar_t));
-        return 1;
-      }
-
     ret = swprintf (result, 100, L"%133000.999999999x", 17);
     if (ret >= 0)
       {
