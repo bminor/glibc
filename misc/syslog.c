@@ -42,8 +42,6 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #include <sys/un.h>
 #include <syslog.h>
 
-#define ftell(s) _IO_ftell (s)
-
 static int LogType = SOCK_DGRAM;	/* type of socket connection */
 static int LogFile = -1;		/* fd for log */
 static bool connected;			/* have done connect */
@@ -122,13 +120,10 @@ void
 __vsyslog_internal (int pri, const char *fmt, va_list ap,
 		    unsigned int mode_flags)
 {
-  struct tm now_tm;
-  time_t now;
-  int fd;
   FILE *f;
   char *buf = 0;
   size_t bufsize = 0;
-  size_t msgoff;
+  int msgoff;
   int saved_errno = errno;
   char failbuf[3 * sizeof (pid_t) + sizeof "out of memory []"];
 
@@ -142,9 +137,7 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
 
   /* Prepare for multiple users.  We have to take care: most syscalls we are
      using are cancellation points.  */
-  struct cleanup_arg clarg;
-  clarg.buf = NULL;
-  clarg.oldaction = NULL;
+  struct cleanup_arg clarg = { NULL, NULL };
   __libc_cleanup_push (cancel_handler, &clarg);
   __libc_lock_lock (syslog_lock);
 
@@ -158,51 +151,22 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
 
   /* Build the message in a memory-buffer stream.  */
   f = __open_memstream (&buf, &bufsize);
-  if (f == NULL)
-    {
-      /* We cannot get a stream.  There is not much we can do but emitting an
-         error messages.  */
-      char numbuf[3 * sizeof (pid_t)];
-      char *nump;
-      char *endp = __stpcpy (failbuf, "out of memory [");
-      pid_t pid = __getpid ();
-
-      nump = numbuf + sizeof (numbuf);
-      /* The PID can never be zero.  */
-      do
-	*--nump = '0' + pid % 10;
-      while ((pid /= 10) != 0);
-
-      endp = __mempcpy (endp, nump, (numbuf + sizeof (numbuf)) - nump);
-      *endp++ = ']';
-      *endp = '\0';
-      buf = failbuf;
-      bufsize = endp - failbuf;
-      msgoff = 0;
-    }
-  else
+  if (f != NULL)
     {
       __fsetlocking (f, FSETLOCKING_BYCALLER);
-      fprintf (f, "<%d>", pri);
-      now = time_now ();
-      f->_IO_write_ptr += __strftime_l (f->_IO_write_ptr,
-					f->_IO_write_end - f->_IO_write_ptr,
-					"%h %e %T ",
-					__localtime_r (&now, &now_tm),
-					_nl_C_locobj_ptr);
-      msgoff = ftell (f);
-      if (LogTag == NULL)
-	LogTag = __progname;
-      if (LogTag != NULL)
-	__fputs_unlocked (LogTag, f);
-      if (LogStat & LOG_PID)
-	fprintf (f, "[%d]", (int) __getpid ());
-      if (LogTag != NULL)
-	{
-	  __putc_unlocked (':', f);
-	  __putc_unlocked (' ', f);
-	}
+      /* "%b %e %H:%M:%S"  */
+      char timebuf[sizeof "MMM DD hh:mm:ss "];
+      time_t now = time_now ();
+      struct tm now_tm;
+      __localtime_r (&now, &now_tm);
+      __strftime_l (timebuf, sizeof (timebuf), "%b %e %T", &now_tm,
+		    _nl_C_locobj_ptr);
 
+      pid_t pid = LogStat & LOG_PID ? __getpid () : 0;
+
+      fprintf (f, "<%d>%s %n%s%s%.0d%s: ", pri, timebuf, &msgoff,
+               LogTag == NULL ? __progname : LogTag,
+               pid != 0 ? "[" : "", pid, pid != 0 ? "]" : "");
       /* Restore errno for %m format.  */
       __set_errno (saved_errno);
 
@@ -216,26 +180,18 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
       /* Tell the cancellation handler to free this buffer.  */
       clarg.buf = buf;
     }
+  else
+    {
+      /* Nothing much to do but emit an error message.  */
+      bufsize = __snprintf (failbuf, sizeof failbuf, "out of memory[%d]",
+                            __getpid ());
+      buf = failbuf;
+    }
 
   /* Output to stderr if requested. */
   if (LogStat & LOG_PERROR)
-    {
-      struct iovec iov[2];
-      struct iovec *v = iov;
-
-      v->iov_base = buf + msgoff;
-      v->iov_len = bufsize - msgoff;
-      /* Append a newline if necessary.  */
-      if (buf[bufsize - 1] != '\n')
-	{
-	  ++v;
-	  v->iov_base = (char *) "\n";
-	  v->iov_len = 1;
-	}
-
-      /* writev is a cancellation point.  */
-      __writev (STDERR_FILENO, iov, v - iov + 1);
-    }
+    __dprintf (STDERR_FILENO, "%s%s", buf + msgoff,
+	       "\n" + (buf[bufsize - 1] == '\n'));
 
   /* Get connected, output the message to the local logger.  */
   if (!connected)
@@ -264,6 +220,7 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
 	   * Make sure the error reported is the one from the
 	   * syslogd failure.
 	   */
+	  int fd;
 	  if (LogStat & LOG_CONS &&
 	      (fd = __open (_PATH_CONSOLE, O_WRONLY | O_NOCTTY
 			    | O_CLOEXEC, 0)) >= 0)
