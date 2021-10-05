@@ -39,7 +39,7 @@ S04  =  1.1661400734e-09; /* 0x30a045e8 */
 static const float zero = 0.0;
 
 /* This is the nearest approximation of the first zero of j0.  */
-#define FIRST_ZERO_J0 0xf.26247p-28f
+#define FIRST_ZERO_J0 0x1.33d152p+1f
 
 #define SMALL_SIZE 64
 
@@ -211,7 +211,7 @@ j0f_asympt (float x)
   /* Now x - pi/4 - alpha0 = h + n*pi/2 mod (2*pi).  */
   float xr = (float) h;
   n = n & 3;
-  float cst = 0xc.c422ap-4; /* sqrt(2/pi) rounded to nearest  */
+  float cst = 0xc.c422ap-4f; /* sqrt(2/pi) rounded to nearest  */
   float t = cst / sqrtf (x) * (float) beta0;
   if (n == 0)
     return t * __cosf (xr);
@@ -285,7 +285,7 @@ __ieee754_j0f(float x)
                 /* The following threshold is optimal: for x=0x1.3b58dep+1
                    and rounding upwards, |cc|=0x1.579b26p-4 and z is 10 ulps
                    far from the correctly rounded value.  */
-                float threshold = 0x1.579b26p-4;
+                float threshold = 0x1.579b26p-4f;
                 if (fabsf (cc) > threshold)
                   return z;
                 else
