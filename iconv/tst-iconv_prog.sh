@@ -32,6 +32,8 @@ $codir/iconv/iconv_prog
 '
 ICONV="$test_wrapper_env $run_program_env $ICONV"
 
+TIMEOUTFACTOR=${TIMEOUTFACTOR:-1}
+
 # List of known hangs;
 # Gathered by running an exhaustive 2 byte input search against glibc-2.28
 hangarray=(
@@ -222,7 +224,8 @@ execute_test ()
 {
   eval PROG=\"$ICONV\"
   echo -en "$twobyte" \
-    | timeout -k 4 3 $PROG $c -f $from -t "$to" &>/dev/null
+    | timeout -k 4 $((3*$TIMEOUTFACTOR)) \
+      $PROG $c -f $from -t "$to" &>/dev/null
   ret=$?
 }
 
