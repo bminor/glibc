@@ -120,12 +120,12 @@ void
 __vsyslog_internal (int pri, const char *fmt, va_list ap,
 		    unsigned int mode_flags)
 {
-  FILE *f;
-  char *buf = 0;
+  /* Try to use a static buffer as an optimization.  */
+  char bufs[1024];
+  char *buf = NULL;
   size_t bufsize = 0;
   int msgoff;
   int saved_errno = errno;
-  char failbuf[3 * sizeof (pid_t) + sizeof "out of memory []"];
 
 #define	INTERNALLOG LOG_ERR|LOG_CONS|LOG_PERROR|LOG_PID
   /* Check for invalid bits. */
@@ -149,43 +149,61 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
   if ((pri & LOG_FACMASK) == 0)
     pri |= LogFacility;
 
-  /* Build the message in a memory-buffer stream.  */
-  f = __open_memstream (&buf, &bufsize);
-  if (f != NULL)
+  pid_t pid = LogStat & LOG_PID ? __getpid () : 0;
+
+  /* "%b %e %H:%M:%S "  */
+  char timestamp[sizeof "MMM DD hh:mm:ss "];
+  time_t now = time_now ();
+  struct tm now_tm;
+  __localtime_r (&now, &now_tm);
+  __strftime_l (timestamp, sizeof timestamp, "%b %e %T ", &now_tm,
+                _nl_C_locobj_ptr);
+
+#define SYSLOG_HEADER(__pri, __timestamp, __msgoff, pid) \
+  "<%d>%s %n%s%s%.0d%s: ",                               \
+  __pri, __timestamp, __msgoff,                          \
+  LogTag == NULL ? __progname : LogTag,                  \
+  "[" + (pid == 0), pid, "]" + (pid == 0)
+
+  int l = __snprintf (bufs, sizeof bufs,
+                      SYSLOG_HEADER (pri, timestamp, &msgoff, pid));
+  if (0 <= l && l < sizeof bufs)
     {
-      __fsetlocking (f, FSETLOCKING_BYCALLER);
-      /* "%b %e %H:%M:%S"  */
-      char timebuf[sizeof "MMM DD hh:mm:ss "];
-      time_t now = time_now ();
-      struct tm now_tm;
-      __localtime_r (&now, &now_tm);
-      __strftime_l (timebuf, sizeof (timebuf), "%b %e %T", &now_tm,
-		    _nl_C_locobj_ptr);
+      va_list apc;
+      va_copy (apc, ap);
 
-      pid_t pid = LogStat & LOG_PID ? __getpid () : 0;
-
-      fprintf (f, "<%d>%s %n%s%s%.0d%s: ", pri, timebuf, &msgoff,
-               LogTag == NULL ? __progname : LogTag,
-               pid != 0 ? "[" : "", pid, pid != 0 ? "]" : "");
       /* Restore errno for %m format.  */
       __set_errno (saved_errno);
 
-      /* We have the header.  Print the user's format into the buffer.  */
-      __vfprintf_internal (f, fmt, ap, mode_flags);
+      int vl = __vsnprintf_internal (bufs + l, sizeof bufs - l, fmt, apc,
+                                     mode_flags);
+      if (0 <= vl && vl < sizeof bufs - l)
+        {
+          buf = bufs;
+          bufsize = l + vl;
+        }
 
-      /* Close the memory stream; this will finalize the data into a malloc'd
-         buffer in BUF.  */
-      fclose (f);
-
-      /* Tell the cancellation handler to free this buffer.  */
-      clarg.buf = buf;
+      va_end (apc);
     }
-  else
+
+  if (buf == NULL)
     {
-      /* Nothing much to do but emit an error message.  */
-      bufsize = __snprintf (failbuf, sizeof failbuf, "out of memory[%d]",
-                            __getpid ());
-      buf = failbuf;
+      buf = malloc (l * sizeof (char));
+      if (buf != NULL)
+	{
+	  /* Tell the cancellation handler to free this buffer.  */
+	  clarg.buf = buf;
+
+	  __snprintf (buf, sizeof buf,
+		      SYSLOG_HEADER (pri, timestamp, &msgoff, pid));
+	}
+      else
+        {
+	  /* Nothing much to do but emit an error message.  */
+          bufsize = __snprintf (bufs, sizeof bufs,
+                                "out of memory[%d]", __getpid ());
+          buf = bufs;
+        }
     }
 
   /* Output to stderr if requested. */
@@ -236,7 +254,7 @@ out:
   __libc_cleanup_pop (0);
   __libc_lock_unlock (syslog_lock);
 
-  if (buf != failbuf)
+  if (buf != bufs)
     free (buf);
 }
 
