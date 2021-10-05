@@ -58,7 +58,7 @@ f2 (void)
   puts ("start f2");
 
   printf ("&on_stack=%p\n", on_stack);
-  if (on_stack < st2 || on_stack >= st2 + sizeof (st2))
+  if (&on_stack[0] < &st2[0] || &on_stack[0] >= st2 + sizeof (st2))
     {
       printf ("%s: memory stack is not where it belongs!", __FUNCTION__);
       exit (1);
