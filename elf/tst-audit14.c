@@ -16,30 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdlib.h>
-#include <string.h>
-#include <support/check.h>
-#include <support/xstdio.h>
-
 static int
 do_test (void)
 {
-  /* Verify what the audit module has written.  This test assumes that
-     standard output has been redirected to a regular file.  */
-  FILE *fp = xfopen ("/dev/stdout", "r");
-
-  char *buffer = NULL;
-  size_t buffer_length = 0;
-  size_t line_length = xgetline (&buffer, &buffer_length, fp);
-  const char *message = "info: tst-auditlogmod-1.so loaded\n";
-  TEST_COMPARE_BLOB (message, strlen (message), buffer, line_length);
-
-  /* No more audit module output.  */
-  line_length = xgetline (&buffer, &buffer_length, fp);
-  TEST_COMPARE_BLOB ("", 0, buffer, line_length);
-
-  free (buffer);
-  xfclose (fp);
   return 0;
 }
 

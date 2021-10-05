@@ -240,6 +240,10 @@ tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 ifeq ($(have-depaudit),yes)
 tests += tst-audit14 tst-audit15 tst-audit16
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-audit14-cmp.out $(objpfx)tst-audit15-cmp.out \
+		 $(objpfx)tst-audit16-cmp.out
+endif
 endif
 endif
 tests += $(tests-execstack-$(have-z-execstack))
@@ -1491,6 +1495,16 @@ $(objpfx)tst-auditmod17.so: $(objpfx)tst-auditmod17.os
 	mv -f $@.new $@
 CFLAGS-.os += $(call elide-stack-protector,.os,tst-auditmod17)
 tst-audit17-ENV = LD_AUDIT=$(objpfx)tst-auditmod17.so
+
+$(objpfx)tst-audit14-cmp.out: tst-audit14.exp $(objpfx)tst-audit14.out
+	cmp $^ > $@; \
+	$(evaluate-test)
+$(objpfx)tst-audit15-cmp.out: tst-audit15.exp $(objpfx)tst-audit15.out
+	cmp $^ > $@; \
+	$(evaluate-test)
+$(objpfx)tst-audit16-cmp.out: tst-audit16.exp $(objpfx)tst-audit16.out
+	cmp $^ > $@; \
+	$(evaluate-test)
 
 # tst-sonamemove links against an older implementation of the library.
 LDFLAGS-tst-sonamemove-linkmod1.so = \
