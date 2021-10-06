@@ -40,16 +40,16 @@ increase_nofile (void)
 static int
 open_dev_null (int flags, mode_t mode)
 {
- int fd = open64 ("/dev/null", flags, mode);
- if (fd > 0)
-   return fd;
+  int fd = open64 ("/dev/null", flags, mode);
+  if (fd >= 0)
+    return fd;
 
- if (fd < 0 && errno != EMFILE)
-   FAIL_EXIT1 ("open64 (\"/dev/null\", 0x%x, 0%o): %m", flags, mode);
+  if (fd < 0 && errno != EMFILE)
+    FAIL_EXIT1 ("open64 (\"/dev/null\", 0x%x, 0%o): %m", flags, mode);
 
- increase_nofile ();
+  increase_nofile ();
 
- return xopen ("/dev/null", flags, mode);
+  return xopen ("/dev/null", flags, mode);
 }
 
 struct range
