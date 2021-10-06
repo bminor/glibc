@@ -1,4 +1,5 @@
 /* Copyright (C) 1991-2021 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -589,7 +590,8 @@ extern int posix_memalign (void **__memptr, size_t __alignment, size_t __size)
 #ifdef __USE_ISOC11
 /* ISO C variant of aligned allocation.  */
 extern void *aligned_alloc (size_t __alignment, size_t __size)
-     __THROW __attribute_malloc__ __attribute_alloc_size__ ((2)) __wur;
+     __THROW __attribute_malloc__ __attribute_alloc_align__ ((1))
+     __attribute_alloc_size__ ((2)) __wur;
 #endif
 
 /* Abort execution and generate a core-dump.  */

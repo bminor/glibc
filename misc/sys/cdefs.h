@@ -1,4 +1,5 @@
 /* Copyright (C) 1992-2021 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -288,6 +289,15 @@
   __attribute__ ((__alloc_size__ params))
 #else
 # define __attribute_alloc_size__(params) /* Ignore.  */
+#endif
+
+/* Tell the compiler which argument to an allocation function
+   indicates the alignment of the allocation.  */
+#if __GNUC_PREREQ (4, 9) || __glibc_has_attribute (__alloc_align__)
+# define __attribute_alloc_align__(param) \
+  __attribute__ ((__alloc_align__ param))
+#else
+# define __attribute_alloc_align__(param) /* Ignore.  */
 #endif
 
 /* At some point during the gcc 2.96 development the `pure' attribute
