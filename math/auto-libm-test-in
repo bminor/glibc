@@ -5807,50 +5807,50 @@ j0 0x1.4b7066p+7
 # the next value exercises the flt-32 code path for x >= 2^127
 j0 0x8.2f4ecp+124
 # the next values gave an error > 9 ulps with glibc-2.34 (flt-32)
-j0 0x1.31ec02p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.31e716p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.31f51ep+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.320226p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.31ed76p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.32083cp+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.32614ep+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.32dc02p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.32e304p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.32e00cp+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.32e504p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.32e12p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.32dc22p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.32dc24p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.32eb18p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.32fa0cp+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.335806p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.335a0cp+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.336p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.336c1cp+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.336336p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33712ep+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.339506p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33950cp+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.339d06p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33b402p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33b50ap+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33c4p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33c202p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33c702p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33c50ap+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33c312p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33c80ap+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33cb04p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33cfp+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33d1p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33d102p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33d10cp+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33d116p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33d12cp+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33d138p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33d146p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33d15p+1 xfail:binary64 xfail:intel96 xfail:binary128
-j0 0x1.33d152p+1 xfail:binary64 xfail:intel96 xfail:binary128
+j0 0x1.31ec02p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.31e716p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.31f51ep+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.320226p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.31ed76p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.32083cp+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.32614ep+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.32dc02p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.32e304p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.32e00cp+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.32e504p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.32e12p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.32dc22p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.32dc24p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.32eb18p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.32fa0cp+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.335806p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.335a0cp+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.336p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.336c1cp+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.336336p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33712ep+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.339506p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33950cp+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.339d06p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33b402p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33b50ap+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33c4p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33c202p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33c702p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33c50ap+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33c312p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33c80ap+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33cb04p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33cfp+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33d1p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33d102p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33d10cp+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33d116p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33d12cp+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33d138p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33d146p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33d15p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
+j0 0x1.33d152p+1 xfail:binary64 xfail:intel96 xfail:binary128 xfail:ibm128-libgcc
 
 j1 -1.0
 j1 0.0
