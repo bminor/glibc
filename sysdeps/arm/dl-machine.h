@@ -84,7 +84,8 @@ elf_machine_load_address (void)
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
 static inline int __attribute__ ((unused))
-elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
+elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
+			   int lazy, int profile)
 {
   Elf32_Addr *got;
   extern void _dl_runtime_resolve (Elf32_Word);
@@ -303,7 +304,7 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 
 #ifdef RESOLVE_MAP
 /* Handle a PC24 reloc, including the out-of-range case.  */
-auto void
+static void
 relocate_pc24 (struct link_map *map, Elf32_Addr value,
                Elf32_Addr *const reloc_addr, Elf32_Sword addend)
 {
@@ -357,10 +358,11 @@ relocate_pc24 (struct link_map *map, Elf32_Addr value,
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
-auto inline void
+static inline void
 __attribute__ ((always_inline))
-elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
-		 const Elf32_Sym *sym, const struct r_found_version *version,
+elf_machine_rel (struct link_map *map, struct r_scope_elem *scope[],
+                 const Elf32_Rel *reloc, const Elf32_Sym *sym,
+                 const struct r_found_version *version,
 		 void *const reloc_addr_arg, int skip_ifunc)
 {
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
@@ -391,7 +393,8 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 #endif
     {
       const Elf32_Sym *const refsym = sym;
-      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+      struct link_map *sym_map = RESOLVE_MAP (map, scope, &sym, version,
+					      r_type);
       Elf32_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
 
       if (sym != NULL
@@ -535,10 +538,11 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 }
 
 # ifndef RTLD_BOOTSTRAP
-auto inline void
+static inline void
 __attribute__ ((always_inline))
-elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
-		  const Elf32_Sym *sym, const struct r_found_version *version,
+elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
+                  const Elf32_Rela *reloc, const Elf32_Sym *sym,
+                  const struct r_found_version *version,
 		  void *const reloc_addr_arg, int skip_ifunc)
 {
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
@@ -553,7 +557,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 # ifndef RESOLVE_CONFLICT_FIND_MAP
       const Elf32_Sym *const refsym = sym;
 # endif
-      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+      struct link_map *sym_map = RESOLVE_MAP (map, scope, &sym, version, r_type);
       Elf32_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
 
       if (sym != NULL
@@ -628,7 +632,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 }
 # endif
 
-auto inline void
+static inline void
 __attribute__ ((always_inline))
 elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
 			  void *const reloc_addr_arg)
@@ -638,7 +642,7 @@ elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
 }
 
 # ifndef RTLD_BOOTSTRAP
-auto inline void
+static inline void
 __attribute__ ((always_inline))
 elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 			   void *const reloc_addr_arg)
@@ -648,9 +652,9 @@ elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 }
 # endif
 
-auto inline void
+static inline void
 __attribute__ ((always_inline))
-elf_machine_lazy_rel (struct link_map *map,
+elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 		      Elf32_Addr l_addr, const Elf32_Rel *reloc,
 		      int skip_ifunc)
 {
@@ -680,7 +684,7 @@ elf_machine_lazy_rel (struct link_map *map,
 
       /* Always initialize TLS descriptors completely, because lazy
 	 initialization requires synchronization at every TLS access.  */
-      elf_machine_rel (map, reloc, sym, version, reloc_addr, skip_ifunc);
+      elf_machine_rel (map, scope, reloc, sym, version, reloc_addr, skip_ifunc);
     }
   else
     _dl_reloc_bad_type (map, r_type, 1);
