@@ -343,7 +343,8 @@ dl_platform_init (void)
 /* Set up the loaded object described by MAP so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 static inline int __attribute__ ((always_inline))
-elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
+elf_machine_runtime_setup (struct link_map *map, struct r_scope_elem *scope[],
+			   int lazy, int profile)
 {
   if (map->l_info[DT_JMPREL])
     {
@@ -618,7 +619,7 @@ extern void attribute_hidden _dl_reloc_overflow (struct link_map *map,
 						 Elf64_Addr *const reloc_addr,
 						 const Elf64_Sym *refsym);
 
-auto inline void __attribute__ ((always_inline))
+static inline void __attribute__ ((always_inline))
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
@@ -627,7 +628,7 @@ elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 }
 
 /* This computes the value used by TPREL* relocs.  */
-auto inline Elf64_Addr __attribute__ ((always_inline, const))
+static inline Elf64_Addr __attribute__ ((always_inline, const))
 elf_machine_tprel (struct link_map *map,
 		   struct link_map *sym_map,
 		   const Elf64_Sym *sym,
@@ -646,7 +647,7 @@ elf_machine_tprel (struct link_map *map,
 }
 
 /* Call function at address VALUE (an OPD entry) to resolve ifunc relocs.  */
-auto inline Elf64_Addr __attribute__ ((always_inline))
+static inline Elf64_Addr __attribute__ ((always_inline))
 resolve_ifunc (Elf64_Addr value,
 	       const struct link_map *map, const struct link_map *sym_map)
 {
@@ -676,8 +677,8 @@ resolve_ifunc (Elf64_Addr value,
 
 /* Perform the relocation specified by RELOC and SYM (which is fully
    resolved).  MAP is the object containing the reloc.  */
-auto inline void __attribute__ ((always_inline))
-elf_machine_rela (struct link_map *map,
+static inline void __attribute__ ((always_inline))
+elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 		  const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym,
 		  const struct r_found_version *version,
@@ -705,7 +706,7 @@ elf_machine_rela (struct link_map *map,
 
   /* We need SYM_MAP even in the absence of TLS, for elf_machine_fixup_plt
      and STT_GNU_IFUNC.  */
-  struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+  struct link_map *sym_map = RESOLVE_MAP (map, scope, &sym, version, r_type);
   Elf64_Addr value = SYMBOL_ADDRESS (sym_map, sym, true) + reloc->r_addend;
 
   if (sym != NULL
@@ -1035,8 +1036,8 @@ elf_machine_rela (struct link_map *map,
   MODIFIED_CODE_NOQUEUE (reloc_addr);
 }
 
-auto inline void __attribute__ ((always_inline))
-elf_machine_lazy_rel (struct link_map *map,
+static inline void __attribute__ ((always_inline))
+elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 		      Elf64_Addr l_addr, const Elf64_Rela *reloc,
 		      int skip_ifunc)
 {

@@ -37,8 +37,8 @@
    relocations; they should be set up to call _dl_runtime_resolve, rather
    than fully resolved now.  */
 
-auto inline void __attribute__ ((always_inline))
-elf_dynamic_do_Rel (struct link_map *map,
+static inline void __attribute__ ((always_inline))
+elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 		    ElfW(Addr) reladdr, ElfW(Addr) relsize,
 		    __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative,
 		    int lazy, int skip_ifunc)
@@ -68,13 +68,13 @@ elf_dynamic_do_Rel (struct link_map *map,
 	  }
 	else
 # endif
-	  elf_machine_lazy_rel (map, l_addr, r, skip_ifunc);
+	  elf_machine_lazy_rel (map, scope, l_addr, r, skip_ifunc);
 
 # ifdef ELF_MACHINE_IRELATIVE
       if (r2 != NULL)
 	for (; r2 <= end2; ++r2)
 	  if (ELFW(R_TYPE) (r2->r_info) == ELF_MACHINE_IRELATIVE)
-	    elf_machine_lazy_rel (map, l_addr, r2, skip_ifunc);
+	    elf_machine_lazy_rel (map, scope, l_addr, r2, skip_ifunc);
 # endif
     }
   else
@@ -134,7 +134,7 @@ elf_dynamic_do_Rel (struct link_map *map,
 #endif
 
 	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)] & 0x7fff;
-	      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)],
+	      elf_machine_rel (map, scope, r, &symtab[ELFW(R_SYM) (r->r_info)],
 			       &map->l_versions[ndx],
 			       (void *) (l_addr + r->r_offset), skip_ifunc);
 	    }
@@ -146,7 +146,7 @@ elf_dynamic_do_Rel (struct link_map *map,
 		{
 		  ElfW(Half) ndx
 		    = version[ELFW(R_SYM) (r2->r_info)] & 0x7fff;
-		  elf_machine_rel (map, r2,
+		  elf_machine_rel (map, scope, r2,
 				   &symtab[ELFW(R_SYM) (r2->r_info)],
 				   &map->l_versions[ndx],
 				   (void *) (l_addr + r2->r_offset),
@@ -167,14 +167,14 @@ elf_dynamic_do_Rel (struct link_map *map,
 	      }
 	    else
 # endif
-	      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
+	      elf_machine_rel (map, scope, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
 			       (void *) (l_addr + r->r_offset), skip_ifunc);
 
 # ifdef ELF_MACHINE_IRELATIVE
 	  if (r2 != NULL)
 	    for (; r2 <= end2; ++r2)
 	      if (ELFW(R_TYPE) (r2->r_info) == ELF_MACHINE_IRELATIVE)
-		elf_machine_rel (map, r2, &symtab[ELFW(R_SYM) (r2->r_info)],
+		elf_machine_rel (map, scope, r2, &symtab[ELFW(R_SYM) (r2->r_info)],
 				 NULL, (void *) (l_addr + r2->r_offset),
 				 skip_ifunc);
 # endif

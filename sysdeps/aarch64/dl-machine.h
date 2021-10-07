@@ -59,7 +59,8 @@ elf_machine_dynamic (void)
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
 static inline int __attribute__ ((unused))
-elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
+elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
+			   int lazy, int profile)
 {
   if (l->l_info[DT_JMPREL] && lazy)
     {
@@ -237,10 +238,11 @@ elf_machine_plt_value (struct link_map *map,
 
 #ifdef RESOLVE_MAP
 
-auto inline void
+static inline void
 __attribute__ ((always_inline))
-elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
-		  const ElfW(Sym) *sym, const struct r_found_version *version,
+elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
+		  const ElfW(Rela) *reloc, const ElfW(Sym) *sym,
+		  const struct r_found_version *version,
 		  void *const reloc_addr_arg, int skip_ifunc)
 {
   ElfW(Addr) *const reloc_addr = reloc_addr_arg;
@@ -253,7 +255,8 @@ elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
   else
     {
       const ElfW(Sym) *const refsym = sym;
-      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+      struct link_map *sym_map = RESOLVE_MAP (map, scope, &sym, version,
+					      r_type);
       ElfW(Addr) value = SYMBOL_ADDRESS (sym_map, sym, true);
 
       if (sym != NULL
@@ -377,9 +380,9 @@ elf_machine_rela_relative (ElfW(Addr) l_addr,
   *reloc_addr = l_addr + reloc->r_addend;
 }
 
-inline void
+static inline void
 __attribute__ ((always_inline))
-elf_machine_lazy_rel (struct link_map *map,
+elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 		      ElfW(Addr) l_addr,
 		      const ElfW(Rela) *reloc,
 		      int skip_ifunc)
@@ -406,7 +409,7 @@ elf_machine_lazy_rel (struct link_map *map,
 		    (const void *)D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
 		  version = &map->l_versions[vernum[symndx] & 0x7fff];
 		}
-	      elf_machine_rela (map, reloc, sym, version, reloc_addr,
+	      elf_machine_rela (map, scope, reloc, sym, version, reloc_addr,
 				skip_ifunc);
 	      return;
 	    }
@@ -433,7 +436,8 @@ elf_machine_lazy_rel (struct link_map *map,
 
       /* Always initialize TLS descriptors completely, because lazy
 	 initialization requires synchronization at every TLS access.  */
-      elf_machine_rela (map, reloc, sym, version, reloc_addr, skip_ifunc);
+      elf_machine_rela (map, scope, reloc, sym, version, reloc_addr,
+			skip_ifunc);
     }
   else if (__glibc_unlikely (r_type == AARCH64_R(IRELATIVE)))
     {

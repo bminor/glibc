@@ -19,8 +19,14 @@
 #if ENABLE_STATIC_PIE
 /* Mark symbols hidden in static PIE for early self relocation to work.  */
 # pragma GCC visibility push(hidden)
+#include <assert.h>
 #include <unistd.h>
 #include <ldsodefs.h>
+
+#include <dl-machine.h>
+
+#define STATIC_PIE_BOOTSTRAP
+#define RESOLVE_MAP(map, scope, sym, version, flags) map
 #include "dynamic-link.h"
 
 /* Relocate static executable with PIE.  */
@@ -29,11 +35,6 @@ void
 _dl_relocate_static_pie (void)
 {
   struct link_map *main_map = _dl_get_dl_main_map ();
-
-# define STATIC_PIE_BOOTSTRAP
-# define BOOTSTRAP_MAP (main_map)
-# define RESOLVE_MAP(sym, version, flags) BOOTSTRAP_MAP
-# include "dynamic-link.h"
 
   /* Figure out the run-time load address of static PIE.  */
   main_map->l_addr = elf_machine_load_address ();
@@ -53,12 +54,12 @@ _dl_relocate_static_pie (void)
   elf_get_dynamic_info (main_map);
 
 # ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
-  ELF_MACHINE_BEFORE_RTLD_RELOC (main_map->l_info);
+  ELF_MACHINE_BEFORE_RTLD_RELOC (main_map, main_map->l_info);
 # endif
 
   /* Relocate ourselves so we can do normal function calls and
      data access using the global offset table.  */
-  ELF_DYNAMIC_RELOCATE (main_map, 0, 0, 0);
+  ELF_DYNAMIC_RELOCATE (main_map, NULL, 0, 0, 0);
   main_map->l_relocated = 1;
 
   /* Initialize _r_debug_extended.  */

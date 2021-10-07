@@ -126,7 +126,8 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
 static inline int
-elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
+elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
+			   int lazy, int profile)
 {
   if (l->l_info[DT_JMPREL] && lazy)
     {
@@ -354,10 +355,11 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
-auto inline void
+static inline void
 __attribute__ ((always_inline))
-elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
-		  const Elf64_Sym *sym, const struct r_found_version *version,
+elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
+		  const Elf64_Rela *reloc, const Elf64_Sym *sym,
+		  const struct r_found_version *version,
 		  void *const reloc_addr_arg, int skip_ifunc)
 {
   Elf64_Addr *const reloc_addr = reloc_addr_arg;
@@ -408,7 +410,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
     }
   else
     {
-      sym_map = RESOLVE_MAP (&sym, version, r_type);
+      sym_map = RESOLVE_MAP (map, scope, &sym, version, r_type);
       value = SYMBOL_ADDRESS (sym_map, sym, true);
     }
 #else
@@ -646,7 +648,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
     }
 }
 
-auto inline void
+static inline void
 __attribute__ ((always_inline))
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 			   void *const reloc_addr_arg)
@@ -655,9 +657,9 @@ elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
   *reloc_addr = l_addr + reloc->r_addend;
 }
 
-auto inline void
+static inline void
 __attribute__ ((always_inline))
-elf_machine_lazy_rel (struct link_map *map,
+elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 		      Elf64_Addr l_addr, const Elf64_Rela *reloc,
 		      int skip_ifunc)
 {
