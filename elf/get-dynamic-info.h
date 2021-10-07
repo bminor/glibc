@@ -16,18 +16,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* This file is included multiple times and therefore lacks a header
-   file inclusion guard.  */
+/* Populate dynamic tags in l_info.  */
+
+#ifndef _GET_DYNAMIC_INFO_H
+#define _GET_DYNAMIC_INFO_H
 
 #include <assert.h>
 #include <libc-diag.h>
 
-#ifndef RESOLVE_MAP
-static
-#else
-auto
-#endif
-inline void __attribute__ ((unused, always_inline))
+static inline void __attribute__ ((unused, always_inline))
 elf_get_dynamic_info (struct link_map *l)
 {
 #if __ELF_NATIVE_CLASS == 32
@@ -165,3 +162,5 @@ elf_get_dynamic_info (struct link_map *l)
     info[DT_RPATH] = NULL;
 #endif
 }
+
+#endif
