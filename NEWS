@@ -61,6 +61,8 @@ Deprecated and removed features, and other changes affecting compatibility:
 
   when audit modules or dlmopen are used.
 
+* Intel MPX support (lazy PLT, ld.so profile, and LD_AUDIT) has been removed.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
