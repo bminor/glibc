@@ -610,7 +610,9 @@ __res_context_querydomain (struct resolv_context *ctx,
 			RES_SET_H_ERRNO(statp, NO_RECOVERY);
 			return (-1);
 		}
-		sprintf(nbuf, "%s.%s", name, domain);
+		char *p = __stpcpy (nbuf, name);
+		*p++ = '.';
+		strcpy (p, domain);
 	}
 	return __res_context_query (ctx, longname, class, type, answer,
 				    anslen, answerp, answerp2, nanswerp2,
