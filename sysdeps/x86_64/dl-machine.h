@@ -21,6 +21,7 @@
 
 #define ELF_MACHINE_NAME "x86_64"
 
+#include <assert.h>
 #include <sys/param.h>
 #include <sysdep.h>
 #include <tls.h>

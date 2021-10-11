@@ -513,6 +513,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
      is trivial: always the map of ld.so itself.  */
 #define RTLD_BOOTSTRAP
 #define RESOLVE_MAP(map, scope, sym, version, flags) map
+#include "get-dynamic-info.h"
 #include "dynamic-link.h"
 
 static ElfW(Addr) __attribute_used__
@@ -547,7 +548,7 @@ _dl_start (void *arg)
 
   /* Read our own dynamic section and fill in the info array.  */
   bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + elf_machine_dynamic ();
-  elf_get_dynamic_info (&bootstrap_map);
+  elf_get_dynamic_info (&bootstrap_map, true);
 
 #if NO_TLS_OFFSET != 0
   bootstrap_map.l_tls_offset = NO_TLS_OFFSET;
@@ -1615,7 +1616,7 @@ dl_main (const ElfW(Phdr) *phdr,
   if (! rtld_is_main)
     {
       /* Extract the contents of the dynamic section for easy access.  */
-      elf_get_dynamic_info (main_map);
+      elf_get_dynamic_info (main_map, false);
 
       /* If the main map is libc.so, update the base namespace to
 	 refer to this map.  If libc.so is loaded later, this happens

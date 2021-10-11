@@ -19,6 +19,7 @@
 #define IN_DL_RUNTIME 1		/* This can be tested in dl-machine.h.  */
 
 #include <alloca.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/param.h>

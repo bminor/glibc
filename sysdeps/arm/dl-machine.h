@@ -21,6 +21,7 @@
 
 #define ELF_MACHINE_NAME "ARM"
 
+#include <assert.h>
 #include <sys/param.h>
 #include <tls.h>
 #include <dl-tlsdesc.h>
