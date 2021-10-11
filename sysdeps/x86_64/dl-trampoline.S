@@ -42,15 +42,6 @@
 
 /* Area on stack to save and restore registers used for parameter
    passing when calling _dl_fixup.  */
-#ifdef __ILP32__
-# define PRESERVE_BND_REGS_PREFIX
-#else
-# ifdef HAVE_MPX_SUPPORT
-#  define PRESERVE_BND_REGS_PREFIX bnd
-# else
-#  define PRESERVE_BND_REGS_PREFIX .byte 0xf2
-# endif
-#endif
 #define REGISTER_SAVE_RAX	0
 #define REGISTER_SAVE_RCX	(REGISTER_SAVE_RAX + 8)
 #define REGISTER_SAVE_RDX	(REGISTER_SAVE_RCX + 8)

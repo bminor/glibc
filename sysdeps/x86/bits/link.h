@@ -38,8 +38,8 @@ typedef struct La_i86_retval
   uint32_t lrv_edx;
   long double lrv_st0;
   long double lrv_st1;
-  uint64_t lrv_bnd0;
-  uint64_t lrv_bnd1;
+  uint64_t unused1;
+  uint64_t unused2;
 } La_i86_retval;
 
 
@@ -112,8 +112,8 @@ typedef struct La_x86_64_retval
   La_x86_64_vector lrv_vector0;
   La_x86_64_vector lrv_vector1;
 #ifndef __ILP32__
-  __int128_t lrv_bnd0;
-  __int128_t lrv_bnd1;
+  __int128_t unused1;
+  __int128_t unused2;
 #endif
 } La_x86_64_retval;
 

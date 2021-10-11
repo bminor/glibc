@@ -10,21 +10,6 @@ LIBC_TRY_CC_OPTION([-mprefer-vector-width=128],
 LIBC_CONFIG_VAR([config-cflags-mprefer-vector-width],
 		[$libc_cv_cc_mprefer_vector_width])
 
-dnl Check whether asm supports Intel MPX
-AC_CACHE_CHECK(for Intel MPX support, libc_cv_asm_mpx, [dnl
-cat > conftest.s <<\EOF
-        bndmov %bnd0,(%rsp)
-EOF
-if AC_TRY_COMMAND(${CC-cc} -c $ASFLAGS conftest.s 1>&AS_MESSAGE_LOG_FD); then
-  libc_cv_asm_mpx=yes
-else
-  libc_cv_asm_mpx=no
-fi
-rm -f conftest*])
-if test $libc_cv_asm_mpx = yes; then
-  AC_DEFINE(HAVE_MPX_SUPPORT)
-fi
-
 if test x"$build_mathvec" = xnotset; then
   build_mathvec=yes
 fi
