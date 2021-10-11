@@ -17,6 +17,7 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <https://www.gnu.org/licenses/>.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <libintl.h>
 #include <stdlib.h>

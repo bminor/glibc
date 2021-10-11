@@ -25,7 +25,7 @@
 #include <libc-diag.h>
 
 static inline void __attribute__ ((unused, always_inline))
-elf_get_dynamic_info (struct link_map *l)
+elf_get_dynamic_info (struct link_map *l, bool check)
 {
 #if __ELF_NATIVE_CLASS == 32
   typedef Elf32_Word d_tag_utype;
@@ -112,16 +112,19 @@ elf_get_dynamic_info (struct link_map *l)
     assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
 #endif
 #ifdef RTLD_BOOTSTRAP
-  /* Only the bind now flags are allowed.  */
-  assert (info[VERSYMIDX (DT_FLAGS_1)] == NULL
-	  || (info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val & ~DF_1_NOW) == 0);
-  /* Flags must not be set for ld.so.  */
-  assert (info[DT_FLAGS] == NULL
-	  || (info[DT_FLAGS]->d_un.d_val & ~DF_BIND_NOW) == 0);
-#endif
-#if defined RTLD_BOOTSTRAP || defined STATIC_PIE_BOOTSTRAP
-  assert (info[DT_RUNPATH] == NULL);
-  assert (info[DT_RPATH] == NULL);
+  if (check)
+    {
+      /* Only the bind now flags are allowed.  */
+      assert (info[VERSYMIDX (DT_FLAGS_1)] == NULL
+	      || (info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val & ~DF_1_NOW) == 0);
+      /* Flags must not be set for ld.so.  */
+      assert (info[DT_FLAGS] == NULL
+	      || (info[DT_FLAGS]->d_un.d_val & ~DF_BIND_NOW) == 0);
+# ifdef STATIC_PIE_BOOTSTRAP
+      assert (info[DT_RUNPATH] == NULL);
+      assert (info[DT_RPATH] == NULL);
+# endif
+    }
 #else
   if (info[DT_FLAGS] != NULL)
     {
