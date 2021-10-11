@@ -93,7 +93,6 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 
 #include <dl-machine.h>
 
-#include "get-dynamic-info.h"
 
 #ifdef RESOLVE_MAP
 
