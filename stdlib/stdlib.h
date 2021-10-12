@@ -943,7 +943,8 @@ extern size_t mbstowcs (wchar_t *__restrict  __pwcs,
 extern size_t wcstombs (char *__restrict __s,
 			const wchar_t *__restrict __pwcs, size_t __n)
      __THROW
-  __attr_access ((__write_only__, 1, 3)) __attr_access ((__read_only__, 2));
+  __fortified_attr_access (__write_only__, 1, 3)
+  __attr_access ((__read_only__, 2));
 
 #ifdef __USE_MISC
 /* Determine whether the string value of RESPONSE matches the affirmation
@@ -997,7 +998,7 @@ extern char *ptsname (int __fd) __THROW __wur;
    terminal associated with the master FD is open on in BUF.
    Return 0 on success, otherwise an error number.  */
 extern int ptsname_r (int __fd, char *__buf, size_t __buflen)
-     __THROW __nonnull ((2)) __attr_access ((__write_only__, 2, 3));
+     __THROW __nonnull ((2)) __fortified_attr_access (__write_only__, 2, 3);
 
 /* Open a master pseudo terminal and return its file descriptor.  */
 extern int getpt (void);

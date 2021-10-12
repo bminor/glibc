@@ -448,7 +448,7 @@ extern char *strerror_l (int __errnum, locale_t __l) __THROW;
 /* Set N bytes of S to 0.  The compiler will not delete a call to this
    function, even if S is dead after the call.  */
 extern void explicit_bzero (void *__s, size_t __n) __THROW __nonnull ((1))
-    __attr_access ((__write_only__, 1, 2));
+    __fortified_attr_access (__write_only__, 1, 2);
 
 /* Return the next DELIM-delimited token from *STRINGP,
    terminating it with a '\0', and update *STRINGP to point past it.  */

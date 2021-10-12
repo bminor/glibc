@@ -605,12 +605,22 @@ _Static_assert (0, "IEEE 128-bits long double requires redirection on this platf
    size-index is not provided:
      access (access-mode, <ref-index> [, <size-index>])  */
 #  define __attr_access(x) __attribute__ ((__access__ x))
+/* For _FORTIFY_SOURCE == 3 we use __builtin_dynamic_object_size, which may
+   use the access attribute to get object sizes from function definition
+   arguments, so we can't use them on functions we fortify.  Drop the object
+   size hints for such functions.  */
+#  if __USE_FORTIFY_LEVEL == 3
+#    define __fortified_attr_access(a, o, s) __attribute__ ((__access__ (a, o)))
+#  else
+#    define __fortified_attr_access(a, o, s) __attr_access ((a, o, s))
+#  endif
 #  if __GNUC_PREREQ (11, 0)
 #    define __attr_access_none(argno) __attribute__ ((__access__ (__none__, argno)))
 #  else
 #    define __attr_access_none(argno)
 #  endif
 #else
+#  define __fortified_attr_access(a, o, s)
 #  define __attr_access(x)
 #  define __attr_access_none(argno)
 #endif
