@@ -20,6 +20,7 @@
 #define SUPPORT_CHECK_H
 
 #include <sys/cdefs.h>
+#include <stddef.h>
 
 __BEGIN_DECLS
 
@@ -171,10 +172,24 @@ void support_test_compare_blob (const void *left,
   (support_test_compare_string (left, right, __FILE__, __LINE__, \
                                 #left, #right))
 
+/* Compare the wide strings LEFT and RIGHT and report a test failure
+   if they are different.  Also report failure if one of the arguments
+   is a null pointer and the other is not.  The strings should be
+   reasonably short because on mismatch, both are printed.  */
+#define TEST_COMPARE_STRING_WIDE(left, right)                         \
+  (support_test_compare_string_wide (left, right, __FILE__, __LINE__, \
+				     #left, #right))
+
 void support_test_compare_string (const char *left, const char *right,
                                   const char *file, int line,
                                   const char *left_expr,
                                   const char *right_expr);
+
+void support_test_compare_string_wide (const wchar_t *left,
+				       const wchar_t *right,
+				       const char *file, int line,
+				       const char *left_expr,
+				       const char *right_expr);
 
 /* Internal function called by the test driver.  */
 int support_report_failure (int status)

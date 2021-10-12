@@ -73,6 +73,12 @@ void support_write_file_string (const char *path, const char *contents);
    the result).  */
 char *support_quote_blob (const void *blob, size_t length);
 
+/* Quote the contents of the wide character array starting at BLOB, of
+   LENGTH wide characters, in such a way that the result string can be
+   included in a C wide string literal (in single/double quotes,
+   without putting the quotes into the result).  */
+char *support_quote_blob_wide (const void *blob, size_t length);
+
 /* Quote the contents of the string, in such a way that the result
    string can be included in a C literal (in single/double quotes,
    without putting the quotes into the result).  */

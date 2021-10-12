@@ -1,4 +1,4 @@
-/* Check two strings for equality.
+/* Quote a wide string blob so that it can be used in C literals.
    Copyright (C) 2018-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,13 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define CHAR char
-#define UCHAR unsigned char
-#define LPREFIX ""
-#define STRLEN strlen
-#define MEMCMP memcmp
-#define SUPPORT_QUOTE_BLOB support_quote_blob
-#define SUPPORT_TEST_COMPARE_STRING support_test_compare_string
-#define WIDE 0
+#define CHAR wchar_t
+#define L_(C) L ## C
+#define SUPPORT_QUOTE_BLOB support_quote_blob_wide
+#define WIDE 1
 
-#include "support_test_compare_string_main.c"
+#include "support_quote_blob_main.c"

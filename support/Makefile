@@ -71,6 +71,7 @@ libsupport-routines = \
   support_openpty \
   support_paths \
   support_quote_blob \
+  support_quote_blob_wide \
   support_quote_string \
   support_record_failure \
   support_run_diff \
@@ -84,6 +85,7 @@ libsupport-routines = \
   support_test_compare_blob \
   support_test_compare_failure \
   support_test_compare_string \
+  support_test_compare_string_wide \
   support_test_main \
   support_test_verify_impl \
   support_wait_for_thread_exit \
@@ -270,11 +272,13 @@ tests = \
   tst-support-open-dev-null-range \
   tst-support-process_state \
   tst-support_quote_blob \
+  tst-support_quote_blob_wide \
   tst-support_quote_string \
   tst-support_record_failure \
   tst-test_compare \
   tst-test_compare_blob \
   tst-test_compare_string \
+  tst-test_compare_string_wide \
   tst-timespec \
   tst-xreadlink \
   tst-xsigstack \
