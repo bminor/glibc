@@ -258,7 +258,7 @@ extern char *__REDIRECT (__fgets_chk_warn,
      __wur __warnattr ("fgets called with bigger size than length "
 		       "of destination buffer");
 
-__fortify_function __wur __attr_access ((__write_only__, 1, 2)) char *
+__fortify_function __wur __fortified_attr_access (__write_only__, 1, 2) char *
 fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
   if (__glibc_objsize (__s) != (size_t) -1)
@@ -320,7 +320,7 @@ extern char *__REDIRECT (__fgets_unlocked_chk_warn,
      __wur __warnattr ("fgets_unlocked called with bigger size than length "
 		       "of destination buffer");
 
-__fortify_function __wur __attr_access ((__write_only__, 1, 2)) char *
+__fortify_function __wur __fortified_attr_access (__write_only__, 1, 2) char *
 fgets_unlocked (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
   if (__glibc_objsize (__s) != (size_t) -1)
