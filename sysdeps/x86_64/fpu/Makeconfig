@@ -29,15 +29,10 @@ libmvec-funcs = \
   sin \
   sincos \
 
-# FIXME: Add ABI tests for all libmvec functions and replace
-# libmvec-abi-funcs with libmvec-funcs.
-libmvec-abi-funcs = \
-  sincos
-
 # The base libmvec ABI tests.
 libmvec-abi-func-tests = \
-  $(addprefix test-double-libmvec-,$(libmvec-abi-funcs)) \
-  $(addsuffix f,$(addprefix test-float-libmvec-,$(libmvec-abi-funcs)))
+  $(addprefix test-double-libmvec-,$(libmvec-funcs)) \
+  $(addsuffix f,$(addprefix test-float-libmvec-,$(libmvec-funcs)))
 
 # The AVX libmvec ABI tests.
 libmvec-abi-func-avx-tests = \
@@ -62,7 +57,7 @@ $(common-objpfx)libmvec.mk: $(common-objpfx)config.make
 	     echo; \
 	   done; \
 	 done; \
-	 for t in $(libmvec-abi-funcs); do \
+	 for t in $(libmvec-funcs); do \
 	   echo "CFLAGS-test-double-libmvec-$$t.c = \\"; \
 	   echo "  \$$(libmvec-abi-test-cflags)"; \
 	   echo "CFLAGS-test-double-libmvec-$$t-avx.c = \\"; \
