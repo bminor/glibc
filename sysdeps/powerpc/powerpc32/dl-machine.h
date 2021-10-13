@@ -25,6 +25,8 @@
 #include <dl-tls.h>
 #include <dl-irel.h>
 #include <hwcapinfo.h>
+#include <dl-static-tls.h>
+#include <dl-machine-rel.h>
 
 /* Translate a processor specific dynamic tag to the index
    in l_info array.  */
@@ -144,10 +146,6 @@ __elf_preferred_address(struct link_map *loader, size_t maplength,
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_PPC_JMP_SLOT
-
-/* The PowerPC never uses REL relocations.  */
-#define ELF_MACHINE_NO_REL 1
-#define ELF_MACHINE_NO_RELA 0
 
 /* We define an initialization function to initialize HWCAP/HWCAP2 and
    platform data so it can be copied into the TCB later.  This is called

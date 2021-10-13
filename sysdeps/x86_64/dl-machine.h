@@ -26,6 +26,8 @@
 #include <sysdep.h>
 #include <tls.h>
 #include <dl-tlsdesc.h>
+#include <dl-static-tls.h>
+#include <dl-machine-rel.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
@@ -199,10 +201,6 @@ _dl_start_user:\n\
 /* The relative ifunc relocation.  */
 // XXX This is a work-around for a broken linker.  Remove!
 #define ELF_MACHINE_IRELATIVE	R_X86_64_IRELATIVE
-
-/* The x86-64 never uses Elf64_Rel/Elf32_Rel relocations.  */
-#define ELF_MACHINE_NO_REL 1
-#define ELF_MACHINE_NO_RELA 0
 
 /* We define an initialization function.  This is called very early in
    _dl_sysdep_start.  */

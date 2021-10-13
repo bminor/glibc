@@ -26,6 +26,8 @@
 #include <link.h>
 #include <sysdeps/s390/dl-procinfo.h>
 #include <dl-irel.h>
+#include <dl-static-tls.h>
+#include <dl-machine-rel.h>
 
 /* This is an older, now obsolete value.  */
 #define EM_S390_OLD	0xA390
@@ -275,10 +277,6 @@ _dl_start_user:\n\
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT    R_390_JMP_SLOT
-
-/* The S390 never uses Elf32_Rel relocations.  */
-#define ELF_MACHINE_NO_REL 1
-#define ELF_MACHINE_NO_RELA 0
 
 /* We define an initialization functions.  This is called very early in
    _dl_sysdep_start.  */

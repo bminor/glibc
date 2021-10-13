@@ -32,6 +32,8 @@
 #include <sysdep.h>
 #include <sys/asm.h>
 #include <dl-tls.h>
+#include <dl-static-tls.h>
+#include <dl-machine-rel.h>
 
 /* The offset of gp from GOT might be system-dependent.  It's set by
    ld.  The same value is also */
@@ -58,10 +60,6 @@
 #define elf_machine_type_class(type) \
   ((((type) == ELF_MACHINE_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
    | (((type) == R_MIPS_COPY) * ELF_RTYPE_CLASS_COPY))
-
-#define ELF_MACHINE_PLT_REL 1
-#define ELF_MACHINE_NO_REL 0
-#define ELF_MACHINE_NO_RELA 0
 
 /* Translate a processor specific dynamic tag to the index
    in l_info array.  */

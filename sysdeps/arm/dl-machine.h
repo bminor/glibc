@@ -26,6 +26,8 @@
 #include <tls.h>
 #include <dl-tlsdesc.h>
 #include <dl-irel.h>
+#include <dl-static-tls.h>
+#include <dl-machine-rel.h>
 
 #ifndef CLEAR_CACHE
 # error CLEAR_CACHE definition required to handle TEXTREL
@@ -231,10 +233,6 @@ _dl_start_user:\n\
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_ARM_JUMP_SLOT
 
-/* ARM never uses Elf32_Rela relocations for the dynamic linker.
-   Prelinked libraries may use Elf32_Rela though.  */
-#define ELF_MACHINE_PLT_REL 1
-
 /* We define an initialization functions.  This is called very early in
    _dl_sysdep_start.  */
 #define DL_PLATFORM_INIT dl_platform_init ()
@@ -266,11 +264,6 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 
 #endif /* !dl_machine_h */
 
-
-/* ARM never uses Elf32_Rela relocations for the dynamic linker.
-   Prelinked libraries may use Elf32_Rela though.  */
-#define ELF_MACHINE_NO_RELA defined RTLD_BOOTSTRAP
-#define ELF_MACHINE_NO_REL 0
 
 /* Names of the architecture-specific auditing callback functions.  */
 #define ARCH_LA_PLTENTER arm_gnu_pltenter

@@ -30,6 +30,8 @@
 #include <string.h>
 #include <link.h>
 #include <dl-tls.h>
+#include <dl-static-tls.h>
+#include <dl-machine-rel.h>
 
 /* Dynamic Linking ABI for ARCv2 ISA.
 
@@ -203,10 +205,6 @@ __start:								\n\
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT  R_ARC_JUMP_SLOT
 
-/* ARC uses Rela relocations.  */
-#define ELF_MACHINE_NO_REL 1
-#define ELF_MACHINE_NO_RELA 0
-
 /* Fixup a PLT entry to bounce directly to the function at VALUE.  */
 
 static inline ElfW(Addr)
@@ -318,7 +316,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
     }
 }
 
-inline void
+static inline void
 __attribute__ ((always_inline))
 elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
                            void *const reloc_addr_arg)
@@ -327,7 +325,7 @@ elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
   *reloc_addr += l_addr;
 }
 
-inline void
+static inline void
 __attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 		      ElfW(Addr) l_addr, const ElfW(Rela) *reloc,

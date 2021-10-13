@@ -24,6 +24,8 @@
 #include <sys/param.h>
 #include <sysdep.h>
 #include <dl-tls.h>
+#include <dl-static-tls.h>
+#include <dl-machine-rel.h>
 
 /* Return nonzero if ELF header is compatible with the running host.  */
 static inline int
@@ -171,10 +173,6 @@ _dl_start_user:\n\
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT R_CKCORE_JUMP_SLOT
-
-/* C-SKY never uses Elf32_Rel relocations.  */
-#define ELF_MACHINE_NO_REL 1
-#define ELF_MACHINE_NO_RELA 0
 
 /* We define an initialization functions.  This is called very early in
    _dl_sysdep_start.  */

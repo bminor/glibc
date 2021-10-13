@@ -29,6 +29,8 @@
 #include <dl-fptr.h>
 #include <abort-instr.h>
 #include <tls.h>
+#include <dl-static-tls.h>
+#include <dl-machine-rel.h>
 
 /* These two definitions must match the definition of the stub in
    bfd/elf32-hppa.c (see plt_stub[]).
@@ -508,10 +510,6 @@ asm (									\
 /* Used by the runtime in fixup to figure out if reloc is *really* PLT */
 #define ELF_MACHINE_JMP_SLOT R_PARISC_IPLT
 #define ELF_MACHINE_SIZEOF_JMP_SLOT PLT_ENTRY_SIZE
-
-/* We only use RELA. */
-#define ELF_MACHINE_NO_REL 1
-#define ELF_MACHINE_NO_RELA 0
 
 /* Return the address of the entry point. */
 #define ELF_MACHINE_START_ADDRESS(map, start)			\

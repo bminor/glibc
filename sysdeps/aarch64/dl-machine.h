@@ -24,7 +24,9 @@
 #include <sysdep.h>
 #include <tls.h>
 #include <dl-tlsdesc.h>
+#include <dl-static-tls.h>
 #include <dl-irel.h>
+#include <dl-machine-rel.h>
 #include <cpu-features.c>
 
 /* Translate a processor specific dynamic tag to the index in l_info array.  */
@@ -189,10 +191,6 @@ _dl_start_user:								\n\
    | (((type) == AARCH64_R(GLOB_DAT)) * ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA))
 
 #define ELF_MACHINE_JMP_SLOT	AARCH64_R(JUMP_SLOT)
-
-/* AArch64 uses RELA not REL */
-#define ELF_MACHINE_NO_REL 1
-#define ELF_MACHINE_NO_RELA 0
 
 #define DL_PLATFORM_INIT dl_platform_init ()
 
@@ -370,7 +368,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
     }
 }
 
-inline void
+static inline void
 __attribute__ ((always_inline))
 elf_machine_rela_relative (ElfW(Addr) l_addr,
 			   const ElfW(Rela) *reloc,

@@ -28,22 +28,13 @@
 #include <sysdep.h>
 #include <hwcapinfo.h>
 #include <cpu-features.c>
+#include <dl-static-tls.h>
+#include <dl-funcdesc.h>
+#include <dl-machine-rel.h>
 
 /* Translate a processor specific dynamic tag to the index
    in l_info array.  */
 #define DT_PPC64(x) (DT_PPC64_##x - DT_LOPROC + DT_NUM)
-
-#if _CALL_ELF != 2
-/* A PowerPC64 function descriptor.  The .plt (procedure linkage
-   table) and .opd (official procedure descriptor) sections are
-   arrays of these.  */
-typedef struct
-{
-  Elf64_Addr fd_func;
-  Elf64_Addr fd_toc;
-  Elf64_Addr fd_aux;
-} Elf64_FuncDesc;
-#endif
 
 #define ELF_MULT_MACHINES_SUPPORTED
 
@@ -291,10 +282,6 @@ BODY_PREFIX "_dl_start_user:\n"						\
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_PPC64_JMP_SLOT
-
-/* The PowerPC never uses REL relocations.  */
-#define ELF_MACHINE_NO_REL 1
-#define ELF_MACHINE_NO_RELA 0
 
 /* We define an initialization function to initialize HWCAP/HWCAP2 and
    platform data so it can be copied into the TCB later.  This is called
