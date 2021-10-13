@@ -52,7 +52,7 @@ _dl_relocate_static_pie (void)
 	break;
       }
 
-  elf_get_dynamic_info (main_map, false);
+  elf_get_dynamic_info (main_map);
 
 # ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
   ELF_MACHINE_BEFORE_RTLD_RELOC (main_map, main_map->l_info);

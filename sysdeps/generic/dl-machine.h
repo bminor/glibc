@@ -20,6 +20,8 @@
 
 #include <string.h>
 #include <link.h>
+#include <dl-static-tls.h>
+#include <dl-machine-rel.h>
 
 
 /* Return nonzero iff ELF header is compatible with the running host.  */

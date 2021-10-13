@@ -23,6 +23,8 @@
 
 #include <sys/param.h>
 #include <tls.h>
+#include <dl-static-tls.h>
+#include <dl-machine-rel.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
@@ -168,10 +170,6 @@ _dl_start_user:\n\
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_MICROBLAZE_JUMP_SLOT
-
-/* The microblaze never uses Elf32_Rel relocations.  */
-#define ELF_MACHINE_NO_REL 1
-#define ELF_MACHINE_NO_RELA 0
 
 static inline Elf32_Addr
 elf_machine_fixup_plt (struct link_map *map, lookup_t t,

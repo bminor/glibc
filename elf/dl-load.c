@@ -1296,7 +1296,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
   if (l->l_ld != 0)
     l->l_ld = (ElfW(Dyn) *) ((ElfW(Addr)) l->l_ld + l->l_addr);
 
-  elf_get_dynamic_info (l, false);
+  elf_get_dynamic_info (l);
 
   /* Make sure we are not dlopen'ing an object that has the
      DF_1_NOOPEN flag set, or a PIE object.  */
