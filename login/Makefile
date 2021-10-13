@@ -46,10 +46,10 @@ vpath %.c programs
 tests := tst-utmp tst-utmpx tst-grantpt tst-ptsname tst-getlogin tst-updwtmpx \
   tst-pututxline-lockfail tst-pututxline-cache
 
-ifeq ($(have-GLIBC_2.33),yes)
 # Empty compatibility library for old binaries.
 extra-libs      := libutil
 extra-libs-others := $(extra-libs)
+ifeq ($(have-GLIBC_2.33),yes)
 libutil-routines := libutil-compat
 libutil-shared-only-routines := libutil-compat
 
@@ -57,6 +57,8 @@ libutil-shared-only-routines := libutil-compat
 # link is not installed.
 install-lib-ldscripts = libutil.so
 $(inst_libdir)/libutil.so:
+else  # not $(have-GLIBC_2.33)
+libutil-inhibit-o = $(filter-out .o,$(object-suffixes))
 endif # $(have-GLIBC_2.33)
 
 include ../Rules
