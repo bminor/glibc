@@ -26,6 +26,8 @@
 #include <sys/asm.h>
 #include <dl-tls.h>
 #include <dl-irel.h>
+#include <dl-static-tls.h>
+#include <dl-machine-rel.h>
 
 #ifndef _RTLD_PROLOGUE
 # define _RTLD_PROLOGUE(entry)						\
@@ -50,9 +52,6 @@
      || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_DTPMOD64)	\
      || (__WORDSIZE == 64 && (type) == R_RISCV_TLS_TPREL64)))	\
    | (ELF_RTYPE_CLASS_COPY * ((type) == R_RISCV_COPY)))
-
-#define ELF_MACHINE_NO_REL 1
-#define ELF_MACHINE_NO_RELA 0
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute_used__

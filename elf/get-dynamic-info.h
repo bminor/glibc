@@ -22,10 +22,11 @@
 #define _GET_DYNAMIC_INFO_H
 
 #include <assert.h>
+#include <dl-machine-rel.h>
 #include <libc-diag.h>
 
 static inline void __attribute__ ((unused, always_inline))
-elf_get_dynamic_info (struct link_map *l, bool check)
+elf_get_dynamic_info (struct link_map *l)
 {
 #if __ELF_NATIVE_CLASS == 32
   typedef Elf32_Word d_tag_utype;
@@ -33,7 +34,7 @@ elf_get_dynamic_info (struct link_map *l, bool check)
   typedef Elf64_Xword d_tag_utype;
 #endif
 
-#if !defined RTLD_BOOTSTRAP && !defined STATIC_PIE_BOOTSTRAP
+#ifndef STATIC_PIE_BOOTSTRAP
   if (l->l_ld == NULL)
     return;
 #endif
@@ -111,21 +112,10 @@ elf_get_dynamic_info (struct link_map *l, bool check)
   if (info[DT_REL] != NULL)
     assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
 #endif
-#ifdef RTLD_BOOTSTRAP
-  if (check)
-    {
-      /* Only the bind now flags are allowed.  */
-      assert (info[VERSYMIDX (DT_FLAGS_1)] == NULL
-	      || (info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val & ~DF_1_NOW) == 0);
-      /* Flags must not be set for ld.so.  */
-      assert (info[DT_FLAGS] == NULL
-	      || (info[DT_FLAGS]->d_un.d_val & ~DF_BIND_NOW) == 0);
-# ifdef STATIC_PIE_BOOTSTRAP
-      assert (info[DT_RUNPATH] == NULL);
-      assert (info[DT_RPATH] == NULL);
-# endif
-    }
-#else
+#ifdef STATIC_PIE_BOOTSTRAP
+  assert (info[DT_RUNPATH] == NULL);
+  assert (info[DT_RPATH] == NULL);
+#endif
   if (info[DT_FLAGS] != NULL)
     {
       /* Flags are used.  Translate to the old form where available.
@@ -163,7 +153,6 @@ elf_get_dynamic_info (struct link_map *l, bool check)
   if (info[DT_RUNPATH] != NULL)
     /* If both RUNPATH and RPATH are given, the latter is ignored.  */
     info[DT_RPATH] = NULL;
-#endif
 }
 
 #endif
