@@ -1,4 +1,4 @@
-/* Test for vector sincosf ABI.
+/* Test for vector ABI.
    Copyright (C) 2016-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,27 +16,26 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <math.h>
+#include <sys/platform/x86.h>
+#include <support/test-driver.h>
 
-#define N 1000
-float x[N], s[N], c[N];
-float *s_ptrs[N];
-float *c_ptrs[N];
+extern int test_vector_abi (void);
 
-int
-test_sincosf_abi (void)
+static int
+do_test (void)
 {
-  int i;
-  for(i = 0; i < N; i++)
-  {
-    x[i] = i / 3;
-    s_ptrs[i] = &s[i];
-    c_ptrs[i] = &c[i];
-  }
+#if defined REQUIRE_AVX
+  if (!CPU_FEATURE_ACTIVE (AVX))
+    return EXIT_UNSUPPORTED;
+#elif defined REQUIRE_AVX2
+  if (!CPU_FEATURE_ACTIVE (AVX2))
+    return EXIT_UNSUPPORTED;
+#elif defined REQUIRE_AVX512F
+  if (!CPU_FEATURE_ACTIVE (AVX512F))
+    return EXIT_UNSUPPORTED;
+#endif
 
-#pragma omp simd
-  for(i = 0; i < N; i++)
-    sincosf (x[i], s_ptrs[i], c_ptrs[i]);
-
-  return 0;
+  return test_vector_abi ();
 }
+
+#include <support/test-driver.c>

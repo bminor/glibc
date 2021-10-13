@@ -1,4 +1,4 @@
-/* Test for vector sincos ABI.
+/* Test for vector sincos/sincosf ABI.
    Copyright (C) 2016-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,27 +17,33 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <support/test-driver.h>
+
+/* Since libsupport_nonshared.a is placed before test-libmvec*.o, which
+   defines do_test, reference support_test_main here to include it to
+   avoid undefined reference to support_test_main.  The libmvec ABI test
+   doesn't need other symbols in libsupport_nonshared.a.  */
+__typeof (support_test_main) *support_test_main_p = support_test_main;
 
 #define N 1000
-double x[N], s[N], c[N];
-double* s_ptrs[N];
-double* c_ptrs[N];
+LIBMVEC_TYPE x[N], s[N], c[N];
+LIBMVEC_TYPE *s_ptrs[N];
+LIBMVEC_TYPE *c_ptrs[N];
 
 int
-test_sincos_abi (void)
+test_vector_abi (void)
 {
   int i;
-
   for(i = 0; i < N; i++)
-  {
-    x[i] = i / 3;
-    s_ptrs[i] = &s[i];
-    c_ptrs[i] = &c[i];
-  }
+    {
+      x[i] = i / 3;
+      s_ptrs[i] = &s[i];
+      c_ptrs[i] = &c[i];
+    }
 
 #pragma omp simd
   for(i = 0; i < N; i++)
-    sincos (x[i], s_ptrs[i], c_ptrs[i]);
+    LIBMVEC_SINCOS (x[i], s_ptrs[i], c_ptrs[i]);
 
   return 0;
 }
