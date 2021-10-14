@@ -171,8 +171,8 @@ This macro was introduced as part of the Large File Support extension
 @end defvr
 
 @defvr Macro _TIME_BITS
-This macro determines the bit size of @code{time_t}, and therefore the
-bit size of all @code{time_t}-derived types and the prototypes of all
+Define this macro to control the bit size of @code{time_t}, and therefore
+the bit size of all @code{time_t}-derived types and the prototypes of all
 related functions.
 
 @enumerate
