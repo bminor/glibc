@@ -26,7 +26,8 @@
 #include <libc-diag.h>
 
 static inline void __attribute__ ((unused, always_inline))
-elf_get_dynamic_info (struct link_map *l)
+elf_get_dynamic_info (struct link_map *l, bool bootstrap,
+		      bool static_pie_bootstrap)
 {
 #if __ELF_NATIVE_CLASS == 32
   typedef Elf32_Word d_tag_utype;
@@ -35,7 +36,7 @@ elf_get_dynamic_info (struct link_map *l)
 #endif
 
 #ifndef STATIC_PIE_BOOTSTRAP
-  if (l->l_ld == NULL)
+  if (!bootstrap && l->l_ld == NULL)
     return;
 #endif
 
@@ -112,47 +113,63 @@ elf_get_dynamic_info (struct link_map *l)
   if (info[DT_REL] != NULL)
     assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
 #endif
-#ifdef STATIC_PIE_BOOTSTRAP
-  assert (info[DT_RUNPATH] == NULL);
-  assert (info[DT_RPATH] == NULL);
-#endif
-  if (info[DT_FLAGS] != NULL)
+  if (bootstrap || static_pie_bootstrap)
     {
-      /* Flags are used.  Translate to the old form where available.
-	 Since these l_info entries are only tested for NULL pointers it
-	 is ok if they point to the DT_FLAGS entry.  */
-      l->l_flags = info[DT_FLAGS]->d_un.d_val;
-
-      if (l->l_flags & DF_SYMBOLIC)
-	info[DT_SYMBOLIC] = info[DT_FLAGS];
-      if (l->l_flags & DF_TEXTREL)
-	info[DT_TEXTREL] = info[DT_FLAGS];
-      if (l->l_flags & DF_BIND_NOW)
-	info[DT_BIND_NOW] = info[DT_FLAGS];
+      assert (info[DT_RUNPATH] == NULL);
+      assert (info[DT_RPATH] == NULL);
     }
-  if (info[VERSYMIDX (DT_FLAGS_1)] != NULL)
+  if (bootstrap)
     {
-      l->l_flags_1 = info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val;
-      if (l->l_flags_1 & DF_1_NODELETE)
-	l->l_nodelete_pending = true;
-
-      /* Only DT_1_SUPPORTED_MASK bits are supported, and we would like
-	 to assert this, but we can't. Users have been setting
-	 unsupported DF_1_* flags for a long time and glibc has ignored
-	 them. Therefore to avoid breaking existing applications the
-	 best we can do is add a warning during debugging with the
-	 intent of notifying the user of the problem.  */
-      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0)
-	  && l->l_flags_1 & ~DT_1_SUPPORTED_MASK)
-	_dl_debug_printf ("\nWARNING: Unsupported flag value(s) of 0x%x in DT_FLAGS_1.\n",
-			  l->l_flags_1 & ~DT_1_SUPPORTED_MASK);
-
-      if (l->l_flags_1 & DF_1_NOW)
-	info[DT_BIND_NOW] = info[VERSYMIDX (DT_FLAGS_1)];
+      /* Only the bind now flags are allowed.  */
+      assert (info[VERSYMIDX (DT_FLAGS_1)] == NULL
+	      || (info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val & ~DF_1_NOW) == 0);
+      /* Flags must not be set for ld.so.  */
+      assert (info[DT_FLAGS] == NULL
+	      || (info[DT_FLAGS]->d_un.d_val & ~DF_BIND_NOW) == 0);
     }
-  if (info[DT_RUNPATH] != NULL)
-    /* If both RUNPATH and RPATH are given, the latter is ignored.  */
-    info[DT_RPATH] = NULL;
+  else
+    {
+      if (info[DT_FLAGS] != NULL)
+	{
+	  /* Flags are used.  Translate to the old form where available.
+	     Since these l_info entries are only tested for NULL pointers it
+	     is ok if they point to the DT_FLAGS entry.  */
+	  l->l_flags = info[DT_FLAGS]->d_un.d_val;
+
+	  if (l->l_flags & DF_SYMBOLIC)
+	    info[DT_SYMBOLIC] = info[DT_FLAGS];
+	  if (l->l_flags & DF_TEXTREL)
+	    info[DT_TEXTREL] = info[DT_FLAGS];
+	  if (l->l_flags & DF_BIND_NOW)
+	    info[DT_BIND_NOW] = info[DT_FLAGS];
+	}
+
+      if (info[VERSYMIDX (DT_FLAGS_1)] != NULL)
+	{
+	  l->l_flags_1 = info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val;
+	  if (l->l_flags_1 & DF_1_NODELETE)
+	    l->l_nodelete_pending = true;
+
+	  /* Only DT_1_SUPPORTED_MASK bits are supported, and we would like
+	     to assert this, but we can't. Users have been setting
+	     unsupported DF_1_* flags for a long time and glibc has ignored
+	     them. Therefore to avoid breaking existing applications the
+	     best we can do is add a warning during debugging with the
+	     intent of notifying the user of the problem.  */
+	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0)
+	      && l->l_flags_1 & ~DT_1_SUPPORTED_MASK)
+	    _dl_debug_printf ("\nWARNING: Unsupported flag value(s) of 0x%x "
+			      "in DT_FLAGS_1.\n",
+			     l->l_flags_1 & ~DT_1_SUPPORTED_MASK);
+
+	 if (l->l_flags_1 & DF_1_NOW)
+	   info[DT_BIND_NOW] = info[VERSYMIDX (DT_FLAGS_1)];
+       }
+
+    if (info[DT_RUNPATH] != NULL)
+      /* If both RUNPATH and RPATH are given, the latter is ignored.  */
+      info[DT_RPATH] = NULL;
+   }
 }
 
 #endif

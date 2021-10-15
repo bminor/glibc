@@ -547,7 +547,7 @@ _dl_start (void *arg)
 
   /* Read our own dynamic section and fill in the info array.  */
   bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + elf_machine_dynamic ();
-  elf_get_dynamic_info (&bootstrap_map);
+  elf_get_dynamic_info (&bootstrap_map, true, false);
 
 #if NO_TLS_OFFSET != 0
   bootstrap_map.l_tls_offset = NO_TLS_OFFSET;
@@ -1615,7 +1615,7 @@ dl_main (const ElfW(Phdr) *phdr,
   if (! rtld_is_main)
     {
       /* Extract the contents of the dynamic section for easy access.  */
-      elf_get_dynamic_info (main_map);
+      elf_get_dynamic_info (main_map, false, false);
 
       /* If the main map is libc.so, update the base namespace to
 	 refer to this map.  If libc.so is loaded later, this happens

@@ -25,7 +25,6 @@
 
 #include <dl-machine.h>
 
-#define STATIC_PIE_BOOTSTRAP
 #define RESOLVE_MAP(map, scope, sym, version, flags) map
 #include "dynamic-link.h"
 #include "get-dynamic-info.h"
@@ -52,7 +51,7 @@ _dl_relocate_static_pie (void)
 	break;
       }
 
-  elf_get_dynamic_info (main_map);
+  elf_get_dynamic_info (main_map, false, true);
 
 # ifdef ELF_MACHINE_BEFORE_RTLD_RELOC
   ELF_MACHINE_BEFORE_RTLD_RELOC (main_map, main_map->l_info);
