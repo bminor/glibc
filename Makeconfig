@@ -575,8 +575,10 @@ link-libc-rpath-link = -Wl,-rpath-link=$(rpath-link)
 # build-hardcoded-path-in-tests.
 ifeq (yes,$(build-hardcoded-path-in-tests))
 link-libc-tests-rpath-link = $(link-libc-rpath)
+link-test-modules-rpath-link = $(link-libc-rpath)
 else
 link-libc-tests-rpath-link = $(link-libc-rpath-link)
+link-test-modules-rpath-link =
 endif  # build-hardcoded-path-in-tests
 
 link-libc-between-gnulib = $(common-objpfx)libc.so$(libc.so-version) \

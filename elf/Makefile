@@ -402,6 +402,7 @@ tests += \
   tst-glibc-hwcaps-mask \
   tst-glibc-hwcaps-prepend \
   tst-global1 \
+  tst-global2 \
   tst-initfinilazyfail \
   tst-initorder \
   tst-initorder2 \
@@ -716,6 +717,7 @@ modules-names = \
   tst-filterobj-filtee \
   tst-filterobj-flt \
   tst-finilazyfailmod \
+  tst-globalmod2 \
   tst-initlazyfailmod \
   tst-initorder2a \
   tst-initorder2b \
@@ -1862,6 +1864,11 @@ $(objpfx)tst-audit8.out: $(objpfx)tst-auditmod1.so
 tst-audit8-ENV = LD_AUDIT=$(objpfx)tst-auditmod1.so
 
 $(objpfx)tst-global1.out: $(objpfx)testobj6.so $(objpfx)testobj2.so
+
+$(objpfx)tst-global2: $(objpfx)tst-globalmod2.so
+$(objpfx)tst-global2.out: $(objpfx)reldepmod1.so $(objpfx)reldepmod4.so
+LDFLAGS-tst-global2 = -Wl,--enable-new-dtags
+LDFLAGS-tst-globalmod2.so = -Wl,--enable-new-dtags
 
 $(objpfx)order2.out: $(objpfx)order2mod1.so $(objpfx)order2mod2.so
 $(objpfx)order2-cmp.out: $(objpfx)order2.out
