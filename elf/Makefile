@@ -353,10 +353,10 @@ ifneq ($(selinux-enabled),1)
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 ifeq ($(have-depaudit),yes)
-tests += tst-audit14 tst-audit15 tst-audit16
+tests += tst-audit14 tst-audit15 tst-audit16 tst-audit14a
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-audit14-cmp.out $(objpfx)tst-audit15-cmp.out \
-		 $(objpfx)tst-audit16-cmp.out
+		 $(objpfx)tst-audit16-cmp.out $(objpfx)tst-audit14a-cmp.out
 endif
 endif
 endif
@@ -1825,9 +1825,11 @@ $(objpfx)tst-auditmany.out: $(objpfx)tst-auditmanymod1.so \
 tst-auditmany-ENV = \
   LD_AUDIT=tst-auditmanymod1.so:tst-auditmanymod2.so:tst-auditmanymod3.so:tst-auditmanymod4.so:tst-auditmanymod5.so:tst-auditmanymod6.so:tst-auditmanymod7.so:tst-auditmanymod8.so:tst-auditmanymod9.so
 
-LDFLAGS-tst-audit14 = -Wl,--audit=tst-auditlogmod-1.so
+LDFLAGS-tst-audit14 = -Wl,--audit=tst-auditlogmod-1.so,--disable-new-dtags
 $(objpfx)tst-auditlogmod-1.so: $(libsupport)
 $(objpfx)tst-audit14.out: $(objpfx)tst-auditlogmod-1.so
+LDFLAGS-tst-audit14a = -Wl,--audit=tst-auditlogmod-1.so,--enable-new-dtags
+$(objpfx)tst-audit14a.out: $(objpfx)tst-auditlogmod-1.so
 LDFLAGS-tst-audit15 = \
   -Wl,--audit=tst-auditlogmod-1.so,--depaudit=tst-auditlogmod-2.so
 $(objpfx)tst-auditlogmod-2.so: $(libsupport)
@@ -1852,6 +1854,9 @@ CFLAGS-.os += $(call elide-stack-protector,.os,tst-auditmod17)
 tst-audit17-ENV = LD_AUDIT=$(objpfx)tst-auditmod17.so
 
 $(objpfx)tst-audit14-cmp.out: tst-audit14.exp $(objpfx)tst-audit14.out
+	cmp $^ > $@; \
+	$(evaluate-test)
+$(objpfx)tst-audit14a-cmp.out: tst-audit14.exp $(objpfx)tst-audit14a.out
 	cmp $^ > $@; \
 	$(evaluate-test)
 $(objpfx)tst-audit15-cmp.out: tst-audit15.exp $(objpfx)tst-audit15.out

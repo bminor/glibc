@@ -2111,6 +2111,21 @@ _dl_map_object (struct link_map *loader, const char *name,
 			    &main_map->l_rpath_dirs,
 			    &realname, &fb, loader ?: main_map, LA_SER_RUNPATH,
 			    &found_other_class);
+
+	  /* Also try DT_RUNPATH in the executable for LD_AUDIT dlopen
+	     call.  */
+	  if (__glibc_unlikely (mode & __RTLD_AUDIT)
+	      && fd == -1 && !did_main_map
+	      && main_map != NULL && main_map->l_type != lt_loaded)
+	    {
+	      struct r_search_path_struct l_rpath_dirs;
+	      l_rpath_dirs.dirs = NULL;
+	      if (cache_rpath (main_map, &l_rpath_dirs,
+			       DT_RUNPATH, "RUNPATH"))
+		fd = open_path (name, namelen, mode, &l_rpath_dirs,
+				&realname, &fb, loader ?: main_map,
+				LA_SER_RUNPATH, &found_other_class);
+	    }
 	}
 
       /* Try the LD_LIBRARY_PATH environment variable.  */
