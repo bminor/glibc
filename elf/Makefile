@@ -991,7 +991,7 @@ $(objpfx)tst-rtld-preload.out: tst-rtld-preload.sh $(objpfx)ld.so \
 $(objpfx)initfirst.out: $(objpfx)firstobj.so
 
 $(objpfx)global: $(objpfx)globalmod1.so
-$(objpfx)global.out: $(objpfx)reldepmod1.so
+$(objpfx)global.out: $(objpfx)reldepmod1.so $(objpfx)reldepmod4.so
 
 $(objpfx)dblload.out: $(objpfx)dblloadmod1.so $(objpfx)dblloadmod2.so
 
