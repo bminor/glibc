@@ -115,15 +115,12 @@ do_test (void)
 {
   pthread_t th = xpthread_create (NULL, tf, NULL);
 
-  do
-    nanosleep (&(struct timespec) { .tv_sec = 0, .tv_nsec = 100000000 }, NULL);
-  while (access (pidfilename, R_OK) != 0);
+  /* Wait to cancel until after the pid is written.  */
+  if (sem_wait (sem) != 0)
+    FAIL_EXIT1 ("sem_wait: %m");
 
   xpthread_cancel (th);
   void *r = xpthread_join (th);
-
-  if (sem_wait (sem) != 0)
-    FAIL_EXIT1 ("sem_wait: %m");
 
   FILE *f = xfopen (pidfilename, "r+");
 
