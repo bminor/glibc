@@ -32,7 +32,7 @@ unsigned int
 __if_nametoindex (const char *ifname)
 {
   struct ifreq ifr;
-  int fd = __opensock ();
+  int fd = __socket (AF_INET, SOCK_DGRAM, 0);
 
   if (fd < 0)
     return 0;
@@ -84,7 +84,7 @@ __if_nameindex (void)
   error_t err = 0;
   char data[2048];
   file_t server;
-  int fd = __opensock ();
+  int fd = __socket (AF_INET, SOCK_DGRAM, 0);
   struct ifconf ifc;
   unsigned int nifs, i;
   struct if_nameindex *idx = NULL;
@@ -169,7 +169,7 @@ char *
 __if_indextoname (unsigned int ifindex, char ifname[IF_NAMESIZE])
 {
   struct ifreq ifr;
-  int fd = __opensock ();
+  int fd = __socket (AF_INET, SOCK_DGRAM, 0);
 
   if (fd < 0)
     return NULL;
