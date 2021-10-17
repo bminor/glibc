@@ -21,8 +21,6 @@
    to indicate that the signal thread might mutate them as part
    of sending us to a signal handler.  */
 
-/* After _hurd_intr_rpc_msg_about_to we need to make a last check of cancel, in
-   case we got interrupted right before _hurd_intr_rpc_msg_about_to.  */
 #define INTR_MSG_TRAP(msg, option, send_size, rcv_size, rcv_name, timeout, notify, cancel_p, intr_port_p) \
 ({									      \
   error_t err;								      \
@@ -31,21 +29,52 @@
        ".globl _hurd_intr_rpc_msg_do_trap\n" 				      \
        ".globl _hurd_intr_rpc_msg_in_trap\n"				      \
        ".globl _hurd_intr_rpc_msg_sp_restored\n"			      \
-       "_hurd_intr_rpc_msg_about_to:	cmpl $0, %5\n"			      \
+       "_hurd_intr_rpc_msg_about_to:"					      \
+       /* We need to make a last check of cancel, in case we got interrupted
+          right before _hurd_intr_rpc_msg_about_to.  */			      \
+       "				cmpl $0, %5\n"			      \
        "				jz _hurd_intr_rpc_msg_do\n"	      \
+       /* We got interrupted, note so and return EINTR.  */		      \
        "				movl $0, %3\n"			      \
        "				movl %6, %%eax\n"		      \
        "				jmp _hurd_intr_rpc_msg_sp_restored\n" \
-       "_hurd_intr_rpc_msg_do:		movl %%esp, %%ecx\n"		      \
-       "				.cfi_def_cfa_register %%ecx\n"	      \
-       "				leal %4, %%esp\n"		      \
+       "_hurd_intr_rpc_msg_do:"						      \
+       /* Ok, push the mach_msg_trap arguments.  */			      \
+       "				pushl 24(%4)\n"			      \
+       "				.cfi_adjust_cfa_offset 4\n"	      \
+       "				pushl %2\n"			      \
+       "				.cfi_adjust_cfa_offset 4\n"	      \
+       "				pushl 16(%4)\n"			      \
+       "				.cfi_adjust_cfa_offset 4\n"	      \
+       "				pushl 12(%4)\n"			      \
+       "				.cfi_adjust_cfa_offset 4\n"	      \
+       "				pushl 8(%4)\n"			      \
+       "				.cfi_adjust_cfa_offset 4\n"	      \
+       "				pushl %1\n"			      \
+       "				.cfi_adjust_cfa_offset 4\n"	      \
+       "				pushl (%4)\n"			      \
+       "				.cfi_adjust_cfa_offset 4\n"	      \
+       "				pushl $0\n"			      \
+       "				.cfi_adjust_cfa_offset 4\n"	      \
+       /* TODO: remove this ecx kludge, we don't need it any more */	      \
+       "				movl %%esp, %%ecx\n"		      \
        "_hurd_intr_rpc_msg_cx_sp:	movl $-25, %%eax\n"		      \
        "_hurd_intr_rpc_msg_do_trap:	lcall $7, $0 # status in %0\n"	      \
-       "_hurd_intr_rpc_msg_in_trap:	movl %%ecx, %%esp\n"		      \
-       "				.cfi_def_cfa_register %%esp\n"	      \
+       "_hurd_intr_rpc_msg_in_trap:"					      \
+       /* Ok, clean the arguments and update OPTION and TIMEOUT.  */	      \
+       "				addl $8, %%esp\n"		      \
+       "				.cfi_adjust_cfa_offset -8\n"	      \
+       "				popl %1\n"			      \
+       "				.cfi_adjust_cfa_offset -4\n"	      \
+       "				addl $12, %%esp\n"		      \
+       "				.cfi_adjust_cfa_offset -12\n"	      \
+       "				popl %2\n"			      \
+       "				.cfi_adjust_cfa_offset -4\n"	      \
+       "				addl $4, %%esp\n"		      \
+       "				.cfi_adjust_cfa_offset -4\n"	      \
        "_hurd_intr_rpc_msg_sp_restored:"				      \
-       : "=a" (err), "+m" (option), "+m" (timeout), "=m" (*intr_port_p)	      \
-       : "m" ((&msg)[-1]), "m" (*cancel_p), "i" (EINTR)			      \
+       : "=a" (err), "+r" (option), "+r" (timeout), "=m" (*intr_port_p)	      \
+       : "r" (&msg), "m" (*cancel_p), "i" (EINTR)			      \
        : "ecx");							      \
   err;									      \
 })
