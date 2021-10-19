@@ -45,7 +45,7 @@ def compute_c_consts(sym_data, cc):
             continue
         name = arg[0]
         value = arg[1]
-        out_lines.append('asm ("@@@name@@@%s@@@value@@@%%0@@@end@@@" '
+        out_lines.append('asm ("/* @@@name@@@%s@@@value@@@%%0@@@end@@@ */" '
                          ': : \"i\" ((long int) (%s)));'
                          % (name, value))
     out_lines.append('}')
