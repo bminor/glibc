@@ -49,7 +49,7 @@ get_platform (void)
 
   __asm__  ("lwz %0,%1(%2)\n"
 	    : "=r" (tmp)
-	    : "i" (__ATPLATOFF), "b" (tp));
+	    : "n" (__ATPLATOFF), "b" (tp));
 
   return tmp;
 }

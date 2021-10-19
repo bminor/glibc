@@ -73,7 +73,7 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
     if (__builtin_constant_p (rn))					\
       __asm__ __volatile__ (						\
         ".machine push; .machine \"power9\"; mffscrni %0,%1; .machine pop" \
-        : "=f" (__fr.fenv) : "i" (rn));					\
+        : "=f" (__fr.fenv) : "n" (rn));					\
     else								\
     {									\
       __fr.l = (rn);							\
@@ -135,8 +135,8 @@ extern const fenv_t *__fe_mask_env (void) attribute_hidden;
 /* Set/clear a particular FPSCR bit (for instance,
    reset_fpscr_bit(FPSCR_VE);
    prevents INVALID exceptions from being raised).  */
-#define set_fpscr_bit(x) asm volatile ("mtfsb1 %0" : : "i"(x))
-#define reset_fpscr_bit(x) asm volatile ("mtfsb0 %0" : : "i"(x))
+#define set_fpscr_bit(x) asm volatile ("mtfsb1 %0" : : "n"(x))
+#define reset_fpscr_bit(x) asm volatile ("mtfsb0 %0" : : "n"(x))
 
 typedef union
 {
@@ -184,7 +184,7 @@ __fesetround_inline_nocheck (const int round)
   if (__glibc_likely (GLRO(dl_hwcap2) & PPC_FEATURE2_ARCH_3_00))
     __fe_mffscrn (round);
   else
-    asm volatile ("mtfsfi 7,%0" : : "i" (round));
+    asm volatile ("mtfsfi 7,%0" : : "n" (round));
 #endif
 }
 

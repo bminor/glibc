@@ -63,16 +63,16 @@ uint64_t check_tcbhwcap (long tid)
 #ifdef __powerpc64__
   __asm__  ("ld %0,%1(%2)\n"
 	    : "=r" (tcb_hwcap)
-	    : "i" (__HWCAPOFF), "b" (__tp));
+	    : "n" (__HWCAPOFF), "b" (__tp));
 #else
   uint64_t h1, h2;
 
   __asm__ ("lwz %0,%1(%2)\n"
       : "=r" (h1)
-      : "i" (__HWCAPOFF), "b" (__tp));
+      : "n" (__HWCAPOFF), "b" (__tp));
   __asm__ ("lwz %0,%1(%2)\n"
       : "=r" (h2)
-      : "i" (__HWCAP2OFF), "b" (__tp));
+      : "n" (__HWCAP2OFF), "b" (__tp));
   tcb_hwcap = (h1 >> 32) << 32 | (h2 >> 32);
 #endif
 
@@ -117,7 +117,7 @@ uint64_t check_tcbhwcap (long tid)
   /* Same test for the platform number.  */
   __asm__  ("lwz %0,%1(%2)\n"
 	    : "=r" (tcb_at_platform)
-	    : "i" (__ATPLATOFF), "b" (__tp));
+	    : "n" (__ATPLATOFF), "b" (__tp));
 
   at_platform_string = (const char *) getauxval (AT_PLATFORM);
   at_platform = _dl_string_platform (at_platform_string);
