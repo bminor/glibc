@@ -106,6 +106,15 @@ Major new features:
   can use it to efficiently locate unwinding information for a code
   address.
 
+* Support for OpenRISC running on Linux has been added.  This port requires
+  as least binutils 2.35, GCC 11, and Linux 5.4.  Currently only soft-float
+  ABI is supported:
+
+    - or1k-linux-gnu
+
+  The OpenRISC ABI is 32-bit big-endian and uses 64-bit time (y2038 safe) and
+  64-bit file offsets (LFS default).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On x86-64, the LD_PREFER_MAP_32BIT_EXEC environment variable support

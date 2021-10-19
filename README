@@ -35,6 +35,7 @@ The GNU C Library supports these configurations for using Linux kernels:
 	microblaze*-*-linux-gnu
 	mips-*-linux-gnu
 	mips64-*-linux-gnu
+	or1k-*-linux-gnu
 	powerpc-*-linux-gnu	Hardware or software floating point, BE only.
 	powerpc64*-*-linux-gnu	Big-endian and little-endian.
 	s390-*-linux-gnu
