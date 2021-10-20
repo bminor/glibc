@@ -82,8 +82,14 @@ handler (int sig)
     _exit (127);
 }
 
+#if __USE_FORTIFY_LEVEL == 3
+volatile size_t buf_size = 10;
+#else
 char buf[10];
 wchar_t wbuf[10];
+#define buf_size sizeof (buf)
+#endif
+
 volatile size_t l0;
 volatile char *p;
 volatile wchar_t *wp;
@@ -122,6 +128,10 @@ int num2 = 987654;
 static int
 do_test (void)
 {
+#if __USE_FORTIFY_LEVEL == 3
+  char *buf = (char *) malloc (buf_size);
+  wchar_t *wbuf = (wchar_t *) malloc (buf_size * sizeof (wchar_t));
+#endif
   set_fortify_handler (handler);
 
   struct A { char buf1[9]; char buf2[1]; } a;
@@ -946,93 +956,93 @@ do_test (void)
 
   rewind (stdin);
 
-  if (fgets (buf, sizeof (buf), stdin) != buf
+  if (fgets (buf, buf_size, stdin) != buf
       || memcmp (buf, "abcdefgh\n", 10))
     FAIL ();
-  if (fgets (buf, sizeof (buf), stdin) != buf || memcmp (buf, "ABCDEFGHI", 10))
+  if (fgets (buf, buf_size, stdin) != buf || memcmp (buf, "ABCDEFGHI", 10))
     FAIL ();
 
   rewind (stdin);
 
-  if (fgets (buf, l0 + sizeof (buf), stdin) != buf
+  if (fgets (buf, l0 + buf_size, stdin) != buf
       || memcmp (buf, "abcdefgh\n", 10))
     FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
-  if (fgets (buf, sizeof (buf) + 1, stdin) != buf)
+  if (fgets (buf, buf_size + 1, stdin) != buf)
     FAIL ();
   CHK_FAIL_END
 
   CHK_FAIL_START
-  if (fgets (buf, l0 + sizeof (buf) + 1, stdin) != buf)
+  if (fgets (buf, l0 + buf_size + 1, stdin) != buf)
     FAIL ();
   CHK_FAIL_END
 #endif
 
   rewind (stdin);
 
-  if (fgets_unlocked (buf, sizeof (buf), stdin) != buf
+  if (fgets_unlocked (buf, buf_size, stdin) != buf
       || memcmp (buf, "abcdefgh\n", 10))
     FAIL ();
-  if (fgets_unlocked (buf, sizeof (buf), stdin) != buf
+  if (fgets_unlocked (buf, buf_size, stdin) != buf
       || memcmp (buf, "ABCDEFGHI", 10))
     FAIL ();
 
   rewind (stdin);
 
-  if (fgets_unlocked (buf, l0 + sizeof (buf), stdin) != buf
+  if (fgets_unlocked (buf, l0 + buf_size, stdin) != buf
       || memcmp (buf, "abcdefgh\n", 10))
     FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
-  if (fgets_unlocked (buf, sizeof (buf) + 1, stdin) != buf)
+  if (fgets_unlocked (buf, buf_size + 1, stdin) != buf)
     FAIL ();
   CHK_FAIL_END
 
   CHK_FAIL_START
-  if (fgets_unlocked (buf, l0 + sizeof (buf) + 1, stdin) != buf)
+  if (fgets_unlocked (buf, l0 + buf_size + 1, stdin) != buf)
     FAIL ();
   CHK_FAIL_END
 #endif
 
   rewind (stdin);
 
-  if (fread (buf, 1, sizeof (buf), stdin) != sizeof (buf)
+  if (fread (buf, 1, buf_size, stdin) != buf_size
       || memcmp (buf, "abcdefgh\nA", 10))
     FAIL ();
-  if (fread (buf, sizeof (buf), 1, stdin) != 1
+  if (fread (buf, buf_size, 1, stdin) != 1
       || memcmp (buf, "BCDEFGHI\na", 10))
     FAIL ();
 
   rewind (stdin);
 
-  if (fread (buf, l0 + 1, sizeof (buf), stdin) != sizeof (buf)
+  if (fread (buf, l0 + 1, buf_size, stdin) != buf_size
       || memcmp (buf, "abcdefgh\nA", 10))
     FAIL ();
-  if (fread (buf, sizeof (buf), l0 + 1, stdin) != 1
+  if (fread (buf, buf_size, l0 + 1, stdin) != 1
       || memcmp (buf, "BCDEFGHI\na", 10))
     FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
-  if (fread (buf, 1, sizeof (buf) + 1, stdin) != sizeof (buf) + 1)
+  if (fread (buf, 1, buf_size + 1, stdin) != buf_size + 1)
     FAIL ();
   CHK_FAIL_END
 
   CHK_FAIL_START
-  if (fread (buf, sizeof (buf) + 1, l0 + 1, stdin) != 1)
+  if (fread (buf, buf_size + 1, l0 + 1, stdin) != 1)
     FAIL ();
   CHK_FAIL_END
 #endif
 
   rewind (stdin);
 
-  if (fread_unlocked (buf, 1, sizeof (buf), stdin) != sizeof (buf)
+  if (fread_unlocked (buf, 1, buf_size, stdin) != buf_size
       || memcmp (buf, "abcdefgh\nA", 10))
     FAIL ();
-  if (fread_unlocked (buf, sizeof (buf), 1, stdin) != 1
+  if (fread_unlocked (buf, buf_size, 1, stdin) != 1
       || memcmp (buf, "BCDEFGHI\na", 10))
     FAIL ();
 
@@ -1047,100 +1057,100 @@ do_test (void)
 
   rewind (stdin);
 
-  if (fread_unlocked (buf, l0 + 1, sizeof (buf), stdin) != sizeof (buf)
+  if (fread_unlocked (buf, l0 + 1, buf_size, stdin) != buf_size
       || memcmp (buf, "abcdefgh\nA", 10))
     FAIL ();
-  if (fread_unlocked (buf, sizeof (buf), l0 + 1, stdin) != 1
+  if (fread_unlocked (buf, buf_size, l0 + 1, stdin) != 1
       || memcmp (buf, "BCDEFGHI\na", 10))
     FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
-  if (fread_unlocked (buf, 1, sizeof (buf) + 1, stdin) != sizeof (buf) + 1)
+  if (fread_unlocked (buf, 1, buf_size + 1, stdin) != buf_size + 1)
     FAIL ();
   CHK_FAIL_END
 
   CHK_FAIL_START
-  if (fread_unlocked (buf, sizeof (buf) + 1, l0 + 1, stdin) != 1)
+  if (fread_unlocked (buf, buf_size + 1, l0 + 1, stdin) != 1)
     FAIL ();
   CHK_FAIL_END
 #endif
 
   lseek (fileno (stdin), 0, SEEK_SET);
 
-  if (read (fileno (stdin), buf, sizeof (buf) - 1) != sizeof (buf) - 1
+  if (read (fileno (stdin), buf, buf_size - 1) != buf_size - 1
       || memcmp (buf, "abcdefgh\n", 9))
     FAIL ();
-  if (read (fileno (stdin), buf, sizeof (buf) - 1) != sizeof (buf) - 1
+  if (read (fileno (stdin), buf, buf_size - 1) != buf_size - 1
       || memcmp (buf, "ABCDEFGHI", 9))
     FAIL ();
 
   lseek (fileno (stdin), 0, SEEK_SET);
 
-  if (read (fileno (stdin), buf, l0 + sizeof (buf) - 1) != sizeof (buf) - 1
+  if (read (fileno (stdin), buf, l0 + buf_size - 1) != buf_size - 1
       || memcmp (buf, "abcdefgh\n", 9))
     FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
-  if (read (fileno (stdin), buf, sizeof (buf) + 1) != sizeof (buf) + 1)
+  if (read (fileno (stdin), buf, buf_size + 1) != buf_size + 1)
     FAIL ();
   CHK_FAIL_END
 
   CHK_FAIL_START
-  if (read (fileno (stdin), buf, l0 + sizeof (buf) + 1) != sizeof (buf) + 1)
+  if (read (fileno (stdin), buf, l0 + buf_size + 1) != buf_size + 1)
     FAIL ();
   CHK_FAIL_END
 #endif
 
-  if (pread (fileno (stdin), buf, sizeof (buf) - 1, sizeof (buf) - 2)
-      != sizeof (buf) - 1
+  if (pread (fileno (stdin), buf, buf_size - 1, buf_size - 2)
+      != buf_size - 1
       || memcmp (buf, "\nABCDEFGH", 9))
     FAIL ();
-  if (pread (fileno (stdin), buf, sizeof (buf) - 1, 0) != sizeof (buf) - 1
+  if (pread (fileno (stdin), buf, buf_size - 1, 0) != buf_size - 1
       || memcmp (buf, "abcdefgh\n", 9))
     FAIL ();
-  if (pread (fileno (stdin), buf, l0 + sizeof (buf) - 1, sizeof (buf) - 3)
-      != sizeof (buf) - 1
+  if (pread (fileno (stdin), buf, l0 + buf_size - 1, buf_size - 3)
+      != buf_size - 1
       || memcmp (buf, "h\nABCDEFG", 9))
     FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
-  if (pread (fileno (stdin), buf, sizeof (buf) + 1, 2 * sizeof (buf))
-      != sizeof (buf) + 1)
+  if (pread (fileno (stdin), buf, buf_size + 1, 2 * buf_size)
+      != buf_size + 1)
     FAIL ();
   CHK_FAIL_END
 
   CHK_FAIL_START
-  if (pread (fileno (stdin), buf, l0 + sizeof (buf) + 1, 2 * sizeof (buf))
-      != sizeof (buf) + 1)
+  if (pread (fileno (stdin), buf, l0 + buf_size + 1, 2 * buf_size)
+      != buf_size + 1)
     FAIL ();
   CHK_FAIL_END
 #endif
 
-  if (pread64 (fileno (stdin), buf, sizeof (buf) - 1, sizeof (buf) - 2)
-      != sizeof (buf) - 1
+  if (pread64 (fileno (stdin), buf, buf_size - 1, buf_size - 2)
+      != buf_size - 1
       || memcmp (buf, "\nABCDEFGH", 9))
     FAIL ();
-  if (pread64 (fileno (stdin), buf, sizeof (buf) - 1, 0) != sizeof (buf) - 1
+  if (pread64 (fileno (stdin), buf, buf_size - 1, 0) != buf_size - 1
       || memcmp (buf, "abcdefgh\n", 9))
     FAIL ();
-  if (pread64 (fileno (stdin), buf, l0 + sizeof (buf) - 1, sizeof (buf) - 3)
-      != sizeof (buf) - 1
+  if (pread64 (fileno (stdin), buf, l0 + buf_size - 1, buf_size - 3)
+      != buf_size - 1
       || memcmp (buf, "h\nABCDEFG", 9))
     FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
-  if (pread64 (fileno (stdin), buf, sizeof (buf) + 1, 2 * sizeof (buf))
-      != sizeof (buf) + 1)
+  if (pread64 (fileno (stdin), buf, buf_size + 1, 2 * buf_size)
+      != buf_size + 1)
     FAIL ();
   CHK_FAIL_END
 
   CHK_FAIL_START
-  if (pread64 (fileno (stdin), buf, l0 + sizeof (buf) + 1, 2 * sizeof (buf))
-      != sizeof (buf) + 1)
+  if (pread64 (fileno (stdin), buf, l0 + buf_size + 1, 2 * buf_size)
+      != buf_size + 1)
     FAIL ();
   CHK_FAIL_END
 #endif
@@ -1178,7 +1188,7 @@ do_test (void)
   CHK_FAIL2_END
 
   CHK_FAIL2_START
-  snprintf (buf, sizeof (buf), "%3$d\n", 1, 2, 3, 4);
+  snprintf (buf, buf_size, "%3$d\n", 1, 2, 3, 4);
   CHK_FAIL2_END
 
   int sp[2];
