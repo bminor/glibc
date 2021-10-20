@@ -103,14 +103,14 @@ __alloc_dir (int fd, bool close_fd, int flags,
      file system provides a bogus value.  */
   enum { max_buffer_size = 1048576 };
 
-  const size_t allocation_size = 32768;
+  enum { allocation_size = 32768 };
   _Static_assert (allocation_size >= sizeof (struct dirent64),
 		  "allocation_size < sizeof (struct dirent64)");
 
   /* Increase allocation if requested, but not if the value appears to
      be bogus.  It will be between 32Kb and 1Mb.  */
-  size_t allocation = MIN (MAX ((size_t) statp->st_blksize, allocation_size),
-			   max_buffer_size);
+  size_t allocation = MIN (MAX ((size_t) statp->st_blksize, (size_t)
+                                allocation_size), (size_t) max_buffer_size);
 
   DIR *dirp = (DIR *) malloc (sizeof (DIR) + allocation);
   if (dirp == NULL)
