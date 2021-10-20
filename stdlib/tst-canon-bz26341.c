@@ -45,6 +45,12 @@ create_link (void)
   TEST_VERIFY_EXIT (fd != -1);
   xclose (fd);
 
+  /* Make filename a canonical path.  */
+  char *saved_filename = filename;
+  filename = realpath (filename, NULL);
+  free (saved_filename);
+  TEST_VERIFY (filename != NULL);
+
   /* Create MAXLINKS symbolic links to the temporary filename.
      On exit, linkname has the last link created.  */
   char *prevlink = filename;
