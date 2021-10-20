@@ -495,7 +495,7 @@ extern char *strfry (char *__string) __THROW __nonnull ((1));
 
 /* Frobnicate N bytes of S.  */
 extern void *memfrob (void *__s, size_t __n) __THROW __nonnull ((1))
-    __attr_access ((__write_only__, 1, 2));
+    __attr_access ((__read_write__, 1, 2));
 
 # ifndef basename
 /* Return the file name within directory of FILENAME.  We don't

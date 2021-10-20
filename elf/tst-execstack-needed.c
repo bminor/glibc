@@ -26,7 +26,7 @@ static void
 deeper (void (*f) (void))
 {
   char stack[1100 * 1024];
-  memfrob (stack, sizeof stack);
+  explicit_bzero (stack, sizeof stack);
   (*f) ();
   memfrob (stack, sizeof stack);
 }
