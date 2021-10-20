@@ -120,6 +120,8 @@ CFLAGS-tst-chk3.c += -Wno-format -Wno-deprecated-declarations -Wno-error
 CFLAGS-tst-chk4.cc += -Wno-format -Wno-deprecated-declarations -Wno-error
 CFLAGS-tst-chk5.cc += -Wno-format -Wno-deprecated-declarations -Wno-error
 CFLAGS-tst-chk6.cc += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-chk7.c += -Wno-format -Wno-deprecated-declarations -Wno-error
+CFLAGS-tst-chk8.cc += -Wno-format -Wno-deprecated-declarations -Wno-error
 CFLAGS-tst-lfschk1.c += -Wno-format -Wno-deprecated-declarations -Wno-error
 CFLAGS-tst-lfschk2.c += -Wno-format -Wno-deprecated-declarations -Wno-error
 CFLAGS-tst-lfschk3.c += -Wno-format -Wno-deprecated-declarations -Wno-error
@@ -129,6 +131,7 @@ CFLAGS-tst-lfschk6.cc += -Wno-format -Wno-deprecated-declarations -Wno-error
 LDLIBS-tst-chk4 = -lstdc++
 LDLIBS-tst-chk5 = -lstdc++
 LDLIBS-tst-chk6 = -lstdc++
+LDLIBS-tst-chk8 = -lstdc++
 LDLIBS-tst-lfschk4 = -lstdc++
 LDLIBS-tst-lfschk5 = -lstdc++
 LDLIBS-tst-lfschk6 = -lstdc++
@@ -150,16 +153,16 @@ CFLAGS-tst-ssp-1.c += -fstack-protector-all
 
 tests = backtrace-tst tst-longjmp_chk tst-chk1 tst-chk2 tst-chk3 \
 	tst-lfschk1 tst-lfschk2 tst-lfschk3 test-strcpy_chk test-stpcpy_chk \
-	tst-chk4 tst-chk5 tst-chk6 tst-lfschk4 tst-lfschk5 tst-lfschk6 \
-	tst-longjmp_chk2 tst-backtrace2 tst-backtrace3 tst-backtrace4 \
-	tst-backtrace5 tst-backtrace6
+	tst-chk4 tst-chk5 tst-chk6 tst-chk7 tst-chk8 tst-lfschk4 tst-lfschk5 \
+	tst-lfschk6 tst-longjmp_chk2 tst-backtrace2 tst-backtrace3 \
+	tst-backtrace4 tst-backtrace5 tst-backtrace6
 
 ifeq ($(have-ssp),yes)
 tests += tst-ssp-1
 endif
 
 ifeq (,$(CXX))
-tests-unsupported = tst-chk4 tst-chk5 tst-chk6 \
+tests-unsupported = tst-chk4 tst-chk5 tst-chk6 tst-chk8 \
 		    tst-lfschk4 tst-lfschk5 tst-lfschk6
 endif
 
@@ -193,6 +196,8 @@ $(objpfx)tst-chk3.out: $(gen-locales)
 $(objpfx)tst-chk4.out: $(gen-locales)
 $(objpfx)tst-chk5.out: $(gen-locales)
 $(objpfx)tst-chk6.out: $(gen-locales)
+$(objpfx)tst-chk7.out: $(gen-locales)
+$(objpfx)tst-chk8.out: $(gen-locales)
 $(objpfx)tst-lfschk1.out: $(gen-locales)
 $(objpfx)tst-lfschk2.out: $(gen-locales)
 $(objpfx)tst-lfschk3.out: $(gen-locales)
