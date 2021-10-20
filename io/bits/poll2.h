@@ -36,16 +36,9 @@ extern int __REDIRECT (__poll_chk_warn, (struct pollfd *__fds, nfds_t __nfds,
 __fortify_function __fortified_attr_access (__write_only__, 1, 2) int
 poll (struct pollfd *__fds, nfds_t __nfds, int __timeout)
 {
-  if (__glibc_objsize (__fds) != (__SIZE_TYPE__) -1)
-    {
-      if (! __builtin_constant_p (__nfds))
-	return __poll_chk (__fds, __nfds, __timeout, __glibc_objsize (__fds));
-      else if (__glibc_objsize (__fds) / sizeof (*__fds) < __nfds)
-	return __poll_chk_warn (__fds, __nfds, __timeout,
-				__glibc_objsize (__fds));
-    }
-
-  return __poll_alias (__fds, __nfds, __timeout);
+  return __glibc_fortify (poll, __nfds, sizeof (*__fds),
+			  __glibc_objsize (__fds),
+			  __fds, __nfds, __timeout);
 }
 
 
@@ -68,17 +61,9 @@ __fortify_function __fortified_attr_access (__write_only__, 1, 2) int
 ppoll (struct pollfd *__fds, nfds_t __nfds, const struct timespec *__timeout,
        const __sigset_t *__ss)
 {
-  if (__glibc_objsize (__fds) != (__SIZE_TYPE__) -1)
-    {
-      if (! __builtin_constant_p (__nfds))
-	return __ppoll_chk (__fds, __nfds, __timeout, __ss,
-			    __glibc_objsize (__fds));
-      else if (__glibc_objsize (__fds) / sizeof (*__fds) < __nfds)
-	return __ppoll_chk_warn (__fds, __nfds, __timeout, __ss,
-				 __glibc_objsize (__fds));
-    }
-
-  return __ppoll_alias (__fds, __nfds, __timeout, __ss);
+  return __glibc_fortify (ppoll, __nfds, sizeof (*__fds),
+			  __glibc_objsize (__fds),
+			  __fds, __nfds, __timeout, __ss);
 }
 #endif
 

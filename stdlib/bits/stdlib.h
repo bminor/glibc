@@ -36,17 +36,16 @@ extern char *__REDIRECT_NTH (__realpath_chk_warn,
 __fortify_function __wur char *
 __NTH (realpath (const char *__restrict __name, char *__restrict __resolved))
 {
-  if (__glibc_objsize (__resolved) != (size_t) -1)
-    {
-#if defined _LIBC_LIMITS_H_ && defined PATH_MAX
-      if (__glibc_objsize (__resolved) < PATH_MAX)
-	return __realpath_chk_warn (__name, __resolved,
-				    __glibc_objsize (__resolved));
-#endif
-      return __realpath_chk (__name, __resolved, __glibc_objsize (__resolved));
-    }
+  size_t sz = __glibc_objsize (__resolved);
 
-  return __realpath_alias (__name, __resolved);
+  if (sz == (size_t) -1)
+    return __realpath_alias (__name, __resolved);
+
+#if defined _LIBC_LIMITS_H_ && defined PATH_MAX
+  if (__glibc_unsafe_len (sz, sizeof (char), PATH_MAX))
+    return __realpath_chk_warn (__name, __resolved, sz);
+#endif
+  return __realpath_chk (__name, __resolved, sz);
 }
 
 
@@ -65,16 +64,9 @@ extern int __REDIRECT_NTH (__ptsname_r_chk_warn,
 __fortify_function int
 __NTH (ptsname_r (int __fd, char *__buf, size_t __buflen))
 {
-  if (__glibc_objsize (__buf) != (size_t) -1)
-    {
-      if (!__builtin_constant_p (__buflen))
-	return __ptsname_r_chk (__fd, __buf, __buflen,
-				__glibc_objsize (__buf));
-      if (__buflen > __glibc_objsize (__buf))
-	return __ptsname_r_chk_warn (__fd, __buf, __buflen,
-				     __glibc_objsize (__buf));
-    }
-  return __ptsname_r_alias (__fd, __buf, __buflen);
+  return __glibc_fortify (ptsname_r, __buflen, sizeof (char),
+			  __glibc_objsize (__buf),
+			  __fd, __buf, __buflen);
 }
 
 
@@ -120,18 +112,9 @@ __fortify_function size_t
 __NTH (mbstowcs (wchar_t *__restrict __dst, const char *__restrict __src,
 		 size_t __len))
 {
-  if (__glibc_objsize (__dst) != (size_t) -1)
-    {
-      if (!__builtin_constant_p (__len))
-	return __mbstowcs_chk (__dst, __src, __len,
-			       __glibc_objsize (__dst) / sizeof (wchar_t));
-
-      if (__len > __glibc_objsize (__dst) / sizeof (wchar_t))
-	return __mbstowcs_chk_warn (__dst, __src, __len,
-				    (__glibc_objsize (__dst)
-				     / sizeof (wchar_t)));
-    }
-  return __mbstowcs_alias (__dst, __src, __len);
+  return __glibc_fortify_n (mbstowcs, __len, sizeof (wchar_t),
+			    __glibc_objsize (__dst),
+			    __dst, __src, __len);
 }
 
 
@@ -154,13 +137,7 @@ __fortify_function size_t
 __NTH (wcstombs (char *__restrict __dst, const wchar_t *__restrict __src,
 		 size_t __len))
 {
-  if (__glibc_objsize (__dst) != (size_t) -1)
-    {
-      if (!__builtin_constant_p (__len))
-	return __wcstombs_chk (__dst, __src, __len, __glibc_objsize (__dst));
-      if (__len > __glibc_objsize (__dst))
-	return __wcstombs_chk_warn (__dst, __src, __len,
-				    __glibc_objsize (__dst));
-    }
-  return __wcstombs_alias (__dst, __src, __len);
+  return __glibc_fortify (wcstombs, __len, sizeof (char),
+			  __glibc_objsize (__dst),
+			  __dst, __src, __len);
 }
