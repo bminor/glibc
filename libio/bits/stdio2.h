@@ -261,15 +261,12 @@ extern char *__REDIRECT (__fgets_chk_warn,
 __fortify_function __wur __fortified_attr_access (__write_only__, 1, 2) char *
 fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
-  if (__glibc_objsize (__s) != (size_t) -1)
-    {
-      if (!__builtin_constant_p (__n) || __n <= 0)
-	return __fgets_chk (__s, __glibc_objsize (__s), __n, __stream);
-
-      if ((size_t) __n > __glibc_objsize (__s))
-	return __fgets_chk_warn (__s, __glibc_objsize (__s), __n, __stream);
-    }
-  return __fgets_alias (__s, __n, __stream);
+  size_t sz = __glibc_objsize (__s);
+  if (__glibc_safe_or_unknown_len (__n, sizeof (char), sz))
+    return __fgets_alias (__s, __n, __stream);
+  if (__glibc_unsafe_len (__n, sizeof (char), sz))
+    return __fgets_chk_warn (__s, sz, __n, __stream);
+  return __fgets_chk (__s, sz, __n, __stream);
 }
 
 extern size_t __fread_chk (void *__restrict __ptr, size_t __ptrlen,
@@ -291,19 +288,12 @@ __fortify_function __wur size_t
 fread (void *__restrict __ptr, size_t __size, size_t __n,
        FILE *__restrict __stream)
 {
-  if (__glibc_objsize0 (__ptr) != (size_t) -1)
-    {
-      if (!__builtin_constant_p (__size)
-	  || !__builtin_constant_p (__n)
-	  || (__size | __n) >= (((size_t) 1) << (8 * sizeof (size_t) / 2)))
-	return __fread_chk (__ptr, __glibc_objsize0 (__ptr), __size, __n,
-			    __stream);
-
-      if (__size * __n > __glibc_objsize0 (__ptr))
-	return __fread_chk_warn (__ptr, __glibc_objsize0 (__ptr), __size, __n,
-				 __stream);
-    }
-  return __fread_alias (__ptr, __size, __n, __stream);
+  size_t sz = __glibc_objsize0 (__ptr);
+  if (__glibc_safe_or_unknown_len (__n, __size, sz))
+    return __fread_alias (__ptr, __size, __n, __stream);
+  if (__glibc_unsafe_len (__n, __size, sz))
+    return __fread_chk_warn (__ptr, sz, __size, __n, __stream);
+  return __fread_chk (__ptr, sz, __size, __n, __stream);
 }
 
 #ifdef __USE_GNU
@@ -323,17 +313,12 @@ extern char *__REDIRECT (__fgets_unlocked_chk_warn,
 __fortify_function __wur __fortified_attr_access (__write_only__, 1, 2) char *
 fgets_unlocked (char *__restrict __s, int __n, FILE *__restrict __stream)
 {
-  if (__glibc_objsize (__s) != (size_t) -1)
-    {
-      if (!__builtin_constant_p (__n) || __n <= 0)
-	return __fgets_unlocked_chk (__s, __glibc_objsize (__s), __n,
-				     __stream);
-
-      if ((size_t) __n > __glibc_objsize (__s))
-	return __fgets_unlocked_chk_warn (__s, __glibc_objsize (__s), __n,
-					  __stream);
-    }
-  return __fgets_unlocked_alias (__s, __n, __stream);
+  size_t sz = __glibc_objsize (__s);
+  if (__glibc_safe_or_unknown_len (__n, sizeof (char), sz))
+    return __fgets_unlocked_alias (__s, __n, __stream);
+  if (__glibc_unsafe_len (__n, sizeof (char), sz))
+    return __fgets_unlocked_chk_warn (__s, sz, __n, __stream);
+  return __fgets_unlocked_chk (__s, sz, __n, __stream);
 }
 #endif
 
@@ -358,41 +343,36 @@ __fortify_function __wur size_t
 fread_unlocked (void *__restrict __ptr, size_t __size, size_t __n,
 		FILE *__restrict __stream)
 {
-  if (__glibc_objsize0 (__ptr) != (size_t) -1)
+  size_t sz = __glibc_objsize0 (__ptr);
+  if (__glibc_safe_or_unknown_len (__n, __size, sz))
     {
-      if (!__builtin_constant_p (__size)
-	  || !__builtin_constant_p (__n)
-	  || (__size | __n) >= (((size_t) 1) << (8 * sizeof (size_t) / 2)))
-	return __fread_unlocked_chk (__ptr, __glibc_objsize0 (__ptr), __size,
-				     __n, __stream);
-
-      if (__size * __n > __glibc_objsize0 (__ptr))
-	return __fread_unlocked_chk_warn (__ptr, __glibc_objsize0 (__ptr),
-					  __size, __n, __stream);
-    }
-
 # ifdef __USE_EXTERN_INLINES
-  if (__builtin_constant_p (__size)
-      && __builtin_constant_p (__n)
-      && (__size | __n) < (((size_t) 1) << (8 * sizeof (size_t) / 2))
-      && __size * __n <= 8)
-    {
-      size_t __cnt = __size * __n;
-      char *__cptr = (char *) __ptr;
-      if (__cnt == 0)
-	return 0;
-
-      for (; __cnt > 0; --__cnt)
+      if (__builtin_constant_p (__size)
+	  && __builtin_constant_p (__n)
+	  && (__size | __n) < (((size_t) 1) << (8 * sizeof (size_t) / 2))
+	  && __size * __n <= 8)
 	{
-	  int __c = getc_unlocked (__stream);
-	  if (__c == EOF)
-	    break;
-	  *__cptr++ = __c;
+	  size_t __cnt = __size * __n;
+	  char *__cptr = (char *) __ptr;
+	  if (__cnt == 0)
+	    return 0;
+
+	  for (; __cnt > 0; --__cnt)
+	    {
+	      int __c = getc_unlocked (__stream);
+	      if (__c == EOF)
+		break;
+	      *__cptr++ = __c;
+	    }
+	  return (__cptr - (char *) __ptr) / __size;
 	}
-      return (__cptr - (char *) __ptr) / __size;
-    }
 # endif
-  return __fread_unlocked_alias (__ptr, __size, __n, __stream);
+      return __fread_unlocked_alias (__ptr, __size, __n, __stream);
+    }
+  if (__glibc_unsafe_len (__n, __size, sz))
+    return __fread_unlocked_chk_warn (__ptr, sz, __size, __n, __stream);
+  return __fread_unlocked_chk (__ptr, sz, __size, __n, __stream);
+
 }
 #endif
 
