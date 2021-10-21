@@ -477,6 +477,21 @@ tests-special += $(objpfx)order-cmp.out $(objpfx)tst-array1-cmp.out \
 		 $(objpfx)tst-unused-dep-cmp.out
 endif
 
+# DSO sorting tests:
+# The dso-ordering-test.py script generates testcase source files in $(objpfx),
+# creating a $(objpfx)<testcase-name>-dir for each testcase, and creates a
+# Makefile fragment to be included.
+define include_dsosort_tests
+$(objpfx)$(1).generated-makefile: $(1)
+	$(PYTHON) $(..)scripts/dso-ordering-test.py \
+	--description-file $$< --objpfx $(objpfx) --output-makefile $$@
+include $(objpfx)$(1).generated-makefile
+endef
+
+# Generate from each testcase description file
+$(eval $(call include_dsosort_tests,dso-sort-tests-1.def))
+$(eval $(call include_dsosort_tests,dso-sort-tests-2.def))
+
 check-abi: $(objpfx)check-abi-ld.out
 tests-special += $(objpfx)check-abi-ld.out
 update-abi: update-abi-ld

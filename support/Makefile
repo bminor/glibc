@@ -257,10 +257,16 @@ others-noinstall += shell-container echo-container true-container
 others += $(LINKS_DSO_PROGRAM)
 others-noinstall += $(LINKS_DSO_PROGRAM)
 
+others += test-run-command
+others-static += test-run-command
+others-noinstall += test-run-command
+LDLIBS-test-run-command = $(libsupport)
+
 $(objpfx)test-container : $(libsupport)
 $(objpfx)shell-container : $(libsupport)
 $(objpfx)echo-container : $(libsupport)
 $(objpfx)true-container : $(libsupport)
+$(objpfx)test-run-command : $(libsupport) $(common-objpfx)elf/static-stubs.o
 
 tests = \
   README-testing \

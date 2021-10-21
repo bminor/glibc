@@ -1,0 +1,66 @@
+# DSO sorting test descriptions.
+# This file is to be processed by ../scripts/dso-ordering-test.py, see usage
+# in elf/Makefile for how it is executed.
+
+# We test both dynamic loader sorting algorithms
+tunable_option: glibc.rtld.dynamic_sort=1
+tunable_option: glibc.rtld.dynamic_sort=2
+
+# Sequence of single dependencies with no cycles.
+tst-dso-ordering1: a->b->c
+output: c>b>a>{}<a<b<c
+
+# Sequence including 2 dependent DSOs not at the end of the graph.
+tst-dso-ordering2: a->b->[cd]->e
+output: e>d>c>b>a>{}<a<b<c<d<e
+
+# Complex order with 3 "layers" of full dependencies
+tst-dso-ordering3: a->[bc]->[def]->[gh]->i
+output: i>h>g>f>e>d>c>b>a>{}<a<b<c<d<e<f<g<h<i
+
+# Sequence including 2 dependent DSOs at the end of the graph.
+# Additionally the same dependencies appear in two paths.
+tst-dso-ordering4: a->b->[de];a->c->d->e
+output: e>d>c>b>a>{}<a<b<c<d<e
+
+# Test that b->c cross link is respected correctly
+tst-dso-ordering5: a!->[bc]->d;b->c
+output: d>c>b>a>{}<a<b<c<d
+
+# First DSO fully dependent on 4 DSOs, with another DSO at the end of chain.
+tst-dso-ordering6: a->[bcde]->f
+output: f>e>d>c>b>a>{}<a<b<c<d<e<f
+
+# Sequence including 2 dependent and 3 dependent DSOs, and one of the
+# dependent DSOs is dependent on an earlier DSO.
+tst-dso-ordering7: a->[bc];b->[cde];e->f
+output: f>e>d>c>b>a>{}<a<b<c<d<e<f
+
+# Sequence where the DSO c is unerlinked and calls a function in DSO a which
+# is technically a cycle.  The main executable depends on the first two DSOs.
+# Note: This test has unspecified behavior.
+tst-dso-ordering8: a->b->c=>a;{}->[ba]
+output: c>b>a>{}<a<b<c
+
+# Generate the permutation of DT_NEEDED order between the main binary and
+# all 5 DSOs; all link orders should produce exact same init/fini ordering
+tst-dso-ordering9: a->b->c->d->e;{}!->[abcde]
+output: e>d>c>b>a>{}<a<b<c<d<e
+
+# Test if init/fini ordering behavior is proper, despite main program with
+# an soname that may cause confusion
+tst-dso-ordering10: {}->a->b->c;soname({})=c
+output: b>a>{}<a<b
+
+# Complex example from Bugzilla #15311, under-linked and with circular
+# relocation(dynamic) dependencies. While this is technically unspecified, the
+# presumed reasonable practical behavior is for the destructor order to respect
+# the static DT_NEEDED links (here this means the a->b->c->d order).
+# The older dynamic_sort=1 algorithm does not achieve this, while the DFS-based
+# dynamic_sort=2 algorithm does, although it is still arguable whether going
+# beyond spec to do this is the right thing to do.
+# The below expected outputs are what the two algorithms currently produce
+# respectively, for regression testing purposes.
+tst-bz15311: {+a;+e;+f;+g;+d;%d;-d;-g;-f;-e;-a};a->b->c->d;d=>[ba];c=>a;b=>e=>a;c=>f=>b;d=>g=>c
+xfail_output(glibc.rtld.dynamic_sort=1): {+a[d>c>b>a>];+e[e>];+f[f>];+g[g>];+d[];%d(b(e(a()))a()g(c(a()f(b(e(a()))))));-d[];-g[];-f[];-e[];-a[<a<c<d<g<f<b<e];}
+output(glibc.rtld.dynamic_sort=2): {+a[d>c>b>a>];+e[e>];+f[f>];+g[g>];+d[];%d(b(e(a()))a()g(c(a()f(b(e(a()))))));-d[];-g[];-f[];-e[];-a[<g<f<a<b<c<d<e];}
