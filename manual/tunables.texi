@@ -309,6 +309,17 @@ changed once allocated at process startup.  The default allocation of
 optional static TLS is 512 bytes and is allocated in every thread.
 @end deftp
 
+@deftp Tunable glibc.rtld.dynamic_sort
+Sets the algorithm to use for DSO sorting, valid values are @samp{1} and
+@samp{2}.  For value of @samp{1}, an older O(n^3) algorithm is used, which is
+long time tested, but may have performance issues when dependencies between
+shared objects contain cycles due to circular dependencies.  When set to the
+value of @samp{2}, a different algorithm is used, which implements a
+topological sort through depth-first search, and does not exhibit the
+performance issues of @samp{1}.
+
+The default value of this tunable is @samp{1}.
+@end deftp
 
 @node Elision Tunables
 @section Elision Tunables

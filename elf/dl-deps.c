@@ -613,10 +613,9 @@ Filters not supported with LD_TRACE_PRELINKING"));
 
   /* If libc.so.6 is the main map, it participates in the sort, so
      that the relocation order is correct regarding libc.so.6.  */
-  if (l_initfini[0] == GL (dl_ns)[l_initfini[0]->l_ns].libc_map)
-    _dl_sort_maps (l_initfini, nlist, NULL, false);
-  else
-    _dl_sort_maps (&l_initfini[1], nlist - 1, NULL, false);
+  _dl_sort_maps (l_initfini, nlist,
+		 (l_initfini[0] != GL (dl_ns)[l_initfini[0]->l_ns].libc_map),
+		 false);
 
   /* Terminate the list of dependencies.  */
   l_initfini[nlist] = NULL;

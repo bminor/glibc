@@ -92,8 +92,7 @@ _dl_fini (void)
 	  /* Now we have to do the sorting.  We can skip looking for the
 	     binary itself which is at the front of the search list for
 	     the main namespace.  */
-	  _dl_sort_maps (maps + (ns == LM_ID_BASE), nmaps - (ns == LM_ID_BASE),
-			 NULL, true);
+	  _dl_sort_maps (maps, nmaps, (ns == LM_ID_BASE), true);
 
 	  /* We do not rely on the linked list of loaded object anymore
 	     from this point on.  We have our own list here (maps).  The

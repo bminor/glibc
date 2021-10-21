@@ -51,6 +51,15 @@ Major new features:
 
 * The ISO C2X macro _PRINTF_NAN_LEN_MAX has been added to <stdio.h>.
 
+* A new DSO sorting algorithm has been added in the dynamic linker that uses
+  topological sorting by depth-first search (DFS), solving performance issues
+  of the existing sorting algorithm when encountering particular circular
+  object dependency cases.
+
+* A new tunable, glibc.rtld.dynamic_sort, can be used to select between the two
+  DSO sorting algorithms.  The default setting of '1' uses the current existing
+  algorithm, while a value of '2' selects the new DFS-based algorithm.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The r_version update in the debugger interface makes the glibc binary

@@ -16,16 +16,24 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <assert.h>
 #include <ldsodefs.h>
+#include <elf/dl-tunables.h>
 
+/* Note: this is the older, "original" sorting algorithm, being used as
+   default up to 2.35.
 
-/* Sort array MAPS according to dependencies of the contained objects.
-   Array USED, if non-NULL, is permutated along MAPS.  If FOR_FINI this is
-   called for finishing an object.  */
-void
-_dl_sort_maps (struct link_map **maps, unsigned int nmaps, char *used,
-	       bool for_fini)
+   Sort array MAPS according to dependencies of the contained objects.
+   If FOR_FINI is true, this is called for finishing an object.  */
+static void
+_dl_sort_maps_original (struct link_map **maps, unsigned int nmaps,
+			unsigned int skip, bool for_fini)
 {
+  /* Allows caller to do the common optimization of skipping the first map,
+     usually the main binary.  */
+  maps += skip;
+  nmaps -= skip;
+
   /* A list of one element need not be sorted.  */
   if (nmaps <= 1)
     return;
@@ -65,14 +73,6 @@ _dl_sort_maps (struct link_map **maps, unsigned int nmaps, char *used,
 		  memmove (&maps[i], &maps[i + 1],
 			   (k - i) * sizeof (maps[0]));
 		  maps[k] = thisp;
-
-		  if (used != NULL)
-		    {
-		      char here_used = used[i];
-		      memmove (&used[i], &used[i + 1],
-			       (k - i) * sizeof (used[0]));
-		      used[k] = here_used;
-		    }
 
 		  if (seen[i + 1] > nmaps - i)
 		    {
@@ -120,3 +120,183 @@ _dl_sort_maps (struct link_map **maps, unsigned int nmaps, char *used,
     next:;
     }
 }
+
+#if !HAVE_TUNABLES
+/* In this case, just default to the original algorithm.  */
+strong_alias (_dl_sort_maps_original, _dl_sort_maps);
+#else
+
+/* We use a recursive function due to its better clarity and ease of
+   implementation, as well as faster execution speed. We already use
+   alloca() for list allocation during the breadth-first search of
+   dependencies in _dl_map_object_deps(), and this should be on the
+   same order of worst-case stack usage.
+
+   Note: the '*rpo' parameter is supposed to point to one past the
+   last element of the array where we save the sort results, and is
+   decremented before storing the current map at each level.  */
+
+static void
+dfs_traversal (struct link_map ***rpo, struct link_map *map,
+	       bool *do_reldeps)
+{
+  if (map->l_visited)
+    return;
+
+  map->l_visited = 1;
+
+  if (map->l_initfini)
+    {
+      for (int i = 0; map->l_initfini[i] != NULL; i++)
+	{
+	  struct link_map *dep = map->l_initfini[i];
+	  if (dep->l_visited == 0
+	      && dep->l_main_map == 0)
+	    dfs_traversal (rpo, dep, do_reldeps);
+	}
+    }
+
+  if (__glibc_unlikely (do_reldeps != NULL && map->l_reldeps != NULL))
+    {
+      /* Indicate that we encountered relocation dependencies during
+	 traversal.  */
+      *do_reldeps = true;
+
+      for (int m = map->l_reldeps->act - 1; m >= 0; m--)
+	{
+	  struct link_map *dep = map->l_reldeps->list[m];
+	  if (dep->l_visited == 0
+	      && dep->l_main_map == 0)
+	    dfs_traversal (rpo, dep, do_reldeps);
+	}
+    }
+
+  *rpo -= 1;
+  **rpo = map;
+}
+
+/* Topologically sort array MAPS according to dependencies of the contained
+   objects.  */
+
+static void
+_dl_sort_maps_dfs (struct link_map **maps, unsigned int nmaps,
+		   unsigned int skip __attribute__ ((unused)), bool for_fini)
+{
+  for (int i = nmaps - 1; i >= 0; i--)
+    maps[i]->l_visited = 0;
+
+  /* We apply DFS traversal for each of maps[i] until the whole total order
+     is found and we're at the start of the Reverse-Postorder (RPO) sequence,
+     which is a topological sort.
+
+     We go from maps[nmaps - 1] backwards towards maps[0] at this level.
+     Due to the breadth-first search (BFS) ordering we receive, going
+     backwards usually gives a more shallow depth-first recursion depth,
+     adding more stack usage safety. Also, combined with the natural
+     processing order of l_initfini[] at each node during DFS, this maintains
+     an ordering closer to the original link ordering in the sorting results
+     under most simpler cases.
+
+     Another reason we order the top level backwards, it that maps[0] is
+     usually exactly the main object of which we're in the midst of
+     _dl_map_object_deps() processing, and maps[0]->l_initfini[] is still
+     blank. If we start the traversal from maps[0], since having no
+     dependencies yet filled in, maps[0] will always be immediately
+     incorrectly placed at the last place in the order (first in reverse).
+     Adjusting the order so that maps[0] is last traversed naturally avoids
+     this problem.
+
+     Further, the old "optimization" of skipping the main object at maps[0]
+     from the call-site (i.e. _dl_sort_maps(maps+1,nmaps-1)) is in general
+     no longer valid, since traversing along object dependency-links
+     may "find" the main object even when it is not included in the initial
+     order (e.g. a dlopen()'ed shared object can have circular dependencies
+     linked back to itself). In such a case, traversing N-1 objects will
+     create a N-object result, and raise problems.
+
+     To summarize, just passing in the full list, and iterating from back
+     to front makes things much more straightforward.  */
+
+  /* Array to hold RPO sorting results, before we copy back to maps[].  */
+  struct link_map *rpo[nmaps];
+
+  /* The 'head' position during each DFS iteration. Note that we start at
+     one past the last element due to first-decrement-then-store (see the
+     bottom of above dfs_traversal() routine).  */
+  struct link_map **rpo_head = &rpo[nmaps];
+
+  bool do_reldeps = false;
+  bool *do_reldeps_ref = (for_fini ? &do_reldeps : NULL);
+
+  for (int i = nmaps - 1; i >= 0; i--)
+    {
+      dfs_traversal (&rpo_head, maps[i], do_reldeps_ref);
+
+      /* We can break early if all objects are already placed.  */
+      if (rpo_head == rpo)
+	goto end;
+    }
+  assert (rpo_head == rpo);
+
+ end:
+  /* Here we may do a second pass of sorting, using only l_initfini[]
+     static dependency links. This is avoided if !FOR_FINI or if we didn't
+     find any reldeps in the first DFS traversal.
+
+     The reason we do this is: while it is unspecified how circular
+     dependencies should be handled, the presumed reasonable behavior is to
+     have destructors to respect static dependency links as much as possible,
+     overriding reldeps if needed. And the first sorting pass, which takes
+     l_initfini/l_reldeps links equally, may not preserve this priority.
+
+     Hence we do a 2nd sorting pass, taking only DT_NEEDED links into account
+     (see how the do_reldeps argument to dfs_traversal() is NULL below).  */
+  if (do_reldeps)
+    {
+      for (int i = nmaps - 1; i >= 0; i--)
+	rpo[i]->l_visited = 0;
+
+      struct link_map **maps_head = &maps[nmaps];
+      for (int i = nmaps - 1; i >= 0; i--)
+	{
+	  dfs_traversal (&maps_head, rpo[i], NULL);
+
+	  /* We can break early if all objects are already placed.
+	     The below memcpy is not needed in the do_reldeps case here,
+	     since we wrote back to maps[] during DFS traversal.  */
+	  if (maps_head == maps)
+	    return;
+	}
+      assert (maps_head == maps);
+      return;
+    }
+
+  memcpy (maps, rpo, sizeof (struct link_map *) * nmaps);
+}
+
+void
+_dl_sort_maps_init (void)
+{
+  int32_t algorithm = TUNABLE_GET (glibc, rtld, dynamic_sort, int32_t, NULL);
+  GLRO(dl_dso_sort_algo) = algorithm == 1 ? dso_sort_algorithm_original
+					  : dso_sort_algorithm_dfs;
+}
+
+void
+_dl_sort_maps (struct link_map **maps, unsigned int nmaps,
+	       unsigned int skip, bool for_fini)
+{
+  /* It can be tempting to use a static function pointer to store and call
+     the current selected sorting algorithm routine, but experimentation
+     shows that current processors still do not handle indirect branches
+     that efficiently, plus a static function pointer will involve
+     PTR_MANGLE/DEMANGLE, further impairing performance of small, common
+     input cases. A simple if-case with direct function calls appears to
+     be the fastest.  */
+  if (__glibc_likely (GLRO(dl_dso_sort_algo) == dso_sort_algorithm_original))
+    _dl_sort_maps_original (maps, nmaps, skip, for_fini);
+  else
+    _dl_sort_maps_dfs (maps, nmaps, skip, for_fini);
+}
+
+#endif /* HAVE_TUNABLES.  */

@@ -1391,6 +1391,9 @@ dl_main (const ElfW(Phdr) *phdr,
       main_map->l_name = (char *) "";
       *user_entry = main_map->l_entry;
 
+      /* Set bit indicating this is the main program map.  */
+      main_map->l_main_map = 1;
+
 #ifdef HAVE_AUX_VECTOR
       /* Adjust the on-stack auxiliary vector so that it looks like the
 	 binary was executed directly.  */

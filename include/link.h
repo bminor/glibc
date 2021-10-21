@@ -181,6 +181,11 @@ struct link_map
     unsigned int l_init_called:1; /* Nonzero if DT_INIT function called.  */
     unsigned int l_global:1;	/* Nonzero if object in _dl_global_scope.  */
     unsigned int l_reserved:2;	/* Reserved for internal use.  */
+    unsigned int l_main_map:1;  /* Nonzero for the map of the main program.  */
+    unsigned int l_visited:1;   /* Used internally for map dependency
+				   graph traversal.  */
+    unsigned int l_map_used:1;  /* These two bits are used during traversal */
+    unsigned int l_map_done:1;  /* of maps in _dl_close_worker. */
     unsigned int l_phdr_allocated:1; /* Nonzero if the data structure pointed
 					to by `l_phdr' is allocated.  */
     unsigned int l_soname_added:1; /* Nonzero if the SONAME is for sure in

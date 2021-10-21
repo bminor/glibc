@@ -167,8 +167,6 @@ _dl_close_worker (struct link_map *map, bool force)
 
   bool any_tls = false;
   const unsigned int nloaded = ns->_ns_nloaded;
-  char used[nloaded];
-  char done[nloaded];
   struct link_map *maps[nloaded];
 
   /* Run over the list and assign indexes to the link maps and enter
@@ -176,16 +174,13 @@ _dl_close_worker (struct link_map *map, bool force)
   int idx = 0;
   for (struct link_map *l = ns->_ns_loaded; l != NULL; l = l->l_next)
     {
+      l->l_map_used = 0;
+      l->l_map_done = 0;
       l->l_idx = idx;
       maps[idx] = l;
       ++idx;
-
     }
   assert (idx == nloaded);
-
-  /* Prepare the bitmaps.  */
-  memset (used, '\0', sizeof (used));
-  memset (done, '\0', sizeof (done));
 
   /* Keep track of the lowest index link map we have covered already.  */
   int done_index = -1;
@@ -193,7 +188,7 @@ _dl_close_worker (struct link_map *map, bool force)
     {
       struct link_map *l = maps[done_index];
 
-      if (done[done_index])
+      if (l->l_map_done)
 	/* Already handled.  */
 	continue;
 
@@ -204,12 +199,12 @@ _dl_close_worker (struct link_map *map, bool force)
 	  /* See CONCURRENCY NOTES in cxa_thread_atexit_impl.c to know why
 	     acquire is sufficient and correct.  */
 	  && atomic_load_acquire (&l->l_tls_dtor_count) == 0
-	  && !used[done_index])
+	  && !l->l_map_used)
 	continue;
 
       /* We need this object and we handle it now.  */
-      done[done_index] = 1;
-      used[done_index] = 1;
+      l->l_map_used = 1;
+      l->l_map_done = 1;
       /* Signal the object is still needed.  */
       l->l_idx = IDX_STILL_USED;
 
@@ -225,9 +220,9 @@ _dl_close_worker (struct link_map *map, bool force)
 		{
 		  assert ((*lp)->l_idx >= 0 && (*lp)->l_idx < nloaded);
 
-		  if (!used[(*lp)->l_idx])
+		  if (!(*lp)->l_map_used)
 		    {
-		      used[(*lp)->l_idx] = 1;
+		      (*lp)->l_map_used = 1;
 		      /* If we marked a new object as used, and we've
 			 already processed it, then we need to go back
 			 and process again from that point forward to
@@ -250,9 +245,9 @@ _dl_close_worker (struct link_map *map, bool force)
 	      {
 		assert (jmap->l_idx >= 0 && jmap->l_idx < nloaded);
 
-		if (!used[jmap->l_idx])
+		if (!jmap->l_map_used)
 		  {
-		    used[jmap->l_idx] = 1;
+		    jmap->l_map_used = 1;
 		    if (jmap->l_idx - 1 < done_index)
 		      done_index = jmap->l_idx - 1;
 		  }
@@ -262,8 +257,7 @@ _dl_close_worker (struct link_map *map, bool force)
 
   /* Sort the entries.  We can skip looking for the binary itself which is
      at the front of the search list for the main namespace.  */
-  _dl_sort_maps (maps + (nsid == LM_ID_BASE), nloaded - (nsid == LM_ID_BASE),
-		 used + (nsid == LM_ID_BASE), true);
+  _dl_sort_maps (maps, nloaded, (nsid == LM_ID_BASE), true);
 
   /* Call all termination functions at once.  */
 #ifdef SHARED
@@ -280,7 +274,7 @@ _dl_close_worker (struct link_map *map, bool force)
       /* All elements must be in the same namespace.  */
       assert (imap->l_ns == nsid);
 
-      if (!used[i])
+      if (!imap->l_map_used)
 	{
 	  assert (imap->l_type == lt_loaded && !imap->l_nodelete_active);
 
@@ -333,7 +327,7 @@ _dl_close_worker (struct link_map *map, bool force)
 	  if (i < first_loaded)
 	    first_loaded = i;
 	}
-      /* Else used[i].  */
+      /* Else imap->l_map_used.  */
       else if (imap->l_type == lt_loaded)
 	{
 	  struct r_scope_elem *new_list = NULL;
@@ -560,7 +554,7 @@ _dl_close_worker (struct link_map *map, bool force)
   for (unsigned int i = first_loaded; i < nloaded; ++i)
     {
       struct link_map *imap = maps[i];
-      if (!used[i])
+      if (!imap->l_map_used)
 	{
 	  assert (imap->l_type == lt_loaded);
 

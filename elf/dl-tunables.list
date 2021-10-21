@@ -156,4 +156,13 @@ glibc {
       security_level: SXID_IGNORE
     }
   }
+
+  rtld {
+    dynamic_sort {
+      type: INT_32
+      minval: 1
+      maxval: 2
+      default: 1
+    }
+  }
 }
