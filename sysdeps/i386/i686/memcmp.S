@@ -408,3 +408,4 @@ weak_alias (memcmp, bcmp)
 #undef __memcmpeq
 strong_alias (memcmp, __memcmpeq)
 libc_hidden_builtin_def (memcmp)
+libc_hidden_def (__memcmpeq)

@@ -26,6 +26,10 @@
    used by IFUNC.  */
 #  define libc_hidden_builtin_def(name) \
 	.globl __GI_memcmp; __GI_memcmp = memcmp
+
+#  undef libc_hidden_def
+#  define libc_hidden_def(name) \
+	.globl __GI___memcmpeq; __GI___memcmpeq = __memcmpeq
 # endif
 
 # undef weak_alias

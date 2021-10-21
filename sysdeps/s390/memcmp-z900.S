@@ -165,6 +165,7 @@ END(MEMCMP_Z196)
 strong_alias (MEMCMP_DEFAULT, memcmp)
 weak_alias (memcmp, bcmp)
 strong_alias (memcmp, __memcmpeq)
+libc_hidden_def (__memcmpeq)
 #endif
 
 #if defined SHARED && IS_IN (libc)

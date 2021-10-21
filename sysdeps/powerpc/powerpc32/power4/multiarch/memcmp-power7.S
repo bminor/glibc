@@ -35,6 +35,9 @@
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 
+#undef libc_hidden_def
+#define libc_hidden_def(name)
+
 #undef weak_alias
 #define weak_alias(a, b)
 

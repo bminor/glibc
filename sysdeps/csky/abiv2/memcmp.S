@@ -140,4 +140,5 @@ END (memcmp)
 weak_alias (memcmp, bcmp)
 strong_alias (memcmp, __memcmpeq)
 libc_hidden_def (memcmp)
+libc_hidden_def (__memcmpeq)
 .weak memcmp

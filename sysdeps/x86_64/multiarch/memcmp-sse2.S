@@ -22,6 +22,9 @@
 # ifdef SHARED
 #  undef libc_hidden_builtin_def
 #  define libc_hidden_builtin_def(name)
+
+#  undef libc_hidden_def
+#  define libc_hidden_def(ignored)
 # endif
 
 # undef weak_alias
