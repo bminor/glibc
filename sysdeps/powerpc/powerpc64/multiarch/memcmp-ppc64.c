@@ -22,6 +22,10 @@
 #define weak_alias(name, aliasname) \
   extern __typeof (__memcmp_ppc) aliasname \
     __attribute__ ((weak, alias ("__memcmp_ppc")));
+#undef strong_alias
+#define strong_alias(name, aliasname) \
+  extern __typeof (__memcmp_ppc) aliasname \
+    __attribute__ ((alias ("__memcmp_ppc")));
 #if IS_IN (libc) && defined(SHARED)
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name) \

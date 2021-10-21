@@ -1373,3 +1373,4 @@ END (memcmp)
 
 libc_hidden_builtin_def (memcmp)
 weak_alias (memcmp, bcmp)
+strong_alias (memcmp, __memcmpeq)

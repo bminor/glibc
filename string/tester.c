@@ -1450,6 +1450,19 @@ test_bcmp (void)
 }
 
 static void
+test_memcmpeq (void)
+{
+  it = "__memcmpeq";
+  check (__memcmpeq ("a", "a", 1) == 0, 1); /* Identity.  */
+  check (__memcmpeq ("abc", "abc", 3) == 0, 2); /* Multicharacter.  */
+  check (__memcmpeq ("abcd", "abce", 4) != 0, 3); /* Honestly unequal.  */
+  check (__memcmpeq ("abce", "abcd", 4) != 0, 4);
+  check (__memcmpeq ("alph", "beta", 4) != 0, 5);
+  check (__memcmpeq ("abce", "abcd", 3) == 0, 6); /* Count limited.  */
+  check (__memcmpeq ("abc", "def", 0) == 0, 8); /* Zero count.  */
+}
+
+static void
 test_strerror (void)
 {
   it = "strerror";
@@ -1610,6 +1623,9 @@ main (void)
 
   /* bcmp - somewhat like memcmp.  */
   test_bcmp ();
+
+  /* __memcmpeq - somewhat like memcmp.  */
+  test_memcmpeq ();
 
   /* strndup.  */
   test_strndup ();

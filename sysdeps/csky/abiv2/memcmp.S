@@ -138,5 +138,6 @@ ENTRY (memcmp)
 	br	.L_s1_aligned
 END (memcmp)
 weak_alias (memcmp, bcmp)
+strong_alias (memcmp, __memcmpeq)
 libc_hidden_def (memcmp)
 .weak memcmp

@@ -164,6 +164,7 @@ END(MEMCMP_Z196)
    Otherwise see sysdeps/s390/memcmp.c.  */
 strong_alias (MEMCMP_DEFAULT, memcmp)
 weak_alias (memcmp, bcmp)
+strong_alias (memcmp, __memcmpeq)
 #endif
 
 #if defined SHARED && IS_IN (libc)

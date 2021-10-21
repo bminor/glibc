@@ -38,4 +38,7 @@
 #undef weak_alias
 #define weak_alias(a, b)
 
+#undef strong_alias
+#define strong_alias(a, b)
+
 #include <sysdeps/powerpc/powerpc32/power7/memcmp.S>

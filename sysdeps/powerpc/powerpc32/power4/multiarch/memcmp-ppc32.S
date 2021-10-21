@@ -40,6 +40,10 @@
 # undef weak_alias
 # define weak_alias(a, b)					\
   .weak b ; b = __memcmp_ppc
+
+# undef strong_alias
+# define strong_alias(a, b)					\
+  .globl b ; b = __memcmp_ppc
 #endif
 
 #include <sysdeps/powerpc/powerpc32/power4/memcmp.S>

@@ -30,6 +30,9 @@
 
 # undef weak_alias
 # define weak_alias(original, alias)
+
+# undef strong_alias
+# define strong_alias(original, alias)
 #endif
 
 #include <sysdeps/i386/i686/memcmp.S>

@@ -64,6 +64,22 @@ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
 extern int memcmp (const void *__s1, const void *__s2, size_t __n)
      __THROW __attribute_pure__ __nonnull ((1, 2));
 
+/* Compare N bytes of S1 and S2.  Return zero if S1 and S2 are equal.
+   Return some non-zero value otherwise.
+
+   Essentially __memcmpeq has the exact same semantics as memcmp
+   except the return value is less constrained.  memcmp is always a
+   correct implementation of __memcmpeq.  As well !!memcmp, -memcmp,
+   or bcmp are correct implementations.
+
+   __memcmpeq is meant to be used by compilers when memcmp return is
+   only used for its bolean value.
+
+   __memcmpeq is declared only for use by compilers.  Programs should
+   continue to use memcmp.  */
+extern int __memcmpeq (const void *__s1, const void *__s2, size_t __n)
+     __THROW __attribute_pure__ __nonnull ((1, 2));
+
 /* Search N bytes of S for C.  */
 #ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
 extern "C++"

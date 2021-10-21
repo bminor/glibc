@@ -29,4 +29,5 @@
 libc_ifunc_redirected (__redirect_memcmp, memcmp, IFUNC_SELECTOR ());
 
 weak_alias (memcmp, bcmp)
+strong_alias (memcmp, __memcmpeq)
 #endif

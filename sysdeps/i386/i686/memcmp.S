@@ -405,4 +405,6 @@ L(table_32bytes) :
 
 #undef bcmp
 weak_alias (memcmp, bcmp)
+#undef __memcmpeq
+strong_alias (memcmp, __memcmpeq)
 libc_hidden_builtin_def (memcmp)

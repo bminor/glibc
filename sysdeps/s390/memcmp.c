@@ -46,4 +46,5 @@ s390_libc_ifunc_expr (__redirect_memcmp, memcmp,
 		      })
 		      )
 weak_alias (memcmp, bcmp);
+strong_alias (memcmp, __memcmpeq)
 #endif

@@ -22,5 +22,7 @@
 #define libc_hidden_builtin_def(name)
 #undef weak_alias
 #define weak_alias(name,alias)
+#undef strong_alias
+#define strong_alias(name,alias)
 
 #include <sysdeps/powerpc/powerpc64/power4/memcmp.S>

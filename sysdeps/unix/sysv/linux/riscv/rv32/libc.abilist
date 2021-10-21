@@ -2375,3 +2375,4 @@ GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F
 GLIBC_2.34 tss_get F
 GLIBC_2.34 tss_set F
+GLIBC_2.35 __memcmpeq F
