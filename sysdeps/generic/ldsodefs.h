@@ -1245,7 +1245,16 @@ extern struct link_map * _dl_get_dl_main_map (void)
 #endif
 
 /* Initialize the DSO sort algorithm to use.  */
+#if !HAVE_TUNABLES
+static inline void
+__always_inline
+_dl_sort_maps_init (void)
+{
+  /* This is optimized out if tunables are not enabled.  */
+}
+#else
 extern void _dl_sort_maps_init (void) attribute_hidden;
+#endif
 
 /* Initialization of libpthread for statically linked applications.
    If libpthread is not linked in, this is an empty function.  */
