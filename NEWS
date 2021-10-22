@@ -60,6 +60,10 @@ Major new features:
   DSO sorting algorithms.  The default setting of '1' uses the current existing
   algorithm, while a value of '2' selects the new DFS-based algorithm.
 
+* ABI support for a new function '__memcmpeq'. '__memcmpeq' is meant
+  to be used by compilers for optimizing usage of 'memcmp' when its
+  return value is only used for its boolean status.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The r_version update in the debugger interface makes the glibc binary
