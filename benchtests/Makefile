@@ -21,12 +21,68 @@
 subdir := benchtests
 
 include ../Makeconfig
-bench-math := acos acosh asin asinh atan atanh cos cosh exp exp2 log log2   \
-	      modf pow rint sin sincos sinh sqrt tan tanh fmin fmax fminf   \
-	      fmaxf powf trunc truncf roundeven roundevenf expf exp2f logf  \
-	      log2f sincosf sinf cosf isnan isinf isfinite hypot logb logbf \
-	      exp10f ilogb ilogbf cbrt erf erfc exp10 expm1 j0 j1 lgamma    \
-	      log10 log1p tgamma y0 y1 atan2
+
+bench-math := \
+  acos \
+  acosh \
+  asin \
+  asinh \
+  atan \
+  atan2 \
+  atanh \
+  cbrt \
+  cos \
+  cosf \
+  cosh \
+  erf \
+  erfc \
+  exp \
+  exp10 \
+  exp10f \
+  exp2 \
+  exp2f \
+  expf \
+  expm1 \
+  fmax \
+  fmaxf \
+  fmin \
+  fminf \
+  hypot \
+  ilogb \
+  ilogbf \
+  isfinite \
+  isinf \
+  isnan \
+  j0 \
+  j1 \
+  lgamma \
+  log \
+  log10 \
+  log1p \
+  log2 \
+  log2f \
+  logb \
+  logbf \
+  logf \
+  modf \
+  pow \
+  powf \
+  rint \
+  roundeven \
+  roundevenf \
+  sin \
+  sincos \
+  sincosf \
+  sinf \
+  sinh \
+  sqrt \
+  tan \
+  tanh \
+  tgamma \
+  trunc \
+  truncf \
+  y0 \
+  y1 \
 
 ifneq (,$(filter yes,$(float96-fcts)))
 bench-math += cbrtl
