@@ -561,13 +561,13 @@ L(between_16_31):
 	/* From 16 to 31 bytes.  No branch when size == 16.  */
 
 	/* Use movups to save code size.  */
-	movups	(%rsi), %xmm2
+	vmovdqu	(%rsi), %xmm2
 	VPCMP	$4, (%rdi), %xmm2, %k1
 	kmovd	%k1, %eax
 	testl	%eax, %eax
 	jnz	L(return_vec_0_lv)
 	/* Use overlapping loads to avoid branches.  */
-	movups	-16(%rsi, %rdx, CHAR_SIZE), %xmm2
+	vmovdqu	-16(%rsi, %rdx, CHAR_SIZE), %xmm2
 	VPCMP	$4, -16(%rdi, %rdx, CHAR_SIZE), %xmm2, %k1
 	addl	$(CHAR_PER_VEC - (16 / CHAR_SIZE)), %edx
 	kmovd	%k1, %eax
