@@ -103,7 +103,7 @@ bench := $(foreach B,$(filter bench-%,${BENCHSET}), ${${B}})
 endif
 
 # String function benchmarks.
-string-benchset := memccpy memchr memcmp memcpy memmem memmove \
+string-benchset := memccpy memchr memcmp memcmpeq memcpy memmem memmove \
 		   mempcpy memset rawmemchr stpcpy stpncpy strcasecmp strcasestr \
 		   strcat strchr strchrnul strcmp strcpy strcspn strlen \
 		   strncasecmp strncat strncmp strncpy strnlen strpbrk strrchr \

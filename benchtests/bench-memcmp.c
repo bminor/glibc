@@ -17,17 +17,21 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
-#ifdef WIDE
+#ifdef TEST_MEMCMPEQ
+# define TEST_NAME "__memcmpeq"
+# define SIMPLE_MEMCMP simple_memcmpeq
+#elif defined WIDE
 # define TEST_NAME "wmemcmp"
+# define SIMPLE_MEMCMP simple_wmemcmp
 #else
 # define TEST_NAME "memcmp"
+# define SIMPLE_MEMCMP simple_memcmp
 #endif
 #include "bench-string.h"
 #ifdef WIDE
 
-# define SIMPLE_MEMCMP simple_wmemcmp
 int
-simple_wmemcmp (const wchar_t *s1, const wchar_t *s2, size_t n)
+SIMPLE_MEMCMP (const wchar_t *s1, const wchar_t *s2, size_t n)
 {
   int ret = 0;
   /* Warning!
@@ -40,10 +44,8 @@ simple_wmemcmp (const wchar_t *s1, const wchar_t *s2, size_t n)
 #else
 # include <limits.h>
 
-# define SIMPLE_MEMCMP simple_memcmp
-
 int
-simple_memcmp (const char *s1, const char *s2, size_t n)
+SIMPLE_MEMCMP (const char *s1, const char *s2, size_t n)
 {
   int ret = 0;
 
