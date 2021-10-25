@@ -224,20 +224,17 @@ AC_DEFUN([LIBC_LINKER_FEATURE],
 [AC_MSG_CHECKING([for linker that supports $1])
 libc_linker_feature=no
 if test x"$gnu_ld" = x"yes"; then
-  libc_linker_check=`$LD -v --help 2>/dev/null | grep "\$1"`
-  if test -n "$libc_linker_check"; then
-    cat > conftest.c <<EOF
+  cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-    if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
-				$2 -nostdlib -nostartfiles
-				-fPIC -shared -o conftest.so conftest.c
-				1>&AS_MESSAGE_LOG_FD])
-    then
-      libc_linker_feature=yes
-    fi
-    rm -f conftest*
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
+		    $2 -nostdlib -nostartfiles
+		    -fPIC -shared -o conftest.so conftest.c
+		    1>&AS_MESSAGE_LOG_FD])
+  then
+    libc_linker_feature=yes
   fi
+  rm -f conftest*
 fi
 if test $libc_linker_feature = yes; then
   $3
