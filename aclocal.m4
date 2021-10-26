@@ -114,8 +114,12 @@ if test -n "$path_binutils"; then
     path_binutils=`(cd $path_binutils; pwd) | sed 's%/*$%/%'`
     CC="$CC -B$path_binutils"
 fi
+case "$CC" in
+    *fuse-ld=lld*) LDNAME=ld.lld;;
+    *)             LDNAME=ld;;
+esac
 AS=`$CC -print-prog-name=as`
-LD=`$CC -print-prog-name=ld`
+LD=`$CC -print-prog-name=$LDNAME`
 AR=`$CC -print-prog-name=ar`
 AC_SUBST(AR)
 OBJDUMP=`$CC -print-prog-name=objdump`
