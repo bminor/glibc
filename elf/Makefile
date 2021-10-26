@@ -427,11 +427,14 @@ ifeq (yes,$(build-shared))
 tests += tst-ifunc-fault-lazy tst-ifunc-fault-bindnow
 # Note: sysdeps/x86_64/ifuncmain8.c uses ifuncmain8.
 tests-internal += \
-	 ifuncmain1 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
+	 ifuncmain1pic ifuncmain1vis ifuncmain1vispic \
 	 ifuncmain1staticpic \
 	 ifuncmain2 ifuncmain2pic ifuncmain3 ifuncmain4 \
-	 ifuncmain5 ifuncmain5pic ifuncmain5staticpic \
+	 ifuncmain5staticpic \
 	 ifuncmain7 ifuncmain7pic
+ifeq (no,$(with-lld))
+tests-internal += ifuncmain1 ifuncmain5 ifuncmain5pic
+endif
 ifeq (yes,$(have-gcc-ifunc))
 tests-internal += ifuncmain9 ifuncmain9pic
 endif
@@ -441,9 +444,12 @@ extra-test-objs += $(ifunc-test-modules:=.o)
 test-internal-extras += $(ifunc-test-modules)
 ifeq (yes,$(have-fpie))
 ifunc-pie-tests = ifuncmain1pie ifuncmain1vispie ifuncmain1staticpie \
-		  ifuncmain5pie ifuncmain6pie ifuncmain7pie
+		  ifuncmain6pie ifuncmain7pie
 ifeq (yes,$(have-gcc-ifunc))
 ifunc-pie-tests += ifuncmain9pie
+endif
+ifeq (no,$(with-lld))
+ifunc-pie-tests += ifuncmain5pie
 endif
 ifeq (yes,$(have-textrel_ifunc))
 ifunc-pie-tests += tst-ifunc-textrel
@@ -451,7 +457,10 @@ endif
 tests-internal += $(ifunc-pie-tests)
 tests-pie += $(ifunc-pie-tests)
 endif
-modules-names += ifuncmod1 ifuncmod3 ifuncmod5 ifuncmod6
+modules-names += ifuncmod1 ifuncmod3 ifuncmod6
+ifeq (no,$(with-lld))
+modules-names += ifuncmod5
+endif
 endif
 endif
 
