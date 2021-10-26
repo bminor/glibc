@@ -450,6 +450,7 @@ tests += \
   unload6 \
   unload7 \
   unload8 \
+  valgrind-test \
   # tests
 tests-cxx = \
   tst-dlopen-nodelete-reloc \
@@ -524,6 +525,12 @@ tests-special += \
 endif
 endif
 endif
+
+tests-special += $(objpfx)tst-valgrind-smoke.out
+$(objpfx)tst-valgrind-smoke.out: tst-valgrind-smoke.sh $(objpfx)ld.so $(objpfx)valgrind-test
+	$(SHELL) $< $(objpfx)ld.so  $(rtlddir)/$(rtld-installed-name) '$(test-wrapper-env)' \
+		'$(run-program-env)' '$(rpath-link)' $(objpfx)valgrind-test > $@; $(evaluate-test)
+
 tests += $(tests-execstack-$(have-z-execstack))
 ifeq ($(run-built-tests),yes)
 tests-special += \
