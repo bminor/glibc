@@ -275,12 +275,14 @@ LT_LABELSUFFIX(name,_name_end): ; \
 /* Allocate frame and save register */
 #define NVOLREG_SAVE \
     stdu r1,-SCV_FRAME_SIZE(r1); \
+    cfi_adjust_cfa_offset(SCV_FRAME_SIZE); \
     std r31,SCV_FRAME_NVOLREG_SAVE(r1); \
-    cfi_adjust_cfa_offset(SCV_FRAME_SIZE);
+    cfi_rel_offset(r31,SCV_FRAME_NVOLREG_SAVE);
 
 /* Restore register and destroy frame */
 #define NVOLREG_RESTORE	\
     ld r31,SCV_FRAME_NVOLREG_SAVE(r1); \
+    cfi_restore(r31); \
     addi r1,r1,SCV_FRAME_SIZE; \
     cfi_adjust_cfa_offset(-SCV_FRAME_SIZE);
 
@@ -331,13 +333,13 @@ LT_LABELSUFFIX(name,_name_end): ; \
 
 #define DO_CALL_SCV \
     mflr r9; \
-    std r9,FRAME_LR_SAVE(r1); \
-    cfi_offset(lr,FRAME_LR_SAVE); \
+    std r9,SCV_FRAME_SIZE+FRAME_LR_SAVE(r1);   \
+    cfi_rel_offset(lr,SCV_FRAME_SIZE+FRAME_LR_SAVE); \
     .machine "push"; \
     .machine "power9"; \
     scv 0; \
     .machine "pop"; \
-    ld r9,FRAME_LR_SAVE(r1); \
+    ld r9,SCV_FRAME_SIZE+FRAME_LR_SAVE(r1);      \
     mtlr r9; \
     cfi_restore(lr);
 
