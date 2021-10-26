@@ -6312,8 +6312,8 @@ void foo (void)
   i = 10;
 }
 EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -S -fPIC -mtls-dialect=gnu2
-		   conftest.c 1>&5'
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -fPIC -mtls-dialect=gnu2 -nostdlib -nostartfiles
+		   conftest.c -o conftest 1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?

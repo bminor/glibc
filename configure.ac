@@ -1493,8 +1493,8 @@ void foo (void)
   i = 10;
 }
 EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -fPIC -mtls-dialect=gnu2
-		   conftest.c 1>&AS_MESSAGE_LOG_FD])
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -fPIC -mtls-dialect=gnu2 -nostdlib -nostartfiles
+		   conftest.c -o conftest 1>&AS_MESSAGE_LOG_FD])
 then
   libc_cv_mtls_dialect_gnu2=yes
 else
