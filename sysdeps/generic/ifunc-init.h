@@ -50,5 +50,8 @@
    '__<symbol>_<variant>' as the optimized implementation and
    '<symbol>_ifunc_selector' as the IFUNC selector.  */
 #define REDIRECT_NAME	EVALUATOR1 (__redirect, SYMBOL_NAME)
-#define OPTIMIZE(name)	EVALUATOR2 (SYMBOL_NAME, name)
 #define IFUNC_SELECTOR	EVALUATOR1 (SYMBOL_NAME, ifunc_selector)
+#define OPTIMIZE1(name)	EVALUATOR1 (SYMBOL_NAME, name)
+#define OPTIMIZE2(name)	EVALUATOR2 (SYMBOL_NAME, name)
+/* Default is to use OPTIMIZE2.  */
+#define OPTIMIZE(name)	OPTIMIZE2(name)

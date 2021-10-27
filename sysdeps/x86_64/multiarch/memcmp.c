@@ -29,9 +29,6 @@
 libc_ifunc_redirected (__redirect_memcmp, memcmp, IFUNC_SELECTOR ());
 # undef bcmp
 weak_alias (memcmp, bcmp)
-# undef __memcmpeq
-strong_alias (memcmp, __memcmpeq)
-libc_hidden_def (__memcmpeq)
 
 # ifdef SHARED
 __hidden_ver1 (memcmp, __GI_memcmp, __redirect_memcmp)

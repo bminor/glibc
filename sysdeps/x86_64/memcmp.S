@@ -356,9 +356,10 @@ L(ATR32res):
 	.p2align 4,, 4
 END(memcmp)
 
-#undef bcmp
+#ifdef USE_AS_MEMCMPEQ
+libc_hidden_def (memcmp)
+#else
+# undef bcmp
 weak_alias (memcmp, bcmp)
-#undef __memcmpeq
-strong_alias (memcmp, __memcmpeq)
 libc_hidden_builtin_def (memcmp)
-libc_hidden_def (__memcmpeq)
+#endif

@@ -1,4 +1,5 @@
-/* memcmp with SSE2.
+/* Multiple versions of __memcmpeq.
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2017-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,24 +17,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-# ifndef memcmp
-#  define memcmp __memcmp_sse2
-# endif
+# define __memcmpeq __redirect___memcmpeq
+# include <string.h>
+# undef __memcmpeq
+
+# define SYMBOL_NAME __memcmpeq
+# include "ifunc-memcmpeq.h"
+
+libc_ifunc_redirected (__redirect___memcmpeq, __memcmpeq, IFUNC_SELECTOR ());
 
 # ifdef SHARED
-#  undef libc_hidden_builtin_def
-#  define libc_hidden_builtin_def(name)
-
-#  undef libc_hidden_def
-#  define libc_hidden_def(ignored)
+__hidden_ver1 (__memcmpeq, __GI___memcmpeq, __redirect___memcmpeq)
+    __attribute__ ((visibility ("hidden"))) __attribute_copy__ (__memcmpeq);
 # endif
-
-# undef weak_alias
-# define weak_alias(ignored1, ignored2)
-
-# undef strong_alias
-# define strong_alias(ignored1, ignored2)
 #endif
-
-#include <sysdeps/x86_64/memcmp.S>

@@ -7,7 +7,9 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c \
 		   memchr-sse2 rawmemchr-sse2 memchr-avx2 rawmemchr-avx2 \
 		   memrchr-sse2 memrchr-avx2 \
 		   memcmp-sse2 \
+		   memcmpeq-sse2 \
 		   memcmp-avx2-movbe \
+		   memcmpeq-avx2 \
 		   memcmp-sse4 memcpy-ssse3 \
 		   memmove-ssse3 \
 		   memcpy-ssse3-back \
@@ -42,6 +44,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c \
 		   memset-avx512-unaligned-erms \
 		   memchr-avx2-rtm \
 		   memcmp-avx2-movbe-rtm \
+		   memcmpeq-avx2-rtm \
 		   memmove-avx-unaligned-erms-rtm \
 		   memrchr-avx2-rtm \
 		   memset-avx2-unaligned-erms-rtm \
@@ -61,6 +64,7 @@ sysdep_routines += strncat-c stpncpy-c strncpy-c \
 		   strrchr-avx2-rtm \
 		   memchr-evex \
 		   memcmp-evex-movbe \
+		   memcmpeq-evex \
 		   memmove-evex-unaligned-erms \
 		   memrchr-evex \
 		   memset-evex-unaligned-erms \

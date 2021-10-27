@@ -1,4 +1,4 @@
-/* memcmp with SSE2.
+/* __memcmpeq optimized with AVX2.
    Copyright (C) 2017-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,24 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
-# ifndef memcmp
-#  define memcmp __memcmp_sse2
-# endif
-
-# ifdef SHARED
-#  undef libc_hidden_builtin_def
-#  define libc_hidden_builtin_def(name)
-
-#  undef libc_hidden_def
-#  define libc_hidden_def(ignored)
-# endif
-
-# undef weak_alias
-# define weak_alias(ignored1, ignored2)
-
-# undef strong_alias
-# define strong_alias(ignored1, ignored2)
+#ifndef MEMCMP
+# define MEMCMP	__memcmpeq_avx2
 #endif
 
-#include <sysdeps/x86_64/memcmp.S>
+#include "memcmp-avx2-movbe.S"
