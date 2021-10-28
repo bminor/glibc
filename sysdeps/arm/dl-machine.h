@@ -202,7 +202,7 @@ _dl_start_user:\n\
 .L_FINI_PROC:\n\
 	.word	_dl_fini(GOTOFF)\n\
 .L_ARGV:\n\
-	.word	_dl_argv(GOTOFF)\n\
+	.word	__GI__dl_argv(GOTOFF)\n\
 .L_LOADED:\n\
 	.word	_rtld_local(GOTOFF)\n\
 .previous\n\
