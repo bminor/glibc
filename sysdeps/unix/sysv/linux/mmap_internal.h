@@ -19,6 +19,8 @@
 #ifndef MMAP_INTERNAL_LINUX_H
 #define MMAP_INTERNAL_LINUX_H 1
 
+#include <stdint.h>
+
 /* This is the minimum mmap2 unit size accept by the kernel.  An architecture
    with multiple minimum page sizes (such as m68k) might define it as -1 and
    thus it will queried at runtime.  */
