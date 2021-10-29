@@ -41,6 +41,8 @@
 # ifdef USE_AS_WCSCMP
 /* Compare packed dwords.  */
 #  define VPCMP		vpcmpd
+#  define VPMINU	vpminud
+#  define VPTESTM	vptestmd
 #  define SHIFT_REG32	r8d
 #  define SHIFT_REG64	r8
 /* 1 dword char == 4 bytes.  */
@@ -48,6 +50,8 @@
 # else
 /* Compare packed bytes.  */
 #  define VPCMP		vpcmpb
+#  define VPMINU	vpminub
+#  define VPTESTM	vptestmb
 #  define SHIFT_REG32	ecx
 #  define SHIFT_REG64	rcx
 /* 1 byte char == 1 byte.  */
@@ -67,6 +71,9 @@
 # define YMM5		ymm22
 # define YMM6		ymm23
 # define YMM7		ymm24
+# define YMM8		ymm25
+# define YMM9		ymm26
+# define YMM10		ymm27
 
 /* Warning!
            wcscmp/wcsncmp have to use SIGNED comparison for elements.
@@ -76,7 +83,7 @@
 /* The main idea of the string comparison (byte or dword) using 256-bit
    EVEX instructions consists of comparing (VPCMP) two ymm vectors. The
    latter can be on either packed bytes or dwords depending on
-   USE_AS_WCSCMP. In order to check the null char, algorithm keeps the
+   USE_AS_WCSCMP. In order to check the null CHAR, algorithm keeps the
    matched bytes/dwords, requiring 5 EVEX instructions (3 VPCMP and 2
    KORD). In general, the costs of comparing VEC_SIZE bytes (32-bytes)
    are 3 VPCMP and 2 KORD instructions, together with VMOVU and ktestd
@@ -113,27 +120,21 @@ ENTRY (STRCMP)
 	jg	L(cross_page)
 	/* Start comparing 4 vectors.  */
 	VMOVU	(%rdi), %YMM0
-	VMOVU	(%rsi), %YMM1
 
-	/* Each bit in K0 represents a mismatch in YMM0 and YMM1.  */
-	VPCMP	$4, %YMM0, %YMM1, %k0
+	/* Each bit set in K2 represents a non-null CHAR in YMM0.  */
+	VPTESTM	%YMM0, %YMM0, %k2
 
-	/* Check for NULL in YMM0.  */
-	VPCMP	$0, %YMMZERO, %YMM0, %k1
-	/* Check for NULL in YMM1.  */
-	VPCMP	$0, %YMMZERO, %YMM1, %k2
-	/* Each bit in K1 represents a NULL in YMM0 or YMM1.  */
-	kord	%k1, %k2, %k1
+	/* Each bit cleared in K1 represents a mismatch or a null CHAR
+	   in YMM0 and 32 bytes at (%rsi).  */
+	VPCMP	$0, (%rsi), %YMM0, %k1{%k2}
 
-	/* Each bit in K1 represents:
-	   1. A mismatch in YMM0 and YMM1.  Or
-	   2. A NULL in YMM0 or YMM1.
-	 */
-	kord	%k0, %k1, %k1
-
-	ktestd	%k1, %k1
-	je	L(next_3_vectors)
 	kmovd	%k1, %ecx
+# ifdef USE_AS_WCSCMP
+	subl	$0xff, %ecx
+# else
+	incl	%ecx
+# endif
+	je	L(next_3_vectors)
 	tzcntl	%ecx, %edx
 # ifdef USE_AS_WCSCMP
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
@@ -162,9 +163,7 @@ L(return):
 # endif
 	ret
 
-	.p2align 4
 L(return_vec_size):
-	kmovd	%k1, %ecx
 	tzcntl	%ecx, %edx
 # ifdef USE_AS_WCSCMP
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
@@ -200,9 +199,7 @@ L(return_vec_size):
 # endif
 	ret
 
-	.p2align 4
 L(return_2_vec_size):
-	kmovd	%k1, %ecx
 	tzcntl	%ecx, %edx
 # ifdef USE_AS_WCSCMP
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
@@ -238,9 +235,7 @@ L(return_2_vec_size):
 # endif
 	ret
 
-	.p2align 4
 L(return_3_vec_size):
-	kmovd	%k1, %ecx
 	tzcntl	%ecx, %edx
 # ifdef USE_AS_WCSCMP
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
@@ -279,43 +274,45 @@ L(return_3_vec_size):
 	.p2align 4
 L(next_3_vectors):
 	VMOVU	VEC_SIZE(%rdi), %YMM0
-	VMOVU	VEC_SIZE(%rsi), %YMM1
-	/* Each bit in K0 represents a mismatch in YMM0 and YMM1.  */
-	VPCMP	$4, %YMM0, %YMM1, %k0
-	VPCMP	$0, %YMMZERO, %YMM0, %k1
-	VPCMP	$0, %YMMZERO, %YMM1, %k2
-	/* Each bit in K1 represents a NULL in YMM0 or YMM1.  */
-	kord	%k1, %k2, %k1
-	/* Each bit in K1 represents a NULL or a mismatch.  */
-	kord	%k0, %k1, %k1
-	ktestd	%k1, %k1
+	/* Each bit set in K2 represents a non-null CHAR in YMM0.  */
+	VPTESTM	%YMM0, %YMM0, %k2
+	/* Each bit cleared in K1 represents a mismatch or a null CHAR
+	   in YMM0 and 32 bytes at VEC_SIZE(%rsi).  */
+	VPCMP	$0, VEC_SIZE(%rsi), %YMM0, %k1{%k2}
+	kmovd	%k1, %ecx
+# ifdef USE_AS_WCSCMP
+	subl	$0xff, %ecx
+# else
+	incl	%ecx
+# endif
 	jne	L(return_vec_size)
 
-	VMOVU	(VEC_SIZE * 2)(%rdi), %YMM2
-	VMOVU	(VEC_SIZE * 3)(%rdi), %YMM3
-	VMOVU	(VEC_SIZE * 2)(%rsi), %YMM4
-	VMOVU	(VEC_SIZE * 3)(%rsi), %YMM5
-
-	/* Each bit in K0 represents a mismatch in YMM2 and YMM4.  */
-	VPCMP	$4, %YMM2, %YMM4, %k0
-	VPCMP	$0, %YMMZERO, %YMM2, %k1
-	VPCMP	$0, %YMMZERO, %YMM4, %k2
-	/* Each bit in K1 represents a NULL in YMM2 or YMM4.  */
-	kord	%k1, %k2, %k1
-	/* Each bit in K1 represents a NULL or a mismatch.  */
-	kord	%k0, %k1, %k1
-	ktestd	%k1, %k1
+	VMOVU	(VEC_SIZE * 2)(%rdi), %YMM0
+	/* Each bit set in K2 represents a non-null CHAR in YMM0.  */
+	VPTESTM	%YMM0, %YMM0, %k2
+	/* Each bit cleared in K1 represents a mismatch or a null CHAR
+	   in YMM0 and 32 bytes at (VEC_SIZE * 2)(%rsi).  */
+	VPCMP	$0, (VEC_SIZE * 2)(%rsi), %YMM0, %k1{%k2}
+	kmovd	%k1, %ecx
+# ifdef USE_AS_WCSCMP
+	subl	$0xff, %ecx
+# else
+	incl	%ecx
+# endif
 	jne	L(return_2_vec_size)
 
-	/* Each bit in K0 represents a mismatch in YMM3 and YMM5.  */
-	VPCMP	$4, %YMM3, %YMM5, %k0
-	VPCMP	$0, %YMMZERO, %YMM3, %k1
-	VPCMP	$0, %YMMZERO, %YMM5, %k2
-	/* Each bit in K1 represents a NULL in YMM3 or YMM5.  */
-	kord	%k1, %k2, %k1
-	/* Each bit in K1 represents a NULL or a mismatch.  */
-	kord	%k0, %k1, %k1
-	ktestd	%k1, %k1
+	VMOVU	(VEC_SIZE * 3)(%rdi), %YMM0
+	/* Each bit set in K2 represents a non-null CHAR in YMM0.  */
+	VPTESTM	%YMM0, %YMM0, %k2
+	/* Each bit cleared in K1 represents a mismatch or a null CHAR
+	   in YMM0 and 32 bytes at (VEC_SIZE * 2)(%rsi).  */
+	VPCMP	$0, (VEC_SIZE * 3)(%rsi), %YMM0, %k1{%k2}
+	kmovd	%k1, %ecx
+# ifdef USE_AS_WCSCMP
+	subl	$0xff, %ecx
+# else
+	incl	%ecx
+# endif
 	jne	L(return_3_vec_size)
 L(main_loop_header):
 	leaq	(VEC_SIZE * 4)(%rdi), %rdx
@@ -365,56 +362,51 @@ L(back_to_loop):
 	VMOVA	VEC_SIZE(%rax), %YMM2
 	VMOVA	(VEC_SIZE * 2)(%rax), %YMM4
 	VMOVA	(VEC_SIZE * 3)(%rax), %YMM6
-	VMOVU	(%rdx), %YMM1
-	VMOVU	VEC_SIZE(%rdx), %YMM3
-	VMOVU	(VEC_SIZE * 2)(%rdx), %YMM5
-	VMOVU	(VEC_SIZE * 3)(%rdx), %YMM7
 
-	VPCMP	$4, %YMM0, %YMM1, %k0
-	VPCMP	$0, %YMMZERO, %YMM0, %k1
-	VPCMP	$0, %YMMZERO, %YMM1, %k2
-	kord	%k1, %k2, %k1
-	/* Each bit in K4 represents a NULL or a mismatch in YMM0 and
-	   YMM1.  */
-	kord	%k0, %k1, %k4
+	VPMINU	%YMM0, %YMM2, %YMM8
+	VPMINU	%YMM4, %YMM6, %YMM9
 
-	VPCMP	$4, %YMM2, %YMM3, %k0
-	VPCMP	$0, %YMMZERO, %YMM2, %k1
-	VPCMP	$0, %YMMZERO, %YMM3, %k2
-	kord	%k1, %k2, %k1
-	/* Each bit in K5 represents a NULL or a mismatch in YMM2 and
-	   YMM3.  */
-	kord	%k0, %k1, %k5
+	/* A zero CHAR in YMM8 means that there is a null CHAR.  */
+	VPMINU	%YMM8, %YMM9, %YMM8
 
-	VPCMP	$4, %YMM4, %YMM5, %k0
-	VPCMP	$0, %YMMZERO, %YMM4, %k1
-	VPCMP	$0, %YMMZERO, %YMM5, %k2
-	kord	%k1, %k2, %k1
-	/* Each bit in K6 represents a NULL or a mismatch in YMM4 and
-	   YMM5.  */
-	kord	%k0, %k1, %k6
+	/* Each bit set in K1 represents a non-null CHAR in YMM8.  */
+	VPTESTM	%YMM8, %YMM8, %k1
 
-	VPCMP	$4, %YMM6, %YMM7, %k0
-	VPCMP	$0, %YMMZERO, %YMM6, %k1
-	VPCMP	$0, %YMMZERO, %YMM7, %k2
-	kord	%k1, %k2, %k1
-	/* Each bit in K7 represents a NULL or a mismatch in YMM6 and
-	   YMM7.  */
-	kord	%k0, %k1, %k7
+	/* (YMM ^ YMM): A non-zero CHAR represents a mismatch.  */
+	vpxorq	(%rdx), %YMM0, %YMM1
+	vpxorq	VEC_SIZE(%rdx), %YMM2, %YMM3
+	vpxorq	(VEC_SIZE * 2)(%rdx), %YMM4, %YMM5
+	vpxorq	(VEC_SIZE * 3)(%rdx), %YMM6, %YMM7
 
-	kord	%k4, %k5, %k0
-	kord	%k6, %k7, %k1
+	vporq	%YMM1, %YMM3, %YMM9
+	vporq	%YMM5, %YMM7, %YMM10
 
-	/* Test each mask (32 bits) individually because for VEC_SIZE
-	   == 32 is not possible to OR the four masks and keep all bits
-	   in a 64-bit integer register, differing from SSE2 strcmp
-	   where ORing is possible.  */
-	kortestd %k0, %k1
-	je	L(loop)
-	ktestd	%k4, %k4
+	/* A non-zero CHAR in YMM9 represents a mismatch.  */
+	vporq	%YMM9, %YMM10, %YMM9
+
+	/* Each bit cleared in K0 represents a mismatch or a null CHAR.  */
+	VPCMP	$0, %YMMZERO, %YMM9, %k0{%k1}
+	kmovd   %k0, %ecx
+# ifdef USE_AS_WCSCMP
+	subl	$0xff, %ecx
+# else
+	incl	%ecx
+# endif
+	je	 L(loop)
+
+	/* Each bit set in K1 represents a non-null CHAR in YMM0.  */
+	VPTESTM	%YMM0, %YMM0, %k1
+	/* Each bit cleared in K0 represents a mismatch or a null CHAR
+	   in YMM0 and (%rdx).  */
+	VPCMP	$0, %YMMZERO, %YMM1, %k0{%k1}
+	kmovd	%k0, %ecx
+# ifdef USE_AS_WCSCMP
+	subl	$0xff, %ecx
+# else
+	incl	%ecx
+# endif
 	je	L(test_vec)
-	kmovd	%k4, %edi
-	tzcntl	%edi, %ecx
+	tzcntl	%ecx, %ecx
 # ifdef USE_AS_WCSCMP
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
 	sall	$2, %ecx
@@ -456,9 +448,18 @@ L(test_vec):
 	cmpq	$VEC_SIZE, %r11
 	jbe	L(zero)
 # endif
-	ktestd	%k5, %k5
+	/* Each bit set in K1 represents a non-null CHAR in YMM2.  */
+	VPTESTM	%YMM2, %YMM2, %k1
+	/* Each bit cleared in K0 represents a mismatch or a null CHAR
+	   in YMM2 and VEC_SIZE(%rdx).  */
+	VPCMP	$0, %YMMZERO, %YMM3, %k0{%k1}
+	kmovd	%k0, %ecx
+# ifdef USE_AS_WCSCMP
+	subl	$0xff, %ecx
+# else
+	incl	%ecx
+# endif
 	je	L(test_2_vec)
-	kmovd	%k5, %ecx
 	tzcntl	%ecx, %edi
 # ifdef USE_AS_WCSCMP
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
@@ -502,9 +503,18 @@ L(test_2_vec):
 	cmpq	$(VEC_SIZE * 2), %r11
 	jbe	L(zero)
 # endif
-	ktestd	%k6, %k6
+	/* Each bit set in K1 represents a non-null CHAR in YMM4.  */
+	VPTESTM	%YMM4, %YMM4, %k1
+	/* Each bit cleared in K0 represents a mismatch or a null CHAR
+	   in YMM4 and (VEC_SIZE * 2)(%rdx).  */
+	VPCMP	$0, %YMMZERO, %YMM5, %k0{%k1}
+	kmovd	%k0, %ecx
+# ifdef USE_AS_WCSCMP
+	subl	$0xff, %ecx
+# else
+	incl	%ecx
+# endif
 	je	L(test_3_vec)
-	kmovd	%k6, %ecx
 	tzcntl	%ecx, %edi
 # ifdef USE_AS_WCSCMP
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
@@ -548,8 +558,18 @@ L(test_3_vec):
 	cmpq	$(VEC_SIZE * 3), %r11
 	jbe	L(zero)
 # endif
-	kmovd	%k7, %esi
-	tzcntl	%esi, %ecx
+	/* Each bit set in K1 represents a non-null CHAR in YMM6.  */
+	VPTESTM	%YMM6, %YMM6, %k1
+	/* Each bit cleared in K0 represents a mismatch or a null CHAR
+	   in YMM6 and (VEC_SIZE * 3)(%rdx).  */
+	VPCMP	$0, %YMMZERO, %YMM7, %k0{%k1}
+	kmovd	%k0, %ecx
+# ifdef USE_AS_WCSCMP
+	subl	$0xff, %ecx
+# else
+	incl	%ecx
+# endif
+	tzcntl	%ecx, %ecx
 # ifdef USE_AS_WCSCMP
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.  */
 	sall	$2, %ecx
@@ -605,39 +625,51 @@ L(loop_cross_page):
 
 	VMOVU	(%rax, %r10), %YMM2
 	VMOVU	VEC_SIZE(%rax, %r10), %YMM3
-	VMOVU	(%rdx, %r10), %YMM4
-	VMOVU	VEC_SIZE(%rdx, %r10), %YMM5
 
-	VPCMP	$4, %YMM4, %YMM2, %k0
-	VPCMP	$0, %YMMZERO, %YMM2, %k1
-	VPCMP	$0, %YMMZERO, %YMM4, %k2
-	kord	%k1, %k2, %k1
-	/* Each bit in K1 represents a NULL or a mismatch in YMM2 and
-	   YMM4.  */
-	kord	%k0, %k1, %k1
+	/* Each bit set in K2 represents a non-null CHAR in YMM2.  */
+	VPTESTM	%YMM2, %YMM2, %k2
+	/* Each bit cleared in K1 represents a mismatch or a null CHAR
+	   in YMM2 and 32 bytes at (%rdx, %r10).  */
+	VPCMP	$0, (%rdx, %r10), %YMM2, %k1{%k2}
+	kmovd	%k1, %r9d
+	/* Don't use subl since it is the lower 16/32 bits of RDI
+	   below.  */
+	notl	%r9d
+# ifdef USE_AS_WCSCMP
+	/* Only last 8 bits are valid.  */
+	andl	$0xff, %r9d
+# endif
 
-	VPCMP	$4, %YMM5, %YMM3, %k3
-	VPCMP	$0, %YMMZERO, %YMM3, %k4
-	VPCMP	$0, %YMMZERO, %YMM5, %k5
-	kord	%k4, %k5, %k4
-	/* Each bit in K3 represents a NULL or a mismatch in YMM3 and
-	   YMM5.  */
-	kord	%k3, %k4, %k3
+	/* Each bit set in K4 represents a non-null CHAR in YMM3.  */
+	VPTESTM	%YMM3, %YMM3, %k4
+	/* Each bit cleared in K3 represents a mismatch or a null CHAR
+	   in YMM3 and 32 bytes at VEC_SIZE(%rdx, %r10).  */
+	VPCMP	$0, VEC_SIZE(%rdx, %r10), %YMM3, %k3{%k4}
+	kmovd	%k3, %edi
+# ifdef USE_AS_WCSCMP
+	/* Don't use subl since it is the upper 8 bits of EDI below.  */
+	notl	%edi
+	andl	$0xff, %edi
+# else
+	incl	%edi
+# endif
 
 # ifdef USE_AS_WCSCMP
-	/* NB: Each bit in K1/K3 represents 4-byte element.  */
-	kshiftlw $8, %k3, %k2
+	/* NB: Each bit in EDI/R9D represents 4-byte element.  */
+	sall	$8, %edi
 	/* NB: Divide shift count by 4 since each bit in K1 represent 4
 	   bytes.  */
 	movl	%ecx, %SHIFT_REG32
 	sarl	$2, %SHIFT_REG32
-# else
-	kshiftlq $32, %k3, %k2
-# endif
 
-	/* Each bit in K1 represents a NULL or a mismatch.  */
-	korq	%k1, %k2, %k1
-	kmovq	%k1, %rdi
+	/* Each bit in EDI represents a null CHAR or a mismatch.  */
+	orl	%r9d, %edi
+# else
+	salq	$32, %rdi
+
+	/* Each bit in RDI represents a null CHAR or a mismatch.  */
+	orq	%r9, %rdi
+# endif
 
 	/* Since ECX < VEC_SIZE * 2, simply skip the first ECX bytes.  */
 	shrxq	%SHIFT_REG64, %rdi, %rdi
@@ -682,35 +714,45 @@ L(loop_cross_page_2_vec):
 	/* The first VEC_SIZE * 2 bytes match or are ignored.  */
 	VMOVU	(VEC_SIZE * 2)(%rax, %r10), %YMM0
 	VMOVU	(VEC_SIZE * 3)(%rax, %r10), %YMM1
-	VMOVU	(VEC_SIZE * 2)(%rdx, %r10), %YMM2
-	VMOVU	(VEC_SIZE * 3)(%rdx, %r10), %YMM3
 
-	VPCMP	$4, %YMM0, %YMM2, %k0
-	VPCMP	$0, %YMMZERO, %YMM0, %k1
-	VPCMP	$0, %YMMZERO, %YMM2, %k2
-	kord	%k1, %k2, %k1
-	/* Each bit in K1 represents a NULL or a mismatch in YMM0 and
-	   YMM2.  */
-	kord	%k0, %k1, %k1
-
-	VPCMP	$4, %YMM1, %YMM3, %k3
-	VPCMP	$0, %YMMZERO, %YMM1, %k4
-	VPCMP	$0, %YMMZERO, %YMM3, %k5
-	kord	%k4, %k5, %k4
-	/* Each bit in K3 represents a NULL or a mismatch in YMM1 and
-	   YMM3.  */
-	kord	%k3, %k4, %k3
-
+	VPTESTM	%YMM0, %YMM0, %k2
+	/* Each bit cleared in K1 represents a mismatch or a null CHAR
+	   in YMM0 and 32 bytes at (VEC_SIZE * 2)(%rdx, %r10).  */
+	VPCMP	$0, (VEC_SIZE * 2)(%rdx, %r10), %YMM0, %k1{%k2}
+	kmovd	%k1, %r9d
+	/* Don't use subl since it is the lower 16/32 bits of RDI
+	   below.  */
+	notl	%r9d
 # ifdef USE_AS_WCSCMP
-	/* NB: Each bit in K1/K3 represents 4-byte element.  */
-	kshiftlw $8, %k3, %k2
-# else
-	kshiftlq $32, %k3, %k2
+	/* Only last 8 bits are valid.  */
+	andl	$0xff, %r9d
 # endif
 
-	/* Each bit in K1 represents a NULL or a mismatch.  */
-	korq	%k1, %k2, %k1
-	kmovq	%k1, %rdi
+	VPTESTM	%YMM1, %YMM1, %k4
+	/* Each bit cleared in K3 represents a mismatch or a null CHAR
+	   in YMM1 and 32 bytes at (VEC_SIZE * 3)(%rdx, %r10).  */
+	VPCMP	$0, (VEC_SIZE * 3)(%rdx, %r10), %YMM1, %k3{%k4}
+	kmovd	%k3, %edi
+# ifdef USE_AS_WCSCMP
+	/* Don't use subl since it is the upper 8 bits of EDI below.  */
+	notl	%edi
+	andl	$0xff, %edi
+# else
+	incl	%edi
+# endif
+
+# ifdef USE_AS_WCSCMP
+	/* NB: Each bit in EDI/R9D represents 4-byte element.  */
+	sall	$8, %edi
+
+	/* Each bit in EDI represents a null CHAR or a mismatch.  */
+	orl	%r9d, %edi
+# else
+	salq	$32, %rdi
+
+	/* Each bit in RDI represents a null CHAR or a mismatch.  */
+	orq	%r9, %rdi
+# endif
 
 	xorl	%r8d, %r8d
 	/* If ECX > VEC_SIZE * 2, skip ECX - (VEC_SIZE * 2) bytes.  */
@@ -719,12 +761,15 @@ L(loop_cross_page_2_vec):
 	/* R8 has number of bytes skipped.  */
 	movl	%ecx, %r8d
 # ifdef USE_AS_WCSCMP
-	/* NB: Divide shift count by 4 since each bit in K1 represent 4
+	/* NB: Divide shift count by 4 since each bit in RDI represent 4
 	   bytes.  */
 	sarl	$2, %ecx
-# endif
+	/* Skip ECX bytes.  */
+	shrl	%cl, %edi
+# else
 	/* Skip ECX bytes.  */
 	shrq	%cl, %rdi
+# endif
 1:
 	/* Before jumping back to the loop, set ESI to the number of
 	   VEC_SIZE * 4 blocks before page crossing.  */
@@ -808,7 +853,7 @@ L(cross_page_loop):
 	movzbl	(%rdi, %rdx), %eax
 	movzbl	(%rsi, %rdx), %ecx
 # endif
-	/* Check null char.  */
+	/* Check null CHAR.  */
 	testl	%eax, %eax
 	jne	L(cross_page_loop)
 	/* Since %eax == 0, subtract is OK for both SIGNED and UNSIGNED
@@ -891,18 +936,17 @@ L(cross_page):
 	jg	L(cross_page_1_vector)
 L(loop_1_vector):
 	VMOVU	(%rdi, %rdx), %YMM0
-	VMOVU	(%rsi, %rdx), %YMM1
 
-	/* Each bit in K0 represents a mismatch in YMM0 and YMM1.  */
-	VPCMP	$4, %YMM0, %YMM1, %k0
-	VPCMP	$0, %YMMZERO, %YMM0, %k1
-	VPCMP	$0, %YMMZERO, %YMM1, %k2
-	/* Each bit in K1 represents a NULL in YMM0 or YMM1.  */
-	kord	%k1, %k2, %k1
-	/* Each bit in K1 represents a NULL or a mismatch.  */
-	kord	%k0, %k1, %k1
+	VPTESTM	%YMM0, %YMM0, %k2
+	/* Each bit cleared in K1 represents a mismatch or a null CHAR
+	   in YMM0 and 32 bytes at (%rsi, %rdx).  */
+	VPCMP	$0, (%rsi, %rdx), %YMM0, %k1{%k2}
 	kmovd	%k1, %ecx
-	testl	%ecx, %ecx
+# ifdef USE_AS_WCSCMP
+	subl	$0xff, %ecx
+# else
+	incl	%ecx
+# endif
 	jne	L(last_vector)
 
 	addl	$VEC_SIZE, %edx
@@ -921,18 +965,17 @@ L(cross_page_1_vector):
 	cmpl	$(PAGE_SIZE - 16), %eax
 	jg	L(cross_page_1_xmm)
 	VMOVU	(%rdi, %rdx), %XMM0
-	VMOVU	(%rsi, %rdx), %XMM1
 
-	/* Each bit in K0 represents a mismatch in XMM0 and XMM1.  */
-	VPCMP	$4, %XMM0, %XMM1, %k0
-	VPCMP	$0, %XMMZERO, %XMM0, %k1
-	VPCMP	$0, %XMMZERO, %XMM1, %k2
-	/* Each bit in K1 represents a NULL in XMM0 or XMM1.  */
-	korw	%k1, %k2, %k1
-	/* Each bit in K1 represents a NULL or a mismatch.  */
-	korw	%k0, %k1, %k1
-	kmovw	%k1, %ecx
-	testl	%ecx, %ecx
+	VPTESTM	%YMM0, %YMM0, %k2
+	/* Each bit cleared in K1 represents a mismatch or a null CHAR
+	   in XMM0 and 16 bytes at (%rsi, %rdx).  */
+	VPCMP	$0, (%rsi, %rdx), %XMM0, %k1{%k2}
+	kmovd	%k1, %ecx
+# ifdef USE_AS_WCSCMP
+	subl	$0xf, %ecx
+# else
+	subl	$0xffff, %ecx
+# endif
 	jne	L(last_vector)
 
 	addl	$16, %edx
@@ -955,25 +998,16 @@ L(cross_page_1_xmm):
 	vmovq	(%rdi, %rdx), %XMM0
 	vmovq	(%rsi, %rdx), %XMM1
 
-	/* Each bit in K0 represents a mismatch in XMM0 and XMM1.  */
-	VPCMP	$4, %XMM0, %XMM1, %k0
-	VPCMP	$0, %XMMZERO, %XMM0, %k1
-	VPCMP	$0, %XMMZERO, %XMM1, %k2
-	/* Each bit in K1 represents a NULL in XMM0 or XMM1.  */
-	kord	%k1, %k2, %k1
-	/* Each bit in K1 represents a NULL or a mismatch.  */
-	kord	%k0, %k1, %k1
-	kmovd	%k1, %ecx
-
+	VPTESTM	%YMM0, %YMM0, %k2
+	/* Each bit cleared in K1 represents a mismatch or a null CHAR
+	   in XMM0 and XMM1.  */
+	VPCMP	$0, %XMM1, %XMM0, %k1{%k2}
+	kmovb	%k1, %ecx
 # ifdef USE_AS_WCSCMP
-	/* Only last 2 bits are valid.  */
-	andl	$0x3, %ecx
+	subl	$0x3, %ecx
 # else
-	/* Only last 8 bits are valid.  */
-	andl	$0xff, %ecx
+	subl	$0xff, %ecx
 # endif
-
-	testl	%ecx, %ecx
 	jne	L(last_vector)
 
 	addl	$8, %edx
@@ -992,25 +1026,16 @@ L(cross_page_8bytes):
 	vmovd	(%rdi, %rdx), %XMM0
 	vmovd	(%rsi, %rdx), %XMM1
 
-	/* Each bit in K0 represents a mismatch in XMM0 and XMM1.  */
-	VPCMP	$4, %XMM0, %XMM1, %k0
-	VPCMP	$0, %XMMZERO, %XMM0, %k1
-	VPCMP	$0, %XMMZERO, %XMM1, %k2
-	/* Each bit in K1 represents a NULL in XMM0 or XMM1.  */
-	kord	%k1, %k2, %k1
-	/* Each bit in K1 represents a NULL or a mismatch.  */
-	kord	%k0, %k1, %k1
+	VPTESTM	%YMM0, %YMM0, %k2
+	/* Each bit cleared in K1 represents a mismatch or a null CHAR
+	   in XMM0 and XMM1.  */
+	VPCMP	$0, %XMM1, %XMM0, %k1{%k2}
 	kmovd	%k1, %ecx
-
 # ifdef USE_AS_WCSCMP
-	/* Only the last bit is valid.  */
-	andl	$0x1, %ecx
+	subl	$0x1, %ecx
 # else
-	/* Only last 4 bits are valid.  */
-	andl	$0xf, %ecx
+	subl	$0xf, %ecx
 # endif
-
-	testl	%ecx, %ecx
 	jne	L(last_vector)
 
 	addl	$4, %edx
