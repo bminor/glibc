@@ -546,14 +546,6 @@ init_cpu_features (struct cpu_features *cpu_features)
 	  if (CPU_FEATURE_USABLE_P (cpu_features, RTM))
 	    cpu_features->preferred[index_arch_Prefer_No_VZEROUPPER]
 	      |= bit_arch_Prefer_No_VZEROUPPER;
-
-	  /* Since to compare 2 32-byte strings, 256-bit EVEX strcmp
-	     requires 2 loads, 3 VPCMPs and 2 KORDs while AVX2 strcmp
-	     requires 1 load, 2 VPCMPEQs, 1 VPMINU and 1 VPMOVMSKB,
-	     AVX2 strcmp is faster than EVEX strcmp.  */
-	  if (CPU_FEATURE_USABLE_P (cpu_features, AVX2))
-	    cpu_features->preferred[index_arch_Prefer_AVX2_STRCMP]
-	      |= bit_arch_Prefer_AVX2_STRCMP;
 	}
 
       /* Avoid avoid short distance REP MOVSB on processor with FSRM.  */
