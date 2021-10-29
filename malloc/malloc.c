@@ -1,5 +1,6 @@
 /* Malloc implementation for multiple threads without lock contention.
    Copyright (C) 1996-2021 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
    and Doug Lea <dl@cs.oswego.edu>, 2001.
@@ -5009,20 +5010,13 @@ __malloc_trim (size_t s)
 static size_t
 musable (void *mem)
 {
-  mchunkptr p;
-  if (mem != 0)
-    {
-      size_t result = 0;
+  mchunkptr p = mem2chunk (mem);
 
-      p = mem2chunk (mem);
+  if (chunk_is_mmapped (p))
+    return chunksize (p) - CHUNK_HDR_SZ;
+  else if (inuse (p))
+    return memsize (p);
 
-      if (chunk_is_mmapped (p))
-	result = chunksize (p) - CHUNK_HDR_SZ;
-      else if (inuse (p))
-	result = memsize (p);
-
-      return result;
-    }
   return 0;
 }
 
@@ -5030,10 +5024,9 @@ musable (void *mem)
 size_t
 __malloc_usable_size (void *m)
 {
-  size_t result;
-
-  result = musable (m);
-  return result;
+  if (m == NULL)
+    return 0;
+  return musable (m);
 }
 #endif
 

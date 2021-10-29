@@ -2,6 +2,7 @@
    MALLOC_CHECK_ exported to a positive value.
 
    Copyright (C) 2012-2021 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,29 +22,24 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdio.h>
+#include <support/support.h>
+#include <support/check.h>
 
 static int
 do_test (void)
 {
   size_t usable_size;
   void *p = malloc (7);
-  if (!p)
-    {
-      printf ("memory allocation failed\n");
-      return 1;
-    }
 
+  TEST_VERIFY_EXIT (p != NULL);
   usable_size = malloc_usable_size (p);
-  if (usable_size != 7)
-    {
-      printf ("malloc_usable_size: expected 7 but got %zu\n", usable_size);
-      return 1;
-    }
-
+  TEST_COMPARE (usable_size, 7);
   memset (p, 0, usable_size);
   free (p);
+
+  TEST_COMPARE (malloc_usable_size (NULL), 0);
+
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include "support/test-driver.c"

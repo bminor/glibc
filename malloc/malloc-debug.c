@@ -1,5 +1,6 @@
 /* Malloc debug DSO.
    Copyright (C) 2021 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -399,17 +400,17 @@ strong_alias (__debug_calloc, calloc)
 size_t
 malloc_usable_size (void *mem)
 {
+  if (mem == NULL)
+    return 0;
+
   if (__is_malloc_debug_enabled (MALLOC_MCHECK_HOOK))
     return mcheck_usable_size (mem);
   if (__is_malloc_debug_enabled (MALLOC_CHECK_HOOK))
     return malloc_check_get_size (mem);
 
-  if (mem != NULL)
-    {
-      mchunkptr p = mem2chunk (mem);
-     if (DUMPED_MAIN_ARENA_CHUNK (p))
-       return chunksize (p) - SIZE_SZ;
-    }
+  mchunkptr p = mem2chunk (mem);
+  if (DUMPED_MAIN_ARENA_CHUNK (p))
+    return chunksize (p) - SIZE_SZ;
 
   return musable (mem);
 }
