@@ -65,12 +65,6 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 
 #ifdef RESOLVE_MAP
 
-# if defined RTLD_BOOTSTRAP || defined STATIC_PIE_BOOTSTRAP
-#  define ELF_DURING_STARTUP (1)
-# else
-#  define ELF_DURING_STARTUP (0)
-# endif
-
 /* Get the definitions of `elf_dynamic_do_rel' and `elf_dynamic_do_rela'.
    These functions are almost identical, so we use cpp magic to avoid
    duplicating their code.  It cannot be done in a more general function
@@ -106,9 +100,8 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 									      \
 	if (ranges[0].start + ranges[0].size == (start + size))		      \
 	  ranges[0].size -= size;					      \
-	if (ELF_DURING_STARTUP						      \
-	    || (!(do_lazy)						      \
-		&& (ranges[0].start + ranges[0].size) == start))	      \
+	if (!(do_lazy)							      \
+	    && (ranges[0].start + ranges[0].size) == start)		      \
 	  {								      \
 	    /* Combine processing the sections.  */			      \
 	    ranges[0].size += size;					      \
@@ -121,20 +114,13 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 	  }								      \
       }									      \
 									      \
-    if (ELF_DURING_STARTUP)						      \
-      elf_dynamic_do_##reloc ((map), scope, ranges[0].start, ranges[0].size,  \
-			      ranges[0].nrelative, 0, skip_ifunc);  \
-    else								      \
-      {									      \
-	int ranges_index;						      \
-	for (ranges_index = 0; ranges_index < 2; ++ranges_index)	      \
-	  elf_dynamic_do_##reloc ((map), scope,				      \
-				  ranges[ranges_index].start,		      \
-				  ranges[ranges_index].size,		      \
-				  ranges[ranges_index].nrelative,	      \
-				  ranges[ranges_index].lazy,		      \
-				  skip_ifunc);		      \
-      }									      \
+      for (int ranges_index = 0; ranges_index < 2; ++ranges_index)	      \
+        elf_dynamic_do_##reloc ((map), scope,				      \
+				ranges[ranges_index].start,		      \
+				ranges[ranges_index].size,		      \
+				ranges[ranges_index].nrelative,		      \
+				ranges[ranges_index].lazy,		      \
+				skip_ifunc);				      \
   } while (0)
 
 # if ELF_MACHINE_NO_REL || ELF_MACHINE_NO_RELA
