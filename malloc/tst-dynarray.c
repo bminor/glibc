@@ -20,6 +20,7 @@
 
 #include <errno.h>
 #include <stdint.h>
+#include <libc-diag.h>
 
 #define DYNARRAY_STRUCT dynarray_long
 #define DYNARRAY_ELEMENT long
@@ -476,8 +477,15 @@ test_long_overflow (void)
     struct dynarray_long dyn;
     dynarray_long_init (&dyn);
     errno = EINVAL;
+    DIAG_PUSH_NEEDS_COMMENT;
+    /* GCC 12 (on 32-bit platforms) warns that after inlining, a loop
+       iteration would invoke undefined behavior.  That loop iteration
+       can never be executed because an allocation of this size must
+       fail.  */
+    DIAG_IGNORE_NEEDS_COMMENT (12, "-Waggressive-loop-optimizations");
     TEST_VERIFY (!dynarray_long_resize
                  (&dyn, (SIZE_MAX / sizeof (long)) + 1));
+    DIAG_POP_NEEDS_COMMENT;
     TEST_VERIFY (errno == ENOMEM);
     TEST_VERIFY (dynarray_long_has_failed (&dyn));
   }
@@ -486,8 +494,15 @@ test_long_overflow (void)
     struct dynarray_long_noscratch dyn;
     dynarray_long_noscratch_init (&dyn);
     errno = EINVAL;
+    DIAG_PUSH_NEEDS_COMMENT;
+    /* GCC 12 (on 32-bit platforms) warns that after inlining, a loop
+       iteration would invoke undefined behavior.  That loop iteration
+       can never be executed because an allocation of this size must
+       fail.  */
+    DIAG_IGNORE_NEEDS_COMMENT (12, "-Waggressive-loop-optimizations");
     TEST_VERIFY (!dynarray_long_noscratch_resize
                  (&dyn, (SIZE_MAX / sizeof (long)) + 1));
+    DIAG_POP_NEEDS_COMMENT;
     TEST_VERIFY (errno == ENOMEM);
     TEST_VERIFY (dynarray_long_noscratch_has_failed (&dyn));
   }
