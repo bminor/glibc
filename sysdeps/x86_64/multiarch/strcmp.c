@@ -43,8 +43,7 @@ IFUNC_SELECTOR (void)
     {
       if (CPU_FEATURE_USABLE_P (cpu_features, AVX512VL)
 	  && CPU_FEATURE_USABLE_P (cpu_features, AVX512BW)
-	  && CPU_FEATURE_USABLE_P (cpu_features, BMI2)
-	  && !CPU_FEATURES_ARCH_P (cpu_features, Prefer_AVX2_STRCMP))
+	  && CPU_FEATURE_USABLE_P (cpu_features, BMI2))
 	return OPTIMIZE (evex);
 
       if (CPU_FEATURE_USABLE_P (cpu_features, RTM))
