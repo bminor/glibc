@@ -4,7 +4,7 @@
 # define VMOVNT		vmovntdq
 # define VMOVU		vmovdqu
 # define VMOVA		vmovdqa
-
+# define MOV_SIZE	4
 # define ZERO_UPPER_VEC_REGISTERS_RETURN \
   ZERO_UPPER_VEC_REGISTERS_RETURN_XTEST
 

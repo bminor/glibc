@@ -25,7 +25,7 @@
 /* Use movups and movaps for smaller code sizes.  */
 #define VMOVU		movups
 #define VMOVA		movaps
-
+#define MOV_SIZE	3
 #define SECTION(p)		p
 
 #ifdef USE_MULTIARCH

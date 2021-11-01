@@ -25,7 +25,7 @@
 # define VMOVU		vmovdqu64
 # define VMOVA		vmovdqa64
 # define VZEROUPPER
-
+# define MOV_SIZE	6
 # define SECTION(p)		p##.evex
 # define MEMMOVE_SYMBOL(p,s)	p##_evex_##s
 
