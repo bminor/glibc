@@ -34,7 +34,10 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, char *src,
 {
   size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
-
+  for (i = 0; i < iters / 64; ++i)
+    {
+      CALL (impl, dst, src, len);
+    }
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)
     {
@@ -53,11 +56,11 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len)
   size_t i, j;
   char *s1, *s2;
 
-  align1 &= 63;
+  align1 &= (getpagesize () - 1);
   if (align1 + len >= page_size)
     return;
 
-  align2 &= 63;
+  align2 &= (getpagesize () - 1);
   if (align2 + len >= page_size)
     return;
 
@@ -85,6 +88,7 @@ test_main (void)
 {
   json_ctx_t json_ctx;
   size_t i;
+  size_t half_page = getpagesize () / 2;
 
   test_init ();
 
@@ -136,6 +140,22 @@ test_main (void)
       do_test (&json_ctx, i, 0, 32 * i);
       do_test (&json_ctx, 0, i, 32 * i);
       do_test (&json_ctx, i, i, 32 * i);
+    }
+
+  for (i = 0; i <= 48; ++i)
+    {
+      do_test (&json_ctx, 0, 0, 2048 + 64 * i);
+      do_test (&json_ctx, i, 0, 2048 + 64 * i);
+      do_test (&json_ctx, 0, i, 2048 + 64 * i);
+      do_test (&json_ctx, i, i, 2048 + 64 * i);
+      do_test (&json_ctx, half_page, 0, 2048 + 64 * i);
+      do_test (&json_ctx, 0, half_page, 2048 + 64 * i);
+      do_test (&json_ctx, half_page + i, 0, 2048 + 64 * i);
+      do_test (&json_ctx, i, half_page, 2048 + 64 * i);
+      do_test (&json_ctx, half_page, i, 2048 + 64 * i);
+      do_test (&json_ctx, 0, half_page + i, 2048 + 64 * i);
+      do_test (&json_ctx, half_page + i, i, 2048 + 64 * i);
+      do_test (&json_ctx, i, half_page + i, 2048 + 64 * i);
     }
 
   json_array_end (&json_ctx);
