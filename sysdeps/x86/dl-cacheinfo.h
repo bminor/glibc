@@ -866,12 +866,14 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   /* NB: The REP MOVSB threshold must be greater than VEC_SIZE * 8.  */
   unsigned int minimum_rep_movsb_threshold;
 #endif
-  /* NB: The default REP MOVSB threshold is 2048 * (VEC_SIZE / 16).  */
+  /* NB: The default REP MOVSB threshold is 4096 * (VEC_SIZE / 16) for
+     VEC_SIZE == 64 or 32.  For VEC_SIZE == 16, the default REP MOVSB
+     threshold is 2048 * (VEC_SIZE / 16).  */
   unsigned int rep_movsb_threshold;
   if (CPU_FEATURE_USABLE_P (cpu_features, AVX512F)
       && !CPU_FEATURE_PREFERRED_P (cpu_features, Prefer_No_AVX512))
     {
-      rep_movsb_threshold = 2048 * (64 / 16);
+      rep_movsb_threshold = 4096 * (64 / 16);
 #if HAVE_TUNABLES
       minimum_rep_movsb_threshold = 64 * 8;
 #endif
@@ -879,7 +881,7 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   else if (CPU_FEATURE_PREFERRED_P (cpu_features,
 				    AVX_Fast_Unaligned_Load))
     {
-      rep_movsb_threshold = 2048 * (32 / 16);
+      rep_movsb_threshold = 4096 * (32 / 16);
 #if HAVE_TUNABLES
       minimum_rep_movsb_threshold = 32 * 8;
 #endif
