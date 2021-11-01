@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #ifndef MEMCPY_RESULT
+# define DO_EXTRA_TESTS
 # define MEMCPY_RESULT(dst, len) dst
 # define MIN_PAGE_SIZE 131072
 # define TEST_MAIN
@@ -78,7 +79,7 @@ do_one_test (impl_t *impl, char *dst, const char *src,
 static void
 do_test (size_t align1, size_t align2, size_t len)
 {
-  size_t i, j;
+  size_t i, j, repeats;
   char *s1, *s2;
 
   align1 &= 4095;
@@ -91,12 +92,14 @@ do_test (size_t align1, size_t align2, size_t len)
 
   s1 = (char *) (buf1 + align1);
   s2 = (char *) (buf2 + align2);
+  for (repeats = 0; repeats < 2; ++repeats)
+    {
+      for (i = 0, j = 1; i < len; i++, j += 23)
+        s1[i] = j;
 
-  for (i = 0, j = 1; i < len; i++, j += 23)
-    s1[i] = j;
-
-  FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, s2, s1, len);
+      FOR_EACH_IMPL (impl, 0)
+        do_one_test (impl, s2, s1, len);
+    }
 }
 
 static void
@@ -212,56 +215,87 @@ do_random_tests (void)
 }
 
 static void
-do_test1 (size_t size)
+do_test1 (size_t align1, size_t align2, size_t size)
 {
   void *large_buf;
-  large_buf = mmap (NULL, size * 2 + page_size, PROT_READ | PROT_WRITE,
-		    MAP_PRIVATE | MAP_ANON, -1, 0);
+  size_t mmap_size, region_size;
+
+  align1 &= (page_size - 1);
+  if (align1 == 0)
+    align1 = page_size;
+
+  align2 &= (page_size - 1);
+  if (align2 == 0)
+    align2 = page_size;
+
+  region_size = (size + page_size - 1) & (~(page_size - 1));
+
+  mmap_size = region_size * 2 + 3 * page_size;
+  large_buf = mmap(NULL, mmap_size, PROT_READ | PROT_WRITE,
+                   MAP_PRIVATE | MAP_ANON, -1, 0);
   if (large_buf == MAP_FAILED)
     {
-      puts ("Failed to allocat large_buf, skipping do_test1");
+      puts ("Failed to allocate large_buf, skipping do_test1");
       return;
     }
-
-  if (mprotect (large_buf + size, page_size, PROT_NONE))
+  if (mprotect (large_buf + region_size + page_size, page_size, PROT_NONE))
     error (EXIT_FAILURE, errno, "mprotect failed");
 
-  size_t arrary_size = size / sizeof (uint32_t);
-  uint32_t *dest = large_buf;
-  uint32_t *src = large_buf + size + page_size;
+  size_t array_size = size / sizeof (uint32_t);
+  uint32_t *dest = large_buf + align1;
+  uint32_t *src = large_buf + region_size + 2 * page_size + align2;
   size_t i;
   size_t repeats;
   for(repeats = 0; repeats < 2; repeats++)
     {
-      for (i = 0; i < arrary_size; i++)
+      for (i = 0; i < array_size; i++)
         src[i] = (uint32_t) i;
-
       FOR_EACH_IMPL (impl, 0)
         {
-            printf ("\t\tRunning: %s\n", impl->name);
           memset (dest, -1, size);
           CALL (impl, (char *) dest, (char *) src, size);
-          for (i = 0; i < arrary_size; i++)
+          for (i = 0; i < array_size; i++)
         if (dest[i] != src[i])
           {
             error (0, 0,
                "Wrong result in function %s dst \"%p\" src \"%p\" offset \"%zd\"",
                impl->name, dest, src, i);
             ret = 1;
-            munmap ((void *) large_buf, size * 2 + page_size);
+            munmap ((void *) large_buf, mmap_size);
             return;
           }
         }
-      dest = src;
-      src = large_buf;
+      dest = large_buf + region_size + 2 * page_size + align1;
+      src = large_buf + align2;
     }
-  munmap ((void *) large_buf, size * 2 + page_size);
+  munmap ((void *) large_buf, mmap_size);
+}
+
+static void
+do_random_large_tests (void)
+{
+  size_t i, align1, align2, size;
+  for (i = 0; i < 32; ++i)
+    {
+      align1 = random ();
+      align2 = random ();
+      size = (random() % 0x1000000) + 0x200000;
+      do_test1 (align1, align2, size);
+    }
+
+  for (i = 0; i < 128; ++i)
+    {
+      align1 = random ();
+      align2 = random ();
+      size = (random() % 32768) + 4096;
+      do_test1 (align1, align2, size);
+    }
 }
 
 int
 test_main (void)
 {
-  size_t i;
+  size_t i, j;
 
   test_init ();
 
@@ -298,6 +332,7 @@ test_main (void)
   for (i = 19; i <= 25; ++i)
     {
       do_test (255, 0, 1 << i);
+      do_test (0, 4000, 1 << i);
       do_test (0, 255, i);
       do_test (0, 4000, i);
     }
@@ -306,8 +341,88 @@ test_main (void)
 
   do_random_tests ();
 
-  do_test1 (0x100000);
-  do_test1 (0x2000000);
+  do_test1 (0, 0, 0x100000);
+  do_test1 (0, 0, 0x2000000);
+
+  for (i = 4096; i < 32768; i += 4096)
+    {
+      for (j = 1; j <= 1024; j <<= 1)
+        {
+          do_test1 (0, j, i);
+          do_test1 (4095, j, i);
+          do_test1 (4096 - j, 0, i);
+
+          do_test1 (0, j - 1, i);
+          do_test1 (4095, j - 1, i);
+          do_test1 (4096 - j - 1, 0, i);
+
+          do_test1 (0, j + 1, i);
+          do_test1 (4095, j + 1, i);
+          do_test1 (4096 - j, 1, i);
+        }
+    }
+
+  for (i = 0x300000; i < 0x2000000; i += 0x235689)
+    {
+      for (j = 64; j <= 1024; j <<= 1)
+        {
+          do_test1 (0, j, i);
+          do_test1 (4095, j, i);
+          do_test1 (4096 - j, 0, i);
+
+          do_test1 (0, j - 1, i);
+          do_test1 (4095, j - 1, i);
+          do_test1 (4096 - j - 1, 0, i);
+
+          do_test1 (0, j + 1, i);
+          do_test1 (4095, j + 1, i);
+          do_test1 (4096 - j, 1, i);
+        }
+    }
+#ifdef DO_EXTRA_TESTS
+  for (i = 0x200000; i <= 0x2000000; i += i)
+    {
+      for (j = 64; j <= 1024; j <<= 1)
+        {
+          do_test1 (0, j, i);
+          do_test1 (4095, j, i);
+          do_test1 (4096 - j, 0, i);
+
+          do_test1 (0, j - 1, i);
+          do_test1 (4095, j - 1, i);
+          do_test1 (4096 - j - 1, 0, i);
+
+          do_test1 (0, j + 1, i);
+          do_test1 (4095, j + 1, i);
+          do_test1 (4096 - j, 1, i);
+
+          do_test1 (0, j, i + 1);
+          do_test1 (4095, j, i + 1);
+          do_test1 (4096 - j, 0, i + 1);
+
+          do_test1 (0, j - 1, i + 1);
+          do_test1 (4095, j - 1, i + 1);
+          do_test1 (4096 - j - 1, 0, i + 1);
+
+          do_test1 (0, j + 1, i + 1);
+          do_test1 (4095, j + 1, i + 1);
+          do_test1 (4096 - j, 1, i + 1);
+
+          do_test1 (0, j, i - 1);
+          do_test1 (4095, j, i - 1);
+          do_test1 (4096 - j, 0, i - 1);
+
+          do_test1 (0, j - 1, i - 1);
+          do_test1 (4095, j - 1, i - 1);
+          do_test1 (4096 - j - 1, 0, i - 1);
+
+          do_test1 (0, j + 1, i - 1);
+          do_test1 (4095, j + 1, i - 1);
+          do_test1 (4096 - j, 1, i - 1);
+        }
+    }
+#endif
+  do_random_large_tests ();
   return ret;
 }
 
