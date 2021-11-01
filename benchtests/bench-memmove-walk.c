@@ -36,6 +36,10 @@
 # define TIMEOUT (20 * 60)
 # include "bench-string.h"
 
+#define NO_OVERLAP 0
+#define PARTIAL_OVERLAP 1
+#define COMPLETE_OVERLAP 2
+
 IMPL (memmove, 1)
 #endif
 
@@ -66,20 +70,40 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl, char *dst, char *src,
 }
 
 static void
-do_test (json_ctx_t *json_ctx, size_t len, bool overlap)
+do_test (json_ctx_t *json_ctx, size_t len, int overlap, int both_ways)
 {
-  json_element_object_begin (json_ctx);
-  json_attr_uint (json_ctx, "length", (double) len);
-  json_array_begin (json_ctx, "timings");
+  char *s1, *s2, *tmp;
+  size_t repeats;
 
-  if (overlap)
-    buf2 = buf1;
+  s1 = (char *) (buf1);
+  s2 = (char *) (buf2);
+  if (overlap != NO_OVERLAP)
+    s2 = s1;
+  if (overlap == PARTIAL_OVERLAP)
+    s2 += len / 2;
 
-  FOR_EACH_IMPL (impl, 0)
-    do_one_test (json_ctx, impl, (char *) buf2, (char *) buf1, len);
+  for (repeats = both_ways ? 2 : 1; repeats; --repeats)
+    {
+      json_element_object_begin (json_ctx);
+      json_attr_uint (json_ctx, "length", (double) len);
+      json_attr_string(json_ctx, "overlap",
+                       overlap == NO_OVERLAP        ? "none"
+                       : overlap == PARTIAL_OVERLAP ? "partial"
+                                                    : "complete");
+      json_attr_uint (json_ctx, "dst > src", (double) (s2 > s1));
+      json_array_begin (json_ctx, "timings");
 
-  json_array_end (json_ctx);
-  json_element_object_end (json_ctx);
+
+      FOR_EACH_IMPL (impl, 0)
+        do_one_test (json_ctx, impl, (char *) buf2, (char *) buf1, len);
+
+      json_array_end (json_ctx);
+      json_element_object_end (json_ctx);
+
+      tmp = s1;
+      s1 = s2;
+      s2 = tmp;
+    }
 }
 
 int
@@ -107,15 +131,22 @@ test_main (void)
   /* Non-overlapping buffers.  */
   for (size_t i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
     {
-      do_test (&json_ctx, i, false);
-      do_test (&json_ctx, i + 1, false);
+      do_test (&json_ctx, i, NO_OVERLAP, 1);
+      do_test (&json_ctx, i + 1, NO_OVERLAP, 1);
     }
 
-  /* Overlapping buffers.  */
+  /* Partially-overlapping buffers.  */
+  for (size_t i = START_SIZE; i <= MIN_PAGE_SIZE / 2; i <<= 1)
+    {
+      do_test (&json_ctx, i, PARTIAL_OVERLAP, 1);
+      do_test (&json_ctx, i + 1, PARTIAL_OVERLAP, 1);
+    }
+
+  /* Complete-overlapping buffers.  */
   for (size_t i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
     {
-      do_test (&json_ctx, i, true);
-      do_test (&json_ctx, i + 1, true);
+      do_test (&json_ctx, i, COMPLETE_OVERLAP, 0);
+      do_test (&json_ctx, i + 1, COMPLETE_OVERLAP, 0);
     }
 
   json_array_end (&json_ctx);
