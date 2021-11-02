@@ -14,10 +14,11 @@ The following bugs are resolved with this release:
   [28036] Incorrect types for pthread_mutexattr_set/getrobust_np
   [28182] _TIME_BITS=64 in C++ has issues with fcntl, ioctl, prctl
   [28310] Do not use affinity mask for sysconf (_SC_NPROCESSORS_CONF)
+  [28340] ld.so crashes while loading a DSO with a read-only dynamic section
   [28357] deadlock between pthread_create and ELF constructors
   [28361] nptl: Avoid setxid deadlock with blocked signals in thread exit
   [28407] pthread_kill assumes that kill and tgkill are equivalent
-  [28340] ld.so crashes while loading a DSO with a read-only dynamic section
+  [28524] Conversion from ISO-2022-JP-3 with iconv may emit spurious NULs
 
 
 Version 2.34
