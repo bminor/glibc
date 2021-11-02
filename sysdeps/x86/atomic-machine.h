@@ -60,6 +60,10 @@ typedef uintmax_t uatomic_max_t;
 # define BR_CONSTRAINT			"q"
 # define IBR_CONSTRAINT			"iq"
 #else
+/* Since the Pentium, i386 CPUs have supported 64-bit atomics, but the
+   i386 psABI supplement provides only 4-byte alignment for uint64_t
+   inside structs, so it is currently not possible to use 64-bit
+   atomics on this platform.  */
 # define __HAVE_64B_ATOMICS		0
 # define SP_REG				"esp"
 # define SEG_REG			"gs"
