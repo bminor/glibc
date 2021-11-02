@@ -23,6 +23,7 @@ The following bugs are resolved with this release:
   [26932] libc: sh: Multiple floating point functions defined as stubs only
   [27130] "rep movsb" performance issue
   [27177] GLIBC_TUNABLES=glibc.cpu.x86_ibt=on:glibc.cpu.x86_shstk=on doesn't work
+  [28524] Conversion from ISO-2022-JP-3 with iconv may emit spurious NULs
   [28607] Masked signals are delivered on thread exit
 
 Version 2.32
