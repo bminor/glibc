@@ -1,5 +1,6 @@
 /* Conversion module for ISO-2022-JP-3.
    Copyright (C) 1998-2021 Free Software Foundation, Inc.
+   Copyright (C) The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,20 +80,31 @@ enum
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->__statep->__count != ASCII_set)			      \
+  if ((data->__statep->__count & ~7) != ASCII_set)			      \
     {									      \
       if (FROM_DIRECTION)						      \
 	{								      \
-	  if (__glibc_likely (outbuf + 4 <= outend))			      \
+	  uint32_t ch = data->__statep->__count >> 6;			      \
+									      \
+	  if (__glibc_unlikely (ch != 0))				      \
 	    {								      \
-	      /* Write out the last character.  */			      \
-	      *((uint32_t *) outbuf) = data->__statep->__count >> 6;	      \
-	      outbuf += sizeof (uint32_t);				      \
-	      data->__statep->__count = ASCII_set;			\
+	      if (__glibc_likely (outbuf + 4 <= outend))		      \
+		{							      \
+		  /* Write out the last character.  */			      \
+		  put32u (outbuf, ch);					      \
+		  outbuf += 4;						      \
+		  data->__statep->__count &= 7;				      \
+		  data->__statep->__count |= ASCII_set;			      \
+		}							      \
+	      else							      \
+		/* We don't have enough room in the output buffer.  */	      \
+		status = __GCONV_FULL_OUTPUT;				      \
 	    }								      \
 	  else								      \
-	    /* We don't have enough room in the output buffer.  */	      \
-	    status = __GCONV_FULL_OUTPUT;				      \
+	    {								      \
+	      data->__statep->__count &= 7;				      \
+	      data->__statep->__count |= ASCII_set;			      \
+	    }								      \
 	}								      \
       else								      \
 	{								      \
