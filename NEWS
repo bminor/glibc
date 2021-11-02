@@ -35,6 +35,7 @@ The following bugs are resolved with this release:
   [27744] Support different libpthread/ld.so load orders for gdb -p
   [27892] powerpc: scv ABI error handling fails to check IS_ERR_VALUE
   [28607] Masked signals are delivered on thread exit
+  [28524] Conversion from ISO-2022-JP-3 with iconv may emit spurious NULs
   [28532] powerpc64[le]: CFI for assembly templated syscalls is incorrect
 
 Version 2.33
