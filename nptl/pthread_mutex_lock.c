@@ -64,6 +64,11 @@ lll_mutex_lock_optimized (pthread_mutex_t *mutex)
 # define PTHREAD_MUTEX_VERSIONS 1
 #endif
 
+#ifndef LLL_MUTEX_READ_LOCK
+# define LLL_MUTEX_READ_LOCK(mutex) \
+  atomic_load_relaxed (&(mutex)->__data.__lock)
+#endif
+
 static int __pthread_mutex_lock_full (pthread_mutex_t *mutex)
      __attribute_noinline__;
 
@@ -141,6 +146,8 @@ PTHREAD_MUTEX_LOCK (pthread_mutex_t *mutex)
 		  break;
 		}
 	      atomic_spin_nop ();
+	      if (LLL_MUTEX_READ_LOCK (mutex) != 0)
+		continue;
 	    }
 	  while (LLL_MUTEX_TRYLOCK (mutex) != 0);
 
