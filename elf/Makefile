@@ -498,8 +498,10 @@ include $(objpfx)$(1).generated-makefile
 endef
 
 # Generate from each testcase description file
+ifeq (yes,$(have-tunables))
 $(eval $(call include_dsosort_tests,dso-sort-tests-1.def))
 $(eval $(call include_dsosort_tests,dso-sort-tests-2.def))
+endif
 
 check-abi: $(objpfx)check-abi-ld.out
 tests-special += $(objpfx)check-abi-ld.out
