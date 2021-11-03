@@ -16,23 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <limits.h>
-#include <stdio.h>
-#include <string.h>
-#include <tls.h>
-#include <unistd.h>
-#include <sys/mman.h>
-#include <sys/param.h>
-#include <sys/types.h>
+#include <assert.h>
 #include <ldsodefs.h>
 #include <dl-irel.h>
 #include <dl-hash.h>
 #include <dl-sym-post.h>
 #include <_itoa.h>
-#include <malloc/malloc-internal.h>
+#include <dl-minimal-malloc.h>
 
-#include <assert.h>
 
 /* The rtld startup code calls __rtld_malloc_init_stubs after the
   first self-relocation to adjust the pointers to the minimal
@@ -44,19 +35,13 @@ __typeof (free) *__rtld_free attribute_relro;
 __typeof (malloc) *__rtld_malloc attribute_relro;
 __typeof (realloc) *__rtld_realloc attribute_relro;
 
-/* Defined below.  */
-static __typeof (calloc) rtld_calloc;
-static __typeof (free) rtld_free;
-static __typeof (malloc) rtld_malloc;
-static __typeof (realloc) rtld_realloc;
-
 void
 __rtld_malloc_init_stubs (void)
 {
-  __rtld_calloc = &rtld_calloc;
-  __rtld_free = &rtld_free;
-  __rtld_malloc = &rtld_malloc;
-  __rtld_realloc = &rtld_realloc;
+  __rtld_calloc = &__minimal_calloc;
+  __rtld_free = &__minimal_free;
+  __rtld_malloc = &__minimal_malloc;
+  __rtld_realloc = &__minimal_realloc;
 }
 
 bool
@@ -64,7 +49,7 @@ __rtld_malloc_is_complete (void)
 {
   /* The caller assumes that there is an active malloc.  */
   assert (__rtld_malloc != NULL);
-  return __rtld_malloc != &rtld_malloc;
+  return __rtld_malloc != &__minimal_malloc;
 }
 
 /* Lookup NAME at VERSION in the scope of MATCH.  */
@@ -115,99 +100,6 @@ __rtld_malloc_init_real (struct link_map *main_map)
   __rtld_realloc = new_realloc;
 }
 
-/* Minimal malloc allocator for used during initial link.  After the
-   initial link, a full malloc implementation is interposed, either
-   the one in libc, or a different one supplied by the user through
-   interposition.  */
-
-static void *alloc_ptr, *alloc_end, *alloc_last_block;
-
-/* Allocate an aligned memory block.  */
-static void *
-rtld_malloc (size_t n)
-{
-  if (alloc_end == 0)
-    {
-      /* Consume any unused space in the last page of our data segment.  */
-      extern int _end attribute_hidden;
-      alloc_ptr = &_end;
-      alloc_end = (void *) 0 + (((alloc_ptr - (void *) 0)
-				 + GLRO(dl_pagesize) - 1)
-				& ~(GLRO(dl_pagesize) - 1));
-    }
-
-  /* Make sure the allocation pointer is ideally aligned.  */
-  alloc_ptr = (void *) 0 + (((alloc_ptr - (void *) 0) + MALLOC_ALIGNMENT - 1)
-			    & ~(MALLOC_ALIGNMENT - 1));
-
-  if (alloc_ptr + n >= alloc_end || n >= -(uintptr_t) alloc_ptr)
-    {
-      /* Insufficient space left; allocate another page plus one extra
-	 page to reduce number of mmap calls.  */
-      caddr_t page;
-      size_t nup = (n + GLRO(dl_pagesize) - 1) & ~(GLRO(dl_pagesize) - 1);
-      if (__glibc_unlikely (nup == 0 && n != 0))
-	return NULL;
-      nup += GLRO(dl_pagesize);
-      page = __mmap (0, nup, PROT_READ|PROT_WRITE,
-		     MAP_ANON|MAP_PRIVATE, -1, 0);
-      if (page == MAP_FAILED)
-	return NULL;
-      if (page != alloc_end)
-	alloc_ptr = page;
-      alloc_end = page + nup;
-    }
-
-  alloc_last_block = (void *) alloc_ptr;
-  alloc_ptr += n;
-  return alloc_last_block;
-}
-
-/* We use this function occasionally since the real implementation may
-   be optimized when it can assume the memory it returns already is
-   set to NUL.  */
-static void *
-rtld_calloc (size_t nmemb, size_t size)
-{
-  /* New memory from the trivial malloc above is always already cleared.
-     (We make sure that's true in the rare occasion it might not be,
-     by clearing memory in free, below.)  */
-  size_t bytes = nmemb * size;
-
-#define HALF_SIZE_T (((size_t) 1) << (8 * sizeof (size_t) / 2))
-  if (__builtin_expect ((nmemb | size) >= HALF_SIZE_T, 0)
-      && size != 0 && bytes / size != nmemb)
-    return NULL;
-
-  return malloc (bytes);
-}
-
-/* This will rarely be called.  */
-void
-rtld_free (void *ptr)
-{
-  /* We can free only the last block allocated.  */
-  if (ptr == alloc_last_block)
-    {
-      /* Since this is rare, we clear the freed block here
-	 so that calloc can presume malloc returns cleared memory.  */
-      memset (alloc_last_block, '\0', alloc_ptr - alloc_last_block);
-      alloc_ptr = alloc_last_block;
-    }
-}
-
-/* This is only called with the most recent block returned by malloc.  */
-void *
-rtld_realloc (void *ptr, size_t n)
-{
-  if (ptr == NULL)
-    return malloc (n);
-  assert (ptr == alloc_last_block);
-  size_t old_size = alloc_ptr - alloc_last_block;
-  alloc_ptr = alloc_last_block;
-  void *new = malloc (n);
-  return new != ptr ? memcpy (new, ptr, old_size) : new;
-}
 
 /* Avoid signal frobnication in setjmp/longjmp.  Keeps things smaller.  */
 

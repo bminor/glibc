@@ -36,7 +36,7 @@ dl-routines	= $(addprefix dl-,load lookup object reloc deps \
 				  exception sort-maps lookup-direct \
 				  call-libc-early-init write \
 				  thread_gscope_wait tls_init_tp \
-				  debug-symbols)
+				  debug-symbols minimal-malloc)
 ifeq (yes,$(use-ldconfig))
 dl-routines += dl-cache
 endif
@@ -74,6 +74,11 @@ all-rtld-routines = $(rtld-routines) $(sysdep-rtld-routines)
 CFLAGS-dl-runtime.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-lookup.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-dl-iteratephdr.c += $(uses-callbacks)
+
+# Called during static library initialization, so turn stack-protection
+# off for non-shared builds.
+CFLAGS-dl-minimal-malloc.o = $(no-stack-protector)
+CFLAGS-dl-minimal-malloc.op = $(no-stack-protector)
 
 # On targets without __builtin_memset, rtld.c uses a hand-coded loop
 # in _dl_start.  Make sure this isn't turned into a call to regular memset.

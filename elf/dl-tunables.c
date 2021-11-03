@@ -31,6 +31,7 @@
 #include <fcntl.h>
 #include <ldsodefs.h>
 #include <array_length.h>
+#include <dl-minimal-malloc.h>
 
 #define TUNABLES_INTERNAL 1
 #include "dl-tunables.h"
@@ -48,13 +49,13 @@ tunables_strdup (const char *in)
   size_t i = 0;
 
   while (in[i++] != '\0');
-  char *out = __sbrk (i);
+  char *out = __minimal_malloc (i + 1);
 
   /* For most of the tunables code, we ignore user errors.  However,
      this is a system error - and running out of memory at program
      startup should be reported, so we do.  */
-  if (out == (void *)-1)
-    _dl_fatal_printf ("sbrk() failure while processing tunables\n");
+  if (out == NULL)
+    _dl_fatal_printf ("failed to allocate memory to process tunables\n");
 
   while (i-- > 0)
     out[i] = in[i];
