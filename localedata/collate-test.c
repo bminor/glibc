@@ -32,6 +32,12 @@ struct lines
 
 static int xstrcoll (const void *, const void *);
 
+static int
+signum (int n)
+{
+  return (0 < n) - (n < 0);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -86,7 +92,7 @@ main (int argc, char *argv[])
   srandom (atoi (argv[1]));
   for (n = 0; n < 10 * nstrings; ++n)
     {
-      int r1, r2, r;
+      int r1, r2;
       size_t idx1 = random () % nstrings;
       size_t idx2 = random () % nstrings;
       struct lines tmp = strings[idx1];
@@ -96,9 +102,8 @@ main (int argc, char *argv[])
       /* While we are at it a first little test.  */
       r1 = strcoll (strings[idx1].key, strings[idx2].key);
       r2 = strcoll (strings[idx2].key, strings[idx1].key);
-      r = r1 * r2;
 
-      if (r > 0 || (r == 0 && r1 != 0) || (r == 0 && r2 != 0))
+      if (signum (r1) != - signum (r2))
 	printf ("`%s' and `%s' collate wrong: %d vs. %d\n",
 		strings[idx1].key, strings[idx2].key, r1, r2);
     }
