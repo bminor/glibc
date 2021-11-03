@@ -2229,8 +2229,8 @@ LABEL(strcmp_exitz):
 
 	.p2align 4
 LABEL(Byte0):
-	movzx	(%rsi), %ecx
-	movzx	(%rdi), %eax
+	movzbl	(%rsi), %ecx
+	movzbl	(%rdi), %eax
 
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	leaq	_nl_C_LC_CTYPE_tolower+128*4(%rip), %rdx
