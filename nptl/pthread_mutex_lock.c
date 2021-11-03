@@ -56,6 +56,11 @@
 #define FORCE_ELISION(m, s)
 #endif
 
+#ifndef LLL_MUTEX_READ_LOCK
+# define LLL_MUTEX_READ_LOCK(mutex) \
+  atomic_load_relaxed (&(mutex)->__data.__lock)
+#endif
+
 static int __pthread_mutex_lock_full (pthread_mutex_t *mutex)
      __attribute_noinline__;
 
@@ -133,6 +138,8 @@ __pthread_mutex_lock (pthread_mutex_t *mutex)
 		  break;
 		}
 	      atomic_spin_nop ();
+	      if (LLL_MUTEX_READ_LOCK (mutex) != 0)
+		continue;
 	    }
 	  while (LLL_MUTEX_TRYLOCK (mutex) != 0);
 
