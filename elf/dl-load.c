@@ -1114,6 +1114,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
     struct loadcmd loadcmds[l->l_phnum];
     size_t nloadcmds = 0;
     bool has_holes = false;
+    bool empty_dynamic = false;
 
     /* The struct is initialized to zero so this is not necessary:
     l->l_ld = 0;
@@ -1126,7 +1127,9 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	     segments are mapped in.  We record the addresses it says
 	     verbatim, and later correct for the run-time load address.  */
 	case PT_DYNAMIC:
-	  if (ph->p_filesz)
+	  if (ph->p_filesz == 0)
+	    empty_dynamic = true; /* Usually separate debuginfo.  */
+	  else
 	    {
 	      /* Debuginfo only files from "objcopy --only-keep-debug"
 		 contain a PT_DYNAMIC segment with p_filesz == 0.  Skip
@@ -1248,6 +1251,13 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	goto lose;
       }
 
+    /* This check recognizes most separate debuginfo files.  */
+    if (__glibc_unlikely ((l->l_ld == 0 && type == ET_DYN) || empty_dynamic))
+      {
+	errstring = N_("object file has no dynamic section");
+	goto lose;
+      }
+
     /* Length of the sections to be loaded.  */
     maplength = loadcmds[nloadcmds - 1].allocend - loadcmds[0].mapstart;
 
@@ -1265,15 +1275,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
       }
   }
 
-  if (l->l_ld == 0)
-    {
-      if (__glibc_unlikely (type == ET_DYN))
-	{
-	  errstring = N_("object file has no dynamic section");
-	  goto lose;
-	}
-    }
-  else
+  if (l->l_ld != 0)
     l->l_ld = (ElfW(Dyn) *) ((ElfW(Addr)) l->l_ld + l->l_addr);
 
   elf_get_dynamic_info (l, NULL);
