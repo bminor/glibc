@@ -24,7 +24,6 @@ include ../Makeconfig
 
 bench-math := \
   acos \
-  acosf \
   acosh \
   asin \
   asinh \
