@@ -29,6 +29,23 @@ libmvec-funcs = \
   sin \
   sincos \
 
+# Define libmvec function for benchtests directory.
+libmvec-bench-funcs = \
+
+bench-libmvec-double = \
+  $(addprefix double-vlen1-, $(libmvec-bench-funcs)) \
+  $(addprefix double-vlen2-, $(libmvec-bench-funcs)) \
+  $(addprefix double-vlen4-, $(libmvec-bench-funcs)) \
+  $(addprefix double-vlen4-avx2-, $(libmvec-bench-funcs)) \
+  $(addprefix double-vlen8-, $(libmvec-bench-funcs)) \
+
+bench-libmvec-float = \
+  $(addsuffix f, $(addprefix float-vlen1-, $(libmvec-bench-funcs))) \
+  $(addsuffix f, $(addprefix float-vlen4-, $(libmvec-bench-funcs))) \
+  $(addsuffix f, $(addprefix float-vlen8-, $(libmvec-bench-funcs))) \
+  $(addsuffix f, $(addprefix float-vlen8-avx2-, $(libmvec-bench-funcs))) \
+  $(addsuffix f, $(addprefix float-vlen16-, $(libmvec-bench-funcs))) \
+
 # The base libmvec ABI tests.
 libmvec-abi-func-tests = \
   $(addprefix test-double-libmvec-,$(libmvec-funcs)) \
@@ -80,6 +97,24 @@ $(common-objpfx)libmvec.mk: $(common-objpfx)config.make
 	   echo "  \$$(float-vlen8-arch-ext2-cflags)"; \
 	   echo "CFLAGS-test-float-libmvec-$${t}f-avx512f.c = \\"; \
 	   echo "  \$$(libmvec-abi-test-cflags) \\"; \
+	   echo "  \$$(float-vlen16-arch-ext-cflags)"; \
+	   echo; \
+	 done; \
+	 echo "endif"; \
+	 echo "ifeq (\$$(subdir),benchtests)"; \
+	 for t in $(libmvec-bench-funcs); do \
+	   echo "CFLAGS-bench-double-vlen4-$$t.c = \\"; \
+	   echo "  \$$(double-vlen4-arch-ext-cflags)"; \
+	   echo "CFLAGS-bench-double-vlen4-avx2-$$t.c = \\"; \
+	   echo "  \$$(double-vlen4-arch-ext2-cflags)"; \
+	   echo "CFLAGS-bench-double-vlen8-$$t.c = \\"; \
+	   echo "  \$$(double-vlen8-arch-ext-cflags)"; \
+	   echo; \
+	   echo "CFLAGS-bench-float-vlen8-$${t}f.c = \\"; \
+	   echo "  \$$(float-vlen8-arch-ext-cflags)"; \
+	   echo "CFLAGS-bench-float-vlen8-avx2-$${t}f.c = \\"; \
+	   echo "  \$$(float-vlen8-arch-ext2-cflags)"; \
+	   echo "CFLAGS-bench-float-vlen16-$${t}f.c = \\"; \
 	   echo "  \$$(float-vlen16-arch-ext-cflags)"; \
 	   echo; \
 	 done; \

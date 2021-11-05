@@ -72,3 +72,43 @@ ifeq ($(subdir)$(config-cflags-mprefer-vector-width),mathyes)
 # performance of sin and cos by more than 40% on Skylake.
 CFLAGS-branred.c = -mprefer-vector-width=128
 endif
+
+ifeq ($(subdir),benchtests)
+double-vlen4-arch-ext-cflags = -mavx
+double-vlen4-arch-ext2-cflags = -mavx2
+double-vlen8-arch-ext-cflags = -mavx512f
+
+float-vlen8-arch-ext-cflags = -mavx
+float-vlen8-arch-ext2-cflags = -mavx2
+float-vlen16-arch-ext-cflags = -mavx512f
+
+bench-libmvec := $(bench-libmvec-double) $(bench-libmvec-float)
+
+ifeq (${BENCHSET},)
+bench += $(bench-libmvec)
+endif
+
+ifeq (${STATIC-BENCHTESTS},yes)
+libmvec-benchtests = $(common-objpfx)mathvec/libmvec.a $(common-objpfx)math/libm.a
+else
+libmvec-benchtests = $(libmvec) $(libm)
+endif
+
+$(addprefix $(objpfx)bench-,$(bench-libmvec-double)): $(libmvec-benchtests)
+$(addprefix $(objpfx)bench-,$(bench-libmvec-float)): $(libmvec-benchtests)
+bench-libmvec-deps = $(..)sysdeps/x86_64/fpu/bench-libmvec-skeleton.c bench-timing.h Makefile
+
+$(objpfx)bench-float-%.c: $(bench-libmvec-deps)
+	{ if [ -n "$($*-INCLUDE)" ]; then \
+	  cat $($*-INCLUDE); \
+	fi; \
+	$(PYTHON) $(..)sysdeps/x86_64/fpu/scripts/bench_libmvec.py $(basename $(@F)); } > $@-tmp
+	mv -f $@-tmp $@
+
+$(objpfx)bench-double-%.c: $(bench-libmvec-deps)
+	{ if [ -n "$($*-INCLUDE)" ]; then \
+	  cat $($*-INCLUDE); \
+	fi; \
+	$(PYTHON) $(..)sysdeps/x86_64/fpu/scripts/bench_libmvec.py $(basename $(@F)); } > $@-tmp
+	mv -f $@-tmp $@
+endif
