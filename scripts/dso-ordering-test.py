@@ -526,9 +526,13 @@ def process_testcase(t):
     base_test_name = t.test_name
     test_subdir = base_test_name + "-dir"
     testpfx = objpfx + test_subdir + "/"
+    test_srcdir = "dso-sort-tests-src/"
+    testpfx_src = objpfx + test_srcdir
 
     if not os.path.exists(testpfx):
         os.mkdir(testpfx)
+    if not os.path.exists(testpfx_src):
+        os.mkdir(testpfx_src)
 
     def find_objs_not_depended_on(t):
         objs_not_depended_on = []
@@ -595,6 +599,11 @@ def process_testcase(t):
         # Print out needed Makefile fragments for use in glibc/elf/Makefile.
         module_names = ""
         for o in test_descr.objs:
+            rule = ("$(objpfx)" + test_subdir + "/" + test_name
+                    + "-" + o + ".os: $(objpfx)" + test_srcdir
+                    + test_name + "-" + o + ".c\n"
+                    "\t$(compile.c) $(OUTPUT_OPTION)\n")
+            makefile.write (rule)
             module_names += " " + test_subdir + "/" + test_name + "-" + o
         makefile.write("modules-names +=%s\n" % (module_names))
 
@@ -637,7 +646,7 @@ def process_testcase(t):
                         # object.  This only needs to be done at most once for
                         # an object name.
                         if not dep in fake_created:
-                            f = open(testpfx + test_name + "-" + dep
+                            f = open(testpfx_src + test_name + "-" + dep
                                      + ".FAKE.c", "w")
                             f.write(" \n")
                             f.close()
@@ -648,6 +657,12 @@ def process_testcase(t):
                                  % (test_name + "-" + dep + ".FAKE.so",
                                     ("$(objpfx)" + test_subdir + "/"
                                      + test_name + "-" + dep + ".so")))
+                            rule = ("$(objpfx)" + test_subdir + "/"
+                                    + test_name + "-" + dep + ".FAKE.os: "
+                                    "$(objpfx)" + test_srcdir
+                                    + test_name + "-" + dep + ".FAKE.c\n"
+                                    "\t$(compile.c) $(OUTPUT_OPTION)\n")
+                            makefile.write (rule)
                             makefile.write \
                                 ("modules-names += %s\n"
                                  % (test_subdir + "/"
@@ -687,6 +702,10 @@ def process_testcase(t):
                       + test_descr.soname_map['#'] + ".so")
             ldflags += (" -Wl,-soname=" + soname)
         makefile.write("LDFLAGS-%s = %s\n" % (test_name, ldflags))
+        rule = ("$(objpfx)" + test_subdir + "/" + test_name + ".o: "
+                "$(objpfx)" + test_srcdir + test_name + ".c\n"
+                "\t$(compile.c) $(OUTPUT_OPTION)\n")
+        makefile.write (rule)
 
         not_depended_objs = find_objs_not_depended_on(test_descr)
         if not_depended_objs:
@@ -745,7 +764,7 @@ def process_testcase(t):
                      "  something_failed=true\n"
                      "else\n"
                      "  diff -wu ${common_objpfx}elf/%s/%s%s.output \\\n"
-                     "           ${common_objpfx}elf/%s/%s%s.exp\n"
+                     "           ${common_objpfx}elf/%s%s%s.exp\n"
                      "  if [ $? -ne 0 ]; then\n"
                      "    echo '%sFAIL: %s%s expected output comparison'\n"
                      "    something_failed=true\n"
@@ -753,14 +772,14 @@ def process_testcase(t):
                      "fi\n"
                      % (("X" if xfail else ""), test_name, tunable_descr,
                         test_subdir, test_name, tunable_sfx,
-                        test_subdir, base_test_name, exp_tunable_sfx,
+                        test_srcdir, base_test_name, exp_tunable_sfx,
                         ("X" if xfail else ""), test_name, tunable_descr))
 
         # Generate C files according to dependency and calling relations from
         # description string.
         for obj in test_descr.objs:
             src_name = test_name + "-" + obj + ".c"
-            f = open(testpfx + src_name, "w")
+            f = open(testpfx_src + src_name, "w")
             if obj in test_descr.callrefs:
                 called_objs = test_descr.callrefs[obj]
                 for callee in called_objs:
@@ -804,7 +823,7 @@ def process_testcase(t):
             f.close()
 
         # Open C file for writing main program
-        f = open(testpfx + test_name + ".c", "w")
+        f = open(testpfx_src + test_name + ".c", "w")
 
         # if there are some operations in main(), it means we need -ldl
         f.write("#include <stdio.h>\n")
@@ -885,7 +904,7 @@ def process_testcase(t):
             for obj in test_descr.objs:
                 src_name = test_name + "-" + obj + ".c"
                 obj_name = test_name + "-" + obj + ".os"
-                run_cmd([build_gcc, "-c", "-fPIC", testpfx + src_name,
+                run_cmd([build_gcc, "-c", "-fPIC", testpfx_src + src_name,
                           "-o", testpfx + obj_name])
 
             obj_processed = {}
@@ -903,10 +922,12 @@ def process_testcase(t):
                             deps.append(dep + ".FAKE")
                             if not dep in fake_created:
                                 base_name = testpfx + test_name + "-" + dep
+                                src_base_name = (testpfx_src + test_name
+                                                 + "-" + dep)
                                 cmd = [build_gcc, "-Wl,--no-as-needed",
                                        ("-Wl,-soname=" + base_name + ".so"),
                                        "-shared", base_name + ".FAKE.c",
-                                       "-o", base_name + ".FAKE.so"]
+                                       "-o", src_base_name + ".FAKE.so"]
                                 run_cmd(cmd)
                                 fake_created[dep] = True
                 dso_deps = map(lambda d: testpfx + test_name + "-" + d + ".so",
@@ -932,7 +953,7 @@ def process_testcase(t):
             main_deps = map(lambda d: testpfx + test_name + "-" + d + ".so",
                             deps)
             cmd = [build_gcc, "-Wl,--no-as-needed", "-o", testpfx + test_name,
-                   testpfx + test_name + ".c", "-L%s" % (os.getcwd()),
+                   testpfx_src + test_name + ".c", "-L%s" % (os.getcwd()),
                    "-Wl,-rpath-link=%s" % (os.getcwd())]
             if '#' in test_descr.soname_map:
                 soname = ("-Wl,-soname=" + testpfx + test_name + "-"
@@ -987,14 +1008,14 @@ def process_testcase(t):
         sfx = ""
         if r[0] != "":
             sfx = "-" + r[0].replace("=","_")
-        f = open(testpfx + t.test_name + sfx + ".exp", "w")
+        f = open(testpfx_src + t.test_name + sfx + ".exp", "w")
         (output, xfail) = r[1]
         f.write('%s' % output)
         f.close()
 
     # Create header part of top-level testcase shell script, to wrap execution
     # and output comparison together.
-    t.sh = open(testpfx + t.test_name + ".sh", "w")
+    t.sh = open(testpfx_src + t.test_name + ".sh", "w")
     t.sh.write("#!/bin/sh\n")
     t.sh.write("# Test driver for %s, generated by "
                 "dso-ordering-test.py\n" % (t.test_name))
@@ -1022,12 +1043,12 @@ def process_testcase(t):
         sfx = ""
         if r[0] != "":
             sfx = "-" + r[0].replace("=","_")
-        expected_output_files += " $(objpfx)%s/%s%s.exp" % (test_subdir,
+        expected_output_files += " $(objpfx)%s%s%s.exp" % (test_srcdir,
                                                             t.test_name, sfx)
     makefile.write \
-    ("$(objpfx)%s.out: $(objpfx)%s/%s.sh%s "
+    ("$(objpfx)%s.out: $(objpfx)%s%s.sh%s "
      "$(common-objpfx)support/test-run-command\n"
-     % (t.test_name, test_subdir, t.test_name,
+     % (t.test_name, test_srcdir, t.test_name,
         expected_output_files))
     makefile.write("\t$(SHELL) $< $(common-objpfx) '$(test-wrapper-env)' "
                     "'$(run-program-env)' > $@; $(evaluate-test)\n")
