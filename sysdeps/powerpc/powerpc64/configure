@@ -32,26 +32,36 @@ if test x$libc_cv_overlapping_opd = xyes; then
 
 fi
 
-# @notoc started to be supported in GNU Binutils 2.31.
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if the assembler supports @notoc" >&5
-$as_echo_n "checking if the assembler supports @notoc... " >&6; }
+# We check if compiler supports @notoc generation since there is no
+# gain by enabling it if it will be optimized away by the linker.
+# It also helps linkers that might not optimize it and end up
+# generating stubs with ISA 3.1 instruction even targetting older ISA.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if the compiler supports @notoc" >&5
+$as_echo_n "checking if the compiler supports @notoc... " >&6; }
 if ${libc_cv_ppc64_notoc+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-
-	       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-void foo (void) {asm("b foo@notoc");}
-
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  libc_cv_ppc64_notoc=yes
-else
+    cat > conftest.c <<EOF
+int bar (void);
+int foo (void) { return bar () + 1; }
+EOF
   libc_cv_ppc64_notoc=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  if { ac_try='${CC-cc} $libc_cv_cc_submachine $CFLAGS $CPPFLAGS -S -o conftest.s conftest.c'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } \
+     && { ac_try='grep -q -E 'bar@notoc' conftest.s'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+  then
+    libc_cv_ppc64_notoc=yes
+  fi
+  rm -rf conftest.*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ppc64_notoc" >&5
 $as_echo "$libc_cv_ppc64_notoc" >&6; }

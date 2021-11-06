@@ -22,13 +22,22 @@ if test x$libc_cv_overlapping_opd = xyes; then
   AC_DEFINE(USE_PPC64_OVERLAPPING_OPD)
 fi
 
-# @notoc started to be supported in GNU Binutils 2.31.
-AC_CACHE_CHECK([if the assembler supports @notoc],
-	       libc_cv_ppc64_notoc, [
-	       AC_COMPILE_IFELSE([AC_LANG_SOURCE([
-void foo (void) {asm("b foo@notoc");}
-		  ])],
-		  [libc_cv_ppc64_notoc=yes],
-		  [libc_cv_ppc64_notoc=no])])
+# We check if compiler supports @notoc generation since there is no
+# gain by enabling it if it will be optimized away by the linker.
+# It also helps linkers that might not optimize it and end up
+# generating stubs with ISA 3.1 instruction even targetting older ISA.
+AC_CACHE_CHECK([if the compiler supports @notoc],
+	       libc_cv_ppc64_notoc, [dnl
+  cat > conftest.c <<EOF
+int bar (void);
+int foo (void) { return bar () + 1; }
+EOF
+  libc_cv_ppc64_notoc=no
+  if AC_TRY_COMMAND([${CC-cc} $libc_cv_cc_submachine $CFLAGS $CPPFLAGS -S -o conftest.s conftest.c]) \
+     && AC_TRY_COMMAND([grep -q -E 'bar@notoc' conftest.s])
+  then
+    libc_cv_ppc64_notoc=yes
+  fi
+  rm -rf conftest.*])
 AS_IF([test x$libc_cv_ppc64_notoc = xyes],
       [AC_DEFINE(USE_PPC64_NOTOC)])
