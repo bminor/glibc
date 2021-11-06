@@ -34,6 +34,7 @@ libmvec-bench-funcs = \
   cos \
   exp \
   log \
+  pow \
 
 bench-libmvec-double = \
   $(addprefix double-vlen1-, $(libmvec-bench-funcs)) \
