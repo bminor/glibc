@@ -465,7 +465,7 @@ $(+mkdep) $< $(if $(filter %.c,$<),$(CFLAGS)) \
 	     $(CPPFLAGS) $($(patsubst .%,%,$(suffix $(<F)))-CPPFLAGS) | sed -e\
 's,$(subst .,\.,$(@F:.d=.o)),$(foreach o,$(all-object-suffixes),$(@:.d=$o)) $@,' \
 $(sed-remove-objpfx) $(sed-remove-dotdot) > $(@:.d=.T)
-mv -f $(@:.d=.T) $@ $(generate-md5)
+mv -f $(@:.d=.T) $@
 endef
 
 ifneq (,$(objpfx))
