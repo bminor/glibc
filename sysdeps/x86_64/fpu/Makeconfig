@@ -32,6 +32,7 @@ libmvec-funcs = \
 # Define libmvec function for benchtests directory.
 libmvec-bench-funcs = \
   cos \
+  exp \
 
 bench-libmvec-double = \
   $(addprefix double-vlen1-, $(libmvec-bench-funcs)) \
