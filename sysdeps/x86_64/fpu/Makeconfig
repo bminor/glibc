@@ -35,6 +35,7 @@ libmvec-bench-funcs = \
   exp \
   log \
   pow \
+  sin \
 
 bench-libmvec-double = \
   $(addprefix double-vlen1-, $(libmvec-bench-funcs)) \
