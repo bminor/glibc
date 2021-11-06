@@ -104,10 +104,6 @@ $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 	mv -f $@T $@
 endif
 
-$(common-objpfx)s-%.d: $(..)sysdeps/unix/s-%.S \
-		       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
-	$(+make-deps)
-
 postclean-generated += sysd-syscalls
 
 endif

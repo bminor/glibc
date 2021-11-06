@@ -459,15 +459,6 @@ compile-stdin.c = $(COMPILE.c) -o $@ -x c - $(compile-mkdep-flags)
 # get the wrong predefines.
 S-CPPFLAGS = -DASSEMBLER $(asm-CPPFLAGS)
 
-define +make-deps
-$(make-target-directory)
-$(+mkdep) $< $(if $(filter %.c,$<),$(CFLAGS)) \
-	     $(CPPFLAGS) $($(patsubst .%,%,$(suffix $(<F)))-CPPFLAGS) | sed -e\
-'s,$(subst .,\.,$(@F:.d=.o)),$(foreach o,$(all-object-suffixes),$(@:.d=$o)) $@,' \
-$(sed-remove-objpfx) $(sed-remove-dotdot) > $(@:.d=.T)
-mv -f $(@:.d=.T) $@
-endef
-
 ifneq (,$(objpfx))
 # Continuation lines here are dangerous because they introduce spaces!
 define sed-remove-objpfx
