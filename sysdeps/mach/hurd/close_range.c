@@ -63,5 +63,4 @@ __close_range (unsigned int first, unsigned int last,
 }
 
 libc_hidden_def (__close_range)
-strong_alias (__close_range, __libc_close_range)
 weak_alias (__close_range, close_range)
