@@ -22,6 +22,7 @@
 # define MIN_PAGE_SIZE 131072
 # define TEST_MAIN
 # define TEST_NAME "memcpy"
+# define TIMEOUT (8 * 60)
 # include "test-string.h"
 
 char *simple_memcpy (char *, const char *, size_t);
