@@ -1445,7 +1445,9 @@ class Config(object):
         # checking support.  libcilkrts does not support GNU/Hurd (and
         # has been removed in GCC 8, so --disable-libcilkrts can be
         # removed once glibc no longer supports building with older
-        # GCC versions).
+        # GCC versions).  --enable-initfini-array is enabled by default
+        # in GCC 12, which can be removed when GCC 12 becomes the
+        # minimum requirement.
         cfg_opts = list(self.gcc_cfg)
         cfg_opts += ['--enable-initfini-array']
         cfg_opts += ['--disable-libssp', '--disable-libcilkrts']
