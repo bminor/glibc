@@ -2090,7 +2090,8 @@ group_number (CHAR_T *front_ptr, CHAR_T *w, CHAR_T *rear_ptr,
 	    copy_rest:
 	      /* No further grouping to be done.  Copy the rest of the
 		 number.  */
-	      memmove (w, s, (front_ptr -s) * sizeof (CHAR_T));
+	      w -= s - front_ptr;
+	      memmove (w, front_ptr, (s - front_ptr) * sizeof (CHAR_T));
 	      break;
 	    }
 	  else if (*grouping != '\0')
