@@ -25,10 +25,4 @@
 /* Set the FD_CLOEXEC bit instead of closing the file descriptor.  */
 #define CLOSE_RANGE_CLOEXEC (1U << 2)
 
-/* Close the file descriptors from FIRST up to LAST, inclusive.
-   If CLOSE_RANGE_CLOEXEC is set in FLAGS, set the FD_CLOEXEC flag
-   instead of closing.  */
-extern int close_range (unsigned int __first, unsigned int __last,
-			int __flags) __THROW;
-
 #endif /* __USE_GNU  */

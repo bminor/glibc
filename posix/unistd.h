@@ -1199,6 +1199,16 @@ int getentropy (void *__buffer, size_t __length) __wur
     __attr_access ((__write_only__, 1, 2));
 #endif
 
+#ifdef __USE_GNU
+/* Close all file descriptors in the range FD up to MAX_FD.  The flag FLAGS
+   are define by the CLOSE_RANGE prefix.  This function behaves like close
+   on the range and gaps where the file descriptor is invalid or errors
+   encountered while closing file descriptors are ignored.   Returns 0 on
+   successor or -1 for failure (and sets errno accordingly).  */
+extern int close_range (unsigned int __fd, unsigned int __max_fd,
+			int __flags) __THROW;
+#endif
+
 /* Define some macros helping to catch buffer overflows.  */
 #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
 # include <bits/unistd.h>

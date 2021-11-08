@@ -220,6 +220,14 @@
 # define __ASSUME_FACCESSAT2 0
 #endif
 
+/* The close_range system call was introduced across all architectures
+   in Linux 5.9.  */
+#if __LINUX_KERNEL_VERSION >= 0x050900
+# define __ASSUME_CLOSE_RANGE 1
+#else
+# define __ASSUME_CLOSE_RANGE 0
+#endif
+
 /* The FUTEX_LOCK_PI2 operation was introduced across all architectures in Linux
    5.14.  */
 #if __LINUX_KERNEL_VERSION >= 0x050e00

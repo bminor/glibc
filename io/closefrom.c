@@ -16,19 +16,21 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <stdbool.h>
 #include <stdio.h>
+#include <sys/param.h>
 #include <unistd.h>
-#include <not-cancel.h>
 
 void
 __closefrom (int lowfd)
 {
-  int maxfd = __getdtablesize ();
-  if (maxfd == -1)
-    __fortify_fail ("closefrom failed to get the file descriptor table size");
+  int l = MAX (0, lowfd);
 
-  for (int i = 0; i < maxfd; i++)
-    if (i >= lowfd)
-      __close_nocancel_nostatus (i);
+  int r = __close_range (l, ~0U, 0);
+  if (r == 0)
+    return ;
+
+  if (!__closefrom_fallback (l, true))
+    __fortify_fail ("closefrom failed to close a file descriptor");
 }
 weak_alias (__closefrom, closefrom)

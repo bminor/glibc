@@ -19,3 +19,5 @@
 /* This file can define __ASSUME_* macros checked by certain source files.
    Almost none of these are used outside of sysdeps/unix/sysv/linux code.
    But those referring to POSIX-level features like O_* flags can be.  */
+
+#define __ASSUME_CLOSE_RANGE 1

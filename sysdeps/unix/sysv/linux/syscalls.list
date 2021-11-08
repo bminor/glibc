@@ -99,4 +99,4 @@ pkey_alloc	EXTRA	pkey_alloc	i:ii	pkey_alloc
 pkey_free	EXTRA	pkey_free	i:i	pkey_free
 gettid          EXTRA   gettid          Ei:     __gettid	gettid
 tgkill          EXTRA   tgkill          i:iii   __tgkill	tgkill
-close_range     EXTRA   close_range     i:iii   __close_range   close_range
+close_range     -       close_range     i:iii   __close_range   close_range

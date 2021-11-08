@@ -119,6 +119,7 @@ close_range_test (void)
   support_descriptors_free (descrs);
 }
 
+#ifdef __linux__
 _Noreturn static int
 close_range_test_fn (void *arg)
 {
@@ -155,8 +156,10 @@ close_range_test_subprocess (void)
   support_descriptors_check (descrs);
   support_descriptors_free (descrs);
 }
+#endif
 
 
+#ifdef CLOSE_RANGE_UNSHARE
 _Noreturn static int
 close_range_unshare_test_fn (void *arg)
 {
@@ -200,6 +203,7 @@ close_range_unshare_test (void)
   support_descriptors_check (descrs1);
   support_descriptors_free (descrs1);
 }
+#endif
 
 static bool
 is_in_array (int *arr, size_t len, int fd)
@@ -282,8 +286,12 @@ do_test (void)
 {
   close_range_test_max_upper_limit ();
   close_range_test ();
+#ifdef __linux__
   close_range_test_subprocess ();
+#endif
+#ifdef CLOSE_RANGE_UNSHARE
   close_range_unshare_test ();
+#endif
   close_range_cloexec_test ();
 
   return 0;

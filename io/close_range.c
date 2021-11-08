@@ -1,4 +1,4 @@
-/* Close a range of file descriptors.  Linux version.
+/* Close a range of file descriptors.
    Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,21 +16,29 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdbool.h>
-#include <stdio.h>
-#include <sys/param.h>
+#include <errno.h>
+#include <not-cancel.h>
 #include <unistd.h>
 
-void
-__closefrom (int lowfd)
+/* Close the file descriptors from FIRST up to LAST, inclusive.  */
+int
+__close_range (unsigned int first, unsigned int last,
+	       int flags)
 {
-  int l = MAX (0, lowfd);
+  if (first > last || flags != 0)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
 
-  int r = __close_range (l, ~0U, 0);
-  if (r == 0)
-    return;
+  int maxfd = __getdtablesize ();
+  if (maxfd == -1)
+    return -1;
 
-  if (!__closefrom_fallback (l, true))
-    __fortify_fail ("closefrom failed to close a file descriptor");
+  for (int i = first; i <= last && i < maxfd; i++)
+    __close_nocancel_nostatus (i);
+
+  return 0;
 }
-weak_alias (__closefrom, closefrom)
+libc_hidden_def (__close_range)
+weak_alias (__close_range, close_range)

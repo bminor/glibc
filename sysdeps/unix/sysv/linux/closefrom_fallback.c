@@ -21,6 +21,8 @@
 #include <not-cancel.h>
 #include <stdbool.h>
 
+#if !__ASSUME_CLOSE_RANGE
+
 /* Fallback code: iterates over /proc/self/fd, closing each file descriptor
    that fall on the criteria.  If DIRFD_FALLBACK is set, a failure on
    /proc/self/fd open will trigger a fallback that tries to close a file
@@ -97,3 +99,5 @@ err:
   __close_nocancel (dirfd);
   return ret;
 }
+
+#endif

@@ -3,6 +3,9 @@
 
 # ifndef _ISOMAC
 
+#  include <stdbool.h>
+#  include <kernel-features.h>
+
 libc_hidden_proto (_exit, __noreturn__)
 #  ifndef NO_RTLD_HIDDEN
 rtld_hidden_proto (_exit, __noreturn__)
@@ -158,7 +161,14 @@ extern int __brk (void *__addr) attribute_hidden;
 extern int __close (int __fd);
 libc_hidden_proto (__close)
 extern int __libc_close (int __fd);
+#  if __ASSUME_CLOSE_RANGE
+static inline _Bool __closefrom_fallback (int __lowfd, _Bool dirfd_fallback)
+{
+  return false;
+}
+#  else
 extern _Bool __closefrom_fallback (int __lowfd, _Bool) attribute_hidden;
+#  endif
 extern ssize_t __read (int __fd, void *__buf, size_t __nbytes);
 libc_hidden_proto (__read)
 extern ssize_t __write (int __fd, const void *__buf, size_t __n);

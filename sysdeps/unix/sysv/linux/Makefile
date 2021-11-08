@@ -120,7 +120,6 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-timerfd tst-ppoll \
 	 tst-clock_adjtime tst-adjtimex tst-ntp_adjtime tst-ntp_gettime \
 	 tst-ntp_gettimex tst-sigtimedwait tst-misalign-clone \
-  tst-close_range \
   tst-prctl \
   tst-scm_rights \
   # tests
