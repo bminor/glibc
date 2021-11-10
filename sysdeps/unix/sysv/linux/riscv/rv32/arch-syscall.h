@@ -16,6 +16,7 @@
 #define __NR_clock_nanosleep_time64 407
 #define __NR_clock_settime64 404
 #define __NR_clone 220
+#define __NR_clone3 435
 #define __NR_close 57
 #define __NR_close_range 436
 #define __NR_connect 203
@@ -171,6 +172,7 @@
 #define __NR_preadv2 286
 #define __NR_prlimit64 261
 #define __NR_process_madvise 440
+#define __NR_process_mrelease 448
 #define __NR_process_vm_readv 270
 #define __NR_process_vm_writev 271
 #define __NR_pselect6_time64 413

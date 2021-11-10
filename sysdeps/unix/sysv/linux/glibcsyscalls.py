@@ -41,7 +41,7 @@ RE_PSEUDO_SYSCALL = re.compile(r"""__NR_(
     (unused|reserved)[0-9]+
 
     # Pseudo-system call which describes a range.
-    |(syscalls|arch_specific_syscall|(OABI_)?SYSCALL_BASE)
+    |(syscalls|arch_specific_syscall|(OABI_)?SYSCALL_BASE|SYSCALL_MASK)
     |(|64_|[NO]32_)Linux(_syscalls)?
    )""", re.X)
 
