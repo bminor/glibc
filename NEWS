@@ -51,6 +51,10 @@ Major new features:
 
 * The ISO C2X macro _PRINTF_NAN_LEN_MAX has been added to <stdio.h>.
 
+* printf-family functions now support the %b format for output of
+  integers in binary, as specified in draft ISO C2X, and the %B variant
+  of that format recommended by draft ISO C2X.
+
 * A new DSO sorting algorithm has been added in the dynamic linker that uses
   topological sorting by depth-first search (DFS), solving performance issues
   of the existing sorting algorithm when encountering particular circular

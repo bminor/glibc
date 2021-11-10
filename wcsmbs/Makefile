@@ -52,7 +52,8 @@ tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-c16c32-1 wcsatcliff tst-wcstol-locale tst-wcstod-nan-locale \
 	 tst-wcstod-round test-char-types tst-fgetwc-after-eof \
 	 tst-wcstod-nan-sign tst-c16-surrogate tst-c32-state \
-	 $(addprefix test-,$(strop-tests)) tst-mbstowcs
+	 $(addprefix test-,$(strop-tests)) tst-mbstowcs \
+	 tst-wprintf-binary
 
 include ../Rules
 

@@ -39,7 +39,7 @@ cat <<'EOF' |
 %0*x:	`0012'
 %*.*x:	`0012'
 %0*.*x:	`0012'
-bad format:	"%b"
+bad format:	"%v"
 nil pointer (padded):	"     (nil)"
 decimal negative:	"-2345"
 octal negative:	"37777773327"
@@ -153,7 +153,7 @@ cat <<'EOF' |
 %0*x:	`0012'
 %*.*x:	`0012'
 %0*.*x:	`0012'
-bad format:	"%b"
+bad format:	"%v"
 nil pointer (padded):	"     (nil)"
 decimal negative:	"-2345"
 octal negative:	"37777773327"

@@ -390,7 +390,7 @@ static const uint8_t jump_table[] =
     /* '4' */  8, /* '5' */  8, /* '6' */  8, /* '7' */  8,
     /* '8' */  8, /* '9' */  8,            0,            0,
 	       0,            0,            0,            0,
-	       0, /* 'A' */ 26,            0, /* 'C' */ 25,
+	       0, /* 'A' */ 26, /* 'B' */ 30, /* 'C' */ 25,
 	       0, /* 'E' */ 19, /* F */   19, /* 'G' */ 19,
 	       0, /* 'I' */ 29,            0,            0,
     /* 'L' */ 12,            0,            0,            0,
@@ -398,7 +398,7 @@ static const uint8_t jump_table[] =
 	       0,            0,            0,            0,
     /* 'X' */ 18,            0, /* 'Z' */ 13,            0,
 	       0,            0,            0,            0,
-	       0, /* 'a' */ 26,            0, /* 'c' */ 20,
+	       0, /* 'a' */ 26, /* 'b' */ 30, /* 'c' */ 20,
     /* 'd' */ 15, /* 'e' */ 19, /* 'f' */ 19, /* 'g' */ 19,
     /* 'h' */ 10, /* 'i' */ 15, /* 'j' */ 28,            0,
     /* 'l' */ 11, /* 'm' */ 24, /* 'n' */ 23, /* 'o' */ 17,
@@ -444,7 +444,7 @@ static const uint8_t jump_table[] =
 
 #define STEP0_3_TABLE							      \
     /* Step 0: at the beginning.  */					      \
-    static JUMP_TABLE_TYPE step0_jumps[30] =				      \
+    static JUMP_TABLE_TYPE step0_jumps[31] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (flag_space),		/* for ' ' */				      \
@@ -476,9 +476,10 @@ static const uint8_t jump_table[] =
       REF (mod_ptrdiff_t),      /* for 't' */				      \
       REF (mod_intmax_t),       /* for 'j' */				      \
       REF (flag_i18n),		/* for 'I' */				      \
+      REF (form_binary),	/* for 'B', 'b' */			      \
     };									      \
     /* Step 1: after processing width.  */				      \
-    static JUMP_TABLE_TYPE step1_jumps[30] =				      \
+    static JUMP_TABLE_TYPE step1_jumps[31] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -509,10 +510,11 @@ static const uint8_t jump_table[] =
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (mod_ptrdiff_t),      /* for 't' */				      \
       REF (mod_intmax_t),       /* for 'j' */				      \
-      REF (form_unknown)        /* for 'I' */				      \
+      REF (form_unknown),       /* for 'I' */				      \
+      REF (form_binary),	/* for 'B', 'b' */			      \
     };									      \
     /* Step 2: after processing precision.  */				      \
-    static JUMP_TABLE_TYPE step2_jumps[30] =				      \
+    static JUMP_TABLE_TYPE step2_jumps[31] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -543,10 +545,11 @@ static const uint8_t jump_table[] =
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (mod_ptrdiff_t),      /* for 't' */				      \
       REF (mod_intmax_t),       /* for 'j' */				      \
-      REF (form_unknown)        /* for 'I' */				      \
+      REF (form_unknown),       /* for 'I' */				      \
+      REF (form_binary),	/* for 'B', 'b' */			      \
     };									      \
     /* Step 3a: after processing first 'h' modifier.  */		      \
-    static JUMP_TABLE_TYPE step3a_jumps[30] =				      \
+    static JUMP_TABLE_TYPE step3a_jumps[31] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -577,10 +580,11 @@ static const uint8_t jump_table[] =
       REF (form_unknown),	/* for 'A', 'a' */			      \
       REF (form_unknown),       /* for 't' */				      \
       REF (form_unknown),       /* for 'j' */				      \
-      REF (form_unknown)        /* for 'I' */				      \
+      REF (form_unknown),       /* for 'I' */				      \
+      REF (form_binary),	/* for 'B', 'b' */			      \
     };									      \
     /* Step 3b: after processing first 'l' modifier.  */		      \
-    static JUMP_TABLE_TYPE step3b_jumps[30] =				      \
+    static JUMP_TABLE_TYPE step3b_jumps[31] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -611,12 +615,13 @@ static const uint8_t jump_table[] =
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (form_unknown),       /* for 't' */				      \
       REF (form_unknown),       /* for 'j' */				      \
-      REF (form_unknown)        /* for 'I' */				      \
+      REF (form_unknown),       /* for 'I' */				      \
+      REF (form_binary),	/* for 'B', 'b' */			      \
     }
 
 #define STEP4_TABLE							      \
     /* Step 4: processing format specifier.  */				      \
-    static JUMP_TABLE_TYPE step4_jumps[30] =				      \
+    static JUMP_TABLE_TYPE step4_jumps[31] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -647,7 +652,8 @@ static const uint8_t jump_table[] =
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (form_unknown),       /* for 't' */				      \
       REF (form_unknown),       /* for 'j' */				      \
-      REF (form_unknown)        /* for 'I' */				      \
+      REF (form_unknown),       /* for 'I' */				      \
+      REF (form_binary),	/* for 'B', 'b' */			      \
     }
 
 /* Before invoking this macro, process_arg_int etc. macros have to be
@@ -706,6 +712,14 @@ static const uint8_t jump_table[] =
     LABEL (form_hexa):							      \
       /* Unsigned hexadecimal integer.  */				      \
       base = 16;							      \
+      goto LABEL (unsigned_number);					      \
+      /* NOTREACHED */							      \
+									      \
+    LABEL (form_binary):						      \
+      /* Unsigned binary integer.  */					      \
+      base = 2;								      \
+      goto LABEL (unsigned_number);					      \
+      /* NOTREACHED */							      \
 									      \
     LABEL (unsigned_number):	  /* Unsigned number of base BASE.  */	      \
 									      \
@@ -803,8 +817,8 @@ static const uint8_t jump_table[] =
 	{								      \
 	  width -= workend - string + prec;				      \
 									      \
-	  if (number.word != 0 && alt && base == 16)			      \
-	    /* Account for 0X hex marker.  */				      \
+	  if (number.word != 0 && alt && (base == 16 || base == 2))	      \
+	    /* Account for 0X, 0x, 0B or 0b hex or binary marker.  */	      \
 	    width -= 2;							      \
 									      \
 	  if (is_negative || showsign || space)				      \
@@ -823,7 +837,7 @@ static const uint8_t jump_table[] =
 	  else if (space)						      \
 	    outchar (L_(' '));						      \
 									      \
-	  if (number.word != 0 && alt && base == 16)			      \
+	  if (number.word != 0 && alt && (base == 16 || base == 2))	      \
 	    {								      \
 	      outchar (L_('0'));					      \
 	      outchar (spec);						      \
@@ -854,7 +868,7 @@ static const uint8_t jump_table[] =
 	      --width;							      \
 	    }								      \
 									      \
-	  if (number.word != 0 && alt && base == 16)			      \
+	  if (number.word != 0 && alt && (base == 16 || base == 2))	      \
 	    {								      \
 	      outchar (L_('0'));					      \
 	      outchar (spec);						      \

@@ -1664,9 +1664,9 @@ an @code{int} argument should be printed in decimal notation, the
 the @samp{%%} conversion to print a literal @samp{%} character.
 
 There are also conversions for printing an integer argument as an
-unsigned value in octal, decimal, or hexadecimal radix (@samp{%o},
-@samp{%u}, or @samp{%x}, respectively); or as a character value
-(@samp{%c}).
+unsigned value in binary, octal, decimal, or hexadecimal radix
+(@samp{%b}, @samp{%o}, @samp{%u}, or @samp{%x}, respectively); or as a
+character value (@samp{%c}).
 
 Floating-point numbers can be printed in normal, fixed-point notation
 using the @samp{%f} conversion or in exponential notation using the
@@ -1825,6 +1825,13 @@ Conversions}, for details.  @samp{%d} and @samp{%i} are synonymous for
 output, but are different when used with @code{scanf} for input
 (@pxref{Table of Input Conversions}).
 
+@item @samp{%b}, @samp{%B}
+Print an integer as an unsigned binary number.  @samp{%b} uses
+lower-case @samp{b} with the @samp{#} flag and @samp{%B} uses
+upper-case.  @samp{%b} is an ISO C2X feature; @samp{%B} is an
+extension recommended by ISO C2X.  @xref{Integer Conversions}, for
+details.
+
 @item @samp{%o}
 Print an integer as an unsigned octal number.  @xref{Integer
 Conversions}, for details.
@@ -1901,15 +1908,17 @@ simply ignored; this is sometimes useful.
 @subsection Integer Conversions
 
 This section describes the options for the @samp{%d}, @samp{%i},
-@samp{%o}, @samp{%u}, @samp{%x}, and @samp{%X} conversion
+@samp{%b}, @samp{%B}, @samp{%o}, @samp{%u}, @samp{%x}, and @samp{%X} conversion
 specifications.  These conversions print integers in various formats.
 
 The @samp{%d} and @samp{%i} conversion specifications both print an
-@code{int} argument as a signed decimal number; while @samp{%o},
-@samp{%u}, and @samp{%x} print the argument as an unsigned octal,
+@code{int} argument as a signed decimal number; while @samp{b}, @samp{%o},
+@samp{%u}, and @samp{%x} print the argument as an unsigned binary, octal,
 decimal, or hexadecimal number (respectively).  The @samp{%X} conversion
 specification is just like @samp{%x} except that it uses the characters
-@samp{ABCDEF} as digits instead of @samp{abcdef}.
+@samp{ABCDEF} as digits instead of @samp{abcdef}.  The @samp{%B}
+conversion specification is just like @samp{%b} except that, with the
+@samp{#} flag, the output starts with @samp{0B} instead of @samp{0b}.
 
 The following flags are meaningful:
 
@@ -1931,7 +1940,9 @@ includes a sign, this flag is ignored if you supply both of them.
 @item @samp{#}
 For the @samp{%o} conversion, this forces the leading digit to be
 @samp{0}, as if by increasing the precision.  For @samp{%x} or
-@samp{%X}, this prefixes a leading @samp{0x} or @samp{0X} (respectively)
+@samp{%X}, this prefixes a leading @samp{0x} or @samp{0X}
+(respectively) to the result.  For @samp{%b} or @samp{%B}, this
+prefixes a leading @samp{0b} or @samp{0B} (respectively)
 to the result.  This doesn't do anything useful for the @samp{%d},
 @samp{%i}, or @samp{%u} conversions.  Using this flag produces output
 which can be parsed by the @code{strtoul} function (@pxref{Parsing of
@@ -1957,7 +1968,8 @@ characters at all are produced.
 
 Without a type modifier, the corresponding argument is treated as an
 @code{int} (for the signed conversions @samp{%i} and @samp{%d}) or
-@code{unsigned int} (for the unsigned conversions @samp{%o}, @samp{%u},
+@code{unsigned int} (for the unsigned conversions @samp{%b},
+@samp{%B}, @samp{%o}, @samp{%u},
 @samp{%x}, and @samp{%X}).  Recall that since @code{printf} and friends
 are variadic, any @code{char} and @code{short} arguments are
 automatically converted to @code{int} by the default argument

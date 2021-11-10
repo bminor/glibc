@@ -70,7 +70,8 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-vfprintf-width-prec-alloc \
 	 tst-printf-fp-free \
 	 tst-printf-fp-leak \
-	 test-strerr
+	 test-strerr \
+	 tst-printf-binary
 
 
 test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble

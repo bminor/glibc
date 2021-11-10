@@ -91,7 +91,7 @@ I am ready for my first lesson today.";
   fmtst2chk("%0*.*x");
 
 #ifndef	BSD
-  printf("bad format:\t\"%b\"\n");
+  printf("bad format:\t\"%v\"\n");
   printf("nil pointer (padded):\t\"%10p\"\n", (void *) NULL);
 #endif
 

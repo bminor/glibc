@@ -328,6 +328,8 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
 	case L'o':
 	case L'X':
 	case L'x':
+	case L'B':
+	case L'b':
 #if LONG_MAX != LONG_LONG_MAX
 	  if (spec->info.is_long_double)
 	    spec->data_arg_type = PA_INT|PA_FLAG_LONG_LONG;
