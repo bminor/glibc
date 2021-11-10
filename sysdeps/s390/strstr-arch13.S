@@ -49,7 +49,7 @@ ENTRY(STRSTR_ARCH13)
 #  error The arch13 variant of strstr needs the z13 variant of strstr!
 # endif
 	clgfi	%r4,9
-	jh	STRSTR_Z13
+	jgh	STRSTR_Z13
 
 	/* In case of a partial match, the vstrs instruction returns the index
 	   of the partial match in a vector-register.  Then we have to

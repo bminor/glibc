@@ -41,7 +41,7 @@ ENTRY(MEMMEM_ARCH13)
 #  error The arch13 variant of memmem needs the z13 variant of memmem!
 # endif
 	clgfi	%r5,9
-	jh	MEMMEM_Z13
+	jgh	MEMMEM_Z13
 
 	aghik	%r0,%r5,-1		/* vll needs highest index.  */
 	bc	4,0(%r14)		/* cc==1: return if needle-len == 0.  */
