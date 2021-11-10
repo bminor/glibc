@@ -23,6 +23,8 @@
 #include <dl-sym-post.h>
 #include <_itoa.h>
 #include <dl-minimal-malloc.h>
+#include <stdio.h>
+#include <unistd.h>
 
 
 /* The rtld startup code calls __rtld_malloc_init_stubs after the

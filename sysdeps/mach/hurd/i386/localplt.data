@@ -35,7 +35,6 @@ ld.so: __access
 ld.so: __access_noerrno
 ld.so: __getpid
 ld.so: __getcwd
-ld.so: __sbrk
 ld.so: _exit ?
 ld.so: abort
 ld.so: _hurd_intr_rpc_mach_msg
