@@ -83,103 +83,111 @@ libc_freeres_ptr (static char *domain);
    now ignored.  */
 #define DEPRECATED_NI_IDN 192
 
-static char *
-nrl_domainname (void)
+static void
+nrl_domainname_core (struct scratch_buffer *tmpbuf)
 {
-  static int not_first;
+  char *c;
+  struct hostent *h, th;
+  int herror;
 
-  if (! not_first)
+  while (__gethostbyname_r ("localhost", &th,
+			    tmpbuf->data, tmpbuf->length,
+			    &h, &herror))
     {
-      __libc_lock_define_initialized (static, lock);
-      __libc_lock_lock (lock);
-
-      if (! not_first)
+      if (herror == NETDB_INTERNAL && errno == ERANGE)
 	{
-	  char *c;
-	  struct hostent *h, th;
-	  int herror;
-	  struct scratch_buffer tmpbuf;
+	  if (!scratch_buffer_grow (tmpbuf))
+	    return;
+	}
+      else
+	break;
+    }
 
-	  scratch_buffer_init (&tmpbuf);
-	  not_first = 1;
+  if (h != NULL && (c = strchr (h->h_name, '.')) != NULL)
+    domain = __strdup (++c);
+  else
+    {
+      /* The name contains no domain information.  Use the name
+	 now to get more information.  */
+      while (__gethostname (tmpbuf->data, tmpbuf->length))
+	if (!scratch_buffer_grow (tmpbuf))
+	  return;
 
-	  while (__gethostbyname_r ("localhost", &th,
-				    tmpbuf.data, tmpbuf.length,
+      if ((c = strchr (tmpbuf->data, '.')) != NULL)
+	domain = __strdup (++c);
+      else
+	{
+	  /* We need to preserve the hostname.  */
+	  const char *hstname = strdupa (tmpbuf->data);
+	  while (__gethostbyname_r (hstname, &th,
+				    tmpbuf->data,
+				    tmpbuf->length,
 				    &h, &herror))
 	    {
 	      if (herror == NETDB_INTERNAL && errno == ERANGE)
 		{
-		  if (!scratch_buffer_grow (&tmpbuf))
-		    goto done;
+		  if (!scratch_buffer_grow (tmpbuf))
+		    return;
 		}
 	      else
 		break;
 	    }
 
-	  if (h && (c = strchr (h->h_name, '.')))
+	  if (h != NULL && (c = strchr(h->h_name, '.')) != NULL)
 	    domain = __strdup (++c);
 	  else
 	    {
-	      /* The name contains no domain information.  Use the name
-		 now to get more information.  */
-	      while (__gethostname (tmpbuf.data, tmpbuf.length))
-		if (!scratch_buffer_grow (&tmpbuf))
-		  goto done;
+	      struct in_addr in_addr;
 
-	      if ((c = strchr (tmpbuf.data, '.')))
-		domain = __strdup (++c);
-	      else
+	      in_addr.s_addr = htonl (INADDR_LOOPBACK);
+
+	      while (__gethostbyaddr_r ((const char *) &in_addr,
+					sizeof (struct in_addr),
+					AF_INET, &th,
+					tmpbuf->data,
+					tmpbuf->length,
+					&h, &herror))
 		{
-		  /* We need to preserve the hostname.  */
-		  const char *hstname = strdupa (tmpbuf.data);
-
-		  while (__gethostbyname_r (hstname, &th,
-					    tmpbuf.data, tmpbuf.length,
-					    &h, &herror))
+		  if (herror == NETDB_INTERNAL && errno == ERANGE)
 		    {
-		      if (herror == NETDB_INTERNAL && errno == ERANGE)
-			{
-			  if (!scratch_buffer_grow (&tmpbuf))
-			    goto done;
-			}
-		      else
-			break;
+		      if (!scratch_buffer_grow (tmpbuf))
+			return;
 		    }
-
-		  if (h && (c = strchr(h->h_name, '.')))
-		    domain = __strdup (++c);
 		  else
-		    {
-		      struct in_addr in_addr;
-
-		      in_addr.s_addr = htonl (INADDR_LOOPBACK);
-
-		      while (__gethostbyaddr_r ((const char *) &in_addr,
-						sizeof (struct in_addr),
-						AF_INET, &th,
-						tmpbuf.data, tmpbuf.length,
-						&h, &herror))
-			{
-			  if (herror == NETDB_INTERNAL && errno == ERANGE)
-			    {
-			      if (!scratch_buffer_grow (&tmpbuf))
-				goto done;
-			    }
-			  else
-			    break;
-			}
-
-		      if (h && (c = strchr (h->h_name, '.')))
-			domain = __strdup (++c);
-		    }
+		    break;
 		}
-	    }
-	done:
-	  scratch_buffer_free (&tmpbuf);
-	}
 
-      __libc_lock_unlock (lock);
+	      if (h != NULL && (c = strchr (h->h_name, '.')) != NULL)
+		domain = __strdup (++c);
+	    }
+	}
     }
+}
+
+static char *
+nrl_domainname (void)
+{
+  static int not_first;
+
+  if (__glibc_likely (atomic_load_acquire (&not_first) != 0))
+    return domain;
+
+  __libc_lock_define_initialized (static, lock);
+  __libc_lock_lock (lock);
+
+  if (atomic_load_relaxed (&not_first) == 0)
+    {
+      struct scratch_buffer tmpbuf;
+      scratch_buffer_init (&tmpbuf);
+
+      nrl_domainname_core (&tmpbuf);
+
+      scratch_buffer_free (&tmpbuf);
+
+      atomic_store_release (&not_first, 1);
+    }
+
+  __libc_lock_unlock (lock);
 
   return domain;
 };
