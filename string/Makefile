@@ -48,9 +48,9 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   sigdescr_np sigabbrev_np strerrorname_np		\
 		   strerrordesc_np
 
-strop-tests	:= memchr memcmp memcpy memcmpeq memmove mempcpy memset	\
-		   memccpy stpcpy stpncpy strcat strchr strcmp strcpy strcspn	\
-		   strlen strncmp strncpy strpbrk strrchr strspn memmem	\
+strop-tests	:= memchr memcmp memcpy memcpy-large memcmpeq memmove mempcpy 	\
+		   memset memccpy stpcpy stpncpy strcat strchr strcmp strcpy	\
+		   strcspn strlen strncmp strncpy strpbrk strrchr strspn memmem	\
 		   strstr strcasestr strnlen strcasecmp strncasecmp	\
 		   strncat rawmemchr strchrnul bcopy bzero memrchr	\
 		   explicit_bzero
