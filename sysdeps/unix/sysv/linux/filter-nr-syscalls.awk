@@ -22,7 +22,7 @@
 }
 
 # Skip pseudo-system calls which describe ranges.
-/^#define __NR_(syscalls|arch_specific_syscall|(OABI_)?SYSCALL_BASE) / {
+/^#define __NR_(syscalls|arch_specific_syscall|(OABI_)?SYSCALL_BASE|SYSCALL_MASK) / {
     next;
 }
 /^#define __NR_(|64_|[NO]32_)Linux(_syscalls)? / {

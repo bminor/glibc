@@ -238,6 +238,7 @@
 #define __NR_preadv2 4361
 #define __NR_prlimit64 4338
 #define __NR_process_madvise 4440
+#define __NR_process_mrelease 4448
 #define __NR_process_vm_readv 4345
 #define __NR_process_vm_writev 4346
 #define __NR_prof 4044
