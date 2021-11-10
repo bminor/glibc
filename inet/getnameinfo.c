@@ -118,15 +118,15 @@ nrl_domainname_core (struct scratch_buffer *tmpbuf)
       else
 	{
 	  /* We need to preserve the hostname.  */
-	  const char *hstname = strdupa (tmpbuf->data);
-	  while (__gethostbyname_r (hstname, &th,
-				    tmpbuf->data,
-				    tmpbuf->length,
+	  size_t hstnamelen = strlen (tmpbuf->data) + 1;
+	  while (__gethostbyname_r (tmpbuf->data, &th,
+				    tmpbuf->data + hstnamelen,
+				    tmpbuf->length - hstnamelen,
 				    &h, &herror))
 	    {
 	      if (herror == NETDB_INTERNAL && errno == ERANGE)
 		{
-		  if (!scratch_buffer_grow (tmpbuf))
+		  if (!scratch_buffer_grow_preserve (tmpbuf))
 		    return;
 		}
 	      else
