@@ -1058,42 +1058,6 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
   /* This is the ELF header.  We read it in `open_verify'.  */
   header = (void *) fbp->buf;
 
-  /* Signal that we are going to add new objects.  */
-  if (r->r_state == RT_CONSISTENT)
-    {
-#ifdef SHARED
-      /* Auditing checkpoint: we are going to add new objects.  */
-      if ((mode & __RTLD_AUDIT) == 0
-	  && __glibc_unlikely (GLRO(dl_naudit) > 0))
-	{
-	  struct link_map *head = GL(dl_ns)[nsid]._ns_loaded;
-	  /* Do not call the functions for any auditing object.  */
-	  if (head->l_auditing == 0)
-	    {
-	      struct audit_ifaces *afct = GLRO(dl_audit);
-	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
-		{
-		  if (afct->activity != NULL)
-		    afct->activity (&link_map_audit_state (head, cnt)->cookie,
-				    LA_ACT_ADD);
-
-		  afct = afct->next;
-		}
-	    }
-	}
-#endif
-
-      /* Notify the debugger we have added some objects.  We need to
-	 call _dl_debug_initialize in a static program in case dynamic
-	 linking has not been used before.  */
-      r->r_state = RT_ADD;
-      _dl_debug_state ();
-      LIBC_PROBE (map_start, 2, nsid, r);
-      make_consistent = true;
-    }
-  else
-    assert (r->r_state == RT_ADD);
-
   /* Enter the new object in the list of loaded objects.  */
   l = _dl_new_object (realname, name, l_type, loader, mode, nsid);
   if (__glibc_unlikely (l == NULL))
@@ -1514,6 +1478,44 @@ cannot enable executable stack as shared object requires");
 
   /* Now that the object is fully initialized add it to the object list.  */
   _dl_add_to_namespace_list (l, nsid);
+
+  /* Signal that we are going to add new objects.  */
+  if (r->r_state == RT_CONSISTENT)
+    {
+#ifdef SHARED
+      /* Auditing checkpoint: we are going to add new objects.  Since this
+         is called after _dl_add_to_namespace_list the namespace is guaranteed
+	 to not be empty.  */
+      if ((mode & __RTLD_AUDIT) == 0
+	  && __glibc_unlikely (GLRO(dl_naudit) > 0))
+	{
+	  struct link_map *head = GL(dl_ns)[nsid]._ns_loaded;
+	  /* Do not call the functions for any auditing object.  */
+	  if (head->l_auditing == 0)
+	    {
+	      struct audit_ifaces *afct = GLRO(dl_audit);
+	      for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
+		{
+		  if (afct->activity != NULL)
+		    afct->activity (&link_map_audit_state (head, cnt)->cookie,
+				    LA_ACT_ADD);
+
+		  afct = afct->next;
+		}
+	    }
+	}
+#endif
+
+      /* Notify the debugger we have added some objects.  We need to
+	 call _dl_debug_initialize in a static program in case dynamic
+	 linking has not been used before.  */
+      r->r_state = RT_ADD;
+      _dl_debug_state ();
+      LIBC_PROBE (map_start, 2, nsid, r);
+      make_consistent = true;
+    }
+  else
+    assert (r->r_state == RT_ADD);
 
 #ifdef SHARED
   /* Auditing checkpoint: we have a new object.  */
