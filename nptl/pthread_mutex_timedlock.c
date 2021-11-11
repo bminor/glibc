@@ -233,12 +233,12 @@ __pthread_mutex_clocklock_common (pthread_mutex_t *mutex,
 	     meantime.  */
 	  if ((oldval & FUTEX_WAITERS) == 0)
 	    {
-	      if (atomic_compare_and_exchange_bool_acq (&mutex->__data.__lock,
-							oldval | FUTEX_WAITERS,
-							oldval)
-		  != 0)
+	      int val;
+	      if ((val = atomic_compare_and_exchange_val_acq
+		   (&mutex->__data.__lock, oldval | FUTEX_WAITERS,
+		    oldval)) != oldval)
 		{
-		  oldval = mutex->__data.__lock;
+		  oldval = val;
 		  continue;
 		}
 	      oldval |= FUTEX_WAITERS;
