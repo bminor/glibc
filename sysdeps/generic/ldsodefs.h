@@ -744,15 +744,26 @@ extern void _dl_dprintf (int fd, const char *fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3)))
      attribute_hidden;
 #else
+#if defined(__clang__)
+#include <stdarg.h>
+#endif
 __attribute__ ((always_inline, __format__ (__printf__, 2, 3)))
 static inline void
 _dl_dprintf (int fd, const char *fmt, ...)
 {
+#if defined(__clang__)
+  /* In the absence of __builtin_va_arg_pack, use varargs macros to construct a
+     direct call to the stdio function that __dprintf eventually gets to.  This
+     is not a robust hack, will break if stdio changes much.  */
+  extern int _IO_vdprintf (int d, const char *format, va_list arg);
+  va_list arg;
+
+  va_start (arg, fmt);
+  _IO_vdprintf (fd, fmt, arg);
+  va_end (arg);
+#else
   /* Use local declaration to avoid includign <stdio.h>.  */
   extern int __dprintf(int fd, const char *format, ...) attribute_hidden;
-#if defined(__clang__)
-  __dprintf (fd, fmt);
-#else
   __dprintf (fd, fmt, __builtin_va_arg_pack ());
 #endif
 }
