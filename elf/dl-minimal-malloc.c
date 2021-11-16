@@ -17,6 +17,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* Mark symbols hidden in static PIE for early self relocation to work.
+    Note: string.h may have ifuncs which cannot be hidden on i686.  */
+#if BUILD_PIE_DEFAULT
+# pragma GCC visibility push(hidden)
+#endif
 #include <assert.h>
 #include <string.h>
 #include <ldsodefs.h>
