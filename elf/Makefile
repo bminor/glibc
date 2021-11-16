@@ -491,6 +491,7 @@ tests-special += $(objpfx)order-cmp.out $(objpfx)tst-array1-cmp.out \
 		 $(objpfx)tst-unused-dep-cmp.out
 endif
 
+ifndef avoid-generated
 # DSO sorting tests:
 # The dso-ordering-test.py script generates testcase source files in $(objpfx),
 # creating a $(objpfx)<testcase-name>-dir for each testcase, and creates a
@@ -498,9 +499,14 @@ endif
 define include_dsosort_tests
 $(objpfx)$(1).generated-makefile: $(1)
 	$(PYTHON) $(..)scripts/dso-ordering-test.py \
-	--description-file $$< --objpfx $(objpfx) --output-makefile $$@
-include $(objpfx)$(1).generated-makefile
+	--description-file $$< --objpfx $(objpfx) --output-makefile $$@T
+	mv $$@T $$@
+-include $(objpfx)$(1).generated-makefile
 endef
+endif
+
+postclean-generated += $(objpfx)/dso-sort-tests-2.generated-makefile \
+		       $(objpfx)/dso-sort-tests-2.generated-makefile
 
 # Generate from each testcase description file
 ifeq (yes,$(have-tunables))
