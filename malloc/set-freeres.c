@@ -21,6 +21,7 @@
 #include <libc-internal.h>
 #include <unwind-link.h>
 #include <dlfcn/dlerror.h>
+#include <ldsodefs.h>
 
 #include "../nss/nsswitch.h"
 #include "../libio/libioP.h"
@@ -66,6 +67,10 @@ __libc_freeres (void)
 #endif
 
       call_function_static_weak (__libc_dlerror_result_free);
+
+#ifdef SHARED
+      GLRO (dl_libc_freeres) ();
+#endif
 
       for (p = symbol_set_first_element (__libc_freeres_ptrs);
            !symbol_set_end_p (__libc_freeres_ptrs, p); ++p)
