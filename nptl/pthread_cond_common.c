@@ -17,79 +17,52 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <atomic.h>
+#include <atomic_wide_counter.h>
 #include <stdint.h>
 #include <pthread.h>
 
-/* We need 3 least-significant bits on __wrefs for something else.  */
+/* We need 3 least-significant bits on __wrefs for something else.
+   This also matches __atomic_wide_counter requirements: The highest
+   value we add is __PTHREAD_COND_MAX_GROUP_SIZE << 2 to __g1_start
+   (the two extra bits are for the lock in the two LSBs of
+   __g1_start).  */
 #define __PTHREAD_COND_MAX_GROUP_SIZE ((unsigned) 1 << 29)
+
+static inline uint64_t
+__condvar_load_wseq_relaxed (pthread_cond_t *cond)
+{
+  return __atomic_wide_counter_load_relaxed (&cond->__data.__wseq);
+}
+
+static inline uint64_t
+__condvar_fetch_add_wseq_acquire (pthread_cond_t *cond, unsigned int val)
+{
+  return __atomic_wide_counter_fetch_add_acquire (&cond->__data.__wseq, val);
+}
+
+static inline uint64_t
+__condvar_load_g1_start_relaxed (pthread_cond_t *cond)
+{
+  return __atomic_wide_counter_load_relaxed (&cond->__data.__g1_start);
+}
+
+static inline void
+__condvar_add_g1_start_relaxed (pthread_cond_t *cond, unsigned int val)
+{
+  __atomic_wide_counter_add_relaxed (&cond->__data.__g1_start, val);
+}
 
 #if __HAVE_64B_ATOMICS == 1
 
-static uint64_t __attribute__ ((unused))
-__condvar_load_wseq_relaxed (pthread_cond_t *cond)
-{
-  return atomic_load_relaxed (&cond->__data.__wseq);
-}
-
-static uint64_t __attribute__ ((unused))
-__condvar_fetch_add_wseq_acquire (pthread_cond_t *cond, unsigned int val)
-{
-  return atomic_fetch_add_acquire (&cond->__data.__wseq, val);
-}
-
-static uint64_t __attribute__ ((unused))
+static inline uint64_t
 __condvar_fetch_xor_wseq_release (pthread_cond_t *cond, unsigned int val)
 {
-  return atomic_fetch_xor_release (&cond->__data.__wseq, val);
+  return atomic_fetch_xor_release (&cond->__data.__wseq.__value64, val);
 }
 
-static uint64_t __attribute__ ((unused))
-__condvar_load_g1_start_relaxed (pthread_cond_t *cond)
-{
-  return atomic_load_relaxed (&cond->__data.__g1_start);
-}
+#else /* !__HAVE_64B_ATOMICS */
 
-static void __attribute__ ((unused))
-__condvar_add_g1_start_relaxed (pthread_cond_t *cond, unsigned int val)
-{
-  atomic_store_relaxed (&cond->__data.__g1_start,
-      atomic_load_relaxed (&cond->__data.__g1_start) + val);
-}
-
-#else
-
-/* We use two 64b counters: __wseq and __g1_start.  They are monotonically
-   increasing and single-writer-multiple-readers counters, so we can implement
-   load, fetch-and-add, and fetch-and-xor operations even when we just have
-   32b atomics.  Values we add or xor are less than or equal to 1<<31 (*),
-   so we only have to make overflow-and-addition atomic wrt. to concurrent
-   load operations and xor operations.  To do that, we split each counter into
-   two 32b values of which we reserve the MSB of each to represent an
-   overflow from the lower-order half to the higher-order half.
-
-   In the common case, the state is (higher-order / lower-order half, and . is
-   basically concatenation of the bits):
-   0.h     / 0.l  = h.l
-
-   When we add a value of x that overflows (i.e., 0.l + x == 1.L), we run the
-   following steps S1-S4 (the values these represent are on the right-hand
-   side):
-   S1:  0.h     / 1.L == (h+1).L
-   S2:  1.(h+1) / 1.L == (h+1).L
-   S3:  1.(h+1) / 0.L == (h+1).L
-   S4:  0.(h+1) / 0.L == (h+1).L
-   If the LSB of the higher-order half is set, readers will ignore the
-   overflow bit in the lower-order half.
-
-   To get an atomic snapshot in load operations, we exploit that the
-   higher-order half is monotonically increasing; if we load a value V from
-   it, then read the lower-order half, and then read the higher-order half
-   again and see the same value V, we know that both halves have existed in
-   the sequence of values the full counter had.  This is similar to the
-   validated reads in the time-based STMs in GCC's libitm (e.g.,
-   method_ml_wt).
-
-   The xor operation needs to be an atomic read-modify-write.  The write
+/* The xor operation needs to be an atomic read-modify-write.  The write
    itself is not an issue as it affects just the lower-order half but not bits
    used in the add operation.  To make the full fetch-and-xor atomic, we
    exploit that concurrently, the value can increase by at most 1<<31 (*): The
@@ -97,117 +70,18 @@ __condvar_add_g1_start_relaxed (pthread_cond_t *cond, unsigned int val)
    than __PTHREAD_COND_MAX_GROUP_SIZE waiters can enter concurrently and thus
    increment __wseq.  Therefore, if the xor operation observes a value of
    __wseq, then the value it applies the modification to later on can be
-   derived (see below).
-
-   One benefit of this scheme is that this makes load operations
-   obstruction-free because unlike if we would just lock the counter, readers
-   can almost always interpret a snapshot of each halves.  Readers can be
-   forced to read a new snapshot when the read is concurrent with an overflow.
-   However, overflows will happen infrequently, so load operations are
-   practically lock-free.
-
-   (*) The highest value we add is __PTHREAD_COND_MAX_GROUP_SIZE << 2 to
-   __g1_start (the two extra bits are for the lock in the two LSBs of
-   __g1_start).  */
-
-typedef struct
-{
-  unsigned int low;
-  unsigned int high;
-} _condvar_lohi;
-
-static uint64_t
-__condvar_fetch_add_64_relaxed (_condvar_lohi *lh, unsigned int op)
-{
-  /* S1. Note that this is an atomic read-modify-write so it extends the
-     release sequence of release MO store at S3.  */
-  unsigned int l = atomic_fetch_add_relaxed (&lh->low, op);
-  unsigned int h = atomic_load_relaxed (&lh->high);
-  uint64_t result = ((uint64_t) h << 31) | l;
-  l += op;
-  if ((l >> 31) > 0)
-    {
-      /* Overflow.  Need to increment higher-order half.  Note that all
-	 add operations are ordered in happens-before.  */
-      h++;
-      /* S2. Release MO to synchronize with the loads of the higher-order half
-	 in the load operation.  See __condvar_load_64_relaxed.  */
-      atomic_store_release (&lh->high, h | ((unsigned int) 1 << 31));
-      l ^= (unsigned int) 1 << 31;
-      /* S3.  See __condvar_load_64_relaxed.  */
-      atomic_store_release (&lh->low, l);
-      /* S4.  Likewise.  */
-      atomic_store_release (&lh->high, h);
-    }
-  return result;
-}
-
-static uint64_t
-__condvar_load_64_relaxed (_condvar_lohi *lh)
-{
-  unsigned int h, l, h2;
-  do
-    {
-      /* This load and the second one below to the same location read from the
-	 stores in the overflow handling of the add operation or the
-	 initializing stores (which is a simple special case because
-	 initialization always completely happens before further use).
-	 Because no two stores to the higher-order half write the same value,
-	 the loop ensures that if we continue to use the snapshot, this load
-	 and the second one read from the same store operation.  All candidate
-	 store operations have release MO.
-	 If we read from S2 in the first load, then we will see the value of
-	 S1 on the next load (because we synchronize with S2), or a value
-	 later in modification order.  We correctly ignore the lower-half's
-	 overflow bit in this case.  If we read from S4, then we will see the
-	 value of S3 in the next load (or a later value), which does not have
-	 the overflow bit set anymore.
-	  */
-      h = atomic_load_acquire (&lh->high);
-      /* This will read from the release sequence of S3 (i.e, either the S3
-	 store or the read-modify-writes at S1 following S3 in modification
-	 order).  Thus, the read synchronizes with S3, and the following load
-	 of the higher-order half will read from the matching S2 (or a later
-	 value).
-	 Thus, if we read a lower-half value here that already overflowed and
-	 belongs to an increased higher-order half value, we will see the
-	 latter and h and h2 will not be equal.  */
-      l = atomic_load_acquire (&lh->low);
-      /* See above.  */
-      h2 = atomic_load_relaxed (&lh->high);
-    }
-  while (h != h2);
-  if (((l >> 31) > 0) && ((h >> 31) > 0))
-    l ^= (unsigned int) 1 << 31;
-  return ((uint64_t) (h & ~((unsigned int) 1 << 31)) << 31) + l;
-}
-
-static uint64_t __attribute__ ((unused))
-__condvar_load_wseq_relaxed (pthread_cond_t *cond)
-{
-  return __condvar_load_64_relaxed ((_condvar_lohi *) &cond->__data.__wseq32);
-}
-
-static uint64_t __attribute__ ((unused))
-__condvar_fetch_add_wseq_acquire (pthread_cond_t *cond, unsigned int val)
-{
-  uint64_t r = __condvar_fetch_add_64_relaxed
-      ((_condvar_lohi *) &cond->__data.__wseq32, val);
-  atomic_thread_fence_acquire ();
-  return r;
-}
+   derived.  */
 
 static uint64_t __attribute__ ((unused))
 __condvar_fetch_xor_wseq_release (pthread_cond_t *cond, unsigned int val)
 {
-  _condvar_lohi *lh = (_condvar_lohi *) &cond->__data.__wseq32;
   /* First, get the current value.  See __condvar_load_64_relaxed.  */
   unsigned int h, l, h2;
   do
     {
-      h = atomic_load_acquire (&lh->high);
-      l = atomic_load_acquire (&lh->low);
-      h2 = atomic_load_relaxed (&lh->high);
+      h = atomic_load_acquire (&cond->__data.__wseq.__value32.__high);
+      l = atomic_load_acquire (&cond->__data.__wseq.__value32.__low);
+      h2 = atomic_load_relaxed (&cond->__data.__wseq.__value32.__high);
     }
   while (h != h2);
   if (((l >> 31) > 0) && ((h >> 31) == 0))
@@ -219,8 +93,9 @@ __condvar_fetch_xor_wseq_release (pthread_cond_t *cond, unsigned int val)
      earlier in modification order than the following fetch-xor.
      This uses release MO to make the full operation have release semantics
      (all other operations access the lower-order half).  */
-  unsigned int l2 = atomic_fetch_xor_release (&lh->low, val)
-      & ~((unsigned int) 1 << 31);
+  unsigned int l2
+    = (atomic_fetch_xor_release (&cond->__data.__wseq.__value32.__low, val)
+       & ~((unsigned int) 1 << 31));
   if (l2 < l)
     /* The lower-order half overflowed in the meantime.  This happened exactly
        once due to the limit on concurrent waiters (see above).  */
@@ -228,22 +103,7 @@ __condvar_fetch_xor_wseq_release (pthread_cond_t *cond, unsigned int val)
   return ((uint64_t) h << 31) + l2;
 }
 
-static uint64_t __attribute__ ((unused))
-__condvar_load_g1_start_relaxed (pthread_cond_t *cond)
-{
-  return __condvar_load_64_relaxed
-      ((_condvar_lohi *) &cond->__data.__g1_start32);
-}
-
-static void __attribute__ ((unused))
-__condvar_add_g1_start_relaxed (pthread_cond_t *cond, unsigned int val)
-{
-  ignore_value (__condvar_fetch_add_64_relaxed
-      ((_condvar_lohi *) &cond->__data.__g1_start32, val));
-}
-
-#endif  /* !__HAVE_64B_ATOMICS  */
-
+#endif /* !__HAVE_64B_ATOMICS */
 
 /* The lock that signalers use.  See pthread_cond_wait_common for uses.
    The lock is our normal three-state lock: not acquired (0) / acquired (1) /

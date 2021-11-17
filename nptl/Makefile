@@ -22,8 +22,14 @@ subdir	:= nptl
 
 include ../Makeconfig
 
-headers := pthread.h semaphore.h bits/semaphore.h \
-	   bits/struct_mutex.h bits/struct_rwlock.h
+headers := \
+  bits/atomic_wide_counter.h \
+  bits/semaphore.h \
+  bits/struct_mutex.h \
+  bits/struct_rwlock.h \
+  pthread.h \
+  semaphore.h \
+  # headers
 
 extra-libs := libpthread
 extra-libs-others := $(extra-libs)
@@ -270,7 +276,7 @@ tests = tst-attr2 tst-attr3 tst-default-attr \
 	tst-mutexpi1 tst-mutexpi2 tst-mutexpi3 tst-mutexpi4 \
 	tst-mutexpi5 tst-mutexpi5a tst-mutexpi6 tst-mutexpi7 tst-mutexpi7a \
 	tst-mutexpi9 tst-mutexpi10 \
-	tst-cond22 tst-cond26 \
+	tst-cond26 \
 	tst-robustpi1 tst-robustpi2 tst-robustpi3 tst-robustpi4 tst-robustpi5 \
 	tst-robustpi6 tst-robustpi7 tst-robustpi9 \
 	tst-rwlock2 tst-rwlock2a tst-rwlock2b tst-rwlock3 \
@@ -319,6 +325,7 @@ tests-internal := tst-robustpi8 tst-rwlock19 tst-rwlock20 \
 		  tst-barrier5 tst-signal7 tst-mutex8 tst-mutex8-static \
 		  tst-mutexpi8 tst-mutexpi8-static \
 		  tst-setgetname \
+		  tst-cond22 \
 
 xtests = tst-setuid1 tst-setuid1-static tst-setuid2 \
 	tst-mutexpp1 tst-mutexpp6 tst-mutexpp10 tst-setgroups \

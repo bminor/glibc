@@ -106,8 +106,11 @@ do_test (void)
       status = 1;
     }
 
-  printf ("cond = { %llu, %llu, %u/%u/%u, %u/%u/%u, %u, %u }\n",
-	  c.__data.__wseq, c.__data.__g1_start,
+  printf ("cond = { 0x%x:%x, 0x%x:%x, %u/%u/%u, %u/%u/%u, %u, %u }\n",
+	  c.__data.__wseq.__value32.__high,
+	  c.__data.__wseq.__value32.__low,
+	  c.__data.__g1_start.__value32.__high,
+	  c.__data.__g1_start.__value32.__low,
 	  c.__data.__g_signals[0], c.__data.__g_refs[0], c.__data.__g_size[0],
 	  c.__data.__g_signals[1], c.__data.__g_refs[1], c.__data.__g_size[1],
 	  c.__data.__g1_orig_size, c.__data.__wrefs);
@@ -149,8 +152,11 @@ do_test (void)
       status = 1;
     }
 
-  printf ("cond = { %llu, %llu, %u/%u/%u, %u/%u/%u, %u, %u }\n",
-	  c.__data.__wseq, c.__data.__g1_start,
+  printf ("cond = { 0x%x:%x, 0x%x:%x, %u/%u/%u, %u/%u/%u, %u, %u }\n",
+	  c.__data.__wseq.__value32.__high,
+	  c.__data.__wseq.__value32.__low,
+	  c.__data.__g1_start.__value32.__high,
+	  c.__data.__g1_start.__value32.__low,
 	  c.__data.__g_signals[0], c.__data.__g_refs[0], c.__data.__g_size[0],
 	  c.__data.__g_signals[1], c.__data.__g_refs[1], c.__data.__g_size[1],
 	  c.__data.__g1_orig_size, c.__data.__wrefs);
