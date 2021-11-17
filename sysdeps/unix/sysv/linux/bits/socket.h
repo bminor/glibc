@@ -86,7 +86,8 @@ typedef __socklen_t socklen_t;
 #define PF_QIPCRTR	42	/* Qualcomm IPC Router.  */
 #define PF_SMC		43	/* SMC sockets.  */
 #define PF_XDP		44	/* XDP sockets.  */
-#define PF_MAX		45	/* For now..  */
+#define PF_MCTP		45	/* Management component transport protocol.  */
+#define PF_MAX		46	/* For now..  */
 
 /* Address families.  */
 #define AF_UNSPEC	PF_UNSPEC
@@ -137,6 +138,7 @@ typedef __socklen_t socklen_t;
 #define AF_QIPCRTR	PF_QIPCRTR
 #define AF_SMC		PF_SMC
 #define AF_XDP		PF_XDP
+#define AF_MCTP		PF_MCTP
 #define AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
