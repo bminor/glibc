@@ -177,6 +177,8 @@ struct link_map
 	lt_library,		/* Library needed by main executable.  */
 	lt_loaded		/* Extra run-time loaded shared object.  */
       } l_type:2;
+    unsigned int l_dt_relr_ref:1; /* Nonzero if GLIBC_ABI_DT_RELR is
+				     referenced.  */
     unsigned int l_relocated:1;	/* Nonzero if object's relocations done.  */
     unsigned int l_init_called:1; /* Nonzero if DT_INIT function called.  */
     unsigned int l_global:1;	/* Nonzero if object in _dl_global_scope.  */

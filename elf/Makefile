@@ -1145,8 +1145,12 @@ $(eval $(call include_dsosort_tests,dso-sort-tests-1.def))
 $(eval $(call include_dsosort_tests,dso-sort-tests-2.def))
 endif
 
-check-abi: $(objpfx)check-abi-ld.out
-tests-special += $(objpfx)check-abi-ld.out
+check-abi: $(objpfx)check-abi-ld.out \
+	   $(objpfx)check-abi-version-libc.out
+tests-special += \
+  $(objpfx)check-abi-ld.out \
+  $(objpfx)check-abi-version-libc.out \
+# tests-special
 update-abi: update-abi-ld
 update-all-abi: update-all-abi-ld
 
@@ -2778,4 +2782,10 @@ LDFLAGS-tst-p_alignmod3.so += -Wl,-z,max-page-size=0x100,-z,common-page-size=0x1
 $(objpfx)tst-p_align3: $(objpfx)tst-p_alignmod3.so
 $(objpfx)tst-p_align3.out: tst-p_align3.sh $(objpfx)tst-p_align3
 	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
+	$(evaluate-test)
+
+$(objpfx)check-abi-version-libc.out: $(common-objpfx)libc.so
+	LC_ALL=C $(READELF) -V -W $< \
+		| sed -ne '/.gnu.version_d/, /.gnu.version_r/ p' \
+		| grep GLIBC_ABI_DT_RELR > $@; \
 	$(evaluate-test)

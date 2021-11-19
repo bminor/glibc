@@ -185,8 +185,13 @@ END {
 	closeversion(oldver, veryoldver);
 	veryoldver = oldver;
       }
-      printf("%s {\n  global:\n", $2) > outfile;
       oldver = $2;
+      # Skip the placeholder symbol used only for empty version map.
+      if ($3 == "__placeholder_only_for_empty_version_map;") {
+	printf("%s {\n", $2) > outfile;
+	continue;
+      }
+      printf("%s {\n  global:\n", $2) > outfile;
     }
     printf("   ") > outfile;
     for (n = 3; n <= NF; ++n) {

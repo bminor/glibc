@@ -55,6 +55,8 @@ $2 == "g" || $2 == "w" && (NF == 7 || NF == 8) {
   # caused STV_HIDDEN symbols to appear in .dynsym, though that is useless.
   if (NF > 7 && $7 == ".hidden") next;
 
+  if (version ~ /^GLIBC_ABI_/ && !include_abi_version) next;
+
   if (version == "GLIBC_PRIVATE" && !include_private) next;
 
   desc = "";

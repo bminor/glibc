@@ -23,6 +23,11 @@ libc {
   GLIBC_2.35 {
     _dl_find_object;
   }
+  GLIBC_ABI_DT_RELR {
+    # This symbol is used only for empty version map and will be removed
+    # by scripts/versions.awk.
+    __placeholder_only_for_empty_version_map;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __libc_early_init;
