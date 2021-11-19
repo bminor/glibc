@@ -31,7 +31,10 @@ routines	:= setjmp sigjmp bsd-setjmp bsd-_setjmp \
 tests		:= tst-setjmp jmpbug bug269-setjmp tst-setjmp-fp \
 		   tst-sigsetjmp tst-setjmp-static
 tests-static	:= tst-setjmp-static
+tests-internal  := \
+       tst-setjmp-check
 
+gen-as-const-headers += jmp_buf-macros.sym
 
 include ../Rules
 
