@@ -1,5 +1,5 @@
-/* system call interface.  Linux/RISC-V version.
-   Copyright (C) 2001-2021 Free Software Foundation, Inc.
+/* Indirect system call.  Linux generic implementation.
+   Copyright (C) 1997-2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +16,28 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <stdarg.h>
 #include <sysdep.h>
 
 long int
-syscall (long int syscall_number, long int arg1, long int arg2, long int arg3,
-	 long int arg4, long int arg5, long int arg6, long int arg7)
+syscall (long int number, ...)
 {
-  long int ret;
+  va_list args;
 
-  ret = INTERNAL_SYSCALL_NCS_CALL (syscall_number, arg1, arg2, arg3, arg4,
-				   arg5, arg6, arg7);
+  va_start (args, number);
+  long int a0 = va_arg (args, long int);
+  long int a1 = va_arg (args, long int);
+  long int a2 = va_arg (args, long int);
+  long int a3 = va_arg (args, long int);
+  long int a4 = va_arg (args, long int);
+  long int a5 = va_arg (args, long int);
+  va_end (args);
 
-  if (INTERNAL_SYSCALL_ERROR_P (ret))
-    return __syscall_error (ret);
-
-  return ret;
+  int r = INTERNAL_SYSCALL_NCS_CALL (number, a0, a1, a2, a3, a4, a5);
+  if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (r)))
+    {
+      __set_errno (-r);
+      return -1;
+    }
+  return r;
 }
