@@ -24,16 +24,9 @@
 int
 __opensock (void)
 {
-  /* SOCK_DGRAM is supported by all address families.  (Netlink does
-     not support SOCK_STREAM.)  */
+  /* SOCK_DGRAM is supported by all address families.  */
   int type = SOCK_DGRAM | SOCK_CLOEXEC;
   int fd;
-
-#ifdef AF_NETLINK
-  fd = __socket (AF_NETLINK, type, 0);
-  if (fd >= 0)
-    return fd;
-#endif
 
   fd = __socket (AF_UNIX, type, 0);
   if (fd >= 0)
