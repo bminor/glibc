@@ -406,8 +406,6 @@ start_thread (void *arg)
   unwind_buf.priv.data.prev = NULL;
   unwind_buf.priv.data.cleanup = NULL;
 
-  __libc_signal_restore_set (&pd->sigmask);
-
   /* Allow setxid from now onwards.  */
   if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0) == -2))
     futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
@@ -416,6 +414,8 @@ start_thread (void *arg)
     {
       /* Store the new cleanup handler info.  */
       THREAD_SETMEM (pd, cleanup_jmp_buf, &unwind_buf);
+
+      __libc_signal_restore_set (&pd->sigmask);
 
       LIBC_PROBE (pthread_start, 3, (pthread_t) pd, pd->start_routine, pd->arg);
 
