@@ -107,6 +107,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-unload \
 	 tst-unwind-thread \
 	 tst-pt-vfork1 tst-pt-vfork2 tst-vfork1x tst-vfork2x \
+	 tst-pthread-exit-signal \
 
 
 # Files which must not be linked with libpthread.

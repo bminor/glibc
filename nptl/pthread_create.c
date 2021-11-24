@@ -416,8 +416,6 @@ START_THREAD_DEFN
   unwind_buf.priv.data.prev = NULL;
   unwind_buf.priv.data.cleanup = NULL;
 
-  __libc_signal_restore_set (&pd->sigmask);
-
   /* Allow setxid from now onwards.  */
   if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0) == -2))
     futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
@@ -426,6 +424,8 @@ START_THREAD_DEFN
     {
       /* Store the new cleanup handler info.  */
       THREAD_SETMEM (pd, cleanup_jmp_buf, &unwind_buf);
+
+      __libc_signal_restore_set (&pd->sigmask);
 
       /* We are either in (a) or (b), and in either case we either own
          PD already (2) or are about to own PD (1), and so our only
