@@ -107,6 +107,37 @@ next_line (int fd, char *const buffer, char **cp, char **re,
   return res == *re ? NULL : res;
 }
 
+static int
+get_nproc_stat (char *buffer, size_t buffer_size)
+{
+  char *buffer_end = buffer + buffer_size;
+  char *cp = buffer_end;
+  char *re = buffer_end;
+
+  /* Default to an SMP system in case we cannot obtain an accurate
+     number.  */
+  int result = 2;
+
+  const int flags = O_RDONLY | O_CLOEXEC;
+  int fd = __open_nocancel ("/proc/stat", flags);
+  if (fd != -1)
+    {
+      result = 0;
+
+      char *l;
+      while ((l = next_line (fd, buffer, &cp, &re, buffer_end)) != NULL)
+	/* The current format of /proc/stat has all the cpu* entries
+	   at the front.  We assume here that stays this way.  */
+	if (strncmp (l, "cpu", 3) != 0)
+	  break;
+	else if (isdigit (l[3]))
+	  ++result;
+
+      __close_nocancel_nostatus (fd);
+    }
+
+  return result;
+}
 
 int
 __get_nprocs (void)
@@ -162,30 +193,7 @@ __get_nprocs (void)
 	return result;
     }
 
-  cp = buffer_end;
-  re = buffer_end;
-
-  /* Default to an SMP system in case we cannot obtain an accurate
-     number.  */
-  result = 2;
-
-  fd = __open_nocancel ("/proc/stat", flags);
-  if (fd != -1)
-    {
-      result = 0;
-
-      while ((l = next_line (fd, buffer, &cp, &re, buffer_end)) != NULL)
-	/* The current format of /proc/stat has all the cpu* entries
-	   at the front.  We assume here that stays this way.  */
-	if (strncmp (l, "cpu", 3) != 0)
-	  break;
-	else if (isdigit (l[3]))
-	  ++result;
-
-      __close_nocancel_nostatus (fd);
-    }
-
-  return result;
+  return get_nproc_stat (buffer, buffer_size);
 }
 libc_hidden_def (__get_nprocs)
 weak_alias (__get_nprocs, get_nprocs)
@@ -219,7 +227,9 @@ __get_nprocs_conf (void)
       return count;
     }
 
-  return 1;
+  enum { buffer_size = 1024 };
+  char buffer[buffer_size];
+  return get_nproc_stat (buffer, buffer_size);
 }
 libc_hidden_def (__get_nprocs_conf)
 weak_alias (__get_nprocs_conf, get_nprocs_conf)
