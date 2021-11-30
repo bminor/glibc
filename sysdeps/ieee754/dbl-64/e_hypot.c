@@ -26,7 +26,11 @@
      rounding mode.
    - Handle required underflow exception for subnormal results.
 
-   The expected ULP is ~0.792.
+   The expected ULP is ~0.792 or ~0.948 if FMA is used.  For FMA, the
+   correction is not used and the error of sqrt (x^2 + y^2) is below 1 ULP
+   if x^2 + y^2 is computed with less than 0.707 ULP error.  If |x| >= |2y|,
+   fma (x, x, y^2) has ~0.625 ULP.  If |x| < |2y|, fma (|2x|, |y|, (x - y)^2)
+   has ~0.625 ULP.
 
    [1] https://arxiv.org/pdf/1904.09481.pdf  */
 
@@ -48,6 +52,16 @@ static inline double
 kernel (double ax, double ay)
 {
   double t1, t2;
+#ifdef __FP_FAST_FMA
+  t1 = ay + ay;
+  t2 = ax - ay;
+
+  if (t1 >= ax)
+    return sqrt (fma (t1, ax, t2 * t2));
+  else
+    return sqrt (fma (ax, ax, ay * ay));
+
+#else
   double h = sqrt (ax * ax + ay * ay);
   if (h <= 2.0 * ay)
     {
@@ -64,6 +78,7 @@ kernel (double ax, double ay)
 
   h -= (t1 + t2) / (2.0 * h);
   return h;
+#endif
 }
 
 double
