@@ -19,6 +19,7 @@
 #include <array_length.h>
 #include <dlfcn.h>
 #include <pthread.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <support/check.h>
