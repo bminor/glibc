@@ -49,6 +49,28 @@ ENTRY (__longjmp)
 
 	PTR_ARG (0)
 
+#if IS_IN(libc)
+	/* Disable ZA state of SME in libc.a and libc.so, but not in ld.so.  */
+# if HAVE_AARCH64_PAC_RET
+	PACIASP
+	cfi_window_save
+# endif
+	stp	x29, x30, [sp, -16]!
+	cfi_adjust_cfa_offset (16)
+	cfi_rel_offset (x29, 0)
+	cfi_rel_offset (x30, 8)
+	mov	x29, sp
+	bl	__libc_arm_za_disable
+	ldp	x29, x30, [sp], 16
+	cfi_adjust_cfa_offset (-16)
+	cfi_restore (x29)
+	cfi_restore (x30)
+# if HAVE_AARCH64_PAC_RET
+	AUTIASP
+	cfi_window_save
+# endif
+#endif
+
 	ldp	x19, x20, [x0, #JB_X19<<3]
 	ldp	x21, x22, [x0, #JB_X21<<3]
 	ldp	x23, x24, [x0, #JB_X23<<3]
