@@ -38,6 +38,7 @@
 #include <math_private.h>
 #include <math-underflow.h>
 #include <math-narrow-eval.h>
+#include <math-use-builtins.h>
 #include <libm-alias-finite.h>
 #include "math_config.h"
 
@@ -95,8 +96,8 @@ __ieee754_hypot (double x, double y)
   x = fabs (x);
   y = fabs (y);
 
-  double ax = x < y ? y : x;
-  double ay = x < y ? x : y;
+  double ax = USE_FMAX_BUILTIN ? fmax (x, y) : (x < y ? y : x);
+  double ay = USE_FMIN_BUILTIN ? fmin (x, y) : (x < y ? x : y);
 
   /* If ax is huge, scale both inputs down.  */
   if (__glibc_unlikely (ax > LARGE_VAL))
