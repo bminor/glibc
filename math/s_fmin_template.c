@@ -17,11 +17,15 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <math.h>
+#include <math-use-builtins.h>
 
 
 FLOAT
 M_DECL_FUNC (__fmin) (FLOAT x, FLOAT y)
 {
+#if M_USE_BUILTIN (FMIN)
+  return M_SUF (__builtin_fmin) (x, y);
+#else
   if (islessequal (x, y))
     return x;
   else if (isgreater (x, y))
@@ -30,5 +34,6 @@ M_DECL_FUNC (__fmin) (FLOAT x, FLOAT y)
     return x + y;
   else
     return isnan (y) ? x : y;
+#endif
 }
 declare_mgen_alias (__fmin, fmin);
