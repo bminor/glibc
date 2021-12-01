@@ -27,7 +27,11 @@ ENTRY (syscall)
 	mr   r8,r9
 #if defined(USE_PPC_SCV) && !IS_IN(rtld) && (defined(__PPC64__) || defined(__powerpc64__))
 	CHECK_SCV_SUPPORT r9 0f
+	stdu r1,-SCV_FRAME_SIZE(r1)
+	cfi_adjust_cfa_offset(SCV_FRAME_SIZE)
 	DO_CALL_SCV
+	addi r1,r1,SCV_FRAME_SIZE
+	cfi_adjust_cfa_offset(-SCV_FRAME_SIZE)
 	RET_SCV
 	b 1f
 #endif
