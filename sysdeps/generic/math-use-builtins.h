@@ -34,5 +34,6 @@
 #include <math-use-builtins-copysign.h>
 #include <math-use-builtins-sqrt.h>
 #include <math-use-builtins-fma.h>
+#include <math-use-builtins-fmax.h>
 
 #endif /* MATH_USE_BUILTINS_H  */

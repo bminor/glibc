@@ -24,6 +24,7 @@
 #define M_SUF(c) c ## f128
 #define FLOAT _Float128
 #define M_STRTO_NAN __strtof128_nan
+#define M_USE_BUILTIN(c) USE_ ##c ##F128_BUILTIN
 
 #define CFLOAT __CFLOAT128
 

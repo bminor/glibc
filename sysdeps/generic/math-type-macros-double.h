@@ -26,6 +26,7 @@
 #define FLOAT double
 #define CFLOAT _Complex double
 #define M_STRTO_NAN __strtod_nan
+#define M_USE_BUILTIN(c) USE_ ##c ##_BUILTIN
 
 #include <libm-alias-double.h>
 #include <math-nan-payload-double.h>
