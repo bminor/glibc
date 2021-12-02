@@ -28,20 +28,15 @@
  *
  */
 
-#define L2_SIZE		(8*1024*1024)/2	// L2 8MB/2
-#define CACHE_LINE_SIZE	256
-#define ZF_DIST		(CACHE_LINE_SIZE * 21)	// Zerofill distance
-#define dest		x0
-#define src		x1
-#define n		x2	// size
-#define tmp1		x3
-#define tmp2		x4
-#define tmp3		x5
-#define rest		x6
-#define dest_ptr	x7
-#define src_ptr		x8
-#define vector_length	x9
-#define cl_remainder	x10	// CACHE_LINE_SIZE remainder
+#define dstin	x0
+#define src	x1
+#define n	x2
+#define dst	x3
+#define dstend	x4
+#define srcend	x5
+#define tmp	x6
+#define vlen	x7
+#define vlen8	x8
 
 #if HAVE_AARCH64_SVE_ASM
 # if IS_IN (libc)
@@ -50,45 +45,37 @@
 
 	.arch armv8.2-a+sve
 
-	.macro dc_zva times
-	dc	zva, tmp1
-	add	tmp1, tmp1, CACHE_LINE_SIZE
-	.if \times-1
-	dc_zva "(\times-1)"
-	.endif
-	.endm
-
 	.macro ld1b_unroll8
-	ld1b	z0.b, p0/z, [src_ptr, #0, mul vl]
-	ld1b	z1.b, p0/z, [src_ptr, #1, mul vl]
-	ld1b	z2.b, p0/z, [src_ptr, #2, mul vl]
-	ld1b	z3.b, p0/z, [src_ptr, #3, mul vl]
-	ld1b	z4.b, p0/z, [src_ptr, #4, mul vl]
-	ld1b	z5.b, p0/z, [src_ptr, #5, mul vl]
-	ld1b	z6.b, p0/z, [src_ptr, #6, mul vl]
-	ld1b	z7.b, p0/z, [src_ptr, #7, mul vl]
+	ld1b	z0.b, p0/z, [src, 0, mul vl]
+	ld1b	z1.b, p0/z, [src, 1, mul vl]
+	ld1b	z2.b, p0/z, [src, 2, mul vl]
+	ld1b	z3.b, p0/z, [src, 3, mul vl]
+	ld1b	z4.b, p0/z, [src, 4, mul vl]
+	ld1b	z5.b, p0/z, [src, 5, mul vl]
+	ld1b	z6.b, p0/z, [src, 6, mul vl]
+	ld1b	z7.b, p0/z, [src, 7, mul vl]
 	.endm
 
 	.macro stld1b_unroll4a
-	st1b	z0.b, p0,   [dest_ptr, #0, mul vl]
-	st1b	z1.b, p0,   [dest_ptr, #1, mul vl]
-	ld1b	z0.b, p0/z, [src_ptr,  #0, mul vl]
-	ld1b	z1.b, p0/z, [src_ptr,  #1, mul vl]
-	st1b	z2.b, p0,   [dest_ptr, #2, mul vl]
-	st1b	z3.b, p0,   [dest_ptr, #3, mul vl]
-	ld1b	z2.b, p0/z, [src_ptr,  #2, mul vl]
-	ld1b	z3.b, p0/z, [src_ptr,  #3, mul vl]
+	st1b	z0.b, p0,   [dst, 0, mul vl]
+	st1b	z1.b, p0,   [dst, 1, mul vl]
+	ld1b	z0.b, p0/z, [src, 0, mul vl]
+	ld1b	z1.b, p0/z, [src, 1, mul vl]
+	st1b	z2.b, p0,   [dst, 2, mul vl]
+	st1b	z3.b, p0,   [dst, 3, mul vl]
+	ld1b	z2.b, p0/z, [src, 2, mul vl]
+	ld1b	z3.b, p0/z, [src, 3, mul vl]
 	.endm
 
 	.macro stld1b_unroll4b
-	st1b	z4.b, p0,   [dest_ptr, #4, mul vl]
-	st1b	z5.b, p0,   [dest_ptr, #5, mul vl]
-	ld1b	z4.b, p0/z, [src_ptr,  #4, mul vl]
-	ld1b	z5.b, p0/z, [src_ptr,  #5, mul vl]
-	st1b	z6.b, p0,   [dest_ptr, #6, mul vl]
-	st1b	z7.b, p0,   [dest_ptr, #7, mul vl]
-	ld1b	z6.b, p0/z, [src_ptr,  #6, mul vl]
-	ld1b	z7.b, p0/z, [src_ptr,  #7, mul vl]
+	st1b	z4.b, p0,   [dst, 4, mul vl]
+	st1b	z5.b, p0,   [dst, 5, mul vl]
+	ld1b	z4.b, p0/z, [src, 4, mul vl]
+	ld1b	z5.b, p0/z, [src, 5, mul vl]
+	st1b	z6.b, p0,   [dst, 6, mul vl]
+	st1b	z7.b, p0,   [dst, 7, mul vl]
+	ld1b	z6.b, p0/z, [src, 6, mul vl]
+	ld1b	z7.b, p0/z, [src, 7, mul vl]
 	.endm
 
 	.macro stld1b_unroll8
@@ -97,87 +84,18 @@
 	.endm
 
 	.macro st1b_unroll8
-	st1b	z0.b, p0, [dest_ptr, #0, mul vl]
-	st1b	z1.b, p0, [dest_ptr, #1, mul vl]
-	st1b	z2.b, p0, [dest_ptr, #2, mul vl]
-	st1b	z3.b, p0, [dest_ptr, #3, mul vl]
-	st1b	z4.b, p0, [dest_ptr, #4, mul vl]
-	st1b	z5.b, p0, [dest_ptr, #5, mul vl]
-	st1b	z6.b, p0, [dest_ptr, #6, mul vl]
-	st1b	z7.b, p0, [dest_ptr, #7, mul vl]
+	st1b	z0.b, p0, [dst, 0, mul vl]
+	st1b	z1.b, p0, [dst, 1, mul vl]
+	st1b	z2.b, p0, [dst, 2, mul vl]
+	st1b	z3.b, p0, [dst, 3, mul vl]
+	st1b	z4.b, p0, [dst, 4, mul vl]
+	st1b	z5.b, p0, [dst, 5, mul vl]
+	st1b	z6.b, p0, [dst, 6, mul vl]
+	st1b	z7.b, p0, [dst, 7, mul vl]
 	.endm
 
-	.macro shortcut_for_small_size exit
-	// if rest <= vector_length * 2
-	whilelo	p0.b, xzr, n
-	whilelo	p1.b, vector_length, n
-	b.last	1f
-	ld1b	z0.b, p0/z, [src, #0, mul vl]
-	ld1b	z1.b, p1/z, [src, #1, mul vl]
-	st1b	z0.b, p0, [dest, #0, mul vl]
-	st1b	z1.b, p1, [dest, #1, mul vl]
-	ret
-1:	// if rest > vector_length * 8
-	cmp	n, vector_length, lsl 3 // vector_length * 8
-	b.hi	\exit
-	// if rest <= vector_length * 4
-	lsl	tmp1, vector_length, 1  // vector_length * 2
-	whilelo	p2.b, tmp1, n
-	incb	tmp1
-	whilelo	p3.b, tmp1, n
-	b.last	1f
-	ld1b	z0.b, p0/z, [src, #0, mul vl]
-	ld1b	z1.b, p1/z, [src, #1, mul vl]
-	ld1b	z2.b, p2/z, [src, #2, mul vl]
-	ld1b	z3.b, p3/z, [src, #3, mul vl]
-	st1b	z0.b, p0, [dest, #0, mul vl]
-	st1b	z1.b, p1, [dest, #1, mul vl]
-	st1b	z2.b, p2, [dest, #2, mul vl]
-	st1b	z3.b, p3, [dest, #3, mul vl]
-	ret
-1:	// if rest <= vector_length * 8
-	lsl	tmp1, vector_length, 2  // vector_length * 4
-	whilelo	p4.b, tmp1, n
-	incb	tmp1
-	whilelo	p5.b, tmp1, n
-	b.last	1f
-	ld1b	z0.b, p0/z, [src, #0, mul vl]
-	ld1b	z1.b, p1/z, [src, #1, mul vl]
-	ld1b	z2.b, p2/z, [src, #2, mul vl]
-	ld1b	z3.b, p3/z, [src, #3, mul vl]
-	ld1b	z4.b, p4/z, [src, #4, mul vl]
-	ld1b	z5.b, p5/z, [src, #5, mul vl]
-	st1b	z0.b, p0, [dest, #0, mul vl]
-	st1b	z1.b, p1, [dest, #1, mul vl]
-	st1b	z2.b, p2, [dest, #2, mul vl]
-	st1b	z3.b, p3, [dest, #3, mul vl]
-	st1b	z4.b, p4, [dest, #4, mul vl]
-	st1b	z5.b, p5, [dest, #5, mul vl]
-	ret
-1:	lsl	tmp1, vector_length, 2	// vector_length * 4
-	incb	tmp1			// vector_length * 5
-	incb	tmp1			// vector_length * 6
-	whilelo	p6.b, tmp1, n
-	incb	tmp1
-	whilelo	p7.b, tmp1, n
-	ld1b	z0.b, p0/z, [src, #0, mul vl]
-	ld1b	z1.b, p1/z, [src, #1, mul vl]
-	ld1b	z2.b, p2/z, [src, #2, mul vl]
-	ld1b	z3.b, p3/z, [src, #3, mul vl]
-	ld1b	z4.b, p4/z, [src, #4, mul vl]
-	ld1b	z5.b, p5/z, [src, #5, mul vl]
-	ld1b	z6.b, p6/z, [src, #6, mul vl]
-	ld1b	z7.b, p7/z, [src, #7, mul vl]
-	st1b	z0.b, p0, [dest, #0, mul vl]
-	st1b	z1.b, p1, [dest, #1, mul vl]
-	st1b	z2.b, p2, [dest, #2, mul vl]
-	st1b	z3.b, p3, [dest, #3, mul vl]
-	st1b	z4.b, p4, [dest, #4, mul vl]
-	st1b	z5.b, p5, [dest, #5, mul vl]
-	st1b	z6.b, p6, [dest, #6, mul vl]
-	st1b	z7.b, p7, [dest, #7, mul vl]
-	ret
-	.endm
+#undef BTI_C
+#define BTI_C
 
 ENTRY (MEMCPY)
 
@@ -185,223 +103,209 @@ ENTRY (MEMCPY)
 	PTR_ARG (1)
 	SIZE_ARG (2)
 
-L(memcpy):
-	cntb	vector_length
-	// shortcut for less than vector_length * 8
-	// gives a free ptrue to p0.b for n >= vector_length
-	shortcut_for_small_size L(vl_agnostic)
-	// end of shortcut
+	cntb	vlen
+	cmp	n, vlen, lsl 1
+	b.hi	L(copy_small)
+	whilelo	p1.b, vlen, n
+	whilelo	p0.b, xzr, n
+	ld1b	z0.b, p0/z, [src, 0, mul vl]
+	ld1b	z1.b, p1/z, [src, 1, mul vl]
+	st1b	z0.b, p0, [dstin, 0, mul vl]
+	st1b	z1.b, p1, [dstin, 1, mul vl]
+	ret
 
-L(vl_agnostic): // VL Agnostic
-	mov	rest, n
-	mov	dest_ptr, dest
-	mov	src_ptr, src
-	// if rest >= L2_SIZE && vector_length == 64 then L(L2)
-	mov	tmp1, 64
-	cmp	rest, L2_SIZE
-	ccmp	vector_length, tmp1, 0, cs
-	b.eq	L(L2)
+	.p2align 4
 
-L(unroll8): // unrolling and software pipeline
-	lsl	tmp1, vector_length, 3	// vector_length * 8
-	.p2align 3
-	cmp	 rest, tmp1
-	b.cc	L(last)
+L(copy_small):
+	cmp	n, vlen, lsl 3
+	b.hi	L(copy_large)
+	add	dstend, dstin, n
+	add	srcend, src, n
+	cmp	n, vlen, lsl 2
+	b.hi	1f
+
+	/* Copy 2-4 vectors.  */
+	ptrue	p0.b
+	ld1b	z0.b, p0/z, [src, 0, mul vl]
+	ld1b	z1.b, p0/z, [src, 1, mul vl]
+	ld1b	z2.b, p0/z, [srcend, -2, mul vl]
+	ld1b	z3.b, p0/z, [srcend, -1, mul vl]
+	st1b	z0.b, p0, [dstin, 0, mul vl]
+	st1b	z1.b, p0, [dstin, 1, mul vl]
+	st1b	z2.b, p0, [dstend, -2, mul vl]
+	st1b	z3.b, p0, [dstend, -1, mul vl]
+	ret
+
+	.p2align 4
+	/* Copy 4-8 vectors.  */
+1:	ptrue	p0.b
+	ld1b	z0.b, p0/z, [src, 0, mul vl]
+	ld1b	z1.b, p0/z, [src, 1, mul vl]
+	ld1b	z2.b, p0/z, [src, 2, mul vl]
+	ld1b	z3.b, p0/z, [src, 3, mul vl]
+	ld1b	z4.b, p0/z, [srcend, -4, mul vl]
+	ld1b	z5.b, p0/z, [srcend, -3, mul vl]
+	ld1b	z6.b, p0/z, [srcend, -2, mul vl]
+	ld1b	z7.b, p0/z, [srcend, -1, mul vl]
+	st1b	z0.b, p0, [dstin, 0, mul vl]
+	st1b	z1.b, p0, [dstin, 1, mul vl]
+	st1b	z2.b, p0, [dstin, 2, mul vl]
+	st1b	z3.b, p0, [dstin, 3, mul vl]
+	st1b	z4.b, p0, [dstend, -4, mul vl]
+	st1b	z5.b, p0, [dstend, -3, mul vl]
+	st1b	z6.b, p0, [dstend, -2, mul vl]
+	st1b	z7.b, p0, [dstend, -1, mul vl]
+	ret
+
+	.p2align 4
+	/* At least 8 vectors - always align to vector length for
+	   higher and consistent write performance.  */
+L(copy_large):
+	sub	tmp, vlen, 1
+	and	tmp, dstin, tmp
+	sub	tmp, vlen, tmp
+	whilelo	p1.b, xzr, tmp
+	ld1b	z1.b, p1/z, [src]
+	st1b	z1.b, p1, [dstin]
+	add	dst, dstin, tmp
+	add	src, src, tmp
+	sub	n, n, tmp
+	ptrue	p0.b
+
+	lsl	vlen8, vlen, 3
+	subs	n, n, vlen8
+	b.ls	3f
 	ld1b_unroll8
-	add	src_ptr, src_ptr, tmp1
-	sub	rest, rest, tmp1
-	cmp	rest, tmp1
-	b.cc	2f
-	.p2align 3
+	add	src, src, vlen8
+	subs	n, n, vlen8
+	b.ls	2f
+
+	.p2align 4
+	/* 8x unrolled and software pipelined loop.  */
 1:	stld1b_unroll8
-	add	dest_ptr, dest_ptr, tmp1
-	add	src_ptr, src_ptr, tmp1
-	sub	rest, rest, tmp1
-	cmp	rest, tmp1
-	b.ge	1b
+	add	dst, dst, vlen8
+	add	src, src, vlen8
+	subs	n, n, vlen8
+	b.hi	1b
 2:	st1b_unroll8
-	add	dest_ptr, dest_ptr, tmp1
+	add	dst, dst, vlen8
+3:	add	n, n, vlen8
 
-	.p2align 3
-L(last):
-	whilelo	p0.b, xzr, rest
-	whilelo	p1.b, vector_length, rest
-	b.last	1f
-	ld1b	z0.b, p0/z, [src_ptr, #0, mul vl]
-	ld1b	z1.b, p1/z, [src_ptr, #1, mul vl]
-	st1b	z0.b, p0, [dest_ptr, #0, mul vl]
-	st1b	z1.b, p1, [dest_ptr, #1, mul vl]
-	ret
-1:	lsl	tmp1, vector_length, 1	// vector_length * 2
-	whilelo	p2.b, tmp1, rest
-	incb	tmp1
-	whilelo	p3.b, tmp1, rest
-	b.last	1f
-	ld1b	z0.b, p0/z, [src_ptr, #0, mul vl]
-	ld1b	z1.b, p1/z, [src_ptr, #1, mul vl]
-	ld1b	z2.b, p2/z, [src_ptr, #2, mul vl]
-	ld1b	z3.b, p3/z, [src_ptr, #3, mul vl]
-	st1b	z0.b, p0, [dest_ptr, #0, mul vl]
-	st1b	z1.b, p1, [dest_ptr, #1, mul vl]
-	st1b	z2.b, p2, [dest_ptr, #2, mul vl]
-	st1b	z3.b, p3, [dest_ptr, #3, mul vl]
-	ret
-1:	lsl	tmp1, vector_length, 2	// vector_length * 4
-	whilelo	p4.b, tmp1, rest
-	incb	tmp1
-	whilelo	p5.b, tmp1, rest
-	incb	tmp1
-	whilelo	p6.b, tmp1, rest
-	incb	tmp1
-	whilelo	p7.b, tmp1, rest
-	ld1b	z0.b, p0/z, [src_ptr, #0, mul vl]
-	ld1b	z1.b, p1/z, [src_ptr, #1, mul vl]
-	ld1b	z2.b, p2/z, [src_ptr, #2, mul vl]
-	ld1b	z3.b, p3/z, [src_ptr, #3, mul vl]
-	ld1b	z4.b, p4/z, [src_ptr, #4, mul vl]
-	ld1b	z5.b, p5/z, [src_ptr, #5, mul vl]
-	ld1b	z6.b, p6/z, [src_ptr, #6, mul vl]
-	ld1b	z7.b, p7/z, [src_ptr, #7, mul vl]
-	st1b	z0.b, p0, [dest_ptr, #0, mul vl]
-	st1b	z1.b, p1, [dest_ptr, #1, mul vl]
-	st1b	z2.b, p2, [dest_ptr, #2, mul vl]
-	st1b	z3.b, p3, [dest_ptr, #3, mul vl]
-	st1b	z4.b, p4, [dest_ptr, #4, mul vl]
-	st1b	z5.b, p5, [dest_ptr, #5, mul vl]
-	st1b	z6.b, p6, [dest_ptr, #6, mul vl]
-	st1b	z7.b, p7, [dest_ptr, #7, mul vl]
+	/* Move last 0-8 vectors.  */
+L(last_bytes):
+	cmp	n, vlen, lsl 1
+	b.hi	1f
+	whilelo	p0.b, xzr, n
+	whilelo	p1.b, vlen, n
+	ld1b	z0.b, p0/z, [src, 0, mul vl]
+	ld1b	z1.b, p1/z, [src, 1, mul vl]
+	st1b	z0.b, p0, [dst, 0, mul vl]
+	st1b	z1.b, p1, [dst, 1, mul vl]
 	ret
 
-L(L2):
-	// align dest address at CACHE_LINE_SIZE byte boundary
-	mov	tmp1, CACHE_LINE_SIZE
-	ands	tmp2, dest_ptr, CACHE_LINE_SIZE - 1
-	// if cl_remainder == 0
-	b.eq	L(L2_dc_zva)
-	sub	cl_remainder, tmp1, tmp2
-	// process remainder until the first CACHE_LINE_SIZE boundary
-	whilelo	p1.b, xzr, cl_remainder	// keep p0.b all true
-	whilelo	p2.b, vector_length, cl_remainder
-	b.last	1f
-	ld1b	z1.b, p1/z, [src_ptr, #0, mul vl]
-	ld1b	z2.b, p2/z, [src_ptr, #1, mul vl]
-	st1b	z1.b, p1, [dest_ptr, #0, mul vl]
-	st1b	z2.b, p2, [dest_ptr, #1, mul vl]
-	b	2f
-1:	lsl	tmp1, vector_length, 1	// vector_length * 2
-	whilelo	p3.b, tmp1, cl_remainder
-	incb	tmp1
-	whilelo	p4.b, tmp1, cl_remainder
-	ld1b	z1.b, p1/z, [src_ptr, #0, mul vl]
-	ld1b	z2.b, p2/z, [src_ptr, #1, mul vl]
-	ld1b	z3.b, p3/z, [src_ptr, #2, mul vl]
-	ld1b	z4.b, p4/z, [src_ptr, #3, mul vl]
-	st1b	z1.b, p1, [dest_ptr, #0, mul vl]
-	st1b	z2.b, p2, [dest_ptr, #1, mul vl]
-	st1b	z3.b, p3, [dest_ptr, #2, mul vl]
-	st1b	z4.b, p4, [dest_ptr, #3, mul vl]
-2:	add	dest_ptr, dest_ptr, cl_remainder
-	add	src_ptr, src_ptr, cl_remainder
-	sub	rest, rest, cl_remainder
+	.p2align 4
 
-L(L2_dc_zva):
-	// zero fill
-	and	tmp1, dest, 0xffffffffffffff
-	and	tmp2, src, 0xffffffffffffff
-	subs	tmp1, tmp1, tmp2	// diff
-	b.ge	1f
-	neg	tmp1, tmp1
-1:	mov	tmp3, ZF_DIST + CACHE_LINE_SIZE * 2
-	cmp	tmp1, tmp3
-	b.lo	L(unroll8)
-	mov	tmp1, dest_ptr
-	dc_zva	(ZF_DIST / CACHE_LINE_SIZE) - 1
-	// unroll
-	ld1b_unroll8	// this line has to be after "b.lo L(unroll8)"
-	add	 src_ptr, src_ptr, CACHE_LINE_SIZE * 2
-	sub	 rest, rest, CACHE_LINE_SIZE * 2
-	mov	 tmp1, ZF_DIST
-	.p2align 3
-1:	stld1b_unroll4a
-	add	tmp2, dest_ptr, tmp1	// dest_ptr + ZF_DIST
-	dc	zva, tmp2
-	stld1b_unroll4b
-	add	tmp2, tmp2, CACHE_LINE_SIZE
-	dc	zva, tmp2
-	add	dest_ptr, dest_ptr, CACHE_LINE_SIZE * 2
-	add	src_ptr, src_ptr, CACHE_LINE_SIZE * 2
-	sub	rest, rest, CACHE_LINE_SIZE * 2
-	cmp	rest, tmp3	// ZF_DIST + CACHE_LINE_SIZE * 2
-	b.ge	1b
-	st1b_unroll8
-	add	dest_ptr, dest_ptr, CACHE_LINE_SIZE * 2
-	b	L(unroll8)
+1:	add	srcend, src, n
+	add	dstend, dst, n
+	ld1b	z0.b, p0/z, [src, 0, mul vl]
+	ld1b	z1.b, p0/z, [src, 1, mul vl]
+	ld1b	z2.b, p0/z, [srcend, -2, mul vl]
+	ld1b	z3.b, p0/z, [srcend, -1, mul vl]
+	cmp	n, vlen, lsl 2
+	b.hi	1f
+
+	st1b	z0.b, p0, [dst, 0, mul vl]
+	st1b	z1.b, p0, [dst, 1, mul vl]
+	st1b	z2.b, p0, [dstend, -2, mul vl]
+	st1b	z3.b, p0, [dstend, -1, mul vl]
+	ret
+
+1:	ld1b	z4.b, p0/z, [src, 2, mul vl]
+	ld1b	z5.b, p0/z, [src, 3, mul vl]
+	ld1b	z6.b, p0/z, [srcend, -4, mul vl]
+	ld1b	z7.b, p0/z, [srcend, -3, mul vl]
+	st1b	z0.b, p0, [dst, 0, mul vl]
+	st1b	z1.b, p0, [dst, 1, mul vl]
+	st1b	z4.b, p0, [dst, 2, mul vl]
+	st1b	z5.b, p0, [dst, 3, mul vl]
+	st1b	z6.b, p0, [dstend, -4, mul vl]
+	st1b	z7.b, p0, [dstend, -3, mul vl]
+	st1b	z2.b, p0, [dstend, -2, mul vl]
+	st1b	z3.b, p0, [dstend, -1, mul vl]
+	ret
 
 END (MEMCPY)
 libc_hidden_builtin_def (MEMCPY)
 
 
-ENTRY (MEMMOVE)
+ENTRY_ALIGN (MEMMOVE, 4)
 
 	PTR_ARG (0)
 	PTR_ARG (1)
 	SIZE_ARG (2)
 
-	// remove tag address
-	// dest has to be immutable because it is the return value
-	// src has to be immutable because it is used in L(bwd_last)
-	and	tmp2, dest, 0xffffffffffffff	// save dest_notag into tmp2
-	and	tmp3, src, 0xffffffffffffff	// save src_notag intp tmp3
-	cmp	n, 0
-	ccmp	tmp2, tmp3, 4, ne
-	b.ne	1f
+	/* Fast case for up to 2 vectors.  */
+	cntb	vlen
+	cmp	n, vlen, lsl 1
+	b.hi	1f
+	whilelo	p0.b, xzr, n
+	whilelo	p1.b, vlen, n
+	ld1b	z0.b, p0/z, [src, 0, mul vl]
+	ld1b	z1.b, p1/z, [src, 1, mul vl]
+	st1b	z0.b, p0, [dstin, 0, mul vl]
+	st1b	z1.b, p1, [dstin, 1, mul vl]
+L(full_overlap):
 	ret
-1:	cntb	vector_length
-	// shortcut for less than vector_length * 8
-	// gives a free ptrue to p0.b for n >= vector_length
-	// tmp2 and tmp3 should not be used in this macro to keep
-	// notag addresses
-	shortcut_for_small_size L(dispatch)
-	// end of shortcut
 
-L(dispatch):
-	// tmp2 = dest_notag, tmp3 = src_notag
-	// diff = dest_notag - src_notag
-	sub	tmp1, tmp2, tmp3
-	// if diff <= 0 || diff >= n then memcpy
-	cmp	tmp1, 0
-	ccmp	tmp1, n, 2, gt
-	b.cs	L(vl_agnostic)
+	.p2align 4
+	/* Check for overlapping moves. Return if there is a full overlap.
+	   Small moves up to 8 vectors use the overlap-safe copy_small code.
+	   Non-overlapping or overlapping moves with dst < src use memcpy.
+	   Overlapping moves with dst > src use a backward copy loop.  */
+1:	sub	tmp, dstin, src
+	ands	tmp, tmp, 0xffffffffffffff	/* Clear special tag bits.  */
+	b.eq	L(full_overlap)
+	cmp	n, vlen, lsl 3
+	b.ls	L(copy_small)
+	cmp	tmp, n
+	b.hs	L(copy_large)
 
-L(bwd_start):
-	mov	rest, n
-	add	dest_ptr, dest, n	// dest_end
-	add	src_ptr, src, n		// src_end
+	/* Align to vector length.  */
+	add	dst, dstin, n
+	sub	tmp, vlen, 1
+	ands	tmp, dst, tmp
+	csel	tmp, tmp, vlen, ne
+	whilelo	p1.b, xzr, tmp
+	sub	n, n, tmp
+	ld1b	z1.b, p1/z, [src, n]
+	st1b	z1.b, p1, [dstin, n]
+	add	src, src, n
+	add	dst, dstin, n
 
-L(bwd_unroll8): // unrolling and software pipeline
-	lsl	tmp1, vector_length, 3	// vector_length * 8
-	.p2align 3
-	cmp	rest, tmp1
-	b.cc	L(bwd_last)
-	sub	src_ptr, src_ptr, tmp1
+	ptrue	p0.b
+	lsl	vlen8, vlen, 3
+	subs	n, n, vlen8
+	b.ls	3f
+	sub	src, src, vlen8
 	ld1b_unroll8
-	sub	rest, rest, tmp1
-	cmp	rest, tmp1
-	b.cc	2f
-	.p2align 3
-1:	sub	src_ptr, src_ptr, tmp1
-	sub	dest_ptr, dest_ptr, tmp1
-	stld1b_unroll8
-	sub	rest, rest, tmp1
-	cmp	rest, tmp1
-	b.ge	1b
-2:	sub	dest_ptr, dest_ptr, tmp1
-	st1b_unroll8
+	subs	n, n, vlen8
+	b.ls	2f
 
-L(bwd_last):
-	mov	dest_ptr, dest
-	mov	src_ptr, src
-	b	L(last)
+	.p2align 4
+	/* 8x unrolled and software pipelined backward copy loop.  */
+1:	sub	src, src, vlen8
+	sub	dst, dst, vlen8
+	stld1b_unroll8
+	subs	n, n, vlen8
+	b.hi	1b
+2:	sub	dst, dst, vlen8
+	st1b_unroll8
+3:	add	n, n, vlen8
+
+	/* Adjust src/dst for last 0-8 vectors.  */
+	sub	src, src, n
+	mov	dst, dstin
+	b	L(last_bytes)
 
 END (MEMMOVE)
 libc_hidden_builtin_def (MEMMOVE)
