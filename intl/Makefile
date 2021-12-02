@@ -155,7 +155,7 @@ $(objpfx)tst-gettext6.out: $(objpfx)tst-gettext.out
 
 CPPFLAGS += -D'LOCALEDIR="$(localedir)"' \
 	    -D'LOCALE_ALIAS_PATH="$(localedir)"'
-BISONFLAGS = --yacc --name-prefix=__gettext --output
+BISONFLAGS = --yacc --no-lines --name-prefix=__gettext --output
 
 $(inst_localedir)/locale.alias: locale.alias $(+force)
 	$(do-install)
