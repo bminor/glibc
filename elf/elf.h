@@ -1259,6 +1259,8 @@ typedef struct
 /* Note entries for GNU systems have this name.  */
 #define ELF_NOTE_GNU		"GNU"
 
+/* Note entries for freedesktop.org have this name.  */
+#define ELF_NOTE_FDO		"FDO"
 
 /* Defined types of notes for Solaris.  */
 
@@ -1301,6 +1303,10 @@ typedef struct
 
 /* Program property.  */
 #define NT_GNU_PROPERTY_TYPE_0 5
+
+/* Packaging metadata as defined on
+   https://systemd.io/COREDUMP_PACKAGE_METADATA/ */
+#define NT_FDO_PACKAGING_METADATA 0xcafe1a7e
 
 /* Note section name of program property.   */
 #define NOTE_GNU_PROPERTY_SECTION_NAME ".note.gnu.property"
