@@ -36,7 +36,9 @@
 #include <tls-internal-struct.h>
 
 #ifndef TCB_ALIGNMENT
-# define TCB_ALIGNMENT	sizeof (double)
+# define TCB_ALIGNMENT 32
+#elif TCB_ALIGNMENT < 32
+# error TCB_ALIGNMENT must be at least 32
 #endif
 
 

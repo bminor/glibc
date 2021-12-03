@@ -30,9 +30,6 @@
 /* Minimal stack size after allocating thread descriptor and guard size.  */
 #define MINIMAL_REST_STACK	16384
 
-/* Alignment requirement for TCB.  */
-#define TCB_ALIGNMENT		16
-
 
 /* Location of current stack frame.  */
 #define CURRENT_STACK_FRAME	__stack_pointer
