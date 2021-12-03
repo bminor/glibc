@@ -23,6 +23,7 @@
 # define TEST_NAME "strcmp"
 #endif
 #include "test-string.h"
+#include <support/test-driver.h>
 
 #ifdef WIDE
 # include <wchar.h>
@@ -390,6 +391,32 @@ check2 (void)
 	}
 }
 
+static void
+check3 (void)
+{
+  size_t size = 0xd000 + 0x4000;
+  CHAR *s1, *s2;
+  CHAR *buffer1 = mmap (NULL, size, PROT_READ | PROT_WRITE,
+			MAP_PRIVATE | MAP_ANON, -1, 0);
+  CHAR *buffer2 = mmap (NULL, size, PROT_READ | PROT_WRITE,
+			MAP_PRIVATE | MAP_ANON, -1, 0);
+  if (buffer1 == MAP_FAILED || buffer1 == MAP_FAILED)
+    error (EXIT_UNSUPPORTED, errno, "mmap failed");
+
+  s1 = (CHAR *) (buffer1 + 0x8f8 / sizeof (CHAR));
+  s2 = (CHAR *) (buffer2 + 0xcff3 / sizeof (CHAR));
+
+  STRCPY(s1, L("/export/redhat/rpms/BUILD/java-1.8.0-openjdk-1.8.0.312.b07-2.fc35.x86_64/openjdk/langtools/src/share/classes/com/sun/tools/doclets/internal/toolkit/util/PathDocFileFactory.java"));
+  STRCPY(s2, L("/export/redhat/rpms/BUILD/java-1.8.0-openjdk-1.8.0.312.b07-2.fc35.x86_64/openjdk/langtools/src/share/classes/com/sun/tools/doclets/internal/toolkit/taglets/ThrowsTaglet.java"));
+
+  int exp_result = SIMPLE_STRCMP (s1, s2);
+  FOR_EACH_IMPL (impl, 0)
+    check_result (impl, s1, s2, exp_result);
+
+  munmap ((void *) buffer1, size);
+  munmap ((void *) buffer2, size);
+}
+
 int
 test_main (void)
 {
@@ -398,6 +425,7 @@ test_main (void)
   test_init ();
   check();
   check2 ();
+  check3 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)

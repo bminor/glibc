@@ -646,12 +646,13 @@ L(loop_cross_page):
 	   in YMM3 and 32 bytes at VEC_SIZE(%rdx, %r10).  */
 	VPCMP	$0, VEC_SIZE(%rdx, %r10), %YMM3, %k3{%k4}
 	kmovd	%k3, %edi
+    /* Must use notl %edi here as lower bits are for CHAR
+	   comparisons potentially out of range thus can be 0 without
+	   indicating mismatch.  */
+	notl	%edi
 # ifdef USE_AS_WCSCMP
 	/* Don't use subl since it is the upper 8 bits of EDI below.  */
-	notl	%edi
 	andl	$0xff, %edi
-# else
-	incl	%edi
 # endif
 
 # ifdef USE_AS_WCSCMP
@@ -733,12 +734,13 @@ L(loop_cross_page_2_vec):
 	   in YMM1 and 32 bytes at (VEC_SIZE * 3)(%rdx, %r10).  */
 	VPCMP	$0, (VEC_SIZE * 3)(%rdx, %r10), %YMM1, %k3{%k4}
 	kmovd	%k3, %edi
+	/* Must use notl %edi here as lower bits are for CHAR
+	   comparisons potentially out of range thus can be 0 without
+	   indicating mismatch.  */
+	notl	%edi
 # ifdef USE_AS_WCSCMP
 	/* Don't use subl since it is the upper 8 bits of EDI below.  */
-	notl	%edi
 	andl	$0xff, %edi
-# else
-	incl	%edi
 # endif
 
 # ifdef USE_AS_WCSCMP
