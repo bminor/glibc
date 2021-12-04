@@ -196,6 +196,9 @@
 /* Define to 1 if libpthread actually resides in libc.  */
 #define PTHREAD_IN_LIBC 0
 
+/* An integer used to scale the timeout of test programs.  */
+#define TIMEOUTFACTOR 1
+
 /*
  */
 

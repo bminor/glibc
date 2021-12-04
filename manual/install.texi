@@ -131,6 +131,11 @@ that the objects in @file{libc_nonshared.a} are compiled with this flag
 (although this will not affect the generated code in this particular
 case and potentially change debugging information and metadata only).
 
+@item --with-timeoutfactor=@var{NUM}
+Specify an integer @var{NUM} to scale the timeout of test programs.
+This factor can be changed at run time using @env{TIMEOUTFACTOR}
+environment variable.
+
 @c disable static doesn't work currently
 @c @item --disable-static
 @c Don't build static libraries.  Static libraries aren't that useful these

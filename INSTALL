@@ -106,6 +106,11 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      particular case and potentially change debugging information and
      metadata only).
 
+'--with-timeoutfactor=NUM'
+     Specify an integer NUM to scale the timeout of test programs.  This
+     factor can be changed at run time using 'TIMEOUTFACTOR' environment
+     variable.
+
 '--disable-shared'
      Don't build shared libraries even if it is possible.  Not all
      systems support shared libraries; you need ELF support and

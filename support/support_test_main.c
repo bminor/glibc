@@ -286,7 +286,7 @@ support_test_main (int argc, char **argv, const struct test_config *config)
   int direct = 0;       /* Directly call the test function?  */
   int status;
   int opt;
-  unsigned int timeoutfactor = 1;
+  unsigned int timeoutfactor = TIMEOUTFACTOR;
   pid_t termpid;
 
   /* If we're debugging the test, we need to disable timeouts and use

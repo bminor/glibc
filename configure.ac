@@ -163,6 +163,13 @@ AC_ARG_WITH([nonshared-cflags],
 	    [extra_nonshared_cflags=])
 AC_SUBST(extra_nonshared_cflags)
 
+AC_ARG_WITH([timeoutfactor],
+	    AS_HELP_STRING([--with-timeoutfactor=NUM],
+			   [specify an integer to scale the timeout]),
+	    [timeoutfactor=$withval],
+	    [timeoutfactor=1])
+AC_DEFINE_UNQUOTED(TIMEOUTFACTOR, $timeoutfactor)
+
 AC_ARG_ENABLE([sanity-checks],
 	      AS_HELP_STRING([--disable-sanity-checks],
 			     [really do not use threads (should not be used except in special situations) @<:@default=yes@:>@]),
