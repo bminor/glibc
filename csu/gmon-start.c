@@ -38,32 +38,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <elf-initfini.h>
-#define __ASSEMBLY__
-#include <entry.h>
-
-/* Beginning and end of our code segment. We cannot declare them
-   as the external functions since we want the addresses of those
-   labels. Taking the address of a function may have different
-   meanings on different platforms. */
-#ifdef ENTRY_POINT_DECL
-ENTRY_POINT_DECL(extern)
-#else
-extern char ENTRY_POINT[];
-#endif
-extern char etext[];
 
 /* Use __executable_start as the lowest address to keep profiling records
    if it provided by the linker.  */
-extern const char executable_start[] asm ("__executable_start")
-  __attribute__ ((weak, visibility ("hidden")));
+extern const char __executable_start[] __attribute__ ((visibility ("hidden")));
 
-#ifndef TEXT_START
-# ifdef ENTRY_POINT_DECL
-#  define TEXT_START ENTRY_POINT
-# else
-#  define TEXT_START &ENTRY_POINT
-# endif
-#endif
+extern char etext[];
 
 #if !ELF_INITFINI
 /* Instead of defining __gmon_start__ globally in gcrt1.o, we make it
@@ -97,10 +77,7 @@ __gmon_start__ (void)
   called = 1;
 
   /* Start keeping profiling records.  */
-  if (&executable_start != NULL)
-    __monstartup ((u_long) &executable_start, (u_long) &etext);
-  else
-    __monstartup ((u_long) TEXT_START, (u_long) &etext);
+  __monstartup ((u_long) &__executable_start, (u_long) &etext);
 
   /* Call _mcleanup before exiting; it will write out gmon.out from the
      collected data.  */
