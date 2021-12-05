@@ -654,6 +654,13 @@ open_archive (struct locarhandle *ah, bool readonly)
       error (EXIT_FAILURE, errno, _("cannot read archive header"));
     }
 
+  /* Check the magic value */
+  if (GET (head.magic) != AR_MAGIC)
+    {
+      (void) lockf64 (fd, F_ULOCK, sizeof (struct locarhead));
+      error (EXIT_FAILURE, 0, _("bad magic value in archive header"));
+    }
+
   ah->fd = fd;
   ah->mmaped = st.st_size;
 
