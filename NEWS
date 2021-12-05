@@ -184,6 +184,10 @@ Major new features:
   than or equal to a given integer.  This function is a GNU extension,
   although Solaris also provides a similar function.
 
+* When invoked explicitly, the dynamic linker now uses the kernel to
+  execute programs that do not have any dynamic dependency (that is,
+  they are statically linked).  This feature is Linux-specific.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The function pthread_mutex_consistent_np has been deprecated; programs

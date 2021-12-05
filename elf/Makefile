@@ -231,6 +231,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tls20 tst-tls21 tst-dlmopen-dlerror tst-dlmopen-gethostbyname \
 	 tst-dl-is_dso tst-ro-dynamic \
 	 tst-audit18 \
+	 tst-rtld-run-static \
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -1977,3 +1978,5 @@ $(objpfx)tst-ro-dynamic-mod.so: $(objpfx)tst-ro-dynamic-mod.os \
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
 		-Wl,--script=tst-ro-dynamic-mod.map \
 		$(objpfx)tst-ro-dynamic-mod.os
+
+$(objpfx)tst-rtld-run-static.out: $(objpfx)/ldconfig

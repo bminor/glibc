@@ -50,6 +50,7 @@
 #include <gnu/lib-names.h>
 #include <dl-tunables.h>
 #include <get-dynamic-info.h>
+#include <dl-execve.h>
 
 #include <assert.h>
 
@@ -1106,6 +1107,45 @@ load_audit_modules (struct link_map *main_map, struct audit_list *audit_list)
     }
 }
 
+/* Check if the executable is not actualy dynamically linked, and
+   invoke it directly in that case.  */
+static void
+rtld_chain_load (struct link_map *main_map, char *argv0)
+{
+  /* The dynamic loader run against itself.  */
+  const char *rtld_soname
+    = ((const char *) D_PTR (&GL(dl_rtld_map), l_info[DT_STRTAB])
+       + GL(dl_rtld_map).l_info[DT_SONAME]->d_un.d_val);
+  if (main_map->l_info[DT_SONAME] != NULL
+      && strcmp (rtld_soname,
+		 ((const char *) D_PTR (main_map, l_info[DT_STRTAB])
+		  + main_map->l_info[DT_SONAME]->d_un.d_val)) == 0)
+    _dl_fatal_printf ("%s: loader cannot load itself\n", rtld_soname);
+
+  /* With DT_NEEDED dependencies, the executable is dynamically
+     linked.  */
+  if (__glibc_unlikely (main_map->l_info[DT_NEEDED] != NULL))
+    return;
+
+  /* If the executable has program interpreter, it is dynamically
+     linked.  */
+  for (size_t i = 0; i < main_map->l_phnum; ++i)
+    if (main_map->l_phdr[i].p_type == PT_INTERP)
+      return;
+
+  const char *pathname = _dl_argv[0];
+  if (argv0 != NULL)
+    _dl_argv[0] = argv0;
+  int errcode = __rtld_execve (pathname, _dl_argv, _environ);
+  const char *errname = strerrorname_np (errcode);
+  if (errname != NULL)
+    _dl_fatal_printf("%s: cannot execute %s: %s\n",
+		     rtld_soname, pathname, errname);
+  else
+    _dl_fatal_printf("%s: cannot execute %s: %d\n",
+		     rtld_soname, pathname, errno);
+}
+
 static void
 dl_main (const ElfW(Phdr) *phdr,
 	 ElfW(Word) phnum,
@@ -1374,14 +1414,8 @@ dl_main (const ElfW(Phdr) *phdr,
       /* Now the map for the main executable is available.  */
       main_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
 
-      if (__glibc_likely (state.mode == rtld_mode_normal)
-	  && GL(dl_rtld_map).l_info[DT_SONAME] != NULL
-	  && main_map->l_info[DT_SONAME] != NULL
-	  && strcmp ((const char *) D_PTR (&GL(dl_rtld_map), l_info[DT_STRTAB])
-		     + GL(dl_rtld_map).l_info[DT_SONAME]->d_un.d_val,
-		     (const char *) D_PTR (main_map, l_info[DT_STRTAB])
-		     + main_map->l_info[DT_SONAME]->d_un.d_val) == 0)
-	_dl_fatal_printf ("loader cannot load itself\n");
+      if (__glibc_likely (state.mode == rtld_mode_normal))
+	rtld_chain_load (main_map, argv0);
 
       phdr = main_map->l_phdr;
       phnum = main_map->l_phnum;
