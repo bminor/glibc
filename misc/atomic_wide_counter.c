@@ -72,11 +72,11 @@ __atomic_wide_counter_fetch_add_relaxed (__atomic_wide_counter *c,
          add operations are ordered in happens-before.  */
       h++;
       /* S2. Release MO to synchronize with the loads of the higher-order half
-         in the load operation.  See __condvar_load_64_relaxed.  */
+         in the load operation.  See __atomic_wide_counter_load_relaxed.  */
       atomic_store_release (&c->__value32.__high,
                             h | ((unsigned int) 1 << 31));
       l ^= (unsigned int) 1 << 31;
-      /* S3.  See __condvar_load_64_relaxed.  */
+      /* S3.  See __atomic_wide_counter_load_relaxed.  */
       atomic_store_release (&c->__value32.__low, l);
       /* S4.  Likewise.  */
       atomic_store_release (&c->__value32.__high, h);

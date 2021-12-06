@@ -75,7 +75,7 @@ __condvar_fetch_xor_wseq_release (pthread_cond_t *cond, unsigned int val)
 static uint64_t __attribute__ ((unused))
 __condvar_fetch_xor_wseq_release (pthread_cond_t *cond, unsigned int val)
 {
-  /* First, get the current value.  See __condvar_load_64_relaxed.  */
+  /* First, get the current value.  See __atomic_wide_counter_load_relaxed.  */
   unsigned int h, l, h2;
   do
     {
