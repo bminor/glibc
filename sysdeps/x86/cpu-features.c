@@ -566,8 +566,11 @@ disable_tsx:
 	  |= bit_arch_Prefer_No_VZEROUPPER;
       else
 	{
-	  cpu_features->preferred[index_arch_Prefer_No_AVX512]
-	    |= bit_arch_Prefer_No_AVX512;
+	  /* Processors with AVX512 and AVX-VNNI won't lower CPU frequency
+	     when ZMM load and store instructions are used.  */
+	  if (!CPU_FEATURES_CPU_P (cpu_features, AVX_VNNI))
+	    cpu_features->preferred[index_arch_Prefer_No_AVX512]
+	      |= bit_arch_Prefer_No_AVX512;
 
 	  /* Avoid RTM abort triggered by VZEROUPPER inside a
 	     transactionally executing RTM region.  */
