@@ -51,6 +51,7 @@ builtin_memcpy (char *dst, const char *src, size_t n)
 }
 #endif
 typedef char *(*proto_t) (char *, const char *, size_t);
+typedef uint32_t __attribute__ ((may_alias, aligned (1))) unaligned_uint32_t;
 
 static void
 do_one_test (impl_t *impl, char *dst, const char *src, size_t len)
@@ -134,8 +135,8 @@ do_test1 (size_t align1, size_t align2, size_t size)
     error (EXIT_FAILURE, errno, "mprotect failed");
 
   size_t array_size = size / sizeof (uint32_t);
-  uint32_t *dest = large_buf + align1;
-  uint32_t *src = large_buf + region_size + 2 * page_size + align2;
+  unaligned_uint32_t *dest = large_buf + align1;
+  unaligned_uint32_t *src = large_buf + region_size + 2 * page_size + align2;
   size_t i;
   size_t repeats;
   for (repeats = 0; repeats < 2; repeats++)
