@@ -2,6 +2,7 @@
 long-double-fcts = yes
 
 pie-ccflag = -fPIE
+no-pie-ccflag = -fno-PIE
 
 ifeq ($(subdir),gmon)
 sysdep_routines += sparc-mcount

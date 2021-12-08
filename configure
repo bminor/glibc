@@ -596,9 +596,6 @@ DEFINES
 static_nss
 profile
 libc_cv_multidir
-libc_cv_pie_default
-libc_cv_cc_pie_default
-libc_cv_pic_default
 shared
 static
 ldd_rewrite_script
@@ -768,7 +765,7 @@ with_timeoutfactor
 enable_sanity_checks
 enable_shared
 enable_profile
-enable_static_pie
+enable_default_pie
 enable_timezone_tools
 enable_hardcoded_path_in_tests
 enable_hidden_plt
@@ -1424,8 +1421,8 @@ Optional Features:
                           in special situations) [default=yes]
   --enable-shared         build shared library [default=yes if GNU ld]
   --enable-profile        build profiled library [default=no]
-  --enable-static-pie     enable static PIE support and use it in the
-                          testsuite [default=no]
+  --disable-default-pie   Do not build glibc programs and the testsuite as PIE
+                          [default=no]
   --disable-timezone-tools
                           do not install timezone tools [default=install]
   --enable-hardcoded-path-in-tests
@@ -3424,11 +3421,11 @@ else
   profile=no
 fi
 
-# Check whether --enable-static-pie was given.
-if test "${enable_static_pie+set}" = set; then :
-  enableval=$enable_static_pie; static_pie=$enableval
+# Check whether --enable-default-pie was given.
+if test "${enable_default_pie+set}" = set; then :
+  enableval=$enable_default_pie; default_pie=$enableval
 else
-  static_pie=no
+  default_pie=yes
 fi
 
 # Check whether --enable-timezone-tools was given.
@@ -6975,7 +6972,8 @@ rm -f conftest.*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_pic_default" >&5
 $as_echo "$libc_cv_pic_default" >&6; }
-
+config_vars="$config_vars
+build-pic-default = $libc_cv_pic_default"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether -fPIE is default" >&5
 $as_echo_n "checking whether -fPIE is default... " >&6; }
@@ -6995,17 +6993,37 @@ rm -f conftest.*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_pie_default" >&5
 $as_echo "$libc_cv_cc_pie_default" >&6; }
-libc_cv_pie_default=$libc_cv_cc_pie_default
+config_vars="$config_vars
+cc-pie-default = $libc_cv_cc_pie_default"
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if we can build programs as PIE" >&5
+$as_echo_n "checking if we can build programs as PIE... " >&6; }
+if test "x$default_pie" != xno; then
+  # Disable build-pie-default if target does not support it.
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#ifdef PIE_UNSUPPORTED
+# error PIE is not supported
+#endif
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  libc_cv_pie_default=yes
+else
+  libc_cv_pie_default=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_pie_default" >&5
+$as_echo "$libc_cv_pie_default" >&6; }
+config_vars="$config_vars
+build-pie-default = $libc_cv_pie_default"
 
-
-# Set the `multidir' variable by grabbing the variable from the compiler.
-# We do it once and save the result in a generated makefile.
-libc_cv_multidir=`${CC-cc} $CFLAGS $CPPFLAGS -print-multi-directory`
-
-
-if test "$static_pie" = yes; then
-  # Check target support for static PIE
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if we can build static PIE programs" >&5
+$as_echo_n "checking if we can build static PIE programs... " >&6; }
+libc_cv_static_pie=$libc_cv_pie_default
+if test "x$libc_cv_pie_default" != xno \
+   -a "$libc_cv_no_dynamic_linker" = yes; then
+  # Enable static-pie if available
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #ifndef SUPPORT_STATIC_PIE
@@ -7013,22 +7031,25 @@ if test "$static_pie" = yes; then
 #endif
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-
+  libc_cv_static_pie=yes
 else
-  as_fn_error $? "the architecture does not support static PIE" "$LINENO" 5
+  libc_cv_static_pie=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-  # The linker must support --no-dynamic-linker.
-  if test "$libc_cv_no_dynamic_linker" != yes; then
-    as_fn_error $? "linker support for --no-dynamic-linker needed" "$LINENO" 5
-  fi
-  # Default to PIE.
-  libc_cv_pie_default=yes
-  $as_echo "#define ENABLE_STATIC_PIE 1" >>confdefs.h
+  if test "$libc_cv_static_pie" = "yes"; then
+    $as_echo "#define ENABLE_STATIC_PIE 1" >>confdefs.h
 
+  fi
 fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_static_pie" >&5
+$as_echo "$libc_cv_static_pie" >&6; }
 config_vars="$config_vars
-enable-static-pie = $static_pie"
+enable-static-pie = $libc_cv_static_pie"
+
+# Set the `multidir' variable by grabbing the variable from the compiler.
+# We do it once and save the result in a generated makefile.
+libc_cv_multidir=`${CC-cc} $CFLAGS $CPPFLAGS -print-multi-directory`
+
 
 
 

@@ -186,11 +186,11 @@ AC_ARG_ENABLE([profile],
 			     [build profiled library @<:@default=no@:>@]),
 	      [profile=$enableval],
 	      [profile=no])
-AC_ARG_ENABLE([static-pie],
-	      AS_HELP_STRING([--enable-static-pie],
-			     [enable static PIE support and use it in the testsuite @<:@default=no@:>@]),
-	      [static_pie=$enableval],
-	      [static_pie=no])
+AC_ARG_ENABLE([default-pie],
+	      AS_HELP_STRING([--disable-default-pie],
+			     [Do not build glibc programs and the testsuite as PIE @<:@default=no@:>@]),
+	      [default_pie=$enableval],
+	      [default_pie=yes])
 AC_ARG_ENABLE([timezone-tools],
 	      AS_HELP_STRING([--disable-timezone-tools],
 			     [do not install timezone tools @<:@default=install@:>@]),
@@ -1846,7 +1846,7 @@ if eval "${CC-cc} -S conftest.c 2>&AS_MESSAGE_LOG_FD 1>&AS_MESSAGE_LOG_FD"; then
   libc_cv_pic_default=no
 fi
 rm -f conftest.*])
-AC_SUBST(libc_cv_pic_default)
+LIBC_CONFIG_VAR([build-pic-default], [$libc_cv_pic_default])
 
 AC_CACHE_CHECK([whether -fPIE is default], libc_cv_cc_pie_default,
 [libc_cv_cc_pie_default=yes
@@ -1859,29 +1859,37 @@ if eval "${CC-cc} -S conftest.c 2>&AS_MESSAGE_LOG_FD 1>&AS_MESSAGE_LOG_FD"; then
   libc_cv_cc_pie_default=no
 fi
 rm -f conftest.*])
-libc_cv_pie_default=$libc_cv_cc_pie_default
-AC_SUBST(libc_cv_cc_pie_default)
-AC_SUBST(libc_cv_pie_default)
+LIBC_CONFIG_VAR([cc-pie-default], [$libc_cv_cc_pie_default])
+
+AC_MSG_CHECKING(if we can build programs as PIE)
+if test "x$default_pie" != xno; then
+  # Disable build-pie-default if target does not support it.
+  AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#ifdef PIE_UNSUPPORTED
+# error PIE is not supported
+#endif]])], [libc_cv_pie_default=yes], [libc_cv_pie_default=no])
+fi
+AC_MSG_RESULT($libc_cv_pie_default)
+LIBC_CONFIG_VAR([build-pie-default], [$libc_cv_pie_default])
+
+AC_MSG_CHECKING(if we can build static PIE programs)
+libc_cv_static_pie=$libc_cv_pie_default
+if test "x$libc_cv_pie_default" != xno \
+   -a "$libc_cv_no_dynamic_linker" = yes; then
+  # Enable static-pie if available
+  AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#ifndef SUPPORT_STATIC_PIE
+# error static PIE is not supported
+#endif]])], [libc_cv_static_pie=yes], [libc_cv_static_pie=no])
+  if test "$libc_cv_static_pie" = "yes"; then
+    AC_DEFINE(ENABLE_STATIC_PIE)
+  fi
+fi
+AC_MSG_RESULT($libc_cv_static_pie)
+LIBC_CONFIG_VAR([enable-static-pie], [$libc_cv_static_pie])
 
 # Set the `multidir' variable by grabbing the variable from the compiler.
 # We do it once and save the result in a generated makefile.
 libc_cv_multidir=`${CC-cc} $CFLAGS $CPPFLAGS -print-multi-directory`
 AC_SUBST(libc_cv_multidir)
-
-if test "$static_pie" = yes; then
-  # Check target support for static PIE
-  AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#ifndef SUPPORT_STATIC_PIE
-# error static PIE is not supported
-#endif]])], , AC_MSG_ERROR([the architecture does not support static PIE]))
-  # The linker must support --no-dynamic-linker.
-  if test "$libc_cv_no_dynamic_linker" != yes; then
-    AC_MSG_ERROR([linker support for --no-dynamic-linker needed])
-  fi
-  # Default to PIE.
-  libc_cv_pie_default=yes
-  AC_DEFINE(ENABLE_STATIC_PIE)
-fi
-LIBC_CONFIG_VAR([enable-static-pie], [$static_pie])
 
 AC_SUBST(profile)
 AC_SUBST(static_nss)

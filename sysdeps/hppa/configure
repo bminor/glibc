@@ -30,3 +30,10 @@ $as_echo "$libc_cv_asm_line_sep" >&6; }
 cat >>confdefs.h <<_ACEOF
 #define ASM_LINE_SEP $libc_cv_asm_line_sep
 _ACEOF
+
+
+# PIE builds fail on binutils 2.37 and earlier, see:
+# https://sourceware.org/bugzilla/show_bug.cgi?id=28672
+$as_echo "#define PIE_UNSUPPORTED 1" >>confdefs.h
+
+# work around problem with autoconf and empty lines at the end of files

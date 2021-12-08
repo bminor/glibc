@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # Build many configurations of glibc.
 # Copyright (C) 2016-2021 Free Software Foundation, Inc.
+# Copyright (C) The GNU Toolchain Authors.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
@@ -437,15 +438,15 @@ class Context(object):
                                                '--disable-experimental-malloc',
                                                '--disable-build-nscd',
                                                '--disable-nscd']},
-                                      {'variant': 'static-pie',
-                                       'cfg': ['--enable-static-pie']},
-                                      {'variant': 'x32-static-pie',
+                                      {'variant': 'no-pie',
+                                       'cfg': ['--disable-default-pie']},
+                                      {'variant': 'x32-no-pie',
                                        'ccopts': '-mx32',
-                                       'cfg': ['--enable-static-pie']},
-                                      {'variant': 'static-pie',
+                                       'cfg': ['--disable-default-pie']},
+                                      {'variant': 'no-pie',
                                        'arch': 'i686',
                                        'ccopts': '-m32 -march=i686',
-                                       'cfg': ['--enable-static-pie']},
+                                       'cfg': ['--disable-default-pie']},
                                       {'variant': 'disable-multi-arch',
                                        'arch': 'i686',
                                        'ccopts': '-m32 -march=i686',

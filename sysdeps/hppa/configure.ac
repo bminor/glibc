@@ -19,3 +19,8 @@ else
 fi
 rm -f conftest*])
 AC_DEFINE_UNQUOTED(ASM_LINE_SEP, $libc_cv_asm_line_sep)
+
+# PIE builds fail on binutils 2.37 and earlier, see:
+# https://sourceware.org/bugzilla/show_bug.cgi?id=28672
+AC_DEFINE(PIE_UNSUPPORTED)
+# work around problem with autoconf and empty lines at the end of files
