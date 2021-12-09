@@ -136,6 +136,12 @@ tests-internal += \
   tst-sigcontext-get_pc \
   # tests-internal
 
+ifneq (no,$(have-tunables))
+tests-internal += \
+  tst-rseq-disable \
+  # tests-internal $(have-tunables)
+endif
+
 tests-time64 += \
   tst-adjtimex-time64 \
   tst-clock_adjtime-time64 \
@@ -226,6 +232,8 @@ $(objpfx)tst-mman-consts.out: ../sysdeps/unix/sysv/linux/tst-mman-consts.py
 	    $(sysdeps-linux-python-cc) \
 	  < /dev/null > $@ 2>&1; $(evaluate-test)
 $(objpfx)tst-mman-consts.out: $(sysdeps-linux-python-deps)
+
+tst-rseq-disable-ENV = GLIBC_TUNABLES=glibc.pthread.rseq=0
 
 endif # $(subdir) == misc
 

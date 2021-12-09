@@ -23,6 +23,9 @@
 #include <tls.h>
 #include <rseq-internal.h>
 
+#define TUNABLE_NAMESPACE pthread
+#include <dl-tunables.h>
+
 #ifndef __ASSUME_SET_ROBUST_LIST
 bool __nptl_set_robust_list_avail;
 rtld_hidden_data_def (__nptl_set_robust_list_avail)
@@ -92,7 +95,13 @@ __tls_init_tp (void)
       }
   }
 
-  rseq_register_current_thread (pd);
+  {
+    bool do_rseq = true;
+#if HAVE_TUNABLES
+    do_rseq = TUNABLE_GET (rseq, int, NULL);
+#endif
+    rseq_register_current_thread (pd, do_rseq);
+  }
 
   /* Set initial thread's stack block from 0 up to __libc_stack_end.
      It will be bigger than it actually is, but for unwind.c/pt-longjmp.c

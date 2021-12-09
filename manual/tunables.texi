@@ -424,6 +424,16 @@ The value is measured in bytes.  The default is @samp{41943040}
 (fourty mibibytes).
 @end deftp
 
+@deftp Tunable glibc.pthread.rseq
+The @code{glibc.pthread.rseq} tunable can be set to @samp{0}, to disable
+restartable sequences support in @theglibc{}.  This enables applications
+to perform direct restartable sequence registration with the kernel.
+The default is @samp{1}, which means that @theglibc{} performs
+registration on behalf of the application.
+
+Restartable sequences are a Linux-specific extension.
+@end deftp
+
 @node Hardware Capability Tunables
 @section Hardware Capability Tunables
 @cindex hardware capability tunables

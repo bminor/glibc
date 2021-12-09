@@ -21,22 +21,27 @@
 #include <sysdep.h>
 #include <errno.h>
 #include <kernel-features.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <sys/rseq.h>
 
 #ifdef RSEQ_SIG
 static inline void
-rseq_register_current_thread (struct pthread *self)
+rseq_register_current_thread (struct pthread *self, bool do_rseq)
 {
-  int ret = INTERNAL_SYSCALL_CALL (rseq,
-                                   &self->rseq_area, sizeof (self->rseq_area),
-                                   0, RSEQ_SIG);
-  if (INTERNAL_SYSCALL_ERROR_P (ret))
-    THREAD_SETMEM (self, rseq_area.cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
+  if (do_rseq)
+    {
+      int ret = INTERNAL_SYSCALL_CALL (rseq, &self->rseq_area,
+                                       sizeof (self->rseq_area),
+                                       0, RSEQ_SIG);
+      if (!INTERNAL_SYSCALL_ERROR_P (ret))
+        return;
+    }
+  THREAD_SETMEM (self, rseq_area.cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
 }
 #else /* RSEQ_SIG */
 static inline void
-rseq_register_current_thread (struct pthread *self)
+rseq_register_current_thread (struct pthread *self, bool do_rseq)
 {
   THREAD_SETMEM (self, rseq_area.cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
 }

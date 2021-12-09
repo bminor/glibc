@@ -368,7 +368,10 @@ start_thread (void *arg)
   __ctype_init ();
 
   /* Register rseq TLS to the kernel.  */
-  rseq_register_current_thread (pd);
+  {
+    bool do_rseq = THREAD_GETMEM (pd, flags) & ATTR_FLAG_DO_RSEQ;
+    rseq_register_current_thread (pd, do_rseq);
+  }
 
 #ifndef __ASSUME_SET_ROBUST_LIST
   if (__nptl_set_robust_list_avail)
@@ -676,6 +679,11 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
   struct pthread *self = THREAD_SELF;
   pd->flags = ((iattr->flags & ~(ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
 	       | (self->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)));
+
+  /* Inherit rseq registration state.  Without seccomp filters, rseq
+     registration will either always fail or always succeed.  */
+  if ((int) THREAD_GETMEM_VOLATILE (self, rseq_area.cpu_id) >= 0)
+    pd->flags |= ATTR_FLAG_DO_RSEQ;
 
   /* Initialize the field for the ID of the thread which is waiting
      for us.  This is a self-reference in case the thread is created

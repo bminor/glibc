@@ -48,6 +48,7 @@ struct pthread_attr
 #define ATTR_FLAG_OLDATTR		0x0010
 #define ATTR_FLAG_SCHED_SET		0x0020
 #define ATTR_FLAG_POLICY_SET		0x0040
+#define ATTR_FLAG_DO_RSEQ		0x0080
 
 /* Used to allocate a pthread_attr_t object which is also accessed
    internally.  */

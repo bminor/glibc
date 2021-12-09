@@ -27,5 +27,11 @@ glibc {
       type: SIZE_T
       default: 41943040
     }
+    rseq {
+      type: INT_32
+      minval: 0
+      maxval: 1
+      default: 1
+    }
   }
 }
