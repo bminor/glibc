@@ -34,6 +34,7 @@
 #include <bits/types/res_state.h>
 #include <kernel-features.h>
 #include <tls-internal-struct.h>
+#include <sys/rseq.h>
 
 #ifndef TCB_ALIGNMENT
 # define TCB_ALIGNMENT 32
@@ -405,6 +406,9 @@ struct pthread
 
   /* Used on strsignal.  */
   struct tls_internal_t tls_state;
+
+  /* rseq area registered with the kernel.  */
+  struct rseq rseq_area;
 
   /* This member must be last.  */
   char end_padding[];

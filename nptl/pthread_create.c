@@ -32,6 +32,7 @@
 #include <default-sched.h>
 #include <futex-internal.h>
 #include <tls-setup.h>
+#include <rseq-internal.h>
 #include "libioP.h"
 #include <sys/single_threaded.h>
 #include <version.h>
@@ -366,6 +367,9 @@ start_thread (void *arg)
   /* Initialize pointers to locale data.  */
   __ctype_init ();
 
+  /* Register rseq TLS to the kernel.  */
+  rseq_register_current_thread (pd);
+
 #ifndef __ASSUME_SET_ROBUST_LIST
   if (__nptl_set_robust_list_avail)
 #endif
@@ -570,6 +574,15 @@ out:
      The 'exit' implementation in the kernel will signal when the
      process is really dead since 'clone' got passed the CLONE_CHILD_CLEARTID
      flag.  The 'tid' field in the TCB will be set to zero.
+
+     rseq TLS is still registered at this point.  Rely on implicit
+     unregistration performed by the kernel on thread teardown.  This is not a
+     problem because the rseq TLS lives on the stack, and the stack outlives
+     the thread.  If TCB allocation is ever changed, additional steps may be
+     required, such as performing explicit rseq unregistration before
+     reclaiming the rseq TLS area memory.  It is NOT sufficient to block
+     signals because the kernel may write to the rseq area even without
+     signals.
 
      The exit code is zero since in case all threads exit by calling
      'pthread_exit' the exit status must be 0 (zero).  */
