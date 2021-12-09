@@ -29,14 +29,6 @@
 #include <stdlib.h>
 
 
-/* Define this to 1 if you want the so-called "optional direct" characters
-      ! " # $ % & * ; < = > @ [ ] ^ _ ` { | }
-   to be encoded. Define to 0 if you want them to be passed straight
-   through, like the so-called "direct" characters.
-   We set this to 1 because it's safer.
- */
-#define UTF7_ENCODE_OPTIONAL_CHARS 1
-
 
 /* The set of "direct characters":
    A-Z a-z 0-9 ' ( ) , - . / : ? space tab lf cr
@@ -323,7 +315,7 @@ base64 (unsigned int i)
     if ((statep->__count & 0x18) == 0)					      \
       {									      \
 	/* base64 encoding inactive */					      \
-	if (UTF7_ENCODE_OPTIONAL_CHARS ? isdirect (ch) : isxdirect (ch))      \
+	if (isdirect (ch))   						      \
 	  {								      \
 	    *outptr++ = (unsigned char) ch;				      \
 	  }								      \
@@ -375,7 +367,7 @@ base64 (unsigned int i)
     else								      \
       {									      \
 	/* base64 encoding active */					      \
-	if (UTF7_ENCODE_OPTIONAL_CHARS ? isdirect (ch) : isxdirect (ch))      \
+	if (isdirect (ch))						      \
 	  {								      \
 	    /* deactivate base64 encoding */				      \
 	    size_t count;						      \
