@@ -207,7 +207,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-tls4 tst-tls5 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-tls15 \
 	 tst-tls16 tst-tls17 tst-tls18 tst-tls19 tst-tls-dlinfo \
-	 tst-align tst-align2 \
+	 tst-align tst-align2 tst-align3 \
 	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
 	 tst-dlmopen1 tst-dlmopen3 tst-dlmopen4 \
 	 unload3 unload4 unload5 unload6 unload7 unload8 tst-global1 order2 \
@@ -241,6 +241,9 @@ tests-internal += loadtest unload unload2 circleload1 \
 tests-container += tst-pldd tst-dlopen-tlsmodid-container \
   tst-dlopen-self-container tst-preload-pthread-libc
 test-srcs = tst-pathopt
+ifeq (yes,$(have-fpie))
+tests-pie += tst-align3
+endif
 selinux-enabled := $(shell cat /selinux/enforce 2> /dev/null)
 ifneq ($(selinux-enabled),1)
 tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
@@ -302,7 +305,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		circlemod3 circlemod3a \
 		reldep8mod1 reldep8mod2 reldep8mod3 \
 		reldep9mod1 reldep9mod2 reldep9mod3 \
-		tst-alignmod tst-alignmod2 \
+		tst-alignmod tst-alignmod2 tst-alignmod3 \
 		$(modules-execstack-$(have-z-execstack)) \
 		tst-dlopenrpathmod tst-deep1mod1 tst-deep1mod2 tst-deep1mod3 \
 		tst-dlmopen1mod tst-auditmod1 \
@@ -1093,6 +1096,13 @@ CFLAGS-tst-alignmod.c += $(stack-align-test-flags)
 CFLAGS-tst-alignmod2.c += $(stack-align-test-flags)
 $(objpfx)tst-align.out: $(objpfx)tst-alignmod.so
 $(objpfx)tst-align2: $(objpfx)tst-alignmod2.so
+$(objpfx)tst-align3: $(objpfx)tst-alignmod3.so
+ifeq (yes,$(have-fpie))
+CFLAGS-tst-align3.c += $(PIE-ccflag)
+endif
+LDFLAGS-tst-align3 += -Wl,-z,max-page-size=0x200000
+LDFLAGS-tst-alignmod3.so += -Wl,-z,max-page-size=0x200000
+$(objpfx)tst-alignmod3.so: $(libsupport)
 
 $(objpfx)unload3.out: $(objpfx)unload3mod1.so $(objpfx)unload3mod2.so \
 		      $(objpfx)unload3mod3.so $(objpfx)unload3mod4.so
