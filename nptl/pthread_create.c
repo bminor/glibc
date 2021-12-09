@@ -370,7 +370,8 @@ start_thread (void *arg)
   /* Register rseq TLS to the kernel.  */
   {
     bool do_rseq = THREAD_GETMEM (pd, flags) & ATTR_FLAG_DO_RSEQ;
-    rseq_register_current_thread (pd, do_rseq);
+    if (!rseq_register_current_thread (pd, do_rseq) && do_rseq)
+      __libc_fatal ("Fatal glibc error: rseq registration failed\n");
   }
 
 #ifndef __ASSUME_SET_ROBUST_LIST
