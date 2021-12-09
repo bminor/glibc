@@ -112,7 +112,8 @@ sysdep_headers += sys/mount.h sys/acct.h \
 		  bits/types/struct_semid64_ds_helper.h \
 		  bits/types/struct_shmid64_ds.h \
 		  bits/types/struct_shmid64_ds_helper.h \
-		  bits/pthread_stack_min.h bits/pthread_stack_min-dynamic.h
+		  bits/pthread_stack_min.h bits/pthread_stack_min-dynamic.h \
+		  sys/rseq.h bits/rseq.h
 
 tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-quota tst-sync_file_range tst-sysconf-iov_max tst-ttyname \

@@ -21,6 +21,7 @@
 #include <support/namespace.h>
 #include <support/xthread.h>
 #include <sysdep.h>
+#include <thread_pointer.h>
 #include <unistd.h>
 
 #ifdef RSEQ_SIG
@@ -30,6 +31,11 @@ static void
 check_rseq_disabled (void)
 {
   struct pthread *pd = THREAD_SELF;
+
+  TEST_COMPARE (__rseq_flags, 0);
+  TEST_VERIFY ((char *) __thread_pointer () + __rseq_offset
+               == (char *) &pd->rseq_area);
+  TEST_COMPARE (__rseq_size, 0);
   TEST_COMPARE ((int) pd->rseq_area.cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
 
   int ret = syscall (__NR_rseq, &pd->rseq_area, sizeof (pd->rseq_area),

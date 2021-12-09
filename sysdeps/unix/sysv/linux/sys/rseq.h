@@ -171,4 +171,14 @@ struct rseq
 
 #endif /* __GLIBC_HAVE_KERNEL_RSEQ */
 
+/* Offset from the thread pointer to the rseq area.  */
+extern const int __rseq_offset;
+
+/* Size of the registered rseq area.  0 if the registration was
+   unsuccessful.  */
+extern const unsigned int __rseq_size;
+
+/* Flags used during rseq registration.  */
+extern const unsigned int __rseq_flags;
+
 #endif /* sys/rseq.h */

@@ -26,7 +26,7 @@
 #include <sys/rseq.h>
 
 #ifdef RSEQ_SIG
-static inline void
+static inline bool
 rseq_register_current_thread (struct pthread *self, bool do_rseq)
 {
   if (do_rseq)
@@ -35,15 +35,17 @@ rseq_register_current_thread (struct pthread *self, bool do_rseq)
                                        sizeof (self->rseq_area),
                                        0, RSEQ_SIG);
       if (!INTERNAL_SYSCALL_ERROR_P (ret))
-        return;
+        return true;
     }
   THREAD_SETMEM (self, rseq_area.cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
+  return false;
 }
 #else /* RSEQ_SIG */
-static inline void
+static inline bool
 rseq_register_current_thread (struct pthread *self, bool do_rseq)
 {
   THREAD_SETMEM (self, rseq_area.cpu_id, RSEQ_CPU_ID_REGISTRATION_FAILED);
+  return false;
 }
 #endif /* RSEQ_SIG */
 

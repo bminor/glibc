@@ -629,6 +629,8 @@ the standard.
 * Waiting with Explicit Clocks::          Functions for waiting with an
                                           explicit clock specification.
 * Single-Threaded::                       Detecting single-threaded execution.
+* Restartable Sequences::                 Linux-specific restartable sequences
+                                          integration.
 @end menu
 
 @node Default Thread Attributes
@@ -957,6 +959,85 @@ undefined behavior.)  In any case, an application must not write to
 application-created thread because future versions of @theglibc{} may
 create background threads after the first thread has been created, and
 the application has no way of knowning that these threads are present.
+
+@node Restartable Sequences
+@subsubsection Restartable Sequences
+
+This section describes restartable sequences integration for
+@theglibc{}.  This functionality is only available on Linux.
+
+@deftp {Data Type} {struct rseq}
+@standards{Linux, sys/rseq.h}
+The type of the restartable sequences area.  Future versions
+of Linux may add additional fields to the end of this structure.
+
+
+Users need to obtain the address of the restartable sequences area using
+the thread pointer and the @code{__rseq_offset} variable, described
+below.
+
+One use of the restartable sequences area is to read the current CPU
+number from its @code{cpu_id} field, as an inline version of
+@code{sched_getcpu}.  @Theglibc{} sets the @code{cpu_id} field to
+@code{RSEQ_CPU_ID_REGISTRATION_FAILED} if registration failed or was
+explicitly disabled.
+
+Furthermore, users can store the address of a @code{struct rseq_cs}
+object into the @code{rseq_cs} field of @code{struct rseq}, thus
+informing the kernel that the thread enters a restartable sequence
+critical section.  This pointer and the code areas it itself points to
+must not be left pointing to memory areas which are freed or re-used.
+Several approaches can guarantee this.  If the application or library
+can guarantee that the memory used to hold the @code{struct rseq_cs} and
+the code areas it refers to are never freed or re-used, no special
+action must be taken.  Else, before that memory is re-used of freed, the
+application is responsible for setting the @code{rseq_cs} field to
+@code{NULL} in each thread's restartable sequence area to guarantee that
+it does not leak dangling references.  Because the application does not
+typically have knowledge of libraries' use of restartable sequences, it
+is recommended that libraries using restartable sequences which may end
+up freeing or re-using their memory set the @code{rseq_cs} field to
+@code{NULL} before returning from library functions which use
+restartable sequences.
+
+The manual for the @code{rseq} system call can be found
+at @uref{https://git.kernel.org/pub/scm/libs/librseq/librseq.git/tree/doc/man/rseq.2}.
+@end deftp
+
+@deftypevar {int} __rseq_offset
+@standards{Linux, sys/rseq.h}
+This variable contains the offset between the thread pointer (as defined
+by @code{__builtin_thread_pointer} or the thread pointer register for
+the architecture) and the restartable sequences area.  This value is the
+same for all threads in the process.  If the restartable sequences area
+is located at a lower address than the location to which the thread
+pointer points, the value is negative.
+@end deftypevar
+
+@deftypevar {unsigned int} __rseq_size
+@standards{Linux, sys/rseq.h}
+This variable is either zero (if restartable sequence registration
+failed or has been disabled) or the size of the restartable sequence
+registration.  This can be different from the size of @code{struct rseq}
+if the kernel has extended the size of the registration.  If
+registration is successful, @code{__rseq_size} is at least 32 (the
+initial size of @code{struct rseq}).
+@end deftypevar
+
+@deftypevar {unsigned int} __rseq_flags
+@standards{Linux, sys/rseq.h}
+The flags used during restartable sequence registration with the kernel.
+Currently zero.
+@end deftypevar
+
+@deftypevr Macro int RSEQ_SIG
+@standards{Linux, sys/rseq.h}
+Each supported architecture provides a @code{RSEQ_SIG} macro in
+@file{sys/rseq.h} which contains a signature.  That signature is
+expected to be present in the code before each restartable sequences
+abort handler.  Failure to provide the expected signature may terminate
+the process with a segmentation fault.
+@end deftypevr
 
 @c FIXME these are undocumented:
 @c pthread_atfork
