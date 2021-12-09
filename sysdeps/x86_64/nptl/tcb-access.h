@@ -39,6 +39,8 @@
        }								      \
      __value; })
 
+/* THREAD_GETMEM already forces a read.  */
+#define THREAD_GETMEM_VOLATILE(descr, member) THREAD_GETMEM (descr, member)
 
 /* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
 # define THREAD_GETMEM_NC(descr, member, idx) \

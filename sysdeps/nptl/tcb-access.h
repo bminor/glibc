@@ -22,6 +22,8 @@
 
 #define THREAD_GETMEM(descr, member) \
   descr->member
+#define THREAD_GETMEM_VOLATILE(descr, member) \
+  (*(volatile __typeof (descr->member) *)&descr->member)
 #define THREAD_GETMEM_NC(descr, member, idx) \
   descr->member[idx]
 #define THREAD_SETMEM(descr, member, value) \
