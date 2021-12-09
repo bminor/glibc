@@ -29,19 +29,11 @@
 # include <mach.h>
 # include <atomic.h>
 
-
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
 
-/* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
-
 /* This is the size of the TCB.  */
 # define TLS_TCB_SIZE TLS_INIT_TCB_SIZE	/* XXX */
-
-/* Alignment requirements for the TCB.  */
-# define TLS_TCB_ALIGN TLS_INIT_TCB_ALIGN /* XXX */
-
 
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */

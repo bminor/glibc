@@ -18,6 +18,9 @@
 
 #include <csu/libc-tls.c>
 
+_Static_assert (TLS_PRE_TCB_SIZE % __alignof (struct pthread) == 0,
+		"__thread_self and THREAD_SELF have same alignment");
+
 /* On IA-64, as it lacks linker optimizations, __tls_get_addr can be
    called even in statically linked binaries.
    In this case module must be always 1 and PT_TLS segment

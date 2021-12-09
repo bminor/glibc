@@ -19,6 +19,11 @@
 /* An architecture-specific version of this file has to defined a
    number of symbols:
 
+     TCB_ALIGNMENT
+
+     Alignment of THREAD_SELF (struct pthread *) and the thread
+     pointer.
+
      TLS_TCB_AT_TP  or  TLS_DTV_AT_TP
 
      The presence of one of these symbols signals which variant of
@@ -41,15 +46,6 @@
 
      Similarly, but this value is only used at startup and in the
      dynamic linker itself.  There are no threads in use at that time.
-
-
-     TLS_TCB_ALIGN
-
-     Alignment requirements for the TCB structure.
-
-     TLS_INIT_TCB_ALIGN
-
-     Similarly, but for the structure used at startup time.
 
 
      INSTALL_DTV(tcb, init_dtv)

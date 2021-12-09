@@ -52,17 +52,11 @@ typedef struct
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE	sizeof (tcbhead_t)
 
-/* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN	__alignof__ (struct pthread)
-
 /* This is the size of the TCB.  */
 # define TLS_TCB_SIZE		sizeof (tcbhead_t)
 
 /* This is the size we need before TCB.  */
 # define TLS_PRE_TCB_SIZE	sizeof (struct pthread)
-
-/* Alignment requirements for the TCB.  */
-# define TLS_TCB_ALIGN		__alignof__ (struct pthread)
 
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */

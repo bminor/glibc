@@ -219,7 +219,7 @@ _dl_count_modids (void)
 void
 _dl_determine_tlsoffset (void)
 {
-  size_t max_align = TLS_TCB_ALIGN;
+  size_t max_align = TCB_ALIGNMENT;
   size_t freetop = 0;
   size_t freebottom = 0;
 
@@ -350,7 +350,7 @@ _dl_determine_tlsoffset (void)
 
   GL(dl_tls_static_used) = offset;
   GLRO (dl_tls_static_size) = roundup (offset + GLRO(dl_tls_static_surplus),
-				       TLS_TCB_ALIGN);
+				       TCB_ALIGNMENT);
 #else
 # error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 #endif

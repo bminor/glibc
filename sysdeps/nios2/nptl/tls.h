@@ -59,20 +59,15 @@ register struct pthread *__thread_self __asm__("r23");
    pointer, we don't need this.  */
 # define TLS_INIT_TCB_SIZE	0
 
-/* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN	__alignof__ (struct pthread)
-
 /* This is the size of the TCB.  Because our TCB is before the thread
    pointer, we don't need this.  */
 # define TLS_TCB_SIZE		0
 
-/* Alignment requirements for the TCB.  */
-# define TLS_TCB_ALIGN		__alignof__ (struct pthread)
-
 /* This is the size we need before TCB - actually, it includes the TCB.  */
 # define TLS_PRE_TCB_SIZE \
   (sizeof (struct pthread)						      \
-   + ((sizeof (tcbhead_t) + TLS_TCB_ALIGN - 1) & ~(TLS_TCB_ALIGN - 1)))
+   + ((sizeof (tcbhead_t) + __alignof (struct pthread) - 1)		      \
+      & ~(__alignof (struct pthread) - 1)))
 
 /* The thread pointer (in hardware register r23) points to the end of
    the TCB + 0x7000, as for PowerPC and MIPS.  */

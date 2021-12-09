@@ -61,14 +61,8 @@ typedef struct
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE	sizeof (tcbhead_t)
 
-/* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN	8
-
 /* This is the size of the TCB.  */
 # define TLS_TCB_SIZE		sizeof (tcbhead_t)
-
-/* Alignment requirements for the TCB.  */
-# define TLS_TCB_ALIGN		8
 
 /* This is the size we need before TCB.  */
 # define TLS_PRE_TCB_SIZE	sizeof (struct pthread)

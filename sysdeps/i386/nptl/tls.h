@@ -102,14 +102,8 @@ union user_desc_init
    struct pthread even when not linked with -lpthread.  */
 # define TLS_INIT_TCB_SIZE sizeof (struct pthread)
 
-/* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN __alignof__ (struct pthread)
-
 /* This is the size of the TCB.  */
 # define TLS_TCB_SIZE sizeof (struct pthread)
-
-/* Alignment requirements for the TCB.  */
-# define TLS_TCB_ALIGN __alignof__ (struct pthread)
 
 /* The TCB can have any size and the memory following the address the
    thread pointer points to is unspecified.  Allocate the TCB there.  */

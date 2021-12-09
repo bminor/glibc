@@ -108,19 +108,14 @@ typedef struct
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE	0
 
-/* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN	__alignof__ (struct pthread)
-
 /* This is the size of the TCB.  */
 # define TLS_TCB_SIZE		0
-
-/* Alignment requirements for the TCB.  */
-# define TLS_TCB_ALIGN		__alignof__ (struct pthread)
 
 /* This is the size we need before TCB.  */
 # define TLS_PRE_TCB_SIZE \
   (sizeof (struct pthread)						      \
-   + ((sizeof (tcbhead_t) + TLS_TCB_ALIGN - 1) & ~(TLS_TCB_ALIGN - 1)))
+   + ((sizeof (tcbhead_t) + __alignof (struct pthread) - 1)		      \
+      & ~(__alignof (struct pthread) - 1)))
 
 /* The following assumes that TP (R2 or R13) points to the end of the
    TCB + 0x7000 (per the ABI).  This implies that TCB address is

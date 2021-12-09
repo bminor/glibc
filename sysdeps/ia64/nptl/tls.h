@@ -53,9 +53,6 @@ register struct pthread *__thread_self __asm__("r13");
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
 
-/* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
-
 /* This is the size of the TCB.  */
 # define TLS_TCB_SIZE sizeof (tcbhead_t)
 
@@ -69,9 +66,6 @@ register struct pthread *__thread_self __asm__("r13");
       ? ((2 * sizeof (uintptr_t) + __alignof__ (struct pthread) - 1)	\
 	 & ~(__alignof__ (struct pthread) - 1))				\
       : 0))
-
-/* Alignment requirements for the TCB.  */
-# define TLS_TCB_ALIGN __alignof__ (struct pthread)
 
 /* The DTV is allocated at the TP; the TCB is placed elsewhere.  */
 # define TLS_DTV_AT_TP	1
