@@ -92,15 +92,7 @@ typedef struct
 # define DB_THREAD_SELF \
   REGISTER (64, 64, 32 * 8, -sizeof (struct pthread))
 
-/* Access to data in the thread descriptor is easy.  */
-#define THREAD_GETMEM(descr, member) \
-  descr->member
-#define THREAD_GETMEM_NC(descr, member, idx) \
-  descr->member[idx]
-#define THREAD_SETMEM(descr, member, value) \
-  descr->member = (value)
-#define THREAD_SETMEM_NC(descr, member, idx, value) \
-  descr->member[idx] = (value)
+# include <tcb-access.h>
 
 /* Get and set the global scope generation counter in struct pthread.  */
 #define THREAD_GSCOPE_FLAG_UNUSED 0

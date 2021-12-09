@@ -113,19 +113,7 @@ typedef struct
 # define DB_THREAD_SELF \
   REGISTER (32, 32, REG_GBR * 4, -sizeof (struct pthread))
 
-/* Read member of the thread descriptor directly.  */
-# define THREAD_GETMEM(descr, member) (descr->member)
-
-/* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
-# define THREAD_GETMEM_NC(descr, member, idx) (descr->member[idx])
-
-/* Set member of the thread descriptor directly.  */
-# define THREAD_SETMEM(descr, member, value) \
-    descr->member = (value)
-
-/* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
-# define THREAD_SETMEM_NC(descr, member, idx, value) \
-    descr->member[idx] = (value)
+# include <tcb-access.h>
 
 #define THREAD_GET_POINTER_GUARD() \
   ({ tcbhead_t *__tcbp;							      \

@@ -105,14 +105,7 @@ typedef struct
   REGISTER (64, 64, 4 * 8, - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
 
 /* Access to data in the thread descriptor is easy.  */
-# define THREAD_GETMEM(descr, member) \
-  descr->member
-# define THREAD_GETMEM_NC(descr, member, idx) \
-  descr->member[idx]
-# define THREAD_SETMEM(descr, member, value) \
-  descr->member = (value)
-# define THREAD_SETMEM_NC(descr, member, idx, value) \
-  descr->member[idx] = (value)
+# include <tcb-access.h>
 
 /* l_tls_offset == 0 is perfectly valid, so we have to use some different
    value to mean unset l_tls_offset.  */

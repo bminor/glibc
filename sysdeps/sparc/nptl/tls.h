@@ -112,15 +112,7 @@ register struct pthread *__thread_self __asm__("%g7");
   REGISTER (32, 32, 10 * 4, 0) \
   REGISTER (64, __WORDSIZE, (6 * 8) + (__WORDSIZE==64?0:4), 0)
 
-/* Access to data in the thread descriptor is easy.  */
-#define THREAD_GETMEM(descr, member) \
-  descr->member
-#define THREAD_GETMEM_NC(descr, member, idx) \
-  descr->member[idx]
-#define THREAD_SETMEM(descr, member, value) \
-  descr->member = (value)
-#define THREAD_SETMEM_NC(descr, member, idx, value) \
-  descr->member[idx] = (value)
+# include <tcb-access.h>
 
 /* Set the stack guard field in TCB head.  */
 #define THREAD_SET_STACK_GUARD(value) \

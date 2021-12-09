@@ -100,20 +100,7 @@ typedef struct
 # define DB_THREAD_SELF \
   CONST_THREAD_AREA (32, sizeof (struct pthread))
 
-/* Read member of the thread descriptor directly.  */
-# define THREAD_GETMEM(descr, member) (descr->member)
-
-/* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
-# define THREAD_GETMEM_NC(descr, member, idx) \
-  (descr->member[idx])
-
-/* Set member of the thread descriptor directly.  */
-# define THREAD_SETMEM(descr, member, value) \
-  (descr->member = (value))
-
-/* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
-# define THREAD_SETMEM_NC(descr, member, idx, value) \
-  (descr->member[idx] = (value))
+# include <tcb-access.h>
 
 /* Get and set the global scope generation counter in struct pthread.  */
 # define THREAD_GSCOPE_FLAG_UNUSED 0

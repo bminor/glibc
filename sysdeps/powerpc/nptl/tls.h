@@ -176,20 +176,7 @@ typedef struct
   REGISTER (64, 64, PT_THREAD_POINTER * 8,				      \
 	    - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
 
-/* Read member of the thread descriptor directly.  */
-# define THREAD_GETMEM(descr, member) ((void)(descr), (THREAD_SELF)->member)
-
-/* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
-# define THREAD_GETMEM_NC(descr, member, idx) \
-    ((void)(descr), (THREAD_SELF)->member[idx])
-
-/* Set member of the thread descriptor directly.  */
-# define THREAD_SETMEM(descr, member, value) \
-    ((void)(descr), (THREAD_SELF)->member = (value))
-
-/* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
-# define THREAD_SETMEM_NC(descr, member, idx, value) \
-    ((void)(descr), (THREAD_SELF)->member[idx] = (value))
+# include <tcb-access.h>
 
 /* Set the stack guard field in TCB head.  */
 # define THREAD_SET_STACK_GUARD(value) \
