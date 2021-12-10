@@ -33,6 +33,7 @@ thread 2: lock(user_lock) -> pthread_create
 */
 
 static pthread_barrier_t bar_ctor;
+static pthread_barrier_t bar_ctor_finish;
 static pthread_barrier_t bar_dtor;
 static pthread_mutex_t user_lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -46,6 +47,7 @@ ctor (void)
   xpthread_mutex_unlock (&user_lock);
   dprintf (1, "thread 1: in ctor: unlocked user_lock.\n");
   dprintf (1, "thread 1: in ctor: done.\n");
+  xpthread_barrier_wait (&bar_ctor_finish);
 }
 
 void
@@ -81,6 +83,7 @@ thread2 (void *a)
   xpthread_mutex_unlock (&user_lock);
   dprintf (1, "thread 2: unlocked user_lock.\n");
   xpthread_join (t3);
+  xpthread_barrier_wait (&bar_ctor_finish);
 
   xpthread_mutex_lock (&user_lock);
   dprintf (1, "thread 2: locked user_lock.\n");
@@ -99,6 +102,7 @@ thread1 (void)
 {
   dprintf (1, "thread 1: started.\n");
   xpthread_barrier_init (&bar_ctor, NULL, 2);
+  xpthread_barrier_init (&bar_ctor_finish, NULL, 2);
   xpthread_barrier_init (&bar_dtor, NULL, 2);
   pthread_t t2 = xpthread_create (0, thread2, 0);
   void *p = xdlopen ("tst-create1mod.so", RTLD_NOW | RTLD_GLOBAL);
