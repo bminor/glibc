@@ -63,6 +63,9 @@
 #define RESOLVE_MAP(map, scope, sym, version, flags) map
 #include "dynamic-link.h"
 
+/* Must include after <dl-machine.h> for DT_MIPS definition.  */
+#include <dl-debug.h>
+
 /* Only enables rtld profiling for architectures which provides non generic
    hp-timing support.  The generic support requires either syscall
    (clock_gettime), which will incur in extra overhead on loading time.
@@ -1776,15 +1779,7 @@ dl_main (const ElfW(Phdr) *phdr,
   size_t count_modids = _dl_count_modids ();
 
   /* Set up debugging before the debugger is notified for the first time.  */
-#ifdef ELF_MACHINE_DEBUG_SETUP
-  /* Some machines (e.g. MIPS) don't use DT_DEBUG in this way.  */
-  ELF_MACHINE_DEBUG_SETUP (main_map, r);
-#else
-  if (main_map->l_info[DT_DEBUG] != NULL)
-    /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
-       with the run-time address of the r_debug structure  */
-    main_map->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
-#endif
+  elf_setup_debug_entry (main_map, r);
 
   /* We start adding objects.  */
   r->r_state = RT_ADD;

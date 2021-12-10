@@ -24,6 +24,7 @@
 #include <ldsodefs.h>
 
 #include <dl-machine.h>
+#include <dl-debug.h>
 
 #define RESOLVE_MAP(map, scope, sym, version, flags) map
 #include "dynamic-link.h"
@@ -68,14 +69,6 @@ _dl_relocate_static_pie (void)
 
   /* Set up debugging before the debugger is notified for the first
      time.  */
-# ifdef ELF_MACHINE_DEBUG_SETUP
-  /* Some machines (e.g. MIPS) don't use DT_DEBUG in this way.  */
-  ELF_MACHINE_DEBUG_SETUP (main_map, r);
-# else
-  if (main_map->l_info[DT_DEBUG] != NULL)
-    /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
-       with the run-time address of the r_debug structure  */
-    main_map->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
-# endif
+  elf_setup_debug_entry (main_map, r);
 }
 #endif
