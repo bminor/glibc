@@ -79,6 +79,9 @@ Major new features:
   variables.  The GNU C Library manual has details on integration of
   Restartable Sequences.
 
+* A symbolic link to the dynamic linker is now installed under
+  /usr/bin/ld.so (or more precisely, '${bindir}/ld.so').
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * The r_version update in the debugger interface makes the glibc binary

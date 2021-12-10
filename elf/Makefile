@@ -110,7 +110,7 @@ endif
 ifeq (yes,$(build-shared))
 extra-objs	= $(all-rtld-routines:%=%.os) sofini.os interp.os
 generated	+= librtld.os dl-allobjs.os ld.so ldd
-install-others	= $(inst_rtlddir)/$(rtld-installed-name)
+install-others	= $(inst_rtlddir)/$(rtld-installed-name) $(inst_bindir)/ld.so
 install-bin-script = ldd
 endif
 
@@ -691,6 +691,11 @@ ifeq (yes,$(build-shared))
 $(inst_rtlddir)/$(rtld-installed-name): $(objpfx)ld.so $(+force)
 	$(make-target-directory)
 	$(do-install-program)
+
+# Creates the relative /usr/bin/ld.so symbolic link.
+$(inst_bindir)/ld.so: $(inst_rtlddir)/$(rtld-installed-name)
+	$(make-target-directory)
+	$(make-link)
 
 # Special target called by parent to install just the dynamic linker.
 .PHONY: ldso_install
