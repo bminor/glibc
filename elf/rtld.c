@@ -1143,7 +1143,7 @@ rtld_chain_load (struct link_map *main_map, char *argv0)
 		     rtld_soname, pathname, errname);
   else
     _dl_fatal_printf("%s: cannot execute %s: %d\n",
-		     rtld_soname, pathname, errno);
+		     rtld_soname, pathname, errcode);
 }
 
 static void
