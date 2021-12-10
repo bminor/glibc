@@ -1,5 +1,6 @@
 /* Map in a shared object's segments from the file.
    Copyright (C) 1995-2021 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1150,6 +1151,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	  c->mapend = ALIGN_UP (ph->p_vaddr + ph->p_filesz, GLRO(dl_pagesize));
 	  c->dataend = ph->p_vaddr + ph->p_filesz;
 	  c->allocend = ph->p_vaddr + ph->p_memsz;
+	  c->mapalign = ph->p_align;
 	  c->mapoff = ALIGN_DOWN (ph->p_offset, GLRO(dl_pagesize));
 
 	  /* Determine whether there is a gap between the last segment

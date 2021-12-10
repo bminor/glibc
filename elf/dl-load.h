@@ -1,5 +1,6 @@
 /* Map in a shared object's segments from the file.
    Copyright (C) 1995-2021 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,7 +75,7 @@ ELF_PREFERRED_ADDRESS_DATA;
    Its details have been expanded out and converted.  */
 struct loadcmd
 {
-  ElfW(Addr) mapstart, mapend, dataend, allocend;
+  ElfW(Addr) mapstart, mapend, dataend, allocend, mapalign;
   ElfW(Off) mapoff;
   int prot;                             /* PROT_* bits.  */
 };
