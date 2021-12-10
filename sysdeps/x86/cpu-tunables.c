@@ -258,13 +258,6 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 		 20);
 	    }
 	  break;
-	case 21:
-	    {
-	      CHECK_GLIBC_IFUNC_PREFERRED_BOTH (n, cpu_features,
-						Prefer_MAP_32BIT_EXEC,
-						disable, 21);
-	    }
-	  break;
 	case 23:
 	    {
 	      CHECK_GLIBC_IFUNC_PREFERRED_NEED_BOTH

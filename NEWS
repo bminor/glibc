@@ -9,6 +9,10 @@ Version 2.35
 
 Major new features:
 
+* The LD_PREFER_MAP_32BIT_EXEC environment variable support has been
+  removed since the first PT_LOAD segment is no longer executable due
+  to defaulting to -z separate-code.
+
 * Unicode 14.0.0 Support: Character encoding, character type info, and
   transliteration tables are all updated to Unicode 14.0.0, using
   generator scripts contributed by Mike FABIAN (Red Hat).
