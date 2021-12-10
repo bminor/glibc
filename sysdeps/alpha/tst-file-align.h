@@ -1,4 +1,4 @@
-/* Check alignment of PT_LOAD segment in a shared library.
+/* Check file alignment.  Alpha version.
    Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,21 +16,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <support/check.h>
-#include <tst-file-align.h>
-#include <tst-stack-align.h>
-
-int bar __attribute__ ((aligned (ALIGN))) = 1;
-
-extern int do_load_test (void);
-
-static int
-do_test (void)
-{
-  printf ("bar: %p\n", &bar);
-  TEST_VERIFY (is_aligned (&bar, ALIGN) == 0);
-
-  return do_load_test ();
-}
-
-#include <support/test-driver.c>
+/* This should cover all possible alignments we currently support.  */
+#define ALIGN 0x10000

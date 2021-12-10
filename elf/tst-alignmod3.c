@@ -17,10 +17,8 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <support/check.h>
+#include <tst-file-align.h>
 #include <tst-stack-align.h>
-
-/* This should cover all possible page sizes we currently support.  */
-#define ALIGN 0x200000
 
 int foo __attribute__ ((aligned (ALIGN))) = 1;
 
