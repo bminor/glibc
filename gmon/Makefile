@@ -50,14 +50,14 @@ CFLAGS-mcount.c := -fno-omit-frame-pointer
 
 CFLAGS-tst-gmon.c := -fno-omit-frame-pointer -pg
 tst-gmon-no-pie = yes
-CRT-tst-gmon := $(csu-objpfx)gcrt1.o
+CRT-tst-gmon := $(csu-objpfx)g$(start-installed-name)
 tst-gmon-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon.data
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-gmon-gprof.out
 endif
 
 CFLAGS-tst-gmon-static.c := $(PIE-ccflag) -fno-omit-frame-pointer -pg
-CRT-tst-gmon-static := $(csu-objpfx)gcrt1.o
+CRT-tst-gmon-static := $(csu-objpfx)g$(static-start-installed-name)
 tst-gmon-static-no-pie = yes
 tst-gmon-static-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon-static.data
 ifeq ($(run-built-tests),yes)
@@ -65,7 +65,7 @@ tests-special += $(objpfx)tst-gmon-static-gprof.out
 endif
 
 CFLAGS-tst-gmon-pie.c := $(PIE-ccflag) -fno-omit-frame-pointer -pg
-CRT-tst-gmon-pie := $(csu-objpfx)gcrt1.o
+CRT-tst-gmon-pie := $(csu-objpfx)g$(start-installed-name)
 tst-gmon-pie-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon-pie.data
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-gmon-pie-gprof.out
@@ -73,7 +73,7 @@ endif
 
 ifeq (yes,$(enable-static-pie))
 CFLAGS-tst-gmon-static-pie.c := $(PIE-ccflag) -fno-omit-frame-pointer -pg
-CRT-tst-gmon-static-pie := $(csu-objpfx)grcrt1.o
+CRT-tst-gmon-static-pie := $(csu-objpfx)gr$(static-start-installed-name)
 tst-gmon-static-pie-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon-static-pie.data
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-gmon-static-pie-gprof.out
