@@ -71,17 +71,21 @@ else
 extra-objs += gmon-start.o
 endif
 
+ifeq (yes,$(enable-static-pie))
+extra-objs += r$(start-installed-name) gr$(start-installed-name)
+install-lib += r$(start-installed-name) gr$(start-installed-name)
+endif
+
 ifneq ($(start-installed-name),$(static-start-installed-name))
-# FIXME: Only Hurd defines static-start-installed-name.  Hurd needs to
-# provide special rules to support static PIE.
 extra-objs += $(static-start-installed-name) g$(static-start-installed-name)
 omit-deps += $(patsubst %.o,%,$(static-start-installed-name) \
 			     g$(static-start-installed-name))
 install-lib += $(static-start-installed-name) g$(static-start-installed-name)
-else
 ifeq (yes,$(enable-static-pie))
-extra-objs += r$(start-installed-name) gr$(start-installed-name)
-install-lib += r$(start-installed-name) gr$(start-installed-name)
+extra-objs += r$(static-start-installed-name) gr$(static-start-installed-name)
+omit-deps += $(patsubst %.o,%,r$(static-start-installed-name) \
+			     gr$(static-start-installed-name))
+install-lib += r$(static-start-installed-name) gr$(static-start-installed-name)
 endif
 endif
 
@@ -149,6 +153,9 @@ $(objpfx)gr$(start-installed-name): \
 ifneq ($(start-installed-name),$(static-start-installed-name))
 $(objpfx)g$(static-start-installed-name): \
   $(objpfx)g%: $(objpfx)% $(objpfx)gmon-start.o
+	$(link-relocatable)
+$(objpfx)gr$(static-start-installed-name): \
+  $(objpfx)gr%: $(objpfx)r% $(objpfx)gmon-start.o
 	$(link-relocatable)
 endif
 else
