@@ -51,16 +51,16 @@
 #define POLYNOMIAL(xx) (POLYNOMIAL2 (xx) + s1)
 
 /* The computed polynomial is a variation of the Taylor series expansion for
-   sin(a):
+   sin(x):
 
-   a - a^3/3! + a^5/5! - a^7/7! + a^9/9! + (1 - a^2) * da / 2
+   x - x^3/3! + x^5/5! - x^7/7! + x^9/9! - dx*x^2/2 + dx
 
    The constants s1, s2, s3, etc. are pre-computed values of 1/3!, 1/5! and so
    on.  The result is returned to LHS.  */
-#define TAYLOR_SIN(xx, a, da) \
+#define TAYLOR_SIN(xx, x, dx) \
 ({									      \
-  double t = ((POLYNOMIAL (xx)  * (a) - 0.5 * (da))  * (xx) + (da));	      \
-  double res = (a) + t;							      \
+  double t = ((POLYNOMIAL (xx)  * (x) - 0.5 * (dx))  * (xx) + (dx));	      \
+  double res = (x) + t;							      \
   res;									      \
 })
 
