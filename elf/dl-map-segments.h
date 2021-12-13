@@ -55,6 +55,7 @@ _dl_map_segment (const struct loadcmd *c, ElfW(Addr) mappref,
       if (delta)
 	__munmap ((void *) map_start, delta);
       ElfW(Addr) map_end = map_start_aligned + maplength;
+      map_end = ALIGN_UP (map_end, GLRO(dl_pagesize));
       delta = map_start + maplen - map_end;
       if (delta)
 	__munmap ((void *) map_end, delta);
