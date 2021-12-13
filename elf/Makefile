@@ -205,43 +205,136 @@ static-dlopen-environment = \
 tst-tls9-static-ENV = $(static-dlopen-environment)
 tst-single_threaded-static-dlopen-ENV = $(static-dlopen-environment)
 
-tests += restest1 preloadtest loadfail multiload origtest resolvfail \
-	 constload1 order noload filter \
-	 reldep reldep2 reldep3 reldep4 nodelete nodelete2 \
-	 nodlopen nodlopen2 lateglobal initfirst global \
-	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
-	 tst-tls4 tst-tls5 \
-	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-tls15 \
-	 tst-tls16 tst-tls17 tst-tls18 tst-tls19 tst-tls-dlinfo \
-	 tst-align tst-align2 tst-align3 \
-	 tst-dlmodcount tst-dlopenrpath tst-deep1 \
-	 tst-dlmopen1 tst-dlmopen3 tst-dlmopen4 \
-	 unload3 unload4 unload5 unload6 unload7 unload8 tst-global1 order2 \
-	 tst-audit1 tst-audit2 tst-audit8 tst-audit9 \
-	 tst-addr1 tst-thrlock \
-	 tst-unique1 tst-unique2 $(if $(CXX),tst-unique3 tst-unique4 \
-	 tst-nodelete tst-dlopen-nodelete-reloc) \
-	 tst-initorder tst-initorder2 tst-relsort1 tst-null-argv \
-	 tst-tlsalign tst-tlsalign-extern tst-nodelete-opened \
-	 tst-nodelete2 tst-audit11 tst-audit12 tst-dlsym-error tst-noload \
-	 tst-latepthread tst-tls-manydynamic tst-nodelete-dlclose \
-	 tst-debug1 tst-main1 tst-absolute-sym tst-absolute-zero tst-big-note \
-	 tst-unwind-ctor tst-unwind-main tst-audit13 \
-	 tst-sonamemove-link tst-sonamemove-dlopen tst-dlopen-tlsmodid \
-	 tst-dlopen-self tst-auditmany tst-initfinilazyfail tst-dlopenfail \
-	 tst-dlopenfail-2 \
-	 tst-filterobj tst-filterobj-dlopen tst-auxobj tst-auxobj-dlopen \
-	 tst-single_threaded tst-single_threaded-pthread \
-	 tst-tls-ie tst-tls-ie-dlmopen argv0test \
-	 tst-glibc-hwcaps tst-glibc-hwcaps-prepend tst-glibc-hwcaps-mask \
-	 tst-tls20 tst-tls21 tst-dlmopen-dlerror tst-dlmopen-gethostbyname \
-	 tst-dl-is_dso tst-ro-dynamic \
-	 tst-audit18 \
-	 tst-audit19b \
-	 tst-audit20 \
-	 tst-audit22 \
-	 tst-rtld-run-static \
+tests += \
+  argv0test \
+  constload1 \
+  dblload \
+  dblunload \
+  filter \
+  global \
+  initfirst \
+  lateglobal \
+  loadfail \
+  multiload \
+  next \
+  nodelete \
+  nodelete2 \
+  nodlopen \
+  nodlopen2 \
+  noload \
+  order \
+  order2 \
+  origtest \
+  preloadtest \
+  reldep \
+  reldep2 \
+  reldep3 \
+  reldep4 \
+  reldep5 \
+  reldep6 \
+  reldep7 \
+  reldep8 \
+  resolvfail \
+  restest1 \
+  restest2 \
+  tst-absolute-sym \
+  tst-absolute-zero \
+  tst-addr1 \
+  tst-align \
+  tst-align2 \
+  tst-align3 \
+  tst-audit1 \
+  tst-audit2 \
+  tst-audit8 \
+  tst-audit9 \
+  tst-audit11 \
+  tst-audit12 \
+  tst-audit13 \
+  tst-audit18 \
+  tst-audit19b \
+  tst-audit20 \
+  tst-audit22 \
+  tst-auditmany \
+  tst-auxobj \
+  tst-auxobj-dlopen \
+  tst-big-note \
+  tst-debug1 \
+  tst-deep1 \
+  tst-dl-is_dso \
+  tst-dlmodcount \
+  tst-dlmopen1 \
+  tst-dlmopen3 \
+  tst-dlmopen4 \
+  tst-dlmopen-dlerror \
+  tst-dlmopen-gethostbyname \
+  tst-dlopenfail \
+  tst-dlopenfail-2 \
+  tst-dlopenrpath \
+  tst-dlopen-self \
+  tst-dlopen-tlsmodid \
+  tst-dlsym-error \
+  tst-filterobj \
+  tst-filterobj-dlopen \
+  tst-glibc-hwcaps \
+  tst-glibc-hwcaps-mask \
+  tst-glibc-hwcaps-prepend \
+  tst-global1 \
+  tst-initfinilazyfail \
+  tst-initorder \
+  tst-initorder2 \
+  tst-latepthread \
+  tst-main1 \
+  tst-nodelete2 \
+  tst-nodelete-dlclose \
+  tst-nodelete-opened \
+  tst-noload \
+  tst-null-argv \
+  tst-relsort1 \
+  tst-ro-dynamic \
+  tst-rtld-run-static \
+  tst-single_threaded \
+  tst-single_threaded-pthread \
+  tst-sonamemove-dlopen \
+  tst-sonamemove-link \
+  tst-thrlock \
+  tst-tls10 \
+  tst-tls11 \
+  tst-tls12 \
+  tst-tls13 \
+  tst-tls14 \
+  tst-tls15 \
+  tst-tls16 \
+  tst-tls17 \
+  tst-tls18 \
+  tst-tls19 \
+  tst-tls20 \
+  tst-tls21 \
+  tst-tls4 \
+  tst-tls5 \
+  tst-tlsalign \
+  tst-tlsalign-extern \
+  tst-tls-dlinfo \
+  tst-tls-ie \
+  tst-tls-ie-dlmopen \
+  tst-tls-manydynamic \
+  tst-unique1 \
+  tst-unique2 \
+  tst-unwind-ctor \
+  tst-unwind-main \
+  unload3 \
+  unload4 \
+  unload5 \
+  unload6 \
+  unload7 \
+  unload8 \
 #	 reldep9
+tests-cxx = \
+  tst-dlopen-nodelete-reloc \
+  tst-nodelete \
+  tst-unique3 \
+  tst-unique4 \
+
+tests += $(if $(CXX),$(tests-cxx))
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
 	 tst-tls3 tst-tls6 tst-tls7 tst-tls8 tst-dlmopen2 \
@@ -291,117 +384,282 @@ tst-tls-many-dynamic-modules-dep-bad = \
 extra-test-objs += $(tlsmod17a-modules:=.os) $(tlsmod18a-modules:=.os) \
 		   tst-tlsalign-vars.o
 test-extras += tst-tlsmod17a tst-tlsmod18a tst-tlsalign-vars
-modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
-		testobj1_1 failobj constload2 constload3 unloadmod \
-		dep1 dep2 dep3 dep4 vismod1 vismod2 vismod3 \
-		nodelmod1 nodelmod2 nodelmod3 nodelmod4 \
-		nodel2mod1 nodel2mod2 nodel2mod3 \
-		nodlopenmod nodlopenmod2 filtmod1 filtmod2 \
-		reldepmod1 reldepmod2 reldepmod3 reldepmod4 nextmod1 nextmod2 \
-		reldep4mod1 reldep4mod2 reldep4mod3 reldep4mod4 \
-		neededobj1 neededobj2 neededobj3 neededobj4 \
-		neededobj5 neededobj6 firstobj globalmod1 \
-		unload2mod unload2dep ltglobmod1 ltglobmod2 pathoptobj \
-		dblloadmod1 dblloadmod2 dblloadmod3 reldepmod5 reldepmod6 \
-		reldep6mod0 reldep6mod1 reldep6mod2 reldep6mod3 reldep6mod4 \
-		reldep7mod1 reldep7mod2 \
-		tst-tlsmod1 tst-tlsmod2 tst-tlsmod3 tst-tlsmod4 \
-		tst-tlsmod5 tst-tlsmod6 tst-tlsmod7 tst-tlsmod8 \
-		tst-tlsmod9 tst-tlsmod10 tst-tlsmod11 tst-tlsmod12 \
-		tst-tlsmod13 tst-tlsmod13a tst-tlsmod14a tst-tlsmod14b \
-		tst-tlsmod15a tst-tlsmod15b tst-tlsmod16a tst-tlsmod16b \
-		$(tlsmod17a-modules) tst-tlsmod17b $(tlsmod18a-modules) \
-		tst-tls19mod1 tst-tls19mod2 tst-tls19mod3 \
-		circlemod1 circlemod1a circlemod2 circlemod2a \
-		circlemod3 circlemod3a \
-		reldep8mod1 reldep8mod2 reldep8mod3 \
-		reldep9mod1 reldep9mod2 reldep9mod3 \
-		tst-alignmod tst-alignmod2 tst-alignmod3 \
-		$(modules-execstack-$(have-z-execstack)) \
-		tst-dlopenrpathmod tst-deep1mod1 tst-deep1mod2 tst-deep1mod3 \
-		tst-dlmopen1mod tst-auditmod1 \
-		unload3mod1 unload3mod2 unload3mod3 unload3mod4 \
-		unload4mod1 unload4mod2 unload4mod3 unload4mod4 \
-		unload6mod1 unload6mod2 unload6mod3 \
-		unload7mod1 unload7mod2 \
-		unload8mod1 unload8mod1x unload8mod2 unload8mod3 \
-		order2mod1 order2mod2 order2mod3 order2mod4 \
-		tst-unique1mod1 tst-unique1mod2 \
-		tst-unique2mod1 tst-unique2mod2 \
-		tst-auditmod9a tst-auditmod9b \
-		$(if $(CXX),tst-unique3lib tst-unique3lib2 tst-unique4lib \
-		  tst-nodelete-uniquemod tst-nodelete-rtldmod \
-		  tst-nodelete-zmod \
-                  tst-dlopen-nodelete-reloc-mod1 \
-		  tst-dlopen-nodelete-reloc-mod2 \
-	          tst-dlopen-nodelete-reloc-mod3 \
-		  tst-dlopen-nodelete-reloc-mod4 \
-		  tst-dlopen-nodelete-reloc-mod5 \
-	          tst-dlopen-nodelete-reloc-mod6 \
-	          tst-dlopen-nodelete-reloc-mod7 \
-	          tst-dlopen-nodelete-reloc-mod8 \
-	          tst-dlopen-nodelete-reloc-mod9 \
-	          tst-dlopen-nodelete-reloc-mod10 \
-	          tst-dlopen-nodelete-reloc-mod11 \
-	          tst-dlopen-nodelete-reloc-mod12 \
-	          tst-dlopen-nodelete-reloc-mod13 \
-	          tst-dlopen-nodelete-reloc-mod14 \
-	          tst-dlopen-nodelete-reloc-mod15 \
-	          tst-dlopen-nodelete-reloc-mod16 \
-		  tst-dlopen-nodelete-reloc-mod17) \
-		tst-initordera1 tst-initorderb1 \
-		tst-initordera2 tst-initorderb2 \
-		tst-initordera3 tst-initordera4 \
-		tst-initorder2a tst-initorder2b tst-initorder2c \
-		tst-initorder2d \
-		tst-relsort1mod1 tst-relsort1mod2 tst-array2dep \
-		tst-array5dep tst-null-argv-lib \
-		tst-tlsalign-lib tst-nodelete-opened-lib tst-nodelete2mod \
-		tst-audit11mod1 tst-audit11mod2 tst-auditmod11 \
-		tst-audit12mod1 tst-audit12mod2 tst-audit12mod3 tst-auditmod12 \
-		tst-latepthreadmod $(tst-tls-many-dynamic-modules) \
-		$(tst-tls-many-dynamic-modules-dep) \
-		$(tst-tls-many-dynamic-modules-dep-bad) \
-		tst-nodelete-dlclose-dso tst-nodelete-dlclose-plugin \
-		tst-main1mod tst-absolute-sym-lib \
-		tst-absolute-zero-lib tst-big-note-lib tst-unwind-ctor-lib \
-		tst-audit13mod1 tst-sonamemove-linkmod1 \
-		tst-sonamemove-runmod1 tst-sonamemove-runmod2 \
-		tst-auditmanymod1 tst-auditmanymod2 tst-auditmanymod3 \
-		tst-auditmanymod4 tst-auditmanymod5 tst-auditmanymod6 \
-		tst-auditmanymod7 tst-auditmanymod8 tst-auditmanymod9 \
-		tst-initlazyfailmod tst-finilazyfailmod \
-		tst-dlopenfailmod1 tst-dlopenfaillinkmod tst-dlopenfailmod2 \
-		tst-dlopenfailmod3 tst-dlopenfailnodelmod tst-ldconfig-ld-mod \
-		tst-filterobj-flt tst-filterobj-aux tst-filterobj-filtee \
-		tst-auditlogmod-1 tst-auditlogmod-2 tst-auditlogmod-3 \
-		tst-single_threaded-mod1 tst-single_threaded-mod2 \
-		tst-single_threaded-mod3 tst-single_threaded-mod4 \
-		tst-tls-ie-mod0 tst-tls-ie-mod1 tst-tls-ie-mod2 \
-		tst-tls-ie-mod3 tst-tls-ie-mod4 tst-tls-ie-mod5 \
-		tst-tls-ie-mod6 libmarkermod1-1 libmarkermod1-2 libmarkermod1-3 \
-		libmarkermod2-1 libmarkermod2-2 \
-		libmarkermod3-1 libmarkermod3-2 libmarkermod3-3 \
-		libmarkermod4-1 libmarkermod4-2 libmarkermod4-3 libmarkermod4-4 \
-		tst-tls20mod-bad tst-tls21mod tst-dlmopen-dlerror-mod \
-		tst-auxvalmod \
-		tst-dlmopen-gethostbyname-mod tst-ro-dynamic-mod \
-		tst-auditmod18 \
-		tst-audit18mod \
-		tst-auditmod19a \
-		tst-auditmod19b \
-		tst-audit19bmod \
-		tst-auditmod20 \
-		tst-auditmod22 \
-		tst-dl_find_object-mod1 \
-		tst-dl_find_object-mod2 \
-		tst-dl_find_object-mod3 \
-		tst-dl_find_object-mod4 \
-		tst-dl_find_object-mod5 \
-		tst-dl_find_object-mod6 \
-		tst-dl_find_object-mod7 \
-		tst-dl_find_object-mod8 \
-		tst-dl_find_object-mod9 \
+modules-names = \
+  circlemod1 \
+  circlemod1a \
+  circlemod2 \
+  circlemod2a \
+  circlemod3 \
+  circlemod3a \
+  constload2 \
+  constload3 \
+  dblloadmod1 \
+  dblloadmod2 \
+  dblloadmod3 \
+  dep1 \
+  dep2 \
+  dep3 \
+  dep4 \
+  failobj \
+  filtmod1 \
+  filtmod2 \
+  firstobj \
+  globalmod1 \
+  libmarkermod1-1 \
+  libmarkermod1-2 \
+  libmarkermod1-3 \
+  libmarkermod2-1 \
+  libmarkermod2-2 \
+  libmarkermod3-1 \
+  libmarkermod3-2 \
+  libmarkermod3-3 \
+  libmarkermod4-1 \
+  libmarkermod4-2 \
+  libmarkermod4-3 \
+  libmarkermod4-4 \
+  ltglobmod1 \
+  ltglobmod2 \
+  neededobj1 \
+  neededobj2 \
+  neededobj3 \
+  neededobj4 \
+  neededobj5 \
+  neededobj6 \
+  nextmod1 \
+  nextmod2 \
+  nodel2mod1 \
+  nodel2mod2 \
+  nodel2mod3 \
+  nodelmod1 \
+  nodelmod2 \
+  nodelmod3 \
+  nodelmod4 \
+  nodlopenmod \
+  nodlopenmod2 \
+  order2mod1 \
+  order2mod2 \
+  order2mod3 \
+  order2mod4 \
+  pathoptobj \
+  reldep4mod1 \
+  reldep4mod2 \
+  reldep4mod3 \
+  reldep4mod4 \
+  reldep6mod0 \
+  reldep6mod1 \
+  reldep6mod2 \
+  reldep6mod3 \
+  reldep6mod4 \
+  reldep7mod1 \
+  reldep7mod2 \
+  reldep8mod1 \
+  reldep8mod2 \
+  reldep8mod3 \
+  reldep9mod1 \
+  reldep9mod2 \
+  reldep9mod3 \
+  reldepmod1 \
+  reldepmod2 \
+  reldepmod3 \
+  reldepmod4 \
+  reldepmod5 \
+  reldepmod6 \
+  testobj1 \
+  testobj1_1 \
+  testobj2 \
+  testobj3 \
+  testobj4 \
+  testobj5 \
+  testobj6 \
+  tst-absolute-sym-lib \
+  tst-absolute-zero-lib \
+  tst-alignmod \
+  tst-alignmod2 \
+  tst-alignmod3 \
+  tst-array2dep \
+  tst-array5dep \
+  tst-audit11mod1 \
+  tst-audit11mod2 \
+  tst-audit12mod1 \
+  tst-audit12mod2 \
+  tst-audit12mod3 \
+  tst-audit13mod1 \
+  tst-audit18mod \
+  tst-audit19bmod \
+  tst-auditlogmod-1 \
+  tst-auditlogmod-2 \
+  tst-auditlogmod-3 \
+  tst-auditmanymod1 \
+  tst-auditmanymod2 \
+  tst-auditmanymod3 \
+  tst-auditmanymod4 \
+  tst-auditmanymod5 \
+  tst-auditmanymod6 \
+  tst-auditmanymod7 \
+  tst-auditmanymod8 \
+  tst-auditmanymod9 \
+  tst-auditmod1 \
+  tst-auditmod9a \
+  tst-auditmod9b \
+  tst-auditmod11 \
+  tst-auditmod12 \
+  tst-auditmod18 \
+  tst-auditmod19a \
+  tst-auditmod19b \
+  tst-auditmod20 \
+  tst-auditmod22 \
+  tst-auxvalmod \
+  tst-big-note-lib \
+  tst-deep1mod1 \
+  tst-deep1mod2 \
+  tst-deep1mod3 \
+  tst-dl_find_object-mod1 \
+  tst-dl_find_object-mod2 \
+  tst-dl_find_object-mod3 \
+  tst-dl_find_object-mod4 \
+  tst-dl_find_object-mod5 \
+  tst-dl_find_object-mod6 \
+  tst-dl_find_object-mod7 \
+  tst-dl_find_object-mod8 \
+  tst-dl_find_object-mod9 \
+  tst-dlmopen1mod \
+  tst-dlmopen-dlerror-mod \
+  tst-dlmopen-gethostbyname-mod \
+  tst-dlopenfaillinkmod \
+  tst-dlopenfailmod1 \
+  tst-dlopenfailmod2 \
+  tst-dlopenfailmod3 \
+  tst-dlopenfailnodelmod \
+  tst-dlopenrpathmod \
+  tst-filterobj-aux \
+  tst-filterobj-filtee \
+  tst-filterobj-flt \
+  tst-finilazyfailmod \
+  tst-initlazyfailmod \
+  tst-initorder2a \
+  tst-initorder2b \
+  tst-initorder2c \
+  tst-initorder2d \
+  tst-initordera1 \
+  tst-initordera2 \
+  tst-initordera3 \
+  tst-initordera4 \
+  tst-initorderb1 \
+  tst-initorderb2 \
+  tst-latepthreadmod \
+  tst-ldconfig-ld-mod \
+  tst-main1mod \
+  tst-nodelete2mod \
+  tst-nodelete-dlclose-dso \
+  tst-nodelete-dlclose-plugin \
+  tst-nodelete-opened-lib \
+  tst-null-argv-lib \
+  tst-relsort1mod1 \
+  tst-relsort1mod2 \
+  tst-ro-dynamic-mod \
+  tst-single_threaded-mod1 \
+  tst-single_threaded-mod2 \
+  tst-single_threaded-mod3 \
+  tst-single_threaded-mod4 \
+  tst-sonamemove-linkmod1 \
+  tst-sonamemove-runmod1 \
+  tst-sonamemove-runmod2 \
+  tst-tls19mod1 \
+  tst-tls19mod2 \
+  tst-tls19mod3 \
+  tst-tls20mod-bad \
+  tst-tls21mod \
+  tst-tlsalign-lib \
+  tst-tls-ie-mod0 \
+  tst-tls-ie-mod1 \
+  tst-tls-ie-mod2 \
+  tst-tls-ie-mod3 \
+  tst-tls-ie-mod4 \
+  tst-tls-ie-mod5 \
+  tst-tls-ie-mod6 \
+  tst-tlsmod1 \
+  tst-tlsmod10 \
+  tst-tlsmod11 \
+  tst-tlsmod12 \
+  tst-tlsmod13 \
+  tst-tlsmod13a \
+  tst-tlsmod14a \
+  tst-tlsmod14b \
+  tst-tlsmod15a \
+  tst-tlsmod15b \
+  tst-tlsmod16a \
+  tst-tlsmod16b \
+  tst-tlsmod17b \
+  tst-tlsmod2 \
+  tst-tlsmod3 \
+  tst-tlsmod4 \
+  tst-tlsmod5 \
+  tst-tlsmod6 \
+  tst-tlsmod7 \
+  tst-tlsmod8 \
+  tst-tlsmod9 \
+  tst-unique1mod1 \
+  tst-unique1mod2 \
+  tst-unique2mod1 \
+  tst-unique2mod2 \
+  tst-unwind-ctor-lib \
+  unload2dep \
+  unload2mod \
+  unload3mod1 \
+  unload3mod2 \
+  unload3mod3 \
+  unload3mod4 \
+  unload4mod1 \
+  unload4mod2 \
+  unload4mod3 \
+  unload4mod4 \
+  unload6mod1 \
+  unload6mod2 \
+  unload6mod3 \
+  unload7mod1 \
+  unload7mod2 \
+  unload8mod1 \
+  unload8mod1x \
+  unload8mod2 \
+  unload8mod3 \
+  unloadmod \
+  vismod1 \
+  vismod2 \
+  vismod3 \
+
+modules-names-cxx = \
+  tst-dlopen-nodelete-reloc-mod1 \
+  tst-dlopen-nodelete-reloc-mod10 \
+  tst-dlopen-nodelete-reloc-mod11 \
+  tst-dlopen-nodelete-reloc-mod12 \
+  tst-dlopen-nodelete-reloc-mod13 \
+  tst-dlopen-nodelete-reloc-mod14 \
+  tst-dlopen-nodelete-reloc-mod15 \
+  tst-dlopen-nodelete-reloc-mod16 \
+  tst-dlopen-nodelete-reloc-mod17 \
+  tst-dlopen-nodelete-reloc-mod2 \
+  tst-dlopen-nodelete-reloc-mod3 \
+  tst-dlopen-nodelete-reloc-mod4 \
+  tst-dlopen-nodelete-reloc-mod5 \
+  tst-dlopen-nodelete-reloc-mod6 \
+  tst-dlopen-nodelete-reloc-mod7 \
+  tst-dlopen-nodelete-reloc-mod8 \
+  tst-dlopen-nodelete-reloc-mod9 \
+  tst-nodelete-rtldmod \
+  tst-nodelete-uniquemod \
+  tst-nodelete-zmod \
+  tst-unique3lib \
+  tst-unique3lib2 \
+  tst-unique4lib \
+
+modules-names += \
+  $(if $(CXX),$(modules-names-cxx)) \
+  $(modules-execstack-$(have-z-execstack)) \
+  $(tst-tls-many-dynamic-modules) \
+  $(tst-tls-many-dynamic-modules-dep) \
+  $(tst-tls-many-dynamic-modules-dep-bad) \
+  $(tlsmod17a-modules) \
+  $(tlsmod18a-modules) \
 
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
