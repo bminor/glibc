@@ -32,6 +32,9 @@
 	.text
 LEAF (__clone)
 
+	/* Align stack to a 128-bit boundary as per RISC-V ABI.  */
+	andi		a1,a1,ALMASK
+
 	/* Sanity check arguments.  */
 	beqz		a0,L (invalid)	/* No NULL function pointers.  */
 	beqz		a1,L (invalid)	/* No NULL stack pointers.  */
