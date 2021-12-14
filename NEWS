@@ -9,10 +9,6 @@ Version 2.35
 
 Major new features:
 
-* The LD_PREFER_MAP_32BIT_EXEC environment variable support has been
-  removed since the first PT_LOAD segment is no longer executable due
-  to defaulting to -z separate-code.
-
 * Unicode 14.0.0 Support: Character encoding, character type info, and
   transliteration tables are all updated to Unicode 14.0.0, using
   generator scripts contributed by Mike FABIAN (Red Hat).
@@ -96,6 +92,10 @@ Major new features:
   configuration.
 
 Deprecated and removed features, and other changes affecting compatibility:
+
+* The LD_PREFER_MAP_32BIT_EXEC environment variable support has been
+  removed since the first PT_LOAD segment is no longer executable due
+  to defaulting to -z separate-code.
 
 * The r_version update in the debugger interface makes the glibc binary
   incompatible with GDB binaries built without the following commits:
