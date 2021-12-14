@@ -318,7 +318,7 @@ value of @samp{2}, a different algorithm is used, which implements a
 topological sort through depth-first search, and does not exhibit the
 performance issues of @samp{1}.
 
-The default value of this tunable is @samp{1}.
+The default value of this tunable is @samp{2}.
 @end deftp
 
 @node Elision Tunables
