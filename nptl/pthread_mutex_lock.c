@@ -138,10 +138,9 @@ __pthread_mutex_lock (pthread_mutex_t *mutex)
 		  break;
 		}
 	      atomic_spin_nop ();
-	      if (LLL_MUTEX_READ_LOCK (mutex) != 0)
-		continue;
 	    }
-	  while (LLL_MUTEX_TRYLOCK (mutex) != 0);
+	  while (LLL_MUTEX_READ_LOCK (mutex) != 0
+		 || LLL_MUTEX_TRYLOCK (mutex) != 0);
 
 	  mutex->__data.__spins += (cnt - mutex->__data.__spins) / 8;
 	}
