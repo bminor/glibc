@@ -26,6 +26,7 @@
 # include <stddef.h>
 # include <stdint.h>
 # include <dl-dtv.h>
+# include <thread_pointer.h>
 
 #else /* __ASSEMBLER__ */
 # include <tcb-offsets.h>
@@ -36,16 +37,10 @@
 #ifndef __powerpc64__
 /* Register r2 (tp) is reserved by the ABI as "thread pointer". */
 # define PT_THREAD_POINTER PT_R2
-# ifndef __ASSEMBLER__
-register void *__thread_register __asm__ ("r2");
-# endif
 
 #else /* __powerpc64__ */
 /* Register r13 (tp) is reserved by the ABI as "thread pointer". */
 # define PT_THREAD_POINTER PT_R13
-# ifndef __ASSEMBLER__
-register void *__thread_register __asm__ ("r13");
-# endif
 #endif /* __powerpc64__ */
 
 #ifndef __ASSEMBLER__
