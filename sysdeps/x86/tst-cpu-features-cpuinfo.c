@@ -169,7 +169,14 @@ do_test (int argc, char **argv)
   else if (cpu_features->basic.kind == arch_kind_amd)
     {
       fails += CHECK_PROC (ibpb, AMD_IBPB);
-      fails += CHECK_PROC (ibrs, AMD_IBRS);
+
+      /* The IBRS feature on AMD processors is reported using the Intel feature
+       * on KVM guests (synthetic bit).  In both cases the cpuinfo entry is the
+       * same.  */
+      if (HAS_CPU_FEATURE (IBRS_IBPB))
+        fails += CHECK_PROC (ibrs, IBRS_IBPB);
+      else
+        fails += CHECK_PROC (ibrs, AMD_IBRS);
       fails += CHECK_PROC (stibp, AMD_STIBP);
     }
   fails += CHECK_PROC (ibt, IBT);
