@@ -1101,6 +1101,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
     size_t nloadcmds = 0;
     bool has_holes = false;
     bool empty_dynamic = false;
+    ElfW(Addr) p_align_max = 0;
 
     /* The struct is initialized to zero so this is not necessary:
     l->l_ld = 0;
@@ -1146,7 +1147,9 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	  c->mapend = ALIGN_UP (ph->p_vaddr + ph->p_filesz, GLRO(dl_pagesize));
 	  c->dataend = ph->p_vaddr + ph->p_filesz;
 	  c->allocend = ph->p_vaddr + ph->p_memsz;
-	  c->mapalign = ph->p_align;
+	  /* Remember the maximum p_align.  */
+	  if (powerof2 (ph->p_align) && ph->p_align > p_align_max)
+	    p_align_max = ph->p_align;
 	  c->mapoff = ALIGN_DOWN (ph->p_offset, GLRO(dl_pagesize));
 
 	  /* Determine whether there is a gap between the last segment
@@ -1220,6 +1223,10 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	errstring = N_("object file has no loadable segments");
 	goto lose;
       }
+
+    /* Align all PT_LOAD segments to the maximum p_align.  */
+    for (size_t i = 0; i < nloadcmds; i++)
+      loadcmds[i].mapalign = p_align_max;
 
     /* dlopen of an executable is not valid because it is not possible
        to perform proper relocations, handle static TLS, or run the
