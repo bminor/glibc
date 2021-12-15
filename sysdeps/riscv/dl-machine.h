@@ -125,8 +125,14 @@ elf_machine_dynamic (void)
 	sll a3, a1, " STRINGXP (PTRLOG) "\n\
 	add a3, a3, a2\n\
 	add a3, a3, " STRINGXP (SZREG) "\n\
+	# Stash the stack pointer in s1.\n\
+	mv s1, sp\n\
+	# Align stack to 128 bits for the _dl_init call.\n\
+	andi sp, sp,-16\n\
 	# Call the function to run the initializers.\n\
 	jal _dl_init\n\
+	# Restore the stack pointer for _start.\n\
+	mv sp, s1\n\
 	# Pass our finalizer function to _start.\n\
 	lla a0, _dl_fini\n\
 	# Jump to the user entry point.\n\
