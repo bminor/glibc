@@ -23,15 +23,3 @@
 # warning "GETSP is not defined for this architecture."
 # define GETSP 0
 #endif
-
-#ifndef GETTIME
-# define GETTIME(low,high)						   \
-  {									   \
-    struct __timespec64 now;						   \
-    uint64_t usecs;							   \
-    __clock_gettime64 (CLOCK_REALTIME, &now);				   \
-    usecs = (uint64_t)now.tv_nsec / 1000 + (uint64_t)now.tv_sec * 1000000; \
-    low = usecs & 0xffffffff;						   \
-    high = usecs >> 32;							   \
-  }
-#endif

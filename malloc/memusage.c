@@ -34,6 +34,7 @@
 #include <sys/time.h>
 
 #include <memusage.h>
+#include <hp-timing.h>
 
 /* Pointer to the real functions.  These are determined used `dlsym'
    when really needed.  */
@@ -114,6 +115,23 @@ static struct entry buffer[2 * DEFAULT_BUFFER_SIZE];
 static uint32_t buffer_cnt;
 static struct entry first;
 
+static void
+gettime (struct entry *e)
+{
+#if HP_TIMING_INLINE
+  hp_timing_t now;
+  HP_TIMING_NOW (now);
+  e->time_low = now & 0xffffffff;
+  e->time_high = now >> 32;
+#else
+  struct __timespec64 now;
+  uint64_t usecs;
+  __clock_gettime64 (CLOCK_REALTIME, &now);
+  usecs = (uint64_t)now.tv_nsec / 1000 + (uint64_t)now.tv_sec * 1000000;
+  e->time_low = usecs & 0xffffffff;
+  e->time_high = usecs >> 32;
+#endif
+}
 
 /* Update the global data after a successful function call.  */
 static void
@@ -177,7 +195,7 @@ update_data (struct header *result, size_t len, size_t old_len)
 
       buffer[idx].heap = current_heap;
       buffer[idx].stack = current_stack;
-      GETTIME (buffer[idx].time_low, buffer[idx].time_high);
+      gettime (&buffer[idx]);
 
       /* Write out buffer if it is full.  */
       if (idx + 1 == buffer_size)
@@ -267,7 +285,7 @@ me (void)
               /* Write the first entry.  */
               first.heap = 0;
               first.stack = 0;
-              GETTIME (first.time_low, first.time_high);
+              gettime (&first);
               /* Write it two times since we need the starting and end time. */
               write (fd, &first, sizeof (first));
               write (fd, &first, sizeof (first));
@@ -818,7 +836,7 @@ dest (void)
          stack.  */
       first.heap = peak_heap;
       first.stack = peak_stack;
-      GETTIME (first.time_low, first.time_high);
+      gettime (&first);
       write (fd, &first, sizeof (struct entry));
 
       /* Close the file.  */

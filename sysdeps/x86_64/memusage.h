@@ -16,6 +16,5 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define GETSP() ({ register uintptr_t stack_ptr asm ("rsp"); stack_ptr; })
-#define GETTIME(low,high) asm ("rdtsc" : "=a" (low), "=d" (high))
 
 #include <sysdeps/generic/memusage.h>

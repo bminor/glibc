@@ -18,12 +18,5 @@
 #include <hp-timing.h>
 
 #define GETSP() ({ register uintptr_t stack_ptr asm ("%r12"); stack_ptr; })
-#define GETTIME(low, high) \
-  {									      \
-    hp_timing_t __now;							      \
-    HP_TIMING_NOW (__now);						      \
-    low = __now & 0xffffffff;						      \
-    high = __now >> 32;							      \
-  }
 
 #include <sysdeps/generic/memusage.h>
