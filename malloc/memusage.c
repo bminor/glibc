@@ -71,20 +71,20 @@ struct header
 #define MAGIC 0xfeedbeaf
 
 
-static memusage_cntr_t calls[idx_last];
-static memusage_cntr_t failed[idx_last];
-static memusage_size_t total[idx_last];
-static memusage_size_t grand_total;
-static memusage_cntr_t histogram[65536 / 16];
-static memusage_cntr_t large;
-static memusage_cntr_t calls_total;
-static memusage_cntr_t inplace;
-static memusage_cntr_t decreasing;
-static memusage_cntr_t realloc_free;
-static memusage_cntr_t inplace_mremap;
-static memusage_cntr_t decreasing_mremap;
-static memusage_size_t current_heap;
-static memusage_size_t peak_use[3];
+static unsigned long int calls[idx_last];
+static unsigned long int failed[idx_last];
+static size_t total[idx_last];
+static size_t grand_total;
+static unsigned long int histogram[65536 / 16];
+static unsigned long int large;
+static unsigned long int calls_total;
+static unsigned long int inplace;
+static unsigned long int decreasing;
+static unsigned long int realloc_free;
+static unsigned long int inplace_mremap;
+static unsigned long int decreasing_mremap;
+static size_t current_heap;
+static size_t peak_use[3];
 static __thread uintptr_t start_sp;
 
 /* A few macros to make the source more readable.  */
@@ -111,7 +111,7 @@ struct entry
 };
 
 static struct entry buffer[2 * DEFAULT_BUFFER_SIZE];
-static uatomic32_t buffer_cnt;
+static uint32_t buffer_cnt;
 static struct entry first;
 
 
@@ -128,7 +128,7 @@ update_data (struct header *result, size_t len, size_t old_len)
     }
 
   /* Compute current heap usage and compare it with the maximum value.  */
-  memusage_size_t heap
+  size_t heap
     = catomic_exchange_and_add (&current_heap, len - old_len) + len - old_len;
   catomic_max (&peak_heap, heap);
 
@@ -161,14 +161,14 @@ update_data (struct header *result, size_t len, size_t old_len)
   /* Store the value only if we are writing to a file.  */
   if (fd != -1)
     {
-      uatomic32_t idx = catomic_exchange_and_add (&buffer_cnt, 1);
+      uint32_t idx = catomic_exchange_and_add (&buffer_cnt, 1);
       if (idx + 1 >= 2 * buffer_size)
         {
           /* We try to reset the counter to the correct range.  If
              this fails because of another thread increasing the
              counter it does not matter since that thread will take
              care of the correction.  */
-          uatomic32_t reset = (idx + 1) % (2 * buffer_size);
+          uint32_t reset = (idx + 1) % (2 * buffer_size);
           catomic_compare_and_exchange_val_acq (&buffer_cnt, reset, idx + 1);
           if (idx >= 2 * buffer_size)
             idx = reset - 1;

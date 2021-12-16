@@ -18,6 +18,4 @@
 
 #define GETSP() ({ register uintptr_t stack_ptr asm ("%sp"); stack_ptr; })
 
-#define uatomic32_t unsigned int
-
 #include <sysdeps/generic/memusage.h>
