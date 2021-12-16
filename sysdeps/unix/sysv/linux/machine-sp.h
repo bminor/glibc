@@ -1,4 +1,5 @@
-/* Copyright (C) 2000-2021 Free Software Foundation, Inc.
+/* Machine-specific function to return the stack pointer.  Linux version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,6 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define GETSP() ({ register uintptr_t stack_ptr asm ("esp"); stack_ptr; })
+#ifndef _MACHINE_SP_H
+#define _MACHINE_SP_H
 
-#include <sysdeps/generic/memusage.h>
+/* Return the current stack pointer.  */
+static inline uintptr_t
+__thread_stack_pointer (void)
+{
+  return (uintptr_t) CURRENT_STACK_FRAME;
+}
+
+#endif	/* machine-sp.h */

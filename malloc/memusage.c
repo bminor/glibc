@@ -33,8 +33,9 @@
 #include <sys/mman.h>
 #include <sys/time.h>
 
-#include <memusage.h>
 #include <hp-timing.h>
+#include <machine-sp.h>
+#include <stackinfo.h>  /* For _STACK_GROWS_UP  */
 
 /* Pointer to the real functions.  These are determined used `dlsym'
    when really needed.  */
@@ -155,10 +156,10 @@ update_data (struct header *result, size_t len, size_t old_len)
      the main thread and it is the first call to any of these
      functions.  */
   if (__glibc_unlikely (!start_sp))
-    start_sp = GETSP ();
+    start_sp = __thread_stack_pointer ();
 
-  uintptr_t sp = GETSP ();
-#ifdef STACK_GROWS_UPWARD
+  uintptr_t sp = __thread_stack_pointer ();
+#ifdef _STACK_GROWS_UP
   /* This can happen in threads where we didn't catch the thread's
      stack early enough.  */
   if (__glibc_unlikely (sp < start_sp))
@@ -268,7 +269,7 @@ me (void)
       const char *outname;
 
       if (!start_sp)
-        start_sp = GETSP ();
+        start_sp = __thread_stack_pointer ();
 
       outname = getenv ("MEMUSAGE_OUTPUT");
       if (outname != NULL && outname[0] != '\0'
@@ -334,7 +335,7 @@ static void
 __attribute__ ((constructor))
 init (void)
 {
-  start_sp = GETSP ();
+  start_sp = __thread_stack_pointer ();
   if (!initialized)
     me ();
 }

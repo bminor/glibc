@@ -22,7 +22,7 @@
 /* Return the current stack pointer.  */
 
 #define __thread_stack_pointer() ({					      \
-  register void *__sp__ asm("esp");					      \
+  register uintptr_t __sp__ asm("esp");					      \
   __sp__;								      \
 })
 
