@@ -149,6 +149,10 @@ CFLAGS-sbrk.o = $(no-stack-protector)
 CFLAGS-sbrk.op = $(no-stack-protector)
 CFLAGS-brk.o = $(no-stack-protector)
 CFLAGS-brk.op = $(no-stack-protector)
+CFLAGS-mmap.o = $(no-stack-protector)
+CFLAGS-mmap.op = $(no-stack-protector)
+CFLAGS-mmap64.o = $(no-stack-protector)
+CFLAGS-mmap64.op = $(no-stack-protector)
 
 include ../Rules
 
