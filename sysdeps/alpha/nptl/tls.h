@@ -109,8 +109,6 @@ typedef struct
     }									     \
   while (0)
 
-#else /* __ASSEMBLER__ */
-# include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
 
 #endif	/* tls.h */

@@ -15,10 +15,6 @@
 # License along with the GNU C Library.  If not, see
 # <https://www.gnu.org/licenses/>.
 
-ifeq ($(subdir),csu)
-gen-as-const-headers += tcb-offsets.sym
-endif
-
 ifeq ($(subdir),nptl)
 # This test relies on compiling part of the binary with EH information,
 # part without, and unwinding through.  The .ARM.exidx tables have

@@ -34,7 +34,6 @@
      __result; })
 
 #else
-# include <tcb-offsets.h>
 /* Define r31 as thread pointer register.  */
 # define READ_THREAD_POINTER() \
 	mov r0, r31;

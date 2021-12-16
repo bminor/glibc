@@ -26,9 +26,6 @@
 # include <stddef.h>
 # include <stdint.h>
 # include <dl-dtv.h>
-
-#else /* __ASSEMBLER__ */
-# include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
 
 

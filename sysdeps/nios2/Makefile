@@ -24,7 +24,3 @@ long-double-fcts = no
 ifeq ($(subdir),soft-fp)
 sysdep_routines += $(gcc-single-routines) $(gcc-double-routines)
 endif
-
-ifeq ($(subdir),csu)
-gen-as-const-headers += tcb-offsets.sym
-endif
