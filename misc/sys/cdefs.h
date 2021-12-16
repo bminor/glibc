@@ -169,7 +169,7 @@
 						   __s, __osz))		      \
    && __glibc_safe_len_cond ((__SIZE_TYPE__) (__l), __s, __osz))
 
-/* Conversely, we know at compile time that the length is safe if the
+/* Conversely, we know at compile time that the length is unsafe if the
    __L * __S <= __OBJSZ condition can be folded to a constant and if it is
    false.  */
 #define __glibc_unsafe_len(__l, __s, __osz) \
