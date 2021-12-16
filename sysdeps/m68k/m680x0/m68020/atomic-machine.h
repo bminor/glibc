@@ -15,34 +15,6 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdint.h>
-
-
-typedef int8_t atomic8_t;
-typedef uint8_t uatomic8_t;
-typedef int_fast8_t atomic_fast8_t;
-typedef uint_fast8_t uatomic_fast8_t;
-
-typedef int16_t atomic16_t;
-typedef uint16_t uatomic16_t;
-typedef int_fast16_t atomic_fast16_t;
-typedef uint_fast16_t uatomic_fast16_t;
-
-typedef int32_t atomic32_t;
-typedef uint32_t uatomic32_t;
-typedef int_fast32_t atomic_fast32_t;
-typedef uint_fast32_t uatomic_fast32_t;
-
-typedef int64_t atomic64_t;
-typedef uint64_t uatomic64_t;
-typedef int_fast64_t atomic_fast64_t;
-typedef uint_fast64_t uatomic_fast64_t;
-
-typedef intptr_t atomicptr_t;
-typedef uintptr_t uatomicptr_t;
-typedef intmax_t atomic_max_t;
-typedef uintmax_t uatomic_max_t;
-
 #define __HAVE_64B_ATOMICS 1
 #define USE_ATOMIC_COMPILER_BUILTINS 0
 

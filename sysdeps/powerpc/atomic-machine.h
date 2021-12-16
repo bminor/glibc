@@ -25,23 +25,6 @@
  * as appropriate and which in turn include this file.
  */
 
-#include <stdint.h>
-
-typedef int32_t atomic32_t;
-typedef uint32_t uatomic32_t;
-typedef int_fast32_t atomic_fast32_t;
-typedef uint_fast32_t uatomic_fast32_t;
-
-typedef int64_t atomic64_t;
-typedef uint64_t uatomic64_t;
-typedef int_fast64_t atomic_fast64_t;
-typedef uint_fast64_t uatomic_fast64_t;
-
-typedef intptr_t atomicptr_t;
-typedef uintptr_t uatomicptr_t;
-typedef intmax_t atomic_max_t;
-typedef uintmax_t uatomic_max_t;
-
 /*
  * Powerpc does not have byte and halfword forms of load and reserve and
  * store conditional. So for powerpc we stub out the 8- and 16-bit forms.

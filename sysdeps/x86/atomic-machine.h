@@ -23,32 +23,6 @@
 #include <tls.h>			/* For tcbhead_t.  */
 #include <libc-pointer-arith.h>		/* For cast_to_integer.  */
 
-typedef int8_t atomic8_t;
-typedef uint8_t uatomic8_t;
-typedef int_fast8_t atomic_fast8_t;
-typedef uint_fast8_t uatomic_fast8_t;
-
-typedef int16_t atomic16_t;
-typedef uint16_t uatomic16_t;
-typedef int_fast16_t atomic_fast16_t;
-typedef uint_fast16_t uatomic_fast16_t;
-
-typedef int32_t atomic32_t;
-typedef uint32_t uatomic32_t;
-typedef int_fast32_t atomic_fast32_t;
-typedef uint_fast32_t uatomic_fast32_t;
-
-typedef int64_t atomic64_t;
-typedef uint64_t uatomic64_t;
-typedef int_fast64_t atomic_fast64_t;
-typedef uint_fast64_t uatomic_fast64_t;
-
-typedef intptr_t atomicptr_t;
-typedef uintptr_t uatomicptr_t;
-typedef intmax_t atomic_max_t;
-typedef uintmax_t uatomic_max_t;
-
-
 #define LOCK_PREFIX "lock;"
 
 #define USE_ATOMIC_COMPILER_BUILTINS	1
@@ -119,9 +93,9 @@ typedef uintmax_t uatomic_max_t;
 		       "lock\n"						      \
 		       "0:\tcmpxchgq %q2, %1"				      \
 		       : "=a" (ret), "=m" (*mem)			      \
-		       : "q" ((atomic64_t) cast_to_integer (newval)),	      \
+		       : "q" ((int64_t) cast_to_integer (newval)),	      \
 			 "m" (*mem),					      \
-			 "0" ((atomic64_t) cast_to_integer (oldval)),	      \
+			 "0" ((int64_t) cast_to_integer (oldval)),	      \
 			 "i" (offsetof (tcbhead_t, multiple_threads)));	      \
      ret; })
 # define do_exchange_and_add_val_64_acq(pfx, mem, value) 0
@@ -191,7 +165,7 @@ typedef uintmax_t uatomic_max_t;
      else if (__HAVE_64B_ATOMICS)					      \
        __asm __volatile ("xchgq %q0, %1"				      \
 			 : "=r" (result), "=m" (*mem)			      \
-			 : "0" ((atomic64_t) cast_to_integer (newvalue)),     \
+			 : "0" ((int64_t) cast_to_integer (newvalue)),        \
 			   "m" (*mem));					      \
      else								      \
        {								      \
@@ -222,7 +196,7 @@ typedef uintmax_t uatomic_max_t;
      else if (__HAVE_64B_ATOMICS)					      \
        __asm __volatile (lock "xaddq %q0, %1"				      \
 			 : "=r" (__result), "=m" (*mem)			      \
-			 : "0" ((atomic64_t) cast_to_integer (__addval)),     \
+			 : "0" ((int64_t) cast_to_integer (__addval)),     \
 			   "m" (*mem),					      \
 			   "i" (offsetof (tcbhead_t, multiple_threads)));     \
      else								      \
@@ -264,7 +238,7 @@ typedef uintmax_t uatomic_max_t;
     else if (__HAVE_64B_ATOMICS)					      \
       __asm __volatile (lock "addq %q1, %0"				      \
 			: "=m" (*mem)					      \
-			: "ir" ((atomic64_t) cast_to_integer (value)),	      \
+			: "ir" ((int64_t) cast_to_integer (value)),	      \
 			  "m" (*mem),					      \
 			  "i" (offsetof (tcbhead_t, multiple_threads)));      \
     else								      \
@@ -298,7 +272,7 @@ typedef uintmax_t uatomic_max_t;
      else if (__HAVE_64B_ATOMICS)					      \
        __asm __volatile (LOCK_PREFIX "addq %q2, %0; sets %1"		      \
 			 : "=m" (*mem), "=qm" (__result)		      \
-			 : "ir" ((atomic64_t) cast_to_integer (value)),	      \
+			 : "ir" ((int64_t) cast_to_integer (value)),	      \
 			   "m" (*mem));					      \
      else								      \
        __atomic_link_error ();						      \
@@ -322,7 +296,7 @@ typedef uintmax_t uatomic_max_t;
      else if (__HAVE_64B_ATOMICS)					      \
        __asm __volatile (LOCK_PREFIX "addq %q2, %0; setz %1"		      \
 			 : "=m" (*mem), "=qm" (__result)		      \
-			 : "ir" ((atomic64_t) cast_to_integer (value)),	      \
+			 : "ir" ((int64_t) cast_to_integer (value)),	      \
 			   "m" (*mem));					      \
      else								      \
        __atomic_link_error ();					      \

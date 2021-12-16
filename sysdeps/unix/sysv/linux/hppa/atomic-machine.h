@@ -15,25 +15,8 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdint.h> /*  Required for type definitions e.g. uint8_t.  */
-
 #ifndef _ATOMIC_MACHINE_H
 #define _ATOMIC_MACHINE_H	1
-
-typedef int8_t atomic8_t;
-typedef uint8_t uatomic8_t;
-typedef int_fast8_t atomic_fast8_t;
-typedef uint_fast8_t uatomic_fast8_t;
-
-typedef int32_t atomic32_t;
-typedef uint32_t uatomic32_t;
-typedef int_fast32_t atomic_fast32_t;
-typedef uint_fast32_t uatomic_fast32_t;
-
-typedef intptr_t atomicptr_t;
-typedef uintptr_t uatomicptr_t;
-typedef intmax_t atomic_max_t;
-typedef uintmax_t uatomic_max_t;
 
 #define atomic_full_barrier() __sync_synchronize ()
 

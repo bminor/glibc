@@ -19,16 +19,6 @@
 #ifndef __CSKY_ATOMIC_H_
 #define __CSKY_ATOMIC_H_
 
-#include <stdint.h>
-
-typedef int32_t atomic32_t;
-typedef uint32_t uatomic32_t;
-
-typedef intptr_t atomicptr_t;
-typedef uintptr_t uatomicptr_t;
-typedef intmax_t atomic_max_t;
-typedef uintmax_t uatomic_max_t;
-
 #define __HAVE_64B_ATOMICS 0
 #define USE_ATOMIC_COMPILER_BUILTINS 1
 #define ATOMIC_EXCHANGE_USES_CAS 1

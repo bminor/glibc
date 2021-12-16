@@ -19,19 +19,6 @@
 #ifndef _LINUX_RISCV_BITS_ATOMIC_H
 #define _LINUX_RISCV_BITS_ATOMIC_H 1
 
-#include <stdint.h>
-
-typedef int32_t atomic32_t;
-typedef uint32_t uatomic32_t;
-
-typedef int64_t atomic64_t;
-typedef uint64_t uatomic64_t;
-
-typedef intptr_t atomicptr_t;
-typedef uintptr_t uatomicptr_t;
-typedef intmax_t atomic_max_t;
-typedef uintmax_t uatomic_max_t;
-
 #define atomic_full_barrier() __sync_synchronize ()
 
 #ifdef __riscv_atomic
