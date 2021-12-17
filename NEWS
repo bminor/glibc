@@ -28,6 +28,7 @@ The following bugs are resolved with this release:
   [28702] RISC-V: clone does not align stack
   [28703] RISC-V: _dl_init might be called with unaligned stack
   [28704] elf/tst-cpu-features-cpuinfo fails for KVM guests on some AMD systems
+  [28707] assert in tzfile.c __tzfile_read striking with truncated timezones
   [28744] A64FX string functions are selected without SVE HWCAP
 
 
