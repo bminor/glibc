@@ -28,7 +28,7 @@
 |* ALTERNATE_NAME - name of another service which is examined in   *|
 |*                  case DATABASE_NAME is not found                *|
 |* 								   *|
-|* DEFAULT_CONFIG - string for default conf (e.g. "dns files")	   *|
+|* DEFAULT_CONFIG - string for default conf (e.g. "files dns")	   *|
 |* 								   *|
 \*******************************************************************/
 

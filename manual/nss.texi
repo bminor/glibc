@@ -324,9 +324,8 @@ missing.
 
 @cindex default value, and NSS
 For the @code{hosts} and @code{networks} databases the default value is
-@code{dns [!UNAVAIL=return] files}.  I.e., the system is prepared for
-the DNS service not to be available but if it is available the answer it
-returns is definitive.
+@code{files dns}.  I.e., local configuration will override the contents
+of the domain name system (DNS).
 
 The @code{passwd}, @code{group}, and @code{shadow} databases was
 traditionally handled in a special way.  The appropriate files in the

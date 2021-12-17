@@ -80,7 +80,7 @@ enum nss_database_default
 {
  nss_database_default_defconfig = 0, /* "nis [NOTFOUND=return] files".  */
  nss_database_default_compat, /* "compat [NOTFOUND=return] files".  */
- nss_database_default_dns,    /* "dns [!UNAVAIL=return] files".  */
+ nss_database_default_dns,    /* "files dns".  */
  nss_database_default_files,    /* "files".  */
  nss_database_default_nis,    /* "nis".  */
  nss_database_default_nis_nisplus,    /* "nis nisplus".  */
@@ -133,7 +133,7 @@ nss_database_select_default (struct nss_database_default_cache *cache,
 #endif
 
     case nss_database_default_dns:
-      line = "dns [!UNAVAIL=return] files";
+      line = "files dns";
       break;
 
     case nss_database_default_files:
