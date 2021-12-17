@@ -32,7 +32,7 @@ ENTRY(__setcontext)
 	add	r0, r0, #UCONTEXT_REGSPACE
 
 	/* Restore the VFP registers.  Copied from arm/__longjmp.S.  */
-#ifdef PIC
+#ifdef SHARED
 	ldr     r2, 1f
 	ldr     r1, .Lrtld_global_ro
 0:      add     r2, pc, r2
@@ -101,7 +101,7 @@ ENTRY(__startcontext)
 	.fnend
 END(__startcontext)
 
-#ifdef PIC
+#ifdef SHARED
 1:      .long   _GLOBAL_OFFSET_TABLE_ - 0b - PC_OFS
 .Lrtld_global_ro:
 	.long   C_SYMBOL_NAME(_rtld_global_ro)(GOT)

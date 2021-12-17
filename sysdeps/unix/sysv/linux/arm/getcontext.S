@@ -50,7 +50,7 @@ ENTRY(__getcontext)
 
 	/* Store FP regs.  Much of the FP code is copied from arm/setjmp.S.  */
 
-#ifdef PIC
+#ifdef SHARED
 	ldr     r2, 1f
 	ldr     r1, .Lrtld_global_ro
 0:      add     r2, pc, r2
@@ -102,7 +102,7 @@ ENTRY(__getcontext)
 
 END(__getcontext)
 
-#ifdef PIC
+#ifdef SHARED
 1:      .long   _GLOBAL_OFFSET_TABLE_ - 0b - PC_OFS
 .Lrtld_global_ro:
 	.long   C_SYMBOL_NAME(_rtld_global_ro)(GOT)
