@@ -23,7 +23,7 @@ subdir	:= timezone
 include ../Makeconfig
 
 others	:= zdump zic
-tests	:= test-tz tst-timezone tst-tzset
+tests	:= test-tz tst-timezone tst-tzset tst-bz28707
 
 generated-dirs += testdata
 
@@ -85,10 +85,12 @@ $(objpfx)tst-timezone.out: $(addprefix $(testdata)/, \
 				       America/Sao_Paulo Asia/Tokyo \
 				       Europe/London)
 $(objpfx)tst-tzset.out: $(addprefix $(testdata)/XT, 1 2 3 4)
+$(objpfx)tst-bz28707.out: $(testdata)/XT5
 
 test-tz-ENV = TZDIR=$(testdata)
 tst-timezone-ENV = TZDIR=$(testdata)
 tst-tzset-ENV = TZDIR=$(testdata)
+tst-bz28707-ENV = TZDIR=$(testdata)
 
 # Note this must come second in the deps list for $(built-program-cmd) to work.
 zic-deps = $(objpfx)zic $(leapseconds) yearistype
@@ -121,6 +123,10 @@ $(testdata)/Asia/Tokyo: asia $(zic-deps)
 $(testdata)/XT%: testdata/XT%
 	$(make-target-directory)
 	cp $< $@
+
+$(testdata)/XT%: testdata/gen-XT%.sh
+	$(SHELL) $< > $@.tmp
+	mv $@.tmp $@
 
 $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
 	sed -e 's|TZDIR=[^}]*|TZDIR=$(zonedir)|' \
