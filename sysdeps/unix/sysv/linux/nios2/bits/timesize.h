@@ -1,5 +1,5 @@
-/* Bit size of the time_t type at glibc build time, general case.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+/* Bit size of the time_t type at glibc build time, Linux/NIOS2.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -14,8 +14,7 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
-#include <bits/wordsize.h>
-
-#define __TIMESIZE	64
+/* Size in bits of the 'time_t' type of the default ABI.  */
+#define __TIMESIZE	32

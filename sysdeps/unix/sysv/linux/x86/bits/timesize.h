@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <bits/wordsize.h>
+
 #if defined __x86_64__ && defined __ILP32__
 /* For x32, time is 64-bit even though word size is 32-bit.  */
 # define __TIMESIZE	64
