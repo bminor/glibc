@@ -1,6 +1,6 @@
 /* Conversion module for ISO-2022-JP-3.
    Copyright (C) 1998-2021 Free Software Foundation, Inc.
-   Copyright (C) The GNU Toolchain Authors.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # Build many configurations of glibc.
 # Copyright (C) 2016-2021 Free Software Foundation, Inc.
-# Copyright (C) The GNU Toolchain Authors.
+# Copyright The GNU Toolchain Authors.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
