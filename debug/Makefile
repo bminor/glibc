@@ -108,6 +108,7 @@ CFLAGS-tst-longjmp_chk2.c += -fexceptions -fasynchronous-unwind-tables
 CPPFLAGS-tst-longjmp_chk2.c += -D_FORTIFY_SOURCE=1
 CFLAGS-tst-longjmp_chk3.c += -fexceptions -fasynchronous-unwind-tables
 CPPFLAGS-tst-longjmp_chk3.c += -D_FORTIFY_SOURCE=1
+CPPFLAGS-tst-realpath-chk.c += -D_FORTIFY_SOURCE=2
 
 # We know these tests have problems with format strings, this is what
 # we are testing.  Disable that warning.  They are also testing
@@ -155,7 +156,7 @@ tests = backtrace-tst tst-longjmp_chk tst-chk1 tst-chk2 tst-chk3 \
 	tst-lfschk1 tst-lfschk2 tst-lfschk3 test-strcpy_chk test-stpcpy_chk \
 	tst-chk4 tst-chk5 tst-chk6 tst-chk7 tst-chk8 tst-lfschk4 tst-lfschk5 \
 	tst-lfschk6 tst-longjmp_chk2 tst-backtrace2 tst-backtrace3 \
-	tst-backtrace4 tst-backtrace5 tst-backtrace6
+	tst-backtrace4 tst-backtrace5 tst-backtrace6 tst-realpath-chk
 
 ifeq ($(have-ssp),yes)
 tests += tst-ssp-1

@@ -42,7 +42,7 @@ __NTH (realpath (const char *__restrict __name, char *__restrict __resolved))
     return __realpath_alias (__name, __resolved);
 
 #if defined _LIBC_LIMITS_H_ && defined PATH_MAX
-  if (__glibc_unsafe_len (sz, sizeof (char), PATH_MAX))
+  if (__glibc_unsafe_len (PATH_MAX, sizeof (char), sz))
     return __realpath_chk_warn (__name, __resolved, sz);
 #endif
   return __realpath_chk (__name, __resolved, sz);
