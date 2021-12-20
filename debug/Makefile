@@ -167,11 +167,8 @@ tests-unsupported = tst-chk4 tst-chk5 tst-chk6 tst-chk8 \
 		    tst-lfschk4 tst-lfschk5 tst-lfschk6
 endif
 
-extra-libs = libSegFault libpcprofile
+extra-libs = libpcprofile
 extra-libs-others = $(extra-libs)
-
-libSegFault-routines = segfault
-libSegFault-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 libpcprofile-routines = pcprofile
 libpcprofile-inhibit-o = $(filter-out .os,$(object-suffixes))
@@ -180,10 +177,7 @@ others = pcprofiledump
 install-bin = pcprofiledump
 install-bin-script = xtrace
 
-ifeq ($(build-shared),yes)
-install-bin-script += catchsegv
-endif
-generated += catchsegv xtrace
+generated += xtrace
 
 include ../Rules
 
@@ -208,15 +202,6 @@ $(objpfx)tst-lfschk6.out: $(gen-locales)
 endif
 
 sLIBdir := $(shell echo $(slibdir) | sed 's,lib\(\|64\)$$,\\\\$$LIB,')
-
-$(objpfx)catchsegv: catchsegv.sh $(common-objpfx)soversions.mk \
-		    $(common-objpfx)config.make
-	slibpfx=`echo $(slibdir)|sed 's/lib\(64\|\)$$/\\\\\\\\$$LIB/'`; \
-	sed -e 's|@VERSION@|$(version)|' -e "s|@SLIB@|$$slibpfx|" \
-	    -e 's|@PKGVERSION@|$(PKGVERSION)|' \
-	    -e 's|@REPORT_BUGS_TO@|$(REPORT_BUGS_TO)|' $< > $@.new
-	chmod 555 $@.new
-	mv -f $@.new $@
 
 $(objpfx)pcprofiledump: $(objpfx)pcprofiledump.o
 

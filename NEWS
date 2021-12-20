@@ -135,6 +135,10 @@ Deprecated and removed features, and other changes affecting compatibility:
   configuration script now automatically detects static-pie support in the
   toolchain and architecture and enables it if available.
 
+* The catchsegv script and associated libSegFault.so shared object have
+  been removed.  There are widely-deployed out-of-process alternatives for
+  catching coredumps and backtraces.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
