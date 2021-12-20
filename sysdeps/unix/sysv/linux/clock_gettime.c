@@ -53,7 +53,7 @@ __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp)
     {
       struct timespec tp32;
       r = INTERNAL_VSYSCALL_CALL (vdso_time, 2, clock_id, &tp32);
-      if (r == 0 && tp32.tv_sec > 0)
+      if (r == 0 && tp32.tv_sec >= 0)
 	{
 	  *tp = valid_timespec_to_timespec64 (tp32);
 	  return 0;
