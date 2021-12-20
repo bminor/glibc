@@ -27,7 +27,8 @@
 float
 __jnf (int n, float x)
 {
-  if (__builtin_expect (isgreater (fabsf (x), (float) X_TLOSS), 0)
+  if (__builtin_expect (isgreater (fabsf (x),
+				   AS_FLOAT_CONSTANT (X_TLOSS)), 0)
       && _LIB_VERSION != _IEEE_ && _LIB_VERSION != _POSIX_)
     /* jn(n,|x|>X_TLOSS) */
     return __kernel_standard_f (n, x, 138);
@@ -42,7 +43,7 @@ float
 __ynf (int n, float x)
 {
   if (__builtin_expect (islessequal (x, 0.0f)
-			|| isgreater (x, (float) X_TLOSS), 0)
+			|| isgreater (x, AS_FLOAT_CONSTANT (X_TLOSS)), 0)
       && _LIB_VERSION != _IEEE_)
     {
       if (x < 0.0f)
