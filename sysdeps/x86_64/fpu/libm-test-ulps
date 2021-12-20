@@ -705,7 +705,7 @@ ldouble: 3
 
 Function: Real part of "clog10_towardzero":
 double: 5
-float: 5
+float: 6
 float128: 4
 ldouble: 8
 
