@@ -1133,16 +1133,11 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	case PT_LOAD:
 	  /* A load command tells us to map in part of the file.
 	     We record the load commands and process them all later.  */
-	  if (__glibc_unlikely ((ph->p_align & (GLRO(dl_pagesize) - 1)) != 0))
-	    {
-	      errstring = N_("ELF load command alignment not page-aligned");
-	      goto lose;
-	    }
 	  if (__glibc_unlikely (((ph->p_vaddr - ph->p_offset)
-				 & (ph->p_align - 1)) != 0))
+				 & (GLRO(dl_pagesize) - 1)) != 0))
 	    {
 	      errstring
-		= N_("ELF load command address/offset not properly aligned");
+		= N_("ELF load command address/offset not page-aligned");
 	      goto lose;
 	    }
 
