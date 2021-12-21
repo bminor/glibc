@@ -68,6 +68,9 @@ sysdep_routines += \
   __mtag_tag_zero_region \
   __mtag_tag_region \
   __arm_za_disable
+
+tests += \
+  tst-sme-jmp
 endif
 
 ifeq ($(subdir),malloc)
