@@ -413,6 +413,8 @@ tests += \
   tst-nodelete-opened \
   tst-noload \
   tst-null-argv \
+  tst-p_alignmod1-edit \
+  tst-p_align1 \
   tst-relsort1 \
   tst-ro-dynamic \
   tst-rtld-run-static \
@@ -737,6 +739,7 @@ modules-names = \
   tst-nodelete-dlclose-plugin \
   tst-nodelete-opened-lib \
   tst-null-argv-lib \
+  tst-p_alignmod-base \
   tst-relsort1mod1 \
   tst-relsort1mod2 \
   tst-ro-dynamic-mod \
@@ -2592,3 +2595,17 @@ CFLAGS-tst-dl_find_object-mod6.c += -funwind-tables
 CFLAGS-tst-dl_find_object-mod7.c += -funwind-tables
 CFLAGS-tst-dl_find_object-mod8.c += -funwind-tables
 CFLAGS-tst-dl_find_object-mod9.c += -funwind-tables
+
+$(objpfx)tst-p_alignmod-base.so: $(libsupport)
+LDFLAGS-tst-p_alignmod-base.so += -Wl,-z,max-page-size=0x200000
+
+$(objpfx)tst-p_align1: $(objpfx)tst-p_alignmod1.so
+
+# Make a copy of tst-p_alignmod-base.so and lower p_align of the first
+# PT_LOAD segment.
+$(objpfx)tst-p_alignmod1.so: $(objpfx)tst-p_alignmod1-edit \
+			     $(objpfx)tst-p_alignmod-base.so
+	rm -f $@
+	cp $(objpfx)tst-p_alignmod-base.so $@
+	$(test-wrapper-env) $(run-program-env) $(rtld-prefix) \
+	  $(objpfx)tst-p_alignmod1-edit $@
