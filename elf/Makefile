@@ -414,7 +414,9 @@ tests += \
   tst-noload \
   tst-null-argv \
   tst-p_alignmod1-edit \
+  tst-p_alignmod2-edit \
   tst-p_align1 \
+  tst-p_align2 \
   tst-relsort1 \
   tst-ro-dynamic \
   tst-rtld-run-static \
@@ -2609,3 +2611,14 @@ $(objpfx)tst-p_alignmod1.so: $(objpfx)tst-p_alignmod1-edit \
 	cp $(objpfx)tst-p_alignmod-base.so $@
 	$(test-wrapper-env) $(run-program-env) $(rtld-prefix) \
 	  $(objpfx)tst-p_alignmod1-edit $@
+
+$(objpfx)tst-p_align2: $(objpfx)tst-p_alignmod2.so
+
+# Make a copy of tst-p_alignmod-base.so and update p_align of the first
+# PT_LOAD segment.
+$(objpfx)tst-p_alignmod2.so: $(objpfx)tst-p_alignmod2-edit \
+			     $(objpfx)tst-p_alignmod-base.so
+	rm -f $@
+	cp $(objpfx)tst-p_alignmod-base.so $@
+	$(test-wrapper-env) $(run-program-env) $(rtld-prefix) \
+	  $(objpfx)tst-p_alignmod2-edit $@
