@@ -417,6 +417,7 @@ tests += \
   tst-p_alignmod2-edit \
   tst-p_align1 \
   tst-p_align2 \
+  tst-p_align3 \
   tst-relsort1 \
   tst-ro-dynamic \
   tst-rtld-run-static \
@@ -742,6 +743,7 @@ modules-names = \
   tst-nodelete-opened-lib \
   tst-null-argv-lib \
   tst-p_alignmod-base \
+  tst-p_alignmod3 \
   tst-relsort1mod1 \
   tst-relsort1mod2 \
   tst-ro-dynamic-mod \
@@ -2622,3 +2624,10 @@ $(objpfx)tst-p_alignmod2.so: $(objpfx)tst-p_alignmod2-edit \
 	cp $(objpfx)tst-p_alignmod-base.so $@
 	$(test-wrapper-env) $(run-program-env) $(rtld-prefix) \
 	  $(objpfx)tst-p_alignmod2-edit $@
+
+LDFLAGS-tst-p_alignmod3.so += -Wl,-z,max-page-size=0x100,-z,common-page-size=0x100
+
+$(objpfx)tst-p_align3: $(objpfx)tst-p_alignmod3.so
+$(objpfx)tst-p_align3.out: tst-p_align3.sh $(objpfx)tst-p_align3
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)'; \
+	$(evaluate-test)
