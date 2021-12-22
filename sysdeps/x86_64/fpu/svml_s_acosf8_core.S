@@ -1,5 +1,5 @@
-/* Wrapper part of tests for SSE ISA versions of vector math functions.
-   Copyright (C) 2014-2021 Free Software Foundation, Inc.
+/* Function acosf vectorized with AVX2, wrapper version.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen2.h"
-#include "test-math-vector-sincos.h"
-#include <immintrin.h>
+#include <sysdep.h>
+#include "svml_s_wrapper_impl.h"
 
-#define VEC_TYPE __m128d
+	.text
+ENTRY (_ZGVdN8v_acosf)
+WRAPPER_IMPL_AVX _ZGVbN4v_acosf
+END (_ZGVdN8v_acosf)
 
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVbN2v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVbN2v_sin)
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVbN2v_log)
-VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVbN2v_exp)
-VECTOR_WRAPPER_ff (WRAPPER_NAME (pow), _ZGVbN2vv_pow)
-VECTOR_WRAPPER (WRAPPER_NAME (acos), _ZGVbN2v_acos)
-
-#define VEC_INT_TYPE __m128i
-
-VECTOR_WRAPPER_fFF_2 (WRAPPER_NAME (sincos), _ZGVbN2vvv_sincos)
+#ifndef USE_MULTIARCH
+ libmvec_hidden_def (_ZGVdN8v_acosf)
+#endif

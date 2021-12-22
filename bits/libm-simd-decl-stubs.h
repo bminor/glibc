@@ -98,4 +98,15 @@
 #define __DECL_SIMD_powf32x
 #define __DECL_SIMD_powf64x
 #define __DECL_SIMD_powf128x
+
+#define __DECL_SIMD_acos
+#define __DECL_SIMD_acosf
+#define __DECL_SIMD_acosl
+#define __DECL_SIMD_acosf16
+#define __DECL_SIMD_acosf32
+#define __DECL_SIMD_acosf64
+#define __DECL_SIMD_acosf128
+#define __DECL_SIMD_acosf32x
+#define __DECL_SIMD_acosf64x
+#define __DECL_SIMD_acosf128x
 #endif

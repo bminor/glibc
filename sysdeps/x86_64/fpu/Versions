@@ -13,4 +13,8 @@ libmvec {
     _ZGVbN4vv_powf; _ZGVcN8vv_powf; _ZGVdN8vv_powf; _ZGVeN16vv_powf;
     _ZGVbN4vvv_sincosf; _ZGVcN8vvv_sincosf; _ZGVdN8vvv_sincosf; _ZGVeN16vvv_sincosf;
   }
+  GLIBC_2.35 {
+    _ZGVbN2v_acos; _ZGVcN4v_acos; _ZGVdN4v_acos; _ZGVeN8v_acos;
+    _ZGVbN4v_acosf; _ZGVcN8v_acosf; _ZGVdN8v_acosf; _ZGVeN16v_acosf;
+  }
 }

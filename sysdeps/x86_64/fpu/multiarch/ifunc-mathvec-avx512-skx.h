@@ -1,5 +1,6 @@
-/* Wrapper part of tests for SSE ISA versions of vector math functions.
-   Copyright (C) 2014-2021 Free Software Foundation, Inc.
+/* Common definition for libmathvec ifunc selections optimized with
+   AVX512.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,19 +17,23 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen2.h"
-#include "test-math-vector-sincos.h"
-#include <immintrin.h>
+#include <init-arch.h>
 
-#define VEC_TYPE __m128d
+#undef PASTER2
+#define PASTER2(x,y)   x##_##y
 
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVbN2v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVbN2v_sin)
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVbN2v_log)
-VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVbN2v_exp)
-VECTOR_WRAPPER_ff (WRAPPER_NAME (pow), _ZGVbN2vv_pow)
-VECTOR_WRAPPER (WRAPPER_NAME (acos), _ZGVbN2v_acos)
+extern void REDIRECT_NAME (void);
+extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_wrapper) attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (skx) attribute_hidden;
 
-#define VEC_INT_TYPE __m128i
+static inline void *
+IFUNC_SELECTOR (void)
+{
+  const struct cpu_features* cpu_features = __get_cpu_features ();
 
-VECTOR_WRAPPER_fFF_2 (WRAPPER_NAME (sincos), _ZGVbN2vvv_sincos)
+  if (!CPU_FEATURES_ARCH_P (cpu_features, MathVec_Prefer_No_AVX512)
+      && CPU_FEATURE_USABLE_P (cpu_features, AVX512DQ))
+    return OPTIMIZE (skx);
+
+  return OPTIMIZE (avx2_wrapper);
+}
