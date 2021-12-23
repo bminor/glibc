@@ -54,9 +54,6 @@ extern char _end[] attribute_hidden;
 /* Protect SUID program against misuse of file descriptors.  */
 extern void __libc_check_standard_fds (void);
 
-#ifdef NEED_DL_BASE_ADDR
-ElfW(Addr) _dl_base_addr;
-#endif
 int __libc_enable_secure attribute_relro = 0;
 rtld_hidden_data_def (__libc_enable_secure)
 /* This variable contains the lowest stack address ever used.  */
@@ -136,11 +133,6 @@ _dl_sysdep_start (void **start_argptr,
       case AT_ENTRY:
 	user_entry = av->a_un.a_val;
 	break;
-#ifdef NEED_DL_BASE_ADDR
-      case AT_BASE:
-	_dl_base_addr = av->a_un.a_val;
-	break;
-#endif
 #ifndef HAVE_AUX_SECURE
       case AT_UID:
       case AT_EUID:
