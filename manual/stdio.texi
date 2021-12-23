@@ -1949,6 +1949,9 @@ which can be parsed by the @code{strtoul} function (@pxref{Parsing of
 Integers}) and @code{scanf} with the @samp{%i} conversion
 (@pxref{Numeric Input Conversions}).
 
+For the @samp{%m} conversion, print an error constant or decimal error
+number, instead of a (possibly translated) error message.
+
 @item @samp{'}
 Separate the digits into groups as specified by the locale specified for
 the @code{LC_NUMERIC} category; @pxref{General Numeric}.  This flag is a
@@ -2271,8 +2274,9 @@ is equivalent to:
 fprintf (stderr, "can't open `%s': %s\n", filename, strerror (errno));
 @end smallexample
 
-@noindent
-The @samp{%m} conversion is a @glibcadj{} extension.
+The @samp{%m} conversion can be used with the @samp{#} flag to print an
+error constant, as provided by @code{strerrorname_np}.  Both @samp{%m}
+and @samp{%#m} are @glibcadj{} extensions.
 
 The @samp{%p} conversion prints a pointer value.  The corresponding
 argument must be of type @code{void *}.  In practice, you can use any

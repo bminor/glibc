@@ -99,6 +99,9 @@ Major new features:
   is set to 'madvise' mode while the latter uses the system reserved
   huge pages.
 
+* The printf family of functions now handles the flagged %#m conversion
+  specifier, printing errno as an error constant (similar to strerrorname_np).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On x86-64, the LD_PREFER_MAP_32BIT_EXEC environment variable support

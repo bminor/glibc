@@ -71,7 +71,9 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-printf-fp-free \
 	 tst-printf-fp-leak \
 	 test-strerr \
-	 tst-printf-binary
+	 tst-printf-binary \
+	 tst-sprintf-errno \
+	 # tests
 
 
 test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble

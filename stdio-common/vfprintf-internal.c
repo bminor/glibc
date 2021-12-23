@@ -950,11 +950,26 @@ static const uint8_t jump_table[] =
 									      \
     LABEL (form_strerror):						      \
       /* Print description of error ERRNO.  */				      \
-      string =								      \
-	(CHAR_T *) __strerror_r (save_errno, (char *) work_buffer,	      \
-				 WORK_BUFFER_SIZE * sizeof (CHAR_T));	      \
-      is_long = 0;		/* This is no wide-char string.  */	      \
-      goto LABEL (print_string)
+      if (alt)								      \
+	string = (CHAR_T *) __get_errname (save_errno);			      \
+      else								      \
+	string = (CHAR_T *) __strerror_r (save_errno, (char *) work_buffer,   \
+					  WORK_BUFFER_SIZE * sizeof (CHAR_T));\
+      if (string == NULL)						\
+	{								      \
+          /* Print as a decimal number. */				      \
+          base = 10;							      \
+	  is_negative = save_errno < 0;					      \
+	  number.word = save_errno;					      \
+	  if (is_negative)						      \
+	    number.word = -number.word;					      \
+	  goto LABEL (number);						      \
+	}								      \
+      else								      \
+	{								      \
+	  is_long = 0;	/* This is no wide-char string.  */		      \
+	  goto LABEL (print_string);					      \
+	}
 
 #ifdef COMPILE_WPRINTF
 # define process_string_arg()						      \
