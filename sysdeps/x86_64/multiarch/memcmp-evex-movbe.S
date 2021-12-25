@@ -62,14 +62,17 @@ Latency:
 # define VMOVU		vmovdqu64
 
 # ifdef USE_AS_WMEMCMP
+#  define VMOVU_MASK	vmovdqu32
 #  define CHAR_SIZE	4
 #  define VPCMP	vpcmpd
 #  define VPTEST	vptestmd
 # else
+#  define VMOVU_MASK	vmovdqu8
 #  define CHAR_SIZE	1
 #  define VPCMP	vpcmpub
 #  define VPTEST	vptestmb
 # endif
+
 
 # define VEC_SIZE	32
 # define PAGE_SIZE	4096
@@ -102,12 +105,48 @@ ENTRY_P2ALIGN (MEMCMP, 6)
 	movl	%edx, %edx
 # endif
 	cmp	$CHAR_PER_VEC, %RDX_LP
-	jb	L(less_vec)
+	/* Fall through for [0, VEC_SIZE] as its the hottest.  */
+	ja	L(more_1x_vec)
 
+	/* Create mask for CHAR's we want to compare. This allows us to
+	   avoid having to include page cross logic.  */
+	movl	$-1, %ecx
+	bzhil	%edx, %ecx, %ecx
+	kmovd	%ecx, %k2
+
+	/* Safe to load full ymm with mask.  */
+	VMOVU_MASK (%rsi), %YMM2{%k2}
+	VPCMP	$4,(%rdi), %YMM2, %k1{%k2}
+	kmovd	%k1, %eax
+	testl	%eax, %eax
+	jnz	L(return_vec_0)
+	ret
+
+	.p2align 4
+L(return_vec_0):
+	tzcntl	%eax, %eax
+# ifdef USE_AS_WMEMCMP
+	movl	(%rdi, %rax, CHAR_SIZE), %ecx
+	xorl	%edx, %edx
+	cmpl	(%rsi, %rax, CHAR_SIZE), %ecx
+	/* NB: no partial register stall here because xorl zero idiom
+	   above.  */
+	setg	%dl
+	leal	-1(%rdx, %rdx), %eax
+# else
+	movzbl	(%rsi, %rax), %ecx
+	movzbl	(%rdi, %rax), %eax
+	subl	%ecx, %eax
+# endif
+	ret
+
+
+	.p2align 4
+L(more_1x_vec):
 	/* From VEC to 2 * VEC.  No branch when size == VEC_SIZE.  */
 	VMOVU	(%rsi), %YMM1
 	/* Use compare not equals to directly check for mismatch.  */
-	VPCMP	$4, (%rdi), %YMM1, %k1
+	VPCMP	$4,(%rdi), %YMM1, %k1
 	kmovd	%k1, %eax
 	/* NB: eax must be destination register if going to
 	   L(return_vec_[0,2]). For L(return_vec_3) destination register
@@ -131,13 +170,13 @@ ENTRY_P2ALIGN (MEMCMP, 6)
 
 	/* Check third and fourth VEC no matter what.  */
 	VMOVU	(VEC_SIZE * 2)(%rsi), %YMM3
-	VPCMP	$4, (VEC_SIZE * 2)(%rdi), %YMM3, %k1
+	VPCMP	$4,(VEC_SIZE * 2)(%rdi), %YMM3, %k1
 	kmovd	%k1, %eax
 	testl	%eax, %eax
 	jnz	L(return_vec_2)
 
 	VMOVU	(VEC_SIZE * 3)(%rsi), %YMM4
-	VPCMP	$4, (VEC_SIZE * 3)(%rdi), %YMM4, %k1
+	VPCMP	$4,(VEC_SIZE * 3)(%rdi), %YMM4, %k1
 	kmovd	%k1, %ecx
 	testl	%ecx, %ecx
 	jnz	L(return_vec_3)
@@ -169,7 +208,7 @@ ENTRY_P2ALIGN (MEMCMP, 6)
 	VMOVU	(VEC_SIZE * 3)(%rsi), %YMM4
 	/* Ternary logic to xor (VEC_SIZE * 3)(%rdi) with YMM4 while
 	   oring with YMM1. Result is stored in YMM4.  */
-	vpternlogd $0xde, (VEC_SIZE * 3)(%rdi), %YMM1, %YMM4
+	vpternlogd $0xde,(VEC_SIZE * 3)(%rdi), %YMM1, %YMM4
 
 	/* Or together YMM2, YMM3, and YMM4 into YMM4.  */
 	vpternlogd $0xfe, %YMM2, %YMM3, %YMM4
@@ -184,7 +223,8 @@ ENTRY_P2ALIGN (MEMCMP, 6)
 	/* NB: eax must be zero to reach here.  */
 	ret
 
-	.p2align 4
+
+	.p2align 4,, 8
 L(8x_end_return_vec_0_1_2_3):
 	movq	%rdx, %rdi
 L(8x_return_vec_0_1_2_3):
@@ -222,23 +262,6 @@ L(return_vec_3):
 # endif
 	ret
 
-	.p2align 4
-L(return_vec_0):
-	tzcntl	%eax, %eax
-# ifdef USE_AS_WMEMCMP
-	movl	(%rdi, %rax, CHAR_SIZE), %ecx
-	xorl	%edx, %edx
-	cmpl	(%rsi, %rax, CHAR_SIZE), %ecx
-	/* NB: no partial register stall here because xorl zero idiom
-	   above.  */
-	setg	%dl
-	leal	-1(%rdx, %rdx), %eax
-# else
-	movzbl	(%rsi, %rax), %ecx
-	movzbl	(%rdi, %rax), %eax
-	subl	%ecx, %eax
-# endif
-	ret
 
 	.p2align 4
 L(return_vec_1):
@@ -297,7 +320,7 @@ L(loop_4x_vec):
 	VMOVU	(VEC_SIZE * 2)(%rsi, %rdi), %YMM3
 	vpxorq	(VEC_SIZE * 2)(%rdi), %YMM3, %YMM3
 	VMOVU	(VEC_SIZE * 3)(%rsi, %rdi), %YMM4
-	vpternlogd $0xde, (VEC_SIZE * 3)(%rdi), %YMM1, %YMM4
+	vpternlogd $0xde,(VEC_SIZE * 3)(%rdi), %YMM1, %YMM4
 	vpternlogd $0xfe, %YMM2, %YMM3, %YMM4
 	VPTEST	%YMM4, %YMM4, %k1
 	kmovd	%k1, %ecx
@@ -324,7 +347,7 @@ L(loop_4x_vec):
 	VMOVU	VEC_SIZE(%rsi, %rdx), %YMM2
 	vpxorq	VEC_SIZE(%rdx), %YMM2, %YMM2
 	VMOVU	(VEC_SIZE * 3)(%rsi, %rdx), %YMM4
-	vpternlogd $0xde, (VEC_SIZE * 3)(%rdx), %YMM1, %YMM4
+	vpternlogd $0xde,(VEC_SIZE * 3)(%rdx), %YMM1, %YMM4
 	vpternlogd $0xfe, %YMM2, %YMM3, %YMM4
 	VPTEST	%YMM4, %YMM4, %k1
 	kmovd	%k1, %ecx
@@ -336,14 +359,14 @@ L(loop_4x_vec):
 	/* Only entry is from L(more_8x_vec).  */
 	.p2align 4,, 10
 L(8x_last_2x_vec):
-	VPCMP	$4, (VEC_SIZE * 2)(%rdx), %YMM3, %k1
+	VPCMP	$4,(VEC_SIZE * 2)(%rdx), %YMM3, %k1
 	kmovd	%k1, %eax
 	testl	%eax, %eax
 	jnz	L(8x_return_vec_2)
 	/* Naturally aligned to 16 bytes.  */
 L(8x_last_1x_vec):
 	VMOVU	(VEC_SIZE * 3)(%rsi, %rdx), %YMM1
-	VPCMP	$4, (VEC_SIZE * 3)(%rdx), %YMM1, %k1
+	VPCMP	$4,(VEC_SIZE * 3)(%rdx), %YMM1, %k1
 	kmovd	%k1, %eax
 	testl	%eax, %eax
 	jnz	L(8x_return_vec_3)
@@ -392,7 +415,9 @@ L(last_1x_vec):
 	jnz	L(return_vec_0_end)
 	ret
 
-	.p2align 4,, 10
+
+	/* Don't align. Takes 2-fetch blocks either way and aligning
+	   will cause code to spill into another cacheline.  */
 L(return_vec_1_end):
 	/* Use bsf to save code size. This is necessary to have
 	   L(one_or_less) fit in aligning bytes between.  */
@@ -411,31 +436,8 @@ L(return_vec_1_end):
 # endif
 	ret
 
-	/* NB: L(one_or_less) fits in alignment padding between
-	   L(return_vec_1_end) and L(return_vec_0_end).  */
-# ifdef USE_AS_WMEMCMP
-L(one_or_less):
-	jb	L(zero)
-	movl	(%rdi), %ecx
-	xorl	%edx, %edx
-	cmpl	(%rsi), %ecx
-	je	L(zero)
-	setg	%dl
-	leal	-1(%rdx, %rdx), %eax
-	ret
-# else
-L(one_or_less):
-	jb	L(zero)
-	movzbl	(%rsi), %ecx
-	movzbl	(%rdi), %eax
-	subl	%ecx, %eax
-	ret
-# endif
-L(zero):
-	xorl	%eax, %eax
-	ret
-
-	.p2align 4
+	/* Don't align. Takes 2-fetch blocks either way and aligning
+	   will cause code to spill into another cacheline.  */
 L(return_vec_0_end):
 	tzcntl	%eax, %eax
 	addl	%edx, %eax
@@ -451,146 +453,7 @@ L(return_vec_0_end):
 	subl	%ecx, %eax
 # endif
 	ret
+	/* 1-byte until next cache line.  */
 
-	.p2align 4
-L(less_vec):
-	/* Check if one or less CHAR. This is necessary for size == 0
-	   but is also faster for size == CHAR_SIZE.  */
-	cmpl	$1, %edx
-	jbe	L(one_or_less)
-
-	/* Check if loading one VEC from either s1 or s2 could cause a
-	   page cross. This can have false positives but is by far the
-	   fastest method.  */
-	movl	%edi, %eax
-	orl	%esi, %eax
-	andl	$(PAGE_SIZE - 1), %eax
-	cmpl	$(PAGE_SIZE - VEC_SIZE), %eax
-	jg	L(page_cross_less_vec)
-
-	/* No page cross possible.  */
-	VMOVU	(%rsi), %YMM2
-	VPCMP	$4, (%rdi), %YMM2, %k1
-	kmovd	%k1, %eax
-	/* Check if any matches where in bounds. Intentionally not
-	   storing result in eax to limit dependency chain if it goes to
-	   L(return_vec_0_lv).  */
-	bzhil	%edx, %eax, %edx
-	jnz	L(return_vec_0_lv)
-	xorl	%eax, %eax
-	ret
-
-	/* Essentially duplicate of L(return_vec_0). Ends up not costing
-	   any code as shrinks L(less_vec) by allowing 2-byte encoding of
-	   the jump and ends up fitting in aligning bytes. As well fits on
-	   same cache line as L(less_vec) so also saves a line from having
-	   to be fetched on cold calls to memcmp.  */
-	.p2align 4,, 4
-L(return_vec_0_lv):
-	tzcntl	%eax, %eax
-# ifdef USE_AS_WMEMCMP
-	movl	(%rdi, %rax, CHAR_SIZE), %ecx
-	xorl	%edx, %edx
-	cmpl	(%rsi, %rax, CHAR_SIZE), %ecx
-	/* NB: no partial register stall here because xorl zero idiom
-	   above.  */
-	setg	%dl
-	leal	-1(%rdx, %rdx), %eax
-# else
-	movzbl	(%rsi, %rax), %ecx
-	movzbl	(%rdi, %rax), %eax
-	subl	%ecx, %eax
-# endif
-	ret
-
-	.p2align 4
-L(page_cross_less_vec):
-	/* if USE_AS_WMEMCMP it can only be 0, 4, 8, 12, 16, 20, 24, 28
-	   bytes.  */
-	cmpl	$(16 / CHAR_SIZE), %edx
-	jae	L(between_16_31)
-# ifndef USE_AS_WMEMCMP
-	cmpl	$8, %edx
-	jae	L(between_8_15)
-	cmpl	$4, %edx
-	jb	L(between_2_3)
-
-	/* Load as big endian with overlapping movbe to avoid branches.
-	 */
-	movbe	(%rdi), %eax
-	movbe	(%rsi), %ecx
-	shlq	$32, %rax
-	shlq	$32, %rcx
-	movbe	-4(%rdi, %rdx), %edi
-	movbe	-4(%rsi, %rdx), %esi
-	orq	%rdi, %rax
-	orq	%rsi, %rcx
-	subq	%rcx, %rax
-	/* edx is guranteed to be positive int32 in range [4, 7].  */
-	cmovne	%edx, %eax
-	/* ecx is -1 if rcx > rax. Otherwise 0.  */
-	sbbl	%ecx, %ecx
-	/* If rcx > rax, then ecx is 0 and eax is positive. If rcx ==
-	   rax then eax and ecx are zero. If rax < rax then ecx is -1 so
-	   eax doesn't matter.  */
-	orl	%ecx, %eax
-	ret
-
-	.p2align 4,, 8
-L(between_8_15):
-# endif
-	/* If USE_AS_WMEMCMP fall through into 8-15 byte case.  */
-	vmovq	(%rdi), %xmm1
-	vmovq	(%rsi), %xmm2
-	VPCMP	$4, %xmm1, %xmm2, %k1
-	kmovd	%k1, %eax
-	testl	%eax, %eax
-	jnz	L(return_vec_0_lv)
-	/* Use overlapping loads to avoid branches.  */
-	vmovq	-8(%rdi, %rdx, CHAR_SIZE), %xmm1
-	vmovq	-8(%rsi, %rdx, CHAR_SIZE), %xmm2
-	VPCMP	$4, %xmm1, %xmm2, %k1
-	addl	$(CHAR_PER_VEC - (8 / CHAR_SIZE)), %edx
-	kmovd	%k1, %eax
-	testl	%eax, %eax
-	jnz	L(return_vec_0_end)
-	ret
-
-	.p2align 4,, 8
-L(between_16_31):
-	/* From 16 to 31 bytes.  No branch when size == 16.  */
-
-	/* Use movups to save code size.  */
-	vmovdqu	(%rsi), %xmm2
-	VPCMP	$4, (%rdi), %xmm2, %k1
-	kmovd	%k1, %eax
-	testl	%eax, %eax
-	jnz	L(return_vec_0_lv)
-	/* Use overlapping loads to avoid branches.  */
-	vmovdqu	-16(%rsi, %rdx, CHAR_SIZE), %xmm2
-	VPCMP	$4, -16(%rdi, %rdx, CHAR_SIZE), %xmm2, %k1
-	addl	$(CHAR_PER_VEC - (16 / CHAR_SIZE)), %edx
-	kmovd	%k1, %eax
-	testl	%eax, %eax
-	jnz	L(return_vec_0_end)
-	ret
-
-# ifndef USE_AS_WMEMCMP
-L(between_2_3):
-	/* Load as big endian to avoid branches.  */
-	movzwl	(%rdi), %eax
-	movzwl	(%rsi), %ecx
-	shll	$8, %eax
-	shll	$8, %ecx
-	bswap	%eax
-	bswap	%ecx
-	movzbl	-1(%rdi, %rdx), %edi
-	movzbl	-1(%rsi, %rdx), %esi
-	orl	%edi, %eax
-	orl	%esi, %ecx
-	/* Subtraction is okay because the upper 8 bits are zero.  */
-	subl	%ecx, %eax
-	ret
-# endif
 END (MEMCMP)
 #endif
