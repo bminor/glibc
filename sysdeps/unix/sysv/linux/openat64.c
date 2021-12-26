@@ -21,12 +21,6 @@
 
 #include <sysdep-cancel.h>
 
-#ifdef __OFF_T_MATCHES_OFF64_T
-# define EXTRA_OPEN_FLAGS 0
-#else
-# define EXTRA_OPEN_FLAGS O_LARGEFILE
-#endif
-
 /* Open FILE with access OFLAG.  Interpret relative paths relative to
    the directory associated with FD.  If OFLAG includes O_CREAT or
    O_TMPFILE, a fourth argument is the file protection.  */
@@ -42,7 +36,7 @@ __libc_openat64 (int fd, const char *file, int oflag, ...)
       va_end (arg);
     }
 
-  return SYSCALL_CANCEL (openat, fd, file, oflag | EXTRA_OPEN_FLAGS, mode);
+  return SYSCALL_CANCEL (openat, fd, file, oflag | O_LARGEFILE, mode);
 }
 
 strong_alias (__libc_openat64, __openat64)

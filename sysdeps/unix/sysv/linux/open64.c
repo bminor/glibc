@@ -23,13 +23,6 @@
 #include <sysdep-cancel.h>
 #include <shlib-compat.h>
 
-
-#ifdef __OFF_T_MATCHES_OFF64_T
-# define EXTRA_OPEN_FLAGS 0
-#else
-# define EXTRA_OPEN_FLAGS O_LARGEFILE
-#endif
-
 /* Open FILE with access OFLAG.  If O_CREAT or O_TMPFILE is in OFLAG,
    a third argument is the file protection.  */
 int
@@ -45,7 +38,7 @@ __libc_open64 (const char *file, int oflag, ...)
       va_end (arg);
     }
 
-  return SYSCALL_CANCEL (openat, AT_FDCWD, file, oflag | EXTRA_OPEN_FLAGS,
+  return SYSCALL_CANCEL (openat, AT_FDCWD, file, oflag | O_LARGEFILE,
 			 mode);
 }
 
