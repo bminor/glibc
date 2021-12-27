@@ -177,6 +177,18 @@ $(objpfx)tst-malloc-thread-exit-malloc-check: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-fail-malloc-check: $(shared-thread-library)
 $(objpfx)tst-malloc-fork-deadlock-malloc-check: $(shared-thread-library)
 $(objpfx)tst-malloc-stats-cancellation-malloc-check: $(shared-thread-library)
+$(objpfx)tst-malloc-thread-exit-malloc-hugetlb1: $(shared-thread-library)
+$(objpfx)tst-malloc-thread-fail-malloc-hugetlb1: $(shared-thread-library)
+$(objpfx)tst-mallocfork2-malloc-hugetlb1: $(shared-thread-library)
+$(objpfx)tst-mallocfork3-malloc-hugetlb1: $(shared-thread-library)
+$(objpfx)tst-malloc-fork-deadlock-malloc-hugetlb1: $(shared-thread-library)
+$(objpfx)tst-malloc-stats-cancellation-malloc-hugetlb1: $(shared-thread-library)
+$(objpfx)tst-malloc-thread-exit-malloc-hugetlb2: $(shared-thread-library)
+$(objpfx)tst-malloc-thread-fail-malloc-hugetlb2: $(shared-thread-library)
+$(objpfx)tst-mallocfork2-malloc-hugetlb2: $(shared-thread-library)
+$(objpfx)tst-mallocfork3-malloc-hugetlb2: $(shared-thread-library)
+$(objpfx)tst-malloc-fork-deadlock-malloc-hugetlb2: $(shared-thread-library)
+$(objpfx)tst-malloc-stats-cancellation-malloc-hugetlb2: $(shared-thread-library)
 
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
@@ -339,6 +351,10 @@ $(objpfx)tst-mallocfork2-mcheck: $(shared-thread-library)
 $(objpfx)tst-malloc-tcache-leak-malloc-check: $(shared-thread-library)
 $(objpfx)tst-malloc_info-malloc-check: $(shared-thread-library)
 $(objpfx)tst-mallocfork2-malloc-check: $(shared-thread-library)
+$(objpfx)tst-malloc-tcache-leak-malloc-hugetlb1: $(shared-thread-library)
+$(objpfx)tst-malloc-tcache-leak-malloc-hugetlb2: $(shared-thread-library)
+$(objpfx)tst-malloc_info-malloc-hugetlb1: $(shared-thread-library)
+$(objpfx)tst-malloc_info-malloc-hugetlb2: $(shared-thread-library)
 
 tst-compathooks-on-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
 tst-compathooks-on-mcheck-ENV = LD_PRELOAD=$(objpfx)libc_malloc_debug.so
