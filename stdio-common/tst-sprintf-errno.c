@@ -48,16 +48,26 @@ do_test (void)
   TEST_COMPARE_STRING (buf, "0");
 
   errno = -1;
+#ifdef __GNU__
+  TEST_COMPARE (sprintf (buf, "%m"), 35);
+  TEST_COMPARE_STRING (buf, "Error in unknown error system: : -1");
+#else
   TEST_COMPARE (sprintf (buf, "%m"), 16);
   TEST_COMPARE_STRING (buf, "Unknown error -1");
+#endif
 
   errno = -1;
   TEST_COMPARE (sprintf (buf, "%#m"), 2);
   TEST_COMPARE_STRING (buf, "-1");
 
   errno = 1002003;
+#ifdef __GNU__
+  TEST_COMPARE (sprintf (buf, "%m"), 42);
+  TEST_COMPARE_STRING (buf, "(system kern) error with unknown subsystem");
+#else
   TEST_COMPARE (sprintf (buf, "%m"), 21);
   TEST_COMPARE_STRING (buf, "Unknown error 1002003");
+#endif
 
   errno = 1002003;
   TEST_COMPARE (sprintf (buf, "%#m"), 7);
