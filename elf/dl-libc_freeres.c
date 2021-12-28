@@ -17,8 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <ldsodefs.h>
+#include <dl-find_object.h>
 
 void
 __rtld_libc_freeres (void)
 {
+  _dl_find_object_freeres ();
 }

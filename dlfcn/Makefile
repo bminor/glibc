@@ -19,7 +19,7 @@ subdir		:= dlfcn
 
 include ../Makeconfig
 
-headers		:= bits/dlfcn.h dlfcn.h
+headers		:= bits/dlfcn.h bits/dl_find_object.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= libdl-compat
 routines = \

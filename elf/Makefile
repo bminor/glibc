@@ -25,7 +25,8 @@ headers		= elf.h bits/elfclass.h link.h bits/link.h bits/link_lavcurrent.h
 routines	= $(all-dl-routines) dl-support dl-iteratephdr \
 		  dl-addr dl-addr-obj enbl-secure dl-profstub \
 		  dl-origin dl-libc dl-sym dl-sysdep dl-error \
-		  dl-reloc-static-pie libc_early_init rtld_static_init
+		  dl-reloc-static-pie libc_early_init rtld_static_init \
+		  libc-dl_find_object
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
@@ -36,7 +37,8 @@ dl-routines	= $(addprefix dl-,load lookup object reloc deps \
 				  exception sort-maps lookup-direct \
 				  call-libc-early-init write \
 				  thread_gscope_wait tls_init_tp \
-				  debug-symbols minimal-malloc)
+				  debug-symbols minimal-malloc \
+			          find_object)
 ifeq (yes,$(use-ldconfig))
 dl-routines += dl-cache
 endif
@@ -62,6 +64,9 @@ all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 elide-routines.os = $(all-dl-routines) dl-support enbl-secure dl-origin \
 		    dl-sysdep dl-exception dl-reloc-static-pie \
 		    thread_gscope_wait rtld_static_init
+
+# These object files are only included in the dynamically-linked libc.
+shared-only-routines = libc-dl_find_object
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.
@@ -171,7 +176,8 @@ tests-static-normal := tst-array1-static tst-array5-static \
 
 tests-static-internal := tst-tls1-static \
 	       tst-ptrguard1-static tst-stackguard1-static \
-	       tst-tls1-static-non-pie
+	       tst-tls1-static-non-pie \
+	       tst-dl_find_object-static
 
 CRT-tst-tls1-static-non-pie := $(csu-objpfx)crt1.o
 tst-tls1-static-non-pie-no-pie = yes
@@ -241,7 +247,8 @@ tests-internal += loadtest unload unload2 circleload1 \
 	 tst-tls3 tst-tls6 tst-tls7 tst-tls8 tst-dlmopen2 \
 	 tst-ptrguard1 tst-stackguard1 \
 	 tst-create_format1 tst-tls-surplus tst-dl-hwcaps_split \
-	 tst-audit19a
+	 tst-audit19a \
+	 tst-dl_find_object tst-dl_find_object-threads
 tests-container += tst-pldd tst-dlopen-tlsmodid-container \
   tst-dlopen-self-container tst-preload-pthread-libc
 test-srcs = tst-pathopt
@@ -386,6 +393,15 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-audit19bmod \
 		tst-auditmod20 \
 		tst-auditmod22 \
+		tst-dl_find_object-mod1 \
+		tst-dl_find_object-mod2 \
+		tst-dl_find_object-mod3 \
+		tst-dl_find_object-mod4 \
+		tst-dl_find_object-mod5 \
+		tst-dl_find_object-mod6 \
+		tst-dl_find_object-mod7 \
+		tst-dl_find_object-mod8 \
+		tst-dl_find_object-mod9 \
 
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
@@ -2033,3 +2049,34 @@ $(objpfx)tst-ro-dynamic-mod.so: $(objpfx)tst-ro-dynamic-mod.os \
 		$(objpfx)tst-ro-dynamic-mod.os
 
 $(objpfx)tst-rtld-run-static.out: $(objpfx)/ldconfig
+
+$(objpfx)tst-dl_find_object.out: \
+  $(objpfx)tst-dl_find_object-mod1.so $(objpfx)tst-dl_find_object-mod2.so
+$(objpfx)tst-dl_find_object-static.out: \
+  $(objpfx)tst-dl_find_object-mod1.so $(objpfx)tst-dl_find_object-mod2.so
+tst-dl_find_object-static-ENV = $(static-dlopen-environment)
+CFLAGS-tst-dl_find_object.c += -funwind-tables
+CFLAGS-tst-dl_find_object-static.c += -funwind-tables
+LDFLAGS-tst-dl_find_object-static += -Wl,--eh-frame-hdr
+CFLAGS-tst-dl_find_object-mod1.c += -funwind-tables
+CFLAGS-tst-dl_find_object-mod2.c += -funwind-tables
+LDFLAGS-tst-dl_find_object-mod2.so += -Wl,--enable-new-dtags,-z,nodelete
+$(objpfx)tst-dl_find_object-threads: $(shared-thread-library)
+CFLAGS-tst-dl_find_object-threads.c += -funwind-tables
+$(objpfx)tst-dl_find_object-threads.out: \
+  $(objpfx)tst-dl_find_object-mod1.so \
+  $(objpfx)tst-dl_find_object-mod2.so \
+  $(objpfx)tst-dl_find_object-mod3.so \
+  $(objpfx)tst-dl_find_object-mod4.so \
+  $(objpfx)tst-dl_find_object-mod5.so \
+  $(objpfx)tst-dl_find_object-mod6.so \
+  $(objpfx)tst-dl_find_object-mod7.so \
+  $(objpfx)tst-dl_find_object-mod8.so \
+  $(objpfx)tst-dl_find_object-mod9.so
+CFLAGS-tst-dl_find_object-mod3.c += -funwind-tables
+CFLAGS-tst-dl_find_object-mod4.c += -funwind-tables
+CFLAGS-tst-dl_find_object-mod5.c += -funwind-tables
+CFLAGS-tst-dl_find_object-mod6.c += -funwind-tables
+CFLAGS-tst-dl_find_object-mod7.c += -funwind-tables
+CFLAGS-tst-dl_find_object-mod8.c += -funwind-tables
+CFLAGS-tst-dl_find_object-mod9.c += -funwind-tables

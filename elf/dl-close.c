@@ -32,6 +32,7 @@
 #include <sysdep-cancel.h>
 #include <tls.h>
 #include <stap-probe.h>
+#include <dl-find_object.h>
 
 #include <dl-unmap-segments.h>
 
@@ -681,6 +682,9 @@ _dl_close_worker (struct link_map *map, bool force)
 	  --ns->_ns_nloaded;
 	  if (imap->l_next != NULL)
 	    imap->l_next->l_prev = imap->l_prev;
+
+	  /* Update the data used by _dl_find_object.  */
+	  _dl_find_object_dlclose (imap);
 
 	  free (imap->l_versions);
 	  if (imap->l_origin != (char *) -1)

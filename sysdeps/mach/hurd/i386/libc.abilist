@@ -2286,6 +2286,7 @@ GLIBC_2.34 shm_open F
 GLIBC_2.34 shm_unlink F
 GLIBC_2.34 timespec_getres F
 GLIBC_2.35 __memcmpeq F
+GLIBC_2.35 _dl_find_object F
 GLIBC_2.35 close_range F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F

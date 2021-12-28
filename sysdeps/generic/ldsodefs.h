@@ -717,6 +717,11 @@ struct rtld_global_ro
   /* Called from __libc_shared to deallocate malloc'ed memory.  */
   void (*_dl_libc_freeres) (void);
 
+  /* Implementation of _dl_find_object.  The public entry point is in
+     libc, and this is patched by __rtld_static_init to support static
+     dlopen.  */
+  int (*_dl_find_object) (void *, struct dl_find_object *);
+
 #ifdef HAVE_DL_DISCOVER_OSVERSION
   int (*_dl_discover_osversion) (void);
 #endif

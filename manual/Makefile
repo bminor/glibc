@@ -39,7 +39,7 @@ chapters = $(addsuffix .texi, \
 		       pipe socket terminal syslog math arith time	\
 		       resource setjmp signal startup process ipc job	\
 		       nss users sysinfo conf crypt debug threads	\
-		       probes tunables)
+		       dynlink probes tunables)
 appendices = lang.texi header.texi install.texi maint.texi platform.texi \
 	     contrib.texi
 licenses = freemanuals.texi lgpl-2.1.texi fdl-1.3.texi

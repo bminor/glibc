@@ -31,6 +31,12 @@ __atomic_wide_counter_load_relaxed (__atomic_wide_counter *c)
 }
 
 static inline uint64_t
+__atomic_wide_counter_load_acquire (__atomic_wide_counter *c)
+{
+  return atomic_load_acquire (&c->__value64);
+}
+
+static inline uint64_t
 __atomic_wide_counter_fetch_add_relaxed (__atomic_wide_counter *c,
                                          unsigned int val)
 {
@@ -63,6 +69,14 @@ __atomic_wide_counter_fetch_xor_release (__atomic_wide_counter *c,
 
 uint64_t __atomic_wide_counter_load_relaxed (__atomic_wide_counter *c)
   attribute_hidden;
+
+static inline uint64_t
+__atomic_wide_counter_load_acquire (__atomic_wide_counter *c)
+{
+  uint64_t r = __atomic_wide_counter_load_relaxed (c);
+  atomic_thread_fence_acquire ();
+  return r;
+}
 
 uint64_t __atomic_wide_counter_fetch_add_relaxed (__atomic_wide_counter *c,
                                                   unsigned int op)

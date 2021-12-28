@@ -102,6 +102,10 @@ Major new features:
 * The printf family of functions now handles the flagged %#m conversion
   specifier, printing errno as an error constant (similar to strerrorname_np).
 
+* The function _dl_find_object has been added.  In-process unwinders
+  can use it to efficiently locate unwinding information for a code
+  address.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On x86-64, the LD_PREFER_MAP_32BIT_EXEC environment variable support

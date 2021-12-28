@@ -1,5 +1,5 @@
 @node Threads
-@c @node Threads, Internal Probes, Debugging Support, Top
+@c @node Threads, Dynamic Linker, Debugging Support, Top
 @c %MENU% Functions, constants, and data types for working with threads
 @chapter Threads
 @cindex threads

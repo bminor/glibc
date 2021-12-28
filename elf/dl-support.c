@@ -43,6 +43,7 @@
 #include <dl-vdso.h>
 #include <dl-vdso-setup.h>
 #include <dl-auxv.h>
+#include <dl-find_object.h>
 
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
@@ -416,6 +417,8 @@ _dl_non_dynamic_init (void)
 	  _dl_main_map.l_relro_size = ph->p_memsz;
 	  break;
 	}
+
+  call_function_static_weak (_dl_find_object_init);
 
   /* Setup relro on the binary itself.  */
   if (_dl_main_map.l_relro_size != 0)

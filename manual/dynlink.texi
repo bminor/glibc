@@ -1,0 +1,137 @@
+@node Dynamic Linker
+@c @node Dynamic Linker, Internal Probes, Threads, Top
+@c %MENU% Loading programs and shared objects.
+@chapter Dynamic Linker
+@cindex dynamic linker
+@cindex dynamic loader
+
+The @dfn{dynamic linker} is responsible for loading dynamically linked
+programs and their dependencies (in the form of shared objects).  The
+dynamic linker in @theglibc{} also supports loading shared objects (such
+as plugins) later at run time.
+
+Dynamic linkers are sometimes called @dfn{dynamic loaders}.
+
+@menu
+* Dynamic Linker Introspection::    Interfaces for querying mapping information.
+@end menu
+
+@node Dynamic Linker Introspection
+@section Dynamic Linker Introspection
+
+@Theglibc{} provides various functions for querying information from the
+dynamic linker.
+
+@deftp {Data Type} {struct dl_find_object}
+@standards{GNU, dlfcn.h}
+This structure contains information about a main program or loaded
+object.  The @code{_dl_find_object} function uses it to return
+result data to the caller.
+
+@table @code
+@item unsigned long long int dlfo_flags
+Currently unused and always 0.
+
+@item void *dlfo_map_start
+The start address of the inspected mapping.  This information comes from
+the program header, so it follows its convention, and the address is not
+necessarily page-aligned.
+
+@item void *dlfo_map_end
+The end address of the mapping.
+
+@item struct link_map *dlf_link_map
+This member contains a pointer to the link map of the object.
+
+@item struct link_map *dlf_link_map
+This member contains a pointer to the exception handling data of the
+object.  See @code{DLFO_EH_SEGMENT_TYPE} below.
+
+@end table
+
+This structure is a GNU extension.
+@end deftp
+
+@deftypevr Macro int DLFO_STRUCT_HAS_EH_DBASE
+@standards{GNU, dlfcn.h}
+On most targets, this macro is defined as @code{0}.  If it is defined to
+@code{1}, @code{struct dl_find_object} contains an additional member
+@code{dlfo_eh_dbase} of type @code{void *}.  It is the base address for
+@code{DW_EH_PE_datarel} DWARF encodings to this location.
+
+This macro is a GNU extension.
+@end deftypevr
+
+@deftypevr Macro int DLFO_STRUCT_HAS_EH_COUNT
+@standards{GNU, dlfcn.h}
+On most targets, this macro is defined as @code{0}.  If it is defined to
+@code{1}, @code{struct dl_find_object} contains an additional member
+@code{dlfo_eh_count} of type @code{int}.  It is the number of exception
+handling entries in the EH frame segment identified by the
+@code{dlfo_eh_frame} member.
+
+This macro is a GNU extension.
+@end deftypevr
+
+@deftypevr Macro int DLFO_EH_SEGMENT_TYPE
+@standards{GNU, dlfcn.h}
+On targets using DWARF-based exception unwinding, this macro expands to
+@code{PT_GNU_EH_FRAME}.  This indicates that @code{dlfo_eh_frame} in
+@code{struct dl_find_object} points to the @code{PT_GNU_EH_FRAME}
+segment of the object.  On targets that use other unwinding formats, the
+macro expands to the program header type for the unwinding data.
+
+This macro is a GNU extension.
+@end deftypevr
+
+@deftypefun {int} _dl_find_object (void *@var{address}, struct dl_find_object *@var{result})
+@standards{GNU, dlfcn.h}
+@safety{@mtsafe{}@assafe{}@acsafe{}}
+On success, this function returns 0 and writes about the object
+surrounding the address to @code{*@var{result}}.  On failure, -1 is
+returned.
+
+The @var{address} can be a code address or data address.  On
+architectures using function descriptors, no attempt is made to decode
+the function descriptor.  Depending on how these descriptors are
+implemented, @code{_dl_find_object} may return the object that defines
+the function descriptor (and not the object that contains the code
+implementing the function), or fail to find any object at all.
+
+On success @var{address} is greater than or equal to
+@code{@var{result}->dlfo_map_start} and less than
+@code{@var{result}->dlfo_map_end}, that is, the supplied code address is
+located within the reported mapping.
+
+This function returns a pointer to the unwinding information for the
+object that contains the program code @var{address} in
+@code{@var{result}->dlfo_eh_frame}.  If the platform uses DWARF
+unwinding information, this is the in-memory address of the
+@code{PT_GNU_EH_FRAME} segment.  See @code{DLFO_EH_SEGMENT_TYPE} above.
+In case @var{address} resides in an object that lacks unwinding information,
+the function still returns 0, but sets @code{@var{result}->dlfo_eh_frame}
+to a null pointer.
+
+@code{_dl_find_object} itself is thread-safe.  However, if the
+application invokes @code{dlclose} for the object that contains
+@var{address} concurrently with @code{_dl_find_object} or after the call
+returns, accessing the unwinding data for that object or the link map
+(through @code{@var{result}->dlfo_link_map}) is not safe.  Therefore, the
+application needs to ensure by other means (e.g., by convention) that
+@var{address} remains a valid code address while the unwinding
+information is processed.
+
+This function is a GNU extension.
+@end deftypefun
+
+
+@c FIXME these are undocumented:
+@c dladdr
+@c dladdr1
+@c dlclose
+@c dlerror
+@c dlinfo
+@c dlmopen
+@c dlopen
+@c dlsym
+@c dlvsym

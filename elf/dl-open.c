@@ -36,6 +36,7 @@
 #include <array_length.h>
 #include <libc-early-init.h>
 #include <gnu/lib-names.h>
+#include <dl-find_object.h>
 
 #include <dl-dst.h>
 #include <dl-prop.h>
@@ -730,6 +731,10 @@ dl_open_worker_begin (void *a)
      update.  After this, dlsym and lazy binding can bind to new
      objects.  */
   update_scopes (new);
+
+  if (!_dl_find_object_update (new))
+    _dl_signal_error (ENOMEM, new->l_libname->name, NULL,
+		      N_ ("cannot allocate address lookup data"));
 
   /* FIXME: It is unclear whether the order here is correct.
      Shouldn't new objects be made available for binding (and thus

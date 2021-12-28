@@ -20,6 +20,9 @@ libc {
     __register_frame_info_table_bases; _Unwind_Find_FDE;
   }
 %endif
+  GLIBC_2.35 {
+    _dl_find_object;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __libc_early_init;
