@@ -184,9 +184,6 @@ init (int *data)
       _dl_phnum = d->phdrsz / sizeof (ElfW(Phdr));
       assert (d->phdrsz % sizeof (ElfW(Phdr)) == 0);
     }
-
-  /* We need to setup TLS before initializing libpthread.  */
-  __libc_setup_tls ();
 #endif
 
   /* Call `init1' (above) with the user code as the return address, and the
