@@ -22,7 +22,9 @@
 #include <sys/poll.h>
 #include <sysdep-cancel.h>
 
-#ifndef __ASSUME_PSELECT
+#ifndef __ASSUME_TIME64_SYSCALL
+#include <sysdeps/unix/sysv/linux/pselect32.c>
+#elif !defined __ASSUME_PSELECT
 int
 __pselect32 (int nfds, fd_set *readfds, fd_set *writefds,
 	     fd_set *exceptfds, const struct __timespec64 *timeout,
