@@ -21,6 +21,8 @@
 #include <lock-intern.h>	/* For `struct mutex'.  */
 #include <vm_param.h>
 
+#include "set-hooks.h"
+
 
 /* Initial maximum size of the data segment (this is arbitrary).  */
 #define	DATA_SIZE	(128 * 1024 * 1024)
@@ -130,7 +132,7 @@ _hurd_set_brk (vm_address_t addr)
   return 0;
 }
 
-static void
+static void attribute_used_retain
 init_brk (void)
 {
   vm_address_t pagend;
@@ -160,7 +162,5 @@ init_brk (void)
 	/* Couldn't allocate the memory.  The break will be very short.  */
 	_hurd_data_end = pagend;
     }
-
-  (void) &init_brk;		/* Avoid ``defined but not used'' warning.  */
 }
-text_set_element (_hurd_preinit_hook, init_brk);
+SET_RELHOOK (_hurd_preinit_hook, init_brk);

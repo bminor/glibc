@@ -17,11 +17,12 @@
 
 #include <hurd.h>
 #include <lowlevellock.h>
+#include "set-hooks.h"
 
 pid_t _hurd_pid, _hurd_ppid, _hurd_pgrp;
 int _hurd_orphaned;
 
-static void
+static void attribute_used_retain
 init_pids (void)
 {
   __USEPORT (PROC,
@@ -29,11 +30,9 @@ init_pids (void)
 	       __proc_getpids (port, &_hurd_pid, &_hurd_ppid, &_hurd_orphaned);
 	       __proc_getpgrp (port, _hurd_pid, &_hurd_pgrp);
 	     }));
-
-  (void) &init_pids;		/* Avoid "defined but not used" warning.  */
 }
 
-text_set_element (_hurd_proc_subinit, init_pids);
+SET_RELHOOK (_hurd_proc_subinit, init_pids);
 
 #include <hurd/msg_server.h>
 #include "set-hooks.h"

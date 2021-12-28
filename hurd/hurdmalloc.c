@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include "set-hooks.h"
 
 #include "hurdmalloc.h"		/* XXX see that file */
 
@@ -148,7 +149,7 @@ static struct free_list malloc_free_list[NBUCKETS];
    It preserves the values of data variables like malloc_free_list, but
    does not save the vm_allocate'd space allocated by this malloc.  */
 
-static void
+static void attribute_used_retain
 malloc_init (void)
 {
   int i;
@@ -160,11 +161,6 @@ malloc_init (void)
       malloc_free_list[i].in_use = 0;
 #endif
     }
-
-  /* This not only suppresses a `defined but not used' warning,
-     but it is ABSOLUTELY NECESSARY to avoid the hyperclever
-     compiler from "optimizing out" the entire function!  */
-  (void) &malloc_init;
 }
 
 static void
@@ -445,4 +441,4 @@ _hurd_malloc_fork_child(void)
 }
 
 
-text_set_element (_hurd_preinit_hook, malloc_init);
+SET_RELHOOK (_hurd_preinit_hook, malloc_init);

@@ -79,7 +79,7 @@ check_standard_fds (void)
   check_one_fd (STDERR_FILENO, O_RDWR);
 }
 
-static void
+static void attribute_used_retain
 init_standard_fds (void)
 {
   /* Now that we have FDs, make sure that, if this is a SUID program,
@@ -87,10 +87,8 @@ init_standard_fds (void)
      ourselves.  If that's not possible we stop the program.  */
   if (__builtin_expect (__libc_enable_secure, 0))
     check_standard_fds ();
-
-  (void) &init_standard_fds;	/* Avoid "defined but not used" warning.  */
 }
-text_set_element (_hurd_fd_subinit, init_standard_fds);
+SET_RELHOOK (_hurd_fd_subinit, init_standard_fds);
 
 
 #ifndef SHARED

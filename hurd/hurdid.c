@@ -17,6 +17,7 @@
 
 #include <hurd.h>
 #include <hurd/id.h>
+#include "set-hooks.h"
 
 struct hurd_id_data _hurd_id;
 
@@ -74,7 +75,7 @@ _hurd_check_ids (void)
   return 0;
 }
 
-static void
+static void attribute_used_retain
 init_id (void)
 {
   __mutex_init (&_hurd_id.lock);
@@ -84,7 +85,5 @@ init_id (void)
   _hurd_id.gen.nuids = _hurd_id.aux.nuids = 0;
   _hurd_id.gen.gids = _hurd_id.aux.gids = NULL;
   _hurd_id.gen.ngids = _hurd_id.aux.ngids = 0;
-
-  (void) &init_id;		/* Avoid "defined but not used" warning.  */
 }
-text_set_element (_hurd_preinit_hook, init_id);
+SET_RELHOOK (_hurd_preinit_hook, init_id);

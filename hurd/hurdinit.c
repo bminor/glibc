@@ -108,7 +108,7 @@ _hurd_init (int flags, char **argv,
   /* Call other things which want to do some initialization.  These are not
      on the __libc_subinit hook because things there like to be able to
      assume the availability of the POSIX.1 services we provide.  */
-  RUN_HOOK (_hurd_subinit, ());
+  RUN_RELHOOK (_hurd_subinit, ());
 }
 libc_hidden_def (_hurd_init)
 
@@ -190,7 +190,7 @@ _hurd_new_proc_init (char **argv,
   /* Call other things which want to do some initialization.  These are not
      on the _hurd_subinit hook because things there assume that things done
      here, like _hurd_pid, are already initialized.  */
-  RUN_HOOK (_hurd_proc_subinit, ());
+  RUN_RELHOOK (_hurd_proc_subinit, ());
 
   /* XXX This code should probably be removed entirely at some point.  This
      conditional should make it reasonably usable with old gdb's for a
@@ -242,7 +242,7 @@ _hurd_setproc (process_t procserver)
 
     /* Call these functions again so they can fetch the
        new information from the new proc server.  */
-    RUN_HOOK (_hurd_proc_subinit, ());
+    RUN_RELHOOK (_hurd_proc_subinit, ());
 
     if (_hurd_pgrp != oldpgrp)
       {

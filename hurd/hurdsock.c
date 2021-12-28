@@ -25,6 +25,7 @@
 #include <_itoa.h>
 #include <lock-intern.h>	/* For `struct mutex'.  */
 #include "hurdmalloc.h"		/* XXX */
+#include "set-hooks.h"
 
 static struct mutex lock;
 
@@ -109,7 +110,7 @@ retry:
   return server;
 }
 
-static void
+static void attribute_used_retain
 init (void)
 {
   int i;
@@ -118,7 +119,5 @@ init (void)
 
   for (i = 0; i < max_domain; ++i)
     servers[i] = MACH_PORT_NULL;
-
-  (void) &init;			/* Avoid "defined but not used" warning.  */
 }
-text_set_element (_hurd_preinit_hook, init);
+SET_RELHOOK (_hurd_preinit_hook, init);

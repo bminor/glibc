@@ -242,7 +242,7 @@ first_init (void)
   /* Initialize data structures so we can do RPCs.  */
   __mach_init ();
 
-  RUN_HOOK (_hurd_preinit_hook, ());
+  RUN_RELHOOK (_hurd_preinit_hook, ());
 }
 
 #ifdef SHARED

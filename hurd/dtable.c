@@ -36,7 +36,7 @@ DEFINE_HOOK (_hurd_fd_subinit, (void));
 
 /* Initialize the file descriptor table at startup.  */
 
-static void
+static void attribute_used_retain
 init_dtable (void)
 {
   int i;
@@ -91,12 +91,10 @@ init_dtable (void)
 
   /* Run things that want to run after the file descriptor table
      is initialized.  */
-  RUN_HOOK (_hurd_fd_subinit, ());
-
-  (void) &init_dtable;		/* Avoid "defined but not used" warning.  */
+  RUN_RELHOOK (_hurd_fd_subinit, ());
 }
 
-text_set_element (_hurd_subinit, init_dtable);
+SET_RELHOOK (_hurd_subinit, init_dtable);
 
 /* XXX when the linker supports it, the following functions should all be
    elsewhere and just have text_set_elements here.  */
