@@ -134,6 +134,10 @@
 #  define __DECL_SIMD_asinh __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_asinhf
 #  define __DECL_SIMD_asinhf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_erfc
+#  define __DECL_SIMD_erfc __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_erfcf
+#  define __DECL_SIMD_erfcf __DECL_SIMD_x86_64
 
 # endif
 #endif

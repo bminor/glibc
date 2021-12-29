@@ -46,6 +46,7 @@ VECTOR_WRAPPER (WRAPPER_NAME (acoshf), _ZGVbN4v_acoshf)
 VECTOR_WRAPPER (WRAPPER_NAME (erff), _ZGVbN4v_erff)
 VECTOR_WRAPPER (WRAPPER_NAME (tanhf), _ZGVbN4v_tanhf)
 VECTOR_WRAPPER (WRAPPER_NAME (asinhf), _ZGVbN4v_asinhf)
+VECTOR_WRAPPER (WRAPPER_NAME (erfcf), _ZGVbN4v_erfcf)
 
 #define VEC_INT_TYPE __m128i
 

@@ -1359,6 +1359,26 @@ float: 6
 float128: 5
 ldouble: 5
 
+Function: "erfc_vlen16":
+float: 1
+
+Function: "erfc_vlen2":
+double: 1
+
+Function: "erfc_vlen4":
+double: 1
+float: 1
+
+Function: "erfc_vlen4_avx2":
+double: 1
+
+Function: "erfc_vlen8":
+double: 1
+float: 1
+
+Function: "erfc_vlen8_avx2":
+float: 1
+
 Function: "exp":
 double: 1
 float: 1

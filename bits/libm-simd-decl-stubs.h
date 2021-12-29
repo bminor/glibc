@@ -307,4 +307,15 @@
 #define __DECL_SIMD_asinhf32x
 #define __DECL_SIMD_asinhf64x
 #define __DECL_SIMD_asinhf128x
+
+#define __DECL_SIMD_erfc
+#define __DECL_SIMD_erfcf
+#define __DECL_SIMD_erfcl
+#define __DECL_SIMD_erfcf16
+#define __DECL_SIMD_erfcf32
+#define __DECL_SIMD_erfcf64
+#define __DECL_SIMD_erfcf128
+#define __DECL_SIMD_erfcf32x
+#define __DECL_SIMD_erfcf64x
+#define __DECL_SIMD_erfcf128x
 #endif

@@ -229,7 +229,7 @@ __MATHCALL (yn,, (int, _Mdouble_));
 #if defined __USE_XOPEN || defined __USE_ISOC99
 /* Error and gamma functions.  */
 __MATHCALL_VEC (erf,, (_Mdouble_));
-__MATHCALL (erfc,, (_Mdouble_));
+__MATHCALL_VEC (erfc,, (_Mdouble_));
 __MATHCALL (lgamma,, (_Mdouble_));
 #endif
 
