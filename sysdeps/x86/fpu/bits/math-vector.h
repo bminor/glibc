@@ -94,6 +94,10 @@
 #  define __DECL_SIMD_sinh __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_sinhf
 #  define __DECL_SIMD_sinhf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_cbrt
+#  define __DECL_SIMD_cbrt __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_cbrtf
+#  define __DECL_SIMD_cbrtf __DECL_SIMD_x86_64
 
 # endif
 #endif

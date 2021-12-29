@@ -149,7 +149,7 @@ __MATHCALL_VEC (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Return the cube root of X.  */
-__MATHCALL (cbrt,, (_Mdouble_ __x));
+__MATHCALL_VEC (cbrt,, (_Mdouble_ __x));
 #endif
 
 

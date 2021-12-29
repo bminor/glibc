@@ -197,4 +197,15 @@
 #define __DECL_SIMD_sinhf32x
 #define __DECL_SIMD_sinhf64x
 #define __DECL_SIMD_sinhf128x
+
+#define __DECL_SIMD_cbrt
+#define __DECL_SIMD_cbrtf
+#define __DECL_SIMD_cbrtl
+#define __DECL_SIMD_cbrtf16
+#define __DECL_SIMD_cbrtf32
+#define __DECL_SIMD_cbrtf64
+#define __DECL_SIMD_cbrtf128
+#define __DECL_SIMD_cbrtf32x
+#define __DECL_SIMD_cbrtf64x
+#define __DECL_SIMD_cbrtf128x
 #endif

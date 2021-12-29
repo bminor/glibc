@@ -583,6 +583,26 @@ float: 1
 float128: 1
 ldouble: 1
 
+Function: "cbrt_vlen16":
+float: 1
+
+Function: "cbrt_vlen2":
+double: 1
+
+Function: "cbrt_vlen4":
+double: 1
+float: 2
+
+Function: "cbrt_vlen4_avx2":
+double: 1
+
+Function: "cbrt_vlen8":
+double: 1
+float: 2
+
+Function: "cbrt_vlen8_avx2":
+float: 2
+
 Function: Real part of "ccos":
 double: 1
 float: 1
