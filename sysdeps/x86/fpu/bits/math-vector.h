@@ -122,6 +122,10 @@
 #  define __DECL_SIMD_acosh __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_acoshf
 #  define __DECL_SIMD_acoshf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_erf
+#  define __DECL_SIMD_erf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_erff
+#  define __DECL_SIMD_erff __DECL_SIMD_x86_64
 
 # endif
 #endif

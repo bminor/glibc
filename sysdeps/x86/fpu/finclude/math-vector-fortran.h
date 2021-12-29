@@ -60,6 +60,8 @@
 !GCC$ builtin (atanhf) attributes simd (notinbranch) if('x86_64')
 !GCC$ builtin (acosh) attributes simd (notinbranch) if('x86_64')
 !GCC$ builtin (acoshf) attributes simd (notinbranch) if('x86_64')
+!GCC$ builtin (erf) attributes simd (notinbranch) if('x86_64')
+!GCC$ builtin (erff) attributes simd (notinbranch) if('x86_64')
 
 !GCC$ builtin (cos) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (cosf) attributes simd (notinbranch) if('x32')
@@ -105,3 +107,5 @@
 !GCC$ builtin (atanhf) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (acosh) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (acoshf) attributes simd (notinbranch) if('x32')
+!GCC$ builtin (erf) attributes simd (notinbranch) if('x32')
+!GCC$ builtin (erff) attributes simd (notinbranch) if('x32')

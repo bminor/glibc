@@ -46,6 +46,7 @@ VECTOR_WRAPPER (WRAPPER_NAME (log2f), _ZGVdN8v_log2f)
 VECTOR_WRAPPER (WRAPPER_NAME (log1pf), _ZGVdN8v_log1pf)
 VECTOR_WRAPPER (WRAPPER_NAME (atanhf), _ZGVdN8v_atanhf)
 VECTOR_WRAPPER (WRAPPER_NAME (acoshf), _ZGVdN8v_acoshf)
+VECTOR_WRAPPER (WRAPPER_NAME (erff), _ZGVdN8v_erff)
 
 /* Redefinition of wrapper to be compatible with _ZGVdN8vvv_sincosf.  */
 #undef VECTOR_WRAPPER_fFF

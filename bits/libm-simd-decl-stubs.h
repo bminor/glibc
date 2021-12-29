@@ -274,4 +274,15 @@
 #define __DECL_SIMD_acoshf32x
 #define __DECL_SIMD_acoshf64x
 #define __DECL_SIMD_acoshf128x
+
+#define __DECL_SIMD_erf
+#define __DECL_SIMD_erff
+#define __DECL_SIMD_erfl
+#define __DECL_SIMD_erff16
+#define __DECL_SIMD_erff32
+#define __DECL_SIMD_erff64
+#define __DECL_SIMD_erff128
+#define __DECL_SIMD_erff32x
+#define __DECL_SIMD_erff64x
+#define __DECL_SIMD_erff128x
 #endif
