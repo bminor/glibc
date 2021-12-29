@@ -68,7 +68,7 @@ __MATHCALL (tan,, (_Mdouble_ __x));
 /* Hyperbolic functions.  */
 
 /* Hyperbolic cosine of X.  */
-__MATHCALL (cosh,, (_Mdouble_ __x));
+__MATHCALL_VEC (cosh,, (_Mdouble_ __x));
 /* Hyperbolic sine of X.  */
 __MATHCALL (sinh,, (_Mdouble_ __x));
 /* Hyperbolic tangent of X.  */

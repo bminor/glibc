@@ -891,6 +891,26 @@ float: 2
 float128: 3
 ldouble: 3
 
+Function: "cosh_vlen16":
+float: 2
+
+Function: "cosh_vlen2":
+double: 2
+
+Function: "cosh_vlen4":
+double: 2
+float: 2
+
+Function: "cosh_vlen4_avx2":
+double: 2
+
+Function: "cosh_vlen8":
+double: 2
+float: 2
+
+Function: "cosh_vlen8_avx2":
+float: 2
+
 Function: Real part of "cpow":
 double: 2
 float: 5

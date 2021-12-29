@@ -26,6 +26,7 @@ libmvec-funcs = \
   asin \
   atan \
   cos \
+  cosh \
   exp \
   exp10 \
   exp2 \

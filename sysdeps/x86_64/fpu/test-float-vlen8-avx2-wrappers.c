@@ -36,6 +36,7 @@ VECTOR_WRAPPER (WRAPPER_NAME (asinf), _ZGVdN8v_asinf)
 VECTOR_WRAPPER_ff (WRAPPER_NAME (hypotf), _ZGVdN8vv_hypotf)
 VECTOR_WRAPPER (WRAPPER_NAME (exp2f), _ZGVdN8v_exp2f)
 VECTOR_WRAPPER (WRAPPER_NAME (exp10f), _ZGVdN8v_exp10f)
+VECTOR_WRAPPER (WRAPPER_NAME (coshf), _ZGVdN8v_coshf)
 
 /* Redefinition of wrapper to be compatible with _ZGVdN8vvv_sincosf.  */
 #undef VECTOR_WRAPPER_fFF
