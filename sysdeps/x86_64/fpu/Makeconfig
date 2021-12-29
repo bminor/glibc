@@ -36,6 +36,7 @@ libmvec-funcs = \
   hypot \
   log \
   log10 \
+  log2 \
   pow \
   sin \
   sincos \

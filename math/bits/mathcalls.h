@@ -130,7 +130,7 @@ __MATHCALL (logb,, (_Mdouble_ __x));
 __MATHCALL_VEC (exp2,, (_Mdouble_ __x));
 
 /* Compute base-2 logarithm of X.  */
-__MATHCALL (log2,, (_Mdouble_ __x));
+__MATHCALL_VEC (log2,, (_Mdouble_ __x));
 #endif
 
 
