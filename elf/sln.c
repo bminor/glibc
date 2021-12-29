@@ -153,11 +153,11 @@ makesymlinks (const char *file)
 static int
 makesymlink (const char *src, const char *dest)
 {
-  struct stat64 stats;
+  struct stat stats;
   const char *error;
 
   /* Destination must not be a directory. */
-  if (lstat64 (dest, &stats) == 0)
+  if (lstat (dest, &stats) == 0)
     {
       if (S_ISDIR (stats.st_mode))
 	{
