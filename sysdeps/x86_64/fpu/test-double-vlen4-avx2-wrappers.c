@@ -33,6 +33,7 @@ VECTOR_WRAPPER_ff (WRAPPER_NAME (pow), _ZGVdN4vv_pow)
 VECTOR_WRAPPER (WRAPPER_NAME (acos), _ZGVdN4v_acos)
 VECTOR_WRAPPER (WRAPPER_NAME (atan), _ZGVdN4v_atan)
 VECTOR_WRAPPER (WRAPPER_NAME (asin), _ZGVdN4v_asin)
+VECTOR_WRAPPER_ff (WRAPPER_NAME (hypot), _ZGVdN4vv_hypot)
 
 #ifndef __ILP32__
 # define VEC_INT_TYPE __m256i

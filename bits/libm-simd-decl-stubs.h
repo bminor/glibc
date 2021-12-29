@@ -131,4 +131,15 @@
 #define __DECL_SIMD_asinf32x
 #define __DECL_SIMD_asinf64x
 #define __DECL_SIMD_asinf128x
+
+#define __DECL_SIMD_hypot
+#define __DECL_SIMD_hypotf
+#define __DECL_SIMD_hypotl
+#define __DECL_SIMD_hypotf16
+#define __DECL_SIMD_hypotf32
+#define __DECL_SIMD_hypotf64
+#define __DECL_SIMD_hypotf128
+#define __DECL_SIMD_hypotf32x
+#define __DECL_SIMD_hypotf64x
+#define __DECL_SIMD_hypotf128x
 #endif

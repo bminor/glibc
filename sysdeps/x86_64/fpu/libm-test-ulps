@@ -1375,6 +1375,26 @@ double: 1
 float128: 1
 ldouble: 1
 
+Function: "hypot_vlen16":
+float: 1
+
+Function: "hypot_vlen2":
+double: 1
+
+Function: "hypot_vlen4":
+double: 1
+float: 1
+
+Function: "hypot_vlen4_avx2":
+double: 1
+
+Function: "hypot_vlen8":
+double: 1
+float: 1
+
+Function: "hypot_vlen8_avx2":
+float: 1
+
 Function: "j0":
 double: 3
 float: 9

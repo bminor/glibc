@@ -30,6 +30,7 @@ VECTOR_WRAPPER_ff (WRAPPER_NAME (powf), _ZGVeN16vv_powf)
 VECTOR_WRAPPER (WRAPPER_NAME (acosf), _ZGVeN16v_acosf)
 VECTOR_WRAPPER (WRAPPER_NAME (atanf), _ZGVeN16v_atanf)
 VECTOR_WRAPPER (WRAPPER_NAME (asinf), _ZGVeN16v_asinf)
+VECTOR_WRAPPER_ff (WRAPPER_NAME (hypotf), _ZGVeN16vv_hypotf)
 
 #define VEC_INT_TYPE __m512i
 

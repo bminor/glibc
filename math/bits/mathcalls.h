@@ -144,7 +144,7 @@ __MATHCALL (sqrt,, (_Mdouble_ __x));
 
 #if defined __USE_XOPEN || defined __USE_ISOC99
 /* Return `sqrt(X*X + Y*Y)'.  */
-__MATHCALL (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
+__MATHCALL_VEC (hypot,, (_Mdouble_ __x, _Mdouble_ __y));
 #endif
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99

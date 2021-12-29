@@ -34,6 +34,8 @@
 !GCC$ builtin (atanf) attributes simd (notinbranch) if('x86_64')
 !GCC$ builtin (asin) attributes simd (notinbranch) if('x86_64')
 !GCC$ builtin (asinf) attributes simd (notinbranch) if('x86_64')
+!GCC$ builtin (hypot) attributes simd (notinbranch) if('x86_64')
+!GCC$ builtin (hypotf) attributes simd (notinbranch) if('x86_64')
 
 !GCC$ builtin (cos) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (cosf) attributes simd (notinbranch) if('x32')
@@ -53,3 +55,5 @@
 !GCC$ builtin (atanf) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (asin) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (asinf) attributes simd (notinbranch) if('x32')
+!GCC$ builtin (hypot) attributes simd (notinbranch) if('x32')
+!GCC$ builtin (hypotf) attributes simd (notinbranch) if('x32')
