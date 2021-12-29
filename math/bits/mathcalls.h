@@ -52,7 +52,7 @@
 /* Arc cosine of X.  */
 __MATHCALL_VEC (acos,, (_Mdouble_ __x));
 /* Arc sine of X.  */
-__MATHCALL (asin,, (_Mdouble_ __x));
+__MATHCALL_VEC (asin,, (_Mdouble_ __x));
 /* Arc tangent of X.  */
 __MATHCALL_VEC (atan,, (_Mdouble_ __x));
 /* Arc tangent of Y/X.  */

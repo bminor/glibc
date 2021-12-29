@@ -66,6 +66,10 @@
 #  define __DECL_SIMD_atan __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_atanf
 #  define __DECL_SIMD_atanf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_asin
+#  define __DECL_SIMD_asin __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_asinf
+#  define __DECL_SIMD_asinf __DECL_SIMD_x86_64
 
 # endif
 #endif

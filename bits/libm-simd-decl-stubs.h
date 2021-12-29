@@ -120,4 +120,15 @@
 #define __DECL_SIMD_atanf32x
 #define __DECL_SIMD_atanf64x
 #define __DECL_SIMD_atanf128x
+
+#define __DECL_SIMD_asin
+#define __DECL_SIMD_asinf
+#define __DECL_SIMD_asinl
+#define __DECL_SIMD_asinf16
+#define __DECL_SIMD_asinf32
+#define __DECL_SIMD_asinf64
+#define __DECL_SIMD_asinf128
+#define __DECL_SIMD_asinf32x
+#define __DECL_SIMD_asinf64x
+#define __DECL_SIMD_asinf128x
 #endif

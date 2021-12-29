@@ -93,6 +93,26 @@ float: 1
 float128: 2
 ldouble: 1
 
+Function: "asin_vlen16":
+float: 1
+
+Function: "asin_vlen2":
+double: 1
+
+Function: "asin_vlen4":
+double: 1
+float: 1
+
+Function: "asin_vlen4_avx2":
+double: 1
+
+Function: "asin_vlen8":
+double: 1
+float: 1
+
+Function: "asin_vlen8_avx2":
+float: 1
+
 Function: "asinh":
 double: 2
 float: 2
