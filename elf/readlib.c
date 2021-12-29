@@ -74,10 +74,10 @@ int
 process_file (const char *real_file_name, const char *file_name,
 	      const char *lib, int *flag, unsigned int *osversion,
 	      unsigned int *isa_level, char **soname, int is_link,
-	      struct stat64 *stat_buf)
+	      struct stat *stat_buf)
 {
   FILE *file;
-  struct stat64 statbuf;
+  struct stat statbuf;
   void *file_contents;
   int ret;
   ElfW(Ehdr) *elf_header;
@@ -97,7 +97,7 @@ process_file (const char *real_file_name, const char *file_name,
       return 1;
     }
 
-  if (fstat64 (fileno (file), &statbuf) < 0)
+  if (fstat (fileno (file), &statbuf) < 0)
     {
       error (0, 0, _("Cannot fstat file %s.\n"), file_name);
       fclose (file);

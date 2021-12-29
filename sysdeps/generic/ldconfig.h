@@ -78,11 +78,11 @@ extern void init_aux_cache (void);
 
 extern void load_aux_cache (const char *aux_cache_name);
 
-extern int search_aux_cache (struct stat64 *stat_buf, int *flags,
+extern int search_aux_cache (struct stat *stat_buf, int *flags,
 			     unsigned int *osversion,
 			     unsigned int *isa_level, char **soname);
 
-extern void add_to_aux_cache (struct stat64 *stat_buf, int flags,
+extern void add_to_aux_cache (struct stat *stat_buf, int flags,
 			      unsigned int osversion,
 			      unsigned int isa_level, const char *soname);
 
@@ -93,7 +93,7 @@ extern int process_file (const char *real_file_name, const char *file_name,
 			 const char *lib, int *flag,
 			 unsigned int *osversion, unsigned int *isa_level,
 			 char **soname, int is_link,
-			 struct stat64 *stat_buf);
+			 struct stat *stat_buf);
 
 extern char *implicit_soname (const char *lib, int flag);
 

@@ -318,8 +318,8 @@ print_cache (const char *cache_name)
   if (fd < 0)
     error (EXIT_FAILURE, errno, _("Can't open cache file %s\n"), cache_name);
 
-  struct stat64 st;
-  if (__fstat64 (fd, &st) < 0
+  struct stat st;
+  if (fstat (fd, &st) < 0
       /* No need to map the file if it is empty.  */
       || st.st_size == 0)
     {
@@ -932,7 +932,7 @@ init_aux_cache (void)
 }
 
 int
-search_aux_cache (struct stat64 *stat_buf, int *flags,
+search_aux_cache (struct stat *stat_buf, int *flags,
 		  unsigned int *osversion, unsigned int *isa_level,
 		  char **soname)
 {
@@ -994,7 +994,7 @@ insert_to_aux_cache (struct aux_cache_entry_id *id, int flags,
 }
 
 void
-add_to_aux_cache (struct stat64 *stat_buf, int flags,
+add_to_aux_cache (struct stat *stat_buf, int flags,
 		  unsigned int osversion, unsigned int isa_level,
 		  const char *soname)
 {
@@ -1017,8 +1017,8 @@ load_aux_cache (const char *aux_cache_name)
       return;
     }
 
-  struct stat64 st;
-  if (__fstat64 (fd, &st) < 0 || st.st_size < sizeof (struct aux_cache_file))
+  struct stat st;
+  if (fstat (fd, &st) < 0 || st.st_size < sizeof (struct aux_cache_file))
     {
       close (fd);
       init_aux_cache ();
@@ -1134,8 +1134,8 @@ save_aux_cache (const char *aux_cache_name)
   char *dir = strdupa (aux_cache_name);
   dir = dirname (dir);
 
-  struct stat64 st;
-  if (stat64 (dir, &st) < 0)
+  struct stat st;
+  if (stat (dir, &st) < 0)
     {
       if (mkdir (dir, 0700) < 0)
 	goto out_fail;
