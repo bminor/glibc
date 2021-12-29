@@ -69,6 +69,26 @@ float: 2
 float128: 3
 ldouble: 3
 
+Function: "acosh_vlen16":
+float: 1
+
+Function: "acosh_vlen2":
+double: 2
+
+Function: "acosh_vlen4":
+double: 2
+float: 1
+
+Function: "acosh_vlen4_avx2":
+double: 2
+
+Function: "acosh_vlen8":
+double: 1
+float: 1
+
+Function: "acosh_vlen8_avx2":
+float: 2
+
 Function: "asin":
 double: 1
 float: 1

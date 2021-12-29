@@ -82,7 +82,7 @@ __MATHDECL_VEC (void,sincos,,
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Hyperbolic arc cosine of X.  */
-__MATHCALL (acosh,, (_Mdouble_ __x));
+__MATHCALL_VEC (acosh,, (_Mdouble_ __x));
 /* Hyperbolic arc sine of X.  */
 __MATHCALL (asinh,, (_Mdouble_ __x));
 /* Hyperbolic arc tangent of X.  */

@@ -118,6 +118,10 @@
 #  define __DECL_SIMD_atanh __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_atanhf
 #  define __DECL_SIMD_atanhf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_acosh
+#  define __DECL_SIMD_acosh __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_acoshf
+#  define __DECL_SIMD_acoshf __DECL_SIMD_x86_64
 
 # endif
 #endif

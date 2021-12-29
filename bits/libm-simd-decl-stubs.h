@@ -263,4 +263,15 @@
 #define __DECL_SIMD_atanhf32x
 #define __DECL_SIMD_atanhf64x
 #define __DECL_SIMD_atanhf128x
+
+#define __DECL_SIMD_acosh
+#define __DECL_SIMD_acoshf
+#define __DECL_SIMD_acoshl
+#define __DECL_SIMD_acoshf16
+#define __DECL_SIMD_acoshf32
+#define __DECL_SIMD_acoshf64
+#define __DECL_SIMD_acoshf128
+#define __DECL_SIMD_acoshf32x
+#define __DECL_SIMD_acoshf64x
+#define __DECL_SIMD_acoshf128x
 #endif
