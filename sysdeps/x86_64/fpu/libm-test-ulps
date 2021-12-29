@@ -1276,6 +1276,26 @@ float: 1
 float128: 2
 ldouble: 1
 
+Function: "exp2_vlen16":
+float: 1
+
+Function: "exp2_vlen2":
+double: 1
+
+Function: "exp2_vlen4":
+double: 1
+float: 1
+
+Function: "exp2_vlen4_avx2":
+double: 1
+
+Function: "exp2_vlen8":
+double: 1
+float: 1
+
+Function: "exp2_vlen8_avx2":
+float: 1
+
 Function: "exp_downward":
 double: 1
 float: 1

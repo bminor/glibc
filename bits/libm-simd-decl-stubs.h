@@ -142,4 +142,15 @@
 #define __DECL_SIMD_hypotf32x
 #define __DECL_SIMD_hypotf64x
 #define __DECL_SIMD_hypotf128x
+
+#define __DECL_SIMD_exp2
+#define __DECL_SIMD_exp2f
+#define __DECL_SIMD_exp2l
+#define __DECL_SIMD_exp2f16
+#define __DECL_SIMD_exp2f32
+#define __DECL_SIMD_exp2f64
+#define __DECL_SIMD_exp2f128
+#define __DECL_SIMD_exp2f32x
+#define __DECL_SIMD_exp2f64x
+#define __DECL_SIMD_exp2f128x
 #endif

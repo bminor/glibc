@@ -127,7 +127,7 @@ __MATHCALL (logb,, (_Mdouble_ __x));
 
 #ifdef __USE_ISOC99
 /* Compute base-2 exponential of X.  */
-__MATHCALL (exp2,, (_Mdouble_ __x));
+__MATHCALL_VEC (exp2,, (_Mdouble_ __x));
 
 /* Compute base-2 logarithm of X.  */
 __MATHCALL (log2,, (_Mdouble_ __x));

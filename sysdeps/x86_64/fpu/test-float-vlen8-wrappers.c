@@ -31,6 +31,7 @@ VECTOR_WRAPPER (WRAPPER_NAME (acosf), _ZGVcN8v_acosf)
 VECTOR_WRAPPER (WRAPPER_NAME (atanf), _ZGVcN8v_atanf)
 VECTOR_WRAPPER (WRAPPER_NAME (asinf), _ZGVcN8v_asinf)
 VECTOR_WRAPPER_ff (WRAPPER_NAME (hypotf), _ZGVcN8vv_hypotf)
+VECTOR_WRAPPER (WRAPPER_NAME (exp2f), _ZGVcN8v_exp2f)
 
 #define VEC_INT_TYPE __m128i
 

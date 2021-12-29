@@ -27,6 +27,7 @@ libmvec-funcs = \
   atan \
   cos \
   exp \
+  exp2 \
   hypot \
   log \
   pow \
