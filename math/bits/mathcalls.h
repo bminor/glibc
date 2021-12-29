@@ -119,7 +119,7 @@ __MATHCALL_VEC (exp10,, (_Mdouble_ __x));
 __MATHCALL_VEC (expm1,, (_Mdouble_ __x));
 
 /* Return log(1 + X).  */
-__MATHCALL (log1p,, (_Mdouble_ __x));
+__MATHCALL_VEC (log1p,, (_Mdouble_ __x));
 
 /* Return the base 2 signed integral exponent of X.  */
 __MATHCALL (logb,, (_Mdouble_ __x));

@@ -110,6 +110,10 @@
 #  define __DECL_SIMD_log2 __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_log2f
 #  define __DECL_SIMD_log2f __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_log1p
+#  define __DECL_SIMD_log1p __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_log1pf
+#  define __DECL_SIMD_log1pf __DECL_SIMD_x86_64
 
 # endif
 #endif

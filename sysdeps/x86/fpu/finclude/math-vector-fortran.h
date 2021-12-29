@@ -54,6 +54,8 @@
 !GCC$ builtin (log10f) attributes simd (notinbranch) if('x86_64')
 !GCC$ builtin (log2) attributes simd (notinbranch) if('x86_64')
 !GCC$ builtin (log2f) attributes simd (notinbranch) if('x86_64')
+!GCC$ builtin (log1p) attributes simd (notinbranch) if('x86_64')
+!GCC$ builtin (log1pf) attributes simd (notinbranch) if('x86_64')
 
 !GCC$ builtin (cos) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (cosf) attributes simd (notinbranch) if('x32')
@@ -93,3 +95,5 @@
 !GCC$ builtin (log10f) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (log2) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (log2f) attributes simd (notinbranch) if('x32')
+!GCC$ builtin (log1p) attributes simd (notinbranch) if('x32')
+!GCC$ builtin (log1pf) attributes simd (notinbranch) if('x32')
