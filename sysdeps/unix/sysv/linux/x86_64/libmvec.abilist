@@ -63,6 +63,7 @@ GLIBC_2.35 _ZGVbN2v_log10 F
 GLIBC_2.35 _ZGVbN2v_log1p F
 GLIBC_2.35 _ZGVbN2v_log2 F
 GLIBC_2.35 _ZGVbN2v_sinh F
+GLIBC_2.35 _ZGVbN2v_tan F
 GLIBC_2.35 _ZGVbN2v_tanh F
 GLIBC_2.35 _ZGVbN2vv_atan2 F
 GLIBC_2.35 _ZGVbN2vv_hypot F
@@ -83,6 +84,7 @@ GLIBC_2.35 _ZGVbN4v_log10f F
 GLIBC_2.35 _ZGVbN4v_log1pf F
 GLIBC_2.35 _ZGVbN4v_log2f F
 GLIBC_2.35 _ZGVbN4v_sinhf F
+GLIBC_2.35 _ZGVbN4v_tanf F
 GLIBC_2.35 _ZGVbN4v_tanhf F
 GLIBC_2.35 _ZGVbN4vv_atan2f F
 GLIBC_2.35 _ZGVbN4vv_hypotf F
@@ -103,6 +105,7 @@ GLIBC_2.35 _ZGVcN4v_log10 F
 GLIBC_2.35 _ZGVcN4v_log1p F
 GLIBC_2.35 _ZGVcN4v_log2 F
 GLIBC_2.35 _ZGVcN4v_sinh F
+GLIBC_2.35 _ZGVcN4v_tan F
 GLIBC_2.35 _ZGVcN4v_tanh F
 GLIBC_2.35 _ZGVcN4vv_atan2 F
 GLIBC_2.35 _ZGVcN4vv_hypot F
@@ -123,6 +126,7 @@ GLIBC_2.35 _ZGVcN8v_log10f F
 GLIBC_2.35 _ZGVcN8v_log1pf F
 GLIBC_2.35 _ZGVcN8v_log2f F
 GLIBC_2.35 _ZGVcN8v_sinhf F
+GLIBC_2.35 _ZGVcN8v_tanf F
 GLIBC_2.35 _ZGVcN8v_tanhf F
 GLIBC_2.35 _ZGVcN8vv_atan2f F
 GLIBC_2.35 _ZGVcN8vv_hypotf F
@@ -143,6 +147,7 @@ GLIBC_2.35 _ZGVdN4v_log10 F
 GLIBC_2.35 _ZGVdN4v_log1p F
 GLIBC_2.35 _ZGVdN4v_log2 F
 GLIBC_2.35 _ZGVdN4v_sinh F
+GLIBC_2.35 _ZGVdN4v_tan F
 GLIBC_2.35 _ZGVdN4v_tanh F
 GLIBC_2.35 _ZGVdN4vv_atan2 F
 GLIBC_2.35 _ZGVdN4vv_hypot F
@@ -163,6 +168,7 @@ GLIBC_2.35 _ZGVdN8v_log10f F
 GLIBC_2.35 _ZGVdN8v_log1pf F
 GLIBC_2.35 _ZGVdN8v_log2f F
 GLIBC_2.35 _ZGVdN8v_sinhf F
+GLIBC_2.35 _ZGVdN8v_tanf F
 GLIBC_2.35 _ZGVdN8v_tanhf F
 GLIBC_2.35 _ZGVdN8vv_atan2f F
 GLIBC_2.35 _ZGVdN8vv_hypotf F
@@ -183,6 +189,7 @@ GLIBC_2.35 _ZGVeN16v_log10f F
 GLIBC_2.35 _ZGVeN16v_log1pf F
 GLIBC_2.35 _ZGVeN16v_log2f F
 GLIBC_2.35 _ZGVeN16v_sinhf F
+GLIBC_2.35 _ZGVeN16v_tanf F
 GLIBC_2.35 _ZGVeN16v_tanhf F
 GLIBC_2.35 _ZGVeN16vv_atan2f F
 GLIBC_2.35 _ZGVeN16vv_hypotf F
@@ -203,6 +210,7 @@ GLIBC_2.35 _ZGVeN8v_log10 F
 GLIBC_2.35 _ZGVeN8v_log1p F
 GLIBC_2.35 _ZGVeN8v_log2 F
 GLIBC_2.35 _ZGVeN8v_sinh F
+GLIBC_2.35 _ZGVeN8v_tan F
 GLIBC_2.35 _ZGVeN8v_tanh F
 GLIBC_2.35 _ZGVeN8vv_atan2 F
 GLIBC_2.35 _ZGVeN8vv_hypot F

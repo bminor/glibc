@@ -2080,6 +2080,26 @@ float: 1
 float128: 1
 ldouble: 2
 
+Function: "tan_vlen16":
+float: 1
+
+Function: "tan_vlen2":
+double: 2
+
+Function: "tan_vlen4":
+double: 2
+float: 2
+
+Function: "tan_vlen4_avx2":
+double: 1
+
+Function: "tan_vlen8":
+double: 2
+float: 2
+
+Function: "tan_vlen8_avx2":
+float: 2
+
 Function: "tanh":
 double: 2
 float: 2

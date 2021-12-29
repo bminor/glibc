@@ -63,7 +63,7 @@ __MATHCALL_VEC (cos,, (_Mdouble_ __x));
 /* Sine of X.  */
 __MATHCALL_VEC (sin,, (_Mdouble_ __x));
 /* Tangent of X.  */
-__MATHCALL (tan,, (_Mdouble_ __x));
+__MATHCALL_VEC (tan,, (_Mdouble_ __x));
 
 /* Hyperbolic functions.  */
 

@@ -138,6 +138,10 @@
 #  define __DECL_SIMD_erfc __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_erfcf
 #  define __DECL_SIMD_erfcf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_tan
+#  define __DECL_SIMD_tan __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_tanf
+#  define __DECL_SIMD_tanf __DECL_SIMD_x86_64
 
 # endif
 #endif
