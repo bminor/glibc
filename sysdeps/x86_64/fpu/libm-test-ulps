@@ -1641,6 +1641,26 @@ float: 2
 float128: 1
 ldouble: 1
 
+Function: "log10_vlen16":
+float: 1
+
+Function: "log10_vlen2":
+double: 1
+
+Function: "log10_vlen4":
+double: 1
+float: 1
+
+Function: "log10_vlen4_avx2":
+double: 1
+
+Function: "log10_vlen8":
+double: 1
+float: 1
+
+Function: "log10_vlen8_avx2":
+float: 1
+
 Function: "log1p":
 double: 1
 float: 1

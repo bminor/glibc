@@ -104,7 +104,7 @@ __MATHCALL (ldexp,, (_Mdouble_ __x, int __exponent));
 __MATHCALL_VEC (log,, (_Mdouble_ __x));
 
 /* Base-ten logarithm of X.  */
-__MATHCALL (log10,, (_Mdouble_ __x));
+__MATHCALL_VEC (log10,, (_Mdouble_ __x));
 
 /* Break VALUE into integral and fractional parts.  */
 __MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr)) __nonnull ((2));
