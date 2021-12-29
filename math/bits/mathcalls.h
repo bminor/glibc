@@ -72,7 +72,7 @@ __MATHCALL_VEC (cosh,, (_Mdouble_ __x));
 /* Hyperbolic sine of X.  */
 __MATHCALL_VEC (sinh,, (_Mdouble_ __x));
 /* Hyperbolic tangent of X.  */
-__MATHCALL (tanh,, (_Mdouble_ __x));
+__MATHCALL_VEC (tanh,, (_Mdouble_ __x));
 
 #ifdef __USE_GNU
 /* Cosine and sine of X.  */

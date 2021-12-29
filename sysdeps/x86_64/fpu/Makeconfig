@@ -45,6 +45,7 @@ libmvec-funcs = \
   sin \
   sincos \
   sinh \
+  tanh \
 
 # Define libmvec function for benchtests directory.
 libmvec-bench-funcs = \
