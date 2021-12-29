@@ -86,6 +86,10 @@
 #  define __DECL_SIMD_cosh __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_coshf
 #  define __DECL_SIMD_coshf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_expm1
+#  define __DECL_SIMD_expm1 __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_expm1f
+#  define __DECL_SIMD_expm1f __DECL_SIMD_x86_64
 
 # endif
 #endif

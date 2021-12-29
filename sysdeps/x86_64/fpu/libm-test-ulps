@@ -1395,6 +1395,26 @@ float: 1
 float128: 3
 ldouble: 4
 
+Function: "expm1_vlen16":
+float: 1
+
+Function: "expm1_vlen2":
+double: 1
+
+Function: "expm1_vlen4":
+double: 1
+float: 1
+
+Function: "expm1_vlen4_avx2":
+double: 1
+
+Function: "expm1_vlen8":
+double: 1
+float: 1
+
+Function: "expm1_vlen8_avx2":
+float: 1
+
 Function: "gamma":
 double: 4
 float: 7

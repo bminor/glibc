@@ -175,4 +175,15 @@
 #define __DECL_SIMD_coshf32x
 #define __DECL_SIMD_coshf64x
 #define __DECL_SIMD_coshf128x
+
+#define __DECL_SIMD_expm1
+#define __DECL_SIMD_expm1f
+#define __DECL_SIMD_expm1l
+#define __DECL_SIMD_expm1f16
+#define __DECL_SIMD_expm1f32
+#define __DECL_SIMD_expm1f64
+#define __DECL_SIMD_expm1f128
+#define __DECL_SIMD_expm1f32x
+#define __DECL_SIMD_expm1f64x
+#define __DECL_SIMD_expm1f128x
 #endif

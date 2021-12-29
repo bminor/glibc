@@ -20,6 +20,7 @@ libmvec {
     _ZGVbN2v_cosh; _ZGVcN4v_cosh; _ZGVdN4v_cosh; _ZGVeN8v_cosh;
     _ZGVbN2v_exp10; _ZGVcN4v_exp10; _ZGVdN4v_exp10; _ZGVeN8v_exp10;
     _ZGVbN2v_exp2; _ZGVcN4v_exp2; _ZGVdN4v_exp2; _ZGVeN8v_exp2;
+    _ZGVbN2v_expm1; _ZGVcN4v_expm1; _ZGVdN4v_expm1; _ZGVeN8v_expm1;
     _ZGVbN2vv_hypot; _ZGVcN4vv_hypot; _ZGVdN4vv_hypot; _ZGVeN8vv_hypot;
     _ZGVbN4v_acosf; _ZGVcN8v_acosf; _ZGVdN8v_acosf; _ZGVeN16v_acosf;
     _ZGVbN4v_asinf; _ZGVcN8v_asinf; _ZGVdN8v_asinf; _ZGVeN16v_asinf;
@@ -27,6 +28,7 @@ libmvec {
     _ZGVbN4v_coshf; _ZGVcN8v_coshf; _ZGVdN8v_coshf; _ZGVeN16v_coshf;
     _ZGVbN4v_exp10f; _ZGVcN8v_exp10f; _ZGVdN8v_exp10f; _ZGVeN16v_exp10f;
     _ZGVbN4v_exp2f; _ZGVcN8v_exp2f; _ZGVdN8v_exp2f; _ZGVeN16v_exp2f;
+    _ZGVbN4v_expm1f; _ZGVcN8v_expm1f; _ZGVdN8v_expm1f; _ZGVeN16v_expm1f;
     _ZGVbN4vv_hypotf; _ZGVcN8vv_hypotf; _ZGVdN8vv_hypotf; _ZGVeN16vv_hypotf;
   }
 }

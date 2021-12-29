@@ -116,7 +116,7 @@ __MATHCALL_VEC (exp10,, (_Mdouble_ __x));
 
 #if defined __USE_XOPEN_EXTENDED || defined __USE_ISOC99
 /* Return exp(X) - 1.  */
-__MATHCALL (expm1,, (_Mdouble_ __x));
+__MATHCALL_VEC (expm1,, (_Mdouble_ __x));
 
 /* Return log(1 + X).  */
 __MATHCALL (log1p,, (_Mdouble_ __x));
