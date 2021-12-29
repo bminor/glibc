@@ -296,4 +296,15 @@
 #define __DECL_SIMD_tanhf32x
 #define __DECL_SIMD_tanhf64x
 #define __DECL_SIMD_tanhf128x
+
+#define __DECL_SIMD_asinh
+#define __DECL_SIMD_asinhf
+#define __DECL_SIMD_asinhl
+#define __DECL_SIMD_asinhf16
+#define __DECL_SIMD_asinhf32
+#define __DECL_SIMD_asinhf64
+#define __DECL_SIMD_asinhf128
+#define __DECL_SIMD_asinhf32x
+#define __DECL_SIMD_asinhf64x
+#define __DECL_SIMD_asinhf128x
 #endif

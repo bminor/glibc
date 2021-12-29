@@ -48,6 +48,7 @@ VECTOR_WRAPPER (WRAPPER_NAME (atanh), _ZGVdN4v_atanh)
 VECTOR_WRAPPER (WRAPPER_NAME (acosh), _ZGVdN4v_acosh)
 VECTOR_WRAPPER (WRAPPER_NAME (erf), _ZGVdN4v_erf)
 VECTOR_WRAPPER (WRAPPER_NAME (tanh), _ZGVdN4v_tanh)
+VECTOR_WRAPPER (WRAPPER_NAME (asinh), _ZGVdN4v_asinh)
 
 #ifndef __ILP32__
 # define VEC_INT_TYPE __m256i

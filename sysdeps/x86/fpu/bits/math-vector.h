@@ -130,6 +130,10 @@
 #  define __DECL_SIMD_tanh __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_tanhf
 #  define __DECL_SIMD_tanhf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_asinh
+#  define __DECL_SIMD_asinh __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_asinhf
+#  define __DECL_SIMD_asinhf __DECL_SIMD_x86_64
 
 # endif
 #endif

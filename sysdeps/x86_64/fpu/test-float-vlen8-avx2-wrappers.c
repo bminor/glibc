@@ -48,6 +48,7 @@ VECTOR_WRAPPER (WRAPPER_NAME (atanhf), _ZGVdN8v_atanhf)
 VECTOR_WRAPPER (WRAPPER_NAME (acoshf), _ZGVdN8v_acoshf)
 VECTOR_WRAPPER (WRAPPER_NAME (erff), _ZGVdN8v_erff)
 VECTOR_WRAPPER (WRAPPER_NAME (tanhf), _ZGVdN8v_tanhf)
+VECTOR_WRAPPER (WRAPPER_NAME (asinhf), _ZGVdN8v_asinhf)
 
 /* Redefinition of wrapper to be compatible with _ZGVdN8vvv_sincosf.  */
 #undef VECTOR_WRAPPER_fFF

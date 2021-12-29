@@ -157,6 +157,23 @@ float: 3
 float128: 4
 ldouble: 5
 
+Function: "asinh_vlen2":
+double: 1
+
+Function: "asinh_vlen4":
+double: 1
+float: 1
+
+Function: "asinh_vlen4_avx2":
+double: 1
+
+Function: "asinh_vlen8":
+double: 1
+float: 1
+
+Function: "asinh_vlen8_avx2":
+float: 1
+
 Function: "atan":
 double: 1
 float: 1

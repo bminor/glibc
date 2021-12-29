@@ -45,6 +45,7 @@ VECTOR_WRAPPER (WRAPPER_NAME (atanh), _ZGVeN8v_atanh)
 VECTOR_WRAPPER (WRAPPER_NAME (acosh), _ZGVeN8v_acosh)
 VECTOR_WRAPPER (WRAPPER_NAME (erf), _ZGVeN8v_erf)
 VECTOR_WRAPPER (WRAPPER_NAME (tanh), _ZGVeN8v_tanh)
+VECTOR_WRAPPER (WRAPPER_NAME (asinh), _ZGVeN8v_asinh)
 
 #ifndef __ILP32__
 # define VEC_INT_TYPE __m512i
