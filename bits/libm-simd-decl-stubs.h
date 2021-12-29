@@ -208,4 +208,15 @@
 #define __DECL_SIMD_cbrtf32x
 #define __DECL_SIMD_cbrtf64x
 #define __DECL_SIMD_cbrtf128x
+
+#define __DECL_SIMD_atan2
+#define __DECL_SIMD_atan2f
+#define __DECL_SIMD_atan2l
+#define __DECL_SIMD_atan2f16
+#define __DECL_SIMD_atan2f32
+#define __DECL_SIMD_atan2f64
+#define __DECL_SIMD_atan2f128
+#define __DECL_SIMD_atan2f32x
+#define __DECL_SIMD_atan2f64x
+#define __DECL_SIMD_atan2f128x
 #endif

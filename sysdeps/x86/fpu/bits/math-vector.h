@@ -98,6 +98,10 @@
 #  define __DECL_SIMD_cbrt __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_cbrtf
 #  define __DECL_SIMD_cbrtf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_atan2
+#  define __DECL_SIMD_atan2 __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_atan2f
+#  define __DECL_SIMD_atan2f __DECL_SIMD_x86_64
 
 # endif
 #endif

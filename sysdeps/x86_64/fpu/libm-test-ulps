@@ -166,6 +166,26 @@ float: 2
 float128: 2
 ldouble: 1
 
+Function: "atan2_vlen16":
+float: 2
+
+Function: "atan2_vlen2":
+double: 1
+
+Function: "atan2_vlen4":
+double: 1
+float: 2
+
+Function: "atan2_vlen4_avx2":
+double: 1
+
+Function: "atan2_vlen8":
+double: 1
+float: 2
+
+Function: "atan2_vlen8_avx2":
+float: 2
+
 Function: "atan_downward":
 double: 1
 float: 2

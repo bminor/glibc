@@ -56,7 +56,7 @@ __MATHCALL_VEC (asin,, (_Mdouble_ __x));
 /* Arc tangent of X.  */
 __MATHCALL_VEC (atan,, (_Mdouble_ __x));
 /* Arc tangent of Y/X.  */
-__MATHCALL (atan2,, (_Mdouble_ __y, _Mdouble_ __x));
+__MATHCALL_VEC (atan2,, (_Mdouble_ __y, _Mdouble_ __x));
 
 /* Cosine of X.  */
 __MATHCALL_VEC (cos,, (_Mdouble_ __x));

@@ -25,6 +25,7 @@ libmvec-funcs = \
   acos \
   asin \
   atan \
+  atan2 \
   cbrt \
   cos \
   cosh \
