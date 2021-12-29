@@ -86,7 +86,7 @@ __MATHCALL (acosh,, (_Mdouble_ __x));
 /* Hyperbolic arc sine of X.  */
 __MATHCALL (asinh,, (_Mdouble_ __x));
 /* Hyperbolic arc tangent of X.  */
-__MATHCALL (atanh,, (_Mdouble_ __x));
+__MATHCALL_VEC (atanh,, (_Mdouble_ __x));
 #endif
 
 /* Exponential and logarithmic functions.  */

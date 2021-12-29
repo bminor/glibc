@@ -114,6 +114,10 @@
 #  define __DECL_SIMD_log1p __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_log1pf
 #  define __DECL_SIMD_log1pf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_atanh
+#  define __DECL_SIMD_atanh __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_atanhf
+#  define __DECL_SIMD_atanhf __DECL_SIMD_x86_64
 
 # endif
 #endif

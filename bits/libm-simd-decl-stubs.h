@@ -252,4 +252,15 @@
 #define __DECL_SIMD_log1pf32x
 #define __DECL_SIMD_log1pf64x
 #define __DECL_SIMD_log1pf128x
+
+#define __DECL_SIMD_atanh
+#define __DECL_SIMD_atanhf
+#define __DECL_SIMD_atanhl
+#define __DECL_SIMD_atanhf16
+#define __DECL_SIMD_atanhf32
+#define __DECL_SIMD_atanhf64
+#define __DECL_SIMD_atanhf128
+#define __DECL_SIMD_atanhf32x
+#define __DECL_SIMD_atanhf64x
+#define __DECL_SIMD_atanhf128x
 #endif
