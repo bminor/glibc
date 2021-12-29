@@ -90,6 +90,10 @@
 #  define __DECL_SIMD_expm1 __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_expm1f
 #  define __DECL_SIMD_expm1f __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_sinh
+#  define __DECL_SIMD_sinh __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_sinhf
+#  define __DECL_SIMD_sinhf __DECL_SIMD_x86_64
 
 # endif
 #endif

@@ -186,4 +186,15 @@
 #define __DECL_SIMD_expm1f32x
 #define __DECL_SIMD_expm1f64x
 #define __DECL_SIMD_expm1f128x
+
+#define __DECL_SIMD_sinh
+#define __DECL_SIMD_sinhf
+#define __DECL_SIMD_sinhl
+#define __DECL_SIMD_sinhf16
+#define __DECL_SIMD_sinhf32
+#define __DECL_SIMD_sinhf64
+#define __DECL_SIMD_sinhf128
+#define __DECL_SIMD_sinhf32x
+#define __DECL_SIMD_sinhf64x
+#define __DECL_SIMD_sinhf128x
 #endif

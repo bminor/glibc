@@ -1840,6 +1840,26 @@ float: 3
 float128: 4
 ldouble: 5
 
+Function: "sinh_vlen16":
+float: 1
+
+Function: "sinh_vlen2":
+double: 2
+
+Function: "sinh_vlen4":
+double: 2
+float: 1
+
+Function: "sinh_vlen4_avx2":
+double: 2
+
+Function: "sinh_vlen8":
+double: 2
+float: 1
+
+Function: "sinh_vlen8_avx2":
+float: 1
+
 Function: "tan":
 float: 1
 float128: 1

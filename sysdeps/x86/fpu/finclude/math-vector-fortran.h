@@ -44,6 +44,8 @@
 !GCC$ builtin (coshf) attributes simd (notinbranch) if('x86_64')
 !GCC$ builtin (expm1) attributes simd (notinbranch) if('x86_64')
 !GCC$ builtin (expm1f) attributes simd (notinbranch) if('x86_64')
+!GCC$ builtin (sinh) attributes simd (notinbranch) if('x86_64')
+!GCC$ builtin (sinhf) attributes simd (notinbranch) if('x86_64')
 
 !GCC$ builtin (cos) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (cosf) attributes simd (notinbranch) if('x32')
@@ -73,3 +75,5 @@
 !GCC$ builtin (coshf) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (expm1) attributes simd (notinbranch) if('x32')
 !GCC$ builtin (expm1f) attributes simd (notinbranch) if('x32')
+!GCC$ builtin (sinh) attributes simd (notinbranch) if('x32')
+!GCC$ builtin (sinhf) attributes simd (notinbranch) if('x32')

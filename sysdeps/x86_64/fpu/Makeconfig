@@ -36,6 +36,7 @@ libmvec-funcs = \
   pow \
   sin \
   sincos \
+  sinh \
 
 # Define libmvec function for benchtests directory.
 libmvec-bench-funcs = \

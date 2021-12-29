@@ -70,7 +70,7 @@ __MATHCALL (tan,, (_Mdouble_ __x));
 /* Hyperbolic cosine of X.  */
 __MATHCALL_VEC (cosh,, (_Mdouble_ __x));
 /* Hyperbolic sine of X.  */
-__MATHCALL (sinh,, (_Mdouble_ __x));
+__MATHCALL_VEC (sinh,, (_Mdouble_ __x));
 /* Hyperbolic tangent of X.  */
 __MATHCALL (tanh,, (_Mdouble_ __x));
 
