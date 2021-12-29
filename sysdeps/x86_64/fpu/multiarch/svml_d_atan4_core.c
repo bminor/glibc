@@ -1,5 +1,5 @@
-/* Wrapper part of tests for SSE ISA versions of vector math functions.
-   Copyright (C) 2014-2021 Free Software Foundation, Inc.
+/* Multiple versions of vectorized atan, vector length is 4.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,20 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen2.h"
-#include "test-math-vector-sincos.h"
-#include <immintrin.h>
+#define SYMBOL_NAME _ZGVdN4v_atan
+#include "ifunc-mathvec-avx2.h"
 
-#define VEC_TYPE __m128d
+libc_ifunc_redirected (REDIRECT_NAME, SYMBOL_NAME, IFUNC_SELECTOR ());
 
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVbN2v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVbN2v_sin)
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVbN2v_log)
-VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVbN2v_exp)
-VECTOR_WRAPPER_ff (WRAPPER_NAME (pow), _ZGVbN2vv_pow)
-VECTOR_WRAPPER (WRAPPER_NAME (acos), _ZGVbN2v_acos)
-VECTOR_WRAPPER (WRAPPER_NAME (atan), _ZGVbN2v_atan)
-
-#define VEC_INT_TYPE __m128i
-
-VECTOR_WRAPPER_fFF_2 (WRAPPER_NAME (sincos), _ZGVbN2vvv_sincos)
+#ifdef SHARED
+__hidden_ver1 (_ZGVdN4v_atan, __GI__ZGVdN4v_atan, __redirect__ZGVdN4v_atan)
+  __attribute__ ((visibility ("hidden")));
+#endif

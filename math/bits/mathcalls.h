@@ -54,7 +54,7 @@ __MATHCALL_VEC (acos,, (_Mdouble_ __x));
 /* Arc sine of X.  */
 __MATHCALL (asin,, (_Mdouble_ __x));
 /* Arc tangent of X.  */
-__MATHCALL (atan,, (_Mdouble_ __x));
+__MATHCALL_VEC (atan,, (_Mdouble_ __x));
 /* Arc tangent of Y/X.  */
 __MATHCALL (atan2,, (_Mdouble_ __y, _Mdouble_ __x));
 

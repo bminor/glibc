@@ -23,6 +23,7 @@ postclean-generated += libmvec.mk
 # Define for both math and mathvec directories.
 libmvec-funcs = \
   acos \
+  atan \
   cos \
   exp \
   log \

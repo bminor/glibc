@@ -1,5 +1,5 @@
-/* Wrapper part of tests for SSE ISA versions of vector math functions.
-   Copyright (C) 2014-2021 Free Software Foundation, Inc.
+/* Function atan vectorized with AVX-512, wrapper to AVX2.
+   Copyright (C) 2021 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,20 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "test-double-vlen2.h"
-#include "test-math-vector-sincos.h"
-#include <immintrin.h>
+#include <sysdep.h>
+#include "svml_d_wrapper_impl.h"
 
-#define VEC_TYPE __m128d
-
-VECTOR_WRAPPER (WRAPPER_NAME (cos), _ZGVbN2v_cos)
-VECTOR_WRAPPER (WRAPPER_NAME (sin), _ZGVbN2v_sin)
-VECTOR_WRAPPER (WRAPPER_NAME (log), _ZGVbN2v_log)
-VECTOR_WRAPPER (WRAPPER_NAME (exp), _ZGVbN2v_exp)
-VECTOR_WRAPPER_ff (WRAPPER_NAME (pow), _ZGVbN2vv_pow)
-VECTOR_WRAPPER (WRAPPER_NAME (acos), _ZGVbN2v_acos)
-VECTOR_WRAPPER (WRAPPER_NAME (atan), _ZGVbN2v_atan)
-
-#define VEC_INT_TYPE __m128i
-
-VECTOR_WRAPPER_fFF_2 (WRAPPER_NAME (sincos), _ZGVbN2vvv_sincos)
+	.text
+ENTRY (_ZGVeN8v_atan)
+WRAPPER_IMPL_AVX512 _ZGVdN4v_atan
+END (_ZGVeN8v_atan)

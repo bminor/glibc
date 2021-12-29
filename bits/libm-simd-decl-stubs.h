@@ -109,4 +109,15 @@
 #define __DECL_SIMD_acosf32x
 #define __DECL_SIMD_acosf64x
 #define __DECL_SIMD_acosf128x
+
+#define __DECL_SIMD_atan
+#define __DECL_SIMD_atanf
+#define __DECL_SIMD_atanl
+#define __DECL_SIMD_atanf16
+#define __DECL_SIMD_atanf32
+#define __DECL_SIMD_atanf64
+#define __DECL_SIMD_atanf128
+#define __DECL_SIMD_atanf32x
+#define __DECL_SIMD_atanf64x
+#define __DECL_SIMD_atanf128x
 #endif

@@ -62,6 +62,10 @@
 #  define __DECL_SIMD_acos __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_acosf
 #  define __DECL_SIMD_acosf __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_atan
+#  define __DECL_SIMD_atan __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_atanf
+#  define __DECL_SIMD_atanf __DECL_SIMD_x86_64
 
 # endif
 #endif
