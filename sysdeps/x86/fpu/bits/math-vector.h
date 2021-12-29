@@ -78,6 +78,10 @@
 #  define __DECL_SIMD_exp2 __DECL_SIMD_x86_64
 #  undef __DECL_SIMD_exp2f
 #  define __DECL_SIMD_exp2f __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_exp10
+#  define __DECL_SIMD_exp10 __DECL_SIMD_x86_64
+#  undef __DECL_SIMD_exp10f
+#  define __DECL_SIMD_exp10f __DECL_SIMD_x86_64
 
 # endif
 #endif
