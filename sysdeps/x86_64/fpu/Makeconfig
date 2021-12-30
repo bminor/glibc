@@ -53,6 +53,7 @@ libmvec-funcs = \
 # Define libmvec function for benchtests directory.
 libmvec-bench-funcs = \
   acos \
+  acosh \
   asin \
   atan \
   atan2 \
