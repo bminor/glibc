@@ -74,6 +74,7 @@ libmvec-bench-funcs = \
   pow \
   sin \
   sinh \
+  tanh \
 
 bench-libmvec-double = \
   $(addprefix double-vlen1-, $(libmvec-bench-funcs)) \
