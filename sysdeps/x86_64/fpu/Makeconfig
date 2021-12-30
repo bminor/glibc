@@ -55,6 +55,7 @@ libmvec-bench-funcs = \
   acos \
   asin \
   atan \
+  cbrt \
   cos \
   cosh \
   exp \
