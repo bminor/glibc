@@ -52,6 +52,7 @@ libmvec-funcs = \
 
 # Define libmvec function for benchtests directory.
 libmvec-bench-funcs = \
+  acos \
   cos \
   exp \
   log \
