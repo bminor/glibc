@@ -33,6 +33,7 @@ tst-audit27-ENV = LD_AUDIT=$(objpfx)tst-auditmod27.so
 endif
 
 ifeq ($(subdir),elf)
+sysdep-rtld-routines += dl-start
 sysdep-dl-routines += tlsdesc dl-tlsdesc
 gen-as-const-headers += dl-link.sym
 
