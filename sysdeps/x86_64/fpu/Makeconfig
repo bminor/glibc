@@ -60,6 +60,7 @@ libmvec-bench-funcs = \
   exp \
   exp10 \
   exp2 \
+  expm1 \
   hypot \
   log \
   pow \
