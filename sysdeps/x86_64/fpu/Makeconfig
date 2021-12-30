@@ -65,6 +65,7 @@ libmvec-bench-funcs = \
   expm1 \
   hypot \
   log \
+  log10 \
   pow \
   sin \
   sinh \
