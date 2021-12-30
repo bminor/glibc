@@ -180,6 +180,11 @@ $(libanl-routines-var) += \
 libanl-routines += libanl-compat
 libanl-shared-only-routines += libanl-compat
 
+# Pretend that libanl.so is a linker script, so that the symbolic link
+# is not installed.
+install-lib-ldscripts = libanl.so
+$(inst_libdir)/libanl.so:
+
 subdir-dirs = nss_dns
 vpath %.c nss_dns
 
