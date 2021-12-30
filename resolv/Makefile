@@ -78,8 +78,12 @@ generate := mtrace-tst-leaks.out tst-leaks.mtrace tst-leaks2.mtrace
 
 extra-libs := libresolv libnss_dns
 ifeq ($(have-thread-library),yes)
-extra-libs += libanl
 routines += gai_sigqueue
+endif
+
+ifeq ($(have-GLIBC_2.34)$(have-thread-library),yesyes)
+# Empty compatibility library for old binaries.
+extra-libs += libanl
 
 tests += \
   tst-bug18665 \
