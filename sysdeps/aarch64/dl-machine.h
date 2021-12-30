@@ -105,81 +105,8 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
   return lazy;
 }
 
-/* Initial entry point for the dynamic linker. The C function
-   _dl_start is the real entry point, its return value is the user
-   program's entry point */
-#ifdef __LP64__
-# define RTLD_START RTLD_START_1 ("x", "3", "sp")
-#else
-# define RTLD_START RTLD_START_1 ("w", "2", "wsp")
-#endif
-
-
-#define RTLD_START_1(PTR, PTR_SIZE_LOG, PTR_SP) asm ("\
-.text									\n\
-.globl _start								\n\
-.type _start, %function							\n\
-.globl _dl_start_user							\n\
-.type _dl_start_user, %function						\n\
-_start:									\n\
-	// bti c							\n\
-	hint	34							\n\
-	mov	" PTR "0, " PTR_SP "					\n\
-	bl	_dl_start						\n\
-	// returns user entry point in x0				\n\
-	mov	x21, x0							\n\
-_dl_start_user:								\n\
-	// get the original arg count					\n\
-	ldr	" PTR "1, [sp]						\n\
-	// get the argv address						\n\
-	add	" PTR "2, " PTR_SP ", #(1<<"  PTR_SIZE_LOG ")		\n\
-	// get _dl_skip_args to see if we were				\n\
-	// invoked as an executable					\n\
-	adrp	x4, _dl_skip_args					\n\
-        ldr	w4, [x4, #:lo12:_dl_skip_args]				\n\
-	// do we need to adjust argc/argv				\n\
-        cmp	w4, 0							\n\
-	beq	.L_done_stack_adjust					\n\
-	// subtract _dl_skip_args from original arg count		\n\
-	sub	" PTR "1, " PTR "1, " PTR "4				\n\
-	// store adjusted argc back to stack				\n\
-	str	" PTR "1, [sp]						\n\
-	// find the first unskipped argument				\n\
-	mov	" PTR "3, " PTR "2					\n\
-	add	" PTR "4, " PTR "2, " PTR "4, lsl #" PTR_SIZE_LOG "	\n\
-	// shuffle argv down						\n\
-1:	ldr	" PTR "5, [x4], #(1<<"  PTR_SIZE_LOG ")			\n\
-	str	" PTR "5, [x3], #(1<<"  PTR_SIZE_LOG ")			\n\
-	cmp	" PTR "5, #0						\n\
-	bne	1b							\n\
-	// shuffle envp down						\n\
-1:	ldr	" PTR "5, [x4], #(1<<"  PTR_SIZE_LOG ")			\n\
-	str	" PTR "5, [x3], #(1<<"  PTR_SIZE_LOG ")			\n\
-	cmp	" PTR "5, #0						\n\
-	bne	1b							\n\
-	// shuffle auxv down						\n\
-1:	ldp	" PTR "0, " PTR "5, [x4, #(2<<"  PTR_SIZE_LOG ")]!	\n\
-	stp	" PTR "0, " PTR "5, [x3], #(2<<"  PTR_SIZE_LOG ")	\n\
-	cmp	" PTR "0, #0						\n\
-	bne	1b							\n\
-	// Update _dl_argv						\n\
-	adrp	x3, __GI__dl_argv					\n\
-	str	" PTR "2, [x3, #:lo12:__GI__dl_argv]			\n\
-.L_done_stack_adjust:							\n\
-	// compute envp							\n\
-	add	" PTR "3, " PTR "2, " PTR "1, lsl #" PTR_SIZE_LOG "	\n\
-	add	" PTR "3, " PTR "3, #(1<<"  PTR_SIZE_LOG ")		\n\
-	adrp	x16, _rtld_local					\n\
-        add	" PTR "16, " PTR "16, #:lo12:_rtld_local		\n\
-        ldr	" PTR "0, [x16]						\n\
-	bl	_dl_init						\n\
-	// load the finalizer function					\n\
-	adrp	x0, _dl_fini						\n\
-	add	" PTR "0, " PTR "0, #:lo12:_dl_fini			\n\
-	// jump to the user_s entry point				\n\
-	mov     x16, x21						\n\
-	br      x16							\n\
-");
+/* In elf/rtld.c _dl_start should be global so dl-start.S can reference it.  */
+#define RTLD_START asm (".globl _dl_start");
 
 #define elf_machine_type_class(type)					\
   ((((type) == AARCH64_R(JUMP_SLOT)					\
