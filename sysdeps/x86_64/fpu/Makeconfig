@@ -56,6 +56,7 @@ libmvec-bench-funcs = \
   asin \
   atan \
   cos \
+  cosh \
   exp \
   exp10 \
   exp2 \
