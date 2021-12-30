@@ -66,6 +66,7 @@ libmvec-bench-funcs = \
   hypot \
   log \
   log10 \
+  log2 \
   pow \
   sin \
   sinh \
