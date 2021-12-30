@@ -61,6 +61,7 @@ libmvec-bench-funcs = \
   cbrt \
   cos \
   cosh \
+  erf \
   exp \
   exp10 \
   exp2 \
