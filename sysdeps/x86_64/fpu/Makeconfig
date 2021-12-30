@@ -57,6 +57,7 @@ libmvec-bench-funcs = \
   atan \
   cos \
   exp \
+  hypot \
   log \
   pow \
   sin \
