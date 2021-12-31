@@ -19,6 +19,6 @@
 #define _I386_VM_PARAM_H
 
 /* Arbitrary start of the brk. This is after usual binary and library mappings.  */
-#define BRK_START	0x10000000
+#define BRK_START	0x20000000
 
 #endif /* i386/vm_param.h */
