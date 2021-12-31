@@ -16,9 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <bits/wordsize.h>
+
 /* Size in bits of the 'time_t' type of the default ABI.  */
-#if _MIPS_SIM == _ABI64
-# define __TIMESIZE	64
-#else
-# define __TIMESIZE	32
-#endif
+#define __TIMESIZE	__WORDSIZE
