@@ -85,7 +85,7 @@ gammaf_positive (float x, int *exp2_adj)
       float x_adj_frac = x_adj - x_adj_int;
       int x_adj_log2;
       float x_adj_mant = __frexpf (x_adj, &x_adj_log2);
-      if (x_adj_mant < (float) M_SQRT1_2)
+      if (x_adj_mant < M_SQRT1_2f)
 	{
 	  x_adj_log2--;
 	  x_adj_mant *= 2.0f;
@@ -94,7 +94,7 @@ gammaf_positive (float x, int *exp2_adj)
       float ret = (__ieee754_powf (x_adj_mant, x_adj)
 		   * __ieee754_exp2f (x_adj_log2 * x_adj_frac)
 		   * __ieee754_expf (-x_adj)
-		   * sqrtf (2 * (float) M_PI / x_adj)
+		   * sqrtf (2 * M_PIf / x_adj)
 		   / prod);
       exp_adj += x_eps * __ieee754_logf (x_adj);
       float bsum = gamma_coeff[NCOEFF - 1];
@@ -176,11 +176,11 @@ __ieee754_gammaf_r (float x, int *signgamp)
 	      if (frac > 0.5f)
 		frac = 1.0f - frac;
 	      float sinpix = (frac <= 0.25f
-			      ? __sinf ((float) M_PI * frac)
-			      : __cosf ((float) M_PI * (0.5f - frac)));
+			      ? __sinf (M_PIf * frac)
+			      : __cosf (M_PIf * (0.5f - frac)));
 	      int exp2_adj;
-	      float tret = (float) M_PI / (-x * sinpix
-					   * gammaf_positive (-x, &exp2_adj));
+	      float tret = M_PIf / (-x * sinpix
+				    * gammaf_positive (-x, &exp2_adj));
 	      ret = __scalbnf (tret, -exp2_adj);
 	      math_check_force_underflow_nonneg (ret);
 	    }

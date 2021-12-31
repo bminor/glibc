@@ -131,9 +131,10 @@ defined.  The default set of features includes these constants.
 @xref{Feature Test Macros}.
 
 All values are of type @code{double}.  As an extension, @theglibc{}
-also defines these constants with type @code{long double}.  The
-@code{long double} macros have a lowercase @samp{l} appended to their
-names: @code{M_El}, @code{M_PIl}, and so forth.  These are only
+also defines these constants with type @code{long double} and
+@code{float}.  The @code{long double} macros have a lowercase @samp{l}
+while the @code{float} macros have a lowercase @samp{f} appended to
+their names: @code{M_El}, @code{M_PIl}, and so forth.  These are only
 available if @code{_GNU_SOURCE} is defined.
 
 Likewise, @theglibc{} also defines these constants with the types

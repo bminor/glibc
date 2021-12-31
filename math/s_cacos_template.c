@@ -32,7 +32,7 @@ M_DECL_FUNC (__cacos) (CFLOAT x)
     {
       y = M_SUF (__casin) (x);
 
-      __real__ res = (FLOAT) M_MLIT (M_PI_2) - __real__ y;
+      __real__ res = M_MLIT (M_PI_2) - __real__ y;
       if (__real__ res == 0)
 	__real__ res = 0;
       __imag__ res = -__imag__ y;

@@ -243,7 +243,7 @@ j1f_near_root (float x, float z)
       x = -x;
       sign = -1.0f;
     }
-  index_f = roundf ((x - FIRST_ZERO_J1) / (float) M_PI);
+  index_f = roundf ((x - FIRST_ZERO_J1) / M_PIf);
   if (index_f >= SMALL_SIZE)
     return sign * j1f_asympt (x);
   index = (int) index_f;
@@ -525,7 +525,7 @@ y1f_near_root (float x, float z)
   float index_f;
   int index;
 
-  index_f = roundf ((x - FIRST_ZERO_Y1) / (float) M_PI);
+  index_f = roundf ((x - FIRST_ZERO_Y1) / M_PIf);
   if (index_f >= SMALL_SIZE)
     return y1f_asympt (x);
   index = (int) index_f;

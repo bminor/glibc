@@ -134,7 +134,7 @@ __ieee754_jnf(int n, float x)
 		tmp = n;
 		v = two/x;
 		tmp = tmp*__ieee754_logf(fabsf(v*tmp));
-		if(tmp<(float)8.8721679688e+01) {
+		if(tmp<8.8721679688e+01f) {
 		    for(i=n-1,di=(float)(i+i);i>0;i--){
 			temp = b;
 			b *= di;

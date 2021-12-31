@@ -56,7 +56,7 @@ M_DECL_FUNC (__kernel_casinh) (CFLOAT x, int adj)
 	}
 
       res = M_SUF (__clog) (y);
-      __real__ res += (FLOAT) M_MLIT (M_LN2);
+      __real__ res += M_MLIT (M_LN2);
     }
   else if (rx >= M_LIT (0.5) && ix < M_EPSILON / 8)
     {

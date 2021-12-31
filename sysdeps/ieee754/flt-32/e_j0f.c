@@ -233,7 +233,7 @@ j0f_near_root (float x, float z)
   float index_f;
   int index;
 
-  index_f = roundf ((x - FIRST_ZERO_J0) / (float) M_PI);
+  index_f = roundf ((x - FIRST_ZERO_J0) / M_PIf);
   /* j0f_asympt fails to give an error <= 9 ulps for x=0x1.324e92p+7
      (index 48) thus we can't reduce SMALL_SIZE below 49.  */
   if (index_f >= SMALL_SIZE)
@@ -514,7 +514,7 @@ y0f_near_root (float x, float z)
   float index_f;
   int index;
 
-  index_f = roundf ((x - FIRST_ZERO_Y0) / (float) M_PI);
+  index_f = roundf ((x - FIRST_ZERO_Y0) / M_PIf);
   if (index_f >= SMALL_SIZE)
     return y0f_asympt (x);
   index = (int) index_f;

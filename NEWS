@@ -43,6 +43,11 @@ Major new features:
   fminimum_mag, fminimum_mag_num and corresponding functions for float,
   long double, _FloatN and _FloatNx.
 
+* <math.h> macros for single-precision float constants are added as a
+  GNU extension: M_Ef, M_LOG2Ef, M_LOG10Ef, M_LN2f, M_LN10f, M_PIf,
+  M_PI_2f, M_PI_4f, M_1_PIf, M_2_PIf, M_2_SQRTPIf, M_SQRT2f and
+  M_SQRT1_2f.
+
 * The __STDC_IEC_60559_BFP__ and __STDC_IEC_60559_COMPLEX__ macros are
   predefined as specified in TS 18661-1:2014.
 

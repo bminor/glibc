@@ -106,7 +106,7 @@ M_DECL_FUNC (__catan) (CFLOAT x)
 	  if (M_FABS (__imag__ x) == 1
 	      && M_FABS (__real__ x) < M_EPSILON * M_EPSILON)
 	    __imag__ res = (M_COPYSIGN (M_LIT (0.5), __imag__ x)
-			    * ((FLOAT) M_MLIT (M_LN2)
+			    * (M_MLIT (M_LN2)
 			       - M_LOG (M_FABS (__real__ x))));
 	  else
 	    {

@@ -27,9 +27,8 @@
 #define M_STRTO_NAN __strtof_nan
 #define M_USE_BUILTIN(c) USE_ ##c ##F_BUILTIN
 
-/* Standard/GNU macro literals do not exist for the float type.  Use
-   the double macro constants.  */
-#define M_MLIT(c) c
+/* GNU extension float constant macros.  */
+#define M_MLIT(c) c ## f
 
 #include <libm-alias-float.h>
 #include <math-nan-payload-float.h>

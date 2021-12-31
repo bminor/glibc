@@ -165,9 +165,9 @@ static float
 lg_sinpi (float x)
 {
   if (x <= 0.25f)
-    return __sinf ((float) M_PI * x);
+    return __sinf (M_PIf * x);
   else
-    return __cosf ((float) M_PI * (0.5f - x));
+    return __cosf (M_PIf * (0.5f - x));
 }
 
 /* Compute cos (pi * X) for -0.25 <= X <= 0.5.  */
@@ -176,9 +176,9 @@ static float
 lg_cospi (float x)
 {
   if (x <= 0.25f)
-    return __cosf ((float) M_PI * x);
+    return __cosf (M_PIf * x);
   else
-    return __sinf ((float) M_PI * (0.5f - x));
+    return __sinf (M_PIf * (0.5f - x));
 }
 
 /* Compute cot (pi * X) for -0.25 <= X <= 0.5.  */
