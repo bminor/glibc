@@ -1,7 +1,7 @@
 ! SPARC v9 32-bit __mpn_submul_1 -- Multiply a limb vector with a limb
 ! and subtract the result from a second limb vector.
 !
-! Copyright (C) 2013-2021 Free Software Foundation, Inc.
+! Copyright (C) 2013-2022 Free Software Foundation, Inc.
 ! This file is part of the GNU C Library.
 !
 ! The GNU C Library is free software; you can redistribute it and/or

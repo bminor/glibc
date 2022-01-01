@@ -1,5 +1,5 @@
 /* Print usage information and help for ld.so.
-   Copyright (C) 1995-2021 Free Software Foundation, Inc.
+   Copyright (C) 1995-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ _dl_version (void)
 {
   _dl_printf ("\
 ld.so " PKGVERSION RELEASE " release version " VERSION ".\n\
-Copyright (C) 2021 Free Software Foundation, Inc.\n\
+Copyright (C) 2022 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.\n\

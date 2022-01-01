@@ -1,5 +1,5 @@
 /* Machine-specific calling sequence for `mcount' profiling function.  x86-64 version.
-   Copyright (C) 2002-2021 Free Software Foundation, Inc.
+   Copyright (C) 2002-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

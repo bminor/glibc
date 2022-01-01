@@ -1,6 +1,6 @@
 /* Define INTERNAL_SIZE_T, SIZE_SZ, MALLOC_ALIGNMENT and MALLOC_ALIGN_MASK
    for malloc.
-   Copyright (C) 2021 Free Software Foundation, Inc.
+   Copyright (C) 2021-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

@@ -1,6 +1,6 @@
 /* strchrnul - find a character or nul in a string
 
-   Copyright (C) 2014-2021 Free Software Foundation, Inc.
+   Copyright (C) 2014-2022 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

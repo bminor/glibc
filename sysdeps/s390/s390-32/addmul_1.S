@@ -1,6 +1,6 @@
 /* S390 __mpn_addmul_1 -- Multiply a limb vector with a limb and add
    the result to a second limb vector.
-   Copyright (C) 2000-2021 Free Software Foundation, Inc.
+   Copyright (C) 2000-2022 Free Software Foundation, Inc.
    This file is part of the GNU MP Library.
 
    The GNU MP Library is free software; you can redistribute it and/or modify

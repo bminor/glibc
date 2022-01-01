@@ -1,5 +1,5 @@
 # Combine version map fragments into version scripts for our shared objects.
-# Copyright (C) 1998-2021 Free Software Foundation, Inc.
+# Copyright (C) 1998-2022 Free Software Foundation, Inc.
 
 # This script expects the following variables to be defined:
 # defsfile		name of Versions.def file

@@ -1,5 +1,5 @@
 /* Optimized memset for Fujitsu A64FX processor.
-   Copyright (C) 2021 Free Software Foundation, Inc.
+   Copyright (C) 2021-2022 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

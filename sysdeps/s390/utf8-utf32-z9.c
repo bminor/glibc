@@ -2,7 +2,7 @@
 
    This module uses the Z9-109 variants of the Convert Unicode
    instructions.
-   Copyright (C) 1997-2021 Free Software Foundation, Inc.
+   Copyright (C) 1997-2022 Free Software Foundation, Inc.
 
    This is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

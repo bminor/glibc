@@ -51,7 +51,7 @@ This is
 @value{VERSION} @value{PKGVERSION}.
 @end ifclear
 
-Copyright @copyright{} 1993--2021 Free Software Foundation, Inc.
+Copyright @copyright{} 1993--2022 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version

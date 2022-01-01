@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # Generate topologically sorted list of manual chapters.
-# Copyright (C) 1998-2021 Free Software Foundation, Inc.
+# Copyright (C) 1998-2022 Free Software Foundation, Inc.
 
 BEGIN {
   cnt = 0

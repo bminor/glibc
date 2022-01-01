@@ -1,5 +1,5 @@
 /* Tests for support_open_dev_null_range.
-   Copyright (C) 2021 Free Software Foundation, Inc.
+   Copyright (C) 2021-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -117,7 +117,7 @@ do_test (void)
     struct rlimit rl;
     if (getrlimit (RLIMIT_NOFILE, &rl) == -1)
       FAIL_EXIT1 ("getrlimit (RLIMIT_NOFILE): %m");
-    
+
     rl.rlim_cur = number_of_opened_files ();
 
     if (setrlimit (RLIMIT_NOFILE, &rl) == 1)

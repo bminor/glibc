@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2021 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -910,7 +910,7 @@
 /* Return minimum numeric value from X and Y.  */
 # define fmin(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, fmin)
 #endif
-  
+
 
 /* Multiply-add function computed as a ternary operation.  */
 #define fma(Val1, Val2, Val3) \

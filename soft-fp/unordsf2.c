@@ -1,6 +1,6 @@
 /* Software floating-point emulation.
    Return 1 iff a or b is a NaN, 0 otherwise.
-   Copyright (C) 2006-2021 Free Software Foundation, Inc.
+   Copyright (C) 2006-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

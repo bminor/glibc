@@ -1,6 +1,6 @@
 /* Copy memory to memory until the specified number of bytes
    has been copied with error checking.  Overlap is NOT handled correctly.
-   Copyright (C) 1991-2021 Free Software Foundation, Inc.
+   Copyright (C) 1991-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

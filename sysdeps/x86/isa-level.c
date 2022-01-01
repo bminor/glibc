@@ -1,5 +1,5 @@
 /* ELF program property for x86 ISA level.
-   Copyright (C) 2020 Free Software Foundation, Inc.
+   Copyright (C) 2020-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
