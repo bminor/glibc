@@ -30,7 +30,7 @@
 
 #line 1 "charmap-kw.gperf"
 
-/* Copyright (C) 1995-2021 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    This program is free software; you can redistribute it and/or modify
@@ -50,7 +50,7 @@
 #include <string.h>
 
 #include "locfile-token.h"
-#line 24 "charmap-kw.gperf"
+#line 23 "charmap-kw.gperf"
 struct keyword_t ;
 
 #define TOTAL_KEYWORDS 17
@@ -130,45 +130,45 @@ charmap_hash (register const char *str, register size_t len)
   static const struct keyword_t wordlist[] =
     {
       {""}, {""}, {""},
-#line 39 "charmap-kw.gperf"
+#line 38 "charmap-kw.gperf"
       {"END",             tok_end,             0},
       {""},
-#line 40 "charmap-kw.gperf"
+#line 39 "charmap-kw.gperf"
       {"WIDTH",           tok_width,           0},
-#line 35 "charmap-kw.gperf"
+#line 34 "charmap-kw.gperf"
       {"escseq",          tok_escseq,          1},
-#line 37 "charmap-kw.gperf"
+#line 36 "charmap-kw.gperf"
       {"include",         tok_include,         1},
       {""}, {""},
-#line 28 "charmap-kw.gperf"
-      {"mb_cur_min",      tok_mb_cur_min,      1},
-#line 29 "charmap-kw.gperf"
-      {"escape_char",     tok_escape_char,     1},
-#line 30 "charmap-kw.gperf"
-      {"comment_char",    tok_comment_char,    1},
-#line 26 "charmap-kw.gperf"
-      {"code_set_name",   tok_code_set_name,   1},
-#line 41 "charmap-kw.gperf"
-      {"WIDTH_VARIABLE",  tok_width_variable,  0},
 #line 27 "charmap-kw.gperf"
+      {"mb_cur_min",      tok_mb_cur_min,      1},
+#line 28 "charmap-kw.gperf"
+      {"escape_char",     tok_escape_char,     1},
+#line 29 "charmap-kw.gperf"
+      {"comment_char",    tok_comment_char,    1},
+#line 25 "charmap-kw.gperf"
+      {"code_set_name",   tok_code_set_name,   1},
+#line 40 "charmap-kw.gperf"
+      {"WIDTH_VARIABLE",  tok_width_variable,  0},
+#line 26 "charmap-kw.gperf"
       {"mb_cur_max",      tok_mb_cur_max,      1},
-#line 36 "charmap-kw.gperf"
+#line 35 "charmap-kw.gperf"
       {"addset",          tok_addset,          1},
-#line 38 "charmap-kw.gperf"
+#line 37 "charmap-kw.gperf"
       {"CHARMAP",         tok_charmap,         0},
-#line 42 "charmap-kw.gperf"
+#line 41 "charmap-kw.gperf"
       {"WIDTH_DEFAULT",   tok_width_default,   0},
       {""},
-#line 34 "charmap-kw.gperf"
+#line 33 "charmap-kw.gperf"
       {"g3esc",           tok_g3esc,           1},
       {""}, {""}, {""}, {""},
-#line 33 "charmap-kw.gperf"
+#line 32 "charmap-kw.gperf"
       {"g2esc",           tok_g2esc,           1},
       {""}, {""}, {""}, {""},
-#line 32 "charmap-kw.gperf"
+#line 31 "charmap-kw.gperf"
       {"g1esc",           tok_g1esc,           1},
       {""}, {""}, {""}, {""},
-#line 31 "charmap-kw.gperf"
+#line 30 "charmap-kw.gperf"
       {"g0esc",           tok_g0esc,           1}
     };
 
