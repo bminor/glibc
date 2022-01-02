@@ -236,7 +236,13 @@ EOF
 		    -fPIC -shared -o conftest.so conftest.c
 		    1>&AS_MESSAGE_LOG_FD])
   then
-    libc_linker_feature=yes
+    if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp $2 -nostdlib \
+	-nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
+	| grep "warning: $1 ignored" > /dev/null 2>&1; then
+      true
+    else
+      libc_linker_feature=yes
+    fi
   fi
   rm -f conftest*
 fi

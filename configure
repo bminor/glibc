@@ -6009,7 +6009,13 @@ EOF
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
   then
-    libc_linker_feature=yes
+    if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -Wl,-z,execstack -nostdlib \
+	-nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
+	| grep "warning: -z execstack ignored" > /dev/null 2>&1; then
+      true
+    else
+      libc_linker_feature=yes
+    fi
   fi
   rm -f conftest*
 fi
@@ -6039,7 +6045,13 @@ EOF
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
   then
-    libc_linker_feature=yes
+    if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -Wl,-z,start-stop-gc -nostdlib \
+	-nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
+	| grep "warning: -z start-stop-gc ignored" > /dev/null 2>&1; then
+      true
+    else
+      libc_linker_feature=yes
+    fi
   fi
   rm -f conftest*
 fi
@@ -6070,7 +6082,13 @@ EOF
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
   then
-    libc_linker_feature=yes
+    if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -Wl,--depaudit,x -nostdlib \
+	-nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
+	| grep "warning: --depaudit ignored" > /dev/null 2>&1; then
+      true
+    else
+      libc_linker_feature=yes
+    fi
   fi
   rm -f conftest*
 fi
@@ -6101,7 +6119,13 @@ EOF
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
   then
-    libc_linker_feature=yes
+    if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -Wl,--no-dynamic-linker -nostdlib \
+	-nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
+	| grep "warning: --no-dynamic-linker ignored" > /dev/null 2>&1; then
+      true
+    else
+      libc_linker_feature=yes
+    fi
   fi
   rm -f conftest*
 fi
