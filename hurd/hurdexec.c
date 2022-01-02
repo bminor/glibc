@@ -229,6 +229,14 @@ retry:
      reflects that our whole ID set differs from what we've set it to.  */
   __mutex_lock (&_hurd_id.lock);
   err = _hurd_check_ids ();
+
+  /* Avoid leaking the rid_auth port reference to the new progam */
+  if (_hurd_id.rid_auth != MACH_PORT_NULL)
+    {
+      __mach_port_deallocate (__mach_task_self (), _hurd_id.rid_auth);
+      _hurd_id.rid_auth = MACH_PORT_NULL;
+    }
+
   if (err == 0 && ((_hurd_id.aux.nuids >= 2 && _hurd_id.gen.nuids >= 1
 		    && _hurd_id.aux.uids[1] != _hurd_id.gen.uids[0])
 		   || (_hurd_id.aux.ngids >= 2 && _hurd_id.gen.ngids >= 1
@@ -244,11 +252,6 @@ retry:
       _hurd_id.aux.uids[1] = _hurd_id.gen.uids[0];
       _hurd_id.aux.gids[1] = _hurd_id.gen.gids[0];
       _hurd_id.valid = 0;
-      if (_hurd_id.rid_auth != MACH_PORT_NULL)
-	{
-	  __mach_port_deallocate (__mach_task_self (), _hurd_id.rid_auth);
-	  _hurd_id.rid_auth = MACH_PORT_NULL;
-	}
 
       err = __auth_makeauth (ports[INIT_PORT_AUTH],
 			     NULL, MACH_MSG_TYPE_COPY_SEND, 0,
