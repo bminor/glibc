@@ -65,12 +65,16 @@ _hurd_exec_paths (task_t task, file_t file,
       _hurd_port_free (&_hurd_ports[i], &ulink_ports[i], ports[i]);
     }
   file_t *dtable;
-  unsigned int dtablesize, i;
+  unsigned int dtablesize, i, j;
   struct hurd_port **dtable_cells;
   struct hurd_userlink *ulink_dtable;
   struct hurd_sigstate *ss;
   mach_port_t *please_dealloc, *pdp;
   int reauth = 0;
+  mach_port_t *portnames = NULL;
+  mach_msg_type_number_t nportnames = 0;
+  mach_port_type_t *porttypes = NULL;
+  mach_msg_type_number_t nporttypes = 0;
 
   /* XXX needs to be hurdmalloc XXX */
   if (argv == NULL)
@@ -361,6 +365,15 @@ retry:
 
       if (pdp)
 	{
+	  /* Get all ports that we may not know about and we should thus destroy.  */
+	  /* XXX need to disable other threads to be safe.  */
+	  if (err = __mach_port_names (__mach_task_self (),
+				     &portnames, &nportnames,
+				     &porttypes, &nporttypes))
+	    return err;
+	  if (nportnames != nporttypes)
+	    return EGRATUITOUS;
+
 	  /* Request the exec server to deallocate some ports from us if
 	     the exec succeeds.  The init ports and descriptor ports will
 	     arrive in the new program's exec_startup message.  If we
@@ -370,9 +383,30 @@ retry:
 	     exec call.  */
 
 	  for (i = 0; i < _hurd_nports; ++i)
-	    *pdp++ = ports[i];
+	    {
+	      *pdp++ = ports[i];
+	      for (j = 0; j < nportnames; j++)
+		if (portnames[j] == ports[i])
+		  portnames[j] = MACH_PORT_NULL;
+	    }
 	  for (i = 0; i < dtablesize; ++i)
-	    *pdp++ = dtable[i];
+	    {
+	      *pdp++ = dtable[i];
+	      for (j = 0; j < nportnames; j++)
+		if (portnames[j] == dtable[i])
+		  portnames[j] = MACH_PORT_NULL;
+	    }
+
+	  /* Pack ports to be destroyed together.  */
+	  for (i = 0, j = 0; i < nportnames; i++)
+	    {
+	      if (portnames[i] == MACH_PORT_NULL)
+		continue;
+	      if (j != i)
+		portnames[j] = portnames[i];
+	      j++;
+	    }
+	  nportnames = j;
 	}
 
       flags = 0;
@@ -393,8 +427,7 @@ retry:
 			       _hurd_nports,
 			       ints, INIT_INT_MAX,
 			       please_dealloc, pdp - please_dealloc,
-			       &_hurd_msgport,
-			       task == __mach_task_self () ? 1 : 0);
+			       portnames, nportnames);
       /* Fall back for backwards compatibility.  This can just be removed
          when __file_exec goes away.  */
       if (err == MIG_BAD_ID)
@@ -404,8 +437,7 @@ retry:
 			   ports, MACH_MSG_TYPE_COPY_SEND, _hurd_nports,
 			   ints, INIT_INT_MAX,
 			   please_dealloc, pdp - please_dealloc,
-			   &_hurd_msgport,
-			   task == __mach_task_self () ? 1 : 0);
+			   portnames, nportnames);
     }
 
   /* Release references to the standard ports.  */
