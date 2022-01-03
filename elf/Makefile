@@ -1683,7 +1683,6 @@ $(objpfx)tst-linkall-static: \
   $(common-objpfx)resolv/libresolv.a \
   $(common-objpfx)login/libutil.a \
   $(common-objpfx)rt/librt.a \
-  $(common-objpfx)resolv/libanl.a \
   $(static-thread-library)
 
 ifeq ($(build-crypt),yes)
