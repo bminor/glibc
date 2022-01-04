@@ -84,7 +84,9 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 	     __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative; int lazy; }  \
       ranges[2] = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };			      \
 									      \
-    if ((map)->l_info[DT_##RELOC])					      \
+    /* With DT_RELR, DT_RELA/DT_REL can have zero value.  */		      \
+    if ((map)->l_info[DT_##RELOC] != NULL				      \
+	&& (map)->l_info[DT_##RELOC]->d_un.d_ptr != 0)			      \
       {									      \
 	ranges[0].start = D_PTR ((map), l_info[DT_##RELOC]);		      \
 	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
@@ -98,6 +100,8 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 	ElfW(Addr) start = D_PTR ((map), l_info[DT_JMPREL]);		      \
 	ElfW(Addr) size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
 									      \
+	if (ranges[0].start == 0)					      \
+	  ranges[0].start = start;					      \
 	if (ranges[0].start + ranges[0].size == (start + size))		      \
 	  ranges[0].size -= size;					      \
 	if (!(do_lazy)							      \

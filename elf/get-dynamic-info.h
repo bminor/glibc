@@ -75,24 +75,36 @@ elf_get_dynamic_info (struct link_map *l, bool bootstrap,
 
 # define ADJUST_DYN_INFO(tag) \
       do								      \
-	if (info[tag] != NULL)						      \
-         info[tag]->d_un.d_ptr += l_addr;				      \
+	{								      \
+	  if (info[tag] != NULL)					      \
+	  info[tag]->d_un.d_ptr += l_addr;				      \
+	}								      \
       while (0)
 
       ADJUST_DYN_INFO (DT_HASH);
       ADJUST_DYN_INFO (DT_PLTGOT);
       ADJUST_DYN_INFO (DT_STRTAB);
       ADJUST_DYN_INFO (DT_SYMTAB);
+      ADJUST_DYN_INFO (DT_RELR);
+      ADJUST_DYN_INFO (DT_JMPREL);
+      ADJUST_DYN_INFO (VERSYMIDX (DT_VERSYM));
+      ADJUST_DYN_INFO (ADDRIDX (DT_GNU_HASH));
+# undef ADJUST_DYN_INFO
+
+      /* DT_RELA/DT_REL are mandatory.  But they may have zero value if
+	 there is DT_RELR.  Don't relocate them if they are zero.  */
+# define ADJUST_DYN_INFO(tag) \
+      do								      \
+	if (info[tag] != NULL && info[tag]->d_un.d_ptr != 0)		      \
+         info[tag]->d_un.d_ptr += l_addr;				      \
+      while (0)
+
 # if ! ELF_MACHINE_NO_RELA
       ADJUST_DYN_INFO (DT_RELA);
 # endif
 # if ! ELF_MACHINE_NO_REL
       ADJUST_DYN_INFO (DT_REL);
 # endif
-      ADJUST_DYN_INFO (DT_RELR);
-      ADJUST_DYN_INFO (DT_JMPREL);
-      ADJUST_DYN_INFO (VERSYMIDX (DT_VERSYM));
-      ADJUST_DYN_INFO (ADDRIDX (DT_GNU_HASH));
 # undef ADJUST_DYN_INFO
     }
   if (info[DT_PLTREL] != NULL)
