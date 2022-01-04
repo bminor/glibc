@@ -1936,6 +1936,10 @@ $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
 # Test static linking of all the libraries we can possibly link
 # together.  Note that in some configurations this may be less than the
 # complete list of libraries we build but we try to maxmimize this list.
+ifeq ($(pthread-in-libc),no)
+$(objpfx)tst-linkall-static: \
+  $(common-objpfx)resolv/libanl.a
+endif
 $(objpfx)tst-linkall-static: \
   $(common-objpfx)math/libm.a \
   $(common-objpfx)resolv/libresolv.a \
