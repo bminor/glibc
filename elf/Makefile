@@ -542,6 +542,25 @@ tests-special += \
   # tests-special
 endif
 endif
+ifeq ($(have-dt-relr),yes)
+tests += \
+  tst-relr \
+# tests
+ifeq ($(have-fpie),yes)
+tests += \
+  tst-relr-pie \
+# tests
+tests-pie += \
+  tst-relr-pie \
+# tests-pie
+tests-special += \
+  $(objpfx)check-tst-relr-pie.out \
+# tests-special
+endif
+CFLAGS-tst-relr-pie.c += $(pie-ccflag)
+LDFLAGS-tst-relr += -Wl,-z,pack-relative-relocs
+LDFLAGS-tst-relr-pie += -Wl,-z,pack-relative-relocs
+endif
 endif
 
 tests-special += $(objpfx)tst-relro-ldso.out $(objpfx)tst-relro-libc.out
@@ -2787,5 +2806,11 @@ $(objpfx)tst-p_align3.out: tst-p_align3.sh $(objpfx)tst-p_align3
 $(objpfx)check-abi-version-libc.out: $(common-objpfx)libc.so
 	LC_ALL=C $(READELF) -V -W $< \
 		| sed -ne '/.gnu.version_d/, /.gnu.version_r/ p' \
+		| grep GLIBC_ABI_DT_RELR > $@; \
+	$(evaluate-test)
+
+$(objpfx)check-tst-relr-pie.out: $(objpfx)tst-relr-pie
+	LC_ALL=C $(OBJDUMP) -p $< \
+		| sed -ne '/required from libc.so/,$$ p' \
 		| grep GLIBC_ABI_DT_RELR > $@; \
 	$(evaluate-test)
