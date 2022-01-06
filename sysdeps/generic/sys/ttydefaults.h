@@ -61,11 +61,7 @@
 #endif
 #define	CERASE		0177
 #define	CINTR		CTRL('c')
-#ifdef _POSIX_VDISABLE
-# define CSTATUS	_POSIX_VDISABLE
-#else
-# define CSTATUS	((unsigned char)'\377')	/* XXX avoid _POSIX_VDISABLE */
-#endif
+#define	CSTATUS		CTRL('t')
 #define	CKILL		CTRL('u')
 #define	CMIN		1
 #define	CQUIT		034		/* FS, ^\ */
