@@ -44,7 +44,7 @@ libc_ifunc (__libc_memset,
 	      : (IS_EMAG (midr) && zva_size == 64
 		? __memset_emag
 # if HAVE_AARCH64_SVE_ASM
-		: (IS_A64FX (midr)
+		: (IS_A64FX (midr) && sve
 		  ? __memset_a64fx
 		  : __memset_generic))));
 # else

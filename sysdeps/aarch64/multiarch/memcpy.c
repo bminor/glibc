@@ -48,7 +48,7 @@ libc_ifunc (__libc_memcpy,
 		      || IS_NEOVERSE_V1 (midr)
 		      ? __memcpy_simd
 # if HAVE_AARCH64_SVE_ASM
-		     : (IS_A64FX (midr)
+		     : (IS_A64FX (midr) && sve
 			? __memcpy_a64fx
 			: __memcpy_generic))))));
 # else
