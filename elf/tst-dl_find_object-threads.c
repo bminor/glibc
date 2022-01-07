@@ -138,12 +138,12 @@ check (void *address, struct dl_find_object *expected, int line)
 #endif
 }
 
-/* Request process termination after 3 seconds.  */
+/* Request process termination after 0.3 seconds.  */
 static bool exit_requested;
 static void *
 exit_thread (void *ignored)
 {
-  usleep (3 * 100 * 1000);
+  usleep (300 * 1000);
   __atomic_store_n (&exit_requested, true,  __ATOMIC_RELAXED);
   return NULL;
 }

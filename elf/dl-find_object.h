@@ -20,6 +20,7 @@
 #define _DL_FIND_EH_FRAME_H
 
 #include <assert.h>
+#include <atomic.h>
 #include <dlfcn.h>
 #include <ldsodefs.h>
 #include <stdbool.h>
@@ -44,6 +45,30 @@ struct dl_find_object_internal
 #endif
 };
 
+/* Create a copy of *SOURCE in *COPY using relaxed MO loads and
+   stores.  */
+static inline void
+_dl_find_object_internal_copy (const struct dl_find_object_internal *source,
+                               struct dl_find_object_internal *copy)
+{
+  atomic_store_relaxed (&copy->map_start,
+                        atomic_load_relaxed (&source->map_start));
+  atomic_store_relaxed (&copy->map_end,
+                        atomic_load_relaxed (&source->map_end));
+  atomic_store_relaxed (&copy->map,
+                        atomic_load_relaxed (&source->map));
+  atomic_store_relaxed (&copy->eh_frame,
+                        atomic_load_relaxed (&source->eh_frame));
+#if DLFO_STRUCT_HAS_EH_DBASE
+  atomic_store_relaxed (&copy->eh_dbase,
+                        atomic_load_relaxed (&source->eh_dbase));
+#endif
+#if DLFO_STRUCT_HAS_EH_COUNT
+  atomic_store_relaxed (&copy->eh_count,
+                        atomic_load_relaxed (&source->eh_count));
+#endif
+}
+
 static inline void
 _dl_find_object_to_external (struct dl_find_object_internal *internal,
                              struct dl_find_object *external)
@@ -62,34 +87,35 @@ _dl_find_object_to_external (struct dl_find_object_internal *internal,
 }
 
 /* Extract the object location data from a link map and writes it to
-   *RESULT.  */
+   *RESULT using relaxed MO stores.  */
 static void __attribute__ ((unused))
 _dl_find_object_from_map (struct link_map *l,
                           struct dl_find_object_internal *result)
 {
-  result->map_start = (uintptr_t) l->l_map_start;
-  result->map_end = (uintptr_t) l->l_map_end;
-  result->map = l;
+  atomic_store_relaxed (&result->map_start, (uintptr_t) l->l_map_start);
+  atomic_store_relaxed (&result->map_end, (uintptr_t) l->l_map_end);
+  atomic_store_relaxed (&result->map, l);
 
 #if DLFO_STRUCT_HAS_EH_DBASE
-  result->eh_dbase = (void *) l->l_info[DT_PLTGOT];
+  atomic_store_relaxed (&result->eh_dbase, (void *) l->l_info[DT_PLTGOT]);
 #endif
 
   for (const ElfW(Phdr) *ph = l->l_phdr, *ph_end = l->l_phdr + l->l_phnum;
        ph < ph_end; ++ph)
     if (ph->p_type == DLFO_EH_SEGMENT_TYPE)
       {
-        result->eh_frame = (void *) (ph->p_vaddr + l->l_addr);
+        atomic_store_relaxed (&result->eh_frame,
+                              (void *) (ph->p_vaddr + l->l_addr));
 #if DLFO_STRUCT_HAS_EH_COUNT
-        result->eh_count = ph->p_memsz / 8;
+        atomic_store_relaxed (&result->eh_count, ph->p_memsz / 8);
 #endif
         return;
       }
 
   /* Object has no exception handling segment.  */
-  result->eh_frame = NULL;
+  atomic_store_relaxed (&result->eh_frame, NULL);
 #if DLFO_STRUCT_HAS_EH_COUNT
-  result->eh_count = 0;
+  atomic_store_relaxed (&result->eh_count, 0);
 #endif
 }
 

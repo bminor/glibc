@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <assert.h>
+#include <atomic.h>
 #include <atomic_wide_counter.h>
 #include <dl-find_object.h>
 #include <dlfcn.h>
@@ -80,13 +81,18 @@ static struct dl_find_object_internal *_dlfo_nodelete_mappings
    over all segments, even though the data is not stored in one
    contiguous array.
 
-   During updates, the segments are overwritten in place, and a
-   software transactional memory construct (involving the
+   During updates, the segments are overwritten in place.  A software
+   transactional memory construct (involving the
    _dlfo_loaded_mappings_version variable) is used to detect
-   concurrent modification, and retry as necessary.  The memory
-   allocations are never deallocated, but slots used for objects that
-   have been dlclose'd can be reused by dlopen.  The memory can live
-   in the regular C malloc heap.
+   concurrent modification, and retry as necessary.  (This approach is
+   similar to seqlocks, except that two copies are used, and there is
+   only one writer, ever, due to the loader lock.)  Technically,
+   relaxed MO loads and stores need to be used for the shared TM data,
+   to avoid data races.
+
+   The memory allocations are never deallocated, but slots used for
+   objects that have been dlclose'd can be reused by dlopen.  The
+   memory can live in the regular C malloc heap.
 
    The segments are populated from the start of the list, with the
    mappings with the highest address.  Only if this segment is full,
@@ -101,17 +107,18 @@ static struct dl_find_object_internal *_dlfo_nodelete_mappings
    needed.  */
 struct dlfo_mappings_segment
 {
-  /* The previous segment has lower base addresses.  */
+  /* The previous segment has lower base addresses.  Constant after
+     initialization; read in the TM region.  */
   struct dlfo_mappings_segment *previous;
 
   /* Used by __libc_freeres to deallocate malloc'ed memory.  */
   void *to_free;
 
   /* Count of array elements in use and allocated.  */
-  size_t size;
+  size_t size;                  /* Read in the TM region.  */
   size_t allocated;
 
-  struct dl_find_object_internal objects[];
+  struct dl_find_object_internal objects[]; /* Read in the TM region.  */
 };
 
 /* To achieve async-signal-safety, two copies of the data structure
@@ -240,7 +247,8 @@ static inline uint64_t
 _dlfo_read_start_version (void)
 {
   /* Acquire MO load synchronizes with the fences at the beginning and
-     end of the TM update region.  */
+     end of the TM update region in _dlfo_mappings_begin_update,
+     _dlfo_mappings_end_update, _dlfo_mappings_end_update_no_switch.  */
   return __atomic_wide_counter_load_acquire (&_dlfo_loaded_mappings_version);
 }
 
@@ -258,34 +266,30 @@ _dlfo_read_version_locked (void)
 static inline unsigned int
 _dlfo_mappings_begin_update (void)
 {
-  unsigned int v
-    = __atomic_wide_counter_fetch_add_relaxed (&_dlfo_loaded_mappings_version,
-                                               2);
-  /* Subsequent stores to the TM data must not be reordered before the
-     store above with the version update.  */
+  /* The store synchronizes with loads in _dlfo_read_start_version
+     (also called from _dlfo_read_success).  */
   atomic_thread_fence_release ();
-  return v & 1;
+  return __atomic_wide_counter_fetch_add_relaxed
+    (&_dlfo_loaded_mappings_version, 2);
 }
 
 /* Installs the just-updated version as the active version.  */
 static inline void
 _dlfo_mappings_end_update (void)
 {
-  /* The previous writes to the TM data must not be reordered after
-     the version update below.  */
+  /* The store synchronizes with loads in _dlfo_read_start_version
+     (also called from _dlfo_read_success).  */
   atomic_thread_fence_release ();
-  __atomic_wide_counter_fetch_add_relaxed (&_dlfo_loaded_mappings_version,
-                                           1);
+  __atomic_wide_counter_fetch_add_relaxed (&_dlfo_loaded_mappings_version, 1);
 }
 /* Completes an in-place update without switching versions.  */
 static inline void
 _dlfo_mappings_end_update_no_switch (void)
 {
-  /* The previous writes to the TM data must not be reordered after
-     the version update below.  */
+  /* The store synchronizes with loads in _dlfo_read_start_version
+     (also called from _dlfo_read_success).  */
   atomic_thread_fence_release ();
-  __atomic_wide_counter_fetch_add_relaxed (&_dlfo_loaded_mappings_version,
-                                           2);
+  __atomic_wide_counter_fetch_add_relaxed (&_dlfo_loaded_mappings_version, 2);
 }
 
 /* Return true if the read was successful, given the start
@@ -293,6 +297,19 @@ _dlfo_mappings_end_update_no_switch (void)
 static inline bool
 _dlfo_read_success (uint64_t start_version)
 {
+  /* See Hans Boehm, Can Seqlocks Get Along with Programming Language
+     Memory Models?, Section 4.  This is necessary so that loads in
+     the TM region are not ordered past the version check below.  */
+  atomic_thread_fence_acquire ();
+
+  /* Synchronizes with stores in _dlfo_mappings_begin_update,
+     _dlfo_mappings_end_update, _dlfo_mappings_end_update_no_switch.
+     It is important that all stores from the last update have been
+     visible, and stores from the next updates are not.
+
+     Unlike with seqlocks, there is no check for odd versions here
+     because we have read the unmodified copy (confirmed to be
+     unmodified by the unchanged version).  */
   return _dlfo_read_start_version () == start_version;
 }
 
@@ -318,7 +335,7 @@ _dlfo_lookup (uintptr_t pc, struct dl_find_object_internal *first1, size_t size)
     {
       size_t half = size >> 1;
       struct dl_find_object_internal *middle = first + half;
-      if (middle->map_start < pc)
+      if (atomic_load_relaxed (&middle->map_start) < pc)
         {
           first = middle + 1;
           size -= half + 1;
@@ -327,9 +344,9 @@ _dlfo_lookup (uintptr_t pc, struct dl_find_object_internal *first1, size_t size)
         size = half;
     }
 
-  if (first != end && pc == first->map_start)
+  if (first != end && pc == atomic_load_relaxed (&first->map_start))
     {
-      if (pc < first->map_end)
+      if (pc < atomic_load_relaxed (&first->map_end))
         return first;
       else
         /* Zero-length mapping after dlclose.  */
@@ -339,7 +356,7 @@ _dlfo_lookup (uintptr_t pc, struct dl_find_object_internal *first1, size_t size)
     {
       /* Check to see if PC is in the previous mapping.  */
       --first;
-      if (pc < first->map_end)
+      if (pc < atomic_load_relaxed (&first->map_end))
         /* pc >= first->map_start implied by the search above.  */
         return first;
       else
@@ -408,39 +425,47 @@ _dl_find_object (void *pc1, struct dl_find_object *result)
          size on earlier unused segments.  */
       for (struct dlfo_mappings_segment *seg
              = _dlfo_mappings_active_segment (start_version);
-           seg != NULL && seg->size > 0; seg = seg->previous)
-        if (pc >= seg->objects[0].map_start)
-          {
-            /* PC may lie within this segment.  If it is less than the
-               segment start address, it can only lie in a previous
-               segment, due to the base address sorting.  */
-            struct dl_find_object_internal *obj
-              = _dlfo_lookup (pc, seg->objects, seg->size);
+           seg != NULL;
+           seg = atomic_load_acquire (&seg->previous))
+        {
+          size_t seg_size = atomic_load_relaxed (&seg->size);
+          if (seg_size == 0)
+            break;
 
-            if (obj != NULL)
-              {
-                /* Found the right mapping.  Copy out the data prior to
-                   checking if the read transaction was successful.  */
-                struct dl_find_object_internal copy = *obj;
-                if (_dlfo_read_success (start_version))
-                  {
-                    _dl_find_object_to_external (&copy, result);
-                    return 0;
-                  }
-                else
-                  /* Read transaction failure.  */
-                  goto retry;
-              }
-            else
-              {
-                /* PC is not covered by this mapping.  */
-                if (_dlfo_read_success (start_version))
-                  return -1;
-                else
-                  /* Read transaction failure.  */
-                  goto retry;
-              }
-          } /* if: PC might lie within the current seg.  */
+          if (pc >= atomic_load_relaxed (&seg->objects[0].map_start))
+            {
+              /* PC may lie within this segment.  If it is less than the
+                 segment start address, it can only lie in a previous
+                 segment, due to the base address sorting.  */
+              struct dl_find_object_internal *obj
+                = _dlfo_lookup (pc, seg->objects, seg_size);
+
+              if (obj != NULL)
+                {
+                  /* Found the right mapping.  Copy out the data prior to
+                     checking if the read transaction was successful.  */
+                  struct dl_find_object_internal copy;
+                  _dl_find_object_internal_copy (obj, &copy);
+                  if (_dlfo_read_success (start_version))
+                    {
+                      _dl_find_object_to_external (&copy, result);
+                      return 0;
+                    }
+                  else
+                    /* Read transaction failure.  */
+                    goto retry;
+                }
+              else
+                {
+                  /* PC is not covered by this mapping.  */
+                  if (_dlfo_read_success (start_version))
+                    return -1;
+                  else
+                    /* Read transaction failure.  */
+                    goto retry;
+                }
+            } /* if: PC might lie within the current seg.  */
+        }
 
       /* PC is not covered by any segment.  */
       if (_dlfo_read_success (start_version))
@@ -619,15 +644,19 @@ static inline size_t
 _dlfo_update_init_seg (struct dlfo_mappings_segment *seg,
                        size_t remaining_to_add)
 {
+  size_t new_seg_size;
   if (remaining_to_add < seg->allocated)
     /* Partially filled segment.  */
-    seg->size = remaining_to_add;
+    new_seg_size = remaining_to_add;
   else
-    seg->size = seg->allocated;
-  return seg->size;
+    new_seg_size = seg->allocated;
+  atomic_store_relaxed (&seg->size, new_seg_size);
+  return new_seg_size;
 }
 
-/* Invoked from _dl_find_object_update after sorting.  */
+/* Invoked from _dl_find_object_update after sorting.  Stores to the
+   shared data need to use relaxed MO.  But plain loads can be used
+   because the loader lock prevents concurrent stores.  */
 static bool
 _dl_find_object_update_1 (struct link_map **loaded, size_t count)
 {
@@ -727,7 +756,8 @@ _dl_find_object_update_1 (struct link_map **loaded, size_t count)
         {
           /* Prefer mapping in current_seg.  */
           assert (current_seg_index1 > 0);
-          *dlfo = current_seg->objects[current_seg_index1 - 1];
+          _dl_find_object_internal_copy
+            (&current_seg->objects[current_seg_index1 - 1], dlfo);
           --current_seg_index1;
         }
       else
@@ -753,7 +783,7 @@ _dl_find_object_update_1 (struct link_map **loaded, size_t count)
 
   /* Prevent searching further into unused segments.  */
   if (target_seg->previous != NULL)
-    target_seg->previous->size = 0;
+    atomic_store_relaxed (&target_seg->previous->size, 0);
 
   _dlfo_mappings_end_update ();
   return true;
