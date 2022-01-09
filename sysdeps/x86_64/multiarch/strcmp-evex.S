@@ -104,6 +104,16 @@ ENTRY (STRCMP)
 	je	L(char0)
 	jb	L(zero)
 #  ifdef USE_AS_WCSCMP
+#  ifndef __ILP32__
+	movq	%rdx, %rcx
+	/* Check if length could overflow when multiplied by
+	   sizeof(wchar_t). Checking top 8 bits will cover all potential
+	   overflow cases as well as redirect cases where its impossible to
+	   length to bound a valid memory region. In these cases just use
+	   'wcscmp'.  */
+	shrq	$56, %rcx
+	jnz	__wcscmp_evex
+#  endif
 	/* Convert units: from wide to byte char.  */
 	shl	$2, %RDX_LP
 #  endif
