@@ -161,6 +161,17 @@ def init_test(test_bin, printer_files, printer_names):
             printer files.
     """
 
+    # Disable debuginfod to avoid GDB messages like:
+    #
+    # This GDB supports auto-downloading debuginfo from the following URLs:
+    # https://debuginfod.fedoraproject.org/
+    # Enable debuginfod for this session? (y or [n])
+    #
+    try:
+        test('set debuginfod enabled off')
+    except Exception:
+        pass
+
     # Load all the pretty printer files.  We're assuming these are safe.
     for printer_file in printer_files:
         test('source {0}'.format(printer_file))
