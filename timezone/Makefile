@@ -124,7 +124,8 @@ $(testdata)/XT%: testdata/XT%
 	$(make-target-directory)
 	cp $< $@
 
-$(testdata)/XT%: testdata/gen-XT%.sh
+$(testdata)/XT5: testdata/gen-XT5.sh
+	$(make-target-directory)
 	$(SHELL) $< > $@.tmp
 	mv $@.tmp $@
 
