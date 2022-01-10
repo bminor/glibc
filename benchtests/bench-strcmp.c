@@ -99,8 +99,8 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl,
 }
 
 static void
-do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len, int
-	 max_char, int exp_result)
+do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
+         int max_char, int exp_result, int at_end)
 {
   size_t i;
 
@@ -109,19 +109,28 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len, int
   if (len == 0)
     return;
 
-  align1 &= 63;
+  align1 &= ~(CHARBYTES - 1);
+  align2 &= ~(CHARBYTES - 1);
+
+  align1 &= (getpagesize () - 1);
   if (align1 + (len + 1) * CHARBYTES >= page_size)
     return;
 
-  align2 &= 63;
+  align2 &= (getpagesize () - 1);
   if (align2 + (len + 1) * CHARBYTES >= page_size)
     return;
 
   /* Put them close to the end of page.  */
-  i = align1 + CHARBYTES * (len + 2);
-  s1 = (CHAR *) (buf1 + ((page_size - i) / 16 * 16) + align1);
-  i = align2 + CHARBYTES * (len + 2);
-  s2 = (CHAR *) (buf2 + ((page_size - i) / 16 * 16)  + align2);
+  if (at_end)
+    {
+      i = align1 + CHARBYTES * (len + 2);
+      align1 = ((page_size - i) / 16 * 16) + align1;
+      i = align2 + CHARBYTES * (len + 2);
+      align2 = ((page_size - i) / 16 * 16) + align2;
+    }
+
+  s1 = (CHAR *)(buf1 + align1);
+  s2 = (CHAR *)(buf2 + align2);
 
   for (i = 0; i < len; i++)
     s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % max_char;
@@ -132,9 +141,9 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len, int
   s2[len - 1] -= exp_result;
 
   json_element_object_begin (json_ctx);
-  json_attr_uint (json_ctx, "length", (double) len);
-  json_attr_uint (json_ctx, "align1", (double) align1);
-  json_attr_uint (json_ctx, "align2", (double) align2);
+  json_attr_uint (json_ctx, "length", (double)len);
+  json_attr_uint (json_ctx, "align1", (double)align1);
+  json_attr_uint (json_ctx, "align2", (double)align2);
   json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
@@ -202,7 +211,8 @@ int
 test_main (void)
 {
   json_ctx_t json_ctx;
-  size_t i;
+  size_t i, j, k;
+  size_t pg_sz = getpagesize ();
 
   test_init ();
 
@@ -221,36 +231,88 @@ test_main (void)
   json_array_end (&json_ctx);
 
   json_array_begin (&json_ctx, "results");
-
-  for (i = 1; i < 32; ++i)
+  for (k = 0; k < 2; ++k)
     {
-      do_test (&json_ctx, CHARBYTES * i, CHARBYTES * i, i, MIDCHAR, 0);
-      do_test (&json_ctx, CHARBYTES * i, CHARBYTES * i, i, MIDCHAR, 1);
-      do_test (&json_ctx, CHARBYTES * i, CHARBYTES * i, i, MIDCHAR, -1);
-    }
+      for (i = 1; i < 32; ++i)
+        {
+          do_test (&json_ctx, CHARBYTES * i, CHARBYTES * i, i, MIDCHAR, 0, k);
+          do_test (&json_ctx, CHARBYTES * i, CHARBYTES * i, i, MIDCHAR, 1, k);
+          do_test (&json_ctx, CHARBYTES * i, CHARBYTES * i, i, MIDCHAR, -1, k);
+        }
 
-  for (i = 1; i < 10 + CHARBYTESLOG; ++i)
-    {
-      do_test (&json_ctx, 0, 0, 2 << i, MIDCHAR, 0);
-      do_test (&json_ctx, 0, 0, 2 << i, LARGECHAR, 0);
-      do_test (&json_ctx, 0, 0, 2 << i, MIDCHAR, 1);
-      do_test (&json_ctx, 0, 0, 2 << i, LARGECHAR, 1);
-      do_test (&json_ctx, 0, 0, 2 << i, MIDCHAR, -1);
-      do_test (&json_ctx, 0, 0, 2 << i, LARGECHAR, -1);
-      do_test (&json_ctx, 0, CHARBYTES * i, 2 << i, MIDCHAR, 1);
-      do_test (&json_ctx, CHARBYTES * i, CHARBYTES * (i + 1), 2 << i, LARGECHAR, 1);
-    }
+      for (i = 1; i <= 8192;)
+        {
+          /* No page crosses.  */
+          do_test (&json_ctx, 0, 0, i, MIDCHAR, 0, k);
+          do_test (&json_ctx, i * CHARBYTES, 0, i, MIDCHAR, 0, k);
+          do_test (&json_ctx, 0, i * CHARBYTES, i, MIDCHAR, 0, k);
 
-  for (i = 1; i < 8; ++i)
-    {
-      do_test (&json_ctx, CHARBYTES * i, 2 * CHARBYTES * i, 8 << i, MIDCHAR, 0);
-      do_test (&json_ctx, 2 * CHARBYTES * i, CHARBYTES * i, 8 << i, LARGECHAR, 0);
-      do_test (&json_ctx, CHARBYTES * i, 2 * CHARBYTES * i, 8 << i, MIDCHAR, 1);
-      do_test (&json_ctx, 2 * CHARBYTES * i, CHARBYTES * i, 8 << i, LARGECHAR, 1);
-      do_test (&json_ctx, CHARBYTES * i, 2 * CHARBYTES * i, 8 << i, MIDCHAR, -1);
-      do_test (&json_ctx, 2 * CHARBYTES * i, CHARBYTES * i, 8 << i, LARGECHAR, -1);
-    }
+          /* False page crosses.  */
+          do_test (&json_ctx, pg_sz / 2, pg_sz / 2 - CHARBYTES, i, MIDCHAR, 0,
+                   k);
+          do_test (&json_ctx, pg_sz / 2 - CHARBYTES, pg_sz / 2, i, MIDCHAR, 0,
+                   k);
 
+          do_test (&json_ctx, pg_sz - (i * CHARBYTES), 0, i, MIDCHAR, 0, k);
+          do_test (&json_ctx, 0, pg_sz - (i * CHARBYTES), i, MIDCHAR, 0, k);
+
+          /* Real page cross.  */
+          for (j = 16; j < 128; j += 16)
+            {
+              do_test (&json_ctx, pg_sz - j, 0, i, MIDCHAR, 0, k);
+              do_test (&json_ctx, 0, pg_sz - j, i, MIDCHAR, 0, k);
+
+              do_test (&json_ctx, pg_sz - j, pg_sz - j / 2, i, MIDCHAR, 0, k);
+              do_test (&json_ctx, pg_sz - j / 2, pg_sz - j, i, MIDCHAR, 0, k);
+            }
+
+          if (i < 32)
+            {
+              ++i;
+            }
+          else if (i < 160)
+            {
+              i += 8;
+            }
+          else if (i < 512)
+            {
+              i += 32;
+            }
+          else
+            {
+              i *= 2;
+            }
+        }
+
+      for (i = 1; i < 10 + CHARBYTESLOG; ++i)
+        {
+          do_test (&json_ctx, 0, 0, 2 << i, MIDCHAR, 0, k);
+          do_test (&json_ctx, 0, 0, 2 << i, LARGECHAR, 0, k);
+          do_test (&json_ctx, 0, 0, 2 << i, MIDCHAR, 1, k);
+          do_test (&json_ctx, 0, 0, 2 << i, LARGECHAR, 1, k);
+          do_test (&json_ctx, 0, 0, 2 << i, MIDCHAR, -1, k);
+          do_test (&json_ctx, 0, 0, 2 << i, LARGECHAR, -1, k);
+          do_test (&json_ctx, 0, CHARBYTES * i, 2 << i, MIDCHAR, 1, k);
+          do_test (&json_ctx, CHARBYTES * i, CHARBYTES * (i + 1), 2 << i,
+                   LARGECHAR, 1, k);
+        }
+
+      for (i = 1; i < 8; ++i)
+        {
+          do_test (&json_ctx, CHARBYTES * i, 2 * CHARBYTES * i, 8 << i,
+                   MIDCHAR, 0, k);
+          do_test (&json_ctx, 2 * CHARBYTES * i, CHARBYTES * i, 8 << i,
+                   LARGECHAR, 0, k);
+          do_test (&json_ctx, CHARBYTES * i, 2 * CHARBYTES * i, 8 << i,
+                   MIDCHAR, 1, k);
+          do_test (&json_ctx, 2 * CHARBYTES * i, CHARBYTES * i, 8 << i,
+                   LARGECHAR, 1, k);
+          do_test (&json_ctx, CHARBYTES * i, 2 * CHARBYTES * i, 8 << i,
+                   MIDCHAR, -1, k);
+          do_test (&json_ctx, 2 * CHARBYTES * i, CHARBYTES * i, 8 << i,
+                   LARGECHAR, -1, k);
+        }
+    }
   do_test_page_boundary (&json_ctx);
 
   json_array_end (&json_ctx);

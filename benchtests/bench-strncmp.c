@@ -150,43 +150,43 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len, size_t
   if (n == 0)
     return;
 
-  align1 &= 63;
+  align1 &= getpagesize () - 1;
   if (align1 + (n + 1) * CHARBYTES >= page_size)
     return;
 
-  align2 &= 7;
+  align2 &= getpagesize () - 1;
   if (align2 + (n + 1) * CHARBYTES >= page_size)
     return;
 
   json_element_object_begin (json_ctx);
-  json_attr_uint (json_ctx, "strlen", (double) len);
-  json_attr_uint (json_ctx, "len", (double) n);
-  json_attr_uint (json_ctx, "align1", (double) align1);
-  json_attr_uint (json_ctx, "align2", (double) align2);
+  json_attr_uint (json_ctx, "strlen", (double)len);
+  json_attr_uint (json_ctx, "len", (double)n);
+  json_attr_uint (json_ctx, "align1", (double)align1);
+  json_attr_uint (json_ctx, "align2", (double)align2);
   json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
-    {
-      alloc_bufs ();
-      s1 = (CHAR *) (buf1 + align1);
-      s2 = (CHAR *) (buf2 + align2);
+  {
+    alloc_bufs ();
+    s1 = (CHAR *)(buf1 + align1);
+    s2 = (CHAR *)(buf2 + align2);
 
-      for (i = 0; i < n; i++)
-	s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % max_char;
+    for (i = 0; i < n; i++)
+      s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % max_char;
 
-      s1[n] = 24 + exp_result;
-      s2[n] = 23;
-      s1[len] = 0;
-      s2[len] = 0;
-      if (exp_result < 0)
-	s2[len] = 32;
-      else if (exp_result > 0)
-	s1[len] = 64;
-      if (len >= n)
-	s2[n - 1] -= exp_result;
+    s1[n] = 24 + exp_result;
+    s2[n] = 23;
+    s1[len] = 0;
+    s2[len] = 0;
+    if (exp_result < 0)
+      s2[len] = 32;
+    else if (exp_result > 0)
+      s1[len] = 64;
+    if (len >= n)
+      s2[n - 1] -= exp_result;
 
-      do_one_test (json_ctx, impl, s1, s2, n, exp_result);
-    }
+    do_one_test (json_ctx, impl, s1, s2, n, exp_result);
+  }
 
   json_array_end (json_ctx);
   json_element_object_end (json_ctx);
@@ -319,7 +319,8 @@ int
 test_main (void)
 {
   json_ctx_t json_ctx;
-  size_t i;
+  size_t i, j, len;
+  size_t pg_sz = getpagesize ();
 
   test_init ();
 
@@ -334,12 +335,12 @@ test_main (void)
 
   json_array_begin (&json_ctx, "ifuncs");
   FOR_EACH_IMPL (impl, 0)
-    json_element_string (&json_ctx, impl->name);
+  json_element_string (&json_ctx, impl->name);
   json_array_end (&json_ctx);
 
   json_array_begin (&json_ctx, "results");
 
-  for (i =0; i < 16; ++i)
+  for (i = 0; i < 16; ++i)
     {
       do_test (&json_ctx, 0, 0, 8, i, 127, 0);
       do_test (&json_ctx, 0, 0, 8, i, 127, -1);
@@ -359,6 +360,57 @@ test_main (void)
       do_test (&json_ctx, i, 2 * i, 8, i, 255, 0);
       do_test (&json_ctx, 2 * i, i, 8, i, 255, 1);
       do_test (&json_ctx, i, 3 * i, 8, i, 255, -1);
+    }
+
+  for (len = 0; len <= 128; len += 64)
+    {
+      for (i = 1; i <= 8192;)
+        {
+          /* No page crosses.  */
+          do_test (&json_ctx, 0, 0, i, i + len, 127, 0);
+          do_test (&json_ctx, i * CHARBYTES, 0, i, i + len, 127, 0);
+          do_test (&json_ctx, 0, i * CHARBYTES, i, i + len, 127, 0);
+
+          /* False page crosses.  */
+          do_test (&json_ctx, pg_sz / 2, pg_sz / 2 - CHARBYTES, i, i + len,
+                   127, 0);
+          do_test (&json_ctx, pg_sz / 2 - CHARBYTES, pg_sz / 2, i, i + len,
+                   127, 0);
+
+          do_test (&json_ctx, pg_sz - (i * CHARBYTES), 0, i, i + len, 127,
+                   0);
+          do_test (&json_ctx, 0, pg_sz - (i * CHARBYTES), i, i + len, 127,
+                   0);
+
+          /* Real page cross.  */
+          for (j = 16; j < 128; j += 16)
+            {
+              do_test (&json_ctx, pg_sz - j, 0, i, i + len, 127, 0);
+              do_test (&json_ctx, 0, pg_sz - j, i, i + len, 127, 0);
+
+              do_test (&json_ctx, pg_sz - j, pg_sz - j / 2, i, i + len,
+                       127, 0);
+              do_test (&json_ctx, pg_sz - j / 2, pg_sz - j, i, i + len,
+                       127, 0);
+            }
+
+          if (i < 32)
+            {
+              ++i;
+            }
+          else if (i < 160)
+            {
+              i += 8;
+            }
+          else if (i < 256)
+            {
+              i += 32;
+            }
+          else
+            {
+              i *= 2;
+            }
+        }
     }
 
   for (i = 1; i < 8; ++i)
