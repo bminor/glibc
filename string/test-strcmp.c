@@ -16,6 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#define TEST_LEN (4096 * 3)
+#define MIN_PAGE_SIZE (TEST_LEN + 2 * getpagesize ())
+
 #define TEST_MAIN
 #ifdef WIDE
 # define TEST_NAME "wcscmp"
@@ -129,7 +132,7 @@ do_one_test (impl_t *impl,
 
 static void
 do_test (size_t align1, size_t align2, size_t len, int max_char,
-	 int exp_result)
+         int exp_result)
 {
   size_t i;
 
@@ -138,19 +141,22 @@ do_test (size_t align1, size_t align2, size_t len, int max_char,
   if (len == 0)
     return;
 
-  align1 &= 63;
+  align1 &= ~(CHARBYTES - 1);
+  align2 &= ~(CHARBYTES - 1);
+
+  align1 &= getpagesize () - 1;
   if (align1 + (len + 1) * CHARBYTES >= page_size)
     return;
 
-  align2 &= 63;
+  align2 &= getpagesize () - 1;
   if (align2 + (len + 1) * CHARBYTES >= page_size)
     return;
 
   /* Put them close to the end of page.  */
   i = align1 + CHARBYTES * (len + 2);
-  s1 = (CHAR *) (buf1 + ((page_size - i) / 16 * 16) + align1);
+  s1 = (CHAR *)(buf1 + ((page_size - i) / 16 * 16) + align1);
   i = align2 + CHARBYTES * (len + 2);
-  s2 = (CHAR *) (buf2 + ((page_size - i) / 16 * 16)  + align2);
+  s2 = (CHAR *)(buf2 + ((page_size - i) / 16 * 16) + align2);
 
   for (i = 0; i < len; i++)
     s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % max_char;
@@ -161,8 +167,9 @@ do_test (size_t align1, size_t align2, size_t len, int max_char,
   s2[len - 1] -= exp_result;
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, s1, s2, exp_result);
+  do_one_test (impl, s1, s2, exp_result);
 }
+
 
 static void
 do_random_tests (void)
@@ -385,7 +392,7 @@ check3 (void)
 int
 test_main (void)
 {
-  size_t i;
+  size_t i, j;
 
   test_init ();
   check();
@@ -424,6 +431,55 @@ test_main (void)
       do_test (2 * CHARBYTES * i, CHARBYTES * i, 8 << i, LARGECHAR, 1);
       do_test (CHARBYTES * i, 2 * CHARBYTES * i, 8 << i, MIDCHAR, -1);
       do_test (2 * CHARBYTES * i, CHARBYTES * i, 8 << i, LARGECHAR, -1);
+    }
+
+  for (j = 0; j < 160; ++j)
+    {
+      for (i = 0; i < TEST_LEN;)
+        {
+          do_test (getpagesize () - j - 1, 0, i, 127, 0);
+          do_test (getpagesize () - j - 1, 0, i, 127, 1);
+          do_test (getpagesize () - j - 1, 0, i, 127, -1);
+
+          do_test (getpagesize () - j - 1, j, i, 127, 0);
+          do_test (getpagesize () - j - 1, j, i, 127, 1);
+          do_test (getpagesize () - j - 1, j, i, 127, -1);
+
+          do_test (0, getpagesize () - j - 1, i, 127, 0);
+          do_test (0, getpagesize () - j - 1, i, 127, 1);
+          do_test (0, getpagesize () - j - 1, i, 127, -1);
+
+          do_test (j, getpagesize () - j - 1, i, 127, 0);
+          do_test (j, getpagesize () - j - 1, i, 127, 1);
+          do_test (j, getpagesize () - j - 1, i, 127, -1);
+
+          if (i < 32)
+            {
+              i += 1;
+            }
+          else if (i < 161)
+            {
+              i += 7;
+            }
+          else if (i + 161 < TEST_LEN)
+            {
+              i += 31;
+              i *= 17;
+              i /= 16;
+              if (i + 161 > TEST_LEN)
+                {
+                  i = TEST_LEN - 160;
+                }
+            }
+          else if (i + 32 < TEST_LEN)
+            {
+              i += 7;
+            }
+          else
+            {
+              i += 1;
+            }
+        }
     }
 
   do_random_tests ();
