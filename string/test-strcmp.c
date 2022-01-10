@@ -34,7 +34,6 @@
 # define STRLEN wcslen
 # define MEMCPY wmemcpy
 # define SIMPLE_STRCMP simple_wcscmp
-# define STUPID_STRCMP stupid_wcscmp
 # define CHAR wchar_t
 # define UCHAR wchar_t
 # define CHARBYTES 4
@@ -64,25 +63,6 @@ simple_wcscmp (const wchar_t *s1, const wchar_t *s2)
   return c1 < c2 ? -1 : 1;
 }
 
-int
-stupid_wcscmp (const wchar_t *s1, const wchar_t *s2)
-{
-  size_t ns1 = wcslen (s1) + 1;
-  size_t ns2 = wcslen (s2) + 1;
-  size_t n = ns1 < ns2 ? ns1 : ns2;
-  int ret = 0;
-
-  wchar_t c1, c2;
-
-  while (n--) {
-    c1 = *s1++;
-    c2 = *s2++;
-    if ((ret = c1 < c2 ? -1 : c1 == c2 ? 0 : 1) != 0)
-      break;
-  }
-  return ret;
-}
-
 #else
 # include <limits.h>
 
@@ -92,7 +72,6 @@ stupid_wcscmp (const wchar_t *s1, const wchar_t *s2)
 # define STRLEN strlen
 # define MEMCPY memcpy
 # define SIMPLE_STRCMP simple_strcmp
-# define STUPID_STRCMP stupid_strcmp
 # define CHAR char
 # define UCHAR unsigned char
 # define CHARBYTES 1
@@ -113,24 +92,10 @@ simple_strcmp (const char *s1, const char *s2)
   return ret;
 }
 
-int
-stupid_strcmp (const char *s1, const char *s2)
-{
-  size_t ns1 = strlen (s1) + 1;
-  size_t ns2 = strlen (s2) + 1;
-  size_t n = ns1 < ns2 ? ns1 : ns2;
-  int ret = 0;
-
-  while (n--)
-    if ((ret = *(unsigned char *) s1++ - *(unsigned char *) s2++) != 0)
-      break;
-  return ret;
-}
 #endif
 
 typedef int (*proto_t) (const CHAR *, const CHAR *);
 
-IMPL (STUPID_STRCMP, 1)
 IMPL (SIMPLE_STRCMP, 1)
 IMPL (STRCMP, 1)
 
