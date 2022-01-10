@@ -26,34 +26,56 @@
 
 # define PAGE_SIZE	4096
 
-/* VEC_SIZE = Number of bytes in a ymm register */
+	/* VEC_SIZE = Number of bytes in a ymm register.  */
 # define VEC_SIZE	32
 
-/* Shift for dividing by (VEC_SIZE * 4).  */
-# define DIVIDE_BY_VEC_4_SHIFT	7
-# if (VEC_SIZE * 4) != (1 << DIVIDE_BY_VEC_4_SHIFT)
-#  error (VEC_SIZE * 4) != (1 << DIVIDE_BY_VEC_4_SHIFT)
-# endif
+# define VMOVU	vmovdqu
+# define VMOVA	vmovdqa
 
 # ifdef USE_AS_WCSCMP
-/* Compare packed dwords.  */
+	/* Compare packed dwords.  */
 #  define VPCMPEQ	vpcmpeqd
-/* Compare packed dwords and store minimum.  */
+	/* Compare packed dwords and store minimum.  */
 #  define VPMINU	vpminud
-/* 1 dword char == 4 bytes.  */
+	/* 1 dword char == 4 bytes.  */
 #  define SIZE_OF_CHAR	4
 # else
-/* Compare packed bytes.  */
+	/* Compare packed bytes.  */
 #  define VPCMPEQ	vpcmpeqb
-/* Compare packed bytes and store minimum.  */
+	/* Compare packed bytes and store minimum.  */
 #  define VPMINU	vpminub
-/* 1 byte char == 1 byte.  */
+	/* 1 byte char == 1 byte.  */
 #  define SIZE_OF_CHAR	1
+# endif
+
+# ifdef USE_AS_STRNCMP
+#  define LOOP_REG	r9d
+#  define LOOP_REG64	r9
+
+#  define OFFSET_REG8	r9b
+#  define OFFSET_REG	r9d
+#  define OFFSET_REG64	r9
+# else
+#  define LOOP_REG	edx
+#  define LOOP_REG64	rdx
+
+#  define OFFSET_REG8	dl
+#  define OFFSET_REG	edx
+#  define OFFSET_REG64	rdx
 # endif
 
 # ifndef VZEROUPPER
 #  define VZEROUPPER	vzeroupper
 # endif
+
+# if defined USE_AS_STRNCMP
+#  define VEC_OFFSET	0
+# else
+#  define VEC_OFFSET	(-VEC_SIZE)
+# endif
+
+# define xmmZERO	xmm15
+# define ymmZERO	ymm15
 
 # ifndef SECTION
 #  define SECTION(p)	p##.avx
@@ -79,783 +101,1049 @@
    the maximum offset is reached before a difference is found, zero is
    returned.  */
 
-	.section SECTION(.text),"ax",@progbits
-ENTRY (STRCMP)
+	.section SECTION(.text), "ax", @progbits
+ENTRY(STRCMP)
 # ifdef USE_AS_STRNCMP
-	/* Check for simple cases (0 or 1) in offset.  */
+#  ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %rdx
+#  endif
 	cmp	$1, %RDX_LP
-	je	L(char0)
-	jb	L(zero)
+	/* Signed comparison intentional. We use this branch to also
+	   test cases where length >= 2^63. These very large sizes can be
+	   handled with strcmp as there is no way for that length to
+	   actually bound the buffer.  */
+	jle	L(one_or_less)
 #  ifdef USE_AS_WCSCMP
-#  ifndef __ILP32__
 	movq	%rdx, %rcx
-	/* Check if length could overflow when multiplied by
-	   sizeof(wchar_t). Checking top 8 bits will cover all potential
-	   overflow cases as well as redirect cases where its impossible to
-	   length to bound a valid memory region. In these cases just use
-	   'wcscmp'.  */
+
+	/* Multiplying length by sizeof(wchar_t) can result in overflow.
+	   Check if that is possible. All cases where overflow are possible
+	   are cases where length is large enough that it can never be a
+	   bound on valid memory so just use wcscmp.  */
 	shrq	$56, %rcx
 	jnz	__wcscmp_avx2
+
+	leaq	(, %rdx, 4), %rdx
 #  endif
-	/* Convert units: from wide to byte char.  */
-	shl	$2, %RDX_LP
-#  endif
-	/* Register %r11 tracks the maximum offset.  */
-	mov	%RDX_LP, %R11_LP
 # endif
+	vpxor	%xmmZERO, %xmmZERO, %xmmZERO
 	movl	%edi, %eax
-	xorl	%edx, %edx
-	/* Make %xmm7 (%ymm7) all zeros in this function.  */
-	vpxor	%xmm7, %xmm7, %xmm7
 	orl	%esi, %eax
-	andl	$(PAGE_SIZE - 1), %eax
-	cmpl	$(PAGE_SIZE - (VEC_SIZE * 4)), %eax
-	jg	L(cross_page)
-	/* Start comparing 4 vectors.  */
-	vmovdqu	(%rdi), %ymm1
-	VPCMPEQ	(%rsi), %ymm1, %ymm0
-	VPMINU	%ymm1, %ymm0, %ymm0
-	VPCMPEQ	%ymm7, %ymm0, %ymm0
-	vpmovmskb %ymm0, %ecx
-	testl	%ecx, %ecx
-	je	L(next_3_vectors)
-	tzcntl	%ecx, %edx
+	sall	$20, %eax
+	/* Check if s1 or s2 may cross a page  in next 4x VEC loads.  */
+	cmpl	$((PAGE_SIZE -(VEC_SIZE * 4)) << 20), %eax
+	ja	L(page_cross)
+
+L(no_page_cross):
+	/* Safe to compare 4x vectors.  */
+	VMOVU	(%rdi), %ymm0
+	/* 1s where s1 and s2 equal.  */
+	VPCMPEQ	(%rsi), %ymm0, %ymm1
+	/* 1s at null CHAR.  */
+	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
+	/* 1s where s1 and s2 equal AND not null CHAR.  */
+	vpandn	%ymm1, %ymm2, %ymm1
+
+	/* All 1s -> keep going, any 0s -> return.  */
+	vpmovmskb %ymm1, %ecx
 # ifdef USE_AS_STRNCMP
-	/* Return 0 if the mismatched index (%rdx) is after the maximum
-	   offset (%r11).   */
-	cmpq	%r11, %rdx
-	jae	L(zero)
+	cmpq	$VEC_SIZE, %rdx
+	jbe	L(vec_0_test_len)
 # endif
+
+	/* All 1s represents all equals. incl will overflow to zero in
+	   all equals case. Otherwise 1s will carry until position of first
+	   mismatch.  */
+	incl	%ecx
+	jz	L(more_3x_vec)
+
+	.p2align 4,, 4
+L(return_vec_0):
+	tzcntl	%ecx, %ecx
 # ifdef USE_AS_WCSCMP
+	movl	(%rdi, %rcx), %edx
 	xorl	%eax, %eax
-	movl	(%rdi, %rdx), %ecx
-	cmpl	(%rsi, %rdx), %ecx
-	je	L(return)
-L(wcscmp_return):
+	cmpl	(%rsi, %rcx), %edx
+	je	L(ret0)
 	setl	%al
 	negl	%eax
 	orl	$1, %eax
-L(return):
 # else
-	movzbl	(%rdi, %rdx), %eax
-	movzbl	(%rsi, %rdx), %edx
-	subl	%edx, %eax
+	movzbl	(%rdi, %rcx), %eax
+	movzbl	(%rsi, %rcx), %ecx
+	subl	%ecx, %eax
 # endif
+L(ret0):
 L(return_vzeroupper):
 	ZERO_UPPER_VEC_REGISTERS_RETURN
 
-	.p2align 4
-L(return_vec_size):
-	tzcntl	%ecx, %edx
 # ifdef USE_AS_STRNCMP
-	/* Return 0 if the mismatched index (%rdx + VEC_SIZE) is after
-	   the maximum offset (%r11).  */
-	addq	$VEC_SIZE, %rdx
-	cmpq	%r11, %rdx
-	jae	L(zero)
-#  ifdef USE_AS_WCSCMP
+	.p2align 4,, 8
+L(vec_0_test_len):
+	notl	%ecx
+	bzhil	%edx, %ecx, %eax
+	jnz	L(return_vec_0)
+	/* Align if will cross fetch block.  */
+	.p2align 4,, 2
+L(ret_zero):
 	xorl	%eax, %eax
-	movl	(%rdi, %rdx), %ecx
-	cmpl	(%rsi, %rdx), %ecx
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(%rdi, %rdx), %eax
-	movzbl	(%rsi, %rdx), %edx
-	subl	%edx, %eax
-#  endif
-# else
-#  ifdef USE_AS_WCSCMP
-	xorl	%eax, %eax
-	movl	VEC_SIZE(%rdi, %rdx), %ecx
-	cmpl	VEC_SIZE(%rsi, %rdx), %ecx
-	jne	L(wcscmp_return)
-#  else
-	movzbl	VEC_SIZE(%rdi, %rdx), %eax
-	movzbl	VEC_SIZE(%rsi, %rdx), %edx
-	subl	%edx, %eax
-#  endif
-# endif
 	VZEROUPPER_RETURN
 
-	.p2align 4
-L(return_2_vec_size):
-	tzcntl	%ecx, %edx
-# ifdef USE_AS_STRNCMP
-	/* Return 0 if the mismatched index (%rdx + 2 * VEC_SIZE) is
-	   after the maximum offset (%r11).  */
-	addq	$(VEC_SIZE * 2), %rdx
-	cmpq	%r11, %rdx
-	jae	L(zero)
+	.p2align 4,, 5
+L(one_or_less):
+	jb	L(ret_zero)
 #  ifdef USE_AS_WCSCMP
+	/* 'nbe' covers the case where length is negative (large
+	   unsigned).  */
+	jnbe	__wcscmp_avx2
+	movl	(%rdi), %edx
 	xorl	%eax, %eax
-	movl	(%rdi, %rdx), %ecx
-	cmpl	(%rsi, %rdx), %ecx
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(%rdi, %rdx), %eax
-	movzbl	(%rsi, %rdx), %edx
-	subl	%edx, %eax
-#  endif
-# else
-#  ifdef USE_AS_WCSCMP
-	xorl	%eax, %eax
-	movl	(VEC_SIZE * 2)(%rdi, %rdx), %ecx
-	cmpl	(VEC_SIZE * 2)(%rsi, %rdx), %ecx
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(VEC_SIZE * 2)(%rdi, %rdx), %eax
-	movzbl	(VEC_SIZE * 2)(%rsi, %rdx), %edx
-	subl	%edx, %eax
-#  endif
-# endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(return_3_vec_size):
-	tzcntl	%ecx, %edx
-# ifdef USE_AS_STRNCMP
-	/* Return 0 if the mismatched index (%rdx + 3 * VEC_SIZE) is
-	   after the maximum offset (%r11).  */
-	addq	$(VEC_SIZE * 3), %rdx
-	cmpq	%r11, %rdx
-	jae	L(zero)
-#  ifdef USE_AS_WCSCMP
-	xorl	%eax, %eax
-	movl	(%rdi, %rdx), %ecx
-	cmpl	(%rsi, %rdx), %ecx
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(%rdi, %rdx), %eax
-	movzbl	(%rsi, %rdx), %edx
-	subl	%edx, %eax
-#  endif
-# else
-#  ifdef USE_AS_WCSCMP
-	xorl	%eax, %eax
-	movl	(VEC_SIZE * 3)(%rdi, %rdx), %ecx
-	cmpl	(VEC_SIZE * 3)(%rsi, %rdx), %ecx
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(VEC_SIZE * 3)(%rdi, %rdx), %eax
-	movzbl	(VEC_SIZE * 3)(%rsi, %rdx), %edx
-	subl	%edx, %eax
-#  endif
-# endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(next_3_vectors):
-	vmovdqu	VEC_SIZE(%rdi), %ymm6
-	VPCMPEQ	VEC_SIZE(%rsi), %ymm6, %ymm3
-	VPMINU	%ymm6, %ymm3, %ymm3
-	VPCMPEQ	%ymm7, %ymm3, %ymm3
-	vpmovmskb %ymm3, %ecx
-	testl	%ecx, %ecx
-	jne	L(return_vec_size)
-	vmovdqu	(VEC_SIZE * 2)(%rdi), %ymm5
-	vmovdqu	(VEC_SIZE * 3)(%rdi), %ymm4
-	vmovdqu	(VEC_SIZE * 3)(%rsi), %ymm0
-	VPCMPEQ	(VEC_SIZE * 2)(%rsi), %ymm5, %ymm2
-	VPMINU	%ymm5, %ymm2, %ymm2
-	VPCMPEQ	%ymm4, %ymm0, %ymm0
-	VPCMPEQ	%ymm7, %ymm2, %ymm2
-	vpmovmskb %ymm2, %ecx
-	testl	%ecx, %ecx
-	jne	L(return_2_vec_size)
-	VPMINU	%ymm4, %ymm0, %ymm0
-	VPCMPEQ	%ymm7, %ymm0, %ymm0
-	vpmovmskb %ymm0, %ecx
-	testl	%ecx, %ecx
-	jne	L(return_3_vec_size)
-L(main_loop_header):
-	leaq	(VEC_SIZE * 4)(%rdi), %rdx
-	movl	$PAGE_SIZE, %ecx
-	/* Align load via RAX.  */
-	andq	$-(VEC_SIZE * 4), %rdx
-	subq	%rdi, %rdx
-	leaq	(%rdi, %rdx), %rax
-# ifdef USE_AS_STRNCMP
-	/* Starting from this point, the maximum offset, or simply the
-	   'offset', DECREASES by the same amount when base pointers are
-	   moved forward.  Return 0 when:
-	     1) On match: offset <= the matched vector index.
-	     2) On mistmach, offset is before the mistmatched index.
-	 */
-	subq	%rdx, %r11
-	jbe	L(zero)
-# endif
-	addq	%rsi, %rdx
-	movq	%rdx, %rsi
-	andl	$(PAGE_SIZE - 1), %esi
-	/* Number of bytes before page crossing.  */
-	subq	%rsi, %rcx
-	/* Number of VEC_SIZE * 4 blocks before page crossing.  */
-	shrq	$DIVIDE_BY_VEC_4_SHIFT, %rcx
-	/* ESI: Number of VEC_SIZE * 4 blocks before page crossing.   */
-	movl	%ecx, %esi
-	jmp	L(loop_start)
-
-	.p2align 4
-L(loop):
-# ifdef USE_AS_STRNCMP
-	/* Base pointers are moved forward by 4 * VEC_SIZE.  Decrease
-	   the maximum offset (%r11) by the same amount.  */
-	subq	$(VEC_SIZE * 4), %r11
-	jbe	L(zero)
-# endif
-	addq	$(VEC_SIZE * 4), %rax
-	addq	$(VEC_SIZE * 4), %rdx
-L(loop_start):
-	testl	%esi, %esi
-	leal	-1(%esi), %esi
-	je	L(loop_cross_page)
-L(back_to_loop):
-	/* Main loop, comparing 4 vectors are a time.  */
-	vmovdqa	(%rax), %ymm0
-	vmovdqa	VEC_SIZE(%rax), %ymm3
-	VPCMPEQ	(%rdx), %ymm0, %ymm4
-	VPCMPEQ	VEC_SIZE(%rdx), %ymm3, %ymm1
-	VPMINU	%ymm0, %ymm4, %ymm4
-	VPMINU	%ymm3, %ymm1, %ymm1
-	vmovdqa	(VEC_SIZE * 2)(%rax), %ymm2
-	VPMINU	%ymm1, %ymm4, %ymm0
-	vmovdqa	(VEC_SIZE * 3)(%rax), %ymm3
-	VPCMPEQ	(VEC_SIZE * 2)(%rdx), %ymm2, %ymm5
-	VPCMPEQ	(VEC_SIZE * 3)(%rdx), %ymm3, %ymm6
-	VPMINU	%ymm2, %ymm5, %ymm5
-	VPMINU	%ymm3, %ymm6, %ymm6
-	VPMINU	%ymm5, %ymm0, %ymm0
-	VPMINU	%ymm6, %ymm0, %ymm0
-	VPCMPEQ	%ymm7, %ymm0, %ymm0
-
-	/* Test each mask (32 bits) individually because for VEC_SIZE
-	   == 32 is not possible to OR the four masks and keep all bits
-	   in a 64-bit integer register, differing from SSE2 strcmp
-	   where ORing is possible.  */
-	vpmovmskb %ymm0, %ecx
-	testl	%ecx, %ecx
-	je	L(loop)
-	VPCMPEQ	%ymm7, %ymm4, %ymm0
-	vpmovmskb %ymm0, %edi
-	testl	%edi, %edi
-	je	L(test_vec)
-	tzcntl	%edi, %ecx
-# ifdef USE_AS_STRNCMP
-	cmpq	%rcx, %r11
-	jbe	L(zero)
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	(%rsi, %rcx), %edi
-	cmpl	(%rdx, %rcx), %edi
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(%rax, %rcx), %eax
-	movzbl	(%rdx, %rcx), %edx
-	subl	%edx, %eax
-#  endif
-# else
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	(%rsi, %rcx), %edi
-	cmpl	(%rdx, %rcx), %edi
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(%rax, %rcx), %eax
-	movzbl	(%rdx, %rcx), %edx
-	subl	%edx, %eax
-#  endif
-# endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(test_vec):
-# ifdef USE_AS_STRNCMP
-	/* The first vector matched.  Return 0 if the maximum offset
-	   (%r11) <= VEC_SIZE.  */
-	cmpq	$VEC_SIZE, %r11
-	jbe	L(zero)
-# endif
-	VPCMPEQ	%ymm7, %ymm1, %ymm1
-	vpmovmskb %ymm1, %ecx
-	testl	%ecx, %ecx
-	je	L(test_2_vec)
-	tzcntl	%ecx, %edi
-# ifdef USE_AS_STRNCMP
-	addq	$VEC_SIZE, %rdi
-	cmpq	%rdi, %r11
-	jbe	L(zero)
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	(%rsi, %rdi), %ecx
-	cmpl	(%rdx, %rdi), %ecx
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(%rax, %rdi), %eax
-	movzbl	(%rdx, %rdi), %edx
-	subl	%edx, %eax
-#  endif
-# else
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	VEC_SIZE(%rsi, %rdi), %ecx
-	cmpl	VEC_SIZE(%rdx, %rdi), %ecx
-	jne	L(wcscmp_return)
-#  else
-	movzbl	VEC_SIZE(%rax, %rdi), %eax
-	movzbl	VEC_SIZE(%rdx, %rdi), %edx
-	subl	%edx, %eax
-#  endif
-# endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(test_2_vec):
-# ifdef USE_AS_STRNCMP
-	/* The first 2 vectors matched.  Return 0 if the maximum offset
-	   (%r11) <= 2 * VEC_SIZE.  */
-	cmpq	$(VEC_SIZE * 2), %r11
-	jbe	L(zero)
-# endif
-	VPCMPEQ	%ymm7, %ymm5, %ymm5
-	vpmovmskb %ymm5, %ecx
-	testl	%ecx, %ecx
-	je	L(test_3_vec)
-	tzcntl	%ecx, %edi
-# ifdef USE_AS_STRNCMP
-	addq	$(VEC_SIZE * 2), %rdi
-	cmpq	%rdi, %r11
-	jbe	L(zero)
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	(%rsi, %rdi), %ecx
-	cmpl	(%rdx, %rdi), %ecx
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(%rax, %rdi), %eax
-	movzbl	(%rdx, %rdi), %edx
-	subl	%edx, %eax
-#  endif
-# else
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	(VEC_SIZE * 2)(%rsi, %rdi), %ecx
-	cmpl	(VEC_SIZE * 2)(%rdx, %rdi), %ecx
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(VEC_SIZE * 2)(%rax, %rdi), %eax
-	movzbl	(VEC_SIZE * 2)(%rdx, %rdi), %edx
-	subl	%edx, %eax
-#  endif
-# endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(test_3_vec):
-# ifdef USE_AS_STRNCMP
-	/* The first 3 vectors matched.  Return 0 if the maximum offset
-	   (%r11) <= 3 * VEC_SIZE.  */
-	cmpq	$(VEC_SIZE * 3), %r11
-	jbe	L(zero)
-# endif
-	VPCMPEQ	%ymm7, %ymm6, %ymm6
-	vpmovmskb %ymm6, %esi
-	tzcntl	%esi, %ecx
-# ifdef USE_AS_STRNCMP
-	addq	$(VEC_SIZE * 3), %rcx
-	cmpq	%rcx, %r11
-	jbe	L(zero)
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	(%rsi, %rcx), %esi
-	cmpl	(%rdx, %rcx), %esi
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(%rax, %rcx), %eax
-	movzbl	(%rdx, %rcx), %edx
-	subl	%edx, %eax
-#  endif
-# else
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	(VEC_SIZE * 3)(%rsi, %rcx), %esi
-	cmpl	(VEC_SIZE * 3)(%rdx, %rcx), %esi
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(VEC_SIZE * 3)(%rax, %rcx), %eax
-	movzbl	(VEC_SIZE * 3)(%rdx, %rcx), %edx
-	subl	%edx, %eax
-#  endif
-# endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(loop_cross_page):
-	xorl	%r10d, %r10d
-	movq	%rdx, %rcx
-	/* Align load via RDX.  We load the extra ECX bytes which should
-	   be ignored.  */
-	andl	$((VEC_SIZE * 4) - 1), %ecx
-	/* R10 is -RCX.  */
-	subq	%rcx, %r10
-
-	/* This works only if VEC_SIZE * 2 == 64. */
-# if (VEC_SIZE * 2) != 64
-#  error (VEC_SIZE * 2) != 64
-# endif
-
-	/* Check if the first VEC_SIZE * 2 bytes should be ignored.  */
-	cmpl	$(VEC_SIZE * 2), %ecx
-	jge	L(loop_cross_page_2_vec)
-
-	vmovdqu	(%rax, %r10), %ymm2
-	vmovdqu	VEC_SIZE(%rax, %r10), %ymm3
-	VPCMPEQ	(%rdx, %r10), %ymm2, %ymm0
-	VPCMPEQ	VEC_SIZE(%rdx, %r10), %ymm3, %ymm1
-	VPMINU	%ymm2, %ymm0, %ymm0
-	VPMINU	%ymm3, %ymm1, %ymm1
-	VPCMPEQ	%ymm7, %ymm0, %ymm0
-	VPCMPEQ	%ymm7, %ymm1, %ymm1
-
-	vpmovmskb %ymm0, %edi
-	vpmovmskb %ymm1, %esi
-
-	salq	$32, %rsi
-	xorq	%rsi, %rdi
-
-	/* Since ECX < VEC_SIZE * 2, simply skip the first ECX bytes.  */
-	shrq	%cl, %rdi
-
-	testq	%rdi, %rdi
-	je	L(loop_cross_page_2_vec)
-	tzcntq	%rdi, %rcx
-# ifdef USE_AS_STRNCMP
-	cmpq	%rcx, %r11
-	jbe	L(zero)
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	(%rsi, %rcx), %edi
-	cmpl	(%rdx, %rcx), %edi
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(%rax, %rcx), %eax
-	movzbl	(%rdx, %rcx), %edx
-	subl	%edx, %eax
-#  endif
-# else
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	(%rsi, %rcx), %edi
-	cmpl	(%rdx, %rcx), %edi
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(%rax, %rcx), %eax
-	movzbl	(%rdx, %rcx), %edx
-	subl	%edx, %eax
-#  endif
-# endif
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(loop_cross_page_2_vec):
-	/* The first VEC_SIZE * 2 bytes match or are ignored.  */
-	vmovdqu	(VEC_SIZE * 2)(%rax, %r10), %ymm2
-	vmovdqu	(VEC_SIZE * 3)(%rax, %r10), %ymm3
-	VPCMPEQ	(VEC_SIZE * 2)(%rdx, %r10), %ymm2, %ymm5
-	VPMINU	%ymm2, %ymm5, %ymm5
-	VPCMPEQ	(VEC_SIZE * 3)(%rdx, %r10), %ymm3, %ymm6
-	VPCMPEQ	%ymm7, %ymm5, %ymm5
-	VPMINU	%ymm3, %ymm6, %ymm6
-	VPCMPEQ	%ymm7, %ymm6, %ymm6
-
-	vpmovmskb %ymm5, %edi
-	vpmovmskb %ymm6, %esi
-
-	salq	$32, %rsi
-	xorq	%rsi, %rdi
-
-	xorl	%r8d, %r8d
-	/* If ECX > VEC_SIZE * 2, skip ECX - (VEC_SIZE * 2) bytes.  */
-	subl	$(VEC_SIZE * 2), %ecx
-	jle	1f
-	/* Skip ECX bytes.  */
-	shrq	%cl, %rdi
-	/* R8 has number of bytes skipped.  */
-	movl	%ecx, %r8d
-1:
-	/* Before jumping back to the loop, set ESI to the number of
-	   VEC_SIZE * 4 blocks before page crossing.  */
-	movl	$(PAGE_SIZE / (VEC_SIZE * 4) - 1), %esi
-
-	testq	%rdi, %rdi
-# ifdef USE_AS_STRNCMP
-	/* At this point, if %rdi value is 0, it already tested
-	   VEC_SIZE*4+%r10 byte starting from %rax. This label
-	   checks whether strncmp maximum offset reached or not.  */
-	je	L(string_nbyte_offset_check)
-# else
-	je	L(back_to_loop)
-# endif
-	tzcntq	%rdi, %rcx
-	addq	%r10, %rcx
-	/* Adjust for number of bytes skipped.  */
-	addq	%r8, %rcx
-# ifdef USE_AS_STRNCMP
-	addq	$(VEC_SIZE * 2), %rcx
-	subq	%rcx, %r11
-	jbe	L(zero)
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	(%rsi, %rcx), %edi
-	cmpl	(%rdx, %rcx), %edi
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(%rax, %rcx), %eax
-	movzbl	(%rdx, %rcx), %edx
-	subl	%edx, %eax
-#  endif
-# else
-#  ifdef USE_AS_WCSCMP
-	movq	%rax, %rsi
-	xorl	%eax, %eax
-	movl	(VEC_SIZE * 2)(%rsi, %rcx), %edi
-	cmpl	(VEC_SIZE * 2)(%rdx, %rcx), %edi
-	jne	L(wcscmp_return)
-#  else
-	movzbl	(VEC_SIZE * 2)(%rax, %rcx), %eax
-	movzbl	(VEC_SIZE * 2)(%rdx, %rcx), %edx
-	subl	%edx, %eax
-#  endif
-# endif
-	VZEROUPPER_RETURN
-
-# ifdef USE_AS_STRNCMP
-L(string_nbyte_offset_check):
-	leaq	(VEC_SIZE * 4)(%r10), %r10
-	cmpq	%r10, %r11
-	jbe	L(zero)
-	jmp	L(back_to_loop)
-# endif
-
-	.p2align 4
-L(cross_page_loop):
-	/* Check one byte/dword at a time.  */
-# ifdef USE_AS_WCSCMP
-	cmpl	%ecx, %eax
-# else
-	subl	%ecx, %eax
-# endif
-	jne	L(different)
-	addl	$SIZE_OF_CHAR, %edx
-	cmpl	$(VEC_SIZE * 4), %edx
-	je	L(main_loop_header)
-# ifdef USE_AS_STRNCMP
-	cmpq	%r11, %rdx
-	jae	L(zero)
-# endif
-# ifdef USE_AS_WCSCMP
-	movl	(%rdi, %rdx), %eax
-	movl	(%rsi, %rdx), %ecx
-# else
-	movzbl	(%rdi, %rdx), %eax
-	movzbl	(%rsi, %rdx), %ecx
-# endif
-	/* Check null char.  */
-	testl	%eax, %eax
-	jne	L(cross_page_loop)
-	/* Since %eax == 0, subtract is OK for both SIGNED and UNSIGNED
-	   comparisons.  */
-	subl	%ecx, %eax
-# ifndef USE_AS_WCSCMP
-L(different):
-# endif
-	VZEROUPPER_RETURN
-
-# ifdef USE_AS_WCSCMP
-	.p2align 4
-L(different):
-	/* Use movl to avoid modifying EFLAGS.  */
-	movl	$0, %eax
+	cmpl	(%rsi), %edx
+	je	L(ret1)
 	setl	%al
 	negl	%eax
 	orl	$1, %eax
-	VZEROUPPER_RETURN
-# endif
-
-# ifdef USE_AS_STRNCMP
-	.p2align 4
-L(zero):
-	xorl	%eax, %eax
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(char0):
-#  ifdef USE_AS_WCSCMP
-	xorl	%eax, %eax
-	movl	(%rdi), %ecx
-	cmpl	(%rsi), %ecx
-	jne	L(wcscmp_return)
 #  else
-	movzbl	(%rsi), %ecx
+	/* 'nbe' covers the case where length is negative (large
+	   unsigned).  */
+
+	jnbe	__strcmp_avx2
 	movzbl	(%rdi), %eax
+	movzbl	(%rsi), %ecx
 	subl	%ecx, %eax
 #  endif
-	VZEROUPPER_RETURN
+L(ret1):
+	ret
 # endif
 
-	.p2align 4
-L(last_vector):
-	addq	%rdx, %rdi
-	addq	%rdx, %rsi
+	.p2align 4,, 10
+L(return_vec_1):
+	tzcntl	%ecx, %ecx
 # ifdef USE_AS_STRNCMP
-	subq	%rdx, %r11
-# endif
-	tzcntl	%ecx, %edx
-# ifdef USE_AS_STRNCMP
-	cmpq	%r11, %rdx
-	jae	L(zero)
+	/* rdx must be > CHAR_PER_VEC so save to subtract w.o fear of
+	   overflow.  */
+	addq	$-VEC_SIZE, %rdx
+	cmpq	%rcx, %rdx
+	jbe	L(ret_zero)
 # endif
 # ifdef USE_AS_WCSCMP
+	movl	VEC_SIZE(%rdi, %rcx), %edx
 	xorl	%eax, %eax
-	movl	(%rdi, %rdx), %ecx
-	cmpl	(%rsi, %rdx), %ecx
-	jne	L(wcscmp_return)
+	cmpl	VEC_SIZE(%rsi, %rcx), %edx
+	je	L(ret2)
+	setl	%al
+	negl	%eax
+	orl	$1, %eax
 # else
-	movzbl	(%rdi, %rdx), %eax
-	movzbl	(%rsi, %rdx), %edx
-	subl	%edx, %eax
+	movzbl	VEC_SIZE(%rdi, %rcx), %eax
+	movzbl	VEC_SIZE(%rsi, %rcx), %ecx
+	subl	%ecx, %eax
 # endif
+L(ret2):
 	VZEROUPPER_RETURN
 
-	/* Comparing on page boundary region requires special treatment:
-	   It must done one vector at the time, starting with the wider
-	   ymm vector if possible, if not, with xmm. If fetching 16 bytes
-	   (xmm) still passes the boundary, byte comparison must be done.
+	.p2align 4,, 10
+# ifdef USE_AS_STRNCMP
+L(return_vec_3):
+	salq	$32, %rcx
+# endif
+
+L(return_vec_2):
+# ifndef USE_AS_STRNCMP
+	tzcntl	%ecx, %ecx
+# else
+	tzcntq	%rcx, %rcx
+	cmpq	%rcx, %rdx
+	jbe	L(ret_zero)
+# endif
+
+# ifdef USE_AS_WCSCMP
+	movl	(VEC_SIZE * 2)(%rdi, %rcx), %edx
+	xorl	%eax, %eax
+	cmpl	(VEC_SIZE * 2)(%rsi, %rcx), %edx
+	je	L(ret3)
+	setl	%al
+	negl	%eax
+	orl	$1, %eax
+# else
+	movzbl	(VEC_SIZE * 2)(%rdi, %rcx), %eax
+	movzbl	(VEC_SIZE * 2)(%rsi, %rcx), %ecx
+	subl	%ecx, %eax
+# endif
+L(ret3):
+	VZEROUPPER_RETURN
+
+# ifndef USE_AS_STRNCMP
+	.p2align 4,, 10
+L(return_vec_3):
+	tzcntl	%ecx, %ecx
+#  ifdef USE_AS_WCSCMP
+	movl	(VEC_SIZE * 3)(%rdi, %rcx), %edx
+	xorl	%eax, %eax
+	cmpl	(VEC_SIZE * 3)(%rsi, %rcx), %edx
+	je	L(ret4)
+	setl	%al
+	negl	%eax
+	orl	$1, %eax
+#  else
+	movzbl	(VEC_SIZE * 3)(%rdi, %rcx), %eax
+	movzbl	(VEC_SIZE * 3)(%rsi, %rcx), %ecx
+	subl	%ecx, %eax
+#  endif
+L(ret4):
+	VZEROUPPER_RETURN
+# endif
+
+	.p2align 4,, 10
+L(more_3x_vec):
+	/* Safe to compare 4x vectors.  */
+	VMOVU	VEC_SIZE(%rdi), %ymm0
+	VPCMPEQ	VEC_SIZE(%rsi), %ymm0, %ymm1
+	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
+	vpandn	%ymm1, %ymm2, %ymm1
+	vpmovmskb %ymm1, %ecx
+	incl	%ecx
+	jnz	L(return_vec_1)
+
+# ifdef USE_AS_STRNCMP
+	subq	$(VEC_SIZE * 2), %rdx
+	jbe	L(ret_zero)
+# endif
+
+	VMOVU	(VEC_SIZE * 2)(%rdi), %ymm0
+	VPCMPEQ	(VEC_SIZE * 2)(%rsi), %ymm0, %ymm1
+	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
+	vpandn	%ymm1, %ymm2, %ymm1
+	vpmovmskb %ymm1, %ecx
+	incl	%ecx
+	jnz	L(return_vec_2)
+
+	VMOVU	(VEC_SIZE * 3)(%rdi), %ymm0
+	VPCMPEQ	(VEC_SIZE * 3)(%rsi), %ymm0, %ymm1
+	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
+	vpandn	%ymm1, %ymm2, %ymm1
+	vpmovmskb %ymm1, %ecx
+	incl	%ecx
+	jnz	L(return_vec_3)
+
+# ifdef USE_AS_STRNCMP
+	cmpq	$(VEC_SIZE * 2), %rdx
+	jbe	L(ret_zero)
+# endif
+
+# ifdef USE_AS_WCSCMP
+	/* any non-zero positive value that doesn't inference with 0x1.
 	 */
+	movl	$2, %r8d
+
+# else
+	xorl	%r8d, %r8d
+# endif
+
+	/* The prepare labels are various entry points from the page
+	   cross logic.  */
+L(prepare_loop):
+
+# ifdef USE_AS_STRNCMP
+	/* Store N + (VEC_SIZE * 4) and place check at the begining of
+	   the loop.  */
+	leaq	(VEC_SIZE * 2)(%rdi, %rdx), %rdx
+# endif
+L(prepare_loop_no_len):
+
+	/* Align s1 and adjust s2 accordingly.  */
+	subq	%rdi, %rsi
+	andq	$-(VEC_SIZE * 4), %rdi
+	addq	%rdi, %rsi
+
+# ifdef USE_AS_STRNCMP
+	subq	%rdi, %rdx
+# endif
+
+L(prepare_loop_aligned):
+	/* eax stores distance from rsi to next page cross. These cases
+	   need to be handled specially as the 4x loop could potentially
+	   read memory past the length of s1 or s2 and across a page
+	   boundary.  */
+	movl	$-(VEC_SIZE * 4), %eax
+	subl	%esi, %eax
+	andl	$(PAGE_SIZE - 1), %eax
+
+	/* Loop 4x comparisons at a time.  */
 	.p2align 4
-L(cross_page):
-	/* Try one ymm vector at a time.  */
-	cmpl	$(PAGE_SIZE - VEC_SIZE), %eax
-	jg	L(cross_page_1_vector)
-L(loop_1_vector):
-	vmovdqu	(%rdi, %rdx), %ymm1
-	VPCMPEQ	(%rsi, %rdx), %ymm1, %ymm0
-	VPMINU	%ymm1, %ymm0, %ymm0
-	VPCMPEQ	%ymm7, %ymm0, %ymm0
-	vpmovmskb %ymm0, %ecx
-	testl	%ecx, %ecx
-	jne	L(last_vector)
+L(loop):
 
-	addl	$VEC_SIZE, %edx
-
-	addl	$VEC_SIZE, %eax
+	/* End condition for strncmp.  */
 # ifdef USE_AS_STRNCMP
-	/* Return 0 if the current offset (%rdx) >= the maximum offset
-	   (%r11).  */
-	cmpq	%r11, %rdx
-	jae	L(zero)
+	subq	$(VEC_SIZE * 4), %rdx
+	jbe	L(ret_zero)
 # endif
-	cmpl	$(PAGE_SIZE - VEC_SIZE), %eax
-	jle	L(loop_1_vector)
-L(cross_page_1_vector):
-	/* Less than 32 bytes to check, try one xmm vector.  */
-	cmpl	$(PAGE_SIZE - 16), %eax
-	jg	L(cross_page_1_xmm)
-	vmovdqu	(%rdi, %rdx), %xmm1
-	VPCMPEQ	(%rsi, %rdx), %xmm1, %xmm0
-	VPMINU	%xmm1, %xmm0, %xmm0
-	VPCMPEQ	%xmm7, %xmm0, %xmm0
-	vpmovmskb %xmm0, %ecx
-	testl	%ecx, %ecx
-	jne	L(last_vector)
 
-	addl	$16, %edx
-# ifndef USE_AS_WCSCMP
-	addl	$16, %eax
-# endif
+	subq	$-(VEC_SIZE * 4), %rdi
+	subq	$-(VEC_SIZE * 4), %rsi
+
+	/* Check if rsi loads will cross a page boundary.  */
+	addl	$-(VEC_SIZE * 4), %eax
+	jnb	L(page_cross_during_loop)
+
+	/* Loop entry after handling page cross during loop.  */
+L(loop_skip_page_cross_check):
+	VMOVA	(VEC_SIZE * 0)(%rdi), %ymm0
+	VMOVA	(VEC_SIZE * 1)(%rdi), %ymm2
+	VMOVA	(VEC_SIZE * 2)(%rdi), %ymm4
+	VMOVA	(VEC_SIZE * 3)(%rdi), %ymm6
+
+	/* ymm1 all 1s where s1 and s2 equal. All 0s otherwise.  */
+	VPCMPEQ	(VEC_SIZE * 0)(%rsi), %ymm0, %ymm1
+
+	VPCMPEQ	(VEC_SIZE * 1)(%rsi), %ymm2, %ymm3
+	VPCMPEQ	(VEC_SIZE * 2)(%rsi), %ymm4, %ymm5
+	VPCMPEQ	(VEC_SIZE * 3)(%rsi), %ymm6, %ymm7
+
+
+	/* If any mismatches or null CHAR then 0 CHAR, otherwise non-
+	   zero.  */
+	vpand	%ymm0, %ymm1, %ymm1
+
+
+	vpand	%ymm2, %ymm3, %ymm3
+	vpand	%ymm4, %ymm5, %ymm5
+	vpand	%ymm6, %ymm7, %ymm7
+
+	VPMINU	%ymm1, %ymm3, %ymm3
+	VPMINU	%ymm5, %ymm7, %ymm7
+
+	/* Reduce all 0 CHARs for the 4x VEC into ymm7.  */
+	VPMINU	%ymm3, %ymm7, %ymm7
+
+	/* If any 0 CHAR then done.  */
+	VPCMPEQ	%ymm7, %ymmZERO, %ymm7
+	vpmovmskb %ymm7, %LOOP_REG
+	testl	%LOOP_REG, %LOOP_REG
+	jz	L(loop)
+
+	/* Find which VEC has the mismatch of end of string.  */
+	VPCMPEQ	%ymm1, %ymmZERO, %ymm1
+	vpmovmskb %ymm1, %ecx
+	testl	%ecx, %ecx
+	jnz	L(return_vec_0_end)
+
+
+	VPCMPEQ	%ymm3, %ymmZERO, %ymm3
+	vpmovmskb %ymm3, %ecx
+	testl	%ecx, %ecx
+	jnz	L(return_vec_1_end)
+
+L(return_vec_2_3_end):
 # ifdef USE_AS_STRNCMP
-	/* Return 0 if the current offset (%rdx) >= the maximum offset
-	   (%r11).  */
-	cmpq	%r11, %rdx
-	jae	L(zero)
+	subq	$(VEC_SIZE * 2), %rdx
+	jbe	L(ret_zero_end)
 # endif
 
-L(cross_page_1_xmm):
-# ifndef USE_AS_WCSCMP
-	/* Less than 16 bytes to check, try 8 byte vector.  NB: No need
-	   for wcscmp nor wcsncmp since wide char is 4 bytes.   */
-	cmpl	$(PAGE_SIZE - 8), %eax
-	jg	L(cross_page_8bytes)
-	vmovq	(%rdi, %rdx), %xmm1
-	vmovq	(%rsi, %rdx), %xmm0
-	VPCMPEQ	%xmm0, %xmm1, %xmm0
-	VPMINU	%xmm1, %xmm0, %xmm0
-	VPCMPEQ	%xmm7, %xmm0, %xmm0
-	vpmovmskb %xmm0, %ecx
-	/* Only last 8 bits are valid.  */
-	andl	$0xff, %ecx
+	VPCMPEQ	%ymm5, %ymmZERO, %ymm5
+	vpmovmskb %ymm5, %ecx
 	testl	%ecx, %ecx
-	jne	L(last_vector)
+	jnz	L(return_vec_2_end)
 
-	addl	$8, %edx
-	addl	$8, %eax
-#  ifdef USE_AS_STRNCMP
-	/* Return 0 if the current offset (%rdx) >= the maximum offset
-	   (%r11).  */
-	cmpq	%r11, %rdx
-	jae	L(zero)
+	/* LOOP_REG contains matches for null/mismatch from the loop. If
+	   VEC 0,1,and 2 all have no null and no mismatches then mismatch
+	   must entirely be from VEC 3 which is fully represented by
+	   LOOP_REG.  */
+	tzcntl	%LOOP_REG, %LOOP_REG
+
+# ifdef USE_AS_STRNCMP
+	subl	$-(VEC_SIZE), %LOOP_REG
+	cmpq	%LOOP_REG64, %rdx
+	jbe	L(ret_zero_end)
+# endif
+
+# ifdef USE_AS_WCSCMP
+	movl	(VEC_SIZE * 2 - VEC_OFFSET)(%rdi, %LOOP_REG64), %ecx
+	xorl	%eax, %eax
+	cmpl	(VEC_SIZE * 2 - VEC_OFFSET)(%rsi, %LOOP_REG64), %ecx
+	je	L(ret5)
+	setl	%al
+	negl	%eax
+	xorl	%r8d, %eax
+# else
+	movzbl	(VEC_SIZE * 2 - VEC_OFFSET)(%rdi, %LOOP_REG64), %eax
+	movzbl	(VEC_SIZE * 2 - VEC_OFFSET)(%rsi, %LOOP_REG64), %ecx
+	subl	%ecx, %eax
+	xorl	%r8d, %eax
+	subl	%r8d, %eax
+# endif
+L(ret5):
+	VZEROUPPER_RETURN
+
+# ifdef USE_AS_STRNCMP
+	.p2align 4,, 2
+L(ret_zero_end):
+	xorl	%eax, %eax
+	VZEROUPPER_RETURN
+# endif
+
+
+	/* The L(return_vec_N_end) differ from L(return_vec_N) in that
+	   they use the value of `r8` to negate the return value. This is
+	   because the page cross logic can swap `rdi` and `rsi`.  */
+	.p2align 4,, 10
+# ifdef USE_AS_STRNCMP
+L(return_vec_1_end):
+	salq	$32, %rcx
+# endif
+L(return_vec_0_end):
+# ifndef USE_AS_STRNCMP
+	tzcntl	%ecx, %ecx
+# else
+	tzcntq	%rcx, %rcx
+	cmpq	%rcx, %rdx
+	jbe	L(ret_zero_end)
+# endif
+
+# ifdef USE_AS_WCSCMP
+	movl	(%rdi, %rcx), %edx
+	xorl	%eax, %eax
+	cmpl	(%rsi, %rcx), %edx
+	je	L(ret6)
+	setl	%al
+	negl	%eax
+	xorl	%r8d, %eax
+# else
+	movzbl	(%rdi, %rcx), %eax
+	movzbl	(%rsi, %rcx), %ecx
+	subl	%ecx, %eax
+	xorl	%r8d, %eax
+	subl	%r8d, %eax
+# endif
+L(ret6):
+	VZEROUPPER_RETURN
+
+# ifndef USE_AS_STRNCMP
+	.p2align 4,, 10
+L(return_vec_1_end):
+	tzcntl	%ecx, %ecx
+#  ifdef USE_AS_WCSCMP
+	movl	VEC_SIZE(%rdi, %rcx), %edx
+	xorl	%eax, %eax
+	cmpl	VEC_SIZE(%rsi, %rcx), %edx
+	je	L(ret7)
+	setl	%al
+	negl	%eax
+	xorl	%r8d, %eax
+#  else
+	movzbl	VEC_SIZE(%rdi, %rcx), %eax
+	movzbl	VEC_SIZE(%rsi, %rcx), %ecx
+	subl	%ecx, %eax
+	xorl	%r8d, %eax
+	subl	%r8d, %eax
 #  endif
-
-L(cross_page_8bytes):
-	/* Less than 8 bytes to check, try 4 byte vector.  */
-	cmpl	$(PAGE_SIZE - 4), %eax
-	jg	L(cross_page_4bytes)
-	vmovd	(%rdi, %rdx), %xmm1
-	vmovd	(%rsi, %rdx), %xmm0
-	VPCMPEQ	%xmm0, %xmm1, %xmm0
-	VPMINU	%xmm1, %xmm0, %xmm0
-	VPCMPEQ	%xmm7, %xmm0, %xmm0
-	vpmovmskb %xmm0, %ecx
-	/* Only last 4 bits are valid.  */
-	andl	$0xf, %ecx
-	testl	%ecx, %ecx
-	jne	L(last_vector)
-
-	addl	$4, %edx
-#  ifdef USE_AS_STRNCMP
-	/* Return 0 if the current offset (%rdx) >= the maximum offset
-	   (%r11).  */
-	cmpq	%r11, %rdx
-	jae	L(zero)
-#  endif
-
-L(cross_page_4bytes):
+L(ret7):
+	VZEROUPPER_RETURN
 # endif
-	/* Less than 4 bytes to check, try one byte/dword at a time.  */
+
+	.p2align 4,, 10
+L(return_vec_2_end):
+	tzcntl	%ecx, %ecx
 # ifdef USE_AS_STRNCMP
-	cmpq	%r11, %rdx
-	jae	L(zero)
+	cmpq	%rcx, %rdx
+	jbe	L(ret_zero_page_cross)
 # endif
 # ifdef USE_AS_WCSCMP
-	movl	(%rdi, %rdx), %eax
-	movl	(%rsi, %rdx), %ecx
+	movl	(VEC_SIZE * 2)(%rdi, %rcx), %edx
+	xorl	%eax, %eax
+	cmpl	(VEC_SIZE * 2)(%rsi, %rcx), %edx
+	je	L(ret11)
+	setl	%al
+	negl	%eax
+	xorl	%r8d, %eax
 # else
-	movzbl	(%rdi, %rdx), %eax
-	movzbl	(%rsi, %rdx), %ecx
-# endif
-	testl	%eax, %eax
-	jne	L(cross_page_loop)
+	movzbl	(VEC_SIZE * 2)(%rdi, %rcx), %eax
+	movzbl	(VEC_SIZE * 2)(%rsi, %rcx), %ecx
 	subl	%ecx, %eax
+	xorl	%r8d, %eax
+	subl	%r8d, %eax
+# endif
+L(ret11):
 	VZEROUPPER_RETURN
-END (STRCMP)
+
+
+	/* Page cross in rsi in next 4x VEC.  */
+
+	/* TODO: Improve logic here.  */
+	.p2align 4,, 10
+L(page_cross_during_loop):
+	/* eax contains [distance_from_page - (VEC_SIZE * 4)].  */
+
+	/* Optimistically rsi and rdi and both aligned inwhich case we
+	   don't need any logic here.  */
+	cmpl	$-(VEC_SIZE * 4), %eax
+	/* Don't adjust eax before jumping back to loop and we will
+	   never hit page cross case again.  */
+	je	L(loop_skip_page_cross_check)
+
+	/* Check if we can safely load a VEC.  */
+	cmpl	$-(VEC_SIZE * 3), %eax
+	jle	L(less_1x_vec_till_page_cross)
+
+	VMOVA	(%rdi), %ymm0
+	VPCMPEQ	(%rsi), %ymm0, %ymm1
+	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
+	vpandn	%ymm1, %ymm2, %ymm1
+	vpmovmskb %ymm1, %ecx
+	incl	%ecx
+	jnz	L(return_vec_0_end)
+
+	/* if distance >= 2x VEC then eax > -(VEC_SIZE * 2).  */
+	cmpl	$-(VEC_SIZE * 2), %eax
+	jg	L(more_2x_vec_till_page_cross)
+
+	.p2align 4,, 4
+L(less_1x_vec_till_page_cross):
+	subl	$-(VEC_SIZE * 4), %eax
+	/* Guranteed safe to read from rdi - VEC_SIZE here. The only
+	   concerning case is first iteration if incoming s1 was near start
+	   of a page and s2 near end. If s1 was near the start of the page
+	   we already aligned up to nearest VEC_SIZE * 4 so gurnateed safe
+	   to read back -VEC_SIZE. If rdi is truly at the start of a page
+	   here, it means the previous page (rdi - VEC_SIZE) has already
+	   been loaded earlier so must be valid.  */
+	VMOVU	-VEC_SIZE(%rdi, %rax), %ymm0
+	VPCMPEQ	-VEC_SIZE(%rsi, %rax), %ymm0, %ymm1
+	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
+	vpandn	%ymm1, %ymm2, %ymm1
+	vpmovmskb %ymm1, %ecx
+
+	/* Mask of potentially valid bits. The lower bits can be out of
+	   range comparisons (but safe regarding page crosses).  */
+	movl	$-1, %r10d
+	shlxl	%esi, %r10d, %r10d
+	notl	%ecx
+
+# ifdef USE_AS_STRNCMP
+	cmpq	%rax, %rdx
+	jbe	L(return_page_cross_end_check)
+# endif
+	movl	%eax, %OFFSET_REG
+	addl	$(PAGE_SIZE - VEC_SIZE * 4), %eax
+
+	andl	%r10d, %ecx
+	jz	L(loop_skip_page_cross_check)
+
+	.p2align 4,, 3
+L(return_page_cross_end):
+	tzcntl	%ecx, %ecx
+
+# ifdef USE_AS_STRNCMP
+	leal	-VEC_SIZE(%OFFSET_REG64, %rcx), %ecx
+L(return_page_cross_cmp_mem):
+# else
+	addl	%OFFSET_REG, %ecx
+# endif
+# ifdef USE_AS_WCSCMP
+	movl	VEC_OFFSET(%rdi, %rcx), %edx
+	xorl	%eax, %eax
+	cmpl	VEC_OFFSET(%rsi, %rcx), %edx
+	je	L(ret8)
+	setl	%al
+	negl	%eax
+	xorl	%r8d, %eax
+# else
+	movzbl	VEC_OFFSET(%rdi, %rcx), %eax
+	movzbl	VEC_OFFSET(%rsi, %rcx), %ecx
+	subl	%ecx, %eax
+	xorl	%r8d, %eax
+	subl	%r8d, %eax
+# endif
+L(ret8):
+	VZEROUPPER_RETURN
+
+# ifdef USE_AS_STRNCMP
+	.p2align 4,, 10
+L(return_page_cross_end_check):
+	tzcntl	%ecx, %ecx
+	leal	-VEC_SIZE(%rax, %rcx), %ecx
+	cmpl	%ecx, %edx
+	ja	L(return_page_cross_cmp_mem)
+	xorl	%eax, %eax
+	VZEROUPPER_RETURN
+# endif
+
+
+	.p2align 4,, 10
+L(more_2x_vec_till_page_cross):
+	/* If more 2x vec till cross we will complete a full loop
+	   iteration here.  */
+
+	VMOVU	VEC_SIZE(%rdi), %ymm0
+	VPCMPEQ	VEC_SIZE(%rsi), %ymm0, %ymm1
+	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
+	vpandn	%ymm1, %ymm2, %ymm1
+	vpmovmskb %ymm1, %ecx
+	incl	%ecx
+	jnz	L(return_vec_1_end)
+
+# ifdef USE_AS_STRNCMP
+	cmpq	$(VEC_SIZE * 2), %rdx
+	jbe	L(ret_zero_in_loop_page_cross)
+# endif
+
+	subl	$-(VEC_SIZE * 4), %eax
+
+	/* Safe to include comparisons from lower bytes.  */
+	VMOVU	-(VEC_SIZE * 2)(%rdi, %rax), %ymm0
+	VPCMPEQ	-(VEC_SIZE * 2)(%rsi, %rax), %ymm0, %ymm1
+	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
+	vpandn	%ymm1, %ymm2, %ymm1
+	vpmovmskb %ymm1, %ecx
+	incl	%ecx
+	jnz	L(return_vec_page_cross_0)
+
+	VMOVU	-(VEC_SIZE * 1)(%rdi, %rax), %ymm0
+	VPCMPEQ	-(VEC_SIZE * 1)(%rsi, %rax), %ymm0, %ymm1
+	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
+	vpandn	%ymm1, %ymm2, %ymm1
+	vpmovmskb %ymm1, %ecx
+	incl	%ecx
+	jnz	L(return_vec_page_cross_1)
+
+# ifdef USE_AS_STRNCMP
+	/* Must check length here as length might proclude reading next
+	   page.  */
+	cmpq	%rax, %rdx
+	jbe	L(ret_zero_in_loop_page_cross)
+# endif
+
+	/* Finish the loop.  */
+	VMOVA	(VEC_SIZE * 2)(%rdi), %ymm4
+	VMOVA	(VEC_SIZE * 3)(%rdi), %ymm6
+
+	VPCMPEQ	(VEC_SIZE * 2)(%rsi), %ymm4, %ymm5
+	VPCMPEQ	(VEC_SIZE * 3)(%rsi), %ymm6, %ymm7
+	vpand	%ymm4, %ymm5, %ymm5
+	vpand	%ymm6, %ymm7, %ymm7
+	VPMINU	%ymm5, %ymm7, %ymm7
+	VPCMPEQ	%ymm7, %ymmZERO, %ymm7
+	vpmovmskb %ymm7, %LOOP_REG
+	testl	%LOOP_REG, %LOOP_REG
+	jnz	L(return_vec_2_3_end)
+
+	/* Best for code size to include ucond-jmp here. Would be faster
+	   if this case is hot to duplicate the L(return_vec_2_3_end) code
+	   as fall-through and have jump back to loop on mismatch
+	   comparison.  */
+	subq	$-(VEC_SIZE * 4), %rdi
+	subq	$-(VEC_SIZE * 4), %rsi
+	addl	$(PAGE_SIZE - VEC_SIZE * 8), %eax
+# ifdef USE_AS_STRNCMP
+	subq	$(VEC_SIZE * 4), %rdx
+	ja	L(loop_skip_page_cross_check)
+L(ret_zero_in_loop_page_cross):
+	xorl	%eax, %eax
+	VZEROUPPER_RETURN
+# else
+	jmp	L(loop_skip_page_cross_check)
+# endif
+
+
+	.p2align 4,, 10
+L(return_vec_page_cross_0):
+	addl	$-VEC_SIZE, %eax
+L(return_vec_page_cross_1):
+	tzcntl	%ecx, %ecx
+# ifdef USE_AS_STRNCMP
+	leal	-VEC_SIZE(%rax, %rcx), %ecx
+	cmpq	%rcx, %rdx
+	jbe	L(ret_zero_in_loop_page_cross)
+# else
+	addl	%eax, %ecx
+# endif
+
+# ifdef USE_AS_WCSCMP
+	movl	VEC_OFFSET(%rdi, %rcx), %edx
+	xorl	%eax, %eax
+	cmpl	VEC_OFFSET(%rsi, %rcx), %edx
+	je	L(ret9)
+	setl	%al
+	negl	%eax
+	xorl	%r8d, %eax
+# else
+	movzbl	VEC_OFFSET(%rdi, %rcx), %eax
+	movzbl	VEC_OFFSET(%rsi, %rcx), %ecx
+	subl	%ecx, %eax
+	xorl	%r8d, %eax
+	subl	%r8d, %eax
+# endif
+L(ret9):
+	VZEROUPPER_RETURN
+
+
+	.p2align 4,, 10
+L(page_cross):
+# ifndef USE_AS_STRNCMP
+	/* If both are VEC aligned we don't need any special logic here.
+	   Only valid for strcmp where stop condition is guranteed to be
+	   reachable by just reading memory.  */
+	testl	$((VEC_SIZE - 1) << 20), %eax
+	jz	L(no_page_cross)
+# endif
+
+	movl	%edi, %eax
+	movl	%esi, %ecx
+	andl	$(PAGE_SIZE - 1), %eax
+	andl	$(PAGE_SIZE - 1), %ecx
+
+	xorl	%OFFSET_REG, %OFFSET_REG
+
+	/* Check which is closer to page cross, s1 or s2.  */
+	cmpl	%eax, %ecx
+	jg	L(page_cross_s2)
+
+	/* The previous page cross check has false positives. Check for
+	   true positive as page cross logic is very expensive.  */
+	subl	$(PAGE_SIZE - VEC_SIZE * 4), %eax
+	jbe	L(no_page_cross)
+
+	/* Set r8 to not interfere with normal return value (rdi and rsi
+	   did not swap).  */
+# ifdef USE_AS_WCSCMP
+	/* any non-zero positive value that doesn't inference with 0x1.
+	 */
+	movl	$2, %r8d
+# else
+	xorl	%r8d, %r8d
+# endif
+
+	/* Check if less than 1x VEC till page cross.  */
+	subl	$(VEC_SIZE * 3), %eax
+	jg	L(less_1x_vec_till_page)
+
+	/* If more than 1x VEC till page cross, loop throuh safely
+	   loadable memory until within 1x VEC of page cross.  */
+
+	.p2align 4,, 10
+L(page_cross_loop):
+
+	VMOVU	(%rdi, %OFFSET_REG64), %ymm0
+	VPCMPEQ	(%rsi, %OFFSET_REG64), %ymm0, %ymm1
+	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
+	vpandn	%ymm1, %ymm2, %ymm1
+	vpmovmskb %ymm1, %ecx
+	incl	%ecx
+
+	jnz	L(check_ret_vec_page_cross)
+	addl	$VEC_SIZE, %OFFSET_REG
+# ifdef USE_AS_STRNCMP
+	cmpq	%OFFSET_REG64, %rdx
+	jbe	L(ret_zero_page_cross)
+# endif
+	addl	$VEC_SIZE, %eax
+	jl	L(page_cross_loop)
+
+	subl	%eax, %OFFSET_REG
+	/* OFFSET_REG has distance to page cross - VEC_SIZE. Guranteed
+	   to not cross page so is safe to load. Since we have already
+	   loaded at least 1 VEC from rsi it is also guranteed to be safe.
+	 */
+
+	VMOVU	(%rdi, %OFFSET_REG64), %ymm0
+	VPCMPEQ	(%rsi, %OFFSET_REG64), %ymm0, %ymm1
+	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
+	vpandn	%ymm1, %ymm2, %ymm1
+	vpmovmskb %ymm1, %ecx
+
+# ifdef USE_AS_STRNCMP
+	leal	VEC_SIZE(%OFFSET_REG64), %eax
+	cmpq	%rax, %rdx
+	jbe	L(check_ret_vec_page_cross2)
+	addq	%rdi, %rdx
+# endif
+	incl	%ecx
+	jz	L(prepare_loop_no_len)
+
+	.p2align 4,, 4
+L(ret_vec_page_cross):
+# ifndef USE_AS_STRNCMP
+L(check_ret_vec_page_cross):
+# endif
+	tzcntl	%ecx, %ecx
+	addl	%OFFSET_REG, %ecx
+L(ret_vec_page_cross_cont):
+# ifdef USE_AS_WCSCMP
+	movl	(%rdi, %rcx), %edx
+	xorl	%eax, %eax
+	cmpl	(%rsi, %rcx), %edx
+	je	L(ret12)
+	setl	%al
+	negl	%eax
+	xorl	%r8d, %eax
+# else
+	movzbl	(%rdi, %rcx), %eax
+	movzbl	(%rsi, %rcx), %ecx
+	subl	%ecx, %eax
+	xorl	%r8d, %eax
+	subl	%r8d, %eax
+# endif
+L(ret12):
+	VZEROUPPER_RETURN
+
+# ifdef USE_AS_STRNCMP
+	.p2align 4,, 10
+L(check_ret_vec_page_cross2):
+	incl	%ecx
+L(check_ret_vec_page_cross):
+	tzcntl	%ecx, %ecx
+	addl	%OFFSET_REG, %ecx
+	cmpq	%rcx, %rdx
+	ja	L(ret_vec_page_cross_cont)
+	.p2align 4,, 2
+L(ret_zero_page_cross):
+	xorl	%eax, %eax
+	VZEROUPPER_RETURN
+# endif
+
+	.p2align 4,, 4
+L(page_cross_s2):
+	/* Ensure this is a true page cross.  */
+	subl	$(PAGE_SIZE - VEC_SIZE * 4), %ecx
+	jbe	L(no_page_cross)
+
+
+	movl	%ecx, %eax
+	movq	%rdi, %rcx
+	movq	%rsi, %rdi
+	movq	%rcx, %rsi
+
+	/* set r8 to negate return value as rdi and rsi swapped.  */
+# ifdef USE_AS_WCSCMP
+	movl	$-4, %r8d
+# else
+	movl	$-1, %r8d
+# endif
+	xorl	%OFFSET_REG, %OFFSET_REG
+
+	/* Check if more than 1x VEC till page cross.  */
+	subl	$(VEC_SIZE * 3), %eax
+	jle	L(page_cross_loop)
+
+	.p2align 4,, 6
+L(less_1x_vec_till_page):
+	/* Find largest load size we can use.  */
+	cmpl	$16, %eax
+	ja	L(less_16_till_page)
+
+	VMOVU	(%rdi), %xmm0
+	VPCMPEQ	(%rsi), %xmm0, %xmm1
+	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
+	vpandn	%xmm1, %xmm2, %xmm1
+	vpmovmskb %ymm1, %ecx
+	incw	%cx
+	jnz	L(check_ret_vec_page_cross)
+	movl	$16, %OFFSET_REG
+# ifdef USE_AS_STRNCMP
+	cmpq	%OFFSET_REG64, %rdx
+	jbe	L(ret_zero_page_cross_slow_case0)
+	subl	%eax, %OFFSET_REG
+# else
+	/* Explicit check for 16 byte alignment.  */
+	subl	%eax, %OFFSET_REG
+	jz	L(prepare_loop)
+# endif
+
+	VMOVU	(%rdi, %OFFSET_REG64), %xmm0
+	VPCMPEQ	(%rsi, %OFFSET_REG64), %xmm0, %xmm1
+	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
+	vpandn	%xmm1, %xmm2, %xmm1
+	vpmovmskb %ymm1, %ecx
+	incw	%cx
+	jnz	L(check_ret_vec_page_cross)
+
+# ifdef USE_AS_STRNCMP
+	addl	$16, %OFFSET_REG
+	subq	%OFFSET_REG64, %rdx
+	jbe	L(ret_zero_page_cross_slow_case0)
+	subq	$-(VEC_SIZE * 4), %rdx
+
+	leaq	-(VEC_SIZE * 4)(%rdi, %OFFSET_REG64), %rdi
+	leaq	-(VEC_SIZE * 4)(%rsi, %OFFSET_REG64), %rsi
+# else
+	leaq	(16 - VEC_SIZE * 4)(%rdi, %OFFSET_REG64), %rdi
+	leaq	(16 - VEC_SIZE * 4)(%rsi, %OFFSET_REG64), %rsi
+# endif
+	jmp	L(prepare_loop_aligned)
+
+# ifdef USE_AS_STRNCMP
+	.p2align 4,, 2
+L(ret_zero_page_cross_slow_case0):
+	xorl	%eax, %eax
+	ret
+# endif
+
+
+	.p2align 4,, 10
+L(less_16_till_page):
+	/* Find largest load size we can use.  */
+	cmpl	$24, %eax
+	ja	L(less_8_till_page)
+
+	vmovq	(%rdi), %xmm0
+	vmovq	(%rsi), %xmm1
+	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
+	VPCMPEQ	%xmm1, %xmm0, %xmm1
+	vpandn	%xmm1, %xmm2, %xmm1
+	vpmovmskb %ymm1, %ecx
+	incb	%cl
+	jnz	L(check_ret_vec_page_cross)
+
+
+# ifdef USE_AS_STRNCMP
+	cmpq	$8, %rdx
+	jbe	L(ret_zero_page_cross_slow_case0)
+# endif
+	movl	$24, %OFFSET_REG
+	/* Explicit check for 16 byte alignment.  */
+	subl	%eax, %OFFSET_REG
+
+
+
+	vmovq	(%rdi, %OFFSET_REG64), %xmm0
+	vmovq	(%rsi, %OFFSET_REG64), %xmm1
+	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
+	VPCMPEQ	%xmm1, %xmm0, %xmm1
+	vpandn	%xmm1, %xmm2, %xmm1
+	vpmovmskb %ymm1, %ecx
+	incb	%cl
+	jnz	L(check_ret_vec_page_cross)
+
+# ifdef USE_AS_STRNCMP
+	addl	$8, %OFFSET_REG
+	subq	%OFFSET_REG64, %rdx
+	jbe	L(ret_zero_page_cross_slow_case0)
+	subq	$-(VEC_SIZE * 4), %rdx
+
+	leaq	-(VEC_SIZE * 4)(%rdi, %OFFSET_REG64), %rdi
+	leaq	-(VEC_SIZE * 4)(%rsi, %OFFSET_REG64), %rsi
+# else
+	leaq	(8 - VEC_SIZE * 4)(%rdi, %OFFSET_REG64), %rdi
+	leaq	(8 - VEC_SIZE * 4)(%rsi, %OFFSET_REG64), %rsi
+# endif
+	jmp	L(prepare_loop_aligned)
+
+
+	.p2align 4,, 10
+L(less_8_till_page):
+# ifdef USE_AS_WCSCMP
+	/* If using wchar then this is the only check before we reach
+	   the page boundary.  */
+	movl	(%rdi), %eax
+	movl	(%rsi), %ecx
+	cmpl	%ecx, %eax
+	jnz	L(ret_less_8_wcs)
+#  ifdef USE_AS_STRNCMP
+	addq	%rdi, %rdx
+	/* We already checked for len <= 1 so cannot hit that case here.
+	 */
+#  endif
+	testl	%eax, %eax
+	jnz	L(prepare_loop_no_len)
+	ret
+
+	.p2align 4,, 8
+L(ret_less_8_wcs):
+	setl	%OFFSET_REG8
+	negl	%OFFSET_REG
+	movl	%OFFSET_REG, %eax
+	xorl	%r8d, %eax
+	ret
+
+# else
+
+	/* Find largest load size we can use.  */
+	cmpl	$28, %eax
+	ja	L(less_4_till_page)
+
+	vmovd	(%rdi), %xmm0
+	vmovd	(%rsi), %xmm1
+	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
+	VPCMPEQ	%xmm1, %xmm0, %xmm1
+	vpandn	%xmm1, %xmm2, %xmm1
+	vpmovmskb %ymm1, %ecx
+	subl	$0xf, %ecx
+	jnz	L(check_ret_vec_page_cross)
+
+#  ifdef USE_AS_STRNCMP
+	cmpq	$4, %rdx
+	jbe	L(ret_zero_page_cross_slow_case1)
+#  endif
+	movl	$28, %OFFSET_REG
+	/* Explicit check for 16 byte alignment.  */
+	subl	%eax, %OFFSET_REG
+
+
+
+	vmovd	(%rdi, %OFFSET_REG64), %xmm0
+	vmovd	(%rsi, %OFFSET_REG64), %xmm1
+	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
+	VPCMPEQ	%xmm1, %xmm0, %xmm1
+	vpandn	%xmm1, %xmm2, %xmm1
+	vpmovmskb %ymm1, %ecx
+	subl	$0xf, %ecx
+	jnz	L(check_ret_vec_page_cross)
+
+#  ifdef USE_AS_STRNCMP
+	addl	$4, %OFFSET_REG
+	subq	%OFFSET_REG64, %rdx
+	jbe	L(ret_zero_page_cross_slow_case1)
+	subq	$-(VEC_SIZE * 4), %rdx
+
+	leaq	-(VEC_SIZE * 4)(%rdi, %OFFSET_REG64), %rdi
+	leaq	-(VEC_SIZE * 4)(%rsi, %OFFSET_REG64), %rsi
+#  else
+	leaq	(4 - VEC_SIZE * 4)(%rdi, %OFFSET_REG64), %rdi
+	leaq	(4 - VEC_SIZE * 4)(%rsi, %OFFSET_REG64), %rsi
+#  endif
+	jmp	L(prepare_loop_aligned)
+
+#  ifdef USE_AS_STRNCMP
+	.p2align 4,, 2
+L(ret_zero_page_cross_slow_case1):
+	xorl	%eax, %eax
+	ret
+#  endif
+
+	.p2align 4,, 10
+L(less_4_till_page):
+	subq	%rdi, %rsi
+	/* Extremely slow byte comparison loop.  */
+L(less_4_loop):
+	movzbl	(%rdi), %eax
+	movzbl	(%rsi, %rdi), %ecx
+	subl	%ecx, %eax
+	jnz	L(ret_less_4_loop)
+	testl	%ecx, %ecx
+	jz	L(ret_zero_4_loop)
+#  ifdef USE_AS_STRNCMP
+	decq	%rdx
+	jz	L(ret_zero_4_loop)
+#  endif
+	incq	%rdi
+	/* end condition is reach page boundary (rdi is aligned).  */
+	testl	$31, %edi
+	jnz	L(less_4_loop)
+	leaq	-(VEC_SIZE * 4)(%rdi, %rsi), %rsi
+	addq	$-(VEC_SIZE * 4), %rdi
+#  ifdef USE_AS_STRNCMP
+	subq	$-(VEC_SIZE * 4), %rdx
+#  endif
+	jmp	L(prepare_loop_aligned)
+
+L(ret_zero_4_loop):
+	xorl	%eax, %eax
+	ret
+L(ret_less_4_loop):
+	xorl	%r8d, %eax
+	subl	%r8d, %eax
+	ret
+# endif
+END(STRCMP)
 #endif
