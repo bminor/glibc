@@ -123,9 +123,9 @@ struct dlfo_mappings_segment
 
 /* To achieve async-signal-safety, two copies of the data structure
    are used, so that a signal handler can still use this data even if
-   dlopen or dlclose modify the other copy.  The the MSB in
-   _dlfo_loaded_mappings_version determines which array element is the
-   currently active region.  */
+   dlopen or dlclose modify the other copy.  The the least significant
+   bit in _dlfo_loaded_mappings_version determines which array element
+   is the currently active region.  */
 static struct dlfo_mappings_segment *_dlfo_loaded_mappings[2];
 
 /* Returns the number of actually used elements in all segments
@@ -248,7 +248,7 @@ _dlfo_read_start_version (void)
 {
   /* Acquire MO load synchronizes with the fences at the beginning and
      end of the TM update region in _dlfo_mappings_begin_update,
-     _dlfo_mappings_end_update, _dlfo_mappings_end_update_no_switch.  */
+     _dlfo_mappings_end_update.  */
   return __atomic_wide_counter_load_acquire (&_dlfo_loaded_mappings_version);
 }
 
@@ -261,35 +261,25 @@ _dlfo_read_version_locked (void)
 }
 
 /* Update the version to reflect that an update is happening.  This
-   does not change the bit that controls the active segment chain.
-   Returns the index of the currently active segment chain.  */
-static inline unsigned int
+   does not change the bit that controls the active segment chain.  */
+static inline void
 _dlfo_mappings_begin_update (void)
 {
-  /* The store synchronizes with loads in _dlfo_read_start_version
+  /* The fence synchronizes with loads in _dlfo_read_start_version
      (also called from _dlfo_read_success).  */
   atomic_thread_fence_release ();
-  return __atomic_wide_counter_fetch_add_relaxed
-    (&_dlfo_loaded_mappings_version, 2);
 }
 
 /* Installs the just-updated version as the active version.  */
 static inline void
 _dlfo_mappings_end_update (void)
 {
-  /* The store synchronizes with loads in _dlfo_read_start_version
+  /* The fence synchronizes with loads in _dlfo_read_start_version
      (also called from _dlfo_read_success).  */
   atomic_thread_fence_release ();
-  __atomic_wide_counter_fetch_add_relaxed (&_dlfo_loaded_mappings_version, 1);
-}
-/* Completes an in-place update without switching versions.  */
-static inline void
-_dlfo_mappings_end_update_no_switch (void)
-{
-  /* The store synchronizes with loads in _dlfo_read_start_version
-     (also called from _dlfo_read_success).  */
-  atomic_thread_fence_release ();
-  __atomic_wide_counter_fetch_add_relaxed (&_dlfo_loaded_mappings_version, 2);
+  /* No atomic read-modify-write update needed because of the loader
+     lock.  */
+  __atomic_wide_counter_add_relaxed (&_dlfo_loaded_mappings_version, 1);
 }
 
 /* Return true if the read was successful, given the start
@@ -302,10 +292,11 @@ _dlfo_read_success (uint64_t start_version)
      the TM region are not ordered past the version check below.  */
   atomic_thread_fence_acquire ();
 
-  /* Synchronizes with stores in _dlfo_mappings_begin_update,
-     _dlfo_mappings_end_update, _dlfo_mappings_end_update_no_switch.
-     It is important that all stores from the last update have been
-     visible, and stores from the next updates are not.
+  /* Synchronizes with the fences in _dlfo_mappings_begin_update,
+     _dlfo_mappings_end_update.  It is important that all stores from
+     the last update have become visible, and stores from the next
+     update to this version are not before the version number is
+     updated.
 
      Unlike with seqlocks, there is no check for odd versions here
      because we have read the unmodified copy (confirmed to be
@@ -839,17 +830,10 @@ _dl_find_object_dlclose (struct link_map *map)
              issues around __libc_freeres.  */
             return;
 
-        /* The update happens in-place, but given that we do not use
-           atomic accesses on the read side, update the version around
-           the update to trigger re-validation in concurrent
-           readers.  */
-        _dlfo_mappings_begin_update ();
-
-        /* Mark as closed.  */
-        obj->map_end = obj->map_start;
-        obj->map = NULL;
-
-        _dlfo_mappings_end_update_no_switch ();
+        /* Mark as closed.  This does not change the overall data
+           structure, so no TM cycle is needed.  */
+        atomic_store_relaxed (&obj->map_end, obj->map_start);
+        atomic_store_relaxed (&obj->map, NULL);
         return;
       }
 }
