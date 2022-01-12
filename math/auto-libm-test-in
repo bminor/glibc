@@ -488,6 +488,14 @@ atan2 0x3.f16f1p+0 -0x1.546056p+0
 atan2 -0x1.9e657cp-24 0x7.40bb4p-52
 # the next value generates larger error bounds on x86_64 (binary32)
 atan2 -0x1.f9cf48p+49 0x1.f60598p+51
+# the next value generates larger error bounds on x86_64 (binary64)
+atan2 0x1.bcab29da0e947p-54 0x1.bc41f4d2294b8p-54
+# the next value generates larger error bounds on x86_64 (binary64)
+atan2 0x1.a11891ec004d4p-348 0x1.814830510be26p-348
+# the next value generates larger error bounds on x86_64 (binary64)
+atan2 0x1.b836ed678be29p-588 0x1.b7be6f5a03a8cp-588
+# the next value generates larger error bounds on x86_64 (binary64)
+atan2 0x1.a83f842ef3f73p-633 0x1.a799d8a6677ep-633
 # the next value generates larger error bounds on x86_64 (binary128)
 atan2 0x1.41df5aa214612c7e019fa6ade88p-13316 0x5.e53b26a270a29eb9f77ef8ef7af8p-13316
 atan2 min min

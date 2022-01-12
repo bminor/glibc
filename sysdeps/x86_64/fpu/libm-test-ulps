@@ -207,17 +207,17 @@ Function: "atan2_vlen16":
 float: 2
 
 Function: "atan2_vlen2":
-double: 1
+double: 2
 
 Function: "atan2_vlen4":
-double: 1
+double: 2
 float: 2
 
 Function: "atan2_vlen4_avx2":
-double: 1
+double: 3
 
 Function: "atan2_vlen8":
-double: 1
+double: 3
 float: 2
 
 Function: "atan2_vlen8_avx2":
