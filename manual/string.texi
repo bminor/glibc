@@ -1921,7 +1921,7 @@ strcasestr ("hello, World", "wo")
 This is like @code{strstr}, but @var{needle} and @var{haystack} are byte
 arrays rather than strings.  @var{needle-len} is the
 length of @var{needle} and @var{haystack-len} is the length of
-@var{haystack}.@refill
+@var{haystack}.
 
 This function is a GNU extension.
 @end deftypefun

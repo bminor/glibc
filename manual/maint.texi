@@ -52,7 +52,7 @@ complete file names, such as @file{strlen.c}).  Use @code{routines} for
 modules that define functions in the library, and @code{aux} for
 auxiliary modules containing things like data definitions.  But the
 values of @code{routines} and @code{aux} are just concatenated, so there
-really is no practical difference.@refill
+really is no practical difference.
 
 @item tests
 The names of test programs for this section of the library.  These
@@ -70,7 +70,7 @@ indicates a bug in the library or error in building.
 The names of ``other'' programs associated with this section of the
 library.  These are programs which are not tests per se, but are other
 small programs included with the library.  They are built by
-@w{@samp{make others}}.@refill
+@w{@samp{make others}}.
 
 @item install-lib
 @itemx install-data
@@ -82,7 +82,7 @@ Files to be installed by @w{@samp{make install}}.  Files listed in
 installed in the directory specified by @samp{datadir} in
 @file{configparms} or @file{Makeconfig}.  Files listed in @code{install}
 are installed in the directory specified by @samp{bindir} in
-@file{configparms} or @file{Makeconfig}.@refill
+@file{configparms} or @file{Makeconfig}.
 
 @item distribute
 Other files from this subdirectory which should be put into a
@@ -337,7 +337,7 @@ subdirectory, it lists other subdirectories of @file{sysdeps} which are
 appended to the list, appearing after the subdirectory containing the
 @file{Implies} file.  Lines in an @file{Implies} file that begin with a
 @samp{#} character are ignored as comments.  For example,
-@file{unix/bsd/Implies} contains:@refill
+@file{unix/bsd/Implies} contains:
 @smallexample
 # BSD has Internet-related things.
 unix/inet
@@ -388,7 +388,7 @@ operating system-dependent version of it, move the file into
 @file{sysdeps/generic} and write your new implementation in the
 appropriate system-specific subdirectory.  Note that if a file is to be
 system-dependent, it @strong{must not} appear in one of the main source
-directories.@refill
+directories.
 
 There are a few special files that may exist in each subdirectory of
 @file{sysdeps}:
@@ -408,7 +408,7 @@ the library.  It can also set the @code{make} variable
 @samp{sysdep-routines}, to specify extra modules to be included in the
 library.  You should use @samp{sysdep-routines} rather than adding
 modules to @samp{routines} because the latter is used in determining
-what to distribute for each subdirectory of the main source tree.@refill
+what to distribute for each subdirectory of the main source tree.
 
 Each makefile in a subdirectory in the ordered list of subdirectories to
 be searched is included in order.  Since several system-dependent
@@ -433,7 +433,7 @@ files that should go into the library for the system this subdirectory
 of @file{sysdeps} implements.  For example,
 @file{sysdeps/unix/inet/Subdirs} contains @file{inet}; the @file{inet}
 directory contains various network-oriented operations which only make
-sense to put in the library on systems that support the Internet.@refill
+sense to put in the library on systems that support the Internet.
 
 @item configure
 
@@ -625,7 +625,7 @@ partially defines them; a @file{sysdep.h} file in another directory must
 finish defining them for the particular machine and operating system
 variant.  See @file{sysdeps/unix/sysdep.h} and the machine-specific
 @file{sysdep.h} implementations to see what these macros are and what
-they should do.@refill
+they should do.
 
 The system-specific makefile for the @file{unix} directory
 (@file{sysdeps/unix/Makefile}) gives rules to generate several files

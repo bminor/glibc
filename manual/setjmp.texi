@@ -136,7 +136,7 @@ This function restores current execution to the state saved in
 established that return point.  Returning from @code{setjmp} by means of
 @code{longjmp} returns the @var{value} argument that was passed to
 @code{longjmp}, rather than @code{0}.  (But if @var{value} is given as
-@code{0}, @code{setjmp} returns @code{1}).@refill
+@code{0}, @code{setjmp} returns @code{1}).
 @end deftypefun
 
 There are a lot of obscure but important restrictions on the use of

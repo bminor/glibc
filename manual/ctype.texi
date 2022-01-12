@@ -57,7 +57,7 @@ character argument is passed as an @code{int}, and it may be the
 constant value @code{EOF} instead of a real character.
 
 The attributes of any given character can vary between locales.
-@xref{Locales}, for more information on locales.@refill
+@xref{Locales}, for more information on locales.
 
 These functions are declared in the header file @file{ctype.h}.
 @pindex ctype.h
@@ -265,7 +265,7 @@ bits.  This function is a BSD extension and is also an SVID extension.
 @standards{SVID, ctype.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
 This is identical to @code{tolower}, and is provided for compatibility
-with the SVID.  @xref{SVID}.@refill
+with the SVID.  @xref{SVID}.
 @end deftypefun
 
 @deftypefun int _toupper (int @var{c})

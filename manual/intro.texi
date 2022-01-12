@@ -99,7 +99,7 @@ by the International Standardization Organization (ISO):
 We here refer to the standard as @w{ISO C} since this is the more
 general standard in respect of ratification.
 The header files and library facilities that make up @theglibc{} are
-a superset of those specified by the @w{ISO C} standard.@refill
+a superset of those specified by the @w{ISO C} standard.
 
 @pindex gcc
 If you are concerned about strict adherence to the @w{ISO C} standard, you
@@ -144,7 +144,7 @@ general, the additional requirements and functionality defined by the
 POSIX standards are aimed at providing lower-level support for a
 particular kind of operating system environment, rather than general
 programming language support which can run in many diverse operating
-system environments.@refill
+system environments.
 
 @Theglibc{} implements all of the functions specified in
 @cite{ISO/IEC 9945-1:1996, the POSIX System Application Program
@@ -1035,7 +1035,7 @@ feature test macro definition (@pxref{Feature Test Macros}).
 
 For more information about the use of header files and @samp{#include}
 directives, @pxref{Header Files,,, cpp.info, The GNU C Preprocessor
-Manual}.@refill
+Manual}.
 
 @Theglibc{} provides several header files, each of which contains
 the type and macro definitions and variable and function declarations

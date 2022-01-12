@@ -2796,7 +2796,7 @@ To illustrate this, suppose you have a function
 fails.  If the file cannot be opened, it prints an error message and
 jumps out to the command level of your program using @code{longjmp}.
 Let's change @code{open2} (@pxref{Alloca Example}) to use this
-subroutine:@refill
+subroutine:
 
 @smallexample
 int

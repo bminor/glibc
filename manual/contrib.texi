@@ -525,7 +525,7 @@ The random number generation functions @code{random}, @code{srandom},
 for the University of California at Berkeley and are copyrighted by the
 Regents of the University of California.  They have undergone minor
 changes to fit into @theglibc{} and to fit the @w{ISO C} standard,
-but the functional code is Berkeley's.@refill
+but the functional code is Berkeley's.
 
 @item
 The Internet-related code (most of the @file{inet} subdirectory) and

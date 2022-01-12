@@ -459,7 +459,7 @@ was invoked with the same @var{ap} argument.
 
 In @theglibc{}, @code{va_end} does nothing, and you need not ever
 use it except for reasons of portability.
-@refill
+
 @end deftypefn
 
 Sometimes it is necessary to parse the list of parameters more than once

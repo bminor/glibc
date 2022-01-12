@@ -2532,7 +2532,7 @@ obstack @var{obstack} to allocate the space.  @xref{Obstacks}.
 
 The characters are written onto the end of the current object.
 To get at them, you must finish the object with @code{obstack_finish}
-(@pxref{Growing Objects}).@refill
+(@pxref{Growing Objects}).
 @end deftypefun
 
 @node Variable Arguments Output
@@ -2696,7 +2696,7 @@ variable argument list specified directly as for @code{vprintf}.
 @c inconsistent state in case of cancellation.
 The @code{obstack_vprintf} function is the equivalent of
 @code{obstack_printf} with the variable argument list specified directly
-as for @code{vprintf}.@refill
+as for @code{vprintf}.
 @end deftypefun
 
 Here's an example showing how you might use @code{vfprintf}.  This is a
