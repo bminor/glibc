@@ -424,6 +424,12 @@ $(objpfx)%$o: $(objpfx)%.c $(before-compile); $$(compile-command.c)
 endef
 object-suffixes-left := $(all-object-suffixes)
 include $(o-iterator)
+
+define o-iterator-doit
+$(objpfx)%$o: $(objpfx)%.cc $(before-compile); $$(compile-command.cc)
+endef
+object-suffixes-left := $(all-object-suffixes)
+include $(o-iterator)
 endif
 
 # Generate .dT files as we compile.
