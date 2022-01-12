@@ -412,7 +412,9 @@
 #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
 # elif !__GNUC_PREREQ (4, 1)
 #  warning _FORTIFY_SOURCE requires GCC 4.1 or later
-# elif _FORTIFY_SOURCE > 2 && __glibc_clang_prereq (9, 0)
+# elif _FORTIFY_SOURCE > 2 && (__glibc_clang_prereq (9, 0)		      \
+			       || __GNUC_PREREQ (12, 0))
+
 #  if _FORTIFY_SOURCE > 3
 #   warning _FORTIFY_SOURCE > 3 is treated like 3 on this platform
 #  endif
