@@ -2735,5 +2735,7 @@ GLIBC_2.34 tss_create F
 GLIBC_2.34 tss_delete F
 GLIBC_2.34 tss_get F
 GLIBC_2.34 tss_set F
+GLIBC_2.35 __epoll_pwait2_time64 F
 GLIBC_2.35 __memcmpeq F
 GLIBC_2.35 _dl_find_object F
+GLIBC_2.35 epoll_pwait2 F

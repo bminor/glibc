@@ -22,6 +22,7 @@
 #include <sys/types.h>
 
 #include <bits/types/sigset_t.h>
+#include <bits/types/struct_timespec.h>
 
 /* Get the platform-dependent flags.  */
 #include <bits/epoll.h>
@@ -132,6 +133,26 @@ extern int epoll_wait (int __epfd, struct epoll_event *__events,
 extern int epoll_pwait (int __epfd, struct epoll_event *__events,
 			int __maxevents, int __timeout,
 			const __sigset_t *__ss);
+
+/* Same as epoll_pwait, but the timeout as a timespec.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+#ifndef __USE_TIME_BITS64
+extern int epoll_pwait2 (int __epfd, struct epoll_event *__events,
+			 int __maxevents, const struct timespec *__timeout,
+			 const __sigset_t *__ss);
+#else
+# ifdef __REDIRECT
+extern int __REDIRECT (epoll_pwait2, (int __epfd, struct epoll_event *__ev,
+				      int __maxevs,
+				      const struct timespec *__timeout,
+				      const __sigset_t *__ss),
+		       __epoll_pwait2_time64);
+# else
+#  define epoll_pwait2 __epoll_pwait2_time64
+# endif
+#endif
 
 __END_DECLS
 

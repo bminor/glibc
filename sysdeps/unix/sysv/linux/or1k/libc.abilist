@@ -697,6 +697,7 @@ GLIBC_2.35 epoll_create F
 GLIBC_2.35 epoll_create1 F
 GLIBC_2.35 epoll_ctl F
 GLIBC_2.35 epoll_pwait F
+GLIBC_2.35 epoll_pwait2 F
 GLIBC_2.35 epoll_wait F
 GLIBC_2.35 erand48 F
 GLIBC_2.35 erand48_r F

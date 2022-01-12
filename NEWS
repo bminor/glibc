@@ -126,6 +126,9 @@ Major new features:
   checks, this can help to ensure that proper diagnostics are printed if
   the dynamic loader runs on an incompatible CPU.
 
+* On Linux, the epoll_pwait2 function has been added.  It is similar to
+  epoll_wait with the difference the timeout has nanoseconds resolution.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On x86-64, the LD_PREFER_MAP_32BIT_EXEC environment variable support

@@ -293,6 +293,12 @@ libc {
 %endif
     close_range;
   }
+  GLIBC_2.35 {
+%ifdef TIME64_NON_DEFAULT
+    __epoll_pwait2_time64;
+%endif
+    epoll_pwait2;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;
