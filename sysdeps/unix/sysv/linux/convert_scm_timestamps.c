@@ -54,8 +54,6 @@ __convert_scm_timestamps (struct msghdr *msg, socklen_t msgsize)
        cmsg != NULL;
        cmsg = CMSG_NXTHDR (msg, cmsg))
     {
-      last = cmsg;
-
       if (cmsg->cmsg_level != SOL_SOCKET)
 	continue;
 
@@ -77,6 +75,8 @@ __convert_scm_timestamps (struct msghdr *msg, socklen_t msgsize)
 	  tvts[1] = tmp[1];
 	  break;
 	}
+
+      last = cmsg;
     }
 
   if (last == NULL || type == 0)
@@ -88,11 +88,10 @@ __convert_scm_timestamps (struct msghdr *msg, socklen_t msgsize)
       return;
     }
 
-  /* Zero memory for the new cmsghdr, required by CMSG_NXTHDR.  */
-  memset (msg->msg_control + msg->msg_controllen, 0,
-	  CMSG_SPACE (sizeof tvts));
   msg->msg_controllen += CMSG_SPACE (sizeof tvts);
-  cmsg = CMSG_NXTHDR (msg, last);
+  cmsg = CMSG_NXTHDR(msg, last);
+  if (cmsg == NULL)
+    return;
   cmsg->cmsg_level = SOL_SOCKET;
   cmsg->cmsg_type = type;
   cmsg->cmsg_len = CMSG_LEN (sizeof tvts);
