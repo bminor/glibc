@@ -867,7 +867,7 @@ endif
 +extra-math-flags = $(if $(filter libm,$(in-module)),-fno-math-errno,-fmath-errno)
 
 # Use 64 bit time_t support for installed programs
-installed-modules = nonlib nscd lddlibc4 libresolv ldconfig locale_programs \
+installed-modules = nonlib nscd lddlibc4 ldconfig locale_programs \
 		    iconvprogs libnss_files libnss_compat libnss_db libnss_hesiod \
 		    libutil libpcprofile libSegFault
 +extra-time-flags = $(if $(filter $(installed-modules),\
