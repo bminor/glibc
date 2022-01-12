@@ -457,7 +457,7 @@ __NTH (wcsrtombs (char *__restrict __dst, const wchar_t **__restrict __src,
 }
 
 
-#ifdef __USE_GNU
+#ifdef	__USE_XOPEN2K8
 extern size_t __mbsnrtowcs_chk (wchar_t *__restrict __dst,
 				const char **__restrict __src, size_t __nmc,
 				size_t __len, mbstate_t *__restrict __ps,

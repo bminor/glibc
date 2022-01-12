@@ -40,7 +40,7 @@ read (int __fd, void *__buf, size_t __nbytes)
 			  __fd, __buf, __nbytes);
 }
 
-#ifdef __USE_UNIX98
+#if defined __USE_UNIX98 || defined __USE_XOPEN2K8
 extern ssize_t __pread_chk (int __fd, void *__buf, size_t __nbytes,
 			    __off_t __offset, size_t __bufsize)
   __wur __attr_access ((__write_only__, 2, 3));

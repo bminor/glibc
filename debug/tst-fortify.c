@@ -1,4 +1,5 @@
-/* Copyright (C) 2004-2021 Free Software Foundation, Inc.
+/* Copyright (C) 2004-2022 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
@@ -37,6 +38,17 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
+#ifndef _GNU_SOURCE
+# define MEMPCPY memcpy
+# define WMEMPCPY wmemcpy
+# define MEMPCPY_RET(x) 0
+# define WMEMPCPY_RET(x) 0
+#else
+# define MEMPCPY mempcpy
+# define WMEMPCPY wmempcpy
+# define MEMPCPY_RET(x) __builtin_strlen (x)
+# define WMEMPCPY_RET(x) wcslen (x)
+#endif
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
@@ -163,7 +175,7 @@ do_test (void)
   if (memcmp (buf, "aabcdefghi", 10))
     FAIL ();
 
-  if (mempcpy (buf + 5, "abcde", 5) != buf + 10
+  if (MEMPCPY (buf + 5, "abcde", 5) != buf + 5 + MEMPCPY_RET ("abcde")
       || memcmp (buf, "aabcdabcde", 10))
     FAIL ();
 
@@ -208,7 +220,7 @@ do_test (void)
   if (memcmp (buf, "aabcdefghi", 10))
     FAIL ();
 
-  if (mempcpy (buf + 5, "abcde", l0 + 5) != buf + 10
+  if (MEMPCPY (buf + 5, "abcde", l0 + 5) != buf + 5 + MEMPCPY_RET ("abcde")
       || memcmp (buf, "aabcdabcde", 10))
     FAIL ();
 
@@ -267,7 +279,8 @@ do_test (void)
   if (memcmp (a.buf1, "aabcdefghi", 10))
     FAIL ();
 
-  if (mempcpy (a.buf1 + 5, "abcde", l0 + 5) != a.buf1 + 10
+  if (MEMPCPY (a.buf1 + 5, "abcde", l0 + 5)
+      != a.buf1 + 5 + MEMPCPY_RET ("abcde")
       || memcmp (a.buf1, "aabcdabcde", 10))
     FAIL ();
 
@@ -348,6 +361,7 @@ do_test (void)
   bcopy (buf + 1, buf + 2, l0 + 9);
   CHK_FAIL_END
 
+#ifdef _GNU_SOURCE
   CHK_FAIL_START
   p = (char *) mempcpy (buf + 6, "abcde", 5);
   CHK_FAIL_END
@@ -355,6 +369,7 @@ do_test (void)
   CHK_FAIL_START
   p = (char *) mempcpy (buf + 6, "abcde", l0 + 5);
   CHK_FAIL_END
+#endif
 
   CHK_FAIL_START
   memset (buf + 9, 'j', 2);
@@ -465,6 +480,7 @@ do_test (void)
   bcopy (a.buf1 + 1, a.buf1 + 2, l0 + 9);
   CHK_FAIL_END
 
+#ifdef _GNU_SOURCE
   CHK_FAIL_START
   p = (char *) mempcpy (a.buf1 + 6, "abcde", 5);
   CHK_FAIL_END
@@ -472,6 +488,7 @@ do_test (void)
   CHK_FAIL_START
   p = (char *) mempcpy (a.buf1 + 6, "abcde", l0 + 5);
   CHK_FAIL_END
+#endif
 
   CHK_FAIL_START
   memset (a.buf1 + 9, 'j', 2);
@@ -551,7 +568,7 @@ do_test (void)
   if (wmemcmp (wbuf, L"aabcdefghi", 10))
     FAIL ();
 
-  if (wmempcpy (wbuf + 5, L"abcde", 5) != wbuf + 10
+  if (WMEMPCPY (wbuf + 5, L"abcde", 5) != wbuf + 5 + WMEMPCPY_RET (L"abcde")
       || wmemcmp (wbuf, L"aabcdabcde", 10))
     FAIL ();
 
@@ -584,7 +601,8 @@ do_test (void)
   if (wmemcmp (wbuf, L"aabcdefghi", 10))
     FAIL ();
 
-  if (wmempcpy (wbuf + 5, L"abcde", l0 + 5) != wbuf + 10
+  if (WMEMPCPY (wbuf + 5, L"abcde", l0 + 5)
+      != wbuf + 5 + WMEMPCPY_RET (L"abcde")
       || wmemcmp (wbuf, L"aabcdabcde", 10))
     FAIL ();
 
@@ -626,7 +644,8 @@ do_test (void)
   if (wmemcmp (wa.buf1, L"aabcdefghi", 10))
     FAIL ();
 
-  if (wmempcpy (wa.buf1 + 5, L"abcde", l0 + 5) != wa.buf1 + 10
+  if (WMEMPCPY (wa.buf1 + 5, L"abcde", l0 + 5)
+      != wa.buf1 + 5 + WMEMPCPY_RET (L"abcde")
       || wmemcmp (wa.buf1, L"aabcdabcde", 10))
     FAIL ();
 
@@ -695,6 +714,7 @@ do_test (void)
   wmemmove (wbuf + 2, wbuf + 1, l0 + 9);
   CHK_FAIL_END
 
+#ifdef _GNU_SOURCE
   CHK_FAIL_START
   wp = wmempcpy (wbuf + 6, L"abcde", 5);
   CHK_FAIL_END
@@ -702,6 +722,7 @@ do_test (void)
   CHK_FAIL_START
   wp = wmempcpy (wbuf + 6, L"abcde", l0 + 5);
   CHK_FAIL_END
+#endif
 
   CHK_FAIL_START
   wmemset (wbuf + 9, L'j', 2);
@@ -769,6 +790,7 @@ do_test (void)
   wmemmove (wa.buf1 + 2, wa.buf1 + 1, l0 + 9);
   CHK_FAIL_END
 
+#ifdef _GNU_SOURCE
   CHK_FAIL_START
   wp = wmempcpy (wa.buf1 + 6, L"abcde", 5);
   CHK_FAIL_END
@@ -776,6 +798,7 @@ do_test (void)
   CHK_FAIL_START
   wp = wmempcpy (wa.buf1 + 6, L"abcde", l0 + 5);
   CHK_FAIL_END
+#endif
 
   CHK_FAIL_START
   wmemset (wa.buf1 + 9, L'j', 2);
@@ -907,6 +930,7 @@ do_test (void)
   if (fprintf (fp, buf2 + 4, str5) != 7)
     FAIL ();
 
+#ifdef _GNU_SOURCE
   char *my_ptr = NULL;
   strcpy (buf2 + 2, "%n%s%n");
   /* When the format string is writable and contains %n,
@@ -936,6 +960,7 @@ do_test (void)
   if (obstack_printf (&obs, "%s%n%s%n", str4, &n1, str5, &n1) != 14)
     FAIL ();
   obstack_free (&obs, NULL);
+#endif
 
   if (freopen (temp_filename, "r", stdin) == NULL)
     {
@@ -983,6 +1008,7 @@ do_test (void)
 
   rewind (stdin);
 
+#ifdef _GNU_SOURCE
   if (fgets_unlocked (buf, buf_size, stdin) != buf
       || memcmp (buf, "abcdefgh\n", 10))
     FAIL ();
@@ -1009,6 +1035,7 @@ do_test (void)
 #endif
 
   rewind (stdin);
+#endif
 
   if (fread (buf, 1, buf_size, stdin) != buf_size
       || memcmp (buf, "abcdefgh\nA", 10))
@@ -1579,7 +1606,10 @@ do_test (void)
       ret = 1;
     }
 
-  int fd = posix_openpt (O_RDWR);
+  int fd;
+
+#ifdef _GNU_SOURCE
+  fd = posix_openpt (O_RDWR);
   if (fd != -1)
     {
       char enough[1000];
@@ -1595,6 +1625,7 @@ do_test (void)
 #endif
       close (fd);
     }
+#endif
 
 #if PATH_MAX > 0
   confstr (_CS_GNU_LIBC_VERSION, largebuf, sizeof (largebuf));
@@ -1712,8 +1743,9 @@ do_test (void)
   poll (fds, l0 + 2, 0);
   CHK_FAIL_END
 #endif
+#ifdef _GNU_SOURCE
   ppoll (fds, 1, NULL, NULL);
-#if __USE_FORTIFY_LEVEL >= 1
+# if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
   ppoll (fds, 2, NULL, NULL);
   CHK_FAIL_END
@@ -1721,6 +1753,7 @@ do_test (void)
   CHK_FAIL_START
   ppoll (fds, l0 + 2, NULL, NULL);
   CHK_FAIL_END
+# endif
 #endif
 
   return ret;
