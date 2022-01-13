@@ -109,6 +109,7 @@ tests := \
   tst-random \
   tst-random2 \
   tst-realpath \
+  tst-realpath-toolong \
   tst-secure-getenv \
   tst-setcontext \
   tst-setcontext2 \
