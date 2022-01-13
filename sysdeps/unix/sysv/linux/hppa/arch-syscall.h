@@ -87,6 +87,7 @@
 #define __NR_ftruncate64 200
 #define __NR_futex 210
 #define __NR_futex_time64 422
+#define __NR_futex_waitv 449
 #define __NR_futimesat 279
 #define __NR_get_mempolicy 261
 #define __NR_get_robust_list 290

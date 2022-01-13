@@ -21,8 +21,8 @@
 # This file can list all potential system calls.  The names are only
 # used if the installed kernel headers also provide them.
 
-# The list of system calls is current as of Linux 5.15.
-kernel 5.15
+# The list of system calls is current as of Linux 5.16.
+kernel 5.16
 
 FAST_atomic_update
 FAST_cmpxchg
@@ -146,6 +146,7 @@ ftruncate
 ftruncate64
 futex
 futex_time64
+futex_waitv
 futimesat
 get_kernel_syms
 get_mempolicy

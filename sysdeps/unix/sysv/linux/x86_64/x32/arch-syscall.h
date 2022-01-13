@@ -74,6 +74,7 @@
 #define __NR_fsync 1073741898
 #define __NR_ftruncate 1073741901
 #define __NR_futex 1073742026
+#define __NR_futex_waitv 1073742273
 #define __NR_futimesat 1073742085
 #define __NR_get_mempolicy 1073742063
 #define __NR_get_robust_list 1073742355

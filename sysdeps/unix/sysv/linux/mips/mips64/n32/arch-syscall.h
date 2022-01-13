@@ -86,6 +86,7 @@
 #define __NR_ftruncate 6075
 #define __NR_futex 6194
 #define __NR_futex_time64 6422
+#define __NR_futex_waitv 6449
 #define __NR_futimesat 6255
 #define __NR_get_kernel_syms 6170
 #define __NR_get_mempolicy 6232
