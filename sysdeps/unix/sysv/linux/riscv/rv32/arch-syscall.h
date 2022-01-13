@@ -60,6 +60,7 @@
 #define __NR_fsync 82
 #define __NR_ftruncate64 46
 #define __NR_futex_time64 422
+#define __NR_futex_waitv 449
 #define __NR_get_mempolicy 236
 #define __NR_get_robust_list 100
 #define __NR_getcpu 168

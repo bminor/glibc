@@ -78,6 +78,7 @@
 #define __NR_fsync 95
 #define __NR_ftruncate 130
 #define __NR_futex 394
+#define __NR_futex_waitv 559
 #define __NR_futimesat 454
 #define __NR_get_kernel_syms 309
 #define __NR_get_mempolicy 430
