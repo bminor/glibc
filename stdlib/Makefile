@@ -65,30 +65,81 @@ aux =	grouping groupingwc tens_in_limb
 static-only-routines = atexit at_quick_exit
 
 test-srcs	:= tst-fmtmsg
-tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
-		   test-canon test-canon2 tst-strtoll tst-environ	    \
-		   tst-xpg-basename tst-random tst-random2 tst-bsearch	    \
-		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
-		   tst-setcontext2 test-a64l tst-qsort testmb2              \
-		   bug-strtod2 tst-atof1 tst-atof2 tst-strtod2		    \
-		   tst-rand48-2 tst-makecontext tst-strtod5		    \
-		   tst-qsort2 tst-makecontext2 tst-strtod6 tst-unsetenv1    \
-		   tst-makecontext3 bug-getcontext bug-fmtmsg1		    \
-		   tst-secure-getenv tst-strtod-overflow tst-strtod-round   \
-		   tst-tininess tst-strtod-underflow tst-setcontext3	    \
-		   tst-strtol-locale tst-strtod-nan-locale tst-strfmon_l    \
-		   tst-quick_exit tst-thread-quick_exit tst-width	    \
-		   tst-width-stdint tst-strfrom tst-strfrom-locale	    \
-		   tst-getrandom tst-atexit tst-at_quick_exit 		    \
-		   tst-cxa_atexit tst-on_exit test-atexit-race 		    \
-		   test-at_quick_exit-race test-cxa_atexit-race		    \
-		   test-cxa_atexit-race2				    \
-		   test-on_exit-race test-dlclose-exit-race 		    \
-		   tst-makecontext-align test-bz22786 tst-strtod-nan-sign \
-		   tst-swapcontext1 tst-setcontext4 tst-setcontext5 \
-		   tst-setcontext6 tst-setcontext7 tst-setcontext8 \
-		   tst-setcontext9 tst-bz20544 tst-canon-bz26341 \
-		   tst-realpath
+tests		:=  bug-fmtmsg1 \
+		    bug-getcontext \
+		    bug-strtod \
+		    bug-strtod2 \
+		    test-a64l \
+		    test-at_quick_exit-race \
+		    test-atexit-race \
+		    test-bz22786 \
+		    test-canon \
+		    test-canon2 \
+		    test-cxa_atexit-race \
+		    test-cxa_atexit-race2 \
+		    test-dlclose-exit-race \
+		    test-on_exit-race \
+		    testdiv \
+		    testmb \
+		    testmb2 \
+		    testrand \
+		    testsort \
+		    tst-at_quick_exit \
+		    tst-atexit \
+		    tst-atof1 \
+		    tst-atof2 \
+		    tst-bsearch \
+		    tst-bz20544 \
+		    tst-canon-bz26341 \
+		    tst-cxa_atexit \
+		    tst-environ \
+		    tst-getrandom \
+		    tst-limits \
+		    tst-makecontext \
+		    tst-makecontext-align \
+		    tst-makecontext2 \
+		    tst-makecontext3 \
+		    tst-on_exit \
+		    tst-qsort \
+		    tst-qsort2 \
+		    tst-quick_exit \
+		    tst-rand48 \
+		    tst-rand48-2 \
+		    tst-random \
+		    tst-random2 \
+		    tst-realpath \
+		    tst-secure-getenv \
+		    tst-setcontext \
+		    tst-setcontext2 \
+		    tst-setcontext3 \
+		    tst-setcontext4 \
+		    tst-setcontext5 \
+		    tst-setcontext6 \
+		    tst-setcontext7 \
+		    tst-setcontext8 \
+		    tst-setcontext9 \
+		    tst-strfmon_l \
+		    tst-strfrom \
+		    tst-strfrom-locale \
+		    tst-strtod \
+		    tst-strtod-nan-locale \
+		    tst-strtod-nan-sign \
+		    tst-strtod-overflow \
+		    tst-strtod-round \
+		    tst-strtod-underflow \
+		    tst-strtod2 \
+		    tst-strtod5 \
+		    tst-strtod6 \
+		    tst-strtol \
+		    tst-strtol-locale \
+		    tst-strtoll \
+		    tst-swapcontext1 \
+		    tst-thread-quick_exit \
+		    tst-tininess \
+		    tst-unsetenv1 \
+		    tst-width \
+		    tst-width-stdint \
+		    tst-xpg-basename
 
 tests-internal	:= tst-strtod1i tst-strtod3 tst-strtod4 tst-strtod5i \
 		   tst-tls-atexit tst-tls-atexit-nodelete
