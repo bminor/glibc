@@ -13,7 +13,9 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* Support for prelink will be removed in the next release; this includes
+  removal of the LD_TRACE_PRELINKING, and LD_USE_LOAD_BIAS, environment
+  variables and their functionality in the dynamic loader.
 
 Changes to build and runtime requirements:
 

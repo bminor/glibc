@@ -142,44 +142,6 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
       plt[1] = 0x85c0a000 | (rfunc & 0x3ff);
       plt[2] = OPCODE_NOP;	/* Fill call delay slot.  */
       plt[3] = (Elf32_Addr) l;
-      if (__builtin_expect (l->l_info[VALIDX(DT_GNU_PRELINKED)] != NULL, 0)
-	  || __builtin_expect (l->l_info [VALIDX (DT_GNU_LIBLISTSZ)] != NULL, 0))
-	{
-	  /* Need to reinitialize .plt to undo prelinking.  */
-	  Elf32_Rela *rela = (Elf32_Rela *) D_PTR (l, l_info[DT_JMPREL]);
-	  Elf32_Rela *relaend
-	    = (Elf32_Rela *) ((char *) rela
-			      + l->l_info[DT_PLTRELSZ]->d_un.d_val);
-#if !defined RTLD_BOOTSTRAP && !defined __sparc_v9__
-	  /* Note that we don't mask the hwcap here, as the flush is
-	     essential to functionality on those cpu's that implement it.
-	     For sparcv9 we can assume flush is present.  */
-	  const int do_flush = GLRO(dl_hwcap) & HWCAP_SPARC_FLUSH;
-#else
-	  const int do_flush = 1;
-#endif
-
-	  /* prelink must ensure there are no R_SPARC_NONE relocs left
-	     in .rela.plt.  */
-	  while (rela < relaend)
-	    {
-	      *(unsigned int *) (rela->r_offset + l->l_addr)
-		= OPCODE_SETHI_G1 | (rela->r_offset + l->l_addr
-				     - (Elf32_Addr) plt);
-	      *(unsigned int *) (rela->r_offset + l->l_addr + 4)
-		= OPCODE_BA | ((((Elf32_Addr) plt
-				 - rela->r_offset - l->l_addr - 4) >> 2)
-			       & 0x3fffff);
-	      if (do_flush)
-		{
-		  __asm __volatile ("flush %0" : : "r" (rela->r_offset
-							+ l->l_addr));
-		  __asm __volatile ("flush %0+4" : : "r" (rela->r_offset
-							  + l->l_addr));
-		}
-	      ++rela;
-	    }
-	}
     }
 
   return lazy;
@@ -334,14 +296,12 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 		  void *const reloc_addr_arg, int skip_ifunc)
 {
   Elf32_Addr *const reloc_addr = reloc_addr_arg;
-#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
+#if !defined RTLD_BOOTSTRAP
   const Elf32_Sym *const refsym = sym;
 #endif
   Elf32_Addr value;
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
-#if !defined RESOLVE_CONFLICT_FIND_MAP
   struct link_map *sym_map = NULL;
-#endif
 
 #if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
   /* This is defined in rtld.c, but nowhere in the static libc.a; make the
@@ -372,7 +332,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
     }
 #endif
 
-#ifndef RESOLVE_CONFLICT_FIND_MAP
   if (__builtin_expect (ELF32_ST_BIND (sym->st_info) == STB_LOCAL, 0)
       && sym->st_shndx != SHN_UNDEF)
     {
@@ -384,9 +343,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
       sym_map = RESOLVE_MAP (map, scope, &sym, version, r_type);
       value = SYMBOL_ADDRESS (sym_map, sym, true);
     }
-#else
-  value = 0;
-#endif
 
   value += reloc->r_addend;	/* Assume copy relocs have zero addend.  */
 
@@ -400,7 +356,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 
   switch (r_type)
     {
-#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
+#if !defined RTLD_BOOTSTRAP
     case R_SPARC_COPY:
       if (sym == NULL)
 	/* This can happen in trace mode if an object could not be
@@ -450,7 +406,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	sparc_fixup_plt (reloc, reloc_addr, value, 0, do_flush);
       }
       break;
-#ifndef RESOLVE_CONFLICT_FIND_MAP
     case R_SPARC_TLS_DTPMOD32:
       /* Get the information from the link map returned by the
 	 resolv function.  */
@@ -474,7 +429,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	    + reloc->r_addend;
 	}
       break;
-# ifndef RTLD_BOOTSTRAP
+#ifndef RTLD_BOOTSTRAP
     case R_SPARC_TLS_LE_HIX22:
     case R_SPARC_TLS_LE_LOX10:
       if (sym != NULL)
@@ -489,7 +444,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	      | 0x1c00;
 	}
       break;
-# endif
 #endif
 #ifndef RTLD_BOOTSTRAP
     case R_SPARC_8:

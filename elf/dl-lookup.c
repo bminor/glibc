@@ -296,19 +296,6 @@ do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
       assert (!RTLD_CHECK_FOREIGN_CALL);
 #endif
 
-#ifdef SHARED
-      /* If tab->entries is NULL, but tab->size is not, it means
-	 this is the second, conflict finding, lookup for
-	 LD_TRACE_PRELINKING in _dl_debug_bindings.  Don't
-	 allocate anything and don't enter anything into the
-	 hash table.  */
-      if (__glibc_unlikely (tab->size))
-	{
-	  assert (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK);
-	  goto success;
-	}
-#endif
-
 #define INITIAL_NUNIQUE_SYM_TABLE 31
       size = INITIAL_NUNIQUE_SYM_TABLE;
       entries = calloc (sizeof (struct unique_sym), size);
@@ -341,9 +328,6 @@ marking %s [%lu] as NODELETE due to unique symbol\n",
     }
   ++tab->n_elements;
 
-#ifdef SHARED
- success:
-#endif
   __rtld_lock_unlock_recursive (tab->lock);
 
   result->s = sym;
@@ -818,12 +802,6 @@ marking %s [%lu] as NODELETE due to memory allocation failure\n",
   goto out;
 }
 
-static void
-_dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
-		    const ElfW(Sym) **ref, struct sym_val *value,
-		    const struct r_found_version *version, int type_class,
-		    int protected);
-
 
 /* Search loaded objects' symbol tables for a definition of the symbol
    UNDEF_NAME, perhaps with a requested version for the symbol.
@@ -943,145 +921,6 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
   if (__glibc_unlikely (current_value.m->l_used == 0))
     current_value.m->l_used = 1;
 
-  if (__glibc_unlikely (GLRO(dl_debug_mask)
-			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK)))
-    _dl_debug_bindings (undef_name, undef_map, ref,
-			&current_value, version, type_class, protected);
-
   *ref = current_value.s;
   return LOOKUP_VALUE (current_value.m);
-}
-
-
-static void
-_dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
-		    const ElfW(Sym) **ref, struct sym_val *value,
-		    const struct r_found_version *version, int type_class,
-		    int protected)
-{
-  const char *reference_name = undef_map->l_name;
-
-  if (GLRO(dl_debug_mask) & DL_DEBUG_BINDINGS)
-    {
-      _dl_debug_printf ("binding file %s [%lu] to %s [%lu]: %s symbol `%s'",
-			DSO_FILENAME (reference_name),
-			undef_map->l_ns,
-			DSO_FILENAME (value->m->l_name),
-			value->m->l_ns,
-			protected ? "protected" : "normal", undef_name);
-      if (version)
-	_dl_debug_printf_c (" [%s]\n", version->name);
-      else
-	_dl_debug_printf_c ("\n");
-    }
-#ifdef SHARED
-  if (GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
-    {
-/* ELF_RTYPE_CLASS_XXX must match RTYPE_CLASS_XXX used by prelink with
-   LD_TRACE_PRELINKING.  */
-#define RTYPE_CLASS_VALID	8
-#define RTYPE_CLASS_PLT		(8|1)
-#define RTYPE_CLASS_COPY	(8|2)
-#define RTYPE_CLASS_TLS		(8|4)
-#if ELF_RTYPE_CLASS_PLT != 0 && ELF_RTYPE_CLASS_PLT != 1
-# error ELF_RTYPE_CLASS_PLT must be 0 or 1!
-#endif
-#if ELF_RTYPE_CLASS_COPY != 0 && ELF_RTYPE_CLASS_COPY != 2
-# error ELF_RTYPE_CLASS_COPY must be 0 or 2!
-#endif
-      int conflict = 0;
-      struct sym_val val = { NULL, NULL };
-
-      if ((GLRO(dl_trace_prelink_map) == NULL
-	   || GLRO(dl_trace_prelink_map) == GL(dl_ns)[LM_ID_BASE]._ns_loaded)
-	  && undef_map != GL(dl_ns)[LM_ID_BASE]._ns_loaded)
-	{
-	  const uint_fast32_t new_hash = dl_new_hash (undef_name);
-	  unsigned long int old_hash = 0xffffffff;
-	  struct unique_sym *saved_entries
-	    = GL(dl_ns)[LM_ID_BASE]._ns_unique_sym_table.entries;
-
-	  GL(dl_ns)[LM_ID_BASE]._ns_unique_sym_table.entries = NULL;
-	  do_lookup_x (undef_name, new_hash, &old_hash, *ref, &val,
-		       undef_map->l_local_scope[0], 0, version, 0, NULL,
-		       type_class, undef_map);
-	  if (val.s != value->s || val.m != value->m)
-	    conflict = 1;
-	  else if (__glibc_unlikely (undef_map->l_symbolic_in_local_scope)
-		   && val.s
-		   && __glibc_unlikely (ELFW(ST_BIND) (val.s->st_info)
-					== STB_GNU_UNIQUE))
-	    {
-	      /* If it is STB_GNU_UNIQUE and undef_map's l_local_scope
-		 contains any DT_SYMBOLIC libraries, unfortunately there
-		 can be conflicts even if the above is equal.  As symbol
-		 resolution goes from the last library to the first and
-		 if a STB_GNU_UNIQUE symbol is found in some late DT_SYMBOLIC
-		 library, it would be the one that is looked up.  */
-	      struct sym_val val2 = { NULL, NULL };
-	      size_t n;
-	      struct r_scope_elem *scope = undef_map->l_local_scope[0];
-
-	      for (n = 0; n < scope->r_nlist; n++)
-		if (scope->r_list[n] == val.m)
-		  break;
-
-	      for (n++; n < scope->r_nlist; n++)
-		if (scope->r_list[n]->l_info[DT_SYMBOLIC] != NULL
-		    && do_lookup_x (undef_name, new_hash, &old_hash, *ref,
-				    &val2,
-				    &scope->r_list[n]->l_symbolic_searchlist,
-				    0, version, 0, NULL, type_class,
-				    undef_map) > 0)
-		  {
-		    conflict = 1;
-		    val = val2;
-		    break;
-		  }
-	    }
-	  GL(dl_ns)[LM_ID_BASE]._ns_unique_sym_table.entries = saved_entries;
-	}
-
-      if (value->s)
-	{
-	  /* Keep only ELF_RTYPE_CLASS_PLT and ELF_RTYPE_CLASS_COPY
-	     bits since since prelink only uses them.  */
-	  type_class &= ELF_RTYPE_CLASS_PLT | ELF_RTYPE_CLASS_COPY;
-	  if (__glibc_unlikely (ELFW(ST_TYPE) (value->s->st_info)
-				== STT_TLS))
-	    /* Clear the RTYPE_CLASS_VALID bit in RTYPE_CLASS_TLS.  */
-	    type_class = RTYPE_CLASS_TLS & ~RTYPE_CLASS_VALID;
-	  else if (__glibc_unlikely (ELFW(ST_TYPE) (value->s->st_info)
-				     == STT_GNU_IFUNC))
-	    /* Set the RTYPE_CLASS_VALID bit.  */
-	    type_class |= RTYPE_CLASS_VALID;
-	}
-
-      if (conflict
-	  || GLRO(dl_trace_prelink_map) == undef_map
-	  || GLRO(dl_trace_prelink_map) == NULL
-	  || type_class >= 4)
-	{
-	  _dl_printf ("%s 0x%0*Zx 0x%0*Zx -> 0x%0*Zx 0x%0*Zx ",
-		      conflict ? "conflict" : "lookup",
-		      (int) sizeof (ElfW(Addr)) * 2,
-		      (size_t) undef_map->l_map_start,
-		      (int) sizeof (ElfW(Addr)) * 2,
-		      (size_t) (((ElfW(Addr)) *ref) - undef_map->l_map_start),
-		      (int) sizeof (ElfW(Addr)) * 2,
-		      (size_t) (value->s ? value->m->l_map_start : 0),
-		      (int) sizeof (ElfW(Addr)) * 2,
-		      (size_t) (value->s ? value->s->st_value : 0));
-
-	  if (conflict)
-	    _dl_printf ("x 0x%0*Zx 0x%0*Zx ",
-			(int) sizeof (ElfW(Addr)) * 2,
-			(size_t) (val.s ? val.m->l_map_start : 0),
-			(int) sizeof (ElfW(Addr)) * 2,
-			(size_t) (val.s ? val.s->st_value : 0));
-
-	  _dl_printf ("/%x %s\n", type_class, undef_name);
-	}
-    }
-#endif
 }

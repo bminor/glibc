@@ -2263,8 +2263,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 
   if (__glibc_unlikely (fd == -1))
     {
-      if (trace_mode
-	  && __glibc_likely ((GLRO(dl_debug_mask) & DL_DEBUG_PRELINK) == 0))
+      if (trace_mode)
 	{
 	  /* We haven't found an appropriate library.  But since we
 	     are only interested in the list of libraries this isn't

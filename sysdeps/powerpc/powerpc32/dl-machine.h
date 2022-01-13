@@ -294,7 +294,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
   const int r_type = ELF32_R_TYPE (reloc->r_info);
   struct link_map *sym_map = NULL;
 
-#ifndef RESOLVE_CONFLICT_FIND_MAP
   if (r_type == R_PPC_RELATIVE)
     {
       *reloc_addr = map->l_addr + reloc->r_addend;
@@ -318,9 +317,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
       value = SYMBOL_ADDRESS (sym_map, sym, true);
     }
   value += reloc->r_addend;
-#else
-  value = reloc->r_addend;
-#endif
 
   if (sym != NULL
       && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
@@ -341,12 +337,11 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
       *reloc_addr = value;
       break;
 
-#ifndef RESOLVE_CONFLICT_FIND_MAP
-# ifdef RTLD_BOOTSTRAP
-#  define NOT_BOOTSTRAP 0
-# else
-#  define NOT_BOOTSTRAP 1
-# endif
+#ifdef RTLD_BOOTSTRAP
+# define NOT_BOOTSTRAP 0
+#else
+# define NOT_BOOTSTRAP 1
+#endif
 
     case R_PPC_DTPMOD32:
       if (map->l_info[DT_PPC(OPT)]
@@ -361,11 +356,11 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	    }
 	  else if (sym_map != NULL)
 	    {
-# ifndef SHARED
+#ifndef SHARED
 	      CHECK_STATIC_TLS (map, sym_map);
-# else
+#else
 	      if (TRY_STATIC_TLS (map, sym_map))
-# endif
+#endif
 		{
 		  reloc_addr[0] = 0;
 		  /* Set up for local dynamic.  */
@@ -395,11 +390,11 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	  else if (sym_map != NULL)
 	    {
 	      /* This reloc is always preceded by R_PPC_DTPMOD32.  */
-# ifndef SHARED
+#ifndef SHARED
 	      assert (HAVE_STATIC_TLS (map, sym_map));
-# else
+#else
 	      if (HAVE_STATIC_TLS (map, sym_map))
-# endif
+#endif
 		{
 		  *reloc_addr = TLS_TPREL_VALUE (sym_map, sym, reloc);
 		  break;
@@ -419,12 +414,8 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	  *reloc_addr = TLS_TPREL_VALUE (sym_map, sym, reloc);
 	}
       break;
-#endif
 
     case R_PPC_JMP_SLOT:
-#ifdef RESOLVE_CONFLICT_FIND_MAP
-      RESOLVE_CONFLICT_FIND_MAP (map, reloc_addr);
-#endif
       if (map->l_info[DT_PPC(GOT)] != 0)
 	{
 	  *reloc_addr = value;

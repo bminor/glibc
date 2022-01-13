@@ -352,7 +352,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
     return;
   else
     {
-#if !defined RTLD_BOOTSTRAP && !defined RESOLVE_CONFLICT_FIND_MAP
+#if !defined RTLD_BOOTSTRAP
       /* Only needed for R_390_COPY below.  */
       const Elf32_Sym *const refsym = sym;
 #endif
@@ -380,34 +380,33 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
 
-#ifndef RESOLVE_CONFLICT_FIND_MAP
 	case R_390_TLS_DTPMOD:
-# ifdef RTLD_BOOTSTRAP
+#ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always the module
 	     with index 1.
 	     XXX If this relocation is necessary move before RESOLVE
 	     call.  */
 	  *reloc_addr = 1;
-# else
+#else
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
 	  if (sym_map != NULL)
 	    *reloc_addr = sym_map->l_tls_modid;
-# endif
+#endif
 	  break;
 	case R_390_TLS_DTPOFF:
-# ifndef RTLD_BOOTSTRAP
+#ifndef RTLD_BOOTSTRAP
 	  /* During relocation all TLS symbols are defined and used.
 	     Therefore the offset is already correct.  */
 	  if (sym != NULL)
 	    *reloc_addr = sym->st_value + reloc->r_addend;
-# endif
+#endif
 	  break;
 	case R_390_TLS_TPOFF:
 	  /* The offset is negative, forward from the thread pointer.  */
-# ifdef RTLD_BOOTSTRAP
+#ifdef RTLD_BOOTSTRAP
 	  *reloc_addr = sym->st_value + reloc->r_addend - map->l_tls_offset;
-# else
+#else
 	  /* We know the offset of the object the symbol is contained in.
 	     It is a negative value which will be added to the
 	     thread pointer.  */
@@ -419,10 +418,8 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	    }
 #endif
 	  break;
-#endif  /* use TLS */
 
 #ifndef RTLD_BOOTSTRAP
-# ifndef RESOLVE_CONFLICT_FIND_MAP
 	/* Not needed in dl-conflict.c.  */
 	case R_390_COPY:
 	  if (sym == NULL)
@@ -443,7 +440,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	  memcpy (reloc_addr_arg, (void *) value,
 		  MIN (sym->st_size, refsym->st_size));
 	  break;
-# endif
 	case R_390_32:
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
@@ -453,7 +449,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	case R_390_8:
 	  *(char *) reloc_addr = value + reloc->r_addend;
 	  break;
-# ifndef RESOLVE_CONFLICT_FIND_MAP
 	case R_390_PC32:
 	  *reloc_addr = value + reloc->r_addend - (Elf32_Addr) reloc_addr;
 	  break;
@@ -471,7 +466,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	  break;
 	case R_390_NONE:
 	  break;
-# endif
 #endif
 #if !defined(RTLD_BOOTSTRAP) || defined(_NDEBUG)
 	default:

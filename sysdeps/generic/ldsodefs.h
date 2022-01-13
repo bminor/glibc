@@ -562,7 +562,6 @@ struct rtld_global_ro
 #define DL_DEBUG_SCOPES	    (1 << 9)
 /* These two are used only internally.  */
 #define DL_DEBUG_HELP       (1 << 10)
-#define DL_DEBUG_PRELINK    (1 << 11)
 
   /* OS version.  */
   EXTERN unsigned int _dl_osversion;
@@ -649,10 +648,6 @@ struct rtld_global_ro
   EXTERN const char *_dl_profile;
   /* Filename of the output file.  */
   EXTERN const char *_dl_profile_output;
-  /* Name of the object we want to trace the prelinking.  */
-  EXTERN const char *_dl_trace_prelink;
-  /* Map of shared object to be prelink traced.  */
-  EXTERN struct link_map *_dl_trace_prelink_map;
 
   /* All search directories defined at startup.  This is assigned a
      non-NULL pointer by the ld.so startup code (after initialization
@@ -1095,12 +1090,6 @@ extern void _dl_protect_relro (struct link_map *map) attribute_hidden;
 extern void _dl_reloc_bad_type (struct link_map *map,
 				unsigned int type, int plt)
      attribute_hidden __attribute__ ((__noreturn__));
-
-/* Resolve conflicts if prelinking.  */
-extern void _dl_resolve_conflicts (struct link_map *l,
-				   ElfW(Rela) *conflict,
-				   ElfW(Rela) *conflictend)
-     attribute_hidden;
 
 /* Check the version dependencies of all objects available through
    MAP.  If VERBOSE print some more diagnostics.  */

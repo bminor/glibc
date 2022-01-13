@@ -127,7 +127,6 @@ rtld-routines = \
   $(all-dl-routines) \
   dl-audit \
   dl-compat \
-  dl-conflict \
   dl-diagnostics \
   dl-diagnostics-cpu \
   dl-diagnostics-kernel \
@@ -1102,14 +1101,6 @@ check-abi: $(objpfx)check-abi-ld.out
 tests-special += $(objpfx)check-abi-ld.out
 update-abi: update-abi-ld
 update-all-abi: update-all-abi-ld
-
-ifeq ($(have-glob-dat-reloc),yes)
-tests += tst-prelink
-tests-internal += tst-prelink-cmp
-# Don't compile tst-prelink.c with PIE for GLOB_DAT relocation.
-CFLAGS-tst-prelink.c += -fno-pie
-tst-prelink-no-pie = yes
-endif
 
 # The test requires shared _and_ PIE because the executable
 # unit test driver must be able to link with the shared object
@@ -2284,13 +2275,6 @@ $(patsubst %,$(objpfx)%.os,$(tst-tls-many-dynamic-modules)): \
 $(objpfx)tst-tls-manydynamic: $(shared-thread-library)
 $(objpfx)tst-tls-manydynamic.out: \
   $(patsubst %,$(objpfx)%.so,$(tst-tls-many-dynamic-modules))
-
-tst-prelink-ENV = LD_TRACE_PRELINKING=1
-
-$(objpfx)tst-prelink-conflict.out: $(objpfx)tst-prelink.out
-	grep stdout $< | grep conflict | $(AWK) '{ print $$10, $$11 }' > $@
-
-$(objpfx)tst-prelink-cmp.out: $(objpfx)tst-prelink-conflict.out
 
 $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
 	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper-env)' \

@@ -423,23 +423,8 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 
       if (r_type == R_ALPHA_GLOB_DAT)
 	*reloc_addr = sym_value;
-#ifdef RESOLVE_CONFLICT_FIND_MAP
-      /* In .gnu.conflict section, R_ALPHA_JMP_SLOT relocations have
-	 R_ALPHA_JMP_SLOT in lower 8 bits and the remaining 24 bits
-	 are .rela.plt index.  */
-      else if ((r_type & 0xff) == R_ALPHA_JMP_SLOT)
-	{
-	  /* elf_machine_fixup_plt needs the map reloc_addr points into,
-	     while in _dl_resolve_conflicts map is _dl_loaded.  */
-	  RESOLVE_CONFLICT_FIND_MAP (map, reloc_addr);
-	  reloc = ((const Elf64_Rela *) D_PTR (map, l_info[DT_JMPREL]))
-		  + (r_type >> 8);
-	  elf_machine_fixup_plt (map, 0, 0, 0, reloc, reloc_addr, sym_value);
-	}
-#else
       else if (r_type == R_ALPHA_JMP_SLOT)
 	elf_machine_fixup_plt (map, 0, 0, 0, reloc, reloc_addr, sym_value);
-#endif
 #ifndef RTLD_BOOTSTRAP
       else if (r_type == R_ALPHA_REFQUAD)
 	{

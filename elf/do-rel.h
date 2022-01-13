@@ -105,9 +105,6 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 	   relocations or rela relocations if they are computed as
 	   memory_loc += l_addr...  */
 	if (l_addr != 0)
-# else
-	/* ...or we know the object has been prelinked.  */
-	if (l_addr != 0 || ! map->l_info[VALIDX(DT_GNU_PRELINKED)])
 # endif
 #endif
 	  for (; relative < r; ++relative)

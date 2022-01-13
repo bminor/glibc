@@ -521,9 +521,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
     return;
   else
     {
-# ifndef RESOLVE_CONFLICT_FIND_MAP
       const Elf32_Sym *const refsym = sym;
-# endif
       struct link_map *sym_map = RESOLVE_MAP (map, scope, &sym, version, r_type);
       Elf32_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
 
@@ -535,7 +533,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 
       switch (r_type)
 	{
-#  ifndef RESOLVE_CONFLICT_FIND_MAP
 	  /* Not needed for dl-conflict.c.  */
 	case R_ARM_COPY:
 	  if (sym == NULL)
@@ -555,7 +552,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	  memcpy (reloc_addr_arg, (void *) value,
 		  MIN (sym->st_size, refsym->st_size));
 	  break;
-#  endif /* !RESOLVE_CONFLICT_FIND_MAP */
 	case R_ARM_GLOB_DAT:
 	case R_ARM_JUMP_SLOT:
 	case R_ARM_ABS32:

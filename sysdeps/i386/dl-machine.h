@@ -479,9 +479,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
     *reloc_addr = map->l_addr + reloc->r_addend;
   else if (r_type != R_386_NONE)
     {
-#  ifndef RESOLVE_CONFLICT_FIND_MAP
       const Elf32_Sym *const refsym = sym;
-#  endif
       struct link_map *sym_map = RESOLVE_MAP (map, scope, &sym, version,
 					      r_type);
       Elf32_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
@@ -503,7 +501,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	case R_386_32:
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
-#  ifndef RESOLVE_CONFLICT_FIND_MAP
 	  /* Not needed for dl-conflict.c.  */
 	case R_386_PC32:
 	  *reloc_addr = (value + reloc->r_addend - (Elf32_Addr) reloc_addr);
@@ -525,19 +522,19 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	    struct tlsdesc volatile *td =
 	      (struct tlsdesc volatile *)reloc_addr;
 
-#   ifndef RTLD_BOOTSTRAP
+#  ifndef RTLD_BOOTSTRAP
 	    if (!sym)
 	      {
 		td->arg = (void*)reloc->r_addend;
 		td->entry = _dl_tlsdesc_undefweak;
 	      }
 	    else
-#   endif
+#  endif
 	      {
-#   ifndef RTLD_BOOTSTRAP
-#    ifndef SHARED
+#  ifndef RTLD_BOOTSTRAP
+#   ifndef SHARED
 		CHECK_STATIC_TLS (map, sym_map);
-#    else
+#   else
 		if (!TRY_STATIC_TLS (map, sym_map))
 		  {
 		    td->arg = _dl_make_tlsdesc_dynamic
@@ -545,8 +542,8 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 		    td->entry = _dl_tlsdesc_dynamic;
 		  }
 		else
-#    endif
 #   endif
+#  endif
 		  {
 		    td->arg = (void*)(sym->st_value - sym_map->l_tls_offset
 				      + reloc->r_addend);
@@ -599,7 +596,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	  memcpy (reloc_addr_arg, (void *) value,
 		  MIN (sym->st_size, refsym->st_size));
 	  break;
-#  endif /* !RESOLVE_CONFLICT_FIND_MAP */
 	case R_386_IRELATIVE:
 	  value = map->l_addr + reloc->r_addend;
 	  if (__glibc_likely (!skip_ifunc))

@@ -203,10 +203,6 @@ struct link_map
     unsigned int l_contiguous:1; /* Nonzero if inter-segment holes are
 				    mprotected or if no holes are present at
 				    all.  */
-    unsigned int l_symbolic_in_local_scope:1; /* Nonzero if l_local_scope
-						 during LD_TRACE_PRELINKING=1
-						 contains any DT_SYMBOLIC
-						 libraries.  */
     unsigned int l_free_initfini:1; /* Nonzero if l_initfini can be
 				       freed, ie. not allocated with
 				       the dummy malloc in ld.so.  */

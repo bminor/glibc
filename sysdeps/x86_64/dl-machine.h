@@ -346,59 +346,58 @@ and creates an unsatisfiable circular dependency.\n",
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
 
-# ifndef RESOLVE_CONFLICT_FIND_MAP
 	case R_X86_64_DTPMOD64:
-#  ifdef RTLD_BOOTSTRAP
+# ifdef RTLD_BOOTSTRAP
 	  /* During startup the dynamic linker is always the module
 	     with index 1.
 	     XXX If this relocation is necessary move before RESOLVE
 	     call.  */
 	  *reloc_addr = 1;
-#  else
+# else
 	  /* Get the information from the link map returned by the
 	     resolve function.  */
 	  if (sym_map != NULL)
 	    *reloc_addr = sym_map->l_tls_modid;
-#  endif
+# endif
 	  break;
 	case R_X86_64_DTPOFF64:
-#  ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 	  /* During relocation all TLS symbols are defined and used.
 	     Therefore the offset is already correct.  */
 	  if (sym != NULL)
 	    {
 	      value = sym->st_value + reloc->r_addend;
-#   ifdef __ILP32__
+#  ifdef __ILP32__
 	      /* This relocation type computes a signed offset that is
 		 usually negative.  The symbol and addend values are 32
 		 bits but the GOT entry is 64 bits wide and the whole
 		 64-bit entry is used as a signed quantity, so we need
 		 to sign-extend the computed value to 64 bits.  */
 	      *(Elf64_Sxword *) reloc_addr = (Elf64_Sxword) (Elf32_Sword) value;
-#   else
+#  else
 	      *reloc_addr = value;
-#   endif
-	    }
 #  endif
+	    }
+# endif
 	  break;
 	case R_X86_64_TLSDESC:
 	  {
 	    struct tlsdesc volatile *td =
 	      (struct tlsdesc volatile *)reloc_addr;
 
-#  ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 	    if (! sym)
 	      {
 		td->arg = (void*)reloc->r_addend;
 		td->entry = _dl_tlsdesc_undefweak;
 	      }
 	    else
-#  endif
+# endif
 	      {
-#  ifndef RTLD_BOOTSTRAP
-#   ifndef SHARED
+# ifndef RTLD_BOOTSTRAP
+#  ifndef SHARED
 		CHECK_STATIC_TLS (map, sym_map);
-#   else
+#  else
 		if (!TRY_STATIC_TLS (map, sym_map))
 		  {
 		    td->arg = _dl_make_tlsdesc_dynamic
@@ -406,8 +405,8 @@ and creates an unsatisfiable circular dependency.\n",
 		    td->entry = _dl_tlsdesc_dynamic;
 		  }
 		else
-#   endif
 #  endif
+# endif
 		  {
 		    td->arg = (void*)(sym->st_value - sym_map->l_tls_offset
 				      + reloc->r_addend);
@@ -418,30 +417,29 @@ and creates an unsatisfiable circular dependency.\n",
 	  }
 	case R_X86_64_TPOFF64:
 	  /* The offset is negative, forward from the thread pointer.  */
-#  ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 	  if (sym != NULL)
-#  endif
+# endif
 	    {
-#  ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
 	      CHECK_STATIC_TLS (map, sym_map);
-#  endif
+# endif
 	      /* We know the offset of the object the symbol is contained in.
 		 It is a negative value which will be added to the
 		 thread pointer.  */
 	      value = (sym->st_value + reloc->r_addend
 		       - sym_map->l_tls_offset);
-#  ifdef __ILP32__
+# ifdef __ILP32__
 	      /* The symbol and addend values are 32 bits but the GOT
 		 entry is 64 bits wide and the whole 64-bit entry is used
 		 as a signed quantity, so we need to sign-extend the
 		 computed value to 64 bits.  */
 	      *(Elf64_Sxword *) reloc_addr = (Elf64_Sxword) (Elf32_Sword) value;
-#  else
+# else
 	      *reloc_addr = value;
-#  endif
+# endif
 	    }
 	  break;
-# endif
 
 # ifndef RTLD_BOOTSTRAP
 	case R_X86_64_64:
@@ -466,15 +464,12 @@ and creates an unsatisfiable circular dependency.\n",
 
 	      fmt = "\
 %s: Symbol `%s' causes overflow in R_X86_64_32 relocation\n";
-#  ifndef RESOLVE_CONFLICT_FIND_MAP
 	    print_err:
-#  endif
 	      strtab = (const char *) D_PTR (map, l_info[DT_STRTAB]);
 
 	      _dl_error_printf (fmt, RTLD_PROGNAME, strtab + refsym->st_name);
 	    }
 	  break;
-#  ifndef RESOLVE_CONFLICT_FIND_MAP
 	  /* Not needed for dl-conflict.c.  */
 	case R_X86_64_PC32:
 	  value += reloc->r_addend - (ElfW(Addr)) reloc_addr;
@@ -502,7 +497,6 @@ and creates an unsatisfiable circular dependency.\n",
 	      goto print_err;
 	    }
 	  break;
-#  endif
 	case R_X86_64_IRELATIVE:
 	  value = map->l_addr + reloc->r_addend;
 	  if (__glibc_likely (!skip_ifunc))
