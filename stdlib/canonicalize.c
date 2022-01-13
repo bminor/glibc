@@ -400,8 +400,16 @@ realpath_stk (const char *name, char *resolved,
 
 error:
   *dest++ = '\0';
-  if (resolved != NULL && dest - rname <= get_path_max ())
-    rname = strcpy (resolved, rname);
+  if (resolved != NULL)
+    {
+      if (dest - rname <= get_path_max ())
+	rname = strcpy (resolved, rname);
+      else
+	{
+	  failed = true;
+	  __set_errno (ENAMETOOLONG);
+	}
+    }
 
 error_nomem:
   scratch_buffer_free (&extra_buffer);
