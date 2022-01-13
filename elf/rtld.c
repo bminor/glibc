@@ -365,7 +365,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_sysinfo = DL_SYSINFO_DEFAULT,
 #endif
     ._dl_debug_fd = STDERR_FILENO,
-    ._dl_use_load_bias = -2,
     ._dl_correct_cache_id = _DL_CACHE_DEFAULT_ID,
 #if !HAVE_TUNABLES
     ._dl_hwcap_mask = HWCAP_IMPORTANT,
@@ -1742,12 +1741,6 @@ dl_main (const ElfW(Phdr) *phdr,
   ++GL(dl_ns)[LM_ID_BASE]._ns_nloaded;
   ++GL(dl_load_adds);
 
-  /* If LD_USE_LOAD_BIAS env variable has not been seen, default
-     to not using bias for non-prelinked PIEs and libraries
-     and using it for executables or prelinked PIEs or libraries.  */
-  if (GLRO(dl_use_load_bias) == (ElfW(Addr)) -2)
-    GLRO(dl_use_load_bias) = main_map->l_addr == 0 ? -1 : 0;
-
   /* Starting from binutils-2.23, the linker will define the magic symbol
      __ehdr_start to point to our own ELF header if it is visible in a
      segment that also includes the phdrs.  If that's not available, we use
@@ -2657,12 +2650,6 @@ process_envvars (struct dl_main_state *state)
 #ifdef EXTRA_LD_ENVVARS_13
 	  EXTRA_LD_ENVVARS_13
 #endif
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "USE_LOAD_BIAS", 13) == 0)
-	    {
-	      GLRO(dl_use_load_bias) = envline[14] == '1' ? -1 : 0;
-	      break;
-	    }
 	  break;
 
 	case 14:

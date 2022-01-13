@@ -94,8 +94,7 @@ _dl_map_segments (struct link_map *l, int fd,
          prefer to map such objects at; but this is only a preference,
          the OS can do whatever it likes. */
       ElfW(Addr) mappref
-        = (ELF_PREFERRED_ADDRESS (loader, maplength,
-                                  c->mapstart & GLRO(dl_use_load_bias))
+        = (ELF_PREFERRED_ADDRESS (loader, maplength, c->mapstart)
            - MAP_BASE_ADDR (l));
 
       /* Remember which part of the address space this object uses.  */

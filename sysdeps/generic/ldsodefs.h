@@ -628,11 +628,6 @@ struct rtld_global_ro
   /* Location of the binary.  */
   EXTERN const char *_dl_origin_path;
 
-  /* -1 if the dynamic linker should honor library load bias,
-     0 if not, -2 use the default (honor biases for normal
-     binaries, don't honor for PIEs).  */
-  EXTERN ElfW(Addr) _dl_use_load_bias;
-
   /* Size of the static TLS block.  */
   EXTERN size_t _dl_tls_static_size;
 

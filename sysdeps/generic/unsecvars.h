@@ -22,7 +22,6 @@
   "LD_PRELOAD\0"							      \
   "LD_PROFILE\0"							      \
   "LD_SHOW_AUXV\0"							      \
-  "LD_USE_LOAD_BIAS\0"							      \
   "LOCALDOMAIN\0"							      \
   "LOCPATH\0"								      \
   "MALLOC_TRACE\0"							      \

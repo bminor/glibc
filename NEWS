@@ -197,6 +197,9 @@ Deprecated and removed features, and other changes affecting compatibility:
   functionality to obtain the program mapping address can be achieved by
   using LD_TRACE_LOADED_OBJECTS to value of 2.
 
+* The LD_USE_LOAD_BIAS has been removed.  The variable was mainly used to
+  support prelink PIE binaries.
+
 Changes to build and runtime requirements:
 
 * The audit module interface version LAV_CURRENT is increased to enable
