@@ -277,10 +277,6 @@
 /* Define if static PIE is enabled.  */
 #define ENABLE_STATIC_PIE 0
 
-/* Some compiler options may now allow to use ebp in __asm__ (used mainly
-   in i386 6 argument syscall issue).  */
-#define CAN_USE_REGISTER_ASM_EBP 0
-
 /* The default value of x86 CET control.  */
 #define DEFAULT_DL_X86_CET_CONTROL cet_elf_property
 
