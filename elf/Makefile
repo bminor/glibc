@@ -69,6 +69,7 @@ dl-routines = \
   dl-object \
   dl-open \
   dl-origin \
+  dl-printf \
   dl-profile \
   dl-reloc \
   dl-runtime \
