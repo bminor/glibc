@@ -106,6 +106,14 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      particular case and potentially change debugging information and
      metadata only).
 
+'--with-rtld-early-cflags=CFLAGS'
+     Use additional compiler flags CFLAGS to build the early startup
+     code of the dynamic linker.  These flags can be used to enable
+     early dynamic linker diagnostics to run on CPUs which are not
+     compatible with the rest of the GNU C Library, for example, due to
+     compiler flags which target a later instruction set architecture
+     (ISA).
+
 '--with-timeoutfactor=NUM'
      Specify an integer NUM to scale the timeout of test programs.  This
      factor can be changed at run time using 'TIMEOUTFACTOR' environment

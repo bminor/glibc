@@ -162,6 +162,12 @@ AC_ARG_WITH([nonshared-cflags],
 	    [extra_nonshared_cflags=$withval],
 	    [extra_nonshared_cflags=])
 AC_SUBST(extra_nonshared_cflags)
+AC_ARG_WITH([rtld-early-cflags],
+	    AS_HELP_STRING([--with-rtld-early-cflags=CFLAGS],
+			   [build early initialization with additional CFLAGS]),
+	    [rtld_early_cflags=$withval],
+	    [rtld_early_cflags=])
+AC_SUBST(rtld_early_cflags)
 
 AC_ARG_WITH([timeoutfactor],
 	    AS_HELP_STRING([--with-timeoutfactor=NUM],

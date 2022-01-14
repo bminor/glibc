@@ -110,6 +110,7 @@ CFLAGS = @CFLAGS@
 CPPFLAGS-config = @CPPFLAGS@
 CPPUNDEFS = @CPPUNDEFS@
 extra-nonshared-cflags = @extra_nonshared_cflags@
+rtld-early-cflags = @rtld_early_cflags@
 ASFLAGS-config = @ASFLAGS_config@
 AR = @AR@
 NM = @NM@

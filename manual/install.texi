@@ -131,6 +131,13 @@ that the objects in @file{libc_nonshared.a} are compiled with this flag
 (although this will not affect the generated code in this particular
 case and potentially change debugging information and metadata only).
 
+@item --with-rtld-early-cflags=@var{cflags}
+Use additional compiler flags @var{cflags} to build the early startup
+code of the dynamic linker.  These flags can be used to enable early
+dynamic linker diagnostics to run on CPUs which are not compatible with
+the rest of @theglibc{}, for example, due to compiler flags which target
+a later instruction set architecture (ISA).
+
 @item --with-timeoutfactor=@var{NUM}
 Specify an integer @var{NUM} to scale the timeout of test programs.
 This factor can be changed at run time using @env{TIMEOUTFACTOR}

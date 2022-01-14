@@ -681,6 +681,7 @@ force_install
 bindnow
 hardcoded_path_in_tests
 enable_timezone_tools
+rtld_early_cflags
 extra_nonshared_cflags
 use_default_link
 sysheaders
@@ -761,6 +762,7 @@ with_selinux
 with_headers
 with_default_link
 with_nonshared_cflags
+with_rtld_early_cflags
 with_timeoutfactor
 enable_sanity_checks
 enable_shared
@@ -1480,6 +1482,8 @@ Optional Packages:
   --with-default-link     do not use explicit linker scripts
   --with-nonshared-cflags=CFLAGS
                           build nonshared libraries with additional CFLAGS
+  --with-rtld-early-cflags=CFLAGS
+                          build early initialization with additional CFLAGS
   --with-timeoutfactor=NUM
                           specify an integer to scale the timeout
   --with-cpu=CPU          select code for CPU variant
@@ -3382,6 +3386,15 @@ if test "${with_nonshared_cflags+set}" = set; then :
   withval=$with_nonshared_cflags; extra_nonshared_cflags=$withval
 else
   extra_nonshared_cflags=
+fi
+
+
+
+# Check whether --with-rtld-early-cflags was given.
+if test "${with_rtld_early_cflags+set}" = set; then :
+  withval=$with_rtld_early_cflags; rtld_early_cflags=$withval
+else
+  rtld_early_cflags=
 fi
 
 

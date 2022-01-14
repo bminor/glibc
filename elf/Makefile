@@ -167,6 +167,14 @@ CFLAGS-.o += $(call elide-stack-protector,.o,$(elide-routines.os))
 CFLAGS-.op += $(call elide-stack-protector,.op,$(elide-routines.os))
 CFLAGS-.os += $(call elide-stack-protector,.os,$(all-rtld-routines))
 
+# Add the requested compiler flags to the early startup code.
+CFLAGS-dl-printf.os += $(rtld-early-cflags)
+CFLAGS-dl-sysdep.os += $(rtld-early-cflags)
+CFLAGS-dl-tunables.os += $(rtld-early-cflags)
+CFLAGS-dl-write.os += $(rtld-early-cflags)
+CFLAGS-dl-writev.os += $(rtld-early-cflags)
+CFLAGS-rtld.os += $(rtld-early-cflags)
+
 ifeq ($(unwind-find-fde),yes)
 routines += unwind-dw2-fde-glibc
 shared-only-routines += unwind-dw2-fde-glibc
