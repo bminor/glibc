@@ -1399,7 +1399,7 @@ envsubst:
   /* Is it a numeric parameter? */
   else if (isdigit (env[0]))
     {
-      int n = atoi (env);
+      unsigned long n = strtoul (env, NULL, 10);
 
       if (n >= __libc_argc)
 	/* Substitute NULL. */

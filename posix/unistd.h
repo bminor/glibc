@@ -517,8 +517,7 @@ extern int fchdir (int __fd) __THROW __wur;
    an array is allocated with `malloc'; the array is SIZE
    bytes long, unless SIZE == 0, in which case it is as
    big as necessary.  */
-extern char *getcwd (char *__buf, size_t __size) __THROW __wur
-    __attr_access ((__write_only__, 1, 2));
+extern char *getcwd (char *__buf, size_t __size) __THROW __wur;
 
 #ifdef	__USE_GNU
 /* Return a malloc'd string containing the current directory name.
@@ -831,7 +830,7 @@ extern int symlinkat (const char *__from, int __tofd,
 /* Like readlink but a relative PATH is interpreted relative to FD.  */
 extern ssize_t readlinkat (int __fd, const char *__restrict __path,
 			   char *__restrict __buf, size_t __len)
-     __THROW __nonnull ((2, 3)) __wur __attr_access ((__read_only__, 3, 4));
+     __THROW __nonnull ((2, 3)) __wur __attr_access ((__write_only__, 3, 4));
 #endif
 
 /* Remove the link NAME.  */
