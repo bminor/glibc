@@ -110,7 +110,7 @@ if test $libc_cv_include_x86_isa_level = yes; then
   AC_CACHE_CHECK([for LAHF/SAHF instruction support],
 		 libc_cv_have_x86_lahf_sahf, [dnl
     libc_cv_have_x86_lahf_sahf=no
-    if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - -x c /dev/null) | grep -q "\-msahf"; then
+    if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - -x c /dev/null) | grep -qE '(-msahf\b|-march=x86-64-v)'; then
       libc_cv_have_x86_lahf_sahf=yes
     fi])
   if test $libc_cv_have_x86_lahf_sahf = yes; then
@@ -119,7 +119,7 @@ if test $libc_cv_include_x86_isa_level = yes; then
   AC_CACHE_CHECK([for MOVBE instruction support],
 		 libc_cv_have_x86_movbe, [dnl
     libc_cv_have_x86_movbe=no
-    if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - -x c /dev/null) | grep -q "\-mmovbe"; then
+    if AC_TRY_COMMAND(${CC-cc} $CFLAGS $CPPFLAGS -fverbose-asm -S -o - -x c /dev/null) | grep -qE '(-mmovbe\b|-march=x86-64-v(@<:@3-9@:>@|@<:@1-9@:>@@<:@0-9@:>@))'; then
       libc_cv_have_x86_movbe=yes
     fi])
   if test $libc_cv_have_x86_movbe = yes; then

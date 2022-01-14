@@ -155,7 +155,7 @@ else
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; } | grep -q "\-msahf"; then
+  test $ac_status = 0; }; } | grep -qE '(-msahf\b|-march=x86-64-v)'; then
       libc_cv_have_x86_lahf_sahf=yes
     fi
 fi
@@ -176,7 +176,7 @@ else
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; } | grep -q "\-mmovbe"; then
+  test $ac_status = 0; }; } | grep -qE '(-mmovbe\b|-march=x86-64-v([3-9]|[1-9][0-9]))'; then
       libc_cv_have_x86_movbe=yes
     fi
 fi
