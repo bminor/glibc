@@ -1202,6 +1202,15 @@ $(common-objpfx)dl-tunable-list.stmp: \
 	touch $@
 endif
 
+# Dump the GCC macros used by the default compiler flags to a header
+# file, so that they can be inspected when using different compiler
+# flags.  Add the GCCMACRO prefix to make these macro names unique.
+$(common-objpfx)gcc-macros.h.in: $(common-objpfx)config.status
+	$(CC) $(CFLAGS) $(CPPFLAGS) -E -dM -x c -o $@ /dev/null
+$(common-objpfx)gcc-macros.h: $(common-objpfx)gcc-macros.h.in
+	sed 's/^#define /#define GCCMACRO/' < $< > $@
+before-compile += $(common-objpfx)gcc-macros.h
+
 # Generate version maps, but wait until sysdep-subdirs is known
 ifeq ($(sysd-sorted-done),t)
 ifeq ($(build-shared),yes)
