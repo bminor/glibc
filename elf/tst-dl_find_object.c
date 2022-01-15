@@ -201,7 +201,7 @@ do_test (void)
 
   /* Now try a NODELETE load.  */
   struct link_map *mod2 = xdlopen ("tst-dl_find_object-mod2.so", RTLD_NOW);
-  void *mod2_data = xdlsym (mod1, "mod2_data");
+  void *mod2_data = xdlsym (mod2, "mod2_data");
   map_start = (void *) mod2->l_map_start;
   map_end = (void *) (mod2->l_map_end - 1);
   check_initial ();
