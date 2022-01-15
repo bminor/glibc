@@ -30,6 +30,7 @@
 #include <sys/wait.h>
 #include <assert.h>
 #include <sysdep.h>
+#include <argz.h>
 #include <mach/mig_support.h>
 #include <mach/machine/vm_param.h>
 #include "hurdstartup.h"
@@ -291,7 +292,8 @@ open_file (const char *file_name, int flags,
       return MACH_PORT_NULL;
     }
 
-  assert (!(flags & ~(O_READ | O_CLOEXEC)));
+  assert (!(flags & ~(O_READ | O_EXEC | O_CLOEXEC)));
+  flags &= ~O_CLOEXEC;
 
   startdir = _dl_hurd_data->portarray[file_name[0] == '/'
 				      ? INIT_PORT_CRDIR : INIT_PORT_CWDIR];
@@ -299,7 +301,7 @@ open_file (const char *file_name, int flags,
   while (file_name[0] == '/')
     file_name++;
 
-  err = __dir_lookup (startdir, (char *)file_name, O_RDONLY, 0,
+  err = __dir_lookup (startdir, (char *)file_name, flags, 0,
 		      &doretry, retryname, port);
 
   if (!err)
@@ -556,6 +558,109 @@ int weak_function
 __access_noerrno (const char *file, int type)
 {
   return -1;
+}
+
+int
+__rtld_execve (const char *file_name, char *const argv[],
+               char *const envp[])
+{
+  file_t file;
+  error_t err;
+  char *args, *env;
+  size_t argslen, envlen;
+  mach_port_t *ports = _dl_hurd_data->portarray;
+  unsigned int portarraysize = _dl_hurd_data->portarraysize;
+  file_t *dtable = _dl_hurd_data->dtable;
+  unsigned int dtablesize = _dl_hurd_data->dtablesize;
+  int *intarray = _dl_hurd_data->intarray;
+  unsigned int i, j;
+  mach_port_t *please_dealloc, *pdp;
+  mach_port_t *portnames = NULL;
+  mach_msg_type_number_t nportnames = 0;
+  mach_port_type_t *porttypes = NULL;
+  mach_msg_type_number_t nporttypes = 0;
+  int flags;
+
+  err = open_file (file_name, O_EXEC, &file, NULL);
+  if (err)
+    goto out;
+
+  if (argv == NULL)
+    args = NULL, argslen = 0;
+  else if (err = __argz_create (argv, &args, &argslen))
+    goto outfile;
+  if (envp == NULL)
+    env = NULL, envlen = 0;
+  else if (err = __argz_create (envp, &env, &envlen))
+    goto outargs;
+
+  please_dealloc = __alloca ((portarraysize + dtablesize)
+			     * sizeof (mach_port_t));
+  pdp = please_dealloc;
+
+  /* Get all ports that we may not know about and we should thus destroy.  */
+  err = __mach_port_names (__mach_task_self (),
+			   &portnames, &nportnames,
+			   &porttypes, &nporttypes);
+  if (err)
+    goto outenv;
+  if (nportnames != nporttypes)
+    {
+      err = EGRATUITOUS;
+      goto outenv;
+    }
+
+  for (i = 0; i < portarraysize; ++i)
+    {
+      *pdp++ = ports[i];
+      for (j = 0; j < nportnames; j++)
+	if (portnames[j] == ports[i])
+	  portnames[j] = MACH_PORT_NULL;
+    }
+  for (i = 0; i < dtablesize; ++i)
+    {
+      *pdp++ = dtable[i];
+      for (j = 0; j < nportnames; j++)
+	if (portnames[j] == dtable[i])
+	  portnames[j] = MACH_PORT_NULL;
+    }
+
+  /* Pack ports to be destroyed together.  */
+  for (i = 0, j = 0; i < nportnames; i++)
+    {
+      if (portnames[i] == MACH_PORT_NULL)
+	continue;
+      if (j != i)
+	portnames[j] = portnames[i];
+      j++;
+    }
+  nportnames = j;
+
+  flags = 0;
+#ifdef EXEC_SIGTRAP
+  if (__sigismember (&intarray[INIT_TRACEMASK], SIGKILL))
+    flags |= EXEC_SIGTRAP;
+#endif
+
+  err = __file_exec_paths (file, __mach_task_self (), flags,
+			   file_name, file_name[0] == '/' ? file_name : "",
+			   args, argslen,
+			   env, envlen,
+			   dtable, MACH_MSG_TYPE_COPY_SEND, dtablesize,
+			   ports, MACH_MSG_TYPE_COPY_SEND, portarraysize,
+			   intarray, INIT_INT_MAX,
+			   please_dealloc, pdp - please_dealloc,
+			   portnames, nportnames);
+
+  /* Oh well.  Might as well be tidy.  */
+outenv:
+  free (env);
+outargs:
+  free (args);
+outfile:
+  __mach_port_deallocate (__mach_task_self (), file);
+out:
+  return err;
 }
 
 check_no_hidden(__getpid);
