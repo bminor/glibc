@@ -469,10 +469,10 @@ retry:
     /* Got a signal while inside an RPC of the critical section, retry again */
     goto retry;
 
- outargs:
-  free (args);
  outenv:
   free (env);
+ outargs:
+  free (args);
   return err;
 }
 libc_hidden_def (_hurd_exec_paths)
