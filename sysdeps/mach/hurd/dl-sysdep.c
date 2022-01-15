@@ -611,19 +611,21 @@ __rtld_execve (const char *file_name, char *const argv[],
     }
 
   for (i = 0; i < portarraysize; ++i)
-    {
-      *pdp++ = ports[i];
-      for (j = 0; j < nportnames; j++)
-	if (portnames[j] == ports[i])
-	  portnames[j] = MACH_PORT_NULL;
-    }
+    if (ports[i] != MACH_PORT_NULL)
+      {
+	*pdp++ = ports[i];
+	for (j = 0; j < nportnames; j++)
+	  if (portnames[j] == ports[i])
+	    portnames[j] = MACH_PORT_NULL;
+      }
   for (i = 0; i < dtablesize; ++i)
-    {
-      *pdp++ = dtable[i];
-      for (j = 0; j < nportnames; j++)
-	if (portnames[j] == dtable[i])
-	  portnames[j] = MACH_PORT_NULL;
-    }
+    if (dtable[i] != MACH_PORT_NULL)
+      {
+	*pdp++ = dtable[i];
+	for (j = 0; j < nportnames; j++)
+	  if (portnames[j] == dtable[i])
+	    portnames[j] = MACH_PORT_NULL;
+      }
 
   /* Pack ports to be destroyed together.  */
   for (i = 0, j = 0; i < nportnames; i++)
