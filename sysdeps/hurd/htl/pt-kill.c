@@ -35,6 +35,10 @@ __pthread_kill (pthread_t thread, int sig)
   if (pthread == NULL)
     return ESRCH;
 
+  if (pthread->kernel_thread == MACH_PORT_DEAD)
+    /* The pthread ID is still valid but we cannot send a signal any more.  */
+    return 0;
+
   ss = _hurd_thread_sigstate (pthread->kernel_thread);
   assert (ss);
 

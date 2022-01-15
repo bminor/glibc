@@ -68,6 +68,9 @@ __pthread_thread_terminate (struct __pthread *thread)
   /* The wake up port is now no longer needed.  */
   __mach_port_destroy (__mach_task_self (), wakeup_port);
 
+  /* The kernel thread won't be there any more.  */
+  thread->kernel_thread = MACH_PORT_DEAD;
+
   /* Terminate and release all that's left.  */
   err = __thread_terminate_release (kernel_thread, mach_task_self (),
 				    kernel_thread, reply_port,
