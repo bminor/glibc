@@ -1868,28 +1868,40 @@ rm -f conftest.*])
 LIBC_CONFIG_VAR([cc-pie-default], [$libc_cv_cc_pie_default])
 
 AC_MSG_CHECKING(if we can build programs as PIE)
-if test "x$default_pie" != xno; then
-  # Disable build-pie-default if target does not support it.
-  AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#ifdef PIE_UNSUPPORTED
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#ifdef PIE_UNSUPPORTED
 # error PIE is not supported
-#endif]])], [libc_cv_pie_default=yes], [libc_cv_pie_default=no])
+#endif]])], [libc_cv_pie_supported=yes], [libc_cv_pie_supported=no])
+AC_MSG_RESULT($libc_cv_pie_supported)
+# Disable build-pie-default if target does not support it or glibc is
+# configured with --disable-default-pie.
+if test "x$default_pie" = xno; then
+  build_pie_default=no
+else
+  build_pie_default=$libc_cv_pie_supported
 fi
-AC_MSG_RESULT($libc_cv_pie_default)
-LIBC_CONFIG_VAR([build-pie-default], [$libc_cv_pie_default])
+LIBC_CONFIG_VAR([build-pie-default], [$build_pie_default])
 
 AC_MSG_CHECKING(if we can build static PIE programs)
-libc_cv_static_pie=$libc_cv_pie_default
-if test "x$libc_cv_pie_default" != xno \
+libc_cv_static_pie_supported=$libc_cv_pie_supported
+if test "x$libc_cv_pie_supported" != xno \
    -a "$libc_cv_no_dynamic_linker" = yes; then
-  # Enable static-pie if available
   AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#ifndef SUPPORT_STATIC_PIE
 # error static PIE is not supported
-#endif]])], [libc_cv_static_pie=yes], [libc_cv_static_pie=no])
-  if test "$libc_cv_static_pie" = "yes"; then
-    AC_DEFINE(ENABLE_STATIC_PIE)
-  fi
+#endif]])], [libc_cv_static_pie_supported=yes],
+	    [libc_cv_static_pie_supported=no])
 fi
-AC_MSG_RESULT($libc_cv_static_pie)
+AC_MSG_RESULT($libc_cv_static_pie_supported)
+
+# Enable static-pie only if it is available and glibc isn't configured
+# with --disable-default-pie.
+if test "x$default_pie" = xno; then
+  libc_cv_static_pie=no
+else
+  libc_cv_static_pie=$libc_cv_static_pie_supported
+fi
+if test "$libc_cv_static_pie" = "yes"; then
+  AC_DEFINE(ENABLE_STATIC_PIE)
+fi
 LIBC_CONFIG_VAR([enable-static-pie], [$libc_cv_static_pie])
 
 # Set the `multidir' variable by grabbing the variable from the compiler.

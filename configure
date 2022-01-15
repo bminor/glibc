@@ -7035,32 +7035,35 @@ cc-pie-default = $libc_cv_cc_pie_default"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if we can build programs as PIE" >&5
 $as_echo_n "checking if we can build programs as PIE... " >&6; }
-if test "x$default_pie" != xno; then
-  # Disable build-pie-default if target does not support it.
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #ifdef PIE_UNSUPPORTED
 # error PIE is not supported
 #endif
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  libc_cv_pie_default=yes
+  libc_cv_pie_supported=yes
 else
-  libc_cv_pie_default=no
+  libc_cv_pie_supported=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_pie_supported" >&5
+$as_echo "$libc_cv_pie_supported" >&6; }
+# Disable build-pie-default if target does not support it or glibc is
+# configured with --disable-default-pie.
+if test "x$default_pie" = xno; then
+  build_pie_default=no
+else
+  build_pie_default=$libc_cv_pie_supported
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_pie_default" >&5
-$as_echo "$libc_cv_pie_default" >&6; }
 config_vars="$config_vars
-build-pie-default = $libc_cv_pie_default"
+build-pie-default = $build_pie_default"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if we can build static PIE programs" >&5
 $as_echo_n "checking if we can build static PIE programs... " >&6; }
-libc_cv_static_pie=$libc_cv_pie_default
-if test "x$libc_cv_pie_default" != xno \
+libc_cv_static_pie_supported=$libc_cv_pie_supported
+if test "x$libc_cv_pie_supported" != xno \
    -a "$libc_cv_no_dynamic_linker" = yes; then
-  # Enable static-pie if available
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #ifndef SUPPORT_STATIC_PIE
@@ -7068,18 +7071,26 @@ if test "x$libc_cv_pie_default" != xno \
 #endif
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  libc_cv_static_pie=yes
+  libc_cv_static_pie_supported=yes
 else
-  libc_cv_static_pie=no
+  libc_cv_static_pie_supported=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-  if test "$libc_cv_static_pie" = "yes"; then
-    $as_echo "#define ENABLE_STATIC_PIE 1" >>confdefs.h
-
-  fi
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_static_pie" >&5
-$as_echo "$libc_cv_static_pie" >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_static_pie_supported" >&5
+$as_echo "$libc_cv_static_pie_supported" >&6; }
+
+# Enable static-pie only if it is available and glibc isn't configured
+# with --disable-default-pie.
+if test "x$default_pie" = xno; then
+  libc_cv_static_pie=no
+else
+  libc_cv_static_pie=$libc_cv_static_pie_supported
+fi
+if test "$libc_cv_static_pie" = "yes"; then
+  $as_echo "#define ENABLE_STATIC_PIE 1" >>confdefs.h
+
+fi
 config_vars="$config_vars
 enable-static-pie = $libc_cv_static_pie"
 
