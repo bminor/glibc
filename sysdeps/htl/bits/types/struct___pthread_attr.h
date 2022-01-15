@@ -19,8 +19,6 @@
 #ifndef _BITS_TYPES_STRUCT___PTHREAD_ATTR
 #define _BITS_TYPES_STRUCT___PTHREAD_ATTR	1
 
-#include <bits/types/struct_sched_param.h>
-
 #define __need_size_t
 #include <stddef.h>
 
@@ -28,11 +26,15 @@ enum __pthread_detachstate;
 enum __pthread_inheritsched;
 enum __pthread_contentionscope;
 
+struct __sched_param {
+  int __sched_priority;
+};
+
 /* This structure describes the attributes of a POSIX thread.  Note
    that not all of them are supported on all systems.  */
 struct __pthread_attr
 {
-  struct sched_param __schedparam;
+  struct __sched_param __schedparam;
   void *__stackaddr;
   size_t __stacksize;
   size_t __guardsize;

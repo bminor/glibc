@@ -26,7 +26,7 @@ int
 __pthread_attr_getschedparam (const pthread_attr_t *attr,
 			      struct sched_param *param)
 {
-  memcpy (param, &attr->__schedparam, sizeof *param);
+  param->sched_priority = attr->__schedparam.__sched_priority;
   return 0;
 }
 
