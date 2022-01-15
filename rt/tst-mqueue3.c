@@ -27,6 +27,7 @@
 #include <sys/mman.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <support/check.h>
 
 #if _POSIX_THREADS
 # include <pthread.h>
@@ -161,15 +162,13 @@ do_test (void)
   /* Create the message queue.  */
   struct mq_attr attr = { .mq_maxmsg = MAXMSG, .mq_msgsize = MSGSIZE };
   m = mq_open (mqname, O_CREAT | O_EXCL | O_RDWR, 0600, &attr);
+
   if (m == -1)
     {
       if (errno == ENOSYS)
-	{
-	  puts ("not implemented");
-	  return 0;
-	}
+	FAIL_UNSUPPORTED ("mq_open not supported");
 
-      puts ("mq_open failed");
+      printf ("mq_open failed with: %m\n");
       return 1;
     }
 

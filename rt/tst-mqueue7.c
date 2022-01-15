@@ -25,6 +25,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
+#include <support/check.h>
 
 #define OPT_AFTEREXEC 20000
 

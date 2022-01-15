@@ -29,6 +29,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
+#include <support/check.h>
 #include "tst-mqueue.h"
 
 #define TEST_FUNCTION do_test ()
@@ -45,11 +46,14 @@ do_test (void)
 
   if (q == (mqd_t) -1)
     {
+      if (errno == ENOSYS)
+	FAIL_UNSUPPORTED ("mq_open not supported");
+
       printf ("mq_open failed with: %m\n");
-      return result;
+      return 1;
     }
-  else
-    add_temp_mq (name);
+
+  add_temp_mq (name);
 
   *p = '.';
   memset (p + 1, 'x', NAME_MAX + 1 - (p - name));
