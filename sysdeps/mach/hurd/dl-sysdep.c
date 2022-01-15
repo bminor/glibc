@@ -105,7 +105,6 @@ _dl_sysdep_start (void **start_argptr,
       DL_SYSDEP_INIT;
 #endif
 
-#ifdef SHARED
 #ifdef DL_PLATFORM_INIT
       DL_PLATFORM_INIT;
 #endif
@@ -113,7 +112,6 @@ _dl_sysdep_start (void **start_argptr,
       /* Determine the length of the platform name.  */
       if (GLRO(dl_platform) != NULL)
 	GLRO(dl_platformlen) = strlen (GLRO(dl_platform));
-#endif
 
       if (_dl_hurd_data->flags & EXEC_STACK_ARGS
 	  && _dl_hurd_data->user_entry == 0)
