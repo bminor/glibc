@@ -18,34 +18,26 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <x86intrin.h>
 #include <support/test-driver.h>
-#include <support/xsignal.h>
-#include <support/xunistd.h>
 
 __attribute__ ((noclone, noinline))
 static void
 do_test_1 (void)
 {
   pid_t p1;
-  int fd[2];
 
-  if (pipe (fd) == -1)
-    {
-      puts ("pipe failed");
-      _exit (EXIT_FAILURE);
-    }
+  /* NB: Since child return pops shadow stack which is shared with
+     parent, child must not return after vfork.  */
 
   if ((p1 = vfork ()) == 0)
     {
-      pid_t p = getpid ();
-      TEMP_FAILURE_RETRY (write (fd[1], &p, sizeof (p)));
-      /* Child return should trigger SIGSEGV.  */
+      /* Child return should trigger SIGSEGV due to shadow stack
+	 mismatch.  */
       return;
     }
   else if (p1 == -1)
@@ -54,22 +46,22 @@ do_test_1 (void)
       _exit (EXIT_FAILURE);
     }
 
-  pid_t p2 = 0;
-  if (TEMP_FAILURE_RETRY (read (fd[0], &p2, sizeof (pid_t)))
-      != sizeof (pid_t))
-    puts ("pipd read failed");
-  else
+  int r;
+  if (TEMP_FAILURE_RETRY (waitpid (p1, &r, 0)) != p1)
     {
-      int r;
-      if (TEMP_FAILURE_RETRY (waitpid (p1, &r, 0)) != p1)
-	puts ("waitpid failed");
-      else if (r != 0)
-	puts ("pip write in child failed");
+      puts ("waitpid failed");
+      _exit (EXIT_FAILURE);
+    }
+
+   if (!WIFSIGNALED (r) || WTERMSIG (r) != SIGSEGV)
+    {
+      puts ("Child not terminated with SIGSEGV");
+      _exit (EXIT_FAILURE);
     }
 
   /* Parent exits immediately so that parent returns without triggering
-     SIGSEGV when shadow stack isn't in use.  */
-  _exit (EXIT_FAILURE);
+     SIGSEGV when shadow stack is in use.  */
+  _exit (EXIT_SUCCESS);
 }
 
 static int
@@ -80,9 +72,8 @@ do_test (void)
     return EXIT_UNSUPPORTED;
   do_test_1 ();
   /* Child exits immediately so that child returns without triggering
-     SIGSEGV when shadow stack isn't in use.  */
+     SIGSEGV when shadow stack is in use.  */
   _exit (EXIT_FAILURE);
 }
 
-#define EXPECTED_SIGNAL (_get_ssp () == 0 ? 0 : SIGSEGV)
 #include <support/test-driver.c>
