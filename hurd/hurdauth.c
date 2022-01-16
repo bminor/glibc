@@ -165,8 +165,8 @@ _S_msg_add_auth (mach_port_t me,
 kern_return_t
 _S_msg_del_auth (mach_port_t me,
 		 task_t task,
-		 intarray_t uids, mach_msg_type_number_t nuids,
-		 intarray_t gids, mach_msg_type_number_t ngids)
+		 const_intarray_t uids, mach_msg_type_number_t nuids,
+		 const_intarray_t gids, mach_msg_type_number_t ngids)
 {
   error_t err;
   auth_t newauth;

@@ -234,7 +234,7 @@ _S_msg_report_wait (mach_port_t msgport, thread_t thread,
 
 kern_return_t
 _S_msg_describe_ports (mach_port_t msgport, mach_port_t refport,
-		       mach_port_t *ports, mach_msg_type_number_t nports,
+		       const mach_port_t *ports, mach_msg_type_number_t nports,
 		       char **desc, mach_msg_type_number_t *desclen)
 {
   char *p, *end;

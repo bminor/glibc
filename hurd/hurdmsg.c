@@ -93,7 +93,7 @@ _S_msg_get_init_ports (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_msg_set_init_ports (mach_port_t msgport, mach_port_t auth,
-		       mach_port_t *ports, mach_msg_type_number_t nports)
+		       const mach_port_t *ports, mach_msg_type_number_t nports)
 {
   mach_msg_type_number_t i;
   error_t err;
@@ -243,7 +243,7 @@ _S_msg_set_init_int (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_msg_set_init_ints (mach_port_t msgport, mach_port_t auth,
-		      int *values, mach_msg_type_number_t nvalues)
+		      const int *values, mach_msg_type_number_t nvalues)
 {
   error_t err;
   mach_msg_type_number_t i;
@@ -295,7 +295,7 @@ _S_msg_set_fd (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_msg_get_env_variable (mach_port_t msgport,
-			 string_t variable, //
+			 const_string_t variable, //
 			 char **data, mach_msg_type_number_t *datalen)
 {
   error_t err;
@@ -322,8 +322,8 @@ _S_msg_get_env_variable (mach_port_t msgport,
 
 kern_return_t
 _S_msg_set_env_variable (mach_port_t msgport, mach_port_t auth,
-			 string_t variable, //
-			 string_t value, //
+			 const_string_t variable, //
+			 const_string_t value, //
 			 int replace)
 {
   AUTHCHECK;
@@ -367,7 +367,7 @@ _S_msg_get_environment (mach_port_t msgport,
 
 kern_return_t
 _S_msg_set_environment (mach_port_t msgport, mach_port_t auth,
-			char *data, mach_msg_type_number_t datalen)
+			const char *data, mach_msg_type_number_t datalen)
 {
   int _hurd_split_args (char *, mach_msg_type_number_t, char **);
   int envc;
@@ -441,6 +441,6 @@ out:
 kern_return_t
 _S_msg_set_dtable (mach_port_t process,
 		   mach_port_t refport,
-		   portarray_t dtable,
+		   const_portarray_t dtable,
 		   mach_msg_type_number_t dtableCnt)
 { return EOPNOTSUPP; }
