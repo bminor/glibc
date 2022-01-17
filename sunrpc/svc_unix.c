@@ -154,7 +154,10 @@ svcunix_create (int sock, u_int sendsize, u_int recvsize, char *path)
   SVCXPRT *xprt;
   struct unix_rendezvous *r;
   struct sockaddr_un addr;
-  socklen_t len = sizeof (struct sockaddr_in);
+  socklen_t len = sizeof (addr);
+
+  if (__sockaddr_un_set (&addr, path) < 0)
+    return NULL;
 
   if (sock == RPC_ANYSOCK)
     {
@@ -165,12 +168,6 @@ svcunix_create (int sock, u_int sendsize, u_int recvsize, char *path)
 	}
       madesock = TRUE;
     }
-  memset (&addr, '\0', sizeof (addr));
-  addr.sun_family = AF_UNIX;
-  len = strlen (path) + 1;
-  memcpy (addr.sun_path, path, len);
-  len += sizeof (addr.sun_family);
-
   __bind (sock, (struct sockaddr *) &addr, len);
 
   if (__getsockname (sock, (struct sockaddr *) &addr, &len) != 0
