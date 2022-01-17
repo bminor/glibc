@@ -4,8 +4,9 @@
 
 # define ARCH_MIN_GUARD_SIZE 0
 
-# if defined __USE_EXTERN_INLINES && defined _LIBC && !IS_IN (libsupport)
-#  include <bits/spin-lock-inline.h>
+# if defined __USE_EXTERN_INLINES && defined _LIBC
+#  if !IS_IN (libsupport)
+#   include <bits/spin-lock-inline.h>
 
 __extern_inline int
 pthread_spin_destroy (pthread_spinlock_t *__lock)
@@ -36,6 +37,7 @@ pthread_spin_unlock (pthread_spinlock_t *__lock)
 {
   return __pthread_spin_unlock (__lock);
 }
+#  endif
 # endif
 #endif
 #endif
