@@ -42,6 +42,9 @@ Security related changes:
   legacy function could result in a stack-based buffer overflow when
   using the "unix" protocol.  Reported by Martin Sebor.
 
+  CVE-2022-23218: Passing an overlong file name to the svcunix_create
+  legacy function could result in a stack-based buffer overflow.
+
 The following bugs are resolved with this release:
 
   [20019] NULL pointer dereference in libc.so.6 IFUNC due to uninitialized GOT
@@ -101,6 +104,7 @@ The following bugs are resolved with this release:
   [28524] Conversion from ISO-2022-JP-3 with iconv may emit spurious NULs
   [28607] Masked signals are delivered on thread exit
   [28755] overflow bug in wcsncmp_avx2 and wcsncmp_evex
+  [28768] CVE-2022-23218: Buffer overflow in sunrpc svcunix_create
   [28896] strncmp-avx2-rtm and wcsncmp-avx2-rtm fallback on non-rtm
     variants when avoiding overflow
   [29304] libc: mq_timedreceive does not handle 64 bit syscall return

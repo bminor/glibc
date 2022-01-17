@@ -65,7 +65,7 @@ shared-only-routines = $(routines)
 endif
 
 tests = tst-xdrmem tst-xdrmem2 test-rpcent tst-udp-error tst-udp-timeout \
-  tst-udp-nonblocking tst-bug22542
+  tst-udp-nonblocking tst-bug22542 tst-bug28768
 
 xtests := tst-getmyaddr
 
