@@ -370,6 +370,7 @@ tests += \
   tst-audit11 \
   tst-audit12 \
   tst-audit13 \
+  tst-audit17 \
   tst-audit18 \
   tst-audit19b \
   tst-audit20 \
