@@ -156,7 +156,9 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
-  [Add security related changes here]
+  CVE-2022-23219: Passing an overlong file name to the clnt_create
+  legacy function could result in a stack-based buffer overflow when
+  using the "unix" protocol.  Reported by Martin Sebor.
 
 The following bugs are resolved with this release:
 
