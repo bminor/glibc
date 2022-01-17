@@ -271,6 +271,7 @@ The following bugs are resolved with this release:
   [27237] malloc: deadlock in malloc/tst-malloc-stats-cancellation
   [27256] locale: Assertion failure in ISO-2022-JP-3 gconv module
     related to combining characters (CVE-2021-3326)
+  [28784] x86: crash in 32bit memset-sse2.s when the cache size can not be determined
 
 
 Version 2.32
