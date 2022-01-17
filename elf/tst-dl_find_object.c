@@ -71,19 +71,24 @@ check (void *address,
               __FILE__, line, address,
               actual.dlfo_flags, expected->dlfo_flags);
     }
-  if (actual.dlfo_flags != expected->dlfo_flags)
+  if (expected->dlfo_link_map->l_contiguous)
     {
-      support_record_failure ();
-      printf ("%s:%d: error: %p: map start is %p, expected %p\n",
-              __FILE__, line,
-              address, actual.dlfo_map_start, expected->dlfo_map_start);
-    }
-  if (actual.dlfo_map_end != expected->dlfo_map_end)
-    {
-      support_record_failure ();
-      printf ("%s:%d: error: %p: map end is %p, expected %p\n",
-              __FILE__, line,
-              address, actual.dlfo_map_end, expected->dlfo_map_end);
+      /* If the mappings are not contiguous, the actual and execpted
+         mappings may differ, so this subtest will not work.  */
+      if (actual.dlfo_flags != expected->dlfo_flags)
+        {
+          support_record_failure ();
+          printf ("%s:%d: error: %p: map start is %p, expected %p\n",
+                  __FILE__, line,
+                  address, actual.dlfo_map_start, expected->dlfo_map_start);
+        }
+      if (actual.dlfo_map_end != expected->dlfo_map_end)
+        {
+          support_record_failure ();
+          printf ("%s:%d: error: %p: map end is %p, expected %p\n",
+                  __FILE__, line,
+                  address, actual.dlfo_map_end, expected->dlfo_map_end);
+        }
     }
   if (actual.dlfo_link_map != expected->dlfo_link_map)
     {
