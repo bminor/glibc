@@ -19,10 +19,15 @@ Security related changes:
   issue when using a notification type of SIGEV_THREAD and a thread
   attribute with a non-default affinity mask.
 
+  CVE-2022-23219: Passing an overlong file name to the clnt_create
+  legacy function could result in a stack-based buffer overflow when
+  using the "unix" protocol.  Reported by Martin Sebor.
+
 The following bugs are resolved with this release:
 
   [15271] dlfcn function failure after dlmopen terminates process
   [18435] pthread_once hangs when init routine throws an exception
+  [22542] CVE-2022-23219: Buffer overflow in sunrpc clnt_create for "unix"
   [23462] Static binary with dynamic string tokens ($LIB, $PLATFORM, $ORIGIN)
     crashes
   [27304] pthread_cond_destroy does not pass private flag to futex system calls
