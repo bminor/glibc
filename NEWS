@@ -12,6 +12,7 @@ The following bugs are resolved with this release:
     (CVE-2016-10228)
   [20019] NULL pointer dereference in libc.so.6 IFUNC due to uninitialized GOT
   [20543] Please move from .gnu.linkonce to comdat
+  [22542] CVE-2022-23219: Buffer overflow in sunrpc clnt_create for "unix"
   [23296] Data race in setting function descriptor during lazy binding
   [24973] iconv encounters segmentation fault when converting 0x00 0xfe in
     EUC-KR to UTF-8 (CVE-2019-25013)
@@ -67,6 +68,10 @@ Security related changes:
 
   CVE-2020-29562: An assertion failure has been fixed in the iconv function
   when invoked with UCS4 input containing an invalid character.
+
+  CVE-2022-23219: Passing an overlong file name to the clnt_create
+  legacy function could result in a stack-based buffer overflow when
+  using the "unix" protocol.  Reported by Martin Sebor.
 
 Version 2.31
 
