@@ -1147,6 +1147,22 @@ rtld_setup_main_map (struct link_map *main_map)
   main_map->l_map_start = ~0;
   /* And it was opened directly.  */
   ++main_map->l_direct_opencount;
+  main_map->l_contiguous = 1;
+
+  /* A PT_LOAD segment at an unexpected address will clear the
+     l_contiguous flag.  The ELF specification says that PT_LOAD
+     segments need to be sorted in in increasing order, but perhaps
+     not all executables follow this requirement.  Having l_contiguous
+     equal to 1 is just an optimization, so the code below does not
+     try to sort the segments in case they are unordered.
+
+     There is one corner case in which l_contiguous is not set to 1,
+     but where it could be set: If a PIE (ET_DYN) binary is loaded by
+     glibc itself (not the kernel), it is always contiguous due to the
+     way the glibc loader works.  However, the kernel loader may still
+     create holes in this case, and the code here still uses 0
+     conservatively for the glibc-loaded case, too.  */
+  ElfW(Addr) expected_load_address = 0;
 
   /* Scan the program header table for the dynamic section.  */
   for (const ElfW(Phdr) *ph = phdr; ph < &phdr[phnum]; ++ph)
@@ -1210,12 +1226,21 @@ rtld_setup_main_map (struct link_map *main_map)
 	  if (main_map->l_map_start > mapstart)
 	    main_map->l_map_start = mapstart;
 
+	  if (main_map->l_contiguous && expected_load_address != 0
+	      && expected_load_address != mapstart)
+	    main_map->l_contiguous = 0;
+
 	  /* Also where it ends.  */
 	  allocend = main_map->l_addr + ph->p_vaddr + ph->p_memsz;
 	  if (main_map->l_map_end < allocend)
 	    main_map->l_map_end = allocend;
 	  if ((ph->p_flags & PF_X) && allocend > main_map->l_text_end)
 	    main_map->l_text_end = allocend;
+
+	  /* The next expected address is the page following this load
+	     segment.  */
+	  expected_load_address = ((allocend + GLRO(dl_pagesize) - 1)
+				   & ~(GLRO(dl_pagesize) - 1));
 	}
 	break;
 
