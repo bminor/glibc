@@ -22,7 +22,7 @@
 
 int bar __attribute__ ((aligned (ALIGN))) = 1;
 
-extern int do_load_test (void);
+extern void do_load_test (void);
 
 static int
 do_test (void)
@@ -30,7 +30,8 @@ do_test (void)
   printf ("bar: %p\n", &bar);
   TEST_VERIFY (is_aligned (&bar, ALIGN) == 0);
 
-  return do_load_test ();
+  do_load_test ();
+  return 0;
 }
 
 #include <support/test-driver.c>
