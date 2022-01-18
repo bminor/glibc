@@ -101,7 +101,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   bug-getopt5 tst-getopt_long1 bug-regex34 bug-regex35 \
 		   tst-pathconf tst-rxspencer-no-utf8 \
 		   tst-fnmatch3 bug-regex36 \
-		   tst-fnmatch4 tst-fnmatch5 tst-fnmatch6 \
+		   tst-fnmatch4 tst-fnmatch5 tst-fnmatch6 tst-fnmatch7 \
 		   tst-posix_spawn-fd tst-posix_spawn-setsid \
 		   tst-posix_fadvise tst-posix_fadvise64 \
 		   tst-sysconf-empty-chroot tst-glob_symlinks tst-fexecve \

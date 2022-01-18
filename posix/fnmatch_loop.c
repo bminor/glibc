@@ -823,8 +823,13 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
             while ((c = *p++) != L_(']'))
               {
                 if (c == L_('\0'))
-                  /* [... (unterminated) loses.  */
-                  return FNM_NOMATCH;
+		  {
+		    /* [ unterminated, treat as normal character.  */
+		    p = p_init;
+		    n = n_init;
+		    c = L_('[');
+		    goto normal_match;
+		  }
 
                 if (!(flags & FNM_NOESCAPE) && c == L_('\\'))
                   {
