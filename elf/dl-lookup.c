@@ -953,51 +953,6 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 }
 
 
-/* Cache the location of MAP's hash table.  */
-
-void
-_dl_setup_hash (struct link_map *map)
-{
-  Elf_Symndx *hash;
-
-  if (__glibc_likely (map->l_info[ELF_MACHINE_GNU_HASH_ADDRIDX] != NULL))
-    {
-      Elf32_Word *hash32
-	= (void *) D_PTR (map, l_info[ELF_MACHINE_GNU_HASH_ADDRIDX]);
-      map->l_nbuckets = *hash32++;
-      Elf32_Word symbias = *hash32++;
-      Elf32_Word bitmask_nwords = *hash32++;
-      /* Must be a power of two.  */
-      assert ((bitmask_nwords & (bitmask_nwords - 1)) == 0);
-      map->l_gnu_bitmask_idxbits = bitmask_nwords - 1;
-      map->l_gnu_shift = *hash32++;
-
-      map->l_gnu_bitmask = (ElfW(Addr) *) hash32;
-      hash32 += __ELF_NATIVE_CLASS / 32 * bitmask_nwords;
-
-      map->l_gnu_buckets = hash32;
-      hash32 += map->l_nbuckets;
-      map->l_gnu_chain_zero = hash32 - symbias;
-
-      /* Initialize MIPS xhash translation table.  */
-      ELF_MACHINE_XHASH_SETUP (hash32, symbias, map);
-
-      return;
-    }
-
-  if (!map->l_info[DT_HASH])
-    return;
-  hash = (void *) D_PTR (map, l_info[DT_HASH]);
-
-  map->l_nbuckets = *hash++;
-  /* Skip nchain.  */
-  hash++;
-  map->l_buckets = hash;
-  hash += map->l_nbuckets;
-  map->l_chain = hash;
-}
-
-
 static void
 _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 		    const ElfW(Sym) **ref, struct sym_val *value,
