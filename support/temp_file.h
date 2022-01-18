@@ -44,6 +44,15 @@ int create_temp_file_in_dir (const char *base, const char *dir,
    returns.  The caller should free this string.  */
 char *support_create_temp_directory (const char *base);
 
+/* Create a temporary directory tree that is longer than PATH_MAX and schedule
+   it for deletion.  BASENAME is used as a prefix for the unique directory
+   name, which the function returns.  The caller should free this string.  */
+char *support_create_and_chdir_toolong_temp_directory (const char *basename);
+
+/* Change into the innermost directory of the directory tree BASE, which was
+   created using support_create_and_chdir_toolong_temp_directory.  */
+void support_chdir_toolong_temp_directory (const char *base);
+
 __END_DECLS
 
 #endif /* SUPPORT_TEMP_FILE_H */

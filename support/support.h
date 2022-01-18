@@ -23,6 +23,7 @@
 #ifndef SUPPORT_H
 #define SUPPORT_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <sys/cdefs.h>
 /* For mode_t.  */
