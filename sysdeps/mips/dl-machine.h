@@ -61,10 +61,6 @@
   ((((type) == ELF_MACHINE_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
    | (((type) == R_MIPS_COPY) * ELF_RTYPE_CLASS_COPY))
 
-/* Translate a processor specific dynamic tag to the index
-   in l_info array.  */
-#define DT_MIPS(x) (DT_MIPS_##x - DT_LOPROC + DT_NUM)
-
 #if ((defined __mips_nan2008 && !defined HAVE_MIPS_NAN2008) \
      || (!defined __mips_nan2008 && defined HAVE_MIPS_NAN2008))
 # error "Configuration inconsistency: __mips_nan2008 != HAVE_MIPS_NAN2008, overridden CFLAGS?"

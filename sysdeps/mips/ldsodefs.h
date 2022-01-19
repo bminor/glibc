@@ -26,6 +26,10 @@ struct La_mips_32_retval;
 struct La_mips_64_regs;
 struct La_mips_64_retval;
 
+/* Translate a processor specific dynamic tag to the index
+   in l_info array.  */
+#define DT_MIPS(x) (DT_MIPS_##x - DT_LOPROC + DT_NUM)
+
 #define ELF_MACHINE_GNU_HASH_ADDRIDX (DT_MIPS_XHASH - DT_LOPROC + DT_NUM)
 
 /* Calculate the index of a symbol in MIPS xhash.  */
