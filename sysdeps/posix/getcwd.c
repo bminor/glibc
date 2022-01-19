@@ -187,6 +187,13 @@ __getcwd_generic (char *buf, size_t size)
   size_t allocated = size;
   size_t used;
 
+  /* A size of 1 byte is never useful.  */
+  if (allocated == 1)
+    {
+      __set_errno (ERANGE);
+      return NULL;
+    }
+
 #if HAVE_MINIMALLY_WORKING_GETCWD
   /* If AT_FDCWD is not defined, the algorithm below is O(N**2) and
      this is much slower than the system getcwd (at least on
