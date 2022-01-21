@@ -28,6 +28,12 @@ Deprecated and removed features, and other changes affecting compatibility:
 
 Security related changes:
 
+  CVE-2021-3999: Passing a buffer of size exactly 1 byte to the getcwd
+  function may result in an off-by-one buffer underflow and overflow
+  when the current working directory is longer than PATH_MAX and also
+  corresponds to the / directory through an unprivileged mount
+  namespace.  Reported by Qualys.
+
   CVE-2016-10739: The getaddrinfo function could successfully parse IPv4
   addresses with arbitrary trailing characters, potentially leading to data
   or command injection issues in applications.

@@ -241,6 +241,14 @@ __getcwd (char *buf, size_t size)
   char *path;
 #ifndef NO_ALLOCATION
   size_t allocated = size;
+
+  /* A size of 1 byte is never useful.  */
+  if (allocated == 1)
+    {
+      __set_errno (ERANGE);
+      return NULL;
+    }
+
   if (size == 0)
     {
       if (buf != NULL)
