@@ -94,6 +94,9 @@ struct dl_main_state
 
   enum rtld_mode mode;
 
+  /* True if program should be also printed for rtld_mode_trace.  */
+  bool mode_trace_program;
+
   /* True if any of the debugging options is enabled.  */
   bool any_debug;
 

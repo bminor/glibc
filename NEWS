@@ -193,6 +193,10 @@ Deprecated and removed features, and other changes affecting compatibility:
   removal of the LD_TRACE_PRELINKING, and LD_USE_LOAD_BIAS, environment
   variables and their functionality in the dynamic loader.
 
+* The LD_TRACE_PRELINKING environment variable has been removed.  Similar
+  functionality to obtain the program mapping address can be achieved by
+  using LD_TRACE_LOADED_OBJECTS to value of 2.
+
 Changes to build and runtime requirements:
 
 * The audit module interface version LAV_CURRENT is increased to enable

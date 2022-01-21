@@ -74,15 +74,14 @@ if ($#ARGV == 0) {
     } else {
 	$prog = "./$binary";
     }
-    # Set the environment variable LD_TRACE_PRELINKING to an empty string so
-    # that we trigger tracing but do not match with the executable or any of
-    # its dependencies.
-    if (open (LOCS, "env LD_TRACE_PRELINKING= $prog |")) {
-	while (<LOCS>) {
+    # Set the environment variable LD_TRACE_LOADED_OBJECTS to 2 so the
+    # executable is also printed.
+    if (open (locs, "env LD_TRACE_LOADED_OBJECTS=2 $prog |")) {
+	while (<locs>) {
 	    chop;
-	    if (/^.*=> (.*) \((0x[0123456789abcdef]*), (0x[0123456789abcdef]*).*/) {
+	    if (/^.*=> (.*) .(0x[0123456789abcdef]*).$/) {
 		$locs{$1} = $2;
-		$rel{$1} = hex($2) - hex($3);
+		$rel{$1} = hex($2);
 	    }
 	}
 	close (LOCS);
@@ -91,6 +90,18 @@ if ($#ARGV == 0) {
     die "Wrong number of arguments, run $progname --help for help.";
 }
 
+sub addr2line {
+    my $addr = pop(@_);
+    my $prog = pop(@_);
+    if (open (ADDR, "addr2line -e $prog $addr|")) {
+	my $line = <ADDR>;
+	chomp $line;
+	close (ADDR);
+	if ($line ne '??:0') {
+	    return $line
+	}
+    }
+}
 sub location {
     my $str = pop(@_);
     return $str if ($str eq "");
@@ -98,11 +109,9 @@ sub location {
 	my $addr = $1;
 	my $fct = $2;
 	return $cache{$addr} if (exists $cache{$addr});
-	if ($binary ne "" && open (ADDR, "addr2line -e $binary $addr|")) {
-	    my $line = <ADDR>;
-	    chomp $line;
-	    close (ADDR);
-	    if ($line ne '??:0') {
+	if ($binary ne "") {
+	    my $line = &addr2line($binary, $addr);
+	    if ($line) {
 		$cache{$addr} = $line;
 		return $cache{$addr};
 	    }
@@ -114,24 +123,22 @@ sub location {
 	my $searchaddr;
 	return $cache{$addr} if (exists $cache{$addr});
 	$searchaddr = sprintf "%#x", hex($addr) + $rel{$prog};
-	if ($binary ne "" && open (ADDR, "addr2line -e $prog $searchaddr|")) {
-	    my $line = <ADDR>;
-	    chomp $line;
-	    close (ADDR);
-	    if ($line ne '??:0') {
-		$cache{$addr} = $line;
-		return $cache{$addr};
+	if ($binary ne "") {
+	    for my $address ($searchaddr, $addr) {
+		my $line = &addr2line($prog, $address);
+		if ($line) {
+		    $cache{$addr} = $line;
+		    return $cache{$addr};
+		}
 	    }
 	}
 	$cache{$addr} = $str = $addr;
     } elsif ($str =~ /^.*[[](0x[^]]*)]$/) {
 	my $addr = $1;
 	return $cache{$addr} if (exists $cache{$addr});
-	if ($binary ne "" && open (ADDR, "addr2line -e $binary $addr|")) {
-	    my $line = <ADDR>;
-	    chomp $line;
-	    close (ADDR);
-	    if ($line ne '??:0') {
+	if ($binary ne "") {
+	    my $line = &addr2line($binary, $addr);
+	    if ($line) {
 		$cache{$addr} = $line;
 		return $cache{$addr};
 	    }

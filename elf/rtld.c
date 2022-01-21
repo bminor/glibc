@@ -2104,18 +2104,18 @@ dl_main (const ElfW(Phdr) *phdr,
 	_dl_printf ("\tstatically linked\n");
       else
 	{
-	  for (l = main_map->l_next; l; l = l->l_next)
+	  for (l = state.mode_trace_program ? main_map : main_map->l_next;
+	       l; l = l->l_next) {
 	    if (l->l_faked)
 	      /* The library was not found.  */
-	      _dl_printf ("\t%s => not found\n", l->l_libname->name);
-	    else if (strcmp (l->l_libname->name, l->l_name) == 0)
-	      _dl_printf ("\t%s (0x%0*Zx)\n", l->l_libname->name,
+	      _dl_printf ("\t%s => not found\n",  l->l_libname->name);
+	    else
+	      _dl_printf ("\t%s => %s (0x%0*Zx)\n",
+			  DSO_FILENAME (l->l_libname->name),
+			  DSO_FILENAME (l->l_name),
 			  (int) sizeof l->l_map_start * 2,
 			  (size_t) l->l_map_start);
-	    else
-	      _dl_printf ("\t%s => %s (0x%0*Zx)\n", l->l_libname->name,
-			  l->l_name, (int) sizeof l->l_map_start * 2,
-			  (size_t) l->l_map_start);
+	  }
 	}
 
       if (__glibc_unlikely (state.mode != rtld_mode_trace))
@@ -2676,7 +2676,11 @@ process_envvars (struct dl_main_state *state)
 	case 20:
 	  /* The mode of the dynamic linker can be set.  */
 	  if (memcmp (envline, "TRACE_LOADED_OBJECTS", 20) == 0)
-	    state->mode = rtld_mode_trace;
+	    {
+	      state->mode = rtld_mode_trace;
+	      state->mode_trace_program
+		= _dl_strtoul (&envline[21], NULL) > 1;
+	    }
 	  break;
 
 	  /* We might have some extra environment variable to handle.  This
