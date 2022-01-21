@@ -346,7 +346,12 @@ sysdep_routines += xstatconv internal_statvfs \
 
 sysdep_headers += bits/fcntl-linux.h
 
-tests += tst-fallocate tst-fallocate64 tst-o_path-locks
+tests += \
+  tst-fallocate \
+  tst-fallocate64 \
+  tst-getcwd-smallbuff \
+  tst-o_path-locks \
+# tests
 endif
 
 ifeq ($(subdir),elf)
