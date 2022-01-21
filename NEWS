@@ -44,6 +44,7 @@ The following bugs are resolved with this release:
   [28524] Conversion from ISO-2022-JP-3 with iconv may emit spurious NULs
   [28755] overflow bug in wcsncmp_avx2 and wcsncmp_evex
   [28768] CVE-2022-23218: Buffer overflow in sunrpc svcunix_create
+  [28769] CVE-2021-3999: Off-by-one buffer overflow/underflow in getcwd()
   [28896] strncmp-avx2-rtm and wcsncmp-avx2-rtm fallback on non-rtm
     variants when avoiding overflow
 
@@ -74,6 +75,12 @@ Security related changes:
 
   CVE-2020-29562: An assertion failure has been fixed in the iconv function
   when invoked with UCS4 input containing an invalid character.
+
+  CVE-2021-3999: Passing a buffer of size exactly 1 byte to the getcwd
+  function may result in an off-by-one buffer underflow and overflow
+  when the current working directory is longer than PATH_MAX and also
+  corresponds to the / directory through an unprivileged mount
+  namespace.  Reported by Qualys.
 
   CVE-2022-23219: Passing an overlong file name to the clnt_create
   legacy function could result in a stack-based buffer overflow when
