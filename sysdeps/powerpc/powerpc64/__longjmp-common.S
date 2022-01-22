@@ -47,12 +47,14 @@
 ENTRY (__longjmp)
 	CALL_MCOUNT 2
 #ifndef __NO_VMX__
-	ld    r5,.LC__dl_hwcap@toc(r2)
+	addis	r5,r2,.LC__dl_hwcap@toc@ha
+	ld	r5,.LC__dl_hwcap@toc@l(r5)
 # ifdef SHARED
 	/* Load _rtld-global._dl_hwcap.  */
-	ld    r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
+	ld	r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
 # else
-	ld    r5,0(r5) /* Load extern _dl_hwcap.  */
+	/* Load extern _dl_hwcap.  */
+	ld	r5,0(r5)
 # endif
 	andis.  r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	beq	L(no_vmx)

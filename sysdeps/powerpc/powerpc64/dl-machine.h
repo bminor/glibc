@@ -175,9 +175,12 @@ BODY_PREFIX "_dl_start_user:\n"						\
 /* the address of _start in r30.  */					\
 "	mr	30,3\n"							\
 /* &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */		\
-"	ld	28,.LC__rtld_local@toc(2)\n"				\
-"	ld	29,.LC__dl_argc@toc(2)\n"				\
-"	ld	27,.LC__dl_argv@toc(2)\n"				\
+"	addis	28,2,.LC__rtld_local@toc@ha\n"				\
+"	ld	28,.LC__rtld_local@toc@l(28)\n"				\
+"	addis	29,2,.LC__dl_argc@toc@ha\n"				\
+"	ld	29,.LC__dl_argc@toc@l(29)\n"				\
+"	addis	27,2,.LC__dl_argv@toc@ha\n"				\
+"	ld	27,.LC__dl_argv@toc@l(27)\n"				\
 /* _dl_init (_dl_loaded, _dl_argc, _dl_argv, _dl_argv+_dl_argc+1).  */	\
 "	ld	3,0(28)\n"						\
 "	lwa	4,0(29)\n"						\
@@ -204,7 +207,8 @@ BODY_PREFIX "_dl_start_user:\n"						\
 "	addi	6,6,8\n"						\
 /* Pass a termination function pointer (in this case _dl_fini) in	\
    r7.  */								\
-"	ld	7,.LC__dl_fini@toc(2)\n"				\
+"	addis	7,2,.LC__dl_fini@toc@ha\n"				\
+"	ld	7,.LC__dl_fini@toc@l(7)\n"				\
 /* Pass the stack pointer in r1 (so far so good), pointing to a NULL	\
    value.  This lets our startup code distinguish between a program	\
    linked statically, which linux will call with argc on top of the	\

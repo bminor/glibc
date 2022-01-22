@@ -32,6 +32,7 @@
    because gcc as of 2010/05 doesn't allocate a proper stack frame for
    a function that makes no calls except for __tls_get_addr and we
    might be here resolving the __tls_get_addr call.  */
+	.hidden _dl_runtime_resolve
 #define INT_PARMS FRAME_MIN_SIZE
 ENTRY (_dl_runtime_resolve, 4)
 	stdu	r1,-FRAME_SIZE(r1)
@@ -195,6 +196,7 @@ END(_dl_runtime_resolve)
    parm1 (r3) and the index (r0) needs to be converted to an offset
    (index * 24) in parm2 (r4).  */
 #ifndef PROF
+	.hidden _dl_profile_resolve
 ENTRY (_dl_profile_resolve, 4)
 /* Spill r30, r31 to preserve the link_map* and reloc_addr, in case we
    need to call _dl_audit_pltexit.  */
@@ -225,12 +227,14 @@ ENTRY (_dl_profile_resolve, 4)
 	std	r9,INT_PARMS+48(r1)
 	std	r10,INT_PARMS+56(r1)
 	std	r8,CALLING_SP(r1)
-	ld	r12,.LC__dl_hwcap@toc(r2)
+	addis   r12,r2,.LC__dl_hwcap@toc@ha
+	ld	r12,.LC__dl_hwcap@toc@l(r12)
 #ifdef SHARED
 	/* Load _rtld_local_ro._dl_hwcap.  */
 	ld	r12,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r12)
 #else
-	ld	r12,0(r12) /* Load extern _dl_hwcap.  */
+	/* Load extern _dl_hwcap.  */
+	ld	r12,0(r12)
 #endif
 	andis.  r0,r12,(PPC_FEATURE_HAS_ALTIVEC >> 16)
 	beq	L(saveFP)
