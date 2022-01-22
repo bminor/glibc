@@ -45,7 +45,7 @@ dl_vdso_vsym (const char *name)
   ElfW (Sym) wsym = { 0 };
   wsym.st_info = (unsigned char) ELFW (ST_INFO (STB_WEAK, STT_NOTYPE));
 
-  struct r_found_version rfv = { VDSO_NAME, VDSO_HASH, 1, NULL };
+  const struct r_found_version rfv = { VDSO_NAME, VDSO_HASH, 1, NULL };
 
   /* Search the scope of the vdso map.  */
   const ElfW (Sym) *ref = &wsym;
