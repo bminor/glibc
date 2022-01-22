@@ -54,6 +54,7 @@ initialize_pthread (struct __pthread *new)
 
   new->state_lock = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
   new->state_cond = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
+  new->terminated = FALSE;
 
   memset (&new->res_state, '\0', sizeof (new->res_state));
 
@@ -84,10 +85,10 @@ __pthread_alloc (struct __pthread **pthread)
     {
       /* There is no need to take NEW->STATE_LOCK: if NEW is on this
          list, then it is protected by __PTHREAD_FREE_THREADS_LOCK
-         except in __pthread_dealloc where after it is added to the
+         except in __pthread_dealloc_finish where after it is added to the
          list (with the lock held), it drops the lock and then sets
          NEW->STATE and immediately stops using NEW.  */
-      if (new->state == PTHREAD_TERMINATED)
+      if (new->terminated)
 	{
 	  __pthread_dequeue (new);
 	  break;

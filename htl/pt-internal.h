@@ -48,8 +48,6 @@ enum pthread_state
   PTHREAD_DETACHED,
   /* A joinable thread exited and its return code is available.  */
   PTHREAD_EXITED,
-  /* The thread structure is unallocated and available for reuse.  */
-  PTHREAD_TERMINATED
 };
 
 #ifndef PTHREAD_KEY_MEMBERS
@@ -95,6 +93,8 @@ struct __pthread
   enum pthread_state state;
   pthread_mutex_t state_lock;	/* Locks the state.  */
   pthread_cond_t state_cond;	/* Signalled when the state changes.  */
+  bool terminated;		/* Whether the kernel thread is over
+				   and we can reuse this structure.  */
 
   /* Resolver state.  */
   struct __res_state res_state;
@@ -209,11 +209,17 @@ extern int __pthread_create_internal (struct __pthread **__restrict pthread,
    kernel thread or a stack).  THREAD has one reference.  */
 extern int __pthread_alloc (struct __pthread **thread);
 
-/* Deallocate the thread structure.  This is the dual of
+/* Deallocate the content of the thread structure.  This is the dual of
    __pthread_alloc (N.B. it does not call __pthread_stack_dealloc nor
-   __pthread_thread_terminate).  THREAD loses one reference and is
-   released if the reference counter drops to 0.  */
+   __pthread_thread_terminate).  THREAD loses one reference, and if
+   if the reference counter drops to 0 this returns 1, and the caller has
+   to call __pthread_dealloc_finish when it is really finished with using
+   THREAD.  */
 extern void __pthread_dealloc (struct __pthread *thread);
+
+/* Confirm deallocating the thread structure.  Before calling this
+   the structure will not be reused yet.  */
+extern void __pthread_dealloc_finish (struct __pthread *pthread);
 
 
 /* Allocate a stack of size STACKSIZE.  The stack base shall be

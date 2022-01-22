@@ -256,7 +256,10 @@ __pthread_create_internal (struct __pthread **thread,
 failed_starting:
   /* If joinable, a reference was added for the caller.  */
   if (pthread->state == PTHREAD_JOINABLE)
-    __pthread_dealloc (pthread);
+    {
+      __pthread_dealloc (pthread);
+      __pthread_dealloc_finish (pthread);
+    }
 
   __pthread_setid (pthread->thread, NULL);
   atomic_decrement (&__pthread_total);
@@ -278,6 +281,7 @@ failed_thread_alloc:
 			      / __vm_page_size) * __vm_page_size + stacksize);
 failed_stack_alloc:
   __pthread_dealloc (pthread);
+  __pthread_dealloc_finish (pthread);
 failed:
   return err;
 }

@@ -62,12 +62,6 @@ __pthread_detach (pthread_t thread)
       __pthread_dealloc (pthread);
       break;
 
-    case PTHREAD_TERMINATED:
-      /* Pretend THREAD wasn't there in the first place.  */
-      __pthread_mutex_unlock (&pthread->state_lock);
-      err = ESRCH;
-      break;
-
     default:
       /* Thou shalt not detach non-joinable threads!  */
       __pthread_mutex_unlock (&pthread->state_lock);

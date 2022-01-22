@@ -75,12 +75,6 @@ __pthread_join_common (pthread_t thread, void **status, int try,
       __pthread_dealloc (pthread);
       break;
 
-    case PTHREAD_TERMINATED:
-      /* Pretend THREAD wasn't there in the first place.  */
-      __pthread_mutex_unlock (&pthread->state_lock);
-      err = ESRCH;
-      break;
-
     default:
       /* Thou shalt not join non-joinable threads!  */
       __pthread_mutex_unlock (&pthread->state_lock);

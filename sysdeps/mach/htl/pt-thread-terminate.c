@@ -35,6 +35,7 @@ __pthread_thread_terminate (struct __pthread *thread)
   void *stackaddr;
   size_t stacksize;
   error_t err;
+  int self;
 
   kernel_thread = thread->kernel_thread;
 
@@ -52,24 +53,31 @@ __pthread_thread_terminate (struct __pthread *thread)
 
   wakeup_port = thread->wakeupmsg.msgh_remote_port;
 
-  /* Each thread has its own reply port, allocated from MiG stub code calling
-     __mig_get_reply_port.  Destroying it is a bit tricky because the calls
-     involved are also RPCs, causing the creation of a new reply port if
-     currently null. The __thread_terminate_release call is actually a one way
-     simple routine designed not to require a reply port.  */
   self_ktid = __mach_thread_self ();
-  reply_port = (self_ktid == kernel_thread)
-      ? __mig_get_reply_port () : MACH_PORT_NULL;
+  self = self_ktid == kernel_thread;
   __mach_port_deallocate (__mach_task_self (), self_ktid);
 
   /* The kernel thread won't be there any more.  */
   thread->kernel_thread = MACH_PORT_DEAD;
 
-  /* Finally done with the thread structure.  */
+  /* Release thread resources.  */
   __pthread_dealloc (thread);
 
-  /* The wake up port is now no longer needed.  */
+  /* The wake up port (needed for locks in __pthread_dealloc) is now no longer
+     needed.  */
   __mach_port_destroy (__mach_task_self (), wakeup_port);
+
+  /* Each thread has its own reply port, allocated from MiG stub code calling
+     __mig_get_reply_port.  Destroying it is a bit tricky because the calls
+     involved are also RPCs, causing the creation of a new reply port if
+     currently null. The __thread_terminate_release call is actually a one way
+     simple routine designed not to require a reply port.  */
+  reply_port = self ? __mig_get_reply_port () : MACH_PORT_NULL;
+  /* From here we shall not use a MIG reply port any more.  */
+
+  /* Finally done with the thread structure (we still needed it to access the
+     reply port).  */
+  __pthread_dealloc_finish (thread);
 
   /* Terminate and release all that's left.  */
   err = __thread_terminate_release (kernel_thread, mach_task_self (),
