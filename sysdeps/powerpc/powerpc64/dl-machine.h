@@ -559,6 +559,27 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 #define ARCH_LA_PLTEXIT ppc64v2_gnu_pltexit
 #endif
 
+#if ENABLE_STATIC_PIE && !defined SHARED && !IS_IN (rtld)
+#include <libc-diag.h>
+#include <tcb-offsets.h>
+
+/* Set up r13 for _dl_relocate_static_pie so that libgcc ifuncs that
+   normally access the tcb copy of hwcap will see __tcb.hwcap.  */
+
+static inline void __attribute__ ((always_inline))
+ppc_init_fake_thread_pointer (void)
+{
+  DIAG_PUSH_NEEDS_COMMENT;
+  /* We are playing pointer tricks.  Silence gcc warning.  */
+  DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Warray-bounds");
+  __thread_register = (char *) &__tcb.hwcap - TCB_HWCAP;
+  DIAG_POP_NEEDS_COMMENT;
+}
+
+#define ELF_MACHINE_BEFORE_RTLD_RELOC(map, dynamic_info) \
+  ppc_init_fake_thread_pointer ();
+#endif /* ENABLE_STATIC_PIE && !defined SHARED && !IS_IN (rtld) */
+
 #endif /* dl_machine_h */
 
 #ifdef RESOLVE_MAP

@@ -21,8 +21,7 @@
 #ifndef HWCAPINFO_H
 # define HWCAPINFO_H
 
-extern uint64_t __tcb_hwcap  attribute_hidden;
-extern uint32_t __tcb_platform attribute_hidden;
+extern tcbhead_t __tcb attribute_hidden;
 
 extern void __tcb_parse_hwcap_and_convert_at_platform (void);
 

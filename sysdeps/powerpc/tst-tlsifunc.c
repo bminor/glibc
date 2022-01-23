@@ -101,11 +101,14 @@ do_test (void)
 
   if (&bar == bar_ptr)
     printf ("PASS: bar address read from IFUNC resolver is correct.\n");
+#if !defined TST_TLSIFUNC_STATIC || !defined PIC \
+    || !defined PI_STATIC_AND_HIDDEN
   else
     {
       printf ("FAIL: bar address read from IFUNC resolver is incorrect.\n");
       ret = 1;
     }
+#endif
 
   if (tcb_test ())
     printf ("PASS: tcb_test IFUNC resolver called once.\n");

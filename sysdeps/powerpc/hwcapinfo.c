@@ -20,8 +20,7 @@
 #include <shlib-compat.h>
 #include <dl-procinfo.h>
 
-uint64_t __tcb_hwcap __attribute__ ((visibility ("hidden")));
-uint32_t __tcb_platform __attribute__ ((visibility ("hidden")));
+tcbhead_t __tcb __attribute__ ((visibility ("hidden")));
 
 /* This function parses the HWCAP/HWCAP2 fields, adding the previous supported
    ISA bits, as well as converting the AT_PLATFORM string to a number.  This
@@ -34,7 +33,7 @@ __tcb_parse_hwcap_and_convert_at_platform (void)
   uint64_t h1, h2;
 
   /* Read AT_PLATFORM string from auxv and convert it to a number.  */
-  __tcb_platform = _dl_string_platform (GLRO (dl_platform));
+  __tcb.at_platform = _dl_string_platform (GLRO (dl_platform));
 
   /* Read HWCAP and HWCAP2 from auxv.  */
   h1 = GLRO (dl_hwcap);
@@ -66,8 +65,7 @@ __tcb_parse_hwcap_and_convert_at_platform (void)
 
   /* Consolidate both HWCAP and HWCAP2 into a single doubleword so that
      we can read both in a single load later.  */
-  __tcb_hwcap = h2;
-  __tcb_hwcap = (h1 << 32) | __tcb_hwcap;
+  __tcb.hwcap = (h1 << 32) | (h2 & 0xffffffff);
 
 }
 #if IS_IN (rtld)
