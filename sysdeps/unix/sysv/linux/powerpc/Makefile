@@ -27,3 +27,9 @@ tests += $(tests-static)
 tests += test-gettimebasefreq
 tests += test-powerpc-linux-sysconf
 endif
+
+ifeq ($(subdir),csu)
+# to relocate stinfo->main
+CPPFLAGS-libc-start.o += -I../elf
+CPPFLAGS-libc-start.op += -I../elf
+endif

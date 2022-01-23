@@ -23,6 +23,10 @@
 #ifndef SHARED
 #include <hwcapinfo.h>
 #endif
+#if ENABLE_STATIC_PIE && !defined SHARED
+/* For elf_machine_load_address.  */
+#include <dl-machine.h>
+#endif
 
 /* The main work is done in the generic function.  */
 #define LIBC_START_MAIN generic_start_main
@@ -95,8 +99,15 @@ __libc_start_main_impl (int argc, char **argv,
   __tcb_parse_hwcap_and_convert_at_platform ();
 #endif
 
-  return generic_start_main (stinfo->main, argc, argv, auxvec,
-			     stinfo->init, stinfo->fini, rtld_fini,
+  void *stmain = stinfo->main;
+#if ENABLE_STATIC_PIE && !defined SHARED
+  struct link_map *map = _dl_get_dl_main_map ();
+  if (!map->l_relocated)
+    stmain = (char *) stmain + elf_machine_load_address ();
+#endif
+
+  return generic_start_main (stmain, argc, argv, auxvec,
+			     NULL, NULL, rtld_fini,
 			     stack_on_entry);
 }
 DEFINE_LIBC_START_MAIN_VERSION
