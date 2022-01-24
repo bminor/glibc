@@ -178,16 +178,23 @@ _dl_audit_symbind (struct link_map *l, struct reloc_result *reloc_result,
 		   const ElfW(Sym) *defsym, DL_FIXUP_VALUE_TYPE *value,
 		   lookup_t result)
 {
-  reloc_result->bound = result;
-  /* Compute index of the symbol entry in the symbol table of the DSO with the
-     definition.  */
-  reloc_result->boundndx = (defsym - (ElfW(Sym) *) D_PTR (result,
-							  l_info[DT_SYMTAB]));
+  bool for_jmp_slot = reloc_result == NULL;
+
+  /* Compute index of the symbol entry in the symbol table of the DSO
+     with the definition.  */
+  unsigned int boundndx = defsym - (ElfW(Sym) *) D_PTR (result,
+							l_info[DT_SYMTAB]);
+  if (!for_jmp_slot)
+    {
+      reloc_result->bound = result;
+      reloc_result->boundndx = boundndx;
+    }
 
   if ((l->l_audit_any_plt | result->l_audit_any_plt) == 0)
     {
       /* Set all bits since this symbol binding is not interesting.  */
-      reloc_result->enterexit = (1u << DL_NNS) - 1;
+      if (!for_jmp_slot)
+	reloc_result->enterexit = (1u << DL_NNS) - 1;
       return;
     }
 
@@ -199,12 +206,13 @@ _dl_audit_symbind (struct link_map *l, struct reloc_result *reloc_result,
      two bits.  */
   assert (DL_NNS * 2 <= sizeof (reloc_result->flags) * 8);
   assert ((LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT) == 3);
-  reloc_result->enterexit = LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT;
+  uint32_t enterexit = LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT;
 
   const char *strtab2 = (const void *) D_PTR (result, l_info[DT_STRTAB]);
 
   unsigned int flags = 0;
   struct audit_ifaces *afct = GLRO(dl_audit);
+  uintptr_t new_value = (uintptr_t) sym.st_value;
   for (unsigned int cnt = 0; cnt < GLRO(dl_naudit); ++cnt)
     {
       /* XXX Check whether both DSOs must request action or only one */
@@ -215,37 +223,41 @@ _dl_audit_symbind (struct link_map *l, struct reloc_result *reloc_result,
 	{
 	  if (afct->symbind != NULL)
 	    {
-	      uintptr_t new_value = afct->symbind (&sym,
-						   reloc_result->boundndx,
-						   &l_state->cookie,
-						   &result_state->cookie,
-						   &flags,
-						   strtab2 + defsym->st_name);
+	      flags |= for_jmp_slot ? LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT
+				    : 0;
+	      new_value = afct->symbind (&sym, boundndx,
+					 &l_state->cookie,
+					 &result_state->cookie, &flags,
+					 strtab2 + defsym->st_name);
 	      if (new_value != (uintptr_t) sym.st_value)
 		{
 		  flags |= LA_SYMB_ALTVALUE;
-		  sym.st_value = new_value;
+		  sym.st_value = for_jmp_slot
+		    ? DL_FIXUP_BINDNOW_ADDR_VALUE (new_value) : new_value;
 		}
 	    }
 
 	  /* Remember the results for every audit library and store a summary
 	     in the first two bits.  */
-	  reloc_result->enterexit &= flags & (LA_SYMB_NOPLTENTER
-					      | LA_SYMB_NOPLTEXIT);
-	  reloc_result->enterexit |= ((flags & (LA_SYMB_NOPLTENTER
-						| LA_SYMB_NOPLTEXIT))
-				      << ((cnt + 1) * 2));
+	  enterexit &= flags & (LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT);
+	  enterexit |= ((flags & (LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT))
+			<< ((cnt + 1) * 2));
 	}
       else
 	/* If the bind flags say this auditor is not interested, set the bits
 	   manually.  */
-	reloc_result->enterexit |= ((LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT)
-				    << ((cnt + 1) * 2));
+	enterexit |= ((LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT)
+		      << ((cnt + 1) * 2));
       afct = afct->next;
     }
 
-  reloc_result->flags = flags;
-  *value = DL_FIXUP_ADDR_VALUE (sym.st_value);
+  if (!for_jmp_slot)
+    {
+      reloc_result->enterexit = enterexit;
+      reloc_result->flags = flags;
+    }
+
+  DL_FIXUP_BINDNOW_RELOC (value, new_value, sym.st_value);
 }
 
 void

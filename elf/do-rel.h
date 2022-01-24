@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <ldsodefs.h>
+
 /* This file may be included twice, to define both
    `elf_dynamic_do_rel' and `elf_dynamic_do_rela'.  */
 
@@ -123,6 +125,10 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 
 	  for (; r < end; ++r)
 	    {
+	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)] & 0x7fff;
+	      const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (r->r_info)];
+	      void *const r_addr_arg = (void *) (l_addr + r->r_offset);
+	      const struct r_found_version *rversion = &map->l_versions[ndx];
 #if defined ELF_MACHINE_IRELATIVE && !defined RTLD_BOOTSTRAP
 	      if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_IRELATIVE)
 		{
@@ -133,10 +139,19 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 		}
 #endif
 
-	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)] & 0x7fff;
-	      elf_machine_rel (map, scope, r, &symtab[ELFW(R_SYM) (r->r_info)],
-			       &map->l_versions[ndx],
-			       (void *) (l_addr + r->r_offset), skip_ifunc);
+	      elf_machine_rel (map, scope, r, sym, rversion, r_addr_arg,
+			       skip_ifunc);
+#if defined SHARED && !defined RTLD_BOOTSTRAP
+	      if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_JMP_SLOT
+		  && GLRO(dl_naudit) > 0)
+		{
+		  struct link_map *sym_map
+		    = RESOLVE_MAP (map, scope, &sym, rversion,
+				   ELF_MACHINE_JMP_SLOT);
+		  if (sym != NULL)
+		    _dl_audit_symbind (map, NULL, sym, r_addr_arg, sym_map);
+		}
+#endif
 	    }
 
 #if defined ELF_MACHINE_IRELATIVE && !defined RTLD_BOOTSTRAP
@@ -158,17 +173,33 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
       else
 	{
 	  for (; r < end; ++r)
+	    {
+	      const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (r->r_info)];
+	      void *const r_addr_arg = (void *) (l_addr + r->r_offset);
 # ifdef ELF_MACHINE_IRELATIVE
-	    if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_IRELATIVE)
-	      {
-		if (r2 == NULL)
-		  r2 = r;
-		end2 = r;
-	      }
-	    else
+	      if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_IRELATIVE)
+		{
+		  if (r2 == NULL)
+		    r2 = r;
+		  end2 = r;
+		  continue;
+		}
 # endif
-	      elf_machine_rel (map, scope, r, &symtab[ELFW(R_SYM) (r->r_info)], NULL,
-			       (void *) (l_addr + r->r_offset), skip_ifunc);
+	      elf_machine_rel (map, scope, r, sym, NULL, r_addr_arg,
+			       skip_ifunc);
+# if defined SHARED && !defined RTLD_BOOTSTRAP
+	      if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_JMP_SLOT
+		  && GLRO(dl_naudit) > 0)
+		{
+		  struct link_map *sym_map
+		    = RESOLVE_MAP (map, scope, &sym,
+				   (struct r_found_version *) NULL,
+				   ELF_MACHINE_JMP_SLOT);
+		  if (sym != NULL)
+		    _dl_audit_symbind (map, NULL , sym,r_addr_arg, sym_map);
+		}
+# endif
+	    }
 
 # ifdef ELF_MACHINE_IRELATIVE
 	  if (r2 != NULL)
