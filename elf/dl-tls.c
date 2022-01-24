@@ -519,8 +519,12 @@ _dl_resize_dtv (dtv_t *dtv, size_t max_modid)
 }
 
 
+/* Allocate initial TLS.  RESULT should be a non-NULL pointer to storage
+   for the TLS space.  The DTV may be resized, and so this function may
+   call malloc to allocate that space.  The loader's GL(dl_load_tls_lock)
+   is taken when manipulating global TLS-related data in the loader.  */
 void *
-_dl_allocate_tls_init (void *result)
+_dl_allocate_tls_init (void *result, bool init_tls)
 {
   if (result == NULL)
     /* The memory allocation failed.  */
@@ -593,7 +597,14 @@ _dl_allocate_tls_init (void *result)
 	     some platforms use in static programs requires it.  */
 	  dtv[map->l_tls_modid].pointer.val = dest;
 
-	  /* Copy the initialization image and clear the BSS part.  */
+	  /* Copy the initialization image and clear the BSS part.  For
+	     audit modules or dependencies with initial-exec TLS, we can not
+	     set the initial TLS image on default loader initialization
+	     because it would already be set by the audit setup.  However,
+	     subsequent thread creation would need to follow the default
+	     behaviour.   */
+	  if (map->l_ns != LM_ID_BASE && !init_tls)
+	    continue;
 	  memset (__mempcpy (dest, map->l_tls_initimage,
 			     map->l_tls_initimage_size), '\0',
 		  map->l_tls_blocksize - map->l_tls_initimage_size);
@@ -620,7 +631,7 @@ _dl_allocate_tls (void *mem)
 {
   return _dl_allocate_tls_init (mem == NULL
 				? _dl_allocate_tls_storage ()
-				: allocate_dtv (mem));
+				: allocate_dtv (mem), true);
 }
 rtld_hidden_def (_dl_allocate_tls)
 
