@@ -12,6 +12,12 @@ Major new features:
 * The audit libraries will avoid unnecessary slowdown if it is not required
   PLT tracking (by not implementing the la_pltenter or la_pltexit callbacks).
 
+Deprecated and removed features, and other changes affecting compatibility:
+
+* The audit module interface version LAV_CURRENT is increased to enable
+  proper bind-now support.  The loader now advertises via the la_symbind
+  flags that PLT trace is not possible.
+
 Security related changes:
 
   CVE-2022-23219: Passing an overlong file name to the clnt_create

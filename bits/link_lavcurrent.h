@@ -22,4 +22,4 @@
 #endif
 
 /* Version numbers for la_version handshake interface.  */
-#define LAV_CURRENT	1
+#define LAV_CURRENT	2
