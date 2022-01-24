@@ -34,6 +34,7 @@
 #include <sys/un.h>
 #include <support/check.h>
 #include <support/temp_file.h>
+#include <support/test-driver.h>
 #include <support/xsched.h>
 #include <support/xunistd.h>
 
@@ -187,6 +188,23 @@ do_test (void)
 
   xmkdir (MOUNT_NAME, S_IRWXU);
   atexit (do_cleanup);
+
+  /* Check whether user namespaces are supported.  */
+  {
+    pid_t pid = xfork ();
+    if (pid == 0)
+      {
+	if (unshare (CLONE_NEWUSER | CLONE_NEWNS) != 0)
+	  _exit (EXIT_UNSUPPORTED);
+	else
+	  _exit (0);
+      }
+    int status;
+    xwaitpid (pid, &status, 0);
+    TEST_VERIFY_EXIT (WIFEXITED (status));
+    if (WEXITSTATUS (status) != 0)
+      return WEXITSTATUS (status);
+  }
 
   TEST_VERIFY_EXIT (socketpair (AF_UNIX, SOCK_STREAM, 0, sockfd) == 0);
   pid_t child_pid = xclone (child_func, NULL, child_stack,
