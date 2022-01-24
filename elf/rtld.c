@@ -52,6 +52,7 @@
 #include <get-dynamic-info.h>
 #include <dl-execve.h>
 #include <dl-find_object.h>
+#include <dl-audit-check.h>
 
 #include <assert.h>
 
@@ -1000,7 +1001,7 @@ file=%s [%lu]; audit interface function la_version returned zero; ignored.\n",
       return;
     }
 
-  if (lav > LAV_CURRENT)
+  if (!_dl_audit_check_version (lav))
     {
       _dl_debug_printf ("\
 ERROR: audit interface '%s' requires version %d (maximum supported version %d); ignored.\n",

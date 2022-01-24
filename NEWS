@@ -172,6 +172,10 @@ Deprecated and removed features, and other changes affecting compatibility:
   proper bind-now support.  The loader now advertises via the la_symbind
   flags that PLT trace is not possible.
 
+* The audit interface on aarch64 is extended to support both the indirect
+  result location register (x8) and NEON Q register.  Old audit modules are
+  rejected by the loader.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

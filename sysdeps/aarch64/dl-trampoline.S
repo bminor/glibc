@@ -45,7 +45,8 @@ _dl_runtime_resolve:
 
 	cfi_rel_offset (lr, 8)
 
-	/* Save arguments.  */
+	/* Note: Saving x9 is not required by the ABI but the assembler requires
+	   the immediate values of operand 3 to be a multiple of 16 */
 	stp	x8, x9, [sp, #-(80+8*16)]!
 	cfi_adjust_cfa_offset (80+8*16)
 	cfi_rel_offset (x8, 0)
@@ -142,7 +143,7 @@ _dl_runtime_profile:
 	   Stack frame layout:
 	   [sp,   #...] lr
 	   [sp,   #...] &PLTGOT[n]
-	   [sp,    #96] La_aarch64_regs
+	   [sp,   #256] La_aarch64_regs
 	   [sp,    #48] La_aarch64_retval
 	   [sp,    #40] frame size return from pltenter
 	   [sp,    #32] dl_profile_call saved x1
@@ -183,19 +184,25 @@ _dl_runtime_profile:
 	stp	x6, x7, [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*3]
 	cfi_rel_offset (x6, OFFSET_RG + DL_OFFSET_RG_X0 + 16*3 + 0)
 	cfi_rel_offset (x7, OFFSET_RG + DL_OFFSET_RG_X0 + 16*3 + 8)
+	str	x8, [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*4 + 0]
+	cfi_rel_offset (x8, OFFSET_RG + DL_OFFSET_RG_X0 + 16*4 + 0)
+	/* Note 8 bytes of padding is in the stack frame for alignment */
 
-	stp	d0, d1, [X29, #OFFSET_RG + DL_OFFSET_RG_D0 + 16*0]
-	cfi_rel_offset (d0, OFFSET_RG + DL_OFFSET_RG_D0 + 16*0)
-	cfi_rel_offset (d1, OFFSET_RG + DL_OFFSET_RG_D0 + 16*0 + 8)
-	stp	d2, d3, [X29, #OFFSET_RG+ DL_OFFSET_RG_D0 + 16*1]
-	cfi_rel_offset (d2, OFFSET_RG + DL_OFFSET_RG_D0 + 16*1 + 0)
-	cfi_rel_offset (d3, OFFSET_RG + DL_OFFSET_RG_D0 + 16*1 + 8)
-	stp	d4, d5, [X29, #OFFSET_RG + DL_OFFSET_RG_D0 + 16*2]
-	cfi_rel_offset (d4, OFFSET_RG + DL_OFFSET_RG_D0 + 16*2 + 0)
-	cfi_rel_offset (d5, OFFSET_RG + DL_OFFSET_RG_D0 + 16*2 + 8)
-	stp	d6, d7, [X29, #OFFSET_RG + DL_OFFSET_RG_D0 + 16*3]
-	cfi_rel_offset (d6, OFFSET_RG + DL_OFFSET_RG_D0 + 16*3 + 0)
-	cfi_rel_offset (d7, OFFSET_RG + DL_OFFSET_RG_D0 + 16*3 + 8)
+	stp	q0, q1, [X29, #OFFSET_RG + DL_OFFSET_RG_V0 + 32*0]
+	cfi_rel_offset (q0, OFFSET_RG + DL_OFFSET_RG_V0 + 32*0)
+	cfi_rel_offset (q1, OFFSET_RG + DL_OFFSET_RG_V0 + 32*0 + 16)
+	stp	q2, q3, [X29, #OFFSET_RG+ DL_OFFSET_RG_V0 + 32*1]
+	cfi_rel_offset (q2, OFFSET_RG + DL_OFFSET_RG_V0 + 32*1 + 0)
+	cfi_rel_offset (q3, OFFSET_RG + DL_OFFSET_RG_V0 + 32*1 + 16)
+	stp	q4, q5, [X29, #OFFSET_RG + DL_OFFSET_RG_V0 + 32*2]
+	cfi_rel_offset (q4, OFFSET_RG + DL_OFFSET_RG_V0 + 32*2 + 0)
+	cfi_rel_offset (q5, OFFSET_RG + DL_OFFSET_RG_V0 + 32*2 + 16)
+	stp	q6, q7, [X29, #OFFSET_RG + DL_OFFSET_RG_V0 + 32*3]
+	cfi_rel_offset (q6, OFFSET_RG + DL_OFFSET_RG_V0 + 32*3 + 0)
+	cfi_rel_offset (q7, OFFSET_RG + DL_OFFSET_RG_V0 + 32*3 + 16)
+
+	/* No APCS extension supported.  */
+	str	xzr,    [X29, #OFFSET_RG + DL_OFFSET_RG_VPCS]
 
 	add     x0, x29, #SF_SIZE + 16
 	ldr	x1, [x29, #OFFSET_LR]
@@ -234,10 +241,11 @@ _dl_runtime_profile:
 	ldp	x2, x3, [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*1]
 	ldp	x4, x5, [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*2]
 	ldp	x6, x7, [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*3]
-	ldp	d0, d1, [x29, #OFFSET_RG + DL_OFFSET_RG_D0 + 16*0]
-	ldp	d2, d3, [x29, #OFFSET_RG + DL_OFFSET_RG_D0 + 16*1]
-	ldp	d4, d5, [x29, #OFFSET_RG + DL_OFFSET_RG_D0 + 16*2]
-	ldp	d6, d7, [x29, #OFFSET_RG + DL_OFFSET_RG_D0 + 16*3]
+	ldr	x8,     [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*4]
+	ldp	q0, q1, [x29, #OFFSET_RG + DL_OFFSET_RG_V0 + 32*0]
+	ldp	q2, q3, [x29, #OFFSET_RG + DL_OFFSET_RG_V0 + 32*1]
+	ldp	q4, q5, [x29, #OFFSET_RG + DL_OFFSET_RG_V0 + 32*2]
+	ldp	q6, q7, [x29, #OFFSET_RG + DL_OFFSET_RG_V0 + 32*3]
 
 	cfi_def_cfa_register (sp)
 	ldp	x29, x30, [x29, #0]
@@ -280,14 +288,22 @@ _dl_runtime_profile:
 	ldp	x2, x3, [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*1]
 	ldp	x4, x5, [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*2]
 	ldp	x6, x7, [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*3]
-	ldp	d0, d1, [x29, #OFFSET_RG + DL_OFFSET_RG_D0 + 16*0]
-	ldp	d2, d3, [x29, #OFFSET_RG + DL_OFFSET_RG_D0 + 16*1]
-	ldp	d4, d5, [x29, #OFFSET_RG + DL_OFFSET_RG_D0 + 16*2]
-	ldp	d6, d7, [x29, #OFFSET_RG + DL_OFFSET_RG_D0 + 16*3]
+	ldr	x8,     [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*4]
+	ldp	q0, q1, [x29, #OFFSET_RG + DL_OFFSET_RG_V0 + 32*0]
+	ldp	q2, q3, [x29, #OFFSET_RG + DL_OFFSET_RG_V0 + 32*1]
+	ldp	q4, q5, [x29, #OFFSET_RG + DL_OFFSET_RG_V0 + 32*2]
+	ldp	q6, q7, [x29, #OFFSET_RG + DL_OFFSET_RG_V0 + 32*3]
 	blr	ip0
-	stp	x0, x1, [x29, #OFFSET_RV + DL_OFFSET_RV_X0]
-	stp	d0, d1, [x29, #OFFSET_RV + DL_OFFSET_RV_D0 + 16*0]
-	stp	d2, d3, [x29, #OFFSET_RV + DL_OFFSET_RV_D0 + 16*1]
+	stp	x0, x1, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*0]
+	stp	x2, x3, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*1]
+	stp	x4, x5, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*2]
+	stp	x6, x7, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*3]
+	str	x8,     [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*4]
+	stp	q0, q1, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*0]
+	stp	q2, q3, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*1]
+	stp	q4, q5, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*2]
+	stp	q6, q7, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*3]
+	str	xzr,    [X29, #OFFSET_RV + DL_OFFSET_RG_VPCS]
 
 	/* Setup call to pltexit  */
 	ldp	x0, x1, [x29, #OFFSET_SAVED_CALL_X0]
@@ -295,9 +311,16 @@ _dl_runtime_profile:
 	add	x3, x29, #OFFSET_RV
 	bl	_dl_audit_pltexit
 
-	ldp	x0, x1, [x29, #OFFSET_RV + DL_OFFSET_RV_X0]
-	ldp	d0, d1, [x29, #OFFSET_RV + DL_OFFSET_RV_D0 + 16*0]
-	ldp	d2, d3, [x29, #OFFSET_RV + DL_OFFSET_RV_D0 + 16*1]
+	ldp	x0, x1, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*0]
+	ldp	x2, x3, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*1]
+	ldp	x4, x5, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*2]
+	ldp	x6, x7, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*3]
+	ldr	x8,     [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*4]
+	ldp	q0, q1, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*0]
+	ldp	q2, q3, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*1]
+	ldp	q4, q5, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*2]
+	ldp	q6, q7, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*3]
+
 	/* LR from within La_aarch64_reg */
 	ldr	lr, [x29, #OFFSET_RG + DL_OFFSET_RG_LR]
 	cfi_restore(lr)
