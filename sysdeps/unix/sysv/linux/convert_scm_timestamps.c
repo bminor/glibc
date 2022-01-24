@@ -54,6 +54,8 @@ __convert_scm_timestamps (struct msghdr *msg, socklen_t msgsize)
        cmsg != NULL;
        cmsg = CMSG_NXTHDR (msg, cmsg))
     {
+      last = cmsg;
+
       if (cmsg->cmsg_level != SOL_SOCKET)
 	continue;
 
@@ -75,11 +77,9 @@ __convert_scm_timestamps (struct msghdr *msg, socklen_t msgsize)
 	  tvts[1] = tmp[1];
 	  break;
 	}
-
-      last = cmsg;
     }
 
-  if (last == NULL || type == 0)
+  if (type == 0)
     return;
 
   if (CMSG_SPACE (sizeof tvts) > msgsize - msg->msg_controllen)
@@ -88,10 +88,12 @@ __convert_scm_timestamps (struct msghdr *msg, socklen_t msgsize)
       return;
     }
 
+  /* Zero memory for the new cmsghdr, so reading cmsg_len field
+     by CMSG_NXTHDR does not trigger UB.  */
+  memset (msg->msg_control + msg->msg_controllen, 0,
+	  CMSG_SPACE (sizeof tvts));
   msg->msg_controllen += CMSG_SPACE (sizeof tvts);
-  cmsg = CMSG_NXTHDR(msg, last);
-  if (cmsg == NULL)
-    return;
+  cmsg = CMSG_NXTHDR (msg, last);
   cmsg->cmsg_level = SOL_SOCKET;
   cmsg->cmsg_type = type;
   cmsg->cmsg_len = CMSG_LEN (sizeof tvts);

@@ -37,6 +37,9 @@ The following bugs are resolved with this release:
   [28310] Do not use affinity mask for sysconf (_SC_NPROCESSORS_CONF)
   [28338] undefined behavior in __tzfile_compute with oddball TZif file
   [28340] ld.so crashes while loading a DSO with a read-only dynamic section
+  [28349] libc: Segfault for ping -R on qemux86 caused by recvmsg()
+  [28350] libc: ping receives SIGABRT on lib32-qemux86-64 caused by
+    recvmsg()
   [28357] deadlock between pthread_create and ELF constructors
   [28361] nptl: Avoid setxid deadlock with blocked signals in thread exit
   [28407] pthread_kill assumes that kill and tgkill are equivalent
