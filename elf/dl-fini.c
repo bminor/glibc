@@ -64,6 +64,10 @@ _dl_fini (void)
 	__rtld_lock_unlock_recursive (GL(dl_load_lock));
       else
 	{
+#ifdef SHARED
+	  _dl_audit_activity_nsid (ns, LA_ACT_DELETE);
+#endif
+
 	  /* Now we can allocate an array to hold all the pointers and
 	     copy the pointers in.  */
 	  struct link_map *maps[nloaded];
@@ -153,6 +157,10 @@ _dl_fini (void)
 	      /* Correct the previous increment.  */
 	      --l->l_direct_opencount;
 	    }
+
+#ifdef SHARED
+	  _dl_audit_activity_nsid (ns, LA_ACT_CONSISTENT);
+#endif
 	}
     }
 
