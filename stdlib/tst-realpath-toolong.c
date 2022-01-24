@@ -29,6 +29,10 @@
 
 #define BASENAME "tst-realpath-toolong."
 
+#ifndef PATH_MAX
+# define PATH_MAX 1024
+#endif
+
 int
 do_test (void)
 {
