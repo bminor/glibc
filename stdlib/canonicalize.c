@@ -404,7 +404,7 @@ error:
     {
       if (dest - rname <= get_path_max ())
 	rname = strcpy (resolved, rname);
-      else
+      else if (!failed)
 	{
 	  failed = true;
 	  __set_errno (ENAMETOOLONG);
