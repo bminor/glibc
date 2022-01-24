@@ -2462,7 +2462,7 @@ dl_main (const ElfW(Phdr) *phdr,
      into the main thread's TLS area, which we allocated above.
      Note: thread-local variables must only be accessed after completing
      the next step.  */
-  _dl_allocate_tls_init (tcbp);
+  _dl_allocate_tls_init (tcbp, false);
 
   /* And finally install it for the main thread.  */
   if (! tls_init_tp_called)

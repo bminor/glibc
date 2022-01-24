@@ -138,7 +138,7 @@ get_cached_stack (size_t *sizep, void **memp)
   memset (dtv, '\0', (dtv[-1].counter + 1) * sizeof (dtv_t));
 
   /* Re-initialize the TLS.  */
-  _dl_allocate_tls_init (TLS_TPADJ (result));
+  _dl_allocate_tls_init (TLS_TPADJ (result), true);
 
   return result;
 }

@@ -377,6 +377,7 @@ tests += \
   tst-audit18 \
   tst-audit19b \
   tst-audit20 \
+  tst-audit21 \
   tst-audit22 \
   tst-audit23 \
   tst-auditmany \
@@ -697,6 +698,8 @@ modules-names = \
   tst-auditmod19a \
   tst-auditmod19b \
   tst-auditmod20 \
+  tst-auditmod21a \
+  tst-auditmod21b \
   tst-auditmod22 \
   tst-auditmod23 \
   tst-auxvalmod \
@@ -2138,6 +2141,11 @@ tst-audit19b-ARGS = -- $(host-test-program-cmd)
 
 $(objpfx)tst-audit20.out: $(objpfx)tst-auditmod20.so
 tst-audit20-ENV = LD_AUDIT=$(objpfx)tst-auditmod20.so
+
+$(objpfx)tst-audit21: $(shared-thread-library)
+$(objpfx)tst-audit21.out: $(objpfx)tst-auditmod21a.so
+$(objpfx)tst-auditmod21a.so: $(objpfx)tst-auditmod21b.so
+tst-audit21-ENV = LD_AUDIT=$(objpfx)tst-auditmod21a.so
 
 $(objpfx)tst-audit22.out: $(objpfx)tst-auditmod22.so
 tst-audit22-ARGS = -- $(host-test-program-cmd)
