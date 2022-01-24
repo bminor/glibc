@@ -1431,7 +1431,10 @@ void _dl_audit_objclose (struct link_map *l)
 /* Call the la_preinit from the audit modules for the link_map L.  */
 void _dl_audit_preinit (struct link_map *l);
 
-/* Call the la_symbind{32,64} from the audit modules for the link_map L.  */
+/* Call the la_symbind{32,64} from the audit modules for the link_map L.  If
+   RELOC_RESULT is NULL it assumes the symbol to be bind-now and will set
+   the flags with LA_SYMB_NOPLTENTER | LA_SYMB_NOPLTEXIT prior calling
+   la_symbind{32,64}.  */
 void _dl_audit_symbind (struct link_map *l, struct reloc_result *reloc_result,
 			const ElfW(Sym) *defsym, DL_FIXUP_VALUE_TYPE *value,
 			lookup_t result)

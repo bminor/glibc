@@ -168,6 +168,10 @@ Deprecated and removed features, and other changes affecting compatibility:
   removal of the LD_TRACE_PRELINKING, and LD_USE_LOAD_BIAS, environment
   variables and their functionality in the dynamic loader.
 
+* The audit module interface version LAV_CURRENT is increased to enable
+  proper bind-now support.  The loader now advertises via the la_symbind
+  flags that PLT trace is not possible.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

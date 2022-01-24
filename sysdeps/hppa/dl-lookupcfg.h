@@ -80,3 +80,6 @@ void attribute_hidden _dl_unmap (struct link_map *map);
 #define DL_FIXUP_VALUE_CODE_ADDR(value) ((value).ip)
 #define DL_FIXUP_VALUE_ADDR(value) ((uintptr_t) &(value))
 #define DL_FIXUP_ADDR_VALUE(addr) (*(struct fdesc *) (addr))
+#define DL_FIXUP_BINDNOW_ADDR_VALUE(addr) (addr)
+#define DL_FIXUP_BINDNOW_RELOC(value, new_value, st_value) \
+  (*value) = *(struct fdesc *) (st_value)

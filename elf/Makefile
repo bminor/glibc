@@ -380,6 +380,12 @@ tests += \
   tst-audit21 \
   tst-audit22 \
   tst-audit23 \
+  tst-audit24a \
+  tst-audit24b \
+  tst-audit24c \
+  tst-audit24d \
+  tst-audit25a \
+  tst-audit25b \
   tst-auditmany \
   tst-auxobj \
   tst-auxobj-dlopen \
@@ -677,6 +683,18 @@ modules-names = \
   tst-audit18mod \
   tst-audit19bmod \
   tst-audit23mod \
+  tst-audit24amod1 \
+  tst-audit24amod2 \
+  tst-audit24bmod1 \
+  tst-audit24bmod2 \
+  tst-audit24dmod1 \
+  tst-audit24dmod2 \
+  tst-audit24dmod3 \
+  tst-audit24dmod4 \
+  tst-audit25mod1 \
+  tst-audit25mod2 \
+  tst-audit25mod3 \
+  tst-audit25mod4 \
   tst-auditlogmod-1 \
   tst-auditlogmod-2 \
   tst-auditlogmod-3 \
@@ -702,6 +720,11 @@ modules-names = \
   tst-auditmod21b \
   tst-auditmod22 \
   tst-auditmod23 \
+  tst-auditmod24a \
+  tst-auditmod24b \
+  tst-auditmod24c \
+  tst-auditmod24d \
+  tst-auditmod25 \
   tst-auxvalmod \
   tst-big-note-lib \
   tst-deep1mod1 \
@@ -919,7 +942,8 @@ extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 
 # filtmod1.so, tst-big-note-lib.so, tst-ro-dynamic-mod.so have special
 # rules.
-modules-names-nobuild := filtmod1 tst-big-note-lib tst-ro-dynamic-mod
+modules-names-nobuild := filtmod1 tst-big-note-lib tst-ro-dynamic-mod \
+			 tst-audit24bmod1 tst-audit24bmod2.so
 
 tests += $(tests-static)
 
@@ -2153,6 +2177,69 @@ tst-audit22-ARGS = -- $(host-test-program-cmd)
 $(objpfx)tst-audit23.out: $(objpfx)tst-auditmod23.so \
 			  $(objpfx)tst-audit23mod.so
 tst-audit23-ARGS = -- $(host-test-program-cmd)
+
+$(objpfx)tst-audit24a.out: $(objpfx)tst-auditmod24a.so
+$(objpfx)tst-audit24a: $(objpfx)tst-audit24amod1.so \
+		       $(objpfx)tst-audit24amod2.so
+tst-audit24a-ENV = LD_AUDIT=$(objpfx)tst-auditmod24a.so
+LDFLAGS-tst-audit24a = -Wl,-z,now
+
+$(objpfx)tst-audit24b.out: $(objpfx)tst-auditmod24b.so
+$(objpfx)tst-audit24b: $(objpfx)tst-audit24bmod1.so \
+		       $(objpfx)tst-audit24bmod2.so
+$(objpfx)tst-audit24bmod1: $(objpfx)tst-audit24bmod2.so
+# The test checks if a library without .gnu.version correctly calls the
+# audit callbacks.  So it uses an explicit link rule to avoid linking
+# against libc.so.
+$(objpfx)tst-audit24bmod1.so: $(objpfx)tst-audit24bmod1.os
+	$(CC) -nostdlib -nostartfiles -shared -o $@.new $(objpfx)tst-audit24bmod1.os \
+	  -Wl,-z,now
+	$(call after-link,$@.new)
+	mv -f $@.new $@
+CFLAGS-.os += $(call elide-stack-protector,.os,tst-audit24bmod1)
+$(objpfx)tst-audit24bmod2.so: $(objpfx)tst-audit24bmod2.os
+	$(CC) -nostdlib -nostartfiles -shared -o $@.new $(objpfx)tst-audit24bmod2.os
+	$(call after-link,$@.new)
+	mv -f $@.new $@
+CFLAGS-.os += $(call elide-stack-protector,.os,tst-audit24bmod2)
+tst-audit24b-ENV = LD_AUDIT=$(objpfx)tst-auditmod24b.so
+LDFLAGS-tst-audit24b = -Wl,-z,now
+
+# Same as tst-audit24a, but tests LD_BIND_NOW
+$(objpfx)tst-audit24c.out: $(objpfx)tst-auditmod24c.so
+$(objpfx)tst-audit24c: $(objpfx)tst-audit24amod1.so \
+		       $(objpfx)tst-audit24amod2.so
+tst-audit24c-ENV = LD_BIND_NOW=1 LD_AUDIT=$(objpfx)tst-auditmod24c.so
+LDFLAGS-tst-audit24b = -Wl,-z,lazy
+
+$(objpfx)tst-audit24d.out: $(objpfx)tst-auditmod24d.so
+$(objpfx)tst-audit24d: $(objpfx)tst-audit24dmod1.so \
+		       $(objpfx)tst-audit24dmod2.so
+$(objpfx)tst-audit24dmod1.so: $(objpfx)tst-audit24dmod3.so
+LDFLAGS-tst-audit24dmod1.so = -Wl,-z,now
+$(objpfx)tst-audit24dmod2.so: $(objpfx)tst-audit24dmod4.so
+LDFLAGS-tst-audit24dmod2.so = -Wl,-z,lazy
+tst-audit24d-ENV = LD_AUDIT=$(objpfx)tst-auditmod24d.so
+LDFLAGS-tst-audit24d = -Wl,-z,lazy
+
+$(objpfx)tst-audit25a.out: $(objpfx)tst-auditmod25.so
+$(objpfx)tst-audit25a: $(objpfx)tst-audit25mod1.so \
+		       $(objpfx)tst-audit25mod2.so \
+		       $(objpfx)tst-audit25mod3.so \
+		       $(objpfx)tst-audit25mod4.so
+$(objpfx)tst-audit25mod1.so: $(objpfx)tst-audit25mod3.so
+LDFLAGS-tst-audit25mod1.so = -Wl,-z,now
+$(objpfx)tst-audit25mod2.so: $(objpfx)tst-audit25mod4.so
+LDFLAGS-tst-audit25mod2.so = -Wl,-z,lazy
+tst-audit25a-ARGS = -- $(host-test-program-cmd)
+
+$(objpfx)tst-audit25b.out: $(objpfx)tst-auditmod25.so
+$(objpfx)tst-audit25b: $(objpfx)tst-audit25mod1.so \
+		       $(objpfx)tst-audit25mod2.so \
+		       $(objpfx)tst-audit25mod3.so \
+		       $(objpfx)tst-audit25mod4.so
+LDFLAGS-tst-audit25b = -Wl,-z,now
+tst-audit25b-ARGS = -- $(host-test-program-cmd)
 
 # tst-sonamemove links against an older implementation of the library.
 LDFLAGS-tst-sonamemove-linkmod1.so = \

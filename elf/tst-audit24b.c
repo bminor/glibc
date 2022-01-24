@@ -1,5 +1,5 @@
-/* Configuration of lookup functions.
-   Copyright (C) 2002-2022 Free Software Foundation, Inc.
+/* LD_AUDIT test for la_symbind and bind-now.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,22 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* The type of the return value of fixup/profile_fixup.  */
-#define DL_FIXUP_VALUE_TYPE ElfW(Addr)
-/* Construct a value of type DL_FIXUP_VALUE_TYPE from a code address
-   and a link map.  */
-#define DL_FIXUP_MAKE_VALUE(map, addr) (addr)
-/* Extract the code address from a value of type DL_FIXUP_MAKE_VALUE.
- */
-#define DL_FIXUP_VALUE_CODE_ADDR(value) (value)
-#define DL_FIXUP_VALUE_ADDR(value) (value)
-#define DL_FIXUP_ADDR_VALUE(addr) (addr)
-#define DL_FIXUP_BINDNOW_ADDR_VALUE(addr) (addr)
-#define DL_FIXUP_BINDNOW_RELOC(value, new_value, st_value) \
-  (*value) = st_value;
+/* This is similar to tst-audit24a, with the difference this modules
+   does not have the .gnu.version section header.  */
+
+#include <support/check.h>
+#include <support/support.h>
+
+int tst_audit24bmod1_func1 (void);
+int tst_audit24bmod1_func2 (void);
+
+int
+do_test (void)
+{
+  TEST_COMPARE (tst_audit24bmod1_func1 (), 1);
+  TEST_COMPARE (tst_audit24bmod1_func2 (), 2);
+
+  return 0;
+}
+
+#include <support/test-driver.c>

@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <err.h>
 #include <error.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -231,6 +232,12 @@ uintptr_t
 la_symbind (Elf_Sym *sym, unsigned int ndx, uintptr_t *refcook,
 	    uintptr_t *defcook, unsigned int *flags, const char *symname)
 {
+  if (*flags & LA_SYMB_NOPLTENTER)
+    warnx ("cannot trace PLT enter (bind-now enabled)");
+
+  if (do_exit && *flags & LA_SYMB_NOPLTEXIT)
+    warnx ("cannot trace PLT exit (bind-now enabled)");
+
   if (!do_exit)
     *flags = LA_SYMB_NOPLTEXIT;
 
