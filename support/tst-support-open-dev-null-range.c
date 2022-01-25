@@ -39,10 +39,11 @@ check_path (int fd)
   char file_path[PATH_MAX];
   ssize_t file_path_length
     = readlink (proc_fd_path, file_path, sizeof (file_path));
-  free (proc_fd_path);
   if (file_path_length < 0)
     FAIL_EXIT1 ("readlink (%s, %p, %zu)", proc_fd_path, file_path,
 		sizeof (file_path));
+
+  free (proc_fd_path);
   file_path[file_path_length] = '\0';
   TEST_COMPARE_STRING (file_path, "/dev/null");
 }

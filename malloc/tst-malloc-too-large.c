@@ -95,7 +95,15 @@ test_large_allocations (size_t size)
   DIAG_POP_NEEDS_COMMENT;
 #endif
   TEST_VERIFY (errno == ENOMEM);
+#if __GNUC_PREREQ (12, 0)
+  /* Ignore a warning about using a pointer made indeterminate by
+     a prior call to realloc().  */
+  DIAG_IGNORE_NEEDS_COMMENT (12, "-Wuse-after-free");
+#endif
   free (ptr_to_realloc);
+#if __GNUC_PREREQ (12, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
 
   for (size_t nmemb = 1; nmemb <= 8; nmemb *= 2)
     if ((size % nmemb) == 0)
@@ -113,14 +121,30 @@ test_large_allocations (size_t size)
         test_setup ();
         TEST_VERIFY (reallocarray (ptr_to_realloc, nmemb, size / nmemb) == NULL);
         TEST_VERIFY (errno == ENOMEM);
+#if __GNUC_PREREQ (12, 0)
+  /* Ignore a warning about using a pointer made indeterminate by
+     a prior call to realloc().  */
+  DIAG_IGNORE_NEEDS_COMMENT (12, "-Wuse-after-free");
+#endif
         free (ptr_to_realloc);
+#if __GNUC_PREREQ (12, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
 
         ptr_to_realloc = malloc (16);
         TEST_VERIFY_EXIT (ptr_to_realloc != NULL);
         test_setup ();
         TEST_VERIFY (reallocarray (ptr_to_realloc, size / nmemb, nmemb) == NULL);
         TEST_VERIFY (errno == ENOMEM);
+#if __GNUC_PREREQ (12, 0)
+  /* Ignore a warning about using a pointer made indeterminate by
+     a prior call to realloc().  */
+  DIAG_IGNORE_NEEDS_COMMENT (12, "-Wuse-after-free");
+#endif
         free (ptr_to_realloc);
+#if __GNUC_PREREQ (12, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
       }
     else
       break;

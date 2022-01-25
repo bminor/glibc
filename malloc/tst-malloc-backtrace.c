@@ -20,6 +20,7 @@
 #include <stdlib.h>
 
 #include <support/support.h>
+#include <libc-diag.h>
 
 #define SIZE 4096
 
@@ -29,7 +30,15 @@ __attribute__((noinline))
 call_free (void *ptr)
 {
   free (ptr);
+#if __GNUC_PREREQ (12, 0)
+  /* Ignore a valid warning about using a pointer made indeterminate
+     by a prior call to free().  */
+  DIAG_IGNORE_NEEDS_COMMENT (12, "-Wuse-after-free");
+#endif
   *(size_t *)(ptr - sizeof (size_t)) = 1;
+#if __GNUC_PREREQ (12, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
 }
 
 int
