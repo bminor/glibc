@@ -130,7 +130,7 @@ do_test (int argc, char **argv)
   fails += CHECK_SUPPORTS (gfni, GFNI);
 #endif
 #if __GNUC_PREREQ (11, 0)
-  fails += CHECK_SUPPORTS (hle, HLE);
+  fails += CHECK_CPU_SUPPORTS (hle, HLE);
   fails += CHECK_CPU_SUPPORTS (ibt, IBT);
   fails += CHECK_SUPPORTS (lahf_lm, LAHF64_SAHF64);
   fails += CHECK_CPU_SUPPORTS (lm, LM);
