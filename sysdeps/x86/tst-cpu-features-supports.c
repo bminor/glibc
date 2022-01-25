@@ -130,7 +130,7 @@ do_test (int argc, char **argv)
   fails += CHECK_FEATURE_ACTIVE (gfni, GFNI);
 #endif
 #if __GNUC_PREREQ (11, 0)
-  fails += CHECK_FEATURE_ACTIVE (hle, HLE);
+  fails += CHECK_FEATURE_PRESENT (hle, HLE);
   fails += CHECK_FEATURE_PRESENT (ibt, IBT);
   fails += CHECK_FEATURE_ACTIVE (lahf_lm, LAHF64_SAHF64);
   fails += CHECK_FEATURE_PRESENT (lm, LM);
