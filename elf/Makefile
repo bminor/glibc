@@ -413,8 +413,6 @@ tests += \
   tst-nodelete-opened \
   tst-noload \
   tst-null-argv \
-  tst-p_alignmod1-edit \
-  tst-p_alignmod2-edit \
   tst-p_align1 \
   tst-p_align2 \
   tst-p_align3 \
@@ -2607,23 +2605,19 @@ $(objpfx)tst-p_align1: $(objpfx)tst-p_alignmod1.so
 
 # Make a copy of tst-p_alignmod-base.so and lower p_align of the first
 # PT_LOAD segment.
-$(objpfx)tst-p_alignmod1.so: $(objpfx)tst-p_alignmod1-edit \
-			     $(objpfx)tst-p_alignmod-base.so
+$(objpfx)tst-p_alignmod1.so: $(objpfx)tst-p_alignmod-base.so
 	rm -f $@
 	cp $(objpfx)tst-p_alignmod-base.so $@
-	$(test-wrapper-env) $(run-program-env) $(rtld-prefix) \
-	  $(objpfx)tst-p_alignmod1-edit $@
+	$(PYTHON) $(..)scripts/tst-elf-edit.py -a half $@
 
 $(objpfx)tst-p_align2: $(objpfx)tst-p_alignmod2.so
 
 # Make a copy of tst-p_alignmod-base.so and update p_align of the first
 # PT_LOAD segment.
-$(objpfx)tst-p_alignmod2.so: $(objpfx)tst-p_alignmod2-edit \
-			     $(objpfx)tst-p_alignmod-base.so
+$(objpfx)tst-p_alignmod2.so: $(objpfx)tst-p_alignmod-base.so
 	rm -f $@
 	cp $(objpfx)tst-p_alignmod-base.so $@
-	$(test-wrapper-env) $(run-program-env) $(rtld-prefix) \
-	  $(objpfx)tst-p_alignmod2-edit $@
+	$(PYTHON) $(..)scripts/tst-elf-edit.py -a 1 $@
 
 LDFLAGS-tst-p_alignmod3.so += -Wl,-z,max-page-size=0x100,-z,common-page-size=0x100
 
