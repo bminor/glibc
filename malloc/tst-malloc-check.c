@@ -86,7 +86,15 @@ do_test (void)
     merror ("errno is not set correctly.");
   DIAG_POP_NEEDS_COMMENT;
 
+#if __GNUC_PREREQ (12, 0)
+  /* Ignore a valid warning about using a pointer made indeterminate
+     by a prior call to realloc().  */
+  DIAG_IGNORE_NEEDS_COMMENT (12, "-Wuse-after-free");
+#endif
   free (p);
+#if __GNUC_PREREQ (12, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
 
   p = malloc (512);
   if (p == NULL)
@@ -104,7 +112,15 @@ do_test (void)
     merror ("errno is not set correctly.");
   DIAG_POP_NEEDS_COMMENT;
 
+#if __GNUC_PREREQ (12, 0)
+  /* Ignore a valid warning about using a pointer made indeterminate
+     by a prior call to realloc().  */
+  DIAG_IGNORE_NEEDS_COMMENT (12, "-Wuse-after-free");
+#endif
   free (p);
+#if __GNUC_PREREQ (12, 0)
+  DIAG_POP_NEEDS_COMMENT;
+#endif
   free (q);
 
   return errors != 0;

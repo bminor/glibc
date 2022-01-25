@@ -20,8 +20,8 @@ verbose_malloc (size_t size)
 static void
 verbose_free (void *buf)
 {
-  free (buf);
   printf ("free (%p)\n", buf);
+  free (buf);
 }
 
 static int
