@@ -735,9 +735,9 @@ manual_link (char *library)
   create_links (real_path, path, libname, soname);
   free (soname);
 out:
-  free (path);
   if (path != real_path)
     free (real_path);
+  free (path);
 }
 
 
