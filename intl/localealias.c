@@ -318,7 +318,15 @@ read_alias_file (const char *fname, int fname_len)
 
 		  if (string_space_act + alias_len + value_len > string_space_max)
 		    {
-		      /* Increase size of memory pool.  */
+#pragma GCC diagnostic push
+
+#if defined __GNUC__ && __GNUC__ >= 12
+  /* Suppress the valid GCC 12 warning until the code below is changed
+     to avoid using pointers to the reallocated block.  */
+#  pragma GCC diagnostic ignored "-Wuse-after-free"
+#endif
+
+		    /* Increase size of memory pool.  */
 		      size_t new_size = (string_space_max
 					 + (alias_len + value_len > 1024
 					    ? alias_len + value_len : 1024));
@@ -350,6 +358,8 @@ read_alias_file (const char *fname, int fname_len)
 		    (const char *) memcpy (&string_space[string_space_act],
 					   value, value_len);
 		  string_space_act += value_len;
+
+#pragma GCC diagnostic pop
 
 		  ++nmap;
 		  ++added;
