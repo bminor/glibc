@@ -150,7 +150,9 @@ __add_to_environ (const char *name, const char *value, const char *combined,
     {
       char **new_environ;
 
-      /* We allocated this space; we can extend it.  */
+      /* We allocated this space; we can extend it.  Avoid using the raw
+	 reallocated pointer to avoid GCC -Wuse-after-free.  */
+      uintptr_t ip_last_environ = (uintptr_t)last_environ;
       new_environ = (char **) realloc (last_environ,
 				       (size + 2) * sizeof (char *));
       if (new_environ == NULL)
@@ -159,7 +161,7 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 	  return -1;
 	}
 
-      if (__environ != last_environ)
+      if ((uintptr_t)__environ != ip_last_environ)
 	memcpy ((char *) new_environ, (char *) __environ,
 		size * sizeof (char *));
 
