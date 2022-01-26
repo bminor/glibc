@@ -439,7 +439,7 @@ dump_heap (heap_info *heap)
   fprintf (stderr, "Heap %p, size %10lx:\n", heap, (long) heap->size);
   ptr = (heap->ar_ptr != (mstate) (heap + 1)) ?
         (char *) (heap + 1) : (char *) (heap + 1) + sizeof (struct malloc_state);
-  p = (mchunkptr) (((unsigned long) ptr + MALLOC_ALIGN_MASK) &
+  p = (mchunkptr) (((uintptr_t) ptr + MALLOC_ALIGN_MASK) &
                    ~MALLOC_ALIGN_MASK);
   for (;; )
     {
@@ -513,7 +513,7 @@ alloc_new_heap  (size_t size, size_t top_pad, size_t pagesize,
       p1 = (char *) MMAP (0, max_size << 1, PROT_NONE, mmap_flags);
       if (p1 != MAP_FAILED)
         {
-          p2 = (char *) (((unsigned long) p1 + (max_size - 1))
+          p2 = (char *) (((uintptr_t) p1 + (max_size - 1))
                          & ~(max_size - 1));
           ul = p2 - p1;
           if (ul)
@@ -752,7 +752,7 @@ _int_new_arena (size_t size)
 
   /* Set up the top chunk, with proper alignment. */
   ptr = (char *) (a + 1);
-  misalign = (unsigned long) chunk2mem (ptr) & MALLOC_ALIGN_MASK;
+  misalign = (uintptr_t) chunk2mem (ptr) & MALLOC_ALIGN_MASK;
   if (misalign > 0)
     ptr += MALLOC_ALIGNMENT - misalign;
   top (a) = (mchunkptr) ptr;
