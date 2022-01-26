@@ -17,7 +17,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifdef __LP64__
+#if defined __LP64__ || defined __CHERI_PURE_CAPABILITY__
 # define __WORDSIZE			64
 #else
 # define __WORDSIZE			32
