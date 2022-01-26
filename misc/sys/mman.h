@@ -146,6 +146,9 @@ extern int shm_open (const char *__name, int __oflag, mode_t __mode);
 /* Remove shared memory segment.  */
 extern int shm_unlink (const char *__name);
 
+/* System-specific extensions.  */
+#include <bits/mman_ext.h>
+
 __END_DECLS
 
 #endif	/* sys/mman.h */

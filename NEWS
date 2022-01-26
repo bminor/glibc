@@ -20,6 +20,10 @@ Major new features:
   have been added.  The pidfd functionality provides access to a process
   while avoiding the issue of PID reuse on tranditional Unix systems.
 
+* On Linux, the process_madvise function has been added. It has the
+  same functionality as madvise but alters the target process identified
+  by the pidfd.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for prelink will be removed in the next release; this includes

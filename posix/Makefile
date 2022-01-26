@@ -32,7 +32,7 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
 	   bits/sched.h bits/cpu-set.h re_comp.h wait.h bits/environments.h   \
 	   cpio.h spawn.h bits/unistd.h bits/types/struct_sched_param.h	      \
-	   bits/unistd_ext.h bits/types/idtype_t.h
+	   bits/unistd_ext.h bits/types/idtype_t.h bits/mman_ext.h
 
 routines :=								      \
 	uname								      \

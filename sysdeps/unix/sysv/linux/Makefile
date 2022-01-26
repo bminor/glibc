@@ -131,6 +131,11 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
   tst-pidfd \
   # tests
 
+# process_madvise requires CAP_SYS_ADMIN.
+xtests += \
+  tst-process_madvise \
+  # xtests
+
 # For +depfiles in Makerules.
 extra-test-objs += tst-sysconf-iov_max-uapi.o
 

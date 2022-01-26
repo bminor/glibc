@@ -303,6 +303,7 @@ libc {
     pidfd_open;
     pidfd_getfd;
     pidfd_send_signal;
+    process_madvise;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries
