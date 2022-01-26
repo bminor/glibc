@@ -143,7 +143,7 @@ do_test (int argc, char **argv)
   fails += CHECK_FEATURE_ACTIVE (movdiri, MOVDIRI);
   fails += CHECK_FEATURE_ACTIVE (movdir64b, MOVDIR64B);
   fails += CHECK_FEATURE_ACTIVE (osxsave, OSXSAVE);
-  fails += CHECK_FEATURE_ACTIVE (pconfig, PCONFIG);
+  fails += CHECK_FEATURE_PRESENT (pconfig, PCONFIG);
   fails += CHECK_FEATURE_ACTIVE (pku, PKU);
 #endif
   fails += CHECK_FEATURE_ACTIVE (popcnt, POPCNT);
