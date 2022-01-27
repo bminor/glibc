@@ -134,6 +134,12 @@ Major new features:
   controlling terminal in the new process in a race free manner.  These
   functions are GNU extensions.
 
+* Source fortification (_FORTIFY_SOURCE) level 3 is now available for
+  applications compiling with glibc and gcc 12 and later. Level 3 leverages
+  the __builtin_dynamic_object_size function to deliver additional
+  fortification balanced against additional runtime cost (checking non-constant
+  bounds).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On x86-64, the LD_PREFER_MAP_32BIT_EXEC environment variable support
