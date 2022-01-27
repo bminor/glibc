@@ -39,6 +39,7 @@ The following bugs are resolved with this release:
   [26932] libc: sh: Multiple floating point functions defined as stubs only
   [27130] "rep movsb" performance issue
   [27177] GLIBC_TUNABLES=glibc.cpu.x86_ibt=on:glibc.cpu.x86_shstk=on doesn't work
+  [27457] vzeroupper use in AVX2 multiarch string functions cause HTM aborts
   [28524] Conversion from ISO-2022-JP-3 with iconv may emit spurious NULs
   [28755] overflow bug in wcsncmp_avx2 and wcsncmp_evex
   [28768] CVE-2022-23218: Buffer overflow in sunrpc svcunix_create
