@@ -29,12 +29,11 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 #include <sys/wait.h>
+#include <stdlib.h>
 
 static int
-handle_restart (const char *argv1)
+handle_restart (const char *argv1, const char *argv2)
 {
-  int fd = xopen (_PATH_TTY, O_RDONLY, 0600);
-
   /* If process group is not changed (POSIX_SPAWN_SETPGROUP), then check
      the creating process one, otherwise check against the process group
      itself.  */
@@ -50,9 +49,20 @@ handle_restart (const char *argv1)
       TEST_VERIFY (pgid != pgrp);
     }
 
-  TEST_COMPARE (tcgetpgrp (fd), pgrp);
+  char *endptr;
+  long int tcfd = strtol (argv2, &endptr, 10);
+  if (*endptr != '\0' || tcfd > INT_MAX)
+    FAIL_EXIT1 ("invalid file descriptor name: %s", argv2);
+  if (tcfd != -1)
+    {
+      TEST_COMPARE (fcntl (tcfd, F_GETFD), -1);
+      TEST_COMPARE (errno, EBADF);
+    }
 
+  int fd = xopen (_PATH_TTY, O_RDONLY, 0600);
+  TEST_COMPARE (tcgetpgrp (fd), pgrp);
   xclose (fd);
+
   return 0;
 }
 
@@ -62,6 +72,7 @@ static int restart;
 
 static void
 run_subprogram (int argc, char *argv[], const posix_spawnattr_t *attr,
+		const posix_spawn_file_actions_t *actions, int tcfd,
 		int exp_err)
 {
   short int flags;
@@ -69,7 +80,9 @@ run_subprogram (int argc, char *argv[], const posix_spawnattr_t *attr,
   bool setpgrp = flags & POSIX_SPAWN_SETPGROUP;
 
   char *spargv[9];
+  TEST_VERIFY_EXIT (((argc - 1) + 4) < array_length (spargv));
   char pgrp[INT_STRLEN_BOUND (pid_t)];
+  char tcfdstr[INT_STRLEN_BOUND (int)];
 
   int i = 0;
   for (; i < argc - 1; i++)
@@ -83,11 +96,12 @@ run_subprogram (int argc, char *argv[], const posix_spawnattr_t *attr,
       snprintf (pgrp, sizeof pgrp, "%d", getpgrp ());
       spargv[i++] = pgrp;
     }
+  snprintf (tcfdstr, sizeof tcfdstr, "%d", tcfd);
+  spargv[i++] = tcfdstr;
   spargv[i] = NULL;
-  TEST_VERIFY_EXIT (i < array_length (spargv));
 
   pid_t pid;
-  TEST_COMPARE (posix_spawn (&pid, argv[1], NULL, attr, spargv, environ),
+  TEST_COMPARE (posix_spawn (&pid, argv[1], actions, attr, spargv, environ),
 		exp_err);
   if (exp_err != 0)
     return;
@@ -114,30 +128,26 @@ do_test (int argc, char *argv[])
    */
 
   if (restart)
-    return handle_restart (argv[1]);
+    return handle_restart (argv[1], argv[2]);
 
-  int tcfd = xopen (_PATH_TTY, O_RDONLY, 0600);
-
-  /* Check getters and setters.  */
-  {
-    posix_spawnattr_t attr;
-    TEST_COMPARE (posix_spawnattr_init (&attr), 0);
-    TEST_COMPARE (posix_spawnattr_tcsetpgrp_np (&attr, tcfd), 0);
-
-    int fd;
-    TEST_COMPARE (posix_spawnattr_tcgetpgrp_np (&attr, &fd), 0);
-    TEST_COMPARE (tcfd, fd);
-  }
+  int tcfd = open64 (_PATH_TTY, O_RDONLY, 0600);
+  if (tcfd == -1)
+    {
+      if (errno == ENXIO)
+	FAIL_UNSUPPORTED ("terminal not available, skipping test");
+      FAIL_EXIT1 ("open64 (\"%s\", 0x%x, 0600): %m", _PATH_TTY, O_RDONLY);
+    }
 
   /* Check setting the controlling terminal without changing the group.  */
   {
     posix_spawnattr_t attr;
     TEST_COMPARE (posix_spawnattr_init (&attr), 0);
-    TEST_COMPARE (posix_spawnattr_setflags (&attr, POSIX_SPAWN_TCSETPGROUP),
+    posix_spawn_file_actions_t actions;
+    TEST_COMPARE (posix_spawn_file_actions_init (&actions), 0);
+    TEST_COMPARE (posix_spawn_file_actions_addtcsetpgrp_np (&actions, tcfd),
 		  0);
-    TEST_COMPARE (posix_spawnattr_tcsetpgrp_np (&attr, tcfd), 0);
 
-    run_subprogram (argc, argv, &attr, 0);
+    run_subprogram (argc, argv, &attr, &actions, -1, 0);
   }
 
   /* Check setting both the controlling terminal and the create a new process
@@ -145,13 +155,28 @@ do_test (int argc, char *argv[])
   {
     posix_spawnattr_t attr;
     TEST_COMPARE (posix_spawnattr_init (&attr), 0);
-    TEST_COMPARE (posix_spawnattr_setflags (&attr, POSIX_SPAWN_TCSETPGROUP
-						   | POSIX_SPAWN_SETPGROUP),
+    TEST_COMPARE (posix_spawnattr_setflags (&attr, POSIX_SPAWN_SETPGROUP), 0);
+    posix_spawn_file_actions_t actions;
+    TEST_COMPARE (posix_spawn_file_actions_init (&actions), 0);
+    TEST_COMPARE (posix_spawn_file_actions_addtcsetpgrp_np (&actions, tcfd),
 		  0);
-    TEST_COMPARE (posix_spawnattr_setpgroup (&attr, 0), 0);
-    TEST_COMPARE (posix_spawnattr_tcsetpgrp_np (&attr, tcfd), 0);
 
-    run_subprogram (argc, argv, &attr, 0);
+    run_subprogram (argc, argv, &attr, &actions, -1, 0);
+  }
+
+  /* Same as before, but check if the addclose file actions closes the terminal
+     file descriptor.  */
+  {
+    posix_spawnattr_t attr;
+    TEST_COMPARE (posix_spawnattr_init (&attr), 0);
+    TEST_COMPARE (posix_spawnattr_setflags (&attr, POSIX_SPAWN_SETPGROUP), 0);
+    posix_spawn_file_actions_t actions;
+    TEST_COMPARE (posix_spawn_file_actions_init (&actions), 0);
+    TEST_COMPARE (posix_spawn_file_actions_addtcsetpgrp_np (&actions, tcfd),
+		  0);
+    TEST_COMPARE (posix_spawn_file_actions_addclose (&actions, tcfd), 0);
+
+    run_subprogram (argc, argv, &attr, &actions, tcfd, 0);
   }
 
   /* Trying to set the controlling terminal after a setsid incurs in a ENOTTY
@@ -159,11 +184,13 @@ do_test (int argc, char *argv[])
   {
     posix_spawnattr_t attr;
     TEST_COMPARE (posix_spawnattr_init (&attr), 0);
-    TEST_COMPARE (posix_spawnattr_setflags (&attr, POSIX_SPAWN_TCSETPGROUP
-						   | POSIX_SPAWN_SETSID), 0);
-    TEST_COMPARE (posix_spawnattr_tcsetpgrp_np (&attr, tcfd), 0);
+    TEST_COMPARE (posix_spawnattr_setflags (&attr, POSIX_SPAWN_SETSID), 0);
+    posix_spawn_file_actions_t actions;
+    TEST_COMPARE (posix_spawn_file_actions_init (&actions), 0);
+    TEST_COMPARE (posix_spawn_file_actions_addtcsetpgrp_np (&actions, tcfd),
+		  0);
 
-    run_subprogram (argc, argv, &attr, ENOTTY);
+    run_subprogram (argc, argv, &attr, &actions, -1, ENOTTY);
   }
 
   xclose (tcfd);

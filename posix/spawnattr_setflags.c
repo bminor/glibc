@@ -26,8 +26,7 @@
 		   | POSIX_SPAWN_SETSCHEDPARAM				      \
 		   | POSIX_SPAWN_SETSCHEDULER				      \
 		   | POSIX_SPAWN_SETSID					      \
-		   | POSIX_SPAWN_USEVFORK				      \
-		   | POSIX_SPAWN_TCSETPGROUP)
+		   | POSIX_SPAWN_USEVFORK)
 
 /* Store flags in the attribute structure.  */
 int

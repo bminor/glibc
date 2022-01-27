@@ -58,13 +58,13 @@ routines :=								      \
 	spawn_faction_addopen spawn_faction_adddup2 spawn_valid_fd	      \
 	spawn_faction_addchdir spawn_faction_addfchdir			      \
 	spawn_faction_addclosefrom					      \
+	spawn_faction_addtcsetpgrp_np					      \
 	spawnattr_init spawnattr_destroy				      \
 	spawnattr_getdefault spawnattr_setdefault			      \
 	spawnattr_getflags spawnattr_setflags				      \
 	spawnattr_getpgroup spawnattr_setpgroup spawn spawnp spawni	      \
 	spawnattr_getsigmask spawnattr_getschedpolicy spawnattr_getschedparam \
 	spawnattr_setsigmask spawnattr_setschedpolicy spawnattr_setschedparam \
-	spawnattr_tcgetpgrp spawnattr_tcsetpgrp				      \
 	posix_madvise							      \
 	get_child_max sched_cpucount sched_cpualloc sched_cpufree \
 	streams-compat \

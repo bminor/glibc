@@ -129,10 +129,9 @@ Major new features:
 * On Linux, the epoll_pwait2 function has been added.  It is similar to
   epoll_wait with the difference the timeout has nanoseconds resolution.
 
-* The functions posix_spawnattr_tcsetpgrp_np and posix_spawnattr_tcgetpgrp_np
-  have been added, enabling posix_spawn and posix_spawnp to set the
-  controlling terminal in the new process in a race free manner.  These
-  functions are GNU extensions.
+* The function posix_spawn_file_actions_addtcsetpgrp_np has been added,
+  enabling posix_spawn and posix_spawnp to set the controlling terminal in
+  the new process in a race free manner.  This function is a GNU extension.
 
 * Source fortification (_FORTIFY_SOURCE) level 3 is now available for
   applications compiling with glibc and gcc 12 and later. Level 3 leverages

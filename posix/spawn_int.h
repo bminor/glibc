@@ -34,6 +34,7 @@ struct __spawn_action
     spawn_do_chdir,
     spawn_do_fchdir,
     spawn_do_closefrom,
+    spawn_do_tcsetpgrp
   } tag;
 
   union
@@ -66,6 +67,10 @@ struct __spawn_action
     {
       int from;
     } closefrom_action;
+    struct
+    {
+      int fd;
+    } setpgrp_action;
   } action;
 };
 
