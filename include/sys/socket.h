@@ -98,15 +98,21 @@ extern int __sendmmsg (int __fd, struct mmsghdr *__vmessages,
 libc_hidden_proto (__sendmmsg)
 #endif
 
-/* Receive a message as described by MESSAGE from socket FD.
-   Returns the number of bytes read or -1 for errors.  */
 extern ssize_t __libc_recvmsg (int __fd, struct msghdr *__message,
 			       int __flags);
 extern ssize_t __recvmsg (int __fd, struct msghdr *__message,
 			  int __flags) attribute_hidden;
 #if __TIMESIZE == 64
+# define __libc_recvmsg64 __libc_recvmsg
+# define __recvmsg64  __recvmsg
 # define __recvmmsg64 __recvmmsg
 #else
+extern ssize_t __libc_recvmsg64 (int __fd, struct msghdr *__message,
+				 int __flags);
+extern ssize_t __recvmsg64 (int __fd, struct msghdr *__message,
+			    int __flags);
+/* Receive a message as described by MESSAGE from socket FD.
+   Returns the number of bytes read or -1 for errors.  */
 extern int __recvmmsg64 (int __fd, struct mmsghdr *vmessages,
 			 unsigned int vlen, int flags,
 			 struct __timespec64 *timeout);

@@ -20,29 +20,41 @@
 #include <sysdep-cancel.h>
 #include <socketcall.h>
 
+static int
+__recvmsg_syscall (int fd, struct msghdr *msg, int flags)
+{
+#ifdef __ASSUME_RECVMSG_SYSCALL
+  return SYSCALL_CANCEL (recvmsg, fd, msg, flags);
+#else
+  return SOCKETCALL_CANCEL (recvmsg, fd, msg, flags);
+#endif
+}
+
 ssize_t
-__libc_recvmsg (int fd, struct msghdr *msg, int flags)
+__libc_recvmsg64 (int fd, struct msghdr *msg, int flags)
 {
   ssize_t r;
-#ifndef __ASSUME_TIME64_SYSCALLS
+#if __TIMESIZE != 64
   socklen_t orig_controllen = msg != NULL ? msg->msg_controllen : 0;
 #endif
 
-#ifdef __ASSUME_RECVMSG_SYSCALL
-  r = SYSCALL_CANCEL (recvmsg, fd, msg, flags);
-#else
-  r = SOCKETCALL_CANCEL (recvmsg, fd, msg, flags);
-#endif
+  r = __recvmsg_syscall (fd, msg, flags);
 
-#ifndef __ASSUME_TIME64_SYSCALLS
+#if __TIMESIZE != 64
   if (r >= 0 && orig_controllen != 0)
     __convert_scm_timestamps (msg, orig_controllen);
 #endif
 
   return r;
 }
+#if __TIMESIZE != 64
+weak_alias (__libc_recvmsg64, __recvmsg64)
+
+ssize_t
+__libc_recvmsg (int fd, struct msghdr *msg, int flags)
+{
+  return __recvmsg_syscall (fd, msg, flags);
+}
+#endif
 weak_alias (__libc_recvmsg, recvmsg)
 weak_alias (__libc_recvmsg, __recvmsg)
-#if __TIMESIZE != 64
-weak_alias (__recvmsg, __recvmsg64)
-#endif
