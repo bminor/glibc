@@ -51,6 +51,9 @@ ld {
     # stack canary
     __stack_chk_guard;
   }
+  GLIBC_2.34 {
+    __rtld_version_placeholder;
+  }
   GLIBC_PRIVATE {
     # Those are in the dynamic linker, but used by libc.so.
     __libc_enable_secure;

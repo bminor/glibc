@@ -126,6 +126,7 @@ shared-only-routines = libc-dl_find_object
 rtld-routines = \
   $(all-dl-routines) \
   dl-audit \
+  dl-compat \
   dl-conflict \
   dl-diagnostics \
   dl-diagnostics-cpu \

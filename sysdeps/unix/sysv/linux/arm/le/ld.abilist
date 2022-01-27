@@ -1,3 +1,4 @@
+GLIBC_2.34 __rtld_version_placeholder F
 GLIBC_2.35 __rseq_flags D 0x4
 GLIBC_2.35 __rseq_offset D 0x4
 GLIBC_2.35 __rseq_size D 0x4
