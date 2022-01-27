@@ -19,9 +19,9 @@
 #include <sysdep.h>
 #include <socketcall.h>
 
-int
-__recvmmsg64 (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
-	      struct __timespec64 *timeout)
+static int
+recvmmsg_syscall (int fd, struct mmsghdr *vmessages, unsigned int vlen,
+		  int flags, struct __timespec64 *timeout)
 {
 #ifndef __NR_recvmmsg_time64
 # define __NR_recvmmsg_time64 __NR_recvmmsg
@@ -44,12 +44,6 @@ __recvmmsg64 (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
       pts32 = &ts32;
     }
 
-  socklen_t csize[IOV_MAX];
-  if (vlen > IOV_MAX)
-    vlen = IOV_MAX;
-  for (int i = 0; i < vlen; i++)
-    csize[i] = vmessages[i].msg_hdr.msg_controllen;
-
 # ifdef __ASSUME_RECVMMSG_SYSCALL
   r = SYSCALL_CANCEL (recvmmsg, fd, vmessages, vlen, flags, pts32);
 # else
@@ -59,11 +53,31 @@ __recvmmsg64 (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
     {
       if (timeout != NULL)
         *timeout = valid_timespec_to_timespec64 (ts32);
+    }
+#endif
+  return r;
+}
 
+int
+__recvmmsg64 (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
+	      struct __timespec64 *timeout)
+{
+#if __TIMESIZE != 64
+  socklen_t csize[IOV_MAX];
+  if (vlen > IOV_MAX)
+    vlen = IOV_MAX;
+  for (int i = 0; i < vlen; i++)
+    csize[i] = vmessages[i].msg_hdr.msg_controllen;
+#endif
+
+  int r = recvmmsg_syscall (fd, vmessages, vlen, flags, timeout);
+#if __TIMESIZE != 64
+  if (r > 0)
+    {
       for (int i=0; i < r; i++)
         __convert_scm_timestamps (&vmessages[i].msg_hdr, csize[i]);
     }
-#endif /* __ASSUME_TIME64_SYSCALLS  */
+#endif
   return r;
 }
 #if __TIMESIZE != 64
@@ -79,7 +93,7 @@ __recvmmsg (int fd, struct mmsghdr *vmessages, unsigned int vlen, int flags,
       ts64 = valid_timespec_to_timespec64 (*timeout);
       pts64 = &ts64;
     }
-  int r = __recvmmsg64 (fd, vmessages, vlen, flags, pts64);
+  int r = recvmmsg_syscall (fd, vmessages, vlen, flags, pts64);
   if (r >= 0 && timeout != NULL)
     /* The remanining timeout will be always less the input TIMEOUT.  */
     *timeout = valid_timespec64_to_timespec (ts64);
