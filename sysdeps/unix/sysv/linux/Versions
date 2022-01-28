@@ -301,6 +301,7 @@ libc {
   }
   GLIBC_2.36 {
     pidfd_open;
+    pidfd_getfd;
   }
   GLIBC_PRIVATE {
     # functions used in other libraries
