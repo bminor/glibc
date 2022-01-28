@@ -30,4 +30,6 @@ extern __ssize_t process_madvise (int __pid_fd, const struct iovec* __iov,
 				  unsigned __flags)
   __THROW;
 
+extern int process_mrelease (int pidfd, unsigned int flags) __THROW;
+
 #endif /* __USE_GNU  */

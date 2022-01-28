@@ -24,6 +24,11 @@ Major new features:
   same functionality as madvise but alters the target process identified
   by the pidfd.
 
+* On Linux, the process_mrelease function has been added.  It allows a
+  caller to release the memory of a dying process.  The release of the
+  memory is carried out in the context of the caller, using the caller's
+  CPU affinity, and priority with CPU usage accounted to the caller.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for prelink will be removed in the next release; this includes
