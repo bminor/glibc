@@ -2633,3 +2633,4 @@ GLIBC_2.35 epoll_pwait2 F
 GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
 GLIBC_2.36 pidfd_getfd F
 GLIBC_2.36 pidfd_open F
+GLIBC_2.36 pidfd_send_signal F

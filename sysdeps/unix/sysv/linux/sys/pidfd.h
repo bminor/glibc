@@ -38,4 +38,12 @@ extern int pidfd_open (__pid_t __pid, unsigned int __flags) __THROW;
 extern int pidfd_getfd (int __pidfd, int __targetfd,
 			unsigned int __flags) __THROW;
 
+/* Sends the signal SIG to the target process referred by the PIDFD.  If
+   INFO points to a siginfo_t buffer, it will be populated.
+
+   The FLAGS argument is reserved for future use, it must be specified
+   as 0.  */
+extern int pidfd_send_signal (int __pidfd, int __sig, siginfo_t *__info,
+			      unsigned int __flags) __THROW;
+
 #endif /* _PIDFD_H  */
