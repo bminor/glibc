@@ -299,6 +299,9 @@ libc {
 %endif
     epoll_pwait2;
   }
+  GLIBC_2.36 {
+    pidfd_open;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

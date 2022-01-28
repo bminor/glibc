@@ -113,7 +113,8 @@ sysdep_headers += sys/mount.h sys/acct.h \
 		  bits/types/struct_shmid64_ds.h \
 		  bits/types/struct_shmid64_ds_helper.h \
 		  bits/pthread_stack_min.h bits/pthread_stack_min-dynamic.h \
-		  sys/rseq.h bits/rseq.h
+		  sys/rseq.h bits/rseq.h \
+		  sys/pidfd.h
 
 tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
 	 tst-quota tst-sync_file_range tst-sysconf-iov_max tst-ttyname \
@@ -239,6 +240,14 @@ $(objpfx)tst-mman-consts.out: ../sysdeps/unix/sysv/linux/tst-mman-consts.py
 	    $(sysdeps-linux-python-cc) \
 	  < /dev/null > $@ 2>&1; $(evaluate-test)
 $(objpfx)tst-mman-consts.out: $(sysdeps-linux-python-deps)
+
+tests-special += $(objpfx)tst-pidfd-consts.out
+$(objpfx)tst-pidfd-consts.out: ../sysdeps/unix/sysv/linux/tst-pidfd-consts.py
+	$(sysdeps-linux-python) \
+	  ../sysdeps/unix/sysv/linux/tst-pidfd-consts.py \
+	    $(sysdeps-linux-python-cc) \
+	  < /dev/null > $@ 2>&1; $(evaluate-test)
+$(objpfx)tst-pidfd-consts.out: $(sysdeps-linux-python-deps)
 
 tst-rseq-disable-ENV = GLIBC_TUNABLES=glibc.pthread.rseq=0
 

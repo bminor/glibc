@@ -16,6 +16,10 @@ Major new features:
   -z pack-relative-relocs option, which is supported for some targets
   in recent binutils versions.  Lazy binding doesn't apply to DT_RELR.
 
+* On Linux, the pidfd_open function has been added.  The pidfd functionality
+  provides access to a process while avoiding the issue of PID reuse on
+  tranditional Unix systems.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for prelink will be removed in the next release; this includes
