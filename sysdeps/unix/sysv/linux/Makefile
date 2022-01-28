@@ -128,6 +128,7 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
   tst-scm_rights \
   tst-epoll \
   tst-getauxval \
+  tst-pidfd \
   # tests
 
 # For +depfiles in Makerules.
