@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <malloc-size.h>
+#include <support/check.h>
 
 static void *
 test (size_t s)
@@ -31,41 +32,42 @@ test (size_t s)
   return p;
 }
 
+#define ALIGNED(p) (((uintptr_t )p & MALLOC_ALIGN_MASK) == 0)
+
 static int
 do_test (void)
 {
   void *p;
-  int ret = 0;
 
   p = test (2);
-  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
+  TEST_VERIFY (ALIGNED (p));
   free (p);
 
   p = test (8);
-  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
+  TEST_VERIFY (ALIGNED (p));
   free (p);
 
   p = test (13);
-  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
+  TEST_VERIFY (ALIGNED (p));
   free (p);
 
   p = test (16);
-  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
+  TEST_VERIFY (ALIGNED (p));
   free (p);
 
   p = test (23);
-  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
+  TEST_VERIFY (ALIGNED (p));
   free (p);
 
   p = test (43);
-  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
+  TEST_VERIFY (ALIGNED (p));
   free (p);
 
   p = test (123);
-  ret |= (uintptr_t) p & MALLOC_ALIGN_MASK;
+  TEST_VERIFY (ALIGNED (p));
   free (p);
 
-  return ret;
+  return 0;
 }
 
 #include <support/test-driver.c>
