@@ -1468,7 +1468,9 @@ preloadtest-ENV = \
 
 LDFLAGS-loadfail = -rdynamic
 
-$(objpfx)loadfail.out: $(objpfx)failobj.so
+$(objpfx)loadfail.out: $(objpfx)failobj.so $(objpfx)testobj1.so \
+		       $(objpfx)testobj2.so $(objpfx)testobj3.so \
+		       $(objpfx)testobj4.so $(objpfx)testobj5.so
 
 LDFLAGS-multiload = -rdynamic
 CFLAGS-multiload.c += -DOBJDIR=\"$(elf-objpfx)\"
