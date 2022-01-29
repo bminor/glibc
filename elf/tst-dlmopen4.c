@@ -25,16 +25,9 @@
 #include <support/check.h>
 #include <support/test-driver.h>
 
-#ifndef ELF_MACHINE_GET_R_DEBUG
-# define ELF_MACHINE_GET_R_DEBUG(d) \
-    (__extension__ ({ 						\
-      struct r_debug_extended *debug;				\
-      if ((d)->d_tag == DT_DEBUG)				\
-	debug = (struct r_debug_extended *) (d)->d_un.d_ptr;	\
-      else							\
-	debug = NULL;						\
-      debug; }))
-#endif
+#define E(x) x
+#define EW(x) ElfW(x)
+#include <dl-r_debug.h>
 
 static int
 do_test (void)
@@ -44,7 +37,7 @@ do_test (void)
 
   for (d = _DYNAMIC; d->d_tag != DT_NULL; ++d)
     {
-      debug = ELF_MACHINE_GET_R_DEBUG (d);
+      debug = (struct r_debug_extended *) r_debug_address (d);
       if (debug != NULL)
 	break;
     }
