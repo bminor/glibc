@@ -237,7 +237,7 @@ do_test (void)
 {
   /* This test only make sense for ABIs that support 32 bit time_t socket
      timestampss.  */
-  if (sizeof (time_t) > 4 && __WORDSIZE == 64)
+  if (sizeof (time_t) > 4 && __TIMESIZE == 64)
     return 0;
 
   srv = xsocket (AF_INET, SOCK_DGRAM, 0);
