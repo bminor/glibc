@@ -49,7 +49,9 @@ def main():
                 linux_version_glibc > linux_version_headers,
                 linux_version_headers > linux_version_glibc)
 
-    status = check('FSOPEN_.*')
+    status = max(
+        check('FSOPEN_.*'),
+        check('FSMOUNT_.*'))
     sys.exit(status)
 
 if __name__ == '__main__':
