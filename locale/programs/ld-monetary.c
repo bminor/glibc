@@ -207,7 +207,6 @@ No definition for %s category found"), "LC_MONETARY");
 
   TEST_ELEM (int_curr_symbol, "");
   TEST_ELEM (currency_symbol, "");
-  TEST_ELEM (mon_decimal_point, ".");
   TEST_ELEM (mon_thousands_sep, "");
   TEST_ELEM (positive_sign, "");
   TEST_ELEM (negative_sign, "");
@@ -257,6 +256,7 @@ not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"),
 	record_error (0, 0, _("%s: field `%s' not defined"),
 		      "LC_MONETARY", "mon_decimal_point");
       monetary->mon_decimal_point = ".";
+      monetary->mon_decimal_point_wc = L'.';
     }
   else if (monetary->mon_decimal_point[0] == '\0' && ! be_quiet && ! nothing)
     {
@@ -264,8 +264,6 @@ not correspond to a valid name in ISO 4217 [--no-warnings=intcurrsym]"),
 %s: value for field `%s' must not be an empty string"),
 		    "LC_MONETARY", "mon_decimal_point");
     }
-  if (monetary->mon_decimal_point_wc == L'\0')
-    monetary->mon_decimal_point_wc = L'.';
 
   if (monetary->mon_grouping_len == 0)
     {
