@@ -12,8 +12,8 @@ tel        ""
 fax        ""
 language   ""
 territory  ""
-revision   "2.0"
-date       "2020-06-28"
+revision   "2.1"
+date       "2022-01-30"
 category  "i18n:2012";LC_IDENTIFICATION
 category  "i18n:2012";LC_CTYPE
 category  "i18n:2012";LC_COLLATE
@@ -68,11 +68,11 @@ LC_MONETARY
 % glibc/locale/C-monetary.c.).
 int_curr_symbol     ""
 currency_symbol     ""
-mon_decimal_point   "."
+mon_decimal_point   ""
 mon_thousands_sep   ""
 mon_grouping        -1
 positive_sign       ""
-negative_sign       "-"
+negative_sign       ""
 int_frac_digits     -1
 frac_digits         -1
 p_cs_precedes       -1
@@ -121,7 +121,9 @@ mon         "January";"February";"March";"April";"May";"June";"July";/
 %
 % ISO 8601 conforming applications should use the values 7, 19971201 (a
 % Monday), and 4 (Thursday), respectively.
-week    7;19971201;4
+%
+% This field is consciously aligned with the builtin C/POSIX locale.
+week    7;19971130;4
 first_weekday	1
 first_workday	2
 
@@ -129,7 +131,7 @@ first_workday	2
 d_t_fmt "%a %b %e %H:%M:%S %Y"
 
 % Appropriate date representation (%x)
-d_fmt   "%m/%d/%y"
+d_fmt   "%m//%d//%y"
 
 % Appropriate time representation (%X)
 t_fmt   "%H:%M:%S"
@@ -150,8 +152,8 @@ LC_MESSAGES
 %
 yesexpr "^[yY]"
 noexpr  "^[nN]"
-yesstr  "Yes"
-nostr   "No"
+yesstr  ""
+nostr   ""
 END LC_MESSAGES
 
 LC_PAPER
@@ -175,6 +177,10 @@ LC_ADDRESS
 % the LC_ADDRESS category.
 % (also used in the built in C/POSIX locale in glibc/locale/C-address.c)
 postal_fmt    "%a%N%f%N%d%N%b%N%s %h %e %r%N%C-%z %T%N%c%N"
+% The abbreviated 2 char and 3 char should be set to empty strings to
+% match the C/POSIX locale.
+country_ab2   ""
+country_ab3   ""
 END LC_ADDRESS
 
 LC_TELEPHONE

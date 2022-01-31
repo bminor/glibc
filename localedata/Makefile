@@ -155,11 +155,31 @@ locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 		     tst_wcsxfrm tst_wctob tst_wctomb tst_wctrans      \
 		     tst_wctype tst_wcwidth
 
-tests = $(locale_test_suite) tst-digits tst-setlocale bug-iconv-trans \
-	tst-leaks tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5 \
-	tst-mbswcs6 tst-xlocale1 tst-xlocale2 bug-usesetlocale \
-	tst-strfmon1 tst-sscanf bug-setlocale1 tst-setlocale2 tst-setlocale3 \
-	tst-wctype tst-iconv-math-trans
+tests = \
+  $(locale_test_suite) \
+  bug-iconv-trans \
+  bug-setlocale1 \
+  bug-usesetlocale \
+  tst-c-utf8-consistency \
+  tst-digits \
+  tst-iconv-math-trans \
+  tst-leaks \
+  tst-mbswcs1 \
+  tst-mbswcs2 \
+  tst-mbswcs3 \
+  tst-mbswcs4 \
+  tst-mbswcs5 \
+  tst-mbswcs6 \
+  tst-setlocale \
+  tst-setlocale2 \
+  tst-setlocale3 \
+  tst-sscanf \
+  tst-strfmon1 \
+  tst-wctype \
+  tst-xlocale1 \
+  tst-xlocale2 \
+  # tests
+
 tests-static = bug-setlocale1-static
 tests += $(tests-static)
 ifeq (yes,$(build-shared))
