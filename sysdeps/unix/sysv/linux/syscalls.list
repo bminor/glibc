@@ -37,6 +37,7 @@ mincore		-	mincore		i:aUV	mincore
 mlock		-	mlock		i:bU	mlock
 mlockall	-	mlockall	i:i	mlockall
 mount		EXTRA	mount		i:sssUp	__mount	mount
+move_mount	EXTRA	move_mount	i:isisU	move_mount
 munlock		-	munlock		i:aU	munlock
 munlockall	-	munlockall	i:	munlockall
 nfsservctl	EXTRA	nfsservctl	i:ipp	__compat_nfsservctl	nfsservctl@GLIBC_2.0:GLIBC_2.28

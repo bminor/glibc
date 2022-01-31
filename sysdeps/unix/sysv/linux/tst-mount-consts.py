@@ -51,7 +51,9 @@ def main():
 
     status = max(
         check('FSOPEN_.*'),
-        check('FSMOUNT_.*'))
+        check('FSMOUNT_.*'),
+        # MOVE_MOUNT__MASK may vary depending of the kernel version.
+        check('MOVE_MOUNT_.*', 'MOVE_MOUNT__MASK'))
     sys.exit(status)
 
 if __name__ == '__main__':

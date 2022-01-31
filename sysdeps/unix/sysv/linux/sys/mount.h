@@ -154,6 +154,16 @@ enum
 #define MOUNT_ATTR_NOSYMFOLLOW  0x00200000 /* Do not follow symlinks.  */
 
 
+/* move_mount flags.  */
+#define MOVE_MOUNT_F_SYMLINKS   0x00000001 /* Follow symlinks on from path */
+#define MOVE_MOUNT_F_AUTOMOUNTS 0x00000002 /* Follow automounts on from path */
+#define MOVE_MOUNT_F_EMPTY_PATH 0x00000004 /* Empty from path permitted */
+#define MOVE_MOUNT_T_SYMLINKS   0x00000010 /* Follow symlinks on to path */
+#define MOVE_MOUNT_T_AUTOMOUNTS 0x00000020 /* Follow automounts on to path */
+#define MOVE_MOUNT_T_EMPTY_PATH 0x00000040 /* Empty to path permitted */
+#define MOVE_MOUNT_SET_GROUP    0x00000100 /* Set sharing group instead */
+
+
 __BEGIN_DECLS
 
 /* Mount a filesystem.  */
@@ -175,6 +185,13 @@ extern int fsopen (const char *__fs_name, unsigned int __flags) __THROW;
    FLAGS with ATTR_FLAGS describing how the mount is to be performed.  */
 extern int fsmount (int __fd, unsigned int __flags,
 		    unsigned int __ms_flags) __THROW;
+
+/* Add the mounted FROM_DFD referenced by FROM_PATHNAME filesystem returned
+   by fsmount in the hierarchy in the place TO_DFD reference by TO_PATHNAME
+   using FLAGS.  */
+extern int move_mount (int __from_dfd, const char *__from_pathname,
+		       int __to_dfd, const char *__to_pathname,
+		       unsigned int flags) __THROW;
 
 __END_DECLS
 
