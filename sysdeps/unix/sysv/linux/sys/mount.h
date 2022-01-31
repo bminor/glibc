@@ -134,6 +134,10 @@ enum
 };
 
 
+/* fsopen flags.  */
+#define FSOPEN_CLOEXEC          0x00000001
+
+
 __BEGIN_DECLS
 
 /* Mount a filesystem.  */
@@ -146,6 +150,10 @@ extern int umount (const char *__special_file) __THROW;
 
 /* Unmount a filesystem.  Force unmounting if FLAGS is set to MNT_FORCE.  */
 extern int umount2 (const char *__special_file, int __flags) __THROW;
+
+/* Open the filesystem referenced by FS_NAME so it can be configured for
+   mouting.  */
+extern int fsopen (const char *__fs_name, unsigned int __flags) __THROW;
 
 __END_DECLS
 

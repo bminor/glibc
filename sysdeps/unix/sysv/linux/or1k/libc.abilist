@@ -2123,6 +2123,7 @@ GLIBC_2.35 wprintf F
 GLIBC_2.35 write F
 GLIBC_2.35 writev F
 GLIBC_2.35 wscanf F
+GLIBC_2.36 fsopen F
 GLIBC_2.36 pidfd_getfd F
 GLIBC_2.36 pidfd_open F
 GLIBC_2.36 pidfd_send_signal F

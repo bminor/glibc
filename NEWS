@@ -41,6 +41,11 @@ Major new features:
   have adverse impact.  It is incompatible with EDNS0 usage and DNSSEC
   validation by applications.
 
+* On Linux, the fsopen function has been added.  It is part of the new Linux
+  kernel mount APIs that allow applications to more flexibly configure and
+  operate on filesystem mounts.  The new mount APIs are specifically designed
+  to work with namespaces.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for prelink will be removed in the next release; this includes
