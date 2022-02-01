@@ -1,5 +1,5 @@
 /* Machine-dependent macros for using symbol sets for running lists of
-   functions. x86-64 version.
+   functions. x86 version.
    Copyright (C) 2021-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -22,7 +22,7 @@
 
 #define SET_RELHOOK(NAME, HOOK) \
 	asm(".section " #NAME",\"aR\"\n" \
-	    ".quad "#HOOK" - .\n" \
+	    ".dc.a "#HOOK" - .\n" \
 	    ".section .text");
 
 #endif /* set_hooks_arch.h */
