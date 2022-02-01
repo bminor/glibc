@@ -32,7 +32,7 @@ test (size_t s)
   return p;
 }
 
-#define ALIGNED(p) (((uintptr_t )p & MALLOC_ALIGN_MASK) == 0)
+#define ALIGNED(p) (((uintptr_t) p & MALLOC_ALIGN_MASK) == 0)
 
 static int
 do_test (void)
