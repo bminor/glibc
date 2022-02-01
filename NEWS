@@ -59,6 +59,7 @@ The following bugs are resolved with this release:
   [28769] CVE-2021-3999: Off-by-one buffer overflow/underflow in getcwd()
   [28770] CVE-2021-3998: Unexpected return value from realpath() for too long results
   [28784] x86: crash in 32bit memset-sse2.s when the cache size can not be determined
+  [28850] linux: __get_nprocs_sched reads uninitialized memory from the stack
 
 
 Version 2.34
