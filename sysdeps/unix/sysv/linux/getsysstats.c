@@ -44,7 +44,7 @@ __get_nprocs_sched (void)
   int r = INTERNAL_SYSCALL_CALL (sched_getaffinity, 0, cpu_bits_size,
 				 cpu_bits);
   if (r > 0)
-    return CPU_COUNT_S (cpu_bits_size, (cpu_set_t*) cpu_bits);
+    return CPU_COUNT_S (r, (cpu_set_t*) cpu_bits);
   else if (r == -EINVAL)
     /* The input buffer is still not enough to store the number of cpus.  This
        is an arbitrary values assuming such systems should be rare and there
