@@ -21,6 +21,7 @@
 /* Architecture-specific rseq signature.  */
 #include <bits/rseq.h>
 
+#include <stddef.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
 #include <bits/endian.h>
@@ -172,7 +173,7 @@ struct rseq
 #endif /* __GLIBC_HAVE_KERNEL_RSEQ */
 
 /* Offset from the thread pointer to the rseq area.  */
-extern const int __rseq_offset;
+extern const ptrdiff_t __rseq_offset;
 
 /* Size of the registered rseq area.  0 if the registration was
    unsuccessful.  */

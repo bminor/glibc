@@ -46,7 +46,7 @@ rtld_mutex_dummy (pthread_mutex_t *lock)
 
 const unsigned int __rseq_flags;
 const unsigned int __rseq_size attribute_relro;
-const int __rseq_offset attribute_relro;
+const ptrdiff_t __rseq_offset attribute_relro;
 
 void
 __tls_pre_init_tp (void)
@@ -119,7 +119,7 @@ __tls_init_tp (void)
        all targets support __thread_pointer, so set __rseq_offset only
        if thre rseq registration may have happened because RSEQ_SIG is
        defined.  */
-    extern int offset __asm__ ("__rseq_offset");
+    extern ptrdiff_t offset __asm__ ("__rseq_offset");
     offset = (char *) &pd->rseq_area - (char *) __thread_pointer ();
 #endif
   }

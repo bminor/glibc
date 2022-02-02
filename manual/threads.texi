@@ -1004,7 +1004,7 @@ The manual for the @code{rseq} system call can be found
 at @uref{https://git.kernel.org/pub/scm/libs/librseq/librseq.git/tree/doc/man/rseq.2}.
 @end deftp
 
-@deftypevar {int} __rseq_offset
+@deftypevar {ptrdiff_t} __rseq_offset
 @standards{Linux, sys/rseq.h}
 This variable contains the offset between the thread pointer (as defined
 by @code{__builtin_thread_pointer} or the thread pointer register for
