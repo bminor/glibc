@@ -29,7 +29,14 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 #include <sys/wait.h>
+#include <sys/ioctl.h>
 #include <stdlib.h>
+#include <termios.h>
+
+#ifndef PATH_MAX
+# define PATH_MAX 1024
+#endif
+static char ptmxpath[PATH_MAX];
 
 static int
 handle_restart (const char *argv1, const char *argv2)
@@ -115,7 +122,7 @@ run_subprogram (int argc, char *argv[], const posix_spawnattr_t *attr,
 }
 
 static int
-do_test (int argc, char *argv[])
+run_test (int argc, char *argv[])
 {
   /* We must have either:
      - four parameters left if called initially:
@@ -127,16 +134,7 @@ do_test (int argc, char *argv[])
        + --setgrpr             optional
    */
 
-  if (restart)
-    return handle_restart (argv[1], argv[2]);
-
-  int tcfd = open64 (_PATH_TTY, O_RDONLY, 0600);
-  if (tcfd == -1)
-    {
-      if (errno == ENXIO)
-	FAIL_UNSUPPORTED ("terminal not available, skipping test");
-      FAIL_EXIT1 ("open64 (\"%s\", 0x%x, 0600): %m", _PATH_TTY, O_RDONLY);
-    }
+  int tcfd = xopen (ptmxpath, O_RDONLY, 0600);
 
   /* Check setting the controlling terminal without changing the group.  */
   {
@@ -196,6 +194,48 @@ do_test (int argc, char *argv[])
   xclose (tcfd);
 
   return 0;
+}
+
+static int
+do_test (int argc, char *argv[])
+{
+  if (restart)
+    return handle_restart (argv[1], argv[2]);
+
+  pid_t pid = xfork ();
+  if (pid == 0)
+    {
+      /* Create a pseudo-terminal to avoid interfering with the one using by
+	 test itself, creates a new session (so there is no controlling
+	 terminal), and set the pseudo-terminal as the controlling one.  */
+      int ptmx = posix_openpt (0);
+      if (ptmx == -1)
+	{
+	  if (errno == ENXIO)
+	    FAIL_UNSUPPORTED ("terminal not available, skipping test");
+	  FAIL_EXIT1 ("posix_openpt (0): %m");
+	}
+      TEST_VERIFY_EXIT (grantpt (ptmx) == 0);
+      TEST_VERIFY_EXIT (unlockpt (ptmx) == 0);
+
+      TEST_VERIFY_EXIT (setsid () != -1);
+      TEST_VERIFY_EXIT (ioctl (ptmx, TIOCSCTTY, NULL) == 0);
+      while (dup2 (ptmx, STDIN_FILENO) == -1 && errno == EBUSY)
+	;
+      while (dup2 (ptmx, STDOUT_FILENO) == -1 && errno == EBUSY)
+	;
+      while (dup2 (ptmx, STDERR_FILENO) == -1 && errno == EBUSY)
+	;
+      TEST_VERIFY_EXIT (ptsname_r (ptmx, ptmxpath, sizeof ptmxpath) == 0);
+      xclose (ptmx);
+
+      run_test (argc, argv);
+      _exit (0);
+    }
+  int status;
+  xwaitpid (pid, &status, 0);
+  TEST_VERIFY (WIFEXITED (status));
+  exit (0);
 }
 
 #define TEST_FUNCTION_ARGV do_test
