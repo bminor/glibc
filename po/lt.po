@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.7\n"
-"POT-Creation-Date: 2021-07-28 22:02-0400\n"
+"POT-Creation-Date: 2022-01-29 17:34-0500\n"
 "PO-Revision-Date: 2009-02-12 05:24+0200\n"
 "Last-Translator: Gintautas Miliauskas <gintas@akl.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
@@ -62,9 +62,9 @@ msgstr "Pateikti šį pagalbinį sąrašą"
 msgid "Give a short usage message"
 msgstr "Pateikti trumpą pranešimą apie naudojimą"
 
-#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
-#: nss/makedb.c:121
+#: argp/argp-parse.c:103 catgets/gencat.c:108 catgets/gencat.c:112
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: nss/makedb.c:120
 msgid "NAME"
 msgstr "PAVADINIMAS"
 
@@ -93,19 +93,19 @@ msgstr "%s: Per daug argumentų\n"
 msgid "(PROGRAM ERROR) Option should have been recognized!?"
 msgstr "(PROGRAM ERROR) Parametras turėjo būti atpažintas!?"
 
-#: catgets/gencat.c:110
+#: catgets/gencat.c:109
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Sukurti C antraščių failą duotu PAVADINIMU, kuriame surašyti simbolių apibrėžimus"
 
-#: catgets/gencat.c:112
+#: catgets/gencat.c:111
 msgid "Do not use existing catalog, force new output file"
 msgstr "Nenaudoti egzistuojančio katalogo, kurti naują išvedimo failą"
 
-#: catgets/gencat.c:113 nss/makedb.c:121
+#: catgets/gencat.c:112 nss/makedb.c:120
 msgid "Write output to file NAME"
 msgstr "Išvesti į failą duotu PAVADINIMU"
 
-#: catgets/gencat.c:123
+#: catgets/gencat.c:122
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -113,86 +113,86 @@ msgstr ""
 "-o IŠVEDIMO-FAILAS [DUOMENŲ-FAILAS]...\n"
 "[IŠVEDIMO-FAILAS [DUOMENŲ-FAILAS]...]"
 
-#: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:333 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
-#: iconv/iconvconfig.c:403 locale/programs/locale.c:298
-#: locale/programs/localedef.c:465 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
+#: catgets/gencat.c:249 debug/pcprofiledump.c:229 debug/xtrace.sh:67
+#: elf/ldconfig.c:332 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: iconv/iconvconfig.c:402 locale/programs/locale.c:297
+#: locale/programs/localedef.c:464 malloc/memusage.sh:74
+#: malloc/memusagestat.c:585 nscd/nscd.c:526 nss/getent.c:92 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Parašė %s.\n"
 
-#: catgets/gencat.c:281
+#: catgets/gencat.c:280
 msgid "*standard input*"
 msgstr "*standartinis įvedimas*"
 
-#: catgets/gencat.c:443
+#: catgets/gencat.c:442
 msgid "duplicate set definition"
 msgstr "pakartotinis rinkinio apibrėžimas"
 
-#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
+#: catgets/gencat.c:444 catgets/gencat.c:616 catgets/gencat.c:668
 msgid "this is the first definition"
 msgstr "šis apibrėžimas pirmasis"
 
-#: catgets/gencat.c:516
+#: catgets/gencat.c:515
 #, c-format
 msgid "unknown set `%s'"
 msgstr "nežinomas rinkinys „%s“"
 
-#: catgets/gencat.c:557
+#: catgets/gencat.c:556
 msgid "invalid quote character"
 msgstr "netaisyklingas kabučių simbolis"
 
-#: catgets/gencat.c:570
+#: catgets/gencat.c:569
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "nežinoma direktyva „%s“: eilutė ignoruota"
 
-#: catgets/gencat.c:615
+#: catgets/gencat.c:614
 msgid "duplicated message number"
 msgstr "pakartotas pranešimo numeris"
 
-#: catgets/gencat.c:666
+#: catgets/gencat.c:665
 msgid "duplicated message identifier"
 msgstr "pakartotas pranešimo identifikatorius"
 
-#: catgets/gencat.c:723
+#: catgets/gencat.c:722
 msgid "invalid character: message ignored"
 msgstr "netaisyklingas simbolis: pranešimas ignoruotas"
 
-#: catgets/gencat.c:766
+#: catgets/gencat.c:765
 msgid "invalid line"
 msgstr "nekorektiška eilutė"
 
-#: catgets/gencat.c:820
+#: catgets/gencat.c:819
 msgid "malformed line ignored"
 msgstr "nekorektiška eilutė ignoruota"
 
-#: catgets/gencat.c:984 catgets/gencat.c:1025
+#: catgets/gencat.c:983 catgets/gencat.c:1024
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "nepavyko atverti išvedimo failo: „%s“"
 
-#: catgets/gencat.c:1211
+#: catgets/gencat.c:1210
 msgid "unterminated message"
 msgstr "neužbaigtas pranešimas"
 
-#: debug/pcprofiledump.c:61
+#: debug/pcprofiledump.c:60
 msgid "[FILE]"
 msgstr "[FAILAS]"
 
-#: debug/pcprofiledump.c:108
+#: debug/pcprofiledump.c:107
 #, c-format
 msgid "cannot open input file"
 msgstr "nepavyko atverti įvedimo failo"
 
-#: debug/pcprofiledump.c:115
+#: debug/pcprofiledump.c:114
 #, c-format
 msgid "cannot read header"
 msgstr "nepavyko perskaityti antraštės"
 
-#: debug/xtrace.sh:138
+#: debug/xtrace.sh:137
 msgid "No program name given\\n"
 msgstr "Nenurodytas programos vardas\\n"
 
@@ -204,40 +204,40 @@ msgstr "nepalaikoma dlinfo užklausa"
 msgid "invalid mode"
 msgstr "netaisyklinga veiksena"
 
-#: elf/cache.c:180
+#: elf/cache.c:179
 msgid "unknown"
 msgstr "nežinoma"
 
-#: elf/cache.c:254
+#: elf/cache.c:253
 msgid "Unknown OS"
 msgstr "Nežinoma OS"
 
-#: elf/cache.c:259
+#: elf/cache.c:258
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:320 elf/ldconfig.c:1434
+#: elf/cache.c:319 elf/ldconfig.c:1437
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Nepavyko atverti podėlio failo %s\n"
 
-#: elf/cache.c:338 elf/cache.c:352 elf/cache.c:363
+#: elf/cache.c:337 elf/cache.c:351 elf/cache.c:362
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Failas nėra podėlio failas.\n"
 
-#: elf/cache.c:392 elf/cache.c:407
+#: elf/cache.c:391 elf/cache.c:406
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "Rasta %d bibliotekų podėlyje „%s“\n"
 
-#: elf/cache.c:775
+#: elf/cache.c:774
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "%s pervadinimas į %s nesėkmingas"
 
-#: elf/dl-close.c:870
+#: elf/dl-close.c:815
 msgid "shared object not open"
 msgstr "bendrasis objektas neatvertas"
 
@@ -249,87 +249,87 @@ msgstr "DST neleidžiamas SUID/SGID programose"
 msgid "error while loading shared libraries"
 msgstr "klaida įkeliant bendrąsias bibliotekas"
 
-#: elf/dl-load.c:1118 elf/dl-load.c:1689 elf/dl-load.c:1791
+#: elf/dl-load.c:1088 elf/dl-load.c:1661 elf/dl-load.c:1763
 msgid "cannot read file data"
 msgstr "nepavyko nuskaityti failo duomenų"
 
-#: elf/dl-load.c:1250
+#: elf/dl-load.c:1223
 msgid "object file has no loadable segments"
 msgstr "objektiniame faile nėra įkeliamų segmentų"
 
-#: elf/dl-load.c:1288
+#: elf/dl-load.c:1247
 msgid "object file has no dynamic section"
 msgstr "objektiniame faile nėra dinaminės sekcijos"
 
-#: elf/dl-load.c:1308
+#: elf/dl-load.c:1284
 msgid "shared object cannot be dlopen()ed"
 msgstr "bendrasis objektas negali būti atvertas su dlopen()"
 
-#: elf/dl-load.c:1321
+#: elf/dl-load.c:1297
 msgid "cannot allocate memory for program header"
 msgstr "nepavyko išskirti atminties programos antraštei"
 
-#: elf/dl-load.c:1406
+#: elf/dl-load.c:1382
 msgid "cannot close file descriptor"
 msgstr "nepavyko užverti failo deskriptoriaus"
 
-#: elf/dl-load.c:1689
+#: elf/dl-load.c:1661
 msgid "file too short"
 msgstr "failas per trumpas"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1697
 msgid "invalid ELF header"
 msgstr "netaisyklinga ELF antraštė"
 
-#: elf/dl-load.c:1737
+#: elf/dl-load.c:1709
 msgid "ELF file data encoding not big-endian"
 msgstr "ELF failo duomenų koduotė ne big-endian"
 
-#: elf/dl-load.c:1739
+#: elf/dl-load.c:1711
 msgid "ELF file data encoding not little-endian"
 msgstr "ELF failo duomenų koduotė ne little-endian"
 
-#: elf/dl-load.c:1743
+#: elf/dl-load.c:1715
 msgid "ELF file version ident does not match current one"
 msgstr "ELF failo versijos identifikatorius neatitinka esamo"
 
-#: elf/dl-load.c:1747
+#: elf/dl-load.c:1719
 msgid "ELF file OS ABI invalid"
 msgstr "ELF failo OS ABI netaisyklingas"
 
-#: elf/dl-load.c:1750
+#: elf/dl-load.c:1722
 msgid "ELF file ABI version invalid"
 msgstr "ELF failo ABI versija netaisyklinga"
 
-#: elf/dl-load.c:1756
+#: elf/dl-load.c:1728
 msgid "internal error"
 msgstr "vidinė klaida"
 
-#: elf/dl-load.c:1763
+#: elf/dl-load.c:1735
 msgid "ELF file version does not match current one"
 msgstr "ELF failo versija neatitinka esamos"
 
-#: elf/dl-load.c:2333
+#: elf/dl-load.c:2301
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "klaidinga ELF klasė: ELFCLASS64"
 
-#: elf/dl-load.c:2334
+#: elf/dl-load.c:2302
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "klaidinga ELF klasė: ELFCLASS32"
 
-#: elf/dl-load.c:2337
+#: elf/dl-load.c:2305
 msgid "cannot open shared object file"
 msgstr "nepavyko atverti bendrojo objekto failo"
 
-#: elf/dl-lookup.c:876
+#: elf/dl-lookup.c:881
 msgid "symbol lookup error"
 msgstr "simbolio paieškos klaida"
 
-#: elf/dl-open.c:401
+#: elf/dl-open.c:405
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "TLS kartų skaitiklis persivertė!  Prašytume apie tai pranešti."
 
-#: elf/dl-open.c:814
+#: elf/dl-open.c:827
 msgid "invalid mode for dlopen()"
 msgstr "netaisyklinga veiksena dlopen()"
 
@@ -337,134 +337,134 @@ msgstr "netaisyklinga veiksena dlopen()"
 msgid "cannot create TLS data structures"
 msgstr "nepavyko sukurti TLS duomenų struktūrų"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:150
 msgid "Print cache"
 msgstr "Spausdinti podėlį"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:151
 msgid "Generate verbose messages"
 msgstr "Generuoti išsamius pranešimus"
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:152
 msgid "Don't build cache"
 msgstr "Nekurti podėlio"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:154
 msgid "Change to and use ROOT as root directory"
 msgstr "Naudoti ŠAKNĮ kaip šakninį aplanką"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:154
 msgid "ROOT"
 msgstr "ŠAKNIS"
 
-#: elf/ldconfig.c:156
+#: elf/ldconfig.c:155
 msgid "CACHE"
 msgstr "PODĖLIS"
 
-#: elf/ldconfig.c:156
+#: elf/ldconfig.c:155
 msgid "Use CACHE as cache file"
 msgstr "Naudoti PODĖLĮ kaip podėlio failą"
 
-#: elf/ldconfig.c:157
+#: elf/ldconfig.c:156
 msgid "CONF"
 msgstr "KONF"
 
-#: elf/ldconfig.c:157
+#: elf/ldconfig.c:156
 msgid "Use CONF as configuration file"
 msgstr "Naudoti KONF kaip konfigūracijos failą"
 
-#: elf/ldconfig.c:158
+#: elf/ldconfig.c:157
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Apdoroti tik aplankus, nurodytus komandų eilutėje. Nekurti podėlio."
 
-#: elf/ldconfig.c:159
+#: elf/ldconfig.c:158
 msgid "Manually link individual libraries."
 msgstr "Rankiniu būdu susaistyti (link) atskiras bibliotekas."
 
-#: elf/ldconfig.c:160
+#: elf/ldconfig.c:159
 msgid "FORMAT"
 msgstr "FORMATAS"
 
-#: elf/ldconfig.c:161
+#: elf/ldconfig.c:160
 msgid "Ignore auxiliary cache file"
 msgstr "Ignoruoti pagalbinį podėlio failą"
 
-#: elf/ldconfig.c:372
+#: elf/ldconfig.c:371
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Kelias „%s“ nurodytas daugiau negu vieną kartą"
 
-#: elf/ldconfig.c:488
+#: elf/ldconfig.c:487
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s nėra žinomas bibliotekos tipas"
 
-#: elf/ldconfig.c:607
+#: elf/ldconfig.c:610
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s nėra simbolinė nuoroda\n"
 
-#: elf/ldconfig.c:632
+#: elf/ldconfig.c:635
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Nepavyko susaistyti (link) %s su %s"
 
-#: elf/ldconfig.c:638
+#: elf/ldconfig.c:641
 msgid " (changed)\n"
 msgstr " (pakeista)\n"
 
-#: elf/ldconfig.c:640
+#: elf/ldconfig.c:643
 msgid " (SKIPPED)\n"
 msgstr " (PRALEISTA)\n"
 
-#: elf/ldconfig.c:696
+#: elf/ldconfig.c:699
 #, c-format
 msgid "Can't find %s"
 msgstr "Nepavyko rasti %s"
 
-#: elf/ldconfig.c:718
+#: elf/ldconfig.c:721
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Failas %s praleistas, nes tai nėra paprastas failas"
 
-#: elf/ldconfig.c:825
+#: elf/ldconfig.c:828
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Nepavyko atverti aplanko %s"
 
-#: elf/ldconfig.c:910 elf/ldconfig.c:972 elf/readlib.c:98
+#: elf/ldconfig.c:913 elf/ldconfig.c:975 elf/readlib.c:96
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Įvedimo failas %s nerastas.\n"
 
-#: elf/ldconfig.c:1070
+#: elf/ldconfig.c:1073
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5 biblioteka %s ne tame aplanke"
 
-#: elf/ldconfig.c:1073
+#: elf/ldconfig.c:1076
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 biblioteka %s ne tame aplanke"
 
-#: elf/ldconfig.c:1076
+#: elf/ldconfig.c:1079
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4 biblioteka %s ne tame aplanke"
 
-#: elf/ldconfig.c:1308 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1311 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "baigėsi atmintis"
 
-#: elf/ldconfig.c:1341
+#: elf/ldconfig.c:1344
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: nepavyko atverti aplanko %s"
 
-#: elf/ldconfig.c:1454
+#: elf/ldconfig.c:1457
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Nepavyko atverti podėlio failo aplanko %s\n"
@@ -512,59 +512,59 @@ msgstr "išėjo su nežinomu išėjimo kodu"
 msgid "error: you do not have read permission for"
 msgstr "klaida: neturite skaitymo teisių"
 
-#: elf/readelflib.c:67
+#: elf/readelflib.c:65
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s yra 32 bitų ELF failas.\n"
 
-#: elf/readelflib.c:69
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s yra 64 bitų ELF failas.\n"
 
-#: elf/readelflib.c:71
+#: elf/readelflib.c:69
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "Netaisyklinga ELFCLASS faile %s.\n"
 
-#: elf/readelflib.c:106
+#: elf/readelflib.c:104
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "daugiau negu vienas dinaminis segmentas\n"
 
-#: elf/readlib.c:115
+#: elf/readlib.c:113
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "Failas %s tuščias, todėl netikrintas."
 
-#: elf/readlib.c:121
+#: elf/readlib.c:119
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "Failas %s per mažas, todėl netikrintas."
 
-#: elf/readlib.c:170
+#: elf/readlib.c:168
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s nėra ELF failas - magiškieji baitai failo pradžioje neteisingi.\n"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:60
 msgid "encoding of original text"
 msgstr "originalaus teksto koduotė"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:62
 msgid "Information:"
 msgstr "Informacija:"
 
-#: iconv/iconv_prog.c:78
+#: iconv/iconv_prog.c:77
 msgid "[FILE...]"
 msgstr "[FAILAS...]"
 
-#: iconv/iconv_prog.c:337
+#: iconv/iconv_prog.c:336
 #, c-format
 msgid "error while closing output file"
 msgstr "klaida užveriant išvedimo failą"
 
-#: iconv/iconv_prog.c:523
+#: iconv/iconv_prog.c:522
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "vidinė klaida (nekorektiškas deskriptorius)"
@@ -583,207 +583,207 @@ msgstr "Bandoma %s...\n"
 msgid "out of memory"
 msgstr "baigėsi atmintis"
 
-#: locale/programs/charmap.c:408
+#: locale/programs/charmap.c:407
 #, c-format
 msgid "duplicate definition of <%s>"
 msgstr "kartotinis <%s> apibrėžimas"
 
-#: locale/programs/charmap.c:415
+#: locale/programs/charmap.c:414
 #, c-format
 msgid "value for <%s> must be 1 or greater"
 msgstr "<%s> reikšmė turi būti 1 arba didesnė"
 
-#: locale/programs/charmap.c:427
+#: locale/programs/charmap.c:426
 #, c-format
 msgid "value of <%s> must be greater or equal than the value of <%s>"
 msgstr "<%s> reikšmė turi būti lygi arba didesnė už <%s> reikšmę"
 
-#: locale/programs/charmap.c:450 locale/programs/repertoire.c:182
+#: locale/programs/charmap.c:449 locale/programs/repertoire.c:181
 #, c-format
 msgid "argument to <%s> must be a single character"
 msgstr "<%s> argumentas turi būti vienas simbolis"
 
-#: locale/programs/charmap.c:504 locale/programs/charmap.c:684
-#: locale/programs/charmap.c:781 locale/programs/repertoire.c:229
+#: locale/programs/charmap.c:503 locale/programs/charmap.c:683
+#: locale/programs/charmap.c:780 locale/programs/repertoire.c:228
 msgid "no symbolic name given"
 msgstr "neduotas joks simbolinis vardas"
 
-#: locale/programs/charmap.c:558
+#: locale/programs/charmap.c:557
 msgid "invalid encoding given"
 msgstr "nurodyta netaisyklinga koduotė"
 
-#: locale/programs/charmap.c:567
+#: locale/programs/charmap.c:566
 msgid "too few bytes in character encoding"
 msgstr "per mažai baitų simbolio koduotėje"
 
-#: locale/programs/charmap.c:569
+#: locale/programs/charmap.c:568
 msgid "too many bytes in character encoding"
 msgstr "per daug baitų simbolio koduotėje"
 
-#: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
-#: locale/programs/ld-collate.c:2619 locale/programs/ld-collate.c:3777
-#: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
-#: locale/programs/ld-identification.c:397 locale/programs/ld-measurement.c:213
-#: locale/programs/ld-messages.c:295 locale/programs/ld-monetary.c:748
-#: locale/programs/ld-name.c:262 locale/programs/ld-numeric.c:325
-#: locale/programs/ld-paper.c:212 locale/programs/ld-telephone.c:276
-#: locale/programs/ld-time.c:959 locale/programs/repertoire.c:312
+#: locale/programs/charmap.c:614 locale/programs/ld-address.c:523
+#: locale/programs/ld-collate.c:2642 locale/programs/ld-collate.c:3806
+#: locale/programs/ld-ctype.c:2117 locale/programs/ld-ctype.c:2829
+#: locale/programs/ld-identification.c:396 locale/programs/ld-measurement.c:212
+#: locale/programs/ld-messages.c:294 locale/programs/ld-monetary.c:747
+#: locale/programs/ld-name.c:261 locale/programs/ld-numeric.c:324
+#: locale/programs/ld-paper.c:211 locale/programs/ld-telephone.c:275
+#: locale/programs/ld-time.c:958 locale/programs/repertoire.c:311
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
 msgstr "%1$s: apibrėžimas neužbaigtas „END %1$s“"
 
-#: locale/programs/charmap.c:656 locale/programs/charmap.c:720
+#: locale/programs/charmap.c:655 locale/programs/charmap.c:719
 #, c-format
 msgid "value for %s must be an integer"
 msgstr "%s reikšmė turi būti sveikasis skaičius"
 
-#: locale/programs/charmap.c:848
+#: locale/programs/charmap.c:847
 #, c-format
 msgid "%s: error in state machine"
 msgstr "%s: klaida būsenų automate"
 
-#: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
-#: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3970
-#: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
-#: locale/programs/ld-identification.c:413 locale/programs/ld-measurement.c:229
-#: locale/programs/ld-messages.c:311 locale/programs/ld-monetary.c:764
-#: locale/programs/ld-name.c:278 locale/programs/ld-numeric.c:341
-#: locale/programs/ld-paper.c:228 locale/programs/ld-telephone.c:292
-#: locale/programs/ld-time.c:990 locale/programs/locfile.c:1010
-#: locale/programs/repertoire.c:323
+#: locale/programs/charmap.c:855 locale/programs/ld-address.c:539
+#: locale/programs/ld-collate.c:2639 locale/programs/ld-collate.c:3999
+#: locale/programs/ld-ctype.c:2114 locale/programs/ld-ctype.c:2846
+#: locale/programs/ld-identification.c:412 locale/programs/ld-measurement.c:228
+#: locale/programs/ld-messages.c:310 locale/programs/ld-monetary.c:763
+#: locale/programs/ld-name.c:277 locale/programs/ld-numeric.c:340
+#: locale/programs/ld-paper.c:227 locale/programs/ld-telephone.c:291
+#: locale/programs/ld-time.c:989 locale/programs/locfile.c:1009
+#: locale/programs/repertoire.c:322
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: ankstyva failo pabaiga"
 
-#: locale/programs/charmap.c:875 locale/programs/charmap.c:886
+#: locale/programs/charmap.c:874 locale/programs/charmap.c:885
 #, c-format
 msgid "unknown character `%s'"
 msgstr "nežinomas simbolis „%s“"
 
-#: locale/programs/charmap.c:1035 locale/programs/repertoire.c:455
+#: locale/programs/charmap.c:1034 locale/programs/repertoire.c:454
 msgid "upper limit in range is smaller than lower limit"
 msgstr "viršutinė riba mažesnė už apatinę ribą"
 
-#: locale/programs/ld-address.c:133 locale/programs/ld-collate.c:1566
-#: locale/programs/ld-ctype.c:430 locale/programs/ld-identification.c:131
-#: locale/programs/ld-measurement.c:92 locale/programs/ld-messages.c:96
-#: locale/programs/ld-monetary.c:192 locale/programs/ld-name.c:93
-#: locale/programs/ld-numeric.c:97 locale/programs/ld-paper.c:89
-#: locale/programs/ld-telephone.c:92 locale/programs/ld-time.c:164
+#: locale/programs/ld-address.c:132 locale/programs/ld-collate.c:1570
+#: locale/programs/ld-ctype.c:429 locale/programs/ld-identification.c:130
+#: locale/programs/ld-measurement.c:91 locale/programs/ld-messages.c:95
+#: locale/programs/ld-monetary.c:191 locale/programs/ld-name.c:92
+#: locale/programs/ld-numeric.c:96 locale/programs/ld-paper.c:88
+#: locale/programs/ld-telephone.c:91 locale/programs/ld-time.c:163
 #, c-format
 msgid "No definition for %s category found"
 msgstr "Nerastas %s kategorijos apibrėžimas"
 
-#: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
-#: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2479
-#: locale/programs/ld-identification.c:309 locale/programs/ld-measurement.c:196
-#: locale/programs/ld-messages.c:264 locale/programs/ld-monetary.c:503
-#: locale/programs/ld-monetary.c:538 locale/programs/ld-monetary.c:579
-#: locale/programs/ld-name.c:235 locale/programs/ld-numeric.c:217
-#: locale/programs/ld-paper.c:195 locale/programs/ld-telephone.c:251
-#: locale/programs/ld-time.c:864 locale/programs/ld-time.c:906
+#: locale/programs/ld-address.c:431 locale/programs/ld-address.c:468
+#: locale/programs/ld-address.c:506 locale/programs/ld-ctype.c:2478
+#: locale/programs/ld-identification.c:308 locale/programs/ld-measurement.c:195
+#: locale/programs/ld-messages.c:263 locale/programs/ld-monetary.c:502
+#: locale/programs/ld-monetary.c:537 locale/programs/ld-monetary.c:578
+#: locale/programs/ld-name.c:234 locale/programs/ld-numeric.c:216
+#: locale/programs/ld-paper.c:194 locale/programs/ld-telephone.c:250
+#: locale/programs/ld-time.c:863 locale/programs/ld-time.c:905
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: laukas „%s“ apibrėžtas daugiau negu vieną kartą"
 
-#: locale/programs/ld-address.c:436 locale/programs/ld-address.c:474
-#: locale/programs/ld-identification.c:313 locale/programs/ld-messages.c:274
-#: locale/programs/ld-monetary.c:507 locale/programs/ld-monetary.c:542
-#: locale/programs/ld-name.c:239 locale/programs/ld-numeric.c:221
-#: locale/programs/ld-telephone.c:255 locale/programs/ld-time.c:756
-#: locale/programs/ld-time.c:827 locale/programs/ld-time.c:869
+#: locale/programs/ld-address.c:435 locale/programs/ld-address.c:473
+#: locale/programs/ld-identification.c:312 locale/programs/ld-messages.c:273
+#: locale/programs/ld-monetary.c:506 locale/programs/ld-monetary.c:541
+#: locale/programs/ld-name.c:238 locale/programs/ld-numeric.c:220
+#: locale/programs/ld-telephone.c:254 locale/programs/ld-time.c:755
+#: locale/programs/ld-time.c:826 locale/programs/ld-time.c:868
 #, c-format
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: nežinomas simbolis lauke „%s“"
 
-#: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3775
-#: locale/programs/ld-ctype.c:2827 locale/programs/ld-identification.c:394
-#: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
-#: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
-#: locale/programs/ld-numeric.c:323 locale/programs/ld-paper.c:210
-#: locale/programs/ld-telephone.c:274 locale/programs/ld-time.c:957
+#: locale/programs/ld-address.c:520 locale/programs/ld-collate.c:3804
+#: locale/programs/ld-ctype.c:2826 locale/programs/ld-identification.c:393
+#: locale/programs/ld-measurement.c:209 locale/programs/ld-messages.c:292
+#: locale/programs/ld-monetary.c:745 locale/programs/ld-name.c:259
+#: locale/programs/ld-numeric.c:322 locale/programs/ld-paper.c:209
+#: locale/programs/ld-telephone.c:273 locale/programs/ld-time.c:956
 #, c-format
 msgid "%s: incomplete `END' line"
 msgstr "%s: nepilna „END“ eilutė"
 
-#: locale/programs/ld-address.c:531 locale/programs/ld-collate.c:550
-#: locale/programs/ld-collate.c:602 locale/programs/ld-collate.c:898
-#: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2585
-#: locale/programs/ld-collate.c:2606 locale/programs/ld-collate.c:3960
-#: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
-#: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
-#: locale/programs/ld-identification.c:404 locale/programs/ld-measurement.c:220
-#: locale/programs/ld-messages.c:302 locale/programs/ld-monetary.c:755
-#: locale/programs/ld-name.c:269 locale/programs/ld-numeric.c:332
-#: locale/programs/ld-paper.c:219 locale/programs/ld-telephone.c:283
-#: locale/programs/ld-time.c:981
+#: locale/programs/ld-address.c:530 locale/programs/ld-collate.c:553
+#: locale/programs/ld-collate.c:605 locale/programs/ld-collate.c:901
+#: locale/programs/ld-collate.c:914 locale/programs/ld-collate.c:2608
+#: locale/programs/ld-collate.c:2629 locale/programs/ld-collate.c:3989
+#: locale/programs/ld-ctype.c:1846 locale/programs/ld-ctype.c:2104
+#: locale/programs/ld-ctype.c:2676 locale/programs/ld-ctype.c:2837
+#: locale/programs/ld-identification.c:403 locale/programs/ld-measurement.c:219
+#: locale/programs/ld-messages.c:301 locale/programs/ld-monetary.c:754
+#: locale/programs/ld-name.c:268 locale/programs/ld-numeric.c:331
+#: locale/programs/ld-paper.c:218 locale/programs/ld-telephone.c:282
+#: locale/programs/ld-time.c:980
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: sintaksės klaida"
 
-#: locale/programs/ld-collate.c:1607
+#: locale/programs/ld-collate.c:1615
 #, c-format
 msgid "symbol `%s' not defined"
 msgstr "simbolis „%s“ neapibrėžtas"
 
-#: locale/programs/ld-collate.c:1687 locale/programs/ld-collate.c:1792
+#: locale/programs/ld-collate.c:1695 locale/programs/ld-collate.c:1800
 #, c-format
 msgid "symbol `%s'"
 msgstr "simbolis „%s“"
 
-#: locale/programs/ld-collate.c:1855
+#: locale/programs/ld-collate.c:1863
 msgid "too many errors; giving up"
 msgstr "per daug klaidų; pasiduodu"
 
-#: locale/programs/ld-ctype.c:1963 locale/programs/ld-ctype.c:2014
-#: locale/programs/ld-ctype.c:2056
+#: locale/programs/ld-ctype.c:1962 locale/programs/ld-ctype.c:2013
+#: locale/programs/ld-ctype.c:2055
 msgid "syntax error"
 msgstr "sintaksės klaida"
 
-#: locale/programs/ld-time.c:740
+#: locale/programs/ld-time.c:739
 #, c-format
 msgid "%s: too few values for field `%s'"
 msgstr "%s: per mažai reikšmių laukui „%s“"
 
-#: locale/programs/ld-time.c:785
+#: locale/programs/ld-time.c:784
 msgid "extra trailing semicolon"
 msgstr "papildomas kabliataškis pabaigoje"
 
-#: locale/programs/linereader.c:130
+#: locale/programs/linereader.c:129
 msgid "trailing garbage at end of line"
 msgstr "šiukšlės eilutės pabaigoje"
 
-#: locale/programs/linereader.c:298
+#: locale/programs/linereader.c:297
 msgid "garbage at end of number"
 msgstr "šiukšlės skaičiaus pabaigoje"
 
-#: locale/programs/locale.c:70
+#: locale/programs/locale.c:69
 msgid "System information:"
 msgstr "Sistemos informacija:"
 
-#: locale/programs/locale.c:78
+#: locale/programs/locale.c:77
 msgid "Print more information"
 msgstr "Spausdinti daugiau informacijos"
 
-#: login/programs/pt_chown.c:204
+#: login/programs/pt_chown.c:203
 #, c-format
 msgid "too many arguments"
 msgstr "per daug argumentų"
 
-#: login/programs/pt_chown.c:212
+#: login/programs/pt_chown.c:211
 #, c-format
 msgid "needs to be installed setuid `root'"
 msgstr "turi būti instaliuota setuid „root“"
 
-#: malloc/mcheck-impl.c:355
+#: malloc/mcheck-impl.c:354
 msgid "memory is consistent, library is buggy\n"
 msgstr "atminties turinys korektiškas, bibliotekoje yra klaida\n"
 
-#: malloc/mcheck-impl.c:364
+#: malloc/mcheck-impl.c:363
 msgid "block freed twice\n"
 msgstr "blokas atlaisvintas du kartus\n"
 
-#: malloc/memusage.sh:213
+#: malloc/memusage.sh:212
 msgid "No program name given"
 msgstr "Nenurodytas programos vardas"
 
@@ -791,7 +791,7 @@ msgstr "Nenurodytas programos vardas"
 msgid "Unknown system error"
 msgstr "Nežinoma sistemos klaida"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:833 nis/ypclnt.c:922 posix/regcomp.c:135
+#: nis/nis_error.h:1 nis/ypclnt.c:832 nis/ypclnt.c:921 posix/regcomp.c:135
 #: sysdeps/gnu/errlist.h:1
 msgid "Success"
 msgstr "Sėkmė"
@@ -804,45 +804,45 @@ msgstr "Dalinė sėkmė"
 msgid "Too many attributes"
 msgstr "Per daug atributų"
 
-#: nis/nis_print.c:52
+#: nis/nis_print.c:51
 msgid "UNKNOWN"
 msgstr "NEŽINOMA"
 
-#: nis/ypclnt.c:881
+#: nis/ypclnt.c:880
 msgid "Database is busy"
 msgstr "Duomenų bazė užimta"
 
-#: nis/ypclnt.c:931
+#: nis/ypclnt.c:930
 msgid "System resource allocation failure"
 msgstr "Sistemos resursų išskyrimo sutrikimas"
 
-#: nscd/nscd_stat.c:174
+#: nscd/nscd_stat.c:173
 msgid "yes"
 msgstr "taip"
 
-#: nscd/nscd_stat.c:175
+#: nscd/nscd_stat.c:174
 msgid "no"
 msgstr "ne"
 
-#: nscd/selinux.c:255
+#: nscd/selinux.c:254
 msgid "Failed to determine if kernel supports SELinux"
 msgstr "Nepavyko nustatyti, ar branduolys palaiko SELinux"
 
-#: nss/getent.c:901
+#: nss/getent.c:900
 #, c-format
 msgid "Unknown database name"
 msgstr "Nežinomas duomenų bazės vardas"
 
-#: nss/getent.c:931
+#: nss/getent.c:930
 msgid "Supported databases:\n"
 msgstr "Palaikomos duomenų bazės:\n"
 
-#: nss/getent.c:997
+#: nss/getent.c:996
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Nežinoma duomenų bazė: %s\n"
 
-#: nss/makedb.c:569
+#: nss/makedb.c:568
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "problemos skaitant „%s“"
@@ -885,7 +885,7 @@ msgstr "Nesuderintas ) arba \\)"
 msgid "No previous regular expression"
 msgstr "Nėra ankstesniosios reguliariosios išraiškos"
 
-#: posix/wordexp.c:1795
+#: posix/wordexp.c:1794
 msgid "parameter null or not set"
 msgstr "parametras tuščias arba nenustatytas"
 
@@ -917,7 +917,7 @@ msgstr "Vardų paieškos vidinė klaida"
 msgid "Unknown resolver error"
 msgstr "Nežinoma vardų paieškos klaida"
 
-#: resolv/res_hconf.c:219
+#: resolv/res_hconf.c:218
 #, c-format
 msgid "%s: line %d: bad command `%s'\n"
 msgstr "%s: eilutė %d: bloga komanda „%s“\n"
@@ -1914,12 +1914,12 @@ msgstr "Nutraukta signalo"
 msgid "Parameter string not correctly encoded"
 msgstr "Parametrų seka netaisyklingai užkoduota"
 
-#: sysdeps/unix/sysv/linux/lddlibc4.c:81
+#: sysdeps/unix/sysv/linux/lddlibc4.c:80
 #, c-format
 msgid "cannot open `%s'"
 msgstr "nepavyko atverti „%s“"
 
-#: sysdeps/unix/sysv/linux/lddlibc4.c:85
+#: sysdeps/unix/sysv/linux/lddlibc4.c:84
 #, c-format
 msgid "cannot read header from `%s'"
 msgstr "nepavyko perskaityti „%s“ antraštės"

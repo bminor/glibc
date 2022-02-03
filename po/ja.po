@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.14\n"
-"POT-Creation-Date: 2021-07-28 22:02-0400\n"
+"POT-Creation-Date: 2022-01-29 17:34-0500\n"
 "PO-Revision-Date: 2011-10-08 23:43+0900\n"
 "Last-Translator: Yasuaki Taniguchi <yasuakit@gmail.com>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -68,9 +68,9 @@ msgstr "このヘルプ一覧を表示する"
 msgid "Give a short usage message"
 msgstr "短い使用方法を表示する"
 
-#: argp/argp-parse.c:103 catgets/gencat.c:109 catgets/gencat.c:113
-#: iconv/iconv_prog.c:61 iconv/iconv_prog.c:62 nscd/nscd.c:107 nscd/nscd.c:111
-#: nss/makedb.c:121
+#: argp/argp-parse.c:103 catgets/gencat.c:108 catgets/gencat.c:112
+#: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
+#: nss/makedb.c:120
 msgid "NAME"
 msgstr "NAME"
 
@@ -112,19 +112,19 @@ msgstr ""
 "%s%s%s:%u: %s%sアサーション `%s' に失敗しました。\n"
 "%n"
 
-#: catgets/gencat.c:110
+#: catgets/gencat.c:109
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "シンボル定義を含んだ C ヘッダーファイル NAME を作成する"
 
-#: catgets/gencat.c:112
+#: catgets/gencat.c:111
 msgid "Do not use existing catalog, force new output file"
 msgstr "既存のカタログを使用せず、強制的に新しい出力ファイルにする"
 
-#: catgets/gencat.c:113 nss/makedb.c:121
+#: catgets/gencat.c:112 nss/makedb.c:120
 msgid "Write output to file NAME"
 msgstr "出力をファイル NAME に書き込む"
 
-#: catgets/gencat.c:118
+#: catgets/gencat.c:117
 msgid ""
 "Generate message catalog.\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
@@ -132,7 +132,7 @@ msgstr ""
 "メッセージカタログを生成する。INPUT-FILE が - の場合、入力を標準入力から読み込む。OUTPUT-FILE\n"
 "が - の場合、出力を標準出力に書き込む。\n"
 
-#: catgets/gencat.c:123
+#: catgets/gencat.c:122
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -140,13 +140,13 @@ msgstr ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
 
-#: catgets/gencat.c:245 debug/pcprofiledump.c:225 debug/xtrace.sh:64
-#: elf/ldconfig.c:328 elf/ldd.bash.in:38 elf/pldd.c:263 elf/sotruss.sh:75
-#: elf/sprof.c:389 iconv/iconv_prog.c:405 iconv/iconvconfig.c:398
-#: locale/programs/locale.c:293 locale/programs/localedef.c:460
-#: login/programs/pt_chown.c:63 malloc/memusage.sh:71 malloc/memusagestat.c:581
-#: nscd/nscd.c:522 nss/getent.c:88 nss/makedb.c:386 posix/getconf.c:485
-#: sysdeps/unix/sysv/linux/lddlibc4.c:68
+#: catgets/gencat.c:244 debug/pcprofiledump.c:224 debug/xtrace.sh:63
+#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
+#: locale/programs/locale.c:292 locale/programs/localedef.c:459
+#: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:580
+#: nscd/nscd.c:521 nss/getent.c:87 nss/makedb.c:385 posix/getconf.c:485
+#: sysdeps/unix/sysv/linux/lddlibc4.c:67
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -157,141 +157,141 @@ msgstr ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 
-#: catgets/gencat.c:250 debug/pcprofiledump.c:230 debug/xtrace.sh:68
-#: elf/ldconfig.c:333 elf/pldd.c:268 elf/sprof.c:395 iconv/iconv_prog.c:410
-#: iconv/iconvconfig.c:403 locale/programs/locale.c:298
-#: locale/programs/localedef.c:465 malloc/memusage.sh:75
-#: malloc/memusagestat.c:586 nscd/nscd.c:527 nss/getent.c:93 nss/makedb.c:391
+#: catgets/gencat.c:249 debug/pcprofiledump.c:229 debug/xtrace.sh:67
+#: elf/ldconfig.c:332 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: iconv/iconvconfig.c:402 locale/programs/locale.c:297
+#: locale/programs/localedef.c:464 malloc/memusage.sh:74
+#: malloc/memusagestat.c:585 nscd/nscd.c:526 nss/getent.c:92 nss/makedb.c:390
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
 msgstr "作者 %s。\n"
 
-#: catgets/gencat.c:281
+#: catgets/gencat.c:280
 msgid "*standard input*"
 msgstr "*標準入力*"
 
-#: catgets/gencat.c:287 iconv/iconv_charmap.c:173 iconv/iconv_prog.c:273
-#: nss/makedb.c:247
+#: catgets/gencat.c:286 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
+#: nss/makedb.c:246
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "入力ファイル`%s'を開けません"
 
-#: catgets/gencat.c:416 catgets/gencat.c:491
+#: catgets/gencat.c:415 catgets/gencat.c:490
 msgid "illegal set number"
 msgstr "不正な設定値です"
 
-#: catgets/gencat.c:443
+#: catgets/gencat.c:442
 msgid "duplicate set definition"
 msgstr "設定の定義が重複しています"
 
-#: catgets/gencat.c:445 catgets/gencat.c:617 catgets/gencat.c:669
+#: catgets/gencat.c:444 catgets/gencat.c:616 catgets/gencat.c:668
 msgid "this is the first definition"
 msgstr "これが最初の定義です"
 
-#: catgets/gencat.c:516
+#: catgets/gencat.c:515
 #, c-format
 msgid "unknown set `%s'"
 msgstr "不明なセット`%s'です"
 
-#: catgets/gencat.c:557
+#: catgets/gencat.c:556
 msgid "invalid quote character"
 msgstr "無効な引用文字です"
 
-#: catgets/gencat.c:570
+#: catgets/gencat.c:569
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "不明な指示`%s'がありました: この行は無視します"
 
-#: catgets/gencat.c:615
+#: catgets/gencat.c:614
 msgid "duplicated message number"
 msgstr "重複したメッセージ番号です"
 
-#: catgets/gencat.c:666
+#: catgets/gencat.c:665
 msgid "duplicated message identifier"
 msgstr "重複したメッセージ識別子です"
 
-#: catgets/gencat.c:723
+#: catgets/gencat.c:722
 msgid "invalid character: message ignored"
 msgstr "無効な文字です: メッセージは無視されました"
 
-#: catgets/gencat.c:766
+#: catgets/gencat.c:765
 msgid "invalid line"
 msgstr "無効な行です"
 
-#: catgets/gencat.c:820
+#: catgets/gencat.c:819
 msgid "malformed line ignored"
 msgstr "間違った形式の行が無視されました"
 
-#: catgets/gencat.c:984 catgets/gencat.c:1025
+#: catgets/gencat.c:983 catgets/gencat.c:1024
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "出力ファイル`%s'を開けません"
 
-#: catgets/gencat.c:1187 locale/programs/linereader.c:560
+#: catgets/gencat.c:1186 locale/programs/linereader.c:559
 msgid "invalid escape sequence"
 msgstr "無効なエスケープシーケンスです"
 
-#: catgets/gencat.c:1211
+#: catgets/gencat.c:1210
 msgid "unterminated message"
 msgstr "終端していないメッセージです"
 
-#: catgets/gencat.c:1235
+#: catgets/gencat.c:1234
 #, c-format
 msgid "while opening old catalog file"
 msgstr "古いカタログファイルオープン中"
 
-#: catgets/gencat.c:1326
+#: catgets/gencat.c:1325
 #, c-format
 msgid "conversion modules not available"
 msgstr "変換モジュールが使用出来ません"
 
-#: catgets/gencat.c:1352
+#: catgets/gencat.c:1351
 #, c-format
 msgid "cannot determine escape character"
 msgstr "エスケープ文字を決定できません"
 
-#: debug/pcprofiledump.c:53
+#: debug/pcprofiledump.c:52
 msgid "Don't buffer output"
 msgstr "出力をバッファーしません"
 
-#: debug/pcprofiledump.c:58
+#: debug/pcprofiledump.c:57
 msgid "Dump information generated by PC profiling."
 msgstr "PCプロファイリングによって生成される情報をダンプします。"
 
-#: debug/pcprofiledump.c:61
+#: debug/pcprofiledump.c:60
 msgid "[FILE]"
 msgstr "[FILE]"
 
-#: debug/pcprofiledump.c:108
+#: debug/pcprofiledump.c:107
 #, c-format
 msgid "cannot open input file"
 msgstr "入力ファイルを開けません"
 
-#: debug/pcprofiledump.c:115
+#: debug/pcprofiledump.c:114
 #, c-format
 msgid "cannot read header"
 msgstr "ヘッダーを読み込めません"
 
-#: debug/pcprofiledump.c:179
+#: debug/pcprofiledump.c:178
 #, c-format
 msgid "invalid pointer size"
 msgstr "無効なポインタサイズです"
 
-#: debug/xtrace.sh:26 debug/xtrace.sh:44
+#: debug/xtrace.sh:25 debug/xtrace.sh:43
 msgid "Usage: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
 msgstr "使用法: xtrace [OPTION]... PROGRAM [PROGRAMOPTION]...\\n"
 
-#: debug/xtrace.sh:32 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
-#: malloc/memusage.sh:26
+#: debug/xtrace.sh:31 elf/sotruss.sh:56 elf/sotruss.sh:67 elf/sotruss.sh:135
+#: malloc/memusage.sh:25
 msgid "Try \\`%s --help' or \\`%s --usage' for more information.\\n"
 msgstr "詳細は `%s --help' または `%s --usage' を実行して下さい。\\n"
 
-#: debug/xtrace.sh:38
+#: debug/xtrace.sh:37
 msgid "%s: option '%s' requires an argument.\\n"
 msgstr "%s: オプション '%s' は引数が必要です。\\n"
 
-#: debug/xtrace.sh:45
+#: debug/xtrace.sh:44
 msgid ""
 "Trace execution of program by printing currently executed function.\n"
 "\n"
@@ -316,20 +316,20 @@ msgstr ""
 "長い形式のオプションで必須または任意の引数は、それに対応する短い形式のオプションでも同様に必須または任意です。\n"
 "\n"
 
-#: debug/xtrace.sh:125
+#: debug/xtrace.sh:124
 msgid "xtrace: unrecognized option \\`$1'\\n"
 msgstr "xtrace: 認識出来ないオプション \\`$1' です。\\n"
 
-#: debug/xtrace.sh:138
+#: debug/xtrace.sh:137
 msgid "No program name given\\n"
 msgstr "プログラム名が与えられていません\\n"
 
-#: debug/xtrace.sh:146
+#: debug/xtrace.sh:145
 #, sh-format
 msgid "executable \\`$program' not found\\n"
 msgstr "実行可能ファイル \\`$program' が見つかりません\\n"
 
-#: debug/xtrace.sh:150
+#: debug/xtrace.sh:149
 #, sh-format
 msgid "\\`$program' is no executable\\n"
 msgstr "\\`$program' は実行可能ファイルではありません\\n"
@@ -350,65 +350,65 @@ msgstr "無効なモードです"
 msgid "invalid mode parameter"
 msgstr "無効なモードパラメータです"
 
-#: elf/cache.c:180
+#: elf/cache.c:179
 msgid "unknown"
 msgstr "不明です"
 
-#: elf/cache.c:254
+#: elf/cache.c:253
 msgid "Unknown OS"
 msgstr "不明な OS です"
 
-#: elf/cache.c:259
+#: elf/cache.c:258
 #, c-format
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:320 elf/ldconfig.c:1434
+#: elf/cache.c:319 elf/ldconfig.c:1437
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "キャッシュファイル %s を開けません\n"
 
-#: elf/cache.c:334
+#: elf/cache.c:333
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "キャッシュファイルの mmap に失敗しました。\n"
 
-#: elf/cache.c:338 elf/cache.c:352 elf/cache.c:363
+#: elf/cache.c:337 elf/cache.c:351 elf/cache.c:362
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "ファイルはキャッシュファイルではありません.\n"
 
-#: elf/cache.c:392 elf/cache.c:407
+#: elf/cache.c:391 elf/cache.c:406
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d 個のライブラリがキャッシュ `%s' 内で見つかりました\n"
 
-#: elf/cache.c:726
+#: elf/cache.c:725
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "一時キャッシュファイル %s を作成できません"
 
-#: elf/cache.c:734 elf/cache.c:744 elf/cache.c:748 elf/cache.c:753
-#: elf/cache.c:771
+#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
+#: elf/cache.c:770
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "キャッシュデータの書込みに失敗しました"
 
-#: elf/cache.c:766
+#: elf/cache.c:765
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "%s のアクセス権限を %#o へ変更するのに失敗しました"
 
-#: elf/cache.c:775
+#: elf/cache.c:774
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "%s から %s への名前変更に失敗しました"
 
-#: elf/dl-close.c:409 elf/dl-open.c:294
+#: elf/dl-close.c:386 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "スコープリストを作成できません"
 
-#: elf/dl-close.c:870
+#: elf/dl-close.c:815
 msgid "shared object not open"
 msgstr "共有オブジェクトが開けません"
 
@@ -461,163 +461,155 @@ msgstr "内部エラー: ファイルポインタ (fptr) 表のシンボル索�
 msgid "cannot create capability list"
 msgstr "権限リストを作成できません"
 
-#: elf/dl-load.c:432
+#: elf/dl-load.c:434
 msgid "cannot allocate name record"
 msgstr "名前レコードを配置できません"
 
-#: elf/dl-load.c:534 elf/dl-load.c:647 elf/dl-load.c:741 elf/dl-load.c:838
+#: elf/dl-load.c:536 elf/dl-load.c:649 elf/dl-load.c:743 elf/dl-load.c:840
 msgid "cannot create cache for search path"
 msgstr "探索パス用のキャッシュを作成できません"
 
-#: elf/dl-load.c:630
+#: elf/dl-load.c:632
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "RUNPATH/RPATH のコピーを作成できません"
 
-#: elf/dl-load.c:727
+#: elf/dl-load.c:729
 msgid "cannot create search path array"
 msgstr "探索パス配列を作成できません"
 
-#: elf/dl-load.c:968
+#: elf/dl-load.c:970
 msgid "cannot stat shared object"
 msgstr "共有オブジェクトの状態取得 (stat) ができません"
 
-#: elf/dl-load.c:1099 elf/dl-load.c:2314
+#: elf/dl-load.c:1069 elf/dl-load.c:2282
 msgid "cannot create shared object descriptor"
 msgstr "共有オブジェクト記述子を作成できません"
 
-#: elf/dl-load.c:1118 elf/dl-load.c:1689 elf/dl-load.c:1791
+#: elf/dl-load.c:1088 elf/dl-load.c:1661 elf/dl-load.c:1763
 msgid "cannot read file data"
 msgstr "ファイルデータを読み込めません"
 
-#: elf/dl-load.c:1164
-msgid "ELF load command alignment not page-aligned"
-msgstr "ELF ロードコマンド整列がページで整列されていません"
-
-#: elf/dl-load.c:1171
-msgid "ELF load command address/offset not properly aligned"
-msgstr "ELF ロードコマンドのアドレス/オフセットが適切に整列されていません"
-
-#: elf/dl-load.c:1250
+#: elf/dl-load.c:1223
 msgid "object file has no loadable segments"
 msgstr "オブジェクトファイルはロード可能セグメントを持っていません"
 
-#: elf/dl-load.c:1263
+#: elf/dl-load.c:1240
 msgid "cannot dynamically load executable"
 msgstr "実行ファイルを動的にロードできません"
 
-#: elf/dl-load.c:1288
+#: elf/dl-load.c:1247
 msgid "object file has no dynamic section"
 msgstr "オブジェクトファイルは動的セクションを持っていません"
 
-#: elf/dl-load.c:1308
+#: elf/dl-load.c:1284
 msgid "shared object cannot be dlopen()ed"
 msgstr "共有オブジェクトは dlopen() できません"
 
-#: elf/dl-load.c:1321
+#: elf/dl-load.c:1297
 msgid "cannot allocate memory for program header"
 msgstr "プログラムヘッダー用のメモリを配置できません"
 
-#: elf/dl-load.c:1354 elf/dl-load.h:130
+#: elf/dl-load.c:1330 elf/dl-load.h:131
 msgid "cannot change memory protections"
 msgstr "メモリ保護を変更できません"
 
-#: elf/dl-load.c:1378
+#: elf/dl-load.c:1354
 msgid "cannot enable executable stack as shared object requires"
 msgstr "共有オブジェクトが必要としている実行可能スタックを有効にできません"
 
-#: elf/dl-load.c:1406
+#: elf/dl-load.c:1382
 msgid "cannot close file descriptor"
 msgstr "ファイル記述子を閉じられません"
 
-#: elf/dl-load.c:1689
+#: elf/dl-load.c:1661
 msgid "file too short"
 msgstr "ファイルが小さすぎます"
 
-#: elf/dl-load.c:1725
+#: elf/dl-load.c:1697
 msgid "invalid ELF header"
 msgstr "無効な ELF ヘッダーです"
 
-#: elf/dl-load.c:1737
+#: elf/dl-load.c:1709
 msgid "ELF file data encoding not big-endian"
 msgstr "ELF ファイルデータのエンコーディングがビッグエンディアンではありません"
 
-#: elf/dl-load.c:1739
+#: elf/dl-load.c:1711
 msgid "ELF file data encoding not little-endian"
 msgstr "ELF ファイルデータのエンコーディングがリトルエンディアンではありません"
 
-#: elf/dl-load.c:1743
+#: elf/dl-load.c:1715
 msgid "ELF file version ident does not match current one"
 msgstr "ELF ファイルバージョン識別子が現在のものと一致していません"
 
-#: elf/dl-load.c:1747
+#: elf/dl-load.c:1719
 msgid "ELF file OS ABI invalid"
 msgstr "ELF ファイル OS ABI が無効です"
 
-#: elf/dl-load.c:1750
+#: elf/dl-load.c:1722
 msgid "ELF file ABI version invalid"
 msgstr "ELF ファイル ABI バージョンが無効です"
 
-#: elf/dl-load.c:1753
+#: elf/dl-load.c:1725
 msgid "nonzero padding in e_ident"
 msgstr "e_ident 内にゼロでない詰め文字があります"
 
-#: elf/dl-load.c:1756
+#: elf/dl-load.c:1728
 msgid "internal error"
 msgstr "内部エラー"
 
-#: elf/dl-load.c:1763
+#: elf/dl-load.c:1735
 msgid "ELF file version does not match current one"
 msgstr "ELFファイルのバージョン番号が現在のファイルに一致していません"
 
-#: elf/dl-load.c:1771
+#: elf/dl-load.c:1743
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "ET_DYN と ET_EXEC のみロード可能です"
 
-#: elf/dl-load.c:1776
+#: elf/dl-load.c:1748
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF ファイルの phentsize が予期されたサイズではありません"
 
-#: elf/dl-load.c:2333
+#: elf/dl-load.c:2301
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "間違った ELF クラスです: ELFCLASS64"
 
-#: elf/dl-load.c:2334
+#: elf/dl-load.c:2302
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "間違った ELF クラスです: ELFCLASS32"
 
-#: elf/dl-load.c:2337
+#: elf/dl-load.c:2305
 msgid "cannot open shared object file"
 msgstr "共有オブジェクトファイルを開けません"
 
-#: elf/dl-load.h:128
+#: elf/dl-load.h:129
 msgid "failed to map segment from shared object"
 msgstr "共有オブジェクトのセグメントをマップするのに失敗しました"
 
-#: elf/dl-load.h:132
+#: elf/dl-load.h:133
 msgid "cannot map zero-fill pages"
 msgstr "ゼロで埋められたページをマップできません"
 
-#: elf/dl-lookup.c:876
+#: elf/dl-lookup.c:881
 msgid "symbol lookup error"
 msgstr "シンボル検索エラーです"
 
-#: elf/dl-open.c:80
+#: elf/dl-open.c:84
 msgid "cannot extend global scope"
 msgstr "大域スコープを拡張できません"
 
-#: elf/dl-open.c:401
+#: elf/dl-open.c:405
 msgid "TLS generation counter wrapped!  Please report this."
 msgstr "TLS 生成カウンタが一周しました!  これを報告してください。"
 
-#: elf/dl-open.c:814
+#: elf/dl-open.c:827
 msgid "invalid mode for dlopen()"
 msgstr "dlopen() 用の無効なモードです"
 
-#: elf/dl-open.c:831
+#: elf/dl-open.c:844
 msgid "no more namespaces available for dlmopen()"
 msgstr "dlmopen() 用にこれ以上名前空間を使用出来ません"
 
-#: elf/dl-open.c:855
+#: elf/dl-open.c:868
 msgid "invalid target namespace in dlmopen()"
 msgstr "dlmopen() 内で無効なターゲット名前空間です"
 
@@ -625,20 +617,20 @@ msgstr "dlmopen() 内で無効なターゲット名前空間です"
 msgid "cannot allocate memory in static TLS block"
 msgstr "静的 TLS ブロック内にメモリを配置出来ません"
 
-#: elf/dl-reloc.c:233
+#: elf/dl-reloc.c:275
 msgid "cannot make segment writable for relocation"
 msgstr "セグメントを再配置用に書き込み可能に出来ません"
 
-#: elf/dl-reloc.c:293
+#: elf/dl-reloc.c:306
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: %s 用の再配置結果を保存するときにメモリが足りなくなりました\n"
 
-#: elf/dl-reloc.c:309
+#: elf/dl-reloc.c:322
 msgid "cannot restore segment prot after reloc"
 msgstr "再配置後にセグメントの prot を復元できません"
 
-#: elf/dl-reloc.c:340
+#: elf/dl-reloc.c:353
 msgid "cannot apply additional memory protection after relocation"
 msgstr "再配置後に追加のメモリ保護を適用できません"
 
@@ -650,196 +642,196 @@ msgstr "コード内で使用されている RTLD_NEXT を動的にロード出�
 msgid "cannot create TLS data structures"
 msgstr "TLS データ構造体を作成できません"
 
-#: elf/dl-version.c:148
+#: elf/dl-version.c:147
 msgid "version lookup error"
 msgstr "バージョン検索エラーです"
 
-#: elf/dl-version.c:279
+#: elf/dl-version.c:278
 msgid "cannot allocate version reference table"
 msgstr "バージョン参照表を配置出来ません"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:150
 msgid "Print cache"
 msgstr "キャッシュを表示します"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:151
 msgid "Generate verbose messages"
 msgstr "冗長なメッセージを生成します"
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:152
 msgid "Don't build cache"
 msgstr "キャッシュの構築を行いません"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:154
 msgid "Change to and use ROOT as root directory"
 msgstr "ルートディレクトリを ROOT に変更し、使用します"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:154
 msgid "ROOT"
 msgstr "ROOT"
 
-#: elf/ldconfig.c:156
+#: elf/ldconfig.c:155
 msgid "CACHE"
 msgstr "CACHE"
 
-#: elf/ldconfig.c:156
+#: elf/ldconfig.c:155
 msgid "Use CACHE as cache file"
 msgstr "キャッシュファイルとして CACHE を使用します"
 
-#: elf/ldconfig.c:157
+#: elf/ldconfig.c:156
 msgid "CONF"
 msgstr "CONF"
 
-#: elf/ldconfig.c:157
+#: elf/ldconfig.c:156
 msgid "Use CONF as configuration file"
 msgstr "設定ファイルとして CONF を使用します"
 
-#: elf/ldconfig.c:158
+#: elf/ldconfig.c:157
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "コマンドラインで指定されたディレクトリのみ処理します。キャッシュは作成しません。"
 
-#: elf/ldconfig.c:159
+#: elf/ldconfig.c:158
 msgid "Manually link individual libraries."
 msgstr "個々のライブラリを手動でリンクしてください。"
 
-#: elf/ldconfig.c:160
+#: elf/ldconfig.c:159
 msgid "FORMAT"
 msgstr "FORMAT"
 
-#: elf/ldconfig.c:161
+#: elf/ldconfig.c:160
 msgid "Ignore auxiliary cache file"
 msgstr "補助キャッシュファイルを無視しています"
 
-#: elf/ldconfig.c:169
+#: elf/ldconfig.c:168
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "動的リンカランタイムのバインディングを設定します。"
 
-#: elf/ldconfig.c:372
+#: elf/ldconfig.c:371
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "パス `%s' が二回以上与えられました"
 
-#: elf/ldconfig.c:488
+#: elf/ldconfig.c:487
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s は既知のライブラリ型ではありません"
 
-#: elf/ldconfig.c:516
+#: elf/ldconfig.c:519
 #, c-format
 msgid "Can't stat %s"
 msgstr "%s の情報取得 (stat) ができません"
 
-#: elf/ldconfig.c:597
+#: elf/ldconfig.c:600
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "%s の情報取得 (stat) が出来ません\n"
 
-#: elf/ldconfig.c:607
+#: elf/ldconfig.c:610
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s はシンボリックリンクではありません\n"
 
-#: elf/ldconfig.c:626
+#: elf/ldconfig.c:629
 #, c-format
 msgid "Can't unlink %s"
 msgstr "%s をリンク解除できません"
 
-#: elf/ldconfig.c:632
+#: elf/ldconfig.c:635
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "%s から %s へリンクできません"
 
-#: elf/ldconfig.c:638
+#: elf/ldconfig.c:641
 msgid " (changed)\n"
 msgstr " (変更されました)\n"
 
-#: elf/ldconfig.c:640
+#: elf/ldconfig.c:643
 msgid " (SKIPPED)\n"
 msgstr " (スキップされました)\n"
 
-#: elf/ldconfig.c:696
+#: elf/ldconfig.c:699
 #, c-format
 msgid "Can't find %s"
 msgstr "%s を見つけられません"
 
-#: elf/ldconfig.c:712 elf/ldconfig.c:892 elf/ldconfig.c:952 elf/ldconfig.c:984
+#: elf/ldconfig.c:715 elf/ldconfig.c:895 elf/ldconfig.c:955 elf/ldconfig.c:987
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "%s の状態取得 (lstat) が出来ません"
 
-#: elf/ldconfig.c:718
+#: elf/ldconfig.c:721
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "通常ファイルでないためファイル %s を無視しています。"
 
-#: elf/ldconfig.c:726
+#: elf/ldconfig.c:729
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "%s 用の動的ライブラリ名 (soname) が見つからないためリンクが作成されませんでした"
 
-#: elf/ldconfig.c:825
+#: elf/ldconfig.c:828
 #, c-format
 msgid "Can't open directory %s"
 msgstr "ディレクトリ %s を開けません"
 
-#: elf/ldconfig.c:910 elf/ldconfig.c:972 elf/readlib.c:98
+#: elf/ldconfig.c:913 elf/ldconfig.c:975 elf/readlib.c:96
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "入力ファイル %s が見つかりません。\n"
 
-#: elf/ldconfig.c:917
+#: elf/ldconfig.c:920
 #, c-format
 msgid "Cannot stat %s"
 msgstr "%s の状態取得 (stat) が出来ません"
 
-#: elf/ldconfig.c:1070
+#: elf/ldconfig.c:1073
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5 ライブラリ %s が誤ったディレクトリ内にあります"
 
-#: elf/ldconfig.c:1073
+#: elf/ldconfig.c:1076
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 ライブラリ %s が誤ったディレクトリ内にあります"
 
-#: elf/ldconfig.c:1076
+#: elf/ldconfig.c:1079
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4 ライブラリ %s が誤ったディレクトリ内にあります"
 
-#: elf/ldconfig.c:1104
+#: elf/ldconfig.c:1107
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "ディレクトリ %3$s 内にあるライブラリ %1$s と %2$s は同一の動的ライブラリ名 (soname) ですが異なった型です。"
 
-#: elf/ldconfig.c:1301
+#: elf/ldconfig.c:1304
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "-r を使用しているときは設定ファイル名として絶対パスのファイル名が必要です"
 
-#: elf/ldconfig.c:1308 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1311 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "メモリを使い果たしました"
 
-#: elf/ldconfig.c:1341
+#: elf/ldconfig.c:1344
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: ディレクトリ %s を読み込めません"
 
-#: elf/ldconfig.c:1389
+#: elf/ldconfig.c:1392
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "キャッシュ生成時に相対パス `%s' が使用されました"
 
-#: elf/ldconfig.c:1413
+#: elf/ldconfig.c:1416
 #, c-format
 msgid "Can't chdir to /"
 msgstr "/ へディレクトリ移動 (chdir) 出来ません"
 
-#: elf/ldconfig.c:1454
+#: elf/ldconfig.c:1457
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "キャッシュファイルディレクトリ %s を開けません\n"
@@ -909,57 +901,57 @@ msgstr "不明な終了コードで終了しました"
 msgid "error: you do not have read permission for"
 msgstr "エラー: 読み込みパーミッションがありません:"
 
-#: elf/readelflib.c:36
+#: elf/readelflib.c:34
 #, c-format
 msgid "file %s is truncated\n"
 msgstr "ファイル %s は切り詰められました\n"
 
-#: elf/readelflib.c:67
+#: elf/readelflib.c:65
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s は 32 ビット ELF ファイルです。\n"
 
-#: elf/readelflib.c:69
+#: elf/readelflib.c:67
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s は 64 ビット ELF ファイルです。\n"
 
-#: elf/readelflib.c:71
+#: elf/readelflib.c:69
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "ファイル %s 内に不明な ELFCLASS があります。\n"
 
-#: elf/readelflib.c:78
+#: elf/readelflib.c:76
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s は共有オブジェクトファイルではありません (型: %d)。\n"
 
-#: elf/readelflib.c:106
+#: elf/readelflib.c:104
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "二つ以上の動的セグメントがあります\n"
 
-#: elf/readlib.c:104
+#: elf/readlib.c:102
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "ファイル %s の状態取得 (fstat) ができません。\n"
 
-#: elf/readlib.c:115
+#: elf/readlib.c:113
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "ファイル %s は空です。検査されません。"
 
-#: elf/readlib.c:121
+#: elf/readlib.c:119
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "ファイル %s は小さすぎます。検査されません。"
 
-#: elf/readlib.c:131
+#: elf/readlib.c:129
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "ファイル %s を mmap できません。\n"
 
-#: elf/readlib.c:170
+#: elf/readlib.c:168
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s は ELF ファイルではありません - 先頭に誤ったマジックバイトを持っています。\n"
@@ -1023,280 +1015,280 @@ msgstr "作者 %s。\\n"
 msgid "%s: unrecognized option '%c%s'\\n"
 msgstr "%s: オプション '%c%s' を認識できません\\n"
 
-#: elf/sprof.c:77
+#: elf/sprof.c:76
 msgid "Output selection:"
 msgstr "出力選択:"
 
-#: elf/sprof.c:79
+#: elf/sprof.c:78
 msgid "print list of count paths and their number of use"
 msgstr "パスとその使用回数を数えて一覧表示します"
 
-#: elf/sprof.c:81
+#: elf/sprof.c:80
 msgid "generate flat profile with counts and ticks"
 msgstr "カウントとティックに関する平坦なプロファイルを生成します"
 
-#: elf/sprof.c:82
+#: elf/sprof.c:81
 msgid "generate call graph"
 msgstr "呼び出しグラフを生成します"
 
-#: elf/sprof.c:89
+#: elf/sprof.c:88
 msgid "Read and display shared object profiling data."
 msgstr "共有オブジェクトのプロファイルデータを読み込んで表示します。"
 
-#: elf/sprof.c:94
+#: elf/sprof.c:93
 msgid "SHOBJ [PROFDATA]"
 msgstr "SHOBJ [PROFDATA]"
 
-#: elf/sprof.c:433
+#: elf/sprof.c:432
 #, c-format
 msgid "failed to load shared object `%s'"
 msgstr "共有オブジェクト `%s' の読み込みに失敗しました"
 
-#: elf/sprof.c:442 elf/sprof.c:825 elf/sprof.c:923
+#: elf/sprof.c:441 elf/sprof.c:824 elf/sprof.c:922
 #, c-format
 msgid "cannot create internal descriptor"
 msgstr "内部記述子を作成できません"
 
-#: elf/sprof.c:554
+#: elf/sprof.c:553
 #, c-format
 msgid "Reopening shared object `%s' failed"
 msgstr "共有オブジェクト `%s' の再オープンに失敗しました"
 
-#: elf/sprof.c:561 elf/sprof.c:656
+#: elf/sprof.c:560 elf/sprof.c:655
 #, c-format
 msgid "reading of section headers failed"
 msgstr "セクションヘッダーの読み込みに失敗しました"
 
-#: elf/sprof.c:569 elf/sprof.c:664
+#: elf/sprof.c:568 elf/sprof.c:663
 #, c-format
 msgid "reading of section header string table failed"
 msgstr "セクションヘッダー文字列表の読み込みに失敗しました"
 
-#: elf/sprof.c:595
+#: elf/sprof.c:594
 #, c-format
 msgid "*** Cannot read debuginfo file name: %m\n"
 msgstr "*** デバッグ情報ファイル名の読み込みに失敗しました: %m\n"
 
-#: elf/sprof.c:616
+#: elf/sprof.c:615
 #, c-format
 msgid "cannot determine file name"
 msgstr "ファイル名を決定できません"
 
-#: elf/sprof.c:649
+#: elf/sprof.c:648
 #, c-format
 msgid "reading of ELF header failed"
 msgstr "ELF ヘッダーの読み込みに失敗しました"
 
-#: elf/sprof.c:685
+#: elf/sprof.c:684
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
 msgstr "*** ファイル `%s' は取り除かれて (strip) います: 詳細な解析が出来ません\n"
 
-#: elf/sprof.c:715
+#: elf/sprof.c:714
 #, c-format
 msgid "failed to load symbol data"
 msgstr "シンボルデータのロードに失敗しました"
 
-#: elf/sprof.c:780
+#: elf/sprof.c:779
 #, c-format
 msgid "cannot load profiling data"
 msgstr "プロファイルデータをロード出来ません"
 
-#: elf/sprof.c:789
+#: elf/sprof.c:788
 #, c-format
 msgid "while stat'ing profiling data file"
 msgstr "プロファイルデータの状態取得 (stat) 中"
 
-#: elf/sprof.c:797
+#: elf/sprof.c:796
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
 msgstr "プロファイルデータファイル `%s' は共有オブジェクト `%s' と一致しません"
 
-#: elf/sprof.c:808
+#: elf/sprof.c:807
 #, c-format
 msgid "failed to mmap the profiling data file"
 msgstr "プロファイルデータファイルの mmap に失敗しました"
 
-#: elf/sprof.c:816
+#: elf/sprof.c:815
 #, c-format
 msgid "error while closing the profiling data file"
 msgstr "プロファイルデータファイルを閉じている間にエラーが発生しました"
 
-#: elf/sprof.c:899
+#: elf/sprof.c:898
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
 msgstr "`%s' は `%s' 用の正しいプロファイルデータではありません"
 
-#: elf/sprof.c:1080 elf/sprof.c:1138
+#: elf/sprof.c:1079 elf/sprof.c:1137
 #, c-format
 msgid "cannot allocate symbol data"
 msgstr "シンボルデータを配置出来ません"
 
-#: iconv/iconv_charmap.c:147 iconv/iconv_prog.c:428
+#: iconv/iconv_charmap.c:146 iconv/iconv_prog.c:427
 #, c-format
 msgid "cannot open output file"
 msgstr "出力ファイルを開けません"
 
-#: iconv/iconv_charmap.c:193 iconv/iconv_prog.c:291
+#: iconv/iconv_charmap.c:192 iconv/iconv_prog.c:290
 #, c-format
 msgid "error while closing input `%s'"
 msgstr "入力 `%s' を閉じている間にエラーが発生しました"
 
-#: iconv/iconv_charmap.c:442
+#: iconv/iconv_charmap.c:443
 #, c-format
 msgid "illegal input sequence at position %Zd"
 msgstr "位置 %Zd に不正な入力シーケンスがあります"
 
-#: iconv/iconv_charmap.c:461 iconv/iconv_prog.c:519
+#: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "バッファの最後に不完全な文字またはシフトシーケンスがあります"
 
-#: iconv/iconv_charmap.c:506 iconv/iconv_charmap.c:542 iconv/iconv_prog.c:562
-#: iconv/iconv_prog.c:598
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:543 iconv/iconv_prog.c:561
+#: iconv/iconv_prog.c:597
 #, c-format
 msgid "error while reading the input"
 msgstr "入力読み込み中にエラーが発生しました"
 
-#: iconv/iconv_charmap.c:524 iconv/iconv_prog.c:580
+#: iconv/iconv_charmap.c:525 iconv/iconv_prog.c:579
 #, c-format
 msgid "unable to allocate buffer for input"
 msgstr "入力用バッファを配置することが出来ません"
 
-#: iconv/iconv_prog.c:60
+#: iconv/iconv_prog.c:59
 msgid "Input/Output format specification:"
 msgstr "入力/出力形式の指定:"
 
-#: iconv/iconv_prog.c:61
+#: iconv/iconv_prog.c:60
 msgid "encoding of original text"
 msgstr "元のテキストのエンコーディング"
 
-#: iconv/iconv_prog.c:62
+#: iconv/iconv_prog.c:61
 msgid "encoding for output"
 msgstr "出力用のエンコーディング"
 
-#: iconv/iconv_prog.c:63
+#: iconv/iconv_prog.c:62
 msgid "Information:"
 msgstr "情報:"
 
-#: iconv/iconv_prog.c:64
+#: iconv/iconv_prog.c:63
 msgid "list all known coded character sets"
 msgstr "全ての既知の符号化された文字集合を一覧表示します"
 
-#: iconv/iconv_prog.c:65 locale/programs/localedef.c:124
+#: iconv/iconv_prog.c:64 locale/programs/localedef.c:123
 msgid "Output control:"
 msgstr "出力制御:"
 
-#: iconv/iconv_prog.c:66
+#: iconv/iconv_prog.c:65
 msgid "omit invalid characters from output"
 msgstr "出力から無効な文字を取り除く"
 
-#: iconv/iconv_prog.c:67
+#: iconv/iconv_prog.c:66
 msgid "output file"
 msgstr "出力ファイル"
 
-#: iconv/iconv_prog.c:68
+#: iconv/iconv_prog.c:67
 msgid "suppress warnings"
 msgstr "警告を抑制する"
 
-#: iconv/iconv_prog.c:69
+#: iconv/iconv_prog.c:68
 msgid "print progress information"
 msgstr "経過情報を表示する"
 
-#: iconv/iconv_prog.c:74
+#: iconv/iconv_prog.c:73
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "与えられたファイルのエンコーディングをあるエンコーディングから別のエンコーディングに変換します。"
 
-#: iconv/iconv_prog.c:78
+#: iconv/iconv_prog.c:77
 msgid "[FILE...]"
 msgstr "[FILE...]"
 
-#: iconv/iconv_prog.c:177 iconv/iconv_prog.c:239
+#: iconv/iconv_prog.c:176 iconv/iconv_prog.c:238
 #, c-format
 msgid "failed to start conversion processing"
 msgstr "変換処理の開始に失敗しました"
 
-#: iconv/iconv_prog.c:213
+#: iconv/iconv_prog.c:212
 #, c-format
 msgid "conversions from `%s' and to `%s' are not supported"
 msgstr "`%s' からの変換および `%s' への変換はサポートされていません"
 
-#: iconv/iconv_prog.c:218
+#: iconv/iconv_prog.c:217
 #, c-format
 msgid "conversion from `%s' is not supported"
 msgstr "`%s' からの変換はサポートされていません"
 
-#: iconv/iconv_prog.c:225
+#: iconv/iconv_prog.c:224
 #, c-format
 msgid "conversion to `%s' is not supported"
 msgstr "`%s' への変換はサポートされていません"
 
-#: iconv/iconv_prog.c:229
+#: iconv/iconv_prog.c:228
 #, c-format
 msgid "conversion from `%s' to `%s' is not supported"
 msgstr "`%s'から`%s'への変換はサポートされていません"
 
-#: iconv/iconv_prog.c:337
+#: iconv/iconv_prog.c:336
 #, c-format
 msgid "error while closing output file"
 msgstr "出力ファイルを閉じている間にエラーが発生しました"
 
-#: iconv/iconv_prog.c:438
+#: iconv/iconv_prog.c:437
 #, c-format
 msgid "conversion stopped due to problem in writing the output"
 msgstr "出力書き出し中に問題があったため変換を中止しました"
 
-#: iconv/iconv_prog.c:515
+#: iconv/iconv_prog.c:514
 #, c-format
 msgid "illegal input sequence at position %ld"
 msgstr "位置 %ld に不正な入力シーケンスがあります"
 
-#: iconv/iconv_prog.c:523
+#: iconv/iconv_prog.c:522
 #, c-format
 msgid "internal error (illegal descriptor)"
 msgstr "内部エラー (不正な記述子) です"
 
-#: iconv/iconv_prog.c:526
+#: iconv/iconv_prog.c:525
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "不明な iconv() エラー %d です"
 
-#: iconv/iconvconfig.c:110
+#: iconv/iconvconfig.c:109
 msgid "Create fastloading iconv module configuration file."
 msgstr "高速読込み用 iconv モジュール設定ファイルを作成します。"
 
-#: iconv/iconvconfig.c:114
+#: iconv/iconvconfig.c:113
 msgid "[DIR...]"
 msgstr "[DIR...]"
 
-#: iconv/iconvconfig.c:128
+#: iconv/iconvconfig.c:127
 msgid "Prefix used for all file accesses"
 msgstr "全てのファイルアクセスに接頭辞を使用する"
 
-#: iconv/iconvconfig.c:129
+#: iconv/iconvconfig.c:128
 msgid "Put output in FILE instead of installed location (--prefix does not apply to FILE)"
 msgstr "インストール場所ではなく FILE に出力する (--prefix は FILE には適用されない)"
 
-#: iconv/iconvconfig.c:133
+#: iconv/iconvconfig.c:132
 msgid "Do not search standard directories, only those on the command line"
 msgstr "標準ディレクトリを探査せず、コマンドラインで指定されたもののみ使用する"
 
-#: iconv/iconvconfig.c:301
+#: iconv/iconvconfig.c:300
 #, c-format
 msgid "Directory arguments required when using --nostdlib"
 msgstr "--nostdlib を使用しているときはディレクトリ引数が必要です"
 
-#: iconv/iconvconfig.c:343
+#: iconv/iconvconfig.c:342
 #, c-format
 msgid "no output file produced because warnings were issued"
 msgstr "警告が出されたため出力ファイルが作成されませんでした"
 
-#: iconv/iconvconfig.c:432
+#: iconv/iconvconfig.c:431
 #, c-format
 msgid "while inserting in search tree"
 msgstr "検索木へ挿入中です"
 
-#: iconv/iconvconfig.c:1188
+#: iconv/iconvconfig.c:1195
 #, c-format
 msgid "cannot generate output file"
 msgstr "出力ファイルを生成できません"
@@ -1384,931 +1376,931 @@ msgstr "不明な .netrc キーワード %s です"
 msgid "cannot read character map directory `%s'"
 msgstr "文字マップディレクトリ `%s' を読み込めませんでした"
 
-#: locale/programs/charmap.c:138
+#: locale/programs/charmap.c:137
 #, c-format
 msgid "character map file `%s' not found"
 msgstr "文字マップファイル `%s' が見つかりません"
 
-#: locale/programs/charmap.c:196
+#: locale/programs/charmap.c:195
 #, c-format
 msgid "default character map file `%s' not found"
 msgstr "デフォルト文字マップファイル `%s' が見つかりません"
 
-#: locale/programs/charmap.c:343
+#: locale/programs/charmap.c:342
 #, c-format
 msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
 msgstr "%s: <mb_cur_max>は<mb_cur_min>より大きくなければいけません\n"
 
-#: locale/programs/charmap.c:363 locale/programs/charmap.c:380
-#: locale/programs/repertoire.c:173
+#: locale/programs/charmap.c:362 locale/programs/charmap.c:379
+#: locale/programs/repertoire.c:172
 #, c-format
 msgid "syntax error in prolog: %s"
 msgstr "prolog 内に構文エラーがあります: %s"
 
-#: locale/programs/charmap.c:364
+#: locale/programs/charmap.c:363
 msgid "invalid definition"
 msgstr "無効な定義です"
 
-#: locale/programs/charmap.c:381 locale/programs/locfile.c:131
-#: locale/programs/locfile.c:158 locale/programs/repertoire.c:174
+#: locale/programs/charmap.c:380 locale/programs/locfile.c:130
+#: locale/programs/locfile.c:157 locale/programs/repertoire.c:173
 msgid "bad argument"
 msgstr "間違った引数です"
 
-#: locale/programs/charmap.c:408
+#: locale/programs/charmap.c:407
 #, c-format
 msgid "duplicate definition of <%s>"
 msgstr "<%s> の定義が重複しています"
 
-#: locale/programs/charmap.c:415
+#: locale/programs/charmap.c:414
 #, c-format
 msgid "value for <%s> must be 1 or greater"
 msgstr "<%s> の値は1以上でなければいけません"
 
-#: locale/programs/charmap.c:427
+#: locale/programs/charmap.c:426
 #, c-format
 msgid "value of <%s> must be greater or equal than the value of <%s>"
 msgstr "<%s> の値は <%s> の値以上でなければいけません"
 
-#: locale/programs/charmap.c:450 locale/programs/repertoire.c:182
+#: locale/programs/charmap.c:449 locale/programs/repertoire.c:181
 #, c-format
 msgid "argument to <%s> must be a single character"
 msgstr "引数 <%s> は単一文字でなければいけません"
 
-#: locale/programs/charmap.c:476
+#: locale/programs/charmap.c:475
 msgid "character sets with locking states are not supported"
 msgstr "ロック状態を持つ文字集合はサポートされていません"
 
-#: locale/programs/charmap.c:503 locale/programs/charmap.c:557
-#: locale/programs/charmap.c:589 locale/programs/charmap.c:683
-#: locale/programs/charmap.c:739 locale/programs/charmap.c:780
-#: locale/programs/charmap.c:821
+#: locale/programs/charmap.c:502 locale/programs/charmap.c:556
+#: locale/programs/charmap.c:588 locale/programs/charmap.c:682
+#: locale/programs/charmap.c:738 locale/programs/charmap.c:779
+#: locale/programs/charmap.c:820
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr "%s の定義内で構文エラーです: %s"
 
-#: locale/programs/charmap.c:504 locale/programs/charmap.c:684
-#: locale/programs/charmap.c:781 locale/programs/repertoire.c:229
+#: locale/programs/charmap.c:503 locale/programs/charmap.c:683
+#: locale/programs/charmap.c:780 locale/programs/repertoire.c:228
 msgid "no symbolic name given"
 msgstr "シンボル名が与えられていません"
 
-#: locale/programs/charmap.c:558
+#: locale/programs/charmap.c:557
 msgid "invalid encoding given"
 msgstr "無効なエンコーディングが与えられました"
 
-#: locale/programs/charmap.c:567
+#: locale/programs/charmap.c:566
 msgid "too few bytes in character encoding"
 msgstr "文字エンコーディング中のバイト数が少なすぎます"
 
-#: locale/programs/charmap.c:569
+#: locale/programs/charmap.c:568
 msgid "too many bytes in character encoding"
 msgstr "文字エンコーディング中のバイト数が多すぎます"
 
-#: locale/programs/charmap.c:591 locale/programs/charmap.c:740
-#: locale/programs/charmap.c:823 locale/programs/repertoire.c:295
+#: locale/programs/charmap.c:590 locale/programs/charmap.c:739
+#: locale/programs/charmap.c:822 locale/programs/repertoire.c:294
 msgid "no symbolic name given for end of range"
 msgstr "領域の最後にシンボル名が与えられていません"
 
-#: locale/programs/charmap.c:615 locale/programs/ld-address.c:524
-#: locale/programs/ld-collate.c:2619 locale/programs/ld-collate.c:3777
-#: locale/programs/ld-ctype.c:2118 locale/programs/ld-ctype.c:2830
-#: locale/programs/ld-identification.c:397 locale/programs/ld-measurement.c:213
-#: locale/programs/ld-messages.c:295 locale/programs/ld-monetary.c:748
-#: locale/programs/ld-name.c:262 locale/programs/ld-numeric.c:325
-#: locale/programs/ld-paper.c:212 locale/programs/ld-telephone.c:276
-#: locale/programs/ld-time.c:959 locale/programs/repertoire.c:312
+#: locale/programs/charmap.c:614 locale/programs/ld-address.c:523
+#: locale/programs/ld-collate.c:2642 locale/programs/ld-collate.c:3806
+#: locale/programs/ld-ctype.c:2117 locale/programs/ld-ctype.c:2829
+#: locale/programs/ld-identification.c:396 locale/programs/ld-measurement.c:212
+#: locale/programs/ld-messages.c:294 locale/programs/ld-monetary.c:747
+#: locale/programs/ld-name.c:261 locale/programs/ld-numeric.c:324
+#: locale/programs/ld-paper.c:211 locale/programs/ld-telephone.c:275
+#: locale/programs/ld-time.c:958 locale/programs/repertoire.c:311
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
 msgstr "%1$s: 定義が `END %1$s' で終っていません"
 
-#: locale/programs/charmap.c:648
+#: locale/programs/charmap.c:647
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr "WIDTH 定義は CHARMAP 定義に従うことのみ許されます"
 
-#: locale/programs/charmap.c:656 locale/programs/charmap.c:720
+#: locale/programs/charmap.c:655 locale/programs/charmap.c:719
 #, c-format
 msgid "value for %s must be an integer"
 msgstr "%s の値は整数でなければなりません"
 
-#: locale/programs/charmap.c:848
+#: locale/programs/charmap.c:847
 #, c-format
 msgid "%s: error in state machine"
 msgstr "%s: 状態マシン内でエラーが発生しました"
 
-#: locale/programs/charmap.c:856 locale/programs/ld-address.c:540
-#: locale/programs/ld-collate.c:2616 locale/programs/ld-collate.c:3970
-#: locale/programs/ld-ctype.c:2115 locale/programs/ld-ctype.c:2847
-#: locale/programs/ld-identification.c:413 locale/programs/ld-measurement.c:229
-#: locale/programs/ld-messages.c:311 locale/programs/ld-monetary.c:764
-#: locale/programs/ld-name.c:278 locale/programs/ld-numeric.c:341
-#: locale/programs/ld-paper.c:228 locale/programs/ld-telephone.c:292
-#: locale/programs/ld-time.c:990 locale/programs/locfile.c:1010
-#: locale/programs/repertoire.c:323
+#: locale/programs/charmap.c:855 locale/programs/ld-address.c:539
+#: locale/programs/ld-collate.c:2639 locale/programs/ld-collate.c:3999
+#: locale/programs/ld-ctype.c:2114 locale/programs/ld-ctype.c:2846
+#: locale/programs/ld-identification.c:412 locale/programs/ld-measurement.c:228
+#: locale/programs/ld-messages.c:310 locale/programs/ld-monetary.c:763
+#: locale/programs/ld-name.c:277 locale/programs/ld-numeric.c:340
+#: locale/programs/ld-paper.c:227 locale/programs/ld-telephone.c:291
+#: locale/programs/ld-time.c:989 locale/programs/locfile.c:1009
+#: locale/programs/repertoire.c:322
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: ファイル終端 (EOF) が早すぎます"
 
-#: locale/programs/charmap.c:875 locale/programs/charmap.c:886
+#: locale/programs/charmap.c:874 locale/programs/charmap.c:885
 #, c-format
 msgid "unknown character `%s'"
 msgstr "不明な文字 `%s' です"
 
-#: locale/programs/charmap.c:894
+#: locale/programs/charmap.c:893
 #, c-format
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr "バイトシーケンスの開始から終了までのバイト数と、範囲の終わりとが一致しません: %d と %d"
 
-#: locale/programs/charmap.c:999 locale/programs/ld-collate.c:2896
-#: locale/programs/repertoire.c:418
+#: locale/programs/charmap.c:998 locale/programs/ld-collate.c:2923
+#: locale/programs/repertoire.c:417
 msgid "invalid names for character range"
 msgstr "キャラクタ範囲として不正な名前です"
 
-#: locale/programs/charmap.c:1011 locale/programs/repertoire.c:430
+#: locale/programs/charmap.c:1010 locale/programs/repertoire.c:429
 msgid "hexadecimal range format should use only capital characters"
 msgstr "16進数の範囲形式は英大文字でのみ使用すべきです"
 
-#: locale/programs/charmap.c:1029 locale/programs/repertoire.c:448
+#: locale/programs/charmap.c:1028 locale/programs/repertoire.c:447
 #, c-format
 msgid "<%s> and <%s> are invalid names for range"
 msgstr "<%s> と <%s> は範囲としては無効な名前です"
 
-#: locale/programs/charmap.c:1035 locale/programs/repertoire.c:455
+#: locale/programs/charmap.c:1034 locale/programs/repertoire.c:454
 msgid "upper limit in range is smaller than lower limit"
 msgstr "範囲の上限が下限より小さいです"
 
-#: locale/programs/charmap.c:1093
+#: locale/programs/charmap.c:1092
 msgid "resulting bytes for range not representable."
 msgstr "範囲の結果バイトが表示可能ではありません。"
 
-#: locale/programs/ld-address.c:133 locale/programs/ld-collate.c:1566
-#: locale/programs/ld-ctype.c:430 locale/programs/ld-identification.c:131
-#: locale/programs/ld-measurement.c:92 locale/programs/ld-messages.c:96
-#: locale/programs/ld-monetary.c:192 locale/programs/ld-name.c:93
-#: locale/programs/ld-numeric.c:97 locale/programs/ld-paper.c:89
-#: locale/programs/ld-telephone.c:92 locale/programs/ld-time.c:164
+#: locale/programs/ld-address.c:132 locale/programs/ld-collate.c:1570
+#: locale/programs/ld-ctype.c:429 locale/programs/ld-identification.c:130
+#: locale/programs/ld-measurement.c:91 locale/programs/ld-messages.c:95
+#: locale/programs/ld-monetary.c:191 locale/programs/ld-name.c:92
+#: locale/programs/ld-numeric.c:96 locale/programs/ld-paper.c:88
+#: locale/programs/ld-telephone.c:91 locale/programs/ld-time.c:163
 #, c-format
 msgid "No definition for %s category found"
 msgstr "%s カテゴリ用の定義が見つかりません"
 
-#: locale/programs/ld-address.c:144 locale/programs/ld-address.c:182
-#: locale/programs/ld-address.c:199 locale/programs/ld-address.c:228
-#: locale/programs/ld-address.c:300 locale/programs/ld-address.c:319
-#: locale/programs/ld-address.c:331 locale/programs/ld-identification.c:144
-#: locale/programs/ld-measurement.c:103 locale/programs/ld-monetary.c:204
-#: locale/programs/ld-monetary.c:258 locale/programs/ld-monetary.c:274
-#: locale/programs/ld-monetary.c:286 locale/programs/ld-name.c:104
-#: locale/programs/ld-name.c:141 locale/programs/ld-numeric.c:111
-#: locale/programs/ld-numeric.c:125 locale/programs/ld-paper.c:100
-#: locale/programs/ld-paper.c:109 locale/programs/ld-telephone.c:103
-#: locale/programs/ld-telephone.c:160 locale/programs/ld-time.c:180
-#: locale/programs/ld-time.c:201
+#: locale/programs/ld-address.c:143 locale/programs/ld-address.c:181
+#: locale/programs/ld-address.c:198 locale/programs/ld-address.c:227
+#: locale/programs/ld-address.c:299 locale/programs/ld-address.c:318
+#: locale/programs/ld-address.c:330 locale/programs/ld-identification.c:143
+#: locale/programs/ld-measurement.c:102 locale/programs/ld-monetary.c:203
+#: locale/programs/ld-monetary.c:257 locale/programs/ld-monetary.c:273
+#: locale/programs/ld-monetary.c:285 locale/programs/ld-name.c:103
+#: locale/programs/ld-name.c:140 locale/programs/ld-numeric.c:110
+#: locale/programs/ld-numeric.c:124 locale/programs/ld-paper.c:99
+#: locale/programs/ld-paper.c:108 locale/programs/ld-telephone.c:102
+#: locale/programs/ld-telephone.c:159 locale/programs/ld-time.c:179
+#: locale/programs/ld-time.c:200
 #, c-format
 msgid "%s: field `%s' not defined"
 msgstr "%s: フィールド `%s' は定義されていません"
 
-#: locale/programs/ld-address.c:156 locale/programs/ld-address.c:207
-#: locale/programs/ld-address.c:237 locale/programs/ld-address.c:275
-#: locale/programs/ld-name.c:116 locale/programs/ld-telephone.c:115
+#: locale/programs/ld-address.c:155 locale/programs/ld-address.c:206
+#: locale/programs/ld-address.c:236 locale/programs/ld-address.c:274
+#: locale/programs/ld-name.c:115 locale/programs/ld-telephone.c:114
 #, c-format
 msgid "%s: field `%s' must not be empty"
 msgstr "%s: フィールド `%s' が空ではいけません"
 
-#: locale/programs/ld-address.c:168
+#: locale/programs/ld-address.c:167
 #, c-format
 msgid "%s: invalid escape `%%%c' sequence in field `%s'"
 msgstr "%s: 無効なエスケープシーケンス `%%%c' がフィールド `%s' 中にあります"
 
-#: locale/programs/ld-address.c:218
+#: locale/programs/ld-address.c:217
 #, c-format
 msgid "%s: terminology language code `%s' not defined"
 msgstr "%s: terminology言語コード `%s' は定義されていません"
 
-#: locale/programs/ld-address.c:243
+#: locale/programs/ld-address.c:242
 #, c-format
 msgid "%s: field `%s' must not be defined"
 msgstr "%s: フィールド `%s' が定義されていてはいけません"
 
-#: locale/programs/ld-address.c:257 locale/programs/ld-address.c:286
+#: locale/programs/ld-address.c:256 locale/programs/ld-address.c:285
 #, c-format
 msgid "%s: language abbreviation `%s' not defined"
 msgstr "%s: 言語名省略形 `%s' が定義されていません"
 
-#: locale/programs/ld-address.c:264 locale/programs/ld-address.c:292
-#: locale/programs/ld-address.c:325 locale/programs/ld-address.c:337
+#: locale/programs/ld-address.c:263 locale/programs/ld-address.c:291
+#: locale/programs/ld-address.c:324 locale/programs/ld-address.c:336
 #, c-format
 msgid "%s: `%s' value does not match `%s' value"
 msgstr "%s: `%s' の値は `%s' の値と一致しません"
 
-#: locale/programs/ld-address.c:311
+#: locale/programs/ld-address.c:310
 #, c-format
 msgid "%s: numeric country code `%d' not valid"
 msgstr "%s: 数字の国コード `%d' が無効です"
 
-#: locale/programs/ld-address.c:432 locale/programs/ld-address.c:469
-#: locale/programs/ld-address.c:507 locale/programs/ld-ctype.c:2479
-#: locale/programs/ld-identification.c:309 locale/programs/ld-measurement.c:196
-#: locale/programs/ld-messages.c:264 locale/programs/ld-monetary.c:503
-#: locale/programs/ld-monetary.c:538 locale/programs/ld-monetary.c:579
-#: locale/programs/ld-name.c:235 locale/programs/ld-numeric.c:217
-#: locale/programs/ld-paper.c:195 locale/programs/ld-telephone.c:251
-#: locale/programs/ld-time.c:864 locale/programs/ld-time.c:906
+#: locale/programs/ld-address.c:431 locale/programs/ld-address.c:468
+#: locale/programs/ld-address.c:506 locale/programs/ld-ctype.c:2478
+#: locale/programs/ld-identification.c:308 locale/programs/ld-measurement.c:195
+#: locale/programs/ld-messages.c:263 locale/programs/ld-monetary.c:502
+#: locale/programs/ld-monetary.c:537 locale/programs/ld-monetary.c:578
+#: locale/programs/ld-name.c:234 locale/programs/ld-numeric.c:216
+#: locale/programs/ld-paper.c:194 locale/programs/ld-telephone.c:250
+#: locale/programs/ld-time.c:863 locale/programs/ld-time.c:905
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: フィールド `%s' が二回以上宣言されています"
 
-#: locale/programs/ld-address.c:436 locale/programs/ld-address.c:474
-#: locale/programs/ld-identification.c:313 locale/programs/ld-messages.c:274
-#: locale/programs/ld-monetary.c:507 locale/programs/ld-monetary.c:542
-#: locale/programs/ld-name.c:239 locale/programs/ld-numeric.c:221
-#: locale/programs/ld-telephone.c:255 locale/programs/ld-time.c:756
-#: locale/programs/ld-time.c:827 locale/programs/ld-time.c:869
+#: locale/programs/ld-address.c:435 locale/programs/ld-address.c:473
+#: locale/programs/ld-identification.c:312 locale/programs/ld-messages.c:273
+#: locale/programs/ld-monetary.c:506 locale/programs/ld-monetary.c:541
+#: locale/programs/ld-name.c:238 locale/programs/ld-numeric.c:220
+#: locale/programs/ld-telephone.c:254 locale/programs/ld-time.c:755
+#: locale/programs/ld-time.c:826 locale/programs/ld-time.c:868
 #, c-format
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: フィールド `%s' 内に不明な文字があります"
 
-#: locale/programs/ld-address.c:521 locale/programs/ld-collate.c:3775
-#: locale/programs/ld-ctype.c:2827 locale/programs/ld-identification.c:394
-#: locale/programs/ld-measurement.c:210 locale/programs/ld-messages.c:293
-#: locale/programs/ld-monetary.c:746 locale/programs/ld-name.c:260
-#: locale/programs/ld-numeric.c:323 locale/programs/ld-paper.c:210
-#: locale/programs/ld-telephone.c:274 locale/programs/ld-time.c:957
+#: locale/programs/ld-address.c:520 locale/programs/ld-collate.c:3804
+#: locale/programs/ld-ctype.c:2826 locale/programs/ld-identification.c:393
+#: locale/programs/ld-measurement.c:209 locale/programs/ld-messages.c:292
+#: locale/programs/ld-monetary.c:745 locale/programs/ld-name.c:259
+#: locale/programs/ld-numeric.c:322 locale/programs/ld-paper.c:209
+#: locale/programs/ld-telephone.c:273 locale/programs/ld-time.c:956
 #, c-format
 msgid "%s: incomplete `END' line"
 msgstr "%s: 不完全な `END' 行です"
 
-#: locale/programs/ld-address.c:531 locale/programs/ld-collate.c:550
-#: locale/programs/ld-collate.c:602 locale/programs/ld-collate.c:898
-#: locale/programs/ld-collate.c:911 locale/programs/ld-collate.c:2585
-#: locale/programs/ld-collate.c:2606 locale/programs/ld-collate.c:3960
-#: locale/programs/ld-ctype.c:1847 locale/programs/ld-ctype.c:2105
-#: locale/programs/ld-ctype.c:2677 locale/programs/ld-ctype.c:2838
-#: locale/programs/ld-identification.c:404 locale/programs/ld-measurement.c:220
-#: locale/programs/ld-messages.c:302 locale/programs/ld-monetary.c:755
-#: locale/programs/ld-name.c:269 locale/programs/ld-numeric.c:332
-#: locale/programs/ld-paper.c:219 locale/programs/ld-telephone.c:283
-#: locale/programs/ld-time.c:981
+#: locale/programs/ld-address.c:530 locale/programs/ld-collate.c:553
+#: locale/programs/ld-collate.c:605 locale/programs/ld-collate.c:901
+#: locale/programs/ld-collate.c:914 locale/programs/ld-collate.c:2608
+#: locale/programs/ld-collate.c:2629 locale/programs/ld-collate.c:3989
+#: locale/programs/ld-ctype.c:1846 locale/programs/ld-ctype.c:2104
+#: locale/programs/ld-ctype.c:2676 locale/programs/ld-ctype.c:2837
+#: locale/programs/ld-identification.c:403 locale/programs/ld-measurement.c:219
+#: locale/programs/ld-messages.c:301 locale/programs/ld-monetary.c:754
+#: locale/programs/ld-name.c:268 locale/programs/ld-numeric.c:331
+#: locale/programs/ld-paper.c:218 locale/programs/ld-telephone.c:282
+#: locale/programs/ld-time.c:980
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: 構文エラー"
 
-#: locale/programs/ld-collate.c:425
+#: locale/programs/ld-collate.c:428
 #, c-format
 msgid "`%.*s' already defined in charmap"
 msgstr "`%.*s' は既に文字マップ内で定義されています"
 
-#: locale/programs/ld-collate.c:434
+#: locale/programs/ld-collate.c:437
 #, c-format
 msgid "`%.*s' already defined in repertoire"
 msgstr "`%.*s' は既にレパートリ内で定義されています"
 
-#: locale/programs/ld-collate.c:441
+#: locale/programs/ld-collate.c:444
 #, c-format
 msgid "`%.*s' already defined as collating symbol"
 msgstr "`%.*s' は既に照合シンボルとして定義されています"
 
-#: locale/programs/ld-collate.c:448
+#: locale/programs/ld-collate.c:451
 #, c-format
 msgid "`%.*s' already defined as collating element"
 msgstr "`%.*s' は既に照合要素として定義されています"
 
-#: locale/programs/ld-collate.c:479 locale/programs/ld-collate.c:505
+#: locale/programs/ld-collate.c:482 locale/programs/ld-collate.c:508
 #, c-format
 msgid "%s: `forward' and `backward' are mutually excluding each other"
 msgstr "%s: `forward' と `backward' は排他的です"
 
-#: locale/programs/ld-collate.c:489 locale/programs/ld-collate.c:515
-#: locale/programs/ld-collate.c:531
+#: locale/programs/ld-collate.c:492 locale/programs/ld-collate.c:518
+#: locale/programs/ld-collate.c:534
 #, c-format
 msgid "%s: `%s' mentioned more than once in definition of weight %d"
 msgstr "%s: `%s'は重み定義 %d 中で複数回使われています"
 
-#: locale/programs/ld-collate.c:587
+#: locale/programs/ld-collate.c:590
 #, c-format
 msgid "%s: too many rules; first entry only had %d"
 msgstr "%s: 規則が多すぎます; 最初のエントリは %d を持っています"
 
-#: locale/programs/ld-collate.c:623
+#: locale/programs/ld-collate.c:626
 #, c-format
 msgid "%s: not enough sorting rules"
 msgstr "%s: 並び替え規則が不十分です"
 
-#: locale/programs/ld-collate.c:788
+#: locale/programs/ld-collate.c:791
 #, c-format
 msgid "%s: empty weight string not allowed"
 msgstr "%s: 空の重み文字列は許可されていません"
 
-#: locale/programs/ld-collate.c:883
+#: locale/programs/ld-collate.c:886
 #, c-format
 msgid "%s: weights must use the same ellipsis symbol as the name"
 msgstr "%s: 重みはその名称として同じ省略シンボルを使用しなければなりません"
 
-#: locale/programs/ld-collate.c:939
+#: locale/programs/ld-collate.c:942
 #, c-format
 msgid "%s: too many values"
 msgstr "%s: 値が多すぎます"
 
-#: locale/programs/ld-collate.c:1059 locale/programs/ld-collate.c:1234
+#: locale/programs/ld-collate.c:1062 locale/programs/ld-collate.c:1237
 #, c-format
 msgid "order for `%.*s' already defined at %s:%Zu"
 msgstr "`%.*s' 用の順序は %s:%Zu で既に定義されています"
 
-#: locale/programs/ld-collate.c:1109
+#: locale/programs/ld-collate.c:1112
 #, c-format
 msgid "%s: the start and the end symbol of a range must stand for characters"
 msgstr "%s: 範囲の開始・終了シンボルは文字を意味しなければいけません"
 
-#: locale/programs/ld-collate.c:1136
+#: locale/programs/ld-collate.c:1139
 #, c-format
 msgid "%s: byte sequences of first and last character must have the same length"
 msgstr "%s: 最初と最後の文字のバイトシーケンスは同一長でなければなりません"
 
-#: locale/programs/ld-collate.c:1178
+#: locale/programs/ld-collate.c:1181
 #, c-format
 msgid "%s: byte sequence of first character of range is not lower than that of the last character"
 msgstr "%s: 範囲の最初の文字のバイトシーケンスは最後の文字のバイトシーケンスより小さくありません"
 
-#: locale/programs/ld-collate.c:1303
+#: locale/programs/ld-collate.c:1306
 #, c-format
 msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
 msgstr "%s: シンボルの範囲の省略は`order_start'のすぐ後に置いてはいけません"
 
-#: locale/programs/ld-collate.c:1307
+#: locale/programs/ld-collate.c:1310
 #, c-format
 msgid "%s: symbolic range ellipsis must not be directly followed by `order_end'"
 msgstr "%s: シンボル範囲省略記号は`order_end'のすぐ後に続いてはいけません"
 
-#: locale/programs/ld-collate.c:1327 locale/programs/ld-ctype.c:1363
+#: locale/programs/ld-collate.c:1330 locale/programs/ld-ctype.c:1362
 #, c-format
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "`%s' と `%.*s' はシンボル範囲用として無効な名前です"
 
-#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:3711
+#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3738
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr "%s: `%.*s' 用の順序は既に %s:%Zu で定義されています"
 
-#: locale/programs/ld-collate.c:1386
+#: locale/programs/ld-collate.c:1389
 #, c-format
 msgid "%s: `%s' must be a character"
 msgstr "%s: `%s' は単一文字でなければいけません"
 
-#: locale/programs/ld-collate.c:1583
+#: locale/programs/ld-collate.c:1591
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr "%s: `position'は特定レベルに対し、全セクションで使用か未使用かのどちらかです"
 
-#: locale/programs/ld-collate.c:1607
+#: locale/programs/ld-collate.c:1615
 #, c-format
 msgid "symbol `%s' not defined"
 msgstr "シンボル `%s' が定義されていません"
 
-#: locale/programs/ld-collate.c:1683 locale/programs/ld-collate.c:1788
+#: locale/programs/ld-collate.c:1691 locale/programs/ld-collate.c:1796
 #, c-format
 msgid "symbol `%s' has the same encoding as"
 msgstr "シンボル `%s' は以下と同じエンコーディングを持っています"
 
-#: locale/programs/ld-collate.c:1687 locale/programs/ld-collate.c:1792
+#: locale/programs/ld-collate.c:1695 locale/programs/ld-collate.c:1800
 #, c-format
 msgid "symbol `%s'"
 msgstr "シンボル `%s'"
 
-#: locale/programs/ld-collate.c:1855
+#: locale/programs/ld-collate.c:1863
 msgid "too many errors; giving up"
 msgstr "エラーが多すぎます。処理をあきらめます"
 
-#: locale/programs/ld-collate.c:2511 locale/programs/ld-collate.c:3899
+#: locale/programs/ld-collate.c:2534 locale/programs/ld-collate.c:3928
 #, c-format
 msgid "%s: nested conditionals not supported"
 msgstr "%s: 入れ子になった条件はサポートされていません"
 
-#: locale/programs/ld-collate.c:2704
+#: locale/programs/ld-collate.c:2731
 #, c-format
 msgid "%s: duplicate definition of `%s'"
 msgstr "%s: `%s' の重複した定義です"
 
-#: locale/programs/ld-collate.c:2740
+#: locale/programs/ld-collate.c:2767
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
 msgstr "%s: セクション `%s' の重複した宣言です"
 
-#: locale/programs/ld-collate.c:2876
+#: locale/programs/ld-collate.c:2903
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr "%s: 照合シンボル名内に不明な文字があります"
 
-#: locale/programs/ld-collate.c:3005
+#: locale/programs/ld-collate.c:3032
 #, c-format
 msgid "%s: unknown character in equivalent definition name"
 msgstr "%s: 等価な定義名内に不明な文字があります"
 
-#: locale/programs/ld-collate.c:3016
+#: locale/programs/ld-collate.c:3043
 #, c-format
 msgid "%s: unknown character in equivalent definition value"
 msgstr "%s: 等価な定義値内に不明な文字があります"
 
-#: locale/programs/ld-collate.c:3026
+#: locale/programs/ld-collate.c:3053
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: 等価な定義内に未知のシンボル `%s' があります"
 
-#: locale/programs/ld-collate.c:3035
+#: locale/programs/ld-collate.c:3062
 msgid "error while adding equivalent collating symbol"
 msgstr "等価な照合シンボル追加中にエラーが発生しました"
 
-#: locale/programs/ld-collate.c:3073
+#: locale/programs/ld-collate.c:3100
 #, c-format
 msgid "duplicate definition of script `%s'"
 msgstr "スクリプト `%s' の重複した定義です"
 
-#: locale/programs/ld-collate.c:3121
+#: locale/programs/ld-collate.c:3148
 #, c-format
 msgid "%s: unknown section name `%.*s'"
 msgstr "%s: 不明なセクション名 `%.*s' です"
 
-#: locale/programs/ld-collate.c:3150
+#: locale/programs/ld-collate.c:3177
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr "%s: セクション `%s' 用の順序定義が複数あります"
 
-#: locale/programs/ld-collate.c:3178
+#: locale/programs/ld-collate.c:3205
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: 無効な並び替え規則の番号です"
 
-#: locale/programs/ld-collate.c:3205
+#: locale/programs/ld-collate.c:3232
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr "%s: 名前のないセクションに対する並び替え定義が複数あります"
 
-#: locale/programs/ld-collate.c:3260 locale/programs/ld-collate.c:3390
-#: locale/programs/ld-collate.c:3753
+#: locale/programs/ld-collate.c:3287 locale/programs/ld-collate.c:3417
+#: locale/programs/ld-collate.c:3782
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr "%s: `order_end' キーワードが見つかりません"
 
-#: locale/programs/ld-collate.c:3323
+#: locale/programs/ld-collate.c:3350
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr "%s: 照合シンボル %.*s に対する並べ替えがまだ定義されていません"
 
-#: locale/programs/ld-collate.c:3341
+#: locale/programs/ld-collate.c:3368
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr "%s: 照合要素 %.*s に対する並べ替えがまだ定義されていません"
 
-#: locale/programs/ld-collate.c:3352
+#: locale/programs/ld-collate.c:3379
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr "%s: %.*sの後で再並び替えができません: 不明なシンボルです"
 
-#: locale/programs/ld-collate.c:3404 locale/programs/ld-collate.c:3765
+#: locale/programs/ld-collate.c:3431 locale/programs/ld-collate.c:3794
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr "%s: `reorder-end' キーワードがありません"
 
-#: locale/programs/ld-collate.c:3438 locale/programs/ld-collate.c:3636
+#: locale/programs/ld-collate.c:3465 locale/programs/ld-collate.c:3663
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr "%s: セクション `%.*s' は不明です"
 
-#: locale/programs/ld-collate.c:3503
+#: locale/programs/ld-collate.c:3530
 #, c-format
 msgid "%s: bad symbol <%.*s>"
 msgstr "%s: 間違ったシンボル <%.*s> です"
 
-#: locale/programs/ld-collate.c:3699
+#: locale/programs/ld-collate.c:3726
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr "%s: 省略記号の範囲の終わりとして `%s' を持つことは出来ません"
 
-#: locale/programs/ld-collate.c:3749
+#: locale/programs/ld-collate.c:3778
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr "%s: 空のカテゴリ記述は許可されていません"
 
-#: locale/programs/ld-collate.c:3768
+#: locale/programs/ld-collate.c:3797
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr "%s: `reorder-sections-end' キーワードがありません"
 
-#: locale/programs/ld-collate.c:3932
+#: locale/programs/ld-collate.c:3961
 #, c-format
 msgid "%s: '%s' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: '%s' に対応している 'ifdef' または 'ifndef' がありません"
 
-#: locale/programs/ld-collate.c:3950
+#: locale/programs/ld-collate.c:3979
 #, c-format
 msgid "%s: 'endif' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: 'endif' に対応している 'ifdef' または 'ifndef' がありません"
 
-#: locale/programs/ld-ctype.c:448
+#: locale/programs/ld-ctype.c:447
 msgid "No character set name specified in charmap"
 msgstr "文字マップ内に指定した文字集合名がありません"
 
-#: locale/programs/ld-ctype.c:476
+#: locale/programs/ld-ctype.c:475
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must be in class `%s'"
 msgstr "文字 L'\\u%0*x' (クラス `%s' 内) はクラス`%s' 内になければいけません"
 
-#: locale/programs/ld-ctype.c:490
+#: locale/programs/ld-ctype.c:489
 #, c-format
 msgid "character L'\\u%0*x' in class `%s' must not be in class `%s'"
 msgstr "文字 L'\\u%0*x' (クラス `%s' 内) はクラス `%s' 内にあってはいけません"
 
-#: locale/programs/ld-ctype.c:504 locale/programs/ld-ctype.c:560
+#: locale/programs/ld-ctype.c:503 locale/programs/ld-ctype.c:559
 #, c-format
 msgid "internal error in %s, line %u"
 msgstr "%s 内、%u 行で内部エラーが発生しました"
 
-#: locale/programs/ld-ctype.c:532
+#: locale/programs/ld-ctype.c:531
 #, c-format
 msgid "character '%s' in class `%s' must be in class `%s'"
 msgstr "クラス `%2$s' の文字 `%1$s' はクラス `%3$s' になければいけません"
 
-#: locale/programs/ld-ctype.c:547
+#: locale/programs/ld-ctype.c:546
 #, c-format
 msgid "character '%s' in class `%s' must not be in class `%s'"
 msgstr "クラス `%2$s' 内の文字 `%1$s' はクラス `%3$s' にあってはいけません"
 
-#: locale/programs/ld-ctype.c:576 locale/programs/ld-ctype.c:611
+#: locale/programs/ld-ctype.c:575 locale/programs/ld-ctype.c:610
 #, c-format
 msgid "<SP> character not in class `%s'"
 msgstr "<SP> 文字はクラス `%s' 内にありません"
 
-#: locale/programs/ld-ctype.c:587 locale/programs/ld-ctype.c:621
+#: locale/programs/ld-ctype.c:586 locale/programs/ld-ctype.c:620
 #, c-format
 msgid "<SP> character must not be in class `%s'"
 msgstr "<SP> 文字はクラス `%s' 内にあってはいけません"
 
-#: locale/programs/ld-ctype.c:601
+#: locale/programs/ld-ctype.c:600
 msgid "character <SP> not defined in character map"
 msgstr "文字 <SP> が文字マップ内で定義されていません"
 
-#: locale/programs/ld-ctype.c:735
+#: locale/programs/ld-ctype.c:734
 msgid "`digit' category has not entries in groups of ten"
 msgstr "`digit' カテゴリはグループ中に10個のエントリを持っていません"
 
-#: locale/programs/ld-ctype.c:784
+#: locale/programs/ld-ctype.c:783
 msgid "no input digits defined and none of the standard names in the charmap"
 msgstr "入力桁が定義されていないか、文字マップ中に標準名がありません"
 
-#: locale/programs/ld-ctype.c:847
+#: locale/programs/ld-ctype.c:846
 msgid "not all characters used in `outdigit' are available in the charmap"
 msgstr "`outdigit' 内で使用されている文字の全てが文字マップ内で利用可能ではありません"
 
-#: locale/programs/ld-ctype.c:866
+#: locale/programs/ld-ctype.c:865
 msgid "not all characters used in `outdigit' are available in the repertoire"
 msgstr "`outdigit'で使用中の文字の一部はレパートリマップで利用可能ではありません"
 
-#: locale/programs/ld-ctype.c:1131
+#: locale/programs/ld-ctype.c:1130
 #, c-format
 msgid "character class `%s' already defined"
 msgstr "文字クラス `%s' は既に定義されています"
 
-#: locale/programs/ld-ctype.c:1137
+#: locale/programs/ld-ctype.c:1136
 #, c-format
 msgid "implementation limit: no more than %Zd character classes allowed"
 msgstr "実装上の制限: %Zd より大きい文字クラスは許可されていません"
 
-#: locale/programs/ld-ctype.c:1163
+#: locale/programs/ld-ctype.c:1162
 #, c-format
 msgid "character map `%s' already defined"
 msgstr "文字マップ `%s' は既に定義されています"
 
-#: locale/programs/ld-ctype.c:1169
+#: locale/programs/ld-ctype.c:1168
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr "実装上の制限: %d より大きい文字マップは許可されていません"
 
-#: locale/programs/ld-ctype.c:1435 locale/programs/ld-ctype.c:1560
-#: locale/programs/ld-ctype.c:1666 locale/programs/ld-ctype.c:2342
-#: locale/programs/ld-ctype.c:3302
+#: locale/programs/ld-ctype.c:1434 locale/programs/ld-ctype.c:1559
+#: locale/programs/ld-ctype.c:1665 locale/programs/ld-ctype.c:2341
+#: locale/programs/ld-ctype.c:3301
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
 msgstr "%s: フィールド `%s' は厳密に10項目を含んでいません"
 
-#: locale/programs/ld-ctype.c:1463 locale/programs/ld-ctype.c:2037
+#: locale/programs/ld-ctype.c:1462 locale/programs/ld-ctype.c:2036
 #, c-format
 msgid "to-value <U%0*X> of range is smaller than from-value <U%0*X>"
 msgstr "範囲の to の値 <U%0*X> は from の値 <U%0*X> より小さいです"
 
-#: locale/programs/ld-ctype.c:1590
+#: locale/programs/ld-ctype.c:1589
 msgid "start and end character sequence of range must have the same length"
 msgstr "範囲の開始と終了文字シーケンスは同一長でなければいけません"
 
-#: locale/programs/ld-ctype.c:1597
+#: locale/programs/ld-ctype.c:1596
 msgid "to-value character sequence is smaller than from-value sequence"
 msgstr "to 値の文字シーケンスは from 値の文字シーケンスよりも小さすぎます"
 
-#: locale/programs/ld-ctype.c:1957 locale/programs/ld-ctype.c:2008
+#: locale/programs/ld-ctype.c:1956 locale/programs/ld-ctype.c:2007
 msgid "premature end of `translit_ignore' definition"
 msgstr "`translit_ignore' 定義の終端が早すぎます"
 
-#: locale/programs/ld-ctype.c:1963 locale/programs/ld-ctype.c:2014
-#: locale/programs/ld-ctype.c:2056
+#: locale/programs/ld-ctype.c:1962 locale/programs/ld-ctype.c:2013
+#: locale/programs/ld-ctype.c:2055
 msgid "syntax error"
 msgstr "構文エラーです"
 
-#: locale/programs/ld-ctype.c:2189
+#: locale/programs/ld-ctype.c:2188
 #, c-format
 msgid "%s: syntax error in definition of new character class"
 msgstr "%s: 新しい文字クラスの定義内で構文エラーです"
 
-#: locale/programs/ld-ctype.c:2204
+#: locale/programs/ld-ctype.c:2203
 #, c-format
 msgid "%s: syntax error in definition of new character map"
 msgstr "%s: 新しい文字マップの定義内で構文エラーです"
 
-#: locale/programs/ld-ctype.c:2364
+#: locale/programs/ld-ctype.c:2363
 msgid "ellipsis range must be marked by two operands of same type"
 msgstr "省略の範囲は同じ型の二個の被演算子によりマークされていなければいけません"
 
-#: locale/programs/ld-ctype.c:2373
+#: locale/programs/ld-ctype.c:2372
 msgid "with symbolic name range values the absolute ellipsis `...' must not be used"
 msgstr "シンボル名の値の範囲として絶対省略 `...' は使用してはいけません"
 
-#: locale/programs/ld-ctype.c:2388
+#: locale/programs/ld-ctype.c:2387
 msgid "with UCS range values one must use the hexadecimal symbolic ellipsis `..'"
 msgstr "UCS の値の範囲として16進シンボル省略 `..' を使用しなければなりません"
 
-#: locale/programs/ld-ctype.c:2402
+#: locale/programs/ld-ctype.c:2401
 msgid "with character code range values one must use the absolute ellipsis `...'"
 msgstr "文字コードの値の範囲として絶対省略 `...' を使用しなければなりません"
 
-#: locale/programs/ld-ctype.c:2553
+#: locale/programs/ld-ctype.c:2552
 #, c-format
 msgid "duplicated definition for mapping `%s'"
 msgstr "重複したマッピング `%s' の定義です"
 
-#: locale/programs/ld-ctype.c:2639 locale/programs/ld-ctype.c:2783
+#: locale/programs/ld-ctype.c:2638 locale/programs/ld-ctype.c:2782
 #, c-format
 msgid "%s: `translit_start' section does not end with `translit_end'"
 msgstr "%s: `translit_start' セクションが `translit_end' で終っていません"
 
-#: locale/programs/ld-ctype.c:2734
+#: locale/programs/ld-ctype.c:2733
 #, c-format
 msgid "%s: duplicate `default_missing' definition"
 msgstr "%s: 重複した `default_missing' 定義です"
 
-#: locale/programs/ld-ctype.c:2739
+#: locale/programs/ld-ctype.c:2738
 msgid "previous definition was here"
 msgstr "前の定義がここにありました"
 
-#: locale/programs/ld-ctype.c:2761
+#: locale/programs/ld-ctype.c:2760
 #, c-format
 msgid "%s: no representable `default_missing' definition found"
 msgstr "%s: 表現可能な `default_missing' 定義が見つかりません"
 
-#: locale/programs/ld-ctype.c:2878 locale/programs/ld-ctype.c:2974
-#: locale/programs/ld-ctype.c:2993 locale/programs/ld-ctype.c:3013
-#: locale/programs/ld-ctype.c:3033 locale/programs/ld-ctype.c:3053
-#: locale/programs/ld-ctype.c:3073 locale/programs/ld-ctype.c:3112
-#: locale/programs/ld-ctype.c:3132 locale/programs/ld-ctype.c:3198
-#: locale/programs/ld-ctype.c:3239 locale/programs/ld-ctype.c:3262
+#: locale/programs/ld-ctype.c:2877 locale/programs/ld-ctype.c:2973
+#: locale/programs/ld-ctype.c:2992 locale/programs/ld-ctype.c:3012
+#: locale/programs/ld-ctype.c:3032 locale/programs/ld-ctype.c:3052
+#: locale/programs/ld-ctype.c:3072 locale/programs/ld-ctype.c:3111
+#: locale/programs/ld-ctype.c:3131 locale/programs/ld-ctype.c:3197
+#: locale/programs/ld-ctype.c:3238 locale/programs/ld-ctype.c:3261
 #, c-format
 msgid "%s: character `%s' not defined while needed as default value"
 msgstr "%s: 文字 `%s' がデフォルト値として必要ですが定義されていません"
 
-#: locale/programs/ld-ctype.c:2883 locale/programs/ld-ctype.c:2979
-#: locale/programs/ld-ctype.c:2998 locale/programs/ld-ctype.c:3018
-#: locale/programs/ld-ctype.c:3038 locale/programs/ld-ctype.c:3058
-#: locale/programs/ld-ctype.c:3078 locale/programs/ld-ctype.c:3117
-#: locale/programs/ld-ctype.c:3137 locale/programs/ld-ctype.c:3203
+#: locale/programs/ld-ctype.c:2882 locale/programs/ld-ctype.c:2978
+#: locale/programs/ld-ctype.c:2997 locale/programs/ld-ctype.c:3017
+#: locale/programs/ld-ctype.c:3037 locale/programs/ld-ctype.c:3057
+#: locale/programs/ld-ctype.c:3077 locale/programs/ld-ctype.c:3116
+#: locale/programs/ld-ctype.c:3136 locale/programs/ld-ctype.c:3202
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
 msgstr "%s: 文字マップ内の文字 `%s' は一バイトで表現できません"
 
-#: locale/programs/ld-ctype.c:3245 locale/programs/ld-ctype.c:3268
+#: locale/programs/ld-ctype.c:3244 locale/programs/ld-ctype.c:3267
 #, c-format
 msgid "%s: character `%s' needed as default value not representable with one byte"
 msgstr "%s: デフォルト値として必要な文字 `%s' が一バイトで表現できません"
 
-#: locale/programs/ld-ctype.c:3324
+#: locale/programs/ld-ctype.c:3323
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr "出力桁が定義されていないか、文字マップ内に標準名がありません"
 
-#: locale/programs/ld-ctype.c:3573
+#: locale/programs/ld-ctype.c:3572
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: ロケール `%s' からのリテラル変換データが使用出来ません"
 
-#: locale/programs/ld-identification.c:173
+#: locale/programs/ld-identification.c:172
 #, c-format
 msgid "%s: no identification for category `%s'"
 msgstr "%s: カテゴリ `%s' 用の識別子がありません"
 
-#: locale/programs/ld-identification.c:380
+#: locale/programs/ld-identification.c:379
 #, c-format
 msgid "%s: duplicate category version definition"
 msgstr "%s: 重複したカテゴリバージョン定義です"
 
-#: locale/programs/ld-measurement.c:111
+#: locale/programs/ld-measurement.c:110
 #, c-format
 msgid "%s: invalid value for field `%s'"
 msgstr "%s: フィールド `%s' 用の無効な値です"
 
-#: locale/programs/ld-messages.c:113 locale/programs/ld-messages.c:146
+#: locale/programs/ld-messages.c:112 locale/programs/ld-messages.c:145
 #, c-format
 msgid "%s: field `%s' undefined"
 msgstr "%s: フィールド `%s' は未定義です"
 
-#: locale/programs/ld-messages.c:119 locale/programs/ld-messages.c:152
-#: locale/programs/ld-monetary.c:264 locale/programs/ld-numeric.c:117
+#: locale/programs/ld-messages.c:118 locale/programs/ld-messages.c:151
+#: locale/programs/ld-monetary.c:263 locale/programs/ld-numeric.c:116
 #, c-format
 msgid "%s: value for field `%s' must not be an empty string"
 msgstr "%s: フィールド `%s' 用の値は空文字列ではいけません"
 
-#: locale/programs/ld-messages.c:135 locale/programs/ld-messages.c:168
+#: locale/programs/ld-messages.c:134 locale/programs/ld-messages.c:167
 #, c-format
 msgid "%s: no correct regular expression for field `%s': %s"
 msgstr "%s: フィールド `%s' 用の正しくない正規表現です: %s"
 
-#: locale/programs/ld-monetary.c:228
+#: locale/programs/ld-monetary.c:227
 #, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
 msgstr "%s: フィールド `int_curr_symbol' の値が間違った長さです"
 
-#: locale/programs/ld-monetary.c:293 locale/programs/ld-monetary.c:322
+#: locale/programs/ld-monetary.c:292 locale/programs/ld-monetary.c:321
 #, c-format
 msgid "%s: value for field `%s' must be in range %d...%d"
 msgstr "%s: フィールド `%s' の値は %d...%d の範囲内になければなりません"
 
-#: locale/programs/ld-monetary.c:549 locale/programs/ld-numeric.c:228
+#: locale/programs/ld-monetary.c:548 locale/programs/ld-numeric.c:227
 #, c-format
 msgid "%s: value for field `%s' must be a single character"
 msgstr "%s: フィールド `%s' の値は単一文字でなければいけません"
 
-#: locale/programs/ld-monetary.c:646 locale/programs/ld-numeric.c:272
+#: locale/programs/ld-monetary.c:645 locale/programs/ld-numeric.c:271
 #, c-format
 msgid "%s: `-1' must be last entry in `%s' field"
 msgstr "%s: `-1' は `%s' フィールド内の最後の項目でなければいけません"
 
-#: locale/programs/ld-monetary.c:668 locale/programs/ld-numeric.c:289
+#: locale/programs/ld-monetary.c:667 locale/programs/ld-numeric.c:288
 #, c-format
 msgid "%s: values for field `%s' must be smaller than 127"
 msgstr "%s: フィールド `%s' 用の値は 127 以下でなければいけません"
 
-#: locale/programs/ld-monetary.c:714
+#: locale/programs/ld-monetary.c:713
 msgid "conversion rate value cannot be zero"
 msgstr "変換レート値はゼロにはできません"
 
-#: locale/programs/ld-name.c:128 locale/programs/ld-telephone.c:124
-#: locale/programs/ld-telephone.c:147
+#: locale/programs/ld-name.c:127 locale/programs/ld-telephone.c:123
+#: locale/programs/ld-telephone.c:146
 #, c-format
 msgid "%s: invalid escape sequence in field `%s'"
 msgstr "%s: フィールド `%s' 中に無効なエスケープシーケンスがあります"
 
-#: locale/programs/ld-time.c:251
+#: locale/programs/ld-time.c:250
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
 msgstr "%s: `era'フィールド内の文字列 %Zd 内の方向フラグが '+' または '-' ではありません"
 
-#: locale/programs/ld-time.c:261
+#: locale/programs/ld-time.c:260
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not a single character"
 msgstr "%s: `era' フィールド内の文字列 %Zd の方向フラグが単一文字ではありません"
 
-#: locale/programs/ld-time.c:273
+#: locale/programs/ld-time.c:272
 #, c-format
 msgid "%s: invalid number for offset in string %Zd in `era' field"
 msgstr "%s: `era'フィールド内の文字列 %Zd 内のオフセット用の番号が無効です"
 
-#: locale/programs/ld-time.c:280
+#: locale/programs/ld-time.c:279
 #, c-format
 msgid "%s: garbage at end of offset value in string %Zd in `era' field"
 msgstr "%s: `era'フィールド内の文字列 %Zd 内のオフセット値の最後にゴミがあります"
 
-#: locale/programs/ld-time.c:330
+#: locale/programs/ld-time.c:329
 #, c-format
 msgid "%s: invalid starting date in string %Zd in `era' field"
 msgstr "%s: `era' フィールド内の文字列 %Zd 内の開始日付が無効です"
 
-#: locale/programs/ld-time.c:338
+#: locale/programs/ld-time.c:337
 #, c-format
 msgid "%s: garbage at end of starting date in string %Zd in `era' field "
 msgstr "%s: `era' フィールド内の文字列 %Zd 内の開始日付の最後にゴミがあります"
 
-#: locale/programs/ld-time.c:356
+#: locale/programs/ld-time.c:355
 #, c-format
 msgid "%s: starting date is invalid in string %Zd in `era' field"
 msgstr "%s: `era' フィールドにある文字列 %Zd 中の開始日が無効です"
 
-#: locale/programs/ld-time.c:404 locale/programs/ld-time.c:430
+#: locale/programs/ld-time.c:403 locale/programs/ld-time.c:429
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
 msgstr "%s: `era' フィールド内の文字列 %Zd 内の終了日付が無効です"
 
-#: locale/programs/ld-time.c:412
+#: locale/programs/ld-time.c:411
 #, c-format
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
 msgstr "%s: `era' フィールド内の文字列 %Zd 内の終了日付の最後にゴミがあります"
 
-#: locale/programs/ld-time.c:438
+#: locale/programs/ld-time.c:437
 #, c-format
 msgid "%s: missing era name in string %Zd in `era' field"
 msgstr "%s: `era' フィールド内の文字列 %Zd 内に era 名がありません"
 
-#: locale/programs/ld-time.c:449
+#: locale/programs/ld-time.c:448
 #, c-format
 msgid "%s: missing era format in string %Zd in `era' field"
 msgstr "%s: `era' フィールド内の文字列 %Zd 内に era 形式がありません"
 
-#: locale/programs/ld-time.c:494
+#: locale/programs/ld-time.c:493
 #, c-format
 msgid "%s: third operand for value of field `%s' must not be larger than %d"
 msgstr "%s: フィールド `%s' の値用の第三被演算子は %d より大きくてはいけません"
 
-#: locale/programs/ld-time.c:502 locale/programs/ld-time.c:510
-#: locale/programs/ld-time.c:518
+#: locale/programs/ld-time.c:501 locale/programs/ld-time.c:509
+#: locale/programs/ld-time.c:517
 #, c-format
 msgid "%s: values for field `%s' must not be larger than %d"
 msgstr "%s: フィールド `%s' の値は %d 以上ではいけません"
 
-#: locale/programs/ld-time.c:740
+#: locale/programs/ld-time.c:739
 #, c-format
 msgid "%s: too few values for field `%s'"
 msgstr "%s: フィールド `%s' 用の値が少なすぎます"
 
-#: locale/programs/ld-time.c:785
+#: locale/programs/ld-time.c:784
 msgid "extra trailing semicolon"
 msgstr "余分なセミコロンが最後にあります"
 
-#: locale/programs/ld-time.c:788
+#: locale/programs/ld-time.c:787
 #, c-format
 msgid "%s: too many values for field `%s'"
 msgstr "%s: フィールド `%s' 用の値が多すぎます"
 
-#: locale/programs/linereader.c:130
+#: locale/programs/linereader.c:129
 msgid "trailing garbage at end of line"
 msgstr "行末にゴミがあります"
 
-#: locale/programs/linereader.c:298
+#: locale/programs/linereader.c:297
 msgid "garbage at end of number"
 msgstr "数字の終わりにゴミがあります"
 
-#: locale/programs/linereader.c:410
+#: locale/programs/linereader.c:409
 msgid "garbage at end of character code specification"
 msgstr "文字コード指定の終わりにゴミがあります"
 
-#: locale/programs/linereader.c:496
+#: locale/programs/linereader.c:495
 msgid "unterminated symbolic name"
 msgstr "シンボル名が終端されていません"
 
-#: locale/programs/linereader.c:623
+#: locale/programs/linereader.c:622
 msgid "illegal escape sequence at end of string"
 msgstr "文字列の終わりに不正なエスケープシーケンスがあります"
 
-#: locale/programs/linereader.c:627 locale/programs/linereader.c:847
+#: locale/programs/linereader.c:626 locale/programs/linereader.c:846
 msgid "unterminated string"
 msgstr "文字列が終端していません"
 
-#: locale/programs/linereader.c:808
+#: locale/programs/linereader.c:807
 #, c-format
 msgid "symbol `%.*s' not in charmap"
 msgstr "シンボル `%.*s' が文字マップ内にありません"
 
-#: locale/programs/linereader.c:829
+#: locale/programs/linereader.c:828
 #, c-format
 msgid "symbol `%.*s' not in repertoire map"
 msgstr "シンボル `%.*s' がレパートリーマップ内にありません"
 
-#: locale/programs/locale-spec.c:130
+#: locale/programs/locale-spec.c:129
 #, c-format
 msgid "unknown name \"%s\""
 msgstr "不明な名前 \"%s\" です"
 
-#: locale/programs/locale.c:70
+#: locale/programs/locale.c:69
 msgid "System information:"
 msgstr "システム情報:"
 
-#: locale/programs/locale.c:72
+#: locale/programs/locale.c:71
 msgid "Write names of available locales"
 msgstr "利用可能なロケール名を書き込む"
 
-#: locale/programs/locale.c:74
+#: locale/programs/locale.c:73
 msgid "Write names of available charmaps"
 msgstr "利用可能なキャラクタマップ名を書き込む"
 
-#: locale/programs/locale.c:75
+#: locale/programs/locale.c:74
 msgid "Modify output format:"
 msgstr "出力形式の修正:"
 
-#: locale/programs/locale.c:76
+#: locale/programs/locale.c:75
 msgid "Write names of selected categories"
 msgstr "選択したカテゴリ名を書き込む"
 
-#: locale/programs/locale.c:77
+#: locale/programs/locale.c:76
 msgid "Write names of selected keywords"
 msgstr "選択したキーワード名を書き込む"
 
-#: locale/programs/locale.c:78
+#: locale/programs/locale.c:77
 msgid "Print more information"
 msgstr "詳細情報を表示する"
 
-#: locale/programs/locale.c:83
+#: locale/programs/locale.c:82
 msgid "Get locale-specific information."
 msgstr "ロケール固有情報を取得する。"
 
-#: locale/programs/locale.c:86
+#: locale/programs/locale.c:85
 msgid ""
 "NAME\n"
 "[-a|-m]"
@@ -2316,76 +2308,76 @@ msgstr ""
 "NAME\n"
 "[-a|-m]"
 
-#: locale/programs/locale.c:522
+#: locale/programs/locale.c:521
 #, c-format
 msgid "while preparing output"
 msgstr "出力を準備中"
 
-#: locale/programs/localedef.c:116
+#: locale/programs/localedef.c:115
 msgid "Input Files:"
 msgstr "入力ファイル:"
 
-#: locale/programs/localedef.c:118
+#: locale/programs/localedef.c:117
 msgid "Symbolic character names defined in FILE"
 msgstr "シンボル文字名は FILE 内で定義されています"
 
-#: locale/programs/localedef.c:120
+#: locale/programs/localedef.c:119
 msgid "Source definitions are found in FILE"
 msgstr "FILE 内でソース定義が見つかりました"
 
-#: locale/programs/localedef.c:122
+#: locale/programs/localedef.c:121
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "FILE にはシンボル名から UCS4 値へのマップが含まれます"
 
-#: locale/programs/localedef.c:126
+#: locale/programs/localedef.c:125
 msgid "Create output even if warning messages were issued"
 msgstr "警告メッセージがあっても出力を作成する"
 
-#: locale/programs/localedef.c:129
+#: locale/programs/localedef.c:128
 msgid "Optional output file prefix"
 msgstr "出力ファイルにオプションの接頭辞を付加する"
 
-#: locale/programs/localedef.c:132
+#: locale/programs/localedef.c:131
 msgid "Suppress warnings and information messages"
 msgstr "警告と情報メッセージを抑制する"
 
-#: locale/programs/localedef.c:133
+#: locale/programs/localedef.c:132
 msgid "Print more messages"
 msgstr "詳細なメッセージを表示する"
 
-#: locale/programs/localedef.c:141
+#: locale/programs/localedef.c:140
 msgid "Archive control:"
 msgstr "書庫制御:"
 
-#: locale/programs/localedef.c:143
+#: locale/programs/localedef.c:142
 msgid "Don't add new data to archive"
 msgstr "書庫に新しいデータを追加しない"
 
-#: locale/programs/localedef.c:145
+#: locale/programs/localedef.c:144
 msgid "Add locales named by parameters to archive"
 msgstr "パラメータで指定された名前のロケールを書庫に追加する"
 
-#: locale/programs/localedef.c:146
+#: locale/programs/localedef.c:145
 msgid "Replace existing archive content"
 msgstr "既存の書庫の内容を置換する"
 
-#: locale/programs/localedef.c:148
+#: locale/programs/localedef.c:147
 msgid "Remove locales named by parameters from archive"
 msgstr "パラメータで指定された名前のロケールを書庫から削除する"
 
-#: locale/programs/localedef.c:149
+#: locale/programs/localedef.c:148
 msgid "List content of archive"
 msgstr "書庫の内容のリストを表示する"
 
-#: locale/programs/localedef.c:151
+#: locale/programs/localedef.c:150
 msgid "locale.alias file to consult when making archive"
 msgstr "書庫を作成する時に locale.alias ファイルを参照する"
 
-#: locale/programs/localedef.c:160
+#: locale/programs/localedef.c:159
 msgid "Compile locale specification"
 msgstr "ロケール仕様をコンパイルする"
 
-#: locale/programs/localedef.c:163
+#: locale/programs/localedef.c:162
 msgid ""
 "NAME\n"
 "[--add-to-archive|--delete-from-archive] FILE...\n"
@@ -2395,27 +2387,27 @@ msgstr ""
 "[--add-to-archive|--delete-from-archive] FILE...\n"
 "--list-archive [FILE]"
 
-#: locale/programs/localedef.c:239
+#: locale/programs/localedef.c:238
 #, c-format
 msgid "cannot create directory for output files"
 msgstr "出力ファイル用ディレクトリが作成できません"
 
-#: locale/programs/localedef.c:250
+#: locale/programs/localedef.c:249
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr "致命的: システムは `_POSIX2_LOCALEDEF' を定義しません"
 
-#: locale/programs/localedef.c:264 locale/programs/localedef.c:280
-#: locale/programs/localedef.c:678 locale/programs/localedef.c:698
+#: locale/programs/localedef.c:263 locale/programs/localedef.c:279
+#: locale/programs/localedef.c:677 locale/programs/localedef.c:697
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "ロケール定義ファイル `%s' を開けません"
 
-#: locale/programs/localedef.c:304
+#: locale/programs/localedef.c:303
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "出力ファイル `%s' へ書き込めません"
 
-#: locale/programs/localedef.c:441
+#: locale/programs/localedef.c:440
 #, c-format
 msgid ""
 "System's directory for character maps : %s\n"
@@ -2428,208 +2420,208 @@ msgstr ""
 "ロケールパス用のシステムディレクトリ       : %s\n"
 "%s"
 
-#: locale/programs/localedef.c:646
+#: locale/programs/localedef.c:645
 msgid "circular dependencies between locale definitions"
 msgstr "ロケール定義間で依存関係が循環しています"
 
-#: locale/programs/localedef.c:652
+#: locale/programs/localedef.c:651
 #, c-format
 msgid "cannot add already read locale `%s' a second time"
 msgstr "読み込み済みのロケール `%s' の二回目の追加は出来ません"
 
-#: locale/programs/locarchive.c:167 locale/programs/locarchive.c:430
+#: locale/programs/locarchive.c:166 locale/programs/locarchive.c:429
 #, c-format
 msgid "cannot initialize archive file"
 msgstr "書庫ファイルを初期化できません"
 
-#: locale/programs/locarchive.c:174 locale/programs/locarchive.c:437
+#: locale/programs/locarchive.c:173 locale/programs/locarchive.c:436
 #, c-format
 msgid "cannot resize archive file"
 msgstr "書庫ファイルのサイズ変更は出来ません"
 
-#: locale/programs/locarchive.c:189 locale/programs/locarchive.c:452
-#: locale/programs/locarchive.c:674
+#: locale/programs/locarchive.c:188 locale/programs/locarchive.c:451
+#: locale/programs/locarchive.c:680
 #, c-format
 msgid "cannot map archive header"
 msgstr "書庫ヘッダーをマップ出来ません"
 
-#: locale/programs/locarchive.c:211
+#: locale/programs/locarchive.c:210
 #, c-format
 msgid "failed to create new locale archive"
 msgstr "新しいロケール書庫の作成に失敗しました"
 
-#: locale/programs/locarchive.c:223
+#: locale/programs/locarchive.c:222
 #, c-format
 msgid "cannot change mode of new locale archive"
 msgstr "新しいロケール書庫のモードを変更できません"
 
-#: locale/programs/locarchive.c:324
+#: locale/programs/locarchive.c:323
 msgid "cannot read data from locale archive"
 msgstr "ロケール書庫からデータを読み込めません"
 
-#: locale/programs/locarchive.c:355
+#: locale/programs/locarchive.c:354
 #, c-format
 msgid "cannot map locale archive file"
 msgstr "ロケール書庫ファイルをマップできません"
 
-#: locale/programs/locarchive.c:460
+#: locale/programs/locarchive.c:459
 #, c-format
 msgid "cannot lock new archive"
 msgstr "新しい書庫をロックできません"
 
-#: locale/programs/locarchive.c:529
+#: locale/programs/locarchive.c:528
 #, c-format
 msgid "cannot extend locale archive file"
 msgstr "ロケール書庫ファイルを拡張できません"
 
-#: locale/programs/locarchive.c:538
+#: locale/programs/locarchive.c:537
 #, c-format
 msgid "cannot change mode of resized locale archive"
 msgstr "サイズ変更したロケール書庫のモードを変更できません"
 
-#: locale/programs/locarchive.c:546
+#: locale/programs/locarchive.c:545
 #, c-format
 msgid "cannot rename new archive"
 msgstr "新しい書庫名を変更できません"
 
-#: locale/programs/locarchive.c:608
+#: locale/programs/locarchive.c:607
 #, c-format
 msgid "cannot open locale archive \"%s\""
 msgstr "ロケール書庫 \"%s\" を開けません"
 
-#: locale/programs/locarchive.c:613
+#: locale/programs/locarchive.c:612
 #, c-format
 msgid "cannot stat locale archive \"%s\""
 msgstr "ロケール書庫 \"%s\" の状態取得 (stat) が出来ません"
 
-#: locale/programs/locarchive.c:632
+#: locale/programs/locarchive.c:631
 #, c-format
 msgid "cannot lock locale archive \"%s\""
 msgstr "ロケール書庫 \"%s\" をロックできません"
 
-#: locale/programs/locarchive.c:655
+#: locale/programs/locarchive.c:654
 #, c-format
 msgid "cannot read archive header"
 msgstr "書庫ヘッダーを読み込めません"
 
-#: locale/programs/locarchive.c:728
+#: locale/programs/locarchive.c:734
 #, c-format
 msgid "locale '%s' already exists"
 msgstr "ロケール '%s' はすでに存在します"
 
-#: locale/programs/locarchive.c:1003 locale/programs/locarchive.c:1018
-#: locale/programs/locarchive.c:1030 locale/programs/locarchive.c:1042
-#: locale/programs/locfile.c:350
+#: locale/programs/locarchive.c:1009 locale/programs/locarchive.c:1024
+#: locale/programs/locarchive.c:1036 locale/programs/locarchive.c:1048
+#: locale/programs/locfile.c:349
 #, c-format
 msgid "cannot add to locale archive"
 msgstr "ロケール書庫に追加できません"
 
-#: locale/programs/locarchive.c:1203
+#: locale/programs/locarchive.c:1209
 #, c-format
 msgid "locale alias file `%s' not found"
 msgstr "ロケール別名ファイル `%s' が見つかりません"
 
-#: locale/programs/locarchive.c:1351
+#: locale/programs/locarchive.c:1357
 #, c-format
 msgid "Adding %s\n"
 msgstr "%s を追加しています\n"
 
-#: locale/programs/locarchive.c:1357
+#: locale/programs/locarchive.c:1363
 #, c-format
 msgid "stat of \"%s\" failed: %s: ignored"
 msgstr "\"%s\" の状態取得 (stat) に失敗しました: %s: 無視します"
 
-#: locale/programs/locarchive.c:1363
+#: locale/programs/locarchive.c:1369
 #, c-format
 msgid "\"%s\" is no directory; ignored"
 msgstr "\"%s\" はディレクトリではありません。無視します"
 
-#: locale/programs/locarchive.c:1370
+#: locale/programs/locarchive.c:1376
 #, c-format
 msgid "cannot open directory \"%s\": %s: ignored"
 msgstr "ディレクトリ \"%s\" を開けません: %s: 無視します"
 
-#: locale/programs/locarchive.c:1438
+#: locale/programs/locarchive.c:1444
 #, c-format
 msgid "incomplete set of locale files in \"%s\""
 msgstr "ロケールファイル \"%s\" 中のロケール集合が不完全です"
 
-#: locale/programs/locarchive.c:1502
+#: locale/programs/locarchive.c:1508
 #, c-format
 msgid "cannot read all files in \"%s\": ignored"
 msgstr "\"%s\" 内の全てのファイルを読み込めません: 無視します"
 
-#: locale/programs/locarchive.c:1572
+#: locale/programs/locarchive.c:1578
 #, c-format
 msgid "locale \"%s\" not in archive"
 msgstr "ロケール \"%s\" は書庫内にありません"
 
-#: locale/programs/locfile.c:137
+#: locale/programs/locfile.c:136
 #, c-format
 msgid "argument to `%s' must be a single character"
 msgstr "`%s' への引数は単一文字でなければいけません"
 
-#: locale/programs/locfile.c:257
+#: locale/programs/locfile.c:256
 msgid "syntax error: not inside a locale definition section"
 msgstr "構文エラー: ロケール定義セクションの内側ではありません"
 
-#: locale/programs/locfile.c:799
+#: locale/programs/locfile.c:798
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
 msgstr "カテゴリ `%2$s' 用の出力ファイル `%1$s' を開けません"
 
-#: locale/programs/locfile.c:822
+#: locale/programs/locfile.c:821
 #, c-format
 msgid "failure while writing data for category `%s'"
 msgstr "カテゴリ `%s' 用のデータ書き込み中に失敗しました"
 
-#: locale/programs/locfile.c:930
+#: locale/programs/locfile.c:929
 #, c-format
 msgid "cannot create output file `%s' for category `%s'"
 msgstr "カテゴリ `%2$s' 用の出力ファイル `%1$s' を作成できません"
 
-#: locale/programs/locfile.c:966
+#: locale/programs/locfile.c:965
 msgid "expecting string argument for `copy'"
 msgstr "`copy' 用には文字列引数が予期されます"
 
-#: locale/programs/locfile.c:970
+#: locale/programs/locfile.c:969
 msgid "locale name should consist only of portable characters"
 msgstr "ロケール名は移植性がある文字だけで構成すべきです"
 
-#: locale/programs/locfile.c:989
+#: locale/programs/locfile.c:988
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr "`copy' を使用したときに他のいかなるキーワードも指定されませんでした"
 
-#: locale/programs/locfile.c:1003
+#: locale/programs/locfile.c:1002
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr "定義`%1$s' が `END %1$s' で終っていません"
 
-#: locale/programs/repertoire.c:228 locale/programs/repertoire.c:269
-#: locale/programs/repertoire.c:294
+#: locale/programs/repertoire.c:227 locale/programs/repertoire.c:268
+#: locale/programs/repertoire.c:293
 #, c-format
 msgid "syntax error in repertoire map definition: %s"
 msgstr "レパートリマップの定義中に構文エラーがあります: %s"
 
-#: locale/programs/repertoire.c:270
+#: locale/programs/repertoire.c:269
 msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr "<Uxxxx> または <Uxxxxxxxx> 値が与えられていません"
 
-#: locale/programs/repertoire.c:330
+#: locale/programs/repertoire.c:329
 msgid "cannot save new repertoire map"
 msgstr "新しいレパートリーマップを保存出来ません"
 
-#: locale/programs/repertoire.c:341
+#: locale/programs/repertoire.c:340
 #, c-format
 msgid "repertoire map file `%s' not found"
 msgstr "レパートリマップファイル `%s' が見つかりません"
 
-#: login/programs/pt_chown.c:79
+#: login/programs/pt_chown.c:78
 #, c-format
 msgid "Set the owner, group and access permission of the slave pseudo terminal corresponding to the master pseudo terminal passed on file descriptor `%d'.  This is the helper program for the `grantpt' function.  It is not intended to be run directly from the command line.\n"
 msgstr "スレーブ疑似端末の所有者、グループ、アクセス権を、ファイル記述子 `%d' として渡されたマスター疑似端末に合わせて設定します。これは `grantpt' 関数用の補助プログラムです。コマンドラインから直接実行するようには意図されていません。\n"
 
-#: login/programs/pt_chown.c:93
+#: login/programs/pt_chown.c:92
 #, c-format
 msgid ""
 "The owner is set to the current user, the group is set to `%s', and the access permission is set to `%o'.\n"
@@ -2640,41 +2632,41 @@ msgstr ""
 "\n"
 "%s"
 
-#: login/programs/pt_chown.c:204
+#: login/programs/pt_chown.c:203
 #, c-format
 msgid "too many arguments"
 msgstr "引数が多すぎます"
 
-#: login/programs/pt_chown.c:212
+#: login/programs/pt_chown.c:211
 #, c-format
 msgid "needs to be installed setuid `root'"
 msgstr "setuid `root' でインストールされる必要があります"
 
-#: malloc/mcheck-impl.c:355
+#: malloc/mcheck-impl.c:354
 msgid "memory is consistent, library is buggy\n"
 msgstr "メモリは一貫性がありますが、ライブラリにバグがあります\n"
 
-#: malloc/mcheck-impl.c:358
+#: malloc/mcheck-impl.c:357
 msgid "memory clobbered before allocated block\n"
 msgstr "ブロック確保前にメモリを上書きしました\n"
 
-#: malloc/mcheck-impl.c:361
+#: malloc/mcheck-impl.c:360
 msgid "memory clobbered past end of allocated block\n"
 msgstr "確保したブロック末尾より後のメモリを上書きしました\n"
 
-#: malloc/mcheck-impl.c:364
+#: malloc/mcheck-impl.c:363
 msgid "block freed twice\n"
 msgstr "ブロックが二回解放 (free) されました\n"
 
-#: malloc/mcheck-impl.c:367
+#: malloc/mcheck-impl.c:366
 msgid "bogus mcheck_status, library is buggy\n"
 msgstr "mcheck_status がおかしいです。ライブラリにバグがあります\n"
 
-#: malloc/memusage.sh:32
+#: malloc/memusage.sh:31
 msgid "%s: option '%s' requires an argument\\n"
 msgstr "%s: オプション '%s' は引数が必要です\\n"
 
-#: malloc/memusage.sh:38
+#: malloc/memusage.sh:37
 msgid ""
 "Usage: memusage [OPTION]... PROGRAM [PROGRAMOPTION]...\n"
 "Profile memory usage of PROGRAM.\n"
@@ -2727,7 +2719,7 @@ msgstr ""
 "長い形式のオプションで必須または任意の引数は、それに対応する短い形式のオプションでも同様に必須または任意です。\n"
 "\n"
 
-#: malloc/memusage.sh:99
+#: malloc/memusage.sh:98
 msgid ""
 "Syntax: memusage [--data=FILE] [--progname=NAME] [--png=FILE] [--unbuffered]\n"
 "\t    [--buffer=SIZE] [--no-timer] [--time-based] [--total]\n"
@@ -2739,47 +2731,47 @@ msgstr ""
 "\t    [--title=STRING] [--x-size=SIZE] [--y-size=SIZE]\n"
 "\t    PROGRAM [PROGRAMOPTION]..."
 
-#: malloc/memusage.sh:191
+#: malloc/memusage.sh:190
 msgid "memusage: option \\`${1##*=}' is ambiguous"
 msgstr "memusage: オプション \\`${1##*=}' は曖昧です"
 
-#: malloc/memusage.sh:200
+#: malloc/memusage.sh:199
 msgid "memusage: unrecognized option \\`$1'"
 msgstr "memusage: 認識出来ないオプション \\`$1' です"
 
-#: malloc/memusage.sh:213
+#: malloc/memusage.sh:212
 msgid "No program name given"
 msgstr "プログラム名を与えられていません"
 
-#: malloc/memusagestat.c:56
+#: malloc/memusagestat.c:55
 msgid "Name output file"
 msgstr "出力ファイル名前"
 
-#: malloc/memusagestat.c:57
+#: malloc/memusagestat.c:56
 msgid "Title string used in output graphic"
 msgstr "出力グラフィック内で使用されるタイトル文字列"
 
-#: malloc/memusagestat.c:58
+#: malloc/memusagestat.c:57
 msgid "Generate output linear to time (default is linear to number of function calls)"
 msgstr "時間に対して線形に出力を生成する (デフォルトは関数呼び出しの回数に対して線形)"
 
-#: malloc/memusagestat.c:62
+#: malloc/memusagestat.c:61
 msgid "Also draw graph for total memory consumption"
 msgstr "合計メモリ消費に関するグラフも描画する"
 
-#: malloc/memusagestat.c:64
+#: malloc/memusagestat.c:63
 msgid "Make output graphic VALUE pixels wide"
 msgstr "出力グラフィックの幅を VALUE ピクセルにする"
 
-#: malloc/memusagestat.c:65
+#: malloc/memusagestat.c:64
 msgid "Make output graphic VALUE pixels high"
 msgstr "出力グラフィックの高さを VALUE にする"
 
-#: malloc/memusagestat.c:70
+#: malloc/memusagestat.c:69
 msgid "Generate graphic from memory profiling data"
 msgstr "メモリプロファイルデータから画像を生成する"
 
-#: malloc/memusagestat.c:73
+#: malloc/memusagestat.c:72
 msgid "DATAFILE [OUTFILE]"
 msgstr "DATAFILE [OUTFILE]"
 
@@ -2787,11 +2779,11 @@ msgstr "DATAFILE [OUTFILE]"
 msgid "Unknown system error"
 msgstr "不明なシステムエラー"
 
-#: nis/nis_callback.c:188
+#: nis/nis_callback.c:187
 msgid "unable to free arguments"
 msgstr "引数を解放できません"
 
-#: nis/nis_error.h:1 nis/ypclnt.c:833 nis/ypclnt.c:922 posix/regcomp.c:135
+#: nis/nis_error.h:1 nis/ypclnt.c:832 nis/ypclnt.c:921 posix/regcomp.c:135
 #: sysdeps/gnu/errlist.h:1
 msgid "Success"
 msgstr "成功です"
@@ -2833,7 +2825,7 @@ msgid "First/next chain broken"
 msgstr "最初/次のチェインが壊れています"
 
 #. TRANS The file permissions do not allow the attempted operation.
-#: nis/nis_error.h:11 nis/ypclnt.c:878 sysdeps/gnu/errlist.h:90
+#: nis/nis_error.h:11 nis/ypclnt.c:877 sysdeps/gnu/errlist.h:90
 msgid "Permission denied"
 msgstr "許可がありません"
 
@@ -2985,128 +2977,128 @@ msgstr "サーバー上にプロセスを作成できません"
 msgid "Master server busy, full dump rescheduled."
 msgstr "マスターサーバーがビジーです、フルダンプは再スケジュールされました。"
 
-#: nis/nis_local_names.c:123
+#: nis/nis_local_names.c:122
 #, c-format
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
 msgstr "ディレクトリ %2$s の UID %1$d に対するローカルエントリが一意ではありません\n"
 
-#: nis/nis_print.c:52
+#: nis/nis_print.c:51
 msgid "UNKNOWN"
 msgstr "未知"
 
-#: nis/nis_print.c:110
+#: nis/nis_print.c:109
 msgid "BOGUS OBJECT\n"
 msgstr "おかしなオブジェクト\n"
 
-#: nis/nis_print.c:113
+#: nis/nis_print.c:112
 msgid "NO OBJECT\n"
 msgstr "オブジェクトがありません\n"
 
-#: nis/nis_print.c:116
+#: nis/nis_print.c:115
 msgid "DIRECTORY\n"
 msgstr "ディレクトリ\n"
 
-#: nis/nis_print.c:119
+#: nis/nis_print.c:118
 msgid "GROUP\n"
 msgstr "グループ\n"
 
-#: nis/nis_print.c:122
+#: nis/nis_print.c:121
 msgid "TABLE\n"
 msgstr "表\n"
 
-#: nis/nis_print.c:125
+#: nis/nis_print.c:124
 msgid "ENTRY\n"
 msgstr "エントリ\n"
 
-#: nis/nis_print.c:128
+#: nis/nis_print.c:127
 msgid "LINK\n"
 msgstr "リンク\n"
 
-#: nis/nis_print.c:131
+#: nis/nis_print.c:130
 msgid "PRIVATE\n"
 msgstr "PRIVATE\n"
 
-#: nis/nis_print.c:134
+#: nis/nis_print.c:133
 msgid "(Unknown object)\n"
 msgstr "(不明なオブジェクト)\n"
 
-#: nis/nis_print.c:168
+#: nis/nis_print.c:167
 #, c-format
 msgid "Name : `%s'\n"
 msgstr "名前 : `%s'\n"
 
-#: nis/nis_print.c:169
+#: nis/nis_print.c:168
 #, c-format
 msgid "Type : %s\n"
 msgstr "型   : %s\n"
 
-#: nis/nis_print.c:174
+#: nis/nis_print.c:173
 msgid "Master Server :\n"
 msgstr "マスターサーバー:\n"
 
-#: nis/nis_print.c:176
+#: nis/nis_print.c:175
 msgid "Replicate :\n"
 msgstr "複製 :\n"
 
-#: nis/nis_print.c:177
+#: nis/nis_print.c:176
 #, c-format
 msgid "\tName       : %s\n"
 msgstr "\t名前       : %s\n"
 
-#: nis/nis_print.c:178
+#: nis/nis_print.c:177
 msgid "\tPublic Key : "
 msgstr "\t公開鍵     : "
 
-#: nis/nis_print.c:182
+#: nis/nis_print.c:181
 msgid "None.\n"
 msgstr "なし。\n"
 
-#: nis/nis_print.c:185
+#: nis/nis_print.c:184
 #, c-format
 msgid "Diffie-Hellmann (%d bits)\n"
 msgstr "Diffie-Hellmann (%d ビット)\n"
 
-#: nis/nis_print.c:190
+#: nis/nis_print.c:189
 #, c-format
 msgid "RSA (%d bits)\n"
 msgstr "RSA (%d ビット)\n"
 
-#: nis/nis_print.c:193
+#: nis/nis_print.c:192
 msgid "Kerberos.\n"
 msgstr "Kerberos。\n"
 
-#: nis/nis_print.c:196
+#: nis/nis_print.c:195
 #, c-format
 msgid "Unknown (type = %d, bits = %d)\n"
 msgstr "不明 (型 = %d、ビット = %d)\n"
 
-#: nis/nis_print.c:207
+#: nis/nis_print.c:206
 #, c-format
 msgid "\tUniversal addresses (%u)\n"
 msgstr "\tユニバーサルアドレス (%u)\n"
 
-#: nis/nis_print.c:229
+#: nis/nis_print.c:228
 msgid "Time to live : "
 msgstr "生存時間 : "
 
-#: nis/nis_print.c:231
+#: nis/nis_print.c:230
 msgid "Default Access rights :\n"
 msgstr "デフォルトアクセス権限 :\n"
 
-#: nis/nis_print.c:240
+#: nis/nis_print.c:239
 #, c-format
 msgid "\tType         : %s\n"
 msgstr "\t型           : %s\n"
 
-#: nis/nis_print.c:241
+#: nis/nis_print.c:240
 msgid "\tAccess rights: "
 msgstr "\tアクセス権限 : "
 
-#: nis/nis_print.c:255
+#: nis/nis_print.c:254
 msgid "Group Flags :"
 msgstr "グループフラグ:"
 
-#: nis/nis_print.c:258
+#: nis/nis_print.c:257
 msgid ""
 "\n"
 "Group Members :\n"
@@ -3114,95 +3106,95 @@ msgstr ""
 "\n"
 "グループメンバ :\n"
 
-#: nis/nis_print.c:270
+#: nis/nis_print.c:269
 #, c-format
 msgid "Table Type          : %s\n"
 msgstr "テーブル型          : %s\n"
 
-#: nis/nis_print.c:271
+#: nis/nis_print.c:270
 #, c-format
 msgid "Number of Columns   : %d\n"
 msgstr "カラム数            : %d\n"
 
-#: nis/nis_print.c:272
+#: nis/nis_print.c:271
 #, c-format
 msgid "Character Separator : %c\n"
 msgstr "文字セパレータ      : %c\n"
 
-#: nis/nis_print.c:273
+#: nis/nis_print.c:272
 #, c-format
 msgid "Search Path         : %s\n"
 msgstr "検索パス            : %s\n"
 
-#: nis/nis_print.c:274
+#: nis/nis_print.c:273
 msgid "Columns             :\n"
 msgstr "カラム              :\n"
 
-#: nis/nis_print.c:277
+#: nis/nis_print.c:276
 #, c-format
 msgid "\t[%d]\tName          : %s\n"
 msgstr "\t[%d]\t名前          : %s\n"
 
-#: nis/nis_print.c:279
+#: nis/nis_print.c:278
 msgid "\t\tAttributes    : "
 msgstr "\t\t属性          : "
 
-#: nis/nis_print.c:281
+#: nis/nis_print.c:280
 msgid "\t\tAccess Rights : "
 msgstr "\t\tアクセス権限  : "
 
-#: nis/nis_print.c:291
+#: nis/nis_print.c:290
 msgid "Linked Object Type : "
 msgstr "リンクされたオブジェクト型 : "
 
-#: nis/nis_print.c:293
+#: nis/nis_print.c:292
 #, c-format
 msgid "Linked to : %s\n"
 msgstr "リンク先 : %s\n"
 
-#: nis/nis_print.c:303
+#: nis/nis_print.c:302
 #, c-format
 msgid "\tEntry data of type %s\n"
 msgstr "\tエントリデータの型 %s\n"
 
-#: nis/nis_print.c:306
+#: nis/nis_print.c:305
 #, c-format
 msgid "\t[%u] - [%u bytes] "
 msgstr "\t[%u] - [%uバイト] "
 
-#: nis/nis_print.c:309
+#: nis/nis_print.c:308
 msgid "Encrypted data\n"
 msgstr "暗号化データ\n"
 
-#: nis/nis_print.c:311
+#: nis/nis_print.c:310
 msgid "Binary data\n"
 msgstr "バイナリデータ\n"
 
-#: nis/nis_print.c:327
+#: nis/nis_print.c:326
 #, c-format
 msgid "Object Name   : %s\n"
 msgstr "オブジェクト名: %s\n"
 
-#: nis/nis_print.c:328
+#: nis/nis_print.c:327
 #, c-format
 msgid "Directory     : %s\n"
 msgstr "ディレクトリ  : %s\n"
 
-#: nis/nis_print.c:329
+#: nis/nis_print.c:328
 #, c-format
 msgid "Owner         : %s\n"
 msgstr "所有者        : %s\n"
 
-#: nis/nis_print.c:330
+#: nis/nis_print.c:329
 #, c-format
 msgid "Group         : %s\n"
 msgstr "グループ      : %s\n"
 
-#: nis/nis_print.c:331
+#: nis/nis_print.c:330
 msgid "Access Rights : "
 msgstr "アクセス権限  : "
 
-#: nis/nis_print.c:333
+#: nis/nis_print.c:332
 #, c-format
 msgid ""
 "\n"
@@ -3211,583 +3203,583 @@ msgstr ""
 "\n"
 "生存時間      : "
 
-#: nis/nis_print.c:336
+#: nis/nis_print.c:335
 #, c-format
 msgid "Creation Time : %s"
 msgstr "作成日時      : %s"
 
-#: nis/nis_print.c:338
+#: nis/nis_print.c:337
 #, c-format
 msgid "Mod. Time     : %s"
 msgstr "更新時刻      : %s"
 
-#: nis/nis_print.c:339
+#: nis/nis_print.c:338
 msgid "Object Type   : "
 msgstr "オブジェクト型: "
 
-#: nis/nis_print.c:359
+#: nis/nis_print.c:358
 #, c-format
 msgid "    Data Length = %u\n"
 msgstr "    データ長    = %u\n"
 
-#: nis/nis_print.c:373
+#: nis/nis_print.c:372
 #, c-format
 msgid "Status            : %s\n"
 msgstr "ステータス        : %s\n"
 
-#: nis/nis_print.c:374
+#: nis/nis_print.c:373
 #, c-format
 msgid "Number of objects : %u\n"
 msgstr "オブジェクト数    : %u\n"
 
-#: nis/nis_print.c:378
+#: nis/nis_print.c:377
 #, c-format
 msgid "Object #%d:\n"
 msgstr "オブジェクト #%d:\n"
 
-#: nis/nis_print_group_entry.c:117
+#: nis/nis_print_group_entry.c:116
 #, c-format
 msgid "Group entry for \"%s.%s\" group:\n"
 msgstr "グループエントリ \"%s.%s\" グループ:\n"
 
-#: nis/nis_print_group_entry.c:125
+#: nis/nis_print_group_entry.c:124
 msgid "    Explicit members:\n"
 msgstr "    明示的メンバ:\n"
 
-#: nis/nis_print_group_entry.c:130
+#: nis/nis_print_group_entry.c:129
 msgid "    No explicit members\n"
 msgstr "    非明示的メンバ\n"
 
-#: nis/nis_print_group_entry.c:133
+#: nis/nis_print_group_entry.c:132
 msgid "    Implicit members:\n"
 msgstr "    暗黙的メンバ:\n"
 
-#: nis/nis_print_group_entry.c:138
+#: nis/nis_print_group_entry.c:137
 msgid "    No implicit members\n"
 msgstr "    非暗黙的メンバ\n"
 
-#: nis/nis_print_group_entry.c:141
+#: nis/nis_print_group_entry.c:140
 msgid "    Recursive members:\n"
 msgstr "    再帰的メンバ:\n"
 
-#: nis/nis_print_group_entry.c:146
+#: nis/nis_print_group_entry.c:145
 msgid "    No recursive members\n"
 msgstr "    非再帰的メンバ\n"
 
-#: nis/nis_print_group_entry.c:149
+#: nis/nis_print_group_entry.c:148
 msgid "    Explicit nonmembers:\n"
 msgstr "    明示的非メンバ:\n"
 
-#: nis/nis_print_group_entry.c:154
+#: nis/nis_print_group_entry.c:153
 msgid "    No explicit nonmembers\n"
 msgstr "    非明示的非メンバ\n"
 
-#: nis/nis_print_group_entry.c:157
+#: nis/nis_print_group_entry.c:156
 msgid "    Implicit nonmembers:\n"
 msgstr "    暗黙的非メンバ:\n"
 
-#: nis/nis_print_group_entry.c:162
+#: nis/nis_print_group_entry.c:161
 msgid "    No implicit nonmembers\n"
 msgstr "    非暗黙的非メンバ\n"
 
-#: nis/nis_print_group_entry.c:165
+#: nis/nis_print_group_entry.c:164
 msgid "    Recursive nonmembers:\n"
 msgstr "    再帰的非メンバ:\n"
 
-#: nis/nis_print_group_entry.c:170
+#: nis/nis_print_group_entry.c:169
 msgid "    No recursive nonmembers\n"
 msgstr "    非再帰的非メンバ\n"
 
-#: nis/ypclnt.c:836
+#: nis/ypclnt.c:835
 msgid "Request arguments bad"
 msgstr "引数要求が間違っています"
 
-#: nis/ypclnt.c:839
+#: nis/ypclnt.c:838
 msgid "RPC failure on NIS operation"
 msgstr "NIS 操作に関する RPC が失敗しました"
 
-#: nis/ypclnt.c:842
+#: nis/ypclnt.c:841
 msgid "Can't bind to server which serves this domain"
 msgstr "このドメインを扱うサーバーへバインドできません"
 
-#: nis/ypclnt.c:845
+#: nis/ypclnt.c:844
 msgid "No such map in server's domain"
 msgstr "サーバードメインにそのようなマップはありません"
 
-#: nis/ypclnt.c:848
+#: nis/ypclnt.c:847
 msgid "No such key in map"
 msgstr "マップにそのようなキーはありません"
 
-#: nis/ypclnt.c:851
+#: nis/ypclnt.c:850
 msgid "Internal NIS error"
 msgstr "NIS 内部エラー"
 
-#: nis/ypclnt.c:854
+#: nis/ypclnt.c:853
 msgid "Local resource allocation failure"
 msgstr "ローカルリソース確保の失敗しました"
 
-#: nis/ypclnt.c:857
+#: nis/ypclnt.c:856
 msgid "No more records in map database"
 msgstr "マップデータベースにこれ以上レコードがありません"
 
-#: nis/ypclnt.c:860
+#: nis/ypclnt.c:859
 msgid "Can't communicate with portmapper"
 msgstr "ポートマッパーと通信できません"
 
-#: nis/ypclnt.c:863
+#: nis/ypclnt.c:862
 msgid "Can't communicate with ypbind"
 msgstr "ypbind と通信できません"
 
-#: nis/ypclnt.c:866
+#: nis/ypclnt.c:865
 msgid "Can't communicate with ypserv"
 msgstr "ypserv と通信できません"
 
-#: nis/ypclnt.c:869
+#: nis/ypclnt.c:868
 msgid "Local domain name not set"
 msgstr "ローカルドメイン名が設定されていません"
 
-#: nis/ypclnt.c:872
+#: nis/ypclnt.c:871
 msgid "NIS map database is bad"
 msgstr "NIS マップデータベースが間違っています"
 
-#: nis/ypclnt.c:875
+#: nis/ypclnt.c:874
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "NIS クライアントとサーバーのバージョンが一致しません。サービスを提供できません"
 
-#: nis/ypclnt.c:881
+#: nis/ypclnt.c:880
 msgid "Database is busy"
 msgstr "データベースがビジー状態です"
 
-#: nis/ypclnt.c:884
+#: nis/ypclnt.c:883
 msgid "Unknown NIS error code"
 msgstr "不明な NIS エラーコードです"
 
-#: nis/ypclnt.c:925
+#: nis/ypclnt.c:924
 msgid "Internal ypbind error"
 msgstr "ypbind 内部エラーです"
 
-#: nis/ypclnt.c:928
+#: nis/ypclnt.c:927
 msgid "Domain not bound"
 msgstr "ドメインはバインドされていません"
 
-#: nis/ypclnt.c:931
+#: nis/ypclnt.c:930
 msgid "System resource allocation failure"
 msgstr "システムリソースの確保に失敗しました"
 
-#: nis/ypclnt.c:934
+#: nis/ypclnt.c:933
 msgid "Unknown ypbind error"
 msgstr "不明な ypbind エラーです"
 
-#: nis/ypclnt.c:975
+#: nis/ypclnt.c:974
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: ホストをネット名へ変換できません\n"
 
-#: nis/ypclnt.c:993
+#: nis/ypclnt.c:992
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: サーバーアドレスを取得できません\n"
 
-#: nscd/aicache.c:69 nscd/hstcache.c:452
+#: nscd/aicache.c:68 nscd/hstcache.c:451
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "ホストキャッシュ内に \"%s\" が見つかりません!"
 
-#: nscd/aicache.c:71 nscd/hstcache.c:454
+#: nscd/aicache.c:70 nscd/hstcache.c:453
 #, c-format
 msgid "Reloading \"%s\" in hosts cache!"
 msgstr "ホストキャッシュ内の \"%s\" を再ロードしています"
 
-#: nscd/cache.c:153
+#: nscd/cache.c:152
 msgid " (first)"
 msgstr " (最初)"
 
-#: nscd/cache.c:341
+#: nscd/cache.c:340
 #, c-format
 msgid "pruning %s cache; time %ld"
 msgstr "%s キャッシュを切り詰めています。時間 %ld"
 
-#: nscd/connections.c:520
+#: nscd/connections.c:519
 #, c-format
 msgid "invalid persistent database file \"%s\": %s"
 msgstr "無効な永続的データベースファイル \"%s\" です: %s"
 
-#: nscd/connections.c:528
+#: nscd/connections.c:527
 msgid "uninitialized header"
 msgstr "初期化されていないヘッダーです"
 
-#: nscd/connections.c:533
+#: nscd/connections.c:532
 msgid "header size does not match"
 msgstr "ヘッダーサイズが一致しません"
 
-#: nscd/connections.c:543
+#: nscd/connections.c:542
 msgid "file size does not match"
 msgstr "ファイルサイズが一致しません"
 
-#: nscd/connections.c:560
+#: nscd/connections.c:559
 msgid "verification failed"
 msgstr "検証に失敗しました"
 
-#: nscd/connections.c:574
+#: nscd/connections.c:573
 #, c-format
 msgid "suggested size of table for database %s larger than the persistent database's table"
 msgstr "データベース %s 用の表の推奨されるサイズが永続的データベースの表のサイズより大きいです"
 
-#: nscd/connections.c:585 nscd/connections.c:669
+#: nscd/connections.c:584 nscd/connections.c:668
 #, c-format
 msgid "cannot create read-only descriptor for \"%s\"; no mmap"
 msgstr "\"%s\" 用の読み込み専用記述子を作成できません。mmap できません"
 
-#: nscd/connections.c:601
+#: nscd/connections.c:600
 #, c-format
 msgid "cannot access '%s'"
 msgstr "'%s' にアクセス出来ません"
 
-#: nscd/connections.c:649
+#: nscd/connections.c:648
 #, c-format
 msgid "database for %s corrupted or simultaneously used; remove %s manually if necessary and restart"
 msgstr "%s 用のデータベースが破損しているか同時使用されました。必要な場合は手動で %s を削除して再起動してください"
 
-#: nscd/connections.c:655
+#: nscd/connections.c:654
 #, c-format
 msgid "cannot create %s; no persistent database used"
 msgstr "%s を作成できません。永続的なデータベースは使用されません"
 
-#: nscd/connections.c:658
+#: nscd/connections.c:657
 #, c-format
 msgid "cannot create %s; no sharing possible"
 msgstr "%s を作成できません。共有することが出来ません"
 
-#: nscd/connections.c:729
+#: nscd/connections.c:728
 #, c-format
 msgid "cannot write to database file %s: %s"
 msgstr "データベースファイル %s へ書き込めません: %s"
 
-#: nscd/connections.c:785
+#: nscd/connections.c:784
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "ソケットを開けません: %s"
 
-#: nscd/connections.c:804
+#: nscd/connections.c:803
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "接続を受け付けるソケットを有効にできません: %s"
 
-#: nscd/connections.c:1039
+#: nscd/connections.c:1038
 #, c-format
 msgid "provide access to FD %d, for %s"
 msgstr "ファイル記述子 %d へのアクセスを提供します (%s 用)"
 
-#: nscd/connections.c:1051
+#: nscd/connections.c:1050
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "要求された古いバージョン %d を扱うことができません。現在のバージョンは %d です"
 
-#: nscd/connections.c:1074
+#: nscd/connections.c:1073
 #, c-format
 msgid "request from %ld not handled due to missing permission"
 msgstr "%ld からの要求は権限が無いため取り扱われません"
 
-#: nscd/connections.c:1079
+#: nscd/connections.c:1078
 #, c-format
 msgid "request from '%s' [%ld] not handled due to missing permission"
 msgstr "'%s' [%ld] からの要求は権限が無いため取り扱われません"
 
-#: nscd/connections.c:1084
+#: nscd/connections.c:1083
 msgid "request not handled due to missing permission"
 msgstr "要求は権限が無いため取り扱われません"
 
-#: nscd/connections.c:1122 nscd/connections.c:1148
+#: nscd/connections.c:1121 nscd/connections.c:1147
 #, c-format
 msgid "cannot write result: %s"
 msgstr "結果を書き込めません: %s"
 
-#: nscd/connections.c:1239
+#: nscd/connections.c:1238
 #, c-format
 msgid "error getting caller's id: %s"
 msgstr "呼び出し元 ID の取得時にエラーが発生しました: %s"
 
-#: nscd/connections.c:1372
+#: nscd/connections.c:1371
 #, c-format
 msgid "cannot change to old UID: %s; disabling paranoia mode"
 msgstr "古い UID へ変更できません: %s; paranoia モードを無効にしています"
 
-#: nscd/connections.c:1383
+#: nscd/connections.c:1382
 #, c-format
 msgid "cannot change to old GID: %s; disabling paranoia mode"
 msgstr "古い GID に変更できません: %s; paranoia モードを無効にしています"
 
-#: nscd/connections.c:1397
+#: nscd/connections.c:1396
 #, c-format
 msgid "cannot change to old working directory: %s; disabling paranoia mode"
 msgstr "古い作業ディレクトリに移動できません: %s; paranoia モードを無効にしています"
 
-#: nscd/connections.c:1444
+#: nscd/connections.c:1443
 #, c-format
 msgid "re-exec failed: %s; disabling paranoia mode"
 msgstr "再実行に失敗しました: %s; paranoia モードを無効にしています"
 
-#: nscd/connections.c:1453
+#: nscd/connections.c:1452
 #, c-format
 msgid "cannot change current working directory to \"/\": %s"
 msgstr "現在の作業ディレクトリを \"/\" に変更できません: %s"
 
-#: nscd/connections.c:1637
+#: nscd/connections.c:1636
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "読み込み要求より短い読み込みです: %s"
 
-#: nscd/connections.c:1670
+#: nscd/connections.c:1669
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "要求に含まれるキー長が長すぎます: %d"
 
-#: nscd/connections.c:1683
+#: nscd/connections.c:1682
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "要求キーの読み込みより短い読み込みです: %s"
 
-#: nscd/connections.c:1693
+#: nscd/connections.c:1692
 #, c-format
 msgid "handle_request: request received (Version = %d) from PID %ld"
 msgstr "handle_request: 要求を受け取りました (バージョン = %d) 送信PID %ld"
 
-#: nscd/connections.c:1698
+#: nscd/connections.c:1697
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: 要求を受け取りました (バージョン = %d)"
 
-#: nscd/connections.c:2386
+#: nscd/connections.c:2385
 msgid "could not initialize conditional variable"
 msgstr "条件変数を初期化できませんでした"
 
-#: nscd/connections.c:2394
+#: nscd/connections.c:2393
 msgid "could not start clean-up thread; terminating"
 msgstr "クリーンアップスレッドを開始できませんでした。終了します"
 
-#: nscd/connections.c:2408
+#: nscd/connections.c:2407
 msgid "could not start any worker thread; terminating"
 msgstr "作業スレッドを全く開始できませんでした。終了します"
 
-#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
-#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
-#: nscd/connections.c:2530
+#: nscd/connections.c:2462 nscd/connections.c:2464 nscd/connections.c:2480
+#: nscd/connections.c:2490 nscd/connections.c:2508 nscd/connections.c:2519
+#: nscd/connections.c:2529
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "ユーザー '%s' で nscd を実行するのに失敗しました"
 
-#: nscd/connections.c:2483
+#: nscd/connections.c:2482
 msgid "initial getgrouplist failed"
 msgstr "getgrouplist 初期化に失敗しました"
 
-#: nscd/connections.c:2492
+#: nscd/connections.c:2491
 msgid "getgrouplist failed"
 msgstr "getgrouplistに 失敗しました"
 
-#: nscd/connections.c:2510
+#: nscd/connections.c:2509
 msgid "setgroups failed"
 msgstr "setgroups に失敗しました"
 
-#: nscd/grpcache.c:385 nscd/hstcache.c:402 nscd/initgrcache.c:378
-#: nscd/pwdcache.c:363 nscd/servicescache.c:310
+#: nscd/grpcache.c:384 nscd/hstcache.c:401 nscd/initgrcache.c:377
+#: nscd/pwdcache.c:362 nscd/servicescache.c:309
 #, c-format
 msgid "short write in %s: %s"
 msgstr "%s での短い書き込み: %s"
 
-#: nscd/grpcache.c:430 nscd/initgrcache.c:75
+#: nscd/grpcache.c:429 nscd/initgrcache.c:74
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "グループキャッシュ内に \"%s\" が見つかりません!"
 
-#: nscd/grpcache.c:432 nscd/initgrcache.c:77
+#: nscd/grpcache.c:431 nscd/initgrcache.c:76
 #, c-format
 msgid "Reloading \"%s\" in group cache!"
 msgstr "グループキャッシュ内の \"%s\" を再ロードしています!"
 
-#: nscd/grpcache.c:492
+#: nscd/grpcache.c:491
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr "無効な gid の数値 \"%s\"!"
 
-#: nscd/mem.c:425
+#: nscd/mem.c:424
 #, c-format
 msgid "freed %zu bytes in %s cache"
 msgstr "%zu バイト解放されました (%s キャッシュ内)"
 
-#: nscd/mem.c:568
+#: nscd/mem.c:567
 #, c-format
 msgid "no more memory for database '%s'"
 msgstr "データベース '%s' 用のメモリがこれ以上ありません"
 
-#: nscd/nscd.c:108
+#: nscd/nscd.c:107
 msgid "Read configuration data from NAME"
 msgstr "NAME から設定情報を読み込む"
 
-#: nscd/nscd.c:110
+#: nscd/nscd.c:109
 msgid "Do not fork and display messages on the current tty"
 msgstr "fork しないで現在の tty にメッセージを表示する"
 
-#: nscd/nscd.c:115
+#: nscd/nscd.c:114
 msgid "NUMBER"
 msgstr "NUMBER"
 
-#: nscd/nscd.c:115
+#: nscd/nscd.c:114
 msgid "Start NUMBER threads"
 msgstr "NUMBERスレッドで起動する"
 
-#: nscd/nscd.c:116
+#: nscd/nscd.c:115
 msgid "Shut the server down"
 msgstr "サーバーを終了する"
 
-#: nscd/nscd.c:117
+#: nscd/nscd.c:116
 msgid "Print current configuration statistics"
 msgstr "現在の設定の統計情報を表示する"
 
-#: nscd/nscd.c:118
+#: nscd/nscd.c:117
 msgid "TABLE"
 msgstr "TABLE"
 
-#: nscd/nscd.c:119
+#: nscd/nscd.c:118
 msgid "Invalidate the specified cache"
 msgstr "指定したキャッシュを無効にする"
 
-#: nscd/nscd.c:120
+#: nscd/nscd.c:119
 msgid "TABLE,yes"
 msgstr "TABLE,yes"
 
-#: nscd/nscd.c:121
+#: nscd/nscd.c:120
 msgid "Use separate cache for each user"
 msgstr "ユーザごとにキャッシュを分離する"
 
-#: nscd/nscd.c:126
+#: nscd/nscd.c:125
 msgid "Name Service Cache Daemon."
 msgstr "名前サービスキャッシュデーモン。"
 
-#: nscd/nscd.c:159 nss/getent.c:987 nss/makedb.c:207
+#: nscd/nscd.c:158 nss/getent.c:986 nss/makedb.c:206
 #, c-format
 msgid "wrong number of arguments"
 msgstr "引数の数が間違っています"
 
-#: nscd/nscd.c:174
+#: nscd/nscd.c:173
 #, c-format
 msgid "failure while reading configuration file; this is fatal"
 msgstr "設定ファイルの読み込みに失敗しました。これは致命的です"
 
-#: nscd/nscd.c:183
+#: nscd/nscd.c:182
 #, c-format
 msgid "already running"
 msgstr "既に起動しています"
 
-#: nscd/nscd.c:207
+#: nscd/nscd.c:206
 #, c-format
 msgid "cannot fork"
 msgstr "fork できません"
 
-#: nscd/nscd.c:277
+#: nscd/nscd.c:276
 msgid "cannot change current working directory to \"/\""
 msgstr "現在の作業ディレクトリを \"/\" に変更できません"
 
-#: nscd/nscd.c:285
+#: nscd/nscd.c:284
 msgid "Could not create log file"
 msgstr "ログファイルを作成できませんでした"
 
-#: nscd/nscd.c:364 nscd/nscd_stat.c:209
+#: nscd/nscd.c:363 nscd/nscd_stat.c:208
 #, c-format
 msgid "write incomplete"
 msgstr "書込みが不完全です"
 
-#: nscd/nscd.c:375
+#: nscd/nscd.c:374
 #, c-format
 msgid "cannot read invalidate ACK"
 msgstr "無効にした ACK を読み込めません"
 
-#: nscd/nscd.c:381
+#: nscd/nscd.c:380
 #, c-format
 msgid "invalidation failed"
 msgstr "無効化に失敗しました"
 
-#: nscd/nscd.c:430 nscd/nscd.c:455 nscd/nscd_stat.c:190
+#: nscd/nscd.c:429 nscd/nscd.c:454 nscd/nscd_stat.c:189
 #, c-format
 msgid "Only root is allowed to use this option!"
 msgstr "root のみこのオプションを使用することを許可されています!"
 
-#: nscd/nscd.c:450
+#: nscd/nscd.c:449
 #, c-format
 msgid "'%s' is not a known database"
 msgstr "'%s' は既知のデータベースではありません"
 
-#: nscd/nscd.c:465
+#: nscd/nscd.c:464
 #, c-format
 msgid "secure services not implemented anymore"
 msgstr "セキュアなサービスはもう実装されていません"
 
-#: nscd/nscd_conf.c:54
+#: nscd/nscd_conf.c:53
 #, c-format
 msgid "database %s is not supported"
 msgstr "データベース %s はサポートされていません"
 
-#: nscd/nscd_conf.c:105
+#: nscd/nscd_conf.c:104
 #, c-format
 msgid "Parse error: %s"
 msgstr "構文解析エラー: %s"
 
-#: nscd/nscd_conf.c:191
+#: nscd/nscd_conf.c:190
 #, c-format
 msgid "Must specify user name for server-user option"
 msgstr "server-user オプション用にユーザ名を指定しなければいけません"
 
-#: nscd/nscd_conf.c:201
+#: nscd/nscd_conf.c:200
 #, c-format
 msgid "Must specify user name for stat-user option"
 msgstr "stat-user オプション用にユーザ名を指定しなければいけません"
 
-#: nscd/nscd_conf.c:259
+#: nscd/nscd_conf.c:258
 #, c-format
 msgid "Must specify value for restart-interval option"
 msgstr "restart-interval オプション用に値を指定しなければいけません"
 
-#: nscd/nscd_conf.c:273
+#: nscd/nscd_conf.c:272
 #, c-format
 msgid "Unknown option: %s %s %s"
 msgstr "不明なオプションです: %s %s %s"
 
-#: nscd/nscd_conf.c:286
+#: nscd/nscd_conf.c:285
 #, c-format
 msgid "cannot get current working directory: %s; disabling paranoia mode"
 msgstr "現在の作業ディレクトリーを取得できません: %s; paranoia モードを無効にしています"
 
-#: nscd/nscd_conf.c:306
+#: nscd/nscd_conf.c:305
 #, c-format
 msgid "maximum file size for %s database too small"
 msgstr "%s データベース用の最大サイズが小さすぎます"
 
-#: nscd/nscd_stat.c:159
+#: nscd/nscd_stat.c:158
 #, c-format
 msgid "cannot write statistics: %s"
 msgstr "統計情報を書き込めません: %s"
 
-#: nscd/nscd_stat.c:174
+#: nscd/nscd_stat.c:173
 msgid "yes"
 msgstr "yes"
 
-#: nscd/nscd_stat.c:175
+#: nscd/nscd_stat.c:174
 msgid "no"
 msgstr "no"
 
-#: nscd/nscd_stat.c:186
+#: nscd/nscd_stat.c:185
 #, c-format
 msgid "Only root or %s is allowed to use this option!"
 msgstr "root または %s だけがこのオプションを使用することができます!"
 
-#: nscd/nscd_stat.c:197
+#: nscd/nscd_stat.c:196
 #, c-format
 msgid "nscd not running!\n"
 msgstr "nscdは起動していません!\n"
 
-#: nscd/nscd_stat.c:221
+#: nscd/nscd_stat.c:220
 #, c-format
 msgid "cannot read statistics data"
 msgstr "統計情報を読み込めません"
 
-#: nscd/nscd_stat.c:224
+#: nscd/nscd_stat.c:223
 #, c-format
 msgid ""
 "nscd configuration:\n"
@@ -3798,27 +3790,27 @@ msgstr ""
 "\n"
 "%15d  サーバーデバッグレベル\n"
 
-#: nscd/nscd_stat.c:248
+#: nscd/nscd_stat.c:247
 #, c-format
 msgid "%3ud %2uh %2um %2lus  server runtime\n"
 msgstr "%3ud %2uh %2um %2lus  サーバー 実行時間\n"
 
-#: nscd/nscd_stat.c:251
+#: nscd/nscd_stat.c:250
 #, c-format
 msgid "    %2uh %2um %2lus  server runtime\n"
 msgstr "    %2uh %2um %2lus  サーバー 実行時間\n"
 
-#: nscd/nscd_stat.c:253
+#: nscd/nscd_stat.c:252
 #, c-format
 msgid "        %2um %2lus  server runtime\n"
 msgstr "        %2um %2lus  サーバー 実行時間\n"
 
-#: nscd/nscd_stat.c:255
+#: nscd/nscd_stat.c:254
 #, c-format
 msgid "            %2lus  server runtime\n"
 msgstr "            %2lus  サーバー 実行時間\n"
 
-#: nscd/nscd_stat.c:257
+#: nscd/nscd_stat.c:256
 #, c-format
 msgid ""
 "%15d  current number of threads\n"
@@ -3835,7 +3827,7 @@ msgstr ""
 "%15lu  内部再起動\n"
 "%15u  再起動回数\n"
 
-#: nscd/nscd_stat.c:292
+#: nscd/nscd_stat.c:291
 #, c-format
 msgid ""
 "\n"
@@ -3886,77 +3878,77 @@ msgstr ""
 "%15<PRIuMAX>  メモリ割り当て失敗\n"
 "%15s  変更に関しては /etc/%s を確認してください\n"
 
-#: nscd/pwdcache.c:471
+#: nscd/pwdcache.c:470
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "無効な uid の数値 \"%s\" です!"
 
-#: nscd/selinux.c:155
+#: nscd/selinux.c:154
 #, c-format
 msgid "Failed opening connection to the audit subsystem: %m"
 msgstr "監査サブシステムへの接続を開くのに失敗しました: %m"
 
-#: nscd/selinux.c:176
+#: nscd/selinux.c:175
 msgid "Failed to set keep-capabilities"
 msgstr "keep-capabilities の設定に失敗しました"
 
-#: nscd/selinux.c:177 nscd/selinux.c:240
+#: nscd/selinux.c:176 nscd/selinux.c:239
 msgid "prctl(KEEPCAPS) failed"
 msgstr "prctl(KEEPCAPS) に失敗しました"
 
-#: nscd/selinux.c:191
+#: nscd/selinux.c:190
 msgid "Failed to initialize drop of capabilities"
 msgstr "権限を取り除いて初期化するのに失敗しました"
 
-#: nscd/selinux.c:192
+#: nscd/selinux.c:191
 msgid "cap_init failed"
 msgstr "cap_init に失敗しました"
 
-#: nscd/selinux.c:213 nscd/selinux.c:230
+#: nscd/selinux.c:212 nscd/selinux.c:229
 msgid "Failed to drop capabilities"
 msgstr "権限を取り除くのに失敗しました"
 
-#: nscd/selinux.c:214 nscd/selinux.c:231
+#: nscd/selinux.c:213 nscd/selinux.c:230
 msgid "cap_set_proc failed"
 msgstr "cap_set_proc に失敗しました"
 
-#: nscd/selinux.c:239
+#: nscd/selinux.c:238
 msgid "Failed to unset keep-capabilities"
 msgstr "keep-capabilities の設定解除に失敗しました"
 
-#: nscd/selinux.c:255
+#: nscd/selinux.c:254
 msgid "Failed to determine if kernel supports SELinux"
 msgstr "カーネルが SELinux をサポートするかどうかの判定に失敗しました"
 
-#: nscd/selinux.c:270
+#: nscd/selinux.c:269
 msgid "Failed to start AVC thread"
 msgstr "AVC スレッドの開始に失敗しました"
 
-#: nscd/selinux.c:292
+#: nscd/selinux.c:291
 msgid "Failed to create AVC lock"
 msgstr "AVC ロックの作成に失敗しました"
 
-#: nscd/selinux.c:338
+#: nscd/selinux.c:337
 msgid "Failed to start AVC"
 msgstr "AVC の開始に失敗しました"
 
-#: nscd/selinux.c:340
+#: nscd/selinux.c:339
 msgid "Access Vector Cache (AVC) started"
 msgstr "Access Vector Cache (AVC) が開始されました"
 
-#: nscd/selinux.c:404
+#: nscd/selinux.c:403
 msgid "Error getting context of socket peer"
 msgstr "ソケット対向のコンテキスト取得中にエラーが発生しました"
 
-#: nscd/selinux.c:409
+#: nscd/selinux.c:408
 msgid "Error getting context of nscd"
 msgstr "nscd のコンテキスト取得中にエラーが発生しました"
 
-#: nscd/selinux.c:415
+#: nscd/selinux.c:414
 msgid "Error getting sid from context"
 msgstr "コンテキストから sid を取得中にエラーが発生しました"
 
-#: nscd/selinux.c:454
+#: nscd/selinux.c:453
 #, c-format
 msgid ""
 "\n"
@@ -3983,64 +3975,64 @@ msgstr ""
 "%15u  CAV probes\n"
 "%15u  CAV misses\n"
 
-#: nscd/servicescache.c:358
+#: nscd/servicescache.c:357
 #, c-format
 msgid "Haven't found \"%s\" in services cache!"
 msgstr "サービスキャッシュ内に \"%s\" が見つかりません!"
 
-#: nscd/servicescache.c:360
+#: nscd/servicescache.c:359
 #, c-format
 msgid "Reloading \"%s\" in services cache!"
 msgstr "サービスキャッシュ内の \"%s\" を再ロードしています!"
 
-#: nss/getent.c:55
+#: nss/getent.c:54
 msgid "database [key ...]"
 msgstr "database [key ...]"
 
-#: nss/getent.c:60
+#: nss/getent.c:59
 msgid "Service configuration to be used"
 msgstr "使用されるサービス設定"
 
-#: nss/getent.c:61
+#: nss/getent.c:60
 msgid "disable IDN encoding"
 msgstr "IDN エンコーディングを無効にする"
 
-#: nss/getent.c:66
+#: nss/getent.c:65
 msgid "Get entries from administrative database."
 msgstr "管理データベースからエントリを取得します。"
 
-#: nss/getent.c:150 nss/getent.c:462 nss/getent.c:509
+#: nss/getent.c:149 nss/getent.c:461 nss/getent.c:508
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "エミュレーションは %s 上ではサポートされていません\n"
 
-#: nss/getent.c:901
+#: nss/getent.c:900
 #, c-format
 msgid "Unknown database name"
 msgstr "不明なデータベース名です"
 
-#: nss/getent.c:931
+#: nss/getent.c:930
 msgid "Supported databases:\n"
 msgstr "サポートされているデータベース:\n"
 
-#: nss/getent.c:997
+#: nss/getent.c:996
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "不明なデータベースです: %s\n"
 
-#: nss/makedb.c:120
+#: nss/makedb.c:119
 msgid "Convert key to lower case"
 msgstr "キーを小文字に変換しています"
 
-#: nss/makedb.c:123
+#: nss/makedb.c:122
 msgid "Do not print messages while building database"
 msgstr "データベース構築中にメッセージを表示しない"
 
-#: nss/makedb.c:125
+#: nss/makedb.c:124
 msgid "Print content of database file, one entry a line"
 msgstr "データベースのコンテキストを、1 エントリ 1 行で表示する"
 
-#: nss/makedb.c:135
+#: nss/makedb.c:134
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -4050,16 +4042,16 @@ msgstr ""
 "-o OUTPUT-FILE INPUT-FILE\n"
 "-u INPUT-FILE"
 
-#: nss/makedb.c:289
+#: nss/makedb.c:288
 #, c-format
 msgid "cannot create temporary file"
 msgstr "一時ファイルを作成できません"
 
-#: nss/makedb.c:557
+#: nss/makedb.c:556
 msgid "duplicate key"
 msgstr "キーが重複しています"
 
-#: nss/makedb.c:569
+#: nss/makedb.c:568
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "`%s' の読み込み中に問題が発生しました"
@@ -4185,7 +4177,7 @@ msgstr ") または \\) が不一致です"
 msgid "No previous regular expression"
 msgstr "以前に正規表現がありません"
 
-#: posix/wordexp.c:1795
+#: posix/wordexp.c:1794
 msgid "parameter null or not set"
 msgstr "パラメータが NULL であるか設定されていません"
 
@@ -4217,27 +4209,27 @@ msgstr "リゾルバ内部エラーです"
 msgid "Unknown resolver error"
 msgstr "不明なリゾルバエラーです"
 
-#: resolv/res_hconf.c:118
+#: resolv/res_hconf.c:117
 #, c-format
 msgid "%s: line %d: cannot specify more than %d trim domains"
 msgstr "%s: 行 %d: %d より多くドメインを取り除けません"
 
-#: resolv/res_hconf.c:139
+#: resolv/res_hconf.c:138
 #, c-format
 msgid "%s: line %d: list delimiter not followed by domain"
 msgstr "%s: %d行: リストデリミタがドメイン内についていません"
 
-#: resolv/res_hconf.c:176
+#: resolv/res_hconf.c:175
 #, c-format
 msgid "%s: line %d: expected `on' or `off', found `%s'\n"
 msgstr "%s: 行 %d: `on' または `off' が予期されますが、見つかったのは `%s' です\n"
 
-#: resolv/res_hconf.c:219
+#: resolv/res_hconf.c:218
 #, c-format
 msgid "%s: line %d: bad command `%s'\n"
 msgstr "%s: 行 %d: 間違ったコマンド `%s' です\n"
 
-#: resolv/res_hconf.c:252
+#: resolv/res_hconf.c:251
 #, c-format
 msgid "%s: line %d: ignoring trailing garbage `%s'\n"
 msgstr "%s: 行 %d: 後に残ったゴミ `%s' を無視します\n"
@@ -4444,7 +4436,7 @@ msgstr "不明なシグナル %d"
 
 #: sunrpc/auth_unix.c:113 sunrpc/clnt_tcp.c:124 sunrpc/clnt_udp.c:140
 #: sunrpc/clnt_unix.c:125 sunrpc/svc_tcp.c:189 sunrpc/svc_tcp.c:233
-#: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:189 sunrpc/svc_unix.c:229
+#: sunrpc/svc_udp.c:161 sunrpc/svc_unix.c:186 sunrpc/svc_unix.c:226
 #: sunrpc/xdr.c:631 sunrpc/xdr.c:791 sunrpc/xdr_array.c:102
 #: sunrpc/xdr_rec.c:153 sunrpc/xdr_ref.c:79
 msgid "out of memory\n"
@@ -4689,11 +4681,11 @@ msgstr "cache_set: 犠牲領域確保に失敗しました"
 msgid "cache_set: could not allocate new rpc_buffer"
 msgstr "cache_set: 新しいrpc_bufferを確保できませんでした"
 
-#: sunrpc/svc_unix.c:163
+#: sunrpc/svc_unix.c:166
 msgid "svc_unix.c - AF_UNIX socket creation problem"
 msgstr "svc_unix.c - AF_UNIXソケット作成に問題があります"
 
-#: sunrpc/svc_unix.c:179
+#: sunrpc/svc_unix.c:176
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c - getsocknameもしくはlistenできません"
 
@@ -5735,12 +5727,12 @@ msgstr "シグナル割り込みが発生しました"
 msgid "Parameter string not correctly encoded"
 msgstr "パラメーター文字列が正しくエンコードされていません"
 
-#: sysdeps/unix/sysv/linux/ia64/makecontext.c:58
+#: sysdeps/unix/sysv/linux/ia64/makecontext.c:57
 #, c-format
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr "makecontext: 8引数以上を扱う方法がわかりません\n"
 
-#: sysdeps/unix/sysv/linux/lddlibc4.c:60
+#: sysdeps/unix/sysv/linux/lddlibc4.c:59
 #, c-format
 msgid ""
 "Usage: lddlibc4 FILE\n"
@@ -5749,17 +5741,17 @@ msgstr ""
 "使用法: lddlibc4 FILE\n"
 "\n"
 
-#: sysdeps/unix/sysv/linux/lddlibc4.c:81
+#: sysdeps/unix/sysv/linux/lddlibc4.c:80
 #, c-format
 msgid "cannot open `%s'"
 msgstr "`%s'を開けません"
 
-#: sysdeps/unix/sysv/linux/lddlibc4.c:85
+#: sysdeps/unix/sysv/linux/lddlibc4.c:84
 #, c-format
 msgid "cannot read header from `%s'"
 msgstr "`%s'のヘッダーを読めません"
 
-#: sysdeps/unix/sysv/linux/x86/readelflib.c:66
+#: sysdeps/unix/sysv/linux/x86/readelflib.c:64
 #, c-format
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s は未知のマシン %d に対するものです.\n"
