@@ -93,7 +93,13 @@ EOF
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; }
   then
-    libc_linker_feature=yes
+    if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp -Wl,--no-tls-get-addr-optimize -nostdlib \
+	-nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
+	| grep "warning: --no-tls-get-addr-optimize ignored" > /dev/null 2>&1; then
+      true
+    else
+      libc_linker_feature=yes
+    fi
   fi
   rm -f conftest*
 fi
