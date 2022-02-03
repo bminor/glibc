@@ -299,8 +299,6 @@ SYSCALL_ERROR_LABEL:							      \
 #define PTR_MANGLE(var) (void) (var)
 #define PTR_DEMANGLE(var) (void) (var)
 
-#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
 /* M68K needs system-supplied DSO to access TLS helpers
    even when statically linked.  */
-# define NEED_STATIC_SYSINFO_DSO 1
-#endif
+#define NEED_STATIC_SYSINFO_DSO 1
