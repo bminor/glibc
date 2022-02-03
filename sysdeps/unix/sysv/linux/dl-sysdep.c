@@ -134,11 +134,9 @@ _dl_sysdep_start (void **start_argptr,
 	new_sysinfo = av->a_un.a_val;
 	break;
 #endif
-#ifdef NEED_DL_SYSINFO_DSO
       case AT_SYSINFO_EHDR:
 	GLRO(dl_sysinfo_dso) = (void *) av->a_un.a_val;
 	break;
-#endif
       case AT_RANDOM:
 	_dl_random = (void *) av->a_un.a_val;
 	break;
@@ -153,10 +151,8 @@ _dl_sysdep_start (void **start_argptr,
 #ifdef NEED_DL_SYSINFO
   if (new_sysinfo != 0)
     {
-# ifdef NEED_DL_SYSINFO_DSO
       /* Only set the sysinfo value if we also have the vsyscall DSO.  */
       if (GLRO(dl_sysinfo_dso) != 0)
-# endif
         GLRO(dl_sysinfo) = new_sysinfo;
     }
 #endif
@@ -309,7 +305,7 @@ int
 attribute_hidden
 _dl_discover_osversion (void)
 {
-#if defined NEED_DL_SYSINFO_DSO && defined SHARED
+#ifdef SHARED
   if (GLRO(dl_sysinfo_map) != NULL)
     {
       /* If the kernel-supplied DSO contains a note indicating the kernel's
@@ -340,7 +336,7 @@ _dl_discover_osversion (void)
 	      }
 	  }
     }
-#endif
+#endif /* SHARED */
 
   char bufmem[64];
   char *buf = bufmem;
