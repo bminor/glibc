@@ -16,9 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <kernel-features.h>
+#include <bits/timesize.h>
 
-#ifndef __ASSUME_TIME64_SYSCALLS
+#if __TIMESIZE != 64
 # include <stdint.h>
 # include <string.h>
 # include <sys/socket.h>
