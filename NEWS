@@ -12,6 +12,8 @@ The following bugs are resolved with this release:
   [28850] linux: __get_nprocs_sched reads uninitialized memory from the stack
   [28853] libc: tst-spawn6 changes current foreground process group
     (breaks test isolation)
+  [28860] build: --enable-kernel=5.1.0 build fails because of missing
+    __convert_scm_timestamps
 
 
 Version 2.35
