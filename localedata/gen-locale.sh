@@ -54,8 +54,14 @@ modifier=`echo $locfile|sed 's|[^.]*[.]\([^@ ]*\)\(@[^ ]*\)\?/LC_CTYPE|\2|'`
 
 echo "Generating locale $locale.$charmap: this might take a while..."
 
-# Run quietly and force output.
-flags="--quiet -c"
+# Do not force output with '-c', all locales should compile without
+# warning or errors.  There is likewise no need to run quietly with
+# '--quiet' since all locales should compile without additional
+# diagnostics.  If there are messages printed then we want to see
+# them, fix them, and the associated error or warning.  During
+# development it may be beneficialy to put '--quiet -c' here to allow
+# you to develop in-progress locales.
+flags=""
 
 # For SJIS the charmap is SHIFT_JIS. We just want the locale to have
 # a slightly nicer name instead of using "*.SHIFT_SJIS", but that
