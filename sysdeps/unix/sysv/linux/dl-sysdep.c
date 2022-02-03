@@ -85,21 +85,6 @@ _dl_sysdep_start (void **start_argptr,
   ElfW(Word) phnum = 0;
   ElfW(Addr) user_entry;
   ElfW(auxv_t) *av;
-#ifdef HAVE_AUX_SECURE
-# define set_seen(tag) (tag)	/* Evaluate for the side effects.  */
-# define set_seen_secure() ((void) 0)
-#else
-  uid_t uid = 0;
-  gid_t gid = 0;
-  unsigned int seen = 0;
-# define set_seen_secure() (seen = -1)
-# ifdef HAVE_AUX_XID
-#  define set_seen(tag) (tag)	/* Evaluate for the side effects.  */
-# else
-#  define M(type) (1 << (type))
-#  define set_seen(tag) seen |= M ((tag)->a_type)
-# endif
-#endif
 #ifdef NEED_DL_SYSINFO
   uintptr_t new_sysinfo = 0;
 #endif
@@ -116,7 +101,7 @@ _dl_sysdep_start (void **start_argptr,
 		  "CONSTANT_MINSIGSTKSZ is constant");
   GLRO(dl_minsigstacksize) = CONSTANT_MINSIGSTKSZ;
 
-  for (av = GLRO(dl_auxv); av->a_type != AT_NULL; set_seen (av++))
+  for (av = GLRO(dl_auxv); av->a_type != AT_NULL; av++)
     switch (av->a_type)
       {
       case AT_PHDR:
@@ -131,20 +116,7 @@ _dl_sysdep_start (void **start_argptr,
       case AT_ENTRY:
 	user_entry = av->a_un.a_val;
 	break;
-#ifndef HAVE_AUX_SECURE
-      case AT_UID:
-      case AT_EUID:
-	uid ^= av->a_un.a_val;
-	break;
-      case AT_GID:
-      case AT_EGID:
-	gid ^= av->a_un.a_val;
-	break;
-#endif
       case AT_SECURE:
-#ifndef HAVE_AUX_SECURE
-	seen = -1;
-#endif
 	__libc_enable_secure = av->a_un.a_val;
 	break;
       case AT_PLATFORM:
@@ -182,31 +154,6 @@ _dl_sysdep_start (void **start_argptr,
       }
 
   dl_hwcap_check ();
-
-#ifndef HAVE_AUX_SECURE
-  if (seen != -1)
-    {
-      /* Fill in the values we have not gotten from the kernel through the
-	 auxiliary vector.  */
-# ifndef HAVE_AUX_XID
-#  define SEE(UID, var, uid) \
-   if ((seen & M (AT_##UID)) == 0) var ^= __get##uid ()
-      SEE (UID, uid, uid);
-      SEE (EUID, uid, euid);
-      SEE (GID, gid, gid);
-      SEE (EGID, gid, egid);
-# endif
-
-      /* If one of the two pairs of IDs does not match this is a setuid
-	 or setgid run.  */
-      __libc_enable_secure = uid | gid;
-    }
-#endif
-
-#ifndef HAVE_AUX_PAGESIZE
-  if (GLRO(dl_pagesize) == 0)
-    GLRO(dl_pagesize) = __getpagesize ();
-#endif
 
 #ifdef NEED_DL_SYSINFO
   if (new_sysinfo != 0)
