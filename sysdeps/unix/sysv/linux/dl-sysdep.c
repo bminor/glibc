@@ -59,19 +59,6 @@ void *__libc_stack_end attribute_relro = NULL;
 rtld_hidden_data_def(__libc_stack_end)
 void *_dl_random attribute_relro = NULL;
 
-#ifndef DL_FIND_ARG_COMPONENTS
-# define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
-  do {									      \
-    void **_tmp;							      \
-    (argc) = *(long int *) cookie;					      \
-    (argv) = (char **) ((long int *) cookie + 1);			      \
-    (envp) = (argv) + (argc) + 1;					      \
-    for (_tmp = (void **) (envp); *_tmp; ++_tmp)			      \
-      continue;								      \
-    (auxp) = (void *) ++_tmp;						      \
-  } while (0)
-#endif
-
 #ifndef DL_STACK_END
 # define DL_STACK_END(cookie) ((void *) (cookie))
 #endif
@@ -90,8 +77,16 @@ _dl_sysdep_start (void **start_argptr,
 #endif
 
   __libc_stack_end = DL_STACK_END (start_argptr);
-  DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ,
-			  GLRO(dl_auxv));
+  _dl_argc = (intptr_t) *start_argptr;
+  _dl_argv = (char **) (start_argptr + 1); /* Necessary aliasing violation.  */
+  _environ = _dl_argv + _dl_argc + 1;
+  for (char **tmp = _environ + 1; ; ++tmp)
+    if (*tmp == NULL)
+      {
+	/* Another necessary aliasing violation.  */
+	GLRO(dl_auxv) = (ElfW(auxv_t) *) (tmp + 1);
+	break;
+      }
 
   user_entry = (ElfW(Addr)) ENTRY_POINT;
   GLRO(dl_platform) = NULL; /* Default to nothing known about the platform.  */
