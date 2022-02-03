@@ -468,11 +468,11 @@ define build-one-locale
 endef
 
 $(INSTALL-SUPPORTED-LOCALE-ARCHIVE): install-locales-dir
-	@flags="-c"; \
+	@flags=""; \
 	$(build-one-locale)
 
 $(INSTALL-SUPPORTED-LOCALE-FILES): install-locales-dir
-	@flags="-c --no-archive --no-hard-links"; \
+	@flags="--no-archive --no-hard-links"; \
 	$(build-one-locale)
 
 tst-setlocale-ENV = LC_ALL=ja_JP.EUC-JP
