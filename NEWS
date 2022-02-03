@@ -61,6 +61,8 @@ The following bugs are resolved with this release:
   [28770] CVE-2021-3998: Unexpected return value from realpath() for too long results
   [28784] x86: crash in 32bit memset-sse2.s when the cache size can not be determined
   [28850] linux: __get_nprocs_sched reads uninitialized memory from the stack
+  [28860] build: --enable-kernel=5.1.0 build fails because of missing
+    __convert_scm_timestamps
 
 
 Version 2.34
