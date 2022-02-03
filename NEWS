@@ -9,7 +9,12 @@ Version 2.36
 
 Major new features:
 
-  [Add new features here]
+* Support for DT_RELR relative relocation format has been added to
+  glibc.  This is a new ELF dynamic tag that improves the size of
+  relative relocations in shared object files and position independent
+  executables (PIE).  DT_RELR generation requires linker support for
+  -z pack-relative-relocs option, which is supported for some targets
+  in recent binutils versions.  Lazy binding doesn't apply to DT_RELR.
 
 Deprecated and removed features, and other changes affecting compatibility:
 
