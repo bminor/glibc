@@ -241,93 +241,21 @@ __rtld_lock_define_initialized_recursive (, _dl_load_tls_lock)
 
 
 #ifdef HAVE_AUX_VECTOR
+#include <dl-parse_auxv.h>
+
 int _dl_clktck;
 
 void
 _dl_aux_init (ElfW(auxv_t) *av)
 {
-  int seen = 0;
-  uid_t uid = 0;
-  gid_t gid = 0;
-
 #ifdef NEED_DL_SYSINFO
   /* NB: Avoid RELATIVE relocation in static PIE.  */
   GL(dl_sysinfo) = DL_SYSINFO_DEFAULT;
 #endif
 
   _dl_auxv = av;
-  for (; av->a_type != AT_NULL; ++av)
-    switch (av->a_type)
-      {
-      case AT_PAGESZ:
-	if (av->a_un.a_val != 0)
-	  GLRO(dl_pagesize) = av->a_un.a_val;
-	break;
-      case AT_CLKTCK:
-	GLRO(dl_clktck) = av->a_un.a_val;
-	break;
-      case AT_PHDR:
-	GL(dl_phdr) = (const void *) av->a_un.a_val;
-	break;
-      case AT_PHNUM:
-	GL(dl_phnum) = av->a_un.a_val;
-	break;
-      case AT_PLATFORM:
-	GLRO(dl_platform) = (void *) av->a_un.a_val;
-	break;
-      case AT_HWCAP:
-	GLRO(dl_hwcap) = (unsigned long int) av->a_un.a_val;
-	break;
-      case AT_HWCAP2:
-	GLRO(dl_hwcap2) = (unsigned long int) av->a_un.a_val;
-	break;
-      case AT_FPUCW:
-	GLRO(dl_fpu_control) = av->a_un.a_val;
-	break;
-#ifdef NEED_DL_SYSINFO
-      case AT_SYSINFO:
-	GL(dl_sysinfo) = av->a_un.a_val;
-	break;
-#endif
-#ifdef NEED_DL_SYSINFO_DSO
-      case AT_SYSINFO_EHDR:
-	GL(dl_sysinfo_dso) = (void *) av->a_un.a_val;
-	break;
-#endif
-      case AT_UID:
-	uid ^= av->a_un.a_val;
-	seen |= 1;
-	break;
-      case AT_EUID:
-	uid ^= av->a_un.a_val;
-	seen |= 2;
-	break;
-      case AT_GID:
-	gid ^= av->a_un.a_val;
-	seen |= 4;
-	break;
-      case AT_EGID:
-	gid ^= av->a_un.a_val;
-	seen |= 8;
-	break;
-      case AT_SECURE:
-	seen = -1;
-	__libc_enable_secure = av->a_un.a_val;
-	__libc_enable_secure_decided = 1;
-	break;
-      case AT_RANDOM:
-	_dl_random = (void *) av->a_un.a_val;
-	break;
-      case AT_MINSIGSTKSZ:
-	_dl_minsigstacksize = av->a_un.a_val;
-	break;
-      DL_PLATFORM_AUXV
-      }
-  if (seen == 0xf)
-    {
-      __libc_enable_secure = uid != 0 || gid != 0;
-      __libc_enable_secure_decided = 1;
-    }
+  dl_parse_auxv_t auxv_values = { 0, };
+  _dl_parse_auxv (av, auxv_values);
 }
 #endif
 
