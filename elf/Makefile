@@ -2210,7 +2210,7 @@ $(objpfx)tst-audit24c.out: $(objpfx)tst-auditmod24c.so
 $(objpfx)tst-audit24c: $(objpfx)tst-audit24amod1.so \
 		       $(objpfx)tst-audit24amod2.so
 tst-audit24c-ENV = LD_BIND_NOW=1 LD_AUDIT=$(objpfx)tst-auditmod24c.so
-LDFLAGS-tst-audit24b = -Wl,-z,lazy
+LDFLAGS-tst-audit24c = -Wl,-z,lazy
 
 $(objpfx)tst-audit24d.out: $(objpfx)tst-auditmod24d.so
 $(objpfx)tst-audit24d: $(objpfx)tst-audit24dmod1.so \
