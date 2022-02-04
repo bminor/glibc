@@ -116,5 +116,7 @@ la_symbind32 (Elf32_Sym *sym, unsigned int ndx,
 	}
     }
 
-  abort ();
+  if (symname[0] != '\0')
+    abort ();
+  return sym->st_value;
 }
