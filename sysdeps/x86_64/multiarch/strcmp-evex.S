@@ -116,7 +116,7 @@ ENTRY(STRCMP)
 # ifdef USE_AS_STRNCMP
 #  ifdef __ILP32__
 	/* Clear the upper 32 bits.  */
-	movl	%edx, %rdx
+	movl	%edx, %edx
 #  endif
 	cmp	$1, %RDX_LP
 	/* Signed comparison intentional. We use this branch to also
