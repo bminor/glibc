@@ -74,7 +74,6 @@ do_test (json_ctx_t *json_ctx, size_t align, int c, size_t len)
   FOR_EACH_IMPL (impl, 0)
     {
       do_one_test (json_ctx, impl, (CHAR *) (buf1) + align, c, len);
-      alloc_bufs ();
     }
 
   json_array_end (json_ctx);
@@ -88,8 +87,9 @@ test_main (void)
   size_t i;
   int c = 0;
 
-  test_init ();
 
+  test_init ();
+  alloc_bufs ();
   json_init (&json_ctx, 0, stdout);
 
   json_document_begin (&json_ctx);
