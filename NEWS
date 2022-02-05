@@ -14,6 +14,8 @@ The following bugs are resolved with this release:
     (breaks test isolation)
   [28860] build: --enable-kernel=5.1.0 build fails because of missing
     __convert_scm_timestamps
+  [28865] linux: _SC_NPROCESSORS_CONF and _SC_NPROCESSORS_ONLN are inaccurate
+    without /sys and /proc
 
 
 Version 2.35

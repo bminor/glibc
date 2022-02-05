@@ -50,9 +50,8 @@ __get_nprocs_sched (void)
        is an arbitrary values assuming such systems should be rare and there
        is no offline cpus.  */
     return max_num_cpus;
-  /* Some other error.  2 is conservative (not a uniprocessor system, so
-     atomics are needed). */
-  return 2;
+  /* Some other error.  */
+  return 0;
 }
 
 static char *
@@ -108,22 +107,19 @@ next_line (int fd, char *const buffer, char **cp, char **re,
 }
 
 static int
-get_nproc_stat (char *buffer, size_t buffer_size)
+get_nproc_stat (void)
 {
+  enum { buffer_size = 1024 };
+  char buffer[buffer_size];
   char *buffer_end = buffer + buffer_size;
   char *cp = buffer_end;
   char *re = buffer_end;
-
-  /* Default to an SMP system in case we cannot obtain an accurate
-     number.  */
-  int result = 2;
+  int result = 0;
 
   const int flags = O_RDONLY | O_CLOEXEC;
   int fd = __open_nocancel ("/proc/stat", flags);
   if (fd != -1)
     {
-      result = 0;
-
       char *l;
       while ((l = next_line (fd, buffer, &cp, &re, buffer_end)) != NULL)
 	/* The current format of /proc/stat has all the cpu* entries
@@ -139,8 +135,8 @@ get_nproc_stat (char *buffer, size_t buffer_size)
   return result;
 }
 
-int
-__get_nprocs (void)
+static int
+get_nprocs_cpu_online (void)
 {
   enum { buffer_size = 1024 };
   char buffer[buffer_size];
@@ -179,7 +175,8 @@ __get_nprocs (void)
 		  }
 	      }
 
-	    result += m - n + 1;
+	    if (m >= n)
+	      result += m - n + 1;
 
 	    l = endp;
 	    if (l < re && *l == ',')
@@ -188,28 +185,18 @@ __get_nprocs (void)
 	while (l < re && *l != '\n');
 
       __close_nocancel_nostatus (fd);
-
-      if (result > 0)
-	return result;
     }
 
-  return get_nproc_stat (buffer, buffer_size);
+  return result;
 }
-libc_hidden_def (__get_nprocs)
-weak_alias (__get_nprocs, get_nprocs)
 
-
-/* On some architectures it is possible to distinguish between configured
-   and active cpus.  */
-int
-__get_nprocs_conf (void)
+static int
+get_nprocs_cpu (void)
 {
-  /* Try to use the sysfs filesystem.  It has actual information about
-     online processors.  */
+  int count = 0;
   DIR *dir = __opendir ("/sys/devices/system/cpu");
   if (dir != NULL)
     {
-      int count = 0;
       struct dirent64 *d;
 
       while ((d = __readdir64 (dir)) != NULL)
@@ -224,12 +211,57 @@ __get_nprocs_conf (void)
 
       __closedir (dir);
 
-      return count;
     }
+  return count;
+}
 
-  enum { buffer_size = 1024 };
-  char buffer[buffer_size];
-  return get_nproc_stat (buffer, buffer_size);
+static int
+get_nprocs_fallback (void)
+{
+  int result;
+
+  /* Try /proc/stat first.  */
+  result = get_nproc_stat ();
+  if (result != 0)
+    return result;
+
+  /* Try sched_getaffinity.  */
+  result = __get_nprocs_sched ();
+  if (result != 0)
+    return result;
+
+  /* We failed to obtain an accurate number.  Be conservative: return
+     the smallest number meaning that this is not a uniprocessor system,
+     so atomics are needed.  */
+  return 2;
+}
+
+int
+__get_nprocs (void)
+{
+  /* Try /sys/devices/system/cpu/online first.  */
+  int result = get_nprocs_cpu_online ();
+  if (result != 0)
+    return result;
+
+  /* Fall back to /proc/stat and sched_getaffinity.  */
+  return get_nprocs_fallback ();
+}
+libc_hidden_def (__get_nprocs)
+weak_alias (__get_nprocs, get_nprocs)
+
+/* On some architectures it is possible to distinguish between configured
+   and active cpus.  */
+int
+__get_nprocs_conf (void)
+{
+  /* Try /sys/devices/system/cpu/ first.  */
+  int result = get_nprocs_cpu ();
+  if (result != 0)
+    return result;
+
+  /* Fall back to /proc/stat and sched_getaffinity.  */
+  return get_nprocs_fallback ();
 }
 libc_hidden_def (__get_nprocs_conf)
 weak_alias (__get_nprocs_conf, get_nprocs_conf)
