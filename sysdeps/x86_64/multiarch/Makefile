@@ -132,37 +132,55 @@ CFLAGS-strspn-c.c += -msse4
 endif
 
 ifeq ($(subdir),wcsmbs)
-sysdep_routines += wmemcmp-sse4 wmemcmp-ssse3 wmemcmp-c \
-		   wmemcmp-avx2-movbe \
-		   wmemchr-sse2 wmemchr-avx2 \
-		   wcscmp-sse2 wcscmp-avx2 \
-		   wcsncmp-sse2 wcsncmp-avx2 \
-		   wcscpy-ssse3 wcscpy-c \
-		   wcschr-sse2 wcschr-avx2 \
-		   wcsrchr-sse2 wcsrchr-avx2 \
-		   wcslen-sse2 wcslen-sse4_1 wcslen-avx2 \
-		   wcsnlen-c wcsnlen-sse4_1 wcsnlen-avx2 \
-		   wcschr-avx2-rtm \
-		   wcscmp-avx2-rtm \
-		   wcslen-avx2-rtm \
-		   wcsncmp-avx2-rtm \
-		   wcsnlen-avx2-rtm \
-		   wcsrchr-avx2-rtm \
-		   wmemchr-avx2-rtm \
-		   wmemcmp-avx2-movbe-rtm \
-		   wcschr-evex \
-		   wcscmp-evex \
-		   wcslen-evex \
-		   wcsncmp-evex \
-		   wcsnlen-evex \
-		   wcsrchr-evex \
-		   wmemchr-evex \
-		   wmemcmp-evex-movbe \
-		   wmemchr-evex-rtm
+sysdep_routines += \
+  wcschr-avx2 \
+  wcschr-avx2-rtm \
+  wcschr-evex \
+  wcschr-sse2 \
+  wcscmp-avx2 \
+  wcscmp-avx2-rtm \
+  wcscmp-evex \
+  wcscmp-sse2 \
+  wcscpy-c \
+  wcscpy-ssse3 \
+  wcslen-avx2 \
+  wcslen-avx2-rtm \
+  wcslen-evex \
+  wcslen-sse2 \
+  wcslen-sse4_1 \
+  wcsncmp-avx2 \
+  wcsncmp-avx2-rtm \
+  wcsncmp-evex \
+  wcsncmp-sse2 \
+  wcsnlen-avx2 \
+  wcsnlen-avx2-rtm \
+  wcsnlen-c \
+  wcsnlen-evex \
+  wcsnlen-sse4_1 \
+  wcsrchr-avx2 \
+  wcsrchr-avx2-rtm \
+  wcsrchr-evex \
+  wcsrchr-sse2 \
+  wmemchr-avx2 \
+  wmemchr-avx2-rtm \
+  wmemchr-evex \
+  wmemchr-evex-rtm \
+  wmemchr-sse2 \
+  wmemcmp-avx2-movbe \
+  wmemcmp-avx2-movbe-rtm \
+  wmemcmp-c \
+  wmemcmp-evex-movbe \
+  wmemcmp-sse4 \
+  wmemcmp-ssse3 \
+# sysdep_routines
 endif
 
 ifeq ($(subdir),debug)
-sysdep_routines += memcpy_chk-nonshared mempcpy_chk-nonshared \
-		   memmove_chk-nonshared memset_chk-nonshared \
-		   wmemset_chk-nonshared
+sysdep_routines += \
+  memcpy_chk-nonshared \
+  memmove_chk-nonshared \
+  mempcpy_chk-nonshared \
+  memset_chk-nonshared \
+  wmemset_chk-nonshared \
+# sysdep_routines
 endif
