@@ -111,7 +111,8 @@ enum cf_protection_level
 /* Local label name for asm code. */
 #ifndef L
 /* ELF-like local names start with `.L'.  */
-# define L(name)	.L##name
+# define LOCAL_LABEL(name) .L##name
+# define L(name)	LOCAL_LABEL(name)
 #endif
 
 #define atom_text_section .section ".text.atom", "ax"
