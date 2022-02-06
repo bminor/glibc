@@ -943,7 +943,7 @@ extra-test-objs += $(addsuffix .os,$(strip $(modules-names)))
 # filtmod1.so, tst-big-note-lib.so, tst-ro-dynamic-mod.so have special
 # rules.
 modules-names-nobuild := filtmod1 tst-big-note-lib tst-ro-dynamic-mod \
-			 tst-audit24bmod1 tst-audit24bmod2.so
+			 tst-audit24bmod1 tst-audit24bmod2
 
 tests += $(tests-static)
 
