@@ -28,17 +28,22 @@
 #define VMOVU     movups
 #define VMOVA     movaps
 
-#define MEMSET_VDUP_TO_VEC0_AND_SET_RETURN(d, r) \
+# define MEMSET_SET_VEC0_AND_SET_RETURN(d, r) \
   movd d, %xmm0; \
-  movq r, %rax; \
-  punpcklbw %xmm0, %xmm0; \
-  punpcklwd %xmm0, %xmm0; \
-  pshufd $0, %xmm0, %xmm0
+  pxor %xmm1, %xmm1; \
+  pshufb %xmm1, %xmm0; \
+  movq r, %rax
 
-#define WMEMSET_VDUP_TO_VEC0_AND_SET_RETURN(d, r) \
+# define WMEMSET_SET_VEC0_AND_SET_RETURN(d, r) \
   movd d, %xmm0; \
-  movq r, %rax; \
-  pshufd $0, %xmm0, %xmm0
+  pshufd $0, %xmm0, %xmm0; \
+  movq r, %rax
+
+# define MEMSET_VDUP_TO_VEC0_HIGH()
+# define MEMSET_VDUP_TO_VEC0_LOW()
+
+# define WMEMSET_VDUP_TO_VEC0_HIGH()
+# define WMEMSET_VDUP_TO_VEC0_LOW()
 
 #define SECTION(p)		p
 
