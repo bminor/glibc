@@ -110,7 +110,7 @@ test_main (void)
     {
       for (i = 0; i < 18; ++i)
 	do_test (&json_ctx, 0, c, 1 << i);
-      for (i = 1; i < 64; ++i)
+      for (i = 0; i < 64; ++i)
 	{
 	  do_test (&json_ctx, i, c, i);
 	  do_test (&json_ctx, 4096 - i, c, i);
