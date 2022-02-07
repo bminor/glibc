@@ -119,6 +119,9 @@ endif
 
 # String function benchmarks.
 string-benchset := \
+  bzero \
+  bzero-large \
+  bzero-walk \
   memccpy \
   memchr \
   memcmp \
