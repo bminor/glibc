@@ -86,16 +86,30 @@ bench-math := \
   y1 \
 
 ifneq (,$(filter yes,$(float96-fcts)))
-bench-math += cbrtl
+bench-math += \
+  cbrtl \
+# bench-math
 endif
 
 ifneq (,$(filter yes,$(float128-fcts) $(float128-alias-fcts)))
-bench-math += expf128 powf128 sinf128 ilogbf128
+bench-math += \
+  expf128 \
+  ilogbf128 \
+  powf128 \
+  sinf128 \
+# bench-math
 endif
 
-bench-pthread := pthread_once thread_create pthread-locks
+bench-pthread := \
+  pthread-locks \
+  pthread_once \
+  thread_create \
+# bench-pthread
 
-bench-string := ffs ffsll
+bench-string := \
+  ffs \
+  ffsll \
+# bench-string
 
 ifeq (${BENCHSET},)
 bench := $(bench-math) $(bench-pthread) $(bench-string)
@@ -104,19 +118,75 @@ bench := $(foreach B,$(filter bench-%,${BENCHSET}), ${${B}})
 endif
 
 # String function benchmarks.
-string-benchset := memccpy memchr memcmp memcmpeq memcpy memmem memmove \
-		   mempcpy memset rawmemchr stpcpy stpncpy strcasecmp strcasestr \
-		   strcat strchr strchrnul strcmp strcpy strcspn strlen \
-		   strncasecmp strncat strncmp strncpy strnlen strpbrk strrchr \
-		   strspn strstr strcpy_chk stpcpy_chk memrchr strsep strtok \
-		   strcoll memcpy-large memcpy-random memmove-large memset-large \
-		   memcpy-walk memset-walk memmove-walk
+string-benchset := \
+  memccpy \
+  memchr \
+  memcmp \
+  memcmpeq \
+  memcpy \
+  memcpy-large \
+  memcpy-random \
+  memcpy-walk \
+  memmem \
+  memmove \
+  memmove-large \
+  memmove-walk \
+  mempcpy \
+  memrchr \
+  memset \
+  memset-large \
+  memset-walk \
+  rawmemchr \
+  stpcpy \
+  stpcpy_chk \
+  stpncpy \
+  strcasecmp \
+  strcasestr \
+  strcat \
+  strchr \
+  strchrnul \
+  strcmp \
+  strcoll \
+  strcpy \
+  strcpy_chk \
+  strcspn \
+  strlen \
+  strncasecmp \
+  strncat \
+  strncmp \
+  strncpy \
+  strnlen \
+  strpbrk \
+  strrchr \
+  strsep \
+  strspn \
+  strstr \
+  strtok \
+# string-benchset
 
 # Build and run locale-dependent benchmarks only if we're building natively.
 ifeq (no,$(cross-compiling))
-wcsmbs-benchset := wcslen wcsnlen wcscpy wcpcpy wcsncpy wcpncpy wcscat wcsncat \
-		   wcscmp wcsncmp wcschr wcschrnul wcsrchr wcsspn wcspbrk wcscspn \
-		   wmemchr wmemset wmemcmp
+wcsmbs-benchset := \
+  wcpcpy \
+  wcpncpy \
+  wcscat \
+  wcschr \
+  wcschrnul \
+  wcscmp \
+  wcscpy \
+  wcscspn \
+  wcslen \
+  wcsncat \
+  wcsncmp \
+  wcsncpy \
+  wcsnlen \
+  wcspbrk \
+  wcsrchr \
+  wcsspn \
+  wmemchr \
+  wmemcmp \
+  wmemset \
+# wcsmbs-benchset
 else
 wcsmbs-benchset :=
 endif
@@ -125,11 +195,32 @@ string-benchset-all := $(string-benchset) ${wcsmbs-benchset}
 
 ifeq (no,$(cross-compiling))
 # We have to generate locales
-LOCALES := en_US.UTF-8 tr_TR.UTF-8 cs_CZ.UTF-8 fa_IR.UTF-8 fr_FR.UTF-8 \
-	   ja_JP.UTF-8 si_LK.UTF-8 en_GB.UTF-8 vi_VN.UTF-8 ar_SA.UTF-8 \
-	   da_DK.UTF-8 pl_PL.UTF-8 pt_PT.UTF-8 el_GR.UTF-8 ru_RU.UTF-8 \
-	   he_IL.UTF-8 is_IS.UTF-8 es_ES.UTF-8 hi_IN.UTF-8 sv_SE.UTF-8 \
-	   hu_HU.UTF-8 it_IT.UTF-8 sr_RS.UTF-8 zh_CN.UTF-8
+LOCALES := \
+  ar_SA.UTF-8 \
+  cs_CZ.UTF-8 \
+  da_DK.UTF-8 \
+  el_GR.UTF-8 \
+  en_GB.UTF-8 \
+  en_US.UTF-8 \
+  es_ES.UTF-8 \
+  fa_IR.UTF-8 \
+  fr_FR.UTF-8 \
+  he_IL.UTF-8 \
+  hi_IN.UTF-8 \
+  hu_HU.UTF-8 \
+  is_IS.UTF-8 \
+  it_IT.UTF-8 \
+  ja_JP.UTF-8 \
+  pl_PL.UTF-8 \
+  pt_PT.UTF-8 \
+  ru_RU.UTF-8 \
+  si_LK.UTF-8 \
+  sr_RS.UTF-8 \
+  sv_SE.UTF-8 \
+  tr_TR.UTF-8 \
+  vi_VN.UTF-8 \
+  zh_CN.UTF-8 \
+# LOCALES
 include ../gen-locales.mk
 endif
 
