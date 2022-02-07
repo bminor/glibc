@@ -19,6 +19,9 @@
   vpbroadcastb d, %VEC0; \
   movq r, %rax
 
+# define BZERO_ZERO_VEC0() \
+  vpxorq %XMM0, %XMM0, %XMM0
+
 # define WMEMSET_SET_VEC0_AND_SET_RETURN(d, r) \
   vpbroadcastd d, %VEC0; \
   movq r, %rax
