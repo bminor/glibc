@@ -27,11 +27,5 @@ if test x"$build_mathvec" = xnotset; then
   build_mathvec=yes
 fi
 
-$as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
-
-
-$as_echo "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
-
-
 test -n "$critic_missing" && as_fn_error $? "
 *** $critic_missing" "$LINENO" 5

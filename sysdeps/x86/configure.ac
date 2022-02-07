@@ -127,3 +127,10 @@ if test $libc_cv_include_x86_isa_level = yes; then
   fi
 fi
 LIBC_CONFIG_VAR([enable-x86-isa-level], [$libc_cv_include_x86_isa_level])
+
+dnl It is always possible to access static and hidden symbols in an
+dnl position independent way.
+AC_DEFINE(PI_STATIC_AND_HIDDEN)
+
+dnl Static PIE is supported.
+AC_DEFINE(SUPPORT_STATIC_PIE)
