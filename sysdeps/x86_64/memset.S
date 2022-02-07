@@ -30,9 +30,10 @@
 
 # define MEMSET_SET_VEC0_AND_SET_RETURN(d, r) \
   movd d, %xmm0; \
-  pxor %xmm1, %xmm1; \
-  pshufb %xmm1, %xmm0; \
-  movq r, %rax
+  movq r, %rax; \
+  punpcklbw %xmm0, %xmm0; \
+  punpcklwd %xmm0, %xmm0; \
+  pshufd $0, %xmm0, %xmm0
 
 # define WMEMSET_SET_VEC0_AND_SET_RETURN(d, r) \
   movd d, %xmm0; \
