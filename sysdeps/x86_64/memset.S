@@ -35,6 +35,9 @@
   punpcklwd %xmm0, %xmm0; \
   pshufd $0, %xmm0, %xmm0
 
+# define BZERO_ZERO_VEC0() \
+  pxor %xmm0, %xmm0
+
 # define WMEMSET_SET_VEC0_AND_SET_RETURN(d, r) \
   movd d, %xmm0; \
   pshufd $0, %xmm0, %xmm0; \
@@ -53,6 +56,10 @@
 # define MEMSET_SYMBOL(p,s)	memset
 #endif
 
+#ifndef BZERO_SYMBOL
+# define BZERO_SYMBOL(p,s)	__bzero
+#endif
+
 #ifndef WMEMSET_SYMBOL
 # define WMEMSET_CHK_SYMBOL(p,s) p
 # define WMEMSET_SYMBOL(p,s)	__wmemset
@@ -63,6 +70,7 @@
 libc_hidden_builtin_def (memset)
 
 #if IS_IN (libc)
+weak_alias (__bzero, bzero)
 libc_hidden_def (__wmemset)
 weak_alias (__wmemset, wmemset)
 libc_hidden_weak (wmemset)

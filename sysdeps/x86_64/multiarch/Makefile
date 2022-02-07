@@ -1,6 +1,7 @@
 ifeq ($(subdir),string)
 
 sysdep_routines += \
+  bzero \
   memchr-avx2 \
   memchr-avx2-rtm \
   memchr-evex \

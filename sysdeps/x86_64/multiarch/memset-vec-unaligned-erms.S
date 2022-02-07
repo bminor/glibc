@@ -26,6 +26,10 @@
 
 #include <sysdep.h>
 
+#ifndef BZERO_SYMBOL
+# define BZERO_SYMBOL(p,s)		MEMSET_SYMBOL (p, s)
+#endif
+
 #ifndef MEMSET_CHK_SYMBOL
 # define MEMSET_CHK_SYMBOL(p,s)		MEMSET_SYMBOL(p, s)
 #endif
@@ -87,6 +91,18 @@
 # define XMM_SMALL	0
 #endif
 
+#ifdef USE_LESS_VEC_MASK_STORE
+# define SET_REG64	rcx
+# define SET_REG32	ecx
+# define SET_REG16	cx
+# define SET_REG8	cl
+#else
+# define SET_REG64	rsi
+# define SET_REG32	esi
+# define SET_REG16	si
+# define SET_REG8	sil
+#endif
+
 #define PAGE_SIZE 4096
 
 /* Macro to calculate size of small memset block for aligning
@@ -96,18 +112,6 @@
 
 #ifndef SECTION
 # error SECTION is not defined!
-#endif
-
-	.section SECTION(.text),"ax",@progbits
-#if VEC_SIZE == 16 && IS_IN (libc)
-ENTRY (__bzero)
-	mov	%RDI_LP, %RAX_LP /* Set return value.  */
-	mov	%RSI_LP, %RDX_LP /* Set n.  */
-	xorl	%esi, %esi
-	pxor	%XMM0, %XMM0
-	jmp	L(entry_from_bzero)
-END (__bzero)
-weak_alias (__bzero, bzero)
 #endif
 
 #if IS_IN (libc)
@@ -123,11 +127,36 @@ ENTRY (WMEMSET_SYMBOL (__wmemset, unaligned))
 	WMEMSET_SET_VEC0_AND_SET_RETURN (%esi, %rdi)
 	WMEMSET_VDUP_TO_VEC0_LOW()
 	cmpq	$VEC_SIZE, %rdx
-	jb	L(less_vec_no_vdup)
+	jb	L(less_vec_from_wmemset)
 	WMEMSET_VDUP_TO_VEC0_HIGH()
 	jmp	L(entry_from_wmemset)
 END (WMEMSET_SYMBOL (__wmemset, unaligned))
 #endif
+
+ENTRY (BZERO_SYMBOL(__bzero, unaligned))
+#if VEC_SIZE > 16
+	BZERO_ZERO_VEC0 ()
+#endif
+	mov	%RDI_LP, %RAX_LP
+	mov	%RSI_LP, %RDX_LP
+#ifndef USE_LESS_VEC_MASK_STORE
+	xorl	%esi, %esi
+#endif
+	cmp	$VEC_SIZE, %RDX_LP
+	jb	L(less_vec_no_vdup)
+#ifdef USE_LESS_VEC_MASK_STORE
+	xorl	%esi, %esi
+#endif
+#if VEC_SIZE <= 16
+	BZERO_ZERO_VEC0 ()
+#endif
+	cmp	$(VEC_SIZE * 2), %RDX_LP
+	ja	L(more_2x_vec)
+	/* From VEC and to 2 * VEC.  No branch when size == VEC_SIZE.  */
+	VMOVU	%VEC(0), (%rdi)
+	VMOVU	%VEC(0), (VEC_SIZE * -1)(%rdi, %rdx)
+	VZEROUPPER_RETURN
+END (BZERO_SYMBOL(__bzero, unaligned))
 
 #if defined SHARED && IS_IN (libc)
 ENTRY_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned))
@@ -142,7 +171,6 @@ ENTRY (MEMSET_SYMBOL (__memset, unaligned))
 	/* Clear the upper 32 bits.  */
 	mov	%edx, %edx
 # endif
-L(entry_from_bzero):
 	cmpq	$VEC_SIZE, %rdx
 	jb	L(less_vec)
 	MEMSET_VDUP_TO_VEC0_HIGH()
@@ -187,6 +215,31 @@ END (__memset_erms)
 END (MEMSET_SYMBOL (__memset, erms))
 # endif
 
+ENTRY_P2ALIGN (BZERO_SYMBOL(__bzero, unaligned_erms), 6)
+# if VEC_SIZE > 16
+	BZERO_ZERO_VEC0 ()
+# endif
+	mov	%RDI_LP, %RAX_LP
+	mov	%RSI_LP, %RDX_LP
+# ifndef USE_LESS_VEC_MASK_STORE
+	xorl	%esi, %esi
+# endif
+	cmp	$VEC_SIZE, %RDX_LP
+	jb	L(less_vec_no_vdup)
+# ifdef USE_LESS_VEC_MASK_STORE
+	xorl	%esi, %esi
+# endif
+# if VEC_SIZE <= 16
+	BZERO_ZERO_VEC0 ()
+# endif
+	cmp	$(VEC_SIZE * 2), %RDX_LP
+	ja	L(stosb_more_2x_vec)
+	/* From VEC and to 2 * VEC.  No branch when size == VEC_SIZE.  */
+	VMOVU	%VEC(0), (%rdi)
+	VMOVU	%VEC(0), (VEC_SIZE * -1)(%rdi, %rdx)
+	VZEROUPPER_RETURN
+END (BZERO_SYMBOL(__bzero, unaligned_erms))
+
 # if defined SHARED && IS_IN (libc)
 ENTRY_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned_erms))
 	cmp	%RDX_LP, %RCX_LP
@@ -229,6 +282,7 @@ L(last_2x_vec):
 	.p2align 4,, 10
 L(less_vec):
 L(less_vec_no_vdup):
+L(less_vec_from_wmemset):
 	/* Less than 1 VEC.  */
 # if VEC_SIZE != 16 && VEC_SIZE != 32 && VEC_SIZE != 64
 #  error Unsupported VEC_SIZE!
@@ -374,7 +428,10 @@ L(less_vec):
 	/* Broadcast esi to partial register (i.e VEC_SIZE == 32 broadcast to
 	   xmm). This is only does anything for AVX2.  */
 	MEMSET_VDUP_TO_VEC0_LOW ()
+L(less_vec_from_wmemset):
+#if VEC_SIZE > 16
 L(less_vec_no_vdup):
+#endif
 #endif
 L(cross_page):
 #if VEC_SIZE > 32
@@ -386,7 +443,10 @@ L(cross_page):
 	jge	L(between_16_31)
 #endif
 #ifndef USE_XMM_LESS_VEC
-	MOVQ	%XMM0, %rcx
+	MOVQ	%XMM0, %SET_REG64
+#endif
+#if VEC_SIZE <= 16
+L(less_vec_no_vdup):
 #endif
 	cmpl	$8, %edx
 	jge	L(between_8_15)
@@ -395,7 +455,7 @@ L(cross_page):
 	cmpl	$1, %edx
 	jg	L(between_2_3)
 	jl	L(between_0_0)
-	movb	%sil, (%LESS_VEC_REG)
+	movb	%SET_REG8, (%LESS_VEC_REG)
 L(between_0_0):
 	ret
 
@@ -428,8 +488,8 @@ L(between_8_15):
 	MOVQ	%XMM0, (%rdi)
 	MOVQ	%XMM0, -8(%rdi, %rdx)
 #else
-	movq	%rcx, (%LESS_VEC_REG)
-	movq	%rcx, -8(%LESS_VEC_REG, %rdx)
+	movq	%SET_REG64, (%LESS_VEC_REG)
+	movq	%SET_REG64, -8(%LESS_VEC_REG, %rdx)
 #endif
 	ret
 
@@ -442,8 +502,8 @@ L(between_4_7):
 	MOVD	%XMM0, (%rdi)
 	MOVD	%XMM0, -4(%rdi, %rdx)
 #else
-	movl	%ecx, (%LESS_VEC_REG)
-	movl	%ecx, -4(%LESS_VEC_REG, %rdx)
+	movl	%SET_REG32, (%LESS_VEC_REG)
+	movl	%SET_REG32, -4(%LESS_VEC_REG, %rdx)
 #endif
 	ret
 
@@ -452,12 +512,12 @@ L(between_4_7):
 L(between_2_3):
 	/* From 2 to 3.  No branch when size == 2.  */
 #ifdef USE_XMM_LESS_VEC
-	movb	%sil, (%rdi)
-	movb	%sil, 1(%rdi)
-	movb	%sil, -1(%rdi, %rdx)
+	movb	%SET_REG8, (%rdi)
+	movb	%SET_REG8, 1(%rdi)
+	movb	%SET_REG8, -1(%rdi, %rdx)
 #else
-	movw	%cx, (%LESS_VEC_REG)
-	movb	%sil, -1(%LESS_VEC_REG, %rdx)
+	movw	%SET_REG16, (%LESS_VEC_REG)
+	movb	%SET_REG8, -1(%LESS_VEC_REG, %rdx)
 #endif
 	ret
 END (MEMSET_SYMBOL (__memset, unaligned_erms))
