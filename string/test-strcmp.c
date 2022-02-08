@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define TEST_LEN (4096 * 3)
+#define TEST_LEN (getpagesize () * 3)
 #define MIN_PAGE_SIZE (TEST_LEN + 2 * getpagesize ())
 
 #define TEST_MAIN
@@ -393,7 +393,7 @@ int
 test_main (void)
 {
   size_t i, j;
-
+  const size_t test_len = MIN(TEST_LEN, 3 * 4096);
   test_init ();
   check();
   check2 ();
@@ -435,7 +435,7 @@ test_main (void)
 
   for (j = 0; j < 160; ++j)
     {
-      for (i = 0; i < TEST_LEN;)
+      for (i = 0; i < test_len;)
         {
           do_test (getpagesize () - j - 1, 0, i, 127, 0);
           do_test (getpagesize () - j - 1, 0, i, 127, 1);
@@ -461,17 +461,17 @@ test_main (void)
             {
               i += 7;
             }
-          else if (i + 161 < TEST_LEN)
+          else if (i + 161 < test_len)
             {
               i += 31;
               i *= 17;
               i /= 16;
-              if (i + 161 > TEST_LEN)
+              if (i + 161 > test_len)
                 {
-                  i = TEST_LEN - 160;
+                  i = test_len - 160;
                 }
             }
-          else if (i + 32 < TEST_LEN)
+          else if (i + 32 < test_len)
             {
               i += 7;
             }
