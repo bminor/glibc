@@ -473,6 +473,8 @@ _dl_map_object_deps (struct link_map *map,
 
   for (nlist = 0, runp = known; runp; runp = runp->next)
     {
+      /* _dl_sort_maps ignores l_faked object, so it is safe to not consider
+	 them for nlist.  */
       if (__builtin_expect (trace_mode, 0) && runp->map->l_faked)
 	/* This can happen when we trace the loading.  */
 	--map->l_searchlist.r_nlist;

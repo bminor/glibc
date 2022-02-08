@@ -693,6 +693,11 @@ modules-names += \
   libmarkermod5-3 \
   libmarkermod5-4 \
   libmarkermod5-5 \
+  libtracemod1-1 \
+  libtracemod2-1 \
+  libtracemod3-1 \
+  libtracemod4-1 \
+  libtracemod5-1 \
   ltglobmod1 \
   ltglobmod2 \
   neededobj1 \
@@ -1161,6 +1166,11 @@ tests-special += \
   $(objpfx)tst-initorder2-cmp.out \
   $(objpfx)tst-unused-dep-cmp.out \
   $(objpfx)tst-unused-dep.out \
+  $(objpfx)tst-trace1.out \
+  $(objpfx)tst-trace2.out \
+  $(objpfx)tst-trace3.out \
+  $(objpfx)tst-trace4.out \
+  $(objpfx)tst-trace5.out \
   # tests-special
 endif
 
@@ -2884,3 +2894,47 @@ $(objpfx)tst-relr-mod4a.so: $(objpfx)tst-relr-mod4a.os \
 	-shared -o $@.new $(filter-out $(map-file),$^)
 	$(call after-link,$@.new)
 	mv -f $@.new $@
+
+LDFLAGS-libtracemod1-1.so += -Wl,-soname,libtracemod1.so
+LDFLAGS-libtracemod2-1.so += -Wl,-soname,libtracemod2.so
+LDFLAGS-libtracemod3-1.so += -Wl,-soname,libtracemod3.so
+LDFLAGS-libtracemod4-1.so += -Wl,-soname,libtracemod4.so
+LDFLAGS-libtracemod5-1.so += -Wl,-soname,libtracemod5.so
+
+$(objpfx)libtracemod1-1.so: $(objpfx)libtracemod2-1.so \
+			    $(objpfx)libtracemod3-1.so
+$(objpfx)libtracemod2-1.so: $(objpfx)libtracemod4-1.so \
+			    $(objpfx)libtracemod5-1.so
+
+define libtracemod-x
+$(objpfx)libtracemod$(1)/libtracemod$(1).so: $(objpfx)libtracemod$(1)-1.so
+	$$(make-target-directory)
+	cp $$< $$@
+endef
+libtracemod-suffixes = 1 2 3 4 5
+$(foreach i,$(libtracemod-suffixes), $(eval $(call libtracemod-x,$(i))))
+
+define tst-trace-skeleton
+$(objpfx)tst-trace$(1).out: $(objpfx)libtracemod1/libtracemod1.so \
+			    $(objpfx)libtracemod2/libtracemod2.so \
+			    $(objpfx)libtracemod3/libtracemod3.so \
+			    $(objpfx)libtracemod4/libtracemod4.so \
+			    $(objpfx)libtracemod5/libtracemod5.so \
+			    $(..)scripts/tst-ld-trace.py \
+			    tst-trace$(1).exp
+	${ $(PYTHON) $(..)scripts/tst-ld-trace.py \
+	    "$(test-wrapper-env) $(elf-objpfx)$(rtld-installed-name) \
+	    --library-path $(common-objpfx):$(strip $(2)) \
+	    $(objpfx)libtracemod1/libtracemod1.so" tst-trace$(1).exp \
+	} > $$@; $$(evaluate-test)
+endef
+
+$(eval $(call tst-trace-skeleton,1,))
+$(eval $(call tst-trace-skeleton,2,\
+	$(objpfx)libtracemod2))
+$(eval $(call tst-trace-skeleton,3,\
+	$(objpfx)libtracemod2:$(objpfx)libtracemod3))
+$(eval $(call tst-trace-skeleton,4,\
+	$(objpfx)libtracemod2:$(objpfx)libtracemod3:$(objpfx)libtracemod4))
+$(eval $(call tst-trace-skeleton,5,\
+	$(objpfx)libtracemod2:$(objpfx)libtracemod3:$(objpfx)libtracemod4:$(objpfx)libtracemod5))

@@ -140,7 +140,9 @@ static void
 dfs_traversal (struct link_map ***rpo, struct link_map *map,
 	       bool *do_reldeps)
 {
-  if (map->l_visited)
+  /* _dl_map_object_deps ignores l_faked objects when calculating the
+     number of maps before calling _dl_sort_maps, ignore them as well.  */
+  if (map->l_visited || map->l_faked)
     return;
 
   map->l_visited = 1;
