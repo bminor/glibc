@@ -139,6 +139,9 @@ string-benchset := \
   memset \
   memset-large \
   memset-walk \
+  memset-zero \
+  memset-zero-large \
+  memset-zero-walk \
   rawmemchr \
   stpcpy \
   stpcpy_chk \

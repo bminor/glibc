@@ -17,7 +17,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
-#define TEST_NAME "bzero"
+#ifdef DO_MEMSET
+# define TEST_NAME "memset"
+#else
+# define TEST_NAME "bzero"
+#endif
 #define START_SIZE 128
 #define MIN_PAGE_SIZE (getpagesize () + 32 * 1024 * 1024)
 #define TIMEOUT (20 * 60)
@@ -25,6 +29,15 @@
 
 #include "json-lib.h"
 
+#ifdef DO_MEMSET
+void *generic_memset (void *, int, size_t);
+
+typedef void *(*proto_t) (void *, int, size_t);
+
+IMPL (memset, 1)
+IMPL (generic_memset, 0)
+
+#else
 static void
 memset_zero (void * s, size_t len)
 {
@@ -35,6 +48,7 @@ typedef void (*proto_t) (void *, size_t);
 
 IMPL (bzero, 1)
 IMPL (memset_zero, 0)
+#endif
 
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, CHAR *s, CHAR *s_end,
@@ -45,7 +59,11 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl, CHAR *s, CHAR *s_end,
 
   TIMING_NOW (start);
   for (i = 0; i < iters && s <= s_end; s_end -= n, i++)
+#ifdef DO_MEMSET
+    CALL (impl, s, 0, n);
+#else
     CALL (impl, s, n);
+#endif
   TIMING_NOW (stop);
 
   TIMING_DIFF (cur, start, stop);
@@ -116,3 +134,13 @@ test_main (void)
 }
 
 #include <support/test-driver.c>
+
+#ifdef DO_MEMSET
+# define libc_hidden_builtin_def(X)
+# define libc_hidden_def(X)
+# define libc_hidden_weak(X)
+# define weak_alias(X,Y)
+# undef MEMSET
+# define MEMSET generic_memset
+# include <string/memset.c>
+#endif
