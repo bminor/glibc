@@ -305,16 +305,3 @@ L(tail1_bwd):
 
 END_GEN_TB (MEMMOVE,TB_TOCLESS)
 libc_hidden_builtin_def (memmove)
-
-/* void bcopy(const void *src [r3], void *dest [r4], size_t n [r5])
-   Implemented in this file to avoid linker create a stub function call
-   in the branch to '_memmove'.  */
-ENTRY_TOCLESS (__bcopy)
-	mr	r6,r3
-	mr	r3,r4
-	mr	r4,r6
-	b	L(_memmove)
-END (__bcopy)
-#ifndef __bcopy
-weak_alias (__bcopy, bcopy)
-#endif

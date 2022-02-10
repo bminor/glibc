@@ -1,1 +1,0 @@
-/* Implemented at memmove.S  */
