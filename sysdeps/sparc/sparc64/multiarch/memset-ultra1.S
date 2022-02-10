@@ -25,6 +25,5 @@
 # define weak_alias(x, y)
 
 # define memset  __memset_ultra1
-# define __bzero __bzero_ultra1
 # include <sysdeps/sparc/sparc64/memset.S>
 #endif

@@ -45,9 +45,6 @@ ENTRY(__memset_niagara1)
 	sllx		%o2, 32, %g1
 	ba,pt		%XCC, 1f
 	 or		%g1, %o2, %o2
-END(__memset_niagara1)
-
-ENTRY(__bzero_niagara1)
 	clr		%o2
 1:
 # ifndef USE_BRP
@@ -171,6 +168,6 @@ ENTRY(__bzero_niagara1)
 90:
 	retl
 	 mov		%o3, %o0
-END(__bzero_niagara1)
+END(__memset_niagara1)
 
 #endif

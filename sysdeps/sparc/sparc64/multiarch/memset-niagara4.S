@@ -39,10 +39,6 @@ ENTRY(__memset_niagara4)
 	sllx		%o2, 32, %g1
 	ba,pt		%icc, 1f
 	 or		%g1, %o2, %o4
-END(__memset_niagara4)
-
-	.align		32
-ENTRY(__bzero_niagara4)
 	clr		%o4
 1:	cmp		%o1, 16
 	ble		%icc, .Ltiny
@@ -118,6 +114,6 @@ ENTRY(__bzero_niagara4)
 	bne,pt		%icc, 1b
 	 add		%o0, 0x30, %o0
 	ba,a,pt		%icc, .Lpostloop
-END(__bzero_niagara4)
+END(__memset_niagara4)
 
 #endif

@@ -31,6 +31,16 @@
 	stx		source, [base - offset - 0x08];	\
 	stx		source, [base - offset - 0x00];
 
+#define ZERO_BLOCKS(base, offset, source)		\
+	stx		source, [base - offset - 0x38];	\
+	stx		source, [base - offset - 0x30];	\
+	stx		source, [base - offset - 0x28];	\
+	stx		source, [base - offset - 0x20];	\
+	stx		source, [base - offset - 0x18];	\
+	stx		source, [base - offset - 0x10];	\
+	stx		source, [base - offset - 0x08];	\
+	stx		source, [base - offset - 0x00];
+
 	/* Well, memset is a lot easier to get right than bcopy... */
 	.text
 	.align		32
@@ -174,22 +184,7 @@ ENTRY(memset)
 	 nop
 	ba,pt		%xcc, 18b
 	 ldd		[%o0], %f0
-END(memset)
-libc_hidden_builtin_def (memset)
 
-#define ZERO_BLOCKS(base, offset, source)		\
-	stx		source, [base - offset - 0x38];	\
-	stx		source, [base - offset - 0x30];	\
-	stx		source, [base - offset - 0x28];	\
-	stx		source, [base - offset - 0x20];	\
-	stx		source, [base - offset - 0x18];	\
-	stx		source, [base - offset - 0x10];	\
-	stx		source, [base - offset - 0x08];	\
-	stx		source, [base - offset - 0x00];
-
-	.text
-	.align		32
-ENTRY(__bzero)
 #ifndef USE_BPR
 	srl		%o1, 0, %o1
 #endif
@@ -307,6 +302,5 @@ ENTRY(__bzero)
 	 stb		%g0, [%o0 - 1]
 0:	retl
 	 mov		%o5, %o0
-END(__bzero)
-
-weak_alias (__bzero, bzero)
+END(memset)
+libc_hidden_builtin_def (memset)

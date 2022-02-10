@@ -1,4 +1,4 @@
-/* Common definition for memset/bzero implementation.
+/* Common definition for memset implementation.
    All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2017-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.

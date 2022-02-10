@@ -99,13 +99,6 @@
 	.text
 	.align		32
 
-ENTRY(__bzero_niagara7)
-	/* bzero (dst, size)  */
-	mov	%o1, %o2
-	mov	0, %o1
-	/* fall through into memset code */
-END(__bzero_niagara7)
-
 ENTRY(__memset_niagara7)
 	/* memset (src, c, size)  */
 	mov	%o0, %o5		/* copy sp1 before using it  */
