@@ -73,14 +73,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memset_power6)
 	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_ppc))
 
-  /* Support sysdeps/powerpc/powerpc32/power4/multiarch/bzero.c.  */
-  IFUNC_IMPL (i, name, bzero,
-	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_FEATURE_HAS_VSX,
-			      __bzero_power7)
-	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_FEATURE_ARCH_2_05,
-			      __bzero_power6)
-	      IFUNC_IMPL_ADD (array, i, bzero, 1, __bzero_ppc))
-
   /* Support sysdeps/powerpc/powerpc32/power4/multiarch/strlen.c.  */
   IFUNC_IMPL (i, name, strlen,
 	      IFUNC_IMPL_ADD (array, i, strlen, hwcap & PPC_FEATURE_HAS_VSX,
