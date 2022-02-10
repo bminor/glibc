@@ -23,15 +23,11 @@
 #define PARMS	4+4	/* space for 1 saved reg */
 #define RTN	PARMS
 #define DEST	RTN
-#ifdef USE_AS_BZERO
-# define LEN	DEST+4
-#else
-# define CHR	DEST+4
-# define LEN	CHR+4
-#endif
+#define CHR	DEST+4
+#define LEN	CHR+4
 
         .text
-#if defined SHARED && IS_IN (libc) && !defined USE_AS_BZERO
+#if defined SHARED && IS_IN (libc)
 ENTRY (__memset_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
@@ -46,15 +42,11 @@ ENTRY (memset)
 	movl	DEST(%esp), %edi
 	cfi_rel_offset (edi, 0)
 	movl	LEN(%esp), %edx
-#ifdef USE_AS_BZERO
-	xorl	%eax, %eax	/* we fill with 0 */
-#else
 	movb	CHR(%esp), %al
 	movb	%al, %ah
 	movl	%eax, %ecx
 	shll	$16, %eax
 	movw	%cx, %ax
-#endif
 	cld
 
 /* If less than 36 bytes to write, skip tricky code (it wouldn't work).  */
@@ -100,10 +92,8 @@ L(2):	shrl	$2, %ecx	/* convert byte count to longword count */
 	rep
 	stosb
 
-#ifndef USE_AS_BZERO
 	/* Load result (only if used as memset).  */
 	movl DEST(%esp), %eax	/* start address of destination is result */
-#endif
 	popl	%edi
 	cfi_adjust_cfa_offset (-4)
 	cfi_restore (edi)

@@ -1,9 +1,9 @@
 ifeq ($(subdir),string)
 gen-as-const-headers += locale-defines.sym
-sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
+sysdep_routines += memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   memmove-ssse3 memcpy-ssse3-rep mempcpy-ssse3-rep \
 		   memmove-ssse3-rep \
-		   memset-sse2-rep bzero-sse2-rep strcmp-ssse3 \
+		   memset-sse2-rep strcmp-ssse3 \
 		   strcmp-sse4 strncmp-c strncmp-ssse3 strncmp-sse4 \
 		   memcmp-ssse3 memcmp-sse4 varshift \
 		   strlen-sse2 strlen-sse2-bsf strncpy-c strcpy-ssse3 \
@@ -21,7 +21,7 @@ sysdep_routines += bzero-sse2 memset-sse2 memcpy-ssse3 mempcpy-ssse3 \
 		   memcpy-sse2-unaligned \
 		   mempcpy-sse2-unaligned memmove-sse2-unaligned \
 		   strcspn-c strpbrk-c strspn-c \
-		   bzero-ia32 rawmemchr-ia32 \
+		   rawmemchr-ia32 \
 		   memchr-ia32 memcmp-ia32 memcpy-ia32 memmove-ia32 \
 		   mempcpy-ia32 memset-ia32 strcat-ia32 strchr-ia32 \
 		   strrchr-ia32 strcpy-ia32 strcmp-ia32 strcspn-ia32 \

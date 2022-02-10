@@ -30,15 +30,11 @@
 #define POP(REG)	popl REG; CFI_POP (REG)
 
 #define STR1  8
-#ifdef USE_AS_BZERO
-#define N     STR1+4
-#else
 #define STR2  STR1+4
 #define N     STR2+4
-#endif
 
 	.text
-#if defined SHARED && IS_IN (libc) && !defined USE_AS_BZERO
+#if defined SHARED && IS_IN (libc)
 ENTRY (__memset_chk)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
@@ -49,20 +45,12 @@ ENTRY (memset)
 	PUSH    (%edi)
 	movl	N(%esp), %ecx
 	movl	STR1(%esp), %edi
-#ifdef USE_AS_BZERO
-	xor	%eax, %eax
-#else
 	movzbl	STR2(%esp), %eax
 	mov	%edi, %edx
-#endif
 	rep	stosb
-#ifndef USE_AS_BZERO
 	mov	%edx, %eax
-#endif
 	POP     (%edi)
 	ret
 END (memset)
 
-#ifndef USE_AS_BZERO
 libc_hidden_builtin_def (memset)
-#endif

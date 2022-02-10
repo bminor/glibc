@@ -36,14 +36,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   size_t i = 0;
 
-  /* Support sysdeps/i386/i686/multiarch/bzero.S.  */
-  IFUNC_IMPL (i, name, bzero,
-	      IFUNC_IMPL_ADD (array, i, bzero, CPU_FEATURE_USABLE (SSE2),
-			      __bzero_sse2_rep)
-	      IFUNC_IMPL_ADD (array, i, bzero, CPU_FEATURE_USABLE (SSE2),
-			      __bzero_sse2)
-	      IFUNC_IMPL_ADD (array, i, bzero, 1, __bzero_ia32))
-
   /* Support sysdeps/i386/i686/multiarch/memchr.S.  */
   IFUNC_IMPL (i, name, memchr,
 	      IFUNC_IMPL_ADD (array, i, memchr, CPU_FEATURE_USABLE (SSE2),
