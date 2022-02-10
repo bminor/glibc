@@ -17,12 +17,12 @@
 
 #include <string.h>
 
-#undef __bzero
-
 /* Set N bytes of S to 0.  */
 void
 __bzero (void *s, size_t len)
 {
   memset (s, '\0', len);
 }
+#ifndef __bzero
 weak_alias (__bzero, bzero)
+#endif
