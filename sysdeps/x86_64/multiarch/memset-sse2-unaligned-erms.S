@@ -31,9 +31,7 @@
 # endif
 
 # undef weak_alias
-# define weak_alias(original, alias) \
-	.weak bzero; bzero = __bzero
-
+# define weak_alias(original, alias)
 # undef strong_alias
 # define strong_alias(ignored1, ignored2)
 #endif
