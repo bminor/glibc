@@ -24,11 +24,7 @@
 /* INPUT PARAMETERS - MEMSET
      %r2 = address of memory area
      %r3 = byte to fill memory with
-     %r4 = number of bytes to fill.
-
-   INPUT PARAMETERS - BZERO
-     %r2 = address of memory area
-     %r3 = number of bytes to fill.  */
+     %r4 = number of bytes to fill.  */
 
        .text
 
@@ -46,12 +42,6 @@
 #  define AGHI	ahi
 #  define BRCTG	brct
 # endif /* ! defined __s390x__  */
-
-ENTRY(BZERO_Z900_G5)
-	LGR	%r4,%r3
-	xr	%r3,%r3
-	j	.L_Z900_G5_start
-END(BZERO_Z900_G5)
 
 ENTRY(MEMSET_Z900_G5)
 .L_Z900_G5_start:
@@ -100,14 +90,6 @@ END(MEMSET_Z900_G5)
 #endif /*  HAVE_MEMSET_Z900_G5  */
 
 #if HAVE_MEMSET_Z10
-ENTRY(BZERO_Z10)
-	.machine "z10"
-	.machinemode "zarch_nohighgprs"
-	lgr	%r4,%r3
-	xr	%r3,%r3
-	j	.L_Z10_start
-END(BZERO_Z10)
-
 ENTRY(MEMSET_Z10)
 .L_Z10_start:
 	.machine "z10"
@@ -141,14 +123,6 @@ END(MEMSET_Z10)
 #endif /* HAVE_MEMSET_Z10  */
 
 #if HAVE_MEMSET_Z196
-ENTRY(BZERO_Z196)
-	.machine "z196"
-	.machinemode "zarch_nohighgprs"
-	lgr	%r4,%r3
-	xr	%r3,%r3
-	j	.L_Z196_start
-END(BZERO_Z196)
-
 ENTRY(MEMSET_Z196)
 .L_Z196_start:
 	.machine "z196"
@@ -204,10 +178,6 @@ END(__memset_mvcle)
 /* If we don't use ifunc, define an alias for memset here.
    Otherwise see sysdeps/s390/memset.c.  */
 strong_alias (MEMSET_DEFAULT, memset)
-/* Same for bzero.  If ifunc is used, see
-   sysdeps/s390/bzero.c.  */
-strong_alias (BZERO_DEFAULT, __bzero)
-weak_alias (__bzero, bzero)
 #endif
 
 #if defined SHARED && IS_IN (libc)
