@@ -29,15 +29,9 @@
 #  define MEMCPY_CHK	__memcpy_chk_sse2_unaligned
 # endif
 
-# ifdef USE_AS_BCOPY
-#  define SRC		PARMS
-#  define DEST		SRC+4
-#  define LEN		DEST+4
-# else
-#  define DEST		PARMS
-#  define SRC		DEST+4
-#  define LEN		SRC+4
-# endif
+# define DEST		PARMS
+# define SRC		DEST+4
+# define LEN		SRC+4
 
 # define CFI_PUSH(REG)		\
   cfi_adjust_cfa_offset (4);		\
@@ -56,7 +50,7 @@
 # define RETURN	RETURN_END; CFI_PUSH (%ebx)
 
 	.section .text.sse2,"ax",@progbits
-# if !defined USE_AS_BCOPY && defined SHARED
+# if defined SHARED
 ENTRY (MEMCPY_CHK)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
@@ -671,7 +665,7 @@ L(len_5_8_bytes):
 
 L(return):
 	movl	%edx, %eax
-# if !defined USE_AS_BCOPY && defined USE_AS_MEMPCPY
+# ifdef USE_AS_MEMPCPY
 	movl	LEN(%esp), %ecx
 	add	%ecx, %eax
 # endif

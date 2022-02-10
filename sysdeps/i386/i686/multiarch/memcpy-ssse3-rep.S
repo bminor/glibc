@@ -30,15 +30,9 @@
 # define MEMCPY_CHK	__memcpy_chk_ssse3_rep
 #endif
 
-#ifdef USE_AS_BCOPY
-# define SRC		PARMS
-# define DEST		SRC+4
-# define LEN		DEST+4
-#else
-# define DEST		PARMS
-# define SRC		DEST+4
-# define LEN		SRC+4
-#endif
+#define DEST		PARMS
+#define SRC		DEST+4
+#define LEN		SRC+4
 
 #define CFI_PUSH(REG)						\
   cfi_adjust_cfa_offset (4);					\
@@ -99,7 +93,7 @@
 #endif
 
 	.section .text.ssse3,"ax",@progbits
-#if !defined USE_AS_BCOPY && defined SHARED
+#ifdef SHARED
 ENTRY (MEMCPY_CHK)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
@@ -1097,12 +1091,10 @@ L(fwd_write_4bytes):
 	movl	-4(%eax), %ecx
 	movl	%ecx, -4(%edx)
 L(fwd_write_0bytes):
-#ifndef USE_AS_BCOPY
-# ifdef USE_AS_MEMPCPY
+#ifdef USE_AS_MEMPCPY
 	movl	%edx, %eax
-# else
+#else
 	movl	DEST(%esp), %eax
-# endif
 #endif
 	RETURN
 
@@ -1112,12 +1104,10 @@ L(fwd_write_5bytes):
 	movl	-4(%eax), %eax
 	movl	%ecx, -5(%edx)
 	movl	%eax, -4(%edx)
-#ifndef USE_AS_BCOPY
-# ifdef USE_AS_MEMPCPY
+#ifdef USE_AS_MEMPCPY
 	movl	%edx, %eax
-# else
+#else
 	movl	DEST(%esp), %eax
-# endif
 #endif
 	RETURN
 
@@ -1157,12 +1147,10 @@ L(fwd_write_9bytes):
 L(fwd_write_1bytes):
 	movzbl	-1(%eax), %ecx
 	movb	%cl, -1(%edx)
-#ifndef USE_AS_BCOPY
-# ifdef USE_AS_MEMPCPY
+#ifdef USE_AS_MEMPCPY
 	movl	%edx, %eax
-# else
+#else
 	movl	DEST(%esp), %eax
-# endif
 #endif
 	RETURN
 
@@ -1203,12 +1191,10 @@ L(fwd_write_6bytes):
 L(fwd_write_2bytes):
 	movzwl	-2(%eax), %ecx
 	movw	%cx, -2(%edx)
-#ifndef USE_AS_BCOPY
-# ifdef USE_AS_MEMPCPY
+#ifdef USE_AS_MEMPCPY
 	movl	%edx, %eax
-# else
+#else
 	movl	DEST(%esp), %eax
-# endif
 #endif
 	RETURN
 
@@ -1251,12 +1237,10 @@ L(fwd_write_3bytes):
 	movzbl	-1(%eax), %eax
 	movw	%cx, -3(%edx)
 	movb	%al, -1(%edx)
-#ifndef USE_AS_BCOPY
-# ifdef USE_AS_MEMPCPY
+#ifdef USE_AS_MEMPCPY
 	movl	%edx, %eax
-# else
+#else
 	movl	DEST(%esp), %eax
-# endif
 #endif
 	RETURN_END
 
@@ -1357,12 +1341,10 @@ L(copy_page_by_rep_left_1):
 L(copy_page_by_rep_exit):
 	POP (%esi)
 	POP (%edi)
-#ifndef USE_AS_BCOPY
 	movl	DEST(%esp), %eax
-# ifdef USE_AS_MEMPCPY
+#ifdef USE_AS_MEMPCPY
 	movl	LEN(%esp), %ecx
 	add	%ecx, %eax
-# endif
 #endif
 	RETURN
 
@@ -1401,12 +1383,10 @@ L(bk_write_4bytes):
 	movl	(%eax), %ecx
 	movl	%ecx, (%edx)
 L(bk_write_0bytes):
-#ifndef USE_AS_BCOPY
 	movl	DEST(%esp), %eax
-# ifdef USE_AS_MEMPCPY
+#ifdef USE_AS_MEMPCPY
 	movl	LEN(%esp), %ecx
 	add	%ecx, %eax
-# endif
 #endif
 	RETURN
 
@@ -1447,12 +1427,10 @@ L(bk_write_5bytes):
 L(bk_write_1bytes):
 	movzbl	(%eax), %ecx
 	movb	%cl, (%edx)
-#ifndef USE_AS_BCOPY
 	movl	DEST(%esp), %eax
-# ifdef USE_AS_MEMPCPY
+#ifdef USE_AS_MEMPCPY
 	movl	LEN(%esp), %ecx
 	add	%ecx, %eax
-# endif
 #endif
 	RETURN
 
@@ -1493,12 +1471,10 @@ L(bk_write_6bytes):
 L(bk_write_2bytes):
 	movzwl	(%eax), %ecx
 	movw	%cx, (%edx)
-#ifndef USE_AS_BCOPY
 	movl	DEST(%esp), %eax
-# ifdef USE_AS_MEMPCPY
+#ifdef USE_AS_MEMPCPY
 	movl	LEN(%esp), %ecx
 	add	%ecx, %eax
-# endif
 #endif
 	RETURN
 
@@ -1541,12 +1517,10 @@ L(bk_write_3bytes):
 	movw	%cx, 1(%edx)
 	movzbl	(%eax), %eax
 	movb	%al, (%edx)
-#ifndef USE_AS_BCOPY
 	movl	DEST(%esp), %eax
-# ifdef USE_AS_MEMPCPY
+#ifdef USE_AS_MEMPCPY
 	movl	LEN(%esp), %ecx
 	add	%ecx, %eax
-# endif
 #endif
 	RETURN_END
 

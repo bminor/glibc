@@ -24,15 +24,9 @@
 # define MEMCPY_CHK	__memcpy_chk
 #endif
 
-#ifdef USE_AS_BCOPY
-# define STR2		12
-# define STR1		STR2+4
-# define N     		STR1+4
-#else
-# define STR1		12
-# define STR2		STR1+4
-# define N     		STR2+4
-#endif
+#define STR1		12
+#define STR2		STR1+4
+#define N     		STR2+4
 
 #define CFI_PUSH(REG)						\
   cfi_adjust_cfa_offset (4);					\
@@ -46,7 +40,7 @@
 #define POP(REG)	popl REG; CFI_POP (REG)
 
 	.text
-#if defined SHARED && IS_IN (libc) && !defined USE_AS_BCOPY
+#if defined SHARED && IS_IN (libc)
 ENTRY (MEMCPY_CHK)
 	movl	12(%esp), %eax
 	cmpl	%eax, 16(%esp)
@@ -90,6 +84,4 @@ L(bwd_write_0bytes):
 
 END (MEMCPY)
 
-#ifndef USE_AS_BCOPY
 libc_hidden_builtin_def (MEMCPY)
-#endif
