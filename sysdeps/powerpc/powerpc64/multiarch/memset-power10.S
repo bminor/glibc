@@ -21,7 +21,4 @@
 #undef libc_hidden_builtin_def
 #define libc_hidden_builtin_def(name)
 
-#undef __bzero
-#define __bzero __bzero_power10
-
 #include <sysdeps/powerpc/powerpc64/le/power10/memset.S>

@@ -223,27 +223,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcmp_power4)
 	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_ppc))
 
-  /* Support sysdeps/powerpc/powerpc64/multiarch/bzero.c.  */
-  IFUNC_IMPL (i, name, bzero,
-#ifdef __LITTLE_ENDIAN__
-	      IFUNC_IMPL_ADD (array, i, bzero,
-			      hwcap2 & PPC_FEATURE2_ARCH_3_1
-			      && hwcap2 & PPC_FEATURE2_HAS_ISEL
-			      && hwcap & PPC_FEATURE_HAS_VSX,
-			      __bzero_power10)
-#endif
-	      IFUNC_IMPL_ADD (array, i, bzero, hwcap2 & PPC_FEATURE2_ARCH_2_07
-			      && hwcap & PPC_FEATURE_HAS_ALTIVEC,
-			      __bzero_power8)
-	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_FEATURE_HAS_VSX,
-			      __bzero_power7)
-	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_FEATURE_ARCH_2_05
-			      && hwcap & PPC_FEATURE_HAS_ALTIVEC,
-			      __bzero_power6)
-	      IFUNC_IMPL_ADD (array, i, bzero, hwcap & PPC_FEATURE_POWER4,
-			      __bzero_power4)
-	      IFUNC_IMPL_ADD (array, i, bzero, 1, __bzero_ppc))
-
   /* Support sysdeps/powerpc/powerpc64/multiarch/mempcpy.c.  */
   IFUNC_IMPL (i, name, mempcpy,
 	      IFUNC_IMPL_ADD (array, i, mempcpy,

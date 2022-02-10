@@ -381,15 +381,3 @@ L(medium_28t):
 	blr
 END_GEN_TB (MEMSET,TB_TOCLESS)
 libc_hidden_builtin_def (memset)
-
-/* Copied from bzero.S to prevent the linker from inserting a stub
-   between bzero and memset.  */
-ENTRY_TOCLESS (__bzero)
-	CALL_MCOUNT 3
-	mr	r5,r4
-	li	r4,0
-	b	L(_memset)
-END (__bzero)
-#ifndef __bzero
-weak_alias (__bzero, bzero)
-#endif
