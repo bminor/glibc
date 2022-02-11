@@ -79,11 +79,6 @@ generate := mtrace-tst-leaks.out tst-leaks.mtrace tst-leaks2.mtrace
 extra-libs := libresolv libnss_dns
 ifeq ($(have-thread-library),yes)
 routines += gai_sigqueue
-endif
-
-ifeq ($(have-GLIBC_2.34)$(have-thread-library),yesyes)
-# Empty compatibility library for old binaries.
-extra-libs += libanl
 
 tests += \
   tst-bug18665 \
@@ -144,7 +139,8 @@ xtests += tst-resolv-qtypes
 
 # This test has dropped packet tests and runs for a long time.
 xtests += tst-resolv-rotate
-endif
+endif # $(have-thread-library)
+
 extra-libs-others = $(extra-libs)
 libresolv-routines := \
   base64 \
@@ -168,6 +164,13 @@ libresolv-routines := \
   resolv-deprecated \
   # libresolv-routines
 
+ifeq ($(have-GLIBC_2.34)$(have-thread-library),yesyes)
+# Empty compatibility library for old binaries.
+extra-libs += libanl
+libanl-routines += libanl-compat
+libanl-shared-only-routines += libanl-compat
+endif
+
 $(libanl-routines-var) += \
   gai_cancel \
   gai_error \
@@ -176,9 +179,6 @@ $(libanl-routines-var) += \
   gai_suspend \
   getaddrinfo_a \
   # $(libanl-routines-var)
-
-libanl-routines += libanl-compat
-libanl-shared-only-routines += libanl-compat
 
 # Pretend that libanl.so is a linker script, so that the symbolic link
 # is not installed.
