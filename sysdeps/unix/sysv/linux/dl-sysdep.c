@@ -18,7 +18,6 @@
 
 #include <_itoa.h>
 #include <assert.h>
-#include <dl-auxv.h>
 #include <dl-hwcap-check.h>
 #include <dl-osinfo.h>
 #include <dl-procinfo.h>
@@ -46,6 +45,8 @@
 #include <dl-machine.h>
 
 #ifdef SHARED
+# include <dl-auxv.h>
+
 extern char **_environ attribute_hidden;
 extern char _end[] attribute_hidden;
 
