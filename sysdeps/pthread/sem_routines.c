@@ -25,7 +25,7 @@
 struct inuse_sem
 {
   dev_t dev;
-  ino_t ino;
+  ino64_t ino;
   int refcnt;
   sem_t *sem;
   char name[];
@@ -34,7 +34,7 @@ struct inuse_sem
 struct search_sem
 {
   dev_t dev;
-  ino_t ino;
+  ino64_t ino;
   int refcnt;
   sem_t *sem;
   char name[NAME_MAX + 1];
@@ -77,8 +77,8 @@ __sem_check_add_mapping (const char *name, int fd, sem_t *existing)
   sem_t *result = SEM_FAILED;
 
   /* Get the information about the file.  */
-  struct stat64 st;
-  if (__fstat64 (fd, &st) == 0)
+  struct __stat64_t64 st;
+  if (__fstat64_time64 (fd, &st) == 0)
     {
       /* Get the lock.  */
       lll_lock (sem_mappings_lock, LLL_PRIVATE);
