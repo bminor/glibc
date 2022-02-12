@@ -114,6 +114,7 @@
 # error SECTION is not defined!
 #endif
 
+	.section SECTION(.text), "ax", @progbits
 #if IS_IN (libc)
 # if defined SHARED
 ENTRY_CHK (WMEMSET_CHK_SYMBOL (__wmemset_chk, unaligned))
