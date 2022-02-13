@@ -25,8 +25,7 @@ __pthread_setspecific (pthread_key_t key, const void *value)
 {
   struct __pthread *self = _pthread_self ();
 
-  if (key < 0 || key >= __pthread_key_count
-      || __pthread_key_destructors[key] == PTHREAD_KEY_INVALID)
+  if (key < 0 || key >= __pthread_key_count)
     return EINVAL;
 
   if (key >= self->thread_specifics_size)
