@@ -22,6 +22,7 @@
 #include <support/xsocket.h>
 #include <support/xunistd.h>
 #include <stdbool.h>
+#include <socket-constants-time64.h>
 
 /* AF_INET socket and address used to receive data.  */
 static int srv;
@@ -88,7 +89,7 @@ do_test_large_buffer (bool mc)
   /* Enable 32 bit timeval precision and check if no 64 bit timeval stamp
      is created.  */
   {
-    int r = setsockopt (srv, SOL_SOCKET, SO_TIMESTAMP_OLD, &(int){1},
+    int r = setsockopt (srv, SOL_SOCKET, COMPAT_SO_TIMESTAMP_OLD, &(int){1},
 			sizeof (int));
     TEST_VERIFY_EXIT (r != -1);
 
@@ -103,10 +104,10 @@ do_test_large_buffer (bool mc)
       if (cmsg->cmsg_level != SOL_SOCKET)
 	continue;
 
-      if (sizeof (time_t) > 4 && cmsg->cmsg_type == SO_TIMESTAMP_NEW)
+      if (sizeof (time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMP_NEW)
 	found_timestamp = true;
       else
-	TEST_VERIFY (cmsg->cmsg_type != SO_TIMESTAMP_NEW);
+	TEST_VERIFY (cmsg->cmsg_type != COMPAT_SO_TIMESTAMP_NEW);
     }
 
     TEST_COMPARE (found_timestamp, sizeof (time_t) > 4);
@@ -114,7 +115,7 @@ do_test_large_buffer (bool mc)
 
   /* Same as before, but for timespec.  */
   {
-    int r = setsockopt (srv, SOL_SOCKET, SO_TIMESTAMPNS_OLD, &(int){1},
+    int r = setsockopt (srv, SOL_SOCKET, COMPAT_SO_TIMESTAMPNS_OLD, &(int){1},
 			sizeof (int));
     TEST_VERIFY_EXIT (r != -1);
 
@@ -129,10 +130,10 @@ do_test_large_buffer (bool mc)
       if (cmsg->cmsg_level != SOL_SOCKET)
 	continue;
 
-      if (sizeof (time_t) > 4 && cmsg->cmsg_type == SO_TIMESTAMPNS_NEW)
+      if (sizeof (time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMPNS_NEW)
 	found_timestamp = true;
       else
-	TEST_VERIFY (cmsg->cmsg_type != SO_TIMESTAMPNS_NEW);
+	TEST_VERIFY (cmsg->cmsg_type != COMPAT_SO_TIMESTAMPNS_NEW);
     }
 
     TEST_COMPARE (found_timestamp, sizeof (time_t) > 4);
@@ -151,7 +152,7 @@ do_test_small_buffer (bool mc)
   /* Enable 32 bit timeval precision and check if no 64 bit timeval stamp
      is created.  */
   {
-    int r = setsockopt (srv, SOL_SOCKET, SO_TIMESTAMP_OLD, &(int){1},
+    int r = setsockopt (srv, SOL_SOCKET, COMPAT_SO_TIMESTAMP_OLD, &(int){1},
 			sizeof (int));
     TEST_VERIFY_EXIT (r != -1);
 
@@ -172,10 +173,10 @@ do_test_small_buffer (bool mc)
       if (cmsg->cmsg_level != SOL_SOCKET)
 	continue;
 
-      if (sizeof (time_t) > 4 && cmsg->cmsg_type == SO_TIMESTAMP_NEW)
+      if (sizeof (time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMP_NEW)
 	found_timestamp = true;
       else
-	TEST_VERIFY (cmsg->cmsg_type != SO_TIMESTAMP_NEW);
+	TEST_VERIFY (cmsg->cmsg_type != COMPAT_SO_TIMESTAMP_NEW);
     }
 
     if (sizeof (time_t) > 4)
@@ -192,7 +193,7 @@ do_test_small_buffer (bool mc)
 
   /* Same as before, but for timespec.  */
   {
-    int r = setsockopt (srv, SOL_SOCKET, SO_TIMESTAMPNS_OLD, &(int){1},
+    int r = setsockopt (srv, SOL_SOCKET, COMPAT_SO_TIMESTAMPNS_OLD, &(int){1},
 			sizeof (int));
     TEST_VERIFY_EXIT (r != -1);
 
@@ -213,10 +214,10 @@ do_test_small_buffer (bool mc)
       if (cmsg->cmsg_level != SOL_SOCKET)
 	continue;
 
-      if (sizeof (time_t) > 4 && cmsg->cmsg_type == SO_TIMESTAMPNS_NEW)
+      if (sizeof (time_t) > 4 && cmsg->cmsg_type == COMPAT_SO_TIMESTAMPNS_NEW)
 	found_timestamp = true;
       else
-	TEST_VERIFY (cmsg->cmsg_type != SO_TIMESTAMPNS_NEW);
+	TEST_VERIFY (cmsg->cmsg_type != COMPAT_SO_TIMESTAMPNS_NEW);
     }
 
     if (sizeof (time_t) > 4)
