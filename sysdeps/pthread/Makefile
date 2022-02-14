@@ -127,7 +127,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-pthread_kill-exiting \
 	 # tests
 
-tests-time64 := \
+tests-time64 += \
   tst-abstime-time64 \
   tst-cnd-timedwait-time64 \
   tst-cond11-time64 \
