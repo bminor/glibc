@@ -24,6 +24,7 @@
 #include <pthreadP.h>
 
 pthread_mutex_t __pthread_key_lock;
+pthread_once_t __pthread_key_once = PTHREAD_ONCE_INIT;
 
 void (**__pthread_key_destructors) (void *arg);
 int __pthread_key_size;

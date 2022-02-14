@@ -47,14 +47,15 @@ extern int __pthread_key_invalid_count;
 /* Protects the above variables.  This must be a recursive lock: the
    destructors may call pthread_key_delete.  */
 extern pthread_mutex_t __pthread_key_lock;
+
+/* Protects the initialization of the mutex above.  */
+extern pthread_once_t __pthread_key_once;
 
 #include <assert.h>
 
 static inline void
 __pthread_key_lock_ready (void)
 {
-  static pthread_once_t o = PTHREAD_ONCE_INIT;
-
   void do_init (void)
   {
     int err;
@@ -73,5 +74,5 @@ __pthread_key_lock_ready (void)
     assert_perror (err);
   }
 
-  __pthread_once (&o, do_init);
+  __pthread_once (&__pthread_key_once, do_init);
 }
