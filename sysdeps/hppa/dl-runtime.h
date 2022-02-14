@@ -1,4 +1,4 @@
-/* Helpers for On-demand PLT fixup for shared objects.  HPAA version.
+/* Helpers for On-demand PLT fixup for shared objects.  HPPA version.
    Copyright (C) 2020-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
