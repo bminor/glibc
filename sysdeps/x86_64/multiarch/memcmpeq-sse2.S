@@ -16,8 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef memcmp
+#if IS_IN (libc)
 # define memcmp	__memcmpeq_sse2
+#else
+# define memcmp	__memcmpeq
 #endif
 #define USE_AS_MEMCMPEQ	1
 #include "memcmp-sse2.S"
