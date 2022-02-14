@@ -54,6 +54,9 @@ __pthread_exit (void *status)
     /* We are the last thread.  */
     exit (0);
 
+  /* Destroy any thread specific data.  */
+  __pthread_destroy_specific (self);
+
   /* Note that after this point the process can be terminated at any
      point if another thread calls `pthread_exit' and happens to be
      the last thread.  */
@@ -91,9 +94,6 @@ __pthread_exit (void *status)
 
       break;
     }
-
-  /* Destroy any thread specific data.  */
-  __pthread_destroy_specific (self);
 
   /* Destroy any signal state.  */
   __pthread_sigstate_destroy (self);
