@@ -176,6 +176,15 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
     Elf32_Addr i[2];
   } sig = {{0x00,0xc0,0xff,0xee, 0xde,0xad,0xbe,0xef}};
 
+  /* Initialize dp register for main executable.  */
+  if (l->l_main_map)
+    {
+      register Elf32_Addr dp asm ("%r27");
+
+      dp = D_PTR (l, l_info[DT_PLTGOT]);
+      asm volatile ("" : : "r" (dp));
+    }
+
   /* If we don't have a PLT we can just skip all this... */
   if (__builtin_expect (l->l_info[DT_JMPREL] == NULL,0))
     return lazy;
@@ -338,16 +347,6 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
    its return value is the user program's entry point.  */
 
 #define RTLD_START \
-/* Set up dp for any non-PIC lib constructors that may be called.  */	\
-static struct link_map * __attribute__((used))				\
-set_dp (struct link_map *map)						\
-{									\
-  register Elf32_Addr dp asm ("%r27");					\
-  dp = D_PTR (map, l_info[DT_PLTGOT]);					\
-  asm volatile ("" : : "r" (dp));					\
-  return map;								\
-}									\
-									\
 asm (									\
 "	.text\n"							\
 "	.globl _start\n"						\
@@ -447,13 +446,10 @@ asm (									\
 "	stw	%r24,-44(%sp)\n"					\
 									\
 ".Lnofix:\n"								\
+	/* Call _dl_init(main_map, argc, argv, envp). */		\
 "	addil	LT'_rtld_local,%r19\n"					\
 "	ldw	RT'_rtld_local(%r1),%r26\n"				\
-"	bl	set_dp, %r2\n"						\
 "	ldw	0(%r26),%r26\n"						\
-									\
-	/* Call _dl_init(_dl_loaded, argc, argv, envp). */		\
-"	copy	%r28,%r26\n"						\
 									\
 	/* envp = argv + argc + 1 */					\
 "	sh2add	%r25,%r24,%r23\n"					\
