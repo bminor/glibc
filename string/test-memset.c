@@ -106,26 +106,28 @@ SIMPLE_MEMSET (CHAR *s, int c, size_t n)
 }
 
 static void
-do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
+do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n, int space_below, int space_above)
 {
-  CHAR buf[n + 2];
-  CHAR *tstbuf = buf + 1;
-  CHAR sentinel = c - 1;
-  buf[0] = sentinel;
-  buf[n + 1] = sentinel;
+  CHAR buf[n];
+  CHAR sentinel = ~c;
+  if (space_below)
+      s[-1] = sentinel;
+  if (space_above)
+      s[n] = sentinel;
+  SIMPLE_MEMSET(s, ~c, n);
 #ifdef TEST_BZERO
-  simple_bzero (tstbuf, n);
+  simple_bzero (buf, n);
   CALL (impl, s, n);
-  if (memcmp (s, tstbuf, n) != 0
-      || buf[0] != sentinel
-      || buf[n + 1] != sentinel)
+  if (memcmp (s, buf, n) != 0
+      || (space_below && s[-1] != sentinel)
+      || (space_above && s[n] != sentinel))
 #else
   CHAR *res = CALL (impl, s, c, n);
   if (res != s
-      || SIMPLE_MEMSET (tstbuf, c, n) != tstbuf
-      || MEMCMP (s, tstbuf, n) != 0
-      || buf[0] != sentinel
-      || buf[n + 1] != sentinel)
+      || SIMPLE_MEMSET (buf, c, n) != buf
+      || MEMCMP (s, buf, n) != 0
+      || (space_below && s[-1] != sentinel)
+      || (space_above && s[n] != sentinel))
 #endif /* !TEST_BZERO */
     {
       error (0, 0, "Wrong result in function %s", impl->name);
@@ -137,12 +139,16 @@ do_one_test (impl_t *impl, CHAR *s, int c __attribute ((unused)), size_t n)
 static void
 do_test (size_t align, int c, size_t len)
 {
+  int space_below, space_above;
   align &= 4095;
   if ((align + len) * sizeof (CHAR) > page_size)
     return;
 
+  space_below = !!align;
+  space_above = !((align + len + 1) * sizeof (CHAR) > page_size);
+
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, (CHAR *) (buf1) + align, c, len);
+    do_one_test (impl, (CHAR *) (buf1) + align, c, len, space_below, space_above);
 }
 
 #ifndef TEST_BZERO
