@@ -193,10 +193,10 @@ L(ret_zero):
 	.p2align 4,, 5
 L(one_or_less):
 	jb	L(ret_zero)
-#  ifdef USE_AS_WCSCMP
 	/* 'nbe' covers the case where length is negative (large
 	   unsigned).  */
-	jnbe	__wcscmp_avx2
+	jnbe	OVERFLOW_STRCMP
+#  ifdef USE_AS_WCSCMP
 	movl	(%rdi), %edx
 	xorl	%eax, %eax
 	cmpl	(%rsi), %edx
@@ -205,10 +205,6 @@ L(one_or_less):
 	negl	%eax
 	orl	$1, %eax
 #  else
-	/* 'nbe' covers the case where length is negative (large
-	   unsigned).  */
-
-	jnbe	__strcmp_avx2
 	movzbl	(%rdi), %eax
 	movzbl	(%rsi), %ecx
 	subl	%ecx, %eax
