@@ -95,7 +95,7 @@ ENTRY (STRCMP)
 	   length to bound a valid memory region. In these cases just use
 	   'wcscmp'.  */
 	shrq	$56, %rcx
-	jnz	__wcscmp_avx2
+	jnz	OVERFLOW_STRCMP
 #  endif
 	/* Convert units: from wide to byte char.  */
 	shl	$2, %RDX_LP
