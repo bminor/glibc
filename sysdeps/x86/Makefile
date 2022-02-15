@@ -109,7 +109,7 @@ CFLAGS-tst-memset-rtm.c += -mrtm
 CFLAGS-tst-strchr-rtm.c += -mrtm
 CFLAGS-tst-strcpy-rtm.c += -mrtm
 CFLAGS-tst-strlen-rtm.c += -mrtm
-CFLAGS-tst-strncmp-rtm.c += -mrtm
+CFLAGS-tst-strncmp-rtm.c += -mrtm -Wno-error
 CFLAGS-tst-strrchr-rtm.c += -mrtm
 endif
 
