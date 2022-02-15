@@ -112,6 +112,9 @@ _dl_map_segments (struct link_map *l, int fd,
              unallocated.  Then jump into the normal segment-mapping loop to
              handle the portion of the segment past the end of the file
              mapping.  */
+	  if (__glibc_unlikely (loadcmds[nloadcmds - 1].mapstart <
+				c->mapend))
+	    return N_("ELF load command address/offset not page-aligned");
           if (__glibc_unlikely
               (__mprotect ((caddr_t) (l->l_addr + c->mapend),
                            loadcmds[nloadcmds - 1].mapstart - c->mapend,
