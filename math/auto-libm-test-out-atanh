@@ -3112,6 +3112,31 @@ atanh 0x1p-5000
 = atanh tonearest binary128 0x1p-5000 : 0x1p-5000 : inexact-ok
 = atanh towardzero binary128 0x1p-5000 : 0x1p-5000 : inexact-ok
 = atanh upward binary128 0x1p-5000 : 0x1.0000000000000000000000000001p-5000 : inexact-ok
+atanh 0x1.f80094p-8
+= atanh downward binary32 0x1.f80094p-8 : 0x1.f8031ep-8 : inexact-ok
+= atanh tonearest binary32 0x1.f80094p-8 : 0x1.f8032p-8 : inexact-ok
+= atanh towardzero binary32 0x1.f80094p-8 : 0x1.f8031ep-8 : inexact-ok
+= atanh upward binary32 0x1.f80094p-8 : 0x1.f8032p-8 : inexact-ok
+= atanh downward binary64 0x1.f80094p-8 : 0x1.f8031f3228153p-8 : inexact-ok
+= atanh tonearest binary64 0x1.f80094p-8 : 0x1.f8031f3228154p-8 : inexact-ok
+= atanh towardzero binary64 0x1.f80094p-8 : 0x1.f8031f3228153p-8 : inexact-ok
+= atanh upward binary64 0x1.f80094p-8 : 0x1.f8031f3228154p-8 : inexact-ok
+= atanh downward intel96 0x1.f80094p-8 : 0x1.f8031f3228153f0ep-8 : inexact-ok
+= atanh tonearest intel96 0x1.f80094p-8 : 0x1.f8031f3228153f0ep-8 : inexact-ok
+= atanh towardzero intel96 0x1.f80094p-8 : 0x1.f8031f3228153f0ep-8 : inexact-ok
+= atanh upward intel96 0x1.f80094p-8 : 0x1.f8031f3228153f1p-8 : inexact-ok
+= atanh downward m68k96 0x1.f80094p-8 : 0x1.f8031f3228153f0ep-8 : inexact-ok
+= atanh tonearest m68k96 0x1.f80094p-8 : 0x1.f8031f3228153f0ep-8 : inexact-ok
+= atanh towardzero m68k96 0x1.f80094p-8 : 0x1.f8031f3228153f0ep-8 : inexact-ok
+= atanh upward m68k96 0x1.f80094p-8 : 0x1.f8031f3228153f1p-8 : inexact-ok
+= atanh downward binary128 0x1.f80094p-8 : 0x1.f8031f3228153f0e56e4db72d2afp-8 : inexact-ok
+= atanh tonearest binary128 0x1.f80094p-8 : 0x1.f8031f3228153f0e56e4db72d2bp-8 : inexact-ok
+= atanh towardzero binary128 0x1.f80094p-8 : 0x1.f8031f3228153f0e56e4db72d2afp-8 : inexact-ok
+= atanh upward binary128 0x1.f80094p-8 : 0x1.f8031f3228153f0e56e4db72d2bp-8 : inexact-ok
+= atanh downward ibm128 0x1.f80094p-8 : 0x1.f8031f3228153f0e56e4db72d28p-8 : inexact-ok
+= atanh tonearest ibm128 0x1.f80094p-8 : 0x1.f8031f3228153f0e56e4db72d28p-8 : inexact-ok
+= atanh towardzero ibm128 0x1.f80094p-8 : 0x1.f8031f3228153f0e56e4db72d28p-8 : inexact-ok
+= atanh upward ibm128 0x1.f80094p-8 : 0x1.f8031f3228153f0e56e4db72d3p-8 : inexact-ok
 atanh 0x2.c02a24f3472c7840afbd8cfb68bap-4
 = atanh downward binary32 0x2.c02a28p-4 : 0x2.c73a3cp-4 : inexact-ok
 = atanh tonearest binary32 0x2.c02a28p-4 : 0x2.c73a3cp-4 : inexact-ok
