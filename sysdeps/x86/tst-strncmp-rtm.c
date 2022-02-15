@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <stdint.h>
 #include <tst-string-rtm.h>
 
 #define LOOP 3000
@@ -45,8 +46,22 @@ function (void)
     return 1;
 }
 
+__attribute__ ((noinline, noclone))
+static int
+function_overflow (void)
+{
+  if (strncmp (string1, string2, SIZE_MAX) == 0)
+    return 0;
+  else
+    return 1;
+}
+
 static int
 do_test (void)
 {
-  return do_test_1 ("strncmp", LOOP, prepare, function);
+  int status = do_test_1 ("strncmp", LOOP, prepare, function);
+  if (status != EXIT_SUCCESS)
+    return status;
+  status = do_test_1 ("strncmp", LOOP, prepare, function_overflow);
+  return status;
 }
