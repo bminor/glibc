@@ -689,6 +689,7 @@ L(ret8):
 # ifdef USE_AS_STRNCMP
 	.p2align 4,, 10
 L(return_page_cross_end_check):
+	andl	%r10d, %ecx
 	tzcntl	%ecx, %ecx
 	leal	-VEC_SIZE(%rax, %rcx, SIZE_OF_CHAR), %ecx
 #  ifdef USE_AS_WCSCMP

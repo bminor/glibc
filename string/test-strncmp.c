@@ -424,6 +424,28 @@ check3 (void)
 }
 
 static void
+check4 (void)
+{
+  /* To trigger bug 28895; We need 1) both s1 and s2 to be within 32 bytes of
+     the end of the page. 2) For there to be no mismatch/null byte before the
+     first page cross. 3) For length (`n`) to be large enough for one string to
+     cross the page. And 4) for there to be either mismatch/null bytes before
+     the start of the strings.  */
+
+  size_t size = 10;
+  size_t addr_mask = (getpagesize () - 1) ^ (sizeof (CHAR) - 1);
+  CHAR *s1 = (CHAR *)(buf1 + (addr_mask & 0xffa));
+  CHAR *s2 = (CHAR *)(buf2 + (addr_mask & 0xfed));
+  int exp_result;
+
+  STRCPY (s1, L ("tst-tlsmod%"));
+  STRCPY (s2, L ("tst-tls-manydynamic73mod"));
+  exp_result = SIMPLE_STRNCMP (s1, s2, size);
+  FOR_EACH_IMPL (impl, 0)
+  check_result (impl, s1, s2, size, exp_result);
+}
+
+static void
 check_overflow (void)
 {
   size_t i, j, of_mask, of_idx;
@@ -546,6 +568,7 @@ test_main (void)
   check1 ();
   check2 ();
   check3 ();
+  check4 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)
