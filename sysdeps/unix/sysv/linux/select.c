@@ -108,7 +108,7 @@ __select64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
       ptv32 = &tv32;
     }
 
-  int r = SYSCALL_CANCEL (select, nfds, readfds, writefds, exceptfds, ptv32);
+  int r = SYSCALL_CANCEL (_newselect, nfds, readfds, writefds, exceptfds, ptv32);
   if (timeout != NULL)
     *timeout = valid_timeval_to_timeval64 (tv32);
   return r;
