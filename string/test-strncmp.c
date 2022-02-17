@@ -446,6 +446,18 @@ check4 (void)
 }
 
 static void
+check5 (void)
+{
+  const CHAR *s1 = L ("abc");
+  CHAR *s2 = STRDUP (s1);
+
+  FOR_EACH_IMPL (impl, 0)
+    check_result (impl, s1, s2, SIZE_MAX, 0);
+
+  free (s2);
+}
+
+static void
 check_overflow (void)
 {
   size_t i, j, of_mask, of_idx;
@@ -569,6 +581,7 @@ test_main (void)
   check2 ();
   check3 ();
   check4 ();
+  check5 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)
