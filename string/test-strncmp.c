@@ -403,6 +403,18 @@ check2 (void)
   free (s2);
 }
 
+static void
+check3 (void)
+{
+  const CHAR *s1 = L ("abc");
+  CHAR *s2 = STRDUP (s1);
+
+  FOR_EACH_IMPL (impl, 0)
+    check_result (impl, s1, s2, SIZE_MAX, 0);
+
+  free (s2);
+}
+
 int
 test_main (void)
 {
@@ -412,6 +424,7 @@ test_main (void)
 
   check1 ();
   check2 ();
+  check3 ();
 
   printf ("%23s", "");
   FOR_EACH_IMPL (impl, 0)
