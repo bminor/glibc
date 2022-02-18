@@ -137,6 +137,8 @@ ENTRY(__getcontext)
 	stw	%r19, -32(%sp)
 	.cfi_offset 19, 32
 #endif
+	stw	%ret1, -60(%sp)
+	.cfi_offset 29, 4
 
 	/* Set up the trampoline registers.
 	   r20, r23, r24, r25, r26 and r2 are clobbered
@@ -167,6 +169,7 @@ ENTRY(__getcontext)
 #ifdef PIC
 	ldw	-32(%sp), %r19
 #endif
+	ldw	-60(%sp), %ret1
 	bv	%r0(%r2)
 	ldwm	-64(%sp), %r4
 END(__getcontext)

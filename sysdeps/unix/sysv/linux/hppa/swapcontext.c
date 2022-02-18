@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <ucontext.h>
+#include "ucontext_i.h"
 
 extern int __getcontext (ucontext_t *ucp);
 extern int __setcontext (const ucontext_t *ucp);
@@ -24,17 +25,61 @@ extern int __setcontext (const ucontext_t *ucp);
 int
 __swapcontext (ucontext_t *oucp, const ucontext_t *ucp)
 {
+  /* Save ucp in stack argument slot.  */
+  asm ("stw %r25,-40(%sp)");
+  asm (".cfi_offset 25, -40");
+
+  /* Save rp for debugger.  */
+  asm ("stw %rp,-20(%sp)");
+  asm (".cfi_offset 2, -20");
+
+  /* Copy rp to ret0 (r28).  */
+  asm ("copy %rp,%ret0");
+
+  /* Create a frame.  */
+  asm ("ldo 64(%sp),%sp");
+  asm (".cfi_def_cfa_offset -64");
+
   /* Save the current machine context to oucp.  */
-  __getcontext (oucp);
+  asm ("bl __getcontext,%rp");
 
-  /* mark sc_sar flag to skip the setcontext call on reactivation.  */
-  if (oucp->uc_mcontext.sc_sar == 0) {
-	oucp->uc_mcontext.sc_sar++;
+  /* Copy oucp to register ret1 (r29).  __getcontext saves and restores it
+     on a normal return.  It is restored from oR29 on reactivation.  */
+  asm ("copy %r26,%ret1");
 
-	/* Restore the machine context in ucp.  */
-	__setcontext (ucp);
-  }
+  /* Pop frame.  */
+  asm ("ldo -64(%sp),%sp");
+  asm (".cfi_def_cfa_offset 0");
 
+  /* Load return pointer from oR28.  */
+  asm ("ldw %0(%%ret1),%%rp" : : "i" (oR28));
+
+  /* Return if error.  */
+  asm ("or,= %r0,%ret0,%r0");
+  asm ("bv,n %r0(%rp)");
+
+  /* Load sc_sar flag.  */
+  asm ("ldw %0(%%ret1),%%r20" : : "i" (oSAR));
+
+  /* Return if oucp context has been reactivated.  */
+  asm ("or,= %r0,%r20,%r0");
+  asm ("bv,n %r0(%rp)");
+
+  /* Mark sc_sar flag.  */
+  asm ("1: ldi 1,%r20");
+  asm ("stw %%r20,%0(%%ret1)" : : "i" (oSAR));
+
+  /* Activate the machine context in ucp.  */
+  asm ("bl __setcontext,%rp");
+  asm ("ldw -40(%sp),%r26");
+
+  /* Load return pointer.  */
+  asm ("ldw %0(%%ret1),%%rp" : : "i" (oR28));
+
+  /* A successful call to setcontext does not return.  */
+  asm ("bv,n %r0(%rp)");
+
+  /* Make gcc happy.  */
   return 0;
 }
 
