@@ -23,12 +23,12 @@
 # define CHAR wchar_t
 # define MEMSET wmemset
 # define STRNCMP wcsncmp
-# define TEST_NAME wcsncmp
+# define TEST_NAME "wcsncmp"
 #else /* !WIDE */
 # define CHAR char
 # define MEMSET memset
 # define STRNCMP strncmp
-# define TEST_NAME strncmp
+# define TEST_NAME "strncmp"
 #endif /* !WIDE */
 
 
