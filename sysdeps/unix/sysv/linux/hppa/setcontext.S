@@ -33,6 +33,8 @@ ENTRY(__setcontext)
 	stw	%r19, -32(%sp)
 	.cfi_offset 19, 32
 #endif
+	stw	%ret1, -60(%sp)
+	.cfi_offset 29, 4
 
 	/* Save ucp.  */
 	copy	%r26, %r3
@@ -154,6 +156,7 @@ ENTRY(__setcontext)
 #ifdef PIC
 	ldw	-32(%r30), %r19
 #endif
+	ldw	-60(%r30), %ret1
 	bv	%r0(%r2)
 	ldwm	-64(%r30), %r3
 L(pseudo_end):
