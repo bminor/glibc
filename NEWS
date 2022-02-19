@@ -16,6 +16,8 @@ The following bugs are resolved with this release:
     __convert_scm_timestamps
   [28865] linux: _SC_NPROCESSORS_CONF and _SC_NPROCESSORS_ONLN are inaccurate
     without /sys and /proc
+  [28896] strncmp-avx2-rtm and wcsncmp-avx2-rtm fallback on non-rtm
+    variants when avoiding overflow
 
 
 Version 2.35
