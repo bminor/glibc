@@ -63,6 +63,8 @@ The following bugs are resolved with this release:
   [27457] vzeroupper use in AVX2 multiarch string functions cause HTM aborts
   [27974] Overflow bug in some implementation of wcsnlen, wmemchr, and wcsncat
   [28755] overflow bug in wcsncmp_avx2 and wcsncmp_evex
+  [28896] strncmp-avx2-rtm and wcsncmp-avx2-rtm fallback on non-rtm
+    variants when avoiding overflow
 
 
 Version 2.30
