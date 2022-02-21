@@ -231,10 +231,6 @@ print_version (void)
 void
 _dl_print_diagnostics (char **environ)
 {
-#ifdef HAVE_DL_DISCOVER_OSVERSION
-  _dl_diagnostics_print_labeled_value
-    ("dl_discover_osversion", _dl_discover_osversion ());
-#endif
   _dl_diagnostics_print_labeled_string ("dl_dst_lib", DL_DST_LIB);
   _dl_diagnostics_print_labeled_value ("dl_hwcap", GLRO (dl_hwcap));
   _dl_diagnostics_print_labeled_value ("dl_hwcap_important", HWCAP_IMPORTANT);
@@ -243,7 +239,6 @@ _dl_print_diagnostics (char **environ)
     ("dl_hwcaps_subdirs", _dl_hwcaps_subdirs);
   _dl_diagnostics_print_labeled_value
     ("dl_hwcaps_subdirs_active", _dl_hwcaps_subdirs_active ());
-  _dl_diagnostics_print_labeled_value ("dl_osversion", GLRO (dl_osversion));
   _dl_diagnostics_print_labeled_value ("dl_pagesize", GLRO (dl_pagesize));
   _dl_diagnostics_print_labeled_string ("dl_platform", GLRO (dl_platform));
   _dl_diagnostics_print_labeled_string

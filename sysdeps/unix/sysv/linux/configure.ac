@@ -50,6 +50,7 @@ fi
 AC_MSG_CHECKING(for kernel header at least $minimum_kernel)
 changequote(,)dnl
 decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
+abinumstr=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1.\2.\3/'`;
 abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
 changequote([,])dnl
 AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[#include <linux/version.h>
@@ -59,6 +60,7 @@ AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[#include <linux/version.h>
 AC_MSG_RESULT($libc_minimum_kernel)
 if test "$libc_minimum_kernel" = ok; then
   AC_DEFINE_UNQUOTED(__LINUX_KERNEL_VERSION, $decnum)
+  AC_DEFINE_UNQUOTED(__LINUX_KERNEL_VERSION_STR, "$abinumstr")
   AC_DEFINE_UNQUOTED(__ABI_TAG_VERSION, $abinum)
 else
   AC_MSG_ERROR([*** The available kernel headers are older than the requested

@@ -552,8 +552,6 @@ struct rtld_global_ro
 /* These two are used only internally.  */
 #define DL_DEBUG_HELP       (1 << 10)
 
-  /* OS version.  */
-  EXTERN unsigned int _dl_osversion;
   /* Platform name.  */
   EXTERN const char *_dl_platform;
   EXTERN size_t _dl_platformlen;
@@ -700,10 +698,6 @@ struct rtld_global_ro
      libc, and this is patched by __rtld_static_init to support static
      dlopen.  */
   int (*_dl_find_object) (void *, struct dl_find_object *);
-
-#ifdef HAVE_DL_DISCOVER_OSVERSION
-  int (*_dl_discover_osversion) (void);
-#endif
 
   /* Dynamic linker operations used after static dlopen.  */
   const struct dlfcn_hook *_dl_dlfcn_hook;

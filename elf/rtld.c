@@ -384,9 +384,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_error_free = _dl_error_free,
     ._dl_tls_get_addr_soft = _dl_tls_get_addr_soft,
     ._dl_libc_freeres = __rtld_libc_freeres,
-#ifdef HAVE_DL_DISCOVER_OSVERSION
-    ._dl_discover_osversion = _dl_discover_osversion
-#endif
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous
@@ -1710,10 +1707,6 @@ dl_main (const ElfW(Phdr) *phdr,
   /* With vDSO setup we can initialize the function pointers.  */
   setup_vdso_pointers ();
 
-#ifdef DL_SYSDEP_OSCHECK
-  DL_SYSDEP_OSCHECK (_dl_fatal_printf);
-#endif
-
   /* Initialize the data structures for the search paths for shared
      objects.  */
   call_init_paths (&state);
@@ -2636,14 +2629,6 @@ process_envvars (struct dl_main_state *state)
 	  if (!__libc_enable_secure
 	      && memcmp (envline, "DYNAMIC_WEAK", 12) == 0)
 	    GLRO(dl_dynamic_weak) = 1;
-	  break;
-
-	case 13:
-	  /* We might have some extra environment variable with length 13
-	     to handle.  */
-#ifdef EXTRA_LD_ENVVARS_13
-	  EXTRA_LD_ENVVARS_13
-#endif
 	  break;
 
 	case 14:

@@ -24,10 +24,3 @@
    we aren't making direct use of it.  So enable this across the board.  */
 
 #define NEED_DL_SYSINFO_DSO	1
-
-
-#ifndef __ASSEMBLER__
-/* Get version of the OS.  */
-extern int _dl_discover_osversion (void) attribute_hidden;
-# define HAVE_DL_DISCOVER_OSVERSION	1
-#endif

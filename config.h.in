@@ -135,6 +135,9 @@
 /* Linux specific: minimum supported kernel version.  */
 #undef	__LINUX_KERNEL_VERSION
 
+/* Linux specific: __LINUX_KERNEL_VERSION as a string.  */
+#undef  __LINUX_KERNEL_VERSION_STR
+
 /* Override abi-tags ABI version if necessary.  */
 #undef  __ABI_TAG_VERSION
 

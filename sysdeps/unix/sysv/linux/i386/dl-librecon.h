@@ -18,8 +18,6 @@
 
 #ifndef _DL_LIBRECON_H
 
-#include <sysdeps/unix/sysv/linux/dl-librecon.h>
-
 #define DISTINGUISH_LIB_VERSIONS \
   do									      \
     {									      \

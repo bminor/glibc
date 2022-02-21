@@ -22,31 +22,6 @@
 #include <stdint.h>
 #include <not-cancel.h>
 
-#ifndef MIN
-# define MIN(a,b) (((a)<(b))?(a):(b))
-#endif
-
-#define DL_SYSDEP_OSCHECK(FATAL)					      \
-  do {									      \
-    /* Test whether the kernel is new enough.  This test is only performed    \
-       if the library is not compiled to run on all kernels.  */	      \
-									      \
-    int version = _dl_discover_osversion ();				      \
-    if (__glibc_likely (version >= 0))					      \
-      {									      \
-	if (__builtin_expect (GLRO(dl_osversion) == 0, 1)		      \
-	    || GLRO(dl_osversion) > version)				      \
-	  GLRO(dl_osversion) = version;					      \
-									      \
-	/* Now we can test with the required version.  */		      \
-	if (__LINUX_KERNEL_VERSION > 0 && version < __LINUX_KERNEL_VERSION)   \
-	  /* Not sufficent.  */						      \
-	  FATAL ("FATAL: kernel too old\n");				      \
-      }									      \
-    else if (__LINUX_KERNEL_VERSION > 0)				      \
-      FATAL ("FATAL: cannot determine kernel version\n");		      \
-  } while (0)
-
 static inline uintptr_t __attribute__ ((always_inline))
 _dl_setup_stack_chk_guard (void *dl_random)
 {

@@ -1591,13 +1591,6 @@ open_verify (const char *name, int fd,
     [EI_OSABI] = ELFOSABI_SYSV,
     [EI_ABIVERSION] = 0
   };
-  static const struct
-  {
-    ElfW(Word) vendorlen;
-    ElfW(Word) datalen;
-    ElfW(Word) type;
-    char vendor[4];
-  } expected_note = { 4, 16, 1, "GNU" };
   /* Initialize it to make the compiler happy.  */
   const char *errstring = NULL;
   int errval = 0;
@@ -1628,10 +1621,7 @@ open_verify (const char *name, int fd,
   if (fd != -1)
     {
       ElfW(Ehdr) *ehdr;
-      ElfW(Phdr) *phdr, *ph;
-      ElfW(Word) *abi_note;
-      ElfW(Word) *abi_note_malloced = NULL;
-      unsigned int osversion;
+      ElfW(Phdr) *phdr;
       size_t maplength;
 
       /* We successfully opened the file.  Now verify it is a file
@@ -1695,13 +1685,16 @@ open_verify (const char *name, int fd,
 #endif
 	      )
 	    errstring = N_("invalid ELF header");
+
 	  else if (ehdr->e_ident[EI_CLASS] != ELFW(CLASS))
 	    {
 	      /* This is not a fatal error.  On architectures where
 		 32-bit and 64-bit binaries can be run this might
 		 happen.  */
 	      *found_other_class = true;
-	      goto close_and_out;
+	      __close_nocancel (fd);
+	      __set_errno (ENOENT);
+	      return -1;
 	    }
 	  else if (ehdr->e_ident[EI_DATA] != byteorder)
 	    {
@@ -1736,7 +1729,11 @@ open_verify (const char *name, int fd,
 	  goto lose;
 	}
       if (! __glibc_likely (elf_machine_matches_host (ehdr)))
-	goto close_and_out;
+	{
+	  __close_nocancel (fd);
+	  __set_errno (ENOENT);
+	  return -1;
+	}
       else if (__glibc_unlikely (ehdr->e_type != ET_DYN
 				 && ehdr->e_type != ET_EXEC))
 	{
@@ -1758,7 +1755,6 @@ open_verify (const char *name, int fd,
 	  if ((size_t) __pread64_nocancel (fd, (void *) phdr, maplength,
 					   ehdr->e_phoff) != maplength)
 	    {
-	    read_error:
 	      errval = errno;
 	      errstring = N_("cannot read file data");
 	      goto lose;
@@ -1768,73 +1764,12 @@ open_verify (const char *name, int fd,
       if (__glibc_unlikely (elf_machine_reject_phdr_p
 			    (phdr, ehdr->e_phnum, fbp->buf, fbp->len,
 			     loader, fd)))
-	goto close_and_out;
+	{
+	  __close_nocancel (fd);
+	  __set_errno (ENOENT);
+	  return -1;
+	}
 
-      /* Check .note.ABI-tag if present.  */
-      for (ph = phdr; ph < &phdr[ehdr->e_phnum]; ++ph)
-	if (ph->p_type == PT_NOTE && ph->p_filesz >= 32
-	    && (ph->p_align == 4 || ph->p_align == 8))
-	  {
-	    ElfW(Addr) size = ph->p_filesz;
-
-	    if (ph->p_offset + size <= (size_t) fbp->len)
-	      abi_note = (void *) (fbp->buf + ph->p_offset);
-	    else
-	      {
-		/* Note: __libc_use_alloca is not usable here, because
-		   thread info may not have been set up yet.  */
-		if (size < __MAX_ALLOCA_CUTOFF)
-		  abi_note = alloca (size);
-		else
-		  {
-		    /* There could be multiple PT_NOTEs.  */
-		    abi_note_malloced = realloc (abi_note_malloced, size);
-		    if (abi_note_malloced == NULL)
-		      goto read_error;
-
-		    abi_note = abi_note_malloced;
-		  }
-		if (__pread64_nocancel (fd, (void *) abi_note, size,
-					ph->p_offset) != size)
-		  {
-		    free (abi_note_malloced);
-		    goto read_error;
-		  }
-	      }
-
-	    while (memcmp (abi_note, &expected_note, sizeof (expected_note)))
-	      {
-		ElfW(Addr) note_size
-		  = ELF_NOTE_NEXT_OFFSET (abi_note[0], abi_note[1],
-					  ph->p_align);
-
-		if (size - 32 < note_size)
-		  {
-		    size = 0;
-		    break;
-		  }
-		size -= note_size;
-		abi_note = (void *) abi_note + note_size;
-	      }
-
-	    if (size == 0)
-	      continue;
-
-	    osversion = (abi_note[5] & 0xff) * 65536
-			+ (abi_note[6] & 0xff) * 256
-			+ (abi_note[7] & 0xff);
-	    if (abi_note[4] != __ABI_TAG_OS
-		|| (GLRO(dl_osversion) && GLRO(dl_osversion) < osversion))
-	      {
-	      close_and_out:
-		__close_nocancel (fd);
-		__set_errno (ENOENT);
-		fd = -1;
-	      }
-
-	    break;
-	  }
-      free (abi_note_malloced);
     }
 
   return fd;

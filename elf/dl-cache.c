@@ -297,9 +297,6 @@ search_cache (const char *string_table, uint32_t string_table_size,
 
 		      if ((libnew->hwcap & hwcap_exclude) && !named_hwcap)
 			continue;
-		      if (GLRO (dl_osversion)
-			  && libnew->osversion > GLRO (dl_osversion))
-			continue;
 		      if (_DL_PLATFORMS_COUNT
 			  && (libnew->hwcap & _DL_HWCAP_PLATFORM) != 0
 			  && ((libnew->hwcap & _DL_HWCAP_PLATFORM)

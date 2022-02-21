@@ -22,6 +22,11 @@ Deprecated and removed features, and other changes affecting compatibility:
   removal of the LD_TRACE_PRELINKING, and LD_USE_LOAD_BIAS, environment
   variables and their functionality in the dynamic loader.
 
+* The Linux kernel version check has been removed along with the
+  LD_ASSUME_KERNEL environment variable.  The minimum kernel used to built
+  glibc is still provided through NT_GNU_ABI_TAG ELF note and also printed
+  when libc.so is issued directly.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

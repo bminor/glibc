@@ -145,8 +145,6 @@ size_t _dl_minsigstacksize = CONSTANT_MINSIGSTKSZ;
 
 int _dl_inhibit_cache;
 
-unsigned int _dl_osversion;
-
 /* All known directories in sorted order.  */
 struct r_search_path_elem *_dl_all_dirs;
 
@@ -325,10 +323,6 @@ _dl_non_dynamic_init (void)
 
 #ifdef DL_PLATFORM_INIT
   DL_PLATFORM_INIT;
-#endif
-
-#ifdef DL_OSVERSION_INIT
-  DL_OSVERSION_INIT;
 #endif
 
   /* Now determine the length of the platform string.  */

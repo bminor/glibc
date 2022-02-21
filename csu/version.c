@@ -33,6 +33,9 @@ Compiled by GNU CC version "__VERSION__".\n"
 #ifdef LIBC_ABIS_STRING
 LIBC_ABIS_STRING
 #endif
+#ifdef __LINUX_KERNEL_VERSION_STR
+"Minimum supported kernel: " __LINUX_KERNEL_VERSION_STR "\n"
+#endif
 "For bug reporting instructions, please see:\n\
 "REPORT_BUGS_TO".\n";
 
