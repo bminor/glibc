@@ -27,6 +27,8 @@ Deprecated and removed features, and other changes affecting compatibility:
   glibc is still provided through NT_GNU_ABI_TAG ELF note and also printed
   when libc.so is issued directly.
 
+* On Linux, The LD_LIBRARY_VERSION environment variable has been removed.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

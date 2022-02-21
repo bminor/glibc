@@ -35,7 +35,6 @@
 #include <dl-machine.h>
 #include <libc-lock.h>
 #include <dl-cache.h>
-#include <dl-librecon.h>
 #include <dl-procinfo.h>
 #include <unsecvars.h>
 #include <hp-timing.h>
@@ -156,8 +155,6 @@ struct link_map *_dl_initfirst;
 
 /* Descriptor to write debug messages to.  */
 int _dl_debug_fd = STDERR_FILENO;
-
-int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
 ElfW(auxv_t) *_dl_auxv;
 const ElfW(Phdr) *_dl_phdr;
@@ -303,9 +300,6 @@ _dl_non_dynamic_init (void)
     {
       static const char unsecure_envvars[] =
 	UNSECURE_ENVVARS
-#ifdef EXTRA_UNSECURE_ENVVARS
-	EXTRA_UNSECURE_ENVVARS
-#endif
 	;
       const char *cp = unsecure_envvars;
 

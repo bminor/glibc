@@ -590,9 +590,6 @@ struct rtld_global_ro
   /* Default floating-point control word.  */
   EXTERN fpu_control_t _dl_fpu_control;
 
-  /* Expected cache ID.  */
-  EXTERN int _dl_correct_cache_id;
-
   /* Mask for hardware capabilities that are available.  */
   EXTERN uint64_t _dl_hwcap;
 

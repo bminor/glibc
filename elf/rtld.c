@@ -32,7 +32,6 @@
 #include <fpu_control.h>
 #include <hp-timing.h>
 #include <libc-lock.h>
-#include <dl-librecon.h>
 #include <unsecvars.h>
 #include <dl-cache.h>
 #include <dl-osinfo.h>
@@ -365,7 +364,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_sysinfo = DL_SYSINFO_DEFAULT,
 #endif
     ._dl_debug_fd = STDERR_FILENO,
-    ._dl_correct_cache_id = _DL_CACHE_DEFAULT_ID,
 #if !HAVE_TUNABLES
     ._dl_hwcap_mask = HWCAP_IMPORTANT,
 #endif
@@ -1692,10 +1690,6 @@ dl_main (const ElfW(Phdr) *phdr,
       if (main_map->l_ld == NULL)
 	_exit (1);
 
-      /* We allow here some platform specific code.  */
-#ifdef DISTINGUISH_LIB_VERSIONS
-      DISTINGUISH_LIB_VERSIONS;
-#endif
       _exit (has_interp ? 0 : 2);
     }
 
@@ -2648,29 +2642,14 @@ process_envvars (struct dl_main_state *state)
 		= _dl_strtoul (&envline[21], NULL) > 1;
 	    }
 	  break;
-
-	  /* We might have some extra environment variable to handle.  This
-	     is tricky due to the pre-processing of the length of the name
-	     in the switch statement here.  The code here assumes that added
-	     environment variables have a different length.  */
-#ifdef EXTRA_LD_ENVVARS
-	  EXTRA_LD_ENVVARS
-#endif
 	}
     }
 
   /* Extra security for SUID binaries.  Remove all dangerous environment
      variables.  */
-  if (__builtin_expect (__libc_enable_secure, 0))
+  if (__glibc_unlikely (__libc_enable_secure))
     {
-      static const char unsecure_envvars[] =
-#ifdef EXTRA_UNSECURE_ENVVARS
-	EXTRA_UNSECURE_ENVVARS
-#endif
-	UNSECURE_ENVVARS;
-      const char *nextp;
-
-      nextp = unsecure_envvars;
+      const char *nextp = UNSECURE_ENVVARS;
       do
 	{
 	  unsetenv (nextp);
