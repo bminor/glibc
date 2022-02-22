@@ -25,8 +25,7 @@
    return that to the caller.  The caller will continue on to call
    _dl_fixup with the relocation offset.  */
 
-ElfW(Word)
-attribute_hidden __attribute ((noinline)) DL_ARCH_FIXUP_ATTRIBUTE
+ElfW(Word) __attribute ((noinline)) DL_ARCH_FIXUP_ATTRIBUTE
 _dl_fix_reloc_arg (struct fdesc *fptr, struct link_map *l)
 {
   Elf32_Addr l_addr, iplt, jmprel, end_jmprel, r_type;
@@ -52,3 +51,4 @@ _dl_fix_reloc_arg (struct fdesc *fptr, struct link_map *l)
   ABORT_INSTRUCTION;
   return 0;
 }
+rtld_hidden_def (_dl_fix_reloc_arg)

@@ -26,6 +26,7 @@
 #include <ldsodefs.h>
 #include <elf/dynamic-link.h>
 #include <dl-fptr.h>
+#include <dl-runtime.h>
 #include <dl-unmap-segments.h>
 #include <atomic.h>
 #include <libc-pointer-arith.h>
@@ -351,21 +352,20 @@ _dl_lookup_address (const void *address)
 {
   ElfW(Addr) addr = (ElfW(Addr)) address;
   ElfW(Word) reloc_arg;
-  volatile unsigned int *desc;
-  unsigned int *gptr;
+  unsigned int *desc, *gptr;
 
   /* Return ADDR if the least-significant two bits of ADDR are not consistent
      with ADDR being a linker defined function pointer.  The normal value for
      a code address in a backtrace is 3.  */
-  if (((unsigned int) addr & 3) != 2)
+  if (((uintptr_t) addr & 3) != 2)
     return addr;
 
   /* Handle special case where ADDR points to page 0.  */
-  if ((unsigned int) addr < 4096)
+  if ((uintptr_t) addr < 4096)
     return addr;
 
   /* Clear least-significant two bits from descriptor address.  */
-  desc = (unsigned int *) ((unsigned int) addr & ~3);
+  desc = (unsigned int *) ((uintptr_t) addr & ~3);
   if (!_dl_read_access_allowed (desc))
     return addr;
 
@@ -376,7 +376,7 @@ _dl_lookup_address (const void *address)
   /* Then load first word of candidate descriptor.  It should be a pointer
      with word alignment and point to memory that can be read.  */
   gptr = (unsigned int *) desc[0];
-  if (((unsigned int) gptr & 3) != 0
+  if (((uintptr_t) gptr & 3) != 0
       || !_dl_read_access_allowed (gptr))
     return addr;
 
@@ -400,10 +400,11 @@ _dl_lookup_address (const void *address)
 
       /* If gp has been resolved, we need to hunt for relocation offset.  */
       if (!(reloc_arg & PA_GP_RELOC))
-	reloc_arg = _dl_fix_reloc_arg (addr, l);
+	reloc_arg = _dl_fix_reloc_arg ((struct fdesc *) addr, l);
 
       _dl_fixup (l, reloc_arg);
     }
 
   return (ElfW(Addr)) desc[0];
 }
+rtld_hidden_def (_dl_lookup_address)
