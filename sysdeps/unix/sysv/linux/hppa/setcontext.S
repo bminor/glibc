@@ -75,7 +75,7 @@ ENTRY(__setcontext)
 	ldw	oR18(%r3), %r18
 	ldw	oR19(%r3), %r19
 	ldw	oR20(%r3), %r20
-	ldw	oR21(%r3), %r21
+	ldw	oR21(%r3), %r21 /* maybe clobbered by dyncall */
 	/* ldw	oR22(%r3), %r22 - dyncall arg.  */
 	ldw	oR23(%r3), %r23
 	ldw	oR24(%r3), %r24
@@ -86,6 +86,10 @@ ENTRY(__setcontext)
 	ldw	oR29(%r3), %r29
 	ldw	oR30(%r3), %sp
 	/* ldw	oR31(%r3), %r31 - dyncall scratch register */
+
+	/* Restore SAR register.  */
+	ldw	oSAR(%r3), %r22
+	mtsar	%r22
 
 	/* Restore floating-point registers.  */
 	ldo	 oFPREGS31(%r3), %r22
