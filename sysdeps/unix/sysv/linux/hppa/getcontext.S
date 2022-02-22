@@ -21,22 +21,28 @@
 #include "ucontext_i.h"
 
 
-	/* Trampoline function. Non-standard calling ABI.  */
+	/* Trampoline function.  Non-standard calling ABI.  */
 	/* Can not use ENTRY(__getcontext_ret) here.  */
 	.type	__getcontext_ret, @function
 	.hidden	__getcontext_ret
 __getcontext_ret:
 	.proc
 	.callinfo FRAME=0,NO_CALLS
-	/* r26-r23 contain original r3-r6, but because setcontext
-	   does not reload r3-r6 (it's using them as temporaries)
-	   we must save them elsewhere and swap them back in.  */
-	copy	%r23, %r3
-	copy	%r24, %r4
-	copy	%r25, %r5
-	copy	%r26, %r6
-	/* r20 contains original return pointer.  */
-	bv	0(%r20)
+	/* Because setcontext does not reload r3-r6 (it's using them
+	   as temporaries), we must load them ourself.  */
+	ldw	oR3(%r26), %r3
+	ldw	oR4(%r26), %r4
+	ldw	oR5(%r26), %r5
+	ldw	oR6(%r26), %r6
+
+	/* Also reload registers clobbered by $$dyncall.  */
+	ldw	oR21(%r26), %r21
+	ldw	oR22(%r26), %r22
+	ldw	oR31(%r26), %r31
+
+	/* oR0 contains original return pointer.  */
+	ldw	oR0(%r26), %rp
+	bv	0(%rp)
 	copy	%r0, %ret0
 	.procend
 	.size	__getcontext_ret, .-__getcontext_ret
@@ -64,13 +70,13 @@ ENTRY(__getcontext)
 	stw	%r17, oR17(%r26)
 	stw	%r18, oR18(%r26)
 	stw	%r19, oR19(%r26)
-	/* stw	%r20, oR20(%r26) - used for trampoline.  */
+	stw	%r20, oR20(%r26)
 	stw	%r21, oR21(%r26)
 	stw	%r22, oR22(%r26)
-	/* stw	%r23, oR23(%r26) - used for trampoline.  */
-	/* stw	%r24, oR24(%r26) - used for trampoline.  */
-	/* stw	%r25, oR25(%r26) - used for trampoline.  */
-	/* stw	%r26, oR26(%r26) - used for trampoline.  */
+	stw	%r23, oR23(%r26)
+	stw	%r24, oR24(%r26)
+	stw	%r25, oR25(%r26)
+	stw	%r26, oR26(%r26)
 	stw	%r27, oR27(%r26)
 	stw	%r28, oR28(%r26)
 	stw	%r29, oR29(%r26)
@@ -89,7 +95,10 @@ ENTRY(__getcontext)
 	stw	%r0, oIASQ1(%r26)
 	stw	%r0, oIAOQ0(%r26)
 	stw	%r0, oIAOQ1(%r26)
-	stw	%r0, oSAR(%r26) /* used as flag in swapcontext().  */
+
+	/* Save SAR register.  */
+	mfctl	%sar, %r1
+	stw	%r1, oSAR(%r26) /* MSB used as flag in swapcontext().  */
 
 
 	/* Store floating-point regs.  */
@@ -141,13 +150,8 @@ ENTRY(__getcontext)
 	.cfi_offset 29, 4
 
 	/* Set up the trampoline registers.
-	   r20, r23, r24, r25, r26 and r2 are clobbered
-	   by call to getcontext() anyway. Reuse them.  */
-	stw	%r2, oR20(%r26)
-	stw	%r3, oR23(%r26)
-	stw	%r4, oR24(%r26)
-	stw	%r5, oR25(%r26)
-	stw	%r6, oR26(%r26)
+	   Use oR0 context slot to save return value.  */
+	stw	%r2, oR0(%r26)
 #ifdef PIC
 	addil	LT%__getcontext_ret, %r19
 	ldw     RT%__getcontext_ret(%r1), %r1

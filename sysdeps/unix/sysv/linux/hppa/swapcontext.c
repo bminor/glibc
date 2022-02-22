@@ -25,10 +25,6 @@ extern int __setcontext (const ucontext_t *ucp);
 int
 __swapcontext (ucontext_t *oucp, const ucontext_t *ucp)
 {
-  /* Save ucp in stack argument slot.  */
-  asm ("stw %r25,-40(%sp)");
-  asm (".cfi_offset 25, -40");
-
   /* Save rp for debugger.  */
   asm ("stw %rp,-20(%sp)");
   asm (".cfi_offset 2, -20");
@@ -59,7 +55,7 @@ __swapcontext (ucontext_t *oucp, const ucontext_t *ucp)
   asm ("bv,n %r0(%rp)");
 
   /* Load sc_sar flag.  */
-  asm ("ldw %0(%%ret1),%%r20" : : "i" (oSAR));
+  asm ("ldb %0(%%ret1),%%r20" : : "i" (oSAR));
 
   /* Return if oucp context has been reactivated.  */
   asm ("or,= %r0,%r20,%r0");
@@ -67,11 +63,11 @@ __swapcontext (ucontext_t *oucp, const ucontext_t *ucp)
 
   /* Mark sc_sar flag.  */
   asm ("1: ldi 1,%r20");
-  asm ("stw %%r20,%0(%%ret1)" : : "i" (oSAR));
+  asm ("stb %%r20,%0(%%ret1)" : : "i" (oSAR));
 
   /* Activate the machine context in ucp.  */
   asm ("bl __setcontext,%rp");
-  asm ("ldw -40(%sp),%r26");
+  asm ("ldw %0(%%ret1),%%r26" : : "i" (oR25));
 
   /* Load return pointer.  */
   asm ("ldw %0(%%ret1),%%rp" : : "i" (oR28));
