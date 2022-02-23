@@ -24,6 +24,8 @@ libmvec-support += \
     $(addprefix svml_s_,$(addsuffix $(l),$(libmvec-funcs))))
 endif
 
+# Do not run libmvec tests if multiarch not enabled.
+ifneq ($(multi-arch),no)
 # Variables for libmvec tests.
 ifeq ($(subdir)$(build-mathvec),mathyes)
 libmvec-tests += double-vlen2 double-vlen4 double-vlen4-avx2 \
@@ -111,4 +113,5 @@ $(objpfx)bench-double-%.c: $(bench-libmvec-deps)
 	fi; \
 	$(PYTHON) $(..)sysdeps/x86_64/fpu/scripts/bench_libmvec.py $(basename $(@F)); } > $@-tmp
 	mv -f $@-tmp $@
+endif
 endif
