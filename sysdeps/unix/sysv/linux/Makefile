@@ -128,6 +128,9 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
   tst-epoll \
   # tests
 
+# For +depfiles in Makerules.
+extra-test-objs += tst-sysconf-iov_max-uapi.o
+
 # Test for the symbol version of fcntl that was replaced in glibc 2.28.
 ifeq ($(have-GLIBC_2.27)$(build-shared),yesyes)
 tests += tst-ofdlocks-compat

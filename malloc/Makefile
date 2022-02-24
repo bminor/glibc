@@ -145,7 +145,7 @@ extra-libs = libmemusage libc_malloc_debug
 extra-libs-others = $(extra-libs)
 
 # Helper objects for some tests.
-extra-tests-objs += \
+extra-test-objs += \
   tst-interpose-aux-nothread.o \
   tst-interpose-aux-thread.o \
 

@@ -86,6 +86,7 @@ ifeq (yes,$(build-shared))
 tests += tst-gconv-init-failure
 modules-names += tst-gconv-init-failure-mod
 modules-names-tests += tst-gconv-init-failure-mod
+extra-test-objs += tst-gconv-init-failure-mod.os
 $(objpfx)tst-gconv-init-failure-mod.so: $(libsupport)
 $(objpfx)tst-gconv-init-failure.out: \
  $(objpfx)gconv-modules $(objpfx)tst-gconv-init-failure-mod.so

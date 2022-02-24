@@ -52,6 +52,7 @@ CFLAGS-tst-quad2pie.c = $(PIE-ccflag)
 
 tests += tst-x86_64-1
 modules-names += x86_64/tst-x86_64mod-1
+extra-test-objs += tst-x86_64mod-1.o
 LDFLAGS-tst-x86_64mod-1.so = -Wl,-soname,tst-x86_64mod-1.so
 ifneq (no,$(have-tunables))
 # Test the state size for XSAVE when XSAVEC is disabled.
@@ -63,6 +64,7 @@ $(objpfx)tst-x86_64-1: $(objpfx)x86_64/tst-x86_64mod-1.so
 ifneq (no,$(have-tunables))
 tests += tst-platform-1
 modules-names += tst-platformmod-1 x86_64/tst-platformmod-2
+extra-test-objs += tst-platformmod-2.o
 CFLAGS-tst-platform-1.c = -mno-avx
 CFLAGS-tst-platformmod-1.c = -mno-avx
 CFLAGS-tst-platformmod-2.c = -mno-avx

@@ -888,6 +888,9 @@ modules-names += \
 modules-names-tests = $(filter-out ifuncmod% tst-tlsmod%,\
 				   $(modules-names))
 
+# For +depfiles in Makerules.
+extra-test-objs += tst-auditmod17.os
+
 ifeq (yes,$(have-mtls-dialect-gnu2))
 tests += tst-gnu2-tls1
 modules-names += tst-gnu2-tls1mod

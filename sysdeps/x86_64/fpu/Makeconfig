@@ -113,6 +113,12 @@ libmvec-abi-func-avx512f-tests = \
 $(common-objpfx)libmvec.mk: $(common-objpfx)config.make
 	(echo "ifeq (\$$(subdir)\$$(build-mathvec),mathyes)"; \
 	 echo; \
+	 echo "extra-test-objs += \\"; \
+	 for i in "" "-avx" "-avx2" "-avx512f"; do \
+	   echo "  test-libmvec$$i.o \\"; \
+	 done; \
+	 echo "# extra-test-objs"; \
+	 echo; \
 	 for i in "" "-avx" "-avx2" "-avx512f"; do \
 	   for t in $(libmvec-abi-func-tests); do \
 	     echo "\$$(objpfx)$$t$$i: \\"; \

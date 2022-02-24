@@ -770,6 +770,7 @@ endif
 	     $(patsubst %.oS,%.d,$(filter %.oS,$(extra-objs))) \
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-test-objs:.os=.o))) \
 	     $(addsuffix .d,$(tests) $(tests-internal) $(xtests) \
+		$(tests-container) $(tests-printers) \
 		$(test-srcs) $(tests-time64) $(xtests-time64))
 ifeq ($(build-programs),yes)
 +depfiles += $(addsuffix .d,$(others) $(sysdep-others))
