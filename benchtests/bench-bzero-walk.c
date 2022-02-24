@@ -113,6 +113,9 @@ test_main (void)
   json_array_end (&json_ctx);
 
   json_array_begin (&json_ctx, "results");
+  for (i = 1; i <= 64; i++)
+    do_test (&json_ctx, i);
+
   for (i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
     {
       do_test (&json_ctx, i);
