@@ -296,11 +296,12 @@ bench-extra-objs = json-lib.o
 extra-objs += $(bench-extra-objs)
 others-extras = $(bench-extra-objs)
 
-include ../Rules
-
 binaries-bench := $(addprefix $(objpfx)bench-,$(bench))
+extra-objs += $(addsuffix .o,$(addprefix bench-,$(bench)))
 binaries-benchset := $(addprefix $(objpfx)bench-,$(benchset))
+extra-objs += $(addsuffix .o,$(addprefix bench-,$(benchset)))
 binaries-bench-malloc := $(addprefix $(objpfx)bench-,$(bench-malloc))
+extra-objs += $(addsuffix .o,$(addprefix bench-,$(bench-malloc)))
 
 # The default duration: 1 seconds.
 ifndef BENCH_DURATION
@@ -334,6 +335,9 @@ run-bench = $(test-wrapper-env) \
 	    $($*-ENV) $(test-via-rtld-prefix) $${run}
 
 timing-type := $(objpfx)bench-timing-type
+extra-objs += bench-timing-type.o
+
+include ../Rules
 
 # This makes sure CPPFLAGS-nonlib and CFLAGS-nonlib are passed
 # for all these modules.
