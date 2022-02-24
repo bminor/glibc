@@ -9,6 +9,7 @@ Version 2.35.1
 
 The following bugs are resolved with this release:
 
+  [28838] FAIL: elf/tst-p_align3
   [28850] linux: __get_nprocs_sched reads uninitialized memory from the stack
   [28853] libc: tst-spawn6 changes current foreground process group
     (breaks test isolation)
