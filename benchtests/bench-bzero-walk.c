@@ -122,12 +122,6 @@ test_main (void)
       do_test (&json_ctx, i + 1);
     }
 
-  for (i = START_SIZE; i <= MIN_PAGE_SIZE; i <<= 1)
-    {
-      do_test (&json_ctx, i);
-      do_test (&json_ctx, i + 1);
-    }
-
   json_array_end (&json_ctx);
   json_attr_object_end (&json_ctx);
   json_attr_object_end (&json_ctx);
