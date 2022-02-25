@@ -28,7 +28,12 @@
 		    "items": {"type": "number"}
                    }
 		 },
-		 "additionalProperties": {"type": "number"},
+		 "additionalProperties": {
+		   "oneOf": [
+		     { "type": "number" },
+		     { "type": "string" }
+		   ]
+		 },
 		 "minProperties": 2
 	      }
 	    }
