@@ -30,7 +30,11 @@
 /* Number of bytes in a vector register */
 # define VEC_SIZE	32
 
-	.section .text.avx,"ax",@progbits
+# ifndef SECTION
+#  define SECTION(p)	p##.avx
+# endif
+
+	.section SECTION(.text),"ax",@progbits
 ENTRY (STRCAT)
 	mov	%rdi, %r9
 # ifdef USE_AS_STRNCAT

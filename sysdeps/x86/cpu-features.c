@@ -424,8 +424,24 @@ init_cpu_features (struct cpu_features *cpu_features)
 	cpu_features->feature[index_arch_Prefer_No_VZEROUPPER]
 	  |= bit_arch_Prefer_No_VZEROUPPER;
       else
-	cpu_features->feature[index_arch_Prefer_No_AVX512]
-	  |= bit_arch_Prefer_No_AVX512;
+	{
+	  cpu_features->feature[index_arch_Prefer_No_AVX512]
+	    |= bit_arch_Prefer_No_AVX512;
+
+	  /* Avoid RTM abort triggered by VZEROUPPER inside a
+	     transactionally executing RTM region.  */
+	  if (CPU_FEATURES_CPU_P (cpu_features, RTM))
+	    cpu_features->feature[index_arch_Prefer_No_VZEROUPPER]
+	      |= bit_arch_Prefer_No_VZEROUPPER;
+
+	  /* Since to compare 2 32-byte strings, 256-bit EVEX strcmp
+	     requires 2 loads, 3 VPCMPs and 2 KORDs while AVX2 strcmp
+	     requires 1 load, 2 VPCMPEQs, 1 VPMINU and 1 VPMOVMSKB,
+	     AVX2 strcmp is faster than EVEX strcmp.  */
+	  if (CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable))
+	    cpu_features->feature[index_arch_Prefer_AVX2_STRCMP]
+	      |= bit_arch_Prefer_AVX2_STRCMP;
+	}
     }
   /* This spells out "AuthenticAMD" or "HygonGenuine".  */
   else if ((ebx == 0x68747541 && ecx == 0x444d4163 && edx == 0x69746e65)

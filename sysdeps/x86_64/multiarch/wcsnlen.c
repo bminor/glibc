@@ -24,27 +24,7 @@
 # undef __wcsnlen
 
 # define SYMBOL_NAME wcsnlen
-# include <init-arch.h>
-
-extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (sse4_1) attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2) attribute_hidden;
-
-static inline void *
-IFUNC_SELECTOR (void)
-{
-  const struct cpu_features* cpu_features = __get_cpu_features ();
-
-  if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER)
-      && CPU_FEATURES_ARCH_P (cpu_features, AVX2_Usable)
-      && CPU_FEATURES_ARCH_P (cpu_features, AVX_Fast_Unaligned_Load))
-    return OPTIMIZE (avx2);
-
-  if (CPU_FEATURES_CPU_P (cpu_features, SSE4_1))
-    return OPTIMIZE (sse4_1);
-
-  return OPTIMIZE (sse2);
-}
+# include "ifunc-wcslen.h"
 
 libc_ifunc_redirected (__redirect_wcsnlen, __wcsnlen, IFUNC_SELECTOR ());
 weak_alias (__wcsnlen, wcsnlen);
