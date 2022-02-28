@@ -25,7 +25,7 @@
 #include <jmpbuf-unwind.h>
 #include <shlib-compat.h>
 
-#ifdef _STACK_GROWS_DOWN
+#if _STACK_GROWS_DOWN
 # define FRAME_LEFT(frame, other, adj) \
   ((uintptr_t) frame - adj >= (uintptr_t) other - adj)
 #elif _STACK_GROWS_UP
