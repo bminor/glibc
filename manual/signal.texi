@@ -1329,7 +1329,7 @@ Setting this flag for a signal other than @code{SIGCHLD} has no effect.
 If this flag is set for a particular signal number, the system uses the
 signal stack when delivering that kind of signal.  @xref{Signal Stack}.
 If a signal with this flag arrives and you have not set a signal stack,
-the system terminates the program with @code{SIGILL}.
+the normal user stack is used instead, as if the flag had not been set.
 @end deftypevr
 
 @deftypevr Macro int SA_RESTART
