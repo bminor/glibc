@@ -160,6 +160,11 @@ ifeq (yes,$(have-loop-to-function))
 CFLAGS-rtld.c += -fno-tree-loop-distribute-patterns
 endif
 
+ifeq (yes,$(have-loop-to-function))
+# Likewise, during static library startup, memset is not yet available.
+CFLAGS-dl-support.c = -fno-tree-loop-distribute-patterns
+endif
+
 # Compile rtld itself without stack protection.
 # Also compile all routines in the static library that are elided from
 # the shared libc because they are in libc.a in the same way.
