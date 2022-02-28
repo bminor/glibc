@@ -69,6 +69,10 @@ do_test (void)
   TEST_VERIFY_EXIT (fd >= 0);
   support_write_file_string (path, "abc");
 
+  /* This should help to prevent delayed allocation, which may result
+     in a spurious stx_blocks/st_blocks difference.  */
+  fsync (fd);
+
   bool check_ns = support_stat_nanoseconds (path);
   if (!check_ns)
     printf ("warning: timestamp with nanoseconds not supported\n");
