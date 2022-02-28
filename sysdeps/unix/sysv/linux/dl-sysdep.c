@@ -18,15 +18,14 @@
 
 #include <_itoa.h>
 #include <assert.h>
-#include <dl-hwcap-check.h>
+#include <dl-auxv.h>
 #include <dl-osinfo.h>
+#include <dl-parse_auxv.h>
 #include <dl-procinfo.h>
 #include <dl-tunables.h>
 #include <elf.h>
-#include <entry.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <fpu_control.h>
 #include <ldsodefs.h>
 #include <libc-internal.h>
 #include <libintl.h>
@@ -43,10 +42,9 @@
 #include <unistd.h>
 
 #include <dl-machine.h>
+#include <dl-hwcap-check.h>
 
 #ifdef SHARED
-# include <dl-auxv.h>
-
 extern char **_environ attribute_hidden;
 extern char _end[] attribute_hidden;
 
@@ -64,20 +62,20 @@ void *_dl_random attribute_relro = NULL;
 # define DL_STACK_END(cookie) ((void *) (cookie))
 #endif
 
-ElfW(Addr)
-_dl_sysdep_start (void **start_argptr,
-		  void (*dl_main) (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
-				   ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv))
+/* Arguments passed to dl_main.  */
+struct dl_main_arguments
 {
-  const ElfW(Phdr) *phdr = NULL;
-  ElfW(Word) phnum = 0;
+  const ElfW(Phdr) *phdr;
+  ElfW(Word) phnum;
   ElfW(Addr) user_entry;
-  ElfW(auxv_t) *av;
-#ifdef NEED_DL_SYSINFO
-  uintptr_t new_sysinfo = 0;
-#endif
+};
 
-  __libc_stack_end = DL_STACK_END (start_argptr);
+/* Separate function, so that dl_main can be called without the large
+   array on the stack.  */
+static void
+_dl_sysdep_parse_arguments (void **start_argptr,
+			    struct dl_main_arguments *args)
+{
   _dl_argc = (intptr_t) *start_argptr;
   _dl_argv = (char **) (start_argptr + 1); /* Necessary aliasing violation.  */
   _environ = _dl_argv + _dl_argc + 1;
@@ -89,74 +87,25 @@ _dl_sysdep_start (void **start_argptr,
 	break;
       }
 
-  user_entry = (ElfW(Addr)) ENTRY_POINT;
-  GLRO(dl_platform) = NULL; /* Default to nothing known about the platform.  */
+  dl_parse_auxv_t auxv_values = { 0, };
+  _dl_parse_auxv (GLRO(dl_auxv), auxv_values);
 
-  /* NB: Default to a constant CONSTANT_MINSIGSTKSZ.  */
-  _Static_assert (__builtin_constant_p (CONSTANT_MINSIGSTKSZ),
-		  "CONSTANT_MINSIGSTKSZ is constant");
-  GLRO(dl_minsigstacksize) = CONSTANT_MINSIGSTKSZ;
+  args->phdr = (const ElfW(Phdr) *) auxv_values[AT_PHDR];
+  args->phnum = auxv_values[AT_PHNUM];
+  args->user_entry = auxv_values[AT_ENTRY];
+}
 
-  for (av = GLRO(dl_auxv); av->a_type != AT_NULL; av++)
-    switch (av->a_type)
-      {
-      case AT_PHDR:
-	phdr = (void *) av->a_un.a_val;
-	break;
-      case AT_PHNUM:
-	phnum = av->a_un.a_val;
-	break;
-      case AT_PAGESZ:
-	GLRO(dl_pagesize) = av->a_un.a_val;
-	break;
-      case AT_ENTRY:
-	user_entry = av->a_un.a_val;
-	break;
-      case AT_SECURE:
-	__libc_enable_secure = av->a_un.a_val;
-	break;
-      case AT_PLATFORM:
-	GLRO(dl_platform) = (void *) av->a_un.a_val;
-	break;
-      case AT_HWCAP:
-	GLRO(dl_hwcap) = (unsigned long int) av->a_un.a_val;
-	break;
-      case AT_HWCAP2:
-	GLRO(dl_hwcap2) = (unsigned long int) av->a_un.a_val;
-	break;
-      case AT_CLKTCK:
-	GLRO(dl_clktck) = av->a_un.a_val;
-	break;
-      case AT_FPUCW:
-	GLRO(dl_fpu_control) = av->a_un.a_val;
-	break;
-#ifdef NEED_DL_SYSINFO
-      case AT_SYSINFO:
-	new_sysinfo = av->a_un.a_val;
-	break;
-#endif
-      case AT_SYSINFO_EHDR:
-	GLRO(dl_sysinfo_dso) = (void *) av->a_un.a_val;
-	break;
-      case AT_RANDOM:
-	_dl_random = (void *) av->a_un.a_val;
-	break;
-      case AT_MINSIGSTKSZ:
-	GLRO(dl_minsigstacksize) = av->a_un.a_val;
-	break;
-      DL_PLATFORM_AUXV
-      }
+ElfW(Addr)
+_dl_sysdep_start (void **start_argptr,
+		  void (*dl_main) (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
+				   ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv))
+{
+  __libc_stack_end = DL_STACK_END (start_argptr);
+
+  struct dl_main_arguments dl_main_args;
+  _dl_sysdep_parse_arguments (start_argptr, &dl_main_args);
 
   dl_hwcap_check ();
-
-#ifdef NEED_DL_SYSINFO
-  if (new_sysinfo != 0)
-    {
-      /* Only set the sysinfo value if we also have the vsyscall DSO.  */
-      if (GLRO(dl_sysinfo_dso) != 0)
-        GLRO(dl_sysinfo) = new_sysinfo;
-    }
-#endif
 
   __tunables_init (_environ);
 
@@ -188,8 +137,9 @@ _dl_sysdep_start (void **start_argptr,
   if (__builtin_expect (__libc_enable_secure, 0))
     __libc_check_standard_fds ();
 
-  (*dl_main) (phdr, phnum, &user_entry, GLRO(dl_auxv));
-  return user_entry;
+  (*dl_main) (dl_main_args.phdr, dl_main_args.phnum,
+              &dl_main_args.user_entry, GLRO(dl_auxv));
+  return dl_main_args.user_entry;
 }
 
 void
