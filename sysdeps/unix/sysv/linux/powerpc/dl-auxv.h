@@ -16,15 +16,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <ldsodefs.h>
-
-#if IS_IN (libc) && !defined SHARED
-int GLRO(dl_cache_line_size);
-#endif
-
-/* Scan the Aux Vector for the "Data Cache Block Size" entry and assign it
-   to dl_cache_line_size.  */
-#define DL_PLATFORM_AUXV						      \
-      case AT_DCACHEBSIZE:						      \
-	GLRO(dl_cache_line_size) = av->a_un.a_val;			      \
-	break;
+#define DL_PLATFORM_AUXV \
+  GLRO(dl_cache_line_size) = auxv_values[AT_DCACHEBSIZE];
