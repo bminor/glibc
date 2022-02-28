@@ -81,6 +81,7 @@ sysdep_routines += \
   strlen-avx2 \
   strlen-avx2-rtm \
   strlen-evex \
+  strlen-evex512 \
   strlen-sse2 \
   strncase_l-avx2 \
   strncase_l-avx2-rtm \
@@ -105,6 +106,7 @@ sysdep_routines += \
   strnlen-avx2 \
   strnlen-avx2-rtm \
   strnlen-evex \
+  strnlen-evex512 \
   strnlen-sse2 \
   strpbrk-c \
   strpbrk-sse2 \
@@ -138,6 +140,7 @@ sysdep_routines += \
   wcslen-avx2 \
   wcslen-avx2-rtm \
   wcslen-evex \
+  wcslen-evex512 \
   wcslen-sse2 \
   wcslen-sse4_1 \
   wcsncmp-avx2 \
@@ -148,6 +151,7 @@ sysdep_routines += \
   wcsnlen-avx2-rtm \
   wcsnlen-c \
   wcsnlen-evex \
+  wcsnlen-evex512 \
   wcsnlen-sse4_1 \
   wcsrchr-avx2 \
   wcsrchr-avx2-rtm \
