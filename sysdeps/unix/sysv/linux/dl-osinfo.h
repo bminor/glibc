@@ -48,7 +48,12 @@ _dl_setup_stack_chk_guard (void *dl_random)
 static inline uintptr_t __attribute__ ((always_inline))
 _dl_setup_pointer_guard (void *dl_random, uintptr_t stack_chk_guard)
 {
+#ifdef __CHERI_PURE_CAPABILITY__
+  /* Pointer mangling is not supported on capability architectures.  */
+  return 0;
+#else
   uintptr_t ret;
   memcpy (&ret, (char *) dl_random + sizeof (ret), sizeof (ret));
   return ret;
+#endif
 }
