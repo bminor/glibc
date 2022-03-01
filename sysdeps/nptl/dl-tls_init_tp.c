@@ -16,6 +16,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifdef __CHERI_PURE_CAPABILITY__
+/* This hack ensures that the later indirectly included public const
+   declaration does not conflict with the non-const definition here.  */
+# define __rseq_size __rseq_size_public_const
+# define __rseq_offset __rseq_offset_public_const
+# include <sys/rseq.h>
+# undef __rseq_size
+# undef __rseq_offset
+#endif
 #include <kernel-features.h>
 #include <ldsodefs.h>
 #include <list.h>
@@ -45,8 +54,13 @@ rtld_mutex_dummy (pthread_mutex_t *lock)
 #endif
 
 const unsigned int __rseq_flags;
+#ifdef __CHERI_PURE_CAPABILITY__
+unsigned int __rseq_size attribute_relro;
+ptrdiff_t __rseq_offset attribute_relro;
+#else
 const unsigned int __rseq_size attribute_relro;
 const ptrdiff_t __rseq_offset attribute_relro;
+#endif
 
 void
 __tls_pre_init_tp (void)
