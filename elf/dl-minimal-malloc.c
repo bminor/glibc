@@ -23,6 +23,7 @@
 # pragma GCC visibility push(hidden)
 #endif
 #include <assert.h>
+#include <stdint.h>
 #include <string.h>
 #include <ldsodefs.h>
 #include <malloc/malloc-internal.h>
@@ -33,6 +34,7 @@ static void *alloc_ptr, *alloc_end, *alloc_last_block;
 void *
 __minimal_malloc (size_t n)
 {
+#ifndef __CHERI_PURE_CAPABILITY__
   if (alloc_end == 0)
     {
       /* Consume any unused space in the last page of our data segment.  */
@@ -42,9 +44,10 @@ __minimal_malloc (size_t n)
 				 + GLRO(dl_pagesize) - 1)
 				& ~(GLRO(dl_pagesize) - 1));
     }
+#endif
 
   /* Make sure the allocation pointer is ideally aligned.  */
-  alloc_ptr = (void *) 0 + (((alloc_ptr - (void *) 0) + MALLOC_ALIGNMENT - 1)
+  alloc_ptr = (void *)(((uintptr_t)alloc_ptr + (MALLOC_ALIGNMENT - 1))
 			    & ~(MALLOC_ALIGNMENT - 1));
 
   if (alloc_ptr + n >= alloc_end || n >= -(uintptr_t) alloc_ptr)
