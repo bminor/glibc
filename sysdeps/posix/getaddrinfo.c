@@ -303,13 +303,13 @@ gethosts (nss_gethostbyname3_r fct, int family, const char *name,
   else if (status == NSS_STATUS_SUCCESS)
     {
       if (!convert_hostent_to_gaih_addrtuple (req, family, &th, res))
-	return -EAI_SYSTEM;
+	return -EAI_MEMORY;
 
       if (localcanon != NULL && res->canon == NULL)
 	{
 	  char *canonbuf = __strdup (localcanon);
 	  if (canonbuf == NULL)
-	    return  -EAI_SYSTEM;
+	    return  -EAI_MEMORY;
 	  res->canon = canonbuf;
 	}
     }
