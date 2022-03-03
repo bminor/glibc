@@ -8,7 +8,6 @@ tests += tst-bz21269
 endif
 
 ifeq ($(subdir),elf)
-sysdep-dl-routines += libc-do-syscall
 sysdep-others += lddlibc4
 install-bin += lddlibc4
 endif
