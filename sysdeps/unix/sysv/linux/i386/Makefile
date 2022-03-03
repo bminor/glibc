@@ -22,7 +22,6 @@ gen-as-const-headers += ucontext_i.sym
 endif
 
 ifeq ($(subdir),csu)
-sysdep-dl-routines += sysdep
 ifeq (yes,$(build-shared))
 sysdep_routines += divdi3
 shared-only-routines += divdi3
