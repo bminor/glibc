@@ -189,19 +189,16 @@ gaih_inet_serv (const char *servicename, const struct gaih_typeproto *tp,
   return 0;
 }
 
-/* Convert struct hostent to a list of struct gaih_addrtuple objects.
-   h_name is not copied, and the struct hostent object must not be
-   deallocated prematurely.  *RESULT must be NULL or a pointer to a
-   linked-list.  The new addresses are appended at the end.  */
+/* Convert struct hostent to a list of struct gaih_addrtuple objects.  h_name
+   is not copied, and the struct hostent object must not be deallocated
+   prematurely.  The new addresses are appended to the tuple array in
+   RESULT.  */
 static bool
 convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 				   int family,
 				   struct hostent *h,
 				   struct gaih_addrtuple **result)
 {
-  while (*result)
-    result = &(*result)->next;
-
   /* Count the number of addresses in h->h_addr_list.  */
   size_t count = 0;
   for (char **p = h->h_addr_list; *p != NULL; ++p)
@@ -212,9 +209,29 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
   if (count == 0 || h->h_length > sizeof (((struct gaih_addrtuple) {}).addr))
     return true;
 
-  struct gaih_addrtuple *array = calloc (count, sizeof (*array));
+  struct gaih_addrtuple *array = *result;
+  size_t old = 0;
+
+  while (array != NULL)
+    {
+      old++;
+      array = array->next;
+    }
+
+  array = realloc (*result, (old + count) * sizeof (*array));
+
   if (array == NULL)
     return false;
+
+  *result = array;
+
+  /* Update the next pointers on reallocation.  */
+  for (size_t i = 0; i < old; i++)
+    array[i].next = array + i + 1;
+
+  array += old;
+
+  memset (array, 0, count * sizeof (*array));
 
   for (size_t i = 0; i < count; ++i)
     {
@@ -235,7 +252,6 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
   array[0].name = h->h_name;
   array[count - 1].next = NULL;
 
-  *result = array;
   return true;
 }
 
