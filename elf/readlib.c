@@ -72,9 +72,8 @@ is_gdb_python_file (const char *name)
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
 process_file (const char *real_file_name, const char *file_name,
-	      const char *lib, int *flag, unsigned int *osversion,
-	      unsigned int *isa_level, char **soname, int is_link,
-	      struct stat *stat_buf)
+	      const char *lib, int *flag, unsigned int *isa_level,
+	      char **soname, int is_link, struct stat *stat_buf)
 {
   FILE *file;
   struct stat statbuf;
@@ -172,8 +171,8 @@ process_file (const char *real_file_name, const char *file_name,
   /* Libraries have to be shared object files.  */
   else if (elf_header->e_type != ET_DYN)
     ret = 1;
-  else if (process_elf_file (file_name, lib, flag, osversion, isa_level,
-			     soname, file_contents, statbuf.st_size))
+  else if (process_elf_file (file_name, lib, flag, isa_level, soname,
+			     file_contents, statbuf.st_size))
     ret = 1;
 
  done:

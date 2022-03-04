@@ -17,19 +17,17 @@
 
 
 int process_elf32_file (const char *file_name, const char *lib,
-			int *flag, unsigned int *osversion,
-			unsigned int *isa_level, char **soname,
+			int *flag, unsigned int *isa_level, char **soname,
 			void *file_contents, size_t file_length);
 int process_elf64_file (const char *file_name, const char *lib,
-			int *flag, unsigned int *osversion,
-			unsigned int *isa_level, char **soname,
+			int *flag, unsigned int *isa_level, char **soname,
 			void *file_contents, size_t file_length);
 
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
 process_elf_file (const char *file_name, const char *lib, int *flag,
-		  unsigned int *osversion, unsigned int *isa_level,
-		  char **soname, void *file_contents, size_t file_length)
+		  unsigned int *isa_level, char **soname, void *file_contents,
+		  size_t file_length)
 {
   ElfW(Ehdr) *elf_header = (ElfW(Ehdr) *) file_contents;
   int ret;
@@ -38,8 +36,8 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
     {
       Elf32_Ehdr *elf32_header = (Elf32_Ehdr *) elf_header;
 
-      ret = process_elf32_file (file_name, lib, flag, osversion, isa_level,
-				soname, file_contents, file_length);
+      ret = process_elf32_file (file_name, lib, flag, isa_level, soname,
+				file_contents, file_length);
 
       if (!ret && EF_ARM_EABI_VERSION (elf32_header->e_flags) == EF_ARM_EABI_VER5)
 	{
@@ -57,8 +55,8 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
     }
   else
     {
-      ret = process_elf64_file (file_name, lib, flag, osversion, isa_level,
-				soname, file_contents, file_length);
+      ret = process_elf64_file (file_name, lib, flag, isa_level, soname,
+				file_contents, file_length);
       /* AArch64 libraries are always libc.so.6+.  */
       if (!ret)
 	*flag = FLAG_AARCH64_LIB64|FLAG_ELF_LIBC6;

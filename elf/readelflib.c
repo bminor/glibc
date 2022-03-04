@@ -40,8 +40,8 @@ do								\
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
 process_elf_file (const char *file_name, const char *lib, int *flag,
-		  unsigned int *osversion, unsigned int *isa_level,
-		  char **soname, void *file_contents, size_t file_length)
+		  unsigned int *isa_level, char **soname, void *file_contents,
+		  size_t file_length)
 {
   int i;
   unsigned int j;
@@ -55,7 +55,6 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
   char *dynamic_strings;
 
   elf_header = (ElfW(Ehdr) *) file_contents;
-  *osversion = 0;
 
   if (elf_header->e_ident [EI_CLASS] != ElfW (CLASS))
     {
@@ -119,52 +118,6 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 		*flag = interpreters[j].flag;
 		break;
 	      }
-	  break;
-
-	case PT_NOTE:
-	  if (!*osversion && segment->p_filesz >= 32 && segment->p_align >= 4)
-	    {
-	      ElfW(Word) *abi_note = (ElfW(Word) *) (file_contents
-						     + segment->p_offset);
-	      ElfW(Addr) size = segment->p_filesz;
-	      /* NB: Some PT_NOTE segment may have alignment value of 0
-		 or 1.  gABI specifies that PT_NOTE segments should be
-		 aligned to 4 bytes in 32-bit objects and to 8 bytes in
-		 64-bit objects.  As a Linux extension, we also support
-		 4 byte alignment in 64-bit objects.  If p_align is less
-		 than 4, we treate alignment as 4 bytes since some note
-		 segments have 0 or 1 byte alignment.   */
-	      ElfW(Addr) align = segment->p_align;
-	      if (align < 4)
-		align = 4;
-	      else if (align != 4 && align != 8)
-		continue;
-
-	      while (abi_note [0] != 4 || abi_note [1] != 16
-		     || abi_note [2] != 1
-		     || memcmp (abi_note + 3, "GNU", 4) != 0)
-		{
-		  ElfW(Addr) note_size
-		    = ELF_NOTE_NEXT_OFFSET (abi_note[0], abi_note[1],
-					    align);
-
-		  if (size - 32 < note_size || note_size == 0)
-		    {
-		      size = 0;
-		      break;
-		    }
-		  size -= note_size;
-		  abi_note = (void *) abi_note + note_size;
-		}
-
-	      if (size == 0)
-		break;
-
-	      *osversion = ((abi_note [4] << 24)
-			    | ((abi_note [5] & 0xff) << 16)
-			    | ((abi_note [6] & 0xff) << 8)
-			    | (abi_note [7] & 0xff));
-	    }
 	  break;
 
 	case PT_GNU_PROPERTY:

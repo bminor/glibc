@@ -95,7 +95,7 @@ struct file_entry_new
       uint32_t key, value;	/* String table indices.  */
     };
   };
-  uint32_t osversion;		/* Required OS version.	 */
+  uint32_t osversion_unused;	/* Required OS version (unused).  */
   uint64_t hwcap;		/* Hwcap entry.	 */
 };
 

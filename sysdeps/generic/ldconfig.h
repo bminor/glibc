@@ -70,8 +70,7 @@ const char *glibc_hwcaps_subdirectory_name
 
 extern void add_to_cache (const char *path, const char *filename,
 			  const char *soname, int flags,
-			  unsigned int osversion, unsigned int isa_level,
-			  uint64_t hwcap,
+			  unsigned int isa_level, uint64_t hwcap,
 			  struct glibc_hwcaps_subdirectory *);
 
 extern void init_aux_cache (void);
@@ -79,28 +78,23 @@ extern void init_aux_cache (void);
 extern void load_aux_cache (const char *aux_cache_name);
 
 extern int search_aux_cache (struct stat *stat_buf, int *flags,
-			     unsigned int *osversion,
 			     unsigned int *isa_level, char **soname);
 
 extern void add_to_aux_cache (struct stat *stat_buf, int flags,
-			      unsigned int osversion,
 			      unsigned int isa_level, const char *soname);
 
 extern void save_aux_cache (const char *aux_cache_name);
 
 /* Declared in readlib.c.  */
 extern int process_file (const char *real_file_name, const char *file_name,
-			 const char *lib, int *flag,
-			 unsigned int *osversion, unsigned int *isa_level,
-			 char **soname, int is_link,
-			 struct stat *stat_buf);
+			 const char *lib, int *flag, unsigned int *isa_level,
+			 char **soname, int is_link, struct stat *stat_buf);
 
 extern char *implicit_soname (const char *lib, int flag);
 
 /* Declared in readelflib.c.  */
 extern int process_elf_file (const char *file_name, const char *lib,
-			     int *flag, unsigned int *osversion,
-			     unsigned int *isa_level, char **soname,
+			     int *flag, unsigned int *isa_level, char **soname,
 			     void *file_contents, size_t file_length);
 
 /* Declared in chroot_canon.c.  */

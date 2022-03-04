@@ -658,7 +658,6 @@ manual_link (char *library)
   char *soname;
   struct stat stat_buf;
   int flag;
-  unsigned int osversion;
   unsigned int isa_level;
 
   /* Prepare arguments for create_links call.  Split library name in
@@ -723,8 +722,8 @@ manual_link (char *library)
       goto out;
     }
 
-  if (process_file (real_library, library, libname, &flag, &osversion,
-		    &isa_level, &soname, 0, &stat_buf))
+  if (process_file (real_library, library, libname, &flag, &isa_level, &soname,
+		    0, &stat_buf))
     {
       error (0, 0, _("No link created since soname could not be found for %s"),
 	     library);
@@ -772,7 +771,6 @@ struct dlib_entry
   char *soname;
   int flag;
   int is_link;
-  unsigned int osversion;
   unsigned int isa_level;
   struct dlib_entry *next;
 };
@@ -991,22 +989,18 @@ search_dir (const struct dir_entry *entry)
       /* First search whether the auxiliary cache contains this
 	 library already and it's not changed.  */
       char *soname;
-      unsigned int osversion;
       unsigned int isa_level;
-      if (!search_aux_cache (&lstat_buf, &flag, &osversion, &isa_level,
-			     &soname))
+      if (!search_aux_cache (&lstat_buf, &flag, &isa_level, &soname))
 	{
 	  if (process_file (real_name, file_name, direntry->d_name, &flag,
-			    &osversion, &isa_level, &soname, is_link,
-			    &lstat_buf))
+			    &isa_level, &soname, is_link, &lstat_buf))
 	    {
 	      if (real_name != real_file_name)
 		free (real_name);
 	      continue;
 	    }
 	  else if (opt_build_cache)
-	    add_to_aux_cache (&lstat_buf, flag, osversion, isa_level,
-			      soname);
+	    add_to_aux_cache (&lstat_buf, flag, isa_level, soname);
 	}
 
       if (soname == NULL)
@@ -1111,7 +1105,6 @@ search_dir (const struct dir_entry *entry)
 		  free (dlib_ptr->name);
 		  dlib_ptr->name = xstrdup (direntry->d_name);
 		  dlib_ptr->is_link = is_link;
-		  dlib_ptr->osversion = osversion;
 		  dlib_ptr->isa_level = isa_level;
 		}
 	      /* Don't add this library, abort loop.  */
@@ -1128,7 +1121,6 @@ search_dir (const struct dir_entry *entry)
 	  dlib_ptr->soname = soname;
 	  dlib_ptr->flag = flag;
 	  dlib_ptr->is_link = is_link;
-	  dlib_ptr->osversion = osversion;
 	  dlib_ptr->isa_level = isa_level;
 	  /* Add at head of list.  */
 	  dlib_ptr->next = dlibs;
@@ -1166,8 +1158,8 @@ search_dir (const struct dir_entry *entry)
 	}
       if (opt_build_cache)
 	add_to_cache (entry->path, filename, dlib_ptr->soname,
-		      dlib_ptr->flag, dlib_ptr->osversion,
-		      dlib_ptr->isa_level, hwcap, entry->hwcaps);
+		      dlib_ptr->flag, dlib_ptr->isa_level, hwcap,
+		      entry->hwcaps);
     }
 
   /* Free all resources.  */
