@@ -27,6 +27,7 @@
 #include <string.h>
 #include <link.h>
 #include <errno.h>
+#include <ldsodefs.h>
 #include <dl-fptr.h>
 #include <abort-instr.h>
 #include <tls.h>
@@ -159,6 +160,24 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
   return (struct fdesc) { value.ip + reloc->r_addend, value.gp };
 }
 
+static inline struct link_map *
+elf_machine_main_map (void)
+{
+  struct link_map *main_map;
+
+#if defined SHARED && IS_IN (rtld)
+  asm (
+"	bl	1f,%0\n"
+"	addil	L'_rtld_local - ($PIC_pcrel$0 - 1),%0\n"
+"1:	ldw	R'_rtld_local - ($PIC_pcrel$0 - 5)(%%r1),%0\n"
+   : "=r" (main_map) : : "r1");
+#else
+  main_map = NULL;
+#endif
+
+  return main_map;
+}
+
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
 
@@ -173,6 +192,15 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
     unsigned char c[8];
     Elf32_Addr i[2];
   } sig = {{0x00,0xc0,0xff,0xee, 0xde,0xad,0xbe,0xef}};
+
+  /* Initialize dp register for main executable.  */
+  if (l == elf_machine_main_map ())
+    {
+      register Elf32_Addr dp asm ("%r27");
+
+      dp = D_PTR (l, l_info[DT_PLTGOT]);
+      asm volatile ("" : : "r" (dp));
+    }
 
   /* If we don't have a PLT we can just skip all this... */
   if (__builtin_expect (l->l_info[DT_JMPREL] == NULL,0))
@@ -336,16 +364,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    its return value is the user program's entry point.  */
 
 #define RTLD_START \
-/* Set up dp for any non-PIC lib constructors that may be called.  */	\
-static struct link_map * __attribute__((used))				\
-set_dp (struct link_map *map)						\
-{									\
-  register Elf32_Addr dp asm ("%r27");					\
-  dp = D_PTR (map, l_info[DT_PLTGOT]);					\
-  asm volatile ("" : : "r" (dp));					\
-  return map;								\
-}									\
-									\
 asm (									\
 "	.text\n"							\
 "	.globl _start\n"						\
@@ -445,13 +463,10 @@ asm (									\
 "	stw	%r24,-44(%sp)\n"					\
 									\
 ".Lnofix:\n"								\
+	/* Call _dl_init(main_map, argc, argv, envp). */		\
 "	addil	LT'_rtld_local,%r19\n"					\
 "	ldw	RT'_rtld_local(%r1),%r26\n"				\
-"	bl	set_dp, %r2\n"						\
 "	ldw	0(%r26),%r26\n"						\
-									\
-	/* Call _dl_init(_dl_loaded, argc, argv, envp). */		\
-"	copy	%r28,%r26\n"						\
 									\
 	/* envp = argv + argc + 1 */					\
 "	sh2add	%r25,%r24,%r23\n"					\
