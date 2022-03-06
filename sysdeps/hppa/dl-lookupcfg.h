@@ -30,6 +30,7 @@ rtld_hidden_proto (_dl_symbol_address)
 #define DL_SYMBOL_ADDRESS(map, ref) _dl_symbol_address(map, ref)
 
 Elf32_Addr _dl_lookup_address (const void *address);
+rtld_hidden_proto (_dl_lookup_address)
 
 #define DL_LOOKUP_ADDRESS(addr) _dl_lookup_address ((const void *) addr)
 
