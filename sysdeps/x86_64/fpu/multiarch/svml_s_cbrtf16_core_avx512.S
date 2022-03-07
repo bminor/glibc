@@ -31,205 +31,204 @@
 
 /* Offsets for data table __svml_scbrt_data_internal_avx512
  */
-#define etbl_H                        	0
-#define etbl_L                        	64
-#define cbrt_tbl_H                    	128
-#define BiasL                         	256
-#define SZero                         	320
-#define OneThird                      	384
-#define Bias3                         	448
-#define Three                         	512
-#define One                           	576
-#define poly_coeff3                   	640
-#define poly_coeff2                   	704
-#define poly_coeff1                   	768
+#define etbl_H				0
+#define etbl_L				64
+#define cbrt_tbl_H			128
+#define BiasL				256
+#define SZero				320
+#define OneThird			384
+#define Bias3				448
+#define Three				512
+#define One				576
+#define poly_coeff3			640
+#define poly_coeff2			704
+#define poly_coeff1			768
 
 #include <sysdep.h>
 
-        .text
-	.section .text.exex512,"ax",@progbits
+	.section .text.exex512, "ax", @progbits
 ENTRY(_ZGVeN16v_cbrtf_skx)
-        vgetmantps $0, {sae}, %zmm0, %zmm8
+	vgetmantps $0, {sae}, %zmm0, %zmm8
 
-/* GetExp(x) */
-        vgetexpps {sae}, %zmm0, %zmm1
-        vmovups   BiasL+__svml_scbrt_data_internal_avx512(%rip), %zmm2
+	/* GetExp(x) */
+	vgetexpps {sae}, %zmm0, %zmm1
+	vmovups	BiasL+__svml_scbrt_data_internal_avx512(%rip), %zmm2
 
-/* exponent/3 */
-        vmovups   OneThird+__svml_scbrt_data_internal_avx512(%rip), %zmm3
-        vmovups   Bias3+__svml_scbrt_data_internal_avx512(%rip), %zmm4
-        vmovups   One+__svml_scbrt_data_internal_avx512(%rip), %zmm15
+	/* exponent/3 */
+	vmovups	OneThird+__svml_scbrt_data_internal_avx512(%rip), %zmm3
+	vmovups	Bias3+__svml_scbrt_data_internal_avx512(%rip), %zmm4
+	vmovups	One+__svml_scbrt_data_internal_avx512(%rip), %zmm15
 
-/* exponent%3 (to be used as index) */
-        vmovups   Three+__svml_scbrt_data_internal_avx512(%rip), %zmm5
+	/* exponent%3 (to be used as index) */
+	vmovups	Three+__svml_scbrt_data_internal_avx512(%rip), %zmm5
 
-/* polynomial */
-        vmovups   poly_coeff3+__svml_scbrt_data_internal_avx512(%rip), %zmm11
-        vmovups   poly_coeff1+__svml_scbrt_data_internal_avx512(%rip), %zmm14
+	/* polynomial */
+	vmovups	poly_coeff3+__svml_scbrt_data_internal_avx512(%rip), %zmm11
+	vmovups	poly_coeff1+__svml_scbrt_data_internal_avx512(%rip), %zmm14
 
-/* Table lookup */
-        vmovups   cbrt_tbl_H+__svml_scbrt_data_internal_avx512(%rip), %zmm12
+	/* Table lookup */
+	vmovups	cbrt_tbl_H+__svml_scbrt_data_internal_avx512(%rip), %zmm12
 
-/* DblRcp ~ 1/Mantissa */
-        vrcp14ps  %zmm8, %zmm7
-        vaddps    {rn-sae}, %zmm2, %zmm1, %zmm6
-        vandps    SZero+__svml_scbrt_data_internal_avx512(%rip), %zmm0, %zmm0
+	/* DblRcp ~ 1/Mantissa */
+	vrcp14ps %zmm8, %zmm7
+	vaddps	{rn-sae}, %zmm2, %zmm1, %zmm6
+	vandps	SZero+__svml_scbrt_data_internal_avx512(%rip), %zmm0, %zmm0
 
-/* round DblRcp to 3 fractional bits (RN mode, no Precision exception) */
-        vrndscaleps $88, {sae}, %zmm7, %zmm9
-        vfmsub231ps {rn-sae}, %zmm6, %zmm3, %zmm4
-        vmovups   poly_coeff2+__svml_scbrt_data_internal_avx512(%rip), %zmm7
+	/* round DblRcp to 3 fractional bits (RN mode, no Precision exception) */
+	vrndscaleps $88, {sae}, %zmm7, %zmm9
+	vfmsub231ps {rn-sae}, %zmm6, %zmm3, %zmm4
+	vmovups	poly_coeff2+__svml_scbrt_data_internal_avx512(%rip), %zmm7
 
-/* Reduced argument: R = DblRcp*Mantissa - 1 */
-        vfmsub231ps {rn-sae}, %zmm9, %zmm8, %zmm15
-        vrndscaleps $9, {sae}, %zmm4, %zmm13
+	/* Reduced argument: R = DblRcp*Mantissa - 1 */
+	vfmsub231ps {rn-sae}, %zmm9, %zmm8, %zmm15
+	vrndscaleps $9, {sae}, %zmm4, %zmm13
 
-/* Prepare table index */
-        vpsrld    $19, %zmm9, %zmm10
-        vfmadd231ps {rn-sae}, %zmm15, %zmm11, %zmm7
-        vfnmadd231ps {rn-sae}, %zmm13, %zmm5, %zmm6
-        vpermt2ps cbrt_tbl_H+64+__svml_scbrt_data_internal_avx512(%rip), %zmm10, %zmm12
-        vfmadd213ps {rn-sae}, %zmm14, %zmm15, %zmm7
-        vscalefps {rn-sae}, %zmm13, %zmm12, %zmm2
+	/* Prepare table index */
+	vpsrld	$19, %zmm9, %zmm10
+	vfmadd231ps {rn-sae}, %zmm15, %zmm11, %zmm7
+	vfnmadd231ps {rn-sae}, %zmm13, %zmm5, %zmm6
+	vpermt2ps cbrt_tbl_H+64+__svml_scbrt_data_internal_avx512(%rip), %zmm10, %zmm12
+	vfmadd213ps {rn-sae}, %zmm14, %zmm15, %zmm7
+	vscalefps {rn-sae}, %zmm13, %zmm12, %zmm2
 
-/* Table lookup: 2^(exponent%3) */
-        vpermps   __svml_scbrt_data_internal_avx512(%rip), %zmm6, %zmm1
-        vpermps   etbl_L+__svml_scbrt_data_internal_avx512(%rip), %zmm6, %zmm6
+	/* Table lookup: 2^(exponent%3) */
+	vpermps	__svml_scbrt_data_internal_avx512(%rip), %zmm6, %zmm1
+	vpermps	etbl_L+__svml_scbrt_data_internal_avx512(%rip), %zmm6, %zmm6
 
-/* Sh*R */
-        vmulps    {rn-sae}, %zmm15, %zmm1, %zmm14
+	/* Sh*R */
+	vmulps	{rn-sae}, %zmm15, %zmm1, %zmm14
 
-/* Sl + (Sh*R)*Poly */
-        vfmadd213ps {rn-sae}, %zmm6, %zmm7, %zmm14
+	/* Sl + (Sh*R)*Poly */
+	vfmadd213ps {rn-sae}, %zmm6, %zmm7, %zmm14
 
-/*
- * branch-free
- * scaled_Th*(Sh+Sl+Sh*R*Poly)
- */
-        vaddps    {rn-sae}, %zmm1, %zmm14, %zmm15
-        vmulps    {rn-sae}, %zmm2, %zmm15, %zmm3
-        vorps     %zmm0, %zmm3, %zmm0
-        ret
+	/*
+	 * branch-free
+	 * scaled_Th*(Sh+Sl+Sh*R*Poly)
+	 */
+	vaddps	{rn-sae}, %zmm1, %zmm14, %zmm15
+	vmulps	{rn-sae}, %zmm2, %zmm15, %zmm3
+	vorps	%zmm0, %zmm3, %zmm0
+	ret
 
 END(_ZGVeN16v_cbrtf_skx)
 
-        .section .rodata, "a"
-        .align 64
+	.section .rodata, "a"
+	.align	64
 
 #ifdef __svml_scbrt_data_internal_avx512_typedef
 typedef unsigned int VUINT32;
 typedef struct {
-        __declspec(align(64)) VUINT32 etbl_H[16][1];
-        __declspec(align(64)) VUINT32 etbl_L[16][1];
-        __declspec(align(64)) VUINT32 cbrt_tbl_H[32][1];
-        __declspec(align(64)) VUINT32 BiasL[16][1];
-        __declspec(align(64)) VUINT32 SZero[16][1];
-        __declspec(align(64)) VUINT32 OneThird[16][1];
-        __declspec(align(64)) VUINT32 Bias3[16][1];
-        __declspec(align(64)) VUINT32 Three[16][1];
-        __declspec(align(64)) VUINT32 One[16][1];
-        __declspec(align(64)) VUINT32 poly_coeff3[16][1];
-        __declspec(align(64)) VUINT32 poly_coeff2[16][1];
-        __declspec(align(64)) VUINT32 poly_coeff1[16][1];
-    } __svml_scbrt_data_internal_avx512;
+	__declspec(align(64)) VUINT32 etbl_H[16][1];
+	__declspec(align(64)) VUINT32 etbl_L[16][1];
+	__declspec(align(64)) VUINT32 cbrt_tbl_H[32][1];
+	__declspec(align(64)) VUINT32 BiasL[16][1];
+	__declspec(align(64)) VUINT32 SZero[16][1];
+	__declspec(align(64)) VUINT32 OneThird[16][1];
+	__declspec(align(64)) VUINT32 Bias3[16][1];
+	__declspec(align(64)) VUINT32 Three[16][1];
+	__declspec(align(64)) VUINT32 One[16][1];
+	__declspec(align(64)) VUINT32 poly_coeff3[16][1];
+	__declspec(align(64)) VUINT32 poly_coeff2[16][1];
+	__declspec(align(64)) VUINT32 poly_coeff1[16][1];
+} __svml_scbrt_data_internal_avx512;
 #endif
 __svml_scbrt_data_internal_avx512:
-        /*== etbl_H ==*/
-        .long 0x3f800000
-        .long 0x3fa14518
-        .long 0x3fcb2ff5
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        /*== etbl_L ==*/
-        .align 64
-        .long 0x00000000
-        .long 0xb2ce51af
-        .long 0x32a7adc8
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        /*== cbrt_tbl_H ==*/
-        .align 64
-        .long 0x3fa14518
-        .long 0x3f9e0b2b
-        .long 0x3f9b0f9b
-        .long 0x3f984a9a
-        .long 0x3f95b5af
-        .long 0x3f934b6c
-        .long 0x3f910737
-        .long 0x3f8ee526
-        .long 0x3f8ce1da
-        .long 0x3f8afa6a
-        .long 0x3f892c4e
-        .long 0x3f87754e
-        .long 0x3f85d377
-        .long 0x3f844510
-        .long 0x3f82c892
-        .long 0x3f815c9f
-        .long 0x3f800000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        .long 0x00000000
-        /*== BiasL ==*/
-        .align 64
-        .long 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000
-        /*== Zero ==*/
-        .align 64
-        .long 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000
-        /*== OneThird ==*/
-        .align 64
-        .long 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab
-        /*== Bias3 ==*/
-        .align 64
-        .long 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000
-        /*== Three ==*/
-        .align 64
-        .long 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000
-        /*==One ==*/
-        .align 64
-        .long 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000
-        /*== poly_coeff3 ==*/
-        .align 64
-        .long 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c
-        /*== poly_coeff2 ==*/
-        .align 64
-        .long 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363
-        /*== poly_coeff1 ==*/
-        .align 64
-        .long 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa
-        .align 64
-        .type	__svml_scbrt_data_internal_avx512,@object
-        .size	__svml_scbrt_data_internal_avx512,.-__svml_scbrt_data_internal_avx512
+	/* etbl_H */
+	.long	0x3f800000
+	.long	0x3fa14518
+	.long	0x3fcb2ff5
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	/* etbl_L */
+	.align	64
+	.long	0x00000000
+	.long	0xb2ce51af
+	.long	0x32a7adc8
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	/* cbrt_tbl_H */
+	.align	64
+	.long	0x3fa14518
+	.long	0x3f9e0b2b
+	.long	0x3f9b0f9b
+	.long	0x3f984a9a
+	.long	0x3f95b5af
+	.long	0x3f934b6c
+	.long	0x3f910737
+	.long	0x3f8ee526
+	.long	0x3f8ce1da
+	.long	0x3f8afa6a
+	.long	0x3f892c4e
+	.long	0x3f87754e
+	.long	0x3f85d377
+	.long	0x3f844510
+	.long	0x3f82c892
+	.long	0x3f815c9f
+	.long	0x3f800000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	.long	0x00000000
+	/* BiasL */
+	.align	64
+	.long	0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000, 0x4b400000
+	/* Zero */
+	.align	64
+	.long	0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000
+	/* OneThird */
+	.align	64
+	.long	0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab, 0x3eaaaaab
+	/* Bias3 */
+	.align	64
+	.long	0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000, 0x4a800000
+	/* Three */
+	.align	64
+	.long	0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000, 0x40400000
+	/* One */
+	.align	64
+	.long	0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000
+	/* poly_coeff3 */
+	.align	64
+	.long	0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c, 0x3d7d057c
+	/* poly_coeff2 */
+	.align	64
+	.long	0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363, 0xbde3a363
+	/* poly_coeff1 */
+	.align	64
+	.long	0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa, 0x3eaaaaaa
+	.align	64
+	.type	__svml_scbrt_data_internal_avx512, @object
+	.size	__svml_scbrt_data_internal_avx512, .-__svml_scbrt_data_internal_avx512
