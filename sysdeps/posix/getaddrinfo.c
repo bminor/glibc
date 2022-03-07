@@ -1004,6 +1004,32 @@ try_simple_gethostbyname (const char *name, const struct addrinfo *req,
   return -EAI_NODATA;
 }
 
+/* Add local address information into RES.  RES->AT is assumed to have enough
+   space for two tuples and is zeroed out.  */
+
+static void
+get_local_addresses (const struct addrinfo *req, struct gaih_result *res)
+{
+  struct gaih_addrtuple *atr = res->at;
+  if (req->ai_family == AF_UNSPEC)
+    res->at->next = res->at + 1;
+
+  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
+    {
+      res->at->family = AF_INET6;
+      if ((req->ai_flags & AI_PASSIVE) == 0)
+	memcpy (res->at->addr, &in6addr_loopback, sizeof (struct in6_addr));
+      atr = res->at->next;
+    }
+
+  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
+    {
+      atr->family = AF_INET;
+      if ((req->ai_flags & AI_PASSIVE) == 0)
+	atr->addr[0] = htonl (INADDR_LOOPBACK);
+    }
+}
+
 static int
 gaih_inet (const char *name, const struct gaih_service *service,
 	   const struct addrinfo *req, struct addrinfo **pai,
@@ -1014,10 +1040,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
   const char *orig_name = name;
 
-  /* Reserve stack memory for the scratch buffer in the getaddrinfo
-     function.  */
-  size_t alloca_used = sizeof (struct scratch_buffer);
-
   int rc;
   if ((rc = get_servtuples (service, req, st, tmpbuf)) != 0)
     return rc;
@@ -1027,76 +1049,51 @@ gaih_inet (const char *name, const struct gaih_service *service,
   int result = 0;
 
   struct gaih_result res = {0};
-  if (name != NULL)
+  struct gaih_addrtuple local_at[2] = {0};
+
+  res.at = local_at;
+
+  if (__glibc_unlikely (name == NULL))
     {
-      if (req->ai_flags & AI_IDN)
-	{
-	  char *out;
-	  result = __idna_to_dns_encoding (name, &out);
-	  if (result != 0)
-	    return -result;
-	  name = out;
-	  malloc_name = true;
-	}
+      get_local_addresses (req, &res);
+      goto process_list;
+    }
 
-      res.at = alloca_account (sizeof (struct gaih_addrtuple), alloca_used);
-      res.at->scopeid = 0;
-      res.at->next = NULL;
+  if (req->ai_flags & AI_IDN)
+    {
+      char *out;
+      result = __idna_to_dns_encoding (name, &out);
+      if (result != 0)
+	return -result;
+      name = out;
+      malloc_name = true;
+    }
 
-      if ((result = text_to_binary_address (name, req, &res)) != 0)
-	goto free_and_return;
-      else if (res.at != NULL)
-	goto process_list;
+  if ((result = text_to_binary_address (name, req, &res)) != 0)
+    goto free_and_return;
+  else if (res.at != NULL)
+    goto process_list;
 
-      if ((result = try_simple_gethostbyname (name, req, tmpbuf, &res)) != 0)
-	goto free_and_return;
-      else if (res.at != NULL)
-	goto process_list;
+  if ((result = try_simple_gethostbyname (name, req, tmpbuf, &res)) != 0)
+    goto free_and_return;
+  else if (res.at != NULL)
+    goto process_list;
 
 #ifdef USE_NSCD
-      if ((result = get_nscd_addresses (name, req, &res)) != 0)
-	goto free_and_return;
-      else if (res.at != NULL)
-	goto process_list;
+  if ((result = get_nscd_addresses (name, req, &res)) != 0)
+    goto free_and_return;
+  else if (res.at != NULL)
+    goto process_list;
 #endif
 
-      if ((result = get_nss_addresses (name, req, tmpbuf, &res)) != 0)
-	goto free_and_return;
-      else if (res.at != NULL)
-	goto process_list;
+  if ((result = get_nss_addresses (name, req, tmpbuf, &res)) != 0)
+    goto free_and_return;
+  else if (res.at != NULL)
+    goto process_list;
 
-      /* None of the lookups worked, so name not found.  */
-      result = -EAI_NONAME;
-      goto free_and_return;
-    }
-  else
-    {
-      struct gaih_addrtuple *atr;
-      atr = res.at = alloca_account (sizeof (struct gaih_addrtuple),
-				     alloca_used);
-      memset (res.at, '\0', sizeof (struct gaih_addrtuple));
-
-      if (req->ai_family == AF_UNSPEC)
-	{
-	  res.at->next = __alloca (sizeof (struct gaih_addrtuple));
-	  memset (res.at->next, '\0', sizeof (struct gaih_addrtuple));
-	}
-
-      if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
-	{
-	  res.at->family = AF_INET6;
-	  if ((req->ai_flags & AI_PASSIVE) == 0)
-	    memcpy (res.at->addr, &in6addr_loopback, sizeof (struct in6_addr));
-	  atr = res.at->next;
-	}
-
-      if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
-	{
-	  atr->family = AF_INET;
-	  if ((req->ai_flags & AI_PASSIVE) == 0)
-	    atr->addr[0] = htonl (INADDR_LOOPBACK);
-	}
-    }
+  /* None of the lookups worked, so name not found.  */
+  result = -EAI_NONAME;
+  goto free_and_return;
 
 process_list:
   {
