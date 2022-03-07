@@ -816,20 +816,9 @@ extern void _dl_debug_printf_c (const char *fmt, ...)
 
 /* Write a message on the specified descriptor FD.  The parameters are
    interpreted as for a `printf' call.  */
-#if IS_IN (rtld) || !defined (SHARED)
 extern void _dl_dprintf (int fd, const char *fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3)))
      attribute_hidden;
-#else
-__attribute__ ((always_inline, __format__ (__printf__, 2, 3)))
-static inline void
-_dl_dprintf (int fd, const char *fmt, ...)
-{
-  /* Use local declaration to avoid includign <stdio.h>.  */
-  extern int __dprintf(int fd, const char *format, ...) attribute_hidden;
-  __dprintf (fd, fmt, __builtin_va_arg_pack ());
-}
-#endif
 
 /* Write LENGTH bytes at BUFFER to FD, like write.  Returns the number
    of bytes written on success, or a negative error constant on
