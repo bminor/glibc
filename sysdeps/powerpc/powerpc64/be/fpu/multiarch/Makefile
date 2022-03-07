@@ -62,6 +62,6 @@ CFLAGS-s_logb-power7.c = -mcpu=power7
 
 # These files quiet sNaNs in a way that is optimized away without
 # -fsignaling-nans.
-CFLAGS-s_modf-ppc64.c += -fsignaling-nans
-CFLAGS-s_modff-ppc64.c += -fsignaling-nans
+CFLAGS-s_modf-ppc64.c += $(config-cflags-signaling-nans)
+CFLAGS-s_modff-ppc64.c += $(config-cflags-signaling-nans)
 endif

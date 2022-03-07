@@ -1488,6 +1488,16 @@ if test -n "$submachine"; then
 fi
 AC_SUBST(libc_cv_cc_submachine)
 
+dnl Determine if compiler supports -fsignaling-nans
+AC_CACHE_CHECK([for compiler option that -fsignaling-nans],
+	       libc_cv_cc_signaling_nans, [dnl
+LIBC_TRY_CC_OPTION([-Werror -fsignaling-nans],
+		   [libc_cv_cc_signaling_nans=-fsignaling-nans],
+		   [libc_cv_cc_signaling_nans=])
+])
+LIBC_CONFIG_VAR([config-cflags-signaling-nans],
+		[$libc_cv_cc_signaling_nans])
+
 AC_CACHE_CHECK(if $CC accepts -fno-tree-loop-distribute-patterns with \
 __attribute__ ((__optimize__)), libc_cv_cc_loop_to_function, [dnl
 cat > conftest.c <<EOF

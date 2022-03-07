@@ -268,9 +268,9 @@ CFLAGS-bench-trunc.c += -fno-builtin
 CFLAGS-bench-truncf.c += -fno-builtin
 CFLAGS-bench-roundeven.c += -fno-builtin
 CFLAGS-bench-roundevenf.c += -fno-builtin
-CFLAGS-bench-isnan.c += -fsignaling-nans
-CFLAGS-bench-isinf.c += -fsignaling-nans
-CFLAGS-bench-isfinite.c += -fsignaling-nans
+CFLAGS-bench-isnan.c += $(config-cflags-signaling-nans)
+CFLAGS-bench-isinf.c += $(config-cflags-signaling-nans)
+CFLAGS-bench-isfinite.c += $(config-cflags-signaling-nans)
 
 ifeq (${BENCHSET},)
 bench-malloc := malloc-thread malloc-simple

@@ -6486,6 +6486,28 @@ $as_echo "$libc_cv_cc_submachine" >&6; }
 fi
 
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for compiler option that -fsignaling-nans" >&5
+$as_echo_n "checking for compiler option that -fsignaling-nans... " >&6; }
+if ${libc_cv_cc_signaling_nans+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if { ac_try='${CC-cc} -Werror -fsignaling-nans -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  libc_cv_cc_signaling_nans=-fsignaling-nans
+else
+  libc_cv_cc_signaling_nans=
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_cc_signaling_nans" >&5
+$as_echo "$libc_cv_cc_signaling_nans" >&6; }
+config_vars="$config_vars
+config-cflags-signaling-nans = $libc_cv_cc_signaling_nans"
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if $CC accepts -fno-tree-loop-distribute-patterns with \
 __attribute__ ((__optimize__))" >&5
 $as_echo_n "checking if $CC accepts -fno-tree-loop-distribute-patterns with \

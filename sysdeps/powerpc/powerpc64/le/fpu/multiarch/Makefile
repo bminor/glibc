@@ -130,8 +130,8 @@ generated += $(f128-march-routines)
 CFLAGS-float128-ifunc.c += $(type-float128-CFLAGS) $(no-gnu-attribute-CFLAGS)
 
 # Copy special CFLAGS for some functions
-CFLAGS-s_modff128-power9.c += -fsignaling-nans
-CFLAGS-m_modff128-power9.c += -fsignaling-nans
+CFLAGS-s_modff128-power9.c += $(config-cflags-signaling-nans)
+CFLAGS-m_modff128-power9.c += $(config-cflags-signaling-nans)
 
 # Generate ifunc wrapper files and target specific wrappers around
 # each routine above.  Note, m_%.c files are fixed up to include

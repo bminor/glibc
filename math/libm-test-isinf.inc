@@ -33,8 +33,10 @@ static const struct test_f_i_data isinf_test_data[] =
     TEST_f_b (isinf, minus_infty, 1, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isinf, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isinf, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#ifdef __SUPPORT_SNAN__
     TEST_f_b (isinf, snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isinf, -snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
   };
 
 #if TEST_COND_intel96

@@ -33,8 +33,10 @@ static const struct test_f_i_data isfinite_test_data[] =
     TEST_f_b (isfinite, minus_infty, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isfinite, qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isfinite, -qnan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#ifdef __SUPPORT_SNAN__
     TEST_f_b (isfinite, snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_b (isfinite, -snan_value, 0, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
   };
 
 static void

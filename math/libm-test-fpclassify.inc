@@ -22,8 +22,10 @@ static const struct test_f_i_data fpclassify_test_data[] =
   {
     TEST_f_i (fpclassify, qnan_value, FP_NAN, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (fpclassify, -qnan_value, FP_NAN, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#ifdef __SUPPORT_SNAN__
     TEST_f_i (fpclassify, snan_value, FP_NAN, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (fpclassify, -snan_value, FP_NAN, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
+#endif
     TEST_f_i (fpclassify, plus_infty, FP_INFINITE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (fpclassify, minus_infty, FP_INFINITE, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),
     TEST_f_i (fpclassify, plus_zero, FP_ZERO, NO_INEXACT_EXCEPTION|ERRNO_UNCHANGED),

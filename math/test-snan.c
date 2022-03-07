@@ -25,8 +25,10 @@
 #include <setjmp.h>
 
 #include <math-tests.h>
+#include <support/check.h>
 
 
+#ifdef __SUPPORT_SNAN__
 static sigjmp_buf sigfpe_buf;
 
 static void
@@ -123,10 +125,12 @@ NAME (void)								      \
 TEST_FUNC (float_test, float, f)
 TEST_FUNC (double_test, double, )
 TEST_FUNC (ldouble_test, long double, l)
+#endif
 
 static int
 do_test (void)
 {
+#ifdef __SUPPORT_SNAN__
   signal (SIGFPE, &myFPsighandler);
 
   float_test ();
@@ -134,7 +138,9 @@ do_test (void)
   ldouble_test ();
 
   return errors != 0;
+#else
+  FAIL_UNSUPPORTED ("compiler does not support -fsignaling-nans");
+#endif
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
