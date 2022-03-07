@@ -121,6 +121,7 @@ struct gaih_result
   struct gaih_addrtuple *at;
   char *canon;
   bool free_at;
+  bool got_ipv6;
 };
 
 /* Values for `protoflag'.  */
@@ -316,7 +317,7 @@ convert_hostent_to_gaih_addrtuple (const struct addrinfo *req,
 	  res.canon = canonbuf;						      \
 	}								      \
       if (_family == AF_INET6 && *pat != NULL)				      \
-	got_ipv6 = true;						      \
+	res.got_ipv6 = true;						      \
     }									      \
  }
 
@@ -466,6 +467,128 @@ get_servtuples (const struct gaih_service *service, const struct addrinfo *req,
 
   return 0;
 }
+
+#ifdef USE_NSCD
+/* Query addresses from nscd cache, returning a non-zero value on error.
+   RES members have the lookup result; RES->AT is NULL if there were no errors
+   but also no results.  */
+
+static int
+get_nscd_addresses (const char *name, const struct addrinfo *req,
+		    struct gaih_result *res)
+{
+  if (__nss_not_use_nscd_hosts > 0
+      && ++__nss_not_use_nscd_hosts > NSS_NSCD_RETRY)
+    __nss_not_use_nscd_hosts = 0;
+
+  res->at = NULL;
+
+  if (__nss_not_use_nscd_hosts || __nss_database_custom[NSS_DBSIDX_hosts])
+    return 0;
+
+  /* Try to use nscd.  */
+  struct nscd_ai_result *air = NULL;
+  int err = __nscd_getai (name, &air, &h_errno);
+
+  if (__glibc_unlikely (air == NULL))
+    {
+      /* The database contains a negative entry.  */
+      if (err == 0)
+	return -EAI_NONAME;
+      if (__nss_not_use_nscd_hosts == 0)
+	{
+	  if (h_errno == NETDB_INTERNAL && errno == ENOMEM)
+	    return -EAI_MEMORY;
+	  if (h_errno == TRY_AGAIN)
+	    return -EAI_AGAIN;
+	  return -EAI_SYSTEM;
+	}
+      return 0;
+    }
+
+  /* Transform into gaih_addrtuple list.  */
+  int result = 0;
+  char *addrs = air->addrs;
+
+  struct gaih_addrtuple *addrfree = calloc (air->naddrs, sizeof (*addrfree));
+  struct gaih_addrtuple *at = calloc (air->naddrs, sizeof (*at));
+  if (at == NULL)
+    {
+      result = -EAI_MEMORY;
+      goto out;
+    }
+
+  res->free_at = true;
+
+  int count = 0;
+  for (int i = 0; i < air->naddrs; ++i)
+    {
+      socklen_t size = (air->family[i] == AF_INET
+			? INADDRSZ : IN6ADDRSZ);
+
+      if (!((air->family[i] == AF_INET
+	     && req->ai_family == AF_INET6
+	     && (req->ai_flags & AI_V4MAPPED) != 0)
+	    || req->ai_family == AF_UNSPEC
+	    || air->family[i] == req->ai_family))
+	{
+	  /* Skip over non-matching result.  */
+	  addrs += size;
+	  continue;
+	}
+
+      if (air->family[i] == AF_INET && req->ai_family == AF_INET6
+	  && (req->ai_flags & AI_V4MAPPED))
+	{
+	  at[count].family = AF_INET6;
+	  at[count].addr[3] = *(uint32_t *) addrs;
+	  at[count].addr[2] = htonl (0xffff);
+	}
+      else if (req->ai_family == AF_UNSPEC
+	       || air->family[count] == req->ai_family)
+	{
+	  at[count].family = air->family[count];
+	  memcpy (at[count].addr, addrs, size);
+	  if (air->family[count] == AF_INET6)
+	    res->got_ipv6 = true;
+	}
+      at[count].next = at + count + 1;
+      count++;
+      addrs += size;
+    }
+
+  if ((req->ai_flags & AI_CANONNAME) && air->canon != NULL)
+    {
+      char *canonbuf = __strdup (air->canon);
+      if (canonbuf == NULL)
+	{
+	  result = -EAI_MEMORY;
+	  goto out;
+	}
+      res->canon = canonbuf;
+    }
+
+  if (count == 0)
+    {
+      result = -EAI_NONAME;
+      goto out;
+    }
+
+  at[count - 1].next = NULL;
+
+  res->at = at;
+
+out:
+  free (air);
+  if (result != 0)
+    {
+      free (at);
+      res->free_at = false;
+    }
+
+  return result;
+}
+#endif
 
 /* Convert numeric addresses to binary into RES.  On failure, RES->AT is set to
    NULL and an error code is returned.  If AI_NUMERIC_HOST is not requested and
@@ -630,7 +753,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
   struct gaih_servtuple st[sizeof (gaih_inet_typeproto)
 			   / sizeof (struct gaih_typeproto)] = {0};
 
-  bool got_ipv6 = false;
   const char *orig_name = name;
 
   /* Reserve stack memory for the scratch buffer in the getaddrinfo
@@ -672,6 +794,13 @@ gaih_inet (const char *name, const struct gaih_service *service,
       else if (res.at != NULL)
 	goto process_list;
 
+#ifdef USE_NSCD
+      if ((result = get_nscd_addresses (name, req, &res)) != 0)
+	goto free_and_return;
+      else if (res.at != NULL)
+	goto process_list;
+#endif
+
       int no_data = 0;
       int no_inet6_data = 0;
       nss_action_list nip;
@@ -680,115 +809,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
       int no_more;
       struct resolv_context *res_ctx = NULL;
       bool do_merge = false;
-
-#ifdef USE_NSCD
-      if (__nss_not_use_nscd_hosts > 0
-	  && ++__nss_not_use_nscd_hosts > NSS_NSCD_RETRY)
-	__nss_not_use_nscd_hosts = 0;
-
-      if (!__nss_not_use_nscd_hosts
-	  && !__nss_database_custom[NSS_DBSIDX_hosts])
-	{
-	  /* Try to use nscd.  */
-	  struct nscd_ai_result *air = NULL;
-	  int err = __nscd_getai (name, &air, &h_errno);
-	  if (air != NULL)
-	    {
-	      /* Transform into gaih_addrtuple list.  */
-	      bool added_canon = (req->ai_flags & AI_CANONNAME) == 0;
-	      char *addrs = air->addrs;
-
-	      addrmem = calloc (air->naddrs, sizeof (*addrmem));
-	      if (addrmem == NULL)
-		{
-		  result = -EAI_MEMORY;
-		  goto free_and_return;
-		}
-
-	      struct gaih_addrtuple *addrfree = addrmem;
-	      struct gaih_addrtuple **pat = &res.at;
-
-	      for (int i = 0; i < air->naddrs; ++i)
-		{
-		  socklen_t size = (air->family[i] == AF_INET
-				    ? INADDRSZ : IN6ADDRSZ);
-
-		  if (!((air->family[i] == AF_INET
-			 && req->ai_family == AF_INET6
-			 && (req->ai_flags & AI_V4MAPPED) != 0)
-			|| req->ai_family == AF_UNSPEC
-			|| air->family[i] == req->ai_family))
-		    {
-		      /* Skip over non-matching result.  */
-		      addrs += size;
-		      continue;
-		    }
-
-		  if (*pat == NULL)
-		    {
-		      *pat = addrfree++;
-		      (*pat)->scopeid = 0;
-		    }
-		  uint32_t *pataddr = (*pat)->addr;
-		  (*pat)->next = NULL;
-		  if (added_canon || air->canon == NULL)
-		    (*pat)->name = NULL;
-		  else if (res.canon == NULL)
-		    {
-		      char *canonbuf = __strdup (air->canon);
-		      if (canonbuf == NULL)
-			{
-			  result = -EAI_MEMORY;
-			  goto free_and_return;
-			}
-		      res.canon = (*pat)->name = canonbuf;
-		    }
-
-		  if (air->family[i] == AF_INET
-		      && req->ai_family == AF_INET6
-		      && (req->ai_flags & AI_V4MAPPED))
-		    {
-		      (*pat)->family = AF_INET6;
-		      pataddr[3] = *(uint32_t *) addrs;
-		      pataddr[2] = htonl (0xffff);
-		      pataddr[1] = 0;
-		      pataddr[0] = 0;
-		      pat = &((*pat)->next);
-		      added_canon = true;
-		    }
-		  else if (req->ai_family == AF_UNSPEC
-			   || air->family[i] == req->ai_family)
-		    {
-		      (*pat)->family = air->family[i];
-		      memcpy (pataddr, addrs, size);
-		      pat = &((*pat)->next);
-		      added_canon = true;
-		      if (air->family[i] == AF_INET6)
-			got_ipv6 = true;
-		    }
-		  addrs += size;
-		}
-
-	      free (air);
-
-	      goto process_list;
-	    }
-	  else if (err == 0)
-	    /* The database contains a negative entry.  */
-	    goto free_and_return;
-	  else if (__nss_not_use_nscd_hosts == 0)
-	    {
-	      if (h_errno == NETDB_INTERNAL && errno == ENOMEM)
-		result = -EAI_MEMORY;
-	      else if (h_errno == TRY_AGAIN)
-		result = -EAI_AGAIN;
-	      else
-		result = -EAI_SYSTEM;
-
-	      goto free_and_return;
-	    }
-	}
-#endif
 
       no_more = !__nss_database_get (nss_database_hosts, &nip);
 
@@ -897,7 +917,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 			  no_data = 0;
 			  if (req->ai_family == AF_INET6)
-			    got_ipv6 = true;
+			    res.got_ipv6 = true;
 			}
 		      else
 			*pat = ((*pat)->next);
@@ -940,7 +960,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			  && (req->ai_flags & AI_V4MAPPED)
 			  /* Avoid generating the mapped addresses if we
 			     know we are not going to need them.  */
-			  && ((req->ai_flags & AI_ALL) || !got_ipv6)))
+			  && ((req->ai_flags & AI_ALL) || !res.got_ipv6)))
 		    {
 		      gethosts (AF_INET);
 
@@ -1091,7 +1111,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    /* If we looked up IPv4 mapped address discard them here if
 	       the caller isn't interested in all address and we have
 	       found at least one IPv6 address.  */
-	    if (got_ipv6
+	    if (res.got_ipv6
 		&& (req->ai_flags & (AI_V4MAPPED|AI_ALL)) == AI_V4MAPPED
 		&& IN6_IS_ADDR_V4MAPPED (at2->addr))
 	      goto ignore;
