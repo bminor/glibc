@@ -41,4 +41,6 @@
 
 /* Location of current stack frame.  The frame pointer is not usable.  */
 #define CURRENT_STACK_FRAME \
-  ({ register char *frame __asm__("rsp"); frame; })
+  ({ register void * p__ __asm__("rsp"); \
+     asm volatile("" : "=r" (p__)); \
+     p__; })
