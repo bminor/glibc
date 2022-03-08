@@ -412,7 +412,8 @@ _IO_wfile_overflow (FILE *f, wint_t wch)
       return WEOF;
     }
   /* If currently reading or no buffer allocated. */
-  if ((f->_flags & _IO_CURRENTLY_PUTTING) == 0)
+  if ((f->_flags & _IO_CURRENTLY_PUTTING) == 0
+      || f->_wide_data->_IO_write_base == NULL)
     {
       /* Allocate a buffer if needed. */
       if (f->_wide_data->_IO_write_base == 0)
