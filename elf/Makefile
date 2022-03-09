@@ -541,6 +541,13 @@ tests-special += \
   # tests-special
 endif
 endif
+ifeq ($(have-relr),yes)
+tests += tst-relr tst-relr-no-pie
+tests-pie += tst-relr
+tests-no-pie += tst-relr-no-pie
+LDFLAGS-tst-relr += -z pack-relative-relocs
+LDFLAGS-tst-relr-no-pie += -z pack-relative-relocs
+endif
 endif
 
 ifeq ($(run-built-tests),yes)

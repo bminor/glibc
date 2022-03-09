@@ -443,7 +443,8 @@ typedef struct
 #define SHT_PREINIT_ARRAY 16		/* Array of pre-constructors */
 #define SHT_GROUP	  17		/* Section group */
 #define SHT_SYMTAB_SHNDX  18		/* Extended section indices */
-#define	SHT_NUM		  19		/* Number of defined types.  */
+#define SHT_RELR	  19            /* RELR relative relocations */
+#define	SHT_NUM		  20		/* Number of defined types.  */
 #define SHT_LOOS	  0x60000000	/* Start OS-specific.  */
 #define SHT_GNU_ATTRIBUTES 0x6ffffff5	/* Object attributes.  */
 #define SHT_GNU_HASH	  0x6ffffff6	/* GNU-style hash table.  */
@@ -661,6 +662,11 @@ typedef struct
   Elf64_Xword	r_info;			/* Relocation type and symbol index */
   Elf64_Sxword	r_addend;		/* Addend */
 } Elf64_Rela;
+
+/* RELR relocation table entry */
+
+typedef Elf32_Word	Elf32_Relr;
+typedef Elf64_Xword	Elf64_Relr;
 
 /* How to extract and insert information held in the r_info field.  */
 
@@ -887,7 +893,10 @@ typedef struct
 #define DT_PREINIT_ARRAY 32		/* Array with addresses of preinit fct*/
 #define DT_PREINIT_ARRAYSZ 33		/* size in bytes of DT_PREINIT_ARRAY */
 #define DT_SYMTAB_SHNDX	34		/* Address of SYMTAB_SHNDX section */
-#define	DT_NUM		35		/* Number used */
+#define DT_RELRSZ	35		/* Total size of RELR relative relocations */
+#define DT_RELR		36		/* Address of RELR relative relocations */
+#define DT_RELRENT	37		/* Size of one RELR relative relocaction */
+#define	DT_NUM		38		/* Number used */
 #define DT_LOOS		0x6000000d	/* Start of OS-specific */
 #define DT_HIOS		0x6ffff000	/* End of OS-specific */
 #define DT_LOPROC	0x70000000	/* Start of processor-specific */
