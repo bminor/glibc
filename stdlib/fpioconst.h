@@ -52,9 +52,12 @@
    - LDBL_MIN_EXP + 2)).  When _Float128 is enabled in libm and it is
    ABI-distinct from long double (e.g. on powerpc64le), we also need powers
    of 10 up to floor (log_2 (FLT128_MANT_DIG - FLT128_MIN_EXP + 2)).  */
-#define FPIOCONST_HAVE_EXTENDED_RANGE \
-  ((!defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024) \
-   || __HAVE_DISTINCT_FLOAT128)
+#if (!defined __NO_LONG_DOUBLE_MATH && __LDBL_MAX_EXP__ > 1024) \
+    || __HAVE_DISTINCT_FLOAT128
+# define FPIOCONST_HAVE_EXTENDED_RANGE 1
+#else
+# define FPIOCONST_HAVE_EXTENDED_RANGE 0
+#endif
 
 #if FPIOCONST_HAVE_EXTENDED_RANGE
 # define FPIOCONST_POW10_ARRAY_SIZE	15
