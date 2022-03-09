@@ -37,13 +37,17 @@
 #define NEED_SPEC_ARRAY 0
 #include <posix-conf-vars.h>
 
-#define NEED_CHECK_SPEC \
-  (!defined _XBS5_ILP32_OFF32 || !defined _XBS5_ILP32_OFFBIG \
+#if !defined _XBS5_ILP32_OFF32 || !defined _XBS5_ILP32_OFFBIG \
    || !defined _XBS5_LP64_OFF64 || !defined _XBS5_LPBIG_OFFBIG \
    || !defined _POSIX_V6_ILP32_OFF32 || !defined _POSIX_V6_ILP32_OFFBIG \
    || !defined _POSIX_V6_LP64_OFF64 || !defined _POSIX_V6_LPBIG_OFFBIG \
    || !defined _POSIX_V7_ILP32_OFF32 || !defined _POSIX_V7_ILP32_OFFBIG \
-   || !defined _POSIX_V7_LP64_OFF64 || !defined _POSIX_V7_LPBIG_OFFBIG)
+   || !defined _POSIX_V7_LP64_OFF64 || !defined _POSIX_V7_LPBIG_OFFBIG
+# define NEED_CHECK_SPEC 1
+#else
+# define NEED_CHECK_SPEC 0
+#endif
+
 #if NEED_CHECK_SPEC
 static long int __sysconf_check_spec (const char *spec);
 #endif
