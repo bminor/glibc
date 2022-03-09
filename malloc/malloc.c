@@ -5412,8 +5412,7 @@ do_set_tcache_unsorted_limit (size_t value)
 }
 #endif
 
-static inline int
-__always_inline
+static __always_inline int
 do_set_mxfast (size_t value)
 {
   if (value <= MAX_FAST_SIZE)
