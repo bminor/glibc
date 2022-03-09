@@ -40,6 +40,11 @@ _Static_assert (sizeof (__blkcnt_t) == sizeof (__blkcnt64_t),
                 "__blkcnt_t and __blkcnt64_t must match");
 #endif
 
+#if (__WORDSIZE == 32 \
+     && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE == 32)) \
+     || defined STAT_HAS_TIME32
+# define FSTATAT_USE_STATX 1
+
 static inline int
 fstatat64_time64_statx (int fd, const char *file, struct __stat64_t64 *buf,
 			int flag)
@@ -73,11 +78,6 @@ fstatat64_time64_statx (int fd, const char *file, struct __stat64_t64 *buf,
 
   return r;
 }
-
-#if (__WORDSIZE == 32 \
-     && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE == 32)) \
-     || defined STAT_HAS_TIME32
-# define FSTATAT_USE_STATX 1
 #else
 # define FSTATAT_USE_STATX 0
 #endif
