@@ -180,7 +180,7 @@ get_next_seq (coll_seq *seq, int nrules, const unsigned char *rulesets,
 	 ensures that seq->save_idx was saved to first and contains a
 	 valid value.  */
       DIAG_PUSH_NEEDS_COMMENT;
-      DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+      DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (5, "-Wmaybe-uninitialized");
       len = weights[idx++];
       DIAG_POP_NEEDS_COMMENT;
       /* Skip over indices of previous levels.  */
@@ -299,7 +299,7 @@ STRCOLL (const STRING_TYPE *s1, const STRING_TYPE *s2, locale_t l)
      seq2.  This uninitialized use is impossible for the same reason
      as described in comments in locale/weightwc.h.  */
   DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+  DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (7, "-Wmaybe-uninitialized");
   coll_seq seq1, seq2;
   DIAG_POP_NEEDS_COMMENT;
   seq1.len = 0;

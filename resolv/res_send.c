@@ -266,7 +266,7 @@ __res_context_send (struct resolv_context *ctx,
 	   Here the variable n is set to the return value of send_vc.
 	   See below.  */
 	DIAG_PUSH_NEEDS_COMMENT;
-	DIAG_IGNORE_NEEDS_COMMENT (9, "-Wmaybe-uninitialized");
+	DIAG_IGNORE_NEEDS_COMMENT_GCC (9, "-Wmaybe-uninitialized");
 	int n;
 	DIAG_POP_NEEDS_COMMENT;
 
@@ -364,7 +364,7 @@ __res_context_send (struct resolv_context *ctx,
 				return (-1);
 			/* See comment at the declaration of n.  */
 			DIAG_PUSH_NEEDS_COMMENT;
-			DIAG_IGNORE_NEEDS_COMMENT (9, "-Wmaybe-uninitialized");
+			DIAG_IGNORE_NEEDS_COMMENT_GCC (9, "-Wmaybe-uninitialized");
 			if (n == 0 && (buf2 == NULL || *resplen2 == 0))
 				goto next_ns;
 			DIAG_POP_NEEDS_COMMENT;
@@ -388,7 +388,7 @@ __res_context_send (struct resolv_context *ctx,
 
 		/* See comment at the declaration of n.  Note: resplen = n;  */
 		DIAG_PUSH_NEEDS_COMMENT;
-		DIAG_IGNORE_NEEDS_COMMENT (9, "-Wmaybe-uninitialized");
+		DIAG_IGNORE_NEEDS_COMMENT_GCC (9, "-Wmaybe-uninitialized");
 		/* Mask the AD bit in both responses unless it is
 		   marked trusted.  */
 		if (resplen > HFIXEDSZ)
@@ -580,7 +580,7 @@ send_vc(res_state statp,
 	   a false-positive.
 	 */
 	DIAG_PUSH_NEEDS_COMMENT;
-	DIAG_IGNORE_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+	DIAG_IGNORE_NEEDS_COMMENT_GCC (5, "-Wmaybe-uninitialized");
 	int resplen;
 	DIAG_POP_NEEDS_COMMENT;
 	struct iovec iov[4];
@@ -852,7 +852,7 @@ reopen (res_state statp, int *terrno, int ns)
 		   the function return -1 before control flow reaches
 		   the call to connect with slen.  */
 		DIAG_PUSH_NEEDS_COMMENT;
-		DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+		DIAG_IGNORE_NEEDS_COMMENT_GCC (5, "-Wmaybe-uninitialized");
 		if (__connect (EXT (statp).nssocks[ns], nsap, slen) < 0) {
 		DIAG_POP_NEEDS_COMMENT;
 			__res_iclose(statp, false);

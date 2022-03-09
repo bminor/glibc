@@ -403,7 +403,7 @@ enum
    involved in determining the code page and is the indicator that
    tmpbuf[2] is initialized.  */
 DIAG_PUSH_NEEDS_COMMENT;
-DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (5, "-Wmaybe-uninitialized");
 #define BODY \
   {									      \
     uint32_t ch;							      \

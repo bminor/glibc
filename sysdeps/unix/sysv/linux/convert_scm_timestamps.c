@@ -51,7 +51,7 @@ __convert_scm_timestamps (struct msghdr *msg, socklen_t msgsize)
      (done by either COMPAT_SO_TIMESTAMP_OLD or COMPAT_SO_TIMESTAMPNS_OLD)
      which will fallthrough to 'common' label.  */
   DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_NEEDS_COMMENT (6, "-Wmaybe-uninitialized");
+  DIAG_IGNORE_NEEDS_COMMENT_GCC (6, "-Wmaybe-uninitialized");
   int64_t tvts[2];
   DIAG_POP_NEEDS_COMMENT;
   int32_t tmp[2];

@@ -318,7 +318,7 @@ realloc_check (void *oldmem, size_t bytes)
 #if __GNUC_PREREQ (7, 0)
   /* GCC 7 warns about magic_p may be used uninitialized.  But we never
      reach here if magic_p is uninitialized.  */
-  DIAG_IGNORE_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+  DIAG_IGNORE_NEEDS_COMMENT_GCC (7, "-Wmaybe-uninitialized");
 #endif
   /* mem2chunk_check changed the magic byte in the old chunk.
      If newmem is NULL, then the old chunk will still be used though,

@@ -33,7 +33,7 @@ findidx (const int32_t *table,
      called except in cases where those fields have been
      initialized.  */
   DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+  DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (7, "-Wmaybe-uninitialized");
   wint_t ch = *(*cpp)++;
   DIAG_POP_NEEDS_COMMENT;
   int32_t i = __collidx_table_lookup ((const char *) table, ch);
@@ -74,7 +74,7 @@ findidx (const int32_t *table,
 	     of -1 for len at the same time which means that this loop
 	     never executes.  */
 	  DIAG_PUSH_NEEDS_COMMENT;
-	  DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+	  DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (5, "-Wmaybe-uninitialized");
 	  for (cnt = 0; cnt < nhere && cnt < len; ++cnt)
 	    if (cp[cnt] != usrc[cnt])
 	      break;
@@ -102,7 +102,7 @@ findidx (const int32_t *table,
 	     might be used uninitialized.  This is impossible for the
 	     same reason as described above.  */
 	  DIAG_PUSH_NEEDS_COMMENT;
-	  DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+	  DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (7, "-Wmaybe-uninitialized");
 	  for (cnt = 0; cnt < nhere - 1 && cnt < len; ++cnt)
 	    if (cp[cnt] != usrc[cnt])
 	      break;
@@ -119,7 +119,7 @@ findidx (const int32_t *table,
 	     might be used uninitialized.  This is impossible for the
 	     same reason as described above.  */
 	  DIAG_PUSH_NEEDS_COMMENT;
-	  DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+	  DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (7, "-Wmaybe-uninitialized");
 	  if (cp[nhere - 1] > usrc[nhere - 1])
 	    {
 	      cp += 2 * nhere;

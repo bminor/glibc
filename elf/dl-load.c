@@ -1161,7 +1161,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	     ‘(((char *)loadcmds.113_68 + _933 + 16))[329406144173384849].mapend’ may be used uninitialized [-Wmaybe-uninitialized]
 	     See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106008
 	   */
-	  DIAG_IGNORE_NEEDS_COMMENT (11, "-Wmaybe-uninitialized");
+	  DIAG_IGNORE_NEEDS_COMMENT_GCC (11, "-Wmaybe-uninitialized");
 #endif
 	  /* Determine whether there is a gap between the last segment
 	     and this one.  */

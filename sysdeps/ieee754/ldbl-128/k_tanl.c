@@ -143,7 +143,7 @@ __kernel_tanl (_Float128 x, _Float128 y, int iy)
 	 uninitialized although in the cases where it is used it has
 	 always been set.  */
       DIAG_PUSH_NEEDS_COMMENT;
-      DIAG_IGNORE_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+      DIAG_IGNORE_NEEDS_COMMENT_GCC (5, "-Wmaybe-uninitialized");
       if (sign < 0)
 	w = -w;
       DIAG_POP_NEEDS_COMMENT;

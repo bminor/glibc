@@ -32,7 +32,7 @@ findidx (const int32_t *table,
      This uninitialized use is impossible for the same reason
      as described in comments in locale/weightwc.h.  */
   DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_Os_NEEDS_COMMENT (8, "-Wmaybe-uninitialized");
+  DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (8, "-Wmaybe-uninitialized");
   int32_t i = table[*(*cpp)++];
   DIAG_POP_NEEDS_COMMENT;
   const unsigned char *cp;
@@ -75,7 +75,7 @@ findidx (const int32_t *table,
 	     of -1 for len at the same time which means that this loop
 	     never executes.  */
 	  DIAG_PUSH_NEEDS_COMMENT;
-	  DIAG_IGNORE_Os_NEEDS_COMMENT (5, "-Wmaybe-uninitialized");
+	  DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (5, "-Wmaybe-uninitialized");
 	  for (cnt = 0; cnt < nhere && cnt < len; ++cnt)
 	    if (cp[cnt] != usrc[cnt])
 	      break;
@@ -144,7 +144,7 @@ findidx (const int32_t *table,
 		     is impossible for the same reason as described
 		     above.  */
 		  DIAG_PUSH_NEEDS_COMMENT;
-		  DIAG_IGNORE_Os_NEEDS_COMMENT (7, "-Wmaybe-uninitialized");
+		  DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (7, "-Wmaybe-uninitialized");
 		  offset += usrc[cnt] - cp[cnt];
 		  DIAG_POP_NEEDS_COMMENT;
 		}
