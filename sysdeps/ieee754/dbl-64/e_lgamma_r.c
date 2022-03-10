@@ -231,7 +231,7 @@ __ieee754_lgamma_r(double x, int *signgamp)
 	    if (x < -2.0 && x > -28.0)
 		return __lgamma_neg (x, signgamp);
 	    t = sin_pi(x);
-	    if(t==zero) return one/fabsf(t); /* -integer */
+	    if(t==zero) return one/fabs(t); /* -integer */
 	    nadj = __ieee754_log(pi/fabs(t*x));
 	    if(t<zero) *signgamp = -1;
 	    x = -x;
