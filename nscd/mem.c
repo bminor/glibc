@@ -218,12 +218,8 @@ gc (struct database_dyn *db)
 
   /* Determine the highest offset.  */
   BITMAP_T mask = HIGHBIT;
-  ref_t highref = (high * BITS - 1) * BLOCK_ALIGN;
   while ((mark[high - 1] & mask) == 0)
-    {
-      mask >>= 1;
-      highref -= BLOCK_ALIGN;
-    }
+    mask >>= 1;
 
   /* Now we can iterate over the MARK array and find bits which are not
      set.  These represent memory which can be recovered.  */
