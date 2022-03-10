@@ -562,7 +562,7 @@ DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (5, "-Wmaybe-uninitialized");
 		  }							      \
 									      \
 		assert (used >= 1 && used <= 4);			      \
-		escseq = ")A\0\0)G)E" + (used - 1) * 2;			      \
+		escseq = &")A\0\0)G)E"[(used - 1) * 2];			      \
 		*outptr++ = ESC;					      \
 		*outptr++ = '$';					      \
 		*outptr++ = *escseq++;					      \
@@ -600,7 +600,7 @@ DIAG_IGNORE_Os_NEEDS_COMMENT_GCC (5, "-Wmaybe-uninitialized");
 		  }							      \
 									      \
 		assert ((used >> 5) >= 3 && (used >> 5) <= 7);		      \
-		escseq = "+I+J+K+L+M" + ((used >> 5) - 3) * 2;		      \
+		escseq = &"+I+J+K+L+M"[((used >> 5) - 3) * 2];		      \
 		*outptr++ = ESC;					      \
 		*outptr++ = '$';					      \
 		*outptr++ = *escseq++;					      \

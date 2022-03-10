@@ -326,7 +326,7 @@ enum
 		  }							      \
 									      \
 		assert ((used >> 3) >= 1 && (used >> 3) <= 3);		      \
-		escseq = ")A)G*H" + ((used >> 3) - 1) * 2;		      \
+		escseq = &")A)G*H"[((used >> 3) - 1) * 2];		      \
 		*outptr++ = ESC;					      \
 		*outptr++ = '$';					      \
 		*outptr++ = *escseq++;					      \
