@@ -88,9 +88,9 @@ static const uint32_t to_ucs4[256] =
 
 static const struct gap from_idx[] =
 {
-  { start: 0x0000, end: 0x00ac, idx:     0 },
-  { start: 0x0e01, end: 0x0e5b, idx: -3412 },
-  { start: 0xffff, end: 0xffff, idx:     0 }
+  { .start = 0x0000, .end = 0x00ac, .idx =     0 },
+  { .start = 0x0e01, .end = 0x0e5b, .idx = -3412 },
+  { .start = 0xffff, .end = 0xffff, .idx =     0 }
 };
 
 static const char from_ucs4[] =
