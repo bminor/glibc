@@ -32,17 +32,6 @@ struct in_buffer
 };
 
 static inline bool
-extract_8 (struct in_buffer *in, unsigned char *value)
-{
-  if (in->size == 0)
-    return false;
-  *value = in->data[0];
-  ++in->data;
-  --in->size;
-  return true;
-}
-
-static inline bool
 extract_16 (struct in_buffer *in, unsigned short *value)
 {
   if (in->size < 2)
