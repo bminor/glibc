@@ -456,7 +456,7 @@ getkeyserv_handle (int vers)
       return kcp->client;
     }
 
-  if ((kcp->client == (CLIENT *) NULL))
+  if (kcp->client == (CLIENT *) NULL)
     /* Use the AF_UNIX transport */
     kcp->client = clnt_create ("/var/run/keyservsock", KEY_PROG, vers, "unix");
 
