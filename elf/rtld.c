@@ -2494,7 +2494,7 @@ Valid options for the LD_DEBUG environment variable are:\n\n");
 
       for (cnt = 0; cnt < ndebopts; ++cnt)
 	_dl_printf ("  %.*s%s%s\n", debopts[cnt].len, debopts[cnt].name,
-		    "         " + debopts[cnt].len - 3,
+		    &"         "[debopts[cnt].len - 3],
 		    debopts[cnt].helptext);
 
       _dl_printf ("\n\
