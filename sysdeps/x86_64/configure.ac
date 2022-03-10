@@ -67,6 +67,17 @@ elif test $enable_cet = permissive; then
 fi
 LIBC_CONFIG_VAR([enable-cet], [$enable_cet])
 
+dnl Check if compiler supports -msse2avx or -Wa,-msse2avx
+AC_CACHE_CHECK(-msse2avx, libc_cv_cc_msse2avx, [dnl
+  for opt in "-msse2avx" "-Wa,-msse2avx"; do
+    if AC_TRY_COMMAND(${CC-cc} $CFLAGS -c -xc /dev/null -o /dev/null -c "$opt" 1>&AS_MESSAGE_LOG_FD); then
+      libc_cv_cc_msse2avx="$opt"; break;
+    fi
+  done
+])
+LIBC_CONFIG_VAR([config-cflags-msse2avx],
+		[$libc_cv_cc_msse2avx])
+
 # Check if -mamx-tile works properly.
 LIBC_TRY_TEST_CC_COMMAND([whether -mamx-tile works properly],
   [#include <x86intrin.h>],
