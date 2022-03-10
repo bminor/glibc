@@ -41,18 +41,6 @@ extern _Float128 __mpn_construct_float128 (mp_srcptr frac_ptr, int expt,
 					   int sign) attribute_hidden;
 #endif
 
-extern __typeof (mpn_add_1) mpn_add_1 attribute_hidden;
-extern __typeof (mpn_addmul_1) mpn_addmul_1 attribute_hidden;
-extern __typeof (mpn_add_n) mpn_add_n attribute_hidden;
-extern __typeof (mpn_cmp) mpn_cmp attribute_hidden;
-extern __typeof (mpn_divrem) mpn_divrem attribute_hidden;
-extern __typeof (mpn_lshift) mpn_lshift attribute_hidden;
-extern __typeof (mpn_mul) mpn_mul attribute_hidden;
-extern __typeof (mpn_mul_1) mpn_mul_1 attribute_hidden;
-extern __typeof (mpn_rshift) mpn_rshift attribute_hidden;
-extern __typeof (mpn_sub_1) mpn_sub_1 attribute_hidden;
-extern __typeof (mpn_submul_1) mpn_submul_1 attribute_hidden;
-extern __typeof (mpn_sub_n) mpn_sub_n attribute_hidden;
 #endif
 
 #endif

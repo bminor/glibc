@@ -48,6 +48,12 @@ along with the GNU MP Library; see the file COPYING.LIB.  If not, see
 #endif
 #endif
 
+#ifdef _LIBC
+#define _ATTRIBUTE_HIDDEN attribute_hidden
+#else
+#define _ATTRIBUTE_HIDDEN
+#endif
+
 #ifdef _SHORT_LIMB
 typedef unsigned int		mp_limb_t;
 typedef int			mp_limb_signed_t;
@@ -389,39 +395,39 @@ void mpf_ui_sub _PROTO ((mpf_ptr, unsigned long int, mpf_srcptr));
 #if defined (__cplusplus)
 extern "C" {
 #endif
-mp_limb_t mpn_add _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_srcptr,mp_size_t));
-mp_limb_t mpn_add_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
-mp_limb_t mpn_add_n _PROTO ((mp_ptr, mp_srcptr, mp_srcptr, mp_size_t));
-mp_limb_t mpn_addmul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
-mp_limb_t mpn_bdivmod _PROTO ((mp_ptr, mp_ptr, mp_size_t, mp_srcptr, mp_size_t, unsigned long int));
-int mpn_cmp _PROTO ((mp_srcptr, mp_srcptr, mp_size_t));
-mp_limb_t mpn_divmod_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
-mp_limb_t mpn_divrem _PROTO ((mp_ptr, mp_size_t, mp_ptr, mp_size_t, mp_srcptr, mp_size_t));
-mp_limb_t mpn_divrem_1 _PROTO ((mp_ptr, mp_size_t, mp_srcptr, mp_size_t, mp_limb_t));
-void mpn_dump _PROTO ((mp_srcptr, mp_size_t));
-mp_size_t mpn_gcd _PROTO ((mp_ptr, mp_ptr, mp_size_t, mp_ptr, mp_size_t));
-mp_limb_t mpn_gcd_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb_t));
-mp_size_t mpn_gcdext _PROTO ((mp_ptr, mp_ptr, mp_ptr, mp_size_t, mp_ptr, mp_size_t));
-size_t mpn_get_str _PROTO ((unsigned char *, int, mp_ptr, mp_size_t));
-unsigned long int mpn_hamdist _PROTO ((mp_srcptr, mp_srcptr, mp_size_t));
-mp_limb_t mpn_lshift _PROTO ((mp_ptr, mp_srcptr, mp_size_t, unsigned int));
-mp_limb_t mpn_mod_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb_t));
-mp_limb_t mpn_mul _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_srcptr, mp_size_t));
-mp_limb_t mpn_mul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
-void mpn_mul_n _PROTO ((mp_ptr, mp_srcptr, mp_srcptr, mp_size_t));
-int mpn_perfect_square_p _PROTO ((mp_srcptr, mp_size_t));
-unsigned long int mpn_popcount _PROTO ((mp_srcptr, mp_size_t));
-mp_limb_t mpn_preinv_mod_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t));
-void mpn_random2 _PROTO ((mp_ptr, mp_size_t));
-mp_limb_t mpn_rshift _PROTO ((mp_ptr, mp_srcptr, mp_size_t, unsigned int));
-unsigned long int mpn_scan0 _PROTO ((mp_srcptr, unsigned long int));
-unsigned long int mpn_scan1 _PROTO ((mp_srcptr, unsigned long int));
-mp_size_t mpn_set_str _PROTO ((mp_ptr, const unsigned char *, size_t, int));
-mp_size_t mpn_sqrtrem _PROTO ((mp_ptr, mp_ptr, mp_srcptr, mp_size_t));
-mp_limb_t mpn_sub _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_srcptr,mp_size_t));
-mp_limb_t mpn_sub_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
-mp_limb_t mpn_sub_n _PROTO ((mp_ptr, mp_srcptr, mp_srcptr, mp_size_t));
-mp_limb_t mpn_submul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t));
+mp_limb_t mpn_add _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_srcptr,mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_add_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_add_n _PROTO ((mp_ptr, mp_srcptr, mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_addmul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_bdivmod _PROTO ((mp_ptr, mp_ptr, mp_size_t, mp_srcptr, mp_size_t, unsigned long int)) _ATTRIBUTE_HIDDEN;
+int mpn_cmp _PROTO ((mp_srcptr, mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_divmod_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_divrem _PROTO ((mp_ptr, mp_size_t, mp_ptr, mp_size_t, mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN; 
+mp_limb_t mpn_divrem_1 _PROTO ((mp_ptr, mp_size_t, mp_srcptr, mp_size_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
+void mpn_dump _PROTO ((mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_size_t mpn_gcd _PROTO ((mp_ptr, mp_ptr, mp_size_t, mp_ptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_gcd_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
+mp_size_t mpn_gcdext _PROTO ((mp_ptr, mp_ptr, mp_ptr, mp_size_t, mp_ptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+size_t mpn_get_str _PROTO ((unsigned char *, int, mp_ptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+unsigned long int mpn_hamdist _PROTO ((mp_srcptr, mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_lshift _PROTO ((mp_ptr, mp_srcptr, mp_size_t, unsigned int)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_mod_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_mul _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_mul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
+void mpn_mul_n _PROTO ((mp_ptr, mp_srcptr, mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+int mpn_perfect_square_p _PROTO ((mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+unsigned long int mpn_popcount _PROTO ((mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_preinv_mod_1 _PROTO ((mp_srcptr, mp_size_t, mp_limb_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
+void mpn_random2 _PROTO ((mp_ptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_rshift _PROTO ((mp_ptr, mp_srcptr, mp_size_t, unsigned int)) _ATTRIBUTE_HIDDEN;
+unsigned long int mpn_scan0 _PROTO ((mp_srcptr, unsigned long int)) _ATTRIBUTE_HIDDEN;
+unsigned long int mpn_scan1 _PROTO ((mp_srcptr, unsigned long int)) _ATTRIBUTE_HIDDEN;
+mp_size_t mpn_set_str _PROTO ((mp_ptr, const unsigned char *, size_t, int)) _ATTRIBUTE_HIDDEN;
+mp_size_t mpn_sqrtrem _PROTO ((mp_ptr, mp_ptr, mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_sub _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_srcptr,mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_sub_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_sub_n _PROTO ((mp_ptr, mp_srcptr, mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
+mp_limb_t mpn_submul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
 #if defined (__cplusplus)
 }
 #endif
