@@ -163,18 +163,6 @@ profil_count (uintptr_t pcp, int prof_uint)
     }
 }
 
-static inline void
-profil_count_ushort (uintptr_t pcp)
-{
-  profil_count (pcp, 0);
-}
-
-static inline void
-profil_count_uint (uintptr_t pcp)
-{
-  profil_count (pcp, 1);
-}
-
 /* Get the machine-dependent definition of `__profil_counter', the signal
    handler for SIGPROF.  It calls `profil_count' (above) with the PC of the
    interrupted code.  */
