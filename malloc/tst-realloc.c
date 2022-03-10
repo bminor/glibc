@@ -20,15 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <libc-diag.h>
-
-static int errors = 0;
-
-static void
-merror (const char *msg)
-{
-  ++errors;
-  printf ("Error: %s\n", msg);
-}
+#include <support/check.h>
 
 static int
 do_test (void)
@@ -51,11 +43,11 @@ do_test (void)
   save = errno;
 
   if (p != NULL)
-    merror ("realloc (NULL, -1) succeeded.");
+    FAIL_EXIT1 ("realloc (NULL, -1) succeeded.");
 
   /* errno should be set to ENOMEM on failure (POSIX).  */
   if (p == NULL && save != ENOMEM)
-    merror ("errno is not set correctly");
+    FAIL_EXIT1 ("errno is not set correctly");
 
   errno = 0;
 
@@ -64,18 +56,18 @@ do_test (void)
   save = errno;
 
   if (p == NULL)
-    merror ("realloc (NULL, 10) failed.");
+    FAIL_EXIT1 ("realloc (NULL, 10) failed.");
 
   free (p);
 
   p = calloc (20, 1);
   if (p == NULL)
-    merror ("calloc (20, 1) failed.");
+    FAIL_EXIT1 ("calloc (20, 1) failed.");
 
   /* Check increasing size preserves contents (C89).  */
   p = realloc (p, 200);
   if (p == NULL)
-    merror ("realloc (p, 200) failed.");
+    FAIL_EXIT1 ("realloc (p, 200) failed.");
 
   c = p;
   ok = 1;
@@ -87,20 +79,20 @@ do_test (void)
     }
 
   if (ok == 0)
-    merror ("first 20 bytes were not cleared");
+    FAIL_EXIT1 ("first 20 bytes were not cleared");
 
   free (p);
 
   p = realloc (NULL, 100);
   if (p == NULL)
-    merror ("realloc (NULL, 100) failed.");
+    FAIL_EXIT1 ("realloc (NULL, 100) failed.");
 
   memset (p, 0xff, 100);
 
   /* Check decreasing size preserves contents (C89).  */
   p = realloc (p, 16);
   if (p == NULL)
-    merror ("realloc (p, 16) failed.");
+    FAIL_EXIT1 ("realloc (p, 16) failed.");
 
   c = p;
   ok = 1;
@@ -112,7 +104,7 @@ do_test (void)
     }
 
   if (ok == 0)
-    merror ("first 16 bytes were not correct");
+    FAIL_EXIT1 ("first 16 bytes were not correct");
 
   /* Check failed realloc leaves original untouched (C89).  */
   DIAG_PUSH_NEEDS_COMMENT;
@@ -124,7 +116,7 @@ do_test (void)
   c = realloc (p, -1);
   DIAG_POP_NEEDS_COMMENT;
   if (c != NULL)
-    merror ("realloc (p, -1) succeeded.");
+    FAIL_EXIT1 ("realloc (p, -1) succeeded.");
 
   c = p;
   ok = 1;
@@ -136,29 +128,21 @@ do_test (void)
     }
 
   if (ok == 0)
-    merror ("first 16 bytes were not correct after failed realloc");
+    FAIL_EXIT1 ("first 16 bytes were not correct after failed realloc");
 
-#if __GNUC_PREREQ (12, 0)
-  /* Ignore a valid warning about using a pointer made indeterminate
-     by a prior call to realloc().  */
-  DIAG_IGNORE_NEEDS_COMMENT (12, "-Wuse-after-free");
-#endif
   /* realloc (p, 0) frees p (C89) and returns NULL (glibc).  */
   p = realloc (p, 0);
-#if __GNUC_PREREQ (12, 0)
-  DIAG_POP_NEEDS_COMMENT;
-#endif
   if (p != NULL)
-    merror ("realloc (p, 0) returned non-NULL.");
+    FAIL_EXIT1 ("realloc (p, 0) returned non-NULL.");
 
   /* realloc (NULL, 0) acts like malloc (0) (glibc).  */
   p = realloc (NULL, 0);
   if (p == NULL)
-    merror ("realloc (NULL, 0) returned NULL.");
+    FAIL_EXIT1 ("realloc (NULL, 0) returned NULL.");
 
   free (p);
 
-  return errors != 0;
+  return 0;
 }
 
 #define TEST_FUNCTION do_test ()
