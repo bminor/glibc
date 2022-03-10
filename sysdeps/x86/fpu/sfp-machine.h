@@ -39,9 +39,15 @@ typedef unsigned int UTItype __attribute__ ((mode (TI)));
 
 # define FP_RND_MASK		0x6000
 
+# ifdef __AVX__
+#  define AVX_INSN_PREFIX	"v"
+# else
+#  define AVX_INSN_PREFIX	""
+# endif
+
 # define FP_INIT_ROUNDMODE					\
   do {								\
-    __asm__ __volatile__ ("%vstmxcsr\t%0" : "=m" (_fcw));	\
+    __asm__ __volatile__ (AVX_INSN_PREFIX "stmxcsr\t%0" : "=m" (_fcw)); \
   } while (0)
 #else
 # define _FP_W_TYPE_SIZE	32
