@@ -1444,6 +1444,15 @@ LIBC_CONFIG_VAR([config-cflags-wno-ignored-attributes],
 		[$libc_cv_wno_ignored_attributes])
 AC_SUBST(libc_cv_test_wno_ignored_attributes)
 
+AC_CACHE_CHECK([for -Wno-maybe-uninitialized],
+                libc_cv_wno_maybe_uninitialized, [dnl
+		LIBC_TRY_CC_OPTION([-Werror -Wno-maybe-uninitialized],
+				   [libc_cv_wno_maybe_uninitialized=-Wno-maybe-uninitialized],
+				   [libc_cv_wno_maybe_uninitialized=])
+])
+LIBC_CONFIG_VAR([config-cflags-wno-maybe-uninitialized],
+		[$libc_cv_wno_maybe_uninitialized])
+
 AC_CACHE_CHECK(whether cc puts quotes around section names,
 	       libc_cv_have_section_quotes,
 	       [cat > conftest.c <<EOF

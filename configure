@@ -7613,6 +7613,32 @@ config_vars="$config_vars
 config-cflags-wno-ignored-attributes = $libc_cv_wno_ignored_attributes"
 
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for -Wno-maybe-uninitialized" >&5
+printf %s "checking for -Wno-maybe-uninitialized... " >&6; }
+if test ${libc_cv_wno_maybe_uninitialized+y}
+then :
+  printf %s "(cached) " >&6
+else case e in #(
+  e) 		if { ac_try='${CC-cc} -Werror -Wno-maybe-uninitialized -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+then :
+  libc_cv_wno_maybe_uninitialized=-Wno-maybe-uninitialized
+else case e in #(
+  e) libc_cv_wno_maybe_uninitialized= ;;
+esac
+fi
+ ;;
+esac
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_cv_wno_maybe_uninitialized" >&5
+printf "%s\n" "$libc_cv_wno_maybe_uninitialized" >&6; }
+config_vars="$config_vars
+config-cflags-wno-maybe-uninitialized = $libc_cv_wno_maybe_uninitialized"
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether cc puts quotes around section names" >&5
 printf %s "checking whether cc puts quotes around section names... " >&6; }
 if test ${libc_cv_have_section_quotes+y}
