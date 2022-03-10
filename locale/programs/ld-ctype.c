@@ -3354,33 +3354,6 @@ wctype_table_init (struct wctype_table *t)
   t->level3_alloc = t->level3_size = 0;
 }
 
-/* Retrieve an entry.  */
-static inline int
-wctype_table_get (struct wctype_table *t, uint32_t wc)
-{
-  uint32_t index1 = wc >> (t->q + t->p + 5);
-  if (index1 < t->level1_size)
-    {
-      uint32_t lookup1 = t->level1[index1];
-      if (lookup1 != EMPTY)
-	{
-	  uint32_t index2 = ((wc >> (t->p + 5)) & ((1 << t->q) - 1))
-			    + (lookup1 << t->q);
-	  uint32_t lookup2 = t->level2[index2];
-	  if (lookup2 != EMPTY)
-	    {
-	      uint32_t index3 = ((wc >> 5) & ((1 << t->p) - 1))
-				+ (lookup2 << t->p);
-	      uint32_t lookup3 = t->level3[index3];
-	      uint32_t index4 = wc & 0x1f;
-
-	      return (lookup3 >> index4) & 1;
-	    }
-	}
-    }
-  return 0;
-}
-
 /* Add one entry.  */
 static void
 wctype_table_add (struct wctype_table *t, uint32_t wc)
