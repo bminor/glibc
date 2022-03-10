@@ -22,7 +22,7 @@
 /* Linux allows PAGE_SHIFT in range of [12-16] and expect
    mmap2 offset to be provided in based on the configured pagesize.
    Determine the shift dynamically with getpagesize.  */
-#define MMAP2_PAGE_UNIT -1
+#define MMAP2_PAGE_UNIT -1ULL
 
 #include_next <mmap_internal.h>
 
