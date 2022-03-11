@@ -33,7 +33,8 @@ minus1:	.double -1.0
 one:	.double 1.0
 	ASM_SIZE_DIRECTIVE(one)
 	.type l2e,@object
-l2e:	.tfloat 1.442695040888963407359924681002
+l2e:	.quad   0xb8aa3b295c17f0bc  /* 1.442695040888963407359924681002 */
+	.short  0x3fff
 	ASM_SIZE_DIRECTIVE(l2e)
 
 DEFINE_DBL_MIN

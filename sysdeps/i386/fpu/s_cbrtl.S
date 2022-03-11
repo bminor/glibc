@@ -23,55 +23,68 @@
 
         .align ALIGNARG(4)
         .type f8,@object
-f8:	.tfloat 0.161617097923756032
+f8:	.quad   0xa57ef3d83a542839  /* 0.161617097923756032  */
+	.short  0x3ffc
 	ASM_SIZE_DIRECTIVE(f8)
         .align ALIGNARG(4)
         .type f7,@object
-f7:	.tfloat -0.988553671195413709
+f7:	.quad   0xfd11da7820029014  /* -0.988553671195413709  */
+	.short  0xbffe
 	ASM_SIZE_DIRECTIVE(f7)
         .align ALIGNARG(4)
         .type f6,@object
-f6:	.tfloat 2.65298938441952296
+f6:	.quad   0xa9ca93fcade3b4ad  /* 2.65298938441952296  */
+	.short  0x4000
 	ASM_SIZE_DIRECTIVE(f6)
         .align ALIGNARG(4)
         .type f5,@object
-f5:	.tfloat -4.11151425200350531
+f5:	.quad   0x839186562c931c34  /* -4.11151425200350531  */
+	.short  0xc001
 	ASM_SIZE_DIRECTIVE(f5)
         .align ALIGNARG(4)
         .type f4,@object
-f4:	.tfloat 4.09559907378707839
+f4:	.quad   0x830f25c9ee304594  /* 4.09559907378707839  */
+	.short  0x4001
 	ASM_SIZE_DIRECTIVE(f4)
         .align ALIGNARG(4)
         .type f3,@object
-f3:	.tfloat -2.82414939754975962
+f3:	.quad   0xb4bedd1d5fa2f0c6  /* -2.82414939754975962  */
+	.short  0xc000
 	ASM_SIZE_DIRECTIVE(f3)
         .align ALIGNARG(4)
         .type f2,@object
-f2:	.tfloat 1.67595307700780102
+f2:	.quad   0xd685a163b08586e3  /* 1.67595307700780102  */
+	.short  0x3fff
 	ASM_SIZE_DIRECTIVE(f2)
         .align ALIGNARG(4)
         .type f1,@object
-f1:	.tfloat 0.338058687610520237
+f1:	.quad   0xad16073ed4ec3b45  /* 0.338058687610520237  */
+	.short  0x3ffd
 	ASM_SIZE_DIRECTIVE(f1)
-
-#define CBRT2		1.2599210498948731648
-#define ONE_CBRT2	0.793700525984099737355196796584
-#define SQR_CBRT2	1.5874010519681994748
-#define ONE_SQR_CBRT2	0.629960524947436582364439673883
 
 	/* We make the entries in the following table all 16 bytes
 	   wide to avoid having to implement a multiplication by 10.  */
 	.type factor,@object
         .align ALIGNARG(4)
-factor:	.tfloat ONE_SQR_CBRT2
+factor:	/* 1.0 / cbrt (2.0) ^ 2 = 0.629960524947436582364439673883  */
+	.quad 0xa14517cc6b945711
+	.short 0x3ffe
 	.byte 0, 0, 0, 0, 0, 0
-	.tfloat ONE_CBRT2
+	/* 1.0 / cbrt (2.0) = 0.793700525984099737355196796584  */
+	.quad 0xcb2ff529eb71e415
+	.short 0x3ffe
 	.byte 0, 0, 0, 0, 0, 0
-	.tfloat 1.0
+	/* 1.0L  */
+	.quad 0x8000000000000000
+	.short 0x3fff
 	.byte 0, 0, 0, 0, 0, 0
-	.tfloat CBRT2
+	/* cbrt (2.0) = 1.2599210498948731648  */
+	.quad 0xa14517cc6b945711
+	.short 0x3fff
 	.byte 0, 0, 0, 0, 0, 0
-	.tfloat SQR_CBRT2
+	/* cbrt (2.0) ^ 2 = 1.5874010519681994748  */
+	.quad 0xcb2ff529eb71e416
+	.short 0x3fff
 	ASM_SIZE_DIRECTIVE(factor)
 
         .type two64,@object

@@ -23,7 +23,8 @@
 
 	.align ALIGNARG(4)
 	.type huge,@object
-huge:	.tfloat 1e+4930
+huge:	.quad   0x89b634e7456ffa1d  /* 1e+4930  */
+	.short  0x7ff8
 	ASM_SIZE_DIRECTIVE(huge)
 	.align ALIGNARG(4)
 	/* Please note that we use double value for 1.0.  This number

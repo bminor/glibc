@@ -14,7 +14,8 @@ RCSID("$NetBSD: s_log1p.S,v 1.7 1995/05/09 00:10:58 jtc Exp $")
 		-1 + sqrt(2) / 2 <= x <= 1 - sqrt(2) / 2
 	   0.29 is a safe value.
 	*/
-limit:	.tfloat 0.29
+limit:	.quad   0x947ae147ae147ae1	/* 0.29  */
+	.short	0x3ffd
 	/* Please note:	 we use a double value here.  Since 1.0 has
 	   an exact representation this does not effect the accuracy
 	   but it helps to optimize the code.  */

@@ -34,7 +34,8 @@ limit:	.double 0.29
 	ASM_SIZE_DIRECTIVE(limit)
 	.align ALIGNARG(4)
 	.type ln2_2,@object
-ln2_2:	.tfloat 0.3465735902799726547086160
+ln2_2:	.quad   0xb17217f7d1cf79ac  /* 0.3465735902799726547086160  */
+	.short  0x3ffd
 	ASM_SIZE_DIRECTIVE(ln2_2)
 
 DEFINE_FLT_MIN
