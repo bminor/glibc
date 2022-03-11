@@ -122,7 +122,8 @@ extern int epoll_ctl (int __epfd, int __op, int __fd,
    This function is a cancellation point and therefore not marked with
    __THROW.  */
 extern int epoll_wait (int __epfd, struct epoll_event *__events,
-		       int __maxevents, int __timeout);
+		       int __maxevents, int __timeout)
+	__attr_access ((__write_only__, 2, 3));
 
 
 /* Same as epoll_wait, but the thread's signal mask is temporarily
@@ -132,7 +133,8 @@ extern int epoll_wait (int __epfd, struct epoll_event *__events,
    __THROW.  */
 extern int epoll_pwait (int __epfd, struct epoll_event *__events,
 			int __maxevents, int __timeout,
-			const __sigset_t *__ss);
+			const __sigset_t *__ss)
+	__attr_access ((__write_only__, 2, 3));
 
 /* Same as epoll_pwait, but the timeout as a timespec.
 
@@ -141,14 +143,16 @@ extern int epoll_pwait (int __epfd, struct epoll_event *__events,
 #ifndef __USE_TIME_BITS64
 extern int epoll_pwait2 (int __epfd, struct epoll_event *__events,
 			 int __maxevents, const struct timespec *__timeout,
-			 const __sigset_t *__ss);
+			 const __sigset_t *__ss)
+	__attr_access ((__write_only__, 2, 3));
 #else
 # ifdef __REDIRECT
 extern int __REDIRECT (epoll_pwait2, (int __epfd, struct epoll_event *__ev,
 				      int __maxevs,
 				      const struct timespec *__timeout,
 				      const __sigset_t *__ss),
-		       __epoll_pwait2_time64);
+		       __epoll_pwait2_time64)
+	__attr_access ((__write_only__, 2, 3));
 # else
 #  define epoll_pwait2 __epoll_pwait2_time64
 # endif
