@@ -57,6 +57,7 @@ endif
 
 ifeq ($(subdir),math)
 CPPFLAGS += -I../soft-fp
+CFLAGS-feupdateenv.c += $(config-cflags-wno-ignored-attributes)
 endif
 
 ifeq ($(subdir),misc)

@@ -1404,6 +1404,28 @@ rm -f conftest*])
 AC_SUBST(libc_cv_mtls_dialect_gnu2)
 LIBC_CONFIG_VAR([have-mtls-dialect-gnu2], [$libc_cv_mtls_dialect_gnu2])
 
+dnl clang emits an warning for a double alias redirection, to warn the
+dnl original symbol is sed even when weak definition overriddes it.
+dnl It is a usual pattern for weak_alias, where multiple alias point to
+dnl same symbol.
+AC_CACHE_CHECK([if -Wno-ignored-attributes is required for aliases],
+	       libc_cv_wno_ignored_attributes, [dnl
+cat > conftest.c <<EOF
+void __foo (void)
+{
+}
+extern __typeof (__foo) foo __attribute__ ((weak, alias ("__foo")));
+extern __typeof (__foo) bar __attribute__ ((weak, alias ("foo")));
+EOF
+libc_cv_wno_ignored_attributes=""
+if ! AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -Werror -c conftest.c])
+then
+  libc_cv_wno_ignored_attributes="-Wno-ignored-attributes"
+fi
+rm -f conftest*])
+LIBC_CONFIG_VAR([config-cflags-wno-ignored-attributes],
+		[$libc_cv_wno_ignored_attributes])
+
 AC_CACHE_CHECK(whether cc puts quotes around section names,
 	       libc_cv_have_section_quotes,
 	       [cat > conftest.c <<EOF

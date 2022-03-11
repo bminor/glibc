@@ -107,20 +107,21 @@ endif
 
 include ../Rules
 
-CFLAGS-open.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-open.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
+CFLAGS-openat.c += $(config-cflags-wno-ignored-attributes)
 CFLAGS-open64.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-creat.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-creat64.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-fcntl.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-fcntl64.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-fcntl.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
+CFLAGS-fcntl64.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
 CFLAGS-poll.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-ppoll.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-lockf.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-lockf64.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-lockf64.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
 CFLAGS-statfs.c += -fexceptions
 CFLAGS-fstatfs.c += -fexceptions
-CFLAGS-statvfs.c += -fexceptions
-CFLAGS-fstatvfs.c += -fexceptions
+CFLAGS-statvfs.c += -fexceptions $(config-cflags-wno-ignored-attributes)
+CFLAGS-fstatvfs.c += -fexceptions $(config-cflags-wno-ignored-attributes)
 CFLAGS-fts.c += -Wno-uninitialized $(uses-callbacks) -fexceptions
 CFLAGS-fts64.c += -Wno-uninitialized $(uses-callbacks) -fexceptions
 CFLAGS-fts64-time64.c += -Wno-uninitialized $(uses-callbacks) -fexceptions
@@ -131,9 +132,10 @@ CFLAGS-posix_fallocate.c += -fexceptions
 CFLAGS-posix_fallocate64.c += -fexceptions
 CFLAGS-fallocate.c += -fexceptions
 CFLAGS-fallocate64.c += -fexceptions
-CFLAGS-read.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-write.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-read.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
+CFLAGS-write.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
 CFLAGS-close.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-lseek64.c += $(config-cflags-wno-ignored-attributes)
 
 CFLAGS-test-stat.c += -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE
 CFLAGS-test-lfs.c += -D_LARGEFILE64_SOURCE

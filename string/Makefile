@@ -231,6 +231,15 @@ LDFLAGS-tst-xbzero-opt = -z now
 CFLAGS-memcpy.c += $(no-stack-protector)
 CFLAGS-wordcopy.c += $(no-stack-protector)
 
+CFLAGS-argz-next.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-basename.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-ffs.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-memmem.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-memchr.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-mempcpy.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-stpcpy.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-strnlen.c += $(config-cflags-wno-ignored-attributes)
+
 ifeq ($(run-built-tests),yes)
 $(objpfx)tst-svc-cmp.out: tst-svc.expect $(objpfx)tst-svc.out
 	cmp $^ > $@; \

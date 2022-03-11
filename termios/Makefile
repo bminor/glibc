@@ -31,3 +31,4 @@ routines	:= speed cfsetspeed tcsetattr tcgetattr tcgetpgrp tcsetpgrp \
 include ../Rules
 
 CFLAGS-tcdrain.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-tcsetattr.c += $(config-cflags-wno-ignored-attributes)

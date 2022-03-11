@@ -381,6 +381,8 @@ CFLAGS-isoc99_vscanf.c += -fexceptions
 CFLAGS-isoc99_fscanf.c += -fexceptions
 CFLAGS-isoc99_scanf.c += -fexceptions
 
+CFLAGS-dprintf.c += $(config-cflags-wno-ignored-attributes)
+
 # scanf14a.c and scanf16a.c test a deprecated extension which is no
 # longer visible under most conformance levels; see the source files
 # for more detail.

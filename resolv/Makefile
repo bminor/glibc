@@ -234,6 +234,7 @@ LOCALES := en_US.UTF-8 en_US.ISO-8859-1
 include ../gen-locales.mk
 
 CFLAGS-res_hconf.c += -fexceptions
+CFLAGS-inet_pton.c += $(config-cflags-wno-ignored-attributes)
 
 # The DNS NSS modules needs the resolver.
 $(objpfx)libnss_dns.so: $(objpfx)libresolv.so

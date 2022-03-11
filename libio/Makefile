@@ -112,18 +112,18 @@ CFLAGS-getchar.c += -fexceptions
 CFLAGS-getwc.c += -fexceptions
 CFLAGS-getwchar.c += -fexceptions
 CFLAGS-iofclose.c += -fexceptions
-CFLAGS-iofflush.c += -fexceptions
+CFLAGS-iofflush.c += -fexceptions $(config-cflags-wno-ignored-attributes)
 CFLAGS-iofgetpos64.c += -fexceptions
 CFLAGS-iofgetpos.c += -fexceptions
 CFLAGS-iofgets.c += -fexceptions
 CFLAGS-iofgetws.c += -fexceptions
-CFLAGS-iofputs.c += -fexceptions
+CFLAGS-iofputs.c += -fexceptions $(config-cflags-wno-ignored-attributes)
 CFLAGS-iofputws.c += -fexceptions
 CFLAGS-iofread.c += -fexceptions
 CFLAGS-iofsetpos64.c += -fexceptions
 CFLAGS-iofsetpos.c += -fexceptions
 CFLAGS-ioftell.c += -fexceptions
-CFLAGS-iofwrite.c += -fexceptions
+CFLAGS-iofwrite.c += -fexceptions $(config-cflags-wno-ignored-attributes)
 CFLAGS-iogetdelim.c += -fexceptions
 CFLAGS-iogetline.c += -fexceptions
 CFLAGS-iogets.c += -fexceptions
@@ -153,6 +153,14 @@ CFLAGS-oldiofopen.c += -fexceptions
 CFLAGS-iofopen.c += -fexceptions
 CFLAGS-iofopen64.c += -fexceptions
 CFLAGS-oldtmpfile.c += -fexceptions
+CFLAGS-fileno.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-feof_u.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-ferror_u.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-getc_u.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-iofflush_u.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-putc_u.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-iofgets_u.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-iofputs_u.c += $(config-cflags-wno-ignored-attributes)
 # XXX Do we need filedoalloc and wfiledoalloc?  Others?
 
 CFLAGS-tst_putwc.c += -DOBJPFX=\"$(objpfx)\"

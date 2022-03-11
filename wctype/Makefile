@@ -29,3 +29,5 @@ routines	:= wcfuncs wctype iswctype wctrans towctrans \
 tests	:= test_wctype test_wcfuncs bug-wctypeh
 
 include ../Rules
+
+CFLAGS-wcfuncs.c += $(config-cflags-wno-ignored-attributes)

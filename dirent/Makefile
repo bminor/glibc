@@ -37,6 +37,7 @@ CFLAGS-scandir.c += $(uses-callbacks)
 CFLAGS-scandir64.c += $(uses-callbacks)
 CFLAGS-scandir-tail.c += $(uses-callbacks)
 CFLAGS-scandir64-tail.c += $(uses-callbacks)
+CFLAGS-dirfd.c += $(config-cflags-wno-ignored-attributes)
 
 include ../Rules
 

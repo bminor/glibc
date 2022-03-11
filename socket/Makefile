@@ -49,11 +49,11 @@ aux	 := sa_len
 
 include ../Rules
 
-CFLAGS-recv.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-recv.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
 CFLAGS-recvfrom.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-sendto.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvmsg.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-sendmsg.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-send.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-connect.c += -fexceptions -fasynchronous-unwind-tables
-CFLAGS-accept.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-sendmsg.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
+CFLAGS-send.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
+CFLAGS-connect.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)
+CFLAGS-accept.c += -fexceptions -fasynchronous-unwind-tables $(config-cflags-wno-ignored-attributes)

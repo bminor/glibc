@@ -98,6 +98,7 @@ CFLAGS-tzset.c += $(tz-cflags)
 CFLAGS-getdate.c += -fexceptions
 CFLAGS-clock_nanosleep.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-nanosleep.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-mktime.c += $(config-cflags-wno-ignored-attributes)
 
 # Don't warn about Y2k problem in strftime format string.
 CFLAGS-test_time.c += -Wno-format

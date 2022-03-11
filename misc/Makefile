@@ -144,6 +144,8 @@ CFLAGS-tst-tsearch.c += $(stack-align-test-flags)
 CFLAGS-msync.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fdatasync.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fsync.c += -fexceptions -fasynchronous-unwind-tables
+CFLAGS-makedev.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-mmap64.c += $(config-cflags-wno-ignored-attributes)
 
 # Called during static library initialization, so turn stack-protection
 # off for non-shared builds.

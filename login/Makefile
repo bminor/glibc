@@ -64,6 +64,7 @@ endif # $(have-GLIBC_2.33)
 include ../Rules
 
 CFLAGS-getpt.c += -fexceptions
+CFLAGS-getlogin_r.c += $(config-cflags-wno-ignored-attributes)
 
 ifeq (yesyes,$(have-fpie)$(build-shared))
 pt_chown-cflags += $(pie-ccflag)
