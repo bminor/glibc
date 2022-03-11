@@ -330,8 +330,18 @@ name_search (const void *left, const void *right)
 void *
 __nss_module_get_function (struct nss_module *module, const char *name)
 {
+  /* A successful dlopen might clobber errno.   */
+  int saved_errno = errno;
+
   if (!__nss_module_load (module))
-    return NULL;
+    {
+      /* Reporting module load failure is currently inaccurate.  See
+	 bug 22041.  Not changing errno is the conservative choice.  */
+      __set_errno (saved_errno);
+      return NULL;
+    }
+
+  __set_errno (saved_errno);
 
   function_name *name_entry = bsearch (name, nss_function_name_array,
                                        array_length (nss_function_name_array),

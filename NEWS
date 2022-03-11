@@ -20,6 +20,7 @@ The following bugs are resolved with this release:
     without /sys and /proc
   [28896] strncmp-avx2-rtm and wcsncmp-avx2-rtm fallback on non-rtm
     variants when avoiding overflow
+  [28953] nss: Protect against errno changes in function lookup
 
 
 Version 2.35
