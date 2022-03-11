@@ -171,17 +171,14 @@ $(objpfx)/libnss_test1.so: $(objpfx)nss_test1.os $(link-libc-deps)
 $(objpfx)/libnss_test2.so: $(objpfx)nss_test2.os $(link-libc-deps)
 	$(build-module)
 $(objpfx)nss_test2.os : nss_test1.c
-ifdef libnss_test1.so-version
-$(objpfx)/libnss_test1.so$(libnss_test1.so-version): $(objpfx)/libnss_test1.so
+# Use the nss_files suffix for these objects as well.
+$(objpfx)/libnss_test1.so$(libnss_files.so-version): $(objpfx)/libnss_test1.so
 	$(make-link)
-endif
-ifdef libnss_test2.so-version
-$(objpfx)/libnss_test2.so$(libnss_test2.so-version): $(objpfx)/libnss_test2.so
+$(objpfx)/libnss_test2.so$(libnss_files.so-version): $(objpfx)/libnss_test2.so
 	$(make-link)
-endif
 $(patsubst %,$(objpfx)%.out,$(tests) $(tests-container)) : \
-	$(objpfx)/libnss_test1.so$(libnss_test1.so-version) \
-	$(objpfx)/libnss_test2.so$(libnss_test2.so-version)
+	$(objpfx)/libnss_test1.so$(libnss_files.so-version) \
+	$(objpfx)/libnss_test2.so$(libnss_files.so-version)
 
 ifeq (yes,$(have-thread-library))
 $(objpfx)tst-cancel-getpwuid_r: $(shared-thread-library)
