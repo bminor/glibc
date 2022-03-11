@@ -1752,6 +1752,20 @@ CFLAGS-s_y0f.c += -fno-builtin-y0f32
 CFLAGS-s_y1f.c += -fno-builtin-y1f32
 CFLAGS-s_ynf.c += -fno-builtin-ynf32
 
+CFLAGS-fclrexcpt.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-ftestexcept.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-s_fabsf128.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-s_sincos.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-w_exp10_compat.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-fraiseexcpt.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-fegetround.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-fesetround.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-fegetenv.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-fesetenv.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-feholdexcpt.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-s_exp10m1f.c += $(config-cflags-wno-ignored-attributes)
+CFLAGS-s_exp2m1f.c += $(config-cflags-wno-ignored-attributes)
+
 # These files quiet sNaNs in a way that is optimized away without
 # -fsignaling-nans.
 CFLAGS-s_modf.c += $(config-cflags-signaling-nans)
