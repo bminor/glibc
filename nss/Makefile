@@ -60,7 +60,8 @@ tests			= test-netdb test-digits-dots tst-nss-getpwent bug17079 \
 			  tst-nss-test1 \
 			  tst-nss-test2 \
 			  tst-nss-test4 \
-			  tst-nss-test5
+			  tst-nss-test5 \
+			  tst-nss-test_errno
 xtests			= bug-erange
 
 tests-container = \
@@ -132,7 +133,7 @@ libnss_compat-inhibit-o	= $(filter-out .os,$(object-suffixes))
 ifeq ($(build-static-nss),yes)
 tests-static		+= tst-nss-static
 endif
-extra-test-objs		+= nss_test1.os nss_test2.os
+extra-test-objs		+= nss_test1.os nss_test2.os nss_test_errno.os
 
 include ../Rules
 
@@ -166,9 +167,12 @@ rtld-tests-LDFLAGS += -Wl,--dynamic-list=nss_test.ver
 
 libof-nss_test1 = extramodules
 libof-nss_test2 = extramodules
+libof-nss_test_errno = extramodules
 $(objpfx)/libnss_test1.so: $(objpfx)nss_test1.os $(link-libc-deps)
 	$(build-module)
 $(objpfx)/libnss_test2.so: $(objpfx)nss_test2.os $(link-libc-deps)
+	$(build-module)
+$(objpfx)/libnss_test_errno.so: $(objpfx)nss_test_errno.os $(link-libc-deps)
 	$(build-module)
 $(objpfx)nss_test2.os : nss_test1.c
 # Use the nss_files suffix for these objects as well.
@@ -176,9 +180,13 @@ $(objpfx)/libnss_test1.so$(libnss_files.so-version): $(objpfx)/libnss_test1.so
 	$(make-link)
 $(objpfx)/libnss_test2.so$(libnss_files.so-version): $(objpfx)/libnss_test2.so
 	$(make-link)
+$(objpfx)/libnss_test_errno.so$(libnss_files.so-version): \
+  $(objpfx)/libnss_test_errno.so
+	$(make-link)
 $(patsubst %,$(objpfx)%.out,$(tests) $(tests-container)) : \
 	$(objpfx)/libnss_test1.so$(libnss_files.so-version) \
-	$(objpfx)/libnss_test2.so$(libnss_files.so-version)
+	$(objpfx)/libnss_test2.so$(libnss_files.so-version) \
+	$(objpfx)/libnss_test_errno.so$(libnss_files.so-version)
 
 ifeq (yes,$(have-thread-library))
 $(objpfx)tst-cancel-getpwuid_r: $(shared-thread-library)
@@ -194,3 +202,4 @@ LDFLAGS-tst-nss-test2 = -Wl,--disable-new-dtags
 LDFLAGS-tst-nss-test3 = -Wl,--disable-new-dtags
 LDFLAGS-tst-nss-test4 = -Wl,--disable-new-dtags
 LDFLAGS-tst-nss-test5 = -Wl,--disable-new-dtags
+LDFLAGS-tst-nss-test_errno = -Wl,--disable-new-dtags
