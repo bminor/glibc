@@ -22,14 +22,14 @@
 #include <ldsodefs.h>
 #include <link.h>
 
-typedef ElfW(Addr) dl_parse_auxv_t[AT_MINSIGSTKSZ + 1];
+typedef elfptr_t dl_parse_auxv_t[AT_MINSIGSTKSZ + 1];
 
 /* Copy the auxiliary vector into AUXV_VALUES and set up GLRO
    variables.  */
 static inline
 void _dl_parse_auxv (ElfW(auxv_t) *av, dl_parse_auxv_t auxv_values)
 {
-  auxv_values[AT_ENTRY] = (ElfW(Addr)) ENTRY_POINT;
+  auxv_values[AT_ENTRY] = (elfptr_t) ENTRY_POINT;
   auxv_values[AT_PAGESZ] = EXEC_PAGESIZE;
   auxv_values[AT_FPUCW] = _FPU_DEFAULT;
 
