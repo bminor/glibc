@@ -4982,8 +4982,7 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
                 we can move to the next aligned spot -- we've allocated enough
                 total room so that this is always possible.
                  */
-      brk = (char *) mem2chunk (((unsigned long) (m + alignment - 1)) &
-                                - ((signed long) alignment));
+      brk = (char *) mem2chunk (m + alignment - ((unsigned long) (m) % alignment));
       if ((unsigned long) (brk - (char *) (p)) < MINSIZE)
         brk += alignment;
 
