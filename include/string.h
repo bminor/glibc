@@ -188,8 +188,8 @@ extern __typeof (strsep) strsep attribute_hidden;
   && !defined NO_MEMPCPY_STPCPY_REDIRECT
 /* Redirect calls to __builtin_mempcpy and __builtin_stpcpy to call
    __mempcpy and __stpcpy if not inlined.  */
-extern __typeof (mempcpy) mempcpy __asm__ ("__mempcpy");
-extern __typeof (stpcpy) stpcpy __asm__ ("__stpcpy");
+__asm__ ("mempcpy = __mempcpy");
+__asm__ ("stpcpy = __stpcpy");
 #endif
 
 extern void *__memcpy_chk (void *__restrict __dest,
