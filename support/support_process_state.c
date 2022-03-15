@@ -59,7 +59,7 @@ support_process_state_wait (pid_t pid, enum support_process_state state)
 
   for (;;)
     {
-      char cur_state = -1;
+      char cur_state = CHAR_MAX;
       while (xgetline (&line, &linesiz, fstatus) > 0)
 	if (strncmp (line, "State:", strlen ("State:")) == 0)
 	  {
@@ -67,7 +67,7 @@ support_process_state_wait (pid_t pid, enum support_process_state state)
 	    break;
 	  }
       /* Fallback to nanosleep for invalid state.  */
-      if (cur_state == -1)
+      if (cur_state == CHAR_MAX)
 	break;
 
       for (size_t i = 0; i < array_length (process_states); ++i)
