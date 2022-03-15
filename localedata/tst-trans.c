@@ -22,6 +22,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <wctype.h>
+#include <libc-diag.h>
 
 static int
 do_test (void)
@@ -59,7 +60,12 @@ do_test (void)
   errors |= len != 10;
   printf ("len = %d, wbuf = L\"%ls\"\n", len, wbuf);
 
-  snprintf (buf, sizeof buf, "%Id", 0x499602D2);
+  /* clang does not support 'I' specifier and handles it as a 'length
+   * modifier'.  */
+  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (16, "-Wformat");
+  snprintf (buf, sizeof buf, "%Id", 0x499602D2U);
+  DIAG_POP_NEEDS_COMMENT_CLANG;
   errors |= strcmp (buf, "bcdefghija") != 0;
   len = strlen (buf);
   errors |= len != 10;
