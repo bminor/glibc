@@ -54,7 +54,7 @@
 
 /* `c_cc' member of 'struct termios' structure can be disabled by
    using the value _POSIX_VDISABLE.  */
-#define	_POSIX_VDISABLE	'\0'
+#define	_POSIX_VDISABLE	0
 
 /* Filenames are not silently truncated.  */
 #define	_POSIX_NO_TRUNC	1
