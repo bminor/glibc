@@ -21,13 +21,19 @@
 #include <tgmath.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <libc-diag.h>
 
+/* clang warns the global variables are not needed and will not be emitted.
+   However they are used on the CHECK_RET_* macros.  */
+DIAG_PUSH_NEEDS_COMMENT_CLANG;
+DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wunneeded-internal-declaration");
 static float fx;
 static double dx;
 static long double lx;
 static int rm = FP_INT_UPWARD;
 static unsigned int width = 64;
 static int errors = 0;
+DIAG_POP_NEEDS_COMMENT_CLANG;
 
 static void
 our_error (const char *c)
