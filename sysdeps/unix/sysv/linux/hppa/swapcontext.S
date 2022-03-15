@@ -67,6 +67,6 @@ ENTRY(__swapcontext)
 	ldw oR28(%ret1),%rp
 	bv,n %r0(%rp)
 
-PSEUDO_END(__swapcontext)
+END(__swapcontext)
 
 weak_alias (__swapcontext, swapcontext)
