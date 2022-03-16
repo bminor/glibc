@@ -116,22 +116,9 @@
 # define PTR_INT_TYPE ptrdiff_t
 #endif
 
-/* If B is the base of an object addressed by P, return the result of
-   aligning P to the next multiple of A + 1.  B and P must be of type
-   char *.  A + 1 must be a power of 2.  */
-
-#define __BPTR_ALIGN(B, P, A) ((B) + (((P) - (B) + (A)) & ~(A)))
-
-/* Similar to _BPTR_ALIGN (B, P, A), except optimize the common case
-   where pointers can be converted to integers, aligned as integers,
-   and converted back again.  If PTR_INT_TYPE is narrower than a
-   pointer (e.g., the AS/400), play it safe and compute the alignment
-   relative to B.  Otherwise, use the faster strategy of computing the
-   alignment relative to 0.  */
-
-#define __PTR_ALIGN(B, P, A)						      \
-  __BPTR_ALIGN (sizeof (PTR_INT_TYPE) < sizeof (void *) ? (B) : (char *) 0, \
-		P, A)
+/* Align P to the next multiple of A + 1, where A + 1 is a power of 2,
+   A fits into unsigned long and P has type char *.  */
+#define __PTR_ALIGN(B, P, A) ((P) + (-(unsigned long)(P) & (A)))
 
 #include <string.h>
 
