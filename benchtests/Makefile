@@ -296,9 +296,11 @@ bench-extra-objs = json-lib.o
 extra-objs += $(bench-extra-objs)
 others-extras = $(bench-extra-objs)
 
-binaries-bench := $(addprefix $(objpfx)bench-,$(bench))
+# NB: Use "=" instead of ":=" since sysdeps Makefiles may add more
+# benches.
+binaries-bench = $(addprefix $(objpfx)bench-,$(bench))
 extra-objs += $(addsuffix .o,$(addprefix bench-,$(bench)))
-binaries-benchset := $(addprefix $(objpfx)bench-,$(benchset))
+binaries-benchset = $(addprefix $(objpfx)bench-,$(benchset))
 extra-objs += $(addsuffix .o,$(addprefix bench-,$(benchset)))
 binaries-bench-malloc := $(addprefix $(objpfx)bench-,$(bench-malloc))
 extra-objs += $(addsuffix .o,$(addprefix bench-,$(bench-malloc)))
