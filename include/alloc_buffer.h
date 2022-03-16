@@ -248,9 +248,9 @@ __alloc_buffer_alloc (struct alloc_buffer *buf, size_t size, size_t align)
   if (size == 1 && align == 1)
     return alloc_buffer_alloc_bytes (buf, size);
 
-  size_t current = buf->__alloc_buffer_current;
-  size_t aligned = roundup (current, align);
-  size_t new_current = aligned + size;
+  uintptr_t current = buf->__alloc_buffer_current;
+  uintptr_t aligned = roundup (current, align);
+  uintptr_t new_current = aligned + size;
   if (aligned >= current        /* No overflow in align step.  */
       && new_current >= size    /* No overflow in size computation.  */
       && new_current <= buf->__alloc_buffer_end) /* Room in buffer.  */
@@ -282,8 +282,8 @@ __alloc_buffer_next (struct alloc_buffer *buf, size_t align)
   if (align == 1)
     return (const void *) buf->__alloc_buffer_current;
 
-  size_t current = buf->__alloc_buffer_current;
-  size_t aligned = roundup (current, align);
+  uintptr_t current = buf->__alloc_buffer_current;
+  uintptr_t aligned = roundup (current, align);
   if (aligned >= current        /* No overflow in align step.  */
       && aligned <= buf->__alloc_buffer_end) /* Room in buffer.  */
     {
