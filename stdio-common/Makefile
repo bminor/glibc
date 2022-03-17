@@ -250,6 +250,7 @@ LOCALES := \
   de_DE.ISO-8859-1 \
   de_DE.UTF-8 \
   en_US.ISO-8859-1 \
+  ja_JP.EUC-JP \
   ps_AF.UTF-8 \
   # LOCALES
 include ../gen-locales.mk
