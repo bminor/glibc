@@ -35,7 +35,11 @@
 
 /* Scalar type that can hold values which represent locale-specific
    character classifications.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+typedef const char *wctype_t;
+#else
 typedef unsigned long int wctype_t;
+#endif
 
 # ifndef _ISwbit
 /* The characteristics are stored always in network byte order (big
