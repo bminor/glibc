@@ -76,6 +76,7 @@ tests-container := \
   tst-nss-db-endgrent \
   tst-nss-db-endpwent \
   tst-nss-files-hosts-long \
+  tst-nss-gai-actions \
   tst-nss-test3 \
   tst-reload1 \
   tst-reload2 \
