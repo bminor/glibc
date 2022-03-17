@@ -19,7 +19,9 @@
 #include <limits.h>
 #include "pthreadP.h"
 #include <shlib-compat.h>
-
+#ifdef __CHERI_PURE_CAPABILITY__
+# include <cheri_perms.h>
+#endif
 
 #ifndef NEW_VERNUM
 # define NEW_VERNUM GLIBC_2_3_3
@@ -41,6 +43,11 @@ __pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
 
 #ifdef EXTRA_PARAM_CHECKS
   EXTRA_PARAM_CHECKS;
+#endif
+
+#ifdef __CHERI_PURE_CAPABILITY__
+  if (!STACK_CAP_CHECK (stackaddr, stacksize))
+    return EINVAL;
 #endif
 
   iattr->stacksize = stacksize;
