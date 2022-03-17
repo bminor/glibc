@@ -458,11 +458,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
   if (name != NULL)
     {
-      at = alloca_account (sizeof (struct gaih_addrtuple), alloca_used);
-      at->family = AF_UNSPEC;
-      at->scopeid = 0;
-      at->next = NULL;
-
       if (req->ai_flags & AI_IDN)
 	{
 	  char *out;
@@ -473,13 +468,21 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  malloc_name = true;
 	}
 
-      if (__inet_aton_exact (name, (struct in_addr *) at->addr) != 0)
+      uint32_t addr[4];
+      if (__inet_aton_exact (name, (struct in_addr *) addr) != 0)
 	{
+	  at = alloca_account (sizeof (struct gaih_addrtuple), alloca_used);
+	  at->scopeid = 0;
+	  at->next = NULL;
+
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
-	    at->family = AF_INET;
+	    {
+	      memcpy (at->addr, addr, sizeof (at->addr));
+	      at->family = AF_INET;
+	    }
 	  else if (req->ai_family == AF_INET6 && (req->ai_flags & AI_V4MAPPED))
 	    {
-	      at->addr[3] = at->addr[0];
+	      at->addr[3] = addr[0];
 	      at->addr[2] = htonl (0xffff);
 	      at->addr[1] = 0;
 	      at->addr[0] = 0;
@@ -493,49 +496,62 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  if (req->ai_flags & AI_CANONNAME)
 	    canon = name;
+
+	  goto process_list;
 	}
-      else if (at->family == AF_UNSPEC)
+
+      char *scope_delim = strchr (name, SCOPE_DELIMITER);
+      int e;
+
+      if (scope_delim == NULL)
+	e = inet_pton (AF_INET6, name, addr);
+      else
+	e = __inet_pton_length (AF_INET6, name, scope_delim - name, addr);
+
+      if (e > 0)
 	{
-	  char *scope_delim = strchr (name, SCOPE_DELIMITER);
-	  int e;
-	  if (scope_delim == NULL)
-	    e = inet_pton (AF_INET6, name, at->addr);
-	  else
-	    e = __inet_pton_length (AF_INET6, name, scope_delim - name,
-				    at->addr);
-	  if (e > 0)
+	  at = alloca_account (sizeof (struct gaih_addrtuple),
+			       alloca_used);
+	  at->scopeid = 0;
+	  at->next = NULL;
+
+	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
 	    {
-	      if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
-		at->family = AF_INET6;
-	      else if (req->ai_family == AF_INET
-		       && IN6_IS_ADDR_V4MAPPED (at->addr))
-		{
-		  at->addr[0] = at->addr[3];
-		  at->family = AF_INET;
-		}
-	      else
-		{
-		  result = -EAI_ADDRFAMILY;
-		  goto free_and_return;
-		}
-
-	      if (scope_delim != NULL
-		  && __inet6_scopeid_pton ((struct in6_addr *) at->addr,
-					   scope_delim + 1,
-					   &at->scopeid) != 0)
-		{
-		  result = -EAI_NONAME;
-		  goto free_and_return;
-		}
-
-	      if (req->ai_flags & AI_CANONNAME)
-		canon = name;
+	      memcpy (at->addr, addr, sizeof (at->addr));
+	      at->family = AF_INET6;
 	    }
+	  else if (req->ai_family == AF_INET
+		   && IN6_IS_ADDR_V4MAPPED (addr))
+	    {
+	      at->addr[0] = addr[3];
+	      at->addr[1] = addr[1];
+	      at->addr[2] = addr[2];
+	      at->addr[3] = addr[3];
+	      at->family = AF_INET;
+	    }
+	  else
+	    {
+	      result = -EAI_ADDRFAMILY;
+	      goto free_and_return;
+	    }
+
+	  if (scope_delim != NULL
+	      && __inet6_scopeid_pton ((struct in6_addr *) at->addr,
+				       scope_delim + 1,
+				       &at->scopeid) != 0)
+	    {
+	      result = -EAI_NONAME;
+	      goto free_and_return;
+	    }
+
+	  if (req->ai_flags & AI_CANONNAME)
+	    canon = name;
+
+	  goto process_list;
 	}
 
-      if (at->family == AF_UNSPEC && (req->ai_flags & AI_NUMERICHOST) == 0)
+      if ((req->ai_flags & AI_NUMERICHOST) == 0)
 	{
-	  struct gaih_addrtuple **pat = &at;
 	  int no_data = 0;
 	  int no_inet6_data = 0;
 	  nss_action_list nip;
@@ -543,6 +559,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  enum nss_status status = NSS_STATUS_UNAVAIL;
 	  int no_more;
 	  struct resolv_context *res_ctx = NULL;
+	  bool do_merge = false;
 
 	  /* If we do not have to look for IPv6 addresses or the canonical
 	     name, use the simple, old functions, which do not support
@@ -579,7 +596,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			  result = -EAI_MEMORY;
 			  goto free_and_return;
 			}
-		      *pat = addrmem;
+		      at = addrmem;
 		    }
 		  else
 		    {
@@ -632,6 +649,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		    }
 
 		  struct gaih_addrtuple *addrfree = addrmem;
+		  struct gaih_addrtuple **pat = &at;
+
 		  for (int i = 0; i < air->naddrs; ++i)
 		    {
 		      socklen_t size = (air->family[i] == AF_INET
@@ -695,12 +714,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 		  free (air);
 
-		  if (at->family == AF_UNSPEC)
-		    {
-		      result = -EAI_NONAME;
-		      goto free_and_return;
-		    }
-
 		  goto process_list;
 		}
 	      else if (err == 0)
@@ -732,6 +745,22 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  while (!no_more)
 	    {
+	      /* Always start afresh; continue should discard previous results
+		 and the hosts database does not support merge.  */
+	      at = NULL;
+	      free (canonbuf);
+	      free (addrmem);
+	      canon = canonbuf = NULL;
+	      addrmem = NULL;
+	      got_ipv6 = false;
+
+	      if (do_merge)
+		{
+		  __set_h_errno (NETDB_INTERNAL);
+		  __set_errno (EBUSY);
+		  break;
+		}
+
 	      no_data = 0;
 	      nss_gethostbyname4_r *fct4 = NULL;
 
@@ -744,12 +773,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		{
 		  while (1)
 		    {
-		      status = DL_CALL_FCT (fct4, (name, pat,
+		      status = DL_CALL_FCT (fct4, (name, &at,
 						   tmpbuf->data, tmpbuf->length,
 						   &errno, &h_errno,
 						   NULL));
 		      if (status == NSS_STATUS_SUCCESS)
 			break;
+		      /* gethostbyname4_r may write into AT, so reset it.  */
+		      at = NULL;
 		      if (status != NSS_STATUS_TRYAGAIN
 			  || errno != ERANGE || h_errno != NETDB_INTERNAL)
 			{
@@ -774,7 +805,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		      no_data = 1;
 
 		      if ((req->ai_flags & AI_CANONNAME) != 0 && canon == NULL)
-			canon = (*pat)->name;
+			canon = at->name;
+
+		      struct gaih_addrtuple **pat = &at;
 
 		      while (*pat != NULL)
 			{
@@ -826,6 +859,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 		  if (fct != NULL)
 		    {
+		      struct gaih_addrtuple **pat = &at;
+
 		      if (req->ai_family == AF_INET6
 			  || req->ai_family == AF_UNSPEC)
 			{
@@ -899,6 +934,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      if (nss_next_action (nip, status) == NSS_ACTION_RETURN)
 		break;
 
+	      /* The hosts database does not support MERGE.  */
+	      if (nss_next_action (nip, status) == NSS_ACTION_MERGE)
+		do_merge = true;
+
 	      nip++;
 	      if (nip->module == NULL)
 		no_more = -1;
@@ -930,7 +969,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	}
 
     process_list:
-      if (at->family == AF_UNSPEC)
+      if (at == NULL)
 	{
 	  result = -EAI_NONAME;
 	  goto free_and_return;
