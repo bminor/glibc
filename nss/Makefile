@@ -56,21 +56,30 @@ extra-objs		+= $(makedb-modules:=.o)
 
 tests-static            = tst-field
 tests-internal		= tst-field
-tests			= test-netdb test-digits-dots tst-nss-getpwent bug17079 \
-			  tst-nss-test1 \
-			  tst-nss-test2 \
-			  tst-nss-test4 \
-			  tst-nss-test5 \
-			  tst-nss-test_errno
-xtests			= bug-erange
 
-tests-container = \
-			  tst-nss-compat1 \
-			  tst-nss-test3 \
-			  tst-nss-files-hosts-long \
-			  tst-nss-db-endpwent \
-			  tst-nss-db-endgrent \
-			  tst-reload1 tst-reload2
+tests := \
+  bug17079 \
+  test-digits-dots \
+  test-netdb \
+  tst-nss-getpwent \
+  tst-nss-test1 \
+  tst-nss-test2 \
+  tst-nss-test4 \
+  tst-nss-test5 \
+  tst-nss-test_errno \
+# tests
+
+xtests = bug-erange
+
+tests-container := \
+  tst-nss-compat1 \
+  tst-nss-db-endgrent \
+  tst-nss-db-endpwent \
+  tst-nss-files-hosts-long \
+  tst-nss-test3 \
+  tst-reload1 \
+  tst-reload2 \
+# tests-container
 
 # Tests which need libdl
 ifeq (yes,$(build-shared))
