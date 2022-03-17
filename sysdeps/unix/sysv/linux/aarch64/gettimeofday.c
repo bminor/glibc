@@ -16,5 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define USE_IFUNC_GETTIMEOFDAY
+#ifndef __CHERI_PURE_CAPABILITY__
+# define USE_IFUNC_GETTIMEOFDAY
+#endif
 #include <sysdeps/unix/sysv/linux/gettimeofday.c>
