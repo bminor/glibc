@@ -153,11 +153,18 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
 
   /* "%b %e %H:%M:%S "  */
   char timestamp[sizeof "MMM DD hh:mm:ss "];
-  time_t now = time_now ();
+  __time64_t now = time64_now ();
   struct tm now_tm;
-  __localtime_r (&now, &now_tm);
-  __strftime_l (timestamp, sizeof timestamp, "%b %e %T ", &now_tm,
-                _nl_C_locobj_ptr);
+  struct tm *now_tmp = __localtime64_r (&now, &now_tm);
+  bool has_ts = now_tmp != NULL;
+
+  /* In the unlikely case of localtime_r failure (tm_year out of int range)
+     skip the hostname so the message is handled as valid PRI but without
+     TIMESTAMP or invalid TIMESTAMP (which should force the relay to add the
+     timestamp itself).  */
+  if (has_ts)
+    __strftime_l (timestamp, sizeof timestamp, "%h %e %T ", now_tmp,
+		  _nl_C_locobj_ptr);
 
 #define SYSLOG_HEADER(__pri, __timestamp, __msgoff, pid) \
   "<%d>%s %n%s%s%.0d%s: ",                               \
@@ -165,8 +172,16 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
   LogTag == NULL ? __progname : LogTag,                  \
   "[" + (pid == 0), pid, "]" + (pid == 0)
 
-  int l = __snprintf (bufs, sizeof bufs,
-                      SYSLOG_HEADER (pri, timestamp, &msgoff, pid));
+#define SYSLOG_HEADER_WITHOUT_TS(__pri, __msgoff)        \
+  "<%d>: %n", __pri, __msgoff
+
+  int l;
+  if (has_ts)
+    l = __snprintf (bufs, sizeof bufs,
+		    SYSLOG_HEADER (pri, timestamp, &msgoff, pid));
+  else
+    l = __snprintf (bufs, sizeof bufs,
+		    SYSLOG_HEADER_WITHOUT_TS (pri, &msgoff));
   if (0 <= l && l < sizeof bufs)
     {
       va_list apc;
@@ -194,8 +209,12 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
 	  /* Tell the cancellation handler to free this buffer.  */
 	  clarg.buf = buf;
 
-	  __snprintf (buf, sizeof buf,
-		      SYSLOG_HEADER (pri, timestamp, &msgoff, pid));
+	  if (has_ts)
+	    __snprintf (bufs, sizeof bufs,
+			SYSLOG_HEADER (pri, timestamp, &msgoff, pid));
+	  else
+	    __snprintf (bufs, sizeof bufs,
+			SYSLOG_HEADER_WITHOUT_TS (pri, &msgoff));
 	}
       else
         {
