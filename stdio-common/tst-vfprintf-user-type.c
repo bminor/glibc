@@ -21,6 +21,7 @@
    this indicates the number of such pairs which constitute the
    argument.  */
 
+#include <array_length.h>
 #include <locale.h>
 #include <printf.h>
 #include <stdio.h>
@@ -60,13 +61,23 @@ my_printf_function (FILE *fp, const struct printf_info *info,
             __func__, fp, info, args[0], args, (wint_t) info->spec,
             info->prec);
 
+  TEST_COMPARE (info->wide, fwide (fp, 0) > 0);
+
   TEST_VERIFY (info->spec == 'P');
   size_t nargs;
   int printed;
   if (info->prec >= 0)
     {
-      if (fputc ('{', fp) < 0)
-        return -1;
+      if (info->wide)
+        {
+          if (fputwc (L'{', fp) < 0)
+            return -1;
+          }
+      else
+        {
+          if (fputc ('{', fp) < 0)
+            return -1;
+        }
       nargs = info->prec;
       printed = 1;
     }
@@ -80,8 +91,16 @@ my_printf_function (FILE *fp, const struct printf_info *info,
     {
       if (i != 0)
         {
-          if (fputc (',', fp) < 0)
-            return -1;
+          if (info->wide)
+            {
+              if (fputwc (L',', fp) < 0)
+                return -1;
+            }
+          else
+            {
+              if (fputc (',', fp) < 0)
+                return -1;
+            }
           ++printed;
         }
 
@@ -89,15 +108,27 @@ my_printf_function (FILE *fp, const struct printf_info *info,
          and those pointers point to a pointer to the memory area
          supplied to my_va_arg_function.  */
       struct two_argument *pair = *(void **) args[i];
-      int ret = fprintf (fp, "(%ld, %f)", pair->i, pair->d);
+      int ret;
+      if (info->wide)
+        ret = fwprintf (fp, L"(%ld, %f)", pair->i, pair->d);
+      else
+        ret = fprintf (fp, "(%ld, %f)", pair->i, pair->d);
       if (ret < 0)
         return -1;
       printed += ret;
     }
   if (info->prec >= 0)
     {
-      if (fputc ('}', fp) < 0)
-        return -1;
+      if (info->wide)
+        {
+          if (fputwc (L'}', fp) < 0)
+            return -1;
+        }
+      else
+        {
+          if (fputc ('}', fp) < 0)
+            return -1;
+        }
       ++printed;
     }
   return printed;
@@ -155,30 +186,22 @@ do_test (void)
   TEST_VERIFY (asprintf_alias == asprintf);
   char *str = NULL;
   TEST_VERIFY (asprintf_alias (&str, "[[%P]]", 123L, 456.0) >= 0);
-  if (test_verbose > 0)
-    printf ("info: %s\n", str);
-  TEST_VERIFY (strcmp (str, "[[(123, 456.000000)]]") == 0);
+  TEST_COMPARE_STRING (str, "[[(123, 456.000000)]]");
   free (str);
 
   str = NULL;
   TEST_VERIFY (asprintf_alias (&str, "[[%1$P %1$P]]", 123L, 457.0) >= 0);
-  if (test_verbose > 0)
-    printf ("info: %s\n", str);
-  TEST_VERIFY (strcmp (str, "[[(123, 457.000000) (123, 457.000000)]]") == 0);
+  TEST_COMPARE_STRING (str, "[[(123, 457.000000) (123, 457.000000)]]");
   free (str);
 
   str = NULL;
   TEST_VERIFY (asprintf_alias (&str, "[[%.1P]]", 1L, 2.0) >= 0);
-  if (test_verbose > 0)
-    printf ("info: %s\n", str);
-  TEST_VERIFY (strcmp (str, "[[{(1, 2.000000)}]]") == 0);
+  TEST_COMPARE_STRING (str, "[[{(1, 2.000000)}]]");
   free (str);
 
   str = NULL;
   TEST_VERIFY (asprintf_alias (&str, "[[%.2P]]", 1L, 2.0, 3L, 4.0) >= 0);
-  if (test_verbose > 0)
-    printf ("info: %s\n", str);
-  TEST_VERIFY (strcmp (str, "[[{(1, 2.000000),(3, 4.000000)}]]") == 0);
+  TEST_COMPARE_STRING (str, "[[{(1, 2.000000),(3, 4.000000)}]]");
   free (str);
 
   str = NULL;
@@ -187,14 +210,12 @@ do_test (void)
                 /* argument 1: */ 1L, 2.0, 3L, 4.0,
                 /* argument 2: */ 5L, 6.0, 7L, 8.0, 9L, 10.0)
                >= 0);
-  if (test_verbose > 0)
-    printf ("info: %s\n", str);
-  TEST_VERIFY (strcmp (str,
+  TEST_COMPARE_STRING (str,
                        "[["
                        "{(1, 2.000000),(3, 4.000000)}"
                        " | "
                        "{(5, 6.000000),(7, 8.000000),(9, 10.000000)}"
-                       "]]") == 0);
+                       "]]");
   free (str);
 
   /* The following subtest fails due to bug 21534.  */
@@ -205,17 +226,62 @@ do_test (void)
                 /* argument 1: */ 1L, 2.0, 3L, 4.0,
                 /* argument 2: */ 5L, 6.0, 7L, 8.0, 9L, 10.0)
                >= 0);
-  if (test_verbose > 0)
-    printf ("info: %s\n", str);
-  TEST_VERIFY (strcmp (str,
+  TEST_COMPARE_STRING (str,
                        "[["
                        "{(1, 2.000000),(3, 4.000000)}"
                        " | "
                        "{(5, 6.000000),(7, 8.000000),(9, 10.000000)}"
                        " | "
                        "{(1, 2.000000),(3, 4.000000)}"
-                       "]]") == 0);
+                       "]]");
   free (str);
+#endif
+
+  /* Wide variants of the tests above.  */
+
+  wchar_t buf[200];
+  TEST_VERIFY (swprintf (buf, array_length (buf), L"[[%P]]", 123L, 456.0)
+               >= 0);
+  TEST_COMPARE_STRING_WIDE (buf, L"[[(123, 456.000000)]]");
+
+  TEST_VERIFY (swprintf (buf, array_length (buf), L"[[%1$P %1$P]]",
+                         123L, 457.0) >= 0);
+  TEST_COMPARE_STRING_WIDE (buf, L"[[(123, 457.000000) (123, 457.000000)]]");
+
+  TEST_VERIFY (swprintf (buf, array_length (buf), L"[[%.1P]]", 1L, 2.0) >= 0);
+  TEST_COMPARE_STRING_WIDE (buf, L"[[{(1, 2.000000)}]]");
+
+  TEST_VERIFY (swprintf (buf, array_length (buf), L"[[%.2P]]",
+                         1L, 2.0, 3L, 4.0) >= 0);
+  TEST_COMPARE_STRING_WIDE (buf, L"[[{(1, 2.000000),(3, 4.000000)}]]");
+
+  TEST_VERIFY (swprintf
+               (buf, array_length (buf), L"[[%.2P | %.3P]]",
+                /* argument 1: */ 1L, 2.0, 3L, 4.0,
+                /* argument 2: */ 5L, 6.0, 7L, 8.0, 9L, 10.0)
+               >= 0);
+  TEST_COMPARE_STRING_WIDE (buf,
+                            L"[["
+                            "{(1, 2.000000),(3, 4.000000)}"
+                            " | "
+                            "{(5, 6.000000),(7, 8.000000),(9, 10.000000)}"
+                            "]]");
+
+  /* The following subtest fails due to bug 21534.  */
+#if 0
+  TEST_VERIFY (swprintf
+               (&buf, array_length (buf), L"[[%1$.2P | %2$.3P | %1$.2P]]",
+                /* argument 1: */ 1L, 2.0, 3L, 4.0,
+                /* argument 2: */ 5L, 6.0, 7L, 8.0, 9L, 10.0)
+               >= 0);
+  TEST_COMPARE_STRING_WIDE (buf,
+                            L"[["
+                            "{(1, 2.000000),(3, 4.000000)}"
+                            " | "
+                            "{(5, 6.000000),(7, 8.000000),(9, 10.000000)}"
+                            " | "
+                            "{(1, 2.000000),(3, 4.000000)}"
+                            "]]");
 #endif
 
   return 0;
