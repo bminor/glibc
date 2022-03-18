@@ -551,17 +551,17 @@ def process_testcase(t):
         if obj in t.deps:
             deps = t.deps[obj]
             if '*' in deps:
-                t.deps[obj].remove('*')
+                deps.remove('*')
                 t.add_deps([obj], non_dep_tgt_objs)
         if obj in t.callrefs:
             deps = t.callrefs[obj]
             if '*' in deps:
-                t.deps[obj].remove('*')
+                deps.remove('*')
                 t.add_callrefs([obj], non_dep_tgt_objs)
     if "#" in t.deps:
         deps = t.deps["#"]
         if '*' in deps:
-            t.deps["#"].remove('*')
+            deps.remove('*')
             t.add_deps(["#"], non_dep_tgt_objs)
 
     # If no main program was specified in dependency description, make a
