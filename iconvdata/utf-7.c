@@ -30,20 +30,27 @@
 
 
 
+static bool
+between (uint32_t const ch,
+	 uint32_t const lower_bound, uint32_t const upper_bound)
+{
+  return (ch >= lower_bound && ch <= upper_bound);
+}
+
 /* The set of "direct characters":
    A-Z a-z 0-9 ' ( ) , - . / : ? space tab lf cr
 */
 
-static const unsigned char direct_tab[128 / 8] =
-  {
-    0x00, 0x26, 0x00, 0x00, 0x81, 0xf3, 0xff, 0x87,
-    0xfe, 0xff, 0xff, 0x07, 0xfe, 0xff, 0xff, 0x07
-  };
-
-static int
+static bool
 isdirect (uint32_t ch)
 {
-  return (ch < 128 && ((direct_tab[ch >> 3] >> (ch & 7)) & 1));
+  return (between (ch, 'A', 'Z')
+	  || between (ch, 'a', 'z')
+	  || between (ch, '0', '9')
+	  || ch == '\'' || ch == '(' || ch == ')'
+	  || between (ch, ',', '/')
+	  || ch == ':' || ch == '?'
+	  || ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r');
 }
 
 
@@ -52,33 +59,27 @@ isdirect (uint32_t ch)
    ! " # $ % & * ; < = > @ [ ] ^ _ ` { | }
 */
 
-static const unsigned char xdirect_tab[128 / 8] =
-  {
-    0x00, 0x26, 0x00, 0x00, 0xff, 0xf7, 0xff, 0xff,
-    0xff, 0xff, 0xff, 0xef, 0xff, 0xff, 0xff, 0x3f
-  };
-
-static int
+static bool
 isxdirect (uint32_t ch)
 {
-  return (ch < 128 && ((xdirect_tab[ch >> 3] >> (ch & 7)) & 1));
+  return (ch == '\t'
+	  || ch == '\n'
+	  || ch == '\r'
+	  || (between (ch, ' ', '}') && ch != '+' && ch != '\\'));
 }
 
 
-/* The set of "extended base64 characters":
+/* Characters which needs to trigger an explicit shift back to US-ASCII (UTF-7
+   only): Modified base64 + '-' (shift back character)
    A-Z a-z 0-9 + / -
 */
 
-static const unsigned char xbase64_tab[128 / 8] =
-  {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0xa8, 0xff, 0x03,
-    0xfe, 0xff, 0xff, 0x07, 0xfe, 0xff, 0xff, 0x07
-  };
-
-static int
-isxbase64 (uint32_t ch)
+static bool
+needs_explicit_shift (uint32_t ch)
 {
-  return (ch < 128 && ((xbase64_tab[ch >> 3] >> (ch & 7)) & 1));
+  return (between (ch, 'A', 'Z')
+	  || between (ch, 'a', 'z')
+	  || between (ch, '/', '9') || ch == '+' || ch == '-');
 }
 
 
@@ -252,7 +253,7 @@ base64 (unsigned int i)
 		   indeed form a Low Surrogate.  */			      \
 		uint32_t wc2 = wch & 0xffff;				      \
 									      \
-		if (! __builtin_expect (wc2 >= 0xdc00 && wc2 < 0xe000, 1))    \
+		if (! __glibc_likely (wc2 >= 0xdc00 && wc2 < 0xe000))	      \
 		  {							      \
 		    STANDARD_FROM_LOOP_ERR_HANDLER ((statep->__count = 0, 1));\
 		  }							      \
@@ -372,7 +373,8 @@ base64 (unsigned int i)
 	    /* deactivate base64 encoding */				      \
 	    size_t count;						      \
 									      \
-	    count = ((statep->__count & 0x18) >= 0x10) + isxbase64 (ch) + 1;  \
+	    count = ((statep->__count & 0x18) >= 0x10)			      \
+	      + needs_explicit_shift (ch) + 1;				      \
 	    if (__glibc_unlikely (outptr + count > outend))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -381,7 +383,7 @@ base64 (unsigned int i)
 									      \
 	    if ((statep->__count & 0x18) >= 0x10)			      \
 	      *outptr++ = base64 ((statep->__count >> 3) & ~3);		      \
-	    if (isxbase64 (ch))						      \
+	    if (needs_explicit_shift (ch))				      \
 	      *outptr++ = '-';						      \
 	    *outptr++ = (unsigned char) ch;				      \
 	    statep->__count = 0;					      \
