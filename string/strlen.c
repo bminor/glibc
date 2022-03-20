@@ -46,15 +46,10 @@ STRLEN (const char *str)
 
   longword_ptr = (unsigned long int *) char_ptr;
 
-  /* Bits 31, 24, 16, and 8 of this number are zero.  Call these bits
-     the "holes."  Note that there is a hole just to the left of
-     each byte, with an extra at the end:
-
-     bits:  01111110 11111110 11111110 11111111
-     bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD
-
-     The 1-bits make sure that carries propagate to the next 0-bit.
-     The 0-bits provide holes for carries to fall into.  */
+  /* Computing (longword - lomagic) sets the high bit of any corresponding
+     byte that is either zero or greater than 0x80.  The latter case can be
+     filtered out by computing (~longword & himagic).  The final result
+     will always be non-zero if one of the bytes of longword is zero.  */
   himagic = 0x80808080L;
   lomagic = 0x01010101L;
   if (sizeof (longword) > 4)
@@ -76,8 +71,7 @@ STRLEN (const char *str)
 
       if (((longword - lomagic) & ~longword & himagic) != 0)
 	{
-	  /* Which of the bytes was the zero?  If none of them were, it was
-	     a misfire; continue the search.  */
+	  /* Which of the bytes was the zero?  */
 
 	  const char *cp = (const char *) (longword_ptr - 1);
 
