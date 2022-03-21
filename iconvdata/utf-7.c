@@ -33,11 +33,13 @@
 enum variant
 {
   UTF7,
+  UTF_7_IMAP
 };
 
 /* Must be in the same order as enum variant above.  */
 static const char names[] =
   "UTF-7//\0"
+  "UTF-7-IMAP//\0"
   "\0";
 
 static uint32_t
@@ -45,6 +47,8 @@ shift_character (enum variant const var)
 {
   if (var == UTF7)
     return '+';
+  else if (var == UTF_7_IMAP)
+    return '&';
   else
     abort ();
 }
@@ -58,6 +62,9 @@ between (uint32_t const ch,
 
 /* The set of "direct characters":
    A-Z a-z 0-9 ' ( ) , - . / : ? space tab lf cr
+   FOR UTF-7-IMAP
+   A-Z a-z 0-9 ' ( ) , - . / : ? space
+   ! " # $ % + * ; < = > @ [ \ ] ^ _ ` { | } ~
 */
 
 static bool
@@ -71,6 +78,8 @@ isdirect (uint32_t ch, enum variant var)
 	    || between (ch, ',', '/')
 	    || ch == ':' || ch == '?'
 	    || ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r');
+  else if (var == UTF_7_IMAP)
+    return (ch != '&' && between (ch, ' ', '~'));
   abort ();
 }
 
@@ -124,6 +133,8 @@ base64 (unsigned int i, enum variant var)
     return '+';
   else if (i == 63 && var == UTF7)
     return '/';
+  else if (i == 63 && var == UTF_7_IMAP)
+    return ',';
   else
     abort ();
 }
@@ -308,7 +319,8 @@ gconv_end (struct __gconv_step *data)
 	  i = ch - '0' + 52;						      \
 	else if (ch == '+')						      \
 	  i = 62;							      \
-	else if (ch == '/')						      \
+	else if ((var == UTF7 && ch == '/')                                   \
+		  || (var == UTF_7_IMAP && ch == ','))			      \
 	  i = 63;							      \
 	else								      \
 	  {								      \
@@ -316,8 +328,10 @@ gconv_end (struct __gconv_step *data)
 									      \
 	    /* If accumulated data is nonzero, the input is invalid.  */      \
 	    /* Also, partial UTF-16 characters are invalid.  */		      \
-	    if (__builtin_expect (statep->__value.__wch != 0, 0)	      \
-		|| __builtin_expect ((statep->__count >> 3) <= 26, 0))	      \
+	    /* In IMAP variant, must be terminated by '-'.  */		      \
+	    if (__glibc_unlikely (statep->__value.__wch != 0)		      \
+		|| __glibc_unlikely ((statep->__count >> 3) <= 26)	      \
+		|| __glibc_unlikely (var == UTF_7_IMAP && ch != '-'))	      \
 	      {								      \
 		STANDARD_FROM_LOOP_ERR_HANDLER ((statep->__count = 0, 1));    \
 	      }								      \
@@ -474,13 +488,15 @@ gconv_end (struct __gconv_step *data)
     else								      \
       {									      \
 	/* base64 encoding active */					      \
-	if (isdirect (ch, var))						      \
+	if ((var == UTF_7_IMAP && ch == '&') || isdirect (ch, var))	      \
 	  {								      \
 	    /* deactivate base64 encoding */				      \
 	    size_t count;						      \
 									      \
 	    count = ((statep->__count & 0x18) >= 0x10)			      \
-	      + needs_explicit_shift (ch) + 1;				      \
+	      + (var == UTF_7_IMAP || needs_explicit_shift (ch))	      \
+	      + (var == UTF_7_IMAP && ch == '&')			      \
+	      + 1;							      \
 	    if (__glibc_unlikely (outptr + count > outend))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
@@ -489,9 +505,11 @@ gconv_end (struct __gconv_step *data)
 									      \
 	    if ((statep->__count & 0x18) >= 0x10)			      \
 	      *outptr++ = base64 ((statep->__count >> 3) & ~3, var);	      \
-	    if (needs_explicit_shift (ch))				      \
+	    if (var == UTF_7_IMAP || needs_explicit_shift (ch))		      \
 	      *outptr++ = '-';						      \
 	    *outptr++ = (unsigned char) ch;				      \
+	    if (var == UTF_7_IMAP && ch == '&')				      \
+	      *outptr++ = '-';						      \
 	    statep->__count = 0;					      \
 	  }								      \
 	else								      \
