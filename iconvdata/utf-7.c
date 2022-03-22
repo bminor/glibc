@@ -155,7 +155,7 @@ base64 (unsigned int i, enum variant var)
   mbstate_t saved_state;						      \
   mbstate_t *statep = data->__statep;					      \
   enum direction dir = ((struct utf7_data *) step->__data)->dir;	      \
-  enum direction var = ((struct utf7_data *) step->__data)->var;
+  enum variant var = ((struct utf7_data *) step->__data)->var;
 #define EXTRA_LOOP_ARGS		, statep, var
 
 
