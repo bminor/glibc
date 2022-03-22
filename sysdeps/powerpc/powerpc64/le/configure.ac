@@ -63,7 +63,7 @@ long double x;
 		  [libc_cv_compiler_powerpc64le_ldbl128_mabi=yes],
 		  [libc_cv_compiler_powerpc64le_ldbl128_mabi=no])
 CFLAGS="$save_CFLAGS"])
-AS_IF([test "$libc_cv_compiler_powerpc64le_ldbl128_mabi" == "no"],
+AS_IF([test "$libc_cv_compiler_powerpc64le_ldbl128_mabi" = "no"],
       [critic_missing="$critic_missing The compiler must support -mabi=ieeelongdouble and -mlong-double-128 simultaneously."])
 
 dnl objcopy (binutils) 2.26 or newer required to support the --update-section

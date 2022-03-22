@@ -767,7 +767,7 @@ if test x"$libc_cv_gcc_indirect_function" != xyes; then
   # GCC 8+ emits a warning for alias with incompatible types and it might
   # fail to build ifunc resolvers aliases to either weak or internal
   # symbols.  Disables multiarch build in this case.
-  if test x"$libc_cv_gcc_incompatible_alias" == xyes; then
+  if test x"$libc_cv_gcc_incompatible_alias" = xyes; then
     AC_MSG_WARN([gcc emits a warning for alias between functions of incompatible types])
     if test x"$multi_arch" = xyes; then
       AC_MSG_ERROR([--enable-multi-arch support requires a gcc with gnu-indirect-function support])

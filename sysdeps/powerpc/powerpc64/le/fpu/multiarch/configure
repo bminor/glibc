@@ -25,7 +25,7 @@ fi
 $as_echo "$libc_cv_mcpu_power10" >&6; }
 config_vars="$config_vars
 mcpu-power10 = $libc_cv_mcpu_power10"
-if test "$libc_cv_mcpu_power10" == "yes"; then :
+if test "$libc_cv_mcpu_power10" = "yes"; then :
 
 	$as_echo "#define USE_PPC64_MCPU_POWER10 1" >>confdefs.h
 
