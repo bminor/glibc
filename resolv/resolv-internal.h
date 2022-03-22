@@ -27,6 +27,13 @@
 #define RES_F_CONN      0x00000002 /* Socket is connected.  */
 #define RES_F_EDNS0ERR  0x00000004 /* EDNS0 caused errors.  */
 
+/* The structure HEADER is normally aligned on a word boundary.  In
+   some code, we need to access this structure when it may be aligned
+   on a byte boundary.  To avoid unaligned accesses, we need a typedef
+   with alignment one.  This ensures the fields are accessed with byte
+   loads and stores.  */
+typedef HEADER __attribute__ ((__aligned__(1))) UHEADER;
+
 /* Legacy function.  This needs to be removed once all NSS modules
    have been adjusted.  */
 static inline bool

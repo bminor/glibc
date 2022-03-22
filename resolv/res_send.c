@@ -245,7 +245,7 @@ static void
 mask_ad_bit (struct resolv_context *ctx, void *buf)
 {
   if (!(ctx->resp->options & RES_TRUSTAD))
-    ((HEADER *) buf)->ad = 0;
+    ((UHEADER *) buf)->ad = 0;
 }
 
 int
@@ -560,9 +560,9 @@ send_vc(res_state statp,
 	int *terrno, int ns, u_char **anscp, u_char **ansp2, int *anssizp2,
 	int *resplen2, int *ansp2_malloced)
 {
-	const HEADER *hp = (HEADER *) buf;
-	const HEADER *hp2 = (HEADER *) buf2;
-	HEADER *anhp = (HEADER *) *ansp;
+	const UHEADER *hp = (UHEADER *) buf;
+	const UHEADER *hp2 = (UHEADER *) buf2;
+	UHEADER *anhp = (UHEADER *) *ansp;
 	struct sockaddr *nsap = __res_get_nsaddr (statp, ns);
 	int truncating, connreset, n;
 	/* On some architectures compiler might emit a warning indicating
@@ -697,7 +697,7 @@ send_vc(res_state statp,
 		thisansp = ansp2;
 		thisresplenp = resplen2;
 	}
-	anhp = (HEADER *) *thisansp;
+	anhp = (UHEADER *) *thisansp;
 
 	*thisresplenp = rlen;
 	/* Is the answer buffer too small?  */
@@ -718,7 +718,7 @@ send_vc(res_state statp,
 			*thisansp = newp;
 			if (thisansp == ansp2)
 			  *ansp2_malloced = 1;
-			anhp = (HEADER *) newp;
+			anhp = (UHEADER *) newp;
 			/* A uint16_t can't be larger than MAXPACKET
 			   thus it's safe to allocate MAXPACKET but
 			   read RLEN bytes instead.  */
@@ -925,8 +925,8 @@ send_dg(res_state statp,
 	int *terrno, int ns, int *v_circuit, int *gotsomewhere, u_char **anscp,
 	u_char **ansp2, int *anssizp2, int *resplen2, int *ansp2_malloced)
 {
-	const HEADER *hp = (HEADER *) buf;
-	const HEADER *hp2 = (HEADER *) buf2;
+	const UHEADER *hp = (UHEADER *) buf;
+	const UHEADER *hp2 = (UHEADER *) buf2;
 	struct timespec now, timeout, finish;
 	struct pollfd pfd[1];
 	int ptimeout;
@@ -1168,7 +1168,7 @@ send_dg(res_state statp,
 		   MSG_TRUNC which is only available on Linux.  We
 		   can abstract out the Linux-specific feature in the
 		   future to detect truncation.  */
-		HEADER *anhp = (HEADER *) *thisansp;
+		UHEADER *anhp = (UHEADER *) *thisansp;
 		socklen_t fromlen = sizeof(struct sockaddr_in6);
 		assert (sizeof(from) <= fromlen);
 		*thisresplenp = __recvfrom (pfd[0].fd, (char *) *thisansp,
