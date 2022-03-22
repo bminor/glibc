@@ -2246,6 +2246,36 @@ gaiconf_reload (void)
     gaiconf_init ();
 }
 
+static bool
+try_connect (int *fdp, int *afp, struct sockaddr_in6 *source_addrp,
+	     const struct sockaddr *addr, socklen_t addrlen, int family)
+{
+  int fd = *fdp;
+  int af = *afp;
+  socklen_t sl = sizeof (*source_addrp);
+
+  while (true)
+    {
+      if (fd != -1 && __connect (fd, addr, addrlen) == 0
+	  && __getsockname (fd, (struct sockaddr *) source_addrp, &sl) == 0)
+	return true;
+
+      if (errno == EAFNOSUPPORT && af == AF_INET6 && family == AF_INET)
+	{
+	  /* This could mean IPv6 sockets are IPv6-only.  */
+	  if (fd != -1)
+	    __close_nocancel_nostatus (fd);
+	  *afp = af = AF_INET;
+	  *fdp = fd = __socket (AF_INET, SOCK_DGRAM | SOCK_CLOEXEC,
+				IPPROTO_IP);
+	  continue;
+	}
+
+      return false;
+    }
+
+  __builtin_unreachable ();
+}
 
 int
 getaddrinfo (const char *name, const char *service,
@@ -2436,7 +2466,6 @@ getaddrinfo (const char *name, const char *service,
 	      if (fd == -1 || (af == AF_INET && q->ai_family == AF_INET6))
 		{
 		  if (fd != -1)
-		  close_retry:
 		    __close_nocancel_nostatus (fd);
 		  af = q->ai_family;
 		  fd = __socket (af, SOCK_DGRAM | SOCK_CLOEXEC, IPPROTO_IP);
@@ -2448,14 +2477,10 @@ getaddrinfo (const char *name, const char *service,
 		  __connect (fd, &sa, sizeof (sa));
 		}
 
-	      socklen_t sl = sizeof (results[i].source_addr);
-	      if (fd != -1
-		  && __connect (fd, q->ai_addr, q->ai_addrlen) == 0
-		  && __getsockname (fd,
-				    (struct sockaddr *) &results[i].source_addr,
-				    &sl) == 0)
+	      if (try_connect (&fd, &af, &results[i].source_addr, q->ai_addr,
+			       q->ai_addrlen, q->ai_family))
 		{
-		  results[i].source_addr_len = sl;
+		  results[i].source_addr_len = sizeof (results[i].source_addr);
 		  results[i].got_source_addr = true;
 
 		  if (in6ai != NULL)
@@ -2520,10 +2545,6 @@ getaddrinfo (const char *name, const char *service,
 		      results[i].source_addr_len = sizeof (struct sockaddr_in);
 		    }
 		}
-	      else if (errno == EAFNOSUPPORT && af == AF_INET6
-		       && q->ai_family == AF_INET)
-		/* This could mean IPv6 sockets are IPv6-only.  */
-		goto close_retry;
 	      else
 		/* Just make sure that if we have to process the same
 		   address again we do not copy any memory.  */
