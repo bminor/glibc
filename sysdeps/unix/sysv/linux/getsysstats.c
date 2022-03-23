@@ -19,7 +19,6 @@
 #include <array_length.h>
 #include <assert.h>
 #include <ctype.h>
-#include <dirent.h>
 #include <errno.h>
 #include <ldsodefs.h>
 #include <limits.h>
@@ -136,7 +135,7 @@ get_nproc_stat (void)
 }
 
 static int
-get_nprocs_cpu_online (void)
+read_sysfs_file (const char *fname)
 {
   enum { buffer_size = 1024 };
   char buffer[buffer_size];
@@ -146,7 +145,7 @@ get_nprocs_cpu_online (void)
 
   const int flags = O_RDONLY | O_CLOEXEC;
   /* This file contains comma-separated ranges.  */
-  int fd = __open_nocancel ("/sys/devices/system/cpu/online", flags);
+  int fd = __open_nocancel (fname, flags);
   char *l;
   int result = 0;
   if (fd != -1)
@@ -191,31 +190,6 @@ get_nprocs_cpu_online (void)
 }
 
 static int
-get_nprocs_cpu (void)
-{
-  int count = 0;
-  DIR *dir = __opendir ("/sys/devices/system/cpu");
-  if (dir != NULL)
-    {
-      struct dirent64 *d;
-
-      while ((d = __readdir64 (dir)) != NULL)
-	/* NB: the sysfs has d_type support.  */
-	if (d->d_type == DT_DIR && strncmp (d->d_name, "cpu", 3) == 0)
-	  {
-	    char *endp;
-	    unsigned long int nr = strtoul (d->d_name + 3, &endp, 10);
-	    if (nr != ULONG_MAX && endp != d->d_name + 3 && *endp == '\0')
-	      ++count;
-	  }
-
-      __closedir (dir);
-
-    }
-  return count;
-}
-
-static int
 get_nprocs_fallback (void)
 {
   int result;
@@ -239,8 +213,7 @@ get_nprocs_fallback (void)
 int
 __get_nprocs (void)
 {
-  /* Try /sys/devices/system/cpu/online first.  */
-  int result = get_nprocs_cpu_online ();
+  int result = read_sysfs_file ("/sys/devices/system/cpu/online");
   if (result != 0)
     return result;
 
@@ -255,8 +228,7 @@ weak_alias (__get_nprocs, get_nprocs)
 int
 __get_nprocs_conf (void)
 {
-  /* Try /sys/devices/system/cpu/ first.  */
-  int result = get_nprocs_cpu ();
+  int result = read_sysfs_file ("/sys/devices/system/cpu/possible");
   if (result != 0)
     return result;
 
