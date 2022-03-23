@@ -308,6 +308,7 @@
 #define __NR_sendmsg 4179
 #define __NR_sendto 4180
 #define __NR_set_mempolicy 4270
+#define __NR_set_mempolicy_home_node 4450
 #define __NR_set_robust_list 4309
 #define __NR_set_thread_area 4283
 #define __NR_set_tid_address 4252
