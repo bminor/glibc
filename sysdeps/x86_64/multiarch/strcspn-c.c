@@ -84,83 +84,74 @@ STRCSPN_SSE42 (const char *s, const char *a)
     RETURN (NULL, strlen (s));
 
   const char *aligned;
-  __m128i mask;
-  int offset = (int) ((size_t) a & 15);
+  __m128i mask, maskz, zero;
+  unsigned int maskz_bits;
+  unsigned int offset = (unsigned int) ((size_t) a & 15);
+  zero = _mm_set1_epi8 (0);
   if (offset != 0)
     {
       /* Load masks.  */
       aligned = (const char *) ((size_t) a & -16L);
       __m128i mask0 = _mm_load_si128 ((__m128i *) aligned);
-
-      mask = __m128i_shift_right (mask0, offset);
+      maskz = _mm_cmpeq_epi8 (mask0, zero);
 
       /* Find where the NULL terminator is.  */
-      int length = _mm_cmpistri (mask, mask, 0x3a);
-      if (length == 16 - offset)
-	{
-	  /* There is no NULL terminator.  */
-	  __m128i mask1 = _mm_load_si128 ((__m128i *) (aligned + 16));
-	  int index = _mm_cmpistri (mask1, mask1, 0x3a);
-	  length += index;
+      maskz_bits = _mm_movemask_epi8 (maskz) >> offset;
+      if (maskz_bits != 0)
+        {
+          mask = __m128i_shift_right (mask0, offset);
+          offset = (unsigned int) ((size_t) s & 15);
+          if (offset)
+            goto start_unaligned;
 
-	  /* Don't use SSE4.2 if the length of A > 16.  */
-	  if (length > 16)
-	    return STRCSPN_SSE2 (s, a);
-
-	  if (index != 0)
-	    {
-	      /* Combine mask0 and mask1.  We could play games with
-		 palignr, but frankly this data should be in L1 now
-		 so do the merge via an unaligned load.  */
-	      mask = _mm_loadu_si128 ((__m128i *) a);
-	    }
-	}
+          aligned = s;
+          goto start_loop;
+        }
     }
-  else
+
+  /* A is aligned.  */
+  mask = _mm_loadu_si128 ((__m128i *) a);
+  /* Find where the NULL terminator is.  */
+  maskz = _mm_cmpeq_epi8 (mask, zero);
+  maskz_bits = _mm_movemask_epi8 (maskz);
+  if (maskz_bits == 0)
     {
-      /* A is aligned.  */
-      mask = _mm_load_si128 ((__m128i *) a);
-
-      /* Find where the NULL terminator is.  */
-      int length = _mm_cmpistri (mask, mask, 0x3a);
-      if (length == 16)
-	{
-	  /* There is no NULL terminator.  Don't use SSE4.2 if the length
-	     of A > 16.  */
-	  if (a[16] != 0)
-	    return STRCSPN_SSE2 (s, a);
-	}
+      /* There is no NULL terminator.  Don't use SSE4.2 if the length
+         of A > 16.  */
+      if (a[16] != 0)
+        return STRCSPN_SSE2 (s, a);
     }
 
-  offset = (int) ((size_t) s & 15);
+  aligned = s;
+  offset = (unsigned int) ((size_t) s & 15);
   if (offset != 0)
     {
+    start_unaligned:
       /* Check partial string.  */
       aligned = (const char *) ((size_t) s & -16L);
       __m128i value = _mm_load_si128 ((__m128i *) aligned);
 
       value = __m128i_shift_right (value, offset);
 
-      int length = _mm_cmpistri (mask, value, 0x2);
+      unsigned int length = _mm_cmpistri (mask, value, 0x2);
       /* No need to check ZFlag since ZFlag is always 1.  */
-      int cflag = _mm_cmpistrc (mask, value, 0x2);
+      unsigned int cflag = _mm_cmpistrc (mask, value, 0x2);
       if (cflag)
 	RETURN ((char *) (s + length), length);
       /* Find where the NULL terminator is.  */
-      int index = _mm_cmpistri (value, value, 0x3a);
+      unsigned int index = _mm_cmpistri (value, value, 0x3a);
       if (index < 16 - offset)
 	RETURN (NULL, index);
       aligned += 16;
     }
-  else
-    aligned = s;
 
+start_loop:
   while (1)
     {
       __m128i value = _mm_load_si128 ((__m128i *) aligned);
-      int index = _mm_cmpistri (mask, value, 0x2);
-      int cflag = _mm_cmpistrc (mask, value, 0x2);
-      int zflag = _mm_cmpistrz (mask, value, 0x2);
+      unsigned int index = _mm_cmpistri (mask, value, 0x2);
+      unsigned int cflag = _mm_cmpistrc (mask, value, 0x2);
+      unsigned int zflag = _mm_cmpistrz (mask, value, 0x2);
       if (cflag)
 	RETURN ((char *) (aligned + index), (size_t) (aligned + index - s));
       if (zflag)
