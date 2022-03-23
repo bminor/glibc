@@ -54,6 +54,11 @@
 #endif /* WIDE */
 
 #ifdef USE_FOR_STRCHRNUL
+# define DO_RAND_TEST(...)
+#else
+# define DO_RAND_TEST(...) do_rand_test(__VA_ARGS__)
+#endif
+#ifdef USE_FOR_STRCHRNUL
 # define NULLRET(endptr) endptr
 #else
 # define NULLRET(endptr) NULL
@@ -73,6 +78,133 @@ simple_STRCHR (const CHAR *s, int c)
 
 IMPL (simple_STRCHR, 0)
 IMPL (STRCHR, 1)
+
+#ifndef USE_FOR_STRCHRNUL
+/* Random benchmarks for strchr (if return is CHAR or NULL).  The
+   rational for the benchmark is returning null/char can be done with
+   predicate execution (i.e cmovcc on x86) or a branch. */
+
+
+/* Large enough that full history can't be stored in BHT. */
+#define NUM_SEARCH_CHARS 2048
+
+/* Expectation is usecases of strchr check the return. Otherwise
+   strchrnul would almost always be better. Since there is another
+   branch coming we want to test the case where a potential branch in
+   strchr can be used to skip a later mispredict because of the
+   relationship between the two branches. */
+static void __attribute__ ((noinline, noclone))
+do_one_rand_plus_branch_test (json_ctx_t *json_ctx, impl_t *impl,
+                              const CHAR *s, const CHAR *c)
+{
+  size_t i, iters = INNER_LOOP_ITERS_LARGE;
+  int must_execute = 0;
+  timing_t start, stop, cur;
+  TIMING_NOW (start);
+  for (i = 0; i < iters; ++i)
+    {
+      if (CALL (impl, s, c[i % NUM_SEARCH_CHARS]))
+        {
+          /* We just need something that will force compiler to emit
+             a branch instead of conditional execution. */
+          ++must_execute;
+          asm volatile("" : : :);
+        }
+    }
+  TIMING_NOW (stop);
+
+  TIMING_DIFF (cur, start, stop);
+
+  json_element_double (json_ctx, (double)cur / (double)iters);
+}
+
+static void __attribute__ ((noinline, noclone))
+do_one_rand_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s,
+                  const CHAR *c)
+{
+  size_t i, iters = INNER_LOOP_ITERS_LARGE;
+  timing_t start, stop, cur;
+  TIMING_NOW (start);
+  for (i = 0; i < iters; ++i)
+    {
+      CALL (impl, s, c[i % NUM_SEARCH_CHARS]);
+    }
+  TIMING_NOW (stop);
+
+  TIMING_DIFF (cur, start, stop);
+
+  json_element_double (json_ctx, (double)cur / (double)iters);
+}
+
+static void
+do_rand_test (json_ctx_t *json_ctx, size_t align, size_t pos, size_t len,
+              float perc_zero)
+{
+  size_t i;
+  int perc_zero_int;
+  CHAR *buf = (CHAR *)buf1;
+  CHAR *c = (CHAR *)buf2;
+  align &= 127;
+  if ((align + len) * sizeof (CHAR) >= page_size)
+    return;
+
+  /* Test is only interesting if we can hit both cases. */
+  if (pos >= len)
+    return;
+
+  /* Segfault if we run the test. */
+  if (NUM_SEARCH_CHARS * sizeof (CHAR) > page_size)
+    return;
+
+  for (i = 0; i < len; ++i)
+    {
+      buf[align + i] = 2;
+    }
+  buf[align + len] = 0;
+  buf[align + pos] = 1;
+
+  perc_zero_int = perc_zero * RAND_MAX;
+  for (i = 0; i < NUM_SEARCH_CHARS; ++i)
+    {
+      if (rand () > perc_zero_int)
+        c[i] = 0;
+      else
+        c[i] = 1;
+    }
+  {
+    json_element_object_begin (json_ctx);
+    json_attr_uint (json_ctx, "rand", 1);
+    json_attr_uint (json_ctx, "branch", 1);
+    json_attr_double (json_ctx, "perc-zero", perc_zero);
+    json_attr_uint (json_ctx, "length", len);
+    json_attr_uint (json_ctx, "pos", pos);
+    json_attr_uint (json_ctx, "alignment", align);
+    json_array_begin (json_ctx, "timings");
+
+    FOR_EACH_IMPL (impl, 0)
+      do_one_rand_plus_branch_test (json_ctx, impl, buf + align, c);
+
+    json_array_end (json_ctx);
+    json_element_object_end (json_ctx);
+  }
+  {
+    json_element_object_begin (json_ctx);
+    json_attr_uint (json_ctx, "rand", 1);
+    json_attr_uint (json_ctx, "branch", 0);
+    json_attr_double (json_ctx, "perc-zero", perc_zero);
+    json_attr_uint (json_ctx, "length", len);
+    json_attr_uint (json_ctx, "pos", pos);
+    json_attr_uint (json_ctx, "alignment", align);
+    json_array_begin (json_ctx, "timings");
+
+    FOR_EACH_IMPL (impl, 0)
+      do_one_rand_test (json_ctx, impl, buf + align, c);
+
+    json_array_end (json_ctx);
+    json_element_object_end (json_ctx);
+  }
+}
+#endif
 
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s, int c,
@@ -136,6 +268,7 @@ do_test (json_ctx_t *json_ctx, size_t align, size_t pos, size_t len,
     result = NULLRET (buf + align + len);
 
   json_element_object_begin (json_ctx);
+  json_attr_uint (json_ctx, "rand", 0);
   json_attr_uint (json_ctx, "length", len);
   json_attr_uint (json_ctx, "pos", pos);
   json_attr_uint (json_ctx, "seek_char", seek_char);
@@ -233,6 +366,16 @@ test_main (void)
       do_test (&json_ctx, 0, i, i + 1, 0, MIDDLE_CHAR);
       do_test (&json_ctx, 0, i, i + 1, 0, BIG_CHAR);
     }
+
+  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.0);
+  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.1);
+  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.25);
+  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.33);
+  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.5);
+  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.66);
+  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.75);
+  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.9);
+  DO_RAND_TEST(&json_ctx, 0, 15, 16, 1.0);
 
   json_array_end (&json_ctx);
   json_attr_object_end (&json_ctx);
