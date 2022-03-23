@@ -30,6 +30,7 @@
 # ifdef USE_AS_WCSCHR
 #  define VPBROADCAST	vpbroadcastd
 #  define VPCMP		vpcmpd
+#  define VPTESTN	vptestnmd
 #  define VPMINU	vpminud
 #  define CHAR_REG	esi
 #  define SHIFT_REG	ecx
@@ -37,6 +38,7 @@
 # else
 #  define VPBROADCAST	vpbroadcastb
 #  define VPCMP		vpcmpb
+#  define VPTESTN	vptestnmb
 #  define VPMINU	vpminub
 #  define CHAR_REG	sil
 #  define SHIFT_REG	edx
@@ -61,13 +63,11 @@
 # define CHAR_PER_VEC (VEC_SIZE / CHAR_SIZE)
 
 	.section .text.evex,"ax",@progbits
-ENTRY (STRCHR)
+ENTRY_P2ALIGN (STRCHR, 5)
 	/* Broadcast CHAR to YMM0.	*/
 	VPBROADCAST	%esi, %YMM0
 	movl	%edi, %eax
 	andl	$(PAGE_SIZE - 1), %eax
-	vpxorq	%XMMZERO, %XMMZERO, %XMMZERO
-
 	/* Check if we cross page boundary with one vector load.
 	   Otherwise it is safe to use an unaligned load.  */
 	cmpl	$(PAGE_SIZE - VEC_SIZE), %eax
@@ -81,11 +81,23 @@ ENTRY (STRCHR)
 	vpxorq	%YMM1, %YMM0, %YMM2
 	VPMINU	%YMM2, %YMM1, %YMM2
 	/* Each bit in K0 represents a CHAR or a null byte in YMM1.  */
-	VPCMP	$0, %YMMZERO, %YMM2, %k0
+	VPTESTN	%YMM2, %YMM2, %k0
 	kmovd	%k0, %eax
 	testl	%eax, %eax
 	jz	L(aligned_more)
 	tzcntl	%eax, %eax
+# ifndef USE_AS_STRCHRNUL
+	/* Found CHAR or the null byte.  */
+	cmp	(%rdi, %rax, CHAR_SIZE), %CHAR_REG
+	/* NB: Use a branch instead of cmovcc here. The expectation is
+	   that with strchr the user will branch based on input being
+	   null. Since this branch will be 100% predictive of the user
+	   branch a branch miss here should save what otherwise would
+	   be branch miss in the user code. Otherwise using a branch 1)
+	   saves code size and 2) is faster in highly predictable
+	   environments.  */
+	jne	L(zero)
+# endif
 # ifdef USE_AS_WCSCHR
 	/* NB: Multiply wchar_t count by 4 to get the number of bytes.
 	 */
@@ -93,37 +105,11 @@ ENTRY (STRCHR)
 # else
 	addq	%rdi, %rax
 # endif
-# ifndef USE_AS_STRCHRNUL
-	/* Found CHAR or the null byte.	 */
-	cmp	(%rax), %CHAR_REG
-	jne	L(zero)
-# endif
 	ret
 
-	/* .p2align 5 helps keep performance more consistent if ENTRY()
-	   alignment % 32 was either 16 or 0. As well this makes the
-	   alignment % 32 of the loop_4x_vec fixed which makes tuning it
-	   easier.  */
-	.p2align 5
-L(first_vec_x3):
-	tzcntl	%eax, %eax
-# ifndef USE_AS_STRCHRNUL
-	/* Found CHAR or the null byte.	 */
-	cmp	(VEC_SIZE * 3)(%rdi, %rax, CHAR_SIZE), %CHAR_REG
-	jne	L(zero)
-# endif
-	/* NB: Multiply sizeof char type (1 or 4) to get the number of
-	   bytes.  */
-	leaq	(VEC_SIZE * 3)(%rdi, %rax, CHAR_SIZE), %rax
-	ret
 
-# ifndef USE_AS_STRCHRNUL
-L(zero):
-	xorl	%eax, %eax
-	ret
-# endif
 
-	.p2align 4
+	.p2align 4,, 10
 L(first_vec_x4):
 # ifndef USE_AS_STRCHRNUL
 	/* Check to see if first match was CHAR (k0) or null (k1).  */
@@ -144,9 +130,18 @@ L(first_vec_x4):
 	leaq	(VEC_SIZE * 4)(%rdi, %rax, CHAR_SIZE), %rax
 	ret
 
+# ifndef USE_AS_STRCHRNUL
+L(zero):
+	xorl	%eax, %eax
+	ret
+# endif
+
+
 	.p2align 4
 L(first_vec_x1):
-	tzcntl	%eax, %eax
+	/* Use bsf here to save 1-byte keeping keeping the block in 1x
+	   fetch block. eax guranteed non-zero.  */
+	bsfl	%eax, %eax
 # ifndef USE_AS_STRCHRNUL
 	/* Found CHAR or the null byte.	 */
 	cmp	(VEC_SIZE)(%rdi, %rax, CHAR_SIZE), %CHAR_REG
@@ -158,7 +153,7 @@ L(first_vec_x1):
 	leaq	(VEC_SIZE)(%rdi, %rax, CHAR_SIZE), %rax
 	ret
 
-	.p2align 4
+	.p2align 4,, 10
 L(first_vec_x2):
 # ifndef USE_AS_STRCHRNUL
 	/* Check to see if first match was CHAR (k0) or null (k1).  */
@@ -179,6 +174,21 @@ L(first_vec_x2):
 	leaq	(VEC_SIZE * 2)(%rdi, %rax, CHAR_SIZE), %rax
 	ret
 
+	.p2align 4,, 10
+L(first_vec_x3):
+	/* Use bsf here to save 1-byte keeping keeping the block in 1x
+	   fetch block. eax guranteed non-zero.  */
+	bsfl	%eax, %eax
+# ifndef USE_AS_STRCHRNUL
+	/* Found CHAR or the null byte.	 */
+	cmp	(VEC_SIZE * 3)(%rdi, %rax, CHAR_SIZE), %CHAR_REG
+	jne	L(zero)
+# endif
+	/* NB: Multiply sizeof char type (1 or 4) to get the number of
+	   bytes.  */
+	leaq	(VEC_SIZE * 3)(%rdi, %rax, CHAR_SIZE), %rax
+	ret
+
 	.p2align 4
 L(aligned_more):
 	/* Align data to VEC_SIZE.  */
@@ -195,7 +205,7 @@ L(cross_page_continue):
 	vpxorq	%YMM1, %YMM0, %YMM2
 	VPMINU	%YMM2, %YMM1, %YMM2
 	/* Each bit in K0 represents a CHAR or a null byte in YMM1.  */
-	VPCMP	$0, %YMMZERO, %YMM2, %k0
+	VPTESTN	%YMM2, %YMM2, %k0
 	kmovd	%k0, %eax
 	testl	%eax, %eax
 	jnz	L(first_vec_x1)
@@ -206,7 +216,7 @@ L(cross_page_continue):
 	/* Each bit in K0 represents a CHAR in YMM1.  */
 	VPCMP	$0, %YMM1, %YMM0, %k0
 	/* Each bit in K1 represents a CHAR in YMM1.  */
-	VPCMP	$0, %YMM1, %YMMZERO, %k1
+	VPTESTN	%YMM1, %YMM1, %k1
 	kortestd	%k0, %k1
 	jnz	L(first_vec_x2)
 
@@ -215,7 +225,7 @@ L(cross_page_continue):
 	vpxorq	%YMM1, %YMM0, %YMM2
 	VPMINU	%YMM2, %YMM1, %YMM2
 	/* Each bit in K0 represents a CHAR or a null byte in YMM1.  */
-	VPCMP	$0, %YMMZERO, %YMM2, %k0
+	VPTESTN	%YMM2, %YMM2, %k0
 	kmovd	%k0, %eax
 	testl	%eax, %eax
 	jnz	L(first_vec_x3)
@@ -224,7 +234,7 @@ L(cross_page_continue):
 	/* Each bit in K0 represents a CHAR in YMM1.  */
 	VPCMP	$0, %YMM1, %YMM0, %k0
 	/* Each bit in K1 represents a CHAR in YMM1.  */
-	VPCMP	$0, %YMM1, %YMMZERO, %k1
+	VPTESTN	%YMM1, %YMM1, %k1
 	kortestd	%k0, %k1
 	jnz	L(first_vec_x4)
 
@@ -265,33 +275,33 @@ L(loop_4x_vec):
 	VPMINU	%YMM3, %YMM4, %YMM4
 	VPMINU	%YMM2, %YMM4, %YMM4{%k4}{z}
 
-	VPCMP	$0, %YMMZERO, %YMM4, %k1
+	VPTESTN	%YMM4, %YMM4, %k1
 	kmovd	%k1, %ecx
 	subq	$-(VEC_SIZE * 4), %rdi
 	testl	%ecx, %ecx
 	jz	L(loop_4x_vec)
 
-	VPCMP	$0, %YMMZERO, %YMM1, %k0
+	VPTESTN	%YMM1, %YMM1, %k0
 	kmovd	%k0, %eax
 	testl	%eax, %eax
 	jnz	L(last_vec_x1)
 
-	VPCMP	$0, %YMMZERO, %YMM2, %k0
+	VPTESTN	%YMM2, %YMM2, %k0
 	kmovd	%k0, %eax
 	testl	%eax, %eax
 	jnz	L(last_vec_x2)
 
-	VPCMP	$0, %YMMZERO, %YMM3, %k0
+	VPTESTN	%YMM3, %YMM3, %k0
 	kmovd	%k0, %eax
 	/* Combine YMM3 matches (eax) with YMM4 matches (ecx).  */
 # ifdef USE_AS_WCSCHR
 	sall	$8, %ecx
 	orl	%ecx, %eax
-	tzcntl	%eax, %eax
+	bsfl	%eax, %eax
 # else
 	salq	$32, %rcx
 	orq	%rcx, %rax
-	tzcntq	%rax, %rax
+	bsfq	%rax, %rax
 # endif
 # ifndef USE_AS_STRCHRNUL
 	/* Check if match was CHAR or null.  */
@@ -303,28 +313,28 @@ L(loop_4x_vec):
 	leaq	(VEC_SIZE * 2)(%rdi, %rax, CHAR_SIZE), %rax
 	ret
 
-# ifndef USE_AS_STRCHRNUL
-L(zero_end):
-	xorl	%eax, %eax
-	ret
+	.p2align 4,, 8
+L(last_vec_x1):
+	bsfl	%eax, %eax
+# ifdef USE_AS_WCSCHR
+	/* NB: Multiply wchar_t count by 4 to get the number of bytes.
+	   */
+	leaq	(%rdi, %rax, CHAR_SIZE), %rax
+# else
+	addq	%rdi, %rax
 # endif
 
-	.p2align 4
-L(last_vec_x1):
-	tzcntl	%eax, %eax
 # ifndef USE_AS_STRCHRNUL
 	/* Check if match was null.  */
-	cmp	(%rdi, %rax, CHAR_SIZE), %CHAR_REG
+	cmp	(%rax), %CHAR_REG
 	jne	L(zero_end)
 # endif
-	/* NB: Multiply sizeof char type (1 or 4) to get the number of
-	   bytes.  */
-	leaq	(%rdi, %rax, CHAR_SIZE), %rax
+
 	ret
 
-	.p2align 4
+	.p2align 4,, 8
 L(last_vec_x2):
-	tzcntl	%eax, %eax
+	bsfl	%eax, %eax
 # ifndef USE_AS_STRCHRNUL
 	/* Check if match was null.  */
 	cmp	(VEC_SIZE)(%rdi, %rax, CHAR_SIZE), %CHAR_REG
@@ -336,7 +346,7 @@ L(last_vec_x2):
 	ret
 
 	/* Cold case for crossing page with first load.	 */
-	.p2align 4
+	.p2align 4,, 8
 L(cross_page_boundary):
 	movq	%rdi, %rdx
 	/* Align rdi.  */
@@ -346,9 +356,9 @@ L(cross_page_boundary):
 	vpxorq	%YMM1, %YMM0, %YMM2
 	VPMINU	%YMM2, %YMM1, %YMM2
 	/* Each bit in K0 represents a CHAR or a null byte in YMM1.  */
-	VPCMP	$0, %YMMZERO, %YMM2, %k0
+	VPTESTN	%YMM2, %YMM2, %k0
 	kmovd	%k0, %eax
-	/* Remove the leading bits.	 */
+	/* Remove the leading bits.  */
 # ifdef USE_AS_WCSCHR
 	movl	%edx, %SHIFT_REG
 	/* NB: Divide shift count by 4 since each bit in K1 represent 4
@@ -360,12 +370,8 @@ L(cross_page_boundary):
 	/* If eax is zero continue.  */
 	testl	%eax, %eax
 	jz	L(cross_page_continue)
-	tzcntl	%eax, %eax
-# ifndef USE_AS_STRCHRNUL
-	/* Check to see if match was CHAR or null.  */
-	cmp	(%rdx, %rax, CHAR_SIZE), %CHAR_REG
-	jne	L(zero_end)
-# endif
+	bsfl	%eax, %eax
+
 # ifdef USE_AS_WCSCHR
 	/* NB: Multiply wchar_t count by 4 to get the number of
 	   bytes.  */
@@ -373,7 +379,15 @@ L(cross_page_boundary):
 # else
 	addq	%rdx, %rax
 # endif
+# ifndef USE_AS_STRCHRNUL
+	/* Check to see if match was CHAR or null.  */
+	cmp	(%rax), %CHAR_REG
+	je	L(cross_page_ret)
+L(zero_end):
+	xorl	%eax, %eax
+L(cross_page_ret):
+# endif
 	ret
 
 END (STRCHR)
-# endif
+#endif
