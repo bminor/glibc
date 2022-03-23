@@ -75,9 +75,8 @@ ENTRY2 (__strcasecmp)
 	movq	__libc_tsd_LOCALE@gottpoff(%rip),%rax
 	mov	%fs:(%rax),%RDX_LP
 
-	// XXX 5 byte should be before the function
-	/* 5-byte NOP.  */
-	.byte	0x0f,0x1f,0x44,0x00,0x00
+	/* Either 1 or 5 bytes (dependeing if CET is enabled).  */
+	.p2align 4
 END2 (__strcasecmp)
 # ifndef NO_NOLOCALE_ALIAS
 weak_alias (__strcasecmp, strcasecmp)
@@ -94,9 +93,8 @@ ENTRY2 (__strncasecmp)
 	movq	__libc_tsd_LOCALE@gottpoff(%rip),%rax
 	mov	%fs:(%rax),%RCX_LP
 
-	// XXX 5 byte should be before the function
-	/* 5-byte NOP.  */
-	.byte	0x0f,0x1f,0x44,0x00,0x00
+	/* Either 1 or 5 bytes (dependeing if CET is enabled).  */
+	.p2align 4
 END2 (__strncasecmp)
 # ifndef NO_NOLOCALE_ALIAS
 weak_alias (__strncasecmp, strncasecmp)
@@ -146,22 +144,22 @@ ENTRY (STRCMP)
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	.section .rodata.cst16,"aM",@progbits,16
 	.align 16
-.Lbelowupper:
-	.quad	0x4040404040404040
-	.quad	0x4040404040404040
-.Ltopupper:
-	.quad	0x5b5b5b5b5b5b5b5b
-	.quad	0x5b5b5b5b5b5b5b5b
-.Ltouppermask:
+.Llcase_min:
+	.quad	0x3f3f3f3f3f3f3f3f
+	.quad	0x3f3f3f3f3f3f3f3f
+.Llcase_max:
+	.quad	0x9999999999999999
+	.quad	0x9999999999999999
+.Lcase_add:
 	.quad	0x2020202020202020
 	.quad	0x2020202020202020
 	.previous
-	movdqa	.Lbelowupper(%rip), %xmm5
-# define UCLOW_reg %xmm5
-	movdqa	.Ltopupper(%rip), %xmm6
-# define UCHIGH_reg %xmm6
-	movdqa	.Ltouppermask(%rip), %xmm7
-# define LCQWORD_reg %xmm7
+	movdqa	.Llcase_min(%rip), %xmm5
+# define LCASE_MIN_reg %xmm5
+	movdqa	.Llcase_max(%rip), %xmm6
+# define LCASE_MAX_reg %xmm6
+	movdqa	.Lcase_add(%rip), %xmm7
+# define CASE_ADD_reg %xmm7
 #endif
 	cmp	$0x30, %ecx
 	ja	LABEL(crosscache)	/* rsi: 16-byte load will cross cache line */
@@ -172,22 +170,18 @@ ENTRY (STRCMP)
 	movhpd	8(%rdi), %xmm1
 	movhpd	8(%rsi), %xmm2
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
-# define TOLOWER(reg1, reg2) \
-	movdqa	reg1, %xmm8;					\
-	movdqa	UCHIGH_reg, %xmm9;				\
-	movdqa	reg2, %xmm10;					\
-	movdqa	UCHIGH_reg, %xmm11;				\
-	pcmpgtb	UCLOW_reg, %xmm8;				\
-	pcmpgtb	reg1, %xmm9;					\
-	pcmpgtb	UCLOW_reg, %xmm10;				\
-	pcmpgtb	reg2, %xmm11;					\
-	pand	%xmm9, %xmm8;					\
-	pand	%xmm11, %xmm10;					\
-	pand	LCQWORD_reg, %xmm8;				\
-	pand	LCQWORD_reg, %xmm10;				\
-	por	%xmm8, reg1;					\
-	por	%xmm10, reg2
-	TOLOWER (%xmm1, %xmm2)
+#  define TOLOWER(reg1, reg2) \
+	movdqa	LCASE_MIN_reg, %xmm8;					\
+	movdqa	LCASE_MIN_reg, %xmm9;					\
+	paddb	reg1, %xmm8;					\
+	paddb	reg2, %xmm9;					\
+	pcmpgtb	LCASE_MAX_reg, %xmm8;				\
+	pcmpgtb	LCASE_MAX_reg, %xmm9;				\
+	pandn	CASE_ADD_reg, %xmm8;					\
+	pandn	CASE_ADD_reg, %xmm9;					\
+	paddb	%xmm8, reg1;					\
+	paddb	%xmm9, reg2
+	TOLOWER	(%xmm1, %xmm2)
 #else
 # define TOLOWER(reg1, reg2)
 #endif
