@@ -88,9 +88,8 @@ ENTRY (GLABEL(__strcasecmp))
 	movq	__libc_tsd_LOCALE@gottpoff(%rip),%rax
 	mov	%fs:(%rax),%RDX_LP
 
-	// XXX 5 byte should be before the function
-	/* 5-byte NOP.  */
-	.byte	0x0f,0x1f,0x44,0x00,0x00
+	/* Either 1 or 5 bytes (dependeing if CET is enabled).  */
+	.p2align 4
 END (GLABEL(__strcasecmp))
 	/* FALLTHROUGH to strcasecmp_l.  */
 #endif
@@ -99,9 +98,8 @@ ENTRY (GLABEL(__strncasecmp))
 	movq	__libc_tsd_LOCALE@gottpoff(%rip),%rax
 	mov	%fs:(%rax),%RCX_LP
 
-	// XXX 5 byte should be before the function
-	/* 5-byte NOP.  */
-	.byte	0x0f,0x1f,0x44,0x00,0x00
+	/* Either 1 or 5 bytes (dependeing if CET is enabled).  */
+	.p2align 4
 END (GLABEL(__strncasecmp))
 	/* FALLTHROUGH to strncasecmp_l.  */
 #endif
@@ -169,27 +167,22 @@ STRCMP_SSE42:
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 	.section .rodata.cst16,"aM",@progbits,16
 	.align 16
-LABEL(belowupper):
-	.quad	0x4040404040404040
-	.quad	0x4040404040404040
-LABEL(topupper):
-# ifdef USE_AVX
-	.quad	0x5a5a5a5a5a5a5a5a
-	.quad	0x5a5a5a5a5a5a5a5a
-# else
-	.quad	0x5b5b5b5b5b5b5b5b
-	.quad	0x5b5b5b5b5b5b5b5b
-# endif
-LABEL(touppermask):
+LABEL(lcase_min):
+	.quad	0x3f3f3f3f3f3f3f3f
+	.quad	0x3f3f3f3f3f3f3f3f
+LABEL(lcase_max):
+	.quad	0x9999999999999999
+	.quad	0x9999999999999999
+LABEL(case_add):
 	.quad	0x2020202020202020
 	.quad	0x2020202020202020
 	.previous
-	movdqa	LABEL(belowupper)(%rip), %xmm4
-# define UCLOW_reg %xmm4
-	movdqa	LABEL(topupper)(%rip), %xmm5
-# define UCHIGH_reg %xmm5
-	movdqa	LABEL(touppermask)(%rip), %xmm6
-# define LCQWORD_reg %xmm6
+	movdqa	LABEL(lcase_min)(%rip), %xmm4
+# define LCASE_MIN_reg %xmm4
+	movdqa	LABEL(lcase_max)(%rip), %xmm5
+# define LCASE_MAX_reg %xmm5
+	movdqa	LABEL(case_add)(%rip), %xmm6
+# define CASE_ADD_reg %xmm6
 #endif
 	cmp	$0x30, %ecx
 	ja	LABEL(crosscache)/* rsi: 16-byte load will cross cache line */
@@ -200,32 +193,26 @@ LABEL(touppermask):
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 # ifdef USE_AVX
 #  define TOLOWER(reg1, reg2) \
-	vpcmpgtb UCLOW_reg, reg1, %xmm7;			\
-	vpcmpgtb UCHIGH_reg, reg1, %xmm8;			\
-	vpcmpgtb UCLOW_reg, reg2, %xmm9;			\
-	vpcmpgtb UCHIGH_reg, reg2, %xmm10;			\
-	vpandn	%xmm7, %xmm8, %xmm8;					\
-	vpandn	%xmm9, %xmm10, %xmm10;					\
-	vpand	LCQWORD_reg, %xmm8, %xmm8;				\
-	vpand	LCQWORD_reg, %xmm10, %xmm10;				\
-	vpor	reg1, %xmm8, reg1;					\
-	vpor	reg2, %xmm10, reg2
+	vpaddb	LCASE_MIN_reg, reg1, %xmm7;					\
+	vpaddb	LCASE_MIN_reg, reg2, %xmm8;					\
+	vpcmpgtb LCASE_MAX_reg, %xmm7, %xmm7;					\
+	vpcmpgtb LCASE_MAX_reg, %xmm8, %xmm8;					\
+	vpandn	CASE_ADD_reg, %xmm7, %xmm7;					\
+	vpandn	CASE_ADD_reg, %xmm8, %xmm8;					\
+	vpaddb	%xmm7, reg1, reg1;					\
+	vpaddb	%xmm8, reg2, reg2
 # else
 #  define TOLOWER(reg1, reg2) \
-	movdqa	reg1, %xmm7;					\
-	movdqa	UCHIGH_reg, %xmm8;				\
-	movdqa	reg2, %xmm9;					\
-	movdqa	UCHIGH_reg, %xmm10;				\
-	pcmpgtb	UCLOW_reg, %xmm7;				\
-	pcmpgtb	reg1, %xmm8;					\
-	pcmpgtb	UCLOW_reg, %xmm9;				\
-	pcmpgtb	reg2, %xmm10;					\
-	pand	%xmm8, %xmm7;					\
-	pand	%xmm10, %xmm9;					\
-	pand	LCQWORD_reg, %xmm7;				\
-	pand	LCQWORD_reg, %xmm9;				\
-	por	%xmm7, reg1;					\
-	por	%xmm9, reg2
+	movdqa	LCASE_MIN_reg, %xmm7;					\
+	movdqa	LCASE_MIN_reg, %xmm8;					\
+	paddb	reg1, %xmm7;					\
+	paddb	reg2, %xmm8;					\
+	pcmpgtb	LCASE_MAX_reg, %xmm7;				\
+	pcmpgtb	LCASE_MAX_reg, %xmm8;				\
+	pandn	CASE_ADD_reg, %xmm7;					\
+	pandn	CASE_ADD_reg, %xmm8;					\
+	paddb	%xmm7, reg1;					\
+	paddb	%xmm8, reg2
 # endif
 	TOLOWER (%xmm1, %xmm2)
 #else
