@@ -392,7 +392,7 @@ check3 (void)
 int
 test_main (void)
 {
-  size_t i, j;
+  size_t i, j, k;
   const size_t test_len = MIN(TEST_LEN, 3 * 4096);
   test_init ();
   check();
@@ -452,6 +452,19 @@ test_main (void)
           do_test (j, getpagesize () - j - 1, i, 127, 0);
           do_test (j, getpagesize () - j - 1, i, 127, 1);
           do_test (j, getpagesize () - j - 1, i, 127, -1);
+
+          for (k = 2; k <= 128; k += k)
+            {
+              do_test (getpagesize () - k, getpagesize () - j - 1, i, 127, 0);
+              do_test (getpagesize () - k - 1, getpagesize () - j - 1, i, 127,
+                       0);
+              do_test (getpagesize () - k, getpagesize () - j - 1, i, 127, 1);
+              do_test (getpagesize () - k - 1, getpagesize () - j - 1, i, 127,
+                       1);
+              do_test (getpagesize () - k, getpagesize () - j - 1, i, 127, -1);
+              do_test (getpagesize () - k - 1, getpagesize () - j - 1, i, 127,
+                       -1);
+            }
 
           if (i < 32)
             {
