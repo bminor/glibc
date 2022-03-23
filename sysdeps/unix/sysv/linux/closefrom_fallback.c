@@ -30,16 +30,16 @@
 _Bool
 __closefrom_fallback (int from, _Bool dirfd_fallback)
 {
-  bool ret = false;
-
   int dirfd = __open_nocancel (FD_TO_FILENAME_PREFIX, O_RDONLY | O_DIRECTORY,
                                0);
   if (dirfd == -1)
     {
-      /* The closefrom should work even when process can't open new files.  */
-      if (errno == ENOENT || !dirfd_fallback)
-        goto err;
+      /* Return if procfs can not be opened for some reason.  */
+      if ((errno != EMFILE && errno != ENFILE && errno != ENOMEM)
+	  || !dirfd_fallback)
+	return false;
 
+      /* The closefrom should work even when process can't open new files.  */
       for (int i = from; i < INT_MAX; i++)
         {
           int r = __close_nocancel (i);
@@ -54,6 +54,7 @@ __closefrom_fallback (int from, _Bool dirfd_fallback)
     }
 
   char buffer[1024];
+  bool ret = false;
   while (true)
     {
       ssize_t ret = __getdents64 (dirfd, buffer, sizeof (buffer));
