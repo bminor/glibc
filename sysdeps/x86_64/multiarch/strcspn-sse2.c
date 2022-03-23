@@ -1,4 +1,4 @@
-/* strcspn optimized with SSE2.
+/* strcspn.
    Copyright (C) 2017-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -19,10 +19,10 @@
 #if IS_IN (libc)
 
 # include <sysdep.h>
-# define strcspn __strcspn_sse2
+# define STRCSPN __strcspn_sse2
 
 # undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(strcspn)
+# define libc_hidden_builtin_def(STRCSPN)
 #endif
 
-#include <sysdeps/x86_64/strcspn.S>
+#include <string/strcspn.c>
