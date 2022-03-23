@@ -448,9 +448,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __strcasecmp_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, strcasecmp,
-			      CPU_FEATURE_USABLE (AVX),
-			      __strcasecmp_avx)
-	      IFUNC_IMPL_ADD (array, i, strcasecmp,
 			      CPU_FEATURE_USABLE (SSE4_2),
 			      __strcasecmp_sse42)
 	      IFUNC_IMPL_ADD (array, i, strcasecmp,
@@ -471,9 +468,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      (CPU_FEATURE_USABLE (AVX2)
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __strcasecmp_l_avx2_rtm)
-	      IFUNC_IMPL_ADD (array, i, strcasecmp_l,
-			      CPU_FEATURE_USABLE (AVX),
-			      __strcasecmp_l_avx)
 	      IFUNC_IMPL_ADD (array, i, strcasecmp_l,
 			      CPU_FEATURE_USABLE (SSE4_2),
 			      __strcasecmp_l_sse42)
@@ -610,9 +604,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __strncasecmp_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, strncasecmp,
-			      CPU_FEATURE_USABLE (AVX),
-			      __strncasecmp_avx)
-	      IFUNC_IMPL_ADD (array, i, strncasecmp,
 			      CPU_FEATURE_USABLE (SSE4_2),
 			      __strncasecmp_sse42)
 	      IFUNC_IMPL_ADD (array, i, strncasecmp,
@@ -634,9 +625,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      (CPU_FEATURE_USABLE (AVX2)
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __strncasecmp_l_avx2_rtm)
-	      IFUNC_IMPL_ADD (array, i, strncasecmp_l,
-			      CPU_FEATURE_USABLE (AVX),
-			      __strncasecmp_l_avx)
 	      IFUNC_IMPL_ADD (array, i, strncasecmp_l,
 			      CPU_FEATURE_USABLE (SSE4_2),
 			      __strncasecmp_l_sse42)
