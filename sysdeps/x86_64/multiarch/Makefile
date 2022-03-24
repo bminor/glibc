@@ -55,6 +55,8 @@ sysdep_routines += \
   stpncpy-sse2-unaligned \
   stpncpy-ssse3 \
   strcasecmp_l-avx \
+  strcasecmp_l-avx2 \
+  strcasecmp_l-avx2-rtm \
   strcasecmp_l-sse2 \
   strcasecmp_l-sse4_2 \
   strcasecmp_l-ssse3 \
@@ -93,6 +95,8 @@ sysdep_routines += \
   strlen-evex \
   strlen-sse2 \
   strncase_l-avx \
+  strncase_l-avx2 \
+  strncase_l-avx2-rtm \
   strncase_l-sse2 \
   strncase_l-sse4_2 \
   strncase_l-ssse3 \
