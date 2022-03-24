@@ -26,7 +26,7 @@ do_test (void)
   if (xsp[0] != 0x330e || xsp[1] != 0x5432 || xsp[2] != 0x9876)
     {
       puts ("srand48(0x98765432) didn't set correct value");
-      printf ("  expected: { %04hx, %04hx, %04hx }\n", 0x330e, 0x5432, 0x9876);
+      printf ("  expected: { %04x, %04x, %04x }\n", 0x330e, 0x5432, 0x9876);
       printf ("  seen:     { %04hx, %04hx, %04hx }\n", xsp[0], xsp[1], xsp[2]);
       result = 1;
     }
@@ -76,7 +76,7 @@ do_test (void)
   if (xsp[0] != 0x62f2 || xsp[1] != 0xf474 || xsp[2] != 0x9e88)
     {
       puts ("seed48() did not install the values correctly");
-      printf ("  expected: { %04hx, %04hx, %04hx }\n", 0x62f2, 0xf474, 0x9e88);
+      printf ("  expected: { %04x, %04x, %04x }\n", 0x62f2, 0xf474, 0x9e88);
       printf ("  seen:     { %04hx, %04hx, %04hx }\n", xsp[0], xsp[1], xsp[2]);
       result = 1;
     }
@@ -215,7 +215,7 @@ do_test (void)
   if (xsp[0] != 0x0637 || xsp[1] != 0x7acd || xsp[2] != 0xdbec)
     {
       puts ("seed48() did not install the values correctly");
-      printf ("  expected: { %04hx, %04hx, %04hx }\n", 0x0637, 0x7acd, 0xdbec);
+      printf ("  expected: { %04x, %04x, %04x }\n", 0x0637, 0x7acd, 0xdbec);
       printf ("  seen:     { %04hx, %04hx, %04hx }\n", xsp[0], xsp[1], xsp[2]);
       result = 1;
     }
