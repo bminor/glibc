@@ -70,6 +70,16 @@ function_overflow (void)
     return 1;
 }
 
+__attribute__ ((noinline, noclone))
+static int
+function_overflow2 (void)
+{
+  if (STRNCMP (string1, string2, SIZE_MAX >> 4) == 0)
+    return 0;
+  else
+    return 1;
+}
+
 static int
 do_test (void)
 {
@@ -77,5 +87,10 @@ do_test (void)
   if (status != EXIT_SUCCESS)
     return status;
   status = do_test_1 (TEST_NAME, LOOP, prepare, function_overflow);
+  if (status != EXIT_SUCCESS)
+    return status;
+  status = do_test_1 (TEST_NAME, LOOP, prepare, function_overflow2);
+  if (status != EXIT_SUCCESS)
+    return status;
   return status;
 }
