@@ -19,6 +19,9 @@
 #if IS_IN (libc)
 
 # include <sysdep.h>
+# if defined USE_AS_STRCASECMP_L
+#  include "locale-defines.h"
+# endif
 
 # ifndef STRCMP
 #  define STRCMP	__strcmp_evex
@@ -34,19 +37,29 @@
 # define VMOVA	vmovdqa64
 
 # ifdef USE_AS_WCSCMP
-#  define TESTEQ	subl	$0xff,
+#  ifndef OVERFLOW_STRCMP
+#   define OVERFLOW_STRCMP	__wcscmp_evex
+#  endif
+
+#  define TESTEQ	subl $0xff,
 	/* Compare packed dwords.  */
 #  define VPCMP	vpcmpd
 #  define VPMINU	vpminud
 #  define VPTESTM	vptestmd
+#  define VPTESTNM	vptestnmd
 	/* 1 dword char == 4 bytes.  */
 #  define SIZE_OF_CHAR	4
 # else
+#  ifndef OVERFLOW_STRCMP
+#   define OVERFLOW_STRCMP	__strcmp_evex
+#  endif
+
 #  define TESTEQ	incl
 	/* Compare packed bytes.  */
 #  define VPCMP	vpcmpb
 #  define VPMINU	vpminub
 #  define VPTESTM	vptestmb
+#  define VPTESTNM	vptestnmb
 	/* 1 byte char == 1 byte.  */
 #  define SIZE_OF_CHAR	1
 # endif
@@ -73,11 +86,16 @@
 #  define VEC_OFFSET	(-VEC_SIZE)
 # endif
 
-# define XMMZERO	xmm16
 # define XMM0	xmm17
 # define XMM1	xmm18
 
-# define YMMZERO	ymm16
+# define XMM10	xmm27
+# define XMM11	xmm28
+# define XMM12	xmm29
+# define XMM13	xmm30
+# define XMM14	xmm31
+
+
 # define YMM0	ymm17
 # define YMM1	ymm18
 # define YMM2	ymm19
@@ -89,6 +107,87 @@
 # define YMM8	ymm25
 # define YMM9	ymm26
 # define YMM10	ymm27
+# define YMM11	ymm28
+# define YMM12	ymm29
+# define YMM13	ymm30
+# define YMM14	ymm31
+
+# ifdef USE_AS_STRCASECMP_L
+#  define BYTE_LOOP_REG	OFFSET_REG
+# else
+#  define BYTE_LOOP_REG	ecx
+# endif
+
+# ifdef USE_AS_STRCASECMP_L
+#  ifdef USE_AS_STRNCMP
+#   define STRCASECMP	__strncasecmp_evex
+#   define LOCALE_REG	rcx
+#   define LOCALE_REG_LP	RCX_LP
+#   define STRCASECMP_NONASCII	__strncasecmp_l_nonascii
+#  else
+#   define STRCASECMP	__strcasecmp_evex
+#   define LOCALE_REG	rdx
+#   define LOCALE_REG_LP	RDX_LP
+#   define STRCASECMP_NONASCII	__strcasecmp_l_nonascii
+#  endif
+# endif
+
+# define LCASE_MIN_YMM	%YMM12
+# define LCASE_MAX_YMM	%YMM13
+# define CASE_ADD_YMM	%YMM14
+
+# define LCASE_MIN_XMM	%XMM12
+# define LCASE_MAX_XMM	%XMM13
+# define CASE_ADD_XMM	%XMM14
+
+	/* NB: wcsncmp uses r11 but strcasecmp is never used in
+	   conjunction with wcscmp.  */
+# define TOLOWER_BASE	%r11
+
+# ifdef USE_AS_STRCASECMP_L
+#  define _REG(x, y) x ## y
+#  define REG(x, y) _REG(x, y)
+#  define TOLOWER(reg1, reg2, ext)										\
+	vpsubb	REG(LCASE_MIN_, ext), reg1, REG(%ext, 10);					\
+	vpsubb	REG(LCASE_MIN_, ext), reg2, REG(%ext, 11);					\
+	vpcmpub	$1, REG(LCASE_MAX_, ext), REG(%ext, 10), %k5;				\
+	vpcmpub	$1, REG(LCASE_MAX_, ext), REG(%ext, 11), %k6;				\
+	vpaddb	reg1, REG(CASE_ADD_, ext), reg1{%k5};						\
+	vpaddb	reg2, REG(CASE_ADD_, ext), reg2{%k6}
+
+#  define TOLOWER_gpr(src, dst) movl (TOLOWER_BASE, src, 4), dst
+#  define TOLOWER_YMM(...)	TOLOWER(__VA_ARGS__, YMM)
+#  define TOLOWER_XMM(...)	TOLOWER(__VA_ARGS__, XMM)
+
+#  define CMP_R1_R2(s1_reg, s2_reg, reg_out, ext)						\
+	TOLOWER	(s1_reg, s2_reg, ext);										\
+	VPCMP	$0, s1_reg, s2_reg, reg_out
+
+#  define CMP_R1_S2(s1_reg, s2_mem, s2_reg, reg_out, ext)				\
+	VMOVU	s2_mem, s2_reg;												\
+	CMP_R1_R2(s1_reg, s2_reg, reg_out, ext)
+
+#  define CMP_R1_R2_YMM(...) CMP_R1_R2(__VA_ARGS__, YMM)
+#  define CMP_R1_R2_XMM(...) CMP_R1_R2(__VA_ARGS__, XMM)
+
+#  define CMP_R1_S2_YMM(...) CMP_R1_S2(__VA_ARGS__, YMM)
+#  define CMP_R1_S2_XMM(...) CMP_R1_S2(__VA_ARGS__, XMM)
+
+# else
+#  define TOLOWER_gpr(...)
+#  define TOLOWER_YMM(...)
+#  define TOLOWER_XMM(...)
+
+#  define CMP_R1_R2_YMM(s1_reg, s2_reg, reg_out)						\
+	VPCMP	$0, s2_reg, s1_reg, reg_out
+
+#  define CMP_R1_R2_XMM(...) CMP_R1_R2_YMM(__VA_ARGS__)
+
+#  define CMP_R1_S2_YMM(s1_reg, s2_mem, unused, reg_out)				\
+	VPCMP	$0, s2_mem, s1_reg, reg_out
+
+#  define CMP_R1_S2_XMM(...) CMP_R1_S2_YMM(__VA_ARGS__)
+# endif
 
 /* Warning!
            wcscmp/wcsncmp have to use SIGNED comparison for elements.
@@ -112,8 +211,45 @@
    returned.  */
 
 	.section .text.evex, "ax", @progbits
-ENTRY(STRCMP)
+	.align	16
+	.type	STRCMP, @function
+	.globl	STRCMP
+	.hidden	STRCMP
+
+# ifdef USE_AS_STRCASECMP_L
+ENTRY (STRCASECMP)
+	movq	__libc_tsd_LOCALE@gottpoff(%rip), %rax
+	mov	%fs:(%rax), %LOCALE_REG_LP
+
+	/* Either 1 or 5 bytes (dependeing if CET is enabled).  */
+	.p2align 4
+END (STRCASECMP)
+	/* FALLTHROUGH to strcasecmp/strncasecmp_l.  */
+# endif
+
+	.p2align 4
+STRCMP:
+	cfi_startproc
+	_CET_ENDBR
+	CALL_MCOUNT
+
+# if defined USE_AS_STRCASECMP_L
+	/* We have to fall back on the C implementation for locales with
+	   encodings not matching ASCII for single bytes.  */
+#  if LOCALE_T___LOCALES != 0 || LC_CTYPE != 0
+	mov	LOCALE_T___LOCALES + LC_CTYPE * LP_SIZE(%LOCALE_REG), %RAX_LP
+#  else
+	mov	(%LOCALE_REG), %RAX_LP
+#  endif
+	testl	$1, LOCALE_DATA_VALUES + _NL_CTYPE_NONASCII_CASE * SIZEOF_VALUES(%rax)
+	jne	STRCASECMP_NONASCII
+	leaq	_nl_C_LC_CTYPE_tolower + 128 * 4(%rip), TOLOWER_BASE
+# endif
+
 # ifdef USE_AS_STRNCMP
+	/* Don't overwrite LOCALE_REG (rcx) until we have pass
+	   L(one_or_less). Otherwise we might use the wrong locale in
+	   the OVERFLOW_STRCMP (strcasecmp_l).  */
 #  ifdef __ILP32__
 	/* Clear the upper 32 bits.  */
 	movl	%edx, %edx
@@ -125,6 +261,32 @@ ENTRY(STRCMP)
 	   actually bound the buffer.  */
 	jle	L(one_or_less)
 # endif
+
+# if defined USE_AS_STRCASECMP_L
+	.section .rodata.cst32, "aM", @progbits, 32
+	.align	32
+L(lcase_min):
+	.quad	0x4141414141414141
+	.quad	0x4141414141414141
+	.quad	0x4141414141414141
+	.quad	0x4141414141414141
+L(lcase_max):
+	.quad	0x1a1a1a1a1a1a1a1a
+	.quad	0x1a1a1a1a1a1a1a1a
+	.quad	0x1a1a1a1a1a1a1a1a
+	.quad	0x1a1a1a1a1a1a1a1a
+L(case_add):
+	.quad	0x2020202020202020
+	.quad	0x2020202020202020
+	.quad	0x2020202020202020
+	.quad	0x2020202020202020
+	.previous
+
+	vmovdqa64 L(lcase_min)(%rip), LCASE_MIN_YMM
+	vmovdqa64 L(lcase_max)(%rip), LCASE_MAX_YMM
+	vmovdqa64 L(case_add)(%rip), CASE_ADD_YMM
+# endif
+
 	movl	%edi, %eax
 	orl	%esi, %eax
 	/* Shift out the bits irrelivant to page boundary ([63:12]).  */
@@ -139,7 +301,7 @@ L(no_page_cross):
 	VPTESTM	%YMM0, %YMM0, %k2
 	/* Each bit cleared in K1 represents a mismatch or a null CHAR
 	   in YMM0 and 32 bytes at (%rsi).  */
-	VPCMP	$0, (%rsi), %YMM0, %k1{%k2}
+	CMP_R1_S2_YMM (%YMM0, (%rsi), %YMM1, %k1){%k2}
 	kmovd	%k1, %ecx
 # ifdef USE_AS_STRNCMP
 	cmpq	$CHAR_PER_VEC, %rdx
@@ -169,6 +331,8 @@ L(return_vec_0):
 # else
 	movzbl	(%rdi, %rcx), %eax
 	movzbl	(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 # endif
 L(ret0):
@@ -188,11 +352,15 @@ L(ret_zero):
 
 	.p2align 4,, 5
 L(one_or_less):
+#  ifdef USE_AS_STRCASECMP_L
+	/* Set locale argument for strcasecmp.  */
+	movq	%LOCALE_REG, %rdx
+#  endif
 	jb	L(ret_zero)
-#  ifdef USE_AS_WCSCMP
 	/* 'nbe' covers the case where length is negative (large
 	   unsigned).  */
-	jnbe	__wcscmp_evex
+	jnbe	OVERFLOW_STRCMP
+#  ifdef USE_AS_WCSCMP
 	movl	(%rdi), %edx
 	xorl	%eax, %eax
 	cmpl	(%rsi), %edx
@@ -201,11 +369,10 @@ L(one_or_less):
 	negl	%eax
 	orl	$1, %eax
 #  else
-	/* 'nbe' covers the case where length is negative (large
-	   unsigned).  */
-	jnbe	__strcmp_evex
 	movzbl	(%rdi), %eax
 	movzbl	(%rsi), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 #  endif
 L(ret1):
@@ -233,6 +400,8 @@ L(return_vec_1):
 # else
 	movzbl	VEC_SIZE(%rdi, %rcx), %eax
 	movzbl	VEC_SIZE(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 # endif
 L(ret2):
@@ -270,6 +439,8 @@ L(return_vec_2):
 # else
 	movzbl	(VEC_SIZE * 2)(%rdi, %rcx), %eax
 	movzbl	(VEC_SIZE * 2)(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 # endif
 L(ret3):
@@ -290,6 +461,8 @@ L(return_vec_3):
 #  else
 	movzbl	(VEC_SIZE * 3)(%rdi, %rcx), %eax
 	movzbl	(VEC_SIZE * 3)(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 #  endif
 L(ret4):
@@ -303,7 +476,7 @@ L(more_3x_vec):
 	/* Safe to compare 4x vectors.  */
 	VMOVU	(VEC_SIZE)(%rdi), %YMM0
 	VPTESTM	%YMM0, %YMM0, %k2
-	VPCMP	$0, (VEC_SIZE)(%rsi), %YMM0, %k1{%k2}
+	CMP_R1_S2_YMM (%YMM0, VEC_SIZE(%rsi), %YMM1, %k1){%k2}
 	kmovd	%k1, %ecx
 	TESTEQ	%ecx
 	jnz	L(return_vec_1)
@@ -315,14 +488,14 @@ L(more_3x_vec):
 
 	VMOVU	(VEC_SIZE * 2)(%rdi), %YMM0
 	VPTESTM	%YMM0, %YMM0, %k2
-	VPCMP	$0, (VEC_SIZE * 2)(%rsi), %YMM0, %k1{%k2}
+	CMP_R1_S2_YMM (%YMM0, (VEC_SIZE * 2)(%rsi), %YMM1, %k1){%k2}
 	kmovd	%k1, %ecx
 	TESTEQ	%ecx
 	jnz	L(return_vec_2)
 
 	VMOVU	(VEC_SIZE * 3)(%rdi), %YMM0
 	VPTESTM	%YMM0, %YMM0, %k2
-	VPCMP	$0, (VEC_SIZE * 3)(%rsi), %YMM0, %k1{%k2}
+	CMP_R1_S2_YMM (%YMM0, (VEC_SIZE * 3)(%rsi), %YMM1, %k1){%k2}
 	kmovd	%k1, %ecx
 	TESTEQ	%ecx
 	jnz	L(return_vec_3)
@@ -381,7 +554,6 @@ L(prepare_loop_aligned):
 	subl	%esi, %eax
 	andl	$(PAGE_SIZE - 1), %eax
 
-	vpxorq	%YMMZERO, %YMMZERO, %YMMZERO
 
 	/* Loop 4x comparisons at a time.  */
 	.p2align 4
@@ -413,22 +585,35 @@ L(loop_skip_page_cross_check):
 	/* A zero CHAR in YMM9 means that there is a null CHAR.  */
 	VPMINU	%YMM8, %YMM9, %YMM9
 
-	/* Each bit set in K1 represents a non-null CHAR in YMM8.  */
+	/* Each bit set in K1 represents a non-null CHAR in YMM9.  */
 	VPTESTM	%YMM9, %YMM9, %k1
-
+# ifndef USE_AS_STRCASECMP_L
 	vpxorq	(VEC_SIZE * 0)(%rsi), %YMM0, %YMM1
 	vpxorq	(VEC_SIZE * 1)(%rsi), %YMM2, %YMM3
 	vpxorq	(VEC_SIZE * 2)(%rsi), %YMM4, %YMM5
 	/* Ternary logic to xor (VEC_SIZE * 3)(%rsi) with YMM6 while
 	   oring with YMM1. Result is stored in YMM6.  */
 	vpternlogd $0xde, (VEC_SIZE * 3)(%rsi), %YMM1, %YMM6
-
+# else
+	VMOVU	(VEC_SIZE * 0)(%rsi), %YMM1
+	TOLOWER_YMM (%YMM0, %YMM1)
+	VMOVU	(VEC_SIZE * 1)(%rsi), %YMM3
+	TOLOWER_YMM (%YMM2, %YMM3)
+	VMOVU	(VEC_SIZE * 2)(%rsi), %YMM5
+	TOLOWER_YMM (%YMM4, %YMM5)
+	VMOVU	(VEC_SIZE * 3)(%rsi), %YMM7
+	TOLOWER_YMM (%YMM6, %YMM7)
+	vpxorq	%YMM0, %YMM1, %YMM1
+	vpxorq	%YMM2, %YMM3, %YMM3
+	vpxorq	%YMM4, %YMM5, %YMM5
+	vpternlogd $0xde, %YMM7, %YMM1, %YMM6
+# endif
 	/* Or together YMM3, YMM5, and YMM6.  */
 	vpternlogd $0xfe, %YMM3, %YMM5, %YMM6
 
 
 	/* A non-zero CHAR in YMM6 represents a mismatch.  */
-	VPCMP	$0, %YMMZERO, %YMM6, %k0{%k1}
+	VPTESTNM %YMM6, %YMM6, %k0{%k1}
 	kmovd	%k0, %LOOP_REG
 
 	TESTEQ	%LOOP_REG
@@ -437,13 +622,13 @@ L(loop_skip_page_cross_check):
 
 	/* Find which VEC has the mismatch of end of string.  */
 	VPTESTM	%YMM0, %YMM0, %k1
-	VPCMP	$0, %YMMZERO, %YMM1, %k0{%k1}
+	VPTESTNM %YMM1, %YMM1, %k0{%k1}
 	kmovd	%k0, %ecx
 	TESTEQ	%ecx
 	jnz	L(return_vec_0_end)
 
 	VPTESTM	%YMM2, %YMM2, %k1
-	VPCMP	$0, %YMMZERO, %YMM3, %k0{%k1}
+	VPTESTNM %YMM3, %YMM3, %k0{%k1}
 	kmovd	%k0, %ecx
 	TESTEQ	%ecx
 	jnz	L(return_vec_1_end)
@@ -457,7 +642,7 @@ L(return_vec_2_3_end):
 # endif
 
 	VPTESTM	%YMM4, %YMM4, %k1
-	VPCMP	$0, %YMMZERO, %YMM5, %k0{%k1}
+	VPTESTNM %YMM5, %YMM5, %k0{%k1}
 	kmovd	%k0, %ecx
 	TESTEQ	%ecx
 # if CHAR_PER_VEC <= 16
@@ -493,6 +678,8 @@ L(return_vec_3_end):
 # else
 	movzbl	(VEC_SIZE * 2)(%rdi, %LOOP_REG64), %eax
 	movzbl	(VEC_SIZE * 2)(%rsi, %LOOP_REG64), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -545,6 +732,8 @@ L(return_vec_0_end):
 # else
 	movzbl	(%rdi, %rcx), %eax
 	movzbl	(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	/* Flip `eax` if `rdi` and `rsi` where swapped in page cross
 	   logic. Subtract `r8d` after xor for zero case.  */
@@ -569,6 +758,8 @@ L(return_vec_1_end):
 #  else
 	movzbl	VEC_SIZE(%rdi, %rcx), %eax
 	movzbl	VEC_SIZE(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -598,7 +789,7 @@ L(page_cross_during_loop):
 
 	VMOVA	(%rdi), %YMM0
 	VPTESTM	%YMM0, %YMM0, %k2
-	VPCMP	$0, (%rsi), %YMM0, %k1{%k2}
+	CMP_R1_S2_YMM (%YMM0, (%rsi), %YMM1, %k1){%k2}
 	kmovd	%k1, %ecx
 	TESTEQ	%ecx
 	jnz	L(return_vec_0_end)
@@ -619,8 +810,7 @@ L(less_1x_vec_till_page_cross):
 	   been loaded earlier so must be valid.  */
 	VMOVU	-VEC_SIZE(%rdi, %rax), %YMM0
 	VPTESTM	%YMM0, %YMM0, %k2
-	VPCMP	$0, -VEC_SIZE(%rsi, %rax), %YMM0, %k1{%k2}
-
+	CMP_R1_S2_YMM (%YMM0, -VEC_SIZE(%rsi, %rax), %YMM1, %k1){%k2}
 	/* Mask of potentially valid bits. The lower bits can be out of
 	   range comparisons (but safe regarding page crosses).  */
 
@@ -642,6 +832,8 @@ L(less_1x_vec_till_page_cross):
 
 # ifdef USE_AS_STRNCMP
 #  ifdef USE_AS_WCSCMP
+	/* NB: strcasecmp not used with WCSCMP so this access to r11 is
+	   safe.  */
 	movl	%eax, %r11d
 	shrl	$2, %r11d
 	cmpq	%r11, %rdx
@@ -679,6 +871,8 @@ L(return_page_cross_cmp_mem):
 # else
 	movzbl	VEC_OFFSET(%rdi, %rcx), %eax
 	movzbl	VEC_OFFSET(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -709,7 +903,7 @@ L(more_2x_vec_till_page_cross):
 
 	VMOVA	VEC_SIZE(%rdi), %YMM0
 	VPTESTM	%YMM0, %YMM0, %k2
-	VPCMP	$0, VEC_SIZE(%rsi), %YMM0, %k1{%k2}
+	CMP_R1_S2_YMM (%YMM0, VEC_SIZE(%rsi), %YMM1, %k1){%k2}
 	kmovd	%k1, %ecx
 	TESTEQ	%ecx
 	jnz	L(return_vec_1_end)
@@ -724,14 +918,14 @@ L(more_2x_vec_till_page_cross):
 	/* Safe to include comparisons from lower bytes.  */
 	VMOVU	-(VEC_SIZE * 2)(%rdi, %rax), %YMM0
 	VPTESTM	%YMM0, %YMM0, %k2
-	VPCMP	$0, -(VEC_SIZE * 2)(%rsi, %rax), %YMM0, %k1{%k2}
+	CMP_R1_S2_YMM (%YMM0, -(VEC_SIZE * 2)(%rsi, %rax), %YMM1, %k1){%k2}
 	kmovd	%k1, %ecx
 	TESTEQ	%ecx
 	jnz	L(return_vec_page_cross_0)
 
 	VMOVU	-(VEC_SIZE * 1)(%rdi, %rax), %YMM0
 	VPTESTM	%YMM0, %YMM0, %k2
-	VPCMP	$0, -(VEC_SIZE * 1)(%rsi, %rax), %YMM0, %k1{%k2}
+	CMP_R1_S2_YMM (%YMM0, -(VEC_SIZE * 1)(%rsi, %rax), %YMM1, %k1){%k2}
 	kmovd	%k1, %ecx
 	TESTEQ	%ecx
 	jnz	L(return_vec_page_cross_1)
@@ -740,6 +934,8 @@ L(more_2x_vec_till_page_cross):
 	/* Must check length here as length might proclude reading next
 	   page.  */
 #  ifdef USE_AS_WCSCMP
+	/* NB: strcasecmp not used with WCSCMP so this access to r11 is
+	   safe.  */
 	movl	%eax, %r11d
 	shrl	$2, %r11d
 	cmpq	%r11, %rdx
@@ -754,12 +950,19 @@ L(more_2x_vec_till_page_cross):
 	VMOVA	(VEC_SIZE * 3)(%rdi), %YMM6
 	VPMINU	%YMM4, %YMM6, %YMM9
 	VPTESTM	%YMM9, %YMM9, %k1
-
+# ifndef USE_AS_STRCASECMP_L
 	vpxorq	(VEC_SIZE * 2)(%rsi), %YMM4, %YMM5
 	/* YMM6 = YMM5 | ((VEC_SIZE * 3)(%rsi) ^ YMM6).  */
 	vpternlogd $0xde, (VEC_SIZE * 3)(%rsi), %YMM5, %YMM6
-
-	VPCMP	$0, %YMMZERO, %YMM6, %k0{%k1}
+# else
+	VMOVU	(VEC_SIZE * 2)(%rsi), %YMM5
+	TOLOWER_YMM (%YMM4, %YMM5)
+	VMOVU	(VEC_SIZE * 3)(%rsi), %YMM7
+	TOLOWER_YMM (%YMM6, %YMM7)
+	vpxorq	%YMM4, %YMM5, %YMM5
+	vpternlogd $0xde, %YMM7, %YMM5, %YMM6
+# endif
+	VPTESTNM %YMM6, %YMM6, %k0{%k1}
 	kmovd	%k0, %LOOP_REG
 	TESTEQ	%LOOP_REG
 	jnz	L(return_vec_2_3_end)
@@ -815,6 +1018,8 @@ L(return_vec_page_cross_1):
 # else
 	movzbl	VEC_OFFSET(%rdi, %rcx), %eax
 	movzbl	VEC_OFFSET(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -871,7 +1076,7 @@ L(page_cross):
 L(page_cross_loop):
 	VMOVU	(%rdi, %OFFSET_REG64, SIZE_OF_CHAR), %YMM0
 	VPTESTM	%YMM0, %YMM0, %k2
-	VPCMP	$0, (%rsi, %OFFSET_REG64, SIZE_OF_CHAR), %YMM0, %k1{%k2}
+	CMP_R1_S2_YMM (%YMM0, (%rsi, %OFFSET_REG64, SIZE_OF_CHAR), %YMM1, %k1){%k2}
 	kmovd	%k1, %ecx
 	TESTEQ	%ecx
 	jnz	L(check_ret_vec_page_cross)
@@ -895,7 +1100,7 @@ L(page_cross_loop):
 	 */
 	VMOVU	(%rdi, %OFFSET_REG64, SIZE_OF_CHAR), %YMM0
 	VPTESTM	%YMM0, %YMM0, %k2
-	VPCMP	$0, (%rsi, %OFFSET_REG64, SIZE_OF_CHAR), %YMM0, %k1{%k2}
+	CMP_R1_S2_YMM (%YMM0, (%rsi, %OFFSET_REG64, SIZE_OF_CHAR), %YMM1, %k1){%k2}
 
 	kmovd	%k1, %ecx
 # ifdef USE_AS_STRNCMP
@@ -930,6 +1135,8 @@ L(ret_vec_page_cross_cont):
 # else
 	movzbl	(%rdi, %rcx, SIZE_OF_CHAR), %eax
 	movzbl	(%rsi, %rcx, SIZE_OF_CHAR), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -989,7 +1196,7 @@ L(less_1x_vec_till_page):
 	/* Use 16 byte comparison.  */
 	vmovdqu	(%rdi), %xmm0
 	VPTESTM	%xmm0, %xmm0, %k2
-	VPCMP	$0, (%rsi), %xmm0, %k1{%k2}
+	CMP_R1_S2_XMM (%xmm0, (%rsi), %xmm1, %k1){%k2}
 	kmovd	%k1, %ecx
 # ifdef USE_AS_WCSCMP
 	subl	$0xf, %ecx
@@ -1009,7 +1216,7 @@ L(less_1x_vec_till_page):
 # endif
 	vmovdqu	(%rdi, %OFFSET_REG64, SIZE_OF_CHAR), %xmm0
 	VPTESTM	%xmm0, %xmm0, %k2
-	VPCMP	$0, (%rsi, %OFFSET_REG64, SIZE_OF_CHAR), %xmm0, %k1{%k2}
+	CMP_R1_S2_XMM (%xmm0, (%rsi, %OFFSET_REG64, SIZE_OF_CHAR), %xmm1, %k1){%k2}
 	kmovd	%k1, %ecx
 # ifdef USE_AS_WCSCMP
 	subl	$0xf, %ecx
@@ -1048,7 +1255,7 @@ L(less_16_till_page):
 	vmovq	(%rdi), %xmm0
 	vmovq	(%rsi), %xmm1
 	VPTESTM	%xmm0, %xmm0, %k2
-	VPCMP	$0, %xmm1, %xmm0, %k1{%k2}
+	CMP_R1_R2_XMM (%xmm0, %xmm1, %k1){%k2}
 	kmovd	%k1, %ecx
 # ifdef USE_AS_WCSCMP
 	subl	$0x3, %ecx
@@ -1068,7 +1275,7 @@ L(less_16_till_page):
 	vmovq	(%rdi, %OFFSET_REG64, SIZE_OF_CHAR), %xmm0
 	vmovq	(%rsi, %OFFSET_REG64, SIZE_OF_CHAR), %xmm1
 	VPTESTM	%xmm0, %xmm0, %k2
-	VPCMP	$0, %xmm1, %xmm0, %k1{%k2}
+	CMP_R1_R2_XMM (%xmm0, %xmm1, %k1){%k2}
 	kmovd	%k1, %ecx
 # ifdef USE_AS_WCSCMP
 	subl	$0x3, %ecx
@@ -1128,7 +1335,7 @@ L(ret_less_8_wcs):
 	vmovd	(%rdi), %xmm0
 	vmovd	(%rsi), %xmm1
 	VPTESTM	%xmm0, %xmm0, %k2
-	VPCMP	$0, %xmm1, %xmm0, %k1{%k2}
+	CMP_R1_R2_XMM (%xmm0, %xmm1, %k1){%k2}
 	kmovd	%k1, %ecx
 	subl	$0xf, %ecx
 	jnz	L(check_ret_vec_page_cross)
@@ -1143,7 +1350,7 @@ L(ret_less_8_wcs):
 	vmovd	(%rdi, %OFFSET_REG64, SIZE_OF_CHAR), %xmm0
 	vmovd	(%rsi, %OFFSET_REG64, SIZE_OF_CHAR), %xmm1
 	VPTESTM	%xmm0, %xmm0, %k2
-	VPCMP	$0, %xmm1, %xmm0, %k1{%k2}
+	CMP_R1_R2_XMM (%xmm0, %xmm1, %k1){%k2}
 	kmovd	%k1, %ecx
 	subl	$0xf, %ecx
 	jnz	L(check_ret_vec_page_cross)
@@ -1176,7 +1383,9 @@ L(less_4_till_page):
 L(less_4_loop):
 	movzbl	(%rdi), %eax
 	movzbl	(%rsi, %rdi), %ecx
-	subl	%ecx, %eax
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %BYTE_LOOP_REG)
+	subl	%BYTE_LOOP_REG, %eax
 	jnz	L(ret_less_4_loop)
 	testl	%ecx, %ecx
 	jz	L(ret_zero_4_loop)
@@ -1203,5 +1412,6 @@ L(ret_less_4_loop):
 	subl	%r8d, %eax
 	ret
 # endif
-END(STRCMP)
+	cfi_endproc
+	.size	STRCMP, .-STRCMP
 #endif
