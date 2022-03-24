@@ -189,7 +189,7 @@ test_getentropy (void)
 
   /* The probability that these two buffers are equal is very
      small. */
-  if (memcmp (buf, buf2, sizeof (buf) == 0))
+  if (memcmp (buf, buf2, sizeof (buf)) == 0)
     {
       printf ("error: getentropy appears to return constant bytes\n");
       errors = true;
