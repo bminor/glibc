@@ -32,7 +32,10 @@ static int
 do_test (void)
 {
   const char blah[] = "BLAH";
+  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (3.4, "-Wgnu-folding-constant");
   char buf[strlen (blah) + 1];
+  DIAG_POP_NEEDS_COMMENT_CLANG;
   FILE *fp, *f;
   const char *cp;
   char *wp;
@@ -51,6 +54,9 @@ do_test (void)
      fread_unlocked below as well.  */
   DIAG_PUSH_NEEDS_COMMENT;
   DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdiv-by-zero");
+  /* clang warns about the implicit conversion from double to size_t,
+     which is required by this tests.  */
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wliteral-conversion");
   if (ftello (fp) != 0
       || fwrite_unlocked (blah, blah - blah, strlen (blah), f++) != 0
       || f != fp + 1
@@ -104,6 +110,7 @@ do_test (void)
   /* See explanation above.  */
   DIAG_PUSH_NEEDS_COMMENT;
   DIAG_IGNORE_NEEDS_COMMENT (4.9, "-Wdiv-by-zero");
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wliteral-conversion");
   if (ftello (fp) != 0
       || fread_unlocked (buf, buf - buf, strlen (blah), f++) != 0
       || f != fp + 1
