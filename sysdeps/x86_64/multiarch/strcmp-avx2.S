@@ -122,7 +122,7 @@ ENTRY(STRCMP)
 	   are cases where length is large enough that it can never be a
 	   bound on valid memory so just use wcscmp.  */
 	shrq	$56, %rcx
-	jnz	__wcscmp_avx2
+	jnz	OVERFLOW_STRCMP
 
 	leaq	(, %rdx, 4), %rdx
 #  endif
