@@ -20,6 +20,10 @@
 
 # include <sysdep.h>
 
+# if defined USE_AS_STRCASECMP_L
+#  include "locale-defines.h"
+# endif
+
 # ifndef STRCMP
 #  define STRCMP	__strcmp_avx2
 # endif
@@ -74,11 +78,86 @@
 #  define VEC_OFFSET	(-VEC_SIZE)
 # endif
 
+# ifdef USE_AS_STRCASECMP_L
+#  define BYTE_LOOP_REG	OFFSET_REG
+# else
+#  define BYTE_LOOP_REG	ecx
+# endif
+
+# ifdef USE_AS_STRCASECMP_L
+#  ifdef USE_AS_STRNCMP
+#   define STRCASECMP	__strncasecmp_avx2
+#   define LOCALE_REG	rcx
+#   define LOCALE_REG_LP	RCX_LP
+#   define STRCASECMP_NONASCII	__strncasecmp_l_nonascii
+#  else
+#   define STRCASECMP	__strcasecmp_avx2
+#   define LOCALE_REG	rdx
+#   define LOCALE_REG_LP	RDX_LP
+#   define STRCASECMP_NONASCII	__strcasecmp_l_nonascii
+#  endif
+# endif
+
 # define xmmZERO	xmm15
 # define ymmZERO	ymm15
 
+# define LCASE_MIN_ymm	%ymm10
+# define LCASE_MAX_ymm	%ymm11
+# define CASE_ADD_ymm	%ymm12
+
+# define LCASE_MIN_xmm	%xmm10
+# define LCASE_MAX_xmm	%xmm11
+# define CASE_ADD_xmm	%xmm12
+
+	/* r11 is never use elsewhere so this is safe to maintain.  */
+# define TOLOWER_BASE	%r11
+
 # ifndef SECTION
 #  define SECTION(p)	p##.avx
+# endif
+
+# ifdef USE_AS_STRCASECMP_L
+#  define REG(x, y) x ## y
+#  define TOLOWER(reg1_in, reg1_out, reg2_in, reg2_out, ext)			\
+	vpaddb	REG(LCASE_MIN_, ext), reg1_in, REG(%ext, 8);				\
+	vpaddb	REG(LCASE_MIN_, ext), reg2_in, REG(%ext, 9);				\
+	vpcmpgtb REG(LCASE_MAX_, ext), REG(%ext, 8), REG(%ext, 8);			\
+	vpcmpgtb REG(LCASE_MAX_, ext), REG(%ext, 9), REG(%ext, 9);			\
+	vpandn	REG(CASE_ADD_, ext), REG(%ext, 8), REG(%ext, 8);			\
+	vpandn	REG(CASE_ADD_, ext), REG(%ext, 9), REG(%ext, 9);			\
+	vpaddb	REG(%ext, 8), reg1_in, reg1_out;							\
+	vpaddb	REG(%ext, 9), reg2_in, reg2_out
+
+#  define TOLOWER_gpr(src, dst)	movl (TOLOWER_BASE, src, 4), dst
+#  define TOLOWER_ymm(...)	TOLOWER(__VA_ARGS__, ymm)
+#  define TOLOWER_xmm(...)	TOLOWER(__VA_ARGS__, xmm)
+
+#  define CMP_R1_R2(s1_reg, s2_reg, scratch_reg, reg_out, ext)			\
+	TOLOWER	(s1_reg, scratch_reg, s2_reg, s2_reg, ext);					\
+	VPCMPEQ	scratch_reg, s2_reg, reg_out
+
+#  define CMP_R1_S2(s1_reg, s2_mem, scratch_reg, reg_out, ext)			\
+	VMOVU	s2_mem, reg_out;											\
+	CMP_R1_R2(s1_reg, reg_out, scratch_reg, reg_out, ext)
+
+#  define CMP_R1_R2_ymm(...) CMP_R1_R2(__VA_ARGS__, ymm)
+#  define CMP_R1_R2_xmm(...) CMP_R1_R2(__VA_ARGS__, xmm)
+
+#  define CMP_R1_S2_ymm(...) CMP_R1_S2(__VA_ARGS__, ymm)
+#  define CMP_R1_S2_xmm(...) CMP_R1_S2(__VA_ARGS__, xmm)
+
+# else
+#  define TOLOWER_gpr(...)
+#  define TOLOWER_ymm(...)
+#  define TOLOWER_xmm(...)
+
+#  define CMP_R1_R2_ymm(s1_reg, s2_reg, scratch_reg, reg_out)			\
+	VPCMPEQ	s2_reg, s1_reg, reg_out
+
+#  define CMP_R1_R2_xmm(...) CMP_R1_R2_ymm(__VA_ARGS__)
+
+#  define CMP_R1_S2_ymm(...) CMP_R1_R2_ymm(__VA_ARGS__)
+#  define CMP_R1_S2_xmm(...) CMP_R1_R2_xmm(__VA_ARGS__)
 # endif
 
 /* Warning!
@@ -102,8 +181,49 @@
    returned.  */
 
 	.section SECTION(.text), "ax", @progbits
-ENTRY(STRCMP)
+	.align	16
+	.type	STRCMP, @function
+	.globl	STRCMP
+	.hidden	STRCMP
+
+# ifndef GLABEL
+#  define GLABEL(...)	__VA_ARGS__
+# endif
+
+# ifdef USE_AS_STRCASECMP_L
+ENTRY (GLABEL(STRCASECMP))
+	movq	__libc_tsd_LOCALE@gottpoff(%rip), %rax
+	mov	%fs:(%rax), %LOCALE_REG_LP
+
+	/* Either 1 or 5 bytes (dependeing if CET is enabled).  */
+	.p2align 4
+END (GLABEL(STRCASECMP))
+	/* FALLTHROUGH to strcasecmp/strncasecmp_l.  */
+# endif
+
+	.p2align 4
+STRCMP:
+	cfi_startproc
+	_CET_ENDBR
+	CALL_MCOUNT
+
+# if defined USE_AS_STRCASECMP_L
+	/* We have to fall back on the C implementation for locales with
+	   encodings not matching ASCII for single bytes.  */
+#  if LOCALE_T___LOCALES != 0 || LC_CTYPE != 0
+	mov	LOCALE_T___LOCALES + LC_CTYPE * LP_SIZE(%LOCALE_REG), %RAX_LP
+#  else
+	mov	(%LOCALE_REG), %RAX_LP
+#  endif
+	testl	$1, LOCALE_DATA_VALUES + _NL_CTYPE_NONASCII_CASE * SIZEOF_VALUES(%rax)
+	jne	STRCASECMP_NONASCII
+	leaq	_nl_C_LC_CTYPE_tolower + 128 * 4(%rip), TOLOWER_BASE
+# endif
+
 # ifdef USE_AS_STRNCMP
+	/* Don't overwrite LOCALE_REG (rcx) until we have pass
+	   L(one_or_less). Otherwise we might use the wrong locale in
+	   the OVERFLOW_STRCMP (strcasecmp_l).  */
 #  ifdef __ILP32__
 	/* Clear the upper 32 bits.  */
 	movl	%edx, %edx
@@ -128,6 +248,30 @@ ENTRY(STRCMP)
 #  endif
 # endif
 	vpxor	%xmmZERO, %xmmZERO, %xmmZERO
+# if defined USE_AS_STRCASECMP_L
+	.section .rodata.cst32, "aM", @progbits, 32
+	.align	32
+L(lcase_min):
+	.quad	0x3f3f3f3f3f3f3f3f
+	.quad	0x3f3f3f3f3f3f3f3f
+	.quad	0x3f3f3f3f3f3f3f3f
+	.quad	0x3f3f3f3f3f3f3f3f
+L(lcase_max):
+	.quad	0x9999999999999999
+	.quad	0x9999999999999999
+	.quad	0x9999999999999999
+	.quad	0x9999999999999999
+L(case_add):
+	.quad	0x2020202020202020
+	.quad	0x2020202020202020
+	.quad	0x2020202020202020
+	.quad	0x2020202020202020
+	.previous
+
+	vmovdqa	L(lcase_min)(%rip), LCASE_MIN_ymm
+	vmovdqa	L(lcase_max)(%rip), LCASE_MAX_ymm
+	vmovdqa	L(case_add)(%rip), CASE_ADD_ymm
+# endif
 	movl	%edi, %eax
 	orl	%esi, %eax
 	sall	$20, %eax
@@ -138,8 +282,10 @@ ENTRY(STRCMP)
 L(no_page_cross):
 	/* Safe to compare 4x vectors.  */
 	VMOVU	(%rdi), %ymm0
-	/* 1s where s1 and s2 equal.  */
-	VPCMPEQ	(%rsi), %ymm0, %ymm1
+	/* 1s where s1 and s2 equal. Just VPCMPEQ if its not strcasecmp.
+	   Otherwise converts ymm0 and load from rsi to lower. ymm2 is
+	   scratch and ymm1 is the return.  */
+	CMP_R1_S2_ymm (%ymm0, (%rsi), %ymm2, %ymm1)
 	/* 1s at null CHAR.  */
 	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
 	/* 1s where s1 and s2 equal AND not null CHAR.  */
@@ -172,6 +318,8 @@ L(return_vec_0):
 # else
 	movzbl	(%rdi, %rcx), %eax
 	movzbl	(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 # endif
 L(ret0):
@@ -192,6 +340,10 @@ L(ret_zero):
 
 	.p2align 4,, 5
 L(one_or_less):
+#  ifdef USE_AS_STRCASECMP_L
+	/* Set locale argument for strcasecmp.  */
+	movq	%LOCALE_REG, %rdx
+#  endif
 	jb	L(ret_zero)
 	/* 'nbe' covers the case where length is negative (large
 	   unsigned).  */
@@ -207,6 +359,8 @@ L(one_or_less):
 #  else
 	movzbl	(%rdi), %eax
 	movzbl	(%rsi), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 #  endif
 L(ret1):
@@ -234,6 +388,8 @@ L(return_vec_1):
 # else
 	movzbl	VEC_SIZE(%rdi, %rcx), %eax
 	movzbl	VEC_SIZE(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 # endif
 L(ret2):
@@ -265,6 +421,8 @@ L(return_vec_2):
 # else
 	movzbl	(VEC_SIZE * 2)(%rdi, %rcx), %eax
 	movzbl	(VEC_SIZE * 2)(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 # endif
 L(ret3):
@@ -285,6 +443,8 @@ L(return_vec_3):
 #  else
 	movzbl	(VEC_SIZE * 3)(%rdi, %rcx), %eax
 	movzbl	(VEC_SIZE * 3)(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 #  endif
 L(ret4):
@@ -295,7 +455,7 @@ L(ret4):
 L(more_3x_vec):
 	/* Safe to compare 4x vectors.  */
 	VMOVU	VEC_SIZE(%rdi), %ymm0
-	VPCMPEQ	VEC_SIZE(%rsi), %ymm0, %ymm1
+	CMP_R1_S2_ymm (%ymm0, VEC_SIZE(%rsi), %ymm2, %ymm1)
 	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
 	vpandn	%ymm1, %ymm2, %ymm1
 	vpmovmskb %ymm1, %ecx
@@ -308,7 +468,7 @@ L(more_3x_vec):
 # endif
 
 	VMOVU	(VEC_SIZE * 2)(%rdi), %ymm0
-	VPCMPEQ	(VEC_SIZE * 2)(%rsi), %ymm0, %ymm1
+	CMP_R1_S2_ymm (%ymm0, (VEC_SIZE * 2)(%rsi), %ymm2, %ymm1)
 	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
 	vpandn	%ymm1, %ymm2, %ymm1
 	vpmovmskb %ymm1, %ecx
@@ -316,7 +476,7 @@ L(more_3x_vec):
 	jnz	L(return_vec_2)
 
 	VMOVU	(VEC_SIZE * 3)(%rdi), %ymm0
-	VPCMPEQ	(VEC_SIZE * 3)(%rsi), %ymm0, %ymm1
+	CMP_R1_S2_ymm (%ymm0, (VEC_SIZE * 3)(%rsi), %ymm2, %ymm1)
 	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
 	vpandn	%ymm1, %ymm2, %ymm1
 	vpmovmskb %ymm1, %ecx
@@ -391,12 +551,10 @@ L(loop_skip_page_cross_check):
 	VMOVA	(VEC_SIZE * 3)(%rdi), %ymm6
 
 	/* ymm1 all 1s where s1 and s2 equal. All 0s otherwise.  */
-	VPCMPEQ	(VEC_SIZE * 0)(%rsi), %ymm0, %ymm1
-
-	VPCMPEQ	(VEC_SIZE * 1)(%rsi), %ymm2, %ymm3
-	VPCMPEQ	(VEC_SIZE * 2)(%rsi), %ymm4, %ymm5
-	VPCMPEQ	(VEC_SIZE * 3)(%rsi), %ymm6, %ymm7
-
+	CMP_R1_S2_ymm (%ymm0, (VEC_SIZE * 0)(%rsi), %ymm3, %ymm1)
+	CMP_R1_S2_ymm (%ymm2, (VEC_SIZE * 1)(%rsi), %ymm5, %ymm3)
+	CMP_R1_S2_ymm (%ymm4, (VEC_SIZE * 2)(%rsi), %ymm7, %ymm5)
+	CMP_R1_S2_ymm (%ymm6, (VEC_SIZE * 3)(%rsi), %ymm13, %ymm7)
 
 	/* If any mismatches or null CHAR then 0 CHAR, otherwise non-
 	   zero.  */
@@ -465,6 +623,8 @@ L(return_vec_2_3_end):
 # else
 	movzbl	(VEC_SIZE * 2 - VEC_OFFSET)(%rdi, %LOOP_REG64), %eax
 	movzbl	(VEC_SIZE * 2 - VEC_OFFSET)(%rsi, %LOOP_REG64), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -508,6 +668,8 @@ L(return_vec_0_end):
 # else
 	movzbl	(%rdi, %rcx), %eax
 	movzbl	(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -530,6 +692,8 @@ L(return_vec_1_end):
 #  else
 	movzbl	VEC_SIZE(%rdi, %rcx), %eax
 	movzbl	VEC_SIZE(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -556,6 +720,8 @@ L(return_vec_2_end):
 # else
 	movzbl	(VEC_SIZE * 2)(%rdi, %rcx), %eax
 	movzbl	(VEC_SIZE * 2)(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -583,7 +749,7 @@ L(page_cross_during_loop):
 	jle	L(less_1x_vec_till_page_cross)
 
 	VMOVA	(%rdi), %ymm0
-	VPCMPEQ	(%rsi), %ymm0, %ymm1
+	CMP_R1_S2_ymm (%ymm0, (%rsi), %ymm2, %ymm1)
 	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
 	vpandn	%ymm1, %ymm2, %ymm1
 	vpmovmskb %ymm1, %ecx
@@ -605,7 +771,7 @@ L(less_1x_vec_till_page_cross):
 	   here, it means the previous page (rdi - VEC_SIZE) has already
 	   been loaded earlier so must be valid.  */
 	VMOVU	-VEC_SIZE(%rdi, %rax), %ymm0
-	VPCMPEQ	-VEC_SIZE(%rsi, %rax), %ymm0, %ymm1
+	CMP_R1_S2_ymm (%ymm0, -VEC_SIZE(%rsi, %rax), %ymm2, %ymm1)
 	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
 	vpandn	%ymm1, %ymm2, %ymm1
 	vpmovmskb %ymm1, %ecx
@@ -647,6 +813,8 @@ L(return_page_cross_cmp_mem):
 # else
 	movzbl	VEC_OFFSET(%rdi, %rcx), %eax
 	movzbl	VEC_OFFSET(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -673,7 +841,7 @@ L(more_2x_vec_till_page_cross):
 	   iteration here.  */
 
 	VMOVU	VEC_SIZE(%rdi), %ymm0
-	VPCMPEQ	VEC_SIZE(%rsi), %ymm0, %ymm1
+	CMP_R1_S2_ymm (%ymm0, VEC_SIZE(%rsi), %ymm2, %ymm1)
 	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
 	vpandn	%ymm1, %ymm2, %ymm1
 	vpmovmskb %ymm1, %ecx
@@ -689,7 +857,7 @@ L(more_2x_vec_till_page_cross):
 
 	/* Safe to include comparisons from lower bytes.  */
 	VMOVU	-(VEC_SIZE * 2)(%rdi, %rax), %ymm0
-	VPCMPEQ	-(VEC_SIZE * 2)(%rsi, %rax), %ymm0, %ymm1
+	CMP_R1_S2_ymm (%ymm0, -(VEC_SIZE * 2)(%rsi, %rax), %ymm2, %ymm1)
 	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
 	vpandn	%ymm1, %ymm2, %ymm1
 	vpmovmskb %ymm1, %ecx
@@ -697,7 +865,7 @@ L(more_2x_vec_till_page_cross):
 	jnz	L(return_vec_page_cross_0)
 
 	VMOVU	-(VEC_SIZE * 1)(%rdi, %rax), %ymm0
-	VPCMPEQ	-(VEC_SIZE * 1)(%rsi, %rax), %ymm0, %ymm1
+	CMP_R1_S2_ymm (%ymm0, -(VEC_SIZE * 1)(%rsi, %rax), %ymm2, %ymm1)
 	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
 	vpandn	%ymm1, %ymm2, %ymm1
 	vpmovmskb %ymm1, %ecx
@@ -715,8 +883,8 @@ L(more_2x_vec_till_page_cross):
 	VMOVA	(VEC_SIZE * 2)(%rdi), %ymm4
 	VMOVA	(VEC_SIZE * 3)(%rdi), %ymm6
 
-	VPCMPEQ	(VEC_SIZE * 2)(%rsi), %ymm4, %ymm5
-	VPCMPEQ	(VEC_SIZE * 3)(%rsi), %ymm6, %ymm7
+	CMP_R1_S2_ymm (%ymm4, (VEC_SIZE * 2)(%rsi), %ymm7, %ymm5)
+	CMP_R1_S2_ymm (%ymm6, (VEC_SIZE * 3)(%rsi), %ymm13, %ymm7)
 	vpand	%ymm4, %ymm5, %ymm5
 	vpand	%ymm6, %ymm7, %ymm7
 	VPMINU	%ymm5, %ymm7, %ymm7
@@ -767,6 +935,8 @@ L(return_vec_page_cross_1):
 # else
 	movzbl	VEC_OFFSET(%rdi, %rcx), %eax
 	movzbl	VEC_OFFSET(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -822,7 +992,7 @@ L(page_cross):
 L(page_cross_loop):
 
 	VMOVU	(%rdi, %OFFSET_REG64), %ymm0
-	VPCMPEQ	(%rsi, %OFFSET_REG64), %ymm0, %ymm1
+	CMP_R1_S2_ymm (%ymm0, (%rsi, %OFFSET_REG64), %ymm2, %ymm1)
 	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
 	vpandn	%ymm1, %ymm2, %ymm1
 	vpmovmskb %ymm1, %ecx
@@ -840,11 +1010,11 @@ L(page_cross_loop):
 	subl	%eax, %OFFSET_REG
 	/* OFFSET_REG has distance to page cross - VEC_SIZE. Guranteed
 	   to not cross page so is safe to load. Since we have already
-	   loaded at least 1 VEC from rsi it is also guranteed to be safe.
-	 */
+	   loaded at least 1 VEC from rsi it is also guranteed to be
+	   safe.  */
 
 	VMOVU	(%rdi, %OFFSET_REG64), %ymm0
-	VPCMPEQ	(%rsi, %OFFSET_REG64), %ymm0, %ymm1
+	CMP_R1_S2_ymm (%ymm0, (%rsi, %OFFSET_REG64), %ymm2, %ymm1)
 	VPCMPEQ	%ymm0, %ymmZERO, %ymm2
 	vpandn	%ymm1, %ymm2, %ymm1
 	vpmovmskb %ymm1, %ecx
@@ -877,6 +1047,8 @@ L(ret_vec_page_cross_cont):
 # else
 	movzbl	(%rdi, %rcx), %eax
 	movzbl	(%rsi, %rcx), %ecx
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %ecx)
 	subl	%ecx, %eax
 	xorl	%r8d, %eax
 	subl	%r8d, %eax
@@ -930,7 +1102,7 @@ L(less_1x_vec_till_page):
 	ja	L(less_16_till_page)
 
 	VMOVU	(%rdi), %xmm0
-	VPCMPEQ	(%rsi), %xmm0, %xmm1
+	CMP_R1_S2_xmm (%xmm0, (%rsi), %xmm2, %xmm1)
 	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
 	vpandn	%xmm1, %xmm2, %xmm1
 	vpmovmskb %ymm1, %ecx
@@ -948,7 +1120,7 @@ L(less_1x_vec_till_page):
 # endif
 
 	VMOVU	(%rdi, %OFFSET_REG64), %xmm0
-	VPCMPEQ	(%rsi, %OFFSET_REG64), %xmm0, %xmm1
+	CMP_R1_S2_xmm (%xmm0, (%rsi, %OFFSET_REG64), %xmm2, %xmm1)
 	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
 	vpandn	%xmm1, %xmm2, %xmm1
 	vpmovmskb %ymm1, %ecx
@@ -986,7 +1158,7 @@ L(less_16_till_page):
 	vmovq	(%rdi), %xmm0
 	vmovq	(%rsi), %xmm1
 	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
-	VPCMPEQ	%xmm1, %xmm0, %xmm1
+	CMP_R1_R2_xmm (%xmm0, %xmm1, %xmm3, %xmm1)
 	vpandn	%xmm1, %xmm2, %xmm1
 	vpmovmskb %ymm1, %ecx
 	incb	%cl
@@ -1006,7 +1178,7 @@ L(less_16_till_page):
 	vmovq	(%rdi, %OFFSET_REG64), %xmm0
 	vmovq	(%rsi, %OFFSET_REG64), %xmm1
 	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
-	VPCMPEQ	%xmm1, %xmm0, %xmm1
+	CMP_R1_R2_xmm (%xmm0, %xmm1, %xmm3, %xmm1)
 	vpandn	%xmm1, %xmm2, %xmm1
 	vpmovmskb %ymm1, %ecx
 	incb	%cl
@@ -1062,7 +1234,7 @@ L(ret_less_8_wcs):
 	vmovd	(%rdi), %xmm0
 	vmovd	(%rsi), %xmm1
 	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
-	VPCMPEQ	%xmm1, %xmm0, %xmm1
+	CMP_R1_R2_xmm (%xmm0, %xmm1, %xmm3, %xmm1)
 	vpandn	%xmm1, %xmm2, %xmm1
 	vpmovmskb %ymm1, %ecx
 	subl	$0xf, %ecx
@@ -1081,7 +1253,7 @@ L(ret_less_8_wcs):
 	vmovd	(%rdi, %OFFSET_REG64), %xmm0
 	vmovd	(%rsi, %OFFSET_REG64), %xmm1
 	VPCMPEQ	%xmm0, %xmmZERO, %xmm2
-	VPCMPEQ	%xmm1, %xmm0, %xmm1
+	CMP_R1_R2_xmm (%xmm0, %xmm1, %xmm3, %xmm1)
 	vpandn	%xmm1, %xmm2, %xmm1
 	vpmovmskb %ymm1, %ecx
 	subl	$0xf, %ecx
@@ -1115,7 +1287,9 @@ L(less_4_till_page):
 L(less_4_loop):
 	movzbl	(%rdi), %eax
 	movzbl	(%rsi, %rdi), %ecx
-	subl	%ecx, %eax
+	TOLOWER_gpr (%rax, %eax)
+	TOLOWER_gpr (%rcx, %BYTE_LOOP_REG)
+	subl	%BYTE_LOOP_REG, %eax
 	jnz	L(ret_less_4_loop)
 	testl	%ecx, %ecx
 	jz	L(ret_zero_4_loop)
@@ -1142,5 +1316,6 @@ L(ret_less_4_loop):
 	subl	%r8d, %eax
 	ret
 # endif
-END(STRCMP)
+	cfi_endproc
+	.size	STRCMP, .-STRCMP
 #endif
