@@ -19,7 +19,11 @@
 
 /* Prevent putchar -> _IO_putc inline expansion.  */
 #define __NO_INLINE__
-#pragma GCC optimize("O0")
+#ifdef __clang__
+# pragma clang optimize off
+#else
+# pragma GCC optimize("O0")
+#endif
 
 #include <stdio.h>
 #include <string.h>
