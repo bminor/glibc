@@ -2,7 +2,7 @@
 #include "tst-unique4.h"
 
 template<int N>
-int S<N>::i = N;
+int S<N>::i __attribute__ ((used)) = N;
 template<int N>
 const int S<N>::j __attribute__ ((used)) = -1;
 

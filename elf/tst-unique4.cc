@@ -2,7 +2,12 @@
 #include "tst-unique4.h"
 
 #include <cstdio>
+#include <libc-diag.h>
 
+/* clang warns that the instantiation of the variable is required, but no
+   definition is available.  They are implemented on tst-unique4lib.so.  */
+DIAG_PUSH_NEEDS_COMMENT_CLANG;
+DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wundefined-var-template");
 static int a[24] =
   {
     S<1>::i, S<2>::i, S<3>::i, S<4>::i, S<5>::i, S<6>::i, S<7>::i, S<8>::i,
@@ -10,6 +15,7 @@ static int a[24] =
     S<16>::i, S<17>::i, S<18>::i, S<19>::i, S<20>::i, S<21>::i, S<22>::i,
     S<23>::i, S<24>::i
   };
+DIAG_POP_NEEDS_COMMENT_CLANG;
 
 int
 main (void)
