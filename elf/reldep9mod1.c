@@ -9,9 +9,7 @@ void
 __attribute__((destructor))
 bar (void)
 {
-  static int i;
   foo ();
-  ++i;
 }
 
 void
