@@ -113,7 +113,8 @@ do_test (void)
     TEST_VERIFY (out != NULL);
 
     /* First line is in the form of <pid>: <full path of executable>  */
-    TEST_COMPARE (fscanf (out, "%u: " STRINPUT (512), &pid, buffer), 2);
+    TEST_COMPARE (fscanf (out, "%u: " STRINPUT (sizeof (buffer) - 1), &pid,
+			  buffer), 2);
 
     TEST_COMPARE (pid, *target_pid_ptr);
     TEST_COMPARE (strcmp (basename (buffer), "tst-pldd"), 0);
