@@ -85,7 +85,6 @@ singlethread_test (void)
 }
 
 
-static volatile sig_atomic_t sigusr1_handler_ran;
 #define SIG_PID_EXIT_CODE 20
 
 static bool atfork_prepare_var;
