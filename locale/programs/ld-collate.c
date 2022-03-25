@@ -1562,7 +1562,6 @@ collate_finish (struct localedef_t *locale, const struct charmap_t *charmap)
   int need_undefined = 0;
   struct section_list *sect;
   int ruleidx;
-  int nr_wide_elems = 0;
 
   if (collate == NULL)
     {
@@ -1716,13 +1715,7 @@ symbol `%s' has the same encoding as"), (*eptr)->name);
 	}
 
       if (runp->used_in_level)
-	{
-	  runp->wcorder = wcact++;
-
-	  /* We take the opportunity to count the elements which have
-	     wide characters.  */
-	  ++nr_wide_elems;
-	}
+	runp->wcorder = wcact++;
 
       if (runp->is_character)
 	{
