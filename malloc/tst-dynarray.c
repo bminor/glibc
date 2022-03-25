@@ -482,7 +482,7 @@ test_long_overflow (void)
        iteration would invoke undefined behavior.  That loop iteration
        can never be executed because an allocation of this size must
        fail.  */
-    DIAG_IGNORE_NEEDS_COMMENT (12, "-Waggressive-loop-optimizations");
+    DIAG_IGNORE_NEEDS_COMMENT_GCC (12, "-Waggressive-loop-optimizations");
     TEST_VERIFY (!dynarray_long_resize
                  (&dyn, (SIZE_MAX / sizeof (long)) + 1));
     DIAG_POP_NEEDS_COMMENT;
@@ -499,7 +499,7 @@ test_long_overflow (void)
        iteration would invoke undefined behavior.  That loop iteration
        can never be executed because an allocation of this size must
        fail.  */
-    DIAG_IGNORE_NEEDS_COMMENT (12, "-Waggressive-loop-optimizations");
+    DIAG_IGNORE_NEEDS_COMMENT_GCC (12, "-Waggressive-loop-optimizations");
     TEST_VERIFY (!dynarray_long_noscratch_resize
                  (&dyn, (SIZE_MAX / sizeof (long)) + 1));
     DIAG_POP_NEEDS_COMMENT;
