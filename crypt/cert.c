@@ -50,10 +50,9 @@ main (int argc, char *argv[])
 {
 	char key[64],plain[64],cipher[64],answer[64];
 	int i;
-	int test;
 	int fail;
 
-	for(test=0;!feof(stdin);test++){
+	for(;!feof(stdin);){
 
 		get8(key);
 		printf(" K: "); put8(key);
