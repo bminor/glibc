@@ -40,82 +40,82 @@ ENTRY (__wcslen)
 	pxor	%xmm0, %xmm0
 
 	lea	32(%rdi), %rax
-	lea	16(%rdi), %rcx
+	addq	$16, %rdi
 	and	$-16, %rax
 
 	pcmpeqd	(%rax), %xmm0
 	pmovmskb %xmm0, %edx
 	pxor	%xmm1, %xmm1
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	pcmpeqd	(%rax), %xmm1
 	pmovmskb %xmm1, %edx
 	pxor	%xmm2, %xmm2
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	pcmpeqd	(%rax), %xmm2
 	pmovmskb %xmm2, %edx
 	pxor	%xmm3, %xmm3
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	pcmpeqd	(%rax), %xmm3
 	pmovmskb %xmm3, %edx
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	pcmpeqd	(%rax), %xmm0
 	pmovmskb %xmm0, %edx
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	pcmpeqd	(%rax), %xmm1
 	pmovmskb %xmm1, %edx
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	pcmpeqd	(%rax), %xmm2
 	pmovmskb %xmm2, %edx
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	pcmpeqd	(%rax), %xmm3
 	pmovmskb %xmm3, %edx
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	pcmpeqd	(%rax), %xmm0
 	pmovmskb %xmm0, %edx
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	pcmpeqd	(%rax), %xmm1
 	pmovmskb %xmm1, %edx
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	pcmpeqd	(%rax), %xmm2
 	pmovmskb %xmm2, %edx
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	pcmpeqd	(%rax), %xmm3
 	pmovmskb %xmm3, %edx
+	addq	$16, %rax
 	test	%edx, %edx
-	lea	16(%rax), %rax
 	jnz	L(exit)
 
 	and	$-0x40, %rax
@@ -132,104 +132,100 @@ L(aligned_64_loop):
 	pminub	%xmm0, %xmm2
 	pcmpeqd	%xmm3, %xmm2
 	pmovmskb %xmm2, %edx
+	addq	$64, %rax
 	test	%edx, %edx
-	lea	64(%rax), %rax
 	jz	L(aligned_64_loop)
 
 	pcmpeqd	-64(%rax), %xmm3
 	pmovmskb %xmm3, %edx
+    addq	$48, %rdi
 	test	%edx, %edx
-	lea	48(%rcx), %rcx
 	jnz	L(exit)
 
 	pcmpeqd	%xmm1, %xmm3
 	pmovmskb %xmm3, %edx
+    addq	$-16, %rdi
 	test	%edx, %edx
-	lea	-16(%rcx), %rcx
 	jnz	L(exit)
 
 	pcmpeqd	-32(%rax), %xmm3
 	pmovmskb %xmm3, %edx
+    addq	$-16, %rdi
 	test	%edx, %edx
-	lea	-16(%rcx), %rcx
 	jnz	L(exit)
 
 	pcmpeqd	%xmm6, %xmm3
 	pmovmskb %xmm3, %edx
+    addq	$-16, %rdi
 	test	%edx, %edx
-	lea	-16(%rcx), %rcx
-	jnz	L(exit)
-
-	jmp	L(aligned_64_loop)
+	jz	L(aligned_64_loop)
 
 	.p2align 4
 L(exit):
-	sub	%rcx, %rax
+	sub	%rdi, %rax
 	shr	$2, %rax
 	test	%dl, %dl
 	jz	L(exit_high)
 
-	mov	%dl, %cl
-	and	$15, %cl
+	andl	$15, %edx
 	jz	L(exit_1)
 	ret
 
-	.p2align 4
+	/* No align here. Naturally aligned % 16 == 1.  */
 L(exit_high):
-	mov	%dh, %ch
-	and	$15, %ch
+	andl	$(15 << 8), %edx
 	jz	L(exit_3)
 	add	$2, %rax
 	ret
 
-	.p2align 4
+	.p2align 3
 L(exit_1):
 	add	$1, %rax
 	ret
 
-	.p2align 4
+	.p2align 3
 L(exit_3):
 	add	$3, %rax
 	ret
 
-	.p2align 4
+	.p2align 3
 L(exit_tail0):
-	xor	%rax, %rax
+	xorl	%eax, %eax
 	ret
 
-	.p2align 4
+	.p2align 3
 L(exit_tail1):
-	mov	$1, %rax
+	movl	$1, %eax
 	ret
 
-	.p2align 4
+	.p2align 3
 L(exit_tail2):
-	mov	$2, %rax
+	movl	$2, %eax
 	ret
 
-	.p2align 4
+	.p2align 3
 L(exit_tail3):
-	mov	$3, %rax
+	movl	$3, %eax
 	ret
 
-	.p2align 4
+	.p2align 3
 L(exit_tail4):
-	mov	$4, %rax
+	movl	$4, %eax
 	ret
 
-	.p2align 4
+	.p2align 3
 L(exit_tail5):
-	mov	$5, %rax
+	movl	$5, %eax
 	ret
 
-	.p2align 4
+	.p2align 3
 L(exit_tail6):
-	mov	$6, %rax
+	movl	$6, %eax
 	ret
 
-	.p2align 4
+	.p2align 3
 L(exit_tail7):
-	mov	$7, %rax
+	movl	$7, %eax
 	ret
 
 END (__wcslen)
