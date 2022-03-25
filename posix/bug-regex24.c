@@ -1,6 +1,7 @@
 #include <regex.h>
 #include <stdio.h>
 #include <string.h>
+#include <libc-diag.h>
 
 #define str "civic"
 
@@ -45,11 +46,14 @@ do_test (void)
       {
 	int len = m[i].rm_eo - m[i].rm_so;
 
+	DIAG_PUSH_NEEDS_COMMENT_CLANG;
+	DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wstring-plus-int");
 	printf ("m[%d] = \"%.*s\"\n", i, len, str + m[i].rm_so);
 
 	if (strlen (expected[i]) != len
 	    || memcmp (expected[i], str + m[i].rm_so, len) != 0)
 	  result = 1;
+	DIAG_POP_NEEDS_COMMENT_CLANG;
       }
 
   return result;

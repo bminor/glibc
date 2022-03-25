@@ -26,6 +26,7 @@
 #include <support/support.h>
 #include <support/test-driver.h>
 #include <stdio.h>
+#include <libc-diag.h>
 
 /* FROM is the input character set, TO the output character set.  If
    IGNORE is true, the iconv descriptor is set up in the same way as
@@ -121,12 +122,15 @@ do_test (void)
           for (int skip = 0; skip < 3; ++skip)
             {
               const char *expected_output;
+	      DIAG_PUSH_NEEDS_COMMENT_CLANG;
+	      DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wstring-plus-int");
               if (do_ignore || strstr (charsets[to_idx], "//IGNORE") != NULL)
                 expected_output = "ABXY" + skip;
               else
                 expected_output = "AB" + skip;
               one_direction (charsets[from_idx], charsets[to_idx], do_ignore,
                              "AB\xffXY" + skip, expected_output, limit);
+	      DIAG_POP_NEEDS_COMMENT_CLANG;
             }
 
   return 0;

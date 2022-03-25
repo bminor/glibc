@@ -26,6 +26,7 @@
 #include <support/support.h>
 #include <support/xdirent.h>
 #include <support/readdir.h>
+#include <libc-diag.h>
 
 /* If positive, at this length an EMSGSIZE error is injected.  */
 static _Atomic int inject_error_at_length;
@@ -59,7 +60,10 @@ add_directory_entry (struct support_fuse_dirstream *d, uint64_t offset)
   if (offset <= 1)
     {
       type = DT_DIR;
+      DIAG_PUSH_NEEDS_COMMENT_CLANG;
+      DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wstring-plus-int");
       name = ".." + !offset;    /* "." or "..".  */
+      DIAG_POP_NEEDS_COMMENT_CLANG;
       ino = 1;
     }
   else if (length == 1000)

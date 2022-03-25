@@ -24,17 +24,21 @@
 #include <support/readdir.h>
 #include <support/support.h>
 #include <support/xdirent.h>
+#include <libc-diag.h>
 
 /* Return the file name at the indicated directory offset.  */
 static char *
 name_at_offset (unsigned int offset)
 {
+  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wstring-plus-int");
   if (offset <= 1)
     return xstrdup (".." + !offset); /* "." or "..".  */
   else
     /* Pad the name with a lot of zeros, so that the dirent buffer gets
        filled more quickly.  */
     return xasprintf ("file%0240u", offset);
+  DIAG_POP_NEEDS_COMMENT_CLANG;
 }
 
 /* This many directory entries, including "." and "..".  */
