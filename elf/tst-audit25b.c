@@ -48,14 +48,6 @@ handle_restart (void)
   return 0;
 }
 
-static inline bool
-startswith (const char *str, const char *pre)
-{
-  size_t lenpre = strlen (pre);
-  size_t lenstr = strlen (str);
-  return lenstr >= lenpre && memcmp (pre, str, lenpre) == 0;
-}
-
 static int
 do_test (int argc, char *argv[])
 {
