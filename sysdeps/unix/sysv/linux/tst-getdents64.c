@@ -103,6 +103,8 @@ do_test_by_size (size_t buffer_size)
   int fd = xopen (".", O_RDONLY | O_DIRECTORY, 0);
   TEST_VERIFY (fd >= 0);
 
+  char *data = xposix_memalign (_Alignof (struct dirent64), buffer_size);
+
   /* Perform two passes, with a rewind operating between passes.  */
   for (int pass = 0; pass < 2; ++pass)
     {
@@ -111,23 +113,15 @@ do_test_by_size (size_t buffer_size)
 
       while (true)
         {
-          /* Simple way to make sure that the memcpy below does not read
-             non-existing data.  */
-          struct
-          {
-            char buffer[buffer_size];
-            struct dirent64 pad;
-          } data;
-
-          ssize_t ret = getdents64 (fd, &data.buffer, sizeof (data.buffer));
+          ssize_t ret = getdents64 (fd, data, buffer_size);
           if (ret < 0)
             FAIL_EXIT1 ("getdents64: %m");
           if (ret == 0)
             break;
           ++read_count;
 
-          char *current = data.buffer;
-          char *end = data.buffer + ret;
+          char *current = data;
+          char *end = data + ret;
           while (current != end)
             {
               struct dirent64 entry;
@@ -169,6 +163,8 @@ do_test_by_size (size_t buffer_size)
       xlseek (fd, 0, SEEK_SET);
       rewinddir (reference);
     }
+
+  free (data);
 
   xclose (fd);
   closedir (reference);
