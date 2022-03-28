@@ -59,11 +59,11 @@ TST_WCTOMB tst_wctomb_loc [] = {
     {
       /* #01 : normal case		   */
       { /*input.*/ { 1,	   0x00C4  },
-	/*expect*/ { 0,1,1,  "Ä"	   },
+	/*expect*/ { 0,1,1,  "\xc4"	   },
       },
       /* #02 : normal case		   */
       { /*input.*/ { 1,	   0x00DC  },
-	/*expect*/ { 0,1,1,  "Ü"	   },
+	/*expect*/ { 0,1,1,  "\xdc"	   },
       },
       /* #03 : normal case		   */
       { /*input.*/ { 1,	   0x0092  },

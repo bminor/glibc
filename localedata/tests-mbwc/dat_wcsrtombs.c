@@ -26,26 +26,26 @@ TST_WCSRTOMBS tst_wcsrtombs_loc [] = {
       },
       /* #02 : Only one chars should be stored in s. No null termination.  */
       { /*input.*/ { 1,1,	{ 0x00C4,0x00D6,0x00DC,0x0000 }, 1, 0, 0 },
-	/*expect*/ { 0,1,1,	 "Ä"					 },
+	/*expect*/ { 0,1,1,	 "\xc4"					 },
       },
       /* #03 : Only two chars should be stored in s. No null termination.  */
       { /*input.*/ { 1,1,	{ 0x00C4,0x00D6,0x00DC,0x0000 }, 2, 0, 0 },
-	/*expect*/ { 0,1,2,	 "ÄÖ"					 },
+	/*expect*/ { 0,1,2,	 "\xc4\xd6"				 },
       },
       /* #04 : Only three chars should be stored in s. No null
 	       termination.  */
       { /*input.*/ { 1,1,	{ 0x00C4,0x00D6,0x00DC,0x0000 }, 3, 0, 0 },
-	/*expect*/ { 0,1,3,	 "ÄÖÜ"					 },
+	/*expect*/ { 0,1,3,	 "\xc4\xd6\xdc"				 },
       },
       /* #05 : Only three chars should be stored in s with a null
 	       termination. */
       { /*input.*/ { 1,1,	{ 0x00C4,0x00D6,0x00DC,0x0000 }, 4, 0, 0 },
-	/*expect*/ { 0,1,3,	 "ÄÖÜ"					 },
+	/*expect*/ { 0,1,3,	 "\xc4\xd6\xdc"				 },
       },
       /* #06 : Only three chars should be stored in s with a null
 	       termination. */
       { /*input.*/ { 1,1,	{ 0x00C4,0x00D6,0x00DC,0x0000 }, 5, 0, 0 },
-	/*expect*/ { 0,1,3,	 "ÄÖÜ"					 },
+	/*expect*/ { 0,1,3,	 "\xc4\xd6\xdc"				 },
       },
       /* #07 : Invalid mb sequence. No chars should be stored in s.  */
       { /*input.*/ { 1,1,	{ 0x0201,0x0221,0x0000,0x0000 }, 2, 0, 0 },

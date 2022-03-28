@@ -7,7 +7,7 @@ int
 main (void)
 {
   iconv_t cd;
-  const char str[] = "ƒд÷ц№ья";
+  const char str[] = "\xc4\xe4\xd6\xf6\xdc\xfc\xdf";
   const char expected[] = "AEaeOEoeUEuess";
   char *inptr = (char *) str;
   size_t inlen = strlen (str) + 1;

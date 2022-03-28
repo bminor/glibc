@@ -31,7 +31,7 @@ TST_SWSCANF tst_swscanf_loc [] =
 	{ /* The fields are: err_val, ret_flag, ret_val,
 	     val_int, val_uns, val_flt, val_c, val_s, val_S.  */
 	  0,1,5,
-	  -1, 2, 3.3, 'ä', "ÄÜ", { 0x0000, },
+	  -1, 2, 3.3, '\xe4', "\xc4\xdc", { 0x0000, },
 	},
       },
       /*------------------------ 02 -----------------------*/

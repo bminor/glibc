@@ -27,13 +27,16 @@ TST_STRCOLL tst_strcoll_loc [] = {
   {
     { Tstrcoll, TST_LOC_de },
     {
-      { /*input.*/ { "ÄBCDEFG", "ÄBCDEFG"	      },  /* #1 */
+      { /*input.*/ { "\xc4\x42\x43\x44\x45\x46\x47",
+		     "\xc4\x42\x43\x44\x45\x46\x47"   },  /* #1 */
 	/*expect*/ { 0,1,0,			      },
       },
-      { /*input.*/ { "XX Ä XX", "XX B XX"	      },  /* #2 */
+      { /*input.*/ { "\x58\x58\x20\xc4\x20\x58\x58",
+		     "XX B XX"			      },  /* #2 */
 	/*expect*/ { 0,0,-1,			      },
       },
-      { /*input.*/ { "XX B XX", "XX Ä XX"	      },  /* #3 */
+      { /*input.*/ { "XX B XX",
+		     "\x58\x58\x20\xc4\x20\x58\x58"   },  /* #3 */
 	/*expect*/ { 0,0,+1,			      },
       },
       { /*input.*/ { "B",	"a"		      },  /* #4 */
@@ -48,10 +51,10 @@ TST_STRCOLL tst_strcoll_loc [] = {
       { /*input.*/ { "A",	"b"		      },  /* #7 */
 	/*expect*/ { 0,0,-1,			      },
       },
-      { /*input.*/ { "ä",	"B"		      },  /* #8 */
+      { /*input.*/ { "\xe4",	"B"		      },  /* #8 */
 	/*expect*/ { 0,0,-1,			      },
       },
-      { /*input.*/ { "B",	"ä"		      },  /* #9 */
+      { /*input.*/ { "B",	"\xe4"		      },  /* #9 */
 	/*expect*/ { 0,0,+1,			      },
       },
       { .is_last = 1 } /* Last element.  */

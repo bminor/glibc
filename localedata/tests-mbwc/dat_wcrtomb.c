@@ -13,11 +13,11 @@ TST_WCRTOMB tst_wcrtomb_loc [] = {
     {
       /* #01 : normal case			       */
       { /*input.*/ { 1,		 0x00FC,   0,0 },
-	/*expect*/ { 0,	   1,1,	 "ü"	       },
+	/*expect*/ { 0,	   1,1,	 "\xfc"	       },
       },
       /* #02 : normal case			       */
       { /*input.*/ { 1,		 0x00D6,   0,0 },
-	/*expect*/ { 0,	   1,1,	 "Ö"	       },
+	/*expect*/ { 0,	   1,1,	 "\xd6"	       },
       },
       /* #03 : error case			       */
       { /*input.*/ { 1,		 0xFFA1,   0,0 },

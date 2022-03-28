@@ -13,9 +13,9 @@ static struct
   {
     { "C", "TRANSLIT", "translit", 0 },
     { "de_DE.ISO-8859-1", "TRANSLIT", "translit", 0 },
-    { "de_DE.ISO-8859-1", "TRANSLIT", "trÄnslit", -1 },
+    { "de_DE.ISO-8859-1", "TRANSLIT", "tr\xc4nslit", -1 },
     { "de_DE.UTF-8", "TRANSLIT", "translit", 0 },
-    { "de_DE.ISO-8859-1", "ä", "Ä", 1 }
+    { "de_DE.ISO-8859-1", "\xe4", "\xc4", 1 }
   };
 #define ntests (sizeof (tests) / sizeof (tests[0]))
 

@@ -36,7 +36,7 @@ main (void)
 }
 
 
-static const char str[] = "0123456789abcdef ABCDEF ghijklmnopqrstuvwxyzäÄöÖüÜ";
+static const char str[] = "0123456789abcdef ABCDEF ghijklmnopqrstuvwxyz\xe4\xc4\xf6\xd6\xfc\xdc";
 static const char exd[] = "11111111110000000000000000000000000000000000000000";
 static const char exa[] = "00000000001111110111111011111111111111111111111111";
 static const char exx[] = "11111111111111110111111000000000000000000000000000";
