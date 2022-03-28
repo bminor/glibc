@@ -64,7 +64,7 @@ tst_mbrtowc (FILE * fp, int debug_flg)
 	  {
 	    fprintf (stdout, "mbrtowc() [ %s : %d : %d ] ret = %zd\n",
 		     locale, rec + 1, seq_num + 1, ret);
-	    fprintf (stdout, "			    errno = %hd\n",
+	    fprintf (stdout, "			    errno = %d\n",
 		     errno_save);
 	  }
 
