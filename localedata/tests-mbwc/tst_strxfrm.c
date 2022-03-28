@@ -30,7 +30,6 @@ tst_strxfrm (FILE * fp, int debug_flg)
 
       if (n1 < 0 || sizeof (frm1) < n1 || sizeof (frm2) < n2)
 	{
-	  warn_count++;
 	  Result (C_IGNORED, S_STRXFRM, CASE_9,
 		  "input data n1 or n2 is invalid");
 	  continue;
@@ -60,7 +59,6 @@ tst_strxfrm (FILE * fp, int debug_flg)
 
       if (ret >= n1 || errno != 0)
 	{
-	  warn_count++;
 	  Result (C_INVALID, S_STRXFRM, CASE_8,
 		  "got an error in fist strxfrm() call");
 	  continue;
@@ -103,7 +101,6 @@ tst_strxfrm (FILE * fp, int debug_flg)
       if (errno != 0)
 	{
 	  /* bug * bug may get correct results ...	  */
-	  warn_count++;
 	  Result (C_INVALID, S_STRXFRM, CASE_6,
 		  "got an error in strcoll() call");
 	  continue;

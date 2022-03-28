@@ -46,7 +46,6 @@ tst_wcschr (FILE * fp, int debug_flg)
 			 "set ret_flg=1 to check NULL return value\n");
 	      }
 
-	    warn_count++;
 	    Result (C_INVALID, S_WCSCHR, CASE_3, "(check the test data) "
 		    "set ret_flg=1 to check NULL return value");
 	    continue;

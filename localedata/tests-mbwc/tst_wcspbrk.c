@@ -12,7 +12,6 @@ tst_wcspbrk (FILE * fp, int debug_flg)
 {
   TST_DECL_VARS (wchar_t *);
   wchar_t *ws1, *ws2;
-  int err;
   wchar_t wc_ex;
 
   TST_DO_TEST (wcspbrk)
@@ -63,7 +62,6 @@ tst_wcspbrk (FILE * fp, int debug_flg)
 
 	if (*ret != wc_ex)
 	  {
-	    err++;
 	    err_count++;
 	    Result (C_FAILURE, S_WCSPBRK, CASE_4, "the pointed wc is "
 		    "different from an expected wc");

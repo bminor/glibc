@@ -75,7 +75,6 @@ tst_strcoll (FILE * fp, int debug_flg)
 			 " to check a return value");
 	      }
 
-	    warn_count++;
 	    Result (C_INVALID, S_WCSCHR, CASE_3, "(check the test data); "
 		    "should set ret_flg=1 to check a return value");
 	  }

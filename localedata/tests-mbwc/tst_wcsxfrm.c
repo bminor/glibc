@@ -28,7 +28,6 @@ tst_wcsxfrm (FILE * fp, int debug_flg)
       n2 = TST_INPUT (wcsxfrm).n2;
       if (n1 < 0 || sizeof (frm1) < n1 || sizeof (frm2) < n2)
 	{
-	  warn_count++;
 	  Result (C_IGNORED, S_WCSXFRM, CASE_9,
 		  "input data n1 or n2 is invalid");
 	  continue;
@@ -52,7 +51,6 @@ tst_wcsxfrm (FILE * fp, int debug_flg)
 
       if (ret == -1 || ret >= n1 || errno_save != 0)
 	{
-	  warn_count++;
 	  Result (C_INVALID, S_WCSXFRM, CASE_8,
 		  "got an error in fist wcsxfrm() call");
 	  continue;
@@ -70,7 +68,6 @@ tst_wcsxfrm (FILE * fp, int debug_flg)
       if (n2 == 0 || ret >= n2 || errno != 0)
 	{
 #if 0
-	  warn_count++;
 	  Result (C_IGNORED, S_WCSXFRM, CASE_7, "did not get a result");
 #endif
 	  continue;
@@ -89,7 +86,6 @@ tst_wcsxfrm (FILE * fp, int debug_flg)
 
       if (errno != 0)		/* bugs * bugs may got correct results ... */
 	{
-	  warn_count++;
 	  Result (C_INVALID, S_WCSXFRM, CASE_6,
 		  "got an error in wcscoll() call");
 	  continue;

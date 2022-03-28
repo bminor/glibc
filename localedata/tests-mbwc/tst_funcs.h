@@ -83,7 +83,6 @@ extern int result (FILE * fp, char res, const char *func, const char *loc,
 
 #define TST_DECL_VARS(_type_)				\
 	int   loc, rec, err_count = 0;			\
-	int   warn_count __attribute__ ((unused));	\
 	int   seq_num = 0;				\
 	const char *locale;				\
 	int   err_exp, ret_flg;				\
