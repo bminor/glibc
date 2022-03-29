@@ -25,6 +25,7 @@
 #else
 # define TEST_NAME "strncmp"
 #endif
+#define TIMEOUT (5 * 60)
 #include "test-string.h"
 
 #ifdef WIDE

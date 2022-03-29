@@ -24,6 +24,7 @@
 
 #define TEST_MAIN
 #define TEST_NAME "strncasecmp"
+#define TIMEOUT (5 * 60)
 #include "test-string.h"
 
 typedef int (*proto_t) (const char *, const char *, size_t);
