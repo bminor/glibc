@@ -24,7 +24,7 @@
 
 /* The prototype of a gnu indirect function resolver on AArch64 is
 
-     ElfW(Addr) ifunc_resolver (uint64_t, const __ifunc_arg_t *);
+     elfptr_t ifunc_resolver (uint64_t, const __ifunc_arg_t *);
 
    the first argument should have the _IFUNC_ARG_HWCAP bit set and
    the remaining bits should match the AT_HWCAP settings.  */
