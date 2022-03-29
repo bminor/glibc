@@ -97,6 +97,7 @@ int verbose = 0;
    * mytest.root/mytest.script has a list of "commands" to run:
        syntax:
          # comment
+	 pidns <comment>
          su
          mv FILE FILE
 	 cp FILE FILE
@@ -122,6 +123,8 @@ int verbose = 0;
 
        details:
          - '#': A comment.
+	 - 'pidns': Require a separate PID namespace, prints comment if it can't
+	    (default is a shared pid namespace)
          - 'su': Enables running test as root in the container.
          - 'mv': A minimal move files command.
          - 'cp': A minimal copy files command.
@@ -148,7 +151,7 @@ int verbose = 0;
    * Simple, easy to review code (i.e. prefer simple naive code over
      complex efficient code)
 
-   * The current implementation ist parallel-make-safe, but only in
+   * The current implementation is parallel-make-safe, but only in
      that it uses a lock to prevent parallel access to the testroot.  */
 
 
@@ -227,11 +230,37 @@ concat (const char *str, ...)
   return bufs[n];
 }
 
+/* Like the above, but put spaces between words.  Caller frees.  */
+static char *
+concat_words (char **words, int num_words)
+{
+  int len = 0;
+  int i;
+  char *rv, *p;
+
+  for (i = 0; i < num_words; i ++)
+    {
+      len += strlen (words[i]);
+      len ++;
+    }
+
+  p = rv = (char *) xmalloc (len);
+
+  for (i = 0; i < num_words; i ++)
+    {
+      if (i > 0)
+	p = stpcpy (p, " ");
+      p = stpcpy (p, words[i]);
+    }
+
+  return rv;
+}
+
 /* Try to mount SRC onto DEST.  */
 static void
 trymount (const char *src, const char *dest)
 {
-  if (mount (src, dest, "", MS_BIND, NULL) < 0)
+  if (mount (src, dest, "", MS_BIND | MS_REC, NULL) < 0)
     FAIL_EXIT1 ("can't mount %s onto %s\n", src, dest);
 }
 
@@ -726,6 +755,9 @@ main (int argc, char **argv)
   gid_t original_gid;
   /* If set, the test runs as root instead of the user running the testsuite.  */
   int be_su = 0;
+  int require_pidns = 0;
+  const char *pidns_comment = NULL;
+  int do_proc_mounts = 0;
   int UMAP;
   int GMAP;
   /* Used for "%lld %lld 1" so need not be large.  */
@@ -1011,6 +1043,12 @@ main (int argc, char **argv)
 	      {
 		be_su = 1;
 	      }
+	    else if (nt >= 1 && strcmp (the_words[0], "pidns") == 0)
+	      {
+		require_pidns = 1;
+		if (nt > 1)
+		  pidns_comment = concat_words (the_words + 1, nt - 1);
+	      }
 	    else if (nt == 3 && strcmp (the_words[0], "mkdirp") == 0)
 	      {
 		long int m;
@@ -1068,7 +1106,8 @@ main (int argc, char **argv)
 
 #ifdef CLONE_NEWNS
   /* The unshare here gives us our own spaces and capabilities.  */
-  if (unshare (CLONE_NEWUSER | CLONE_NEWPID | CLONE_NEWNS) < 0)
+  if (unshare (CLONE_NEWUSER | CLONE_NEWNS
+	       | (require_pidns ? CLONE_NEWPID : 0)) < 0)
     {
       /* Older kernels may not support all the options, or security
 	 policy may block this call.  */
@@ -1079,6 +1118,11 @@ main (int argc, char **argv)
 	    check_for_unshare_hints ();
 	  FAIL_UNSUPPORTED ("unable to unshare user/fs: %s", strerror (saved_errno));
 	}
+      /* We're about to exit anyway, it's "safe" to call unshare again
+	 just to see if the CLONE_NEWPID caused the error.  */
+      else if (require_pidns && unshare (CLONE_NEWUSER | CLONE_NEWNS) >= 0)
+	FAIL_EXIT1 ("unable to unshare pid ns: %s : %s", strerror (errno),
+		    pidns_comment ? pidns_comment : "required by test");
       else
 	FAIL_EXIT1 ("unable to unshare user/fs: %s", strerror (errno));
     }
@@ -1093,6 +1137,15 @@ main (int argc, char **argv)
 
   trymount (support_srcdir_root, new_srcdir_path);
   trymount (support_objdir_root, new_objdir_path);
+
+  /* It may not be possible to mount /proc directly.  */
+  if (! require_pidns)
+  {
+    char *new_proc = concat (new_root_path, "/proc", NULL);
+    xmkdirp (new_proc, 0755);
+    trymount ("/proc", new_proc);
+    do_proc_mounts = 1;
+  }
 
   xmkdirp (concat (new_root_path, "/dev", NULL), 0755);
   devmount (new_root_path, "null");
@@ -1163,42 +1216,60 @@ main (int argc, char **argv)
 
   maybe_xmkdir ("/tmp", 0755);
 
-  /* Now that we're pid 1 (effectively "root") we can mount /proc  */
-  maybe_xmkdir ("/proc", 0777);
-  if (mount ("proc", "/proc", "proc", 0, NULL) < 0)
-    FAIL_EXIT1 ("Unable to mount /proc: ");
-
-  /* We map our original UID to the same UID in the container so we
-     can own our own files normally.  */
-  UMAP = open ("/proc/self/uid_map", O_WRONLY);
-  if (UMAP < 0)
-    FAIL_EXIT1 ("can't write to /proc/self/uid_map\n");
-
-  sprintf (tmp, "%lld %lld 1\n",
-	   (long long) (be_su ? 0 : original_uid), (long long) original_uid);
-  write (UMAP, tmp, strlen (tmp));
-  xclose (UMAP);
-
-  /* We must disable setgroups () before we can map our groups, else we
-     get EPERM.  */
-  GMAP = open ("/proc/self/setgroups", O_WRONLY);
-  if (GMAP >= 0)
+  if (require_pidns)
     {
-      /* We support kernels old enough to not have this.  */
-      write (GMAP, "deny\n", 5);
-      xclose (GMAP);
+      /* Now that we're pid 1 (effectively "root") we can mount /proc  */
+      maybe_xmkdir ("/proc", 0777);
+      if (mount ("proc", "/proc", "proc", 0, NULL) != 0)
+	{
+	  /* This happens if we're trying to create a nested container,
+	     like if the build is running under podman, and we lack
+	     priviledges.
+
+	     Ideally we would WARN here, but that would just add noise to
+	     *every* test-container test, and the ones that care should
+	     have their own relevent diagnostics.
+
+	     FAIL_EXIT1 ("Unable to mount /proc: ");  */
+	}
+      else
+	do_proc_mounts = 1;
     }
 
-  /* We map our original GID to the same GID in the container so we
-     can own our own files normally.  */
-  GMAP = open ("/proc/self/gid_map", O_WRONLY);
-  if (GMAP < 0)
-    FAIL_EXIT1 ("can't write to /proc/self/gid_map\n");
+  if (do_proc_mounts)
+    {
+      /* We map our original UID to the same UID in the container so we
+	 can own our own files normally.  */
+      UMAP = open ("/proc/self/uid_map", O_WRONLY);
+      if (UMAP < 0)
+	FAIL_EXIT1 ("can't write to /proc/self/uid_map\n");
 
-  sprintf (tmp, "%lld %lld 1\n",
-	   (long long) (be_su ? 0 : original_gid), (long long) original_gid);
-  write (GMAP, tmp, strlen (tmp));
-  xclose (GMAP);
+      sprintf (tmp, "%lld %lld 1\n",
+	       (long long) (be_su ? 0 : original_uid), (long long) original_uid);
+      write (UMAP, tmp, strlen (tmp));
+      xclose (UMAP);
+
+      /* We must disable setgroups () before we can map our groups, else we
+	 get EPERM.  */
+      GMAP = open ("/proc/self/setgroups", O_WRONLY);
+      if (GMAP >= 0)
+	{
+	  /* We support kernels old enough to not have this.  */
+	  write (GMAP, "deny\n", 5);
+	  xclose (GMAP);
+	}
+
+      /* We map our original GID to the same GID in the container so we
+	 can own our own files normally.  */
+      GMAP = open ("/proc/self/gid_map", O_WRONLY);
+      if (GMAP < 0)
+	FAIL_EXIT1 ("can't write to /proc/self/gid_map\n");
+
+      sprintf (tmp, "%lld %lld 1\n",
+	       (long long) (be_su ? 0 : original_gid), (long long) original_gid);
+      write (GMAP, tmp, strlen (tmp));
+      xclose (GMAP);
+    }
 
   if (change_cwd)
     {

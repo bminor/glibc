@@ -64,6 +64,7 @@ libsupport-routines = \
   support_format_netent \
   support_isolate_in_subprocess \
   support_mutex_pi_monotonic \
+  support_need_proc \
   support_path_support_time64 \
   support_process_state \
   support_ptrace \

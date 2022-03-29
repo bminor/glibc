@@ -28,6 +28,8 @@
 #include <unistd.h>
 #include <inttypes.h>
 
+#include <support/support.h>
+
 /* There is an obscure bug in the kernel due to which RLIMIT_STACK is sometimes
    returned as unlimited when it is not, which may cause this test to fail.
    There is also the other case where RLIMIT_STACK is intentionally set as
@@ -153,6 +155,8 @@ check_stack_top (void)
 static int
 do_test (void)
 {
+  support_need_proc ("Reads /proc/self/maps to get stack size.");
+
   pagesize = sysconf (_SC_PAGESIZE);
   return check_stack_top ();
 }

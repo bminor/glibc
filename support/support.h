@@ -91,6 +91,11 @@ char *support_quote_string (const char *);
    regular file open for writing, and initially empty.  */
 int support_descriptor_supports_holes (int fd);
 
+/* Predicates that a test requires a working /proc filesystem.  This
+   call will exit with UNSUPPORTED if /proc is not available, printing
+   WHY_MSG as part of the diagnostic.  */
+void support_need_proc (const char *why_msg);
+
 /* Error-checking wrapper functions which terminate the process on
    error.  */
 
