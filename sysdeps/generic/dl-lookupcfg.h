@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 /* The type of the return value of fixup/profile_fixup.  */
-#define DL_FIXUP_VALUE_TYPE ElfW(Addr)
+#define DL_FIXUP_VALUE_TYPE elfptr_t
 /* Construct a value of type DL_FIXUP_VALUE_TYPE from a code address
    and a link map.  */
 #define DL_FIXUP_MAKE_VALUE(map, addr) (addr)

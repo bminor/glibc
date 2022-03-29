@@ -542,11 +542,16 @@ _dl_start (void *arg)
 # endif
 #endif
 
+#ifdef __CHERI_PURE_CAPABILITY__
+  bootstrap_map.l_addr = elf_machine_load_address_from_args (arg);
+  bootstrap_map.l_ld = elf_machine_runtime_dynamic ();
+#else
   /* Figure out the run-time load address of the dynamic linker itself.  */
   bootstrap_map.l_addr = elf_machine_load_address ();
 
   /* Read our own dynamic section and fill in the info array.  */
   bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + elf_machine_dynamic ();
+#endif
   bootstrap_map.l_ld_readonly = DL_RO_DYN_SECTION;
   elf_get_dynamic_info (&bootstrap_map, true, false);
 

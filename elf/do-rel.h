@@ -41,14 +41,14 @@
 
 static inline void __attribute__ ((always_inline))
 elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
-		    ElfW(Addr) reladdr, ElfW(Addr) relsize,
+		    elfptr_t reladdr, ElfW(Addr) relsize,
 		    __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative,
 		    int lazy, int skip_ifunc)
 {
   const ElfW(Rel) *relative = (const void *) reladdr;
   const ElfW(Rel) *r = relative + nrelative;
   const ElfW(Rel) *end = (const void *) (reladdr + relsize);
-  ElfW(Addr) l_addr = map->l_addr;
+  elfptr_t l_addr = map->l_addr;
   const ElfW(Sym) *const symtab
       = (const void *) D_PTR (map, l_info[DT_SYMTAB]);
 
