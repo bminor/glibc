@@ -95,6 +95,8 @@ do_test (void)
   char buf1[PATH_MAX];
   char buf2[PATH_MAX];
 
+  support_need_proc ("Our xmkdirp fails if we can't map our uid, which requires /proc.");
+
   sprintf (buf1, "/subdir%s", support_slibdir_prefix);
   xmkdirp (buf1, 0777);
 
