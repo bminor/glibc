@@ -304,6 +304,7 @@ class Sht(_OpenIntEnum):
     SHT_PREINIT_ARRAY = 16
     SHT_GROUP = 17
     SHT_SYMTAB_SHNDX = 18
+    SHT_RELR = 19
     SHT_GNU_ATTRIBUTES = 0x6ffffff5
     SHT_GNU_HASH = 0x6ffffff6
     SHT_GNU_LIBLIST = 0x6ffffff7
@@ -593,6 +594,9 @@ class Dt(_OpenIntEnum):
     DT_PREINIT_ARRAY = 32
     DT_PREINIT_ARRAYSZ = 33
     DT_SYMTAB_SHNDX = 34
+    DT_RELRSZ = 35
+    DT_RELR = 36
+    DT_RELRENT = 37
     DT_GNU_PRELINKED = 0x6ffffdf5
     DT_GNU_CONFLICTSZ = 0x6ffffdf6
     DT_GNU_LIBLISTSZ = 0x6ffffdf7
