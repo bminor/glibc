@@ -85,6 +85,8 @@ in_str_list (const char *libname, const char *const strlist[])
 static int
 do_test (void)
 {
+  support_need_proc ("needs /proc/sys/kernel/yama/ptrace_scope and /proc/$child");
+
   /* Check if our subprocess can be debugged with ptrace.  */
   {
     int ptrace_scope = support_ptrace_scope ();
