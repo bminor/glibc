@@ -37,6 +37,7 @@
 # define GLOB_LSTAT      gl_lstat
 # define GLOB_STAT64     __stat64_time64
 # define GLOB_LSTAT64    __lstat64_time64
+# define GLOB_FSTATAT64    __fstatat64_time64
 
 # define COMPILE_GLOB64	1
 
