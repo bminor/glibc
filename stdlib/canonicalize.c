@@ -400,11 +400,14 @@ realpath_stk (const char *name, char *resolved,
 
 error:
   *dest++ = '\0';
-  if (!failed && resolved != NULL)
+  if (resolved != NULL)
     {
-      if (dest - rname <= get_path_max ())
+      /* Copy the full result on success or partial result if failure was due
+	 to the path not existing or not being accessible.  */
+      if ((!failed || errno == ENOENT || errno == EACCES)
+	  && dest - rname <= get_path_max ())
 	rname = strcpy (resolved, rname);
-      else
+      else if (!failed)
 	{
 	  failed = true;
 	  __set_errno (ENAMETOOLONG);

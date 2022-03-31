@@ -44,6 +44,7 @@ The following bugs are resolved with this release:
     variants when avoiding overflow
   [28937] New DSO dependency sorter does not put new map first if in a cycle
   [28953] nss: Protect against errno changes in function lookup
+  [28996] realpath fails to copy partial result on ENOENT and EACCES
   [29029] nptl: poll() spuriously returns EINTR during thread
     cancellation and with cancellation disabled
   [29039] Corrupt DTV after reuse of a TLS module ID following dlclose with unused TLS
