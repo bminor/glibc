@@ -16,20 +16,35 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <stdint.h>
 #include <tst-string-rtm.h>
+
+#ifdef WIDE
+# define CHAR wchar_t
+# define MEMSET wmemset
+# define STRNCMP wcsncmp
+# define TEST_NAME "wcsncmp"
+#else /* !WIDE */
+# define CHAR char
+# define MEMSET memset
+# define STRNCMP strncmp
+# define TEST_NAME "strncmp"
+#endif /* !WIDE */
+
+
 
 #define LOOP 3000
 #define STRING_SIZE 1024
-char string1[STRING_SIZE];
-char string2[STRING_SIZE];
+CHAR string1[STRING_SIZE];
+CHAR string2[STRING_SIZE];
 
 __attribute__ ((noinline, noclone))
 static int
 prepare (void)
 {
-  memset (string1, 'a', STRING_SIZE - 1);
-  memset (string2, 'a', STRING_SIZE - 1);
-  if (strncmp (string1, string2, STRING_SIZE) == 0)
+  MEMSET (string1, 'a', STRING_SIZE - 1);
+  MEMSET (string2, 'a', STRING_SIZE - 1);
+  if (STRNCMP (string1, string2, STRING_SIZE) == 0)
     return EXIT_SUCCESS;
   else
     return EXIT_FAILURE;
@@ -39,7 +54,17 @@ __attribute__ ((noinline, noclone))
 static int
 function (void)
 {
-  if (strncmp (string1, string2, STRING_SIZE) == 0)
+  if (STRNCMP (string1, string2, STRING_SIZE) == 0)
+    return 0;
+  else
+    return 1;
+}
+
+__attribute__ ((noinline, noclone))
+static int
+function_overflow (void)
+{
+  if (STRNCMP (string1, string2, SIZE_MAX) == 0)
     return 0;
   else
     return 1;
@@ -48,5 +73,9 @@ function (void)
 static int
 do_test (void)
 {
-  return do_test_1 ("strncmp", LOOP, prepare, function);
+  int status = do_test_1 (TEST_NAME, LOOP, prepare, function);
+  if (status != EXIT_SUCCESS)
+    return status;
+  status = do_test_1 (TEST_NAME, LOOP, prepare, function_overflow);
+  return status;
 }

@@ -71,7 +71,6 @@ update_usable (struct cpu_features *cpu_features)
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_6);
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_7);
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_9);
-  CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_11);
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_12);
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_13);
   CPU_FEATURE_UNSET (cpu_features, INDEX_7_EDX_17);
@@ -318,6 +317,9 @@ update_usable (struct cpu_features *cpu_features)
   /* Determine if PKU is usable.  */
   if (CPU_FEATURES_CPU_P (cpu_features, OSPKE))
     CPU_FEATURE_SET (cpu_features, PKU);
+
+  if (CPU_FEATURES_CPU_P (cpu_features, RTM_ALWAYS_ABORT))
+    CPU_FEATURE_UNSET (cpu_features, RTM);
 }
 
 static void
@@ -516,11 +518,39 @@ init_cpu_features (struct cpu_features *cpu_features)
 	      break;
 	    }
 
-	 /* Disable TSX on some Haswell processors to avoid TSX on kernels that
-	    weren't updated with the latest microcode package (which disables
-	    broken feature by default).  */
+	 /* Disable TSX on some processors to avoid TSX on kernels that
+	    weren't updated with the latest microcode package (which
+	    disables broken feature by default).  */
 	 switch (model)
 	    {
+	    case 0x55:
+	      if (stepping <= 5)
+		goto disable_tsx;
+	      break;
+	    case 0x8e:
+	      /* NB: Although the errata documents that for model == 0x8e,
+		 only 0xb stepping or lower are impacted, the intention of
+		 the errata was to disable TSX on all client processors on
+		 all steppings.  Include 0xc stepping which is an Intel
+		 Core i7-8665U, a client mobile processor.  */
+	    case 0x9e:
+	      if (stepping > 0xc)
+		break;
+	      /* Fall through.  */
+	    case 0x4e:
+	    case 0x5e:
+	      {
+		/* Disable Intel TSX and enable RTM_ALWAYS_ABORT for
+		   processors listed in:
+
+https://www.intel.com/content/www/us/en/support/articles/000059422/processors.html
+		 */
+disable_tsx:
+		CPU_FEATURE_UNSET (cpu_features, HLE);
+		CPU_FEATURE_UNSET (cpu_features, RTM);
+		CPU_FEATURE_SET (cpu_features, RTM_ALWAYS_ABORT);
+	      }
+	      break;
 	    case 0x3f:
 	      /* Xeon E7 v3 with stepping >= 4 has working TSX.  */
 	      if (stepping >= 4)
