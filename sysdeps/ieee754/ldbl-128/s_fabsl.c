@@ -24,11 +24,9 @@ static char rcsid[] = "$NetBSD: $";
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
 
-_Float128 __fabsl(_Float128 x)
+_Float128
+__fabsl (_Float128 x)
 {
-	uint64_t hx;
-	GET_LDOUBLE_MSW64(hx,x);
-	SET_LDOUBLE_MSW64(x,hx&0x7fffffffffffffffLL);
-        return x;
+  return __builtin_fabsf128 (x);
 }
 libm_alias_ldouble (__fabs, fabs)

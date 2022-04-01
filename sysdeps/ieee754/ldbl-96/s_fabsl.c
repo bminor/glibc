@@ -1,5 +1,5 @@
-/* Absolute value of floating point number.
-   Copyright (C) 2002-2022 Free Software Foundation, Inc.
+/* Absolute value of floating-point number.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
+#include <math.h>
 #include <libm-alias-ldouble.h>
+#include <math-use-builtins.h>
 
-       .text
-ENTRY(__fabsl)
-       fldt    8(%rsp)
-       fabs
-       ret
-END(__fabsl)
+long double
+__fabsl (long double x)
+{
+  return __builtin_fabsl (x);
+}
 libm_alias_ldouble (__fabs, fabs)

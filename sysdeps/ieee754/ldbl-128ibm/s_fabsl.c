@@ -24,9 +24,13 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 #include <math_ldbl_opt.h>
+#include <math-use-builtins.h>
 
 long double __fabsl(long double x)
 {
+#if USE_FABSL_BUILTIN
+	return __builtin_fabsl (x);
+#else
 	uint64_t hx, lx;
 	double xhi, xlo;
 
@@ -39,5 +43,6 @@ long double __fabsl(long double x)
 	INSERT_WORDS64 (xlo, lx);
 	x = ldbl_pack (xhi, xlo);
 	return x;
+#endif
 }
 long_double_symbol (libm, __fabsl, fabsl);
