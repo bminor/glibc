@@ -14,9 +14,15 @@
   movq r, %rax; \
   vpbroadcastd %xmm0, %ymm0
 
-# define SECTION(p)		p##.avx
-# define MEMSET_SYMBOL(p,s)	p##_avx2_##s
-# define WMEMSET_SYMBOL(p,s)	p##_avx2_##s
+# ifndef SECTION
+#  define SECTION(p)		p##.avx
+# endif
+# ifndef MEMSET_SYMBOL
+#  define MEMSET_SYMBOL(p,s)	p##_avx2_##s
+# endif
+# ifndef WMEMSET_SYMBOL
+#  define WMEMSET_SYMBOL(p,s)	p##_avx2_##s
+# endif
 
 # include "memset-vec-unaligned-erms.S"
 #endif
