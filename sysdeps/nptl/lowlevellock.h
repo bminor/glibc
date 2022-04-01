@@ -125,9 +125,9 @@ libc_hidden_proto (__lll_lock_wait)
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
 
 
-extern void __lll_lock_wake_private (int *futex);
+extern void __lll_lock_wake_private (int *futex) __THROW;
 libc_hidden_proto (__lll_lock_wake_private)
-extern void __lll_lock_wake (int *futex, int private);
+extern void __lll_lock_wake (int *futex, int private) __THROW;
 libc_hidden_proto (__lll_lock_wake)
 
 /* This is an expression rather than a statement even though its value is

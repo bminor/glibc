@@ -1495,6 +1495,11 @@ rtld-stubbed-symbols += \
   __GI___vsyslog_chk \
   # rtld-stubbed-symbols
 
+# clang might generate an abort call for cleanup functions.
+rtld-stubbed-symbols += \
+  __GI_abort \
+  # rtld-stubbed-symbols
+
 ifeq ($(have-ssp),yes)
 # rtld is not built with the stack protector, so these references will
 # go away in the rebuilds.
