@@ -1163,7 +1163,8 @@ enum
     (__builtin_types_compatible_p (__typeof (x), _Float128) \
      ? __isinff128 (x) : __builtin_isinf_sign (x))
 # elif (__GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__) \
-       || __glibc_clang_prereq (3,7)
+       || __glibc_clang_prereq (3,7) \
+       && __FP_BUILTIN_DENORMAL
 #  define isinf(x) __builtin_isinf_sign (x)
 # else
 #  define isinf(x) __MATH_TG ((x), __isinf, (x))
