@@ -1083,6 +1083,8 @@ enum
       FP_NORMAL
   };
 
+#include <bits/fp-builtin-denormal.h>
+
 /* GCC bug 66462 means we cannot use the math builtins with -fsignaling-nan,
    so disable builtins if this is enabled.  When fixed in a newer GCC,
    the __SUPPORT_SNAN__ check may be skipped for those versions.  */
@@ -1090,6 +1092,7 @@ enum
 /* Return number of classification appropriate for X.  */
 # if ((__GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__)		      \
       || __glibc_clang_prereq (2,8))					      \
+      && __FP_BUILTIN_DENORMAL						      \
      && (!defined __OPTIMIZE_SIZE__ || defined __cplusplus)
      /* The check for __cplusplus allows the use of the builtin, even
 	when optimization for size is on.  This is provided for
@@ -1131,7 +1134,8 @@ enum
 
 /* Return nonzero value if X is neither zero, subnormal, Inf, nor NaN.  */
 # if (__GNUC_PREREQ (4,4) && !defined __SUPPORT_SNAN__) \
-     || __glibc_clang_prereq (2,8)
+     || __glibc_clang_prereq (2,8) \
+     && __FP_BUILTIN_DENORMAL
 #  define isnormal(x) __builtin_isnormal (x)
 # else
 #  define isnormal(x) (fpclassify (x) == FP_NORMAL)
