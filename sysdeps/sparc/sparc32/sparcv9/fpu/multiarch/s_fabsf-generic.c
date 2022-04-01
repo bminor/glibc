@@ -2,4 +2,4 @@
 #define __fabsf __fabsf_generic
 #undef libm_alias_float
 #define libm_alias_float(a, b)
-#include <sysdeps/sparc/sparc32/fpu/s_fabsf.S>
+#include <sysdeps/ieee754/flt-32/s_fabsf.c>

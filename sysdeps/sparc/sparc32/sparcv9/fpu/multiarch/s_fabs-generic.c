@@ -2,4 +2,4 @@
 #define __fabs __fabs_generic
 #undef libm_alias_double
 #define libm_alias_double(a, b)
-#include <sysdeps/sparc/sparc32/fpu/s_fabs.S>
+#include <sysdeps/ieee754/dbl-64/s_fabs.c>
