@@ -183,7 +183,6 @@ do_test (void)
 #else
   extern int asprintf_alias (char **, const char *, ...) __asm__ ("asprintf");
 #endif
-  TEST_VERIFY (asprintf_alias == asprintf);
   char *str = NULL;
   TEST_VERIFY (asprintf_alias (&str, "[[%P]]", 123L, 456.0) >= 0);
   TEST_COMPARE_STRING (str, "[[(123, 456.000000)]]");
