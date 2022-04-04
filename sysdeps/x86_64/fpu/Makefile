@@ -75,7 +75,7 @@ ifeq ($(subdir)$(config-cflags-mprefer-vector-width),mathyes)
 CFLAGS-branred.c = -mprefer-vector-width=128
 endif
 
-ifeq ($(subdir),benchtests)
+ifeq ($(subdir)$(build-mathvec),benchtestsyes)
 double-vlen4-arch-ext-cflags = -mavx
 double-vlen4-arch-ext2-cflags = -mavx2
 double-vlen8-arch-ext-cflags = -mavx512f
