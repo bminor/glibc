@@ -56,9 +56,6 @@
 #undef	STACK_PROTECTOR_LEVEL
 #endif
 
-/* Define if the linker supports the -z combreloc option.  */
-#undef	HAVE_Z_COMBRELOC
-
 /* Define if _rtld_local structure should be forced into .sdata section.  */
 #undef	HAVE_SDATA_SECTION
 

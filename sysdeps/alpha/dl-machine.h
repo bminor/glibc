@@ -371,37 +371,22 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
   Elf64_Addr *const reloc_addr = reloc_addr_arg;
   unsigned long int const r_type = ELF64_R_TYPE (reloc->r_info);
 
-#if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC && !defined SHARED
-  /* This is defined in rtld.c, but nowhere in the static libc.a; make the
-     reference weak so static programs can still link.  This declaration
-     cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
-     because rtld.c contains the common defn for _dl_rtld_map, which is
-     incompatible with a weak decl in the same file.  */
-  weak_extern (_dl_rtld_map);
-#endif
-
   /* We cannot use a switch here because we cannot locate the switch
      jump table until we've self-relocated.  */
 
-#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
+#if !defined RTLD_BOOTSTRAP
   if (__builtin_expect (r_type == R_ALPHA_RELATIVE, 0))
     {
-# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
-      /* Already done in dynamic linker.  */
-      if (map != &GL(dl_rtld_map))
-# endif
-	{
-	  /* XXX Make some timings.  Maybe it's preferable to test for
-	     unaligned access and only do it the complex way if necessary.  */
-	  Elf64_Addr reloc_addr_val;
+	/* XXX Make some timings.  Maybe it's preferable to test for
+	   unaligned access and only do it the complex way if necessary.  */
+	Elf64_Addr reloc_addr_val;
 
-	  /* Load value without causing unaligned trap. */
-	  memcpy (&reloc_addr_val, reloc_addr_arg, 8);
-	  reloc_addr_val += map->l_addr;
+	/* Load value without causing unaligned trap. */
+	memcpy (&reloc_addr_val, reloc_addr_arg, 8);
+	reloc_addr_val += map->l_addr;
 
-	  /* Store value without causing unaligned trap. */
-	  memcpy (reloc_addr_arg, &reloc_addr_val, 8);
-	}
+	/* Store value without causing unaligned trap. */
+	memcpy (reloc_addr_arg, &reloc_addr_val, 8);
     }
   else
 #endif

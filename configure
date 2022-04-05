@@ -625,7 +625,6 @@ libc_cv_has_glob_dat
 libc_cv_hashstyle
 libc_cv_fpie
 libc_cv_z_execstack
-libc_cv_z_combreloc
 ASFLAGS_config
 libc_cv_cc_with_libunwind
 libc_cv_insert
@@ -5964,44 +5963,6 @@ fi
 $as_echo "$libc_cv_as_noexecstack" >&6; }
 if test $libc_cv_as_noexecstack = yes; then
   ASFLAGS_config="$ASFLAGS_config -Wa,--noexecstack"
-fi
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -z combreloc" >&5
-$as_echo_n "checking for -z combreloc... " >&6; }
-if ${libc_cv_z_combreloc+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<EOF
-extern int bar (int);
-extern int mumble;
-int foo (void) { return bar (mumble); }
-EOF
-if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			-fPIC -shared $no_ssp -o conftest.so conftest.c
-			-nostdlib -nostartfiles
-			-Wl,-z,combreloc 1>&5'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }
-then
-  if $READELF -S conftest.so | grep -E '.rela?.dyn' > /dev/null; then
-    libc_cv_z_combreloc=yes
-  else
-    libc_cv_z_combreloc=no
-  fi
-else
-  libc_cv_z_combreloc=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_z_combreloc" >&5
-$as_echo "$libc_cv_z_combreloc" >&6; }
-if test "$libc_cv_z_combreloc" = yes; then
-  $as_echo "#define HAVE_Z_COMBRELOC 1" >>confdefs.h
-
 fi
 
 

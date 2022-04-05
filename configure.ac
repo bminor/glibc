@@ -1324,37 +1324,6 @@ if test $libc_cv_as_noexecstack = yes; then
 fi
 AC_SUBST(ASFLAGS_config)
 
-AC_CACHE_CHECK(for -z combreloc,
-	       libc_cv_z_combreloc, [dnl
-cat > conftest.c <<EOF
-extern int bar (int);
-extern int mumble;
-int foo (void) { return bar (mumble); }
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
-			-fPIC -shared $no_ssp -o conftest.so conftest.c
-			-nostdlib -nostartfiles
-			-Wl,-z,combreloc 1>&AS_MESSAGE_LOG_FD])
-then
-dnl The following test is a bit weak.  We must use a tool which can test
-dnl cross-platform since the gcc used can be a cross compiler.  Without
-dnl introducing new options this is not easily doable.  Instead use a tool
-dnl which always is cross-platform: readelf.  To detect whether -z combreloc
-dnl look for a section named .rel.dyn or .rela.dyn.
-  if $READELF -S conftest.so | grep -E '.rela?.dyn' > /dev/null; then
-    libc_cv_z_combreloc=yes
-  else
-    libc_cv_z_combreloc=no
-  fi
-else
-  libc_cv_z_combreloc=no
-fi
-rm -f conftest*])
-if test "$libc_cv_z_combreloc" = yes; then
-  AC_DEFINE(HAVE_Z_COMBRELOC)
-fi
-AC_SUBST(libc_cv_z_combreloc)
-
 LIBC_LINKER_FEATURE([-z execstack], [-Wl,-z,execstack],
 		    [libc_cv_z_execstack=yes], [libc_cv_z_execstack=no])
 AC_SUBST(libc_cv_z_execstack)

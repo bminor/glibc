@@ -557,15 +557,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
   struct link_map *sym_map;
   Elf32_Addr value;
 
-# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC && !defined SHARED
-  /* This is defined in rtld.c, but nowhere in the static libc.a; make the
-     reference weak so static programs can still link.  This declaration
-     cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
-     because rtld.c contains the common defn for _dl_rtld_map, which is
-     incompatible with a weak decl in the same file.  */
-  weak_extern (GL(dl_rtld_map));
-# endif
-
   /* RESOLVE_MAP will return a null value for undefined syms, and
      non-null for all other syms.  In particular, relocs with no
      symbol (symbol index of zero), also called *ABS* relocs, will be

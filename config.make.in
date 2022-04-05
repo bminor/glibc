@@ -53,7 +53,6 @@ c++-bits-std_abs-h = @CXX_BITS_STD_ABS_H@
 all-warnings = @all_warnings@
 enable-werror = @enable_werror@
 
-have-z-combreloc = @libc_cv_z_combreloc@
 have-z-execstack = @libc_cv_z_execstack@
 have-protected-data = @libc_cv_protected_data@
 have-insert = @libc_cv_insert@

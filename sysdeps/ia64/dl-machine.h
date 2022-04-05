@@ -383,29 +383,15 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
   const unsigned long int r_type = ELF64_R_TYPE (reloc->r_info);
   Elf64_Addr value;
 
-#if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC && !defined SHARED
-  /* This is defined in rtld.c, but nowhere in the static libc.a; make the
-     reference weak so static programs can still link.  This declaration
-     cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
-     because rtld.c contains the common defn for _dl_rtld_map, which is
-     incompatible with a weak decl in the same file.  */
-  weak_extern (_dl_rtld_map);
-#endif
-
   /* We cannot use a switch here because we cannot locate the switch
      jump table until we've self-relocated.  */
 
-#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
+#if !defined RTLD_BOOTSTRAP
   if (__builtin_expect (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_REL64LSB),
 			0))
     {
       assert (ELF64_R_TYPE (reloc->r_info) == R_IA64_REL64LSB);
-      value = *reloc_addr;
-# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
-      /* Already done in dynamic linker.  */
-      if (map != &GL(dl_rtld_map))
-# endif
-	value += map->l_addr;
+      value = *reloc_addr + map->l_addr;
     }
   else
 #endif

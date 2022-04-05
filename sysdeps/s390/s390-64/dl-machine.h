@@ -276,23 +276,9 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
   Elf64_Addr *const reloc_addr = reloc_addr_arg;
   const unsigned int r_type = ELF64_R_TYPE (reloc->r_info);
 
-#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
+#if !defined RTLD_BOOTSTRAP
   if (__glibc_unlikely (r_type == R_390_RELATIVE))
-    {
-# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
-      /* This is defined in rtld.c, but nowhere in the static libc.a;
-	 make the reference weak so static programs can still link.
-	 This declaration cannot be done when compiling rtld.c
-	 (i.e. #ifdef RTLD_BOOTSTRAP) because rtld.c contains the
-	 common defn for _dl_rtld_map, which is incompatible with a
-	 weak decl in the same file.  */
-#  ifndef SHARED
-      weak_extern (GL(dl_rtld_map));
-#  endif
-      if (map != &GL(dl_rtld_map)) /* Already done in rtld itself.  */
-# endif
-	*reloc_addr = map->l_addr + reloc->r_addend;
-    }
+    *reloc_addr = map->l_addr + reloc->r_addend;
   else
 #endif
   if (__glibc_unlikely (r_type == R_390_NONE))
