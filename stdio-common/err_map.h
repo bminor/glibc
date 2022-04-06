@@ -1,5 +1,5 @@
 /* Internal errno names mapping definition.
-   Copyright (C) 1991-2022 Free Software Foundation, Inc.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <array_length.h>
-#include <err_map.h>
-#include <errno.h>
-#include <libintl.h>
-#include <stdio.h>
+#ifndef _ERR_MAP_H
+#define _ERR_MAP_H
 
-const char *
-__get_errlist (int errnum)
-{
-  int mapped = ERR_MAP (errnum);
-  if (mapped >= 0 && mapped < _sys_errlist_internal_len)
-    return _sys_errlist_internal[mapped];
-  return NULL;
-}
+#define ERR_MAP(n) (n)
+
+#endif

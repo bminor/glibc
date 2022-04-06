@@ -1,4 +1,5 @@
-/* Copyright (C) 1998-2022 Free Software Foundation, Inc.
+/* Internal errno names mapping definition.  Hurd version.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,7 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef _ERR_MAP_H
+#define _ERR_MAP_H
+
 #include <mach/error.h>
 
 #define ERR_MAP(value) err_get_code (value)
-#include <stdio-common/errlist.c>
+
+#endif

@@ -1030,7 +1030,8 @@ ifeq (yes,$(build-shared))
 # Under --enable-shared, we will build a shared library of PIC objects.
 # The PIC object files are named foo.os.
 object-suffixes += .os
-CPPFLAGS-.os = -DPIC -DSHARED
+pic-cppflags = -DPIC -DSHARED
+CPPFLAGS-.os = $(pic-cppflags)
 CFLAGS-.os = $(filter %frame-pointer,$(+cflags)) $(pic-ccflag)
 libtype.os := lib%_pic.a
 # This can be changed by a sysdep makefile

@@ -88,6 +88,7 @@ routines := \
 
 aux := \
   errlist \
+  errlist-data \
   errname \
   fxprintf \
   printf-parsemb \
@@ -211,6 +212,10 @@ tests := \
   xbug \
   # tests
 
+generated += \
+  errlist-data-aux-shared.S \
+  errlist-data-aux.S \
+  # generated
 
 test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble
 
@@ -245,6 +250,20 @@ endif # $(run-built-tests)
 tests-special += $(objpfx)tst-errno-manual.out
 
 include ../Rules
+
+# The errlist.c is built in two phases because compiler might reorder the
+# compat_symbol directive prior the object itself and on binutils older
+# than 2.29 it might generate object sizes different than the expected ones.
+$(objpfx)errlist-data-aux-shared.S: errlist-data-gen.c
+	$(make-target-directory)
+	$(compile-command.c) $(pic-cppflags) $(pic-ccflag) $(no-stack-protector) -S
+
+$(objpfx)errlist-data-aux.S: errlist-data-gen.c
+	$(make-target-directory)
+	$(compile-command.c) $(pie-default) $(no-stack-protector) -S
+
+$(objpfx)errlist-data.os: $(objpfx)errlist-data-aux-shared.S
+$(objpfx)errlist-data.o: $(objpfx)errlist-data-aux.S
 
 ifeq ($(run-built-tests),yes)
 LOCALES := \
@@ -334,7 +353,6 @@ CFLAGS-isoc99_vfscanf.c += -fexceptions
 CFLAGS-isoc99_vscanf.c += -fexceptions
 CFLAGS-isoc99_fscanf.c += -fexceptions
 CFLAGS-isoc99_scanf.c += -fexceptions
-CFLAGS-errlist.c += $(fno-unit-at-a-time)
 CFLAGS-siglist.c += $(fno-unit-at-a-time)
 
 # scanf14a.c and scanf16a.c test a deprecated extension which is no

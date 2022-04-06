@@ -180,6 +180,7 @@ int __vfxprintf (FILE *__fp, const char *__fmt, __gnuc_va_list,
   attribute_hidden;
 
 extern const char *const _sys_errlist_internal[] attribute_hidden;
+extern const size_t _sys_errlist_internal_len attribute_hidden;
 extern const char *__get_errlist (int) attribute_hidden;
 extern const char *__get_errname (int) attribute_hidden;
 
