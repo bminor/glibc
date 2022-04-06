@@ -30,19 +30,26 @@ int
 __pthread_enable_asynccancel (void)
 {
   struct pthread *self = THREAD_SELF;
+  int oldval = atomic_load_relaxed (&self->cancelhandling);
 
-  int oldval = THREAD_GETMEM (self, canceltype);
-  THREAD_SETMEM (self, canceltype, PTHREAD_CANCEL_ASYNCHRONOUS);
-
-  int ch = THREAD_GETMEM (self, cancelhandling);
-
-  if (self->cancelstate == PTHREAD_CANCEL_ENABLE
-      && (ch & CANCELED_BITMASK)
-      && !(ch & EXITING_BITMASK)
-      && !(ch & TERMINATED_BITMASK))
+  while (1)
     {
-      THREAD_SETMEM (self, result, PTHREAD_CANCELED);
-      __do_cancel ();
+      int newval = oldval | CANCELTYPE_BITMASK;
+
+      if (newval == oldval)
+	break;
+
+      if (atomic_compare_exchange_weak_acquire (&self->cancelhandling,
+						&oldval, newval))
+	{
+	  if (cancel_enabled_and_canceled_and_async (newval))
+	    {
+	      self->result = PTHREAD_CANCELED;
+	      __do_cancel ();
+	    }
+
+	  break;
+	}
     }
 
   return oldval;
@@ -56,10 +63,29 @@ __pthread_disable_asynccancel (int oldtype)
 {
   /* If asynchronous cancellation was enabled before we do not have
      anything to do.  */
-  if (oldtype == PTHREAD_CANCEL_ASYNCHRONOUS)
+  if (oldtype & CANCELTYPE_BITMASK)
     return;
 
   struct pthread *self = THREAD_SELF;
-  self->canceltype = PTHREAD_CANCEL_DEFERRED;
+  int newval;
+  int oldval = atomic_load_relaxed (&self->cancelhandling);
+  do
+    {
+      newval = oldval & ~CANCELTYPE_BITMASK;
+    }
+  while (!atomic_compare_exchange_weak_acquire (&self->cancelhandling,
+						&oldval, newval));
+
+  /* We cannot return when we are being canceled.  Upon return the
+     thread might be things which would have to be undone.  The
+     following loop should loop until the cancellation signal is
+     delivered.  */
+  while (__glibc_unlikely ((newval & (CANCELING_BITMASK | CANCELED_BITMASK))
+			   == CANCELING_BITMASK))
+    {
+      futex_wait_simple ((unsigned int *) &self->cancelhandling, newval,
+			 FUTEX_PRIVATE);
+      newval = atomic_load_relaxed (&self->cancelhandling);
+    }
 }
 libc_hidden_def (__pthread_disable_asynccancel)

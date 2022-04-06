@@ -42,18 +42,29 @@ sigcancel_handler (int sig, siginfo_t *si, void *ctx)
 
   struct pthread *self = THREAD_SELF;
 
-  int ch = atomic_load_relaxed (&self->cancelhandling);
-  /* Cancelation not enabled, not cancelled, or already exitting.  */
-  if (self->cancelstate == PTHREAD_CANCEL_DISABLE
-      || (ch & CANCELED_BITMASK) == 0
-      || (ch & EXITING_BITMASK) != 0)
-    return;
+  int oldval = atomic_load_relaxed (&self->cancelhandling);
+  while (1)
+    {
+      /* We are canceled now.  When canceled by another thread this flag
+	 is already set but if the signal is directly send (internally or
+	 from another process) is has to be done here.  */
+      int newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
 
-  /* Set the return value.  */
-  THREAD_SETMEM (self, result, PTHREAD_CANCELED);
-  /* Make sure asynchronous cancellation is still enabled.  */
-  if (self->canceltype == PTHREAD_CANCEL_ASYNCHRONOUS)
-    __do_cancel ();
+      if (oldval == newval || (oldval & EXITING_BITMASK) != 0)
+	/* Already canceled or exiting.  */
+	break;
+
+      if (atomic_compare_exchange_weak_acquire (&self->cancelhandling,
+						&oldval, newval))
+	{
+	  self->result = PTHREAD_CANCELED;
+
+	  /* Make sure asynchronous cancellation is still enabled.  */
+	  if ((oldval & CANCELTYPE_BITMASK) != 0)
+	    /* Run the registered destructors and terminate the thread.  */
+	    __do_cancel ();
+	}
+    }
 }
 
 int
@@ -92,29 +103,70 @@ __pthread_cancel (pthread_t th)
   }
 #endif
 
-  int oldch = atomic_fetch_or_acquire (&pd->cancelhandling, CANCELED_BITMASK);
-  if ((oldch & CANCELED_BITMASK) != 0)
-    return 0;
+  /* Some syscalls are never restarted after being interrupted by a signal
+     handler, regardless of the use of SA_RESTART (they always fail with
+     EINTR).  So pthread_cancel cannot send SIGCANCEL unless the cancellation
+     is enabled and set as asynchronous (in this case the cancellation will
+     be acted in the cancellation handler instead by the syscall wrapper).
+     Otherwise the target thread is set as 'cancelling' (CANCELING_BITMASK)
+     by atomically setting 'cancelhandling' and the cancelation will be acted
+     upon on next cancellation entrypoing in the target thread.
 
-  if (pd == THREAD_SELF)
+     It also requires to atomically check if cancellation is enabled and
+     asynchronous, so both cancellation state and type are tracked on
+     'cancelhandling'.  */
+
+  int result = 0;
+  int oldval = atomic_load_relaxed (&pd->cancelhandling);
+  int newval;
+  do
     {
-      /* A single-threaded process should be able to kill itself, since there
-	 is nothing in the POSIX specification that says that it cannot.  So
-	 we set multiple_threads to true so that cancellation points get
-	 executed.  */
-      THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
+      newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
+      if (oldval == newval)
+	break;
+
+      /* If the cancellation is handled asynchronously just send a
+	 signal.  We avoid this if possible since it's more
+	 expensive.  */
+      if (cancel_enabled_and_canceled_and_async (newval))
+	{
+	  /* Mark the cancellation as "in progress".  */
+	  int newval2 = oldval | CANCELING_BITMASK;
+	  if (!atomic_compare_exchange_weak_acquire (&pd->cancelhandling,
+						     &oldval, newval2))
+	    continue;
+
+	  if (pd == THREAD_SELF)
+	    /* This is not merely an optimization: An application may
+	       call pthread_cancel (pthread_self ()) without calling
+	       pthread_create, so the signal handler may not have been
+	       set up for a self-cancel.  */
+	    {
+	      pd->result = PTHREAD_CANCELED;
+	      if ((newval & CANCELTYPE_BITMASK) != 0)
+		__do_cancel ();
+	    }
+	  else
+	    /* The cancellation handler will take care of marking the
+	       thread as canceled.  */
+	    result = __pthread_kill_internal (th, SIGCANCEL);
+
+	  break;
+	}
+
+	/* A single-threaded process should be able to kill itself, since
+	   there is nothing in the POSIX specification that says that it
+	   cannot.  So we set multiple_threads to true so that cancellation
+	   points get executed.  */
+	THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
       __libc_multiple_threads = 1;
 #endif
-
-      THREAD_SETMEM (pd, result, PTHREAD_CANCELED);
-      if (pd->cancelstate == PTHREAD_CANCEL_ENABLE
-	  && pd->canceltype == PTHREAD_CANCEL_ASYNCHRONOUS)
-	__do_cancel ();
-      return 0;
     }
+  while (!atomic_compare_exchange_weak_acquire (&pd->cancelhandling, &oldval,
+						newval));
 
-  return __pthread_kill_internal (th, SIGCANCEL);
+  return result;
 }
 versioned_symbol (libc, __pthread_cancel, pthread_cancel, GLIBC_2_34);
 
