@@ -54,11 +54,10 @@
 #endif /* WIDE */
 
 typedef CHAR *(*proto_t) (CHAR *, const CHAR *);
-CHAR *SIMPLE_STRCAT (CHAR *, const CHAR *);
 
-IMPL (SIMPLE_STRCAT, 0)
 IMPL (STRCAT, 1)
 
+/* Naive implementation to verify results.  */
 CHAR *
 SIMPLE_STRCAT (CHAR *dst, const CHAR *src)
 {

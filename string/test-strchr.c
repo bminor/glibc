@@ -35,7 +35,6 @@
 #ifndef WIDE
 # ifdef USE_FOR_STRCHRNUL
 #  define STRCHR strchrnul
-#  define stupid_STRCHR stupid_STRCHRNUL
 #  define simple_STRCHR simple_STRCHRNUL
 # else
 #  define STRCHR strchr
@@ -51,7 +50,6 @@
 # include <wchar.h>
 # ifdef USE_FOR_STRCHRNUL
 #  define STRCHR wcschrnul
-#  define stupid_STRCHR stupid_WCSCHRNUL
 #  define simple_STRCHR simple_WCSCHRNUL
 # else
 #  define STRCHR wcschr
@@ -74,17 +72,9 @@
 
 typedef CHAR *(*proto_t) (const CHAR *, int);
 
+/* Naive implementation to verify results.  */
 CHAR *
 simple_STRCHR (const CHAR *s, int c)
-{
-  for (; *s != (CHAR) c; ++s)
-    if (*s == '\0')
-      return NULLRET ((CHAR *) s);
-  return (CHAR *) s;
-}
-
-CHAR *
-stupid_STRCHR (const CHAR *s, int c)
 {
   size_t n = STRLEN (s) + 1;
 
@@ -94,8 +84,6 @@ stupid_STRCHR (const CHAR *s, int c)
   return NULLRET ((CHAR *) s - 1);
 }
 
-IMPL (stupid_STRCHR, 0)
-IMPL (simple_STRCHR, 0)
 IMPL (STRCHR, 1)
 
 static int
@@ -231,7 +219,7 @@ check1 (void)
 {
   CHAR s[] __attribute__((aligned(16))) = L ("\xff");
   CHAR c = L ('\xfe');
-  CHAR *exp_result = stupid_STRCHR (s, c);
+  CHAR *exp_result = simple_STRCHR (s, c);
 
   FOR_EACH_IMPL (impl, 0)
     check_result (impl, s, c, exp_result);

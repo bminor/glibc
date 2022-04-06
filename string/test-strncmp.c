@@ -88,7 +88,6 @@ simple_strncmp (const char *s1, const char *s2, size_t n)
 
 typedef int (*proto_t) (const CHAR *, const CHAR *, size_t);
 
-IMPL (SIMPLE_STRNCMP, 0)
 IMPL (STRNCMP, 1)
 
 

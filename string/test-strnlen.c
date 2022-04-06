@@ -42,11 +42,10 @@
 #endif /* !WIDE */
 
 typedef size_t (*proto_t) (const CHAR *, size_t);
-size_t SIMPLE_STRNLEN (const CHAR *, size_t);
 
-IMPL (SIMPLE_STRNLEN, 0)
 IMPL (STRNLEN, 1)
 
+/* Naive implementation to verify results.  */
 size_t
 SIMPLE_STRNLEN (const CHAR *s, size_t maxlen)
 {

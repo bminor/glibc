@@ -20,13 +20,9 @@
 #define TEST_NAME "memccpy"
 #include "test-string.h"
 
-void *simple_memccpy (void *, const void *, int, size_t);
-void *stupid_memccpy (void *, const void *, int, size_t);
-
-IMPL (stupid_memccpy, 0)
-IMPL (simple_memccpy, 0)
 IMPL (memccpy, 1)
 
+/* Naive implementation to verify results.  */
 void *
 simple_memccpy (void *dst, const void *src, int c, size_t n)
 {
@@ -37,18 +33,6 @@ simple_memccpy (void *dst, const void *src, int c, size_t n)
     if ((*d++ = *s++) == (char) c)
       return d;
 
-  return NULL;
-}
-
-void *
-stupid_memccpy (void *dst, const void *src, int c, size_t n)
-{
-  void *p = memchr (src, c, n);
-
-  if (p != NULL)
-    return mempcpy (dst, src, p - src + 1);
-
-  memcpy (dst, src, n);
   return NULL;
 }
 

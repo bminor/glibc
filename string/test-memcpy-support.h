@@ -29,12 +29,9 @@
 #define TIMEOUT (8 * 60)
 #include "test-string.h"
 
-char *simple_memcpy (char *, const char *, size_t);
-char *builtin_memcpy (char *, const char *, size_t);
-
-IMPL (simple_memcpy, 0)
-IMPL (builtin_memcpy, 0)
 IMPL (memcpy, 1)
+
+/* Naive implementation to verify results.  */
 char *
 simple_memcpy (char *dst, const char *src, size_t n)
 {
@@ -44,11 +41,6 @@ simple_memcpy (char *dst, const char *src, size_t n)
   return ret;
 }
 
-char *
-builtin_memcpy (char *dst, const char *src, size_t n)
-{
-  return __builtin_memcpy (dst, src, n);
-}
 #endif
 typedef char *(*proto_t) (char *, const char *, size_t);
 typedef uint32_t __attribute__ ((may_alias, aligned (1))) unaligned_uint32_t;

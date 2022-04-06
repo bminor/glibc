@@ -29,23 +29,23 @@ char *simple_memmove (char *, const char *, size_t);
 
 #ifdef TEST_BCOPY
 typedef void (*proto_t) (const char *, char *, size_t);
-void simple_bcopy (const char *, char *, size_t);
 
-IMPL (simple_bcopy, 0)
 IMPL (bcopy, 1)
 
+/* Naive implementation to verify results.  */
 void
 simple_bcopy (const char *src, char *dst, size_t n)
 {
   simple_memmove (dst, src, n);
 }
+
 #else
 typedef char *(*proto_t) (char *, const char *, size_t);
 
-IMPL (simple_memmove, 0)
 IMPL (memmove, 1)
 #endif
 
+/* Naive implementation to verify results.  */
 char *
 inhibit_loop_to_libcall
 simple_memmove (char *dst, const char *src, size_t n)

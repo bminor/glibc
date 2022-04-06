@@ -47,21 +47,16 @@
 # include "test-string.h"
 # ifndef WIDE
 #  define SIMPLE_STRNCPY simple_strncpy
-#  define STUPID_STRNCPY stupid_strncpy
 #  define STRNCPY strncpy
 # else
 #  define SIMPLE_STRNCPY simple_wcsncpy
-#  define STUPID_STRNCPY stupid_wcsncpy
 #  define STRNCPY wcsncpy
 # endif /* WIDE */
 
-CHAR *SIMPLE_STRNCPY (CHAR *, const CHAR *, size_t);
-CHAR *STUPID_STRNCPY (CHAR *, const CHAR *, size_t);
 
-IMPL (STUPID_STRNCPY, 0)
-IMPL (SIMPLE_STRNCPY, 0)
 IMPL (STRNCPY, 1)
 
+/* Naive implementation to verify results.  */
 CHAR *
 SIMPLE_STRNCPY (CHAR *dst, const CHAR *src, size_t n)
 {
@@ -76,18 +71,6 @@ SIMPLE_STRNCPY (CHAR *dst, const CHAR *src, size_t n)
   return ret;
 }
 
-CHAR *
-STUPID_STRNCPY (CHAR *dst, const CHAR *src, size_t n)
-{
-  size_t nc = STRNLEN (src, n);
-  size_t i;
-
-  for (i = 0; i < nc; ++i)
-    dst[i] = src[i];
-  for (; i < n; ++i)
-    dst[i] = '\0';
-  return dst;
-}
 #endif /* !STRNCPY_RESULT */
 
 typedef CHAR *(*proto_t) (CHAR *, const CHAR *, size_t);

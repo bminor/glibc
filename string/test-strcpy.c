@@ -54,11 +54,9 @@
 #  define STRCPY wcscpy
 # endif
 
-CHAR *SIMPLE_STRCPY (CHAR *, const CHAR *);
-
-IMPL (SIMPLE_STRCPY, 0)
 IMPL (STRCPY, 1)
 
+/* Naive implementation to verify results.  */
 CHAR *
 SIMPLE_STRCPY (CHAR *dst, const CHAR *src)
 {

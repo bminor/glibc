@@ -28,7 +28,6 @@
 # define CHAR char
 # define UCHAR unsigned char
 # define SIMPLE_STRNCAT simple_strncat
-# define STUPID_STRNCAT stupid_strncat
 # define STRLEN strlen
 # define MEMSET memset
 # define MEMCPY memcpy
@@ -41,7 +40,6 @@
 # define CHAR wchar_t
 # define UCHAR wchar_t
 # define SIMPLE_STRNCAT simple_wcsncat
-# define STUPID_STRNCAT stupid_wcsncat
 # define STRLEN wcslen
 # define MEMSET wmemset
 # define MEMCPY wmemcpy
@@ -51,14 +49,12 @@
 #endif /* WIDE */
 
 typedef CHAR *(*proto_t) (CHAR *, const CHAR *, size_t);
-CHAR *STUPID_STRNCAT (CHAR *, const CHAR *, size_t);
-CHAR *SIMPLE_STRNCAT (CHAR *, const CHAR *, size_t);
 
-IMPL (STUPID_STRNCAT, 0)
 IMPL (STRNCAT, 2)
 
+/* Naive implementation to verify results.  */
 CHAR *
-STUPID_STRNCAT (CHAR *dst, const CHAR *src, size_t n)
+SIMPLE_STRNCAT (CHAR *dst, const CHAR *src, size_t n)
 {
   CHAR *ret = dst;
   while (*dst++ != '\0');

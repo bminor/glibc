@@ -37,6 +37,7 @@
 
 typedef size_t (*proto_t) (const CHAR *);
 
+/* Naive implementation to verify results.  */
 size_t
 simple_STRLEN (const CHAR *s)
 {
@@ -55,7 +56,6 @@ builtin_strlen (const CHAR *p)
 IMPL (builtin_strlen, 0)
 #endif
 
-IMPL (simple_STRLEN, 0)
 IMPL (STRLEN, 1)
 
 

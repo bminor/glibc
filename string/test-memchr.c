@@ -44,11 +44,10 @@
 #endif /* WIDE */
 
 typedef CHAR *(*proto_t) (const CHAR *, int, size_t);
-CHAR *SIMPLE_MEMCHR (const CHAR *, int, size_t);
 
-IMPL (SIMPLE_MEMCHR, 0)
 IMPL (MEMCHR, 1)
 
+/* Naive implementation to verify results.  */
 CHAR *
 SIMPLE_MEMCHR (const CHAR *s, int c, size_t n)
 {

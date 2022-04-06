@@ -99,7 +99,6 @@ simple_strcmp (const char *s1, const char *s2)
 
 typedef int (*proto_t) (const CHAR *, const CHAR *);
 
-IMPL (SIMPLE_STRCMP, 1)
 IMPL (STRCMP, 1)
 
 static int

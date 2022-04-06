@@ -85,7 +85,6 @@ SIMPLE_MEMCMP (const char *s1, const char *s2, size_t n)
 
 typedef int (*proto_t) (const CHAR *, const CHAR *, size_t);
 
-IMPL (SIMPLE_MEMCMP, 0)
 IMPL (MEMCMP, 1)
 
 static int

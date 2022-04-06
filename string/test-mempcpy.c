@@ -22,11 +22,9 @@
 #define TEST_NAME "mempcpy"
 #include "test-string.h"
 
-char *simple_mempcpy (char *, const char *, size_t);
-
-IMPL (simple_mempcpy, 0)
 IMPL (mempcpy, 1)
 
+/* Naive implementation to verify results.  */
 char *
 simple_mempcpy (char *dst, const char *src, size_t n)
 {

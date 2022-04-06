@@ -21,11 +21,10 @@
 #include "test-string.h"
 
 typedef char *(*proto_t) (const char *, int, size_t);
-char *simple_memrchr (const char *, int, size_t);
 
-IMPL (simple_memrchr, 0)
 IMPL (memrchr, 1)
 
+/* Naive implementation to verify results.  */
 char *
 simple_memrchr (const char *s, int c, size_t n)
 {

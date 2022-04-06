@@ -23,11 +23,10 @@
 #include "test-string.h"
 
 typedef char *(*proto_t) (const void *, size_t, const void *, size_t);
-void *simple_memmem (const void *, size_t, const void *, size_t);
 
-IMPL (simple_memmem, 0)
 IMPL (memmem, 1)
 
+/* Naive implementation to verify results.  */
 void *
 simple_memmem (const void *haystack, size_t haystack_len, const void *needle,
 	       size_t needle_len)

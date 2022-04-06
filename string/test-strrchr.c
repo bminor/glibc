@@ -42,11 +42,10 @@
 #endif
 
 typedef CHAR *(*proto_t) (const CHAR *, int);
-CHAR *SIMPLE_STRRCHR (const CHAR *, int);
 
-IMPL (SIMPLE_STRRCHR, 0)
 IMPL (STRRCHR, 1)
 
+/* Naive implementation to verify results.  */
 CHAR *
 SIMPLE_STRRCHR (const CHAR *s, int c)
 {
