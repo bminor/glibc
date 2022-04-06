@@ -785,11 +785,6 @@ extern unsigned int _dl_skip_args attribute_hidden
      attribute_relro
 # endif
      ;
-extern unsigned int _dl_skip_args_internal attribute_hidden
-# ifndef DL_ARGV_NOT_RELRO
-     attribute_relro
-# endif
-     ;
 #endif
 #define rtld_progname _dl_argv[0]
 
