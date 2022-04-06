@@ -68,8 +68,7 @@ until the subprogram terminates before you can do anything else.
 @c   CLEANUP_HANDLER @ascuplugin @ascuheap @acsmem
 @c    libc_cleanup_region_start @ascuplugin @ascuheap @acsmem
 @c     pthread_cleanup_push_defer @ascuplugin @ascuheap @acsmem
-@c      __pthread_testcancel @ascuplugin @ascuheap @acsmem
-@c       CANCEL_ENABLED_AND_CANCELED ok
+@c      cancel_enabled_and_canceled @ascuplugin @ascuheap @acsmem
 @c       do_cancel @ascuplugin @ascuheap @acsmem
 @c    cancel_handler ok
 @c     kill syscall ok

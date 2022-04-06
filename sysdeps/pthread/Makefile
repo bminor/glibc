@@ -69,6 +69,7 @@ tests += tst-cnd-basic tst-mtx-trylock tst-cnd-broadcast \
 	 tst-cancel12 tst-cancel13 tst-cancel14 tst-cancel15 tst-cancel16 \
 	 tst-cancel18 tst-cancel19 tst-cancel20 tst-cancel21 \
 	 tst-cancel22 tst-cancel23 tst-cancel26 tst-cancel27 tst-cancel28 \
+	 tst-cancel29 \
 	 tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 \
 	 tst-clock1 \
 	 tst-cond-except \
