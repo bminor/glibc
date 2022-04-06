@@ -21,6 +21,8 @@ The following bugs are resolved with this release:
   [28896] strncmp-avx2-rtm and wcsncmp-avx2-rtm fallback on non-rtm
     variants when avoiding overflow
   [28953] nss: Protect against errno changes in function lookup
+  [29029] nptl: poll() spuriously returns EINTR during thread
+    cancellation and with cancellation disabled
   [29062] elf: Fix memory leak in _dl_find_object_update
 
 

@@ -30,9 +30,29 @@ __pthread_setcancelstate (int state, int *oldstate)
 
   self = THREAD_SELF;
 
-  if (oldstate != NULL)
-    *oldstate = self->cancelstate;
-  self->cancelstate = state;
+  int oldval = atomic_load_relaxed (&self->cancelhandling);
+  while (1)
+    {
+      int newval = (state == PTHREAD_CANCEL_DISABLE
+		    ? oldval | CANCELSTATE_BITMASK
+		    : oldval & ~CANCELSTATE_BITMASK);
+
+      if (oldstate != NULL)
+	*oldstate = ((oldval & CANCELSTATE_BITMASK)
+		     ? PTHREAD_CANCEL_DISABLE : PTHREAD_CANCEL_ENABLE);
+
+      if (oldval == newval)
+	break;
+
+      if (atomic_compare_exchange_weak_acquire (&self->cancelhandling,
+						&oldval, newval))
+	{
+	  if (cancel_enabled_and_canceled_and_async (newval))
+	    __do_cancel ();
+
+	  break;
+	}
+    }
 
   return 0;
 }

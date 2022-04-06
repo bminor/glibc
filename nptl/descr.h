@@ -279,18 +279,27 @@ struct pthread
 
   /* Flags determining processing of cancellation.  */
   int cancelhandling;
+  /* Bit set if cancellation is disabled.  */
+#define CANCELSTATE_BIT		0
+#define CANCELSTATE_BITMASK	(1 << CANCELSTATE_BIT)
+  /* Bit set if asynchronous cancellation mode is selected.  */
+#define CANCELTYPE_BIT		1
+#define CANCELTYPE_BITMASK	(1 << CANCELTYPE_BIT)
+  /* Bit set if canceling has been initiated.  */
+#define CANCELING_BIT		2
+#define CANCELING_BITMASK	(1 << CANCELING_BIT)
   /* Bit set if canceled.  */
 #define CANCELED_BIT		3
-#define CANCELED_BITMASK	(0x01 << CANCELED_BIT)
+#define CANCELED_BITMASK	(1 << CANCELED_BIT)
   /* Bit set if thread is exiting.  */
 #define EXITING_BIT		4
-#define EXITING_BITMASK		(0x01 << EXITING_BIT)
+#define EXITING_BITMASK		(1 << EXITING_BIT)
   /* Bit set if thread terminated and TCB is freed.  */
 #define TERMINATED_BIT		5
-#define TERMINATED_BITMASK	(0x01 << TERMINATED_BIT)
+#define TERMINATED_BITMASK	(1 << TERMINATED_BIT)
   /* Bit set if thread is supposed to change XID.  */
 #define SETXID_BIT		6
-#define SETXID_BITMASK		(0x01 << SETXID_BIT)
+#define SETXID_BITMASK		(1 << SETXID_BIT)
 
   /* Flags.  Including those copied from the thread attribute.  */
   int flags;
@@ -390,14 +399,6 @@ struct pthread
   /* Indicates whether is a C11 thread created by thrd_creat.  */
   bool c11;
 
-  /* Thread cancel state (PTHREAD_CANCEL_ENABLE or
-     PTHREAD_CANCEL_DISABLE).  */
-  unsigned char cancelstate;
-
-  /* Thread cancel type (PTHREAD_CANCEL_DEFERRED or
-     PTHREAD_CANCEL_ASYNCHRONOUS).  */
-  unsigned char canceltype;
-
   /* Used in __pthread_kill_internal to detected a thread that has
      exited or is about to exit.  exit_lock must only be acquired
      after blocking signals.  */
@@ -416,6 +417,22 @@ struct pthread
 #define PTHREAD_STRUCT_END_PADDING \
   (sizeof (struct pthread) - offsetof (struct pthread, end_padding))
 } __attribute ((aligned (TCB_ALIGNMENT)));
+
+static inline bool
+cancel_enabled_and_canceled (int value)
+{
+  return (value & (CANCELSTATE_BITMASK | CANCELED_BITMASK | EXITING_BITMASK
+		   | TERMINATED_BITMASK))
+    == CANCELED_BITMASK;
+}
+
+static inline bool
+cancel_enabled_and_canceled_and_async (int value)
+{
+  return ((value) & (CANCELSTATE_BITMASK | CANCELTYPE_BITMASK | CANCELED_BITMASK
+		     | EXITING_BITMASK | TERMINATED_BITMASK))
+    == (CANCELTYPE_BITMASK | CANCELED_BITMASK);
+}
 
 /* This yields the pointer that TLS support code calls the thread pointer.  */
 #if TLS_TCB_AT_TP
