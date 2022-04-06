@@ -1,5 +1,5 @@
 /* Internal errno names mapping definition.
-   Copyright (C) 1991-2022 Free Software Foundation, Inc.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,20 +25,37 @@
 # define ERR_MAP(n) n
 #endif
 
-const char *const _sys_errlist_internal[] =
+static const union sys_errname_t
+{
+  struct
   {
-#define _S(n, str)         [ERR_MAP(n)] = str,
+#define MSGSTRFIELD1(line) str##line
+#define MSGSTRFIELD(line)  MSGSTRFIELD1(line)
+#define _S(n, str)         char MSGSTRFIELD(__LINE__)[sizeof(#n)];
 #include <errlist.h>
 #undef _S
   };
+  char str[0];
+} _sys_errname = { {
+#define _S(n, s) #n,
+#include <errlist.h>
+#undef _S
+} };
+
+static const unsigned short _sys_errnameidx[] =
+{
+#define _S(n, s) \
+  [ERR_MAP(n)] = offsetof(union sys_errname_t, MSGSTRFIELD(__LINE__)),
+#include <errlist.h>
+#undef _S
+};
 
 const char *
-__get_errlist (int errnum)
+__get_errname (int errnum)
 {
   int mapped = ERR_MAP (errnum);
-  if (mapped >= 0 && mapped < array_length (_sys_errlist_internal))
-    return _sys_errlist_internal[mapped];
-  return NULL;
+  if (mapped < 0 || mapped >= array_length (_sys_errnameidx)
+      || (mapped > 0 && _sys_errnameidx[mapped] == 0))
+    return NULL;
+  return _sys_errname.str + _sys_errnameidx[mapped];
 }
-
-#include <errlist-compat.c>

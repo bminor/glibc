@@ -88,6 +88,7 @@ routines := \
 
 aux := \
   errlist \
+  errname \
   fxprintf \
   printf-parsemb \
   printf-parsewc \
