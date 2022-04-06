@@ -324,14 +324,16 @@ for linking")
    This is only necessary when defining something in assembly, or playing
    funny alias games where the size should be other than what the compiler
    thinks it is.  */
-#define declare_symbol_alias(symbol, original, type, size) \
-  declare_symbol_alias_1 (symbol, original, type, size)
 #ifdef __ASSEMBLER__
-# define declare_symbol_alias_1(symbol, original, type, size) \
-   strong_alias (original, symbol); \
-   .type C_SYMBOL_NAME (symbol), %##type; \
-   .size C_SYMBOL_NAME (symbol), size
+# define declare_object_symbol_alias(symbol, original, size) \
+  declare_object_symbol_alias_1 (symbol, original, size)
+# define declare_object_symbol_alias_1(symbol, original, s_size) \
+   strong_alias (original, symbol) ASM_LINE_SEP \
+   .type C_SYMBOL_NAME (symbol), %object ASM_LINE_SEP \
+   .size C_SYMBOL_NAME (symbol), s_size ASM_LINE_SEP
 #else /* Not __ASSEMBLER__.  */
+# define declare_symbol_alias(symbol, original, type, size) \
+  declare_symbol_alias_1 (symbol, original, type, size)
 # define declare_symbol_alias_1(symbol, original, type, size) \
    asm (".globl " __SYMBOL_PREFIX #symbol \
 	"\n\t" declare_symbol_alias_1_alias (symbol, original) \
