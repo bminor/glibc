@@ -139,8 +139,8 @@ call_init (int argc, char **argv, char **env)
   if (init_array != NULL)
     {
       unsigned int jm
-	= l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (ElfW(Addr));
-      ElfW(Addr) *addrs = (void *) (init_array->d_un.d_ptr + l->l_addr);
+	= l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (elfptr_t);
+      elfptr_t *addrs = (void *) (init_array->d_un.d_ptr + l->l_addr);
       for (unsigned int j = 0; j < jm; ++j)
 	((dl_init_t) addrs[j]) (argc, argv, env);
     }

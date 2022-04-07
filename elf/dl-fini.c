@@ -133,11 +133,11 @@ _dl_fini (void)
 		      /* First see whether an array is given.  */
 		      if (l->l_info[DT_FINI_ARRAY] != NULL)
 			{
-			  ElfW(Addr) *array =
-			    (ElfW(Addr) *) (l->l_addr
+			  elfptr_t *array =
+			    (elfptr_t *) (l->l_addr
 					    + l->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
 			  unsigned int i = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-					    / sizeof (ElfW(Addr)));
+					    / sizeof (elfptr_t));
 			  while (i-- > 0)
 			    ((fini_t) array[i]) ();
 			}

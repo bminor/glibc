@@ -119,11 +119,11 @@ call_destructors (void *closure)
 
   if (map->l_info[DT_FINI_ARRAY] != NULL)
     {
-      ElfW(Addr) *array =
-	(ElfW(Addr) *) (map->l_addr
+      elfptr_t *array =
+	(elfptr_t *) (map->l_addr
 			+ map->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
       unsigned int sz = (map->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-			 / sizeof (ElfW(Addr)));
+			 / sizeof (elfptr_t));
 
       while (sz-- > 0)
 	((fini_t) array[sz]) ();
