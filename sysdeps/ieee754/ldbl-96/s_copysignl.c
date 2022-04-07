@@ -24,15 +24,11 @@ static char rcsid[] = "$NetBSD: $";
 
 #define NO_MATH_REDIRECT
 #include <math.h>
-#include <math_private.h>
 #include <libm-alias-ldouble.h>
 
-long double __copysignl(long double x, long double y)
+long double
+__copysignl (long double x, long double y)
 {
-	uint32_t es1,es2;
-	GET_LDOUBLE_EXP(es1,x);
-	GET_LDOUBLE_EXP(es2,y);
-	SET_LDOUBLE_EXP(x,(es1&0x7fff)|(es2&0x8000));
-        return x;
+  return __builtin_copysignl (x, y);
 }
 libm_alias_ldouble (__copysign, copysign)
