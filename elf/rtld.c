@@ -1274,7 +1274,7 @@ rtld_setup_main_map (struct link_map *main_map)
      the executable is actually an ET_DYN object.  */
   if (main_map->l_tls_initimage != NULL)
     main_map->l_tls_initimage
-      = (char *) main_map->l_tls_initimage + main_map->l_addr;
+      = (ElfW(Addr)) main_map->l_tls_initimage + (char *) main_map->l_addr;
   if (! main_map->l_map_end)
     main_map->l_map_end = ~0;
   if (! main_map->l_text_end)

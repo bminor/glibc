@@ -1369,7 +1369,7 @@ cannot enable executable stack as shared object requires");
 
   /* Adjust the address of the TLS initialization image.  */
   if (l->l_tls_initimage != NULL)
-    l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_addr;
+    l->l_tls_initimage = (ElfW(Addr)) l->l_tls_initimage + (char *) l->l_addr;
 
   /* Process program headers again after load segments are mapped in
      case processing requires accessing those segments.  Scan program
