@@ -474,10 +474,19 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 	  sizeof GL(dl_rtld_map).l_info);
   GL(dl_rtld_map).l_mach = info->l.l_mach;
   GL(dl_rtld_map).l_relocated = 1;
+# ifdef __CHERI_PURE_CAPABILITY__
+  GL(dl_rtld_map).l_map_start = info->l.l_map_start;
+  GL(dl_rtld_map).l_rw_start = info->l.l_rw_start;
+  GL(dl_rtld_map).l_rw_count = info->l.l_rw_count;
+  for (int i = 0; i < info->l.l_rw_count; i++)
+    GL(dl_rtld_map).l_rw_range[i] = info->l.l_rw_range[i];
+# endif
 #endif
   _dl_setup_hash (&GL(dl_rtld_map));
   GL(dl_rtld_map).l_real = &GL(dl_rtld_map);
+#ifndef __CHERI_PURE_CAPABILITY__
   GL(dl_rtld_map).l_map_start = (ElfW(Addr)) &__ehdr_start;
+#endif
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
   GL(dl_rtld_map).l_text_end = (ElfW(Addr)) _etext;
   /* Copy the TLS related data if necessary.  */
@@ -542,11 +551,16 @@ _dl_start (void *arg)
 # endif
 #endif
 
+#ifdef __CHERI_PURE_CAPABILITY__
+  elf_machine_rtld_base_setup (&bootstrap_map, arg);
+  bootstrap_map.l_ld = elf_machine_runtime_dynamic ();
+#else
   /* Figure out the run-time load address of the dynamic linker itself.  */
   bootstrap_map.l_addr = elf_machine_load_address ();
 
   /* Read our own dynamic section and fill in the info array.  */
   bootstrap_map.l_ld = (void *) bootstrap_map.l_addr + elf_machine_dynamic ();
+#endif
   bootstrap_map.l_ld_readonly = DL_RO_DYN_SECTION;
   elf_get_dynamic_info (&bootstrap_map, true, false);
 
@@ -1125,8 +1139,13 @@ rtld_setup_main_map (struct link_map *main_map)
 
   main_map->l_map_end = 0;
   main_map->l_text_end = 0;
+#ifndef __CHERI_PURE_CAPABILITY__
   /* Perhaps the executable has no PT_LOAD header entries at all.  */
   main_map->l_map_start = ~0;
+#else
+  /* May be computed already when exe is loaded by ld.so.  */
+  main_map->l_rw_count = 0;
+#endif
   /* And it was opened directly.  */
   ++main_map->l_direct_opencount;
   main_map->l_contiguous = 1;
@@ -1205,8 +1224,10 @@ rtld_setup_main_map (struct link_map *main_map)
 	  /* Remember where the main program starts in memory.  */
 	  mapstart = (main_map->l_addr
 		      + (ph->p_vaddr & ~(GLRO(dl_pagesize) - 1)));
+#ifndef __CHERI_PURE_CAPABILITY__
 	  if (main_map->l_map_start > mapstart)
 	    main_map->l_map_start = mapstart;
+#endif
 
 	  if (main_map->l_contiguous && expected_load_address != 0
 	      && expected_load_address != mapstart)
@@ -1223,6 +1244,15 @@ rtld_setup_main_map (struct link_map *main_map)
 	     segment.  */
 	  expected_load_address = ((allocend + GLRO(dl_pagesize) - 1)
 				   & ~(GLRO(dl_pagesize) - 1));
+#ifdef __CHERI_PURE_CAPABILITY__
+	  if (ph->p_flags & PF_W)
+	    {
+	      assert (main_map->l_rw_count < DL_MAX_RW_COUNT);
+	      main_map->l_rw_range[main_map->l_rw_count].start = mapstart;
+	      main_map->l_rw_range[main_map->l_rw_count].end = allocend;
+	      main_map->l_rw_count++;
+	    }
+#endif
 	}
 	break;
 
@@ -1635,6 +1665,14 @@ dl_main (const ElfW(Phdr) *phdr,
 	  case AT_EXECFN:
 	    av->a_un.a_val = (uintptr_t) _dl_argv[0];
 	    break;
+# ifdef __CHERI_PURE_CAPABILITY__
+	  case AT_CHERI_EXEC_RX_CAP:
+	    av->a_un.a_val = main_map->l_map_start;
+	    break;
+	  case AT_CHERI_EXEC_RW_CAP:
+	    av->a_un.a_val = main_map->l_rw_start;
+	    break;
+# endif
 	  }
 #endif
 
@@ -1678,6 +1716,19 @@ dl_main (const ElfW(Phdr) *phdr,
 
       /* We delay initializing the path structure until we got the dynamic
 	 information for the program.  */
+
+#ifdef __CHERI_PURE_CAPABILITY__
+      for (ElfW(auxv_t) *av = auxv; av->a_type != AT_NULL; av++)
+	switch (av->a_type)
+	  {
+	  case AT_CHERI_EXEC_RX_CAP:
+	    main_map->l_map_start = av->a_un.a_val;
+	    break;
+	  case AT_CHERI_EXEC_RW_CAP:
+	    main_map->l_rw_start = av->a_un.a_val;
+	    break;
+	  }
+#endif
     }
 
   bool has_interp = rtld_setup_main_map (main_map);
