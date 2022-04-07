@@ -62,7 +62,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
     {
       ElfW (Half) ndx = version[ELFW (R_SYM) (r->r_info)] & 0x7fff;
       const ElfW (Sym) *sym = &symtab[ELFW (R_SYM) (r->r_info)];
-      void *const r_addr_arg = (void *) (l_addr + r->r_offset);
+      void *const r_addr_arg = (void *) dl_rw_ptr (map, r->r_offset);
       const struct r_found_version *rversion = &map->l_versions[ndx];
 
       elf_machine_rel (map, scope, r, sym, rversion, r_addr_arg, skip_ifunc);
@@ -132,7 +132,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 	    {
 	      ElfW(Half) ndx = version[ELFW(R_SYM) (r->r_info)] & 0x7fff;
 	      const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (r->r_info)];
-	      void *const r_addr_arg = (void *) (l_addr + r->r_offset);
+	      void *const r_addr_arg = (void *) dl_rw_ptr (map, r->r_offset);
 	      const struct r_found_version *rversion = &map->l_versions[ndx];
 #if defined ELF_MACHINE_IRELATIVE
 	      if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_IRELATIVE)
@@ -169,7 +169,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 		  elf_machine_rel (map, scope, r2,
 				   &symtab[ELFW(R_SYM) (r2->r_info)],
 				   &map->l_versions[ndx],
-				   (void *) (l_addr + r2->r_offset),
+				   (void *) dl_rw_ptr (map, r2->r_offset),
 				   skip_ifunc);
 		}
 #endif
@@ -179,7 +179,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 	  for (; r < end; ++r)
 	    {
 	      const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (r->r_info)];
-	      void *const r_addr_arg = (void *) (l_addr + r->r_offset);
+	      void *const r_addr_arg = (void *) dl_rw_ptr (map, r->r_offset);
 # ifdef ELF_MACHINE_IRELATIVE
 	      if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_IRELATIVE)
 		{
@@ -210,7 +210,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 	    for (; r2 <= end2; ++r2)
 	      if (ELFW(R_TYPE) (r2->r_info) == ELF_MACHINE_IRELATIVE)
 		elf_machine_rel (map, scope, r2, &symtab[ELFW(R_SYM) (r2->r_info)],
-				 NULL, (void *) (l_addr + r2->r_offset),
+				 NULL, (void *) dl_rw_ptr (map, r2->r_offset),
 				 skip_ifunc);
 # endif
 	}
