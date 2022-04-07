@@ -55,7 +55,7 @@ _dl_fixup (
 		      + reloc_offset (pltgot, reloc_arg));
   const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
   const ElfW(Sym) *refsym = sym;
-  void *const rel_addr = (void *)(l->l_addr + reloc->r_offset);
+  void *const rel_addr = (void *) dl_rw_ptr (l, reloc->r_offset);
   lookup_t result;
   DL_FIXUP_VALUE_TYPE value;
 

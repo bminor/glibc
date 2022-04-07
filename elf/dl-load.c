@@ -866,7 +866,7 @@ _dl_init_paths (const char *llp, const char *source,
 void
 _dl_process_pt_gnu_property (struct link_map *l, int fd, const ElfW(Phdr) *ph)
 {
-  const ElfW(Nhdr) *note = (const void *) (ph->p_vaddr + l->l_addr);
+  const ElfW(Nhdr) *note = (const void *) dl_rx_ptr (l, ph->p_vaddr);
   const ElfW(Addr) size = ph->p_memsz;
   const ElfW(Addr) align = ph->p_align;
 
@@ -1314,7 +1314,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
     }
   else
     /* Adjust the PT_PHDR value by the runtime load address.  */
-    l->l_phdr = (ElfW(Phdr) *) ((ElfW(Addr)) l->l_phdr + l->l_addr);
+    l->l_phdr = (ElfW(Phdr) *) dl_rx_ptr (l, (ElfW(Addr)) l->l_phdr);
 
   if (__glibc_unlikely ((stack_flags &~ GL(dl_stack_flags)) & PF_X))
     {
@@ -1369,7 +1369,8 @@ cannot enable executable stack as shared object requires");
 
   /* Adjust the address of the TLS initialization image.  */
   if (l->l_tls_initimage != NULL)
-    l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_addr;
+    l->l_tls_initimage
+      = (void *) dl_rw_ptr (l, (ElfW(Addr)) l->l_tls_initimage);
 
   /* Process program headers again after load segments are mapped in
      case processing requires accessing those segments.  Scan program
@@ -1402,7 +1403,7 @@ cannot enable executable stack as shared object requires");
   /* If this is ET_EXEC, we should have loaded it as lt_executable.  */
   assert (type != ET_EXEC || l->l_type == lt_executable);
 
-  l->l_entry += l->l_addr;
+  l->l_entry = dl_rx_ptr (l, l->l_entry);
 
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_FILES))
     _dl_debug_printf ("\

@@ -86,7 +86,7 @@ checking for version `%s' in file %s [%lu] required by file %s [%lu]\n",
   def_offset = map->l_info[VERSYMIDX (DT_VERDEF)]->d_un.d_ptr;
   assert (def_offset != 0);
 
-  def = (ElfW(Verdef) *) ((char *) map->l_addr + def_offset);
+  def = (ElfW(Verdef) *) dl_rx_ptr (map, def_offset);
   while (1)
     {
       /* Currently the version number of the definition entry is 1.
@@ -177,7 +177,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
   if (dyn != NULL)
     {
       /* This file requires special versions from its dependencies.  */
-      ElfW(Verneed) *ent = (ElfW(Verneed) *) (map->l_addr + dyn->d_un.d_ptr);
+      ElfW(Verneed) *ent = (ElfW(Verneed) *) dl_rx_ptr (map, dyn->d_un.d_ptr);
 
       /* Currently the version number of the needed entry is 1.
 	 Make sure all we see is this version.  */
@@ -257,7 +257,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
   if (def != NULL)
     {
       ElfW(Verdef) *ent;
-      ent = (ElfW(Verdef) *) (map->l_addr + def->d_un.d_ptr);
+      ent = (ElfW(Verdef) *) dl_rx_ptr (map, def->d_un.d_ptr);
       while (1)
 	{
 	  if ((unsigned int) (ent->vd_ndx & 0x7fff) > ndx_high)
@@ -296,7 +296,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
       if (dyn != NULL)
 	{
 	  ElfW(Verneed) *ent;
-	  ent = (ElfW(Verneed) *) (map->l_addr + dyn->d_un.d_ptr);
+	  ent = (ElfW(Verneed) *) dl_rx_ptr (map, dyn->d_un.d_ptr);
 	  while (1)
 	    {
 	      ElfW(Vernaux) *aux;
@@ -334,7 +334,7 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
       if (def != NULL)
 	{
 	  ElfW(Verdef) *ent;
-	  ent = (ElfW(Verdef)  *) (map->l_addr + def->d_un.d_ptr);
+	  ent = (ElfW(Verdef)  *) dl_rx_ptr (map, def->d_un.d_ptr);
 	  while (1)
 	    {
 	      ElfW(Verdaux) *aux;

@@ -115,7 +115,8 @@ dl_rw_ptr (const struct link_map *l, ElfW(Addr) vaddr)
   most architectures the entry is already relocated - but for some not
   and we need to relocate at access time.  */
 #define D_PTR(map, i) \
-  ((map)->i->d_un.d_ptr + (dl_relocate_ld (map) ? 0 : (map)->l_addr))
+  (dl_relocate_ld (map) ? (map)->i->d_un.d_ptr \
+			: dl_rx_ptr ((map), (map)->i->d_un.d_ptr))
 
 /* Result of the lookup functions and how to retrieve the base address.  */
 typedef struct link_map *lookup_t;

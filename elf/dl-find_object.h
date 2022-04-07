@@ -105,7 +105,7 @@ _dl_find_object_from_map (struct link_map *l,
     if (ph->p_type == DLFO_EH_SEGMENT_TYPE)
       {
         atomic_store_relaxed (&result->eh_frame,
-                              (void *) (ph->p_vaddr + l->l_addr));
+                              (void *) dl_rx_ptr (l, ph->p_vaddr));
 #if DLFO_STRUCT_HAS_EH_COUNT
         atomic_store_relaxed (&result->eh_count, ph->p_memsz / 8);
 #endif
