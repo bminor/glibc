@@ -252,7 +252,8 @@ struct link_map
 
     /* Start and finish of memory map for this object.  l_map_start
        need not be the same as l_addr.  */
-    ElfW(Addr) l_map_start, l_map_end;
+    elfptr_t l_map_start;
+    ElfW(Addr) l_map_end;
     /* End of the executable part of the mapping.  */
     ElfW(Addr) l_text_end;
 
