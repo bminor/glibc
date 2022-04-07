@@ -133,11 +133,10 @@ _dl_fini (void)
 		      /* First see whether an array is given.  */
 		      if (l->l_info[DT_FINI_ARRAY] != NULL)
 			{
-			  ElfW(Addr) *array =
-			    (ElfW(Addr) *) (l->l_addr
-					    + l->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
+			  ElfW(Addr) v = l->l_info[DT_FINI_ARRAY]->d_un.d_ptr;
+			  elfptr_t *array = (elfptr_t *) dl_rx_ptr (l, v);
 			  unsigned int i = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-					    / sizeof (ElfW(Addr)));
+					    / sizeof (elfptr_t));
 			  while (i-- > 0)
 			    ((fini_t) array[i]) ();
 			}
@@ -145,7 +144,7 @@ _dl_fini (void)
 		      /* Next try the old-style destructor.  */
 		      if (ELF_INITFINI && l->l_info[DT_FINI] != NULL)
 			DL_CALL_DT_FINI
-			  (l, l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr);
+			  (l, dl_rx_ptr (l, l->l_info[DT_FINI]->d_un.d_ptr));
 		    }
 
 #ifdef SHARED

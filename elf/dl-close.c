@@ -119,11 +119,10 @@ call_destructors (void *closure)
 
   if (map->l_info[DT_FINI_ARRAY] != NULL)
     {
-      ElfW(Addr) *array =
-	(ElfW(Addr) *) (map->l_addr
-			+ map->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
+      elfptr_t *array =
+	(elfptr_t *) dl_rx_ptr (map, map->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
       unsigned int sz = (map->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-			 / sizeof (ElfW(Addr)));
+			 / sizeof (elfptr_t));
 
       while (sz-- > 0)
 	((fini_t) array[sz]) ();
@@ -131,8 +130,7 @@ call_destructors (void *closure)
 
   /* Next try the old-style destructor.  */
   if (map->l_info[DT_FINI] != NULL)
-    DL_CALL_DT_FINI (map, ((void *) map->l_addr
-			   + map->l_info[DT_FINI]->d_un.d_ptr));
+    DL_CALL_DT_FINI (map, dl_rx_ptr (map, map->l_info[DT_FINI]->d_un.d_ptr));
 }
 
 void
