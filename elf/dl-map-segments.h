@@ -21,12 +21,12 @@
 
 /* Map a segment and align it properly.  */
 
-static __always_inline ElfW(Addr)
+static __always_inline elfptr_t
 _dl_map_segment (const struct loadcmd *c, ElfW(Addr) mappref,
 		 const size_t maplength, int fd)
 {
   if (__glibc_likely (c->mapalign <= GLRO(dl_pagesize)))
-    return (ElfW(Addr)) __mmap ((void *) mappref, maplength, c->prot,
+    return (elfptr_t) __mmap ((void *) mappref, maplength, c->prot,
 				MAP_COPY|MAP_FILE, fd, c->mapoff);
 
   /* If the segment alignment > the page size, allocate enough space to
@@ -34,15 +34,15 @@ _dl_map_segment (const struct loadcmd *c, ElfW(Addr) mappref,
   ElfW(Addr) maplen = (maplength >= c->mapalign
 		       ? (maplength + c->mapalign)
 		       : (2 * c->mapalign));
-  ElfW(Addr) map_start = (ElfW(Addr)) __mmap ((void *) mappref, maplen,
+  elfptr_t map_start = (elfptr_t) __mmap ((void *) mappref, maplen,
 					      PROT_NONE,
 					      MAP_ANONYMOUS|MAP_PRIVATE,
 					      -1, 0);
   if (__glibc_unlikely ((void *) map_start == MAP_FAILED))
     return map_start;
 
-  ElfW(Addr) map_start_aligned = ALIGN_UP (map_start, c->mapalign);
-  map_start_aligned = (ElfW(Addr)) __mmap ((void *) map_start_aligned,
+  elfptr_t map_start_aligned = ALIGN_UP (map_start, c->mapalign);
+  map_start_aligned = (elfptr_t) __mmap ((void *) map_start_aligned,
 					   maplength, c->prot,
 					   MAP_COPY|MAP_FILE|MAP_FIXED,
 					   fd, c->mapoff);
@@ -54,7 +54,7 @@ _dl_map_segment (const struct loadcmd *c, ElfW(Addr) mappref,
       ElfW(Addr) delta = map_start_aligned - map_start;
       if (delta)
 	__munmap ((void *) map_start, delta);
-      ElfW(Addr) map_end = map_start_aligned + maplength;
+      elfptr_t map_end = map_start + (map_start_aligned - map_start) + maplength;
       map_end = ALIGN_UP (map_end, GLRO(dl_pagesize));
       delta = map_start + maplen - map_end;
       if (delta)
@@ -126,6 +126,18 @@ _dl_map_segments (struct link_map *l, int fd,
 
       goto postmap;
     }
+#ifdef __CHERI_PURE_CAPABILITY__
+  else
+    {
+      /* TODO: l_addr is 0 in an exe, but it should cover the load segments.  */
+      uintptr_t l_addr = 0;
+      unsigned long allocend = ALIGN_UP (loadcmds[nloadcmds - 1].allocend,
+					 GLRO(dl_pagesize));
+      asm volatile ("cvtd %0, %x0" : "+r"(l_addr));
+      asm volatile ("scbnds %0, %0, %x1" : "+r"(l_addr) : "r"(allocend));
+      l->l_addr = l_addr;
+    }
+#endif
 
   /* Remember which part of the address space this object uses.  */
   l->l_map_start = c->mapstart + l->l_addr;
@@ -134,10 +146,10 @@ _dl_map_segments (struct link_map *l, int fd,
 
   while (c < &loadcmds[nloadcmds])
     {
-      if (c->mapend > c->mapstart
+      if (c->dataend > c->mapstart
           /* Map the segment contents from the file.  */
           && (__mmap ((void *) (l->l_addr + c->mapstart),
-                      c->mapend - c->mapstart, c->prot,
+                      c->dataend - c->mapstart, c->prot,
                       MAP_FIXED|MAP_COPY|MAP_FILE,
                       fd, c->mapoff)
               == MAP_FAILED))
@@ -150,7 +162,7 @@ _dl_map_segments (struct link_map *l, int fd,
         {
           /* Extra zero pages should appear at the end of this segment,
              after the data mapped from the file.   */
-          ElfW(Addr) zero, zeroend, zeropage;
+	  elfptr_t zero, zeroend, zeropage;
 
           zero = l->l_addr + c->dataend;
           zeroend = l->l_addr + c->allocend;
