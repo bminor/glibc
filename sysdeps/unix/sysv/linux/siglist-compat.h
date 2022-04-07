@@ -1,4 +1,4 @@
-/* Define list of all signal numbers and their names.
+/* Compatibility signal numbers and their names symbols.  Linux version.
    Copyright (C) 1997-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,24 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stddef.h>
-#include <signal.h>
-#include <libintl.h>
+#include <siglist-compat-def.h>
+/* To get _NSIG definition.  */
+#define _SIGNAL_H
+#include <bits/signum-generic.h>
 
-const char *const __sys_siglist[NSIG] =
-{
-#define init_sig(sig, abbrev, desc)   [sig] = desc,
-#include <siglist.h>
-#undef init_sig
-};
-libc_hidden_def (__sys_siglist)
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
+DEFINE_COMPAT_SIGLIST (32, GLIBC_2_0)
+#endif
 
-const char *const __sys_sigabbrev[NSIG] =
-{
-#define init_sig(sig, abbrev, desc)   [sig] = abbrev,
-#include <siglist.h>
-#undef init_sig
-};
-libc_hidden_def (__sys_sigabbrev)
+#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_3_3)
+DEFINE_COMPAT_SIGLIST (64, GLIBC_2_1)
+#endif
 
-#include <siglist-compat.c>
+#if SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_32)
+DEFINE_COMPAT_SIGLIST (_NSIG, GLIBC_2_3_3)
+#endif
