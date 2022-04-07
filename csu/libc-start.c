@@ -132,15 +132,15 @@ call_init (int argc, char **argv, char **env)
      the same file.  */
 
   if (ELF_INITFINI && l->l_info[DT_INIT] != NULL)
-    DL_CALL_DT_INIT(l, l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr,
+    DL_CALL_DT_INIT(l, dl_rx_ptr (l, l->l_info[DT_INIT]->d_un.d_ptr),
 		    argc, argv, env);
 
   ElfW(Dyn) *init_array = l->l_info[DT_INIT_ARRAY];
   if (init_array != NULL)
     {
       unsigned int jm
-	= l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (ElfW(Addr));
-      ElfW(Addr) *addrs = (void *) (init_array->d_un.d_ptr + l->l_addr);
+	= l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (elfptr_t);
+      elfptr_t *addrs = (void *) dl_rx_ptr (l, init_array->d_un.d_ptr);
       for (unsigned int j = 0; j < jm; ++j)
 	((dl_init_t) addrs[j]) (argc, argv, env);
     }
