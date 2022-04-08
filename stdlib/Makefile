@@ -22,49 +22,145 @@ subdir	:= stdlib
 
 include ../Makeconfig
 
-headers	:= stdlib.h bits/stdlib.h bits/stdlib-ldbl.h bits/stdlib-float.h      \
-	   monetary.h bits/monetary-ldbl.h				      \
-	   inttypes.h stdint.h bits/wordsize.h bits/timesize.h		      \
-	   errno.h sys/errno.h bits/errno.h bits/types/error_t.h	      \
-	   ucontext.h sys/ucontext.h bits/indirect-return.h		      \
-	   alloca.h fmtmsg.h						      \
-	   bits/stdlib-bsearch.h sys/random.h bits/stdint-intn.h	      \
-	   bits/stdint-uintn.h bits/time64.h				      \
+headers := \
+  alloca.h \
+  bits/errno.h \
+  bits/indirect-return.h \
+  bits/monetary-ldbl.h \
+  bits/stdint-intn.h \
+  bits/stdint-uintn.h \
+  bits/stdlib-bsearch.h \
+  bits/stdlib-float.h \
+  bits/stdlib.h \
+  bits/stdlib-ldbl.h \
+  bits/time64.h \
+  bits/timesize.h \
+  bits/types/error_t.h \
+  bits/wordsize.h \
+  errno.h \
+  fmtmsg.h \
+  inttypes.h \
+  monetary.h \
+  stdint.h \
+  stdlib.h \
+  sys/errno.h \
+  sys/random.h \
+  sys/ucontext.h \
+  ucontext.h \
+  # headers
 
-routines	:=							      \
-	atof atoi atol atoll						      \
-	abort								      \
-	bsearch qsort msort						      \
-	getenv putenv setenv secure-getenv				      \
-	exit on_exit atexit cxa_atexit cxa_finalize old_atexit		      \
-	quick_exit at_quick_exit cxa_at_quick_exit cxa_thread_atexit_impl     \
-	abs labs llabs							      \
-	div ldiv lldiv							      \
-	mblen mbstowcs mbtowc wcstombs wctomb				      \
-	random random_r rand rand_r					      \
-	drand48 erand48 lrand48 nrand48 mrand48 jrand48			      \
-	srand48 seed48 lcong48						      \
-	drand48_r erand48_r lrand48_r nrand48_r mrand48_r jrand48_r	      \
-	srand48_r seed48_r lcong48_r					      \
-	drand48-iter getrandom getentropy				      \
-	strfromf strfromd strfroml					      \
-	strtol strtoul strtoll strtoull					      \
-	strtol_l strtoul_l strtoll_l strtoull_l				      \
-	strtof strtod strtold						      \
-	strtof_l strtod_l strtold_l					      \
-	strtof_nan strtod_nan strtold_nan				      \
-	system canonicalize						      \
-	a64l l64a							      \
-	rpmatch strfmon strfmon_l getsubopt xpg_basename fmtmsg		      \
-	getcontext setcontext makecontext swapcontext
-aux =	grouping groupingwc tens_in_limb
+routines := \
+  a64l \
+  abort \
+  abs \
+  at_quick_exit \
+  atof \
+  atoi \
+  atol\
+  atoll	\
+  bsearch \
+  canonicalize \
+  cxa_at_quick_exit \
+  cxa_atexit \
+  cxa_finalize \
+  cxa_thread_atexit_impl \
+  div \
+  drand48 \
+  drand48-iter \
+  drand48_r \
+  erand48 \
+  erand48_r \
+  exit \
+  fmtmsg \
+  getcontext \
+  getentropy \
+  getenv \
+  getrandom \
+  getsubopt \
+  jrand48 \
+  jrand48_r \
+  l64a \
+  labs \
+  lcong48 \
+  lcong48_r \
+  ldiv \
+  llabs \
+  lldiv \
+  lrand48 \
+  lrand48_r \
+  makecontext \
+  mblen \
+  mbstowcs \
+  mbtowc \
+  mrand48 \
+  mrand48_r \
+  msort \
+  nrand48 \
+  nrand48_r \
+  old_atexit  \
+  on_exit atexit \
+  putenv \
+  qsort \
+  quick_exit \
+  rand \
+  rand_r \
+  random \
+  random_r \
+  rpmatch \
+  secure-getenv \
+  seed48 \
+  seed48_r \
+  setcontext \
+  setenv \
+  srand48 \
+  srand48_r \
+  strfmon \
+  strfmon_l \
+  strfromd \
+  strfromf \
+  strfroml \
+  strtod \
+  strtod_l \
+  strtod_nan \
+  strtof \
+  strtof_l \
+  strtof_nan \
+  strtol \
+  strtol_l \
+  strtold \
+  strtold_l \
+  strtold_nan \
+  strtoll \
+  strtoll_l \
+  strtoul \
+  strtoul_l \
+  strtoull \
+  strtoull_l \
+  swapcontext \
+  system \
+  wcstombs \
+  wctomb  \
+  xpg_basename \
+  # routines
+
+aux = \
+  grouping \
+  groupingwc \
+  tens_in_limb \
+  # aux
 
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive
 # linked against when the shared library will be used.
-static-only-routines = atexit at_quick_exit
+static-only-routines = \
+  atexit \
+  at_quick_exit \
+  # static-only-routines
 
-test-srcs	:= tst-fmtmsg
+test-srcs := \
+  tst-fmtmsg \
+  #test-srcs
+
 tests := \
   bug-fmtmsg1 \
   bug-getcontext \
@@ -142,15 +238,29 @@ tests := \
   tst-width \
   tst-width-stdint \
   tst-xpg-basename \
-# tests
+  # tests
 
-tests-internal	:= tst-strtod1i tst-strtod3 tst-strtod4 tst-strtod5i \
-		   tst-tls-atexit tst-tls-atexit-nodelete
-tests-static	:= tst-secure-getenv
-tests-container := tst-system
+tests-internal := \
+  tst-strtod1i \
+  tst-strtod3 \
+  tst-strtod4 \
+  tst-strtod5i \
+  tst-tls-atexit \
+  tst-tls-atexit-nodelete \
+  # tests-internal
+
+tests-static := \
+  tst-secure-getenv \
+  # tests-static
+
+tests-container := \
+  tst-system \
+  #tests-container
 
 ifeq ($(build-hardcoded-path-in-tests),yes)
-tests += tst-empty-env
+tests += \
+  tst-empty-env \
+  # tests
 endif
 
 LDLIBS-test-atexit-race = $(shared-thread-library)
@@ -171,30 +281,76 @@ CFLAGS-tst-thread-quick_exit.o = -std=c++11
 LDLIBS-tst-thread-quick_exit = -lstdc++
 $(objpfx)tst-thread-quick_exit: $(shared-thread-library)
 else
-tests-unsupported += tst-quick_exit tst-thread-quick_exit
+tests-unsupported += \
+  tst-quick_exit \
+  tst-thread-quick_exit \
+  # tests-unsupported
 endif
 
-modules-names	= tst-tls-atexit-lib test-dlclose-exit-race-helper
+modules-names = \
+  test-dlclose-exit-race-helper \
+  tst-tls-atexit-lib \
+  # modules-names
 extra-test-objs += $(addsuffix .os, $(modules-names))
 
 ifeq ($(build-shared),yes)
-tests		+= tst-putenv
+tests += \
+  tst-putenv \
+  # tests
 endif
 
 # Several mpn functions from GNU MP are used by the strtod function.
-mpn-routines := inlines add_n addmul_1 cmp divmod_1 divrem udiv_qrnnd \
-		lshift rshift mod_1 mul mul_1 mul_n sub_n submul_1
-mpn-headers = longlong.h gmp.h gmp-impl.h gmp-mparam.h asm-syntax.h
+mpn-routines := \
+  add_n \
+  addmul_1 \
+  cmp \
+  divmod_1 \
+  divrem \
+  inlines \
+  lshift \
+  mod_1 \
+  mul \
+  mul_1 \
+  mul_n \
+  rshift \
+  sub_n \
+  submul_1 \
+  udiv_qrnnd \
+  # mpn-routines
+mpn-headers = \
+  asm-syntax.h \
+  gmp-impl.h \
+  gmp-mparam.h \
+  gmp.h \
+  longlong.h \
+  # mpn-headers
 
-routines := $(strip $(routines) $(mpn-routines))	\
-	    dbl2mpn ldbl2mpn				\
-	    mpn2flt mpn2dbl mpn2ldbl
-aux += fpioconst mp_clz_tab
+routines := \
+  $(strip $(routines) $(mpn-routines)) \
+  dbl2mpn \
+  ldbl2mpn \
+  mpn2dbl \
+  mpn2flt \
+  mpn2ldbl \
+  # routines
+aux += \
+  fpioconst \
+  mp_clz_tab \
+  # aux
 
-tests-extras += tst-putenvmod
-extra-test-objs += tst-putenvmod.os
+tests-extras += \
+  tst-putenvmod \
+  # tests-extras
+  
+extra-test-objs += \
+  tst-putenvmod.os \
+  # extra-test-objs
 
-generated += isomac isomac.out tst-putenvmod.so
+generated += \
+  isomac \
+  isomac.out \
+  tst-putenvmod.so \
+  # generated
 
 CFLAGS-bsearch.c += $(uses-callbacks)
 CFLAGS-msort.c += $(uses-callbacks)
@@ -227,9 +383,17 @@ endif
 include ../Rules
 
 ifeq ($(run-built-tests),yes)
-LOCALES := cs_CZ.UTF-8 de_DE.UTF-8 en_US.ISO-8859-1 tr_TR.UTF-8 \
-	   tr_TR.ISO-8859-9 tg_TJ.UTF-8 hr_HR.UTF-8 hi_IN.UTF-8 \
-	   el_GR.UTF-8
+LOCALES := \
+  cs_CZ.UTF-8 \
+  de_DE.UTF-8 \
+  el_GR.UTF-8 \
+  en_US.ISO-8859-1 \
+  hi_IN.UTF-8 \
+  hr_HR.UTF-8 \
+  tg_TJ.UTF-8 \
+  tr_TR.ISO-8859-9 \
+  tr_TR.UTF-8 \
+  # LOCALES
 include ../gen-locales.mk
 
 $(objpfx)bug-strtod2.out: $(gen-locales)
