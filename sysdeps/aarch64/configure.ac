@@ -1,9 +1,6 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/aarch64.
 
-# Static PIE is supported.
-AC_DEFINE(SUPPORT_STATIC_PIE)
-
 # We check to see if the compiler and flags are
 # selecting the big endian ABI and if they are then
 # we set libc_cv_aarch64_be to yes which causes
@@ -17,12 +14,33 @@ AC_CACHE_CHECK([for big endian],
                       yes
                      #endif
   ], libc_cv_aarch64_be=yes, libc_cv_aarch64_be=no)])
+# Check for purecap ABI too, an alternative name is l64pc128.
+AC_CACHE_CHECK([for purecap ABI],
+  [libc_cv_aarch64_purecap],
+  [AC_EGREP_CPP(yes,[#ifdef __CHERI_PURE_CAPABILITY__
+                      yes
+                     #endif
+  ], libc_cv_aarch64_purecap=yes, libc_cv_aarch64_purecap=no)])
+LIBC_CONFIG_VAR([aarch64-purecap], [$libc_cv_aarch64_purecap])
+
+libc_aarch64_be=""
 if test $libc_cv_aarch64_be = yes; then
   AC_DEFINE(HAVE_AARCH64_BE)
-  LIBC_CONFIG_VAR([default-abi], [lp64_be])
-else
-  LIBC_CONFIG_VAR([default-abi], [lp64])
+  libc_aarch64_be="_be"
 fi
+
+libc_aarch64_abi="lp64"
+if test $libc_cv_aarch64_purecap = yes; then
+  libc_aarch64_abi="purecap"
+  # The purecap abi requires relocations because objects may not be
+  # within bounds for PCC. This means static-pie is not supported.
+  AC_DEFINE(HIDDEN_VAR_NEEDS_DYNAMIC_RELOC)
+else
+  # Static PIE is supported.  Hidden variables only need relocations
+  # in PIE with -mcmodel=large, but that's unsupported.
+  AC_DEFINE(SUPPORT_STATIC_PIE)
+fi
+LIBC_CONFIG_VAR([default-abi], [$libc_aarch64_abi$libc_aarch64_be])
 
 # Only consider BTI supported if -mbranch-protection=bti is
 # on by default in the compiler and the linker produces
