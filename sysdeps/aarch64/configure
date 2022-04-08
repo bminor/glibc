@@ -1,10 +1,6 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/aarch64.
 
-# Static PIE is supported.
-$as_echo "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
-
-
 # We check to see if the compiler and flags are
 # selecting the big endian ABI and if they are then
 # we set libc_cv_aarch64_be to yes which causes
@@ -167,15 +163,55 @@ rm -f conftest*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_aarch64_be" >&5
 $as_echo "$libc_cv_aarch64_be" >&6; }
+# Check for purecap ABI too, an alternative name is l64pc128.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for purecap ABI" >&5
+$as_echo_n "checking for purecap ABI... " >&6; }
+if ${libc_cv_aarch64_purecap+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+                      yes
+                     #endif
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "yes" >/dev/null 2>&1; then :
+  libc_cv_aarch64_purecap=yes
+else
+  libc_cv_aarch64_purecap=no
+fi
+rm -f conftest*
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_aarch64_purecap" >&5
+$as_echo "$libc_cv_aarch64_purecap" >&6; }
+config_vars="$config_vars
+aarch64-purecap = $libc_cv_aarch64_purecap"
+
+libc_aarch64_be=""
 if test $libc_cv_aarch64_be = yes; then
   $as_echo "#define HAVE_AARCH64_BE 1" >>confdefs.h
 
-  config_vars="$config_vars
-default-abi = lp64_be"
-else
-  config_vars="$config_vars
-default-abi = lp64"
+  libc_aarch64_be="_be"
 fi
+
+libc_aarch64_abi="lp64"
+if test $libc_cv_aarch64_purecap = yes; then
+  libc_aarch64_abi="purecap"
+  # The purecap abi requires relocations because objects may not be
+  # within bounds for PCC. This means static-pie is not supported.
+  $as_echo "#define HIDDEN_VAR_NEEDS_DYNAMIC_RELOC 1" >>confdefs.h
+
+else
+  # Static PIE is supported.  Hidden variables only need relocations
+  # in PIE with -mcmodel=large, but that's unsupported.
+  $as_echo "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
+
+fi
+config_vars="$config_vars
+default-abi = $libc_aarch64_abi$libc_aarch64_be"
 
 # Only consider BTI supported if -mbranch-protection=bti is
 # on by default in the compiler and the linker produces
