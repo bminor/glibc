@@ -1504,6 +1504,11 @@ do_test (void)
       CHK_FAIL_END
 #endif
 
+      /* Bug 29030 regresion check */
+      cp = "HelloWorld";
+      if (mbsrtowcs (NULL, &cp, (size_t)-1, &s) != 10)
+        FAIL ();
+
       cp = "A";
       if (mbstowcs (wenough, cp, 10) != 1
 	  || wcscmp (wenough, L"A") != 0)
