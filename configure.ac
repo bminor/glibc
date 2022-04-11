@@ -153,7 +153,7 @@ AC_ARG_WITH([default-link],
 	    AS_HELP_STRING([--with-default-link],
 			   [do not use explicit linker scripts]),
 	    [use_default_link=$withval],
-	    [use_default_link=default])
+	    [use_default_link=no])
 
 dnl Additional build flags injection.
 AC_ARG_WITH([nonshared-cflags],
@@ -1370,59 +1370,6 @@ else
 fi
 rm -f conftest*])
 AC_SUBST(libc_cv_hashstyle)
-
-# The linker's default -shared behavior is good enough if it
-# does these things that our custom linker scripts ensure that
-# all allocated NOTE sections come first.
-if test "$use_default_link" = default; then
-  AC_CACHE_CHECK([for sufficient default -shared layout],
-		  libc_cv_use_default_link, [dnl
-  libc_cv_use_default_link=no
-  cat > conftest.s <<\EOF
-	  .section .note.a,"a",%note
-	  .balign 4
-	  .long 4,4,9
-	  .string "GNU"
-	  .string "foo"
-	  .section .note.b,"a",%note
-	  .balign 4
-	  .long 4,4,9
-	  .string "GNU"
-	  .string "bar"
-EOF
-  if AC_TRY_COMMAND([dnl
-  ${CC-cc} $ASFLAGS -shared -o conftest.so conftest.s 1>&AS_MESSAGE_LOG_FD]) &&
-       ac_try=`$READELF -S conftest.so | sed -n \
-	 ['${x;p;}
-	  s/^ *\[ *[1-9][0-9]*\]  *\([^ ][^ ]*\)  *\([^ ][^ ]*\) .*$/\2 \1/
-	  t a
-	  b
-	  : a
-	  H']`
-  then
-    libc_seen_a=no libc_seen_b=no
-    set -- $ac_try
-    while test $# -ge 2 -a "$1" = NOTE; do
-      case "$2" in
-      .note.a) libc_seen_a=yes ;;
-      .note.b) libc_seen_b=yes ;;
-      esac
-      shift 2
-    done
-    case "$libc_seen_a$libc_seen_b" in
-    yesyes)
-      libc_cv_use_default_link=yes
-      ;;
-    *)
-      echo >&AS_MESSAGE_LOG_FD "\
-$libc_seen_a$libc_seen_b from:
-$ac_try"
-      ;;
-    esac
-  fi
-  rm -f conftest*])
-  use_default_link=$libc_cv_use_default_link
-fi
 
 AC_CACHE_CHECK(for GLOB_DAT reloc,
 	       libc_cv_has_glob_dat, [dnl

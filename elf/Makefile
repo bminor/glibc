@@ -543,6 +543,39 @@ endif
 endif
 endif
 
+tests-special += $(objpfx)tst-relro-ldso.out $(objpfx)tst-relro-libc.out
+$(objpfx)tst-relro-ldso.out: tst-relro-symbols.py $(..)/scripts/glibcelf.py \
+  $(objpfx)ld.so
+	$(PYTHON) tst-relro-symbols.py $(objpfx)ld.so \
+	  --required=_rtld_global_ro \
+	  > $@ 2>&1; $(evaluate-test)
+# The optional symbols are present in libc only if the architecture has
+# the GLIBC_2.0 symbol set in libc.
+$(objpfx)tst-relro-libc.out: tst-relro-symbols.py $(..)/scripts/glibcelf.py \
+  $(common-objpfx)libc.so
+	$(PYTHON) tst-relro-symbols.py $(common-objpfx)libc.so \
+	    --required=_IO_cookie_jumps \
+	    --required=_IO_file_jumps \
+	    --required=_IO_file_jumps_maybe_mmap \
+	    --required=_IO_file_jumps_mmap \
+	    --required=_IO_helper_jumps \
+	    --required=_IO_mem_jumps \
+	    --required=_IO_obstack_jumps \
+	    --required=_IO_proc_jumps \
+	    --required=_IO_str_chk_jumps \
+	    --required=_IO_str_jumps \
+	    --required=_IO_strn_jumps \
+	    --required=_IO_wfile_jumps \
+	    --required=_IO_wfile_jumps_maybe_mmap \
+	    --required=_IO_wfile_jumps_mmap \
+	    --required=_IO_wmem_jumps \
+	    --required=_IO_wstr_jumps \
+	    --required=_IO_wstrn_jumps \
+	    --optional=_IO_old_cookie_jumps \
+	    --optional=_IO_old_file_jumps \
+	    --optional=_IO_old_proc_jumps \
+	  > $@ 2>&1; $(evaluate-test)
+
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-valgrind-smoke.out
 endif
