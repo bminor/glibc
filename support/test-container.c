@@ -230,6 +230,7 @@ concat (const char *str, ...)
   return bufs[n];
 }
 
+#ifdef CLONE_NEWNS
 /* Like the above, but put spaces between words.  Caller frees.  */
 static char *
 concat_words (char **words, int num_words)
@@ -255,6 +256,7 @@ concat_words (char **words, int num_words)
 
   return rv;
 }
+#endif
 
 /* Try to mount SRC onto DEST.  */
 static void
@@ -756,7 +758,9 @@ main (int argc, char **argv)
   /* If set, the test runs as root instead of the user running the testsuite.  */
   int be_su = 0;
   int require_pidns = 0;
+#ifdef CLONE_NEWNS
   const char *pidns_comment = NULL;
+#endif
   int do_proc_mounts = 0;
   int UMAP;
   int GMAP;
@@ -1046,8 +1050,10 @@ main (int argc, char **argv)
 	    else if (nt >= 1 && strcmp (the_words[0], "pidns") == 0)
 	      {
 		require_pidns = 1;
+#ifdef CLONE_NEWNS
 		if (nt > 1)
 		  pidns_comment = concat_words (the_words + 1, nt - 1);
+#endif
 	      }
 	    else if (nt == 3 && strcmp (the_words[0], "mkdirp") == 0)
 	      {
