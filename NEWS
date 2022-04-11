@@ -49,6 +49,7 @@ The following bugs are resolved with this release:
   [19193] nptl: pthread_kill, pthread_cancel should not fail after exit
   [22542] CVE-2022-23219: Buffer overflow in sunrpc clnt_create for "unix"
   [23734] la_symbind*() doesn't get called when LD_BIND_NOW is set
+  [25812] Libio vtable protection is sometimes only partially enforced
   [26643] register x8 and quad sized NEON registers are not properly
     saved when using ld_audit on aarch64
   [28036] Incorrect types for pthread_mutexattr_set/getrobust_np

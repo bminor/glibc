@@ -1,3 +1,9 @@
+ifeq ($(subdir),elf)
+# ia64 does not support PT_GNU_RELRO.
+test-xfail-tst-relro-ldso = yes
+test-xfail-tst-relro-libc = yes
+endif
+
 ifeq ($(subdir),misc)
 sysdep_headers += sys/rse.h
 endif
