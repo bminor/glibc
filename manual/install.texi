@@ -117,6 +117,12 @@ problem and suppress these constructs, so that the library will still be
 usable, but functionality may be lost---for example, you can't build a
 shared libc with old binutils.
 
+@item --with-default-link=@var{FLAG}
+With @code{--with-default-link=yes}, the build system does not use a
+custom linker script for linking shared objects.  The default for
+@var{FLAG} is the opposite, @samp{no}, because the custom linker script
+is needed for full RELRO protection.
+
 @item --with-nonshared-cflags=@var{cflags}
 Use additional compiler flags @var{cflags} to build the parts of the
 library which are always statically linked into applications and
