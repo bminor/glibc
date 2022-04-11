@@ -1115,6 +1115,13 @@ tests-special += $(objpfx)check-abi-ld.out
 update-abi: update-abi-ld
 update-all-abi: update-all-abi-ld
 
+tests-special += $(objpfx)tst-glibcelf.out
+$(objpfx)tst-glibcelf.out: tst-glibcelf.py elf.h $(..)/scripts/glibcelf.py \
+  $(..)/scripts/glibcextract.py
+	PYTHONPATH=$(..)scripts $(PYTHON) tst-glibcelf.py \
+          --cc="$(CC) $(patsubst -DMODULE_NAME=%,-DMODULE_NAME=testsuite,$(CPPFLAGS))" \
+	  < /dev/null > $@ 2>&1; $(evaluate-test)
+
 # The test requires shared _and_ PIE because the executable
 # unit test driver must be able to link with the shared object
 # that is going to eventually go into an installed DSO.
