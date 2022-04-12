@@ -28,7 +28,7 @@ static void __attribute__ ((constructor))
 init (void)
 {
   /* An arbitrary error code which is otherwise not used.  */
-  errno = ELIBBAD;
+  errno = -1009;
 }
 
 /* Lookup functions for pwd follow that do not return any data.  */
