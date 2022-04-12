@@ -749,6 +749,11 @@ particular function will always fail with @code{ENOSYS} unless you
 install a new version of the C library or the operating system.
 @end deftypevr
 
+@deftypevr Macro int ELIBEXEC
+@standards{GNU, errno.h}
+@errno{ELIBEXEC, 83, Cannot exec a shared library directly}
+@end deftypevr
+
 @deftypevr Macro int ENOTSUP
 @standards{POSIX.1, errno.h}
 @errno{ENOTSUP, 118, Not supported}
@@ -1057,11 +1062,6 @@ They are not yet documented.}
 @deftypevr Macro int ELIBMAX
 @standards{Linux???, errno.h}
 @errno{ELIBMAX, ???/82, Attempting to link in too many shared libraries}
-@end deftypevr
-
-@deftypevr Macro int ELIBEXEC
-@standards{Linux???, errno.h}
-@errno{ELIBEXEC, ???/83, Cannot exec a shared library directly}
 @end deftypevr
 
 @deftypevr Macro int ESTRPIPE

@@ -115,6 +115,7 @@ enum __error_t_codes
   EAUTH                          = 0x40000050,	/* Authentication error */
   ENEEDAUTH                      = 0x40000051,	/* Need authenticator */
   ENOSYS                         = 0x4000004e,	/* Function not implemented */
+  ELIBEXEC                       = 0x40000053,	/* Cannot exec a shared library directly */
   ENOTSUP                        = 0x40000076,	/* Not supported */
   EILSEQ                         = 0x4000006a,	/* Invalid or incomplete multibyte or wide character */
   EBACKGROUND                    = 0x40000064,	/* Inappropriate operation for background process */
@@ -312,6 +313,7 @@ enum __error_t_codes
 #define EAUTH                          0x40000050
 #define ENEEDAUTH                      0x40000051
 #define ENOSYS                         0x4000004e
+#define ELIBEXEC                       0x40000053
 #define ENOTSUP                        0x40000076
 #define EILSEQ                         0x4000006a
 #define EBACKGROUND                    0x40000064
