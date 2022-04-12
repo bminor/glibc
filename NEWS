@@ -165,6 +165,9 @@ Major new features:
   fortification balanced against additional runtime cost (checking non-constant
   bounds).
 
+* The audit libraries will avoid unnecessary slowdown if it is not required
+  PLT tracking (by not implementing the la_pltenter or la_pltexit callbacks).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * On x86-64, the LD_PREFER_MAP_32BIT_EXEC environment variable support
@@ -463,9 +466,6 @@ Major new features:
 * When invoked explicitly, the dynamic linker now uses the kernel to
   execute programs that do not have any dynamic dependency (that is,
   they are statically linked).  This feature is Linux-specific.
-
-* The audit libraries will avoid unnecessary slowdown if it is not required
-  PLT tracking (by not implementing the la_pltenter or la_pltexit callbacks).
 
 Deprecated and removed features, and other changes affecting compatibility:
 
