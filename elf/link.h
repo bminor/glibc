@@ -160,7 +160,7 @@ enum
 
 struct dl_phdr_info
   {
-    ElfW(Addr) dlpi_addr;
+    elfptr_t dlpi_addr;
     const char *dlpi_name;
     const ElfW(Phdr) *dlpi_phdr;
     ElfW(Half) dlpi_phnum;
