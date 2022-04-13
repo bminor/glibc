@@ -25,6 +25,7 @@
 extern int marker2 (void);
 extern int marker3 (void);
 extern int marker4 (void);
+extern int marker5 (void);
 
 /* Return the arch level, 10 for the baseline libmarkermod*.so's.  */
 static int
@@ -63,9 +64,11 @@ compute_level (void)
     return 12;
   if (strcmp (platform, "z15") == 0)
     return 13;
+  if (strcmp (platform, "z16") == 0)
+    return 14;
   printf ("warning: unrecognized AT_PLATFORM value: %s\n", platform);
-  /* Assume that the new platform supports z15.  */
-  return 13;
+  /* Assume that the new platform supports z16.  */
+  return 14;
 }
 
 static int
@@ -76,6 +79,7 @@ do_test (void)
   TEST_COMPARE (marker2 (), MIN (level - 9, 2));
   TEST_COMPARE (marker3 (), MIN (level - 9, 3));
   TEST_COMPARE (marker4 (), MIN (level - 9, 4));
+  TEST_COMPARE (marker5 (), MIN (level - 9, 5));
   return 0;
 }
 

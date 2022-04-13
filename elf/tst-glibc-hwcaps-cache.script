@@ -4,6 +4,7 @@
 cp $B/elf/libmarkermod2-1.so $L/libmarkermod2.so
 cp $B/elf/libmarkermod3-1.so $L/libmarkermod3.so
 cp $B/elf/libmarkermod4-1.so $L/libmarkermod4.so
+cp $B/elf/libmarkermod5-1.so $L/libmarkermod5.so
 
 mkdirp 0770 $L/glibc-hwcaps/power9
 cp $B/elf/libmarkermod2-2.so $L/glibc-hwcaps/power9/libmarkermod2.so
@@ -20,6 +21,11 @@ mkdirp 0770 $L/glibc-hwcaps/z15
 cp $B/elf/libmarkermod4-2.so $L/glibc-hwcaps/z13/libmarkermod4.so
 cp $B/elf/libmarkermod4-3.so $L/glibc-hwcaps/z14/libmarkermod4.so
 cp $B/elf/libmarkermod4-4.so $L/glibc-hwcaps/z15/libmarkermod4.so
+mkdirp 0770 $L/glibc-hwcaps/z16
+cp $B/elf/libmarkermod5-2.so $L/glibc-hwcaps/z13/libmarkermod5.so
+cp $B/elf/libmarkermod5-3.so $L/glibc-hwcaps/z14/libmarkermod5.so
+cp $B/elf/libmarkermod5-4.so $L/glibc-hwcaps/z15/libmarkermod5.so
+cp $B/elf/libmarkermod5-5.so $L/glibc-hwcaps/z16/libmarkermod5.so
 
 mkdirp 0770 $L/glibc-hwcaps/x86-64-v2
 cp $B/elf/libmarkermod2-2.so $L/glibc-hwcaps/x86-64-v2/libmarkermod2.so
