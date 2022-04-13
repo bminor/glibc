@@ -63,7 +63,7 @@ last (void)
 }
 
 int
-main (void)
+do_test (void)
 {
   int value;
   void *dso;
@@ -90,3 +90,5 @@ main (void)
 
   FAIL_EXIT1 ("Did not terminate via exit(0) in exit_thread() as expected.");
 }
+
+#include <support/test-driver.c>
