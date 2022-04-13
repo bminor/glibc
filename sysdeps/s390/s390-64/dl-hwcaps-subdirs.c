@@ -19,8 +19,8 @@
 #include <dl-hwcaps.h>
 #include <ldsodefs.h>
 
-const char _dl_hwcaps_subdirs[] = "z15:z14:z13";
-enum { subdirs_count = 3 }; /* Number of components in _dl_hwcaps_subdirs.  */
+const char _dl_hwcaps_subdirs[] = "z16:z15:z14:z13";
+enum { subdirs_count = 4 }; /* Number of components in _dl_hwcaps_subdirs.  */
 
 uint32_t
 _dl_hwcaps_subdirs_active (void)
@@ -47,6 +47,13 @@ _dl_hwcaps_subdirs_active (void)
      in future.  */
   if (!((GLRO (dl_hwcap) & HWCAP_S390_VXRS_EXT2)
         && (GLRO (dl_hwcap) & HWCAP_S390_VXRS_PDE)))
+    return _dl_hwcaps_subdirs_build_bitmask (subdirs_count, active);
+  ++active;
+
+  /* z16.
+   Note: We do not list HWCAP_S390_NNPA here as, according to the Principles of
+   Operation, those instructions may be replaced or removed in future.  */
+  if (!(GLRO (dl_hwcap) & HWCAP_S390_VXRS_PDE2))
     return _dl_hwcaps_subdirs_build_bitmask (subdirs_count, active);
   ++active;
 
