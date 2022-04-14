@@ -63,7 +63,6 @@ sysdep_routines += \
   strcat-evex \
   strcat-sse2 \
   strcat-sse2-unaligned \
-  strcat-ssse3 \
   strchr-avx2 \
   strchr-avx2-rtm \
   strchr-evex \
@@ -101,7 +100,6 @@ sysdep_routines += \
   strncat-c \
   strncat-evex \
   strncat-sse2-unaligned \
-  strncat-ssse3 \
   strncmp-avx2 \
   strncmp-avx2-rtm \
   strncmp-evex \
