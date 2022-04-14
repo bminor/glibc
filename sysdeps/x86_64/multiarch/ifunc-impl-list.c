@@ -98,8 +98,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memcmp_evex_movbe)
 	      IFUNC_IMPL_ADD (array, i, memcmp, CPU_FEATURE_USABLE (SSE4_1),
 			      __memcmp_sse4_1)
-	      IFUNC_IMPL_ADD (array, i, memcmp, CPU_FEATURE_USABLE (SSSE3),
-			      __memcmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, memcmp, 1, __memcmp_sse2))
 
 #ifdef SHARED
@@ -844,8 +842,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __wmemcmp_evex_movbe)
 	      IFUNC_IMPL_ADD (array, i, wmemcmp, CPU_FEATURE_USABLE (SSE4_1),
 			      __wmemcmp_sse4_1)
-	      IFUNC_IMPL_ADD (array, i, wmemcmp, CPU_FEATURE_USABLE (SSSE3),
-			      __wmemcmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, wmemcmp, 1, __wmemcmp_sse2))
 
   /* Support sysdeps/x86_64/multiarch/wmemset.c.  */

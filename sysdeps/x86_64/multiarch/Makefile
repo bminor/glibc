@@ -12,7 +12,6 @@ sysdep_routines += \
   memcmp-evex-movbe \
   memcmp-sse2 \
   memcmp-sse4 \
-  memcmp-ssse3 \
   memcmpeq-avx2 \
   memcmpeq-avx2-rtm \
   memcmpeq-evex \
@@ -179,7 +178,6 @@ sysdep_routines += \
   wmemcmp-c \
   wmemcmp-evex-movbe \
   wmemcmp-sse4 \
-  wmemcmp-ssse3 \
 # sysdep_routines
 endif
 
