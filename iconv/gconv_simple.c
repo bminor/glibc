@@ -959,8 +959,8 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       }									      \
     else								      \
       {									      \
-	uint_fast32_t cnt;						      \
-	uint_fast32_t i;						      \
+	unsigned int cnt;						      \
+	unsigned int i;						      \
 									      \
 	if (ch >= 0xc2 && ch < 0xe0)					      \
 	  {								      \

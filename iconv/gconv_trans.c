@@ -37,15 +37,15 @@ __gconv_transliterate (struct __gconv_step *step,
 		       unsigned char **outbufstart, size_t *irreversible)
 {
   /* Find out about the locale's transliteration.  */
-  uint_fast32_t size;
+  uint32_t size;
   const uint32_t *from_idx;
   const uint32_t *from_tbl;
   const uint32_t *to_idx;
   const uint32_t *to_tbl;
   const uint32_t *winbuf;
   const uint32_t *winbufend;
-  uint_fast32_t low;
-  uint_fast32_t high;
+  uint32_t low;
+  uint32_t high;
 
   /* The input buffer.  There are actually 4-byte values.  */
   winbuf = (const uint32_t *) *inbufp;
@@ -85,7 +85,7 @@ __gconv_transliterate (struct __gconv_step *step,
   high = size;
   while (low < high)
     {
-      uint_fast32_t med = (low + high) / 2;
+      uint32_t med = (low + high) / 2;
       uint32_t idx;
       int cnt;
 
@@ -111,7 +111,7 @@ __gconv_transliterate (struct __gconv_step *step,
 	  do
 	    {
 	      /* Determine length of replacement.  */
-	      uint_fast32_t len = 0;
+	      unsigned int len = 0;
 	      int res;
 	      const unsigned char *toinptr;
 	      unsigned char *outptr;

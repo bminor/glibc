@@ -208,7 +208,7 @@ is_nodelete (struct link_map *map, int flags)
    in the unique symbol table, creating a new entry if necessary.
    Return the matching symbol in RESULT.  */
 static void
-do_lookup_unique (const char *undef_name, uint_fast32_t new_hash,
+do_lookup_unique (const char *undef_name, unsigned int new_hash,
 		  struct link_map *map, struct sym_val *result,
 		  int type_class, const ElfW(Sym) *sym, const char *strtab,
 		  const ElfW(Sym) *ref, const struct link_map *undef_map,
@@ -339,7 +339,7 @@ marking %s [%lu] as NODELETE due to unique symbol\n",
    something bad happened.  */
 static int
 __attribute_noinline__
-do_lookup_x (const char *undef_name, uint_fast32_t new_hash,
+do_lookup_x (const char *undef_name, unsigned int new_hash,
 	     unsigned long int *old_hash, const ElfW(Sym) *ref,
 	     struct sym_val *result, struct r_scope_elem *scope, size_t i,
 	     const struct r_found_version *const version, int flags,
@@ -558,13 +558,13 @@ skip:
 }
 
 
-static uint_fast32_t
+static uint32_t
 dl_new_hash (const char *s)
 {
-  uint_fast32_t h = 5381;
+  uint32_t h = 5381;
   for (unsigned char c = *s; c != '\0'; c = *++s)
     h = h * 33 + c;
-  return h & 0xffffffff;
+  return h;
 }
 
 
@@ -816,7 +816,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 		     const struct r_found_version *version,
 		     int type_class, int flags, struct link_map *skip_map)
 {
-  const uint_fast32_t new_hash = dl_new_hash (undef_name);
+  const unsigned int new_hash = dl_new_hash (undef_name);
   unsigned long int old_hash = 0xffffffff;
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope = symbol_scope;

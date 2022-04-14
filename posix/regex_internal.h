@@ -814,7 +814,7 @@ re_string_elem_size_at (const re_string_t *pstr, Idx idx)
 # ifdef _LIBC
   const unsigned char *p, *extra;
   const int32_t *table, *indirect;
-  uint_fast32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
+  uint32_t nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
 
   if (nrules != 0)
     {

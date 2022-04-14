@@ -27,7 +27,7 @@ findidx (const int32_t *table,
 	 const unsigned char *extra,
 	 const unsigned char **cpp, size_t len)
 {
-  int_fast32_t i = table[*(*cpp)++];
+  int32_t i = table[*(*cpp)++];
   const unsigned char *cp;
   const unsigned char *usrc;
 

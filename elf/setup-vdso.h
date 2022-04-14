@@ -36,7 +36,7 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
       l->l_phdr = ((const void *) GLRO(dl_sysinfo_dso)
 		   + GLRO(dl_sysinfo_dso)->e_phoff);
       l->l_phnum = GLRO(dl_sysinfo_dso)->e_phnum;
-      for (uint_fast16_t i = 0; i < l->l_phnum; ++i)
+      for (unsigned int i = 0; i < l->l_phnum; ++i)
 	{
 	  const ElfW(Phdr) *const ph = &l->l_phdr[i];
 	  if (ph->p_type == PT_DYNAMIC)

@@ -575,7 +575,7 @@ _hurd_select (int nfds,
     for (i = 0; i < nfds; ++i)
       {
 	int type = d[i].type;
-	int_fast16_t revents = 0;
+	int revents = 0;
 
 	if (type & SELECT_ERROR)
 	  switch (d[i].error)

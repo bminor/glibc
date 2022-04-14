@@ -1093,7 +1093,7 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
    /* On most platforms presume that PT_GNU_STACK is absent and the stack is
     * executable.  Other platforms default to a nonexecutable stack and don't
     * need PT_GNU_STACK to do so.  */
-   uint_fast16_t stack_flags = DEFAULT_STACK_PERMS;
+   unsigned int stack_flags = DEFAULT_STACK_PERMS;
 
   {
     /* Scan the program header table, collecting its load commands.  */

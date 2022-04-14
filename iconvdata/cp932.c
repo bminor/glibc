@@ -4572,7 +4572,7 @@ static const char from_ucs4_extra[229][2] =
 	/* Two-byte character.  First test whether the next character	      \
 	   is also available.  */					      \
 	uint32_t ch2;							      \
-	uint_fast32_t idx;						      \
+	uint32_t idx;						      \
 									      \
 	if (__glibc_unlikely (inptr + 1 >= inend))			      \
 	  {								      \

@@ -269,7 +269,7 @@ _dl_discover_osversion (void)
       } expected_note = { { sizeof "Linux", sizeof (ElfW(Word)), 0 }, "Linux" };
       const ElfW(Phdr) *const phdr = GLRO(dl_sysinfo_map)->l_phdr;
       const ElfW(Word) phnum = GLRO(dl_sysinfo_map)->l_phnum;
-      for (uint_fast16_t i = 0; i < phnum; ++i)
+      for (unsigned int i = 0; i < phnum; ++i)
 	if (phdr[i].p_type == PT_NOTE)
 	  {
 	    const ElfW(Addr) start = (phdr[i].p_vaddr
