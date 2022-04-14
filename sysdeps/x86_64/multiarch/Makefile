@@ -16,7 +16,6 @@ sysdep_routines += \
   memcmpeq-avx2-rtm \
   memcmpeq-evex \
   memcmpeq-sse2 \
-  memcpy-ssse3 \
   memmove-avx-unaligned-erms \
   memmove-avx-unaligned-erms-rtm \
   memmove-avx512-no-vzeroupper \
