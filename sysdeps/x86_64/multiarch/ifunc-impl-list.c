@@ -399,8 +399,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/stpncpy.c.  */
   IFUNC_IMPL (i, name, stpncpy,
-	      IFUNC_IMPL_ADD (array, i, stpncpy, CPU_FEATURE_USABLE (SSSE3),
-			      __stpncpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, stpncpy, CPU_FEATURE_USABLE (AVX2),
 			      __stpncpy_avx2)
 	      IFUNC_IMPL_ADD (array, i, stpncpy,
@@ -417,8 +415,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/stpcpy.c.  */
   IFUNC_IMPL (i, name, stpcpy,
-	      IFUNC_IMPL_ADD (array, i, stpcpy, CPU_FEATURE_USABLE (SSSE3),
-			      __stpcpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, stpcpy, CPU_FEATURE_USABLE (AVX2),
 			      __stpcpy_avx2)
 	      IFUNC_IMPL_ADD (array, i, stpcpy,
@@ -567,8 +563,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)),
 			      __strcpy_evex)
-	      IFUNC_IMPL_ADD (array, i, strcpy, CPU_FEATURE_USABLE (SSSE3),
-			      __strcpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strcpy, 1, __strcpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strcpy, 1, __strcpy_sse2))
 
@@ -644,8 +638,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)),
 			      __strncpy_evex)
-	      IFUNC_IMPL_ADD (array, i, strncpy, CPU_FEATURE_USABLE (SSSE3),
-			      __strncpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strncpy, 1,
 			      __strncpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strncpy, 1, __strncpy_sse2))
