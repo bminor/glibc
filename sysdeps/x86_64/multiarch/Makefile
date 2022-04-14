@@ -58,7 +58,6 @@ sysdep_routines += \
   strcasecmp_l-evex \
   strcasecmp_l-sse2 \
   strcasecmp_l-sse4_2 \
-  strcasecmp_l-ssse3 \
   strcat-avx2 \
   strcat-avx2-rtm \
   strcat-evex \
@@ -80,7 +79,6 @@ sysdep_routines += \
   strcmp-sse2 \
   strcmp-sse2-unaligned \
   strcmp-sse4_2 \
-  strcmp-ssse3 \
   strcpy-avx2 \
   strcpy-avx2-rtm \
   strcpy-evex \
@@ -98,7 +96,6 @@ sysdep_routines += \
   strncase_l-evex \
   strncase_l-sse2 \
   strncase_l-sse4_2 \
-  strncase_l-ssse3 \
   strncat-avx2 \
   strncat-avx2-rtm \
   strncat-c \
@@ -110,7 +107,6 @@ sysdep_routines += \
   strncmp-evex \
   strncmp-sse2 \
   strncmp-sse4_2 \
-  strncmp-ssse3 \
   strncpy-avx2 \
   strncpy-avx2-rtm \
   strncpy-c \

@@ -448,9 +448,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcasecmp,
 			      CPU_FEATURE_USABLE (SSE4_2),
 			      __strcasecmp_sse42)
-	      IFUNC_IMPL_ADD (array, i, strcasecmp,
-			      CPU_FEATURE_USABLE (SSSE3),
-			      __strcasecmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strcasecmp, 1, __strcasecmp_sse2))
 
   /* Support sysdeps/x86_64/multiarch/strcasecmp_l.c.  */
@@ -469,9 +466,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strcasecmp_l,
 			      CPU_FEATURE_USABLE (SSE4_2),
 			      __strcasecmp_l_sse42)
-	      IFUNC_IMPL_ADD (array, i, strcasecmp_l,
-			      CPU_FEATURE_USABLE (SSSE3),
-			      __strcasecmp_l_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strcasecmp_l, 1,
 			      __strcasecmp_l_sse2))
 
@@ -560,8 +554,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strcmp_evex)
 	      IFUNC_IMPL_ADD (array, i, strcmp, CPU_FEATURE_USABLE (SSE4_2),
 			      __strcmp_sse42)
-	      IFUNC_IMPL_ADD (array, i, strcmp, CPU_FEATURE_USABLE (SSSE3),
-			      __strcmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strcmp, 1, __strcmp_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strcmp, 1, __strcmp_sse2))
 
@@ -604,9 +596,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strncasecmp,
 			      CPU_FEATURE_USABLE (SSE4_2),
 			      __strncasecmp_sse42)
-	      IFUNC_IMPL_ADD (array, i, strncasecmp,
-			      CPU_FEATURE_USABLE (SSSE3),
-			      __strncasecmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strncasecmp, 1,
 			      __strncasecmp_sse2))
 
@@ -626,9 +615,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strncasecmp_l,
 			      CPU_FEATURE_USABLE (SSE4_2),
 			      __strncasecmp_l_sse42)
-	      IFUNC_IMPL_ADD (array, i, strncasecmp_l,
-			      CPU_FEATURE_USABLE (SSSE3),
-			      __strncasecmp_l_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strncasecmp_l, 1,
 			      __strncasecmp_l_sse2))
 
@@ -1054,8 +1040,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strncmp_evex)
 	      IFUNC_IMPL_ADD (array, i, strncmp, CPU_FEATURE_USABLE (SSE4_2),
 			      __strncmp_sse42)
-	      IFUNC_IMPL_ADD (array, i, strncmp, CPU_FEATURE_USABLE (SSSE3),
-			      __strncmp_ssse3)
 	      IFUNC_IMPL_ADD (array, i, strncmp, 1, __strncmp_sse2))
 
 #ifdef SHARED
