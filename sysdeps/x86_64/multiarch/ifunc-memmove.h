@@ -25,7 +25,6 @@ extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned)
 extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned_erms)
   attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (ssse3) attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (ssse3_back) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx_unaligned) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx_unaligned_erms)
   attribute_hidden;
@@ -94,17 +93,14 @@ IFUNC_SELECTOR (void)
 	}
     }
 
-  if (!CPU_FEATURE_USABLE_P (cpu_features, SSSE3)
-      || CPU_FEATURES_ARCH_P (cpu_features, Fast_Unaligned_Copy))
+  if (CPU_FEATURE_USABLE_P (cpu_features, SSSE3)
+      && !CPU_FEATURES_ARCH_P (cpu_features, Fast_Unaligned_Copy))
     {
-      if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
-	return OPTIMIZE (sse2_unaligned_erms);
-
-      return OPTIMIZE (sse2_unaligned);
+      return OPTIMIZE (ssse3);
     }
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, Fast_Copy_Backward))
-    return OPTIMIZE (ssse3_back);
+  if (CPU_FEATURE_USABLE_P (cpu_features, ERMS))
+    return OPTIMIZE (sse2_unaligned_erms);
 
-  return OPTIMIZE (ssse3);
+  return OPTIMIZE (sse2_unaligned);
 }
