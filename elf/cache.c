@@ -727,7 +727,8 @@ save_cache (const char *cache_name)
   if (opt_format != opt_format_old)
     {
       /* Align file position to 4.  */
-      off64_t old_offset = lseek64 (fd, extension_offset, SEEK_SET);
+      __attribute__ ((unused)) off64_t old_offset
+        = lseek64 (fd, extension_offset, SEEK_SET);
       assert ((unsigned long long int) (extension_offset - old_offset) < 4);
       write_extensions (fd, str_offset, extension_offset);
     }
