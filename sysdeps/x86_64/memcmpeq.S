@@ -16,6 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define memcmp	__memcmpeq
+#define MEMCMP	__memcmpeq
 #define USE_AS_MEMCMPEQ	1
 #include "multiarch/memcmp-sse2.S"

@@ -18,395 +18,557 @@
 
 #include <sysdep.h>
 
+#ifdef USE_AS_WMEMCMP
+# define PCMPEQ	pcmpeqd
+# define CHAR_SIZE	4
+# define SIZE_OFFSET	(0)
+#else
+# define PCMPEQ	pcmpeqb
+# define CHAR_SIZE	1
+#endif
+
+#ifdef USE_AS_MEMCMPEQ
+# define SIZE_OFFSET	(0)
+# define CHECK_CMP(x, y)	subl x, y
+#else
+# ifndef SIZE_OFFSET
+#  define SIZE_OFFSET	(CHAR_PER_VEC * 2)
+# endif
+# define CHECK_CMP(x, y)	cmpl x, y
+#endif
+
+#define VEC_SIZE	16
+#define CHAR_PER_VEC	(VEC_SIZE / CHAR_SIZE)
+
+#ifndef MEMCMP
+# define MEMCMP	memcmp
+#endif
+
 	.text
-ENTRY (memcmp)
-#ifdef __ILP32__
-	/* Clear the upper 32 bits.  */
-	movl	%edx, %edx
+ENTRY(MEMCMP)
+#ifdef USE_AS_WMEMCMP
+	/* Use 0xffff to test for mismatches on pmovmskb bitmask. Store
+	   in ecx for code size. This is preferable to using `incw` as
+	   it avoids partial register stalls on older hardware (pre
+	   SnB).  */
+	movl	$0xffff, %ecx
 #endif
-	test	%RDX_LP, %RDX_LP
-	jz	L(finz)
-	cmpq	$1, %rdx
-	jbe	L(finr1b)
-	subq	%rdi, %rsi
-	movq	%rdx, %r10
-	cmpq	$32, %r10
-	jae	L(gt32)
-	/* Handle small chunks and last block of less than 32 bytes.  */
-L(small):
-	testq	$1, %r10
-	jz	L(s2b)
-	movzbl	(%rdi),	%eax
-	movzbl	(%rdi, %rsi), %edx
-	subq    $1, %r10
-	je	L(finz1)
-	addq	$1, %rdi
-	subl	%edx, %eax
-	jnz	L(exit)
-L(s2b):
-	testq	$2, %r10
-	jz	L(s4b)
-	movzwl	(%rdi),	%eax
-	movzwl	(%rdi, %rsi), %edx
-	subq    $2, %r10
-#ifdef USE_AS_MEMCMPEQ
-	je	L(finz1)
+	cmpq	$CHAR_PER_VEC, %rdx
+	ja	L(more_1x_vec)
+
+#ifdef USE_AS_WMEMCMP
+	/* saves a byte of code keeping the fall through path n = [2, 4]
+	   in the initial cache line.  */
+	decl	%edx
+	jle	L(cmp_0_1)
+
+	movq	(%rsi), %xmm0
+	movq	(%rdi), %xmm1
+	PCMPEQ	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+	subl	%ecx, %eax
+	jnz	L(ret_nonzero_vec_start_0)
+
+	movq	-4(%rsi, %rdx, CHAR_SIZE), %xmm0
+	movq	-4(%rdi, %rdx, CHAR_SIZE), %xmm1
+	PCMPEQ	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+	subl	%ecx, %eax
+	jnz	L(ret_nonzero_vec_end_0_adj)
 #else
-	je	L(fin2_7)
-#endif
-	addq	$2, %rdi
-	cmpl	%edx, %eax
-#ifdef USE_AS_MEMCMPEQ
-	jnz	L(neq_early)
-#else
-	jnz	L(fin2_7)
-#endif
-L(s4b):
-	testq	$4, %r10
-	jz	L(s8b)
-	movl	(%rdi),	%eax
-	movl	(%rdi, %rsi), %edx
-	subq    $4, %r10
-#ifdef USE_AS_MEMCMPEQ
-	je	L(finz1)
-#else
-	je	L(fin2_7)
-#endif
-	addq	$4, %rdi
-	cmpl	%edx, %eax
-#ifdef USE_AS_MEMCMPEQ
-	jnz	L(neq_early)
-#else
-	jnz	L(fin2_7)
-#endif
-L(s8b):
-	testq	$8, %r10
-	jz	L(s16b)
-	movq	(%rdi),	%rax
-	movq	(%rdi, %rsi), %rdx
-	subq    $8, %r10
-#ifdef USE_AS_MEMCMPEQ
-	je	L(sub_return8)
-#else
-	je	L(fin2_7)
-#endif
-	addq	$8, %rdi
-	cmpq	%rdx, %rax
-#ifdef USE_AS_MEMCMPEQ
-	jnz	L(neq_early)
-#else
-	jnz	L(fin2_7)
-#endif
-L(s16b):
-	movdqu    (%rdi), %xmm1
-	movdqu    (%rdi, %rsi), %xmm0
-	pcmpeqb   %xmm0, %xmm1
-#ifdef USE_AS_MEMCMPEQ
-	pmovmskb  %xmm1, %eax
-	subl      $0xffff, %eax
+	cmpl	$8, %edx
+	ja	L(cmp_9_16)
+
+	cmpl	$4, %edx
+	jb	L(cmp_0_3)
+
+# ifdef USE_AS_MEMCMPEQ
+	movl	(%rsi), %eax
+	subl	(%rdi), %eax
+
+	movl	-4(%rsi, %rdx), %esi
+	subl	-4(%rdi, %rdx), %esi
+
+	orl	%esi, %eax
 	ret
-#else
-	pmovmskb  %xmm1, %edx
-	xorl	  %eax, %eax
-	subl      $0xffff, %edx
-	jz	  L(finz)
-	bsfl      %edx, %ecx
-	leaq	 (%rdi, %rcx), %rcx
-	movzbl	 (%rcx), %eax
-	movzbl	 (%rsi, %rcx), %edx
-	jmp	 L(finz1)
-#endif
-	.p2align 4,, 4
-L(finr1b):
-	movzbl	(%rdi), %eax
-	movzbl  (%rsi), %edx
-L(finz1):
-	subl	%edx, %eax
-L(exit):
-	ret
-#ifdef USE_AS_MEMCMPEQ
-	.p2align 4,, 4
-L(sub_return8):
-	subq	%rdx, %rax
-	movl	%eax, %edx
-	shrq	$32, %rax
-	orl	%edx, %eax
-	ret
-#else
-	.p2align 4,, 4
-L(fin2_7):
-	cmpq	%rdx, %rax
-	jz	L(finz)
-	movq	%rax, %r11
-	subq	%rdx, %r11
-	bsfq	%r11, %rcx
-	sarq	$3, %rcx
-	salq	$3, %rcx
-	sarq	%cl, %rax
-	movzbl  %al, %eax
-	sarq	%cl, %rdx
-	movzbl  %dl, %edx
-	subl	%edx, %eax
-	ret
-#endif
-	.p2align 4,, 4
-L(finz):
+# else
+	/* Combine comparisons for lo and hi 4-byte comparisons.  */
+	movl	-4(%rsi, %rdx), %ecx
+	movl	-4(%rdi, %rdx), %eax
+	shlq	$32, %rcx
+	shlq	$32, %rax
+	movl	(%rsi), %esi
+	movl	(%rdi), %edi
+	orq	%rsi, %rcx
+	orq	%rdi, %rax
+	/* Only compute proper return if not-equal.  */
+	cmpq	%rcx, %rax
+	jnz	L(ret_nonzero)
 	xorl	%eax, %eax
 	ret
-#ifdef USE_AS_MEMCMPEQ
-	.p2align 4,, 4
-L(neq_early):
-	movl	$1, %eax
+# endif
+
+	.p2align 4,, 10
+L(cmp_9_16):
+# ifdef USE_AS_MEMCMPEQ
+	movq	(%rsi), %rax
+	subq	(%rdi), %rax
+
+	movq	-8(%rsi, %rdx), %rcx
+	subq	-8(%rdi, %rdx), %rcx
+	orq	%rcx, %rax
+	/* Convert 64 bit -> 32 bit boolean (we should have made the ABI
+	   return long).  */
+	setnz	%cl
+	movzbl	%cl, %eax
+# else
+	movq	(%rsi), %rcx
+	movq	(%rdi), %rax
+	/* Only compute proper return if not-equal.  */
+	cmpq	%rcx, %rax
+	jnz	L(ret_nonzero)
+
+	movq	-8(%rsi, %rdx, CHAR_SIZE), %rcx
+	movq	-8(%rdi, %rdx, CHAR_SIZE), %rax
+	/* Only compute proper return if not-equal.  */
+	cmpq	%rcx, %rax
+	jnz	L(ret_nonzero)
+	xorl	%eax, %eax
+# endif
+#endif
+	ret
+
+	.p2align 4,, 8
+L(cmp_0_1):
+	/* Flag set by earlier comparison against 1.  */
+	jne	L(cmp_0_0)
+#ifdef USE_AS_WMEMCMP
+	movl	(%rdi), %ecx
+	xorl	%edx, %edx
+	cmpl	(%rsi), %ecx
+	je	L(cmp_0_0)
+	setg	%dl
+	leal	-1(%rdx, %rdx), %eax
+#else
+	movzbl	(%rdi), %eax
+	movzbl	(%rsi), %ecx
+	subl	%ecx, %eax
+#endif
+	ret
+
+	/* Fits in aligning bytes.  */
+L(cmp_0_0):
+	xorl	%eax, %eax
+	ret
+
+#ifdef USE_AS_WMEMCMP
+	.p2align 4
+L(ret_nonzero_vec_start_0):
+	bsfl	%eax, %eax
+	movl	(%rdi, %rax), %ecx
+	xorl	%edx, %edx
+	cmpl	(%rsi, %rax), %ecx
+	/* NB: no partial register stall here because xorl zero idiom
+	   above.  */
+	setg	%dl
+	leal	-1(%rdx, %rdx), %eax
+	ret
+#else
+
+# ifndef USE_AS_MEMCMPEQ
+	.p2align 4,, 14
+L(ret_nonzero):
+	/* Need to bswap to get proper return without branch.  */
+	bswapq	%rcx
+	bswapq	%rax
+	subq	%rcx, %rax
+	sbbl	%eax, %eax
+	orl	$1, %eax
+	ret
+# endif
+
+	.p2align 4
+L(cmp_0_3):
+# ifdef USE_AS_MEMCMPEQ
+	/* No reason to add to dependency chain on rdx. Saving a the
+	   bytes here doesn't change number of fetch blocks.  */
+	cmpl	$1, %edx
+	jbe	L(cmp_0_1)
+# else
+	/* We need the code size to prevent taking an extra fetch block.
+	 */
+	decl	%edx
+	jle	L(cmp_0_1)
+# endif
+	movzwl	(%rsi), %ecx
+	movzwl	(%rdi), %eax
+
+# ifdef USE_AS_MEMCMPEQ
+	subl	%ecx, %eax
+
+	movzbl	-1(%rsi, %rdx), %esi
+	movzbl	-1(%rdi, %rdx), %edi
+	subl	%edi, %esi
+	orl	%esi, %eax
+# else
+	bswapl	%ecx
+	bswapl	%eax
+
+	/* Implicit right shift by one. We just need to displace the
+	   sign bits.  */
+	shrl	%ecx
+	shrl	%eax
+
+	/* Eat a partial register stall here. Saves code stopping
+	   L(cmp_0_3) from bleeding into the next fetch block and saves
+	   an ALU.  */
+	movb	(%rsi, %rdx), %cl
+	movzbl	(%rdi, %rdx), %edi
+	orl	%edi, %eax
+	subl	%ecx, %eax
+# endif
 	ret
 #endif
-	/* For blocks bigger than 32 bytes
-	   1. Advance one of the addr pointer to be 16B aligned.
-	   2. Treat the case of both addr pointers aligned to 16B
-	      separately to avoid movdqu.
-	   3. Handle any blocks of greater than 64 consecutive bytes with
-	      unrolling to reduce branches.
-	   4. At least one addr pointer is 16B aligned, use memory version
-	      of pcmbeqb.
-	*/
-	.p2align 4,, 4
-L(gt32):
-	movq	%rdx, %r11
-	addq	%rdi, %r11
-	movq	%rdi, %r8
 
-	andq	$15, %r8
-	jz	L(16am)
-	/* Both pointers may be misaligned.  */
-	movdqu	(%rdi),	%xmm1
-	movdqu	(%rdi, %rsi), %xmm0
-	pcmpeqb   %xmm0, %xmm1
-	pmovmskb  %xmm1, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	neg	 %r8
-	leaq    16(%rdi, %r8), %rdi
-L(16am):
-	/* Handle two 16B aligned pointers separately.  */
-	testq   $15, %rsi
-	jz      L(ATR)
-	testq	$16, %rdi
-	jz	L(A32)
-	movdqu	(%rdi, %rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq	$16, %rdi
-L(A32):
-	movq	%r11, %r10
-	andq	$-32, %r10
-	cmpq	%r10, %rdi
-        jae	L(mt16)
-	/* Pre-unroll to be ready for unrolled 64B loop.  */
-	testq	$32, %rdi
-	jz	L(A64)
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb  (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-L(A64):
-	movq	%r11, %r10
-	andq	$-64, %r10
-	cmpq	%r10, %rdi
-        jae	L(mt32)
-
-L(A64main):
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb  (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	cmpq       %rdi, %r10
-	jne       L(A64main)
-
-L(mt32):
-	movq	%r11, %r10
-	andq	$-32, %r10
-	cmpq	%r10, %rdi
-        jae	L(mt16)
-
-L(A32main):
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqu    (%rdi,%rsi), %xmm0
-	pcmpeqb  (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	cmpq       %rdi, %r10
-	jne       L(A32main)
-L(mt16):
-	subq       %rdi, %r11
-	je	  L(finz)
-	movq	  %r11, %r10
-	jmp	  L(small)
-
-	.p2align 4,, 4
-L(neq):
-#ifdef USE_AS_MEMCMPEQ
-	movl	$1, %eax
-    ret
+	.p2align 5
+L(more_1x_vec):
+#ifndef USE_AS_WMEMCMP
+	/* Use 0xffff to test for mismatches on pmovmskb bitmask. Store
+	   in ecx for code size. This is preferable to using `incw` as
+	   it avoids partial register stalls on older hardware (pre
+	   SnB).  */
+	movl	$0xffff, %ecx
+#endif
+	movups	(%rsi), %xmm0
+	movups	(%rdi), %xmm1
+	PCMPEQ	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+	subl	%ecx, %eax
+	jnz	L(ret_nonzero_vec_start_0)
+#if SIZE_OFFSET == 0
+	cmpq	$(CHAR_PER_VEC * 2), %rdx
 #else
-	bsfl      %edx, %ecx
-	movzbl	 (%rdi, %rcx), %eax
-	addq	 %rdi, %rsi
-	movzbl	 (%rsi,%rcx), %edx
-	jmp	 L(finz1)
+	/* Offset rdx. Saves just enough code size to keep the
+	   L(last_2x_vec) case and the non-zero return in a single
+	   cache line.  */
+	subq	$(CHAR_PER_VEC * 2), %rdx
+#endif
+	ja	L(more_2x_vec)
+
+	movups	(VEC_SIZE * -1 + SIZE_OFFSET)(%rsi, %rdx, CHAR_SIZE), %xmm0
+	movups	(VEC_SIZE * -1 + SIZE_OFFSET)(%rdi, %rdx, CHAR_SIZE), %xmm1
+	PCMPEQ	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+	subl	%ecx, %eax
+#ifndef USE_AS_MEMCMPEQ
+	/* Don't use `incw ax` as machines this code runs on are liable
+	   to have partial register stall.  */
+	jnz	L(ret_nonzero_vec_end_0)
+#else
+	/* Various return targets for memcmpeq. Will always be hot in
+	   Icache and get short encoding.  */
+L(ret_nonzero_vec_start_1):
+L(ret_nonzero_vec_start_0):
+L(ret_nonzero_vec_end_0):
+#endif
+	ret
+
+#ifndef USE_AS_MEMCMPEQ
+# ifdef USE_AS_WMEMCMP
+	.p2align 4
+L(ret_nonzero_vec_end_0_adj):
+	addl	$3, %edx
+# else
+	.p2align 4,, 8
+# endif
+L(ret_nonzero_vec_end_0):
+	bsfl	%eax, %eax
+# ifdef USE_AS_WMEMCMP
+	leal	(%rax, %rdx, CHAR_SIZE), %eax
+	movl	(VEC_SIZE * -1 + SIZE_OFFSET)(%rdi, %rax), %ecx
+	xorl	%edx, %edx
+	cmpl	(VEC_SIZE * -1 + SIZE_OFFSET)(%rsi, %rax), %ecx
+	/* NB: no partial register stall here because xorl zero idiom
+	   above.  */
+	setg	%dl
+	leal	-1(%rdx, %rdx), %eax
+# else
+	addl	%edx, %eax
+	movzbl	(VEC_SIZE * -1 + SIZE_OFFSET)(%rsi, %rax), %ecx
+	movzbl	(VEC_SIZE * -1 + SIZE_OFFSET)(%rdi, %rax), %eax
+	subl	%ecx, %eax
+# endif
+	ret
+# ifndef USE_AS_WMEMCMP
+	.p2align 4,, 10
+L(ret_nonzero_vec_start_0):
+	bsfl	%eax, %eax
+	movzbl	(%rsi, %rax), %ecx
+	movzbl	(%rdi, %rax), %eax
+	subl	%ecx, %eax
+	ret
+# endif
+#else
 #endif
 
-	.p2align 4,, 4
-L(ATR):
-	movq	%r11, %r10
-	andq	$-32, %r10
-	cmpq	%r10, %rdi
-        jae	L(mt16)
-	testq	$16, %rdi
-	jz	L(ATR32)
+	.p2align 5
+L(more_2x_vec):
+	movups	(VEC_SIZE * 1)(%rsi), %xmm0
+	movups	(VEC_SIZE * 1)(%rdi), %xmm1
+	PCMPEQ	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+	subl	%ecx, %eax
+	jnz	L(ret_nonzero_vec_start_1)
 
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-	cmpq       %rdi, %r10
-	je       L(mt16)
+	cmpq	$(CHAR_PER_VEC * 4 - SIZE_OFFSET), %rdx
+	jbe	L(last_2x_vec)
 
-L(ATR32):
-	movq	%r11, %r10
-	andq	$-64, %r10
-	testq	$32, %rdi
-	jz	L(ATR64)
+	cmpq	$(CHAR_PER_VEC * 8 - SIZE_OFFSET), %rdx
+	ja	L(more_8x_vec)
 
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
+	/* Do comparisons for [65, 96] and [97, 128] 2x VEC at a time.
+	   This can harm performance if non-zero return in [65, 80] or
+	   [97, 112] but helps performance otherwise. Generally zero-
+	   return is hotter.  */
+	movups	(VEC_SIZE * 2)(%rsi), %xmm0
+	movups	(VEC_SIZE * 2)(%rdi), %xmm1
+	PCMPEQ	%xmm0, %xmm1
+	movups	(VEC_SIZE * 3)(%rsi), %xmm2
+	movups	(VEC_SIZE * 3)(%rdi), %xmm3
+	PCMPEQ	%xmm2, %xmm3
+	pand	%xmm1, %xmm3
 
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
+	pmovmskb %xmm3, %eax
+	CHECK_CMP (%ecx, %eax)
+	jnz	L(ret_nonzero_vec_start_2_3)
 
-L(ATR64):
-	cmpq       %rdi, %r10
-	je	   L(mt32)
+	cmpl	$(CHAR_PER_VEC * 6 - SIZE_OFFSET), %edx
+	jbe	L(last_2x_vec)
 
-L(ATR64main):
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
+	movups	(VEC_SIZE * 4)(%rsi), %xmm0
+	movups	(VEC_SIZE * 4)(%rdi), %xmm1
+	PCMPEQ	%xmm0, %xmm1
+	movups	(VEC_SIZE * 5)(%rsi), %xmm2
+	movups	(VEC_SIZE * 5)(%rdi), %xmm3
+	PCMPEQ	%xmm2, %xmm3
+	pand	%xmm1, %xmm3
 
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-	cmpq       %rdi, %r10
-	jne       L(ATR64main)
-
-	movq	%r11, %r10
-	andq	$-32, %r10
-	cmpq	%r10, %rdi
-        jae	L(mt16)
-
-L(ATR32res):
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	movdqa    (%rdi,%rsi), %xmm0
-	pcmpeqb   (%rdi), %xmm0
-	pmovmskb  %xmm0, %edx
-	subl      $0xffff, %edx
-	jnz       L(neq)
-	addq       $16, %rdi
-
-	cmpq	  %r10, %rdi
-	jne       L(ATR32res)
-
-	subq       %rdi, %r11
-	je	  L(finz)
-	movq	  %r11, %r10
-	jmp	  L(small)
-	/* Align to 16byte to improve instruction fetch.  */
-	.p2align 4,, 4
-END(memcmp)
-
+	pmovmskb %xmm3, %eax
+	CHECK_CMP (%ecx, %eax)
 #ifdef USE_AS_MEMCMPEQ
-libc_hidden_def (memcmp)
+	jz	L(last_2x_vec)
+	ret
 #else
-# undef bcmp
-weak_alias (memcmp, bcmp)
-libc_hidden_builtin_def (memcmp)
+	jnz	L(ret_nonzero_vec_start_4_5)
+#endif
+	.p2align 4
+L(last_2x_vec):
+	movups	(VEC_SIZE * -2 + SIZE_OFFSET)(%rsi, %rdx, CHAR_SIZE), %xmm0
+	movups	(VEC_SIZE * -2 + SIZE_OFFSET)(%rdi, %rdx, CHAR_SIZE), %xmm1
+	PCMPEQ	%xmm0, %xmm1
+	movups	(VEC_SIZE * -1 + SIZE_OFFSET)(%rsi, %rdx, CHAR_SIZE), %xmm2
+	movups	(VEC_SIZE * -1 + SIZE_OFFSET)(%rdi, %rdx, CHAR_SIZE), %xmm3
+	PCMPEQ	%xmm2, %xmm3
+	pand	%xmm1, %xmm3
+	pmovmskb %xmm3, %eax
+	subl	%ecx, %eax
+#ifdef USE_AS_MEMCMPEQ
+	/* Various return targets for memcmpeq. Will always be hot in
+	   Icache and get short encoding.  */
+L(ret_nonzero_vec_start_2_3):
+L(ret_nonzero_vec_start_4_5):
+	ret
+#else
+	jnz	L(ret_nonzero_vec_end_1)
+	ret
+
+	.p2align 4,, 8
+L(ret_nonzero_vec_end_1):
+	pmovmskb %xmm1, %ecx
+	/* High 16 bits of eax guranteed to be all ones. Rotate them in
+	   to we can do `or + not` with just `xor`.  */
+	rorl	$16, %eax
+	xorl	%ecx, %eax
+	/* Partial register stall.  */
+
+	bsfl	%eax, %eax
+# ifdef USE_AS_WMEMCMP
+	leal	(%rax, %rdx, CHAR_SIZE), %eax
+	movl	(VEC_SIZE * -2 + SIZE_OFFSET)(%rdi, %rax), %ecx
+	xorl	%edx, %edx
+	cmpl	(VEC_SIZE * -2 + SIZE_OFFSET)(%rsi, %rax), %ecx
+	/* NB: no partial register stall here because xorl zero idiom
+	   above.  */
+	setg	%dl
+	leal	-1(%rdx, %rdx), %eax
+# else
+	addl	%edx, %eax
+	movzbl	(VEC_SIZE * -2 + SIZE_OFFSET)(%rsi, %rax), %ecx
+	movzbl	(VEC_SIZE * -2 + SIZE_OFFSET)(%rdi, %rax), %eax
+	subl	%ecx, %eax
+# endif
+	ret
+
+	.p2align 4
+L(ret_nonzero_vec_start_4_5):
+	pmovmskb %xmm1, %edx
+	sall	$16, %eax
+	leal	1(%rax, %rdx), %eax
+	bsfl	%eax, %eax
+# ifdef USE_AS_WMEMCMP
+	movl	(VEC_SIZE * 4)(%rdi, %rax), %ecx
+	xorl	%edx, %edx
+	cmpl	(VEC_SIZE * 4)(%rsi, %rax), %ecx
+	/* NB: no partial register stall here because xorl zero idiom
+	   above.  */
+	setg	%dl
+	leal	-1(%rdx, %rdx), %eax
+# else
+	movzbl	(VEC_SIZE * 4)(%rsi, %rax), %ecx
+	movzbl	(VEC_SIZE * 4)(%rdi, %rax), %eax
+	subl	%ecx, %eax
+# endif
+	ret
+
+	.p2align 4,, 8
+L(ret_nonzero_vec_start_1):
+	bsfl	%eax, %eax
+# ifdef USE_AS_WMEMCMP
+	movl	(VEC_SIZE * 1)(%rdi, %rax), %ecx
+	xorl	%edx, %edx
+	cmpl	(VEC_SIZE * 1)(%rsi, %rax), %ecx
+	/* NB: no partial register stall here because xorl zero idiom
+	   above.  */
+	setg	%dl
+	leal	-1(%rdx, %rdx), %eax
+# else
+	movzbl	(VEC_SIZE * 1)(%rsi, %rax), %ecx
+	movzbl	(VEC_SIZE * 1)(%rdi, %rax), %eax
+	subl	%ecx, %eax
+# endif
+	ret
+#endif
+
+	.p2align 4
+L(more_8x_vec):
+	subq	%rdi, %rsi
+	leaq	(VEC_SIZE * -6 + SIZE_OFFSET)(%rdi, %rdx, CHAR_SIZE), %rdx
+	andq	$(VEC_SIZE * -1), %rdi
+	addq	%rdi, %rsi
+	.p2align 4
+L(loop_4x):
+	movups	(VEC_SIZE * 2)(%rsi), %xmm0
+	movups	(VEC_SIZE * 3)(%rsi), %xmm1
+
+	PCMPEQ	(VEC_SIZE * 2)(%rdi), %xmm0
+	PCMPEQ	(VEC_SIZE * 3)(%rdi), %xmm1
+
+	movups	(VEC_SIZE * 4)(%rsi), %xmm2
+	movups	(VEC_SIZE * 5)(%rsi), %xmm3
+
+	PCMPEQ	(VEC_SIZE * 4)(%rdi), %xmm2
+	PCMPEQ	(VEC_SIZE * 5)(%rdi), %xmm3
+
+	pand	%xmm0, %xmm1
+	pand	%xmm2, %xmm3
+	pand	%xmm1, %xmm3
+
+	pmovmskb %xmm3, %eax
+	subl	%ecx, %eax
+	jnz	L(ret_nonzero_loop)
+
+	addq	$(VEC_SIZE * 4), %rdi
+	addq	$(VEC_SIZE * 4), %rsi
+	cmpq	%rdi, %rdx
+	ja	L(loop_4x)
+	/* Get remaining length in edx.  */
+	subl	%edi, %edx
+	/* Restore offset so we can reuse L(last_2x_vec).  */
+	addl	$(VEC_SIZE * 6 - SIZE_OFFSET), %edx
+#ifdef USE_AS_WMEMCMP
+	shrl	$2, %edx
+#endif
+	cmpl	$(CHAR_PER_VEC * 4 - SIZE_OFFSET), %edx
+	jbe	L(last_2x_vec)
+
+
+	movups	(VEC_SIZE * 2)(%rsi), %xmm0
+	movups	(VEC_SIZE * 2)(%rdi), %xmm1
+	PCMPEQ	%xmm0, %xmm1
+	movups	(VEC_SIZE * 3)(%rsi), %xmm2
+	movups	(VEC_SIZE * 3)(%rdi), %xmm3
+	PCMPEQ	%xmm2, %xmm3
+	pand	%xmm1, %xmm3
+
+	pmovmskb %xmm3, %eax
+	CHECK_CMP (%ecx, %eax)
+	jz	L(last_2x_vec)
+#ifdef USE_AS_MEMCMPEQ
+L(ret_nonzero_loop):
+	ret
+#else
+
+	.p2align 4
+L(ret_nonzero_vec_start_2_3):
+	pmovmskb %xmm1, %edx
+	sall	$16, %eax
+	leal	1(%rax, %rdx), %eax
+
+	bsfl	%eax, %eax
+# ifdef USE_AS_WMEMCMP
+	movl	(VEC_SIZE * 2)(%rdi, %rax), %ecx
+	xorl	%edx, %edx
+	cmpl	(VEC_SIZE * 2)(%rsi, %rax), %ecx
+	/* NB: no partial register stall here because xorl zero idiom
+	   above.  */
+	setg	%dl
+	leal	-1(%rdx, %rdx), %eax
+# else
+	movzbl	(VEC_SIZE * 2)(%rsi, %rax), %ecx
+	movzbl	(VEC_SIZE * 2)(%rdi, %rax), %eax
+	subl	%ecx, %eax
+# endif
+	ret
+
+	.p2align 4
+L(ret_nonzero_loop):
+	pmovmskb %xmm0, %ecx
+	pmovmskb %xmm1, %edx
+	sall	$(VEC_SIZE * 1), %edx
+	leal	1(%rcx, %rdx), %edx
+	pmovmskb %xmm2, %ecx
+	/* High 16 bits of eax guranteed to be all ones. Rotate them in
+	   to we can do `or + not` with just `xor`.  */
+	rorl	$16, %eax
+	xorl	%ecx, %eax
+
+	salq	$32, %rax
+	orq	%rdx, %rax
+
+	bsfq	%rax, %rax
+# ifdef USE_AS_WMEMCMP
+	movl	(VEC_SIZE * 2)(%rdi, %rax), %ecx
+	xorl	%edx, %edx
+	cmpl	(VEC_SIZE * 2)(%rsi, %rax), %ecx
+	/* NB: no partial register stall here because xorl zero idiom
+	   above.  */
+	setg	%dl
+	leal	-1(%rdx, %rdx), %eax
+# else
+	movzbl	(VEC_SIZE * 2)(%rsi, %rax), %ecx
+	movzbl	(VEC_SIZE * 2)(%rdi, %rax), %eax
+	subl	%ecx, %eax
+# endif
+	ret
+#endif
+END(MEMCMP)
+
+#ifndef USE_AS_WMEMCMP
+# ifdef USE_AS_MEMCMPEQ
+libc_hidden_def (MEMCMP)
+# else
+#  undef bcmp
+weak_alias (MEMCMP, bcmp)
+libc_hidden_builtin_def (MEMCMP)
+# endif
 #endif
