@@ -17,9 +17,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc)
-# define memcmp	__memcmpeq_sse2
+# define MEMCMP	__memcmpeq_sse2
 #else
-# define memcmp	__memcmpeq
+# define MEMCMP	__memcmpeq
 #endif
 #define USE_AS_MEMCMPEQ	1
 #include "memcmp-sse2.S"
