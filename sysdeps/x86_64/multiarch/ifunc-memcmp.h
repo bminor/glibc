@@ -21,7 +21,6 @@
 
 extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (ssse3) attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (sse4_1) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_movbe) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_movbe_rtm) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (evex_movbe) attribute_hidden;
@@ -46,9 +45,6 @@ IFUNC_SELECTOR (void)
       if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER))
 	return OPTIMIZE (avx2_movbe);
     }
-
-  if (CPU_FEATURE_USABLE_P (cpu_features, SSE4_1))
-    return OPTIMIZE (sse4_1);
 
   if (CPU_FEATURE_USABLE_P (cpu_features, SSSE3))
     return OPTIMIZE (ssse3);
