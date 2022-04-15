@@ -429,22 +429,21 @@ L(page_cross_less_vec):
 # ifndef USE_AS_WMEMCMP
 	cmpl	$8, %edx
 	jae	L(between_8_15)
+	/* Fall through for [4, 7].  */
 	cmpl	$4, %edx
-	jae	L(between_4_7)
+	jb	L(between_2_3)
 
-	/* Load as big endian to avoid branches.  */
-	movzwl	(%rdi), %eax
-	movzwl	(%rsi), %ecx
-	shll	$8, %eax
-	shll	$8, %ecx
-	bswap	%eax
-	bswap	%ecx
-	movzbl	-1(%rdi, %rdx), %edi
-	movzbl	-1(%rsi, %rdx), %esi
-	orl	%edi, %eax
-	orl	%esi, %ecx
-	/* Subtraction is okay because the upper 8 bits are zero.  */
-	subl	%ecx, %eax
+	movbe	(%rdi), %eax
+	movbe	(%rsi), %ecx
+	shlq	$32, %rax
+	shlq	$32, %rcx
+	movbe	-4(%rdi, %rdx), %edi
+	movbe	-4(%rsi, %rdx), %esi
+	orq	%rdi, %rax
+	orq	%rsi, %rcx
+	subq	%rcx, %rax
+	/* Fast path for return zero.  */
+	jnz	L(ret_nonzero)
 	/* No ymm register was touched.  */
 	ret
 
@@ -457,9 +456,33 @@ L(one_or_less):
 	/* No ymm register was touched.  */
 	ret
 
+	.p2align 4,, 5
+L(ret_nonzero):
+	sbbl	%eax, %eax
+	orl	$1, %eax
+	/* No ymm register was touched.  */
+	ret
+
+	.p2align 4,, 2
+L(zero):
+	xorl	%eax, %eax
+	/* No ymm register was touched.  */
+	ret
+
 	.p2align 4
 L(between_8_15):
-# endif
+	movbe	(%rdi), %rax
+	movbe	(%rsi), %rcx
+	subq	%rcx, %rax
+	jnz	L(ret_nonzero)
+	movbe	-8(%rdi, %rdx), %rax
+	movbe	-8(%rsi, %rdx), %rcx
+	subq	%rcx, %rax
+	/* Fast path for return zero.  */
+	jnz	L(ret_nonzero)
+	/* No ymm register was touched.  */
+	ret
+# else
 	/* If USE_AS_WMEMCMP fall through into 8-15 byte case.  */
 	vmovq	(%rdi), %xmm1
 	vmovq	(%rsi), %xmm2
@@ -475,16 +498,13 @@ L(between_8_15):
 	VPCMPEQ	%xmm1, %xmm2, %xmm2
 	vpmovmskb %xmm2, %eax
 	subl	$0xffff, %eax
+	/* Fast path for return zero.  */
 	jnz	L(return_vec_0)
 	/* No ymm register was touched.  */
 	ret
+# endif
 
-	.p2align 4
-L(zero):
-	xorl	%eax, %eax
-	ret
-
-	.p2align 4
+	.p2align 4,, 10
 L(between_16_31):
 	/* From 16 to 31 bytes.  No branch when size == 16.  */
 	vmovdqu	(%rsi), %xmm2
@@ -501,11 +521,17 @@ L(between_16_31):
 	VPCMPEQ	(%rdi), %xmm2, %xmm2
 	vpmovmskb %xmm2, %eax
 	subl	$0xffff, %eax
+	/* Fast path for return zero.  */
 	jnz	L(return_vec_0)
 	/* No ymm register was touched.  */
 	ret
 
 # ifdef USE_AS_WMEMCMP
+	.p2align 4,, 2
+L(zero):
+	xorl	%eax, %eax
+	ret
+
 	.p2align 4
 L(one_or_less):
 	jb	L(zero)
@@ -520,22 +546,20 @@ L(one_or_less):
 # else
 
 	.p2align 4
-L(between_4_7):
-	/* Load as big endian with overlapping movbe to avoid branches.
-	 */
-	movbe	(%rdi), %eax
-	movbe	(%rsi), %ecx
-	shlq	$32, %rax
-	shlq	$32, %rcx
-	movbe	-4(%rdi, %rdx), %edi
-	movbe	-4(%rsi, %rdx), %esi
-	orq	%rdi, %rax
-	orq	%rsi, %rcx
-	subq	%rcx, %rax
-	jz	L(zero_4_7)
-	sbbl	%eax, %eax
-	orl	$1, %eax
-L(zero_4_7):
+L(between_2_3):
+	/* Load as big endian to avoid branches.  */
+	movzwl	(%rdi), %eax
+	movzwl	(%rsi), %ecx
+	bswap	%eax
+	bswap	%ecx
+	shrl	%eax
+	shrl	%ecx
+	movzbl	-1(%rdi, %rdx), %edi
+	movzbl	-1(%rsi, %rdx), %esi
+	orl	%edi, %eax
+	orl	%esi, %ecx
+	/* Subtraction is okay because the upper bit is zero.  */
+	subl	%ecx, %eax
 	/* No ymm register was touched.  */
 	ret
 # endif
