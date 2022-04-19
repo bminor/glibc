@@ -285,9 +285,6 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
         }
     }
 
-  /* Initialize very early so that tunables can use it.  */
-  __libc_init_secure ();
-
   __tunables_init (__environ);
 
   ARCH_INIT_CPU_FEATURES ();

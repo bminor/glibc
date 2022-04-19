@@ -32,30 +32,6 @@ _startup_fatal (const char *message __attribute__ ((unused)))
   ABORT_INSTRUCTION;
   __builtin_unreachable ();
 }
-
-static inline uid_t
-startup_getuid (void)
-{
-  return (uid_t) INTERNAL_SYSCALL_CALL (getuid32);
-}
-
-static inline uid_t
-startup_geteuid (void)
-{
-  return (uid_t) INTERNAL_SYSCALL_CALL (geteuid32);
-}
-
-static inline gid_t
-startup_getgid (void)
-{
-  return (gid_t) INTERNAL_SYSCALL_CALL (getgid32);
-}
-
-static inline gid_t
-startup_getegid (void)
-{
-  return (gid_t) INTERNAL_SYSCALL_CALL (getegid32);
-}
 #else
 # include_next <startup.h>
 #endif

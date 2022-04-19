@@ -23,27 +23,3 @@
 
 /* Use macro instead of inline function to avoid including <stdio.h>.  */
 #define _startup_fatal(message) __libc_fatal ((message))
-
-static inline uid_t
-startup_getuid (void)
-{
-  return __getuid ();
-}
-
-static inline uid_t
-startup_geteuid (void)
-{
-  return __geteuid ();
-}
-
-static inline gid_t
-startup_getgid (void)
-{
-  return __getgid ();
-}
-
-static inline gid_t
-startup_getegid (void)
-{
-  return __getegid ();
-}
