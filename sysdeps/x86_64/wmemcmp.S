@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define MEMCMP	wmemcmp
+#define MEMCMP	__wmemcmp
 #define USE_AS_WMEMCMP	1
-#include "multiarch/memcmp-sse2.S"
+#include "memcmp.S"
+
+weak_alias (__wmemcmp, wmemcmp)
