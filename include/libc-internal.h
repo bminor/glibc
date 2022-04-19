@@ -21,9 +21,6 @@
 
 #include <hp-timing.h>
 
-/* Initialize the `__libc_enable_secure' flag.  */
-extern void __libc_init_secure (void);
-
 /* Discover the tick frequency of the machine if something goes wrong,
    we return 0, an impossible hertz.  */
 extern int __profile_frequency (void);

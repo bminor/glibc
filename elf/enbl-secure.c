@@ -26,15 +26,5 @@
 #include <startup.h>
 #include <libc-internal.h>
 
-/* If nonzero __libc_enable_secure is already set.  */
-int __libc_enable_secure_decided;
 /* Safest assumption, if somehow the initializer isn't run.  */
 int __libc_enable_secure = 1;
-
-void
-__libc_init_secure (void)
-{
-  if (__libc_enable_secure_decided == 0)
-    __libc_enable_secure = (startup_geteuid () != startup_getuid ()
-			    || startup_getegid () != startup_getgid ());
-}
