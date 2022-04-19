@@ -79,6 +79,25 @@ kernel_timer_to_timerid (kernel_timer_t ktimerid)
   return (timer_t) ((intptr_t) ktimerid);
 }
 
+#ifdef __CHERI_PURE_CAPABILITY__
+static inline timer_t
+timer_to_timerid (struct timer *ptr)
+{
+  return (timer_t) ((uintptr_t) ptr | ~(-1UL/2));
+}
+
+static inline bool
+timer_is_sigev_thread (timer_t timerid)
+{
+  return ((uintptr_t) timerid & ~(-1UL/2)) != 0;
+}
+
+static inline struct timer *
+timerid_to_timer (timer_t timerid)
+{
+  return (struct timer *)((uintptr_t) timerid & (-1UL/2));
+}
+#else
 static inline timer_t
 timer_to_timerid (struct timer *ptr)
 {
@@ -96,6 +115,7 @@ timerid_to_timer (timer_t timerid)
 {
   return (struct timer *)((uintptr_t) timerid << 1);
 }
+#endif
 
 static inline kernel_timer_t
 timerid_to_kernel_timer (timer_t timerid)
