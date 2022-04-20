@@ -384,7 +384,7 @@ extern struct rtld_global_ro _rtld_local_ro
 
 
 static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
-		     ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv);
+		     elfptr_t *user_entry, ElfW(auxv_t) *auxv);
 
 /* These two variables cannot be moved into .data.rel.ro.  */
 static struct libname_list _dl_rtld_libname;
@@ -416,15 +416,15 @@ DL_SYSINFO_IMPLEMENTATION
 #endif
 
 #ifdef DONT_USE_BOOTSTRAP_MAP
-static ElfW(Addr) _dl_start_final (void *arg);
+static elfptr_t _dl_start_final (void *arg);
 #else
 struct dl_start_final_info
 {
   struct link_map l;
   RTLD_TIMING_VAR (start_time);
 };
-static ElfW(Addr) _dl_start_final (void *arg,
-				   struct dl_start_final_info *info);
+static elfptr_t _dl_start_final (void *arg,
+				 struct dl_start_final_info *info);
 #endif
 
 /* These are defined magically by the linker.  */
@@ -446,14 +446,14 @@ RTLD_START
    this function is not inlined (see below).  */
 
 #ifdef DONT_USE_BOOTSTRAP_MAP
-static inline ElfW(Addr) __attribute__ ((always_inline))
+static inline elfptr_t __attribute__ ((always_inline))
 _dl_start_final (void *arg)
 #else
-static ElfW(Addr) __attribute__ ((noinline))
+static elfptr_t __attribute__ ((noinline))
 _dl_start_final (void *arg, struct dl_start_final_info *info)
 #endif
 {
-  ElfW(Addr) start_addr;
+  elfptr_t start_addr;
 
   /* Do not use an initializer for these members because it would
      intefere with __rtld_static_init.  */
@@ -515,7 +515,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 # define bootstrap_map info.l
 #endif
 
-static ElfW(Addr) __attribute_used__
+static elfptr_t __attribute_used__
 _dl_start (void *arg)
 {
 #ifdef DONT_USE_BOOTSTRAP_MAP
@@ -1352,7 +1352,7 @@ _dl_start_args_adjust (int skip_args)
 static void
 dl_main (const ElfW(Phdr) *phdr,
 	 ElfW(Word) phnum,
-	 ElfW(Addr) *user_entry,
+	 elfptr_t *user_entry,
 	 ElfW(auxv_t) *auxv)
 {
   struct link_map *main_map;
