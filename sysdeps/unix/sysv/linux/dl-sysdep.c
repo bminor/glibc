@@ -67,7 +67,7 @@ struct dl_main_arguments
 {
   const ElfW(Phdr) *phdr;
   ElfW(Word) phnum;
-  ElfW(Addr) user_entry;
+  elfptr_t user_entry;
 };
 
 /* Separate function, so that dl_main can be called without the large
@@ -95,10 +95,10 @@ _dl_sysdep_parse_arguments (void **start_argptr,
   args->user_entry = auxv_values[AT_ENTRY];
 }
 
-ElfW(Addr)
+elfptr_t
 _dl_sysdep_start (void **start_argptr,
 		  void (*dl_main) (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
-				   ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv))
+				   elfptr_t *user_entry, ElfW(auxv_t) *auxv))
 {
   __libc_stack_end = DL_STACK_END (start_argptr);
 
