@@ -45,15 +45,35 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 		    __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative,
 		    int lazy, int skip_ifunc)
 {
-  const ElfW(Rel) *r = (const void *) reladdr;
+  const ElfW(Rel) *relative = (const void *) reladdr;
+  const ElfW(Rel) *r = relative + nrelative;
   const ElfW(Rel) *end = (const void *) (reladdr + relsize);
   ElfW(Addr) l_addr = map->l_addr;
-# if defined ELF_MACHINE_IRELATIVE && !defined RTLD_BOOTSTRAP
+  const ElfW(Sym) *const symtab
+      = (const void *) D_PTR (map, l_info[DT_SYMTAB]);
+
+#ifdef RTLD_BOOTSTRAP
+  for (; relative < r; ++relative)
+    DO_ELF_MACHINE_REL_RELATIVE (map, l_addr, relative);
+
+  const ElfW (Half) *const version
+      = (const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
+  for (; r < end; ++r)
+    {
+      ElfW (Half) ndx = version[ELFW (R_SYM) (r->r_info)] & 0x7fff;
+      const ElfW (Sym) *sym = &symtab[ELFW (R_SYM) (r->r_info)];
+      void *const r_addr_arg = (void *) (l_addr + r->r_offset);
+      const struct r_found_version *rversion = &map->l_versions[ndx];
+
+      elf_machine_rel (map, scope, r, sym, rversion, r_addr_arg, skip_ifunc);
+    }
+#else /* !RTLD_BOOTSTRAP */
+# if defined ELF_MACHINE_IRELATIVE
   const ElfW(Rel) *r2 = NULL;
   const ElfW(Rel) *end2 = NULL;
 # endif
 
-#if (!defined DO_RELA || !defined ELF_MACHINE_PLT_REL) && !defined RTLD_BOOTSTRAP
+#if !defined DO_RELA || !defined ELF_MACHINE_PLT_REL
   /* We never bind lazily during ld.so bootstrap.  Unfortunately gcc is
      not clever enough to see through all the function calls to realize
      that.  */
@@ -82,12 +102,6 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
   else
 #endif
     {
-      const ElfW(Sym) *const symtab =
-	(const void *) D_PTR (map, l_info[DT_SYMTAB]);
-      const ElfW(Rel) *relative = r;
-      r += nrelative;
-
-#ifndef RTLD_BOOTSTRAP
       /* This is defined in rtld.c, but nowhere in the static libc.a; make
 	 the reference weak so static programs can still link.  This
 	 declaration cannot be done when compiling rtld.c (i.e. #ifdef
@@ -106,16 +120,10 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 	   memory_loc += l_addr...  */
 	if (l_addr != 0)
 # endif
-#endif
 	  for (; relative < r; ++relative)
 	    DO_ELF_MACHINE_REL_RELATIVE (map, l_addr, relative);
 
-#ifdef RTLD_BOOTSTRAP
-      /* The dynamic linker always uses versioning.  */
-      assert (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL);
-#else
       if (map->l_info[VERSYMIDX (DT_VERSYM)])
-#endif
 	{
 	  const ElfW(Half) *const version =
 	    (const void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
@@ -126,7 +134,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 	      const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (r->r_info)];
 	      void *const r_addr_arg = (void *) (l_addr + r->r_offset);
 	      const struct r_found_version *rversion = &map->l_versions[ndx];
-#if defined ELF_MACHINE_IRELATIVE && !defined RTLD_BOOTSTRAP
+#if defined ELF_MACHINE_IRELATIVE
 	      if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_IRELATIVE)
 		{
 		  if (r2 == NULL)
@@ -138,7 +146,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 
 	      elf_machine_rel (map, scope, r, sym, rversion, r_addr_arg,
 			       skip_ifunc);
-#if defined SHARED && !defined RTLD_BOOTSTRAP
+#if defined SHARED
 	      if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_JMP_SLOT
 		  && GLRO(dl_naudit) > 0)
 		{
@@ -151,7 +159,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 #endif
 	    }
 
-#if defined ELF_MACHINE_IRELATIVE && !defined RTLD_BOOTSTRAP
+#if defined ELF_MACHINE_IRELATIVE
 	  if (r2 != NULL)
 	    for (; r2 <= end2; ++r2)
 	      if (ELFW(R_TYPE) (r2->r_info) == ELF_MACHINE_IRELATIVE)
@@ -166,7 +174,6 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 		}
 #endif
 	}
-#ifndef RTLD_BOOTSTRAP
       else
 	{
 	  for (; r < end; ++r)
@@ -184,7 +191,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 # endif
 	      elf_machine_rel (map, scope, r, sym, NULL, r_addr_arg,
 			       skip_ifunc);
-# if defined SHARED && !defined RTLD_BOOTSTRAP
+# if defined SHARED
 	      if (ELFW(R_TYPE) (r->r_info) == ELF_MACHINE_JMP_SLOT
 		  && GLRO(dl_naudit) > 0)
 		{
@@ -207,8 +214,8 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
 				 skip_ifunc);
 # endif
 	}
-#endif
     }
+#endif /* !RTLD_BOOTSTRAP */
 }
 
 #undef elf_dynamic_do_Rel
