@@ -121,6 +121,7 @@ __pthread_cancel (pthread_t th)
   int newval;
   do
     {
+    again:
       newval = oldval | CANCELING_BITMASK | CANCELED_BITMASK;
       if (oldval == newval)
 	break;
@@ -134,7 +135,7 @@ __pthread_cancel (pthread_t th)
 	  int newval2 = oldval | CANCELING_BITMASK;
 	  if (!atomic_compare_exchange_weak_acquire (&pd->cancelhandling,
 						     &oldval, newval2))
-	    continue;
+	    goto again;
 
 	  if (pd == THREAD_SELF)
 	    /* This is not merely an optimization: An application may
