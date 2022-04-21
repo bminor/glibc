@@ -32,7 +32,7 @@ __bsd_signal (int sig, __sighandler_t handler)
 
   /* Check signal extents to protect __sigismember.  */
   if (handler == SIG_ERR || sig < 1 || sig >= NSIG
-      || __is_internal_signal (sig))
+      || is_internal_signal (sig))
     {
       __set_errno (EINVAL);
       return SIG_ERR;

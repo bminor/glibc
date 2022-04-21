@@ -32,7 +32,7 @@ __pthread_sigmask (int how, const sigset_t *newmask, sigset_t *oldmask)
          || __glibc_unlikely (__sigismember (newmask, SIGSETXID))))
     {
       local_newmask = *newmask;
-      __clear_internal_signals (&local_newmask);
+      clear_internal_signals (&local_newmask);
       newmask = &local_newmask;
     }
 

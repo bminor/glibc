@@ -34,7 +34,7 @@ __libc_unwind_longjmp (sigjmp_buf env, int val)
 
   if (env[0].__mask_was_saved)
     /* Restore the saved signal mask.  */
-    __libc_signal_restore_set (&env[0].__saved_mask);
+    __sigprocmask (SIG_SETMASK, &env[0].__saved_mask, NULL);
 
   /* Call the machine-dependent function to restore machine state.  */
   __sigstack_longjmp (env[0].__jmpbuf, val ?: 1);

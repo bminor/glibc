@@ -31,7 +31,7 @@ sigfillset (sigset_t *set)
     }
 
   __sigfillset (set);
-  __clear_internal_signals (set);
+  clear_internal_signals (set);
   return 0;
 }
 libc_hidden_def (sigfillset)

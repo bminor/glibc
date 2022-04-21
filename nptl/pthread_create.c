@@ -423,7 +423,7 @@ start_thread (void *arg)
       /* Store the new cleanup handler info.  */
       THREAD_SETMEM (pd, cleanup_jmp_buf, &unwind_buf);
 
-      __libc_signal_restore_set (&pd->sigmask);
+      internal_signal_restore_set (&pd->sigmask);
 
       LIBC_PROBE (pthread_start, 3, (pthread_t) pd, pd->start_routine, pd->arg);
 
@@ -501,8 +501,8 @@ start_thread (void *arg)
      signal to be delivered.  (SIGSETXID cannot run application code,
      nor does it use pthread_kill.)  Reuse the pd->sigmask space for
      computing the signal mask, to save stack space.  */
-  __sigfillset (&pd->sigmask);
-  __sigdelset (&pd->sigmask, SIGSETXID);
+  internal_sigfillset (&pd->sigmask);
+  internal_sigdelset (&pd->sigmask, SIGSETXID);
   INTERNAL_SYSCALL_CALL (rt_sigprocmask, SIG_BLOCK, &pd->sigmask, NULL,
 			 __NSIG_BYTES);
 
@@ -769,14 +769,14 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
   /* Block all signals, so that the new thread starts out with
      signals disabled.  This avoids race conditions in the thread
      startup.  */
-  sigset_t original_sigmask;
-  __libc_signal_block_all (&original_sigmask);
+  internal_sigset_t original_sigmask;
+  internal_signal_block_all (&original_sigmask);
 
   if (iattr->extension != NULL && iattr->extension->sigmask_set)
     /* Use the signal mask in the attribute.  The internal signals
        have already been filtered by the public
        pthread_attr_setsigmask_np interface.  */
-    pd->sigmask = iattr->extension->sigmask;
+    internal_sigset_from_sigset (&pd->sigmask, &iattr->extension->sigmask);
   else
     {
       /* Conceptually, the new thread needs to inherit the signal mask
@@ -786,7 +786,7 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
       pd->sigmask = original_sigmask;
       /* Reset the cancellation signal mask in case this thread is
 	 running cancellation.  */
-      __sigdelset (&pd->sigmask, SIGCANCEL);
+      internal_sigdelset (&pd->sigmask, SIGCANCEL);
     }
 
   /* Start the thread.  */
@@ -833,7 +833,7 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 
   /* Return to the previous signal mask, after creating the new
      thread.  */
-  __libc_signal_restore_set (&original_sigmask);
+  internal_signal_restore_set (&original_sigmask);
 
   if (__glibc_unlikely (retval != 0))
     {

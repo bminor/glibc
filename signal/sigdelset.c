@@ -25,7 +25,7 @@ int
 sigdelset (sigset_t *set, int signo)
 {
   if (set == NULL || signo <= 0 || signo >= NSIG
-      || __is_internal_signal (signo))
+      || is_internal_signal (signo))
     {
       __set_errno (EINVAL);
       return -1;

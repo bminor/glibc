@@ -43,7 +43,7 @@ thread_handler (union sigval sv)
       if (sigismember (&ss, sig))
 	{
 	  TEST_VERIFY (sig != SIGKILL && sig != SIGSTOP);
-	  TEST_VERIFY (!__is_internal_signal (sig));
+	  TEST_VERIFY (!is_internal_signal (sig));
 	}
       if (test_verbose && sigismember (&ss, sig))
 	printf ("%d, ", sig);

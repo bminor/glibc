@@ -45,8 +45,8 @@ __pthread_kill_implementation (pthread_t threadid, int signo, int no_tid)
     }
 
   /* Block all signals, as required by pd->exit_lock.  */
-  sigset_t old_mask;
-  __libc_signal_block_all (&old_mask);
+  internal_sigset_t old_mask;
+  internal_signal_block_all (&old_mask);
   __libc_lock_lock (pd->exit_lock);
 
   int ret;
@@ -64,7 +64,7 @@ __pthread_kill_implementation (pthread_t threadid, int signo, int no_tid)
     }
 
   __libc_lock_unlock (pd->exit_lock);
-  __libc_signal_restore_set (&old_mask);
+  internal_signal_restore_set (&old_mask);
 
   return ret;
 }
@@ -83,7 +83,7 @@ __pthread_kill (pthread_t threadid, int signo)
 {
   /* Disallow sending the signal we use for cancellation, timers,
      for the setxid implementation.  */
-  if (__is_internal_signal (signo))
+  if (is_internal_signal (signo))
     return EINVAL;
 
   return __pthread_kill_internal (threadid, signo);
@@ -102,7 +102,7 @@ int
 attribute_compat_text_section
 __pthread_kill_esrch (pthread_t threadid, int signo)
 {
-  if (__is_internal_signal (signo))
+  if (is_internal_signal (signo))
     return EINVAL;
 
   return __pthread_kill_implementation (threadid, signo, ESRCH);

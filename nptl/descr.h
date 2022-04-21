@@ -35,6 +35,7 @@
 #include <kernel-features.h>
 #include <tls-internal-struct.h>
 #include <sys/rseq.h>
+#include <internal-sigset.h>
 
 #ifndef TCB_ALIGNMENT
 # define TCB_ALIGNMENT 32
@@ -387,7 +388,7 @@ struct pthread
   /* Signal mask for the new thread.  Used during thread startup to
      restore the signal mask.  (Threads are launched with all signals
      masked.)  */
-  sigset_t sigmask;
+  internal_sigset_t sigmask;
 
   /* Indicates whether is a C11 thread created by thrd_creat.  */
   bool c11;

@@ -29,39 +29,20 @@
 #define RESERVED_SIGRT  0
 
 static inline bool
-__is_internal_signal (int sig)
+is_internal_signal (int sig)
 {
   return false;
 }
 
 static inline void
-__clear_internal_signals (sigset_t *set)
+clear_internal_signals (sigset_t *set)
 {
 }
 
-static inline void
-__libc_signal_block_all (sigset_t *set)
-{
-  sigset_t allset;
-  __sigfillset (&allset);
-  __sigprocmask (SIG_BLOCK, &allset, set);
-}
+typedef sigset_t internal_sigset_t;
 
-static inline void
-__libc_signal_block_app (sigset_t *set)
-{
-  sigset_t allset;
-  __sigfillset (&allset);
-  __clear_internal_signals (&allset);
-  __sigprocmask (SIG_BLOCK, &allset, set);
-}
-
-/* Restore current process signal mask.  */
-static inline void
-__libc_signal_restore_set (const sigset_t *set)
-{
-  __sigprocmask (SIG_SETMASK, set, NULL);
-}
-
+#define internal_sigemptyset(__s)            sigemptyset (__s)
+#define internal_sigaddset(__s, __i)	     sigaddset (__s, __i)
+#define internal_sigprocmask(__h, __s, __o)  sigprocmask (__h, __s, __o)
 
 #endif /* __INTERNAL_SIGNALS_H  */

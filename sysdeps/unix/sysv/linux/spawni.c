@@ -57,7 +57,7 @@
 
 struct posix_spawn_args
 {
-  sigset_t oldmask;
+  internal_sigset_t oldmask;
   const char *file;
   int (*exec) (const char *, char *const *, char *const *);
   const posix_spawn_file_actions_t *fa;
@@ -124,7 +124,7 @@ __spawni_child (void *arguments)
 	}
       else if (__sigismember (&hset, sig))
 	{
-	  if (__is_internal_signal (sig))
+	  if (is_internal_signal (sig))
 	    sa.sa_handler = SIG_IGN;
 	  else
 	    {
@@ -284,8 +284,10 @@ __spawni_child (void *arguments)
 
   /* Set the initial signal mask of the child if POSIX_SPAWN_SETSIGMASK
      is set, otherwise restore the previous one.  */
-  __sigprocmask (SIG_SETMASK, (attr->__flags & POSIX_SPAWN_SETSIGMASK)
-		 ? &attr->__ss : &args->oldmask, 0);
+  if (attr->__flags & POSIX_SPAWN_SETSIGMASK)
+    __sigprocmask (SIG_SETMASK, &attr->__ss, NULL);
+  else
+    internal_sigprocmask (SIG_SETMASK, &args->oldmask, NULL);
 
   args->exec (args->file, args->argv, args->envp);
 
@@ -368,7 +370,7 @@ __spawnix (pid_t * pid, const char *file,
   args.envp = envp;
   args.xflags = xflags;
 
-  __libc_signal_block_all (&args.oldmask);
+  internal_signal_block_all (&args.oldmask);
 
   /* The clone flags used will create a new child that will run in the same
      memory space (CLONE_VM) and the execution of calling thread will be
@@ -416,7 +418,7 @@ __spawnix (pid_t * pid, const char *file,
   if ((ec == 0) && (pid != NULL))
     *pid = new_pid;
 
-  __libc_signal_restore_set (&args.oldmask);
+  internal_signal_restore_set (&args.oldmask);
 
   __pthread_setcancelstate (state, NULL);
 

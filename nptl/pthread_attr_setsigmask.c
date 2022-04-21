@@ -28,7 +28,7 @@ pthread_attr_setsigmask_np (pthread_attr_t *attr, const sigset_t *sigmask)
 
   /* Filter out internal signals.  */
   struct pthread_attr *iattr = (struct pthread_attr *) attr;
-  __clear_internal_signals (&iattr->extension->sigmask);
+  clear_internal_signals (&iattr->extension->sigmask);
 
   return 0;
 }

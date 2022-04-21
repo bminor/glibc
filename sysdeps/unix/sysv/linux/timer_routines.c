@@ -41,7 +41,7 @@ struct thread_start_data
 static void *
 timer_sigev_thread (void *arg)
 {
-  __libc_signal_unblock_sigtimer (NULL);
+  signal_unblock_sigtimer ();
 
   struct thread_start_data *td = (struct thread_start_data *) arg;
   void (*thrfunc) (sigval_t) = td->thrfunc;
