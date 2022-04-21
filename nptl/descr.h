@@ -172,9 +172,6 @@ struct pthread
      therefore stack) used' flag.  */
   pid_t tid;
 
-  /* Ununsed.  */
-  pid_t pid_ununsed;
-
   /* List of robust mutexes the thread is holding.  */
 #if __PTHREAD_MUTEX_HAVE_PREV
   void *robust_prev;
@@ -341,10 +338,6 @@ struct pthread
 
   /* Lock for synchronizing setxid calls.  */
   unsigned int setxid_futex;
-
-#if HP_TIMING_INLINE
-  hp_timing_t cpuclock_offset_ununsed;
-#endif
 
   /* If the thread waits to join another one the ID of the latter is
      stored here.
