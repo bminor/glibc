@@ -102,6 +102,7 @@ endif
 
 bench-pthread := \
   pthread-locks \
+  pthread-mutex-locks \
   pthread_once \
   thread_create \
 # bench-pthread
@@ -281,6 +282,7 @@ $(addprefix $(objpfx)bench-,$(math-benchset)): $(libm-benchtests)
 $(addprefix $(objpfx)bench-,$(bench-pthread)): $(thread-library-benchtests)
 $(addprefix $(objpfx)bench-,$(bench-malloc)): $(thread-library-benchtests)
 $(addprefix $(objpfx)bench-,pthread-locks): $(libm-benchtests)
+$(addprefix $(objpfx)bench-,pthread-mutex-locks): $(libm-benchtests)
 
 
 
