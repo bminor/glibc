@@ -28,6 +28,12 @@ import collections
 import enum
 import struct
 
+if not hasattr(enum, 'IntFlag'):
+    import sys
+    sys.stdout.write(
+        'warning: glibcelf.py needs Python 3.6 for enum support\n')
+    sys.exit(77)
+
 class _OpenIntEnum(enum.IntEnum):
     """Integer enumeration that supports arbitrary int values."""
     @classmethod
