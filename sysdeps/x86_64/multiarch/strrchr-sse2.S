@@ -17,7 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc)
-# define strrchr __strrchr_sse2
+# define STRRCHR __strrchr_sse2
 
 # undef weak_alias
 # define weak_alias(strrchr, rindex)
