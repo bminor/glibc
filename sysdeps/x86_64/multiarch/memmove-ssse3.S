@@ -27,6 +27,10 @@ ENTRY(MEMMOVE_CHK)
 END(MEMMOVE_CHK)
 
 ENTRY_P2ALIGN(MEMMOVE, 6)
+# ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+# endif
 	movq	%rdi, %rax
 L(start):
 	cmpq	$16, %rdx
