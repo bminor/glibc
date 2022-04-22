@@ -46,6 +46,10 @@
 
 	.text
 ENTRY(MEMCMP)
+# ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+# endif
 #ifdef USE_AS_WMEMCMP
 	/* Use 0xffff to test for mismatches on pmovmskb bitmask. Store
 	   in ecx for code size. This is preferable to using `incw` as
