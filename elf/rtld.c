@@ -468,6 +468,10 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 {
   ElfW(Addr) start_addr;
 
+  /* Do not use an initializer for these members because it would
+     intefere with __rtld_static_init.  */
+  GLRO (dl_find_object) = &_dl_find_object;
+
   /* If it hasn't happen yet record the startup time.  */
   rtld_timer_start (&start_time);
 #if !defined DONT_USE_BOOTSTRAP_MAP
@@ -512,7 +516,10 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
       print_statistics (RTLD_TIMING_REF(rtld_total_time));
     }
 
-  return start_addr;
+#ifndef ELF_MACHINE_START_ADDRESS
+# define ELF_MACHINE_START_ADDRESS(map, start) (start)
+#endif
+  return ELF_MACHINE_START_ADDRESS (GL(dl_ns)[LM_ID_BASE]._ns_loaded, start_addr);
 }
 
 #ifdef DONT_USE_BOOTSTRAP_MAP
@@ -586,23 +593,11 @@ _dl_start (void *arg)
 
   __rtld_malloc_init_stubs ();
 
-  /* Do not use an initializer for these members because it would
-     intefere with __rtld_static_init.  */
-  GLRO (dl_find_object) = &_dl_find_object;
-
-  {
 #ifdef DONT_USE_BOOTSTRAP_MAP
-    ElfW(Addr) entry = _dl_start_final (arg);
+  return _dl_start_final (arg);
 #else
-    ElfW(Addr) entry = _dl_start_final (arg, &info);
+  return _dl_start_final (arg, &info);
 #endif
-
-#ifndef ELF_MACHINE_START_ADDRESS
-# define ELF_MACHINE_START_ADDRESS(map, start) (start)
-#endif
-
-    return ELF_MACHINE_START_ADDRESS (GL(dl_ns)[LM_ID_BASE]._ns_loaded, entry);
-  }
 }
 
 
