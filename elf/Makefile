@@ -209,6 +209,44 @@ tests-execstack-yes = tst-execstack tst-execstack-needed tst-execstack-prog
 endif
 endif
 endif
+ifeq ($(have-dt-relr),yes)
+tests += \
+  tst-relr \
+  tst-relr2 \
+  tst-relr3 \
+  tst-relr4 \
+# tests
+modules-names-dt-relr = \
+  tst-relr-mod2 \
+  tst-relr-mod3a \
+  tst-relr-mod3b \
+  tst-relr-mod4a \
+  tst-relr-mod4b \
+# modules-names-dt-relr
+modules-names += $(modules-names-dt-relr)
+# These shared libraries have special build rules.
+modules-names-nobuild += $(modules-names-dt-relr)
+ifeq ($(have-fpie),yes)
+tests += \
+  tst-relr-pie \
+# tests
+tests-pie += \
+  tst-relr-pie \
+# tests-pie
+tests-special += \
+  $(objpfx)check-tst-relr-pie.out \
+# tests-special
+endif
+CFLAGS-tst-relr-pie.c += $(pie-ccflag)
+LDFLAGS-tst-relr += -Wl,-z,pack-relative-relocs
+LDFLAGS-tst-relr-pie += -Wl,-z,pack-relative-relocs
+LDFLAGS-tst-relr2 += -Wl,--allow-shlib-undefined
+CFLAGS-tst-relr-mod2.c += $(no-stack-protector)
+CFLAGS-tst-relr-mod3a.c += $(no-stack-protector)
+CFLAGS-tst-relr-mod3b.c += $(no-stack-protector)
+CFLAGS-tst-relr-mod4a.c += $(no-stack-protector)
+CFLAGS-tst-relr-mod4b.c += $(no-stack-protector)
+endif
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-leaks1-mem.out \
 		 $(objpfx)tst-leaks1-static-mem.out $(objpfx)noload-mem.out \
@@ -1482,3 +1520,56 @@ $(objpfx)tst-dlopen-offset-comb.so: $(objpfx)tst-dlopen-offset-mod1.so $(objpfx)
 	dd if=$(objpfx)tst-dlopen-offset-mod3.so of=$(objpfx)tst-dlopen-offset-comb.so bs=1024 seek=192
 
 $(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so
+
+$(objpfx)check-tst-relr-pie.out: $(objpfx)tst-relr-pie
+	LC_ALL=C $(OBJDUMP) -p $< \
+		| sed -ne '/required from libc.so/,$$ p' \
+		| grep GLIBC_ABI_DT_RELR > $@; \
+	$(evaluate-test)
+
+# The test checks if a DT_RELR shared library without DT_NEEDED works as
+# intended, so it uses an explicit link rule.
+$(objpfx)tst-relr2: $(objpfx)tst-relr-mod2.so
+$(objpfx)tst-relr-mod2.so: $(objpfx)tst-relr-mod2.os
+	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
+	$(LDFLAGS-soname-fname) \
+	-shared -o $@.new $(filter-out $(map-file),$^)
+	$(call after-link,$@.new)
+	mv -f $@.new $@
+
+# The test checks if a DT_RELR shared library without DT_VERNEED works as
+# intended, so it uses an explicit link rule.
+$(objpfx)tst-relr3: $(objpfx)tst-relr-mod3a.so
+$(objpfx)tst-relr-mod3b.so: $(objpfx)tst-relr-mod3b.os
+	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
+	$(LDFLAGS-soname-fname) \
+	-shared -o $@.new $(filter-out $(map-file),$^)
+	$(call after-link,$@.new)
+	mv -f $@.new $@
+
+$(objpfx)tst-relr-mod3a.so: $(objpfx)tst-relr-mod3a.os \
+  $(objpfx)tst-relr-mod3b.so
+	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
+	$(LDFLAGS-soname-fname) \
+	-shared -o $@.new $(filter-out $(map-file),$^)
+	$(call after-link,$@.new)
+	mv -f $@.new $@
+
+# The test checks if a DT_RELR shared library without libc.so on DT_NEEDED
+# works as intended, so it uses an explicit link rule.
+$(objpfx)tst-relr4: $(objpfx)tst-relr-mod4a.so
+$(objpfx)tst-relr-mod4b.so: $(objpfx)tst-relr-mod4b.os
+	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
+	$(LDFLAGS-soname-fname) \
+	-Wl,--version-script=tst-relr-mod4b.map \
+	-shared -o $@.new $(filter-out $(map-file),$^)
+	$(call after-link,$@.new)
+	mv -f $@.new $@
+
+$(objpfx)tst-relr-mod4a.so: $(objpfx)tst-relr-mod4a.os \
+  $(objpfx)tst-relr-mod4b.so
+	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
+	$(LDFLAGS-soname-fname) \
+	-shared -o $@.new $(filter-out $(map-file),$^)
+	$(call after-link,$@.new)
+	mv -f $@.new $@

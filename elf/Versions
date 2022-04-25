@@ -20,6 +20,11 @@ libc {
     __register_frame_info_table_bases; _Unwind_Find_FDE;
   }
 %endif
+  GLIBC_ABI_DT_RELR {
+    # This symbol is used only for empty version map and will be removed
+    # by scripts/versions.awk.
+    __placeholder_only_for_empty_version_map;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     _dl_addr;

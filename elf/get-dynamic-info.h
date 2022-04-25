@@ -49,7 +49,12 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 
   while (dyn->d_tag != DT_NULL)
     {
-      if ((d_tag_utype) dyn->d_tag < DT_NUM)
+      /* Google-local: b/208156916.  See ELF_DYNAMIC_DO_RELR.  */
+      if (dyn->d_tag == DT_RELR)
+	info[VERSYMIDX (DT_VERSYM + 1)] = dyn;
+      else if (dyn->d_tag == DT_RELRSZ)
+	info[VERSYMIDX (DT_VERSYM + 2)] = dyn;
+      else if ((d_tag_utype) dyn->d_tag < DT_NUM)
 	info[dyn->d_tag] = dyn;
       else if (dyn->d_tag >= DT_LOPROC &&
 	       dyn->d_tag < DT_LOPROC + DT_THISPROCNUM)
@@ -104,16 +109,27 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
       ADJUST_DYN_INFO (DT_PLTGOT);
       ADJUST_DYN_INFO (DT_STRTAB);
       ADJUST_DYN_INFO (DT_SYMTAB);
+      ADJUST_DYN_INFO (VERSYMIDX (DT_VERSYM + 1)); /* DT_RELR */
+      ADJUST_DYN_INFO (DT_JMPREL);
+      ADJUST_DYN_INFO (VERSYMIDX (DT_VERSYM));
+      ADJUST_DYN_INFO (DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM + DT_THISPROCNUM
+		       + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM);
+# undef ADJUST_DYN_INFO
+
+      /* DT_RELA/DT_REL are mandatory.  But they may have zero value if
+	 there is DT_RELR.  Don't relocate them if they are zero.  */
+# define ADJUST_DYN_INFO(tag) \
+      do								      \
+	if (info[tag] != NULL && info[tag]->d_un.d_ptr != 0)		      \
+         info[tag]->d_un.d_ptr += l_addr;				      \
+      while (0)
+
 # if ! ELF_MACHINE_NO_RELA
       ADJUST_DYN_INFO (DT_RELA);
 # endif
 # if ! ELF_MACHINE_NO_REL
       ADJUST_DYN_INFO (DT_REL);
 # endif
-      ADJUST_DYN_INFO (DT_JMPREL);
-      ADJUST_DYN_INFO (VERSYMIDX (DT_VERSYM));
-      ADJUST_DYN_INFO (DT_ADDRTAGIDX (DT_GNU_HASH) + DT_NUM + DT_THISPROCNUM
-		       + DT_VERSIONTAGNUM + DT_EXTRANUM + DT_VALNUM);
 # undef ADJUST_DYN_INFO
       assert (cnt <= DL_RO_DYN_TEMP_CNT);
     }

@@ -1354,6 +1354,11 @@ LIBC_LINKER_FEATURE([-z start-stop-gc], [-Wl,-z,start-stop-gc],
 		    [libc_cv_z_start_stop_gc=yes], [libc_cv_z_start_stop_gc=no])
 LIBC_CONFIG_VAR([have-z-start-stop-gc], [$libc_cv_z_start_stop_gc])
 
+LIBC_LINKER_FEATURE([-z pack-relative-relocs],
+		    [-Wl,-z,pack-relative-relocs],
+		    [libc_cv_dt_relr=yes], [libc_cv_dt_relr=no])
+LIBC_CONFIG_VAR([have-dt-relr], [$libc_cv_dt_relr])
+
 LIBC_LINKER_FEATURE([--no-dynamic-linker],
 		    [-Wl,--no-dynamic-linker],
 		    [libc_cv_no_dynamic_linker=yes],

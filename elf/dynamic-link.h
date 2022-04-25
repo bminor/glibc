@@ -128,7 +128,9 @@ elf_machine_lazy_rel (struct link_map *map,
 	     __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative; int lazy; }  \
       ranges[2] = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };			      \
 									      \
-    if ((map)->l_info[DT_##RELOC])					      \
+    /* With DT_RELR, DT_RELA/DT_REL can have zero value.  */		      \
+    if ((map)->l_info[DT_##RELOC] != NULL				      \
+	&& (map)->l_info[DT_##RELOC]->d_un.d_ptr != 0)			      \
       {									      \
 	ranges[0].start = D_PTR ((map), l_info[DT_##RELOC]);		      \
 	ranges[0].size = (map)->l_info[DT_##RELOC##SZ]->d_un.d_val;	      \
@@ -142,6 +144,8 @@ elf_machine_lazy_rel (struct link_map *map,
 	ElfW(Addr) start = D_PTR ((map), l_info[DT_JMPREL]);		      \
 	ElfW(Addr) size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
 									      \
+	if (ranges[0].start == 0)					      \
+	  ranges[0].start = start;					      \
 	if (ranges[0].start + ranges[0].size == (start + size))		      \
 	  ranges[0].size -= size;					      \
 	if (ELF_DURING_STARTUP						      \
@@ -253,12 +257,48 @@ elf_machine_lazy_rel (struct link_map *map,
 #  define ELF_DYNAMIC_DO_RELA(map, lazy, skip_ifunc, boot_map) /* Nothing to do.  */
 # endif
 
+/* Google-local: b/208156916.  To not bump DT_NUM, use DT_VERSYM+1 for DT_RELR
+   and DT_VERSYM+2 for DT_RELRSZ.  */
+# define ELF_DYNAMIC_DO_RELR(map)					      \
+  do {									      \
+    ElfW(Addr) l_addr = (map)->l_addr, *where = 0;			      \
+    const ElfW(Relr) *r, *end;						      \
+    if (!(map)->l_info[VERSYMIDX (DT_VERSYM + 1)])			      \
+      break;								      \
+    r = (const ElfW(Relr) *)D_PTR((map), l_info[VERSYMIDX (DT_VERSYM + 1)]);  \
+    end = (const ElfW(Relr) *)((const char *)r +			      \
+                               (map)->l_info[VERSYMIDX (DT_VERSYM + 2)]->d_un.d_val); \
+    for (; r < end; r++)						      \
+      {									      \
+	ElfW(Relr) entry = *r;						      \
+	if ((entry & 1) == 0)						      \
+	  {								      \
+	    where = (ElfW(Addr) *)(l_addr + entry);			      \
+	    *where++ += l_addr;						      \
+	  }								      \
+	else 								      \
+	  {								      \
+	    for (long i = 0; (entry >>= 1) != 0; i++)			      \
+	      if ((entry & 1) != 0)					      \
+		where[i] += l_addr;					      \
+	    where += CHAR_BIT * sizeof(ElfW(Relr)) - 1;			      \
+	  }								      \
+      }									      \
+  } while (0);
+
 /* This can't just be an inline function because GCC is too dumb
    to inline functions containing inlines themselves.  */
+# ifdef RTLD_BOOTSTRAP
+#  define DO_RTLD_BOOTSTRAP 1
+# else
+#  define DO_RTLD_BOOTSTRAP 0
+# endif
 # define ELF_DYNAMIC_RELOCATE(map, lazy, consider_profile, skip_ifunc, boot_map) \
   do {									      \
     int edr_lazy = elf_machine_runtime_setup ((map), (lazy),		      \
 					      (consider_profile));	      \
+    if (((map) != &GL(dl_rtld_map) || DO_RTLD_BOOTSTRAP))		      \
+      ELF_DYNAMIC_DO_RELR (map);					      \
     ELF_DYNAMIC_DO_REL ((map), edr_lazy, skip_ifunc, boot_map);			\
     ELF_DYNAMIC_DO_RELA ((map), edr_lazy, skip_ifunc, boot_map);			\
   } while (0)
