@@ -159,8 +159,24 @@ class Context(object):
         """Add all known glibc build configurations."""
         self.add_config(arch='aarch64',
                         os_name='linux-gnu',
+                        gcc_cfg=['--with-multilib-list=lp64,purecap',
+                                 '--disable-libgomp', '--disable-libitm'],
+                        glibcs=[{},
+                                {'variant': 'purecap',
+                                 'ccopts': '-mabi=purecap -march=morello+c64',
+                                 'cfg': ['--disable-werror']}],
                         extra_glibcs=[{'variant': 'disable-multi-arch',
-                                       'cfg': ['--disable-multi-arch']}])
+                                       'cfg': ['--disable-multi-arch']},
+                                      {'variant': 'purecap-nopie',
+                                       'ccopts': '-mabi=purecap -march=morello+c64',
+                                       'cfg': ['--disable-werror', '--disable-default-pie']}])
+        self.add_config(arch='aarch64',
+                        os_name='linux-gnu_purecap',
+                        gcc_cfg=['--with-abi=purecap', '--with-arch=morello+c64', '--disable-multilib',
+                                 '--disable-libgomp', '--disable-libitm'],
+                        glibcs=[{'cfg': ['--disable-werror']}],
+                        extra_glibcs=[{'variant': 'nopie',
+                                       'cfg': ['--disable-werror', '--disable-default-pie']}])
         self.add_config(arch='aarch64_be',
                         os_name='linux-gnu')
         self.add_config(arch='arc',
