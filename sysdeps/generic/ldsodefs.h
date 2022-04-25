@@ -235,17 +235,6 @@ struct libname_list
   };
 
 
-/* Bit masks for the objects which valid callers can come from to
-   functions with restricted interface.  */
-enum allowmask
-  {
-    allow_libc = 1,
-    allow_libdl = 2,
-    allow_libpthread = 4,
-    allow_ldso = 8
-  };
-
-
 /* DSO sort algorithm to use (check dl-sort-maps.c).  */
 enum dso_sort_algorithm
   {
