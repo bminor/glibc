@@ -25,6 +25,7 @@ The following bugs are resolved with this release:
   [29029] nptl: poll() spuriously returns EINTR during thread
     cancellation and with cancellation disabled
   [29062] elf: Fix memory leak in _dl_find_object_update
+  [29078] <dlfcn.h> functions unusable during early auditing
 
 
 Version 2.35

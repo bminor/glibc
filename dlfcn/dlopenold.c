@@ -70,7 +70,7 @@ __dlopen_nocheck (const char *file, int mode)
     mode |= RTLD_LAZY;
   args.mode = mode;
 
-  if (!rtld_active ())
+  if (GLRO (dl_dlfcn_hook) != NULL)
     return GLRO (dl_dlfcn_hook)->dlopen (file, mode, RETURN_ADDRESS (0));
 
   return _dlerror_run (dlopen_doit, &args) ? NULL : args.new;
