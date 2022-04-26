@@ -98,6 +98,7 @@ The following bugs are resolved with this release:
     cancellation and with cancellation disabled
   [29069] libc: fstatat64_time64_statx wrapper broken on MIPS N32 with
     -D_FILE_OFFSET_BITS=64 and -D_TIME_BITS=64
+  [29078] <dlfcn.h> functions unusable during early auditing
 
 
 Version 2.34

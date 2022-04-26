@@ -89,7 +89,7 @@ dlinfo_implementation (void *handle, int request, void *arg)
 int
 ___dlinfo (void *handle, int request, void *arg)
 {
-  if (!rtld_active ())
+  if (GLRO (dl_dlfcn_hook) != NULL)
     return GLRO (dl_dlfcn_hook)->dlinfo (handle, request, arg);
   else
     return dlinfo_implementation (handle, request, arg);

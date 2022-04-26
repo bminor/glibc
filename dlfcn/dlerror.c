@@ -32,7 +32,7 @@ char *
 __dlerror (void)
 {
 # ifdef SHARED
-  if (!rtld_active ())
+  if (GLRO (dl_dlfcn_hook) != NULL)
     return GLRO (dl_dlfcn_hook)->dlerror ();
 # endif
 
