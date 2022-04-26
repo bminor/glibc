@@ -19,9 +19,6 @@
 #include <arch-fork.h>
 #include <pthreadP.h>
 
-/* Pointer to the fork generation counter in the thread library.  */
-extern unsigned long int *__fork_generation_pointer attribute_hidden;
-
 pid_t
 _Fork (void)
 {
