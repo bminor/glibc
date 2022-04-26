@@ -80,7 +80,7 @@ dlmopen_implementation (Lmid_t nsid, const char *file, int mode,
 void *
 ___dlmopen (Lmid_t nsid, const char *file, int mode)
 {
-  if (!rtld_active ())
+  if (GLRO (dl_dlfcn_hook) != NULL)
     return GLRO (dl_dlfcn_hook)->dlmopen (nsid, file, mode, RETURN_ADDRESS (0));
   else
     return dlmopen_implementation (nsid, file, mode, RETURN_ADDRESS (0));
