@@ -90,10 +90,10 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      library will still be usable, but functionality may be lost--for
      example, you can't build a shared libc with old binutils.
 
-'--with-default-link=FLAG'
-     With '--with-default-link=yes', the build system does not use a
-     custom linker script for linking shared objects.  The default for
-     FLAG is the opposite, 'no', because the custom linker script is
+'--with-default-link'
+     With '--with-default-link', the build system does not use a custom
+     linker script for linking shared objects.  The default is
+     '--without-default-link', because the custom linker script is
      needed for full RELRO protection.
 
 '--with-nonshared-cflags=CFLAGS'
