@@ -668,7 +668,7 @@ ldouble: 4
 
 Function: Imaginary part of "clog10":
 double: 2
-float: 1
+float: 2
 float128: 2
 ldouble: 2
 
