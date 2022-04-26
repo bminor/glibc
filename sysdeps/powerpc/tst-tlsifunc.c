@@ -102,7 +102,7 @@ do_test (void)
   if (&bar == bar_ptr)
     printf ("PASS: bar address read from IFUNC resolver is correct.\n");
 #if !defined TST_TLSIFUNC_STATIC || !defined PIC \
-    || !defined PI_STATIC_AND_HIDDEN
+    || defined HIDDEN_VAR_NEEDS_DYNAMIC_RELOC
   else
     {
       printf ("FAIL: bar address read from IFUNC resolver is incorrect.\n");

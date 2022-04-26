@@ -1,8 +1,6 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/riscv/elf.
 
-AC_DEFINE(PI_STATIC_AND_HIDDEN)
-
 # Check if static linker supports R_RISCV_ALIGN
 AC_CACHE_CHECK([for R_RISCV_ALIGN linker relaxation support], [libc_cv_riscv_r_align],[dnl
   cat > conftest.S <<EOF

@@ -3,7 +3,7 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
 dnl No MIPS GCC supports accessing static and hidden symbols in an
 dnl position independent way.
-dnl AC_DEFINE(PI_STATIC_AND_HIDDEN)
+AC_DEFINE(HIDDEN_VAR_NEEDS_DYNAMIC_RELOC)
 
 AC_CACHE_CHECK([whether the compiler is using the 2008 NaN encoding],
   libc_cv_mips_nan2008, [AC_EGREP_CPP(yes, [dnl

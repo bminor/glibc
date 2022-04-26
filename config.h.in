@@ -84,9 +84,9 @@
 /* Define if the compiler\'s exception support is based on libunwind.  */
 #undef	HAVE_CC_WITH_LIBUNWIND
 
-/* Define if the access to static and hidden variables is position independent
-   and does not need relocations.  */
-#undef	PI_STATIC_AND_HIDDEN
+/* Define if the accesses to static and hidden variables in a shared object
+   need dynamic relocations.  */
+#undef	HIDDEN_VAR_NEEDS_DYNAMIC_RELOC
 
 /* Define this to disable the 'hidden_proto' et al macros in
    include/libc-symbols.h that avoid PLT slots in PIE.  */

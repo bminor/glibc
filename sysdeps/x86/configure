@@ -190,8 +190,5 @@ fi
 config_vars="$config_vars
 enable-x86-isa-level = $libc_cv_include_x86_isa_level"
 
-$as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
-
-
 $as_echo "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
 

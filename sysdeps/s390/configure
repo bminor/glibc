@@ -1,9 +1,6 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/s390.
 
-$as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
-
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __builtin_tbegin" >&5
 $as_echo_n "checking for __builtin_tbegin... " >&6; }
 if ${libc_cv_gcc_builtin_tbegin+:} false; then :

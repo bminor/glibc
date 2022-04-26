@@ -1,8 +1,6 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/arc.
 
-$as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
-
 libc_cv_have_sdata_section=no
 
 # For ARC, historically ; was used for comments and not newline

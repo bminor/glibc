@@ -1,6 +1,8 @@
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/powerpc/powerpc32.
 
+AC_DEFINE(HIDDEN_VAR_NEEDS_DYNAMIC_RELOC)
+
 # See whether GCC uses -msecure-plt.
 AC_CACHE_CHECK(for -msecure-plt by default, libc_cv_ppc_secure_plt, [dnl
 echo 'int foo (void) { extern int bar; return bar; }' > conftest.c

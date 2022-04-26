@@ -11,3 +11,5 @@ AC_CACHE_CHECK([for big endian],
 if test $libc_cv_nios2_be = yes; then
   AC_MSG_ERROR([Big endian not supported for Nios II])
 fi
+
+AC_DEFINE(HIDDEN_VAR_NEEDS_DYNAMIC_RELOC)

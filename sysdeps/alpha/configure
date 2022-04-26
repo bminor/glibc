@@ -1,11 +1,6 @@
 # This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/alpha.
 
-# With required gcc+binutils, we can always access static and hidden
-# symbols in a position independent way.
-$as_echo "#define PI_STATIC_AND_HIDDEN 1" >>confdefs.h
-
-
 # PIE builds fail on binutils 2.37 and earlier, see:
 # https://sourceware.org/bugzilla/show_bug.cgi?id=28672
 $as_echo "#define PIE_UNSUPPORTED 1" >>confdefs.h
