@@ -39,8 +39,8 @@ __faccessat (int fd, const char *file, int mode, int flag)
   if ((flag == 0 || ((flag & ~AT_EACCESS) == 0 && ! __libc_enable_secure)))
     return INLINE_SYSCALL (faccessat, 3, fd, file, mode);
 
-  struct stat64 stats;
-  if (__fstatat64 (fd, file, &stats, flag & AT_SYMLINK_NOFOLLOW))
+  struct __stat64_t64 stats;
+  if (__fstatat64_time64 (fd, file, &stats, flag & AT_SYMLINK_NOFOLLOW))
     return -1;
 
   mode &= (X_OK | W_OK | R_OK);	/* Clear any bogus bits. */

@@ -110,8 +110,8 @@ distinguish_extX (const struct statfs *fsbuf, const char *file, int fd)
 	      && strcmp (mntbuf.mnt_type, "ext4") != 0)
 	    continue;
 
-	  struct stat64 fsst;
-	  if (__stat64 (mntbuf.mnt_dir, &fsst) >= 0
+	  struct __stat64_t64 fsst;
+	  if (__stat64_time64 (mntbuf.mnt_dir, &fsst) >= 0
 	      && st.st_dev == fsst.st_dev)
 	    {
 	      if (strcmp (mntbuf.mnt_type, "ext4") == 0)
