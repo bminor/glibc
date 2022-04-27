@@ -83,16 +83,17 @@ tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
 		   tst-ftw-bz28126
 
 tests-time64 := \
+  tst-fcntl-time64 \
+  tst-fts-time64 \
   tst-futimens-time64 \
   tst-futimes-time64\
-  tst-fts-time64 \
+  tst-futimesat-time64 \
+  tst-lchmod-time64 \
   tst-lutimes-time64 \
   tst-stat-time64 \
-  tst-futimesat-time64 \
   tst-utime-time64 \
   tst-utimensat-time64 \
   tst-utimes-time64 \
-  tst-fcntl-time64 \
   # tests-time64
 
 # Likewise for statx, but we do not need static linking here.
@@ -136,6 +137,7 @@ CFLAGS-close.c += -fexceptions -fasynchronous-unwind-tables
 
 CFLAGS-test-stat.c += -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE
 CFLAGS-test-lfs.c += -D_LARGEFILE64_SOURCE
+CFLAGS-tst-lchmod.c += -D_FILE_OFFSET_BITS=64
 
 test-stat2-ARGS = Makefile . $(objpfx)test-stat2
 
