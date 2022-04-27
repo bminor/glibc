@@ -15,7 +15,6 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#include <lowlevellock.h>
 #include <sysdep.h>
 
 ENTRY(pthread_spin_lock)
