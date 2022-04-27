@@ -67,9 +67,26 @@ select_path (bool do_relative_path, const char *full_path, const char *relative_
 }
 
 static void
+update_file_time_to_y2038 (const char *fname, int flags)
+{
+#ifdef CHECK_TIME64
+  /* Y2038 threshold plus 1 second.  */
+  const struct timespec ts[] = { { 0x80000001LL, 0}, { 0x80000001LL } };
+  TEST_VERIFY_EXIT (utimensat (AT_FDCWD, fname, ts, flags) == 0);
+#endif
+}
+
+static void
 test_1 (bool do_relative_path, int (*chmod_func) (int fd, const char *, mode_t, int))
 {
   char *tempdir = support_create_temp_directory ("tst-lchmod-");
+#ifdef CHECK_TIME64
+  if (!support_path_support_time64 (tempdir))
+    {
+      puts ("info: test skipped, filesystem does not support 64 bit time_t");
+      return;
+    }
+#endif
 
   char *path_dangling = xasprintf ("%s/dangling", tempdir);
   char *path_file = xasprintf ("%s/file", tempdir);
@@ -93,9 +110,12 @@ test_1 (bool do_relative_path, int (*chmod_func) (int fd, const char *, mode_t, 
   xsymlink ("loop", path_loop);
   xsymlink ("target-does-not-exist", path_dangling);
 
+  update_file_time_to_y2038 (path_file, 0);
+  update_file_time_to_y2038 (path_to_file, AT_SYMLINK_NOFOLLOW);
+
   /* Check that the modes do not collide with what we will use in the
      test.  */
-  struct stat64 st;
+  struct stat st;
   xstat (path_file, &st);
   TEST_VERIFY ((st.st_mode & 0777) != 1);
   xlstat (path_to_file, &st);

@@ -99,6 +99,8 @@ The following bugs are resolved with this release:
   [29069] libc: fstatat64_time64_statx wrapper broken on MIPS N32 with
     -D_FILE_OFFSET_BITS=64 and -D_TIME_BITS=64
   [29078] <dlfcn.h> functions unusable during early auditing
+  [29097] time: fchmodat does not handle 64 bit time_t for
+    AT_SYMLINK_NOFOLLOW
 
 
 Version 2.34

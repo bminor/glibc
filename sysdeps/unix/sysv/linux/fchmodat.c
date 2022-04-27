@@ -48,8 +48,8 @@ fchmodat (int fd, const char *file, mode_t mode, int flag)
 
       /* Use fstatat because fstat does not work on O_PATH descriptors
 	 before Linux 3.6.  */
-      struct stat64 st;
-      if (__fstatat64 (pathfd, "", &st, AT_EMPTY_PATH) != 0)
+      struct __stat64_t64 st;
+      if (__fstatat64_time64 (pathfd, "", &st, AT_EMPTY_PATH) != 0)
 	{
 	  __close_nocancel (pathfd);
 	  return -1;
