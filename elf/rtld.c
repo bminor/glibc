@@ -440,8 +440,8 @@ static ElfW(Addr) _dl_start_final (void *arg,
 				   struct dl_start_final_info *info);
 #endif
 
-/* These defined magically in the linker script.  */
-extern char _begin[] attribute_hidden;
+/* These are defined magically by the linker.  */
+extern const ElfW(Ehdr) __ehdr_start attribute_hidden;
 extern char _etext[] attribute_hidden;
 extern char _end[] attribute_hidden;
 
@@ -490,7 +490,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 #endif
   _dl_setup_hash (&GL(dl_rtld_map));
   GL(dl_rtld_map).l_real = &GL(dl_rtld_map);
-  GL(dl_rtld_map).l_map_start = (ElfW(Addr)) _begin;
+  GL(dl_rtld_map).l_map_start = (ElfW(Addr)) &__ehdr_start;
   GL(dl_rtld_map).l_map_end = (ElfW(Addr)) _end;
   GL(dl_rtld_map).l_text_end = (ElfW(Addr)) _etext;
   /* Copy the TLS related data if necessary.  */
@@ -1741,7 +1741,6 @@ dl_main (const ElfW(Phdr) *phdr,
      segment that also includes the phdrs.  If that's not available, we use
      the old method that assumes the beginning of the file is part of the
      lowest-addressed PT_LOAD segment.  */
-  extern const ElfW(Ehdr) __ehdr_start __attribute__ ((visibility ("hidden")));
 
   /* Set up the program header information for the dynamic linker
      itself.  It is needed in the dl_iterate_phdr callbacks.  */
