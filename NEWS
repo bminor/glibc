@@ -28,6 +28,8 @@ The following bugs are resolved with this release:
     cancellation and with cancellation disabled
   [29062] elf: Fix memory leak in _dl_find_object_update
   [29078] <dlfcn.h> functions unusable during early auditing
+  [29097] time: fchmodat does not handle 64 bit time_t for
+    AT_SYMLINK_NOFOLLOW
 
 
 Version 2.35
