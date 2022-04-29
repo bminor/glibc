@@ -36,7 +36,8 @@
 static inline int __attribute__ ((unused))
 elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
 {
-  return ehdr->e_machine == EM_AARCH64;
+  return ehdr->e_machine == EM_AARCH64
+	 && (ehdr->e_flags & EF_AARCH64_CHERI_PURECAP) == 0;
 }
 
 /* Return the run-time load address of the shared object.  */
