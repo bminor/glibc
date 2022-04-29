@@ -113,12 +113,6 @@ bench-string := \
   ffsll \
 # bench-string
 
-ifeq (${BENCHSET},)
-bench := $(bench-math) $(bench-pthread) $(bench-string)
-else
-bench := $(foreach B,$(filter bench-%,${BENCHSET}), ${${B}})
-endif
-
 # String function benchmarks.
 string-benchset := \
   bzero \
@@ -299,15 +293,6 @@ bench-extra-objs = json-lib.o
 extra-objs += $(bench-extra-objs)
 others-extras = $(bench-extra-objs)
 
-# NB: Use "=" instead of ":=" since sysdeps Makefiles may add more
-# benches.
-binaries-bench = $(addprefix $(objpfx)bench-,$(bench))
-extra-objs += $(addsuffix .o,$(addprefix bench-,$(bench)))
-binaries-benchset = $(addprefix $(objpfx)bench-,$(benchset))
-extra-objs += $(addsuffix .o,$(addprefix bench-,$(benchset)))
-binaries-bench-malloc := $(addprefix $(objpfx)bench-,$(bench-malloc))
-extra-objs += $(addsuffix .o,$(addprefix bench-,$(bench-malloc)))
-
 # The default duration: 1 seconds.
 ifndef BENCH_DURATION
 BENCH_DURATION := 1
@@ -343,6 +328,23 @@ timing-type := $(objpfx)bench-timing-type
 extra-objs += bench-timing-type.o
 
 include ../Rules
+
+bench-math += $(bench-libmvec)
+
+ifeq (${BENCHSET},)
+bench := $(bench-math) $(bench-pthread) $(bench-string)
+else
+bench := $(foreach B,$(filter bench-%,${BENCHSET}), ${${B}})
+endif
+
+# NB: Use "=" instead of ":=" since sysdeps Makefiles may add more
+# benches.
+binaries-bench = $(addprefix $(objpfx)bench-,$(bench))
+extra-objs += $(addsuffix .o,$(addprefix bench-,$(bench)))
+binaries-benchset = $(addprefix $(objpfx)bench-,$(benchset))
+extra-objs += $(addsuffix .o,$(addprefix bench-,$(benchset)))
+binaries-bench-malloc := $(addprefix $(objpfx)bench-,$(bench-malloc))
+extra-objs += $(addsuffix .o,$(addprefix bench-,$(bench-malloc)))
 
 # This makes sure CPPFLAGS-nonlib and CFLAGS-nonlib are passed
 # for all these modules.

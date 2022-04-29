@@ -86,10 +86,6 @@ float-vlen16-arch-ext-cflags = -mavx512f
 
 bench-libmvec := $(bench-libmvec-double) $(bench-libmvec-float)
 
-ifeq (${BENCHSET},)
-bench += $(bench-libmvec)
-endif
-
 ifeq (${STATIC-BENCHTESTS},yes)
 libmvec-benchtests = $(common-objpfx)mathvec/libmvec.a $(common-objpfx)math/libm.a
 else
