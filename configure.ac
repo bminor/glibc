@@ -1360,22 +1360,6 @@ LIBC_TRY_CC_OPTION([-fpie], [libc_cv_fpie=yes], [libc_cv_fpie=no])
 
 AC_SUBST(libc_cv_fpie)
 
-AC_CACHE_CHECK(for --hash-style option,
-	       libc_cv_hashstyle, [dnl
-cat > conftest.c <<EOF
-int _start (void) { return 42; }
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
-			    -fPIC -shared -o conftest.so conftest.c
-			    -Wl,--hash-style=both -nostdlib 1>&AS_MESSAGE_LOG_FD])
-then
-  libc_cv_hashstyle=yes
-else
-  libc_cv_hashstyle=no
-fi
-rm -f conftest*])
-AC_SUBST(libc_cv_hashstyle)
-
 AC_CACHE_CHECK(for GLOB_DAT reloc,
 	       libc_cv_has_glob_dat, [dnl
 cat > conftest.c <<EOF

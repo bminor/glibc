@@ -557,13 +557,6 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 		  -Wl,--verbose 2>/dev/null | \
 	  sed > $@T \
 	      -e '/^=========/,/^=========/!d;/^=========/d' \
-	      $(if $(filter yes,$(have-hash-style)), \
-		   -e 's/^.*\.gnu\.hash[ 	]*:.*$$/  .note.ABI-tag : { *(.note.ABI-tag) } &/' \
-		   -e '/^[ 	]*\.hash[ 	]*:.*$$/{h;d;}' \
-		   -e '/DATA_SEGMENT_ALIGN/{H;g}' \
-		, \
-		   -e 's/^.*\.hash[ 	]*:.*$$/  .note.ABI-tag : { *(.note.ABI-tag) } &/' \
-	       ) \
 	      -e 's/^.*\*(\.dynbss).*$$/& \
 		 PROVIDE(__start___libc_freeres_ptrs = .); \
 		 *(__libc_freeres_ptrs) \

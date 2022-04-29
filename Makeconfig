@@ -362,15 +362,6 @@ relro-LDFLAGS = -Wl,-z,relro
 LDFLAGS.so += $(relro-LDFLAGS)
 LDFLAGS-rtld += $(relro-LDFLAGS)
 
-ifeq (yes,$(have-hash-style))
-# For the time being we unconditionally use 'both'.  At some time we
-# should declare statically linked code as 'out of luck' and compile
-# with --hash-style=gnu only.
-hashstyle-LDFLAGS = -Wl,--hash-style=both
-LDFLAGS.so += $(hashstyle-LDFLAGS)
-LDFLAGS-rtld += $(hashstyle-LDFLAGS)
-endif
-
 ifeq (no,$(build-pie-default))
 pie-default = $(no-pie-ccflag)
 else # build-pie-default
