@@ -1,4 +1,5 @@
 # Copyright (C) 2013-2022 Free Software Foundation, Inc.
+# Copyright The GNU Toolchain Authors.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -417,11 +418,23 @@ bench-func: $(binaries-bench)
 	  echo "{\"timing_type\": \"$${timing_type}\","; \
 	  echo " \"functions\": {"; \
 	  for run in $^; do \
-	    if ! [ "x$${run}" = "x$<" ]; then \
-	      echo ","; \
-	    fi; \
-	    echo "Running $${run}" >&2; \
-	    $(run-bench) $(DETAILED_OPT); \
+	    op=$$($(run-bench) $(DETAILED_OPT)); \
+	    ret=$$?; \
+	    case "$${ret}" in \
+	      77) \
+	      echo "UNSUPPORTED $${run}: $${op}" >&2; \
+		;; \
+	      0) \
+		echo "Running $${run}" >&2; \
+		if [ "$${run}" != "$<" ]; then \
+		  echo ","; \
+		fi; \
+		echo "$${op}"; \
+		;; \
+	      *) \
+		echo "FAILED $${run}" >&2; \
+		;; \
+	    esac; \
 	  done; \
 	  echo; \
 	  echo " }"; \

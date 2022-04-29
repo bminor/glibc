@@ -40,20 +40,20 @@ main (int argc, char **argv)
 #if defined REQUIRE_AVX
   if (!CPU_FEATURE_ACTIVE (AVX))
     {
-      printf ("AVX not supported.\n");
-      return 0;
+      printf ("AVX not supported.");
+      return 77;
     }
 #elif defined REQUIRE_AVX2
   if (!CPU_FEATURE_ACTIVE (AVX2))
     {
-      printf ("AVX2 not supported.\n");
-      return 0;
+      printf ("AVX2 not supported.");
+      return 77;
     }
 #elif defined REQUIRE_AVX512F
   if (!CPU_FEATURE_ACTIVE (AVX512F))
     {
-      printf ("AVX512F not supported.\n");
-      return 0;
+      printf ("AVX512F not supported.");
+      return 77;
     }
 #endif
 
