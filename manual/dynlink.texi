@@ -22,6 +22,76 @@ Dynamic linkers are sometimes called @dfn{dynamic loaders}.
 @Theglibc{} provides various functions for querying information from the
 dynamic linker.
 
+@deftypefun {int} dlinfo (void *@var{handle}, int @var{request}, void *@var{arg})
+@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acunsafe{@acucorrupt{}}}
+@standards{GNU, dlfcn.h}
+This function returns information about @var{handle} in the memory
+location @var{arg}, based on @var{request}.  The @var{handle} argument
+must be a pointer returned by @code{dlopen} or @code{dlmopen}; it must
+not have been closed by @code{dlclose}.
+
+On success, @code{dlinfo} returns 0.  If there is an error, the function
+returns @math{-1}, and @code{dlerror} can be used to obtain a
+corresponding error message.
+
+The following operations are defined for use with @var{request}:
+
+@vtable @code
+@item RTLD_DI_LINKMAP
+The corresponding @code{struct link_map} pointer for @var{handle} is
+written to @code{*@var{arg}}.  The @var{arg} argument must be the
+address of an object of type @code{struct link_map *}.
+
+@item RTLD_DI_LMID
+The namespace identifier of @var{handle} is written to
+@code{*@var{arg}}.  The @var{arg} argument must be the address of an
+object of type @code{Lmid_t}.
+
+@item RTLD_DI_ORIGIN
+The value of the @code{$ORIGIN} dynamic string token for @var{handle} is
+written to the character array starting at @var{arg} as a
+null-terminated string.
+
+This request type should not be used because it is prone to buffer
+overflows.
+
+@item RTLD_DI_SERINFO
+@itemx RTLD_DI_SERINFOSIZE
+These requests can be used to obtain search path information for
+@var{handle}.  For both requests, @var{arg} must point to a
+@code{Dl_serinfo} object.  The @code{RTLD_DI_SERINFOSIZE} request must
+be made first; it updates the @code{dls_size} and @code{dls_cnt} members
+of the @code{Dl_serinfo} object.  The caller should then allocate memory
+to store at least @code{dls_size} bytes and pass that buffer to a
+@code{RTLD_DI_SERINFO} request.  This second request fills the
+@code{dls_serpath} array.  The number of array elements was returned in
+the @code{dls_cnt} member in the initial @code{RTLD_DI_SERINFOSIZE}
+request.  The caller is responsible for freeing the allocated buffer.
+
+This interface is prone to buffer overflows in multi-threaded processes
+because the required size can change between the
+@code{RTLD_DI_SERINFOSIZE} and @code{RTLD_DI_SERINFO} requests.
+
+@item RTLD_DI_TLS_DATA
+This request writes the address of the TLS block (in the current thread)
+for the shared object identified by @var{handle} to @code{*@var{arg}}.
+The argument @var{arg} must be the address of an object of type
+@code{void *}.  A null pointer is written if the object does not have
+any associated TLS block.
+
+@item RTLD_DI_TLS_MODID
+This request writes the TLS module ID for the shared object @var{handle}
+to @code{*@var{arg}}.  The argument @var{arg} must be the address of an
+object of type @code{size_t}.  The module ID is zero if the object
+does not have an associated TLS block.
+@end vtable
+
+The @code{dlinfo} function is a GNU extension.
+@end deftypefun
+
+The remainder of this section documents the @code{_dl_find_object}
+function and supporting types and constants.
+
 @deftp {Data Type} {struct dl_find_object}
 @standards{GNU, dlfcn.h}
 This structure contains information about a main program or loaded
@@ -130,7 +200,6 @@ This function is a GNU extension.
 @c dladdr1
 @c dlclose
 @c dlerror
-@c dlinfo
 @c dlmopen
 @c dlopen
 @c dlsym
