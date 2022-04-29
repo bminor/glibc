@@ -2906,6 +2906,9 @@ enum
 /* MTE memory tag segment type.  */
 #define PT_AARCH64_MEMTAG_MTE	(PT_LOPROC + 2)
 
+/* Processor specific flags for the ELF header e_flags field.  */
+#define EF_AARCH64_CHERI_PURECAP 0x00010000
+
 /* AArch64 specific values for the Dyn d_tag field.  */
 #define DT_AARCH64_BTI_PLT	(DT_LOPROC + 1)
 #define DT_AARCH64_PAC_PLT	(DT_LOPROC + 3)
