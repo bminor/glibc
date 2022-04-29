@@ -73,6 +73,10 @@ tststatic3-ENV = $(tststatic-ENV)
 tststatic4-ENV = $(tststatic-ENV)
 tststatic5-ENV = $(tststatic-ENV)
 
+tests-internal += \
+  tst-dlinfo-phdr \
+  # tests-internal
+
 ifneq (,$(CXX))
 modules-names += bug-atexit3-lib
 else
