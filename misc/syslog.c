@@ -174,7 +174,7 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
   "<%d>%s%n%s%s%.0d%s: ",                                \
   __pri, __timestamp, __msgoff,                          \
   LogTag == NULL ? __progname : LogTag,                  \
-  "[" + (pid == 0), pid, "]" + (pid == 0)
+  &"["[pid == 0], pid, &"]"[pid == 0]
 
 #define SYSLOG_HEADER_WITHOUT_TS(__pri, __msgoff)        \
   "<%d>: %n", __pri, __msgoff
@@ -274,7 +274,7 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
   /* Output to stderr if requested. */
   if (LogStat & LOG_PERROR)
     __dprintf (STDERR_FILENO, "%s%s", buf + msgoff,
-	       "\n" + (buf[bufsize - 1] == '\n'));
+	       &"\n"[buf[bufsize - 1] == '\n']);
 
   /* Get connected, output the message to the local logger.  */
   if (!connected)
