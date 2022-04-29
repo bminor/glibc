@@ -30,9 +30,9 @@ location @var{arg}, based on @var{request}.  The @var{handle} argument
 must be a pointer returned by @code{dlopen} or @code{dlmopen}; it must
 not have been closed by @code{dlclose}.
 
-On success, @code{dlinfo} returns 0.  If there is an error, the function
-returns @math{-1}, and @code{dlerror} can be used to obtain a
-corresponding error message.
+On success, @code{dlinfo} returns 0 for most request types; exceptions
+are noted below.  If there is an error, the function returns @math{-1},
+and @code{dlerror} can be used to obtain a corresponding error message.
 
 The following operations are defined for use with @var{request}:
 
@@ -84,6 +84,15 @@ This request writes the TLS module ID for the shared object @var{handle}
 to @code{*@var{arg}}.  The argument @var{arg} must be the address of an
 object of type @code{size_t}.  The module ID is zero if the object
 does not have an associated TLS block.
+
+@item RTLD_DI_PHDR
+This request writes the address of the program header array to
+@code{*@var{arg}}.  The argument @var{arg} must be the address of an
+object of type @code{const ElfW(Phdr) *} (that is,
+@code{const Elf32_Phdr *} or @code{const Elf64_Phdr *}, as appropriate
+for the current architecture).  For this request, the value returned by
+@code{dlinfo} is the number of program headers in the program header
+array.
 @end vtable
 
 The @code{dlinfo} function is a GNU extension.

@@ -164,7 +164,12 @@ enum
        segment, or if the calling thread has not allocated a block for it.  */
     RTLD_DI_TLS_DATA = 10,
 
-    RTLD_DI_MAX = 10
+    /* Treat ARG as const ElfW(Phdr) **, and store the address of the
+       program header array at that location.  The dlinfo call returns
+       the number of program headers in the array.  */
+    RTLD_DI_PHDR = 11,
+
+    RTLD_DI_MAX = 11
   };
 
 
