@@ -409,7 +409,7 @@ __spawnix (pid_t * pid, const char *file,
 	__waitpid (new_pid, NULL, 0);
     }
   else
-    ec = -new_pid;
+    ec = errno;
 
   __munmap (stack, stack_size);
 
