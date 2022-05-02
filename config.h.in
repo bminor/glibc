@@ -153,9 +153,6 @@
 /* Define if inlined system calls are available.  */
 #undef HAVE_INLINED_SYSCALLS
 
-/* Define if your compiler defaults to -msecure-plt mode on ppc.  */
-#undef HAVE_PPC_SECURE_PLT
-
 /* Define if memory tagging support should be enabled.  */
 #undef USE_MTAG
 
