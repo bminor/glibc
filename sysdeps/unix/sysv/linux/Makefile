@@ -126,6 +126,7 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
   tst-prctl \
   tst-scm_rights \
   tst-epoll \
+  tst-getauxval \
   # tests
 
 # For +depfiles in Makerules.
