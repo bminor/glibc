@@ -662,11 +662,10 @@ endif
 +preinit = $(addprefix $(csu-objpfx),crti.o)
 +postinit = $(addprefix $(csu-objpfx),crtn.o)
 ifeq ($(with-clang),yes)
-# With clang, use the crt*.o files from llvm's compiler-rt package.
-# The files normally have an architecture name appended, in case of
-# variants (32/64, le/be etc) installed in the same directory.
-+prector = `$(CC) $(sysdep-LDFLAGS) --print-file-name=clang_rt.crtbegin-$(config-machine).o`
-+postctor = `$(CC) $(sysdep-LDFLAGS) --print-file-name=clang_rt.crtend-$(config-machine).o`
+# With clang, use the clang_rt.crt*.o files from the compiler-rt package
+# in a LLVM_ENABLE_RUNTIMES build.
++prector = `$(CC) $(sysdep-LDFLAGS) --print-file-name=clang_rt.crtbegin.o`
++postctor = `$(CC) $(sysdep-LDFLAGS) --print-file-name=clang_rt.crtend.o`
 else
 +prector = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtbegin.o`
 +postctor = `$(CC) $(sysdep-LDFLAGS) --print-file-name=crtend.o`
