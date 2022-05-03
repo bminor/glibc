@@ -48,8 +48,4 @@ extern int _dl_sysinfo_break attribute_hidden;
        ".previous");
 #endif
 
-/* _dl_argv cannot be attribute_relro, because _dl_start_user
-   might write into it after _dl_start returns.  */
-#define DL_ARGV_NOT_RELRO 1
-
 #endif	/* dl-sysdep.h */

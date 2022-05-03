@@ -157,16 +157,9 @@ static void dl_main_state_init (struct dl_main_state *state);
 extern char **_environ attribute_hidden;
 static void process_envvars (struct dl_main_state *state);
 
-#ifdef DL_ARGV_NOT_RELRO
-int _dl_argc attribute_hidden;
-char **_dl_argv = NULL;
-/* Nonzero if we were run directly.  */
-unsigned int _dl_skip_args attribute_hidden;
-#else
 int _dl_argc attribute_relro attribute_hidden;
 char **_dl_argv attribute_relro = NULL;
 unsigned int _dl_skip_args attribute_relro attribute_hidden;
-#endif
 rtld_hidden_data_def (_dl_argv)
 
 #ifndef THREAD_SET_STACK_GUARD
