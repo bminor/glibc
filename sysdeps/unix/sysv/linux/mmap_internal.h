@@ -42,10 +42,6 @@ static uint64_t page_unit;
 /* Do not accept offset not multiple of page size.  */
 #define MMAP_OFF_LOW_MASK  (MMAP2_PAGE_UNIT - 1)
 
-/* An architecture may override this.  */
-#ifndef MMAP_CALL
-# define MMAP_CALL(__nr, __addr, __len, __prot, __flags, __fd, __offset) \
-  INLINE_SYSCALL_CALL (__nr, __addr, __len, __prot, __flags, __fd, __offset)
-#endif
+#include <mmap_call.h>
 
 #endif /* MMAP_INTERNAL_LINUX_H  */

@@ -1,4 +1,4 @@
-/* mmap - map files or devices into memory.  Linux/s390 version.
+/* Generic definition of MMAP_CALL and MMAP_CALL_INTERNAL.
    Copyright (C) 2017-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,17 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef MMAP_S390_INTERNAL_H
-# define MMAP_S390_INTERNAL_H
-
-#define MMAP_CALL(__nr, __addr, __len, __prot, __flags, __fd, __offset)	\
-  ({									\
-    long int __args[6] = { (long int) (__addr), (long int) (__len),	\
-			   (long int) (__prot), (long int) (__flags),	\
-			   (long int) (__fd), (long int) (__offset) };	\
-    INLINE_SYSCALL_CALL (__nr, __args);					\
-  })
-
-#include_next <mmap_internal.h>
-
-#endif
+#define MMAP_CALL(__nr, __addr, __len, __prot, __flags, __fd, __offset) \
+  INLINE_SYSCALL_CALL (__nr, __addr, __len, __prot, __flags, __fd, __offset)
+#define MMAP_CALL_INTERNAL(__nr, __addr, __len, __prot, __flags, __fd, __offset) \
+  INTERNAL_SYSCALL_CALL (__nr, __addr, __len, __prot, __flags, __fd, __offset)
