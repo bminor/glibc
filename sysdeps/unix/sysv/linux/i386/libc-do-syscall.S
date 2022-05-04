@@ -18,8 +18,6 @@
 
 #include <sysdep.h>
 
-#ifndef OPTIMIZE_FOR_GCC_5
-
 /* %eax, %ecx, %edx and %esi contain the values expected by the kernel.
    %edi points to a structure with the values of %ebx, %edi and %ebp.  */
 
@@ -50,4 +48,3 @@ ENTRY (__libc_do_syscall)
 	cfi_restore (ebx)
 	ret
 END (__libc_do_syscall)
-#endif
