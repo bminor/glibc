@@ -250,7 +250,8 @@ option, and stores the option's argument (if it has one) in @code{optarg}.
 
 When @code{getopt_long} encounters a long option, it takes actions based
 on the @code{flag} and @code{val} fields of the definition of that
-option.
+option.  The option name may be abbreviated as long as the abbreviation is
+unique.
 
 If @code{flag} is a null pointer, then @code{getopt_long} returns the
 contents of @code{val} to indicate which option it found.  You should
