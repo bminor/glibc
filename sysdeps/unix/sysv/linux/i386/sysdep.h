@@ -43,6 +43,15 @@
 # endif
 #endif
 
+#if !I386_USE_SYSENTER && IS_IN (libc) && !defined SHARED
+/* Inside static libc, we have two versions.  For compilation units
+   with !I386_USE_SYSENTER, the vDSO entry mechanism cannot be
+   used. */
+# define I386_DO_SYSCALL_STRING "__libc_do_syscall_int80"
+#else
+# define I386_DO_SYSCALL_STRING "__libc_do_syscall"
+#endif
+
 #ifdef __ASSEMBLER__
 
 /* Linux uses a negative return value to indicate syscall errors,
@@ -302,7 +311,7 @@ struct libc_do_syscall_args
     };									\
     asm volatile (							\
     "movl %1, %%eax\n\t"						\
-    "call __libc_do_syscall"						\
+    "call " I386_DO_SYSCALL_STRING					\
     : "=a" (resultvar)							\
     : "i" (__NR_##name), "c" (arg2), "d" (arg3), "S" (arg4), "D" (&_xv) \
     : "memory", "cc")
@@ -316,7 +325,7 @@ struct libc_do_syscall_args
     };									\
     asm volatile (							\
     "movl %1, %%eax\n\t"						\
-    "call __libc_do_syscall"						\
+    "call " I386_DO_SYSCALL_STRING					\
     : "=a" (resultvar)							\
     : "a" (name), "c" (arg2), "d" (arg3), "S" (arg4), "D" (&_xv)	\
     : "memory", "cc")
