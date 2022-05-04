@@ -13,7 +13,7 @@ install-bin += lddlibc4
 endif
 
 ifeq ($(subdir),io)
-sysdep_routines += libc-do-syscall
+sysdep_routines += libc-do-syscall libc-do-syscall-int80
 endif
 
 ifeq ($(subdir),stdlib)
