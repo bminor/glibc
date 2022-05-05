@@ -77,7 +77,7 @@ struct __timex64
   int  :32;
   int  :32;
 };
-extern int __clock_adjtime64 (const clockid_t clock_id, struct __timex64 *tx64);
+extern int __clock_adjtime64 (const clockid_t clock_id, struct __timex64 *tx64) __nonnull((2));
 libc_hidden_proto (__clock_adjtime64);
 extern int ___adjtimex64 (struct __timex64 *tx64) __nonnull ((1));
 libc_hidden_proto (___adjtimex64)
