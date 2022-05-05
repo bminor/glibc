@@ -154,7 +154,7 @@ __spawni (pid_t *pid, const char *file,
      reauthenticated, or was newly opened on behalf of the child.  */
   error_t reauthenticate_fd (int fd)
     {
-      if (dtable_cells[fd] != NULL)
+      if (dtable_cells[fd] != NULL && dtable[fd] != MACH_PORT_NULL)
 	{
 	  file_t newfile;
 	  mach_port_t ref = __mach_reply_port ();
