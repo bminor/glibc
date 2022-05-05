@@ -94,9 +94,9 @@ struct __ntptimeval64
   long int __glibc_reserved3;
   long int __glibc_reserved4;
 };
-extern int __ntp_gettime64 (struct __ntptimeval64 *ntv);
+extern int __ntp_gettime64 (struct __ntptimeval64 *ntv) __nonnull ((1));
 libc_hidden_proto (__ntp_gettime64)
-extern int __ntp_gettimex64 (struct __ntptimeval64 *ntv);
+extern int __ntp_gettimex64 (struct __ntptimeval64 *ntv) __nonnull ((1));
 libc_hidden_proto (__ntp_gettimex64)
 
 #  endif
