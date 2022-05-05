@@ -166,7 +166,7 @@ libc_hidden_proto (__timegm64)
 # define __clock_settime64 __clock_settime
 #else
 extern int __clock_settime64 (clockid_t clock_id,
-                              const struct __timespec64 *tp);
+                              const struct __timespec64 *tp) __nonnull((2));
 libc_hidden_proto (__clock_settime64)
 #endif
 
@@ -324,7 +324,7 @@ extern int __clock_nanosleep_time64 (clockid_t clock_id,
                                      int flags, const struct __timespec64 *req,
                                      struct __timespec64 *rem);
 libc_hidden_proto (__clock_nanosleep_time64)
-extern int __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp);
+extern int __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp) __nonnull((2));
 libc_hidden_proto (__clock_gettime64)
 extern int __timespec_get64 (struct __timespec64 *ts, int base);
 libc_hidden_proto (__timespec_get64)

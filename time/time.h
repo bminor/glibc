@@ -276,11 +276,12 @@ extern int nanosleep (const struct timespec *__requested_time,
 extern int clock_getres (clockid_t __clock_id, struct timespec *__res) __THROW;
 
 /* Get current value of clock CLOCK_ID and store it in TP.  */
-extern int clock_gettime (clockid_t __clock_id, struct timespec *__tp) __THROW;
+extern int clock_gettime (clockid_t __clock_id, struct timespec *__tp)
+     __THROW __nonnull((2));
 
 /* Set clock CLOCK_ID to value TP.  */
 extern int clock_settime (clockid_t __clock_id, const struct timespec *__tp)
-     __THROW;
+     __THROW __nonnull((2));
 # else
 #  ifdef __REDIRECT
 extern int __REDIRECT (nanosleep, (const struct timespec *__requested_time,
@@ -290,9 +291,11 @@ extern int __REDIRECT_NTH (clock_getres, (clockid_t __clock_id,
                                           struct timespec *__res),
                            __clock_getres64);
 extern int __REDIRECT_NTH (clock_gettime, (clockid_t __clock_id, struct
-                                           timespec *__tp), __clock_gettime64);
+                                           timespec *__tp), __clock_gettime64)
+                           __nonnull((2));
 extern int __REDIRECT_NTH (clock_settime, (clockid_t __clock_id, const struct
-                                           timespec *__tp), __clock_settime64);
+                                           timespec *__tp), __clock_settime64)
+                           __nonnull((2));
 #  else
 #   define nanosleep __nanosleep64
 #   define clock_getres __clock_getres64
