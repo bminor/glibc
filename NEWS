@@ -30,6 +30,8 @@ The following bugs are resolved with this release:
   [29078] <dlfcn.h> functions unusable during early auditing
   [29097] time: fchmodat does not handle 64 bit time_t for
     AT_SYMLINK_NOFOLLOW
+  [29109] libc: posix_spawn() always returns 1 (EPERM) on clone()
+    failure
 
 
 Version 2.35
