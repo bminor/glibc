@@ -33,6 +33,7 @@
 #include <kernel-features.h>
 #include <errno.h>
 #include <internal-signals.h>
+#include <pthread_mutex_backoff.h>
 #include "pthread_mutex_conf.h"
 
 
