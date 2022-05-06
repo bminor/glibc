@@ -138,14 +138,26 @@ PTHREAD_MUTEX_LOCK (pthread_mutex_t *mutex)
 	  int cnt = 0;
 	  int max_cnt = MIN (max_adaptive_count (),
 			     mutex->__data.__spins * 2 + 10);
+	  int spin_count, exp_backoff = 1;
+	  unsigned int jitter = get_jitter ();
 	  do
 	    {
-	      if (cnt++ >= max_cnt)
+	      /* In each loop, spin count is exponential backoff plus
+		 random jitter, random range is [0, exp_backoff-1].  */
+	      spin_count = exp_backoff + (jitter & (exp_backoff - 1));
+	      cnt += spin_count;
+	      if (cnt >= max_cnt)
 		{
+		  /* If cnt exceeds max spin count, just go to wait
+		     queue.  */
 		  LLL_MUTEX_LOCK (mutex);
 		  break;
 		}
-	      atomic_spin_nop ();
+	      do
+		atomic_spin_nop ();
+	      while (--spin_count > 0);
+	      /* Prepare for next loop.  */
+	      exp_backoff = get_next_backoff (exp_backoff);
 	    }
 	  while (LLL_MUTEX_READ_LOCK (mutex) != 0
 		 || LLL_MUTEX_TRYLOCK (mutex) != 0);
