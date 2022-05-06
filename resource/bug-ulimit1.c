@@ -7,7 +7,7 @@ main (void)
   int retval = 0;
   long int res;
 
-  res = ulimit (UL_SETFSIZE, 10000);
+  res = ulimit (UL_SETFSIZE, 10000L);
   printf ("Result of ulimit (UL_SETFSIZE, 10000): %ld\n", res);
   if (res != 10000)
     retval = 1;
