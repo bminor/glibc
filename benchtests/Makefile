@@ -171,6 +171,7 @@ ifeq (no,$(cross-compiling))
 wcsmbs-benchset := \
   wcpcpy \
   wcpncpy \
+  wcrtomb \
   wcscat \
   wcschr \
   wcschrnul \
