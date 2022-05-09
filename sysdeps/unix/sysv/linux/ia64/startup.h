@@ -1,4 +1,4 @@
-/* Linux/i386 definitions of functions used by static libc main startup.
+/* Linux/ia64 definitions of functions used by static libc main startup.
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,7 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Can't use "call *%gs:SYSINFO_OFFSET" during startup.  */
-#define I386_USE_SYSENTER 0
+/* This code is used before the TCB is set up.  */
+#define IA64_USE_NEW_STUB 0
 
 #include_next <startup.h>
