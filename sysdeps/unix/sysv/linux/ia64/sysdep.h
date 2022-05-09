@@ -44,12 +44,15 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
-#if defined USE_DL_SYSINFO \
-	&& (IS_IN (libc) \
-	    || IS_IN (libpthread) || IS_IN (librt))
-# define IA64_USE_NEW_STUB
-#else
-# undef IA64_USE_NEW_STUB
+#ifndef IA64_USE_NEW_STUB
+# if defined USE_DL_SYSINFO && IS_IN (libc)
+#  define IA64_USE_NEW_STUB 1
+# else
+#  define IA64_USE_NEW_STUB 0
+# endif
+#endif
+#if IA64_USE_NEW_STUB && !USE_DL_SYSINFO
+# error IA64_USE_NEW_STUB needs USE_DL_SYSINFO
 #endif
 
 #ifdef __ASSEMBLER__
@@ -101,7 +104,7 @@
 	mov r15=num;				\
 	break __IA64_BREAK_SYSCALL
 
-#ifdef IA64_USE_NEW_STUB
+#if IA64_USE_NEW_STUB
 # ifdef SHARED
 #  define DO_CALL(num)				\
 	.prologue;				\
@@ -185,7 +188,7 @@
    (non-negative) errno on error or the return value on success.
  */
 
-#ifdef IA64_USE_NEW_STUB
+#if IA64_USE_NEW_STUB
 
 # define INTERNAL_SYSCALL_NCS(name, nr, args...)			      \
 ({									      \
@@ -277,7 +280,7 @@
 #define ASM_OUTARGS_5	ASM_OUTARGS_4, "=r" (_out4)
 #define ASM_OUTARGS_6	ASM_OUTARGS_5, "=r" (_out5)
 
-#ifdef IA64_USE_NEW_STUB
+#if IA64_USE_NEW_STUB
 #define ASM_ARGS_0
 #define ASM_ARGS_1	ASM_ARGS_0, "4" (_out0)
 #define ASM_ARGS_2	ASM_ARGS_1, "5" (_out1)
@@ -313,7 +316,7 @@
   /* Branch registers.  */						\
   "b6"
 
-#ifdef IA64_USE_NEW_STUB
+#if IA64_USE_NEW_STUB
 # define ASM_CLOBBERS_6	ASM_CLOBBERS_6_COMMON
 #else
 # define ASM_CLOBBERS_6	ASM_CLOBBERS_6_COMMON , "b7"
