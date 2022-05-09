@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <dl-sysdep.h>
-/* brk is used by statup before TCB is properly set.  */
-#undef USE_DL_SYSINFO
+/* brk is used by startup before TCB is properly set up.  */
+#define IA64_USE_NEW_STUB 0
 #include <sysdeps/unix/sysv/linux/brk.c>
