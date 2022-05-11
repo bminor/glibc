@@ -154,15 +154,17 @@
 # ifdef __LP64__
 #  define VDSO_NAME  "LINUX_2.6.39"
 #  define VDSO_HASH  123718537
-# else
+# elif defined __ILP32__
 #  define VDSO_NAME  "LINUX_4.9"
 #  define VDSO_HASH  61765625
 # endif
 
+# ifdef VDSO_NAME
 /* List of system calls which are supported as vsyscalls.  */
 # define HAVE_CLOCK_GETRES64_VSYSCALL	"__kernel_clock_getres"
 # define HAVE_CLOCK_GETTIME64_VSYSCALL	"__kernel_clock_gettime"
 # define HAVE_GETTIMEOFDAY_VSYSCALL	"__kernel_gettimeofday"
+# endif
 
 # undef INTERNAL_SYSCALL_RAW
 # define INTERNAL_SYSCALL_RAW(name, nr, args...)		\
