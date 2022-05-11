@@ -68,7 +68,6 @@ have-selinux = @have_selinux@
 have-libaudit = @have_libaudit@
 have-libcap = @have_libcap@
 have-cc-with-libunwind = @libc_cv_cc_with_libunwind@
-fno-unit-at-a-time = @fno_unit_at_a_time@
 bind-now = @bindnow@
 use-default-link = @use_default_link@
 have-cxx-thread_local = @libc_cv_cxx_thread_local@

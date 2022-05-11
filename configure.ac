@@ -1383,25 +1383,6 @@ fi
 rm -f conftest*])
 AC_SUBST(libc_cv_has_glob_dat)
 
-AC_CACHE_CHECK(for -fno-toplevel-reorder -fno-section-anchors, libc_cv_fno_toplevel_reorder, [dnl
-cat > conftest.c <<EOF
-int foo;
-EOF
-if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS -S -fno-toplevel-reorder -fno-section-anchors
-			    conftest.c 1>&AS_MESSAGE_LOG_FD])
-then
-  libc_cv_fno_toplevel_reorder=yes
-else
-  libc_cv_fno_toplevel_reorder=no
-fi
-rm -f conftest*])
-if test $libc_cv_fno_toplevel_reorder = yes; then
-  fno_unit_at_a_time="-fno-toplevel-reorder -fno-section-anchors"
-else
-  fno_unit_at_a_time=-fno-unit-at-a-time
-fi
-AC_SUBST(fno_unit_at_a_time)
-
 AC_CACHE_CHECK([for -mtls-dialect=gnu2], libc_cv_mtls_dialect_gnu2,
 [dnl
 cat > conftest.c <<EOF
