@@ -182,6 +182,9 @@ static unsigned int log_hashfraction;
 void
 _dl_start_profile (void)
 {
+#ifdef __CHERI_PURE_CAPABILITY__
+  __libc_fatal ("Profiling is not supported on capability architectures.");
+#else
   char *filename;
   int fd;
   struct __stat64_t64 st;
@@ -482,6 +485,7 @@ _dl_start_profile (void)
 
   /* Turn on profiling.  */
   running = 1;
+#endif
 }
 
 
