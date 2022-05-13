@@ -883,11 +883,12 @@ the string @var{s}.  This includes all bytes representing shift
 sequences.
 
 One word about the interface of the function: there is no parameter
-specifying the length of the array @var{s}.  Instead the function
-assumes that there are at least @code{MB_CUR_MAX} bytes available since
-this is the maximum length of any byte sequence representing a single
-character.  So the caller has to make sure that there is enough space
-available, otherwise buffer overruns can occur.
+specifying the length of the array @var{s}, so the caller has to make sure
+that there is enough space available, otherwise buffer overruns can occur.
+This version of @theglibc{} does not assume that @var{s} is at least
+@var{MB_CUR_MAX} bytes long, but programs that need to run on @glibcadj{}
+versions that have this assumption documented in the manual must comply
+with this limit.
 
 @pindex wchar.h
 @code{wcrtomb} was introduced in @w{Amendment 1} to @w{ISO C90} and is

@@ -172,6 +172,10 @@ libc_hidden_proto (__mbrtowc)
 libc_hidden_proto (__mbrlen)
 extern size_t __wcrtomb (char *__restrict __s, wchar_t __wc,
 			 __mbstate_t *__restrict __ps) attribute_hidden;
+extern size_t __wcrtomb_internal (char *__restrict __s, wchar_t __wc,
+				  __mbstate_t *__restrict __ps,
+				  size_t __s_size)
+     attribute_hidden;
 extern size_t __mbsrtowcs (wchar_t *__restrict __dst,
 			   const char **__restrict __src,
 			   size_t __len, __mbstate_t *__restrict __ps)

@@ -1,4 +1,5 @@
 /* Copyright (C) 1996-2022 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +21,7 @@
 #include <errno.h>
 #include <gconv.h>
 #include <stdlib.h>
+#include <string.h>
 #include <wchar.h>
 #include <wcsmbsload.h>
 
@@ -34,7 +36,7 @@
 static mbstate_t state;
 
 size_t
-__wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
+__wcrtomb_internal (char *s, wchar_t wc, mbstate_t *ps, size_t s_size)
 {
   char buf[MB_LEN_MAX];
   struct __gconv_step_data data;
@@ -52,14 +54,11 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
   /* A first special case is if S is NULL.  This means put PS in the
      initial state.  */
   if (s == NULL)
-    {
-      s = buf;
-      wc = L'\0';
-    }
+    wc = L'\0';
 
   /* Tell where we want to have the result.  */
-  data.__outbuf = (unsigned char *) s;
-  data.__outbufend = (unsigned char *) s + MB_CUR_MAX;
+  data.__outbuf = (unsigned char *) buf;
+  data.__outbufend = (unsigned char *) buf + sizeof buf;
 
   /* Get the conversion functions.  */
   fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
@@ -101,7 +100,17 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 
   if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
       || status == __GCONV_FULL_OUTPUT)
-    result = data.__outbuf - (unsigned char *) s;
+    {
+      result = data.__outbuf - (unsigned char *) buf;
+
+      if (s != NULL)
+	{
+	  if (result > s_size)
+	    __chk_fail ();
+
+	  memcpy (s, buf, result);
+	}
+    }
   else
     {
       result = (size_t) -1;
@@ -109,6 +118,12 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
     }
 
   return result;
+}
+
+size_t
+__wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
+{
+  return __wcrtomb_internal (s, wc, ps, (size_t) -1);
 }
 weak_alias (__wcrtomb, wcrtomb)
 libc_hidden_weak (wcrtomb)

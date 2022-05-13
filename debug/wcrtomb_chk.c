@@ -1,4 +1,5 @@
 /* Copyright (C) 2005-2022 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,10 +26,5 @@
 size_t
 __wcrtomb_chk (char *s, wchar_t wchar, mbstate_t *ps, size_t buflen)
 {
-  /* We do not have to implement the full wctomb semantics since we
-     know that S cannot be NULL when we come here.  */
-  if (buflen < MB_CUR_MAX)
-    __chk_fail ();
-
-  return __wcrtomb (s, wchar, ps);
+  return __wcrtomb_internal (s, wchar, ps, buflen);
 }

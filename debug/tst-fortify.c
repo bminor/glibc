@@ -1478,10 +1478,15 @@ do_test (void)
 	 character which has a multibyte representation which does not
 	 fit.  */
       CHK_FAIL_START
-      char smallbuf[2];
+      char smallbuf[1];
       if (wcrtomb (smallbuf, L'\x100', &s) != 2)
 	FAIL ();
       CHK_FAIL_END
+
+      /* Same input with a large enough buffer and we're good.  */
+      char bigenoughbuf[2];
+      if (wcrtomb (bigenoughbuf, L'\x100', &s) != 2)
+	FAIL ();
 #endif
 
       wchar_t wenough[10];
