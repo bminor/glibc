@@ -14,9 +14,6 @@
   vmovd d, %xmm0; \
   movq r, %rax;
 
-# define BZERO_ZERO_VEC0() \
-  vpxor %xmm0, %xmm0, %xmm0
-
 # define WMEMSET_SET_VEC0_AND_SET_RETURN(d, r) \
   MEMSET_SET_VEC0_AND_SET_RETURN(d, r)
 
@@ -31,9 +28,6 @@
 # endif
 # ifndef MEMSET_SYMBOL
 #  define MEMSET_SYMBOL(p,s)	p##_avx2_##s
-# endif
-# ifndef BZERO_SYMBOL
-#  define BZERO_SYMBOL(p,s)	p##_avx2_##s
 # endif
 # ifndef WMEMSET_SYMBOL
 #  define WMEMSET_SYMBOL(p,s)	p##_avx2_##s

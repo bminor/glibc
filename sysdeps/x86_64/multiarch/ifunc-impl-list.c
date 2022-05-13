@@ -291,48 +291,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memset_avx512_no_vzeroupper)
 	     )
 
-  /* Support sysdeps/x86_64/multiarch/bzero.c.  */
-  IFUNC_IMPL (i, name, bzero,
-	      IFUNC_IMPL_ADD (array, i, bzero, 1,
-			      __bzero_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, bzero, 1,
-			      __bzero_sse2_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, bzero,
-			      CPU_FEATURE_USABLE (AVX2),
-			      __bzero_avx2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, bzero,
-			      CPU_FEATURE_USABLE (AVX2),
-			      __bzero_avx2_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, bzero,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __bzero_avx2_unaligned_rtm)
-	      IFUNC_IMPL_ADD (array, i, bzero,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __bzero_avx2_unaligned_erms_rtm)
-	      IFUNC_IMPL_ADD (array, i, bzero,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __bzero_evex_unaligned)
-	      IFUNC_IMPL_ADD (array, i, bzero,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __bzero_evex_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, bzero,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __bzero_avx512_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, bzero,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __bzero_avx512_unaligned)
-	     )
-
   /* Support sysdeps/x86_64/multiarch/rawmemchr.c.  */
   IFUNC_IMPL (i, name, rawmemchr,
 	      IFUNC_IMPL_ADD (array, i, rawmemchr,

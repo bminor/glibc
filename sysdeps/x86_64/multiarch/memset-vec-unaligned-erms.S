@@ -1,4 +1,4 @@
-/* memset/bzero with unaligned store and rep stosb
+/* memset with unaligned store and rep stosb
    Copyright (C) 2016-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -25,10 +25,6 @@
       4 VEC stores and store 4 * VEC at a time until done.  */
 
 #include <sysdep.h>
-
-#ifndef BZERO_SYMBOL
-# define BZERO_SYMBOL(p,s)		MEMSET_SYMBOL (p, s)
-#endif
 
 #ifndef MEMSET_CHK_SYMBOL
 # define MEMSET_CHK_SYMBOL(p,s)		MEMSET_SYMBOL(p, s)
@@ -134,31 +130,6 @@ ENTRY (WMEMSET_SYMBOL (__wmemset, unaligned))
 END (WMEMSET_SYMBOL (__wmemset, unaligned))
 #endif
 
-ENTRY (BZERO_SYMBOL(__bzero, unaligned))
-#if VEC_SIZE > 16
-	BZERO_ZERO_VEC0 ()
-#endif
-	mov	%RDI_LP, %RAX_LP
-	mov	%RSI_LP, %RDX_LP
-#ifndef USE_LESS_VEC_MASK_STORE
-	xorl	%esi, %esi
-#endif
-	cmp	$VEC_SIZE, %RDX_LP
-	jb	L(less_vec_no_vdup)
-#ifdef USE_LESS_VEC_MASK_STORE
-	xorl	%esi, %esi
-#endif
-#if VEC_SIZE <= 16
-	BZERO_ZERO_VEC0 ()
-#endif
-	cmp	$(VEC_SIZE * 2), %RDX_LP
-	ja	L(more_2x_vec)
-	/* From VEC and to 2 * VEC.  No branch when size == VEC_SIZE.  */
-	VMOVU	%VEC(0), (%rdi)
-	VMOVU	%VEC(0), (VEC_SIZE * -1)(%rdi, %rdx)
-	VZEROUPPER_RETURN
-END (BZERO_SYMBOL(__bzero, unaligned))
-
 #if defined SHARED && IS_IN (libc)
 ENTRY_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned))
 	cmp	%RDX_LP, %RCX_LP
@@ -216,31 +187,6 @@ END (__memset_erms)
 END (MEMSET_SYMBOL (__memset, erms))
 # endif
 
-ENTRY_P2ALIGN (BZERO_SYMBOL(__bzero, unaligned_erms), 6)
-# if VEC_SIZE > 16
-	BZERO_ZERO_VEC0 ()
-# endif
-	mov	%RDI_LP, %RAX_LP
-	mov	%RSI_LP, %RDX_LP
-# ifndef USE_LESS_VEC_MASK_STORE
-	xorl	%esi, %esi
-# endif
-	cmp	$VEC_SIZE, %RDX_LP
-	jb	L(less_vec_no_vdup)
-# ifdef USE_LESS_VEC_MASK_STORE
-	xorl	%esi, %esi
-# endif
-# if VEC_SIZE <= 16
-	BZERO_ZERO_VEC0 ()
-# endif
-	cmp	$(VEC_SIZE * 2), %RDX_LP
-	ja	L(stosb_more_2x_vec)
-	/* From VEC and to 2 * VEC.  No branch when size == VEC_SIZE.  */
-	VMOVU	%VEC(0), (%rdi)
-	VMOVU	%VEC(0), (VEC_SIZE * -1)(%rdi, %rdx)
-	VZEROUPPER_RETURN
-END (BZERO_SYMBOL(__bzero, unaligned_erms))
-
 # if defined SHARED && IS_IN (libc)
 ENTRY_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned_erms))
 	cmp	%RDX_LP, %RCX_LP
@@ -282,7 +228,6 @@ L(last_2x_vec):
 #ifdef USE_LESS_VEC_MASK_STORE
 	.p2align 4,, 10
 L(less_vec):
-L(less_vec_no_vdup):
 L(less_vec_from_wmemset):
 	/* Less than 1 VEC.  */
 # if VEC_SIZE != 16 && VEC_SIZE != 32 && VEC_SIZE != 64
@@ -430,9 +375,6 @@ L(less_vec):
 	   xmm). This is only does anything for AVX2.  */
 	MEMSET_VDUP_TO_VEC0_LOW ()
 L(less_vec_from_wmemset):
-#if VEC_SIZE > 16
-L(less_vec_no_vdup):
-#endif
 #endif
 L(cross_page):
 #if VEC_SIZE > 32
@@ -445,9 +387,6 @@ L(cross_page):
 #endif
 #ifndef USE_XMM_LESS_VEC
 	MOVQ	%XMM0, %SET_REG64
-#endif
-#if VEC_SIZE <= 16
-L(less_vec_no_vdup):
 #endif
 	cmpl	$8, %edx
 	jge	L(between_8_15)
