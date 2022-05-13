@@ -22,7 +22,6 @@
 
 #if IS_IN (libc)
 # define MEMSET_SYMBOL(p,s)	p##_sse2_##s
-# define BZERO_SYMBOL(p,s)	MEMSET_SYMBOL (p, s)
 # define WMEMSET_SYMBOL(p,s)	p##_sse2_##s
 
 # ifdef SHARED
