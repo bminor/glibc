@@ -27,8 +27,8 @@
 /* The GNU libc does not support any K&R compilers or the traditional mode
    of ISO C compilers anymore.  Check for some of the combinations not
    supported anymore.  */
-#if defined __GNUC__ && !defined __STDC__
-# error "You need a ISO C conforming compiler to use the glibc headers"
+#if defined __GNUC__ && !defined __STDC__ && !defined __cplusplus
+# error "You need a ISO C or C++ conforming compiler to use the glibc headers"
 #endif
 
 /* Some user header file might have defined this before.  */
