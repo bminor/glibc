@@ -1,4 +1,4 @@
-# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
+GLIBC_PROVIDES[]dnl See aclocal.m4 in the top level source directory.
 # Local preconfigure fragment for sysdeps/mips
 
 case "$machine" in
@@ -18,7 +18,7 @@ mips*)
 	elif test "$abiflag" = "_ABI64" ; then
 		machine=mips/mips64/n64
 	else
-		as_fn_error 1 "Unable to determine ABI." "$LINENO" 5
+		AC_MSG_ERROR([Unable to determine ABI.], [1])
 	fi
 	# $config_machine is not really needed here but the slash after
 	# $machine is needed by the case statement in
@@ -26,7 +26,7 @@ mips*)
 	machine=$machine/$config_machine
 
 	if test "$abiflag" != "_ABIO32" -a "$mips16flag" = "1"; then
-		as_fn_error 1 "MIPS16 is only supported with the o32 ABI." "$LINENO" 5
+		AC_MSG_ERROR([MIPS16 is only supported with the o32 ABI.], [1])
 	fi
 
 	with_fp_cond="defined __mips_hard_float"
