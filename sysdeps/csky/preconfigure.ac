@@ -1,4 +1,4 @@
-# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
+GLIBC_PROVIDES[]dnl See aclocal.m4 in the top level source directory.
 # Local preconfigure fragment for sysdeps/csky
 
 case "$machine" in
@@ -14,13 +14,13 @@ csky*)
 
     case "$abi" in
     1)
-	as_fn_error 1 "glibc does not support abiv1 yet" "$LINENO" 5
+	AC_MSG_ERROR([glibc does not support abiv1 yet], [1])
 	;;
     2)
 	machine=abiv2
 	;;
     *)
-	as_fn_error 1 "Unknown abi" "$LINENO" 5
+	AC_MSG_ERROR([Unknown abi], [1])
 	;;
     esac
 
@@ -49,13 +49,7 @@ csky*)
     base_machine=csky
     machine=csky/$machine
 
-    cat >>confdefs.h <<_ACEOF
-#define CSKYABI $abi
-_ACEOF
-
-    cat >>confdefs.h <<_ACEOF
-#define CSKY_HARD_FLOAT $with_fp_cond
-_ACEOF
-
+    AC_DEFINE_UNQUOTED([CSKYABI], [$abi])
+    AC_DEFINE_UNQUOTED([CSKY_HARD_FLOAT], [$with_fp_cond])
     ;;
 esac
