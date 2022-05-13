@@ -164,7 +164,7 @@
 /* Length is known to be safe at compile time if the __L * __S <= __OBJSZ
    condition can be folded to a constant and if it is true, or unknown (-1) */
 #define __glibc_safe_or_unknown_len(__l, __s, __osz) \
-  ((__osz) == (__SIZE_TYPE__) -1					      \
+  ((__builtin_constant_p (__osz) && (__osz) == (__SIZE_TYPE__) -1)	      \
    || (__glibc_unsigned_or_positive (__l)				      \
        && __builtin_constant_p (__glibc_safe_len_cond ((__SIZE_TYPE__) (__l), \
 						       (__s), (__osz)))	      \
