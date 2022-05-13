@@ -1,4 +1,4 @@
-# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
+GLIBC_PROVIDES[]dnl See aclocal.m4 in the top level source directory.
 # Local preconfigure fragment for sysdeps/m68k
 
 # This fragment canonicalizes the machine names for m68k variants.
@@ -11,9 +11,9 @@ m68k)		variant=`(echo "#ifdef __mcoldfire__"
 			  echo "m680x0/m68020"
 			  echo "#endif") |
 			 $CC $CFLAGS $CPPFLAGS -E - |
-			 grep '^[a-z]'`
+			 grep '^[[a-z]]'`
 		if test -z "$variant"; then
-		  as_fn_error 1 "Cannot determine m68k processor variant" "$LINENO" 5
+		  AC_MSG_ERROR([Cannot determine m68k processor variant], [1])
 		fi
 		base_machine=m68k machine=m68k/$variant
 		if test "$variant" = "coldfire"; then
