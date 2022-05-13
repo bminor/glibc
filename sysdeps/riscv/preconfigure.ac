@@ -1,4 +1,4 @@
-# This file is generated from configure.ac by Autoconf.  DO NOT EDIT!
+GLIBC_PROVIDES[]dnl See aclocal.m4 in the top level source directory.
 # Local preconfigure fragment for sysdeps/riscv
 
 case "$machine" in
@@ -12,7 +12,7 @@ riscv*)
     64 | 32)
 	;;
     *)
-	as_fn_error 1 "Unable to determine XLEN" "$LINENO" 5
+	AC_MSG_ERROR([Unable to determine XLEN], [1])
 	;;
     esac
 
@@ -22,13 +22,13 @@ riscv*)
 	with_fp_cond=1
 	;;
     32)
-	as_fn_error 1 "glibc does not yet support systems with the F but not D extensions" "$LINENO" 5
+	AC_MSG_ERROR([glibc does not yet support systems with the F but not D extensions], 1)
 	;;
     "")
 	with_fp_cond=0
 	;;
     *)
-	as_fn_error 1 "Unable to determine FLEN" "$LINENO" 5
+	AC_MSG_ERROR([Unable to determine FLEN], [1])
 	;;
     esac
 
@@ -37,13 +37,13 @@ riscv*)
 	abi_flen=0
 	;;
     single)
-	as_fn_error 1 "glibc does not yet support the single floating-point ABI" "$LINENO" 5
+	AC_MSG_ERROR([glibc does not yet support the single floating-point ABI], [1])
 	;;
     double)
 	abi_flen=64
 	;;
     *)
-	as_fn_error 1 "Unable to determine floating-point ABI" "$LINENO" 5
+	AC_MSG_ERROR([Unable to determine floating-point ABI], [1])
 	;;
     esac
 
@@ -51,20 +51,14 @@ riscv*)
     __riscv_atomic)
 	;;
     *)
-	as_fn_error 1 "glibc requires the A extension" "$LINENO" 5
+	AC_MSG_ERROR([glibc requires the A extension], [1])
 	;;
     esac
 
     base_machine=riscv
     machine=riscv/rv$xlen/$float_machine
 
-    cat >>confdefs.h <<_ACEOF
-#define RISCV_ABI_XLEN $xlen
-_ACEOF
-
-    cat >>confdefs.h <<_ACEOF
-#define RISCV_ABI_FLEN $abi_flen
-_ACEOF
-
+    AC_DEFINE_UNQUOTED([RISCV_ABI_XLEN], [$xlen])
+    AC_DEFINE_UNQUOTED([RISCV_ABI_FLEN], [$abi_flen])
     ;;
 esac
