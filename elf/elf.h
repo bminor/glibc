@@ -3927,6 +3927,8 @@ enum
 #define EF_RISCV_FLOAT_ABI_SINGLE 	0x0002
 #define EF_RISCV_FLOAT_ABI_DOUBLE 	0x0004
 #define EF_RISCV_FLOAT_ABI_QUAD 	0x0006
+#define EF_RISCV_RVE			0x0008
+#define EF_RISCV_TSO			0x0010
 
 /* RISC-V relocations.  */
 #define R_RISCV_NONE		 0
@@ -3986,6 +3988,19 @@ enum
 #define R_RISCV_IRELATIVE	58
 
 #define R_RISCV_NUM		59
+
+/* RISC-V specific values for the st_other field.  */
+#define STO_RISCV_VARIANT_CC	0x80	/* Function uses variant calling
+					   convention */
+
+/* RISC-V specific values for the sh_type field.  */
+#define SHT_RISCV_ATTRIBUTES	(SHT_LOPROC + 3)
+
+/* RISC-V specific values for the p_type field.  */
+#define PT_RISCV_ATTRIBUTES	(PT_LOPROC + 3)
+
+/* RISC-V specific values for the d_tag field.  */
+#define DT_RISCV_VARIANT_CC	(DT_LOPROC + 1)
 
 /* BPF specific declarations.  */
 
