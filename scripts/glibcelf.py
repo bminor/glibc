@@ -385,6 +385,10 @@ class ShtPARISC(enum.Enum):
     SHT_PARISC_UNWIND = 0x70000001
     SHT_PARISC_DOC = 0x70000002
 
+class ShtRISCV(enum.Enum):
+    """Supplemental SHT_* constants for EM_RISCV."""
+    SHT_RISCV_ATTRIBUTES = 0x70000003
+
 class Pf(enum.IntFlag):
     """Program header flags.  Type of Phdr.p_flags values."""
     PF_X = 1
@@ -558,6 +562,10 @@ class PtPARISC(enum.Enum):
     PT_PARISC_ARCHEXT = 0x70000000
     PT_PARISC_UNWIND = 0x70000001
 
+class PtRISCV(enum.Enum):
+    """Supplemental PT_* constants for EM_RISCV."""
+    PT_RISCV_ATTRIBUTES = 0x70000003
+
 class Dt(_OpenIntEnum):
     """ELF dynamic segment tags.  Type of Dyn.d_val."""
     DT_NULL = 0
@@ -709,6 +717,10 @@ class DtPPC64(enum.Enum):
     DT_PPC64_OPD = 0x70000001
     DT_PPC64_OPDSZ = 0x70000002
     DT_PPC64_OPT = 0x70000003
+
+class DtRISCV(enum.Enum):
+    """Supplemental DT_* constants for EM_RISCV."""
+    DT_RISCV_VARIANT_CC = 0x70000001
 
 class DtSPARC(enum.Enum):
     """Supplemental DT_* constants for EM_SPARC."""
