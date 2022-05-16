@@ -1342,6 +1342,7 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 # if the sanity check below fails.
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@.new		\
 		  $(LDFLAGS-rtld) -Wl,-z,defs $(z-now-$(bind-now))	\
+		  $(dt-relr-ldflag) \
 		  $(filter-out $(map-file),$^) $(load-map-file)		\
 		  -Wl,-soname=$(rtld-installed-name)
 	$(call after-link,$@.new)
@@ -1666,6 +1667,7 @@ $(objpfx)nodlopen2.out: $(objpfx)nodlopenmod2.so
 
 $(objpfx)filtmod1.so: $(objpfx)filtmod1.os $(objpfx)filtmod2.so
 	$(LINK.o) -shared -o $@ -B$(csu-objpfx) $(LDFLAGS.so) \
+		  $(dt-relr-ldflag) \
 		  -L$(subst :, -L,$(rpath-link)) \
 		  -Wl,-rpath-link=$(rpath-link) \
 		  $< -Wl,-F,$(objpfx)filtmod2.so
@@ -2469,7 +2471,7 @@ $(objpfx)tst-big-note: $(objpfx)tst-big-note-lib.so
 # artificial, large note in tst-big-note-lib.o and invalidate the
 # test.
 $(objpfx)tst-big-note-lib.so: $(objpfx)tst-big-note-lib.o
-	$(LINK.o) -shared -o $@ $(LDFLAGS.so) $<
+	$(LINK.o) -shared -o $@ $(LDFLAGS.so) $(dt-relr-ldflag) $<
 
 $(objpfx)tst-unwind-ctor: $(objpfx)tst-unwind-ctor-lib.so
 
@@ -2778,6 +2780,7 @@ $(objpfx)tst-ro-dynamic: $(objpfx)tst-ro-dynamic-mod.so
 $(objpfx)tst-ro-dynamic-mod.so: $(objpfx)tst-ro-dynamic-mod.os \
   tst-ro-dynamic-mod.map
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
+		$(dt-relr-ldflag) \
 		-Wl,--script=tst-ro-dynamic-mod.map \
 		$(objpfx)tst-ro-dynamic-mod.os
 

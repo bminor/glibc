@@ -362,6 +362,15 @@ relro-LDFLAGS = -Wl,-z,relro
 LDFLAGS.so += $(relro-LDFLAGS)
 LDFLAGS-rtld += $(relro-LDFLAGS)
 
+# Linker options to enable and disable DT_RELR.
+ifeq ($(have-dt-relr),yes)
+dt-relr-ldflag = -Wl,-z,pack-relative-relocs
+no-dt-relr-ldflag = -Wl,-z,nopack-relative-relocs
+else
+dt-relr-ldflag =
+no-dt-relr-ldflag =
+endif
+
 ifeq (no,$(build-pie-default))
 pie-default = $(no-pie-ccflag)
 else # build-pie-default
@@ -370,6 +379,7 @@ pic-default = -DPIC
 pie-default = $(pie-ccflag)
 
 ifeq (yes,$(enable-static-pie))
+static-pie-dt-relr-ldflag = $(dt-relr-ldflag)
 ifeq (yes,$(have-static-pie))
 static-pie-ldflag = -static-pie
 else
@@ -404,6 +414,7 @@ link-extra-libs-tests = $(libsupport)
 # Command for linking PIE programs with the C library.
 ifndef +link-pie
 +link-pie-before-inputs = $(if $($(@F)-no-pie),$(no-pie-ldflag),-pie) \
+	     $(if $($(@F)-no-dt-relr),$(no-dt-relr-ldflag),$(dt-relr-ldflag)) \
 	     -Wl,-O1 -nostdlib -nostartfiles \
 	     $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	     $(relro-LDFLAGS) $(hashstyle-LDFLAGS) \
@@ -436,6 +447,7 @@ endif
 ifndef +link-static
 +link-static-before-inputs = -nostdlib -nostartfiles -static \
 	      $(if $($(@F)-no-pie),$(no-pie-ldflag),$(static-pie-ldflag)) \
+	      $(if $($(@F)-no-dt-relr),$(no-dt-relr-ldflag),$(static-pie-dt-relr-ldflag)) \
 	      $(sysdep-LDFLAGS) $(LDFLAGS) $(LDFLAGS-$(@F))  \
 	      $(firstword $(CRT-$(@F)) $(csu-objpfx)$(real-static-start-installed-name)) \
 	      $(+preinit) $(+prectorT)
