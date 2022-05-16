@@ -43,9 +43,11 @@ EI_DATA=5
 ELFDATA2LSB=b'\x01'
 ELFDATA2MSB=b'\x02'
 
+ET_EXEC=2
 ET_DYN=3
 
 PT_LOAD=1
+PT_TLS=7
 
 def elf_types_fmts(e_ident):
     endian = '<' if e_ident[EI_DATA] == ELFDATA2LSB else '>'
@@ -146,8 +148,15 @@ def elf_edit_align(phdr, align):
     else:
         phdr.p_align = int(align)
 
+def elf_edit_maximize_tls_size(phdr, elfclass):
+    if elfclass == ELFCLASS32:
+        # It is possible that the kernel can allocate half of the
+        # address space, so use something larger.
+        phdr.p_memsz = 0xfff00000
+    else:
+        phdr.p_memsz = 1 << 63
 
-def elf_edit(f, align):
+def elf_edit(f, opts):
     ei_nident_fmt = 'c' * EI_NIDENT
     ei_nident_len = struct.calcsize(ei_nident_fmt)
 
@@ -172,24 +181,35 @@ def elf_edit(f, align):
 
     ehdr = Elf_Ehdr(e_ident)
     ehdr.read(f)
-    if ehdr.e_type != ET_DYN:
-       error('{}: not a shared library'.format(f.name))
+    if ehdr.e_type not in (ET_EXEC, ET_DYN):
+       error('{}: not an executable or shared library'.format(f.name))
 
     phdr = Elf_Phdr(e_ident)
+    maximize_tls_size_done = False
     for i in range(0, ehdr.e_phnum):
         f.seek(ehdr.e_phoff + i * phdr.len)
         phdr.read(f)
-        if phdr.p_type == PT_LOAD:
-            elf_edit_align(phdr, align)
+        if phdr.p_type == PT_LOAD and opts.align is not None:
+            elf_edit_align(phdr, opts.align)
             f.seek(ehdr.e_phoff + i * phdr.len)
             phdr.write(f)
             break
+        if phdr.p_type == PT_TLS and opts.maximize_tls_size:
+            elf_edit_maximize_tls_size(phdr, e_ident[EI_CLASS])
+            f.seek(ehdr.e_phoff + i * phdr.len)
+            phdr.write(f)
+            maximize_tls_size_done = True
+            break
 
+    if opts.maximize_tls_size and not maximize_tls_size_done:
+        error('{}: TLS maximum size was not updated'.format(f.name))
 
 def get_parser():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('-a', dest='align', required=True,
+    parser.add_argument('-a', dest='align',
                         help='How to set the LOAD alignment')
+    parser.add_argument('--maximize-tls-size', action='store_true',
+                        help='Set maximum PT_TLS size')
     parser.add_argument('output',
                         help='ELF file to edit')
     return parser
@@ -199,7 +219,7 @@ def main(argv):
     parser = get_parser()
     opts = parser.parse_args(argv)
     with open(opts.output, 'r+b') as fout:
-       elf_edit(fout, opts.align)
+       elf_edit(fout, opts)
 
 
 if __name__ == '__main__':
