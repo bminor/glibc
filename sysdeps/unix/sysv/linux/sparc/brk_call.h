@@ -1,5 +1,5 @@
-/* Change data segment size.  Linux/Alpha.
-   Copyright (C) 2020-2022 Free Software Foundation, Inc.
+/* Invoke the brk system call.  Sparc version.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,23 +16,20 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <unistd.h>
-#include <sysdep.h>
+#ifdef __arch64__
+# define SYSCALL_NUM "0x6d"
+#else
+# define SYSCALL_NUM "0x10"
+#endif
 
-void *__curbrk = 0;
-
-int
-__brk (void *addr)
+static inline void *
+__brk_call (void *addr)
 {
-  /* Alpha brk returns -ENOMEM in case of failure.  */
-  __curbrk = (void *) INTERNAL_SYSCALL_CALL (brk, addr);
-  if ((unsigned long) __curbrk == -ENOMEM)
-    {
-      __set_errno (ENOMEM);
-      return -1;
-    }
-
-  return 0;
+  register long int g1 asm ("g1") = __NR_brk;
+  register long int o0 asm ("o0") = (long int) addr;
+  asm volatile ("ta " SYSCALL_NUM
+		: "=r"(o0)
+		: "r"(g1), "0"(o0)
+		: "cc");
+  return (void *) o0;
 }
-weak_alias (__brk, brk)
