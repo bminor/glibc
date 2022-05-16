@@ -1226,6 +1226,11 @@ extern struct link_map * _dl_get_dl_main_map (void)
 # endif
 #endif
 
+/* Perform early memory allocation, avoding a TCB dependency.
+   Terminate the process if allocation fails.  May attempt to use
+   brk.  */
+void *_dl_early_allocate (size_t size) attribute_hidden;
+
 /* Initialization of libpthread for statically linked applications.
    If libpthread is not linked in, this is an empty function.  */
 void __pthread_initialize_minimal (void) weak_function;
