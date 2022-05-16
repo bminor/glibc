@@ -33,6 +33,7 @@ routines = \
   $(all-dl-routines) \
   dl-addr \
   dl-addr-obj \
+  dl-early_allocate \
   dl-error \
   dl-iteratephdr \
   dl-libc \
@@ -108,6 +109,7 @@ all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
 # But they are absent from the shared libc, because that code is in ld.so.
 elide-routines.os = \
   $(all-dl-routines) \
+  dl-early_allocate \
   dl-exception \
   dl-origin \
   dl-reloc-static-pie \
@@ -276,6 +278,7 @@ tests-static-normal := \
   tst-linkall-static \
   tst-single_threaded-pthread-static \
   tst-single_threaded-static \
+  tst-tls-allocation-failure-static \
   tst-tlsalign-extern-static \
   tst-tlsalign-static \
   # tests-static-normal
@@ -1212,6 +1215,10 @@ $(objpfx)tst-glibcelf.out: tst-glibcelf.py elf.h $(..)/scripts/glibcelf.py \
 	PYTHONPATH=$(..)scripts $(PYTHON) tst-glibcelf.py \
           --cc="$(CC) $(patsubst -DMODULE_NAME=%,-DMODULE_NAME=testsuite,$(CPPFLAGS))" \
 	  < /dev/null > $@ 2>&1; $(evaluate-test)
+
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-tls-allocation-failure-static-patched.out
+endif
 
 # The test requires shared _and_ PIE because the executable
 # unit test driver must be able to link with the shared object
@@ -2937,3 +2944,15 @@ $(eval $(call tst-trace-skeleton,4,\
 	$(objpfx)libtracemod2:$(objpfx)libtracemod3:$(objpfx)libtracemod4))
 $(eval $(call tst-trace-skeleton,5,\
 	$(objpfx)libtracemod2:$(objpfx)libtracemod3:$(objpfx)libtracemod4:$(objpfx)libtracemod5))
+
+$(objpfx)tst-tls-allocation-failure-static-patched: \
+  $(objpfx)tst-tls-allocation-failure-static $(..)scripts/tst-elf-edit.py
+	cp $< $@
+	$(PYTHON) $(..)scripts/tst-elf-edit.py --maximize-tls-size $@
+
+$(objpfx)tst-tls-allocation-failure-static-patched.out: \
+  $(objpfx)tst-tls-allocation-failure-static-patched
+	$< > $@ 2>&1; echo "status: $$?" >> $@
+	grep -q '^Fatal glibc error: Cannot allocate TLS block$$' $@ \
+	  && grep -q '^status: 127$$' $@; \
+	  $(evaluate-test)

@@ -1211,6 +1211,11 @@ extern struct link_map * _dl_get_dl_main_map (void)
 # endif
 #endif
 
+/* Perform early memory allocation, avoding a TCB dependency.
+   Terminate the process if allocation fails.  May attempt to use
+   brk.  */
+void *_dl_early_allocate (size_t size) attribute_hidden;
+
 /* Initialize the DSO sort algorithm to use.  */
 #if !HAVE_TUNABLES
 static inline void

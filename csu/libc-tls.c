@@ -145,11 +145,16 @@ __libc_setup_tls (void)
      _dl_allocate_tls_storage (in elf/dl-tls.c) does using __libc_memalign
      and dl_tls_static_align.  */
   tcb_offset = roundup (memsz + GLRO(dl_tls_static_surplus), max_align);
-  tlsblock = __sbrk (tcb_offset + TLS_INIT_TCB_SIZE + max_align);
+  tlsblock = _dl_early_allocate (tcb_offset + TLS_INIT_TCB_SIZE + max_align);
+  if (tlsblock == NULL)
+    _startup_fatal ("Fatal glibc error: Cannot allocate TLS block\n");
 #elif TLS_DTV_AT_TP
   tcb_offset = roundup (TLS_INIT_TCB_SIZE, align ?: 1);
-  tlsblock = __sbrk (tcb_offset + memsz + max_align
-		     + TLS_PRE_TCB_SIZE + GLRO(dl_tls_static_surplus));
+  tlsblock = _dl_early_allocate (tcb_offset + memsz + max_align
+				 + TLS_PRE_TCB_SIZE
+				 + GLRO(dl_tls_static_surplus));
+  if (tlsblock == NULL)
+    _startup_fatal ("Fatal glibc error: Cannot allocate TLS block\n");
   tlsblock += TLS_PRE_TCB_SIZE;
 #else
   /* In case a model with a different layout for the TCB and DTV
