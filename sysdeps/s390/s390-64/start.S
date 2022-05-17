@@ -84,10 +84,25 @@ _start:
 
 	/* Ok, now branch to the libc main routine.  */
 #ifdef PIC
+# ifdef SHARED
+	/* Used for dynamic linked position independent executable.
+	   => Scrt1.o  */
 	larl	%r2,main@GOTENT		# load pointer to main
 	lg	%r2,0(%r2)
+# else
+	/* Used for dynamic linked position dependent executable.
+	   => crt1.o (glibc configured without --disable-default-pie:
+	   PIC is defined)
+	   Or for static linked position independent executable.
+	   => rcrt1.o (only available if glibc configured without
+	   --disable-default-pie: PIC is defined) */
+	larl	%r2,__wrap_main
+# endif
 	brasl	%r14,__libc_start_main@plt
 #else
+	/* Used for dynamic/static linked position dependent executable.
+	   => crt1.o (glibc configured with --disable-default-pie:
+	   PIC and SHARED are not defined)  */
 	larl	%r2,main		# load pointer to main
 	brasl	%r14,__libc_start_main
 #endif
@@ -96,6 +111,19 @@ _start:
 	.word	0
 
 	cfi_endproc
+
+#if defined PIC && !defined SHARED
+	/* When main is not defined in the executable but in a shared library
+	   then a wrapper is needed in crt1.o of the static-pie enabled libc,
+	   because crt1.o and rcrt1.o share code and the later must avoid the
+	   use of GOT relocations before __libc_start_main is called.  */
+__wrap_main:
+	cfi_startproc
+	larl	%r1,main@GOTENT		# load pointer to main
+	lg	%r1,0(%r1)
+	br	%r1
+	cfi_endproc
+#endif
 
 	/* Define a symbol for the first piece of initialized data.  */
 	.data
