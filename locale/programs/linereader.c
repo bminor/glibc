@@ -596,6 +596,75 @@ get_ident (struct linereader *lr)
   return &lr->token;
 }
 
+/* Process a decoded Unicode character WCH in a string.  */
+static void
+get_string_U_char (struct localedef_t *locale, const struct charmap_t *charmap,
+		   const struct repertoire_t *repertoire,
+		   uint32_t wch, struct lr_buffer *lrb, bool *illegal_string)
+{
+  /* See whether the charmap contains the Uxxxxxxxx names.  */
+  char utmp[10];
+  snprintf (utmp, sizeof (utmp), "U%08X", wch);
+  struct charseq *seq = charmap_find_value (charmap, utmp, 9);
+
+  if (seq == NULL)
+    {
+      /* No, this isn't the case.  Now determine from
+	 the repertoire the name of the character and
+	 find it in the charmap.  */
+      if (repertoire != NULL)
+	{
+	  const char *symbol = repertoire_find_symbol (repertoire, wch);
+	  if (symbol != NULL)
+	    seq = charmap_find_value (charmap, symbol, strlen (symbol));
+	}
+
+      if (seq == NULL)
+	{
+#ifndef NO_TRANSLITERATION
+	  /* Transliterate if possible.  */
+	  if (locale != NULL)
+	    {
+	      if ((locale->avail & CTYPE_LOCALE) == 0)
+		{
+		  /* Load the CTYPE data now.  */
+		  int old_needed = locale->needed;
+
+		  locale->needed = 0;
+		  locale = load_locale (LC_CTYPE, locale->name,
+					locale->repertoire_name,
+					charmap, locale);
+		  locale->needed = old_needed;
+		}
+
+	      uint32_t *translit;
+	      if ((locale->avail & CTYPE_LOCALE) != 0
+		  && ((translit = find_translit (locale, charmap, wch))
+		      != NULL))
+		/* The CTYPE data contains a matching
+		   transliteration.  */
+		{
+		  for (int i = 0; translit[i] != 0; ++i)
+		    {
+		      snprintf (utmp, sizeof (utmp), "U%08X", translit[i]);
+		      seq = charmap_find_value (charmap, utmp, 9);
+		      assert (seq != NULL);
+		      adds (lrb, seq->bytes, seq->nbytes);
+		    }
+		  return;
+		}
+	    }
+#endif	/* NO_TRANSLITERATION */
+
+	  /* Not a known name.  */
+	  *illegal_string = true;
+	}
+    }
+
+  if (seq != NULL)
+    adds (lrb, seq->bytes, seq->nbytes);
+}
+
 
 static struct token *
 get_string (struct linereader *lr, const struct charmap_t *charmap,
@@ -635,7 +704,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
     }
   else
     {
-      int illegal_string = 0;
+      bool illegal_string = false;
       size_t buf2act = 0;
       size_t buf2max = 56 * sizeof (uint32_t);
       int ch;
@@ -695,7 +764,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 	    {
 	      /* <> is no correct name.  Ignore it and also signal an
 		 error.  */
-	      illegal_string = 1;
+	      illegal_string = true;
 	      continue;
 	    }
 
@@ -709,8 +778,6 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 
 	      if (cp == &lrb.buf[lrb.act])
 		{
-		  char utmp[10];
-
 		  /* Yes, it is.  */
 		  addc (&lrb, '\0');
 		  wch = strtoul (lrb.buf + startidx + 1, NULL, 16);
@@ -721,81 +788,8 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 		  if (return_widestr)
 		    ADDWC (wch);
 
-		  /* See whether the charmap contains the Uxxxxxxxx names.  */
-		  snprintf (utmp, sizeof (utmp), "U%08X", wch);
-		  seq = charmap_find_value (charmap, utmp, 9);
-
-		  if (seq == NULL)
-		    {
-		     /* No, this isn't the case.  Now determine from
-			the repertoire the name of the character and
-			find it in the charmap.  */
-		      if (repertoire != NULL)
-			{
-			  const char *symbol;
-
-			  symbol = repertoire_find_symbol (repertoire, wch);
-
-			  if (symbol != NULL)
-			    seq = charmap_find_value (charmap, symbol,
-						      strlen (symbol));
-			}
-
-		      if (seq == NULL)
-			{
-#ifndef NO_TRANSLITERATION
-			  /* Transliterate if possible.  */
-			  if (locale != NULL)
-			    {
-			      uint32_t *translit;
-
-			      if ((locale->avail & CTYPE_LOCALE) == 0)
-				{
-				  /* Load the CTYPE data now.  */
-				  int old_needed = locale->needed;
-
-				  locale->needed = 0;
-				  locale = load_locale (LC_CTYPE,
-							locale->name,
-							locale->repertoire_name,
-							charmap, locale);
-				  locale->needed = old_needed;
-				}
-
-			      if ((locale->avail & CTYPE_LOCALE) != 0
-				  && ((translit = find_translit (locale,
-								 charmap, wch))
-				      != NULL))
-				/* The CTYPE data contains a matching
-				   transliteration.  */
-				{
-				  int i;
-
-				  for (i = 0; translit[i] != 0; ++i)
-				    {
-				      char utmp[10];
-
-				      snprintf (utmp, sizeof (utmp), "U%08X",
-						translit[i]);
-				      seq = charmap_find_value (charmap, utmp,
-								9);
-				      assert (seq != NULL);
-				      adds (&lrb, seq->bytes, seq->nbytes);
-				    }
-
-				  continue;
-				}
-			    }
-#endif	/* NO_TRANSLITERATION */
-
-			  /* Not a known name.  */
-			  illegal_string = 1;
-			}
-		    }
-
-		  if (seq != NULL)
-		    adds (&lrb, seq->bytes, seq->nbytes);
-
+		  get_string_U_char (locale, charmap, repertoire, wch,
+				     &lrb, &illegal_string);
 		  continue;
 		}
 	    }
@@ -812,7 +806,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 	      /* This name is not in the charmap.  */
 	      lr_error (lr, _("symbol `%.*s' not in charmap"),
 			(int) (lrb.act - startidx), &lrb.buf[startidx]);
-	      illegal_string = 1;
+	      illegal_string = true;
 	    }
 
 	  if (return_widestr)
@@ -833,7 +827,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 		  /* This name is not in the repertoire map.  */
 		  lr_error (lr, _("symbol `%.*s' not in repertoire map"),
 			    (int) (lrb.act - startidx), &lrb.buf[startidx]);
-		  illegal_string = 1;
+		  illegal_string = true;
 		}
 	      else
 		ADDWC (wch);
@@ -850,7 +844,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
       if (ch == '\n' || ch == EOF)
 	{
 	  lr_error (lr, _("unterminated string"));
-	  illegal_string = 1;
+	  illegal_string = true;
 	}
 
       if (illegal_string)
