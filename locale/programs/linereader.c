@@ -688,7 +688,11 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 
       buf2 = NULL;
       while ((ch = lr_getc (lr)) != '"' && ch != '\n' && ch != EOF)
-	addc (&lrb, ch);
+	{
+	  if (ch >= 0x80)
+	    lr_error (lr, _("illegal 8-bit character in untranslated string"));
+	  addc (&lrb, ch);
+	}
 
       /* Catch errors with trailing escape character.  */
       if (lrb.act > 0 && lrb.buf[lrb.act - 1] == lr->escape_char
@@ -733,13 +737,35 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 	      if (ch == lr->escape_char)
 		{
 		  ch = lr_getc (lr);
+		  if (ch >= 0x80)
+		    {
+		      lr_error (lr, _("illegal 8-bit escape sequence"));
+		      illegal_string = true;
+		      break;
+		    }
 		  if (ch == '\n' || ch == EOF)
 		    break;
 		}
+	      else if (ch < 0x80)
+		{
+		  wch = ch;
+		  addc (&lrb, ch);
+		}
+	      else 		/* UTF-8 sequence.  */
+		{
+		 if (!get_string_decode_utf8 (lr, ch, &wch))
+		   {
+		     illegal_string = true;
+		     break;
+		   }
+		 get_string_U_char (locale, charmap, repertoire, wch,
+				    &lrb, &illegal_string);
+		 if (illegal_string)
+		   break;
+		}
 
-	      addc (&lrb, ch);
 	      if (return_widestr)
-		ADDWC ((uint32_t) ch);
+		ADDWC (wch);
 
 	      continue;
 	    }
