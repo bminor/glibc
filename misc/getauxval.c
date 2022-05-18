@@ -20,6 +20,39 @@
 #include <ldsodefs.h>
 #include <stdbool.h>
 
+void *
+__getauxptr (unsigned long int type)
+{
+  /* error if asking for a non-pointer from getauxptr(). This list is not a
+     perfect enforcement as it currently supports both transitional and draft
+     ABIs, which have different capability entries.  */
+  switch (type) {
+    case AT_ENTRY:
+    case AT_PHDR:
+    case AT_BASE:
+    case AT_SYSINFO_EHDR:
+    case AT_EXECFN:
+    case AT_RANDOM:
+    case AT_PLATFORM:
+    case AT_CHERI_EXEC_RW_CAP:
+    case AT_CHERI_EXEC_RX_CAP:
+    case AT_CHERI_INTERP_RW_CAP:
+    case AT_CHERI_INTERP_RX_CAP:
+    case AT_CHERI_SEAL_CAP:
+    {
+      ElfW(auxv_t) *p;
+      for (p = GLRO(dl_auxv); p->a_type != AT_NULL; p++)
+        if (p->a_type == type)
+          return (void *) p->a_un.a_val;
+    }
+  }
+
+  __set_errno (ENOENT);
+  return 0;
+}
+weak_alias (__getauxptr, getauxptr)
+libc_hidden_def (__getauxptr)
+
 bool
 __getauxval2 (unsigned long int type, unsigned long int *result)
 {
