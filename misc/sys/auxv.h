@@ -31,6 +31,10 @@ __BEGIN_DECLS
 extern unsigned long int getauxval (unsigned long int __type)
   __THROW;
 
+/* Same as getauxval, but for Arm Morello capabilities.  */
+extern void * getauxptr (unsigned long int __type)
+  __THROW;
+
 __END_DECLS
 
 #endif /* sys/auxv.h */
