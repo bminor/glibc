@@ -10,4 +10,8 @@ libc_hidden_proto (__getauxval)
 _Bool __getauxval2 (unsigned long int type, unsigned long int *result);
 libc_hidden_proto (__getauxval2)
 
+/* Like getauxval, but for Arm Morello capabilities.  */
+extern __typeof (getauxptr) __getauxptr;
+libc_hidden_proto (__getauxptr)
+
 #endif  /* !_ISOMAC */
