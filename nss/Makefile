@@ -62,6 +62,7 @@ tests := \
   test-digits-dots \
   test-netdb \
   tst-nss-getpwent \
+  tst-nss-hash \
   tst-nss-test1 \
   tst-nss-test2 \
   tst-nss-test4 \

@@ -75,4 +75,5 @@ __nss_hash (const void *keyarg, size_t len)
   return h;
 }
 
+
 libc_hidden_def (__nss_hash)
