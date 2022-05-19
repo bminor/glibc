@@ -312,6 +312,7 @@ tests := \
   tst-array4 \
   tst-array5 \
   tst-auxv \
+  tst-dl-hash \
   tst-leaks1 \
   tst-stringtable \
   tst-tls9 \
