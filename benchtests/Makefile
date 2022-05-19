@@ -227,6 +227,12 @@ LOCALES := \
 include ../gen-locales.mk
 endif
 
+hash-benchset := \
+  dl-elf-hash \
+  dl-new-hash \
+  nss-hash \
+# hash-benchset
+
 stdlib-benchset := strtod
 
 stdio-common-benchset := sprintf
@@ -235,7 +241,7 @@ math-benchset := math-inlines
 
 ifeq (${BENCHSET},)
 benchset := $(string-benchset-all) $(stdlib-benchset) $(stdio-common-benchset) \
-	    $(math-benchset)
+	    $(math-benchset) $(hash-benchset)
 else
 benchset := $(foreach B,$(filter %-benchset,${BENCHSET}), ${${B}})
 endif
@@ -363,9 +369,20 @@ bench-clean:
 
 # Validate the passed in BENCHSET
 ifneq ($(strip ${BENCHSET}),)
-VALIDBENCHSETNAMES := bench-pthread bench-math bench-string string-benchset \
-   wcsmbs-benchset stdlib-benchset stdio-common-benchset math-benchset \
-   malloc-thread malloc-simple
+VALIDBENCHSETNAMES := \
+  bench-math \
+  bench-pthread \
+  bench-string \
+  hash-benchset \
+  malloc-simple \
+  malloc-thread \
+  math-benchset \
+  stdio-common-benchset \
+  stdlib-benchset \
+  string-benchset \
+  wcsmbs-benchset \
+# VALIDBENCHSETNAMES
+
 INVALIDBENCHSETNAMES := $(filter-out ${VALIDBENCHSETNAMES},${BENCHSET})
 ifneq (${INVALIDBENCHSETNAMES},)
 $(info The following values in BENCHSET are invalid: ${INVALIDBENCHSETNAMES})

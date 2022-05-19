@@ -84,12 +84,13 @@ where BENCHSET may be a space-separated list of the following values:
     bench-math
     bench-pthread
     bench-string
+    hash-benchset
+    malloc-thread
+    math-benchset
+    stdio-common-benchset
+    stdlib-benchset
     string-benchset
     wcsmbs-benchset
-    stdlib-benchset
-    stdio-common-benchset
-    math-benchset
-    malloc-thread
 
 Adding a function to benchtests:
 ===============================
