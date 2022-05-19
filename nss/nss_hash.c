@@ -19,58 +19,63 @@
 
 /* This is from libc/db/hash/hash_func.c, hash3 is static there */
 /*
- * This is INCREDIBLY ugly, but fast.  We break the string up into 8 byte
+ * This is INCREDIBLY ugly, but fast.  We break the string up into 4 byte
  * units.  On the first time through the loop we get the "leftover bytes"
- * (strlen % 8).  On every other iteration, we perform 8 HASHC's so we handle
- * all 8 bytes.  Essentially, this saves us 7 cmp & branch instructions.  If
- * this routine is heavily used enough, it's worth the ugly coding.
+ * (len % 4).  On every other iteration, we perform a 4x unrolled version
+ * HASHC. Further unrolling does not appear to help.
  *
  * OZ's original sdbm hash
  */
 uint32_t
 __nss_hash (const void *keyarg, size_t len)
 {
+  enum
+  {
+    HASH_CONST_P0 = 1,	       /* (uint32_t)(65599 ^ 0).  */
+    HASH_CONST_P1 = 65599,     /* (uint32_t)(65599 ^ 1).  */
+    HASH_CONST_P2 = 8261505,   /* (uint32_t)(65599 ^ 2).  */
+    HASH_CONST_P3 = 780587199, /* (uint32_t)(65599 ^ 3).  */
+    HASH_CONST_P4 = 1139564289 /* (uint32_t)(65599 ^ 4).  */
+  };
+
   const unsigned char *key;
-  size_t loop;
   uint32_t h;
 
-#define HASHC   h = *key++ + 65599 * h
+#define HASHC	h = *key++ + HASH_CONST_P1 * h
 
   h = 0;
   key = keyarg;
   if (len > 0)
     {
-      loop = (len + 8 - 1) >> 3;
-      switch (len & (8 - 1))
-        {
-        case 0:
-          do
-            {
-              HASHC;
-              /* FALLTHROUGH */
-            case 7:
-              HASHC;
-              /* FALLTHROUGH */
-            case 6:
-              HASHC;
-              /* FALLTHROUGH */
-            case 5:
-              HASHC;
-              /* FALLTHROUGH */
-            case 4:
-              HASHC;
-              /* FALLTHROUGH */
-            case 3:
-              HASHC;
-              /* FALLTHROUGH */
-            case 2:
-              HASHC;
-              /* FALLTHROUGH */
-            case 1:
-              HASHC;
-            }
-	  while (--loop);
-        }
+      switch ((len & (4 - 1)))
+	{
+	case 0:
+	  /* h starts out as zero so no need to include the multiply. */
+	  h = *key++;
+	  /* FALLTHROUGH */
+	case 3:
+	  HASHC;
+	  /* FALLTHROUGH */
+	case 2:
+	  HASHC;
+	  /* FALLTHROUGH */
+	case 1:
+	  HASHC;
+	  /* FALLTHROUGH */
+	}
+
+      uint32_t c0, c1, c2, c3;
+      for (--len; len >= 4; len -= 4)
+	{
+	  c0 = (unsigned char) *(key + 0);
+	  c1 = (unsigned char) *(key + 1);
+	  c2 = (unsigned char) *(key + 2);
+	  c3 = (unsigned char) *(key + 3);
+	  h = HASH_CONST_P4 * h + HASH_CONST_P3 * c0 + HASH_CONST_P2 * c1
+	      + HASH_CONST_P1 * c2 + HASH_CONST_P0 * c3;
+
+	  key += 4;
+	}
     }
   return h;
 }
