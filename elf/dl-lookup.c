@@ -24,6 +24,7 @@
 #include <ldsodefs.h>
 #include <dl-hash.h>
 #include <dl-machine.h>
+#include <dl-new-hash.h>
 #include <dl-protected.h>
 #include <sysdep-cancel.h>
 #include <libc-lock.h>
@@ -558,16 +559,6 @@ skip:
 }
 
 
-static uint32_t
-dl_new_hash (const char *s)
-{
-  uint32_t h = 5381;
-  for (unsigned char c = *s; c != '\0'; c = *++s)
-    h = h * 33 + c;
-  return h;
-}
-
-
 /* Add extra dependency on MAP to UNDEF_MAP.  */
 static int
 add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
@@ -816,7 +807,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 		     const struct r_found_version *version,
 		     int type_class, int flags, struct link_map *skip_map)
 {
-  const unsigned int new_hash = dl_new_hash (undef_name);
+  const unsigned int new_hash = _dl_new_hash (undef_name);
   unsigned long int old_hash = 0xffffffff;
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope = symbol_scope;
