@@ -1,4 +1,4 @@
-/* Measure __dl_new_hash runtime
+/* _dl_new_hash for elf symbol lookup
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,11 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <dl-new-hash.h>
-#include <elf/simple-dl-new-hash.h>
-#define TEST_FUNC(x, y) _dl_new_hash (x)
-#define SIMPLE_TEST_FUNC(x, y) __simple_dl_new_hash (x)
+#ifdef __asm_reassociation_barrier
+# error "__asm_reassociation_barrier should never already be defined."
+#endif
 
-#define TEST_NAME "_dl_new_hash"
-
-#include "bench-hash-funcs.c"
+#define __asm_reassociation_barrier __asm__
+#include <sysdeps/generic/dl-new-hash.h>

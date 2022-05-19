@@ -1,4 +1,4 @@
-/* _dl_new_hash for elf symbol lookup
+/* __simple_dl_new_hash for testing true elf symbol lookup.
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,16 +16,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _DL_NEW_HASH_H
-#define _DL_NEW_HASH_H 1
+#ifndef _SIMPLE_DL_NEW_HASH_H
+#define _SIMPLE_DL_NEW_HASH_H 1
 
 #include <stdint.h>
-/* For __always_inline.  */
-#include <sys/cdefs.h>
 
-static __always_inline uint32_t
+/* For testing/benchmarking purposes.  Real implementation in
+   sysdeps/generic/dl-new-hash.h.  */
+static uint32_t
 __attribute__ ((unused))
-_dl_new_hash (const char *s)
+__simple_dl_new_hash (const char *s)
 {
   uint32_t h = 5381;
   for (unsigned char c = *s; c != '\0'; c = *++s)
@@ -33,8 +33,4 @@ _dl_new_hash (const char *s)
   return h;
 }
 
-/* For testing/benchmarking purposes.  */
-#define __simple_dl_new_hash _dl_new_hash
-
-
-#endif /* dl-new-hash.h */
+#endif /* simple-dl-new-hash.h */

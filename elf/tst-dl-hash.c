@@ -18,6 +18,7 @@
 
 
 #include <simple-dl-hash.h>
+#include <simple-dl-new-hash.h>
 #include <dl-hash.h>
 #include <dl-new-hash.h>
 #include <support/support.h>
