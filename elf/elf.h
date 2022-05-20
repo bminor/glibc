@@ -1243,6 +1243,12 @@ typedef struct
 
 #define AT_MINSIGSTKSZ		51 /* Stack needed for signal delivery  */
 
+# define AT_CHERI_EXEC_RW_CAP	60
+# define AT_CHERI_EXEC_RX_CAP	61
+# define AT_CHERI_INTERP_RW_CAP	62
+# define AT_CHERI_INTERP_RX_CAP	63
+# define AT_CHERI_SEAL_CAP	64
+
 /* Note section contents.  Each entry in the note section begins with
    a header of a fixed form.  */
 
