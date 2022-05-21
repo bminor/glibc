@@ -325,11 +325,13 @@ and creates an unsatisfiable circular dependency.\n",
 #  endif
 	  /* Set to symbol size plus addend.  */
 	  value = sym->st_size;
+	  *reloc_addr = value + reloc->r_addend;
+	  break;
 # endif
-	  /* Fall through.  */
+
 	case R_X86_64_GLOB_DAT:
 	case R_X86_64_JUMP_SLOT:
-	  *reloc_addr = value + reloc->r_addend;
+	  *reloc_addr = value;
 	  break;
 
 	case R_X86_64_DTPMOD64:
