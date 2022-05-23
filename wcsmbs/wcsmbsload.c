@@ -150,12 +150,14 @@ __libc_rwlock_define (extern, __libc_setlocale_lock attribute_hidden)
 void
 __wcsmbs_load_conv (struct __locale_data *new_category)
 {
+  struct lc_ctype_data *data = new_category->private;
+
   /* Acquire the lock.  */
   __libc_rwlock_wrlock (__libc_setlocale_lock);
 
   /* We should repeat the test since while we waited some other thread
      might have run this function.  */
-  if (__glibc_likely (new_category->private == NULL))
+  if (__glibc_likely (data->fcts == NULL))
     {
       /* We must find the real functions.  */
       const char *charset_name;
@@ -199,10 +201,10 @@ __wcsmbs_load_conv (struct __locale_data *new_category)
 	  free (new_fcts);
 
 	failed:
-	  new_category->private = (void *) &__wcsmbs_gconv_fcts_c;
+	  data->fcts = (void *) &__wcsmbs_gconv_fcts_c;
 	}
       else
-	new_category->private = new_fcts;
+	data->fcts = new_fcts;
     }
 
   __libc_rwlock_unlock (__libc_setlocale_lock);
@@ -263,14 +265,15 @@ __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
 void
 _nl_cleanup_ctype (struct __locale_data *locale)
 {
-  const struct gconv_fcts *const data = locale->private;
-  if (data != NULL && data != &__wcsmbs_gconv_fcts_c)
+  struct lc_ctype_data *data = locale->private;
+  if (data->fcts != NULL && data->fcts != &__wcsmbs_gconv_fcts_c)
     {
-      locale->private = NULL;
-
       /* Free the old conversions.  */
-      __gconv_close_transform (data->tomb, data->tomb_nsteps);
-      __gconv_close_transform (data->towc, data->towc_nsteps);
-      free ((char *) data);
+      __gconv_close_transform (data->fcts->tomb, data->fcts->tomb_nsteps);
+      __gconv_close_transform (data->fcts->towc, data->fcts->towc_nsteps);
+
+      free ((void *) data->fcts);
+      data->fcts = NULL;
+      /* data itself is allocated within locale.  */
     }
 }

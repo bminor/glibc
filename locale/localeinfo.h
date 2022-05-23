@@ -61,7 +61,7 @@ struct __locale_data
   /* This provides a slot for category-specific code to cache data
      computed about this locale.  Type of the data pointed to:
 
-     LC_CTYPE   struct gconv_fcts (get_gconv_fcts, __wcsmbs_load_conv)
+     LC_CTYPE   struct lc_ctype_data (_nl_intern_locale_data)
      LC_TIME    struct lc_time_data (_nl_init_alt_digit, _nl_init_era_entries)
 
      This data deallocated at the start of _nl_unload_locale.  */
@@ -161,6 +161,27 @@ struct lc_time_data
   int walt_digits_initialized;
 };
 
+/* Ancillary data for LC_CTYPE.  Co-allocated after struct
+   __locale_data by _nl_intern_locale_data.  */
+struct lc_ctype_data
+{
+  /* See get_gconv_fcts and __wcsmbs_load_conv.  */
+  const struct gconv_fcts *fcts;
+
+  /* If false, outdigit just maps to the ASCII digits.  */
+  bool outdigit_translation_needed;
+
+  /* Cached multi-byte string lengths.  This could be added to the
+     locale data itself if the format is changed (which impacts
+     existing statically linked binaries).  */
+
+  /* For the outdigit decimal digits (copied from LC_CTYPE).  */
+  unsigned char outdigit_bytes[10];
+
+  /* If all outdigit_bytes elements are equal, this is that value,
+     otherwise it is 0.  */
+  unsigned char outdigit_bytes_all_equal;
+};
 
 /* LC_CTYPE specific:
    Hardwired indices for standard wide character translation mappings.  */
