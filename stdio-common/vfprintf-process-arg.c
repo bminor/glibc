@@ -335,29 +335,20 @@ LABEL (form_strerror):
       goto LABEL (print_string);
     }
 
-#ifdef COMPILE_WPRINTF
 LABEL (form_character):
   /* Character.  */
   if (is_long)
     goto LABEL (form_wcharacter);
   --width;  /* Account for the character itself.  */
   if (!left)
-    PAD (L' ');
+    PAD (L_(' '));
+#ifdef COMPILE_WPRINTF
   outchar (__btowc ((unsigned char) process_arg_int ())); /* Promoted. */
+#else
+  outchar ((unsigned char) process_arg_int ()); /* Promoted.  */
+#endif
   if (left)
-    PAD (L' ');
-  break;
-
-LABEL (form_wcharacter):
-  {
-    /* Wide character.  */
-    --width;
-    if (!left)
-      PAD (L' ');
-    outchar (process_arg_wchar_t ());
-    if (left)
-      PAD (L' ');
-  }
+    PAD (L_(' '));
   break;
 
 LABEL (form_string):
@@ -366,8 +357,11 @@ LABEL (form_string):
 
     /* The string argument could in fact be `char *' or `wchar_t *'.
        But this should not make a difference here.  */
+#ifdef COMPILE_WPRINTF
     string = (CHAR_T *) process_arg_wstring ();
-
+#else
+    string = (CHAR_T *) process_arg_string ();
+#endif
     /* Entry point for printing other strings.  */
     LABEL (print_string):
 
@@ -387,21 +381,39 @@ LABEL (form_string):
       }
     else if (!is_long && spec != L_('S'))
       {
+#ifdef COMPILE_WPRINTF
         done = outstring_converted_wide_string
           (s, (const char *) string, prec, width, left, done);
         if (done < 0)
           goto all_done;
         /* The padding has already been written.  */
         break;
+#else
+        if (prec != -1)
+          /* Search for the end of the string, but don't search past
+             the length (in bytes) specified by the precision.  */
+          len = __strnlen (string, prec);
+        else
+          len = strlen (string);
+#endif
       }
     else
       {
+#ifdef COMPILE_WPRINTF
         if (prec != -1)
           /* Search for the end of the string, but don't search past
              the length specified by the precision.  */
           len = __wcsnlen (string, prec);
         else
           len = __wcslen (string);
+#else
+        done = outstring_converted_wide_string
+          (s, (const wchar_t *) string, prec, width, left, done);
+        if (done < 0)
+          goto all_done;
+        /* The padding has already been written.  */
+        break;
+#endif
       }
 
     if ((width -= len) < 0)
@@ -411,25 +423,27 @@ LABEL (form_string):
       }
 
     if (!left)
-      PAD (L' ');
+      PAD (L_(' '));
     outstring (string, len);
+    if (left)
+      PAD (L_(' '));
+  }
+  break;
+
+#ifdef COMPILE_WPRINTF
+LABEL (form_wcharacter):
+  {
+    /* Wide character.  */
+    --width;
+    if (!left)
+      PAD (L' ');
+    outchar (process_arg_wchar_t ());
     if (left)
       PAD (L' ');
   }
   break;
-#else /* !COMPILE_WPRINTF */
-LABEL (form_character):
-  /* Character.  */
-  if (is_long)
-    goto LABEL (form_wcharacter);
-  --width;  /* Account for the character itself.  */
-  if (!left)
-    PAD (' ');
-  outchar ((unsigned char) process_arg_int ()); /* Promoted.  */
-  if (left)
-    PAD (' ');
-  break;
 
+#else /* !COMPILE_WPRINTF */
 LABEL (form_wcharacter):
   {
     /* Wide character.  */
@@ -449,64 +463,6 @@ LABEL (form_wcharacter):
     if (!left)
       PAD (' ');
     outstring (buf, len);
-    if (left)
-      PAD (' ');
-  }
-  break;
-
-LABEL (form_string):
-  {
-    size_t len;
-
-    /* The string argument could in fact be `char *' or `wchar_t *'.
-       But this should not make a difference here.  */
-    string = (char *) process_arg_string ();
-
-    /* Entry point for printing other strings.  */
-    LABEL (print_string):
-
-    if (string == NULL)
-      {
-        /* Write "(null)" if there's space.  */
-        if (prec == -1 || prec >= (int) sizeof (null) - 1)
-          {
-            string = (char *) null;
-            len = sizeof (null) - 1;
-          }
-        else
-          {
-            string = (char *) "";
-            len = 0;
-          }
-      }
-    else if (!is_long && spec != L_('S'))
-      {
-        if (prec != -1)
-          /* Search for the end of the string, but don't search past
-             the length (in bytes) specified by the precision.  */
-          len = __strnlen (string, prec);
-        else
-          len = strlen (string);
-      }
-    else
-      {
-        done = outstring_converted_wide_string
-          (s, (const wchar_t *) string, prec, width, left, done);
-        if (done < 0)
-          goto all_done;
-        /* The padding has already been written.  */
-        break;
-      }
-
-    if ((width -= len) < 0)
-      {
-        outstring (string, len);
-        break;
-      }
-
-    if (!left)
-      PAD (' ');
-    outstring (string, len);
     if (left)
       PAD (' ');
   }
