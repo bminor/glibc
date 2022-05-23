@@ -107,7 +107,7 @@ __NTH (stpncpy (char *__dest, const char *__src, size_t __n))
 # else
 extern char *__stpncpy_chk (char *__dest, const char *__src, size_t __n,
 			    size_t __destlen) __THROW
-  __fortified_attr_access ((__write_only__, 1, 3))
+  __fortified_attr_access (__write_only__, 1, 3)
   __attr_access ((__read_only__, 2));
 extern char *__REDIRECT_NTH (__stpncpy_alias, (char *__dest, const char *__src,
 					       size_t __n), stpncpy);
