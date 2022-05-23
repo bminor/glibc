@@ -53,7 +53,6 @@ _nl_init_era_entries (struct __locale_data *current)
       if (current->private.time == NULL)
 	goto out;
       memset (current->private.time, 0, sizeof *current->private.time);
-      current->private.cleanup = &_nl_cleanup_time;
     }
   data = current->private.time;
 

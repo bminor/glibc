@@ -348,6 +348,6 @@ _nl_remove_locale (int locale, struct __locale_data *data)
 	}
 
       /* This does the real work.  */
-      _nl_unload_locale (data);
+      _nl_unload_locale (locale, data);
     }
 }

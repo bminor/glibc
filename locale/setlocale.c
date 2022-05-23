@@ -489,7 +489,7 @@ free_category (int category,
       struct __locale_data *data = (struct __locale_data *) runp->data;
 
       if (data != NULL && data != c_data)
-	_nl_unload_locale (data);
+	_nl_unload_locale (category, data);
       runp = runp->next;
       free ((char *) curr->filename);
       free (curr);

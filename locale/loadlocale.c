@@ -101,8 +101,7 @@ _nl_intern_locale_data (int category, const void *data, size_t datasize)
 
   newdata->filedata = (void *) filedata;
   newdata->filesize = datasize;
-  newdata->private.data = NULL;
-  newdata->private.cleanup = NULL;
+  memset (&newdata->private, 0, sizeof (newdata->private));
   newdata->usage_count = 0;
   newdata->use_translit = 0;
   newdata->nstrings = filedata->nstrings;
@@ -282,10 +281,18 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 }
 
 void
-_nl_unload_locale (struct __locale_data *locale)
+_nl_unload_locale (int category, struct __locale_data *locale)
 {
-  if (locale->private.cleanup)
-    (*locale->private.cleanup) (locale);
+  /* Deallocate locale->private.  */
+  switch (category)
+    {
+    case LC_CTYPE:
+      _nl_cleanup_ctype (locale);
+      break;
+    case LC_TIME:
+      _nl_cleanup_time (locale);
+      break;
+    }
 
   switch (__builtin_expect (locale->alloc, ld_mapped))
     {

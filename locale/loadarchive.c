@@ -515,7 +515,7 @@ _nl_archive_subfreeres (void)
       free (dead->name);
       for (category = 0; category < __LC_LAST; ++category)
 	if (category != LC_ALL && dead->data[category] != NULL)
-	  _nl_unload_locale (dead->data[category]);
+	  _nl_unload_locale (category, dead->data[category]);
       free (dead);
     }
   archloaded = NULL;

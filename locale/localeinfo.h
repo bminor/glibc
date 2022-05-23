@@ -58,18 +58,13 @@ struct __locale_data
     ld_archive			/* Both point into mmap'd archive regions.  */
   } alloc;
 
-  /* This provides a slot for category-specific code to cache data computed
-     about this locale.  That code can set a cleanup function to deallocate
-     the data.  */
-  struct
+  /* This provides a slot for category-specific code to cache data
+     computed about this locale.  This is deallocated at the start of
+     _nl_unload_locale.  */
+  union
   {
-    void (*cleanup) (struct __locale_data *);
-    union
-    {
-      void *data;
-      struct lc_time_data *time;
-      const struct gconv_fcts *ctype;
-    };
+    struct lc_time_data *time;
+    const struct gconv_fcts *ctype;
   } private;
 
   unsigned int usage_count;	/* Counter for users.  */
@@ -349,7 +344,8 @@ extern void _nl_load_locale (struct loaded_l10nfile *file, int category)
      attribute_hidden;
 
 /* Free all resource.  */
-extern void _nl_unload_locale (struct __locale_data *locale) attribute_hidden;
+extern void _nl_unload_locale (int category, struct __locale_data *locale)
+  attribute_hidden;
 
 /* Free the locale and give back all memory if the usage count is one.  */
 extern void _nl_remove_locale (int locale, struct __locale_data *data)
@@ -409,7 +405,8 @@ extern int _nl_parse_alt_digit (const char **strp,
 /* Postload processing.  */
 extern void _nl_postload_ctype (void);
 
-/* Functions used for the `private.cleanup' hook.  */
+/* Deallocate category-specific data.  Used in _nl_unload_locale.  */
+extern void _nl_cleanup_ctype (struct __locale_data *) attribute_hidden;
 extern void _nl_cleanup_time (struct __locale_data *) attribute_hidden;
 
 

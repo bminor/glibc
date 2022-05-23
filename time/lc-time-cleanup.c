@@ -26,7 +26,6 @@ _nl_cleanup_time (struct __locale_data *locale)
   if (data != NULL)
     {
       locale->private.time = NULL;
-      locale->private.cleanup = NULL;
 
       free (data->eras);
       free (data->alt_digits);

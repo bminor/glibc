@@ -202,10 +202,7 @@ __wcsmbs_load_conv (struct __locale_data *new_category)
 	  new_category->private.ctype = &__wcsmbs_gconv_fcts_c;
 	}
       else
-	{
-	  new_category->private.ctype = new_fcts;
-	  new_category->private.cleanup = &_nl_cleanup_ctype;
-	}
+	new_category->private.ctype = new_fcts;
     }
 
   __libc_rwlock_unlock (__libc_setlocale_lock);
@@ -267,10 +264,9 @@ void
 _nl_cleanup_ctype (struct __locale_data *locale)
 {
   const struct gconv_fcts *const data = locale->private.ctype;
-  if (data != NULL)
+  if (data != NULL && data != &__wcsmbs_gconv_fcts_c)
     {
       locale->private.ctype = NULL;
-      locale->private.cleanup = NULL;
 
       /* Free the old conversions.  */
       __gconv_close_transform (data->tomb, data->tomb_nsteps);
