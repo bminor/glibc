@@ -103,9 +103,17 @@ __printf_fphex (FILE *fp,
     }
   fpnum;
 
-  /* Locale-dependent representation of decimal point.	*/
-  const char *decimal;
-  wchar_t decimalwc;
+  /* This function always uses LC_NUMERIC.  */
+  assert (info->extra == 0);
+
+  /* Locale-dependent representation of decimal point. Hexadecimal
+     formatting always using LC_NUMERIC (disregarding info->extra).  */
+  const char *decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+  wchar_t decimalwc = _NL_CURRENT_WORD (LC_NUMERIC,
+					_NL_NUMERIC_DECIMAL_POINT_WC);
+
+  /* The decimal point character must never be zero.  */
+  assert (*decimal != '\0' && decimalwc != L'\0');
 
   /* "NaN" or "Inf" for the special cases.  */
   const char *special = NULL;
@@ -146,22 +154,6 @@ __printf_fphex (FILE *fp,
 
   /* Nonzero if this is output on a wide character stream.  */
   int wide = info->wide;
-
-
-  /* Figure out the decimal point character.  */
-  if (info->extra == 0)
-    {
-      decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
-      decimalwc = _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_DECIMAL_POINT_WC);
-    }
-  else
-    {
-      decimal = _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
-      decimalwc = _NL_CURRENT_WORD (LC_MONETARY,
-				    _NL_MONETARY_DECIMAL_POINT_WC);
-    }
-  /* The decimal point character must never be zero.  */
-  assert (*decimal != '\0' && decimalwc != L'\0');
 
 #define PRINTF_FPHEX_FETCH(FLOAT, VAR)					\
   {									\
