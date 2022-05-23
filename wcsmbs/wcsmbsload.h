@@ -66,13 +66,15 @@ extern const struct __locale_data _nl_C_LC_CTYPE attribute_hidden;
 static inline const struct gconv_fcts *
 get_gconv_fcts (struct __locale_data *data)
 {
-  if (__glibc_unlikely (data->private.ctype == NULL))
+  struct gconv_fcts *private = data->private;
+  if (private == NULL)
     {
-      if (__glibc_unlikely (data == &_nl_C_LC_CTYPE))
+      if (data == &_nl_C_LC_CTYPE)
 	return &__wcsmbs_gconv_fcts_c;
       __wcsmbs_load_conv (data);
+      private = data->private;
     }
-  return data->private.ctype;
+  return private;
 }
 
 #endif	/* wcsmbsload.h */

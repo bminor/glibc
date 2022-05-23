@@ -59,13 +59,13 @@ struct __locale_data
   } alloc;
 
   /* This provides a slot for category-specific code to cache data
-     computed about this locale.  This is deallocated at the start of
-     _nl_unload_locale.  */
-  union
-  {
-    struct lc_time_data *time;
-    const struct gconv_fcts *ctype;
-  } private;
+     computed about this locale.  Type of the data pointed to:
+
+     LC_CTYPE   struct gconv_fcts (get_gconv_fcts, __wcsmbs_load_conv)
+     LC_TIME    struct lc_time_data (_nl_init_alt_digit, _nl_init_era_entries)
+
+     This data deallocated at the start of _nl_unload_locale.  */
+  void *private;
 
   unsigned int usage_count;	/* Counter for users.  */
 

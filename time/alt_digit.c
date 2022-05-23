@@ -30,19 +30,18 @@ __libc_rwlock_define (extern, __libc_setlocale_lock attribute_hidden)
 #define CURRENT_WSTR(item) \
   ((wchar_t *) current->values[_NL_ITEM_INDEX (item)].wstr)
 
-static void
+static struct lc_time_data *
 _nl_init_alt_digit (struct __locale_data *current)
 {
-  struct lc_time_data *data;
+  struct lc_time_data *data = current->private;
 
-  if (current->private.time == NULL)
+  if (data == NULL)
     {
-      current->private.time = malloc (sizeof *current->private.time);
-      if (current->private.time == NULL)
-	return;
-      memset (current->private.time, 0, sizeof *current->private.time);
+      data = calloc (sizeof *data, 1);
+      if (data == NULL)
+	return NULL;
+      current->private = data;
     }
-  data = current->private.time;
 
   if (! data->alt_digits_initialized)
     {
@@ -65,6 +64,7 @@ _nl_init_alt_digit (struct __locale_data *current)
 	}
     }
 
+  return data;
 }
 
 const char *
@@ -77,13 +77,11 @@ _nl_get_alt_digit (unsigned int number, struct __locale_data *current)
 
   __libc_rwlock_wrlock (__libc_setlocale_lock);
 
-  if (current->private.time == NULL
-      || ! current->private.time->alt_digits_initialized)
-    _nl_init_alt_digit (current);
+  struct lc_time_data *data = _nl_init_alt_digit (current);
 
-  result = ((current->private.time != NULL
-	     && current->private.time->alt_digits != NULL)
-	    ? current->private.time->alt_digits[number]
+  result = ((data != NULL
+	     && data->alt_digits != NULL)
+	    ? data->alt_digits[number]
 	    : NULL);
 
   __libc_rwlock_unlock (__libc_setlocale_lock);
@@ -96,21 +94,20 @@ const wchar_t *
 _nl_get_walt_digit (unsigned int number, struct __locale_data *current)
 {
   const wchar_t *result = NULL;
-  struct lc_time_data *data;
 
   if (number >= 100 || CURRENT_WSTR (_NL_WALT_DIGITS)[0] == L'\0')
     return NULL;
 
   __libc_rwlock_wrlock (__libc_setlocale_lock);
 
-  if (current->private.time == NULL)
+  struct lc_time_data *data = current->private;
+  if (data == NULL)
     {
-      current->private.time = malloc (sizeof *current->private.time);
-      if (current->private.time == NULL)
+      data = calloc (sizeof *data, 1);
+      if (data == NULL)
 	goto out;
-      memset (current->private.time, 0, sizeof *current->private.time);
+      current->private = data;
     }
-  data = current->private.time;
 
   if (! data->walt_digits_initialized)
     {
@@ -156,12 +153,8 @@ _nl_parse_alt_digit (const char **strp, struct __locale_data *current)
 
   __libc_rwlock_wrlock (__libc_setlocale_lock);
 
-  if (current->private.time == NULL
-      || ! current->private.time->alt_digits_initialized)
-    _nl_init_alt_digit (current);
-
-  if (current->private.time != NULL
-      && current->private.time->alt_digits != NULL)
+  struct lc_time_data *data = _nl_init_alt_digit (current);
+  if (data != NULL && data->alt_digits != NULL)
     /* Matching is not unambiguous.  The alternative digits could be like
        I, II, III, ... and the first one is a substring of the second
        and third.  Therefore we must keep on searching until we found
@@ -169,7 +162,7 @@ _nl_parse_alt_digit (const char **strp, struct __locale_data *current)
        the standard.  */
     for (cnt = 0; cnt < 100; ++cnt)
       {
-	const char *const dig = current->private.time->alt_digits[cnt];
+	const char *const dig = data->alt_digits[cnt];
 	size_t len = strlen (dig);
 
 	if (len > maxlen && strncmp (dig, str, len) == 0)

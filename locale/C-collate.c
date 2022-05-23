@@ -25,7 +25,7 @@ const struct __locale_data _nl_C_LC_COLLATE attribute_hidden =
 {
   _nl_C_name,
   NULL, 0, 0,			/* no file mapped */
-  { NULL, },			/* no cached data */
+  NULL,				/* No cached data.  */
   UNDELETABLE,
   0,
   19,

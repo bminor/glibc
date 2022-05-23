@@ -542,7 +542,7 @@ const struct __locale_data _nl_C_LC_CTYPE attribute_hidden =
 {
   _nl_C_name,
   NULL, 0, 0,			/* no file mapped */
-  { NULL, },			/* no cached data */
+  NULL,				/* No cached data.  */
   UNDELETABLE,
   1,		/* Enable transliteration by default.  */
   NR_FIXED + NR_CLASSES + NR_MAPS,

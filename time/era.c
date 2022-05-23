@@ -35,7 +35,7 @@ __libc_rwlock_define (extern, __libc_setlocale_lock attribute_hidden)
 
 /* Look up the era information in CURRENT's locale strings and
    cache it in CURRENT->private.  */
-static void
+static struct lc_time_data *
 _nl_init_era_entries (struct __locale_data *current)
 {
   size_t cnt;
@@ -43,18 +43,22 @@ _nl_init_era_entries (struct __locale_data *current)
 
   /* Avoid touching CURRENT if there is no data at all, for _nl_C_LC_TIME.  */
   if (CURRENT_WORD (_NL_TIME_ERA_NUM_ENTRIES) == 0)
-    return;
+    return NULL;
+
+  data = current->private;
+  if (data != NULL && atomic_load_acquire (&data->era_initialized))
+    return data;
 
   __libc_rwlock_wrlock (__libc_setlocale_lock);
 
-  if (current->private.time == NULL)
+  data = current->private;
+  if (data == NULL)
     {
-      current->private.time = malloc (sizeof *current->private.time);
-      if (current->private.time == NULL)
+      data = calloc (sizeof *data, 1);
+      if (data == NULL)
 	goto out;
-      memset (current->private.time, 0, sizeof *current->private.time);
+      current->private = data;
     }
-  data = current->private.time;
 
   if (! data->era_initialized)
     {
@@ -130,33 +134,30 @@ _nl_init_era_entries (struct __locale_data *current)
 	    }
 	}
 
-      data->era_initialized = 1;
+      atomic_store_release (&data->era_initialized, 1);
     }
 
  out:
   __libc_rwlock_unlock (__libc_setlocale_lock);
+  return data;
 }
 
 struct era_entry *
 _nl_get_era_entry (const struct tm *tp, struct __locale_data *current)
 {
-  if (current->private.time == NULL || !current->private.time->era_initialized)
-    _nl_init_era_entries (current);
+  struct lc_time_data *data = _nl_init_era_entries (current);
 
-  if (current->private.time != NULL)
+  if (data != NULL)
     {
       /* Now compare date with the available eras.  */
       const int32_t tdate[3] = { tp->tm_year, tp->tm_mon, tp->tm_mday };
       size_t cnt;
-      for (cnt = 0; cnt < current->private.time->num_eras; ++cnt)
-	if ((ERA_DATE_CMP (current->private.time->eras[cnt].start_date, tdate)
-	     && ERA_DATE_CMP (tdate,
-			      current->private.time->eras[cnt].stop_date))
-	    || (ERA_DATE_CMP (current->private.time->eras[cnt].stop_date,
-			      tdate)
-		&& ERA_DATE_CMP (tdate,
-				 current->private.time->eras[cnt].start_date)))
-	  return &current->private.time->eras[cnt];
+      for (cnt = 0; cnt < data->num_eras; ++cnt)
+	if ((ERA_DATE_CMP (data->eras[cnt].start_date, tdate)
+	     && ERA_DATE_CMP (tdate, data->eras[cnt].stop_date))
+	    || (ERA_DATE_CMP (data->eras[cnt].stop_date, tdate)
+		&& ERA_DATE_CMP (tdate, data->eras[cnt].start_date)))
+	  return &data->eras[cnt];
     }
 
   return NULL;
@@ -166,9 +167,6 @@ _nl_get_era_entry (const struct tm *tp, struct __locale_data *current)
 struct era_entry *
 _nl_select_era_entry (int cnt, struct __locale_data *current)
 {
-  if (current->private.time == NULL || !current->private.time->era_initialized)
-    _nl_init_era_entries (current);
-
-  return (current->private.time == NULL
-	  ? NULL : &current->private.time->eras[cnt]);
+  struct lc_time_data *data = _nl_init_era_entries (current);
+  return data == NULL ? NULL : &data->eras[cnt];
 }
