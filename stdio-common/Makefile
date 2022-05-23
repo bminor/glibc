@@ -205,6 +205,7 @@ tests := \
   tst-vfprintf-user-type \
   tst-vfprintf-width-prec \
   tst-vfprintf-width-prec-alloc \
+  tst-vfprintf-width-i18n \
   tst-wc-printf \
   tstdiomisc \
   tstgetln \
@@ -283,6 +284,7 @@ LOCALES := \
   de_DE.ISO-8859-1 \
   de_DE.UTF-8 \
   en_US.ISO-8859-1 \
+  hi_IN.UTF-8 \
   ja_JP.EUC-JP \
   ps_AF.UTF-8 \
   # LOCALES
@@ -296,6 +298,7 @@ $(objpfx)tst-sprintf.out: $(gen-locales)
 $(objpfx)tst-sscanf.out: $(gen-locales)
 $(objpfx)tst-swprintf.out: $(gen-locales)
 $(objpfx)tst-vfprintf-mbs-prec.out: $(gen-locales)
+$(objpfx)tst-vfprintf-width-i18n.out: $(gen-locales)
 endif
 
 tst-printf-bz18872-ENV = MALLOC_TRACE=$(objpfx)tst-printf-bz18872.mtrace \
