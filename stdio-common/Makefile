@@ -175,6 +175,7 @@ tests := \
   tst-gets \
   tst-grouping \
   tst-long-dbl-fphex \
+  tst-memstream-string \
   tst-obprintf \
   tst-perror \
   tst-popen \
@@ -389,6 +390,8 @@ CFLAGS-tst-gets.c += -Wno-deprecated-declarations
 # BZ #11319 was first fixed for regular vdprintf, then reopened because
 # the fortified version had the same bug.
 CFLAGS-tst-bz11319-fortify2.c += -D_FORTIFY_SOURCE=2
+
+CFLAGS-tst-memstream-string.c += -fno-builtin-fprintf
 
 CPPFLAGS += $(libio-mtsafe)
 
