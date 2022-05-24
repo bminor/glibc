@@ -44,29 +44,6 @@ struct printf_spec
     int size;
   };
 
-
-/* The various kinds off arguments that can be passed to printf.  */
-union printf_arg
-  {
-    wchar_t pa_wchar;
-    int pa_int;
-    long int pa_long_int;
-    long long int pa_long_long_int;
-    unsigned int pa_u_int;
-    unsigned long int pa_u_long_int;
-    unsigned long long int pa_u_long_long_int;
-    double pa_double;
-    long double pa_long_double;
-#if __HAVE_FLOAT128_UNLIKE_LDBL
-    _Float128 pa_float128;
-#endif
-    const char *pa_string;
-    const wchar_t *pa_wstring;
-    void *pa_pointer;
-    void *pa_user;
-  };
-
-
 #ifndef DONT_NEED_READ_INT
 /* Read a simple integer from a string and update the string pointer.
    It is assumed that the first character is a digit.  */

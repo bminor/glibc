@@ -20,6 +20,27 @@ int __register_printf_specifier (int, printf_function,
 				 printf_arginfo_size_function);
 libc_hidden_proto (__register_printf_specifier)
 
+/* The various kinds of arguments that can be passed to printf.  */
+union printf_arg
+  {
+    wchar_t pa_wchar;
+    int pa_int;
+    long int pa_long_int;
+    long long int pa_long_long_int;
+    unsigned int pa_u_int;
+    unsigned long int pa_u_long_int;
+    unsigned long long int pa_u_long_long_int;
+    double pa_double;
+    long double pa_long_double;
+#if __HAVE_FLOAT128_UNLIKE_LDBL
+    _Float128 pa_float128;
+#endif
+    const char *pa_string;
+    const wchar_t *pa_wstring;
+    void *pa_pointer;
+    void *pa_user;
+};
+
 #include <bits/types/locale_t.h>
 
 /* Now define the internal interfaces.  */
