@@ -1,5 +1,6 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
    Copyright (C) 1995-2022 Free Software Foundation, Inc.
+   Copyright The GNU Toolchain Authors.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
