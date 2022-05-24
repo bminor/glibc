@@ -18,6 +18,8 @@
 #include <libc-lock.h>
 #include <stdbool.h>
 #include <register-atfork.h>
+#include <intprops.h>
+#include <stdio.h>
 
 #define DYNARRAY_ELEMENT           struct fork_handler
 #define DYNARRAY_STRUCT            fork_handler_list
@@ -26,7 +28,7 @@
 #include <malloc/dynarray-skeleton.c>
 
 static struct fork_handler_list fork_handlers;
-static bool fork_handler_init = false;
+static uint64_t fork_handler_counter;
 
 static int atfork_lock = LLL_LOCK_INITIALIZER;
 
@@ -36,11 +38,8 @@ __register_atfork (void (*prepare) (void), void (*parent) (void),
 {
   lll_lock (atfork_lock, LLL_PRIVATE);
 
-  if (!fork_handler_init)
-    {
-      fork_handler_list_init (&fork_handlers);
-      fork_handler_init = true;
-    }
+  if (fork_handler_counter == 0)
+    fork_handler_list_init (&fork_handlers);
 
   struct fork_handler *newp = fork_handler_list_emplace (&fork_handlers);
   if (newp != NULL)
@@ -49,6 +48,13 @@ __register_atfork (void (*prepare) (void), void (*parent) (void),
       newp->parent_handler = parent;
       newp->child_handler = child;
       newp->dso_handle = dso_handle;
+
+      /* IDs assigned to handlers start at 1 and increment with handler
+         registration.  Un-registering a handlers discards the corresponding
+         ID.  It is not reused in future registrations.  */
+      if (INT_ADD_OVERFLOW (fork_handler_counter, 1))
+        __libc_fatal ("fork handler counter overflow");
+      newp->id = ++fork_handler_counter;
     }
 
   /* Release the lock.  */
@@ -103,37 +109,111 @@ __unregister_atfork (void *dso_handle)
   lll_unlock (atfork_lock, LLL_PRIVATE);
 }
 
-void
-__run_fork_handlers (enum __run_fork_handler_type who, _Bool do_locking)
+uint64_t
+__run_prefork_handlers (_Bool do_locking)
 {
-  struct fork_handler *runp;
+  uint64_t lastrun;
 
-  if (who == atfork_run_prepare)
+  if (do_locking)
+    lll_lock (atfork_lock, LLL_PRIVATE);
+
+  /* We run prepare handlers from last to first.  After fork, only
+     handlers up to the last handler found here (pre-fork) will be run.
+     Handlers registered during __run_prefork_handlers or
+     __run_postfork_handlers will be positioned after this last handler, and
+     since their prepare handlers won't be run now, their parent/child
+     handlers should also be ignored.  */
+  lastrun = fork_handler_counter;
+
+  size_t sl = fork_handler_list_size (&fork_handlers);
+  for (size_t i = sl; i > 0;)
     {
-      if (do_locking)
-	lll_lock (atfork_lock, LLL_PRIVATE);
-      size_t sl = fork_handler_list_size (&fork_handlers);
-      for (size_t i = sl; i > 0; i--)
-	{
-	  runp = fork_handler_list_at (&fork_handlers, i - 1);
-	  if (runp->prepare_handler != NULL)
-	    runp->prepare_handler ();
-	}
+      struct fork_handler *runp
+        = fork_handler_list_at (&fork_handlers, i - 1);
+
+      uint64_t id = runp->id;
+
+      if (runp->prepare_handler != NULL)
+        {
+          if (do_locking)
+            lll_unlock (atfork_lock, LLL_PRIVATE);
+
+          runp->prepare_handler ();
+
+          if (do_locking)
+            lll_lock (atfork_lock, LLL_PRIVATE);
+        }
+
+      /* We unlocked, ran the handler, and locked again.  In the
+         meanwhile, one or more deregistrations could have occurred leading
+         to the current (just run) handler being moved up the list or even
+         removed from the list itself.  Since handler IDs are guaranteed to
+         to be in increasing order, the next handler has to have:  */
+
+      /* A. An earlier position than the current one has.  */
+      i--;
+
+      /* B. A lower ID than the current one does.  The code below skips
+         any newly added handlers with higher IDs.  */
+      while (i > 0
+             && fork_handler_list_at (&fork_handlers, i - 1)->id >= id)
+        i--;
     }
-  else
+
+  return lastrun;
+}
+
+void
+__run_postfork_handlers (enum __run_fork_handler_type who, _Bool do_locking,
+                         uint64_t lastrun)
+{
+  size_t sl = fork_handler_list_size (&fork_handlers);
+  for (size_t i = 0; i < sl;)
     {
-      size_t sl = fork_handler_list_size (&fork_handlers);
-      for (size_t i = 0; i < sl; i++)
-	{
-	  runp = fork_handler_list_at (&fork_handlers, i);
-	  if (who == atfork_run_child && runp->child_handler)
-	    runp->child_handler ();
-	  else if (who == atfork_run_parent && runp->parent_handler)
-	    runp->parent_handler ();
-	}
+      struct fork_handler *runp = fork_handler_list_at (&fork_handlers, i);
+      uint64_t id = runp->id;
+
+      /* prepare handlers were not run for handlers with ID > LASTRUN.
+         Thus, parent/child handlers will also not be run.  */
+      if (id > lastrun)
+        break;
+
       if (do_locking)
-	lll_unlock (atfork_lock, LLL_PRIVATE);
+        lll_unlock (atfork_lock, LLL_PRIVATE);
+
+      if (who == atfork_run_child && runp->child_handler)
+        runp->child_handler ();
+      else if (who == atfork_run_parent && runp->parent_handler)
+        runp->parent_handler ();
+
+      if (do_locking)
+        lll_lock (atfork_lock, LLL_PRIVATE);
+
+      /* We unlocked, ran the handler, and locked again.  In the meanwhile,
+         one or more [de]registrations could have occurred.  Due to this,
+         the list size must be updated.  */
+      sl = fork_handler_list_size (&fork_handlers);
+
+      /* The just-run handler could also have moved up the list. */
+
+      if (sl > i && fork_handler_list_at (&fork_handlers, i)->id == id)
+        /* The position of the recently run handler hasn't changed.  The
+           next handler to be run is an easy increment away.  */
+        i++;
+      else
+        {
+          /* The next handler to be run is the first handler in the list
+             to have an ID higher than the current one.  */
+          for (i = 0; i < sl; i++)
+            {
+              if (fork_handler_list_at (&fork_handlers, i)->id > id)
+                break;
+            }
+        }
     }
+
+  if (do_locking)
+    lll_unlock (atfork_lock, LLL_PRIVATE);
 }
 
 

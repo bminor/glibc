@@ -26,6 +26,7 @@ struct fork_handler
   void (*parent_handler) (void);
   void (*child_handler) (void);
   void *dso_handle;
+  uint64_t id;
 };
 
 /* Function to call to unregister fork handlers.  */
@@ -39,19 +40,18 @@ enum __run_fork_handler_type
   atfork_run_parent
 };
 
-/* Run the atfork handlers and lock/unlock the internal lock depending
-   of the WHO argument:
+/* Run the atfork prepare handlers in the reverse order of registration and
+   return the ID of the last registered handler.  If DO_LOCKING is true, the
+   internal lock is held locked upon return.  */
+extern uint64_t __run_prefork_handlers (_Bool do_locking) attribute_hidden;
 
-   - atfork_run_prepare: run all the PREPARE_HANDLER in reverse order of
-			 insertion and locks the internal lock.
-   - atfork_run_child: run all the CHILD_HANDLER and unlocks the internal
-		       lock.
-   - atfork_run_parent: run all the PARENT_HANDLER and unlocks the internal
-			lock.
-
-   Perform locking only if DO_LOCKING.  */
-extern void __run_fork_handlers (enum __run_fork_handler_type who,
-				 _Bool do_locking) attribute_hidden;
+/* Given a handler type (parent or child), run all the atfork handlers in
+   the order of registration up to and including the handler with id equal
+   to LASTRUN.  If DO_LOCKING is true, the internal lock is unlocked prior
+   to return.  */
+extern void __run_postfork_handlers (enum __run_fork_handler_type who,
+                                     _Bool do_locking,
+                                     uint64_t lastrun) attribute_hidden;
 
 /* C library side function to register new fork handlers.  */
 extern int __register_atfork (void (*__prepare) (void),
