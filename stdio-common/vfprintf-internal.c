@@ -1379,7 +1379,6 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
       /* Process format specifiers.  */
       while (1)
 	{
-	  extern printf_function **__printf_function_table;
 	  int function_done;
 
 	  if (spec <= UCHAR_MAX

@@ -97,12 +97,6 @@ read_int (const UCHAR_T * *pstr)
 #endif
 
 
-/* These are defined in reg-printf.c.  */
-extern printf_arginfo_size_function **__printf_arginfo_table attribute_hidden;
-extern printf_function **__printf_function_table attribute_hidden;
-extern printf_va_arg_function **__printf_va_arg_table attribute_hidden;
-
-
 /* Find the next spec in FORMAT, or the end of the string.  Returns
    a pointer into FORMAT, to a '%' or a '\0'.  */
 __extern_always_inline const unsigned char *

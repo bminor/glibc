@@ -30,13 +30,6 @@ printf_function **__printf_function_table attribute_hidden;
 
 __libc_lock_define_initialized (static, lock)
 
-int __register_printf_specifier (int, printf_function,
-				 printf_arginfo_size_function);
-libc_hidden_proto (__register_printf_specifier)
-int __register_printf_function (int, printf_function,
-				printf_arginfo_function);
-
-
 /* Register FUNC to be called to format SPEC specifiers.  */
 int
 __register_printf_specifier (int spec, printf_function converter,
