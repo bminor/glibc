@@ -672,8 +672,7 @@ static int printf_positional (FILE *s,
 			      unsigned int mode_flags);
 
 /* Handle unknown format specifier.  */
-static int printf_unknown (FILE *, const struct printf_info *,
-			   const void *const *) __THROW;
+static int printf_unknown (FILE *, const struct printf_info *) __THROW;
 
 /* Group digits of number string.  */
 static CHAR_T *group_number (CHAR_T *, CHAR_T *, CHAR_T *, const char *,
@@ -1465,19 +1464,7 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
 
 	  LABEL (form_unknown):
 	  {
-	    unsigned int i;
-	    const void **ptr;
-
-	    ptr = alloca (specs[nspecs_done].ndata_args
-			  * sizeof (const void *));
-
-	    /* Fill in an array of pointers to the argument values.  */
-	    for (i = 0; i < specs[nspecs_done].ndata_args; ++i)
-	      ptr[i] = &args_value[specs[nspecs_done].data_arg + i];
-
-	    /* Call the function.  */
-	    function_done = printf_unknown (s, &specs[nspecs_done].info,
-					    ptr);
+	    int function_done = printf_unknown (s, &specs[nspecs_done].info);
 
 	    /* If an error occurred we don't have information about #
 	       of chars.  */
@@ -1507,9 +1494,7 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
 /* Handle an unknown format specifier.  This prints out a canonicalized
    representation of the format spec itself.  */
 static int
-printf_unknown (FILE *s, const struct printf_info *info,
-		const void *const *args)
-
+printf_unknown (FILE *s, const struct printf_info *info)
 {
   int done = 0;
   CHAR_T work_buffer[MAX (sizeof (info->width), sizeof (info->prec)) * 3];
