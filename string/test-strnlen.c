@@ -96,6 +96,8 @@ do_overflow_tests (void)
 
   for (i = 0; i < 750; ++i)
     {
+      do_test (1, i, SIZE_MAX, BIG_CHAR);
+
       do_test (0, i, SIZE_MAX - i, BIG_CHAR);
       do_test (0, i, i - buf_addr, BIG_CHAR);
       do_test (0, i, -buf_addr - i, BIG_CHAR);
