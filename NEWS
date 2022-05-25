@@ -32,6 +32,7 @@ The following bugs are resolved with this release:
     AT_SYMLINK_NOFOLLOW
   [29109] libc: posix_spawn() always returns 1 (EPERM) on clone()
     failure
+  [29165] libc: [Regression] broken argv adjustment
   [29203] libc: daemon is not y2038 aware
   [29204] libc: getusershell is not 2038 aware
   [29207] libc: posix_fallocate fallback implementation is not y2038
