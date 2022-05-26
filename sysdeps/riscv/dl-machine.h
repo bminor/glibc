@@ -107,18 +107,8 @@ elf_machine_dynamic (void)
 	" _RTLD_PROLOGUE (_dl_start_user) "\
 	# Stash user entry point in s0.\n\
 	mv s0, a0\n\
-	# See if we were run as a command with the executable file\n\
-	# name as an extra leading argument.\n\
-	lw a0, _dl_skip_args\n\
-	# Load the original argument count.\n\
+	# Load the adjusted argument count.\n\
 	" STRINGXP (REG_L) " a1, 0(sp)\n\
-	# Subtract _dl_skip_args from it.\n\
-	sub a1, a1, a0\n\
-	# Adjust the stack pointer to skip _dl_skip_args words.\n\
-	sll a0, a0, " STRINGXP (PTRLOG) "\n\
-	add sp, sp, a0\n\
-	# Save back the modified argument count.\n\
-	" STRINGXP (REG_S) " a1, 0(sp)\n\
 	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
 	" STRINGXP (REG_L) " a0, _rtld_local\n\
 	add a2, sp, " STRINGXP (SZREG) "\n\
