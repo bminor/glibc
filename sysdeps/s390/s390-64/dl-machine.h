@@ -167,22 +167,6 @@ _dl_start_user:\n\
 	lgr   %r8,%r2\n\
 	# Point %r12 at the GOT.\n\
 	larl  %r12,_GLOBAL_OFFSET_TABLE_\n\
-	# See if we were run as a command with the executable file\n\
-	# name as an extra leading argument.\n\
-	lghi  %r1,_dl_skip_args@GOT\n\
-	lg    %r1,0(%r1,%r12)\n\
-	lgf   %r1,0(%r1)	  # load _dl_skip_args\n\
-	# Get the original argument count.\n\
-	lg    %r0,160(%r15)\n\
-	# Subtract _dl_skip_args from it.\n\
-	sgr   %r0,%r1\n\
-	# Adjust the stack pointer to skip _dl_skip_args words.\n\
-	sllg  %r1,%r1,3\n\
-	agr   %r15,%r1\n\
-	# Set the back chain to zero again\n\
-	xc    0(8,%r15),0(%r15)\n\
-	# Store back the modified argument count.\n\
-	stg   %r0,160(%r15)\n\
 	# The special initializer gets called with the stack just\n\
 	# as the application's entry point will see it; it can\n\
 	# switch stacks if it moves these contents over.\n\
