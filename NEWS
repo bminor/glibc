@@ -102,6 +102,7 @@ The following bugs are resolved with this release:
   [29097] time: fchmodat does not handle 64 bit time_t for
     AT_SYMLINK_NOFOLLOW
   [29165] libc: [Regression] broken argv adjustment
+  [29187] dynamic-link: [regression] broken argv adjustment for nios2
   [29203] libc: daemon is not y2038 aware
   [29204] libc: getusershell is not 2038 aware
   [29207] libc: posix_fallocate fallback implementation is not y2038
