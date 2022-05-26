@@ -33,7 +33,7 @@ def main():
                         help='C compiler (including options) to use')
     args = parser.parse_args()
     linux_version_headers = glibcsyscalls.linux_kernel_version(args.cc)
-    linux_version_glibc = (5, 17)
+    linux_version_glibc = (5, 18)
     sys.exit(glibcextract.compare_macro_consts(
         '#define _GNU_SOURCE 1\n'
         '#include <sys/mman.h>\n',

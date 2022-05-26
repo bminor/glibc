@@ -34,7 +34,7 @@ def main():
     args = parser.parse_args()
 
     linux_version_headers = glibcsyscalls.linux_kernel_version(args.cc)
-    linux_version_glibc = (5, 16)
+    linux_version_glibc = (5, 18)
     sys.exit(glibcextract.compare_macro_consts(
                 '#include <sys/pidfd.h>\n',
                 '#include <asm/fcntl.h>\n'
