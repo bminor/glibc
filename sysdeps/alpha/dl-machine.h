@@ -156,12 +156,6 @@ _dl_start_user:							\n\
 	.prologue 0						\n\
 	/* Save the user entry point address in s0.  */		\n\
 	mov	$0, $9						\n\
-	/* See if we were run as a command with the executable	\n\
-	   file name as an extra leading argument.  */		\n\
-	ldah	$1, _dl_skip_args($gp)	!gprelhigh		\n\
-	ldl	$1, _dl_skip_args($1)	!gprellow		\n\
-	bne	$1, $fixup_stack				\n\
-$fixup_stack_ret:						\n\
 	/* The special initializer gets called with the stack	\n\
 	   just as the application's entry point will see it;	\n\
 	   it can switch stacks if it moves these contents	\n\
@@ -182,41 +176,6 @@ $fixup_stack_ret:						\n\
 	/* Jump to the user's entry point.  */			\n\
 	mov	$9, $27						\n\
 	jmp	($9)						\n\
-$fixup_stack:							\n\
-	/* Adjust the stack pointer to skip _dl_skip_args words.\n\
-	   This involves copying everything down, since the	\n\
-	   stack pointer must always be 16-byte aligned.  */	\n\
-	ldah	$7, __GI__dl_argv($gp) !gprelhigh		\n\
-	ldq	$2, 0($sp)					\n\
-	ldq	$5, __GI__dl_argv($7) !gprellow			\n\
-	subq	$31, $1, $6					\n\
-	subq	$2, $1, $2					\n\
-	s8addq	$6, $5, $5					\n\
-	mov	$sp, $4						\n\
-	s8addq	$1, $sp, $3					\n\
-	stq	$2, 0($sp)					\n\
-	stq	$5, __GI__dl_argv($7) !gprellow			\n\
-	/* Copy down argv.  */					\n\
-0:	ldq	$5, 8($3)					\n\
-	addq	$4, 8, $4					\n\
-	addq	$3, 8, $3					\n\
-	stq	$5, 0($4)					\n\
-	bne	$5, 0b						\n\
-	/* Copy down envp.  */					\n\
-1:	ldq	$5, 8($3)					\n\
-	addq	$4, 8, $4					\n\
-	addq	$3, 8, $3					\n\
-	stq	$5, 0($4)					\n\
-	bne	$5, 1b						\n\
-	/* Copy down auxiliary table.  */			\n\
-2:	ldq	$5, 8($3)					\n\
-	ldq	$6, 16($3)					\n\
-	addq	$4, 16, $4					\n\
-	addq	$3, 16, $3					\n\
-	stq	$5, -8($4)					\n\
-	stq	$6, 0($4)					\n\
-	bne	$5, 2b						\n\
-	br	$fixup_stack_ret				\n\
 	.end _dl_start_user					\n\
 	.set noat						\n\
 .previous");
