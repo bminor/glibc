@@ -143,17 +143,8 @@ _dl_start_user:\n\
 	# Point %ebx at the GOT.\n\
 	call 0b\n\
 	addl $_GLOBAL_OFFSET_TABLE_, %ebx\n\
-	# See if we were run as a command with the executable file\n\
-	# name as an extra leading argument.\n\
-	movl _dl_skip_args@GOTOFF(%ebx), %eax\n\
-	# Pop the original argument count.\n\
-	popl %edx\n\
-	# Adjust the stack pointer to skip _dl_skip_args words.\n\
-	leal (%esp,%eax,4), %esp\n\
-	# Subtract _dl_skip_args from argc.\n\
-	subl %eax, %edx\n\
-	# Push argc back on the stack.\n\
-	push %edx\n\
+	# Read the original argument count.\n\
+	movl (%esp), %edx\n\
 	# The special initializer gets called with the stack just\n\
 	# as the application's entry point will see it; it can\n\
 	# switch stacks if it moves these contents over.\n\
