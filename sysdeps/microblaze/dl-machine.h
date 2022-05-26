@@ -117,12 +117,7 @@ _start:\n\
 _dl_start_user:\n\
 	mfs   r20,rpc\n\
 	addik r20,r20,_GLOBAL_OFFSET_TABLE_+8\n\
-	lwi   r4,r20,_dl_skip_args@GOTOFF\n\
 	lwi   r5,r1,24\n\
-	rsubk r5,r4,r5\n\
-	addk  r4,r4,r4\n\
-	addk  r4,r4,r4\n\
-	addk  r1,r1,r4\n\
 	swi   r5,r1,24\n\
 	swi   r3,r1,20\n\
 	addk  r6,r5,r0\n\
