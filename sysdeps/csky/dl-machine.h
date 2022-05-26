@@ -113,11 +113,7 @@ _start:\n\
 	addu	t1, gb\n\
 	jsr	t1\n\
 _dl_start_user:\n\
-	/* get _dl_skip_args */    \n\
-	lrw	r11, _dl_skip_args@GOTOFF\n\
-	addu	r11, gb\n\
-	ldw	r11, (r11, 0)\n\
-	/* store program entry address in r11 */ \n\
+	/* store program entry address in r10 */ \n\
 	mov	r10, a0\n\
 	/* Get argc */\n\
 	ldw	a1, (sp, 0)\n\
@@ -125,8 +121,6 @@ _dl_start_user:\n\
 	mov	a2, sp\n\
 	addi	a2, 4\n\
 	cmpnei	r11, 0\n\
-	bt	.L_fixup_stack\n\
-.L_done_fixup:\n\
 	mov	a3, a1\n\
 	lsli	a3, 2\n\
 	add	a3, a2\n\
@@ -141,17 +135,6 @@ _dl_start_user:\n\
 	lrw	a0, _dl_fini@GOTOFF\n\
 	addu	a0, gb\n\
 	jmp	r10\n\
-.L_fixup_stack:\n\
-	subu	a1, r11\n\
-	lsli	r11, 2\n\
-	addu	sp, r11\n\
-	stw	a1, (sp, 0)\n\
-	mov	a2, sp\n\
-	addi	a2, 4\n\
-	lrw	a3, _dl_argv@GOTOFF\n\
-	addu	a3, gb\n\
-	stw	a2, (a3, 0)\n\
-	br	.L_done_fixup\n\
 ");
 
 /* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or
