@@ -278,20 +278,7 @@ do {									\
 	move $16, $28\n\
 	# Save the user entry point address in a saved register.\n\
 	move $17, $2\n\
-	# See if we were run as a command with the executable file\n\
-	# name as an extra leading argument.\n\
-	lw $2, _dl_skip_args\n\
-	beq $2, $0, 1f\n\
-	# Load the original argument count.\n\
-	" STRINGXP(PTR_L) " $4, 0($29)\n\
-	# Subtract _dl_skip_args from it.\n\
-	subu $4, $2\n\
-	# Adjust the stack pointer to skip _dl_skip_args words.\n\
-	sll $2, " STRINGXP (PTRLOG) "\n\
-	" STRINGXP(PTR_ADDU) " $29, $2\n\
-	# Save back the modified argument count.\n\
-	" STRINGXP(PTR_S) " $4, 0($29)\n\
-1:	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
+	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
 	" STRINGXP(PTR_L) " $4, _rtld_local\n\
 	" STRINGXP(PTR_L) /* or lw???  fixme */ " $5, 0($29)\n\
 	" STRINGXP(PTR_LA) " $6, " STRINGXP (PTRSIZE) "($29)\n\
@@ -352,21 +339,7 @@ do {									\
 	addu $16, $4\n\
 	move $17, $2\n\
 	move $28, $16\n\
-	lw $4, %got(_dl_skip_args)($16)\n\
-	lw $4, 0($4)\n\
-	beqz $4, 1f\n\
-	# Load the original argument count.\n\
-	lw $5, 0($sp)\n\
-	# Subtract _dl_skip_args from it.\n\
-	subu $5, $4\n\
-	# Adjust the stack pointer to skip _dl_skip_args words.\n\
-	sll $4, " STRINGXP (PTRLOG) "\n\
-	move $6, $sp\n\
-	addu $6, $4\n\
-	move $sp, $6\n\
-	# Save back the modified argument count.\n\
-	sw $5, 0($sp)\n\
-1:	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
+	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
 	lw $4, %got(_rtld_local)($16)\n\
 	lw $4, 0($4)\n\
 	lw $5, 0($sp)\n\
