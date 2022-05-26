@@ -755,10 +755,6 @@ rtld_hidden_proto (__libc_stack_end)
 extern int _dl_argc attribute_hidden attribute_relro;
 extern char **_dl_argv attribute_relro;
 rtld_hidden_proto (_dl_argv)
-#if IS_IN (rtld)
-/* Always 0, only kept for not-yet-updated target start code.  */
-extern const unsigned int _dl_skip_args attribute_hidden;
-#endif
 #define rtld_progname _dl_argv[0]
 
 /* Flag set at startup and cleared when the last initializer has run.  */

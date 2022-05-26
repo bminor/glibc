@@ -139,7 +139,6 @@ _dl_sysdep_start (void **start_argptr,
 	    mach_port_t memobj;
 	    error_t err;
 
-	    ++_dl_skip_args;
 	    --_dl_argc;
 	    p = _dl_argv++[1] + 1;
 
