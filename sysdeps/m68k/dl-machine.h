@@ -142,15 +142,8 @@ _start:\n\
 _dl_start_user:\n\
 	| Save the user entry point address in %a4.\n\
 	move.l %d0, %a4\n\
-	| See if we were run as a command with the executable file\n\
-	| name as an extra leading argument.\n\
-	" PCREL_OP ("move.l", "_dl_skip_args", "%d0", "%d0", "%pc") "\n\
 	| Pop the original argument count\n\
 	move.l (%sp)+, %d1\n\
-	| Subtract _dl_skip_args from it.\n\
-	sub.l %d0, %d1\n\
-	| Adjust the stack pointer to skip _dl_skip_args words.\n\
-	lea (%sp, %d0*4), %sp\n\
 	| Push back the modified argument count.\n\
 	move.l %d1, -(%sp)\n\
 	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)\n\
