@@ -196,48 +196,9 @@ _dl_start_user:\n\
 	add	%l7, %o7, %l7\n\
   /* Save the user entry point address in %l0 */\n\
 	mov	%o0, %l0\n\
-  /* See if we were run as a command with the executable file name as an\n\
-     extra leading argument.  If so, adjust the contents of the stack.  */\n\
-	" RTLD_GOT_ADDRESS(%l7, %g2, _dl_skip_args) "\n\
-	ld	[%g2], %i0\n\
-	tst	%i0\n\
-	beq	3f\n\
-	 ld	[%sp+22*4], %i5		/* load argc */\n\
-	/* Find out how far to shift.  */\n\
-	" RTLD_GOT_ADDRESS(%l7, %l3, _dl_argv) "\n\
-	sub	%i5, %i0, %i5\n\
-	ld	[%l3], %l4\n\
-	sll	%i0, 2, %i2\n\
-	st	%i5, [%sp+22*4]\n\
-	sub	%l4, %i2, %l4\n\
-	add	%sp, 23*4, %i1\n\
-	add	%i1, %i2, %i2\n\
-	st	%l4, [%l3]\n\
-	/* Copy down argv */\n\
-21:	ld	[%i2], %i3\n\
-	add	%i2, 4, %i2\n\
-	tst	%i3\n\
-	st	%i3, [%i1]\n\
-	bne	21b\n\
-	 add	%i1, 4, %i1\n\
-	/* Copy down env */\n\
-22:	ld	[%i2], %i3\n\
-	add	%i2, 4, %i2\n\
-	tst	%i3\n\
-	st	%i3, [%i1]\n\
-	bne	22b\n\
-	 add	%i1, 4, %i1\n\
-	/* Copy down auxiliary table.  */\n\
-23:	ld	[%i2], %i3\n\
-	ld	[%i2+4], %i4\n\
-	add	%i2, 8, %i2\n\
-	tst	%i3\n\
-	st	%i3, [%i1]\n\
-	st	%i4, [%i1+4]\n\
-	bne	23b\n\
-	 add	%i1, 8, %i1\n\
+	ld	[%sp+22*4], %i5		/* load argc */\n\
   /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */\n\
-3:	" RTLD_GOT_ADDRESS(%l7, %o0, _rtld_local) "\n\
+	" RTLD_GOT_ADDRESS(%l7, %o0, _rtld_local) "\n\
 	add	%sp, 23*4, %o2\n\
 	sll	%i5, 2, %o3\n\
 	add	%o3, 4, %o3\n\

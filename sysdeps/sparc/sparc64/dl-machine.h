@@ -245,45 +245,9 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 "	add	%l7, %o7, %l7\n"					\
 "   /* Save the user entry point address in %l0.  */\n"			\
 "	mov	%o0, %l0\n"						\
-"   /* See if we were run as a command with the executable file name as an\n" \
-"      extra leading argument.  If so, we must shift things around since we\n" \
-"      must keep the stack doubleword aligned.  */\n"			\
-	RTLD_GOT_ADDRESS(%l7, %g5, _dl_skip_args)			\
-"	ld	[%g5], %i0\n"						\
-"	brz,pt	%i0, 2f\n"						\
-"	 ldx	[%sp + " __S(STACK_BIAS) " + 22*8], %i5\n"		\
-"	/* Find out how far to shift.  */\n"				\
-"	sub	%i5, %i0, %i5\n"					\
-"	sllx	%i0, 3, %l6\n"						\
-	RTLD_GOT_ADDRESS(%l7, %l4, _dl_argv)				\
-"	stx	%i5, [%sp + " __S(STACK_BIAS) " + 22*8]\n"		\
-"	add	%sp, " __S(STACK_BIAS) " + 23*8, %i1\n"			\
-"	add	%i1, %l6, %i2\n"					\
-"	ldx	[%l4], %l5\n"						\
-"	/* Copy down argv.  */\n"					\
-"12:	ldx	[%i2], %i3\n"						\
-"	add	%i2, 8, %i2\n"						\
-"	stx	%i3, [%i1]\n"						\
-"	brnz,pt	%i3, 12b\n"						\
-"	 add	%i1, 8, %i1\n"						\
-"	sub	%l5, %l6, %l5\n"					\
-"	/* Copy down envp.  */\n"					\
-"13:	ldx	[%i2], %i3\n"						\
-"	add	%i2, 8, %i2\n"						\
-"	stx	%i3, [%i1]\n"						\
-"	brnz,pt	%i3, 13b\n"						\
-"	 add	%i1, 8, %i1\n"						\
-"	/* Copy down auxiliary table.  */\n"				\
-"14:	ldx	[%i2], %i3\n"						\
-"	ldx	[%i2 + 8], %i4\n"					\
-"	add	%i2, 16, %i2\n"						\
-"	stx	%i3, [%i1]\n"						\
-"	stx	%i4, [%i1 + 8]\n"					\
-"	brnz,pt	%i3, 14b\n"						\
-"	 add	%i1, 16, %i1\n"						\
-"	stx	%l5, [%l4]\n"						\
+"	ldx	[%sp + " __S(STACK_BIAS) " + 22*8], %i5\n"		\
 "  /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */\n"	\
-"2:\t"	RTLD_GOT_ADDRESS(%l7, %o0, _rtld_local)				\
+""	RTLD_GOT_ADDRESS(%l7, %o0, _rtld_local)				\
 "	sllx	%i5, 3, %o3\n"						\
 "	add	%sp, " __S(STACK_BIAS) " + 23*8, %o2\n"			\
 "	add	%o3, 8, %o3\n"						\
