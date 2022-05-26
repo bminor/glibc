@@ -129,52 +129,22 @@ _start:\n\
         callr r8\n\
         mov gp, r2\n\
 \n\
-        /* Find the number of arguments to skip.  */\n\
-        ldw r8, %got(_dl_skip_args)(r22)\n\
-        ldw r8, 0(r8)\n\
-\n\
         /* Find the main_map from the GOT.  */\n\
         ldw r4, %got(_rtld_local)(r22)\n\
         ldw r4, 0(r4)\n\
 \n\
-        /* Find argc.  */\n\
-        ldw r5, 0(sp)\n\
-        sub r5, r5, r8\n\
-        stw r5, 0(sp)\n\
+        /* Load adjusted argc.  */\n\
+        ldw r2, %got(_dl_argc)(r22)\n\
+	ldw r5, 0(r2)\n\
 \n\
-        /* Find the first unskipped argument.  */\n\
-        slli r8, r8, 2\n\
-        addi r6, sp, 4\n\
-        add r9, r6, r8\n\
-        mov r10, r6\n\
-\n\
-        /* Shuffle argv down.  */\n\
-3:      ldw r11, 0(r9)\n\
-        stw r11, 0(r10)\n\
-        addi r9, r9, 4\n\
-        addi r10, r10, 4\n\
-        bne r11, zero, 3b\n\
-\n\
-        /* Shuffle envp down.  */\n\
-        mov r7, r10\n\
-4:      ldw r11, 0(r9)\n\
-        stw r11, 0(r10)\n\
-        addi r9, r9, 4\n\
-        addi r10, r10, 4\n\
-        bne r11, zero, 4b\n\
-\n\
-        /* Shuffle auxv down.  */\n\
-5:      ldw r11, 4(r9)\n\
-        stw r11, 4(r10)\n\
-        ldw r11, 0(r9)\n\
-        stw r11, 0(r10)\n\
-        addi r9, r9, 8\n\
-        addi r10, r10, 8\n\
-        bne r11, zero, 5b\n\
-\n\
-        /* Update _dl_argv.  */\n\
+        /* Load adjsuted argv.  */\n\
         ldw r2, %got(_dl_argv)(r22)\n\
-        stw r6, 0(r2)\n\
+	ldw r6, 0(r2)\n\
+\n\
+	/* envp = argv + argc + 1  */\n\
+        addi r7, r5, 1\n\
+        slli r7, r7, 2\n\
+        add  r7, r7, r6\n\
 \n\
         /* Call _dl_init through the PLT.  */\n\
         ldw r8, %call(_dl_init)(r22)\n\
