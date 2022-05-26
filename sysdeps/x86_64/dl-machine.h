@@ -140,17 +140,8 @@ _start:\n\
 _dl_start_user:\n\
 	# Save the user entry point address in %r12.\n\
 	movq %rax, %r12\n\
-	# See if we were run as a command with the executable file\n\
-	# name as an extra leading argument.\n\
-	movl _dl_skip_args(%rip), %eax\n\
-	# Pop the original argument count.\n\
-	popq %rdx\n\
-	# Adjust the stack pointer to skip _dl_skip_args words.\n\
-	leaq (%rsp,%rax,8), %rsp\n\
-	# Subtract _dl_skip_args from argc.\n\
-	subl %eax, %edx\n\
-	# Push argc back on the stack.\n\
-	pushq %rdx\n\
+	# Read the original argument count.\n\
+	movq (%rsp), %rdx\n\
 	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)\n\
 	# argc -> rsi\n\
 	movq %rdx, %rsi\n\
