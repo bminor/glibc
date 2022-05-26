@@ -130,9 +130,6 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 _start:\n\
 	@ we are PIC code, so get global offset table\n\
 	ldr	sl, .L_GET_GOT\n\
-	@ See if we were run as a command with the executable file\n\
-	@ name as an extra leading argument.\n\
-	ldr	r4, .L_SKIP_ARGS\n\
 	@ at start time, all the args are on the stack\n\
 	mov	r0, sp\n\
 	bl	_dl_start\n\
@@ -147,10 +144,6 @@ _dl_start_user:\n\
 	ldr	r1, [sp]\n\
 	@ get the argv address\n\
 	add	r2, sp, #4\n\
-	@ Fix up the stack if necessary.\n\
-	cmp	r4, #0\n\
-	bne	.L_fixup_stack\n\
-.L_done_fixup:\n\
 	@ compute envp\n\
 	add	r3, r2, r1, lsl #2\n\
 	add	r3, r3, #4\n\
@@ -165,40 +158,8 @@ _dl_start_user:\n\
 	@ jump to the user_s entry point\n\
 	" BX(r6) "\n\
 \n\
-	@ iWMMXt and EABI targets require the stack to be eight byte\n\
-	@ aligned - shuffle arguments etc.\n\
-.L_fixup_stack:\n\
-	@ subtract _dl_skip_args from original arg count\n\
-	sub	r1, r1, r4\n\
-	@ store the new argc in the new stack location\n\
-	str	r1, [sp]\n\
-	@ find the first unskipped argument\n\
-	mov	r3, r2\n\
-	add	r4, r2, r4, lsl #2\n\
-	@ shuffle argv down\n\
-1:	ldr	r5, [r4], #4\n\
-	str	r5, [r3], #4\n\
-	cmp	r5, #0\n\
-	bne	1b\n\
-	@ shuffle envp down\n\
-1:	ldr	r5, [r4], #4\n\
-	str	r5, [r3], #4\n\
-	cmp	r5, #0\n\
-	bne	1b\n\
-	@ shuffle auxv down\n\
-1:	ldmia	r4!, {r0, r5}\n\
-	stmia	r3!, {r0, r5}\n\
-	cmp	r0, #0\n\
-	bne	1b\n\
-	@ Update _dl_argv\n\
-	ldr	r3, .L_ARGV\n\
-	str	r2, [sl, r3]\n\
-	b	.L_done_fixup\n\
-\n\
 .L_GET_GOT:\n\
 	.word	_GLOBAL_OFFSET_TABLE_ - .L_GET_GOT\n\
-.L_SKIP_ARGS:\n\
-	.word	_dl_skip_args(GOTOFF)\n\
 .L_FINI_PROC:\n\
 	.word	_dl_fini(GOTOFF)\n\
 .L_ARGV:\n\
