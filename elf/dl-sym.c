@@ -144,7 +144,7 @@ RTLD_NEXT used in code not dynamically loaded"));
 	l = l->l_loader;
 
       result = GLRO(dl_lookup_symbol_x) (name, match, &ref, l->l_local_scope,
-					 vers, 0, 0, match);
+					 vers, 0, flags, match);
     }
   else
     {

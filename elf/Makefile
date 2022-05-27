@@ -426,6 +426,7 @@ tests += \
   tst-initorder2 \
   tst-latepthread \
   tst-main1 \
+  tst-next-ver \
   tst-nodelete2 \
   tst-nodelete-dlclose \
   tst-nodelete-opened \
@@ -712,6 +713,7 @@ modules-names += \
   neededobj6 \
   nextmod1 \
   nextmod2 \
+  nextmod3 \
   nodel2mod1 \
   nodel2mod2 \
   nodel2mod3 \
@@ -1690,6 +1692,9 @@ $(objpfx)reldep4.out: $(objpfx)reldep4mod1.so $(objpfx)reldep4mod2.so
 $(objpfx)next: $(objpfx)nextmod1.so $(objpfx)nextmod2.so
 LDFLAGS-next = -Wl,--no-as-needed
 
+$(objpfx)tst-next-ver: $(objpfx)nextmod3.so
+LDFLAGS-tst-next-ver = -Wl,--no-as-needed
+
 $(objpfx)unload2.out: $(objpfx)unload2mod.so $(objpfx)unload2dep.so
 
 $(objpfx)lateglobal.out: $(objpfx)ltglobmod1.so $(objpfx)ltglobmod2.so
@@ -2436,6 +2441,8 @@ $(objpfx)tst-linkall-static: \
   $(common-objpfx)crypt/libcrypt.a
 endif
 endif
+
+LDFLAGS-nextmod3.so = -Wl,--version-script=nextmod3.map
 
 # The application depends on the DSO, and the DSO loads the plugin.
 # The plugin also depends on the DSO. This creates the circular
