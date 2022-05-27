@@ -21,6 +21,7 @@
 #define BUF1PAGES 20
 #define ITERATIONS 100
 #include "bench-string.h"
+#include "json-lib.h"
 
 typedef char *(*proto_t) (const void *, size_t, const void *, size_t);
 
@@ -102,44 +103,62 @@ IMPL (twoway_memmem, 0)
 IMPL (basic_memmem, 0)
 
 static void
-do_one_test (impl_t *impl, const void *haystack, size_t haystack_len,
-	     const void *needle, size_t needle_len, const void *expected)
+do_one_test (json_ctx_t *json_ctx, impl_t *impl, const void *haystack,
+	     size_t haystack_len, const void *needle, size_t needle_len,
+	     const void *expected)
 {
   size_t i, iters = INNER_LOOP_ITERS_SMALL;
   timing_t start, stop, cur;
-
+  void *res;
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)
     {
-      CALL (impl, haystack, haystack_len, needle, needle_len);
+      res = CALL (impl, haystack, haystack_len, needle, needle_len);
     }
   TIMING_NOW (stop);
 
   TIMING_DIFF (cur, start, stop);
 
-  TIMING_PRINT_MEAN ((double) cur, (double) iters);
+  json_element_double (json_ctx, (double) cur / (double) iters);
+
+  if (res != expected)
+    {
+      error (0, 0, "Wrong result in function (%p != %p) %s(%p, %zu, %p, %zu)",
+	     res, expected, impl->name, haystack, haystack_len, needle,
+	     needle_len);
+      ret = 1;
+    }
 }
 
 static void
-do_test (const char *str, size_t len, size_t idx)
+do_test (json_ctx_t *json_ctx, const char *str, size_t len, size_t idx)
 {
   char tmpbuf[len];
 
   memcpy (tmpbuf, buf1 + idx, len);
   memcpy (buf1 + idx, str, len);
 
-  printf ("String %s, offset %zd:", str, idx);
+  json_element_object_begin (json_ctx);
+  json_attr_uint (json_ctx, "len_haystack", BUF1PAGES * page_size);
+  json_attr_uint (json_ctx, "len_needle", len);
+  json_attr_uint (json_ctx, "haystack_ptr", (uintptr_t) buf1);
+  json_attr_uint (json_ctx, "needle_ptr", (uintptr_t) str);
+  json_attr_uint (json_ctx, "fail", 0);
+
+  json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
-    do_one_test (impl, buf1, BUF1PAGES * page_size, str, len, buf1 + idx);
+    do_one_test (json_ctx, impl, buf1, BUF1PAGES * page_size, str, len,
+		 buf1 + idx);
 
   memcpy (buf1 + idx, tmpbuf, len);
 
-  putchar ('\n');
+  json_array_end (json_ctx);
+  json_element_object_end (json_ctx);
 }
 
 static void
-do_random_tests (void)
+do_random_tests (json_ctx_t *json_ctx)
 {
   for (size_t n = 0; n < ITERATIONS; ++n)
     {
@@ -159,13 +178,21 @@ do_random_tests (void)
 	  buf1[idx + off] = ch;
 	}
 
-      printf ("String %.*s, offset %zd:", (int) len, buf1 + idx, idx);
+      json_element_object_begin (json_ctx);
+      json_attr_uint (json_ctx, "len_haystack", BUF1PAGES * page_size);
+      json_attr_uint (json_ctx, "len_needle", len);
+      json_attr_uint (json_ctx, "haystack_ptr", (uintptr_t) buf1);
+      json_attr_uint (json_ctx, "needle_ptr", (uintptr_t) (buf1 + idx));
+      json_attr_uint (json_ctx, "fail", 0);
+
+      json_array_begin (json_ctx, "timings");
 
       FOR_EACH_IMPL (impl, 0)
-	do_one_test (impl, buf1, BUF1PAGES * page_size, buf1 + idx, len,
-		     buf1 + idx);
+	do_one_test (json_ctx, impl, buf1, BUF1PAGES * page_size, buf1 + idx,
+		     len, buf1 + idx);
 
-      putchar ('\n');
+      json_array_end (json_ctx);
+      json_element_object_end (json_ctx);
 
       memcpy (buf1 + idx, tmpbuf, len);
     }
@@ -178,18 +205,28 @@ static const char *const strs[] =
     "abc0", "aaaa0", "abcabc0"
   };
 
-
 int
 test_main (void)
 {
+  json_ctx_t json_ctx;
   size_t i;
 
   test_init ();
+  json_init (&json_ctx, 0, stdout);
 
-  printf ("%23s", "");
+  json_document_begin (&json_ctx);
+  json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
+
+  json_attr_object_begin (&json_ctx, "functions");
+  json_attr_object_begin (&json_ctx, TEST_NAME);
+  json_attr_string (&json_ctx, "bench-variant", "");
+
+  json_array_begin (&json_ctx, "ifuncs");
   FOR_EACH_IMPL (impl, 0)
-    printf ("\t%s", impl->name);
-  putchar ('\n');
+    json_element_string (&json_ctx, impl->name);
+  json_array_end (&json_ctx);
+
+  json_array_begin (&json_ctx, "results");
 
   for (i = 0; i < BUF1PAGES * page_size; ++i)
     buf1[i] = 60 + random () % 32;
@@ -199,10 +236,15 @@ test_main (void)
       {
 	size_t len = strlen (strs[i]);
 
-	do_test (strs[i], len, j);
+	do_test (&json_ctx, strs[i], len, j);
       }
 
-  do_random_tests ();
+  do_random_tests (&json_ctx);
+
+  json_array_end (&json_ctx);
+  json_attr_object_end (&json_ctx);
+  json_attr_object_end (&json_ctx);
+  json_document_end (&json_ctx);
   return ret;
 }
 
