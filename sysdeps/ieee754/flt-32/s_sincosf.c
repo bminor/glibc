@@ -24,6 +24,10 @@
 #include "math_config.h"
 #include "s_sincosf.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 #ifndef SINCOSF
 # define SINCOSF_FUNC __sincosf
 #else
@@ -35,6 +39,7 @@
    small values.  Large inputs have their range reduced using fast integer
    arithmetic.  */
 void
+SECTION
 SINCOSF_FUNC (float y, float *sinp, float *cosp)
 {
   double x = y;

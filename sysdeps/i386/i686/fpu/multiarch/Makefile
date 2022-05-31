@@ -9,4 +9,5 @@ CFLAGS-e_logf-sse2.c = -msse2 -mfpmath=sse
 CFLAGS-e_powf-sse2.c = -msse2 -mfpmath=sse
 CFLAGS-s_cosf-sse2.c = -msse2 -mfpmath=sse
 CFLAGS-s_sinf-sse2.c = -msse2 -mfpmath=sse
+CFLAGS-s_sincosf-sse2.c = -msse2 -mfpmath=sse
 endif
