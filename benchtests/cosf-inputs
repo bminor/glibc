@@ -1,7 +1,7 @@
 ## args: float
 ## ret: float
 ## includes: math.h
-
+## name: workload-random
 -0x1.d24c56p-1
 -0x1.50ab58p-1
 0x1.112339p-6
