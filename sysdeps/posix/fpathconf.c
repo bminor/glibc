@@ -131,9 +131,9 @@ __fpathconf (int fd, int name)
 #ifdef	_POSIX_ASYNC_IO
       {
 	/* AIO is only allowed on regular files and block devices.  */
-	struct stat64 st;
+	struct __stat64_t64 st;
 
-	if (__fstat64 (fd, &st) < 0
+	if (__fstat64_time64 (fd, &st) < 0
 	    || (! S_ISREG (st.st_mode) && ! S_ISBLK (st.st_mode)))
 	  return -1;
 	else
