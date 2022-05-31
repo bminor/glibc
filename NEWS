@@ -101,6 +101,7 @@ The following bugs are resolved with this release:
   [29078] <dlfcn.h> functions unusable during early auditing
   [29097] time: fchmodat does not handle 64 bit time_t for
     AT_SYMLINK_NOFOLLOW
+  [29203] libc: daemon is not y2038 aware
 
 
 Version 2.34
