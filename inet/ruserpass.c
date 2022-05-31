@@ -95,7 +95,7 @@ ruserpass (const char *host, const char **aname, const char **apass)
 	char *hdir, *buf, *tmp;
 	char myname[1024], *mydomain;
 	int t, usedefault = 0;
-	struct stat64 stb;
+	struct __stat64_t64 stb;
 
 	hdir = __libc_secure_getenv("HOME");
 	if (hdir == NULL) {
@@ -174,7 +174,7 @@ next:
 			break;
 		case PASSWD:
 			if (strcmp(*aname, "anonymous") &&
-			    __fstat64(fileno(cfile), &stb) >= 0 &&
+			    __fstat64_time64(fileno(cfile), &stb) >= 0 &&
 			    (stb.st_mode & 077) != 0) {
 	warnx(_("Error: .netrc file is readable by others."));
 	warnx(_("Remove 'password' line or make file unreadable by others."));
