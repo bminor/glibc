@@ -24,12 +24,12 @@
 int
 isfdtype (int fildes, int fdtype)
 {
-  struct stat64 st;
+  struct __stat64_t64 st;
   int result;
 
   {
     int save_error = errno;
-    result = __fstat64 (fildes, &st);
+    result = __fstat64_time64 (fildes, &st);
     __set_errno (save_error);
   }
 
