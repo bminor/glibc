@@ -23,6 +23,10 @@
 #include "math_config.h"
 #include "s_sincosf.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 #ifndef COSF
 # define COSF_FUNC __cosf
 #else
@@ -35,6 +39,7 @@
    arithmetic.
 */
 float
+SECTION
 COSF_FUNC (float y)
 {
   double x = y;
