@@ -34,6 +34,7 @@ The following bugs are resolved with this release:
     failure
   [29203] libc: daemon is not y2038 aware
   [29204] libc: getusershell is not 2038 aware
+  [29207] libc: posix_fallocate fallback implementation is not y2038
 
 
 Version 2.35
