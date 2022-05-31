@@ -484,7 +484,7 @@ capabilities at runtime, thus disabling use of those extensions.
 The @code{glibc.cpu.hwcaps=-xxx,yyy,-zzz...} tunable allows the user to
 enable CPU/ARCH feature @code{yyy}, disable CPU/ARCH feature @code{xxx}
 and @code{zzz} where the feature name is case-sensitive and has to match
-the ones in @code{sysdeps/x86/cpu-features.h}.
+the ones in @code{sysdeps/x86/include/cpu-features.h}.
 
 This tunable is specific to i386 and x86-64.
 @end deftp
