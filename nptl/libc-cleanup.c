@@ -57,7 +57,8 @@ __libc_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer)
   THREAD_SETMEM (self, cleanup, buffer->__prev);
 
   int cancelhandling = atomic_load_relaxed (&self->cancelhandling);
-  if (cancelhandling & CANCELTYPE_BITMASK)
+  if (buffer->__canceltype != PTHREAD_CANCEL_DEFERRED
+      && (cancelhandling & CANCELTYPE_BITMASK) == 0)
     {
       int newval;
       do
