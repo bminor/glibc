@@ -97,7 +97,7 @@ initshells (void)
 {
 	char **sp, *cp;
 	FILE *fp;
-	struct stat64 statb;
+	struct __stat64_t64 statb;
 	size_t flen;
 
 	free(shells);
@@ -106,7 +106,7 @@ initshells (void)
 	strings = NULL;
 	if ((fp = fopen(_PATH_SHELLS, "rce")) == NULL)
 		goto init_okshells_noclose;
-	if (__fstat64(fileno(fp), &statb) == -1) {
+	if (__fstat64_time64(fileno(fp), &statb) == -1) {
 	init_okshells:
 		(void)fclose(fp);
 	init_okshells_noclose:
