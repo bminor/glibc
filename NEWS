@@ -107,6 +107,7 @@ The following bugs are resolved with this release:
   [29208] libc: fpathconf(_PC_ASYNC_IO) is not y2038 aware
   [29209] libc: isfdtype is not y2038 aware
   [29210] network: ruserpass is not y2038 aware
+  [29211] libc: __open_catalog is not y2038 aware
 
 
 Version 2.34
