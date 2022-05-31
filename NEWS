@@ -37,6 +37,7 @@ The following bugs are resolved with this release:
   [29207] libc: posix_fallocate fallback implementation is not y2038
   [29208] libc: fpathconf(_PC_ASYNC_IO) is not y2038 aware
   [29209] libc: isfdtype is not y2038 aware
+  [29210] network: ruserpass is not y2038 aware
 
 
 Version 2.35
