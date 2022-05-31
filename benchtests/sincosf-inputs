@@ -1,5 +1,6 @@
 ## includes: math.h
 ## args: float:<float *>:<float *>
+## name: workload-random
 0x1.759424p-1
 -0x1.324949p0
 -0x1.855528p8
