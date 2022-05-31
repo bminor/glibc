@@ -32,8 +32,11 @@
 # define readdir __readdir
 # define closedir __closedir
 # define mempcpy __mempcpy
-# define lstat64 __lstat64
+# define struct_stat struct __stat64_t64
+# define lstat __lstat64_time64
 # define feof_unlocked __feof_unlocked
+#else
+# define struct_stat struct stat
 #endif
 
 /* Name of the file containing the module information in the directories
@@ -158,12 +161,12 @@ gconv_parseconfdir (const char *prefix, const char *dir, size_t dir_len)
 	      && strcmp (ent->d_name + len - strlen (suffix), suffix) == 0)
 	    {
 	      char *conf;
-	      struct stat64 st;
+	      struct_stat st;
 	      if (asprintf (&conf, "%s/%s", buf, ent->d_name) < 0)
 		continue;
 
 	      if (ent->d_type != DT_UNKNOWN
-		  || (lstat64 (conf, &st) != -1 && S_ISREG (st.st_mode)))
+		  || (lstat (conf, &st) != -1 && S_ISREG (st.st_mode)))
 		found |= read_conf_file (conf, dir, dir_len);
 
 	      free (conf);
