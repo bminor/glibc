@@ -32,6 +32,7 @@ The following bugs are resolved with this release:
     AT_SYMLINK_NOFOLLOW
   [29109] libc: posix_spawn() always returns 1 (EPERM) on clone()
     failure
+  [29203] libc: daemon is not y2038 aware
 
 
 Version 2.35
