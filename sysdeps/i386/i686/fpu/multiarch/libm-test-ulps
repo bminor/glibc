@@ -1463,21 +1463,25 @@ ldouble: 4
 
 Function: "sin":
 double: 1
+float: 1
 float128: 2
 ldouble: 2
 
 Function: "sin_downward":
 double: 1
+float: 1
 float128: 3
 ldouble: 3
 
 Function: "sin_towardzero":
 double: 1
+float: 1
 float128: 2
 ldouble: 2
 
 Function: "sin_upward":
 double: 1
+float: 1
 float128: 3
 ldouble: 3
 

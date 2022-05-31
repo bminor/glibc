@@ -23,6 +23,10 @@
 #include "math_config.h"
 #include "s_sincosf.h"
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 #ifndef SINF
 # define SINF_FUNC __sinf
 #else
@@ -35,6 +39,7 @@
    arithmetic.
 */
 float
+SECTION
 SINF_FUNC (float y)
 {
   double x = y;
