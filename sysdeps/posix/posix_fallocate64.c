@@ -30,7 +30,7 @@
 int
 __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
 {
-  struct stat64 st;
+  struct __stat64_t64 st;
 
   if (offset < 0 || len < 0)
     return EINVAL;
@@ -48,7 +48,7 @@ __posix_fallocate64_l64 (int fd, __off64_t offset, __off64_t len)
   }
 
   /* We have to make sure that this is really a regular file.  */
-  if (__fstat64 (fd, &st) != 0)
+  if (__fstat64_time64 (fd, &st) != 0)
     return EBADF;
   if (S_ISFIFO (st.st_mode))
     return ESPIPE;
