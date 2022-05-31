@@ -171,6 +171,7 @@ typedef __socklen_t socklen_t;
 #define SOL_XDP		283
 #define SOL_MPTCP	284
 #define SOL_MCTP	285
+#define SOL_SMC		286
 
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	4096
