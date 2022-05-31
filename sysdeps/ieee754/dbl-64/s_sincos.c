@@ -24,10 +24,15 @@
 #include <math-underflow.h>
 #include <libm-alias-double.h>
 
+#ifndef SECTION
+# define SECTION
+#endif
+
 #define IN_SINCOS
 #include "s_sin.c"
 
 void
+SECTION
 __sincos (double x, double *sinx, double *cosx)
 {
   mynumber u;
@@ -100,4 +105,6 @@ __sincos (double x, double *sinx, double *cosx)
 
   *sinx = *cosx = x / x;
 }
+#ifndef __sincos
 libm_alias_double (__sincos, sincos)
+#endif
