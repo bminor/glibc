@@ -40,6 +40,7 @@ The following bugs are resolved with this release:
   [29210] network: ruserpass is not y2038 aware
   [29211] libc: __open_catalog is not y2038 aware
   [29213] libc: gconv_parseconfdir is not y2038 aware
+  [29214] nptl: pthread_setcanceltype fails to set type
 
 
 Version 2.35
