@@ -42,7 +42,8 @@ _Static_assert (sizeof (__blkcnt_t) == sizeof (__blkcnt64_t),
 
 #if (__WORDSIZE == 32 \
      && (!defined __SYSCALL_WORDSIZE || __SYSCALL_WORDSIZE == 32)) \
-     || defined STAT_HAS_TIME32
+     || defined STAT_HAS_TIME32 \
+     || (!defined __NR_newfstatat && !defined __NR_fstatat64)
 # define FSTATAT_USE_STATX 1
 
 static inline int
