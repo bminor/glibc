@@ -93,6 +93,8 @@
 				   readable.  */
 # define MADV_POPULATE_WRITE 23	/* Populate (prefault) page tables
 				   writable.  */
+# define MADV_DONTNEED_LOCKED 24 /* Like MADV_DONTNEED, but drop
+				    locked pages too.  */
 # define MADV_HWPOISON	  100	/* Poison a page for testing.  */
 #endif
 
