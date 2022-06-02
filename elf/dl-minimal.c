@@ -25,7 +25,7 @@
 #include <dl-minimal-malloc.h>
 #include <stdio.h>
 #include <unistd.h>
-
+#include <errno.h>
 
 /* The rtld startup code calls __rtld_malloc_init_stubs after the
   first self-relocation to adjust the pointers to the minimal
