@@ -143,7 +143,8 @@ Usage: $$0 [OPTIONS] <program> [ARGUMENTS...]
 
   --tool=TOOL  Run with the specified TOOL. It can be strace, rpctrace,
                valgrind or container. The container will run within
-               support/test-container.
+               support/test-container.  For strace and valgrind,
+               additional arguments can be passed after the tool name.
 EOF
 
   exit 1
@@ -174,16 +175,16 @@ case "$$toolname" in
     exec $(subst $(common-objdir),"$${builddir}", $(test-program-prefix)) \
       $${1+"$$@"}
     ;;
-  strace)
-    exec strace $(patsubst %, -E%, $(run-program-env)) \
+  strace*)
+    exec $$toolname $(patsubst %, -E%, $(run-program-env)) \
       $(test-via-rtld-prefix) $${1+"$$@"}
     ;;
   rpctrace)
     exec rpctrace $(patsubst %, -E%, $(run-program-env)) \
       $(test-via-rtld-prefix) $${1+"$$@"}
     ;;
-  valgrind)
-    exec env $(run-program-env) valgrind $(test-via-rtld-prefix) $${1+"$$@"}
+  valgrind*)
+    exec env $(run-program-env) $$toolname $(test-via-rtld-prefix) $${1+"$$@"}
     ;;
   container)
     exec env $(run-program-env) $(test-via-rtld-prefix) \
