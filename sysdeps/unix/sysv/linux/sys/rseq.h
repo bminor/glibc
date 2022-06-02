@@ -24,7 +24,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
-#include <bits/endian.h>
 
 #ifdef __has_include
 # if __has_include ("linux/rseq.h")
@@ -129,28 +128,13 @@ struct rseq
        targeted by the rseq_cs.  Also needs to be set to NULL by user-space
        before reclaiming memory that contains the targeted struct rseq_cs.
 
-       Read and set by the kernel.  Set by user-space with single-copy
-       atomicity semantics.  This field should only be updated by the
-       thread which registered this data structure.  Aligned on 64-bit.  */
-    union
-      {
-        uint64_t ptr64;
-# ifdef __LP64__
-        uint64_t ptr;
-# else /* __LP64__ */
-        struct
-          {
-#if __BYTE_ORDER == __BIG_ENDIAN
-            uint32_t padding; /* Initialized to zero.  */
-            uint32_t ptr32;
-#  else /* LITTLE */
-            uint32_t ptr32;
-            uint32_t padding; /* Initialized to zero.  */
-#  endif /* ENDIAN */
-          } ptr;
-# endif /* __LP64__ */
-      } rseq_cs;
+       Read and set by the kernel. Set by user-space with single-copy
+       atomicity semantics. This field should only be updated by the
+       thread which registered this data structure. Aligned on 64-bit.
 
+       32-bit architectures should update the low order bits of the
+       rseq_cs field, leaving the high order bits initialized to 0.  */
+    uint64_t rseq_cs;
     /* Restartable sequences flags field.
 
        This field should only be updated by the thread which
