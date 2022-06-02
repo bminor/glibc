@@ -22,6 +22,7 @@
 #include <dl-machine.h>
 #include <dl-runtime.h>
 #include <dl-fixup-attribute.h>
+#include <sys/param.h>
 
 void
 _dl_audit_activity_map (struct link_map *l, int action)
