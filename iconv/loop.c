@@ -435,11 +435,17 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
     return __GCONV_FULL_OUTPUT;
 
   /*  Now add characters from the normal input buffer.  */
-  if (inlen >= MAX_NEEDED_INPUT)
+  if (inlen >= MAX_NEEDED_INPUT || inptr >= inend)
     /* Avoid a -Wstringop-overflow= warning when this loop is
        unrolled.  The compiler cannot otherwise see that this is
        unreachable because it depends on (state->__count & 7) not
-       being too large after a previous conversion step.  */
+       being too large after a previous conversion step.
+       Starting with GCC 12, we also have mark the inptr >= inend
+       case as unreachable to omit the warning.  Note that this SINGLE
+       function is only used to implement the mb*towc*() or wc*tomb*()
+       functions.  Those functions use inptr and inend pointing to a
+       variable on stack, compute the inend pointer or explicitly check
+       the arguments which always leads to inptr < inend.  */
     __builtin_unreachable ();
   do
     bytebuf[inlen++] = *inptr++;
