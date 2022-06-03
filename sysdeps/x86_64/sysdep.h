@@ -99,11 +99,11 @@ lose:									      \
    to avoid RTM abort triggered by VZEROUPPER inside transactionally.  */
 #define ZERO_UPPER_VEC_REGISTERS_RETURN_XTEST \
 	xtest;							\
-	jz	1f;						\
-	vzeroall;						\
+	jnz	1f;						\
+	vzeroupper;						\
 	ret;							\
 1:								\
-	vzeroupper;						\
+	vzeroall;						\
 	ret
 
 /* Can be used to replace vzeroupper that is not directly before a
