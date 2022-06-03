@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <support/support.h>
 #include <support/check.h>
+#include <libc-diag.h>
 
 static int
 do_test (void)
@@ -48,6 +49,9 @@ do_test (void)
   TEST_COMPARE_STRING (buf, " INR12,345.67");
 
   /* Translated.  */
+  /* clang does not know about the GNU extension 'I'.  */
+  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (14, "-Wformat-invalid-specifier");
   TEST_COMPARE (sprintf (buf, "%I16d", 12345), 16);
   TEST_COMPARE_STRING (buf, " १२३४५");
   TEST_COMPARE (sprintf (buf, "%I12.2f", 12345.67), 26);
@@ -58,6 +62,7 @@ do_test (void)
   TEST_COMPARE_STRING (buf, " १२,३४५");
   TEST_COMPARE (sprintf (buf, "%'I12.2f", 12345.67), 26);
   TEST_COMPARE_STRING (buf, "   १२,३४५.६७");
+  DIAG_POP_NEEDS_COMMENT_CLANG;
 
   xsetlocale (LC_ALL, "ps_AF.UTF-8");
 
@@ -78,6 +83,8 @@ do_test (void)
   TEST_COMPARE_STRING (buf, "  12٬346 AFN"); /* Counts bytes.   */
 
   /* Translated.  */
+  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (14, "-Wformat-invalid-specifier");
   TEST_COMPARE (sprintf (buf, "%I11d", 12345), 11);
   TEST_COMPARE_STRING (buf, " ١٢٣۴٥");
   TEST_COMPARE (sprintf (buf, "%I12.2f", 12345.67), 20);
@@ -88,6 +95,7 @@ do_test (void)
   TEST_COMPARE_STRING (buf, " ١٢٬٣۴٥");
   TEST_COMPARE (sprintf (buf, "%'I12.2f", 12345.67), 21);
   TEST_COMPARE_STRING (buf, "   ١٢٬٣۴٥٫٦٧");
+  DIAG_POP_NEEDS_COMMENT_CLANG;
 
   return 0;
 }
