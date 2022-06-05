@@ -420,23 +420,32 @@ nss_database_check_reload_and_get (struct nss_database_state *local,
       return true;
     }
 
-  /* Before we reload, verify that "/" hasn't changed.  We assume that
-     errors here are very unlikely, but the chance that we're entering
-     a container is also very unlikely, so we err on the side of both
-     very unlikely things not happening at the same time.  */
-  if (__stat64_time64 ("/", &str) != 0
-      || (local->root_ino != 0
-	  && (str.st_ino != local->root_ino
-	      ||  str.st_dev != local->root_dev)))
+  int stat_rv = __stat64_time64 ("/", &str);
+
+  if (local->data.services[database_index] != NULL)
     {
-      /* Change detected; disable reloading and return current state.  */
-      atomic_store_release (&local->data.reload_disabled, 1);
-      *result = local->data.services[database_index];
-      __libc_lock_unlock (local->lock);
-      return true;
+      /* Before we reload, verify that "/" hasn't changed.  We assume that
+        errors here are very unlikely, but the chance that we're entering
+        a container is also very unlikely, so we err on the side of both
+        very unlikely things not happening at the same time.  */
+      if (stat_rv != 0
+	  || (local->root_ino != 0
+	      && (str.st_ino != local->root_ino
+		  ||  str.st_dev != local->root_dev)))
+	{
+        /* Change detected; disable reloading and return current state.  */
+        atomic_store_release (&local->data.reload_disabled, 1);
+        *result = local->data.services[database_index];
+        __libc_lock_unlock (local->lock);
+        return true;
+      }
     }
-  local->root_ino = str.st_ino;
-  local->root_dev = str.st_dev;
+  if (stat_rv == 0)
+    {
+      local->root_ino = str.st_ino;
+      local->root_dev = str.st_dev;
+    }
+
   __libc_lock_unlock (local->lock);
 
   /* Avoid overwriting the global configuration until we have loaded
