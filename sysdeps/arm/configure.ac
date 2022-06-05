@@ -53,7 +53,7 @@ ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
 LC_ALL=C $READELF -dr conftest.so > conftest.dr 2>&AS_MESSAGE_LOG_FD &&
 {
   cat conftest.dr 1>&AS_MESSAGE_LOG_FD
-  fgrep 'TEXTREL
+  grep -F 'TEXTREL
 R_ARM_NONE' conftest.dr > /dev/null || libc_cv_arm_pcrel_movw=yes
 }
 rm -f conftest*])

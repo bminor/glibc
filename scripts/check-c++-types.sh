@@ -32,9 +32,9 @@
 # #include <sys/stat.h>
 # EOF
 # gcc -D_GNU_SOURCE -E - |
-# egrep '^typedef.*;$' |
+# grep -E '^typedef.*;$' |
 # sed 's/^typedef[[:space:]]*//;s/\([[:space:]]\{1,\}__attribute__.*\);/;/;s/.*[[:space:]]\([*]\|\)\(.*\);/\2/' |
-# egrep -v '^_' |
+# grep -E -v '^_' |
 # LC_ALL=C sort -u
 #
 data=$1

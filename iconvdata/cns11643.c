@@ -38,7 +38,7 @@
 
    The table can be generated using
 
-   egrep '^0x2' CNS11643.TXT |
+   grep -E '^0x2' CNS11643.TXT |
    awk '{print $1, $2}' | perl tab.pl
 
    where tab.pl is:
@@ -1979,7 +1979,7 @@ const uint16_t __cns11643l2_to_ucs4_tab[] =
 
    The table can be generated using
 
-   egrep '^0x3' CNS11643.TXT |
+   grep -E '^0x3' CNS11643.TXT |
    awk '{print $1, $2}' | perl tab.pl
 
    where tab.pl is:
@@ -3606,7 +3606,7 @@ const uint32_t __cns11643l3_to_ucs4_tab[] =
 
    The table can be generated using
 
-   egrep '^0x4' CNS11643.TXT |
+   grep -E '^0x4' CNS11643.TXT |
    awk '{print $1, $2}' | perl tab.pl
 
    where tab.pl is:
@@ -5456,7 +5456,7 @@ const uint32_t __cns11643l4_to_ucs4_tab[] =
 
    The table can be generated using
 
-   egrep '^0x5' CNS11643.TXT |
+   grep -E '^0x5' CNS11643.TXT |
    awk '{print $1, $2}' | perl tab.pl
 
    where tab.pl is:
@@ -7635,7 +7635,7 @@ const uint32_t __cns11643l5_to_ucs4_tab[] =
 
    The table can be generated using
 
-   egrep '^0x6' CNS11643.TXT |
+   grep -E '^0x6' CNS11643.TXT |
    awk '{print $1, $2}' | perl tab.pl
 
    where tab.pl is:
@@ -9260,7 +9260,7 @@ const uint32_t __cns11643l6_to_ucs4_tab[] =
 
    The table can be generated using
 
-   egrep '^0x7' CNS11643.TXT |
+   grep -E '^0x7' CNS11643.TXT |
    awk '{print $1, $2}' | perl tab.pl
 
    where tab.pl is:
@@ -10923,7 +10923,7 @@ const uint32_t __cns11643l7_to_ucs4_tab[] =
 
    The table can be generated using
 
-   egrep '^0xF' CNS11643.TXT |
+   grep -E '^0xF' CNS11643.TXT |
    awk '{print $1, $2}' | perl tab.pl
 
    where tab.pl is:
@@ -12633,8 +12633,8 @@ const uint32_t __cns11643l15_to_ucs4_tab[] =
    CJK Ideographs in the UCS plane 0: range U+3400..U+9FA5.
    The table can be created using
 
-   egrep '^0x' CNS11643.TXT |
-   awk '{ print $2, $1 }' | sort | egrep '^0x(3[4-9A-F]|[4-9])' | perl tab.pl
+   grep -E '^0x' CNS11643.TXT |
+   awk '{ print $2, $1 }' | sort | grep -E '^0x(3[4-9A-F]|[4-9])' | perl tab.pl
 
    where tab.pl is
 
@@ -24796,8 +24796,8 @@ const char __cns11643_from_ucs4p0_tab[][3] =
 /* CJK Ideographs in the UCS plane 2: range U+20000..U+2A6D6.
    The table can be created using
 
-   egrep '^0x' CNS11643.TXT |
-   awk '{ print $2, $1 }' | sort | egrep '^0x2[0-9A]... ' | perl tab.pl
+   grep -E '^0x' CNS11643.TXT |
+   awk '{ print $2, $1 }' | sort | grep -E '^0x2[0-9A]... ' | perl tab.pl
 
    where tab.pl is
 
@@ -39911,8 +39911,8 @@ const char __cns11643_from_ucs4p2_tab[][3] =
 /* CJK Compatibility Ideographs in the UCS plane 2: range U+2F800..U+2FA1D.
    The table can be created using
 
-   egrep '^0x' CNS11643.TXT |
-   awk '{ print $2, $1 }' | sort | egrep '^0x2F... ' | perl tab.pl
+   grep -E '^0x' CNS11643.TXT |
+   awk '{ print $2, $1 }' | sort | grep -E '^0x2F... ' | perl tab.pl
 
    where tab.pl is
 

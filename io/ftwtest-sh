@@ -268,7 +268,7 @@ $testprogram --skip-siblings=file@1b $tmpdir |
 regexp=`echo $(ls -U $tmp/$ftwtest/foo/lvl1b \
 	       | sed -n '/file@1b$/,${/file[23]@1b$/p;}') | sed 's, ,|,'`
 catcmd=cat
-[ -n "$regexp" ] && catcmd="egrep -v $regexp"
+[ -n "$regexp" ] && catcmd="grep -E -v $regexp"
 
 $catcmd <<EOF | diff -u $testout - || exit 1
 base = "$tmp/", file = "$ftwtest", flag = FTW_D, level = 0

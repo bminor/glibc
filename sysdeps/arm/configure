@@ -209,7 +209,7 @@ ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
 LC_ALL=C $READELF -dr conftest.so > conftest.dr 2>&5 &&
 {
   cat conftest.dr 1>&5
-  fgrep 'TEXTREL
+  grep -F 'TEXTREL
 R_ARM_NONE' conftest.dr > /dev/null || libc_cv_arm_pcrel_movw=yes
 }
 rm -f conftest*

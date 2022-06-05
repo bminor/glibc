@@ -565,10 +565,10 @@ $(objpfx)check-wrapper-headers.out: scripts/check-wrapper-headers.py $(headers)
 endif # $(headers)
 
 define summarize-tests
-@egrep -v '^(PASS|XFAIL):' $(objpfx)$1 || true
+@grep -E -v '^(PASS|XFAIL):' $(objpfx)$1 || true
 @echo "Summary of test results$2:"
 @sed 's/:.*//' < $(objpfx)$1 | sort | uniq -c
-@! egrep -q -v '^(X?PASS|XFAIL|UNSUPPORTED):' $(objpfx)$1
+@! grep -E -q -v '^(X?PASS|XFAIL|UNSUPPORTED):' $(objpfx)$1
 endef
 
 # The intention here is to do ONE install of our build into the

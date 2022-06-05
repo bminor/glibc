@@ -20,7 +20,7 @@
 
 /* The conversion table to UCS4 has almost no holes.  It can be generated with:
 
-   egrep '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
+   grep -E '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
    perl tab.pl
 
    where tab.pl is:
@@ -1918,8 +1918,8 @@ const char __gb2312_from_ucs4_tab1[][2] =
 
 /* The table can be created using
 
-   egrep '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
-   awk '{ print $2, $1 }' | sort | egrep '^0x03' | perl tab.pl
+   grep -E '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
+   awk '{ print $2, $1 }' | sort | grep -E '^0x03' | perl tab.pl
 
    where tab.pl is
 
@@ -1959,8 +1959,8 @@ const char __gb2312_from_ucs4_tab2[][2] =
 
 /* The table can be created using
 
-   egrep '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
-   awk '{ print $2, $1 }' | sort | egrep '^0x04' | perl tab.pl
+   grep -E '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
+   awk '{ print $2, $1 }' | sort | grep -E '^0x04' | perl tab.pl
 
    where tab.pl is
 
@@ -2006,8 +2006,8 @@ const char __gb2312_from_ucs4_tab3[][2] =
 
 /* The table can be created using
 
-   egrep '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
-   awk '{ print $2, $1 }' | sort | egrep '^0x20' | perl tab.pl
+   grep -E '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
+   awk '{ print $2, $1 }' | sort | grep -E '^0x20' | perl tab.pl
 
    where tab.pl is
 
@@ -2035,8 +2035,8 @@ const char __gb2312_from_ucs4_tab4[][2] =
 
 /* The table can be created using
 
-   egrep '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
-   awk '{ print $2, $1 }' | sort | egrep '^0x2[12]' | perl tab.pl
+   grep -E '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
+   awk '{ print $2, $1 }' | sort | grep -E '^0x2[12]' | perl tab.pl
 
    where tab.pl is
 
@@ -2076,8 +2076,8 @@ const char __gb2312_from_ucs4_tab5[][2] =
 
 /* The table can be created using
 
-   egrep '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
-   awk '{ print $2, $1 }' | sort | egrep '^0x24' | perl tab.pl
+   grep -E '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
+   awk '{ print $2, $1 }' | sort | grep -E '^0x24' | perl tab.pl
 
    where tab.pl is
 
@@ -2118,8 +2118,8 @@ const char __gb2312_from_ucs4_tab6[][2] =
 
 /* The table can be created using
 
-   egrep '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
-   awk '{ print $2, $1 }' | sort | egrep '^0x3[01]' | perl tab.pl
+   grep -E '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
+   awk '{ print $2, $1 }' | sort | grep -E '^0x3[01]' | perl tab.pl
 
    where tab.pl is
 
@@ -2219,8 +2219,8 @@ const char __gb2312_from_ucs4_tab7[][2] =
 
 /* The table can be created using
 
-   egrep '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
-   awk '{ print $2, $1 }' | sort | egrep '^0x[4-9]' | perl tab.pl
+   grep -E '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
+   awk '{ print $2, $1 }' | sort | grep -E '^0x[4-9]' | perl tab.pl
 
    where tab.pl is
 
@@ -4499,8 +4499,8 @@ const char __gb2312_from_ucs4_tab8[][2] =
 
 /* The table can be created using
 
-   egrep '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
-   awk '{ print $2, $1 }' | sort | egrep '^0xFF[0-5]' | perl tab.pl
+   grep -E '^0x' /mnt/cdrom/unix/mappings/eastasia/gb/gb2312.txt |
+   awk '{ print $2, $1 }' | sort | grep -E '^0xFF[0-5]' | perl tab.pl
 
    where tab.pl is
 

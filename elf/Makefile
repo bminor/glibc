@@ -1315,7 +1315,7 @@ $(objpfx)librtld.mk: $(objpfx)librtld.map Makefile
 	while read lib file; do \
 	  case $$lib in \
 	  libc_pic.a) \
-	    LC_ALL=C fgrep -l /$$file \
+	    LC_ALL=C grep -F -l /$$file \
 		  $(common-objpfx)stamp.os $(common-objpfx)*/stamp.os | \
 	    LC_ALL=C \
 	    sed 's@^$(common-objpfx)\([^/]*\)/stamp\.os$$@rtld-\1'" +=$$file@"\

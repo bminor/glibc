@@ -22,7 +22,7 @@ build_menu () {
 }
 
 collect_nodes () {
-  egrep '^(@c )?@node.*Top' "$@" /dev/null | cut -d, -f-2 |
+  grep -E '^(@c )?@node.*Top' "$@" /dev/null | cut -d, -f-2 |
   sed 's/@c //; s/, /:/; s/:@node /:/; s/ /_/g; s/:/ /g' |
   $AWK '{ file[$2] = $1; nnode[$2] = $3 }
 	END  { for (x in file)

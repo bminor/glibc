@@ -3,7 +3,7 @@ bindir=$1
 
 VERSION=1.0
 
-egrep -h @deftypefu?nx? *.texi ../linuxthreads/*.texi |
+grep -E -h @deftypefu?nx? *.texi ../linuxthreads/*.texi |
 sed -e 's/@deftypefunx*[[:space:]]*\({[^{]*}\|[[:alnum:]_]*\)[[:space:]]*\([[:alnum:]_]*\).*/\2/' -e 's/@deftypefn {[^}]*function}*[[:space:]]*\({[^{]*}\|[[:alnum:]_]*\)[[:space:]]*\([[:alnum:]_]*\).*/\2/' -e '/^@/d' |
 sed -e '/^obstack_/d' -e '/^\([lf]\|\)stat\(\|64\)$/d' -e '/^mknod$/d' |
 sed -e '/^signbit$/d' -e '/^sigsetjmp$/d' |
@@ -15,7 +15,7 @@ sed -e '/^alloca$/d' |
 sort -u > DOCUMENTED
 
 nm --extern --define $bindir/libc.so $bindir/math/libm.so $bindir/rt/librt.so $bindir/linuxthreads/libpthread.so $bindir/dlfcn/libdl.so $bindir/crypt/libcrypt.so $bindir/login/libutil.so |
-egrep " [TW] ([[:alpha:]]|_[[:alpha:]])" |
+grep -E " [TW] ([[:alpha:]]|_[[:alpha:]])" |
 sed 's/\(@.*\)//' |
 cut -b 12- |
 sed -e '/^_IO/d' -e '/^_dl/d' -e '/^_pthread/d' -e '/^_obstack/d' |

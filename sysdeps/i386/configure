@@ -28,7 +28,7 @@ int _start (void) { int a, b, c; __sync_val_compare_and_swap (&a, b, c); return 
 EOF
 if ! { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
 		     -O0 -nostdlib -nostartfiles
-		     -S conftest.c -o - | fgrep "__sync_val_compare_and_swap"
+		     -S conftest.c -o - | grep -F "__sync_val_compare_and_swap"
 		     1>&5'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5

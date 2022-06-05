@@ -35,7 +35,7 @@ rtldobjs="$rtldobjs $(ar t ${objpfx}rtld-libc.a)"
 
 # OBJECT symbols can be ignored.
 $READELF -sW ${objpfx}dl-allobjs.os ${objpfx}rtld-libc.a |
-egrep " OBJECT  *GLOBAL " |
+grep -E " OBJECT  *GLOBAL " |
 awk '{if ($7 != "ABS") print $8 }' |
 sort -u > "$tmp"
 declare -a objects
@@ -59,8 +59,8 @@ while test -n "$objs"; do
 	done
         for o in $rtldobjs; do
 	  ro=$(echo "$objpfx"../*/"$o")
-	  if $NM -g --defined-only "$ro" | egrep -qs " $s\$"; then
-	    if ! (echo "$tocheck $objs" | fgrep -qs "$o"); then
+	  if $NM -g --defined-only "$ro" | grep -E -qs " $s\$"; then
+	    if ! (echo "$tocheck $objs" | grep -F -qs "$o"); then
 	      echo "$o needed for $s"
 	      objs="$objs $o"
 	    fi

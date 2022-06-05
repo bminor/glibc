@@ -280,7 +280,7 @@ int _start (void) { $2 return 0; }
 EOF
 if ! AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
 		     $3 -nostdlib -nostartfiles
-		     -S conftest.c -o - | fgrep "$1"
+		     -S conftest.c -o - | grep -F "$1"
 		     1>&AS_MESSAGE_LOG_FD])
 then
   libc_compiler_builtin_inlined=yes

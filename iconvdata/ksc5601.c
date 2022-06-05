@@ -20,8 +20,8 @@
 #include "ksc5601.h"
 
 /*
-egrep  '# HANGUL SYLL' < /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
-egrep -v '^0x[4-9AD-F]' | egrep -v '^0x..([4-9].|A0)' | \
+grep -E '# HANGUL SYLL' < /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
+grep -E -v '^0x[4-9AD-F]' | grep -E -v '^0x..([4-9].|A0)' | \
 perl tab21.pl > ksc_hangul1.tb
 
 ----------
@@ -350,7 +350,7 @@ const uint16_t __ksc5601_hangul_to_ucs[KSC5601_HANGUL]=
     and UCS-4. It's used to convert symbols in  EUC-KR, ISO-2022-KR,
     Johab, UHC to UCS-4.
 
-egrep '^0xA[1-C]' < /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
+grep -E '^0xA[1-C]' < /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
 grep -v '# HANGUL SYLLABLE' | perl tab11.pl  > ksc_sym1.tb
 
    $n=0;
@@ -624,7 +624,7 @@ const uint16_t __ksc5601_sym_to_ucs[] =
 
  Mapping table from UCS4 to symbols defined in KS C 5601-1987.
 
-egrep '^0xA[1-C]' /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
+grep -E '^0xA[1-C]' /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
 grep -v '# HANGUL SYLLABLE' | awk '{print $2, $1}' | sort -u |
 perl tab12.pl > ksc_sym2.tb
 
@@ -981,7 +981,7 @@ const struct map __ksc5601_sym_from_ucs[KSC5601_SYMBOL] =
 };
 
 /*
-egrep  '^0x.*# <CJK>' < /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
+grep -E '^0x.*# <CJK>' < /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
 perl tab21.pl > ksc_hanja1.tb
 
 
@@ -1613,7 +1613,7 @@ const uint16_t __ksc5601_hanja_to_ucs[KSC5601_HANJA]=
 };
 
 /*
-egrep  '^0x.*# <CJK>' < /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
+grep -E '^0x.*# <CJK>' < /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
 awk '{print $2,$1}' | sort -u | perl tab12.pl > ksc_hanja2.tb
 
    $n=0;

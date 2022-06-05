@@ -38,7 +38,7 @@
    It's not worth trying to use these gaps.  The table can be generated
    using
 
-   egrep '^0x' < .../eastasia/jis/jis0208.txt |
+   grep -E '^0x' < .../eastasia/jis/jis0208.txt |
    perl tab.pl
 
    with tab.pl containing:
@@ -1800,8 +1800,8 @@ const char __jisx0208_from_ucs4_lat1[JIS0208_LAT1_MAX + 1
 
 /* The following table can be generated using
 
-   egrep '^0x' < .../eastasia/jis/jis0208.txt |
-   awk '{ print $3, $2}' | egrep '^0x0[34]' | sort -u | perl tab.pl
+   grep -E '^0x' < .../eastasia/jis/jis0208.txt |
+   awk '{ print $3, $2}' | grep -E '^0x0[34]' | sort -u | perl tab.pl
 
    where tab.pl contains:
 
@@ -1868,8 +1868,8 @@ const char __jisx0208_from_ucs4_greek[0xc1][2] =
    unpredictable place and size.  Therefore we use a table which maps
    ranges to idexes in a table.  This table ca be generated with:
 
-   egrep '^0x' < .../eastasia/jis/jis0208.txt | awk '{ print $3, $2}' |
-   egrep '^0x[^01]' | sort -u | perl tab.pl
+   grep -E '^0x' < .../eastasia/jis/jis0208.txt | awk '{ print $3, $2}' |
+   grep -E '^0x[^01]' | sort -u | perl tab.pl
 
    where tab.pl is
 
@@ -2610,8 +2610,8 @@ const struct jisx0208_ucs_idx __jisx0208_from_ucs_idx[] =
    therefore indexed using UCS with leaving large gaps out.  It can
    be computed with
 
-   egrep '^0x' < .../eastasia/jis/jis0208.txt | awk '{ print $3, $2}' |
-   egrep '^0x[^01]' | sort -u | perl tag.pl
+   grep -E '^0x' < .../eastasia/jis/jis0208.txt | awk '{ print $3, $2}' |
+   grep -E '^0x[^01]' | sort -u | perl tag.pl
 
    where tab.pl is
 

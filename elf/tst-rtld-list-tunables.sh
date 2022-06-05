@@ -41,5 +41,5 @@ ${test_wrapper_env} \
 ${run_program_env} \
 $rtld --list-tunables \
 | sort -u \
-| egrep "(rtld|malloc)" \
+| grep -E "(rtld|malloc)" \
 | sed -e "s/0xf\+/0x[f]+/"

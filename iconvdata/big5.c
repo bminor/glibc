@@ -27,7 +27,7 @@
 /* Table for Big5 to UCS conversion. This is generated from the BIG5
    charmap, using the following command:
 
-	egrep "/x../x.." BIG5 | egrep -v "^% " | sed 's/%IRREVERSIBLE%//' | \
+	grep -E "/x../x.." BIG5 | grep -E -v "^% " | sed 's/%IRREVERSIBLE%//' | \
 	perl segA.pl > segA
 
    where segA.pl script is:
@@ -3600,45 +3600,45 @@ static const char from_ucs4_tab1[256][2] =
 
 ---------------------------------------------------------------------
 rm -f segB2
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<U02" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<U02" | sort | \
 	perl segB2.pl 2 0x02C7 0x02D9 >> segB2
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<U03" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<U03" | sort | \
 	perl segB2.pl 3 0x0391 0x03C9 >> segB2
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<U20[1-3]" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<U20[1-3]" | sort | \
 	perl segB2.pl 4 0x2013 0x203B >> segB2
 
 ( Separate U20AC, U2103, U2105, U2109 )
 
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<U216" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<U216" | sort | \
 	perl segB2.pl 5 0x2160 0x2169 >> segB2
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<U219" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<U219" | sort | \
 	perl segB2.pl 6 0x2190 0x2199 >> segB2
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<U22[1-6]" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<U22[1-6]" | sort | \
 	perl segB2.pl 7 0x2215 0x2267 >> segB2
 
 ( Separate U2295, U2299, U22A5, U22BF )
 
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<U2[56]" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<U2[56]" | sort | \
 	perl segB2.pl 8 0x2500 0x2642 >> segB2
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<U30" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<U30" | sort | \
 	perl segB2.pl 9 0x3000 0x3029 >> segB2
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<U31" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<U31" | sort | \
 	perl segB2.pl 10 0x3105 0x3129 >> segB2
 
 ( Separate U32A3 )
 
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<U33" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<U33" | sort | \
 	perl segB2.pl 11 0x338E 0x33D5 >> segB2
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<U[4-9]" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<U[4-9]" | sort | \
 	perl segB2.pl 12 0x4E00 0x9FA4 >> segB2
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<UF[678]" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<UF[678]" | sort | \
 	perl segB2.pl 13 0xF6B1 0xF848 >> segB2
 
 ( Separate UFA0C, UFA0D )
 
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<UFE" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<UFE" | sort | \
 	perl segB2.pl 14 0xFE30 0xFE6B >> segB2
-egrep "/x../x.." BIG5 | egrep -v "^%" | egrep "^<UFF" | sort | \
+grep -E "/x../x.." BIG5 | grep -E -v "^%" | grep -E "^<UFF" | sort | \
 	perl segB2.pl 15 0xFF01 0xFFE5 >> segB2
 ---------------------------------------------------------------------
 

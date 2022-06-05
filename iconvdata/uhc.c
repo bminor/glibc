@@ -22,7 +22,7 @@
 
 
 /*
-egrep \
+grep -E \
 '^0x([89][0-9A-F]..|A0..|[AB][0-9A-F][4-9].|[AB][0-9A-F]A0|C[0-6][4-9].|C[0-6]A0)' < /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | perl tab.pl
 
 ------tab.pl
@@ -1150,7 +1150,7 @@ static const uint32_t uhc_extra_to_ucs[8822]=
 };
 
 /*
-egrep  '# HANGUL SYLL' < /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
+grep -E '# HANGUL SYLL' < /cdrom/unix/mappings/eastasia/ksc/ksc5601.txt | \
  awk '{print $2, $1}' | sort -u | perl tab.pl
 
 -----tab.pl

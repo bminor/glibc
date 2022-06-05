@@ -41,14 +41,14 @@ check_file() {
     file=$1
     size=$(readelf -S $file | \
 	(sz=0; while read line; do
-		if echo $line | fgrep -q " .rodata"; then
+		if echo $line | grep -F -q " .rodata"; then
 		    read sz rest
 		    break
 		fi
 	    done;
 	    printf "%d" 0x$sz))
 
-    summands=$(readelf -s $file | fgrep " OBJECT " | tr -s ' ' |
+    summands=$(readelf -s $file | grep -F " OBJECT " | tr -s ' ' |
 	cut -f4 -d' ' | sed 's,$,+,')0
     sum=$(($summands))
     if [ $sum != $size ]; then

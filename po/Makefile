@@ -57,13 +57,13 @@ libc.pot: pot.header libc.pot.files
 	    -e "s/DATE/`date +'%Y-%m-%d %H:%M'$$disp`/" \
 	    -e "s/CHARSET/UTF-8/" \
 	    $< > $@.new
-	egrep -v '\.ksh$$' $(word 2,$^) > $(objdir)/tmp-libc.pot-files
+	grep -E -v '\.ksh$$' $(word 2,$^) > $(objdir)/tmp-libc.pot-files
 	cd ..; $(XGETTEXT) --keyword=_ --keyword=N_ \
 			   --add-comments=TRANS --flag=error:3:c-format \
 			   --flag=f_print:2:c-format \
 			   --sort-by-file --omit-header -E -n -d - \
 			   -f $(objdir)/tmp-libc.pot-files >> po/$@.new
-	egrep '\.ksh$$' $(word 2,$^) > $(objdir)/tmp-libc.pot-files
+	grep -E '\.ksh$$' $(word 2,$^) > $(objdir)/tmp-libc.pot-files
 	cd ..; $(XGETTEXT) --add-comments=TRANS --language=Shell \
 			   --sort-by-file --omit-header -E -n -o po/$@.new -j \
 			   -f $(objdir)/tmp-libc.pot-files po/$@.new
