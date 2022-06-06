@@ -126,6 +126,7 @@ sysdep_routines += \
   strrchr-sse2 \
   strspn-c \
   strspn-sse2 \
+  strstr-avx512 \
   strstr-sse2-unaligned \
   varshift \
 # sysdep_routines
@@ -133,6 +134,7 @@ CFLAGS-varshift.c += -msse4
 CFLAGS-strcspn-c.c += -msse4
 CFLAGS-strpbrk-c.c += -msse4
 CFLAGS-strspn-c.c += -msse4
+CFLAGS-strstr-avx512.c += -mavx512f -mavx512vl -mavx512dq -mavx512bw -mbmi -mbmi2 -O3
 endif
 
 ifeq ($(subdir),wcsmbs)
