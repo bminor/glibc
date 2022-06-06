@@ -181,7 +181,7 @@ extern ssize_t __REDIRECT (sendmsg, (int __fd, const struct msghdr *__message,
 # else
 extern ssize_t __sendmsg64 (int __fd, const struct msghdr *__message,
 			    int __flags);
-#  defien sendmsg __sendmsg64
+#  define sendmsg __sendmsg64
 # endif
 #endif
 
