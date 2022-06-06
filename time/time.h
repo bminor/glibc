@@ -240,21 +240,30 @@ extern long int timezone;
   ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
 
 
+#if defined __USE_MISC || __GLIBC_USE (ISOC2X)
+# ifndef __USE_TIME_BITS64
+/* Like `mktime', but for TP represents Universal Time, not local time.  */
+extern time_t timegm (struct tm *__tp) __THROW;
+# else
+#  ifdef __REDIRECT_NTH
+extern time_t __REDIRECT_NTH (timegm, (struct tm *__tp), __timegm64);
+#  else
+#   define timegm __timegm64
+#  endif
+# endif
+#endif
+
+
 #ifdef __USE_MISC
 /* Miscellaneous functions many Unices inherited from the public domain
    localtime package.  These are included only for compatibility.  */
 
 #ifndef __USE_TIME_BITS64
-/* Like `mktime', but for TP represents Universal Time, not local time.  */
-extern time_t timegm (struct tm *__tp) __THROW;
 /* Another name for `mktime'.  */
 extern time_t timelocal (struct tm *__tp) __THROW;
 #else
 # ifdef __REDIRECT_NTH
-extern time_t __REDIRECT_NTH (timegm, (struct tm *__tp), __timegm64);
 extern time_t __REDIRECT_NTH (timelocal, (struct tm *__tp), __mktime64);
-# else
-#  define timegm __timegm64
 # endif
 #endif
 
