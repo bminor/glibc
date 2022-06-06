@@ -618,6 +618,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/strstr.c.  */
   IFUNC_IMPL (i, name, strstr,
+              IFUNC_IMPL_ADD (array, i, strstr,
+                              (CPU_FEATURE_USABLE (AVX512VL)
+                               && CPU_FEATURE_USABLE (AVX512BW)
+                               && CPU_FEATURE_USABLE (AVX512DQ)
+                               && CPU_FEATURE_USABLE (BMI2)),
+                              __strstr_avx512)
 	      IFUNC_IMPL_ADD (array, i, strstr, 1, __strstr_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, strstr, 1, __strstr_sse2))
 
