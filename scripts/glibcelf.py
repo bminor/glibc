@@ -523,6 +523,10 @@ class Pt(_OpenIntEnum):
     PT_SUNWBSS = 0x6ffffffa
     PT_SUNWSTACK = 0x6ffffffb
 
+class PtAARCH64(enum.Enum):
+    """Supplemental PT_* constants for EM_AARCH64."""
+    PT_AARCH64_MEMTAG_MTE = 0x70000002
+
 class PtARM(enum.Enum):
     """Supplemental PT_* constants for EM_ARM."""
     PT_ARM_EXIDX = 0x70000001
