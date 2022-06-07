@@ -57,7 +57,7 @@
 # define CHAR_PER_VEC	(VEC_SIZE / CHAR_SIZE)
 
 	.section SECTION(.text),"ax",@progbits
-ENTRY (MEMCHR)
+ENTRY_P2ALIGN (MEMCHR, 5)
 # ifndef USE_AS_RAWMEMCHR
 	/* Check for zero length.  */
 #  ifdef __ILP32__
@@ -87,12 +87,14 @@ ENTRY (MEMCHR)
 # endif
 	testl	%eax, %eax
 	jz	L(aligned_more)
-	tzcntl	%eax, %eax
+	bsfl	%eax, %eax
 	addq	%rdi, %rax
-	VZEROUPPER_RETURN
+L(return_vzeroupper):
+	ZERO_UPPER_VEC_REGISTERS_RETURN
+
 
 # ifndef USE_AS_RAWMEMCHR
-	.p2align 5
+	.p2align 4
 L(first_vec_x0):
 	/* Check if first match was before length.  */
 	tzcntl	%eax, %eax
@@ -100,58 +102,31 @@ L(first_vec_x0):
 	/* NB: Multiply length by 4 to get byte count.  */
 	sall	$2, %edx
 #  endif
-	xorl	%ecx, %ecx
+    COND_VZEROUPPER
+	/* Use branch instead of cmovcc so L(first_vec_x0) fits in one fetch
+	   block. branch here as opposed to cmovcc is not that costly. Common
+	   usage of memchr is to check if the return was NULL (if string was
+	   known to contain CHAR user would use rawmemchr). This branch will be
+	   highly correlated with the user branch and can be used by most
+	   modern branch predictors to predict the user branch.  */
 	cmpl	%eax, %edx
-	leaq	(%rdi, %rax), %rax
-	cmovle	%rcx, %rax
-	VZEROUPPER_RETURN
+    jle  L(null)
+	addq	%rdi, %rax
+    ret
+# endif
 
+	.p2align 4,, 10
+L(first_vec_x1):
+	bsfl	%eax, %eax
+	incq	%rdi
+	addq	%rdi, %rax
+	VZEROUPPER_RETURN
+# ifndef USE_AS_RAWMEMCHR
+	/* First in aligning bytes here.  */
 L(null):
 	xorl	%eax, %eax
 	ret
 # endif
-	.p2align 4
-L(cross_page_boundary):
-	/* Save pointer before aligning as its original value is
-	   necessary for computer return address if byte is found or
-	   adjusting length if it is not and this is memchr.  */
-	movq	%rdi, %rcx
-	/* Align data to VEC_SIZE - 1. ALGN_PTR_REG is rcx for memchr
-	   and rdi for rawmemchr.  */
-	orq	$(VEC_SIZE - 1), %ALGN_PTR_REG
-	VPCMPEQ	-(VEC_SIZE - 1)(%ALGN_PTR_REG), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-# ifndef USE_AS_RAWMEMCHR
-	/* Calculate length until end of page (length checked for a
-	   match).  */
-	leaq	1(%ALGN_PTR_REG), %rsi
-	subq	%RRAW_PTR_REG, %rsi
-#  ifdef USE_AS_WMEMCHR
-	/* NB: Divide bytes by 4 to get wchar_t count.  */
-	shrl	$2, %esi
-#  endif
-# endif
-	/* Remove the leading bytes.  */
-	sarxl	%ERAW_PTR_REG, %eax, %eax
-# ifndef USE_AS_RAWMEMCHR
-	/* Check the end of data.  */
-	cmpq	%rsi, %rdx
-	jbe	L(first_vec_x0)
-# endif
-	testl	%eax, %eax
-	jz	L(cross_page_continue)
-	tzcntl	%eax, %eax
-	addq	%RRAW_PTR_REG, %rax
-L(return_vzeroupper):
-	ZERO_UPPER_VEC_REGISTERS_RETURN
-
-	.p2align 4
-L(first_vec_x1):
-	tzcntl	%eax, %eax
-	incq	%rdi
-	addq	%rdi, %rax
-	VZEROUPPER_RETURN
-
 	.p2align 4
 L(first_vec_x2):
 	tzcntl	%eax, %eax
@@ -340,7 +315,7 @@ L(first_vec_x1_check):
 	incq	%rdi
 	addq	%rdi, %rax
 	VZEROUPPER_RETURN
-	.p2align 4
+	.p2align 4,, 6
 L(set_zero_end):
 	xorl	%eax, %eax
 	VZEROUPPER_RETURN
@@ -427,6 +402,40 @@ L(last_vec_x3):
 	addq	%rdi, %rax
 	VZEROUPPER_RETURN
 # endif
+
+	.p2align 4
+L(cross_page_boundary):
+	/* Save pointer before aligning as its original value is necessary for
+	   computer return address if byte is found or adjusting length if it
+	   is not and this is memchr.  */
+	movq	%rdi, %rcx
+	/* Align data to VEC_SIZE. ALGN_PTR_REG is rcx for memchr and rdi for
+	   rawmemchr.  */
+	andq	$-VEC_SIZE, %ALGN_PTR_REG
+	VPCMPEQ	(%ALGN_PTR_REG), %ymm0, %ymm1
+	vpmovmskb %ymm1, %eax
+# ifndef USE_AS_RAWMEMCHR
+	/* Calculate length until end of page (length checked for a match).  */
+	leal	VEC_SIZE(%ALGN_PTR_REG), %esi
+	subl	%ERAW_PTR_REG, %esi
+# ifdef USE_AS_WMEMCHR
+	/* NB: Divide bytes by 4 to get wchar_t count.  */
+	shrl	$2, %esi
+# endif
+# endif
+	/* Remove the leading bytes.  */
+	sarxl	%ERAW_PTR_REG, %eax, %eax
+# ifndef USE_AS_RAWMEMCHR
+	/* Check the end of data.  */
+	cmpq	%rsi, %rdx
+	jbe	L(first_vec_x0)
+# endif
+	testl	%eax, %eax
+	jz	L(cross_page_continue)
+	bsfl	%eax, %eax
+	addq	%RRAW_PTR_REG, %rax
+	VZEROUPPER_RETURN
+
 
 END (MEMCHR)
 #endif
