@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <assert.h>
+#include <support/xunistd.h>
 
 #define TEST_MAIN
 #define TEST_NAME "rawmemchr"
@@ -51,12 +52,44 @@ do_one_test (impl_t *impl, const char *s, int c, char *exp_res)
 }
 
 static void
+do_test_bz29234 (void)
+{
+  size_t i, j;
+  char *ptr_start;
+  char *buf = xmmap (0, 8192, PROT_READ | PROT_WRITE,
+		     MAP_PRIVATE | MAP_ANONYMOUS, -1);
+
+  memset (buf, -1, 8192);
+
+  ptr_start = buf + 4096 - 8;
+
+  /* Out of range matches before the start of a page. */
+  memset (ptr_start - 8, 0x1, 8);
+
+  for (j = 0; j < 8; ++j)
+    {
+      for (i = 0; i < 128; ++i)
+	{
+	  ptr_start[i + j] = 0x1;
+
+	  FOR_EACH_IMPL (impl, 0)
+	    do_one_test (impl, (char *) (ptr_start + j), 0x1,
+			 ptr_start + i + j);
+
+	  ptr_start[i + j] = 0xff;
+	}
+    }
+
+  xmunmap (buf, 8192);
+}
+
+static void
 do_test (size_t align, size_t pos, size_t len, int seek_char)
 {
   size_t i;
   char *result;
 
-  align &= 7;
+  align &= getpagesize () - 1;
   if (align + len >= page_size)
     return;
 
@@ -114,6 +147,13 @@ do_random_tests (void)
 	    }
 	}
 
+      if (align)
+	{
+	  p[align - 1] = seek_char;
+	  if (align > 4)
+	    p[align - 4] = seek_char;
+	}
+
       assert (pos < len);
       size_t r = random ();
       if ((r & 31) == 0)
@@ -129,6 +169,13 @@ do_random_tests (void)
 		   result, p);
 	    ret = 1;
 	  }
+
+      if (align)
+	{
+	  p[align - 1] = seek_char;
+	  if (align > 4)
+	    p[align - 4] = seek_char;
+	}
     }
 }
 
@@ -150,14 +197,22 @@ test_main (void)
       do_test (i, 64, 256, 23);
       do_test (0, 16 << i, 2048, 0);
       do_test (i, 64, 256, 0);
+
+      do_test (getpagesize () - i, 64, 256, 23);
+      do_test (getpagesize () - i, 64, 256, 0);
     }
   for (i = 1; i < 32; ++i)
     {
       do_test (0, i, i + 1, 23);
       do_test (0, i, i + 1, 0);
+
+      do_test (getpagesize () - 7, i, i + 1, 23);
+      do_test (getpagesize () - i / 2, i, i + 1, 23);
+      do_test (getpagesize () - i, i, i + 1, 23);
     }
 
   do_random_tests ();
+  do_test_bz29234 ();
   return ret;
 }
 
