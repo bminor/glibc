@@ -1,8 +1,20 @@
 ifeq ($(subdir),string)
-sysdep_routines += memcpy_generic memcpy_advsimd memcpy_thunderx memcpy_thunderx2 \
-		   memcpy_falkor memcpy_a64fx memcpy_sve \
-		   memset_generic memset_falkor memset_emag memset_kunpeng \
-		   memset_a64fx \
-		   memchr_generic memchr_nosimd \
-		   strlen_mte strlen_asimd
+sysdep_routines += \
+  memchr_generic \
+  memchr_nosimd \
+  memcpy_a64fx \
+  memcpy_advsimd \
+  memcpy_falkor \
+  memcpy_generic \
+  memcpy_sve \
+  memcpy_thunderx \
+  memcpy_thunderx2 \
+  memset_a64fx \
+  memset_emag \
+  memset_falkor \
+  memset_generic \
+  memset_kunpeng \
+  strlen_asimd \
+  strlen_mte \
+# sysdep_routines
 endif
