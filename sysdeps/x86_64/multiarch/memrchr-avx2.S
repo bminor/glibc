@@ -21,340 +21,318 @@
 # include <sysdep.h>
 
 # ifndef MEMRCHR
-#  define MEMRCHR	__memrchr_avx2
+#  define MEMRCHR				__memrchr_avx2
 # endif
 
 # ifndef VZEROUPPER
-#  define VZEROUPPER	vzeroupper
+#  define VZEROUPPER			vzeroupper
 # endif
 
 # ifndef SECTION
 #  define SECTION(p)	p##.avx
 # endif
 
-# define VEC_SIZE 32
+# define VEC_SIZE			32
+# define PAGE_SIZE			4096
+	.section SECTION(.text), "ax", @progbits
+ENTRY(MEMRCHR)
+# ifdef __ILP32__
+	/* Clear upper bits.  */
+	and	%RDX_LP, %RDX_LP
+# else
+	test	%RDX_LP, %RDX_LP
+# endif
+	jz	L(zero_0)
 
-	.section SECTION(.text),"ax",@progbits
-ENTRY (MEMRCHR)
-	/* Broadcast CHAR to YMM0.  */
 	vmovd	%esi, %xmm0
+	/* Get end pointer. Minus one for two reasons. 1) It is necessary for a
+	   correct page cross check and 2) it correctly sets up end ptr to be
+	   subtract by lzcnt aligned.  */
+	leaq	-1(%rdx, %rdi), %rax
+
 	vpbroadcastb %xmm0, %ymm0
 
-	sub	$VEC_SIZE, %RDX_LP
-	jbe	L(last_vec_or_less)
+	/* Check if we can load 1x VEC without cross a page.  */
+	testl	$(PAGE_SIZE - VEC_SIZE), %eax
+	jz	L(page_cross)
 
-	add	%RDX_LP, %RDI_LP
+	vpcmpeqb -(VEC_SIZE - 1)(%rax), %ymm0, %ymm1
+	vpmovmskb %ymm1, %ecx
+	cmpq	$VEC_SIZE, %rdx
+	ja	L(more_1x_vec)
 
-	/* Check the last VEC_SIZE bytes.  */
-	vpcmpeqb (%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x0)
+L(ret_vec_x0_test):
+	/* If ecx is zero (no matches) lzcnt will set it 32 (VEC_SIZE) which
+	   will gurantee edx (len) is less than it.  */
+	lzcntl	%ecx, %ecx
 
-	subq	$(VEC_SIZE * 4), %rdi
-	movl	%edi, %ecx
-	andl	$(VEC_SIZE - 1), %ecx
-	jz	L(aligned_more)
+	/* Hoist vzeroupper (not great for RTM) to save code size. This allows
+	   all logic for edx (len) <= VEC_SIZE to fit in first cache line.  */
+	COND_VZEROUPPER
+	cmpl	%ecx, %edx
+	jle	L(zero_0)
+	subq	%rcx, %rax
+	ret
 
-	/* Align data for aligned loads in the loop.  */
-	addq	$VEC_SIZE, %rdi
-	addq	$VEC_SIZE, %rdx
-	andq	$-VEC_SIZE, %rdi
-	subq	%rcx, %rdx
+	/* Fits in aligning bytes of first cache line.  */
+L(zero_0):
+	xorl	%eax, %eax
+	ret
 
-	.p2align 4
-L(aligned_more):
-	subq	$(VEC_SIZE * 4), %rdx
-	jbe	L(last_4x_vec_or_less)
-
-	/* Check the last 4 * VEC_SIZE.  Only one VEC_SIZE at a time
-	   since data is only aligned to VEC_SIZE.  */
-	vpcmpeqb (VEC_SIZE * 3)(%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x3)
-
-	vpcmpeqb (VEC_SIZE * 2)(%rdi), %ymm0, %ymm2
-	vpmovmskb %ymm2, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x2)
-
-	vpcmpeqb VEC_SIZE(%rdi), %ymm0, %ymm3
-	vpmovmskb %ymm3, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x1)
-
-	vpcmpeqb (%rdi), %ymm0, %ymm4
-	vpmovmskb %ymm4, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x0)
-
-	/* Align data to 4 * VEC_SIZE for loop with fewer branches.
-	   There are some overlaps with above if data isn't aligned
-	   to 4 * VEC_SIZE.  */
-	movl	%edi, %ecx
-	andl	$(VEC_SIZE * 4 - 1), %ecx
-	jz	L(loop_4x_vec)
-
-	addq	$(VEC_SIZE * 4), %rdi
-	addq	$(VEC_SIZE * 4), %rdx
-	andq	$-(VEC_SIZE * 4), %rdi
-	subq	%rcx, %rdx
-
-	.p2align 4
-L(loop_4x_vec):
-	/* Compare 4 * VEC at a time forward.  */
-	subq	$(VEC_SIZE * 4), %rdi
-	subq	$(VEC_SIZE * 4), %rdx
-	jbe	L(last_4x_vec_or_less)
-
-	vmovdqa	(%rdi), %ymm1
-	vmovdqa	VEC_SIZE(%rdi), %ymm2
-	vmovdqa	(VEC_SIZE * 2)(%rdi), %ymm3
-	vmovdqa	(VEC_SIZE * 3)(%rdi), %ymm4
-
-	vpcmpeqb %ymm1, %ymm0, %ymm1
-	vpcmpeqb %ymm2, %ymm0, %ymm2
-	vpcmpeqb %ymm3, %ymm0, %ymm3
-	vpcmpeqb %ymm4, %ymm0, %ymm4
-
-	vpor	%ymm1, %ymm2, %ymm5
-	vpor	%ymm3, %ymm4, %ymm6
-	vpor	%ymm5, %ymm6, %ymm5
-
-	vpmovmskb %ymm5, %eax
-	testl	%eax, %eax
-	jz	L(loop_4x_vec)
-
-	/* There is a match.  */
-	vpmovmskb %ymm4, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x3)
-
-	vpmovmskb %ymm3, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x2)
-
-	vpmovmskb %ymm2, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x1)
-
-	vpmovmskb %ymm1, %eax
-	bsrl	%eax, %eax
-	addq	%rdi, %rax
+	.p2align 4,, 9
+L(ret_vec_x0):
+	lzcntl	%ecx, %ecx
+	subq	%rcx, %rax
 L(return_vzeroupper):
 	ZERO_UPPER_VEC_REGISTERS_RETURN
 
+	.p2align 4,, 10
+L(more_1x_vec):
+	testl	%ecx, %ecx
+	jnz	L(ret_vec_x0)
+
+	/* Align rax (string pointer).  */
+	andq	$-VEC_SIZE, %rax
+
+	/* Recompute remaining length after aligning.  */
+	movq	%rax, %rdx
+	/* Need this comparison next no matter what.  */
+	vpcmpeqb -(VEC_SIZE)(%rax), %ymm0, %ymm1
+	subq	%rdi, %rdx
+	decq	%rax
+	vpmovmskb %ymm1, %ecx
+	/* Fall through for short (hotter than length).  */
+	cmpq	$(VEC_SIZE * 2), %rdx
+	ja	L(more_2x_vec)
+L(last_2x_vec):
+	cmpl	$VEC_SIZE, %edx
+	jbe	L(ret_vec_x0_test)
+
+	testl	%ecx, %ecx
+	jnz	L(ret_vec_x0)
+
+	vpcmpeqb -(VEC_SIZE * 2 - 1)(%rax), %ymm0, %ymm1
+	vpmovmskb %ymm1, %ecx
+	/* 64-bit lzcnt. This will naturally add 32 to position.  */
+	lzcntq	%rcx, %rcx
+	COND_VZEROUPPER
+	cmpl	%ecx, %edx
+	jle	L(zero_0)
+	subq	%rcx, %rax
+	ret
+
+
+	/* Inexpensive place to put this regarding code size / target alignments
+	   / ICache NLP. Necessary for 2-byte encoding of jump to page cross
+	   case which in turn is necessary for hot path (len <= VEC_SIZE) to fit
+	   in first cache line.  */
+L(page_cross):
+	movq	%rax, %rsi
+	andq	$-VEC_SIZE, %rsi
+	vpcmpeqb (%rsi), %ymm0, %ymm1
+	vpmovmskb %ymm1, %ecx
+	/* Shift out negative alignment (because we are starting from endptr and
+	   working backwards).  */
+	movl	%eax, %r8d
+	/* notl because eax already has endptr - 1.  (-x = ~(x - 1)).  */
+	notl	%r8d
+	shlxl	%r8d, %ecx, %ecx
+	cmpq	%rdi, %rsi
+	ja	L(more_1x_vec)
+	lzcntl	%ecx, %ecx
+	COND_VZEROUPPER
+	cmpl	%ecx, %edx
+	jle	L(zero_0)
+	subq	%rcx, %rax
+	ret
+	.p2align 4,, 11
+L(ret_vec_x1):
+	/* This will naturally add 32 to position.  */
+	lzcntq	%rcx, %rcx
+	subq	%rcx, %rax
+	VZEROUPPER_RETURN
+	.p2align 4,, 10
+L(more_2x_vec):
+	testl	%ecx, %ecx
+	jnz	L(ret_vec_x0)
+
+	vpcmpeqb -(VEC_SIZE * 2 - 1)(%rax), %ymm0, %ymm1
+	vpmovmskb %ymm1, %ecx
+	testl	%ecx, %ecx
+	jnz	L(ret_vec_x1)
+
+
+	/* Needed no matter what.  */
+	vpcmpeqb -(VEC_SIZE * 3 - 1)(%rax), %ymm0, %ymm1
+	vpmovmskb %ymm1, %ecx
+
+	subq	$(VEC_SIZE * 4), %rdx
+	ja	L(more_4x_vec)
+
+	cmpl	$(VEC_SIZE * -1), %edx
+	jle	L(ret_vec_x2_test)
+
+L(last_vec):
+	testl	%ecx, %ecx
+	jnz	L(ret_vec_x2)
+
+	/* Needed no matter what.  */
+	vpcmpeqb -(VEC_SIZE * 4 - 1)(%rax), %ymm0, %ymm1
+	vpmovmskb %ymm1, %ecx
+	lzcntl	%ecx, %ecx
+	subq	$(VEC_SIZE * 3), %rax
+	COND_VZEROUPPER
+	subq	%rcx, %rax
+	cmpq	%rax, %rdi
+	ja	L(zero_2)
+	ret
+
+	/* First in aligning bytes.  */
+L(zero_2):
+	xorl	%eax, %eax
+	ret
+
+	.p2align 4,, 4
+L(ret_vec_x2_test):
+	lzcntl	%ecx, %ecx
+	subq	$(VEC_SIZE * 2), %rax
+	COND_VZEROUPPER
+	subq	%rcx, %rax
+	cmpq	%rax, %rdi
+	ja	L(zero_2)
+	ret
+
+
+	.p2align 4,, 11
+L(ret_vec_x2):
+	/* ecx must be non-zero.  */
+	bsrl	%ecx, %ecx
+	leaq	(VEC_SIZE * -3 + 1)(%rcx, %rax), %rax
+	VZEROUPPER_RETURN
+
+	.p2align 4,, 14
+L(ret_vec_x3):
+	/* ecx must be non-zero.  */
+	bsrl	%ecx, %ecx
+	leaq	(VEC_SIZE * -4 + 1)(%rcx, %rax), %rax
+	VZEROUPPER_RETURN
+
+
+
 	.p2align 4
-L(last_4x_vec_or_less):
-	addl	$(VEC_SIZE * 4), %edx
+L(more_4x_vec):
+	testl	%ecx, %ecx
+	jnz	L(ret_vec_x2)
+
+	vpcmpeqb -(VEC_SIZE * 4 - 1)(%rax), %ymm0, %ymm1
+	vpmovmskb %ymm1, %ecx
+
+	testl	%ecx, %ecx
+	jnz	L(ret_vec_x3)
+
+	/* Check if near end before re-aligning (otherwise might do an
+	   unnecissary loop iteration).  */
+	addq	$-(VEC_SIZE * 4), %rax
+	cmpq	$(VEC_SIZE * 4), %rdx
+	jbe	L(last_4x_vec)
+
+	/* Align rax to (VEC_SIZE - 1).  */
+	orq	$(VEC_SIZE * 4 - 1), %rax
+	movq	%rdi, %rdx
+	/* Get endptr for loop in rdx. NB: Can't just do while rax > rdi because
+	   lengths that overflow can be valid and break the comparison.  */
+	orq	$(VEC_SIZE * 4 - 1), %rdx
+
+	.p2align 4
+L(loop_4x_vec):
+	/* Need this comparison next no matter what.  */
+	vpcmpeqb -(VEC_SIZE * 1 - 1)(%rax), %ymm0, %ymm1
+	vpcmpeqb -(VEC_SIZE * 2 - 1)(%rax), %ymm0, %ymm2
+	vpcmpeqb -(VEC_SIZE * 3 - 1)(%rax), %ymm0, %ymm3
+	vpcmpeqb -(VEC_SIZE * 4 - 1)(%rax), %ymm0, %ymm4
+
+	vpor	%ymm1, %ymm2, %ymm2
+	vpor	%ymm3, %ymm4, %ymm4
+	vpor	%ymm2, %ymm4, %ymm4
+	vpmovmskb %ymm4, %esi
+
+	testl	%esi, %esi
+	jnz	L(loop_end)
+
+	addq	$(VEC_SIZE * -4), %rax
+	cmpq	%rdx, %rax
+	jne	L(loop_4x_vec)
+
+	subl	%edi, %edx
+	incl	%edx
+
+L(last_4x_vec):
+	/* Used no matter what.  */
+	vpcmpeqb -(VEC_SIZE * 1 - 1)(%rax), %ymm0, %ymm1
+	vpmovmskb %ymm1, %ecx
+
 	cmpl	$(VEC_SIZE * 2), %edx
 	jbe	L(last_2x_vec)
 
-	vpcmpeqb (VEC_SIZE * 3)(%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x3)
+	testl	%ecx, %ecx
+	jnz	L(ret_vec_x0_end)
 
-	vpcmpeqb (VEC_SIZE * 2)(%rdi), %ymm0, %ymm2
-	vpmovmskb %ymm2, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x2)
+	vpcmpeqb -(VEC_SIZE * 2 - 1)(%rax), %ymm0, %ymm1
+	vpmovmskb %ymm1, %ecx
+	testl	%ecx, %ecx
+	jnz	L(ret_vec_x1_end)
 
-	vpcmpeqb VEC_SIZE(%rdi), %ymm0, %ymm3
-	vpmovmskb %ymm3, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x1_check)
+	/* Used no matter what.  */
+	vpcmpeqb -(VEC_SIZE * 3 - 1)(%rax), %ymm0, %ymm1
+	vpmovmskb %ymm1, %ecx
+
 	cmpl	$(VEC_SIZE * 3), %edx
-	jbe	L(zero)
+	ja	L(last_vec)
 
-	vpcmpeqb (%rdi), %ymm0, %ymm4
-	vpmovmskb %ymm4, %eax
-	testl	%eax, %eax
-	jz	L(zero)
-	bsrl	%eax, %eax
-	subq	$(VEC_SIZE * 4), %rdx
-	addq	%rax, %rdx
-	jl	L(zero)
-	addq	%rdi, %rax
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(last_2x_vec):
-	vpcmpeqb (VEC_SIZE * 3)(%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jnz	L(last_vec_x3_check)
-	cmpl	$VEC_SIZE, %edx
-	jbe	L(zero)
-
-	vpcmpeqb (VEC_SIZE * 2)(%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-	testl	%eax, %eax
-	jz	L(zero)
-	bsrl	%eax, %eax
-	subq	$(VEC_SIZE * 2), %rdx
-	addq	%rax, %rdx
-	jl	L(zero)
-	addl	$(VEC_SIZE * 2), %eax
-	addq	%rdi, %rax
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(last_vec_x0):
-	bsrl	%eax, %eax
-	addq	%rdi, %rax
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(last_vec_x1):
-	bsrl	%eax, %eax
-	addl	$VEC_SIZE, %eax
-	addq	%rdi, %rax
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(last_vec_x2):
-	bsrl	%eax, %eax
-	addl	$(VEC_SIZE * 2), %eax
-	addq	%rdi, %rax
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(last_vec_x3):
-	bsrl	%eax, %eax
-	addl	$(VEC_SIZE * 3), %eax
-	addq	%rdi, %rax
+	lzcntl	%ecx, %ecx
+	subq	$(VEC_SIZE * 2), %rax
+	COND_VZEROUPPER
+	subq	%rcx, %rax
+	cmpq	%rax, %rdi
+	jbe	L(ret0)
+	xorl	%eax, %eax
+L(ret0):
 	ret
 
+
 	.p2align 4
-L(last_vec_x1_check):
-	bsrl	%eax, %eax
-	subq	$(VEC_SIZE * 3), %rdx
-	addq	%rax, %rdx
-	jl	L(zero)
-	addl	$VEC_SIZE, %eax
-	addq	%rdi, %rax
+L(loop_end):
+	vpmovmskb %ymm1, %ecx
+	testl	%ecx, %ecx
+	jnz	L(ret_vec_x0_end)
+
+	vpmovmskb %ymm2, %ecx
+	testl	%ecx, %ecx
+	jnz	L(ret_vec_x1_end)
+
+	vpmovmskb %ymm3, %ecx
+	/* Combine last 2 VEC matches. If ecx (VEC3) is zero (no CHAR in VEC3)
+	   then it won't affect the result in esi (VEC4). If ecx is non-zero
+	   then CHAR in VEC3 and bsrq will use that position.  */
+	salq	$32, %rcx
+	orq	%rsi, %rcx
+	bsrq	%rcx, %rcx
+	leaq	(VEC_SIZE * -4 + 1)(%rcx, %rax), %rax
 	VZEROUPPER_RETURN
 
-	.p2align 4
-L(last_vec_x3_check):
-	bsrl	%eax, %eax
-	subq	$VEC_SIZE, %rdx
-	addq	%rax, %rdx
-	jl	L(zero)
-	addl	$(VEC_SIZE * 3), %eax
-	addq	%rdi, %rax
+	.p2align 4,, 4
+L(ret_vec_x1_end):
+	/* 64-bit version will automatically add 32 (VEC_SIZE).  */
+	lzcntq	%rcx, %rcx
+	subq	%rcx, %rax
 	VZEROUPPER_RETURN
 
-	.p2align 4
-L(zero):
-	xorl	%eax, %eax
+	.p2align 4,, 4
+L(ret_vec_x0_end):
+	lzcntl	%ecx, %ecx
+	subq	%rcx, %rax
 	VZEROUPPER_RETURN
 
-	.p2align 4
-L(null):
-	xorl	%eax, %eax
-	ret
-
-	.p2align 4
-L(last_vec_or_less_aligned):
-	movl	%edx, %ecx
-
-	vpcmpeqb (%rdi), %ymm0, %ymm1
-
-	movl	$1, %edx
-	/* Support rdx << 32.  */
-	salq	%cl, %rdx
-	subq	$1, %rdx
-
-	vpmovmskb %ymm1, %eax
-
-	/* Remove the trailing bytes.  */
-	andl	%edx, %eax
-	testl	%eax, %eax
-	jz	L(zero)
-
-	bsrl	%eax, %eax
-	addq	%rdi, %rax
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(last_vec_or_less):
-	addl	$VEC_SIZE, %edx
-
-	/* Check for zero length.  */
-	testl	%edx, %edx
-	jz	L(null)
-
-	movl	%edi, %ecx
-	andl	$(VEC_SIZE - 1), %ecx
-	jz	L(last_vec_or_less_aligned)
-
-	movl	%ecx, %esi
-	movl	%ecx, %r8d
-	addl	%edx, %esi
-	andq	$-VEC_SIZE, %rdi
-
-	subl	$VEC_SIZE, %esi
-	ja	L(last_vec_2x_aligned)
-
-	/* Check the last VEC.  */
-	vpcmpeqb (%rdi), %ymm0, %ymm1
-	vpmovmskb %ymm1, %eax
-
-	/* Remove the leading and trailing bytes.  */
-	sarl	%cl, %eax
-	movl	%edx, %ecx
-
-	movl	$1, %edx
-	sall	%cl, %edx
-	subl	$1, %edx
-
-	andl	%edx, %eax
-	testl	%eax, %eax
-	jz	L(zero)
-
-	bsrl	%eax, %eax
-	addq	%rdi, %rax
-	addq	%r8, %rax
-	VZEROUPPER_RETURN
-
-	.p2align 4
-L(last_vec_2x_aligned):
-	movl	%esi, %ecx
-
-	/* Check the last VEC.  */
-	vpcmpeqb VEC_SIZE(%rdi), %ymm0, %ymm1
-
-	movl	$1, %edx
-	sall	%cl, %edx
-	subl	$1, %edx
-
-	vpmovmskb %ymm1, %eax
-
-	/* Remove the trailing bytes.  */
-	andl	%edx, %eax
-
-	testl	%eax, %eax
-	jnz	L(last_vec_x1)
-
-	/* Check the second last VEC.  */
-	vpcmpeqb (%rdi), %ymm0, %ymm1
-
-	movl	%r8d, %ecx
-
-	vpmovmskb %ymm1, %eax
-
-	/* Remove the leading bytes.  Must use unsigned right shift for
-	   bsrl below.  */
-	shrl	%cl, %eax
-	testl	%eax, %eax
-	jz	L(zero)
-
-	bsrl	%eax, %eax
-	addq	%rdi, %rax
-	addq	%r8, %rax
-	VZEROUPPER_RETURN
-END (MEMRCHR)
+	/* 2 bytes until next cache line.  */
+END(MEMRCHR)
 #endif
