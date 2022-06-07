@@ -106,6 +106,24 @@ lose:									      \
 	vzeroupper;						\
 	ret
 
+/* Can be used to replace vzeroupper that is not directly before a
+   return.  This is useful when hoisting a vzeroupper from multiple
+   return paths to decrease the total number of vzerouppers and code
+   size.  */
+#define COND_VZEROUPPER_XTEST							\
+    xtest;							\
+    jz 1f;							\
+    vzeroall;							\
+    jmp 2f;							\
+1:							\
+    vzeroupper;							\
+2:
+
+/* In RTM define this as COND_VZEROUPPER_XTEST.  */
+#ifndef COND_VZEROUPPER
+# define COND_VZEROUPPER vzeroupper
+#endif
+
 /* Zero upper vector registers and return.  */
 #ifndef ZERO_UPPER_VEC_REGISTERS_RETURN
 # define ZERO_UPPER_VEC_REGISTERS_RETURN \
