@@ -25,3 +25,5 @@ char __libc_single_threaded;
 #else
 char __libc_single_threaded = 1;
 #endif
+libc_hidden_data_def_alias (__libc_single_threaded,
+			    __libc_single_threaded_internal)

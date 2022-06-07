@@ -38,7 +38,7 @@ __libc_early_init (_Bool initial)
   __libc_single_threaded = initial;
 
 #ifdef SHARED
-  __libc_initial = initial;
+  __libc_single_threaded_internal = __libc_initial = initial;
 #endif
 
   __pthread_early_init ();
