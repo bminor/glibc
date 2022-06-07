@@ -18,362 +18,333 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#define VEC_SIZE			16
+#define PAGE_SIZE			4096
 
 	.text
-ENTRY (__memrchr)
-	movd	%esi, %xmm1
+ENTRY_P2ALIGN(__memrchr, 6)
+#ifdef __ILP32__
+	/* Clear upper bits.  */
+	mov	%RDX_LP, %RDX_LP
+#endif
+	movd	%esi, %xmm0
 
-	sub	$16, %RDX_LP
-	jbe	L(length_less16)
+	/* Get end pointer.  */
+	leaq	(%rdx, %rdi), %rcx
 
-	punpcklbw	%xmm1, %xmm1
-	punpcklbw	%xmm1, %xmm1
+	punpcklbw %xmm0, %xmm0
+	punpcklwd %xmm0, %xmm0
+	pshufd	$0, %xmm0, %xmm0
 
-	add	%RDX_LP, %RDI_LP
-	pshufd	$0, %xmm1, %xmm1
+	/* Check if we can load 1x VEC without cross a page.  */
+	testl	$(PAGE_SIZE - VEC_SIZE), %ecx
+	jz	L(page_cross)
 
-	movdqu	(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
+	/* NB: This load happens regardless of whether rdx (len) is zero. Since
+	   it doesn't cross a page and the standard gurantees any pointer have
+	   at least one-valid byte this load must be safe. For the entire
+	   history of the x86 memrchr implementation this has been possible so
+	   no code "should" be relying on a zero-length check before this load.
+	   The zero-length check is moved to the page cross case because it is
+	   1) pretty cold and including it pushes the hot case len <= VEC_SIZE
+	   into 2-cache lines.  */
+	movups	-(VEC_SIZE)(%rcx), %xmm1
+	pcmpeqb	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
 
-/* Check if there is a match.  */
-	pmovmskb	%xmm0, %eax
-	test	%eax, %eax
-	jnz	L(matches0)
-
-	sub	$64, %rdi
-	mov	%edi, %ecx
-	and	$15, %ecx
-	jz	L(loop_prolog)
-
-	add	$16, %rdi
-	add	$16, %rdx
-	and	$-16, %rdi
-	sub	%rcx, %rdx
-
-	.p2align 4
-L(loop_prolog):
-	sub	$64, %rdx
-	jbe	L(exit_loop)
-
-	movdqa	48(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb	%xmm0, %eax
-	test	%eax, %eax
-	jnz	L(matches48)
-
-	movdqa	32(%rdi), %xmm2
-	pcmpeqb	%xmm1, %xmm2
-	pmovmskb	%xmm2, %eax
-	test	%eax, %eax
-	jnz	L(matches32)
-
-	movdqa	16(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
-	pmovmskb	%xmm3, %eax
-	test	%eax, %eax
-	jnz	L(matches16)
-
-	movdqa	(%rdi), %xmm4
-	pcmpeqb	%xmm1, %xmm4
-	pmovmskb	%xmm4, %eax
-	test	%eax, %eax
-	jnz	L(matches0)
-
-	sub	$64, %rdi
-	sub	$64, %rdx
-	jbe	L(exit_loop)
-
-	movdqa	48(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb	%xmm0, %eax
-	test	%eax, %eax
-	jnz	L(matches48)
-
-	movdqa	32(%rdi), %xmm2
-	pcmpeqb	%xmm1, %xmm2
-	pmovmskb	%xmm2, %eax
-	test	%eax, %eax
-	jnz	L(matches32)
-
-	movdqa	16(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
-	pmovmskb	%xmm3, %eax
-	test	%eax, %eax
-	jnz	L(matches16)
-
-	movdqa	(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
-	pmovmskb	%xmm3, %eax
-	test	%eax, %eax
-	jnz	L(matches0)
-
-	mov	%edi, %ecx
-	and	$63, %ecx
-	jz	L(align64_loop)
-
-	add	$64, %rdi
-	add	$64, %rdx
-	and	$-64, %rdi
-	sub	%rcx, %rdx
-
-	.p2align 4
-L(align64_loop):
-	sub	$64, %rdi
-	sub	$64, %rdx
-	jbe	L(exit_loop)
-
-	movdqa	(%rdi), %xmm0
-	movdqa	16(%rdi), %xmm2
-	movdqa	32(%rdi), %xmm3
-	movdqa	48(%rdi), %xmm4
-
-	pcmpeqb	%xmm1, %xmm0
-	pcmpeqb	%xmm1, %xmm2
-	pcmpeqb	%xmm1, %xmm3
-	pcmpeqb	%xmm1, %xmm4
-
-	pmaxub	%xmm3, %xmm0
-	pmaxub	%xmm4, %xmm2
-	pmaxub	%xmm0, %xmm2
-	pmovmskb	%xmm2, %eax
-
-	test	%eax, %eax
-	jz	L(align64_loop)
-
-	pmovmskb	%xmm4, %eax
-	test	%eax, %eax
-	jnz	L(matches48)
-
-	pmovmskb	%xmm3, %eax
-	test	%eax, %eax
-	jnz	L(matches32)
-
-	movdqa	16(%rdi), %xmm2
-
-	pcmpeqb	%xmm1, %xmm2
-	pcmpeqb	(%rdi), %xmm1
-
-	pmovmskb	%xmm2, %eax
-	test	%eax, %eax
-	jnz	L(matches16)
-
-	pmovmskb	%xmm1, %eax
-	bsr	%eax, %eax
-
-	add	%rdi, %rax
+	subq	$VEC_SIZE, %rdx
+	ja	L(more_1x_vec)
+L(ret_vec_x0_test):
+	/* Zero-flag set if eax (src) is zero. Destination unchanged if src is
+	   zero.  */
+	bsrl	%eax, %eax
+	jz	L(ret_0)
+	/* Check if the CHAR match is in bounds. Need to truly zero `eax` here
+	   if out of bounds.  */
+	addl	%edx, %eax
+	jl	L(zero_0)
+	/* Since we subtracted VEC_SIZE from rdx earlier we can just add to base
+	   ptr.  */
+	addq	%rdi, %rax
+L(ret_0):
 	ret
 
-	.p2align 4
-L(exit_loop):
-	add	$64, %edx
-	cmp	$32, %edx
-	jbe	L(exit_loop_32)
-
-	movdqa	48(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb	%xmm0, %eax
-	test	%eax, %eax
-	jnz	L(matches48)
-
-	movdqa	32(%rdi), %xmm2
-	pcmpeqb	%xmm1, %xmm2
-	pmovmskb	%xmm2, %eax
-	test	%eax, %eax
-	jnz	L(matches32)
-
-	movdqa	16(%rdi), %xmm3
-	pcmpeqb	%xmm1, %xmm3
-	pmovmskb	%xmm3, %eax
-	test	%eax, %eax
-	jnz	L(matches16_1)
-	cmp	$48, %edx
-	jbe	L(return_null)
-
-	pcmpeqb	(%rdi), %xmm1
-	pmovmskb	%xmm1, %eax
-	test	%eax, %eax
-	jnz	L(matches0_1)
-	xor	%eax, %eax
+	.p2align 4,, 5
+L(ret_vec_x0):
+	bsrl	%eax, %eax
+	leaq	-(VEC_SIZE)(%rcx, %rax), %rax
 	ret
 
-	.p2align 4
-L(exit_loop_32):
-	movdqa	48(%rdi), %xmm0
-	pcmpeqb	%xmm1, %xmm0
-	pmovmskb	%xmm0, %eax
-	test	%eax, %eax
-	jnz	L(matches48_1)
-	cmp	$16, %edx
-	jbe	L(return_null)
-
-	pcmpeqb	32(%rdi), %xmm1
-	pmovmskb	%xmm1, %eax
-	test	%eax, %eax
-	jnz	L(matches32_1)
-	xor	%eax, %eax
+	.p2align 4,, 2
+L(zero_0):
+	xorl	%eax, %eax
 	ret
 
-	.p2align 4
-L(matches0):
-	bsr	%eax, %eax
-	add	%rdi, %rax
+
+	.p2align 4,, 8
+L(more_1x_vec):
+	testl	%eax, %eax
+	jnz	L(ret_vec_x0)
+
+	/* Align rcx (pointer to string).  */
+	decq	%rcx
+	andq	$-VEC_SIZE, %rcx
+
+	movq	%rcx, %rdx
+	/* NB: We could consistenyl save 1-byte in this pattern with `movaps
+	   %xmm0, %xmm1; pcmpeq IMM8(r), %xmm1; ...`. The reason against it is
+	   it adds more frontend uops (even if the moves can be eliminated) and
+	   some percentage of the time actual backend uops.  */
+	movaps	-(VEC_SIZE)(%rcx), %xmm1
+	pcmpeqb	%xmm0, %xmm1
+	subq	%rdi, %rdx
+	pmovmskb %xmm1, %eax
+
+	cmpq	$(VEC_SIZE * 2), %rdx
+	ja	L(more_2x_vec)
+L(last_2x_vec):
+	subl	$VEC_SIZE, %edx
+	jbe	L(ret_vec_x0_test)
+
+	testl	%eax, %eax
+	jnz	L(ret_vec_x0)
+
+	movaps	-(VEC_SIZE * 2)(%rcx), %xmm1
+	pcmpeqb	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+
+	subl	$VEC_SIZE, %edx
+	bsrl	%eax, %eax
+	jz	L(ret_1)
+	addl	%edx, %eax
+	jl	L(zero_0)
+	addq	%rdi, %rax
+L(ret_1):
 	ret
 
-	.p2align 4
-L(matches16):
-	bsr	%eax, %eax
-	lea	16(%rax, %rdi), %rax
+	/* Don't align. Otherwise lose 2-byte encoding in jump to L(page_cross)
+	   causes the hot pause (length <= VEC_SIZE) to span multiple cache
+	   lines.  Naturally aligned % 16 to 8-bytes.  */
+L(page_cross):
+	/* Zero length check.  */
+	testq	%rdx, %rdx
+	jz	L(zero_0)
+
+	leaq	-1(%rcx), %r8
+	andq	$-(VEC_SIZE), %r8
+
+	movaps	(%r8), %xmm1
+	pcmpeqb	%xmm0, %xmm1
+	pmovmskb %xmm1, %esi
+	/* Shift out negative alignment (because we are starting from endptr and
+	   working backwards).  */
+	negl	%ecx
+	/* 32-bit shift but VEC_SIZE=16 so need to mask the shift count
+	   explicitly.  */
+	andl	$(VEC_SIZE - 1), %ecx
+	shl	%cl, %esi
+	movzwl	%si, %eax
+	leaq	(%rdi, %rdx), %rcx
+	cmpq	%rdi, %r8
+	ja	L(more_1x_vec)
+	subl	$VEC_SIZE, %edx
+	bsrl	%eax, %eax
+	jz	L(ret_2)
+	addl	%edx, %eax
+	jl	L(zero_1)
+	addq	%rdi, %rax
+L(ret_2):
 	ret
 
-	.p2align 4
-L(matches32):
-	bsr	%eax, %eax
-	lea	32(%rax, %rdi), %rax
+	/* Fits in aliging bytes.  */
+L(zero_1):
+	xorl	%eax, %eax
 	ret
 
-	.p2align 4
-L(matches48):
-	bsr	%eax, %eax
-	lea	48(%rax, %rdi), %rax
+	.p2align 4,, 5
+L(ret_vec_x1):
+	bsrl	%eax, %eax
+	leaq	-(VEC_SIZE * 2)(%rcx, %rax), %rax
 	ret
 
-	.p2align 4
-L(matches0_1):
-	bsr	%eax, %eax
-	sub	$64, %rdx
-	add	%rax, %rdx
-	jl	L(return_null)
-	add	%rdi, %rax
+	.p2align 4,, 8
+L(more_2x_vec):
+	testl	%eax, %eax
+	jnz	L(ret_vec_x0)
+
+	movaps	-(VEC_SIZE * 2)(%rcx), %xmm1
+	pcmpeqb	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+	testl	%eax, %eax
+	jnz	L(ret_vec_x1)
+
+
+	movaps	-(VEC_SIZE * 3)(%rcx), %xmm1
+	pcmpeqb	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+
+	subq	$(VEC_SIZE * 4), %rdx
+	ja	L(more_4x_vec)
+
+	addl	$(VEC_SIZE), %edx
+	jle	L(ret_vec_x2_test)
+
+L(last_vec):
+	testl	%eax, %eax
+	jnz	L(ret_vec_x2)
+
+	movaps	-(VEC_SIZE * 4)(%rcx), %xmm1
+	pcmpeqb	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+
+	subl	$(VEC_SIZE), %edx
+	bsrl	%eax, %eax
+	jz	L(ret_3)
+	addl	%edx, %eax
+	jl	L(zero_2)
+	addq	%rdi, %rax
+L(ret_3):
 	ret
 
-	.p2align 4
-L(matches16_1):
-	bsr	%eax, %eax
-	sub	$48, %rdx
-	add	%rax, %rdx
-	jl	L(return_null)
-	lea	16(%rdi, %rax), %rax
+	.p2align 4,, 6
+L(ret_vec_x2_test):
+	bsrl	%eax, %eax
+	jz	L(zero_2)
+	addl	%edx, %eax
+	jl	L(zero_2)
+	addq	%rdi, %rax
 	ret
 
-	.p2align 4
-L(matches32_1):
-	bsr	%eax, %eax
-	sub	$32, %rdx
-	add	%rax, %rdx
-	jl	L(return_null)
-	lea	32(%rdi, %rax), %rax
+L(zero_2):
+	xorl	%eax, %eax
 	ret
 
-	.p2align 4
-L(matches48_1):
-	bsr	%eax, %eax
-	sub	$16, %rdx
-	add	%rax, %rdx
-	jl	L(return_null)
-	lea	48(%rdi, %rax), %rax
+
+	.p2align 4,, 5
+L(ret_vec_x2):
+	bsrl	%eax, %eax
+	leaq	-(VEC_SIZE * 3)(%rcx, %rax), %rax
 	ret
 
-	.p2align 4
-L(return_null):
-	xor	%eax, %eax
+	.p2align 4,, 5
+L(ret_vec_x3):
+	bsrl	%eax, %eax
+	leaq	-(VEC_SIZE * 4)(%rcx, %rax), %rax
 	ret
 
-	.p2align 4
-L(length_less16_offset0):
-	test	%edx, %edx
-	jz	L(return_null)
+	.p2align 4,, 8
+L(more_4x_vec):
+	testl	%eax, %eax
+	jnz	L(ret_vec_x2)
 
-	mov	%dl, %cl
-	pcmpeqb	(%rdi), %xmm1
+	movaps	-(VEC_SIZE * 4)(%rcx), %xmm1
+	pcmpeqb	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
 
-	mov	$1, %edx
-	sal	%cl, %edx
-	sub	$1, %edx
+	testl	%eax, %eax
+	jnz	L(ret_vec_x3)
 
-	pmovmskb	%xmm1, %eax
+	addq	$-(VEC_SIZE * 4), %rcx
+	cmpq	$(VEC_SIZE * 4), %rdx
+	jbe	L(last_4x_vec)
 
-	and	%edx, %eax
-	test	%eax, %eax
-	jz	L(return_null)
+	/* Offset everything by 4x VEC_SIZE here to save a few bytes at the end
+	   keeping the code from spilling to the next cache line.  */
+	addq	$(VEC_SIZE * 4 - 1), %rcx
+	andq	$-(VEC_SIZE * 4), %rcx
+	leaq	(VEC_SIZE * 4)(%rdi), %rdx
+	andq	$-(VEC_SIZE * 4), %rdx
 
-	bsr	%eax, %eax
-	add	%rdi, %rax
+	.p2align 4,, 11
+L(loop_4x_vec):
+	movaps	(VEC_SIZE * -1)(%rcx), %xmm1
+	movaps	(VEC_SIZE * -2)(%rcx), %xmm2
+	movaps	(VEC_SIZE * -3)(%rcx), %xmm3
+	movaps	(VEC_SIZE * -4)(%rcx), %xmm4
+	pcmpeqb	%xmm0, %xmm1
+	pcmpeqb	%xmm0, %xmm2
+	pcmpeqb	%xmm0, %xmm3
+	pcmpeqb	%xmm0, %xmm4
+
+	por	%xmm1, %xmm2
+	por	%xmm3, %xmm4
+	por	%xmm2, %xmm4
+
+	pmovmskb %xmm4, %esi
+	testl	%esi, %esi
+	jnz	L(loop_end)
+
+	addq	$-(VEC_SIZE * 4), %rcx
+	cmpq	%rdx, %rcx
+	jne	L(loop_4x_vec)
+
+	subl	%edi, %edx
+
+	/* Ends up being 1-byte nop.  */
+	.p2align 4,, 2
+L(last_4x_vec):
+	movaps	-(VEC_SIZE)(%rcx), %xmm1
+	pcmpeqb	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+
+	cmpl	$(VEC_SIZE * 2), %edx
+	jbe	L(last_2x_vec)
+
+	testl	%eax, %eax
+	jnz	L(ret_vec_x0)
+
+
+	movaps	-(VEC_SIZE * 2)(%rcx), %xmm1
+	pcmpeqb	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+
+	testl	%eax, %eax
+	jnz	L(ret_vec_end)
+
+	movaps	-(VEC_SIZE * 3)(%rcx), %xmm1
+	pcmpeqb	%xmm0, %xmm1
+	pmovmskb %xmm1, %eax
+
+	subl	$(VEC_SIZE * 3), %edx
+	ja	L(last_vec)
+	bsrl	%eax, %eax
+	jz	L(ret_4)
+	addl	%edx, %eax
+	jl	L(zero_3)
+	addq	%rdi, %rax
+L(ret_4):
 	ret
 
-	.p2align 4
-L(length_less16):
-	punpcklbw	%xmm1, %xmm1
-	punpcklbw	%xmm1, %xmm1
+	/* Ends up being 1-byte nop.  */
+	.p2align 4,, 3
+L(loop_end):
+	pmovmskb %xmm1, %eax
+	sall	$16, %eax
+	jnz	L(ret_vec_end)
 
-	add	$16, %edx
+	pmovmskb %xmm2, %eax
+	testl	%eax, %eax
+	jnz	L(ret_vec_end)
 
-	pshufd	$0, %xmm1, %xmm1
-
-	mov	%edi, %ecx
-	and	$15, %ecx
-	jz	L(length_less16_offset0)
-
-	mov	%cl, %dh
-	mov	%ecx, %esi
-	add	%dl, %dh
-	and	$-16, %rdi
-
-	sub	$16, %dh
-	ja	L(length_less16_part2)
-
-	pcmpeqb	(%rdi), %xmm1
-	pmovmskb	%xmm1, %eax
-
-	sar	%cl, %eax
-	mov	%dl, %cl
-
-	mov	$1, %edx
-	sal	%cl, %edx
-	sub	$1, %edx
-
-	and	%edx, %eax
-	test	%eax, %eax
-	jz	L(return_null)
-
-	bsr	%eax, %eax
-	add	%rdi, %rax
-	add	%rsi, %rax
+	pmovmskb %xmm3, %eax
+	/* Combine last 2 VEC matches. If ecx (VEC3) is zero (no CHAR in VEC3)
+	   then it won't affect the result in esi (VEC4). If ecx is non-zero
+	   then CHAR in VEC3 and bsrq will use that position.  */
+	sall	$16, %eax
+	orl	%esi, %eax
+	bsrl	%eax, %eax
+	leaq	-(VEC_SIZE * 4)(%rcx, %rax), %rax
 	ret
 
-	.p2align 4
-L(length_less16_part2):
-	movdqa	16(%rdi), %xmm2
-	pcmpeqb	%xmm1, %xmm2
-	pmovmskb	%xmm2, %eax
-
-	mov	%dh, %cl
-	mov	$1, %edx
-	sal	%cl, %edx
-	sub	$1, %edx
-
-	and	%edx, %eax
-
-	test	%eax, %eax
-	jnz	L(length_less16_part2_return)
-
-	pcmpeqb	(%rdi), %xmm1
-	pmovmskb	%xmm1, %eax
-
-	mov	%esi, %ecx
-	sar	%cl, %eax
-	test	%eax, %eax
-	jz	L(return_null)
-
-	bsr	%eax, %eax
-	add	%rdi, %rax
-	add	%rsi, %rax
+L(ret_vec_end):
+	bsrl	%eax, %eax
+	leaq	(VEC_SIZE * -2)(%rax, %rcx), %rax
 	ret
-
-	.p2align 4
-L(length_less16_part2_return):
-	bsr	%eax, %eax
-	lea	16(%rax, %rdi), %rax
+	/* Use in L(last_4x_vec). In the same cache line. This is just a spare
+	   aligning bytes.  */
+L(zero_3):
+	xorl	%eax, %eax
 	ret
-
-END (__memrchr)
+	/* 2-bytes from next cache line.  */
+END(__memrchr)
 weak_alias (__memrchr, memrchr)
