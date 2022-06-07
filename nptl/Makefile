@@ -50,7 +50,6 @@ routines = \
   events \
   futex-internal \
   libc-cleanup \
-  libc_multiple_threads \
   lowlevellock \
   nptl-stack \
   nptl_deallocate_tsd \

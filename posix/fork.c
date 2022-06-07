@@ -45,7 +45,7 @@ __libc_fork (void)
      requirement for fork (Austin Group tracker issue #62) this is
      best effort to make is async-signal-safe at least for single-thread
      case.  */
-  bool multiple_threads = __libc_single_threaded_internal == 0;
+  bool multiple_threads = !SINGLE_THREAD_P;
   uint64_t lastrun;
 
   lastrun = __run_prefork_handlers (multiple_threads);

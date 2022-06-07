@@ -93,9 +93,6 @@
 #define ASMFMT_5 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6)
 #define ASMFMT_6 , "0" (gpr2), "d" (gpr3), "d" (gpr4), "d" (gpr5), "d" (gpr6), "d" (gpr7)
 
-#define SINGLE_THREAD_BY_GLOBAL		1
-
-
 #define VDSO_NAME  "LINUX_2.6.29"
 #define VDSO_HASH  123718585
 

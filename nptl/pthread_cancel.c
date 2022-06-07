@@ -161,7 +161,7 @@ __pthread_cancel (pthread_t th)
 	   points get executed.  */
 	THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
-      __libc_multiple_threads = 1;
+	__libc_single_threaded_internal = 0;
 #endif
     }
   while (!atomic_compare_exchange_weak_acquire (&pd->cancelhandling, &oldval,

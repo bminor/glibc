@@ -164,8 +164,6 @@
 # define HAVE_CLOCK_GETTIME64_VSYSCALL	"__kernel_clock_gettime"
 # define HAVE_GETTIMEOFDAY_VSYSCALL	"__kernel_gettimeofday"
 
-# define SINGLE_THREAD_BY_GLOBAL		1
-
 # undef INTERNAL_SYSCALL_RAW
 # define INTERNAL_SYSCALL_RAW(name, nr, args...)		\
   ({ long _sys_result;						\

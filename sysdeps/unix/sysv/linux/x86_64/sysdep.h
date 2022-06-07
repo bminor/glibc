@@ -379,8 +379,6 @@
 
 # define HAVE_CLONE3_WRAPPER			1
 
-# define SINGLE_THREAD_BY_GLOBAL		1
-
 #endif	/* __ASSEMBLER__ */
 
 

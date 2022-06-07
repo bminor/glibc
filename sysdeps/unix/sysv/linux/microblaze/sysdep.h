@@ -308,8 +308,6 @@ SYSCALL_ERROR_LABEL_DCL:                            \
 # define PTR_MANGLE(var) (void) (var)
 # define PTR_DEMANGLE(var) (void) (var)
 
-# define SINGLE_THREAD_BY_GLOBAL	1
-
 #undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
 #define HAVE_INTERNAL_BRK_ADDR_SYMBOL 1
 

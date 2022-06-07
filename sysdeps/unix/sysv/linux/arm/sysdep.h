@@ -408,8 +408,6 @@ __local_syscall_error:						\
 #define INTERNAL_SYSCALL_NCS(number, nr, args...)              \
   INTERNAL_SYSCALL_RAW (number, nr, args)
 
-#define SINGLE_THREAD_BY_GLOBAL	1
-
 #endif	/* __ASSEMBLER__ */
 
 #endif /* linux/arm/sysdep.h */
