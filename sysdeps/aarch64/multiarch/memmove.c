@@ -33,27 +33,38 @@ extern __typeof (__redirect_memmove) __memmove_simd attribute_hidden;
 extern __typeof (__redirect_memmove) __memmove_thunderx attribute_hidden;
 extern __typeof (__redirect_memmove) __memmove_thunderx2 attribute_hidden;
 extern __typeof (__redirect_memmove) __memmove_falkor attribute_hidden;
-# if HAVE_AARCH64_SVE_ASM
 extern __typeof (__redirect_memmove) __memmove_a64fx attribute_hidden;
-# endif
+extern __typeof (__redirect_memmove) __memmove_sve attribute_hidden;
 
-libc_ifunc (__libc_memmove,
-            (IS_THUNDERX (midr)
-	     ? __memmove_thunderx
-	     : (IS_FALKOR (midr) || IS_PHECDA (midr)
-		? __memmove_falkor
-		: (IS_THUNDERX2 (midr) || IS_THUNDERX2PA (midr)
-		   ? __memmove_thunderx2
-		   : (IS_NEOVERSE_N1 (midr) || IS_NEOVERSE_N2 (midr)
-		      || IS_NEOVERSE_V1 (midr)
-		      ? __memmove_simd
-# if HAVE_AARCH64_SVE_ASM
-		     : (IS_A64FX (midr) && sve
-			? __memmove_a64fx
-			: __memmove_generic))))));
-# else
-		     : __memmove_generic)))));
-# endif
+static inline __typeof (__redirect_memmove) *
+select_memmove_ifunc (void)
+{
+  INIT_ARCH ();
+
+  if (IS_NEOVERSE_N1 (midr) || IS_NEOVERSE_N2 (midr))
+    return __memmove_simd;
+
+  if (sve && HAVE_AARCH64_SVE_ASM)
+    {
+      if (IS_A64FX (midr))
+	return __memmove_a64fx;
+      return __memmove_sve;
+    }
+
+  if (IS_THUNDERX (midr))
+    return __memmove_thunderx;
+
+  if (IS_THUNDERX2 (midr) || IS_THUNDERX2PA (midr))
+    return __memmove_thunderx2;
+
+  if (IS_FALKOR (midr) || IS_PHECDA (midr))
+    return __memmove_falkor;
+
+  return __memmove_generic;
+}
+
+libc_ifunc (__libc_memmove, select_memmove_ifunc ());
+
 # undef memmove
 strong_alias (__libc_memmove, memmove);
 #endif
