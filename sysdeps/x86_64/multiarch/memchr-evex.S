@@ -88,7 +88,7 @@
 # define PAGE_SIZE 4096
 
 	.section SECTION(.text),"ax",@progbits
-ENTRY (MEMCHR)
+ENTRY_P2ALIGN (MEMCHR, 6)
 # ifndef USE_AS_RAWMEMCHR
 	/* Check for zero length.  */
 	test	%RDX_LP, %RDX_LP
@@ -131,22 +131,24 @@ L(zero):
 	xorl	%eax, %eax
 	ret
 
-	.p2align 5
-L(first_vec_x0):
-	/* Check if first match was before length.  */
-	tzcntl	%eax, %eax
-	xorl	%ecx, %ecx
-	cmpl	%eax, %edx
-	leaq	(%rdi, %rax, CHAR_SIZE), %rax
-	cmovle	%rcx, %rax
-	ret
-# else
-	/* NB: first_vec_x0 is 17 bytes which will leave
-	   cross_page_boundary (which is relatively cold) close enough
-	   to ideal alignment. So only realign L(cross_page_boundary) if
-	   rawmemchr.  */
 	.p2align 4
+L(first_vec_x0):
+	/* Check if first match was before length. NB: tzcnt has false data-
+	   dependency on destination. eax already had a data-dependency on esi
+	   so this should have no affect here.  */
+	tzcntl	%eax, %esi
+#  ifdef USE_AS_WMEMCHR
+	leaq	(%rdi, %rsi, CHAR_SIZE), %rdi
+#  else
+	addq	%rsi, %rdi
+#  endif
+	xorl	%eax, %eax
+	cmpl	%esi, %edx
+	cmovg	%rdi, %rax
+	ret
 # endif
+
+	.p2align 4
 L(cross_page_boundary):
 	/* Save pointer before aligning as its original value is
 	   necessary for computer return address if byte is found or
@@ -400,10 +402,14 @@ L(last_2x_vec):
 L(zero_end):
 	ret
 
+L(set_zero_end):
+	xorl	%eax, %eax
+	ret
 
 	.p2align 4
 L(first_vec_x1_check):
-	tzcntl	%eax, %eax
+	/* eax must be non-zero. Use bsfl to save code size.  */
+	bsfl	%eax, %eax
 	/* Adjust length.  */
 	subl	$-(CHAR_PER_VEC * 4), %edx
 	/* Check if match within remaining length.  */
@@ -411,9 +417,6 @@ L(first_vec_x1_check):
 	jbe	L(set_zero_end)
 	/* NB: Multiply bytes by CHAR_SIZE to get the wchar_t count.  */
 	leaq	VEC_SIZE(%rdi, %rax, CHAR_SIZE), %rax
-	ret
-L(set_zero_end):
-	xorl	%eax, %eax
 	ret
 
 	.p2align 4
@@ -464,7 +467,7 @@ L(loop_4x_vec_end):
 # endif
 	ret
 
-	.p2align 4
+	.p2align 4,, 10
 L(last_vec_x1_return):
 	tzcntl	%eax, %eax
 # if defined USE_AS_WMEMCHR || RET_OFFSET != 0
@@ -496,6 +499,7 @@ L(last_vec_x3_return):
 # endif
 
 # ifndef USE_AS_RAWMEMCHR
+	.p2align 4,, 5
 L(last_4x_vec_or_less_cmpeq):
 	VPCMP	$0, (VEC_SIZE * 5)(%rdi), %YMMMATCH, %k0
 	kmovd	%k0, %eax
@@ -546,7 +550,7 @@ L(last_4x_vec):
 #  endif
 	andl	%ecx, %eax
 	jz	L(zero_end2)
-	tzcntl	%eax, %eax
+	bsfl	%eax, %eax
 	leaq	(VEC_SIZE * 4)(%rdi, %rax, CHAR_SIZE), %rax
 L(zero_end2):
 	ret
@@ -562,6 +566,6 @@ L(last_vec_x3):
 	leaq	(VEC_SIZE * 3)(%rdi, %rax, CHAR_SIZE), %rax
 	ret
 # endif
-
+	/* 7 bytes from next cache line.  */
 END (MEMCHR)
 #endif
