@@ -1002,7 +1002,7 @@ endef
 define make-link-multidir
 $(patsubst %/,cd %,$(objpfx)); \
   $(addprefix $(abspath $(..)scripts/mkinstalldirs) ,$(dir $(multidir))); \
-  $(LN_S) . $(multidir) 2> /dev/null; \
+  $(SHELL) $(abspath $(..)scripts/rellns-sh) . $(multidir) 2> /dev/null; \
   test -L $(multidir)
 endef
 else
