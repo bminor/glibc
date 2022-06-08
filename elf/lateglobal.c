@@ -15,14 +15,14 @@ main (void)
   h[0] = dlopen ("ltglobmod1.so", RTLD_LAZY);
   if (h[0] == NULL)
     {
-      printf ("%s: cannot open %s: %s",
+      printf ("%s: cannot open %s: %s\n",
 	      __FUNCTION__, "ltglobmod1.so", dlerror ());
       exit (EXIT_FAILURE);
     }
   h[1] = dlopen ("ltglobmod2.so", RTLD_LAZY);
   if (h[1] == NULL)
     {
-      printf ("%s: cannot open %s: %s",
+      printf ("%s: cannot open %s: %s\n",
 	      __FUNCTION__, "ltglobmod2.so", dlerror ());
       exit (EXIT_FAILURE);
     }
@@ -32,7 +32,7 @@ main (void)
   fp = dlsym (h[1], "foo");
   if (fp == NULL)
     {
-      printf ("cannot get address of `foo': %s", dlerror ());
+      printf ("cannot get address of `foo': %s\n", dlerror ());
       exit (EXIT_FAILURE);
     }
 
