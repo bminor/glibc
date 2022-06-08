@@ -409,19 +409,19 @@ L(cross_page_boundary):
 	   computer return address if byte is found or adjusting length if it
 	   is not and this is memchr.  */
 	movq	%rdi, %rcx
-	/* Align data to VEC_SIZE. ALGN_PTR_REG is rcx for memchr and rdi for
-	   rawmemchr.  */
-	andq	$-VEC_SIZE, %ALGN_PTR_REG
-	VPCMPEQ	(%ALGN_PTR_REG), %ymm0, %ymm1
+	/* Align data to VEC_SIZE - 1. ALGN_PTR_REG is rcx for memchr
+	   and rdi for rawmemchr.  */
+	orq	$(VEC_SIZE - 1), %ALGN_PTR_REG
+	VPCMPEQ	-(VEC_SIZE - 1)(%ALGN_PTR_REG), %ymm0, %ymm1
 	vpmovmskb %ymm1, %eax
 # ifndef USE_AS_RAWMEMCHR
 	/* Calculate length until end of page (length checked for a match).  */
-	leal	VEC_SIZE(%ALGN_PTR_REG), %esi
-	subl	%ERAW_PTR_REG, %esi
-# ifdef USE_AS_WMEMCHR
+	leaq	1(%ALGN_PTR_REG), %rsi
+	subq	%RRAW_PTR_REG, %rsi
+#  ifdef USE_AS_WMEMCHR
 	/* NB: Divide bytes by 4 to get wchar_t count.  */
 	shrl	$2, %esi
-# endif
+#  endif
 # endif
 	/* Remove the leading bytes.  */
 	sarxl	%ERAW_PTR_REG, %eax, %eax
