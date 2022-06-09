@@ -31,7 +31,7 @@ EOF
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fPIE -c conftest1.c -o conftest1.o]) \
      && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -fPIE -c conftest2.c -o conftest2.o]) \
      && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -pie -o conftest conftest1.o conftest2.o]) \
-     && AC_TRY_COMMAND([! $READELF -Wr conftest | grep R_390_TLS_TPOFF])
+     && AC_TRY_COMMAND([! LC_ALL=C $READELF -Wr conftest | grep R_390_TLS_TPOFF])
   then
     libc_cv_s390x_staticpie_req=yes
   fi
