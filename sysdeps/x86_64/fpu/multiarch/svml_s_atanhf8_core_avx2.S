@@ -30,305 +30,304 @@
  *
  */
 
-/* Offsets for data table __svml_satanh_data_internal
- */
+/* Offsets for data table __svml_satanh_data_internal_avx512. Ordered
+   by use in the function. On cold-starts this might hhelp the
+   prefetcher. Possibly a better idea is to interleave start/end so
+   that the prefetcher is less likely to detect a stream and pull
+   irrelivant lines into cache.  */
 #define SgnMask				0
 #define sOne				32
-#define sPoly				64
-#define iBrkValue			320
-#define iOffExpoMask			352
-#define sHalf				384
-#define sSign				416
-#define sTopMask12			448
-#define TinyRange			480
-#define sLn2				512
+#define sTopMask12			64
+#define TinyRange			96
+#define iBrkValue			128
+#define iOffExpoMask			160
+#define sPoly				192
+#define sLn2				448
+#define sHalf				480
 
 #include <sysdep.h>
+#define ATANHF_DATA(x)			((x)+__svml_satanh_data_internal)
 
 	.section .text.avx2, "ax", @progbits
 ENTRY(_ZGVdN8v_atanhf_avx2)
-	pushq	%rbp
-	cfi_def_cfa_offset(16)
-	movq	%rsp, %rbp
-	cfi_def_cfa(6, 16)
-	cfi_offset(6, -16)
-	andq	$-32, %rsp
-	subq	$96, %rsp
-
-	/* Load constants including One = 1 */
-	vmovups	sOne+__svml_satanh_data_internal(%rip), %ymm5
-	vmovups	sTopMask12+__svml_satanh_data_internal(%rip), %ymm13
-	vmovaps	%ymm0, %ymm6
-
 	/* Strip off the sign, so treat X as positive until right at the end */
-	vandps	SgnMask+__svml_satanh_data_internal(%rip), %ymm6, %ymm10
-	vsubps	%ymm10, %ymm5, %ymm1
+	vmovaps	ATANHF_DATA(SgnMask)(%rip), %ymm2
+	vandps	%ymm2, %ymm0, %ymm3
+	/* Load constants including One = 1 */
+	vmovups	ATANHF_DATA(sOne)(%rip), %ymm5
+	vsubps	%ymm3, %ymm5, %ymm1
+	vmovups	ATANHF_DATA(sTopMask12)(%rip), %ymm4
 
-	/*
-	 * Compute V = 2 * X trivially, and UHi + U_lo = 1 - X in two pieces,
-	 * the upper part UHi being <= 12 bits long. Then we have
-	 * atanh(X) = 1/2 * log((1 + X) / (1 - X)) = 1/2 * log1p(V / (UHi + ULo)).
-	 */
-	vaddps	%ymm10, %ymm10, %ymm14
+	vrcpps	%ymm1, %ymm7
+	vsubps	%ymm1, %ymm5, %ymm9
+	vandps	%ymm4, %ymm7, %ymm6
+	vsubps	%ymm3, %ymm9, %ymm7
+
+	/* No need to split sU when FMA is available */
+	vfnmadd213ps %ymm5, %ymm6, %ymm1
+	vmovaps	%ymm0, %ymm8
+	vfmadd213ps %ymm0, %ymm0, %ymm0
+	vfnmadd231ps %ymm6, %ymm7, %ymm1
 
 	/*
 	 * Check whether |X| < 1, in which case we use the main function.
 	 * Otherwise set the rangemask so that the callout will get used.
 	 * Note that this will also use the callout for NaNs since not(NaN < 1).
 	 */
-	vcmpnlt_uqps %ymm5, %ymm10, %ymm7
-	vsubps	%ymm1, %ymm5, %ymm9
-	vcmplt_oqps TinyRange+__svml_satanh_data_internal(%rip), %ymm10, %ymm4
-	vrcpps	%ymm1, %ymm11
-	vsubps	%ymm10, %ymm9, %ymm12
-	vandps	%ymm13, %ymm11, %ymm0
+	vcmpnlt_uqps %ymm5, %ymm3, %ymm14
+	vcmplt_oqps ATANHF_DATA(TinyRange)(%rip), %ymm3, %ymm15
 
-	/* No need to split sU when FMA is available */
-	vfnmadd213ps %ymm5, %ymm0, %ymm1
-	vmovaps	%ymm6, %ymm8
-	vfmadd213ps %ymm6, %ymm6, %ymm8
-	vfnmadd231ps %ymm0, %ymm12, %ymm1
+	/*
+	 * Compute V = 2 * X trivially, and UHi + U_lo = 1 - X in two pieces,
+	 * the upper part UHi being <= 12 bits long. Then we have
+	 * atanh(X) = 1/2 * log((1 + X) / (1 - X)) = 1/2 * log1p(V / (UHi + ULo)).
+	 */
+	vaddps	%ymm3, %ymm3, %ymm3
 
 	/*
 	 * Split V as well into upper 12 bits and lower part, so that we can get
 	 * a preliminary quotient estimate without rounding error.
 	 */
-	vandps	%ymm13, %ymm14, %ymm15
-	vmovmskps %ymm7, %edx
-	vsubps	%ymm15, %ymm14, %ymm7
+	vandps	%ymm4, %ymm3, %ymm4
+	vsubps	%ymm4, %ymm3, %ymm7
 
 	/* Hence get initial quotient estimate QHi + QLo = R * VHi + R * VLo */
-	vmulps	%ymm15, %ymm0, %ymm10
+	vmulps	%ymm4, %ymm6, %ymm4
 
 	/* Compute D = E + E^2 */
 	vfmadd213ps %ymm1, %ymm1, %ymm1
 
-	/* Record the sign for eventual reincorporation. */
-	vandps	sSign+__svml_satanh_data_internal(%rip), %ymm6, %ymm3
+	/* Record the sign for eventual reincorporation.  */
+	vandnps	%ymm8, %ymm2, %ymm3
 
 	/* Or the sign bit in with the tiny result to handle atanh(-0) correctly */
-	vorps	%ymm3, %ymm8, %ymm2
-	vmulps	%ymm7, %ymm0, %ymm8
+	vorps	%ymm3, %ymm0, %ymm13
+	vmulps	%ymm7, %ymm6, %ymm2
 
 	/*
 	 * Compute R * (VHi + VLo) * (1 + E + E^2)
 	 * = R *  (VHi + VLo) * (1 + D)
 	 * = QHi + (QHi * D + QLo + QLo * D)
 	 */
-	vmulps	%ymm1, %ymm10, %ymm9
-	vfmadd213ps %ymm8, %ymm8, %ymm1
-	vaddps	%ymm1, %ymm9, %ymm1
 
-	/* reduction: compute r, n */
-	vmovups	iBrkValue+__svml_satanh_data_internal(%rip), %ymm9
+	/*
+	 * If less precision is acceptable the `vmulps %ymm1, %ymm4, %ymm9;
+	 * vaddps %ymm1, %ymm9, %ymm1` can be replaced with
+	 * `vfmadd231ps %ymm1, %ymm4, %ymm4`.
+	 */
+	vmulps	%ymm1, %ymm4, %ymm6
+	vfmadd213ps %ymm2, %ymm2, %ymm1
+	vaddps	%ymm1, %ymm6, %ymm1
 
 	/*
 	 * Now finally accumulate the high and low parts of the
 	 * argument to log1p, H + L, with a final compensated summation.
 	 */
-	vaddps	%ymm1, %ymm10, %ymm12
-	vsubps	%ymm12, %ymm10, %ymm11
+	vaddps	%ymm1, %ymm4, %ymm2
+
+	/* reduction: compute r, n */
+	vmovups	ATANHF_DATA(iBrkValue)(%rip), %ymm9
 
 	/*
 	 * Now we feed into the log1p code, using H in place of _VARG1 and
 	 * later incorporating L into the reduced argument.
 	 * compute 1+x as high, low parts
 	 */
-	vmaxps	%ymm12, %ymm5, %ymm13
-	vminps	%ymm12, %ymm5, %ymm14
-	vaddps	%ymm11, %ymm1, %ymm0
-	vaddps	%ymm14, %ymm13, %ymm1
-	vpsubd	%ymm9, %ymm1, %ymm7
-	vsubps	%ymm1, %ymm13, %ymm15
-	vpsrad	$23, %ymm7, %ymm10
-	vpand	iOffExpoMask+__svml_satanh_data_internal(%rip), %ymm7, %ymm8
-	vaddps	%ymm15, %ymm14, %ymm13
-	vpslld	$23, %ymm10, %ymm11
-	vpaddd	%ymm9, %ymm8, %ymm15
-	vaddps	%ymm13, %ymm0, %ymm14
-	vcvtdq2ps %ymm10, %ymm0
-	vpsubd	%ymm11, %ymm5, %ymm12
+	vmaxps	%ymm2, %ymm5, %ymm0
+	vminps	%ymm2, %ymm5, %ymm6
+
+	/* This is needed for rounding (see `vaddps %ymm1, %ymm4, %ymm2`).  */
+	vsubps	%ymm2, %ymm4, %ymm2
+	vaddps	%ymm6, %ymm0, %ymm4
+	vpsubd	%ymm9, %ymm4, %ymm7
+	vsubps	%ymm4, %ymm0, %ymm4
+	vaddps	%ymm2, %ymm1, %ymm2
+	vmovaps	ATANHF_DATA(iOffExpoMask)(%rip), %ymm1
+
+	vandps	%ymm1, %ymm7, %ymm0
+	vaddps	%ymm4, %ymm6, %ymm4
+	vandnps	%ymm7, %ymm1, %ymm6
+	vmovups	ATANHF_DATA(sPoly+0)(%rip), %ymm1
+	vpaddd	%ymm9, %ymm0, %ymm0
+	vaddps	%ymm4, %ymm2, %ymm4
+	vpsubd	%ymm6, %ymm5, %ymm6
 
 	/* polynomial evaluation */
-	vsubps	%ymm5, %ymm15, %ymm5
-	vmulps	%ymm14, %ymm12, %ymm1
-	vaddps	%ymm5, %ymm1, %ymm5
-	vmovups	sPoly+224+__svml_satanh_data_internal(%rip), %ymm1
-	vfmadd213ps sPoly+192+__svml_satanh_data_internal(%rip), %ymm5, %ymm1
-	vfmadd213ps sPoly+160+__svml_satanh_data_internal(%rip), %ymm5, %ymm1
-	vfmadd213ps sPoly+128+__svml_satanh_data_internal(%rip), %ymm5, %ymm1
-	vfmadd213ps sPoly+96+__svml_satanh_data_internal(%rip), %ymm5, %ymm1
-	vfmadd213ps sPoly+64+__svml_satanh_data_internal(%rip), %ymm5, %ymm1
-	vfmadd213ps sPoly+32+__svml_satanh_data_internal(%rip), %ymm5, %ymm1
-	vfmadd213ps sPoly+__svml_satanh_data_internal(%rip), %ymm5, %ymm1
-	vmulps	%ymm1, %ymm5, %ymm7
-	vfmadd213ps %ymm5, %ymm5, %ymm7
+	vsubps	%ymm5, %ymm0, %ymm2
+	vfmadd231ps %ymm4, %ymm6, %ymm2
+	vfmadd213ps ATANHF_DATA(sPoly+32)(%rip), %ymm2, %ymm1
+	vfmadd213ps ATANHF_DATA(sPoly+64)(%rip), %ymm2, %ymm1
+	vfmadd213ps ATANHF_DATA(sPoly+96)(%rip), %ymm2, %ymm1
+	vfmadd213ps ATANHF_DATA(sPoly+128)(%rip), %ymm2, %ymm1
+	vfmadd213ps ATANHF_DATA(sPoly+160)(%rip), %ymm2, %ymm1
+	vfmadd213ps ATANHF_DATA(sPoly+192)(%rip), %ymm2, %ymm1
+	vfmadd213ps ATANHF_DATA(sPoly+224)(%rip), %ymm2, %ymm1
+
+	vmulps	%ymm1, %ymm2, %ymm1
+	vfmadd213ps %ymm2, %ymm2, %ymm1
 
 	/* final reconstruction */
-	vfmadd132ps sLn2+__svml_satanh_data_internal(%rip), %ymm7, %ymm0
+	vpsrad	$23, %ymm7, %ymm6
+	vcvtdq2ps %ymm6, %ymm2
+	vfmadd132ps ATANHF_DATA(sLn2)(%rip), %ymm1, %ymm2
 
 	/* Finally, halve the result and reincorporate the sign */
-	vxorps	sHalf+__svml_satanh_data_internal(%rip), %ymm3, %ymm3
-	vmulps	%ymm0, %ymm3, %ymm0
-	vblendvps %ymm4, %ymm2, %ymm0, %ymm0
+	vxorps	ATANHF_DATA(sHalf)(%rip), %ymm3, %ymm3
+	vmulps	%ymm2, %ymm3, %ymm2
+	vmovmskps %ymm14, %edx
 	testl	%edx, %edx
 
+	vblendvps %ymm15, %ymm13, %ymm2, %ymm0
 	/* Go to special inputs processing branch */
 	jne	L(SPECIAL_VALUES_BRANCH)
-	# LOE rbx r12 r13 r14 r15 edx ymm0 ymm6
-
-	/* Restore registers
-	 * and exit the function
-	 */
-
-L(EXIT):
-	movq	%rbp, %rsp
-	popq	%rbp
-	cfi_def_cfa(7, 8)
-	cfi_restore(6)
+	# LOE rbx rdx r12 r13 r14 r15 ymm0
+	/* No registers to restore on fast path.  */
 	ret
-	cfi_def_cfa(6, 16)
-	cfi_offset(6, -16)
 
-	/* Branch to process
-	 * special inputs
-	 */
 
+	/* Cold case. edx has 1s where there was a special value that
+	   needs to be handled by a atanhf call. Optimize for code size
+	   more so than speed here. */
 L(SPECIAL_VALUES_BRANCH):
-	vmovups	%ymm6, 32(%rsp)
-	vmovups	%ymm0, 64(%rsp)
-	# LOE rbx r12 r13 r14 r15 edx ymm0
+	# LOE rbx rdx r12 r13 r14 r15 ymm0 ymm8
+    /* Use r13 to save/restore the stack. This allows us to use rbp as
+       callee save register saving code size. */
+	pushq	%r13
+	cfi_adjust_cfa_offset(8)
+	cfi_offset(r13, -16)
+	/* Need to callee save registers to preserve state across tanhf calls.
+	 */
+	pushq	%rbx
+	cfi_adjust_cfa_offset(8)
+	cfi_offset(rbx, -24)
+	pushq	%rbp
+	cfi_adjust_cfa_offset(8)
+	cfi_offset(rbp, -32)
+	movq	%rsp, %r13
+	cfi_def_cfa_register(r13)
 
-	xorl	%eax, %eax
-	# LOE rbx r12 r13 r14 r15 eax edx
+	/* Align stack and make room for 2x ymm vectors.  */
+	andq	$-32, %rsp
+	addq	$-64, %rsp
+
+	/* Save all already computed inputs.  */
+	vmovups	%ymm0, (%rsp)
+	/* Save original input (ymm8 unchanged up to this point).  */
+	vmovups	%ymm8, 32(%rsp)
 
 	vzeroupper
-	movq	%r12, 16(%rsp)
-	/*  DW_CFA_expression: r12 (r12) (DW_OP_lit8; DW_OP_minus; DW_OP_const4s: -32; DW_OP_and; DW_OP_const4s: -80; DW_OP_plus)  */
-	.cfi_escape 0x10, 0x0c, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0xb0, 0xff, 0xff, 0xff, 0x22
-	movl	%eax, %r12d
-	movq	%r13, 8(%rsp)
-	/*  DW_CFA_expression: r13 (r13) (DW_OP_lit8; DW_OP_minus; DW_OP_const4s: -32; DW_OP_and; DW_OP_const4s: -88; DW_OP_plus)  */
-	.cfi_escape 0x10, 0x0d, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0xa8, 0xff, 0xff, 0xff, 0x22
-	movl	%edx, %r13d
-	movq	%r14, (%rsp)
-	/*  DW_CFA_expression: r14 (r14) (DW_OP_lit8; DW_OP_minus; DW_OP_const4s: -32; DW_OP_and; DW_OP_const4s: -96; DW_OP_plus)  */
-	.cfi_escape 0x10, 0x0e, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0xa0, 0xff, 0xff, 0xff, 0x22
-	# LOE rbx r15 r12d r13d
 
-	/* Range mask
-	 * bits check
-	 */
-
-L(RANGEMASK_CHECK):
-	btl	%r12d, %r13d
-
-	/* Call scalar math function */
-	jc	L(SCALAR_MATH_CALL)
-	# LOE rbx r15 r12d r13d
-
-	/* Special inputs
-	 * processing loop
-	 */
-
+	/* edx has 1s where there was a special value that needs to be handled
+	   by a atanhf call.  */
+	movl	%edx, %ebx
 L(SPECIAL_VALUES_LOOP):
-	incl	%r12d
-	cmpl	$8, %r12d
+	# LOE rbx rbp r12 r13 r14 r15
+	/* use rbp as index for special value that is saved across calls to
+	   atanhf. We technically don't need a callee save register here as offset
+	   to rsp is always [0, 28] so we can restore rsp by realigning to 64.
+	   Essentially the tradeoff is 1 extra save/restore vs 2 extra instructions
+	   in the loop. Realigning also costs more code size.  */
+	xorl	%ebp, %ebp
+	tzcntl	%ebx, %ebp
 
-	/* Check bits in range mask */
-	jl	L(RANGEMASK_CHECK)
-	# LOE rbx r15 r12d r13d
-
-	movq	16(%rsp), %r12
-	cfi_restore(12)
-	movq	8(%rsp), %r13
-	cfi_restore(13)
-	movq	(%rsp), %r14
-	cfi_restore(14)
-	vmovups	64(%rsp), %ymm0
-
-	/* Go to exit */
-	jmp	L(EXIT)
-	/*  DW_CFA_expression: r12 (r12) (DW_OP_lit8; DW_OP_minus; DW_OP_const4s: -32; DW_OP_and; DW_OP_const4s: -80; DW_OP_plus)  */
-	.cfi_escape 0x10, 0x0c, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0xb0, 0xff, 0xff, 0xff, 0x22
-	/*  DW_CFA_expression: r13 (r13) (DW_OP_lit8; DW_OP_minus; DW_OP_const4s: -32; DW_OP_and; DW_OP_const4s: -88; DW_OP_plus)  */
-	.cfi_escape 0x10, 0x0d, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0xa8, 0xff, 0xff, 0xff, 0x22
-	/*  DW_CFA_expression: r14 (r14) (DW_OP_lit8; DW_OP_minus; DW_OP_const4s: -32; DW_OP_and; DW_OP_const4s: -96; DW_OP_plus)  */
-	.cfi_escape 0x10, 0x0e, 0x0e, 0x38, 0x1c, 0x0d, 0xe0, 0xff, 0xff, 0xff, 0x1a, 0x0d, 0xa0, 0xff, 0xff, 0xff, 0x22
-	# LOE rbx r12 r13 r14 r15 ymm0
-
-	/* Scalar math fucntion call
-	 * to process special input
-	 */
-
-L(SCALAR_MATH_CALL):
-	movl	%r12d, %r14d
-	movss	32(%rsp, %r14, 4), %xmm0
+	/* Scalar math fucntion call to process special input.  */
+	movss	32(%rsp, %rbp, 4), %xmm0
 	call	atanhf@PLT
-	# LOE rbx r14 r15 r12d r13d xmm0
 
-	movss	%xmm0, 64(%rsp, %r14, 4)
+	/* No good way to avoid the store-forwarding fault this will cause on
+	   return. `lfence` avoids the SF fault but at greater cost as it
+	   serialized stack/callee save restoration.  */
+	movss	%xmm0, (%rsp, %rbp, 4)
 
-	/* Process special inputs in loop */
-	jmp	L(SPECIAL_VALUES_LOOP)
-	# LOE rbx r15 r12d r13d
+	blsrl   %ebx, %ebx
+	jnz	L(SPECIAL_VALUES_LOOP)
+	# LOE r12 r13 r14 r15
+
+
+	/* All results have been written to (%rsp).  */
+	vmovups	(%rsp), %ymm0
+	/* Restore rsp.  */
+	movq	%r13, %rsp
+	cfi_def_cfa_register(rsp)
+	/* Restore callee save registers.  */
+	popq	%rbp
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(rbp)
+	popq	%rbx
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(rbp)
+	popq	%r13
+	cfi_adjust_cfa_offset(-8)
+	cfi_restore(r13)
+	ret
 END(_ZGVdN8v_atanhf_avx2)
 
 	.section .rodata, "a"
 	.align	32
-
 #ifdef __svml_satanh_data_internal_typedef
 typedef unsigned int VUINT32;
-typedef struct {
+typedef struct{
 	__declspec(align(32)) VUINT32 SgnMask[8][1];
 	__declspec(align(32)) VUINT32 sOne[8][1];
-	__declspec(align(32)) VUINT32 sPoly[8][8][1];
-	__declspec(align(32)) VUINT32 iBrkValue[8][1];
-	__declspec(align(32)) VUINT32 iOffExpoMask[8][1];
-	__declspec(align(32)) VUINT32 sHalf[8][1];
-	__declspec(align(32)) VUINT32 sSign[8][1];
 	__declspec(align(32)) VUINT32 sTopMask12[8][1];
 	__declspec(align(32)) VUINT32 TinyRange[8][1];
+	__declspec(align(32)) VUINT32 iBrkValue[8][1];
+	__declspec(align(32)) VUINT32 iOffExpoMask[8][1];
+	__declspec(align(32)) VUINT32 sPoly[8][8][1];
 	__declspec(align(32)) VUINT32 sLn2[8][1];
+	__declspec(align(32)) VUINT32 sHalf[8][1];
 } __svml_satanh_data_internal;
 #endif
 __svml_satanh_data_internal:
 	/* SgnMask */
-	.long	0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff
+	.long	0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff
+	.long	0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff
 	/* sOne = SP 1.0 */
 	.align	32
-	.long	0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000
-	/* sPoly[] = SP polynomial */
-	.align	32
-	.long	0xbf000000, 0xbf000000, 0xbf000000, 0xbf000000, 0xbf000000, 0xbf000000, 0xbf000000, 0xbf000000 /* -5.0000000000000000000000000e-01 P0 */
-	.long	0x3eaaaa94, 0x3eaaaa94, 0x3eaaaa94, 0x3eaaaa94, 0x3eaaaa94, 0x3eaaaa94, 0x3eaaaa94, 0x3eaaaa94 /* 3.3333265781402587890625000e-01 P1 */
-	.long	0xbe80058e, 0xbe80058e, 0xbe80058e, 0xbe80058e, 0xbe80058e, 0xbe80058e, 0xbe80058e, 0xbe80058e /* -2.5004237890243530273437500e-01 P2 */
-	.long	0x3e4ce190, 0x3e4ce190, 0x3e4ce190, 0x3e4ce190, 0x3e4ce190, 0x3e4ce190, 0x3e4ce190, 0x3e4ce190 /* 2.0007920265197753906250000e-01 P3 */
-	.long	0xbe28ad37, 0xbe28ad37, 0xbe28ad37, 0xbe28ad37, 0xbe28ad37, 0xbe28ad37, 0xbe28ad37, 0xbe28ad37 /* -1.6472326219081878662109375e-01 P4 */
-	.long	0x3e0fcb12, 0x3e0fcb12, 0x3e0fcb12, 0x3e0fcb12, 0x3e0fcb12, 0x3e0fcb12, 0x3e0fcb12, 0x3e0fcb12 /* 1.4042308926582336425781250e-01 P5 */
-	.long	0xbe1ad9e3, 0xbe1ad9e3, 0xbe1ad9e3, 0xbe1ad9e3, 0xbe1ad9e3, 0xbe1ad9e3, 0xbe1ad9e3, 0xbe1ad9e3 /* -1.5122179687023162841796875e-01 P6 */
-	.long	0x3e0d84ed, 0x3e0d84ed, 0x3e0d84ed, 0x3e0d84ed, 0x3e0d84ed, 0x3e0d84ed, 0x3e0d84ed, 0x3e0d84ed /* 1.3820238411426544189453125e-01 P7 */
-	/* iBrkValue = SP 2/3 */
-	.align	32
-	.long	0x3f2aaaab, 0x3f2aaaab, 0x3f2aaaab, 0x3f2aaaab, 0x3f2aaaab, 0x3f2aaaab, 0x3f2aaaab, 0x3f2aaaab
-	/* iOffExpoMask = SP significand mask */
-	.align	32
-	.long	0x007fffff, 0x007fffff, 0x007fffff, 0x007fffff, 0x007fffff, 0x007fffff, 0x007fffff, 0x007fffff
-	/* sHalf */
-	.align	32
-	.long	0x3F000000, 0x3F000000, 0x3F000000, 0x3F000000, 0x3F000000, 0x3F000000, 0x3F000000, 0x3F000000
-	/* sSign */
-	.align	32
-	.long	0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000, 0x80000000
+	.long	0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000
+	.long	0x3f800000, 0x3f800000, 0x3f800000, 0x3f800000
 	/* sTopMask12 */
 	.align	32
-	.long	0xFFFFF000, 0xFFFFF000, 0xFFFFF000, 0xFFFFF000, 0xFFFFF000, 0xFFFFF000, 0xFFFFF000, 0xFFFFF000
+	.long	0xFFFFF000, 0xFFFFF000, 0xFFFFF000, 0xFFFFF000
+	.long	0xFFFFF000, 0xFFFFF000, 0xFFFFF000, 0xFFFFF000
 	/* TinyRange */
 	.align	32
-	.long	0x0C000000, 0x0C000000, 0x0C000000, 0x0C000000, 0x0C000000, 0x0C000000, 0x0C000000, 0x0C000000
+	.long	0x0C000000, 0x0C000000, 0x0C000000, 0x0C000000
+	.long	0x0C000000, 0x0C000000, 0x0C000000, 0x0C000000
+	/* iBrkValue = SP 2/3 */
+	.align	32
+	.long	0x3f2aaaab, 0x3f2aaaab, 0x3f2aaaab, 0x3f2aaaab
+	.long	0x3f2aaaab, 0x3f2aaaab, 0x3f2aaaab, 0x3f2aaaab
+	/* iOffExpoMask = SP significand mask */
+	.align	32
+	.long	0x007fffff, 0x007fffff, 0x007fffff, 0x007fffff
+	.long	0x007fffff, 0x007fffff, 0x007fffff, 0x007fffff
+	/* sPoly[] = SP polynomial */
+	.align	32
+	.long	0x3e0d84ed, 0x3e0d84ed, 0x3e0d84ed, 0x3e0d84ed
+	.long	0x3e0d84ed, 0x3e0d84ed, 0x3e0d84ed, 0x3e0d84ed /* 1.3820238411426544189453125e-01 P7 */
+	.long	0xbe1ad9e3, 0xbe1ad9e3, 0xbe1ad9e3, 0xbe1ad9e3
+	.long	0xbe1ad9e3, 0xbe1ad9e3, 0xbe1ad9e3, 0xbe1ad9e3 /* -1.5122179687023162841796875e-01 P6 */
+	.long	0x3e0fcb12, 0x3e0fcb12, 0x3e0fcb12, 0x3e0fcb12
+	.long	0x3e0fcb12, 0x3e0fcb12, 0x3e0fcb12, 0x3e0fcb12 /* 1.4042308926582336425781250e-01 P5 */
+	.long	0xbe28ad37, 0xbe28ad37, 0xbe28ad37, 0xbe28ad37
+	.long	0xbe28ad37, 0xbe28ad37, 0xbe28ad37, 0xbe28ad37 /* -1.6472326219081878662109375e-01 P4 */
+	.long	0x3e4ce190, 0x3e4ce190, 0x3e4ce190, 0x3e4ce190
+	.long	0x3e4ce190, 0x3e4ce190, 0x3e4ce190, 0x3e4ce190 /* 2.0007920265197753906250000e-01 P3 */
+	.long	0xbe80058e, 0xbe80058e, 0xbe80058e, 0xbe80058e
+	.long	0xbe80058e, 0xbe80058e, 0xbe80058e, 0xbe80058e /* -2.5004237890243530273437500e-01 P2 */
+	.long	0x3eaaaa94, 0x3eaaaa94, 0x3eaaaa94, 0x3eaaaa94
+	.long	0x3eaaaa94, 0x3eaaaa94, 0x3eaaaa94, 0x3eaaaa94 /* 3.3333265781402587890625000e-01 P1 */
+	.long	0xbf000000, 0xbf000000, 0xbf000000, 0xbf000000
+	.long	0xbf000000, 0xbf000000, 0xbf000000, 0xbf000000 /* -5.0000000000000000000000000e-01 P0 */
 	/* sLn2 = SP ln(2) */
 	.align	32
-	.long	0x3f317218, 0x3f317218, 0x3f317218, 0x3f317218, 0x3f317218, 0x3f317218, 0x3f317218, 0x3f317218
+	.long	0x3f317218, 0x3f317218, 0x3f317218, 0x3f317218
+	.long	0x3f317218, 0x3f317218, 0x3f317218, 0x3f317218
+	/* sHalf */
+	.align	32
+	.long	0x3F000000, 0x3F000000, 0x3F000000, 0x3F000000
+	.long	0x3F000000, 0x3F000000, 0x3F000000, 0x3F000000
 	.align	32
 	.type	__svml_satanh_data_internal, @object
 	.size	__svml_satanh_data_internal, .-__svml_satanh_data_internal
