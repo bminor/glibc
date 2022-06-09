@@ -19,7 +19,8 @@
 #include <stdint.h>
 #include <tmmintrin.h>
 
-extern const int8_t ___m128i_shift_right[31] attribute_hidden;
+extern const int8_t ___m128i_shift_right[31] attribute_hidden
+    __attribute__ ((aligned (32)));
 
 static __inline__ __m128i
 __m128i_shift_right (__m128i value, unsigned long int offset)
