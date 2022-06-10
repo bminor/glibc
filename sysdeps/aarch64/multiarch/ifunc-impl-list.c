@@ -24,16 +24,11 @@
 #include <init-arch.h>
 #include <stdio.h>
 
-/* Maximum number of IFUNC implementations.  */
-#define MAX_IFUNC	8
-
 size_t
 __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			size_t max)
 {
-  assert (max >= MAX_IFUNC);
-
-  size_t i = 0;
+  size_t i = max;
 
   INIT_ARCH ();
 
@@ -76,5 +71,5 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strlen, !mte, __strlen_asimd)
 	      IFUNC_IMPL_ADD (array, i, strlen, 1, __strlen_mte))
 
-  return i;
+  return 0;
 }

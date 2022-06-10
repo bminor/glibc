@@ -30,7 +30,7 @@ size_t
 __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			size_t max)
 {
-  size_t i = 0;
+  size_t i = max;
   int hwcap;
 
   hwcap = GLRO(dl_hwcap);
@@ -75,5 +75,5 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __memmove_niagara7)
 	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_ultra1));
 
-  return i;
+  return 0;
 }

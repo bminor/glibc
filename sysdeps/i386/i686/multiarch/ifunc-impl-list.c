@@ -22,9 +22,6 @@
 #include <ifunc-impl-list.h>
 #include "init-arch.h"
 
-/* Maximum number of IFUNC implementations.  */
-#define MAX_IFUNC	4
-
 /* Fill ARRAY of MAX elements with IFUNC implementations for function
    NAME and return the number of valid entries.  */
 
@@ -32,9 +29,7 @@ size_t
 __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			size_t max)
 {
-  assert (max >= MAX_IFUNC);
-
-  size_t i = 0;
+  size_t i = max;
 
   /* Support sysdeps/i386/i686/multiarch/memchr.S.  */
   IFUNC_IMPL (i, name, memchr,
@@ -358,5 +353,5 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strncmp, 1, __strncmp_ia32))
 #endif
 
-  return i;
+  return 0;
 }

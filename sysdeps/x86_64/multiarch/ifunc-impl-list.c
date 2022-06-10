@@ -23,9 +23,6 @@
 #include <sysdep.h>
 #include "init-arch.h"
 
-/* Maximum number of IFUNC implementations.  */
-#define MAX_IFUNC	5
-
 /* Fill ARRAY of MAX elements with IFUNC implementations for function
    NAME supported on target machine and return the number of valid
    entries.  */
@@ -34,9 +31,7 @@ size_t
 __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			size_t max)
 {
-  assert (max >= MAX_IFUNC);
-
-  size_t i = 0;
+  size_t i = max;
 
   /* Support sysdeps/x86_64/multiarch/memcmpeq.c.  */
   IFUNC_IMPL (i, name, __memcmpeq,
@@ -1015,5 +1010,5 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __wmemset_chk_avx512_unaligned))
 #endif
 
-  return i;
+  return 0;
 }

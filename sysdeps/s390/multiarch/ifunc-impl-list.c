@@ -66,9 +66,6 @@
 #include <ifunc-wmemset.h>
 #include <ifunc-wmemcmp.h>
 
-/* Maximum number of IFUNC implementations.  */
-#define MAX_IFUNC	3
-
 /* Fill ARRAY of MAX elements with IFUNC implementations for function
    NAME supported on target machine and return the number of valid
    entries.  */
@@ -76,9 +73,7 @@ size_t
 __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			size_t max)
 {
-  assert (max >= MAX_IFUNC);
-
-  size_t i = 0;
+  size_t i = max;
 
   /* Get hardware information.  */
   unsigned long int dl_hwcap = GLRO (dl_hwcap);
@@ -670,5 +665,5 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		)
 #endif /* HAVE_WMEMCMP_IFUNC  */
 
-  return i;
+  return 0;
 }

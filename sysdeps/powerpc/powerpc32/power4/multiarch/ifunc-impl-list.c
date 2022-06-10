@@ -22,16 +22,11 @@
 #include <ldsodefs.h>
 #include <ifunc-impl-list.h>
 
-/* Maximum number of IFUNC implementations.  */
-#define MAX_IFUNC	6
-
 size_t
 __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			size_t max)
 {
-  assert (max >= MAX_IFUNC);
-
-  size_t i = 0;
+  size_t i = max;
 
   unsigned long int hwcap = GLRO(dl_hwcap);
   /* hwcap contains only the latest supported ISA, the code checks which is
@@ -179,5 +174,5 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, strchr, 1,
 			      __strchr_ppc))
 
-  return i;
+  return 0;
 }
