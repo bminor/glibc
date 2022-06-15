@@ -47,7 +47,7 @@ glibc.malloc.mxfast: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.elision.skip_lock_busy: 3 (min: -2147483648, max: 2147483647)
 glibc.malloc.top_pad: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.x86_rep_stosb_threshold: 0x800 (min: 0x1, max: 0xffffffffffffffff)
-glibc.cpu.x86_non_temporal_threshold: 0xc0000 (min: 0x0, max: 0xffffffffffffffff)
+glibc.cpu.x86_non_temporal_threshold: 0xc0000 (min: 0x4040, max: 0x0fffffffffffffff)
 glibc.cpu.x86_shstk:
 glibc.cpu.hwcap_mask: 0x6 (min: 0x0, max: 0xffffffffffffffff)
 glibc.malloc.mmap_max: 0 (min: -2147483648, max: 2147483647)
