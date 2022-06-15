@@ -194,8 +194,7 @@ _dl_start_user:\n\
      || (type) == R_386_TLS_DTPOFF32 || (type) == R_386_TLS_TPOFF32	      \
      || (type) == R_386_TLS_TPOFF || (type) == R_386_TLS_DESC)		      \
     * ELF_RTYPE_CLASS_PLT)						      \
-   | (((type) == R_386_COPY) * ELF_RTYPE_CLASS_COPY)			      \
-   | (((type) == R_386_GLOB_DAT) * ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA))
+   | (((type) == R_386_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_386_JMP_SLOT
