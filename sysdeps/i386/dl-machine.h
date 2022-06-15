@@ -185,10 +185,7 @@ _dl_start_user:\n\
    TLS variable, so undefined references should not be allowed to
    define the value.
    ELF_RTYPE_CLASS_COPY iff TYPE should not be allowed to resolve to one
-   of the main executable's symbols, as for a COPY reloc.
-   ELF_RTYPE_CLASS_EXTERN_PROTECTED_DATA iff TYPE describes relocation may
-   against protected data whose address be external due to copy relocation.
- */
+   of the main executable's symbols, as for a COPY reloc.  */
 # define elf_machine_type_class(type) \
   ((((type) == R_386_JMP_SLOT || (type) == R_386_TLS_DTPMOD32		      \
      || (type) == R_386_TLS_DTPOFF32 || (type) == R_386_TLS_TPOFF32	      \
