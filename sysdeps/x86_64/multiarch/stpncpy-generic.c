@@ -1,6 +1,5 @@
-/* Multiple versions of wcsnlen.
-   All versions must be listed in ifunc-impl-list.c.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+/* stpncpy.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,16 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Define multiple versions only for the definition in libc.  */
-#if IS_IN (libc)
-# define __wcsnlen __redirect_wcsnlen
-# include <wchar.h>
-# undef __wcsnlen
 
-# define SYMBOL_NAME wcsnlen
-# define GENERIC generic
-# include "ifunc-wcslen.h"
+#define STPNCPY __stpncpy_generic
+#undef weak_alias
+#define weak_alias(ignored1, ignored2)
+#undef libc_hidden_def
+#define libc_hidden_def(stpncpy)
 
-libc_ifunc_redirected (__redirect_wcsnlen, __wcsnlen, IFUNC_SELECTOR ());
-weak_alias (__wcsnlen, wcsnlen);
-#endif
+#include <string/stpncpy.c>

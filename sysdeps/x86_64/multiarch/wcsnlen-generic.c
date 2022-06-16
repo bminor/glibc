@@ -1,5 +1,5 @@
-/* strspn.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+/* wcsnlen.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+
 #if IS_IN (libc)
+# include <wchar.h>
 
-# include <sysdep.h>
-# define STRSPN __strspn_sse2
+# define WCSNLEN __wcsnlen_generic
 
-# undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(STRSPN)
+extern __typeof (wcsnlen) __wcsnlen_generic;
 #endif
 
-#include <string/strspn.c>
+#include "wcsmbs/wcsnlen.c"

@@ -1,5 +1,5 @@
-/* wcsncmp optimized with SSE2.
-   Copyright (C) 2018-2022 Free Software Foundation, Inc.
+/* strcspn.
+   Copyright (C) 2017-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,5 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define WCSNCMP __wcsncmp_sse2
-#include <wcsmbs/wcsncmp.c>
+#if IS_IN (libc)
+
+# include <sysdep.h>
+# define STRCSPN __strcspn_generic
+
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(STRCSPN)
+#endif
+
+#include <string/strcspn.c>

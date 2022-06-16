@@ -19,7 +19,11 @@
 
 #include <init-arch.h>
 
-extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
+#ifndef GENERIC
+# define GENERIC sse2
+#endif
+
+extern __typeof (REDIRECT_NAME) OPTIMIZE (GENERIC) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_rtm) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (evex) attribute_hidden;
@@ -44,5 +48,5 @@ IFUNC_SELECTOR (void)
 	return OPTIMIZE (avx2);
     }
 
-  return OPTIMIZE (sse2);
+  return OPTIMIZE (GENERIC);
 }

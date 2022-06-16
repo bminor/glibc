@@ -1,5 +1,4 @@
-/* Multiple versions of wcsnlen.
-   All versions must be listed in ifunc-impl-list.c.
+/* strspn.
    Copyright (C) 2017-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,16 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
-# define __wcsnlen __redirect_wcsnlen
-# include <wchar.h>
-# undef __wcsnlen
 
-# define SYMBOL_NAME wcsnlen
-# define GENERIC generic
-# include "ifunc-wcslen.h"
+# include <sysdep.h>
+# define STRSPN __strspn_generic
 
-libc_ifunc_redirected (__redirect_wcsnlen, __wcsnlen, IFUNC_SELECTOR ());
-weak_alias (__wcsnlen, wcsnlen);
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(STRSPN)
 #endif
+
+#include <string/strspn.c>

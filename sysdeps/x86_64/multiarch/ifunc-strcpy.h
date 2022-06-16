@@ -20,7 +20,11 @@
 
 #include <init-arch.h>
 
-extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
+#ifndef GENERIC
+# define GENERIC sse2
+#endif
+
+extern __typeof (REDIRECT_NAME) OPTIMIZE (GENERIC) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned)
   attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2) attribute_hidden;
@@ -49,5 +53,5 @@ IFUNC_SELECTOR (void)
   if (CPU_FEATURES_ARCH_P (cpu_features, Fast_Unaligned_Load))
     return OPTIMIZE (sse2_unaligned);
 
-  return OPTIMIZE (sse2);
+  return OPTIMIZE (GENERIC);
 }

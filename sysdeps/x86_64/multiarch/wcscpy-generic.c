@@ -1,4 +1,4 @@
-/* strpbrk with SSE4.2 intrinsics
+/* wcscpy.
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define USE_AS_STRPBRK
-#define STRCSPN_SSE2 __strpbrk_sse2
-#define STRCSPN_SSE42 __strpbrk_sse42
-#include "strcspn-c.c"
+
+#if IS_IN (libc)
+# define WCSCPY  __wcscpy_generic
+#endif
+
+#include <wcsmbs/wcscpy.c>

@@ -1,5 +1,5 @@
-/* strcspn.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+/* strncat.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
 
-# include <sysdep.h>
-# define STRCSPN __strcspn_sse2
-
-# undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(STRCSPN)
-#endif
-
-#include <string/strcspn.c>
+#define STRNCAT __strncat_generic
+#include <string/strncat.c>

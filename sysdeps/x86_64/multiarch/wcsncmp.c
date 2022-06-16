@@ -24,6 +24,8 @@
 # undef wcsncmp
 # undef __wcsncmp
 
+# define GENERIC generic
+
 # define SYMBOL_NAME wcsncmp
 # include "ifunc-avx2.h"
 

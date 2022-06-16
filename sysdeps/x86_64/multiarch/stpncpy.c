@@ -25,6 +25,7 @@
 # undef stpncpy
 # undef __stpncpy
 
+# define GENERIC generic
 # define SYMBOL_NAME stpncpy
 # include "ifunc-strcpy.h"
 

@@ -19,7 +19,7 @@
 
 #include <init-arch.h>
 
-extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (generic) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (sse42) attribute_hidden;
 
 static inline void *
@@ -30,5 +30,5 @@ IFUNC_SELECTOR (void)
   if (CPU_FEATURE_USABLE_P (cpu_features, SSE4_2))
     return OPTIMIZE (sse42);
 
-  return OPTIMIZE (sse2);
+  return OPTIMIZE (generic);
 }
