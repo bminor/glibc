@@ -298,6 +298,11 @@ and creates an unsatisfiable circular dependency.\n",
 
       switch (r_type)
 	{
+	case R_X86_64_GLOB_DAT:
+	case R_X86_64_JUMP_SLOT:
+	  *reloc_addr = value;
+	  break;
+
 # ifndef RTLD_BOOTSTRAP
 #  ifdef __ILP32__
 	case R_X86_64_SIZE64:
@@ -314,29 +319,14 @@ and creates an unsatisfiable circular dependency.\n",
 	  value = sym->st_size;
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
-# endif
-
-	case R_X86_64_GLOB_DAT:
-	case R_X86_64_JUMP_SLOT:
-	  *reloc_addr = value;
-	  break;
 
 	case R_X86_64_DTPMOD64:
-# ifdef RTLD_BOOTSTRAP
-	  /* During startup the dynamic linker is always the module
-	     with index 1.
-	     XXX If this relocation is necessary move before RESOLVE
-	     call.  */
-	  *reloc_addr = 1;
-# else
 	  /* Get the information from the link map returned by the
 	     resolve function.  */
 	  if (sym_map != NULL)
 	    *reloc_addr = sym_map->l_tls_modid;
-# endif
 	  break;
 	case R_X86_64_DTPOFF64:
-# ifndef RTLD_BOOTSTRAP
 	  /* During relocation all TLS symbols are defined and used.
 	     Therefore the offset is already correct.  */
 	  if (sym != NULL)
@@ -353,23 +343,19 @@ and creates an unsatisfiable circular dependency.\n",
 	      *reloc_addr = value;
 #  endif
 	    }
-# endif
 	  break;
 	case R_X86_64_TLSDESC:
 	  {
 	    struct tlsdesc volatile *td =
 	      (struct tlsdesc volatile *)reloc_addr;
 
-# ifndef RTLD_BOOTSTRAP
 	    if (! sym)
 	      {
 		td->arg = (void*)reloc->r_addend;
 		td->entry = _dl_tlsdesc_undefweak;
 	      }
 	    else
-# endif
 	      {
-# ifndef RTLD_BOOTSTRAP
 #  ifndef SHARED
 		CHECK_STATIC_TLS (map, sym_map);
 #  else
@@ -381,7 +367,6 @@ and creates an unsatisfiable circular dependency.\n",
 		  }
 		else
 #  endif
-# endif
 		  {
 		    td->arg = (void*)(sym->st_value - sym_map->l_tls_offset
 				      + reloc->r_addend);
@@ -392,13 +377,9 @@ and creates an unsatisfiable circular dependency.\n",
 	  }
 	case R_X86_64_TPOFF64:
 	  /* The offset is negative, forward from the thread pointer.  */
-# ifndef RTLD_BOOTSTRAP
 	  if (sym != NULL)
-# endif
 	    {
-# ifndef RTLD_BOOTSTRAP
 	      CHECK_STATIC_TLS (map, sym_map);
-# endif
 	      /* We know the offset of the object the symbol is contained in.
 		 It is a negative value which will be added to the
 		 thread pointer.  */
@@ -416,7 +397,6 @@ and creates an unsatisfiable circular dependency.\n",
 	    }
 	  break;
 
-# ifndef RTLD_BOOTSTRAP
 	case R_X86_64_64:
 	  /* value + r_addend may be > 0xffffffff and R_X86_64_64
 	     relocation updates the whole 64-bit entry.  */
@@ -481,7 +461,7 @@ and creates an unsatisfiable circular dependency.\n",
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
-# endif
+# endif /* !RTLD_BOOTSTRAP */
 	}
     }
 }
