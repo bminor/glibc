@@ -47,7 +47,8 @@
 # endif
 
 # if ISA_V2 && defined __AVX__ && defined __AVX2__ && defined __F16C__ \
-     && defined __FMA__ && defined __LZCNT__ && defined HAVE_X86_MOVBE
+     && defined __FMA__ && defined __LZCNT__ && defined HAVE_X86_MOVBE \
+     && defined __BMI__ && defined __BMI2__
 /* NB: ISAs in x86-64 ISA level v3 are used.  */
 #  define ISA_V3	GNU_PROPERTY_X86_ISA_1_V3
 # else
