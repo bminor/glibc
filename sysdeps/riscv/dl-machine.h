@@ -181,7 +181,15 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 
   switch (r_type)
     {
-#ifndef RTLD_BOOTSTRAP
+    case R_RISCV_RELATIVE:
+      *addr_field = map->l_addr + reloc->r_addend;
+      break;
+    case R_RISCV_JUMP_SLOT:
+    case __WORDSIZE == 64 ? R_RISCV_64 : R_RISCV_32:
+      *addr_field = value;
+      break;
+
+# ifndef RTLD_BOOTSTRAP
     case __WORDSIZE == 64 ? R_RISCV_TLS_DTPMOD64 : R_RISCV_TLS_DTPMOD32:
       if (sym_map)
 	*addr_field = sym_map->l_tls_modid;
@@ -232,13 +240,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	memcpy (reloc_addr, (void *)value, size);
 	break;
       }
-#endif
-
-#if !defined RTLD_BOOTSTRAP
-    case R_RISCV_RELATIVE:
-      *addr_field = map->l_addr + reloc->r_addend;
-      break;
-#endif
 
     case R_RISCV_IRELATIVE:
       value = map->l_addr + reloc->r_addend;
@@ -247,13 +248,9 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
       *addr_field = value;
       break;
 
-    case R_RISCV_JUMP_SLOT:
-    case __WORDSIZE == 64 ? R_RISCV_64 : R_RISCV_32:
-      *addr_field = value;
-      break;
-
     case R_RISCV_NONE:
       break;
+# endif /* !RTLD_BOOTSTRAP */
 
     default:
       _dl_reloc_bad_type (map, r_type, 0);
