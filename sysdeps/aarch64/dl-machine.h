@@ -178,7 +178,9 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
       return;
   else
     {
+# ifndef RTLD_BOOTSTRAP
       const ElfW(Sym) *const refsym = sym;
+# endif
       struct link_map *sym_map = RESOLVE_MAP (map, scope, &sym, version,
 					      r_type);
       ElfW(Addr) value = SYMBOL_ADDRESS (sym_map, sym, true);
@@ -191,6 +193,18 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 
       switch (r_type)
 	{
+	case AARCH64_R(GLOB_DAT):
+	case AARCH64_R(JUMP_SLOT):
+	  *reloc_addr = value + reloc->r_addend;
+	  break;
+
+# ifndef RTLD_BOOTSTRAP
+	case AARCH64_R(ABS32):
+#  ifdef __LP64__
+	case AARCH64_R(ABS64):
+#  endif
+	  *reloc_addr = value + reloc->r_addend;
+	  break;
 	case AARCH64_R(COPY):
 	  if (sym == NULL)
 	      break;
@@ -210,30 +224,17 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 		  ? sym->st_size : refsym->st_size);
 	  break;
 
-	case AARCH64_R(RELATIVE):
-	case AARCH64_R(GLOB_DAT):
-	case AARCH64_R(JUMP_SLOT):
-	case AARCH64_R(ABS32):
-#ifdef __LP64__
-	case AARCH64_R(ABS64):
-#endif
-	  *reloc_addr = value + reloc->r_addend;
-	  break;
-
 	case AARCH64_R(TLSDESC):
 	  {
 	    struct tlsdesc volatile *td =
 	      (struct tlsdesc volatile *)reloc_addr;
-#ifndef RTLD_BOOTSTRAP
 	    if (! sym)
 	      {
 		td->arg = (void*)reloc->r_addend;
 		td->entry = _dl_tlsdesc_undefweak;
 	      }
 	    else
-#endif
 	      {
-#ifndef RTLD_BOOTSTRAP
 # ifndef SHARED
 		CHECK_STATIC_TLS (map, sym_map);
 # else
@@ -245,7 +246,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 		  }
 		else
 # endif
-#endif
 		  {
 		    td->arg = (void*)(sym->st_value + sym_map->l_tls_offset
 				      + reloc->r_addend);
@@ -256,14 +256,10 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	  }
 
 	case AARCH64_R(TLS_DTPMOD):
-#ifdef RTLD_BOOTSTRAP
-	  *reloc_addr = 1;
-#else
 	  if (sym_map != NULL)
 	    {
 	      *reloc_addr = sym_map->l_tls_modid;
 	    }
-#endif
 	  break;
 
 	case AARCH64_R(TLS_DTPREL):
@@ -286,6 +282,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	    value = elf_ifunc_invoke (value);
 	  *reloc_addr = value;
 	  break;
+# endif /* !RTLD_BOOTSTRAP */
 
 	default:
 	  _dl_reloc_bad_type (map, r_type, 0);
