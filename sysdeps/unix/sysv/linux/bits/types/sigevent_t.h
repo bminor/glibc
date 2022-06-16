@@ -7,7 +7,11 @@
 
 #define __SIGEV_MAX_SIZE	64
 #if __WORDSIZE == 64
-# define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 4)
+# ifdef __CHERI_PURE_CAPABILITY__
+#  define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 8)
+# else
+#  define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 4)
+# endif
 #else
 # define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 3)
 #endif
