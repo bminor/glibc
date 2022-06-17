@@ -1152,10 +1152,20 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	    p_align_max = ph->p_align;
 	  c->mapoff = ALIGN_DOWN (ph->p_offset, GLRO(dl_pagesize));
 
+	  DIAG_PUSH_NEEDS_COMMENT;
+
+#if __GNUC_PREREQ (11, 0)
+	  /* Suppress invalid GCC warning:
+	     ‘(((char *)loadcmds.113_68 + _933 + 16))[329406144173384849].mapend’ may be used uninitialized [-Wmaybe-uninitialized]
+	     See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=106008
+	   */
+	  DIAG_IGNORE_NEEDS_COMMENT (11, "-Wmaybe-uninitialized");
+#endif
 	  /* Determine whether there is a gap between the last segment
 	     and this one.  */
 	  if (nloadcmds > 1 && c[-1].mapend != c->mapstart)
 	    has_holes = true;
+	  DIAG_POP_NEEDS_COMMENT;
 
 	  /* Optimize a common case.  */
 #if (PF_R | PF_W | PF_X) == 7 && (PROT_READ | PROT_WRITE | PROT_EXEC) == 7
