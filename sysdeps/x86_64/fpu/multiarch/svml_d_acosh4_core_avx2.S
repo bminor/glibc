@@ -372,11 +372,11 @@ L(SPECIAL_VALUES_LOOP):
 
 L(SCALAR_MATH_CALL):
 	movl	%r12d, %r14d
-	movsd	32(%rsp, %r14, 8), %xmm0
+	vmovsd	32(%rsp, %r14, 8), %xmm0
 	call	acosh@PLT
 	# LOE rbx r14 r15 r12d r13d xmm0
 
-	movsd	%xmm0, 64(%rsp, %r14, 8)
+	vmovsd	%xmm0, 64(%rsp, %r14, 8)
 
 	/* Process special inputs in loop */
 	jmp	L(SPECIAL_VALUES_LOOP)

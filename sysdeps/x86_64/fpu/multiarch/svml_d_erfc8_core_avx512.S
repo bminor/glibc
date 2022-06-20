@@ -261,11 +261,11 @@ L(SPECIAL_VALUES_LOOP):
 
 L(SCALAR_MATH_CALL):
 	movl	%r12d, %r14d
-	movsd	64(%rsp, %r14, 8), %xmm0
+	vmovsd	64(%rsp, %r14, 8), %xmm0
 	call	erfc@PLT
 	# LOE rbx r14 r15 r12d r13d xmm0
 
-	movsd	%xmm0, 128(%rsp, %r14, 8)
+	vmovsd	%xmm0, 128(%rsp, %r14, 8)
 
 	/* Process special inputs in loop */
 	jmp	L(SPECIAL_VALUES_LOOP)

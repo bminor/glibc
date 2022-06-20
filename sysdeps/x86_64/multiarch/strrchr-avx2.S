@@ -49,7 +49,7 @@
 
 	.section SECTION(.text), "ax", @progbits
 ENTRY(STRRCHR)
-	movd	%esi, %xmm7
+	vmovd	%esi, %xmm7
 	movl	%edi, %eax
 	/* Broadcast CHAR to YMM4.  */
 	VPBROADCAST %xmm7, %ymm7

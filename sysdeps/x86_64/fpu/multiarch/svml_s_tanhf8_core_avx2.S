@@ -240,13 +240,13 @@ L(SPECIAL_VALUES_LOOP):
 	tzcntl	%ebx, %ebp
 
 	/* Scalar math function call to process special input.  */
-	movss	32(%rsp, %rbp, 4), %xmm0
+	vmovss	32(%rsp, %rbp, 4), %xmm0
 	call	tanhf@PLT
 
 	/* No good way to avoid the store-forwarding fault this will cause on
 	   return. `lfence` avoids the SF fault but at greater cost as it
 	   serialized stack/callee save restoration.  */
-	movss	%xmm0, (%rsp, %rbp, 4)
+	vmovss	%xmm0, (%rsp, %rbp, 4)
 
 	blsrl   %ebx, %ebx
 	jnz	L(SPECIAL_VALUES_LOOP)
