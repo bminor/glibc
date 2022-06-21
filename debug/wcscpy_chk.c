@@ -24,36 +24,16 @@ wchar_t *
 __wcscpy_chk (wchar_t *dest, const wchar_t *src, size_t n)
 {
   wint_t c;
-  wchar_t *wcp;
+  wchar_t *wcp = dest;
 
-  if (__alignof__ (wchar_t) >= sizeof (wchar_t))
+  do
     {
-      const ptrdiff_t off = dest - src - 1;
-
-      wcp = (wchar_t *) src;
-
-      do
-	{
-	  if (__glibc_unlikely (n-- == 0))
-	    __chk_fail ();
-	  c = *wcp++;
-	  wcp[off] = c;
-	}
-      while (c != L'\0');
+      if (__glibc_unlikely (n-- == 0))
+        __chk_fail ();
+      c = *src++;
+      *wcp++ = c;
     }
-  else
-    {
-      wcp = dest;
-
-      do
-	{
-	  if (__glibc_unlikely (n-- == 0))
-	    __chk_fail ();
-	  c = *src++;
-	  *wcp++ = c;
-	}
-      while (c != L'\0');
-    }
+  while (c != L'\0');
 
   return dest;
 }
