@@ -16,9 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <isa-level.h>
+#include <sysdep.h>
 
-# include <sysdep.h>
+#if ISA_SHOULD_BUILD (3)
 
 # ifndef MEMCHR
 #  define MEMCHR	__memchr_avx2

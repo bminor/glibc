@@ -46,4 +46,14 @@
 # error "Unsupported ISA Level!"
 #endif
 
+#if IS_IN(rtld)
+# if !defined USE_MULTIARCH
+#  error "RTLD version should only exist in multiarch build"
+# endif
+#else
+# if defined USE_MULTIARCH
+#  error "Multiarch build should not use ISA_DEFAULT_IMPL without RTLD"
+# endif
+#endif
+
 #include ISA_DEFAULT_IMPL

@@ -25,7 +25,8 @@
 
 /* Fill ARRAY of MAX elements with IFUNC implementations for function
    NAME supported on target machine and return the number of valid
-   entries.  */
+   entries.  Each set of implementations for a given function is sorted in
+   descending order by ISA level.  */
 
 size_t
 __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
@@ -53,24 +54,27 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/memchr.c.  */
   IFUNC_IMPL (i, name, memchr,
-	      IFUNC_IMPL_ADD (array, i, memchr,
-			      CPU_FEATURE_USABLE (AVX2),
-			      __memchr_avx2)
-	      IFUNC_IMPL_ADD (array, i, memchr,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memchr_avx2_rtm)
-	      IFUNC_IMPL_ADD (array, i, memchr,
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memchr,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)
 			       && CPU_FEATURE_USABLE (BMI2)),
 			      __memchr_evex)
-	      IFUNC_IMPL_ADD (array, i, memchr,
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memchr,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)
 			       && CPU_FEATURE_USABLE (BMI2)),
 			      __memchr_evex_rtm)
-	      IFUNC_IMPL_ADD (array, i, memchr, 1, __memchr_sse2))
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memchr,
+			      CPU_FEATURE_USABLE (AVX2),
+			      __memchr_avx2)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memchr,
+			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (RTM)),
+			      __memchr_avx2_rtm)
+	      /* Can be lowered to V1 if a V2 implementation is added.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, memchr,
+			      1,
+			      __memchr_sse2))
 
   /* Support sysdeps/x86_64/multiarch/memcmp.c.  */
   IFUNC_IMPL (i, name, memcmp,
@@ -288,24 +292,27 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/rawmemchr.c.  */
   IFUNC_IMPL (i, name, rawmemchr,
-	      IFUNC_IMPL_ADD (array, i, rawmemchr,
-			      CPU_FEATURE_USABLE (AVX2),
-			      __rawmemchr_avx2)
-	      IFUNC_IMPL_ADD (array, i, rawmemchr,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __rawmemchr_avx2_rtm)
-	      IFUNC_IMPL_ADD (array, i, rawmemchr,
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, rawmemchr,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)
 			       && CPU_FEATURE_USABLE (BMI2)),
 			      __rawmemchr_evex)
-	      IFUNC_IMPL_ADD (array, i, rawmemchr,
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, rawmemchr,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)
 			       && CPU_FEATURE_USABLE (BMI2)),
 			      __rawmemchr_evex_rtm)
-	      IFUNC_IMPL_ADD (array, i, rawmemchr, 1, __rawmemchr_sse2))
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, rawmemchr,
+			      CPU_FEATURE_USABLE (AVX2),
+			      __rawmemchr_avx2)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, rawmemchr,
+			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (RTM)),
+			      __rawmemchr_avx2_rtm)
+	      /* Can be lowered to V1 if a V2 implementation is added.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, rawmemchr,
+			      1,
+			      __rawmemchr_sse2))
 
   /* Support sysdeps/x86_64/multiarch/strlen.c.  */
   IFUNC_IMPL (i, name, strlen,
@@ -748,24 +755,27 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/wmemchr.c.  */
   IFUNC_IMPL (i, name, wmemchr,
-	      IFUNC_IMPL_ADD (array, i, wmemchr,
-			      CPU_FEATURE_USABLE (AVX2),
-			      __wmemchr_avx2)
-	      IFUNC_IMPL_ADD (array, i, wmemchr,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __wmemchr_avx2_rtm)
-	      IFUNC_IMPL_ADD (array, i, wmemchr,
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, wmemchr,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)
 			       && CPU_FEATURE_USABLE (BMI2)),
 			      __wmemchr_evex)
-	      IFUNC_IMPL_ADD (array, i, wmemchr,
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, wmemchr,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)
 			       && CPU_FEATURE_USABLE (BMI2)),
 			      __wmemchr_evex_rtm)
-	      IFUNC_IMPL_ADD (array, i, wmemchr, 1, __wmemchr_sse2))
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wmemchr,
+			      CPU_FEATURE_USABLE (AVX2),
+			      __wmemchr_avx2)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wmemchr,
+			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (RTM)),
+			      __wmemchr_avx2_rtm)
+	      /* Can be lowered to V1 if a V2 implementation is added.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, wmemchr,
+			      1,
+			      __wmemchr_sse2))
 
   /* Support sysdeps/x86_64/multiarch/wmemcmp.c.  */
   IFUNC_IMPL (i, name, wmemcmp,

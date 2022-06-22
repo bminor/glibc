@@ -1,4 +1,7 @@
-#define MEMCHR __rawmemchr_evex
-#define USE_AS_RAWMEMCHR 1
+#ifndef RAWMEMCHR
+# define RAWMEMCHR	__rawmemchr_evex
+#endif
+#define USE_AS_RAWMEMCHR	1
+#define MEMCHR	RAWMEMCHR
 
 #include "memchr-evex.S"

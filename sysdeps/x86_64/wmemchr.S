@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,13 +15,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define MEMCHR	__memchr
+#define WMEMCHR	__wmemchr
 
-#define DEFAULT_IMPL_V1	"multiarch/memchr-sse2.S"
-#define DEFAULT_IMPL_V3	"multiarch/memchr-avx2.S"
-#define DEFAULT_IMPL_V4	"multiarch/memchr-evex.S"
+#define DEFAULT_IMPL_V1	"multiarch/wmemchr-sse2.S"
+#define DEFAULT_IMPL_V3	"multiarch/wmemchr-avx2.S"
+#define DEFAULT_IMPL_V4	"multiarch/wmemchr-evex.S"
 
 #include "isa-default-impl.h"
 
-weak_alias (__memchr, memchr)
-libc_hidden_builtin_def(memchr)
+libc_hidden_def (__wmemchr)
+weak_alias (__wmemchr, wmemchr)
+libc_hidden_weak (wmemchr)

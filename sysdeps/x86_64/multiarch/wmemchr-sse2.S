@@ -1,4 +1,7 @@
-#define USE_AS_WMEMCHR 1
-#define wmemchr __wmemchr_sse2
+#ifndef WMEMCHR
+# define WMEMCHR	__wmemchr_sse2
+#endif
+#define USE_AS_WMEMCHR	1
+#define MEMCHR	WMEMCHR
 
-#include "../memchr.S"
+#include "memchr-sse2.S"
