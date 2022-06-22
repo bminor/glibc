@@ -19,7 +19,9 @@
 #include <ifunc-init.h>
 #include <isa.h>
 
-#ifndef __x86_64__
+#ifdef __x86_64__
+# include <isa-ifunc-macros.h>
+#else
 /* Due to the reordering and the other nifty extensions in i686, it is
    not really good to use heavily i586 optimized code on an i686.  It's
    better to use i486 code if it isn't an i586.  */
