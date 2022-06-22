@@ -341,7 +341,7 @@ aux += \
 tests-extras += \
   tst-putenvmod \
   # tests-extras
-  
+
 extra-test-objs += \
   tst-putenvmod.os \
   # extra-test-objs
