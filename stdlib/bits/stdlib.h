@@ -96,10 +96,10 @@ extern size_t __mbstowcs_chk (wchar_t *__restrict __dst,
 			      const char *__restrict __src,
 			      size_t __len, size_t __dstlen) __THROW
     __attr_access ((__write_only__, 1, 3)) __attr_access ((__read_only__, 2));
-extern size_t __REDIRECT_NTH (__mbstowcs_chk_nulldst,
+extern size_t __REDIRECT_NTH (__mbstowcs_nulldst,
 			      (wchar_t *__restrict __dst,
 			       const char *__restrict __src,
-			       size_t __len), mbstowcs_chk)
+			       size_t __len), mbstowcs)
     __attr_access ((__read_only__, 2));
 extern size_t __REDIRECT_NTH (__mbstowcs_alias,
 			      (wchar_t *__restrict __dst,
@@ -113,12 +113,12 @@ extern size_t __REDIRECT_NTH (__mbstowcs_chk_warn,
      __warnattr ("mbstowcs called with dst buffer smaller than len "
 		 "* sizeof (wchar_t)");
 
-__always_inline __fortify_function size_t
+__fortify_function size_t
 __NTH (mbstowcs (wchar_t *__restrict __dst, const char *__restrict __src,
 		 size_t __len))
 {
   if (__builtin_constant_p (__dst == NULL) && __dst == NULL)
-    return __mbstowcs_chk_nulldst (__dst, __src, __len);
+    return __mbstowcs_nulldst (__dst, __src, __len);
   else
     return __glibc_fortify_n (mbstowcs, __len, sizeof (wchar_t),
 			      __glibc_objsize (__dst), __dst, __src, __len);
