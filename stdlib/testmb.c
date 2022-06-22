@@ -16,6 +16,13 @@ main (int argc, char *argv[])
       lose = 1;
     }
 
+  i = mbstowcs (NULL, "bar", 4);
+  if (!(i == 3 && w[1] == 'a'))
+    {
+      puts ("mbstowcs FAILED2!");
+      lose = 1;
+    }
+
   mbstowcs (w, "blah", 5);
   i = wcstombs (c, w, 10);
   if (i != 4)
