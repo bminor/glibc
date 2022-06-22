@@ -110,6 +110,7 @@ CPPFLAGS-tst-longjmp_chk2.c += -D_FORTIFY_SOURCE=1
 CFLAGS-tst-longjmp_chk3.c += -fexceptions -fasynchronous-unwind-tables
 CPPFLAGS-tst-longjmp_chk3.c += -D_FORTIFY_SOURCE=1
 CPPFLAGS-tst-realpath-chk.c += -D_FORTIFY_SOURCE=2
+CPPFLAGS-tst-read-chk-cancel.c += -D_FORTIFY_SOURCE=2
 
 # _FORTIFY_SOURCE tests.
 # Auto-generate tests for _FORTIFY_SOURCE for different levels, compilers and
@@ -204,6 +205,10 @@ ifeq ($(have-ssp),yes)
 tests += tst-ssp-1
 endif
 
+ifeq ($(have-thread-library), yes)
+tests += tst-read-chk-cancel
+endif
+
 ifeq (,$(CXX))
 tests-unsupported = $(tests-cc-chk)
 endif
@@ -242,3 +247,5 @@ $(objpfx)xtrace: xtrace.sh
 	    -e 's|@BINDIR@|$(bindir)|' -e 's|@PKGVERSION@|$(PKGVERSION)|' \
 	    -e 's|@REPORT_BUGS_TO@|$(REPORT_BUGS_TO)|' $^ > $@.new \
 	&& rm -f $@ && mv $@.new $@ && chmod +x $@
+
+$(objpfx)tst-read-chk-cancel: $(shared-thread-library)

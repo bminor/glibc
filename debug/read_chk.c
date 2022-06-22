@@ -16,12 +16,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <unistd.h>
-#include <sys/param.h>
-#ifdef HAVE_INLINED_SYSCALLS
-# include <errno.h>
-# include <sysdep.h>
-#endif
-
 
 ssize_t
 __read_chk (int fd, void *buf, size_t nbytes, size_t buflen)
@@ -29,9 +23,5 @@ __read_chk (int fd, void *buf, size_t nbytes, size_t buflen)
   if (nbytes > buflen)
     __chk_fail ();
 
-#ifdef HAVE_INLINED_SYSCALLS
-  return INLINE_SYSCALL (read, 3, fd, buf, nbytes);
-#else
   return __read (fd, buf, nbytes);
-#endif
 }
