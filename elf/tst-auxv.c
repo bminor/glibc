@@ -27,7 +27,11 @@ static int
 do_test (int argc, char *argv[])
 {
   errno = 0;
+#ifndef __CHERI_PURE_CAPABILITY__
   const char *execfn = (const char *) getauxval (AT_NULL);
+#else
+  const char *execfn = (const char *) getauxptr (AT_NULL);
+#endif
 
   if (errno != ENOENT)
     {
@@ -43,7 +47,11 @@ do_test (int argc, char *argv[])
     }
 
   errno = 0;
+#ifndef __CHERI_PURE_CAPABILITY__
   execfn = (const char *) getauxval (AT_EXECFN);
+#else
+  execfn = (const char *) getauxptr (AT_EXECFN);
+#endif
 
   if (execfn == NULL)
     {
