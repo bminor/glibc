@@ -152,6 +152,14 @@ elf_machine_fixup_plt (struct link_map *map, lookup_t t,
 
 #ifdef RESOLVE_MAP
 
+static inline void
+__attribute__ ((always_inline))
+elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
+			  void *const reloc_addr)
+{
+  *(ElfW(Addr) *) reloc_addr = l_addr + reloc->r_addend;
+}
+
 /* Perform a relocation described by R_INFO at the location pointed to
    by RELOC_ADDR.  SYM is the relocation symbol specified by R_INFO and
    MAP is the object containing the reloc.  */
@@ -182,7 +190,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
   switch (r_type)
     {
     case R_RISCV_RELATIVE:
-      *addr_field = map->l_addr + reloc->r_addend;
+      elf_machine_rela_relative (map->l_addr, reloc, addr_field);
       break;
     case R_RISCV_JUMP_SLOT:
     case __WORDSIZE == 64 ? R_RISCV_64 : R_RISCV_32:
@@ -256,14 +264,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
       _dl_reloc_bad_type (map, r_type, 0);
       break;
     }
-}
-
-static inline void
-__attribute__ ((always_inline))
-elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
-			  void *const reloc_addr)
-{
-  *(ElfW(Addr) *) reloc_addr = l_addr + reloc->r_addend;
 }
 
 static inline void
