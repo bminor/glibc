@@ -35,7 +35,7 @@
 # define VEC_SIZE			32
 # define PAGE_SIZE			4096
 	.section SECTION(.text), "ax", @progbits
-ENTRY(MEMRCHR)
+ENTRY_P2ALIGN(MEMRCHR, 6)
 # ifdef __ILP32__
 	/* Clear upper bits.  */
 	and	%RDX_LP, %RDX_LP
