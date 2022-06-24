@@ -130,6 +130,7 @@ tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
   tst-getauxval \
   tst-pidfd \
   tst-process_mrelease \
+  tst-mount \
   # tests
 
 # process_madvise requires CAP_SYS_ADMIN.
