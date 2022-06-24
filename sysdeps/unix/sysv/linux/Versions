@@ -305,6 +305,7 @@ libc {
     fsopen;
     fspick;
     move_mount;
+    mount_setattr;
     open_tree;
     pidfd_open;
     pidfd_getfd;

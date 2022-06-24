@@ -23,6 +23,9 @@
 #include <sys/wait.h>
 #include <sys/mount.h>
 
+_Static_assert (sizeof (struct mount_attr) == MOUNT_ATTR_SIZE_VER0,
+		"sizeof (struct mount_attr) != MOUNT_ATTR_SIZE_VER0");
+
 static void
 subprocess (void)
 {
@@ -67,10 +70,31 @@ subprocess (void)
 
   TEST_COMPARE (open_tree (AT_FDCWD, "", 0), -1);
   TEST_COMPARE (errno, ENOENT);
+  int fd_tree = open_tree (AT_FDCWD, "/tmp",
+			   OPEN_TREE_CLONE | OPEN_TREE_CLOEXEC);
+  TEST_VERIFY (fd_tree != -1);
+
   {
-    int fd_tree = open_tree (AT_FDCWD, "/tmp",
-			     OPEN_TREE_CLONE | OPEN_TREE_CLOEXEC);
-    TEST_VERIFY (fd_tree != -1);
+    struct mount_attr attr =
+    {
+      .attr_set = MOUNT_ATTR_RDONLY,
+    };
+     mount_setattr (fd_tree, "", AT_EMPTY_PATH, &attr,
+			   sizeof (attr));
+    int r = mount_setattr (fd_tree, "", AT_EMPTY_PATH, &attr,
+			   sizeof (attr));
+    /* New mount API was added on 5.1, but mount_setattr on 5.12.  */
+    if (r == -1)
+      TEST_COMPARE (errno, ENOSYS);
+    else
+      {
+	TEST_COMPARE (mount_setattr (-1, "", AT_EMPTY_PATH, &attr,
+				     sizeof (attr)), -1);
+	TEST_COMPARE (errno, EBADF);
+	TEST_COMPARE (mount_setattr (fd_tree, "", AT_EMPTY_PATH, &attr,
+				     sizeof (attr) - 8), -1);
+	TEST_COMPARE (errno, EINVAL);
+      }
   }
 
   _exit (0);

@@ -41,10 +41,10 @@ Major new features:
   have adverse impact.  It is incompatible with EDNS0 usage and DNSSEC
   validation by applications.
 
-* On Linux, the fsopen, fsmount, move_mount, fsconfig, fspick, and open_tree
-  functions have been added.  They are part of the new Linux kernel mount
-  APIs that allow applications to more flexibly configure and operate on
-  filesystem mounts.  The new mount APIs are specifically designed to work
+* On Linux, the fsopen, fsmount, move_mount, fsconfig, fspick, open_tree,
+  and mount_setattr have been added.  They are part of the new Linux kernel
+  mount APIs that allow applications to more flexibly configure and operate
+  on filesystem mounts.  The new mount APIs are specifically designed to work
   with namespaces.
 
 * localedef now accepts locale definition files encoded in UTF-8.

@@ -39,6 +39,7 @@ mincore		-	mincore		i:aUV	mincore
 mlock		-	mlock		i:bU	mlock
 mlockall	-	mlockall	i:i	mlockall
 mount		EXTRA	mount		i:sssUp	__mount	mount
+mount_setattr	EXTRA	mount_setattr	i:isUpU	mount_setattr
 move_mount	EXTRA	move_mount	i:isisU	move_mount
 munlock		-	munlock		i:aU	munlock
 munlockall	-	munlockall	i:	munlockall

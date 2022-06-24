@@ -2717,6 +2717,7 @@ GLIBC_2.36 fsconfig F
 GLIBC_2.36 fsmount F
 GLIBC_2.36 fsopen F
 GLIBC_2.36 fspick F
+GLIBC_2.36 mount_setattr F
 GLIBC_2.36 move_mount F
 GLIBC_2.36 open_tree F
 GLIBC_2.36 pidfd_getfd F

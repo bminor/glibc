@@ -56,7 +56,9 @@ def main():
         check('FSMOUNT_.*'),
         # MOVE_MOUNT__MASK may vary depending of the kernel version.
         check('MOVE_MOUNT_.*', 'MOVE_MOUNT__MASK'),
-        check('OPEN_TREE_*'))
+        check('OPEN_TREE_*'),
+        # MOUNT_ATTR_SIZE_VER0 is used for mount_setattr.
+        check('MOUNT_ATTR_.*', 'MOUNT_ATTR_SIZE_VER0'))
     sys.exit(status)
 
 if __name__ == '__main__':

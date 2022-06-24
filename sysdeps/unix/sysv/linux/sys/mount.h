@@ -23,6 +23,8 @@
 
 #include <fcntl.h>
 #include <features.h>
+#include <stdint.h>
+#include <stddef.h>
 #include <sys/ioctl.h>
 
 #define BLOCK_SIZE	1024
@@ -155,6 +157,17 @@ enum
 #define MOUNT_ATTR_NOSYMFOLLOW  0x00200000 /* Do not follow symlinks.  */
 
 
+/* For mount_setattr.  */
+struct mount_attr
+{
+  uint64_t attr_set;
+  uint64_t attr_clr;
+  uint64_t propagation;
+  uint64_t userns_fd;
+};
+
+#define MOUNT_ATTR_SIZE_VER0    32 /* sizeof first published struct */
+
 /* move_mount flags.  */
 #define MOVE_MOUNT_F_SYMLINKS   0x00000001 /* Follow symlinks on from path */
 #define MOVE_MOUNT_F_AUTOMOUNTS 0x00000002 /* Follow automounts on from path */
@@ -238,6 +251,15 @@ extern int fspick (int __dfd, const char *__path, unsigned int __flags)
 
 /* Open the mount point FILENAME in directory DFD using FLAGS.  */
 extern int open_tree (int __dfd, const char *__filename, unsigned int __flags)
+  __THROW;
+
+/* Change the mount properties of the mount or an entire mount tree.  If
+   PATH is a relative pathname, then it is interpreted relative to the
+   directory referred to by the file descriptor dirfd.  Otherwise if DFD is
+   the special value AT_FDCWD then PATH is interpreted relative to the current
+   working directory of the calling process.  */
+extern int mount_setattr (int __dfd, const char *__path, unsigned int __flags,
+			  struct mount_attr *__uattr, size_t __usize)
   __THROW;
 
 __END_DECLS
