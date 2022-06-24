@@ -71,14 +71,18 @@ response (const struct resolv_response_context *ctx,
       switch (qtype)
         {
         case T_A:
-          char ipv4[4] = {192, 0, 2, i + 1};
-          resolv_response_add_data (b, &ipv4, sizeof (ipv4));
+          {
+            char ipv4[4] = {192, 0, 2, i + 1};
+            resolv_response_add_data (b, &ipv4, sizeof (ipv4));
+          }
           break;
 
         case T_PTR:
-          char *name = xasprintf ("ptr-%d", i);
-          resolv_response_add_name (b, name);
-          free (name);
+          {
+            char *name = xasprintf ("ptr-%d", i);
+            resolv_response_add_name (b, name);
+            free (name);
+          }
           break;
         }
       resolv_response_close_record (b);
