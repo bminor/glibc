@@ -85,8 +85,8 @@ test_multiple_cnames (void)
     "\xc0\x00\x02\x01";
   check_packet (packet, sizeof (packet) - 1, __func__,
                 "name: www.example\n"
-                "name: www1.example\n"
-                "name: www2.example\n"
+                "data: www.example CNAME www1.example\n"
+                "data: www1.example CNAME www2.example\n"
                 "address: 192.0.2.1\n");
 }
 

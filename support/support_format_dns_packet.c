@@ -90,6 +90,17 @@ extract_name (struct in_buffer full, struct in_buffer *in, struct dname *value)
   return true;
 }
 
+static void
+extract_name_data (struct in_buffer full, struct in_buffer *rdata,
+                   const struct dname *owner, const char *typename, FILE *out)
+{
+  struct dname name;
+  if (extract_name (full, rdata, &name))
+    fprintf (out, "data: %s %s %s\n", owner->name, typename, name.name);
+  else
+    fprintf (out, "error: malformed CNAME/PTR record\n");
+}
+
 char *
 support_format_dns_packet (const unsigned char *buffer, size_t length)
 {
@@ -195,14 +206,11 @@ support_format_dns_packet (const unsigned char *buffer, size_t length)
           }
           break;
         case T_CNAME:
+          extract_name_data (full, &rdata, &rname, "CNAME", mem.out);
+          break;
         case T_PTR:
-          {
-            struct dname name;
-            if (extract_name (full, &rdata, &name))
-              fprintf (mem.out, "name: %s\n", name.name);
-            else
-              fprintf (mem.out, "error: malformed CNAME/PTR record\n");
-          }
+          extract_name_data (full, &rdata, &rname, "PTR", mem.out);
+          break;
         }
     }
 
