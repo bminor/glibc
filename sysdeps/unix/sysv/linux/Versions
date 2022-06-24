@@ -300,6 +300,7 @@ libc {
     epoll_pwait2;
   }
   GLIBC_2.36 {
+    fsconfig;
     fsmount;
     fsopen;
     move_mount;

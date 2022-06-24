@@ -163,6 +163,27 @@ enum
 #define MOVE_MOUNT_T_EMPTY_PATH 0x00000040 /* Empty to path permitted */
 #define MOVE_MOUNT_SET_GROUP    0x00000100 /* Set sharing group instead */
 
+/* The type of fsconfig call made.   */
+enum fsconfig_command
+{
+  FSCONFIG_SET_FLAG       = 0,    /* Set parameter, supplying no value */
+#define FSCONFIG_SET_FLAG FSCONFIG_SET_FLAG
+  FSCONFIG_SET_STRING     = 1,    /* Set parameter, supplying a string value */
+#define FSCONFIG_SET_STRING FSCONFIG_SET_STRING
+  FSCONFIG_SET_BINARY     = 2,    /* Set parameter, supplying a binary blob value */
+#define FSCONFIG_SET_BINARY FSCONFIG_SET_BINARY
+  FSCONFIG_SET_PATH       = 3,    /* Set parameter, supplying an object by path */
+#define FSCONFIG_SET_PATH FSCONFIG_SET_PATH
+  FSCONFIG_SET_PATH_EMPTY = 4,    /* Set parameter, supplying an object by (empty) path */
+#define FSCONFIG_SET_PATH_EMPTY FSCONFIG_SET_PATH_EMPTY
+  FSCONFIG_SET_FD         = 5,    /* Set parameter, supplying an object by fd */
+#define FSCONFIG_SET_FD FSCONFIG_SET_FD
+  FSCONFIG_CMD_CREATE     = 6,    /* Invoke superblock creation */
+#define FSCONFIG_CMD_CREATE FSCONFIG_CMD_CREATE
+  FSCONFIG_CMD_RECONFIGURE = 7,   /* Invoke superblock reconfiguration */
+#define FSCONFIG_CMD_RECONFIGURE FSCONFIG_CMD_RECONFIGURE
+};
+
 
 __BEGIN_DECLS
 
@@ -192,6 +213,11 @@ extern int fsmount (int __fd, unsigned int __flags,
 extern int move_mount (int __from_dfd, const char *__from_pathname,
 		       int __to_dfd, const char *__to_pathname,
 		       unsigned int flags) __THROW;
+
+/* Set parameters and trigger CMD action on the FD context.  KEY, VALUE,
+   and AUX are used depending ng of the CMD.  */
+extern int fsconfig (int __fd, unsigned int __cmd, const char *__key,
+		     const void *__value, int __aux) __THROW;
 
 __END_DECLS
 

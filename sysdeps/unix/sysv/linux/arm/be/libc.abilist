@@ -496,6 +496,7 @@ GLIBC_2.35 __memcmpeq F
 GLIBC_2.35 _dl_find_object F
 GLIBC_2.35 epoll_pwait2 F
 GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+GLIBC_2.36 fsconfig F
 GLIBC_2.36 fsmount F
 GLIBC_2.36 fsopen F
 GLIBC_2.36 move_mount F

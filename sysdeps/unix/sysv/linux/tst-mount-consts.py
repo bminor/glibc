@@ -49,6 +49,8 @@ def main():
                 linux_version_glibc > linux_version_headers,
                 linux_version_headers > linux_version_glibc)
 
+    # Skip testing FS_CONFIG commands since they are only enums in the kernel
+    # header.
     status = max(
         check('FSOPEN_.*'),
         check('FSMOUNT_.*'),
