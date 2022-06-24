@@ -142,10 +142,8 @@ _start:\n\
 _dl_start_user:\n\
 	| Save the user entry point address in %a4.\n\
 	move.l %d0, %a4\n\
-	| Pop the original argument count\n\
-	move.l (%sp)+, %d1\n\
-	| Push back the modified argument count.\n\
-	move.l %d1, -(%sp)\n\
+	| Load the adjusted argument count.\n\
+	move.l (%sp), %d1\n\
 	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)\n\
 	pea 8(%sp, %d1*4)\n\
 	pea 8(%sp)\n\
