@@ -28,6 +28,10 @@
 # define SHIFT_RETURN
 #endif
 
+#ifndef SECTION
+# define SECTION(p)	p
+#endif
+
 /* Long lived register in strlen(s), strnlen(s, n) are:
 
 	%xmm3 - zero
@@ -37,7 +41,7 @@
 */
 
 
-.text
+	.section SECTION(.text),"ax",@progbits
 ENTRY(strlen)
 
 /* Test 64 bytes from %rax for zero. Save result as bitmask in %rdx.  */
