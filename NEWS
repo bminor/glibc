@@ -29,6 +29,18 @@ Major new features:
   memory is carried out in the context of the caller, using the caller's
   CPU affinity, and priority with CPU usage accounted to the caller.
 
+* The “no-aaaa” DNS stub resolver option has been added.  System
+  administrators can use it to suppress AAAA queries made by the stub
+  resolver, including AAAA lookups triggered by NSS-based interfaces
+  such as getaddrinfo.  Only DNS lookups are affected: IPv6 data in
+  /etc/hosts is still used, getaddrinfo with AI_PASSIVE will still
+  produce IPv6 addresses, and configured IPv6 name servers are still
+  used.  To produce correct Name Error (NXDOMAIN) results, AAAA queries
+  are translated to A queries.  The new resolver option is intended
+  primarily for diagnostic purposes, to rule out that AAAA DNS queries
+  have adverse impact.  It is incompatible with EDNS0 usage and DNSSEC
+  validation by applications.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for prelink will be removed in the next release; this includes

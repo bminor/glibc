@@ -124,6 +124,14 @@ static enum nss_status gaih_getanswer (const querybuf *answer1, int anslen1,
 				       char *buffer, size_t buflen,
 				       int *errnop, int *h_errnop,
 				       int32_t *ttlp);
+static enum nss_status gaih_getanswer_noaaaa (const querybuf *answer1,
+					      int anslen1,
+					      const char *qname,
+					      struct gaih_addrtuple **pat,
+					      char *buffer, size_t buflen,
+					      int *errnop, int *h_errnop,
+					      int32_t *ttlp);
+
 
 static enum nss_status gethostbyname3_context (struct resolv_context *ctx,
 					       const char *name, int af,
@@ -369,17 +377,31 @@ _nss_dns_gethostbyname4_r (const char *name, struct gaih_addrtuple **pat,
   int resplen2 = 0;
   int ans2p_malloced = 0;
 
+
   int olderr = errno;
-  int n = __res_context_search (ctx, name, C_IN, T_QUERY_A_AND_AAAA,
+  int n;
+
+  if ((ctx->resp->options & RES_NOAAAA) == 0)
+    {
+      n = __res_context_search (ctx, name, C_IN, T_QUERY_A_AND_AAAA,
 				host_buffer.buf->buf, 2048, &host_buffer.ptr,
 				&ans2p, &nans2p, &resplen2, &ans2p_malloced);
-  if (n >= 0)
-    {
-      status = gaih_getanswer (host_buffer.buf, n, (const querybuf *) ans2p,
-			       resplen2, name, pat, buffer, buflen,
-			       errnop, herrnop, ttlp);
+      if (n >= 0)
+	status = gaih_getanswer (host_buffer.buf, n, (const querybuf *) ans2p,
+				 resplen2, name, pat, buffer, buflen,
+				 errnop, herrnop, ttlp);
     }
   else
+    {
+      n = __res_context_search (ctx, name, C_IN, T_A,
+				host_buffer.buf->buf, 2048, NULL,
+				NULL, NULL, NULL, NULL);
+      if (n >= 0)
+	status = gaih_getanswer_noaaaa (host_buffer.buf, n,
+					name, pat, buffer, buflen,
+					errnop, herrnop, ttlp);
+    }
+  if (n < 0)
     {
       switch (errno)
 	{
@@ -1385,5 +1407,23 @@ gaih_getanswer (const querybuf *answer1, int anslen1, const querybuf *answer2,
 	status = NSS_STATUS_TRYAGAIN;
     }
 
+  return status;
+}
+
+/* Variant of gaih_getanswer without a second (AAAA) response.  */
+static enum nss_status
+gaih_getanswer_noaaaa (const querybuf *answer1, int anslen1, const char *qname,
+		       struct gaih_addrtuple **pat,
+		       char *buffer, size_t buflen,
+		       int *errnop, int *h_errnop, int32_t *ttlp)
+{
+  int first = 1;
+
+  enum nss_status status = NSS_STATUS_NOTFOUND;
+  if (anslen1 > 0)
+    status = gaih_getanswer_slice (answer1, anslen1, qname,
+				   &pat, &buffer, &buflen,
+				   errnop, h_errnop, ttlp,
+				   &first);
   return status;
 }

@@ -85,6 +85,14 @@ int __res_context_send (struct resolv_context *, const unsigned char *, int,
                         int *, int *, int *);
 libc_hidden_proto (__res_context_send)
 
+/* Return true if the query has been handled in RES_NOAAAA mode.  For
+   that, RES_NOAAAA must be active, and the question type must be AAAA.
+   The caller is expected to return *RESULT as the return value.  */
+bool __res_handle_no_aaaa (struct resolv_context *ctx,
+                           const unsigned char *buf, int buflen,
+                           unsigned char *ans, int anssiz, int *result)
+  attribute_hidden;
+
 /* Internal function similar to res_hostalias.  */
 const char *__res_context_hostalias (struct resolv_context *,
                                      const char *, char *, size_t);

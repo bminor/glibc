@@ -204,10 +204,26 @@ __res_context_query (struct resolv_context *ctx, const char *name,
 			free (buf);
 		return (n);
 	}
-	assert (answerp == NULL || (void *) *answerp == (void *) answer);
-	n = __res_context_send (ctx, query1, nquery1, query2, nquery2, answer,
-				anslen, answerp, answerp2, nanswerp2, resplen2,
-				answerp2_malloced);
+
+	/* Suppress AAAA lookups if required.  __res_handle_no_aaaa
+	   checks RES_NOAAAA first, so avoids parsing the
+	   just-generated query packet in most cases.  nss_dns avoids
+	   using T_QUERY_A_AND_AAAA in RES_NOAAAA mode, so there is no
+	   need to handle it here.  */
+	if (type == T_AAAA && __res_handle_no_aaaa (ctx, query1, nquery1,
+						    answer, anslen, &n))
+	  /* There must be no second query for AAAA queries.  The code
+	     below is still needed to translate NODATA responses.  */
+	  assert (query2 == NULL);
+	else
+	  {
+	    assert (answerp == NULL || (void *) *answerp == (void *) answer);
+	    n = __res_context_send (ctx, query1, nquery1, query2, nquery2,
+				    answer, anslen,
+				    answerp, answerp2, nanswerp2, resplen2,
+				    answerp2_malloced);
+	  }
+
 	if (use_malloc)
 		free (buf);
 	if (n < 0) {

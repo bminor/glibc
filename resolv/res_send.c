@@ -438,8 +438,13 @@ context_send_common (struct resolv_context *ctx,
       RES_SET_H_ERRNO (&_res, NETDB_INTERNAL);
       return -1;
     }
-  int result = __res_context_send (ctx, buf, buflen, NULL, 0, ans, anssiz,
-				   NULL, NULL, NULL, NULL, NULL);
+
+  int result;
+  if (__res_handle_no_aaaa (ctx, buf, buflen, ans, anssiz, &result))
+    return result;
+
+  result = __res_context_send (ctx, buf, buflen, NULL, 0, ans, anssiz,
+			       NULL, NULL, NULL, NULL, NULL);
   __resolv_context_put (ctx);
   return result;
 }
