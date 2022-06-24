@@ -55,7 +55,8 @@ def main():
         check('FSOPEN_.*'),
         check('FSMOUNT_.*'),
         # MOVE_MOUNT__MASK may vary depending of the kernel version.
-        check('MOVE_MOUNT_.*', 'MOVE_MOUNT__MASK'))
+        check('MOVE_MOUNT_.*', 'MOVE_MOUNT__MASK'),
+        check('OPEN_TREE_*'))
     sys.exit(status)
 
 if __name__ == '__main__':

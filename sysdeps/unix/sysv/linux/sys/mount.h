@@ -21,6 +21,7 @@
 #ifndef _SYS_MOUNT_H
 #define _SYS_MOUNT_H	1
 
+#include <fcntl.h>
 #include <features.h>
 #include <sys/ioctl.h>
 
@@ -192,6 +193,10 @@ enum fsconfig_command
 #define FSCONFIG_CMD_RECONFIGURE FSCONFIG_CMD_RECONFIGURE
 };
 
+/* open_tree flags.  */
+#define OPEN_TREE_CLONE    1         /* Clone the target tree and attach the clone */
+#define OPEN_TREE_CLOEXEC  O_CLOEXEC /* Close the file on execve() */
+
 
 __BEGIN_DECLS
 
@@ -229,6 +234,10 @@ extern int fsconfig (int __fd, unsigned int __cmd, const char *__key,
 
 /* Equivalent of fopen for an existing mount point.  */
 extern int fspick (int __dfd, const char *__path, unsigned int __flags)
+  __THROW;
+
+/* Open the mount point FILENAME in directory DFD using FLAGS.  */
+extern int open_tree (int __dfd, const char *__filename, unsigned int __flags)
   __THROW;
 
 __END_DECLS
