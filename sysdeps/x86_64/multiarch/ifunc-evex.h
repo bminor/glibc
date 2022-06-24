@@ -37,7 +37,7 @@ IFUNC_SELECTOR (void)
   if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX2)
       && X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, BMI2)
       && X86_ISA_CPU_FEATURES_ARCH_P (cpu_features,
-				      AVX_Fast_Unaligned_Load))
+				      AVX_Fast_Unaligned_Load, ))
     {
       if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX512VL)
 	  && X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX512BW))
@@ -52,7 +52,7 @@ IFUNC_SELECTOR (void)
 	return OPTIMIZE (avx2_rtm);
 
       if (X86_ISA_CPU_FEATURES_ARCH_P (cpu_features,
-				       Prefer_No_VZEROUPPER))
+				       Prefer_No_VZEROUPPER, !))
 	return OPTIMIZE (avx2);
     }
 

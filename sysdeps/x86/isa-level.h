@@ -64,14 +64,8 @@
 #define MINIMUM_X86_ISA_LEVEL                                                 \
   (__X86_ISA_V1 + __X86_ISA_V2 + __X86_ISA_V3 + __X86_ISA_V4)
 
-
-/*
- * CPU Features that are hard coded as enabled depending on ISA build
- *   level.
- *    - Values > 0 features are always ENABLED if:
- *          Value >= MINIMUM_X86_ISA_LEVEL
- */
-
+/* Depending on the minimum ISA level, a feature check result can be a
+   compile-time constant.. */
 
 /* ISA level >= 4 guaranteed includes.  */
 #define AVX512VL_X86_ISA_LEVEL 4
@@ -81,18 +75,16 @@
 #define AVX2_X86_ISA_LEVEL 3
 #define BMI2_X86_ISA_LEVEL 3
 
-/*
- * NB: This may not be fully assumable for ISA level >= 3. From
- * looking over the architectures supported in cpu-features.h the
- * following CPUs may have an issue with this being default set:
- *      - AMD Excavator
- */
+/* NB: This feature is enabled when ISA level >= 3, which was disabled
+   for the following CPUs:
+        - AMD Excavator
+   when ISA level < 3.  */
 #define AVX_Fast_Unaligned_Load_X86_ISA_LEVEL 3
 
-/*
- * KNL (the only cpu that sets this supported in cpu-features.h)
- * builds with ISA V1 so this shouldn't harm any architectures.
- */
+/* NB: This feature is disabled when ISA level >= 3, which was enabled
+   for the following CPUs:
+        - Intel KNL
+   when ISA level < 3.  */
 #define Prefer_No_VZEROUPPER_X86_ISA_LEVEL 3
 
 #define ISA_SHOULD_BUILD(isa_build_level)                              \
