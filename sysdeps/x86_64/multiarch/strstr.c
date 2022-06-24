@@ -24,17 +24,17 @@
 #include <string.h>
 #undef  strstr
 
-#define STRSTR __strstr_sse2
+#define STRSTR __strstr_generic
 #ifdef SHARED
 # undef libc_hidden_builtin_def
 # define libc_hidden_builtin_def(name) \
-  __hidden_ver1 (__strstr_sse2, __GI_strstr, __strstr_sse2);
+  __hidden_ver1 (__strstr_generic, __GI_strstr, __strstr_generic);
 #endif
 
 #include "string/strstr.c"
 
 extern __typeof (__redirect_strstr) __strstr_sse2_unaligned attribute_hidden;
-extern __typeof (__redirect_strstr) __strstr_sse2 attribute_hidden;
+extern __typeof (__redirect_strstr) __strstr_generic attribute_hidden;
 extern __typeof (__redirect_strstr) __strstr_avx512 attribute_hidden;
 
 #include "init-arch.h"
@@ -58,7 +58,7 @@ IFUNC_SELECTOR (void)
   if (CPU_FEATURES_ARCH_P (cpu_features, Fast_Unaligned_Load))
     return __strstr_sse2_unaligned;
 
-  return __strstr_sse2;
+  return __strstr_generic;
 }
 
 libc_ifunc_redirected (__redirect_strstr, __libc_strstr, IFUNC_SELECTOR ());

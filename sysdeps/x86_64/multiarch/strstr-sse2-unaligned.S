@@ -267,7 +267,7 @@ L(next_pair3):
 	.p2align 4
 L(switch_strstr):
 	movq	%rdi, %rdi
-	jmp	__strstr_sse2
+	jmp	__strstr_generic
 
 	.p2align 4
 L(cross_page):
