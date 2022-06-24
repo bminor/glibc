@@ -163,6 +163,14 @@ enum
 #define MOVE_MOUNT_T_EMPTY_PATH 0x00000040 /* Empty to path permitted */
 #define MOVE_MOUNT_SET_GROUP    0x00000100 /* Set sharing group instead */
 
+
+/* fspick flags.  */
+#define FSPICK_CLOEXEC          0x00000001
+#define FSPICK_SYMLINK_NOFOLLOW 0x00000002
+#define FSPICK_NO_AUTOMOUNT     0x00000004
+#define FSPICK_EMPTY_PATH       0x00000008
+
+
 /* The type of fsconfig call made.   */
 enum fsconfig_command
 {
@@ -218,6 +226,10 @@ extern int move_mount (int __from_dfd, const char *__from_pathname,
    and AUX are used depending ng of the CMD.  */
 extern int fsconfig (int __fd, unsigned int __cmd, const char *__key,
 		     const void *__value, int __aux) __THROW;
+
+/* Equivalent of fopen for an existing mount point.  */
+extern int fspick (int __dfd, const char *__path, unsigned int __flags)
+  __THROW;
 
 __END_DECLS
 

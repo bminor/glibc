@@ -15,6 +15,7 @@ flock		-	flock		i:ii	__flock		flock
 fsconfig	EXTRA	fsconfig	i:iUsNi	fsconfig
 fsmount		EXTRA	fsmount		i:iUU	fsmount
 fsopen		EXTRA	fsopen		i:sU	fsopen
+fspick		EXTRA	fspick		i:isU	fspick
 get_kernel_syms	EXTRA	get_kernel_syms	i:p	__compat_get_kernel_syms	get_kernel_syms@GLIBC_2.0:GLIBC_2.23
 getpid          -       getpid          Ei:     __getpid        getpid
 getegid		-	getegid		Ei:	__getegid	getegid

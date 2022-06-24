@@ -303,6 +303,7 @@ libc {
     fsconfig;
     fsmount;
     fsopen;
+    fspick;
     move_mount;
     pidfd_open;
     pidfd_getfd;
