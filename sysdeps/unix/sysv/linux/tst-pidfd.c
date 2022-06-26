@@ -142,6 +142,13 @@ do_test (void)
     xrecvfrom (sockets[0], &remote_fd, sizeof (remote_fd), 0, NULL, 0);
 
     int fd = pidfd_getfd (pidfd, remote_fd, 0);
+    /* pidfd_getfd may fail with EPERM if the process does not have
+       PTRACE_MODE_ATTACH_REALCREDS permissions. This means the call
+       may be denied if the process doesn't have CAP_SYS_PTRACE or
+       if a LSM security_ptrace_access_check denies access.  */
+    if (fd == -1 && errno == EPERM)
+      FAIL_UNSUPPORTED ("don't have permission to use pidfd_getfd on pidfd, "
+			"skipping test");
     TEST_VERIFY (fd > 0);
 
     char *path = xasprintf ("/proc/%d/fd/%d", pid, remote_fd);
