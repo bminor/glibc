@@ -633,14 +633,10 @@ LDFLAGS-c.so = -nostdlib -nostartfiles
 LDLIBS-c.so += $(libc.so-gnulib)
 # Give libc.so an entry point and make it directly runnable itself.
 LDFLAGS-c.so += -e __libc_main
-# Pre-link the objects of libc_pic.a so that we can locally resolve
-# COMMON symbols before we link against ld.so.  This is because ld.so
-# contains some of libc_pic.a already, which will prevent the COMMONs
-# from being allocated in libc.so, which introduces evil dependencies
-# between libc.so and ld.so, which can make it impossible to upgrade.
+# Pre-link the objects of libc_pic.a for .gnu.glibc-stub.* processing.
 $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
-	$(LDFLAGS-c_pic.os) -Wl,-d $(whole-archive) $^ -o $@
+	$(LDFLAGS-c_pic.os) $(whole-archive) $^ -o $@
 
 ifeq (,$(strip $(shlib-lds-flags)))
 # Generate a list of -R options to excise .gnu.glibc-stub.* sections.
