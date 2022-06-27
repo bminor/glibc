@@ -33,38 +33,32 @@
 #define src		x2
 #define tmp1		x1
 #define tmp2		x3
-#define tmp2w		w3
 
 #define vrepchr		v0
 #define vdata		v1
 #define qdata		q1
 #define vhas_nul	v2
 #define vhas_chr	v3
-#define vrepmask	v4
-#define vend		v5
-#define dend		d5
+#define vend		v4
+#define dend		d4
 
-/* Core algorithm:
-
-   For each 16-byte chunk we calculate a 64-bit syndrome value with four bits
-   per byte. For even bytes, bits 0-3 are set if the relevant byte matched the
-   requested character or the byte is NUL. Bits 4-7 must be zero. Bits 4-7 are
-   set likewise for odd bytes so that adjacent bytes can be merged. Since the
-   bits in the syndrome reflect the order in which things occur in the original
-   string, counting trailing zeros identifies exactly which byte matched.  */
+/*
+   Core algorithm:
+   For each 16-byte chunk we calculate a 64-bit nibble mask value with four bits
+   per byte. We take 4 bits of every comparison byte with shift right and narrow
+   by 4 instruction. Since the bits in the nibble mask reflect the order in
+   which things occur in the original string, counting leading zeros identifies
+   exactly which byte matched.  */
 
 ENTRY (__strchrnul)
 	PTR_ARG (0)
 	bic	src, srcin, 15
 	dup	vrepchr.16b, chrin
 	ld1	{vdata.16b}, [src]
-	mov	tmp2w, 0xf00f
-	dup	vrepmask.8h, tmp2w
 	cmeq	vhas_chr.16b, vdata.16b, vrepchr.16b
 	cmhs	vhas_chr.16b, vhas_chr.16b, vdata.16b
 	lsl	tmp2, srcin, 2
-	and	vhas_chr.16b, vhas_chr.16b, vrepmask.16b
-	addp	vend.16b, vhas_chr.16b, vhas_chr.16b		/* 128->64 */
+	shrn	vend.8b, vhas_chr.8h, 4		/* 128->64 */
 	fmov	tmp1, dend
 	lsr	tmp1, tmp1, tmp2	/* Mask padding bits.  */
 	cbz	tmp1, L(loop)
@@ -83,8 +77,7 @@ L(loop):
 	fmov	tmp1, dend
 	cbz	tmp1, L(loop)
 
-	and	vhas_chr.16b, vhas_chr.16b, vrepmask.16b
-	addp	vend.16b, vhas_chr.16b, vhas_chr.16b		/* 128->64 */
+	shrn	vend.8b, vhas_chr.8h, 4		/* 128->64 */
 	fmov	tmp1, dend
 #ifndef __AARCH64EB__
 	rbit	tmp1, tmp1
