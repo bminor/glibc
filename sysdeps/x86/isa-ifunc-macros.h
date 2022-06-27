@@ -56,31 +56,4 @@
 # define X86_IFUNC_IMPL_ADD_V1(...)
 #endif
 
-/* Both X86_ISA_CPU_FEATURE_USABLE_P and X86_ISA_CPU_FEATURES_ARCH_P
-   macros are wrappers for the the respective
-   CPU_FEATURE{S}_{USABLE|ARCH}_P runtime checks.  They differ in two
-   ways.
-
-    1.  The USABLE_P version is evaluated to true when the feature
-        is enabled.
-
-    2.  The ARCH_P version has a third argument `not`.  The `not`
-        argument can either be '!' or empty.  If the feature is
-        enabled above an ISA level, the third argument should be empty
-        and the expression is evaluated to true when the feature is
-        enabled.  If the feature is disabled above an ISA level, the
-        third argument should be `!` and the expression is evaluated
-        to true when the feature is disabled.
- */
-
-#define X86_ISA_CPU_FEATURE_USABLE_P(ptr, name)                        \
-  (((name##_X86_ISA_LEVEL) <= MINIMUM_X86_ISA_LEVEL)                   \
-   || CPU_FEATURE_USABLE_P (ptr, name))
-
-
-#define X86_ISA_CPU_FEATURES_ARCH_P(ptr, name, not)                    \
-  (((name##_X86_ISA_LEVEL) <= MINIMUM_X86_ISA_LEVEL)                   \
-   || not CPU_FEATURES_ARCH_P (ptr, name))
-
-
 #endif
