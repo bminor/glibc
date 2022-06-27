@@ -98,7 +98,8 @@ void support_record_failure (void);
 
 /* Compare the two integers LEFT and RIGHT and report failure if they
    are different.  */
-#define TEST_COMPARE(left, right)                                       \
+#ifndef __CHERI_PURE_CAPABILITY__
+# define TEST_COMPARE(left, right)                                      \
   ({                                                                    \
     /* + applies the integer promotions, for bitfield support.   */     \
     typedef __typeof__ (+ (left)) __left_type;                          \
@@ -126,6 +127,32 @@ void support_record_failure (void);
          #left, __left_value, __left_is_positive, sizeof (__left_type), \
          #right, __right_value, __right_is_positive, sizeof (__right_type)); \
   })
+#else
+# define TEST_COMPARE(left, right)                                      \
+  ({                                                                    \
+    /* + applies the integer promotions, for bitfield support.   */     \
+    typedef __typeof__ (+ (left)) __left_type;                          \
+    typedef __typeof__ (+ (right)) __right_type;                        \
+    __left_type __left_value = (left);                                  \
+    __right_type __right_value = (right);                               \
+    int __left_is_positive = __left_value > 0;                          \
+    int __right_is_positive = __right_value > 0;                        \
+    /* Prevent use with floating-point types.  */                       \
+    support_static_assert ((__left_type) 1.0 == (__left_type) 1.5,      \
+                           "left value has floating-point type");       \
+    support_static_assert ((__right_type) 1.0 == (__right_type) 1.5,    \
+                           "right value has floating-point type");      \
+    /* Compare the value.  */                                           \
+    if (__left_value != __right_value                                   \
+        || __left_is_positive != __right_is_positive)                   \
+      /* Pass the sign for printing the correct value.  */              \
+      support_test_compare_failure                                      \
+        (__FILE__, __LINE__,                                            \
+         #left, __left_value, __left_is_positive, sizeof (__left_type), \
+         #right, __right_value, __right_is_positive, sizeof (__right_type)); \
+  })
+#endif
+
 
 /* Internal implementation of TEST_COMPARE.  LEFT_POSITIVE and
    RIGHT_POSITIVE are used to store the sign separately, so that both
@@ -133,6 +160,7 @@ void support_record_failure (void);
    RIGHT_VALUE, and the function can still print the original value.
    LEFT_SIZE and RIGHT_SIZE specify the size of the argument in bytes,
    for hexadecimal formatting.  */
+#ifndef __CHERI_PURE_CAPABILITY__
 void support_test_compare_failure (const char *file, int line,
                                    const char *left_expr,
                                    long long left_value,
@@ -142,7 +170,17 @@ void support_test_compare_failure (const char *file, int line,
                                    long long right_value,
                                    int right_positive,
                                    int right_size);
-
+#else
+void support_test_compare_failure (const char *file, int line,
+                                   const char *left_expr,
+                                   __uintcap_t left_value,
+                                   int left_positive,
+                                   int left_size,
+                                   const char *right_expr,
+                                   __uintcap_t right_value,
+                                   int right_positive,
+                                   int right_size);
+#endif
 
 /* Compare [LEFT, LEFT + LEFT_LENGTH) with [RIGHT, RIGHT +
    RIGHT_LENGTH) and report a test failure if the arrays are
