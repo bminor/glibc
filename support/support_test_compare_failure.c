@@ -34,6 +34,7 @@ report (const char *which, const char *expr, long long value, int positive,
   printf (" (0x%llx); from: %s\n", (unsigned long long) value & mask, expr);
 }
 
+#ifndef __CHERI_PURE_CAPABILITY__
 void
 support_test_compare_failure (const char *file, int line,
                               const char *left_expr,
@@ -56,3 +57,27 @@ support_test_compare_failure (const char *file, int line,
   report ("right", right_expr, right_value, right_positive, right_size);
   errno = saved_errno;
 }
+#else
+void
+support_test_compare_failure (const char *file, int line,
+                              const char *left_expr,
+                              __uintcap_t left_value,
+                              int left_positive,
+                              int left_size,
+                              const char *right_expr,
+                              __uintcap_t right_value,
+                              int right_positive,
+                              int right_size)
+{
+  int saved_errno = errno;
+  support_record_failure ();
+  if (left_size != right_size)
+    printf ("%s:%d: numeric comparison failure (widths %d and %d)\n",
+            file, line, left_size * 8, right_size * 8);
+  else
+    printf ("%s:%d: numeric comparison failure\n", file, line);
+  report (" left", left_expr, left_value, left_positive, left_size);
+  report ("right", right_expr, right_value, right_positive, right_size);
+  errno = saved_errno;
+}
+#endif
