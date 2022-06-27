@@ -602,6 +602,9 @@ Bit 1 enables precise faulting mode for tag violations on systems that
 support deferred tag violation reporting.  This may cause programs
 to run more slowly.
 
+Bit 2 enables either precise or deferred faulting mode for tag violations
+whichever is preferred by the system.
+
 Other bits are currently reserved.
 
 @Theglibc{} startup code will automatically enable memory tagging

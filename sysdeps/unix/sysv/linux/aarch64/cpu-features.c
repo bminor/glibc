@@ -108,7 +108,13 @@ init_cpu_features (struct cpu_features *cpu_features)
   TUNABLE_SET (glibc, mem, tagging, cpu_features->mte_state);
 # endif
 
-  if (cpu_features->mte_state & 2)
+  if (cpu_features->mte_state & 4)
+    /* Enable choosing system-preferred faulting mode.  */
+    __prctl (PR_SET_TAGGED_ADDR_CTRL,
+	     (PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_SYNC | PR_MTE_TCF_ASYNC
+	      | MTE_ALLOWED_TAGS),
+	     0, 0, 0);
+  else if (cpu_features->mte_state & 2)
     __prctl (PR_SET_TAGGED_ADDR_CTRL,
 	     (PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_SYNC | MTE_ALLOWED_TAGS),
 	     0, 0, 0);
