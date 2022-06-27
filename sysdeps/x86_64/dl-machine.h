@@ -28,6 +28,7 @@
 #include <dl-tlsdesc.h>
 #include <dl-static-tls.h>
 #include <dl-machine-rel.h>
+#include <isa-level.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
@@ -86,6 +87,8 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
       /* Identify this shared object.  */
       *(ElfW(Addr) *) (got + 1) = (ElfW(Addr)) l;
 
+      const struct cpu_features* cpu_features = __get_cpu_features ();
+
       /* The got[2] entry contains the address of a function which gets
 	 called to get the address of a so far unresolved function and
 	 jump to it.  The profiling extension of the dynamic linker allows
@@ -94,9 +97,9 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	 end in this function.  */
       if (__glibc_unlikely (profile))
 	{
-	  if (CPU_FEATURE_USABLE (AVX512F))
+	  if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX512F))
 	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile_avx512;
-	  else if (CPU_FEATURE_USABLE (AVX))
+	  else if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX))
 	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile_avx;
 	  else
 	    *(ElfW(Addr) *) (got + 2) = (ElfW(Addr)) &_dl_runtime_profile_sse;
@@ -112,9 +115,10 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
 	  /* This function will get called to fix up the GOT entry
 	     indicated by the offset on the stack, and then jump to
 	     the resolved address.  */
-	  if (GLRO(dl_x86_cpu_features).xsave_state_size != 0)
+	  if (MINIMUM_X86_ISA_LEVEL >= AVX_X86_ISA_LEVEL
+	      || GLRO(dl_x86_cpu_features).xsave_state_size != 0)
 	    *(ElfW(Addr) *) (got + 2)
-	      = (CPU_FEATURE_USABLE (XSAVEC)
+	      = (CPU_FEATURE_USABLE_P (cpu_features, XSAVEC)
 		 ? (ElfW(Addr)) &_dl_runtime_resolve_xsavec
 		 : (ElfW(Addr)) &_dl_runtime_resolve_xsave);
 	  else

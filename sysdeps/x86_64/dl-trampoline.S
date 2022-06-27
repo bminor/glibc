@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <cpu-features-offsets.h>
 #include <link-defines.h>
+#include <isa-level.h>
 
 #ifndef DL_STACK_ALIGNMENT
 /* Due to GCC bug:
@@ -62,35 +63,39 @@
 #undef VMOVA
 #undef VEC_SIZE
 
-#define VEC_SIZE		32
-#define VMOVA			vmovdqa
-#define VEC(i)			ymm##i
-#define _dl_runtime_profile	_dl_runtime_profile_avx
-#include "dl-trampoline.h"
-#undef _dl_runtime_profile
-#undef VEC
-#undef VMOVA
-#undef VEC_SIZE
+#if MINIMUM_X86_ISA_LEVEL <= AVX_X86_ISA_LEVEL
+# define VEC_SIZE		32
+# define VMOVA			vmovdqa
+# define VEC(i)			ymm##i
+# define _dl_runtime_profile	_dl_runtime_profile_avx
+# include "dl-trampoline.h"
+# undef _dl_runtime_profile
+# undef VEC
+# undef VMOVA
+# undef VEC_SIZE
+#endif
 
+#if MINIMUM_X86_ISA_LEVEL < AVX_X86_ISA_LEVEL
 /* movaps/movups is 1-byte shorter.  */
-#define VEC_SIZE		16
-#define VMOVA			movaps
-#define VEC(i)			xmm##i
-#define _dl_runtime_profile	_dl_runtime_profile_sse
-#undef RESTORE_AVX
-#include "dl-trampoline.h"
-#undef _dl_runtime_profile
-#undef VEC
-#undef VMOVA
-#undef VEC_SIZE
+# define VEC_SIZE		16
+# define VMOVA			movaps
+# define VEC(i)			xmm##i
+# define _dl_runtime_profile	_dl_runtime_profile_sse
+# undef RESTORE_AVX
+# include "dl-trampoline.h"
+# undef _dl_runtime_profile
+# undef VEC
+# undef VMOVA
+# undef VEC_SIZE
 
-#define USE_FXSAVE
-#define STATE_SAVE_ALIGNMENT	16
-#define _dl_runtime_resolve	_dl_runtime_resolve_fxsave
-#include "dl-trampoline.h"
-#undef _dl_runtime_resolve
-#undef USE_FXSAVE
-#undef STATE_SAVE_ALIGNMENT
+# define USE_FXSAVE
+# define STATE_SAVE_ALIGNMENT	16
+# define _dl_runtime_resolve	_dl_runtime_resolve_fxsave
+# include "dl-trampoline.h"
+# undef _dl_runtime_resolve
+# undef USE_FXSAVE
+# undef STATE_SAVE_ALIGNMENT
+#endif
 
 #define USE_XSAVE
 #define STATE_SAVE_ALIGNMENT	64

@@ -68,10 +68,12 @@
    compile-time constant.. */
 
 /* ISA level >= 4 guaranteed includes.  */
+#define AVX512F_X86_ISA_LEVEL 4
 #define AVX512VL_X86_ISA_LEVEL 4
 #define AVX512BW_X86_ISA_LEVEL 4
 
 /* ISA level >= 3 guaranteed includes.  */
+#define AVX_X86_ISA_LEVEL 3
 #define AVX2_X86_ISA_LEVEL 3
 #define BMI2_X86_ISA_LEVEL 3
 
