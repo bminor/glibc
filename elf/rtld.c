@@ -1307,7 +1307,7 @@ _dl_start_args_adjust (int skip_args)
     return;
 
   /* Sanity check.  */
-  intptr_t argc = (intptr_t) sp[0] - skip_args;
+  intptr_t argc __attribute__ ((unused)) = (intptr_t) sp[0] - skip_args;
   assert (argc == _dl_argc);
 
   /* Adjust argc on stack.  */
