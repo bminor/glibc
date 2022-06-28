@@ -129,7 +129,7 @@ _dl_sysdep_start (void **start_argptr,
        break up that far.  When the user program examines its break, it
        will see this new value and not clobber our data.  */
     __sbrk (GLRO(dl_pagesize)
-	    - ((_end - (char *) 0) & (GLRO(dl_pagesize) - 1)));
+	    - (((uintptr_t) _end) & (GLRO(dl_pagesize) - 1)));
 
   /* If this is a SUID program we make sure that FDs 0, 1, and 2 are
      allocated.  If necessary we are doing it ourself.  If it is not

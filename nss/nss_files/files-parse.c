@@ -239,7 +239,7 @@ parse_list (char **linep, char *eol, char *buf_end, int terminator_c,
 
   /* Adjust the pointer so it is aligned for storing pointers.  */
   eol += __alignof__ (char *) - 1;
-  eol -= (eol - (char *) 0) % __alignof__ (char *);
+  eol -= ((uintptr_t) eol) % __alignof__ (char *);
   /* We will start the storage here for the vector of pointers.  */
   list = (char **) eol;
 

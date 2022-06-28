@@ -281,7 +281,7 @@ get_next_alias (FILE *stream, const char *match, struct aliasent *result,
 		      /* Adjust the pointer so it is aligned for
 			 storing pointers.  */
 		      first_unused += __alignof__ (char *) - 1;
-		      first_unused -= ((first_unused - (char *) 0)
+		      first_unused -= (((uintptr_t) first_unused)
 				       % __alignof__ (char *));
 		      result->alias_members = (char **) first_unused;
 

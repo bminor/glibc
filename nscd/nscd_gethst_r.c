@@ -244,10 +244,9 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       /* A first check whether the buffer is sufficiently large is possible.  */
       /* Now allocate the buffer the array for the group members.  We must
 	 align the pointer and the base of the h_addr_list pointers.  */
-      align1 = ((__alignof__ (char *) - (cp - ((char *) 0)))
+      align1 = ((__alignof__ (char *) - ((uintptr_t) cp))
 		& (__alignof__ (char *) - 1));
-      align2 = ((__alignof__ (char *) - ((cp + align1 + hst_resp.h_name_len)
-					 - ((char *) 0)))
+      align2 = ((__alignof__ (char *) - ((uintptr_t) (cp + align1 + hst_resp.h_name_len)))
 		& (__alignof__ (char *) - 1));
       if (buflen < (align1 + hst_resp.h_name_len + align2
 		    + ((hst_resp.h_aliases_cnt + hst_resp.h_addr_list_cnt

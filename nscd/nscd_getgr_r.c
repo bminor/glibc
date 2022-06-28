@@ -159,7 +159,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 
       /* Now allocate the buffer the array for the group members.  We must
 	 align the pointer.  */
-      align = ((__alignof__ (char *) - (p - ((char *) 0)))
+      align = ((__alignof__ (char *) - ((uintptr_t) p))
 	       & (__alignof__ (char *) - 1));
       total_len = (align + (1 + gr_resp.gr_mem_cnt) * sizeof (char *)
 		   + gr_resp.gr_name_len + gr_resp.gr_passwd_len);

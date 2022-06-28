@@ -38,13 +38,13 @@ __minimal_malloc (size_t n)
       /* Consume any unused space in the last page of our data segment.  */
       extern int _end attribute_hidden;
       alloc_ptr = &_end;
-      alloc_end = (void *) 0 + (((alloc_ptr - (void *) 0)
+      alloc_end = (void *) 0 + ((((uintptr_t) alloc_ptr)
 				 + GLRO(dl_pagesize) - 1)
 				& ~(GLRO(dl_pagesize) - 1));
     }
 
   /* Make sure the allocation pointer is ideally aligned.  */
-  alloc_ptr = (void *) 0 + (((alloc_ptr - (void *) 0) + MALLOC_ALIGNMENT - 1)
+  alloc_ptr = (void *) 0 + ((((uintptr_t) alloc_ptr) + MALLOC_ALIGNMENT - 1)
 			    & ~(MALLOC_ALIGNMENT - 1));
 
   if (alloc_ptr + n >= alloc_end || n >= -(uintptr_t) alloc_ptr)
