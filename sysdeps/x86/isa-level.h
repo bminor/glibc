@@ -67,15 +67,27 @@
 /* Depending on the minimum ISA level, a feature check result can be a
    compile-time constant.. */
 
+
+/* For CPU_FEATURE_USABLE_P.  */
+
 /* ISA level >= 4 guaranteed includes.  */
 #define AVX512F_X86_ISA_LEVEL 4
 #define AVX512VL_X86_ISA_LEVEL 4
 #define AVX512BW_X86_ISA_LEVEL 4
+#define AVX512DQ_X86_ISA_LEVEL 4
 
 /* ISA level >= 3 guaranteed includes.  */
 #define AVX_X86_ISA_LEVEL 3
 #define AVX2_X86_ISA_LEVEL 3
 #define BMI2_X86_ISA_LEVEL 3
+#define MOVBE_X86_ISA_LEVEL 3
+
+/* ISA level >= 2 guaranteed includes.  */
+#define SSE4_2_X86_ISA_LEVEL 2
+#define SSSE3_X86_ISA_LEVEL 2
+
+
+/* For X86_ISA_CPU_FEATURES_ARCH_P.  */
 
 /* NB: This feature is enabled when ISA level >= 3, which was disabled
    for the following CPUs:
@@ -88,6 +100,9 @@
         - Intel KNL
    when ISA level < 3.  */
 #define Prefer_No_VZEROUPPER_X86_ISA_LEVEL 3
+
+/* Feature(s) enabled when ISA level >= 2.  */
+#define Fast_Unaligned_Load_X86_ISA_LEVEL 2
 
 /* Both X86_ISA_CPU_FEATURE_USABLE_P and X86_ISA_CPU_FEATURES_ARCH_P
    macros are wrappers for the respective CPU_FEATURE{S}_{USABLE|ARCH}_P
