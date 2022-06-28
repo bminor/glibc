@@ -157,7 +157,10 @@ __attribute__ ((always_inline))
 elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
 			  void *const reloc_addr)
 {
-  *(ElfW(Addr) *) reloc_addr = l_addr + reloc->r_addend;
+  /* R_RISCV_RELATIVE might located in debug info section which might not
+     aligned to XLEN bytes.  Also support relocations on unaligned offsets.  */
+  ElfW(Addr) value = l_addr + reloc->r_addend;
+  memcpy (reloc_addr, &value, sizeof value);
 }
 
 /* Perform a relocation described by R_INFO at the location pointed to
