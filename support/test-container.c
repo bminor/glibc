@@ -18,6 +18,7 @@
 
 #define _FILE_OFFSET_BITS 64
 
+#include <array_length.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -684,39 +685,43 @@ rsync (char *src, char *dest, int and_delete, int force_copies)
 /* See if we can detect what the user needs to do to get unshare
    support working for us.  */
 void
-check_for_unshare_hints (void)
+check_for_unshare_hints (int require_pidns)
 {
+  static struct {
+    const char *path;
+    int bad_value, good_value, for_pidns;
+  } files[] = {
+    /* Default Debian Linux disables user namespaces, but allows a way
+       to enable them.  */
+    { "/proc/sys/kernel/unprivileged_userns_clone", 0, 1, 0 },
+    /* ALT Linux has an alternate way of doing the same.  */
+    { "/proc/sys/kernel/userns_restrict", 1, 0, 0 },
+    /* Linux kernel >= 4.9 has a configurable limit on the number of
+       each namespace.  Some distros set the limit to zero to disable the
+       corresponding namespace as a "security policy".  */
+    { "/proc/sys/user/max_user_namespaces", 0, 1024, 0 },
+    { "/proc/sys/user/max_mnt_namespaces", 0, 1024, 0 },
+    { "/proc/sys/user/max_pid_namespaces", 0, 1024, 1 },
+  };
   FILE *f;
-  int i;
+  int i, val;
 
-  /* Default Debian Linux disables user namespaces, but allows a way
-     to enable them.  */
-  f = fopen ("/proc/sys/kernel/unprivileged_userns_clone", "r");
-  if (f != NULL)
+  for (i = 0; i < array_length (files); i++)
     {
-      i = 99; /* Sentinel.  */
-      fscanf (f, "%d", &i);
-      if (i == 0)
-	{
-	  printf ("To enable test-container, please run this as root:\n");
-	  printf ("  echo 1 > /proc/sys/kernel/unprivileged_userns_clone\n");
-	}
-      fclose (f);
-      return;
-    }
+      if (!require_pidns && files[i].for_pidns)
+        continue;
 
-  /* ALT Linux has an alternate way of doing the same.  */
-  f = fopen ("/proc/sys/kernel/userns_restrict", "r");
-  if (f != NULL)
-    {
-      i = 99; /* Sentinel.  */
-      fscanf (f, "%d", &i);
-      if (i == 1)
-	{
-	  printf ("To enable test-container, please run this as root:\n");
-	  printf ("  echo 0 > /proc/sys/kernel/userns_restrict\n");
-	}
-      fclose (f);
+      f = fopen (files[i].path, "r");
+      if (f == NULL)
+        continue;
+
+      val = -1; /* Sentinel.  */
+      fscanf (f, "%d", &val);
+      if (val != files[i].bad_value)
+	continue;
+
+      printf ("To enable test-container, please run this as root:\n");
+      printf ("  echo %d > %s\n", files[i].good_value, files[i].path);
       return;
     }
 }
@@ -1117,11 +1122,11 @@ main (int argc, char **argv)
     {
       /* Older kernels may not support all the options, or security
 	 policy may block this call.  */
-      if (errno == EINVAL || errno == EPERM)
+      if (errno == EINVAL || errno == EPERM || errno == ENOSPC)
 	{
 	  int saved_errno = errno;
-	  if (errno == EPERM)
-	    check_for_unshare_hints ();
+	  if (errno == EPERM || errno == ENOSPC)
+	    check_for_unshare_hints (require_pidns);
 	  FAIL_UNSUPPORTED ("unable to unshare user/fs: %s", strerror (saved_errno));
 	}
       /* We're about to exit anyway, it's "safe" to call unshare again
