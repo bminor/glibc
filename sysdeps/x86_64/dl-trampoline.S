@@ -57,22 +57,26 @@
 #define VMOVA			vmovdqa64
 #define VEC(i)			zmm##i
 #define _dl_runtime_profile	_dl_runtime_profile_avx512
+# define SECTION(p)		p##.evex512
 #include "dl-trampoline.h"
 #undef _dl_runtime_profile
 #undef VEC
 #undef VMOVA
 #undef VEC_SIZE
+#undef SECTION
 
 #if MINIMUM_X86_ISA_LEVEL <= AVX_X86_ISA_LEVEL
 # define VEC_SIZE		32
 # define VMOVA			vmovdqa
 # define VEC(i)			ymm##i
+# define SECTION(p)		p##.avx
 # define _dl_runtime_profile	_dl_runtime_profile_avx
 # include "dl-trampoline.h"
 # undef _dl_runtime_profile
 # undef VEC
 # undef VMOVA
 # undef VEC_SIZE
+# undef SECTION
 #endif
 
 #if MINIMUM_X86_ISA_LEVEL < AVX_X86_ISA_LEVEL

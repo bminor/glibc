@@ -16,7 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-	.text
+#ifndef SECTION
+# define SECTION(p)	p
+#endif
+
+	.section SECTION(.text),"ax",@progbits
 #ifdef _dl_runtime_resolve
 
 # undef REGISTER_SAVE_AREA
@@ -219,19 +223,19 @@ _dl_runtime_profile:
 	/* We always store the XMM registers even if AVX is available.
 	   This is to provide backward binary compatibility for existing
 	   audit modules.  */
-	movaps %xmm0,		   (LR_XMM_OFFSET)(%rsp)
-	movaps %xmm1, (LR_XMM_OFFSET +   XMM_SIZE)(%rsp)
-	movaps %xmm2, (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp)
-	movaps %xmm3, (LR_XMM_OFFSET + XMM_SIZE*3)(%rsp)
-	movaps %xmm4, (LR_XMM_OFFSET + XMM_SIZE*4)(%rsp)
-	movaps %xmm5, (LR_XMM_OFFSET + XMM_SIZE*5)(%rsp)
-	movaps %xmm6, (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp)
-	movaps %xmm7, (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp)
+	VMOVA %xmm0, (LR_XMM_OFFSET + XMM_SIZE*0)(%rsp)
+	VMOVA %xmm1, (LR_XMM_OFFSET + XMM_SIZE*1)(%rsp)
+	VMOVA %xmm2, (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp)
+	VMOVA %xmm3, (LR_XMM_OFFSET + XMM_SIZE*3)(%rsp)
+	VMOVA %xmm4, (LR_XMM_OFFSET + XMM_SIZE*4)(%rsp)
+	VMOVA %xmm5, (LR_XMM_OFFSET + XMM_SIZE*5)(%rsp)
+	VMOVA %xmm6, (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp)
+	VMOVA %xmm7, (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp)
 
 # ifdef RESTORE_AVX
 	/* This is to support AVX audit modules.  */
-	VMOVA %VEC(0),		      (LR_VECTOR_OFFSET)(%rsp)
-	VMOVA %VEC(1), (LR_VECTOR_OFFSET +   VECTOR_SIZE)(%rsp)
+	VMOVA %VEC(0), (LR_VECTOR_OFFSET + VECTOR_SIZE*0)(%rsp)
+	VMOVA %VEC(1), (LR_VECTOR_OFFSET + VECTOR_SIZE*1)(%rsp)
 	VMOVA %VEC(2), (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp)
 	VMOVA %VEC(3), (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp)
 	VMOVA %VEC(4), (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp)
@@ -241,8 +245,8 @@ _dl_runtime_profile:
 
 	/* Save xmm0-xmm7 registers to detect if any of them are
 	   changed by audit module.  */
-	vmovdqa %xmm0,		    (LR_SIZE)(%rsp)
-	vmovdqa %xmm1, (LR_SIZE +   XMM_SIZE)(%rsp)
+	vmovdqa %xmm0, (LR_SIZE + XMM_SIZE*0)(%rsp)
+	vmovdqa %xmm1, (LR_SIZE + XMM_SIZE*1)(%rsp)
 	vmovdqa %xmm2, (LR_SIZE + XMM_SIZE*2)(%rsp)
 	vmovdqa %xmm3, (LR_SIZE + XMM_SIZE*3)(%rsp)
 	vmovdqa %xmm4, (LR_SIZE + XMM_SIZE*4)(%rsp)
@@ -265,84 +269,84 @@ _dl_runtime_profile:
 	movq  LR_R8_OFFSET(%rsp), %r8
 	movq  LR_R9_OFFSET(%rsp), %r9
 
-	movaps		    (LR_XMM_OFFSET)(%rsp), %xmm0
-	movaps	 (LR_XMM_OFFSET + XMM_SIZE)(%rsp), %xmm1
-	movaps (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp), %xmm2
-	movaps (LR_XMM_OFFSET + XMM_SIZE*3)(%rsp), %xmm3
-	movaps (LR_XMM_OFFSET + XMM_SIZE*4)(%rsp), %xmm4
-	movaps (LR_XMM_OFFSET + XMM_SIZE*5)(%rsp), %xmm5
-	movaps (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp), %xmm6
-	movaps (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp), %xmm7
+	VMOVA (LR_XMM_OFFSET + XMM_SIZE*0)(%rsp), %xmm0
+	VMOVA (LR_XMM_OFFSET + XMM_SIZE*1)(%rsp), %xmm1
+	VMOVA (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp), %xmm2
+	VMOVA (LR_XMM_OFFSET + XMM_SIZE*3)(%rsp), %xmm3
+	VMOVA (LR_XMM_OFFSET + XMM_SIZE*4)(%rsp), %xmm4
+	VMOVA (LR_XMM_OFFSET + XMM_SIZE*5)(%rsp), %xmm5
+	VMOVA (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp), %xmm6
+	VMOVA (LR_XMM_OFFSET + XMM_SIZE*7)(%rsp), %xmm7
 
 # ifdef RESTORE_AVX
 	/* Check if any xmm0-xmm7 registers are changed by audit
 	   module.  */
-	vpcmpeqq (LR_SIZE)(%rsp), %xmm0, %xmm8
+	vpcmpeqb (LR_SIZE)(%rsp), %xmm0, %xmm8
 	vpmovmskb %xmm8, %esi
-	cmpl $0xffff, %esi
+	incw %si
 	je 2f
 	vmovdqa	%xmm0, (LR_VECTOR_OFFSET)(%rsp)
 	jmp 1f
 2:	VMOVA (LR_VECTOR_OFFSET)(%rsp), %VEC(0)
 	vmovdqa	%xmm0, (LR_XMM_OFFSET)(%rsp)
 
-1:	vpcmpeqq (LR_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm8
+1:	vpcmpeqb (LR_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm8
 	vpmovmskb %xmm8, %esi
-	cmpl $0xffff, %esi
+	incw %si
 	je 2f
 	vmovdqa	%xmm1, (LR_VECTOR_OFFSET + VECTOR_SIZE)(%rsp)
 	jmp 1f
 2:	VMOVA (LR_VECTOR_OFFSET + VECTOR_SIZE)(%rsp), %VEC(1)
 	vmovdqa	%xmm1, (LR_XMM_OFFSET + XMM_SIZE)(%rsp)
 
-1:	vpcmpeqq (LR_SIZE + XMM_SIZE*2)(%rsp), %xmm2, %xmm8
+1:	vpcmpeqb (LR_SIZE + XMM_SIZE*2)(%rsp), %xmm2, %xmm8
 	vpmovmskb %xmm8, %esi
-	cmpl $0xffff, %esi
+	incw %si
 	je 2f
 	vmovdqa	%xmm2, (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp)
 	jmp 1f
 2:	VMOVA (LR_VECTOR_OFFSET + VECTOR_SIZE*2)(%rsp), %VEC(2)
 	vmovdqa	%xmm2, (LR_XMM_OFFSET + XMM_SIZE*2)(%rsp)
 
-1:	vpcmpeqq (LR_SIZE + XMM_SIZE*3)(%rsp), %xmm3, %xmm8
+1:	vpcmpeqb (LR_SIZE + XMM_SIZE*3)(%rsp), %xmm3, %xmm8
 	vpmovmskb %xmm8, %esi
-	cmpl $0xffff, %esi
+	incw %si
 	je 2f
 	vmovdqa	%xmm3, (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp)
 	jmp 1f
 2:	VMOVA (LR_VECTOR_OFFSET + VECTOR_SIZE*3)(%rsp), %VEC(3)
 	vmovdqa	%xmm3, (LR_XMM_OFFSET + XMM_SIZE*3)(%rsp)
 
-1:	vpcmpeqq (LR_SIZE + XMM_SIZE*4)(%rsp), %xmm4, %xmm8
+1:	vpcmpeqb (LR_SIZE + XMM_SIZE*4)(%rsp), %xmm4, %xmm8
 	vpmovmskb %xmm8, %esi
-	cmpl $0xffff, %esi
+	incw %si
 	je 2f
 	vmovdqa	%xmm4, (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp)
 	jmp 1f
 2:	VMOVA (LR_VECTOR_OFFSET + VECTOR_SIZE*4)(%rsp), %VEC(4)
 	vmovdqa	%xmm4, (LR_XMM_OFFSET + XMM_SIZE*4)(%rsp)
 
-1:	vpcmpeqq (LR_SIZE + XMM_SIZE*5)(%rsp), %xmm5, %xmm8
+1:	vpcmpeqb (LR_SIZE + XMM_SIZE*5)(%rsp), %xmm5, %xmm8
 	vpmovmskb %xmm8, %esi
-	cmpl $0xffff, %esi
+	incw %si
 	je 2f
 	vmovdqa	%xmm5, (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp)
 	jmp 1f
 2:	VMOVA (LR_VECTOR_OFFSET + VECTOR_SIZE*5)(%rsp), %VEC(5)
 	vmovdqa	%xmm5, (LR_XMM_OFFSET + XMM_SIZE*5)(%rsp)
 
-1:	vpcmpeqq (LR_SIZE + XMM_SIZE*6)(%rsp), %xmm6, %xmm8
+1:	vpcmpeqb (LR_SIZE + XMM_SIZE*6)(%rsp), %xmm6, %xmm8
 	vpmovmskb %xmm8, %esi
-	cmpl $0xffff, %esi
+	incw %si
 	je 2f
 	vmovdqa	%xmm6, (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp)
 	jmp 1f
 2:	VMOVA (LR_VECTOR_OFFSET + VECTOR_SIZE*6)(%rsp), %VEC(6)
 	vmovdqa	%xmm6, (LR_XMM_OFFSET + XMM_SIZE*6)(%rsp)
 
-1:	vpcmpeqq (LR_SIZE + XMM_SIZE*7)(%rsp), %xmm7, %xmm8
+1:	vpcmpeqb (LR_SIZE + XMM_SIZE*7)(%rsp), %xmm7, %xmm8
 	vpmovmskb %xmm8, %esi
-	cmpl $0xffff, %esi
+	incw %si
 	je 2f
 	vmovdqa	%xmm7, (LR_VECTOR_OFFSET + VECTOR_SIZE*7)(%rsp)
 	jmp 1f
@@ -352,8 +356,8 @@ _dl_runtime_profile:
 1:
 # endif
 
-	mov  16(%rbx), %R10_LP	# Anything in framesize?
-	test %R10_LP, %R10_LP
+	mov  16(%rbx), %RCX_LP	# Anything in framesize?
+	test %RCX_LP, %RCX_LP
 	jns 3f
 
 	/* There's nothing in the frame size, so there
@@ -385,14 +389,11 @@ _dl_runtime_profile:
 	   returned from _dl_profile_fixup */
 
 	lea LR_RSP_OFFSET(%rbx), %RSI_LP # stack
-	add $8, %R10_LP
-	and $-16, %R10_LP
-	mov %R10_LP, %RCX_LP
-	sub %R10_LP, %RSP_LP
+	add $8, %RCX_LP
+	and $-16, %RCX_LP
+	sub %RCX_LP, %RSP_LP
 	mov %RSP_LP, %RDI_LP
-	shr $3, %RCX_LP
-	rep
-	movsq
+	rep movsb
 
 	movq 24(%rdi), %rcx	# Get back register content.
 	movq 32(%rdi), %rsi
@@ -428,8 +429,8 @@ _dl_runtime_profile:
 	movq %rax, LRV_RAX_OFFSET(%rcx)
 	movq %rdx, LRV_RDX_OFFSET(%rcx)
 
-	movaps %xmm0, LRV_XMM0_OFFSET(%rcx)
-	movaps %xmm1, LRV_XMM1_OFFSET(%rcx)
+	VMOVA %xmm0, LRV_XMM0_OFFSET(%rcx)
+	VMOVA %xmm1, LRV_XMM1_OFFSET(%rcx)
 
 # ifdef RESTORE_AVX
 	/* This is to support AVX audit modules.  */
@@ -438,8 +439,8 @@ _dl_runtime_profile:
 
 	/* Save xmm0/xmm1 registers to detect if they are changed
 	   by audit module.  */
-	vmovdqa %xmm0,		  (LRV_SIZE)(%rcx)
-	vmovdqa %xmm1, (LRV_SIZE + XMM_SIZE)(%rcx)
+	vmovdqa %xmm0, (LRV_SIZE + XMM_SIZE*0)(%rcx)
+	vmovdqa %xmm1, (LRV_SIZE + XMM_SIZE*1)(%rcx)
 # endif
 
 	fstpt LRV_ST0_OFFSET(%rcx)
@@ -454,20 +455,20 @@ _dl_runtime_profile:
 	movq LRV_RAX_OFFSET(%rsp), %rax
 	movq LRV_RDX_OFFSET(%rsp), %rdx
 
-	movaps LRV_XMM0_OFFSET(%rsp), %xmm0
-	movaps LRV_XMM1_OFFSET(%rsp), %xmm1
+	VMOVA LRV_XMM0_OFFSET(%rsp), %xmm0
+	VMOVA LRV_XMM1_OFFSET(%rsp), %xmm1
 
 # ifdef RESTORE_AVX
 	/* Check if xmm0/xmm1 registers are changed by audit module.  */
-	vpcmpeqq (LRV_SIZE)(%rsp), %xmm0, %xmm2
+	vpcmpeqb (LRV_SIZE)(%rsp), %xmm0, %xmm2
 	vpmovmskb %xmm2, %esi
-	cmpl $0xffff, %esi
+	incw %si
 	jne 1f
 	VMOVA LRV_VECTOR0_OFFSET(%rsp), %VEC(0)
 
-1:	vpcmpeqq (LRV_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm2
+1:	vpcmpeqb (LRV_SIZE + XMM_SIZE)(%rsp), %xmm1, %xmm2
 	vpmovmskb %xmm2, %esi
-	cmpl $0xffff, %esi
+	incw %si
 	jne 1f
 	VMOVA LRV_VECTOR1_OFFSET(%rsp), %VEC(1)
 
