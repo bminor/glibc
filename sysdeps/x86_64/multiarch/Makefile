@@ -17,6 +17,7 @@ sysdep_routines += \
   memmove-avx-unaligned-erms-rtm \
   memmove-avx512-no-vzeroupper \
   memmove-avx512-unaligned-erms \
+  memmove-erms \
   memmove-evex-unaligned-erms \
   memmove-sse2-unaligned-erms \
   memmove-ssse3 \
