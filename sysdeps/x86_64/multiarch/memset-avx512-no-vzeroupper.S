@@ -17,8 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <isa-level.h>
 
-#if IS_IN (libc)
+#if ISA_SHOULD_BUILD (4)
+
 
 #include "asm-syntax.h"
 #ifndef MEMSET

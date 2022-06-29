@@ -17,22 +17,51 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-#include <shlib-compat.h>
+#include <isa-level.h>
 
-#if IS_IN (libc)
-# define MEMSET_SYMBOL(p,s)	p##_sse2_##s
-# define WMEMSET_SYMBOL(p,s)	p##_sse2_##s
+/* MINIMUM_X86_ISA_LEVEL <= 2 because there is no V2 implementation
+   so we need this to build for ISA V2 builds. */
+#if ISA_SHOULD_BUILD (2)
 
-# ifdef SHARED
-#  undef libc_hidden_builtin_def
-#  define libc_hidden_builtin_def(name)
+# include <sysdep.h>
+# define USE_WITH_SSE2	1
+
+# define VEC_SIZE	16
+# define MOV_SIZE	3
+# define RET_SIZE	1
+
+# define VEC(i)		xmm##i
+# define VMOVU     movups
+# define VMOVA     movaps
+
+# define MEMSET_SET_VEC0_AND_SET_RETURN(d, r) \
+  movd d, %xmm0; \
+  movq r, %rax; \
+  punpcklbw %xmm0, %xmm0; \
+  punpcklwd %xmm0, %xmm0; \
+  pshufd $0, %xmm0, %xmm0
+
+# define WMEMSET_SET_VEC0_AND_SET_RETURN(d, r) \
+  movd d, %xmm0; \
+  pshufd $0, %xmm0, %xmm0; \
+  movq r, %rax
+
+# define MEMSET_VDUP_TO_VEC0_HIGH()
+# define MEMSET_VDUP_TO_VEC0_LOW()
+
+# define WMEMSET_VDUP_TO_VEC0_HIGH()
+# define WMEMSET_VDUP_TO_VEC0_LOW()
+
+# define SECTION(p)		p
+
+# ifndef MEMSET_SYMBOL
+#  define MEMSET_SYMBOL(p,s)	p##_sse2_##s
 # endif
 
-# undef weak_alias
-# define weak_alias(original, alias)
-# undef strong_alias
-# define strong_alias(ignored1, ignored2)
-#endif
+# ifndef WMEMSET_SYMBOL
+#  define WMEMSET_SYMBOL(p,s)	p##_sse2_##s
+# endif
 
-#include <sysdeps/x86_64/memset.S>
+# include "memset-vec-unaligned-erms.S"
+
+#endif

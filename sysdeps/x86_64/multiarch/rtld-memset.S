@@ -1,6 +1,4 @@
-/* memset -- set memory area to CH/0
-   Optimized version for x86-64.
-   Copyright (C) 2002-2022 Free Software Foundation, Inc.
+/* Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,24 +15,4 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
-#define MEMSET_SYMBOL(p,s)	memset
-#define MEMSET_CHK_SYMBOL(p,s)	p
-
-#define WMEMSET_SYMBOL(p,s)	__wmemset
-#define WMEMSET_CHK_SYMBOL(p,s) p
-
-#define DEFAULT_IMPL_V1	"multiarch/memset-sse2-unaligned-erms.S"
-#define DEFAULT_IMPL_V3	"multiarch/memset-avx2-unaligned-erms.S"
-#define DEFAULT_IMPL_V4	"multiarch/memset-evex-unaligned-erms.S"
-
-#include "isa-default-impl.h"
-
-libc_hidden_builtin_def (memset)
-
-#if IS_IN (libc)
-libc_hidden_def (__wmemset)
-weak_alias (__wmemset, wmemset)
-libc_hidden_weak (wmemset)
-#endif
+#include "../memset.S"

@@ -213,94 +213,99 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_IMPL (i, name, __memset_chk,
 	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
 			      __memset_chk_erms)
-	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
-			      __memset_chk_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memset_chk, 1,
-			      __memset_chk_sse2_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memset_chk,
-			      CPU_FEATURE_USABLE (AVX2),
-			      __memset_chk_avx2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memset_chk,
-			      CPU_FEATURE_USABLE (AVX2),
-			      __memset_chk_avx2_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memset_chk,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memset_chk_avx2_unaligned_rtm)
-	      IFUNC_IMPL_ADD (array, i, __memset_chk,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memset_chk_avx2_unaligned_erms_rtm)
-	      IFUNC_IMPL_ADD (array, i, __memset_chk,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __memset_chk_evex_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memset_chk,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __memset_chk_evex_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memset_chk,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __memset_chk_avx512_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memset_chk,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __memset_chk_avx512_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memset_chk,
-			      CPU_FEATURE_USABLE (AVX512F),
-			      __memset_chk_avx512_no_vzeroupper)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memset_chk,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __memset_chk_avx512_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memset_chk,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __memset_chk_avx512_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memset_chk,
+				     CPU_FEATURE_USABLE (AVX512F),
+				     __memset_chk_avx512_no_vzeroupper)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memset_chk,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __memset_chk_evex_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memset_chk,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __memset_chk_evex_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memset_chk,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __memset_chk_avx2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memset_chk,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __memset_chk_avx2_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memset_chk,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memset_chk_avx2_unaligned_rtm)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memset_chk,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memset_chk_avx2_unaligned_erms_rtm)
+	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
+	         implementation is also used at ISA level 2.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __memset_chk, 1,
+				     __memset_chk_sse2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __memset_chk, 1,
+				     __memset_chk_sse2_unaligned_erms)
 	      )
 #endif
 
   /* Support sysdeps/x86_64/multiarch/memset.c.  */
   IFUNC_IMPL (i, name, memset,
 	      IFUNC_IMPL_ADD (array, i, memset, 1,
-			      __memset_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, memset, 1,
-			      __memset_sse2_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, memset, 1, __memset_erms)
-	      IFUNC_IMPL_ADD (array, i, memset,
-			      CPU_FEATURE_USABLE (AVX2),
-			      __memset_avx2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, memset,
-			      CPU_FEATURE_USABLE (AVX2),
-			      __memset_avx2_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, memset,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memset_avx2_unaligned_rtm)
-	      IFUNC_IMPL_ADD (array, i, memset,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memset_avx2_unaligned_erms_rtm)
-	      IFUNC_IMPL_ADD (array, i, memset,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __memset_evex_unaligned)
-	      IFUNC_IMPL_ADD (array, i, memset,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __memset_evex_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, memset,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __memset_avx512_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, memset,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __memset_avx512_unaligned)
-	      IFUNC_IMPL_ADD (array, i, memset,
-			      CPU_FEATURE_USABLE (AVX512F),
-			      __memset_avx512_no_vzeroupper)
+			      __memset_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memset,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __memset_avx512_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memset,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __memset_avx512_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memset,
+				     CPU_FEATURE_USABLE (AVX512F),
+				     __memset_avx512_no_vzeroupper)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memset,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __memset_evex_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memset,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __memset_evex_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memset,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __memset_avx2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memset,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __memset_avx2_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memset,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memset_avx2_unaligned_rtm)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memset,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memset_avx2_unaligned_erms_rtm)
+	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
+	         implementation is also used at ISA level 2.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, memset, 1,
+				     __memset_sse2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, memset, 1,
+				     __memset_sse2_unaligned_erms)
 	     )
 
   /* Support sysdeps/x86_64/multiarch/rawmemchr.c.  */
@@ -821,25 +826,27 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/wmemset.c.  */
   IFUNC_IMPL (i, name, wmemset,
-	      IFUNC_IMPL_ADD (array, i, wmemset, 1,
-			      __wmemset_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, wmemset,
-			      CPU_FEATURE_USABLE (AVX2),
-			      __wmemset_avx2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, wmemset,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __wmemset_avx2_unaligned_rtm)
-	      IFUNC_IMPL_ADD (array, i, wmemset,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __wmemset_evex_unaligned)
-	      IFUNC_IMPL_ADD (array, i, wmemset,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __wmemset_avx512_unaligned))
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, wmemset,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wmemset_evex_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, wmemset,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wmemset_avx512_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wmemset,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __wmemset_avx2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wmemset,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __wmemset_avx2_unaligned_rtm)
+	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
+	         implementation is also used at ISA level 2.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, wmemset, 1,
+				     __wmemset_sse2_unaligned))
 
 #ifdef SHARED
   /* Support sysdeps/x86_64/multiarch/memcpy_chk.c.  */
@@ -1049,25 +1056,27 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 #ifdef SHARED
   /* Support sysdeps/x86_64/multiarch/wmemset_chk.c.  */
   IFUNC_IMPL (i, name, __wmemset_chk,
-	      IFUNC_IMPL_ADD (array, i, __wmemset_chk, 1,
-			      __wmemset_chk_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __wmemset_chk,
-			      CPU_FEATURE_USABLE (AVX2),
-			      __wmemset_chk_avx2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __wmemset_chk,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __wmemset_chk_avx2_unaligned_rtm)
-	      IFUNC_IMPL_ADD (array, i, __wmemset_chk,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __wmemset_chk_evex_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __wmemset_chk,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)
-			       && CPU_FEATURE_USABLE (BMI2)),
-			      __wmemset_chk_avx512_unaligned))
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __wmemset_chk,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wmemset_chk_evex_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __wmemset_chk,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wmemset_chk_avx512_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __wmemset_chk,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __wmemset_chk_avx2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __wmemset_chk,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __wmemset_chk_avx2_unaligned_rtm)
+	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
+	         implementation is also used at ISA level 2.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __wmemset_chk, 1,
+				     __wmemset_chk_sse2_unaligned))
 #endif
 
   return 0;

@@ -1,4 +1,7 @@
-#if IS_IN (libc)
+#include <isa-level.h>
+
+#if ISA_SHOULD_BUILD (3)
+
 # define USE_WITH_AVX2	1
 
 # define VEC_SIZE	32

@@ -18,22 +18,26 @@
 
 #include <init-arch.h>
 
-extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned) attribute_hidden;
+extern __typeof (REDIRECT_NAME) OPTIMIZE (avx512_unaligned) attribute_hidden;
+
+extern __typeof (REDIRECT_NAME) OPTIMIZE (evex_unaligned) attribute_hidden;
+
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_unaligned) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2_unaligned_rtm)
   attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (evex_unaligned) attribute_hidden;
-extern __typeof (REDIRECT_NAME) OPTIMIZE (avx512_unaligned) attribute_hidden;
+
+extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned) attribute_hidden;
 
 static inline void *
 IFUNC_SELECTOR (void)
 {
-  const struct cpu_features* cpu_features = __get_cpu_features ();
+  const struct cpu_features *cpu_features = __get_cpu_features ();
 
-  if (CPU_FEATURE_USABLE_P (cpu_features, AVX2)
-      && CPU_FEATURES_ARCH_P (cpu_features, AVX_Fast_Unaligned_Load))
+  if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX2)
+      && X86_ISA_CPU_FEATURES_ARCH_P (cpu_features,
+				      AVX_Fast_Unaligned_Load, !))
     {
-      if (CPU_FEATURE_USABLE_P (cpu_features, AVX512VL))
+      if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX512VL))
 	{
 	  if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_AVX512))
 	    return OPTIMIZE (avx512_unaligned);
@@ -44,7 +48,8 @@ IFUNC_SELECTOR (void)
       if (CPU_FEATURE_USABLE_P (cpu_features, RTM))
 	return OPTIMIZE (avx2_unaligned_rtm);
 
-      if (!CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER))
+      if (X86_ISA_CPU_FEATURES_ARCH_P (cpu_features,
+				       Prefer_No_VZEROUPPER, !))
 	return OPTIMIZE (avx2_unaligned);
     }
 
