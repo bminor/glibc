@@ -30,7 +30,8 @@
    since IFUNC must be set up by init_cpu_features.  */
 # if defined USE_MULTIARCH && !defined SHARED
 #  ifdef __x86_64__
-#   define DEFAULT_MEMCMP	__memcmp_sse2
+/* DEFAULT_MEMCMP by sysdeps/x86_64/memcmp-isa-default-impl.h.  */
+#   include <sysdeps/x86_64/memcmp-isa-default-impl.h>
 #  else
 #   define DEFAULT_MEMCMP	__memcmp_ia32
 #  endif

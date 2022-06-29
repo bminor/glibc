@@ -1,4 +1,4 @@
-/* wmemcmp optimized with SSE2.
+/* wmemcmp hook for non-multiarch and RTLD build.
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,8 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define MEMCMP	__wmemcmp
-#define USE_AS_WMEMCMP	1
-#include "memcmp.S"
+#define WMEMCMP	__wmemcmp
+
+#define DEFAULT_IMPL_V1	"multiarch/wmemcmp-sse2.S"
+#define DEFAULT_IMPL_V3	"multiarch/wmemcmp-avx2-movbe.S"
+#define DEFAULT_IMPL_V4	"multiarch/wmemcmp-evex-movbe.S"
+
+#include "isa-default-impl.h"
 
 weak_alias (__wmemcmp, wmemcmp)

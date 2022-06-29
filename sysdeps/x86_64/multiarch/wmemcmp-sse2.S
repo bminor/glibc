@@ -16,6 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef WMEMCMP
+# define WMEMCMP	__wmemcmp_sse2
+#endif
+
+#define MEMCMP	WMEMCMP
 #define USE_AS_WMEMCMP	1
-#define MEMCMP	__wmemcmp_sse2
-#include "../memcmp.S"
+
+#include "memcmp-sse2.S"

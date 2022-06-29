@@ -1,5 +1,5 @@
-/* memcmp hook for non-multiarch and RTLD build.
-   Copyright (C) 2009-2022 Free Software Foundation, Inc.
+/* Set default memcmp impl based on ISA level.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define MEMCMP	memcmp
-
-#define DEFAULT_IMPL_V1	"multiarch/memcmp-sse2.S"
-#define DEFAULT_IMPL_V3	"multiarch/memcmp-avx2-movbe.S"
-#define DEFAULT_IMPL_V4	"multiarch/memcmp-evex-movbe.S"
-
-#include "isa-default-impl.h"
-
-libc_hidden_builtin_def(memcmp)
-weak_alias (memcmp, bcmp)
+#include <isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL == 1 || MINIMUM_X86_ISA_LEVEL == 2
+# define DEFAULT_MEMCMP	__memcmp_sse2
+#elif MINIMUM_X86_ISA_LEVEL == 3
+# define DEFAULT_MEMCMP	__memcmp_avx2_movbe
+#elif MINIMUM_X86_ISA_LEVEL == 4
+# define DEFAULT_MEMCMP	__memcmp_evex_movbe
+#else
+# error "Unknown default memcmp implementation"
+#endif

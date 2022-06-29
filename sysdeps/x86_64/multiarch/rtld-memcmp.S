@@ -1,5 +1,4 @@
-/* memcmp hook for non-multiarch and RTLD build.
-   Copyright (C) 2009-2022 Free Software Foundation, Inc.
+/* Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +15,4 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define MEMCMP	memcmp
-
-#define DEFAULT_IMPL_V1	"multiarch/memcmp-sse2.S"
-#define DEFAULT_IMPL_V3	"multiarch/memcmp-avx2-movbe.S"
-#define DEFAULT_IMPL_V4	"multiarch/memcmp-evex-movbe.S"
-
-#include "isa-default-impl.h"
-
-libc_hidden_builtin_def(memcmp)
-weak_alias (memcmp, bcmp)
+#include "../memcmp.S"
