@@ -33,6 +33,7 @@ sysdep_routines += \
   memset-avx2-unaligned-erms-rtm \
   memset-avx512-no-vzeroupper \
   memset-avx512-unaligned-erms \
+  memset-erms \
   memset-evex-unaligned-erms \
   memset-sse2-unaligned-erms \
   rawmemchr-avx2 \
