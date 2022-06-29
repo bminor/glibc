@@ -156,37 +156,6 @@ L(entry_from_wmemset):
 #if defined USE_MULTIARCH && IS_IN (libc)
 END (MEMSET_SYMBOL (__memset, unaligned))
 
-# if VEC_SIZE == 16
-ENTRY (__memset_chk_erms)
-	cmp	%RDX_LP, %RCX_LP
-	jb	HIDDEN_JUMPTARGET (__chk_fail)
-END (__memset_chk_erms)
-
-/* Only used to measure performance of REP STOSB.  */
-ENTRY (__memset_erms)
-	/* Skip zero length.  */
-	test	%RDX_LP, %RDX_LP
-	jnz	 L(stosb)
-	movq	%rdi, %rax
-	ret
-# else
-/* Provide a hidden symbol to debugger.  */
-	.hidden	MEMSET_SYMBOL (__memset, erms)
-ENTRY (MEMSET_SYMBOL (__memset, erms))
-# endif
-L(stosb):
-	mov	%RDX_LP, %RCX_LP
-	movzbl	%sil, %eax
-	mov	%RDI_LP, %RDX_LP
-	rep stosb
-	mov	%RDX_LP, %RAX_LP
-	VZEROUPPER_RETURN
-# if VEC_SIZE == 16
-END (__memset_erms)
-# else
-END (MEMSET_SYMBOL (__memset, erms))
-# endif
-
 # if defined SHARED && IS_IN (libc)
 ENTRY_CHK (MEMSET_CHK_SYMBOL (__memset_chk, unaligned_erms))
 	cmp	%RDX_LP, %RCX_LP
