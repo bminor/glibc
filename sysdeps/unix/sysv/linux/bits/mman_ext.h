@@ -21,11 +21,8 @@
 #endif
 
 #ifdef __USE_GNU
-#include <bits/types/struct_iovec.h>
-
-/*
- */
-extern __ssize_t process_madvise (int __pid_fd, const struct iovec* __iov,
+struct iovec;
+extern __ssize_t process_madvise (int __pid_fd, const struct iovec *__iov,
 				  size_t __count, int __advice,
 				  unsigned __flags)
   __THROW;
