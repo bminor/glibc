@@ -1009,6 +1009,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      CPU_FEATURE_USABLE (AVX2),
 			      __wmemset_chk_avx2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, __wmemset_chk,
+			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (RTM)),
+			      __wmemset_chk_avx2_unaligned_rtm)
+	      IFUNC_IMPL_ADD (array, i, __wmemset_chk,
 			      (CPU_FEATURE_USABLE (AVX512VL)
 			       && CPU_FEATURE_USABLE (AVX512BW)
 			       && CPU_FEATURE_USABLE (BMI2)),
