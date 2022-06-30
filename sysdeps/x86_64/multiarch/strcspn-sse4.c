@@ -16,9 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <nmmintrin.h>
-#include <string.h>
-#include "varshift.h"
+#if IS_IN (libc)
+
+# include <nmmintrin.h>
+# include <string.h>
+# include "varshift.h"
 
 /* We use 0x2:
 	_SIDD_SBYTE_OPS
@@ -52,31 +54,31 @@
    when either CFlag or ZFlag is 1.  If CFlag == 1, ECX has the offset
    X for case 1.  */
 
-#ifndef STRCSPN_GENERIC
-# define STRCSPN_GENERIC __strcspn_generic
-# define STRCSPN_SSE42 __strcspn_sse42
-#endif
+# ifndef STRCSPN_GENERIC
+#  define STRCSPN_GENERIC __strcspn_generic
+#  define STRCSPN_SSE42 __strcspn_sse42
+# endif
 
-#ifdef USE_AS_STRPBRK
-# define RETURN(val1, val2) return val1
-#else
-# define RETURN(val1, val2) return val2
-#endif
+# ifdef USE_AS_STRPBRK
+#  define RETURN(val1, val2) return val1
+# else
+#  define RETURN(val1, val2) return val2
+# endif
 
 extern
-#ifdef USE_AS_STRPBRK
+# ifdef USE_AS_STRPBRK
 char *
-#else
+# else
 size_t
-#endif
+# endif
 STRCSPN_GENERIC (const char *, const char *) attribute_hidden;
 
 
-#ifdef USE_AS_STRPBRK
+# ifdef USE_AS_STRPBRK
 char *
-#else
+# else
 size_t
-#endif
+# endif
 __attribute__ ((section (".text.sse4.2")))
 STRCSPN_SSE42 (const char *s, const char *a)
 {
@@ -161,3 +163,4 @@ start_loop:
       aligned += 16;
     }
 }
+#endif
