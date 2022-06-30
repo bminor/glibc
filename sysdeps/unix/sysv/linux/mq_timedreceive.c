@@ -35,7 +35,7 @@ __mq_timedreceive_time64 (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
 #else
   int ret = SYSCALL_CANCEL (mq_timedreceive_time64, mqdes, msg_ptr, msg_len,
                             msg_prio, abs_timeout);
-  if (ret == 0 || errno != ENOSYS)
+  if (ret >= 0 || errno != ENOSYS)
     return ret;
 
   struct timespec ts32;
