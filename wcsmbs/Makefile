@@ -52,6 +52,7 @@ tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-c16c32-1 wcsatcliff tst-wcstol-locale tst-wcstod-nan-locale \
 	 tst-wcstod-round test-char-types tst-fgetwc-after-eof \
 	 tst-wcstod-nan-sign tst-c16-surrogate tst-c32-state \
+	 test-mbrtoc8 test-c8rtomb \
 	 $(addprefix test-,$(strop-tests)) tst-mbstowcs \
 	 tst-wprintf-binary
 
@@ -59,7 +60,7 @@ include ../Rules
 
 ifeq ($(run-built-tests),yes)
 LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 hr_HR.ISO-8859-2 \
-	   ja_JP.EUC-JP zh_TW.EUC-TW tr_TR.UTF-8 tr_TR.ISO-8859-9
+	   ja_JP.EUC-JP zh_TW.EUC-TW tr_TR.UTF-8 tr_TR.ISO-8859-9 zh_HK.BIG5-HKSCS
 include ../gen-locales.mk
 
 $(objpfx)tst-btowc.out: $(gen-locales)
