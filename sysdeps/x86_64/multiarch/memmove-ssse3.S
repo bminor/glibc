@@ -1,19 +1,42 @@
-#include <sysdep.h>
+/* memmove/memcpy/mempcpy optimized for aligned access with SSSE3.
+   All versions must be listed in ifunc-impl-list.c.
+   Copyright (C) 2022 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-#ifndef MEMMOVE
-# define MEMMOVE	__memmove_ssse3
-# define MEMMOVE_CHK	__memmove_chk_ssse3
-# define MEMCPY	__memcpy_ssse3
-# define MEMCPY_CHK	__memcpy_chk_ssse3
-# define MEMPCPY	__mempcpy_ssse3
-# define MEMPCPY_CHK	__mempcpy_chk_ssse3
-#endif
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+
+#if IS_IN (libc)
+
+# include <sysdep.h>
+# ifndef MEMMOVE
+#  define MEMMOVE	__memmove_ssse3
+#  define MEMMOVE_CHK	__memmove_chk_ssse3
+#  define MEMCPY	__memcpy_ssse3
+#  define MEMCPY_CHK	__memcpy_chk_ssse3
+#  define MEMPCPY	__mempcpy_ssse3
+#  define MEMPCPY_CHK	__mempcpy_chk_ssse3
+# endif
 
 	.section .text.ssse3, "ax", @progbits
+# if defined SHARED
 ENTRY(MEMPCPY_CHK)
 	cmp	%RDX_LP, %RCX_LP
 	jb	HIDDEN_JUMPTARGET(__chk_fail)
 END(MEMPCPY_CHK)
+# endif
 
 ENTRY(MEMPCPY)
 	mov	%RDI_LP, %RAX_LP
@@ -21,10 +44,12 @@ ENTRY(MEMPCPY)
 	jmp	L(start)
 END(MEMPCPY)
 
+# if defined SHARED
 ENTRY(MEMMOVE_CHK)
 	cmp	%RDX_LP, %RCX_LP
 	jb	HIDDEN_JUMPTARGET(__chk_fail)
 END(MEMMOVE_CHK)
+# endif
 
 ENTRY_P2ALIGN(MEMMOVE, 6)
 # ifdef __ILP32__
@@ -124,11 +149,11 @@ L(more_2x_vec):
 	   loop.  */
 	movups	%xmm0, (%rdi)
 
-#ifdef SHARED_CACHE_SIZE_HALF
+# ifdef SHARED_CACHE_SIZE_HALF
 	cmp	$SHARED_CACHE_SIZE_HALF, %RDX_LP
-#else
+# else
 	cmp	__x86_shared_cache_size_half(%rip), %rdx
-#endif
+# endif
 	ja	L(large_memcpy)
 
 	leaq	-64(%rdi, %rdx), %r8
@@ -206,7 +231,7 @@ L(end_loop_fwd):
 
 	/* Extactly 64 bytes if `jmp L(end_loop_fwd)` is long encoding.
 	   60 bytes otherwise.  */
-#define ALIGNED_LOOP_FWD(align_by);	\
+# define ALIGNED_LOOP_FWD(align_by);	\
 	.p2align 6;	\
 L(loop_fwd_ ## align_by):	\
 	movaps	16(%rsi), %xmm0;	\
@@ -275,7 +300,7 @@ L(end_large_loop_fwd):
 
 	/* Size > 64 bytes and <= 96 bytes. 32-byte align between ensure
 	   96-byte spacing between each.  */
-#define ALIGNED_LARGE_LOOP_FWD(align_by);	\
+# define ALIGNED_LARGE_LOOP_FWD(align_by);	\
 	.p2align 5;	\
 L(large_loop_fwd_ ## align_by):	\
 	movaps	16(%rsi), %xmm0;	\
@@ -343,7 +368,7 @@ L(end_loop_bkwd):
 
 	/* Extactly 64 bytes if `jmp L(end_loop_bkwd)` is long encoding.
 	   60 bytes otherwise.  */
-#define ALIGNED_LOOP_BKWD(align_by);	\
+# define ALIGNED_LOOP_BKWD(align_by);	\
 	.p2align 6;	\
 L(loop_bkwd_ ## align_by):	\
 	movaps	32(%rsi), %xmm1;	\
@@ -381,4 +406,7 @@ L(loop_bkwd_ ## align_by):	\
 END(MEMMOVE)
 
 strong_alias (MEMMOVE, MEMCPY)
+# if defined SHARED
 strong_alias (MEMMOVE_CHK, MEMCPY_CHK)
+# endif
+#endif
