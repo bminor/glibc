@@ -33,7 +33,7 @@ __mq_timedreceive_time64 (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len,
                             msg_prio, abs_timeout);
 
 #ifndef __ASSUME_TIME64_SYSCALLS
-  if (ret == 0 || errno != ENOSYS)
+  if (ret >= 0 || errno != ENOSYS)
     return ret;
 
   struct timespec ts32;
