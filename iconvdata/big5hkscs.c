@@ -17769,7 +17769,7 @@ static struct
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->__statep->__count != 0)					      \
+  if ((data->__statep->__count >> 3) != 0)				      \
     {									      \
       if (FROM_DIRECTION)						      \
 	{								      \
@@ -17778,7 +17778,7 @@ static struct
 	      /* Write out the last character.  */			      \
 	      *((uint32_t *) outbuf) = data->__statep->__count >> 3;	      \
 	      outbuf += sizeof (uint32_t);				      \
-	      data->__statep->__count = 0;				      \
+	      data->__statep->__count &= 7;				      \
 	    }								      \
 	  else								      \
 	    /* We don't have enough room in the output buffer.  */	      \
@@ -17792,7 +17792,7 @@ static struct
 	      uint32_t lasttwo = data->__statep->__count >> 3;		      \
 	      *outbuf++ = (lasttwo >> 8) & 0xff;			      \
 	      *outbuf++ = lasttwo & 0xff;				      \
-	      data->__statep->__count = 0;				      \
+	      data->__statep->__count &= 7;				      \
 	    }								      \
 	  else								      \
 	    /* We don't have enough room in the output buffer.  */	      \
@@ -17878,7 +17878,7 @@ static struct
 									      \
 		/* Otherwise store only the first character now, and	      \
 		   put the second one into the queue.  */		      \
-		*statep = ch2 << 3;					      \
+		*statep = (ch2 << 3) | (*statep & 7);			      \
 		/* Tell the caller why we terminate the loop.  */	      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -17895,7 +17895,7 @@ static struct
       }									      \
     else								      \
       /* Clear the queue and proceed to output the saved character.  */	      \
-      *statep = 0;							      \
+      *statep &= 7;							      \
 									      \
     put32 (outptr, ch);							      \
     outptr += 4;							      \
@@ -17946,7 +17946,7 @@ static struct
 	  }								      \
 	*outptr++ = (ch >> 8) & 0xff;					      \
 	*outptr++ = ch & 0xff;						      \
-	*statep = 0;							      \
+	*statep &= 7;							      \
 	inptr += 4;							      \
 	continue;							      \
 									      \
@@ -17959,7 +17959,7 @@ static struct
 	  }								      \
 	*outptr++ = (lasttwo >> 8) & 0xff;				      \
 	*outptr++ = lasttwo & 0xff;					      \
-	*statep = 0;							      \
+	*statep &= 7;							      \
 	continue;							      \
       }									      \
 									      \
@@ -17996,7 +17996,7 @@ static struct
 	   /* Check for possible combining character.  */		      \
 	    if (__glibc_unlikely (ch == 0xca || ch == 0xea))		      \
 	      {								      \
-		*statep = ((cp[0] << 8) | cp[1]) << 3;			      \
+		*statep = (((cp[0] << 8) | cp[1]) << 3) | (*statep & 7);      \
 		inptr += 4;						      \
 		continue;						      \
 	      }								      \

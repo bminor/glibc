@@ -128,6 +128,71 @@ check_conversion (struct testdata test)
       printf ("error: Result of third conversion was wrong.\n");
       err++;
     }
+
+  /* Now perform the same test as above consuming one byte at a time.  */
+  mbs = test.input;
+  memset (&st, 0, sizeof (st));
+
+  /* Consume the first byte; expect an incomplete multibyte character.  */
+  ret = mbrtowc (&wc, mbs, 1, &st);
+  if (ret != -2)
+    {
+      printf ("error: First byte conversion returned %zd.\n", ret);
+      err++;
+    }
+  /* Advance past the first consumed byte.  */
+  mbs += 1;
+  /* Consume the second byte; expect the first wchar_t.  */
+  ret = mbrtowc (&wc, mbs, 1, &st);
+  if (ret != 1)
+    {
+      printf ("error: Second byte conversion returned %zd.\n", ret);
+      err++;
+    }
+  /* Advance past the second consumed byte.  */
+  mbs += 1;
+  if (wc != test.expected[0])
+    {
+      printf ("error: Result of first wchar_t conversion was wrong.\n");
+      err++;
+    }
+  /* Consume no bytes; expect the second wchar_t.  */
+  ret = mbrtowc (&wc, mbs, 1, &st);
+  if (ret != 0)
+    {
+      printf ("error: First attempt of third byte conversion returned %zd.\n", ret);
+      err++;
+    }
+  /* Do not advance past the third byte.  */
+  mbs += 0;
+  if (wc != test.expected[1])
+    {
+      printf ("error: Result of second wchar_t conversion was wrong.\n");
+      err++;
+    }
+  /* After the second wchar_t conversion, the converter should be in
+     the initial state since the two input BIG5-HKSCS bytes have been
+     consumed and the two wchar_t's have been output.  */
+  if (mbsinit (&st) == 0)
+    {
+      printf ("error: Converter not in initial state.\n");
+      err++;
+    }
+  /* Consume the third byte; expect the third wchar_t.  */
+  ret = mbrtowc (&wc, mbs, 1, &st);
+  if (ret != 1)
+    {
+      printf ("error: Third byte conversion returned %zd.\n", ret);
+      err++;
+    }
+  /* Advance past the third consumed byte.  */
+  mbs += 1;
+  if (wc != test.expected[2])
+    {
+      printf ("error: Result of third wchar_t conversion was wrong.\n");
+      err++;
+    }
+
   /* Return 0 if we saw no errors.  */
   return err;
 }
