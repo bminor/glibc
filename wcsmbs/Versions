@@ -49,4 +49,7 @@ libc {
     wcstof32; wcstof64; wcstof32x;
     wcstof32_l; wcstof64_l; wcstof32x_l;
   }
+  GLIBC_2.36 {
+    c8rtomb; mbrtoc8;
+  }
 }

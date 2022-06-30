@@ -42,7 +42,7 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcsmbsload mbsrtowcs_l \
 	    isoc99_wscanf isoc99_vwscanf isoc99_fwscanf isoc99_vfwscanf \
 	    isoc99_swscanf isoc99_vswscanf \
-	    mbrtoc16 c16rtomb mbrtoc32 c32rtomb
+	    mbrtoc8 c8rtomb mbrtoc16 c16rtomb mbrtoc32 c32rtomb
 
 strop-tests :=  wcscmp wcsncmp wmemcmp wcslen wcschr wcsrchr wcscpy wcsnlen \
 		wcpcpy wcsncpy wcpncpy wcscat wcsncat wcschrnul wcsspn wcspbrk \

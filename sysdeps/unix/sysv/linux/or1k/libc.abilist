@@ -2123,10 +2123,12 @@ GLIBC_2.35 wprintf F
 GLIBC_2.35 write F
 GLIBC_2.35 writev F
 GLIBC_2.35 wscanf F
+GLIBC_2.36 c8rtomb F
 GLIBC_2.36 fsconfig F
 GLIBC_2.36 fsmount F
 GLIBC_2.36 fsopen F
 GLIBC_2.36 fspick F
+GLIBC_2.36 mbrtoc8 F
 GLIBC_2.36 mount_setattr F
 GLIBC_2.36 move_mount F
 GLIBC_2.36 open_tree F

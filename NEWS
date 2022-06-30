@@ -51,6 +51,15 @@ Major new features:
   Previously, input bytes not within the ASCII range resulted in
   unpredictable output.
 
+* Support for the mbrtoc8 and c8rtomb multibyte/UTF-8 character conversion
+  functions has been added per the ISO C2X N2653 and C++20 P0482R6 proposals.
+  Support for the char8_t typedef has been added per the ISO C2X N2653
+  proposal.  The functions are declared in uchar.h in C2X mode or when the
+  _GNU_SOURCE macro or C++20 __cpp_char8_t feature test macro is defined.
+  The char8_t typedef is declared in uchar.h in C2X mode or when the
+  _GNU_SOURCE macro is defined and the C++20 __cpp_char8_t feature test macro
+  is not defined (if __cpp_char8_t is defined, then char8_t is a builtin type).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for prelink will be removed in the next release; this includes
