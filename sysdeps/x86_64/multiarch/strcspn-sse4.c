@@ -16,7 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <isa-level.h>
+#if IS_IN (libc) || MINIMUM_X86_ISA_LEVEL >= 2
 
 # include <nmmintrin.h>
 # include <string.h>
@@ -54,9 +55,11 @@
    when either CFlag or ZFlag is 1.  If CFlag == 1, ECX has the offset
    X for case 1.  */
 
+# ifndef STRCSPN
+#  define STRCSPN __strcspn_sse42
+# endif
 # ifndef STRCSPN_GENERIC
 #  define STRCSPN_GENERIC __strcspn_generic
-#  define STRCSPN_SSE42 __strcspn_sse42
 # endif
 
 # ifdef USE_AS_STRPBRK
@@ -80,7 +83,7 @@ char *
 size_t
 # endif
 __attribute__ ((section (".text.sse4.2")))
-STRCSPN_SSE42 (const char *s, const char *a)
+STRCSPN (const char *s, const char *a)
 {
   if (*a == 0)
     RETURN (NULL, strlen (s));

@@ -533,6 +533,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/strcspn.c.  */
   IFUNC_IMPL (i, name, strcspn,
+	      /* All implementations of strcspn are built at all ISA
+	         levels.  */
 	      IFUNC_IMPL_ADD (array, i, strcspn, CPU_FEATURE_USABLE (SSE4_2),
 			      __strcspn_sse42)
 	      IFUNC_IMPL_ADD (array, i, strcspn, 1, __strcspn_generic))
@@ -609,6 +611,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/strpbrk.c.  */
   IFUNC_IMPL (i, name, strpbrk,
+	      /* All implementations of strpbrk are built at all ISA
+	         levels.  */
 	      IFUNC_IMPL_ADD (array, i, strpbrk, CPU_FEATURE_USABLE (SSE4_2),
 			      __strpbrk_sse42)
 	      IFUNC_IMPL_ADD (array, i, strpbrk, 1, __strpbrk_generic))
@@ -616,6 +620,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/strspn.c.  */
   IFUNC_IMPL (i, name, strspn,
+	      /* All implementations of strspn are built at all ISA
+	         levels.  */
 	      IFUNC_IMPL_ADD (array, i, strspn, CPU_FEATURE_USABLE (SSE4_2),
 			      __strspn_sse42)
 	      IFUNC_IMPL_ADD (array, i, strspn, 1, __strspn_generic))

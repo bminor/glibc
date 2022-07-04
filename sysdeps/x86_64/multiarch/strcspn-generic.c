@@ -16,8 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
-
+/* We always need to build this implementation as strcspn-sse4 needs
+   to be able to fallback to it.  */
+#include <isa-level.h>
+#if IS_IN (libc) || MINIMUM_X86_ISA_LEVEL >= 2
 # include <sysdep.h>
 # define STRCSPN __strcspn_generic
 

@@ -33,7 +33,7 @@ IFUNC_SELECTOR (void)
      implementation its best to keep it regardless.  If an optimized
      fallback is added add a X86_ISA_CPU_FEATURE_ARCH_P (cpu_features,
      Slow_SSE4_2) check.  */
-  if (CPU_FEATURE_USABLE_P (cpu_features, SSE4_2))
+  if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, SSE4_2))
     return OPTIMIZE (sse42);
 
   return OPTIMIZE (generic);

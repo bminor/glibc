@@ -53,10 +53,13 @@
 
 extern size_t __strspn_generic (const char *, const char *) attribute_hidden;
 
+#ifndef STRSPN
+# define STRSPN	__strspn_sse42
+#endif
 
 size_t
 __attribute__ ((section (".text.sse4.2")))
-__strspn_sse42 (const char *s, const char *a)
+STRSPN (const char *s, const char *a)
 {
   if (*a == 0)
     return 0;

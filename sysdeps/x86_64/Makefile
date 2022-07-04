@@ -14,7 +14,14 @@ sysdep_noprof += _mcount
 endif
 
 ifeq ($(subdir),string)
-sysdep_routines += strcasecmp_l-nonascii strncase_l-nonascii
+sysdep_routines += \
+  strcasecmp_l-nonascii \
+  strcspn-generic \
+  strncase_l-nonascii \
+  strpbrk-generic \
+  strspn-generic \
+  varshift \
+# sysdep_routines
 gen-as-const-headers += locale-defines.sym
 tests += \
   tst-rsi-strlen

@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <isa-level.h>
+#if IS_IN (libc) || MINIMUM_X86_ISA_LEVEL >= 2
+
 # include <stdint.h>
 
 const int8_t ___m128i_shift_right[31] attribute_hidden

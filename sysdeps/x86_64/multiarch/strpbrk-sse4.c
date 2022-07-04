@@ -16,7 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#ifndef STRPBRK
+# define STRPBRK __strpbrk_sse42
+#endif
+
 #define USE_AS_STRPBRK
 #define STRCSPN_GENERIC __strpbrk_generic
-#define STRCSPN_SSE42 __strpbrk_sse42
+#define STRCSPN STRPBRK
 #include "strcspn-sse4.c"

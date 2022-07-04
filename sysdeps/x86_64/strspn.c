@@ -1,5 +1,5 @@
-/* strpbrk.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+/* strspn hook for non-multiarch and RTLD build.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-
-/* We always need to build this implementation as strpbrk-sse4 needs
-   to be able to fallback to it.  */
 #include <isa-level.h>
-#if IS_IN (libc) || MINIMUM_X86_ISA_LEVEL >= 2
-# include <sysdep.h>
-# define STRPBRK __strpbrk_generic
 
-# undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(STRPBRK)
+#if MINIMUM_X86_ISA_LEVEL == 1
+#include <string/strspn.c>
+#else
+#define STRSPN	strspn
+#include "multiarch/strspn-sse4.c"
+libc_hidden_builtin_def (strspn)
 #endif
-
-#include <string/strpbrk.c>
