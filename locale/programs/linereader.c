@@ -416,36 +416,60 @@ get_toplvl_escape (struct linereader *lr)
   return &lr->token;
 }
 
+/* Multibyte string buffer.  */
+struct lr_buffer
+{
+  size_t act;
+  size_t max;
+  char *buf;
+};
 
-#define ADDC(ch) \
-  do									      \
-    {									      \
-      if (bufact == bufmax)						      \
-	{								      \
-	  bufmax *= 2;							      \
-	  buf = xrealloc (buf, bufmax);					      \
-	}								      \
-      buf[bufact++] = (ch);						      \
-    }									      \
-  while (0)
+/* Initialize *LRB with a default-sized buffer.  */
+static void
+lr_buffer_init (struct lr_buffer *lrb)
+{
+ lrb->act = 0;
+ lrb->max = 56;
+ lrb->buf = xmalloc (lrb->max);
+}
 
+/* Transfers the buffer string from *LRB to LR->token.mbstr.  */
+static void
+lr_buffer_to_token (struct lr_buffer *lrb, struct linereader *lr)
+{
+  lr->token.val.str.startmb = xrealloc (lrb->buf, lrb->act + 1);
+  lr->token.val.str.startmb[lrb->act] = '\0';
+  lr->token.val.str.lenmb = lrb->act;
+}
 
-#define ADDS(s, l) \
-  do									      \
-    {									      \
-      size_t _l = (l);							      \
-      if (bufact + _l > bufmax)						      \
-	{								      \
-	  if (bufact < _l)						      \
-	    bufact = _l;						      \
-	  bufmax *= 2;							      \
-	  buf = xrealloc (buf, bufmax);					      \
-	}								      \
-      memcpy (&buf[bufact], s, _l);					      \
-      bufact += _l;							      \
-    }									      \
-  while (0)
+/* Adds CH to *LRB.  */
+static void
+addc (struct lr_buffer *lrb, char ch)
+{
+  if (lrb->act == lrb->max)
+    {
+      lrb->max *= 2;
+      lrb->buf = xrealloc (lrb->buf, lrb->max);
+    }
+  lrb->buf[lrb->act++] = ch;
+}
 
+/* Adds L bytes at S to *LRB.  */
+static void
+adds (struct lr_buffer *lrb, const unsigned char *s, size_t l)
+{
+  if (lrb->max - lrb->act < l)
+    {
+      size_t required_size = lrb->act + l;
+      size_t new_max = 2 * lrb->max;
+      if (new_max < required_size)
+	new_max = required_size;
+      lrb->buf = xrealloc (lrb->buf, new_max);
+      lrb->max = new_max;
+    }
+  memcpy (lrb->buf + lrb->act, s, l);
+  lrb->act += l;
+}
 
 #define ADDWC(ch) \
   do									      \
@@ -467,13 +491,11 @@ get_symname (struct linereader *lr)
      1. reserved words
      2. ISO 10646 position values
      3. all other.  */
-  char *buf;
-  size_t bufact = 0;
-  size_t bufmax = 56;
   const struct keyword_t *kw;
   int ch;
+  struct lr_buffer lrb;
 
-  buf = (char *) xmalloc (bufmax);
+  lr_buffer_init (&lrb);
 
   do
     {
@@ -481,13 +503,13 @@ get_symname (struct linereader *lr)
       if (ch == lr->escape_char)
 	{
 	  int c2 = lr_getc (lr);
-	  ADDC (c2);
+	  addc (&lrb, c2);
 
 	  if (c2 == '\n')
 	    ch = '\n';
 	}
       else
-	ADDC (ch);
+	addc (&lrb, ch);
     }
   while (ch != '>' && ch != '\n');
 
@@ -495,39 +517,35 @@ get_symname (struct linereader *lr)
     lr_error (lr, _("unterminated symbolic name"));
 
   /* Test for ISO 10646 position value.  */
-  if (buf[0] == 'U' && (bufact == 6 || bufact == 10))
+  if (lrb.buf[0] == 'U' && (lrb.act == 6 || lrb.act == 10))
     {
-      char *cp = buf + 1;
-      while (cp < &buf[bufact - 1] && isxdigit (*cp))
+      char *cp = lrb.buf + 1;
+      while (cp < &lrb.buf[lrb.act - 1] && isxdigit (*cp))
 	++cp;
 
-      if (cp == &buf[bufact - 1])
+      if (cp == &lrb.buf[lrb.act - 1])
 	{
 	  /* Yes, it is.  */
 	  lr->token.tok = tok_ucs4;
-	  lr->token.val.ucs4 = strtoul (buf + 1, NULL, 16);
+	  lr->token.val.ucs4 = strtoul (lrb.buf + 1, NULL, 16);
 
 	  return &lr->token;
 	}
     }
 
   /* It is a symbolic name.  Test for reserved words.  */
-  kw = lr->hash_fct (buf, bufact - 1);
+  kw = lr->hash_fct (lrb.buf, lrb.act - 1);
 
   if (kw != NULL && kw->symname_or_ident == 1)
     {
       lr->token.tok = kw->token;
-      free (buf);
+      free (lrb.buf);
     }
   else
     {
       lr->token.tok = tok_bsymbol;
-
-      buf = xrealloc (buf, bufact + 1);
-      buf[bufact] = '\0';
-
-      lr->token.val.str.startmb = buf;
-      lr->token.val.str.lenmb = bufact - 1;
+      lr_buffer_to_token (&lrb, lr);
+      --lr->token.val.str.lenmb;  /* Hide the training '>'.  */
     }
 
   return &lr->token;
@@ -537,16 +555,13 @@ get_symname (struct linereader *lr)
 static struct token *
 get_ident (struct linereader *lr)
 {
-  char *buf;
-  size_t bufact;
-  size_t bufmax = 56;
   const struct keyword_t *kw;
   int ch;
+  struct lr_buffer lrb;
 
-  buf = xmalloc (bufmax);
-  bufact = 0;
+  lr_buffer_init (&lrb);
 
-  ADDC (lr->buf[lr->idx - 1]);
+  addc (&lrb, lr->buf[lr->idx - 1]);
 
   while (!isspace ((ch = lr_getc (lr))) && ch != '"' && ch != ';'
 	 && ch != '<' && ch != ',' && ch != EOF)
@@ -560,27 +575,22 @@ get_ident (struct linereader *lr)
 	      break;
 	    }
 	}
-      ADDC (ch);
+      addc (&lrb, ch);
     }
 
   lr_ungetc (lr, ch);
 
-  kw = lr->hash_fct (buf, bufact);
+  kw = lr->hash_fct (lrb.buf, lrb.act);
 
   if (kw != NULL && kw->symname_or_ident == 0)
     {
       lr->token.tok = kw->token;
-      free (buf);
+      free (lrb.buf);
     }
   else
     {
       lr->token.tok = tok_ident;
-
-      buf = xrealloc (buf, bufact + 1);
-      buf[bufact] = '\0';
-
-      lr->token.val.str.startmb = buf;
-      lr->token.val.str.lenmb = bufact;
+      lr_buffer_to_token (&lrb, lr);
     }
 
   return &lr->token;
@@ -593,14 +603,10 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 	    int verbose)
 {
   int return_widestr = lr->return_widestr;
-  char *buf;
+  struct lr_buffer lrb;
   wchar_t *buf2 = NULL;
-  size_t bufact;
-  size_t bufmax = 56;
 
-  /* We must return two different strings.  */
-  buf = xmalloc (bufmax);
-  bufact = 0;
+  lr_buffer_init (&lrb);
 
   /* We know it'll be a string.  */
   lr->token.tok = tok_string;
@@ -613,19 +619,19 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 
       buf2 = NULL;
       while ((ch = lr_getc (lr)) != '"' && ch != '\n' && ch != EOF)
-	ADDC (ch);
+	addc (&lrb, ch);
 
       /* Catch errors with trailing escape character.  */
-      if (bufact > 0 && buf[bufact - 1] == lr->escape_char
-	  && (bufact == 1 || buf[bufact - 2] != lr->escape_char))
+      if (lrb.act > 0 && lrb.buf[lrb.act - 1] == lr->escape_char
+	  && (lrb.act == 1 || lrb.buf[lrb.act - 2] != lr->escape_char))
 	{
 	  lr_error (lr, _("illegal escape sequence at end of string"));
-	  --bufact;
+	  --lrb.act;
 	}
       else if (ch == '\n' || ch == EOF)
 	lr_error (lr, _("unterminated string"));
 
-      ADDC ('\0');
+      addc (&lrb, '\0');
     }
   else
     {
@@ -662,7 +668,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 		    break;
 		}
 
-	      ADDC (ch);
+	      addc (&lrb, ch);
 	      if (return_widestr)
 		ADDWC ((uint32_t) ch);
 
@@ -671,7 +677,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 
 	  /* Now we have to search for the end of the symbolic name, i.e.,
 	     the closing '>'.  */
-	  startidx = bufact;
+	  startidx = lrb.act;
 	  while ((ch = lr_getc (lr)) != '>' && ch != '\n' && ch != EOF)
 	    {
 	      if (ch == lr->escape_char)
@@ -680,12 +686,12 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 		  if (ch == '\n' || ch == EOF)
 		    break;
 		}
-	      ADDC (ch);
+	      addc (&lrb, ch);
 	    }
 	  if (ch == '\n' || ch == EOF)
 	    /* Not a correct string.  */
 	    break;
-	  if (bufact == startidx)
+	  if (lrb.act == startidx)
 	    {
 	      /* <> is no correct name.  Ignore it and also signal an
 		 error.  */
@@ -694,23 +700,23 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 	    }
 
 	  /* It might be a Uxxxx symbol.  */
-	  if (buf[startidx] == 'U'
-	      && (bufact - startidx == 5 || bufact - startidx == 9))
+	  if (lrb.buf[startidx] == 'U'
+	      && (lrb.act - startidx == 5 || lrb.act - startidx == 9))
 	    {
-	      char *cp = buf + startidx + 1;
-	      while (cp < &buf[bufact] && isxdigit (*cp))
+	      char *cp = lrb.buf + startidx + 1;
+	      while (cp < &lrb.buf[lrb.act] && isxdigit (*cp))
 		++cp;
 
-	      if (cp == &buf[bufact])
+	      if (cp == &lrb.buf[lrb.act])
 		{
 		  char utmp[10];
 
 		  /* Yes, it is.  */
-		  ADDC ('\0');
-		  wch = strtoul (buf + startidx + 1, NULL, 16);
+		  addc (&lrb, '\0');
+		  wch = strtoul (lrb.buf + startidx + 1, NULL, 16);
 
 		  /* Now forget about the name we just added.  */
-		  bufact = startidx;
+		  lrb.act = startidx;
 
 		  if (return_widestr)
 		    ADDWC (wch);
@@ -774,7 +780,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 				      seq = charmap_find_value (charmap, utmp,
 								9);
 				      assert (seq != NULL);
-				      ADDS (seq->bytes, seq->nbytes);
+				      adds (&lrb, seq->bytes, seq->nbytes);
 				    }
 
 				  continue;
@@ -788,24 +794,24 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 		    }
 
 		  if (seq != NULL)
-		    ADDS (seq->bytes, seq->nbytes);
+		    adds (&lrb, seq->bytes, seq->nbytes);
 
 		  continue;
 		}
 	    }
 
-	  /* We now have the symbolic name in buf[startidx] to
-	     buf[bufact-1].  Now find out the value for this character
+	  /* We now have the symbolic name in lrb.buf[startidx] to
+	     lrb.buf[lrb.act-1].  Now find out the value for this character
 	     in the charmap as well as in the repertoire map (in this
 	     order).  */
-	  seq = charmap_find_value (charmap, &buf[startidx],
-				    bufact - startidx);
+	  seq = charmap_find_value (charmap, &lrb.buf[startidx],
+				    lrb.act - startidx);
 
 	  if (seq == NULL)
 	    {
 	      /* This name is not in the charmap.  */
 	      lr_error (lr, _("symbol `%.*s' not in charmap"),
-			(int) (bufact - startidx), &buf[startidx]);
+			(int) (lrb.act - startidx), &lrb.buf[startidx]);
 	      illegal_string = 1;
 	    }
 
@@ -816,8 +822,8 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 		wch = seq->ucs4;
 	      else
 		{
-		  wch = repertoire_find_value (repertoire, &buf[startidx],
-					       bufact - startidx);
+		  wch = repertoire_find_value (repertoire, &lrb.buf[startidx],
+					       lrb.act - startidx);
 		  if (seq != NULL)
 		    seq->ucs4 = wch;
 		}
@@ -826,7 +832,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 		{
 		  /* This name is not in the repertoire map.  */
 		  lr_error (lr, _("symbol `%.*s' not in repertoire map"),
-			    (int) (bufact - startidx), &buf[startidx]);
+			    (int) (lrb.act - startidx), &lrb.buf[startidx]);
 		  illegal_string = 1;
 		}
 	      else
@@ -834,11 +840,11 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 	    }
 
 	  /* Now forget about the name we just added.  */
-	  bufact = startidx;
+	  lrb.act = startidx;
 
 	  /* And copy the bytes.  */
 	  if (seq != NULL)
-	    ADDS (seq->bytes, seq->nbytes);
+	    adds (&lrb, seq->bytes, seq->nbytes);
 	}
 
       if (ch == '\n' || ch == EOF)
@@ -849,7 +855,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 
       if (illegal_string)
 	{
-	  free (buf);
+	  free (lrb.buf);
 	  free (buf2);
 	  lr->token.val.str.startmb = NULL;
 	  lr->token.val.str.lenmb = 0;
@@ -859,7 +865,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 	  return &lr->token;
 	}
 
-      ADDC ('\0');
+      addc (&lrb, '\0');
 
       if (return_widestr)
 	{
@@ -870,8 +876,7 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 	}
     }
 
-  lr->token.val.str.startmb = xrealloc (buf, bufact);
-  lr->token.val.str.lenmb = bufact;
+  lr_buffer_to_token (&lrb, lr);
 
   return &lr->token;
 }
