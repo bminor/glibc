@@ -646,11 +646,11 @@ add_dependency (struct link_map *undef_map, struct link_map *map, int flags)
 	    {
 	      if (undef_map->l_name[0] == '\0')
 		_dl_debug_printf ("\
-marking %s [%lu] as NODELETE due to reference to main program\n",
+marking %s [%lu] as NODELETE due to reference from main program\n",
 				  map->l_name, map->l_ns);
 	      else
 		_dl_debug_printf ("\
-marking %s [%lu] as NODELETE due to reference to %s [%lu]\n",
+marking %s [%lu] as NODELETE due to reference from %s [%lu]\n",
 				  map->l_name, map->l_ns,
 				  undef_map->l_name, undef_map->l_ns);
 	    }
