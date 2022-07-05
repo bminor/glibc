@@ -330,15 +330,17 @@ lr_token (struct linereader *lr, const struct charmap_t *charmap,
       break;
 
     case 0x80 ... 0xff:		/* UTF-8 sequence.  */
-      uint32_t wch;
-      if (!utf8_decode (lr, ch, &wch))
-	{
-	  lr->token.tok = tok_error;
-	  return &lr->token;
-	}
-      lr->token.tok = tok_ucs4;
-      lr->token.val.ucs4 = wch;
-      return &lr->token;
+      {
+	uint32_t wch;
+	if (!utf8_decode (lr, ch, &wch))
+	  {
+	    lr->token.tok = tok_error;
+	    return &lr->token;
+	  }
+	lr->token.tok = tok_ucs4;
+	lr->token.val.ucs4 = wch;
+	return &lr->token;
+      }
     }
 
   return get_ident (lr);
