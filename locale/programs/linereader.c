@@ -42,6 +42,7 @@ static struct token *get_string (struct linereader *lr,
 				 struct localedef_t *locale,
 				 const struct repertoire_t *repertoire,
 				 int verbose);
+static bool utf8_decode (struct linereader *lr, uint8_t ch1, uint32_t *wch);
 
 
 struct linereader *
@@ -327,6 +328,17 @@ lr_token (struct linereader *lr, const struct charmap_t *charmap,
 	}
       lr_ungetn (lr, 2);
       break;
+
+    case 0x80 ... 0xff:		/* UTF-8 sequence.  */
+      uint32_t wch;
+      if (!utf8_decode (lr, ch, &wch))
+	{
+	  lr->token.tok = tok_error;
+	  return &lr->token;
+	}
+      lr->token.tok = tok_ucs4;
+      lr->token.val.ucs4 = wch;
+      return &lr->token;
     }
 
   return get_ident (lr);
@@ -673,6 +685,87 @@ translate_unicode_codepoint (struct localedef_t *locale,
     return false;
 }
 
+/* Returns true if ch is not EOF (that is, non-negative) and a valid
+   UTF-8 trailing byte.  */
+static bool
+utf8_valid_trailing (int ch)
+{
+  return ch >= 0 && (ch & 0xc0) == 0x80;
+}
+
+/* Reports an error for a broken UTF-8 sequence.  CH2 to CH4 may be
+   EOF.  Always returns false.  */
+static bool
+utf8_sequence_error (struct linereader *lr, uint8_t ch1, int ch2, int ch3,
+		     int ch4)
+{
+  char buf[30];
+
+  if (ch2 < 0)
+    snprintf (buf, sizeof (buf), "0x%02x", ch1);
+  else if (ch3 < 0)
+    snprintf (buf, sizeof (buf), "0x%02x 0x%02x", ch1, ch2);
+  else if (ch4 < 0)
+    snprintf (buf, sizeof (buf), "0x%02x 0x%02x 0x%02x", ch1, ch2, ch3);
+  else
+    snprintf (buf, sizeof (buf), "0x%02x 0x%02x 0x%02x 0x%02x",
+	      ch1, ch2, ch3, ch4);
+
+  lr_error (lr, _("invalid UTF-8 sequence %s"), buf);
+  return false;
+}
+
+/* Reads a UTF-8 sequence from LR, with the leading byte CH1, and
+   stores the decoded codepoint in *WCH.  Returns false on failure and
+   reports an error.  */
+static bool
+utf8_decode (struct linereader *lr, uint8_t ch1, uint32_t *wch)
+{
+  /* See RFC 3629 section 4 and __gconv_transform_utf8_internal.  */
+  if (ch1 < 0xc2)
+    return utf8_sequence_error (lr, ch1, -1, -1, -1);
+
+  int ch2 = lr_getc (lr);
+  if (!utf8_valid_trailing (ch2))
+    return utf8_sequence_error (lr, ch1, ch2, -1, -1);
+
+  if (ch1 <= 0xdf)
+    {
+      uint32_t result = ((ch1 & 0x1f)  << 6) | (ch2 & 0x3f);
+      if (result < 0x80)
+	return utf8_sequence_error (lr, ch1, ch2, -1, -1);
+      *wch = result;
+      return true;
+    }
+
+  int ch3 = lr_getc (lr);
+  if (!utf8_valid_trailing (ch3) || ch1 < 0xe0)
+    return utf8_sequence_error (lr, ch1, ch2, ch3, -1);
+
+  if (ch1 <= 0xef)
+    {
+      uint32_t result = (((ch1 & 0x0f)  << 12)
+			 | ((ch2 & 0x3f) << 6)
+			 | (ch3 & 0x3f));
+      if (result < 0x800)
+	return utf8_sequence_error (lr, ch1, ch2, ch3, -1);
+      *wch = result;
+      return true;
+    }
+
+  int ch4 = lr_getc (lr);
+  if (!utf8_valid_trailing (ch4) || ch1 < 0xf0 || ch1 > 0xf4)
+    return utf8_sequence_error (lr, ch1, ch2, ch3, ch4);
+
+  uint32_t result = (((ch1 & 0x07)  << 18)
+		     | ((ch2 & 0x3f) << 12)
+		     | ((ch3 & 0x3f) << 6)
+		     | (ch4 & 0x3f));
+  if (result < 0x10000)
+    return utf8_sequence_error (lr, ch1, ch2, ch3, ch4);
+  *wch = result;
+  return true;
+}
 
 static struct token *
 get_string (struct linereader *lr, const struct charmap_t *charmap,
@@ -696,7 +789,11 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 
       buf2 = NULL;
       while ((ch = lr_getc (lr)) != '"' && ch != '\n' && ch != EOF)
-	addc (&lrb, ch);
+	{
+	  if (ch >= 0x80)
+	    lr_error (lr, _("illegal 8-bit character in untranslated string"));
+	  addc (&lrb, ch);
+	}
 
       /* Catch errors with trailing escape character.  */
       if (lrb.act > 0 && lrb.buf[lrb.act - 1] == lr->escape_char
@@ -730,24 +827,49 @@ get_string (struct linereader *lr, const struct charmap_t *charmap,
 
 	  if (ch != '<')
 	    {
-	      /* The standards leave it up to the implementation to decide
-		 what to do with character which stand for themself.  We
-		 could jump through hoops to find out the value relative to
-		 the charmap and the repertoire map, but instead we leave
-		 it up to the locale definition author to write a better
-		 definition.  We assume here that every character which
-		 stands for itself is encoded using ISO 8859-1.  Using the
-		 escape character is allowed.  */
+	      /* The standards leave it up to the implementation to
+		 decide what to do with characters which stand for
+		 themselves.  This implementation treats the input
+		 file as encoded in UTF-8.  */
 	      if (ch == lr->escape_char)
 		{
 		  ch = lr_getc (lr);
+		  if (ch >= 0x80)
+		    {
+		      lr_error (lr, _("illegal 8-bit escape sequence"));
+		      illegal_string = true;
+		      break;
+		    }
 		  if (ch == '\n' || ch == EOF)
 		    break;
+		  addc (&lrb, ch);
+		  wch = ch;
+		}
+	      else if (ch < 0x80)
+		{
+		  wch = ch;
+		  addc (&lrb, ch);
+		}
+	      else 		/* UTF-8 sequence.  */
+		{
+		  if (!utf8_decode (lr, ch, &wch))
+		    {
+		      illegal_string = true;
+		      break;
+		    }
+		  if (!translate_unicode_codepoint (locale, charmap,
+						    repertoire, wch, &lrb))
+		    {
+		      /* Ignore the rest of the string.  Callers may
+			 skip this string because it cannot be encoded
+			 in the output character set.  */
+		      illegal_string = true;
+		      continue;
+		    }
 		}
 
-	      addc (&lrb, ch);
 	      if (return_widestr)
-		ADDWC ((uint32_t) ch);
+		ADDWC (wch);
 
 	      continue;
 	    }

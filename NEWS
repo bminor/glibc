@@ -46,6 +46,10 @@ Major new features:
   to more flexibly configure and operate on filesystem mounts.  The new
   mount APIs are specifically designed to work with namespaces.
 
+* localedef now accepts locale definition files encoded in UTF-8.
+  Previously, input bytes not within the ASCII range resulted in
+  unpredictable output.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for prelink will be removed in the next release; this includes
