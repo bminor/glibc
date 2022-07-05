@@ -275,7 +275,8 @@ realloc_check (void *oldmem, size_t bytes)
     malloc_printerr ("realloc(): invalid pointer");
   const INTERNAL_SIZE_T oldsize = chunksize (oldp);
 
-  if (!checked_request2size (rb, &chnb))
+  chnb = checked_request2size (rb);
+  if (chnb == 0)
     {
       __set_errno (ENOMEM);
       goto invert;
