@@ -108,15 +108,16 @@ do_test (void)
      loader and libc.  */
   {
     pid_t pid;
-    char buffer[512];
-#define STRINPUT(size) "%" # size "s"
+#define BUFFERLEN 511
+    char buffer[BUFFERLEN + 1];
+#define STRINPUT(size)  XSTRINPUT(size)
+#define XSTRINPUT(size) "%" # size "s"
 
     FILE *out = fmemopen (pldd.out.buffer, pldd.out.length, "r");
     TEST_VERIFY (out != NULL);
 
     /* First line is in the form of <pid>: <full path of executable>  */
-    TEST_COMPARE (fscanf (out, "%u: " STRINPUT (sizeof (buffer) - 1), &pid,
-			  buffer), 2);
+    TEST_COMPARE (fscanf (out, "%u: " STRINPUT (BUFFERLEN), &pid, buffer), 2);
 
     TEST_COMPARE (pid, *target_pid_ptr);
     TEST_COMPARE (strcmp (basename (buffer), "tst-pldd"), 0);
