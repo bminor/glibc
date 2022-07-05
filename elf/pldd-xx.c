@@ -24,6 +24,7 @@
 
 #include <dl-r_debug.h>
 
+#ifndef __CHERI_PURE_CAPABILITY__
 struct E(link_map)
 {
   EW(Addr) l_addr;
@@ -35,6 +36,48 @@ struct E(link_map)
   Lmid_t l_ns;
   EW(Addr) l_libname;
 };
+
+struct E(libname_list)
+{
+  EW(Addr) name;
+  EW(Addr) next;
+};
+
+struct E(r_debug)
+{
+  int r_version;
+# if CLASS == 64
+  int pad;
+# endif
+  EW(Addr) r_map;
+};
+#else
+struct E(link_map)
+{
+  uintptr_t l_addr;
+  uintptr_t l_name;
+  uintptr_t l_ld;
+  uintptr_t l_next;
+  uintptr_t l_prev;
+  uintptr_t l_real;
+  Lmid_t l_ns;
+  uintptr_t l_libname;
+};
+
+struct E(libname_list)
+{
+  uintptr_t name;
+  uintptr_t next;
+};
+
+struct E(r_debug)
+{
+  int r_version;
+  int pad;
+  uintptr_t r_map;
+};
+#endif
+
 #if CLASS == __ELF_NATIVE_CLASS
 _Static_assert (offsetof (struct link_map, l_addr)
 		== offsetof (struct E(link_map), l_addr), "l_addr");
@@ -44,27 +87,12 @@ _Static_assert (offsetof (struct link_map, l_next)
 		== offsetof (struct E(link_map), l_next), "l_next");
 #endif
 
-
-struct E(libname_list)
-{
-  EW(Addr) name;
-  EW(Addr) next;
-};
 #if CLASS == __ELF_NATIVE_CLASS
 _Static_assert (offsetof (struct libname_list, name)
 		== offsetof (struct E(libname_list), name), "name");
 _Static_assert (offsetof (struct libname_list, next)
 		== offsetof (struct E(libname_list), next), "next");
 #endif
-
-struct E(r_debug)
-{
-  int r_version;
-#if CLASS == 64
-  int pad;
-#endif
-  EW(Addr) r_map;
-};
 #if CLASS == __ELF_NATIVE_CLASS
 _Static_assert (offsetof (struct r_debug, r_version)
 		== offsetof (struct E(r_debug), r_version), "r_version");
