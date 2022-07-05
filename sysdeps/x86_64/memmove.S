@@ -16,17 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sysdep.h>
-
-#define VEC_SIZE	16
-#define VEC(i)		xmm##i
-#define PREFETCHNT	prefetchnta
-#define VMOVNT		movntdq
-/* Use movups and movaps for smaller code sizes.  */
-#define VMOVU		movups
-#define VMOVA		movaps
-#define MOV_SIZE	3
-#define SECTION(p)		p
 
 #ifdef USE_MULTIARCH
 # if !IS_IN (libc)
@@ -42,12 +31,18 @@
 #if !defined USE_MULTIARCH || !IS_IN (libc)
 # define MEMPCPY_SYMBOL(p,s)		__mempcpy
 #endif
-#ifndef MEMMOVE_SYMBOL
-# define MEMMOVE_CHK_SYMBOL(p,s)	p
-# define MEMMOVE_SYMBOL(p,s)		memmove
-#endif
 
-#include "multiarch/memmove-vec-unaligned-erms.S"
+#define MEMMOVE_CHK_SYMBOL(p,s)	p
+#define MEMMOVE_SYMBOL(p,s)	memmove
+
+
+#define DEFAULT_IMPL_V1	"multiarch/memmove-sse2-unaligned-erms.S"
+#define DEFAULT_IMPL_V3	"multiarch/memmove-avx-unaligned-erms.S"
+#define DEFAULT_IMPL_V4	"multiarch/memmove-evex-unaligned-erms.S"
+
+#include "isa-default-impl.h"
+
+weak_alias (__mempcpy, mempcpy)
 
 #ifndef USE_MULTIARCH
 libc_hidden_builtin_def (memmove)
@@ -59,13 +54,10 @@ libc_hidden_def (__mempcpy)
 weak_alias (__mempcpy, mempcpy)
 libc_hidden_builtin_def (mempcpy)
 
+
 # if defined SHARED && IS_IN (libc)
 #  undef memcpy
 #  include <shlib-compat.h>
 versioned_symbol (libc, __memcpy, memcpy, GLIBC_2_14);
-
-#  if SHLIB_COMPAT (libc, GLIBC_2_2_5, GLIBC_2_14)
-compat_symbol (libc, memmove, memcpy, GLIBC_2_2_5);
-#  endif
 # endif
 #endif

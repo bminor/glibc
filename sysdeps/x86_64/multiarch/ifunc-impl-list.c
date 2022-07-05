@@ -101,84 +101,96 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 #ifdef SHARED
   /* Support sysdeps/x86_64/multiarch/memmove_chk.c.  */
   IFUNC_IMPL (i, name, __memmove_chk,
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
-			      CPU_FEATURE_USABLE (AVX512F),
-			      __memmove_chk_avx512_no_vzeroupper)
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memmove_chk_avx512_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memmove_chk_avx512_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
-			      CPU_FEATURE_USABLE (AVX),
-			      __memmove_chk_avx_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
-			      CPU_FEATURE_USABLE (AVX),
-			      __memmove_chk_avx_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memmove_chk_avx_unaligned_rtm)
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memmove_chk_avx_unaligned_erms_rtm)
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memmove_chk_evex_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memmove_chk_evex_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk,
-			      CPU_FEATURE_USABLE (SSSE3),
-			      __memmove_chk_ssse3)
 	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
-			      __memmove_chk_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
-			      __memmove_chk_sse2_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memmove_chk, 1,
-			      __memmove_chk_erms))
+			      __memmove_chk_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memmove_chk,
+				     CPU_FEATURE_USABLE (AVX512F),
+				     __memmove_chk_avx512_no_vzeroupper)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memmove_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memmove_chk_avx512_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memmove_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memmove_chk_avx512_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memmove_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memmove_chk_evex_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memmove_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memmove_chk_evex_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memmove_chk,
+				     CPU_FEATURE_USABLE (AVX),
+				     __memmove_chk_avx_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memmove_chk,
+				     CPU_FEATURE_USABLE (AVX),
+				     __memmove_chk_avx_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memmove_chk,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memmove_chk_avx_unaligned_rtm)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memmove_chk,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memmove_chk_avx_unaligned_erms_rtm)
+	      /* By V3 we assume fast aligned copy.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __memmove_chk,
+				     CPU_FEATURE_USABLE (SSSE3),
+				     __memmove_chk_ssse3)
+	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
+	         implementation is also used at ISA level 2 (SSSE3 is too
+	         optimized around aligned copy to be better as general
+	         purpose memmove).  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __memmove_chk, 1,
+				     __memmove_chk_sse2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __memmove_chk, 1,
+				     __memmove_chk_sse2_unaligned_erms))
 #endif
 
   /* Support sysdeps/x86_64/multiarch/memmove.c.  */
   IFUNC_IMPL (i, name, memmove,
-	      IFUNC_IMPL_ADD (array, i, memmove,
-			      CPU_FEATURE_USABLE (AVX),
-			      __memmove_avx_unaligned)
-	      IFUNC_IMPL_ADD (array, i, memmove,
-			      CPU_FEATURE_USABLE (AVX),
-			      __memmove_avx_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, memmove,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memmove_avx_unaligned_rtm)
-	      IFUNC_IMPL_ADD (array, i, memmove,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memmove_avx_unaligned_erms_rtm)
-	      IFUNC_IMPL_ADD (array, i, memmove,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memmove_evex_unaligned)
-	      IFUNC_IMPL_ADD (array, i, memmove,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memmove_evex_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, memmove,
-			      CPU_FEATURE_USABLE (AVX512F),
-			      __memmove_avx512_no_vzeroupper)
-	      IFUNC_IMPL_ADD (array, i, memmove,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memmove_avx512_unaligned)
-	      IFUNC_IMPL_ADD (array, i, memmove,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memmove_avx512_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, memmove, CPU_FEATURE_USABLE (SSSE3),
-			      __memmove_ssse3)
-	      IFUNC_IMPL_ADD (array, i, memmove, 1, __memmove_erms)
 	      IFUNC_IMPL_ADD (array, i, memmove, 1,
-			      __memmove_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, memmove, 1,
-			      __memmove_sse2_unaligned_erms))
+			      __memmove_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memmove,
+				     CPU_FEATURE_USABLE (AVX512F),
+				     __memmove_avx512_no_vzeroupper)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memmove,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memmove_avx512_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memmove,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memmove_avx512_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memmove,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memmove_evex_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memmove,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memmove_evex_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memmove,
+				     CPU_FEATURE_USABLE (AVX),
+				     __memmove_avx_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memmove,
+				     CPU_FEATURE_USABLE (AVX),
+				     __memmove_avx_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memmove,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memmove_avx_unaligned_rtm)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memmove,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memmove_avx_unaligned_erms_rtm)
+	      /* By V3 we assume fast aligned copy.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, memmove,
+				     CPU_FEATURE_USABLE (SSSE3),
+				     __memmove_ssse3)
+	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
+	         implementation is also used at ISA level 2 (SSSE3 is too
+	         optimized around aligned copy to be better as general
+	         purpose memmove).  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, memmove, 1,
+				     __memmove_sse2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, memmove, 1,
+				     __memmove_sse2_unaligned_erms))
 
   /* Support sysdeps/x86_64/multiarch/memrchr.c.  */
   IFUNC_IMPL (i, name, memrchr,
@@ -832,165 +844,190 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 #ifdef SHARED
   /* Support sysdeps/x86_64/multiarch/memcpy_chk.c.  */
   IFUNC_IMPL (i, name, __memcpy_chk,
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
-			      CPU_FEATURE_USABLE (AVX512F),
-			      __memcpy_chk_avx512_no_vzeroupper)
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memcpy_chk_avx512_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memcpy_chk_avx512_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
-			      CPU_FEATURE_USABLE (AVX),
-			      __memcpy_chk_avx_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
-			      CPU_FEATURE_USABLE (AVX),
-			      __memcpy_chk_avx_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memcpy_chk_avx_unaligned_rtm)
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memcpy_chk_avx_unaligned_erms_rtm)
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memcpy_chk_evex_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memcpy_chk_evex_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk,
-			      CPU_FEATURE_USABLE (SSSE3),
-			      __memcpy_chk_ssse3)
 	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
-			      __memcpy_chk_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
-			      __memcpy_chk_sse2_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __memcpy_chk, 1,
-			      __memcpy_chk_erms))
+			      __memcpy_chk_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memcpy_chk,
+				     CPU_FEATURE_USABLE (AVX512F),
+				     __memcpy_chk_avx512_no_vzeroupper)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memcpy_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memcpy_chk_avx512_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memcpy_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memcpy_chk_avx512_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memcpy_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memcpy_chk_evex_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __memcpy_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memcpy_chk_evex_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memcpy_chk,
+				     CPU_FEATURE_USABLE (AVX),
+				     __memcpy_chk_avx_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memcpy_chk,
+				     CPU_FEATURE_USABLE (AVX),
+				     __memcpy_chk_avx_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memcpy_chk,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memcpy_chk_avx_unaligned_rtm)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __memcpy_chk,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memcpy_chk_avx_unaligned_erms_rtm)
+	      /* By V3 we assume fast aligned copy.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __memcpy_chk,
+				     CPU_FEATURE_USABLE (SSSE3),
+				     __memcpy_chk_ssse3)
+	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
+	         implementation is also used at ISA level 2 (SSSE3 is too
+	         optimized around aligned copy to be better as general
+	         purpose memmove).  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __memcpy_chk, 1,
+				     __memcpy_chk_sse2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __memcpy_chk, 1,
+				     __memcpy_chk_sse2_unaligned_erms))
 #endif
 
   /* Support sysdeps/x86_64/multiarch/memcpy.c.  */
   IFUNC_IMPL (i, name, memcpy,
-	      IFUNC_IMPL_ADD (array, i, memcpy,
-			      CPU_FEATURE_USABLE (AVX),
-			      __memcpy_avx_unaligned)
-	      IFUNC_IMPL_ADD (array, i, memcpy,
-			      CPU_FEATURE_USABLE (AVX),
-			      __memcpy_avx_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, memcpy,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memcpy_avx_unaligned_rtm)
-	      IFUNC_IMPL_ADD (array, i, memcpy,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __memcpy_avx_unaligned_erms_rtm)
-	      IFUNC_IMPL_ADD (array, i, memcpy,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memcpy_evex_unaligned)
-	      IFUNC_IMPL_ADD (array, i, memcpy,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memcpy_evex_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, memcpy, CPU_FEATURE_USABLE (SSSE3),
-			      __memcpy_ssse3)
-	      IFUNC_IMPL_ADD (array, i, memcpy,
-			      CPU_FEATURE_USABLE (AVX512F),
-			      __memcpy_avx512_no_vzeroupper)
-	      IFUNC_IMPL_ADD (array, i, memcpy,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memcpy_avx512_unaligned)
-	      IFUNC_IMPL_ADD (array, i, memcpy,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __memcpy_avx512_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_sse2_unaligned)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1,
-			      __memcpy_sse2_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_erms))
+			      __memcpy_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memcpy,
+				     CPU_FEATURE_USABLE (AVX512F),
+				     __memcpy_avx512_no_vzeroupper)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memcpy,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memcpy_avx512_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memcpy,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memcpy_avx512_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memcpy,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memcpy_evex_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memcpy,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __memcpy_evex_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memcpy,
+				     CPU_FEATURE_USABLE (AVX),
+				     __memcpy_avx_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memcpy,
+				     CPU_FEATURE_USABLE (AVX),
+				     __memcpy_avx_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memcpy,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memcpy_avx_unaligned_rtm)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, memcpy,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __memcpy_avx_unaligned_erms_rtm)
+	      /* By V3 we assume fast aligned copy.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, memcpy,
+				     CPU_FEATURE_USABLE (SSSE3),
+				     __memcpy_ssse3)
+	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
+	         implementation is also used at ISA level 2 (SSSE3 is too
+	         optimized around aligned copy to be better as general
+	         purpose memmove).  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, memcpy, 1,
+				     __memcpy_sse2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, memcpy, 1,
+				     __memcpy_sse2_unaligned_erms))
 
 #ifdef SHARED
   /* Support sysdeps/x86_64/multiarch/mempcpy_chk.c.  */
   IFUNC_IMPL (i, name, __mempcpy_chk,
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
-			      CPU_FEATURE_USABLE (AVX512F),
-			      __mempcpy_chk_avx512_no_vzeroupper)
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __mempcpy_chk_avx512_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __mempcpy_chk_avx512_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
-			      CPU_FEATURE_USABLE (AVX),
-			      __mempcpy_chk_avx_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
-			      CPU_FEATURE_USABLE (AVX),
-			      __mempcpy_chk_avx_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __mempcpy_chk_avx_unaligned_rtm)
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __mempcpy_chk_avx_unaligned_erms_rtm)
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __mempcpy_chk_evex_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __mempcpy_chk_evex_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk,
-			      CPU_FEATURE_USABLE (SSSE3),
-			      __mempcpy_chk_ssse3)
 	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
-			      __mempcpy_chk_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
-			      __mempcpy_chk_sse2_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, __mempcpy_chk, 1,
-			      __mempcpy_chk_erms))
+			      __mempcpy_chk_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __mempcpy_chk,
+				     CPU_FEATURE_USABLE (AVX512F),
+				     __mempcpy_chk_avx512_no_vzeroupper)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __mempcpy_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __mempcpy_chk_avx512_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __mempcpy_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __mempcpy_chk_avx512_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __mempcpy_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __mempcpy_chk_evex_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, __mempcpy_chk,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __mempcpy_chk_evex_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __mempcpy_chk,
+				     CPU_FEATURE_USABLE (AVX),
+				     __mempcpy_chk_avx_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __mempcpy_chk,
+				     CPU_FEATURE_USABLE (AVX),
+				     __mempcpy_chk_avx_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __mempcpy_chk,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __mempcpy_chk_avx_unaligned_rtm)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, __mempcpy_chk,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __mempcpy_chk_avx_unaligned_erms_rtm)
+	      /* By V3 we assume fast aligned copy.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __mempcpy_chk,
+				     CPU_FEATURE_USABLE (SSSE3),
+				     __mempcpy_chk_ssse3)
+	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
+	         implementation is also used at ISA level 2 (SSSE3 is too
+	         optimized around aligned copy to be better as general
+	         purpose memmove).  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __mempcpy_chk, 1,
+				     __mempcpy_chk_sse2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, __mempcpy_chk, 1,
+				     __mempcpy_chk_sse2_unaligned_erms))
 #endif
 
   /* Support sysdeps/x86_64/multiarch/mempcpy.c.  */
   IFUNC_IMPL (i, name, mempcpy,
-	      IFUNC_IMPL_ADD (array, i, mempcpy,
-			      CPU_FEATURE_USABLE (AVX512F),
-			      __mempcpy_avx512_no_vzeroupper)
-	      IFUNC_IMPL_ADD (array, i, mempcpy,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __mempcpy_avx512_unaligned)
-	      IFUNC_IMPL_ADD (array, i, mempcpy,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __mempcpy_avx512_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, mempcpy,
-			      CPU_FEATURE_USABLE (AVX),
-			      __mempcpy_avx_unaligned)
-	      IFUNC_IMPL_ADD (array, i, mempcpy,
-			      CPU_FEATURE_USABLE (AVX),
-			      __mempcpy_avx_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, mempcpy,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __mempcpy_avx_unaligned_rtm)
-	      IFUNC_IMPL_ADD (array, i, mempcpy,
-			      (CPU_FEATURE_USABLE (AVX)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __mempcpy_avx_unaligned_erms_rtm)
-	      IFUNC_IMPL_ADD (array, i, mempcpy,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __mempcpy_evex_unaligned)
-	      IFUNC_IMPL_ADD (array, i, mempcpy,
-			      CPU_FEATURE_USABLE (AVX512VL),
-			      __mempcpy_evex_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, mempcpy, CPU_FEATURE_USABLE (SSSE3),
-			      __mempcpy_ssse3)
 	      IFUNC_IMPL_ADD (array, i, mempcpy, 1,
-			      __mempcpy_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, mempcpy, 1,
-			      __mempcpy_sse2_unaligned_erms)
-	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, __mempcpy_erms))
+			      __mempcpy_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, mempcpy,
+				     CPU_FEATURE_USABLE (AVX512F),
+				     __mempcpy_avx512_no_vzeroupper)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, mempcpy,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __mempcpy_avx512_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, mempcpy,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __mempcpy_avx512_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, mempcpy,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __mempcpy_evex_unaligned)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, mempcpy,
+				     CPU_FEATURE_USABLE (AVX512VL),
+				     __mempcpy_evex_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, mempcpy,
+				     CPU_FEATURE_USABLE (AVX),
+				     __mempcpy_avx_unaligned)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, mempcpy,
+				     CPU_FEATURE_USABLE (AVX),
+				     __mempcpy_avx_unaligned_erms)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, mempcpy,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __mempcpy_avx_unaligned_rtm)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, mempcpy,
+				     (CPU_FEATURE_USABLE (AVX)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __mempcpy_avx_unaligned_erms_rtm)
+	      /* By V3 we assume fast aligned copy.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, mempcpy,
+				     CPU_FEATURE_USABLE (SSSE3),
+				     __mempcpy_ssse3)
+	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
+	         implementation is also used at ISA level 2 (SSSE3 is too
+	         optimized around aligned copy to be better as general
+	         purpose memmove).  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, mempcpy, 1,
+				     __mempcpy_sse2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, mempcpy, 1,
+				     __mempcpy_sse2_unaligned_erms))
 
   /* Support sysdeps/x86_64/multiarch/strncmp.c.  */
   IFUNC_IMPL (i, name, strncmp,

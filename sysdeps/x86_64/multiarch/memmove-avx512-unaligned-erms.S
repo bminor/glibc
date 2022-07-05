@@ -1,4 +1,7 @@
-#if IS_IN (libc)
+#include <isa-level.h>
+
+#if ISA_SHOULD_BUILD (4)
+
 # define VEC_SIZE	64
 # define XMM0		xmm16
 # define XMM1		xmm17
@@ -26,8 +29,12 @@
 # define VMOVA		vmovdqa64
 # define VZEROUPPER
 # define MOV_SIZE	6
+
 # define SECTION(p)		p##.evex512
-# define MEMMOVE_SYMBOL(p,s)	p##_avx512_##s
+
+# ifndef MEMMOVE_SYMBOL
+#  define MEMMOVE_SYMBOL(p,s)	p##_avx512_##s
+# endif
 
 # include "memmove-vec-unaligned-erms.S"
 #endif

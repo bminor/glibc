@@ -18,7 +18,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 
-#if IS_IN (libc)
+#include <isa-level.h>
+
+#if ISA_SHOULD_BUILD (2)
 
 # include <sysdep.h>
 # ifndef MEMMOVE
