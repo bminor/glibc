@@ -134,7 +134,7 @@ lr_getc (struct linereader *lr)
 	return EOF;
     }
 
-  return lr->buf[lr->idx] == '\32' ? EOF : lr->buf[lr->idx++];
+  return lr->buf[lr->idx++] & 0xff;
 }
 
 
