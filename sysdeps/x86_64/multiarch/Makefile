@@ -45,7 +45,6 @@ sysdep_routines += \
   stpcpy-sse2-unaligned \
   stpncpy-avx2 \
   stpncpy-avx2-rtm \
-  stpncpy-generic \
   stpncpy-evex \
   stpncpy-sse2-unaligned \
   strcasecmp_l-avx2 \
@@ -91,7 +90,6 @@ sysdep_routines += \
   strncase_l-sse4_2 \
   strncat-avx2 \
   strncat-avx2-rtm \
-  strncat-generic \
   strncat-evex \
   strncat-sse2-unaligned \
   strncmp-avx2 \
@@ -101,7 +99,6 @@ sysdep_routines += \
   strncmp-sse4_2 \
   strncpy-avx2 \
   strncpy-avx2-rtm \
-  strncpy-generic \
   strncpy-evex \
   strncpy-sse2-unaligned \
   strnlen-avx2 \

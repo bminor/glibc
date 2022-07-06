@@ -24,8 +24,7 @@
 # undef strncpy
 
 # define SYMBOL_NAME strncpy
-# define GENERIC generic
-# include "ifunc-strcpy.h"
+# include "ifunc-strncpy.h"
 
 libc_ifunc_redirected (__redirect_strncpy, strncpy, IFUNC_SELECTOR ());
 

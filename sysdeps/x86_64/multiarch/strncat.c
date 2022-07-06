@@ -24,8 +24,7 @@
 # undef strncat
 
 # define SYMBOL_NAME strncat
-# define GENERIC generic
-# include "ifunc-strcpy.h"
+# include "ifunc-strncpy.h"
 
 libc_ifunc_redirected (__redirect_strncat, strncat, IFUNC_SELECTOR ());
 strong_alias (strncat, __strncat);

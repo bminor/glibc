@@ -1,7 +1,6 @@
-/* Common definition for ifunc selections optimized with SSE2, unaligned
-   SSE2 and SSSE3.
+/* Common definition for ifunc st{r|p}n{cpy|cat}
    All versions must be listed in ifunc-impl-list.c.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +19,6 @@
 
 #include <init-arch.h>
 
-extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2_unaligned)
   attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2) attribute_hidden;
@@ -46,8 +44,5 @@ IFUNC_SELECTOR (void)
 	return OPTIMIZE (avx2);
     }
 
-  if (CPU_FEATURES_ARCH_P (cpu_features, Fast_Unaligned_Load))
-    return OPTIMIZE (sse2_unaligned);
-
-  return OPTIMIZE (sse2);
+  return OPTIMIZE (sse2_unaligned);
 }
