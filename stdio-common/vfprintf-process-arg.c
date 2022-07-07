@@ -25,6 +25,115 @@
 {
   /* Start real work.  We know about all flags and modifiers and
      now process the wanted format specifier.  */
+
+/* Process capability information according to the CHERI C Programming guide:
+   https://github.com/CTSRD-CHERI/cheri-c-programming/wiki/Displaying-Capabilities */
+#ifdef __CHERI_PURE_CAPABILITY__
+LABEL (capability):
+  /* CHERI capability.  */
+  {
+	uint64_t cap_perm = 0;
+	uint64_t cap_base = 0;
+	uint64_t cap_limit = 0;
+	uint64_t cap_tag = 0;
+	uint64_t cap_type = 0;
+	outchar (L_(' '));
+	outchar (L_('['));
+	cap_perm = __builtin_cheri_perms_get (cap);
+	if (cap_perm & CAP_PERM_LOAD)
+	  outchar (L_('r'));
+	if (cap_perm & CAP_PERM_STORE)
+	  outchar (L_('w'));
+	if (cap_perm & CAP_PERM_EXECUTE)
+	  outchar (L_('x'));
+	if (cap_perm & CAP_PERM_LOAD_CAP)
+	  outchar (L_('R'));
+	if (cap_perm & CAP_PERM_STORE_CAP)
+	  outchar (L_('W'));
+	if (cap_perm & CAP_PERM_EXECUTIVE)
+	  outchar (L_('E'));
+	outchar (L_(','));
+	cap_base = __builtin_cheri_base_get (cap);
+	number.word = (unsigned long int) cap_base;
+	if (prec < 0)
+	  prec = 1;
+	else
+	  pad = L_(' ');
+	string = _itoa_word (number.word, workend, base, spec == L_('X'));
+	prec = MAX (0, prec - (workend - string));
+	width -= workend - string + prec;
+	if (number.word != 0)
+	  width -= 2;
+	if (pad == L_(' '))
+	  {
+	    PAD (L_(' '));
+	    width = 0;
+	  }
+	if (number.word != 0)
+	  {
+	    outchar (L_('0'));
+	    outchar (spec);
+	  }
+	width += prec;
+	PAD (L_('0'));
+	outstring (string, workend - string);
+	outchar (L_('-'));
+	cap_limit = __builtin_cheri_length_get (cap) + cap_base;
+	number.word = (unsigned long int) cap_limit;
+	if (prec < 0)
+	  prec = 1;
+	else
+	  pad = L_(' ');
+	string = _itoa_word (number.word, workend, base, spec == L_('X'));
+	prec = MAX (0, prec - (workend - string));
+	width -= workend - string + prec;
+	if (number.word != 0)
+	  width -= 2;
+	if (pad == L_(' '))
+	  {
+	    PAD (L_(' '));
+	    width = 0;
+	  }
+	if (number.word != 0)
+	  {
+	    outchar (L_('0'));
+	    outchar (spec);
+	  }
+	width += prec;
+	PAD (L_('0'));
+	outstring (string, workend - string);
+	outchar (L_(']'));
+	cap_tag = __builtin_cheri_tag_get (cap);
+	if (!cap_tag)
+	  {
+	    outchar (L_(' '));
+	    outchar (L_('('));
+	    outstring ("invalid", 8);
+	    outchar (L_(')'));
+	    break;
+	  }
+	cap_type = __builtin_cheri_type_get (cap);
+	if (cap_type != 0)
+	  {
+	    if (cap_type == 1)
+	      {
+		outchar (L_(' '));
+		outchar (L_('('));
+		outstring ("sentry", 7);
+		outchar (L_(')'));
+	      }
+	    else
+	      {
+		outchar (L_(' '));
+		outchar (L_('('));
+		outstring ("sealed", 7);
+		outchar (L_(')'));
+	      }
+	  }
+      }
+      break;
+#endif
+
 LABEL (form_percent):
   /* Write a literal "%".  */
   outchar (L_('%'));
@@ -212,6 +321,11 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
 
       outstring (string, workend - string);
 
+#ifdef __CHERI_PURE_CAPABILITY__
+      if (is_cap == 1)
+	goto LABEL(capability);
+#endif
+
       break;
     }
   else
@@ -265,6 +379,13 @@ LABEL (form_pointer):
         base = 16;
         number.word = (unsigned long int) ptr;
         is_negative = 0;
+#ifdef __CHERI_PURE_CAPABILITY__
+	if (alt == 1)
+	  {
+	    cap = ptr;
+	    is_cap = 1;
+	  }
+#endif
         alt = 1;
         group = 0;
         spec = L_('x');
