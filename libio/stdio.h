@@ -885,18 +885,25 @@ extern void funlockfile (FILE *__stream) __THROW;
 extern int __uflow (FILE *);
 extern int __overflow (FILE *, int);
 
+#if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
+/* Declare all functions from bits/stdio2-decl.h first.  */
+# include <bits/stdio2-decl.h>
+#endif
+
+/* The following headers provide asm redirections.  These redirections must
+   appear before the first usage of these functions, e.g. in bits/stdio.h.  */
+#if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
+# include <bits/stdio-ldbl.h>
+#endif
+
 /* If we are compiling with optimizing read this file.  It contains
    several optimizing inline functions and macros.  */
 #ifdef __USE_EXTERN_INLINES
 # include <bits/stdio.h>
 #endif
 #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
+/* Now include the function definitions and redirects too.  */
 # include <bits/stdio2.h>
-#endif
-
-#include <bits/floatn.h>
-#if defined __LDBL_COMPAT || __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1
-# include <bits/stdio-ldbl.h>
 #endif
 
 __END_DECLS
