@@ -116,6 +116,10 @@
   while (0)
 #endif
 
+#ifdef __CHERI_PURE_CAPABILITY__
+# include <cheri_perms.h>
+#endif
+
 /* Add LENGTH to DONE.  Return the new value of DONE, or -1 on
    overflow (and set errno accordingly).  */
 static inline int
@@ -792,6 +796,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap, unsigned int mode_flags)
       int base;
       union printf_arg the_arg;
       CHAR_T *string;	/* Pointer to argument string.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+      const void *cap = 0;
+#endif
       int alt = 0;	/* Alternate format.  */
       int space = 0;	/* Use space prefix if no sign is needed.  */
       int left = 0;	/* Left-justify output.  */
@@ -805,6 +812,9 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap, unsigned int mode_flags)
       int is_char = 0;	/* Argument is promoted (unsigned) char.  */
       int width = 0;	/* Width of output; 0 means none specified.  */
       int prec = -1;	/* Precision of output; -1 means none specified.  */
+      __attribute__((unused))
+      int is_cap = 0;	/* Argument is a capability.  */
+
       /* This flag is set by the 'I' modifier and selects the use of the
 	 `outdigits' as determined by the current locale.  */
       int use_outdigits = 0;
@@ -1324,6 +1334,9 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
       } number;
       int base;
       CHAR_T *string;		/* Pointer to argument string.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+      const void *cap = 0;
+#endif
 
       /* Fill variables from values in struct.  */
       int alt = specs[nspecs_done].info.alt;
@@ -1338,6 +1351,8 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
       int is_long = specs[nspecs_done].info.is_long;
       int width = specs[nspecs_done].info.width;
       int prec = specs[nspecs_done].info.prec;
+      __attribute__((unused))
+      int is_cap = specs[nspecs_done].info.is_cap;
       int use_outdigits = specs[nspecs_done].info.i18n;
       char pad = specs[nspecs_done].info.pad;
       CHAR_T spec = specs[nspecs_done].info.spec;
