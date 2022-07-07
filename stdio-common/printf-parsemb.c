@@ -80,6 +80,7 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
   spec->info.pad = ' ';
   spec->info.wide = sizeof (UCHAR_T) > 1;
   spec->info.is_binary128 = 0;
+  spec->info.is_cap = 0;
 
   /* Test for positional argument.  */
   if (ISDIGIT (*format))
@@ -371,6 +372,10 @@ __parse_one_specmb (const UCHAR_T *format, size_t posn,
 	  break;
 	case L'p':
 	  spec->data_arg_type = PA_POINTER;
+#ifdef __CHERI_PURE_CAPABILITY__
+	  if (spec->info.alt)
+	    spec->info.is_cap = 1;
+#endif
 	  break;
 	case L'n':
 	  spec->data_arg_type = PA_INT|PA_FLAG_PTR;
