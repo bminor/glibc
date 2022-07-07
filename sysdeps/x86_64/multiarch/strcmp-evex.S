@@ -214,7 +214,6 @@
 	.align	16
 	.type	STRCMP, @function
 	.globl	STRCMP
-	.hidden	STRCMP
 
 # ifdef USE_AS_STRCASECMP_L
 ENTRY (STRCASECMP)

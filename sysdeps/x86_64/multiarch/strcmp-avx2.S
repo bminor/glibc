@@ -184,7 +184,6 @@
 	.align	16
 	.type	STRCMP, @function
 	.globl	STRCMP
-	.hidden	STRCMP
 
 # ifndef GLABEL
 #  define GLABEL(...)	__VA_ARGS__
