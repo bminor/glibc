@@ -78,7 +78,6 @@ sysdep_routines += \
   strcpy-evex \
   strcpy-sse2 \
   strcpy-sse2-unaligned \
-  strcspn-generic \
   strcspn-sse4 \
   strlen-avx2 \
   strlen-avx2-rtm \
@@ -110,13 +109,11 @@ sysdep_routines += \
   strnlen-evex \
   strnlen-evex512 \
   strnlen-sse2 \
-  strpbrk-generic \
   strpbrk-sse4 \
   strrchr-avx2 \
   strrchr-avx2-rtm \
   strrchr-evex \
   strrchr-sse2 \
-  strspn-generic \
   strspn-sse4 \
   strstr-avx512 \
   strstr-sse2-unaligned \
