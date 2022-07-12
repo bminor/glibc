@@ -1,5 +1,4 @@
-/* strcpy/stpcpy implementation for x86-64.
-   Copyright (C) 2002-2022 Free Software Foundation, Inc.
+/* Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +15,4 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define STRCPY	strcpy
-#include "multiarch/strcpy-sse2.S"
-libc_hidden_builtin_def (strcpy)
+#include "../stpcpy.S"

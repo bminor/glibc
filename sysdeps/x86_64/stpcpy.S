@@ -1,7 +1,6 @@
-#define USE_AS_STPCPY
 #define STRCPY __stpcpy
 
-#include <sysdeps/x86_64/strcpy.S>
+#include "multiarch/stpcpy-sse2.S"
 
 weak_alias (__stpcpy, stpcpy)
 libc_hidden_def (__stpcpy)

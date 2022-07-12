@@ -17,17 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc)
-
-# include <sysdep.h>
-# define __stpcpy __stpcpy_sse2
-
-# undef weak_alias
-# define weak_alias(ignored1, ignored2)
-# undef libc_hidden_def
-# define libc_hidden_def(__stpcpy)
-# undef libc_hidden_builtin_def
-# define libc_hidden_builtin_def(stpcpy)
+# ifndef STRCPY
+#  define STRCPY	__stpcpy_sse2
+# endif
 #endif
 
 #define USE_AS_STPCPY
-#include <sysdeps/x86_64/stpcpy.S>
+#include "strcpy-sse2.S"
