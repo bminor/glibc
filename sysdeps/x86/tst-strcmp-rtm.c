@@ -1,5 +1,6 @@
-/* Test case for strncmp inside a transactionally executing RTM region.
-   Copyright (C) 2021-2022 Free Software Foundation, Inc.
+/* Test case for strcmp inside a transactionally executing RTM
+   region.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,18 +23,17 @@
 #ifdef WIDE
 # define CHAR wchar_t
 # define MEMSET wmemset
-# define STRNCMP wcsncmp
-# define TEST_NAME "wcsncmp"
+# define STRCMP wcscmp
+# define TEST_NAME "wcscmp"
 #else /* !WIDE */
 # define CHAR char
 # define MEMSET memset
-# ifndef STRNCMP
-#  define STRNCMP strncmp
-#  define TEST_NAME "strncmp"
+
+# ifndef STRCMP
+#  define STRCMP strcmp
+#  define TEST_NAME "strcmp"
 # endif
-#endif /* !WIDE */
-
-
+#endif
 
 #define LOOP 3000
 #define STRING_SIZE 1024
@@ -46,7 +46,7 @@ prepare (void)
 {
   MEMSET (string1, 'a', STRING_SIZE - 1);
   MEMSET (string2, 'a', STRING_SIZE - 1);
-  if (STRNCMP (string1, string2, STRING_SIZE) == 0)
+  if (STRCMP (string1, string2) == 0)
     return EXIT_SUCCESS;
   else
     return EXIT_FAILURE;
@@ -56,43 +56,15 @@ __attribute__ ((noinline, noclone))
 static int
 function (void)
 {
-  if (STRNCMP (string1, string2, STRING_SIZE) == 0)
+  if (STRCMP (string1, string2) == 0)
     return 0;
   else
     return 1;
 }
 
-__attribute__ ((noinline, noclone))
-static int
-function_overflow (void)
-{
-  if (STRNCMP (string1, string2, SIZE_MAX) == 0)
-    return 0;
-  else
-    return 1;
-}
-
-__attribute__ ((noinline, noclone))
-static int
-function_overflow2 (void)
-{
-  if (STRNCMP (string1, string2, SIZE_MAX >> 4) == 0)
-    return 0;
-  else
-    return 1;
-}
 
 static int
 do_test (void)
 {
-  int status = do_test_1 (TEST_NAME, LOOP, prepare, function);
-  if (status != EXIT_SUCCESS)
-    return status;
-  status = do_test_1 (TEST_NAME, LOOP, prepare, function_overflow);
-  if (status != EXIT_SUCCESS)
-    return status;
-  status = do_test_1 (TEST_NAME, LOOP, prepare, function_overflow2);
-  if (status != EXIT_SUCCESS)
-    return status;
-  return status;
+  return do_test_1 (TEST_NAME, LOOP, prepare, function);
 }

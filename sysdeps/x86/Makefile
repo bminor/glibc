@@ -95,11 +95,15 @@ tests += \
   tst-memmove-rtm \
   tst-memrchr-rtm \
   tst-memset-rtm \
+  tst-strcasecmp-rtm \
   tst-strchr-rtm \
+  tst-strcmp-rtm \
   tst-strcpy-rtm \
   tst-strlen-rtm \
+  tst-strncasecmp-rtm \
   tst-strncmp-rtm \
   tst-strrchr-rtm \
+  tst-wcscmp-rtm \
   tst-wcsncmp-rtm \
 # tests
 
@@ -108,11 +112,15 @@ CFLAGS-tst-memcmp-rtm.c += -mrtm
 CFLAGS-tst-memmove-rtm.c += -mrtm
 CFLAGS-tst-memrchr-rtm.c += -mrtm
 CFLAGS-tst-memset-rtm.c += -mrtm
+CFLAGS-tst-strcasecmp-rtm.c += -mrtm
 CFLAGS-tst-strchr-rtm.c += -mrtm
+CFLAGS-tst-strcmp-rtm.c += -mrtm
 CFLAGS-tst-strcpy-rtm.c += -mrtm
 CFLAGS-tst-strlen-rtm.c += -mrtm
+CFLAGS-tst-strncasecmp-rtm.c += -mrtm -Wno-error
 CFLAGS-tst-strncmp-rtm.c += -mrtm -Wno-error
 CFLAGS-tst-strrchr-rtm.c += -mrtm
+CFLAGS-tst-wcscmp-rtm.c += -mrtm
 CFLAGS-tst-wcsncmp-rtm.c += -mrtm -Wno-error
 endif
 
