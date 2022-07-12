@@ -17,6 +17,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc)
-# define STRRCHR	__wcsrchr_sse2
+# ifndef STRRCHR
+#  define STRRCHR	__wcsrchr_sse2
+# endif
 #endif
-#include "../wcsrchr.S"
+
+#define USE_AS_WCSRCHR	1
+#define NO_PMINU	1
+
+#include "strrchr-sse2.S"
