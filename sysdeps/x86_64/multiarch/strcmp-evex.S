@@ -123,12 +123,12 @@
 #   define STRCASECMP	__strncasecmp_evex
 #   define LOCALE_REG	rcx
 #   define LOCALE_REG_LP	RCX_LP
-#   define STRCASECMP_NONASCII	__strncasecmp_l_nonascii
+#   define STRCASECMP_L_NONASCII	__strncasecmp_l_nonascii
 #  else
 #   define STRCASECMP	__strcasecmp_evex
 #   define LOCALE_REG	rdx
 #   define LOCALE_REG_LP	RDX_LP
-#   define STRCASECMP_NONASCII	__strcasecmp_l_nonascii
+#   define STRCASECMP_L_NONASCII	__strcasecmp_l_nonascii
 #  endif
 # endif
 
@@ -241,7 +241,7 @@ STRCMP:
 	mov	(%LOCALE_REG), %RAX_LP
 #  endif
 	testl	$1, LOCALE_DATA_VALUES + _NL_CTYPE_NONASCII_CASE * SIZEOF_VALUES(%rax)
-	jne	STRCASECMP_NONASCII
+	jne	STRCASECMP_L_NONASCII
 	leaq	_nl_C_LC_CTYPE_tolower + 128 * 4(%rip), TOLOWER_BASE
 # endif
 
