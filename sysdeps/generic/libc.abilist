@@ -1,1 +1,3 @@
 GLIBC_2.36 pidfd_getfd F
+GLIBC_2.37 __getauxptr F
+GLIBC_2.37 getauxptr F
