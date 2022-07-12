@@ -17,10 +17,11 @@
    <https://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc)
-# define __strchrnul __strchrnul_sse2
-
-# undef weak_alias
-# define weak_alias(__strchrnul, strchrnul)
+# ifndef STRCHR
+#  define STRCHR	__strchrnul_sse2
+# endif
 #endif
 
-#include "../strchrnul.S"
+#define AS_STRCHRNUL
+
+#include "strchr-sse2.S"
