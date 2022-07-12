@@ -26,6 +26,10 @@
 #define ZMM_SIZE_IN_BYTES 64
 #define PAGESIZE 4096
 
+#define cvtmask64_u64(...) (uint64_t) (__VA_ARGS__)
+#define kshiftri_mask64(x, y) ((x) >> (y))
+#define kand_mask64(x, y) ((x) & (y))
+
 /*
  Returns the index of the first edge within the needle, returns 0 if no edge
  is found. Example: 'ab' is the first edge in 'aaaaaaaaaabaarddg'
@@ -133,15 +137,15 @@ __strstr_avx512 (const char *haystack, const char *ned)
   __m512i hay0 = _mm512_maskz_loadu_epi8 (loadmask, haystack + hay_index);
   /* Search for NULL and compare only till null char */
   uint64_t nullmask
-      = _cvtmask64_u64 (_mm512_mask_testn_epi8_mask (loadmask, hay0, hay0));
+      = cvtmask64_u64 (_mm512_mask_testn_epi8_mask (loadmask, hay0, hay0));
   uint64_t cmpmask = nullmask ^ (nullmask - ONE_64BIT);
-  cmpmask = cmpmask & _cvtmask64_u64 (loadmask);
+  cmpmask = cmpmask & cvtmask64_u64 (loadmask);
   /* Search for the 2 charaters of needle */
   __mmask64 k0 = _mm512_cmpeq_epi8_mask (hay0, ned0);
   __mmask64 k1 = _mm512_cmpeq_epi8_mask (hay0, ned1);
-  k1 = _kshiftri_mask64 (k1, 1);
+  k1 = kshiftri_mask64 (k1, 1);
   /* k2 masks tell us if both chars from needle match */
-  uint64_t k2 = _cvtmask64_u64 (_kand_mask64 (k0, k1)) & cmpmask;
+  uint64_t k2 = cvtmask64_u64 (kand_mask64 (k0, k1)) & cmpmask;
   /* For every match, search for the entire needle for a full match */
   while (k2)
     {
@@ -178,13 +182,13 @@ __strstr_avx512 (const char *haystack, const char *ned)
       hay0 = _mm512_loadu_si512 (haystack + hay_index);
       hay1 = _mm512_load_si512 (haystack + hay_index
                                 + 1); // Always 64 byte aligned
-      nullmask = _cvtmask64_u64 (_mm512_testn_epi8_mask (hay1, hay1));
+      nullmask = cvtmask64_u64 (_mm512_testn_epi8_mask (hay1, hay1));
       /* Compare only till null char */
       cmpmask = nullmask ^ (nullmask - ONE_64BIT);
       k0 = _mm512_cmpeq_epi8_mask (hay0, ned0);
       k1 = _mm512_cmpeq_epi8_mask (hay1, ned1);
       /* k2 masks tell us if both chars from needle match */
-      k2 = _cvtmask64_u64 (_kand_mask64 (k0, k1)) & cmpmask;
+      k2 = cvtmask64_u64 (kand_mask64 (k0, k1)) & cmpmask;
       /* For every match, compare full strings for potential match */
       while (k2)
         {
