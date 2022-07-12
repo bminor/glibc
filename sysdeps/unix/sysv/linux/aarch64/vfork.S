@@ -28,7 +28,7 @@
 ENTRY (__vfork)
 
 	mov	x0, #0x4111	/* CLONE_VM | CLONE_VFORK | SIGCHLD */
-	mov	x1, sp
+	mov	x1, 0
 	DO_CALL (clone, 2)
 
 	cmn	x0, #4095
