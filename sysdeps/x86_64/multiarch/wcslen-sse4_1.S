@@ -1,5 +1,5 @@
 #define AS_WCSLEN
-#define strlen	__wcslen_sse4_1
+#define STRLEN	__wcslen_sse4_1
 #define SECTION(p)	p##.sse4.1
 
-#include "strlen-vec.S"
+#include "strlen-sse2.S"

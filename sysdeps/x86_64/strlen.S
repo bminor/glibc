@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include "multiarch/strlen-vec.S"
+#define STRLEN	strlen
+#include "multiarch/strlen-sse2.S"
 
 libc_hidden_builtin_def (strlen)
