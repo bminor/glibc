@@ -61,6 +61,7 @@ union pthread_attr_t
 {
   char __size[__SIZEOF_PTHREAD_ATTR_T];
   long int __align;
+  void * __align_p;
 };
 #ifndef __have_pthread_attr_t
 typedef union pthread_attr_t pthread_attr_t;
