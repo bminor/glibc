@@ -55,6 +55,7 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #include <dirent.h>
 #include <errno.h>
 #include <fts.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -67,7 +68,7 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #endif
 /* Align P to that size.  */
 #ifndef ALIGN
-#define	ALIGN(p)	(((unsigned long int) (p) + ALIGNBYTES) & ~ALIGNBYTES)
+#define	ALIGN(p)	(((uintptr_t) (p) + ALIGNBYTES) & ~ALIGNBYTES)
 #endif
 
 
