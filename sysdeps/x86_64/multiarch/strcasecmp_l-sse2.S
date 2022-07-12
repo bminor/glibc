@@ -16,8 +16,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define STRCMP __strcasecmp_l_sse2
 #define USE_AS_STRCASECMP_L
-#define NO_NOLOCALE_ALIAS
-#define __strcasecmp __strcasecmp_sse2
-#include <sysdeps/x86_64/strcmp.S>
+#include "strcmp-sse2.S"

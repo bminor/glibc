@@ -1,6 +1,11 @@
-#define STRCMP __strncasecmp_l
-#define USE_AS_STRNCASECMP_L
-#include "strcmp.S"
+/* Symbols = __strncasecmp_l and __strncasecmp.  */
+
+#include "multiarch/strncase_l-sse2.S"
+
+libc_hidden_builtin_def (__strncasecmp_l)
 
 weak_alias (__strncasecmp_l, strncasecmp_l)
 libc_hidden_def (strncasecmp_l)
+
+weak_alias (__strncasecmp, strncasecmp)
+libc_hidden_def (__strncasecmp)
