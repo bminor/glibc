@@ -2294,6 +2294,8 @@ GLIBC_2.36 arc4random_buf F
 GLIBC_2.36 arc4random_uniform F
 GLIBC_2.36 c8rtomb F
 GLIBC_2.36 mbrtoc8 F
+GLIBC_2.37 __getauxptr F
+GLIBC_2.37 getauxptr F
 GLIBC_2.4 __confstr_chk F
 GLIBC_2.4 __fgets_chk F
 GLIBC_2.4 __fgets_unlocked_chk F

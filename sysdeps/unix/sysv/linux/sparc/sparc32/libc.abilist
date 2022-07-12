@@ -2765,6 +2765,8 @@ GLIBC_2.36 pidfd_open F
 GLIBC_2.36 pidfd_send_signal F
 GLIBC_2.36 process_madvise F
 GLIBC_2.36 process_mrelease F
+GLIBC_2.37 __getauxptr F
+GLIBC_2.37 getauxptr F
 GLIBC_2.4 _IO_fprintf F
 GLIBC_2.4 _IO_printf F
 GLIBC_2.4 _IO_sprintf F
