@@ -71,7 +71,7 @@ ___pthread_unregister_cancel_restore (__pthread_unwind_buf_t *buf)
     return;
 
   int cancelhandling = atomic_load_relaxed (&self->cancelhandling);
-  if (cancelhandling & CANCELTYPE_BITMASK)
+  if ((cancelhandling & CANCELTYPE_BITMASK) == 0)
     {
       int newval;
       do
