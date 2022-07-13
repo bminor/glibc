@@ -78,3 +78,4 @@
 #define HWCAP2_AFP		(1 << 20)
 #define HWCAP2_RPRES		(1 << 21)
 #define HWCAP2_MTE3		(1 << 22)
+#define HWCAP2_MORELLO		(1 << 19) /* FIXME: This bit will change.  */
