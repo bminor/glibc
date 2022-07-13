@@ -204,10 +204,10 @@ GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI)
    Note R is a register number and not a register name.  */
 #ifdef __LP64__
 # define MOVL(R, NAME)					\
-	movz	PTR_REG (R), #:abs_g3:NAME;		\
-	movk	PTR_REG (R), #:abs_g2_nc:NAME;		\
-	movk	PTR_REG (R), #:abs_g1_nc:NAME;		\
-	movk	PTR_REG (R), #:abs_g0_nc:NAME;
+	movz	x##R, #:abs_g3:NAME;			\
+	movk	x##R, #:abs_g2_nc:NAME;			\
+	movk	x##R, #:abs_g1_nc:NAME;			\
+	movk	x##R, #:abs_g0_nc:NAME;
 #else
 # define MOVL(R, NAME)					\
 	movz	PTR_REG (R), #:abs_g1:NAME;		\
