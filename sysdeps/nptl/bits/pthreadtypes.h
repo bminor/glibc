@@ -24,7 +24,11 @@
 
 /* Thread identifiers.  The structure of the attribute type is not
    exposed on purpose.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+typedef __uintcap_t pthread_t;
+#else
 typedef unsigned long int pthread_t;
+#endif
 
 
 /* Data structures for mutex handling.  The structure of the attribute

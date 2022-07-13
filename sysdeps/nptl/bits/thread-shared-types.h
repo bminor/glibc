@@ -103,7 +103,11 @@ struct __pthread_cond_s
 };
 
 typedef unsigned int __tss_t;
+#ifdef __CHERI_PURE_CAPABILITY__
+typedef __uintcap_t __thrd_t;
+#else
 typedef unsigned long int __thrd_t;
+#endif
 
 typedef struct
 {
