@@ -71,8 +71,13 @@ typedef struct
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
+# ifdef __CHERI_PURE_CAPABILITY__
+# define TLS_INIT_TP(tcbp) \
+  ({ __asm __volatile ("msr ctpidr_el0, %0" : : "r" (tcbp)); NULL; })
+# else
 # define TLS_INIT_TP(tcbp) \
   ({ __asm __volatile ("msr tpidr_el0, %0" : : "r" (tcbp)); NULL; })
+# endif
 
 /* Value passed to 'clone' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1
