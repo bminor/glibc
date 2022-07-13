@@ -1,6 +1,5 @@
-/* strcat(dest, src) -- Append SRC on the end of DEST.
-   Optimized for x86-64.
-   Copyright (C) 2002-2022 Free Software Foundation, Inc.
+/* strcat dispatch for RTLD and non-multiarch build
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define STRCAT strcat
-#include "multiarch/strcat-sse2.S"
+#define STRCAT	strcat
+
+#define DEFAULT_IMPL_V1	"multiarch/strcat-sse2-unaligned.S"
+#define DEFAULT_IMPL_V3	"multiarch/strcat-avx2.S"
+#define DEFAULT_IMPL_V4	"multiarch/strcat-evex.S"
+
+#include "isa-default-impl.h"
+
 libc_hidden_builtin_def (strcat)

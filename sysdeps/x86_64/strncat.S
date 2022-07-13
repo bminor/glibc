@@ -1,4 +1,4 @@
-/* strcpy dispatch for RTLD and non-multiarch build
+/* strncat dispatch for RTLD and non-multiarch build
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define STRCPY	strcpy
+#define STRNCAT	strncat
 
-#define DEFAULT_IMPL_V1	"multiarch/strcpy-sse2-unaligned.S"
-#define DEFAULT_IMPL_V3	"multiarch/strcpy-avx2.S"
-#define DEFAULT_IMPL_V4	"multiarch/strcpy-evex.S"
+#define DEFAULT_IMPL_V1	"multiarch/strncat-sse2-unaligned.S"
+#define DEFAULT_IMPL_V3	"multiarch/strncat-avx2.S"
+#define DEFAULT_IMPL_V4	"multiarch/strncat-evex.S"
 
 #include "isa-default-impl.h"
 
-libc_hidden_builtin_def (strcpy)
+strong_alias (strncat, __strncat)
+libc_hidden_def (__strncat)

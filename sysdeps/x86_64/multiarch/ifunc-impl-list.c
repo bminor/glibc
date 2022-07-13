@@ -403,33 +403,46 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/stpncpy.c.  */
   IFUNC_IMPL (i, name, stpncpy,
-	      IFUNC_IMPL_ADD (array, i, stpncpy, CPU_FEATURE_USABLE (AVX2),
-			      __stpncpy_avx2)
-	      IFUNC_IMPL_ADD (array, i, stpncpy,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __stpncpy_avx2_rtm)
-	      IFUNC_IMPL_ADD (array, i, stpncpy,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)),
-			      __stpncpy_evex)
-	      IFUNC_IMPL_ADD (array, i, stpncpy, 1,
-			      __stpncpy_sse2_unaligned))
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, stpncpy,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)),
+				     __stpncpy_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, stpncpy,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __stpncpy_avx2)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, stpncpy,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __stpncpy_avx2_rtm)
+	      /* ISA V2 wrapper for sse2_unaligned implementation because
+	         the sse2_unaligned implementation is also used at ISA
+	         level 2.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, stpncpy,
+				     1,
+				     __stpncpy_sse2_unaligned))
 
   /* Support sysdeps/x86_64/multiarch/stpcpy.c.  */
   IFUNC_IMPL (i, name, stpcpy,
-	      IFUNC_IMPL_ADD (array, i, stpcpy, CPU_FEATURE_USABLE (AVX2),
-			      __stpcpy_avx2)
-	      IFUNC_IMPL_ADD (array, i, stpcpy,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __stpcpy_avx2_rtm)
-	      IFUNC_IMPL_ADD (array, i, stpcpy,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)),
-			      __stpcpy_evex)
-	      IFUNC_IMPL_ADD (array, i, stpcpy, 1, __stpcpy_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, stpcpy, 1, __stpcpy_sse2))
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, stpcpy,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)),
+				     __stpcpy_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, stpcpy,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __stpcpy_avx2)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, stpcpy,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __stpcpy_avx2_rtm)
+	      /* ISA V2 wrapper for sse2_unaligned implementation because
+	         the sse2_unaligned implementation is also used at ISA
+	         level 2.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, stpcpy,
+				     1,
+				     __stpcpy_sse2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V1 (array, i, stpcpy,
+				     1,
+				     __stpcpy_sse2))
 
   /* Support sysdeps/x86_64/multiarch/strcasecmp_l.c.  */
   IFUNC_IMPL (i, name, strcasecmp,
@@ -477,18 +490,26 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/strcat.c.  */
   IFUNC_IMPL (i, name, strcat,
-	      IFUNC_IMPL_ADD (array, i, strcat, CPU_FEATURE_USABLE (AVX2),
-			      __strcat_avx2)
-	      IFUNC_IMPL_ADD (array, i, strcat,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __strcat_avx2_rtm)
-	      IFUNC_IMPL_ADD (array, i, strcat,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)),
-			      __strcat_evex)
-	      IFUNC_IMPL_ADD (array, i, strcat, 1, __strcat_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, strcat, 1, __strcat_sse2))
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, strcat,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)),
+				     __strcat_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, strcat,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __strcat_avx2)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, strcat,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __strcat_avx2_rtm)
+	      /* ISA V2 wrapper for sse2_unaligned implementation because
+	         the sse2_unaligned implementation is also used at ISA
+	         level 2.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, strcat,
+				     1,
+				     __strcat_sse2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V1 (array, i, strcat,
+				     1,
+				     __strcat_sse2))
 
   /* Support sysdeps/x86_64/multiarch/strchr.c.  */
   IFUNC_IMPL (i, name, strchr,
@@ -584,18 +605,26 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/strcpy.c.  */
   IFUNC_IMPL (i, name, strcpy,
-	      IFUNC_IMPL_ADD (array, i, strcpy, CPU_FEATURE_USABLE (AVX2),
-			      __strcpy_avx2)
-	      IFUNC_IMPL_ADD (array, i, strcpy,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __strcpy_avx2_rtm)
-	      IFUNC_IMPL_ADD (array, i, strcpy,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)),
-			      __strcpy_evex)
-	      IFUNC_IMPL_ADD (array, i, strcpy, 1, __strcpy_sse2_unaligned)
-	      IFUNC_IMPL_ADD (array, i, strcpy, 1, __strcpy_sse2))
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, strcpy,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)),
+				     __strcpy_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, strcpy,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __strcpy_avx2)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, strcpy,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __strcpy_avx2_rtm)
+	      /* ISA V2 wrapper for sse2_unaligned implementation because
+	         the sse2_unaligned implementation is also used at ISA
+	         level 2.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, strcpy,
+				     1,
+				     __strcpy_sse2_unaligned)
+	      X86_IFUNC_IMPL_ADD_V1 (array, i, strcpy,
+				     1,
+				     __strcpy_sse2))
 
   /* Support sysdeps/x86_64/multiarch/strcspn.c.  */
   IFUNC_IMPL (i, name, strcspn,
@@ -651,33 +680,43 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/strncat.c.  */
   IFUNC_IMPL (i, name, strncat,
-	      IFUNC_IMPL_ADD (array, i, strncat, CPU_FEATURE_USABLE (AVX2),
-			      __strncat_avx2)
-	      IFUNC_IMPL_ADD (array, i, strncat,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __strncat_avx2_rtm)
-	      IFUNC_IMPL_ADD (array, i, strncat,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)),
-			      __strncat_evex)
-	      IFUNC_IMPL_ADD (array, i, strncat, 1,
-			      __strncat_sse2_unaligned))
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, strncat,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)),
+				     __strncat_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, strncat,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __strncat_avx2)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, strncat,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __strncat_avx2_rtm)
+	      /* ISA V2 wrapper for sse2_unaligned implementation because
+	         the sse2_unaligned implementation is also used at ISA
+	         level 2.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, strncat,
+				     1,
+				     __strncat_sse2_unaligned))
 
   /* Support sysdeps/x86_64/multiarch/strncpy.c.  */
   IFUNC_IMPL (i, name, strncpy,
-	      IFUNC_IMPL_ADD (array, i, strncpy, CPU_FEATURE_USABLE (AVX2),
-			      __strncpy_avx2)
-	      IFUNC_IMPL_ADD (array, i, strncpy,
-			      (CPU_FEATURE_USABLE (AVX2)
-			       && CPU_FEATURE_USABLE (RTM)),
-			      __strncpy_avx2_rtm)
-	      IFUNC_IMPL_ADD (array, i, strncpy,
-			      (CPU_FEATURE_USABLE (AVX512VL)
-			       && CPU_FEATURE_USABLE (AVX512BW)),
-			      __strncpy_evex)
-	      IFUNC_IMPL_ADD (array, i, strncpy, 1,
-			      __strncpy_sse2_unaligned))
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, strncpy,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)),
+				     __strncpy_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, strncpy,
+				     CPU_FEATURE_USABLE (AVX2),
+				     __strncpy_avx2)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, strncpy,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (RTM)),
+				     __strncpy_avx2_rtm)
+	      /* ISA V2 wrapper for sse2_unaligned implementation because
+	         the sse2_unaligned implementation is also used at ISA
+	         level 2.  */
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, strncpy,
+				     1,
+				     __strncpy_sse2_unaligned))
 
   /* Support sysdeps/x86_64/multiarch/strpbrk.c.  */
   IFUNC_IMPL (i, name, strpbrk,

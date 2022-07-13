@@ -1,4 +1,4 @@
-/* strcpy dispatch for RTLD and non-multiarch build
+/* stpncpy dispatch for RTLD and non-multiarch build
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define STRCPY	strcpy
+#define STPNCPY	__stpncpy
 
-#define DEFAULT_IMPL_V1	"multiarch/strcpy-sse2-unaligned.S"
-#define DEFAULT_IMPL_V3	"multiarch/strcpy-avx2.S"
-#define DEFAULT_IMPL_V4	"multiarch/strcpy-evex.S"
+#define DEFAULT_IMPL_V1	"multiarch/stpncpy-sse2-unaligned.S"
+#define DEFAULT_IMPL_V3	"multiarch/stpncpy-avx2.S"
+#define DEFAULT_IMPL_V4	"multiarch/stpncpy-evex.S"
 
 #include "isa-default-impl.h"
 
-libc_hidden_builtin_def (strcpy)
+weak_alias (__stpncpy, stpncpy)
+libc_hidden_def (__stpncpy)

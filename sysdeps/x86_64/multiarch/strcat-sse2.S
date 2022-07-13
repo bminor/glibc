@@ -1,5 +1,6 @@
-/* strcat optimized with SSE2.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+/* strcat(dest, src) -- Append SRC on the end of DEST.
+   Optimized for x86-64.
+   Copyright (C) 2002-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +17,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
-# ifndef STRCAT
-#  define STRCAT __strcat_sse2
-# endif
-#endif
+#include <isa-level.h>
 
-#include <sysdep.h>
+#if ISA_SHOULD_BUILD (1)
+
+# include <sysdep.h>
+
+# ifndef STRCAT
+#  define STRCAT	__strcat_sse2
+# endif
+
+/* Will be removed when new strcpy implementation gets merged.  */
 
 	.text
 ENTRY (STRCAT)
@@ -256,3 +261,4 @@ ENTRY (STRCAT)
 	movq	%rdi, %rax	/* Source is return value.  */
 	retq
 END (STRCAT)
+#endif

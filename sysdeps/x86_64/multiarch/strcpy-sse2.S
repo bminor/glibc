@@ -1,5 +1,5 @@
-/* strcpy optimized with SSE2.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+/* strcpy/stpcpy implementation for x86-64.
+   Copyright (C) 2002-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
-# ifndef STRCPY
+#include <isa-level.h>
+
+#if ISA_SHOULD_BUILD (1)
+
+# include <sysdep.h>
+
+# ifndef STPCPY
 #  define STRCPY __strcpy_sse2
 # endif
-#endif
-
-#include <sysdep.h>
 
 	.text
 ENTRY (STRCPY)
@@ -144,10 +146,11 @@ ENTRY (STRCPY)
 	jmp	3b		/* and look at next two bytes in %rax.  */
 
 4:
-#ifdef USE_AS_STPCPY
+# ifdef USE_AS_STPCPY
 	movq	%rdx, %rax	/* Destination is return value.  */
-#else
+# else
 	movq	%rdi, %rax	/* Source is return value.  */
-#endif
+# endif
 	retq
 END (STRCPY)
+#endif
