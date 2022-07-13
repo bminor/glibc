@@ -1,4 +1,4 @@
-/* wcscpy.
+/* wcscpy dispatch for RTLD and non-multiarch .c ISA level 1 build.
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* wcscpy non-multiarch build is split into two files,
+   wcscpy-generic.c and wcscpy.S. The wcscpy-generic.c build is for
+   ISA level <= 1 and just uses wcsmbs/wcscpy.c.  This must be split
+   into two files because we cannot include C code from assembly or
+   vice versa.  */
 
 #include <isa-level.h>
 
-#if ISA_SHOULD_BUILD (1)
+#if MINIMUM_X86_ISA_LEVEL <= 1
 
-# define WCSCPY  __wcscpy_generic
-# include <wcsmbs/wcscpy.c>
+# include "wcsmbs/wcscpy.c"
 
 #endif

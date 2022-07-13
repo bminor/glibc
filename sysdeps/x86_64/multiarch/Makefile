@@ -134,7 +134,6 @@ sysdep_routines += \
   wcscmp-avx2-rtm \
   wcscmp-evex \
   wcscmp-sse2 \
-  wcscpy-generic \
   wcscpy-ssse3 \
   wcslen-avx2 \
   wcslen-avx2-rtm \

@@ -16,11 +16,21 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <isa-level.h>
+
+/* MINIMUM_X86_ISA_LEVEL <= 4 because there are not V3/V4
+   implementations so we need this to build for ISA V3/V4
+    builds. */
+#if ISA_SHOULD_BUILD (4)
+
+# ifndef WCSCPY
+#  define WCSCPY	__wcscpy_ssse3
+# endif
+
 # include <sysdep.h>
 
 	.section .text.ssse3,"ax",@progbits
-ENTRY (__wcscpy_ssse3)
+ENTRY (WCSCPY)
 
 	mov	%rsi, %rcx
 	mov	%rdi, %rdx
@@ -547,5 +557,5 @@ L(Exit16):
 	mov	%rdi, %rax
 	ret
 
-END(__wcscpy_ssse3)
+END(WCSCPY)
 #endif

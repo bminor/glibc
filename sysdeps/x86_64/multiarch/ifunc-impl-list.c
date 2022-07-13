@@ -791,9 +791,15 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/wcscpy.c.  */
   IFUNC_IMPL (i, name, wcscpy,
-	      IFUNC_IMPL_ADD (array, i, wcscpy, CPU_FEATURE_USABLE (SSSE3),
-			      __wcscpy_ssse3)
-	      IFUNC_IMPL_ADD (array, i, wcscpy, 1, __wcscpy_generic))
+	      /* ISA V4 wrapper for SSSE3 implementation because
+	         the SSSE3 implementation is also used at ISA
+	         level 3/4.  */
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, wcscpy,
+				     CPU_FEATURE_USABLE (SSSE3),
+				     __wcscpy_ssse3)
+	      X86_IFUNC_IMPL_ADD_V1 (array, i, wcscpy,
+				     1,
+				     __wcscpy_generic))
 
   /* Support sysdeps/x86_64/multiarch/wcslen.c.  */
   IFUNC_IMPL (i, name, wcslen,

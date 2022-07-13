@@ -26,15 +26,16 @@
 # define SYMBOL_NAME wcscpy
 # include <init-arch.h>
 
-extern __typeof (REDIRECT_NAME) OPTIMIZE (generic) attribute_hidden;
 extern __typeof (REDIRECT_NAME) OPTIMIZE (ssse3) attribute_hidden;
+
+extern __typeof (REDIRECT_NAME) OPTIMIZE (generic) attribute_hidden;
 
 static inline void *
 IFUNC_SELECTOR (void)
 {
   const struct cpu_features* cpu_features = __get_cpu_features ();
 
-  if (CPU_FEATURE_USABLE_P (cpu_features, SSSE3))
+  if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, SSSE3))
     return OPTIMIZE (ssse3);
 
   return OPTIMIZE (generic);

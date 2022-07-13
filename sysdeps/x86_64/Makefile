@@ -199,6 +199,7 @@ endif
 ifeq ($(subdir),wcsmbs)
 
 sysdep_routines += \
+  wcscpy-generic \
   wcsncmp-generic \
   wcsnlen-generic \
 # sysdep_routines

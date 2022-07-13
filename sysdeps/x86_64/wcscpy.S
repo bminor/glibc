@@ -1,4 +1,4 @@
-/* wcscpy.
+/* wcscpy dispatch for RTLD and non-multiarch .c files
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,12 +16,25 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* wcscpy non-multiarch build is split into two files,
+   wcscpy-generic.c and wcscpy.S. The wcscpy.S build is for
+   ISA level >= 2 uses the optimized assembly implementations in
+   multiarch/wcscpy*.S.  This must be split into two files because
+   we cannot include C code from assembly or vice versa.  */
 
 #include <isa-level.h>
 
-#if ISA_SHOULD_BUILD (1)
+#if MINIMUM_X86_ISA_LEVEL >= 2
 
-# define WCSCPY  __wcscpy_generic
-# include <wcsmbs/wcscpy.c>
+# define WCSCPY	__wcscpy
 
+# define DEFAULT_IMPL_V2	"multiarch/wcscpy-ssse3.S"
+/* isa-default-impl.h expects DEFAULT_IMPL_V1 to be defined but it
+   should never be used from here.  */
+# define DEFAULT_IMPL_V1	"ERROR -- Invalid ISA IMPL"
+
+# include "isa-default-impl.h"
+
+weak_alias (__wcscpy, wcscpy)
+libc_hidden_def (__wcscpy)
 #endif
