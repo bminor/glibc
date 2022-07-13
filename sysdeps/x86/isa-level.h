@@ -84,6 +84,7 @@
 
 /* ISA level >= 2 guaranteed includes.  */
 #define SSE4_2_X86_ISA_LEVEL 2
+#define SSE4_1_X86_ISA_LEVEL 2
 #define SSSE3_X86_ISA_LEVEL 2
 
 
@@ -101,8 +102,17 @@
    when ISA level < 3.  */
 #define Prefer_No_VZEROUPPER_X86_ISA_LEVEL 3
 
+/* NB: This feature is disable when ISA level >= 3.  All CPUs with
+   this feature don't run on glibc built with ISA level >= 3.  */
+#define Slow_SSE42_X86_ISA_LEVEL 3
+
 /* Feature(s) enabled when ISA level >= 2.  */
 #define Fast_Unaligned_Load_X86_ISA_LEVEL 2
+
+/* NB: This feature is disable when ISA level >= 2, which was enabled
+   for the early Atom CPUs.  */
+#define Slow_BSF_X86_ISA_LEVEL 2
+
 
 /* Both X86_ISA_CPU_FEATURE_USABLE_P and X86_ISA_CPU_FEATURES_ARCH_P
    macros are wrappers for the respective CPU_FEATURE{S}_{USABLE|ARCH}_P

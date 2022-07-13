@@ -1,5 +1,4 @@
-/* strchr (str, ch) -- Return pointer to first occurrence of CH in STR.
-   For AMD x86-64.
+/* strchr dispatch for RTLD and non-multiarch build
    Copyright (C) 2009-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,8 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#define STRCHR	strchr
 
-#define STRCHR strchr
-#include "multiarch/strchr-sse2.S"
+#define DEFAULT_IMPL_V1	"multiarch/strchr-sse2.S"
+#define DEFAULT_IMPL_V3	"multiarch/strchr-avx2.S"
+#define DEFAULT_IMPL_V4	"multiarch/strchr-evex.S"
+
+#include "isa-default-impl.h"
+
 weak_alias (strchr, index)
 libc_hidden_builtin_def (strchr)

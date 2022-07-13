@@ -16,7 +16,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <isa-level.h>
+
+#if ISA_SHOULD_BUILD (3)
+
+# ifndef STRCMP_ISA
+#  define STRCMP_ISA	_avx2
+# endif
+
+# include "strcmp-naming.h"
 
 # include <sysdep.h>
 
@@ -86,15 +94,11 @@
 
 # ifdef USE_AS_STRCASECMP_L
 #  ifdef USE_AS_STRNCMP
-#   define STRCASECMP	__strncasecmp_avx2
 #   define LOCALE_REG	rcx
 #   define LOCALE_REG_LP	RCX_LP
-#   define STRCASECMP_L_NONASCII	__strncasecmp_l_nonascii
 #  else
-#   define STRCASECMP	__strcasecmp_avx2
 #   define LOCALE_REG	rdx
 #   define LOCALE_REG_LP	RDX_LP
-#   define STRCASECMP_L_NONASCII	__strcasecmp_l_nonascii
 #  endif
 # endif
 
@@ -185,18 +189,14 @@
 	.type	STRCMP, @function
 	.globl	STRCMP
 
-# ifndef GLABEL
-#  define GLABEL(...)	__VA_ARGS__
-# endif
-
 # ifdef USE_AS_STRCASECMP_L
-ENTRY (GLABEL(STRCASECMP))
+ENTRY (STRCASECMP)
 	movq	__libc_tsd_LOCALE@gottpoff(%rip), %rax
 	mov	%fs:(%rax), %LOCALE_REG_LP
 
 	/* Either 1 or 5 bytes (dependeing if CET is enabled).  */
 	.p2align 4
-END (GLABEL(STRCASECMP))
+END (STRCASECMP)
 	/* FALLTHROUGH to strcasecmp/strncasecmp_l.  */
 # endif
 

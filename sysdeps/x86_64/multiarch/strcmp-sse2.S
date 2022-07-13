@@ -16,7 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc) || IS_IN (rtld)
+#include <isa-level.h>
+
+/* Continue building at ISA level 2 as the strcmp-sse42 is not always
+   preferable for ISA level == 2 CPUs.  */
+#if ISA_SHOULD_BUILD (2)
 
 # define STRCMP_ISA	_sse2
 # include "strcmp-naming.h"

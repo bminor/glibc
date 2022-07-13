@@ -17,4 +17,5 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define USE_AS_STRCASECMP_L
+
 #include "strcmp-sse2.S"

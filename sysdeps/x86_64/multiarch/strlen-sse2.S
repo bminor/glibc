@@ -16,14 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc) || defined STRLEN
+#include <isa-level.h>
 
-# ifndef STRLEN
-#  define STRLEN __strlen_sse2
-# endif
-
+/* ISA level >= 2 for both strlen and wcslen.  wcslen uses `pminud`
+   which is SSE4.1. strlen doesn't have an ISA level == 2
+   implementation so the SSE2 implementation must be built with ISA
+   level == 2.  */
+# if ISA_SHOULD_BUILD (2)
 
 # include <sysdep.h>
+
+# ifndef STRLEN
+#  define STRLEN	__strlen_sse2
+# endif
 
 # ifdef AS_WCSLEN
 #  define PMINU		pminud
@@ -82,7 +87,7 @@ L(n_nonzero):
    suffice.  */
 	mov	%RSI_LP, %R10_LP
 	sar	$62, %R10_LP
-	jnz	__wcslen_sse4_1
+	jnz	OVERFLOW_STRLEN
 	sal	$2, %RSI_LP
 #  endif
 

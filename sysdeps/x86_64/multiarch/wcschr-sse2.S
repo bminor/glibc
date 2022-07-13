@@ -16,13 +16,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+
+#include <isa-level.h>
+
+/* ISA level >= 2 because there is no wcschr-sse4 implementations.  */
+#if ISA_SHOULD_BUILD (2)
+
 # ifndef WCSCHR
 #  define WCSCHR __wcschr_sse2
 # endif
-#endif
 
-#include <sysdep.h>
+# include <sysdep.h>
 
 	.text
 ENTRY (WCSCHR)
@@ -155,3 +159,4 @@ L(return_null):
 	ret
 
 END (WCSCHR)
+#endif

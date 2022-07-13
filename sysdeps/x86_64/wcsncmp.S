@@ -1,4 +1,4 @@
-/* strcasecmp_l dispatch for RTLD and non-multiarch build
+/* wcsncmp dispatch for RTLD and non-multiarch .c files
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,20 +16,25 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Symbols = __strcasecmp_l and __strcasecmp.  */
+/* wcsncmp non-multiarch build is split into two files,
+   wcsncmp-generic.c and wcsncmp.S. The wcsncmp.S build is for
+   ISA level >= 3 uses the optimized assembly implementations in
+   multiarch/wcsncmp*.S.  This must be split into two files because
+   we cannot include C code from assembly or vice versa.  */
 
-#define DEFAULT_IMPL_V1	"multiarch/strcasecmp_l-sse2.S"
-/* This may cause regressions on some processors that heavily prefer
-   aligned loads or have slow a implementation of the `pcmpstri`
-   instruction.  */
-#define DEFAULT_IMPL_V2	"multiarch/strcasecmp_l-sse4_2.S"
-#define DEFAULT_IMPL_V3	"multiarch/strcasecmp_l-avx2.S"
-#define DEFAULT_IMPL_V4	"multiarch/strcasecmp_l-evex.S"
+#include <isa-level.h>
 
-#include "isa-default-impl.h"
+#if MINIMUM_X86_ISA_LEVEL >= 3
 
-libc_hidden_def (__strcasecmp_l)
-weak_alias (__strcasecmp_l, strcasecmp_l)
+/* Symbol = wcsncmp.  */
 
-libc_hidden_def (__strcasecmp)
-weak_alias (__strcasecmp, strcasecmp)
+# define DEFAULT_IMPL_V3	"multiarch/wcsncmp-avx2.S"
+# define DEFAULT_IMPL_V4	"multiarch/wcsncmp-evex.S"
+
+/* isa-default-impl.h expects DEFAULT_IMPL_V1 to be defined but it
+   should never be used from here.  */
+# define DEFAULT_IMPL_V1	"ERROR -- Invalid ISA IMPL"
+
+# include "isa-default-impl.h"
+
+#endif

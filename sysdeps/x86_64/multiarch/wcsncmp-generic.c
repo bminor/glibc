@@ -16,5 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define WCSNCMP __wcsncmp_generic
-#include <wcsmbs/wcsncmp.c>
+#include <isa-level.h>
+#if ISA_SHOULD_BUILD (2)
+
+# define WCSNCMP __wcsncmp_generic
+# include <wcsmbs/wcsncmp.c>
+
+#endif

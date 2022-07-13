@@ -16,22 +16,26 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <isa-level.h>
+
+/* MINIMUM_X86_ISA_LEVEL <= 2 because there is no V2 implementation
+   so we need this to build for ISA V2 builds. */
+#if ISA_SHOULD_BUILD (2)
+
 # ifndef MEMRCHR
 #  define MEMRCHR __memrchr_sse2
 # endif
-#endif
 
-#include <sysdep.h>
-#define VEC_SIZE			16
-#define PAGE_SIZE			4096
+# include <sysdep.h>
+# define VEC_SIZE			16
+# define PAGE_SIZE			4096
 
 	.text
 ENTRY_P2ALIGN(MEMRCHR, 6)
-#ifdef __ILP32__
+# ifdef __ILP32__
 	/* Clear upper bits.  */
 	mov	%RDX_LP, %RDX_LP
-#endif
+# endif
 	movd	%esi, %xmm0
 
 	/* Get end pointer.  */
@@ -352,3 +356,4 @@ L(zero_3):
 	ret
 	/* 2-bytes from next cache line.  */
 END(MEMRCHR)
+#endif

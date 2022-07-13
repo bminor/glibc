@@ -16,7 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <isa-level.h>
+
+/* NB: atom builds with ISA level == 1 so no reason to hold onto this
+   at ISA level >= 2.  */
+#if ISA_SHOULD_BUILD (1)
 
 # include <sysdep.h>
 # include "asm-syntax.h"

@@ -16,13 +16,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
-# ifndef WCSLEN
-#  define WCSLEN __wcslen_sse2
-# endif
+#include <isa-level.h>
+
+#if ISA_SHOULD_BUILD (1)
+
+# include <sysdep.h>
+
+#ifndef WCSLEN
+# define WCSLEN	__wcslen_sse2
 #endif
 
-#include <sysdep.h>
 
 	.text
 ENTRY (WCSLEN)
@@ -235,3 +238,5 @@ L(exit_tail7):
 	ret
 
 END (WCSLEN)
+
+#endif

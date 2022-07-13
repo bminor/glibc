@@ -1,4 +1,4 @@
-/* wcschr with SSSE3
+/* wcschr dispatch for RTLD and non-multiarch build
    Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,9 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-
 #define WCSCHR	__wcschr
-#include "multiarch/wcschr-sse2.S"
-libc_hidden_def(__wcschr)
+
+#define DEFAULT_IMPL_V1	"multiarch/wcschr-sse2.S"
+#define DEFAULT_IMPL_V3	"multiarch/wcschr-avx2.S"
+#define DEFAULT_IMPL_V4	"multiarch/wcschr-evex.S"
+
+#include "isa-default-impl.h"
+
+libc_hidden_def (__wcschr)
 weak_alias (__wcschr, wcschr)
 libc_hidden_weak (wcschr)

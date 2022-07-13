@@ -1,5 +1,5 @@
-/* strcasecmp_l optimized with EVEX.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+/* Set default strchr impl based on ISA level.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,5 +16,13 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define USE_AS_STRCASECMP_L
-#include "strcmp-evex.S"
+#include <isa-level.h>
+#if MINIMUM_X86_ISA_LEVEL == 1 || MINIMUM_X86_ISA_LEVEL == 2
+# define DEFAULT_STRCHR	__strchr_sse2
+#elif MINIMUM_X86_ISA_LEVEL == 3
+# define DEFAULT_STRCHR	__strchr_avx2
+#elif MINIMUM_X86_ISA_LEVEL == 4
+# define DEFAULT_STRCHR	__strchr_evex
+#else
+# error "Unknown default strchr implementation"
+#endif

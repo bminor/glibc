@@ -16,11 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
-# ifndef STRLEN
-#  define STRLEN	__strnlen_sse2
-# endif
+#ifndef STRNLEN
+# define STRNLEN	__strnlen_sse2
 #endif
 
-#define AS_STRNLEN
+#define AS_STRNLEN	1
+#define STRLEN	STRNLEN
+
 #include "strlen-sse2.S"

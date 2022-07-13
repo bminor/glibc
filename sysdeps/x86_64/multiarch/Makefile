@@ -144,11 +144,9 @@ sysdep_routines += \
   wcslen-sse4_1 \
   wcsncmp-avx2 \
   wcsncmp-avx2-rtm \
-  wcsncmp-generic \
   wcsncmp-evex \
   wcsnlen-avx2 \
   wcsnlen-avx2-rtm \
-  wcsnlen-generic \
   wcsnlen-evex \
   wcsnlen-evex512 \
   wcsnlen-sse4_1 \

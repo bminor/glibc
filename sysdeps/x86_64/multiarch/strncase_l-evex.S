@@ -16,10 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef STRCMP
-# define STRCMP	__strncasecmp_l_evex
-#endif
-#define OVERFLOW_STRCMP	__strcasecmp_l_evex
 #define USE_AS_STRCASECMP_L
 #define USE_AS_STRNCMP
 #include "strcmp-evex.S"

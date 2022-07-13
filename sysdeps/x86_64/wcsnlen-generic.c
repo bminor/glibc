@@ -1,5 +1,5 @@
-/* strcasecmp_l optimized with EVEX.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+/* wcsnlen dispatch for RTLD and non-multiarch .c ISA level 1 build.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,5 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define USE_AS_STRCASECMP_L
-#include "strcmp-evex.S"
+/* wcsnlen non-multiarch build is split into two files,
+   wcsnlen-generic.c and wcsnlen.S. The wcsnlen-generic.c build is for
+   ISA level <= 1 and just uses wcsmbs/wcsnlen.c.  This must be split
+   into two files because we cannot include C code from assembly or
+   vice versa.  */
+
+#include <isa-level.h>
+
+#if MINIMUM_X86_ISA_LEVEL <= 1
+# include "wcsmbs/wcsnlen.c"
+#endif

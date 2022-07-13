@@ -1,4 +1,4 @@
-/* strrchr (str, ch) -- Return pointer to last occurrence of CH in STR.
+/* strrchr dispatch for RTLD and non-multiarch build
    Copyright (C) 2013-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,6 +17,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define STRRCHR	strrchr
-#include "multiarch/strrchr-sse2.S"
+
+#define DEFAULT_IMPL_V1	"multiarch/strrchr-sse2.S"
+#define DEFAULT_IMPL_V3	"multiarch/strrchr-avx2.S"
+#define DEFAULT_IMPL_V4	"multiarch/strrchr-evex.S"
+
+#include "isa-default-impl.h"
+
 weak_alias (strrchr, rindex)
 libc_hidden_builtin_def (strrchr)

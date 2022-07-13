@@ -16,11 +16,20 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <isa-level.h>
 
-#include "sysdep.h"
+/* Continue building as ISA level 2.  We use this as ISA V2 default
+   because strcmp-sse42 uses pcmpstri (slow on some SSE4.2
+   processors) and this implementation is potenially faster than
+   strcmp-sse42 (aside from the slower page cross case).  */
+#if ISA_SHOULD_BUILD (2)
 
-ENTRY ( __strcmp_sse2_unaligned)
+# define STRCMP_ISA	_sse2_unaligned
+# include "strcmp-naming.h"
+
+# include "sysdep.h"
+
+ENTRY (STRCMP)
 	movl	%edi, %eax
 	xorl	%edx, %edx
 	pxor	%xmm7, %xmm7
@@ -208,6 +217,5 @@ L(cross_page):
 L(different):
 	subl	%ecx, %eax
 	ret
-END (__strcmp_sse2_unaligned)
-
+END (STRCMP)
 #endif

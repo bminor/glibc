@@ -16,7 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <isa-level.h>
+
+#if ISA_SHOULD_BUILD (2)
+
 # include <sysdep.h>
 
 # define STRCMP_ISA	_sse42
@@ -1766,7 +1769,6 @@ LABEL(unaligned_table):
 	.int	LABEL(ashr_0) - LABEL(unaligned_table)
 
 # undef LABEL
-# undef GLABEL
 # undef SECTION
 # undef movdqa
 # undef movdqu

@@ -16,11 +16,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define USE_AS_WCSCMP
-#define STRCMP_ISA	_sse2
-#include "strcmp-naming.h"
+#include <isa-level.h>
 
-#include <sysdep.h>
+/* ISA level >= 2 because there is no wcscmp-sse4 implementations.  */
+#if ISA_SHOULD_BUILD (2)
+# include <sysdep.h>
+
+/* Needed to get right name.  */
+# define USE_AS_WCSCMP
+# define STRCMP_ISA	_sse2
+# include "strcmp-naming.h"
 
 /* Note: wcscmp uses signed comparison, not unsighed as in strcmp function. */
 
@@ -949,3 +954,4 @@ L(equal):
 	ret
 
 END (STRCMP)
+#endif

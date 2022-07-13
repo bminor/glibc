@@ -1,4 +1,4 @@
-/* Optimized wcscmp for x86-64 with SSE2.
+/* strlen dispatch for RTLD and non-multiarch build
    Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -18,6 +18,11 @@
 
 /* Symbol = __wcscmp.  */
 
-#include "multiarch/wcscmp-sse2.S"
+#define DEFAULT_IMPL_V1	"multiarch/wcscmp-sse2.S"
+#define DEFAULT_IMPL_V3	"multiarch/wcscmp-avx2.S"
+#define DEFAULT_IMPL_V4	"multiarch/wcscmp-evex.S"
+
+#include "isa-default-impl.h"
+
 libc_hidden_def (__wcscmp)
 weak_alias (__wcscmp, wcscmp)

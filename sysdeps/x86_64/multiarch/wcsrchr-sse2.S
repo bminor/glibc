@@ -16,12 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
-# ifndef STRRCHR
-#  define STRRCHR	__wcsrchr_sse2
-# endif
+#ifndef WCSRCHR
+# define WCSRCHR	__wcsrchr_sse2
 #endif
 
+#define STRRCHR	WCSRCHR
 #define USE_AS_WCSRCHR	1
 #define NO_PMINU	1
 

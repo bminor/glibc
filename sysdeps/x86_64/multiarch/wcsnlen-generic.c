@@ -16,13 +16,18 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <isa-level.h>
 
-#if IS_IN (libc)
+#if ISA_SHOULD_BUILD (1)
+
 # include <wchar.h>
 
-# define WCSNLEN __wcsnlen_generic
+# ifndef WCSNLEN
+#  define WCSNLEN __wcsnlen_generic
+# endif
 
 extern __typeof (wcsnlen) __wcsnlen_generic;
-#endif
 
-#include "wcsmbs/wcsnlen.c"
+# include "wcsmbs/wcsnlen.c"
+
+#endif

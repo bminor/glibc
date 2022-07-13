@@ -16,8 +16,5 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef STRCMP
-# define STRCMP	__strcasecmp_l_avx2
-#endif
 #define USE_AS_STRCASECMP_L
 #include "strcmp-avx2.S"

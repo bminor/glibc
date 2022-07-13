@@ -16,7 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <isa-level.h>
+
+#if ISA_SHOULD_BUILD (4)
+
+# define STRCMP_ISA	_evex
+# include "strcmp-naming.h"
 
 # include <sysdep.h>
 # if defined USE_AS_STRCASECMP_L
@@ -37,10 +42,6 @@
 # define VMOVA	vmovdqa64
 
 # ifdef USE_AS_WCSCMP
-#  ifndef OVERFLOW_STRCMP
-#   define OVERFLOW_STRCMP	__wcscmp_evex
-#  endif
-
 #  define TESTEQ	subl $0xff,
 	/* Compare packed dwords.  */
 #  define VPCMP	vpcmpd
@@ -50,10 +51,6 @@
 	/* 1 dword char == 4 bytes.  */
 #  define SIZE_OF_CHAR	4
 # else
-#  ifndef OVERFLOW_STRCMP
-#   define OVERFLOW_STRCMP	__strcmp_evex
-#  endif
-
 #  define TESTEQ	incl
 	/* Compare packed bytes.  */
 #  define VPCMP	vpcmpb
@@ -120,15 +117,11 @@
 
 # ifdef USE_AS_STRCASECMP_L
 #  ifdef USE_AS_STRNCMP
-#   define STRCASECMP	__strncasecmp_evex
 #   define LOCALE_REG	rcx
 #   define LOCALE_REG_LP	RCX_LP
-#   define STRCASECMP_L_NONASCII	__strncasecmp_l_nonascii
 #  else
-#   define STRCASECMP	__strcasecmp_evex
 #   define LOCALE_REG	rdx
 #   define LOCALE_REG_LP	RDX_LP
-#   define STRCASECMP_L_NONASCII	__strcasecmp_l_nonascii
 #  endif
 # endif
 
@@ -214,7 +207,6 @@
 	.align	16
 	.type	STRCMP, @function
 	.globl	STRCMP
-
 # ifdef USE_AS_STRCASECMP_L
 ENTRY (STRCASECMP)
 	movq	__libc_tsd_LOCALE@gottpoff(%rip), %rax

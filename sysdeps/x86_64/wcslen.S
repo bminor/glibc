@@ -1,4 +1,4 @@
-/* Optimized wcslen for x86-64 with SSE2.
+/* wcslen dispatch for RTLD and non-multiarch build
    Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,5 +17,18 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define WCSLEN	__wcslen
-#include "multiarch/wcslen-sse2.S"
-weak_alias(__wcslen, wcslen)
+
+#define DEFAULT_IMPL_V1	"multiarch/wcslen-sse2.S"
+#define DEFAULT_IMPL_V2	"multiarch/wcslen-sse4_1.S"
+#define DEFAULT_IMPL_V3	"multiarch/wcslen-avx2.S"
+#define DEFAULT_IMPL_V4	"multiarch/wcslen-evex.S"
+
+#include "isa-default-impl.h"
+
+weak_alias (__wcslen, wcslen)
+
+#if MINIMUM_X86_ISA_LEVEL == 2 && !IS_IN (rtld)
+/* Hidden def so it can be used as overflow fallback in
+   wcsnlen-sse4_1.S.  */
+libc_hidden_def (__wcslen)
+#endif

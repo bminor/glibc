@@ -16,36 +16,40 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
+#include <isa-level.h>
+
+/* ISA level >= 2 because there are no {wcs|str}rchr-sse4
+   implementations.  */
+#if ISA_SHOULD_BUILD (2)
+
+# include <sysdep.h>
+
 # ifndef STRRCHR
 #  define STRRCHR __strrchr_sse2
 # endif
-#endif
 
-#include <sysdep.h>
+# ifdef USE_AS_WCSRCHR
+#  define PCMPEQ	pcmpeqd
+#  define CHAR_SIZE	4
+#  define PMINU	pminud
+# else
+#  define PCMPEQ	pcmpeqb
+#  define CHAR_SIZE	1
+#  define PMINU	pminub
+# endif
 
-#ifdef USE_AS_WCSRCHR
-# define PCMPEQ	pcmpeqd
-# define CHAR_SIZE	4
-# define PMINU	pminud
-#else
-# define PCMPEQ	pcmpeqb
-# define CHAR_SIZE	1
-# define PMINU	pminub
-#endif
-
-#define PAGE_SIZE	4096
-#define VEC_SIZE	16
+# define PAGE_SIZE	4096
+# define VEC_SIZE	16
 
 	.text
 ENTRY(STRRCHR)
 	movd	%esi, %xmm0
 	movq	%rdi, %rax
 	andl	$(PAGE_SIZE - 1), %eax
-#ifndef USE_AS_WCSRCHR
+# ifndef USE_AS_WCSRCHR
 	punpcklbw %xmm0, %xmm0
 	punpcklwd %xmm0, %xmm0
-#endif
+# endif
 	pshufd	$0, %xmm0, %xmm0
 	cmpl	$(PAGE_SIZE - VEC_SIZE), %eax
 	ja	L(cross_page)
@@ -69,9 +73,9 @@ L(cross_page_continue):
 	/* We are off by 3 for wcsrchr if search CHAR is non-zero. If
 	   search CHAR is zero we are correct. Either way `andq
 	   -CHAR_SIZE, %rax` gets the correct result.  */
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	andq	$-CHAR_SIZE, %rax
-#endif
+# endif
 L(ret0):
 	ret
 
@@ -85,9 +89,9 @@ L(first_vec_x0_test):
 	jz	L(ret0)
 	bsrl	%eax, %eax
 	addq	%r8, %rax
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	andq	$-CHAR_SIZE, %rax
-#endif
+# endif
 	ret
 
 	.p2align 4
@@ -100,9 +104,9 @@ L(first_vec_x1):
 	jz	L(first_vec_x0_test)
 	bsrl	%eax, %eax
 	leaq	(VEC_SIZE)(%rdi, %rax), %rax
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	andq	$-CHAR_SIZE, %rax
-#endif
+# endif
 	ret
 
 	.p2align 4
@@ -113,9 +117,9 @@ L(first_vec_x1_test):
 	jz	L(first_vec_x0_test)
 	bsrl	%eax, %eax
 	leaq	(VEC_SIZE)(%rdi, %rax), %rax
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	andq	$-CHAR_SIZE, %rax
-#endif
+# endif
 	ret
 
 	.p2align 4
@@ -128,9 +132,9 @@ L(first_vec_x2):
 	jz	L(first_vec_x1_test)
 	bsrl	%eax, %eax
 	leaq	(VEC_SIZE * 2)(%rdi, %rax), %rax
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	andq	$-CHAR_SIZE, %rax
-#endif
+# endif
 	ret
 
 	.p2align 4
@@ -165,27 +169,27 @@ L(first_loop):
 	/* Since SSE2 no pminud so wcsrchr needs seperate logic for
 	   detecting zero. Note if this is found to be a bottleneck it
 	   may be worth adding an SSE4.1 wcsrchr implementation.  */
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	movaps	%xmm5, %xmm6
 	pxor	%xmm8, %xmm8
 
 	PCMPEQ	%xmm8, %xmm5
 	PCMPEQ	%xmm4, %xmm8
 	por	%xmm5, %xmm8
-#else
+# else
 	movaps	%xmm5, %xmm6
 	PMINU	%xmm4, %xmm5
-#endif
+# endif
 
 	movaps	%xmm4, %xmm9
 	PCMPEQ	%xmm0, %xmm4
 	PCMPEQ	%xmm0, %xmm6
 	movaps	%xmm6, %xmm7
 	por	%xmm4, %xmm6
-#ifndef USE_AS_WCSRCHR
+# ifndef USE_AS_WCSRCHR
 	pxor	%xmm8, %xmm8
 	PCMPEQ	%xmm5, %xmm8
-#endif
+# endif
 	pmovmskb %xmm8, %ecx
 	pmovmskb %xmm6, %eax
 
@@ -219,9 +223,9 @@ L(first_loop_old_match):
 
 	bsrl	%eax, %eax
 	addq	%rsi, %rax
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	andq	$-CHAR_SIZE, %rax
-#endif
+# endif
 	ret
 
 	.p2align 4
@@ -247,9 +251,9 @@ L(new_match):
 	jz	L(first_loop_old_match)
 	bsrl	%eax, %eax
 	addq	%rdi, %rax
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	andq	$-CHAR_SIZE, %rax
-#endif
+# endif
 	ret
 
 	/* Save minimum state for getting most recent match. We can
@@ -267,27 +271,27 @@ L(second_loop):
 	/* Since SSE2 no pminud so wcsrchr needs seperate logic for
 	   detecting zero. Note if this is found to be a bottleneck it
 	   may be worth adding an SSE4.1 wcsrchr implementation.  */
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	movaps	%xmm5, %xmm6
 	pxor	%xmm8, %xmm8
 
 	PCMPEQ	%xmm8, %xmm5
 	PCMPEQ	%xmm4, %xmm8
 	por	%xmm5, %xmm8
-#else
+# else
 	movaps	%xmm5, %xmm6
 	PMINU	%xmm4, %xmm5
-#endif
+# endif
 
 	movaps	%xmm4, %xmm9
 	PCMPEQ	%xmm0, %xmm4
 	PCMPEQ	%xmm0, %xmm6
 	movaps	%xmm6, %xmm7
 	por	%xmm4, %xmm6
-#ifndef USE_AS_WCSRCHR
+# ifndef USE_AS_WCSRCHR
 	pxor	%xmm8, %xmm8
 	PCMPEQ	%xmm5, %xmm8
-#endif
+# endif
 
 	pmovmskb %xmm8, %ecx
 	pmovmskb %xmm6, %eax
@@ -312,9 +316,9 @@ L(second_loop_old_match):
 	orl	%ecx, %eax
 	bsrl	%eax, %eax
 	addq	%rsi, %rax
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	andq	$-CHAR_SIZE, %rax
-#endif
+# endif
 	ret
 
 	.p2align 4
@@ -340,9 +344,9 @@ L(second_loop_new_match):
 	jz	L(second_loop_old_match)
 	bsrl	%eax, %eax
 	addq	%rdi, %rax
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	andq	$-CHAR_SIZE, %rax
-#endif
+# endif
 	ret
 
 	.p2align 4,, 4
@@ -366,9 +370,10 @@ L(cross_page):
 	jz	L(ret1)
 	bsrl	%eax, %eax
 	addq	%rdi, %rax
-#ifdef USE_AS_WCSRCHR
+# ifdef USE_AS_WCSRCHR
 	andq	$-CHAR_SIZE, %rax
-#endif
+# endif
 L(ret1):
 	ret
 END(STRRCHR)
+#endif

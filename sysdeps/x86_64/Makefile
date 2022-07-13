@@ -197,6 +197,12 @@ gen-as-const-headers += tlsdesc.sym rtld-offsets.sym
 endif
 
 ifeq ($(subdir),wcsmbs)
+
+sysdep_routines += \
+  wcsncmp-generic \
+  wcsnlen-generic \
+# sysdep_routines
+
 tests += \
   tst-rsi-wcslen
 endif

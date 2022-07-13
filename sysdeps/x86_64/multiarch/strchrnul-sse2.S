@@ -16,12 +16,10 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if IS_IN (libc)
-# ifndef STRCHR
-#  define STRCHR	__strchrnul_sse2
-# endif
+#ifndef STRCHRNUL
+# define STRCHRNUL	__strchrnul_sse2
 #endif
-
 #define AS_STRCHRNUL
+#define STRCHR	STRCHRNUL
 
 #include "strchr-sse2.S"

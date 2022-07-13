@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include "../strchr-isa-default-impl.h"
 
 ENTRY(__strstr_sse2_unaligned)
 	movzbl	(%rsi), %eax
@@ -75,7 +76,7 @@ L(next_pair_index):
 	.p2align 4
 L(strchr):
 	movzbl	%al, %esi
-	jmp	__strchr_sse2
+	jmp	DEFAULT_STRCHR
 
 	.p2align 4
 L(pair_loop):
