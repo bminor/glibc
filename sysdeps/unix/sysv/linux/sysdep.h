@@ -35,13 +35,19 @@
   })
 #endif
 
+#ifdef __CHERI_PURE_CAPABILITY__
+# define syscall_ret_t intptr_t
+#else
+# define syscall_ret_t long
+#endif
+
 /* Define a macro which expands into the inline wrapper code for a system
    call.  It sets the errno and returns -1 on a failure, or the syscall
    return value otherwise.  */
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)				\
   ({									\
-    long int sc_ret = INTERNAL_SYSCALL (name, nr, args);		\
+    syscall_ret_t sc_ret = INTERNAL_SYSCALL (name, nr, args);		\
     __glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (sc_ret))		\
     ? SYSCALL_ERROR_LABEL (INTERNAL_SYSCALL_ERRNO (sc_ret))		\
     : sc_ret;								\
