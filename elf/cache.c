@@ -157,6 +157,7 @@ struct cache_entry
 /* List of all cache entries.  */
 static struct cache_entry *entries;
 
+/* libc4, ELF and libc5 are unsupported.  */
 static const char *flag_descr[] =
 { "libc4", "ELF", "libc5", "libc6"};
 
@@ -168,14 +169,11 @@ print_entry (const char *lib, int flag, uint64_t hwcap,
   printf ("\t%s (", lib);
   switch (flag & FLAG_TYPE_MASK)
     {
-    case FLAG_LIBC4:
-    case FLAG_ELF:
-    case FLAG_ELF_LIBC5:
     case FLAG_ELF_LIBC6:
       fputs (flag_descr[flag & FLAG_TYPE_MASK], stdout);
       break;
     default:
-      fputs (_("unknown"), stdout);
+      fputs (_("unknown or unsupported flag"), stdout);
       break;
     }
   switch (flag & FLAG_REQUIRED_MASK)

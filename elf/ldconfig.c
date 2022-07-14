@@ -65,19 +65,6 @@
 
 #define PACKAGE _libc_intl_domainname
 
-static const struct
-{
-  const char *name;
-  int flag;
-} lib_types[] =
-{
-  {"libc4", FLAG_LIBC4},
-  {"libc5", FLAG_ELF_LIBC5},
-  {"libc6", FLAG_ELF_LIBC6},
-  {"glibc2", FLAG_ELF_LIBC6}
-};
-
-
 /* List of directories to handle.  */
 struct dir_entry
 {
@@ -469,27 +456,8 @@ add_dir_1 (const char *line, const char *from_file, int from_line)
   entry->from_file = strdup (from_file);
   entry->from_line = from_line;
 
-  /* Search for an '=' sign.  */
   entry->path = xstrdup (line);
-  char *equal_sign = strchr (entry->path, '=');
-  if (equal_sign)
-    {
-      *equal_sign = '\0';
-      ++equal_sign;
-      entry->flag = FLAG_ANY;
-      for (i = 0; i < sizeof (lib_types) / sizeof (lib_types[0]); ++i)
-	if (strcmp (equal_sign, lib_types[i].name) == 0)
-	  {
-	    entry->flag = lib_types[i].flag;
-	    break;
-	  }
-      if (entry->flag == FLAG_ANY)
-	error (0, 0, _("%s is not a known library type"), equal_sign);
-    }
-  else
-    {
-      entry->flag = FLAG_ANY;
-    }
+  entry->flag = FLAG_ELF_LIBC6;
 
   /* Canonify path: for now only remove leading and trailing
      whitespace and the trailing slashes.  */
@@ -1054,23 +1022,11 @@ search_dir (const struct dir_entry *entry)
 	  soname = xstrdup (direntry->d_name);
 	}
 
-      if (flag == FLAG_ELF
-	  && (entry->flag == FLAG_ELF_LIBC5
-	      || entry->flag == FLAG_ELF_LIBC6))
-	flag = entry->flag;
-
       /* Some sanity checks to print warnings.  */
       if (opt_verbose)
 	{
-	  if (flag == FLAG_ELF_LIBC5 && entry->flag != FLAG_ELF_LIBC5
-	      && entry->flag != FLAG_ANY)
-	    error (0, 0, _("libc5 library %s in wrong directory"), file_name);
-	  if (flag == FLAG_ELF_LIBC6 && entry->flag != FLAG_ELF_LIBC6
-	      && entry->flag != FLAG_ANY)
+	  if (flag == FLAG_ELF_LIBC6 && entry->flag != FLAG_ELF_LIBC6)
 	    error (0, 0, _("libc6 library %s in wrong directory"), file_name);
-	  if (flag == FLAG_LIBC4 && entry->flag != FLAG_LIBC4
-	      && entry->flag != FLAG_ANY)
-	    error (0, 0, _("libc4 library %s in wrong directory"), file_name);
 	}
 
       /* Add library to list.  */
@@ -1089,19 +1045,8 @@ search_dir (const struct dir_entry *entry)
 		  /* It's newer - add it.  */
 		  /* Flag should be the same - sanity check.  */
 		  if (dlib_ptr->flag != flag)
-		    {
-		      if (dlib_ptr->flag == FLAG_ELF
-			  && (flag == FLAG_ELF_LIBC5 || flag == FLAG_ELF_LIBC6))
-			dlib_ptr->flag = flag;
-		      else if ((dlib_ptr->flag == FLAG_ELF_LIBC5
-				|| dlib_ptr->flag == FLAG_ELF_LIBC6)
-			       && flag == FLAG_ELF)
-			dlib_ptr->flag = flag;
-		      else
-			error (0, 0, _("libraries %s and %s in directory %s have same soname but different type."),
-			       dlib_ptr->name, direntry->d_name,
-			       entry->path);
-		    }
+		    error (0, 0, _("libraries %s and %s in directory %s have same soname but different type."),
+			   dlib_ptr->name, direntry->d_name, entry->path);
 		  free (dlib_ptr->name);
 		  dlib_ptr->name = xstrdup (direntry->d_name);
 		  dlib_ptr->is_link = is_link;

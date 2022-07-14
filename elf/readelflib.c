@@ -44,7 +44,6 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 		  size_t file_length)
 {
   int i;
-  unsigned int j;
   unsigned int dynamic_addr;
   size_t dynamic_size;
   char *program_interpreter;
@@ -81,9 +80,8 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
   elf_pheader = (ElfW(Phdr) *) (elf_header->e_phoff + file_contents);
   check_ptr (elf_pheader);
 
-  /* The library is an elf library, now search for soname and
-     libc5/libc6.  */
-  *flag = FLAG_ELF;
+  /* The library is an elf library.  */
+  *flag = FLAG_ELF_LIBC6;
 
   /* The default ISA level is 0.  */
   *isa_level = 0;
@@ -109,16 +107,6 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
 	case PT_INTERP:
 	  program_interpreter = (char *) (file_contents + segment->p_offset);
 	  check_ptr (program_interpreter);
-
-	  /* Check if this is enough to classify the binary.  */
-	  for (j = 0; j < sizeof (interpreters) / sizeof (interpreters [0]);
-	       ++j)
-	    if (strcmp (program_interpreter, interpreters[j].soname) == 0)
-	      {
-		*flag = interpreters[j].flag;
-		break;
-	      }
-	  break;
 
 	case PT_GNU_PROPERTY:
 	  /* The NT_GNU_PROPERTY_TYPE_0 note must be aligned to 4 bytes
@@ -244,38 +232,16 @@ done:
   if (dynamic_strings == NULL)
     return 1;
 
-  /* Now read the DT_NEEDED and DT_SONAME entries.  */
+  /* Now read the DT_SONAME entries.  */
   for (dyn_entry = dynamic_segment; dyn_entry->d_tag != DT_NULL;
        ++dyn_entry)
     {
-      if (dyn_entry->d_tag == DT_NEEDED || dyn_entry->d_tag == DT_SONAME)
+      if (dyn_entry->d_tag == DT_SONAME)
 	{
 	  char *name = dynamic_strings + dyn_entry->d_un.d_val;
 	  check_ptr (name);
-
-	  if (dyn_entry->d_tag == DT_NEEDED)
-	    {
-
-	      if (*flag == FLAG_ELF)
-		{
-		  /* Check if this is enough to classify the binary.  */
-		  for (j = 0;
-		       j < sizeof (known_libs) / sizeof (known_libs [0]);
-		       ++j)
-		    if (strcmp (name, known_libs [j].soname) == 0)
-		      {
-			*flag = known_libs [j].flag;
-			break;
-		      }
-		}
-	    }
-
-	  else if (dyn_entry->d_tag == DT_SONAME)
-	    *soname = xstrdup (name);
-
-	  /* Do we have everything we need?  */
-	  if (*soname && *flag != FLAG_ELF)
-	    return 0;
+          *soname = xstrdup (name);
+          return 0;
 	}
     }
 
