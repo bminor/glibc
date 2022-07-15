@@ -29,6 +29,10 @@
 # define __NR_fcntl64 __NR_fcntl
 #endif
 
+#ifndef FCNTL_VA_ARG
+# define FCNTL_VA_ARG(a, t) va_arg(a, t)
+#endif
+
 #ifndef FCNTL_ADJUST_CMD
 # define FCNTL_ADJUST_CMD(__cmd) __cmd
 #endif
@@ -40,7 +44,7 @@ __libc_fcntl64 (int fd, int cmd, ...)
   void *arg;
 
   va_start (ap, cmd);
-  arg = va_arg (ap, void *);
+  arg = FCNTL_VA_ARG (ap, void *);
   va_end (ap);
 
   cmd = FCNTL_ADJUST_CMD (cmd);
