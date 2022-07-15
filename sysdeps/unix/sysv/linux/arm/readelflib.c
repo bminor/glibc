@@ -55,11 +55,18 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
     }
   else
     {
+      Elf64_Ehdr *elf64_header = (Elf64_Ehdr *) elf_header;
+
       ret = process_elf64_file (file_name, lib, flag, isa_level, soname,
 				file_contents, file_length);
       /* AArch64 libraries are always libc.so.6+.  */
       if (!ret)
-	*flag = FLAG_AARCH64_LIB64|FLAG_ELF_LIBC6;
+	{
+	  if (elf64_header->e_flags & EF_AARCH64_CHERI_PURECAP)
+	    *flag = FLAG_AARCH64_PURECAP|FLAG_ELF_LIBC6;
+	  else
+	    *flag = FLAG_AARCH64_LIB64|FLAG_ELF_LIBC6;
+	}
     }
   return ret;
 }
