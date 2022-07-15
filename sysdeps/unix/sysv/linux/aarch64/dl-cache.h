@@ -20,6 +20,8 @@
 
 #ifdef __LP64__
 # define _DL_CACHE_DEFAULT_ID    (FLAG_AARCH64_LIB64 | FLAG_ELF_LIBC6)
+#elif defined __CHERI_PURE_CAPABILITY__
+# define _DL_CACHE_DEFAULT_ID    (FLAG_AARCH64_PURECAP | FLAG_ELF_LIBC6)
 #else
 # define _DL_CACHE_DEFAULT_ID    (FLAG_AARCH64_LIB32 | FLAG_ELF_LIBC6)
 #endif
@@ -38,6 +40,11 @@
 	  len -= 2;						\
 	  path[len] = '\0';					\
 	}							\
+      if (len >= 7 && ! memcmp (path + len - 7, "/lib64c", 7))	\
+	{							\
+	  len -= 3;						\
+	  path[len] = '\0';					\
+	}							\
       if (len >= 9 && ! memcmp (path + len - 9, "/libilp32", 9))\
 	{							\
 	  len -= 5;						\
@@ -47,6 +54,8 @@
       if (len >= 4 && ! memcmp (path + len - 4, "/lib", 4))	\
 	{							\
 	  memcpy (path + len, "64", 3);				\
+	  add_dir (path);					\
+	  memcpy (path + len, "64c", 4);			\
 	  add_dir (path);					\
 	  memcpy (path + len, "ilp32", 6);			\
 	  add_dir (path);					\
