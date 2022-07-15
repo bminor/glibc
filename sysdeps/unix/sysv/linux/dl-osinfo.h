@@ -34,7 +34,11 @@ _dl_setup_stack_chk_guard (void *dl_random)
   /* We need in the moment only 8 bytes on 32-bit platforms and 16
      bytes on 64-bit platforms.  Therefore we can use the data
      directly and not use the kernel-provided data to seed a PRNG.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+  memcpy (ret.bytes, dl_random, 8);
+#else
   memcpy (ret.bytes, dl_random, sizeof (ret));
+#endif
 #if BYTE_ORDER == LITTLE_ENDIAN
   ret.num &= ~(uintptr_t) 0xff;
 #elif BYTE_ORDER == BIG_ENDIAN
