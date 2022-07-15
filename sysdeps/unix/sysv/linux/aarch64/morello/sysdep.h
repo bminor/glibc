@@ -105,6 +105,8 @@ typedef __intcap_t __sysarg_t;
   LOAD_ARGS_6 (c0, c1, c2, c3, c4, c5)		\
   register __sysarg_t _x6 asm ("c6") = _x6tmp;
 
+# define FCNTL_VA_ARG(a, t) (a ? va_arg(a, t) : 0)
+
 #endif	/* __ASSEMBLER__ */
 
 /* Disable pointer mangling for purecap ABI.  */
