@@ -20,15 +20,18 @@
 #include <support/check.h>
 #include <support/xunistd.h>
 #include <support/namespace.h>
-#include <sys/wait.h>
 #include <sys/mount.h>
 
 _Static_assert (sizeof (struct mount_attr) == MOUNT_ATTR_SIZE_VER0,
 		"sizeof (struct mount_attr) != MOUNT_ATTR_SIZE_VER0");
 
-static void
-subprocess (void)
+static int
+do_test (void)
 {
+  support_become_root ();
+  if (!support_enter_mount_namespace ())
+    FAIL_UNSUPPORTED ("cannot enter mount namespace, skipping test");
+
   int r = fsopen ("it_should_be_not_a_valid_mount", 0);
   TEST_VERIFY_EXIT (r == -1);
   if (errno == ENOSYS)
@@ -98,22 +101,6 @@ subprocess (void)
   }
 
   _exit (0);
-}
-
-static int
-do_test (void)
-{
-  support_become_root ();
-
-  pid_t pid = xfork ();
-  if (pid == 0)
-    subprocess ();
-
-  int status;
-  xwaitpid (pid, &status, 0);
-  TEST_VERIFY (WIFEXITED (status));
-
-  return 0;
 }
 
 #include <support/test-driver.c>
