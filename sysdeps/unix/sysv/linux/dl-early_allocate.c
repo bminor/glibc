@@ -64,7 +64,7 @@ _dl_early_allocate (size_t size)
      for static PIE.  */
   if (result == NULL)
     {
-      long int ret;
+      intptr_t ret;
       int prot = PROT_READ | PROT_WRITE;
       int flags = MAP_PRIVATE | MAP_ANONYMOUS;
 #ifdef __NR_mmap2
