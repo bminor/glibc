@@ -66,8 +66,8 @@ ENTRY(strlen)
 L(n_nonzero):
 # ifdef AS_WCSLEN
 /* Check for overflow from maxlen * sizeof(wchar_t). If it would
-   overflow the only way this program doesn't have undefined behavior 
-   is if there is a null terminator in valid memory so wcslen will 
+   overflow the only way this program doesn't have undefined behavior
+   is if there is a null terminator in valid memory so wcslen will
    suffice.  */
 	mov	%RSI_LP, %R10_LP
 	sar	$62, %R10_LP
