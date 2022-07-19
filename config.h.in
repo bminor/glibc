@@ -132,6 +132,12 @@
 /* RISC-V floating-point ABI for ld.so.  */
 #undef RISCV_ABI_FLEN
 
+/* LOONGARCH integer ABI for ld.so.  */
+#undef LOONGARCH_ABI_GRLEN
+
+/* LOONGARCH floating-point ABI for ld.so.  */
+#undef LOONGARCH_ABI_FRLEN
+
 /* Linux specific: minimum supported kernel version.  */
 #undef	__LINUX_KERNEL_VERSION
 
