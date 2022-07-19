@@ -64,6 +64,14 @@ Major new features:
   added.  The functions use a pseudo-random number generator along with
   entropy from the kernel.
 
+* Support for LoongArch running on Linux has been added.  This port requires
+  as least binutils 2.38, GCC 12, and Linux 5.19.  Currently only hard-float
+  ABI is supported:
+
+    - loongarch64-linux-gnu
+
+  The LoongArch ABI is 64-bit little-endian.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for prelink will be removed in the next release; this includes
