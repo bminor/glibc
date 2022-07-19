@@ -252,7 +252,8 @@ class Machine(_OpenIntEnum):
     EM_RISCV = 243
     EM_BPF = 247
     EM_CSKY = 252
-    EM_NUM = 253
+    EM_LOONGARCH = 258
+    EM_NUM = 259
     EM_ALPHA = 0x9026
 
 class Et(_OpenIntEnum):
