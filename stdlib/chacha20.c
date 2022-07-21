@@ -165,8 +165,9 @@ chacha20_block (uint32_t *state, uint8_t *dst, const uint8_t *src)
 }
 
 static void
-chacha20_crypt (uint32_t *state, uint8_t *dst, const uint8_t *src,
-		size_t bytes)
+__attribute_maybe_unused__
+chacha20_crypt_generic (uint32_t *state, uint8_t *dst, const uint8_t *src,
+			size_t bytes)
 {
   while (bytes >= CHACHA20_BLOCK_SIZE)
     {
@@ -185,3 +186,6 @@ chacha20_crypt (uint32_t *state, uint8_t *dst, const uint8_t *src,
       explicit_bzero (stream, sizeof stream);
     }
 }
+
+/* Get the architecture optimized version.  */
+#include <chacha20_arch.h>
