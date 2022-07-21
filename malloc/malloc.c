@@ -292,19 +292,14 @@
 # define __assert_fail(assertion, file, line, function)			\
 	 __malloc_assert(assertion, file, line, function)
 
-extern const char *__progname;
-
-static void
+_Noreturn static void
 __malloc_assert (const char *assertion, const char *file, unsigned int line,
 		 const char *function)
 {
-  (void) __fxprintf (NULL, "%s%s%s:%u: %s%sAssertion `%s' failed.\n",
-		     __progname, __progname[0] ? ": " : "",
-		     file, line,
-		     function ? function : "", function ? ": " : "",
-		     assertion);
-  fflush (stderr);
-  abort ();
+  __libc_message (do_abort, "\
+Fatal glibc error: malloc assertion failure in %s: %s\n",
+		  function, assertion);
+  __builtin_unreachable ();
 }
 #endif
 #endif
