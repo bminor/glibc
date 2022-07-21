@@ -8,6 +8,7 @@ endif
 ifeq ($(subdir),stdlib)
 sysdep_routines += \
   chacha20-amd64-sse2 \
+  chacha20-amd64-avx2 \
   # sysdep_routines
 endif
 

@@ -44,6 +44,9 @@
    Public domain.  */
 
 #include <sysdep.h>
+#include <isa-level.h>
+
+#if MINIMUM_X86_ISA_LEVEL <= 2
 
 #ifdef PIC
 #  define rRIP (%rip)
@@ -304,3 +307,5 @@ L(round2_4):
 	cfi_def_cfa_register(%rsp);
 	ret_spec_stop;
 END (__chacha20_sse2_blocks4)
+
+#endif /* if MINIMUM_X86_ISA_LEVEL <= 2 */
