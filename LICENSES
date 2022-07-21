@@ -391,7 +391,8 @@ Copyright 2001 by Stephen L. Moshier <moshier@na-net.ornl.gov>
  <https://www.gnu.org/licenses/>.  */
 
 sysdeps/aarch64/chacha20-aarch64.S, sysdeps/x86_64/chacha20-amd64-sse2.S,
-and sysdeps/x86_64/chacha20-amd64-avx2.S imports code from libgcrypt,
+sysdeps/x86_64/chacha20-amd64-avx2.S, and
+sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c imports code from libgcrypt,
 with the following notices:
 
 Copyright (C) 2017-2019 Jussi Kivilinna <jussi.kivilinna@iki.fi>
