@@ -1447,6 +1447,7 @@ systems.
 * ISO Random::                  @code{rand} and friends.
 * BSD Random::                  @code{random} and friends.
 * SVID Random::                 @code{drand48} and friends.
+* High Quality Random::         @code{arc4random} and friends.
 @end menu
 
 @node ISO Random
@@ -1983,6 +1984,51 @@ If the return value is non-negative the function call succeeded.
 
 This function is a GNU extension and should not be used in portable
 programs.
+@end deftypefun
+
+@node High Quality Random
+@subsection High Quality Random Number Functions
+
+This section describes the random number functions provided as a GNU
+extension, based on OpenBSD interfaces.
+
+@Theglibc{} uses kernel entropy obtained either through @code{getrandom}
+or by reading @file{/dev/urandom} to seed and periodically re-seed the
+internal state.  A per-thread data pool is used, which allows fast output
+generation.
+
+Although these functions provide higher random quality than ISO, BSD, and
+SVID functions, these still use a Pseudo-Random generator and should not
+be used in cryptographic contexts.
+
+The internal state is cleared and reseeded with kernel entropy on @code{fork}
+and @code{_Fork}.  It is not cleared on either a direct @code{clone} syscall
+or when using @theglibc{} @code{syscall} function.
+
+The prototypes for these functions are in @file{stdlib.h}.
+@pindex stdlib.h
+
+@deftypefun uint32_t arc4random (void)
+@standards{BSD, stdlib.h}
+@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acsafe{}}
+This function returns a single 32-bit value in the range of @code{0} to
+@code{2^32−1} (inclusive), which is twice the range of @code{rand} and
+@code{random}.
+@end deftypefun
+
+@deftypefun void arc4random_buf (void *@var{buffer}, size_t @var{length})
+@standards{BSD, stdlib.h}
+@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acsafe{}}
+This function fills the region @var{buffer} of length @var{length} bytes
+with random data.
+@end deftypefun
+
+@deftypefun uint32_t arc4random_uniform (uint32_t @var{upper_bound})
+@standards{BSD, stdlib.h}
+@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acsafe{}}
+This function returns a single 32-bit value, uniformly distributed but
+less than the @var{upper_bound}.  It avoids the @w{modulo bias} when the
+upper bound is not a power of two.
 @end deftypefun
 
 @node FP Function Optimizations
