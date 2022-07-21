@@ -233,7 +233,10 @@ hash-benchset := \
   nss-hash \
 # hash-benchset
 
-stdlib-benchset := strtod
+stdlib-benchset := \
+  arc4random \
+  strtod \
+  # stdlib-benchset
 
 stdio-common-benchset := sprintf
 

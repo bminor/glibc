@@ -38,8 +38,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define DO_NOT_OPTIMIZE_OUT(x) __asm__ volatile("" : : "r,m"(x) : "memory")
-
 enum
 {
   NFIXED_ITERS = 1048576,

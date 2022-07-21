@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 
+#include "bench-util.h"
 
 /* We go through the trouble of using macros here because many of the
    hash functions are meant to be inlined so its not fair to benchmark
