@@ -74,6 +74,9 @@ __typeof (__fcntl) __fcntl_nocancel;
 #define __fcntl64_nocancel(...) \
   __fcntl_nocancel (__VA_ARGS__)
 
+#define __getrandom_nocancel(buf, size, flags) \
+  __getrandom (buf, size, flags)
+
 #if IS_IN (libc)
 hidden_proto (__close_nocancel)
 hidden_proto (__close_nocancel_nostatus)

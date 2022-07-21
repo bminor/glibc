@@ -60,6 +60,10 @@ Major new features:
   _GNU_SOURCE macro is defined and the C++20 __cpp_char8_t feature test macro
   is not defined (if __cpp_char8_t is defined, then char8_t is a builtin type).
 
+* The functions arc4random, arc4random_buf, and arc4random_uniform have been
+  added.  The functions use a pseudo-random number generator along with
+  entropy from the kernel.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Support for prelink will be removed in the next release; this includes

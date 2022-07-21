@@ -53,6 +53,8 @@ routines := \
   a64l \
   abort \
   abs \
+  arc4random \
+  arc4random_uniform \
   at_quick_exit \
   atof \
   atoi \

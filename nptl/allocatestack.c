@@ -32,6 +32,7 @@
 #include <kernel-features.h>
 #include <nptl-stack.h>
 #include <libc-lock.h>
+#include <tls-internal.h>
 
 /* Default alignment of stack.  */
 #ifndef STACK_ALIGN
@@ -127,7 +128,7 @@ get_cached_stack (size_t *sizep, void **memp)
 
   result->exiting = false;
   __libc_lock_init (result->exit_lock);
-  result->tls_state = (struct tls_internal_t) { 0 };
+  memset (&result->tls_state, 0, sizeof result->tls_state);
 
   /* Clear the DTV.  */
   dtv_t *dtv = GET_DTV (TLS_TPADJ (result));

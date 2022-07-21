@@ -48,5 +48,7 @@
   (void) __writev (fd, iov, n)
 #define __fcntl64_nocancel(fd, cmd, ...) \
   __fcntl64 (fd, cmd, __VA_ARGS__)
+#define __getrandom_nocancel(buf, size, flags) \
+  __getrandom (buf, size, flags)
 
 #endif /* NOT_CANCEL_H  */

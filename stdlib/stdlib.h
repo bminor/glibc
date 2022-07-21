@@ -533,6 +533,19 @@ extern int seed48_r (unsigned short int __seed16v[3],
 extern int lcong48_r (unsigned short int __param[7],
 		      struct drand48_data *__buffer)
      __THROW __nonnull ((1, 2));
+
+/* Return a random integer between zero and 2**32-1 (inclusive).  */
+extern __uint32_t arc4random (void)
+     __THROW __wur;
+
+/* Fill the buffer with random data.  */
+extern void arc4random_buf (void *__buf, size_t __size)
+     __THROW __nonnull ((1));
+
+/* Return a random number between zero (inclusive) and the specified
+   limit (exclusive).  */
+extern __uint32_t arc4random_uniform (__uint32_t __upper_bound)
+     __THROW __wur;
 # endif	/* Use misc.  */
 #endif	/* Use misc or X/Open.  */
 

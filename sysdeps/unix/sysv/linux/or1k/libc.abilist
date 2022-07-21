@@ -2123,6 +2123,9 @@ GLIBC_2.35 wprintf F
 GLIBC_2.35 write F
 GLIBC_2.35 writev F
 GLIBC_2.35 wscanf F
+GLIBC_2.36 arc4random F
+GLIBC_2.36 arc4random_buf F
+GLIBC_2.36 arc4random_uniform F
 GLIBC_2.36 c8rtomb F
 GLIBC_2.36 fsconfig F
 GLIBC_2.36 fsmount F

@@ -67,6 +67,13 @@ __writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
   INTERNAL_SYSCALL_CALL (writev, fd, iov, iovcnt);
 }
 
+static inline int
+__getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
+{
+  return INTERNAL_SYSCALL_CALL (getrandom, buf, buflen, flags);
+}
+
+
 /* Uncancelable fcntl.  */
 __typeof (__fcntl) __fcntl64_nocancel;
 

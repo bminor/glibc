@@ -30,11 +30,6 @@ __glibc_tls_internal (void)
   return &__tls_internal;
 }
 
-static inline void
-__glibc_tls_internal_free (void)
-{
-  free (__tls_internal.strsignal_buf);
-  free (__tls_internal.strerror_l_buf);
-}
+extern void __glibc_tls_internal_free (void) attribute_hidden;
 
 #endif

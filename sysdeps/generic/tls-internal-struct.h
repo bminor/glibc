@@ -23,6 +23,7 @@ struct tls_internal_t
 {
   char *strsignal_buf;
   char *strerror_l_buf;
+  struct arc4random_state_t *rand_state;
 };
 
 #endif

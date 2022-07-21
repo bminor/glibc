@@ -136,6 +136,11 @@ libc {
     strtof32; strtof64; strtof32x;
     strtof32_l; strtof64_l; strtof32x_l;
   }
+  GLIBC_2.36 {
+    arc4random;
+    arc4random_buf;
+    arc4random_uniform;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.
