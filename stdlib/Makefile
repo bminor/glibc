@@ -183,6 +183,9 @@ tests := \
   testmb2 \
   testrand \
   testsort \
+  tst-arc4random-fork \
+  tst-arc4random-stats \
+  tst-arc4random-thread \
   tst-at_quick_exit \
   tst-atexit \
   tst-atof1 \
@@ -243,6 +246,7 @@ tests := \
   # tests
 
 tests-internal := \
+  tst-arc4random-chacha20 \
   tst-strtod1i \
   tst-strtod3 \
   tst-strtod4 \
@@ -252,6 +256,7 @@ tests-internal := \
   # tests-internal
 
 tests-static := \
+  tst-arc4random-chacha20 \
   tst-secure-getenv \
   # tests-static
 
@@ -271,6 +276,8 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
 LDLIBS-test-cxa_atexit-race2 = $(shared-thread-library)
 LDLIBS-test-on_exit-race = $(shared-thread-library)
 LDLIBS-tst-canon-bz26341 = $(shared-thread-library)
+LDLIBS-tst-arc4random-fork = $(shared-thread-library)
+LDLIBS-tst-arc4random-thread = $(shared-thread-library)
 
 LDLIBS-test-dlclose-exit-race = $(shared-thread-library)
 LDFLAGS-test-dlclose-exit-race = $(LDFLAGS-rdynamic)
