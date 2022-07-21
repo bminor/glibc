@@ -25,19 +25,31 @@
 # include <features.h>
 #endif
 
-#ifndef __USE_EXTERN_INLINES
-# define __USE_EXTERN_INLINES	1
-#endif
-#define ARGP_EI
-#undef __OPTIMIZE__
-#define __OPTIMIZE__ 1
 #include <argp.h>
 
-/* Add weak aliases.  */
-#if _LIBC - 0 && defined (weak_alias)
-
+void
+__argp_usage (const struct argp_state *__state)
+{
+  __argp_state_help (__state, stderr, ARGP_HELP_STD_USAGE);
+}
 weak_alias (__argp_usage, argp_usage)
-weak_alias (__option_is_short, _option_is_short)
-weak_alias (__option_is_end, _option_is_end)
 
-#endif
+int
+__option_is_short (const struct argp_option *__opt)
+{
+  if (__opt->flags & OPTION_DOC)
+    return 0;
+  else
+    {
+      int __key = __opt->key;
+      return __key > 0 && __key <= UCHAR_MAX && isprint (__key);
+    }
+}
+weak_alias (__option_is_short, _option_is_short)
+
+int
+__option_is_end (const struct argp_option *__opt)
+{
+  return !__opt->key && !__opt->name && !__opt->doc && !__opt->group;
+}
+weak_alias (__option_is_end, _option_is_end)
