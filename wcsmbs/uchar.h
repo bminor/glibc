@@ -34,8 +34,16 @@
 /* Declare the C2x char8_t typedef in C2x modes, but only if the C++
   __cpp_char8_t feature test macro is not defined.  */
 #if __GLIBC_USE (ISOC2X) && !defined __cpp_char8_t
+#if __GNUC_PREREQ (10, 0) && defined __cplusplus
+/* Suppress the diagnostic regarding char8_t being a keyword in C++20.  */
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wc++20-compat"
+#endif
 /* Define the 8-bit character type.  */
 typedef unsigned char char8_t;
+#if __GNUC_PREREQ (10, 0) && defined __cplusplus
+# pragma GCC diagnostic pop
+#endif
 #endif
 
 #ifndef __USE_ISOCXX11
