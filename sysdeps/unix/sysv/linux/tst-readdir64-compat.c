@@ -37,12 +37,15 @@ struct __old_dirent64
 
 typedef struct __old_dirent64 *(*compat_readdir64_type) (DIR *);
 
+#if TEST_COMPAT (libc, GLIBC_2_1, GLIBC_2_2)
 struct __old_dirent64 *compat_readdir64 (DIR *);
 compat_symbol_reference (libc, compat_readdir64, readdir64, GLIBC_2_1);
+#endif
 
 static int
 do_test (void)
 {
+#if TEST_COMPAT (libc, GLIBC_2_1, GLIBC_2_2)
   /* Directory stream using the non-compat readdir64 symbol.  The test
      checks against this.  */
   DIR *dir_reference = opendir (".");
@@ -104,6 +107,7 @@ do_test (void)
 
   TEST_COMPARE (closedir (dir_test), 0);
   TEST_COMPARE (closedir (dir_reference), 0);
+#endif
   return 0;
 }
 
