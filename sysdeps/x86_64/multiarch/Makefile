@@ -62,11 +62,13 @@ sysdep_routines += \
   strchr-avx2 \
   strchr-avx2-rtm \
   strchr-evex \
+  strchr-evex512 \
   strchr-sse2 \
   strchr-sse2-no-bsf \
   strchrnul-avx2 \
   strchrnul-avx2-rtm \
   strchrnul-evex \
+  strchrnul-evex512 \
   strchrnul-sse2 \
   strcmp-avx2 \
   strcmp-avx2-rtm \
@@ -131,6 +133,7 @@ sysdep_routines += \
   wcschr-avx2 \
   wcschr-avx2-rtm \
   wcschr-evex \
+  wcschr-evex512 \
   wcschr-sse2 \
   wcscmp-avx2 \
   wcscmp-avx2-rtm \
