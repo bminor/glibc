@@ -1993,17 +1993,10 @@ This section describes the random number functions provided as a GNU
 extension, based on OpenBSD interfaces.
 
 @Theglibc{} uses kernel entropy obtained either through @code{getrandom}
-or by reading @file{/dev/urandom} to seed and periodically re-seed the
-internal state.  A per-thread data pool is used, which allows fast output
-generation.
+or by reading @file{/dev/urandom} to seed.
 
-Although these functions provide higher random quality than ISO, BSD, and
-SVID functions, these still use a Pseudo-Random generator and should not
-be used in cryptographic contexts.
-
-The internal state is cleared and reseeded with kernel entropy on @code{fork}
-and @code{_Fork}.  It is not cleared on either a direct @code{clone} syscall
-or when using @theglibc{} @code{syscall} function.
+These functions provide higher random quality than ISO, BSD, and SVID
+functions, and may be used in cryptographic contexts.
 
 The prototypes for these functions are in @file{stdlib.h}.
 @pindex stdlib.h

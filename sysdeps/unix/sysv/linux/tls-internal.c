@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdlib/arc4random.h>
 #include <string.h>
 #include <tls-internal.h>
 
@@ -26,13 +25,4 @@ __glibc_tls_internal_free (void)
   struct pthread *self = THREAD_SELF;
   free (self->tls_state.strsignal_buf);
   free (self->tls_state.strerror_l_buf);
-
-  if (self->tls_state.rand_state != NULL)
-    {
-      /* Clear any lingering random state prior so if the thread stack is
-         cached it won't leak any data.  */
-      explicit_bzero (self->tls_state.rand_state,
-		      sizeof (*self->tls_state.rand_state));
-      free (self->tls_state.rand_state);
-    }
 }

@@ -1,8 +1,3 @@
 ifeq ($(subdir),string)
 sysdep_routines += strcasestr-ppc64
 endif
-
-ifeq ($(subdir),stdlib)
-sysdep_routines += chacha20-ppc
-CFLAGS-chacha20-ppc.c += -mcpu=power8
-endif

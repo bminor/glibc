@@ -5,13 +5,6 @@ ifeq ($(subdir),csu)
 gen-as-const-headers += link-defines.sym
 endif
 
-ifeq ($(subdir),stdlib)
-sysdep_routines += \
-  chacha20-amd64-sse2 \
-  chacha20-amd64-avx2 \
-  # sysdep_routines
-endif
-
 ifeq ($(subdir),gmon)
 sysdep_routines += _mcount
 # We cannot compile _mcount.S with -pg because that would create

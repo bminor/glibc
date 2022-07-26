@@ -662,8 +662,6 @@ retry:
       _hurd_malloc_fork_child ();
       call_function_static_weak (__malloc_fork_unlock_child);
 
-      call_function_static_weak (__arc4random_fork_subprocess);
-
       /* Run things that want to run in the child task to set up.  */
       RUN_HOOK (_hurd_fork_child_hook, ());
 

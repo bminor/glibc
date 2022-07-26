@@ -20,6 +20,7 @@
 # define NOT_CANCEL_H
 
 #include <fcntl.h>
+#include <poll.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -50,5 +51,7 @@
   __fcntl64 (fd, cmd, __VA_ARGS__)
 #define __getrandom_nocancel(buf, size, flags) \
   __getrandom (buf, size, flags)
+#define __poll_infinity_nocancel(fds, nfds) \
+  __poll (fds, nfds, -1)
 
 #endif /* NOT_CANCEL_H  */

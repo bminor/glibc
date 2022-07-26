@@ -51,10 +51,6 @@ ifeq ($(subdir),csu)
 gen-as-const-headers += tlsdesc.sym
 endif
 
-ifeq ($(subdir),stdlib)
-sysdep_routines += chacha20-aarch64
-endif
-
 ifeq ($(subdir),gmon)
 CFLAGS-mcount.c += -mgeneral-regs-only
 endif

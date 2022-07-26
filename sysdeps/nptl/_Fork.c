@@ -43,8 +43,6 @@ _Fork (void)
       self->robust_head.list = &self->robust_head;
       INTERNAL_SYSCALL_CALL (set_robust_list, &self->robust_head,
 			     sizeof (struct robust_list_head));
-
-      call_function_static_weak (__arc4random_fork_subprocess);
     }
   return pid;
 }

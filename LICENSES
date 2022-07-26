@@ -389,26 +389,3 @@ Copyright 2001 by Stephen L. Moshier <moshier@na-net.ornl.gov>
  You should have received a copy of the GNU Lesser General Public
  License along with this library; if not, see
  <https://www.gnu.org/licenses/>.  */
-
-sysdeps/aarch64/chacha20-aarch64.S, sysdeps/x86_64/chacha20-amd64-sse2.S,
-sysdeps/x86_64/chacha20-amd64-avx2.S, and
-sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c, and
-sysdeps/s390/s390-64/chacha20-s390x.S imports code from libgcrypt,
-with the following notices:
-
-Copyright (C) 2017-2019 Jussi Kivilinna <jussi.kivilinna@iki.fi>
-
-This file is part of Libgcrypt.
-
-Libgcrypt is free software; you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as
-published by the Free Software Foundation; either version 2.1 of
-the License, or (at your option) any later version.
-
-Libgcrypt is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this program; if not, see <https://www.gnu.org/licenses/>.

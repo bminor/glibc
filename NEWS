@@ -61,8 +61,8 @@ Major new features:
   is not defined (if __cpp_char8_t is defined, then char8_t is a builtin type).
 
 * The functions arc4random, arc4random_buf, and arc4random_uniform have been
-  added.  The functions use a pseudo-random number generator along with
-  entropy from the kernel.
+  added.  The functions wrap getrandom and/or /dev/urandom to return high-
+  quality randomness from the kernel.
 
 * Support for LoongArch running on Linux has been added.  This port requires
   as least binutils 2.38, GCC 12, and Linux 5.19.  Currently only hard-float

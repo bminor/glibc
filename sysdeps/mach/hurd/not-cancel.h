@@ -21,6 +21,7 @@
 
 #include <fcntl.h>
 #include <unistd.h>
+#include <poll.h>
 #include <sys/wait.h>
 #include <time.h>
 #include <sys/uio.h>
@@ -76,6 +77,9 @@ __typeof (__fcntl) __fcntl_nocancel;
 
 #define __getrandom_nocancel(buf, size, flags) \
   __getrandom (buf, size, flags)
+
+#define __poll_infinity_nocancel(fds, nfds) \
+  __poll (fds, nfds, -1)
 
 #if IS_IN (libc)
 hidden_proto (__close_nocancel)

@@ -28,7 +28,6 @@ __glibc_tls_internal (void)
   return &THREAD_SELF->tls_state;
 }
 
-/* Reset the arc4random TCB state on fork.  */
 extern void __glibc_tls_internal_free (void) attribute_hidden;
 
 #endif

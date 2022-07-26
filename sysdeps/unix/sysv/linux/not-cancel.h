@@ -23,6 +23,7 @@
 #include <sysdep.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/poll.h>
 #include <sys/syscall.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -70,9 +71,14 @@ __writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
 static inline int
 __getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
 {
-  return INTERNAL_SYSCALL_CALL (getrandom, buf, buflen, flags);
+  return INLINE_SYSCALL_CALL (getrandom, buf, buflen, flags);
 }
 
+static inline int
+__poll_infinity_nocancel (struct pollfd *fds, nfds_t nfds)
+{
+  return INLINE_SYSCALL_CALL (ppoll, fds, nfds, NULL, NULL, 0);
+}
 
 /* Uncancelable fcntl.  */
 __typeof (__fcntl) __fcntl64_nocancel;

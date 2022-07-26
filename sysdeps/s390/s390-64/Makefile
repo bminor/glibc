@@ -67,9 +67,3 @@ tests-container += tst-glibc-hwcaps-cache
 endif
 
 endif # $(subdir) == elf
-
-ifeq ($(subdir),stdlib)
-sysdep_routines += \
-  chacha20-s390x \
-  # sysdep_routines
-endif

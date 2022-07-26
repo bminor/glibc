@@ -246,7 +246,6 @@ tests := \
   # tests
 
 tests-internal := \
-  tst-arc4random-chacha20 \
   tst-strtod1i \
   tst-strtod3 \
   tst-strtod4 \
@@ -256,7 +255,6 @@ tests-internal := \
   # tests-internal
 
 tests-static := \
-  tst-arc4random-chacha20 \
   tst-secure-getenv \
   # tests-static
 
