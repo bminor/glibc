@@ -19,13 +19,8 @@
 #ifndef _DL_MACHINE_REL_H
 #define _DL_MACHINE_REL_H
 
-/* ARM never uses Elf32_Rela relocations for the dynamic linker.
-   Prelinked libraries may use Elf32_Rela though.  */
-#define ELF_MACHINE_NO_RELA defined RTLD_BOOTSTRAP
+#define ELF_MACHINE_NO_RELA 1
 #define ELF_MACHINE_NO_REL 0
-
-/* ARM never uses Elf32_Rela relocations for the dynamic linker.
-   Prelinked libraries may use Elf32_Rela though.  */
 #define ELF_MACHINE_PLT_REL 1
 
 #define PLTREL ElfW(Rel)

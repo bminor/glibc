@@ -447,96 +447,6 @@ elf_machine_rel (struct link_map *map, struct r_scope_elem *scope[],
     }
 }
 
-# ifndef RTLD_BOOTSTRAP
-static inline void
-__attribute__ ((always_inline))
-elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
-                  const Elf32_Rela *reloc, const Elf32_Sym *sym,
-                  const struct r_found_version *version,
-		  void *const reloc_addr_arg, int skip_ifunc)
-{
-  Elf32_Addr *const reloc_addr = reloc_addr_arg;
-  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
-
-  if (__builtin_expect (r_type == R_ARM_RELATIVE, 0))
-    *reloc_addr = map->l_addr + reloc->r_addend;
-  else if (__builtin_expect (r_type == R_ARM_NONE, 0))
-    return;
-  else
-    {
-      const Elf32_Sym *const refsym = sym;
-      struct link_map *sym_map = RESOLVE_MAP (map, scope, &sym, version, r_type);
-      Elf32_Addr value = SYMBOL_ADDRESS (sym_map, sym, true);
-
-      if (sym != NULL
-	  && __builtin_expect (ELFW(ST_TYPE) (sym->st_info) == STT_GNU_IFUNC, 0)
-	  && __builtin_expect (sym->st_shndx != SHN_UNDEF, 1)
-	  && __builtin_expect (!skip_ifunc, 1))
-	value = elf_ifunc_invoke (value);
-
-      switch (r_type)
-	{
-	  /* Not needed for dl-conflict.c.  */
-	case R_ARM_COPY:
-	  if (sym == NULL)
-	    /* This can happen in trace mode if an object could not be
-	       found.  */
-	    break;
-	  if (sym->st_size > refsym->st_size
-	      || (GLRO(dl_verbose) && sym->st_size < refsym->st_size))
-	    {
-	      const char *strtab;
-
-	      strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
-	      _dl_error_printf ("\
-%s: Symbol `%s' has different size in shared object, consider re-linking\n",
-				RTLD_PROGNAME, strtab + refsym->st_name);
-	    }
-	  memcpy (reloc_addr_arg, (void *) value,
-		  MIN (sym->st_size, refsym->st_size));
-	  break;
-	case R_ARM_GLOB_DAT:
-	case R_ARM_JUMP_SLOT:
-	case R_ARM_ABS32:
-	  *reloc_addr = value + reloc->r_addend;
-	  break;
-	case R_ARM_PC24:
-          relocate_pc24 (map, value, reloc_addr, reloc->r_addend);
-	  break;
-#if !defined RTLD_BOOTSTRAP
-	case R_ARM_TLS_DTPMOD32:
-	  /* Get the information from the link map returned by the
-	     resolv function.  */
-	  if (sym_map != NULL)
-	    *reloc_addr = sym_map->l_tls_modid;
-	  break;
-
-	case R_ARM_TLS_DTPOFF32:
-	  *reloc_addr = (sym == NULL ? 0 : sym->st_value) + reloc->r_addend;
-	  break;
-
-	case R_ARM_TLS_TPOFF32:
-	  if (sym != NULL)
-	    {
-	      CHECK_STATIC_TLS (map, sym_map);
-	      *reloc_addr = (sym->st_value + sym_map->l_tls_offset
-			     + reloc->r_addend);
-	    }
-	  break;
-	case R_ARM_IRELATIVE:
-	  value = map->l_addr + reloc->r_addend;
-	  if (__glibc_likely (!skip_ifunc))
-	    value = ((Elf32_Addr (*) (int)) value) (GLRO(dl_hwcap));
-	  *reloc_addr = value;
-	  break;
-#endif
-	default:
-	  _dl_reloc_bad_type (map, r_type, 0);
-	  break;
-	}
-    }
-}
-# endif
 
 static inline void
 __attribute__ ((always_inline))
@@ -547,16 +457,6 @@ elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
   *reloc_addr += l_addr;
 }
 
-# ifndef RTLD_BOOTSTRAP
-static inline void
-__attribute__ ((always_inline))
-elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
-			   void *const reloc_addr_arg)
-{
-  Elf32_Addr *const reloc_addr = reloc_addr_arg;
-  *reloc_addr = l_addr + reloc->r_addend;
-}
-# endif
 
 static inline void
 __attribute__ ((always_inline))
