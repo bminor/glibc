@@ -41,13 +41,13 @@ ENTRY (__wcscpy_ssse3)
 	mov	STR1(%esp), %edx
 	mov	STR2(%esp), %ecx
 
-	cmp	$0, (%ecx)
+	cmpl	$0, (%ecx)
 	jz	L(ExitTail4)
-	cmp	$0, 4(%ecx)
+	cmpl	$0, 4(%ecx)
 	jz	L(ExitTail8)
-	cmp	$0, 8(%ecx)
+	cmpl	$0, 8(%ecx)
 	jz	L(ExitTail12)
-	cmp	$0, 12(%ecx)
+	cmpl	$0, 12(%ecx)
 	jz	L(ExitTail16)
 
 	PUSH	(%edi)
