@@ -227,6 +227,16 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 #define ARCH_LA_PLTEXIT arm_gnu_pltexit
 
 #ifdef RESOLVE_MAP
+/* Set NEW_VALUE based on V, and return true iff it overflows 24 bits.  */
+static inline bool set_new_value (Elf32_Addr *new_value, Elf32_Addr v,
+				  Elf32_Addr *const reloc_addr,
+				  Elf32_Sword addend)
+{
+  *new_value = v + addend - (Elf32_Addr) reloc_addr;
+  Elf32_Addr topbits = *new_value & 0xfe000000;
+  return topbits != 0xfe000000 && topbits != 0x00000000;
+}
+
 /* Handle a PC24 reloc, including the out-of-range case.  */
 static void
 relocate_pc24 (struct link_map *map, Elf32_Addr value,
@@ -234,15 +244,7 @@ relocate_pc24 (struct link_map *map, Elf32_Addr value,
 {
   Elf32_Addr new_value;
 
-  /* Set NEW_VALUE based on V, and return true iff it overflows 24 bits.  */
-  inline bool set_new_value (Elf32_Addr v)
-  {
-    new_value = v + addend - (Elf32_Addr) reloc_addr;
-    Elf32_Addr topbits = new_value & 0xfe000000;
-    return topbits != 0xfe000000 && topbits != 0x00000000;
-  }
-
-  if (set_new_value (value))
+  if (set_new_value (&new_value, value, reloc_addr, addend))
     {
       /* The PC-relative address doesn't fit in 24 bits!  */
 
@@ -271,7 +273,8 @@ relocate_pc24 (struct link_map *map, Elf32_Addr value,
           fix_offset = 0;
         }
 
-      if (set_new_value ((Elf32_Addr) fix_address))
+      if (set_new_value (&new_value, (Elf32_Addr) fix_address, reloc_addr,
+			 addend))
         _dl_signal_error (0, map->l_name, NULL,
                           "R_ARM_PC24 relocation out of range");
     }
