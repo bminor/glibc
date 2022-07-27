@@ -38,6 +38,9 @@
 #define LARCH_REG_S2 25
 #define LARCH_REG_NARGS 8
 
+typedef unsigned long int greg_t;
+/* Container for all general registers.  */
+typedef greg_t gregset_t[32];
 #endif
 
 typedef struct mcontext_t
