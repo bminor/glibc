@@ -46,6 +46,7 @@ The following bugs are resolved with this release:
   [29214] nptl: pthread_setcanceltype fails to set type
   [29225] network: Mistyped define statement in socket/sys/socket.h in
     line 184
+  [29415] nscd: Fix netlink cache invalidation if epoll is used
   [29446] _dlopen now ignores dl_caller argument in static mode
   [29490] alpha: New __brk_call implementation is broken
   [29528] elf: Call __libc_early_init for reused namespaces
