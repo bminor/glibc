@@ -110,8 +110,8 @@
 
 #ifndef __ASSEMBLER__
 
-#define VDSO_NAME "LINUX_2.6"
-#define VDSO_HASH 61765110
+#define VDSO_NAME "LINUX_5.10"
+#define VDSO_HASH 182947696
 
 /* List of system calls which are supported as vsyscalls.  */
 #define HAVE_CLOCK_GETRES64_VSYSCALL "__vdso_clock_getres"
