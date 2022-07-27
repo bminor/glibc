@@ -17,23 +17,23 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <array_length.h>
+#include <sched.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <support/check.h>
 #include <support/namespace.h>
 #include <support/support.h>
 #include <support/xthread.h>
 
 /* Number of arc4random_buf calls per thread.  */
-enum { count_per_thread = 5000 };
+enum { count_per_thread = 2048 };
 
 /* Number of threads computing randomness.  */
-enum { inner_threads = 5 };
+enum { inner_threads = 4 };
 
-/* Number of threads launching other threads.  Chosen as to not to
-   overload the system.  */
-enum { outer_threads = 7 };
+/* Number of threads launching other threads.  */
+static int outer_threads = 1;
 
 /* Number of launching rounds performed by the outer threads.  */
 enum { outer_rounds = 10 };
@@ -331,6 +331,18 @@ do_test_func (const char *fname, void (*func)(unsigned char *, size_t))
 static int
 do_test (void)
 {
+  /* Do not run more threads than the maximum of schedulable CPUs.  */
+  cpu_set_t cpuset;
+  if (sched_getaffinity (0, sizeof cpuset, &cpuset) == 0)
+    {
+      unsigned int ncpus = CPU_COUNT (&cpuset);
+      /* Limit the number to not overload the system.  */
+      outer_threads = (ncpus / 2) / inner_threads ?: 1;
+    }
+
+  printf ("info: outer_threads=%d inner_threads=%d\n", outer_threads,
+	  inner_threads);
+
   do_test_func ("arc4random", generate_arc4random);
   do_test_func ("arc4random_buf", generate_arc4random_buf);
   do_test_func ("arc4random_uniform", generate_arc4random_uniform);
