@@ -25,6 +25,10 @@ int __pthread_enable_asynccancel (void)
   struct __pthread *p = _pthread_self ();
   int oldtype;
 
+  if (___pthread_self == NULL)
+    /* We are not initialized yet, we can't be cancelled anyway.  */
+    return PTHREAD_CANCEL_DEFERRED;
+
   __pthread_mutex_lock (&p->cancel_lock);
   oldtype = p->cancel_type;
   p->cancel_type = PTHREAD_CANCEL_ASYNCHRONOUS;
@@ -38,6 +42,10 @@ int __pthread_enable_asynccancel (void)
 void __pthread_disable_asynccancel (int oldtype)
 {
   struct __pthread *p = _pthread_self ();
+
+  if (___pthread_self == NULL)
+    /* We are not initialized yet, we can't be cancelled anyway.  */
+    return;
 
   __pthread_mutex_lock (&p->cancel_lock);
   p->cancel_type = oldtype;
