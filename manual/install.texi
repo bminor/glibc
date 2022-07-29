@@ -549,7 +549,7 @@ GCC 6.2 or newer
 GCC 6.2 or higher is required.  In general it is recommended to use
 the newest version of the compiler that is known to work for building
 @theglibc{}, as newer compilers usually produce better code.  As of
-release time, GCC 12.0 is the newest compiler verified to work to build
+release time, GCC 12.1 is the newest compiler verified to work to build
 @theglibc{}.
 
 For PowerPC 64-bits little-endian (powerpc64le), a GCC version with support
@@ -585,7 +585,7 @@ GNU @code{binutils} 2.25 or later
 
 You must use GNU @code{binutils} (as and ld) to build @theglibc{}.
 No other assembler or linker has the necessary functionality at the
-moment. As of release time, GNU @code{binutils} 2.37 is the newest
+moment. As of release time, GNU @code{binutils} 2.38 is the newest
 verified to work to build @theglibc{}.
 
 For PowerPC 64-bits little-endian (powerpc64le), @command{objcopy} is required
@@ -625,7 +625,7 @@ Perl 5
 
 Perl is not required, but if present it is used in some tests and the
 @code{mtrace} program, to build the @glibcadj{} manual.  As of release
-time @code{perl} version 5.34.0 is the newest verified to work to
+time @code{perl} version 5.34.1 is the newest verified to work to
 build @theglibc{}.
 
 @item
@@ -639,7 +639,7 @@ with any version of @code{sed}.  As of release time, @code{sed} version
 Python 3.4 or later
 
 Python is required to build @theglibc{}.  As of release time, Python
-3.10.2 is the newest verified to work for building and testing
+3.10.5 is the newest verified to work for building and testing
 @theglibc{}.
 
 @item PExpect 4.0
@@ -657,7 +657,7 @@ GDB itself needs to be configured with Python support in order to use
 the pretty printers.  Notice that your system having Python available
 doesn't imply that GDB supports it, nor that your system's Python and
 GDB's have the same version.  As of release time GNU @code{debugger}
-11.1 is the newest verified to work to test the pretty printers.
+12.1 is the newest verified to work to test the pretty printers.
 
 Unless Python, PExpect and GDB with Python support are present, the
 printer tests will report themselves as @code{UNSUPPORTED}.  Notice
@@ -734,7 +734,7 @@ if you configure @theglibc{} with @samp{--prefix=/usr}.  If you set some other
 prefix or allow it to default to @file{/usr/local}, then all the
 components are installed there.
 
-As of release time, Linux version 5.16 is the newest version verified
+As of release time, Linux version 5.18 is the newest stable version verified
 to work to build @theglibc{}.
 
 @node Reporting Bugs
