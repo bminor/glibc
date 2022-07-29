@@ -73,6 +73,8 @@ $(objpfx)tst-wcstol-locale.out: $(gen-locales)
 $(objpfx)tst-wcstod-nan-locale.out: $(gen-locales)
 $(objpfx)tst-c16-surrogate.out: $(gen-locales)
 $(objpfx)tst-c32-state.out: $(gen-locales)
+$(objpfx)test-c8rtomb.out: $(gen-locales)
+$(objpfx)test-mbrtoc8.out: $(gen-locales)
 endif
 
 $(objpfx)tst-wcstod-round: $(libm)
