@@ -75,8 +75,8 @@ ENTRY(__swapcontext)
 	/* Write the termination context extension header.  */
 	add	x2, x2, #FPSIMD_CONTEXT_SIZE
 
-	str	xzr, [x2, #oHEAD + oMAGIC]
-	str	xzr, [x2, #oHEAD + oSIZE]
+	str	wzr, [x2, #oHEAD + oMAGIC]
+	str	wzr, [x2, #oHEAD + oSIZE]
 
 	/* Preserve ucp.  */
 	mov	x21, x1
