@@ -86,8 +86,8 @@ ENTRY(__getcontext)
 	/* Write the termination context extension header.  */
 	add	x2, x2, #FPSIMD_CONTEXT_SIZE
 
-	str	xzr, [x2, #oHEAD + oMAGIC]
-	str	xzr, [x2, #oHEAD + oSIZE]
+	str	wzr, [x2, #oHEAD + oMAGIC]
+	str	wzr, [x2, #oHEAD + oSIZE]
 
 	/* Grab the signal mask */
 	/* rt_sigprocmask (SIG_BLOCK, NULL, &ucp->uc_sigmask, _NSIG8) */
