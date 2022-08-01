@@ -300,11 +300,6 @@ next_env_entry (char ***position)
 #endif
 
 
-#ifdef SHARED
-extern struct dl_open_hook *_dl_open_hook;
-libc_hidden_proto (_dl_open_hook);
-#endif
-
 #if USE_TCACHE
 static void tcache_key_initialize (void);
 #endif

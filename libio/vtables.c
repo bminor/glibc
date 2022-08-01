@@ -25,10 +25,6 @@
 
 void (*IO_accept_foreign_vtables) (void) attribute_hidden;
 
-/* Used to detected multiple libcs.  */
-extern struct dl_open_hook *_dl_open_hook;
-libc_hidden_proto (_dl_open_hook);
-
 #else  /* !SHARED */
 
 /* Used to check whether static dlopen support is needed.  */
