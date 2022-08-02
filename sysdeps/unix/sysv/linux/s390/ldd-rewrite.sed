@@ -1,6 +1,3 @@
-/LD_TRACE_LOADED_OBJECTS=1/a\
-add_env="$add_env LD_LIBRARY_VERSION=\\$verify_out"
-
 # ldd is generated from elf/ldd.bash.in with the name
 # of ld.so as generated in Makeconfig
 
