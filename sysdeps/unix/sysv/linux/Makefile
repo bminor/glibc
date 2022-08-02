@@ -393,8 +393,6 @@ endif
 ifeq ($(subdir),elf)
 sysdep-rtld-routines += dl-brk dl-sbrk dl-getcwd dl-openat64 dl-opendir
 
-libof-lddlibc4 = lddlibc4
-
 others += pldd
 install-bin += pldd
 $(objpfx)pldd: $(objpfx)xmalloc.o

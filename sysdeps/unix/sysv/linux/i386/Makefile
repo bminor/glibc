@@ -7,11 +7,6 @@ sysdep_routines += ioperm iopl vm86
 tests += tst-bz21269
 endif
 
-ifeq ($(subdir),elf)
-sysdep-others += lddlibc4
-install-bin += lddlibc4
-endif
-
 ifeq ($(subdir),io)
 sysdep_routines += libc-do-syscall libc-do-syscall-int80
 endif

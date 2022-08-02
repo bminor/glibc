@@ -866,7 +866,7 @@ endif
 +extra-math-flags = $(if $(filter libm,$(in-module)),-fno-math-errno,-fmath-errno)
 
 # Use 64 bit time_t support for installed programs
-installed-modules = nonlib nscd lddlibc4 ldconfig locale_programs \
+installed-modules = nonlib nscd ldconfig locale_programs \
 		    iconvprogs libnss_files libnss_compat libnss_db libnss_hesiod \
 		    libutil libpcprofile libSegFault
 +extra-time-flags = $(if $(filter $(installed-modules),\
@@ -966,7 +966,7 @@ endif	# $(+cflags) == ""
 libio-include = -I$(..)libio
 
 # List of non-library modules that we build.
-built-modules = iconvprogs iconvdata ldconfig lddlibc4 libmemusage \
+built-modules = iconvprogs iconvdata ldconfig libmemusage \
 		libSegFault libpcprofile librpcsvc locale-programs \
 		memusagestat nonlib nscd extramodules libnldbl libsupport \
 		testsuite testsuite-internal
