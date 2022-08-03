@@ -1283,6 +1283,7 @@ $(objpfx)dl-allobjs.os: $(all-rtld-routines:%=$(objpfx)%.os)
 rtld-stubbed-symbols = \
   __GI___pthread_disable_asynccancel \
   __GI___pthread_enable_asynccancel \
+  __libc_assert_fail \
   __pthread_disable_asynccancel \
   __pthread_enable_asynccancel \
   calloc \

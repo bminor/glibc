@@ -24,7 +24,12 @@ include ../Makeconfig
 
 headers	:= assert.h
 
-routines := assert assert-perr __assert
+routines := \
+  __assert \
+  __libc_assert_fail \
+  assert \
+  assert-perr \
+  # routines
 tests := test-assert test-assert-perr tst-assert-c++ tst-assert-g++
 
 ifeq ($(have-cxx-thread_local),yes)

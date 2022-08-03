@@ -288,22 +288,6 @@
 #define MALLOC_DEBUG 0
 #endif
 
-#if IS_IN (libc)
-#ifndef NDEBUG
-# define __assert_fail(assertion, file, line, function)			\
-	 __malloc_assert(assertion, file, line, function)
-
-_Noreturn static void
-__malloc_assert (const char *assertion, const char *file, unsigned int line,
-		 const char *function)
-{
-  __libc_message ("Fatal glibc error: malloc assertion failure in %s: %s\n",
-		  function, assertion);
-  __builtin_unreachable ();
-}
-#endif
-#endif
-
 #if USE_TCACHE
 /* We want 64 entries.  This is an arbitrary limit, which tunables can reduce.  */
 # define TCACHE_MAX_BINS		64

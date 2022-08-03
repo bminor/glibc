@@ -78,7 +78,7 @@ test_bz20544_cxa_at_quick_exit (void *closure)
 static void
 test_one_fn (void (*test_fn) (void *))
 {
-  const char expected_error[] = "Assertion `func != NULL' failed.\n";
+  const char expected_error[] = "assertion failed: func != NULL\n";
   struct support_capture_subprocess result;
   result = support_capture_subprocess (test_fn, NULL);
   support_capture_subprocess_check (&result, "bz20544", -SIGABRT,

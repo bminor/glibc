@@ -101,4 +101,3 @@ __assert_fail (const char *assertion, const char *file, unsigned int line,
   __assert_fail_base (_("%s%s%s:%u: %s%sAssertion `%s' failed.\n%n"),
 		      assertion, file, line, function);
 }
-hidden_def(__assert_fail)
