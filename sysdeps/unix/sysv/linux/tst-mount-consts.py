@@ -34,10 +34,10 @@ def main():
     args = parser.parse_args()
 
     linux_version_headers = glibcsyscalls.linux_kernel_version(args.cc)
-    # Constants in glibc were updated to match Linux v5.16.  When glibc
+    # Constants in glibc were updated to match Linux v5.19.  When glibc
     # constants are updated this value should be updated to match the
     # released kernel version from which the constants were taken.
-    linux_version_glibc = (5, 16)
+    linux_version_glibc = (5, 19)
     def check(cte, exclude=None):
         return glibcextract.compare_macro_consts(
                 '#include <sys/mount.h>\n',
