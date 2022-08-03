@@ -21,8 +21,6 @@ void
 __attribute__ ((noreturn))
 __fortify_fail (const char *msg)
 {
-  /* The loop is added only to keep gcc happy.  */
-  while (1)
-    __libc_message (do_abort, "*** %s ***: terminated\n", msg);
+  __libc_message ("*** %s ***: terminated\n", msg);
 }
 libc_hidden_def (__fortify_fail)

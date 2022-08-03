@@ -297,8 +297,7 @@ _Noreturn static void
 __malloc_assert (const char *assertion, const char *file, unsigned int line,
 		 const char *function)
 {
-  __libc_message (do_abort, "\
-Fatal glibc error: malloc assertion failure in %s: %s\n",
+  __libc_message ("Fatal glibc error: malloc assertion failure in %s: %s\n",
 		  function, assertion);
   __builtin_unreachable ();
 }
@@ -5658,7 +5657,7 @@ static void
 malloc_printerr (const char *str)
 {
 #if IS_IN (libc)
-  __libc_message (do_abort, "%s\n", str);
+  __libc_message ("%s\n", str);
 #else
   __libc_fatal (str);
 #endif
