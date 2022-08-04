@@ -143,7 +143,7 @@ number of bytes to retain when shrinking any of the arenas.  This provides the
 necessary hysteresis in heap size such that excessive amounts of system calls
 can be avoided.
 
-The default value of this tunable is @samp{0}.
+The default value of this tunable is @samp{131072} (128 KB).
 @end deftp
 
 @deftp Tunable glibc.malloc.perturb

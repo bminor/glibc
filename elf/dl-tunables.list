@@ -42,6 +42,7 @@ glibc {
       type: SIZE_T
       env_alias: MALLOC_TOP_PAD_
       security_level: SXID_IGNORE
+      default: 131072
     }
     perturb {
       type: INT_32
