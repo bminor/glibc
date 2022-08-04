@@ -45,6 +45,7 @@ The following bugs are resolved with this release:
   [29214] nptl: pthread_setcanceltype fails to set type
   [29225] network: Mistyped define statement in socket/sys/socket.h in
     line 184
+  [29446] _dlopen now ignores dl_caller argument in static mode
 
 
 Version 2.35
