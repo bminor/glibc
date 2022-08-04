@@ -2141,8 +2141,8 @@ L(less16bytes):
 	jbe	L(eq)
 #endif
 
-	movzx	7(%eax), %ecx
-	movzx	7(%edx), %eax
+	movzbl	7(%eax), %ecx
+	movzbl	7(%edx), %eax
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 # ifdef PIC
 	movl	_nl_C_LC_CTYPE_tolower@GOTOFF+128*4(%ebx,%ecx,4), %ecx
@@ -2161,8 +2161,8 @@ L(Byte0):
 	cmp	$0, REM
 	jbe	L(eq)
 #endif
-	movzx	(%eax), %ecx
-	movzx	(%edx), %eax
+	movzbl	(%eax), %ecx
+	movzbl	(%edx), %eax
 
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 # ifdef PIC
@@ -2182,8 +2182,8 @@ L(Byte1):
 	cmp	$1, REM
 	jbe	L(eq)
 #endif
-	movzx	1(%eax), %ecx
-	movzx	1(%edx), %eax
+	movzbl	1(%eax), %ecx
+	movzbl	1(%edx), %eax
 
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 # ifdef PIC
@@ -2203,8 +2203,8 @@ L(Byte2):
 	cmp	$2, REM
 	jbe	L(eq)
 #endif
-	movzx	2(%eax), %ecx
-	movzx	2(%edx), %eax
+	movzbl	2(%eax), %ecx
+	movzbl	2(%edx), %eax
 
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 # ifdef PIC
@@ -2224,8 +2224,8 @@ L(Byte3):
 	cmp	$3, REM
 	jbe	L(eq)
 #endif
-	movzx	3(%eax), %ecx
-	movzx	3(%edx), %eax
+	movzbl	3(%eax), %ecx
+	movzbl	3(%edx), %eax
 
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 # ifdef PIC
@@ -2245,8 +2245,8 @@ L(Byte4):
 	cmp	$4, REM
 	jbe	L(eq)
 #endif
-	movzx	4(%eax), %ecx
-	movzx	4(%edx), %eax
+	movzbl	4(%eax), %ecx
+	movzbl	4(%edx), %eax
 
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 # ifdef PIC
@@ -2266,8 +2266,8 @@ L(Byte5):
 	cmp	$5, REM
 	jbe	L(eq)
 #endif
-	movzx	5(%eax), %ecx
-	movzx	5(%edx), %eax
+	movzbl	5(%eax), %ecx
+	movzbl	5(%edx), %eax
 
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 # ifdef PIC
@@ -2287,8 +2287,8 @@ L(Byte6):
 	cmp	$6, REM
 	jbe	L(eq)
 #endif
-	movzx	6(%eax), %ecx
-	movzx	6(%edx), %eax
+	movzbl	6(%eax), %ecx
+	movzbl	6(%edx), %eax
 
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 # ifdef PIC
@@ -2337,8 +2337,8 @@ L(2next_8_bytes):
 	cmp	$7, REM
 	jbe	L(eq)
 #endif
-	movzx	7(%eax), %ecx
-	movzx	7(%edx), %eax
+	movzbl	7(%eax), %ecx
+	movzbl	7(%edx), %eax
 
 #if defined USE_AS_STRCASECMP_L || defined USE_AS_STRNCASECMP_L
 # ifdef PIC
