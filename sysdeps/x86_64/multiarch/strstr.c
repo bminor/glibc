@@ -37,7 +37,7 @@ extern __typeof (__redirect_strstr) __strstr_sse2_unaligned attribute_hidden;
 
 #include "init-arch.h"
 
-static inline void *
+static __always_inline void *
 IFUNC_SELECTOR (void)
 {
   const struct cpu_features *cpu_features = __get_cpu_features ();

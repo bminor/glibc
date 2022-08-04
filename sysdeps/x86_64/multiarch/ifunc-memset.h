@@ -53,7 +53,7 @@ prefer_erms_nt_impl (const struct cpu_features *cpu_features)
 	 || !CPU_FEATURES_ARCH_P (cpu_features, Avoid_Non_Temporal_Memset);
 }
 
-static inline void *
+static __always_inline void *
 IFUNC_SELECTOR (void)
 {
   const struct cpu_features *cpu_features = __get_cpu_features ();

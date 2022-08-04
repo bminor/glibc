@@ -30,7 +30,7 @@ extern __typeof (REDIRECT_NAME)
 
 extern __typeof (REDIRECT_NAME) OPTIMIZE (sse2) attribute_hidden;
 
-static inline void *
+static __always_inline void *
 IFUNC_SELECTOR (void)
 {
   const struct cpu_features *cpu_features = __get_cpu_features ();
