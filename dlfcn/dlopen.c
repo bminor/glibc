@@ -90,7 +90,7 @@ compat_symbol (libdl, ___dlopen, dlopen, GLIBC_2_1);
 void *
 __dlopen (const char *file, int mode, void *dl_caller)
 {
-  return dlopen_implementation (file, mode, RETURN_ADDRESS (0));
+  return dlopen_implementation (file, mode, dl_caller);
 }
 
 void *
