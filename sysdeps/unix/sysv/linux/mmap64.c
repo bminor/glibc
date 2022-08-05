@@ -20,7 +20,11 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sysdep.h>
+#include <ldsodefs.h>
 #include <mmap_internal.h>
+#ifdef __CHERI_PURE_CAPABILITY__
+# include <cheri_perms.h>
+#endif
 
 #ifdef __NR_mmap2
 /* To avoid silent truncation of offset when using mmap2, do not accept
@@ -51,12 +55,35 @@ __mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
     return (void *) INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 
   MMAP_PREPARE (addr, len, prot, flags, fd, offset);
+  void *ret;
 #ifdef __NR_mmap2
-  return (void *) MMAP_CALL (mmap2, addr, len, prot, flags, fd,
+  ret =  (void *) MMAP_CALL (mmap2, addr, len, prot, flags, fd,
 			     (off_t) (offset / MMAP2_PAGE_UNIT));
 #else
-  return (void *) MMAP_CALL (mmap, addr, len, prot, flags, fd, offset);
+  ret =  (void *) MMAP_CALL (mmap, addr, len, prot, flags, fd, offset);
 #endif
+#ifdef __CHERI_PURE_CAPABILITY__
+  if (ret != MAP_FAILED)
+    {
+      size_t ps = GLRO(dl_pagesize);
+      ret = __builtin_cheri_bounds_set (ret, (len + ps - 1) & -ps);
+      unsigned long mask = CAP_PERM_MASK_BASE;
+      if (prot & PROT_READ)
+	mask |= CAP_PERM_MASK_R;
+      if (prot & PROT_WRITE)
+	mask |= CAP_PERM_MASK_RW;
+      if (prot & PROT_EXEC)
+	mask |= CAP_PERM_MASK_RX;
+      if (prot & PROT_MAX (PROT_READ))
+	mask |= CAP_PERM_MASK_R;
+      if (prot & PROT_MAX (PROT_WRITE))
+	mask |= CAP_PERM_MASK_RW;
+      if (prot & PROT_MAX (PROT_EXEC))
+	mask |= CAP_PERM_MASK_RX;
+      ret = __builtin_cheri_perms_and (ret, mask);
+    }
+#endif
+  return ret;
 }
 weak_alias (__mmap64, mmap64)
 libc_hidden_def (__mmap64)

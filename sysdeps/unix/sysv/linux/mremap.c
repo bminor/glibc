@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <ldsodefs.h>
 
 void *
 __mremap (void *addr, size_t old_len, size_t new_len, int flags, ...)
@@ -34,8 +35,17 @@ __mremap (void *addr, size_t old_len, size_t new_len, int flags, ...)
       va_end (va);
     }
 
-  return (void *) INLINE_SYSCALL_CALL (mremap, addr, old_len, new_len, flags,
+  void *ret;
+  ret =  (void *) INLINE_SYSCALL_CALL (mremap, addr, old_len, new_len, flags,
 				       new_addr);
+#ifdef __CHERI_PURE_CAPABILITY__
+  if (ret != MAP_FAILED)
+    {
+      size_t ps = GLRO(dl_pagesize);
+      ret = __builtin_cheri_bounds_set (ret, (new_len + ps - 1) & -ps);
+    }
+#endif
+  return ret;
 }
 libc_hidden_def (__mremap)
 weak_alias (__mremap, mremap)
