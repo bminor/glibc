@@ -22,7 +22,7 @@
 
 # include <sysdep.h>
 
-# ifndef STPCPY
+# ifndef STRCPY
 #  define STRCPY __strcpy_sse2
 # endif
 
