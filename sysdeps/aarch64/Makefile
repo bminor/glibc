@@ -68,3 +68,9 @@ endif
 ifeq ($(subdir),malloc)
 sysdep_malloc_debug_routines = __mtag_tag_zero_region __mtag_tag_region
 endif
+
+ifeq (yes,$(aarch64-purecap))
+ifeq ($(subdir),stdio-common)
+tests += tst-printf-cap
+endif
+endif
