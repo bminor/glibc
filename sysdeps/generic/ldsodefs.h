@@ -80,6 +80,34 @@ dl_relocate_ld (const struct link_map *l)
   return !(l->l_ld_readonly || DL_RO_DYN_SECTION);
 }
 
+static inline elfptr_t __attribute__ ((unused))
+dl_get_ptr (elfptr_t cap, ElfW(Addr) base, ElfW(Addr) vaddr)
+{
+#ifdef __CHERI_PURE_CAPABILITY__
+  return __builtin_cheri_address_set (cap, base + vaddr);
+#else
+  return base + vaddr;
+#endif
+}
+
+static inline elfptr_t __attribute__ ((unused))
+dl_rx_ptr (const struct link_map *l, ElfW(Addr) vaddr)
+{
+  return dl_get_ptr (l->l_map_start, l->l_addr, vaddr);
+}
+
+static inline elfptr_t __attribute__ ((unused))
+dl_rw_ptr (const struct link_map *l, ElfW(Addr) vaddr)
+{
+  elfptr_t cap;
+#ifdef __CHERI_PURE_CAPABILITY__
+  cap = l->l_rw_start;
+#else
+  cap = 0; /* Avoid uninitialized warning.  */
+#endif
+  return dl_get_ptr (cap, l->l_addr, vaddr);
+}
+
 /* All references to the value of l_info[DT_PLTGOT],
   l_info[DT_STRTAB], l_info[DT_SYMTAB], l_info[DT_RELA],
   l_info[DT_REL], l_info[DT_JMPREL], and l_info[VERSYMIDX (DT_VERSYM)]
