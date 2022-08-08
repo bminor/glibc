@@ -509,8 +509,9 @@ _dl_load_cache_lookup (const char *name)
      we are accessing. Therefore we must make the copy of the
      mapping data without using malloc.  */
   char *temp;
-  temp = alloca (strlen (best) + 1);
-  strcpy (temp, best);
+  size_t best_len = strlen (best) + 1;
+  temp = alloca (best_len);
+  memcpy (temp, best, best_len);
   return __strdup (temp);
 }
 
