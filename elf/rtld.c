@@ -723,8 +723,7 @@ match_version (const char *string, struct link_map *map)
     /* The file has no symbol versioning.  */
     return 0;
 
-  def = (ElfW(Verdef) *) ((char *) map->l_addr
-			  + map->l_info[VERDEFTAG]->d_un.d_ptr);
+  def = (ElfW(Verdef) *) dl_rx_ptr (map, map->l_info[VERDEFTAG]->d_un.d_ptr);
   while (1)
     {
       ElfW(Verdaux) *aux = (ElfW(Verdaux) *) ((char *) def + def->vd_aux);
@@ -1193,8 +1192,8 @@ rtld_setup_main_map (struct link_map *main_map)
 	   dlopen call or DT_NEEDED entry, for something that wants to link
 	   against the dynamic linker as a shared library, will know that
 	   the shared object is already loaded.  */
-	_dl_rtld_libname.name = ((const char *) main_map->l_addr
-				 + ph->p_vaddr);
+	_dl_rtld_libname.name = (const char *) dl_rx_ptr (main_map,
+							  ph->p_vaddr);
 	/* _dl_rtld_libname.next = NULL;	Already zero.  */
 	GL(dl_rtld_map).l_libname = &_dl_rtld_libname;
 
@@ -1311,7 +1310,7 @@ rtld_setup_main_map (struct link_map *main_map)
      the executable is actually an ET_DYN object.  */
   if (main_map->l_tls_initimage != NULL)
     main_map->l_tls_initimage
-      = (ElfW(Addr)) main_map->l_tls_initimage + (char *) main_map->l_addr;
+      = (void *) dl_rx_ptr (main_map, (ElfW(Addr)) main_map->l_tls_initimage);
   if (! main_map->l_map_end)
     main_map->l_map_end = ~0;
   if (! main_map->l_text_end)
@@ -2252,7 +2251,7 @@ dl_main (const ElfW(Phdr) *phdr,
 		    continue;
 
 		  strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
-		  ent = (ElfW(Verneed) *) (map->l_addr + dyn->d_un.d_ptr);
+		  ent = (ElfW(Verneed) *) dl_rx_ptr (map, dyn->d_un.d_ptr);
 
 		  if (first)
 		    {

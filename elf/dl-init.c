@@ -53,7 +53,8 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
      - the others in the DT_INIT_ARRAY.
   */
   if (ELF_INITFINI && l->l_info[DT_INIT] != NULL)
-    DL_CALL_DT_INIT(l, l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr, argc, argv, env);
+    DL_CALL_DT_INIT(l, dl_rx_ptr (l, l->l_info[DT_INIT]->d_un.d_ptr),
+		    argc, argv, env);
 
   /* Next see whether there is an array with initialization functions.  */
   ElfW(Dyn) *init_array = l->l_info[DT_INIT_ARRAY];
@@ -65,7 +66,7 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
 
       jm = l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (elfptr_t);
 
-      addrs = (elfptr_t *) (init_array->d_un.d_ptr + l->l_addr);
+      addrs = (elfptr_t *) dl_rx_ptr (l, init_array->d_un.d_ptr);
       for (j = 0; j < jm; ++j)
 	((dl_init_t) addrs[j]) (argc, argv, env);
     }
@@ -97,7 +98,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 	_dl_debug_printf ("\ncalling preinit: %s\n\n",
 			  DSO_FILENAME (main_map->l_name));
 
-      addrs = (elfptr_t *) (preinit_array->d_un.d_ptr + main_map->l_addr);
+      addrs = (elfptr_t *) dl_rx_ptr (main_map, preinit_array->d_un.d_ptr);
       for (cnt = 0; cnt < i; ++cnt)
 	((dl_init_t) addrs[cnt]) (argc, argv, env);
     }
