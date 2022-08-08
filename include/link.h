@@ -256,6 +256,18 @@ struct link_map
     ElfW(Addr) l_map_end;
     /* End of the executable part of the mapping.  */
     ElfW(Addr) l_text_end;
+#ifdef __CHERI_PURE_CAPABILITY__
+    /* Writable part of the mapping (may have non-writable holes).  */
+    elfptr_t l_rw_start;
+# define DL_MAX_RW_COUNT 4
+    /* Writable ranges: objects are writable in these ranges.  */
+    int l_rw_count;
+    struct rw_range
+    {
+      ElfW(Addr) start;
+      ElfW(Addr) end;
+    } l_rw_range[DL_MAX_RW_COUNT];
+#endif
 
     /* Default array for 'l_scope'.  */
     struct r_scope_elem *l_scope_mem[4];
