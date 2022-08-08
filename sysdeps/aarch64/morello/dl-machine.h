@@ -101,6 +101,78 @@ elf_machine_runtime_dynamic (void)
   return p;
 }
 
+/* PCC relative access to ehdr before relocations are processed.  */
+static const ElfW(Ehdr) *
+elf_machine_ehdr (void)
+{
+  const void *p;
+  asm (""
+    ".weak __ehdr_start\n"
+    ".hidden __ehdr_start\n"
+    "adrp %0, __ehdr_start\n"
+    "add %0, %0, :lo12:__ehdr_start\n" : "=r"(p));
+  return p;
+}
+
+/* Set up ld.so root capabilities and base address from args.  */
+static void __attribute__ ((unused))
+elf_machine_rtld_base_setup (struct link_map *map, void *args)
+{
+  uintptr_t *sp;
+  long argc;
+  uintptr_t cap_rx, cap_rw, cap_exe_rx, cap_exe_rw;
+  unsigned long ldso_base = 0;
+
+  sp = args;
+  argc = sp[0];
+  /* Skip argv.  */
+  sp += argc + 2;
+  /* Skip environ.  */
+  for (; *sp; sp++);
+  sp++;
+  cap_rx = cap_rw = cap_exe_rx = cap_exe_rw = 0;
+  for (; *sp != AT_NULL; sp += 2)
+    {
+      long t = sp[0];
+      if (t == AT_BASE)
+	ldso_base = sp[1];
+      if (t == AT_CHERI_INTERP_RX_CAP)
+	cap_rx = sp[1];
+      if (t == AT_CHERI_INTERP_RW_CAP)
+	cap_rw = sp[1];
+      if (t == AT_CHERI_EXEC_RX_CAP)
+	cap_exe_rx = sp[1];
+      if (t == AT_CHERI_EXEC_RW_CAP)
+	cap_exe_rw = sp[1];
+    }
+  /* Check if ldso is the executable.  */
+  if (ldso_base == 0)
+    {
+      cap_rx = cap_exe_rx;
+      cap_rw = cap_exe_rw;
+      ldso_base = cap_rx; /* Assume load segments start at vaddr 0.  */
+    }
+  map->l_addr = ldso_base;
+  map->l_map_start = cap_rx;
+  map->l_rw_start = cap_rw;
+
+  /* Set up the RW ranges of ld.so, required for symbolic relocations.  */
+  const ElfW(Ehdr) *ehdr = elf_machine_ehdr ();
+  const ElfW(Phdr) *phdr = (const void *) ehdr + ehdr->e_phoff;
+  if (sizeof *phdr != ehdr->e_phentsize)
+    __builtin_trap ();
+  for (const ElfW(Phdr) *ph = phdr; ph < phdr + ehdr->e_phnum; ph++)
+    if (ph->p_type == PT_LOAD && (ph->p_flags & PF_W))
+      {
+	uintptr_t allocend = map->l_addr + ph->p_vaddr + ph->p_memsz;
+	if (map->l_rw_count >= DL_MAX_RW_COUNT)
+	  __builtin_trap ();
+	map->l_rw_range[map->l_rw_count].start = map->l_addr + ph->p_vaddr;
+	map->l_rw_range[map->l_rw_count].end = allocend;
+	map->l_rw_count++;
+      }
+}
+
 /* Load address of the dynamic linker with correct bounds.  */
 static uintptr_t __attribute__ ((unused))
 elf_machine_load_address_from_args (void *arg)
