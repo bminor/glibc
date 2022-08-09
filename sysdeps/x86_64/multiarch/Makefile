@@ -114,6 +114,7 @@ sysdep_routines += \
   strrchr-avx2 \
   strrchr-avx2-rtm \
   strrchr-evex \
+  strrchr-evex512 \
   strrchr-sse2 \
   strspn-sse4 \
   strstr-avx512 \
@@ -157,6 +158,7 @@ sysdep_routines += \
   wcsrchr-avx2 \
   wcsrchr-avx2-rtm \
   wcsrchr-evex \
+  wcsrchr-evex512 \
   wcsrchr-sse2 \
   wmemchr-avx2 \
   wmemchr-avx2-rtm \
