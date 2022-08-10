@@ -33,6 +33,11 @@ def main():
                         help='C compiler (including options) to use')
     args = parser.parse_args()
 
+    if glibcextract.compile_c_snippet(
+            '#include <linux/mount.h>',
+            args.cc).returncode != 0:
+        sys.exit (77)
+
     linux_version_headers = glibcsyscalls.linux_kernel_version(args.cc)
     # Constants in glibc were updated to match Linux v5.19.  When glibc
     # constants are updated this value should be updated to match the
