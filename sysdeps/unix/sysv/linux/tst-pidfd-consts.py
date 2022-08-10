@@ -33,11 +33,13 @@ def main():
                         help='C compiler (including options) to use')
     args = parser.parse_args()
 
-    linux_version_headers = glibcsyscalls.linux_kernel_version(args.cc)
-    # Linux started to provide pidfd.h with 5.10.
-    if linux_version_headers < (5, 10):
+    if glibcextract.compile_c_snippet(
+            '#include <linux/pidfd.h>',
+            args.cc).returncode != 0:
         sys.exit (77)
-    linux_version_glibc = (5, 18)
+
+    linux_version_headers = glibcsyscalls.linux_kernel_version(args.cc)
+    linux_version_glibc = (5, 19)
     sys.exit(glibcextract.compare_macro_consts(
                 '#include <sys/pidfd.h>\n',
                 '#include <asm/fcntl.h>\n'
