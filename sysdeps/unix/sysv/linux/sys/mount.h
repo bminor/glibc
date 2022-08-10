@@ -27,8 +27,8 @@
 #include <stddef.h>
 #include <sys/ioctl.h>
 
-#define BLOCK_SIZE	1024
 #define BLOCK_SIZE_BITS	10
+#define BLOCK_SIZE	(1<<BLOCK_SIZE_BITS)
 
 
 /* These are the fs-independent mount-flags: up to 16 flags are
