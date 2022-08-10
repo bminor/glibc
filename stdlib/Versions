@@ -141,6 +141,8 @@ libc {
     arc4random_buf;
     arc4random_uniform;
   }
+  GLIBC_2.37 {
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.

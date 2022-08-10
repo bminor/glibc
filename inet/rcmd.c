@@ -79,6 +79,7 @@
 #include <wchar.h>
 #include <sys/uio.h>
 #include <sigsetops.h>
+#include <shlib-compat.h>
 
 
 int __ivaliduser (FILE *, uint32_t, const char *, const char *);
@@ -621,18 +622,9 @@ iruserok (uint32_t raddr, int superuser, const char *ruser, const char *luser)
   return iruserok_af (&raddr, superuser, ruser, luser, AF_INET);
 }
 
-/*
- * XXX
- * Don't make static, used by lpd(8).
- *
- * This function is not used anymore. It is only present because lpd(8)
- * calls it (!?!). We simply call __invaliduser2() with an illegal rhost
- * argument. This means that netgroups won't work in .rhost/hosts.equiv
- * files. If you want lpd to work with netgroups, fix lpd to use ruserok()
- * or PAM.
- * Returns 0 if ok, -1 if not ok.
- */
-int
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_37)
+/* Previously used by lpd.  Current lpd versions have their own copy.  */
+int attribute_compat_text_section
 __ivaliduser (FILE *hostf, uint32_t raddr, const char *luser,
 	      const char *ruser)
 {
@@ -643,7 +635,8 @@ __ivaliduser (FILE *hostf, uint32_t raddr, const char *luser,
 	return __validuser2_sa(hostf, (struct sockaddr *)&ra, sizeof(ra),
 			       luser, ruser, "-");
 }
-
+compat_symbol (libc, __ivaliduser, __ivaliduser, GLIBC_2_0);
+#endif
 
 /* Returns 1 on positive match, 0 on no match, -1 on negative match.  */
 static int
