@@ -20,8 +20,15 @@
 #include <sys/asm.h>
 
 ENTRY (__longjmp)
+#ifdef PTR_MANGLE
+	REG_L t0, a0, 0*SZREG
+	PTR_DEMANGLE (ra, t0, t1, t2)
+	REG_L t0, a0, 1*SZREG
+	PTR_DEMANGLE2 (sp, t0, t1)
+#else
 	REG_L ra, a0, 0*SZREG
 	REG_L sp, a0, 1*SZREG
+#endif
 	REG_L x,  a0, 2*SZREG
 	REG_L fp, a0, 3*SZREG
 	REG_L s0, a0, 4*SZREG

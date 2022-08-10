@@ -29,8 +29,15 @@ ENTRY (setjmp)
 END (setjmp)
 
 ENTRY (__sigsetjmp)
+#ifdef PTR_MANGLE
+	PTR_MANGLE (t0, ra, t1, t2)
+	REG_S t0, a0, 0*SZREG
+	PTR_MANGLE2 (t0, sp, t1)
+	REG_S t0, a0, 1*SZREG
+#else
 	REG_S ra, a0, 0*SZREG
 	REG_S sp, a0, 1*SZREG
+#endif
 	REG_S x,  a0, 2*SZREG
 	REG_S fp, a0, 3*SZREG
 	REG_S s0, a0, 4*SZREG
