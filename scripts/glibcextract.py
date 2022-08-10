@@ -17,6 +17,7 @@
 # License along with the GNU C Library; if not, see
 # <https://www.gnu.org/licenses/>.
 
+import collections
 import os.path
 import re
 import subprocess
@@ -173,3 +174,21 @@ def compare_macro_consts(source_1, source_2, cc, macro_re, exclude_re=None,
             if not allow_extra_2:
                 ret = 1
     return ret
+
+CompileResult = collections.namedtuple("CompileResult", "returncode output")
+
+def compile_c_snippet(snippet, cc, extra_cc_args=''):
+    """Compile and return whether the SNIPPET can be build with CC along
+       EXTRA_CC_ARGS compiler flags.  Return a CompileResult with RETURNCODE
+       being 0 for success, or the failure value and the compiler output.
+    """
+    with tempfile.TemporaryDirectory() as temp_dir:
+        c_file_name = os.path.join(temp_dir, 'test.c')
+        obj_file_name = os.path.join(temp_dir, 'test.o')
+        with open(c_file_name, 'w') as c_file:
+            c_file.write(snippet + '\n')
+        cmd = cc.split() + extra_cc_args.split() + ['-c', '-o', obj_file_name,
+                c_file_name]
+        r = subprocess.run(cmd, check=False, stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT)
+        return CompileResult(r.returncode, r.stdout)
