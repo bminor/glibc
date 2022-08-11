@@ -37,12 +37,18 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
 #define _IO_lock_lock(_name) \
   do {									      \
     void *__self = THREAD_SELF;						      \
-    if ((_name).owner != __self)					      \
+    if (SINGLE_THREAD_P && (_name).owner == NULL)			      \
+      {									      \
+	(_name).lock = LLL_LOCK_INITIALIZER_LOCKED;			      \
+	(_name).owner = __self;						      \
+      }									      \
+    else if ((_name).owner != __self)					      \
       {									      \
 	lll_lock ((_name).lock, LLL_PRIVATE);				      \
-        (_name).owner = __self;						      \
+	(_name).owner = __self;						      \
       }									      \
-    ++(_name).cnt;							      \
+    else								      \
+      ++(_name).cnt;							      \
   } while (0)
 
 #define _IO_lock_trylock(_name) \
@@ -52,10 +58,7 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
     if ((_name).owner != __self)					      \
       {									      \
         if (lll_trylock ((_name).lock) == 0)				      \
-          {								      \
-            (_name).owner = __self;					      \
-            (_name).cnt = 1;						      \
-          }								      \
+	  (_name).owner = __self;					      \
         else								      \
           __result = EBUSY;						      \
       }									      \
@@ -66,11 +69,18 @@ typedef struct { int lock; int cnt; void *owner; } _IO_lock_t;
 
 #define _IO_lock_unlock(_name) \
   do {									      \
-    if (--(_name).cnt == 0)						      \
+    if (SINGLE_THREAD_P && (_name).cnt == 0)				      \
       {									      \
-        (_name).owner = NULL;						      \
+	(_name).owner = NULL;						      \
+	(_name).lock = 0;						      \
+      }									      \
+    else if ((_name).cnt == 0)						      \
+      {									      \
+	(_name).owner = NULL;						      \
 	lll_unlock ((_name).lock, LLL_PRIVATE);				      \
       }									      \
+    else								      \
+      --(_name).cnt;							      \
   } while (0)
 
 
