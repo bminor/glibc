@@ -869,10 +869,13 @@ __ieee754_y1l (_Float128 x)
     {
       /* 0 <= x <= 2 */
       SET_RESTORE_ROUNDL (FE_TONEAREST);
+      xx = math_opt_barrier (xx);
+      x = math_opt_barrier (x);
       z = xx * xx;
       p = xx * neval (z, Y0_2N, NY0_2N) / deval (z, Y0_2D, NY0_2D);
       p = -TWOOPI / xx + p;
       p = TWOOPI * __ieee754_logl (x) * __ieee754_j1l (x) + p;
+      math_force_eval (p);
       return p;
     }
 
