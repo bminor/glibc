@@ -88,7 +88,7 @@ EOF
 LIBC_CONFIG_VAR([aarch64-variant-pcs], [$libc_cv_aarch64_variant_pcs])
 
 # Check if asm support armv8.2-a+sve
-AC_CACHE_CHECK(for SVE support in assembler, libc_cv_asm_sve, [dnl
+AC_CACHE_CHECK([for SVE support in assembler], [libc_cv_aarch64_sve_asm], [dnl
 cat > conftest.s <<\EOF
         ptrue p0.b
 EOF
