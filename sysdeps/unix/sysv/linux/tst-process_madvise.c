@@ -101,8 +101,11 @@ do_test (void)
 
     /* We expect this to succeed in the target process because the mapping
        is valid.  */
-    TEST_COMPARE (process_madvise (pidfd, &iv, 1, MADV_COLD, 0),
-		  2 * page_size);
+    ssize_t ret = process_madvise (pidfd, &iv, 1, MADV_COLD, 0);
+    if (ret == -1 && errno == ENOSYS)
+      FAIL_UNSUPPORTED ("kernel does not support process_madvise, skipping"
+			"test");
+    TEST_COMPARE (ret, 2 * page_size);
   }
 
   {
