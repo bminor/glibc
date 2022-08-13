@@ -146,14 +146,6 @@ struct ip_opts
     char ip_opts[40];		/* Actually variable in size.  */
   };
 
-/* Like `struct ip_mreq' but including interface specification by index.  */
-struct ip_mreqn
-  {
-    struct in_addr imr_multiaddr;	/* IP multicast address of group */
-    struct in_addr imr_address;		/* local IP address of interface */
-    int	imr_ifindex;			/* Interface index */
-  };
-
 /* Structure used for IP_PKTINFO.  */
 struct in_pktinfo
   {

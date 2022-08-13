@@ -278,6 +278,19 @@ struct ip_mreq
     struct in_addr imr_interface;
   };
 
+/* IPv4 multicast request with interface index.  */
+struct ip_mreqn
+  {
+    /* IP multicast address of group.  */
+    struct in_addr imr_multiaddr;
+
+    /* Local IP address of interface.  */
+    struct in_addr imr_address;
+
+    /* Interface index.  */
+    int imr_ifindex;
+  };
+
 struct ip_mreq_source
   {
     /* IP multicast address of group.  */
