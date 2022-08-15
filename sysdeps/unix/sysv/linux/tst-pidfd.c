@@ -147,8 +147,11 @@ do_test (void)
        may be denied if the process doesn't have CAP_SYS_PTRACE or
        if a LSM security_ptrace_access_check denies access.  */
     if (fd == -1 && errno == EPERM)
-      FAIL_UNSUPPORTED ("don't have permission to use pidfd_getfd on pidfd, "
-			"skipping test");
+      {
+	TEST_COMPARE (pidfd_send_signal (pidfd, SIGKILL, NULL, 0), 0);
+	FAIL_UNSUPPORTED ("don't have permission to use pidfd_getfd on pidfd, "
+			  "skipping test");
+      }
     TEST_VERIFY (fd > 0);
 
     char *path = xasprintf ("/proc/%d/fd/%d", pid, remote_fd);
