@@ -1110,10 +1110,6 @@ static mchunkptr mremap_chunk(mchunkptr p, size_t new_size);
 # define MAP_ANONYMOUS MAP_ANON
 #endif
 
-#ifndef MAP_NORESERVE
-# define MAP_NORESERVE 0
-#endif
-
 #define MMAP(addr, size, prot, flags) \
  __mmap((addr), (size), (prot), (flags)|MAP_ANONYMOUS|MAP_PRIVATE, -1, 0)
 

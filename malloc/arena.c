@@ -559,16 +559,13 @@ new_heap (size_t size, size_t top_pad)
 #if HAVE_TUNABLES
   if (__glibc_unlikely (mp_.hp_pagesize != 0))
     {
-      /* MAP_NORESERVE is not used for huge pages because some kernel may
-	 not reserve the mmap region and a subsequent access may trigger
-	 a SIGBUS if there is no free pages in the pool.  */
       heap_info *h = alloc_new_heap (size, top_pad, mp_.hp_pagesize,
 				     mp_.hp_flags);
       if (h != NULL)
 	return h;
     }
 #endif
-  return alloc_new_heap (size, top_pad, GLRO (dl_pagesize), MAP_NORESERVE);
+  return alloc_new_heap (size, top_pad, GLRO (dl_pagesize), 0);
 }
 
 /* Grow a heap.  size is automatically rounded up to a
