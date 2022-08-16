@@ -26,19 +26,17 @@
 #define __MAP_ANONYMOUS	  0x10		/* Don't use a file.  */
 
 /* These are Linux-specific.  */
-#ifdef __USE_MISC
-# define MAP_GROWSDOWN	  0x01000	/* Stack-like segment.  */
-# define MAP_DENYWRITE	  0x02000	/* ETXTBSY */
-# define MAP_EXECUTABLE	  0x04000	/* Mark it as an executable.  */
-# define MAP_LOCKED	  0x08000	/* Lock the mapping.  */
-# define MAP_NORESERVE	  0x10000	/* Don't check for reservations.  */
-# define MAP_POPULATE	  0x20000	/* Populate (prefault) pagetables.  */
-# define MAP_NONBLOCK	  0x40000	/* Do not block on IO.  */
-# define MAP_STACK	  0x80000	/* Allocation is for a stack.  */
-# define MAP_HUGETLB	  0x100000	/* Create huge page mapping.  */
-# define MAP_FIXED_NOREPLACE 0x200000	/* MAP_FIXED but do not unmap
+#define MAP_GROWSDOWN	  0x01000	/* Stack-like segment.  */
+#define MAP_DENYWRITE	  0x02000	/* ETXTBSY */
+#define MAP_EXECUTABLE	  0x04000	/* Mark it as an executable.  */
+#define MAP_LOCKED	  0x08000	/* Lock the mapping.  */
+#define MAP_NORESERVE	  0x10000	/* Don't check for reservations.  */
+#define MAP_POPULATE	  0x20000	/* Populate (prefault) pagetables.  */
+#define MAP_NONBLOCK	  0x40000	/* Do not block on IO.  */
+#define MAP_STACK	  0x80000	/* Allocation is for a stack.  */
+#define MAP_HUGETLB	  0x100000	/* Create huge page mapping.  */
+#define MAP_FIXED_NOREPLACE 0x200000	/* MAP_FIXED but do not unmap
 					   underlying mapping.  */
-#endif
 
 /* Flags for `mlockall'.  */
 #define MCL_CURRENT	  8192

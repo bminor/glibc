@@ -24,9 +24,7 @@
    But the kernel header is not namespace clean.  */
 
 /* Other flags.  */
-#ifdef __USE_MISC
-# define MAP_32BIT	0x40		/* Only give out 32-bit addresses.  */
-#endif
+#define MAP_32BIT	0x40		/* Only give out 32-bit addresses.  */
 
 #include <bits/mman-map-flags-generic.h>
 

@@ -24,24 +24,20 @@
 
 /* Other flags.  */
 #define __MAP_ANONYMOUS	0x10		/* Don't use a file */
-#ifdef __USE_MISC
-# define MAP_VARIABLE	0
-#endif
+#define MAP_VARIABLE	0
 
 /* These are Linux-specific.  */
-#ifdef __USE_MISC
-# define MAP_DENYWRITE	0x0800		/* ETXTBSY */
-# define MAP_EXECUTABLE	0x1000		/* Mark it as an executable */
-# define MAP_LOCKED	0x2000		/* Pages are locked */
-# define MAP_NORESERVE	0x4000		/* Don't check for reservations */
-# define MAP_GROWSDOWN	0x8000		/* Stack-like segment */
-# define MAP_POPULATE	0x10000		/* Populate (prefault) pagetables */
-# define MAP_NONBLOCK	0x20000		/* Do not block on IO */
-# define MAP_STACK	0x40000		/* Create for process/thread stacks */
-# define MAP_HUGETLB	0x80000		/* Create a huge page mapping */
-# define MAP_FIXED_NOREPLACE 0x100000	/* MAP_FIXED but do not unmap
+#define MAP_DENYWRITE	0x0800		/* ETXTBSY */
+#define MAP_EXECUTABLE	0x1000		/* Mark it as an executable */
+#define MAP_LOCKED	0x2000		/* Pages are locked */
+#define MAP_NORESERVE	0x4000		/* Don't check for reservations */
+#define MAP_GROWSDOWN	0x8000		/* Stack-like segment */
+#define MAP_POPULATE	0x10000		/* Populate (prefault) pagetables */
+#define MAP_NONBLOCK	0x20000		/* Do not block on IO */
+#define MAP_STACK	0x40000		/* Create for process/thread stacks */
+#define MAP_HUGETLB	0x80000		/* Create a huge page mapping */
+#define MAP_FIXED_NOREPLACE 0x100000	/* MAP_FIXED but do not unmap
 					   underlying mapping.  */
-#endif
 
 /* Advice to "madvise"  */
 #ifdef __USE_MISC
@@ -50,10 +46,8 @@
 
 #include <bits/mman-linux.h>
 
-#ifdef __USE_MISC
-# undef MAP_TYPE
-# define MAP_TYPE	0x2b		/* Mask for type of mapping */
-#endif
+#undef MAP_TYPE
+#define MAP_TYPE	0x2b		/* Mask for type of mapping */
 
 #undef MAP_FIXED
 #define MAP_FIXED	0x04		/* Interpret addr exactly */

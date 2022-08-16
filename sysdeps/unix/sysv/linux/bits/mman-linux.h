@@ -41,26 +41,22 @@
 /* Sharing types (must choose one and only one of these).  */
 #define MAP_SHARED	0x01		/* Share changes.  */
 #define MAP_PRIVATE	0x02		/* Changes are private.  */
-#ifdef __USE_MISC
-# define MAP_SHARED_VALIDATE	0x03	/* Share changes and validate
+#define MAP_SHARED_VALIDATE	0x03	/* Share changes and validate
 					   extension flags.  */
-# define MAP_TYPE	0x0f		/* Mask for type of mapping.  */
-#endif
+#define MAP_TYPE	0x0f		/* Mask for type of mapping.  */
 
 /* Other flags.  */
 #define MAP_FIXED	0x10		/* Interpret addr exactly.  */
-#ifdef __USE_MISC
-# define MAP_FILE	0
-# ifdef __MAP_ANONYMOUS
-#  define MAP_ANONYMOUS	__MAP_ANONYMOUS	/* Don't use a file.  */
-# else
-#  define MAP_ANONYMOUS	0x20		/* Don't use a file.  */
-# endif
-# define MAP_ANON	MAP_ANONYMOUS
-/* When MAP_HUGETLB is set bits [26:31] encode the log2 of the huge page size.  */
-# define MAP_HUGE_SHIFT	26
-# define MAP_HUGE_MASK	0x3f
+#define MAP_FILE	0
+#ifdef __MAP_ANONYMOUS
+# define MAP_ANONYMOUS	__MAP_ANONYMOUS	/* Don't use a file.  */
+#else
+# define MAP_ANONYMOUS	0x20		/* Don't use a file.  */
 #endif
+#define MAP_ANON	MAP_ANONYMOUS
+/* When MAP_HUGETLB is set bits [26:31] encode the log2 of the huge page size.  */
+#define MAP_HUGE_SHIFT	26
+#define MAP_HUGE_MASK	0x3f
 
 /* Flags to `msync'.  */
 #define MS_ASYNC	1		/* Sync memory asynchronously.  */

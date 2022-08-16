@@ -24,9 +24,7 @@
    But the kernel header is not namespace clean.  */
 
 /* These are Linux-specific.  */
-#ifdef __USE_MISC
-# define MAP_GROWSUP	  0x00200	/* Register stack-like segment */
-#endif
+#define MAP_GROWSUP	  0x00200	/* Register stack-like segment */
 
 #include <bits/mman-map-flags-generic.h>
 

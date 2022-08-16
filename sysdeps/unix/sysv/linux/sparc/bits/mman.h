@@ -25,22 +25,20 @@
 
 
 /* These are Linux-specific.  */
-#ifdef __USE_MISC
-# define MAP_GROWSDOWN	0x0200		/* Stack-like segment.  */
-# define MAP_DENYWRITE	0x0800		/* ETXTBSY */
-# define MAP_EXECUTABLE	0x1000		/* Mark it as an executable.  */
-# define MAP_LOCKED	0x0100		/* Lock the mapping.  */
-# define MAP_NORESERVE	0x0040		/* Don't check for reservations.  */
-# define _MAP_NEW	0x80000000	/* Binary compatibility with SunOS.  */
-# define MAP_POPULATE	0x8000		/* Populate (prefault) pagetables.  */
-# define MAP_NONBLOCK	0x10000		/* Do not block on IO.  */
-# define MAP_STACK	0x20000		/* Allocation is for a stack.  */
-# define MAP_HUGETLB	0x40000		/* Create huge page mapping.  */
-# define MAP_SYNC	0x80000		/* Perform synchronous page
+#define MAP_GROWSDOWN	0x0200		/* Stack-like segment.  */
+#define MAP_DENYWRITE	0x0800		/* ETXTBSY */
+#define MAP_EXECUTABLE	0x1000		/* Mark it as an executable.  */
+#define MAP_LOCKED	0x0100		/* Lock the mapping.  */
+#define MAP_NORESERVE	0x0040		/* Don't check for reservations.  */
+#define _MAP_NEW	0x80000000	/* Binary compatibility with SunOS.  */
+#define MAP_POPULATE	0x8000		/* Populate (prefault) pagetables.  */
+#define MAP_NONBLOCK	0x10000		/* Do not block on IO.  */
+#define MAP_STACK	0x20000		/* Allocation is for a stack.  */
+#define MAP_HUGETLB	0x40000		/* Create huge page mapping.  */
+#define MAP_SYNC	0x80000		/* Perform synchronous page
 					   faults for the mapping.  */
-# define MAP_FIXED_NOREPLACE 0x100000	/* MAP_FIXED but do not unmap
+#define MAP_FIXED_NOREPLACE 0x100000	/* MAP_FIXED but do not unmap
 					   underlying mapping.  */
-#endif
 
 /* Flags for `mlockall'.  */
 #define MCL_CURRENT	0x2000		/* Lock all currently mapped pages.  */
@@ -52,6 +50,4 @@
 #include <bits/mman-linux.h>
 
 /* Other flags.  */
-#ifdef __USE_MISC
-# define MAP_RENAME	MAP_ANONYMOUS
-#endif
+#define MAP_RENAME	MAP_ANONYMOUS
