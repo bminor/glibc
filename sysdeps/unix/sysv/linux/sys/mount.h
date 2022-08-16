@@ -188,9 +188,6 @@ enum
 };
 
 
-/* fsopen flags.  */
-#define FSOPEN_CLOEXEC          0x00000001
-
 /* fsmount flags.  */
 #define FSMOUNT_CLOEXEC         0x00000001
 
@@ -260,6 +257,9 @@ enum fsconfig_command
 # define FSCONFIG_CMD_RECONFIGURE FSCONFIG_CMD_RECONFIGURE
 };
 #endif
+
+/* fsopen flags.  */
+#define FSOPEN_CLOEXEC          0x00000001
 
 /* open_tree flags.  */
 #define OPEN_TREE_CLONE    1         /* Clone the target tree and attach the clone */
