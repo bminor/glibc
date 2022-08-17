@@ -76,9 +76,9 @@ END LC_MESSAGES
 
 LC_MONETARY
 int_curr_symbol           "EUR "
-currency_symbol           "<U20AC>"
+currency_symbol           "€"
 mon_decimal_point         ","
-mon_thousands_sep         "<U202F>"
+mon_thousands_sep         " "
 mon_grouping              3
 positive_sign             ""
 negative_sign             "-"
@@ -94,7 +94,7 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point             ","
-thousands_sep             "<U202F>"
+thousands_sep             " "
 grouping                  3
 END LC_NUMERIC
 
@@ -108,29 +108,29 @@ day     "dimanche";/
         "vendredi";/
         "samedi"
 abmon   "janv.";/
-        "f<U00E9>vr.";/
+        "févr.";/
         "mars";/
         "avril";/
         "mai";/
         "juin";/
         "juil.";/
-        "ao<U00FB>t";/
+        "août";/
         "sept.";/
         "oct.";/
         "nov.";/
-        "d<U00E9>c."
+        "déc."
 mon     "janvier";/
-        "f<U00E9>vrier";/
+        "février";/
         "mars";/
         "avril";/
         "mai";/
         "juin";/
         "juillet";/
-        "ao<U00FB>t";/
+        "août";/
         "septembre";/
         "octobre";/
         "novembre";/
-        "d<U00E9>cembre"
+        "décembre"
 d_t_fmt  "%a %d %b %Y %T"
 date_fmt "%a %d %b %Y %T %Z"
 d_fmt   "%d//%m//%Y"
@@ -169,7 +169,7 @@ country_ab3 "FRA"
 country_num 250
 country_isbn "979-10"
 country_car  "F"
-lang_name "fran<U00E7>ais"
+lang_name "français"
 lang_ab      "fr"
 lang_term    "fra"
 lang_lib  "fre"
