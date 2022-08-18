@@ -38,10 +38,14 @@ __printf_buffer_do_flush (struct __printf_buffer *buf)
   switch (buf->mode)
     {
     case __printf_buffer_mode_failed:
+    case __printf_buffer_mode_sprintf:
       return;
     case __printf_buffer_mode_snprintf:
       __printf_buffer_flush_snprintf ((struct __printf_buffer_snprintf *) buf);
       return;
+    case __printf_buffer_mode_sprintf_chk:
+      __chk_fail ();
+      break;
     case __printf_buffer_mode_to_file:
       __printf_buffer_flush_to_file ((struct __printf_buffer_to_file *) buf);
       return;
