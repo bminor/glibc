@@ -53,6 +53,14 @@ routines := \
   perror \
   printf \
   printf-prs \
+  printf_buffer_as_file \
+  printf_buffer_done \
+  printf_buffer_flush \
+  printf_buffer_pad_1 \
+  printf_buffer_putc_1 \
+  printf_buffer_puts_1 \
+  printf_buffer_to_file \
+  printf_buffer_write \
   printf_fp \
   printf_fphex \
   printf_size \
@@ -85,6 +93,14 @@ routines := \
   vfwscanf \
   vfwscanf-internal \
   vprintf \
+  wprintf_buffer_as_file \
+  wprintf_buffer_done \
+  wprintf_buffer_flush \
+  wprintf_buffer_pad_1 \
+  wprintf_buffer_putc_1 \
+  wprintf_buffer_puts_1 \
+  wprintf_buffer_to_file \
+  wprintf_buffer_write \
   # routines
 
 aux := \
