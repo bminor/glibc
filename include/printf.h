@@ -53,7 +53,18 @@ int __wprintf_function_invoke (void *, printf_function callback,
 
 #include <bits/types/locale_t.h>
 
-/* Now define the internal interfaces.  */
+/* Returns the width (as for printf, in bytes) of the converted ASCII
+   number in the characters in the range [FIRST, LAST).  The range
+   must only contain ASCII digits.  The caller is responsible for
+   avoiding overflow.
+
+   This function is used during non-wide digit translation.  Wide
+   digit translate produces one wide character per ASCII digit,
+   so the width is simply LAST - FIRST.  */
+int __translated_number_width (locale_t loc,
+			       const char *first, const char *last)
+  attribute_hidden;
+
 extern int __printf_fphex (FILE *, const struct printf_info *,
 			   const void *const *) attribute_hidden;
 extern int __printf_fp (FILE *, const struct printf_info *,
