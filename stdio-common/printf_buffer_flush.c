@@ -32,6 +32,7 @@
 # pragma weak __printf_buffer_flush_fp
 # pragma weak __printf_buffer_flush_fp_to_wide
 # pragma weak __printf_buffer_flush_fphex_to_wide
+# pragma weak __printf_buffer_flush_obstack
 #endif /* !SHARED */
 
 static void
@@ -71,6 +72,9 @@ __printf_buffer_do_flush (struct __printf_buffer *buf)
     case __printf_buffer_mode_fphex_to_wide:
       __printf_buffer_flush_fphex_to_wide
         ((struct __printf_buffer_fphex_to_wide *) buf);
+      return;
+    case __printf_buffer_mode_obstack:
+      __printf_buffer_flush_obstack ((struct __printf_buffer_obstack *) buf);
       return;
     }
   __builtin_trap ();
