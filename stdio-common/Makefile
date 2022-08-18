@@ -39,6 +39,7 @@ routines := \
   gentempfd \
   getline \
   getw \
+  grouping_iterator \
   iovfscanf \
   isoc99_fscanf \
   isoc99_scanf \
@@ -222,6 +223,10 @@ generated += \
   siglist-aux.S \
   # generated
 
+tests-internal = \
+  tst-grouping_iterator \
+  # tests-internal
+
 test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble
 
 ifeq ($(run-built-tests),yes)
@@ -299,7 +304,8 @@ LOCALES := \
   hi_IN.UTF-8 \
   ja_JP.EUC-JP \
   ps_AF.UTF-8 \
-  # LOCALES
+  tg_TJ.UTF-8 \
+ # LOCALES
 include ../gen-locales.mk
 
 $(objpfx)bug14.out: $(gen-locales)
@@ -307,6 +313,7 @@ $(objpfx)scanf13.out: $(gen-locales)
 $(objpfx)test-vfprintf.out: $(gen-locales)
 $(objpfx)tst-grouping.out: $(gen-locales)
 $(objpfx)tst-grouping2.out: $(gen-locales)
+$(objpfx)tst-grouping_iterator.out: $(gen-locales)
 $(objpfx)tst-sprintf.out: $(gen-locales)
 $(objpfx)tst-sscanf.out: $(gen-locales)
 $(objpfx)tst-swprintf.out: $(gen-locales)
