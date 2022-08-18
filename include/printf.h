@@ -41,6 +41,16 @@ union printf_arg
     void *pa_user;
 };
 
+/* Invoke a registered printf callback.  Called from vfprintf and vfwprintf.  */
+int __printf_function_invoke (void *, printf_function callback,
+			      union printf_arg *args_value,
+			      size_t ndata_args,
+			      struct printf_info *info) attribute_hidden;
+int __wprintf_function_invoke (void *, printf_function callback,
+			       union printf_arg *args_value,
+			       size_t ndata_args,
+			       struct printf_info *info) attribute_hidden;
+
 #include <bits/types/locale_t.h>
 
 /* Now define the internal interfaces.  */

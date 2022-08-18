@@ -63,6 +63,7 @@ routines := \
   printf_buffer_write \
   printf_fp \
   printf_fphex \
+  printf_function_invoke \
   printf_size \
   psiginfo \
   psignal \
@@ -101,6 +102,7 @@ routines := \
   wprintf_buffer_puts_1 \
   wprintf_buffer_to_file \
   wprintf_buffer_write \
+  wprintf_function_invoke \
   # routines
 
 aux := \
