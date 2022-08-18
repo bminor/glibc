@@ -67,6 +67,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				     (CPU_FEATURE_USABLE (AVX512VL)
 				      && CPU_FEATURE_USABLE (AVX512BW)
 				      && CPU_FEATURE_USABLE (BMI2)),
+				     __memchr_evex512)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, memchr,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
 				     __memchr_evex_rtm)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, memchr,
 				     (CPU_FEATURE_USABLE (AVX2)
@@ -337,6 +342,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				      && CPU_FEATURE_USABLE (AVX512BW)
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __rawmemchr_evex)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, rawmemchr,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __rawmemchr_evex512)
 	      X86_IFUNC_IMPL_ADD_V4 (array, i, rawmemchr,
 				     (CPU_FEATURE_USABLE (AVX512VL)
 				      && CPU_FEATURE_USABLE (AVX512BW)
@@ -942,6 +952,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				      && CPU_FEATURE_USABLE (AVX512BW)
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __wmemchr_evex)
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, wmemchr,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wmemchr_evex512)
 	      X86_IFUNC_IMPL_ADD_V4 (array, i, wmemchr,
 				     (CPU_FEATURE_USABLE (AVX512VL)
 				      && CPU_FEATURE_USABLE (AVX512BW)

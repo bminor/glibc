@@ -4,6 +4,7 @@ sysdep_routines += \
   memchr-avx2 \
   memchr-avx2-rtm \
   memchr-evex \
+  memchr-evex512 \
   memchr-evex-rtm \
   memchr-sse2 \
   memcmp-avx2-movbe \
@@ -36,6 +37,7 @@ sysdep_routines += \
   rawmemchr-avx2 \
   rawmemchr-avx2-rtm \
   rawmemchr-evex \
+  rawmemchr-evex512 \
   rawmemchr-evex-rtm \
   rawmemchr-sse2 \
   stpcpy-avx2 \
@@ -156,6 +158,7 @@ sysdep_routines += \
   wmemchr-avx2 \
   wmemchr-avx2-rtm \
   wmemchr-evex \
+  wmemchr-evex512 \
   wmemchr-evex-rtm \
   wmemchr-sse2 \
   wmemcmp-avx2-movbe \
