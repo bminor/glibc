@@ -73,7 +73,9 @@ size_t
 __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			size_t max)
 {
-  size_t i = max;
+  /* If the architecture level set is high enough, no IFUNCs are used at all
+     and the variable i would be unused.  */
+  size_t i __attribute__ ((unused)) = max;
 
   /* Get hardware information.  */
   unsigned long int dl_hwcap = GLRO (dl_hwcap);
