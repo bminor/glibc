@@ -29,33 +29,8 @@
 #include <string.h>
 #include "../locale/localeinfo.h"
 #include <bits/floatn.h>
-
-
-#define out_char(Ch)							      \
-  do {									      \
-    if (dest >= s + maxsize - 1)					      \
-      {									      \
-	__set_errno (E2BIG);						      \
-	va_end (ap);							      \
-	return -1;							      \
-      }									      \
-    *dest++ = (Ch);							      \
-  } while (0)
-
-#define out_string(String)						      \
-  do {									      \
-    const char *_s = (String);						      \
-    while (*_s)								      \
-      out_char (*_s++);							      \
-  } while (0)
-
-#define out_nstring(String, N)						      \
-  do {									      \
-    int _n = (N);							      \
-    const char *_s = (String);						      \
-    while (_n-- > 0)							      \
-      out_char (*_s++);							      \
-  } while (0)
+#include <stdio-common/grouping_iterator.h>
+#include <printf_buffer.h>
 
 #define to_digit(Ch) ((Ch) - '0')
 
@@ -75,21 +50,15 @@
    some information in the LC_MONETARY category which should be used,
    too.  Some of the information contradicts the information which can
    be specified in format string.  */
-ssize_t
-__vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
-		       const char *format, va_list ap, unsigned int flags)
+static void
+__vstrfmon_l_buffer (struct __printf_buffer *buf, locale_t loc,
+		     const char *fmt, va_list ap, unsigned int flags)
 {
   struct __locale_data *current = loc->__locales[LC_MONETARY];
-  _IO_strfile f;
   struct printf_info info;
-  char *dest;			/* Pointer so copy the output.  */
-  const char *fmt;		/* Pointer that walks through format.  */
-
-  dest = s;
-  fmt = format;
 
   /* Loop through the format-string.  */
-  while (*fmt != '\0')
+  while (*fmt != '\0' && !__printf_buffer_has_failed (buf))
     {
       /* The floating-point value to output.  */
       union
@@ -122,11 +91,9 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
       int other_cs_precedes;
       const char *sign_string;
       const char *other_sign_string;
-      int done;
       const char *currency_symbol;
       size_t currency_symbol_len;
       long int width;
-      char *startp;
       const void *ptr;
       char space_char;
 
@@ -134,14 +101,14 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 	 specification.  */
       if (*fmt != '%')
 	{
-	  out_char (*fmt++);
+	  __printf_buffer_putc (buf, *fmt++);
 	  continue;
 	}
 
       /* "%%" means a single '%' character.  */
       if (fmt[1] == '%')
 	{
-	  out_char (*++fmt);
+	  __printf_buffer_putc (buf, *++fmt);
 	  ++fmt;
 	  continue;
 	}
@@ -171,7 +138,8 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 		{
 		  /* Premature EOS.  */
 		  __set_errno (EINVAL);
-		  return -1;
+		  __printf_buffer_mark_failed (buf);
+		  return;
 		}
 	      continue;
 	    case '^':			/* Don't group digits.  */
@@ -181,7 +149,8 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 	      if (n_sign_posn != -2)
 		{
 		  __set_errno (EINVAL);
-		  return -1;
+		  __printf_buffer_mark_failed (buf);
+		  return;
 		}
 	      p_sign_posn = *_NL_CURRENT (LC_MONETARY, P_SIGN_POSN);
 	      n_sign_posn = *_NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
@@ -190,7 +159,8 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 	      if (n_sign_posn != -2)
 		{
 		  __set_errno (EINVAL);
-		  return -1;
+		  __printf_buffer_mark_failed (buf);
+		  return;
 		}
 	      p_sign_posn = 0;
 	      n_sign_posn = 0;
@@ -220,18 +190,11 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 		  || (width == LONG_MAX && val > LONG_MAX % 10))
 		{
 		  __set_errno (E2BIG);
-		  return -1;
+		  __printf_buffer_mark_failed (buf);
+		  return;
 		}
 
 	      width = width * 10 + val;
-	    }
-
-	  /* If we don't have enough room for the demanded width we
-	     can stop now and return an error.  */
-	  if (width >= maxsize - (dest - s))
-	    {
-	      __set_errno (E2BIG);
-	      return -1;
 	    }
 	}
 
@@ -241,7 +204,8 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 	  if (!isdigit (*++fmt))
 	    {
 	      __set_errno (EINVAL);
-	      return -1;
+	      __printf_buffer_mark_failed (buf);
+	      return;
 	    }
 	  left_prec = to_digit (*fmt);
 
@@ -258,7 +222,8 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 	  if (!isdigit (*++fmt))
 	    {
 	      __set_errno (EINVAL);
-	      return -1;
+	      __printf_buffer_mark_failed (buf);
+	      return;
 	    }
 	  right_prec = to_digit (*fmt);
 
@@ -306,7 +271,8 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 	  break;
 	default:		/* Any unrecognized format is an error.  */
 	  __set_errno (EINVAL);
-	  return -1;
+	  __printf_buffer_mark_failed (buf);
+	  return;
 	}
 
       /* If not specified by the format string now find the values for
@@ -327,8 +293,11 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
       /* If we have to print the digits grouped determine how many
 	 extra characters this means.  */
       if (group && left_prec != -1)
-	left_prec += __guess_grouping (left_prec,
-				       _NL_CURRENT (LC_MONETARY, MON_GROUPING));
+	{
+	  struct grouping_iterator it;
+	  __grouping_iterator_init (&it, LC_MONETARY, loc, left_prec);
+	  left_prec += it.separators;
+	}
 
       /* Now it's time to get the value.  */
       if (is_long_double == 1)
@@ -482,57 +451,46 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 #define left_paren '('
 #define right_paren ')'
 
-      startp = dest;		/* Remember start so we can compute length.  */
+      char *startp = buf->write_ptr;
 
-      while (left_pad-- > 0)
-	out_char (' ');
+      __printf_buffer_pad (buf, ' ', left_pad);
 
       if (sign_posn == 0 && is_negative)
-	out_char (left_paren);
+	__printf_buffer_putc (buf, left_paren);
 
       if (cs_precedes)
 	{
 	  if (sign_posn != 0 && sign_posn != 2 && sign_posn != 4
 	      && sign_posn != 5)
 	    {
-	      out_string (sign_string);
+	      __printf_buffer_puts (buf, sign_string);
 	      if (sep_by_space == 2)
-		out_char (' ');
+		__printf_buffer_putc (buf, ' ');
 	    }
 
 	  if (print_curr_symbol)
-	    out_string (currency_symbol);
+	    __printf_buffer_puts (buf, currency_symbol);
 
 	  if (sign_posn == 4)
 	    {
 	      if (print_curr_symbol && sep_by_space == 2)
-		out_char (space_char);
-	      out_string (sign_string);
+		__printf_buffer_putc (buf, space_char);
+	      __printf_buffer_puts (buf, sign_string);
 	      if (sep_by_space == 1)
 		/* POSIX.2 and SUS are not clear on this case, but C99
 		   says a space follows the adjacent-symbol-and-sign */
-		out_char (' ');
+		__printf_buffer_putc (buf, ' ');
 	    }
 	  else
 	    if (print_curr_symbol && sep_by_space == 1)
-	      out_char (space_char);
+	      __printf_buffer_putc (buf, space_char);
 	}
       else
 	if (sign_posn != 0 && sign_posn != 2 && sign_posn != 3
 	    && sign_posn != 4 && sign_posn != 5)
-	  out_string (sign_string);
+	  __printf_buffer_puts (buf, sign_string);
 
       /* Print the number.  */
-#ifdef _IO_MTSAFE_IO
-      f._sbf._f._lock = NULL;
-#endif
-      _IO_init_internal (&f._sbf._f, 0);
-      _IO_JUMPS (&f._sbf) = &_IO_str_jumps;
-      _IO_str_init_static_internal (&f, dest, (s + maxsize) - dest, dest);
-      /* We clear the last available byte so we can find out whether
-	 the numeric representation is too long.  */
-      s[maxsize - 1] = '\0';
-
       memset (&info, '\0', sizeof (info));
       info.prec = right_prec;
       info.width = left_prec + (right_prec ? (right_prec + 1) : 0);
@@ -544,25 +502,17 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
       info.extra = 1;		/* This means use values from LC_MONETARY.  */
 
       ptr = &fpnum;
-      done = __printf_fp_l (&f._sbf._f, loc, &info, &ptr);
-      if (done < 0)
-	return -1;
-
-      if (s[maxsize - 1] != '\0')
-	{
-	  __set_errno (E2BIG);
-	  return -1;
-	}
-
-      dest += done;
+      __printf_fp_l_buffer (buf, loc, &info, &ptr);
+      if (__printf_buffer_has_failed (buf))
+	return;
 
       if (!cs_precedes)
 	{
 	  if (sign_posn == 3)
 	    {
 	      if (sep_by_space == 1)
-		out_char (' ');
-	      out_string (sign_string);
+		__printf_buffer_putc (buf, ' ');
+	      __printf_buffer_puts (buf, sign_string);
 	    }
 
 	  if (print_curr_symbol)
@@ -572,55 +522,61 @@ __vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
 		  || (sign_posn == 2 && sep_by_space == 1)
 		  || (sign_posn == 1 && sep_by_space == 1)
 		  || (sign_posn == 0 && sep_by_space == 1))
-		out_char (space_char);
-	      out_nstring (currency_symbol, currency_symbol_len);
+		__printf_buffer_putc (buf, space_char);
+	      __printf_buffer_write (buf, currency_symbol,
+				       __strnlen (currency_symbol,
+						  currency_symbol_len));
 	    }
 
 	  if (sign_posn == 4)
 	    {
 	      if (sep_by_space == 2)
-		out_char (' ');
-	      out_string (sign_string);
+		__printf_buffer_putc (buf, ' ');
+	      __printf_buffer_puts (buf, sign_string);
 	    }
 	}
 
       if (sign_posn == 2)
 	{
 	  if (sep_by_space == 2)
-	    out_char (' ');
-	  out_string (sign_string);
+	    __printf_buffer_putc (buf, ' ');
+	  __printf_buffer_puts (buf, sign_string);
 	}
 
       if (sign_posn == 0 && is_negative)
-	out_char (right_paren);
+	__printf_buffer_putc (buf, right_paren);
 
       /* Now test whether the output width is filled.  */
-      if (dest - startp < width)
+      if (buf->write_ptr - startp < width)
 	{
-	  if (left)
-	    /* We simply have to fill using spaces.  */
-	    do
-	      out_char (' ');
-	    while (dest - startp < width);
-	  else
+	  size_t pad_width = width - (buf->write_ptr - startp);
+	  __printf_buffer_pad (buf, ' ', pad_width);
+	  if (__printf_buffer_has_failed (buf))
+	    /* Implies length check.  */
+	    return;
+	  /* Left padding is already in the correct position.
+	     Otherwise move the field contents in place.  */
+	  if (!left)
 	    {
-	      long int dist = width - (dest - startp);
-	      for (char *cp = dest - 1; cp >= startp; --cp)
-		cp[dist] = cp[0];
-
-	      dest += dist;
-
-	      do
-		startp[--dist] = ' ';
-	      while (dist > 0);
+	      memmove (startp + pad_width, startp, buf->write_ptr - startp);
+	      memset (startp, ' ', pad_width);
 	    }
 	}
     }
+}
 
-  /* Terminate the string.  */
-  *dest = '\0';
-
-  return dest - s;
+ssize_t
+__vstrfmon_l_internal (char *s, size_t maxsize, locale_t loc,
+		       const char *format, va_list ap, unsigned int flags)
+{
+  struct __printf_buffer buf;
+  __printf_buffer_init (&buf, s, maxsize, __printf_buffer_mode_strfmon);
+  __vstrfmon_l_buffer (&buf, loc, format, ap, flags);
+  __printf_buffer_putc (&buf, '\0'); /* Terminate the string.  */
+  if (__printf_buffer_has_failed (&buf))
+    return -1;
+  else
+    return buf.write_ptr - buf.write_base - 1; /* Exclude NUL byte.  */
 }
 
 ssize_t

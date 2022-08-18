@@ -25,97 +25,76 @@
    in files containing the exception.  */
 
 #include "libioP.h"
-#include "strfile.h"
 
-static int _IO_strn_overflow (FILE *fp, int c) __THROW;
+#include <array_length.h>
+#include <printf.h>
+#include <printf_buffer.h>
 
-static int
-_IO_strn_overflow (FILE *fp, int c)
+void
+__printf_buffer_flush_snprintf (struct __printf_buffer_snprintf *buf)
 {
-  /* When we come to here this means the user supplied buffer is
-     filled.  But since we must return the number of characters which
-     would have been written in total we must provide a buffer for
-     further use.  We can do this by writing on and on in the overflow
-     buffer in the _IO_strnfile structure.  */
-  _IO_strnfile *snf = (_IO_strnfile *) fp;
+  /* Record the bytes written so far, before switching buffers.  */
+  buf->base.written += buf->base.write_ptr - buf->base.write_base;
 
-  if (fp->_IO_buf_base != snf->overflow_buf)
+  if (buf->base.write_base != buf->discard)
     {
-      /* Terminate the string.  We know that there is room for at
-	 least one more character since we initialized the stream with
-	 a size to make this possible.  */
-      *fp->_IO_write_ptr = '\0';
+      /* We just finished writing the caller-supplied buffer.  Force
+	 NUL termination if the string length is not zero.  */
+      if (buf->base.write_base != buf->base.write_end)
+	buf->base.write_end[-1] = '\0';
 
-      _IO_setb (fp, snf->overflow_buf,
-		snf->overflow_buf + sizeof (snf->overflow_buf), 0);
 
-      fp->_IO_write_base = snf->overflow_buf;
-      fp->_IO_read_base = snf->overflow_buf;
-      fp->_IO_read_ptr = snf->overflow_buf;
-      fp->_IO_read_end = snf->overflow_buf + sizeof (snf->overflow_buf);
+      /* Switch to the discard buffer.  */
+      buf->base.write_base = buf->discard;
+      buf->base.write_ptr = buf->discard;
+      buf->base.write_end = array_end (buf->discard);
     }
 
-  fp->_IO_write_ptr = snf->overflow_buf;
-  fp->_IO_write_end = snf->overflow_buf;
-
-  /* Since we are not really interested in storing the characters
-     which do not fit in the buffer we simply ignore it.  */
-  return c;
+  buf->base.write_base = buf->discard;
+  buf->base.write_ptr = buf->discard;
 }
 
-
-const struct _IO_jump_t _IO_strn_jumps libio_vtable attribute_hidden =
+void
+__printf_buffer_snprintf_init (struct __printf_buffer_snprintf *buf,
+			       char *buffer, size_t length)
 {
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_str_finish),
-  JUMP_INIT(overflow, _IO_strn_overflow),
-  JUMP_INIT(underflow, _IO_str_underflow),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_str_pbackfail),
-  JUMP_INIT(xsputn, _IO_default_xsputn),
-  JUMP_INIT(xsgetn, _IO_default_xsgetn),
-  JUMP_INIT(seekoff, _IO_str_seekoff),
-  JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_default_setbuf),
-  JUMP_INIT(sync, _IO_default_sync),
-  JUMP_INIT(doallocate, _IO_default_doallocate),
-  JUMP_INIT(read, _IO_default_read),
-  JUMP_INIT(write, _IO_default_write),
-  JUMP_INIT(seek, _IO_default_seek),
-  JUMP_INIT(close, _IO_default_close),
-  JUMP_INIT(stat, _IO_default_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue)
-};
+  __printf_buffer_init (&buf->base, buffer, length,
+			__printf_buffer_mode_snprintf);
+  if (length > 0)
+    /* Historic behavior for trivially overlapping buffers (checked by
+       the test suite).  */
+    *buffer = '\0';
+}
 
+int
+__printf_buffer_snprintf_done (struct __printf_buffer_snprintf *buf)
+{
+  /* NB: Do not check for buf->base.fail here.  Write the null
+     terminator even in case of errors. */
+
+  if (buf->base.write_ptr < buf->base.write_end)
+    *buf->base.write_ptr = '\0';
+  else if (buf->base.write_ptr > buf->base.write_base)
+    /* If write_ptr == write_base, nothing has been written.  No null
+       termination is needed because of the early truncation in
+       __printf_buffer_snprintf_init (the historic behavior).
+
+       We might also be at the start of the discard buffer, but in
+       this case __printf_buffer_flush_snprintf has already written
+       the NUL terminator.  */
+    buf->base.write_ptr[-1] = '\0';
+
+  return __printf_buffer_done (&buf->base);
+}
 
 int
 __vsnprintf_internal (char *string, size_t maxlen, const char *format,
 		      va_list args, unsigned int mode_flags)
 {
-  _IO_strnfile sf;
-  int ret;
-#ifdef _IO_MTSAFE_IO
-  sf.f._sbf._f._lock = NULL;
-#endif
-
-  /* We need to handle the special case where MAXLEN is 0.  Use the
-     overflow buffer right from the start.  */
-  if (maxlen == 0)
-    {
-      string = sf.overflow_buf;
-      maxlen = sizeof (sf.overflow_buf);
-    }
-
-  _IO_no_init (&sf.f._sbf._f, _IO_USER_LOCK, -1, NULL, NULL);
-  _IO_JUMPS (&sf.f._sbf) = &_IO_strn_jumps;
-  string[0] = '\0';
-  _IO_str_init_static_internal (&sf.f, string, maxlen - 1, string);
-  ret = __vfprintf_internal (&sf.f._sbf._f, format, args, mode_flags);
-
-  if (sf.f._sbf._f._IO_buf_base != sf.overflow_buf)
-    *sf.f._sbf._f._IO_write_ptr = '\0';
-  return ret;
+  struct __printf_buffer_snprintf buf;
+  __printf_buffer_snprintf_init (&buf, string, maxlen);
+  __printf_buffer (&buf.base, format, args, mode_flags);
+  return __printf_buffer_snprintf_done (&buf);
 }
 
 int
