@@ -1452,6 +1452,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap, unsigned int mode_flags)
     return EOF;
 #endif
 
+  if (!_IO_need_lock (s))
+    {
+      struct Xprintf (buffer_to_file) wrap;
+      Xprintf (buffer_to_file_init) (&wrap, s);
+      Xprintf_buffer (&wrap.base, format, ap, mode_flags);
+      return Xprintf (buffer_to_file_done) (&wrap);
+    }
+
   int done;
 
   /* Lock stream.  */
