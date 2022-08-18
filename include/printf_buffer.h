@@ -49,6 +49,7 @@ enum __printf_buffer_mode
     __printf_buffer_mode_sprintf_chk,
     __printf_buffer_mode_to_file,
     __printf_buffer_mode_asprintf,
+    __printf_buffer_mode_dprintf,
     __printf_buffer_mode_strfmon,
     __printf_buffer_mode_fp,         /* For __printf_fp_l_buffer.  */
     __printf_buffer_mode_fp_to_wide, /* For __wprintf_fp_l_buffer.  */
@@ -304,6 +305,9 @@ void __printf_buffer_flush_to_file (struct __printf_buffer_to_file *)
   attribute_hidden;
 struct __printf_buffer_asprintf;
 void __printf_buffer_flush_asprintf (struct __printf_buffer_asprintf *)
+  attribute_hidden;
+struct __printf_buffer_dprintf;
+void __printf_buffer_flush_dprintf (struct __printf_buffer_dprintf *)
   attribute_hidden;
 struct __printf_buffer_fp;
 void __printf_buffer_flush_fp (struct __printf_buffer_fp *)

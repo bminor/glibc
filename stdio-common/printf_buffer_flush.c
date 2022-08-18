@@ -28,6 +28,7 @@
 # pragma weak __printf_buffer_flush_snprintf
 # pragma weak __printf_buffer_flush_to_file
 # pragma weak __printf_buffer_flush_asprintf
+# pragma weak __printf_buffer_flush_dprintf
 # pragma weak __printf_buffer_flush_fp
 # pragma weak __printf_buffer_flush_fp_to_wide
 # pragma weak __printf_buffer_flush_fphex_to_wide
@@ -52,6 +53,9 @@ __printf_buffer_do_flush (struct __printf_buffer *buf)
       return;
     case __printf_buffer_mode_asprintf:
       __printf_buffer_flush_asprintf ((struct __printf_buffer_asprintf *) buf);
+      return;
+    case __printf_buffer_mode_dprintf:
+      __printf_buffer_flush_dprintf ((struct __printf_buffer_dprintf *) buf);
       return;
     case __printf_buffer_mode_strfmon:
       __set_errno (E2BIG);
