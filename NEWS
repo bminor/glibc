@@ -225,6 +225,18 @@ Changes to build and runtime requirements:
   source tree.  ChangeLog files are located in the ChangeLog.old directory as
   ChangeLog.N where the highest N has the latest entries.
 
+* On Linux, the system administrator needs to configure /dev/pts with
+  the intended access modes for pseudo-terminals.  glibc no longer
+  attemps to adjust permissions of terminal devices.  The previous glibc
+  defaults ("tty" group, user read/write and group write) already
+  corresponded to what most systems used, so that grantpt did not
+  perform any adjustments.
+
+* On Linux, the posix_openpt and getpt functions no longer attempt to
+  use legacy (BSD) pseudo-terminals and assume that if /dev/ptmx exists
+  (and pseudo-terminals are supported), a devpts file system is mounted
+  on /dev/pts.  Current systems already meet these requirements.
+
 Security related changes:
 
   CVE-2019-19126: ld.so failed to ignore the LD_PREFER_MAP_32BIT_EXEC
