@@ -1,4 +1,5 @@
 #include <array_length.h>
+#include <errno.h>
 #include <stdio.h>
 #include <support/check.h>
 #include <sys/types.h>
@@ -37,6 +38,8 @@ do_test (void)
 
   for (n = 0; n < array_length (tests); ++n)
     {
+      wmemset (buf, 0xabcd, array_length (buf));
+      errno = 0;
       ssize_t res = swprintf (buf, tests[n].n, L"%s", tests[n].str);
 
       if (tests[n].exp < 0 && res >= 0)
@@ -52,9 +55,31 @@ do_test (void)
 swprintf (buf, %zu, L\"%%s\", \"%s\") expected to return %zd, but got %zd\n",
 		  tests[n].n, tests[n].str, tests[n].exp, res);
 	}
-      else
-	printf ("swprintf (buf, %zu, L\"%%s\", \"%s\") OK\n",
-		tests[n].n, tests[n].str);
+      else if (res < 0
+	       && tests[n].n > 0
+	       && wcsnlen (buf, array_length (buf)) == array_length (buf))
+	{
+	  support_record_failure ();
+	  printf ("\
+error: swprintf (buf, %zu, L\"%%s\", \"%s\") missing null terminator\n",
+		  tests[n].n, tests[n].str);
+	}
+      else if (res < 0
+	       && tests[n].n > 0
+	       && wcsnlen (buf, array_length (buf)) < array_length (buf)
+	       && buf[wcsnlen (buf, array_length (buf)) + 1] != 0xabcd)
+	{
+	  support_record_failure ();
+	  printf ("\
+error: swprintf (buf, %zu, L\"%%s\", \"%s\") out of bounds write\n",
+		  tests[n].n, tests[n].str);
+	}
+
+      if (res < 0 && tests[n].n < 0)
+	TEST_COMPARE (errno, E2BIG);
+
+      printf ("swprintf (buf, %zu, L\"%%s\", \"%s\") OK\n",
+	      tests[n].n, tests[n].str);
     }
 
   TEST_COMPARE (swprintf (buf, array_length (buf), L"%.0s", "foo"), 0);
