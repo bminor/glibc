@@ -95,8 +95,13 @@ init1 (int argc, char *arg0, ...)
   d = (void *) ++envp;
 
   if ((void *) d == argv[0])
-    /* No Hurd data block to process.  */
-    return;
+    {
+      /* No Hurd data block to process.  */
+#ifndef SHARED
+      __libc_enable_secure = 0;
+#endif
+      return;
+    }
 
 #ifndef SHARED
   __libc_enable_secure = d->flags & EXEC_SECURE;
