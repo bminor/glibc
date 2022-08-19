@@ -1158,5 +1158,24 @@ class Image:
         self._stringtab[sh_link] = strtab
         return strtab
 
+def elf_hash(s):
+    """Computes the ELF hash of the string."""
+    acc = 0
+    for ch in s:
+        if type(ch) is not int:
+            ch = ord(ch)
+        acc = ((acc << 4) + ch) & 0xffffffff
+        top = acc & 0xf0000000
+        acc = (acc ^ (top >> 24)) & ~top
+    return acc
+
+def gnu_hash(s):
+    """Computes the GNU hash of the string."""
+    h = 5381
+    for ch in s:
+        if type(ch) is not int:
+            ch = ord(ch)
+        h = (h * 33 + ch) & 0xffffffff
+    return h
 
 __all__ = [name for name in dir() if name[0].isupper()]

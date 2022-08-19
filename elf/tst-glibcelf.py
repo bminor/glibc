@@ -240,6 +240,24 @@ def check_constant_values(cc):
             error('{}: glibcelf has {!r}, <elf.h> has {!r}'.format(
                 name, glibcelf_value, elf_h_value))
 
+def check_hashes():
+    for name, expected_elf, expected_gnu in (
+            ('', 0, 0x1505),
+            ('PPPPPPPPPPPP', 0, 0x9f105c45),
+            ('GLIBC_2.0', 0xd696910, 0xf66c3dd5),
+            ('GLIBC_2.34', 0x69691b4, 0xc3f3f90c),
+            ('GLIBC_PRIVATE', 0x963cf85, 0x692a260)):
+        for convert in (lambda x: x, lambda x: x.encode('UTF-8')):
+            name = convert(name)
+            actual_elf = glibcelf.elf_hash(name)
+            if actual_elf != expected_elf:
+                error('elf_hash({!r}): {:x} != 0x{:x}'.format(
+                    name, actual_elf, expected_elf))
+            actual_gnu = glibcelf.gnu_hash(name)
+            if actual_gnu != expected_gnu:
+                error('gnu_hash({!r}): {:x} != 0x{:x}'.format(
+                    name, actual_gnu, expected_gnu))
+
 def main():
     """The main entry point."""
     parser = argparse.ArgumentParser(
@@ -251,6 +269,7 @@ def main():
     check_duplicates()
     check_constant_prefixes()
     check_constant_values(cc=args.cc)
+    check_hashes()
 
     if errors_encountered > 0:
         print("note: errors encountered:", errors_encountered)
