@@ -49,7 +49,6 @@ typedef struct
   mach_port_t reply_port;      /* This thread's reply port.  */
   struct hurd_sigstate *_hurd_sigstate;
 } tcbhead_t;
-#endif
 
 /* Return tcbhead_t from a TLS segment descriptor.  */
 # define HURD_DESC_TLS(desc)						      \
@@ -60,10 +59,18 @@ typedef struct
   })
 
 /* Return 1 if TLS is not initialized yet.  */
+#ifndef SHARED
+extern unsigned short __init1_desc;
+#define __HURD_DESC_INITIAL(gs, ds) ((gs) == (ds) || (gs) == __init1_desc)
+#else
+#define __HURD_DESC_INITIAL(gs, ds) ((gs) == (ds))
+#endif
+
 #define __LIBC_NO_TLS()							      \
   ({ unsigned short ds, gs;						      \
      asm ("movw %%ds,%w0; movw %%gs,%w1" : "=q" (ds), "=q" (gs));	      \
-     __builtin_expect (ds == gs, 0); })
+     __builtin_expect(__HURD_DESC_INITIAL(gs, ds), 0); })
+#endif
 
 /* The TCB can have any size and the memory following the address the
    thread pointer points to is unspecified.  Allocate the TCB there.  */
