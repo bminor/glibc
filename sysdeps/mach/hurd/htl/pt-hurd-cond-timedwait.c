@@ -73,6 +73,10 @@ __pthread_hurd_cond_timedwait_internal (pthread_cond_t *cond,
   if (abstime != NULL && ! valid_nanoseconds (abstime->tv_nsec))
     return EINVAL;
 
+  err = __pthread_mutex_checklocked (mutex);
+  if (err)
+    return err;
+
   /* Atomically enqueue our thread on the condition variable's queue of
      waiters, and mark our sigstate to indicate that `cancel_me' must be
      called to wake us up.  We must hold the sigstate lock while acquiring
