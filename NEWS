@@ -11,6 +11,7 @@ The following bugs are resolved with this release:
 
   [29446] _dlopen now ignores dl_caller argument in static mode
   [29485] Linux: Terminate subprocess on late failure in tst-pidfd
+  [29490] alpha: New __brk_call implementation is broken
 
 
 Version 2.36
