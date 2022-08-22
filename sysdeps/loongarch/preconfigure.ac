@@ -12,7 +12,6 @@ loongarch*)
     case "$float_abi" in
     soft)
 	abi_flen=0
-	AC_MSG_ERROR([loongarch does not yet support soft floating-point  ABI!!], 1)
 	;;
     single)
 	AC_MSG_ERROR([glibc does not yet support the single floating-point ABI!!], 1)

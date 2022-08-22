@@ -11,10 +11,26 @@ if test $libc_cv_loongarch_int_abi = no; then
   AC_MSG_ERROR([Unable to determine integer ABI])
 fi
 
-LIBC_CONFIG_VAR([default-abi], [$libc_cv_loongarch_int_abi])
+libc_cv_loongarch_float_abi=no
+AC_EGREP_CPP(yes, [#ifdef __loongarch_double_float
+		   yes
+		   #endif
+  ],libc_cv_loongarch_float_abi=d)
+AC_EGREP_CPP(yes, [#ifdef __loongarch_soft_float
+		   yes
+		   #endif
+  ],libc_cv_loongarch_float_abi=s)
+if test "$libc_cv_loongarch_float_abi" = no; then
+  AC_MSG_ERROR([Unable to determine floating-point ABI])
+fi
 
-case $libc_cv_loongarch_int_abi in
-lp64)
+LIBC_CONFIG_VAR([default-abi], [$libc_cv_loongarch_int_abi$libc_cv_loongarch_float_abi])
+
+case $libc_cv_loongarch_int_abi$libc_cv_loongarch_float_abi in
+lp64s)
+  LIBC_SLIBDIR_RTLDDIR([lib64/sf], [lib64])
+  ;;
+lp64d)
   LIBC_SLIBDIR_RTLDDIR([lib64], [lib64])
   ;;
 esac

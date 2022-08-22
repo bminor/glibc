@@ -222,6 +222,10 @@ class Context(object):
                         os_name='linux-gnu',
                         variant='lp64d',
                         gcc_cfg=['--with-abi=lp64d','--disable-multilib'])
+        self.add_config(arch='loongarch64',
+                        os_name='linux-gnu',
+                        variant='lp64s',
+                        gcc_cfg=['--with-abi=lp64s','--disable-multilib'])
         self.add_config(arch='m68k',
                         os_name='linux-gnu',
                         gcc_cfg=['--disable-multilib'])

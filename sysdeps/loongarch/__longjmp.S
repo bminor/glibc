@@ -41,6 +41,7 @@ ENTRY (__longjmp)
 	REG_L s7, a0, 11*SZREG
 	REG_L s8, a0, 12*SZREG
 
+#ifndef __loongarch_soft_float
 	FREG_L $f24, a0, 13*SZREG + 0*SZFREG
 	FREG_L $f25, a0, 13*SZREG + 1*SZFREG
 	FREG_L $f26, a0, 13*SZREG + 2*SZFREG
@@ -49,6 +50,7 @@ ENTRY (__longjmp)
 	FREG_L $f29, a0, 13*SZREG + 5*SZFREG
 	FREG_L $f30, a0, 13*SZREG + 6*SZFREG
 	FREG_L $f31, a0, 13*SZREG + 7*SZFREG
+#endif
 
 	sltui	a0,a1,1
 	ADD	a0, a0, a1	 # a0 = (a1 == 0) ? 1 : a1

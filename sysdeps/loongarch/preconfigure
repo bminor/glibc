@@ -12,7 +12,6 @@ loongarch*)
     case "$float_abi" in
     soft)
 	abi_flen=0
-	as_fn_error 1 "loongarch does not yet support soft floating-point  ABI!!" "$LINENO" 5
 	;;
     single)
 	as_fn_error 1 "glibc does not yet support the single floating-point ABI!!" "$LINENO" 5

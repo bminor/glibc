@@ -1,4 +1,4 @@
-/* Define the machine-dependent type `jmp_buf'.
+/* Configuration for math tests: rounding mode support.
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -13,30 +13,15 @@
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library.  If not, see
+   License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _LOONGARCH_BITS_SETJMP_H
-#define _LOONGARCH_BITS_SETJMP_H
+#ifndef LOONGARCH_NOFPU_MATH_TESTS_ROUNDING_H
+#define LOONGARCH_NOFPU_MATH_TESTS_ROUNDING_H 1
 
-typedef struct __jmp_buf_internal_tag
-{
-  /* Program counter.  */
-  long int __pc;
-  /* Stack pointer.  */
-  long int __sp;
-  /* Reserved */
-  long int __x;
-  /* Frame pointer.  */
-  long int __fp;
-  /* Callee-saved registers.  */
-  long int __regs[9];
+/* On soft-float targets we only support the "to nearest" rounding mode.  */
+#define ROUNDING_TESTS_float(MODE)		((MODE) == FE_TONEAREST)
+#define ROUNDING_TESTS_double(MODE)		((MODE) == FE_TONEAREST)
+#define ROUNDING_TESTS_long_double(MODE)	((MODE) == FE_TONEAREST)
 
-#ifndef __loongarch_soft_float
-  /* Callee-saved floating point registers.  */
-  double __fpregs[8];
-#endif
-
-} __jmp_buf[1];
-
-#endif /* _LOONGARCH_BITS_SETJMP_H */
+#endif /* math-tests-rounding.h.  */

@@ -21,8 +21,11 @@
 
 /* Assembler veneer called from the PLT header code for lazy loading.
    The PLT header passes its own args in t0-t2.  */
-
-# define FRAME_SIZE (-((-10 * SZREG - 8 * SZFREG) & ALMASK))
+#ifdef __loongarch_soft_float
+#define FRAME_SIZE (-((-10 * SZREG) & ALMASK))
+#else
+#define FRAME_SIZE (-((-10 * SZREG - 8 * SZFREG) & ALMASK))
+#endif
 
 ENTRY (_dl_runtime_resolve)
 
@@ -39,6 +42,7 @@ ENTRY (_dl_runtime_resolve)
 	REG_S	a6, sp, 7*SZREG
 	REG_S	a7, sp, 8*SZREG
 
+#ifndef __loongarch_soft_float
 	FREG_S	fa0, sp, 10*SZREG + 0*SZFREG
 	FREG_S	fa1, sp, 10*SZREG + 1*SZFREG
 	FREG_S	fa2, sp, 10*SZREG + 2*SZFREG
@@ -47,6 +51,7 @@ ENTRY (_dl_runtime_resolve)
 	FREG_S	fa5, sp, 10*SZREG + 5*SZFREG
 	FREG_S	fa6, sp, 10*SZREG + 6*SZFREG
 	FREG_S	fa7, sp, 10*SZREG + 7*SZFREG
+#endif
 
 	/* Update .got.plt and obtain runtime address of callee */
 	SLLI	a1, t1, 1
@@ -67,6 +72,7 @@ ENTRY (_dl_runtime_resolve)
 	REG_L	a6, sp, 7*SZREG
 	REG_L	a7, sp, 8*SZREG
 
+#ifndef __loongarch_soft_float
 	FREG_L	fa0, sp, 10*SZREG + 0*SZFREG
 	FREG_L	fa1, sp, 10*SZREG + 1*SZFREG
 	FREG_L	fa2, sp, 10*SZREG + 2*SZFREG
@@ -75,6 +81,7 @@ ENTRY (_dl_runtime_resolve)
 	FREG_L	fa5, sp, 10*SZREG + 5*SZFREG
 	FREG_L	fa6, sp, 10*SZREG + 6*SZFREG
 	FREG_L	fa7, sp, 10*SZREG + 7*SZFREG
+#endif
 
 	ADDI	sp, sp, FRAME_SIZE
 

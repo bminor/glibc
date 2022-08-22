@@ -51,6 +51,17 @@
 
 #include <features.h>
 
+#ifdef __loongarch_soft_float
+
+#define _FPU_RESERVED 0xffffffff
+#define _FPU_DEFAULT 0x00000000
+typedef unsigned int fpu_control_t;
+#define _FPU_GETCW(cw) (cw) = 0
+#define _FPU_SETCW(cw) (void) (cw)
+extern fpu_control_t __fpu_control;
+
+#else /* __loongarch_soft_float */
+
 /* Masks for interrupts.  */
 #define _FPU_MASK_V 0x10 /* Invalid operation */
 #define _FPU_MASK_Z 0x08 /* Division by zero  */
@@ -85,5 +96,7 @@ extern void __loongarch_fpu_setcw (fpu_control_t) __THROW;
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
+
+#endif /* __loongarch_soft_float */
 
 #endif /* fpu_control.h */

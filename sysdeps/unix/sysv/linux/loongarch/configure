@@ -151,11 +151,56 @@ if test $libc_cv_loongarch_int_abi = no; then
   as_fn_error $? "Unable to determine integer ABI" "$LINENO" 5
 fi
 
-config_vars="$config_vars
-default-abi = $libc_cv_loongarch_int_abi"
+libc_cv_loongarch_float_abi=no
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#ifdef __loongarch_double_float
+		   yes
+		   #endif
 
-case $libc_cv_loongarch_int_abi in
-lp64)
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "yes" >/dev/null 2>&1; then :
+  libc_cv_loongarch_float_abi=d
+fi
+rm -f conftest*
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#ifdef __loongarch_soft_float
+		   yes
+		   #endif
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "yes" >/dev/null 2>&1; then :
+  libc_cv_loongarch_float_abi=s
+fi
+rm -f conftest*
+
+if test "$libc_cv_loongarch_float_abi" = no; then
+  as_fn_error $? "Unable to determine floating-point ABI" "$LINENO" 5
+fi
+
+config_vars="$config_vars
+default-abi = $libc_cv_loongarch_int_abi$libc_cv_loongarch_float_abi"
+
+case $libc_cv_loongarch_int_abi$libc_cv_loongarch_float_abi in
+lp64s)
+  test -n "$libc_cv_slibdir" ||
+case "$prefix" in
+/usr | /usr/)
+  libc_cv_slibdir='/lib64/sf'
+  libc_cv_rtlddir='/lib64'
+  if test "$libdir" = '${exec_prefix}/lib'; then
+    libdir='${exec_prefix}/lib64/sf';
+    # Locale data can be shared between 32-bit and 64-bit libraries.
+    libc_cv_complocaledir='${exec_prefix}/lib/locale'
+  fi
+  ;;
+esac
+  ;;
+lp64d)
   test -n "$libc_cv_slibdir" ||
 case "$prefix" in
 /usr | /usr/)

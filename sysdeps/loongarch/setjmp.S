@@ -50,6 +50,7 @@ ENTRY (__sigsetjmp)
 	REG_S s7, a0, 11*SZREG
 	REG_S s8, a0, 12*SZREG
 
+#ifndef __loongarch_soft_float
 	FREG_S $f24, a0, 13*SZREG + 0*SZFREG
 	FREG_S $f25, a0, 13*SZREG + 1*SZFREG
 	FREG_S $f26, a0, 13*SZREG + 2*SZFREG
@@ -58,6 +59,7 @@ ENTRY (__sigsetjmp)
 	FREG_S $f29, a0, 13*SZREG + 5*SZFREG
 	FREG_S $f30, a0, 13*SZREG + 6*SZFREG
 	FREG_S $f31, a0, 13*SZREG + 7*SZFREG
+#endif
 
 #if !IS_IN (libc) && IS_IN(rtld)
 	li.w		v0, 0
