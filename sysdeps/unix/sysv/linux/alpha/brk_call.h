@@ -21,8 +21,7 @@ __brk_call (void *addr)
 {
   unsigned long int result = INTERNAL_SYSCALL_CALL (brk, addr);
   if (result == -ENOMEM)
-    /* Mimic the default error reporting behavior.  */
-    return addr;
-  else
-    return (void *) result;
+    /* Mimic the generic error reporting behavior.  */
+    result = INTERNAL_SYSCALL_CALL (brk, 0);
+  return (void *) result;
 }
