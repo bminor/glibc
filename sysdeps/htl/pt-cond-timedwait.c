@@ -142,12 +142,14 @@ __pthread_cond_timedwait_internal (pthread_cond_t *cond,
 
   __pthread_mutex_unlock (&self->cancel_lock);
 
+  /* Increase the waiter reference count.  Relaxed MO is sufficient because
+     we only need to synchronize when decrementing the reference count.
+     We however need to have the mutex held to prevent concurrency with
+     a pthread_cond_destroy.  */
+  atomic_fetch_add_relaxed (&cond->__wrefs, 2);
+
   /* Release MUTEX before blocking.  */
   __pthread_mutex_unlock (mutex);
-
-  /* Increase the waiter reference count.  Relaxed MO is sufficient because
-     we only need to synchronize when decrementing the reference count.  */
-  atomic_fetch_add_relaxed (&cond->__wrefs, 2);
 
   /* Block the thread.  */
   if (abstime != NULL)
