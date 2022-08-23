@@ -1052,7 +1052,7 @@ pic-ccflag = -fPIC
 PIC-ccflag = -fPIC
 endif
 # This can be changed by a sysdep makefile
-pie-ccflag = -fpie
+pie-ccflag = -fPIE
 no-pie-ccflag = -fno-pie
 # This one should always stay like this unless there is a very good reason.
 PIE-ccflag = -fPIE
