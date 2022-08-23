@@ -253,9 +253,10 @@ struct link_map
 
     /* Start and finish of memory map for this object.  l_map_start
        need not be the same as l_addr.  */
-    elfptr_t l_map_start, l_map_end;
+    elfptr_t l_map_start;
+    ElfW(Addr) l_map_end;
     /* End of the executable part of the mapping.  */
-    elfptr_t l_text_end;
+    ElfW(Addr) l_text_end;
 
     /* Default array for 'l_scope'.  */
     struct r_scope_elem *l_scope_mem[4];
@@ -344,7 +345,7 @@ struct link_map
 
     /* Information used to change permission after the relocations are
        done.  */
-    elfptr_t l_relro_addr;
+    ElfW(Addr) l_relro_addr;
     size_t l_relro_size;
 
     unsigned long long int l_serial;
