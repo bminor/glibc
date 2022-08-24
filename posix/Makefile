@@ -600,6 +600,7 @@ CFLAGS-execvp.os = -fomit-frame-pointer
 CFLAGS-execlp.os = -fomit-frame-pointer
 CFLAGS-nanosleep.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-fork.c = $(libio-mtsafe) $(config-cflags-wno-ignored-attributes)
+CFLAGS-confstr.c += $(config-cflags-wno-ignored-attributes)
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour
