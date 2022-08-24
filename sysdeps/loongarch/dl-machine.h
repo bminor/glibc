@@ -166,8 +166,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
     {
 
     case R_LARCH_JUMP_SLOT:
-    case __WORDSIZE == 64 ? R_LARCH_64:
-    R_LARCH_32:
+    case __WORDSIZE == 64 ? R_LARCH_64 : R_LARCH_32:
       *addr_field = value;
       break;
 
@@ -175,18 +174,15 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
       break;
 
 #ifndef RTLD_BOOTSTRAP
-    case __WORDSIZE == 64 ? R_LARCH_TLS_DTPMOD64:
-    R_LARCH_TLS_DTPMOD32:
+    case __WORDSIZE == 64 ? R_LARCH_TLS_DTPMOD64 : R_LARCH_TLS_DTPMOD32:
       *addr_field = sym_map->l_tls_modid;
       break;
 
-    case __WORDSIZE == 64 ? R_LARCH_TLS_DTPREL64:
-    R_LARCH_TLS_DTPREL32:
+    case __WORDSIZE == 64 ? R_LARCH_TLS_DTPREL64 : R_LARCH_TLS_DTPREL32:
       *addr_field = TLS_DTPREL_VALUE (sym) + reloc->r_addend;
       break;
 
-    case __WORDSIZE == 64 ? R_LARCH_TLS_TPREL64:
-    R_LARCH_TLS_TPREL32:
+    case __WORDSIZE == 64 ? R_LARCH_TLS_TPREL64 : R_LARCH_TLS_TPREL32:
       CHECK_STATIC_TLS (map, sym_map);
       *addr_field = TLS_TPREL_VALUE (sym_map, sym) + reloc->r_addend;
       break;
