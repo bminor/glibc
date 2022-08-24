@@ -760,6 +760,7 @@ with_headers
 with_default_link
 with_nonshared_cflags
 with_rtld_early_cflags
+with_extra_version_id
 with_timeoutfactor
 enable_sanity_checks
 enable_shared
@@ -1481,6 +1482,9 @@ Optional Packages:
                           build nonshared libraries with additional CFLAGS
   --with-rtld-early-cflags=CFLAGS
                           build early initialization with additional CFLAGS
+  --extra-version-id=STRING
+                          specify an extra version string to use in internal
+                          ABI checks
   --with-timeoutfactor=NUM
                           specify an integer to scale the timeout
   --with-cpu=CPU          select code for CPU variant
@@ -3394,6 +3398,13 @@ else
   rtld_early_cflags=
 fi
 
+
+
+
+# Check whether --with-extra-version-id was given.
+if test "${with_extra_version_id+set}" = set; then :
+  withval=$with_extra_version_id; extra_version_id="$withval"
+fi
 
 
 

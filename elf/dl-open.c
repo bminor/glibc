@@ -760,8 +760,8 @@ dl_open_worker_begin (void *a)
   if (!args->libc_already_loaded)
     {
       /* dlopen cannot be used to load an initial libc by design.  */
-      struct link_map *libc_map = GL(dl_ns)[args->nsid].libc_map;
-      _dl_call_libc_early_init (libc_map, false);
+      if (GL(dl_ns)[args->nsid].libc_map != NULL)
+	GL(dl_ns)[args->nsid].libc_map_early_init (false);
     }
 
   args->worker_continue = true;

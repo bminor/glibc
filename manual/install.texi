@@ -144,6 +144,15 @@ dynamic linker diagnostics to run on CPUs which are not compatible with
 the rest of @theglibc{}, for example, due to compiler flags which target
 a later instruction set architecture (ISA).
 
+@item --with-extra-version-id=@var{string}
+Use @var{string} as part of the fingerprint that is used by the dynamic
+linker to detect an incompatible version of @file{libc.so}.  For
+example, @var{string} could be the full package version and release
+string used by a distribution build of @theglibc{}.  This way,
+concurrent process creation during a package update will fail with an
+error message, @emph{ld.so/libc.so mismatch detected (upgrade in
+progress?)}, rather than crashing mysteriously.
+
 @item --with-timeoutfactor=@var{NUM}
 Specify an integer @var{NUM} to scale the timeout of test programs.
 This factor can be changed at run time using @env{TIMEOUTFACTOR}

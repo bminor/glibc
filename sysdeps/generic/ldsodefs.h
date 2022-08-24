@@ -333,6 +333,10 @@ struct rtld_global
        its link map.  */
     struct link_map *libc_map;
 
+    /* __libc_early_init function in libc_map.  Initialized at the
+       same time as libc_map.  */
+    void (*libc_map_early_init) (_Bool);
+
     /* Search table for unique objects.  */
     struct unique_sym_table
     {
