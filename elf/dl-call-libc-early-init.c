@@ -1,4 +1,4 @@
-/* Find the address of the __libc_early_init function.
+/* Invoke the early initialization function in libc.so.
    Copyright (C) 2020-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,21 +16,26 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <assert.h>
 #include <ldsodefs.h>
 #include <libc-early-init.h>
 #include <link.h>
 #include <stddef.h>
 
-__typeof (__libc_early_init) *
-_dl_lookup_libc_early_init (struct link_map *libc_map)
+void
+_dl_call_libc_early_init (struct link_map *libc_map, _Bool initial)
 {
+  /* There is nothing to do if we did not actually load libc.so.  */
+  if (libc_map == NULL)
+    return;
+
   const ElfW(Sym) *sym
-    = _dl_lookup_direct (libc_map, LIBC_EARLY_INIT_NAME_STRING,
-                         LIBC_EARLY_INIT_GNU_HASH,
+    = _dl_lookup_direct (libc_map, "__libc_early_init",
+                         0x069682ac, /* dl_new_hash output.  */
                          "GLIBC_PRIVATE",
                          0x0963cf85); /* _dl_elf_hash output.  */
-  if (sym == NULL)
-    _dl_signal_error (0, libc_map->l_name, NULL, "\
-ld.so/libc.so mismatch detected (upgrade in progress?)");
-  return DL_SYMBOL_ADDRESS (libc_map, sym);
+  assert (sym != NULL);
+  __typeof (__libc_early_init) *early_init
+    = DL_SYMBOL_ADDRESS (libc_map, sym);
+  early_init (initial);
 }

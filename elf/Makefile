@@ -52,6 +52,7 @@ routines = \
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
 dl-routines = \
+  dl-call-libc-early-init \
   dl-close \
   dl-debug \
   dl-debug-symbols \
@@ -64,7 +65,6 @@ dl-routines = \
   dl-load \
   dl-lookup \
   dl-lookup-direct \
-  dl-lookup_libc_early_init \
   dl-minimal-malloc \
   dl-misc \
   dl-object \

@@ -9,12 +9,7 @@ Version 2.37
 
 Major new features:
 
-* The dynamic loader now prints an error message, "ld.so/libc.so
-  mismatch detected (upgrade in progress?)" if it detects that the
-  version of libc.so it loaded comes from a different build of glibc.
-  The new configure option --with-extra-version-id can be used to
-  specify an arbitrary string that affects the computation of the
-  version fingerprint.
+  [Add new features here]
 
 Deprecated and removed features, and other changes affecting compatibility:
 

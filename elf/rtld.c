@@ -1707,6 +1707,15 @@ dl_main (const ElfW(Phdr) *phdr,
       /* Extract the contents of the dynamic section for easy access.  */
       elf_get_dynamic_info (main_map, false, false);
 
+      /* If the main map is libc.so, update the base namespace to
+	 refer to this map.  If libc.so is loaded later, this happens
+	 in _dl_map_object_from_fd.  */
+      if (main_map->l_info[DT_SONAME] != NULL
+	  && (strcmp (((const char *) D_PTR (main_map, l_info[DT_STRTAB])
+		      + main_map->l_info[DT_SONAME]->d_un.d_val), LIBC_SO)
+	      == 0))
+	GL(dl_ns)[LM_ID_BASE].libc_map = main_map;
+
       /* Set up our cache of pointers into the hash table.  */
       _dl_setup_hash (main_map);
     }
@@ -2377,8 +2386,7 @@ dl_main (const ElfW(Phdr) *phdr,
   /* Relocation is complete.  Perform early libc initialization.  This
      is the initial libc, even if audit modules have been loaded with
      other libcs.  */
-  if (GL(dl_ns)[LM_ID_BASE].libc_map != NULL)
-    GL(dl_ns)[LM_ID_BASE].libc_map_early_init (true);
+  _dl_call_libc_early_init (GL(dl_ns)[LM_ID_BASE].libc_map, true);
 
   /* Do any necessary cleanups for the startup OS interface code.
      We do these now so that no calls are made after rtld re-relocation

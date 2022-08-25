@@ -169,11 +169,6 @@ AC_ARG_WITH([rtld-early-cflags],
 	    [rtld_early_cflags=])
 AC_SUBST(rtld_early_cflags)
 
-AC_ARG_WITH([extra-version-id],
-	    AS_HELP_STRING([--extra-version-id=STRING],
-			   [specify an extra version string to use in internal ABI checks]),
-	    [extra_version_id="$withval"])
-
 AC_ARG_WITH([timeoutfactor],
 	    AS_HELP_STRING([--with-timeoutfactor=NUM],
 			   [specify an integer to scale the timeout]),

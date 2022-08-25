@@ -98,7 +98,6 @@ build-hardcoded-path-in-tests= @hardcoded_path_in_tests@
 build-pt-chown = @build_pt_chown@
 have-tunables = @have_tunables@
 pthread-in-libc = @pthread_in_libc@
-extra-version-id = @extra_version_id@
 
 # Build tools.
 CC = @CC@

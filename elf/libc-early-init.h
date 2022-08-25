@@ -19,9 +19,12 @@
 #ifndef _LIBC_EARLY_INIT_H
 #define _LIBC_EARLY_INIT_H
 
-#include <libc_early_init_name.h>
-
 struct link_map;
+
+/* If LIBC_MAP is not NULL, look up the __libc_early_init symbol in it
+   and call this function, with INITIAL as the argument.  */
+void _dl_call_libc_early_init (struct link_map *libc_map, _Bool initial)
+  attribute_hidden;
 
 /* In the shared case, this function is defined in libc.so and invoked
    from ld.so (or on the fist static dlopen) after complete relocation
@@ -30,18 +33,6 @@ struct link_map;
    startup code.  If INITIAL is true, the libc being initialized is
    the libc for the main program.  INITIAL is false for libcs loaded
    for audit modules, dlmopen, and static dlopen.  */
-void __libc_early_init (_Bool initial)
-#ifdef SHARED
-/* Redirect to the actual implementation name.  */
-  __asm__ (LIBC_EARLY_INIT_NAME_STRING)
-#endif
-  ;
-
-/* Attempts to find the appropriately named __libc_early_init function
-   in LIBC_MAP.  On lookup failure, an exception is signaled,
-   indicating an ld.so/libc.so mismatch.  */
-__typeof (__libc_early_init) *_dl_lookup_libc_early_init (struct link_map *
-                                                          libc_map)
-  attribute_hidden;
+void __libc_early_init (_Bool initial);
 
 #endif /* _LIBC_EARLY_INIT_H */

@@ -31,6 +31,7 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <gnu/lib-names.h>
 
 /* Type for the buffer we put the ELF header and hopefully the program
    header.  This buffer does not really have to be too large.  In most
@@ -1464,6 +1465,14 @@ cannot enable executable stack as shared object requires");
       && l->l_info[DT_SONAME] != NULL)
     add_name_to_object (l, ((const char *) D_PTR (l, l_info[DT_STRTAB])
 			    + l->l_info[DT_SONAME]->d_un.d_val));
+
+  /* If we have newly loaded libc.so, update the namespace
+     description.  */
+  if (GL(dl_ns)[nsid].libc_map == NULL
+      && l->l_info[DT_SONAME] != NULL
+      && strcmp (((const char *) D_PTR (l, l_info[DT_STRTAB])
+		  + l->l_info[DT_SONAME]->d_un.d_val), LIBC_SO) == 0)
+    GL(dl_ns)[nsid].libc_map = l;
 
   /* _dl_close can only eventually undo the module ID assignment (via
      remove_slotinfo) if this function returns a pointer to a link

@@ -29,8 +29,8 @@ libc {
     __placeholder_only_for_empty_version_map;
   }
   GLIBC_PRIVATE {
-    # A pattern is needed here because the suffix is dynamically generated.
-    __libc_early_init_*;
+    # functions used in other libraries
+    __libc_early_init;
 
     # Internal error handling support.  Interposes the functions in ld.so.
     _dl_signal_exception; _dl_catch_exception;

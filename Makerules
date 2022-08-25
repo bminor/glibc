@@ -112,20 +112,6 @@ before-compile := $(common-objpfx)first-versions.h \
 		  $(common-objpfx)ldbl-compat-choose.h $(before-compile)
 $(common-objpfx)first-versions.h: $(common-objpfx)versions.stmp
 $(common-objpfx)ldbl-compat-choose.h: $(common-objpfx)versions.stmp
-
-# libc_early_init_name.h provides the actual name of the
-# __libc_early_init function.  It is used as a protocol version marker
-# between ld.so and libc.so
-before-compile := $(common-objpfx)libc_early_init_name.h $(before-compile)
-libc_early_init_name-deps = \
-  $(..)NEWS $(..)sysdeps/generic/ldsodefs.h $(..)include/link.h
-$(common-objpfx)libc_early_init_name.h: $(..)scripts/libc_early_init_name.py \
-  $(common-objpfx)config.make $(libc_early_init_name-deps)
-	$(PYTHON) $(..)scripts/libc_early_init_name.py \
-	  --output=$@T \
-	  --extra-version-id="$(extra-version-id)" \
-	  $(libc_early_init_name-deps)
-	$(move-if-change) $@T $@
 endif # avoid-generated
 endif # $(build-shared) = yes
 

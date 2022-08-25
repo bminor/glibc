@@ -23,8 +23,6 @@
 #include <string.h>
 #include <ldsodefs.h>
 #include <_itoa.h>
-#include <gnu/lib-names.h>
-#include <libc-early-init.h>
 
 #include <assert.h>
 
@@ -359,22 +357,6 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	      ent = (ElfW(Verdef) *) ((char *) ent + ent->vd_next);
 	    }
 	}
-    }
-
-  /* Detect a libc.so loaded into this namespace.  The
-     __libc_early_init lookup below means that we have to do this
-     after parsing the version data.  */
-  if (GL(dl_ns)[map->l_ns].libc_map == NULL
-      && map->l_info[DT_SONAME] != NULL
-      && strcmp (((const char *) D_PTR (map, l_info[DT_STRTAB])
-		  + map->l_info[DT_SONAME]->d_un.d_val), LIBC_SO) == 0)
-    {
-      /* Look up this symbol early to trigger a mismatch error before
-	 relocation (which may call IFUNC resolvers, and those can
-	 have an internal ABI dependency).  */
-      GL(dl_ns)[map->l_ns].libc_map_early_init
-	= _dl_lookup_libc_early_init (map);
-      GL(dl_ns)[map->l_ns].libc_map = map;
     }
 
   /* When there is a DT_VERNEED entry with libc.so on DT_NEEDED, issue

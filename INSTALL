@@ -120,16 +120,6 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      compiler flags which target a later instruction set architecture
      (ISA).
 
-'--with-extra-version-id=STRING'
-     Use STRING as part of the fingerprint that is used by the dynamic
-     linker to detect an incompatible version of 'libc.so'.  For
-     example, STRING could be the full package version and release
-     string used by a distribution build of the GNU C Library.  This
-     way, concurrent process creation during a package update will fail
-     with an error message, _error while loading shared libraries:
-     /lib64/libc.so.6: ld.so/libc.so mismatch detected (upgrade in
-     progress?)_, rather than crashing mysteriously.
-
 '--with-timeoutfactor=NUM'
      Specify an integer NUM to scale the timeout of test programs.  This
      factor can be changed at run time using 'TIMEOUTFACTOR' environment
