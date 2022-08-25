@@ -16,6 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <libc-misc.h>
 #include <sys/platform/x86.h>
 
 enum isa
@@ -29,7 +30,7 @@ enum isa
 };
 
 enum isa
-__attribute__ ((__optimize__ ("-fno-stack-protector")))
+test_inhibit_stack_protector
 get_isa (void)
 {
   if (CPU_FEATURE_ACTIVE (AVX512F))
@@ -84,7 +85,7 @@ isa_none (void)
 int foo (void) __attribute__ ((ifunc ("foo_ifunc")));
 
 void *
-__attribute__ ((__optimize__ ("-fno-stack-protector")))
+test_inhibit_stack_protector
 foo_ifunc (void)
 {
   switch (get_isa ())
