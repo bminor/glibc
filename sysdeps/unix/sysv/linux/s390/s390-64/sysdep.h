@@ -153,12 +153,8 @@
     lgr %r0,%r7;							      \
     lg %r7,160(%r15);							      \
   .endif;								      \
-  .if SYS_ify (syscall) < 256;						      \
-    svc SYS_ify (syscall);						      \
-  .else;								      \
     lghi %r1,SYS_ify (syscall);						      \
     svc 0;								      \
-  .endif;								      \
   .if args > 5;								      \
     lgr %r7,%r0;							      \
   .endif

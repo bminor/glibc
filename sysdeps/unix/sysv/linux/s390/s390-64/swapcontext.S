@@ -73,7 +73,8 @@ ENTRY(__swapcontext)
 	la	%r3,SC_MASK(%r5)
 	la	%r4,SC_MASK(%r1)
 	lghi	%r5,_NSIG8
-	svc	SYS_ify(rt_sigprocmask)
+	lghi	%r1,SYS_ify(rt_sigprocmask)
+	svc	0
 
 	/* Load fpu context.  */
 	lgr	%r5,%r0

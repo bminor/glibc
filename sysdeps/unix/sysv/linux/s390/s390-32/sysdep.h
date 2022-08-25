@@ -155,12 +155,8 @@
     lr %r0,%r7;								      \
     l %r7,96(%r15);							      \
   .endif;								      \
-  .if SYS_ify (syscall) < 256;						      \
-    svc SYS_ify (syscall);						      \
-  .else;								      \
     lhi %r1,SYS_ify (syscall);						      \
     svc 0;								      \
-  .endif;								      \
   .if args > 5;								      \
     lr %r7,%r0;								      \
   .endif

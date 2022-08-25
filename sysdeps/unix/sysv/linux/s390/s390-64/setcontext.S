@@ -30,16 +30,18 @@
   other than the PRESERVED state.  */
 
 ENTRY(__setcontext)
-	lgr	%r1,%r2
+	lgr	%r0,%r2
 
 	/* sigprocmask (SIG_SETMASK, &sc->sc_mask, NULL).  */
+	la	%r3,SC_MASK(%r2)
 	la      %r2,SIG_SETMASK
-	la	%r3,SC_MASK(%r1)
 	slgr	%r4,%r4
 	lghi	%r5,_NSIG8
-	svc	SYS_ify(rt_sigprocmask)
+	lghi	%r1,SYS_ify(rt_sigprocmask)
+	svc	0
 
 	/* Load fpu context.  */
+	lgr	%r1,%r0
 	lfpc	SC_FPC(%r1)
 	ld	%f0,SC_FPRS(%r1)
 	ld      %f1,SC_FPRS+8(%r1)

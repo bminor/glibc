@@ -31,9 +31,10 @@
 
 	.text
 ENTRY(__clone)
-	stg	%r6,48(%r15)		/* store %r6 to save area */
+	stmg	%r6,%r7,48(%r15)	/* Save registers.  */
+	cfi_offset (%r7,-104)
 	cfi_offset (%r6,-112)
-	ltgr    %r1,%r2			/* check fn and move to %r1 */
+	ltgr    %r7,%r2			/* check fn and move to %r7 */
 	jz      error			/* no NULL function pointers */
 	lghi	%r0,-16			/* Align the child_stack to a ...  */
 	ngr	%r3,%r0			/* double word boundary and ...  */
@@ -44,10 +45,11 @@ ENTRY(__clone)
 	lgr	%r4,%r6			/* move parent_tid to %r4 */
 	lg	%r5,168(%r15)		/* load child_tid from stack */
 	lg	%r6,160(%r15)		/* load tls from stack */
-	svc	SYS_ify(clone)
+	lghi	%r1,SYS_ify (clone)
+	svc	0
 	ltgr	%r2,%r2			/* check return code */
 	jz	thread_start
-	lg	%r6,48(%r15)		/* restore %r6 */
+	lmg	%r6,%r7,48(%r15)	/* Restore registers.  */
 	jgm	SYSCALL_ERROR_LABEL
 	br	%r14
 error:
@@ -59,11 +61,11 @@ thread_start:
 	cfi_startproc
 	/* Mark r14 as undefined in order to stop unwinding here!  */
 	cfi_undefined (r14)
-	/* fn is in gpr 1, arg in gpr 0 */
+	/* fn is in gpr 7, arg in gpr 0 */
 	lgr	%r2,%r0		/* set first parameter to void *arg */
 	aghi	%r15,-160	/* make room on the stack for the save area */
 	xc	0(8,%r15),0(%r15)
-	basr	%r14,%r1	/* jump to fn */
+	basr	%r14,%r7	/* jump to fn */
 	DO_CALL	(exit, 1)
 	cfi_endproc
 

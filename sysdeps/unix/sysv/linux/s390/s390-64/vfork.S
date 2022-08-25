@@ -28,7 +28,8 @@
 
 ENTRY (__libc_vfork)
 	/* Do vfork system call.  */
-	svc	SYS_ify (vfork)
+	lghi	%r1,SYS_ify (vfork)
+	svc	0
 
 	/* Check for error.  */
 	lghi	%r4,-4095
