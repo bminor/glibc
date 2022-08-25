@@ -39,7 +39,7 @@ _dl_procinfo (unsigned int type, unsigned long int word)
 
   for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1UL << i))
-      _dl_printf (" %s", GLRO(dl_s390_cap_flags)[i]);
+      _dl_printf (" %s", _dl_s390_cap_flags[i]);
 
   _dl_printf ("\n");
 

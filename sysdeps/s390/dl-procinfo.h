@@ -21,8 +21,10 @@
 #include <ldsodefs.h>
 
 #define _DL_HWCAP_COUNT 23
+extern const char _dl_s390_cap_flags[_DL_HWCAP_COUNT][9] attribute_hidden;
 
 #define _DL_PLATFORMS_COUNT	11
+extern const char _dl_s390_platforms[_DL_PLATFORMS_COUNT][7] attribute_hidden;
 
 /* The kernel provides up to 32 capability bits with elf_hwcap.  */
 #define _DL_FIRST_PLATFORM	32
@@ -78,7 +80,7 @@ static inline const char *
 __attribute__ ((unused))
 _dl_hwcap_string (int idx)
 {
-  return GLRO(dl_s390_cap_flags)[idx];
+  return _dl_s390_cap_flags[idx];
 };
 
 static inline int
@@ -89,7 +91,7 @@ _dl_string_hwcap (const char *str)
 
   for (i = 0; i < _DL_HWCAP_COUNT; i++)
     {
-      if (strcmp (str, GLRO(dl_s390_cap_flags)[i]) == 0)
+      if (strcmp (str, _dl_s390_cap_flags[i]) == 0)
 	return i;
     }
   return -1;
@@ -104,7 +106,7 @@ _dl_string_platform (const char *str)
   if (str != NULL)
     for (i = 0; i < _DL_PLATFORMS_COUNT; ++i)
       {
-	if (strcmp (str, GLRO(dl_s390_platforms)[i]) == 0)
+	if (strcmp (str, _dl_s390_platforms[i]) == 0)
 	  return _DL_FIRST_PLATFORM + i;
       }
   return -1;

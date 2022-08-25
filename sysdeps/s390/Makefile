@@ -43,6 +43,8 @@ $(modpfx)gconv-modules-s390.conf: ../sysdeps/s390/gconv-modules-s390.conf \
 endif
 
 ifeq ($(subdir),elf)
+sysdep-dl-routines += dl-procinfo-s390
+
 ifeq ($(build-shared),yes)
 tests += tst-dl-runtime-resolve-noaudit tst-dl-runtime-resolve-audit \
 	tst-dl-runtime-profile-noaudit
