@@ -408,6 +408,7 @@ tests += \
   tst-dlmopen4 \
   tst-dlmopen-dlerror \
   tst-dlmopen-gethostbyname \
+  tst-dlmopen-twice \
   tst-dlopenfail \
   tst-dlopenfail-2 \
   tst-dlopenrpath \
@@ -795,6 +796,8 @@ modules-names = \
   tst-dlmopen1mod \
   tst-dlmopen-dlerror-mod \
   tst-dlmopen-gethostbyname-mod \
+  tst-dlmopen-twice-mod1 \
+  tst-dlmopen-twice-mod2 \
   tst-dlopenfaillinkmod \
   tst-dlopenfailmod1 \
   tst-dlopenfailmod2 \
@@ -2865,3 +2868,25 @@ $(objpfx)tst-tls-allocation-failure-static-patched.out: \
 	grep -q '^Fatal glibc error: Cannot allocate TLS block$$' $@ \
 	  && grep -q '^status: 127$$' $@; \
 	  $(evaluate-test)
+
+$(objpfx)tst-audit-tlsdesc: $(objpfx)tst-audit-tlsdesc-mod1.so \
+			    $(objpfx)tst-audit-tlsdesc-mod2.so \
+			    $(shared-thread-library)
+ifeq (yes,$(have-mtls-dialect-gnu2))
+# The test is valid for all TLS types, but we want to exercise GNU2
+# TLS if possible.
+CFLAGS-tst-audit-tlsdesc-mod1.c += -mtls-dialect=gnu2
+CFLAGS-tst-audit-tlsdesc-mod2.c += -mtls-dialect=gnu2
+endif
+$(objpfx)tst-audit-tlsdesc-dlopen: $(shared-thread-library)
+$(objpfx)tst-audit-tlsdesc-dlopen.out: $(objpfx)tst-audit-tlsdesc-mod1.so \
+				       $(objpfx)tst-audit-tlsdesc-mod2.so
+$(objpfx)tst-audit-tlsdesc-mod1.so: $(objpfx)tst-audit-tlsdesc-mod2.so
+$(objpfx)tst-audit-tlsdesc.out: $(objpfx)tst-auditmod-tlsdesc.so
+tst-audit-tlsdesc-ENV = LD_AUDIT=$(objpfx)tst-auditmod-tlsdesc.so
+$(objpfx)tst-audit-tlsdesc-dlopen.out: $(objpfx)tst-auditmod-tlsdesc.so
+tst-audit-tlsdesc-dlopen-ENV = LD_AUDIT=$(objpfx)tst-auditmod-tlsdesc.so
+
+$(objpfx)tst-dlmopen-twice.out: \
+  $(objpfx)tst-dlmopen-twice-mod1.so \
+  $(objpfx)tst-dlmopen-twice-mod2.so

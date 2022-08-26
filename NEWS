@@ -48,6 +48,7 @@ The following bugs are resolved with this release:
     line 184
   [29446] _dlopen now ignores dl_caller argument in static mode
   [29490] alpha: New __brk_call implementation is broken
+  [29528] elf: Call __libc_early_init for reused namespaces
 
 
 Version 2.35
