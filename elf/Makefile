@@ -210,7 +210,7 @@ tests += restest1 preloadtest loadfail multiload origtest resolvfail \
 	 tst-filterobj tst-filterobj-dlopen tst-auxobj tst-auxobj-dlopen \
 	 tst-audit14 tst-audit15 tst-audit16 \
 	 tst-single_threaded tst-single_threaded-pthread \
-	 tst-tls-ie tst-tls-ie-dlmopen
+	 tst-tls-ie tst-tls-ie-dlmopen tst-dlmopen-twice
 #	 reldep9
 tests-internal += loadtest unload unload2 circleload1 \
 	 neededtest neededtest2 neededtest3 neededtest4 \
@@ -328,7 +328,8 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		tst-single_threaded-mod3 tst-single_threaded-mod4 \
 		tst-tls-ie-mod0 tst-tls-ie-mod1 tst-tls-ie-mod2 \
 		tst-tls-ie-mod3 tst-tls-ie-mod4 tst-tls-ie-mod5 \
-		tst-tls-ie-mod6
+		tst-tls-ie-mod6 \
+		tst-dlmopen-twice-mod1 tst-dlmopen-twice-mod2 \
 
 # Most modules build with _ISOMAC defined, but those filtered out
 # depend on internal headers.
@@ -1796,3 +1797,8 @@ $(objpfx)tst-tls-ie-dlmopen.out: \
   $(objpfx)tst-tls-ie-mod6.so
 
 $(objpfx)tst-tls-surplus: $(libdl)
+
+$(objpfx)tst-dlmopen-twice: $(libdl)
+$(objpfx)tst-dlmopen-twice.out: \
+  $(objpfx)tst-dlmopen-twice-mod1.so \
+  $(objpfx)tst-dlmopen-twice-mod2.so
