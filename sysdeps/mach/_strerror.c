@@ -40,7 +40,7 @@ __strerror_r (int errnum, char *buf, size_t buflen)
 
   if (system > err_max_system || ! __mach_error_systems[system].bad_sub)
     {
-      __snprintf (buf, buflen, "%s: %d", _("Error in unknown error system: "),
+      __snprintf (buf, buflen, "%s%X", _("Error in unknown error system: "),
 		  errnum);
       return buf;
     }
