@@ -27,7 +27,8 @@ _hurd_get_host_config (const char *item, char *buf, size_t buflen)
 {
   error_t err;
   char *data;
-  mach_msg_type_number_t nread, more;
+  mach_msg_type_number_t nread;
+  vm_size_t more;
   file_t config;
 
   err = __hurd_file_name_lookup (&_hurd_ports_use, &__getdport, 0,

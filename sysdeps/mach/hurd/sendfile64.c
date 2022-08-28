@@ -42,7 +42,7 @@ __sendfile64 (int out_fd, int in_fd, off64_t *offset, size_t count)
 					   count));
   if (err == 0)
     {
-      size_t nwrote;
+      vm_size_t nwrote;
       if (datalen == 0)
 	return 0;
       err = HURD_DPORT_USE (out_fd, __io_write (port, data, datalen,

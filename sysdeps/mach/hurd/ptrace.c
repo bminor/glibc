@@ -47,8 +47,11 @@ ptrace (enum __ptrace_request request, ... )
     {
       /* Read the pages containing the addressed range.  */
       error_t err;
+      mach_msg_type_number_t nread;
       *size = round_page (addr + data) - trunc_page (addr);
-      err = __vm_read (task, trunc_page (addr), *size, ourpage, size);
+      err = __vm_read (task, trunc_page (addr), *size, ourpage, &nread);
+      if (!err)
+	*size = nread;
       return err;
     }
 

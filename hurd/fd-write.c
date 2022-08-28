@@ -26,7 +26,7 @@ _hurd_fd_write (struct hurd_fd *fd,
 		const void *buf, size_t *nbytes, loff_t offset)
 {
   error_t err;
-  mach_msg_type_number_t wrote;
+  vm_size_t wrote;
 
   error_t writefd (io_t port)
     {

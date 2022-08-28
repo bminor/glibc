@@ -70,7 +70,7 @@ fioctl (int fd,
 
     case FIONREAD:
       {
-	mach_msg_type_number_t navail;
+	vm_size_t navail;
 	err = HURD_DPORT_USE (fd, __io_readable (port, &navail));
 	if (!err)
 	  *arg = (int) navail;

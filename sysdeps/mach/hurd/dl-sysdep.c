@@ -382,7 +382,7 @@ __ssize_t weak_function
 __write (int fd, const void *buf, size_t nbytes)
 {
   error_t err;
-  mach_msg_type_number_t nwrote;
+  vm_size_t nwrote;
 
   assert (fd < _hurd_init_dtablesize);
 
@@ -415,7 +415,7 @@ __writev (int fd, const struct iovec *iov, int niov)
     {
       char buf[total], *bufp = buf;
       error_t err;
-      mach_msg_type_number_t nwrote;
+      vm_size_t nwrote;
 
       for (i = 0; i < niov; ++i)
 	bufp = (memcpy (bufp, iov[i].iov_base, iov[i].iov_len)

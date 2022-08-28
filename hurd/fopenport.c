@@ -48,7 +48,7 @@ readio (void *cookie, char *buf, size_t n)
 static ssize_t
 writeio (void *cookie, const char *buf, size_t n)
 {
-  mach_msg_type_number_t wrote;
+  vm_size_t wrote;
   error_t err;
 
   if (err = __io_write ((io_t) cookie, buf, n, -1, &wrote))

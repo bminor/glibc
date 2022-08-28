@@ -47,7 +47,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
   } data = { .ptr = NULL };
   char data_buf[2048];
   mach_msg_type_number_t len;
-  mach_msg_type_number_t amount;
+  vm_size_t amount;
   int dealloc = 0;
   int socketrpc = 0;
   int i;

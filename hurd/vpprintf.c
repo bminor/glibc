@@ -25,8 +25,8 @@
 static ssize_t
 do_write (void *cookie,	const char *buf, size_t n)
 {
-  error_t error = __io_write ((io_t) cookie, buf, n, -1,
-			      (mach_msg_type_number_t *) &n);
+  vm_size_t amount = n;
+  error_t error = __io_write ((io_t) cookie, buf, n, -1, &amount);
   if (error)
     return __hurd_fail (error);
   return n;
