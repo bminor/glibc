@@ -193,28 +193,32 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
       int vl = __vsnprintf_internal (bufs + l, sizeof bufs - l, fmt, apc,
                                      mode_flags);
       if (0 <= vl && vl < sizeof bufs - l)
-        {
-          buf = bufs;
-          bufsize = l + vl;
-        }
+        buf = bufs;
+      bufsize = l + vl;
 
       va_end (apc);
     }
 
   if (buf == NULL)
     {
-      buf = malloc (l * sizeof (char));
+      buf = malloc ((bufsize + 1) * sizeof (char));
       if (buf != NULL)
 	{
 	  /* Tell the cancellation handler to free this buffer.  */
 	  clarg.buf = buf;
 
 	  if (has_ts)
-	    __snprintf (bufs, sizeof bufs,
+	    __snprintf (buf, l + 1,
 			SYSLOG_HEADER (pri, timestamp, &msgoff, pid));
 	  else
-	    __snprintf (bufs, sizeof bufs,
+	    __snprintf (buf, l + 1,
 			SYSLOG_HEADER_WITHOUT_TS (pri, &msgoff));
+
+	  va_list apc;
+	  va_copy (apc, ap);
+	  __vsnprintf_internal (buf + l, bufsize - l + 1, fmt, apc,
+				mode_flags);
+	  va_end (apc);
 	}
       else
         {
