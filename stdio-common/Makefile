@@ -64,7 +64,9 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 tst-scanf-round \
 	 tst-renameat2 \
 	 tst-printf-bz25691 \
-	 tst-vfprintf-width-prec-alloc
+	 tst-vfprintf-width-prec-alloc \
+	 tst-grouping2 \
+  # tests
 
 test-srcs = tst-unbputc tst-printf tst-printfsz-islongdouble
 
@@ -91,6 +93,7 @@ $(objpfx)bug14.out: $(gen-locales)
 $(objpfx)scanf13.out: $(gen-locales)
 $(objpfx)test-vfprintf.out: $(gen-locales)
 $(objpfx)tst-grouping.out: $(gen-locales)
+$(objpfx)tst-grouping2.out: $(gen-locales)
 $(objpfx)tst-sprintf.out: $(gen-locales)
 $(objpfx)tst-sscanf.out: $(gen-locales)
 $(objpfx)tst-swprintf.out: $(gen-locales)
