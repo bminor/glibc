@@ -174,6 +174,7 @@ tests := \
   tst-fwrite \
   tst-gets \
   tst-grouping \
+  tst-grouping2 \
   tst-long-dbl-fphex \
   tst-memstream-string \
   tst-obprintf \
@@ -295,6 +296,7 @@ $(objpfx)bug14.out: $(gen-locales)
 $(objpfx)scanf13.out: $(gen-locales)
 $(objpfx)test-vfprintf.out: $(gen-locales)
 $(objpfx)tst-grouping.out: $(gen-locales)
+$(objpfx)tst-grouping2.out: $(gen-locales)
 $(objpfx)tst-sprintf.out: $(gen-locales)
 $(objpfx)tst-sscanf.out: $(gen-locales)
 $(objpfx)tst-swprintf.out: $(gen-locales)
