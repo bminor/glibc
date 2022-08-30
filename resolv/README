@@ -146,6 +146,3 @@ res_libc.c is home-brewn, although parts of it are taken from res_data.c.
 
 res_hconf.c and res_hconf.h were contributed by David Mosberger, and
 do not come from BIND.
-
-The files gethnamaddr.c, mapv4v6addr.h and mapv4v6hostent.h are
-leftovers from BIND 4.9.7.
