@@ -116,6 +116,11 @@ static enum nss_status getanswer_r (struct resolv_context *ctx,
 				    struct hostent *result, char *buffer,
 				    size_t buflen, int *errnop, int *h_errnop,
 				    int map, int32_t *ttlp, char **canonp);
+static enum nss_status getanswer_ptr (const querybuf *answer, int anslen,
+				      const char *qname,
+				      struct hostent *result, char *buffer,
+				      size_t buflen, int *errnop,
+				      int *h_errnop, int32_t *ttlp);
 
 static enum nss_status gaih_getanswer (const querybuf *answer1, int anslen1,
 				       const querybuf *answer2, int anslen2,
@@ -561,9 +566,8 @@ _nss_dns_gethostbyaddr2_r (const void *addr, socklen_t len, int af,
       return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
-  status = getanswer_r
-    (ctx, host_buffer.buf, n, qbuf, T_PTR, result, buffer, buflen,
-     errnop, h_errnop, 0 /* XXX */, ttlp, NULL);
+  status = getanswer_ptr (host_buffer.buf, n, qbuf, result,
+			  buffer, buflen, errnop, h_errnop, ttlp);
   if (host_buffer.buf != orig_host_buffer)
     free (host_buffer.buf);
   if (status != NSS_STATUS_SUCCESS)
@@ -659,8 +663,6 @@ getanswer_r (struct resolv_context *ctx,
   int haveanswer, had_error;
   char *bp, **ap, **hap;
   char tbuf[MAXDNAME];
-  const char *tname;
-  int (*name_ok) (const char *);
   u_char packtmp[NS_MAXCDNAME];
   int have_to_map = 0;
   uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct host_data);
@@ -679,22 +681,8 @@ getanswer_r (struct resolv_context *ctx,
   if (buflen - sizeof (struct host_data) != linebuflen)
     linebuflen = INT_MAX;
 
-  tname = qname;
   result->h_name = NULL;
   end_of_message = answer->buf + anslen;
-  switch (qtype)
-    {
-    case T_A:
-    case T_AAAA:
-      name_ok = __libc_res_hnok;
-      break;
-    case T_PTR:
-      name_ok = __libc_res_dnok;
-      break;
-    default:
-      *errnop = ENOENT;
-      return NSS_STATUS_UNAVAIL;  /* XXX should be abort(); */
-    }
 
   /*
    * find first satisfactory answer
@@ -729,7 +717,7 @@ getanswer_r (struct resolv_context *ctx,
       *h_errnop = NO_RECOVERY;
       return NSS_STATUS_UNAVAIL;
     }
-  if (__glibc_unlikely (name_ok (bp) == 0))
+  if (__glibc_unlikely (__libc_res_hnok (bp) == 0))
     {
       errno = EBADMSG;
       *errnop = EBADMSG;
@@ -783,7 +771,7 @@ getanswer_r (struct resolv_context *ctx,
 	  n = -1;
 	}
 
-      if (__glibc_unlikely (n < 0 || (*name_ok) (bp) == 0))
+      if (__glibc_unlikely (n < 0 || __libc_res_hnok (bp) == 0))
 	{
 	  ++had_error;
 	  continue;
@@ -816,7 +804,7 @@ getanswer_r (struct resolv_context *ctx,
 	  continue;			/* XXX - had_error++ ? */
 	}
 
-      if ((qtype == T_A || qtype == T_AAAA) && type == T_CNAME)
+      if (type == T_CNAME)
 	{
 	  /* A CNAME could also have a TTL entry.  */
 	  if (ttlp != NULL && ttl < *ttlp)
@@ -826,7 +814,7 @@ getanswer_r (struct resolv_context *ctx,
 	    continue;
 	  n = __libc_dn_expand (answer->buf, end_of_message, cp,
 				tbuf, sizeof tbuf);
-	  if (__glibc_unlikely (n < 0 || (*name_ok) (tbuf) == 0))
+	  if (__glibc_unlikely (n < 0 || __libc_res_hnok (tbuf) == 0))
 	    {
 	      ++had_error;
 	      continue;
@@ -857,35 +845,6 @@ getanswer_r (struct resolv_context *ctx,
 	  continue;
 	}
 
-      if (qtype == T_PTR && type == T_CNAME)
-	{
-	  /* A CNAME could also have a TTL entry.  */
-	  if (ttlp != NULL && ttl < *ttlp)
-	      *ttlp = ttl;
-
-	  n = __libc_dn_expand (answer->buf, end_of_message, cp,
-				tbuf, sizeof tbuf);
-	  if (__glibc_unlikely (n < 0 || __libc_res_dnok (tbuf) == 0))
-	    {
-	      ++had_error;
-	      continue;
-	    }
-	  cp += n;
-	  /* Get canonical name.  */
-	  n = strlen (tbuf) + 1;   /* For the \0.  */
-	  if (__glibc_unlikely (n > linebuflen))
-	    goto too_small;
-	  if (__glibc_unlikely (n >= MAXHOSTNAMELEN))
-	    {
-	      ++had_error;
-	      continue;
-	    }
-	  tname = bp;
-	  bp = __mempcpy (bp, tbuf, n);	/* Cannot overflow.  */
-	  linebuflen -= n;
-	  continue;
-	}
-
       if (type == T_A && qtype == T_AAAA && map)
 	have_to_map = 1;
       else if (__glibc_unlikely (type != qtype))
@@ -896,35 +855,6 @@ getanswer_r (struct resolv_context *ctx,
 
       switch (type)
 	{
-	case T_PTR:
-	  if (__glibc_unlikely (__strcasecmp (tname, bp) != 0))
-	    {
-	      cp += n;
-	      continue;			/* XXX - had_error++ ? */
-	    }
-
-	  n = __ns_name_unpack (answer->buf, end_of_message, cp,
-				packtmp, sizeof packtmp);
-	  if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
-	    {
-	      if (__glibc_unlikely (errno == EMSGSIZE))
-		goto too_small;
-
-	      n = -1;
-	    }
-
-	  if (__glibc_unlikely (n < 0 || __libc_res_hnok (bp) == 0))
-	    {
-	      ++had_error;
-	      break;
-	    }
-	  if (ttlp != NULL && ttl < *ttlp)
-	      *ttlp = ttl;
-	  /* bind would put multiple PTR records as aliases, but we don't do
-	     that.  */
-	  result->h_name = bp;
-	  *h_errnop = NETDB_SUCCESS;
-	  return NSS_STATUS_SUCCESS;
 	case T_A:
 	case T_AAAA:
 	  if (__glibc_unlikely (__strcasecmp (result->h_name, bp) != 0))
@@ -1030,6 +960,292 @@ getanswer_r (struct resolv_context *ctx,
 	   ? NSS_STATUS_NOTFOUND : NSS_STATUS_TRYAGAIN);
 }
 
+static enum nss_status
+getanswer_ptr (const querybuf *answer, int anslen, const char *qname,
+	       struct hostent *result, char *buffer, size_t buflen,
+	       int *errnop, int *h_errnop, int32_t *ttlp)
+{
+  struct host_data
+  {
+    char *aliases[MAX_NR_ALIASES];
+    unsigned char host_addr[16];	/* IPv4 or IPv6 */
+    char *h_addr_ptrs[0];
+  } *host_data;
+  int linebuflen;
+  const HEADER *hp;
+  const u_char *end_of_message, *cp;
+  int n, ancount, qdcount;
+  int haveanswer, had_error;
+  char *bp, **ap, **hap;
+  char tbuf[MAXDNAME];
+  const char *tname;
+  u_char packtmp[NS_MAXCDNAME];
+  uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct host_data);
+  buffer += pad;
+  buflen = buflen > pad ? buflen - pad : 0;
+  if (__glibc_unlikely (buflen < sizeof (struct host_data)))
+    {
+      /* The buffer is too small.  */
+    too_small:
+      *errnop = ERANGE;
+      *h_errnop = NETDB_INTERNAL;
+      return NSS_STATUS_TRYAGAIN;
+    }
+  host_data = (struct host_data *) buffer;
+  linebuflen = buflen - sizeof (struct host_data);
+  if (buflen - sizeof (struct host_data) != linebuflen)
+    linebuflen = INT_MAX;
+
+  tname = qname;
+  result->h_name = NULL;
+  end_of_message = answer->buf + anslen;
+
+  /*
+   * find first satisfactory answer
+   */
+  hp = &answer->hdr;
+  ancount = ntohs (hp->ancount);
+  qdcount = ntohs (hp->qdcount);
+  cp = answer->buf + HFIXEDSZ;
+  if (__glibc_unlikely (qdcount != 1))
+    {
+      *h_errnop = NO_RECOVERY;
+      return NSS_STATUS_UNAVAIL;
+    }
+  if (sizeof (struct host_data) + (ancount + 1) * sizeof (char *) >= buflen)
+    goto too_small;
+  bp = (char *) &host_data->h_addr_ptrs[ancount + 1];
+  linebuflen -= (ancount + 1) * sizeof (char *);
+
+  n = __ns_name_unpack (answer->buf, end_of_message, cp,
+			packtmp, sizeof packtmp);
+  if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
+    {
+      if (__glibc_unlikely (errno == EMSGSIZE))
+	goto too_small;
+
+      n = -1;
+    }
+
+  if (__glibc_unlikely (n < 0))
+    {
+      *errnop = errno;
+      *h_errnop = NO_RECOVERY;
+      return NSS_STATUS_UNAVAIL;
+    }
+  if (__glibc_unlikely (__libc_res_dnok (bp) == 0))
+    {
+      errno = EBADMSG;
+      *errnop = EBADMSG;
+      *h_errnop = NO_RECOVERY;
+      return NSS_STATUS_UNAVAIL;
+    }
+  cp += n + QFIXEDSZ;
+
+  ap = host_data->aliases;
+  *ap = NULL;
+  result->h_aliases = host_data->aliases;
+  hap = host_data->h_addr_ptrs;
+  *hap = NULL;
+  result->h_addr_list = host_data->h_addr_ptrs;
+  haveanswer = 0;
+  had_error = 0;
+
+  while (ancount-- > 0 && cp < end_of_message && had_error == 0)
+    {
+      int type, class;
+
+      n = __ns_name_unpack (answer->buf, end_of_message, cp,
+			    packtmp, sizeof packtmp);
+      if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
+	{
+	  if (__glibc_unlikely (errno == EMSGSIZE))
+	    goto too_small;
+
+	  n = -1;
+	}
+
+      if (__glibc_unlikely (n < 0 || __libc_res_dnok (bp) == 0))
+	{
+	  ++had_error;
+	  continue;
+	}
+      cp += n;				/* name */
+
+      if (__glibc_unlikely (cp + 10 > end_of_message))
+	{
+	  ++had_error;
+	  continue;
+	}
+
+      NS_GET16 (type, cp);
+      NS_GET16 (class, cp);
+      int32_t ttl;
+      NS_GET32 (ttl, cp);
+      NS_GET16 (n, cp);		/* RDATA length.  */
+
+      if (end_of_message - cp < n)
+	{
+	  /* RDATA extends beyond the end of the packet.  */
+	  ++had_error;
+	  continue;
+	}
+
+      if (__glibc_unlikely (class != C_IN))
+	{
+	  /* XXX - debug? syslog? */
+	  cp += n;
+	  continue;			/* XXX - had_error++ ? */
+	}
+
+      if (type == T_CNAME)
+	{
+	  /* A CNAME could also have a TTL entry.  */
+	  if (ttlp != NULL && ttl < *ttlp)
+	      *ttlp = ttl;
+
+	  n = __libc_dn_expand (answer->buf, end_of_message, cp,
+				tbuf, sizeof tbuf);
+	  if (__glibc_unlikely (n < 0 || __libc_res_dnok (tbuf) == 0))
+	    {
+	      ++had_error;
+	      continue;
+	    }
+	  cp += n;
+	  /* Get canonical name.  */
+	  n = strlen (tbuf) + 1;   /* For the \0.  */
+	  if (__glibc_unlikely (n > linebuflen))
+	    goto too_small;
+	  if (__glibc_unlikely (n >= MAXHOSTNAMELEN))
+	    {
+	      ++had_error;
+	      continue;
+	    }
+	  tname = bp;
+	  bp = __mempcpy (bp, tbuf, n);	/* Cannot overflow.  */
+	  linebuflen -= n;
+	  continue;
+	}
+
+      switch (type)
+	{
+	case T_PTR:
+	  if (__glibc_unlikely (__strcasecmp (tname, bp) != 0))
+	    {
+	      cp += n;
+	      continue;			/* XXX - had_error++ ? */
+	    }
+
+	  n = __ns_name_unpack (answer->buf, end_of_message, cp,
+				packtmp, sizeof packtmp);
+	  if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
+	    {
+	      if (__glibc_unlikely (errno == EMSGSIZE))
+		goto too_small;
+
+	      n = -1;
+	    }
+
+	  if (__glibc_unlikely (n < 0 || __libc_res_hnok (bp) == 0))
+	    {
+	      ++had_error;
+	      break;
+	    }
+	  if (ttlp != NULL && ttl < *ttlp)
+	      *ttlp = ttl;
+	  /* bind would put multiple PTR records as aliases, but we don't do
+	     that.  */
+	  result->h_name = bp;
+	  *h_errnop = NETDB_SUCCESS;
+	  return NSS_STATUS_SUCCESS;
+	case T_A:
+	case T_AAAA:
+	  if (__glibc_unlikely (__strcasecmp (result->h_name, bp) != 0))
+	    {
+	      cp += n;
+	      continue;			/* XXX - had_error++ ? */
+	    }
+
+	  /* Stop parsing at a record whose length is incorrect.  */
+	  if (n != rrtype_to_rdata_length (type))
+	    {
+	      ++had_error;
+	      break;
+	    }
+
+	  /* Skip records of the wrong type.  */
+	  if (n != result->h_length)
+	    {
+	      cp += n;
+	      continue;
+	    }
+	  if (!haveanswer)
+	    {
+	      int nn;
+
+	      /* We compose a single hostent out of the entire chain of
+	         entries, so the TTL of the hostent is essentially the lowest
+		 TTL in the chain.  */
+	      if (ttlp != NULL && ttl < *ttlp)
+		*ttlp = ttl;
+	      result->h_name = bp;
+	      nn = strlen (bp) + 1;	/* for the \0 */
+	      bp += nn;
+	      linebuflen -= nn;
+	    }
+
+	  /* Provide sufficient alignment for both address
+	     families.  */
+	  enum { align = 4 };
+	  _Static_assert ((align % __alignof__ (struct in_addr)) == 0,
+			  "struct in_addr alignment");
+	  _Static_assert ((align % __alignof__ (struct in6_addr)) == 0,
+			  "struct in6_addr alignment");
+	  {
+	    char *new_bp = PTR_ALIGN_UP (bp, align);
+	    linebuflen -= new_bp - bp;
+	    bp = new_bp;
+	  }
+
+	  if (__glibc_unlikely (n > linebuflen))
+	    goto too_small;
+	  bp = __mempcpy (*hap++ = bp, cp, n);
+	  cp += n;
+	  linebuflen -= n;
+	  break;
+	default:
+	  cp += n;
+	  continue;			/* XXX - had_error++ ? */
+	}
+      if (had_error == 0)
+	++haveanswer;
+    }
+
+  if (haveanswer > 0)
+    {
+      *ap = NULL;
+      *hap = NULL;
+
+      if (result->h_name == NULL)
+	{
+	  n = strlen (qname) + 1;	/* For the \0.  */
+	  if (n > linebuflen)
+	    goto too_small;
+	  if (n >= MAXHOSTNAMELEN)
+	    goto no_recovery;
+	  result->h_name = bp;
+	  bp = __mempcpy (bp, qname, n);	/* Cannot overflow.  */
+	  linebuflen -= n;
+	}
+
+      *h_errnop = NETDB_SUCCESS;
+      return NSS_STATUS_SUCCESS;
+    }
+ no_recovery:
+  *h_errnop = NO_RECOVERY;
+  *errnop = ENOENT;
+  return NSS_STATUS_TRYAGAIN;
+}
 
 static enum nss_status
 gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
