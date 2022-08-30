@@ -87,10 +87,6 @@
 #include <resolv/resolv-internal.h>
 #include <resolv/resolv_context.h>
 
-/* Get implementations of some internal functions.  */
-#include <resolv/mapv4v6addr.h>
-#include <resolv/mapv4v6hostent.h>
-
 #define RESOLVSORT
 
 #if PACKETSZ > 65536
@@ -116,7 +112,7 @@ static enum nss_status getanswer_r (struct resolv_context *ctx,
 				    const char *qname, int qtype,
 				    struct hostent *result, char *buffer,
 				    size_t buflen, int *errnop, int *h_errnop,
-				    int map, int32_t *ttlp, char **canonp);
+				    int32_t *ttlp, char **canonp);
 static enum nss_status getanswer_ptr (unsigned char *packet, size_t packetlen,
 				      struct alloc_buffer *abuf,
 				      char **hnamep, int *errnop,
@@ -197,7 +193,6 @@ gethostbyname3_context (struct resolv_context *ctx,
   char tmp[NS_MAXDNAME];
   int size, type, n;
   const char *cp;
-  int map = 0;
   int olderr = errno;
   enum nss_status status;
 
@@ -258,32 +253,12 @@ gethostbyname3_context (struct resolv_context *ctx,
 	*errnop = EAGAIN;
       else
 	__set_errno (olderr);
-
-      /* If we are looking for an IPv6 address and mapping is enabled
-	 by having the RES_USE_INET6 bit in _res.options set, we try
-	 another lookup.  */
-      if (af == AF_INET6 && res_use_inet6 ())
-	n = __res_context_search (ctx, name, C_IN, T_A, host_buffer.buf->buf,
-				  host_buffer.buf != orig_host_buffer
-				  ? MAXPACKET : 1024, &host_buffer.ptr,
-				  NULL, NULL, NULL, NULL);
-
-      if (n < 0)
-	{
-	  if (host_buffer.buf != orig_host_buffer)
-	    free (host_buffer.buf);
-	  return status;
-	}
-
-      map = 1;
-
-      result->h_addrtype = AF_INET;
-      result->h_length = INADDRSZ;
     }
+  else
+    status = getanswer_r
+      (ctx, host_buffer.buf, n, name, type, result, buffer, buflen,
+       errnop, h_errnop, ttlp, canonp);
 
-  status = getanswer_r
-    (ctx, host_buffer.buf, n, name, type, result, buffer, buflen,
-     errnop, h_errnop, map, ttlp, canonp);
   if (host_buffer.buf != orig_host_buffer)
     free (host_buffer.buf);
   return status;
@@ -329,13 +304,8 @@ _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
       *h_errnop = NETDB_INTERNAL;
       return NSS_STATUS_UNAVAIL;
     }
-  status = NSS_STATUS_NOTFOUND;
-  if (res_use_inet6 ())
-    status = gethostbyname3_context (ctx, name, AF_INET6, result, buffer,
-				     buflen, errnop, h_errnop, NULL, NULL);
-  if (status == NSS_STATUS_NOTFOUND)
-    status = gethostbyname3_context (ctx, name, AF_INET, result, buffer,
-				     buflen, errnop, h_errnop, NULL, NULL);
+  status = gethostbyname3_context (ctx, name, AF_INET, result, buffer,
+				   buflen, errnop, h_errnop, NULL, NULL);
   __resolv_context_put (ctx);
   return status;
 }
@@ -648,7 +618,7 @@ static enum nss_status
 getanswer_r (struct resolv_context *ctx,
 	     const querybuf *answer, int anslen, const char *qname, int qtype,
 	     struct hostent *result, char *buffer, size_t buflen,
-	     int *errnop, int *h_errnop, int map, int32_t *ttlp, char **canonp)
+	     int *errnop, int *h_errnop, int32_t *ttlp, char **canonp)
 {
   struct host_data
   {
@@ -664,7 +634,6 @@ getanswer_r (struct resolv_context *ctx,
   char *bp, **ap, **hap;
   char tbuf[MAXDNAME];
   u_char packtmp[NS_MAXCDNAME];
-  int have_to_map = 0;
   uintptr_t pad = -(uintptr_t) buffer % __alignof__ (struct host_data);
   buffer += pad;
   buflen = buflen > pad ? buflen - pad : 0;
@@ -845,9 +814,7 @@ getanswer_r (struct resolv_context *ctx,
 	  continue;
 	}
 
-      if (type == T_A && qtype == T_AAAA && map)
-	have_to_map = 1;
-      else if (__glibc_unlikely (type != qtype))
+      if (__glibc_unlikely (type != qtype))
 	{
 	  cp += n;
 	  continue;			/* XXX - had_error++ ? */
@@ -944,9 +911,6 @@ getanswer_r (struct resolv_context *ctx,
 	  linebuflen -= n;
 	}
 
-      if (have_to_map)
-	if (map_v4v6_hostent (result, &bp, &linebuflen))
-	  goto too_small;
       *h_errnop = NETDB_SUCCESS;
       return NSS_STATUS_SUCCESS;
     }
