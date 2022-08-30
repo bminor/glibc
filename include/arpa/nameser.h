@@ -55,6 +55,12 @@ int __ns_name_ntop (const unsigned char *, char *, size_t) __THROW;
 int __ns_name_unpack (const unsigned char *, const unsigned char *,
 		      const unsigned char *, unsigned char *, size_t) __THROW;
 
+/* Like ns_samename, but for uncompressed binary names.  Return true
+   if the two arguments compare are equal as case-insensitive domain
+   names.  */
+_Bool __ns_samebinaryname (const unsigned char *, const unsigned char *)
+  attribute_hidden;
+
 #define ns_msg_getflag(handle, flag) \
   (((handle)._flags & _ns_flagdata[flag].mask) >> _ns_flagdata[flag].shift)
 
