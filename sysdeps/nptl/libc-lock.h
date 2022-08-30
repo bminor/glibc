@@ -22,6 +22,7 @@
 #include <pthread.h>
 #define __need_NULL
 #include <stddef.h>
+#include <libc-lock-arch.h>
 
 
 /* Mutex type.  */
@@ -29,7 +30,12 @@
 # if (!IS_IN (libc) && !IS_IN (libpthread)) || !defined _LIBC
 typedef struct { pthread_mutex_t mutex; } __libc_lock_recursive_t;
 # else
-typedef struct { int lock; int cnt; void *owner; } __libc_lock_recursive_t;
+typedef struct
+{
+  int lock __LIBC_LOCK_ALIGNMENT;
+  int cnt;
+  void *owner;
+} __libc_lock_recursive_t;
 # endif
 #else
 typedef struct __libc_lock_recursive_opaque__ __libc_lock_recursive_t;

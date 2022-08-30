@@ -32,9 +32,10 @@
    ld.so might be used on old kernels with a different libc.so.  */
 #include <lowlevellock.h>
 #include <tls.h>
+#include <libc-lock-arch.h>
 
 /* Mutex type.  */
-typedef int __libc_lock_t;
+typedef int __libc_lock_t __LIBC_LOCK_ALIGNMENT;
 typedef struct { pthread_mutex_t mutex; } __rtld_lock_recursive_t;
 typedef pthread_rwlock_t __libc_rwlock_t;
 
