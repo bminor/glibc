@@ -47,6 +47,8 @@ routines := \
   ns_name_skip \
   ns_name_uncompress \
   ns_name_unpack \
+  ns_rr_cursor_init \
+  ns_rr_cursor_next \
   ns_samebinaryname \
   ns_samename \
   nsap_addr \
@@ -115,6 +117,10 @@ tests-static += tst-ns_samebinaryname
 # Likewise for __ns_name_length_uncompressed.
 tests-internal += tst-ns_name_length_uncompressed
 tests-static += tst-ns_name_length_uncompressed
+
+# Likewise for struct ns_rr_cursor and its functions.
+tests-internal += tst-ns_rr_cursor
+tests-static += tst-ns_rr_cursor
 
 # These tests need libdl.
 ifeq (yes,$(build-shared))
