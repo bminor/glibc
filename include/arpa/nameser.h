@@ -95,5 +95,13 @@ libc_hidden_proto (__ns_name_unpack)
 extern __typeof (ns_samename) __libc_ns_samename;
 libc_hidden_proto (__libc_ns_samename)
 
+/* Packet parser helper functions.  */
+
+/* Verify that P points to an uncompressed domain name in wire format.
+   On success, return the length of the encoded name, including the
+   terminating null byte.  On failure, return -1 and set errno.  EOM
+   must point one past the last byte in the packet.  */
+int __ns_name_length_uncompressed (const unsigned char *p,
+				   const unsigned char *eom) attribute_hidden;
 # endif /* !_ISOMAC */
 #endif
