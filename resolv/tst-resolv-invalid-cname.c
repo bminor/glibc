@@ -162,7 +162,7 @@ test_mode_to_string (enum test_mode mode)
     case gai_canon:
       return "gai_canon";
     case test_mode_num:
-      /* Report error below.  */
+      break;                    /* Report error below.  */
     }
   FAIL_EXIT1 ("invalid test_mode: %d", mode);
 }
