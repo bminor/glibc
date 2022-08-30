@@ -70,5 +70,8 @@ libc_hidden_proto (__libc_res_nameinquery)
 extern __typeof (__res_queriesmatch) __libc_res_queriesmatch;
 libc_hidden_proto (__libc_res_queriesmatch)
 
+/* Variant of res_hnok which operates on binary (but uncompressed) names.  */
+bool __res_binary_hnok (const unsigned char *dn) attribute_hidden;
+
 # endif /* _RESOLV_H_ && !_ISOMAC */
 #endif

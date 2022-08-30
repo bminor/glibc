@@ -138,6 +138,12 @@ binary_leading_dash (const unsigned char *dn)
   return dn[0] > 0 && dn[1] == '-';
 }
 
+bool
+__res_binary_hnok (const unsigned char *dn)
+{
+  return !binary_leading_dash (dn) && binary_hnok (dn);
+}
+
 /* Return 1 if res_hnok is a valid host name.  Labels must only
    contain [0-9a-zA-Z_-] characters, and the name must not start with
    a '-'.  The latter is to avoid confusion with program options.  */
@@ -145,11 +151,9 @@ int
 ___res_hnok (const char *dn)
 {
   unsigned char buf[NS_MAXCDNAME];
-  if (!printable_string (dn)
-      || __ns_name_pton (dn, buf, sizeof (buf)) < 0
-      || binary_leading_dash (buf))
-    return 0;
-  return binary_hnok (buf);
+  return (printable_string (dn)
+	  && __ns_name_pton (dn, buf, sizeof (buf)) >= 0
+	  && __res_binary_hnok (buf));
 }
 versioned_symbol (libc, ___res_hnok, res_hnok, GLIBC_2_34);
 versioned_symbol (libc, ___res_hnok, __libc_res_hnok, GLIBC_PRIVATE);
