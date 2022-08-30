@@ -124,13 +124,14 @@ get_base (void)
 }
 
 static void
-apply_rel (uintptr_t base, uintptr_t start, uintptr_t end)
+apply_rel (uintptr_t cap_rx, uintptr_t cap_rw, uintptr_t start, uintptr_t end)
 {
   const ElfW(Rela) *r;
   for (r = (const ElfW(Rela) *)start; r != (void *)end; r++)
     {
-      uintptr_t *reloc_addr = base + r->r_offset;
-      uintptr_t value = morello_relative (base, r, reloc_addr);
+      uintptr_t *reloc_addr =
+	(uintptr_t *) __builtin_cheri_address_set (cap_rw, r->r_offset);
+      uintptr_t value = morello_relative (0, cap_rx, cap_rw, r, reloc_addr);
       *reloc_addr = value;
     }
 }
@@ -151,7 +152,7 @@ __real_start (void rtld_fini (void), uintptr_t *sp)
       uintptr_t start = get_rela_dyn_start ();
       uintptr_t end = get_rela_dyn_end ();
       uintptr_t base = get_base ();
-      apply_rel (base, start, end);
+      apply_rel (base, base, start, end);
       rtld_fini = 0;
     }
   /* Compiler barrier after relocs are processed.  */

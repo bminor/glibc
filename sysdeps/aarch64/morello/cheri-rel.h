@@ -3,9 +3,8 @@
 #include <cheri_perms.h>
 
 static inline uintptr_t
-morello_relative (uintptr_t base,
-		  const ElfW(Rela) *reloc,
-		  void *reloc_addr)
+morello_relative (uint64_t base, uintptr_t cap_rx, uintptr_t cap_rw,
+		  const ElfW(Rela) *reloc, void *reloc_addr)
 {
   uint64_t *__attribute__((may_alias)) u64_reloc_addr = reloc_addr;
 
@@ -16,7 +15,12 @@ morello_relative (uintptr_t base,
   unsigned long perm = u64_reloc_addr[1] >> 56;
   uintptr_t value;
 
-  value = base + loc;
+  /* Permissions field is encoded as:
+     4 = executable, 2 = read/write, 1 = read-only.  */
+  if (perm == 2)
+    value = __builtin_cheri_address_set (cap_rw, base + loc);
+  else
+    value = __builtin_cheri_address_set (cap_rx, base + loc);
 
   value = __builtin_cheri_bounds_set_exact (value, len);
 
@@ -24,10 +28,6 @@ morello_relative (uintptr_t base,
 
   if (perm == 1)
     value = __builtin_cheri_perms_and (value, CAP_PERM_MASK_R);
-  if (perm == 2)
-    value = __builtin_cheri_perms_and (value, CAP_PERM_MASK_RW);
-  if (perm == 4)
-    value = __builtin_cheri_perms_and (value, CAP_PERM_MASK_RX);
 
   /* Seal executable capabilities with MORELLO_RB.  */
   if (perm == 4)
