@@ -40,6 +40,7 @@ routines := \
   inet_pton \
   ns_makecanon \
   ns_name_compress \
+  ns_name_length_uncompressed \
   ns_name_ntop \
   ns_name_pack \
   ns_name_pton \
@@ -110,6 +111,10 @@ tests-static += tst-resolv-txnid-collision
 # Likewise for __ns_samebinaryname.
 tests-internal += tst-ns_samebinaryname
 tests-static += tst-ns_samebinaryname
+
+# Likewise for __ns_name_length_uncompressed.
+tests-internal += tst-ns_name_length_uncompressed
+tests-static += tst-ns_name_length_uncompressed
 
 # These tests need libdl.
 ifeq (yes,$(build-shared))
