@@ -103,5 +103,97 @@ libc_hidden_proto (__libc_ns_samename)
    must point one past the last byte in the packet.  */
 int __ns_name_length_uncompressed (const unsigned char *p,
 				   const unsigned char *eom) attribute_hidden;
+
+/* Iterator over the resource records in a DNS packet.  */
+struct ns_rr_cursor
+{
+  /* These members are not changed after initialization.  */
+  const unsigned char *begin;	/* First byte of packet.  */
+  const unsigned char *end;	/* One past the last byte of the packet.  */
+  const unsigned char *first_rr; /* First resource record (or packet end).  */
+
+  /* Advanced towards the end while reading the packet.  */
+  const unsigned char *current;
+};
+
+/* Returns the RCODE field from the DNS header.  */
+static inline int
+ns_rr_cursor_rcode (const struct ns_rr_cursor *c)
+{
+  return c->begin[3] & 0x0f;	/* Lower 4 bits at offset 3.  */
+}
+
+/* Returns the length of the answer section according to the DNS header.  */
+static inline int
+ns_rr_cursor_ancount (const struct ns_rr_cursor *c)
+{
+  return c->begin[6] * 256 + c->begin[7]; /* 16 bits at offset 6.  */
+}
+
+/* Returns the length of the authority (name server) section according
+   to the DNS header.  */
+static inline int
+ns_rr_cursor_nscount (const struct ns_rr_cursor *c)
+{
+  return c->begin[8] * 256 + c->begin[9]; /* 16 bits at offset 8.  */
+}
+
+/* Returns the length of the additional data section according to the
+   DNS header.  */
+static inline int
+ns_rr_cursor_adcount (const struct ns_rr_cursor *c)
+{
+  return c->begin[10] * 256 + c->begin[11]; /* 16 bits at offset 10.  */
+}
+
+/* Returns a pointer to the uncompressed question name in wire
+   format.  */
+static inline const unsigned char *
+ns_rr_cursor_qname (const struct ns_rr_cursor *c)
+{
+  return c->begin + 12;		/* QNAME starts right after the header.  */
+}
+
+/* Returns the question type of the first and only question.  */
+static inline const int
+ns_rr_cursor_qtype (const struct ns_rr_cursor *c)
+{
+  /* 16 bits 4 bytes back from the first RR header start.  */
+  return c->first_rr[-4] * 256 + c->first_rr[-3];
+}
+
+/* Returns the clss of the first and only question (usally C_IN).  */
+static inline const int
+ns_rr_cursor_qclass (const struct ns_rr_cursor *c)
+{
+  /* 16 bits 2 bytes back from the first RR header start.  */
+  return c->first_rr[-2] * 256 + c->first_rr[-1];
+}
+
+/* Initializes *C to cover the packet [BUF, BUF+LEN).  Returns false
+   if LEN is less than sizeof (*HD), if the packet does not contain a
+   full (uncompressed) question, or if the question count is not 1.  */
+_Bool __ns_rr_cursor_init (struct ns_rr_cursor *c,
+			   const unsigned char *buf, size_t len)
+  attribute_hidden;
+
+/* Like ns_rr, but the record owner name is not decoded into text format.  */
+struct ns_rr_wire
+{
+  unsigned char rname[NS_MAXCDNAME]; /* Owner name of the record.  */
+  uint16_t rtype;		/* Resource record type (T_*).  */
+  uint16_t rclass;		/* Resource record class (C_*).  */
+  uint32_t ttl;			/* Time-to-live field.  */
+  const unsigned char *rdata;	/* Start of resource record data.  */
+  uint16_t rdlength;		/* Length of the data at rdata, in bytes.  */
+};
+
+/* Attempts to parse the record at C into *RR.  On success, return
+   true, and C is advanced past the record, and RR->rdata points to
+   the record data.  On failure, errno is set to EMSGSIZE, and false
+   is returned.  */
+_Bool __ns_rr_cursor_next (struct ns_rr_cursor *c, struct ns_rr_wire *rr)
+  attribute_hidden;
+
 # endif /* !_ISOMAC */
 #endif
