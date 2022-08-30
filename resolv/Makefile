@@ -89,6 +89,7 @@ tests += \
   tst-ns_name_pton \
   tst-res_hconf_reorder \
   tst-res_hnok \
+  tst-resolv-aliases \
   tst-resolv-basic \
   tst-resolv-binary \
   tst-resolv-byaddr \
@@ -259,6 +260,7 @@ $(objpfx)tst-resolv-ai_idn.out: $(gen-locales)
 $(objpfx)tst-resolv-ai_idn-latin1.out: $(gen-locales)
 $(objpfx)tst-resolv-ai_idn-nolibidn2.out: \
   $(gen-locales) $(objpfx)tst-no-libidn2.so
+$(objpfx)tst-resolv-aliases: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-binary: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-byaddr: $(objpfx)libresolv.so $(shared-thread-library)
