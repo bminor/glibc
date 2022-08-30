@@ -90,6 +90,7 @@ tests += \
   tst-res_hnok \
   tst-resolv-basic \
   tst-resolv-binary \
+  tst-resolv-byaddr \
   tst-resolv-edns \
   tst-resolv-network \
   tst-resolv-nondecimal \
@@ -258,6 +259,7 @@ $(objpfx)tst-resolv-ai_idn-nolibidn2.out: \
   $(gen-locales) $(objpfx)tst-no-libidn2.so
 $(objpfx)tst-resolv-basic: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-binary: $(objpfx)libresolv.so $(shared-thread-library)
+$(objpfx)tst-resolv-byaddr: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-edns: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-network: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-res_init: $(objpfx)libresolv.so
