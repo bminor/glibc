@@ -46,6 +46,7 @@ routines := \
   ns_name_skip \
   ns_name_uncompress \
   ns_name_unpack \
+  ns_samebinaryname \
   ns_samename \
   nsap_addr \
   nss_dns_functions \
@@ -105,6 +106,10 @@ tests += \
 # from libresolv.
 tests-internal += tst-resolv-txnid-collision
 tests-static += tst-resolv-txnid-collision
+
+# Likewise for __ns_samebinaryname.
+tests-internal += tst-ns_samebinaryname
+tests-static += tst-ns_samebinaryname
 
 # These tests need libdl.
 ifeq (yes,$(build-shared))
