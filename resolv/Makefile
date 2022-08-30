@@ -98,6 +98,7 @@ tests += \
   tst-resolv-binary \
   tst-resolv-byaddr \
   tst-resolv-edns \
+  tst-resolv-invalid-cname \
   tst-resolv-network \
   tst-resolv-noaaaa \
   tst-resolv-nondecimal \
@@ -286,6 +287,8 @@ $(objpfx)tst-resolv-res_init: $(objpfx)libresolv.so
 $(objpfx)tst-resolv-res_init-multi: $(objpfx)libresolv.so \
   $(shared-thread-library)
 $(objpfx)tst-resolv-res_init-thread: $(objpfx)libresolv.so \
+  $(shared-thread-library)
+$(objpfx)tst-resolv-invalid-cname: $(objpfx)libresolv.so \
   $(shared-thread-library)
 $(objpfx)tst-resolv-noaaaa: $(objpfx)libresolv.so $(shared-thread-library)
 $(objpfx)tst-resolv-nondecimal: $(objpfx)libresolv.so $(shared-thread-library)
