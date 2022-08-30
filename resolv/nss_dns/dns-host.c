@@ -970,12 +970,12 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 
 	  n = -1;
 	}
-      if (__glibc_unlikely (n < 0 || __libc_res_hnok (buffer) == 0))
+      if (__glibc_unlikely (n < 0))
 	{
 	  ++had_error;
 	  continue;
 	}
-      if (*firstp && canon == NULL)
+      if (*firstp && canon == NULL && __libc_res_hnok (buffer))
 	{
 	  h_name = buffer;
 	  buffer += h_namelen;
@@ -1021,14 +1021,14 @@ gaih_getanswer_slice (const querybuf *answer, int anslen, const char *qname,
 
 	  n = __libc_dn_expand (answer->buf, end_of_message, cp,
 				tbuf, sizeof tbuf);
-	  if (__glibc_unlikely (n < 0 || __libc_res_hnok (tbuf) == 0))
+	  if (__glibc_unlikely (n < 0))
 	    {
 	      ++had_error;
 	      continue;
 	    }
 	  cp += n;
 
-	  if (*firstp)
+	  if (*firstp && __libc_res_hnok (tbuf))
 	    {
 	      /* Reclaim buffer space.  */
 	      if (h_name + h_namelen == buffer)
