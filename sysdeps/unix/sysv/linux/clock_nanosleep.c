@@ -34,7 +34,7 @@ __clock_nanosleep_time64 (clockid_t clock_id, int flags,
   if (clock_id == CLOCK_THREAD_CPUTIME_ID)
     return EINVAL;
   if (clock_id == CLOCK_PROCESS_CPUTIME_ID)
-    clock_id = MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED);
+    clock_id = PROCESS_CLOCK;
 
   /* If the call is interrupted by a signal handler or encounters an error,
      it returns a positive value similar to errno.  */

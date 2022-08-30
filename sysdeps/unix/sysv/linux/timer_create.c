@@ -33,9 +33,9 @@ ___timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 {
   {
     clockid_t syscall_clockid = (clock_id == CLOCK_PROCESS_CPUTIME_ID
-				 ? MAKE_PROCESS_CPUCLOCK (0, CPUCLOCK_SCHED)
+				 ? PROCESS_CLOCK
 				 : clock_id == CLOCK_THREAD_CPUTIME_ID
-				 ? MAKE_THREAD_CPUCLOCK (0, CPUCLOCK_SCHED)
+				 ? THREAD_CLOCK
 				 : clock_id);
 
     /* If the user wants notification via a thread we need to handle

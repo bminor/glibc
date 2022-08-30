@@ -35,7 +35,7 @@ __pthread_getcpuclockid (pthread_t threadid, clockid_t *clockid)
 
   /* The clockid_t value is a simple computation from the TID.  */
 
-  const clockid_t tidclock = MAKE_THREAD_CPUCLOCK (pd->tid, CPUCLOCK_SCHED);
+  const clockid_t tidclock = make_thread_cpuclock (pd->tid, CPUCLOCK_SCHED);
 
   *clockid = tidclock;
   return 0;
