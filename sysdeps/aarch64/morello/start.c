@@ -136,11 +136,10 @@ apply_rel (uintptr_t base, uintptr_t start, uintptr_t end)
 }
 #endif /* !SHARED */
 
-int main (int argc, char **argv);
+int main (int argc, char **argv, char **envp, void *auxv);
 
-void __libc_start_main (int main (int, char **),
-			int argc, char **argv,
-			void *init, void *fini,
+void __libc_start_main (int main (int, char **, char **, void *),
+			int argc, char **argv, char **envp, void *auxv,
 			void rtld_fini (void), void *sp);
 
 void
@@ -161,7 +160,11 @@ __real_start (void rtld_fini (void), uintptr_t *sp)
 
   int argc = *sp;
   char **argv = (char **) (sp + 1);
-  __libc_start_main (main, argc, argv, 0, 0, rtld_fini, sp);
+  char **envp = argv + argc + 1;
+  char **p = envp;
+  while (*p) p++;
+  void *auxv = p + 1;
+  __libc_start_main (main, argc, argv, envp, auxv, rtld_fini, sp);
   __builtin_trap ();
 }
 

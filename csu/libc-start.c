@@ -210,11 +210,16 @@ STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
 					 MAIN_AUXVEC_DECL),
 			    int argc,
 			    char **argv,
+#ifdef LIBC_START_MAIN_ENVP_ARG
+			    char **envp,
+#endif
 #ifdef LIBC_START_MAIN_AUXVEC_ARG
 			    ElfW(auxv_t) *auxvec,
 #endif
+#ifndef LIBC_START_MAIN_NO_INITFINI_ARG
 			    __typeof (main) init,
 			    void (*fini) (void),
+#endif
 			    void (*rtld_fini) (void),
 			    void *stack_end)
      __attribute__ ((noreturn));
@@ -233,15 +238,24 @@ STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
 STATIC int
 LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 		 int argc, char **argv,
+#ifdef LIBC_START_MAIN_ENVP_ARG
+		 char **envp,
+#endif
 #ifdef LIBC_START_MAIN_AUXVEC_ARG
 		 ElfW(auxv_t) *auxvec,
 #endif
+#ifndef LIBC_START_MAIN_NO_INITFINI_ARG
 		 __typeof (main) init,
 		 void (*fini) (void),
+#endif
 		 void (*rtld_fini) (void), void *stack_end)
 {
 #ifndef SHARED
+#ifdef LIBC_START_MAIN_ENVP_ARG
+  char **ev = envp;
+#else
   char **ev = &argv[argc + 1];
+#endif
 
   __environ = ev;
 
@@ -358,11 +372,13 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
     GLRO(dl_debug_printf) ("\ninitialize program: %s\n\n", argv[0]);
 
+#ifndef LIBC_START_MAIN_NO_INITFINI_ARG
   if (init != NULL)
     /* This is a legacy program which supplied its own init
        routine.  */
     (*init) (argc, argv, __environ MAIN_AUXVEC_PARAM);
   else
+#endif
     /* This is a current program.  Use the dynamic segment to find
        constructors.  */
     call_init (argc, argv, __environ);
