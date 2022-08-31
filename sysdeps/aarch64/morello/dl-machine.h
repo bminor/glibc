@@ -282,7 +282,8 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
   const unsigned int r_type = ELFW (R_TYPE) (reloc->r_info);
 
   if (r_type == MORELLO_R(RELATIVE))
-    *cap_reloc_addr = morello_relative_value (map->l_addr, reloc, reloc_addr);
+    *cap_reloc_addr = morello_relative (map->l_addr, map->l_map_start,
+					map->l_rw_start, reloc, reloc_addr);
   else if (r_type == AARCH64_R(RELATIVE))
     *u64_reloc_addr = map->l_addr + reloc->r_addend;
   else if (__builtin_expect (r_type == R_AARCH64_NONE, 0))
@@ -347,8 +348,11 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 
 	case MORELLO_R(IRELATIVE):
 	{
-	  uintptr_t value
-	    = morello_relative_value (map->l_addr, reloc, reloc_addr);
+	  uintptr_t value = morello_relative (map->l_addr,
+					      map->l_map_start,
+					      map->l_rw_start,
+					      reloc,
+					      reloc_addr);
 	  if (__glibc_likely (!skip_ifunc))
 	    value = elf_ifunc_invoke (value);
 	  *cap_reloc_addr = value;
@@ -410,15 +414,19 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 
 static inline void
 __attribute__ ((always_inline))
-elf_machine_rela_relative (uintptr_t l_addr,
-			   const ElfW(Rela) *reloc,
-			   void *const reloc_addr)
+elf_machine_rela_relative (struct link_map *map, const ElfW(Rela) *reloc)
 {
+  ElfW(Addr) l_addr = map->l_addr;
+  uintptr_t cap_rx = map->l_map_start;
+  uintptr_t cap_rw = map->l_rw_start;
+  void *const reloc_addr
+    = (void *) __builtin_cheri_address_set (cap_rw, l_addr + reloc->r_offset);
   uint64_t *__attribute__((may_alias)) u64_reloc_addr = reloc_addr;
   uintptr_t *__attribute__((may_alias)) cap_reloc_addr = reloc_addr;
   const unsigned int r_type = ELFW (R_TYPE) (reloc->r_info);
   if (r_type == MORELLO_R(RELATIVE))
-    *cap_reloc_addr = morello_relative_value (l_addr, reloc, reloc_addr);
+    *cap_reloc_addr = morello_relative (l_addr, cap_rx, cap_rw,
+					reloc, reloc_addr);
   else
     *u64_reloc_addr = l_addr + reloc->r_addend;
 }
@@ -485,8 +493,8 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
     }
   else if (__glibc_unlikely (r_type == MORELLO_R(IRELATIVE)))
     {
-      uintptr_t value
-	= morello_relative_value (map->l_addr, reloc, reloc_addr);
+      uintptr_t value = morello_relative (map->l_addr, map->l_map_start,
+					  map->l_rw_start, reloc, reloc_addr);
       if (__glibc_likely (!skip_ifunc))
 	value = elf_ifunc_invoke (value);
       *cap_reloc_addr = value;

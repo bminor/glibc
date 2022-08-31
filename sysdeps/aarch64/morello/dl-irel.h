@@ -41,42 +41,7 @@ elf_ifunc_invoke (uintptr_t addr)
 	 (GLRO(dl_hwcap) | _IFUNC_ARG_HWCAP, &arg);
 }
 
-#include <cheri_perms.h>
-
-static inline uintptr_t
-__attribute__ ((always_inline))
-morello_relative_value (uintptr_t l_addr,
-			const ElfW(Rela) *reloc,
-			void *reloc_addr)
-{
-  uint64_t *__attribute__((may_alias)) u64_reloc_addr = reloc_addr;
-
-  /* Fragment identified by r_offset has the following information:
-     | 64-bit: address | 56-bits: length | 8-bits: permissions | */
-  unsigned long loc = u64_reloc_addr[0];
-  unsigned long len = u64_reloc_addr[1] & ((1UL << 56) - 1);
-  unsigned long perm = u64_reloc_addr[1] >> 56;
-  unsigned long perm_mask = 0;
-  uintptr_t value = __builtin_cheri_bounds_set_exact (l_addr + loc, len);
-
-  value = value + reloc->r_addend;
-
-  /* Set permissions. Permissions field encoded as:
-     4 = executable, 2 = read/write, 1 = read-only.
-     Mask should follow the same encoding as the ELF segment permissions.  */
-  if (perm == 1)
-    perm_mask = CAP_PERM_MASK_R;
-  if (perm == 2)
-    perm_mask = CAP_PERM_MASK_RW;
-  if (perm == 4)
-    perm_mask = CAP_PERM_MASK_RX;
-  value = __builtin_cheri_perms_and (value, perm_mask);
-
-  /* Seal capabilities, which provide execute permission, with MORELLO_RB.  */
-  if (perm == 4)
-    value = __builtin_cheri_seal_entry (value);
-  return value;
-}
+#include <cheri-rel.h>
 
 static inline void
 __attribute ((always_inline))
@@ -87,10 +52,13 @@ elf_irela (const ElfW(Rela) *reloc)
   if (__glibc_likely (r_type == MORELLO_R(IRELATIVE)))
     {
       struct link_map *main_map = GL(dl_ns)[LM_ID_BASE]._ns_loaded;
-      void *reloc_addr = (void *) main_map->l_addr + reloc->r_offset;
+      void *reloc_addr = (void *) dl_rw_ptr (main_map, reloc->r_offset);
       uintptr_t *__attribute__((may_alias)) cap_reloc_addr = reloc_addr;
+      uint64_t base = main_map->l_addr;
+      uintptr_t cap_rx = main_map->l_map_start;
+      uintptr_t cap_rw = main_map->l_rw_start;
       uintptr_t value
-	= morello_relative_value (main_map->l_addr, reloc, reloc_addr);
+	= morello_relative (base, cap_rx, cap_rw, reloc, reloc_addr);
       *cap_reloc_addr = elf_ifunc_invoke (value);
     }
   else

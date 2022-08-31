@@ -22,6 +22,11 @@
 #include <elf.h>
 #include <cpu-features.h>
 
+#ifdef __CHERI_PURE_CAPABILITY__
+# define DO_ELF_MACHINE_REL_RELATIVE(map, l_addr, relative) \
+  elf_machine_rela_relative (map, relative)
+#endif
+
 struct La_aarch64_regs;
 struct La_aarch64_retval;
 

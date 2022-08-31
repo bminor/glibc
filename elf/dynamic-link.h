@@ -46,9 +46,14 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 		  const ElfW(Rela) *reloc, const ElfW(Sym) *sym,
 		  const struct r_found_version *version, void *const reloc_addr,
 		  int skip_ifunc);
+#  ifdef __CHERI_PURE_CAPABILITY__
 static inline void __attribute__((always_inline))
-elf_machine_rela_relative (elfptr_t l_addr, const ElfW(Rela) *reloc,
+elf_machine_rela_relative (struct link_map *map, const ElfW(Rela) *reloc);
+#  else
+static inline void __attribute__((always_inline))
+elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
 			   void *const reloc_addr);
+#  endif
 # endif
 # if ELF_MACHINE_NO_RELA || defined ELF_MACHINE_PLT_REL
 static inline void __attribute__((always_inline))
