@@ -43,24 +43,24 @@
    Note that in case of dynamic linked exe the code in the .init section
    has already been run.  This includes _init and _libc_init.
 
-
    At this entry point, most registers' values are unspecified, except:
 
-   x0/w0	Contains a function pointer to be registered with `atexit'.
+   x0		argc
+
+   c1		argv
+
+   c2		envp
+
+   c3		auxv
+
+   c4		Contains a function pointer to be registered with `atexit'.
 		This is how the dynamic linker arranges to have DT_FINI
 		functions called for shared libraries that have been loaded
-		before this code runs.
+		before this code runs. It is unspecified in a static linked
+		executable.
 
-   sp		The stack contains the arguments and environment:
-		0(sp)			argc
-		8(sp)			argv[0]
-		...
-		(8*argc)(sp)		NULL
-		(8*(argc+1))(sp)	envp[0]
-		...
-					NULL
+   csp		The stack pointer.
  */
-
 asm(""
 ".global	_start\n"
 ".type		_start, %function\n"
@@ -69,7 +69,7 @@ asm(""
 "	.cfi_undefined c30\n"
 "	mov	c29, czr\n"
 "	mov	c30, czr\n"
-"	mov	c1, csp\n"
+"	mov	c5, csp\n"
 "	b	__real_start\n"
 "	.cfi_endproc\n"
 "	.size _start, .-_start\n");
@@ -113,14 +113,24 @@ get_rela_dyn_end (void)
   return p;
 }
 
-static uintptr_t
-get_base (void)
+static void
+get_caps (uintptr_t *cap_rx, uintptr_t *cap_rw, const uintptr_t *auxv)
 {
-  /* The base is always 0: only used for static linking and static pie
-     is not supported here.  */
-  uintptr_t p = 0;
-  asm volatile ("cvtd %0, %x0" : "+r"(p));
-  return p;
+  for (;;)
+    {
+      switch ((unsigned long)auxv[0])
+	{
+	case AT_NULL:
+	  return;
+	case AT_CHERI_EXEC_RX_CAP:
+	  *cap_rx = auxv[1];
+	  break;
+	case AT_CHERI_EXEC_RW_CAP:
+	  *cap_rw = auxv[1];
+	  break;
+	}
+      auxv += 2;
+    }
 }
 
 static void
@@ -144,27 +154,23 @@ void __libc_start_main (int main (int, char **, char **, void *),
 			void rtld_fini (void), void *sp);
 
 void
-__real_start (void rtld_fini (void), uintptr_t *sp)
+__real_start (int argc, char **argv, char **envp, void *auxv,
+	      void (*rtld_fini) (void), uintptr_t *sp)
 {
 #ifndef SHARED
   if (is_static_linked ())
     {
       uintptr_t start = get_rela_dyn_start ();
       uintptr_t end = get_rela_dyn_end ();
-      uintptr_t base = get_base ();
-      apply_rel (base, base, start, end);
+      uintptr_t cap_rx = 0;
+      uintptr_t cap_rw = 0;
+      get_caps (&cap_rx, &cap_rw, auxv);
+      apply_rel (cap_rx, cap_rw, start, end);
       rtld_fini = 0;
     }
   /* Compiler barrier after relocs are processed.  */
   asm volatile ("" ::: "memory");
 #endif
-
-  int argc = *sp;
-  char **argv = (char **) (sp + 1);
-  char **envp = argv + argc + 1;
-  char **p = envp;
-  while (*p) p++;
-  void *auxv = p + 1;
   __libc_start_main (main, argc, argv, envp, auxv, rtld_fini, sp);
   __builtin_trap ();
 }
