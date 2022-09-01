@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libc-diag.h>
 
 #include <support/xstdio.h>
 
@@ -54,6 +55,11 @@ main (int argc, char **argv)
   rewind (f);
   (void) fputs (buf, f);
   rewind (f);
+
+  /* clang do not handle %Z format.  */
+  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-invalid-specifier");
+  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat-extra-args");
   {
     size_t i;
     for (i = 0; i < replace_from; ++i)
@@ -101,6 +107,7 @@ main (int argc, char **argv)
 	lose = 1;
       }
   }
+  DIAG_POP_NEEDS_COMMENT_CLANG;
 
   if (!lose)
     {

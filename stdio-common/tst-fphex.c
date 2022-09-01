@@ -3,6 +3,7 @@
 #include <array_length.h>
 #include <stdio.h>
 #include <string.h>
+#include <libc-diag.h>
 
 #ifndef WIDE
 # define STR_LEN strlen
@@ -56,10 +57,14 @@ do_test (void)
       int n = SPRINT (buf, array_length (buf), t->fmt, t->value);
       if (n != STR_LEN (t->expect) || STR_CMP (buf, t->expect) != 0)
 	{
+	  /* clang do not handle %Z format.  */
+	  DIAG_PUSH_NEEDS_COMMENT_CLANG;
+	  DIAG_IGNORE_NEEDS_COMMENT_CLANG (13, "-Wformat");
 	  PRINT (L_("" S "\tExpected \"" S "\" (%Zu)\n\tGot      \""
 		    S "\" (%d, %Zu)\n"),
 		 t->fmt, t->expect, STR_LEN (t->expect),
 		 buf, n, STR_LEN (buf));
+	  DIAG_POP_NEEDS_COMMENT_CLANG;
 	  result = 1;
 	}
     }
