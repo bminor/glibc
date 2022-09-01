@@ -25,6 +25,10 @@
 #ifdef __CHERI_PURE_CAPABILITY__
 # define DO_ELF_MACHINE_REL_RELATIVE(map, l_addr, relative) \
   elf_machine_rela_relative (map, relative)
+
+#define D_PTR_RW(map, i) \
+  (dl_relocate_ld (map) ? (map)->i->d_un.d_ptr \
+			: dl_rw_ptr ((map), (map)->i->d_un.d_ptr))
 #endif
 
 struct La_aarch64_regs;
