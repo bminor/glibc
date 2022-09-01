@@ -1033,7 +1033,7 @@ write_out (struct catalog *catalog, const char *output_name,
 	  /* If the current message set has a symbolic name write this
 	     out first.  */
 	  if (set_run->symbol != NULL)
-	    fprintf (fp, "%s#define %sSet %#x\t/* %s:%Zu */\n",
+	    fprintf (fp, "%s#define %sSet %#x\t/* %s:%zu */\n",
 		     first ? "" : "\n", set_run->symbol, set_run->number - 1,
 		     set_run->fname, set_run->line);
 	  first = 0;
@@ -1047,12 +1047,12 @@ write_out (struct catalog *catalog, const char *output_name,
 	      if (message_run->symbol != NULL)
 		{
 		  if (set_run->symbol == NULL)
-		    fprintf (fp, "#define AutomaticSet%d%s %#x\t/* %s:%Zu */\n",
+		    fprintf (fp, "#define AutomaticSet%d%s %#x\t/* %s:%zu */\n",
 			     set_run->number, message_run->symbol,
 			     message_run->number, message_run->fname,
 			     message_run->line);
 		  else
-		    fprintf (fp, "#define %s%s %#x\t/* %s:%Zu */\n",
+		    fprintf (fp, "#define %s%s %#x\t/* %s:%zu */\n",
 			     set_run->symbol, message_run->symbol,
 			     message_run->number, message_run->fname,
 			     message_run->line);

@@ -42,18 +42,18 @@ do_test (void)
       if (tests[n].exp < 0 && res >= 0)
 	{
 	  support_record_failure ();
-	  printf ("swprintf (buf, %Zu, L\"%%s\", \"%s\") expected to fail\n",
+	  printf ("swprintf (buf, %zu, L\"%%s\", \"%s\") expected to fail\n",
 		  tests[n].n, tests[n].str);
 	}
       else if (tests[n].exp >= 0 && tests[n].exp != res)
 	{
 	  support_record_failure ();
 	  printf ("\
-swprintf (buf, %Zu, L\"%%s\", \"%s\") expected to return %Zd, but got %Zd\n",
+swprintf (buf, %zu, L\"%%s\", \"%s\") expected to return %zd, but got %zd\n",
 		  tests[n].n, tests[n].str, tests[n].exp, res);
 	}
       else
-	printf ("swprintf (buf, %Zu, L\"%%s\", \"%s\") OK\n",
+	printf ("swprintf (buf, %zu, L\"%%s\", \"%s\") OK\n",
 		tests[n].n, tests[n].str);
     }
 

@@ -59,7 +59,7 @@ do_test (void)
       exit (1);
     }
 
-   printf ("INFO: input file has %Zd bytes\n", mbsize);
+   printf ("INFO: input file has %zd bytes\n", mbsize);
 
   /* First convert the text to wide characters.  We use iconv here.  */
   {
@@ -82,7 +82,7 @@ do_test (void)
     nonr = iconv (cd, &inbuf, &inleft, &outbuf, &outleft);
     if (nonr != 0 && nonr != (size_t) -1)
       {
-	printf ("%u: iconv performed %Zd nonreversible conversions\n",
+	printf ("%u: iconv performed %zd nonreversible conversions\n",
 		__LINE__, nonr);
 	exit (1);
       }
@@ -90,7 +90,7 @@ do_test (void)
     if  (nonr == (size_t) -1)
       {
 	printf ("\
-%u: iconv returned with %Zd and errno = %m (inleft: %Zd, outleft: %Zd)\n",
+%u: iconv returned with %zd and errno = %m (inleft: %zd, outleft: %zd)\n",
 		__LINE__, nonr, inleft, outleft);
 	exit (1);
       }
@@ -163,7 +163,7 @@ do_test (void)
       wint_t wch = fgetwc (fp);
       if (wch == WEOF)
 	{
-	  printf ("%u: fgetwc failed (idx %Zd): %m\n", __LINE__, n);
+	  printf ("%u: fgetwc failed (idx %zd): %m\n", __LINE__, n);
 	  exit (1);
 	}
       wc2buf[n] = wch;
@@ -290,7 +290,7 @@ do_test (void)
     {
       if (fgetws (wcp, &wc2buf[wcsize] - wcp + 1, fp) == NULL)
 	{
-	  printf ("%u: short read using fgetws (only %td of %Zd)\n",
+	  printf ("%u: short read using fgetws (only %td of %zd)\n",
 		  __LINE__, wcp - wc2buf, wcsize);
 	  status = 1;
 	  break;

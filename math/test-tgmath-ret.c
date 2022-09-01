@@ -83,7 +83,7 @@ do_test (void)
   check_return_fromfpx ();
   check_return_ufromfpx ();
 
-  printf ("%Zd\n", sizeof (carg (lx)));
+  printf ("%zd\n", sizeof (carg (lx)));
 
   return errors != 0;
 }

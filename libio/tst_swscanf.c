@@ -20,7 +20,7 @@ main (int argc, char *argv[])
   n = swscanf (in, L"%d + %d is %d", &a, &b, &c);
   if (n != 3 || a + b != c || c != 42)
     {
-      printf ("*** FAILED, n = %Zu, a = %d, b = %d, c = %d\n", n, a, b, c);
+      printf ("*** FAILED, n = %zu, a = %d, b = %d, c = %d\n", n, a, b, c);
       result = 1;
     }
 
@@ -30,7 +30,7 @@ main (int argc, char *argv[])
   if (n != 5 || strcmp (buf1, "one") != 0 || wcscmp (wbuf2, L"two") != 0
       || strcmp (buf3, "three") != 0 || c4 != '!' || wc5 != L'!')
     {
-      printf ("*** FAILED, n = %Zu, buf1 = \"%s\", wbuf2 = L\"%S\", buf3 = \"%s\", c4 = '%c', wc5 = L'%C'\n",
+      printf ("*** FAILED, n = %zu, buf1 = \"%s\", wbuf2 = L\"%S\", buf3 = \"%s\", c4 = '%c', wc5 = L'%C'\n",
 	      n, buf1, wbuf2, buf3, c4, (wint_t) wc5);
       result = 1;
     }

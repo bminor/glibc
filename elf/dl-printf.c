@@ -113,7 +113,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	  /* Recognize the l modifier.  It is only important on some
 	     platforms where long and int have a different size.  We
 	     can use the same code for size_t.  */
-	  if (*fmt == 'l' || *fmt == 'Z')
+	  if (*fmt == 'l' || *fmt == 'z')
 	    {
 #if LONG_MAX != INT_MAX
 	      long_mod = 1;

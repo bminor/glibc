@@ -20,7 +20,7 @@ main (void)
 
   pchar = setlocale (LC_ALL, "de_DE.UTF-8");
   printf ("locale : %s\n",pchar);
-  printf ("MB_CUR_MAX %Zd\n", MB_CUR_MAX);
+  printf ("MB_CUR_MAX %zd\n", MB_CUR_MAX);
 
   puts ("---- test 1 ------");
   test = mbstowcs (tmp, str, (strlen (str) + 1) * sizeof (char));

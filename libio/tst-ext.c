@@ -25,8 +25,8 @@ main (void)
   /* Get the buffer size.  */
   if (__fbufsize (fp) != sizeof buf)
     {
-      printf ("__fbusize() reported a buffer size of %Zd bytes;"
-	      " we installed a buffer with %Zd bytes\n",
+      printf ("__fbusize() reported a buffer size of %zd bytes;"
+	      " we installed a buffer with %zd bytes\n",
 	      __fbufsize (fp), sizeof buf);
       result = 1;
     }
@@ -91,7 +91,7 @@ main (void)
   /* The string we wrote above should still be in the buffer.  */
   if (__fpending (fp) != strlen (teststring))
     {
-      printf ("__fpending() returned %Zd; expected %Zd\n",
+      printf ("__fpending() returned %zd; expected %zd\n",
 	      __fpending (fp), strlen (teststring));
       result = 1;
     }
@@ -100,7 +100,7 @@ main (void)
   /* And check again.  */
   if (__fpending (fp) != 0)
     {
-      printf ("__fpending() returned %Zd; expected 0\n",
+      printf ("__fpending() returned %zd; expected 0\n",
 	      __fpending (fp));
       result = 1;
     }

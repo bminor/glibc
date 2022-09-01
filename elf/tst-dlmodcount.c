@@ -32,7 +32,7 @@ callback (struct dl_phdr_info *info, size_t size, void *ptr)
   static int last_adds = 0, last_subs = 0;
   intptr_t cmd = (intptr_t) ptr;
 
-  printf ("  size = %Zu\n", size);
+  printf ("  size = %zu\n", size);
   if (size < (offsetof (struct dl_phdr_info, dlpi_subs)
 	      + sizeof (info->dlpi_subs)))
     {

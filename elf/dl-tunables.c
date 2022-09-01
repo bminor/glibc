@@ -380,7 +380,7 @@ __tunables_print (void)
 			  (long int) cur->type.max);
 	      break;
 	    case TUNABLE_TYPE_SIZE_T:
-	      _dl_printf ("0x%Zx (min: 0x%Zx, max: 0x%Zx)\n",
+	      _dl_printf ("0x%zx (min: 0x%zx, max: 0x%zx)\n",
 			  (size_t) cur->val.numval,
 			  (size_t) cur->type.min,
 			  (size_t) cur->type.max);

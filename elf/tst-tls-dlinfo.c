@@ -33,7 +33,7 @@ do_test (void)
       result = 1;
     }
   else
-    printf ("dlinfo says TLS module ID %Zu\n", modid);
+    printf ("dlinfo says TLS module ID %zu\n", modid);
 
   void *block;
   if (dlinfo (h, RTLD_DI_TLS_DATA, &block))

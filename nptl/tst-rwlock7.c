@@ -100,16 +100,16 @@ do_test_clock (clockid_t clockid, const char *fnname)
       pthread_rwlockattr_t a;
 
       if (pthread_rwlockattr_init (&a) != 0)
-        FAIL_EXIT1 ("round %Zu: rwlockattr_t failed\n", cnt);
+        FAIL_EXIT1 ("round %zu: rwlockattr_t failed\n", cnt);
 
       if (pthread_rwlockattr_setkind_np (&a, kind[cnt]) != 0)
-        FAIL_EXIT1 ("round %Zu: rwlockattr_setkind failed\n", cnt);
+        FAIL_EXIT1 ("round %zu: rwlockattr_setkind failed\n", cnt);
 
       if (pthread_rwlock_init (&r, &a) != 0)
-        FAIL_EXIT1 ("round %Zu: rwlock_init failed\n", cnt);
+        FAIL_EXIT1 ("round %zu: rwlock_init failed\n", cnt);
 
       if (pthread_rwlockattr_destroy (&a) != 0)
-        FAIL_EXIT1 ("round %Zu: rwlockattr_destroy failed\n", cnt);
+        FAIL_EXIT1 ("round %zu: rwlockattr_destroy failed\n", cnt);
 
       struct timespec ts;
       xclock_gettime (clockid_for_get, &ts);
@@ -119,10 +119,10 @@ do_test_clock (clockid_t clockid, const char *fnname)
       /* Get a read lock.  */
       if (clockid == CLOCK_USE_TIMEDLOCK) {
         if (pthread_rwlock_timedrdlock (&r, &ts) != 0)
-          FAIL_EXIT1 ("round %Zu: rwlock_timedrdlock failed\n", cnt);
+          FAIL_EXIT1 ("round %zu: rwlock_timedrdlock failed\n", cnt);
       } else {
         if (pthread_rwlock_clockrdlock (&r, clockid, &ts) != 0)
-          FAIL_EXIT1 ("round %Zu: rwlock_%srdlock failed\n", cnt, fnname);
+          FAIL_EXIT1 ("round %zu: rwlock_%srdlock failed\n", cnt, fnname);
       }
 
       printf ("%zu: got %srdlock\n", cnt, fnname);
@@ -134,10 +134,10 @@ do_test_clock (clockid_t clockid, const char *fnname)
       pthread_t th = xpthread_create (NULL, tf, &args);
       void *status = xpthread_join (th);
       if (status != NULL)
-        FAIL_EXIT1 ("failure in round %Zu\n", cnt);
+        FAIL_EXIT1 ("failure in round %zu\n", cnt);
 
       if (pthread_rwlock_destroy (&r) != 0)
-        FAIL_EXIT1 ("round %Zu: rwlock_destroy failed\n", cnt);
+        FAIL_EXIT1 ("round %zu: rwlock_destroy failed\n", cnt);
     }
 
   return 0;

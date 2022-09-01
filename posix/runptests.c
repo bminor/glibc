@@ -115,7 +115,7 @@ main (int argc, char *argv[])
 	regfree (&re);
       }
 
-  printf ("\n%Zu tests, %d errors\n", cnt, errors);
+  printf ("\n%zu tests, %d errors\n", cnt, errors);
 
   return errors != 0;
 }

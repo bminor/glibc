@@ -413,11 +413,11 @@ testit (struct test_case_struct *tc)
   if (bzzzt)
     {
       printf ("FAILED\n");
-      printf ("info: Test words: <%s>, need retval %d, wordc %Zd\n",
+      printf ("info: Test words: <%s>, need retval %d, wordc %zd\n",
 	      tc->words, tc->retval, tc->wordc);
       if (start_offs != 0)
 	printf ("(preceded by %d NULLs)\n", start_offs);
-      printf ("Got retval %d, wordc %Zd: ", retval, we.we_wordc);
+      printf ("Got retval %d, wordc %zd: ", retval, we.we_wordc);
       if (retval == 0 || retval == WRDE_NOSPACE)
 	{
 	  for (i = 0; i < we.we_wordc + start_offs; ++i)

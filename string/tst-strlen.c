@@ -34,7 +34,7 @@ do_test (void)
 	      if (strlen (buf) != words * 4 + lens[last])
 		{
 		  printf ("\
-strlen failed for base=%Zu, words=%Zu, and last=%Zu (is %zd, expected %zd)\n",
+strlen failed for base=%zu, words=%zu, and last=%zu (is %zd, expected %zd)\n",
 			  base, words, last,
 			  strlen (buf), words * 4 + lens[last]);
 		  return 1;
@@ -43,7 +43,7 @@ strlen failed for base=%Zu, words=%Zu, and last=%Zu (is %zd, expected %zd)\n",
 	      if (strnlen (buf, -1) != words * 4 + lens[last])
 		{
 		  printf ("\
-strnlen failed for base=%Zu, words=%Zu, and last=%Zu (is %zd, expected %zd)\n",
+strnlen failed for base=%zu, words=%zu, and last=%zu (is %zd, expected %zd)\n",
 			  base, words, last,
 			  strnlen (buf, -1), words * 4 + lens[last]);
 		  return 1;

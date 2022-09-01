@@ -102,18 +102,18 @@ do_test (void)
 
       if (res == 0)
 	{
-	  printf ("%Zu: %s: res == 0 despite size == %Zu\n",
+	  printf ("%zu: %s: res == 0 despite size == %zu\n",
 		  cnt, tests[cnt].fmt, size);
 	  result = 1;
 	}
       else if (size < tests[cnt].min)
 	{
-	  printf ("%Zu: %s: size == %Zu was enough\n",
+	  printf ("%zu: %s: size == %zu was enough\n",
 		  cnt, tests[cnt].fmt, size);
 	  result = 1;
 	}
       else
-	printf ("%Zu: %s: size == %Zu: OK\n", cnt, tests[cnt].fmt, size);
+	printf ("%zu: %s: size == %zu: OK\n", cnt, tests[cnt].fmt, size);
 
       free (buf);
     }

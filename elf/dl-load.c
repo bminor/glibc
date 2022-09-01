@@ -1406,7 +1406,7 @@ cannot enable executable stack as shared object requires");
 
   if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_FILES))
     _dl_debug_printf ("\
-  dynamic: 0x%0*lx  base: 0x%0*lx   size: 0x%0*Zx\n\
+  dynamic: 0x%0*lx  base: 0x%0*lx   size: 0x%0*zx\n\
     entry: 0x%0*lx  phdr: 0x%0*lx  phnum:   %*u\n\n",
 			   (int) sizeof (void *) * 2,
 			   (unsigned long int) l->l_ld,

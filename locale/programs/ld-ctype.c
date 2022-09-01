@@ -526,7 +526,7 @@ internal error in %s, line %u"), __FUNCTION__, __LINE__);
 			  {
 			    char buf[17];
 
-			    snprintf (buf, sizeof buf, "\\%Zo", cnt);
+			    snprintf (buf, sizeof buf, "\\%zo", cnt);
 
 			    record_error (0, 0, _("\
 character '%s' in class `%s' must be in class `%s'"),
@@ -541,7 +541,7 @@ character '%s' in class `%s' must be in class `%s'"),
 			  {
 			    char buf[17];
 
-			    snprintf (buf, sizeof buf, "\\%Zo", cnt);
+			    snprintf (buf, sizeof buf, "\\%zo", cnt);
 
 			    record_error (0, 0, _("\
 character '%s' in class `%s' must not be in class `%s'"),

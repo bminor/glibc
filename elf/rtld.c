@@ -2125,11 +2125,11 @@ dl_main (const ElfW(Phdr) *phdr,
 	    else if (strcmp (l->l_libname->name, l->l_name) == 0)
 	      /* Print vDSO like libraries without duplicate name.  Some
 		 consumers depend of this format.  */
-	      _dl_printf ("\t%s (0x%0*Zx)\n", l->l_libname->name,
+	      _dl_printf ("\t%s (0x%0*zx)\n", l->l_libname->name,
 			  (int) sizeof l->l_map_start * 2,
 			  (size_t) l->l_map_start);
 	    else
-	      _dl_printf ("\t%s => %s (0x%0*Zx)\n",
+	      _dl_printf ("\t%s => %s (0x%0*zx)\n",
 			  DSO_FILENAME (l->l_libname->name),
 			  DSO_FILENAME (l->l_name),
 			  (int) sizeof l->l_map_start * 2,
@@ -2151,7 +2151,7 @@ dl_main (const ElfW(Phdr) *phdr,
 
 	    loadbase = LOOKUP_VALUE_ADDRESS (result, false);
 
-	    _dl_printf ("%s found at 0x%0*Zd in object at 0x%0*Zd\n",
+	    _dl_printf ("%s found at 0x%0*zd in object at 0x%0*zd\n",
 			_dl_argv[i],
 			(int) sizeof ref->st_value * 2,
 			(size_t) ref->st_value,

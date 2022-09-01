@@ -440,7 +440,7 @@ process_block (struct convtable *tbl, char *addr, size_t len, FILE *output)
 	       ignoring errors.  Otherwise punt.  */
 	    if (! omit_invalid)
 	      {
-		error (0, 0, _("illegal input sequence at position %Zd"), n);
+		error (0, 0, _("illegal input sequence at position %zd"), n);
 		return -1;
 	      }
 

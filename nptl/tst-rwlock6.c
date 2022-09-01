@@ -104,16 +104,16 @@ do_test_clock (clockid_t clockid, const char *fnname)
       pthread_rwlockattr_t a;
 
       if (pthread_rwlockattr_init (&a) != 0)
-        FAIL_EXIT1 ("round %Zu: rwlockattr_t failed\n", cnt);
+        FAIL_EXIT1 ("round %zu: rwlockattr_t failed\n", cnt);
 
       if (pthread_rwlockattr_setkind_np (&a, kind[cnt]) != 0)
-        FAIL_EXIT1 ("round %Zu: rwlockattr_setkind failed\n", cnt);
+        FAIL_EXIT1 ("round %zu: rwlockattr_setkind failed\n", cnt);
 
       if (pthread_rwlock_init (&r, &a) != 0)
-        FAIL_EXIT1 ("round %Zu: rwlock_init failed\n", cnt);
+        FAIL_EXIT1 ("round %zu: rwlock_init failed\n", cnt);
 
       if (pthread_rwlockattr_destroy (&a) != 0)
-        FAIL_EXIT1 ("round %Zu: rwlockattr_destroy failed\n", cnt);
+        FAIL_EXIT1 ("round %zu: rwlockattr_destroy failed\n", cnt);
 
       struct timespec ts;
       xclock_gettime (clockid_for_get, &ts);
@@ -124,7 +124,7 @@ do_test_clock (clockid_t clockid, const char *fnname)
 	? pthread_rwlock_timedwrlock (&r, &ts)
 	: pthread_rwlock_clockwrlock (&r, clockid, &ts);
       if (e != 0)
-        FAIL_EXIT1 ("round %Zu: %swrlock failed (%d)\n",
+        FAIL_EXIT1 ("round %zu: %swrlock failed (%d)\n",
                     cnt, fnname, e);
 
       verbose_printf ("1st %swrlock done\n", fnname);
@@ -160,7 +160,7 @@ do_test_clock (clockid_t clockid, const char *fnname)
       puts ("joined thread");
 
       if (pthread_rwlock_destroy (&r) != 0)
-        FAIL_EXIT1 ("round %Zu: rwlock_destroy failed\n", cnt);
+        FAIL_EXIT1 ("round %zu: rwlock_destroy failed\n", cnt);
     }
 
   return 0;

@@ -275,7 +275,7 @@ do_test (int argc, char *argv[])
   for (cnt = 10; cnt > 0; )
     if (aio_cancel64 (fd, cbp[--cnt]) == -1)
       /* This is not an error.  The request can simply be finished.  */
-      printf ("aio_cancel64 (fd, cbp[%Zd]) cannot be canceled\n", cnt);
+      printf ("aio_cancel64 (fd, cbp[%zd]) cannot be canceled\n", cnt);
   puts ("finished2");
 
   result |= do_wait (cbp, 10, ECANCELED);
