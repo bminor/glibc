@@ -53,7 +53,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
       extern void _dl_runtime_resolve (ElfW(Word));
       extern void _dl_runtime_profile (ElfW(Word));
 
-      got = (uintptr_t *) D_PTR (l, l_info[DT_PLTGOT]);
+      got = (uintptr_t *) D_PTR_RW (l, l_info[DT_PLTGOT]);
       if (got[1])
 	{
 	  l->l_mach.plt = (uint64_t) got[1] + l->l_addr;
