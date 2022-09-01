@@ -18,6 +18,9 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <dl-load.h>
+#ifdef __CHERI_PURE_CAPABILITY__
+# include <cheri_perms.h>
+#endif
 
 /* Map a segment and align it properly.  */
 
@@ -79,6 +82,10 @@ _dl_map_segments (struct link_map *l, int fd,
                   struct link_map *loader)
 {
   const struct loadcmd *c = loadcmds;
+#ifdef __CHERI_PURE_CAPABILITY__
+  ElfW(Addr) rw_start = -1;
+  ElfW(Addr) rw_end = 0;
+#endif
 
   if (__glibc_likely (type == ET_DYN))
     {
@@ -129,6 +136,16 @@ _dl_map_segments (struct link_map *l, int fd,
 #ifdef __CHERI_PURE_CAPABILITY__
   else
     {
+      /* Need a single capability to cover all load segments.  */
+      void *p = __mmap ((void *) c->mapstart, maplength, c->prot,
+                        MAP_FIXED|MAP_COPY|MAP_FILE,
+                        fd, c->mapoff);
+      if (p == MAP_FAILED)
+        return DL_MAP_SEGMENTS_ERROR_MAP_SEGMENT;
+      l->l_map_start = (elfptr_t) p;
+      l->l_map_end = l->l_map_start + maplength;
+      l->l_contiguous = !has_holes;
+
       /* TODO: l_addr is 0 in an exe, but it should cover the load segments.  */
       uintptr_t l_addr = 0;
       unsigned long allocend = ALIGN_UP (loadcmds[nloadcmds - 1].allocend,
@@ -136,6 +153,8 @@ _dl_map_segments (struct link_map *l, int fd,
       asm volatile ("cvtd %0, %x0" : "+r"(l_addr));
       asm volatile ("scbnds %0, %0, %x1" : "+r"(l_addr) : "r"(allocend));
       l->l_addr = l_addr;
+
+      goto postmap;
     }
 #endif
 
@@ -157,6 +176,21 @@ _dl_map_segments (struct link_map *l, int fd,
 
     postmap:
       _dl_postprocess_loadcmd (l, header, c);
+
+#ifdef __CHERI_PURE_CAPABILITY__
+      if (c->prot & PROT_WRITE)
+	{
+          if (l->l_rw_count >= DL_MAX_RW_COUNT)
+	    return DL_MAP_SEGMENTS_ERROR_MAP_SEGMENT; // TODO: right error code
+	  if (c->mapstart < rw_start)
+	    rw_start = c->mapstart;
+	  if (c->allocend > rw_end)
+	    rw_end = c->allocend;
+	  l->l_rw_range[l->l_rw_count].start = l->l_addr + c->mapstart;
+	  l->l_rw_range[l->l_rw_count].end = l->l_addr + c->allocend;
+	  l->l_rw_count++;
+	}
+#endif
 
       if (c->allocend > c->dataend)
         {
@@ -205,6 +239,16 @@ _dl_map_segments (struct link_map *l, int fd,
 
       ++c;
     }
+
+#ifdef __CHERI_PURE_CAPABILITY__
+  if (l->l_rw_count > 0)
+    {
+      l->l_rw_start = __builtin_cheri_address_set (l->l_map_start, l->l_addr + rw_start);
+      l->l_rw_start = __builtin_cheri_bounds_set (l->l_rw_start, rw_end - rw_start);
+      l->l_rw_start = __builtin_cheri_perms_and (l->l_rw_start, CAP_PERM_MASK_RW);
+    }
+  l->l_map_start = __builtin_cheri_perms_and (l->l_map_start, CAP_PERM_MASK_RX);
+#endif
 
   /* Notify ELF_PREFERRED_ADDRESS that we have to load this one
      fixed.  */
