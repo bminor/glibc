@@ -1175,8 +1175,10 @@ rtld_setup_main_map (struct link_map *main_map)
       case PT_DYNAMIC:
 	/* This tells us where to find the dynamic section,
 	   which tells us everything we need to do.  */
-	main_map->l_ld = (void *) main_map->l_addr + ph->p_vaddr;
 	main_map->l_ld_readonly = (ph->p_flags & PF_W) == 0;
+	main_map->l_ld = (void *) (main_map->l_ld_readonly
+				   ? dl_rx_ptr (main_map, ph->p_vaddr)
+				   : dl_rw_ptr (main_map, ph->p_vaddr));
 	break;
       case PT_INTERP:
 	/* This "interpreter segment" was used by the program loader to
