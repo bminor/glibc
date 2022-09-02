@@ -56,7 +56,7 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
       got = (uintptr_t *) D_PTR_RW (l, l_info[DT_PLTGOT]);
       if (got[1])
 	{
-	  l->l_mach.plt = (uint64_t) got[1] + l->l_addr;
+	  l->l_mach.plt = dl_rx_ptr (l, got[1]);
 	}
       got[1] = (uintptr_t) l;
 
@@ -313,18 +313,24 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 	      break;
 	    }
 
-	  unsigned long perm_mask;
+	  unsigned long perm_mask = CAP_PERM_MASK_RX;
 	  switch (ELFW(ST_TYPE) (sym->st_info))
 	    {
 	      case STT_OBJECT:
+		perm_mask = CAP_PERM_MASK_R;
+		for (int i = 0; i < sym_map->l_rw_count; i++)
+		  if (sym_map->l_rw_range[i].start <= value
+		      && sym_map->l_rw_range[i].end > value)
+		    {
+		      value = dl_rw_ptr (sym_map, value - sym_map->l_addr);
+		      perm_mask = CAP_PERM_MASK_RW;
+		      break;
+		    }
 		value = __builtin_cheri_bounds_set_exact (value, sym->st_size);
-		perm_mask = CAP_PERM_MASK_RW;
 		break;
 	      case STT_FUNC:
 	      case STT_GNU_IFUNC:
-		/* Use l_addr for function pointer bounds.  */
-		value = sym_map->l_addr + (value - sym_map->l_addr);
-		perm_mask = CAP_PERM_MASK_RX;
+		/* value already has RX bounds.  */
 		break;
 	      default:
 		/* STT_NONE or unknown symbol: readonly.  */
@@ -438,7 +444,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 		      const ElfW(Rela) *reloc,
 		      int skip_ifunc)
 {
-  void *reloc_addr = (void *) (l_addr + reloc->r_offset);
+  void *reloc_addr = (void *) dl_rw_ptr (map, reloc->r_offset);
   uintptr_t *__attribute__((may_alias)) cap_reloc_addr = reloc_addr;
   const unsigned int r_type = ELFW (R_TYPE) (reloc->r_info);
   /* Check for unexpected PLT reloc type.  */
@@ -468,7 +474,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 	}
 
       if (map->l_mach.plt == 0)
-	*cap_reloc_addr = (uint64_t) *cap_reloc_addr + l_addr;
+	*cap_reloc_addr = dl_rx_ptr (map, *cap_reloc_addr);
       else
 	*cap_reloc_addr = map->l_mach.plt;
     }
