@@ -1276,7 +1276,9 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
   }
 
   if (l->l_ld != 0)
-    l->l_ld = (ElfW(Dyn) *) ((ElfW(Addr)) l->l_ld + l->l_addr);
+    l->l_ld = (ElfW(Dyn) *) (l->l_ld_readonly
+			     ? dl_rx_ptr (l, (elfptr_t) l->l_ld)
+			     : dl_rw_ptr (l, (elfptr_t) l->l_ld));
 
   elf_get_dynamic_info (l, false, false);
 
