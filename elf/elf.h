@@ -1064,7 +1064,8 @@ typedef struct
 
 /* Legal values for vd_flags (version information flags).  */
 #define VER_FLG_BASE	0x1		/* Version definition of file itself */
-#define VER_FLG_WEAK	0x2		/* Weak version identifier */
+#define VER_FLG_WEAK	0x2		/* Weak version identifier.  Also
+					   used by vna_flags below.  */
 
 /* Versym symbol index values.  */
 #define	VER_NDX_LOCAL		0	/* Symbol is local.  */
@@ -1140,10 +1141,6 @@ typedef struct
   Elf64_Word	vna_next;		/* Offset in bytes to next vernaux
 					   entry */
 } Elf64_Vernaux;
-
-
-/* Legal values for vna_flags.  */
-#define VER_FLG_WEAK	0x2		/* Weak version identifier */
 
 
 /* Auxiliary vector.  */
