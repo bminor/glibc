@@ -167,7 +167,7 @@ __vsyslog_internal (int pri, const char *fmt, va_list ap,
 		  _nl_C_locobj_ptr);
 
 #define SYSLOG_HEADER(__pri, __timestamp, __msgoff, pid) \
-  "<%d>%s %n%s%s%.0d%s: ",                               \
+  "<%d>%s%n%s%s%.0d%s: ",                                \
   __pri, __timestamp, __msgoff,                          \
   LogTag == NULL ? __progname : LogTag,                  \
   "[" + (pid == 0), pid, "]" + (pid == 0)

@@ -275,16 +275,19 @@ parse_syslog_msg (const char *msg)
 {
   struct msg_t r = { .pid = -1 };
   int number;
+  int wsb, wsa;
 
 #define STRINPUT(size)  XSTRINPUT(size)
 #define XSTRINPUT(size) "%" # size "s"
 
   /* The message in the form:
-     <179>Apr  8 14:51:19  tst-syslog: message 176 3  */
-  int n = sscanf (msg, "<%3d>%*s %*d %*d:%*d:%*d " STRINPUT(IDENT_LENGTH)
+     <179>Apr  8 14:51:19 tst-syslog: message 176 3  */
+  int n = sscanf (msg, "<%3d>%*s %*d %*d:%*d:%*d%n %n" STRINPUT(IDENT_LENGTH)
 		       " " STRINPUT(MSG_LENGTH) " %*d %*d",
-                  &number, r.ident, r.msg);
+                  &number, &wsb, &wsa, r.ident, r.msg);
   TEST_COMPARE (n, 3);
+  /* It should only one space between timestamp and message.  */
+  TEST_COMPARE (wsa - wsb, 1);
 
   r.facility = number & LOG_FACMASK;
   r.priority = number & LOG_PRIMASK;
