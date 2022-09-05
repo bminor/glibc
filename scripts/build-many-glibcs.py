@@ -858,7 +858,7 @@ class Context(object):
         """Check out the given version of the given component from version
         control.  Return a revision identifier."""
         if component == 'binutils':
-            git_url = 'git://sourceware.org/git/binutils-gdb.git'
+            git_url = 'https://sourceware.org/git/binutils-gdb.git'
             if version == 'mainline':
                 git_branch = 'master'
             else:
@@ -872,7 +872,7 @@ class Context(object):
                 branch = 'releases/gcc-%s' % version
             return self.gcc_checkout(branch, update)
         elif component == 'glibc':
-            git_url = 'git://sourceware.org/git/glibc.git'
+            git_url = 'https://sourceware.org/git/glibc.git'
             if version == 'mainline':
                 git_branch = 'master'
             else:
@@ -961,7 +961,7 @@ class Context(object):
             shutil.rmtree(self.component_srcdir('gcc'))
             update = False
         if not update:
-            self.git_checkout('gcc', 'git://gcc.gnu.org/git/gcc.git',
+            self.git_checkout('gcc', 'https://gcc.gnu.org/git/gcc.git',
                               branch, update)
         subprocess.run(['contrib/gcc_update', '--silent'],
                        cwd=self.component_srcdir('gcc'), check=True)
