@@ -1,0 +1,6 @@
+ld {
+  GLIBC_PRIVATE {
+    # in ld.so, but used by libc.so too.
+    _dl_symbol_address;
+  }
+}

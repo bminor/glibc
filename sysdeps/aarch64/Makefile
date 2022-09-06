@@ -9,7 +9,7 @@ LDFLAGS-rtld += -Wl,-z,force-bti,--fatal-warnings
 endif
 
 ifeq ($(subdir),elf)
-sysdep-dl-routines += dl-bti
+sysdep-dl-routines += dl-bti dl-symaddr
 
 tests += tst-audit26 \
 	 tst-audit27
