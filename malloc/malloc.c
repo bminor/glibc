@@ -2460,11 +2460,11 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags, mstate av)
     }
 
   /* update statistics */
-  int new = atomic_exchange_and_add (&mp_.n_mmaps, 1) + 1;
+  int new = atomic_fetch_add_relaxed (&mp_.n_mmaps, 1) + 1;
   atomic_max (&mp_.max_n_mmaps, new);
 
   unsigned long sum;
-  sum = atomic_exchange_and_add (&mp_.mmapped_mem, size) + size;
+  sum = atomic_fetch_add_relaxed (&mp_.mmapped_mem, size) + size;
   atomic_max (&mp_.max_mmapped_mem, sum);
 
   check_chunk (av, p);
@@ -3084,7 +3084,7 @@ mremap_chunk (mchunkptr p, size_t new_size)
   set_head (p, (new_size - offset) | IS_MMAPPED);
 
   INTERNAL_SIZE_T new;
-  new = atomic_exchange_and_add (&mp_.mmapped_mem, new_size - size - offset)
+  new = atomic_fetch_add_relaxed (&mp_.mmapped_mem, new_size - size - offset)
         + new_size - size - offset;
   atomic_max (&mp_.max_mmapped_mem, new);
   return p;
