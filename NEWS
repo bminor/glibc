@@ -21,7 +21,10 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
-  [Add security related changes here]
+  CVE-2022-39046: When the syslog function is passed a crafted input
+  string larger than 1024 bytes, it reads uninitialized memory from the
+  heap and prints it to the target log file, potentially revealing a
+  portion of the contents of the heap.
 
 The following bugs are resolved with this release:
 
