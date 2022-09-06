@@ -27,12 +27,12 @@
    If FOR_FINI is true, this is called for finishing an object.  */
 static void
 _dl_sort_maps_original (struct link_map **maps, unsigned int nmaps,
-			unsigned int skip, bool for_fini)
+			bool force_first, bool for_fini)
 {
   /* Allows caller to do the common optimization of skipping the first map,
      usually the main binary.  */
-  maps += skip;
-  nmaps -= skip;
+  maps += force_first;
+  nmaps -= force_first;
 
   /* A list of one element need not be sorted.  */
   if (nmaps <= 1)
@@ -182,7 +182,7 @@ dfs_traversal (struct link_map ***rpo, struct link_map *map,
 
 static void
 _dl_sort_maps_dfs (struct link_map **maps, unsigned int nmaps,
-		   unsigned int skip __attribute__ ((unused)), bool for_fini)
+		   bool force_first __attribute__ ((unused)), bool for_fini)
 {
   for (int i = nmaps - 1; i >= 0; i--)
     maps[i]->l_visited = 0;
@@ -286,7 +286,7 @@ _dl_sort_maps_init (void)
 
 void
 _dl_sort_maps (struct link_map **maps, unsigned int nmaps,
-	       unsigned int skip, bool for_fini)
+	       bool force_first, bool for_fini)
 {
   /* It can be tempting to use a static function pointer to store and call
      the current selected sorting algorithm routine, but experimentation
@@ -296,9 +296,9 @@ _dl_sort_maps (struct link_map **maps, unsigned int nmaps,
      input cases. A simple if-case with direct function calls appears to
      be the fastest.  */
   if (__glibc_likely (GLRO(dl_dso_sort_algo) == dso_sort_algorithm_original))
-    _dl_sort_maps_original (maps, nmaps, skip, for_fini);
+    _dl_sort_maps_original (maps, nmaps, force_first, for_fini);
   else
-    _dl_sort_maps_dfs (maps, nmaps, skip, for_fini);
+    _dl_sort_maps_dfs (maps, nmaps, force_first, for_fini);
 }
 
 #endif /* HAVE_TUNABLES.  */
