@@ -1131,10 +1131,10 @@ extern void *_dl_sysdep_read_whole_file (const char *file, size_t *sizep,
    After this, file access calls and getenv must work.  This is responsible
    for setting __libc_enable_secure if we need to be secure (e.g. setuid),
    and for setting _dl_argc and _dl_argv, and then calling _dl_main.  */
-extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
+extern elfptr_t _dl_sysdep_start (void **start_argptr,
 				    void (*dl_main) (const ElfW(Phdr) *phdr,
 						     ElfW(Word) phnum,
-						     ElfW(Addr) *user_entry,
+						     elfptr_t *user_entry,
 						     ElfW(auxv_t) *auxv))
      attribute_hidden;
 

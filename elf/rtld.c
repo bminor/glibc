@@ -384,7 +384,7 @@ extern struct rtld_global_ro _rtld_local_ro
 
 
 static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
-		     ElfW(Addr) *user_entry, ElfW(auxv_t) *auxv);
+		     elfptr_t *user_entry, ElfW(auxv_t) *auxv);
 
 /* These two variables cannot be moved into .data.rel.ro.  */
 static struct libname_list _dl_rtld_libname;
@@ -453,7 +453,7 @@ static elfptr_t __attribute__ ((noinline))
 _dl_start_final (void *arg, struct dl_start_final_info *info)
 #endif
 {
-  ElfW(Addr) start_addr;
+  elfptr_t start_addr;
 
   /* Do not use an initializer for these members because it would
      intefere with __rtld_static_init.  */
@@ -1357,7 +1357,7 @@ _dl_start_args_adjust (int skip_args)
 static void
 dl_main (const ElfW(Phdr) *phdr,
 	 ElfW(Word) phnum,
-	 ElfW(Addr) *user_entry,
+	 elfptr_t *user_entry,
 	 ElfW(auxv_t) *auxv)
 {
   struct link_map *main_map;
