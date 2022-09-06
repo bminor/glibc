@@ -141,8 +141,10 @@ typedef void (*dl_init_t) (int, char **, char **);
    to the actual code of the function but rather an architecture
    specific descriptor. */
 #ifndef ELF_FUNCTION_PTR_IS_SPECIAL
-# define DL_SYMBOL_ADDRESS(map, ref) \
+# ifndef __CHERI_PURE_CAPABILITY__
+#  define DL_SYMBOL_ADDRESS(map, ref) \
  (void *) SYMBOL_ADDRESS (map, ref, false)
+# endif
 # define DL_LOOKUP_ADDRESS(addr) ((ElfW(Addr)) (addr))
 # define DL_CALL_DT_INIT(map, start, argc, argv, env) \
  ((dl_init_t) (start)) (argc, argv, env)
