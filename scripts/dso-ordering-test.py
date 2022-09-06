@@ -707,13 +707,12 @@ def process_testcase(t):
                 "\t$(compile.c) $(OUTPUT_OPTION)\n")
         makefile.write (rule)
 
-        not_depended_objs = find_objs_not_depended_on(test_descr)
-        if not_depended_objs:
-            depstr = ""
-            for dep in not_depended_objs:
-                depstr += (" $(objpfx)" + test_subdir + "/"
-                           + test_name + "-" + dep + ".so")
-            makefile.write("$(objpfx)%s.out:%s\n" % (base_test_name, depstr))
+        # Ensure that all shared objects are built before running the
+        # test, whether there link-time dependencies or not.
+        depobjs = ["$(objpfx){}/{}-{}.so".format(test_subdir, test_name, dep)
+                   for dep in test_descr.objs]
+        makefile.write("$(objpfx){}.out: {}\n".format(
+            base_test_name, " ".join(depobjs)))
 
         # Add main executable to test-srcs
         makefile.write("test-srcs += %s/%s\n" % (test_subdir, test_name))
