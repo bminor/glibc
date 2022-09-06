@@ -121,13 +121,16 @@ dl_rw_ptr (const struct link_map *l, ElfW(Addr) vaddr)
 typedef struct link_map *lookup_t;
 #define LOOKUP_VALUE(map) map
 #define LOOKUP_VALUE_ADDRESS(map, set) ((set) || (map) ? (map)->l_addr : 0)
+#define LOOKUP_VALUE_START(map, set) ((set) || (map) ? (map)->l_map_start : 0)
 
 /* Calculate the address of symbol REF using the base address from map MAP,
    if non-NULL.  Don't check for NULL map if MAP_SET is TRUE.  */
 #define SYMBOL_ADDRESS(map, ref, map_set)				\
   ((ref) == NULL ? 0							\
-   : (__glibc_unlikely ((ref)->st_shndx == SHN_ABS) ? 0			\
-      : LOOKUP_VALUE_ADDRESS (map, map_set)) + (ref)->st_value)
+   : (__glibc_unlikely ((ref)->st_shndx == SHN_ABS) ? (ref)->st_value	\
+      : dl_get_ptr (LOOKUP_VALUE_START (map, map_set),			\
+		    LOOKUP_VALUE_ADDRESS (map, map_set),		\
+		    (ref)->st_value)))
 
 /* Type of a constructor function, in DT_INIT, DT_INIT_ARRAY,
    DT_PREINIT_ARRAY.  */
