@@ -260,13 +260,8 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 		perm_mask = CAP_PERM_MASK_RX;
 		break;
 	      default:
-		{
-		  const char *strtab;
-		  strtab = (const void *) D_PTR (sym_map, l_info[DT_STRTAB]);
-		  _dl_error_printf ("%s: symbol `%s' from `%s' has unknown type, when relocating `%s'.\n",
-				    RTLD_PROGNAME, strtab + sym->st_name, sym_map->l_name, map->l_name);
-		  perm_mask = CAP_PERM_MASK_R;
-		}
+		/* STT_NONE or unknown symbol: readonly.  */
+		perm_mask = CAP_PERM_MASK_R;
 	    }
 	  value = value + reloc->r_addend;
 	  value = __builtin_cheri_perms_and (value, perm_mask);
