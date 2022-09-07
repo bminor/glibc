@@ -51,3 +51,13 @@ EOF
 if test "$libc_cv_static_pie_on_loongarch" = yes; then
   AC_DEFINE(SUPPORT_STATIC_PIE)
 fi
+
+  # Check if gcc supports option -mcmodel=medium.
+AC_CACHE_CHECK(whether $CC supports option -mcmodel=medium,
+	       libc_cv_loongarch_cmodel_medium, [
+  if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS -mcmodel=medium /dev/null 1>&AS_MESSAGE_LOG_FD); then
+    libc_cv_loongarch_cmodel_medium=yes
+  else
+    libc_cv_loongarch_cmodel_medium=no
+  fi])
+LIBC_CONFIG_VAR([have-cmodel-medium], [$libc_cv_loongarch_cmodel_medium])
