@@ -263,6 +263,11 @@ _dl_aux_init (ElfW(auxv_t) *av)
   for (int i = 0; i < array_length (auxv_values); ++i)
     auxv_values[i] = 0;
   _dl_parse_auxv (av, auxv_values);
+
+# ifdef __CHERI_PURE_CAPABILITY__
+  _dl_main_map.l_map_start = auxv_values[AT_CHERI_EXEC_RX_CAP];
+  _dl_main_map.l_rw_start = auxv_values[AT_CHERI_EXEC_RW_CAP];
+# endif
 }
 #endif
 

@@ -22,7 +22,12 @@
 #include <ldsodefs.h>
 #include <link.h>
 
-typedef elfptr_t dl_parse_auxv_t[AT_MINSIGSTKSZ + 1];
+#ifdef __CHERI_PURE_CAPABILITY__
+# define AT_MAX AT_ENVP
+#else
+# define AT_MAX AT_MINSIGSTKSZ
+#endif
+typedef elfptr_t dl_parse_auxv_t[AT_MAX + 1];
 
 /* Copy the auxiliary vector into AUXV_VALUES and set up GLRO
    variables.  */
@@ -39,7 +44,7 @@ void _dl_parse_auxv (ElfW(auxv_t) *av, dl_parse_auxv_t auxv_values)
   auxv_values[AT_MINSIGSTKSZ] = CONSTANT_MINSIGSTKSZ;
 
   for (; av->a_type != AT_NULL; av++)
-    if (av->a_type <= AT_MINSIGSTKSZ)
+    if (av->a_type <= AT_MAX)
       auxv_values[av->a_type] = av->a_un.a_val;
 
   GLRO(dl_pagesize) = auxv_values[AT_PAGESZ];
