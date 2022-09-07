@@ -193,17 +193,8 @@ _dl_tlsdesc_dynamic:
 
 	SAVE_Q_REGISTERS
 
-	/* TODO: remove once __tls_get_addr is fixed.  */
-	str	c1, [csp, #32*8]
-
 	mov	c0, c1
 	bl	__tls_get_addr
-
-	/* TODO: __tls_get_addr should return bounded pointer,
-	   currently it does not so bound it here.  */
-	ldr	c1, [csp, #32*8]
-	ldr	x3, [c1, #TLSDESC_SIZE]
-	scbndse	c0, c0, x3
 
 	mrs	c2, ctpidr_el0 /* Restore c2.  */
 
