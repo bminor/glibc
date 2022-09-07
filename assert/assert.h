@@ -135,7 +135,11 @@ __END_DECLS
 #endif /* NDEBUG.  */
 
 
-#if defined __USE_ISOC11 && !defined __cplusplus
+#if (defined __USE_ISOC11			\
+     && (!defined __STDC_VERSION__		\
+	 || __STDC_VERSION__ <= 201710L		\
+	 || !__GNUC_PREREQ (13, 0))		\
+     && !defined __cplusplus)
 # undef static_assert
 # define static_assert _Static_assert
 #endif

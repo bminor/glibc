@@ -27,7 +27,9 @@ __BEGIN_DECLS
 #include <bits/thread-shared-types.h>
 #include <bits/types/struct_timespec.h>
 
-#ifndef __cplusplus
+#if (!defined __STDC_VERSION__				\
+     || __STDC_VERSION__ <= 201710L			\
+     || !__GNUC_PREREQ (13, 0)) && !defined __cplusplus
 # define thread_local _Thread_local
 #endif
 
