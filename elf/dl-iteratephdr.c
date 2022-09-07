@@ -61,7 +61,13 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
 
   for (l = GL(dl_ns)[ns]._ns_loaded; l != NULL; l = l->l_next)
     {
+#ifdef __CHERI_PURE_CAPABILITY__
+      info.dlpi_addr = l->l_real->l_addr == l->l_real->l_map_start
+		       ? l->l_real->l_map_start
+		       : l->l_real->l_addr;
+#else
       info.dlpi_addr = l->l_real->l_addr;
+#endif
       info.dlpi_name = l->l_real->l_name;
       info.dlpi_phdr = l->l_real->l_phdr;
       info.dlpi_phnum = l->l_real->l_phnum;
