@@ -152,9 +152,6 @@ elf_machine_load_address_from_args (void *arg)
 
 #define ELF_MACHINE_JMP_SLOT	MORELLO_R(JUMP_SLOT)
 
-/* Return the address of the entry point. */
-#define ELF_MACHINE_START_ADDRESS(map, start) ((map)->l_addr + ((start) - (ElfW(Addr))(map)->l_addr))
-
 #define DL_PLATFORM_INIT dl_platform_init ()
 
 static inline void __attribute__ ((unused))
