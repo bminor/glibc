@@ -49,6 +49,10 @@ _dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
     {
       .ti_module = map->l_tls_modid,
       .ti_offset = ref->st_value
+#  ifdef __CHERI_PURE_CAPABILITY__
+	,
+      .ti_size = ref->st_size
+#  endif
     };
 
   return __TLS_GET_ADDR (&tmp);
