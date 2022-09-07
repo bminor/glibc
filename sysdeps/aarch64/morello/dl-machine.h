@@ -440,7 +440,7 @@ elf_machine_rela_relative (struct link_map *map, const ElfW(Rela) *reloc)
 static inline void
 __attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
-		      uintptr_t l_addr,
+		      ElfW(Addr) l_addr,
 		      const ElfW(Rela) *reloc,
 		      int skip_ifunc)
 {

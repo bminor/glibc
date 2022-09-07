@@ -553,7 +553,6 @@ _dl_start (void *arg)
 
 #ifdef __CHERI_PURE_CAPABILITY__
   elf_machine_rtld_base_setup (&bootstrap_map, arg);
-  bootstrap_map.l_addr = elf_machine_load_address_from_args (arg);
   bootstrap_map.l_ld = elf_machine_runtime_dynamic ();
 #else
   /* Figure out the run-time load address of the dynamic linker itself.  */
@@ -1172,10 +1171,6 @@ rtld_setup_main_map (struct link_map *main_map)
       case PT_PHDR:
 	/* Find out the load address.  */
 	main_map->l_addr = (elfptr_t) phdr - ph->p_vaddr;
-#ifdef __CHERI_PURE_CAPABILITY__
-	// TODO: we still need laddr
-	asm volatile ("cvtd %0, %x0" : "+r"(main_map->l_addr));
-#endif
 	break;
       case PT_DYNAMIC:
 	/* This tells us where to find the dynamic section,

@@ -48,7 +48,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
   const ElfW(Rel) *relative = (const void *) reladdr;
   const ElfW(Rel) *r = relative + nrelative;
   const ElfW(Rel) *end = (const void *) (reladdr + relsize);
-  elfptr_t l_addr = map->l_addr;
+  ElfW(Addr) l_addr = map->l_addr;
   const ElfW(Sym) *const symtab
       = (const void *) D_PTR (map, l_info[DT_SYMTAB]);
 

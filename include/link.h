@@ -97,7 +97,7 @@ struct link_map
   {
     /* These first few members are part of the protocol with the debugger.
        This is the same format used in SVR4.  */
-    elfptr_t l_addr;		/* Difference between the address in the ELF
+    ElfW(Addr) l_addr;		/* Difference between the address in the ELF
 				   file and the addresses in memory.  */
 
     char *l_name;		/* Absolute file name object was found in.  */

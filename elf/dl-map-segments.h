@@ -123,7 +123,7 @@ _dl_map_segments (struct link_map *l, int fd,
 				c->mapend))
 	    return N_("ELF load command address/offset not page-aligned");
           if (__glibc_unlikely
-              (__mprotect ((caddr_t) (l->l_addr + c->mapend),
+              (__mprotect ((caddr_t) dl_rx_ptr (l, c->mapend),
                            loadcmds[nloadcmds - 1].mapstart - c->mapend,
                            PROT_NONE) < 0))
             return DL_MAP_SEGMENTS_ERROR_MPROTECT;
@@ -146,14 +146,6 @@ _dl_map_segments (struct link_map *l, int fd,
       l->l_map_end = l->l_map_start + maplength;
       l->l_contiguous = !has_holes;
 
-      /* TODO: l_addr is 0 in an exe, but it should cover the load segments.  */
-      uintptr_t l_addr = 0;
-      unsigned long allocend = ALIGN_UP (loadcmds[nloadcmds - 1].allocend,
-					 GLRO(dl_pagesize));
-      asm volatile ("cvtd %0, %x0" : "+r"(l_addr));
-      asm volatile ("scbnds %0, %0, %x1" : "+r"(l_addr) : "r"(allocend));
-      l->l_addr = l_addr;
-
       goto postmap;
     }
 #endif
@@ -167,7 +159,7 @@ _dl_map_segments (struct link_map *l, int fd,
     {
       if (c->dataend > c->mapstart
           /* Map the segment contents from the file.  */
-          && (__mmap ((void *) (l->l_addr + c->mapstart),
+          && (__mmap ((void *) dl_rx_ptr (l, c->mapstart),
                       c->dataend - c->mapstart, c->prot,
                       MAP_FIXED|MAP_COPY|MAP_FILE,
                       fd, c->mapoff)
@@ -198,7 +190,7 @@ _dl_map_segments (struct link_map *l, int fd,
              after the data mapped from the file.   */
 	  elfptr_t zero, zeroend, zeropage;
 
-          zero = l->l_addr + c->dataend;
+          zero = dl_rx_ptr (l, c->dataend);
           zeroend = l->l_addr + c->allocend;
           zeropage = ((zero + GLRO(dl_pagesize) - 1)
                       & ~(GLRO(dl_pagesize) - 1));

@@ -37,7 +37,7 @@ elf_machine_rel (struct link_map *map, struct r_scope_elem *scope[],
 		 const struct r_found_version *version,
 		 void *const reloc_addr, int skip_ifunc);
 static inline void __attribute__((always_inline))
-elf_machine_rel_relative (elfptr_t l_addr, const ElfW(Rel) *reloc,
+elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
 			  void *const reloc_addr);
 # endif
 # if ! ELF_MACHINE_NO_RELA
@@ -58,12 +58,12 @@ elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
 # if ELF_MACHINE_NO_RELA || defined ELF_MACHINE_PLT_REL
 static inline void __attribute__((always_inline))
 elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
-		      elfptr_t l_addr, const ElfW(Rel) *reloc,
+		      ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
 		      int skip_ifunc);
 # else
 static inline void __attribute__((always_inline))
 elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
-		      elfptr_t l_addr, const ElfW(Rela) *reloc,
+		      ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
 		      int skip_ifunc);
 # endif
 #endif
