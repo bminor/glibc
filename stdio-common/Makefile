@@ -267,6 +267,10 @@ $(objpfx)errlist-data-aux.S: errlist-data-gen.c
 	$(make-target-directory)
 	$(compile-command.c) $(pie-default) $(no-stack-protector) -S
 
+ifndef no_deps
+-include $(objpfx)errlist-data-aux.S.d $(objpfx)errlist-data-aux-shared.S.d
+endif
+
 $(objpfx)errlist-data.os: $(objpfx)errlist-data-aux-shared.S
 $(objpfx)errlist-data.o: $(objpfx)errlist-data-aux.S
 
@@ -277,6 +281,10 @@ $(objpfx)siglist-aux-shared.S: siglist-gen.c
 $(objpfx)siglist-aux.S: siglist-gen.c
 	$(make-target-directory)
 	$(compile-command.c) $(pie-default) $(no-stack-protector) -S
+
+ifndef no_deps
+-include $(objpfx)siglist-aux.S.d $(objpfx)siglist-aux-shared.S.d
+endif
 
 $(objpfx)siglist.os: $(objpfx)siglist-aux-shared.S
 $(objpfx)siglist.o: $(objpfx)siglist-aux.S
