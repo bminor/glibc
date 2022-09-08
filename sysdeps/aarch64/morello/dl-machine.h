@@ -220,9 +220,6 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
     return;
   else
     {
-# ifndef RTLD_BOOTSTRAP
-      const ElfW(Sym) *const refsym = sym;
-# endif
       struct link_map *sym_map = RESOLVE_MAP (map, scope, &sym, version,
 					      r_type);
       uintptr_t value = SYMBOL_ADDRESS (sym_map, sym, true);
@@ -365,7 +362,6 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 		      int skip_ifunc)
 {
   void *reloc_addr = (void *) (l_addr + reloc->r_offset);
-  uint64_t *__attribute__((may_alias)) u64_reloc_addr = reloc_addr;
   uintptr_t *__attribute__((may_alias)) cap_reloc_addr = reloc_addr;
   const unsigned int r_type = ELFW (R_TYPE) (reloc->r_info);
   /* Check for unexpected PLT reloc type.  */
