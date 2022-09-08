@@ -173,47 +173,6 @@ elf_machine_rtld_base_setup (struct link_map *map, void *args)
       }
 }
 
-/* Load address of the dynamic linker with correct bounds.  */
-static uintptr_t __attribute__ ((unused))
-elf_machine_load_address_from_args (void *arg)
-{
-  uintptr_t *sp;
-  long argc;
-  uintptr_t phdr = 0;
-  size_t phentsize = sizeof (ElfW(Phdr));
-  size_t phnum = 0;
-
-  sp = arg;
-  argc = sp[0];
-  /* Skip argv.  */
-  sp += argc + 2;
-  /* Skip environ.  */
-  for (; *sp; sp++);
-  sp++;
-  for (; *sp != AT_NULL; sp += 2)
-    {
-      long t = sp[0];
-      if (t == AT_BASE && sp[1])
-	return sp[1];
-      else if (t == AT_PHDR)
-	phdr = sp[1];
-      else if (t == AT_PHNUM)
-	phnum = sp[1];
-      else if (t == AT_PHENT)
-	phentsize = sp[1];
-    }
-  for (size_t i = 0; i < phnum; i++)
-    {
-      ElfW(Phdr) *p = (ElfW(Phdr) *)(phdr + i * phentsize);
-      if (p->p_type == PT_PHDR)
-	return phdr - p->p_vaddr;
-      if (p->p_type == PT_DYNAMIC)
-	return (uintptr_t) elf_machine_runtime_dynamic () - p->p_vaddr;
-    }
-  /* Fail.  */
-  return 0;
-}
-
 /* In elf/rtld.c _dl_start should be global so dl-start.S can reference it.  */
 #define RTLD_START asm (".globl _dl_start");
 
