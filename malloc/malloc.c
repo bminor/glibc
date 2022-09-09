@@ -3033,7 +3033,7 @@ munmap_chunk (mchunkptr p)
       || __glibc_unlikely (!powerof2 (mem & (pagesize - 1))))
     malloc_printerr ("munmap_chunk(): invalid pointer");
 
-  atomic_decrement (&mp_.n_mmaps);
+  atomic_fetch_add_relaxed (&mp_.n_mmaps, -1);
   atomic_fetch_add_relaxed (&mp_.mmapped_mem, -total_size);
 
   /* If munmap failed the process virtual memory address space is in a

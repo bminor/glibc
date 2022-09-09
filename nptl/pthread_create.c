@@ -861,7 +861,7 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
 	 NOTES above).  */
 
       /* Oops, we lied for a second.  */
-      atomic_decrement (&__nptl_nthreads);
+      atomic_fetch_add_relaxed (&__nptl_nthreads, -1);
 
       /* Free the resources.  */
       __nptl_deallocate_stack (pd);

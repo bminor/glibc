@@ -262,7 +262,7 @@ failed_starting:
     }
 
   __pthread_setid (pthread->thread, NULL);
-  atomic_decrement (&__pthread_total);
+  atomic_fetch_add_relaxed (&__pthread_total, -1);
 failed_sigstate:
   __pthread_sigstate_destroy (pthread);
 failed_setup:

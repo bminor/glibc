@@ -88,7 +88,7 @@ __nptl_setxid_sighandler (int sig, siginfo_t *si, void *ctx)
   self->setxid_futex = 1;
   futex_wake (&self->setxid_futex, 1, FUTEX_PRIVATE);
 
-  if (atomic_decrement_val (&xidcmd->cntr) == 0)
+  if (atomic_fetch_add_relaxed (&xidcmd->cntr, -1) == 1)
     futex_wake ((unsigned int *) &xidcmd->cntr, 1, FUTEX_PRIVATE);
 }
 libc_hidden_def (__nptl_setxid_sighandler)

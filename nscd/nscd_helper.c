@@ -390,7 +390,7 @@ __nscd_get_mapping (request_type type, const char *key,
   struct mapped_database *oldval = *mappedp;
   *mappedp = result;
 
-  if (oldval != NULL && atomic_decrement_val (&oldval->counter) == 0)
+  if (oldval != NULL && atomic_fetch_add_relaxed (&oldval->counter, -1) == 1)
     __nscd_unmap (oldval);
 
   return result;

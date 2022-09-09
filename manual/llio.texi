@@ -2569,7 +2569,7 @@ aiocb64}, since the LFS transparently replaces the old interface.
 @c      lll_lock (pd->lock) @asulock @aculock
 @c      atomic_increment ok
 @c      clone ok
-@c      atomic_decrement ok
+@c      atomic_fetch_add_relaxed ok
 @c      atomic_exchange_acq ok
 @c      lll_futex_wake ok
 @c      deallocate_stack dup

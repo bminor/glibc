@@ -148,7 +148,7 @@ __nscd_setnetgrent (const char *group, struct __netgrent *datap)
       if ((gc_cycle & 1) != 0 || ++nretries == 5 || retval == -1)
 	{
 	  /* nscd is just running gc now.  Disable using the mapping.  */
-	  if (atomic_decrement_val (&mapped->counter) == 0)
+	  if (atomic_fetch_add_relaxed (&mapped->counter, -1) == 1)
 	    __nscd_unmap (mapped);
 	  mapped = NO_MAPPING;
 	}
@@ -272,7 +272,7 @@ __nscd_innetgr (const char *netgroup, const char *host, const char *user,
       if ((gc_cycle & 1) != 0 || ++nretries == 5 || retval == -1)
 	{
 	  /* nscd is just running gc now.  Disable using the mapping.  */
-	  if (atomic_decrement_val (&mapped->counter) == 0)
+	  if (atomic_fetch_add_relaxed (&mapped->counter, -1) == 1)
 	    __nscd_unmap (mapped);
 	  mapped = NO_MAPPING;
 	}
