@@ -278,7 +278,7 @@ make_request (int fd, pid_t pid)
     {
       free (result);
 
-      atomic_add (&noai6ai_cached.usecnt, 2);
+      atomic_fetch_add_relaxed (&noai6ai_cached.usecnt, 2);
       noai6ai_cached.seen_ipv4 = seen_ipv4;
       noai6ai_cached.seen_ipv6 = seen_ipv6;
       result = &noai6ai_cached;
@@ -349,7 +349,7 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
       *in6ai = data->in6ai;
 
       if (olddata != NULL && olddata->usecnt > 0
-	  && atomic_add_zero (&olddata->usecnt, -1))
+	  && atomic_fetch_add_relaxed (&olddata->usecnt, -1) == 1)
 	free (olddata);
 
       return;
@@ -377,7 +377,7 @@ __free_in6ai (struct in6addrinfo *ai)
 	(struct cached_data *) ((char *) ai
 				- offsetof (struct cached_data, in6ai));
 
-      if (atomic_add_zero (&data->usecnt, -1))
+      if (atomic_fetch_add_relaxed (&data->usecnt, -1) == 1)
 	{
 	  __libc_lock_lock (lock);
 
