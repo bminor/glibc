@@ -12,6 +12,11 @@ Major new features:
 * The audit libraries will avoid unnecessary slowdown if it is not required
   PLT tracking (by not implementing the la_pltenter or la_pltexit callbacks).
 
+* The getent tool now supports the --no-addrconfig option. The output of
+  getent with --no-addrconfig may contain addresses of families not
+  configured on the current host i.e. as-if you had not passed
+  AI_ADDRCONFIG to getaddrinfo calls.
+
 Changes to build and runtime requirements:
 
 * The audit module interface version LAV_CURRENT is increased to enable
