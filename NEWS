@@ -7,6 +7,13 @@ using `glibc' in the "product" field.
 
 Version 2.36.1
 
+Major new features:
+
+* The getent tool now supports the --no-addrconfig option. The output of
+  getent with --no-addrconfig may contain addresses of families not
+  configured on the current host i.e. as-if you had not passed
+  AI_ADDRCONFIG to getaddrinfo calls.
+
 Security related changes:
 
   CVE-2022-39046: When the syslog function is passed a crafted input
