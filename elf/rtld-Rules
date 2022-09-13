@@ -52,7 +52,7 @@ $(objpfx)rtld-libc.a: $(foreach dir,$(rtld-subdirs),\
 	mv -f $@T $@
 
 # Use the verbose option of ar and tar when not running silently.
-ifeq	"$(findstring s,$(MAKEFLAGS))" ""	# if not -s
+ifeq ($(silent-make),no)			# if not -s
 verbose := v
 else						# -s
 verbose	:=
