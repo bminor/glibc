@@ -794,7 +794,7 @@ endif
 # Maximize efficiency by minimizing the number of rules.
 .SUFFIXES:	# Clear the suffix list.  We don't use suffix rules.
 # Don't define any builtin rules.
-MAKEFLAGS := $(MAKEFLAGS)r
+MAKEFLAGS := $(MAKEFLAGS) -r
 
 # Generic rule for making directories.
 %/:
@@ -811,7 +811,7 @@ MAKEFLAGS := $(MAKEFLAGS)r
 .PRECIOUS: $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
 
 # Use the verbose option of ar and tar when not running silently.
-ifeq	"$(findstring s,$(MAKEFLAGS))" ""	# if not -s
+ifeq ($(silent-make),no)			# if not -s
 verbose := v
 else	   					# -s
 verbose	:=
