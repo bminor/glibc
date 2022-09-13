@@ -9,7 +9,10 @@ Version 2.37
 
 Major new features:
 
-  [Add new features here]
+* The getent tool now supports the --no-addrconfig option. The output of
+  getent with --no-addrconfig may contain addresses of families not
+  configured on the current host i.e. as-if you had not passed
+  AI_ADDRCONFIG to getaddrinfo calls.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

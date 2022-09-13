@@ -58,6 +58,8 @@ static const struct argp_option args_options[] =
   {
     { "service", 's', N_("CONFIG"), 0, N_("Service configuration to be used") },
     { "no-idn", 'i', NULL, 0, N_("disable IDN encoding") },
+    { "no-addrconfig", 'A', NULL, 0,
+      N_("do not filter out unsupported IPv4/IPv6 addresses (with ahosts*)") },
     { NULL, 0, NULL, 0, NULL },
   };
 
@@ -78,6 +80,9 @@ static struct argp argp =
 
 /* Additional getaddrinfo flags for IDN encoding.  */
 static int idn_flags = AI_IDN | AI_CANONIDN;
+
+/* Set to 0 by --no-addrconfig.  */
+static int addrconfig_flags = AI_ADDRCONFIG;
 
 /* Print the version information.  */
 static void
@@ -346,7 +351,7 @@ ahosts_keys_int (int af, int xflags, int number, char *key[])
 
   struct addrinfo hint;
   memset (&hint, '\0', sizeof (hint));
-  hint.ai_flags = (AI_V4MAPPED | AI_ADDRCONFIG | AI_CANONNAME
+  hint.ai_flags = (AI_V4MAPPED | addrconfig_flags | AI_CANONNAME
 		   | idn_flags | xflags);
   hint.ai_family = af;
 
@@ -903,6 +908,10 @@ parse_option (int key, char *arg, struct argp_state *state)
 
     case 'i':
       idn_flags = 0;
+      break;
+
+    case 'A':
+      addrconfig_flags = 0;
       break;
 
     default:
