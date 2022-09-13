@@ -43,6 +43,22 @@ else
 $(error objdir must be defined by the build-directory Makefile)
 endif
 
+# Did we request 'make -s' run? "yes" or "no".
+# Starting from make-4.4 MAKEFLAGS now contains long
+# options like '--shuffle'. To detect presence of 's'
+# we pick first word with short options. Long options
+# are guaranteed to come after whitespace. We use '-'
+# prefix to always have a word before long options
+# even if no short options were passed.
+# Typical MAKEFLAGS values to watch for:
+#   "rs --shuffle=42" (silent)
+#   " --shuffle" (not silent)
+ifeq ($(findstring s, $(firstword -$(MAKEFLAGS))),)
+silent-make := no
+else
+silent-make := yes
+endif
+
 # Root of the sysdeps tree.
 sysdep_dir := $(..)sysdeps
 export sysdep_dir := $(sysdep_dir)
@@ -917,7 +933,7 @@ endif
 # umpteen zillion filenames along with it (we use `...' instead)
 # but we don't want this echoing done when the user has said
 # he doesn't want to see commands echoed by using -s.
-ifneq	"$(findstring s,$(MAKEFLAGS))" ""	# if -s
+ifeq ($(silent-make),yes)			# if -s
 +cmdecho	:= echo >/dev/null
 else						# not -s
 +cmdecho	:= echo
