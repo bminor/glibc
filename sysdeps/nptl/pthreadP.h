@@ -43,12 +43,6 @@
   atomic_compare_and_exchange_val_acq (&(descr)->member, new, old)
 #endif
 
-#ifndef THREAD_ATOMIC_BIT_SET
-# define THREAD_ATOMIC_BIT_SET(descr, member, bit) \
-  atomic_bit_set (&(descr)->member, bit)
-#endif
-
-
 static inline short max_adaptive_count (void)
 {
 #if HAVE_TUNABLES
@@ -276,7 +270,7 @@ __do_cancel (void)
   struct pthread *self = THREAD_SELF;
 
   /* Make sure we get no more cancellations.  */
-  atomic_bit_set (&self->cancelhandling, EXITING_BIT);
+  atomic_fetch_or_relaxed (&self->cancelhandling, EXITING_BITMASK);
 
   __pthread_unwind ((__pthread_unwind_buf_t *)
 		    THREAD_GETMEM (self, cleanup_jmp_buf));

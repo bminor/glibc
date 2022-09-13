@@ -24,7 +24,8 @@ void
 __nptl_free_tcb (struct pthread *pd)
 {
   /* The thread is exiting now.  */
-  if (atomic_bit_test_set (&pd->cancelhandling, TERMINATED_BIT) == 0)
+  if ((atomic_fetch_or_relaxed (&pd->cancelhandling, TERMINATED_BITMASK)
+      & TERMINATED_BITMASK) == 0)
     {
       /* Free TPP data.  */
       if (pd->tpp != NULL)
