@@ -69,7 +69,12 @@ __dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,
       info.dlpi_addr = l->l_real->l_addr;
 #endif
       info.dlpi_name = l->l_real->l_name;
+#ifdef __CHERI_PURE_CAPABILITY__
+      ElfW(Addr) phdr = (ElfW(Addr)) l->l_real->l_phdr - l->l_real->l_addr;
+      info.dlpi_phdr = (const void *) dl_rx_ptr (l->l_real, phdr);
+#else
       info.dlpi_phdr = l->l_real->l_phdr;
+#endif
       info.dlpi_phnum = l->l_real->l_phnum;
       info.dlpi_adds = GL(dl_load_adds);
       info.dlpi_subs = GL(dl_load_adds) - nloaded;
