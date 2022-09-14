@@ -32,7 +32,7 @@ readlinkat (int fd, const char *file_name, char *buf, size_t len)
   file_t file;
   struct stat64 st;
 
-  file = __file_name_lookup_at (fd, 0, file_name, O_READ | O_NOLINK, 0);
+  file = __file_name_lookup_at (fd, 0, file_name, O_NOLINK, 0);
   if (file == MACH_PORT_NULL)
     return -1;
 
@@ -41,6 +41,9 @@ readlinkat (int fd, const char *file_name, char *buf, size_t len)
     if (S_ISLNK (st.st_mode))
       {
 	char *rbuf = buf;
+
+	__mach_port_deallocate (__mach_task_self (), file);
+	file = __file_name_lookup_at (fd, 0, file_name, O_READ | O_NOLINK, 0);
 
 	err = __io_read (file, &rbuf, &len, 0, len);
 	if (!err && rbuf != buf)
