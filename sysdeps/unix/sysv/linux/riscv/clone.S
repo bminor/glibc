@@ -63,7 +63,7 @@ L (invalid):
 	li		a0, -EINVAL
 	/* Something bad happened -- no child created.  */
 L (error):
-	j		__syscall_error
+	tail		__syscall_error
 	END (__clone)
 
 /* Load up the arguments to the function.  Put this block of code in

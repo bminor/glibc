@@ -92,7 +92,7 @@ LEAF (__setcontext)
 
 	jr	t1
 
-99:	j	__syscall_error
+99:	tail	__syscall_error
 
 END (__setcontext)
 libc_hidden_def (__setcontext)

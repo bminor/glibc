@@ -70,7 +70,7 @@ LEAF (__getcontext)
 
 	ret
 
-99:	j	__syscall_error
+99:	tail	__syscall_error
 
 PSEUDO_END (__getcontext)
 

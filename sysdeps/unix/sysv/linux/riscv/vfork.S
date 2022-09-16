@@ -39,7 +39,7 @@ LEAF (__libc_vfork)
 	bltz	a0, 1f
 	ret
 
-1:	j		__syscall_error
+1:	tail	__syscall_error
 END (__libc_vfork)
 
 weak_alias (__libc_vfork, vfork)

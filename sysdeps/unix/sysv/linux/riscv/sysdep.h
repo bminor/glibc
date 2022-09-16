@@ -102,7 +102,7 @@
 # else
 #  define SYSCALL_ERROR_HANDLER(name)				\
 .Lsyscall_error ## name:					\
-        j       __syscall_error;
+        tail    __syscall_error;
 # endif
 
 /* Performs a system call, not setting errno.  */

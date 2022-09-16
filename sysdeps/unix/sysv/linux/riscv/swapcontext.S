@@ -118,7 +118,7 @@ LEAF (__swapcontext)
 	jr	t1
 
 
-99:	j	__syscall_error
+99:	tail	__syscall_error
 
 PSEUDO_END (__swapcontext)
 
