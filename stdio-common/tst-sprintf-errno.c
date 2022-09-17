@@ -49,7 +49,7 @@ do_test (void)
 
   errno = -1;
 #ifdef __GNU__
-  TEST_COMPARE (sprintf (buf, "%m"), 35);
+  TEST_COMPARE (sprintf (buf, "%m"), 39);
   TEST_COMPARE_STRING (buf, "Error in unknown error system: FFFFFFFF");
 #else
   TEST_COMPARE (sprintf (buf, "%m"), 16);
