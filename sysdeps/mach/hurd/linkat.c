@@ -23,18 +23,17 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
+#include <linkat_common.h>
 
 /* Make a link to FROM relative to FROMFD called TO relative to TOFD.  */
 int
-linkat (int fromfd, const char *from, int tofd, const char *to, int flags)
+__linkat_common (int fromfd, const char *from, int tofd, const char *to, int at_flags, int flags)
 {
   error_t err;
   file_t oldfile, linknode, todir;
   char *toname;
 
-  /* POSIX says linkat doesn't follow symlinks by default, so pass
-     O_NOLINK.  That can be overridden by AT_SYMLINK_FOLLOW in FLAGS.  */
-  oldfile = __file_name_lookup_at (fromfd, flags, from, O_NOLINK, 0);
+  oldfile = __file_name_lookup_at (fromfd, at_flags, from, flags, 0);
   if (oldfile == MACH_PORT_NULL)
     return -1;
 
@@ -60,3 +59,12 @@ linkat (int fromfd, const char *from, int tofd, const char *to, int flags)
     return __hurd_fail (err);
   return 0;
 }
+
+int
+__linkat (int fromfd, const char *from, int tofd, const char *to, int at_flags)
+{
+  /* POSIX says linkat doesn't follow symlinks by default, so pass
+     O_NOLINK.  That can be overridden by AT_SYMLINK_FOLLOW in FLAGS.  */
+  return __linkat_common (fromfd, from, tofd, to, at_flags, O_NOLINK);
+}
+weak_alias (__linkat, linkat)

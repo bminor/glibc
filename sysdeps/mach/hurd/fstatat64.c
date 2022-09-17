@@ -23,14 +23,16 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
+#include <fstatat_common.h>
+
 /* Get information about the file descriptor FD in BUF.  */
 int
-__fstatat64 (int fd, const char *filename, struct stat64 *buf, int flag)
+__fstatat64_common (int fd, const char *filename, struct stat64 *buf, int at_flags, int flags)
 {
   error_t err;
   io_t port;
 
-  port = __file_name_lookup_at (fd, flag, filename, 0, 0);
+  port = __file_name_lookup_at (fd, at_flags, filename, flags, 0);
   if (port == MACH_PORT_NULL)
     return -1;
 
@@ -38,6 +40,12 @@ __fstatat64 (int fd, const char *filename, struct stat64 *buf, int flag)
   __mach_port_deallocate (__mach_task_self (), port);
 
   return __hurd_fail (err);
+}
+
+int
+__fstatat64 (int fd, const char *filename, struct stat64 *buf, int at_flags)
+{
+  return __fstatat64_common (fd, filename, buf, at_flags, 0);
 }
 libc_hidden_def (__fstatat64)
 weak_alias (__fstatat64, fstatat64)

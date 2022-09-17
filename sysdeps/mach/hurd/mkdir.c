@@ -25,19 +25,7 @@
 int
 __mkdir (const char *file_name, mode_t mode)
 {
-  error_t err;
-  const char *name;
-  file_t parent;
-  if (!strcmp (file_name, "/"))
-    return __hurd_fail (EEXIST);
-  parent = __directory_name_split (file_name, (char **) &name);
-  if (parent == MACH_PORT_NULL)
-    return -1;
-  err = __dir_mkdir (parent, name, mode & ~_hurd_umask);
-  __mach_port_deallocate (__mach_task_self (), parent);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  return __mkdirat (AT_FDCWD, file_name, mode);
 }
 
 libc_hidden_def (__mkdir)

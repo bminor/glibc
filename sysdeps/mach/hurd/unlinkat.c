@@ -26,7 +26,7 @@
 
 /* Remove the link named NAME.  */
 int
-unlinkat (int fd, const char *name, int flag)
+__unlinkat (int fd, const char *name, int flag)
 {
   error_t err;
   file_t dir;
@@ -49,3 +49,5 @@ unlinkat (int fd, const char *name, int flag)
     return __hurd_fail (err);
   return 0;
 }
+
+weak_alias (__unlinkat, unlinkat)

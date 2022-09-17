@@ -21,6 +21,8 @@
 #include <hurd.h>
 #include <shlib-compat.h>
 
+#include <fstatat_common.h>
+
 #if LIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_33)
 
 /* Get information about the file descriptor FD in BUF.  */
@@ -30,7 +32,7 @@ __xstat64 (int vers, const char *file, struct stat64 *buf)
   if (vers != _STAT_VER)
     return __hurd_fail (EINVAL);
 
-  return __stat64 (file, buf);
+  return __fstatat64_common (AT_FDCWD, file, buf, 0, 0);
 }
 
 #endif

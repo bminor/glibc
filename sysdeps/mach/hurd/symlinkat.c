@@ -28,7 +28,7 @@
 
 /* Make a link to FROM called TO relative to FD.  */
 int
-symlinkat (const char *from, int fd, const char *to)
+__symlinkat (const char *from, int fd, const char *to)
 {
   error_t err;
   file_t dir, node;
@@ -70,3 +70,5 @@ symlinkat (const char *from, int fd, const char *to)
     return __hurd_fail (err);
   return 0;
 }
+
+weak_alias (__symlinkat, symlinkat)

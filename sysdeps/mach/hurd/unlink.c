@@ -25,20 +25,7 @@
 int
 __unlink (const char *name)
 {
-  error_t err;
-  file_t dir;
-  const char *file;
-
-  dir = __directory_name_split (name, (char **) &file);
-  if (dir == MACH_PORT_NULL)
-    return -1;
-
-  err = __dir_unlink (dir, file);
-  __mach_port_deallocate (__mach_task_self (), dir);
-
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  return __unlinkat (AT_FDCWD, name, 0);
 }
 
 weak_alias (__unlink, unlink)

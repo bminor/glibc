@@ -26,7 +26,7 @@
    than LEN bytes of BUF.  The contents are not null-terminated.
    Returns the number of characters read, or -1 for errors.  */
 ssize_t
-readlinkat (int fd, const char *file_name, char *buf, size_t len)
+__readlinkat (int fd, const char *file_name, char *buf, size_t len)
 {
   error_t err;
   file_t file_stat;
@@ -67,4 +67,5 @@ readlinkat (int fd, const char *file_name, char *buf, size_t len)
 
   return err ? __hurd_fail (err) : len;
 }
+weak_alias (__readlinkat, readlinkat)
 libc_hidden_def (readlinkat)

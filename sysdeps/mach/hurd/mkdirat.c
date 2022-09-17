@@ -24,7 +24,7 @@
 #include <string.h>
 
 int
-mkdirat (int fd, const char *path, mode_t mode)
+__mkdirat (int fd, const char *path, mode_t mode)
 {
   error_t err;
   const char *name;
@@ -40,3 +40,5 @@ mkdirat (int fd, const char *path, mode_t mode)
     return __hurd_fail (err);
   return 0;
 }
+
+weak_alias (__mkdirat, mkdirat)

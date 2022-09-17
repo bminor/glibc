@@ -27,46 +27,6 @@
 ssize_t
 __readlink (const char *file_name, char *buf, size_t len)
 {
-  error_t err;
-  file_t file_stat;
-  struct stat64 st;
-
-  file_stat = __file_name_lookup (file_name, O_NOLINK, 0);
-  if (file_stat == MACH_PORT_NULL)
-    return -1;
-
-  err = __io_stat (file_stat, &st);
-  if (! err)
-    if (S_ISLNK (st.st_mode))
-      {
-	enum retry_type doretry;
-	char retryname[1024];
-	file_t file;
-	char *rbuf = buf;
-
-	err = __dir_lookup (file_stat, "", O_READ | O_NOLINK, 0, &doretry, retryname, &file);
-	if (! err && (doretry != FS_RETRY_NORMAL || retryname[0] != '\0'))
-	  err = EGRATUITOUS;
-	if (! err)
-	  {
-	    err = __io_read (file, &rbuf, &len, 0, len);
-	    if (!err && rbuf != buf)
-	      {
-		memcpy (buf, rbuf, len);
-		__vm_deallocate (__mach_task_self (), (vm_address_t)rbuf, len);
-	      }
-
-	    __mach_port_deallocate (__mach_task_self (), file);
-	  }
-      }
-    else
-      err = EINVAL;
-
-  __mach_port_deallocate (__mach_task_self (), file_stat);
-
-  if (err)
-    return __hurd_fail (err);
-  else
-    return len;
+  return __readlinkat (AT_FDCWD, file_name, buf, len);
 }
 weak_alias (__readlink, readlink)

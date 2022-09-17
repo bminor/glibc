@@ -22,24 +22,5 @@
 int
 rename (const char *old, const char *new)
 {
-  error_t err;
-  file_t olddir, newdir;
-  const char *oldname, *newname;
-
-  olddir = __directory_name_split (old, (char **) &oldname);
-  if (olddir == MACH_PORT_NULL)
-    return -1;
-  newdir = __directory_name_split (new, (char **) &newname);
-  if (newdir == MACH_PORT_NULL)
-    {
-       __mach_port_deallocate (__mach_task_self (), olddir);
-      return -1;
-    }
-
-  err = __dir_rename (olddir, oldname, newdir, newname, 0);
-  __mach_port_deallocate (__mach_task_self (), olddir);
-  __mach_port_deallocate (__mach_task_self (), newdir);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  return __renameat2 (AT_FDCWD, old, AT_FDCWD, new, 0);
 }

@@ -196,6 +196,7 @@ extern int __utimensat64_helper (int fd, const char *file,
                                  const struct __timespec64 tsp[2], int flags);
 libc_hidden_proto (__utimensat64_helper);
 
+extern int __futimesat (int __fd, const char *__file, const struct timeval __tvp[2]);
 #if __TIMESIZE == 64
 # define __futimes64 __futimes
 # define __futimesat64 __futimesat

@@ -27,7 +27,7 @@
 /* Change the access time of FILE relative to FD to TVP[0] and
    the modification time of FILE to TVP[1].  */
 int
-futimesat (int fd, const char *file, const struct timeval tvp[2])
+__futimesat (int fd, const char *file, const struct timeval tvp[2])
 {
   error_t err;
   file_t port;
@@ -43,3 +43,4 @@ futimesat (int fd, const char *file, const struct timeval tvp[2])
     return __hurd_fail (err);
   return 0;
 }
+weak_alias (__futimesat, futimesat)

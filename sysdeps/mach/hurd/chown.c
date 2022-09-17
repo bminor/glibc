@@ -24,15 +24,7 @@
 int
 __chown (const char *file, uid_t owner, gid_t group)
 {
-  error_t err;
-  file_t port = __file_name_lookup (file, 0, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = __file_chown (port, owner, group);
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  return __fchownat (AT_FDCWD, file, owner, group, 0);
 }
 libc_hidden_def (__chown)
 weak_alias (__chown, chown)

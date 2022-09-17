@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+/* Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,18 +15,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stddef.h>
-#include <unistd.h>
-#include <hurd.h>
+#ifndef	_FSTATAT_COMMON_H
+#define	_FSTATAT_COMMON_H	1
 
-#include <linkat_common.h>
+extern int __fstatat64_common (int fd, const char *filename, struct stat64 *buf, int at_flags, int flags);
 
-/* Make a link to FROM called TO.  */
-int
-__link (const char *from, const char *to)
-{
-  return __linkat_common (AT_FDCWD, from, AT_FDCWD, to, 0, 0);
-}
-
-weak_alias (__link, link)
+#endif /* link_common.h */

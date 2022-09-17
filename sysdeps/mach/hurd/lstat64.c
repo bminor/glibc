@@ -21,21 +21,13 @@
 #include <fcntl.h>
 #include <hurd.h>
 
+#include <fstatat_common.h>
+
 /* Get information about the file descriptor FD in BUF.  */
 int
 __lstat64 (const char *file, struct stat64 *buf)
 {
-  error_t err;
-  file_t port;
-
-  port = __file_name_lookup (file, O_NOLINK, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = __io_stat (port, buf);
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  return __fstatat64_common (AT_FDCWD, file, buf, 0, O_NOLINK);
 }
 hidden_def (__lstat64)
 weak_alias (__lstat64, lstat64)
