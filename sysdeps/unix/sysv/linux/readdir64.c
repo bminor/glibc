@@ -37,48 +37,36 @@ __readdir64 (DIR *dirp)
   __libc_lock_lock (dirp->lock);
 #endif
 
-  do
+  if (dirp->offset >= dirp->size)
     {
-      size_t reclen;
+      /* We've emptied out our buffer.  Refill it.  */
 
-      if (dirp->offset >= dirp->size)
+      size_t maxread = dirp->allocation;
+      ssize_t bytes;
+
+      bytes = __getdents64 (dirp->fd, dirp->data, maxread);
+      if (bytes <= 0)
 	{
-	  /* We've emptied out our buffer.  Refill it.  */
-
-	  size_t maxread = dirp->allocation;
-	  ssize_t bytes;
-
-	  bytes = __getdents64 (dirp->fd, dirp->data, maxread);
-	  if (bytes <= 0)
-	    {
-	      /* On some systems getdents fails with ENOENT when the
-		 open directory has been rmdir'd already.  POSIX.1
-		 requires that we treat this condition like normal EOF.  */
-	      if (bytes < 0 && errno == ENOENT)
-		bytes = 0;
-
-	      /* Don't modifiy errno when reaching EOF.  */
-	      if (bytes == 0)
-		__set_errno (saved_errno);
-	      dp = NULL;
-	      break;
-	    }
-	  dirp->size = (size_t) bytes;
-
-	  /* Reset the offset into the buffer.  */
-	  dirp->offset = 0;
+	  /* Linux may fail with ENOENT on some file systems if the
+	     directory inode is marked as dead (deleted).  POSIX
+	     treats this as a regular end-of-directory condition, so
+	     do not set errno in that case, to indicate success.  */
+	  if (bytes == 0 || errno == ENOENT)
+	    __set_errno (saved_errno);
+#if IS_IN (libc)
+	  __libc_lock_unlock (dirp->lock);
+#endif
+	  return NULL;
 	}
+      dirp->size = (size_t) bytes;
 
-      dp = (struct dirent64 *) &dirp->data[dirp->offset];
+      /* Reset the offset into the buffer.  */
+      dirp->offset = 0;
+    }
 
-      reclen = dp->d_reclen;
-
-      dirp->offset += reclen;
-
-      dirp->filepos = dp->d_off;
-
-      /* Skip deleted files.  */
-    } while (dp->d_ino == 0);
+  dp = (struct dirent64 *) &dirp->data[dirp->offset];
+  dirp->offset += dp->d_reclen;
+  dirp->filepos = dp->d_off;
 
 #if IS_IN (libc)
   __libc_lock_unlock (dirp->lock);
@@ -115,48 +103,36 @@ __old_readdir64 (DIR *dirp)
   __libc_lock_lock (dirp->lock);
 #endif
 
-  do
+  if (dirp->offset >= dirp->size)
     {
-      size_t reclen;
+      /* We've emptied out our buffer.  Refill it.  */
 
-      if (dirp->offset >= dirp->size)
+      size_t maxread = dirp->allocation;
+      ssize_t bytes;
+
+      bytes = __old_getdents64 (dirp->fd, dirp->data, maxread);
+      if (bytes <= 0)
 	{
-	  /* We've emptied out our buffer.  Refill it.  */
-
-	  size_t maxread = dirp->allocation;
-	  ssize_t bytes;
-
-	  bytes = __old_getdents64 (dirp->fd, dirp->data, maxread);
-	  if (bytes <= 0)
-	    {
-	      /* On some systems getdents fails with ENOENT when the
-		 open directory has been rmdir'd already.  POSIX.1
-		 requires that we treat this condition like normal EOF.  */
-	      if (bytes < 0 && errno == ENOENT)
-		bytes = 0;
-
-	      /* Don't modifiy errno when reaching EOF.  */
-	      if (bytes == 0)
-		__set_errno (saved_errno);
-	      dp = NULL;
-	      break;
-	    }
-	  dirp->size = (size_t) bytes;
-
-	  /* Reset the offset into the buffer.  */
-	  dirp->offset = 0;
+	  /* Linux may fail with ENOENT on some file systems if the
+	     directory inode is marked as dead (deleted).  POSIX
+	     treats this as a regular end-of-directory condition, so
+	     do not set errno in that case, to indicate success.  */
+	  if (bytes == 0 || errno == ENOENT)
+	    __set_errno (saved_errno);
+#if IS_IN (libc)
+	  __libc_lock_unlock (dirp->lock);
+#endif
+	  return NULL;
 	}
+      dirp->size = (size_t) bytes;
 
-      dp = (struct __old_dirent64 *) &dirp->data[dirp->offset];
+      /* Reset the offset into the buffer.  */
+      dirp->offset = 0;
+    }
 
-      reclen = dp->d_reclen;
-
-      dirp->offset += reclen;
-
-      dirp->filepos = dp->d_off;
-
-      /* Skip deleted files.  */
-    } while (dp->d_ino == 0);
+  dp = (struct __old_dirent64 *) &dirp->data[dirp->offset];
+  dirp->offset += dp->d_reclen;
+  dirp->filepos = dp->d_off;
 
 #if IS_IN (libc)
   __libc_lock_unlock (dirp->lock);
