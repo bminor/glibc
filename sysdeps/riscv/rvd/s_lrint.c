@@ -1,4 +1,4 @@
-/* llround().  RISC-V version.
+/* lrint().  RISC-V version.
    Copyright (C) 2017-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -19,12 +19,20 @@
 #include <libm-alias-double.h>
 #include <stdint.h>
 
+#if __WORDSIZE == 64
+# define OP "fcvt.l.d"
+#elif __WORDSIZE == 32
+# define OP "fcvt.w.d"
+#else
+# error Unsupported
+#endif
+
 long int
-__lround (double x)
+__lrint (double x)
 {
-  int64_t res;
-  asm ("fcvt.l.d %0, %1, rmm" : "=r" (res) : "f" (x));
+  long int res;
+  asm (OP "\t%0, %1" : "=r" (res) : "f" (x));
   return res;
 }
 
-libm_alias_double (__lround, lround)
+libm_alias_double (__lrint, lrint)
