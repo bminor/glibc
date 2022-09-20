@@ -182,8 +182,9 @@ dfs_traversal (struct link_map ***rpo, struct link_map *map,
 
 static void
 _dl_sort_maps_dfs (struct link_map **maps, unsigned int nmaps,
-		   bool force_first __attribute__ ((unused)), bool for_fini)
+		   bool force_first, bool for_fini)
 {
+  struct link_map *first_map = maps[0];
   for (int i = nmaps - 1; i >= 0; i--)
     maps[i]->l_visited = 0;
 
@@ -207,14 +208,6 @@ _dl_sort_maps_dfs (struct link_map **maps, unsigned int nmaps,
      incorrectly placed at the last place in the order (first in reverse).
      Adjusting the order so that maps[0] is last traversed naturally avoids
      this problem.
-
-     Further, the old "optimization" of skipping the main object at maps[0]
-     from the call-site (i.e. _dl_sort_maps(maps+1,nmaps-1)) is in general
-     no longer valid, since traversing along object dependency-links
-     may "find" the main object even when it is not included in the initial
-     order (e.g. a dlopen()'ed shared object can have circular dependencies
-     linked back to itself). In such a case, traversing N-1 objects will
-     create a N-object result, and raise problems.
 
      To summarize, just passing in the full list, and iterating from back
      to front makes things much more straightforward.  */
@@ -274,6 +267,27 @@ _dl_sort_maps_dfs (struct link_map **maps, unsigned int nmaps,
     }
 
   memcpy (maps, rpo, sizeof (struct link_map *) * nmaps);
+
+  /* Skipping the first object at maps[0] is not valid in general,
+     since traversing along object dependency-links may "find" that
+     first object even when it is not included in the initial order
+     (e.g., a dlopen'ed shared object can have circular dependencies
+     linked back to itself).  In such a case, traversing N-1 objects
+     will create a N-object result, and raise problems.  Instead,
+     force the object back into first place after sorting.  This naive
+     approach may introduce further dependency ordering violations
+     compared to rotating the cycle until the first map is again in
+     the first position, but as there is a cycle, at least one
+     violation is already present.  */
+  if (force_first && maps[0] != first_map)
+    {
+      int i;
+      for (i = 0; maps[i] != first_map; ++i)
+	;
+      assert (i < nmaps);
+      memmove (&maps[1], maps, i * sizeof (maps[0]));
+      maps[0] = first_map;
+    }
 }
 
 void
