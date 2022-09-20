@@ -25,6 +25,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
+#include <net/if.h>
 
 
 /* This structure gets passed by the SIOCADDRT and SIOCDELRT calls. */
@@ -63,6 +64,22 @@ struct in6_rtmsg
     uint32_t rtmsg_flags;
     int rtmsg_ifindex;
   };
+
+
+typedef struct ifrtreq
+  {
+    char ifname[IFNAMSIZ];
+    in_addr_t rt_dest;
+    in_addr_t rt_mask;
+    in_addr_t rt_gateway;
+    int rt_flags;
+    int rt_metric;
+    int rt_mtu;
+    int rt_window;
+    int rt_irtt;
+    int rt_tos;
+    int rt_class;
+  } ifrtreq_t;
 
 
 #define	RTF_UP		0x0001		/* Route usable.  */
