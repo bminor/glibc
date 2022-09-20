@@ -30,3 +30,6 @@
 
 #undef __ASSUME_CLONE_DEFAULT
 #define __ASSUME_CLONE_BACKWARDS 1
+
+/* QEMU does not support set_robust_list.  */
+#undef __ASSUME_SET_ROBUST_LIST
