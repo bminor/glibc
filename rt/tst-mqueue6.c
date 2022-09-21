@@ -40,7 +40,7 @@
 static int
 (mqsend) (mqd_t q, int line)
 {
-  char c;
+  char c = 0;
   if (mq_send (q, &c, 1, 1) != 0)
     {
       printf ("mq_send on line %d failed with: %m\n", line);
