@@ -80,6 +80,7 @@ typedef struct ifrtreq
     int rt_tos;
     int rt_class;
   } ifrtreq_t;
+#define _IOT_ifrtreq _IOT (_IOTS(char), IF_NAMESIZE, _IOTS(int), 10, 0, 0)
 
 
 #define	RTF_UP		0x0001		/* Route usable.  */
