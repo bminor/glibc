@@ -3768,7 +3768,13 @@ check_node_accept_bytes (const re_dfa_t *dfa, Idx node_idx,
 	      _NL_CURRENT (LC_COLLATE, _NL_COLLATE_SYMB_EXTRAMB);
 	  for (i = 0; i < cset->ncoll_syms; ++i)
 	    {
+	      /* The compiler might warn that extra may be used uninitialized,
+		 however the loop will be executed iff ncoll_syms is larger
+		 than 0,which means extra will be already initialized.  */
+	      DIAG_PUSH_NEEDS_COMMENT;
+	      DIAG_IGNORE_Os_NEEDS_COMMENT (8, "-Wmaybe-uninitialized");
 	      const unsigned char *coll_sym = extra + cset->coll_syms[i];
+	      DIAG_POP_NEEDS_COMMENT;
 	      /* Compare the length of input collating element and
 		 the length of current collating element.  */
 	      if (*coll_sym != elem_len)
