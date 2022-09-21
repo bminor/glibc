@@ -68,7 +68,7 @@ struct in6_rtmsg
 
 typedef struct ifrtreq
   {
-    char ifname[IFNAMSIZ];
+    char ifname[IF_NAMESIZE];
     in_addr_t rt_dest;
     in_addr_t rt_mask;
     in_addr_t rt_gateway;
