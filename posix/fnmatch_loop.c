@@ -530,6 +530,14 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
                               {
                                 /* Compare the byte sequence but only if
                                    this is not part of a range.  */
+
+				/* The compiler might warn that idx may be
+				   used uninitialized, however it will be
+				   reached iff elem < table_size which means
+				   that it was properly set in the loop
+				   above.   */
+                                DIAG_PUSH_NEEDS_COMMENT;
+                                DIAG_IGNORE_Os_NEEDS_COMMENT (8, "-Wmaybe-uninitialized");
                                 if (! is_range
 
 # if WIDE_CHAR_VERSION
@@ -542,11 +550,19 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
                                     n += c1 - 1;
                                     goto matched;
                                   }
+                                DIAG_POP_NEEDS_COMMENT;
 
                                 /* Get the collation sequence value.  */
                                 is_seqval = true;
 # if WIDE_CHAR_VERSION
+                                /* The compile might warn that wextra may be
+				   used uninitialized and similar to 'idx'
+				   above it will be properly set by the loop.
+				   */
+                                DIAG_PUSH_NEEDS_COMMENT;
+                                DIAG_IGNORE_Os_NEEDS_COMMENT (8, "-Wmaybe-uninitialized");
                                 cold = wextra[1 + wextra[0]];
+                                DIAG_POP_NEEDS_COMMENT;
 # else
                                 idx += 1 + extra[idx];
                                 /* Adjust for the alignment.  */
@@ -723,9 +739,24 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
                                     /* Get the collation sequence value.  */
                                     is_seqval = true;
 # if WIDE_CHAR_VERSION
+                                    /* The compiler might warn that wextra may
+                                       be used uninitialized, however it will
+                                       be reached iff elem < table_size which
+                                       means that it was properly set in the
+                                       loop above.   */
+                                    DIAG_PUSH_NEEDS_COMMENT;
+                                    DIAG_IGNORE_Os_NEEDS_COMMENT (8, "-Wmaybe-uninitialized");
                                     cend = wextra[1 + wextra[0]];
+                                    DIAG_POP_NEEDS_COMMENT;
 # else
+				    /* The compile might warn that idx may
+				       be used uninitialized and similar to
+				       wextra above it will be properly set by
+				       the loop.   */
+                                    DIAG_PUSH_NEEDS_COMMENT;
+                                    DIAG_IGNORE_Os_NEEDS_COMMENT (8, "-Wmaybe-uninitialized");
                                     idx += 1 + extra[idx];
+                                    DIAG_POP_NEEDS_COMMENT;
                                     /* Adjust for the alignment.  */
                                     idx = (idx + 3) & ~3;
                                     cend = *((int32_t *) &extra[idx]);
