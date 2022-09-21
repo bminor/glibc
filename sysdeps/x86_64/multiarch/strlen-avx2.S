@@ -544,14 +544,11 @@ L(return_vzeroupper):
 L(cross_page_less_vec):
 	tzcntl	%eax, %eax
 #  ifdef USE_AS_WCSLEN
-	/* NB: Multiply length by 4 to get byte count.  */
-	sall	$2, %esi
+	/* NB: Divide by 4 to convert from byte-count to length.  */
+	shrl	$2, %eax
 #  endif
 	cmpq	%rax, %rsi
 	cmovb	%esi, %eax
-#  ifdef USE_AS_WCSLEN
-	shrl	$2, %eax
-#  endif
 	VZEROUPPER_RETURN
 # endif
 
