@@ -281,8 +281,8 @@ enum __ioctl_datum { IOC_8, IOC_16, IOC_32, IOC_64 };
 #define	SIOCSPGRP	_IOW('s',  8, int)		/* set process group */
 #define	SIOCGPGRP	_IOR('s',  9, int)		/* get process group */
 
-#define	SIOCADDRT	_IOW('r', 10, struct ortentry)	/* add route */
-#define	SIOCDELRT	_IOW('r', 11, struct ortentry)	/* delete route */
+#define	SIOCADDRT	_IOW('r', 10, struct ifrtreq)	/* add route */
+#define	SIOCDELRT	_IOW('r', 11, struct ifrtreq)	/* delete route */
 
 #define	SIOCSIFADDR	_IOW('i', 12, struct ifreq)	/* set ifnet address */
 #define	OSIOCGIFADDR	_IOWR('i',13, struct ifreq)	/* get ifnet address */
