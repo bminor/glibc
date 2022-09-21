@@ -28,44 +28,6 @@
 #include <net/if.h>
 
 
-/* This structure gets passed by the SIOCADDRT and SIOCDELRT calls. */
-struct rtentry
-  {
-    unsigned long int rt_pad1;
-    struct sockaddr rt_dst;		/* Target address.  */
-    struct sockaddr rt_gateway;		/* Gateway addr (RTF_GATEWAY).  */
-    struct sockaddr rt_genmask;		/* Target network mask (IP).  */
-    unsigned short int rt_flags;
-    short int rt_pad2;
-    unsigned long int rt_pad3;
-    unsigned char rt_tos;
-    unsigned char rt_class;
-    short int rt_pad4;
-    short int rt_metric;		/* +1 for binary compatibility!  */
-    char *rt_dev;			/* Forcing the device at add.  */
-    unsigned long int rt_mtu;		/* Per route MTU/Window.  */
-    unsigned long int rt_window;	/* Window clamping.  */
-    unsigned short int rt_irtt;		/* Initial RTT.  */
-  };
-/* Compatibility hack.  */
-#define rt_mss	rt_mtu
-
-
-struct in6_rtmsg
-  {
-    struct in6_addr rtmsg_dst;
-    struct in6_addr rtmsg_src;
-    struct in6_addr rtmsg_gateway;
-    uint32_t rtmsg_type;
-    uint16_t rtmsg_dst_len;
-    uint16_t rtmsg_src_len;
-    uint32_t rtmsg_metric;
-    unsigned long int rtmsg_info;
-    uint32_t rtmsg_flags;
-    int rtmsg_ifindex;
-  };
-
-
 typedef struct ifrtreq
   {
     char ifname[IF_NAMESIZE];
