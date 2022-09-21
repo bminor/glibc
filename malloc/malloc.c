@@ -244,6 +244,9 @@
 /* For memory tagging.  */
 #include <libc-mtag.h>
 
+/* For CHERI capability narrowing.  */
+#include <libc-cap.h>
+
 #include <malloc/malloc-internal.h>
 
 /* For SINGLE_THREAD_P.  */
@@ -480,6 +483,49 @@ tag_at (void *ptr)
   if (__glibc_unlikely (mtag_enabled))
     return __libc_mtag_address_get_tag (ptr);
   return ptr;
+}
+
+/* CHERI capability narrowing support.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+static bool cap_narrowing_enabled = true;
+#else
+# define cap_narrowing_enabled 0
+#endif
+
+/* Round up size so capability bounds can be represented.  */
+static __always_inline size_t
+cap_roundup (size_t n)
+{
+  if (cap_narrowing_enabled)
+    return __libc_cap_roundup (n);
+  return n;
+}
+
+/* Alignment such that capability bounds can be represented.  */
+static __always_inline size_t
+cap_align (size_t n)
+{
+  if (cap_narrowing_enabled)
+    return __libc_cap_align (n);
+  return 1;
+}
+
+/* Narrow the bounds of p to [p, p+n) exactly unless p is NULL.  */
+static __always_inline void *
+cap_narrow (void *p, size_t n)
+{
+  if (cap_narrowing_enabled && p != NULL)
+    return __libc_cap_narrow (p, n);
+  return p;
+}
+
+/* Widen back the bounds of a non-NULL p that was returned by cap_narrow.  */
+static __always_inline void *
+cap_widen (void *p)
+{
+  if (cap_narrowing_enabled)
+    return __libc_cap_widen (p);
+  return p;
 }
 
 #include <string.h>
@@ -1292,6 +1338,18 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
       _int_memalign: Returns untagged memory.
       _mid_memalign: Returns tagged memory.
       _int_realloc: Takes and returns tagged memory.
+
+   With CHERI capability narrowing enabled, public interfaces take and
+   return pointers with bounds that cannot access malloc internal chunk
+   headers.  Narrowing CHERI capabilities in internal interfaces:
+
+      sysmalloc: Returns wide capability.
+      _int_malloc: Returns wide capability.
+      _int_free: Takes wide capability.
+      _int_memalign: Returns wide capability.
+      _int_memalign: Returns wide capability.
+      _mid_memalign: Returns narrow capability.
+      _int_realloc: Takes and returns wide capability.
 */
 
 /* The chunk header is two SIZE_SZ elements, but this is used widely, so
@@ -3320,7 +3378,13 @@ __libc_malloc (size_t bytes)
 
   if (!__malloc_initialized)
     ptmalloc_init ();
+
+  size_t align = cap_align (bytes);
+  bytes = cap_roundup (bytes);
 #if USE_TCACHE
+  _Static_assert (MAX_TCACHE_SIZE <= __CAP_ALIGN_THRESHOLD,
+		  "tcache entries are already aligned for capability narrowing");
+
   /* int_free also calls request2size, be careful to not pad twice.  */
   size_t tbytes = checked_request2size (bytes);
   if (tbytes == 0)
@@ -3338,16 +3402,22 @@ __libc_malloc (size_t bytes)
       && tcache->counts[tc_idx] > 0)
     {
       victim = tcache_get (tc_idx);
-      return tag_new_usable (victim);
+      victim = tag_new_usable (victim);
+      victim = cap_narrow (victim, bytes);
+      return victim;
     }
   DIAG_POP_NEEDS_COMMENT;
 #endif
+
+  if (align > MALLOC_ALIGNMENT)
+    return _mid_memalign (align, bytes, 0);
 
   if (SINGLE_THREAD_P)
     {
       victim = tag_new_usable (_int_malloc (&main_arena, bytes));
       assert (!victim || chunk_is_mmapped (mem2chunk (victim)) ||
 	      &main_arena == arena_for_chunk (mem2chunk (victim)));
+      victim = cap_narrow (victim, bytes);
       return victim;
     }
 
@@ -3370,6 +3440,7 @@ __libc_malloc (size_t bytes)
 
   assert (!victim || chunk_is_mmapped (mem2chunk (victim)) ||
           ar_ptr == arena_for_chunk (mem2chunk (victim)));
+  victim = cap_narrow (victim, bytes);
   return victim;
 }
 libc_hidden_def (__libc_malloc)
@@ -3382,6 +3453,8 @@ __libc_free (void *mem)
 
   if (mem == 0)                              /* free(0) has no effect */
     return;
+
+  mem = cap_widen (mem);
 
   /* Quickly check that the freed pointer matches the tag for the memory.
      This gives a useful double-free detection.  */
@@ -3444,6 +3517,8 @@ __libc_realloc (void *oldmem, size_t bytes)
   if (oldmem == 0)
     return __libc_malloc (bytes);
 
+  oldmem = cap_widen (oldmem);
+
   /* Perform a quick check to ensure that the pointer's tag matches the
      memory's tag.  */
   if (__glibc_unlikely (mtag_enabled))
@@ -3470,6 +3545,8 @@ __libc_realloc (void *oldmem, size_t bytes)
        || __builtin_expect (misaligned_chunk (oldp), 0)))
       malloc_printerr ("realloc(): invalid pointer");
 
+  size_t align = cap_align (bytes);
+  bytes = cap_roundup (bytes);
   nb = checked_request2size (bytes);
   if (nb == 0)
     {
@@ -3481,6 +3558,14 @@ __libc_realloc (void *oldmem, size_t bytes)
     {
       void *newmem;
 
+#ifdef __CHERI_PURE_CAPABILITY__
+      size_t pagesize = GLRO (dl_pagesize);
+
+      // TODO: with pcuabi kernel more cases can be handled by mremap
+      /* Don't try in-place realloc if oldmem is unaligned.  */
+      if (align <= pagesize && ((size_t) oldmem & (align - 1)) == 0)
+	{
+#endif
 #if HAVE_MREMAP
       newp = mremap_chunk (oldp, nb);
       if (newp)
@@ -3491,20 +3576,56 @@ __libc_realloc (void *oldmem, size_t bytes)
 	     reused.  There's a performance hit for both us and the
 	     caller for doing this, so we might want to
 	     reconsider.  */
-	  return tag_new_usable (newmem);
+	  newmem = tag_new_usable (newmem);
+	  newmem = cap_narrow (newmem, bytes);
+	  return newmem;
 	}
 #endif
+#ifdef __CHERI_PURE_CAPABILITY__
+	}
+      size_t sz = oldsize - CHUNK_HDR_SZ;
+      /* In-place realloc if the size shrinks, but if it shrinks a lot
+	 then don't waste the rest of the mapping.  */
+      if (sz >= bytes && sz / 4 < bytes
+	  && ((size_t) oldmem & (align - 1)) == 0)
+	return cap_narrow (oldmem, bytes);
+#else
       /* Note the extra SIZE_SZ overhead. */
       if (oldsize - SIZE_SZ >= nb)
         return oldmem;                         /* do nothing */
+#endif
 
       /* Must alloc, copy, free. */
+#ifdef __CHERI_PURE_CAPABILITY__
+      if (align > MALLOC_ALIGNMENT)
+	newmem = _mid_memalign (align, bytes, 0);
+      else
+#endif
       newmem = __libc_malloc (bytes);
       if (newmem == 0)
         return 0;              /* propagate failure */
 
+#ifdef __CHERI_PURE_CAPABILITY__
+      memcpy (newmem, oldmem, sz < bytes ? sz : bytes);
+#else
       memcpy (newmem, oldmem, oldsize - CHUNK_HDR_SZ);
+#endif
       munmap_chunk (oldp);
+      return newmem;
+    }
+
+  /* Large alignment is required and it's not possible to realloc in place.  */
+  if (align > MALLOC_ALIGNMENT
+      && (oldsize < nb || ((size_t) oldmem & (align - 1)) != 0))
+    {
+      /* Use memalign, copy, free.  */
+      void *newmem = _mid_memalign (align, bytes, 0);
+      if (newmem == NULL)
+	return newmem;
+      size_t sz = oldsize - CHUNK_HDR_SZ;
+      memcpy (newmem, oldmem, sz < bytes ? sz : bytes);
+      (void) tag_region (oldmem, sz);
+      _int_free (ar_ptr, oldp, 0);
       return newmem;
     }
 
@@ -3514,7 +3635,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       assert (!newp || chunk_is_mmapped (mem2chunk (newp)) ||
 	      ar_ptr == arena_for_chunk (mem2chunk (newp)));
 
-      return newp;
+      return cap_narrow (newp, bytes);
     }
 
   __libc_lock_lock (ar_ptr->mutex);
@@ -3538,6 +3659,8 @@ __libc_realloc (void *oldmem, size_t bytes)
           _int_free (ar_ptr, oldp, 0);
         }
     }
+  else
+    newp = cap_narrow (newp, bytes);
 
   return newp;
 }
@@ -3550,6 +3673,11 @@ __libc_memalign (size_t alignment, size_t bytes)
     ptmalloc_init ();
 
   void *address = RETURN_ADDRESS (0);
+
+  size_t align = cap_align (bytes);
+  bytes = cap_roundup (bytes);
+  if (align > alignment)
+    alignment = align;
   return _mid_memalign (alignment, bytes, address);
 }
 
@@ -3590,7 +3718,9 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
       p = _int_memalign (&main_arena, alignment, bytes);
       assert (!p || chunk_is_mmapped (mem2chunk (p)) ||
 	      &main_arena == arena_for_chunk (mem2chunk (p)));
-      return tag_new_usable (p);
+      p = tag_new_usable (p);
+      p = cap_narrow (p, bytes);
+      return p;
     }
 
   arena_get (ar_ptr, bytes + alignment + MINSIZE);
@@ -3608,7 +3738,9 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
 
   assert (!p || chunk_is_mmapped (mem2chunk (p)) ||
           ar_ptr == arena_for_chunk (mem2chunk (p)));
-  return tag_new_usable (p);
+  p = tag_new_usable (p);
+  p = cap_narrow (p, bytes);
+  return p;
 }
 /* For ISO C11.  */
 weak_alias (__libc_memalign, aligned_alloc)
@@ -3622,6 +3754,10 @@ __libc_valloc (size_t bytes)
 
   void *address = RETURN_ADDRESS (0);
   size_t pagesize = GLRO (dl_pagesize);
+  size_t align = cap_align (bytes);
+  bytes = cap_roundup (bytes);
+  if (align > pagesize)
+    pagesize = align;
   return _mid_memalign (pagesize, bytes, address);
 }
 
@@ -3644,6 +3780,10 @@ __libc_pvalloc (size_t bytes)
     }
   rounded_bytes = rounded_bytes & -(pagesize - 1);
 
+  size_t align = cap_align (rounded_bytes);
+  rounded_bytes = cap_roundup (rounded_bytes);
+  if (align > pagesize)
+    pagesize = align;
   return _mid_memalign (pagesize, rounded_bytes, address);
 }
 
@@ -3666,9 +3806,22 @@ __libc_calloc (size_t n, size_t elem_size)
     }
 
   sz = bytes;
+  sz = cap_roundup (sz);
 
   if (!__malloc_initialized)
     ptmalloc_init ();
+
+  size_t align = cap_align (bytes);
+  if (align > MALLOC_ALIGNMENT)
+    {
+      mem = _mid_memalign (align, sz, 0);
+      if (mem == NULL)
+	return mem;
+      mchunkptr p = mem2chunk (cap_widen (mem));
+      if (chunk_is_mmapped (p) && __glibc_likely (perturb_byte == 0))
+	return mem;
+      return memset (mem, 0, sz);
+    }
 
   MAYBE_INIT_TCACHE ();
 
@@ -3732,13 +3885,19 @@ __libc_calloc (size_t n, size_t elem_size)
      regardless of MORECORE_CLEARS, so we zero the whole block while
      doing so.  */
   if (__glibc_unlikely (mtag_enabled))
-    return tag_new_zero_region (mem, memsize (p));
+    {
+      mem = tag_new_zero_region (mem, memsize (p));
+      mem = cap_narrow (mem, sz);
+      return mem;
+    }
 
   INTERNAL_SIZE_T csz = chunksize (p);
 
   /* Two optional cases in which clearing not necessary */
   if (chunk_is_mmapped (p))
     {
+      mem = cap_narrow (mem, sz);
+
       if (__builtin_expect (perturb_byte, 0))
         return memset (mem, 0, sz);
 
@@ -3762,8 +3921,7 @@ __libc_calloc (size_t n, size_t elem_size)
   assert (nclears >= 3);
 
   if (nclears > 9)
-    return memset (d, 0, clearsize);
-
+    mem = memset (mem, 0, clearsize);
   else
     {
       *(d + 0) = 0;
@@ -3786,6 +3944,7 @@ __libc_calloc (size_t n, size_t elem_size)
         }
     }
 
+  mem = cap_narrow (mem, sz);
   return mem;
 }
 #endif /* IS_IN (libc) */
@@ -5167,6 +5326,7 @@ __malloc_usable_size (void *m)
 {
   if (m == NULL)
     return 0;
+  m = cap_widen (m);
   return musable (m);
 }
 #endif
@@ -5713,6 +5873,10 @@ __posix_memalign (void **memptr, size_t alignment, size_t size)
       || alignment == 0)
     return EINVAL;
 
+  size_t align = cap_align (size);
+  size = cap_roundup (size);
+  if (align > alignment)
+    alignment = align;
 
   void *address = RETURN_ADDRESS (0);
   mem = _mid_memalign (alignment, size, address);
