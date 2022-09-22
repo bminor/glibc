@@ -50,7 +50,7 @@ __pthread_exit (void *status)
 
   /* Decrease the number of threads.  We use an atomic operation to
      make sure that only the last thread calls `exit'.  */
-  if (atomic_decrement_and_test (&__pthread_total))
+  if (atomic_fetch_add_relaxed (&__pthread_total, -1) == 1)
     /* We are the last thread.  */
     exit (0);
 

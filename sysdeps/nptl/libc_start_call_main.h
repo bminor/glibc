@@ -65,7 +65,7 @@ __libc_start_call_main (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
       /* One less thread.  Decrement the counter.  If it is zero we
          terminate the entire process.  */
       result = 0;
-      if (! atomic_decrement_and_test (&__nptl_nthreads))
+      if (atomic_fetch_add_relaxed (&__nptl_nthreads, -1) != 1)
         /* Not much left to do but to exit the thread, not the process.  */
 	while (1)
 	  INTERNAL_SYSCALL_CALL (exit, 0);

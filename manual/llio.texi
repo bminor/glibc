@@ -2614,7 +2614,7 @@ aiocb64}, since the LFS transparently replaces the old interface.
 @c      free @ascuheap @acsmem
 @c     libc_thread_freeres
 @c      libc_thread_subfreeres ok
-@c     atomic_decrement_and_test ok
+@c     atomic_fetch_add_relaxed ok
 @c     td_eventword ok
 @c     td_eventmask ok
 @c     atomic_compare_exchange_bool_acq ok
