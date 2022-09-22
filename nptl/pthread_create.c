@@ -539,7 +539,7 @@ start_thread (void *arg)
 # endif
 	  this->__list.__next = NULL;
 
-	  atomic_or (&this->__lock, FUTEX_OWNER_DIED);
+	  atomic_fetch_or_acquire (&this->__lock, FUTEX_OWNER_DIED);
 	  futex_wake ((unsigned int *) &this->__lock, 1,
 		      /* XYZ */ FUTEX_SHARED);
 	}

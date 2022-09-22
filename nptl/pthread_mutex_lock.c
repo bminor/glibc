@@ -462,7 +462,7 @@ __pthread_mutex_lock_full (pthread_mutex_t *mutex)
 
 	if (__glibc_unlikely (oldval & FUTEX_OWNER_DIED))
 	  {
-	    atomic_and (&mutex->__data.__lock, ~FUTEX_OWNER_DIED);
+	    atomic_fetch_and_acquire (&mutex->__data.__lock, ~FUTEX_OWNER_DIED);
 
 	    /* We got the mutex.  */
 	    mutex->__data.__count = 1;
