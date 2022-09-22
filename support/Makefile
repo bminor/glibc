@@ -274,12 +274,12 @@ $(objpfx)test-run-command : $(libsupport) $(common-objpfx)elf/static-stubs.o
 tests = \
   README-testing \
   tst-support-namespace \
+  tst-support-open-dev-null-range \
+  tst-support-process_state \
   tst-support_blob_repeat \
   tst-support_capture_subprocess \
   tst-support_descriptors \
   tst-support_format_dns_packet \
-  tst-support-open-dev-null-range \
-  tst-support-process_state \
   tst-support_quote_blob \
   tst-support_quote_blob_wide \
   tst-support_quote_string \
@@ -303,6 +303,12 @@ $(objpfx)tst-support_record_failure-2.out: tst-support_record_failure-2.sh \
 	  > $@; \
 	$(evaluate-test)
 endif
+
+tests-special += $(objpfx)tst-glibcpp.out
+
+$(objpfx)tst-glibcpp.out: tst-glibcpp.py $(..)scripts/glibcpp.py
+	PYTHONPATH=$(..)scripts $(PYTHON) tst-glibcpp.py > $@ 2>&1; \
+	$(evaluate-test)
 
 $(objpfx)tst-support_format_dns_packet: $(common-objpfx)resolv/libresolv.so
 
