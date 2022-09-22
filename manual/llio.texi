@@ -2528,7 +2528,7 @@ aiocb64}, since the LFS transparently replaces the old interface.
 @c      _dl_allocate_tls_init ok
 @c       GET_DTV ok
 @c     mmap ok
-@c     atomic_increment_val ok
+@c     atomic_fetch_add_relaxed ok
 @c     munmap ok
 @c     change_stack_perm ok
 @c      mprotect ok
@@ -2567,7 +2567,7 @@ aiocb64}, since the LFS transparently replaces the old interface.
 @c     do_clone @asulock @ascuheap @aculock @acsmem
 @c      PREPARE_CREATE ok
 @c      lll_lock (pd->lock) @asulock @aculock
-@c      atomic_increment ok
+@c      atomic_fetch_add_relaxed ok
 @c      clone ok
 @c      atomic_fetch_add_relaxed ok
 @c      atomic_exchange_acq ok

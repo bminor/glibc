@@ -759,7 +759,7 @@ __pthread_create_2_1 (pthread_t *newthread, const pthread_attr_t *attr,
      we momentarily store a false value; this doesn't matter because there
      is no kosher thing a signal handler interrupting us right here can do
      that cares whether the thread count is correct.  */
-  atomic_increment (&__nptl_nthreads);
+  atomic_fetch_add_relaxed (&__nptl_nthreads, 1);
 
   /* Our local value of stopped_start and thread_ran can be accessed at
      any time. The PD->stopped_start may only be accessed if we have

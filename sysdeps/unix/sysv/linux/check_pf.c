@@ -72,8 +72,8 @@ static uint32_t nl_timestamp;
 uint32_t
 __bump_nl_timestamp (void)
 {
-  if (atomic_increment_val (&nl_timestamp) == 0)
-    atomic_increment (&nl_timestamp);
+  if (atomic_fetch_add_relaxed (&nl_timestamp, 1) + 1 == 0)
+    atomic_fetch_add_relaxed (&nl_timestamp, 1);
 
   return nl_timestamp;
 }
@@ -309,7 +309,7 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
   if (cache_valid_p ())
     {
       data = cache;
-      atomic_increment (&cache->usecnt);
+      atomic_fetch_add_relaxed (&cache->usecnt, 1);
     }
   else
     {

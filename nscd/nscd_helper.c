@@ -425,7 +425,7 @@ __nscd_get_map_ref (request_type type, const char *name,
 				0))
 	    cur = NO_MAPPING;
 	  else
-	    atomic_increment (&cur->counter);
+	    atomic_fetch_add_relaxed (&cur->counter, 1);
 	}
     }
 

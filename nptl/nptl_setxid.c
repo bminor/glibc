@@ -163,7 +163,7 @@ setxid_signal_thread (struct xid_command *cmdp, struct pthread *t)
   /* If this failed, it must have had not started yet or else exited.  */
   if (!INTERNAL_SYSCALL_ERROR_P (val))
     {
-      atomic_increment (&cmdp->cntr);
+      atomic_fetch_add_relaxed (&cmdp->cntr, 1);
       return 1;
     }
   else

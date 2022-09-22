@@ -91,7 +91,7 @@ __old_sem_post (sem_t *sem)
   /* We must need to synchronize with consumers of this token, so the atomic
      increment must have release MO semantics.  */
   atomic_write_barrier ();
-  (void) atomic_increment_val (futex);
+  atomic_fetch_add_release (futex, 1);
   /* We always have to assume it is a shared semaphore.  */
   futex_wake (futex, 1, LLL_SHARED);
   return 0;

@@ -228,7 +228,7 @@ __pthread_create_internal (struct __pthread **thread,
      the number of threads from within the new thread isn't an option
      since this thread might return and call `pthread_exit' before the
      new thread runs.  */
-  atomic_increment (&__pthread_total);
+  atomic_fetch_add_relaxed (&__pthread_total, 1);
 
   /* Store a pointer to this thread in the thread ID lookup table.  We
      could use __thread_setid, however, we only lock for reading as no
