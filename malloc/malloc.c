@@ -4803,7 +4803,8 @@ _int_realloc (mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
 
   /* oldmem size */
   if (__builtin_expect (chunksize_nomask (oldp) <= CHUNK_HDR_SZ, 0)
-      || __builtin_expect (oldsize >= av->system_mem, 0))
+      || __builtin_expect (oldsize >= av->system_mem, 0)
+      || __builtin_expect (oldsize != chunksize (oldp), 0))
     malloc_printerr ("realloc(): invalid old size");
 
   check_inuse_chunk (av, oldp);
