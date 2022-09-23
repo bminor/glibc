@@ -43,12 +43,12 @@ static struct passwd pwd_table_1[] = {
 
 static const char *hostaddr_5[] =
   {
-   "ABCD", "abcd", "1234", NULL
+   "ABCd", "ABCD", "ABC4", NULL
   };
 
 static const char *hostaddr_15[] =
   {
-   "4321", "ghij", NULL
+   "4321", "4322", NULL
   };
 
 static const char *hostaddr_25[] =
@@ -86,12 +86,12 @@ static const char *hostaddr_6[] =
 
 static const char *hostaddr_16[] =
   {
-   "7890", "a1b2", NULL
+   "7890", "7891", NULL
   };
 
 static const char *hostaddr_26[] =
   {
-   "qwer", "tyui", NULL
+   "qwer", "qweR", NULL
   };
 
 static struct hostent host_table_2[] = {
