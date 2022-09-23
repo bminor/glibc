@@ -121,7 +121,7 @@ must_be_tests (struct passwd *pt, struct hostent *ht)
       TEST_VERIFY (p != NULL);
       if (p != NULL)
 	{
-	  TEST_VERIFY (strcmp (p->pw_name, pt[i].pw_name) == 0);
+	  TEST_COMPARE_STRING (p->pw_name, pt[i].pw_name);
 	}
     }
 
@@ -132,8 +132,8 @@ must_be_tests (struct passwd *pt, struct hostent *ht)
       TEST_VERIFY (p != NULL);
       if (p != NULL)
 	{
-	  TEST_VERIFY (strcmp (p->pw_name, pt[i].pw_name) == 0);
-	  TEST_VERIFY (p->pw_uid == pt[i].pw_uid);
+	  TEST_COMPARE_STRING (p->pw_name, pt[i].pw_name);
+	  TEST_COMPARE (p->pw_uid, pt[i].pw_uid);
 	}
     }
   endpwent ();
@@ -144,10 +144,12 @@ must_be_tests (struct passwd *pt, struct hostent *ht)
       TEST_VERIFY (h != NULL);
       if (h != NULL)
 	{
-	  TEST_VERIFY (strcmp (h->h_name, ht[i].h_name) == 0);
+	  TEST_COMPARE_STRING (h->h_name, ht[i].h_name);
+	  TEST_COMPARE (h->h_addrtype, AF_INET);
 	  TEST_VERIFY (h->h_addr_list[0] != NULL);
-	  if (h->h_addr_list[0])
-	    TEST_VERIFY (strcmp (h->h_addr_list[0], ht[i].h_addr_list[0]) == 0);
+	  if (h->h_addr_list[0] != NULL)
+	    TEST_COMPARE_BLOB (h->h_addr_list[0], h->h_length,
+			       ht[i].h_addr_list[0], ht[i].h_length);
 	}
     }
 
@@ -158,14 +160,16 @@ must_be_tests (struct passwd *pt, struct hostent *ht)
       int herrno, res;
 
       res = gethostbyname2_r (ht[i].h_name, AF_INET,
-			    &r, buf, TESTBUFLEN, &rp, &herrno);
-      TEST_VERIFY (res == 0);
+			      &r, buf, TESTBUFLEN, &rp, &herrno);
+      TEST_COMPARE (res, 0);
       if (res == 0)
 	{
-	  TEST_VERIFY (strcmp (r.h_name, ht[i].h_name) == 0);
+	  TEST_COMPARE_STRING (r.h_name, ht[i].h_name);
+	  TEST_COMPARE (r.h_addrtype, AF_INET);
 	  TEST_VERIFY (r.h_addr_list[0] != NULL);
-	  if (r.h_addr_list[0])
-	    TEST_VERIFY (strcmp (r.h_addr_list[0], ht[i].h_addr_list[0]) == 0);
+	  if (r.h_addr_list[0] != NULL)
+	    TEST_COMPARE_BLOB (r.h_addr_list[0], r.h_length,
+			       ht[i].h_addr_list[0], ht[i].h_length);
 	}
     }
 
@@ -175,10 +179,11 @@ must_be_tests (struct passwd *pt, struct hostent *ht)
       TEST_VERIFY (h != NULL);
       if (h != NULL)
 	{
-	  TEST_VERIFY (strcmp (h->h_name, ht[i].h_name) == 0);
+	  TEST_COMPARE_STRING (h->h_name, ht[i].h_name);
 	  TEST_VERIFY (h->h_addr_list[0] != NULL);
-	  if (h->h_addr_list[0])
-	    TEST_VERIFY (strcmp (h->h_addr_list[0], ht[i].h_addr_list[0]) == 0);
+	  if (h->h_addr_list[0] != NULL)
+	    TEST_COMPARE_BLOB (h->h_addr_list[0], h->h_length,
+			       ht[i].h_addr_list[0], ht[i].h_length);
 	}
     }
 
@@ -198,17 +203,19 @@ must_be_tests (struct passwd *pt, struct hostent *ht)
 
       ap = NULL;
       res = getaddrinfo (ht[i].h_name, NULL, &hint, &ap);
-      TEST_VERIFY (res == 0);
+      TEST_COMPARE (res, 0);
       TEST_VERIFY (ap != NULL);
       if (res == 0 && ap != NULL)
 	{
 	  j = 0; /* which address in the list */
 	  while (ap)
 	    {
+	      TEST_COMPARE (ap->ai_family, AF_INET);
+
 	      struct sockaddr_in *in = (struct sockaddr_in *)ap->ai_addr;
 	      unsigned char *up = (unsigned char *)&in->sin_addr;
 
-	      TEST_VERIFY (memcmp (up, ht[i].h_addr_list[j], 4) == 0);
+	      TEST_COMPARE_BLOB (up, 4, ht[i].h_addr_list[j], 4);
 
 	      ap = ap->ai_next;
 	      ++j;
@@ -233,7 +240,7 @@ must_be_tests (struct passwd *pt, struct hostent *ht)
 			 host_buf, sizeof(host_buf),
 			 NULL, 0, NI_NOFQDN);
 
-      TEST_VERIFY (res == 0);
+      TEST_COMPARE (res, 0);
       if (res == 0)
 	TEST_VERIFY (strcmp (ht[i].h_name, host_buf) == 0);
       else
@@ -285,8 +292,8 @@ test_cross_switch_consistency (void)
       TEST_VERIFY (p != NULL);
       if (p != NULL)
 	{
-	  TEST_VERIFY (strcmp (p->pw_name, pwd_table_1[i].pw_name) == 0);
-	  TEST_VERIFY (p->pw_uid == pwd_table_1[i].pw_uid);
+	  TEST_COMPARE_STRING (p->pw_name, pwd_table_1[i].pw_name);
+	  TEST_COMPARE (p->pw_uid, pwd_table_1[i].pw_uid);
 	}
 
       /* After the first lookup, switch to conf2 and verify */
@@ -296,7 +303,7 @@ test_cross_switch_consistency (void)
 	  xrename ("/etc/nsswitch.conf2", "/etc/nsswitch.conf");
 
 	  p = getpwnam (pwd_table_2[0].pw_name);
-	  TEST_VERIFY (p->pw_uid == pwd_table_2[0].pw_uid);
+	  TEST_COMPARE (p->pw_uid, pwd_table_2[0].pw_uid);
 	}
 
       /* But the original loop should still be on conf1.  */
@@ -311,8 +318,8 @@ test_cross_switch_consistency (void)
       TEST_VERIFY (p != NULL);
       if (p != NULL)
 	{
-	  TEST_VERIFY (strcmp (p->pw_name, pwd_table_2[i].pw_name) == 0);
-	  TEST_VERIFY (p->pw_uid == pwd_table_2[i].pw_uid);
+	  TEST_COMPARE_STRING (p->pw_name, pwd_table_2[i].pw_name);
+	  TEST_COMPARE (p->pw_uid, pwd_table_2[i].pw_uid);
 	}
     }
   endpwent ();
