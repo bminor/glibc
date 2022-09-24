@@ -3,3 +3,51 @@
 
 $as_echo "#define HIDDEN_VAR_NEEDS_DYNAMIC_RELOC 1" >>confdefs.h
 
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if the toolchain is sufficient to build static PIE on LoongArch" >&5
+$as_echo_n "checking if the toolchain is sufficient to build static PIE on LoongArch... " >&6; }
+if ${libc_cv_static_pie_on_loongarch+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  cat > conftest.S << EOF
+.global _start
+.type _start, @function
+_start:
+  li.w \$a7, 93
+  /* This ensures the assembler supports explicit reloc.  */
+  pcalau12i \$a0, %pc_hi20(x)
+  ld.w \$a0, \$a0, %pc_lo12(x)
+  syscall 0
+
+.data
+x:
+  .word 0
+  /* This should produce an R_LARCH_RELATIVE in the static PIE.  */
+  .dword _start
+EOF
+  libc_cv_static_pie_on_loongarch=no
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static-pie -nostdlib -fPIE -o conftest conftest.S'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } \
+     && { ac_try='LC_ALL=C $READELF -Wr conftest | grep -q R_LARCH_RELATIVE'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }
+  then
+    libc_cv_static_pie_on_loongarch=yes
+  fi
+  rm -rf conftest.*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_static_pie_on_loongarch" >&5
+$as_echo "$libc_cv_static_pie_on_loongarch" >&6; }
+
+if test "$libc_cv_static_pie_on_loongarch" = yes; then
+  $as_echo "#define SUPPORT_STATIC_PIE 1" >>confdefs.h
+
+fi

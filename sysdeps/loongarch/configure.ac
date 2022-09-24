@@ -4,3 +4,39 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 dnl It is always possible to access static and hidden symbols in an
 dnl position independent way.
 AC_DEFINE(HIDDEN_VAR_NEEDS_DYNAMIC_RELOC)
+
+dnl Test if the toolchain is new enough for static PIE.
+dnl We need a GAS supporting explicit reloc (older GAS produces stack-based
+dnl reloc and triggers an internal error in the linker).  And, we need GCC to
+dnl pass the correct linker flags for static PIE.  GCC >= 13 and GAS >= 2.40
+dnl satisify the requirement, but a distro may backport static PIE support into
+dnl earlier GCC or Binutils releases as well.
+AC_CACHE_CHECK([if the toolchain is sufficient to build static PIE on LoongArch],
+libc_cv_static_pie_on_loongarch, [
+  cat > conftest.S << EOF
+.global _start
+.type _start, @function
+_start:
+  li.w \$a7, 93
+  /* This ensures the assembler supports explicit reloc.  */
+  pcalau12i \$a0, %pc_hi20(x)
+  ld.w \$a0, \$a0, %pc_lo12(x)
+  syscall 0
+
+.data
+x:
+  .word 0
+  /* This should produce an R_LARCH_RELATIVE in the static PIE.  */
+  .dword _start
+EOF
+  libc_cv_static_pie_on_loongarch=no
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static-pie -nostdlib -fPIE -o conftest conftest.S]) \
+     && AC_TRY_COMMAND([LC_ALL=C $READELF -Wr conftest | grep -q R_LARCH_RELATIVE])
+  then
+    libc_cv_static_pie_on_loongarch=yes
+  fi
+  rm -rf conftest.*])
+
+if test "$libc_cv_static_pie_on_loongarch" = yes; then
+  AC_DEFINE(SUPPORT_STATIC_PIE)
+fi

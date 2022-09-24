@@ -60,9 +60,17 @@ ENTRY (ENTRY_POINT)
 	cfi_undefined (1)
 	or		a5, a0, zero /* rtld_fini */
 
+#if defined(PIC) && !defined(SHARED)
+/* For static PIE, the GOT cannot be used in _start because the GOT entries are
+   offsets instead of real addresses before __libc_start_main.  */
+# define LA la.pcrel
+#else
 /* We must get symbol main through GOT table, since main may not be local.
    For instance: googletest defines main in dynamic library.  */
-	la.got		a0, t0, main
+# define LA la.got
+#endif
+
+	LA		a0, t0, main
 	REG_L		a1, sp, 0
 	ADDI		a2, sp, SZREG
 
@@ -73,9 +81,9 @@ ENTRY (ENTRY_POINT)
 	move		a4, zero /* used to be fini */
 	or		a6, sp, zero /* stack_end */
 
-	la.got		ra, t0, __libc_start_main
+	LA		ra, t0, __libc_start_main
 	jirl		ra, ra, 0
 
-	la.got		ra, t0, abort
+	LA		ra, t0, abort
 	jirl		ra, ra, 0
 END (ENTRY_POINT)
