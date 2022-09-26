@@ -58,11 +58,11 @@ worker (void * arg)
 
   char ascii[] = CONV_INPUT;
   char *inbufpos = ascii;
-  size_t inbytesleft = sizeof (CONV_INPUT);
+  size_t inbytesleft = sizeof (CONV_INPUT) - 1;
 
   char *utf8 = xcalloc (sizeof (CONV_INPUT), 1);
   char *outbufpos = utf8;
-  size_t outbytesleft = sizeof (CONV_INPUT);
+  size_t outbytesleft = sizeof (CONV_INPUT) - 1;
 
   if (tidx < TCOUNT/2)
     /* The first half of the worker thread pool synchronize together here,
