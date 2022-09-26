@@ -130,7 +130,7 @@ register struct pthread *__thread_self __asm__("%g7");
 #define THREAD_GSCOPE_RESET_FLAG() \
   do									     \
     { int __res								     \
-	= atomic_exchange_rel (&THREAD_SELF->header.gscope_flag,	     \
+	= atomic_exchange_release (&THREAD_SELF->header.gscope_flag,	     \
 			       THREAD_GSCOPE_FLAG_UNUSED);		     \
       if (__res == THREAD_GSCOPE_FLAG_WAIT)				     \
 	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);   \

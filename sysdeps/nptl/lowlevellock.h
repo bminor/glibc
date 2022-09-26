@@ -119,7 +119,7 @@ libc_hidden_proto (__lll_lock_wait)
   ((void)                                                               \
    ({                                                                   \
      int *__futex = (futex);                                            \
-     if (__glibc_unlikely (atomic_exchange_acq (__futex, 2) != 0))      \
+     if (__glibc_unlikely (atomic_exchange_acquire (__futex, 2) != 0))  \
        __lll_lock_wait (__futex, private);                              \
    }))
 #define lll_cond_lock(futex, private) __lll_cond_lock (&(futex), private)
@@ -147,7 +147,7 @@ libc_hidden_proto (__lll_lock_wake)
   ({									\
      int *__futex = (futex);						\
      int __private = (private);						\
-     int __oldval = atomic_exchange_rel (__futex, 0);			\
+     int __oldval = atomic_exchange_release (__futex, 0);		\
      if (__glibc_unlikely (__oldval > 1))				\
        {								\
          if (__builtin_constant_p (private) && (private) == LLL_PRIVATE) \

@@ -74,7 +74,7 @@ __assert_fail_base (const char *fmt, const char *assertion, const char *file,
 
 	  /* We have to free the old buffer since the application might
 	     catch the SIGABRT signal.  */
-	  struct abort_msg_s *old = atomic_exchange_acq (&__abort_msg, buf);
+	  struct abort_msg_s *old = atomic_exchange_acquire (&__abort_msg, buf);
 
 	  if (old != NULL)
 	    __munmap (old, old->size);

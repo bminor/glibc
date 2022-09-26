@@ -89,7 +89,7 @@ __lll_abstimed_lock (void *ptr,
 
   while (1)
     {
-      if (atomic_exchange_acq ((int *)ptr, 2) == 0)
+      if (atomic_exchange_acquire ((int *)ptr, 2) == 0)
         return 0;
       else if (! valid_nanoseconds (tsp->tv_nsec))
         return EINVAL;

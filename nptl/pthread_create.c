@@ -415,7 +415,7 @@ start_thread (void *arg)
   unwind_buf.priv.data.cleanup = NULL;
 
   /* Allow setxid from now onwards.  */
-  if (__glibc_unlikely (atomic_exchange_acq (&pd->setxid_futex, 0) == -2))
+  if (__glibc_unlikely (atomic_exchange_acquire (&pd->setxid_futex, 0) == -2))
     futex_wake (&pd->setxid_futex, 1, FUTEX_PRIVATE);
 
   if (__glibc_likely (! not_first_call))

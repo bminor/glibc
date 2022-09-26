@@ -78,7 +78,7 @@ extern kern_return_t __gsync_wait_intr
          || atomic_compare_and_exchange_bool_acq (__iptr, 1, 0) != 0)   \
        while (1)   \
          {   \
-           if (atomic_exchange_acq (__iptr, 2) == 0)   \
+           if (atomic_exchange_acquire (__iptr, 2) == 0)   \
              break;   \
            __lll_wait (__iptr, 2, __flags);   \
          }   \
@@ -102,7 +102,7 @@ extern kern_return_t __gsync_wait_intr
 #define __lll_unlock(ptr, flags)   \
   ({   \
      int *__iptr = (int *)(ptr);   \
-     if (atomic_exchange_rel (__iptr, 0) == 2)   \
+     if (atomic_exchange_release (__iptr, 0) == 2)   \
        __lll_wake (__iptr, (flags));   \
      (void)0;   \
    })

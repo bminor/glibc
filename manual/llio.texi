@@ -2538,7 +2538,7 @@ aiocb64}, since the LFS transparently replaces the old interface.
 @c     munmap ok
 @c    THREAD_COPY_STACK_GUARD ok
 @c    THREAD_COPY_POINTER_GUARD ok
-@c    atomic_exchange_acq ok
+@c    atomic_exchange_acquire ok
 @c    lll_futex_wake ok
 @c    deallocate_stack @asulock @ascuheap @aculock @acsmem
 @c     lll_lock (state_cache_lock) @asulock @aculock
@@ -2570,7 +2570,7 @@ aiocb64}, since the LFS transparently replaces the old interface.
 @c      atomic_fetch_add_relaxed ok
 @c      clone ok
 @c      atomic_fetch_add_relaxed ok
-@c      atomic_exchange_acq ok
+@c      atomic_exchange_acquire ok
 @c      lll_futex_wake ok
 @c      deallocate_stack dup
 @c      sched_setaffinity ok
@@ -2590,7 +2590,7 @@ aiocb64}, since the LFS transparently replaces the old interface.
 @c    start_thread ok
 @c     HP_TIMING_NOW ok
 @c     ctype_init @mtslocale
-@c     atomic_exchange_acq ok
+@c     atomic_exchange_acquire ok
 @c     lll_futex_wake ok
 @c     sigemptyset ok
 @c     sigaddset ok

@@ -451,7 +451,7 @@ this function is in @file{stdlib.h}.
 @c    clear_fastchunks ok
 @c    unsorted_chunks dup ok
 @c    fastbin dup ok
-@c    atomic_exchange_acq ok
+@c    atomic_exchange_acquire ok
 @c    check_inuse_chunk dup ok/disabled
 @c    chunk_at_offset dup ok
 @c    chunksize dup ok
