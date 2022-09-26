@@ -57,12 +57,13 @@ worker (void * arg)
   iconv_t cd;
 
   char ascii[] = CONV_INPUT;
+  size_t bytes = sizeof (CONV_INPUT) - 1;
   char *inbufpos = ascii;
-  size_t inbytesleft = sizeof (CONV_INPUT);
+  size_t inbytesleft = bytes;
 
-  char *utf8 = xcalloc (sizeof (CONV_INPUT), 1);
+  char *utf8 = xcalloc (bytes, 1);
   char *outbufpos = utf8;
-  size_t outbytesleft = sizeof (CONV_INPUT);
+  size_t outbytesleft = bytes;
 
   if (tidx < TCOUNT/2)
     /* The first half of the worker thread pool synchronize together here,
@@ -91,8 +92,6 @@ worker (void * arg)
                            &outbytesleft)
                     != (size_t) -1);
 
-  *outbufpos = '\0';
-
   xpthread_barrier_wait (&sync);
 
   TEST_VERIFY_EXIT (iconv_close (cd) == 0);
@@ -104,11 +103,7 @@ worker (void * arg)
   if (tidx < TCOUNT/2)
     xpthread_barrier_wait (&sync);
 
-  if (strncmp (utf8, CONV_INPUT, sizeof CONV_INPUT))
-    {
-      printf ("FAIL: thread %lx: invalid conversion output from iconv\n", tidx);
-      pthread_exit ((void *) (long int) 1);
-    }
+  TEST_COMPARE_BLOB (utf8, bytes, CONV_INPUT, bytes);
 
   pthread_exit (NULL);
 }
