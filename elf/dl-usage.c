@@ -104,34 +104,6 @@ print_search_path_for_help (struct dl_main_state *state)
   print_search_path_for_help_1 (__rtld_search_dirs.dirs);
 }
 
-/* Helper function for printing flags associated with a HWCAP name.  */
-static void
-print_hwcap_1 (bool *first, bool active, const char *label)
-{
-  if (active)
-    {
-      if (*first)
-        {
-          _dl_printf (" (");
-          *first = false;
-        }
-      else
-        _dl_printf (", ");
-      _dl_printf ("%s", label);
-    }
-}
-
-/* Called after a series of print_hwcap_1 calls to emit the line
-   terminator.  */
-static void
-print_hwcap_1_finish (bool *first)
-{
-  if (*first)
-    _dl_printf ("\n");
-  else
-    _dl_printf (")\n");
-}
-
 /* Print the header for print_hwcaps_subdirectories.  */
 static void
 print_hwcaps_subdirectories_header (bool *nothing_printed)
@@ -165,9 +137,7 @@ print_hwcaps_subdirectories (const struct dl_main_state *state)
     {
       print_hwcaps_subdirectories_header (&nothing_printed);
       print_hwcaps_subdirectories_name (&split);
-      bool first = true;
-      print_hwcap_1 (&first, true, "searched");
-      print_hwcap_1_finish (&first);
+      _dl_printf (" (searched)\n");
     }
 
   /* The built-in glibc-hwcaps subdirectories.  Do the filtering
@@ -178,13 +148,14 @@ print_hwcaps_subdirectories (const struct dl_main_state *state)
     {
       print_hwcaps_subdirectories_header (&nothing_printed);
       print_hwcaps_subdirectories_name (&split);
-      bool first = true;
-      print_hwcap_1 (&first, mask & 1, "supported");
       bool listed = _dl_hwcaps_contains (state->glibc_hwcaps_mask,
                                          split.segment, split.length);
-      print_hwcap_1 (&first, !listed, "masked");
-      print_hwcap_1 (&first, (mask & 1) && listed, "searched");
-      print_hwcap_1_finish (&first);
+      if (mask & 1)
+        _dl_printf (" (supported, %s)\n", listed ? "searched" : "masked");
+      else if (!listed)
+        _dl_printf (" (masked)\n");
+      else
+        _dl_printf ("\n");
       mask >>= 1;
     }
 
