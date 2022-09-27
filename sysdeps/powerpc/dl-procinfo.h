@@ -70,16 +70,6 @@ _dl_hwcap_string (int idx)
 }
 
 static inline int
-__attribute__ ((unused))
-_dl_string_hwcap (const char *str)
-{
-  for (int i = 0; i < _DL_HWCAP_COUNT; ++i)
-    if (strcmp (str, _dl_hwcap_string (i)) == 0)
-      return i;
-  return -1;
-}
-
-static inline int
 __attribute__ ((unused, always_inline))
 _dl_string_platform (const char *str)
 {

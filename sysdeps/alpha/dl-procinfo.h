@@ -54,6 +54,4 @@ _dl_string_platform (const char *str)
 /* We don't have any hardware capabilities.  */
 #define _DL_HWCAP_COUNT	0
 
-#define _dl_string_hwcap(str) (-1)
-
 #endif /* dl-procinfo.h */

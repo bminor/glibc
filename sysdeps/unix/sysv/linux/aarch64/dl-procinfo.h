@@ -37,18 +37,6 @@ _dl_hwcap_string (int idx)
   return (unsigned)idx < _DL_HWCAP_COUNT ? GLRO(dl_aarch64_cap_flags)[idx] : "";
 };
 
-static inline int
-__attribute__ ((unused))
-_dl_string_hwcap (const char *str)
-{
-  for (int i = 0; i < _DL_HWCAP_COUNT; i++)
-    {
-      if (strcmp (str, _dl_hwcap_string (i)) == 0)
-	return i;
-    }
-  return -1;
-};
-
 /* There're no platforms to filter out.  */
 #define _DL_HWCAP_PLATFORM 0
 

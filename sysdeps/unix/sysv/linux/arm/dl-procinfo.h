@@ -75,18 +75,6 @@ _dl_procinfo (unsigned int type, unsigned long int word)
 
 #define HWCAP_IMPORTANT		(HWCAP_ARM_VFP | HWCAP_ARM_NEON)
 
-static inline int
-__attribute__ ((unused))
-_dl_string_hwcap (const char *str)
-{
-  for (int i = 0; i < _DL_HWCAP_COUNT; i++)
-    {
-      if (strcmp (str, _dl_hwcap_string (i)) == 0)
-	return i;
-    }
-  return -1;
-};
-
 #define _dl_string_platform(str) (-1)
 
 #endif /* dl-procinfo.h */

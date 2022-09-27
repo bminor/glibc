@@ -52,19 +52,6 @@ _dl_hwcap_string (int idx)
   return GLRO(dl_sparc_cap_flags)[idx];
 };
 
-static inline int
-__attribute__ ((unused, always_inline))
-_dl_string_hwcap (const char *str)
-{
-  int i;
-  for (i = 0; i < _DL_HWCAP_COUNT; i++)
-    {
-      if (strcmp (str, GLRO(dl_sparc_cap_flags) [i]) == 0)
-	return i;
-    }
-  return -1;
-};
-
 #include <bits/wordsize.h>
 #define HWCAP_IMPORTANT_V9	(__WORDSIZE == 64 ? 0 : HWCAP_SPARC_V9)
 #define HWCAP_IMPORTANT		(HWCAP_IMPORTANT_V9 | HWCAP_SPARC_ULTRA3 \
