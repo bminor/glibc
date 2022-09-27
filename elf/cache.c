@@ -764,7 +764,7 @@ save_cache (const char *cache_name)
 /* Add one library to the cache.  */
 void
 add_to_cache (const char *path, const char *filename, const char *soname,
-	      int flags, unsigned int isa_level, uint64_t hwcap,
+	      int flags, unsigned int isa_level,
 	      struct glibc_hwcaps_subdirectory *hwcaps)
 {
   struct cache_entry *new_entry = xmalloc (sizeof (*new_entry));
@@ -782,22 +782,12 @@ add_to_cache (const char *path, const char *filename, const char *soname,
   new_entry->path = path_interned;
   new_entry->flags = flags;
   new_entry->isa_level = isa_level;
-  new_entry->hwcap = hwcap;
+  new_entry->hwcap = 0;
   new_entry->hwcaps = hwcaps;
   new_entry->bits_hwcap = 0;
 
   if (hwcaps != NULL)
-    {
-      assert (hwcap == 0);
-      hwcaps->used = true;
-    }
-
-  /* Count the number of bits set in the masked value.  */
-  for (size_t i = 0;
-       (~((1ULL << i) - 1) & hwcap) != 0 && i < 8 * sizeof (hwcap); ++i)
-    if ((hwcap & (1ULL << i)) != 0)
-      ++new_entry->bits_hwcap;
-
+    hwcaps->used = true;
 
   /* Keep the list sorted - search for right place to insert.  */
   struct cache_entry *ptr = entries;

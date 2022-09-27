@@ -980,8 +980,7 @@ search_dir (const struct dir_entry *entry)
 	}
       if (opt_build_cache)
 	add_to_cache (entry->path, filename, dlib_ptr->soname,
-		      dlib_ptr->flag, dlib_ptr->isa_level, 0,
-		      entry->hwcaps);
+		      dlib_ptr->flag, dlib_ptr->isa_level, entry->hwcaps);
     }
 
   /* Free all resources.  */
