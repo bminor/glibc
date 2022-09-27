@@ -170,17 +170,7 @@ _dl_important_hwcaps (const char *glibc_hwcaps_prepend,
 		      const char *glibc_hwcaps_mask,
 		      size_t *sz, size_t *max_capstrlen)
 {
-  uint64_t hwcap_mask = GET_HWCAP_MASK();
-  /* Determine how many important bits are set.  */
-  uint64_t masked = GLRO(dl_hwcap) & hwcap_mask;
-  size_t cnt = GLRO (dl_platform) != NULL;
-  size_t n, m;
-  struct r_strlenpair *result;
-  struct r_strlenpair *rp;
-  char *cp;
-
-  /* glibc-hwcaps subdirectories.  These are exempted from the power
-     set construction below.  */
+  /* glibc-hwcaps subdirectories.  */
   uint32_t hwcaps_subdirs_active = _dl_hwcaps_subdirs_active ();
   struct hwcaps_counts hwcaps_counts =  { 0, };
   update_hwcaps_counts (&hwcaps_counts, glibc_hwcaps_prepend, -1, NULL);
@@ -193,72 +183,14 @@ _dl_important_hwcaps (const char *glibc_hwcaps_prepend,
   /* Each hwcaps subdirectory has a GLIBC_HWCAPS_PREFIX string prefix
      and a "/" suffix once stored in the result.  */
   hwcaps_counts.maximum_length += strlen (GLIBC_HWCAPS_PREFIX) + 1;
-  size_t hwcaps_sz = (hwcaps_counts.count * (strlen (GLIBC_HWCAPS_PREFIX) + 1)
+  size_t total = (hwcaps_counts.count * (strlen (GLIBC_HWCAPS_PREFIX) + 1)
 		  + hwcaps_counts.total_length);
 
-  /* Count the number of bits set in the masked value.  */
-  for (n = 0; (~((1ULL << n) - 1) & masked) != 0; ++n)
-    if ((masked & (1ULL << n)) != 0)
-      ++cnt;
+  *sz = hwcaps_counts.count + 1;
 
-  /* For TLS enabled builds always add 'tls'.  */
-  ++cnt;
-
-  /* Create temporary data structure to generate result table.  */
-  struct r_strlenpair temp[cnt];
-  m = 0;
-  for (n = 0; masked != 0; ++n)
-    if ((masked & (1ULL << n)) != 0)
-      {
-	temp[m].str = _dl_hwcap_string (n);
-	temp[m].len = strlen (temp[m].str);
-	masked ^= 1ULL << n;
-	++m;
-      }
-  if (GLRO (dl_platform) != NULL)
-    {
-      temp[m].str = GLRO (dl_platform);
-      temp[m].len = GLRO (dl_platformlen);
-      ++m;
-    }
-
-  temp[m].str = "tls";
-  temp[m].len = 3;
-  ++m;
-
-  assert (m == cnt);
-
-  /* Determine the total size of all strings together.  */
-  size_t total;
-  if (cnt == 1)
-    total = temp[0].len + 1;
-  else
-    {
-      total = temp[0].len + temp[cnt - 1].len + 2;
-      if (cnt > 2)
-	{
-	  total <<= 1;
-	  for (n = 1; n + 1 < cnt; ++n)
-	    total += temp[n].len + 1;
-	  if (cnt > 3
-	      && (cnt >= sizeof (size_t) * 8
-		  || total + (sizeof (*result) << 3)
-		     >= (1UL << (sizeof (size_t) * 8 - cnt + 3))))
-	    _dl_signal_error (ENOMEM, NULL, NULL,
-			      N_("cannot create capability list"));
-
-	  total <<= cnt - 3;
-	}
-    }
-
-  *sz = hwcaps_counts.count + (1 << cnt);
-
-  /* This is the overall result, including both glibc-hwcaps
-     subdirectories and the legacy hwcaps subdirectories using the
-     power set construction.  */
-  total += hwcaps_sz;
+  /* This is the overall result.  */
   struct r_strlenpair *overall_result
-    = malloc (*sz * sizeof (*result) + total);
+    = malloc (*sz * sizeof (*overall_result) + total);
   if (overall_result == NULL)
     _dl_signal_error (ENOMEM, NULL, NULL,
 		      N_("cannot create capability list"));
@@ -271,110 +203,14 @@ _dl_important_hwcaps (const char *glibc_hwcaps_prepend,
     copy_hwcaps (&target, glibc_hwcaps_prepend, -1, NULL);
     copy_hwcaps (&target, _dl_hwcaps_subdirs,
 		 hwcaps_subdirs_active, glibc_hwcaps_mask);
-    /* Set up the write target for the power set construction.  */
-    result = target.next_pair;
-    cp = target.next_string;
+
+    /* Append an empty entry for the base directory itself.  */
+    target.next_pair->str = target.next_string;
+    target.next_pair->len = 0;
   }
 
-
-  /* Power set construction begins here.  We use a very compressed way
-     to store the various combinations of capability names.  */
-
-  if (cnt == 1)
-    {
-      result[0].str = cp;
-      result[0].len = temp[0].len + 1;
-      result[1].str = cp;
-      result[1].len = 0;
-      cp = __mempcpy (cp, temp[0].str, temp[0].len);
-      *cp = '/';
-      if (result[0].len > hwcaps_counts.maximum_length)
-	*max_capstrlen = result[0].len;
-      else
-	*max_capstrlen = hwcaps_counts.maximum_length;
-
-      return overall_result;
-    }
-
-  /* Fill in the information.  This follows the following scheme
-     (indices from TEMP for four strings):
-	entry #0: 0, 1, 2, 3	binary: 1111
-	      #1: 0, 1, 3		1101
-	      #2: 0, 2, 3		1011
-	      #3: 0, 3			1001
-     This allows the representation of all possible combinations of
-     capability names in the string.  First generate the strings.  */
-  result[1].str = result[0].str = cp;
-#define add(idx) \
-      cp = __mempcpy (__mempcpy (cp, temp[idx].str, temp[idx].len), "/", 1);
-  if (cnt == 2)
-    {
-      add (1);
-      add (0);
-    }
-  else
-    {
-      n = 1 << (cnt - 1);
-      do
-	{
-	  n -= 2;
-
-	  /* We always add the last string.  */
-	  add (cnt - 1);
-
-	  /* Add the strings which have the bit set in N.  */
-	  for (m = cnt - 2; m > 0; --m)
-	    if ((n & (1 << m)) != 0)
-	      add (m);
-
-	  /* Always add the first string.  */
-	  add (0);
-	}
-      while (n != 0);
-    }
-#undef add
-
-  /* Now we are ready to install the string pointers and length.  */
-  for (n = 0; n < (1UL << cnt); ++n)
-    result[n].len = 0;
-  n = cnt;
-  do
-    {
-      size_t mask = 1 << --n;
-
-      rp = result;
-      for (m = 1 << cnt; m > 0; ++rp)
-	if ((--m & mask) != 0)
-	  rp->len += temp[n].len + 1;
-    }
-  while (n != 0);
-
-  /* The first half of the strings all include the first string.  */
-  n = (1 << cnt) - 2;
-  rp = &result[2];
-  while (n != (1UL << (cnt - 1)))
-    {
-      if ((--n & 1) != 0)
-	rp[0].str = rp[-2].str + rp[-2].len;
-      else
-	rp[0].str = rp[-1].str;
-      ++rp;
-    }
-
-  /* The second half starts right after the first part of the string of
-     the corresponding entry in the first half.  */
-  do
-    {
-      rp[0].str = rp[-(1 << (cnt - 1))].str + temp[cnt - 1].len + 1;
-      ++rp;
-    }
-  while (--n != 0);
-
   /* The maximum string length.  */
-  if (result[0].len > hwcaps_counts.maximum_length)
-    *max_capstrlen = result[0].len;
-  else
-    *max_capstrlen = hwcaps_counts.maximum_length;
+  *max_capstrlen = hwcaps_counts.maximum_length;
 
   return overall_result;
 }

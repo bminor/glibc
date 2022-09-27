@@ -2689,12 +2689,6 @@ $(objpfx)tst-rtld-help.out: $(objpfx)ld.so
 	$(test-wrapper) $(rtld-prefix) --help > $@; \
 	status=$$?; \
 	echo "info: ld.so exit status: $$status" >> $@; \
-	if ! grep -q 'Legacy HWCAP subdirectories under library search path directories' $@; then \
-	  echo "error: missing subdirectory pattern" >> $@; \
-	  if test $$status -eq 0; then \
-	    status=1; \
-	  fi; \
-	fi; \
 	(exit $$status); \
 	$(evaluate-test)
 
