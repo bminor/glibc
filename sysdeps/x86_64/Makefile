@@ -57,17 +57,6 @@ $(objpfx)tst-quad2pie: $(objpfx)tst-quadmod2pie.o
 CFLAGS-tst-quad1pie.c = $(PIE-ccflag)
 CFLAGS-tst-quad2pie.c = $(PIE-ccflag)
 
-tests += tst-x86_64-1
-modules-names += x86_64/tst-x86_64mod-1
-extra-test-objs += tst-x86_64mod-1.o
-LDFLAGS-tst-x86_64mod-1.so = -Wl,-soname,tst-x86_64mod-1.so
-ifneq (no,$(have-tunables))
-# Test the state size for XSAVE when XSAVEC is disabled.
-tst-x86_64-1-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-XSAVEC
-endif
-
-$(objpfx)tst-x86_64-1: $(objpfx)x86_64/tst-x86_64mod-1.so
-
 ifneq (no,$(have-tunables))
 tests += tst-platform-1
 modules-names += tst-platformmod-1 x86_64/tst-platformmod-2
@@ -207,11 +196,6 @@ sysdep_routines += \
 tests += \
   tst-rsi-wcslen
 endif
-
-$(objpfx)x86_64/tst-x86_64mod-1.os: $(objpfx)tst-x86_64mod-1.os
-	$(make-target-directory)
-	rm -f $@
-	ln $< $@
 
 do-tests-clean common-mostlyclean: tst-x86_64-1-clean
 
