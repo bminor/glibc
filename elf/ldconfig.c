@@ -46,16 +46,6 @@
 
 #include <dl-procinfo.h>
 
-/* This subpath in search path entries is always supported and
-   included in the cache for backwards compatibility.  */
-#define TLS_SUBPATH "tls"
-
-/* The MSB of the hwcap field is set for objects in TLS_SUBPATH
-   directories.  There is always TLS support in glibc, so the dynamic
-   loader does not check the bit directly.  But more hwcap bits make a
-   an object more preferred, so the bit still has meaning.  */
-#define TLS_HWCAP_BIT 63
-
 #ifndef LD_SO_CONF
 # define LD_SO_CONF SYSCONFDIR "/ld.so.conf"
 #endif
@@ -120,9 +110,6 @@ static char *cache_file;
 /* Configuration file.  */
 static const char *config_file;
 
-/* Mask to use for important hardware capabilities.  */
-static unsigned long int hwcap_mask = HWCAP_IMPORTANT;
-
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *)
@@ -162,75 +149,6 @@ static struct argp argp =
 {
   options, parse_opt, NULL, doc, NULL, more_help, NULL
 };
-
-/* Check if string corresponds to an important hardware capability or
-   a platform.  */
-static int
-is_hwcap_platform (const char *name)
-{
-  int hwcap_idx = _dl_string_hwcap (name);
-
-  /* Is this a normal hwcap for the machine like "fpu?"  */
-  if (hwcap_idx != -1 && ((1 << hwcap_idx) & hwcap_mask))
-    return 1;
-
-  /* Is this a platform pseudo-hwcap like "i686?"  */
-  hwcap_idx = _dl_string_platform (name);
-  if (hwcap_idx != -1)
-    return 1;
-
-  /* Backwards-compatibility for the "tls" subdirectory.  */
-  if (strcmp (name, TLS_SUBPATH) == 0)
-    return 1;
-
-  return 0;
-}
-
-/* Get hwcap (including platform) encoding of path.  */
-static uint64_t
-path_hwcap (const char *path)
-{
-  char *str = xstrdup (path);
-  char *ptr;
-  uint64_t hwcap = 0;
-  uint64_t h;
-
-  size_t len;
-
-  len = strlen (str);
-  if (str[len] == '/')
-    str[len] = '\0';
-
-  /* Search pathname from the end and check for hwcap strings.  */
-  for (;;)
-    {
-      ptr = strrchr (str, '/');
-
-      if (ptr == NULL)
-	break;
-
-      h = _dl_string_hwcap (ptr + 1);
-
-      if (h == (uint64_t) -1)
-	{
-	  h = _dl_string_platform (ptr + 1);
-	  if (h == (uint64_t) -1)
-	    {
-	      if (strcmp (ptr + 1, TLS_SUBPATH) == 0)
-		h = TLS_HWCAP_BIT;
-	      else
-		break;
-	    }
-	}
-      hwcap += 1ULL << h;
-
-      /* Search the next part of the path.  */
-      *ptr = '\0';
-    }
-
-  free (str);
-  return hwcap;
-}
 
 /* Handle program arguments.  */
 static error_t
@@ -747,27 +665,15 @@ struct dlib_entry
 static void
 search_dir (const struct dir_entry *entry)
 {
-  uint64_t hwcap;
-  if (entry->hwcaps == NULL)
+  if (opt_verbose)
     {
-      hwcap = path_hwcap (entry->path);
-      if (opt_verbose)
-	{
-	  if (hwcap != 0)
-	    printf ("%s: (hwcap: %#.16" PRIx64 ")", entry->path, hwcap);
-	  else
-	    printf ("%s:", entry->path);
-	}
-    }
-  else
-    {
-      hwcap = 0;
-      if (opt_verbose)
+      if (entry->hwcaps == NULL)
+	printf ("%s:", entry->path);
+      else
 	printf ("%s: (hwcap: \"%s\")", entry->path,
 		glibc_hwcaps_subdirectory_name (entry->hwcaps));
+      printf (_(" (from %s:%d)\n"), entry->from_file, entry->from_line);
     }
-  if (opt_verbose)
-    printf (_(" (from %s:%d)\n"), entry->from_file, entry->from_line);
 
   char *dir_name;
   char *real_file_name;
@@ -808,14 +714,10 @@ search_dir (const struct dir_entry *entry)
 	  && direntry->d_type != DT_REG
 	  && direntry->d_type != DT_DIR)
 	continue;
-      /* Does this file look like a shared library or is it a hwcap
-	 subdirectory (if not already processing a glibc-hwcaps
-	 subdirectory)?  The dynamic linker is also considered as
-	 shared library.  */
+      /* Does this file look like a shared library?  The dynamic linker
+	 is also considered as shared library.  */
       if (!_dl_is_dso (direntry->d_name)
-	  && (direntry->d_type == DT_REG
-	      || (entry->hwcaps == NULL
-		  && !is_hwcap_platform (direntry->d_name))))
+	  && (direntry->d_type == DT_REG || entry->hwcaps == NULL))
 	continue;
 
       size_t len = strlen (direntry->d_name);
@@ -863,7 +765,6 @@ search_dir (const struct dir_entry *entry)
 	  }
 
       struct stat stat_buf;
-      bool is_dir;
       int is_link = S_ISLNK (lstat_buf.st_mode);
       if (is_link)
 	{
@@ -898,37 +799,13 @@ search_dir (const struct dir_entry *entry)
 	  if (opt_chroot != NULL)
 	    free (target_name);
 
-	  is_dir = S_ISDIR (stat_buf.st_mode);
-
 	  /* lstat_buf is later stored, update contents.  */
 	  lstat_buf.st_dev = stat_buf.st_dev;
 	  lstat_buf.st_ino = stat_buf.st_ino;
 	  lstat_buf.st_size = stat_buf.st_size;
 	  lstat_buf.st_ctime = stat_buf.st_ctime;
 	}
-      else
-	is_dir = S_ISDIR (lstat_buf.st_mode);
-
-      /* No descending into subdirectories if this directory is a
-	 glibc-hwcaps subdirectory (which are not recursive).  */
-      if (entry->hwcaps == NULL
-	  && is_dir && is_hwcap_platform (direntry->d_name))
-	{
-	  if (!is_link
-	      && direntry->d_type != DT_UNKNOWN
-	      && __builtin_expect (lstat (real_file_name, &lstat_buf), 0))
-	    {
-	      error (0, errno, _("Cannot lstat %s"), file_name);
-	      continue;
-	    }
-
-	  /* Handle subdirectory later.  */
-	  struct dir_entry *new_entry = new_sub_entry (entry, file_name,
-						       &lstat_buf);
-	  add_single_dir (new_entry, 0);
-	  continue;
-	}
-      else if (!S_ISREG (lstat_buf.st_mode) && !is_link)
+      else if (!S_ISREG (lstat_buf.st_mode))
 	continue;
 
       char *real_name;
@@ -1103,7 +980,7 @@ search_dir (const struct dir_entry *entry)
 	}
       if (opt_build_cache)
 	add_to_cache (entry->path, filename, dlib_ptr->soname,
-		      dlib_ptr->flag, dlib_ptr->isa_level, hwcap,
+		      dlib_ptr->flag, dlib_ptr->isa_level, 0,
 		      entry->hwcaps);
     }
 
@@ -1290,16 +1167,6 @@ parse_conf_include (const char *config_file, unsigned int lineno,
   free (copy);
 }
 
-/* Honour LD_HWCAP_MASK.  */
-static void
-set_hwcap (void)
-{
-  char *mask = getenv ("LD_HWCAP_MASK");
-
-  if (mask)
-    hwcap_mask = strtoul (mask, NULL, 0);
-}
-
 
 int
 main (int argc, char **argv)
@@ -1331,8 +1198,6 @@ main (int argc, char **argv)
 	else
 	  add_dir_1 (argv[i], "<cmdline>", 0);
     }
-
-  set_hwcap ();
 
   if (opt_chroot != NULL)
     {
