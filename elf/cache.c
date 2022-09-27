@@ -145,10 +145,8 @@ struct cache_entry
   struct stringtable_entry *path; /* Path to find library.  */
   int flags;			/* Flags to indicate kind of library.  */
   unsigned int isa_level;	/* Required ISA level.  */
-  uint64_t hwcap;		/* Important hardware capabilities.  */
-  int bits_hwcap;		/* Number of bits set in hwcap.  */
 
-  /* glibc-hwcaps subdirectory.  If not NULL, hwcap must be zero.  */
+  /* glibc-hwcaps subdirectory.  */
   struct glibc_hwcaps_subdirectory *hwcaps;
 
   struct cache_entry *next;	/* Next entry in list.  */
@@ -433,15 +431,6 @@ compare (const struct cache_entry *e1, const struct cache_entry *e2)
 	  if (res != 0)
 	    return res;
 	}
-      /* Sort by most specific hwcap.  */
-      if (e2->bits_hwcap > e1->bits_hwcap)
-	return 1;
-      else if (e2->bits_hwcap < e1->bits_hwcap)
-	return -1;
-      else if (e2->hwcap > e1->hwcap)
-	return 1;
-      else if (e2->hwcap < e1->hwcap)
-	return -1;
     }
   return res;
 }
@@ -547,14 +536,13 @@ save_cache (const char *cache_name)
   int cache_entry_count = 0;
   /* The old format doesn't contain hwcap entries and doesn't contain
      libraries in subdirectories with hwcaps entries.  Count therefore
-     also all entries with hwcap == 0.  */
+     all entries.  */
   int cache_entry_old_count = 0;
 
   for (entry = entries; entry != NULL; entry = entry->next)
     {
       ++cache_entry_count;
-      if (entry->hwcap == 0)
-	++cache_entry_old_count;
+      ++cache_entry_old_count;
     }
 
   struct stringtable_finalized strings_finalized;
@@ -626,7 +614,7 @@ save_cache (const char *cache_name)
   for (idx_old = 0, idx_new = 0, entry = entries; entry != NULL;
        entry = entry->next, ++idx_new)
     {
-      if (opt_format != opt_format_new && entry->hwcap == 0)
+      if (opt_format != opt_format_new)
 	{
 	  file_entries->libs[idx_old].flags = entry->flags;
 	  /* XXX: Actually we can optimize here and remove duplicates.  */
@@ -644,7 +632,7 @@ save_cache (const char *cache_name)
 	  file_entries_new->libs[idx_new].flags = entry->flags;
 	  file_entries_new->libs[idx_new].osversion_unused = 0;
 	  if (entry->hwcaps == NULL)
-	    file_entries_new->libs[idx_new].hwcap = entry->hwcap;
+	    file_entries_new->libs[idx_new].hwcap = 0;
 	  else
 	    file_entries_new->libs[idx_new].hwcap
 	      = compute_hwcap_value (entry);
@@ -654,9 +642,7 @@ save_cache (const char *cache_name)
 	    = str_offset + entry->path->offset;
 	}
 
-      /* Ignore entries with hwcap for old format.  */
-      if (entry->hwcap == 0)
-	++idx_old;
+      ++idx_old;
     }
 
   /* Duplicate last old cache entry if needed.  */
@@ -782,9 +768,7 @@ add_to_cache (const char *path, const char *filename, const char *soname,
   new_entry->path = path_interned;
   new_entry->flags = flags;
   new_entry->isa_level = isa_level;
-  new_entry->hwcap = 0;
   new_entry->hwcaps = hwcaps;
-  new_entry->bits_hwcap = 0;
 
   if (hwcaps != NULL)
     hwcaps->used = true;
