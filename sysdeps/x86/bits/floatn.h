@@ -58,7 +58,7 @@
 /* Defined to concatenate the literal suffix to be used with _Float128
    types, if __HAVE_FLOAT128 is 1. */
 # if __HAVE_FLOAT128
-#  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
+#  if !__GNUC_PREREQ (7, 0) || (defined __cplusplus && !__GNUC_PREREQ (13, 0))
 /* The literal suffix f128 exists only since GCC 7.0.  */
 #   define __f128(x) x##q
 #  else
@@ -68,7 +68,7 @@
 
 /* Defined to a complex binary128 type if __HAVE_FLOAT128 is 1.  */
 # if __HAVE_FLOAT128
-#  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
+#  if !__GNUC_PREREQ (7, 0) || (defined __cplusplus && !__GNUC_PREREQ (13, 0))
 /* Add a typedef for older GCC compilers which don't natively support
    _Complex _Float128.  */
 typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__TC__)));
@@ -82,7 +82,7 @@ typedef _Complex float __cfloat128 __attribute__ ((__mode__ (__TC__)));
 # if __HAVE_FLOAT128
 
 /* The type _Float128 exists only since GCC 7.0.  */
-#  if !__GNUC_PREREQ (7, 0) || defined __cplusplus
+#  if !__GNUC_PREREQ (7, 0) || (defined __cplusplus && !__GNUC_PREREQ (13, 0))
 typedef __float128 _Float128;
 #  endif
 
