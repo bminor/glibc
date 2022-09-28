@@ -151,6 +151,7 @@
 
 /* RV32 does not support the gettime VDSO syscalls.  */
 # endif
+# define HAVE_CLONE3_WRAPPER		1
 
 /* List of system calls which are supported as vsyscalls (for RV32 and
    RV64).  */
