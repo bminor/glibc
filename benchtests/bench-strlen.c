@@ -128,10 +128,10 @@ test_main (void)
   /* Checking with only 4 * N alignments for wcslen, other alignments are wrong for wchar_t type arrays*/
 
   for (i = 1; i < 8; ++i)
-  {
-    do_test (&json_ctx, sizeof (CHAR) * i, i);
-    do_test (&json_ctx, 0, i);
-  }
+    {
+      do_test (&json_ctx, sizeof (CHAR) * i, i);
+      do_test (&json_ctx, 0, i);
+    }
 
   for (i = 2; i <= 12; ++i)
     {
@@ -139,6 +139,31 @@ test_main (void)
       do_test (&json_ctx, sizeof (CHAR) * 7, 1 << i);
       do_test (&json_ctx, sizeof (CHAR) * i, 1 << i);
       do_test (&json_ctx, sizeof (CHAR) * i, (size_t)((1 << i) / 1.5));
+    }
+
+  for (i = 0; i < 512; i += 32)
+    {
+      do_test (&json_ctx, 0, i / sizeof (CHAR));
+    }
+
+  for (i = 512; i < 1024; i += 64)
+    {
+      do_test (&json_ctx, 0, i / sizeof (CHAR));
+    }
+
+  for (i = 1024; i < 2048; i += 128)
+    {
+      do_test (&json_ctx, 0, i / sizeof (CHAR));
+    }
+
+  for (i = 2048; i < 4096; i += 256)
+    {
+      do_test (&json_ctx, 0, i / sizeof (CHAR));
+    }
+
+  for (i = 4096; i < 8192; i += 512)
+    {
+      do_test (&json_ctx, 0, i / sizeof (CHAR));
     }
 
   json_array_end (&json_ctx);
