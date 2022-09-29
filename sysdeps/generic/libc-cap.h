@@ -26,9 +26,18 @@
 void __libc_cap_link_error (void);
 
 #define __libc_cap_fail(rtype) (__libc_cap_link_error (), (rtype) 0)
+#define __libc_cap_init() __libc_cap_fail (bool)
+#define __libc_cap_fork_lock() __libc_cap_fail (void)
+#define __libc_cap_fork_unlock_parent() __libc_cap_fail (void)
+#define __libc_cap_fork_unlock_child() __libc_cap_fail (void)
+#define __libc_cap_map_add(p) __libc_cap_fail (bool)
+#define __libc_cap_map_del(p) __libc_cap_fail (void)
 #define __libc_cap_roundup(n) __libc_cap_fail (size_t)
 #define __libc_cap_align(n) __libc_cap_fail (size_t)
 #define __libc_cap_narrow(p, n) __libc_cap_fail (void *)
 #define __libc_cap_widen(p) __libc_cap_fail (void *)
+#define __libc_cap_reserve(p) __libc_cap_fail (bool)
+#define __libc_cap_unreserve(p) __libc_cap_fail (void)
+#define __libc_cap_drop(p) __libc_cap_fail (void)
 
 #endif
