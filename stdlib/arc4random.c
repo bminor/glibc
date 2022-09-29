@@ -34,7 +34,7 @@ void
 __arc4random_buf (void *p, size_t n)
 {
   static int seen_initialized;
-  size_t l;
+  ssize_t l;
   int fd;
 
   if (n == 0)
