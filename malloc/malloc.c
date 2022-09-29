@@ -492,6 +492,49 @@ static bool cap_narrowing_enabled = true;
 # define cap_narrowing_enabled 0
 #endif
 
+static __always_inline void
+cap_init (void)
+{
+  if (cap_narrowing_enabled)
+    assert (__libc_cap_init ());
+}
+
+static __always_inline void
+cap_fork_lock (void)
+{
+  if (cap_narrowing_enabled)
+    __libc_cap_fork_lock ();
+}
+
+static __always_inline void
+cap_fork_unlock_parent (void)
+{
+  if (cap_narrowing_enabled)
+    __libc_cap_fork_unlock_parent ();
+}
+
+static __always_inline void
+cap_fork_unlock_child (void)
+{
+  if (cap_narrowing_enabled)
+    __libc_cap_fork_unlock_child ();
+}
+
+static __always_inline bool
+cap_map_add (void *p)
+{
+  if (cap_narrowing_enabled)
+    return __libc_cap_map_add (p);
+  return true;
+}
+
+static __always_inline void
+cap_map_del (void *p)
+{
+  if (cap_narrowing_enabled)
+    __libc_cap_map_del (p);
+}
+
 /* Round up size so capability bounds can be represented.  */
 static __always_inline size_t
 cap_roundup (size_t n)
@@ -510,12 +553,48 @@ cap_align (size_t n)
   return 1;
 }
 
-/* Narrow the bounds of p to [p, p+n) exactly unless p is NULL.  */
+/* Narrow the bounds of p to [p, p+n) exactly unless p is NULL.
+   Must match a previous cap_reserve call.  */
 static __always_inline void *
 cap_narrow (void *p, size_t n)
 {
-  if (cap_narrowing_enabled && p != NULL)
-    return __libc_cap_narrow (p, n);
+  if (cap_narrowing_enabled)
+    {
+      if (p == NULL)
+	__libc_cap_unreserve ();
+      else
+        p = __libc_cap_narrow (p, n);
+    }
+  return p;
+}
+
+/* Used in realloc if p is already narrowed or NULL.
+   Must match a previous cap_reserve call.  */
+static __always_inline bool
+cap_narrow_check (void *p, void *oldp)
+{
+  if (cap_narrowing_enabled)
+    {
+      if (p == NULL)
+	(void) __libc_cap_narrow (oldp, 0);
+      else
+	__libc_cap_unreserve ();
+    }
+  return p != NULL;
+}
+
+/* Used in realloc if p is new allocation or NULL but not yet narrowed.
+   Must match a previous cap_reserve call.  */
+static __always_inline void *
+cap_narrow_try (void *p, size_t n, void *oldp)
+{
+  if (cap_narrowing_enabled)
+    {
+      if (p == NULL)
+	(void) __libc_cap_narrow (oldp, 0);
+      else
+	p = __libc_cap_narrow (p, n);
+    }
   return p;
 }
 
@@ -526,6 +605,31 @@ cap_widen (void *p)
   if (cap_narrowing_enabled)
     return __libc_cap_widen (p);
   return p;
+}
+
+/* Reserve memory for the following cap_narrow, this may fail with ENOMEM.  */
+static __always_inline bool
+cap_reserve (void)
+{
+  if (cap_narrowing_enabled)
+    return __libc_cap_reserve ();
+  return true;
+}
+
+/* Release the reserved memory by cap_reserve.  */
+static __always_inline void
+cap_unreserve (void)
+{
+  if (cap_narrowing_enabled)
+    __libc_cap_unreserve ();
+}
+
+/* Remove p so cap_widen no longer works on it.  */
+static __always_inline void
+cap_drop (void *p)
+{
+  if (cap_narrowing_enabled)
+    __libc_cap_drop (p);
 }
 
 #include <string.h>
@@ -2508,6 +2612,12 @@ sysmalloc_mmap (INTERNAL_SIZE_T nb, size_t pagesize, int extra_flags, mstate av)
   if (mm == MAP_FAILED)
     return mm;
 
+  if (!cap_map_add (mm))
+    {
+      __munmap (mm, size);
+      return MAP_FAILED;
+    }
+
 #ifdef MAP_HUGETLB
   if (!(extra_flags & MAP_HUGETLB))
     madvise_thp (mm, size);
@@ -2592,6 +2702,12 @@ sysmalloc_mmap_fallback (long int *s, INTERNAL_SIZE_T nb,
 			       extra_flags));
   if (mbrk == MAP_FAILED)
     return MAP_FAILED;
+
+  if (!cap_map_add (mbrk))
+    {
+      __munmap (mbrk, size);
+      return MAP_FAILED;
+    }
 
 #ifdef MAP_HUGETLB
   if (!(extra_flags & MAP_HUGETLB))
@@ -3126,6 +3242,8 @@ munmap_chunk (mchunkptr p)
   atomic_decrement (&mp_.n_mmaps);
   atomic_add (&mp_.mmapped_mem, -total_size);
 
+  cap_map_del ((void *) block);
+
   /* If munmap failed the process virtual memory address space is in a
      bad shape.  Just leave the block hanging around, the process will
      terminate shortly anyway since not much can be done.  */
@@ -3163,6 +3281,9 @@ mremap_chunk (mchunkptr p, size_t new_size)
 
   if (cp == MAP_FAILED)
     return 0;
+
+  cap_map_del ((void *) block);
+  cap_map_add (cp);
 
   madvise_thp (cp, new_size);
 
@@ -3409,6 +3530,8 @@ __libc_malloc (size_t bytes)
       && tcache
       && tcache->counts[tc_idx] > 0)
     {
+      if (!cap_reserve ())
+	return NULL;
       victim = tcache_get (tc_idx);
       victim = tag_new_usable (victim);
       victim = cap_narrow (victim, bytes);
@@ -3419,6 +3542,9 @@ __libc_malloc (size_t bytes)
 
   if (align > MALLOC_ALIGNMENT)
     return _mid_memalign (align, bytes, 0);
+
+  if (!cap_reserve ())
+    return NULL;
 
   if (SINGLE_THREAD_P)
     {
@@ -3463,6 +3589,7 @@ __libc_free (void *mem)
     return;
 
   mem = cap_widen (mem);
+  cap_drop (mem);
 
   /* Quickly check that the freed pointer matches the tag for the memory.
      This gives a useful double-free detection.  */
@@ -3562,6 +3689,11 @@ __libc_realloc (void *oldmem, size_t bytes)
       return NULL;
     }
 
+  /* Every return path below should unreserve using the cap_narrow* apis.  */
+  if (!cap_reserve ())
+    return NULL;
+  cap_drop (oldmem);
+
   if (chunk_is_mmapped (oldp))
     {
       void *newmem;
@@ -3585,7 +3717,7 @@ __libc_realloc (void *oldmem, size_t bytes)
 	     caller for doing this, so we might want to
 	     reconsider.  */
 	  newmem = tag_new_usable (newmem);
-	  newmem = cap_narrow (newmem, bytes);
+	  newmem = cap_narrow_try (newmem, bytes, oldmem);
 	  return newmem;
 	}
 #endif
@@ -3610,7 +3742,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       else
 #endif
       newmem = __libc_malloc (bytes);
-      if (newmem == 0)
+      if (!cap_narrow_check (newmem, oldmem))
         return 0;              /* propagate failure */
 
 #ifdef __CHERI_PURE_CAPABILITY__
@@ -3628,7 +3760,7 @@ __libc_realloc (void *oldmem, size_t bytes)
     {
       /* Use memalign, copy, free.  */
       void *newmem = _mid_memalign (align, bytes, 0);
-      if (newmem == NULL)
+      if (!cap_narrow_check (newmem, oldmem))
 	return newmem;
       size_t sz = oldsize - CHUNK_HDR_SZ;
       memcpy (newmem, oldmem, sz < bytes ? sz : bytes);
@@ -3642,8 +3774,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       newp = _int_realloc (ar_ptr, oldp, oldsize, nb);
       assert (!newp || chunk_is_mmapped (mem2chunk (newp)) ||
 	      ar_ptr == arena_for_chunk (mem2chunk (newp)));
-
-      return cap_narrow (newp, bytes);
+      return cap_narrow_try (newp, bytes, oldmem);
     }
 
   __libc_lock_lock (ar_ptr->mutex);
@@ -3659,13 +3790,12 @@ __libc_realloc (void *oldmem, size_t bytes)
       /* Try harder to allocate memory in other arenas.  */
       LIBC_PROBE (memory_realloc_retry, 2, bytes, oldmem);
       newp = __libc_malloc (bytes);
-      if (newp != NULL)
-        {
-	  size_t sz = memsize (oldp);
-	  memcpy (newp, oldmem, sz);
-	  (void) tag_region (chunk2mem (oldp), sz);
-          _int_free (ar_ptr, oldp, 0);
-        }
+      if (!cap_narrow_check (newp, oldmem))
+	return NULL;
+      size_t sz = memsize (oldp);
+      memcpy (newp, oldmem, sz);
+      (void) tag_region (chunk2mem (oldp), sz);
+      _int_free (ar_ptr, oldp, 0);
     }
   else
     newp = cap_narrow (newp, bytes);
@@ -3711,6 +3841,8 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
       return 0;
     }
 
+  if (!cap_reserve ())
+    return NULL;
 
   /* Make sure alignment is power of 2.  */
   if (!powerof2 (alignment))
@@ -3833,6 +3965,9 @@ __libc_calloc (size_t n, size_t elem_size)
 
   MAYBE_INIT_TCACHE ();
 
+  if (!cap_reserve ())
+    return NULL;
+
   if (SINGLE_THREAD_P)
     av = &main_arena;
   else
@@ -3884,6 +4019,8 @@ __libc_calloc (size_t n, size_t elem_size)
     }
 
   /* Allocation failed even after a retry.  */
+  if (mem == 0)
+    cap_unreserve ();
   if (mem == 0)
     return 0;
 

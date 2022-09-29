@@ -191,6 +191,7 @@ __malloc_fork_lock_parent (void)
       if (ar_ptr == &main_arena)
         break;
     }
+  cap_fork_lock ();
 }
 
 void
@@ -198,6 +199,8 @@ __malloc_fork_unlock_parent (void)
 {
   if (!__malloc_initialized)
     return;
+
+  cap_fork_unlock_parent ();
 
   for (mstate ar_ptr = &main_arena;; )
     {
@@ -214,6 +217,8 @@ __malloc_fork_unlock_child (void)
 {
   if (!__malloc_initialized)
     return;
+
+  cap_fork_unlock_child ();
 
   /* Push all arenas to the free list, except thread_arena, which is
      attached to the current thread.  */
@@ -320,6 +325,8 @@ ptmalloc_init (void)
 #if USE_TCACHE
   tcache_key_initialize ();
 #endif
+
+  cap_init ();
 
 #ifdef USE_MTAG
   if ((TUNABLE_GET_FULL (glibc, mem, tagging, int32_t, NULL) & 1) != 0)
@@ -526,6 +533,9 @@ alloc_new_heap  (size_t size, size_t top_pad, size_t pagesize,
           else
             aligned_heap_area = p2 + max_size;
           __munmap (p2 + max_size, max_size - ul);
+#ifdef __CHERI_PURE_CAPABILITY__
+	  p2 = __builtin_cheri_bounds_set_exact (p2, max_size);
+#endif
         }
       else
         {
@@ -543,6 +553,12 @@ alloc_new_heap  (size_t size, size_t top_pad, size_t pagesize,
         }
     }
   if (__mprotect (p2, size, mtag_mmap_flags | PROT_READ | PROT_WRITE) != 0)
+    {
+      __munmap (p2, max_size);
+      return 0;
+    }
+
+  if (!cap_map_add (p2))
     {
       __munmap (p2, max_size);
       return 0;
@@ -670,6 +686,7 @@ heap_trim (heap_info *heap, size_t pad)
       LIBC_PROBE (memory_heap_free, 2, heap, heap->size);
       if ((char *) heap + max_size == aligned_heap_area)
 	aligned_heap_area = NULL;
+      cap_map_del (heap);
       __munmap (heap, max_size);
       heap = prev_heap;
       if (!prev_inuse (p)) /* consolidate backward */
