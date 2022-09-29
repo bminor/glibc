@@ -25,6 +25,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <sys/uio.h>
+#include <sys/random.h>
 #include <hurd.h>
 #include <hurd/fd.h>
 
@@ -75,8 +76,15 @@ __typeof (__fcntl) __fcntl_nocancel;
 #define __fcntl64_nocancel(...) \
   __fcntl_nocancel (__VA_ARGS__)
 
-#define __getrandom_nocancel(buf, size, flags) \
-  __getrandom (buf, size, flags)
+static inline ssize_t
+__getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
+{
+  int save_errno = errno;
+  ssize_t r = __getrandom (buf, buflen, flags);
+  r = r == -1 ? -errno : r;
+  __set_errno (save_errno);
+  return r;
+}
 
 #define __poll_infinity_nocancel(fds, nfds) \
   __poll (fds, nfds, -1)

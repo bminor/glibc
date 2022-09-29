@@ -71,7 +71,7 @@ __writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
 static inline ssize_t
 __getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
 {
-  return INLINE_SYSCALL_CALL (getrandom, buf, buflen, flags);
+  return INTERNAL_SYSCALL_CALL (getrandom, buf, buflen, flags);
 }
 
 static inline int
