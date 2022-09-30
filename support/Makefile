@@ -159,6 +159,7 @@ libsupport-routines = \
   xpthread_cancel \
   xpthread_check_return \
   xpthread_cond_wait \
+  xpthread_cond_signal \
   xpthread_create \
   xpthread_detach \
   xpthread_join \

@@ -62,6 +62,7 @@ void xpthread_mutex_consistent (pthread_mutex_t *);
 void xpthread_spin_lock (pthread_spinlock_t *lock);
 void xpthread_spin_unlock (pthread_spinlock_t *lock);
 void xpthread_cond_wait (pthread_cond_t * cond, pthread_mutex_t * mutex);
+void xpthread_cond_signal (pthread_cond_t *cond);
 pthread_t xpthread_create (pthread_attr_t *attr,
                            void *(*thread_func) (void *), void *closure);
 void xpthread_detach (pthread_t thr);
