@@ -20,6 +20,7 @@
 #include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <support/xthread.h>
 #include <sys/syscall.h>
 #include <unistd.h>
 
@@ -36,30 +37,21 @@ static pthread_cond_t cond_recv;
 static void *
 thread_func (void *ctx __attribute__ ((unused)))
 {
-  int ret = pthread_mutex_lock (&mutex);
-  if (ret != 0)
-    FAIL ("pthread_mutex_lock (thread): %d", ret);
-
+  xpthread_mutex_lock (&mutex);
   while (true)
     {
       if (func_sent != NULL)
 	{
 	  void (*func) (void) = func_sent;
-	  ret = pthread_mutex_unlock (&mutex);
-	  if (ret != 0)
-	    FAIL ("pthread_mutex_unlock (thread): %d", ret);
+	  xpthread_mutex_unlock (&mutex);
+
 	  func ();
-	  ret = pthread_mutex_lock (&mutex);
-	  if (ret != 0)
-	    FAIL ("pthread_mutex_lock (thread): %d", ret);
+
+	  xpthread_mutex_lock (&mutex);
 	  func_sent = NULL;
-	  ret = pthread_cond_signal (&cond_recv);
-	  if (ret != 0)
-	    FAIL ("pthread_cond_signal (recv): %d", ret);
+	  xpthread_cond_signal (&cond_recv);
 	}
-      ret = pthread_cond_wait (&cond_send, &mutex);
-      if (ret != 0)
-	FAIL ("pthread_cond_wait (send): %d", ret);
+      xpthread_cond_wait (&cond_send, &mutex);
     }
   return NULL;
 }
@@ -67,31 +59,18 @@ thread_func (void *ctx __attribute__ ((unused)))
 static void
 run_on_thread (void (*func) (void))
 {
-  int ret = pthread_mutex_lock (&mutex);
-  if (ret != 0)
-    FAIL ("pthread_mutex_lock (%s): %d", __func__, ret);
+  xpthread_mutex_lock (&mutex);
   func_sent = func;
-  ret = pthread_mutex_unlock (&mutex);
-  if (ret != 0)
-    FAIL ("pthread_mutex_unlock (%s): %d", __func__, ret);
+  xpthread_mutex_unlock (&mutex);
 
-  ret = pthread_cond_signal (&cond_send);
-  if (ret != 0)
-    FAIL ("pthread_mutex_lock (%s): %d", __func__, ret);
+  xpthread_cond_signal (&cond_send);
 
-  ret = pthread_mutex_lock (&mutex);
-  if (ret != 0)
-    FAIL ("pthread_mutex_lock (%s): %d", __func__, ret);
-
+  xpthread_mutex_lock (&mutex);
   while (func_sent != NULL)
     {
-      ret = pthread_cond_wait (&cond_recv, &mutex);
-      if (ret != 0)
-	FAIL ("pthread_mutex_wait (%s): %d", __func__, ret);
+      xpthread_cond_wait (&cond_recv, &mutex);
     }
-  ret = pthread_mutex_unlock (&mutex);
-  if (ret != 0)
-    FAIL ("pthread_mutex_unlock (%s): %d", __func__, ret);
+  xpthread_mutex_unlock (&mutex);
 }
 
 static void
@@ -141,5 +120,4 @@ do_test (void)
   return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
