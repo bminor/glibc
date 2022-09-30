@@ -1391,14 +1391,62 @@ template<> struct __iseqsig_type<long double>
   }
 };
 
-#  if __HAVE_FLOAT128_UNLIKE_LDBL
+#  if __HAVE_FLOAT32 && __GNUC_PREREQ (13, 0)
+template<> struct __iseqsig_type<_Float32>
+{
+  static int __call (_Float32 __x, _Float32 __y) throw ()
+  {
+    return __iseqsigf (__x, __y);
+  }
+};
+#  endif
+
+#  if __HAVE_FLOAT64 && __GNUC_PREREQ (13, 0)
+template<> struct __iseqsig_type<_Float64>
+{
+  static int __call (_Float64 __x, _Float64 __y) throw ()
+  {
+    return __iseqsig (__x, __y);
+  }
+};
+#  endif
+
+#  if __HAVE_FLOAT128_UNLIKE_LDBL || (__HAVE_FLOAT128 && __GNUC_PREREQ (13, 0))
   /* When using an IEEE 128-bit long double, _Float128 is defined as long double
      in C++.  */
 template<> struct __iseqsig_type<_Float128>
 {
   static int __call (_Float128 __x, _Float128 __y) throw ()
   {
+#   if __HAVE_FLOAT128_UNLIKE_LDBL
     return __iseqsigf128 (__x, __y);
+#   else
+    return __iseqsigl (__x, __y);
+#   endif
+  }
+};
+#  endif
+
+#  if __HAVE_FLOAT32X && __GNUC_PREREQ (13, 0)
+template<> struct __iseqsig_type<_Float32x>
+{
+  static int __call (_Float32x __x, _Float32x __y) throw ()
+  {
+    return __iseqsig (__x, __y);
+  }
+};
+#  endif
+
+#  if __HAVE_FLOAT64X && __GNUC_PREREQ (13, 0)
+template<> struct __iseqsig_type<_Float64x>
+{
+  static int __call (_Float64x __x, _Float64x __y) throw ()
+  {
+#   if __HAVE_FLOAT64X_LONG_DOUBLE
+    return __iseqsigl (__x, __y);
+#   else
+    return __iseqsigf128 (__x, __y);
+#   endif
   }
 };
 #  endif

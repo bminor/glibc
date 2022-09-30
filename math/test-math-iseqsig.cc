@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define _GNU_SOURCE 1
+#include <float.h>
 #include <math.h>
 #include <stdio.h>
 
@@ -67,6 +68,20 @@ check_type ()
     }
 }
 
+/* Run minimal tests of iseqsig for a pair of types, without relying
+   on C++ library support or knowledge of the representation.  */
+template <class T1, class T2>
+static void
+check_type_minimal ()
+{
+  T1 t1 = 0;
+  T2 t2 = 0;
+  CHECK (iseqsig (t1, t2), 1);
+
+  t2 = 1;
+  CHECK (iseqsig (t1, t2), 0);
+}
+
 #if __HAVE_DISTINCT_FLOAT128
 static void
 check_float128 ()
@@ -105,6 +120,281 @@ do_test (void)
 #if __HAVE_DISTINCT_FLOAT128
   check_float128 ();
 #endif
+
+#if __HAVE_FLOAT16
+  check_type_minimal<float, _Float16> ();
+#endif
+#if __HAVE_FLOAT32
+  check_type_minimal<float, _Float32> ();
+#endif
+#if __HAVE_FLOAT64
+  check_type_minimal<float, _Float64> ();
+#endif
+#if __HAVE_FLOAT128
+  check_type_minimal<float, _Float128> ();
+#endif
+#if __HAVE_FLOAT32X
+  check_type_minimal<float, _Float32x> ();
+#endif
+#if __HAVE_FLOAT64X
+  check_type_minimal<float, _Float64x> ();
+#endif
+#if __HAVE_FLOAT128X
+  check_type_minimal<float, _Float128x> ();
+#endif
+#if __HAVE_FLOAT16
+  check_type_minimal<double, _Float16> ();
+#endif
+#if __HAVE_FLOAT32
+  check_type_minimal<double, _Float32> ();
+#endif
+#if __HAVE_FLOAT64
+  check_type_minimal<double, _Float64> ();
+#endif
+#if __HAVE_FLOAT128
+  check_type_minimal<double, _Float128> ();
+#endif
+#if __HAVE_FLOAT32X
+  check_type_minimal<double, _Float32x> ();
+#endif
+#if __HAVE_FLOAT64X
+  check_type_minimal<double, _Float64x> ();
+#endif
+#if __HAVE_FLOAT128X
+  check_type_minimal<double, _Float128x> ();
+#endif
+#if __HAVE_FLOAT16
+  check_type_minimal<long double, _Float16> ();
+#endif
+#if __HAVE_FLOAT32
+  check_type_minimal<long double, _Float32> ();
+#endif
+#if __HAVE_FLOAT64
+  check_type_minimal<long double, _Float64> ();
+#endif
+#if __HAVE_FLOAT128 && LDBL_MANT_DIG != 106
+  check_type_minimal<long double, _Float128> ();
+#endif
+#if __HAVE_FLOAT32X
+  check_type_minimal<long double, _Float32x> ();
+#endif
+#if __HAVE_FLOAT64X && LDBL_MANT_DIG != 106
+  check_type_minimal<long double, _Float64x> ();
+#endif
+#if __HAVE_FLOAT128X && LDBL_MANT_DIG != 106
+  check_type_minimal<long double, _Float128x> ();
+#endif
+#if __HAVE_FLOAT16
+  check_type_minimal<_Float16, float> ();
+#endif
+#if __HAVE_FLOAT16
+  check_type_minimal<_Float16, double> ();
+#endif
+#if __HAVE_FLOAT16
+  check_type_minimal<_Float16, long double> ();
+#endif
+#if __HAVE_FLOAT16
+  check_type_minimal<_Float16, _Float16> ();
+#endif
+#if __HAVE_FLOAT16 && __HAVE_FLOAT32
+  check_type_minimal<_Float16, _Float32> ();
+#endif
+#if __HAVE_FLOAT16 && __HAVE_FLOAT64
+  check_type_minimal<_Float16, _Float64> ();
+#endif
+#if __HAVE_FLOAT16 && __HAVE_FLOAT128
+  check_type_minimal<_Float16, _Float128> ();
+#endif
+#if __HAVE_FLOAT16 && __HAVE_FLOAT32X
+  check_type_minimal<_Float16, _Float32x> ();
+#endif
+#if __HAVE_FLOAT16 && __HAVE_FLOAT64X
+  check_type_minimal<_Float16, _Float64x> ();
+#endif
+#if __HAVE_FLOAT16 && __HAVE_FLOAT128X
+  check_type_minimal<_Float16, _Float128x> ();
+#endif
+#if __HAVE_FLOAT32
+  check_type_minimal<_Float32, float> ();
+#endif
+#if __HAVE_FLOAT32
+  check_type_minimal<_Float32, double> ();
+#endif
+#if __HAVE_FLOAT32
+  check_type_minimal<_Float32, long double> ();
+#endif
+#if __HAVE_FLOAT32 && __HAVE_FLOAT16
+  check_type_minimal<_Float32, _Float16> ();
+#endif
+#if __HAVE_FLOAT32
+  check_type_minimal<_Float32, _Float32> ();
+#endif
+#if __HAVE_FLOAT32 && __HAVE_FLOAT64
+  check_type_minimal<_Float32, _Float64> ();
+#endif
+#if __HAVE_FLOAT32 && __HAVE_FLOAT128
+  check_type_minimal<_Float32, _Float128> ();
+#endif
+#if __HAVE_FLOAT32 && __HAVE_FLOAT32X
+  check_type_minimal<_Float32, _Float32x> ();
+#endif
+#if __HAVE_FLOAT32 && __HAVE_FLOAT64X
+  check_type_minimal<_Float32, _Float64x> ();
+#endif
+#if __HAVE_FLOAT32 && __HAVE_FLOAT128X
+  check_type_minimal<_Float32, _Float128x> ();
+#endif
+#if __HAVE_FLOAT64
+  check_type_minimal<_Float64, float> ();
+#endif
+#if __HAVE_FLOAT64
+  check_type_minimal<_Float64, double> ();
+#endif
+#if __HAVE_FLOAT64
+  check_type_minimal<_Float64, long double> ();
+#endif
+#if __HAVE_FLOAT64 && __HAVE_FLOAT16
+  check_type_minimal<_Float64, _Float16> ();
+#endif
+#if __HAVE_FLOAT64 && __HAVE_FLOAT32
+  check_type_minimal<_Float64, _Float32> ();
+#endif
+#if __HAVE_FLOAT64
+  check_type_minimal<_Float64, _Float64> ();
+#endif
+#if __HAVE_FLOAT64 && __HAVE_FLOAT128
+  check_type_minimal<_Float64, _Float128> ();
+#endif
+#if __HAVE_FLOAT64 && __HAVE_FLOAT32X
+  check_type_minimal<_Float64, _Float32x> ();
+#endif
+#if __HAVE_FLOAT64 && __HAVE_FLOAT64X
+  check_type_minimal<_Float64, _Float64x> ();
+#endif
+#if __HAVE_FLOAT64 && __HAVE_FLOAT128X
+  check_type_minimal<_Float64, _Float128x> ();
+#endif
+#if __HAVE_FLOAT128
+  check_type_minimal<_Float128, float> ();
+#endif
+#if __HAVE_FLOAT128
+  check_type_minimal<_Float128, double> ();
+#endif
+#if __HAVE_FLOAT128 && LDBL_MANT_DIG != 106
+  check_type_minimal<_Float128, long double> ();
+#endif
+#if __HAVE_FLOAT128 && __HAVE_FLOAT16
+  check_type_minimal<_Float128, _Float16> ();
+#endif
+#if __HAVE_FLOAT128 && __HAVE_FLOAT32
+  check_type_minimal<_Float128, _Float32> ();
+#endif
+#if __HAVE_FLOAT128 && __HAVE_FLOAT64
+  check_type_minimal<_Float128, _Float64> ();
+#endif
+#if __HAVE_FLOAT128
+  check_type_minimal<_Float128, _Float128> ();
+#endif
+#if __HAVE_FLOAT128 && __HAVE_FLOAT32X
+  check_type_minimal<_Float128, _Float32x> ();
+#endif
+#if __HAVE_FLOAT128 && __HAVE_FLOAT64X
+  check_type_minimal<_Float128, _Float64x> ();
+#endif
+#if __HAVE_FLOAT128 && __HAVE_FLOAT128X
+  check_type_minimal<_Float128, _Float128x> ();
+#endif
+#if __HAVE_FLOAT32X
+  check_type_minimal<_Float32x, float> ();
+#endif
+#if __HAVE_FLOAT32X
+  check_type_minimal<_Float32x, double> ();
+#endif
+#if __HAVE_FLOAT32X
+  check_type_minimal<_Float32x, long double> ();
+#endif
+#if __HAVE_FLOAT32X && __HAVE_FLOAT16
+  check_type_minimal<_Float32x, _Float16> ();
+#endif
+#if __HAVE_FLOAT32X && __HAVE_FLOAT32
+  check_type_minimal<_Float32x, _Float32> ();
+#endif
+#if __HAVE_FLOAT32X && __HAVE_FLOAT64
+  check_type_minimal<_Float32x, _Float64> ();
+#endif
+#if __HAVE_FLOAT32X && __HAVE_FLOAT128
+  check_type_minimal<_Float32x, _Float128> ();
+#endif
+#if __HAVE_FLOAT32X
+  check_type_minimal<_Float32x, _Float32x> ();
+#endif
+#if __HAVE_FLOAT32X && __HAVE_FLOAT64X
+  check_type_minimal<_Float32x, _Float64x> ();
+#endif
+#if __HAVE_FLOAT32X && __HAVE_FLOAT128X
+  check_type_minimal<_Float32x, _Float128x> ();
+#endif
+#if __HAVE_FLOAT64X
+  check_type_minimal<_Float64x, float> ();
+#endif
+#if __HAVE_FLOAT64X
+  check_type_minimal<_Float64x, double> ();
+#endif
+#if __HAVE_FLOAT64X && LDBL_MANT_DIG != 106
+  check_type_minimal<_Float64x, long double> ();
+#endif
+#if __HAVE_FLOAT64X && __HAVE_FLOAT16
+  check_type_minimal<_Float64x, _Float16> ();
+#endif
+#if __HAVE_FLOAT64X && __HAVE_FLOAT32
+  check_type_minimal<_Float64x, _Float32> ();
+#endif
+#if __HAVE_FLOAT64X && __HAVE_FLOAT64
+  check_type_minimal<_Float64x, _Float64> ();
+#endif
+#if __HAVE_FLOAT64X && __HAVE_FLOAT128
+  check_type_minimal<_Float64x, _Float128> ();
+#endif
+#if __HAVE_FLOAT64X && __HAVE_FLOAT32X
+  check_type_minimal<_Float64x, _Float32x> ();
+#endif
+#if __HAVE_FLOAT64X
+  check_type_minimal<_Float64x, _Float64x> ();
+#endif
+#if __HAVE_FLOAT64X && __HAVE_FLOAT128X
+  check_type_minimal<_Float64x, _Float128x> ();
+#endif
+#if __HAVE_FLOAT128X
+  check_type_minimal<_Float128x, float> ();
+#endif
+#if __HAVE_FLOAT128X
+  check_type_minimal<_Float128x, double> ();
+#endif
+#if __HAVE_FLOAT128X && LDBL_MANT_DIG != 106
+  check_type_minimal<_Float128x, long double> ();
+#endif
+#if __HAVE_FLOAT128X && __HAVE_FLOAT16
+  check_type_minimal<_Float128x, _Float16> ();
+#endif
+#if __HAVE_FLOAT128X && __HAVE_FLOAT32
+  check_type_minimal<_Float128x, _Float32> ();
+#endif
+#if __HAVE_FLOAT128X && __HAVE_FLOAT64
+  check_type_minimal<_Float128x, _Float64> ();
+#endif
+#if __HAVE_FLOAT128X && __HAVE_FLOAT128
+  check_type_minimal<_Float128x, _Float128> ();
+#endif
+#if __HAVE_FLOAT128X && __HAVE_FLOAT32X
+  check_type_minimal<_Float128x, _Float32x> ();
+#endif
+#if __HAVE_FLOAT128X && __HAVE_FLOAT64X
+  check_type_minimal<_Float128x, _Float64x> ();
+#endif
+#if __HAVE_FLOAT128X
+  check_type_minimal<_Float128x, _Float128x> ();
+#endif
+
   return 0;
 }
 
