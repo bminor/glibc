@@ -1,4 +1,4 @@
-/* Measure mutex_lock for different threads and critical sections.
+/* Measure lock functions for different threads and critical sections.
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,7 +17,6 @@
    <https://www.gnu.org/licenses/>.  */
 
 #define TEST_MAIN
-#define TEST_NAME "pthread-mutex-locks"
 #define TIMEOUT (20 * 60)
 
 #include <stdio.h>
@@ -31,8 +30,8 @@
 #include "bench-timing.h"
 #include "json-lib.h"
 
-static pthread_mutex_t lock;
-static pthread_mutexattr_t attr;
+static bench_lock_t lock;
+static bench_lock_attr_t attr;
 static pthread_barrier_t barrier;
 
 #define START_ITERS 1000
@@ -104,9 +103,9 @@ worker (void *v)
   TIMING_NOW (start);
   while (iters--)
     {
-      pthread_mutex_lock (&lock);
+      LOCK (&lock);
       critical_section (crt_len);
-      pthread_mutex_unlock (&lock);
+      UNLOCK (&lock);
       non_critical_section (non_crt_len);
     }
   TIMING_NOW (stop);
@@ -123,7 +122,7 @@ do_one_test (int num_threads, int crt_len, int non_crt_len, long iters)
   Worker_Params *p, params[num_threads];
   pthread_t threads[num_threads];
 
-  pthread_mutex_init (&lock, &attr);
+  LOCK_INIT (&lock, &attr);
   pthread_barrier_init (&barrier, NULL, num_threads);
 
   for (i = 0; i < num_threads; i++)
@@ -137,7 +136,7 @@ do_one_test (int num_threads, int crt_len, int non_crt_len, long iters)
   for (i = 0; i < num_threads; i++)
     pthread_join (threads[i], NULL);
 
-  pthread_mutex_destroy (&lock);
+  LOCK_DESTROY (&lock);
   pthread_barrier_destroy (&barrier);
 
   mean = 0;
@@ -246,7 +245,7 @@ do_bench (void)
   char name[128];
 
   json_init (&json_ctx, 2, stdout);
-  json_attr_object_begin (&json_ctx, "pthread_mutex_locks");
+  json_attr_object_begin (&json_ctx, TEST_NAME);
 
   /* The thread config begins from 1, and increases by 2x until nprocs.
      We also wants to test over-saturation case (1.25*nprocs).  */
@@ -260,8 +259,7 @@ do_bench (void)
   threads[th_conf++] = nprocs;
   threads[th_conf++] = nprocs + nprocs / 4;
 
-  pthread_mutexattr_init (&attr);
-  pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_ADAPTIVE_NP);
+  LOCK_ATTR_INIT (&attr);
   snprintf (name, sizeof name, "type=adaptive");
 
   for (k = 0; k < (sizeof (non_crt_lens) / sizeof (int)); k++)

@@ -103,10 +103,18 @@ endif
 
 bench-pthread := \
   pthread-locks \
-  pthread-mutex-locks \
+  pthread-mutex-lock \
+  pthread-mutex-trylock \
+  pthread-spin-lock \
+  pthread-spin-trylock \
   pthread_once \
   thread_create \
 # bench-pthread
+
+LDLIBS-bench-pthread-mutex-lock += -lm
+LDLIBS-bench-pthread-mutex-trylock += -lm
+LDLIBS-bench-pthread-spin-lock += -lm
+LDLIBS-bench-pthread-spin-trylock += -lm
 
 bench-string := \
   ffs \
