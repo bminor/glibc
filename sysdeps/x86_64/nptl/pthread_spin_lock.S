@@ -19,18 +19,27 @@
 #include <shlib-compat.h>
 
 ENTRY(__pthread_spin_lock)
-1:	LOCK
-	decl	0(%rdi)
-	jne	2f
+	/* Always return zero.  */
 	xor	%eax, %eax
+	LOCK
+	decl	0(%rdi)
+	jne	1f
 	ret
 
 	.align	16
-2:	rep
+1:
+	/* `rep nop` == `pause`.  */
+	rep
 	nop
-	cmpl	$0, 0(%rdi)
-	jg	1b
-	jmp	2b
+	cmpl	%eax, 0(%rdi)
+	jle	1b
+	/* Just repeat the `lock decl` logic here.  The code size save
+	   of jumping back to entry doesn't change how many 16-byte
+	   chunks (default function alignment) that the code fits in.  */
+	LOCK
+	decl	0(%rdi)
+	jne	1b
+	ret
 END(__pthread_spin_lock)
 versioned_symbol (libc, __pthread_spin_lock, pthread_spin_lock, GLIBC_2_34)
 

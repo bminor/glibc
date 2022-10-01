@@ -20,13 +20,21 @@
 #include <shlib-compat.h>
 
 ENTRY(__pthread_spin_trylock)
-	movl	$1, %eax
 	xorl	%ecx, %ecx
-	lock
-	cmpxchgl %ecx, (%rdi)
+	/* xchg has implicit LOCK prefix.  */
+	xchgl	%ecx, (%rdi)
+
+	/* Branch on result.  Expectation is the use of trylock will be
+	   branching on success/failure so this branch can be used to
+	   to predict the coming branch.  It has the benefit of
+	   breaking the likely expensive memory dependency on (%rdi).  */
+	cmpl	$1, %ecx
+	jnz	1f
+	xorl	%eax, %eax
+	ret
+1:
 	movl	$EBUSY, %eax
-	cmovel	%ecx, %eax
-	retq
+	ret
 END(__pthread_spin_trylock)
 versioned_symbol (libc, __pthread_spin_trylock, pthread_spin_trylock,
 		  GLIBC_2_34)
