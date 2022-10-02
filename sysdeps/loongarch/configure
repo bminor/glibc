@@ -10,7 +10,7 @@ if ${libc_cv_static_pie_on_loongarch+:} false; then :
   $as_echo_n "(cached) " >&6
 else
 
-  cat > conftest.S << EOF
+  cat > conftest1.S << EOF
 .global _start
 .type _start, @function
 _start:
@@ -26,14 +26,35 @@ x:
   /* This should produce an R_LARCH_RELATIVE in the static PIE.  */
   .dword _start
 EOF
+  cat > conftest2.S << EOF
+.global f
+.type f, @function
+f:
+  /* The linker should be able to handle this and produce a PLT entry.  */
+  la.pcrel \$t0, \$t0, external_func
+  jirl \$zero, \$t0, 0
+EOF
+
   libc_cv_static_pie_on_loongarch=no
-  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static-pie -nostdlib -fPIE -o conftest conftest.S'
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static-pie -nostdlib -fPIE -o conftest1 conftest1.S'
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; } \
-     && { ac_try='LC_ALL=C $READELF -Wr conftest | grep -q R_LARCH_RELATIVE'
+     && { ac_try='LC_ALL=C $READELF -Wr conftest1 | grep -q R_LARCH_RELATIVE'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } \
+     && { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -shared -fPIC -o conftest2.so conftest2.S'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } \
+     && { ac_try='LC_ALL=C $READELF -Wr conftest2.so | grep -q 'R_LARCH_JUMP_SLOT.*external_func''
   { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -42,7 +63,7 @@ EOF
   then
     libc_cv_static_pie_on_loongarch=yes
   fi
-  rm -rf conftest.*
+  rm -rf conftest*
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_static_pie_on_loongarch" >&5
 $as_echo "$libc_cv_static_pie_on_loongarch" >&6; }

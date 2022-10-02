@@ -13,7 +13,7 @@ dnl satisify the requirement, but a distro may backport static PIE support into
 dnl earlier GCC or Binutils releases as well.
 AC_CACHE_CHECK([if the toolchain is sufficient to build static PIE on LoongArch],
 libc_cv_static_pie_on_loongarch, [
-  cat > conftest.S << EOF
+  cat > conftest1.S << EOF
 .global _start
 .type _start, @function
 _start:
@@ -29,13 +29,24 @@ x:
   /* This should produce an R_LARCH_RELATIVE in the static PIE.  */
   .dword _start
 EOF
+  cat > conftest2.S << EOF
+.global f
+.type f, @function
+f:
+  /* The linker should be able to handle this and produce a PLT entry.  */
+  la.pcrel \$t0, \$t0, external_func
+  jirl \$zero, \$t0, 0
+EOF
+
   libc_cv_static_pie_on_loongarch=no
-  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static-pie -nostdlib -fPIE -o conftest conftest.S]) \
-     && AC_TRY_COMMAND([LC_ALL=C $READELF -Wr conftest | grep -q R_LARCH_RELATIVE])
+  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static-pie -nostdlib -fPIE -o conftest1 conftest1.S]) \
+     && AC_TRY_COMMAND([LC_ALL=C $READELF -Wr conftest1 | grep -q R_LARCH_RELATIVE]) \
+     && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -shared -fPIC -o conftest2.so conftest2.S]) \
+     && AC_TRY_COMMAND([LC_ALL=C $READELF -Wr conftest2.so | grep -q 'R_LARCH_JUMP_SLOT.*external_func'])
   then
     libc_cv_static_pie_on_loongarch=yes
   fi
-  rm -rf conftest.*])
+  rm -rf conftest* ])
 
 if test "$libc_cv_static_pie_on_loongarch" = yes; then
   AC_DEFINE(SUPPORT_STATIC_PIE)

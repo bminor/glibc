@@ -60,13 +60,16 @@ ENTRY (ENTRY_POINT)
 	cfi_undefined (1)
 	or		a5, a0, zero /* rtld_fini */
 
-#if defined(PIC) && !defined(SHARED)
+#if ENABLE_STATIC_PIE
 /* For static PIE, the GOT cannot be used in _start because the GOT entries are
-   offsets instead of real addresses before __libc_start_main.  */
+   offsets instead of real addresses before __libc_start_main.
+   __libc_start_main and/or main may be not local, so we rely on the linker to
+   produce PLT entries for them.  GNU ld >= 2.40 supports this.  */
 # define LA la.pcrel
 #else
-/* We must get symbol main through GOT table, since main may not be local.
-   For instance: googletest defines main in dynamic library.  */
+/* Old GNU ld (< 2.40) cannot handle PC relative address against a non-local
+   function correctly.  We deem these old linkers failing to support static PIE
+   and load the addresses from GOT.  */
 # define LA la.got
 #endif
 
