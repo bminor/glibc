@@ -209,13 +209,19 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   IFUNC_IMPL (i, name, memrchr,
 	      X86_IFUNC_IMPL_ADD_V4 (array, i, memrchr,
 				     (CPU_FEATURE_USABLE (AVX512VL)
-				      && CPU_FEATURE_USABLE (AVX512BW)),
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)
+				      && CPU_FEATURE_USABLE (LZCNT)),
 				     __memrchr_evex)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, memrchr,
-				     CPU_FEATURE_USABLE (AVX2),
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)
+				      && CPU_FEATURE_USABLE (LZCNT)),
 				     __memrchr_avx2)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, memrchr,
 				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)
+				      && CPU_FEATURE_USABLE (LZCNT)
 				      && CPU_FEATURE_USABLE (RTM)),
 				     __memrchr_avx2_rtm)
 	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
