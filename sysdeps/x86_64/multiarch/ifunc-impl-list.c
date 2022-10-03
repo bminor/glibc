@@ -711,10 +711,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/wcscmp.c.  */
   IFUNC_IMPL (i, name, wcscmp,
 	      IFUNC_IMPL_ADD (array, i, wcscmp,
-			      CPU_FEATURE_USABLE (AVX2),
+			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)),
 			      __wcscmp_avx2)
 	      IFUNC_IMPL_ADD (array, i, wcscmp,
 			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __wcscmp_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, wcscmp,
@@ -727,10 +729,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/wcsncmp.c.  */
   IFUNC_IMPL (i, name, wcsncmp,
 	      IFUNC_IMPL_ADD (array, i, wcsncmp,
-			      CPU_FEATURE_USABLE (AVX2),
+			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)),
 			      __wcsncmp_avx2)
 	      IFUNC_IMPL_ADD (array, i, wcsncmp,
 			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __wcsncmp_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, wcsncmp,
