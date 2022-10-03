@@ -3205,6 +3205,35 @@ tcache_get (size_t tc_idx)
   return (void *) e;
 }
 
+/* Cut down __libc_free for cleaning up tcache entries.  */
+static void
+tcache_libc_free (void *mem)
+{
+  int err = errno;
+  mchunkptr p = mem2chunk(mem);
+  if (chunk_is_mmapped (p))
+    {
+      /* See if the dynamic brk/mmap threshold needs adjusting.
+	 Dumped fake mmapped chunks do not affect the threshold.  */
+      if (!mp_.no_dyn_threshold
+          && chunksize_nomask (p) > mp_.mmap_threshold
+          && chunksize_nomask (p) <= DEFAULT_MMAP_THRESHOLD_MAX)
+        {
+          mp_.mmap_threshold = chunksize (p);
+          mp_.trim_threshold = 2 * mp_.mmap_threshold;
+          LIBC_PROBE (memory_mallopt_free_dyn_thresholds, 2,
+                      mp_.mmap_threshold, mp_.trim_threshold);
+        }
+      munmap_chunk (p);
+    }
+  else
+    {
+      mstate ar_ptr = arena_for_chunk (p);
+      _int_free (ar_ptr, p, 0);
+    }
+  __set_errno (err);
+}
+
 static void
 tcache_thread_shutdown (void)
 {
@@ -3230,11 +3259,11 @@ tcache_thread_shutdown (void)
 	    malloc_printerr ("tcache_thread_shutdown(): "
 			     "unaligned tcache chunk detected");
 	  tcache_tmp->entries[i] = REVEAL_PTR (e->next);
-	  __libc_free (e);
+	  tcache_libc_free (e);
 	}
     }
 
-  __libc_free (tcache_tmp);
+  tcache_libc_free (tcache_tmp);
 }
 
 static void
