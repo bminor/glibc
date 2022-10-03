@@ -25,12 +25,12 @@
 # include <sysdep.h>
 
 # ifdef USE_AS_WCSLEN
-#  define VPCMP		vpcmpd
+#  define VPCMPEQ	vpcmpeqd
 #  define VPTESTN	vptestnmd
 #  define VPMINU	vpminud
 #  define CHAR_SIZE	4
 # else
-#  define VPCMP		vpcmpb
+#  define VPCMPEQ	vpcmpeqb
 #  define VPTESTN	vptestnmb
 #  define VPMINU	vpminub
 #  define CHAR_SIZE	1
@@ -55,20 +55,29 @@ ENTRY_P2ALIGN (STRLEN, 6)
 
 	movl	%edi, %eax
 	vpxorq	%VMM_128(0), %VMM_128(0), %VMM_128(0)
-	andl	$(PAGE_SIZE - 1), %eax
-	cmpl	$(PAGE_SIZE - VEC_SIZE), %eax
+	sall	$20, %eax
+	cmpl	$((PAGE_SIZE - VEC_SIZE) << 20), %eax
 	ja	L(page_cross)
 
 	/* Compare [w]char for null, mask bit will be set for match.  */
-	VPCMP	$0, (%rdi), %VMM(0), %k0
+	VPCMPEQ	(%rdi), %VMM(0), %k0
+# ifdef USE_AS_STRNLEN
+	KMOV	%k0, %VRCX
+	/* Store max length in rax.  */
+	mov	%rsi, %rax
+	/* If rcx is 0, rax will have max length.  We can not use VRCX
+	   and VRAX here for evex256 because, upper 32 bits may be
+	   undefined for ecx and eax.  */
+	bsfq	%rcx, %rax
+	cmp	$CHAR_PER_VEC, %rax
+	ja	L(align_more)
+	cmpq	%rax, %rsi
+	cmovb	%esi, %eax
+# else
 	KMOV	%k0, %VRAX
 	test	%VRAX, %VRAX
 	jz	L(align_more)
-
 	bsf	%VRAX, %VRAX
-# ifdef USE_AS_STRNLEN
-	cmpq	%rsi, %rax
-	cmovnb	%rsi, %rax
 # endif
 	ret
 
@@ -81,25 +90,24 @@ L(ret_max):
 # endif
 
 L(align_more):
-	leaq	VEC_SIZE(%rdi), %rax
+	mov	%rdi, %rax
 	/* Align rax to VEC_SIZE.  */
 	andq	$-VEC_SIZE, %rax
 # ifdef USE_AS_STRNLEN
-	movq	%rax, %rdx
-	subq	%rdi, %rdx
+	movq	%rdi, %rdx
+	subq	%rax, %rdx
 #  ifdef USE_AS_WCSLEN
 	shr	$2, %VRDX
 #  endif
 	/* At this point rdx contains [w]chars already compared.  */
-	subq	%rsi, %rdx
-	jae	L(ret_max)
-	negq	%rdx
+	leaq	-CHAR_PER_VEC(%rsi, %rdx), %rdx
 	/* At this point rdx contains number of w[char] needs to go.
 	   Now onwards rdx will keep decrementing with each compare.  */
 # endif
 
 	/* Loop unroll 4 times for 4 vector loop.  */
-	VPCMP	$0, (%rax), %VMM(0), %k0
+	VPCMPEQ	VEC_SIZE(%rax), %VMM(0), %k0
+	subq	$-VEC_SIZE, %rax
 	KMOV	%k0, %VRCX
 	test	%VRCX, %VRCX
 	jnz	L(ret_vec_x1)
@@ -109,7 +117,7 @@ L(align_more):
 	jbe	L(ret_max)
 # endif
 
-	VPCMP	$0, VEC_SIZE(%rax), %VMM(0), %k0
+	VPCMPEQ	VEC_SIZE(%rax), %VMM(0), %k0
 	KMOV	%k0, %VRCX
 	test	%VRCX, %VRCX
 	jnz	L(ret_vec_x2)
@@ -119,7 +127,7 @@ L(align_more):
 	jbe	L(ret_max)
 # endif
 
-	VPCMP	$0, (VEC_SIZE * 2)(%rax), %VMM(0), %k0
+	VPCMPEQ	(VEC_SIZE * 2)(%rax), %VMM(0), %k0
 	KMOV	%k0, %VRCX
 	test	%VRCX, %VRCX
 	jnz	L(ret_vec_x3)
@@ -129,7 +137,7 @@ L(align_more):
 	jbe	L(ret_max)
 # endif
 
-	VPCMP	$0, (VEC_SIZE * 3)(%rax), %VMM(0), %k0
+	VPCMPEQ	(VEC_SIZE * 3)(%rax), %VMM(0), %k0
 	KMOV	%k0, %VRCX
 	test	%VRCX, %VRCX
 	jnz	L(ret_vec_x4)
@@ -155,16 +163,10 @@ L(align_more):
 	addq	%rcx, %rdx
 	/* Need jump as we don't want to add/subtract rdx for first
 	   iteration of 4 x VEC_SIZE aligned loop.  */
-	jmp	L(loop_entry)
 # endif
 
 	.p2align 4,,11
 L(loop):
-# ifdef USE_AS_STRNLEN
-	subq	$(CHAR_PER_VEC * 4), %rdx
-	jbe	L(ret_max)
-L(loop_entry):
-# endif
 	/* VPMINU and VPCMP combination provide better performance as
 	   compared to alternative combinations.  */
 	VMOVA	(VEC_SIZE * 4)(%rax), %VMM(1)
@@ -177,7 +179,18 @@ L(loop_entry):
 
 	subq	$-(VEC_SIZE * 4), %rax
 	KORTEST	%k0, %k1
-	jz	L(loop)
+
+# ifndef USE_AS_STRNLEN
+	jz      L(loop)
+# else
+	jnz	L(loopend)
+	subq	$(CHAR_PER_VEC * 4), %rdx
+	ja	L(loop)
+	mov	%rsi, %rax
+	ret
+# endif
+
+L(loopend):
 
 	VPTESTN	%VMM(1), %VMM(1), %k2
 	KMOV	%k2, %VRCX
@@ -249,24 +262,34 @@ L(ret_vec_x1):
 	ret
 
 L(page_cross):
-	movl	%eax, %ecx
-# ifdef USE_AS_WCSLEN
+	mov	%rdi, %rax
+	movl	%edi, %ecx
 	andl	$(VEC_SIZE - 1), %ecx
+# ifdef USE_AS_WCSLEN
 	sarl	$2, %ecx
 # endif
 	/* ecx contains number of w[char] to be skipped as a result
 	   of address alignment.  */
-	xorq	%rdi, %rax
-	VPCMP	$0, (PAGE_SIZE - VEC_SIZE)(%rax), %VMM(0), %k0
-	KMOV	%k0, %VRAX
+	andq	$-VEC_SIZE, %rax
+	VPCMPEQ	(%rax), %VMM(0), %k0
+	KMOV	%k0, %VRDX
 	/* Ignore number of character for alignment adjustment.  */
-	shr	%cl, %VRAX
+	shr	%cl, %VRDX
+# ifdef USE_AS_STRNLEN
+	jnz	L(page_cross_end)
+	movl    $CHAR_PER_VEC, %eax
+	sub     %ecx, %eax
+	cmp	%rax, %rsi
+	ja	L(align_more)
+# else
 	jz	L(align_more)
+# endif
 
-	bsf	%VRAX, %VRAX
+L(page_cross_end):
+	bsf	%VRDX, %VRAX
 # ifdef USE_AS_STRNLEN
 	cmpq	%rsi, %rax
-	cmovnb	%rsi, %rax
+	cmovnb	%esi, %eax
 # endif
 	ret
 
