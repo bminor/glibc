@@ -59,10 +59,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/memchr.c.  */
   IFUNC_IMPL (i, name, memchr,
 	      IFUNC_IMPL_ADD (array, i, memchr,
-			      CPU_FEATURE_USABLE (AVX2),
+			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)),
 			      __memchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, memchr,
 			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __memchr_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, memchr,
@@ -301,10 +303,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/rawmemchr.c.  */
   IFUNC_IMPL (i, name, rawmemchr,
 	      IFUNC_IMPL_ADD (array, i, rawmemchr,
-			      CPU_FEATURE_USABLE (AVX2),
+			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)),
 			      __rawmemchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, rawmemchr,
 			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __rawmemchr_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, rawmemchr,
@@ -805,10 +809,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   /* Support sysdeps/x86_64/multiarch/wmemchr.c.  */
   IFUNC_IMPL (i, name, wmemchr,
 	      IFUNC_IMPL_ADD (array, i, wmemchr,
-			      CPU_FEATURE_USABLE (AVX2),
+			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)),
 			      __wmemchr_avx2)
 	      IFUNC_IMPL_ADD (array, i, wmemchr,
 			      (CPU_FEATURE_USABLE (AVX2)
+			       && CPU_FEATURE_USABLE (BMI2)
 			       && CPU_FEATURE_USABLE (RTM)),
 			      __wmemchr_avx2_rtm)
 	      IFUNC_IMPL_ADD (array, i, wmemchr,
