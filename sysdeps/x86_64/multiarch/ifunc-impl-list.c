@@ -69,10 +69,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __memchr_evex_rtm)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, memchr,
-				     CPU_FEATURE_USABLE (AVX2),
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)),
 				     __memchr_avx2)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, memchr,
 				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)
 				      && CPU_FEATURE_USABLE (RTM)),
 				     __memchr_avx2_rtm)
 	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
@@ -335,10 +337,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __rawmemchr_evex_rtm)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, rawmemchr,
-				     CPU_FEATURE_USABLE (AVX2),
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)),
 				     __rawmemchr_avx2)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, rawmemchr,
 				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)
 				      && CPU_FEATURE_USABLE (RTM)),
 				     __rawmemchr_avx2_rtm)
 	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
@@ -927,10 +931,12 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __wmemchr_evex_rtm)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, wmemchr,
-				     CPU_FEATURE_USABLE (AVX2),
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)),
 				     __wmemchr_avx2)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, wmemchr,
 				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)
 				      && CPU_FEATURE_USABLE (RTM)),
 				     __wmemchr_avx2_rtm)
 	      /* ISA V2 wrapper for SSE2 implementation because the SSE2
