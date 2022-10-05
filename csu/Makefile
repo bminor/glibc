@@ -50,15 +50,21 @@ tests =
 # applications, so that build flags matter.
 # See <https://sourceware.org/ml/libc-alpha/2018-07/msg00101.html>.
 #
+# The function is called prior the thread pointer setup, and if stack
+# protector is enabled the compiler might still generate the stack check
+# (which requires the thread pointer correctly set).
+extra-no-ssp = static-reloc
+
 # libc-start.os is safe to be built with stack protector since
 # __libc_start_main is called after stack canary setup is done.
-ssp-safe.os = static-reloc libc-start
+ssp-safe.os = libc-start
 
-CFLAGS-.o += $(call elide-stack-protector,.o,$(routines))
-CFLAGS-.op += $(call elide-stack-protector,.op,$(routines))
-CFLAGS-.oS += $(call elide-stack-protector,.oS,$(routines))
+CFLAGS-.o += $(call elide-stack-protector,.o,$(routines) $(extra-no-ssp))
+CFLAGS-.op += $(call elide-stack-protector,.op,$(routines) $(extra-no-ssp))
+CFLAGS-.oS += $(call elide-stack-protector,.oS,$(routines) $(extra-no-ssp))
 CFLAGS-.os += $(call elide-stack-protector,.os,$(filter-out \
-						 $(ssp-safe.os),$(routines)))
+						 $(ssp-safe.os), \
+						 $(routines) $(extra-no-ssp)))
 
 ifeq (yes,$(build-shared))
 extra-objs += S$(start-installed-name) gmon-start.os
