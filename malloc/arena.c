@@ -326,6 +326,12 @@ ptmalloc_init (void)
   tcache_key_initialize ();
 #endif
 
+#ifdef __CHERI_PURE_CAPABILITY__
+  if (TUNABLE_GET_FULL (glibc, mem, cap_narrowing, int32_t, NULL) == 0)
+    cap_narrowing_enabled = false;
+  else
+    cap_narrowing_enabled = true;
+#endif
   cap_init ();
 
 #ifdef USE_MTAG
