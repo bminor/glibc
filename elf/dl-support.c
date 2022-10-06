@@ -44,6 +44,7 @@
 #include <dl-auxv.h>
 #include <dl-find_object.h>
 #include <array_length.h>
+#include <dl-symbol-redir-ifunc.h>
 
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
