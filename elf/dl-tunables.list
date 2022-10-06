@@ -159,6 +159,13 @@ glibc {
       maxval: 255
       security_level: SXID_IGNORE
     }
+    cap_narrowing {
+      type: INT_32
+      minval: 0
+      maxval: 1
+      default: 1
+      security_level: SXID_IGNORE
+    }
   }
 
   rtld {
