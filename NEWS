@@ -16,7 +16,7 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-* The dynamic linker no longer no longer loads shared objects from the "tls"
+* The dynamic linker no longer loads shared objects from the "tls"
   subdirectories on the library search path or the subdirectory that
   corresponds to the AT_PLATFORM system name, or employs the legacy AT_HWCAP
   search mechanism, which was deprecated in version 2.33.
