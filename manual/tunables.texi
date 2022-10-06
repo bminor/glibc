@@ -612,3 +612,9 @@ support in the kernel if this tunable has any non-zero value.
 
 The default value is @samp{0}, which disables all memory tagging.
 @end deftp
+
+@deftp Tunable glibc.mem.cap_narrowing
+On CHERI architecture use capability bounds narrowing in the malloc
+implementation. By default it is set to 1, to disable bounds narrowing
+set it to 0.
+@end deftp
