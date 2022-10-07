@@ -88,6 +88,7 @@ tests-exclude-hugetlb1 = \
 	tst-interpose-thread \
 	tst-interpose-static-nothread \
 	tst-interpose-static-thread \
+	tst-malloc-backtrace \
 	tst-malloc-usable \
 	tst-malloc-usable-tunables \
 	tst-mallocstate
@@ -158,6 +159,8 @@ libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 libc_malloc_debug-routines = malloc-debug $(sysdep_malloc_debug_routines)
 libc_malloc_debug-inhibit-o = $(filter-out .os,$(object-suffixes))
+
+tst-malloc-backtrace-ENV = GLIBC_TUNABLES=glibc.mem.cap_narrowing=0
 
 $(objpfx)tst-malloc-backtrace: $(shared-thread-library)
 $(objpfx)tst-malloc-thread-exit: $(shared-thread-library)
@@ -331,12 +334,14 @@ $(objpfx)tst-interpose-static-thread: \
   $(objpfx)tst-interpose-aux-thread.o $(static-thread-library)
 
 tst-dynarray-ENV = MALLOC_TRACE=$(objpfx)tst-dynarray.mtrace \
+		   GLIBC_TUNABLES=glibc.mem.cap_narrowing=0 \
 		   LD_PRELOAD=$(objpfx)libc_malloc_debug.so
 $(objpfx)tst-dynarray-mem.out: $(objpfx)tst-dynarray.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-dynarray.mtrace > $@; \
 	$(evaluate-test)
 
 tst-dynarray-fail-ENV = MALLOC_TRACE=$(objpfx)tst-dynarray-fail.mtrace \
+			GLIBC_TUNABLES=glibc.mem.cap_narrowing=0 \
 			LD_PRELOAD=$(objpfx)libc_malloc_debug.so
 $(objpfx)tst-dynarray-fail-mem.out: $(objpfx)tst-dynarray-fail.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-dynarray-fail.mtrace > $@; \
