@@ -66,37 +66,34 @@ __llroundl (long double x)
       /* Peg at max/min values, assuming that the above conversions do so.
          Strictly speaking, we can return anything for values that overflow,
          but this is more useful.  */
-      res = hi + lo;
-
-      /* This is just sign(hi) == sign(lo) && sign(res) != sign(hi).  */
-      if (__glibc_unlikely (((~(hi ^ lo) & (res ^ hi)) < 0)))
+      if (__glibc_unlikely (__builtin_add_overflow (hi, lo, &res)))
 	goto overflow;
 
       xh -= lo;
       ldbl_canonicalize (&xh, &xl);
 
-      hi = res;
       if (xh > 0.5)
 	{
-	  res += 1;
+	  if (__glibc_unlikely (__builtin_add_overflow (res, 1, &res)))
+	    goto overflow;
 	}
       else if (xh == 0.5)
 	{
 	  if (xl > 0.0 || (xl == 0.0 && res >= 0))
-	    res += 1;
+	    if (__glibc_unlikely (__builtin_add_overflow (res, 1, &res)))
+	      goto overflow;
 	}
       else if (-xh > 0.5)
 	{
-	  res -= 1;
+	  if (__glibc_unlikely (__builtin_add_overflow (res, -1, &res)))
+	    goto overflow;
 	}
       else if (-xh == 0.5)
 	{
 	  if (xl < 0.0 || (xl == 0.0 && res <= 0))
-	    res -= 1;
+	    if (__glibc_unlikely (__builtin_add_overflow (res, -1, &res)))
+	      goto overflow;
 	}
-
-      if (__glibc_unlikely (((~(hi ^ (res - hi)) & (res ^ hi)) < 0)))
-	goto overflow;
 
       return res;
     }
