@@ -812,6 +812,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap, unsigned int mode_flags)
       int is_char = 0;	/* Argument is promoted (unsigned) char.  */
       int width = 0;	/* Width of output; 0 means none specified.  */
       int prec = -1;	/* Precision of output; -1 means none specified.  */
+      __attribute__((unused))
       int is_cap = 0;	/* Argument is a capability.  */
 
       /* This flag is set by the 'I' modifier and selects the use of the
@@ -1350,6 +1351,7 @@ printf_positional (FILE *s, const CHAR_T *format, int readonly_format,
       int is_long = specs[nspecs_done].info.is_long;
       int width = specs[nspecs_done].info.width;
       int prec = specs[nspecs_done].info.prec;
+      __attribute__((unused))
       int is_cap = specs[nspecs_done].info.is_cap;
       int use_outdigits = specs[nspecs_done].info.i18n;
       char pad = specs[nspecs_done].info.pad;
