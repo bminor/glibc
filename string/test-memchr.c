@@ -247,8 +247,11 @@ test_main (void)
   /* BZ#21182 - wrong overflow calculation for i686 implementation
      with address near end of the page.  */
   for (i = 2; i < 16; ++i)
-    /* page_size is in fact getpagesize() * 2.  */
-    do_test (page_size / 2 - i, i, i, 1, 0x9B);
+    {
+      /* page_size is in fact getpagesize() * 2.  */
+      do_test (page_size / 2 - i, i, i, 1, 0x9B);
+      do_test (page_size / 2 - i, i - 1, i - 1, 1, 0x9B);
+    }
 
   do_random_tests ();
   do_overflow_tests ();
