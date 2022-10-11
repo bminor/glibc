@@ -155,21 +155,13 @@ do_test (void)
     struct scratch_buffer buf;
     scratch_buffer_init (&buf);
     memset (buf.data, '@', buf.length);
-
-    size_t sizes[] = { 16, buf.length, buf.length + 16 };
-    for (int i = 0; i < array_length (sizes); i++)
-      {
-        /* The extra size is unitialized through realloc.  */
-        size_t l = sizes[i] > buf.length ? sizes[i] : buf.length;
-        void *r = scratch_buffer_dupfree (&buf, l);
-        void *c = xmalloc (l);
-        memset (c, '@', l);
-        TEST_COMPARE_BLOB (r, l, buf.data, l);
-        free (r);
-        free (c);
-      }
-
-    scratch_buffer_free (&buf);
+    size_t l = 16 <= buf.length ? 16 : buf.length;
+    void *r = scratch_buffer_dupfree (&buf, l);
+    void *c = xmalloc (l);
+    memset (c, '@', l);
+    TEST_COMPARE_BLOB (r, l, c, l);
+    free (r);
+    free (c);
   }
   return 0;
 }
