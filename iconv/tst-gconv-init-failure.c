@@ -31,13 +31,13 @@
 static void
 activate_test_gconv_modules (void)
 {
-  unsigned long ptr = getauxval (AT_EXECFN);
-  if (ptr == 0)
+  const char *ptr = getauxptr (AT_EXECFN);
+  if (ptr == NULL)
     {
       printf ("warning: AT_EXECFN not support, cannot run test\n");
       exit (EXIT_UNSUPPORTED);
     }
-  char *test_program_directory = dirname (xstrdup ((const char *) ptr));
+  char *test_program_directory = dirname (xstrdup (ptr));
   TEST_VERIFY (setenv ("GCONV_PATH", test_program_directory, 1) == 0);
   free (test_program_directory);
 }
