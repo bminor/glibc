@@ -64,9 +64,17 @@ __correctly_grouped_prefixmb (const STRING_TYPE *begin, const STRING_TYPE *end,
   thousands_len = strlen (thousands);
 #endif
 
+#ifdef USE_WIDE_CHAR
   while (end > begin)
+#else
+  while (end - begin >= thousands_len)
+#endif
     {
+#ifdef USE_WIDE_CHAR
       const STRING_TYPE *cp = end - 1;
+#else
+      const STRING_TYPE *cp = end - thousands_len;
+#endif
       const char *gp = grouping;
 
       /* Check first group.  */
