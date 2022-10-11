@@ -264,7 +264,7 @@ do_test_dependency (void)
 	  xdlclose (moddep);
 	}
 
-      for (int n = 1; n <= nmods; n++)
+      for (int n = 1; n < nmods; n++)
 	if (mods[n] != 0)
 	  unload_mod (n);
     }
@@ -342,7 +342,7 @@ do_test_invalid_dependency (bool bind_now)
 	    xdlclose (moddep);
 	}
 
-      for (int n = 1; n <= nmods; n++)
+      for (int n = 1; n < nmods; n++)
 	if (mods[n] != 0)
 	  unload_mod (n);
     }
