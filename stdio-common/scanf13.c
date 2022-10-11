@@ -67,6 +67,7 @@ main (void)
   buf[2049] = 0x84;
   buf[2058] = '\t';
   buf[2059] = 'a';
+  buf[sizeof (buf) - 1] = '\0';
   if (sscanf (buf, "%ms%mc", &sp1, &sp2) != 2)
     FAIL ();
   else
