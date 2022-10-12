@@ -4093,8 +4093,11 @@ enum
 #define R_NDS32_TLS_DESC	119
 
 /* LoongArch ELF Flags */
-#define EF_LARCH_ABI    	0x07
-#define EF_LARCH_ABI_LP64D	0x03
+#define EF_LARCH_ABI_MODIFIER_MASK  0x07
+#define EF_LARCH_ABI_SOFT_FLOAT     0x01
+#define EF_LARCH_ABI_SINGLE_FLOAT   0x02
+#define EF_LARCH_ABI_DOUBLE_FLOAT   0x03
+#define EF_LARCH_OBJABI_V1          0x40
 
 /* LoongArch specific dynamic relocations */
 #define R_LARCH_NONE		0
