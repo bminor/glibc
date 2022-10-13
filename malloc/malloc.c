@@ -1757,7 +1757,7 @@ typedef struct malloc_chunk *mfastbinptr;
 #define set_contiguous(M)      ((M)->flags &= ~NONCONTIGUOUS_BIT)
 
 /* Maximum size of memory handled in fastbins.  */
-static INTERNAL_SIZE_T global_max_fast;
+static uint8_t global_max_fast;
 
 /*
    Set value of max_fast.
