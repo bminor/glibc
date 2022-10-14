@@ -37,6 +37,7 @@ The following bugs are resolved with this release:
   [29537] libc: [2.34 regression]: Alignment issue on m68k when using
   [29539] libc: LD_TRACE_LOADED_OBJECTS changed how vDSO library are
   [29583] Use 64-bit interfaces in gconv_parseconfdir
+  [29600] Do not completely clear reused namespace in dlmopen
   [29607] nscd repeatably crashes calling __strlen_avx2 when hosts cache is
     enabled
   [29638] libc: stdlib: arc4random fallback is never used

@@ -844,15 +844,13 @@ _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid,
 	  _dl_signal_error (EINVAL, file, NULL, N_("\
 no more namespaces available for dlmopen()"));
 	}
+      else if (nsid == GL(dl_nns))
+	{
+	  __rtld_lock_initialize (GL(dl_ns)[nsid]._ns_unique_sym_table.lock);
+	  ++GL(dl_nns);
+	}
 
-      if (nsid == GL(dl_nns))
-	++GL(dl_nns);
-
-      /* Initialize the new namespace.  Most members are
-	 zero-initialized, only the lock needs special treatment.  */
-      memset (&GL(dl_ns)[nsid], 0, sizeof (GL(dl_ns)[nsid]));
-      __rtld_lock_initialize (GL(dl_ns)[nsid]._ns_unique_sym_table.lock);
-
+      GL(dl_ns)[nsid].libc_map = NULL;
       _dl_debug_update (nsid)->r_state = RT_CONSISTENT;
     }
   /* Never allow loading a DSO in a namespace which is empty.  Such

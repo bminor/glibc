@@ -16,18 +16,38 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <support/xdlfcn.h>
+#include <stdio.h>
 #include <support/check.h>
+#include <support/xdlfcn.h>
 
-static int
-do_test (void)
+/* Run the test multiple times, to check finding a new namespace while
+   another namespace is already in use.  This used to trigger bug 29600.  */
+static void
+recurse (int depth)
 {
-  void *handle = xdlmopen (LM_ID_NEWLM, "tst-dlmopen-twice-mod1.so", RTLD_NOW);
+  if (depth == 0)
+    return;
+
+  printf ("info: running at depth %d\n", depth);
+  void *handle = xdlmopen (LM_ID_NEWLM, "tst-dlmopen-twice-mod1.so",
+                           RTLD_NOW);
   xdlclose (handle);
   handle = xdlmopen (LM_ID_NEWLM, "tst-dlmopen-twice-mod2.so", RTLD_NOW);
   int (*run_check) (void) = xdlsym (handle, "run_check");
   TEST_COMPARE (run_check (), 0);
+  recurse (depth - 1);
   xdlclose (handle);
+}
+
+static int
+do_test (void)
+{
+  /* First run the test without nesting.  */
+  recurse (1);
+
+  /* Then with nesting.  The constant needs to be less than the
+     internal DL_NNS namespace constant.  */
+  recurse (10);
   return 0;
 }
 
