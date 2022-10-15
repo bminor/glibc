@@ -36,42 +36,10 @@
 #  define CHAR_SIZE	1
 # endif
 
-# define XMM0		xmm16
 # define PAGE_SIZE	4096
 # define CHAR_PER_VEC	(VEC_SIZE / CHAR_SIZE)
 
-# if VEC_SIZE == 64
-#  define KMOV		kmovq
-#  define KORTEST	kortestq
-#  define RAX		rax
-#  define RCX		rcx
-#  define RDX		rdx
-#  define SHR		shrq
-#  define TEXTSUFFIX	evex512
-#  define VMM0		zmm16
-#  define VMM1		zmm17
-#  define VMM2		zmm18
-#  define VMM3		zmm19
-#  define VMM4		zmm20
-#  define VMOVA		vmovdqa64
-# elif VEC_SIZE == 32
-/* Currently Unused.  */
-#  define KMOV		kmovd
-#  define KORTEST	kortestd
-#  define RAX		eax
-#  define RCX		ecx
-#  define RDX		edx
-#  define SHR		shrl
-#  define TEXTSUFFIX	evex256
-#  define VMM0		ymm16
-#  define VMM1		ymm17
-#  define VMM2		ymm18
-#  define VMM3		ymm19
-#  define VMM4		ymm20
-#  define VMOVA		vmovdqa32
-# endif
-
-	.section .text.TEXTSUFFIX, "ax", @progbits
+	.section SECTION(.text),"ax",@progbits
 /* Aligning entry point to 64 byte, provides better performance for
    one vector length string.  */
 ENTRY_P2ALIGN (STRLEN, 6)
@@ -86,18 +54,18 @@ ENTRY_P2ALIGN (STRLEN, 6)
 # endif
 
 	movl	%edi, %eax
-	vpxorq	%XMM0, %XMM0, %XMM0
+	vpxorq	%VMM_128(0), %VMM_128(0), %VMM_128(0)
 	andl	$(PAGE_SIZE - 1), %eax
 	cmpl	$(PAGE_SIZE - VEC_SIZE), %eax
 	ja	L(page_cross)
 
 	/* Compare [w]char for null, mask bit will be set for match.  */
-	VPCMP	$0, (%rdi), %VMM0, %k0
-	KMOV	%k0, %RAX
-	test	%RAX, %RAX
+	VPCMP	$0, (%rdi), %VMM(0), %k0
+	KMOV	%k0, %VRAX
+	test	%VRAX, %VRAX
 	jz	L(align_more)
 
-	bsf	%RAX, %RAX
+	bsf	%VRAX, %VRAX
 # ifdef USE_AS_STRNLEN
 	cmpq	%rsi, %rax
 	cmovnb	%rsi, %rax
@@ -120,7 +88,7 @@ L(align_more):
 	movq	%rax, %rdx
 	subq	%rdi, %rdx
 #  ifdef USE_AS_WCSLEN
-	SHR	$2, %RDX
+	shr	$2, %VRDX
 #  endif
 	/* At this point rdx contains [w]chars already compared.  */
 	subq	%rsi, %rdx
@@ -131,9 +99,9 @@ L(align_more):
 # endif
 
 	/* Loop unroll 4 times for 4 vector loop.  */
-	VPCMP	$0, (%rax), %VMM0, %k0
-	KMOV	%k0, %RCX
-	test	%RCX, %RCX
+	VPCMP	$0, (%rax), %VMM(0), %k0
+	KMOV	%k0, %VRCX
+	test	%VRCX, %VRCX
 	jnz	L(ret_vec_x1)
 
 # ifdef USE_AS_STRNLEN
@@ -141,9 +109,9 @@ L(align_more):
 	jbe	L(ret_max)
 # endif
 
-	VPCMP	$0, VEC_SIZE(%rax), %VMM0, %k0
-	KMOV	%k0, %RCX
-	test	%RCX, %RCX
+	VPCMP	$0, VEC_SIZE(%rax), %VMM(0), %k0
+	KMOV	%k0, %VRCX
+	test	%VRCX, %VRCX
 	jnz	L(ret_vec_x2)
 
 # ifdef USE_AS_STRNLEN
@@ -151,9 +119,9 @@ L(align_more):
 	jbe	L(ret_max)
 # endif
 
-	VPCMP	$0, (VEC_SIZE * 2)(%rax), %VMM0, %k0
-	KMOV	%k0, %RCX
-	test	%RCX, %RCX
+	VPCMP	$0, (VEC_SIZE * 2)(%rax), %VMM(0), %k0
+	KMOV	%k0, %VRCX
+	test	%VRCX, %VRCX
 	jnz	L(ret_vec_x3)
 
 # ifdef USE_AS_STRNLEN
@@ -161,9 +129,9 @@ L(align_more):
 	jbe	L(ret_max)
 # endif
 
-	VPCMP	$0, (VEC_SIZE * 3)(%rax), %VMM0, %k0
-	KMOV	%k0, %RCX
-	test	%RCX, %RCX
+	VPCMP	$0, (VEC_SIZE * 3)(%rax), %VMM(0), %k0
+	KMOV	%k0, %VRCX
+	test	%VRCX, %VRCX
 	jnz	L(ret_vec_x4)
 
 # ifdef USE_AS_STRNLEN
@@ -179,7 +147,7 @@ L(align_more):
 # ifdef USE_AS_STRNLEN
 	subq	%rax, %rcx
 #  ifdef USE_AS_WCSLEN
-	SHR	$2, %RCX
+	shr	$2, %VRCX
 #  endif
 	/* rcx contains number of [w]char will be recompared due to
 	   alignment fixes.  rdx must be incremented by rcx to offset
@@ -199,42 +167,42 @@ L(loop_entry):
 # endif
 	/* VPMINU and VPCMP combination provide better performance as
 	   compared to alternative combinations.  */
-	VMOVA	(VEC_SIZE * 4)(%rax), %VMM1
-	VPMINU	(VEC_SIZE * 5)(%rax), %VMM1, %VMM2
-	VMOVA	(VEC_SIZE * 6)(%rax), %VMM3
-	VPMINU	(VEC_SIZE * 7)(%rax), %VMM3, %VMM4
+	VMOVA	(VEC_SIZE * 4)(%rax), %VMM(1)
+	VPMINU	(VEC_SIZE * 5)(%rax), %VMM(1), %VMM(2)
+	VMOVA	(VEC_SIZE * 6)(%rax), %VMM(3)
+	VPMINU	(VEC_SIZE * 7)(%rax), %VMM(3), %VMM(4)
 
-	VPTESTN	%VMM2, %VMM2, %k0
-	VPTESTN	%VMM4, %VMM4, %k1
+	VPTESTN	%VMM(2), %VMM(2), %k0
+	VPTESTN	%VMM(4), %VMM(4), %k1
 
 	subq	$-(VEC_SIZE * 4), %rax
 	KORTEST	%k0, %k1
 	jz	L(loop)
 
-	VPTESTN	%VMM1, %VMM1, %k2
-	KMOV	%k2, %RCX
-	test	%RCX, %RCX
+	VPTESTN	%VMM(1), %VMM(1), %k2
+	KMOV	%k2, %VRCX
+	test	%VRCX, %VRCX
 	jnz	L(ret_vec_x1)
 
-	KMOV	%k0, %RCX
+	KMOV	%k0, %VRCX
 	/* At this point, if k0 is non zero, null char must be in the
 	   second vector.  */
-	test	%RCX, %RCX
+	test	%VRCX, %VRCX
 	jnz	L(ret_vec_x2)
 
-	VPTESTN	%VMM3, %VMM3, %k3
-	KMOV	%k3, %RCX
-	test	%RCX, %RCX
+	VPTESTN	%VMM(3), %VMM(3), %k3
+	KMOV	%k3, %VRCX
+	test	%VRCX, %VRCX
 	jnz	L(ret_vec_x3)
 	/* At this point null [w]char must be in the fourth vector so no
 	   need to check.  */
-	KMOV	%k1, %RCX
+	KMOV	%k1, %VRCX
 
 	/* Fourth, third, second vector terminating are pretty much
 	   same, implemented this way to avoid branching and reuse code
 	   from pre loop exit condition.  */
 L(ret_vec_x4):
-	bsf	%RCX, %RCX
+	bsf	%VRCX, %VRCX
 	subq	%rdi, %rax
 # ifdef USE_AS_WCSLEN
 	subq	$-(VEC_SIZE * 3), %rax
@@ -250,7 +218,7 @@ L(ret_vec_x4):
 	ret
 
 L(ret_vec_x3):
-	bsf	%RCX, %RCX
+	bsf	%VRCX, %VRCX
 	subq	%rdi, %rax
 # ifdef USE_AS_WCSLEN
 	subq	$-(VEC_SIZE * 2), %rax
@@ -268,7 +236,7 @@ L(ret_vec_x3):
 L(ret_vec_x2):
 	subq	$-VEC_SIZE, %rax
 L(ret_vec_x1):
-	bsf	%RCX, %RCX
+	bsf	%VRCX, %VRCX
 	subq	%rdi, %rax
 # ifdef USE_AS_WCSLEN
 	shrq	$2, %rax
@@ -289,13 +257,13 @@ L(page_cross):
 	/* ecx contains number of w[char] to be skipped as a result
 	   of address alignment.  */
 	xorq	%rdi, %rax
-	VPCMP	$0, (PAGE_SIZE - VEC_SIZE)(%rax), %VMM0, %k0
-	KMOV	%k0, %RAX
+	VPCMP	$0, (PAGE_SIZE - VEC_SIZE)(%rax), %VMM(0), %k0
+	KMOV	%k0, %VRAX
 	/* Ignore number of character for alignment adjustment.  */
-	SHR	%cl, %RAX
+	shr	%cl, %VRAX
 	jz	L(align_more)
 
-	bsf	%RAX, %RAX
+	bsf	%VRAX, %VRAX
 # ifdef USE_AS_STRNLEN
 	cmpq	%rsi, %rax
 	cmovnb	%rsi, %rax
