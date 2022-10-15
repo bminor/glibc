@@ -4,14 +4,9 @@
 
 # define USE_WITH_AVX2	1
 
-# define VEC_SIZE	32
-# define MOV_SIZE	4
-# define RET_SIZE	4
-
-# define VEC(i)		ymm##i
-
-# define VMOVU     vmovdqu
-# define VMOVA     vmovdqa
+# ifndef VEC_SIZE
+#  include "x86-avx-vecs.h"
+# endif
 
 # define MEMSET_SET_VEC0_AND_SET_RETURN(d, r) \
   vmovd d, %xmm0; \
@@ -26,9 +21,6 @@
 # define WMEMSET_VDUP_TO_VEC0_HIGH() vpbroadcastd %xmm0, %ymm0
 # define WMEMSET_VDUP_TO_VEC0_LOW() vpbroadcastd %xmm0, %xmm0
 
-# ifndef SECTION
-#  define SECTION(p)		p##.avx
-# endif
 # ifndef MEMSET_SYMBOL
 #  define MEMSET_SYMBOL(p,s)	p##_avx2_##s
 # endif

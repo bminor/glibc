@@ -26,13 +26,7 @@
 # include <sysdep.h>
 # define USE_WITH_SSE2	1
 
-# define VEC_SIZE	16
-# define MOV_SIZE	3
-# define RET_SIZE	1
-
-# define VEC(i)		xmm##i
-# define VMOVU     movups
-# define VMOVA     movaps
+# include "x86-sse2-vecs.h"
 
 # define MEMSET_SET_VEC0_AND_SET_RETURN(d, r) \
   movd d, %xmm0; \
@@ -51,8 +45,6 @@
 
 # define WMEMSET_VDUP_TO_VEC0_HIGH()
 # define WMEMSET_VDUP_TO_VEC0_LOW()
-
-# define SECTION(p)		p
 
 # ifndef MEMSET_SYMBOL
 #  define MEMSET_SYMBOL(p,s)	p##_sse2_##s
