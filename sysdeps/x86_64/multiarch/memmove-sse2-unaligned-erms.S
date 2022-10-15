@@ -22,18 +22,9 @@
    so we need this to build for ISA V2 builds. */
 #if ISA_SHOULD_BUILD (2)
 
-# include <sysdep.h>
+# include "x86-sse2-vecs.h"
 
-# define VEC_SIZE	16
-# define VEC(i)		xmm##i
 # define PREFETCHNT	prefetchnta
-# define VMOVNT		movntdq
-/* Use movups and movaps for smaller code sizes.  */
-# define VMOVU		movups
-# define VMOVA		movaps
-# define MOV_SIZE	3
-
-# define SECTION(p)		p
 
 # ifndef MEMMOVE_SYMBOL
 #  define MEMMOVE_SYMBOL(p,s)	p##_sse2_##s

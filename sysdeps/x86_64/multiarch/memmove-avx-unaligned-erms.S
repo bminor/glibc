@@ -2,14 +2,7 @@
 
 #if ISA_SHOULD_BUILD (3)
 
-# define VEC_SIZE	32
-# define VEC(i)		ymm##i
-# define VMOVNT		vmovntdq
-# define VMOVU		vmovdqu
-# define VMOVA		vmovdqa
-# define MOV_SIZE	4
-
-# define SECTION(p)		p##.avx
+# include "x86-avx-vecs.h"
 
 # ifndef MEMMOVE_SYMBOL
 #  define MEMMOVE_SYMBOL(p,s)	p##_avx_##s

@@ -60,14 +60,6 @@
 # define MEMMOVE_CHK_SYMBOL(p,s)	MEMMOVE_SYMBOL(p, s)
 #endif
 
-#ifndef XMM0
-# define XMM0				xmm0
-#endif
-
-#ifndef YMM0
-# define YMM0				ymm0
-#endif
-
 #ifndef VZEROUPPER
 # if VEC_SIZE > 16
 #  define VZEROUPPER vzeroupper
@@ -225,13 +217,13 @@ L(start):
 	cmp	$VEC_SIZE, %RDX_LP
 	jb	L(less_vec)
 	/* Load regardless.  */
-	VMOVU	(%rsi), %VEC(0)
+	VMOVU	(%rsi), %VMM(0)
 	cmp	$(VEC_SIZE * 2), %RDX_LP
 	ja	L(more_2x_vec)
 	/* From VEC and to 2 * VEC.  No branch when size == VEC_SIZE.  */
-	VMOVU	-VEC_SIZE(%rsi,%rdx), %VEC(1)
-	VMOVU	%VEC(0), (%rdi)
-	VMOVU	%VEC(1), -VEC_SIZE(%rdi,%rdx)
+	VMOVU	-VEC_SIZE(%rsi,%rdx), %VMM(1)
+	VMOVU	%VMM(0), (%rdi)
+	VMOVU	%VMM(1), -VEC_SIZE(%rdi,%rdx)
 #if !(defined USE_MULTIARCH && IS_IN (libc))
 	ZERO_UPPER_VEC_REGISTERS_RETURN
 #else
@@ -270,15 +262,15 @@ L(start_erms):
 	cmp	$VEC_SIZE, %RDX_LP
 	jb	L(less_vec)
 	/* Load regardless.  */
-	VMOVU	(%rsi), %VEC(0)
+	VMOVU	(%rsi), %VMM(0)
 	cmp	$(VEC_SIZE * 2), %RDX_LP
 	ja	L(movsb_more_2x_vec)
 	/* From VEC and to 2 * VEC.  No branch when size == VEC_SIZE.
 	 */
-	VMOVU	-VEC_SIZE(%rsi, %rdx), %VEC(1)
-	VMOVU	%VEC(0), (%rdi)
-	VMOVU	%VEC(1), -VEC_SIZE(%rdi, %rdx)
-L(return):
+	VMOVU	-VEC_SIZE(%rsi, %rdx), %VMM(1)
+	VMOVU	%VMM(0), (%rdi)
+	VMOVU	%VMM(1), -VEC_SIZE(%rdi, %rdx)
+L(return_vzeroupper):
 # if VEC_SIZE > 16
 	ZERO_UPPER_VEC_REGISTERS_RETURN
 # else
@@ -359,10 +351,10 @@ L(between_16_31):
 	.p2align 4,, 10
 L(between_32_63):
 	/* From 32 to 63.  No branch when size == 32.  */
-	VMOVU	(%rsi), %YMM0
-	VMOVU	-32(%rsi, %rdx), %YMM1
-	VMOVU	%YMM0, (%rdi)
-	VMOVU	%YMM1, -32(%rdi, %rdx)
+	VMOVU	(%rsi), %VMM_256(0)
+	VMOVU	-32(%rsi, %rdx), %VMM_256(1)
+	VMOVU	%VMM_256(0), (%rdi)
+	VMOVU	%VMM_256(1), -32(%rdi, %rdx)
 	VZEROUPPER_RETURN
 #endif
 
@@ -380,12 +372,12 @@ L(last_4x_vec):
 	/* Copy from 2 * VEC + 1 to 4 * VEC, inclusively.  */
 
 	/* VEC(0) and VEC(1) have already been loaded.  */
-	VMOVU	-VEC_SIZE(%rsi, %rdx), %VEC(2)
-	VMOVU	-(VEC_SIZE * 2)(%rsi, %rdx), %VEC(3)
-	VMOVU	%VEC(0), (%rdi)
-	VMOVU	%VEC(1), VEC_SIZE(%rdi)
-	VMOVU	%VEC(2), -VEC_SIZE(%rdi, %rdx)
-	VMOVU	%VEC(3), -(VEC_SIZE * 2)(%rdi, %rdx)
+	VMOVU	-VEC_SIZE(%rsi, %rdx), %VMM(2)
+	VMOVU	-(VEC_SIZE * 2)(%rsi, %rdx), %VMM(3)
+	VMOVU	%VMM(0), (%rdi)
+	VMOVU	%VMM(1), VEC_SIZE(%rdi)
+	VMOVU	%VMM(2), -VEC_SIZE(%rdi, %rdx)
+	VMOVU	%VMM(3), -(VEC_SIZE * 2)(%rdi, %rdx)
 	VZEROUPPER_RETURN
 
 	.p2align 4
@@ -400,24 +392,24 @@ L(more_2x_vec):
 	cmpq	$(VEC_SIZE * 8), %rdx
 	ja	L(more_8x_vec)
 	/* Load VEC(1) regardless. VEC(0) has already been loaded.  */
-	VMOVU	VEC_SIZE(%rsi), %VEC(1)
+	VMOVU	VEC_SIZE(%rsi), %VMM(1)
 	cmpq	$(VEC_SIZE * 4), %rdx
 	jbe	L(last_4x_vec)
 	/* Copy from 4 * VEC + 1 to 8 * VEC, inclusively.  */
-	VMOVU	(VEC_SIZE * 2)(%rsi), %VEC(2)
-	VMOVU	(VEC_SIZE * 3)(%rsi), %VEC(3)
-	VMOVU	-VEC_SIZE(%rsi, %rdx), %VEC(4)
-	VMOVU	-(VEC_SIZE * 2)(%rsi, %rdx), %VEC(5)
-	VMOVU	-(VEC_SIZE * 3)(%rsi, %rdx), %VEC(6)
-	VMOVU	-(VEC_SIZE * 4)(%rsi, %rdx), %VEC(7)
-	VMOVU	%VEC(0), (%rdi)
-	VMOVU	%VEC(1), VEC_SIZE(%rdi)
-	VMOVU	%VEC(2), (VEC_SIZE * 2)(%rdi)
-	VMOVU	%VEC(3), (VEC_SIZE * 3)(%rdi)
-	VMOVU	%VEC(4), -VEC_SIZE(%rdi, %rdx)
-	VMOVU	%VEC(5), -(VEC_SIZE * 2)(%rdi, %rdx)
-	VMOVU	%VEC(6), -(VEC_SIZE * 3)(%rdi, %rdx)
-	VMOVU	%VEC(7), -(VEC_SIZE * 4)(%rdi, %rdx)
+	VMOVU	(VEC_SIZE * 2)(%rsi), %VMM(2)
+	VMOVU	(VEC_SIZE * 3)(%rsi), %VMM(3)
+	VMOVU	-VEC_SIZE(%rsi, %rdx), %VMM(4)
+	VMOVU	-(VEC_SIZE * 2)(%rsi, %rdx), %VMM(5)
+	VMOVU	-(VEC_SIZE * 3)(%rsi, %rdx), %VMM(6)
+	VMOVU	-(VEC_SIZE * 4)(%rsi, %rdx), %VMM(7)
+	VMOVU	%VMM(0), (%rdi)
+	VMOVU	%VMM(1), VEC_SIZE(%rdi)
+	VMOVU	%VMM(2), (VEC_SIZE * 2)(%rdi)
+	VMOVU	%VMM(3), (VEC_SIZE * 3)(%rdi)
+	VMOVU	%VMM(4), -VEC_SIZE(%rdi, %rdx)
+	VMOVU	%VMM(5), -(VEC_SIZE * 2)(%rdi, %rdx)
+	VMOVU	%VMM(6), -(VEC_SIZE * 3)(%rdi, %rdx)
+	VMOVU	%VMM(7), -(VEC_SIZE * 4)(%rdi, %rdx)
 	VZEROUPPER_RETURN
 
 	.p2align 4,, 4
@@ -466,14 +458,14 @@ L(more_8x_vec_forward):
 	 */
 
 	/* First vec was already loaded into VEC(0).  */
-	VMOVU	-VEC_SIZE(%rsi, %rdx), %VEC(5)
-	VMOVU	-(VEC_SIZE * 2)(%rsi, %rdx), %VEC(6)
+	VMOVU	-VEC_SIZE(%rsi, %rdx), %VMM(5)
+	VMOVU	-(VEC_SIZE * 2)(%rsi, %rdx), %VMM(6)
 	/* Save begining of dst.  */
 	movq	%rdi, %rcx
 	/* Align dst to VEC_SIZE - 1.  */
 	orq	$(VEC_SIZE - 1), %rdi
-	VMOVU	-(VEC_SIZE * 3)(%rsi, %rdx), %VEC(7)
-	VMOVU	-(VEC_SIZE * 4)(%rsi, %rdx), %VEC(8)
+	VMOVU	-(VEC_SIZE * 3)(%rsi, %rdx), %VMM(7)
+	VMOVU	-(VEC_SIZE * 4)(%rsi, %rdx), %VMM(8)
 
 	/* Subtract dst from src. Add back after dst aligned.  */
 	subq	%rcx, %rsi
@@ -488,25 +480,25 @@ L(more_8x_vec_forward):
 	.p2align 4,, 11
 L(loop_4x_vec_forward):
 	/* Copy 4 * VEC a time forward.  */
-	VMOVU	(%rsi), %VEC(1)
-	VMOVU	VEC_SIZE(%rsi), %VEC(2)
-	VMOVU	(VEC_SIZE * 2)(%rsi), %VEC(3)
-	VMOVU	(VEC_SIZE * 3)(%rsi), %VEC(4)
+	VMOVU	(%rsi), %VMM(1)
+	VMOVU	VEC_SIZE(%rsi), %VMM(2)
+	VMOVU	(VEC_SIZE * 2)(%rsi), %VMM(3)
+	VMOVU	(VEC_SIZE * 3)(%rsi), %VMM(4)
 	subq	$-(VEC_SIZE * 4), %rsi
-	VMOVA	%VEC(1), (%rdi)
-	VMOVA	%VEC(2), VEC_SIZE(%rdi)
-	VMOVA	%VEC(3), (VEC_SIZE * 2)(%rdi)
-	VMOVA	%VEC(4), (VEC_SIZE * 3)(%rdi)
+	VMOVA	%VMM(1), (%rdi)
+	VMOVA	%VMM(2), VEC_SIZE(%rdi)
+	VMOVA	%VMM(3), (VEC_SIZE * 2)(%rdi)
+	VMOVA	%VMM(4), (VEC_SIZE * 3)(%rdi)
 	subq	$-(VEC_SIZE * 4), %rdi
 	cmpq	%rdi, %rdx
 	ja	L(loop_4x_vec_forward)
 	/* Store the last 4 * VEC.  */
-	VMOVU	%VEC(5), (VEC_SIZE * 3)(%rdx)
-	VMOVU	%VEC(6), (VEC_SIZE * 2)(%rdx)
-	VMOVU	%VEC(7), VEC_SIZE(%rdx)
-	VMOVU	%VEC(8), (%rdx)
+	VMOVU	%VMM(5), (VEC_SIZE * 3)(%rdx)
+	VMOVU	%VMM(6), (VEC_SIZE * 2)(%rdx)
+	VMOVU	%VMM(7), VEC_SIZE(%rdx)
+	VMOVU	%VMM(8), (%rdx)
 	/* Store the first VEC.  */
-	VMOVU	%VEC(0), (%rcx)
+	VMOVU	%VMM(0), (%rcx)
 	/* Keep L(nop_backward) target close to jmp for 2-byte encoding.
 	 */
 L(nop_backward):
@@ -523,12 +515,12 @@ L(more_8x_vec_backward):
 	   addresses.  */
 
 	/* First vec was also loaded into VEC(0).  */
-	VMOVU	VEC_SIZE(%rsi), %VEC(5)
-	VMOVU	(VEC_SIZE * 2)(%rsi), %VEC(6)
+	VMOVU	VEC_SIZE(%rsi), %VMM(5)
+	VMOVU	(VEC_SIZE * 2)(%rsi), %VMM(6)
 	/* Begining of region for 4x backward copy stored in rcx.  */
 	leaq	(VEC_SIZE * -4 + -1)(%rdi, %rdx), %rcx
-	VMOVU	(VEC_SIZE * 3)(%rsi), %VEC(7)
-	VMOVU	-VEC_SIZE(%rsi, %rdx), %VEC(8)
+	VMOVU	(VEC_SIZE * 3)(%rsi), %VMM(7)
+	VMOVU	-VEC_SIZE(%rsi, %rdx), %VMM(8)
 	/* Subtract dst from src. Add back after dst aligned.  */
 	subq	%rdi, %rsi
 	/* Align dst.  */
@@ -540,25 +532,25 @@ L(more_8x_vec_backward):
 	.p2align 4,, 11
 L(loop_4x_vec_backward):
 	/* Copy 4 * VEC a time backward.  */
-	VMOVU	(VEC_SIZE * 3)(%rsi), %VEC(1)
-	VMOVU	(VEC_SIZE * 2)(%rsi), %VEC(2)
-	VMOVU	(VEC_SIZE * 1)(%rsi), %VEC(3)
-	VMOVU	(VEC_SIZE * 0)(%rsi), %VEC(4)
+	VMOVU	(VEC_SIZE * 3)(%rsi), %VMM(1)
+	VMOVU	(VEC_SIZE * 2)(%rsi), %VMM(2)
+	VMOVU	(VEC_SIZE * 1)(%rsi), %VMM(3)
+	VMOVU	(VEC_SIZE * 0)(%rsi), %VMM(4)
 	addq	$(VEC_SIZE * -4), %rsi
-	VMOVA	%VEC(1), (VEC_SIZE * 3)(%rcx)
-	VMOVA	%VEC(2), (VEC_SIZE * 2)(%rcx)
-	VMOVA	%VEC(3), (VEC_SIZE * 1)(%rcx)
-	VMOVA	%VEC(4), (VEC_SIZE * 0)(%rcx)
+	VMOVA	%VMM(1), (VEC_SIZE * 3)(%rcx)
+	VMOVA	%VMM(2), (VEC_SIZE * 2)(%rcx)
+	VMOVA	%VMM(3), (VEC_SIZE * 1)(%rcx)
+	VMOVA	%VMM(4), (VEC_SIZE * 0)(%rcx)
 	addq	$(VEC_SIZE * -4), %rcx
 	cmpq	%rcx, %rdi
 	jb	L(loop_4x_vec_backward)
 	/* Store the first 4 * VEC.  */
-	VMOVU	%VEC(0), (%rdi)
-	VMOVU	%VEC(5), VEC_SIZE(%rdi)
-	VMOVU	%VEC(6), (VEC_SIZE * 2)(%rdi)
-	VMOVU	%VEC(7), (VEC_SIZE * 3)(%rdi)
+	VMOVU	%VMM(0), (%rdi)
+	VMOVU	%VMM(5), VEC_SIZE(%rdi)
+	VMOVU	%VMM(6), (VEC_SIZE * 2)(%rdi)
+	VMOVU	%VMM(7), (VEC_SIZE * 3)(%rdi)
 	/* Store the last VEC.  */
-	VMOVU	%VEC(8), -VEC_SIZE(%rdx, %rdi)
+	VMOVU	%VMM(8), -VEC_SIZE(%rdx, %rdi)
 	VZEROUPPER_RETURN
 
 #if defined USE_MULTIARCH && IS_IN (libc)
@@ -568,7 +560,7 @@ L(loop_4x_vec_backward):
 # if ALIGN_MOVSB
 L(skip_short_movsb_check):
 #  if MOVSB_ALIGN_TO > VEC_SIZE
-	VMOVU	VEC_SIZE(%rsi), %VEC(1)
+	VMOVU	VEC_SIZE(%rsi), %VMM(1)
 #  endif
 #  if MOVSB_ALIGN_TO > (VEC_SIZE * 2)
 #   error Unsupported MOVSB_ALIGN_TO
@@ -597,9 +589,9 @@ L(skip_short_movsb_check):
 
 	rep	movsb
 
-	VMOVU	%VEC(0), (%r8)
+	VMOVU	%VMM(0), (%r8)
 #  if MOVSB_ALIGN_TO > VEC_SIZE
-	VMOVU	%VEC(1), VEC_SIZE(%r8)
+	VMOVU	%VMM(1), VEC_SIZE(%r8)
 #  endif
 	VZEROUPPER_RETURN
 # endif
@@ -640,7 +632,7 @@ L(movsb):
 # endif
 # if ALIGN_MOVSB
 #  if MOVSB_ALIGN_TO > VEC_SIZE
-	VMOVU	VEC_SIZE(%rsi), %VEC(1)
+	VMOVU	VEC_SIZE(%rsi), %VMM(1)
 #  endif
 #  if MOVSB_ALIGN_TO > (VEC_SIZE * 2)
 #   error Unsupported MOVSB_ALIGN_TO
@@ -664,9 +656,9 @@ L(movsb_align_dst):
 	rep	movsb
 
 	/* Store VECs loaded for aligning.  */
-	VMOVU	%VEC(0), (%r8)
+	VMOVU	%VMM(0), (%r8)
 #  if MOVSB_ALIGN_TO > VEC_SIZE
-	VMOVU	%VEC(1), VEC_SIZE(%r8)
+	VMOVU	%VMM(1), VEC_SIZE(%r8)
 #  endif
 	VZEROUPPER_RETURN
 # else	/* !ALIGN_MOVSB.  */
@@ -701,18 +693,18 @@ L(large_memcpy_2x):
 
 	/* First vec was also loaded into VEC(0).  */
 # if VEC_SIZE < 64
-	VMOVU	VEC_SIZE(%rsi), %VEC(1)
+	VMOVU	VEC_SIZE(%rsi), %VMM(1)
 #  if VEC_SIZE < 32
-	VMOVU	(VEC_SIZE * 2)(%rsi), %VEC(2)
-	VMOVU	(VEC_SIZE * 3)(%rsi), %VEC(3)
+	VMOVU	(VEC_SIZE * 2)(%rsi), %VMM(2)
+	VMOVU	(VEC_SIZE * 3)(%rsi), %VMM(3)
 #  endif
 # endif
-	VMOVU	%VEC(0), (%rdi)
+	VMOVU	%VMM(0), (%rdi)
 # if VEC_SIZE < 64
-	VMOVU	%VEC(1), VEC_SIZE(%rdi)
+	VMOVU	%VMM(1), VEC_SIZE(%rdi)
 #  if VEC_SIZE < 32
-	VMOVU	%VEC(2), (VEC_SIZE * 2)(%rdi)
-	VMOVU	%VEC(3), (VEC_SIZE * 3)(%rdi)
+	VMOVU	%VMM(2), (VEC_SIZE * 2)(%rdi)
+	VMOVU	%VMM(3), (VEC_SIZE * 3)(%rdi)
 #  endif
 # endif
 
@@ -761,12 +753,12 @@ L(loop_large_memcpy_2x_inner):
 	PREFETCH_ONE_SET(1, (%rsi), PAGE_SIZE + PREFETCHED_LOAD_SIZE)
 	PREFETCH_ONE_SET(1, (%rsi), PAGE_SIZE + PREFETCHED_LOAD_SIZE * 2)
 	/* Load vectors from rsi.  */
-	LOAD_ONE_SET((%rsi), 0, %VEC(0), %VEC(1), %VEC(2), %VEC(3))
-	LOAD_ONE_SET((%rsi), PAGE_SIZE, %VEC(4), %VEC(5), %VEC(6), %VEC(7))
+	LOAD_ONE_SET((%rsi), 0, %VMM(0), %VMM(1), %VMM(2), %VMM(3))
+	LOAD_ONE_SET((%rsi), PAGE_SIZE, %VMM(4), %VMM(5), %VMM(6), %VMM(7))
 	subq	$-LARGE_LOAD_SIZE, %rsi
 	/* Non-temporal store vectors to rdi.  */
-	STORE_ONE_SET((%rdi), 0, %VEC(0), %VEC(1), %VEC(2), %VEC(3))
-	STORE_ONE_SET((%rdi), PAGE_SIZE, %VEC(4), %VEC(5), %VEC(6), %VEC(7))
+	STORE_ONE_SET((%rdi), 0, %VMM(0), %VMM(1), %VMM(2), %VMM(3))
+	STORE_ONE_SET((%rdi), PAGE_SIZE, %VMM(4), %VMM(5), %VMM(6), %VMM(7))
 	subq	$-LARGE_LOAD_SIZE, %rdi
 	decl	%ecx
 	jnz	L(loop_large_memcpy_2x_inner)
@@ -785,31 +777,31 @@ L(loop_large_memcpy_2x_tail):
 	/* Copy 4 * VEC a time forward with non-temporal stores.  */
 	PREFETCH_ONE_SET (1, (%rsi), PREFETCHED_LOAD_SIZE)
 	PREFETCH_ONE_SET (1, (%rdi), PREFETCHED_LOAD_SIZE)
-	VMOVU	(%rsi), %VEC(0)
-	VMOVU	VEC_SIZE(%rsi), %VEC(1)
-	VMOVU	(VEC_SIZE * 2)(%rsi), %VEC(2)
-	VMOVU	(VEC_SIZE * 3)(%rsi), %VEC(3)
+	VMOVU	(%rsi), %VMM(0)
+	VMOVU	VEC_SIZE(%rsi), %VMM(1)
+	VMOVU	(VEC_SIZE * 2)(%rsi), %VMM(2)
+	VMOVU	(VEC_SIZE * 3)(%rsi), %VMM(3)
 	subq	$-(VEC_SIZE * 4), %rsi
 	addl	$-(VEC_SIZE * 4), %edx
-	VMOVA	%VEC(0), (%rdi)
-	VMOVA	%VEC(1), VEC_SIZE(%rdi)
-	VMOVA	%VEC(2), (VEC_SIZE * 2)(%rdi)
-	VMOVA	%VEC(3), (VEC_SIZE * 3)(%rdi)
+	VMOVA	%VMM(0), (%rdi)
+	VMOVA	%VMM(1), VEC_SIZE(%rdi)
+	VMOVA	%VMM(2), (VEC_SIZE * 2)(%rdi)
+	VMOVA	%VMM(3), (VEC_SIZE * 3)(%rdi)
 	subq	$-(VEC_SIZE * 4), %rdi
 	cmpl	$(VEC_SIZE * 4), %edx
 	ja	L(loop_large_memcpy_2x_tail)
 
 L(large_memcpy_2x_end):
 	/* Store the last 4 * VEC.  */
-	VMOVU	-(VEC_SIZE * 4)(%rsi, %rdx), %VEC(0)
-	VMOVU	-(VEC_SIZE * 3)(%rsi, %rdx), %VEC(1)
-	VMOVU	-(VEC_SIZE * 2)(%rsi, %rdx), %VEC(2)
-	VMOVU	-VEC_SIZE(%rsi, %rdx), %VEC(3)
+	VMOVU	-(VEC_SIZE * 4)(%rsi, %rdx), %VMM(0)
+	VMOVU	-(VEC_SIZE * 3)(%rsi, %rdx), %VMM(1)
+	VMOVU	-(VEC_SIZE * 2)(%rsi, %rdx), %VMM(2)
+	VMOVU	-VEC_SIZE(%rsi, %rdx), %VMM(3)
 
-	VMOVU	%VEC(0), -(VEC_SIZE * 4)(%rdi, %rdx)
-	VMOVU	%VEC(1), -(VEC_SIZE * 3)(%rdi, %rdx)
-	VMOVU	%VEC(2), -(VEC_SIZE * 2)(%rdi, %rdx)
-	VMOVU	%VEC(3), -VEC_SIZE(%rdi, %rdx)
+	VMOVU	%VMM(0), -(VEC_SIZE * 4)(%rdi, %rdx)
+	VMOVU	%VMM(1), -(VEC_SIZE * 3)(%rdi, %rdx)
+	VMOVU	%VMM(2), -(VEC_SIZE * 2)(%rdi, %rdx)
+	VMOVU	%VMM(3), -VEC_SIZE(%rdi, %rdx)
 	VZEROUPPER_RETURN
 
 	.p2align 4
@@ -831,16 +823,16 @@ L(loop_large_memcpy_4x_inner):
 	PREFETCH_ONE_SET(1, (%rsi), PAGE_SIZE * 2 + PREFETCHED_LOAD_SIZE)
 	PREFETCH_ONE_SET(1, (%rsi), PAGE_SIZE * 3 + PREFETCHED_LOAD_SIZE)
 	/* Load vectors from rsi.  */
-	LOAD_ONE_SET((%rsi), 0, %VEC(0), %VEC(1), %VEC(2), %VEC(3))
-	LOAD_ONE_SET((%rsi), PAGE_SIZE, %VEC(4), %VEC(5), %VEC(6), %VEC(7))
-	LOAD_ONE_SET((%rsi), PAGE_SIZE * 2, %VEC(8), %VEC(9), %VEC(10), %VEC(11))
-	LOAD_ONE_SET((%rsi), PAGE_SIZE * 3, %VEC(12), %VEC(13), %VEC(14), %VEC(15))
+	LOAD_ONE_SET((%rsi), 0, %VMM(0), %VMM(1), %VMM(2), %VMM(3))
+	LOAD_ONE_SET((%rsi), PAGE_SIZE, %VMM(4), %VMM(5), %VMM(6), %VMM(7))
+	LOAD_ONE_SET((%rsi), PAGE_SIZE * 2, %VMM(8), %VMM(9), %VMM(10), %VMM(11))
+	LOAD_ONE_SET((%rsi), PAGE_SIZE * 3, %VMM(12), %VMM(13), %VMM(14), %VMM(15))
 	subq	$-LARGE_LOAD_SIZE, %rsi
 	/* Non-temporal store vectors to rdi.  */
-	STORE_ONE_SET((%rdi), 0, %VEC(0), %VEC(1), %VEC(2), %VEC(3))
-	STORE_ONE_SET((%rdi), PAGE_SIZE, %VEC(4), %VEC(5), %VEC(6), %VEC(7))
-	STORE_ONE_SET((%rdi), PAGE_SIZE * 2, %VEC(8), %VEC(9), %VEC(10), %VEC(11))
-	STORE_ONE_SET((%rdi), PAGE_SIZE * 3, %VEC(12), %VEC(13), %VEC(14), %VEC(15))
+	STORE_ONE_SET((%rdi), 0, %VMM(0), %VMM(1), %VMM(2), %VMM(3))
+	STORE_ONE_SET((%rdi), PAGE_SIZE, %VMM(4), %VMM(5), %VMM(6), %VMM(7))
+	STORE_ONE_SET((%rdi), PAGE_SIZE * 2, %VMM(8), %VMM(9), %VMM(10), %VMM(11))
+	STORE_ONE_SET((%rdi), PAGE_SIZE * 3, %VMM(12), %VMM(13), %VMM(14), %VMM(15))
 	subq	$-LARGE_LOAD_SIZE, %rdi
 	decl	%ecx
 	jnz	L(loop_large_memcpy_4x_inner)
@@ -858,31 +850,31 @@ L(loop_large_memcpy_4x_tail):
 	/* Copy 4 * VEC a time forward with non-temporal stores.  */
 	PREFETCH_ONE_SET (1, (%rsi), PREFETCHED_LOAD_SIZE)
 	PREFETCH_ONE_SET (1, (%rdi), PREFETCHED_LOAD_SIZE)
-	VMOVU	(%rsi), %VEC(0)
-	VMOVU	VEC_SIZE(%rsi), %VEC(1)
-	VMOVU	(VEC_SIZE * 2)(%rsi), %VEC(2)
-	VMOVU	(VEC_SIZE * 3)(%rsi), %VEC(3)
+	VMOVU	(%rsi), %VMM(0)
+	VMOVU	VEC_SIZE(%rsi), %VMM(1)
+	VMOVU	(VEC_SIZE * 2)(%rsi), %VMM(2)
+	VMOVU	(VEC_SIZE * 3)(%rsi), %VMM(3)
 	subq	$-(VEC_SIZE * 4), %rsi
 	addl	$-(VEC_SIZE * 4), %edx
-	VMOVA	%VEC(0), (%rdi)
-	VMOVA	%VEC(1), VEC_SIZE(%rdi)
-	VMOVA	%VEC(2), (VEC_SIZE * 2)(%rdi)
-	VMOVA	%VEC(3), (VEC_SIZE * 3)(%rdi)
+	VMOVA	%VMM(0), (%rdi)
+	VMOVA	%VMM(1), VEC_SIZE(%rdi)
+	VMOVA	%VMM(2), (VEC_SIZE * 2)(%rdi)
+	VMOVA	%VMM(3), (VEC_SIZE * 3)(%rdi)
 	subq	$-(VEC_SIZE * 4), %rdi
 	cmpl	$(VEC_SIZE * 4), %edx
 	ja	L(loop_large_memcpy_4x_tail)
 
 L(large_memcpy_4x_end):
 	/* Store the last 4 * VEC.  */
-	VMOVU	-(VEC_SIZE * 4)(%rsi, %rdx), %VEC(0)
-	VMOVU	-(VEC_SIZE * 3)(%rsi, %rdx), %VEC(1)
-	VMOVU	-(VEC_SIZE * 2)(%rsi, %rdx), %VEC(2)
-	VMOVU	-VEC_SIZE(%rsi, %rdx), %VEC(3)
+	VMOVU	-(VEC_SIZE * 4)(%rsi, %rdx), %VMM(0)
+	VMOVU	-(VEC_SIZE * 3)(%rsi, %rdx), %VMM(1)
+	VMOVU	-(VEC_SIZE * 2)(%rsi, %rdx), %VMM(2)
+	VMOVU	-VEC_SIZE(%rsi, %rdx), %VMM(3)
 
-	VMOVU	%VEC(0), -(VEC_SIZE * 4)(%rdi, %rdx)
-	VMOVU	%VEC(1), -(VEC_SIZE * 3)(%rdi, %rdx)
-	VMOVU	%VEC(2), -(VEC_SIZE * 2)(%rdi, %rdx)
-	VMOVU	%VEC(3), -VEC_SIZE(%rdi, %rdx)
+	VMOVU	%VMM(0), -(VEC_SIZE * 4)(%rdi, %rdx)
+	VMOVU	%VMM(1), -(VEC_SIZE * 3)(%rdi, %rdx)
+	VMOVU	%VMM(2), -(VEC_SIZE * 2)(%rdi, %rdx)
+	VMOVU	%VMM(3), -VEC_SIZE(%rdi, %rdx)
 	VZEROUPPER_RETURN
 #endif
 END (MEMMOVE_SYMBOL (__memmove, unaligned_erms))
