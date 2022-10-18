@@ -22,7 +22,7 @@ arm*)
     sed -n 's/^#define \(__ARM_ARCH_[0-9].*__\) .*$/\1/p'`
 
   case "x$archcppflag" in
-  x__ARM_ARCH_89*__)
+  x__ARM_ARCH_[89]*__)
     machine=armv7
     { $as_echo "$as_me:${as_lineno-$LINENO}: Found compiler is configured for something newer than v7 - using v7" >&5
 $as_echo "$as_me: Found compiler is configured for something newer than v7 - using v7" >&6;}
