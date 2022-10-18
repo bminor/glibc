@@ -46,7 +46,7 @@ do_test (void)
   recurse (1);
 
   /* Then with nesting.  The constant needs to be less than the
-     internal DL_NNS namespace constant.  */
+     glibc.rtld.nns tunable (which is between 1 and DL_NNS).  */
   recurse (10);
   return 0;
 }
