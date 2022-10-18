@@ -19,7 +19,6 @@
 
 /* All supported kernel versions for MicroBlaze have these syscalls.  */
 #define __ASSUME_CONNECT_SYSCALL	1
-#define __ASSUME_GETPEERNAME_SYSCALL	1
 #define __ASSUME_SEND_SYSCALL		1
 #define __ASSUME_RECV_SYSCALL		1
 

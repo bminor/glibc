@@ -17,11 +17,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Direct socketcalls available with kernel 4.3.  */
-#if __LINUX_KERNEL_VERSION >= 0x040300
-# define __ASSUME_GETPEERNAME_SYSCALL        1
-#endif
-
 #include_next <kernel-features.h>
 
 #undef __ASSUME_ACCEPT_SYSCALL
@@ -42,6 +37,7 @@
 # undef __ASSUME_LISTEN_SYSCALL
 # undef __ASSUME_SHUTDOWN_SYSCALL
 # undef __ASSUME_GETSOCKNAME_SYSCALL
+# undef __ASSUME_GETPEERNAME_SYSCALL
 #endif
 
 /* i686 only supports ipc syscall before 5.1.  */

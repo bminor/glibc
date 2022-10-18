@@ -85,6 +85,7 @@
 #define __ASSUME_LISTEN_SYSCALL		1
 #define __ASSUME_SHUTDOWN_SYSCALL	1
 #define __ASSUME_GETSOCKNAME_SYSCALL	1
+#define __ASSUME_GETPEERNAME_SYSCALL	1
 
 /* Support for SysV IPC through wired syscalls.  All supported architectures
    either support ipc syscall and/or all the ipc correspondent syscalls.  */
