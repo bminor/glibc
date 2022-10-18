@@ -62,7 +62,11 @@
    observed PT_GNU_TLS sizes across all architectures.  Some
    architectures have lower values due to differences in type sizes
    and link editor capabilities.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+#define LIBC_IE_TLS 256
+#else
 #define LIBC_IE_TLS 144
+#endif
 
 /* Size of initial-exec TLS in libraries other than libc.so.
    This should be large enough to cover runtime libraries of the
@@ -87,7 +91,11 @@ tls_static_surplus (int nns, int opt_tls)
    the computation of dl_tls_static_surplus in
    _dl_tls_static_surplus_init yields the historic value 1664, for
    backwards compatibility.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+#define LEGACY_TLS 0
+#else
 #define LEGACY_TLS (1664 - tls_static_surplus (DEFAULT_NNS, OPTIONAL_TLS))
+#endif
 
 /* Calculate the size of the static TLS surplus, when the given
    number of audit modules are loaded.  Must be called after the
