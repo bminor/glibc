@@ -1,5 +1,4 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
 # Socket APIs
-getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername

@@ -19,7 +19,6 @@
 
 /* Direct socketcalls available with kernel 4.3.  */
 #if __LINUX_KERNEL_VERSION >= 0x040300
-# define __ASSUME_GETSOCKNAME_SYSCALL        1
 # define __ASSUME_GETPEERNAME_SYSCALL        1
 #endif
 
@@ -42,6 +41,7 @@
 # undef __ASSUME_SOCKETPAIR_SYSCALL
 # undef __ASSUME_LISTEN_SYSCALL
 # undef __ASSUME_SHUTDOWN_SYSCALL
+# undef __ASSUME_GETSOCKNAME_SYSCALL
 #endif
 
 /* i686 only supports ipc syscall before 5.1.  */
