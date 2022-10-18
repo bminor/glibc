@@ -75,9 +75,8 @@ __cxa_finalize (void *d)
 	       parallel.  */
 	    f->flavor = ef_free;
 
-#ifdef PTR_DEMANGLE
 	    PTR_DEMANGLE (cxafn);
-#endif
+
 	    /* Unlock the list while we call a foreign function.  */
 	    __libc_lock_unlock (__exit_funcs_lock);
 	    cxafn (cxaarg, 0);

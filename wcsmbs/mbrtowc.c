@@ -78,10 +78,8 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 	goto ilseq;
     }
   __gconv_fct fct = fcts->towc->__fct;
-#ifdef PTR_DEMANGLE
   if (fcts->towc->__shlib_handle != NULL)
     PTR_DEMANGLE (fct);
-#endif
   status = DL_CALL_FCT (fct, (fcts->towc, &data, &inbuf, endbuf,
 			      NULL, &dummy, 0, 1));
 

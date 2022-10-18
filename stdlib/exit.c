@@ -81,9 +81,8 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 	    case ef_on:
 	      onfct = f->func.on.fn;
 	      arg = f->func.on.arg;
-#ifdef PTR_DEMANGLE
 	      PTR_DEMANGLE (onfct);
-#endif
+
 	      /* Unlock the list while we call a foreign function.  */
 	      __libc_lock_unlock (__exit_funcs_lock);
 	      onfct (status, arg);
@@ -91,9 +90,8 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 	      break;
 	    case ef_at:
 	      atfct = f->func.at;
-#ifdef PTR_DEMANGLE
 	      PTR_DEMANGLE (atfct);
-#endif
+
 	      /* Unlock the list while we call a foreign function.  */
 	      __libc_lock_unlock (__exit_funcs_lock);
 	      atfct ();
@@ -105,9 +103,8 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 	      f->flavor = ef_free;
 	      cxafct = f->func.cxa.fn;
 	      arg = f->func.cxa.arg;
-#ifdef PTR_DEMANGLE
 	      PTR_DEMANGLE (cxafct);
-#endif
+
 	      /* Unlock the list while we call a foreign function.  */
 	      __libc_lock_unlock (__exit_funcs_lock);
 	      cxafct (arg, status);

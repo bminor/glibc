@@ -45,10 +45,8 @@ __btowc (int c)
   /* Get the conversion functions.  */
   fcts = get_gconv_fcts (_NL_CURRENT_DATA (LC_CTYPE));
   __gconv_btowc_fct btowc_fct = fcts->towc->__btowc_fct;
-#ifdef PTR_DEMANGLE
   if (fcts->towc->__shlib_handle != NULL)
     PTR_DEMANGLE (btowc_fct);
-#endif
 
   if (__builtin_expect (fcts->towc_nsteps == 1, 1)
       && __builtin_expect (btowc_fct != NULL, 1))
@@ -81,10 +79,8 @@ __btowc (int c)
       inbuf[0] = c;
 
       __gconv_fct fct = fcts->towc->__fct;
-#ifdef PTR_DEMANGLE
       if (fcts->towc->__shlib_handle != NULL)
 	PTR_DEMANGLE (fct);
-#endif
       status = DL_CALL_FCT (fct, (fcts->towc, &data, &inptr, inptr + 1,
 				  NULL, &dummy, 0, 1));
 

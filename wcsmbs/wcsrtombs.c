@@ -54,10 +54,8 @@ __wcsrtombs (char *dst, const wchar_t **src, size_t len, mbstate_t *ps)
   /* Get the structure with the function pointers.  */
   tomb = fcts->tomb;
   __gconv_fct fct = tomb->__fct;
-#ifdef PTR_DEMANGLE
   if (tomb->__shlib_handle != NULL)
     PTR_DEMANGLE (fct);
-#endif
 
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)

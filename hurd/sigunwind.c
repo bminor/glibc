@@ -73,9 +73,7 @@ _hurdsig_longjmp_from_handler (void *data, jmp_buf env, int val)
 
       inline uintptr_t demangle_ptr (uintptr_t x)
 	{
-# ifdef PTR_DEMANGLE
 	  PTR_DEMANGLE (x);
-# endif
 	  return x;
 	}
 

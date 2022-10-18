@@ -24,6 +24,11 @@
 #include <unistd.h>
 #include <stap-probe.h>
 
+/* See sysdeps/unix/sysv/linux/s390/s390-64/pointer_guard.h.  */
+#if IS_IN (rtld)
+# undef PTR_DEMANGLE
+#endif
+
 /* Jump to the position specified by ENV, causing the
    setjmp call there to return VAL, or 1 if VAL is 0.  */
 void

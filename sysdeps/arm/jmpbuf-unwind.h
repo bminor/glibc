@@ -33,9 +33,7 @@ static inline uintptr_t __attribute__ ((unused))
 _jmpbuf_sp (__jmp_buf regs)
 {
   uintptr_t sp = regs[__JMP_BUF_SP];
-#ifdef PTR_DEMANGLE
   PTR_DEMANGLE (sp);
-#endif
   return sp;
 }
 

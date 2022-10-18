@@ -53,10 +53,8 @@ __gconv_transliterate (struct __gconv_step *step,
   winbufend = (const uint32_t *) inbufend;
 
   __gconv_fct fct = step->__fct;
-#ifdef PTR_DEMANGLE
   if (step->__shlib_handle != NULL)
     PTR_DEMANGLE (fct);
-#endif
 
   /* If there is no transliteration information in the locale don't do
      anything and return the error.  */

@@ -49,9 +49,7 @@ __internal_atexit (void (*func) (void *), void *arg, void *d,
       return -1;
     }
 
-#ifdef PTR_MANGLE
   PTR_MANGLE (func);
-#endif
   new->func.cxa.fn = (void (*) (void *, int)) func;
   new->func.cxa.arg = arg;
   new->func.cxa.dso_handle = d;

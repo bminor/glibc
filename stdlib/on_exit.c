@@ -39,9 +39,7 @@ __on_exit (void (*func) (int status, void *arg), void *arg)
       return -1;
     }
 
-#ifdef PTR_MANGLE
   PTR_MANGLE (func);
-#endif
   new->func.on.fn = func;
   new->func.on.arg = arg;
   new->flavor = ef_on;

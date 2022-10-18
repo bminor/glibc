@@ -31,9 +31,7 @@
 static inline uintptr_t
 demangle_ptr (uintptr_t x)
 {
-# ifdef PTR_DEMANGLE
   PTR_DEMANGLE (x);
-# endif
   return x;
 }
 

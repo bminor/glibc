@@ -404,10 +404,8 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
   if ((data->__flags & __GCONV_IS_LAST) == 0)
     {
       fct = next_step->__fct;
-#ifdef PTR_DEMANGLE
       if (next_step->__shlib_handle != NULL)
 	PTR_DEMANGLE (fct);
-#endif
     }
 
   /* If the function is called with no input this means we have to reset

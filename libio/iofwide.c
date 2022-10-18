@@ -124,10 +124,8 @@ __libio_codecvt_out (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   codecvt->__cd_out.step_data.__statep = statep;
 
   __gconv_fct fct = gs->__fct;
-#ifdef PTR_DEMANGLE
   if (gs->__shlib_handle != NULL)
     PTR_DEMANGLE (fct);
-#endif
 
   status = DL_CALL_FCT (fct,
 			(gs, &codecvt->__cd_out.step_data, &from_start_copy,
@@ -176,10 +174,8 @@ __libio_codecvt_in (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   codecvt->__cd_in.step_data.__statep = statep;
 
   __gconv_fct fct = gs->__fct;
-#ifdef PTR_DEMANGLE
   if (gs->__shlib_handle != NULL)
     PTR_DEMANGLE (fct);
-#endif
 
   status = DL_CALL_FCT (fct,
 			(gs, &codecvt->__cd_in.step_data, &from_start_copy,
@@ -243,10 +239,8 @@ __libio_codecvt_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   codecvt->__cd_in.step_data.__statep = statep;
 
   __gconv_fct fct = gs->__fct;
-#ifdef PTR_DEMANGLE
   if (gs->__shlib_handle != NULL)
     PTR_DEMANGLE (fct);
-#endif
 
   DL_CALL_FCT (fct,
 	       (gs, &codecvt->__cd_in.step_data, &cp,

@@ -73,10 +73,8 @@ functions_allocate (void *closure)
   result->handle = handle;
   result->lookup_ul = ptr_lookup_ul;
   result->to_unicode_lzlz = ptr_to_unicode_lzlz;
-#ifdef PTR_MANGLE
   PTR_MANGLE (result->lookup_ul);
   PTR_MANGLE (result->to_unicode_lzlz);
-#endif
 
   return result;
 }
@@ -138,9 +136,7 @@ __idna_to_dns_encoding (const char *name, char **result)
     return EAI_IDN_ENCODE;
   char *ptr = NULL;
   __typeof__ (functions->lookup_ul) fptr = functions->lookup_ul;
-#ifdef PTR_DEMANGLE
   PTR_DEMANGLE (fptr);
-#endif
   int ret = fptr (name, &ptr, 0);
   if (ret == 0)
     {
@@ -165,9 +161,7 @@ __idna_from_dns_encoding (const char *name, char **result)
     return gai_strdup (name, result);
   char *ptr = NULL;
   __typeof__ (functions->to_unicode_lzlz) fptr = functions->to_unicode_lzlz;
-#ifdef PTR_DEMANGLE
   PTR_DEMANGLE (fptr);
-#endif
   int ret = fptr (name, &ptr, 0);
   if (ret == 0)
     {

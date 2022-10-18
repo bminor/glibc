@@ -64,10 +64,8 @@ __mbsnrtowcs (wchar_t *dst, const char **src, size_t nmc, size_t len,
   /* Get the structure with the function pointers.  */
   towc = fcts->towc;
   __gconv_fct fct = towc->__fct;
-#ifdef PTR_DEMANGLE
   if (towc->__shlib_handle != NULL)
     PTR_DEMANGLE (fct);
-#endif
 
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)

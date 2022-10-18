@@ -46,10 +46,8 @@ __gconv (__gconv_t cd, const unsigned char **inbuf,
   cd->__data[last_step].__outbufend = outbufend;
 
   __gconv_fct fct = cd->__steps->__fct;
-#ifdef PTR_DEMANGLE
   if (cd->__steps->__shlib_handle != NULL)
     PTR_DEMANGLE (fct);
-#endif
 
   if (inbuf == NULL || *inbuf == NULL)
     {

@@ -86,19 +86,17 @@ __libc_unwind_link_get (void)
   assert (local.ptr__Unwind_Resume != NULL);
   assert (local.ptr_personality != NULL);
 
-#ifdef PTR_MANGLE
   PTR_MANGLE (local.ptr__Unwind_Backtrace);
   PTR_MANGLE (local.ptr__Unwind_ForcedUnwind);
   PTR_MANGLE (local.ptr__Unwind_GetCFA);
-# if UNWIND_LINK_GETIP
+#if UNWIND_LINK_GETIP
   PTR_MANGLE (local.ptr__Unwind_GetIP);
-# endif
-  PTR_MANGLE (local.ptr__Unwind_Resume);
-# if UNWIND_LINK_FRAME_STATE_FOR
-  PTR_MANGLE (local.ptr___frame_state_for);
-# endif
-  PTR_MANGLE (local.ptr_personality);
 #endif
+  PTR_MANGLE (local.ptr__Unwind_Resume);
+#if UNWIND_LINK_FRAME_STATE_FOR
+  PTR_MANGLE (local.ptr___frame_state_for);
+#endif
+  PTR_MANGLE (local.ptr_personality);
 
   __libc_lock_lock (lock);
   if (atomic_load_relaxed (&global_libgcc_handle) != NULL)

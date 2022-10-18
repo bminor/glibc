@@ -28,12 +28,8 @@
   local.ptr__Unwind_GetGR                                   \
     = __libc_dlsym (local_libgcc_handle, "_Unwind_GetGR");  \
   assert (local.ptr__Unwind_GetGR != NULL);
-#ifdef PTR_MANGLE
-# define UNWIND_LINK_EXTRA_INIT                 \
+#define UNWIND_LINK_EXTRA_INIT                  \
   UNWIND_LINK_EXTRA_INIT_SHARED                 \
   PTR_MANGLE (local.ptr__Unwind_GetGR);
-#else
-# define UNWIND_LINK_EXTRA_INIT UNWIND_LINK_EXTRA_INIT_SHARED
-#endif
 
 #endif /* _ARCH_UNWIND_LINK_H */

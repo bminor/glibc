@@ -127,11 +127,9 @@ __gconv_find_shlib (const char *name)
 		  found->init_fct = __libc_dlsym (found->handle, "gconv_init");
 		  found->end_fct = __libc_dlsym (found->handle, "gconv_end");
 
-#ifdef PTR_MANGLE
 		  PTR_MANGLE (found->fct);
 		  PTR_MANGLE (found->init_fct);
 		  PTR_MANGLE (found->end_fct);
-#endif
 
 		  /* We have succeeded in loading the shared object.  */
 		  found->counter = 1;

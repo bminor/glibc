@@ -35,9 +35,7 @@ _IO_cookie_read (FILE *fp, void *buf, ssize_t size)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
   cookie_read_function_t *read_cb = cfile->__io_functions.read;
-#ifdef PTR_DEMANGLE
   PTR_DEMANGLE (read_cb);
-#endif
 
   if (read_cb == NULL)
     return -1;
@@ -50,9 +48,7 @@ _IO_cookie_write (FILE *fp, const void *buf, ssize_t size)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
   cookie_write_function_t *write_cb = cfile->__io_functions.write;
-#ifdef PTR_DEMANGLE
   PTR_DEMANGLE (write_cb);
-#endif
 
   if (write_cb == NULL)
     {
@@ -72,9 +68,7 @@ _IO_cookie_seek (FILE *fp, off64_t offset, int dir)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
   cookie_seek_function_t *seek_cb = cfile->__io_functions.seek;
-#ifdef PTR_DEMANGLE
   PTR_DEMANGLE (seek_cb);
-#endif
 
   return ((seek_cb == NULL
 	   || (seek_cb (cfile->__cookie, &offset, dir)
@@ -88,9 +82,7 @@ _IO_cookie_close (FILE *fp)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
   cookie_close_function_t *close_cb = cfile->__io_functions.close;
-#ifdef PTR_DEMANGLE
   PTR_DEMANGLE (close_cb);
-#endif
 
   if (close_cb == NULL)
     return 0;
@@ -139,12 +131,10 @@ static void
 set_callbacks (cookie_io_functions_t *target,
 	       cookie_io_functions_t source)
 {
-#ifdef PTR_MANGLE
   PTR_MANGLE (source.read);
   PTR_MANGLE (source.write);
   PTR_MANGLE (source.seek);
   PTR_MANGLE (source.close);
-#endif
   *target = source;
 }
 
@@ -226,9 +216,7 @@ _IO_old_cookie_seek (FILE *fp, off64_t offset, int dir)
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
   int (*seek_cb) (FILE *, off_t, int)
     = (int (*) (FILE *, off_t, int)) cfile->__io_functions.seek;
-#ifdef PTR_DEMANGLE
   PTR_DEMANGLE (seek_cb);
-#endif
 
   if (seek_cb == NULL)
     return _IO_pos_BAD;
