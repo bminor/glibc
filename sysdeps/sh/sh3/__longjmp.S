@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <pointer_guard.h>
 #define _SETJMP_H
 #define _ASM
 #include <bits/setjmp.h>

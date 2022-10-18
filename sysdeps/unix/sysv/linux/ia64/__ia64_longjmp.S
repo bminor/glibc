@@ -15,6 +15,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <pointer_guard.h>
 #include <features.h>
 
 LEAF(__ia64_flush_rbs)

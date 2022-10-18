@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <shlib-compat.h>
+#include <pointer_guard.h>
 
 static ssize_t
 _IO_cookie_read (FILE *fp, void *buf, ssize_t size)

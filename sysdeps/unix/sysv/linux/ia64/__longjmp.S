@@ -31,6 +31,7 @@
 		bits into ar.rnat after setting ar.bspstore. */
 
 #include <sysdep.h>
+#include <pointer_guard.h>
 #include <features.h>
 
 #	define	pPos	p6	/* is rotate count positive? */

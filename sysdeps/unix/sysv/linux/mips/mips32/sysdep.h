@@ -337,8 +337,4 @@ libc_hidden_proto (__mips_syscall7, nomips16)
 
 #endif /* __ASSEMBLER__ */
 
-/* Pointer mangling is not yet supported for MIPS.  */
-#define PTR_MANGLE(var) (void) (var)
-#define PTR_DEMANGLE(var) (void) (var)
-
 #endif /* linux/mips/mips32/sysdep.h */

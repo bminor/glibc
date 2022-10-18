@@ -22,7 +22,7 @@
 #include <uchar.h>
 #include <wcsmbsload.h>
 
-#include <sysdep.h>
+#include <pointer_guard.h>
 
 #ifndef EILSEQ
 # define EILSEQ EINVAL

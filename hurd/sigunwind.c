@@ -22,7 +22,7 @@
 #include <jmpbuf-unwind.h>
 #include <assert.h>
 #include <stdint.h>
-
+#include <pointer_guard.h>
 
 /* _hurd_setup_sighandler puts a link on the `active resources' chain so that
    _longjmp_unwind will call this function with the `struct sigcontext *'

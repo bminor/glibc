@@ -23,6 +23,7 @@
 #include <gnu/lib-names.h>
 #include <unwind-link.h>
 #include <libc-lock.h>
+#include <pointer_guard.h>
 
 /* Statically allocate the object, so that we do not have to deal with
    malloc failure.  __libc_unwind_link_get must not fail if libgcc_s

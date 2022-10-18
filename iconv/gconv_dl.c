@@ -26,7 +26,7 @@
 #include <sys/param.h>
 
 #include <gconv_int.h>
-#include <sysdep.h>
+#include <pointer_guard.h>
 
 
 #ifdef DEBUG

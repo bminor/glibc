@@ -21,6 +21,7 @@
 #include <unwind.h>
 #include <bits/wordsize.h>
 #include <sysdep.h>
+#include <pointer_guard.h>
 
 
 /* Test if longjmp to JMPBUF would unwind the frame

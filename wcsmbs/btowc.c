@@ -24,7 +24,7 @@
 #include <wcsmbsload.h>
 #include <limits.h>
 
-#include <sysdep.h>
+#include <pointer_guard.h>
 
 
 wint_t

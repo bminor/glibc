@@ -357,8 +357,4 @@ extern long int __syscall_error (long int neg_errno);
 
 #endif /* ! __ASSEMBLER__ */
 
-/* Pointer mangling is not supported.  */
-#define PTR_MANGLE(var) (void) (var)
-#define PTR_DEMANGLE(var) (void) (var)
-
 #endif /* linux/riscv/sysdep.h */

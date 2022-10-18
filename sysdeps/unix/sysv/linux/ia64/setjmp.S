@@ -63,6 +63,7 @@
 	0x1c0	f31 */
 
 #include <sysdep.h>
+#include <pointer_guard.h>
 #include <features.h>
 
 	/* The following two entry points are the traditional entry points: */

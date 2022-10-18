@@ -28,6 +28,7 @@
 #include <gconv_int.h>
 #include <iconvconfig.h>
 #include <not-cancel.h>
+#include <pointer_guard.h>
 
 #include "../intl/hash-string.h"
 

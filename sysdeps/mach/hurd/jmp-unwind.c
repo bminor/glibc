@@ -22,7 +22,7 @@
 #include <hurd/sigpreempt.h>
 #include <assert.h>
 #include <stdint.h>
-
+#include <pointer_guard.h>
 
 #ifndef _JMPBUF_UNWINDS
 #error "<jmpbuf-unwind.h> fails to define _JMPBUF_UNWINDS"

@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <pointer_guard.h>
 #include <stap-probe.h>
 #include <bits/setjmp.h>
 #include <rtld-global-offsets.h>

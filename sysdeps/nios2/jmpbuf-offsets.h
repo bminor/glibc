@@ -32,6 +32,7 @@
 #include <setjmp.h>
 #include <stdint.h>
 #include <sysdep.h>
+#include <pointer_guard.h>
 
 static inline uintptr_t __attribute__ ((unused))
 _jmpbuf_sp (__jmp_buf jmpbuf)

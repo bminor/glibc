@@ -23,8 +23,6 @@
 #include <uchar.h>
 #include <wcsmbsload.h>
 
-#include <sysdep.h>
-
 #ifndef EILSEQ
 # define EILSEQ EINVAL
 #endif

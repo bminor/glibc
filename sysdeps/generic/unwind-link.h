@@ -31,7 +31,7 @@ unwind_arch_adjustment (void *prev, void *addr)
 #endif
 
 #ifdef SHARED
-# include <sysdep.h>
+# include <pointer_guard.h>
 # include <unwind-resume.h>
 
 # if UNWIND_LINK_FRAME_STATE_FOR

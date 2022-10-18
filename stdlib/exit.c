@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sysdep.h>
+#include <pointer_guard.h>
 #include <libc-lock.h>
 #include "exit.h"
 

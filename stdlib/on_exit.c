@@ -18,7 +18,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include "exit.h"
-#include <sysdep.h>
+#include <pointer_guard.h>
 
 /* Register a function to be called by exit.  */
 int

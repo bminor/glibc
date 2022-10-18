@@ -47,6 +47,7 @@
 #include "iolibio.h"
 
 #include <shlib-compat.h>
+#include <pointer_guard.h>
 
 /* For historical reasons this is the name of the sysdeps header that
    adjusts the libio configuration.  */

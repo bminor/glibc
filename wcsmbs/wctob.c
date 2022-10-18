@@ -22,7 +22,7 @@
 #include <wchar.h>
 #include <wcsmbsload.h>
 
-#include <sysdep.h>
+#include <pointer_guard.h>
 
 
 int

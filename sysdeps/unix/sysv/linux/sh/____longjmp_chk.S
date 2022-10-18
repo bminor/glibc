@@ -16,6 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <pointer_guard.h>
 
 #include <sigaltstack-offsets.h>
 

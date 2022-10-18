@@ -215,10 +215,6 @@ hidden_proto (__syscall_error)
   LOAD_ARGS_6 (nm, arg1, arg2, arg3, arg4, arg5, arg6)	\
   register long int _arg7 __asm__ ("r6") = _tmp7;
 
-/* Pointer mangling not yet supported.  */
-# define PTR_MANGLE(var) (void) (var)
-# define PTR_DEMANGLE(var) (void) (var)
-
 # undef HAVE_INTERNAL_BRK_ADDR_SYMBOL
 # define HAVE_INTERNAL_BRK_ADDR_SYMBOL  1
 

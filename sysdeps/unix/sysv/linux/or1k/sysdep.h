@@ -119,10 +119,6 @@ L(pseudo_end): \
 
 extern long int __syscall_error (long int neg_errno);
 
-/* Pointer mangling is not yet supported for or1k.  */
-#define PTR_MANGLE(var) (void) (var)
-#define PTR_DEMANGLE(var) (void) (var)
-
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, nr, args...) \
 	INTERNAL_SYSCALL_NCS (SYS_ify (name), nr, args)

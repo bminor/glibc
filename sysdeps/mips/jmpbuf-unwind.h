@@ -19,6 +19,7 @@
 #include <stdint.h>
 #include <unwind.h>
 #include <sysdep.h>
+#include <pointer_guard.h>
 
 /* Test if longjmp to JMPBUF would unwind the frame
    containing a local variable at ADDRESS.  */

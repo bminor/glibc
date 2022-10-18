@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include "exit.h"
 #include <register-atfork.h>
-#include <sysdep.h>
+#include <pointer_guard.h>
 #include <stdint.h>
 
 /* If D is non-NULL, call all functions registered with `__cxa_atexit'

@@ -26,6 +26,7 @@
 #include <libc-lock.h>
 #include "gconv_int.h"
 #include "../locale/localeinfo.h"
+#include <pointer_guard.h>
 
 
 int

@@ -21,6 +21,7 @@
 #include <inet/net-internal.h>
 #include <netdb.h>
 #include <stdbool.h>
+#include <pointer_guard.h>
 
 /* Use the soname and version to locate libidn2, to ensure a
    compatible ABI.  */

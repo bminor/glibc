@@ -17,6 +17,7 @@
 
 #include <errno.h>
 #include <sysdep.h>
+#include <pointer_guard.h>
 #include <setjmp.h>
 #include <bits/setjmp.h>
 #include <stdlib.h>

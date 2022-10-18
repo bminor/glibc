@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <pointer_guard.h>
 #include <jmpbuf-offsets.h>
 #include <stap-probe.h>
 

@@ -147,7 +147,7 @@
 # include <dlfcn.h>
 #endif
 
-#include <sysdep.h>
+#include <pointer_guard.h>
 #include <stdint.h>
 
 #ifndef DL_CALL_FCT

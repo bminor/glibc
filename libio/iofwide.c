@@ -36,7 +36,7 @@
 #include <wcsmbs/wcsmbsload.h>
 #include <iconv/gconv_int.h>
 #include <shlib-compat.h>
-#include <sysdep.h>
+#include <pointer_guard.h>
 
 
 /* Return orientation of stream.  If mode is nonzero try to change

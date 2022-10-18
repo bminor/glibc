@@ -220,21 +220,4 @@
 
 #endif /* __ASSEMBLER__ */
 
-/* Pointer mangling support.  */
-#if IS_IN (rtld)
-/* We cannot use the thread descriptor because in ld.so we use setjmp
-   earlier than the descriptor is initialized.  */
-#else
-# ifdef __ASSEMBLER__
-#  define PTR_MANGLE_GUARD(guard) ldw guard, POINTER_GUARD(r23)
-#  define PTR_MANGLE(dst, src, guard) xor dst, src, guard
-#  define PTR_DEMANGLE(dst, src, guard) PTR_MANGLE (dst, src, guard)
-# else
-#  define PTR_MANGLE(var) \
-  (var) = (__typeof (var)) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
-#  define PTR_DEMANGLE(var)	PTR_MANGLE (var)
-# endif
-#endif
-
-
 #endif /* linux/nios2/sysdep.h */

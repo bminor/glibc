@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sysdep.h>
+#include <pointer_guard.h>
 
 /* Suffix after .so of NSS service modules.  This is a bit of magic,
    but we assume LIBNSS_FILES_SO looks like "libnss_files.so.2" and we

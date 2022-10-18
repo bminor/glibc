@@ -75,6 +75,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ldsodefs.h>
+#include <pointer_guard.h>
 
 typedef void (*dtor_func) (void *);
 

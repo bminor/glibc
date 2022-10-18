@@ -16,6 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sysdep.h>
+#include <pointer_guard.h>
 #include <jmpbuf-offsets.h>
 #include <jmp_buf-ssp.h>
 #include <asm-syntax.h>

@@ -21,7 +21,7 @@
 
 #include <libc-lock.h>
 #include "exit.h"
-#include <sysdep.h>
+#include <pointer_guard.h>
 
 #undef __cxa_atexit
 

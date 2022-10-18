@@ -207,38 +207,6 @@
 #define ASM_INPUT_5 ASM_INPUT_4, "5" (r7)
 #define ASM_INPUT_6 ASM_INPUT_5, "6" (r8)
 
-
-/* Pointer mangling support.  */
-#if IS_IN (rtld)
-/* We cannot use the thread descriptor because in ld.so we use setjmp
-   earlier than the descriptor is initialized.  */
-#else
-# ifdef __ASSEMBLER__
-#  if defined(__PPC64__) || defined(__powerpc64__)
-#   define LOAD  ld
-#   define TPREG r13
-#  else
-#   define LOAD  lwz
-#   define TPREG r2
-#  endif
-#  define PTR_MANGLE(reg, tmpreg) \
-	LOAD	tmpreg,POINTER_GUARD(TPREG); \
-	xor	reg,tmpreg,reg
-#  define PTR_MANGLE2(reg, tmpreg) \
-	xor	reg,tmpreg,reg
-#  define PTR_MANGLE3(destreg, reg, tmpreg) \
-	LOAD	tmpreg,POINTER_GUARD(TPREG); \
-	xor	destreg,tmpreg,reg
-#  define PTR_DEMANGLE(reg, tmpreg) PTR_MANGLE (reg, tmpreg)
-#  define PTR_DEMANGLE2(reg, tmpreg) PTR_MANGLE2 (reg, tmpreg)
-#  define PTR_DEMANGLE3(destreg, reg, tmpreg) PTR_MANGLE3 (destreg, reg, tmpreg)
-# else
-#  define PTR_MANGLE(var) \
-  (var) = (__typeof (var)) ((uintptr_t) (var) ^ THREAD_GET_POINTER_GUARD ())
-#  define PTR_DEMANGLE(var)	PTR_MANGLE (var)
-# endif
-#endif
-
 /* List of system calls which are supported as vsyscalls.  */
 #define VDSO_NAME  "LINUX_2.6.15"
 #define VDSO_HASH  123718565

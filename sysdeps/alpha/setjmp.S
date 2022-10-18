@@ -18,6 +18,7 @@
 #define __ASSEMBLY__
 
 #include <sysdep.h>
+#include <pointer_guard.h>
 #include <jmpbuf-offsets.h>
 
 	.ent __sigsetjmp

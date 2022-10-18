@@ -21,6 +21,7 @@
    in setjmp doesn't clobber the state restored by longjmp.  */
 
 #include <sysdep.h>
+#include <pointer_guard.h>
 #include <jmpbuf-offsets.h>
 #include <jmp_buf-ssp.h>
 #include <stap-probe.h>

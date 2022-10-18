@@ -295,10 +295,6 @@ SYSCALL_ERROR_LABEL:							      \
 
 #endif /* not __ASSEMBLER__ */
 
-/* Pointer mangling is not yet supported for M68K.  */
-#define PTR_MANGLE(var) (void) (var)
-#define PTR_DEMANGLE(var) (void) (var)
-
 /* M68K needs system-supplied DSO to access TLS helpers
    even when statically linked.  */
 #define NEED_STATIC_SYSINFO_DSO 1

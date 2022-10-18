@@ -27,7 +27,7 @@
 
 #include <dlfcn.h>
 #include <gconv_int.h>
-#include <sysdep.h>
+#include <pointer_guard.h>
 
 
 /* Simple data structure for alias mapping.  We have two names, `from'

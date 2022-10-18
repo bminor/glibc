@@ -20,6 +20,7 @@
 #include <libioP.h>
 #include <stdio.h>
 #include <ldsodefs.h>
+#include <pointer_guard.h>
 
 #ifdef SHARED
 
