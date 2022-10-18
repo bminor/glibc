@@ -20,6 +20,7 @@
 #define _X86_64_SYSDEP_H 1
 
 #include <sysdeps/x86/sysdep.h>
+#include <x86-lp_size.h>
 
 #ifdef	__ASSEMBLER__
 
@@ -67,9 +68,6 @@ lose:									      \
 /* For static archives, branch to target directly.  */
 # define JUMPTARGET(name)	name
 #endif
-
-/* Long and pointer size in bytes.  */
-#define LP_SIZE	8
 
 /* Instruction to operate on long and pointer.  */
 #define LP_OP(insn) insn##q
@@ -136,9 +134,6 @@ lose:									      \
 #endif
 
 #else	/* __ASSEMBLER__ */
-
-/* Long and pointer size in bytes.  */
-#define LP_SIZE "8"
 
 /* Instruction to operate on long and pointer.  */
 #define LP_OP(insn) #insn "q"
