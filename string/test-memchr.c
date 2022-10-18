@@ -251,6 +251,7 @@ test_main (void)
       /* page_size is in fact getpagesize() * 2.  */
       do_test (page_size / 2 - i, i, i, 1, 0x9B);
       do_test (page_size / 2 - i, i - 1, i - 1, 1, 0x9B);
+      do_test (page_size / 2 - (i * 4), i + 128, i + 128, i, 0x9B);
     }
 
   do_random_tests ();
