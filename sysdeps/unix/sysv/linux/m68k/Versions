@@ -29,9 +29,6 @@ libc {
     # v*
     versionsort64;
   }
-  GLIBC_2.11 {
-    fallocate64;
-  }
   GLIBC_2.31 {
     msgctl; semctl; shmctl;
   }

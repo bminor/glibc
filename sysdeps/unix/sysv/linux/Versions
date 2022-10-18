@@ -157,6 +157,9 @@ libc {
   GLIBC_2.10 {
     fallocate;
   }
+  GLIBC_2.11 {
+    fallocate64;
+  }
   GLIBC_2.12 {
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
 

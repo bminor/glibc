@@ -44,9 +44,6 @@ libc {
     getutmpx;
     login;
   }
-  GLIBC_2.11 {
-    fallocate64;
-  }
   GLIBC_2.31 {
     msgctl; semctl; shmctl;
   }

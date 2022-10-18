@@ -4,9 +4,6 @@ libc {
     inb; inw; inl;
     outb; outw; outl;
   }
-  GLIBC_2.11 {
-    fallocate64;
-  }
   GLIBC_2.24 {
     recvmsg; sendmsg;
   }

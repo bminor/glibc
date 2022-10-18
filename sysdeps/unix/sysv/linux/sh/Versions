@@ -22,9 +22,6 @@ libc {
     # v*
     versionsort64;
   }
-  GLIBC_2.11 {
-    fallocate64;
-  }
   GLIBC_2.16 {
     fanotify_mark;
   }
