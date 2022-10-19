@@ -17,14 +17,10 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/param.h>
+#include <dl-dst.h>
+#include <fcntl.h>
 #include <ldsodefs.h>
 #include <sysdep.h>
-
-#include <dl-dst.h>
 
 /* On Linux >= 2.1 systems which have the dcache implementation we can get
    the path of the application from the /proc/self/exe symlink.  Try this
@@ -37,9 +33,9 @@ _dl_get_origin (void)
   char *result;
   int len;
 
-  len = INTERNAL_SYSCALL_CALL (readlink, "/proc/self/exe", linkval,
-			       sizeof (linkval));
-  if (! INTERNAL_SYSCALL_ERROR_P (len) && len > 0 && linkval[0] != '[')
+  len = INTERNAL_SYSCALL_CALL (readlinkat, AT_FDCWD, "/proc/self/exe",
+			       linkval, sizeof (linkval));
+  if (len > 0 && linkval[0] != '[')
     {
       /* We can use this value.  */
       assert (linkval[0] == '/');
