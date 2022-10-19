@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Create a directory.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,19 +16,19 @@
    License along with the GNU C Library.  If not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <stddef.h>
-#include <sysdep.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-
+#include <sysdep.h>
 
 /* Create a directory named PATH with protections MODE.  */
 int
 __mkdir (const char *path, mode_t mode)
 {
-  return INLINE_SYSCALL (mkdirat, 3, AT_FDCWD, path, mode);
+#ifdef __NR_mkdir
+  return INLINE_SYSCALL_CALL (mkdir,  path, mode);
+#else
+  return INLINE_SYSCALL_CALL (mkdirat, AT_FDCWD, path, mode);
+#endif
 }
 
 libc_hidden_def (__mkdir)
