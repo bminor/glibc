@@ -19,7 +19,8 @@
 #ifndef _LINUX_LOONGARCH_SYSDEP_H
 #define _LINUX_LOONGARCH_SYSDEP_H 1
 
-#include <sysdeps/unix/sysv/linux/generic/sysdep.h>
+#include <sysdeps/unix/sysv/linux/sysdep.h>
+#include <sysdeps/unix/sysdep.h>
 #include <tls.h>
 
 #ifdef __ASSEMBLER__

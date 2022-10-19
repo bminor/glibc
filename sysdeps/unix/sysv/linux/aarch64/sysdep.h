@@ -21,7 +21,8 @@
 
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/aarch64/sysdep.h>
-#include <sysdeps/unix/sysv/linux/generic/sysdep.h>
+#include <sysdeps/unix/sysdep.h>
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 
 /* Defines RTLD_PRIVATE_ERRNO and USE_DL_SYSINFO.  */
 #include <dl-sysdep.h>

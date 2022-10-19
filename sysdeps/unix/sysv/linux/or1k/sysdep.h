@@ -19,8 +19,9 @@
 #ifndef _LINUX_OR1K_SYSDEP_H
 #define _LINUX_OR1K_SYSDEP_H 1
 
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 #include <sysdeps/or1k/sysdep.h>
-#include <sysdeps/unix/sysv/linux/generic/sysdep.h>
+#include <sysdeps/unix/sysdep.h>
 #include <tls.h>
 
 /* "workarounds" for generic code needing to handle 64-bit time_t.  */

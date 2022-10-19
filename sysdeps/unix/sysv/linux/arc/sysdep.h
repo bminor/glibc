@@ -20,7 +20,9 @@
 #define _LINUX_ARC_SYSDEP_H 1
 
 #include <sysdeps/arc/sysdep.h>
-#include <sysdeps/unix/sysv/linux/generic/sysdep.h>
+#include <bits/wordsize.h>
+#include <sysdeps/unix/sysdep.h>
+#include <sysdeps/unix/sysv/linux/sysdep.h>
 
 /* "workarounds" for generic code needing to handle 64-bit time_t.  */
 
