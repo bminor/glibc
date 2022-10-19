@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Initialize an inotify instance.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +24,10 @@ libc_hidden_proto (inotify_init)
 int
 inotify_init (void)
 {
-  return INLINE_SYSCALL (inotify_init1, 1, 0);
+#ifdef __NR_inotify_init
+  return INLINE_SYSCALL_CALL (inotify_init);
+#else
+  return INLINE_SYSCALL_CALL (inotify_init1, 0);
+#endif
 }
 libc_hidden_def (inotify_init)
