@@ -41,7 +41,6 @@
 # undef __ASSUME_GETSOCKOPT_SYSCALL
 # undef __ASSUME_SETSOCKOPT_SYSCALL
 #else
-# define __ASSUME_SOCKETPAIR_SYSCALL         1
 # define __ASSUME_SHUTDOWN_SYSCALL           1
 #endif
 
