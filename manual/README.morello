@@ -1,0 +1,35 @@
+Morello glibc port
+==================
+
+Morello is a prototype security architecture, led by Arm, based on CHERI.
+https://www.morello-project.org/
+https://www.cl.cam.ac.uk/research/security/ctsrd/cheri/
+
+Toolchain components of the morello port are maintained in upstream branches.
+The morello port is implemented as an ABI variant of the aarch64 port that is
+also called the purecap ABI. Morello specific ABI documents are at:
+https://github.com/ARM-software/abi-aa
+https://git.morello-project.org/morello/kernel/linux/-/wikis/home
+
+Areas with significant morello or CHERI specific changes outside the usual
+target specific changes:
+
+- Early start code including ELF entry and auxv,
+- Dynamic linker and relocation processing,
+- malloc with narrow capability support,
+- printf %#p to pretty print capabilities.
+
+Limitations of the morello port:
+
+- Building requires --disable-werror.
+- Profiling and --enable-profile are not supported (gperf, sprof, LD_PROFILE).
+- LD_AUDIT is not supported (symbind, PLT hooks, would require API redesign).
+- VDSO is not supported (depends on Linux work).
+- static-pie is not supported (requires start code redesign).
+- POSIX message queue async notify does not work (pointers passed via an fd).
+- Process shared robust mutexes don't work (pointers in shared memory).
+- Purecap pldd only supports purecap ABI processes (not lp64).
+- malloc has significant overhead (locks and hash table lookup).
+- string functions are not optimized.
+- Exectable stacks are not supported.
+- Internal pointer protection and pointer mangling are disabled.
