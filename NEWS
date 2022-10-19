@@ -43,6 +43,8 @@ The following bugs are resolved with this release:
   [29607] nscd repeatably crashes calling __strlen_avx2 when hosts cache is
     enabled
   [29638] libc: stdlib: arc4random fallback is never used
+  [29657] libc: Incorrect struct stat for 64-bit time on linux/generic
+    platforms
 
 Version 2.36
 
