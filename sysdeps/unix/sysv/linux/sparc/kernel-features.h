@@ -45,12 +45,9 @@
 #endif
 
 /* These syscalls were added for both 32-bit and 64-bit in 4.4.  */
-#if __LINUX_KERNEL_VERSION >= 0x040400
-# define __ASSUME_LISTEN_SYSCALL             1
-#endif
-
 #if __LINUX_KERNEL_VERSION < 0x040400
 # undef __ASSUME_BIND_SYSCALL
+# undef __ASSUME_LISTEN_SYSCALL
 #endif
 
 #ifdef __arch64__
