@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Delete a directory.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +24,10 @@
 int
 __rmdir (const char *path)
 {
-  return INLINE_SYSCALL (unlinkat, 3, AT_FDCWD, path, AT_REMOVEDIR);
+#ifdef __NR_rmdir
+  return INLINE_SYSCALL_CALL (rmdir, path);
+#else
+  return INLINE_SYSCALL_CALL (unlinkat, AT_FDCWD, path, AT_REMOVEDIR);
+#endif
 }
 weak_alias (__rmdir, rmdir)
