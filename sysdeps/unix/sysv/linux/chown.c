@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Change ownership of a file.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +24,11 @@
 int
 __chown (const char *file, uid_t owner, gid_t group)
 {
-  return INLINE_SYSCALL (fchownat, 5, AT_FDCWD, file, owner, group, 0);
+#ifdef __NR_chown
+  return INLINE_SYSCALL_CALL (chown, file, owner, groups);
+#else
+  return INLINE_SYSCALL_CALL (fchownat, AT_FDCWD, file, owner, group, 0);
+#endif
 }
 libc_hidden_def (__chown)
 weak_alias (__chown, chown)
