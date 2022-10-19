@@ -3,4 +3,3 @@
 # Socket APIs
 getsockname	-	getsockname	i:ipp	__getsockname	getsockname
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
-shutdown	-	shutdown	i:ii	__shutdown	shutdown
