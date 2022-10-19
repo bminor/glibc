@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Open an epoll file descriptor.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,12 +24,16 @@ libc_hidden_proto (epoll_create)
 int
 epoll_create (int size)
 {
+#ifdef __NR_epoll_create
+  return INLINE_SYSCALL_CALL (epoll_create);
+#else
   if (size <= 0)
     {
       __set_errno (EINVAL);
       return -1;
     }
 
-  return INLINE_SYSCALL (epoll_create1, 1, 0);
+  return INLINE_SYSCALL_CALL (epoll_create1, 0);
+#endif
 }
 libc_hidden_def (epoll_create)
