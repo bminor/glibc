@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* longjmp fortify implementation.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,8 +29,7 @@
 #define called_from(this, saved) ((this) > (saved))
 #endif
 
-extern void ____longjmp_chk (__jmp_buf __env, int __val)
-  __attribute__ ((__noreturn__));
+_Noreturn extern void ____longjmp_chk (__jmp_buf __env, int __val);
 
 void ____longjmp_chk (__jmp_buf env, int val)
 {
