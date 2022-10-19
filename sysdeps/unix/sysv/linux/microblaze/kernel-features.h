@@ -18,7 +18,6 @@
 #include <endian.h>
 
 /* All supported kernel versions for MicroBlaze have these syscalls.  */
-#define __ASSUME_SOCKET_SYSCALL		1
 #define __ASSUME_CONNECT_SYSCALL	1
 #define __ASSUME_LISTEN_SYSCALL		1
 #define __ASSUME_GETSOCKNAME_SYSCALL	1

@@ -15,19 +15,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <errno.h>
-#include <signal.h>
 #include <sys/socket.h>
-
 #include <socketcall.h>
-#include <kernel-features.h>
-#include <sys/syscall.h>
 
 int
 __socket (int fd, int type, int domain)
 {
 #ifdef __ASSUME_SOCKET_SYSCALL
-  return INLINE_SYSCALL (socket, 3, fd, type, domain);
+  return INLINE_SYSCALL_CALL (socket, fd, type, domain);
 #else
   return SOCKETCALL (socket, fd, type, domain);
 #endif
