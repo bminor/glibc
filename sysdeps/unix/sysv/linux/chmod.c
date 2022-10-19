@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Change permissions of a file.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +17,17 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fcntl.h>
-#include <sys/types.h>
 #include <sysdep.h>
 
 /* Change the protections of FILE to MODE.  */
 int
 __chmod (const char *file, mode_t mode)
 {
-  return INLINE_SYSCALL (fchmodat, 3, AT_FDCWD, file, mode);
+#ifdef __NR_chmod
+  return INLINE_SYSCALL_CALL (chmod, file, mode);
+#else
+  return INLINE_SYSCALL_CALL (fchmodat, AT_FDCWD, file, mode);
+#endif
 }
 
 libc_hidden_def (__chmod)
