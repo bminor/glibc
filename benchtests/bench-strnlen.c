@@ -195,19 +195,19 @@ test_main (void)
     {
       for (j = 0; j <= (704 / sizeof (CHAR)); j += (32 / sizeof (CHAR)))
 	{
-	  do_test (&json_ctx, 0, 1 << i, (i + j), BIG_CHAR);
 	  do_test (&json_ctx, 0, i + j, i, BIG_CHAR);
-
-	  do_test (&json_ctx, 64, 1 << i, (i + j), BIG_CHAR);
 	  do_test (&json_ctx, 64, i + j, i, BIG_CHAR);
+
+	  do_test (&json_ctx, 0, i, i + j, BIG_CHAR);
+	  do_test (&json_ctx, 64, i, i + j, BIG_CHAR);
 
 	  if (j < i)
 	    {
-	      do_test (&json_ctx, 0, 1 << i, i - j, BIG_CHAR);
 	      do_test (&json_ctx, 0, i - j, i, BIG_CHAR);
-
-	      do_test (&json_ctx, 64, 1 << i, i - j, BIG_CHAR);
 	      do_test (&json_ctx, 64, i - j, i, BIG_CHAR);
+
+	      do_test (&json_ctx, 0, i, i - j, BIG_CHAR);
+	      do_test (&json_ctx, 64, i, i - j, BIG_CHAR);
 	    }
 	}
     }

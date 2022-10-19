@@ -287,8 +287,8 @@ int
 test_main (void)
 {
   json_ctx_t json_ctx;
-  size_t i;
 
+  size_t i, j;
   test_init ();
 
   json_init (&json_ctx, 0, stdout);
@@ -367,15 +367,30 @@ test_main (void)
       do_test (&json_ctx, 0, i, i + 1, 0, BIG_CHAR);
     }
 
-  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.0);
-  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.1);
-  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.25);
-  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.33);
-  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.5);
-  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.66);
-  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.75);
-  DO_RAND_TEST(&json_ctx, 0, 15, 16, 0.9);
-  DO_RAND_TEST(&json_ctx, 0, 15, 16, 1.0);
+  for (i = 16 / sizeof (CHAR); i <= 8192 / sizeof (CHAR); i += i)
+    {
+      for (j = 32 / sizeof (CHAR); j <= 320 / sizeof (CHAR);
+	   j += 32 / sizeof (CHAR))
+	{
+	  do_test (&json_ctx, 0, i, i + j, 0, MIDDLE_CHAR);
+	  do_test (&json_ctx, 0, i + j, i, 0, MIDDLE_CHAR);
+	  if (i > j)
+	    {
+	      do_test (&json_ctx, 0, i, i - j, 0, MIDDLE_CHAR);
+	      do_test (&json_ctx, 0, i - j, i, 0, MIDDLE_CHAR);
+	    }
+	}
+    }
+
+  DO_RAND_TEST (&json_ctx, 0, 15, 16, 0.0);
+  DO_RAND_TEST (&json_ctx, 0, 15, 16, 0.1);
+  DO_RAND_TEST (&json_ctx, 0, 15, 16, 0.25);
+  DO_RAND_TEST (&json_ctx, 0, 15, 16, 0.33);
+  DO_RAND_TEST (&json_ctx, 0, 15, 16, 0.5);
+  DO_RAND_TEST (&json_ctx, 0, 15, 16, 0.66);
+  DO_RAND_TEST (&json_ctx, 0, 15, 16, 0.75);
+  DO_RAND_TEST (&json_ctx, 0, 15, 16, 0.9);
+  DO_RAND_TEST (&json_ctx, 0, 15, 16, 1.0);
 
   json_array_end (&json_ctx);
   json_attr_object_end (&json_ctx);

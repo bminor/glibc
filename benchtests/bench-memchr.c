@@ -126,7 +126,7 @@ do_test (json_ctx_t *json_ctx, size_t align, size_t pos, size_t len,
 int
 test_main (void)
 {
-  size_t i;
+  size_t i, j, al, al_max;
   int repeats;
   json_ctx_t json_ctx;
   test_init ();
@@ -147,35 +147,46 @@ test_main (void)
 
   json_array_begin (&json_ctx, "results");
 
+  al_max = 0;
+#ifdef USE_AS_MEMRCHR
+  al_max = getpagesize () / 2;
+#endif
+
   for (repeats = 0; repeats < 2; ++repeats)
     {
-      for (i = 1; i < 8; ++i)
+      for (al = 0; al <= al_max; al += getpagesize () / 2)
 	{
-	  do_test (&json_ctx, 0, 16 << i, 2048, 23, repeats);
-	  do_test (&json_ctx, i, 64, 256, 23, repeats);
-	  do_test (&json_ctx, 0, 16 << i, 2048, 0, repeats);
-	  do_test (&json_ctx, i, 64, 256, 0, repeats);
+	  for (i = 1; i < 8; ++i)
+	    {
+	      do_test (&json_ctx, al, 16 << i, 2048, 23, repeats);
+	      do_test (&json_ctx, al + i, 64, 256, 23, repeats);
+	      do_test (&json_ctx, al, 16 << i, 2048, 0, repeats);
+	      do_test (&json_ctx, al + i, 64, 256, 0, repeats);
 
-	  do_test (&json_ctx, getpagesize () - 15, 64, 256, 0, repeats);
+	      do_test (&json_ctx, al + getpagesize () - 15, 64, 256, 0,
+		       repeats);
 #ifdef USE_AS_MEMRCHR
-	  /* Also test the position close to the beginning for memrchr.  */
-	  do_test (&json_ctx, 0, i, 256, 23, repeats);
-	  do_test (&json_ctx, 0, i, 256, 0, repeats);
-	  do_test (&json_ctx, i, i, 256, 23, repeats);
-	  do_test (&json_ctx, i, i, 256, 0, repeats);
+	      /* Also test the position close to the beginning for memrchr.  */
+	      do_test (&json_ctx, al, i, 256, 23, repeats);
+	      do_test (&json_ctx, al, i, 256, 0, repeats);
+	      do_test (&json_ctx, al + i, i, 256, 23, repeats);
+	      do_test (&json_ctx, al + i, i, 256, 0, repeats);
 #endif
-	}
-      for (i = 1; i < 8; ++i)
-	{
-	  do_test (&json_ctx, i, i << 5, 192, 23, repeats);
-	  do_test (&json_ctx, i, i << 5, 192, 0, repeats);
-	  do_test (&json_ctx, i, i << 5, 256, 23, repeats);
-	  do_test (&json_ctx, i, i << 5, 256, 0, repeats);
-	  do_test (&json_ctx, i, i << 5, 512, 23, repeats);
-	  do_test (&json_ctx, i, i << 5, 512, 0, repeats);
+	    }
+	  for (i = 1; i < 8; ++i)
+	    {
+	      do_test (&json_ctx, al + i, i << 5, 192, 23, repeats);
+	      do_test (&json_ctx, al + i, i << 5, 192, 0, repeats);
+	      do_test (&json_ctx, al + i, i << 5, 256, 23, repeats);
+	      do_test (&json_ctx, al + i, i << 5, 256, 0, repeats);
+	      do_test (&json_ctx, al + i, i << 5, 512, 23, repeats);
+	      do_test (&json_ctx, al + i, i << 5, 512, 0, repeats);
 
-	  do_test (&json_ctx, getpagesize () - 15, i << 5, 256, 23, repeats);
+	      do_test (&json_ctx, al + getpagesize () - 15, i << 5, 256, 23,
+		       repeats);
+	    }
 	}
+
       for (i = 1; i < 32; ++i)
 	{
 	  do_test (&json_ctx, 0, i, i + 1, 23, repeats);
@@ -207,6 +218,24 @@ test_main (void)
 	  do_test (&json_ctx, 0, 2, i + 1, 0, repeats);
 #endif
 	}
+      for (al = 0; al <= al_max; al += getpagesize () / 2)
+	{
+	  for (i = (16 / sizeof (CHAR)); i <= (8192 / sizeof (CHAR)); i += i)
+	    {
+	      for (j = 0; j <= (384 / sizeof (CHAR));
+		   j += (32 / sizeof (CHAR)))
+		{
+		  do_test (&json_ctx, al, i + j, i, 23, repeats);
+		  do_test (&json_ctx, al, i, i + j, 23, repeats);
+		  if (j < i)
+		    {
+		      do_test (&json_ctx, al, i - j, i, 23, repeats);
+		      do_test (&json_ctx, al, i, i - j, 23, repeats);
+		    }
+		}
+	    }
+	}
+
 #ifndef USE_AS_MEMRCHR
       break;
 #endif

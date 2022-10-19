@@ -70,7 +70,7 @@ do_test (json_ctx_t *json_ctx, size_t align, size_t pos, size_t len, int seek_ch
   size_t i;
   char *result;
 
-  align &= 7;
+  align &= getpagesize () - 1;
   if (align + len >= page_size)
     return;
 
@@ -106,7 +106,6 @@ test_main (void)
 {
   json_ctx_t json_ctx;
   size_t i;
-
   test_init ();
 
   json_init (&json_ctx, 0, stdout);
@@ -120,7 +119,7 @@ test_main (void)
 
   json_array_begin (&json_ctx, "ifuncs");
   FOR_EACH_IMPL (impl, 0)
-      json_element_string (&json_ctx, impl->name);
+    json_element_string (&json_ctx, impl->name);
   json_array_end (&json_ctx);
 
   json_array_begin (&json_ctx, "results");
@@ -136,6 +135,31 @@ test_main (void)
     {
       do_test (&json_ctx, 0, i, i + 1, 23);
       do_test (&json_ctx, 0, i, i + 1, 0);
+    }
+  for (; i < 256; i += 32)
+    {
+      do_test (&json_ctx, 0, i, i + 1, 23);
+      do_test (&json_ctx, 0, i - 1, i, 23);
+    }
+  for (; i < 512; i += 64)
+    {
+      do_test (&json_ctx, 0, i, i + 1, 23);
+      do_test (&json_ctx, 0, i - 1, i, 23);
+    }
+  for (; i < 1024; i += 128)
+    {
+      do_test (&json_ctx, 0, i, i + 1, 23);
+      do_test (&json_ctx, 0, i - 1, i, 23);
+    }
+  for (; i < 2048; i += 256)
+    {
+      do_test (&json_ctx, 0, i, i + 1, 23);
+      do_test (&json_ctx, 0, i - 1, i, 23);
+    }
+  for (; i < 4096; i += 512)
+    {
+      do_test (&json_ctx, 0, i, i + 1, 23);
+      do_test (&json_ctx, 0, i - 1, i, 23);
     }
 
   json_array_end (&json_ctx);
