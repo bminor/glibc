@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Read value of a symbolic link.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +26,10 @@
 ssize_t
 __readlink (const char *path, char *buf, size_t len)
 {
-  return INLINE_SYSCALL (readlinkat, 4, AT_FDCWD, path, buf, len);
+#ifdef __NR_readlink
+  return INLINE_SYSCALL_CALL (readlink, path, buf, len);
+#else
+  return INLINE_SYSCALL_CALL (readlinkat, AT_FDCWD, path, buf, len);
+#endif
 }
 weak_alias (__readlink, readlink)
