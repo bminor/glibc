@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Make a new name for a file.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +24,10 @@
 int
 __symlink (const char *from, const char *to)
 {
-  return INLINE_SYSCALL (symlinkat, 3, from, AT_FDCWD, to);
+#ifdef __NR_symlink
+  return INLINE_SYSCALL_CALL (symlink, from, to);
+#else
+  return INLINE_SYSCALL_CALL (symlinkat, from, AT_FDCWD, to);
+#endif
 }
 weak_alias (__symlink, symlink)
