@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Duplicate a file descriptor.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,12 +25,16 @@
 int
 __dup2 (int fd, int fd2)
 {
+#ifdef __NR_dup2
+  return INLINE_SYSCALL_CALL (dup2, fd, fd2);
+#else
   /* For the degenerate case, check if the fd is valid (by trying to
      get the file status flags) and return it, or else return EBADF.  */
   if (fd == fd2)
     return __libc_fcntl (fd, F_GETFL, 0) < 0 ? -1 : fd;
 
-  return INLINE_SYSCALL (dup3, 3, fd, fd2, 0);
+  return INLINE_SYSCALL_CALL (dup3, fd, fd2, 0);
+#endif
 }
 libc_hidden_def (__dup2)
 weak_alias (__dup2, dup2)
