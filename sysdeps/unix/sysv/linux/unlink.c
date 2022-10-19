@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Delete a name and possibly the file it refers to.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +24,10 @@
 int
 __unlink (const char *name)
 {
-  return INLINE_SYSCALL (unlinkat, 3, AT_FDCWD, name, 0);
+#ifdef __NR_unlink
+  return INLINE_SYSCALL_CALL (unlink, name);
+#else
+  return INLINE_SYSCALL_CALL (unlinkat, AT_FDCWD, name, 0);
+#endif
 }
 weak_alias (__unlink, unlink)
