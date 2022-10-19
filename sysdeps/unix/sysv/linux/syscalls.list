@@ -62,8 +62,6 @@ sched_primin	-	sched_get_priority_min	i:i	__sched_get_priority_min	sched_get_pri
 sched_setp	-	sched_setparam	i:ip	__sched_setparam	sched_setparam
 sched_sets	-	sched_setscheduler	i:iip	__sched_setscheduler	sched_setscheduler
 sched_yield	-	sched_yield	i:	__sched_yield	sched_yield
-sendfile	-	sendfile	i:iipU	sendfile
-sendfile64	-	sendfile64	i:iipU	sendfile64
 setfsgid	EXTRA	setfsgid	i:i	setfsgid
 setfsuid	EXTRA	setfsuid	i:i	setfsuid
 setpgid		-	setpgid		i:ii	__setpgid	setpgid

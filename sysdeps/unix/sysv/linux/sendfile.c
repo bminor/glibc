@@ -1,4 +1,5 @@
-/* Copyright (C) 2011-2022 Free Software Foundation, Inc.
+/* Transfer data between file descriptors.  Linux version.
+   Copyright (C) 2011-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,11 +21,16 @@
 #include <errno.h>
 #include <sysdep.h>
 
+#ifndef __OFF_T_MATCHES_OFF64_T
+
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
    descriptor OUT_FD.  */
 ssize_t
 sendfile (int out_fd, int in_fd, off_t *offset, size_t count)
 {
+# ifdef __NR_sendfile
+  return INLINE_SYSCALL_CALL (sendfile, out_fd, in_fd, offset, count);
+# else
   __off64_t off64;
   int rc;
 
@@ -38,9 +44,12 @@ sendfile (int out_fd, int in_fd, off_t *offset, size_t count)
       off64 = *offset;
     }
 
-  rc = INLINE_SYSCALL (sendfile64, 4, out_fd, in_fd,
-                       offset ? &off64 : NULL, count);
+  rc = INLINE_SYSCALL_CALL (sendfile64, out_fd, in_fd, offset ? &off64 : NULL,
+			    count);
   if (offset)
     *offset = off64;
   return rc;
+# endif
 }
+
+#endif
