@@ -616,7 +616,11 @@ L(movsb):
 	jae	L(large_memcpy_2x_check)
 # if AVOID_SHORT_DISTANCE_REP_MOVSB || ALIGN_MOVSB
 	/* Only avoid short movsb if CPU has FSRM.  */
+#  if X86_STRING_CONTROL_AVOID_SHORT_DISTANCE_REP_MOVSB < 256
+	testb	$X86_STRING_CONTROL_AVOID_SHORT_DISTANCE_REP_MOVSB, __x86_string_control(%rip)
+#  else
 	testl	$X86_STRING_CONTROL_AVOID_SHORT_DISTANCE_REP_MOVSB, __x86_string_control(%rip)
+#  endif
 	jz	L(skip_short_movsb_check)
 #  if AVOID_SHORT_DISTANCE_REP_MOVSB
 	/* Avoid "rep movsb" if RCX, the distance between source and
