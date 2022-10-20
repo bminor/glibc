@@ -119,7 +119,7 @@ STRCMP:
 #  else
 	mov	(%rdx), %RAX_LP
 #  endif
-	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
+	testb	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
 	jne	__strcasecmp_l_nonascii
 # endif
 # ifdef USE_AS_STRNCASECMP_L
@@ -130,7 +130,7 @@ STRCMP:
 #  else
 	mov	(%rcx), %RAX_LP
 #  endif
-	testl	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
+	testb	$1, LOCALE_DATA_VALUES+_NL_CTYPE_NONASCII_CASE*SIZEOF_VALUES(%rax)
 	jne	__strncasecmp_l_nonascii
 # endif
 
