@@ -41,7 +41,7 @@
 
 static inline void __attribute__ ((always_inline))
 elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
-		    ElfW(Addr) reladdr, ElfW(Addr) relsize,
+		    elfptr_t reladdr, ElfW(Addr) relsize,
 		    __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative,
 		    int lazy, int skip_ifunc)
 {

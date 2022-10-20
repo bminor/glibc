@@ -46,9 +46,14 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
 		  const ElfW(Rela) *reloc, const ElfW(Sym) *sym,
 		  const struct r_found_version *version, void *const reloc_addr,
 		  int skip_ifunc);
+#  ifdef __CHERI_PURE_CAPABILITY__
+static inline void __attribute__((always_inline))
+elf_machine_rela_relative (struct link_map *map, const ElfW(Rela) *reloc);
+#  else
 static inline void __attribute__((always_inline))
 elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
 			   void *const reloc_addr);
+#  endif
 # endif
 # if ELF_MACHINE_NO_RELA || defined ELF_MACHINE_PLT_REL
 static inline void __attribute__((always_inline))
@@ -80,7 +85,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
 
 # define _ELF_DYNAMIC_DO_RELOC(RELOC, reloc, map, scope, do_lazy, skip_ifunc, test_rel) \
   do {									      \
-    struct { ElfW(Addr) start, size;					      \
+    struct { elfptr_t start; ElfW(Addr) size;					      \
 	     __typeof (((ElfW(Dyn) *) 0)->d_un.d_val) nrelative; int lazy; }  \
       ranges[2] = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };			      \
 									      \
@@ -97,7 +102,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
     if ((map)->l_info[DT_PLTREL]					      \
 	&& (!test_rel || (map)->l_info[DT_PLTREL]->d_un.d_val == DT_##RELOC)) \
       {									      \
-	ElfW(Addr) start = D_PTR ((map), l_info[DT_JMPREL]);		      \
+	elfptr_t start = D_PTR ((map), l_info[DT_JMPREL]);		      \
 	ElfW(Addr) size = (map)->l_info[DT_PLTRELSZ]->d_un.d_val;	      \
 									      \
 	if (ranges[0].start == 0)					      \
