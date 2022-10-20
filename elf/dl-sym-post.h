@@ -41,7 +41,7 @@ _dl_sym_post (lookup_t result, const ElfW(Sym) *ref, void *value,
   if (__glibc_unlikely (ELFW(ST_TYPE) (ref->st_info) == STT_GNU_IFUNC))
     {
       DL_FIXUP_VALUE_TYPE fixup
-        = DL_FIXUP_MAKE_VALUE (result, (ElfW(Addr)) value);
+        = DL_FIXUP_MAKE_VALUE (result, (elfptr_t) value);
       fixup = elf_ifunc_invoke (DL_FIXUP_VALUE_ADDR (fixup));
       value = (void *) DL_FIXUP_VALUE_CODE_ADDR (fixup);
     }
