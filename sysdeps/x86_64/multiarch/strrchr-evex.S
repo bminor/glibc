@@ -29,9 +29,7 @@
 # include "x86-evex256-vecs.h"
 
 # ifdef USE_AS_WCSRCHR
-#  define RCX_M	cl
-#  define SHIFT_REG	rcx
-#  define VPCOMPRESS	vpcompressd
+#  define SHIFT_REG	rsi
 #  define kunpck_2x	kunpckbw
 #  define kmov_2x	kmovd
 #  define maskz_2x	ecx
@@ -46,9 +44,7 @@
 
 #  define USE_WIDE_CHAR
 # else
-#  define RCX_M	ecx
 #  define SHIFT_REG	rdi
-#  define VPCOMPRESS	vpcompressb
 #  define kunpck_2x	kunpckdq
 #  define kmov_2x	kmovq
 #  define maskz_2x	rcx
@@ -78,7 +74,7 @@ ENTRY_P2ALIGN(STRRCHR, 6)
 	andl	$(PAGE_SIZE - 1), %eax
 	cmpl	$(PAGE_SIZE - VEC_SIZE), %eax
 	jg	L(cross_page_boundary)
-
+L(page_cross_continue):
 	VMOVU	(%rdi), %VMM(1)
 	/* k0 has a 1 for each zero CHAR in VEC(1).  */
 	VPTESTN	%VMM(1), %VMM(1), %k0
@@ -86,7 +82,6 @@ ENTRY_P2ALIGN(STRRCHR, 6)
 	test	%VRSI, %VRSI
 	jz	L(aligned_more)
 	/* fallthrough: zero CHAR in first VEC.  */
-L(page_cross_return):
 	/* K1 has a 1 for each search CHAR match in VEC(1).  */
 	VPCMPEQ	%VMATCH, %VMM(1), %k1
 	KMOV	%k1, %VRAX
@@ -197,7 +192,6 @@ L(first_vec_x2):
 
 	.p2align 4,, 12
 L(aligned_more):
-L(page_cross_continue):
 	/* Need to keep original pointer incase VEC(1) has last match.
 	 */
 	movq	%rdi, %rsi
@@ -353,53 +347,48 @@ L(return_new_match):
 	leaq	(VEC_SIZE * 2)(%rdi, %rax, CHAR_SIZE), %rax
 	ret
 
-	.p2align 4,, 4
 L(cross_page_boundary):
+	/* eax contains all the page offset bits of src (rdi). `xor rdi,
+	   rax` sets pointer will all page offset bits cleared so
+	   offset of (PAGE_SIZE - VEC_SIZE) will get last aligned VEC
+	   before page cross (guranteed to be safe to read). Doing this
+	   as opposed to `movq %rdi, %rax; andq $-VEC_SIZE, %rax` saves
+	   a bit of code size.  */
 	xorq	%rdi, %rax
-	mov	$-1, %VRDX
-	VMOVU	(PAGE_SIZE - VEC_SIZE)(%rax), %VMM(6)
-	VPTESTN	%VMM(6), %VMM(6), %k0
-	KMOV	%k0, %VRSI
+	VMOVU	(PAGE_SIZE - VEC_SIZE)(%rax), %VMM(1)
+	VPTESTN	%VMM(1), %VMM(1), %k0
+	KMOV	%k0, %VRCX
 
+	/* Shift out zero CHAR matches that are before the begining of
+	   src (rdi).  */
 # ifdef USE_AS_WCSRCHR
-	movl	%edi, %ecx
-	and	$(VEC_SIZE - 1), %ecx
-	shrl	$2, %ecx
+	movl	%edi, %esi
+	andl	$(VEC_SIZE - 1), %esi
+	shrl	$2, %esi
 # endif
-	shlx	%VGPR(SHIFT_REG), %VRDX, %VRDX
+	shrx	%VGPR(SHIFT_REG), %VRCX, %VRCX
 
-# ifdef USE_AS_WCSRCHR
-	kmovb	%edx, %k1
-# else
-	KMOV	%VRDX, %k1
-# endif
-
-	/* Need to adjust result to VEC(1) so it can be re-used by
-	   L(return_vec_x0_test).  The alternative is to collect VEC(1)
-	   will a page cross load which is far more expensive.  */
-	VPCOMPRESS %VMM(6), %VMM(1){%k1}{z}
-
-	/* We could technically just jmp back after the vpcompress but
-	   it doesn't save any 16-byte blocks.  */
-	shrx	%VGPR(SHIFT_REG), %VRSI, %VRSI
-	test	%VRSI, %VRSI
+	test	%VRCX, %VRCX
 	jz	L(page_cross_continue)
 
-	/* Duplicate of return logic from ENTRY. Doesn't cause spill to
-	   next cache line so might as well copy it here.  */
-	VPCMPEQ	%VMATCH, %VMM(1), %k1
+	/* Found zero CHAR so need to test for search CHAR.  */
+	VPCMP	$0, %VMATCH, %VMM(1), %k1
 	KMOV	%k1, %VRAX
-	blsmsk	%VRSI, %VRSI
-	and	%VRSI, %VRAX
-	jz	L(ret_page_cross)
+	/* Shift out search CHAR matches that are before the begining of
+	   src (rdi).  */
+	shrx	%VGPR(SHIFT_REG), %VRAX, %VRAX
+
+	/* Check if any search CHAR match in range.  */
+	blsmsk	%VRCX, %VRCX
+	and	%VRCX, %VRAX
+	jz	L(ret3)
 	bsr	%VRAX, %VRAX
 # ifdef USE_AS_WCSRCHR
 	leaq	(%rdi, %rax, CHAR_SIZE), %rax
 # else
 	addq	%rdi, %rax
 # endif
-L(ret_page_cross):
+L(ret3):
 	ret
-	/* 1 byte till next cache line.  */
 END(STRRCHR)
 #endif
