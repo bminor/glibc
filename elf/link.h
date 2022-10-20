@@ -34,6 +34,12 @@
 #include <bits/elfclass.h>		/* Defines __ELF_NATIVE_CLASS.  */
 #include <bits/link.h>
 
+#ifdef __CHERI_PURE_CAPABILITY__
+typedef uintptr_t elfptr_t;
+#else
+typedef ElfW(Addr) elfptr_t;
+#endif
+
 /* The legacy rendezvous structure used by the run-time dynamic linker to
    communicate details of shared object loading to the debugger.  */
 
