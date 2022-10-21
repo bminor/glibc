@@ -258,7 +258,9 @@ _dl_aux_init (ElfW(auxv_t) *av)
 
 # ifdef __CHERI_PURE_CAPABILITY__
   _dl_main_map.l_map_start = auxv_values[AT_CHERI_EXEC_RX_CAP];
+  _dl_main_map.l_map_start = __builtin_cheri_perms_and (_dl_main_map.l_map_start, CAP_PERM_MASK_RX);
   _dl_main_map.l_rw_start = auxv_values[AT_CHERI_EXEC_RW_CAP];
+  _dl_main_map.l_rw_start = __builtin_cheri_perms_and (_dl_main_map.l_rw_start, CAP_PERM_MASK_RW);
 # endif
 }
 #endif

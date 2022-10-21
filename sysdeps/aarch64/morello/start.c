@@ -124,9 +124,11 @@ get_caps (uintptr_t *cap_rx, uintptr_t *cap_rw, const uintptr_t *auxv)
 	  return;
 	case AT_CHERI_EXEC_RX_CAP:
 	  *cap_rx = auxv[1];
+	  *cap_rx = __builtin_cheri_perms_and (*cap_rx, CAP_PERM_MASK_RX);
 	  break;
 	case AT_CHERI_EXEC_RW_CAP:
 	  *cap_rw = auxv[1];
+	  *cap_rw = __builtin_cheri_perms_and (*cap_rw, CAP_PERM_MASK_RW);
 	  break;
 	}
       auxv += 2;
