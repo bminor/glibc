@@ -27,6 +27,7 @@
 #include <printf.h>
 #include <string.h>
 #include <locale/localeinfo.h>
+#include <fix-float-double-convert-nan.h>
 
 #define UCHAR_T char
 #define L_(Str) Str
@@ -61,7 +62,7 @@ STRFROM (char *dest, size_t size, const char *format, FLOAT f)
      because __printf_fp and __printf_fphex only accept double and long double
      as the floating-point argument.  */
   if (__builtin_types_compatible_p (FLOAT, float))
-    fpnum.flt = f;
+    fpnum.flt = keep_sign_conversion (f);
   else
     fpnum.value = f;
 
