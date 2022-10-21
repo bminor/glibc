@@ -152,6 +152,8 @@ elf_machine_rtld_base_setup (struct link_map *map, void *args)
       cap_rw = cap_exe_rw;
       ldso_base = cap_rx; /* Assume load segments start at vaddr 0.  */
     }
+  cap_rx = __builtin_cheri_perms_and (cap_rx, CAP_PERM_MASK_RX);
+  cap_rw = __builtin_cheri_perms_and (cap_rw, CAP_PERM_MASK_RW);
   map->l_addr = ldso_base;
   map->l_map_start = cap_rx;
   map->l_rw_start = cap_rw;

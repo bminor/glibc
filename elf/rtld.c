@@ -1724,9 +1724,11 @@ dl_main (const ElfW(Phdr) *phdr,
 	  {
 	  case AT_CHERI_EXEC_RX_CAP:
 	    main_map->l_map_start = av->a_un.a_val;
+	    main_map->l_map_start = __builtin_cheri_perms_and (main_map->l_map_start, CAP_PERM_MASK_RX);
 	    break;
 	  case AT_CHERI_EXEC_RW_CAP:
 	    main_map->l_rw_start = av->a_un.a_val;
+	    main_map->l_rw_start = __builtin_cheri_perms_and (main_map->l_rw_start, CAP_PERM_MASK_RW);
 	    break;
 	  }
 #endif
