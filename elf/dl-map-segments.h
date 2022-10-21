@@ -22,6 +22,13 @@
 # include <cheri_perms.h>
 #endif
 
+/* Allow RWX mprotect later, on CHERI this means RWX capability permission.  */
+#ifdef PROT_MAX
+# define PROT_MAX_RWX PROT_MAX (PROT_READ | PROT_WRITE | PROT_EXEC)
+#else
+# define PROT_MAX_RWX 0
+#endif
+
 /* Map a segment and align it properly.  */
 
 static __always_inline elfptr_t
@@ -29,7 +36,8 @@ _dl_map_segment (const struct loadcmd *c, ElfW(Addr) mappref,
 		 const size_t maplength, int fd)
 {
   if (__glibc_likely (c->mapalign <= GLRO(dl_pagesize)))
-    return (elfptr_t) __mmap ((void *) mappref, maplength, c->prot,
+    return (elfptr_t) __mmap ((void *) mappref, maplength,
+				c->prot|PROT_MAX_RWX,
 				MAP_COPY|MAP_FILE, fd, c->mapoff);
 
   /* If the segment alignment > the page size, allocate enough space to
@@ -38,7 +46,7 @@ _dl_map_segment (const struct loadcmd *c, ElfW(Addr) mappref,
 		       ? (maplength + c->mapalign)
 		       : (2 * c->mapalign));
   elfptr_t map_start = (elfptr_t) __mmap ((void *) mappref, maplen,
-					      PROT_NONE,
+					      PROT_NONE|PROT_MAX_RWX,
 					      MAP_ANONYMOUS|MAP_PRIVATE,
 					      -1, 0);
   if (__glibc_unlikely ((void *) map_start == MAP_FAILED))
@@ -46,7 +54,7 @@ _dl_map_segment (const struct loadcmd *c, ElfW(Addr) mappref,
 
   elfptr_t map_start_aligned = ALIGN_UP (map_start, c->mapalign);
   map_start_aligned = (elfptr_t) __mmap ((void *) map_start_aligned,
-					   maplength, c->prot,
+					   maplength, c->prot|PROT_MAX_RWX,
 					   MAP_COPY|MAP_FILE|MAP_FIXED,
 					   fd, c->mapoff);
   if (__glibc_unlikely ((void *) map_start_aligned == MAP_FAILED))
@@ -137,7 +145,8 @@ _dl_map_segments (struct link_map *l, int fd,
   else
     {
       /* Need a single capability to cover all load segments.  */
-      void *p = __mmap ((void *) c->mapstart, maplength, c->prot,
+      void *p = __mmap ((void *) c->mapstart, maplength,
+			c->prot|PROT_MAX_RWX,
                         MAP_FIXED|MAP_COPY|MAP_FILE,
                         fd, c->mapoff);
       if (p == MAP_FAILED)
