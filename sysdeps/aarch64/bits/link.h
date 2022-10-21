@@ -28,7 +28,6 @@ typedef union
 } La_aarch64_vector;
 
 /* Registers for entry into PLT on AArch64.  */
-#ifndef __CHERI_PURE_CAPABILITY__
 typedef struct La_aarch64_regs
 {
   uint64_t          lr_xreg[9];
@@ -47,24 +46,6 @@ typedef struct La_aarch64_retval
   La_aarch64_vector lrv_vreg[8];
   void              *lrv_vpcs;
 } La_aarch64_retval;
-#else
-typedef struct La_aarch64_regs
-{
-  uintptr_t         lr_xreg[9];
-  La_aarch64_vector lr_vreg[8];
-  uintptr_t         lr_sp;
-  uintptr_t         lr_lr;
-  void              *lr_vpcs;
-} La_aarch64_regs;
-
-typedef struct La_aarch64_retval
-{
-  uintptr_t         lrv_xreg[8];
-  La_aarch64_vector lrv_vreg[8];
-  void              *lrv_vpcs;
-} La_aarch64_retval;
-#endif
-
 __BEGIN_DECLS
 
 extern ElfW(Addr)
