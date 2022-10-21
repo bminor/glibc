@@ -1170,7 +1170,7 @@ rtld_setup_main_map (struct link_map *main_map)
       {
       case PT_PHDR:
 	/* Find out the load address.  */
-	main_map->l_addr = (elfptr_t) phdr - ph->p_vaddr;
+	main_map->l_addr = (ElfW(Addr)) phdr - ph->p_vaddr;
 	break;
       case PT_DYNAMIC:
 	/* This tells us where to find the dynamic section,
