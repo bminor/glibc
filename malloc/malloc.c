@@ -1134,8 +1134,16 @@ static mchunkptr mremap_chunk(mchunkptr p, size_t new_size);
 # define MAP_NORESERVE 0
 #endif
 
+/* Allow RW mprotect later, on CHERI this means RW capability permission.  */
+#ifdef PROT_MAX
+# define PROT_MAX_RW PROT_MAX (PROT_READ | PROT_WRITE)
+#else
+# define PROT_MAX_RW 0
+#endif
+
 #define MMAP(addr, size, prot, flags) \
- __mmap((addr), (size), (prot), (flags)|MAP_ANONYMOUS|MAP_PRIVATE, -1, 0)
+ __mmap((addr), (size), (prot)|PROT_MAX_RW, \
+	(flags)|MAP_ANONYMOUS|MAP_PRIVATE, -1, 0)
 
 
 /*
