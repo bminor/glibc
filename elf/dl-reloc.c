@@ -355,7 +355,7 @@ _dl_protect_relro (struct link_map *l)
 {
   elfptr_t start = ALIGN_DOWN(dl_rx_ptr (l, l->l_relro_addr),
 				GLRO(dl_pagesize));
-  elfptr_t end = ALIGN_DOWN((l->l_addr
+  ElfW(Addr) end = ALIGN_DOWN((l->l_addr
 			       + l->l_relro_addr
 			       + l->l_relro_size),
 			      GLRO(dl_pagesize));
