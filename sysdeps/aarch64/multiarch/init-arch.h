@@ -35,6 +35,4 @@
   bool __attribute__((unused)) mte =					      \
     MTE_ENABLED ();							      \
   bool __attribute__((unused)) sve =					      \
-    GLRO(dl_aarch64_cpu_features).sve;					      \
-  bool __attribute__((unused)) morello =				      \
-    GLRO(dl_hwcap2) & HWCAP2_MORELLO;
+    GLRO(dl_aarch64_cpu_features).sve;

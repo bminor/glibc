@@ -68,11 +68,6 @@
 #define IS_A64FX(midr) (MIDR_IMPLEMENTOR(midr) == 'F'			      \
 			&& MIDR_PARTNUM(midr) == 0x001)
 
-/* TODO: This is based on the Morello Fast Model.
-	 Will MIDR_IMPLEMENTOR change to 'A'?  */
-#define IS_MORELLO(midr) (MIDR_IMPLEMENTOR(midr) == 0x3f       \
-                         && MIDR_PARTNUM(midr) == 0x412)
-
 struct cpu_features
 {
   uint64_t midr_el1;
@@ -81,7 +76,6 @@ struct cpu_features
   /* Currently, the GLIBC memory tagging tunable only defines 8 bits.  */
   uint8_t mte_state;
   bool sve;
-  bool morello;
 };
 
 #endif /* _CPU_FEATURES_AARCH64_H  */
