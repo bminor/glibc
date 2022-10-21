@@ -151,44 +151,10 @@ GNU_PROPERTY (FEATURE_1_AND, FEATURE_1_BTI)
   ASM_SIZE_DIRECTIVE(name)
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
-#if defined PROF && defined __CHERI_PURE_CAPABILITY__
-/* Note: c9 must be preserved in var arg functions.  */
-# define CALL_MCOUNT						\
-	stp	c30, c9, [csp, #-160]!;				\
-	cfi_adjust_cfa_offset (160);				\
-	cfi_rel_offset (c30, 0);				\
-	cfi_rel_offset (c9, 16);				\
-	stp	c0, c1, [csp, #32];				\
-	cfi_rel_offset (c0, 32);				\
-	cfi_rel_offset (c1, 48);				\
-	stp	c2, c3, [csp, #64];				\
-	cfi_rel_offset (c2, 64);				\
-	cfi_rel_offset (c3, 80);				\
-	stp	c4, c5, [csp, #96];				\
-	cfi_rel_offset (c4, 96);				\
-	cfi_rel_offset (c5, 112);				\
-	stp	c6, c7, [csp, #128];				\
-	cfi_rel_offset (c6, 128);				\
-	cfi_rel_offset (c7, 144);				\
-	mov	c0, c30;					\
-	bl	mcount;						\
-	ldp	c0, c1, [csp, #32];				\
-	cfi_restore (c0);					\
-	cfi_restore (c1);					\
-	ldp	c2, c3, [csp, #64];				\
-	cfi_restore (c2);					\
-	cfi_restore (c3);					\
-	ldp	c4, c5, [csp, #96];				\
-	cfi_restore (c4);					\
-	cfi_restore (c5);					\
-	ldp	c6, c7, [csp, #128];				\
-	cfi_restore (c6);					\
-	cfi_restore (c7);					\
-	ldp	c30, c9, [csp, #160];				\
-	cfi_adjust_cfa_offset (-160);				\
-	cfi_restore (c30);					\
-	cfi_restore (c9);
-#elif defined PROF && !defined __CHERI_PURE_CAPAILITY__
+#ifdef	PROF
+# ifdef __CHERI_PURE_CAPABILITY__
+#  error mcount profiling is not supported with purecap ABI
+# endif
 # define CALL_MCOUNT						\
 	str	x30, [sp, #-80]!;				\
 	cfi_adjust_cfa_offset (80);				\
