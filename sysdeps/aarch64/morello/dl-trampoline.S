@@ -127,7 +127,7 @@ _dl_runtime_profile:
 
 	/* TODO: requires definition of La_aarch64_* layout
 	   and register state saved correctly for varargs ABI.  */
-	mov c0, 0
+	mov x0, 0
 	ldr c0, [c0]
 
 	cfi_endproc
