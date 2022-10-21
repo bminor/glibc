@@ -25,6 +25,9 @@
 
 #define PROT_BTI	0x10
 #define PROT_MTE	0x20
+#ifdef __CHERI_PURE_CAPABILITY__
+# define PROT_MAX(prot) ((prot) << 16)
+#endif
 
 #include <bits/mman-map-flags-generic.h>
 
