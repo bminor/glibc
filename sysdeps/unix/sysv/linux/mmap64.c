@@ -22,6 +22,9 @@
 #include <sysdep.h>
 #include <ldsodefs.h>
 #include <mmap_internal.h>
+#ifdef __CHERI_PURE_CAPABILITY__
+# include <cheri_perms.h>
+#endif
 
 #ifdef __NR_mmap2
 /* To avoid silent truncation of offset when using mmap2, do not accept
@@ -64,6 +67,20 @@ __mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
     {
       size_t ps = GLRO(dl_pagesize);
       ret = __builtin_cheri_bounds_set (ret, (len + ps - 1) & -ps);
+      unsigned long mask = CAP_PERM_MASK_BASE;
+      if (prot & PROT_READ)
+	mask |= CAP_PERM_MASK_R;
+      if (prot & PROT_WRITE)
+	mask |= CAP_PERM_MASK_RW;
+      if (prot & PROT_EXEC)
+	mask |= CAP_PERM_MASK_RX;
+      if (prot & PROT_MAX (PROT_READ))
+	mask |= CAP_PERM_MASK_R;
+      if (prot & PROT_MAX (PROT_WRITE))
+	mask |= CAP_PERM_MASK_RW;
+      if (prot & PROT_MAX (PROT_EXEC))
+	mask |= CAP_PERM_MASK_RX;
+      ret = __builtin_cheri_perms_and (ret, mask);
     }
 #endif
   return ret;
