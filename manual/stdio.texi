@@ -1912,7 +1912,7 @@ This section describes the options for the @samp{%d}, @samp{%i},
 specifications.  These conversions print integers in various formats.
 
 The @samp{%d} and @samp{%i} conversion specifications both print an
-@code{int} argument as a signed decimal number; while @samp{b}, @samp{%o},
+@code{int} argument as a signed decimal number; while @samp{%b}, @samp{%o},
 @samp{%u}, and @samp{%x} print the argument as an unsigned binary, octal,
 decimal, or hexadecimal number (respectively).  The @samp{%X} conversion
 specification is just like @samp{%x} except that it uses the characters
