@@ -32,3 +32,7 @@
 #define PARODD	0001000
 #define HUPCL	0002000
 #define CLOCAL	0004000
+
+#ifdef __USE_MISC
+# define ADDRB 04000000000
+#endif

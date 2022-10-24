@@ -33,3 +33,7 @@
 #define HUPCL	00040000
 
 #define CLOCAL	00100000
+
+#ifdef __USE_MISC
+# define ADDRB 04000000000
+#endif
