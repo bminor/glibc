@@ -52,6 +52,13 @@
 # define MAP_STACK 0
 #endif
 
+/* On CHERI targets ensure the mmap returned capability has RW permissions.  */
+#ifdef PROT_MAX
+# define PROT_MAX_RW PROT_MAX (PROT_READ | PROT_WRITE)
+#else
+# define PROT_MAX_RW 0
+#endif
+
 /* Get a stack frame from the cache.  We have to match by size since
    some blocks might be too small or far too large.  */
 static struct pthread *
@@ -363,7 +370,8 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  /* If a guard page is required, avoid committing memory by first
 	     allocate with PROT_NONE and then reserve with required permission
 	     excluding the guard page.  */
-	  mem = __mmap (NULL, size, (guardsize == 0) ? prot : PROT_NONE,
+	  mem = __mmap (NULL, size,
+			(guardsize == 0) ? prot : PROT_NONE | PROT_MAX_RW,
 			MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
 
 	  if (__glibc_unlikely (mem == MAP_FAILED))
