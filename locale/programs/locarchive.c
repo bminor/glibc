@@ -84,6 +84,13 @@ static const char *locnames[] =
 /* Size of the reserved address space area.  */
 #define RESERVE_MMAP_SIZE	512 * 1024 * 1024
 
+/* On CHERI targets ensure the mmap returned capability has RW permissions.  */
+#ifdef PROT_MAX
+# define PROT_MAX_RW PROT_MAX (PROT_READ | PROT_WRITE)
+#else
+# define PROT_MAX_RW 0
+#endif
+
 /* To prepare for enlargements of the mmaped area reserve some address
    space.  On some machines, being a file mapping rather than an anonymous
    mapping affects the address selection.  So do this mapping from the
@@ -94,7 +101,8 @@ prepare_address_space (int fd, size_t total, size_t *reserved, int *xflags,
 {
   if (total < RESERVE_MMAP_SIZE)
     {
-      void *p = mmap64 (NULL, RESERVE_MMAP_SIZE, PROT_NONE, MAP_SHARED, fd, 0);
+      void *p = mmap64 (NULL, RESERVE_MMAP_SIZE,
+			PROT_NONE | PROT_MAX_RW, MAP_SHARED, fd, 0);
       if (p != MAP_FAILED)
 	{
 	  void *aligned_p = PTR_ALIGN_UP (p, MAP_FIXED_ALIGNMENT);
