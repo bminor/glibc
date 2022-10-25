@@ -854,6 +854,23 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
   if (__glibc_unlikely (current_value.m->l_used == 0))
     current_value.m->l_used = 1;
 
+ if (__glibc_unlikely (GLRO(dl_debug_mask) & DL_DEBUG_BINDINGS))
+   {
+      const char *reference_name = undef_map->l_name;
+
+      _dl_debug_printf ("binding file %s [%lu] to %s [%lu]: %s symbol `%s'",
+			DSO_FILENAME (reference_name),
+			undef_map->l_ns,
+			DSO_FILENAME (current_value.m->l_name),
+			current_value.m->l_ns,
+			protected ? "protected" : "normal", undef_name);
+      if (version)
+	_dl_debug_printf_c (" [%s]\n", version->name);
+      else
+	_dl_debug_printf_c ("\n");
+   }
+
+
   *ref = current_value.s;
   return LOOKUP_VALUE (current_value.m);
 }
