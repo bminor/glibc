@@ -66,8 +66,13 @@ ENTRY(__clone)
 	PTR_ARG (6)
 #else
 	cbz	x9, L(skip_args)
+	gclen   x10, c9
 	ldr	c4, [c9]
+	cmp	x10, 16
+	bls	L(skip_args)
 	ldr	c5, [c9,16]
+	cmp	x10, 32
+	bls	L(skip_args)
 	ldr	c6, [c9,32]
 L(skip_args):
 #endif
