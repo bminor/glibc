@@ -151,7 +151,7 @@ allocate_big (size_t total_size, const void *element, size_t element_size,
 
   /* Reserve the memory region.  If we cannot create the mapping,
      there is no reason to set up the backing file.  */
-  void *target = mmap (NULL, total_size, PROT_NONE,
+  void *target = mmap (NULL, total_size, PROT_NONE | PROT_MAX_RW,
                        MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
   if (target == MAP_FAILED)
     return (struct support_blob_repeat) { 0 };

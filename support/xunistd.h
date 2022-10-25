@@ -25,6 +25,7 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
 __BEGIN_DECLS
@@ -76,6 +77,13 @@ void xclose (int);
 
 /* Write the buffer.  Retry on short writes.  */
 void xwrite (int, const void *, size_t);
+
+/* On CHERI targets ensure the mmap returned capability has RW permissions.  */
+#ifdef PROT_MAX
+# define PROT_MAX_RW PROT_MAX (PROT_READ | PROT_WRITE)
+#else
+# define PROT_MAX_RW 0
+#endif
 
 /* Invoke mmap with a zero file offset.  */
 void *xmmap (void *addr, size_t length, int prot, int flags, int fd);

@@ -60,7 +60,7 @@ support_stack_alloc (size_t size)
      so we know they are allocated.  */
   void *alloc_base = xmmap (0,
                             alloc_size,
-                            PROT_NONE,
+                            PROT_NONE|PROT_MAX_RW,
                             MAP_PRIVATE|MAP_ANONYMOUS|MAP_NORESERVE|MAP_STACK,
                             -1);
   /* Some architecture still requires executable stack for the signal return
