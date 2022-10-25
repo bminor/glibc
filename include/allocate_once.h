@@ -27,6 +27,9 @@ void *__libc_allocate_once_slow (void **__place,
                                  void (*__deallocate) (void *__closure,
                                                        void *__ptr),
                                  void *__closure);
+#ifndef _ISOMAC
+libc_hidden_proto (__libc_allocate_once_slow)
+#endif
 
 /* Return an a pointer to an allocated and initialized data structure.
    If this function returns a non-NULL value, the caller can assume
@@ -87,9 +90,5 @@ allocate_once (void **__place, void *(*__allocate) (void *__closure),
     return __libc_allocate_once_slow (__place, __allocate, __deallocate,
                                       __closure);
 }
-
-#ifndef _ISOMAC
-libc_hidden_proto (__libc_allocate_once_slow)
-#endif
 
 #endif /* _ALLOCATE_ONCE_H */
