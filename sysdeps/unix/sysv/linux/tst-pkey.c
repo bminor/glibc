@@ -175,7 +175,7 @@ do_test (void)
   /* pkey_mprotect with key -1 should work even when there is no
      protection key support.  */
   {
-    int *page = xmmap (NULL, pagesize, PROT_NONE,
+    int *page = xmmap (NULL, pagesize, PROT_NONE | PROT_MAX_RW,
                        MAP_ANONYMOUS | MAP_PRIVATE, -1);
     TEST_COMPARE (pkey_mprotect (page, pagesize, PROT_READ | PROT_WRITE, -1),
                   0);
