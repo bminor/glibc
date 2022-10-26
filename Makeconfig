@@ -884,7 +884,7 @@ endif
 # Use 64 bit time_t support for installed programs
 installed-modules = nonlib nscd ldconfig locale_programs \
 		    iconvprogs libnss_files libnss_compat libnss_db libnss_hesiod \
-		    libutil libpcprofile
+		    libutil libpcprofile libnsl
 +extra-time-flags = $(if $(filter $(installed-modules),\
                            $(in-module)),-D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64)
 
