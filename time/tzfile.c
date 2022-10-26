@@ -32,7 +32,7 @@
 int __use_tzfile;
 static dev_t tzfile_dev;
 static ino64_t tzfile_ino;
-static time_t tzfile_mtime;
+static __time64_t tzfile_mtime;
 
 struct ttinfo
   {
