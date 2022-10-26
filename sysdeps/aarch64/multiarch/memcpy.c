@@ -29,7 +29,6 @@
 extern __typeof (__redirect_memcpy) __libc_memcpy;
 
 extern __typeof (__redirect_memcpy) __memcpy_generic attribute_hidden;
-extern __typeof (__redirect_memcpy) __memcpy_simd attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_thunderx attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_thunderx2 attribute_hidden;
 extern __typeof (__redirect_memcpy) __memcpy_falkor attribute_hidden;
@@ -40,9 +39,6 @@ static inline __typeof (__redirect_memcpy) *
 select_memcpy_ifunc (void)
 {
   INIT_ARCH ();
-
-  if (IS_NEOVERSE_N1 (midr) || IS_NEOVERSE_N2 (midr))
-    return __memcpy_simd;
 
   if (sve && HAVE_AARCH64_SVE_ASM)
     {

@@ -3,7 +3,6 @@ sysdep_routines += \
   memchr_generic \
   memchr_nosimd \
   memcpy_a64fx \
-  memcpy_advsimd \
   memcpy_falkor \
   memcpy_generic \
   memcpy_sve \
