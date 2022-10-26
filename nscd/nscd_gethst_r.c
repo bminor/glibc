@@ -112,7 +112,7 @@ __nscd_get_nl_timestamp (void)
   if (map == NULL
       || (map != NO_MAPPING
 	  && map->head->nscd_certainly_running == 0
-	  && map->head->timestamp + MAPPING_TIMEOUT < time_now ()))
+	  && map->head->timestamp + MAPPING_TIMEOUT < time64_now ()))
     map = __nscd_get_mapping (GETFDHST, "hosts", &__hst_map_handle.mapped);
 
   if (map == NO_MAPPING)

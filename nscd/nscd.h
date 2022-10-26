@@ -65,7 +65,7 @@ typedef enum
 struct traced_file
 {
   /* Tracks the last modified time of the traced file.  */
-  time_t mtime;
+  __time64_t mtime;
   /* Support multiple registered files per database.  */
   struct traced_file *next;
   int call_res_init;
