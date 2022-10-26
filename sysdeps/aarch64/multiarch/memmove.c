@@ -29,7 +29,6 @@
 extern __typeof (__redirect_memmove) __libc_memmove;
 
 extern __typeof (__redirect_memmove) __memmove_generic attribute_hidden;
-extern __typeof (__redirect_memmove) __memmove_simd attribute_hidden;
 extern __typeof (__redirect_memmove) __memmove_thunderx attribute_hidden;
 extern __typeof (__redirect_memmove) __memmove_falkor attribute_hidden;
 
@@ -38,10 +37,7 @@ libc_ifunc (__libc_memmove,
 	     ? __memmove_thunderx
 	     : (IS_FALKOR (midr) || IS_PHECDA (midr)
 		? __memmove_falkor
-		  : (IS_NEOVERSE_N1 (midr) || IS_NEOVERSE_N2 (midr)
-		     || IS_NEOVERSE_V1 (midr)
-		     ? __memmove_simd
-		     : __memmove_generic))));
+		: __memmove_generic)));
 
 # undef memmove
 strong_alias (__libc_memmove, memmove);
