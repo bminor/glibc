@@ -27,6 +27,7 @@ The following bugs are resolved with this release:
   [24816] Fix tst-nss-files-hosts-long on single-stack hosts
   [28846] CMSG_NXTHDR may trigger -Wstrict-overflow warning
   [29305] Conserve NSS buffer space during DNS packet parsing
+  [29402] nscd: nscd: No such file or directory
   [29415] nscd: Fix netlink cache invalidation if epoll is used
   [28937] New DSO dependency sorter does not put new map first if in a cycle
   [29446] _dlopen now ignores dl_caller argument in static mode
