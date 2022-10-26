@@ -1,5 +1,5 @@
 ifeq ($(subdir),string)
-sysdep_routines += memcpy_generic memcpy_advsimd memcpy_thunderx memcpy_thunderx2 \
+sysdep_routines += memcpy_generic memcpy_thunderx memcpy_thunderx2 \
 		   memcpy_falkor memmove_falkor memset_generic memset_falkor \
 		   strlen_generic strlen_asimd
 endif
