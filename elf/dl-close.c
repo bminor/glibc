@@ -36,11 +36,6 @@
 
 #include <dl-unmap-segments.h>
 
-
-/* Type of the constructor functions.  */
-typedef void (*fini_t) (void);
-
-
 /* Special l_idx value used to indicate which objects remain loaded.  */
 #define IDX_STILL_USED -1
 
@@ -108,31 +103,6 @@ remove_slotinfo (size_t idx, struct dtv_slotinfo_list *listp, size_t disp,
 
   /* No non-entry in this list element.  */
   return false;
-}
-
-/* Invoke dstructors for CLOSURE (a struct link_map *).  Called with
-   exception handling temporarily disabled, to make errors fatal.  */
-static void
-call_destructors (void *closure)
-{
-  struct link_map *map = closure;
-
-  if (map->l_info[DT_FINI_ARRAY] != NULL)
-    {
-      ElfW(Addr) *array =
-	(ElfW(Addr) *) (map->l_addr
-			+ map->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
-      unsigned int sz = (map->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-			 / sizeof (ElfW(Addr)));
-
-      while (sz-- > 0)
-	((fini_t) array[sz]) ();
-    }
-
-  /* Next try the old-style destructor.  */
-  if (map->l_info[DT_FINI] != NULL)
-    DL_CALL_DT_FINI (map, ((void *) map->l_addr
-			   + map->l_info[DT_FINI]->d_un.d_ptr));
 }
 
 void
@@ -280,17 +250,7 @@ _dl_close_worker (struct link_map *map, bool force)
 	     half-cooked objects.  Temporarily disable exception
 	     handling, so that errors are fatal.  */
 	  if (imap->l_init_called)
-	    {
-	      /* When debugging print a message first.  */
-	      if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS,
-				    0))
-		_dl_debug_printf ("\ncalling fini: %s [%lu]\n\n",
-				  imap->l_name, nsid);
-
-	      if (imap->l_info[DT_FINI_ARRAY] != NULL
-		  || imap->l_info[DT_FINI] != NULL)
-		_dl_catch_exception (NULL, call_destructors, imap);
-	    }
+	    _dl_catch_exception (NULL, _dl_call_fini, imap);
 
 #ifdef SHARED
 	  /* Auditing checkpoint: we remove an object.  */
