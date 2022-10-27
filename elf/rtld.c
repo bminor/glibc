@@ -730,7 +730,7 @@ match_version (const char *string, struct link_map *map)
   return 0;
 }
 
-static bool tls_init_tp_called;
+bool __rtld_tls_init_tp_called;
 
 static void *
 init_tls (size_t naudit)
@@ -800,7 +800,7 @@ cannot allocate TLS data structures for initial thread\n");
   if (__glibc_unlikely (lossage != NULL))
     _dl_fatal_printf ("cannot set up thread-local storage: %s\n", lossage);
   __tls_init_tp ();
-  tls_init_tp_called = true;
+  __rtld_tls_init_tp_called = true;
 
   return tcbp;
 }
@@ -2050,7 +2050,7 @@ dl_main (const ElfW(Phdr) *phdr,
      an old kernel that can't perform TLS_INIT_TP, even if no TLS is ever
      used.  Trying to do it lazily is too hairy to try when there could be
      multiple threads (from a non-TLS-using libpthread).  */
-  bool was_tls_init_tp_called = tls_init_tp_called;
+  bool was_tls_init_tp_called = __rtld_tls_init_tp_called;
   if (tcbp == NULL)
     tcbp = init_tls (0);
 
@@ -2321,7 +2321,7 @@ dl_main (const ElfW(Phdr) *phdr,
 			       consider_profiling);
 
 	/* Add object to slot information data if necessasy.  */
-	if (l->l_tls_blocksize != 0 && tls_init_tp_called)
+	if (l->l_tls_blocksize != 0 && __rtld_tls_init_tp_called)
 	  _dl_add_to_slotinfo (l, true);
       }
   }
@@ -2347,7 +2347,7 @@ dl_main (const ElfW(Phdr) *phdr,
   _dl_allocate_tls_init (tcbp, false);
 
   /* And finally install it for the main thread.  */
-  if (! tls_init_tp_called)
+  if (! __rtld_tls_init_tp_called)
     {
       const char *lossage = TLS_INIT_TP (tcbp);
       if (__glibc_unlikely (lossage != NULL))

@@ -1219,6 +1219,9 @@ extern void *_dl_allocate_tls_storage (void) attribute_hidden;
 extern void *_dl_allocate_tls_init (void *, bool);
 rtld_hidden_proto (_dl_allocate_tls_init)
 
+/* True if the TCB has been set up.  */
+extern bool __rtld_tls_init_tp_called attribute_hidden;
+
 /* Deallocate memory allocated with _dl_allocate_tls.  */
 extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb);
 rtld_hidden_proto (_dl_deallocate_tls)
