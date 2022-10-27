@@ -53,6 +53,7 @@ routines = \
 # profiled libraries.
 dl-routines = \
   dl-call-libc-early-init \
+  dl-call_fini \
   dl-close \
   dl-debug \
   dl-debug-symbols \

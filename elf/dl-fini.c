@@ -21,11 +21,6 @@
 #include <ldsodefs.h>
 #include <elf-initfini.h>
 
-
-/* Type of the constructor functions.  */
-typedef void (*fini_t) (void);
-
-
 void
 _dl_fini (void)
 {
@@ -116,38 +111,7 @@ _dl_fini (void)
 
 	      if (l->l_init_called)
 		{
-		  /* Make sure nothing happens if we are called twice.  */
-		  l->l_init_called = 0;
-
-		  /* Is there a destructor function?  */
-		  if (l->l_info[DT_FINI_ARRAY] != NULL
-		      || (ELF_INITFINI && l->l_info[DT_FINI] != NULL))
-		    {
-		      /* When debugging print a message first.  */
-		      if (__builtin_expect (GLRO(dl_debug_mask)
-					    & DL_DEBUG_IMPCALLS, 0))
-			_dl_debug_printf ("\ncalling fini: %s [%lu]\n\n",
-					  DSO_FILENAME (l->l_name),
-					  ns);
-
-		      /* First see whether an array is given.  */
-		      if (l->l_info[DT_FINI_ARRAY] != NULL)
-			{
-			  ElfW(Addr) *array =
-			    (ElfW(Addr) *) (l->l_addr
-					    + l->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
-			  unsigned int i = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-					    / sizeof (ElfW(Addr)));
-			  while (i-- > 0)
-			    ((fini_t) array[i]) ();
-			}
-
-		      /* Next try the old-style destructor.  */
-		      if (ELF_INITFINI && l->l_info[DT_FINI] != NULL)
-			DL_CALL_DT_FINI
-			  (l, l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr);
-		    }
-
+		  _dl_call_fini (l);
 #ifdef SHARED
 		  /* Auditing checkpoint: another object closed.  */
 		  _dl_audit_objclose (l);

@@ -105,6 +105,9 @@ typedef struct link_map *lookup_t;
    DT_PREINIT_ARRAY.  */
 typedef void (*dl_init_t) (int, char **, char **);
 
+/* Type of a constructor function, in DT_FINI, DT_FINI_ARRAY.  */
+typedef void (*fini_t) (void);
+
 /* On some architectures a pointer to a function is not just a pointer
    to the actual code of the function but rather an architecture
    specific descriptor. */
@@ -1047,6 +1050,11 @@ extern void _dl_init (struct link_map *main_map, int argc, char **argv,
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */
 extern void _dl_fini (void) attribute_hidden;
+
+/* Invoke the DT_FINI_ARRAY and DT_FINI destructors for MAP, which
+   must be a struct link_map *.  Can be used as an argument to
+   _dl_catch_exception.  */
+void _dl_call_fini (void *map) attribute_hidden;
 
 /* Sort array MAPS according to dependencies of the contained objects.
    If FORCE_FIRST, MAPS[0] keeps its place even if the dependencies
