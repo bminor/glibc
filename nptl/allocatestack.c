@@ -276,7 +276,7 @@ __free_stacks (size_t limit)
 
 	  /* Remove this block.  This should never fail.  If it does
 	     something is really wrong.  */
-	  if (__munmap (curr->stackblock, curr->stackblock_size) != 0)
+	  if (munmap (curr->stackblock, curr->stackblock_size) != 0)
 	    abort ();
 
 	  /* Maybe we have freed enough.  */
@@ -558,7 +558,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  /* If a guard page is required, avoid committing memory by first
 	     allocate with PROT_NONE and then reserve with required permission
 	     excluding the guard page.  */
-	  mem = __mmap (NULL, size, (guardsize == 0) ? prot : PROT_NONE,
+	  mem = mmap (NULL, size, (guardsize == 0) ? prot : PROT_NONE,
 			MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
 
 	  if (__glibc_unlikely (mem == MAP_FAILED))
@@ -585,7 +585,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 					    pagesize_m1);
 	      if (setup_stack_prot (mem, size, guard, guardsize, prot) != 0)
 		{
-		  __munmap (mem, size);
+		  munmap (mem, size);
 		  return errno;
 		}
 	    }
@@ -628,7 +628,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	      assert (errno == ENOMEM);
 
 	      /* Free the stack memory we just allocated.  */
-	      (void) __munmap (mem, size);
+	      (void) munmap (mem, size);
 
 	      return errno;
 	    }
