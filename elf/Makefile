@@ -2872,7 +2872,7 @@ $(objpfx)tst-relr-mod3b.so: $(objpfx)tst-relr-mod3b.os
 $(objpfx)tst-relr-mod3a.so: $(objpfx)tst-relr-mod3a.os \
   $(objpfx)tst-relr-mod3b.so
 	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
-	$(LDFLAGS-soname-fname) \
+	$(LDFLAGS-soname-fname) $(LDFLAGS-rpath-ORIGIN) \
 	-shared -o $@.new $(filter-out $(map-file),$^)
 	$(call after-link,$@.new)
 	mv -f $@.new $@
@@ -2891,7 +2891,7 @@ $(objpfx)tst-relr-mod4b.so: $(objpfx)tst-relr-mod4b.os
 $(objpfx)tst-relr-mod4a.so: $(objpfx)tst-relr-mod4a.os \
   $(objpfx)tst-relr-mod4b.so
 	$(LINK.o) -nostdlib -nostartfiles -Wl,-z,pack-relative-relocs \
-	$(LDFLAGS-soname-fname) \
+	$(LDFLAGS-soname-fname) $(LDFLAGS-rpath-ORIGIN) \
 	-shared -o $@.new $(filter-out $(map-file),$^)
 	$(call after-link,$@.new)
 	mv -f $@.new $@
