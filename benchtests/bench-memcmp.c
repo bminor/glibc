@@ -63,7 +63,7 @@ IMPL (MEMCMP, 1)
 
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s1,
-	     const CHAR *s2, size_t len, int exp_result)
+	     const CHAR *s2, size_t len)
 {
   size_t i, iters = INNER_LOOP_ITERS_LARGE;
   timing_t start, stop, cur;
@@ -87,9 +87,6 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
   size_t i;
   CHAR *s1, *s2;
 
-  if (len == 0)
-    return;
-
   align1 &= (4096 - CHARBYTES);
   if (align1 + (len + 1) * CHARBYTES >= page_size)
     return;
@@ -111,13 +108,16 @@ do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len,
   for (i = 0; i < len; i++)
     s1[i] = s2[i] = 1 + (23 << ((CHARBYTES - 1) * 8)) * i % MAX_CHAR;
 
-  s1[len] = align1;
-  s2[len] = align2;
-  s2[len - 1] -= exp_result;
+  if (len)
+    {
+      s1[len] = align1;
+      s2[len] = align2;
+      s2[len - 1] -= exp_result;
+    }
 
   FOR_EACH_IMPL (impl, 0)
     {
-      do_one_test (json_ctx, impl, s1, s2, len, exp_result);
+      do_one_test (json_ctx, impl, s1, s2, len);
     }
 
   json_array_end (json_ctx);
@@ -147,7 +147,7 @@ test_main (void)
   json_array_end (&json_ctx);
 
   json_array_begin (&json_ctx, "results");
-  for (i = 1; i < 32; ++i)
+  for (i = 0; i < 32; ++i)
     {
       do_test (&json_ctx, i * CHARBYTES, i * CHARBYTES, i, 0);
       do_test (&json_ctx, i * CHARBYTES, i * CHARBYTES, i, 1);
