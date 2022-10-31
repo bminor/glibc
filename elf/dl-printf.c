@@ -27,6 +27,7 @@
 #include <string.h>
 #include <sys/uio.h>
 #include <unistd.h>
+#include <intprops.h>
 
 /* Bare-bones printf implementation.  This function only knows about
    the formats and flags needed and can handle only up to 64 stripes in
@@ -36,6 +37,9 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 {
 # define NIOVMAX 64
   struct iovec iov[NIOVMAX];
+  /* Maximum size for 'd', 'u', and 'x' including padding.  */
+  enum { IFMTSIZE = INT_STRLEN_BOUND(void *) };
+  char ifmtbuf[NIOVMAX][IFMTSIZE];
   int niov = 0;
   pid_t pid = 0;
   char pidbuf[12];
@@ -100,6 +104,8 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	  if (*fmt == '*')
 	    {
 	      width = va_arg (arg, int);
+	      /* The maximum padding accepted is up to pointer size.  */
+	      assert (width < IFMTSIZE);
 	      ++fmt;
 	    }
 
@@ -160,14 +166,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 #endif
 		  }
 
-		/* We use alloca() to allocate the buffer with the most
-		   pessimistic guess for the size.  Using alloca() allows
-		   having more than one integer formatting in a call.  */
-		int size = 1 + 3 * sizeof (unsigned long int);
-		if (width + 1 > size)
-		  size = width + 1;
-		char *buf = (char *) alloca (size);
-		char *endp = &buf[size];
+		char *endp = &ifmtbuf[niov][IFMTSIZE];
 		char *cp = _itoa (num, endp, *fmt == 'x' ? 16 : 10, 0);
 
 		/* Pad to the width the user specified.  */
