@@ -45,6 +45,7 @@ The following bugs are resolved with this release:
   [29638] libc: stdlib: arc4random fallback is never used
   [29657] libc: Incorrect struct stat for 64-bit time on linux/generic
     platforms
+  [29730] broken y2038 support in fstatat on MIPS N64
 
 Version 2.36
 
