@@ -21,8 +21,6 @@
 #include <sysdep.h>
 
 #if !XSTAT_IS_XSTAT64
-# include <kstat_cp.h>
-
 int
 __fstatat (int fd, const char *file, struct stat *buf, int flag)
 {
