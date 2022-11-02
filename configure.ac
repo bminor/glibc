@@ -1137,8 +1137,8 @@ AC_SUBST(CXX_SYSINCLUDES)
 # copy of those headers in Makerules.
 if test -n "$CXX"; then
   find_cxx_header () {
-    echo "#include <$1>" | $CXX -M -MP -x c++ - 2>/dev/null \
-	 | sed -n "\,$1:,{s/:\$//;p}"
+    echo "#include <$1>" | $CXX -H -fsyntax-only -x c++ - 2>&1 \
+	 | $AWK '$1 == "."{print $2}'
   }
   CXX_CSTDLIB_HEADER="$(find_cxx_header cstdlib)"
   CXX_CMATH_HEADER="$(find_cxx_header cmath)"
