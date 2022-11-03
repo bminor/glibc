@@ -211,7 +211,7 @@ def _parse_elf_h():
             self.errors = 0
 
         def error(self, line, message):
-            errors += 1
+            self.errors += 1
             print('{}:{}: error: {}'.format(path, line, message))
 
         def note(self, line, message):
