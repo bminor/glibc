@@ -203,8 +203,7 @@ tls_fill_user_desc (union user_desc_init *desc,
 	  which is necessary since we have changed it.   */		      \
        TLS_SET_GS (_segdescr.desc.entry_number * 8 + 3);		      \
 									      \
-     _result == 0 ? NULL						      \
-     : "set_thread_area failed when setting up thread-local storage\n"; })
+     _result == 0; })
 
 # define TLS_DEFINE_INIT_TP(tp, pd)					      \
   union user_desc_init _segdescr;					      \

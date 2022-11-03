@@ -25,6 +25,7 @@
 #include <sys/param.h>
 #include <array_length.h>
 #include <pthreadP.h>
+#include <dl-call_tls_init_tp.h>
 
 #ifdef SHARED
  #error makefile bug, this file is for static only
@@ -147,14 +148,14 @@ __libc_setup_tls (void)
   tcb_offset = roundup (memsz + GLRO(dl_tls_static_surplus), max_align);
   tlsblock = _dl_early_allocate (tcb_offset + TLS_INIT_TCB_SIZE + max_align);
   if (tlsblock == NULL)
-    _startup_fatal ("Fatal glibc error: Cannot allocate TLS block\n");
+    _startup_fatal_tls_error ();
 #elif TLS_DTV_AT_TP
   tcb_offset = roundup (TLS_INIT_TCB_SIZE, align ?: 1);
   tlsblock = _dl_early_allocate (tcb_offset + memsz + max_align
 				 + TLS_PRE_TCB_SIZE
 				 + GLRO(dl_tls_static_surplus));
   if (tlsblock == NULL)
-    _startup_fatal ("Fatal glibc error: Cannot allocate TLS block\n");
+    _startup_fatal_tls_error ();
   tlsblock += TLS_PRE_TCB_SIZE;
 #else
   /* In case a model with a different layout for the TCB and DTV
@@ -191,16 +192,11 @@ __libc_setup_tls (void)
 #if TLS_TCB_AT_TP
   INSTALL_DTV ((char *) tlsblock + tcb_offset, _dl_static_dtv);
 
-  const char *lossage = TLS_INIT_TP ((char *) tlsblock + tcb_offset);
+  call_tls_init_tp ((char *) tlsblock + tcb_offset);
 #elif TLS_DTV_AT_TP
   INSTALL_DTV (tlsblock, _dl_static_dtv);
-  const char *lossage = TLS_INIT_TP (tlsblock);
-#else
-# error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+  call_tls_init_tp (tlsblock);
 #endif
-  if (__builtin_expect (lossage != NULL, 0))
-    _startup_fatal (lossage);
-  __tls_init_tp ();
 
   /* Update the executable's link map with enough information to make
      the TLS routines happy.  */

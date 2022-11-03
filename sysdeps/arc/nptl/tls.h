@@ -75,8 +75,7 @@ typedef struct
 	long result_var;					\
 	__builtin_set_thread_pointer (tcbp);     		\
 	result_var = INTERNAL_SYSCALL_CALL (arc_settls, (tcbp));\
-	INTERNAL_SYSCALL_ERROR_P (result_var)			\
-	  ? "settls syscall error" : NULL;			\
+	!INTERNAL_SYSCALL_ERROR_P (result_var);			\
    })
 
 /* Value passed to 'clone' for initialization of the thread register.  */

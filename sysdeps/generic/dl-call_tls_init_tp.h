@@ -1,5 +1,5 @@
-/* Generic definitions of functions used by static libc main startup.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+/* Invoke TLS_INIT_TP and __tls_init_tp with error handling.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,10 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* Targets should override this file if the default definitions below
-   will not work correctly very early before TLS is initialized.  */
+#include <startup.h>
+#include <tls.h>
 
-#include <stdio.h>
+static inline void
+_startup_fatal_tls_error (void)
+{
+  _startup_fatal ("Fatal glibc error: Cannot allocate TLS block\n");
+}
 
-/* Use macro instead of inline function to avoid including <stdio.h>.  */
-#define _startup_fatal(message) __libc_fatal ((message))
+static inline void
+call_tls_init_tp (void *addr)
+{
+  if (!TLS_INIT_TP (addr))
+    _startup_fatal_tls_error ();
+  __tls_init_tp ();
+}

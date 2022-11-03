@@ -89,7 +89,7 @@ register struct pthread *__thread_self __asm__("%g7");
 
 /* Code to initially initialize the thread pointer.  */
 # define TLS_INIT_TP(descr) \
-  (__thread_self = (__typeof (__thread_self)) (descr), NULL)
+  (__thread_self = (__typeof (__thread_self)) (descr), true)
 
 /* Value passed to 'clone' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd)

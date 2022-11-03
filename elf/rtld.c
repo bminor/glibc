@@ -52,6 +52,7 @@
 #include <dl-execve.h>
 #include <dl-find_object.h>
 #include <dl-audit-check.h>
+#include <dl-call_tls_init_tp.h>
 
 #include <assert.h>
 
@@ -796,10 +797,7 @@ cannot allocate TLS data structures for initial thread\n");
   GL(dl_initial_dtv) = GET_DTV (tcbp);
 
   /* And finally install it for the main thread.  */
-  const char *lossage = TLS_INIT_TP (tcbp);
-  if (__glibc_unlikely (lossage != NULL))
-    _dl_fatal_printf ("cannot set up thread-local storage: %s\n", lossage);
-  __tls_init_tp ();
+  call_tls_init_tp (tcbp);
   __rtld_tls_init_tp_called = true;
 
   return tcbp;
@@ -2348,13 +2346,7 @@ dl_main (const ElfW(Phdr) *phdr,
 
   /* And finally install it for the main thread.  */
   if (! __rtld_tls_init_tp_called)
-    {
-      const char *lossage = TLS_INIT_TP (tcbp);
-      if (__glibc_unlikely (lossage != NULL))
-	_dl_fatal_printf ("cannot set up thread-local storage: %s\n",
-			  lossage);
-      __tls_init_tp ();
-    }
+    call_tls_init_tp (tcbp);
 
   /* Make sure no new search directories have been added.  */
   assert (GLRO(dl_init_all_dirs) == GL(dl_all_dirs));

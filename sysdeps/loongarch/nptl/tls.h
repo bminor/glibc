@@ -83,7 +83,7 @@ typedef struct
 #define TLS_INIT_TP(tcbp) \
   ({ \
     __thread_self = (char *) tcbp + TLS_TCB_OFFSET; \
-    NULL; \
+    true; \
   })
 
 /* Return the address of the dtv for the current thread.  */

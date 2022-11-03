@@ -69,7 +69,7 @@ typedef struct
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(tcbp) \
-  (__builtin_set_thread_pointer ((void *)(tcbp)), NULL)
+  (__builtin_set_thread_pointer ((void *)(tcbp)), true)
 
 /* Value passed to 'clone' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd) + 1

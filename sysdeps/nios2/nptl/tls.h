@@ -88,7 +88,7 @@ register struct pthread *__thread_self __asm__("r23");
 
 /* Code to initially initialize the thread pointer.  */
 # define TLS_INIT_TP(tcbp) \
-  (__thread_self = (struct pthread *) ((char *) tcbp + TLS_TCB_OFFSET), NULL)
+  (__thread_self = (struct pthread *) ((char *) tcbp + TLS_TCB_OFFSET), true)
 
 /* Value passed to 'clone' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) \

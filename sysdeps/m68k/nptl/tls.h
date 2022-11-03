@@ -90,7 +90,7 @@ typedef struct
 									\
     _sys_result = INTERNAL_SYSCALL_CALL (set_thread_area, 		\
 				    ((void *) (tcbp)) + TLS_TCB_OFFSET); \
-    INTERNAL_SYSCALL_ERROR_P (_sys_result) ? "unknown error" : NULL; })
+    !INTERNAL_SYSCALL_ERROR_P (_sys_result); })
 
 # define TLS_DEFINE_INIT_TP(tp, pd) \
   void *tp = (void *) (pd) + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE

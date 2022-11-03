@@ -79,7 +79,7 @@ typedef struct
 
 /* Code to initially initialize the thread pointer.  */
 # define TLS_INIT_TP(tcbp) \
-  ({ __thread_self = (char*)tcbp + TLS_TCB_OFFSET; NULL; })
+  ({ __thread_self = (char*)tcbp + TLS_TCB_OFFSET; true; })
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \

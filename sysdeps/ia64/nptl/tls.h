@@ -105,7 +105,7 @@ register struct pthread *__thread_self __asm__("r13");
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(thrdescr) \
-  (__thread_self = (thrdescr), INIT_SYSINFO, NULL)
+  (__thread_self = (thrdescr), INIT_SYSINFO, true)
 
 /* Value passed to 'clone2' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) \

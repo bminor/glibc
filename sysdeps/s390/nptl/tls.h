@@ -112,7 +112,7 @@ typedef struct
      INIT_SYSINFO;							      \
 									      \
     __builtin_set_thread_pointer (_thrdescr);				      \
-    NULL;								      \
+    true;								      \
   })
 
 /* Value passed to 'clone' for initialization of the thread register.  */

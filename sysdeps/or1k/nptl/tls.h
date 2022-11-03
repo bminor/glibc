@@ -112,7 +112,7 @@ register tcbhead_t *__thread_self __asm__("r10");
    It's hard to fail this, so return NULL always.  */
 
 # define TLS_INIT_TP(tcbp) \
-  ({__thread_self = ((tcbhead_t *)tcbp + 1); NULL;})
+  ({__thread_self = ((tcbhead_t *)tcbp + 1); true;})
 
 /* Value passed to 'clone' for initialization of the thread register.  */
 # define TLS_DEFINE_INIT_TP(tp, pd) \

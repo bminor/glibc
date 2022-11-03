@@ -156,7 +156,7 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 		     "S" (_thrdescr)					      \
 		   : "memory", "cc", "r11", "cx");			      \
 									      \
-    _result ? "cannot set %fs base address for thread-local storage" : 0;     \
+    _result == 0;							      \
   })
 
 # define TLS_DEFINE_INIT_TP(tp, pd) void *tp = (pd)
