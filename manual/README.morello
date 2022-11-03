@@ -29,7 +29,9 @@ Limitations of the morello port:
 - POSIX message queue async notify does not work (pointers passed via an fd).
 - Process shared robust mutexes don't work (pointers in shared memory).
 - Purecap pldd only supports purecap ABI processes (not lp64).
-- malloc has significant overhead (locks and hash table lookup).
+- malloc bounds narrowing has large overhead (locks and hash table lookup).
+- malloc bounds narrowing can break code expecting page granularity protection.
+	Use GLIBC_TUNABLES=glibc.mem.cap_narrowing=0 env var as a workaround.
 - string functions are not optimized.
-- Exectable stacks are not supported.
+- Executable stacks are not supported.
 - Internal pointer protection and pointer mangling are disabled.
