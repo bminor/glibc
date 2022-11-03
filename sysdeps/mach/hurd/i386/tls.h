@@ -48,6 +48,9 @@ typedef struct
      compatible with the i386 Linux version.  */
   mach_port_t reply_port;      /* This thread's reply port.  */
   struct hurd_sigstate *_hurd_sigstate;
+
+  /* Used by the exception handling implementation in the dynamic loader.  */
+  struct rtld_catch *rtld_catch;
 } tcbhead_t;
 
 /* Return tcbhead_t from a TLS segment descriptor.  */

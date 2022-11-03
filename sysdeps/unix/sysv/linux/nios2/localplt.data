@@ -28,8 +28,3 @@ libc.so: __extendsfdf2
 libc.so: __floatundidf ?
 libc.so: __floatunsidf ?
 libm.so: matherr
-# The TLS-enabled version of these functions is interposed from libc.so.
-ld.so: _dl_signal_error
-ld.so: _dl_catch_error
-ld.so: _dl_signal_exception
-ld.so: _dl_catch_exception

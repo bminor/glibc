@@ -8,11 +8,6 @@ libc.so: free + REL R_386_GLOB_DAT
 libc.so: malloc + REL R_386_GLOB_DAT
 libc.so: realloc + REL R_386_GLOB_DAT
 libm.so: matherr + REL R_386_GLOB_DAT
-# The TLS-enabled version of these functions is interposed from libc.so.
-ld.so: _dl_signal_error + REL R_386_GLOB_DAT
-ld.so: _dl_catch_error + REL R_386_GLOB_DAT
-ld.so: _dl_signal_exception + REL R_386_GLOB_DAT
-ld.so: _dl_catch_exception + REL R_386_GLOB_DAT
 # The dynamic linker has its own versions of basic functions for initial loading
 # of shared libraries.  These need to be overriden by libc once loaded.
 ld.so: __open ?

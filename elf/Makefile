@@ -34,7 +34,6 @@ routines = \
   dl-addr \
   dl-addr-obj \
   dl-early_allocate \
-  dl-error \
   dl-iteratephdr \
   dl-libc \
   dl-origin \
@@ -54,6 +53,7 @@ routines = \
 dl-routines = \
   dl-call-libc-early-init \
   dl-call_fini \
+  dl-catch \
   dl-close \
   dl-debug \
   dl-debug-symbols \
@@ -134,7 +134,6 @@ rtld-routines = \
   dl-diagnostics-cpu \
   dl-diagnostics-kernel \
   dl-environ \
-  dl-error-minimal \
   dl-hwcaps \
   dl-hwcaps-subdirs \
   dl-hwcaps_split \

@@ -390,6 +390,9 @@ struct pthread
      masked.)  */
   internal_sigset_t sigmask;
 
+  /* Used by the exception handling implementation in the dynamic loader.  */
+  struct rtld_catch *rtld_catch;
+
   /* Indicates whether is a C11 thread created by thrd_creat.  */
   bool c11;
 

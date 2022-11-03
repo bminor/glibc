@@ -1,4 +1,4 @@
-/* Template for error handling for runtime dynamic linker.
+/* Exception handling in the dynamic linker.
    Copyright (C) 1995-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,16 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-/* The following macro needs to be defined before including this
-   skeleton file:
-
-   DL_ERROR_BOOTSTRAP
-
-     If 1, do not use TLS and implement _dl_signal_cerror and
-     _dl_receive_error.  If 0, TLS is used, and the variants with
-     error callbacks are not provided.  */
-
-
 #include <libintl.h>
 #include <setjmp.h>
 #include <stdbool.h>
@@ -34,39 +24,54 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <stdio.h>
+#include <tls.h>
 
 /* This structure communicates state between _dl_catch_error and
    _dl_signal_error.  */
-struct catch
+struct rtld_catch
   {
     struct dl_exception *exception; /* The exception data is stored there.  */
     volatile int *errcode;	/* Return value of _dl_signal_error.  */
     jmp_buf env;		/* longjmp here on error.  */
   };
 
-/* Multiple threads at once can use the `_dl_catch_error' function.  The
-   calls can come from `_dl_map_object_deps', `_dlerror_run', or from
-   any of the libc functionality which loads dynamic objects (NSS, iconv).
-   Therefore we have to be prepared to save the state in thread-local
-   memory.  */
-#if !DL_ERROR_BOOTSTRAP
-static __thread struct catch *catch_hook attribute_tls_model_ie;
-#else
-/* The version of this code in ld.so cannot use thread-local variables
-   and is used during bootstrap only.  */
-static struct catch *catch_hook;
+/* Multiple threads at once can use the `_dl_catch_error' function.
+   The calls can come from `_dl_map_object_deps', `_dlerror_run', or
+   from any of the libc functionality which loads dynamic objects
+   (NSS, iconv).  Therefore we have to be prepared to save the state
+   in thread-local memory.  We use THREAD_GETMEM and THREAD_SETMEM
+   instead of ELF TLS because ELF TLS is not available in the dynamic
+   loader.  Additionally, the exception handling mechanism must be
+   usable before the TCB has been set up, which is why
+   rtld_catch_notls is used if !__rtld_tls_init_tp_called.  This is
+   not needed for static builds, where initialization completes before
+   static dlopen etc. can be called.  */
+
+#if IS_IN (rtld)
+static struct rtld_catch *rtld_catch_notls;
 #endif
 
-#if DL_ERROR_BOOTSTRAP
-/* This points to a function which is called when an continuable error is
-   received.  Unlike the handling of `catch' this function may return.
-   The arguments will be the `errstring' and `objname'.
+static struct rtld_catch *
+get_catch (void)
+{
+#if IS_IN (rtld)
+  if (!__rtld_tls_init_tp_called)
+    return rtld_catch_notls;
+  else
+#endif
+    return THREAD_GETMEM (THREAD_SELF, rtld_catch);
+}
 
-   Since this functionality is not used in normal programs (only in ld.so)
-   we do not care about multi-threaded programs here.  We keep this as a
-   global variable.  */
-static receiver_fct receiver;
-#endif /* DL_ERROR_BOOTSTRAP */
+static void
+set_catch (struct rtld_catch *catch)
+{
+#if IS_IN (rtld)
+  if (!__rtld_tls_init_tp_called)
+    rtld_catch_notls = catch;
+  else
+#endif
+    THREAD_SETMEM (THREAD_SELF, rtld_catch, catch);
+}
 
 /* Lossage while resolving the program's own symbols is always fatal.  */
 static void
@@ -89,7 +94,7 @@ void
 _dl_signal_exception (int errcode, struct dl_exception *exception,
 		      const char *occasion)
 {
-  struct catch *lcatch = catch_hook;
+  struct rtld_catch *lcatch = get_catch ();
   if (lcatch != NULL)
     {
       *lcatch->exception = *exception;
@@ -101,13 +106,13 @@ _dl_signal_exception (int errcode, struct dl_exception *exception,
   else
     fatal_error (errcode, exception->objname, occasion, exception->errstring);
 }
-libc_hidden_def (_dl_signal_exception)
+rtld_hidden_def (_dl_signal_exception)
 
 void
 _dl_signal_error (int errcode, const char *objname, const char *occation,
 		  const char *errstring)
 {
-  struct catch *lcatch = catch_hook;
+  struct rtld_catch *lcatch = get_catch ();
 
   if (! errstring)
     errstring = N_("DYNAMIC LINKER BUG!!!");
@@ -123,10 +128,18 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
   else
     fatal_error (errcode, objname, occation, errstring);
 }
-libc_hidden_def (_dl_signal_error)
+rtld_hidden_def (_dl_signal_error)
 
+#if IS_IN (rtld)
+/* This points to a function which is called when a continuable error is
+   received.  Unlike the handling of `catch' this function may return.
+   The arguments will be the `errstring' and `objname'.
 
-#if DL_ERROR_BOOTSTRAP
+   Since this functionality is not used in normal programs (only in ld.so)
+   we do not care about multi-threaded programs here.  We keep this as a
+   global variable.  */
+static receiver_fct receiver;
+
 void
 _dl_signal_cexception (int errcode, struct dl_exception *exception,
 		       const char *occasion)
@@ -167,7 +180,23 @@ _dl_signal_cerror (int errcode, const char *objname, const char *occation,
   else
     _dl_signal_error (errcode, objname, occation, errstring);
 }
-#endif /* DL_ERROR_BOOTSTRAP */
+
+void
+_dl_receive_error (receiver_fct fct, void (*operate) (void *), void *args)
+{
+  struct rtld_catch *old_catch = get_catch ();
+  receiver_fct old_receiver = receiver;
+
+  /* Set the new values.  */
+  set_catch (NULL);
+  receiver = fct;
+
+  (*operate) (args);
+
+  set_catch (old_catch);
+  receiver = old_receiver;
+}
+#endif
 
 int
 _dl_catch_exception (struct dl_exception *exception,
@@ -177,11 +206,11 @@ _dl_catch_exception (struct dl_exception *exception,
      Exceptions during operate (args) are fatal.  */
   if (exception == NULL)
     {
-      struct catch *const old = catch_hook;
-      catch_hook = NULL;
+      struct rtld_catch *old_catch = get_catch ();
+      set_catch (NULL);
       operate (args);
       /* If we get here, the operation was successful.  */
-      catch_hook = old;
+      set_catch (old_catch);
       return 0;
     }
 
@@ -194,19 +223,19 @@ _dl_catch_exception (struct dl_exception *exception,
      in _dl_signal_error (before longjmp).  */
   volatile int errcode;
 
-  struct catch c;
+  struct rtld_catch c;
   /* Don't use an initializer since we don't need to clear C.env.  */
   c.exception = exception;
   c.errcode = &errcode;
 
-  struct catch *const old = catch_hook;
-  catch_hook = &c;
+  struct rtld_catch *old = get_catch ();
+  set_catch (&c);
 
   /* Do not save the signal mask.  */
   if (__builtin_expect (__sigsetjmp (c.env, 0), 0) == 0)
     {
       (*operate) (args);
-      catch_hook = old;
+      set_catch (old);
       *exception = (struct dl_exception) { NULL };
       return 0;
     }
@@ -214,10 +243,10 @@ _dl_catch_exception (struct dl_exception *exception,
   /* We get here only if we longjmp'd out of OPERATE.
      _dl_signal_exception has already stored values into
      *EXCEPTION.  */
-  catch_hook = old;
+  set_catch (old);
   return errcode;
 }
-libc_hidden_def (_dl_catch_exception)
+rtld_hidden_def (_dl_catch_exception)
 
 int
 _dl_catch_error (const char **objname, const char **errstring,
@@ -230,34 +259,3 @@ _dl_catch_error (const char **objname, const char **errstring,
   *mallocedp = exception.message_buffer == exception.errstring;
   return errorcode;
 }
-libc_hidden_def (_dl_catch_error)
-
-#if DL_ERROR_BOOTSTRAP
-void
-_dl_receive_error (receiver_fct fct, void (*operate) (void *), void *args)
-{
-  struct catch *old_catch = catch_hook;
-  receiver_fct old_receiver = receiver;
-
-  /* Set the new values.  */
-  catch_hook = NULL;
-  receiver = fct;
-
-  (*operate) (args);
-
-  catch_hook = old_catch;
-  receiver = old_receiver;
-}
-
-/* Forwarder used for initializing GLRO (_dl_catch_error).  */
-int
-_rtld_catch_error (const char **objname, const char **errstring,
-		   bool *mallocedp, void (*operate) (void *),
-		   void *args)
-{
-  /* The reference to _dl_catch_error will eventually be relocated to
-     point to the implementation in libc.so.  */
-  return _dl_catch_error (objname, errstring, mallocedp, operate, args);
-}
-
-#endif /* DL_ERROR_BOOTSTRAP */
