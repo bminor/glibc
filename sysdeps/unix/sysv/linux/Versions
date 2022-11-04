@@ -313,6 +313,11 @@ libc {
     process_madvise;
     process_mrelease;
   }
+  GLIBC_2.37 {
+%ifdef TIME64_NON_DEFAULT
+    __ppoll64_chk;
+%endif
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __syscall_rt_sigqueueinfo;

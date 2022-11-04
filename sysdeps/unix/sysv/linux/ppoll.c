@@ -67,7 +67,7 @@ __ppoll64 (struct pollfd *fds, nfds_t nfds, const struct __timespec64 *timeout,
 libc_hidden_def (__ppoll64)
 
 int
-__ppoll (struct pollfd *fds, nfds_t nfds, const struct timespec *timeout,
+ppoll (struct pollfd *fds, nfds_t nfds, const struct timespec *timeout,
          const sigset_t *sigmask)
 {
   struct __timespec64 ts64;
@@ -77,5 +77,4 @@ __ppoll (struct pollfd *fds, nfds_t nfds, const struct timespec *timeout,
   return __ppoll64 (fds, nfds, timeout ? &ts64 : NULL, sigmask);
 }
 #endif
-strong_alias (__ppoll, ppoll)
 libc_hidden_def (ppoll)

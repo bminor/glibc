@@ -43,6 +43,30 @@ poll (struct pollfd *__fds, nfds_t __nfds, int __timeout)
 
 
 #ifdef __USE_GNU
+# ifdef __USE_TIME_BITS64
+extern int __REDIRECT (__ppoll64_alias, (struct pollfd *__fds, nfds_t __nfds,
+				       const struct timespec *__timeout,
+				       const __sigset_t *__ss), __ppoll64);
+extern int __ppoll64_chk (struct pollfd *__fds, nfds_t __nfds,
+			  const struct timespec *__timeout,
+			  const __sigset_t *__ss, __SIZE_TYPE__ __fdslen)
+    __attr_access ((__write_only__, 1, 2));
+extern int __REDIRECT (__ppoll64_chk_warn, (struct pollfd *__fds, nfds_t __n,
+					    const struct timespec *__timeout,
+					    const __sigset_t *__ss,
+					    __SIZE_TYPE__ __fdslen),
+		       __ppoll64_chk)
+  __warnattr ("ppoll called with fds buffer too small file nfds entries");
+
+__fortify_function __fortified_attr_access (__write_only__, 1, 2) int
+ppoll (struct pollfd *__fds, nfds_t __nfds, const struct timespec *__timeout,
+       const __sigset_t *__ss)
+{
+  return __glibc_fortify (ppoll64, __nfds, sizeof (*__fds),
+			  __glibc_objsize (__fds),
+			  __fds, __nfds, __timeout, __ss);
+}
+# else
 extern int __REDIRECT (__ppoll_alias, (struct pollfd *__fds, nfds_t __nfds,
 				       const struct timespec *__timeout,
 				       const __sigset_t *__ss), ppoll);
@@ -65,6 +89,7 @@ ppoll (struct pollfd *__fds, nfds_t __nfds, const struct timespec *__timeout,
 			  __glibc_objsize (__fds),
 			  __fds, __nfds, __timeout, __ss);
 }
+# endif
 #endif
 
 __END_DECLS
