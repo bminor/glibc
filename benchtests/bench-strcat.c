@@ -35,6 +35,7 @@
 # define SMALL_CHAR 1273
 #endif /* WIDE */
 
+#include "json-lib.h"
 
 typedef CHAR *(*proto_t) (CHAR *, const CHAR *);
 
@@ -49,7 +50,7 @@ IMPL (STRCAT, 1)
 IMPL (generic_strcat, 0)
 
 static void
-do_one_test (impl_t *impl, CHAR *dst, const CHAR *src)
+do_one_test (json_ctx_t *json_ctx, impl_t *impl, CHAR *dst, const CHAR *src)
 {
   size_t k = STRLEN (dst), i, iters = INNER_LOOP_ITERS_LARGE;
   timing_t start, stop, cur;
@@ -64,7 +65,8 @@ do_one_test (impl_t *impl, CHAR *dst, const CHAR *src)
 
   if (STRCMP (dst + k, src) != 0)
     {
-      error (0, 0, "Wrong result in function %s dst \"%" sfmt "\" src \"%" sfmt "\"",
+      error (0, 0,
+	     "Wrong result in function %s dst \"%" sfmt "\" src \"%" sfmt "\"",
 	     impl->name, dst, src);
       ret = 1;
       return;
@@ -80,11 +82,12 @@ do_one_test (impl_t *impl, CHAR *dst, const CHAR *src)
 
   TIMING_DIFF (cur, start, stop);
 
-  TIMING_PRINT_MEAN ((double) cur, (double) iters);
+  json_element_double (json_ctx, (double) cur / (double) iters);
 }
 
 static void
-do_test (size_t align1, size_t align2, size_t len1, size_t len2, int max_char)
+do_test (json_ctx_t *json_ctx, size_t align1, size_t align2, size_t len1,
+	 size_t len2, int max_char)
 {
   size_t i;
   CHAR *s1, *s2;
@@ -107,52 +110,111 @@ do_test (size_t align1, size_t align2, size_t len1, size_t len2, int max_char)
   for (i = 0; i < len2; i++)
     s2[i] = 32 + 23 * i % (max_char - 32);
 
-  printf ("Length %4zd/%4zd, alignment %2zd/%2zd:", len1, len2, align1, align2);
+  json_element_object_begin (json_ctx);
+  json_attr_uint (json_ctx, "align1", align1);
+  json_attr_uint (json_ctx, "align2", align2);
+  json_attr_uint (json_ctx, "len1", len1);
+  json_attr_uint (json_ctx, "len2", len2);
+  json_attr_uint (json_ctx, "max_char", max_char);
+
+  json_array_begin (json_ctx, "timings");
 
   FOR_EACH_IMPL (impl, 0)
     {
       s2[len2] = '\0';
-      do_one_test (impl, s2, s1);
+      do_one_test (json_ctx, impl, s2, s1);
     }
 
-  putchar ('\n');
+  json_array_end (json_ctx);
+  json_element_object_end (json_ctx);
 }
 
 int
 test_main (void)
 {
+  json_ctx_t json_ctx;
   size_t i;
 
   test_init ();
 
-  printf ("%28s", "");
+  test_init ();
+
+  json_init (&json_ctx, 0, stdout);
+
+  json_document_begin (&json_ctx);
+  json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
+
+  json_attr_object_begin (&json_ctx, "functions");
+  json_attr_object_begin (&json_ctx, TEST_NAME);
+  json_attr_string (&json_ctx, "bench-variant", "");
+
+  json_array_begin (&json_ctx, "ifuncs");
   FOR_EACH_IMPL (impl, 0)
-    printf ("\t%s", impl->name);
-  putchar ('\n');
+    json_element_string (&json_ctx, impl->name);
+  json_array_end (&json_ctx);
+
+  json_array_begin (&json_ctx, "results");
 
   for (i = 0; i < 16; ++i)
     {
-      do_test (0, 0, i, i, SMALL_CHAR);
-      do_test (0, 0, i, i, BIG_CHAR);
-      do_test (0, i, i, i, SMALL_CHAR);
-      do_test (i, 0, i, i, BIG_CHAR);
+      do_test (&json_ctx, 0, 0, i, i, SMALL_CHAR);
+      do_test (&json_ctx, 0, 0, i, i, BIG_CHAR);
+      do_test (&json_ctx, 0, i, i, i, SMALL_CHAR);
+      do_test (&json_ctx, i, 0, i, i, BIG_CHAR);
     }
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (0, 0, 8 << i, 8 << i, SMALL_CHAR);
-      do_test (8 - i, 2 * i, 8 << i, 8 << i, SMALL_CHAR);
-      do_test (0, 0, 8 << i, 2 << i, SMALL_CHAR);
-      do_test (8 - i, 2 * i, 8 << i, 2 << i, SMALL_CHAR);
+      do_test (&json_ctx, 0, 0, 8 << i, 8 << i, SMALL_CHAR);
+      do_test (&json_ctx, 8 - i, 2 * i, 8 << i, 8 << i, SMALL_CHAR);
+      do_test (&json_ctx, 0, 0, 8 << i, 2 << i, SMALL_CHAR);
+      do_test (&json_ctx, 8 - i, 2 * i, 8 << i, 2 << i, SMALL_CHAR);
     }
 
   for (i = 1; i < 8; ++i)
     {
-      do_test (i, 2 * i, 8 << i, 1, SMALL_CHAR);
-      do_test (2 * i, i, 8 << i, 1, BIG_CHAR);
-      do_test (i, i, 8 << i, 10, SMALL_CHAR);
-      do_test (i, i, 8 << i, 10, BIG_CHAR);
+      do_test (&json_ctx, i, 2 * i, 8 << i, 1, SMALL_CHAR);
+      do_test (&json_ctx, 2 * i, i, 8 << i, 1, BIG_CHAR);
+      do_test (&json_ctx, i, i, 8 << i, 10, SMALL_CHAR);
+      do_test (&json_ctx, i, i, 8 << i, 10, BIG_CHAR);
     }
+
+  for (i = 32; i < 256; i += 32)
+    {
+      do_test (&json_ctx, 1, 0, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, 0, i, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, 0, 0, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, i, i, i, 31, SMALL_CHAR);
+    }
+
+  for (; i < 512; i += 64)
+    {
+      do_test (&json_ctx, 1, 0, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, 0, i, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, 0, 0, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, i, i, i, 31, SMALL_CHAR);
+    }
+
+  for (; i < 1024; i += 128)
+    {
+      do_test (&json_ctx, 1, 0, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, 0, i, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, 0, 0, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, i, i, i, 31, SMALL_CHAR);
+    }
+
+  for (; i < 2048; i += 256)
+    {
+      do_test (&json_ctx, 1, 0, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, 0, i, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, 0, 0, i, 31, SMALL_CHAR);
+      do_test (&json_ctx, i, i, i, 31, SMALL_CHAR);
+    }
+
+  json_array_end (&json_ctx);
+  json_attr_object_end (&json_ctx);
+  json_attr_object_end (&json_ctx);
+  json_document_end (&json_ctx);
 
   return ret;
 }
