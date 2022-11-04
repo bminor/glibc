@@ -19,7 +19,14 @@ typedef int (*foo_p) (void);
 #endif
 
 foo_p foo_ptr = foo;
+
+/* Address-significant access to protected symbols is not supported in
+   position-dependent mode on several architectures because GCC
+   generates relocations that assume that the address is local to the
+   main program.  */
+#ifdef __PIE__
 foo_p foo_procted_ptr = foo_protected;
+#endif
 
 extern foo_p get_foo_p (void);
 extern foo_p get_foo_hidden_p (void);
@@ -37,12 +44,16 @@ main (void)
   if ((*foo_ptr) () != -1)
     abort ();
 
+#ifdef __PIE__
   if (foo_procted_ptr != foo_protected)
     abort ();
+#endif
   if (foo_protected () != 0)
     abort ();
+#ifdef __PIE__
   if ((*foo_procted_ptr) () != 0)
     abort ();
+#endif
 
   p = get_foo_p ();
   if (p != foo)
@@ -55,8 +66,10 @@ main (void)
     abort ();
 
   p = get_foo_protected_p ();
+#ifdef __PIE__
   if (p != foo_protected)
     abort ();
+#endif
   if (ret_foo_protected != 0 || (*p) () != ret_foo_protected)
     abort ();
 
