@@ -110,6 +110,8 @@ _dl_make_tlsdesc_dynamic (struct link_map *map, size_t ti_offset)
     }
 
   *entry = td = malloc (sizeof (struct tlsdesc_dynamic_arg));
+  if (! td)
+    return 0;
   /* This may be higher than the map's generation, but it doesn't
      matter much.  Worst case, we'll have one extra DTV update per
      thread.  */
