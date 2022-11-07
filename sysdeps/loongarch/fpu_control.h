@@ -97,6 +97,23 @@ extern void __loongarch_fpu_setcw (fpu_control_t) __THROW;
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;
 
+# define _FCLASS_SNAN     (1 << 0)
+# define _FCLASS_QNAN     (1 << 1)
+# define _FCLASS_MINF     (1 << 2)
+# define _FCLASS_MNORM    (1 << 3)
+# define _FCLASS_MSUBNORM (1 << 4)
+# define _FCLASS_MZERO    (1 << 5)
+# define _FCLASS_PINF     (1 << 6)
+# define _FCLASS_PNORM    (1 << 7)
+# define _FCLASS_PSUBNORM (1 << 8)
+# define _FCLASS_PZERO    (1 << 9)
+
+# define _FCLASS_ZERO     (_FCLASS_MZERO | _FCLASS_PZERO)
+# define _FCLASS_SUBNORM  (_FCLASS_MSUBNORM | _FCLASS_PSUBNORM)
+# define _FCLASS_NORM     (_FCLASS_MNORM | _FCLASS_PNORM)
+# define _FCLASS_INF      (_FCLASS_MINF | _FCLASS_PINF)
+# define _FCLASS_NAN      (_FCLASS_SNAN | _FCLASS_QNAN)
+
 #endif /* __loongarch_soft_float */
 
 #endif /* fpu_control.h */
