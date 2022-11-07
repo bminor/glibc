@@ -1,4 +1,5 @@
-/* Copyright (C) 2022 Free Software Foundation, Inc.
+/* Implementation of sigwaitinfo function from POSIX.1b.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +17,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <signal.h>
-#include <hurd.h>
+#include <stddef.h>
 
-/* Select any of pending signals from SET or wait for any to arrive.  */
 int
-__sigwait (const sigset_t *set, int *sig)
+__sigwaitinfo (const sigset_t *set, siginfo_t *info)
 {
-  int ret;
-
-  ret = __sigtimedwait (set, NULL, NULL);
-
-  if (ret < 0)
-    return -1;
-
-  if (!ret)
-    return __hurd_fail(EAGAIN);
-
-  *sig = ret;
-  return 0;
+  return __sigtimedwait (set, info, NULL);
 }
-libc_hidden_def (__sigwait)
-weak_alias (__sigwait, sigwait)
+libc_hidden_def (__sigwaitinfo)
+weak_alias (__sigwaitinfo, sigwaitinfo)
