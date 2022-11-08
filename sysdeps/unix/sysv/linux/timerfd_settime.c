@@ -33,8 +33,8 @@ __timerfd_settime64 (int fd, int flags, const struct __itimerspec64 *value,
 #ifdef __ASSUME_TIME64_SYSCALLS
   return INLINE_SYSCALL_CALL (timerfd_settime64, fd, flags, value, ovalue);
 #else
-  bool need_time64 = !in_time_t_range (value->it_value.tv_sec)
-		     || !in_time_t_range (value->it_interval.tv_sec);
+  bool need_time64 = !in_int32_t_range (value->it_value.tv_sec)
+		     || !in_int32_t_range (value->it_interval.tv_sec);
   if (need_time64)
     {
       int r = INLINE_SYSCALL_CALL (timerfd_settime64, fd, flags, value,

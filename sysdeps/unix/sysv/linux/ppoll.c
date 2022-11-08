@@ -43,7 +43,7 @@ __ppoll64 (struct pollfd *fds, nfds_t nfds, const struct __timespec64 *timeout,
 			 __NSIG_BYTES);
 #else
   int ret;
-  bool need_time64 = timeout != NULL && !in_time_t_range (timeout->tv_sec);
+  bool need_time64 = timeout != NULL && !in_int32_t_range (timeout->tv_sec);
   if (need_time64)
     {
       ret = SYSCALL_CANCEL (ppoll_time64, fds, nfds, timeout, sigmask,

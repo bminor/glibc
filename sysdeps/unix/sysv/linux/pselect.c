@@ -56,7 +56,7 @@ __pselect64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
   return pselect64_syscall (nfds, readfds, writefds, exceptfds, timeout,
 			    sigmask);
 #else
-  bool need_time64 = timeout != NULL && !in_time_t_range (timeout->tv_sec);
+  bool need_time64 = timeout != NULL && !in_int32_t_range (timeout->tv_sec);
   if (need_time64)
     {
       int r = pselect64_syscall (nfds, readfds, writefds, exceptfds, timeout,

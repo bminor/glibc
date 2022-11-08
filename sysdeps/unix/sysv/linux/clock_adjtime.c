@@ -35,7 +35,7 @@ __clock_adjtime64 (const clockid_t clock_id, struct __timex64 *tx64)
     return r;
 
   if (tx64->modes & ADJ_SETOFFSET
-      && ! in_time_t_range (tx64->time.tv_sec))
+      && ! in_int32_t_range (tx64->time.tv_sec))
     {
       __set_errno (EOVERFLOW);
       return -1;

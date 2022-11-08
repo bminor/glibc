@@ -347,9 +347,17 @@ libc_hidden_proto (__time64)
 /* Check whether T fits in int32_t, assume all usages are for
    sizeof(time_t) == 32.  */
 static inline bool
-in_time_t_range (__time64_t t)
+in_int32_t_range (__time64_t t)
 {
   int32_t s = t;
+  return s == t;
+}
+
+/* Check whether T fits in time_t.  */
+static inline bool
+in_time_t_range (__time64_t t)
+{
+  time_t s = t;
   return s == t;
 }
 

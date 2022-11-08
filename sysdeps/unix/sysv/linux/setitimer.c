@@ -32,8 +32,8 @@ __setitimer64 (__itimer_which_t which,
 #else
   struct __itimerval32 new_value_32;
 
-  if (! in_time_t_range (new_value->it_interval.tv_sec)
-      || ! in_time_t_range (new_value->it_value.tv_sec))
+  if (! in_int32_t_range (new_value->it_interval.tv_sec)
+      || ! in_int32_t_range (new_value->it_value.tv_sec))
     {
       __set_errno (EOVERFLOW);
       return -1;

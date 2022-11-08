@@ -42,7 +42,7 @@ __semtimedop64 (int semid, struct sembuf *sops, size_t nsops,
 #ifdef __ASSUME_TIME64_SYSCALLS
   return semtimedop_syscall (semid, sops, nsops, timeout);
 #else
-  bool need_time64 = timeout != NULL && !in_time_t_range (timeout->tv_sec);
+  bool need_time64 = timeout != NULL && !in_int32_t_range (timeout->tv_sec);
   if (need_time64)
     {
       int r = semtimedop_syscall (semid, sops, nsops, timeout);

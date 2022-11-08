@@ -36,7 +36,7 @@ ___mq_timedreceive_time64 (mqd_t mqdes, char *__restrict msg_ptr, size_t msg_len
 			 msg_prio, abs_timeout);
 #else
   bool need_time64 = abs_timeout != NULL
-		     && !in_time_t_range (abs_timeout->tv_sec);
+		     && !in_int32_t_range (abs_timeout->tv_sec);
   if (need_time64)
     {
       int r = SYSCALL_CANCEL (mq_timedreceive_time64, mqdes, msg_ptr, msg_len,

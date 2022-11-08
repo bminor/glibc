@@ -41,7 +41,7 @@ __clock_settime64 (clockid_t clock_id, const struct __timespec64 *tp)
   if (ret == 0 || errno != ENOSYS)
     return ret;
 
-  if (! in_time_t_range (tp->tv_sec))
+  if (! in_int32_t_range (tp->tv_sec))
     {
       __set_errno (EOVERFLOW);
       return -1;

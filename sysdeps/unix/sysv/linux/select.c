@@ -72,7 +72,7 @@ __select64 (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
     TIMESPEC_TO_TIMEVAL (timeout, pts64);
   return r;
 #else
-  bool need_time64 = timeout != NULL && !in_time_t_range (timeout->tv_sec);
+  bool need_time64 = timeout != NULL && !in_int32_t_range (timeout->tv_sec);
   if (need_time64)
     {
       int r = SYSCALL_CANCEL (pselect6_time64, nfds, readfds, writefds,

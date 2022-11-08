@@ -35,7 +35,7 @@ recvmmsg_syscall (int fd, struct mmsghdr *vmessages, unsigned int vlen,
   struct timespec ts32, *pts32 = NULL;
   if (timeout != NULL)
     {
-      if (! in_time_t_range (timeout->tv_sec))
+      if (! in_int32_t_range (timeout->tv_sec))
 	{
 	  __set_errno (EINVAL);
 	  return -1;
