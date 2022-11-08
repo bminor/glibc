@@ -85,11 +85,19 @@ shmctl_syscall (int shmid, int cmd, shmctl_arg_t *buf)
 int
 __shmctl64 (int shmid, int cmd, struct __shmid64_ds *buf)
 {
-#if __IPC_TIME64
+#if IPC_CTL_NEED_TRANSLATION
+# if __IPC_TIME64
   struct kernel_shmid64_ds kshmid, *arg = NULL;
-#else
+# else
   shmctl_arg_t *arg;
-#endif
+# endif
+
+  /* Some applications pass the __IPC_64 flag in cmd, to invoke
+     previously unsupported commands back when there was no EINVAL
+     error checking in glibc.  Mask the flag for the switch statements
+     below.  shmctl_syscall adds back the __IPC_64 flag for the actual
+     system call.  */
+  cmd &= ~__IPC_64;
 
   switch (cmd)
     {
@@ -103,19 +111,19 @@ __shmctl64 (int shmid, int cmd, struct __shmid64_ds *buf)
     case IPC_STAT:
     case SHM_STAT:
     case SHM_STAT_ANY:
-#if __IPC_TIME64
+# if __IPC_TIME64
       if (buf != NULL)
 	{
 	  shmid64_to_kshmid64 (buf, &kshmid);
 	  arg = &kshmid;
 	}
-# ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
+#  ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
       if (cmd == IPC_SET)
         arg->shm_perm.mode *= 0x10000U;
-# endif
-#else
+#  endif
+# else
       arg = buf;
-#endif
+# endif
       break;
 
     case IPC_INFO:
@@ -140,21 +148,25 @@ __shmctl64 (int shmid, int cmd, struct __shmid64_ds *buf)
       case IPC_STAT:
       case SHM_STAT:
       case SHM_STAT_ANY:
-#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
+# ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
         arg->shm_perm.mode >>= 16;
-#else
+# else
       /* Old Linux kernel versions might not clear the mode padding.  */
       if (sizeof ((struct shmid_ds){0}.shm_perm.mode)
 	  != sizeof (__kernel_mode_t))
 	arg->shm_perm.mode &= 0xFFFF;
-#endif
+# endif
 
-#if __IPC_TIME64
+# if __IPC_TIME64
       kshmid64_to_shmid64 (arg, buf);
-#endif
+# endif
     }
 
   return ret;
+
+#else /* !IPC_CTL_NEED_TRANSLATION */
+  return shmctl_syscall (shmid, cmd, buf);
+#endif
 }
 #if __TIMESIZE != 64
 libc_hidden_def (__shmctl64)
