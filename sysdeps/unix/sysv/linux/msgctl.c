@@ -85,11 +85,19 @@ msgctl_syscall (int msqid, int cmd, msgctl_arg_t *buf)
 int
 __msgctl64 (int msqid, int cmd, struct __msqid64_ds *buf)
 {
-#if __IPC_TIME64
+#if IPC_CTL_NEED_TRANSLATION
+# if __IPC_TIME64
   struct kernel_msqid64_ds ksemid, *arg = NULL;
-#else
+# else
   msgctl_arg_t *arg;
-#endif
+# endif
+
+  /* Some applications pass the __IPC_64 flag in cmd, to invoke
+     previously unsupported commands back when there was no EINVAL
+     error checking in glibc.  Mask the flag for the switch statements
+     below.  msgctl_syscall adds back the __IPC_64 flag for the actual
+     system call.  */
+  cmd &= ~__IPC_64;
 
   switch (cmd)
     {
@@ -101,19 +109,19 @@ __msgctl64 (int msqid, int cmd, struct __msqid64_ds *buf)
     case IPC_STAT:
     case MSG_STAT:
     case MSG_STAT_ANY:
-#if __IPC_TIME64
+# if __IPC_TIME64
       if (buf != NULL)
 	{
 	  msqid64_to_kmsqid64 (buf, &ksemid);
 	  arg = &ksemid;
 	}
-# ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
+#  ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
       if (cmd == IPC_SET)
 	arg->msg_perm.mode *= 0x10000U;
-# endif
-#else
+#  endif
+# else
       arg = buf;
-#endif
+# endif
       break;
 
     case IPC_INFO:
@@ -137,21 +145,25 @@ __msgctl64 (int msqid, int cmd, struct __msqid64_ds *buf)
     case IPC_STAT:
     case MSG_STAT:
     case MSG_STAT_ANY:
-#ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
+# ifdef __ASSUME_SYSVIPC_BROKEN_MODE_T
       arg->msg_perm.mode >>= 16;
-#else
+# else
       /* Old Linux kernel versions might not clear the mode padding.  */
       if (sizeof ((struct msqid_ds){0}.msg_perm.mode)
           != sizeof (__kernel_mode_t))
 	arg->msg_perm.mode &= 0xFFFF;
-#endif
+# endif
 
-#if __IPC_TIME64
+# if __IPC_TIME64
       kmsqid64_to_msqid64 (arg, buf);
-#endif
+# endif
     }
 
   return ret;
+
+#else /* !IPC_CTL_NEED_TRANSLATION */
+  return msgctl_syscall (msqid, cmd, buf);
+#endif
 }
 #if __TIMESIZE != 64
 libc_hidden_def (__msgctl64)

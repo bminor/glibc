@@ -140,6 +140,13 @@ __semctl64 (int semid, int semnum, int cmd, ...)
   union semun64 arg64 = { 0 };
   va_list ap;
 
+  /* Some applications pass the __IPC_64 flag in cmd, to invoke
+     previously unsupported commands back when there was no EINVAL
+     error checking in glibc.  Mask the flag for the switch statements
+     below.  semctl_syscall adds back the __IPC_64 flag for the actual
+     system call.  */
+  cmd &= ~__IPC_64;
+
   /* Get the argument only if required.  */
   switch (cmd)
     {
