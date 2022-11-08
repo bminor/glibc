@@ -63,4 +63,10 @@ struct __old_ipc_perm
 # define __IPC_TIME64 0
 #endif
 
+#if __IPC_TIME64 || defined __ASSUME_SYSVIPC_BROKEN_MODE_T
+# define IPC_CTL_NEED_TRANSLATION 1
+#else
+# define IPC_CTL_NEED_TRANSLATION 0
+#endif
+
 #include <ipc_ops.h>
