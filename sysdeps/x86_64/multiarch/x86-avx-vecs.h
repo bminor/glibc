@@ -27,7 +27,8 @@
 #define VEC_SIZE			32
 #include "x86-vec-macros.h"
 
-#define USE_WITH_AVX		1
+#define USE_WITH_AVX2		1
+
 #define SECTION(p)			p##.avx
 
 /* 4-byte mov instructions with AVX2.  */

@@ -3,6 +3,5 @@
 #endif
 
 #define USE_AS_STPCPY
-#define USE_AS_STRNCPY
-#define STRCPY	STPNCPY
-#include "strcpy-avx2.S"
+#define STRNCPY	STPNCPY
+#include "strncpy-avx2.S"
