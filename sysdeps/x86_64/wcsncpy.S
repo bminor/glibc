@@ -1,4 +1,4 @@
-/* wcscpy.
+/* ISA level static dispatch for wcsncpy .S files.
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,11 +16,25 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* wcsncpy non-multiarch build is split into two files,
+   wcsncpy-generic.c and wcsncpy.S. The wcsncpy-generic.c build is
+   for ISA level <= 1 and just uses multiarch/wcsncpy-generic.c.
+   This must be split into two files because we cannot include C
+   code from assembly or vice versa.  */
 
 #include <isa-level.h>
-#if ISA_SHOULD_BUILD (3)
 
-# define WCSCPY  __wcscpy_generic
-# include <wcsmbs/wcscpy.c>
+#if MINIMUM_X86_ISA_LEVEL >= 4
 
+# define WCSNCPY	__wcsncpy
+
+# define DEFAULT_IMPL_V4	"multiarch/wcsncpy-evex.S"
+/* isa-default-impl.h expects DEFAULT_IMPL_V1 to be defined but it
+   should never be used from here.  */
+# define DEFAULT_IMPL_V1	"ERROR -- Invalid ISA IMPL"
+
+# include "isa-default-impl.h"
+
+weak_alias (__wcsncpy, wcsncpy)
+libc_hidden_def (__wcsncpy)
 #endif

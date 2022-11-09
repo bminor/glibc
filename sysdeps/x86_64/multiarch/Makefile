@@ -131,6 +131,12 @@ endif
 
 ifeq ($(subdir),wcsmbs)
 sysdep_routines += \
+  wcpcpy-evex \
+  wcpcpy-generic \
+  wcpncpy-evex \
+  wcpncpy-generic \
+  wcscat-evex \
+  wcscat-generic \
   wcschr-avx2 \
   wcschr-avx2-rtm \
   wcschr-evex \
@@ -140,6 +146,8 @@ sysdep_routines += \
   wcscmp-avx2-rtm \
   wcscmp-evex \
   wcscmp-sse2 \
+  wcscpy-evex \
+  wcscpy-generic \
   wcscpy-ssse3 \
   wcslen-avx2 \
   wcslen-avx2-rtm \
@@ -147,9 +155,13 @@ sysdep_routines += \
   wcslen-evex512 \
   wcslen-sse2 \
   wcslen-sse4_1 \
+  wcsncat-evex \
+  wcsncat-generic \
   wcsncmp-avx2 \
   wcsncmp-avx2-rtm \
   wcsncmp-evex \
+  wcsncpy-evex \
+  wcsncpy-generic \
   wcsnlen-avx2 \
   wcsnlen-avx2-rtm \
   wcsnlen-evex \
@@ -163,8 +175,8 @@ sysdep_routines += \
   wmemchr-avx2 \
   wmemchr-avx2-rtm \
   wmemchr-evex \
-  wmemchr-evex512 \
   wmemchr-evex-rtm \
+  wmemchr-evex512 \
   wmemchr-sse2 \
   wmemcmp-avx2-movbe \
   wmemcmp-avx2-movbe-rtm \

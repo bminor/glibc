@@ -1,4 +1,4 @@
-/* wcscpy dispatch for RTLD and non-multiarch .c files
+/* ISA level static dispatch for wcscpy .S files.
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -28,6 +28,7 @@
 
 # define WCSCPY	__wcscpy
 
+# define DEFAULT_IMPL_V4	"multiarch/wcscpy-evex.S"
 # define DEFAULT_IMPL_V2	"multiarch/wcscpy-ssse3.S"
 /* isa-default-impl.h expects DEFAULT_IMPL_V1 to be defined but it
    should never be used from here.  */

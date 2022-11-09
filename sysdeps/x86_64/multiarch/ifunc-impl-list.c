@@ -901,15 +901,72 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 
   /* Support sysdeps/x86_64/multiarch/wcscpy.c.  */
   IFUNC_IMPL (i, name, wcscpy,
-	      /* ISA V4 wrapper for SSSE3 implementation because
-	         the SSSE3 implementation is also used at ISA
-	         level 3/4.  */
 	      X86_IFUNC_IMPL_ADD_V4 (array, i, wcscpy,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcscpy_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcscpy,
 				     CPU_FEATURE_USABLE (SSSE3),
 				     __wcscpy_ssse3)
 	      X86_IFUNC_IMPL_ADD_V1 (array, i, wcscpy,
 				     1,
 				     __wcscpy_generic))
+
+  /* Support sysdeps/x86_64/multiarch/wcsncpy.c.  */
+  IFUNC_IMPL (i, name, wcsncpy,
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, wcsncpy,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcsncpy_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcpncpy,
+				     1,
+				     __wcsncpy_generic))
+
+  /* Support sysdeps/x86_64/multiarch/wcpcpy.c.  */
+  IFUNC_IMPL (i, name, wcpcpy,
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, wcpcpy,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcpcpy_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcpcpy,
+				     1,
+				     __wcpcpy_generic))
+
+  /* Support sysdeps/x86_64/multiarch/wcpncpy.c.  */
+  IFUNC_IMPL (i, name, wcpncpy,
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, wcpncpy,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcpncpy_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcsncpy,
+				     1,
+				     __wcpncpy_generic))
+
+  /* Support sysdeps/x86_64/multiarch/wcscat.c.  */
+  IFUNC_IMPL (i, name, wcscat,
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, wcscat,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcscat_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcscat,
+				     1,
+				     __wcscat_generic))
+
+  /* Support sysdeps/x86_64/multiarch/wcsncat.c.  */
+  IFUNC_IMPL (i, name, wcsncat,
+	      X86_IFUNC_IMPL_ADD_V4 (array, i, wcsncat,
+				     (CPU_FEATURE_USABLE (AVX512VL)
+				      && CPU_FEATURE_USABLE (AVX512BW)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcsncat_evex)
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcsncat,
+				     1,
+				     __wcsncat_generic))
 
   /* Support sysdeps/x86_64/multiarch/wcslen.c.  */
   IFUNC_IMPL (i, name, wcslen,

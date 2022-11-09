@@ -188,8 +188,13 @@ endif
 ifeq ($(subdir),wcsmbs)
 
 sysdep_routines += \
+  wcpcpy-generic \
+  wcpncpy-generic \
+  wcscat-generic \
   wcscpy-generic \
+  wcsncat-generic \
   wcsncmp-generic \
+  wcsncpy-generic \
   wcsnlen-generic \
 # sysdep_routines
 

@@ -1,4 +1,4 @@
-/* wcscpy.
+/* wcsncat.
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,11 +16,12 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-
+/* We always need to build this implementation as strspn-sse4 needs to
+   be able to fallback to it.  */
 #include <isa-level.h>
 #if ISA_SHOULD_BUILD (3)
 
-# define WCSCPY  __wcscpy_generic
-# include <wcsmbs/wcscpy.c>
+# define WCSNCAT __wcsncat_generic
+# include <wcsmbs/wcsncat.c>
 
 #endif

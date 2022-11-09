@@ -1,4 +1,5 @@
-/* wcscpy.
+/* Multiple versions of wcscat.
+   All versions must be listed in ifunc-impl-list.c.
    Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,11 +17,21 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+/* Define multiple versions only for the definition in libc.  */
+#if IS_IN (libc)
+# define __wcscat __redirect_wcscat
+# include <wchar.h>
+# undef __wcscat
 
-#include <isa-level.h>
-#if ISA_SHOULD_BUILD (3)
+# define SYMBOL_NAME wcscat
+# include <init-arch.h>
 
-# define WCSCPY  __wcscpy_generic
-# include <wcsmbs/wcscpy.c>
+# include "ifunc-wcs.h"
 
+libc_ifunc_redirected (__redirect_wcscat, __wcscat, IFUNC_SELECTOR ());
+weak_alias (__wcscat, wcscat)
+# ifdef SHARED
+__hidden_ver1 (__wcscat, __GI___wcscat, __redirect_wcscat)
+  __attribute__((visibility ("hidden"))) __attribute_copy__ (wcscat);
+# endif
 #endif
