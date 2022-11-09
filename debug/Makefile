@@ -226,7 +226,7 @@ tests += tst-chk-cancel
 endif
 
 ifeq (,$(CXX))
-tests-unsupported = $(tests-cc-def-chk) $(test-cc-time64-chk)
+tests-unsupported = $(tests-cc-def-chk) $(tests-cc-time64-chk)
 endif
 
 extra-libs = libpcprofile
