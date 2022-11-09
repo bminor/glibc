@@ -33,7 +33,7 @@ export LC_ALL
 set -e
 
 # Get the charmap.
-./tst-table-charmap.sh ${charmap:-$charset} \
+./tst-table-charmap.sh \
   < ../localedata/charmaps/${charmap:-$charset} \
   > ${objpfx}tst-${charset}.charmap.table
 # When the charset is GB18030, truncate this table because for this encoding,

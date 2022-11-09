@@ -32,7 +32,7 @@
 /* The tables in this file are generated from the charmap.
    In a first step, the charmap is converted to a simple table format:
 
-      ./tst-table-charmap.sh GB18030 < ../localedata/charmaps/GB18030 \
+      ./tst-table-charmap.sh < ../localedata/charmaps/GB18030 \
       > GB18030.table
 */
 
