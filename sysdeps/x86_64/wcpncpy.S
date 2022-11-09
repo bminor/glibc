@@ -24,11 +24,12 @@
 
 #include <isa-level.h>
 
-#if MINIMUM_X86_ISA_LEVEL >= 4
+#if MINIMUM_X86_ISA_LEVEL >= 3
 
 # define WCPNCPY	__wcpncpy
 
 # define DEFAULT_IMPL_V4	"multiarch/wcpncpy-evex.S"
+# define DEFAULT_IMPL_V3	"multiarch/wcpncpy-avx2.S"
 /* isa-default-impl.h expects DEFAULT_IMPL_V1 to be defined but it
    should never be used from here.  */
 # define DEFAULT_IMPL_V1	"ERROR -- Invalid ISA IMPL"

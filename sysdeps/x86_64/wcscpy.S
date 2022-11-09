@@ -29,6 +29,7 @@
 # define WCSCPY	__wcscpy
 
 # define DEFAULT_IMPL_V4	"multiarch/wcscpy-evex.S"
+# define DEFAULT_IMPL_V3	"multiarch/wcscpy-avx2.S"
 # define DEFAULT_IMPL_V2	"multiarch/wcscpy-ssse3.S"
 /* isa-default-impl.h expects DEFAULT_IMPL_V1 to be defined but it
    should never be used from here.  */

@@ -131,10 +131,13 @@ endif
 
 ifeq ($(subdir),wcsmbs)
 sysdep_routines += \
+  wcpcpy-avx2 \
   wcpcpy-evex \
   wcpcpy-generic \
+  wcpncpy-avx2 \
   wcpncpy-evex \
   wcpncpy-generic \
+  wcscat-avx2 \
   wcscat-evex \
   wcscat-generic \
   wcschr-avx2 \
@@ -146,6 +149,7 @@ sysdep_routines += \
   wcscmp-avx2-rtm \
   wcscmp-evex \
   wcscmp-sse2 \
+  wcscpy-avx2 \
   wcscpy-evex \
   wcscpy-generic \
   wcscpy-ssse3 \
@@ -155,11 +159,13 @@ sysdep_routines += \
   wcslen-evex512 \
   wcslen-sse2 \
   wcslen-sse4_1 \
+  wcsncat-avx2 \
   wcsncat-evex \
   wcsncat-generic \
   wcsncmp-avx2 \
   wcsncmp-avx2-rtm \
   wcsncmp-evex \
+  wcsncpy-avx2 \
   wcsncpy-evex \
   wcsncpy-generic \
   wcsnlen-avx2 \

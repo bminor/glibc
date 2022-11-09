@@ -24,7 +24,7 @@
 
 #include <isa-level.h>
 
-#if MINIMUM_X86_ISA_LEVEL <= 3
+#if MINIMUM_X86_ISA_LEVEL <= 2
 
 # include <wcsmbs/wcsncat.c>
 

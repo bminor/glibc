@@ -18,7 +18,7 @@
 
 
 #include <isa-level.h>
-#if ISA_SHOULD_BUILD (3)
+#if ISA_SHOULD_BUILD (2)
 
 # define WCSCPY  __wcscpy_generic
 # include <wcsmbs/wcscpy.c>

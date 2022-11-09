@@ -28,6 +28,8 @@
 
 extern __typeof (REDIRECT_NAME) OPTIMIZE (evex) attribute_hidden;
 
+extern __typeof (REDIRECT_NAME) OPTIMIZE (avx2) attribute_hidden;
+
 extern __typeof (REDIRECT_NAME) OPTIMIZE (ssse3) attribute_hidden;
 
 extern __typeof (REDIRECT_NAME) OPTIMIZE (generic) attribute_hidden;
@@ -44,6 +46,9 @@ IFUNC_SELECTOR (void)
       if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX512VL)
 	  && X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX512BW))
 	return OPTIMIZE (evex);
+
+      if (X86_ISA_CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER, !))
+	return OPTIMIZE (avx2);
     }
 
   if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, SSSE3))

@@ -907,6 +907,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __wcscpy_evex)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcscpy,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcscpy_avx2)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, wcscpy,
 				     CPU_FEATURE_USABLE (SSSE3),
 				     __wcscpy_ssse3)
 	      X86_IFUNC_IMPL_ADD_V1 (array, i, wcscpy,
@@ -920,7 +924,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				      && CPU_FEATURE_USABLE (AVX512BW)
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __wcsncpy_evex)
-	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcpncpy,
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcsncpy,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcsncpy_avx2)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, wcpncpy,
 				     1,
 				     __wcsncpy_generic))
 
@@ -932,6 +940,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __wcpcpy_evex)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcpcpy,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcpcpy_avx2)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, wcpcpy,
 				     1,
 				     __wcpcpy_generic))
 
@@ -942,7 +954,11 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				      && CPU_FEATURE_USABLE (AVX512BW)
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __wcpncpy_evex)
-	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcsncpy,
+	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcpncpy,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcpncpy_avx2)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, wcsncpy,
 				     1,
 				     __wcpncpy_generic))
 
@@ -954,6 +970,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __wcscat_evex)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcscat,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcscat_avx2)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, wcscat,
 				     1,
 				     __wcscat_generic))
 
@@ -965,6 +985,10 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 				      && CPU_FEATURE_USABLE (BMI2)),
 				     __wcsncat_evex)
 	      X86_IFUNC_IMPL_ADD_V3 (array, i, wcsncat,
+				     (CPU_FEATURE_USABLE (AVX2)
+				      && CPU_FEATURE_USABLE (BMI2)),
+				     __wcsncat_avx2)
+	      X86_IFUNC_IMPL_ADD_V2 (array, i, wcsncat,
 				     1,
 				     __wcsncat_generic))
 
