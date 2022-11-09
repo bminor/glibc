@@ -546,14 +546,16 @@ endef
 
 ifeq (yes,$(use-default-link))
 # If the linker is good enough, we can let it use its default linker script.
+# In the long term the custom linker script will be removed.
 shlib-lds =
 shlib-lds-flags =
 else
 # binutils only position loadable notes into the first page for binaries,
 # not for shared objects
+# lld --verbose does not dump a linker script.  Use -fuse-ld=bfd.
 $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 	$(LINK.o) -shared -Wl,-O1 \
-		  -nostdlib -nostartfiles \
+		  -nostdlib -nostartfiles -fuse-ld=bfd \
 		  $(sysdep-LDFLAGS) $(rtld-LDFLAGS) $(LDFLAGS.so) \
 		  -Wl,--verbose 2>/dev/null | \
 	  sed > $@T \
