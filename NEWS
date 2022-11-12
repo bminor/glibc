@@ -50,6 +50,7 @@ The following bugs are resolved with this release:
     platforms
   [29730] broken y2038 support in fstatat on MIPS N64
   [29771] Restore IPC_64 support in sysvipc *ctl functions
+  [29776] elf/tst-tlsopt-powerpc fails when compiled with -mcpu=power10
 
 Version 2.36
 
