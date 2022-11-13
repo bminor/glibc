@@ -20,10 +20,8 @@
 #include <unistd.h>
 #include <pointer_guard.h>
 #include <libc-lock.h>
+#include <libio/libioP.h>
 #include "exit.h"
-
-#include "set-hooks.h"
-DEFINE_HOOK (__libc_atexit, (void))
 
 /* Initialize the flag that indicates exit function processing
    is complete. See concurrency notes in stdlib/exit.h where
@@ -128,7 +126,7 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
   __libc_lock_unlock (__exit_funcs_lock);
 
   if (run_list_atexit)
-    RUN_HOOK (__libc_atexit, ());
+    call_function_static_weak (_IO_cleanup);
 
   _exit (status);
 }

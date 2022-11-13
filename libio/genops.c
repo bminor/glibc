@@ -1115,5 +1115,3 @@ _IO_list_resetlock (void)
 #endif
 }
 libc_hidden_def (_IO_list_resetlock)
-
-text_set_element(__libc_atexit, _IO_cleanup);
