@@ -74,7 +74,7 @@ checkhdr (const struct hdr *hdr)
        an error and report it.  */
     return MCHECK_OK;
 
-  switch (hdr->magic ^ ((unsigned long) hdr->prev + (unsigned long) hdr->next))
+  switch (hdr->magic ^ ((uintptr_t) hdr->prev + (uintptr_t) hdr->next))
     {
     default:
       status = MCHECK_HEAD;
