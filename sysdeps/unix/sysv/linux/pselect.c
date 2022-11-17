@@ -27,12 +27,19 @@ pselect64_syscall (int nfds, fd_set *readfds, fd_set *writefds,
 # define __NR_pselect6_time64 __NR_pselect6
 #endif
   /* NB: This is required by ARGIFY used in x32 internal_syscallN.  */
-  __syscall_ulong_t data[2] =
-    {
-      (uintptr_t) sigmask, __NSIG_BYTES
-    };
+#ifdef __CHERI_PURE_CAPABILITY__
+  typedef uintptr_t kernel_ptr_t;
+  typedef size_t kernel_size_t;
+#else
+  typedef __syscall_ulong_t kernel_ptr_t;
+  typedef __syscall_ulong_t kernel_size_t;
+#endif
+  struct {
+    kernel_ptr_t ptr;
+    kernel_size_t size;
+  } data = { (uintptr_t) sigmask, __NSIG_BYTES };
   return SYSCALL_CANCEL (pselect6_time64, nfds, readfds, writefds, exceptfds,
-			 timeout, data);
+			 timeout, &data);
 }
 
 int
