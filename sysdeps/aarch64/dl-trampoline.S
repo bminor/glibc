@@ -298,12 +298,11 @@ _dl_runtime_profile:
 	stp	x2, x3, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*1]
 	stp	x4, x5, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*2]
 	stp	x6, x7, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*3]
-	str	x8,     [x29, #OFFSET_RG + DL_OFFSET_RG_X0 + 16*4]
 	stp	q0, q1, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*0]
 	stp	q2, q3, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*1]
 	stp	q4, q5, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*2]
 	stp	q6, q7, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*3]
-	str	xzr,    [X29, #OFFSET_RV + DL_OFFSET_RG_VPCS]
+	str	xzr,    [X29, #OFFSET_RV + DL_OFFSET_RV_VPCS]
 
 	/* Setup call to pltexit  */
 	ldp	x0, x1, [x29, #OFFSET_SAVED_CALL_X0]
@@ -315,7 +314,6 @@ _dl_runtime_profile:
 	ldp	x2, x3, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*1]
 	ldp	x4, x5, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*2]
 	ldp	x6, x7, [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*3]
-	ldr	x8,     [x29, #OFFSET_RV + DL_OFFSET_RV_X0 + 16*4]
 	ldp	q0, q1, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*0]
 	ldp	q2, q3, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*1]
 	ldp	q4, q5, [x29, #OFFSET_RV + DL_OFFSET_RV_V0 + 32*2]
