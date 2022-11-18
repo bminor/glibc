@@ -54,7 +54,7 @@
 
 #include <sysdep.h>
 
-	.section .text.exex512, "ax", @progbits
+	.section .text.evex512, "ax", @progbits
 ENTRY(_ZGVeN16v_coshf_skx)
 	pushq	%rbp
 	cfi_def_cfa_offset(16)

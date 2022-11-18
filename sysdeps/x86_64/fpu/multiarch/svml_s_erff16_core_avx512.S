@@ -56,7 +56,7 @@
 
 #include <sysdep.h>
 
-	.section .text.exex512, "ax", @progbits
+	.section .text.evex512, "ax", @progbits
 ENTRY(_ZGVeN16v_erff_skx)
 	vmovaps	%zmm0, %zmm8
 	vmulps	{rn-sae}, %zmm8, %zmm8, %zmm11
