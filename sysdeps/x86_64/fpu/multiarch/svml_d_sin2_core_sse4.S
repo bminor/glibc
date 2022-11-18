@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #include "svml_d_trig_data.h"
 
-	.text
+	.section .text.sse4, "ax", @progbits
 ENTRY (_ZGVbN2v_sin_sse4)
 /* ALGORITHM DESCRIPTION:
 

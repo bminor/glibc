@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #include "svml_s_powf_data.h"
 
-	.text
+	.section .text.avx2, "ax", @progbits
 ENTRY(_ZGVdN8vv_powf_avx2)
 /*
    ALGORITHM DESCRIPTION:

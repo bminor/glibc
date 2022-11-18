@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #include "svml_s_trig_data.h"
 
-	.text
+	.section .text.avx2, "ax", @progbits
 ENTRY (_ZGVdN8vl4l4_sincosf_avx2)
 /*
    ALGORITHM DESCRIPTION:

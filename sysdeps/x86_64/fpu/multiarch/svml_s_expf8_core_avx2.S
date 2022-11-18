@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #include "svml_s_expf_data.h"
 
-	.text
+	.section .text.avx2, "ax", @progbits
 ENTRY(_ZGVdN8v_expf_avx2)
 /*
    ALGORITHM DESCRIPTION:

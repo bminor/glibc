@@ -20,7 +20,7 @@
 #include "svml_s_expf_data.h"
 #include "svml_s_wrapper_impl.h"
 
-	.text
+	.section .text.evex512, "ax", @progbits
 ENTRY (_ZGVeN16v_expf_knl)
 /*
    ALGORITHM DESCRIPTION:

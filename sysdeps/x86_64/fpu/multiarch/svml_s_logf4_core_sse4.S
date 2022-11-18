@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #include "svml_s_logf_data.h"
 
-	.text
+	.section .text.sse4, "ax", @progbits
 ENTRY (_ZGVbN4v_logf_sse4)
 /*
    ALGORITHM DESCRIPTION:

@@ -20,7 +20,7 @@
 #include "svml_d_trig_data.h"
 #include "svml_d_wrapper_impl.h"
 
-	.text
+	.section .text.evex512, "ax", @progbits
 ENTRY (_ZGVeN8v_cos_knl)
 /*
   ALGORITHM DESCRIPTION:

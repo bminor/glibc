@@ -35,7 +35,7 @@
      cos(arg) = sin(arg+Pi/2) = sin(N'*Pi + R') = (-1)^N' * sin(R')
      sin(R), sin(R') are approximated by corresponding polynomial.  */
 
-	.text
+	.section .text.evex512, "ax", @progbits
 ENTRY (_ZGVeN8vl8l8_sincos_knl)
         pushq     %rbp
         cfi_adjust_cfa_offset (8)

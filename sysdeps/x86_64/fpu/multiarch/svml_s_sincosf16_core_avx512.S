@@ -48,7 +48,7 @@
            R1 = XOR( RS, SS );
            R2 = XOR( RC, SC ).  */
 
-	.text
+	.section .text.evex512, "ax", @progbits
 ENTRY (_ZGVeN16vl4l4_sincosf_knl)
         pushq     %rbp
         cfi_adjust_cfa_offset (8)

@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #include "svml_s_logf_data.h"
 
-	.text
+	.section .text.avx2, "ax", @progbits
 ENTRY(_ZGVdN8v_logf_avx2)
 /*
    ALGORITHM DESCRIPTION:

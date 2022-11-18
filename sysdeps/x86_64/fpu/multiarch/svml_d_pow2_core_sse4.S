@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #include "svml_d_pow_data.h"
 
-	.text
+	.section .text.sse4, "ax", @progbits
 ENTRY (_ZGVbN2vv_pow_sse4)
 /*
    ALGORITHM DESCRIPTION:

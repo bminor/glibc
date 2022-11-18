@@ -80,7 +80,7 @@
      Res := ResHi + ResLo:
      Result := ex(Res) + N.  */
 
-	.text
+	.section .text.evex512, "ax", @progbits
 ENTRY (_ZGVeN8vv_pow_knl)
         pushq     %rbp
         cfi_adjust_cfa_offset (8)

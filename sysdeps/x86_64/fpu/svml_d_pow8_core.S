@@ -19,7 +19,7 @@
 #include <sysdep.h>
 #include "svml_d_wrapper_impl.h"
 
-	.text
+	.section .text.evex512, "ax", @progbits
 ENTRY (_ZGVeN8vv_pow)
 WRAPPER_IMPL_AVX512_ff _ZGVdN4vv_pow
 END (_ZGVeN8vv_pow)
