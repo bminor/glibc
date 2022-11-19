@@ -18,39 +18,38 @@
 
 /* SSE2 ISA version as wrapper to scalar.  */
 .macro WRAPPER_IMPL_SSE2 callee
+	subq	$24, %rsp
+	cfi_adjust_cfa_offset (24)
+	movaps	%xmm0, (%rsp)
+	call	JUMPTARGET(\callee)
+	movsd	%xmm0, (%rsp)
+	movsd	8(%rsp), %xmm0
+	call	JUMPTARGET(\callee)
+	movsd	(%rsp), %xmm1
+	unpcklpd %xmm0, %xmm1
+	movaps	%xmm1, %xmm0
+	addq	$24, %rsp
+	cfi_adjust_cfa_offset (-24)
+	ret
+.endm
+
+
+/* 2 argument SSE2 ISA version as wrapper to scalar.  */
+.macro WRAPPER_IMPL_SSE2_ff callee
 	subq	$40, %rsp
 	cfi_adjust_cfa_offset (40)
 	movaps	%xmm0, (%rsp)
+	movaps	%xmm1, 16(%rsp)
 	call	JUMPTARGET(\callee)
-	movsd	%xmm0, 16(%rsp)
+	movsd	%xmm0, (%rsp)
 	movsd	8(%rsp), %xmm0
+	movsd	24(%rsp), %xmm1
 	call	JUMPTARGET(\callee)
-	movsd	16(%rsp), %xmm1
-	movsd	%xmm0, 24(%rsp)
+	movsd	(%rsp), %xmm1
 	unpcklpd %xmm0, %xmm1
 	movaps	%xmm1, %xmm0
 	addq	$40, %rsp
 	cfi_adjust_cfa_offset (-40)
-	ret
-.endm
-
-/* 2 argument SSE2 ISA version as wrapper to scalar.  */
-.macro WRAPPER_IMPL_SSE2_ff callee
-	subq	$56, %rsp
-	cfi_adjust_cfa_offset (56)
-	movaps	%xmm0, (%rsp)
-	movaps	%xmm1, 16(%rsp)
-	call	JUMPTARGET(\callee)
-	movsd	%xmm0, 32(%rsp)
-	movsd	8(%rsp), %xmm0
-	movsd	24(%rsp), %xmm1
-	call	JUMPTARGET(\callee)
-	movsd	32(%rsp), %xmm1
-	movsd	%xmm0, 40(%rsp)
-	unpcklpd %xmm0, %xmm1
-	movaps	%xmm1, %xmm0
-	addq	$56, %rsp
-	cfi_adjust_cfa_offset (-56)
 	ret
 .endm
 
@@ -62,30 +61,18 @@
 	pushq	%rbx
 	cfi_adjust_cfa_offset (8)
 	cfi_rel_offset (%rbx, 0)
+	subq	$24, %rsp
+	cfi_adjust_cfa_offset (24)
+	movaps	%xmm0, (%rsp)
 	movq	%rdi, %rbp
 	movq	%rsi, %rbx
-	subq	$40, %rsp
-	cfi_adjust_cfa_offset (40)
-	leaq	16(%rsp), %rsi
-	leaq	24(%rsp), %rdi
-	movaps	%xmm0, (%rsp)
 	call	JUMPTARGET(\callee)
-	leaq	16(%rsp), %rsi
-	leaq	24(%rsp), %rdi
-	movsd	24(%rsp), %xmm0
-	movapd	(%rsp), %xmm1
-	movsd	%xmm0, 0(%rbp)
-	unpckhpd %xmm1, %xmm1
-	movsd	16(%rsp), %xmm0
-	movsd	%xmm0, (%rbx)
-	movapd	%xmm1, %xmm0
+	movsd	8(%rsp), %xmm0
+	leaq	8(%rbp), %rdi
+	leaq	8(%rbx), %rsi
 	call	JUMPTARGET(\callee)
-	movsd	24(%rsp), %xmm0
-	movsd	%xmm0, 8(%rbp)
-	movsd	16(%rsp), %xmm0
-	movsd	%xmm0, 8(%rbx)
-	addq	$40, %rsp
-	cfi_adjust_cfa_offset (-40)
+	addq	$24, %rsp
+	cfi_adjust_cfa_offset (-24)
 	popq	%rbx
 	cfi_adjust_cfa_offset (-8)
 	cfi_restore (%rbx)
@@ -104,15 +91,17 @@
 	cfi_def_cfa_register (%rbp)
 	andq	$-32, %rsp
 	subq	$32, %rsp
-	vextractf128 $1, %ymm0, (%rsp)
+	vmovaps	%ymm0, (%rsp)
 	vzeroupper
 	call	HIDDEN_JUMPTARGET(\callee)
-	vmovapd	%xmm0, 16(%rsp)
-	vmovaps	(%rsp), %xmm0
+	vmovaps	%xmm0, (%rsp)
+	vmovaps	16(%rsp), %xmm0
 	call	HIDDEN_JUMPTARGET(\callee)
-	vmovapd	%xmm0, %xmm1
-	vmovapd	16(%rsp), %xmm0
-	vinsertf128 $1, %xmm1, %ymm0, %ymm0
+	/* combine xmm0 (return of second call) with result of first
+	   call (saved on stack). Might be worth exploring logic that
+	   uses `vpblend` and reads in ymm1 using -16(rsp).  */
+	vmovaps	(%rsp), %xmm1
+	vinsertf128 $1, %xmm0, %ymm1, %ymm0
 	movq	%rbp, %rsp
 	cfi_def_cfa_register (%rsp)
 	popq	%rbp
@@ -130,17 +119,19 @@
 	cfi_def_cfa_register (%rbp)
 	andq	$-32, %rsp
 	subq	$64, %rsp
-	vextractf128 $1, %ymm0, 16(%rsp)
-	vextractf128 $1, %ymm1, (%rsp)
+	vmovaps	%ymm0, (%rsp)
+	vmovaps	%ymm1, 32(%rsp)
 	vzeroupper
 	call	HIDDEN_JUMPTARGET(\callee)
-	vmovaps	%xmm0, 32(%rsp)
+	vmovaps	48(%rsp), %xmm1
+	vmovaps	%xmm0, (%rsp)
 	vmovaps	16(%rsp), %xmm0
-	vmovaps	(%rsp), %xmm1
 	call	HIDDEN_JUMPTARGET(\callee)
-	vmovaps	%xmm0, %xmm1
-	vmovaps	32(%rsp), %xmm0
-	vinsertf128 $1, %xmm1, %ymm0, %ymm0
+	/* combine xmm0 (return of second call) with result of first
+	   call (saved on stack). Might be worth exploring logic that
+	   uses `vpblend` and reads in ymm1 using -16(rsp).  */
+	vmovaps	(%rsp), %xmm1
+	vinsertf128 $1, %xmm0, %ymm1, %ymm0
 	movq	%rbp, %rsp
 	cfi_def_cfa_register (%rsp)
 	popq	%rbp
@@ -155,35 +146,21 @@
 	cfi_adjust_cfa_offset (8)
 	cfi_rel_offset (%rbp, 0)
 	movq	%rsp, %rbp
-	cfi_def_cfa_register (%rbp)
 	andq	$-32, %rsp
-	pushq	%r13
-	cfi_adjust_cfa_offset (8)
-	cfi_rel_offset (%r13, 0)
+	subq	$32, %rsp
+	vmovaps	%ymm0, (%rsp)
+	pushq	%rbx
 	pushq	%r14
-	cfi_adjust_cfa_offset (8)
-	cfi_rel_offset (%r14, 0)
-	subq	$48, %rsp
+	movq	%rdi, %rbx
 	movq	%rsi, %r14
-	movq	%rdi, %r13
-	vextractf128 $1, %ymm0, 32(%rsp)
 	vzeroupper
 	call	HIDDEN_JUMPTARGET(\callee)
 	vmovaps	32(%rsp), %xmm0
-	lea	(%rsp), %rdi
-	lea	16(%rsp), %rsi
+	leaq	16(%rbx), %rdi
+	leaq	16(%r14), %rsi
 	call	HIDDEN_JUMPTARGET(\callee)
-	vmovapd	(%rsp), %xmm0
-	vmovapd	16(%rsp), %xmm1
-	vmovapd	%xmm0, 16(%r13)
-	vmovapd	%xmm1, 16(%r14)
-	addq	$48, %rsp
 	popq	%r14
-	cfi_adjust_cfa_offset (-8)
-	cfi_restore (%r14)
-	popq	%r13
-	cfi_adjust_cfa_offset (-8)
-	cfi_restore (%r13)
+	popq	%rbx
 	movq	%rbp, %rsp
 	cfi_def_cfa_register (%rsp)
 	popq	%rbp
@@ -200,15 +177,16 @@
 	movq	%rsp, %rbp
 	cfi_def_cfa_register (%rbp)
 	andq	$-64, %rsp
-	subq	$128, %rsp
+	subq	$64, %rsp
 	vmovups	%zmm0, (%rsp)
-	vmovupd	(%rsp), %ymm0
 	call	HIDDEN_JUMPTARGET(\callee)
-	vmovupd	%ymm0, 64(%rsp)
+	vmovupd	%ymm0, (%rsp)
 	vmovupd	32(%rsp), %ymm0
 	call	HIDDEN_JUMPTARGET(\callee)
-	vmovupd	%ymm0, 96(%rsp)
-	vmovups	64(%rsp), %zmm0
+	/* combine ymm0 (return of second call) with result of first
+	   call (saved on stack).  */
+	vmovaps	(%rsp), %ymm1
+	vinserti64x4 $0x1, %ymm0, %zmm1, %zmm0
 	movq	%rbp, %rsp
 	cfi_def_cfa_register (%rsp)
 	popq	%rbp
@@ -225,18 +203,19 @@
 	movq	%rsp, %rbp
 	cfi_def_cfa_register (%rbp)
 	andq	$-64, %rsp
-	subq	$192, %rsp
+	addq	$-128, %rsp
 	vmovups	%zmm0, (%rsp)
 	vmovups	%zmm1, 64(%rsp)
-	vmovupd	(%rsp), %ymm0
-	vmovupd	64(%rsp), %ymm1
+	/* ymm0 and ymm1 are already set.  */
 	call	HIDDEN_JUMPTARGET(\callee)
-	vmovupd	%ymm0, 128(%rsp)
-	vmovupd	32(%rsp), %ymm0
-	vmovupd	96(%rsp), %ymm1
+	vmovups	96(%rsp), %ymm1
+	vmovaps	%ymm0, (%rsp)
+	vmovups	32(%rsp), %ymm0
 	call	HIDDEN_JUMPTARGET(\callee)
-	vmovupd	%ymm0, 160(%rsp)
-	vmovups	128(%rsp), %zmm0
+	/* combine ymm0 (return of second call) with result of first
+	   call (saved on stack).  */
+	vmovaps	(%rsp), %ymm1
+	vinserti64x4 $0x1, %ymm0, %zmm1, %zmm0
 	movq	%rbp, %rsp
 	cfi_def_cfa_register (%rsp)
 	popq	%rbp
@@ -253,34 +232,20 @@
 	movq	%rsp, %rbp
 	cfi_def_cfa_register (%rbp)
 	andq	$-64, %rsp
-	pushq	%r12
-	cfi_adjust_cfa_offset (8)
-	cfi_rel_offset (%r12, 0)
-	pushq	%r13
-	cfi_adjust_cfa_offset (8)
-	cfi_rel_offset (%r13, 0)
-	subq	$176, %rsp
-	movq	%rsi, %r13
-	vmovups	%zmm0, (%rsp)
-	movq	%rdi, %r12
-	vmovupd	(%rsp), %ymm0
+	subq	$64, %rsp
+	vmovaps	%zmm0, (%rsp)
+	pushq	%rbx
+	pushq	%r14
+	movq	%rdi, %rbx
+	movq	%rsi, %r14
+	/* ymm0 is already set.  */
 	call	HIDDEN_JUMPTARGET(\callee)
-	vmovupd	32(%rsp), %ymm0
-	lea	64(%rsp), %rdi
-	lea	96(%rsp), %rsi
+	vmovaps	48(%rsp), %ymm0
+	leaq	32(%rbx), %rdi
+	leaq	32(%r14), %rsi
 	call	HIDDEN_JUMPTARGET(\callee)
-	vmovupd	64(%rsp), %ymm0
-	vmovupd	96(%rsp), %ymm1
-	vmovupd	%ymm0, 32(%r12)
-	vmovupd	%ymm1, 32(%r13)
-	vzeroupper
-	addq	$176, %rsp
-	popq	%r13
-	cfi_adjust_cfa_offset (-8)
-	cfi_restore (%r13)
-	popq	%r12
-	cfi_adjust_cfa_offset (-8)
-	cfi_restore (%r12)
+	popq	%r14
+	popq	%rbx
 	movq	%rbp, %rsp
 	cfi_def_cfa_register (%rsp)
 	popq	%rbp
