@@ -272,7 +272,8 @@ ifndef no_deps
 endif
 
 $(objpfx)errlist-data.os: $(objpfx)errlist-data-aux-shared.S
-$(objpfx)errlist-data.o: $(objpfx)errlist-data-aux.S
+$(addprefix $(objpfx)errlist-data, $(object-suffixes-noshared)): \
+  $(objpfx)errlist-data-aux.S
 
 $(objpfx)siglist-aux-shared.S: siglist-gen.c
 	$(make-target-directory)
@@ -287,7 +288,8 @@ ifndef no_deps
 endif
 
 $(objpfx)siglist.os: $(objpfx)siglist-aux-shared.S
-$(objpfx)siglist.o: $(objpfx)siglist-aux.S
+$(addprefix $(objpfx)siglist, $(object-suffixes-noshared)): \
+  $(objpfx)siglist-aux.S
 
 ifeq ($(run-built-tests),yes)
 LOCALES := \
