@@ -16,10 +16,14 @@
 #include <math_private.h>
 #include <libm-alias-float.h>
 #include <fix-int-fp-convert-zero.h>
+#include <math-use-builtins.h>
 
 float
 __logbf (float x)
 {
+#if USE_LOGBF_BUILTIN
+  return __builtin_logbf (x);
+#else
   int32_t ix, rix;
 
   GET_FLOAT_WORD (ix, x);
@@ -37,5 +41,6 @@ __logbf (float x)
   if (FIX_INT_FP_CONVERT_ZERO && rix == 127)
     return 0.0f;
   return (float) (rix - 127);
+#endif /* ! USE_LOGBF_BUILTIN */
 }
 libm_alias_float (__logb, logb)

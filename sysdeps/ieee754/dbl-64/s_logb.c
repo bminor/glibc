@@ -21,10 +21,14 @@
 #include <math_private.h>
 #include <libm-alias-double.h>
 #include <fix-int-fp-convert-zero.h>
+#include <math-use-builtins.h>
 
 double
 __logb (double x)
 {
+#if USE_LOGB_BUILTIN
+  return __builtin_logb (x);
+#else
   int64_t ix, ex;
 
   EXTRACT_WORDS64 (ix, x);
@@ -42,6 +46,7 @@ __logb (double x)
   if (FIX_INT_FP_CONVERT_ZERO && ex == 1023)
     return 0.0;
   return (double) (ex - 1023);
+#endif /* !USE_LOGB_BUILTIN  */
 }
 #ifndef __logb
 libm_alias_double (__logb, logb)

@@ -25,10 +25,15 @@ static char rcsid[] = "$NetBSD: $";
 #include <math.h>
 #include <math_private.h>
 #include <libm-alias-ldouble.h>
+#include <math-use-builtins.h>
 
 _Float128
 __logbl (_Float128 x)
 {
+#if USE_LOGBL_BUILTIN
+  return __builtin_logbl (x);
+#else
+  /* Use generic implementation.  */
   int64_t lx, hx, ex;
 
   GET_LDOUBLE_WORDS64 (hx, lx, x);
@@ -49,6 +54,7 @@ __logbl (_Float128 x)
       ex -= ma - 16;
     }
   return (_Float128) (ex - 16383);
+#endif /* ! USE_LOGBL_BUILTIN  */
 }
 
 libm_alias_ldouble (__logb, logb)

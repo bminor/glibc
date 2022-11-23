@@ -39,5 +39,6 @@
 #include <math-use-builtins-fabs.h>
 #include <math-use-builtins-lrint.h>
 #include <math-use-builtins-llrint.h>
+#include <math-use-builtins-logb.h>
 
 #endif /* MATH_USE_BUILTINS_H  */
