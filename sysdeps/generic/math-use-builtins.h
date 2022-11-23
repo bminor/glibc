@@ -38,5 +38,6 @@
 #include <math-use-builtins-fmin.h>
 #include <math-use-builtins-fabs.h>
 #include <math-use-builtins-lrint.h>
+#include <math-use-builtins-llrint.h>
 
 #endif /* MATH_USE_BUILTINS_H  */

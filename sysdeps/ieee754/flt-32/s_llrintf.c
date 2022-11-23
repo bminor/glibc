@@ -25,17 +25,22 @@
 #include <math_private.h>
 #include <libm-alias-float.h>
 #include <fix-fp-int-convert-overflow.h>
-
-static const float two23[2] =
-{
-  8.3886080000e+06, /* 0x4B000000 */
- -8.3886080000e+06, /* 0xCB000000 */
-};
+#include <math-use-builtins.h>
 
 
 long long int
 __llrintf (float x)
 {
+#if USE_LLRINTF_BUILTIN
+  return __builtin_llrintf (x);
+#else
+  /* Use generic implementation.  */
+  static const float two23[2] =
+  {
+    8.3886080000e+06, /* 0x4B000000 */
+   -8.3886080000e+06, /* 0xCB000000 */
+  };
+
   int32_t j0;
   uint32_t i0;
   float w;
@@ -82,6 +87,7 @@ __llrintf (float x)
     }
 
   return sx ? -result : result;
+#endif /* ! USE_LLRINTF_BUILTIN  */
 }
 
 libm_alias_float (__llrint, llrint)

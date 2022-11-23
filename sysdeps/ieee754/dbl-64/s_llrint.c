@@ -25,17 +25,22 @@
 #include <math_private.h>
 #include <libm-alias-double.h>
 #include <fix-fp-int-convert-overflow.h>
-
-static const double two52[2] =
-{
-  4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
- -4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
-};
+#include <math-use-builtins.h>
 
 
 long long int
 __llrint (double x)
 {
+#if USE_LLRINT_BUILTIN
+  return __builtin_llrint (x);
+#else
+  /* Use generic implementation.  */
+  static const double two52[2] =
+  {
+    4.50359962737049600000e+15, /* 0x43300000, 0x00000000 */
+   -4.50359962737049600000e+15, /* 0xC3300000, 0x00000000 */
+  };
+
   int32_t j0;
   uint32_t i1, i0;
   long long int result;
@@ -95,6 +100,7 @@ __llrint (double x)
     }
 
   return sx ? -result : result;
+#endif /* ! USE_LLRINT_BUILTIN  */
 }
 
 libm_alias_double (__llrint, llrint)
