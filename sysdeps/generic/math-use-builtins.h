@@ -37,5 +37,6 @@
 #include <math-use-builtins-fmax.h>
 #include <math-use-builtins-fmin.h>
 #include <math-use-builtins-fabs.h>
+#include <math-use-builtins-lrint.h>
 
 #endif /* MATH_USE_BUILTINS_H  */
