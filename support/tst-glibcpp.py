@@ -131,6 +131,7 @@ check_macro_eval('#define A 1', {'A': 1})
 check_macro_eval('#define A (1)', {'A': 1})
 check_macro_eval('#define A (1 + 1)', {'A': 2})
 check_macro_eval('#define A (1U << 31)', {'A': 1 << 31})
+check_macro_eval('#define A (1 | 2)', {'A': 1 | 2})
 check_macro_eval('''\
 #define A (B + 1)
 #define B 10

@@ -346,6 +346,7 @@ RE_SPLIT_INTEGER_SUFFIX = re.compile(r'([^ullULL]+)([ullULL]*)')
 BINARY_OPERATORS = {
     '+': operator.add,
     '<<': operator.lshift,
+    '|': operator.or_,
 }
 
 # Use the general-purpose dict type if it is order-preserving.
