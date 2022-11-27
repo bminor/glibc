@@ -183,14 +183,14 @@ __start:								\n\
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
 #define elf_machine_type_class(type)				\
-  ((((type) == R_ARC_JUMP_SLOT					\
+  ((((type) == R_ARC_JMP_SLOT					\
      || (type) == R_ARC_TLS_DTPMOD				\
      || (type) == R_ARC_TLS_DTPOFF				\
      || (type) == R_ARC_TLS_TPOFF) * ELF_RTYPE_CLASS_PLT)	\
    | (((type) == R_ARC_COPY) * ELF_RTYPE_CLASS_COPY))
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
-#define ELF_MACHINE_JMP_SLOT  R_ARC_JUMP_SLOT
+#define ELF_MACHINE_JMP_SLOT  R_ARC_JMP_SLOT
 
 /* Fixup a PLT entry to bounce directly to the function at VALUE.  */
 
@@ -261,7 +261,7 @@ elf_machine_rela (struct link_map *map, struct r_scope_elem *scope[],
           break;
 
         case R_ARC_GLOB_DAT:
-        case R_ARC_JUMP_SLOT:
+        case R_ARC_JMP_SLOT:
             *reloc_addr = value;
           break;
 
@@ -321,7 +321,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
   ElfW(Addr) *const reloc_addr = (void *) (l_addr + reloc->r_offset);
   const unsigned int r_type = ELFW (R_TYPE) (reloc->r_info);
 
-  if (r_type == R_ARC_JUMP_SLOT)
+  if (r_type == R_ARC_JMP_SLOT)
     *reloc_addr += l_addr;
   else
     _dl_reloc_bad_type (map, r_type, 1);

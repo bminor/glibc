@@ -304,6 +304,8 @@ class Sht(_TypedConstant):
     prefix = 'SHT_'
 class ShtALPHA(Sht):
     """Supplemental SHT_* constants for EM_ALPHA."""
+class ShtARC(Sht):
+    """Supplemental SHT_* constants for EM_ARC."""
 class ShtARM(Sht):
     """Supplemental SHT_* constants for EM_ARM."""
 class ShtCSKY(Sht):
@@ -317,6 +319,7 @@ class ShtPARISC(Sht):
 class ShtRISCV(Sht):
     """Supplemental SHT_* constants for EM_RISCV."""
 _register_elf_h(ShtALPHA, prefix='SHT_ALPHA_', parent=Sht)
+_register_elf_h(ShtARC, prefix='SHT_ARC_', parent=Sht)
 _register_elf_h(ShtARM, prefix='SHT_ARM_', parent=Sht)
 _register_elf_h(ShtCSKY, prefix='SHT_CSKY_', parent=Sht)
 _register_elf_h(ShtIA_64, prefix='SHT_IA_64_', parent=Sht)
