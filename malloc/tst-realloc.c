@@ -17,6 +17,7 @@
 
 #include <errno.h>
 #include <malloc.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <libc-diag.h>
@@ -141,6 +142,28 @@ do_test (void)
     FAIL_EXIT1 ("realloc (NULL, 0) returned NULL.");
 
   free (p);
+
+  /* Smoke test to make sure that allocations do not move if they have enough
+     space to expand in the chunk.  */
+  for (size_t sz = 3; sz < 256 * 1024; sz += 2048)
+    {
+      p = realloc (NULL, sz);
+      if (p == NULL)
+	FAIL_EXIT1 ("realloc (NULL, %zu) returned NULL.", sz);
+      size_t newsz = malloc_usable_size (p);
+      printf ("size: %zu, usable size: %zu, extra: %zu\n",
+	      sz, newsz, newsz - sz);
+      uintptr_t oldp = (uintptr_t) p;
+      void *new_p = realloc (p, newsz);
+      if ((uintptr_t) new_p != oldp)
+	FAIL_EXIT1 ("Expanding (%zu bytes) to usable size (%zu) moved block",
+		    sz, newsz);
+      free (new_p);
+
+      /* We encountered a large enough extra size at least once.  */
+      if (newsz - sz > 1024)
+	break;
+    }
 
   return 0;
 }

@@ -1100,6 +1100,8 @@ static void munmap_chunk(mchunkptr p);
 static mchunkptr mremap_chunk(mchunkptr p, size_t new_size);
 #endif
 
+static size_t musable (void *mem);
+
 /* ------------------ MMAP support ------------------  */
 
 
@@ -3395,6 +3397,14 @@ __libc_realloc (void *oldmem, size_t bytes)
      memory's tag.  */
   if (__glibc_unlikely (mtag_enabled))
     *(volatile char*) oldmem;
+
+  /* Return the chunk as is whenever possible, i.e. there's enough usable space
+     but not so much that we end up fragmenting the block.  We use the trim
+     threshold as the heuristic to decide the latter.  */
+  size_t usable = musable (oldmem);
+  if (bytes <= usable
+      && (unsigned long) (usable - bytes) <= mp_.trim_threshold)
+    return oldmem;
 
   /* chunk corresponding to oldmem */
   const mchunkptr oldp = mem2chunk (oldmem);
