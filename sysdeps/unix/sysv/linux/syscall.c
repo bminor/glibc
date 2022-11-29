@@ -33,7 +33,7 @@ syscall (long int number, ...)
   long int a5 = va_arg (args, long int);
   va_end (args);
 
-  int r = INTERNAL_SYSCALL_NCS_CALL (number, a0, a1, a2, a3, a4, a5);
+  long int r = INTERNAL_SYSCALL_NCS_CALL (number, a0, a1, a2, a3, a4, a5);
   if (__glibc_unlikely (INTERNAL_SYSCALL_ERROR_P (r)))
     {
       __set_errno (-r);
