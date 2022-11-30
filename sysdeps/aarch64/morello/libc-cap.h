@@ -173,7 +173,7 @@ ht_reserve (struct ht *ht)
   size_t future_used = ht->used + ht->reserve;
   /* Resize at 3/4 fill or if there are many deleted entries.  */
   if (future_fill > ht->mask - ht->mask / 4
-      || future_fill > future_used * 4)
+      || future_fill > 2 * future_used + ht->mask / 4)
     r = ht_resize (ht);
   if (!r)
     ht->reserve--;
