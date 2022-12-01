@@ -28,7 +28,11 @@
 /* NOTE BEFORE MODIFYING THIS FILE: This version number must be
    incremented whenever callers compiled using an old obstack.h can no
    longer properly call the functions in this obstack.c.  */
+#ifdef __CHERI_PURE_CAPABILITY__
+#define OBSTACK_INTERFACE_VERSION 2
+#else
 #define OBSTACK_INTERFACE_VERSION 1
+#endif
 
 /* Comment out all this code if we are using the GNU C Library, and are not
    actually compiling the library itself, and the installed library
