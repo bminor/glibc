@@ -1522,7 +1522,6 @@ class GlibcPolicyDefault(object):
             'CC=%s' % glibc.tool_name('gcc'),
             'CXX=%s' % glibc.tool_name('g++'),
             'AR=%s' % glibc.tool_name('ar'),
-            'AS=%s' % glibc.tool_name('as'),
             'LD=%s' % glibc.tool_name('ld'),
             'NM=%s' % glibc.tool_name('nm'),
             'OBJCOPY=%s' % glibc.tool_name('objcopy'),

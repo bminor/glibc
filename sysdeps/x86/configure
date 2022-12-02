@@ -33,8 +33,8 @@ $as_echo "$libc_cv_x86_cet_available" >&6; }
 fi
 if test $enable_cet != no; then
   # Check if assembler supports CET.
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $AS supports CET" >&5
-$as_echo_n "checking whether $AS supports CET... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether compiler supports CET" >&5
+$as_echo_n "checking whether compiler supports CET... " >&6; }
 if ${libc_cv_x86_cet_as+:} false; then :
   $as_echo_n "(cached) " >&6
 else

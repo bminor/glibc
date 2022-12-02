@@ -118,7 +118,6 @@ case "$CC" in
     *fuse-ld=lld*) LDNAME=ld.lld;;
     *)             LDNAME=ld;;
 esac
-AS=`$CC -print-prog-name=as`
 LD=`$CC -print-prog-name=$LDNAME`
 AR=`$CC -print-prog-name=ar`
 AC_SUBST(AR)
