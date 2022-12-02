@@ -4155,26 +4155,6 @@ OBJCOPY=`$CC -print-prog-name=objcopy`
 GPROF=`$CC -print-prog-name=gprof`
 
 
-# Determine whether we are using GNU binutils.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $AS is GNU as" >&5
-$as_echo_n "checking whether $AS is GNU as... " >&6; }
-if ${libc_cv_prog_as_gnu+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  # Most GNU programs take a -v and spit out some text including
-# the word 'GNU'.  Some try to read stdin, so give them /dev/null.
-if $AS -o conftest -v </dev/null 2>&1 | grep GNU > /dev/null 2>&1; then
-  libc_cv_prog_as_gnu=yes
-else
-  libc_cv_prog_as_gnu=no
-fi
-rm -fr contest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_prog_as_gnu" >&5
-$as_echo "$libc_cv_prog_as_gnu" >&6; }
-rm -f a.out
-gnu_as=$libc_cv_prog_as_gnu
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $LD is GNU ld" >&5
 $as_echo_n "checking whether $LD is GNU ld... " >&6; }
 if ${libc_cv_prog_ld_gnu+:} false; then :

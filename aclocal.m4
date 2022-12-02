@@ -127,12 +127,6 @@ AC_SUBST(OBJCOPY)
 GPROF=`$CC -print-prog-name=gprof`
 AC_SUBST(GPROF)
 
-# Determine whether we are using GNU binutils.
-AC_CACHE_CHECK(whether $AS is GNU as, libc_cv_prog_as_gnu,
-[LIBC_PROG_FOO_GNU($AS, libc_cv_prog_as_gnu=yes, libc_cv_prog_as_gnu=no)])
-rm -f a.out
-gnu_as=$libc_cv_prog_as_gnu
-
 AC_CACHE_CHECK(whether $LD is GNU ld, libc_cv_prog_ld_gnu,
 [LIBC_PROG_FOO_GNU($LD, libc_cv_prog_ld_gnu=yes, libc_cv_prog_ld_gnu=no)])
 gnu_ld=$libc_cv_prog_ld_gnu
