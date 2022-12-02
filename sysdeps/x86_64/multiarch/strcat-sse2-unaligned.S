@@ -35,6 +35,10 @@
 ENTRY (STRCAT)
 	mov	%rdi, %r9
 # ifdef USE_AS_STRNCAT
+#  ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+#  endif
 	mov	%rdx, %r8
 # endif
 

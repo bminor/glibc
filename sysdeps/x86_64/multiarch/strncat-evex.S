@@ -79,6 +79,11 @@
 
 	.section SECTION(.text), "ax", @progbits
 ENTRY(STRNCAT)
+# ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+# endif
+
 	movq	%rdi, %rax
 
 	/* NB: It's safe to filter out zero-length strings WITHOUT
