@@ -560,6 +560,125 @@ fi
 test -n "$base_machine" || base_machine=$machine
 AC_SUBST(base_machine)
 
+### Locate tools.
+
+AC_PROG_INSTALL
+if test "$INSTALL" = "${srcdir}/scripts/install-sh -c"; then
+  # The makefiles need to use a different form to find it in $srcdir.
+  INSTALL='\$(..)./scripts/install-sh -c'
+fi
+AC_PROG_LN_S
+
+LIBC_PROG_BINUTILS
+
+# Accept binutils 2.25 or newer.
+AC_CHECK_PROG_VER(AS, $AS, --version,
+		  [GNU assembler.* \([0-9]*\.[0-9.]*\)],
+		  [2.1[0-9][0-9]*|2.2[5-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
+		  AS=: critic_missing="$critic_missing as")
+
+libc_cv_with_lld=no
+case $($LD --version) in
+  "GNU gold"*)
+  # Accept gold 1.14 or higher
+    AC_CHECK_PROG_VER(LD, $LD, --version,
+		    [GNU gold.* \([0-9][0-9]*\.[0-9.]*\)],
+		    [1.1[4-9]*|1.[2-9][0-9]*|1.1[0-9][0-9]*|[2-9].*|[1-9][0-9]*],
+		    LD=: critic_missing="$critic_missing GNU gold")
+    ;;
+  "LLD"*)
+  # Accept LLD 13.0.0 or higher
+    AC_CHECK_PROG_VER(LD, $LD, --version,
+		    [LLD.* \([0-9][0-9]*\.[0-9.]*\)],
+		    [1[3-9].*|[2-9][0-9].*],
+		    LD=: critic_missing="$critic_missing LLD")
+    libc_cv_with_lld=yes
+    ;;
+  *)
+    AC_CHECK_PROG_VER(LD, $LD, --version,
+		    [GNU ld.* \([0-9][0-9]*\.[0-9.]*\)],
+		    [2.1[0-9][0-9]*|2.2[5-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
+		    LD=: critic_missing="$critic_missing GNU ld")
+    ;;
+esac
+LIBC_CONFIG_VAR([with-lld], [$libc_cv_with_lld])
+
+# These programs are version sensitive.
+AC_CHECK_PROG_VER(MAKE, gnumake gmake make, --version,
+  [GNU Make[^0-9]*\([0-9][0-9.]*\)],
+  [[4-9].* | [1-9][0-9]*], critic_missing="$critic_missing make")
+
+AC_CHECK_PROG_VER(MSGFMT, gnumsgfmt gmsgfmt msgfmt, --version,
+  [GNU gettext.* \([0-9]*\.[0-9.]*\)],
+  [0.10.3[6-9]* | 0.10.[4-9][0-9]* | 0.1[1-9]* | 0.[2-9][0-9]* | [1-9].*],
+  MSGFMT=: aux_missing="$aux_missing msgfmt")
+AC_CHECK_PROG_VER(MAKEINFO, makeinfo, --version,
+  [GNU texinfo.* \([0-9][0-9.]*\)],
+  [4.[7-9]*|4.[1-9][0-9]*|[5-9].*],
+  MAKEINFO=: aux_missing="$aux_missing makeinfo")
+AC_CHECK_PROG_VER(SED, sed, --version,
+  [GNU sed[^0-9]* \([0-9]*\.[0-9.]*\)],
+  [3.0[2-9]*|3.[1-9]*|[4-9]*],
+  SED=: aux_missing="$aux_missing sed")
+AC_CHECK_PROG_VER(AWK, gawk, --version,
+  [GNU Awk[^0-9]*\([0-9][0-9.]*\)],
+  [3.1.[2-9]*|3.[2-9]*|[4-9]*], critic_missing="$critic_missing gawk")
+AC_CHECK_PROG_VER(BISON, bison, --version,
+  [bison (GNU Bison) \([0-9]*\.[0-9.]*\)],
+  [2.7*|[3-9].*|[1-9][0-9]*], critic_missing="$critic_missing bison")
+
+AC_CACHE_CHECK([if $CC is sufficient to build libc], libc_cv_compiler_ok, [
+AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[]], [[
+#if !defined __GNUC__ || __GNUC__ < 6 || (__GNUC__ == 6 && __GNUC_MINOR__ < 2)
+#error insufficient compiler
+#endif]])],
+	       [libc_cv_compiler_ok=yes],
+	       [libc_cv_compiler_ok=no])])
+AS_IF([test $libc_cv_compiler_ok != yes],
+      [critic_missing="$critic_missing compiler"])
+
+AC_CHECK_TOOL(NM, nm, false)
+
+if test "x$maintainer" = "xyes"; then
+  AC_CHECK_PROGS(AUTOCONF, autoconf, no)
+  case "x$AUTOCONF" in
+  xno|x|x:) AUTOCONF=no ;;
+  *)
+    AC_CACHE_CHECK(dnl
+  whether $AUTOCONF${ACFLAGS:+ }$ACFLAGS works, libc_cv_autoconf_works, [dnl
+    if (cd $srcdir; $AUTOCONF $ACFLAGS configure.ac > /dev/null 2>&1); then
+      libc_cv_autoconf_works=yes
+    else
+      libc_cv_autoconf_works=no
+    fi])
+    test $libc_cv_autoconf_works = yes || AUTOCONF=no
+    ;;
+  esac
+  if test "x$AUTOCONF" = xno; then
+    aux_missing="$aux_missing autoconf"
+  fi
+else
+  AUTOCONF=no
+fi
+
+# Check for python3 if available, or else python.
+AC_CHECK_PROG_VER(PYTHON_PROG, python3 python, --version,
+  [Python \([0-9][0-9.]*\)],
+  [3.[4-9]*|3.[1-9][0-9]*|[4-9].*|[1-9][0-9]*],
+  critic_missing="$critic_missing python")
+PYTHON="$PYTHON_PROG -B"
+AC_SUBST(PYTHON)
+
+test -n "$critic_missing" && AC_MSG_ERROR([
+*** These critical programs are missing or too old:$critic_missing
+*** Check the INSTALL file for required versions.])
+
+test -n "$aux_missing" && AC_MSG_WARN([
+*** These auxiliary programs are missing or incompatible versions:$aux_missing
+*** some features or tests will be disabled.
+*** Check the INSTALL file for required versions.])
+
+
 # Determine whether to use fpu or nofpu sysdeps directories.
 AC_CACHE_CHECK([for use of fpu sysdeps directories],
 	       libc_cv_with_fp, [dnl
@@ -990,125 +1109,6 @@ sysnames="$names $default_sysnames"
 AC_SUBST(sysnames)
 # The other names were emitted during the scan.
 AC_MSG_RESULT($default_sysnames)
-
-
-### Locate tools.
-
-AC_PROG_INSTALL
-if test "$INSTALL" = "${srcdir}/scripts/install-sh -c"; then
-  # The makefiles need to use a different form to find it in $srcdir.
-  INSTALL='\$(..)./scripts/install-sh -c'
-fi
-AC_PROG_LN_S
-
-LIBC_PROG_BINUTILS
-
-# Accept binutils 2.25 or newer.
-AC_CHECK_PROG_VER(AS, $AS, --version,
-		  [GNU assembler.* \([0-9]*\.[0-9.]*\)],
-		  [2.1[0-9][0-9]*|2.2[5-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
-		  AS=: critic_missing="$critic_missing as")
-
-libc_cv_with_lld=no
-case $($LD --version) in
-  "GNU gold"*)
-  # Accept gold 1.14 or higher
-    AC_CHECK_PROG_VER(LD, $LD, --version,
-		    [GNU gold.* \([0-9][0-9]*\.[0-9.]*\)],
-		    [1.1[4-9]*|1.[2-9][0-9]*|1.1[0-9][0-9]*|[2-9].*|[1-9][0-9]*],
-		    LD=: critic_missing="$critic_missing GNU gold")
-    ;;
-  "LLD"*)
-  # Accept LLD 13.0.0 or higher
-    AC_CHECK_PROG_VER(LD, $LD, --version,
-		    [LLD.* \([0-9][0-9]*\.[0-9.]*\)],
-		    [1[3-9].*|[2-9][0-9].*],
-		    LD=: critic_missing="$critic_missing LLD")
-    libc_cv_with_lld=yes
-    ;;
-  *)
-    AC_CHECK_PROG_VER(LD, $LD, --version,
-		    [GNU ld.* \([0-9][0-9]*\.[0-9.]*\)],
-		    [2.1[0-9][0-9]*|2.2[5-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
-		    LD=: critic_missing="$critic_missing GNU ld")
-    ;;
-esac
-LIBC_CONFIG_VAR([with-lld], [$libc_cv_with_lld])
-
-# These programs are version sensitive.
-AC_CHECK_PROG_VER(MAKE, gnumake gmake make, --version,
-  [GNU Make[^0-9]*\([0-9][0-9.]*\)],
-  [[4-9].* | [1-9][0-9]*], critic_missing="$critic_missing make")
-
-AC_CHECK_PROG_VER(MSGFMT, gnumsgfmt gmsgfmt msgfmt, --version,
-  [GNU gettext.* \([0-9]*\.[0-9.]*\)],
-  [0.10.3[6-9]* | 0.10.[4-9][0-9]* | 0.1[1-9]* | 0.[2-9][0-9]* | [1-9].*],
-  MSGFMT=: aux_missing="$aux_missing msgfmt")
-AC_CHECK_PROG_VER(MAKEINFO, makeinfo, --version,
-  [GNU texinfo.* \([0-9][0-9.]*\)],
-  [4.[7-9]*|4.[1-9][0-9]*|[5-9].*],
-  MAKEINFO=: aux_missing="$aux_missing makeinfo")
-AC_CHECK_PROG_VER(SED, sed, --version,
-  [GNU sed[^0-9]* \([0-9]*\.[0-9.]*\)],
-  [3.0[2-9]*|3.[1-9]*|[4-9]*],
-  SED=: aux_missing="$aux_missing sed")
-AC_CHECK_PROG_VER(AWK, gawk, --version,
-  [GNU Awk[^0-9]*\([0-9][0-9.]*\)],
-  [3.1.[2-9]*|3.[2-9]*|[4-9]*], critic_missing="$critic_missing gawk")
-AC_CHECK_PROG_VER(BISON, bison, --version,
-  [bison (GNU Bison) \([0-9]*\.[0-9.]*\)],
-  [2.7*|[3-9].*|[1-9][0-9]*], critic_missing="$critic_missing bison")
-
-AC_CACHE_CHECK([if $CC is sufficient to build libc], libc_cv_compiler_ok, [
-AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[]], [[
-#if !defined __GNUC__ || __GNUC__ < 6 || (__GNUC__ == 6 && __GNUC_MINOR__ < 2)
-#error insufficient compiler
-#endif]])],
-	       [libc_cv_compiler_ok=yes],
-	       [libc_cv_compiler_ok=no])])
-AS_IF([test $libc_cv_compiler_ok != yes],
-      [critic_missing="$critic_missing compiler"])
-
-AC_CHECK_TOOL(NM, nm, false)
-
-if test "x$maintainer" = "xyes"; then
-  AC_CHECK_PROGS(AUTOCONF, autoconf, no)
-  case "x$AUTOCONF" in
-  xno|x|x:) AUTOCONF=no ;;
-  *)
-    AC_CACHE_CHECK(dnl
-  whether $AUTOCONF${ACFLAGS:+ }$ACFLAGS works, libc_cv_autoconf_works, [dnl
-    if (cd $srcdir; $AUTOCONF $ACFLAGS configure.ac > /dev/null 2>&1); then
-      libc_cv_autoconf_works=yes
-    else
-      libc_cv_autoconf_works=no
-    fi])
-    test $libc_cv_autoconf_works = yes || AUTOCONF=no
-    ;;
-  esac
-  if test "x$AUTOCONF" = xno; then
-    aux_missing="$aux_missing autoconf"
-  fi
-else
-  AUTOCONF=no
-fi
-
-# Check for python3 if available, or else python.
-AC_CHECK_PROG_VER(PYTHON_PROG, python3 python, --version,
-  [Python \([0-9][0-9.]*\)],
-  [3.[4-9]*|3.[1-9][0-9]*|[4-9].*|[1-9][0-9]*],
-  critic_missing="$critic_missing python")
-PYTHON="$PYTHON_PROG -B"
-AC_SUBST(PYTHON)
-
-test -n "$critic_missing" && AC_MSG_ERROR([
-*** These critical programs are missing or too old:$critic_missing
-*** Check the INSTALL file for required versions.])
-
-test -n "$aux_missing" && AC_MSG_WARN([
-*** These auxiliary programs are missing or incompatible versions:$aux_missing
-*** some features or tests will be disabled.
-*** Check the INSTALL file for required versions.])
 
 # if using special system headers, find out the compiler's sekrit
 # header directory and add that to the list.  NOTE: Only does the right

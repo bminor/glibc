@@ -635,6 +635,14 @@ CXX_CMATH_HEADER
 CXX_CSTDLIB_HEADER
 CXX_SYSINCLUDES
 SYSINCLUDES
+sysnames
+submachine
+multi_arch
+libc_cv_textrel_ifunc
+no_stack_protector
+stack_protector
+libc_cv_ssp
+libc_cv_with_fp
 PYTHON
 PYTHON_PROG
 AUTOCONF
@@ -654,14 +662,6 @@ LN_S
 INSTALL_DATA
 INSTALL_SCRIPT
 INSTALL_PROGRAM
-sysnames
-submachine
-multi_arch
-libc_cv_textrel_ifunc
-no_stack_protector
-stack_protector
-libc_cv_ssp
-libc_cv_with_fp
 base_machine
 have_tunables
 build_pt_chown
@@ -4025,528 +4025,6 @@ fi
 test -n "$base_machine" || base_machine=$machine
 
 
-# Determine whether to use fpu or nofpu sysdeps directories.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for use of fpu sysdeps directories" >&5
-$as_echo_n "checking for use of fpu sysdeps directories... " >&6; }
-if ${libc_cv_with_fp+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<EOF
-#if $with_fp_cond
-int dummy;
-#else
-# error "no hardware floating point"
-#endif
-EOF
-libc_cv_with_fp=no
-if ${CC-cc} $CFLAGS $CPPFLAGS -S conftest.c -o conftest.s \
-   1>&5 2>&5 ; then
-  libc_cv_with_fp=yes
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_with_fp" >&5
-$as_echo "$libc_cv_with_fp" >&6; }
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector" >&5
-$as_echo_n "checking for -fstack-protector... " >&6; }
-if ${libc_cv_ssp+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector -xc /dev/null -S -o /dev/null'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then :
-  libc_cv_ssp=yes
-else
-  libc_cv_ssp=no
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp" >&5
-$as_echo "$libc_cv_ssp" >&6; }
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector-strong" >&5
-$as_echo_n "checking for -fstack-protector-strong... " >&6; }
-if ${libc_cv_ssp_strong+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector-strong -xc /dev/null -S -o /dev/null'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then :
-  libc_cv_ssp_strong=yes
-else
-  libc_cv_ssp_strong=no
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp_strong" >&5
-$as_echo "$libc_cv_ssp_strong" >&6; }
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector-all" >&5
-$as_echo_n "checking for -fstack-protector-all... " >&6; }
-if ${libc_cv_ssp_all+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector-all -xc /dev/null -S -o /dev/null'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then :
-  libc_cv_ssp_all=yes
-else
-  libc_cv_ssp_all=no
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp_all" >&5
-$as_echo "$libc_cv_ssp_all" >&6; }
-
-stack_protector=
-no_stack_protector=
-if test "$libc_cv_ssp" = yes; then
-  no_stack_protector="-fno-stack-protector -DSTACK_PROTECTOR_LEVEL=0"
-  $as_echo "#define HAVE_CC_NO_STACK_PROTECTOR 1" >>confdefs.h
-
-fi
-
-if test "$enable_stack_protector" = yes && test "$libc_cv_ssp" = yes; then
-  stack_protector="-fstack-protector"
-  $as_echo "#define STACK_PROTECTOR_LEVEL 1" >>confdefs.h
-
-elif test "$enable_stack_protector" = all && test "$libc_cv_ssp_all" = yes; then
-  stack_protector="-fstack-protector-all"
-  $as_echo "#define STACK_PROTECTOR_LEVEL 2" >>confdefs.h
-
-elif test "$enable_stack_protector" = strong && test "$libc_cv_ssp_strong" = yes; then
-  stack_protector="-fstack-protector-strong"
-  $as_echo "#define STACK_PROTECTOR_LEVEL 3" >>confdefs.h
-
-else
-  stack_protector="-fno-stack-protector"
-  $as_echo "#define STACK_PROTECTOR_LEVEL 0" >>confdefs.h
-
-fi
-
-
-
-
-if test -n "$stack_protector"; then
-      no_ssp=-fno-stack-protector
-else
-  no_ssp=
-
-  if test "$enable_stack_protector" != no; then
-    as_fn_error $? "--enable-stack-protector=$enable_stack_protector specified, but specified level of stack protection is not supported by the compiler." "$LINENO" 5
-  fi
-fi
-
-# For the multi-arch option we need support in the assembler & linker.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler and linker STT_GNU_IFUNC support" >&5
-$as_echo_n "checking for assembler and linker STT_GNU_IFUNC support... " >&6; }
-if ${libc_cv_ld_gnu_indirect_function+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.S <<EOF
-.type foo,%gnu_indirect_function
-foo:
-.globl _start
-_start:
-.globl __start
-__start:
-.data
-#ifdef _LP64
-.quad foo
-#else
-.long foo
-#endif
-EOF
-libc_cv_ld_gnu_indirect_function=no
-if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-	    -nostartfiles -nostdlib $no_ssp \
-	    -o conftest conftest.S 1>&5 2>&5; then
-  # Do a link to see if the backend supports IFUNC relocs.
-  $READELF -r conftest 1>&5
-  LC_ALL=C $READELF -Wr conftest | grep -q 'IRELATIVE\|R_SPARC_JMP_IREL' && {
-    libc_cv_ld_gnu_indirect_function=yes
-  }
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ld_gnu_indirect_function" >&5
-$as_echo "$libc_cv_ld_gnu_indirect_function" >&6; }
-
-# Check if gcc supports attribute ifunc as it is used in libc_ifunc macro.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for gcc attribute ifunc support" >&5
-$as_echo_n "checking for gcc attribute ifunc support... " >&6; }
-if ${libc_cv_gcc_indirect_function+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<EOF
-extern int func (int);
-int used_func (int a)
-{
-  return a;
-}
-static void *resolver ()
-{
-  return &used_func;
-}
-extern __typeof (func) func __attribute__ ((ifunc ("resolver")));
-EOF
-libc_cv_gcc_indirect_function=no
-if ${CC-cc} -c conftest.c -o conftest.o 1>&5 \
-   2>&5 ; then
-  if $READELF -s conftest.o | grep IFUNC >/dev/null 2>&5; then
-    libc_cv_gcc_indirect_function=yes
-  fi
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_indirect_function" >&5
-$as_echo "$libc_cv_gcc_indirect_function" >&6; }
-
-# Check if linker supports textrel relocation with ifunc (used on elf/tests).
-# Note that it relies on libc_cv_ld_gnu_indirect_function test above.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the linker supports textrels along with ifunc" >&5
-$as_echo_n "checking whether the linker supports textrels along with ifunc... " >&6; }
-if ${libc_cv_textrel_ifunc+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.S <<EOF
-.type foo,%gnu_indirect_function
-foo:
-.globl _start
-_start:
-.globl __start
-__start:
-.data
-#ifdef _LP64
-.quad foo
-#else
-.long foo
-#endif
-.text
-.globl address
-address:
-#ifdef _LP64
-.quad address
-#else
-.long address
-#endif
-EOF
-libc_cv_textrel_ifunc=no
-if test $libc_cv_ld_gnu_indirect_function = yes; then
-   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostartfiles -nostdlib $no_ssp -pie -o conftest conftest.S'
-  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-     libc_cv_textrel_ifunc=yes
-   fi
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_textrel_ifunc" >&5
-$as_echo "$libc_cv_textrel_ifunc" >&6; }
-
-
-# Check if CC supports attribute retain as it is used in attribute_used_retain macro.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GNU attribute retain support" >&5
-$as_echo_n "checking for GNU attribute retain support... " >&6; }
-if ${libc_cv_gnu_retain+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<EOF
-static int var  __attribute__ ((used, retain, section ("__libc_atexit")));
-EOF
-libc_cv_gnu_retain=no
-if ${CC-cc} -Werror -c conftest.c -o /dev/null 1>&5 \
-   2>&5 ; then
-  libc_cv_gnu_retain=yes
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gnu_retain" >&5
-$as_echo "$libc_cv_gnu_retain" >&6; }
-if test $libc_cv_gnu_retain = yes; then
-  $as_echo "#define HAVE_GNU_RETAIN 1" >>confdefs.h
-
-fi
-config_vars="$config_vars
-have-gnu-retain = $libc_cv_gnu_retain"
-
-# Check if gcc warns about alias for function with incompatible types.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if compiler warns about alias for function with incompatible types" >&5
-$as_echo_n "checking if compiler warns about alias for function with incompatible types... " >&6; }
-if ${libc_cv_gcc_incompatible_alias+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat > conftest.c <<EOF
-int __redirect_foo (const void *s, int c);
-
-__typeof (__redirect_foo) *foo_impl (void) __asm__ ("foo");
-__typeof (__redirect_foo) *foo_impl (void)
-{
-  return 0;
-}
-
-extern __typeof (__redirect_foo) foo_alias __attribute__ ((alias ("foo")));
-EOF
-libc_cv_gcc_incompatible_alias=yes
-if ${CC-cc} -Werror -c conftest.c -o conftest.o 1>&5 2>&5 ; then
-  libc_cv_gcc_incompatible_alias=no
-fi
-rm -f conftest*
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_incompatible_alias" >&5
-$as_echo "$libc_cv_gcc_incompatible_alias" >&6; }
-
-if test x"$libc_cv_ld_gnu_indirect_function" != xyes; then
-  if test x"$multi_arch" = xyes; then
-    as_fn_error $? "--enable-multi-arch support requires assembler and linker support" "$LINENO" 5
-  else
-    multi_arch=no
-  fi
-fi
-if test x"$libc_cv_gcc_indirect_function" != xyes; then
-  # GCC 8+ emits a warning for alias with incompatible types and it might
-  # fail to build ifunc resolvers aliases to either weak or internal
-  # symbols.  Disables multiarch build in this case.
-  if test x"$libc_cv_gcc_incompatible_alias" = xyes; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: gcc emits a warning for alias between functions of incompatible types" >&5
-$as_echo "$as_me: WARNING: gcc emits a warning for alias between functions of incompatible types" >&2;}
-    if test x"$multi_arch" = xyes; then
-      as_fn_error $? "--enable-multi-arch support requires a gcc with gnu-indirect-function support" "$LINENO" 5
-    fi
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Multi-arch is disabled." >&5
-$as_echo "$as_me: WARNING: Multi-arch is disabled." >&2;}
-    multi_arch=no
-  elif test x"$multi_arch" = xyes; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --enable-multi-arch support recommends a gcc with gnu-indirect-function support.
-Please use a gcc which supports it by default or configure gcc with --enable-gnu-indirect-function" >&5
-$as_echo "$as_me: WARNING: --enable-multi-arch support recommends a gcc with gnu-indirect-function support.
-Please use a gcc which supports it by default or configure gcc with --enable-gnu-indirect-function" >&2;}
-  fi
-fi
-multi_arch_d=
-if test x"$multi_arch" != xno; then
-  multi_arch_d=/multiarch
-fi
-
-# Compute the list of sysdep directories for this configuration.
-# This can take a while to compute.
-sysdep_dir=$srcdir/sysdeps
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking sysdep dirs" >&5
-$as_echo_n "checking sysdep dirs... " >&6; }
-# Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
-os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
-
-test "x$base_os" != x || case "$os" in
-gnu*)
-  base_os=mach/hurd ;;
-linux*)
-  base_os=unix/sysv ;;
-esac
-
-# For sunos4.1.1, try sunos4.1.1, then sunos4.1, then sunos4, then sunos.
-tail=$os
-ostry=$os
-while o=`echo $tail | sed 's/\.[^.]*$//'`; test $o != $tail; do
-  ostry="$ostry /$o"
-  tail=$o
-done
-o=`echo $tail | sed 's/[0-9]*$//'`
-if test $o != $tail; then
-  ostry="$ostry /$o"
-fi
-# For linux-gnu, try linux-gnu, then linux.
-o=`echo $tail | sed 's/-.*$//'`
-if test $o != $tail; then
-  ostry="$ostry /$o"
-fi
-
-# For unix/sysv/sysv4, try unix/sysv/sysv4, then unix/sysv, then unix.
-base=
-tail=$base_os
-while b=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$b"; do
-  set $b
-  base="$base /$1"
-  tail="$2"
-done
-
-# For sparc/sparc32, try sparc/sparc32 and then sparc.
-mach=
-tail=$machine${submachine:+/$submachine}
-while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
-  set $m
-  # Prepend the machine's FPU directory unless the architecture specific
-  # preconfigure disables it.
-  if test "$libc_cv_with_fp" = yes; then
-    maybe_fpu=/fpu
-  else
-    maybe_fpu=/nofpu
-  fi
-  # For each machine term, try it with and then without /multiarch.
-  for try_fpu in $maybe_fpu ''; do
-    for try_multi in $multi_arch_d ''; do
-      mach="$mach /$1$try_fpu$try_multi"
-    done
-  done
-  tail="$2"
-done
-
-
-# Find what sysdep directories exist.
-sysnames=
-for b in $base ''; do
-  for m0 in $mach ''; do
-    for v in /$vendor ''; do
-      test "$v" = / && continue
-      for o in /$ostry ''; do
-	test "$o" = / && continue
-	for m in $mach ''; do
-	  try_suffix="$m0$b$v$o$m"
-	  if test -n "$try_suffix"; then
-	    try_srcdir="${srcdir}/"
-	    try="sysdeps$try_suffix"
-	    test -n "$enable_debug_configure" &&
-	    echo "$0 DEBUG: try $try" >&2
-	    if test -d "$try_srcdir$try"; then
-	      sysnames="$sysnames $try"
-	      { test -n "$o" || test -n "$b"; } && os_used=t
-	      { test -n "$m" || test -n "$m0"; } && machine_used=t
-	      case x${m0:-$m} in
-	      x*/$submachine) submachine_used=t ;;
-	      esac
-	    fi
-	  fi
-	done
-      done
-    done
-  done
-done
-
-# If the assembler supports gnu_indirect_function symbol type and the
-# architecture supports multi-arch, we enable multi-arch by default.
-case $sysnames in
-*"$multi_arch_d"*)
-  ;;
-*)
-  test x"$multi_arch" = xdefault && multi_arch=no
-  ;;
-esac
-if test x"$multi_arch" != xno; then
-  $as_echo "#define USE_MULTIARCH 1" >>confdefs.h
-
-fi
-
-
-if test -z "$os_used" && test "$os" != none; then
-  as_fn_error $? "Operating system $os is not supported." "$LINENO" 5
-fi
-if test -z "$machine_used" && test "$machine" != none; then
-  as_fn_error $? "The $machine is not supported." "$LINENO" 5
-fi
-if test -z "$submachine_used" && test -n "$submachine"; then
-  as_fn_error $? "The $submachine subspecies of $host_cpu is not supported." "$LINENO" 5
-fi
-
-
-# We have now validated the configuration.
-
-# Expand the list of system names into a full list of directories
-# from each element's parent name and Implies file (if present).
-set $sysnames
-names=
-while test $# -gt 0; do
-  name=$1
-  shift
-
-  case " $names " in *" $name "*)
-    # Already in the list.
-    continue
-  esac
-
-  # Report each name as we discover it, so there is no long pause in output.
-  echo $ECHO_N "$name $ECHO_C" >&6
-
-  name_base=`echo $name | sed -e 's@\(.*sysdeps\)/.*@\1@'`
-
-  case $name in
-    /*) xsrcdir= ;;
-    *)  xsrcdir=$srcdir/ ;;
-  esac
-  test -n "$enable_debug_configure" &&
-  echo "DEBUG: name/Implies $xsrcdir$name/Implies" >&2
-
-  for implies_file in Implies Implies-before Implies-after; do
-    implies_type=`echo $implies_file | sed s/-/_/`
-    eval ${implies_type}=
-    if test -f $xsrcdir$name/$implies_file; then
-      # Collect more names from the `Implies' file (removing comments).
-      implied_candidate="`sed 's/#.*$//' < $xsrcdir$name/$implies_file`"
-      for x in $implied_candidate; do
-	found=no
-	if test -d $xsrcdir$name_base/$x; then
-	  eval "${implies_type}=\"\$${implies_type} \$name_base/\$x\""
-	  found=yes
-	fi
-	try="sysdeps/$x"
-	try_srcdir=$srcdir/
-	test -n "$enable_debug_configure" &&
-	 echo "DEBUG: $name $implies_file $x try() {$try_srcdir}$try" >&2
-	if test $try != $xsrcdir$name_base/$x && test -d $try_srcdir$try;
-	then
-	  eval "${implies_type}=\"\$${implies_type} \$try\""
-	  found=yes
-	fi
-	if test $found = no; then
-	  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $name/$implies_file specifies nonexistent $x" >&5
-$as_echo "$as_me: WARNING: $name/$implies_file specifies nonexistent $x" >&2;}
-	fi
-      done
-    fi
-  done
-
-  # Add NAME to the list of names.
-  names="$names $name"
-
-  # Find the parent of NAME, using the empty string if it has none.
-  parent="`echo $name | sed -n -e 's=/[^/]*$==' -e '/sysdeps$/q' -e p`"
-
-  test -n "$enable_debug_configure" &&
-    echo "DEBUG: $name Implies='$Implies' rest='$*' parent='$parent' \
-Implies_before='$Implies_before' Implies_after='$Implies_after'" >&2
-
-  # Add the names implied by NAME, and NAME's parent (if it has one), to
-  # the list of names to be processed (the argument list).  We prepend the
-  # implied names to the list and append the parent.  We want implied
-  # directories to come before further directories inferred from the
-  # configuration components; this ensures that for sysv4, unix/common
-  # (implied by unix/sysv/sysv4) comes before unix/sysv (in ostry (here $*)
-  # after sysv4).
-  sysnames="`echo $Implies $* $Implies_before $parent $Implies_after`"
-  test -n "$sysnames" && set $sysnames
-done
-
-# Add the default directories.
-default_sysnames="sysdeps/generic"
-sysnames="$names $default_sysnames"
-
-# The other names were emitted during the scan.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $default_sysnames" >&5
-$as_echo "$default_sysnames" >&6; }
-
-
 ### Locate tools.
 
 # Find a good install program.  We prefer a C program (faster),
@@ -5641,6 +5119,528 @@ $as_echo "$as_me: WARNING:
 *** These auxiliary programs are missing or incompatible versions:$aux_missing
 *** some features or tests will be disabled.
 *** Check the INSTALL file for required versions." >&2;}
+
+
+# Determine whether to use fpu or nofpu sysdeps directories.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for use of fpu sysdeps directories" >&5
+$as_echo_n "checking for use of fpu sysdeps directories... " >&6; }
+if ${libc_cv_with_fp+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+#if $with_fp_cond
+int dummy;
+#else
+# error "no hardware floating point"
+#endif
+EOF
+libc_cv_with_fp=no
+if ${CC-cc} $CFLAGS $CPPFLAGS -S conftest.c -o conftest.s \
+   1>&5 2>&5 ; then
+  libc_cv_with_fp=yes
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_with_fp" >&5
+$as_echo "$libc_cv_with_fp" >&6; }
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector" >&5
+$as_echo_n "checking for -fstack-protector... " >&6; }
+if ${libc_cv_ssp+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  libc_cv_ssp=yes
+else
+  libc_cv_ssp=no
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp" >&5
+$as_echo "$libc_cv_ssp" >&6; }
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector-strong" >&5
+$as_echo_n "checking for -fstack-protector-strong... " >&6; }
+if ${libc_cv_ssp_strong+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector-strong -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  libc_cv_ssp_strong=yes
+else
+  libc_cv_ssp_strong=no
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp_strong" >&5
+$as_echo "$libc_cv_ssp_strong" >&6; }
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for -fstack-protector-all" >&5
+$as_echo_n "checking for -fstack-protector-all... " >&6; }
+if ${libc_cv_ssp_all+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -Werror -fstack-protector-all -xc /dev/null -S -o /dev/null'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  libc_cv_ssp_all=yes
+else
+  libc_cv_ssp_all=no
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ssp_all" >&5
+$as_echo "$libc_cv_ssp_all" >&6; }
+
+stack_protector=
+no_stack_protector=
+if test "$libc_cv_ssp" = yes; then
+  no_stack_protector="-fno-stack-protector -DSTACK_PROTECTOR_LEVEL=0"
+  $as_echo "#define HAVE_CC_NO_STACK_PROTECTOR 1" >>confdefs.h
+
+fi
+
+if test "$enable_stack_protector" = yes && test "$libc_cv_ssp" = yes; then
+  stack_protector="-fstack-protector"
+  $as_echo "#define STACK_PROTECTOR_LEVEL 1" >>confdefs.h
+
+elif test "$enable_stack_protector" = all && test "$libc_cv_ssp_all" = yes; then
+  stack_protector="-fstack-protector-all"
+  $as_echo "#define STACK_PROTECTOR_LEVEL 2" >>confdefs.h
+
+elif test "$enable_stack_protector" = strong && test "$libc_cv_ssp_strong" = yes; then
+  stack_protector="-fstack-protector-strong"
+  $as_echo "#define STACK_PROTECTOR_LEVEL 3" >>confdefs.h
+
+else
+  stack_protector="-fno-stack-protector"
+  $as_echo "#define STACK_PROTECTOR_LEVEL 0" >>confdefs.h
+
+fi
+
+
+
+
+if test -n "$stack_protector"; then
+      no_ssp=-fno-stack-protector
+else
+  no_ssp=
+
+  if test "$enable_stack_protector" != no; then
+    as_fn_error $? "--enable-stack-protector=$enable_stack_protector specified, but specified level of stack protection is not supported by the compiler." "$LINENO" 5
+  fi
+fi
+
+# For the multi-arch option we need support in the assembler & linker.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for assembler and linker STT_GNU_IFUNC support" >&5
+$as_echo_n "checking for assembler and linker STT_GNU_IFUNC support... " >&6; }
+if ${libc_cv_ld_gnu_indirect_function+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.S <<EOF
+.type foo,%gnu_indirect_function
+foo:
+.globl _start
+_start:
+.globl __start
+__start:
+.data
+#ifdef _LP64
+.quad foo
+#else
+.long foo
+#endif
+EOF
+libc_cv_ld_gnu_indirect_function=no
+if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
+	    -nostartfiles -nostdlib $no_ssp \
+	    -o conftest conftest.S 1>&5 2>&5; then
+  # Do a link to see if the backend supports IFUNC relocs.
+  $READELF -r conftest 1>&5
+  LC_ALL=C $READELF -Wr conftest | grep -q 'IRELATIVE\|R_SPARC_JMP_IREL' && {
+    libc_cv_ld_gnu_indirect_function=yes
+  }
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_ld_gnu_indirect_function" >&5
+$as_echo "$libc_cv_ld_gnu_indirect_function" >&6; }
+
+# Check if gcc supports attribute ifunc as it is used in libc_ifunc macro.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for gcc attribute ifunc support" >&5
+$as_echo_n "checking for gcc attribute ifunc support... " >&6; }
+if ${libc_cv_gcc_indirect_function+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+extern int func (int);
+int used_func (int a)
+{
+  return a;
+}
+static void *resolver ()
+{
+  return &used_func;
+}
+extern __typeof (func) func __attribute__ ((ifunc ("resolver")));
+EOF
+libc_cv_gcc_indirect_function=no
+if ${CC-cc} -c conftest.c -o conftest.o 1>&5 \
+   2>&5 ; then
+  if $READELF -s conftest.o | grep IFUNC >/dev/null 2>&5; then
+    libc_cv_gcc_indirect_function=yes
+  fi
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_indirect_function" >&5
+$as_echo "$libc_cv_gcc_indirect_function" >&6; }
+
+# Check if linker supports textrel relocation with ifunc (used on elf/tests).
+# Note that it relies on libc_cv_ld_gnu_indirect_function test above.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the linker supports textrels along with ifunc" >&5
+$as_echo_n "checking whether the linker supports textrels along with ifunc... " >&6; }
+if ${libc_cv_textrel_ifunc+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.S <<EOF
+.type foo,%gnu_indirect_function
+foo:
+.globl _start
+_start:
+.globl __start
+__start:
+.data
+#ifdef _LP64
+.quad foo
+#else
+.long foo
+#endif
+.text
+.globl address
+address:
+#ifdef _LP64
+.quad address
+#else
+.long address
+#endif
+EOF
+libc_cv_textrel_ifunc=no
+if test $libc_cv_ld_gnu_indirect_function = yes; then
+   if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostartfiles -nostdlib $no_ssp -pie -o conftest conftest.S'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+     libc_cv_textrel_ifunc=yes
+   fi
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_textrel_ifunc" >&5
+$as_echo "$libc_cv_textrel_ifunc" >&6; }
+
+
+# Check if CC supports attribute retain as it is used in attribute_used_retain macro.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GNU attribute retain support" >&5
+$as_echo_n "checking for GNU attribute retain support... " >&6; }
+if ${libc_cv_gnu_retain+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+static int var  __attribute__ ((used, retain, section ("__libc_atexit")));
+EOF
+libc_cv_gnu_retain=no
+if ${CC-cc} -Werror -c conftest.c -o /dev/null 1>&5 \
+   2>&5 ; then
+  libc_cv_gnu_retain=yes
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gnu_retain" >&5
+$as_echo "$libc_cv_gnu_retain" >&6; }
+if test $libc_cv_gnu_retain = yes; then
+  $as_echo "#define HAVE_GNU_RETAIN 1" >>confdefs.h
+
+fi
+config_vars="$config_vars
+have-gnu-retain = $libc_cv_gnu_retain"
+
+# Check if gcc warns about alias for function with incompatible types.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if compiler warns about alias for function with incompatible types" >&5
+$as_echo_n "checking if compiler warns about alias for function with incompatible types... " >&6; }
+if ${libc_cv_gcc_incompatible_alias+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat > conftest.c <<EOF
+int __redirect_foo (const void *s, int c);
+
+__typeof (__redirect_foo) *foo_impl (void) __asm__ ("foo");
+__typeof (__redirect_foo) *foo_impl (void)
+{
+  return 0;
+}
+
+extern __typeof (__redirect_foo) foo_alias __attribute__ ((alias ("foo")));
+EOF
+libc_cv_gcc_incompatible_alias=yes
+if ${CC-cc} -Werror -c conftest.c -o conftest.o 1>&5 2>&5 ; then
+  libc_cv_gcc_incompatible_alias=no
+fi
+rm -f conftest*
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_gcc_incompatible_alias" >&5
+$as_echo "$libc_cv_gcc_incompatible_alias" >&6; }
+
+if test x"$libc_cv_ld_gnu_indirect_function" != xyes; then
+  if test x"$multi_arch" = xyes; then
+    as_fn_error $? "--enable-multi-arch support requires assembler and linker support" "$LINENO" 5
+  else
+    multi_arch=no
+  fi
+fi
+if test x"$libc_cv_gcc_indirect_function" != xyes; then
+  # GCC 8+ emits a warning for alias with incompatible types and it might
+  # fail to build ifunc resolvers aliases to either weak or internal
+  # symbols.  Disables multiarch build in this case.
+  if test x"$libc_cv_gcc_incompatible_alias" = xyes; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: gcc emits a warning for alias between functions of incompatible types" >&5
+$as_echo "$as_me: WARNING: gcc emits a warning for alias between functions of incompatible types" >&2;}
+    if test x"$multi_arch" = xyes; then
+      as_fn_error $? "--enable-multi-arch support requires a gcc with gnu-indirect-function support" "$LINENO" 5
+    fi
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Multi-arch is disabled." >&5
+$as_echo "$as_me: WARNING: Multi-arch is disabled." >&2;}
+    multi_arch=no
+  elif test x"$multi_arch" = xyes; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --enable-multi-arch support recommends a gcc with gnu-indirect-function support.
+Please use a gcc which supports it by default or configure gcc with --enable-gnu-indirect-function" >&5
+$as_echo "$as_me: WARNING: --enable-multi-arch support recommends a gcc with gnu-indirect-function support.
+Please use a gcc which supports it by default or configure gcc with --enable-gnu-indirect-function" >&2;}
+  fi
+fi
+multi_arch_d=
+if test x"$multi_arch" != xno; then
+  multi_arch_d=/multiarch
+fi
+
+# Compute the list of sysdep directories for this configuration.
+# This can take a while to compute.
+sysdep_dir=$srcdir/sysdeps
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking sysdep dirs" >&5
+$as_echo_n "checking sysdep dirs... " >&6; }
+# Make sco3.2v4 become sco3.2.4 and sunos4.1.1_U1 become sunos4.1.1.U1.
+os="`echo $os | sed 's/\([0-9A-Z]\)[v_]\([0-9A-Z]\)/\1.\2/g'`"
+
+test "x$base_os" != x || case "$os" in
+gnu*)
+  base_os=mach/hurd ;;
+linux*)
+  base_os=unix/sysv ;;
+esac
+
+# For sunos4.1.1, try sunos4.1.1, then sunos4.1, then sunos4, then sunos.
+tail=$os
+ostry=$os
+while o=`echo $tail | sed 's/\.[^.]*$//'`; test $o != $tail; do
+  ostry="$ostry /$o"
+  tail=$o
+done
+o=`echo $tail | sed 's/[0-9]*$//'`
+if test $o != $tail; then
+  ostry="$ostry /$o"
+fi
+# For linux-gnu, try linux-gnu, then linux.
+o=`echo $tail | sed 's/-.*$//'`
+if test $o != $tail; then
+  ostry="$ostry /$o"
+fi
+
+# For unix/sysv/sysv4, try unix/sysv/sysv4, then unix/sysv, then unix.
+base=
+tail=$base_os
+while b=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$b"; do
+  set $b
+  base="$base /$1"
+  tail="$2"
+done
+
+# For sparc/sparc32, try sparc/sparc32 and then sparc.
+mach=
+tail=$machine${submachine:+/$submachine}
+while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
+  set $m
+  # Prepend the machine's FPU directory unless the architecture specific
+  # preconfigure disables it.
+  if test "$libc_cv_with_fp" = yes; then
+    maybe_fpu=/fpu
+  else
+    maybe_fpu=/nofpu
+  fi
+  # For each machine term, try it with and then without /multiarch.
+  for try_fpu in $maybe_fpu ''; do
+    for try_multi in $multi_arch_d ''; do
+      mach="$mach /$1$try_fpu$try_multi"
+    done
+  done
+  tail="$2"
+done
+
+
+# Find what sysdep directories exist.
+sysnames=
+for b in $base ''; do
+  for m0 in $mach ''; do
+    for v in /$vendor ''; do
+      test "$v" = / && continue
+      for o in /$ostry ''; do
+	test "$o" = / && continue
+	for m in $mach ''; do
+	  try_suffix="$m0$b$v$o$m"
+	  if test -n "$try_suffix"; then
+	    try_srcdir="${srcdir}/"
+	    try="sysdeps$try_suffix"
+	    test -n "$enable_debug_configure" &&
+	    echo "$0 DEBUG: try $try" >&2
+	    if test -d "$try_srcdir$try"; then
+	      sysnames="$sysnames $try"
+	      { test -n "$o" || test -n "$b"; } && os_used=t
+	      { test -n "$m" || test -n "$m0"; } && machine_used=t
+	      case x${m0:-$m} in
+	      x*/$submachine) submachine_used=t ;;
+	      esac
+	    fi
+	  fi
+	done
+      done
+    done
+  done
+done
+
+# If the assembler supports gnu_indirect_function symbol type and the
+# architecture supports multi-arch, we enable multi-arch by default.
+case $sysnames in
+*"$multi_arch_d"*)
+  ;;
+*)
+  test x"$multi_arch" = xdefault && multi_arch=no
+  ;;
+esac
+if test x"$multi_arch" != xno; then
+  $as_echo "#define USE_MULTIARCH 1" >>confdefs.h
+
+fi
+
+
+if test -z "$os_used" && test "$os" != none; then
+  as_fn_error $? "Operating system $os is not supported." "$LINENO" 5
+fi
+if test -z "$machine_used" && test "$machine" != none; then
+  as_fn_error $? "The $machine is not supported." "$LINENO" 5
+fi
+if test -z "$submachine_used" && test -n "$submachine"; then
+  as_fn_error $? "The $submachine subspecies of $host_cpu is not supported." "$LINENO" 5
+fi
+
+
+# We have now validated the configuration.
+
+# Expand the list of system names into a full list of directories
+# from each element's parent name and Implies file (if present).
+set $sysnames
+names=
+while test $# -gt 0; do
+  name=$1
+  shift
+
+  case " $names " in *" $name "*)
+    # Already in the list.
+    continue
+  esac
+
+  # Report each name as we discover it, so there is no long pause in output.
+  echo $ECHO_N "$name $ECHO_C" >&6
+
+  name_base=`echo $name | sed -e 's@\(.*sysdeps\)/.*@\1@'`
+
+  case $name in
+    /*) xsrcdir= ;;
+    *)  xsrcdir=$srcdir/ ;;
+  esac
+  test -n "$enable_debug_configure" &&
+  echo "DEBUG: name/Implies $xsrcdir$name/Implies" >&2
+
+  for implies_file in Implies Implies-before Implies-after; do
+    implies_type=`echo $implies_file | sed s/-/_/`
+    eval ${implies_type}=
+    if test -f $xsrcdir$name/$implies_file; then
+      # Collect more names from the `Implies' file (removing comments).
+      implied_candidate="`sed 's/#.*$//' < $xsrcdir$name/$implies_file`"
+      for x in $implied_candidate; do
+	found=no
+	if test -d $xsrcdir$name_base/$x; then
+	  eval "${implies_type}=\"\$${implies_type} \$name_base/\$x\""
+	  found=yes
+	fi
+	try="sysdeps/$x"
+	try_srcdir=$srcdir/
+	test -n "$enable_debug_configure" &&
+	 echo "DEBUG: $name $implies_file $x try() {$try_srcdir}$try" >&2
+	if test $try != $xsrcdir$name_base/$x && test -d $try_srcdir$try;
+	then
+	  eval "${implies_type}=\"\$${implies_type} \$try\""
+	  found=yes
+	fi
+	if test $found = no; then
+	  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $name/$implies_file specifies nonexistent $x" >&5
+$as_echo "$as_me: WARNING: $name/$implies_file specifies nonexistent $x" >&2;}
+	fi
+      done
+    fi
+  done
+
+  # Add NAME to the list of names.
+  names="$names $name"
+
+  # Find the parent of NAME, using the empty string if it has none.
+  parent="`echo $name | sed -n -e 's=/[^/]*$==' -e '/sysdeps$/q' -e p`"
+
+  test -n "$enable_debug_configure" &&
+    echo "DEBUG: $name Implies='$Implies' rest='$*' parent='$parent' \
+Implies_before='$Implies_before' Implies_after='$Implies_after'" >&2
+
+  # Add the names implied by NAME, and NAME's parent (if it has one), to
+  # the list of names to be processed (the argument list).  We prepend the
+  # implied names to the list and append the parent.  We want implied
+  # directories to come before further directories inferred from the
+  # configuration components; this ensures that for sysv4, unix/common
+  # (implied by unix/sysv/sysv4) comes before unix/sysv (in ostry (here $*)
+  # after sysv4).
+  sysnames="`echo $Implies $* $Implies_before $parent $Implies_after`"
+  test -n "$sysnames" && set $sysnames
+done
+
+# Add the default directories.
+default_sysnames="sysdeps/generic"
+sysnames="$names $default_sysnames"
+
+# The other names were emitted during the scan.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $default_sysnames" >&5
+$as_echo "$default_sysnames" >&6; }
 
 # if using special system headers, find out the compiler's sekrit
 # header directory and add that to the list.  NOTE: Only does the right
