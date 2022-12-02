@@ -126,10 +126,6 @@ OBJCOPY=`$CC -print-prog-name=objcopy`
 AC_SUBST(OBJCOPY)
 GPROF=`$CC -print-prog-name=gprof`
 AC_SUBST(GPROF)
-
-AC_CACHE_CHECK(whether $LD is GNU ld, libc_cv_prog_ld_gnu,
-[LIBC_PROG_FOO_GNU($LD, libc_cv_prog_ld_gnu=yes, libc_cv_prog_ld_gnu=no)])
-gnu_ld=$libc_cv_prog_ld_gnu
 ])
 
 dnl Run a static link test with -nostdlib -nostartfiles.
@@ -219,25 +215,23 @@ dnl LIBC_LINKER_FEATURE([ld_option], [cc_option], [action-if-true], [action-if-f
 AC_DEFUN([LIBC_LINKER_FEATURE],
 [AC_MSG_CHECKING([for linker that supports $1])
 libc_linker_feature=no
-if test x"$gnu_ld" = x"yes"; then
-  cat > conftest.c <<EOF
+cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-  if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
-		    $2 -nostdlib -nostartfiles
-		    -fPIC -shared -o conftest.so conftest.c
-		    1>&AS_MESSAGE_LOG_FD])
-  then
-    if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp $2 -nostdlib \
-	-nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
-	| grep "warning: $1 ignored" > /dev/null 2>&1; then
-      true
-    else
-      libc_linker_feature=yes
-    fi
+if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp
+		  $2 -nostdlib -nostartfiles
+		  -fPIC -shared -o conftest.so conftest.c
+		  1>&AS_MESSAGE_LOG_FD])
+then
+  if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $no_ssp $2 -nostdlib \
+      -nostartfiles -fPIC -shared -o conftest.so conftest.c 2>&1 \
+      | grep "warning: $1 ignored" > /dev/null 2>&1; then
+    true
+  else
+    libc_linker_feature=yes
   fi
-  rm -f conftest*
 fi
+rm -f conftest*
 if test $libc_linker_feature = yes; then
   $3
 else
