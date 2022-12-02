@@ -80,6 +80,10 @@
 
 	.section SECTION(.text), "ax", @progbits
 ENTRY(STRNCPY)
+# ifdef __ILP32__
+	/* Clear the upper 32 bits.  */
+	movl	%edx, %edx
+# endif
 	/* Filter zero length strings and very long strings.  Zero
 	   length strings just return, very long strings are handled by
 	   just running rep stos{b|l} to zero set (which will almost
