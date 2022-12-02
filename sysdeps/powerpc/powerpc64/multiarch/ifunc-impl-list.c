@@ -171,8 +171,6 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 			      __strncmp_power8)
 	      IFUNC_IMPL_ADD (array, i, strncmp, hwcap & PPC_FEATURE_ARCH_2_06,
 			      __strncmp_power7)
-	      IFUNC_IMPL_ADD (array, i, strncmp, hwcap & PPC_FEATURE_POWER4,
-			      __strncmp_power4)
 	      IFUNC_IMPL_ADD (array, i, strncmp, 1,
 			      __strncmp_ppc))
 
