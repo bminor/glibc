@@ -327,6 +327,7 @@ ptmalloc_init (void)
 #endif
 
 #ifdef __CHERI_PURE_CAPABILITY__
+  __always_fail_morecore = true;
   if (TUNABLE_GET_FULL (glibc, mem, cap_narrowing, int32_t, NULL) == 0)
     cap_narrowing_enabled = false;
   else
