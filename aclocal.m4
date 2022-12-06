@@ -118,12 +118,20 @@ case "$CC" in
     *fuse-ld=lld*) LDNAME=ld.lld;;
     *)             LDNAME=ld;;
 esac
-LD=`$CC -print-prog-name=$LDNAME`
-AR=`$CC -print-prog-name=ar`
+if test -z "$LD"; then
+    LD=`$CC -print-prog-name=$LDNAME`
+fi
+if test -z "$AR"; then
+    AR=`$CC -print-prog-name=ar`
+fi
 AC_SUBST(AR)
-OBJCOPY=`$CC -print-prog-name=objcopy`
+if test -z "$OBJCOPY"; then
+    OBJCOPY=`$CC -print-prog-name=objcopy`
+fi
 AC_SUBST(OBJCOPY)
-GPROF=`$CC -print-prog-name=gprof`
+if test -z "$GPROF"; then
+    GPROF=`$CC -print-prog-name=gprof`
+fi
 AC_SUBST(GPROF)
 ])
 
