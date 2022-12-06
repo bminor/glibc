@@ -238,6 +238,9 @@ tests := \
   xbug \
   # tests
 
+tests-container += \
+  tst-popen3
+
 generated += \
   errlist-data-aux-shared.S \
   errlist-data-aux.S \

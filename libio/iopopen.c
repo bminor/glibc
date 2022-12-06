@@ -66,11 +66,12 @@ unlock (void *not_used)
    be close (by transversing the proc_file_chain list) and the insertion of a
    new one after a successful posix_spawn this function should be called
    with proc_file_chain_lock acquired.  */
-static bool
+static int
 spawn_process (posix_spawn_file_actions_t *fa, FILE *fp, const char *command,
 	       int do_cloexec, int pipe_fds[2], int parent_end, int child_end,
 	       int child_pipe_fd)
 {
+  int err = 0;
 
   for (struct _IO_proc_file *p = proc_file_chain; p; p = p->next)
     {
@@ -79,15 +80,19 @@ spawn_process (posix_spawn_file_actions_t *fa, FILE *fp, const char *command,
       /* If any stream from previous popen() calls has fileno
 	 child_pipe_fd, it has been already closed by the adddup2 action
 	 above.  */
-      if (fd != child_pipe_fd
-	  && __posix_spawn_file_actions_addclose (fa, fd) != 0)
-	return false;
+      if (fd != child_pipe_fd)
+	{
+	  err = __posix_spawn_file_actions_addclose (fa, fd);
+	  if (err != 0)
+	    return err;
+	}
     }
 
-  if (__posix_spawn (&((_IO_proc_file *) fp)->pid, _PATH_BSHELL, fa, 0,
-		     (char *const[]){ (char*) "sh", (char*) "-c",
-		     (char *) command, NULL }, __environ) != 0)
-    return false;
+  err = __posix_spawn (&((_IO_proc_file *) fp)->pid, _PATH_BSHELL, fa, 0,
+		       (char *const[]){ (char*) "sh", (char*) "-c",
+		       (char *) command, NULL }, __environ);
+  if (err != 0)
+    return err;
 
   __close_nocancel (pipe_fds[child_end]);
 
@@ -101,7 +106,7 @@ spawn_process (posix_spawn_file_actions_t *fa, FILE *fp, const char *command,
   ((_IO_proc_file *) fp)->next = proc_file_chain;
   proc_file_chain = (_IO_proc_file *) fp;
 
-  return true;
+  return 0;
 }
 
 FILE *
@@ -112,7 +117,7 @@ _IO_new_proc_open (FILE *fp, const char *command, const char *mode)
   int parent_end, child_end;
   int pipe_fds[2];
   int child_pipe_fd;
-  bool spawn_ok;
+  int err;
 
   int do_read = 0;
   int do_write = 0;
@@ -185,16 +190,17 @@ _IO_new_proc_open (FILE *fp, const char *command, const char *mode)
       pipe_fds[child_end] = tmp;
     }
 
-  if (__posix_spawn_file_actions_adddup2 (&fa, pipe_fds[child_end],
-      child_pipe_fd) != 0)
+  err = __posix_spawn_file_actions_adddup2 (&fa, pipe_fds[child_end],
+					    child_pipe_fd);
+  if (err != 0)
     goto spawn_failure;
 
 #ifdef _IO_MTSAFE_IO
   _IO_cleanup_region_start_noarg (unlock);
   _IO_lock_lock (proc_file_chain_lock);
 #endif
-  spawn_ok = spawn_process (&fa, fp, command, do_cloexec, pipe_fds,
-			    parent_end, child_end, child_pipe_fd);
+  err = spawn_process (&fa, fp, command, do_cloexec, pipe_fds, parent_end,
+		       child_end, child_pipe_fd);
 #ifdef _IO_MTSAFE_IO
   _IO_lock_unlock (proc_file_chain_lock);
   _IO_cleanup_region_end (0);
@@ -202,12 +208,12 @@ _IO_new_proc_open (FILE *fp, const char *command, const char *mode)
 
   __posix_spawn_file_actions_destroy (&fa);
 
-  if (!spawn_ok)
+  if (err != 0)
     {
+      __set_errno (err);
     spawn_failure:
       __close_nocancel (pipe_fds[child_end]);
       __close_nocancel (pipe_fds[parent_end]);
-      __set_errno (ENOMEM);
       return NULL;
     }
 
