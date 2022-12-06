@@ -22,7 +22,7 @@ EOF
 fi
 if test $enable_cet != no; then
   # Check if assembler supports CET.
-  AC_CACHE_CHECK(whether compiler supports CET,
+  AC_CACHE_CHECK(whether assembler supports CET,
 		 libc_cv_x86_cet_as, [dnl
 cat > conftest.s <<EOF
 	incsspd %ecx
