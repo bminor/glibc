@@ -331,7 +331,13 @@ ptmalloc_init (void)
   if (TUNABLE_GET_FULL (glibc, mem, cap_narrowing, int32_t, NULL) == 0)
     cap_narrowing_enabled = false;
   else
-    cap_narrowing_enabled = true;
+    {
+      cap_narrowing_enabled = true;
+# ifdef __CAP_MMAP_THRESHOLD
+      /* Default mmap threshold to avoid heap fragmentation.  */
+      do_set_mmap_threshold (__CAP_MMAP_THRESHOLD);
+# endif
+    }
 #endif
   cap_init ();
 

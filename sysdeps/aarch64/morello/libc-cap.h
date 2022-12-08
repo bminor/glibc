@@ -285,6 +285,10 @@ __libc_cap_map_del (void *p)
    allocations, i.e. __libc_cap_align (n) <= MALLOC_ALIGNMENT.  */
 #define __CAP_ALIGN_THRESHOLD 32759
 
+/* Set the mmap_threshold to this value when narrowing is enabled
+   to avoid heap fragmentation due to alignment requirements.  */
+#define __CAP_MMAP_THRESHOLD 262144
+
 /* Round up the allocation size so the allocated pointer bounds
    can be represented.  Note: this may be called before any
    checks on n, so it should work with all possible n values.  */
