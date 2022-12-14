@@ -308,7 +308,17 @@ L(ret_nonzero_vec_end_0):
 	setg	%dl
 	leal	-1(%rdx, %rdx), %eax
 #  else
-	addl	%edx, %eax
+	/* Use `addq` instead of `addl` here so that even if `rax` + `rdx`
+       is negative value of the sum will be usable as a 64-bit offset
+       (negative 32-bit numbers zero-extend to a large and often
+       out-of-bounds 64-bit offsets).  Note that `rax` + `rdx` >= 0 is
+       an invariant when `memcmp` is used correctly, but if the input
+       strings `rsi`/`rdi` are concurrently modified as the function
+       runs (there is a Data-Race) it is possible for `rax` + `rdx` to
+       be negative.  Given that there is virtually no extra to cost
+       using `addq` instead of `addl` we may as well protect the
+       data-race case.  */
+	addq	%rdx, %rax
 	movzbl	(VEC_SIZE * -1 + SIZE_OFFSET)(%rsi, %rax), %ecx
 	movzbl	(VEC_SIZE * -1 + SIZE_OFFSET)(%rdi, %rax), %eax
 	subl	%ecx, %eax
