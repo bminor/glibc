@@ -54,21 +54,57 @@ CFLAGS-malloc.c += -DMORECORE_CLEARS=2
 endif
 
 ifeq ($(subdir),misc)
-sysdep_routines += adjtimex clone umount umount2 readahead sysctl \
-		   setfsuid setfsgid epoll_pwait epoll_pwait2 signalfd \
-		   eventfd eventfd_read eventfd_write prlimit prlimit64 \
-		   personality epoll_wait tee vmsplice splice \
-		   open_by_handle_at mlock2 pkey_mprotect pkey_set pkey_get \
-		   timerfd_gettime timerfd_settime prctl \
-		   process_vm_readv process_vm_writev clock_adjtime \
-		   pselect32 \
-		   xstat fxstat lxstat xstat64 fxstat64 lxstat64 \
-		   fxstatat fxstatat64 \
-		   xmknod xmknodat convert_scm_timestamps \
-		   closefrom_fallback \
-		   clone3 clone-internal \
-		   fanotify_mark \
-		   mremap \
+sysdep_routines += \
+  adjtimex \
+  clock_adjtime \
+  clone \
+  clone-internal \
+  clone3 \
+  closefrom_fallback \
+  convert_scm_timestamps \
+  epoll_pwait \
+  epoll_pwait2 \
+  epoll_wait \
+  eventfd \
+  eventfd_read \
+  eventfd_write \
+  fanotify_mark \
+  fxstat \
+  fxstat64 \
+  fxstatat \
+  fxstatat64 \
+  lxstat \
+  lxstat64 \
+  mlock2 \
+  mremap \
+  open_by_handle_at \
+  personality \
+  pkey_get \
+  pkey_mprotect \
+  pkey_set \
+  prctl \
+  prlimit \
+  prlimit64 \
+  process_vm_readv \
+  process_vm_writev \
+  pselect32 \
+  readahead \
+  setfsgid \
+  setfsuid \
+  signalfd \
+  splice \
+  sysctl \
+  tee \
+  timerfd_gettime \
+  timerfd_settime \
+  umount \
+  umount2 \
+  vmsplice \
+  xmknod \
+  xmknodat \
+  xstat \
+  xstat64 \
+  # sysdeps-routines
 
 CFLAGS-gethostid.c = -fexceptions
 CFLAGS-tee.c = -fexceptions -fasynchronous-unwind-tables
@@ -79,58 +115,114 @@ CFLAGS-sync_file_range.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pselect32.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=(0x80000000-sysconf(_SC_PAGESIZE))"
 
-sysdep_headers += sys/mount.h sys/acct.h \
-		  sys/klog.h \
-		  sys/user.h sys/prctl.h \
-		  sys/kd.h sys/soundcard.h sys/vt.h \
-		  sys/quota.h sys/fsuid.h \
-		  scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h sys/pci.h \
-		  sys/raw.h sys/personality.h sys/epoll.h \
-		  bits/a.out.h sys/inotify.h sys/signalfd.h sys/eventfd.h \
-		  sys/timerfd.h sys/fanotify.h bits/eventfd.h bits/inotify.h \
-		  bits/signalfd.h bits/timerfd.h bits/epoll.h \
-		  bits/socket_type.h bits/syscall.h \
-		  bits/mman-linux.h bits/mman-shared.h bits/ptrace-shared.h \
-		  bits/siginfo-arch.h bits/siginfo-consts-arch.h \
-		  bits/procfs.h bits/procfs-id.h bits/procfs-extra.h \
-		  bits/procfs-prregset.h bits/mman-map-flags-generic.h \
-		  bits/shmlba.h \
-		  bits/termios-struct.h bits/termios-c_cc.h \
-		  bits/termios-c_iflag.h bits/termios-c_oflag.h \
-		  bits/termios-baud.h bits/termios-c_cflag.h \
-		  bits/termios-c_lflag.h bits/termios-tcflow.h \
-		  bits/termios-misc.h \
-		  bits/types/struct_semid_ds.h \
-		  bits/types/struct_msqid_ds.h \
-		  bits/types/struct_shmid_ds.h \
-		  bits/ipc-perm.h \
-		  bits/struct_stat.h \
-		  bits/struct_stat_time64_helper.h \
-		  bits/types/struct_msqid64_ds.h \
-		  bits/types/struct_msqid64_ds_helper.h \
-		  bits/types/struct_semid64_ds.h \
-		  bits/types/struct_semid64_ds_helper.h \
-		  bits/types/struct_shmid64_ds.h \
-		  bits/types/struct_shmid64_ds_helper.h \
-		  bits/pthread_stack_min.h bits/pthread_stack_min-dynamic.h \
-		  sys/rseq.h bits/rseq.h \
-		  sys/pidfd.h
+sysdep_headers += \
+  bits/a.out.h \
+  bits/epoll.h \
+  bits/eventfd.h \
+  bits/inotify.h \
+  bits/ipc-perm.h \
+  bits/mman-linux.h \
+  bits/mman-map-flags-generic.h \
+  bits/mman-shared.h \
+  bits/procfs-extra.h \
+  bits/procfs-id.h \
+  bits/procfs-prregset.h \
+  bits/procfs.h \
+  bits/pthread_stack_min-dynamic.h \
+  bits/pthread_stack_min.h \
+  bits/ptrace-shared.h \
+  bits/rseq.h \
+  bits/shmlba.h \
+  bits/siginfo-arch.h \
+  bits/siginfo-consts-arch.h \
+  bits/signalfd.h \
+  bits/socket_type.h \
+  bits/struct_stat.h \
+  bits/struct_stat_time64_helper.h \
+  bits/syscall.h \
+  bits/termios-baud.h \
+  bits/termios-c_cc.h \
+  bits/termios-c_cflag.h \
+  bits/termios-c_iflag.h \
+  bits/termios-c_lflag.h \
+  bits/termios-c_oflag.h \
+  bits/termios-misc.h \
+  bits/termios-struct.h \
+  bits/termios-tcflow.h \
+  bits/timerfd.h \
+  bits/types/struct_msqid64_ds.h \
+  bits/types/struct_msqid64_ds_helper.h \
+  bits/types/struct_msqid_ds.h \
+  bits/types/struct_semid64_ds.h \
+  bits/types/struct_semid64_ds_helper.h \
+  bits/types/struct_semid_ds.h \
+  bits/types/struct_shmid64_ds.h \
+  bits/types/struct_shmid64_ds_helper.h \
+  bits/types/struct_shmid_ds.h \
+  scsi/scsi.h \
+  scsi/scsi_ioctl.h \
+  scsi/sg.h \
+  sys/acct.h \
+  sys/epoll.h \
+  sys/eventfd.h \
+  sys/fanotify.h \
+  sys/fsuid.h \
+  sys/inotify.h \
+  sys/kd.h \
+  sys/klog.h \
+  sys/mount.h \
+  sys/pci.h \
+  sys/personality.h \
+  sys/pidfd.h \
+  sys/prctl.h \
+  sys/quota.h \
+  sys/raw.h \
+  sys/rseq.h \
+  sys/signalfd.h \
+  sys/soundcard.h \
+  sys/timerfd.h \
+  sys/user.h \
+  sys/vt.h \
+  # sysdep-headers
 
-tests += tst-clone tst-clone2 tst-clone3 tst-fanotify tst-personality \
-	 tst-quota tst-sync_file_range tst-sysconf-iov_max tst-ttyname \
-	 test-errno-linux tst-memfd_create tst-mlock2 tst-pkey \
-	 tst-rlimit-infinity tst-ofdlocks tst-gettid tst-gettid-kill \
-	 tst-tgkill tst-sysvsem-linux tst-sysvmsg-linux tst-sysvshm-linux \
-	 tst-timerfd tst-ppoll \
-	 tst-clock_adjtime tst-adjtimex tst-ntp_adjtime tst-ntp_gettime \
-	 tst-ntp_gettimex tst-sigtimedwait tst-misalign-clone \
-  tst-prctl \
-  tst-scm_rights \
+tests += \
+  test-errno-linux \
+  tst-adjtimex \
+  tst-clock_adjtime \
+  tst-clone \
+  tst-clone2 \
+  tst-clone3 \
   tst-epoll \
+  tst-fanotify \
   tst-getauxval \
-  tst-pidfd \
-  tst-process_mrelease \
+  tst-gettid \
+  tst-gettid-kill \
+  tst-memfd_create \
+  tst-misalign-clone \
+  tst-mlock2 \
   tst-mount \
+  tst-ntp_adjtime \
+  tst-ntp_gettime \
+  tst-ntp_gettimex \
+  tst-ofdlocks \
+  tst-personality \
+  tst-pidfd \
+  tst-pkey \
+  tst-ppoll \
+  tst-prctl \
+  tst-process_mrelease \
+  tst-quota \
+  tst-rlimit-infinity \
+  tst-scm_rights \
+  tst-sigtimedwait \
+  tst-sync_file_range \
+  tst-sysconf-iov_max \
+  tst-sysvmsg-linux \
+  tst-sysvsem-linux \
+  tst-sysvshm-linux \
+  tst-tgkill \
+  tst-timerfd \
+  tst-ttyname \
   # tests
 
 # process_madvise requires CAP_SYS_ADMIN.
