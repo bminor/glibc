@@ -2412,9 +2412,10 @@ allocate at least @var{size} wide characters for the string @var{ws}.
 
 The return value is the number of characters generated for the given
 input, excluding the trailing null.  If not all output fits into the
-provided buffer a negative value is returned.  You should try again with
-a bigger output string.  @emph{Note:} this is different from how
-@code{snprintf} handles this situation.
+provided buffer a negative value is returned, and @code{errno} is set to
+@code{E2BIG}.  (The setting of @code{errno} is a GNU extension.)  You
+should try again with a bigger output string.  @emph{Note:} this is
+different from how @code{snprintf} handles this situation.
 
 Note that the corresponding narrow stream function takes fewer
 parameters.  @code{swprintf} in fact corresponds to the @code{snprintf}

@@ -609,7 +609,6 @@ $(objpfx)tst-relro-libc.out: tst-relro-symbols.py $(..)/scripts/glibcelf.py \
 	    --required=_IO_wmem_jumps \
 	    --required=_IO_wprintf_buffer_as_file_jumps \
 	    --required=_IO_wstr_jumps \
-	    --required=_IO_wstrn_jumps \
 	    --optional=_IO_old_cookie_jumps \
 	    --optional=_IO_old_file_jumps \
 	    --optional=_IO_old_proc_jumps \

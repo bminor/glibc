@@ -24,101 +24,37 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
-#include "libioP.h"
-#include "strfile.h"
-
-
-static wint_t _IO_wstrn_overflow (FILE *fp, wint_t c) __THROW;
-
-static wint_t
-_IO_wstrn_overflow (FILE *fp, wint_t c)
-{
-  /* When we come to here this means the user supplied buffer is
-     filled.  But since we must return the number of characters which
-     would have been written in total we must provide a buffer for
-     further use.  We can do this by writing on and on in the overflow
-     buffer in the _IO_wstrnfile structure.  */
-  _IO_wstrnfile *snf = (_IO_wstrnfile *) fp;
-
-  if (fp->_wide_data->_IO_buf_base != snf->overflow_buf)
-    {
-      _IO_wsetb (fp, snf->overflow_buf,
-		 snf->overflow_buf + (sizeof (snf->overflow_buf)
-				      / sizeof (wchar_t)), 0);
-
-      fp->_wide_data->_IO_write_base = snf->overflow_buf;
-      fp->_wide_data->_IO_read_base = snf->overflow_buf;
-      fp->_wide_data->_IO_read_ptr = snf->overflow_buf;
-      fp->_wide_data->_IO_read_end = (snf->overflow_buf
-				      + (sizeof (snf->overflow_buf)
-					 / sizeof (wchar_t)));
-    }
-
-  fp->_wide_data->_IO_write_ptr = snf->overflow_buf;
-  fp->_wide_data->_IO_write_end = snf->overflow_buf;
-
-  /* Since we are not really interested in storing the characters
-     which do not fit in the buffer we simply ignore it.  */
-  return c;
-}
-
-
-const struct _IO_jump_t _IO_wstrn_jumps libio_vtable attribute_hidden =
-{
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_wstr_finish),
-  JUMP_INIT(overflow, (_IO_overflow_t) _IO_wstrn_overflow),
-  JUMP_INIT(underflow, (_IO_underflow_t) _IO_wstr_underflow),
-  JUMP_INIT(uflow, (_IO_underflow_t) _IO_wdefault_uflow),
-  JUMP_INIT(pbackfail, (_IO_pbackfail_t) _IO_wstr_pbackfail),
-  JUMP_INIT(xsputn, _IO_wdefault_xsputn),
-  JUMP_INIT(xsgetn, _IO_wdefault_xsgetn),
-  JUMP_INIT(seekoff, _IO_wstr_seekoff),
-  JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_default_setbuf),
-  JUMP_INIT(sync, _IO_default_sync),
-  JUMP_INIT(doallocate, _IO_wdefault_doallocate),
-  JUMP_INIT(read, _IO_default_read),
-  JUMP_INIT(write, _IO_default_write),
-  JUMP_INIT(seek, _IO_default_seek),
-  JUMP_INIT(close, _IO_default_close),
-  JUMP_INIT(stat, _IO_default_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue)
-};
-
+#include <errno.h>
+#include <math_ldbl_opt.h>
+#include <printf.h>
+#include <printf_buffer.h>
 
 int
 __vswprintf_internal (wchar_t *string, size_t maxlen, const wchar_t *format,
 		      va_list args, unsigned int mode_flags)
 {
-  _IO_wstrnfile sf;
-  int ret;
-  struct _IO_wide_data wd;
-#ifdef _IO_MTSAFE_IO
-  sf.f._sbf._f._lock = NULL;
-#endif
-
   if (maxlen == 0)
     /* Since we have to write at least the terminating L'\0' a buffer
        length of zero always makes the function fail.  */
     return -1;
 
-  _IO_no_init (&sf.f._sbf._f, _IO_USER_LOCK, 0, &wd, &_IO_wstrn_jumps);
-  _IO_fwide (&sf.f._sbf._f, 1);
-  string[0] = L'\0';
-  _IO_wstr_init_static (&sf.f._sbf._f, string, maxlen - 1, string);
-  ret = __vfwprintf_internal ((FILE *) &sf.f._sbf, format, args, mode_flags);
+  struct __wprintf_buffer buf;
+  __wprintf_buffer_init (&buf, string, maxlen, __wprintf_buffer_mode_swprintf);
 
-  if (sf.f._sbf._f._wide_data->_IO_buf_base == sf.overflow_buf)
-    /* ISO C99 requires swprintf/vswprintf to return an error if the
-       output does not fit in the provided buffer.  */
-    return -1;
+  __wprintf_buffer (&buf, format, args, mode_flags);
 
-  /* Terminate the string.  */
-  *sf.f._sbf._f._wide_data->_IO_write_ptr = '\0';
+  if (buf.write_ptr == buf.write_end)
+    {
+      /* Buffer has been filled exactly, excluding the null wide
+	 character.  This is an error because the null wide character
+	 is required.  */
+      buf.write_end[-1] = L'\0';
+      return -1;
+    }
 
-  return ret;
+  buf.write_ptr[0] = L'\0';
+
+  return __wprintf_buffer_done (&buf);
 }
 
 int

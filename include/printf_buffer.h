@@ -196,6 +196,7 @@ bool __printf_buffer_flush (struct __printf_buffer *buf) attribute_hidden;
 enum __wprintf_buffer_mode
   {
     __wprintf_buffer_mode_failed,
+    __wprintf_buffer_mode_swprintf,
     __wprintf_buffer_mode_to_file,
   };
 
