@@ -17,10 +17,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <array_length.h>
+#include <assert.h>
 #include <ctype.h>
 #include <ieee754.h>
 #include <math.h>
 #include <printf.h>
+#include <libioP.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -30,6 +32,9 @@
 #include <locale/localeinfo.h>
 #include <stdbool.h>
 #include <rounding-mode.h>
+#include <sys/param.h>
+#include <printf_buffer.h>
+#include <errno.h>
 
 #if __HAVE_DISTINCT_FLOAT128
 # include "ieee754_float128.h"
@@ -39,58 +44,11 @@
 		IEEE854_FLOAT128_BIAS)
 #endif
 
-/* #define NDEBUG 1*/		/* Undefine this for debugging assertions.  */
-#include <assert.h>
-
-#include <libioP.h>
-#define PUT(f, s, n) _IO_sputn (f, s, n)
-#define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : _IO_padn (f, c, n))
-#undef putc
-#define putc(c, f) (wide \
-		     ? (int)_IO_putwc_unlocked (c, f) : _IO_putc_unlocked (c, f))
-
-
-/* Macros for doing the actual output.  */
-
-#define outchar(ch)							      \
-  do									      \
-    {									      \
-      const int outc = (ch);						      \
-      if (putc (outc, fp) == EOF)					      \
-	return -1;							      \
-      ++done;								      \
-    } while (0)
-
-#define PRINT(ptr, wptr, len)						      \
-  do									      \
-    {									      \
-      size_t outlen = (len);						      \
-      if (wide)								      \
-	while (outlen-- > 0)						      \
-	  outchar (*wptr++);						      \
-      else								      \
-	while (outlen-- > 0)						      \
-	  outchar (*ptr++);						      \
-    } while (0)
-
-#define PADN(ch, len)							      \
-  do									      \
-    {									      \
-      if (PAD (fp, ch, len) != len)					      \
-	return -1;							      \
-      done += len;							      \
-    }									      \
-  while (0)
-
-#ifndef MIN
-# define MIN(a,b) ((a)<(b)?(a):(b))
-#endif
-
-
-int
-__printf_fphex (FILE *fp,
-		const struct printf_info *info,
-		const void *const *args)
+static void
+__printf_fphex_buffer (struct __printf_buffer *buf,
+		       const char *decimal,
+		       const struct printf_info *info,
+		       const void *const *args)
 {
   /* The floating-point value to output.  */
   union
@@ -106,34 +64,19 @@ __printf_fphex (FILE *fp,
   /* This function always uses LC_NUMERIC.  */
   assert (info->extra == 0);
 
-  /* Locale-dependent representation of decimal point. Hexadecimal
-     formatting always using LC_NUMERIC (disregarding info->extra).  */
-  const char *decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
-  wchar_t decimalwc = _NL_CURRENT_WORD (LC_NUMERIC,
-					_NL_NUMERIC_DECIMAL_POINT_WC);
-
-  /* The decimal point character must never be zero.  */
-  assert (*decimal != '\0' && decimalwc != L'\0');
-
   /* "NaN" or "Inf" for the special cases.  */
   const char *special = NULL;
-  const wchar_t *wspecial = NULL;
 
   /* Buffer for the generated number string for the mantissa.  The
      maximal size for the mantissa is 128 bits.  */
   char numbuf[32];
   char *numstr;
   char *numend;
-  wchar_t wnumbuf[32];
-  wchar_t *wnumstr;
-  wchar_t *wnumend;
   int negative;
 
   /* The maximal exponent of two in decimal notation has 5 digits.  */
   char expbuf[5];
   char *expstr;
-  wchar_t wexpbuf[5];
-  wchar_t *wexpstr;
   int expnegative;
   int exponent;
 
@@ -149,12 +92,6 @@ __printf_fphex (FILE *fp,
   /* Width.  */
   int width = info->width;
 
-  /* Number of characters written.  */
-  int done = 0;
-
-  /* Nonzero if this is output on a wide character stream.  */
-  int wide = info->wide;
-
 #define PRINTF_FPHEX_FETCH(FLOAT, VAR)					\
   {									\
     (VAR) = *(const FLOAT *) args[0];					\
@@ -163,30 +100,18 @@ __printf_fphex (FILE *fp,
     if (isnan (VAR))							\
       {									\
 	if (isupper (info->spec))					\
-	  {								\
-	    special = "NAN";						\
-	    wspecial = L"NAN";						\
-	  }								\
+	  special = "NAN";						\
 	else								\
-	  {								\
-	    special = "nan";						\
-	    wspecial = L"nan";						\
-	  }								\
+	  special = "nan";						\
       }									\
     else								\
       {									\
 	if (isinf (VAR))						\
 	  {								\
 	    if (isupper (info->spec))					\
-	      {								\
-		special = "INF";					\
-		wspecial = L"INF";					\
-	      }								\
+	      special = "INF";						\
 	    else							\
-	      {								\
-		special = "inf";					\
-		wspecial = L"inf";					\
-	      }								\
+	      special = "inf";						\
 	  }								\
       }									\
     negative = signbit (VAR);						\
@@ -215,22 +140,22 @@ __printf_fphex (FILE *fp,
 	--width;
       width -= 3;
 
-      if (!info->left && width > 0)
-	PADN (' ', width);
+      if (!info->left)
+	__printf_buffer_pad (buf, ' ', width);
 
       if (negative)
-	outchar ('-');
+	__printf_buffer_putc (buf, '-');
       else if (info->showsign)
-	outchar ('+');
+	__printf_buffer_putc (buf, '+');
       else if (info->space)
-	outchar (' ');
+	__printf_buffer_putc (buf, ' ');
 
-      PRINT (special, wspecial, 3);
+      __printf_buffer_puts (buf, special);
 
-      if (info->left && width > 0)
-	PADN (' ', width);
+      if (info->left)
+	__printf_buffer_pad (buf, ' ', width);
 
-      return done;
+      return;
     }
 
 #if __HAVE_DISTINCT_FLOAT128
@@ -252,26 +177,15 @@ __printf_fphex (FILE *fp,
       zero_mantissa = num == 0;
 
       if (sizeof (unsigned long int) > 6)
-	{
-	  wnumstr = _itowa_word (num, wnumbuf + (sizeof wnumbuf) / sizeof (wchar_t), 16,
-				 info->spec == 'A');
 	  numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,
 			       info->spec == 'A');
-	}
       else
-	{
-	  wnumstr = _itowa (num, wnumbuf + sizeof wnumbuf / sizeof (wchar_t), 16,
-			    info->spec == 'A');
 	  numstr = _itoa (num, numbuf + sizeof numbuf, 16,
 			  info->spec == 'A');
-	}
 
       /* Fill with zeroes.  */
-      while (wnumstr > wnumbuf + (sizeof wnumbuf - 52) / sizeof (wchar_t))
-	{
-	  *--wnumstr = L'0';
-	  *--numstr = '0';
-	}
+      while (numstr > numbuf + (sizeof numbuf - 13))
+	*--numstr = '0';
 
       leading = fpnum.dbl.ieee.exponent == 0 ? '0' : '1';
 
@@ -307,13 +221,9 @@ __printf_fphex (FILE *fp,
   /* Look for trailing zeroes.  */
   if (! zero_mantissa)
     {
-      wnumend = array_end (wnumbuf);
       numend = array_end (numbuf);
-      while (wnumend[-1] == L'0')
-	{
-	  --wnumend;
+      while (numend[-1] == '0')
 	  --numend;
-	}
 
       bool do_round_away = false;
 
@@ -352,7 +262,6 @@ __printf_fphex (FILE *fp,
 		 like in ASCII.  This is true for the rest of GNU, too.  */
 	      if (ch == '9')
 		{
-		  wnumstr[cnt] = (wchar_t) info->spec;
 		  numstr[cnt] = info->spec;	/* This is tricky,
 						   think about it!  */
 		  break;
@@ -360,14 +269,10 @@ __printf_fphex (FILE *fp,
 	      else if (tolower (ch) < 'f')
 		{
 		  ++numstr[cnt];
-		  ++wnumstr[cnt];
 		  break;
 		}
 	      else
-		{
-		  numstr[cnt] = '0';
-		  wnumstr[cnt] = L'0';
-		}
+		numstr[cnt] = '0';
 	    }
 	  if (cnt < 0)
 	    {
@@ -401,13 +306,10 @@ __printf_fphex (FILE *fp,
       if (precision == -1)
 	precision = 0;
       numend = numstr;
-      wnumend = wnumstr;
     }
 
   /* Now we can compute the exponent string.  */
   expstr = _itoa_word (exponent, expbuf + sizeof expbuf, 10, 0);
-  wexpstr = _itowa_word (exponent,
-			 wexpbuf + sizeof wexpbuf / sizeof (wchar_t), 10, 0);
 
   /* Now we have all information to compute the size.  */
   width -= ((negative || info->showsign || info->space)
@@ -421,54 +323,110 @@ __printf_fphex (FILE *fp,
      A special case when the mantissa or the precision is zero and the `#'
      is not given.  In this case we must not print the decimal point.  */
   if (precision > 0 || info->alt)
-    width -= wide ? 1 : strlen (decimal);
+    --width;
 
-  if (!info->left && info->pad != '0' && width > 0)
-    PADN (' ', width);
+  if (!info->left && info->pad != '0')
+    __printf_buffer_pad (buf, ' ', width);
 
   if (negative)
-    outchar ('-');
+    __printf_buffer_putc (buf, '-');
   else if (info->showsign)
-    outchar ('+');
+    __printf_buffer_putc (buf, '+');
   else if (info->space)
-    outchar (' ');
+    __printf_buffer_putc (buf, ' ');
 
-  outchar ('0');
+  __printf_buffer_putc (buf, '0');
   if ('X' - 'A' == 'x' - 'a')
-    outchar (info->spec + ('x' - 'a'));
+    __printf_buffer_putc (buf, info->spec + ('x' - 'a'));
   else
-    outchar (info->spec == 'A' ? 'X' : 'x');
+    __printf_buffer_putc (buf, info->spec == 'A' ? 'X' : 'x');
 
-  if (!info->left && info->pad == '0' && width > 0)
-    PADN ('0', width);
+  if (!info->left && info->pad == '0')
+    __printf_buffer_pad (buf, '0', width);
 
-  outchar (leading);
+  __printf_buffer_putc (buf, leading);
 
   if (precision > 0 || info->alt)
-    {
-      const wchar_t *wtmp = &decimalwc;
-      PRINT (decimal, wtmp, wide ? 1 : strlen (decimal));
-    }
+    __printf_buffer_puts (buf, decimal);
 
   if (precision > 0)
     {
       ssize_t tofill = precision - (numend - numstr);
-      PRINT (numstr, wnumstr, MIN (numend - numstr, precision));
-      if (tofill > 0)
-	PADN ('0', tofill);
+      __printf_buffer_write (buf, numstr, MIN (numend - numstr, precision));
+      __printf_buffer_pad (buf, '0', tofill);
     }
 
   if ('P' - 'A' == 'p' - 'a')
-    outchar (info->spec + ('p' - 'a'));
+    __printf_buffer_putc (buf, info->spec + ('p' - 'a'));
   else
-    outchar (info->spec == 'A' ? 'P' : 'p');
+    __printf_buffer_putc (buf, info->spec == 'A' ? 'P' : 'p');
 
-  outchar (expnegative ? '-' : '+');
+  __printf_buffer_putc (buf, expnegative ? '-' : '+');
 
-  PRINT (expstr, wexpstr, (expbuf + sizeof expbuf) - expstr);
+  __printf_buffer_write (buf, expstr, (expbuf + sizeof expbuf) - expstr);
 
-  if (info->left && info->pad != '0' && width > 0)
-    PADN (info->pad, width);
+  if (info->left && info->pad != '0')
+    __printf_buffer_pad (buf, info->pad, width);
+}
 
-  return done;
+void
+__printf_fphex_l_buffer (struct __printf_buffer *buf, locale_t loc,
+			 const struct printf_info *info,
+			 const void *const *args)
+{
+  __printf_fphex_buffer (buf, _nl_lookup (loc, LC_NUMERIC, DECIMAL_POINT),
+			 info, args);
+}
+
+
+/* The wide buffer version is implemented by translating the output of
+   the multibyte verison.  */
+
+struct __printf_buffer_fphex_to_wide
+{
+  struct __printf_buffer base;
+  wchar_t decimalwc;
+  struct __wprintf_buffer *next;
+  char untranslated[PRINTF_BUFFER_SIZE_DIGITS];
+};
+
+/* Translate to wide characters, rewriting "." to the actual decimal
+   point.  */
+void
+__printf_buffer_flush_fphex_to_wide (struct __printf_buffer_fphex_to_wide *buf)
+{
+  /* No need to adjust buf->base.written, only buf->next->written matters.  */
+  for (char *p = buf->untranslated; p < buf->base.write_ptr; ++p)
+    {
+      /* wchar_t overlaps with char in the ASCII range.  */
+      wchar_t ch = *p;
+      if (ch == L'.')
+	ch = buf->decimalwc;
+      __wprintf_buffer_putc (buf->next, ch);
+    }
+
+  if (!__wprintf_buffer_has_failed (buf->next))
+    buf->base.write_ptr = buf->untranslated;
+  else
+    __printf_buffer_mark_failed (&buf->base);
+}
+
+void
+__wprintf_fphex_l_buffer (struct __wprintf_buffer *next, locale_t loc,
+			  const struct printf_info *info,
+			  const void *const *args)
+{
+  struct __printf_buffer_fphex_to_wide buf;
+  __printf_buffer_init (&buf.base, buf.untranslated, sizeof (buf.untranslated),
+			__printf_buffer_mode_fphex_to_wide);
+  buf.decimalwc = _nl_lookup_word (loc, LC_NUMERIC,
+				   _NL_NUMERIC_DECIMAL_POINT_WC);
+  buf.next = next;
+  __printf_fphex_buffer (&buf.base, ".", info, args);
+  if (__printf_buffer_has_failed (&buf.base))
+    {
+      __wprintf_buffer_mark_failed (buf.next);
+      return;
+    }
+  __printf_buffer_flush_fphex_to_wide (&buf);
 }

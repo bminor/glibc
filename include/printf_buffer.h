@@ -45,7 +45,12 @@
 enum __printf_buffer_mode
   {
     __printf_buffer_mode_failed,
+    __printf_buffer_mode_snprintf,
     __printf_buffer_mode_to_file,
+    __printf_buffer_mode_strfmon,
+    __printf_buffer_mode_fp,         /* For __printf_fp_l_buffer.  */
+    __printf_buffer_mode_fp_to_wide, /* For __wprintf_fp_l_buffer.  */
+    __printf_buffer_mode_fphex_to_wide, /* For __wprintf_fphex_l_buffer.  */
   };
 
 /* Buffer for fast character writing with overflow handling.
@@ -268,12 +273,44 @@ bool __wprintf_buffer_flush (struct __wprintf_buffer *buf) attribute_hidden;
 #define Xprintf_buffer_puts Xprintf (buffer_puts)
 #define Xprintf_buffer_write Xprintf (buffer_write)
 
+/* Commonly used buffers.  */
+
+struct __printf_buffer_snprintf
+{
+  struct __printf_buffer base;
+#define PRINTF_BUFFER_SIZE_DISCARD 128
+  char discard[PRINTF_BUFFER_SIZE_DISCARD]; /* Used in counting mode.  */
+};
+
+/* Sets up [BUFFER, BUFFER + LENGTH) as the write target.  If LENGTH
+   is positive, also writes a NUL byte to *BUFFER.  */
+void __printf_buffer_snprintf_init (struct __printf_buffer_snprintf *,
+                                    char *buffer, size_t length)
+  attribute_hidden;
+
+/* Add the null terminator after everything has been written.  The
+   return value is the one expected by printf (see __printf_buffer_done).  */
+int __printf_buffer_snprintf_done (struct __printf_buffer_snprintf *)
+  attribute_hidden;
+
 /* Flush function implementations follow.  They are called from
    __printf_buffer_flush.  Generic code should not call these flush
    functions directly.  Some modes have inline implementations.  */
 
+void __printf_buffer_flush_snprintf (struct __printf_buffer_snprintf *)
+  attribute_hidden;
 struct __printf_buffer_to_file;
 void __printf_buffer_flush_to_file (struct __printf_buffer_to_file *)
+  attribute_hidden;
+struct __printf_buffer_fp;
+void __printf_buffer_flush_fp (struct __printf_buffer_fp *)
+  attribute_hidden;
+struct __printf_buffer_fp_to_wide;
+void __printf_buffer_flush_fp_to_wide (struct __printf_buffer_fp_to_wide *)
+  attribute_hidden;
+struct __printf_buffer_fphex_to_wide;
+void __printf_buffer_flush_fphex_to_wide (struct
+                                          __printf_buffer_fphex_to_wide *)
   attribute_hidden;
 
 struct __wprintf_buffer_to_file;
@@ -282,10 +319,15 @@ void __wprintf_buffer_flush_to_file (struct __wprintf_buffer_to_file *)
 
 /* Buffer sizes.  These can be tuned as necessary.  There is a tension
    here between stack consumption, cache usage, and additional system
-   calls or heap allocations (if the buffer is too small).  */
+   calls or heap allocations (if the buffer is too small).
+
+   Also see PRINTF_BUFFER_SIZE_DISCARD above for snprintf.  */
 
 /* Fallback buffer if the underlying FILE * stream does not provide
    buffer space.  */
 #define PRINTF_BUFFER_SIZE_TO_FILE_STAGE 128
+
+/* Temporary buffer used during floating point digit translation.  */
+#define PRINTF_BUFFER_SIZE_DIGITS 64
 
 #endif /* PRINTF_BUFFER_H */

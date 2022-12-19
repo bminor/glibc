@@ -27,7 +27,7 @@
      now process the wanted format specifier.  */
 LABEL (form_percent):
   /* Write a literal "%".  */
-  outchar (L_('%'));
+  Xprintf_buffer_putc (buf, L_('%'));
   break;
 
 LABEL (form_integer):
@@ -116,16 +116,8 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
             *--string = L_('0');
         }
       else
-        {
-          /* Put the number in WORK.  */
-          string = _itoa (number.longlong, workend, base,
-                          spec == L_('X'));
-          if (group && grouping)
-            string = group_number (work_buffer, string, workend,
-                                   grouping, thousands_sep);
-          if (use_outdigits && base == 10)
-            string = _i18n_number_rewrite (string, workend, workend);
-        }
+        /* Put the number in WORK.  */
+        string = _itoa (number.longlong, workend, base, spec == L_('X'));
       /* Simplify further test for num != 0.  */
       number.word = number.longlong != 0;
     }
@@ -159,27 +151,46 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
             *--string = L_('0');
         }
       else
-        {
-          /* Put the number in WORK.  */
-          string = _itoa_word (number.word, workend, base,
-                               spec == L_('X'));
-          if (group && grouping)
-            string = group_number (work_buffer, string, workend,
-                                   grouping, thousands_sep);
-          if (use_outdigits && base == 10)
-            string = _i18n_number_rewrite (string, workend, workend);
-        }
+        /* Put the number in WORK.  */
+        string = _itoa_word (number.word, workend, base,
+                             spec == L_('X'));
     }
 
-  if (prec <= workend - string && number.word != 0 && alt && base == 8)
-    /* Add octal marker.  */
-    *--string = L_('0');
+  /* Grouping is also used for outdigits translation.  */
+  struct grouping_iterator iter;
+  bool number_slow_path = group || (use_outdigits && base == 10);
+  if (group)
+    __grouping_iterator_init (&iter, LC_NUMERIC, _NL_CURRENT_LOCALE,
+                              workend - string);
+  else if (use_outdigits && base == 10)
+    __grouping_iterator_init_none (&iter, workend - string);
+
+  int number_length;
+#ifndef COMPILE_WPRINTF
+  if (use_outdigits && base == 10)
+    number_length = __translated_number_width (_NL_CURRENT_LOCALE,
+                                               string, workend);
+  else
+    number_length = workend - string;
+  if (group)
+    number_length += iter.separators * strlen (thousands_sep);
+#else
+  number_length = workend - string;
+  /* All wide separators have length 1.  */
+  if (group && thousands_sep != L'\0')
+    number_length += iter.separators;
+#endif
+
+  /* The marker comes right before the number, but is not subject
+     to grouping.  */
+  bool octal_marker = (prec <= number_length && number.word != 0
+                       && alt && base == 8);
 
   prec = MAX (0, prec - (workend - string));
 
   if (!left)
     {
-      width -= workend - string + prec;
+      width -= number_length + prec;
 
       if (number.word != 0 && alt && (base == 16 || base == 2))
         /* Account for 0X, 0x, 0B or 0b hex or binary marker.  */
@@ -190,27 +201,34 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
 
       if (pad == L_(' '))
         {
-          PAD (L_(' '));
+          Xprintf_buffer_pad (buf, L_(' '), width);
           width = 0;
         }
 
       if (is_negative)
-        outchar (L_('-'));
+        Xprintf_buffer_putc (buf, L_('-'));
       else if (showsign)
-        outchar (L_('+'));
+        Xprintf_buffer_putc (buf, L_('+'));
       else if (space)
-        outchar (L_(' '));
+        Xprintf_buffer_putc (buf, L_(' '));
 
       if (number.word != 0 && alt && (base == 16 || base == 2))
         {
-          outchar (L_('0'));
-          outchar (spec);
+          Xprintf_buffer_putc (buf, L_('0'));
+          Xprintf_buffer_putc (buf, spec);
         }
 
       width += prec;
-      PAD (L_('0'));
+      Xprintf_buffer_pad (buf, L_('0'), width);
 
-      outstring (string, workend - string);
+      if (octal_marker)
+        Xprintf_buffer_putc (buf, L_('0'));
+
+      if (number_slow_path)
+        group_number (buf, &iter, string, workend, thousands_sep,
+                      use_outdigits && base == 10);
+      else
+        Xprintf_buffer_write (buf, string, workend - string);
 
       break;
     }
@@ -218,40 +236,41 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
     {
       if (is_negative)
         {
-          outchar (L_('-'));
+          Xprintf_buffer_putc (buf, L_('-'));
           --width;
         }
       else if (showsign)
         {
-          outchar (L_('+'));
+          Xprintf_buffer_putc (buf, L_('+'));
           --width;
         }
       else if (space)
         {
-          outchar (L_(' '));
+          Xprintf_buffer_putc (buf, L_(' '));
           --width;
         }
 
       if (number.word != 0 && alt && (base == 16 || base == 2))
         {
-          outchar (L_('0'));
-          outchar (spec);
+          Xprintf_buffer_putc (buf, L_('0'));
+          Xprintf_buffer_putc (buf, spec);
           width -= 2;
         }
 
       width -= workend - string + prec;
 
-      if (prec > 0)
-        {
-          int temp = width;
-          width = prec;
-          PAD (L_('0'));
-          width = temp;
-        }
+      Xprintf_buffer_pad (buf, L_('0'), prec);
 
-      outstring (string, workend - string);
+      if (octal_marker)
+        Xprintf_buffer_putc (buf, L_('0'));
 
-      PAD (L_(' '));
+      if (number_slow_path)
+        group_number (buf, &iter, string, workend, thousands_sep,
+                      use_outdigits && base == 10);
+      else
+        Xprintf_buffer_write (buf, string, workend - string);
+
+      Xprintf_buffer_pad (buf, L_(' '), width);
       break;
     }
 
@@ -300,16 +319,17 @@ LABEL (form_number):
     }
   /* Answer the count of characters written.  */
   void *ptrptr = process_arg_pointer ();
+  unsigned int written = Xprintf_buffer_done (buf);
   if (is_longlong)
-    *(long long int *) ptrptr = done;
+    *(long long int *) ptrptr = written;
   else if (is_long_num)
-    *(long int *) ptrptr = done;
+    *(long int *) ptrptr = written;
   else if (is_char)
-    *(char *) ptrptr = done;
+    *(char *) ptrptr = written;
   else if (!is_short)
-    *(int *) ptrptr = done;
+    *(int *) ptrptr = written;
   else
-    *(short int *) ptrptr = done;
+    *(short int *) ptrptr = written;
   break;
 
 LABEL (form_strerror):
@@ -341,14 +361,16 @@ LABEL (form_character):
     goto LABEL (form_wcharacter);
   --width;  /* Account for the character itself.  */
   if (!left)
-    PAD (L_(' '));
+    Xprintf_buffer_pad (buf, L_(' '), width);
 #ifdef COMPILE_WPRINTF
-  outchar (__btowc ((unsigned char) process_arg_int ())); /* Promoted. */
+  __wprintf_buffer_putc (buf, __btowc ((unsigned char) /* Promoted. */
+                                       process_arg_int ()));
 #else
-  outchar ((unsigned char) process_arg_int ()); /* Promoted.  */
+  __printf_buffer_putc (buf, (unsigned char) /* Promoted.  */
+                        process_arg_int ());
 #endif
   if (left)
-    PAD (L_(' '));
+    Xprintf_buffer_pad (buf, L_(' '), width);
   break;
 
 LABEL (form_string):
@@ -382,10 +404,8 @@ LABEL (form_string):
     else if (!is_long && spec != L_('S'))
       {
 #ifdef COMPILE_WPRINTF
-        done = outstring_converted_wide_string
-          (s, (const char *) string, prec, width, left, done);
-        if (done < 0)
-          goto all_done;
+        outstring_converted_wide_string (buf, (const char *) string,
+                                         prec, width, left);
         /* The padding has already been written.  */
         break;
 #else
@@ -407,10 +427,8 @@ LABEL (form_string):
         else
           len = __wcslen (string);
 #else
-        done = outstring_converted_wide_string
-          (s, (const wchar_t *) string, prec, width, left, done);
-        if (done < 0)
-          goto all_done;
+        outstring_converted_wide_string (buf, (const wchar_t *) string,
+                                         prec, width, left);
         /* The padding has already been written.  */
         break;
 #endif
@@ -418,15 +436,15 @@ LABEL (form_string):
 
     if ((width -= len) < 0)
       {
-        outstring (string, len);
+        Xprintf_buffer_write (buf, string, len);
         break;
       }
 
     if (!left)
-      PAD (L_(' '));
-    outstring (string, len);
+      Xprintf_buffer_pad (buf, L_(' '), width);
+    Xprintf_buffer_write (buf, string, len);
     if (left)
-      PAD (L_(' '));
+      Xprintf_buffer_pad (buf, L_(' '), width);
   }
   break;
 
@@ -436,10 +454,10 @@ LABEL (form_wcharacter):
     /* Wide character.  */
     --width;
     if (!left)
-      PAD (L' ');
-    outchar (process_arg_wchar_t ());
+      Xprintf_buffer_pad (buf, L_(' '), width);
+    Xprintf_buffer_putc (buf, process_arg_wchar_t ());
     if (left)
-      PAD (L' ');
+      Xprintf_buffer_pad (buf, L_(' '), width);
   }
   break;
 
@@ -447,24 +465,24 @@ LABEL (form_wcharacter):
 LABEL (form_wcharacter):
   {
     /* Wide character.  */
-    char buf[MB_LEN_MAX];
+    char wcbuf[MB_LEN_MAX];
     mbstate_t mbstate;
     size_t len;
 
     memset (&mbstate, '\0', sizeof (mbstate_t));
-    len = __wcrtomb (buf, process_arg_wchar_t (), &mbstate);
+    len = __wcrtomb (wcbuf, process_arg_wchar_t (), &mbstate);
     if (len == (size_t) -1)
       {
         /* Something went wrong during the conversion.  Bail out.  */
-        done = -1;
+        __printf_buffer_mark_failed (buf);
         goto all_done;
       }
     width -= len;
     if (!left)
-      PAD (' ');
-    outstring (buf, len);
+      Xprintf_buffer_pad (buf, L_(' '), width);
+    Xprintf_buffer_write (buf, wcbuf, len);
     if (left)
-      PAD (' ');
+      Xprintf_buffer_pad (buf, L_(' '), width);
   }
   break;
 #endif /* !COMPILE_WPRINTF */

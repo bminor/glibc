@@ -36,45 +36,23 @@ do {									      \
       zero_mantissa = (num0|num1) == 0;					      \
 									      \
       if (sizeof (unsigned long int) > 6)				      \
-	{								      \
-	  numstr = _itoa_word (num1, numbuf + sizeof numbuf, 16,	      \
-			       info->spec == 'A');			      \
-	  wnumstr = _itowa_word (num1,					      \
-				 wnumbuf + sizeof (wnumbuf) / sizeof (wchar_t),\
-				 16, info->spec == 'A');		      \
-	}								      \
+	numstr = _itoa_word (num1, numbuf + sizeof numbuf, 16,		      \
+			     info->spec == 'A');			      \
       else								      \
-	{								      \
-	  numstr = _itoa (num1, numbuf + sizeof numbuf, 16,		      \
-			  info->spec == 'A');				      \
-	  wnumstr = _itowa (num1,					      \
-			    wnumbuf + sizeof (wnumbuf) / sizeof (wchar_t),    \
-			    16, info->spec == 'A');			      \
-	}								      \
+	numstr = _itoa (num1, numbuf + sizeof numbuf, 16,		      \
+			info->spec == 'A');				      \
 									      \
       while (numstr > numbuf + (sizeof numbuf - 64 / 4))		      \
-	{								      \
-	  *--numstr = '0';						      \
-	  *--wnumstr = L'0';						      \
-	}								      \
+	*--numstr = '0';						      \
 									      \
       if (sizeof (unsigned long int) > 6)				      \
-	{								      \
-	  numstr = _itoa_word (num0, numstr, 16, info->spec == 'A');	      \
-	  wnumstr = _itowa_word (num0, wnumstr, 16, info->spec == 'A');	      \
-	}								      \
+	numstr = _itoa_word (num0, numstr, 16, info->spec == 'A');	      \
       else								      \
-	{								      \
-	  numstr = _itoa (num0, numstr, 16, info->spec == 'A');		      \
-	  wnumstr = _itowa (num0, wnumstr, 16, info->spec == 'A');	      \
-	}								      \
+	numstr = _itoa (num0, numstr, 16, info->spec == 'A');		      \
 									      \
       /* Fill with zeroes.  */						      \
       while (numstr > numbuf + (sizeof numbuf - 112 / 4))		      \
-	{								      \
 	  *--numstr = '0';						      \
-	  *--wnumstr = L'0';						      \
-	}								      \
 									      \
       leading = u.ieee.exponent == 0 ? '0' : '1';			      \
 									      \

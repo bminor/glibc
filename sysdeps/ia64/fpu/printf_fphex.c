@@ -35,16 +35,10 @@ do {									      \
 									      \
       numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,		      \
 			   info->spec == 'A');				      \
-      wnumstr = _itowa_word (num,					      \
-			     wnumbuf + sizeof (wnumbuf) / sizeof (wchar_t),   \
-			     16, info->spec == 'A');			      \
 									      \
       /* Fill with zeroes.  */						      \
       while (numstr > numbuf + (sizeof numbuf - 64 / 4))		      \
-	{								      \
-	  *--numstr = '0';						      \
-	  *--wnumstr = L'0';						      \
-	}								      \
+	*--numstr = '0';						      \
 									      \
       /* We use a full nibble for the leading digit.  */		      \
       leading = *numstr++;						      \

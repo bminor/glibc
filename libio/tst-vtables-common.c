@@ -409,11 +409,14 @@ void _IO_init (FILE *fp, int flags);
 static void
 with_compatibility_fprintf (void *closure)
 {
+  /* A temporary staging buffer is used in the current fprintf
+     implementation, which is why there is just one call to
+     xsputn.  */
   TEST_COMPARE (fprintf_ptr (shared->fp, "A%sCD", "B"), 4);
-  TEST_COMPARE (shared->calls, 3);
-  TEST_COMPARE (shared->calls_xsputn, 3);
+  TEST_COMPARE (shared->calls, 1);
+  TEST_COMPARE (shared->calls_xsputn, 1);
   TEST_COMPARE_BLOB (shared->buffer, shared->buffer_length,
-                     "CD", 2);
+                     "ABCD", 4);
 }
 
 static void

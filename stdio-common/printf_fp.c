@@ -41,90 +41,12 @@
 #include <wchar.h>
 #include <stdbool.h>
 #include <rounding-mode.h>
+#include <printf_buffer.h>
+#include <printf_buffer_to_file.h>
+#include <grouping_iterator.h>
 
-#ifdef COMPILE_WPRINTF
-# define CHAR_T        wchar_t
-#else
-# define CHAR_T        char
-#endif
-
-#include "_i18n_number.h"
-
-#ifndef NDEBUG
-# define NDEBUG			/* Undefine this for debugging assertions.  */
-#endif
 #include <assert.h>
 
-#define PUT(f, s, n) _IO_sputn (f, s, n)
-#define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : _IO_padn (f, c, n))
-#undef putc
-#define putc(c, f) (wide \
-		    ? (int)_IO_putwc_unlocked (c, f) : _IO_putc_unlocked (c, f))
-
-
-/* Macros for doing the actual output.  */
-
-#define outchar(ch)							      \
-  do									      \
-    {									      \
-      const int outc = (ch);						      \
-      if (putc (outc, fp) == EOF)					      \
-	{								      \
-	  if (buffer_malloced)						      \
-	    {								      \
-	      free (buffer);						      \
-	      free (wbuffer);						      \
-	    }								      \
-	  return -1;							      \
-	}								      \
-      ++done;								      \
-    } while (0)
-
-#define PRINT(ptr, wptr, len)						      \
-  do									      \
-    {									      \
-      size_t outlen = (len);						      \
-      if (len > 20)							      \
-	{								      \
-	  if (PUT (fp, wide ? (const char *) wptr : ptr, outlen) != outlen)   \
-	    {								      \
-	      if (buffer_malloced)					      \
-		{							      \
-		  free (buffer);					      \
-		  free (wbuffer);					      \
-		}							      \
-	      return -1;						      \
-	    }								      \
-	  ptr += outlen;						      \
-	  done += outlen;						      \
-	}								      \
-      else								      \
-	{								      \
-	  if (wide)							      \
-	    while (outlen-- > 0)					      \
-	      outchar (*wptr++);					      \
-	  else								      \
-	    while (outlen-- > 0)					      \
-	      outchar (*ptr++);						      \
-	}								      \
-    } while (0)
-
-#define PADN(ch, len)							      \
-  do									      \
-    {									      \
-      if (PAD (fp, ch, len) != len)					      \
-	{								      \
-	  if (buffer_malloced)						      \
-	    {								      \
-	      free (buffer);						      \
-	      free (wbuffer);						      \
-	    }								      \
-	  return -1;							      \
-	}								      \
-      done += len;							      \
-    }									      \
-  while (0)
-
 /* We use the GNU MP library to handle large numbers.
 
    An MP variable occupies a varying number of entries in its array.  We keep
@@ -145,10 +67,6 @@ extern mp_size_t __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 					    long double value);
 
 
-static wchar_t *group_number (wchar_t *buf, wchar_t *bufend,
-			      unsigned int intdig_no, const char *grouping,
-			      wchar_t thousands_sep, int ngroups);
-
 struct hack_digit_param
 {
   /* Sign of the exponent.  */
@@ -165,7 +83,7 @@ struct hack_digit_param
   MPN_VAR(tmp);
 };
 
-static wchar_t
+static char
 hack_digit (struct hack_digit_param *p)
 {
   mp_limb_t hi;
@@ -197,7 +115,7 @@ hack_digit (struct hack_digit_param *p)
 	      /* We're not prepared for an mpn variable with zero
 		 limbs.  */
 	      p->fracsize = 1;
-	      return L'0' + hi;
+	      return '0' + hi;
 	    }
 	}
 
@@ -206,13 +124,22 @@ hack_digit (struct hack_digit_param *p)
 	p->frac[p->fracsize++] = _cy;
     }
 
-  return L'0' + hi;
+  return '0' + hi;
 }
 
-int
-__printf_fp_l (FILE *fp, locale_t loc,
-	       const struct printf_info *info,
-	       const void *const *args)
+/* Version that performs grouping (if INFO->group && THOUSANDS_SEP != 0),
+   but not i18n digit translation.
+
+   The output buffer is always multibyte (not wide) at this stage.
+   Wide conversion and i18n digit translation happen later, with a
+   temporary buffer.  To prepare for that, THOUSANDS_SEP_LENGTH is the
+   final length of the thousands separator.  */
+static void
+__printf_fp_buffer_1 (struct __printf_buffer *buf, locale_t loc,
+		      char thousands_sep, char decimal,
+		      unsigned int thousands_sep_length,
+		      const struct printf_info *info,
+		      const void *const *args)
 {
   /* The floating-point value to output.  */
   union
@@ -225,18 +152,11 @@ __printf_fp_l (FILE *fp, locale_t loc,
     }
   fpnum;
 
-  /* Locale-dependent representation of decimal point.	*/
-  const char *decimal;
-  wchar_t decimalwc;
-
-  /* Locale-dependent thousands separator and grouping specification.  */
-  const char *thousands_sep = NULL;
-  wchar_t thousands_sepwc = 0;
-  const char *grouping;
-
   /* "NaN" or "Inf" for the special cases.  */
   const char *special = NULL;
-  const wchar_t *wspecial = NULL;
+
+  /* Used to determine grouping rules.  */
+  int lc_category = info->extra ? LC_MONETARY : LC_NUMERIC;
 
   /* When _Float128 is enabled in the library and ABI-distinct from long
      double, we need mp_limbs enough for any of them.  */
@@ -256,89 +176,15 @@ __printf_fp_l (FILE *fp, locale_t loc,
   /* Sign of float number.  */
   int is_neg = 0;
 
-  /* Counter for number of written characters.	*/
-  int done = 0;
-
   /* General helper (carry limb).  */
   mp_limb_t cy;
 
-  /* Nonzero if this is output on a wide character stream.  */
-  int wide = info->wide;
-
   /* Buffer in which we produce the output.  */
-  wchar_t *wbuffer = NULL;
-  char *buffer = NULL;
+  char *wbuffer = NULL;
   /* Flag whether wbuffer and buffer are malloc'ed or not.  */
   int buffer_malloced = 0;
 
   p.expsign = 0;
-
-  /* Figure out the decimal point character.  */
-  if (info->extra == 0)
-    {
-      decimal = _nl_lookup (loc, LC_NUMERIC, DECIMAL_POINT);
-      decimalwc = _nl_lookup_word
-	(loc, LC_NUMERIC, _NL_NUMERIC_DECIMAL_POINT_WC);
-    }
-  else
-    {
-      decimal = _nl_lookup (loc, LC_MONETARY, MON_DECIMAL_POINT);
-      if (*decimal == '\0')
-	decimal = _nl_lookup (loc, LC_NUMERIC, DECIMAL_POINT);
-      decimalwc = _nl_lookup_word (loc, LC_MONETARY,
-				    _NL_MONETARY_DECIMAL_POINT_WC);
-      if (decimalwc == L'\0')
-	decimalwc = _nl_lookup_word (loc, LC_NUMERIC,
-				      _NL_NUMERIC_DECIMAL_POINT_WC);
-    }
-  /* The decimal point character must not be zero.  */
-  assert (*decimal != '\0');
-  assert (decimalwc != L'\0');
-
-  if (info->group)
-    {
-      if (info->extra == 0)
-	grouping = _nl_lookup (loc, LC_NUMERIC, GROUPING);
-      else
-	grouping = _nl_lookup (loc, LC_MONETARY, MON_GROUPING);
-
-      if (*grouping <= 0 || *grouping == CHAR_MAX)
-	grouping = NULL;
-      else
-	{
-	  /* Figure out the thousands separator character.  */
-	  if (wide)
-	    {
-	      if (info->extra == 0)
-		thousands_sepwc = _nl_lookup_word
-		  (loc, LC_NUMERIC, _NL_NUMERIC_THOUSANDS_SEP_WC);
-	      else
-		thousands_sepwc =
-		  _nl_lookup_word (loc, LC_MONETARY,
-				    _NL_MONETARY_THOUSANDS_SEP_WC);
-	    }
-	  else
-	    {
-	      if (info->extra == 0)
-		thousands_sep = _nl_lookup (loc, LC_NUMERIC, THOUSANDS_SEP);
-	      else
-		thousands_sep = _nl_lookup
-		  (loc, LC_MONETARY, MON_THOUSANDS_SEP);
-	    }
-
-	  if ((wide && thousands_sepwc == L'\0')
-	      || (! wide && *thousands_sep == '\0'))
-	    grouping = NULL;
-	  else if (thousands_sepwc == L'\0')
-	    /* If we are printing multibyte characters and there is a
-	       multibyte representation for the thousands separator,
-	       we must ensure the wide character thousands separator
-	       is available, even if it is fake.  */
-	    thousands_sepwc = 0xfffffffe;
-	}
-    }
-  else
-    grouping = NULL;
 
 #define PRINTF_FP_FETCH(FLOAT, VAR, SUFFIX, MANT_DIG)			\
   {									\
@@ -349,29 +195,17 @@ __printf_fp_l (FILE *fp, locale_t loc,
       {									\
 	is_neg = signbit (VAR);						\
 	if (isupper (info->spec))					\
-	  {								\
-	    special = "NAN";						\
-	    wspecial = L"NAN";						\
-	  }								\
+	  special = "NAN";						\
 	else								\
-	  {								\
-	    special = "nan";						\
-	    wspecial = L"nan";						\
-	  }								\
+	  special = "nan";						\
       }									\
     else if (isinf (VAR))						\
       {									\
 	is_neg = signbit (VAR);						\
 	if (isupper (info->spec))					\
-	  {								\
-	    special = "INF";						\
-	    wspecial = L"INF";						\
-	  }								\
+	  special = "INF";						\
 	else								\
-	  {								\
-	    special = "inf";						\
-	    wspecial = L"inf";						\
-	  }								\
+	  special = "inf";						\
       }									\
     else								\
       {									\
@@ -405,22 +239,22 @@ __printf_fp_l (FILE *fp, locale_t loc,
 	--width;
       width -= 3;
 
-      if (!info->left && width > 0)
-	PADN (' ', width);
+      if (!info->left)
+	__printf_buffer_pad (buf, ' ', width);
 
       if (is_neg)
-	outchar ('-');
+	__printf_buffer_putc (buf, '-');
       else if (info->showsign)
-	outchar ('+');
+	__printf_buffer_putc (buf, '+');
       else if (info->space)
-	outchar (' ');
+	__printf_buffer_putc (buf, ' ');
 
-      PRINT (special, wspecial, 3);
+      __printf_buffer_puts (buf, special);
 
-      if (info->left && width > 0)
-	PADN (' ', width);
+      if (info->left)
+	__printf_buffer_pad (buf, ' ', width);
 
-      return done;
+      return;
     }
 
 
@@ -829,7 +663,7 @@ __printf_fp_l (FILE *fp, locale_t loc,
 
   {
     int width = info->width;
-    wchar_t *wstartp, *wcp;
+    char *wstartp, *wcp;
     size_t chars_needed;
     int expscale;
     int intdig_max, intdig_no = 0;
@@ -837,7 +671,6 @@ __printf_fp_l (FILE *fp, locale_t loc,
     int fracdig_max;
     int dig_max;
     int significant;
-    int ngroups = 0;
     char spec = _tolower (info->spec);
 
     if (spec == 'e')
@@ -898,38 +731,32 @@ __printf_fp_l (FILE *fp, locale_t loc,
 	significant = 0;		/* We count significant digits.	 */
       }
 
-    if (grouping)
-      {
-	/* Guess the number of groups we will make, and thus how
-	   many spaces we need for separator characters.  */
-	ngroups = __guess_grouping (intdig_max, grouping);
-	/* Allocate one more character in case rounding increases the
-	   number of groups.  */
-	chars_needed += ngroups + 1;
-      }
-
     /* Allocate buffer for output.  We need two more because while rounding
        it is possible that we need two more characters in front of all the
        other output.  If the amount of memory we have to allocate is too
        large use `malloc' instead of `alloca'.  */
-    if (__builtin_expect (chars_needed >= (size_t) -1 / sizeof (wchar_t) - 2
-			  || chars_needed < fracdig_max, 0))
+    if (__glibc_unlikely (chars_needed >= (size_t) -1 - 2
+			  || chars_needed < fracdig_max))
       {
 	/* Some overflow occurred.  */
 	__set_errno (ERANGE);
-	return -1;
+	__printf_buffer_mark_failed (buf);
+	return;
       }
-    size_t wbuffer_to_alloc = (2 + chars_needed) * sizeof (wchar_t);
+    size_t wbuffer_to_alloc = 2 + chars_needed;
     buffer_malloced = ! __libc_use_alloca (wbuffer_to_alloc);
     if (__builtin_expect (buffer_malloced, 0))
       {
-	wbuffer = (wchar_t *) malloc (wbuffer_to_alloc);
+	wbuffer = malloc (wbuffer_to_alloc);
 	if (wbuffer == NULL)
-	  /* Signal an error to the caller.  */
-	  return -1;
+	  {
+	    /* Signal an error to the caller.  */
+	    __printf_buffer_mark_failed (buf);
+	    return;
+	  }
       }
     else
-      wbuffer = (wchar_t *) alloca (wbuffer_to_alloc);
+      wbuffer = alloca (wbuffer_to_alloc);
     wcp = wstartp = wbuffer + 2;	/* Let room for rounding.  */
 
     /* Do the real work: put digits in allocated buffer.  */
@@ -945,15 +772,15 @@ __printf_fp_l (FILE *fp, locale_t loc,
 	if (info->alt
 	    || fracdig_min > 0
 	    || (fracdig_max > 0 && (p.fracsize > 1 || p.frac[0] != 0)))
-	  *wcp++ = decimalwc;
+	  *wcp++ = decimal;
       }
     else
       {
 	/* |fp| < 1.0 and the selected p.type is 'f', so put "0."
 	   in the buffer.  */
-	*wcp++ = L'0';
+	*wcp++ = '0';
 	--p.exponent;
-	*wcp++ = decimalwc;
+	*wcp++ = decimal;
       }
 
     /* Generate the needed number of fractional digits.	 */
@@ -964,7 +791,7 @@ __printf_fp_l (FILE *fp, locale_t loc,
       {
 	++fracdig_no;
 	*wcp = hack_digit (&p);
-	if (*wcp++ != L'0')
+	if (*wcp++ != '0')
 	  significant = 1;
 	else if (significant == 0)
 	  {
@@ -975,10 +802,10 @@ __printf_fp_l (FILE *fp, locale_t loc,
       }
 
     /* Do rounding.  */
-    wchar_t last_digit = wcp[-1] != decimalwc ? wcp[-1] : wcp[-2];
-    wchar_t next_digit = hack_digit (&p);
+    char last_digit = wcp[-1] != decimal ? wcp[-1] : wcp[-2];
+    char next_digit = hack_digit (&p);
     bool more_bits;
-    if (next_digit != L'0' && next_digit != L'5')
+    if (next_digit != '0' && next_digit != '5')
       more_bits = true;
     else if (p.fracsize == 1 && p.frac[0] == 0)
       /* Rest of the number is zero.  */
@@ -995,29 +822,29 @@ __printf_fp_l (FILE *fp, locale_t loc,
     else
       more_bits = true;
     int rounding_mode = get_rounding_mode ();
-    if (round_away (is_neg, (last_digit - L'0') & 1, next_digit >= L'5',
+    if (round_away (is_neg, (last_digit - '0') & 1, next_digit >= '5',
 		    more_bits, rounding_mode))
       {
-	wchar_t *wtp = wcp;
+	char *wtp = wcp;
 
 	if (fracdig_no > 0)
 	  {
 	    /* Process fractional digits.  Terminate if not rounded or
 	       radix character is reached.  */
 	    int removed = 0;
-	    while (*--wtp != decimalwc && *wtp == L'9')
+	    while (*--wtp != decimal && *wtp == '9')
 	      {
-		*wtp = L'0';
+		*wtp = '0';
 		++removed;
 	      }
 	    if (removed == fracdig_min && added_zeros > 0)
 	      --added_zeros;
-	    if (*wtp != decimalwc)
+	    if (*wtp != decimal)
 	      /* Round up.  */
 	      (*wtp)++;
 	    else if (__builtin_expect (spec == 'g' && p.type == 'f' && info->alt
 				       && wtp == wstartp + 1
-				       && wstartp[0] == L'0',
+				       && wstartp[0] == '0',
 				       0))
 	      /* This is a special case: the rounded number is 1.0,
 		 the format is 'g' or 'G', and the alternative format
@@ -1025,14 +852,14 @@ __printf_fp_l (FILE *fp, locale_t loc,
 	      --added_zeros;
 	  }
 
-	if (fracdig_no == 0 || *wtp == decimalwc)
+	if (fracdig_no == 0 || *wtp == decimal)
 	  {
 	    /* Round the integer digits.  */
-	    if (*(wtp - 1) == decimalwc)
+	    if (*(wtp - 1) == decimal)
 	      --wtp;
 
-	    while (--wtp >= wstartp && *wtp == L'9')
-	      *wtp = L'0';
+	    while (--wtp >= wstartp && *wtp == '9')
+	      *wtp = '0';
 
 	    if (wtp >= wstartp)
 	      /* Round up.  */
@@ -1056,13 +883,13 @@ __printf_fp_l (FILE *fp, locale_t loc,
 		    /* This is the case where for p.type %g the number fits
 		       really in the range for %f output but after rounding
 		       the number of digits is too big.	 */
-		    *--wstartp = decimalwc;
-		    *--wstartp = L'1';
+		    *--wstartp = decimal;
+		    *--wstartp = '1';
 
 		    if (info->alt || fracdig_no > 0)
 		      {
 			/* Overwrite the old radix character.  */
-			wstartp[intdig_no + 2] = L'0';
+			wstartp[intdig_no + 2] = '0';
 			++fracdig_no;
 		      }
 
@@ -1077,7 +904,7 @@ __printf_fp_l (FILE *fp, locale_t loc,
 		  {
 		    /* We can simply add another another digit before the
 		       radix.  */
-		    *--wstartp = L'1';
+		    *--wstartp = '1';
 		    ++intdig_no;
 		  }
 
@@ -1094,27 +921,15 @@ __printf_fp_l (FILE *fp, locale_t loc,
       }
 
     /* Now remove unnecessary '0' at the end of the string.  */
-    while (fracdig_no > fracdig_min + added_zeros && *(wcp - 1) == L'0')
+    while (fracdig_no > fracdig_min + added_zeros && *(wcp - 1) == '0')
       {
 	--wcp;
 	--fracdig_no;
       }
     /* If we eliminate all fractional digits we perhaps also can remove
        the radix character.  */
-    if (fracdig_no == 0 && !info->alt && *(wcp - 1) == decimalwc)
+    if (fracdig_no == 0 && !info->alt && *(wcp - 1) == decimal)
       --wcp;
-
-    if (grouping)
-      {
-	/* Rounding might have changed the number of groups.  We allocated
-	   enough memory but we need here the correct number of groups.  */
-	if (intdig_no != intdig_max)
-	  ngroups = __guess_grouping (intdig_no, grouping);
-
-	/* Add in separator characters, overwriting the same buffer.  */
-	wcp = group_number (wstartp, wcp, intdig_no, grouping, thousands_sepwc,
-			    ngroups);
-      }
 
     /* Write the p.exponent if it is needed.  */
     if (p.type != 'f')
@@ -1125,12 +940,12 @@ __printf_fp_l (FILE *fp, locale_t loc,
 	       really smaller than -4, which requires the 'e'/'E' format.
 	       But after rounding the number has an p.exponent of -4.  */
 	    assert (wcp >= wstartp + 1);
-	    assert (wstartp[0] == L'1');
-	    __wmemcpy (wstartp, L"0.0001", 6);
-	    wstartp[1] = decimalwc;
+	    assert (wstartp[0] == '1');
+	    memcpy (wstartp, "0.0001", 6);
+	    wstartp[1] = decimal;
 	    if (wcp >= wstartp + 2)
 	      {
-		__wmemset (wstartp + 6, L'0', wcp - (wstartp + 2));
+		memset (wstartp + 6, '0', wcp - (wstartp + 2));
 		wcp += 4;
 	      }
 	    else
@@ -1138,8 +953,8 @@ __printf_fp_l (FILE *fp, locale_t loc,
 	  }
 	else
 	  {
-	    *wcp++ = (wchar_t) p.type;
-	    *wcp++ = p.expsign ? L'-' : L'+';
+	    *wcp++ = p.type;
+	    *wcp++ = p.expsign ? '-' : '+';
 
 	    /* Find the magnitude of the p.exponent.	*/
 	    expscale = 10;
@@ -1148,220 +963,293 @@ __printf_fp_l (FILE *fp, locale_t loc,
 
 	    if (p.exponent < 10)
 	      /* Exponent always has at least two digits.  */
-	      *wcp++ = L'0';
+	      *wcp++ = '0';
 	    else
 	      do
 		{
 		  expscale /= 10;
-		  *wcp++ = L'0' + (p.exponent / expscale);
+		  *wcp++ = '0' + (p.exponent / expscale);
 		  p.exponent %= expscale;
 		}
 	      while (expscale > 10);
-	    *wcp++ = L'0' + p.exponent;
+	    *wcp++ = '0' + p.exponent;
 	  }
       }
+
+    struct grouping_iterator iter;
+    if (thousands_sep != '\0' && info->group)
+      __grouping_iterator_init (&iter, lc_category, loc, intdig_no);
+    else
+      iter.separators = 0;
 
     /* Compute number of characters which must be filled with the padding
        character.  */
     if (is_neg || info->showsign || info->space)
       --width;
+    /* To count bytes, we would have to use __translated_number_width
+       for info->i18n && !info->wide.  See bug 28943.  */
     width -= wcp - wstartp;
+    /* For counting bytes, we would have to multiply by
+       thousands_sep_length.  */
+    width -= iter.separators;
 
-    if (!info->left && info->pad != '0' && width > 0)
-      PADN (info->pad, width);
+    if (!info->left && info->pad != '0')
+      __printf_buffer_pad (buf, info->pad, width);
 
     if (is_neg)
-      outchar ('-');
+      __printf_buffer_putc (buf, '-');
     else if (info->showsign)
-      outchar ('+');
+      __printf_buffer_putc (buf, '+');
     else if (info->space)
-      outchar (' ');
+      __printf_buffer_putc (buf, ' ');
 
-    if (!info->left && info->pad == '0' && width > 0)
-      PADN ('0', width);
+    if (!info->left && info->pad == '0')
+      __printf_buffer_pad (buf, '0', width);
 
+    if (iter.separators > 0)
+      {
+	char *cp = wstartp;
+	for (int i = 0; i < intdig_no; ++i)
+	  {
+	    if (__grouping_iterator_next (&iter))
+	      __printf_buffer_putc (buf, thousands_sep);
+	    __printf_buffer_putc (buf, *cp);
+	    ++cp;
+	  }
+	__printf_buffer_write (buf, cp, wcp - cp);
+      }
+    else
+      __printf_buffer_write (buf, wstartp, wcp - wstartp);
+
+    if (info->left)
+      __printf_buffer_pad (buf, info->pad, width);
+  }
+
+  if (buffer_malloced)
+    free (wbuffer);
+}
+
+/* ASCII to localization translation.  Multibyte version.  */
+struct __printf_buffer_fp
+{
+  struct __printf_buffer base;
+
+  /* Replacement for ',' and '.'.  */
+  const char *thousands_sep;
+  const char *decimal;
+  unsigned char decimal_point_bytes;
+  unsigned char thousands_sep_length;
+
+  /* Buffer to write to.   */
+  struct __printf_buffer *next;
+
+  /* Activates outdigit translation if not NULL.  */
+  struct __locale_data *ctype;
+
+  /* Buffer to which the untranslated ASCII digits are written.  */
+  char untranslated[PRINTF_BUFFER_SIZE_DIGITS];
+};
+
+/*  Multibyte buffer-to-buffer flush function with full translation.  */
+void
+__printf_buffer_flush_fp (struct __printf_buffer_fp *buf)
+{
+  /* No need to update buf->base.written; the actual count is
+     maintained in buf->next->written.  */
+  for (char *p = buf->untranslated; p < buf->base.write_ptr; ++p)
     {
-      char *buffer_end = NULL;
-      char *cp = NULL;
-      char *tmpptr;
-
-      if (! wide)
+      char ch = *p;
+      const char *replacement = NULL;
+      unsigned int replacement_bytes;
+      if (ch == ',')
 	{
-	  /* Create the single byte string.  */
-	  size_t decimal_len;
-	  size_t thousands_sep_len;
-	  wchar_t *copywc;
-	  size_t factor;
-	  if (info->i18n)
-	    factor = _nl_lookup_word (loc, LC_CTYPE, _NL_CTYPE_MB_CUR_MAX);
-	  else
-	    factor = 1;
-
-	  decimal_len = strlen (decimal);
-
-	  if (thousands_sep == NULL)
-	    thousands_sep_len = 0;
-	  else
-	    thousands_sep_len = strlen (thousands_sep);
-
-	  size_t nbuffer = (2 + chars_needed * factor + decimal_len
-			    + ngroups * thousands_sep_len);
-	  if (__glibc_unlikely (buffer_malloced))
-	    {
-	      buffer = (char *) malloc (nbuffer);
-	      if (buffer == NULL)
-		{
-		  /* Signal an error to the caller.  */
-		  free (wbuffer);
-		  return -1;
-		}
-	    }
-	  else
-	    buffer = (char *) alloca (nbuffer);
-	  buffer_end = buffer + nbuffer;
-
-	  /* Now copy the wide character string.  Since the character
-	     (except for the decimal point and thousands separator) must
-	     be coming from the ASCII range we can esily convert the
-	     string without mapping tables.  */
-	  for (cp = buffer, copywc = wstartp; copywc < wcp; ++copywc)
-	    if (*copywc == decimalwc)
-	      cp = (char *) __mempcpy (cp, decimal, decimal_len);
-	    else if (*copywc == thousands_sepwc)
-	      cp = (char *) __mempcpy (cp, thousands_sep, thousands_sep_len);
-	    else
-	      *cp++ = (char) *copywc;
+	  replacement = buf->thousands_sep;
+	  replacement_bytes = buf->thousands_sep_length;
 	}
-
-      tmpptr = buffer;
-      if (__glibc_unlikely (info->i18n))
+      else if (ch == '.')
 	{
-#ifdef COMPILE_WPRINTF
-	  wstartp = _i18n_number_rewrite (wstartp, wcp,
-					  wbuffer + wbuffer_to_alloc);
-	  wcp = wbuffer + wbuffer_to_alloc;
-	  assert ((uintptr_t) wbuffer <= (uintptr_t) wstartp);
-	  assert ((uintptr_t) wstartp
-		  < (uintptr_t) wbuffer + wbuffer_to_alloc);
-#else
-	  tmpptr = _i18n_number_rewrite (tmpptr, cp, buffer_end);
-	  cp = buffer_end;
-	  assert ((uintptr_t) buffer <= (uintptr_t) tmpptr);
-	  assert ((uintptr_t) tmpptr < (uintptr_t) buffer_end);
-#endif
+	  replacement = buf->decimal;
+	  replacement_bytes = buf->decimal_point_bytes;
 	}
-
-      PRINT (tmpptr, wstartp, wide ? wcp - wstartp : cp - tmpptr);
-
-      /* Free the memory if necessary.  */
-      if (__glibc_unlikely (buffer_malloced))
+      else if (buf->ctype != NULL && '0' <= ch && ch <= '9')
 	{
-	  free (buffer);
-	  free (wbuffer);
-	  /* Avoid a double free if the subsequent PADN encounters an
-	     I/O error.  */
-	  buffer = NULL;
-	  wbuffer = NULL;
+	  int digit = ch - '0';
+	  replacement
+	    = buf->ctype->values[_NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_MB)
+				 + digit].string;
+	  struct lc_ctype_data *ctype = buf->ctype->private;
+	  replacement_bytes = ctype->outdigit_bytes[digit];
 	}
+      if (replacement == NULL)
+	__printf_buffer_putc (buf->next, ch);
+      else
+	__printf_buffer_write (buf->next, replacement, replacement_bytes);
     }
 
-    if (info->left && width > 0)
-      PADN (info->pad, width);
-  }
-  return done;
+  if (!__printf_buffer_has_failed (buf->next))
+    buf->base.write_ptr = buf->untranslated;
+  else
+    __printf_buffer_mark_failed (&buf->base);
 }
-libc_hidden_def (__printf_fp_l)
+
+void
+__printf_fp_l_buffer (struct __printf_buffer *buf, locale_t loc,
+		      const struct printf_info *info,
+		      const void *const *args)
+{
+  struct __printf_buffer_fp tmp;
+
+  if (info->extra)
+    {
+      tmp.thousands_sep = _nl_lookup (loc, LC_MONETARY, MON_THOUSANDS_SEP);
+      tmp.decimal = _nl_lookup (loc, LC_MONETARY, MON_DECIMAL_POINT);
+      if (tmp.decimal[0] == '\0')
+	tmp.decimal = _nl_lookup (loc, LC_NUMERIC, DECIMAL_POINT);
+    }
+  else
+    {
+      tmp.thousands_sep = _nl_lookup (loc, LC_NUMERIC, THOUSANDS_SEP);
+      tmp.decimal = _nl_lookup (loc, LC_NUMERIC, DECIMAL_POINT);
+    }
+
+  tmp.thousands_sep_length = strlen (tmp.thousands_sep);
+  if (tmp.decimal[1] == '\0' && tmp.thousands_sep_length <= 1
+      && !info->i18n)
+    {
+      /* Emit the the characters directly.  This is only possible if the
+	 separators have length 1 (or 0 in case of thousands_sep).  i18n
+	 digit translation still needs the full conversion.  */
+      __printf_fp_buffer_1 (buf, loc,
+			    tmp.thousands_sep[0], tmp.decimal[0],
+			    tmp.thousands_sep_length,
+			    info, args);
+      return;
+    }
+
+  tmp.decimal_point_bytes = strlen (tmp.decimal);
+
+  if (info->i18n)
+    tmp.ctype = loc->__locales[LC_CTYPE];
+  else
+    tmp.ctype = NULL;
+  tmp.next = buf;
+
+  __printf_buffer_init (&tmp.base, tmp.untranslated, sizeof (tmp.untranslated),
+			__printf_buffer_mode_fp);
+  __printf_fp_buffer_1 (&tmp.base, loc, ',', '.',
+			tmp.thousands_sep_length, info, args);
+  if (__printf_buffer_has_failed (&tmp.base))
+    {
+      __printf_buffer_mark_failed (tmp.next);
+      return;
+    }
+  __printf_buffer_flush_fp (&tmp);
+}
+
+/* The wide version is implemented on top of the multibyte version using
+   translation.  */
+
+struct __printf_buffer_fp_to_wide
+{
+  struct __printf_buffer base;
+  wchar_t thousands_sep_wc;
+  wchar_t decimalwc;
+  struct __wprintf_buffer *next;
+
+  /* Activates outdigit translation if not NULL.  */
+  struct __locale_data *ctype;
+
+  char untranslated[PRINTF_BUFFER_SIZE_DIGITS];
+};
+
+void
+__printf_buffer_flush_fp_to_wide (struct __printf_buffer_fp_to_wide *buf)
+{
+  /* No need to update buf->base.written; the actual count is
+     maintained in buf->next->written.  */
+  for (char *p = buf->untranslated; p < buf->base.write_ptr; ++p)
+    {
+      /* wchar_t overlaps with char in the ASCII range.  */
+      wchar_t ch = *p;
+      if (ch == L',')
+	{
+	  ch = buf->thousands_sep_wc;
+	  if (ch == 0)
+	    continue;
+	}
+      else if (ch == L'.')
+	ch = buf->decimalwc;
+      else if (buf->ctype != NULL && L'0' <= ch && ch <= L'9')
+	ch = buf->ctype->values[_NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC)
+				+ ch - L'0'].word;
+      __wprintf_buffer_putc (buf->next, ch);
+    }
+
+  if (!__wprintf_buffer_has_failed (buf->next))
+    buf->base.write_ptr = buf->untranslated;
+  else
+    __printf_buffer_mark_failed (&buf->base);
+}
+
+void
+__wprintf_fp_l_buffer (struct __wprintf_buffer *buf, locale_t loc,
+		       const struct printf_info *info,
+		       const void *const *args)
+{
+  struct __printf_buffer_fp_to_wide tmp;
+  if (info->extra)
+    {
+      tmp.decimalwc = _nl_lookup_word (loc, LC_MONETARY,
+				       _NL_MONETARY_DECIMAL_POINT_WC);
+      tmp.thousands_sep_wc = _nl_lookup_word (loc, LC_MONETARY,
+					      _NL_MONETARY_THOUSANDS_SEP_WC);
+      if (tmp.decimalwc == 0)
+	tmp.decimalwc = _nl_lookup_word (loc, LC_NUMERIC,
+					 _NL_NUMERIC_DECIMAL_POINT_WC);
+    }
+  else
+    {
+      tmp.decimalwc = _nl_lookup_word (loc, LC_NUMERIC,
+				       _NL_NUMERIC_DECIMAL_POINT_WC);
+      tmp.thousands_sep_wc = _nl_lookup_word (loc, LC_NUMERIC,
+					      _NL_NUMERIC_THOUSANDS_SEP_WC);
+    }
+
+  if (info->i18n)
+    tmp.ctype = loc->__locales[LC_CTYPE];
+  else
+    tmp.ctype = NULL;
+  tmp.next = buf;
+
+  __printf_buffer_init (&tmp.base, tmp.untranslated, sizeof (tmp.untranslated),
+			__printf_buffer_mode_fp_to_wide);
+  __printf_fp_buffer_1 (&tmp.base, loc, ',', '.', 1, info, args);
+  if (__printf_buffer_has_failed (&tmp.base))
+    {
+      __wprintf_buffer_mark_failed (tmp.next);
+      return;
+    }
+  __printf_buffer_flush (&tmp.base);
+}
 
 int
 ___printf_fp (FILE *fp, const struct printf_info *info,
 	      const void *const *args)
 {
-  return __printf_fp_l (fp, _NL_CURRENT_LOCALE, info, args);
+  if (info->wide)
+    {
+      struct __wprintf_buffer_to_file buf;
+      __wprintf_buffer_to_file_init (&buf, fp);
+      __wprintf_fp_l_buffer (&buf.base, _NL_CURRENT_LOCALE, info, args);
+      return __wprintf_buffer_to_file_done (&buf);
+    }
+  else
+    {
+      struct __printf_buffer_to_file buf;
+      __printf_buffer_to_file_init (&buf, fp);
+      __printf_fp_l_buffer (&buf.base, _NL_CURRENT_LOCALE, info, args);
+      return __printf_buffer_to_file_done (&buf);
+    }
 }
 ldbl_hidden_def (___printf_fp, __printf_fp)
 ldbl_strong_alias (___printf_fp, __printf_fp)
-
-
-/* Return the number of extra grouping characters that will be inserted
-   into a number with INTDIG_MAX integer digits.  */
-
-unsigned int
-__guess_grouping (unsigned int intdig_max, const char *grouping)
-{
-  unsigned int groups;
-
-  /* We treat all negative values like CHAR_MAX.  */
-
-  if (*grouping == CHAR_MAX || *grouping <= 0)
-    /* No grouping should be done.  */
-    return 0;
-
-  groups = 0;
-  while (intdig_max > (unsigned int) *grouping)
-    {
-      ++groups;
-      intdig_max -= *grouping++;
-
-      if (*grouping == CHAR_MAX
-#if CHAR_MIN < 0
-	  || *grouping < 0
-#endif
-	  )
-	/* No more grouping should be done.  */
-	break;
-      else if (*grouping == 0)
-	{
-	  /* Same grouping repeats.  */
-	  groups += (intdig_max - 1) / grouping[-1];
-	  break;
-	}
-    }
-
-  return groups;
-}
-
-/* Group the INTDIG_NO integer digits of the number in [BUF,BUFEND).
-   There is guaranteed enough space past BUFEND to extend it.
-   Return the new end of buffer.  */
-
-static wchar_t *
-group_number (wchar_t *buf, wchar_t *bufend, unsigned int intdig_no,
-	      const char *grouping, wchar_t thousands_sep, int ngroups)
-{
-  wchar_t *p;
-
-  if (ngroups == 0)
-    return bufend;
-
-  /* Move the fractional part down.  */
-  __wmemmove (buf + intdig_no + ngroups, buf + intdig_no,
-	      bufend - (buf + intdig_no));
-
-  p = buf + intdig_no + ngroups - 1;
-  do
-    {
-      unsigned int len = *grouping++;
-      do
-	*p-- = buf[--intdig_no];
-      while (--len > 0);
-      *p-- = thousands_sep;
-
-      if (*grouping == CHAR_MAX
-#if CHAR_MIN < 0
-	  || *grouping < 0
-#endif
-	  )
-	/* No more grouping should be done.  */
-	break;
-      else if (*grouping == 0)
-	/* Same grouping repeats.  */
-	--grouping;
-    } while (intdig_no > (unsigned int) *grouping);
-
-  /* Copy the remaining ungrouped digits.  */
-  do
-    *p-- = buf[--intdig_no];
-  while (p > buf);
-
-  return bufend + ngroups;
-}

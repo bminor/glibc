@@ -65,18 +65,31 @@ int __translated_number_width (locale_t loc,
 			       const char *first, const char *last)
   attribute_hidden;
 
-extern int __printf_fphex (FILE *, const struct printf_info *,
-			   const void *const *) attribute_hidden;
+
+struct __printf_buffer;
+void __printf_buffer (struct __printf_buffer *buf, const char *format,
+		      va_list ap, unsigned int mode_flags);
+struct __wprintf_buffer;
+void __wprintf_buffer (struct __wprintf_buffer *buf, const wchar_t *format,
+		       va_list ap, unsigned int mode_flags);
+
 extern int __printf_fp (FILE *, const struct printf_info *,
 			const void *const *);
 libc_hidden_proto (__printf_fp)
-extern int __printf_fp_l (FILE *, locale_t, const struct printf_info *,
-			  const void *const *);
-libc_hidden_proto (__printf_fp_l)
 
-extern unsigned int __guess_grouping (unsigned int intdig_max,
-				      const char *grouping)
-     attribute_hidden;
+void __printf_fphex_l_buffer (struct __printf_buffer *, locale_t,
+			      const struct printf_info *,
+			      const void *const *) attribute_hidden;
+void __printf_fp_l_buffer (struct __printf_buffer *, locale_t,
+			   const struct printf_info *,
+			   const void *const *) attribute_hidden;
+struct __wprintf_buffer;
+void __wprintf_fphex_l_buffer (struct __wprintf_buffer *, locale_t,
+			       const struct printf_info *,
+			       const void *const *) attribute_hidden;
+void __wprintf_fp_l_buffer (struct __wprintf_buffer *, locale_t,
+			    const struct printf_info *,
+			    const void *const *) attribute_hidden;
 
 # endif /* !_ISOMAC */
 #endif
