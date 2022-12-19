@@ -127,14 +127,13 @@ fi
 config_vars="$config_vars
 MIG = $MIG"
 
+OLD_CPPFLAGS=$CPPFLAGS
 if test -n "$sysheaders"; then
-  OLD_CPPFLAGS=$CPPFLAGS
   CPPFLAGS="$CPPFLAGS $SYSINCLUDES"
 fi
 
 ### Sanity checks for Mach header installation
-old_CFLAGS=$CFLAGS
-CFLAGS="$CFLAGS -ffreestanding"
+CPPFLAGS="$CPPFLAGS -ffreestanding"
 
 
 ac_fn_c_check_header_preproc "$LINENO" "mach/mach_types.h" "ac_cv_header_mach_mach_types_h"
@@ -527,6 +526,4 @@ if test $hurd_cv_mig_retcode = yes; then
 
 fi
 
-if test -n "$sysheaders"; then
-  CPPFLAGS=$OLD_CPPFLAGS
-fi
+CPPFLAGS=$OLD_CPPFLAGS
