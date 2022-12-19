@@ -50,6 +50,7 @@ enum __printf_buffer_mode
     __printf_buffer_mode_sprintf_chk,
     __printf_buffer_mode_to_file,
     __printf_buffer_mode_asprintf,
+    __printf_buffer_mode_dprintf,
     __printf_buffer_mode_strfmon,
     __printf_buffer_mode_fp,         /* For __printf_fp_l_buffer.  */
     __printf_buffer_mode_fp_to_wide, /* For __wprintf_fp_l_buffer.  */
@@ -308,6 +309,9 @@ void __printf_buffer_flush_to_file (struct __printf_buffer_to_file *)
 struct __printf_buffer_asprintf;
 void __printf_buffer_flush_asprintf (struct __printf_buffer_asprintf *)
   attribute_hidden;
+struct __printf_buffer_dprintf;
+void __printf_buffer_flush_dprintf (struct __printf_buffer_dprintf *)
+  attribute_hidden;
 struct __printf_buffer_fp;
 void __printf_buffer_flush_fp (struct __printf_buffer_fp *)
   attribute_hidden;
@@ -340,5 +344,10 @@ void __wprintf_buffer_flush_to_file (struct __wprintf_buffer_to_file *)
    large enough to copy almost all asprintf usages with just a single
    (final, correctly sized) heap allocation.  */
 #define PRINTF_BUFFER_SIZE_ASPRINTF 200
+
+/* This should cover most of the packet-oriented file descriptors,
+   where boundaries between writes could be visible to readers.  But
+   it is still small enough not to cause too many stack overflow issues.  */
+#define PRINTF_BUFFER_SIZE_DPRINTF 2048
 
 #endif /* PRINTF_BUFFER_H */
