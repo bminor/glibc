@@ -43,15 +43,18 @@ __getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
   ssize_t cur_len = 0;
   ssize_t len;
 
-  if (lineptr == NULL || n == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
   CHECK_FILE (fp, -1);
   _IO_acquire_lock (fp);
   if (_IO_ferror_unlocked (fp))
     {
+      result = -1;
+      goto unlock_return;
+    }
+
+  if (lineptr == NULL || n == NULL)
+    {
+      __set_errno (EINVAL);
+      fseterr_unlocked (fp);
       result = -1;
       goto unlock_return;
     }
@@ -62,6 +65,7 @@ __getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
       *lineptr = (char *) malloc (*n);
       if (*lineptr == NULL)
 	{
+	  fseterr_unlocked (fp);
 	  result = -1;
 	  goto unlock_return;
 	}
@@ -88,6 +92,7 @@ __getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
       if (__glibc_unlikely (len >= SSIZE_MAX - cur_len))
 	{
 	  __set_errno (EOVERFLOW);
+	  fseterr_unlocked (fp);
 	  result = -1;
 	  goto unlock_return;
 	}
@@ -102,6 +107,7 @@ __getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
 	  new_lineptr = (char *) realloc (*lineptr, needed);
 	  if (new_lineptr == NULL)
 	    {
+	      fseterr_unlocked (fp);
 	      result = -1;
 	      goto unlock_return;
 	    }
