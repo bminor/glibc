@@ -85,6 +85,7 @@ routines := \
   tmpfile64 \
   tmpnam \
   tmpnam_r \
+  translated_number_width \
   vfprintf \
   vfprintf-internal \
   vfscanf \
