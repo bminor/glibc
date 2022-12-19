@@ -147,7 +147,7 @@ argp_default_parser (int key, char *arg, struct argp_state *state)
       break;
 
     case OPT_HANG:
-      _argp_hang = atoi (arg ? arg : "3600");
+      _argp_hang = arg ? strtol (arg, NULL, 10) : 3600;
       while (_argp_hang-- > 0)
 	__sleep (1);
       break;

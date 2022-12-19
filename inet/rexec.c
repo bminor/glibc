@@ -134,7 +134,7 @@ retry:
 		if (!getnameinfo(&sa2.sa, sa2len,
 				 NULL, 0, servbuff, sizeof(servbuff),
 				 NI_NUMERICSERV))
-			port = atoi(servbuff);
+			port = strtol(servbuff, NULL, 10);
 		(void) sprintf(num, "%u", port);
 		(void) __write(s, num, strlen(num)+1);
 		{ socklen_t len = sizeof (from);
