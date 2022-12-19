@@ -24,64 +24,115 @@
    This exception applies to code released by its copyright holders
    in files containing the exception.  */
 
-#include <string.h>
+#include <array_length.h>
+#include <errno.h>
+#include <limits.h>
+#include <math_ldbl_opt.h>
+#include <printf.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include <strfile.h>
+#include <string.h>
+#include <printf_buffer.h>
+
+struct __printf_buffer_asprintf
+{
+  /* base.write_base points either to a heap-allocated buffer, or to
+     the direct array below.  */
+  struct __printf_buffer base;
+
+  /* Initial allocation.  200 should be large enough to copy almost
+     all asprintf usages with just a single (final, correctly sized)
+     heap allocation.  */
+  char direct[PRINTF_BUFFER_SIZE_ASPRINTF];
+};
+
+void
+__printf_buffer_flush_asprintf (struct __printf_buffer_asprintf *buf)
+{
+  size_t current_pos = buf->base.write_ptr - buf->base.write_base;
+  if (current_pos >= INT_MAX)
+    {
+      /* The result is not representable.  No need to continue.  */
+      __set_errno (EOVERFLOW);
+      __printf_buffer_mark_failed (&buf->base);
+      return;
+    }
+
+  size_t current_size = buf->base.write_end - buf->base.write_base;
+  /* Implement an exponentiation sizing policy.  Keep the size
+     congruent 8 (mod 16), to account for the footer in glibc
+     malloc.  */
+  size_t new_size = ALIGN_UP (current_size + current_size / 2, 16) | 8;
+  char *new_buffer;
+  if (buf->base.write_base == buf->direct)
+    {
+      new_buffer = malloc (new_size);
+      if (new_buffer == NULL)
+	{
+	  __printf_buffer_mark_failed (&buf->base);
+	  return;
+	}
+      memcpy (new_buffer, buf->direct, current_pos);
+    }
+  else
+    {
+      new_buffer = realloc (buf->base.write_base, new_size);
+      if (new_buffer == NULL)
+	{
+	  __printf_buffer_mark_failed (&buf->base);
+	  return;
+	}
+    }
+
+  /* Set up the new write area.  */
+  buf->base.write_base = new_buffer;
+  buf->base.write_ptr = new_buffer + current_pos;
+  buf->base.write_end = new_buffer + new_size;
+}
+
 
 int
 __vasprintf_internal (char **result_ptr, const char *format, va_list args,
 		      unsigned int mode_flags)
 {
-  /* Initial size of the buffer to be used.  Will be doubled each time an
-     overflow occurs.  */
-  const size_t init_string_size = 100;
-  char *string;
-  _IO_strfile sf;
-  int ret;
-  size_t needed;
-  size_t allocated;
-  /* No need to clear the memory here (unlike for open_memstream) since
-     we know we will never seek on the stream.  */
-  string = (char *) malloc (init_string_size);
-  if (string == NULL)
-    return -1;
-#ifdef _IO_MTSAFE_IO
-  sf._sbf._f._lock = NULL;
-#endif
-  _IO_no_init (&sf._sbf._f, _IO_USER_LOCK, -1, NULL, NULL);
-  _IO_JUMPS (&sf._sbf) = &_IO_str_jumps;
-  _IO_str_init_static_internal (&sf, string, init_string_size, string);
-  sf._sbf._f._flags &= ~_IO_USER_BUF;
-  sf._s._allocate_buffer_unused = (_IO_alloc_type) malloc;
-  sf._s._free_buffer_unused = (_IO_free_type) free;
-  ret = __vfprintf_internal (&sf._sbf._f, format, args, mode_flags);
-  if (ret < 0)
+  struct __printf_buffer_asprintf buf;
+  __printf_buffer_init (&buf.base, buf.direct, array_length (buf.direct),
+			__printf_buffer_mode_asprintf);
+
+  __printf_buffer (&buf.base, format, args, mode_flags);
+  int done = __printf_buffer_done (&buf.base);
+  if (done < 0)
     {
-      free (sf._sbf._f._IO_buf_base);
-      return ret;
+      if (buf.base.write_base != buf.direct)
+	free (buf.base.write_base);
+      return done;
     }
-  /* Only use realloc if the size we need is of the same (binary)
-     order of magnitude then the memory we allocated.  */
-  needed = sf._sbf._f._IO_write_ptr - sf._sbf._f._IO_write_base + 1;
-  allocated = sf._sbf._f._IO_write_end - sf._sbf._f._IO_write_base;
-  if ((allocated >> 1) <= needed)
-    *result_ptr = (char *) realloc (sf._sbf._f._IO_buf_base, needed);
+
+  /* Transfer to the final buffer.  */
+  char *result;
+  size_t size = buf.base.write_ptr - buf.base.write_base;
+  if (buf.base.write_base == buf.direct)
+    {
+      result = malloc (size + 1);
+      if (result == NULL)
+	return -1;
+      memcpy (result, buf.direct, size);
+    }
   else
     {
-      *result_ptr = (char *) malloc (needed);
-      if (*result_ptr != NULL)
+      result = realloc (buf.base.write_base, size + 1);
+      if (result == NULL)
 	{
-	  memcpy (*result_ptr, sf._sbf._f._IO_buf_base, needed - 1);
-	  free (sf._sbf._f._IO_buf_base);
+	  free (buf.base.write_base);
+	  return -1;
 	}
-      else
-	/* We have no choice, use the buffer we already have.  */
-	*result_ptr = (char *) realloc (sf._sbf._f._IO_buf_base, needed);
     }
-  if (*result_ptr == NULL)
-    *result_ptr = sf._sbf._f._IO_buf_base;
-  (*result_ptr)[needed - 1] = '\0';
-  return ret;
+
+  /* Add NUL termination.  */
+  result[size] = '\0';
+  *result_ptr = result;
+
+  return done;
 }
 
 int
