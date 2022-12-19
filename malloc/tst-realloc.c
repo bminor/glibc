@@ -83,6 +83,25 @@ do_test (void)
 
   free (p);
 
+  /* Check as above with larger size increase.  */
+  p = malloc (34);
+  if (p == NULL)
+    FAIL_EXIT1 ("malloc (34) failed.");
+  memset (p, 'a', 34);
+  p = realloc (p, 80000);
+  if (p == NULL)
+    FAIL_EXIT1 ("realloc (p, 80000) failed.");
+  c = p;
+  ok = 1;
+  for (i = 0; i < 34; i++)
+    {
+      if (c[i] != 'a')
+        ok = 0;
+    }
+  if (ok == 0)
+    FAIL_EXIT1 ("first 34 bytes were not preserved");
+  free (p);
+
   p = realloc (NULL, 100);
   if (p == NULL)
     FAIL_EXIT1 ("realloc (NULL, 100) failed.");

@@ -3762,9 +3762,9 @@ __libc_realloc (void *oldmem, size_t bytes)
       void *newmem = _mid_memalign (align, bytes, 0);
       if (!cap_narrow_check (newmem, oldmem))
 	return newmem;
-      size_t sz = oldsize - CHUNK_HDR_SZ;
+      size_t sz = memsize (oldp);
       memcpy (newmem, oldmem, sz < bytes ? sz : bytes);
-      (void) tag_region (oldmem, sz);
+      (void) tag_region (chunk2mem (oldp), sz);
       _int_free (ar_ptr, oldp, 0);
       return newmem;
     }
