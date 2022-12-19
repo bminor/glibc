@@ -15,7 +15,6 @@ fi
 CPPFLAGS="$CPPFLAGS -ffreestanding"
 AC_CHECK_HEADER(mach/mach_types.h,,
                 [AC_MSG_ERROR([cannot find Mach headers])], -)
-CFLAGS=$old_CFLAGS
 AC_CHECK_HEADER(mach/mach_types.defs,, [dnl
 AC_MSG_ERROR([cannot find Mach .defs files])], -)
 
@@ -44,8 +43,6 @@ dnl The creation_time field is a GNU Mach addition the other variants lack.
 dnl
 AC_CACHE_CHECK(for creation_time in task_basic_info,
 	       libc_cv_mach_task_creation_time, [dnl
-old_CFLAGS=$CFLAGS
-CFLAGS="$CFLAGS -ffreestanding"
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <mach/task_info.h>]], [[
 extern struct task_basic_info *i;
 long s = i->creation_time.seconds;
@@ -53,7 +50,6 @@ long s = i->creation_time.seconds;
 if test $libc_cv_mach_task_creation_time = no; then
   AC_MSG_ERROR([you need Mach headers supporting task_info.creation_time])
 fi
-CFLAGS=$old_CFLAGS
 
 dnl
 dnl The Darwin variant no longer has <mach/mach.defs>

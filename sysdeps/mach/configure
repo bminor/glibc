@@ -144,7 +144,6 @@ else
 fi
 
 
-CFLAGS=$old_CFLAGS
 ac_fn_c_check_header_preproc "$LINENO" "mach/mach_types.defs" "ac_cv_header_mach_mach_types_defs"
 if test "x$ac_cv_header_mach_mach_types_defs" = xyes; then :
 
@@ -218,8 +217,6 @@ $as_echo_n "checking for creation_time in task_basic_info... " >&6; }
 if ${libc_cv_mach_task_creation_time+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  old_CFLAGS=$CFLAGS
-CFLAGS="$CFLAGS -ffreestanding"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <mach/task_info.h>
@@ -246,7 +243,6 @@ $as_echo "$libc_cv_mach_task_creation_time" >&6; }
 if test $libc_cv_mach_task_creation_time = no; then
   as_fn_error $? "you need Mach headers supporting task_info.creation_time" "$LINENO" 5
 fi
-CFLAGS=$old_CFLAGS
 
 mach_interface_list=
 for ifc in mach mach4 gnumach \
