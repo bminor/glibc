@@ -62,6 +62,7 @@ sysdep_routines += \
   clone3 \
   closefrom_fallback \
   convert_scm_timestamps \
+  epoll_create \
   epoll_pwait \
   epoll_pwait2 \
   epoll_wait \
@@ -73,6 +74,7 @@ sysdep_routines += \
   fxstat64 \
   fxstatat \
   fxstatat64 \
+  inotify_init \
   lxstat \
   lxstat64 \
   mlock2 \
