@@ -45,7 +45,9 @@
 enum __printf_buffer_mode
   {
     __printf_buffer_mode_failed,
+    __printf_buffer_mode_sprintf,
     __printf_buffer_mode_snprintf,
+    __printf_buffer_mode_sprintf_chk,
     __printf_buffer_mode_to_file,
     __printf_buffer_mode_strfmon,
     __printf_buffer_mode_fp,         /* For __printf_fp_l_buffer.  */

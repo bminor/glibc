@@ -25,58 +25,18 @@
    in files containing the exception.  */
 
 #include "libioP.h"
-#include "strfile.h"
 
-static int __THROW
-_IO_str_chk_overflow (FILE *fp, int c)
-{
-  /* If we get here, the user-supplied buffer would be overrun by
-     further output.  */
-  __chk_fail ();
-}
-
-static const struct _IO_jump_t _IO_str_chk_jumps libio_vtable =
-{
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_str_finish),
-  JUMP_INIT(overflow, _IO_str_chk_overflow),
-  JUMP_INIT(underflow, _IO_str_underflow),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_str_pbackfail),
-  JUMP_INIT(xsputn, _IO_default_xsputn),
-  JUMP_INIT(xsgetn, _IO_default_xsgetn),
-  JUMP_INIT(seekoff, _IO_str_seekoff),
-  JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_default_setbuf),
-  JUMP_INIT(sync, _IO_default_sync),
-  JUMP_INIT(doallocate, _IO_default_doallocate),
-  JUMP_INIT(read, _IO_default_read),
-  JUMP_INIT(write, _IO_default_write),
-  JUMP_INIT(seek, _IO_default_seek),
-  JUMP_INIT(close, _IO_default_close),
-  JUMP_INIT(stat, _IO_default_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue)
-};
-
-/* This function is called by regular vsprintf with maxlen set to -1,
-   and by vsprintf_chk with maxlen set to the size of the output
-   string.  In the former case, _IO_str_chk_overflow will never be
-   called; in the latter case it will crash the program if the buffer
-   overflows.  */
+#include <printf.h>
+#include <stdint.h>
+#include <printf_buffer.h>
 
 int
 __vsprintf_internal (char *string, size_t maxlen,
 		     const char *format, va_list args,
 		     unsigned int mode_flags)
 {
-  _IO_strfile sf;
-  int ret;
+  struct __printf_buffer buf;
 
-#ifdef _IO_MTSAFE_IO
-  sf._sbf._f._lock = NULL;
-#endif
-  _IO_no_init (&sf._sbf._f, _IO_USER_LOCK, -1, NULL, NULL);
   /* When called from fortified sprintf/vsprintf, erase the destination
      buffer and try to detect overflows.  When called from regular
      sprintf/vsprintf, do not erase the destination buffer, because
@@ -84,19 +44,25 @@ __vsprintf_internal (char *string, size_t maxlen,
      by ISO C), nor try to detect overflows.  */
   if ((mode_flags & PRINTF_CHK) != 0)
     {
-      _IO_JUMPS (&sf._sbf) = &_IO_str_chk_jumps;
       string[0] = '\0';
+      __printf_buffer_init (&buf, string, maxlen,
+			    __printf_buffer_mode_sprintf_chk);
     }
   else
-    _IO_JUMPS (&sf._sbf) = &_IO_str_jumps;
-  _IO_str_init_static_internal (&sf, string,
-				(maxlen == -1) ? -1 : maxlen - 1,
-				string);
+    {
+      __printf_buffer_init (&buf, string, 0, __printf_buffer_mode_sprintf);
+      buf.write_end = (char *) ~(uintptr_t) 0; /* End of address space.  */
+    }
 
-  ret = __vfprintf_internal (&sf._sbf._f, format, args, mode_flags);
+  __printf_buffer (&buf, format, args, mode_flags);
 
-  *sf._sbf._f._IO_write_ptr = '\0';
-  return ret;
+  /* Write the NUL terminator if there is room.  Do not use the putc
+     operation to avoid overflowing the character write count.  */
+  if ((mode_flags & PRINTF_CHK) != 0 && buf.write_ptr == buf.write_end)
+    __chk_fail ();
+  *buf.write_ptr = '\0';
+
+  return __printf_buffer_done (&buf);
 }
 
 int
