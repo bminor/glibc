@@ -55,6 +55,7 @@ enum __printf_buffer_mode
     __printf_buffer_mode_fp,         /* For __printf_fp_l_buffer.  */
     __printf_buffer_mode_fp_to_wide, /* For __wprintf_fp_l_buffer.  */
     __printf_buffer_mode_fphex_to_wide, /* For __wprintf_fphex_l_buffer.  */
+    __printf_buffer_mode_obstack,    /* For __printf_buffer_flush_obstack.  */
   };
 
 /* Buffer for fast character writing with overflow handling.
@@ -321,6 +322,9 @@ void __printf_buffer_flush_fp_to_wide (struct __printf_buffer_fp_to_wide *)
 struct __printf_buffer_fphex_to_wide;
 void __printf_buffer_flush_fphex_to_wide (struct
                                           __printf_buffer_fphex_to_wide *)
+  attribute_hidden;
+struct __printf_buffer_obstack;
+void __printf_buffer_flush_obstack (struct __printf_buffer_obstack *)
   attribute_hidden;
 
 struct __wprintf_buffer_to_file;

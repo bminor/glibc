@@ -600,7 +600,6 @@ $(objpfx)tst-relro-libc.out: tst-relro-symbols.py $(..)/scripts/glibcelf.py \
 	    --required=_IO_file_jumps_maybe_mmap \
 	    --required=_IO_file_jumps_mmap \
 	    --required=_IO_mem_jumps \
-	    --required=_IO_obstack_jumps \
 	    --required=_IO_printf_buffer_as_file_jumps \
 	    --required=_IO_proc_jumps \
 	    --required=_IO_str_jumps \
