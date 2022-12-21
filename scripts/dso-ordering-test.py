@@ -745,7 +745,7 @@ def process_testcase(t):
                                  if tunable_env else "")
                 # Write out fragment of shell script for this single test.
                 test_descr.sh.write \
-                    ("%s${test_wrapper_env} ${run_program_env} \\\n"
+                    ("${test_wrapper_env} ${run_program_env} %s\\\n"
                      "${common_objpfx}support/test-run-command \\\n"
                      "${common_objpfx}elf/ld.so \\\n"
                      "--library-path ${common_objpfx}elf/%s:"
