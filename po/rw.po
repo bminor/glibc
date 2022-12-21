@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3\n"
-"POT-Creation-Date: 2022-01-29 17:34-0500\n"
+"POT-Creation-Date: 2022-07-29 13:00-0400\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -28,7 +28,7 @@ msgstr ""
 msgid "Usage:"
 msgstr "Ikoresha:"
 
-#: elf/cache.c:179
+#: elf/cache.c:178
 msgid "unknown"
 msgstr "itazwi"
 

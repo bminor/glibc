@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.2.3\n"
-"POT-Creation-Date: 2022-01-29 17:34-0500\n"
+"POT-Creation-Date: 2022-07-29 13:00-0400\n"
 "PO-Revision-Date: 2001-05-21 19:20:31+0000\n"
 "Last-Translator: Nikos Mavroyanopoulos <nmav@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -219,7 +219,7 @@ msgstr "το %s δεν είναι συμβολικός σύνδεσμος\n"
 msgid " (changed)\n"
 msgstr " (άλλαξε)\n"
 
-#: elf/ldconfig.c:1311 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1303 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
@@ -237,7 +237,7 @@ msgstr "Δεν υπάρχει τέτοιο αρχείο ή κατάλογος"
 msgid "not regular file"
 msgstr "δεν είναι κανονικό αρχείο"
 
-#: elf/readlib.c:129
+#: elf/readlib.c:128
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "Αδυναμία μεταφοράς στη μνήμη (mmap) του αρχείου %s.\n"
@@ -551,10 +551,10 @@ msgid "no symbolic name given for end of range"
 msgstr "δεν δώθηκε συμβολικό όνομα για το τέλος πεδίου"
 
 #: locale/programs/charmap.c:614 locale/programs/ld-address.c:523
-#: locale/programs/ld-collate.c:2642 locale/programs/ld-collate.c:3806
+#: locale/programs/ld-collate.c:2635 locale/programs/ld-collate.c:3799
 #: locale/programs/ld-ctype.c:2117 locale/programs/ld-ctype.c:2829
 #: locale/programs/ld-identification.c:396 locale/programs/ld-measurement.c:212
-#: locale/programs/ld-messages.c:294 locale/programs/ld-monetary.c:747
+#: locale/programs/ld-messages.c:294 locale/programs/ld-monetary.c:855
 #: locale/programs/ld-name.c:261 locale/programs/ld-numeric.c:324
 #: locale/programs/ld-paper.c:211 locale/programs/ld-telephone.c:275
 #: locale/programs/ld-time.c:958 locale/programs/repertoire.c:311
@@ -577,10 +577,10 @@ msgid "%s: error in state machine"
 msgstr "%s: Σφάλμα στο μηχανισμό κατάστασης"
 
 #: locale/programs/charmap.c:855 locale/programs/ld-address.c:539
-#: locale/programs/ld-collate.c:2639 locale/programs/ld-collate.c:3999
+#: locale/programs/ld-collate.c:2632 locale/programs/ld-collate.c:3992
 #: locale/programs/ld-ctype.c:2114 locale/programs/ld-ctype.c:2846
 #: locale/programs/ld-identification.c:412 locale/programs/ld-measurement.c:228
-#: locale/programs/ld-messages.c:310 locale/programs/ld-monetary.c:763
+#: locale/programs/ld-messages.c:310 locale/programs/ld-monetary.c:871
 #: locale/programs/ld-name.c:277 locale/programs/ld-numeric.c:340
 #: locale/programs/ld-paper.c:227 locale/programs/ld-telephone.c:291
 #: locale/programs/ld-time.c:989 locale/programs/locfile.c:1009
@@ -659,22 +659,22 @@ msgid "%s: duplicate category version definition"
 msgstr "%s: διπλός ορισμός έκδοσης κατηγορίας"
 
 #: locale/programs/ld-messages.c:118 locale/programs/ld-messages.c:151
-#: locale/programs/ld-monetary.c:263 locale/programs/ld-numeric.c:116
+#: locale/programs/ld-numeric.c:116
 #, c-format
 msgid "%s: value for field `%s' must not be an empty string"
 msgstr "%s: η τιμή για το πεδίο `%s' δεν πρέπει να είναι ένα κενό αλφαριθμητικό"
 
-#: locale/programs/ld-monetary.c:227
+#: locale/programs/ld-monetary.c:310
 #, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
 msgstr "%s: η τιμή του πεδίου `int_curr_symbol' έχει λάθος μήκος"
 
-#: locale/programs/ld-monetary.c:645 locale/programs/ld-numeric.c:271
+#: locale/programs/ld-monetary.c:753 locale/programs/ld-numeric.c:271
 #, c-format
 msgid "%s: `-1' must be last entry in `%s' field"
 msgstr "%s: το `-1' πρέπει να είναι η τελευταία καταχώριση στο πεδίο `%s'"
 
-#: locale/programs/ld-monetary.c:667 locale/programs/ld-numeric.c:288
+#: locale/programs/ld-monetary.c:775 locale/programs/ld-numeric.c:288
 #, c-format
 msgid "%s: values for field `%s' must be smaller than 127"
 msgstr "%s: οι τιμές για το πεδίο `%s' πρέπει να είναι μικρότερες από 127"
@@ -725,27 +725,27 @@ msgstr "%s: λείπει η διαμόρφωση εποχής στο αλφαρ�
 msgid "%s: values for field `%s' must not be larger than %d"
 msgstr "%s: οι τιμές για το πεδίο `%s' δεν πρέπει να είναι μεγαλύτερες από %d"
 
-#: locale/programs/linereader.c:129
+#: locale/programs/linereader.c:130
 msgid "trailing garbage at end of line"
 msgstr "ακολουθούν σκουπίδια στο τέλος της γραμμής"
 
-#: locale/programs/linereader.c:297
+#: locale/programs/linereader.c:298
 msgid "garbage at end of number"
 msgstr "σκουπίδια στο τέλος του αριθμού"
 
-#: locale/programs/linereader.c:409
+#: locale/programs/linereader.c:423
 msgid "garbage at end of character code specification"
 msgstr "σκουπίδια στο τέλος των χαρακτηριστικών του κώδικα χαρακτήρων"
 
-#: locale/programs/linereader.c:495
+#: locale/programs/linereader.c:531
 msgid "unterminated symbolic name"
 msgstr "μη τερματιζόμενο συμβολικό όνομα"
 
-#: locale/programs/linereader.c:622
+#: locale/programs/linereader.c:804
 msgid "illegal escape sequence at end of string"
 msgstr "μη έγκυρη διαδικασία διαφυγής στο τέλος του αλφαριθμιτικού"
 
-#: locale/programs/linereader.c:626 locale/programs/linereader.c:846
+#: locale/programs/linereader.c:808 locale/programs/linereader.c:979
 msgid "unterminated string"
 msgstr "μη τερματιζόμενo αλφαριθμητικό"
 
@@ -3010,7 +3010,7 @@ msgstr "αδυναμία ανοίγματος του `%s'"
 msgid "cannot read header from `%s'"
 msgstr "αδυναμία ανάγνωσης κεφαλίδας από το `%s'"
 
-#: sysdeps/unix/sysv/linux/x86/readelflib.c:64
+#: sysdeps/unix/sysv/linux/x86/readelflib.c:62
 #, c-format
 msgid "%s is for unknown machine %d.\n"
 msgstr "το %s είναι για το άγνωστο σύστημά %d.\n"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.10.1\n"
-"POT-Creation-Date: 2022-01-29 17:34-0500\n"
+"POT-Creation-Date: 2022-07-29 13:00-0400\n"
 "PO-Revision-Date: 2009-06-23 12:30+0700\n"
 "Last-Translator: Arif E. Nugroho <arif_endro@yahoo.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
@@ -213,7 +213,7 @@ msgstr "baris tidak dibentuk dengan benar diabaikan"
 msgid "cannot open output file `%s'"
 msgstr "tidak dapat membuka berkas keluaran `%s'"
 
-#: catgets/gencat.c:1186 locale/programs/linereader.c:559
+#: catgets/gencat.c:1186 locale/programs/linereader.c:588
 msgid "invalid escape sequence"
 msgstr "urutan escape tidak valid"
 
@@ -311,7 +311,7 @@ msgstr "aplikasi \\`$program' tidak ditemukan\\n"
 msgid "\\`$program' is no executable\\n"
 msgstr "\\`$program' bukan sebuah aplikasi\\n"
 
-#: dlfcn/dlinfo.c:43
+#: dlfcn/dlinfo.c:48
 msgid "unsupported dlinfo request"
 msgstr "perminttan dlinfo tidak didukung"
 
@@ -327,56 +327,47 @@ msgstr "mode tidak valid"
 msgid "invalid mode parameter"
 msgstr "mode parameter tidak valid"
 
-#: elf/cache.c:179
+#: elf/cache.c:178
 msgid "unknown"
 msgstr "tidak diketahui"
 
-#: elf/cache.c:253
-msgid "Unknown OS"
-msgstr "OS tidak diketahui"
-
-#: elf/cache.c:258
-#, c-format
-msgid ", OS ABI: %s %d.%d.%d"
-msgstr ", OS ABI: %s %d.%d.%d"
-
-#: elf/cache.c:319 elf/ldconfig.c:1437
+#: elf/cache.c:297 elf/ldconfig.c:1429
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Tidak dapat membuka berkas cache %s\n"
 
-#: elf/cache.c:333
+#: elf/cache.c:311
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "mmap dari berkas cache gagal.\n"
 
-#: elf/cache.c:337 elf/cache.c:351 elf/cache.c:362
+#: elf/cache.c:315 elf/cache.c:329 elf/cache.c:340
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Berkas bukan sebuah berkas cache.\n"
 
-#: elf/cache.c:391 elf/cache.c:406
+#: elf/cache.c:369 elf/cache.c:384
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d libs ditemukan dalam cache `%s'\n"
 
-#: elf/cache.c:725
+#: elf/cache.c:698
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Tidak dapat membuat berkas cache %s sementara"
 
-#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
-#: elf/cache.c:770
+#: elf/cache.c:706 elf/cache.c:716 elf/cache.c:720 elf/cache.c:725
+#: elf/cache.c:744
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Penulisan dari cache data gagal"
 
-#: elf/cache.c:765
+#: elf/cache.c:739
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Mengubah ijin akses dari %s ke %#o gagal"
 
-#: elf/cache.c:774
+#: elf/cache.c:748
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Mengubah nama dari %s ke %s gagal"
@@ -389,30 +380,26 @@ msgstr "tidak dapat membuat daftar scope"
 msgid "shared object not open"
 msgstr "shared objek tidak dapat dibuka"
 
-#: elf/dl-deps.c:112
+#: elf/dl-deps.c:96
 msgid "DST not allowed in SUID/SGID programs"
 msgstr "DST tidak diperbolehkan dalam aplikasi SUID/SGID"
 
-#: elf/dl-deps.c:125
+#: elf/dl-deps.c:109
 msgid "empty dynamic string token substitution"
 msgstr "penggantian string token dinamis kosong"
 
-#: elf/dl-deps.c:131
+#: elf/dl-deps.c:115
 #, c-format
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr "tidak dapat melod tambahan `%s' karena penggantian string dinamis kosong\n"
 
-#: elf/dl-deps.c:443
+#: elf/dl-deps.c:427
 msgid "cannot allocate dependency list"
 msgstr "tidak dapat mengalokasikan daftar ketergantungan"
 
-#: elf/dl-deps.c:483 elf/dl-deps.c:548
+#: elf/dl-deps.c:467
 msgid "cannot allocate symbol search list"
 msgstr "tidak dapat mengalokasikan daftar pencarian simbol"
-
-#: elf/dl-deps.c:528
-msgid "Filters not supported with LD_TRACE_PRELINKING"
-msgstr "Penyaring tidak didukung dengan LD_TRACE_PRELINKING"
 
 #: elf/dl-error-skeleton.c:80
 msgid "error while loading shared libraries"
@@ -422,15 +409,15 @@ msgstr "error ketika melod perpustakaan terbagi"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "BUG LINKER DINAMIS!!!"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:95
+#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
 msgid "cannot map pages for fdesc table"
 msgstr "tidak dapat memetakan halaman untuk tabel fdesc"
 
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:213
+#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
 msgid "cannot map pages for fptr table"
 msgstr "tidak dapat memetakan halaman untuk tabel fptr"
 
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:242
+#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
 msgid "internal error: symidx out of range of fptr table"
 msgstr "internal error: symidx diluar dari jangkauan tabel fptr"
 
@@ -458,43 +445,43 @@ msgstr "tidak dapat membuah array jalur pencarian"
 msgid "cannot stat shared object"
 msgstr "tidak dapat memperoleh statistik objek terbagi"
 
-#: elf/dl-load.c:1069 elf/dl-load.c:2282
+#: elf/dl-load.c:1069 elf/dl-load.c:2226
 msgid "cannot create shared object descriptor"
 msgstr "tidak dapat membuat deskripsi objek terbagi"
 
-#: elf/dl-load.c:1088 elf/dl-load.c:1661 elf/dl-load.c:1763
+#: elf/dl-load.c:1088 elf/dl-load.c:1661 elf/dl-load.c:1769
 msgid "cannot read file data"
 msgstr "tidak dapat membaca berkas data"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1233
 msgid "object file has no loadable segments"
 msgstr "berkas objek tidak memiliki segmen yang dapat diangkut"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1250
 msgid "cannot dynamically load executable"
 msgstr "tidak dapat secara dinamis mengangkut aplikasi"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1257
 msgid "object file has no dynamic section"
 msgstr "berkas objek tidak memiliki bagian dinamis"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1294
 msgid "shared object cannot be dlopen()ed"
 msgstr "objek terbagi tidak dapat di dlopen()ed"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1307
 msgid "cannot allocate memory for program header"
 msgstr "tidak dapat mengalokasikan memori untuk aplikasi header"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:131
+#: elf/dl-load.c:1340 elf/dl-load.h:131
 msgid "cannot change memory protections"
 msgstr "tidak dapat mengubah proteksi memori"
 
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1364
 msgid "cannot enable executable stack as shared object requires"
 msgstr "tidak dapat mengaktifkan stack aplikasi sebagai objek terbagi yang dibutuhkan"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1392
 msgid "cannot close file descriptor"
 msgstr "tidak dapat menutup berkas deskripsi"
 
@@ -506,51 +493,51 @@ msgstr "berkas terlalu pendek"
 msgid "invalid ELF header"
 msgstr "header ELF tidak valid"
 
-#: elf/dl-load.c:1709
+#: elf/dl-load.c:1712
 msgid "ELF file data encoding not big-endian"
 msgstr "berkas data enkoding ELF bukan big-endian"
 
-#: elf/dl-load.c:1711
+#: elf/dl-load.c:1714
 msgid "ELF file data encoding not little-endian"
 msgstr "berkas data enkoding ELF bukan little-endian"
 
-#: elf/dl-load.c:1715
+#: elf/dl-load.c:1718
 msgid "ELF file version ident does not match current one"
 msgstr "berkas versi ident ELF tidak cocok dengan yang sekarang"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1722
 msgid "ELF file OS ABI invalid"
 msgstr "berkas OS ABI ELF tidak valid"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1725
 msgid "ELF file ABI version invalid"
 msgstr "berkas versi ABI ELF tidak valid"
 
-#: elf/dl-load.c:1728
+#: elf/dl-load.c:1731
 msgid "internal error"
 msgstr "internal error"
 
-#: elf/dl-load.c:1735
+#: elf/dl-load.c:1738
 msgid "ELF file version does not match current one"
 msgstr "berkas versi ELF tidak cocok dengan yang sekarang"
 
-#: elf/dl-load.c:1743
+#: elf/dl-load.c:1750
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "hanya ET_DYN dan ET_EXEC yang dapat diangkut"
 
-#: elf/dl-load.c:1748
+#: elf/dl-load.c:1755
 msgid "ELF file's phentsize not the expected size"
 msgstr "berkas phentsize ELF tidak seperti ukuran yang diduga"
 
-#: elf/dl-load.c:2301
+#: elf/dl-load.c:2245
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "kelas ELF salah: ELFCLASS64"
 
-#: elf/dl-load.c:2302
+#: elf/dl-load.c:2246
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "kelas ELF salah: ELFCLASS32"
 
-#: elf/dl-load.c:2305
+#: elf/dl-load.c:2249
 msgid "cannot open shared object file"
 msgstr "tidak dapat membuka berkas objek terbagi"
 
@@ -562,7 +549,7 @@ msgstr "gagal untuk memetakan segmen dari objek terbagi"
 msgid "cannot map zero-fill pages"
 msgstr "tidak dapat memetakan halaman pengisian-nol"
 
-#: elf/dl-lookup.c:881
+#: elf/dl-lookup.c:797
 msgid "symbol lookup error"
 msgstr "simbol lookup error"
 
@@ -586,24 +573,24 @@ msgstr "tidak ada lagi ruang-nama yang tersedia untuk dlmopen()"
 msgid "invalid target namespace in dlmopen()"
 msgstr "target ruang-nama dalam dlmopen() tidak valid"
 
-#: elf/dl-reloc.c:139
+#: elf/dl-reloc.c:140
 msgid "cannot allocate memory in static TLS block"
 msgstr "tidak dapat mengalokasikan memori dalam blok TLS statis"
 
-#: elf/dl-reloc.c:275
+#: elf/dl-reloc.c:288
 msgid "cannot make segment writable for relocation"
 msgstr "tidak dapat membuat segmen dapat ditulis untuk relokasi"
 
-#: elf/dl-reloc.c:306
+#: elf/dl-reloc.c:319
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: kehabisan dari memori untuk menyimpan hasil relokasi untuk %s\n"
 
-#: elf/dl-reloc.c:322
+#: elf/dl-reloc.c:335
 msgid "cannot restore segment prot after reloc"
 msgstr "tidak dapat merestore segmen prot setelah relokasi"
 
-#: elf/dl-reloc.c:353
+#: elf/dl-reloc.c:366
 msgid "cannot apply additional memory protection after relocation"
 msgstr "tidak dapat mengaplikasikan proteksi memori tambahan setelah relokasi"
 
@@ -611,11 +598,11 @@ msgstr "tidak dapat mengaplikasikan proteksi memori tambahan setelah relokasi"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT digunakan dalam kode yang tidak secara dinamis diangkut"
 
-#: elf/dl-tls.c:1039
+#: elf/dl-tls.c:1050
 msgid "cannot create TLS data structures"
 msgstr "tidak dapat membuat struktur data TLS"
 
-#: elf/dl-version.c:278
+#: elf/dl-version.c:285
 msgid "cannot allocate version reference table"
 msgstr "tidak dapat mengalokasikan tabel referensi versi"
 
@@ -718,89 +705,89 @@ msgstr " (berubah)\n"
 msgid " (SKIPPED)\n"
 msgstr " (DILEWATI)\n"
 
-#: elf/ldconfig.c:699
+#: elf/ldconfig.c:698
 #, c-format
 msgid "Can't find %s"
 msgstr "Tidak dapat menemukan %s"
 
-#: elf/ldconfig.c:715 elf/ldconfig.c:895 elf/ldconfig.c:955 elf/ldconfig.c:987
+#: elf/ldconfig.c:714 elf/ldconfig.c:893 elf/ldconfig.c:953 elf/ldconfig.c:985
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Tidak dapat lstat %s"
 
-#: elf/ldconfig.c:721
+#: elf/ldconfig.c:720
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Mengabaikan berkas %s karena itu bukan sebuah berkas umum."
 
-#: elf/ldconfig.c:729
+#: elf/ldconfig.c:728
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Tidak ada hubungan yang dibuat karena soname tidak dapaat ditemukan untuk %s"
 
-#: elf/ldconfig.c:828
+#: elf/ldconfig.c:826
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Tidak dapat membuka direktori %s"
 
-#: elf/ldconfig.c:913 elf/ldconfig.c:975 elf/readlib.c:96
+#: elf/ldconfig.c:911 elf/ldconfig.c:973 elf/readlib.c:95
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Berkas masukan %s tidak ditemukan.\n"
 
-#: elf/ldconfig.c:920
+#: elf/ldconfig.c:918
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Tidak dapat memperoleh statistik %s"
 
-#: elf/ldconfig.c:1073
+#: elf/ldconfig.c:1067
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "perpustakaan libc5 %s berada dalam direktori salah"
 
-#: elf/ldconfig.c:1076
+#: elf/ldconfig.c:1070
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "perpustakaan libc6 %s berada dalam direktori salah"
 
-#: elf/ldconfig.c:1079
+#: elf/ldconfig.c:1073
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "perpustakaan lib4 %s berada dalam direktori salah"
 
-#: elf/ldconfig.c:1107
+#: elf/ldconfig.c:1101
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "perpustakaan %s dan %s berada dalam direktori %s memiliki soname sama tetapi memiliki tipe berbeda."
 
-#: elf/ldconfig.c:1304
+#: elf/ldconfig.c:1296
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "membutuhkan nama berkas absolut untuk berkas konfigurasi ketika menggunakan -r"
 
-#: elf/ldconfig.c:1311 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1303 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "kehabisan memori"
 
-#: elf/ldconfig.c:1344
+#: elf/ldconfig.c:1336
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: tidak dapat membaca direktori %s"
 
-#: elf/ldconfig.c:1392
+#: elf/ldconfig.c:1384
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "jalur relatif `%s' digunakan untuk membuat cache"
 
-#: elf/ldconfig.c:1416
+#: elf/ldconfig.c:1408
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Tidak dapat chdir ke /"
 
-#: elf/ldconfig.c:1457
+#: elf/ldconfig.c:1449
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Tidak dapat membuat berkas cache direktori %s\n"
@@ -875,52 +862,52 @@ msgstr "error: anda tidak memiliki ijin membaca untuk"
 msgid "file %s is truncated\n"
 msgstr "berkas %s terpotong\n"
 
-#: elf/readelflib.c:65
+#: elf/readelflib.c:64
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s adalah sebuah berkas ELF 32 bit.\n"
 
-#: elf/readelflib.c:67
+#: elf/readelflib.c:66
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s adalah sebuah berkas ELF 64 bit.\n"
 
-#: elf/readelflib.c:69
+#: elf/readelflib.c:68
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "ELFCLASS dalam berkas %s tidak diketahui.\n"
 
-#: elf/readelflib.c:76
+#: elf/readelflib.c:75
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s bukan sebuah berkas objek terbagi (Tipe: %d).\n"
 
-#: elf/readelflib.c:104
+#: elf/readelflib.c:103
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "lebih dari satu segmen dinamis\n"
 
-#: elf/readlib.c:102
+#: elf/readlib.c:101
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "Tidak dapat fstat berkas %s.\n"
 
-#: elf/readlib.c:113
+#: elf/readlib.c:112
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "Berkas %s kosong, tidak diperiksa."
 
-#: elf/readlib.c:119
+#: elf/readlib.c:118
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "Berkas %s terlalu kecil, tidak diperiksa."
 
-#: elf/readlib.c:129
+#: elf/readlib.c:128
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "Tidak dapat mmap berkas %s.\n"
 
-#: elf/readlib.c:168
+#: elf/readlib.c:167
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s bukan sebuah berkas ELF - ini memiliki magis bytes salah di awal.\n"
@@ -1410,10 +1397,10 @@ msgid "no symbolic name given for end of range"
 msgstr "tidak ada nama simbolis yang diberikan untuk akhir dari jangkauan"
 
 #: locale/programs/charmap.c:614 locale/programs/ld-address.c:523
-#: locale/programs/ld-collate.c:2642 locale/programs/ld-collate.c:3806
+#: locale/programs/ld-collate.c:2635 locale/programs/ld-collate.c:3799
 #: locale/programs/ld-ctype.c:2117 locale/programs/ld-ctype.c:2829
 #: locale/programs/ld-identification.c:396 locale/programs/ld-measurement.c:212
-#: locale/programs/ld-messages.c:294 locale/programs/ld-monetary.c:747
+#: locale/programs/ld-messages.c:294 locale/programs/ld-monetary.c:855
 #: locale/programs/ld-name.c:261 locale/programs/ld-numeric.c:324
 #: locale/programs/ld-paper.c:211 locale/programs/ld-telephone.c:275
 #: locale/programs/ld-time.c:958 locale/programs/repertoire.c:311
@@ -1436,10 +1423,10 @@ msgid "%s: error in state machine"
 msgstr "%s: error dalam mesin status"
 
 #: locale/programs/charmap.c:855 locale/programs/ld-address.c:539
-#: locale/programs/ld-collate.c:2639 locale/programs/ld-collate.c:3999
+#: locale/programs/ld-collate.c:2632 locale/programs/ld-collate.c:3992
 #: locale/programs/ld-ctype.c:2114 locale/programs/ld-ctype.c:2846
 #: locale/programs/ld-identification.c:412 locale/programs/ld-measurement.c:228
-#: locale/programs/ld-messages.c:310 locale/programs/ld-monetary.c:763
+#: locale/programs/ld-messages.c:310 locale/programs/ld-monetary.c:871
 #: locale/programs/ld-name.c:277 locale/programs/ld-numeric.c:340
 #: locale/programs/ld-paper.c:227 locale/programs/ld-telephone.c:291
 #: locale/programs/ld-time.c:989 locale/programs/locfile.c:1009
@@ -1458,7 +1445,7 @@ msgstr "karakter `%s' tidak dikenal"
 msgid "number of bytes for byte sequence of beginning and end of range not the same: %d vs %d"
 msgstr "jumlah dari bytes untuk urutan byte dari awal dan akhir dari jangkauan tidak sama: %d vs %d"
 
-#: locale/programs/charmap.c:998 locale/programs/ld-collate.c:2923
+#: locale/programs/charmap.c:998 locale/programs/ld-collate.c:2916
 #: locale/programs/repertoire.c:417
 msgid "invalid names for character range"
 msgstr "nama tidak valid untuk jangkauan karakter"
@@ -1480,7 +1467,7 @@ msgstr "batas atas dalam jangkauan adalah lebih kecil daripada batas bawah"
 msgid "resulting bytes for range not representable."
 msgstr "menghasilkan bytes untuk jangkauan tidak dapat direpresentasikan."
 
-#: locale/programs/ld-address.c:132 locale/programs/ld-collate.c:1570
+#: locale/programs/ld-address.c:132 locale/programs/ld-collate.c:1569
 #: locale/programs/ld-ctype.c:429 locale/programs/ld-identification.c:130
 #: locale/programs/ld-measurement.c:91 locale/programs/ld-messages.c:95
 #: locale/programs/ld-monetary.c:191 locale/programs/ld-name.c:92
@@ -1494,14 +1481,13 @@ msgstr "Tidak ada definisi untuk kategori %s yang ditemukan"
 #: locale/programs/ld-address.c:198 locale/programs/ld-address.c:227
 #: locale/programs/ld-address.c:299 locale/programs/ld-address.c:318
 #: locale/programs/ld-address.c:330 locale/programs/ld-identification.c:143
-#: locale/programs/ld-measurement.c:102 locale/programs/ld-monetary.c:203
-#: locale/programs/ld-monetary.c:257 locale/programs/ld-monetary.c:273
-#: locale/programs/ld-monetary.c:285 locale/programs/ld-name.c:103
-#: locale/programs/ld-name.c:140 locale/programs/ld-numeric.c:110
-#: locale/programs/ld-numeric.c:124 locale/programs/ld-paper.c:99
-#: locale/programs/ld-paper.c:108 locale/programs/ld-telephone.c:102
-#: locale/programs/ld-telephone.c:159 locale/programs/ld-time.c:179
-#: locale/programs/ld-time.c:200
+#: locale/programs/ld-measurement.c:102 locale/programs/ld-monetary.c:291
+#: locale/programs/ld-monetary.c:368 locale/programs/ld-monetary.c:389
+#: locale/programs/ld-name.c:103 locale/programs/ld-name.c:140
+#: locale/programs/ld-numeric.c:110 locale/programs/ld-numeric.c:124
+#: locale/programs/ld-paper.c:99 locale/programs/ld-paper.c:108
+#: locale/programs/ld-telephone.c:102 locale/programs/ld-telephone.c:159
+#: locale/programs/ld-time.c:179 locale/programs/ld-time.c:200
 #, c-format
 msgid "%s: field `%s' not defined"
 msgstr "%s: daerah `%s' tidak terdefinisi"
@@ -1547,8 +1533,8 @@ msgstr "%s: kode negara numerik `%d' tidak valid"
 #: locale/programs/ld-address.c:431 locale/programs/ld-address.c:468
 #: locale/programs/ld-address.c:506 locale/programs/ld-ctype.c:2478
 #: locale/programs/ld-identification.c:308 locale/programs/ld-measurement.c:195
-#: locale/programs/ld-messages.c:263 locale/programs/ld-monetary.c:502
-#: locale/programs/ld-monetary.c:537 locale/programs/ld-monetary.c:578
+#: locale/programs/ld-messages.c:263 locale/programs/ld-monetary.c:610
+#: locale/programs/ld-monetary.c:645 locale/programs/ld-monetary.c:686
 #: locale/programs/ld-name.c:234 locale/programs/ld-numeric.c:216
 #: locale/programs/ld-paper.c:194 locale/programs/ld-telephone.c:250
 #: locale/programs/ld-time.c:863 locale/programs/ld-time.c:905
@@ -1558,7 +1544,7 @@ msgstr "%s: daerah `%s' terdeklarasi lebih dari sekali"
 
 #: locale/programs/ld-address.c:435 locale/programs/ld-address.c:473
 #: locale/programs/ld-identification.c:312 locale/programs/ld-messages.c:273
-#: locale/programs/ld-monetary.c:506 locale/programs/ld-monetary.c:541
+#: locale/programs/ld-monetary.c:614 locale/programs/ld-monetary.c:649
 #: locale/programs/ld-name.c:238 locale/programs/ld-numeric.c:220
 #: locale/programs/ld-telephone.c:254 locale/programs/ld-time.c:755
 #: locale/programs/ld-time.c:826 locale/programs/ld-time.c:868
@@ -1566,10 +1552,10 @@ msgstr "%s: daerah `%s' terdeklarasi lebih dari sekali"
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: karakter dalam daerah `%s' tidak dikenal"
 
-#: locale/programs/ld-address.c:520 locale/programs/ld-collate.c:3804
+#: locale/programs/ld-address.c:520 locale/programs/ld-collate.c:3797
 #: locale/programs/ld-ctype.c:2826 locale/programs/ld-identification.c:393
 #: locale/programs/ld-measurement.c:209 locale/programs/ld-messages.c:292
-#: locale/programs/ld-monetary.c:745 locale/programs/ld-name.c:259
+#: locale/programs/ld-monetary.c:853 locale/programs/ld-name.c:259
 #: locale/programs/ld-numeric.c:322 locale/programs/ld-paper.c:209
 #: locale/programs/ld-telephone.c:273 locale/programs/ld-time.c:956
 #, c-format
@@ -1578,12 +1564,12 @@ msgstr "%s: tidak lengkap `END'  baris"
 
 #: locale/programs/ld-address.c:530 locale/programs/ld-collate.c:553
 #: locale/programs/ld-collate.c:605 locale/programs/ld-collate.c:901
-#: locale/programs/ld-collate.c:914 locale/programs/ld-collate.c:2608
-#: locale/programs/ld-collate.c:2629 locale/programs/ld-collate.c:3989
+#: locale/programs/ld-collate.c:914 locale/programs/ld-collate.c:2601
+#: locale/programs/ld-collate.c:2622 locale/programs/ld-collate.c:3982
 #: locale/programs/ld-ctype.c:1846 locale/programs/ld-ctype.c:2104
 #: locale/programs/ld-ctype.c:2676 locale/programs/ld-ctype.c:2837
 #: locale/programs/ld-identification.c:403 locale/programs/ld-measurement.c:219
-#: locale/programs/ld-messages.c:301 locale/programs/ld-monetary.c:754
+#: locale/programs/ld-messages.c:301 locale/programs/ld-monetary.c:862
 #: locale/programs/ld-name.c:268 locale/programs/ld-numeric.c:331
 #: locale/programs/ld-paper.c:218 locale/programs/ld-telephone.c:282
 #: locale/programs/ld-time.c:980
@@ -1682,7 +1668,7 @@ msgstr "%s: jangkauan simbolis ellipsis tidak boleh secara langsung mengikuti `o
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "`%s' dan `%.*s' bukan sebuah nama valid untuk jangkauan simbolis"
 
-#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3738
+#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3731
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr "%s: urutan untuk `%.*s' telah terdefinisi di %s:%Zu"
@@ -1692,151 +1678,151 @@ msgstr "%s: urutan untuk `%.*s' telah terdefinisi di %s:%Zu"
 msgid "%s: `%s' must be a character"
 msgstr "%s: `%s' harus berupa sebuah karakter"
 
-#: locale/programs/ld-collate.c:1591
+#: locale/programs/ld-collate.c:1590
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr "%s: `posisi' harus digunakan untuk tingkat spesifik dalam seluruh bagian atau kosong"
 
-#: locale/programs/ld-collate.c:1615
+#: locale/programs/ld-collate.c:1614
 #, c-format
 msgid "symbol `%s' not defined"
 msgstr "simbol `%s' tidak terdefinisi"
 
-#: locale/programs/ld-collate.c:1691 locale/programs/ld-collate.c:1796
+#: locale/programs/ld-collate.c:1690 locale/programs/ld-collate.c:1789
 #, c-format
 msgid "symbol `%s' has the same encoding as"
 msgstr "simbol `%s' memiliki pengkodean yang sama seperti"
 
-#: locale/programs/ld-collate.c:1695 locale/programs/ld-collate.c:1800
+#: locale/programs/ld-collate.c:1694 locale/programs/ld-collate.c:1793
 #, c-format
 msgid "symbol `%s'"
 msgstr "simbol `%s'"
 
-#: locale/programs/ld-collate.c:1863
+#: locale/programs/ld-collate.c:1856
 msgid "too many errors; giving up"
 msgstr "terlalu banyak error; menyerah"
 
-#: locale/programs/ld-collate.c:2534 locale/programs/ld-collate.c:3928
+#: locale/programs/ld-collate.c:2527 locale/programs/ld-collate.c:3921
 #, c-format
 msgid "%s: nested conditionals not supported"
 msgstr "%s: nested kondisional tidak didukung"
 
-#: locale/programs/ld-collate.c:2731
+#: locale/programs/ld-collate.c:2724
 #, c-format
 msgid "%s: duplicate definition of `%s'"
 msgstr "%s: duplikasi definisi dari `%s'"
 
-#: locale/programs/ld-collate.c:2767
+#: locale/programs/ld-collate.c:2760
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
 msgstr "%s: duplikasi deklarasi dari daerah `%s'"
 
-#: locale/programs/ld-collate.c:2903
+#: locale/programs/ld-collate.c:2896
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr "%s: karakter tidak dikenal dalam nama simbol collating"
 
-#: locale/programs/ld-collate.c:3032
+#: locale/programs/ld-collate.c:3025
 #, c-format
 msgid "%s: unknown character in equivalent definition name"
 msgstr "%s: karakter tidak dikenal dalam definisi nama yang ekuivalen"
 
-#: locale/programs/ld-collate.c:3043
+#: locale/programs/ld-collate.c:3036
 #, c-format
 msgid "%s: unknown character in equivalent definition value"
 msgstr "%s: karakter tidak dikenal dalam nilai definisi yang ekuivalen"
 
-#: locale/programs/ld-collate.c:3053
+#: locale/programs/ld-collate.c:3046
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: simbol tidak dikenal `%s' definisi ekuivalen"
 
-#: locale/programs/ld-collate.c:3062
+#: locale/programs/ld-collate.c:3055
 msgid "error while adding equivalent collating symbol"
 msgstr "error ketika menambahkan simbol collating ekuivalen"
 
-#: locale/programs/ld-collate.c:3100
+#: locale/programs/ld-collate.c:3093
 #, c-format
 msgid "duplicate definition of script `%s'"
 msgstr "duplikasi definisi dari skrip `%s'"
 
-#: locale/programs/ld-collate.c:3148
+#: locale/programs/ld-collate.c:3141
 #, c-format
 msgid "%s: unknown section name `%.*s'"
 msgstr "%s: nama daerah `%.*s' tidak dikenal"
 
-#: locale/programs/ld-collate.c:3177
+#: locale/programs/ld-collate.c:3170
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr "%s: multiple tingkat definisi untuk daerah `%s'"
 
-#: locale/programs/ld-collate.c:3205
+#: locale/programs/ld-collate.c:3198
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: nomor tidak valid untuk aturan pengurutan"
 
-#: locale/programs/ld-collate.c:3232
+#: locale/programs/ld-collate.c:3225
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr "%s: banyak tingkat definisi untuk daerah tidak bernama"
 
-#: locale/programs/ld-collate.c:3287 locale/programs/ld-collate.c:3417
-#: locale/programs/ld-collate.c:3782
+#: locale/programs/ld-collate.c:3280 locale/programs/ld-collate.c:3410
+#: locale/programs/ld-collate.c:3775
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr "%s: hilang `order_end' kata-kunci"
 
-#: locale/programs/ld-collate.c:3350
+#: locale/programs/ld-collate.c:3343
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr "%s: tingkat untuk collaing simbol %.*s belum terdefinisi"
 
-#: locale/programs/ld-collate.c:3368
+#: locale/programs/ld-collate.c:3361
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr "%s: tingkat untuk collating elemen %.*s belum terdefinisi"
 
-#: locale/programs/ld-collate.c:3379
+#: locale/programs/ld-collate.c:3372
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr "%s: tidak dapat mengurutkan setelah %.*s: simbol tidak diketahui"
 
-#: locale/programs/ld-collate.c:3431 locale/programs/ld-collate.c:3794
+#: locale/programs/ld-collate.c:3424 locale/programs/ld-collate.c:3787
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr "%s: hilang `reorder-end' kata-kunci"
 
-#: locale/programs/ld-collate.c:3465 locale/programs/ld-collate.c:3663
+#: locale/programs/ld-collate.c:3458 locale/programs/ld-collate.c:3656
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr "%s: bagian `%.*s' tidak dikenal"
 
-#: locale/programs/ld-collate.c:3530
+#: locale/programs/ld-collate.c:3523
 #, c-format
 msgid "%s: bad symbol <%.*s>"
 msgstr "%s: simbol buruk <%.*s>"
 
-#: locale/programs/ld-collate.c:3726
+#: locale/programs/ld-collate.c:3719
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr "%s: tidak dapat memiliki `%s' sebagai akhir dari jangkauan ellipsis"
 
-#: locale/programs/ld-collate.c:3778
+#: locale/programs/ld-collate.c:3771
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr "%s: deskripsi kategori kosong tidak diperbolehkan"
 
-#: locale/programs/ld-collate.c:3797
+#: locale/programs/ld-collate.c:3790
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr "%s: hilang `reorder-section-end' kata-kunci"
 
-#: locale/programs/ld-collate.c:3961
+#: locale/programs/ld-collate.c:3954
 #, c-format
 msgid "%s: '%s' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: '%s' tanpa pencocokan 'ifdef' atau 'ifndef'"
 
-#: locale/programs/ld-collate.c:3979
+#: locale/programs/ld-collate.c:3972
 #, c-format
 msgid "%s: 'endif' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: 'endif' tanpa pencocokan 'ifdef' atau 'ifndef'"
@@ -2027,7 +2013,7 @@ msgstr "%s: karakter `%s' dibutuhkan sebagai nilai baku tidak dapat direpresenta
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr "tidak ada keluaran digital terdefinisi dan tidak ada nama baku dalam charmaps"
 
-#: locale/programs/ld-ctype.c:3572
+#: locale/programs/ld-ctype.c:3545
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: transliteration data dari lokal `%s' tidak tersedia"
@@ -2053,7 +2039,7 @@ msgid "%s: field `%s' undefined"
 msgstr "%s: daerah `%s' tidak terdefinisi"
 
 #: locale/programs/ld-messages.c:118 locale/programs/ld-messages.c:151
-#: locale/programs/ld-monetary.c:263 locale/programs/ld-numeric.c:116
+#: locale/programs/ld-numeric.c:116
 #, c-format
 msgid "%s: value for field `%s' must not be an empty string"
 msgstr "%s: nilai untuk daerah `%s' tidak boleh berupa string kosong"
@@ -2063,32 +2049,32 @@ msgstr "%s: nilai untuk daerah `%s' tidak boleh berupa string kosong"
 msgid "%s: no correct regular expression for field `%s': %s"
 msgstr "%s: tidak ada ekspresi reguler yang benar untuk daerah `%s': %s"
 
-#: locale/programs/ld-monetary.c:227
+#: locale/programs/ld-monetary.c:310
 #, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
 msgstr "%s: nilai untuk daerah `int_curr_symbol' memiliki panjang salah"
 
-#: locale/programs/ld-monetary.c:292 locale/programs/ld-monetary.c:321
+#: locale/programs/ld-monetary.c:396 locale/programs/ld-monetary.c:420
 #, c-format
 msgid "%s: value for field `%s' must be in range %d...%d"
 msgstr "%s: nilai untuk daerah `%s' harus berada dalam jangkauan %d...%d"
 
-#: locale/programs/ld-monetary.c:548 locale/programs/ld-numeric.c:227
+#: locale/programs/ld-monetary.c:656 locale/programs/ld-numeric.c:227
 #, c-format
 msgid "%s: value for field `%s' must be a single character"
 msgstr "%s: nilai untuk daerah `%s' harus berupa karakter tunggal"
 
-#: locale/programs/ld-monetary.c:645 locale/programs/ld-numeric.c:271
+#: locale/programs/ld-monetary.c:753 locale/programs/ld-numeric.c:271
 #, c-format
 msgid "%s: `-1' must be last entry in `%s' field"
 msgstr "%s: `-1' harus berupa masukan terakhir dalam daerah `%s'"
 
-#: locale/programs/ld-monetary.c:667 locale/programs/ld-numeric.c:288
+#: locale/programs/ld-monetary.c:775 locale/programs/ld-numeric.c:288
 #, c-format
 msgid "%s: values for field `%s' must be smaller than 127"
 msgstr "%s: nilai untuk daerah `%s' harus lebih kecil dari 127"
 
-#: locale/programs/ld-monetary.c:713
+#: locale/programs/ld-monetary.c:821
 msgid "conversion rate value cannot be zero"
 msgstr "nilai tingkat konversi tidak dapat nol"
 
@@ -2178,36 +2164,36 @@ msgstr "kelebihan akhiran semicolon"
 msgid "%s: too many values for field `%s'"
 msgstr "%s: terlalu banyak nilai untuk daerah `%s'"
 
-#: locale/programs/linereader.c:129
+#: locale/programs/linereader.c:130
 msgid "trailing garbage at end of line"
 msgstr "kelebihan sampah diakhir dari baris"
 
-#: locale/programs/linereader.c:297
+#: locale/programs/linereader.c:298
 msgid "garbage at end of number"
 msgstr "sampah diakhir dari nomor"
 
-#: locale/programs/linereader.c:409
+#: locale/programs/linereader.c:423
 msgid "garbage at end of character code specification"
 msgstr "sampah diakhir dari spesifikasi kode karakter"
 
-#: locale/programs/linereader.c:495
+#: locale/programs/linereader.c:531
 msgid "unterminated symbolic name"
 msgstr "nama simbolis tidak terselesaikan"
 
-#: locale/programs/linereader.c:622
+#: locale/programs/linereader.c:804
 msgid "illegal escape sequence at end of string"
 msgstr "urutan escape tidak legal diakhir dari string"
 
-#: locale/programs/linereader.c:626 locale/programs/linereader.c:846
+#: locale/programs/linereader.c:808 locale/programs/linereader.c:979
 msgid "unterminated string"
 msgstr "string tidak selesai"
 
-#: locale/programs/linereader.c:807
+#: locale/programs/linereader.c:940
 #, c-format
 msgid "symbol `%.*s' not in charmap"
 msgstr "simbol `%.*s' tidak dalam charmap"
 
-#: locale/programs/linereader.c:828
+#: locale/programs/linereader.c:961
 #, c-format
 msgid "symbol `%.*s' not in repertoire map"
 msgstr "simbol `%.*s' tidak dalam repertoire map"
@@ -3520,12 +3506,12 @@ msgstr "Reloading \"%s\" dalam grup cache!"
 msgid "Invalid numeric gid \"%s\"!"
 msgstr "Numerik gid \"%s\" tidak valid !"
 
-#: nscd/mem.c:424
+#: nscd/mem.c:420
 #, c-format
 msgid "freed %zu bytes in %s cache"
 msgstr "dibebaskan %zu bytes dalam %s cache"
 
-#: nscd/mem.c:567
+#: nscd/mem.c:563
 #, c-format
 msgid "no more memory for database '%s'"
 msgstr "tidak ada memori lagi untuk basis data '%s'"
@@ -5475,7 +5461,7 @@ msgstr "tidak dapat membuka `%s'"
 msgid "cannot read header from `%s'"
 msgstr "tidak dapat membaca header dari `%s'"
 
-#: sysdeps/unix/sysv/linux/x86/readelflib.c:64
+#: sysdeps/unix/sysv/linux/x86/readelflib.c:62
 #, c-format
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s adalah untuk mesin tidak dikenal %d.\n"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc-2.11.1\n"
-"POT-Creation-Date: 2022-01-29 17:34-0500\n"
+"POT-Creation-Date: 2022-07-29 13:00-0400\n"
 "PO-Revision-Date: 2010-11-01 10:37+0100\n"
 "Last-Translator: Keld Simonsen <keld@keldix.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -215,7 +215,7 @@ msgstr "fejlagtig linje ignoreret"
 msgid "cannot open output file `%s'"
 msgstr "kan ikke åbne uddatafil '%s'"
 
-#: catgets/gencat.c:1186 locale/programs/linereader.c:559
+#: catgets/gencat.c:1186 locale/programs/linereader.c:588
 msgid "invalid escape sequence"
 msgstr "ugyldig undvigetegnsekvens"
 
@@ -312,7 +312,7 @@ msgstr "program \\'$program' blev ikke fundet\\n"
 msgid "\\`$program' is no executable\\n"
 msgstr "\\'$program' kan ikke udføres\\n"
 
-#: dlfcn/dlinfo.c:43
+#: dlfcn/dlinfo.c:48
 msgid "unsupported dlinfo request"
 msgstr "dlinfo-forespørgsel ikke understøttet"
 
@@ -328,56 +328,47 @@ msgstr "ugyldig tilstand"
 msgid "invalid mode parameter"
 msgstr "ugyldig tilstandsparameter"
 
-#: elf/cache.c:179
+#: elf/cache.c:178
 msgid "unknown"
 msgstr "ukendt"
 
-#: elf/cache.c:253
-msgid "Unknown OS"
-msgstr "Ukendt OS"
-
-#: elf/cache.c:258
-#, c-format
-msgid ", OS ABI: %s %d.%d.%d"
-msgstr ", OS ABI: %s %d.%d.%d"
-
-#: elf/cache.c:319 elf/ldconfig.c:1437
+#: elf/cache.c:297 elf/ldconfig.c:1429
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Kan ikke åbne hurtigbufferfil %s\n"
 
-#: elf/cache.c:333
+#: elf/cache.c:311
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "mmap af bufferfil fejlede\n"
 
-#: elf/cache.c:337 elf/cache.c:351 elf/cache.c:362
+#: elf/cache.c:315 elf/cache.c:329 elf/cache.c:340
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Fil er ikke en bufferfil.\n"
 
-#: elf/cache.c:391 elf/cache.c:406
+#: elf/cache.c:369 elf/cache.c:384
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d libs fundet i hurtigbuffer '%s'\n"
 
-#: elf/cache.c:725
+#: elf/cache.c:698
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Kan ikke oprette midlertidig hurtigbufferfil %s"
 
-#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
-#: elf/cache.c:770
+#: elf/cache.c:706 elf/cache.c:716 elf/cache.c:720 elf/cache.c:725
+#: elf/cache.c:744
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Udskrivning af bufferdata fejlede"
 
-#: elf/cache.c:765
+#: elf/cache.c:739
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Ændring af adgangsrettigheder for %s til %#o fejlede"
 
-#: elf/cache.c:774
+#: elf/cache.c:748
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Omdøbning af %s til %s fejlede"
@@ -390,32 +381,28 @@ msgstr "kan ikke oprette omfangsliste"
 msgid "shared object not open"
 msgstr "delt objekt er ikke åbent"
 
-#: elf/dl-deps.c:112
+#: elf/dl-deps.c:96
 msgid "DST not allowed in SUID/SGID programs"
 msgstr "DST er ikke tilladt i SUIT/SGID-programmer"
 
-#: elf/dl-deps.c:125
+#: elf/dl-deps.c:109
 msgid "empty dynamic string token substitution"
 msgstr "tom dynamisk strengelement-erstatning"
 
-#: elf/dl-deps.c:131
+#: elf/dl-deps.c:115
 #, c-format
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr ""
 "kan ikke indlæse ekstra \"%s\" på grund af at erstatning af\n"
 "\"dynamic string token\" er tom\n"
 
-#: elf/dl-deps.c:443
+#: elf/dl-deps.c:427
 msgid "cannot allocate dependency list"
 msgstr "kan ikke allokere afhængighedsliste"
 
-#: elf/dl-deps.c:483 elf/dl-deps.c:548
+#: elf/dl-deps.c:467
 msgid "cannot allocate symbol search list"
 msgstr "kan ikke allokere symbolsøgningsliste"
-
-#: elf/dl-deps.c:528
-msgid "Filters not supported with LD_TRACE_PRELINKING"
-msgstr "Filtre understøttes ej med LD_TRACE_PRELINKING"
 
 #: elf/dl-error-skeleton.c:80
 msgid "error while loading shared libraries"
@@ -425,15 +412,15 @@ msgstr "fejl ved indlæsning af delte biblioteker"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "FEJL I DYNAMISK LÆNKER!!!"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:95
+#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
 msgid "cannot map pages for fdesc table"
 msgstr "kan ikke hukommelsesmappe sider for fdesc-tabel"
 
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:213
+#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
 msgid "cannot map pages for fptr table"
 msgstr "kan ikke hukommelsesmappe sider for fptr-tabel"
 
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:242
+#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
 msgid "internal error: symidx out of range of fptr table"
 msgstr "intern fejl: symidx er udenfor intervallet for fptr-tabellen"
 
@@ -461,43 +448,43 @@ msgstr "kan ikke oprette tabel over søgestier"
 msgid "cannot stat shared object"
 msgstr "kan ikke tage status på delt objekt"
 
-#: elf/dl-load.c:1069 elf/dl-load.c:2282
+#: elf/dl-load.c:1069 elf/dl-load.c:2226
 msgid "cannot create shared object descriptor"
 msgstr "kan ikke oprette delt objektbeskriver"
 
-#: elf/dl-load.c:1088 elf/dl-load.c:1661 elf/dl-load.c:1763
+#: elf/dl-load.c:1088 elf/dl-load.c:1661 elf/dl-load.c:1769
 msgid "cannot read file data"
 msgstr "kan ikke indlæse fildata"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1233
 msgid "object file has no loadable segments"
 msgstr "objektfil har ingen indlæsbare segmenter"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1250
 msgid "cannot dynamically load executable"
 msgstr "kan ikke indlæse udførbare programmer dynamisk"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1257
 msgid "object file has no dynamic section"
 msgstr "objektfil har ingen dynamisk sektion"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1294
 msgid "shared object cannot be dlopen()ed"
 msgstr "delt objekt kan ikke åbnes med dlopen()"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1307
 msgid "cannot allocate memory for program header"
 msgstr "kan ikke allokere hukommelse til programhoved"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:131
+#: elf/dl-load.c:1340 elf/dl-load.h:131
 msgid "cannot change memory protections"
 msgstr "kan ikke ændre hukommelsesbeskyttelser"
 
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1364
 msgid "cannot enable executable stack as shared object requires"
 msgstr "kan ikke oprette udførbar stak som kræves af delt objekt"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1392
 msgid "cannot close file descriptor"
 msgstr "kan ikke lukke filbeskriver"
 
@@ -509,51 +496,51 @@ msgstr "for kort fil"
 msgid "invalid ELF header"
 msgstr "ugyldigt ELF-hoved"
 
-#: elf/dl-load.c:1709
+#: elf/dl-load.c:1712
 msgid "ELF file data encoding not big-endian"
 msgstr "Kodning for ELF-fildata er ikke \"big-endian\""
 
-#: elf/dl-load.c:1711
+#: elf/dl-load.c:1714
 msgid "ELF file data encoding not little-endian"
 msgstr "Kodning for ELF-fildata er ikke \"little-endian\""
 
-#: elf/dl-load.c:1715
+#: elf/dl-load.c:1718
 msgid "ELF file version ident does not match current one"
 msgstr "ELF-filens version-identitet passer ikke med den aktuelle"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1722
 msgid "ELF file OS ABI invalid"
 msgstr "ELF-filens OS ABI er ugyldigt"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1725
 msgid "ELF file ABI version invalid"
 msgstr "ELF-filens ABI-version er ugyldig"
 
-#: elf/dl-load.c:1728
+#: elf/dl-load.c:1731
 msgid "internal error"
 msgstr "intern fejl"
 
-#: elf/dl-load.c:1735
+#: elf/dl-load.c:1738
 msgid "ELF file version does not match current one"
 msgstr "ELF-filens version passer ikke med den aktuelle"
 
-#: elf/dl-load.c:1743
+#: elf/dl-load.c:1750
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "kun ET_DYN og ET_EXEC kan indlæses"
 
-#: elf/dl-load.c:1748
+#: elf/dl-load.c:1755
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF-filens 'phentsize' er ikke den forventede størrelse"
 
-#: elf/dl-load.c:2301
+#: elf/dl-load.c:2245
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "forkert ELF-klasse: ELFCLASS64"
 
-#: elf/dl-load.c:2302
+#: elf/dl-load.c:2246
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "forkert ELF-klasse: ELFCLASS32"
 
-#: elf/dl-load.c:2305
+#: elf/dl-load.c:2249
 msgid "cannot open shared object file"
 msgstr "kan ikke åbne delt objektfil"
 
@@ -565,7 +552,7 @@ msgstr "kunne ikke afbilde segment fra delt objekt'"
 msgid "cannot map zero-fill pages"
 msgstr "kan ikke mappe nulstil-sider"
 
-#: elf/dl-lookup.c:881
+#: elf/dl-lookup.c:797
 msgid "symbol lookup error"
 msgstr "fejl ved opslag af symbol"
 
@@ -589,24 +576,24 @@ msgstr "ikke flere navnerum tilgængelige for dlmopen()"
 msgid "invalid target namespace in dlmopen()"
 msgstr "ugyldigt mål-navnerum for dlmopen()"
 
-#: elf/dl-reloc.c:139
+#: elf/dl-reloc.c:140
 msgid "cannot allocate memory in static TLS block"
 msgstr "Kan ikke tildele hukommelse i statisk TLS-blok"
 
-#: elf/dl-reloc.c:275
+#: elf/dl-reloc.c:288
 msgid "cannot make segment writable for relocation"
 msgstr "kan ikke gøre segment skrivbart for relokering"
 
-#: elf/dl-reloc.c:306
+#: elf/dl-reloc.c:319
 #, c-format
 msgid "%s: out of memory to store relocation results for %s\n"
 msgstr "%s: ikke mere hukommelse til at gemme relokeringsresultat for %s\n"
 
-#: elf/dl-reloc.c:322
+#: elf/dl-reloc.c:335
 msgid "cannot restore segment prot after reloc"
 msgstr "kan ikke genskabe segmentbeskyttelse efter flytning"
 
-#: elf/dl-reloc.c:353
+#: elf/dl-reloc.c:366
 msgid "cannot apply additional memory protection after relocation"
 msgstr "kan ikke udføre yderligere hukommelsesbeskyttelser efter flytning"
 
@@ -614,11 +601,11 @@ msgstr "kan ikke udføre yderligere hukommelsesbeskyttelser efter flytning"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT brugt i kode er ikke dynamisk indlæst"
 
-#: elf/dl-tls.c:1039
+#: elf/dl-tls.c:1050
 msgid "cannot create TLS data structures"
 msgstr "kan ikke oprette datastrukturer for TLS"
 
-#: elf/dl-version.c:278
+#: elf/dl-version.c:285
 msgid "cannot allocate version reference table"
 msgstr "kan ikke allokere versionsreferencetabel"
 
@@ -721,89 +708,89 @@ msgstr " (ændret)\n"
 msgid " (SKIPPED)\n"
 msgstr " (UDELADT)\n"
 
-#: elf/ldconfig.c:699
+#: elf/ldconfig.c:698
 #, c-format
 msgid "Can't find %s"
 msgstr "Kan ikke finde %s"
 
-#: elf/ldconfig.c:715 elf/ldconfig.c:895 elf/ldconfig.c:955 elf/ldconfig.c:987
+#: elf/ldconfig.c:714 elf/ldconfig.c:893 elf/ldconfig.c:953 elf/ldconfig.c:985
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Kan ikke lstat %s"
 
-#: elf/ldconfig.c:721
+#: elf/ldconfig.c:720
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Ignorerede filen %s da den ikke er en almindelig fil."
 
-#: elf/ldconfig.c:729
+#: elf/ldconfig.c:728
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Ingen lænke oprettet da .so-navn ikke kunne findes for %s"
 
-#: elf/ldconfig.c:828
+#: elf/ldconfig.c:826
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Kan ikke åbne katalog %s"
 
-#: elf/ldconfig.c:913 elf/ldconfig.c:975 elf/readlib.c:96
+#: elf/ldconfig.c:911 elf/ldconfig.c:973 elf/readlib.c:95
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Inddatafilen %s ikke fundet\n"
 
-#: elf/ldconfig.c:920
+#: elf/ldconfig.c:918
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Kan ikke stat() %s"
 
-#: elf/ldconfig.c:1073
+#: elf/ldconfig.c:1067
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5-bibliotek %s i forkert katalog"
 
-#: elf/ldconfig.c:1076
+#: elf/ldconfig.c:1070
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6-bibliotek %s i forkert katalog"
 
-#: elf/ldconfig.c:1079
+#: elf/ldconfig.c:1073
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4-bibliotek %s i forkert katalog"
 
-#: elf/ldconfig.c:1107
+#: elf/ldconfig.c:1101
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "bibliotekerne %s og %s i kataloget %s har samme .so-navn, men forskellig type"
 
-#: elf/ldconfig.c:1304
+#: elf/ldconfig.c:1296
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "behøver fuldt filnavn for konfigurationsfil når -r bruges"
 
-#: elf/ldconfig.c:1311 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1303 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "hukommelsen opbrugt"
 
-#: elf/ldconfig.c:1344
+#: elf/ldconfig.c:1336
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: kan ikke læse katalog %s"
 
-#: elf/ldconfig.c:1392
+#: elf/ldconfig.c:1384
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "relativ søgesti \"%s\" brugt til at bygge hurtigbuffer"
 
-#: elf/ldconfig.c:1416
+#: elf/ldconfig.c:1408
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Kan ikke chdir til /"
 
-#: elf/ldconfig.c:1457
+#: elf/ldconfig.c:1449
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Kan ikke åbne hurtigbuffer-katalog %s\n"
@@ -878,52 +865,52 @@ msgstr "fejl: du har ikke læserettigheder til"
 msgid "file %s is truncated\n"
 msgstr "fil %s er afkortet\n"
 
-#: elf/readelflib.c:65
+#: elf/readelflib.c:64
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s er en 32-bit ELF-fil.\n"
 
-#: elf/readelflib.c:67
+#: elf/readelflib.c:66
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s er en 64-bit ELF-fil.\n"
 
-#: elf/readelflib.c:69
+#: elf/readelflib.c:68
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "Ukendt ELFCLASS i filen %s.\n"
 
-#: elf/readelflib.c:76
+#: elf/readelflib.c:75
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s er ikke en delt objektfil (Type: %d).\n"
 
-#: elf/readelflib.c:104
+#: elf/readelflib.c:103
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "mere end ét dynamisk segment\n"
 
-#: elf/readlib.c:102
+#: elf/readlib.c:101
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "Kan ikke fstat() fil %s\n"
 
-#: elf/readlib.c:113
+#: elf/readlib.c:112
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "Fil %s er tom, ikke afprøvet."
 
-#: elf/readlib.c:119
+#: elf/readlib.c:118
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "Fil %s er for lille, ikke afprøvet."
 
-#: elf/readlib.c:129
+#: elf/readlib.c:128
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "Kan ikke mmap fil %s\n"
 
-#: elf/readlib.c:168
+#: elf/readlib.c:167
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s er ikke en ELF-fil - den har de forkerte signaturtegn i starten.\n"
@@ -1413,10 +1400,10 @@ msgid "no symbolic name given for end of range"
 msgstr "ikke noget symbolsk navn givet for slutningen på området"
 
 #: locale/programs/charmap.c:614 locale/programs/ld-address.c:523
-#: locale/programs/ld-collate.c:2642 locale/programs/ld-collate.c:3806
+#: locale/programs/ld-collate.c:2635 locale/programs/ld-collate.c:3799
 #: locale/programs/ld-ctype.c:2117 locale/programs/ld-ctype.c:2829
 #: locale/programs/ld-identification.c:396 locale/programs/ld-measurement.c:212
-#: locale/programs/ld-messages.c:294 locale/programs/ld-monetary.c:747
+#: locale/programs/ld-messages.c:294 locale/programs/ld-monetary.c:855
 #: locale/programs/ld-name.c:261 locale/programs/ld-numeric.c:324
 #: locale/programs/ld-paper.c:211 locale/programs/ld-telephone.c:275
 #: locale/programs/ld-time.c:958 locale/programs/repertoire.c:311
@@ -1439,10 +1426,10 @@ msgid "%s: error in state machine"
 msgstr "%s: fejl i tilstandsmaskinen"
 
 #: locale/programs/charmap.c:855 locale/programs/ld-address.c:539
-#: locale/programs/ld-collate.c:2639 locale/programs/ld-collate.c:3999
+#: locale/programs/ld-collate.c:2632 locale/programs/ld-collate.c:3992
 #: locale/programs/ld-ctype.c:2114 locale/programs/ld-ctype.c:2846
 #: locale/programs/ld-identification.c:412 locale/programs/ld-measurement.c:228
-#: locale/programs/ld-messages.c:310 locale/programs/ld-monetary.c:763
+#: locale/programs/ld-messages.c:310 locale/programs/ld-monetary.c:871
 #: locale/programs/ld-name.c:277 locale/programs/ld-numeric.c:340
 #: locale/programs/ld-paper.c:227 locale/programs/ld-telephone.c:291
 #: locale/programs/ld-time.c:989 locale/programs/locfile.c:1009
@@ -1463,7 +1450,7 @@ msgstr ""
 "antal byte for bytesekvens angivet i begyndelsen respektive slutningen af intervallet\n"
 "er forskellige: %d respektive %d"
 
-#: locale/programs/charmap.c:998 locale/programs/ld-collate.c:2923
+#: locale/programs/charmap.c:998 locale/programs/ld-collate.c:2916
 #: locale/programs/repertoire.c:417
 msgid "invalid names for character range"
 msgstr "ugyldige navne for tegnområde"
@@ -1485,7 +1472,7 @@ msgstr "øvre grænse i område er mindre end nedre grænse"
 msgid "resulting bytes for range not representable."
 msgstr "de resulterende bytes for området kan ikke repræsenteres."
 
-#: locale/programs/ld-address.c:132 locale/programs/ld-collate.c:1570
+#: locale/programs/ld-address.c:132 locale/programs/ld-collate.c:1569
 #: locale/programs/ld-ctype.c:429 locale/programs/ld-identification.c:130
 #: locale/programs/ld-measurement.c:91 locale/programs/ld-messages.c:95
 #: locale/programs/ld-monetary.c:191 locale/programs/ld-name.c:92
@@ -1499,14 +1486,13 @@ msgstr "Definition for kategori %s ikke fundet"
 #: locale/programs/ld-address.c:198 locale/programs/ld-address.c:227
 #: locale/programs/ld-address.c:299 locale/programs/ld-address.c:318
 #: locale/programs/ld-address.c:330 locale/programs/ld-identification.c:143
-#: locale/programs/ld-measurement.c:102 locale/programs/ld-monetary.c:203
-#: locale/programs/ld-monetary.c:257 locale/programs/ld-monetary.c:273
-#: locale/programs/ld-monetary.c:285 locale/programs/ld-name.c:103
-#: locale/programs/ld-name.c:140 locale/programs/ld-numeric.c:110
-#: locale/programs/ld-numeric.c:124 locale/programs/ld-paper.c:99
-#: locale/programs/ld-paper.c:108 locale/programs/ld-telephone.c:102
-#: locale/programs/ld-telephone.c:159 locale/programs/ld-time.c:179
-#: locale/programs/ld-time.c:200
+#: locale/programs/ld-measurement.c:102 locale/programs/ld-monetary.c:291
+#: locale/programs/ld-monetary.c:368 locale/programs/ld-monetary.c:389
+#: locale/programs/ld-name.c:103 locale/programs/ld-name.c:140
+#: locale/programs/ld-numeric.c:110 locale/programs/ld-numeric.c:124
+#: locale/programs/ld-paper.c:99 locale/programs/ld-paper.c:108
+#: locale/programs/ld-telephone.c:102 locale/programs/ld-telephone.c:159
+#: locale/programs/ld-time.c:179 locale/programs/ld-time.c:200
 #, c-format
 msgid "%s: field `%s' not defined"
 msgstr "%s: felt '%s' ikke defineret"
@@ -1552,8 +1538,8 @@ msgstr "%s: numerisk landekode '%d' er ugyldig"
 #: locale/programs/ld-address.c:431 locale/programs/ld-address.c:468
 #: locale/programs/ld-address.c:506 locale/programs/ld-ctype.c:2478
 #: locale/programs/ld-identification.c:308 locale/programs/ld-measurement.c:195
-#: locale/programs/ld-messages.c:263 locale/programs/ld-monetary.c:502
-#: locale/programs/ld-monetary.c:537 locale/programs/ld-monetary.c:578
+#: locale/programs/ld-messages.c:263 locale/programs/ld-monetary.c:610
+#: locale/programs/ld-monetary.c:645 locale/programs/ld-monetary.c:686
 #: locale/programs/ld-name.c:234 locale/programs/ld-numeric.c:216
 #: locale/programs/ld-paper.c:194 locale/programs/ld-telephone.c:250
 #: locale/programs/ld-time.c:863 locale/programs/ld-time.c:905
@@ -1563,7 +1549,7 @@ msgstr "%s: felt '%s' erklæret mere end én gang"
 
 #: locale/programs/ld-address.c:435 locale/programs/ld-address.c:473
 #: locale/programs/ld-identification.c:312 locale/programs/ld-messages.c:273
-#: locale/programs/ld-monetary.c:506 locale/programs/ld-monetary.c:541
+#: locale/programs/ld-monetary.c:614 locale/programs/ld-monetary.c:649
 #: locale/programs/ld-name.c:238 locale/programs/ld-numeric.c:220
 #: locale/programs/ld-telephone.c:254 locale/programs/ld-time.c:755
 #: locale/programs/ld-time.c:826 locale/programs/ld-time.c:868
@@ -1571,10 +1557,10 @@ msgstr "%s: felt '%s' erklæret mere end én gang"
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: ukendt tegn i felt '%s'"
 
-#: locale/programs/ld-address.c:520 locale/programs/ld-collate.c:3804
+#: locale/programs/ld-address.c:520 locale/programs/ld-collate.c:3797
 #: locale/programs/ld-ctype.c:2826 locale/programs/ld-identification.c:393
 #: locale/programs/ld-measurement.c:209 locale/programs/ld-messages.c:292
-#: locale/programs/ld-monetary.c:745 locale/programs/ld-name.c:259
+#: locale/programs/ld-monetary.c:853 locale/programs/ld-name.c:259
 #: locale/programs/ld-numeric.c:322 locale/programs/ld-paper.c:209
 #: locale/programs/ld-telephone.c:273 locale/programs/ld-time.c:956
 #, c-format
@@ -1583,12 +1569,12 @@ msgstr "%s: ufuldstændig 'END'-linje"
 
 #: locale/programs/ld-address.c:530 locale/programs/ld-collate.c:553
 #: locale/programs/ld-collate.c:605 locale/programs/ld-collate.c:901
-#: locale/programs/ld-collate.c:914 locale/programs/ld-collate.c:2608
-#: locale/programs/ld-collate.c:2629 locale/programs/ld-collate.c:3989
+#: locale/programs/ld-collate.c:914 locale/programs/ld-collate.c:2601
+#: locale/programs/ld-collate.c:2622 locale/programs/ld-collate.c:3982
 #: locale/programs/ld-ctype.c:1846 locale/programs/ld-ctype.c:2104
 #: locale/programs/ld-ctype.c:2676 locale/programs/ld-ctype.c:2837
 #: locale/programs/ld-identification.c:403 locale/programs/ld-measurement.c:219
-#: locale/programs/ld-messages.c:301 locale/programs/ld-monetary.c:754
+#: locale/programs/ld-messages.c:301 locale/programs/ld-monetary.c:862
 #: locale/programs/ld-name.c:268 locale/programs/ld-numeric.c:331
 #: locale/programs/ld-paper.c:218 locale/programs/ld-telephone.c:282
 #: locale/programs/ld-time.c:980
@@ -1687,7 +1673,7 @@ msgstr "%s: symbolsk interval-ellipse må ikke være fulgt umiddelbart af 'order
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "'%s' og '%.*s' er ikke gyldige navne for symbolsk område"
 
-#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3738
+#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3731
 #, c-format
 msgid "%s: order for `%.*s' already defined at %s:%Zu"
 msgstr "%s: rækkefølge for '%.*s' allerede defineret ved %s:%Zu"
@@ -1697,151 +1683,151 @@ msgstr "%s: rækkefølge for '%.*s' allerede defineret ved %s:%Zu"
 msgid "%s: `%s' must be a character"
 msgstr "%s: '%s' skal være et tegn"
 
-#: locale/programs/ld-collate.c:1591
+#: locale/programs/ld-collate.c:1590
 #, c-format
 msgid "%s: `position' must be used for a specific level in all sections or none"
 msgstr "%s: 'position' skal bruges på det samme niveau i alle sektioner, ellers ingen"
 
-#: locale/programs/ld-collate.c:1615
+#: locale/programs/ld-collate.c:1614
 #, c-format
 msgid "symbol `%s' not defined"
 msgstr "symbol '%s' ikke defineret"
 
-#: locale/programs/ld-collate.c:1691 locale/programs/ld-collate.c:1796
+#: locale/programs/ld-collate.c:1690 locale/programs/ld-collate.c:1789
 #, c-format
 msgid "symbol `%s' has the same encoding as"
 msgstr "symbol '%s' har den samme kodning som"
 
-#: locale/programs/ld-collate.c:1695 locale/programs/ld-collate.c:1800
+#: locale/programs/ld-collate.c:1694 locale/programs/ld-collate.c:1793
 #, c-format
 msgid "symbol `%s'"
 msgstr "symbol '%s'"
 
-#: locale/programs/ld-collate.c:1863
+#: locale/programs/ld-collate.c:1856
 msgid "too many errors; giving up"
 msgstr "for mange fejl, giver op"
 
-#: locale/programs/ld-collate.c:2534 locale/programs/ld-collate.c:3928
+#: locale/programs/ld-collate.c:2527 locale/programs/ld-collate.c:3921
 #, c-format
 msgid "%s: nested conditionals not supported"
 msgstr "%s betingelser i niveauer er ikke understøttet"
 
-#: locale/programs/ld-collate.c:2731
+#: locale/programs/ld-collate.c:2724
 #, c-format
 msgid "%s: duplicate definition of `%s'"
 msgstr "%s: duplikér definition af '%s'"
 
-#: locale/programs/ld-collate.c:2767
+#: locale/programs/ld-collate.c:2760
 #, c-format
 msgid "%s: duplicate declaration of section `%s'"
 msgstr "%s: duplikér definition af sektion '%s'"
 
-#: locale/programs/ld-collate.c:2903
+#: locale/programs/ld-collate.c:2896
 #, c-format
 msgid "%s: unknown character in collating symbol name"
 msgstr "%s: ukendt tegn i sammenligningsymbolnavn"
 
-#: locale/programs/ld-collate.c:3032
+#: locale/programs/ld-collate.c:3025
 #, c-format
 msgid "%s: unknown character in equivalent definition name"
 msgstr "%s: ukendt tegn i ækvivalens-definitions-navn"
 
-#: locale/programs/ld-collate.c:3043
+#: locale/programs/ld-collate.c:3036
 #, c-format
 msgid "%s: unknown character in equivalent definition value"
 msgstr "%s: ukendt tegn i ækvivalens-definitions-værdi"
 
-#: locale/programs/ld-collate.c:3053
+#: locale/programs/ld-collate.c:3046
 #, c-format
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: ukendt symbol '%s' i ækvivalens-definition"
 
-#: locale/programs/ld-collate.c:3062
+#: locale/programs/ld-collate.c:3055
 msgid "error while adding equivalent collating symbol"
 msgstr "fejl under indsætning af ækvivalens-sammenligningssymbol"
 
-#: locale/programs/ld-collate.c:3100
+#: locale/programs/ld-collate.c:3093
 #, c-format
 msgid "duplicate definition of script `%s'"
 msgstr "duplikér definition af skript '%s'"
 
-#: locale/programs/ld-collate.c:3148
+#: locale/programs/ld-collate.c:3141
 #, c-format
 msgid "%s: unknown section name `%.*s'"
 msgstr "%s: ukendt sektionsnavn '%.*s'"
 
-#: locale/programs/ld-collate.c:3177
+#: locale/programs/ld-collate.c:3170
 #, c-format
 msgid "%s: multiple order definitions for section `%s'"
 msgstr "%s: flere definitioner af orden for sektion '%s'"
 
-#: locale/programs/ld-collate.c:3205
+#: locale/programs/ld-collate.c:3198
 #, c-format
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: ugyldigt antal sorteringsregler"
 
-#: locale/programs/ld-collate.c:3232
+#: locale/programs/ld-collate.c:3225
 #, c-format
 msgid "%s: multiple order definitions for unnamed section"
 msgstr "%s: flere definitioner af orden for unavngiven sektion"
 
-#: locale/programs/ld-collate.c:3287 locale/programs/ld-collate.c:3417
-#: locale/programs/ld-collate.c:3782
+#: locale/programs/ld-collate.c:3280 locale/programs/ld-collate.c:3410
+#: locale/programs/ld-collate.c:3775
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr "%s: manglende 'order_end' nøgleord"
 
-#: locale/programs/ld-collate.c:3350
+#: locale/programs/ld-collate.c:3343
 #, c-format
 msgid "%s: order for collating symbol %.*s not yet defined"
 msgstr "%s: rækkefølge for sammenligningssymbol '%.*s' endnu ikke defineret"
 
-#: locale/programs/ld-collate.c:3368
+#: locale/programs/ld-collate.c:3361
 #, c-format
 msgid "%s: order for collating element %.*s not yet defined"
 msgstr "%s: rækkefølge for sammenligningselement '%.*s' endnu ikke defineret"
 
-#: locale/programs/ld-collate.c:3379
+#: locale/programs/ld-collate.c:3372
 #, c-format
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr "%s: kan ikke ordne efter %.*s: symbol ikke kendt"
 
-#: locale/programs/ld-collate.c:3431 locale/programs/ld-collate.c:3794
+#: locale/programs/ld-collate.c:3424 locale/programs/ld-collate.c:3787
 #, c-format
 msgid "%s: missing `reorder-end' keyword"
 msgstr "%s: manglende 'reorder-end' nøgleord"
 
-#: locale/programs/ld-collate.c:3465 locale/programs/ld-collate.c:3663
+#: locale/programs/ld-collate.c:3458 locale/programs/ld-collate.c:3656
 #, c-format
 msgid "%s: section `%.*s' not known"
 msgstr "%s: sektion '%.*s' ukendt"
 
-#: locale/programs/ld-collate.c:3530
+#: locale/programs/ld-collate.c:3523
 #, c-format
 msgid "%s: bad symbol <%.*s>"
 msgstr "%s: dårligt symbol: <%.*s>"
 
-#: locale/programs/ld-collate.c:3726
+#: locale/programs/ld-collate.c:3719
 #, c-format
 msgid "%s: cannot have `%s' as end of ellipsis range"
 msgstr "%s: kan ikke have '%s' som slutning på ellipse-interval"
 
-#: locale/programs/ld-collate.c:3778
+#: locale/programs/ld-collate.c:3771
 #, c-format
 msgid "%s: empty category description not allowed"
 msgstr "%s: tom kategori-beskrivelse ikke tilladt"
 
-#: locale/programs/ld-collate.c:3797
+#: locale/programs/ld-collate.c:3790
 #, c-format
 msgid "%s: missing `reorder-sections-end' keyword"
 msgstr "%s: manglende 'reorder-sections-end' nøgleord"
 
-#: locale/programs/ld-collate.c:3961
+#: locale/programs/ld-collate.c:3954
 #, c-format
 msgid "%s: '%s' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: \"%s\" uden tilsvarende \"ifdef\" eller \"ifndef\""
 
-#: locale/programs/ld-collate.c:3979
+#: locale/programs/ld-collate.c:3972
 #, c-format
 msgid "%s: 'endif' without matching 'ifdef' or 'ifndef'"
 msgstr "%s: \"endif\" uden tilsvarende \"ifdef\" eller \"ifndef\""
@@ -2032,7 +2018,7 @@ msgstr "%s: Tegnet '%s' brugt som standardværdi er ikke repræsenterbar med én
 msgid "no output digits defined and none of the standard names in the charmap"
 msgstr "ingen uddata-cifre defineret, og ingen af standardnavnene i tegntabellen"
 
-#: locale/programs/ld-ctype.c:3572
+#: locale/programs/ld-ctype.c:3545
 #, c-format
 msgid "%s: transliteration data from locale `%s' not available"
 msgstr "%s: transliterationsdata fra lokale '%s' ikke tilgængelige"
@@ -2058,7 +2044,7 @@ msgid "%s: field `%s' undefined"
 msgstr "%s: felt '%s' udefineret"
 
 #: locale/programs/ld-messages.c:118 locale/programs/ld-messages.c:151
-#: locale/programs/ld-monetary.c:263 locale/programs/ld-numeric.c:116
+#: locale/programs/ld-numeric.c:116
 #, c-format
 msgid "%s: value for field `%s' must not be an empty string"
 msgstr "%s: værdien for felt '%s' må ikke være en tom streng"
@@ -2068,32 +2054,32 @@ msgstr "%s: værdien for felt '%s' må ikke være en tom streng"
 msgid "%s: no correct regular expression for field `%s': %s"
 msgstr "%s: intet korrekt regulært udtryk for felt '%s': %s"
 
-#: locale/programs/ld-monetary.c:227
+#: locale/programs/ld-monetary.c:310
 #, c-format
 msgid "%s: value of field `int_curr_symbol' has wrong length"
 msgstr "%s: værdien for felt 'int_curr_symbol' har forkert længde"
 
-#: locale/programs/ld-monetary.c:292 locale/programs/ld-monetary.c:321
+#: locale/programs/ld-monetary.c:396 locale/programs/ld-monetary.c:420
 #, c-format
 msgid "%s: value for field `%s' must be in range %d...%d"
 msgstr "%s: værdi for felt '%s' skal være i intervallet %d...%d"
 
-#: locale/programs/ld-monetary.c:548 locale/programs/ld-numeric.c:227
+#: locale/programs/ld-monetary.c:656 locale/programs/ld-numeric.c:227
 #, c-format
 msgid "%s: value for field `%s' must be a single character"
 msgstr "%s: værdi for felt '%s' skal være et enkelt tegn"
 
-#: locale/programs/ld-monetary.c:645 locale/programs/ld-numeric.c:271
+#: locale/programs/ld-monetary.c:753 locale/programs/ld-numeric.c:271
 #, c-format
 msgid "%s: `-1' must be last entry in `%s' field"
 msgstr "%s: '-1' skal være sidste post i '%s' feltet"
 
-#: locale/programs/ld-monetary.c:667 locale/programs/ld-numeric.c:288
+#: locale/programs/ld-monetary.c:775 locale/programs/ld-numeric.c:288
 #, c-format
 msgid "%s: values for field `%s' must be smaller than 127"
 msgstr "%s: værdier på felt '%s' skal være lavere end 127"
 
-#: locale/programs/ld-monetary.c:713
+#: locale/programs/ld-monetary.c:821
 msgid "conversion rate value cannot be zero"
 msgstr "vekselkurs-værdi kan ikke være nul"
 
@@ -2183,36 +2169,36 @@ msgstr "ekstra efterfølgende semikolon"
 msgid "%s: too many values for field `%s'"
 msgstr "%s: for mange værdier for felt '%s'"
 
-#: locale/programs/linereader.c:129
+#: locale/programs/linereader.c:130
 msgid "trailing garbage at end of line"
 msgstr "efterfølgende snavs på slutningen af linjen"
 
-#: locale/programs/linereader.c:297
+#: locale/programs/linereader.c:298
 msgid "garbage at end of number"
 msgstr "snavs i slutningen af tal"
 
-#: locale/programs/linereader.c:409
+#: locale/programs/linereader.c:423
 msgid "garbage at end of character code specification"
 msgstr "snavs i slutningen af tegnkodespecifikation"
 
-#: locale/programs/linereader.c:495
+#: locale/programs/linereader.c:531
 msgid "unterminated symbolic name"
 msgstr "uafsluttet symbolsk navn"
 
-#: locale/programs/linereader.c:622
+#: locale/programs/linereader.c:804
 msgid "illegal escape sequence at end of string"
 msgstr "ugyldig undvigetegnsekvens ved slutningen af streng"
 
-#: locale/programs/linereader.c:626 locale/programs/linereader.c:846
+#: locale/programs/linereader.c:808 locale/programs/linereader.c:979
 msgid "unterminated string"
 msgstr "uafsluttet streng"
 
-#: locale/programs/linereader.c:807
+#: locale/programs/linereader.c:940
 #, c-format
 msgid "symbol `%.*s' not in charmap"
 msgstr "symbol '%.*s' ikke i tegntabel"
 
-#: locale/programs/linereader.c:828
+#: locale/programs/linereader.c:961
 #, c-format
 msgid "symbol `%.*s' not in repertoire map"
 msgstr "symbol '%.*s' ikke i repertoiretabel"
@@ -3525,12 +3511,12 @@ msgstr "Genindlæser '%s' i gruppe-nærbuffer!"
 msgid "Invalid numeric gid \"%s\"!"
 msgstr "Ugyldigt numerisk gruppe-id (gid) \"%s\"!"
 
-#: nscd/mem.c:424
+#: nscd/mem.c:420
 #, c-format
 msgid "freed %zu bytes in %s cache"
 msgstr "frigjorde %zu byte i %s cache"
 
-#: nscd/mem.c:567
+#: nscd/mem.c:563
 #, c-format
 msgid "no more memory for database '%s'"
 msgstr "Ikke mere hukommelse for database '%s'"
@@ -5480,7 +5466,7 @@ msgstr "kan ikke åbne '%s'"
 msgid "cannot read header from `%s'"
 msgstr "kan ikke læse hoved fra '%s'"
 
-#: sysdeps/unix/sysv/linux/x86/readelflib.c:64
+#: sysdeps/unix/sysv/linux/x86/readelflib.c:62
 #, c-format
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s er til ukendt maskine %d.\n"

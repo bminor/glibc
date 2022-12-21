@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.10.1\n"
-"POT-Creation-Date: 2022-01-29 17:34-0500\n"
+"POT-Creation-Date: 2022-07-29 13:00-0400\n"
 "PO-Revision-Date: 2009-08-04 02:23+0200\n"
 "Last-Translator: Gabor Kelemen <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -215,7 +215,7 @@ msgstr "a rosszul formált sor figyelmen kívül maradt"
 msgid "cannot open output file `%s'"
 msgstr "a kimeneti fájl (\"%s\") nem nyitható meg"
 
-#: catgets/gencat.c:1186 locale/programs/linereader.c:559
+#: catgets/gencat.c:1186 locale/programs/linereader.c:588
 msgid "invalid escape sequence"
 msgstr "érvénytelen escape-sorozat"
 
@@ -313,7 +313,7 @@ msgstr "A „$program” nem található\\n"
 msgid "\\`$program' is no executable\\n"
 msgstr "A „$program” nem hajtható végre\\n"
 
-#: dlfcn/dlinfo.c:43
+#: dlfcn/dlinfo.c:48
 msgid "unsupported dlinfo request"
 msgstr "nem támogatott dlinfo kérés"
 
@@ -329,56 +329,47 @@ msgstr "érvénytelen mód"
 msgid "invalid mode parameter"
 msgstr "érvénytelen módparaméter"
 
-#: elf/cache.c:179
+#: elf/cache.c:178
 msgid "unknown"
 msgstr "ismeretlen"
 
-#: elf/cache.c:253
-msgid "Unknown OS"
-msgstr "Ismeretlen OS"
-
-#: elf/cache.c:258
-#, c-format
-msgid ", OS ABI: %s %d.%d.%d"
-msgstr ", OS ABI: %s %d.%d.%d"
-
-#: elf/cache.c:319 elf/ldconfig.c:1437
+#: elf/cache.c:297 elf/ldconfig.c:1429
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Nem nyitható meg a gyorsítótárfájl (%s)\n"
 
-#: elf/cache.c:333
+#: elf/cache.c:311
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "a gyorsítótár mmap-olása meghiúsult.\n"
 
-#: elf/cache.c:337 elf/cache.c:351 elf/cache.c:362
+#: elf/cache.c:315 elf/cache.c:329 elf/cache.c:340
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "A fájl nem gyorsítótárfájl.\n"
 
-#: elf/cache.c:391 elf/cache.c:406
+#: elf/cache.c:369 elf/cache.c:384
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d programkönyvtár található a gyorsítótárban („%s”)\n"
 
-#: elf/cache.c:725
+#: elf/cache.c:698
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Nem hozható létre az ideiglenes gyorsítótárfájl (%s)"
 
-#: elf/cache.c:733 elf/cache.c:743 elf/cache.c:747 elf/cache.c:752
-#: elf/cache.c:770
+#: elf/cache.c:706 elf/cache.c:716 elf/cache.c:720 elf/cache.c:725
+#: elf/cache.c:744
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "A gyorsítótáradatok írása meghiúsult"
 
-#: elf/cache.c:765
+#: elf/cache.c:739
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "%s hozzáférési jogainak módosítása meghiúsult erre: %#o"
 
-#: elf/cache.c:774
+#: elf/cache.c:748
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "%s átnevezése meghiúsult erre: %s"
@@ -391,30 +382,26 @@ msgstr "Nem hozható létre hatókörlista"
 msgid "shared object not open"
 msgstr "a megosztott objektum nincs megnyitva"
 
-#: elf/dl-deps.c:112
+#: elf/dl-deps.c:96
 msgid "DST not allowed in SUID/SGID programs"
 msgstr "a DST nem engedélyezett SUID/SGID programokban"
 
-#: elf/dl-deps.c:125
+#: elf/dl-deps.c:109
 msgid "empty dynamic string token substitution"
 msgstr "üres dinamikus karakterlánc-helyettesítés"
 
-#: elf/dl-deps.c:131
+#: elf/dl-deps.c:115
 #, c-format
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
 msgstr "nem tölthető be a külső „%s”, az üres dinamikus karakterlánc-helyettesítés miatt\n"
 
-#: elf/dl-deps.c:443
+#: elf/dl-deps.c:427
 msgid "cannot allocate dependency list"
 msgstr "nem foglalható le a függőségi lista"
 
-#: elf/dl-deps.c:483 elf/dl-deps.c:548
+#: elf/dl-deps.c:467
 msgid "cannot allocate symbol search list"
 msgstr "nem foglalható le a szimbólumkeresési lista"
-
-#: elf/dl-deps.c:528
-msgid "Filters not supported with LD_TRACE_PRELINKING"
-msgstr "A szűrők nem támogatottak az LD_TRACE_PRELINKING mellett"
 
 #: elf/dl-error-skeleton.c:80
 msgid "error while loading shared libraries"
@@ -424,15 +411,15 @@ msgstr "hiba a megosztott programkönyvtárak betöltésekor"
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "HIBA A DINAMIKUS LINKELŐBEN!"
 
-#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:95
+#: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
 msgid "cannot map pages for fdesc table"
 msgstr "nem képezhetők le a lapok az fdesc táblára"
 
-#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:213
+#: elf/dl-fptr.c:192 sysdeps/hppa/dl-fptr.c:214
 msgid "cannot map pages for fptr table"
 msgstr "nem képezhetők le a lapok az fptr táblára"
 
-#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:242
+#: elf/dl-fptr.c:221 sysdeps/hppa/dl-fptr.c:243
 msgid "internal error: symidx out of range of fptr table"
 msgstr "belső hiba: a symidx kívül van az fptr tábla tartományán"
 
@@ -456,43 +443,43 @@ msgstr "nem hozható létre keresésiútvonal-tömb"
 msgid "cannot stat shared object"
 msgstr "nem érhető el a megosztott objektum"
 
-#: elf/dl-load.c:1069 elf/dl-load.c:2282
+#: elf/dl-load.c:1069 elf/dl-load.c:2226
 msgid "cannot create shared object descriptor"
 msgstr "nem hozható létre megosztott objektumleíró"
 
-#: elf/dl-load.c:1088 elf/dl-load.c:1661 elf/dl-load.c:1763
+#: elf/dl-load.c:1088 elf/dl-load.c:1661 elf/dl-load.c:1769
 msgid "cannot read file data"
 msgstr "nem olvashatók a fájladatok"
 
-#: elf/dl-load.c:1223
+#: elf/dl-load.c:1233
 msgid "object file has no loadable segments"
 msgstr "az objektumfájlnak nincsenek betölthető szakaszai"
 
-#: elf/dl-load.c:1240
+#: elf/dl-load.c:1250
 msgid "cannot dynamically load executable"
 msgstr "nem tölthető be dinamikusan a végrehajtható fájl"
 
-#: elf/dl-load.c:1247
+#: elf/dl-load.c:1257
 msgid "object file has no dynamic section"
 msgstr "az objektumfájlnak nincs dinamikus szakasza"
 
-#: elf/dl-load.c:1284
+#: elf/dl-load.c:1294
 msgid "shared object cannot be dlopen()ed"
 msgstr "megosztott objektumra nem hívható meg a dlopen()"
 
-#: elf/dl-load.c:1297
+#: elf/dl-load.c:1307
 msgid "cannot allocate memory for program header"
 msgstr "nem foglalható memória a program fejlécének"
 
-#: elf/dl-load.c:1330 elf/dl-load.h:131
+#: elf/dl-load.c:1340 elf/dl-load.h:131
 msgid "cannot change memory protections"
 msgstr "a memóriavédelem nem módosítható"
 
-#: elf/dl-load.c:1354
+#: elf/dl-load.c:1364
 msgid "cannot enable executable stack as shared object requires"
 msgstr "nem engedélyezhető a végrehajtható verem, mint ahogy a megosztott objektum megköveteli"
 
-#: elf/dl-load.c:1382
+#: elf/dl-load.c:1392
 msgid "cannot close file descriptor"
 msgstr "nem zárható le a fájlleíró"
 
@@ -504,51 +491,51 @@ msgstr "a fájl túl rövid"
 msgid "invalid ELF header"
 msgstr "érvénytelen ELF fejléc"
 
-#: elf/dl-load.c:1709
+#: elf/dl-load.c:1712
 msgid "ELF file data encoding not big-endian"
 msgstr "az ELF fájladatok kódolása nem big endian"
 
-#: elf/dl-load.c:1711
+#: elf/dl-load.c:1714
 msgid "ELF file data encoding not little-endian"
 msgstr "az ELF fájladatok kódolása nem little endian"
 
-#: elf/dl-load.c:1715
+#: elf/dl-load.c:1718
 msgid "ELF file version ident does not match current one"
 msgstr "az ELF fájlverzió azonosítója nem felel meg az aktuálisnak"
 
-#: elf/dl-load.c:1719
+#: elf/dl-load.c:1722
 msgid "ELF file OS ABI invalid"
 msgstr "az ELF fájl OS ABI-ja érvénytelen"
 
-#: elf/dl-load.c:1722
+#: elf/dl-load.c:1725
 msgid "ELF file ABI version invalid"
 msgstr "az ELF fájl ABI verziója érvénytelen"
 
-#: elf/dl-load.c:1728
+#: elf/dl-load.c:1731
 msgid "internal error"
 msgstr "belső hiba"
 
-#: elf/dl-load.c:1735
+#: elf/dl-load.c:1738
 msgid "ELF file version does not match current one"
 msgstr "az ELF fájlverzió nem felel meg az aktuálisnak"
 
-#: elf/dl-load.c:1743
+#: elf/dl-load.c:1750
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "csak az ET_DYN és ET_EXEC tölthető be"
 
-#: elf/dl-load.c:1748
+#: elf/dl-load.c:1755
 msgid "ELF file's phentsize not the expected size"
 msgstr "az ELF fájl phentsize értéke nem a várt méretű"
 
-#: elf/dl-load.c:2301
+#: elf/dl-load.c:2245
 msgid "wrong ELF class: ELFCLASS64"
 msgstr "hibás ELF osztály: ELFCLASS64"
 
-#: elf/dl-load.c:2302
+#: elf/dl-load.c:2246
 msgid "wrong ELF class: ELFCLASS32"
 msgstr "hibás ELF osztály: ELFCLASS32"
 
-#: elf/dl-load.c:2305
+#: elf/dl-load.c:2249
 msgid "cannot open shared object file"
 msgstr "nem nyitható meg a megosztott objektumfájl"
 
@@ -560,7 +547,7 @@ msgstr "a szegmens leképezése meghiúsult a megosztott objektumból"
 msgid "cannot map zero-fill pages"
 msgstr "nem képezhetők le a nullával kitöltött lapok"
 
-#: elf/dl-lookup.c:881
+#: elf/dl-lookup.c:797
 msgid "symbol lookup error"
 msgstr "szimbólumkikeresési hiba"
 
@@ -568,7 +555,7 @@ msgstr "szimbólumkikeresési hiba"
 msgid "cannot extend global scope"
 msgstr "a globális hatáskör nem bővíthető"
 
-#: elf/ldconfig.c:1311 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1303 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
@@ -1888,7 +1875,7 @@ msgstr ""
 msgid "cannot open `%s'"
 msgstr "„%s” nem nyitható meg"
 
-#: sysdeps/unix/sysv/linux/x86/readelflib.c:64
+#: sysdeps/unix/sysv/linux/x86/readelflib.c:62
 #, c-format
 msgid "%s is for unknown machine %d.\n"
 msgstr "%s az ismeretlen géphez tartozik: %d.\n"
