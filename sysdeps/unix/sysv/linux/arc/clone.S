@@ -41,6 +41,7 @@
 
 ENTRY (__clone)
 	cmp	r0, 0		/* @fn can't be NULL.  */
+	and	r1,r1,-4	/* @child_stack be 4 bytes aligned per ABI.  */
 	cmp.ne	r1, 0		/* @child_stack can't be NULL.  */
 	bz	L (__sys_err)
 
