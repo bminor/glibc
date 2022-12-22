@@ -25,7 +25,7 @@ int
 epoll_create (int size)
 {
 #ifdef __NR_epoll_create
-  return INLINE_SYSCALL_CALL (epoll_create);
+  return INLINE_SYSCALL_CALL (epoll_create, size);
 #else
   if (size <= 0)
     {
