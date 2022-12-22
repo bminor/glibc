@@ -386,34 +386,39 @@ ptmalloc_init (void)
               if (!__builtin_expect (__libc_enable_secure, 0))
                 {
                   if (memcmp (envline, "TOP_PAD_", 8) == 0)
-                    __libc_mallopt (M_TOP_PAD, atoi (&envline[9]));
+                    __libc_mallopt (M_TOP_PAD, strtol (&envline[9], NULL, 10));
                   else if (memcmp (envline, "PERTURB_", 8) == 0)
-                    __libc_mallopt (M_PERTURB, atoi (&envline[9]));
+                    __libc_mallopt (M_PERTURB, strtol (&envline[9], NULL, 10));
                 }
               break;
             case 9:
               if (!__builtin_expect (__libc_enable_secure, 0))
                 {
                   if (memcmp (envline, "MMAP_MAX_", 9) == 0)
-                    __libc_mallopt (M_MMAP_MAX, atoi (&envline[10]));
+                    __libc_mallopt (M_MMAP_MAX, strtol (&envline[10],
+							NULL, 10));
                   else if (memcmp (envline, "ARENA_MAX", 9) == 0)
-                    __libc_mallopt (M_ARENA_MAX, atoi (&envline[10]));
+                    __libc_mallopt (M_ARENA_MAX, strtol (&envline[10],
+							 NULL, 10));
                 }
               break;
             case 10:
               if (!__builtin_expect (__libc_enable_secure, 0))
                 {
                   if (memcmp (envline, "ARENA_TEST", 10) == 0)
-                    __libc_mallopt (M_ARENA_TEST, atoi (&envline[11]));
+                    __libc_mallopt (M_ARENA_TEST, strtol (&envline[11],
+							  NULL, 10));
                 }
               break;
             case 15:
               if (!__builtin_expect (__libc_enable_secure, 0))
                 {
                   if (memcmp (envline, "TRIM_THRESHOLD_", 15) == 0)
-                    __libc_mallopt (M_TRIM_THRESHOLD, atoi (&envline[16]));
+                    __libc_mallopt (M_TRIM_THRESHOLD, strtol (&envline[16],
+							      NULL, 10));
                   else if (memcmp (envline, "MMAP_THRESHOLD_", 15) == 0)
-                    __libc_mallopt (M_MMAP_THRESHOLD, atoi (&envline[16]));
+                    __libc_mallopt (M_MMAP_THRESHOLD, strtol (&envline[16],
+							      NULL, 10));
                 }
               break;
             default:
