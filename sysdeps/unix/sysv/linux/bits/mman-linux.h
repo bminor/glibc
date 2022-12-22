@@ -91,6 +91,7 @@
 				   writable.  */
 # define MADV_DONTNEED_LOCKED 24 /* Like MADV_DONTNEED, but drop
 				    locked pages too.  */
+# define MADV_COLLAPSE    25	/* Synchronous hugepage collapse.  */
 # define MADV_HWPOISON	  100	/* Poison a page for testing.  */
 #endif
 

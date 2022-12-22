@@ -79,4 +79,6 @@
 # define MADV_WIPEONFORK 71	/* Zero memory on fork, child only.  */
 # undef MADV_KEEPONFORK
 # define MADV_KEEPONFORK 72	/* Undo MADV_WIPEONFORK.  */
+# undef MADV_COLLAPSE
+# define MADV_COLLAPSE   73	/* Synchronous hugepage collapse.  */
 #endif
