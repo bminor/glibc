@@ -29,34 +29,6 @@ struct _IO_FILE_memstream
 };
 
 
-static int _IO_mem_sync (FILE* fp) __THROW;
-static void _IO_mem_finish (FILE* fp, int) __THROW;
-
-
-static const struct _IO_jump_t _IO_mem_jumps libio_vtable =
-{
-  JUMP_INIT_DUMMY,
-  JUMP_INIT (finish, _IO_mem_finish),
-  JUMP_INIT (overflow, _IO_str_overflow),
-  JUMP_INIT (underflow, _IO_str_underflow),
-  JUMP_INIT (uflow, _IO_default_uflow),
-  JUMP_INIT (pbackfail, _IO_str_pbackfail),
-  JUMP_INIT (xsputn, _IO_default_xsputn),
-  JUMP_INIT (xsgetn, _IO_default_xsgetn),
-  JUMP_INIT (seekoff, _IO_str_seekoff),
-  JUMP_INIT (seekpos, _IO_default_seekpos),
-  JUMP_INIT (setbuf, _IO_default_setbuf),
-  JUMP_INIT (sync, _IO_mem_sync),
-  JUMP_INIT (doallocate, _IO_default_doallocate),
-  JUMP_INIT (read, _IO_default_read),
-  JUMP_INIT (write, _IO_default_write),
-  JUMP_INIT (seek, _IO_default_seek),
-  JUMP_INIT (close, _IO_default_close),
-  JUMP_INIT (stat, _IO_default_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue)
-};
-
 /* Open a stream that writes into a malloc'd buffer that is expanded as
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
@@ -105,7 +77,7 @@ libc_hidden_def (__open_memstream)
 weak_alias (__open_memstream, open_memstream)
 
 
-static int
+int
 _IO_mem_sync (FILE *fp)
 {
   struct _IO_FILE_memstream *mp = (struct _IO_FILE_memstream *) fp;
@@ -123,7 +95,7 @@ _IO_mem_sync (FILE *fp)
 }
 
 
-static void
+void
 _IO_mem_finish (FILE *fp, int dummy)
 {
   struct _IO_FILE_memstream *mp = (struct _IO_FILE_memstream *) fp;

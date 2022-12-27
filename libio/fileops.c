@@ -815,7 +815,7 @@ _IO_new_file_sync (FILE *fp)
 }
 libc_hidden_ver (_IO_new_file_sync, _IO_file_sync)
 
-static int
+int
 _IO_file_sync_mmap (FILE *fp)
 {
   if (fp->_IO_read_ptr != fp->_IO_read_end)
@@ -1109,7 +1109,7 @@ _IO_file_seekoff_mmap (FILE *fp, off64_t offset, int dir, int mode)
   return offset;
 }
 
-static off64_t
+off64_t
 _IO_file_seekoff_maybe_mmap (FILE *fp, off64_t offset, int dir,
 			     int mode)
 {
@@ -1360,7 +1360,7 @@ _IO_file_xsgetn (FILE *fp, void *data, size_t n)
 }
 libc_hidden_def (_IO_file_xsgetn)
 
-static size_t
+size_t
 _IO_file_xsgetn_mmap (FILE *fp, void *data, size_t n)
 {
   size_t have;
@@ -1405,7 +1405,7 @@ _IO_file_xsgetn_mmap (FILE *fp, void *data, size_t n)
   return s - (char *) data;
 }
 
-static size_t
+size_t
 _IO_file_xsgetn_maybe_mmap (FILE *fp, void *data, size_t n)
 {
   /* We only get here if this is the first attempt to read something.
@@ -1428,76 +1428,3 @@ versioned_symbol (libc, _IO_new_file_seekoff, _IO_file_seekoff, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_underflow, _IO_file_underflow, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_write, _IO_file_write, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_xsputn, _IO_file_xsputn, GLIBC_2_1);
-
-const struct _IO_jump_t _IO_file_jumps libio_vtable =
-{
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_file_finish),
-  JUMP_INIT(overflow, _IO_file_overflow),
-  JUMP_INIT(underflow, _IO_file_underflow),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_default_pbackfail),
-  JUMP_INIT(xsputn, _IO_file_xsputn),
-  JUMP_INIT(xsgetn, _IO_file_xsgetn),
-  JUMP_INIT(seekoff, _IO_new_file_seekoff),
-  JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_new_file_setbuf),
-  JUMP_INIT(sync, _IO_new_file_sync),
-  JUMP_INIT(doallocate, _IO_file_doallocate),
-  JUMP_INIT(read, _IO_file_read),
-  JUMP_INIT(write, _IO_new_file_write),
-  JUMP_INIT(seek, _IO_file_seek),
-  JUMP_INIT(close, _IO_file_close),
-  JUMP_INIT(stat, _IO_file_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue)
-};
-libc_hidden_data_def (_IO_file_jumps)
-
-const struct _IO_jump_t _IO_file_jumps_mmap libio_vtable =
-{
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_file_finish),
-  JUMP_INIT(overflow, _IO_file_overflow),
-  JUMP_INIT(underflow, _IO_file_underflow_mmap),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_default_pbackfail),
-  JUMP_INIT(xsputn, _IO_new_file_xsputn),
-  JUMP_INIT(xsgetn, _IO_file_xsgetn_mmap),
-  JUMP_INIT(seekoff, _IO_file_seekoff_mmap),
-  JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, (_IO_setbuf_t) _IO_file_setbuf_mmap),
-  JUMP_INIT(sync, _IO_file_sync_mmap),
-  JUMP_INIT(doallocate, _IO_file_doallocate),
-  JUMP_INIT(read, _IO_file_read),
-  JUMP_INIT(write, _IO_new_file_write),
-  JUMP_INIT(seek, _IO_file_seek),
-  JUMP_INIT(close, _IO_file_close_mmap),
-  JUMP_INIT(stat, _IO_file_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue)
-};
-
-const struct _IO_jump_t _IO_file_jumps_maybe_mmap libio_vtable =
-{
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_file_finish),
-  JUMP_INIT(overflow, _IO_file_overflow),
-  JUMP_INIT(underflow, _IO_file_underflow_maybe_mmap),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_default_pbackfail),
-  JUMP_INIT(xsputn, _IO_new_file_xsputn),
-  JUMP_INIT(xsgetn, _IO_file_xsgetn_maybe_mmap),
-  JUMP_INIT(seekoff, _IO_file_seekoff_maybe_mmap),
-  JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, (_IO_setbuf_t) _IO_file_setbuf_mmap),
-  JUMP_INIT(sync, _IO_new_file_sync),
-  JUMP_INIT(doallocate, _IO_file_doallocate),
-  JUMP_INIT(read, _IO_file_read),
-  JUMP_INIT(write, _IO_new_file_write),
-  JUMP_INIT(seek, _IO_file_seek),
-  JUMP_INIT(close, _IO_file_close),
-  JUMP_INIT(stat, _IO_file_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue)
-};

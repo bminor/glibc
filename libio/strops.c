@@ -352,27 +352,3 @@ _IO_str_finish (FILE *fp, int dummy)
 
   _IO_default_finish (fp, 0);
 }
-
-const struct _IO_jump_t _IO_str_jumps libio_vtable =
-{
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_str_finish),
-  JUMP_INIT(overflow, _IO_str_overflow),
-  JUMP_INIT(underflow, _IO_str_underflow),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_str_pbackfail),
-  JUMP_INIT(xsputn, _IO_default_xsputn),
-  JUMP_INIT(xsgetn, _IO_default_xsgetn),
-  JUMP_INIT(seekoff, _IO_str_seekoff),
-  JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_default_setbuf),
-  JUMP_INIT(sync, _IO_default_sync),
-  JUMP_INIT(doallocate, _IO_default_doallocate),
-  JUMP_INIT(read, _IO_default_read),
-  JUMP_INIT(write, _IO_default_write),
-  JUMP_INIT(seek, _IO_default_seek),
-  JUMP_INIT(close, _IO_default_close),
-  JUMP_INIT(stat, _IO_default_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue)
-};

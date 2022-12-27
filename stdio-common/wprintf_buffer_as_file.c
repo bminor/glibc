@@ -48,7 +48,7 @@ __wprintf_buffer_as_file_switch_to_buffer (struct __wprintf_buffer_as_file *file
 /* Only a small subset of the vtable functions is implemented here,
    following _IO_obstack_jumps.  */
 
-static wint_t
+wint_t
 __wprintf_buffer_as_file_overflow (FILE *fp, int ch)
 {
   struct __wprintf_buffer_as_file *file
@@ -75,7 +75,7 @@ __wprintf_buffer_as_file_overflow (FILE *fp, int ch)
     return WEOF;
 }
 
-static size_t
+size_t
 __wprintf_buffer_as_file_xsputn (FILE *fp, const void *buf, size_t len)
 {
   struct __wprintf_buffer_as_file *file
@@ -96,30 +96,6 @@ __wprintf_buffer_as_file_xsputn (FILE *fp, const void *buf, size_t len)
        count here.  */
     return 0;
 }
-
-static const struct _IO_jump_t _IO_wprintf_buffer_as_file_jumps libio_vtable =
-{
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, NULL),
-  JUMP_INIT(overflow, (_IO_overflow_t) __wprintf_buffer_as_file_overflow),
-  JUMP_INIT(underflow, NULL),
-  JUMP_INIT(uflow, NULL),
-  JUMP_INIT(pbackfail, NULL),
-  JUMP_INIT(xsputn, __wprintf_buffer_as_file_xsputn),
-  JUMP_INIT(xsgetn, NULL),
-  JUMP_INIT(seekoff, NULL),
-  JUMP_INIT(seekpos, NULL),
-  JUMP_INIT(setbuf, NULL),
-  JUMP_INIT(sync, NULL),
-  JUMP_INIT(doallocate, NULL),
-  JUMP_INIT(read, NULL),
-  JUMP_INIT(write, NULL),
-  JUMP_INIT(seek, NULL),
-  JUMP_INIT(close, NULL),
-  JUMP_INIT(stat, NULL),
-  JUMP_INIT(showmanyc, NULL),
-  JUMP_INIT(imbue, NULL)
-};
 
 void
 __wprintf_buffer_as_file_init (struct __wprintf_buffer_as_file *file,

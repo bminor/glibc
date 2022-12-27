@@ -51,6 +51,8 @@ routines	:=							      \
 									      \
 	libc_fatal fmemopen oldfmemopen vtables
 
+gen-as-const-headers += libio-macros.sym
+
 tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst_wprintf2 tst-widetext test-fmemopen tst-ext tst-ext2 \
 	tst-fgetws tst-ungetwc1 tst-ungetwc2 tst-swscanf tst-sscanf	      \

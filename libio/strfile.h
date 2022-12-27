@@ -78,8 +78,6 @@ typedef struct
   wchar_t overflow_buf[64];
 } _IO_wstrnfile;
 
-extern const struct _IO_jump_t _IO_wstrn_jumps attribute_hidden;
-
 /* Initialize an _IO_strfile SF to read from narrow string STRING, and
    return the corresponding FILE object.  It is not necessary to fclose
    the FILE when it is no longer needed.  */

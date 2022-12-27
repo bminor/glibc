@@ -33,3 +33,6 @@
 FILE *stdin = (FILE *) &_IO_2_1_stdin_;
 FILE *stdout = (FILE *) &_IO_2_1_stdout_;
 FILE *stderr = (FILE *) &_IO_2_1_stderr_;
+
+libio_static_fn_required (_IO_file_open);
+libio_static_fn_required (_IO_file_doallocate);

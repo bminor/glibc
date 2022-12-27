@@ -243,20 +243,26 @@ for linking")
    This is only necessary when defining something in assembly, or playing
    funny alias games where the size should be other than what the compiler
    thinks it is.  */
-#ifdef __ASSEMBLER__
-# define declare_object_symbol_alias(symbol, original, size) \
+#define declare_object_symbol_alias(symbol, original, size) \
   declare_object_symbol_alias_1 (symbol, original, size)
+#ifdef __ASSEMBLER__
 # define declare_object_symbol_alias_1(symbol, original, s_size) \
    strong_alias (original, symbol) ASM_LINE_SEP \
    .type C_SYMBOL_NAME (symbol), %object ASM_LINE_SEP \
    .size C_SYMBOL_NAME (symbol), s_size ASM_LINE_SEP
 #else /* Not __ASSEMBLER__.  */
 # ifdef HAVE_ASM_SET_DIRECTIVE
-#  define declare_symbol_alias_1_alias(symbol, original) \
-     ".set " __SYMBOL_PREFIX #symbol ", " __SYMBOL_PREFIX #original
+#  define declare_object_symbol_alias_1(symbol, original, size) \
+     asm (".global " __SYMBOL_PREFIX # symbol "\n" \
+	  ".type " __SYMBOL_PREFIX # symbol ", %object\n" \
+	  ".set " __SYMBOL_PREFIX #symbol ", " __SYMBOL_PREFIX original "\n" \
+	  ".size " __SYMBOL_PREFIX #symbol ", " #size "\n");
 # else
-#  define declare_symbol_alias_1_alias(symbol, original) \
-     __SYMBOL_PREFIX #symbol " = " __SYMBOL_PREFIX #original
+#  define declare_object_symbol_alias_1(symbol, original, size) \
+     asm (".global " __SYMBOL_PREFIX # symbol "\n" \
+	  ".type " __SYMBOL_PREFIX # symbol ", %object\n" \
+	  __SYMBOL_PREFIX #symbol " = " __SYMBOL_PREFIX original "\n" \
+	  ".size " __SYMBOL_PREFIX #symbol ", " #size "\n");
 # endif /* HAVE_ASM_SET_DIRECTIVE */
 #endif /* __ASSEMBLER__ */
 

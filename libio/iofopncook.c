@@ -30,7 +30,7 @@
 #include <shlib-compat.h>
 #include <pointer_guard.h>
 
-static ssize_t
+ssize_t
 _IO_cookie_read (FILE *fp, void *buf, ssize_t size)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
@@ -43,7 +43,7 @@ _IO_cookie_read (FILE *fp, void *buf, ssize_t size)
   return read_cb (cfile->__cookie, buf, size);
 }
 
-static ssize_t
+ssize_t
 _IO_cookie_write (FILE *fp, const void *buf, ssize_t size)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
@@ -63,7 +63,7 @@ _IO_cookie_write (FILE *fp, const void *buf, ssize_t size)
   return n;
 }
 
-static off64_t
+off64_t
 _IO_cookie_seek (FILE *fp, off64_t offset, int dir)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
@@ -77,7 +77,7 @@ _IO_cookie_seek (FILE *fp, off64_t offset, int dir)
 	  ? _IO_pos_BAD : offset);
 }
 
-static int
+int
 _IO_cookie_close (FILE *fp)
 {
   struct _IO_cookie_file *cfile = (struct _IO_cookie_file *) fp;
@@ -91,7 +91,7 @@ _IO_cookie_close (FILE *fp)
 }
 
 
-static off64_t
+off64_t
 _IO_cookie_seekoff (FILE *fp, off64_t offset, int dir, int mode)
 {
   /* We must force the fileops code to always use seek to determine
@@ -99,31 +99,6 @@ _IO_cookie_seekoff (FILE *fp, off64_t offset, int dir, int mode)
   fp->_offset = _IO_pos_BAD;
   return _IO_file_seekoff (fp, offset, dir, mode);
 }
-
-
-static const struct _IO_jump_t _IO_cookie_jumps libio_vtable = {
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_file_finish),
-  JUMP_INIT(overflow, _IO_file_overflow),
-  JUMP_INIT(underflow, _IO_file_underflow),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_default_pbackfail),
-  JUMP_INIT(xsputn, _IO_file_xsputn),
-  JUMP_INIT(xsgetn, _IO_default_xsgetn),
-  JUMP_INIT(seekoff, _IO_cookie_seekoff),
-  JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_file_setbuf),
-  JUMP_INIT(sync, _IO_file_sync),
-  JUMP_INIT(doallocate, _IO_file_doallocate),
-  JUMP_INIT(read, _IO_cookie_read),
-  JUMP_INIT(write, _IO_cookie_write),
-  JUMP_INIT(seek, _IO_cookie_seek),
-  JUMP_INIT(close, _IO_cookie_close),
-  JUMP_INIT(stat, _IO_default_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue),
-};
-
 
 /* Copy the callbacks from SOURCE to *TARGET, with pointer
    mangling.  */
@@ -209,7 +184,7 @@ versioned_symbol (libc, _IO_fopencookie, fopencookie, GLIBC_2_2);
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 
-static off64_t
+off64_t
 attribute_compat_text_section
 _IO_old_cookie_seek (FILE *fp, off64_t offset, int dir)
 {
@@ -225,29 +200,6 @@ _IO_old_cookie_seek (FILE *fp, off64_t offset, int dir)
 
   return (ret == -1) ? _IO_pos_BAD : ret;
 }
-
-static const struct _IO_jump_t _IO_old_cookie_jumps libio_vtable = {
-  JUMP_INIT_DUMMY,
-  JUMP_INIT(finish, _IO_file_finish),
-  JUMP_INIT(overflow, _IO_file_overflow),
-  JUMP_INIT(underflow, _IO_file_underflow),
-  JUMP_INIT(uflow, _IO_default_uflow),
-  JUMP_INIT(pbackfail, _IO_default_pbackfail),
-  JUMP_INIT(xsputn, _IO_file_xsputn),
-  JUMP_INIT(xsgetn, _IO_default_xsgetn),
-  JUMP_INIT(seekoff, _IO_cookie_seekoff),
-  JUMP_INIT(seekpos, _IO_default_seekpos),
-  JUMP_INIT(setbuf, _IO_file_setbuf),
-  JUMP_INIT(sync, _IO_file_sync),
-  JUMP_INIT(doallocate, _IO_file_doallocate),
-  JUMP_INIT(read, _IO_cookie_read),
-  JUMP_INIT(write, _IO_cookie_write),
-  JUMP_INIT(seek, _IO_old_cookie_seek),
-  JUMP_INIT(close, _IO_cookie_close),
-  JUMP_INIT(stat, _IO_default_stat),
-  JUMP_INIT(showmanyc, _IO_default_showmanyc),
-  JUMP_INIT(imbue, _IO_default_imbue),
-};
 
 FILE *
 attribute_compat_text_section

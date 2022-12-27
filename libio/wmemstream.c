@@ -30,34 +30,6 @@ struct _IO_FILE_wmemstream
 };
 
 
-static int _IO_wmem_sync (FILE* fp) __THROW;
-static void _IO_wmem_finish (FILE* fp, int) __THROW;
-
-
-static const struct _IO_jump_t _IO_wmem_jumps libio_vtable =
-{
-  JUMP_INIT_DUMMY,
-  JUMP_INIT (finish, _IO_wmem_finish),
-  JUMP_INIT (overflow, (_IO_overflow_t) _IO_wstr_overflow),
-  JUMP_INIT (underflow, (_IO_underflow_t) _IO_wstr_underflow),
-  JUMP_INIT (uflow, (_IO_underflow_t) _IO_wdefault_uflow),
-  JUMP_INIT (pbackfail, (_IO_pbackfail_t) _IO_wstr_pbackfail),
-  JUMP_INIT (xsputn, _IO_wdefault_xsputn),
-  JUMP_INIT (xsgetn, _IO_wdefault_xsgetn),
-  JUMP_INIT (seekoff, _IO_wstr_seekoff),
-  JUMP_INIT (seekpos, _IO_default_seekpos),
-  JUMP_INIT (setbuf, _IO_default_setbuf),
-  JUMP_INIT (sync, _IO_wmem_sync),
-  JUMP_INIT (doallocate, _IO_wdefault_doallocate),
-  JUMP_INIT (read, _IO_default_read),
-  JUMP_INIT (write, _IO_default_write),
-  JUMP_INIT (seek, _IO_default_seek),
-  JUMP_INIT (close, _IO_default_close),
-  JUMP_INIT (stat, _IO_default_stat),
-  JUMP_INIT (showmanyc, _IO_default_showmanyc),
-  JUMP_INIT (imbue, _IO_default_imbue)
-};
-
 /* Open a stream that writes into a malloc'd buffer that is expanded as
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */
@@ -105,7 +77,7 @@ open_wmemstream (wchar_t **bufloc, size_t *sizeloc)
 }
 
 
-static int
+int
 _IO_wmem_sync (FILE *fp)
 {
   struct _IO_FILE_wmemstream *mp = (struct _IO_FILE_wmemstream *) fp;
@@ -124,7 +96,7 @@ _IO_wmem_sync (FILE *fp)
 }
 
 
-static void
+void
 _IO_wmem_finish (FILE *fp, int dummy)
 {
   struct _IO_FILE_wmemstream *mp = (struct _IO_FILE_wmemstream *) fp;
