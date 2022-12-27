@@ -19,11 +19,11 @@
 #include <printf.h>
 #include <stdlib.h>
 #include <libc-lock.h>
+#include <set-freeres.h>
 
 
 /* Array of functions indexed by format character.  */
-libc_freeres_ptr (printf_va_arg_function **__printf_va_arg_table)
-  attribute_hidden;
+printf_va_arg_function **__printf_va_arg_table attribute_hidden;
 
 __libc_lock_define_initialized (static, lock);
 
@@ -59,3 +59,5 @@ __register_printf_type (printf_va_arg_function fct)
   return result;
 }
 weak_alias (__register_printf_type, register_printf_type)
+
+weak_alias (__printf_va_arg_table, __libc_reg_type_freemem_ptr)

@@ -386,10 +386,7 @@ __sha256_crypt_r (const char *key, const char *salt, char *buffer, int buflen)
   return buffer;
 }
 
-#ifndef _LIBC
-# define libc_freeres_ptr(decl) decl
-#endif
-libc_freeres_ptr (static char *buffer);
+static char *buffer;
 
 /* This entry point is equivalent to the `crypt' function in Unix
    libcs.  */
@@ -418,11 +415,9 @@ __sha256_crypt (const char *key, const char *salt)
   return __sha256_crypt_r (key, salt, buffer, buflen);
 }
 
-#ifndef _LIBC
 static void
 __attribute__ ((__destructor__))
 free_mem (void)
 {
   free (buffer);
 }
-#endif

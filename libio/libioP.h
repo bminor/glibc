@@ -491,7 +491,6 @@ libc_hidden_proto (_IO_wdo_write)
 extern int _IO_flush_all_lockp (int);
 extern int _IO_flush_all (void);
 libc_hidden_proto (_IO_flush_all)
-extern int _IO_cleanup (void);
 extern void _IO_flush_all_linebuffered (void);
 libc_hidden_proto (_IO_flush_all_linebuffered)
 extern int _IO_new_fgetpos (FILE *, __fpos_t *);

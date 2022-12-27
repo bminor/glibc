@@ -87,6 +87,5 @@ static struct dl_action_result *const dl_action_result_malloc_failed
    reporting via dlerror.  */
 extern __thread struct dl_action_result *__libc_dlerror_result
   attribute_tls_model_ie;
-void __libc_dlerror_result_free (void) attribute_hidden;
 
 #endif /* _DLERROR_H */

@@ -24,6 +24,7 @@
 #define __GCVT __qgcvt
 #define __ECVT_R __qecvt_r
 #define __FCVT_R __qfcvt_r
+#define __EFGCVT_FREEMEM_PTR __libc_qefgcvt_freemem_ptr
 #include <efgcvt-ldbl-macros.h>
 #include <efgcvt-template.c>
 

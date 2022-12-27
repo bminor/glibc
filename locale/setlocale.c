@@ -468,7 +468,7 @@ setlocale (int category, const char *locale)
 }
 libc_hidden_def (setlocale)
 
-static void __libc_freeres_fn_section
+static void
 free_category (int category,
 	       struct __locale_data *here, struct __locale_data *c_data)
 {
@@ -498,7 +498,7 @@ free_category (int category,
 
 /* This is called from iconv/gconv_db.c's free_mem, as locales must
    be freed before freeing gconv steps arrays.  */
-void __libc_freeres_fn_section
+void
 _nl_locale_subfreeres (void)
 {
 #ifdef NL_CURRENT_INDIRECT

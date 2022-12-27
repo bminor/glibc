@@ -17,10 +17,11 @@
 
 #include <stdlib.h>
 #include <utmp.h>
+#include <set-freeres.h>
 
 
 /* Local buffer to store the result.  */
-libc_freeres_ptr (static struct utmp *buffer);
+static struct utmp *buffer;
 
 
 struct utmp *
@@ -41,3 +42,5 @@ __getutline (const struct utmp *line)
 }
 libc_hidden_def (__getutline)
 weak_alias (__getutline, getutline)
+
+weak_alias (buffer, __libc_getutline_freemem_ptr)

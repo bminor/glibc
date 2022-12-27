@@ -102,7 +102,7 @@ __nss_action_allocate (struct nss_action *actions, size_t count)
   return result;
 }
 
-void __libc_freeres_fn_section
+void
 __nss_action_freeres (void)
 {
   struct nss_action_list_wrapper *current = nss_actions;

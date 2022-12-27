@@ -1761,7 +1761,8 @@ check_gaiconf_mtime (const struct __stat64_t64 *st)
 #endif
 
 
-libc_freeres_fn(fini)
+void
+__libc_getaddrinfo_freemem (void)
 {
   if (labels != default_labels)
     {
@@ -2233,7 +2234,7 @@ no_file:
 
   /* If we previously read the file but it is gone now, free the old data and
      use the builtin one.  Leave the reload flag alone.  */
-  fini ();
+  __libc_getaddrinfo_freemem ();
 }
 
 

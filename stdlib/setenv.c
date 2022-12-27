@@ -323,7 +323,8 @@ clearenv (void)
   return 0;
 }
 #ifdef _LIBC
-libc_freeres_fn (free_mem)
+void
+__libc_setenv_freemem (void)
 {
   /* Remove all traces.  */
   clearenv ();

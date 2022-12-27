@@ -434,7 +434,11 @@ handle_requests (void *arg)
 
 
 /* Free allocated resources.  */
-libc_freeres_fn (free_res)
+#if !PTHREAD_IN_LIBC
+__attribute__ ((__destructor__)) static
+#endif
+void
+__gai_freemem (void)
 {
   size_t row;
 

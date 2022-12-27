@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include <pointer_guard.h>
 #include <libc-lock.h>
-#include <libio/libioP.h>
+#include <set-freeres.h>
 #include "exit.h"
 
 /* Initialize the flag that indicates exit function processing

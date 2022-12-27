@@ -131,7 +131,7 @@ __libc_unwind_link_after_fork (void)
     }
 }
 
-void __libc_freeres_fn_section
+void
 __libc_unwind_link_freeres (void)
 {
   if (global_libgcc_handle != NULL)

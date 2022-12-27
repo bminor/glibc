@@ -495,7 +495,7 @@ __nss_database_get_noreload (enum nss_database db)
   return result;
 }
 
-void __libc_freeres_fn_section
+void
 __nss_database_freeres (void)
 {
   free (global_database_state);

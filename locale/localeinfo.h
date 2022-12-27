@@ -381,10 +381,10 @@ extern struct __locale_data *_nl_load_locale_from_archive (int category,
 							   const char **namep)
      attribute_hidden;
 
-/* Subroutine of setlocale's __libc_subfreeres hook.  */
+/* Subroutine of setlocale's free resource.  */
 extern void _nl_archive_subfreeres (void) attribute_hidden;
 
-/* Subroutine of gconv-db's __libc_subfreeres hook.  */
+/* Subroutine of gconv-db's free resource.  */
 extern void _nl_locale_subfreeres (void) attribute_hidden;
 
 /* Validate the contents of a locale file and set up the in-core

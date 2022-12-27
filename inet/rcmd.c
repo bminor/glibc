@@ -80,6 +80,7 @@
 #include <sys/uio.h>
 #include <sigsetops.h>
 #include <shlib-compat.h>
+#include <set-freeres.h>
 
 
 int __ivaliduser (FILE *, uint32_t, const char *, const char *);
@@ -98,7 +99,7 @@ int iruserok (uint32_t raddr, int superuser, const char *ruser,
 
 libc_hidden_proto (iruserok_af)
 
-libc_freeres_ptr(static char *ahostbuf);
+static char *ahostbuf;
 
 int
 rcmd_af (char **ahost, u_short rport, const char *locuser, const char *remuser,
@@ -817,3 +818,5 @@ __validuser2_sa (FILE *hostf, struct sockaddr *ra, size_t ralen,
 
     return retval;
 }
+
+weak_alias (ahostbuf, __libc_rcmd_freemem_ptr)

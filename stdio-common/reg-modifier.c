@@ -183,7 +183,8 @@ __handle_registered_modifier_wc (const unsigned int **format,
 }
 
 
-libc_freeres_fn (free_mem)
+void
+__libc_printf_freemem (void)
 {
   if (__printf_modifier_table != NULL)
     {

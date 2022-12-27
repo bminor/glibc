@@ -72,12 +72,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <libc-lock.h>
 #include <scratch_buffer.h>
 #include <net-internal.h>
+#include <set-freeres.h>
 
 #ifndef min
 # define min(x,y) (((x) > (y)) ? (y) : (x))
 #endif /* min */
 
-libc_freeres_ptr (static char *domain);
+static char *domain;
 
 /* Former NI_IDN_ALLOW_UNASSIGNED, NI_IDN_USE_STD3_ASCII_RULES flags,
    now ignored.  */
@@ -556,3 +557,5 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
   return 0;
 }
 libc_hidden_def (getnameinfo)
+
+weak_alias (domain, __libc_getnameinfo_freemem_ptr)

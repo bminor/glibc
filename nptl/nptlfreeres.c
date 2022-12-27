@@ -16,7 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <set-hooks.h>
 #include <libc-symbols.h>
 #include <pthreadP.h>
 #include <nptl-stack.h>

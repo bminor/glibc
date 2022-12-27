@@ -560,14 +560,7 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make $(..)Makerules
 		  -Wl,--verbose 2>/dev/null | \
 	  sed > $@T \
 	      -e '/^=========/,/^=========/!d;/^=========/d' \
-	      -e 's/^.*\*(\.dynbss).*$$/& \
-		 PROVIDE(__start___libc_freeres_ptrs = .); \
-		 *(__libc_freeres_ptrs) \
-		 PROVIDE(__stop___libc_freeres_ptrs = .);/'\
 	      -e 's@^.*\*(\.jcr).*$$@& \
-		 PROVIDE(__start___libc_subfreeres = .);\
-		 __libc_subfreeres : { *(__libc_subfreeres) }\
-		 PROVIDE(__stop___libc_subfreeres = .);\
 		 PROVIDE(__start___libc_IO_vtables = .);\
 		 __libc_IO_vtables : { *(__libc_IO_vtables) }\
 		 PROVIDE(__stop___libc_IO_vtables = .);\

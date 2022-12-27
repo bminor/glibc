@@ -416,7 +416,7 @@ __nss_module_disable_loading (void)
   __libc_lock_unlock (nss_module_list_lock);
 }
 
-void __libc_freeres_fn_section
+void
 __nss_module_freeres (void)
 {
   struct nss_module *current = nss_module_list;

@@ -101,8 +101,5 @@ nss_action_list __nss_action_allocate (struct nss_action *actions,
    EINVAL means that LINE is syntactically invalid.  */
 nss_action_list __nss_action_parse (const char *line);
 
-/* Called from __libc_freeres.  */
-void __nss_action_freeres (void) attribute_hidden;
-
 
 #endif /* _NSS_ACTION_H */

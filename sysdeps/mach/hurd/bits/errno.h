@@ -9,7 +9,6 @@
      mach/boolean.h
      mach/i386/boolean.h
      mach/i386/vm_types.h
-     mach/i386/stdint.h
      mach/mig_errors.h
      device/device_types.h
      mach/std_types.h

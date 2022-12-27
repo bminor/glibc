@@ -1,4 +1,5 @@
-/* Copyright (C) 2008-2023 Free Software Foundation, Inc.
+/* System specific resource deallocation.  Linux version.
+   Copyright (C) 2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,18 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdlib.h>
-#include <utmp.h>
+extern void __check_pf_freemem (void) attribute_hidden;
+extern char * __ttyname_freemem_ptr attribute_hidden;
 
-#include "utmp-compat.h"
-
-#if defined SHARED
-# undef weak_alias
-# define weak_alias(n,a)
-#endif
-#include "login/getutline.c"
-_weak_alias (buffer, __libc_getutline_freemem_ptr)
-
-#if defined SHARED
-default_symbol_version (__getutline, getutline, UTMP_COMPAT_BASE);
-#endif
+#define call_freeres_os_funcs			  \
+  call_function_static_weak (__check_pf_freemem); \
+  call_free_static_weak (__ttyname_freemem_ptr)

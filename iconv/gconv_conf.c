@@ -530,7 +530,8 @@ __gconv_load_conf (void)
 
 
 /* Free all resources if necessary.  */
-libc_freeres_fn (free_mem)
+void
+__gconv_conf_freemem (void)
 {
   if (__gconv_path_elem != NULL && __gconv_path_elem != &empty_path_elem)
     free ((void *) __gconv_path_elem);

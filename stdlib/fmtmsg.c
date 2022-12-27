@@ -361,7 +361,8 @@ __addseverity (int severity, const char *string)
 weak_alias (__addseverity, addseverity)
 
 
-libc_freeres_fn (free_mem)
+void
+__libc_fmtmsg_freemem (void)
 {
   struct severity_info *runp = severity_list;
 

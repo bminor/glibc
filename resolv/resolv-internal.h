@@ -34,6 +34,20 @@
    loads and stores.  */
 typedef HEADER __attribute__ ((__aligned__(1))) UHEADER;
 
+/* List of known interfaces.  */
+struct netaddr
+{
+  int addrtype;
+  union
+  {
+    struct
+    {
+      uint32_t	addr;
+      uint32_t	mask;
+    } ipv4;
+  } u;
+};
+
 /* Legacy function.  This needs to be removed once all NSS modules
    have been adjusted.  */
 static inline bool

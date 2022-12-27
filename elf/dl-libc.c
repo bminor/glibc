@@ -228,7 +228,7 @@ __libc_dlclose (void *map)
 }
 
 
-static bool __libc_freeres_fn_section
+static bool
 free_slotinfo (struct dtv_slotinfo_list **elemp)
 {
   size_t cnt;
@@ -256,7 +256,8 @@ free_slotinfo (struct dtv_slotinfo_list **elemp)
 }
 
 
-libc_freeres_fn (free_mem)
+void
+__dl_libc_freemem (void)
 {
   struct link_map *l;
   struct r_search_path_elem *d;

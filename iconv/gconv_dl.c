@@ -184,7 +184,7 @@ __gconv_release_shlib (struct __gconv_loaded_object *handle)
 
 
 /* We run this if we debug the memory allocation.  */
-static void __libc_freeres_fn_section
+static void
 do_release_all (void *nodep)
 {
   struct __gconv_loaded_object *obj = (struct __gconv_loaded_object *) nodep;
@@ -196,7 +196,8 @@ do_release_all (void *nodep)
   free (obj);
 }
 
-libc_freeres_fn (free_mem)
+void
+__gconv_dl_freemem (void)
 {
   __tdestroy (loaded, do_release_all);
   loaded = NULL;

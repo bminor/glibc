@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <set-freeres.h>
 
 char *__ttyname;
 
@@ -31,7 +32,8 @@ static char *getttyname (int fd, dev_t mydev, ino_t myino,
 			 int save, int *dostat);
 
 
-libc_freeres_ptr (static char *getttyname_name);
+static char *getttyname_name;
+weak_alias (getttyname_name, __ttyname_freemem_ptr)
 
 static char *
 getttyname (int fd, dev_t mydev, ino_t myino, int save, int *dostat)

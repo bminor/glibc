@@ -20,6 +20,7 @@
 #include <shadow.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <set-freeres.h>
 
 
 /* A reasonable size for a buffer to start with.  */
@@ -28,7 +29,7 @@
 /* We need to protect the dynamic buffer handling.  */
 __libc_lock_define_initialized (static, lock);
 
-libc_freeres_ptr (static char *buffer);
+static char *buffer;
 
 /* Read one shadow entry from the given stream.  */
 struct spwd *
@@ -85,3 +86,5 @@ fgetspent (FILE *stream)
 
   return result;
 }
+
+weak_alias (buffer, __libc_fgetspent_freemem_ptr);

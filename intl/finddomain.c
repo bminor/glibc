@@ -185,7 +185,7 @@ out:
 #ifdef _LIBC
 /* This is called from iconv/gconv_db.c's free_mem, as locales must
    be freed before freeing gconv steps arrays.  */
-void __libc_freeres_fn_section
+void
 _nl_finddomain_subfreeres (void)
 {
   struct loaded_l10nfile *runp = _nl_loaded_domains;

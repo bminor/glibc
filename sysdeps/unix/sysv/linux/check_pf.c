@@ -362,7 +362,8 @@ __check_pf (bool *seen_ipv4, bool *seen_ipv6,
 }
 
 /* Free the cache if it has been allocated.  */
-libc_freeres_fn (freecache)
+void
+__check_pf_freemem (void)
 {
   if (cache)
     __free_in6ai (cache->in6ai);

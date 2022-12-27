@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <libc-lock.h>
 #include <stdlib.h>
+#include <set-freeres.h>
 
 #include "nsswitch.h"
 
@@ -43,6 +44,9 @@
 #define APPEND_R1(name) name##_r
 #define INTERNAL(name) INTERNAL1 (name)
 #define INTERNAL1(name) __##name
+#define APPEND_FREEMEM_NAME1(name) __libc_##name##_freemem_ptr
+#define APPEND_FREEMEM_NAME(name) APPEND_FREEMEM_NAME1(name)
+#define FREEMEM_NAME APPEND_FREEMEM_NAME (GETFUNC_NAME)
 
 /* Sometimes we need to store error codes in the `h_errno' variable.  */
 #ifdef NEED_H_ERRNO
@@ -62,8 +66,9 @@ extern int INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer,
 __libc_lock_define_initialized (static, lock);
 
 /* This points to the static buffer used.  */
-libc_freeres_ptr (static char *buffer);
+static char *buffer;
 
+weak_alias (buffer, FREEMEM_NAME)
 
 LOOKUP_TYPE *
 GETFUNC_NAME (void)

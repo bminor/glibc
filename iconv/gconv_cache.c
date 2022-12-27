@@ -449,7 +449,8 @@ __gconv_release_cache (struct __gconv_step *steps, size_t nsteps)
 
 
 /* Free all resources if necessary.  */
-libc_freeres_fn (free_mem)
+void
+__gconv_cache_freemem (void)
 {
   if (cache_malloced)
     free (gconv_cache);

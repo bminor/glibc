@@ -26,6 +26,7 @@
 
 #include "libioP.h"
 #include <stdio.h>
+#include <set-freeres.h>
 
 int
 __fcloseall (void)

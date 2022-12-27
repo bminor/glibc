@@ -42,6 +42,7 @@
 #include "res_hconf.h"
 #include <wchar.h>
 #include <atomic.h>
+#include <set-freeres.h>
 
 #if IS_IN (libc)
 # define fgets_unlocked __fgets_unlocked
@@ -330,19 +331,8 @@ _res_hconf_init (void)
 #if IS_IN (libc)
 # if defined SIOCGIFCONF && defined SIOCGIFNETMASK
 /* List of known interfaces.  */
-libc_freeres_ptr (
-static struct netaddr
-{
-  int addrtype;
-  union
-  {
-    struct
-    {
-      uint32_t	addr;
-      uint32_t	mask;
-    } ipv4;
-  } u;
-} *ifaddrs);
+static struct netaddr *ifaddrs;
+weak_alias (ifaddrs, __libc_resolv_res_hconf_freemem_ptr)
 # endif
 
 /* Reorder addresses returned in a hostent such that the first address

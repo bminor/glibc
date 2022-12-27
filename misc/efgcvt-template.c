@@ -22,6 +22,7 @@
 #include <sys/param.h>
 #include <libc-lock.h>
 #include <math_ldbl_opt.h>
+#include <set-freeres.h>
 
 #ifndef SPRINTF
 # define SPRINTF sprintf
@@ -38,7 +39,7 @@
 
 static char FCVT_BUFFER[MAXDIG];
 static char ECVT_BUFFER[MAXDIG];
-libc_freeres_ptr (static char *FCVT_BUFPTR);
+static char *FCVT_BUFPTR;
 
 char *
 __FCVT (FLOAT_TYPE value, int ndigit, int *decpt, int *sign)
@@ -73,3 +74,5 @@ __GCVT (FLOAT_TYPE value, int ndigit, char *buf)
   SPRINTF (buf, "%.*" FLOAT_FMT_FLAG "g", MIN (ndigit, NDIGIT_MAX), value);
   return buf;
 }
+
+weak_alias (FCVT_BUFPTR, __EFGCVT_FREEMEM_PTR);

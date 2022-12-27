@@ -654,7 +654,8 @@ __resolv_conf_detach (struct __res_state *resp)
 }
 
 /* Deallocate the global data.  */
-libc_freeres_fn (freeres)
+void
+__libc_resolv_conf_freemem (void)
 {
   /* No locking because this function is supposed to be called when
      the process has turned single-threaded.  */

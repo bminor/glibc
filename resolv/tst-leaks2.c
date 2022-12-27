@@ -23,6 +23,8 @@
 #include <resolv.h>
 #include <support/check.h>
 
+void __libc_freeres (void);
+
 static int
 do_test (void)
 {

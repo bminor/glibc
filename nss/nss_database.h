@@ -64,9 +64,6 @@ libc_hidden_proto (__nss_database_get)
 nss_action_list __nss_database_get_noreload (enum nss_database db)
   attribute_hidden;
 
-/* Called from __libc_freeres.  */
-void __nss_database_freeres (void) attribute_hidden;
-
 /* Internal type.  Exposed only for fork handling purposes.  */
 struct nss_database_data
 {

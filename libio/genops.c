@@ -765,8 +765,8 @@ weak_alias (_IO_flush_all_linebuffered, _flushlbf)
    actual buffer because this will happen anyway once the program
    terminated.  If we do want to look for memory leaks we have to free
    the buffers.  Whether something is freed is determined by the
-   function sin the libc_freeres section.  Those are called as part of
-   the atexit routine, just like _IO_cleanup.  The problem is we do
+   function called by __libc_freeres (those are not called as part of
+   the atexit routine, different from  _IO_cleanup).  The problem is we do
    not know whether the freeres code is called first or _IO_cleanup.
    if the former is the case, we set the DEALLOC_BUFFER variable to
    true and _IO_unbuffer_all will take care of the rest.  If
@@ -844,8 +844,8 @@ _IO_unbuffer_all (void)
 #endif
 }
 
-
-libc_freeres_fn (buffer_free)
+void
+__libio_freemem (void)
 {
   dealloc_buffers = true;
 

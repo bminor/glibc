@@ -68,7 +68,8 @@ libc_locked_map_ptr (,__gr_map_handle) attribute_hidden;
 /* Note that we only free the structure if necessary.  The memory
    mapping is not removed since it is not visible to the malloc
    handling.  */
-libc_freeres_fn (gr_map_free)
+void
+__nscd_gr_map_freemem (void)
 {
   if (__gr_map_handle.mapped != NO_MAPPING)
     {

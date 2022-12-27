@@ -498,7 +498,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
   return lia->data[category];
 }
 
-void __libc_freeres_fn_section
+void
 _nl_archive_subfreeres (void)
 {
   struct locale_in_archive *lia;

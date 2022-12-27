@@ -19,9 +19,10 @@
 #include <netdb.h>
 #include <stdlib.h>
 #include <libc-lock.h>
+#include <set-freeres.h>
 
 /* Static buffer for return value.  We allocate it when needed.  */
-libc_freeres_ptr (static char *buffer);
+static char *buffer;
 /* All three strings should fit in a block of 1kB size.  */
 #define BUFSIZE 1024
 
@@ -47,3 +48,5 @@ getnetgrent (char **hostp, char **userp, char **domainp)
 
   return __getnetgrent_r (hostp, userp, domainp, buffer, BUFSIZE);
 }
+
+weak_alias (buffer, __libc_getnetgrent_freemem_ptr)

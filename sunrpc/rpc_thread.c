@@ -37,7 +37,6 @@ __rpc_thread_destroy (void)
 		thread_rpc_vars = NULL;
 	}
 }
-text_set_element (__libc_subfreeres, __rpc_thread_destroy);
 
 /*
  * Initialize RPC multi-threaded operation

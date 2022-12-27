@@ -389,8 +389,8 @@ auth_errmsg (enum auth_stat stat)
 }
 
 
-libc_freeres_fn (free_mem)
+void
+__rpc_freemem (void)
 {
-  /* Not libc_freeres_ptr, since buf is a macro.  */
   free (buf);
 }

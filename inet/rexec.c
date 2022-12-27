@@ -40,9 +40,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/uio.h>
+#include <set-freeres.h>
 
 int	rexecoptions;
-libc_freeres_ptr (static char *ahostbuf);
+static char *ahostbuf;
 
 int
 rexec_af (char **ahost, int rport, const char *name, const char *pass,
@@ -196,3 +197,5 @@ rexec (char **ahost, int rport, const char *name, const char *pass,
 {
 	return rexec_af(ahost, rport, name, pass, cmd, fd2p, AF_INET);
 }
+
+weak_alias (ahostbuf, __libc_rexec_freemem_ptr)
