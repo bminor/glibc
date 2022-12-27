@@ -544,13 +544,8 @@ $(LINK.o) -shared -static-libgcc -Wl,-O1 $(sysdep-LDFLAGS) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link)
 endef
 
-# If the linker is good enough, we can let it use its default linker script.
-# In the long term the custom linker script will be removed.
-shlib-lds =
-shlib-lds-flags =
-
 define build-shlib
-$(build-shlib-helper) -o $@ $(shlib-lds-flags) \
+$(build-shlib-helper) -o $@ \
 	  $(csu-objpfx)abi-note.o $(build-shlib-objlist)
 endef
 
@@ -569,12 +564,12 @@ endef
 # binutils only position loadable notes into the first page for binaries,
 # not for shared objects
 define build-module
-$(build-module-helper) -o $@ $(shlib-lds-flags) \
+$(build-module-helper) -o $@ \
 	  $(csu-objpfx)abi-note.o $(build-module-objlist) $(link-libc-args)
 $(call after-link,$@)
 endef
 define build-module-asneeded
-$(build-module-helper) -o $@ $(shlib-lds-flags) \
+$(build-module-helper) -o $@ \
 	  $(csu-objpfx)abi-note.o \
 	  -Wl,--as-needed $(build-module-objlist) -Wl,--no-as-needed \
 	  $(link-libc-args)
@@ -606,7 +601,6 @@ $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
 	$(LDFLAGS-c_pic.os) $(whole-archive) $^ -o $@
 
-ifeq (,$(strip $(shlib-lds-flags)))
 # Generate a list of -R options to excise .gnu.glibc-stub.* sections.
 $(common-objpfx)libc_pic.opts: $(common-objpfx)libc_pic.os
 	$(OBJDUMP) -h $< | \
@@ -620,7 +614,6 @@ $(common-objpfx)libc_pic.os.clean: $(common-objpfx)libc_pic.opts \
 generated += libc_pic.opts libc_pic.os.clean
 
 libc_pic_clean := .clean
-endif
 
 # Build a possibly-modified version of libc_pic.a for use in building
 # linkobj/libc.so.
@@ -650,16 +643,14 @@ $(common-objpfx)linkobj/libc.so: link-libc-deps = # empty
 $(common-objpfx)libc.so: $(common-objpfx)libc_pic.os$(libc_pic_clean) \
 			 $(elf-objpfx)sofini.os \
 			 $(elf-objpfx)interp.os \
-			 $(elf-objpfx)ld.so \
-			 $(shlib-lds)
+			 $(elf-objpfx)ld.so
 	$(build-shlib)
 	$(call after-link,$@)
 
 $(common-objpfx)linkobj/libc.so: $(common-objpfx)linkobj/libc_pic.a \
 			 $(elf-objpfx)sofini.os \
 			 $(elf-objpfx)interp.os \
-			 $(elf-objpfx)ld.so \
-			 $(shlib-lds)
+			 $(elf-objpfx)ld.so
 	$(build-shlib)
 	$(call after-link,$@)
 
@@ -720,7 +711,7 @@ endif
 
 extra-modules-build := $(filter-out $(modules-names-nobuild),$(modules-names))
 $(extra-modules-build:%=$(objpfx)%.so): $(objpfx)%.so: \
-		$(objpfx)%.os $(shlib-lds) $(link-libs-deps)
+		$(objpfx)%.os $(link-libs-deps)
 	$(build-module)
 endif
 

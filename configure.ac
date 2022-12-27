@@ -147,13 +147,6 @@ AC_ARG_WITH([headers],
 	    [sysheaders=''])
 AC_SUBST(sysheaders)
 
-AC_SUBST(use_default_link)
-AC_ARG_WITH([default-link],
-	    AS_HELP_STRING([--with-default-link],
-			   [do not use explicit linker scripts]),
-	    [use_default_link=$withval],
-	    [use_default_link=no])
-
 dnl Additional build flags injection.
 AC_ARG_WITH([nonshared-cflags],
 	    AS_HELP_STRING([--with-nonshared-cflags=CFLAGS],

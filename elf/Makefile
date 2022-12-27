@@ -1242,8 +1242,6 @@ endif
 # Command to link into a larger single relocatable object.
 reloc-link = $(LINK.o) -nostdlib -nostartfiles -r
 
-$(objpfx)sotruss-lib.so: $(shlib-lds)
-
 $(objpfx)dl-allobjs.os: $(all-rtld-routines:%=$(objpfx)%.os)
 	$(reloc-link) -o $@ $^
 

@@ -680,7 +680,6 @@ hardcoded_path_in_tests
 enable_timezone_tools
 rtld_early_cflags
 extra_nonshared_cflags
-use_default_link
 sysheaders
 ac_ct_CXX
 CXXFLAGS
@@ -756,7 +755,6 @@ with_gd_lib
 with_binutils
 with_selinux
 with_headers
-with_default_link
 with_nonshared_cflags
 with_rtld_early_cflags
 with_timeoutfactor
@@ -1475,7 +1473,6 @@ Optional Packages:
   --with-selinux          if building with SELinux support
   --with-headers=PATH     location of system headers to use (for example
                           /usr/src/linux/include) [default=compiler default]
-  --with-default-link     do not use explicit linker scripts
   --with-nonshared-cflags=CFLAGS
                           build nonshared libraries with additional CFLAGS
   --with-rtld-early-cflags=CFLAGS
@@ -3272,16 +3269,6 @@ else
   sysheaders=''
 fi
 
-
-
-
-
-# Check whether --with-default-link was given.
-if test "${with_default_link+set}" = set; then :
-  withval=$with_default_link; use_default_link=$withval
-else
-  use_default_link=no
-fi
 
 
 
