@@ -79,7 +79,7 @@ __sem_timedwait_internal (sem_t *restrict sem,
 		      ((unsigned int *) &sem->data) + SEM_VALUE_OFFSET,
 		      0, flags);
 
-	  if (err != 0)
+	  if (err != 0 && err != KERN_INVALID_ARGUMENT)
 	    {
 	      /* Error, interruption or timeout, abort.  */
 	      if (err == KERN_TIMEDOUT)
@@ -138,7 +138,7 @@ __sem_timedwait_internal (sem_t *restrict sem,
 		err = __lll_wait_intr (&isem->value,
 			  SEM_NWAITERS_MASK, flags);
 
-	      if (err != 0)
+	      if (err != 0 && err != KERN_INVALID_ARGUMENT)
 		{
 		  /* Error, interruption or timeout, abort.  */
 		  if (err == KERN_TIMEDOUT)
