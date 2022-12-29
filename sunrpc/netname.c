@@ -49,10 +49,11 @@ user2netname (char netname[MAXNETNAMELEN + 1], const uid_t uid,
   if ((strlen (dfltdom) + OPSYS_LEN + 3 + MAXIPRINT) > (size_t) MAXNETNAMELEN)
     return 0;
 
-  /* GCC with -Os warns that sprint might overflow while handling dfltdom,
-     however the above test does check if an overflow would happen.  */
+  /* GCC with -Os or -O1 warns that sprint might overflow while handling
+     dfltdom, however the above test does check if an overflow would
+     happen.  */
   DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_Os_NEEDS_COMMENT (8, "-Wformat-overflow");
+  DIAG_IGNORE_NEEDS_COMMENT (8, "-Wformat-overflow");
   sprintf (netname, "%s.%d@%s", OPSYS, uid, dfltdom);
   DIAG_POP_NEEDS_COMMENT;
   i = strlen (netname);
