@@ -145,6 +145,11 @@ _hurd_startup (void **argptr, void (*main) (intptr_t *data))
       data.portarraysize = 0;
       data.intarray = NULL;
       data.intarraysize = 0;
+      data.stack_base = 0;
+      data.stack_size = 0;
+      data.phdr = 0;
+      data.phdrsz = 0;
+      data.user_entry = 0;
     }
   else if ((void *) &envp[envc + 1] == argv[0])
     {
