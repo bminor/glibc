@@ -1027,7 +1027,7 @@ ldouble: 3
 
 Function: Imaginary part of "ctan_upward":
 double: 2
-float: 1
+float: 2
 float128: 5
 ldouble: 3
 
@@ -1260,13 +1260,13 @@ float128: 2
 ldouble: 8
 
 Function: "j0_downward":
-double: 5
+double: 6
 float: 9
 float128: 9
 ldouble: 6
 
 Function: "j0_towardzero":
-double: 6
+double: 7
 float: 9
 float128: 9
 ldouble: 6
@@ -1285,13 +1285,13 @@ ldouble: 9
 
 Function: "j1_downward":
 double: 5
-float: 6
+float: 8
 float128: 4
 ldouble: 4
 
 Function: "j1_towardzero":
 double: 4
-float: 6
+float: 8
 float128: 4
 ldouble: 4
 
@@ -1617,7 +1617,7 @@ ldouble: 5
 
 Function: "y0_towardzero":
 double: 4
-float: 4
+float: 8
 float128: 3
 ldouble: 8
 
@@ -1641,7 +1641,7 @@ ldouble: 7
 
 Function: "y1_towardzero":
 double: 3
-float: 4
+float: 9
 float128: 6
 ldouble: 5
 
