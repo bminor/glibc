@@ -699,7 +699,8 @@ void *weak_function
 __sbrk (intptr_t increment)
 {
   vm_address_t addr;
-  __vm_allocate (__mach_task_self (), &addr, increment, 1);
+  if (__vm_allocate (__mach_task_self (), &addr, increment, 1))
+    return NULL;
   return (void *) addr;
 }
 
