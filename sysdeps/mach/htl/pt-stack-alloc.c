@@ -57,9 +57,6 @@ get_stack:
 	return EAGAIN;
     }
 
-  if (base >= VM_MAX_ADDRESS)
-    return EAGAIN;
-
   next_stack_base = base + stacksize;
 
   (*stackaddr) = (void *) base;
