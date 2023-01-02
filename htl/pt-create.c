@@ -136,8 +136,8 @@ __pthread_create_internal (struct __pthread **thread,
   if (stacksize == 0)
     {
       struct rlimit rlim;
-      __getrlimit (RLIMIT_STACK, &rlim);
-      if (rlim.rlim_cur != RLIM_INFINITY)
+      err = __getrlimit (RLIMIT_STACK, &rlim);
+      if (err == 0 && rlim.rlim_cur != RLIM_INFINITY)
 	stacksize = rlim.rlim_cur;
       if (stacksize == 0)
 	stacksize = PTHREAD_STACK_DEFAULT;
