@@ -101,21 +101,24 @@ _S_msg_add_auth (mach_port_t me,
   __mutex_lock (&_hurd_id.lock);
   _hurd_check_ids ();
 
-#define MAKE(genaux,uidgid) 						    \
-  make_list (&new ## genaux ## uidgid ## s, 				    \
+#define MAKE(genaux,uidgid) ({						    \
+  new ## genaux ## uidgid ## s = 0;					    \
+  nnew ## genaux ## uidgid ## s = 0;					    \
+  make_list (&new ## genaux ## uidgid ## s,				    \
 	     &nnew ## genaux ## uidgid ## s,				    \
 	     _hurd_id.genaux.uidgid ## s,				    \
 	     _hurd_id.genaux.n ## uidgid ## s,				    \
 	     genaux ## uidgid ## s,					    \
-	     n ## genaux ## uidgid ## s)
+	     n ## genaux ## uidgid ## s);				    \
+})
 
   err = MAKE (gen, uid);
   if (!err)
-    MAKE (aux, uid);
+    err = MAKE (aux, uid);
   if (!err)
-    MAKE (gen, gid);
+    err = MAKE (gen, gid);
   if (!err)
-    MAKE (aux, gid);
+    err = MAKE (aux, gid);
 #undef MAKE
 
   __mutex_unlock (&_hurd_id.lock);
