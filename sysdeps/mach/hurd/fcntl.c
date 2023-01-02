@@ -109,7 +109,7 @@ __libc_fcntl (int fd, int cmd, ...)
 
       /* Set RESULT by evaluating EXPR with the descriptor locked.
 	 Check for an empty descriptor and return EBADF.  */
-#define LOCKED(expr)							      \
+#define LOCKED(expr) do {						      \
       HURD_CRITICAL_BEGIN;						      \
       __spin_lock (&d->port.lock);					      \
       if (d->port.port == MACH_PORT_NULL)				      \
@@ -117,7 +117,8 @@ __libc_fcntl (int fd, int cmd, ...)
       else								      \
 	result = (expr);						      \
       __spin_unlock (&d->port.lock);					      \
-      HURD_CRITICAL_END;
+      HURD_CRITICAL_END;						      \
+} while(0)
 
     case F_GETFD:		/* Get descriptor flags.  */
       LOCKED (d->flags);
