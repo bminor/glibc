@@ -262,28 +262,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   }
 #  endif
   _dl_aux_init (auxvec);
-  if (GL(dl_phdr) == NULL)
 # endif
-    {
-      /* Starting from binutils-2.23, the linker will define the
-         magic symbol __ehdr_start to point to our own ELF header
-         if it is visible in a segment that also includes the phdrs.
-         So we can set up _dl_phdr and _dl_phnum even without any
-         information from auxv.  */
-
-      extern const ElfW(Ehdr) __ehdr_start
-# if BUILD_PIE_DEFAULT
-	__attribute__ ((visibility ("hidden")));
-# else
-	__attribute__ ((weak, visibility ("hidden")));
-      if (&__ehdr_start != NULL)
-# endif
-        {
-          assert (__ehdr_start.e_phentsize == sizeof *GL(dl_phdr));
-          GL(dl_phdr) = (const void *) &__ehdr_start + __ehdr_start.e_phoff;
-          GL(dl_phnum) = __ehdr_start.e_phnum;
-        }
-    }
 
   __tunables_init (__environ);
 
