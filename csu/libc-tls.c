@@ -119,19 +119,18 @@ __libc_setup_tls (void)
   __tls_pre_init_tp ();
 
   /* Look through the TLS segment if there is any.  */
-  if (_dl_phdr != NULL)
-    for (phdr = _dl_phdr; phdr < &_dl_phdr[_dl_phnum]; ++phdr)
-      if (phdr->p_type == PT_TLS)
-	{
-	  /* Remember the values we need.  */
-	  memsz = phdr->p_memsz;
-	  filesz = phdr->p_filesz;
-	  initimage = (void *) phdr->p_vaddr + main_map->l_addr;
-	  align = phdr->p_align;
-	  if (phdr->p_align > max_align)
-	    max_align = phdr->p_align;
-	  break;
-	}
+  for (phdr = _dl_phdr; phdr < &_dl_phdr[_dl_phnum]; ++phdr)
+    if (phdr->p_type == PT_TLS)
+      {
+	/* Remember the values we need.  */
+	memsz = phdr->p_memsz;
+	filesz = phdr->p_filesz;
+	initimage = (void *) phdr->p_vaddr + main_map->l_addr;
+	align = phdr->p_align;
+	if (phdr->p_align > max_align)
+	  max_align = phdr->p_align;
+	break;
+      }
 
   /* Calculate the size of the static TLS surplus, with 0 auditors.  */
   _dl_tls_static_surplus_init (0);
