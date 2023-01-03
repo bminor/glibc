@@ -861,6 +861,18 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
      share of the cache, it has a substantial risk of negatively
      impacting the performance of other threads running on the chip. */
   unsigned long int non_temporal_threshold = shared * 3 / 4;
+  /* SIZE_MAX >> 4 because memmove-vec-unaligned-erms right-shifts the value of
+     'x86_non_temporal_threshold' by `LOG_4X_MEMCPY_THRESH` (4) and it is best
+     if that operation cannot overflow. Minimum of 0x4040 (16448) because the
+     L(large_memset_4x) loops need 64-byte to cache align and enough space for
+     at least 1 iteration of 4x PAGE_SIZE unrolled loop.  Both values are
+     reflected in the manual.  */
+  unsigned long int maximum_non_temporal_threshold = SIZE_MAX >> 4;
+  unsigned long int minimum_non_temporal_threshold = 0x4040;
+  if (non_temporal_threshold < minimum_non_temporal_threshold)
+    non_temporal_threshold = minimum_non_temporal_threshold;
+  else if (non_temporal_threshold > maximum_non_temporal_threshold)
+    non_temporal_threshold = maximum_non_temporal_threshold;
 
 #if HAVE_TUNABLES
   /* NB: The REP MOVSB threshold must be greater than VEC_SIZE * 8.  */
@@ -915,8 +927,8 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
     shared = tunable_size;
 
   tunable_size = TUNABLE_GET (x86_non_temporal_threshold, long int, NULL);
-  /* NB: Ignore the default value 0.  */
-  if (tunable_size != 0)
+  if (tunable_size > minimum_non_temporal_threshold
+      && tunable_size <= maximum_non_temporal_threshold)
     non_temporal_threshold = tunable_size;
 
   tunable_size = TUNABLE_GET (x86_rep_movsb_threshold, long int, NULL);
@@ -931,14 +943,9 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
 
   TUNABLE_SET_WITH_BOUNDS (x86_data_cache_size, data, 0, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_shared_cache_size, shared, 0, SIZE_MAX);
-  /* SIZE_MAX >> 4 because memmove-vec-unaligned-erms right-shifts the value of
-     'x86_non_temporal_threshold' by `LOG_4X_MEMCPY_THRESH` (4) and it is best
-     if that operation cannot overflow. Minimum of 0x4040 (16448) because the
-     L(large_memset_4x) loops need 64-byte to cache align and enough space for
-     at least 1 iteration of 4x PAGE_SIZE unrolled loop.  Both values are
-     reflected in the manual.  */
   TUNABLE_SET_WITH_BOUNDS (x86_non_temporal_threshold, non_temporal_threshold,
-			   0x4040, SIZE_MAX >> 4);
+			   minimum_non_temporal_threshold,
+			   maximum_non_temporal_threshold);
   TUNABLE_SET_WITH_BOUNDS (x86_rep_movsb_threshold, rep_movsb_threshold,
 			   minimum_rep_movsb_threshold, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_rep_stosb_threshold, rep_stosb_threshold, 1,
