@@ -406,7 +406,11 @@
 #define __builtin_ceill __builtin_ceilf128
 #define __builtin_truncl __builtin_truncf128
 #define __builtin_roundl __builtin_roundf128
+#define __builtin_roundevenl __builtin_roundevenf128
+#define __builtin_lrintl __builtin_lrintf128
+#define __builtin_llrintl __builtin_llrintf128
 #define __builtin_copysignl __builtin_copysignf128
+#define __builtin_fabsl __builtin_fabsf128
 
 /* Get the constant suffix from bits/floatn-compat.h.  */
 #define L(x) __f128 (x)

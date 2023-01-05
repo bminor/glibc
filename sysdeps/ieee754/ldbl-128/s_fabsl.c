@@ -27,6 +27,6 @@ static char rcsid[] = "$NetBSD: $";
 _Float128
 __fabsl (_Float128 x)
 {
-  return __builtin_fabsf128 (x);
+  return __builtin_fabsl (x);
 }
 libm_alias_ldouble (__fabs, fabs)

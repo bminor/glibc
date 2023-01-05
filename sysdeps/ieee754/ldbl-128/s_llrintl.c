@@ -31,7 +31,7 @@ long long int
 __llrintl (_Float128 x)
 {
 #if USE_LLRINTL_BUILTIN
-  return __builtin_round (x);
+  return __builtin_llrintl (x);
 #else
   /* Use generic implementation.  */
   static const _Float128 two112[2] =
