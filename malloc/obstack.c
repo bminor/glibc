@@ -57,6 +57,7 @@
 
 
 # include <stdint.h>
+# include <string.h>
 
 /* Determine default alignment.  */
 union fooround
@@ -78,15 +79,6 @@ enum
   DEFAULT_ALIGNMENT = offsetof (struct fooalign, u),
   DEFAULT_ROUNDING = sizeof (union fooround)
 };
-
-/* When we copy a long block of data, this is the unit to do it with.
-   On some machines, copying successive ints does not work;
-   in such a case, redefine COPYING_UNIT to 'long' (if that works)
-   or 'char' as a last resort.  */
-# ifndef COPYING_UNIT
-#  define COPYING_UNIT int
-# endif
-
 
 /* The functions allocating more room by calling 'obstack_chunk_alloc'
    jump to the handler pointed to by 'obstack_alloc_failed_handler'.
@@ -273,25 +265,8 @@ _obstack_newchunk (struct obstack *h, int length)
   object_base =
     __PTR_ALIGN ((char *) new_chunk, new_chunk->contents, h->alignment_mask);
 
-  /* Move the existing object to the new chunk.
-     Word at a time is fast and is safe if the object
-     is sufficiently aligned.  */
-  if (h->alignment_mask + 1 >= DEFAULT_ALIGNMENT)
-    {
-      for (i = obj_size / sizeof (COPYING_UNIT) - 1;
-	   i >= 0; i--)
-	((COPYING_UNIT *) object_base)[i]
-	  = ((COPYING_UNIT *) h->object_base)[i];
-      /* We used to copy the odd few remaining bytes as one extra COPYING_UNIT,
-	 but that can cross a page boundary on a machine
-	 which does not do strict alignment for COPYING_UNITS.  */
-      already = obj_size / sizeof (COPYING_UNIT) * sizeof (COPYING_UNIT);
-    }
-  else
-    already = 0;
-  /* Copy remaining bytes one by one.  */
-  for (i = already; i < obj_size; i++)
-    object_base[i] = h->object_base[i];
+  /* Move the existing object to the new chunk.  */
+  memcpy (object_base, h->object_base, obj_size);
 
   /* If the object just copied was the only data in OLD_CHUNK,
      free that chunk and remove it from the chain.
