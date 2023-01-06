@@ -231,7 +231,7 @@ No definition for %s category found"), "LC_MONETARY");
 	currency_symbol		""
 	mon_decimal_point	""
 	mon_thousands_sep	""
-	mon_grouping		"\177" i.e. CHAR_MAX 
+	mon_grouping		"\177" i.e. CHAR_MAX
 	positive_sign		""
 	negative_sign		""
 	int_frac_digits		-1
