@@ -402,7 +402,7 @@ mp_limb_t mpn_addmul_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t)) _ATTRI
 mp_limb_t mpn_bdivmod _PROTO ((mp_ptr, mp_ptr, mp_size_t, mp_srcptr, mp_size_t, unsigned long int)) _ATTRIBUTE_HIDDEN;
 int mpn_cmp _PROTO ((mp_srcptr, mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
 mp_limb_t mpn_divmod_1 _PROTO ((mp_ptr, mp_srcptr, mp_size_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
-mp_limb_t mpn_divrem _PROTO ((mp_ptr, mp_size_t, mp_ptr, mp_size_t, mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN; 
+mp_limb_t mpn_divrem _PROTO ((mp_ptr, mp_size_t, mp_ptr, mp_size_t, mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
 mp_limb_t mpn_divrem_1 _PROTO ((mp_ptr, mp_size_t, mp_srcptr, mp_size_t, mp_limb_t)) _ATTRIBUTE_HIDDEN;
 void mpn_dump _PROTO ((mp_srcptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
 mp_size_t mpn_gcd _PROTO ((mp_ptr, mp_ptr, mp_size_t, mp_ptr, mp_size_t)) _ATTRIBUTE_HIDDEN;
