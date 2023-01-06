@@ -1,5 +1,5 @@
 /* Record the register state before and after a variant PCS call.
-   Copyright (C) 2020-2022 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.
 

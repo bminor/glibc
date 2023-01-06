@@ -1,5 +1,5 @@
 /* Fully-inline hash table, used mainly for managing TLS descriptors.
-   Copyright (C) 1999-2022 Free Software Foundation, Inc.
+   Copyright (C) 1999-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    This file is derived from a 2003's version of libiberty's

@@ -1,7 +1,7 @@
 /* Filtee header for BZ#16272 test.
    Contains prototypes for symbols implemented in the filtee.
 
-   Copyright (C) 2020-2022 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

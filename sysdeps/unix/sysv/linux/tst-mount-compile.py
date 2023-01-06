@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # Check if glibc provided sys/mount.h can be used along related kernel
 # headers.
-# Copyright (C) 2022 Free Software Foundation, Inc.
+# Copyright (C) 2022-2023 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or

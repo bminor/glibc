@@ -1,6 +1,6 @@
 /* This is the simple test intended to be called by
    tst-valgrind-smoke to perform vagrind smoke test.
-   Copyright (C) 2022 Free Software Foundation, Inc.
+   Copyright (C) 2022-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

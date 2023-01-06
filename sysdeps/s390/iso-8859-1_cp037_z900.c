@@ -1,7 +1,7 @@
 /* Conversion between ISO 8859-1 and IBM037.
 
    This module uses the translate instruction.
-   Copyright (C) 1997-2022 Free Software Foundation, Inc.
+   Copyright (C) 1997-2023 Free Software Foundation, Inc.
 
    This is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

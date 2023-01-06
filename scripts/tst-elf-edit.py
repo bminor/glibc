@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # ELF editor for load align tests.
-# Copyright (C) 2022 Free Software Foundation, Inc.
+# Copyright (C) 2022-2023 Free Software Foundation, Inc.
 # Copyright The GNU Toolchain Authors.
 # This file is part of the GNU C Library.
 #

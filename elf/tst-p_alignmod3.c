@@ -1,5 +1,5 @@
 /* Check invalid p_align of PT_LOAD segment in a shared library.
-   Copyright (C) 2022 Free Software Foundation, Inc.
+   Copyright (C) 2022-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

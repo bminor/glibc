@@ -1,6 +1,6 @@
 /* Configuration for math tests: support for exceptions.  RISC-V
    no-FPU version.
-   Copyright (C) 2013-2022 Free Software Foundation, Inc.
+   Copyright (C) 2013-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

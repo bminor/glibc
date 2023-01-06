@@ -1,6 +1,6 @@
 /* Generate table of tests in tst-strtod-round.c from
    tst-strtod-round-data.
-   Copyright (C) 2012-2022 Free Software Foundation, Inc.
+   Copyright (C) 2012-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

@@ -1,5 +1,5 @@
 /* timespec_get -- get system time - Linux version supporting 64 bit time.
-   Copyright (C) 2020-2022 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

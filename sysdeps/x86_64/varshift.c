@@ -1,7 +1,7 @@
 /* Hook for build varshift for non-multiarch build.  Needed for the
    ISA level >= 2 because strspn-sse4, strcspn-sse4, and strpbrk-sse4
    all have a dependency on varshift.c.
-   Copyright (C) 2022 Free Software Foundation, Inc.
+   Copyright (C) 2022-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

@@ -1,6 +1,6 @@
 /* ffs -- find first set bit in a word, counted from least significant end.
    S/390 version.
-   Copyright (C) 2000-2022 Free Software Foundation, Inc.
+   Copyright (C) 2000-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

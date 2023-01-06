@@ -1,7 +1,7 @@
 /* Check if a thread that disables cancellation and which call functions
    that might be interrupted by a signal do not see the internal SIGCANCEL.
 
-   Copyright (C) 2022 Free Software Foundation, Inc.
+   Copyright (C) 2022-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or

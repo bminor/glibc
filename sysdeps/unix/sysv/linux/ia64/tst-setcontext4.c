@@ -1,7 +1,7 @@
 /* The uc_sigmask on IA64 has the wrong type and this needs fixing,
    but until that change is evaluated, we fix this here with a cast.
    See https://sourceware.org/bugzilla/show_bug.cgi?id=21634
-   Copyright (C) 2018-2022 Free Software Foundation, Inc.
+   Copyright (C) 2018-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
