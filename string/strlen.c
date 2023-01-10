@@ -15,86 +15,38 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <libc-pointer-arith.h>
+#include <string-fzb.h>
+#include <string-fzc.h>
+#include <string-fzi.h>
+#include <string-shift.h>
 #include <string.h>
-#include <stdlib.h>
 
-#undef strlen
-
-#ifndef STRLEN
-# define STRLEN strlen
+#ifdef STRLEN
+# define __strlen STRLEN
 #endif
 
 /* Return the length of the null-terminated string STR.  Scan for
    the null terminator quickly by testing four bytes at a time.  */
 size_t
-STRLEN (const char *str)
+__strlen (const char *str)
 {
-  const char *char_ptr;
-  const unsigned long int *longword_ptr;
-  unsigned long int longword, himagic, lomagic;
+  /* Align pointer to sizeof op_t.  */
+  const uintptr_t s_int = (uintptr_t) str;
+  const op_t *word_ptr = (const op_t*) PTR_ALIGN_DOWN (str, sizeof (op_t));
 
-  /* Handle the first few characters by reading one character at a time.
-     Do this until CHAR_PTR is aligned on a longword boundary.  */
-  for (char_ptr = str; ((unsigned long int) char_ptr
-			& (sizeof (longword) - 1)) != 0;
-       ++char_ptr)
-    if (*char_ptr == '\0')
-      return char_ptr - str;
+  op_t word = *word_ptr;
+  find_t mask = shift_find (find_zero_all (word), s_int);
+  if (mask != 0)
+    return index_first (mask);
 
-  /* All these elucidatory comments refer to 4-byte longwords,
-     but the theory applies equally well to 8-byte longwords.  */
+  do
+    word = *++word_ptr;
+  while (! has_zero (word));
 
-  longword_ptr = (unsigned long int *) char_ptr;
-
-  /* Computing (longword - lomagic) sets the high bit of any corresponding
-     byte that is either zero or greater than 0x80.  The latter case can be
-     filtered out by computing (~longword & himagic).  The final result
-     will always be non-zero if one of the bytes of longword is zero.  */
-  himagic = 0x80808080L;
-  lomagic = 0x01010101L;
-  if (sizeof (longword) > 4)
-    {
-      /* 64-bit version of the magic.  */
-      /* Do the shift in two steps to avoid a warning if long has 32 bits.  */
-      himagic = ((himagic << 16) << 16) | himagic;
-      lomagic = ((lomagic << 16) << 16) | lomagic;
-    }
-  if (sizeof (longword) > 8)
-    abort ();
-
-  /* Instead of the traditional loop which tests each character,
-     we will test a longword at a time.  The tricky part is testing
-     if *any of the four* bytes in the longword in question are zero.  */
-  for (;;)
-    {
-      longword = *longword_ptr++;
-
-      if (((longword - lomagic) & ~longword & himagic) != 0)
-	{
-	  /* Which of the bytes was the zero?  */
-
-	  const char *cp = (const char *) (longword_ptr - 1);
-
-	  if (cp[0] == 0)
-	    return cp - str;
-	  if (cp[1] == 0)
-	    return cp - str + 1;
-	  if (cp[2] == 0)
-	    return cp - str + 2;
-	  if (cp[3] == 0)
-	    return cp - str + 3;
-	  if (sizeof (longword) > 4)
-	    {
-	      if (cp[4] == 0)
-		return cp - str + 4;
-	      if (cp[5] == 0)
-		return cp - str + 5;
-	      if (cp[6] == 0)
-		return cp - str + 6;
-	      if (cp[7] == 0)
-		return cp - str + 7;
-	    }
-	}
-    }
+  return ((const char *) word_ptr) + index_first_zero (word) - str;
 }
+#ifndef STRLEN
+weak_alias (__strlen, strlen)
 libc_hidden_builtin_def (strlen)
+#endif
