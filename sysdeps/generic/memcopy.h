@@ -55,10 +55,8 @@
      [I fail to understand.  I feel stupid.  --roland]
 */
 
-/* Type to use for aligned memory operations.
-   This should normally be the biggest type supported by a single load
-   and store.  */
-#define	op_t	unsigned long int
+/* Type to use for aligned memory operations.  */
+#include <string-optype.h>
 #define OPSIZ	(sizeof (op_t))
 
 /* Type to use for unaligned operations.  */

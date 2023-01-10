@@ -46,7 +46,6 @@
 /* Type to use for aligned memory operations.
    This should normally be the biggest type supported by a single load
    and store.  Must be an unsigned type.  */
-# define op_t	unsigned long int
 # define OPSIZ	(sizeof (op_t))
 
 /* Threshold value for when to enter the unrolled loops.  */
