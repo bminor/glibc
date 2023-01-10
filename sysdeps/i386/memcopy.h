@@ -18,9 +18,6 @@
 
 #include <sysdeps/generic/memcopy.h>
 
-#undef	OP_T_THRES
-#define	OP_T_THRES	8
-
 #undef	BYTE_COPY_FWD
 #define BYTE_COPY_FWD(dst_bp, src_bp, nbytes)				      \
   do {									      \

@@ -20,9 +20,6 @@
 
 #if	defined(__mc68020__) || defined(mc68020)
 
-#undef	OP_T_THRES
-#define	OP_T_THRES	16
-
 /* WORD_COPY_FWD and WORD_COPY_BWD are not symmetric on the 68020,
    because of its weird instruction overlap characteristics.  */
 

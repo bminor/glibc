@@ -48,9 +48,6 @@
    and store.  Must be an unsigned type.  */
 # define OPSIZ	(sizeof (op_t))
 
-/* Threshold value for when to enter the unrolled loops.  */
-# define OP_T_THRES	16
-
 /* Type to use for unaligned operations.  */
 typedef unsigned char byte;
 

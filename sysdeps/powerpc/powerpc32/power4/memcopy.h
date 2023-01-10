@@ -50,11 +50,6 @@
      [I fail to understand.  I feel stupid.  --roland]
 */
 
-
-/* Threshold value for when to enter the unrolled loops.  */
-#undef	OP_T_THRES
-#define OP_T_THRES 16
-
 /* Copy exactly NBYTES bytes from SRC_BP to DST_BP,
    without any assumptions about alignment of the pointers.  */
 #undef BYTE_COPY_FWD
