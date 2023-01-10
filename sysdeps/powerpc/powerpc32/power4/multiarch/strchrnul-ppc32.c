@@ -19,10 +19,6 @@
 #include <string.h>
 
 #define STRCHRNUL  __strchrnul_ppc
-
-#undef weak_alias
-#define weak_alias(a,b )
-
 extern __typeof (strchrnul) __strchrnul_ppc attribute_hidden;
 
 #include <string/strchrnul.c>

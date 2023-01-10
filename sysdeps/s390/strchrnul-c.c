@@ -22,8 +22,6 @@
 # if HAVE_STRCHRNUL_IFUNC
 #  define STRCHRNUL STRCHRNUL_C
 #  define __strchrnul STRCHRNUL
-#  undef weak_alias
-#  define weak_alias(name, alias)
 # endif
 
 # include <string/strchrnul.c>
