@@ -5,6 +5,7 @@
 @menu
 * Source Layout::         How to add new functions or header files
                              to the GNU C Library.
+* Source Fortification::  Fortification of function calls.
 * Symbol handling::       How to handle symbols in the GNU C Library.
 * Porting::               How to port the GNU C Library to
                              a new machine or operating system.
@@ -182,6 +183,254 @@ sysdep_headers += sys/platform/ppc.h
 Then ensure that you have added a @file{sys/platform/ppc.h}
 header file in the machine-specific directory, e.g.,
 @file{sysdeps/powerpc/sys/platform/ppc.h}.
+
+
+@node Source Fortification
+@appendixsec Fortification of function calls
+
+This section contains implementation details of @theglibc{} and may not
+remain stable across releases.
+
+The @code{_FORTIFY_SOURCE} macro may be defined by users to control
+hardening of calls into some functions in @theglibc{}.  The definition
+should be at the top of the source file before any headers are included
+or at the pre-processor commandline using the @code{-D} switch.  The
+hardening primarily focuses on accesses to buffers passed to the
+functions but may also include checks for validity of other inputs to
+the functions.
+
+When the @code{_FORTIFY_SOURCE} macro is defined, it enables code that
+validates inputs passed to some functions in @theglibc to determine if
+they are safe.  If the compiler is unable to determine that the inputs
+to the function call are safe, the call may be replaced by a call to its
+hardened variant that does additional safety checks at runtime.  Some
+hardened variants need the size of the buffer to perform access
+validation and this is provided by the @code{__builtin_object_size} or
+the @code{__builtin_dynamic_object_size} builtin functions.
+
+At runtime, if any of those safety checks fail, the program will
+terminate with a @code{SIGABRT} signal.  @code{_FORTIFY_SOURCE} may be
+defined to one of the following values:
+
+@itemize @bullet
+@item @math{1}: This enables buffer bounds checking using the value
+returned by the @code{__builtin_object_size} compiler builtin function.
+If the function returns @code{(size_t) -1}, the function call is left
+untouched.  Additionally, this level also enables validation of flags to
+the @code{open}, @code{open64}, @code{openat} and @code{openat64}
+functions.
+
+@item @math{2}: This behaves like @math{1}, with the addition of some
+checks that may trap code that is conforming but unsafe, e.g. accepting
+@code{%n} only in read-only format strings.
+
+@item @math{3}: This enables buffer bounds checking using the value
+returned by the @code{__builtin_dynamic_object_size} compiler builtin
+function.  If the function returns @code{(size_t) -1}, the function call
+is left untouched.  Fortification at this level may have a impact on
+program performance if the function call that is fortified is frequently
+encountered and the size expression returned by
+@code{__builtin_dynamic_object_size} is complex.
+@end itemize
+
+In general, the fortified variants of the function calls use the name of
+the function with a @code{__} prefix and a @code{_chk} suffix.  There
+are some exceptions, e.g. the @code{printf} family of functions where,
+depending on the architecture, one may also see fortified variants have
+the @code{_chkieee128} suffix or the @code{__nldbl___} prefix to their
+names.
+
+Another exception is the @code{open} family of functions, where their
+fortified replacements have the @code{__} prefix and a @code{_2} suffix.
+The @code{FD_SET}, @code{FD_CLR} and @code{FD_ISSET} macros use the
+@code{__fdelt_chk} function on fortification.
+
+The following functions and macros are fortified in @theglibc{}:
+@c Generated using the following command:
+@c find . -name Versions | xargs grep -e "_chk;" -e "_2;" |
+@c   cut -d ':' -f 2 | sed 's/;/\n/g' | sed 's/ *//g' | grep -v "^$" |
+@c   sort -u | grep ^__ |
+@c   grep -v -e ieee128 -e __nldbl -e align_cpy -e "fdelt_warn" |
+@c   sed 's/__fdelt_chk/@item @code{FD_SET}\n\n@item @code{FD_CLR}\n\n@item @code{FD_ISSET}\n/' |
+@c   sed 's/__\(.*\)_\(chk\|2\)/@item @code{\1}\n/'
+
+@itemize @bullet
+
+@item @code{asprintf}
+
+@item @code{confstr}
+
+@item @code{dprintf}
+
+@item @code{explicit_bzero}
+
+@item @code{FD_SET}
+
+@item @code{FD_CLR}
+
+@item @code{FD_ISSET}
+
+@item @code{fgets}
+
+@item @code{fgets_unlocked}
+
+@item @code{fgetws}
+
+@item @code{fgetws_unlocked}
+
+@item @code{fprintf}
+
+@item @code{fread}
+
+@item @code{fread_unlocked}
+
+@item @code{fwprintf}
+
+@item @code{getcwd}
+
+@item @code{getdomainname}
+
+@item @code{getgroups}
+
+@item @code{gethostname}
+
+@item @code{getlogin_r}
+
+@item @code{gets}
+
+@item @code{getwd}
+
+@item @code{longjmp}
+
+@item @code{mbsnrtowcs}
+
+@item @code{mbsrtowcs}
+
+@item @code{mbstowcs}
+
+@item @code{memcpy}
+
+@item @code{memmove}
+
+@item @code{mempcpy}
+
+@item @code{memset}
+
+@item @code{mq_open}
+
+@item @code{obstack_printf}
+
+@item @code{obstack_vprintf}
+
+@item @code{open}
+
+@item @code{open64}
+
+@item @code{openat}
+
+@item @code{openat64}
+
+@item @code{poll}
+
+@item @code{ppoll64}
+
+@item @code{ppoll}
+
+@item @code{pread64}
+
+@item @code{pread}
+
+@item @code{printf}
+
+@item @code{ptsname_r}
+
+@item @code{read}
+
+@item @code{readlinkat}
+
+@item @code{readlink}
+
+@item @code{realpath}
+
+@item @code{recv}
+
+@item @code{recvfrom}
+
+@item @code{snprintf}
+
+@item @code{sprintf}
+
+@item @code{stpcpy}
+
+@item @code{stpncpy}
+
+@item @code{strcat}
+
+@item @code{strcpy}
+
+@item @code{strncat}
+
+@item @code{strncpy}
+
+@item @code{swprintf}
+
+@item @code{syslog}
+
+@item @code{ttyname_r}
+
+@item @code{vasprintf}
+
+@item @code{vdprintf}
+
+@item @code{vfprintf}
+
+@item @code{vfwprintf}
+
+@item @code{vprintf}
+
+@item @code{vsnprintf}
+
+@item @code{vsprintf}
+
+@item @code{vswprintf}
+
+@item @code{vsyslog}
+
+@item @code{vwprintf}
+
+@item @code{wcpcpy}
+
+@item @code{wcpncpy}
+
+@item @code{wcrtomb}
+
+@item @code{wcscat}
+
+@item @code{wcscpy}
+
+@item @code{wcsncat}
+
+@item @code{wcsncpy}
+
+@item @code{wcsnrtombs}
+
+@item @code{wcsrtombs}
+
+@item @code{wcstombs}
+
+@item @code{wctomb}
+
+@item @code{wmemcpy}
+
+@item @code{wmemmove}
+
+@item @code{wmempcpy}
+
+@item @code{wmemset}
+
+@item @code{wprintf}
+
+@end itemize
 
 
 @node Symbol handling
