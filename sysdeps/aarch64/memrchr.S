@@ -26,7 +26,6 @@
  * MTE compatible.
  */
 
-/* Arguments and results.  */
 #define srcin		x0
 #define chrin		w1
 #define cntin		x2
@@ -77,31 +76,34 @@ ENTRY (__memrchr)
 	csel	result, result, xzr, hi
 	ret
 
+	nop
 L(start_loop):
-	sub	tmp, end, src
-	subs	cntrem, cntin, tmp
+	subs	cntrem, src, srcin
 	b.ls	L(nomatch)
 
 	/* Make sure that it won't overread by a 16-byte chunk */
-	add	tmp, cntrem, 15
-	tbnz	tmp, 4, L(loop32_2)
+	sub	cntrem, cntrem, 1
+	tbz	cntrem, 4, L(loop32_2)
+	add	src, src, 16
 
-	.p2align 4
+	.p2align 5
 L(loop32):
-	ldr	qdata, [src, -16]!
+	ldr	qdata, [src, -32]!
 	cmeq	vhas_chr.16b, vdata.16b, vrepchr.16b
 	umaxp	vend.16b, vhas_chr.16b, vhas_chr.16b		/* 128->64 */
 	fmov	synd, dend
 	cbnz	synd, L(end)
 
 L(loop32_2):
-	ldr	qdata, [src, -16]!
+	ldr	qdata, [src, -16]
 	subs	cntrem, cntrem, 32
 	cmeq	vhas_chr.16b, vdata.16b, vrepchr.16b
-	b.ls	L(end)
+	b.lo	L(end_2)
 	umaxp	vend.16b, vhas_chr.16b, vhas_chr.16b		/* 128->64 */
 	fmov	synd, dend
 	cbz	synd, L(loop32)
+L(end_2):
+	sub	src, src, 16
 L(end):
 	shrn	vend.8b, vhas_chr.8h, 4		/* 128->64 */
 	fmov	synd, dend
