@@ -1521,8 +1521,6 @@ class GlibcPolicyDefault(object):
             '--host=%s' % glibc.triplet,
             'CC=%s' % glibc.tool_name('gcc'),
             'CXX=%s' % glibc.tool_name('g++'),
-            'RANLIB=%s' % glibc.tool_name('ranlib'),
-            'STRIP=%s' % glibc.tool_name('strip'),
         ]
         if glibc.os == 'gnu':
             self.configure_args.append('MIG=%s' % glibc.tool_name('mig'))
