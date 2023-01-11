@@ -51,8 +51,6 @@ if test $host != $build; then
 fi
 AC_SUBST(cross_compiling)
 AC_PROG_CPP
-AC_CHECK_TOOL(READELF, readelf, false)
-AC_CHECK_TOOL(OBJDUMP, objdump, false)
 
 # We need the C++ compiler only for testing.
 AC_PROG_CXX
@@ -631,8 +629,6 @@ AC_PREPROC_IFELSE([AC_LANG_PROGRAM([[]], [[
 	       [libc_cv_compiler_ok=no])])
 AS_IF([test $libc_cv_compiler_ok != yes],
       [critic_missing="$critic_missing compiler"])
-
-AC_CHECK_TOOL(NM, nm, false)
 
 if test "x$maintainer" = "xyes"; then
   AC_CHECK_PROGS(AUTOCONF, autoconf, no)

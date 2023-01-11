@@ -1521,10 +1521,7 @@ class GlibcPolicyDefault(object):
             '--host=%s' % glibc.triplet,
             'CC=%s' % glibc.tool_name('gcc'),
             'CXX=%s' % glibc.tool_name('g++'),
-            'NM=%s' % glibc.tool_name('nm'),
-            'OBJDUMP=%s' % glibc.tool_name('objdump'),
             'RANLIB=%s' % glibc.tool_name('ranlib'),
-            'READELF=%s' % glibc.tool_name('readelf'),
             'STRIP=%s' % glibc.tool_name('strip'),
         ]
         if glibc.os == 'gnu':

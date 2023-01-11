@@ -133,6 +133,18 @@ if test -z "$GPROF"; then
     GPROF=`$CC -print-prog-name=gprof`
 fi
 AC_SUBST(GPROF)
+if test -z "$READELF"; then
+    READELF=`$CC -print-prog-name=readelf`
+fi
+AC_SUBST(READELF)
+if test -z "$OBJDUMP"; then
+    OBJDUMP=`$CC -print-prog-name=objdump`
+fi
+AC_SUBST(OBJDUMP)
+if test -z "$NM"; then
+    NM=`$CC -print-prog-name=nm`
+fi
+AC_SUBST(NM)
 ])
 
 dnl Run a static link test with -nostdlib -nostartfiles.
