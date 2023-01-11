@@ -19,7 +19,19 @@
 /* BE VERY CAREFUL IF YOU CHANGE THIS CODE...!  */
 
 #include <stddef.h>
+#include <libc-diag.h>
+/* Compiling with -O1 might warn that 'a2' and 'a3' may be used
+   uninitialized.  There are only two ways to arrive at labels 'do4', 'do3'
+   or 'do1', all of which use 'a2' or 'a3' in the MERGE macro: either from
+   the earlier switch case statement or via a loop iteration.  In all cases
+   the switch statement or previous loop sets both 'a2' and 'a3'.
+
+   Since the usage is within the MERGE macro we disable the
+   warning in the definition, but only in this file.  */
+DIAG_PUSH_NEEDS_COMMENT;
+DIAG_IGNORE_NEEDS_COMMENT (6, "-Wmaybe-uninitialized");
 #include <memcopy.h>
+DIAG_POP_NEEDS_COMMENT;
 
 /* _wordcopy_fwd_aligned -- Copy block beginning at SRCP to
    block beginning at DSTP with LEN `op_t' words (not LEN bytes!).
@@ -94,7 +106,15 @@ WORDCOPY_FWD_ALIGNED (long int dstp, long int srcp, size_t len)
     {
     do8:
       a0 = ((op_t *) srcp)[0];
+      /* Compiling with -O1 may warn that 'a1' may be used uninitialized.
+	 There are only two ways to arrive at label 'do8' and they are via a
+	 do-while loop iteration or directly via the earlier switch 'case 1:'
+	 case. The switch case always sets 'a1' and all previous loop
+	 iterations will also have set 'a1' before the use.  */
+      DIAG_PUSH_NEEDS_COMMENT;
+      DIAG_IGNORE_NEEDS_COMMENT (6, "-Wmaybe-uninitialized");
       ((op_t *) dstp)[0] = a1;
+      DIAG_POP_NEEDS_COMMENT;
     do7:
       a1 = ((op_t *) srcp)[1];
       ((op_t *) dstp)[1] = a0;
@@ -291,7 +311,11 @@ WORDCOPY_BWD_ALIGNED (long int dstp, long int srcp, size_t len)
     {
     do8:
       a0 = ((op_t *) srcp)[7];
+      /* Check the comment on WORDCOPY_FWD_ALIGNED.  */
+      DIAG_PUSH_NEEDS_COMMENT;
+      DIAG_IGNORE_NEEDS_COMMENT (6, "-Wmaybe-uninitialized");
       ((op_t *) dstp)[7] = a1;
+      DIAG_POP_NEEDS_COMMENT;
     do7:
       a1 = ((op_t *) srcp)[6];
       ((op_t *) dstp)[6] = a0;
