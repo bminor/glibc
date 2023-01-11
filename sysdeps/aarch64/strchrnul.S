@@ -70,14 +70,22 @@ ENTRY (__strchrnul)
 
 	.p2align 4
 L(loop):
-	ldr	qdata, [src, 16]!
+	ldr	qdata, [src, 16]
+	cmeq	vhas_chr.16b, vdata.16b, vrepchr.16b
+	cmhs	vhas_chr.16b, vhas_chr.16b, vdata.16b
+	umaxp	vend.16b, vhas_chr.16b, vhas_chr.16b
+	fmov	tmp1, dend
+	cbnz	tmp1, L(end)
+	ldr	qdata, [src, 32]!
 	cmeq	vhas_chr.16b, vdata.16b, vrepchr.16b
 	cmhs	vhas_chr.16b, vhas_chr.16b, vdata.16b
 	umaxp	vend.16b, vhas_chr.16b, vhas_chr.16b
 	fmov	tmp1, dend
 	cbz	tmp1, L(loop)
-
+	sub	src, src, 16
+L(end):
 	shrn	vend.8b, vhas_chr.8h, 4		/* 128->64 */
+	add	src, src, 16
 	fmov	tmp1, dend
 #ifndef __AARCH64EB__
 	rbit	tmp1, tmp1
