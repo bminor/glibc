@@ -43,12 +43,9 @@
 #define dend		d2
 
 /* Core algorithm:
-
-   For each 16-byte chunk we calculate a 64-bit nibble mask value with four bits
-   per byte. We take 4 bits of every comparison byte with shift right and narrow
-   by 4 instruction. Since the bits in the nibble mask reflect the order in
-   which things occur in the original string, counting trailing zeros identifies
-   exactly which byte matched.  */
+   Process the string in 16-byte aligned chunks. Compute a 64-bit mask with
+   four bits per byte using the shrn instruction. A count trailing zeros then
+   identifies the first zero byte.  */
 
 ENTRY (STRLEN)
 	PTR_ARG (0)
@@ -68,18 +65,25 @@ ENTRY (STRLEN)
 
 	.p2align 5
 L(loop):
-	ldr	data, [src, 16]!
+	ldr	data, [src, 16]
+	cmeq	vhas_nul.16b, vdata.16b, 0
+	umaxp	vend.16b, vhas_nul.16b, vhas_nul.16b
+	fmov	synd, dend
+	cbnz	synd, L(loop_end)
+	ldr	data, [src, 32]!
 	cmeq	vhas_nul.16b, vdata.16b, 0
 	umaxp	vend.16b, vhas_nul.16b, vhas_nul.16b
 	fmov	synd, dend
 	cbz	synd, L(loop)
-
+	sub	src, src, 16
+L(loop_end):
 	shrn	vend.8b, vhas_nul.8h, 4		/* 128->64 */
 	sub	result, src, srcin
 	fmov	synd, dend
 #ifndef __AARCH64EB__
 	rbit	synd, synd
 #endif
+	add	result, result, 16
 	clz	tmp, synd
 	add	result, result, tmp, lsr 2
 	ret
