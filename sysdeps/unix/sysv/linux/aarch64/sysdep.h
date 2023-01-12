@@ -165,6 +165,8 @@
 # define HAVE_CLOCK_GETTIME64_VSYSCALL	"__kernel_clock_gettime"
 # define HAVE_GETTIMEOFDAY_VSYSCALL	"__kernel_gettimeofday"
 
+# define HAVE_CLONE3_WRAPPER		1
+
 # undef INTERNAL_SYSCALL_RAW
 # define INTERNAL_SYSCALL_RAW(name, nr, args...)		\
   ({ long _sys_result;						\
