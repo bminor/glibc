@@ -24,6 +24,11 @@ extern int __clone3 (struct clone_args *__cl_args, size_t __size,
    fall back to clone or clone2.  */
 extern int __clone_internal (struct clone_args *__cl_args,
 			     int (*__func) (void *__arg), void *__arg);
+/* clone3 wrapper with a sticky check to avoid re-issuing the syscall if
+   it fails with ENOSYS.  */
+extern int __clone3_internal (struct clone_args *cl_args,
+			      int (*func) (void *args), void *arg)
+     attribute_hidden;
 /* The fallback code which calls clone/clone2 based on clone3 arguments.  */
 extern int __clone_internal_fallback (struct clone_args *__cl_args,
 				      int (*__func) (void *__arg),

@@ -241,4 +241,13 @@
 # define __ASSUME_FUTEX_LOCK_PI2 0
 #endif
 
+/* The clone3 system call was introduced across on most architectures in
+   Linux 5.3.  Not all ports implements it, so it should be used along
+   HAVE_CLONE3_WRAPPER define.  */
+#if __LINUX_KERNEL_VERSION >= 0x050300
+# define __ASSUME_CLONE3 1
+#else
+# define __ASSUME_CLONE3 0
+#endif
+
 #endif /* kernel-features.h */

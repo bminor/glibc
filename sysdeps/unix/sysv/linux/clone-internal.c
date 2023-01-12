@@ -76,6 +76,28 @@ __clone_internal_fallback (struct clone_args *cl_args,
   return ret;
 }
 
+int
+__clone3_internal (struct clone_args *cl_args, int (*func) (void *args),
+		   void *arg)
+{
+#ifdef HAVE_CLONE3_WRAPPER
+# if __ASSUME_CLONE3
+  return __clone3 (cl_args, sizeof (*cl_args), func, arg);
+# else
+  static int clone3_supported = 1;
+  if (atomic_load_relaxed (&clone3_supported) == 1)
+    {
+      int ret = __clone3 (cl_args, sizeof (*cl_args), func, arg);
+      if (ret != -1 || errno != ENOSYS)
+	return ret;
+
+      atomic_store_relaxed (&clone3_supported, 0);
+    }
+# endif
+#endif
+  __set_errno (ENOSYS);
+  return -1;
+}
 
 int
 __clone_internal (struct clone_args *cl_args,
@@ -83,7 +105,7 @@ __clone_internal (struct clone_args *cl_args,
 {
 #ifdef HAVE_CLONE3_WRAPPER
   int saved_errno = errno;
-  int ret = __clone3 (cl_args, sizeof (*cl_args), func, arg);
+  int ret = __clone3_internal (cl_args, func, arg);
   if (ret != -1 || errno != ENOSYS)
     return ret;
 
