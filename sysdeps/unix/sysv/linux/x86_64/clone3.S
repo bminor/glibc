@@ -73,9 +73,6 @@ L(thread_start):
 	   the outermost frame obviously.  */
 	xorl	%ebp, %ebp
 
-	/* Align stack to 16 bytes per the x86-64 psABI.  */
-	and	$-16, %RSP_LP
-
 	/* Set up arguments for the function call.  */
 	mov	%R8_LP, %RDI_LP	/* Argument.  */
 	call	*%rdx		/* Call function.  */

@@ -11,6 +11,9 @@
    Different than kernel, the implementation also returns EINVAL for an
    invalid NULL __CL_ARGS or __FUNC (similar to __clone).
 
+   All callers are responsible for correctly aligning the stack.  The stack is
+   not aligned prior to the syscall (this differs from the exported __clone).
+
    This function is only implemented if the ABI defines HAVE_CLONE3_WRAPPER.
 */
 extern int __clone3 (struct clone_args *__cl_args, size_t __size,
