@@ -129,7 +129,7 @@ __spawni_child (void *arguments)
 	  else
 	    {
 	      __libc_sigaction (sig, 0, &sa);
-	      if (sa.sa_handler == SIG_IGN)
+	      if (sa.sa_handler == SIG_IGN || sa.sa_handler == SIG_DFL)
 		continue;
 	      sa.sa_handler = SIG_DFL;
 	    }
