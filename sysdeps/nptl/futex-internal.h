@@ -38,12 +38,6 @@
    return values that callers need to handle.
 
    The private flag must be either FUTEX_PRIVATE or FUTEX_SHARED.
-   FUTEX_PRIVATE is always supported, and the implementation can internally
-   use FUTEX_SHARED when FUTEX_PRIVATE is requested.  FUTEX_SHARED is not
-   necessarily supported (use futex_supports_pshared to detect this).
-
-   We expect callers to only use these operations if futexes and the
-   specific futex operations being used are supported (e.g., FUTEX_SHARED).
 
    Given that waking other threads waiting on a futex involves concurrent
    accesses to the futex word, you must use atomic operations to access the
@@ -94,20 +88,6 @@ futex_fatal_error (void)
 
    We expect a Linux kernel version of 2.6.22 or more recent (since this
    version, EINTR is not returned on spurious wake-ups anymore).  */
-
-/* Returns EINVAL if PSHARED is neither PTHREAD_PROCESS_PRIVATE nor
-   PTHREAD_PROCESS_SHARED; otherwise, returns 0 if PSHARED is supported, and
-   ENOTSUP if not.  */
-static __always_inline int
-futex_supports_pshared (int pshared)
-{
-  if (__glibc_likely (pshared == PTHREAD_PROCESS_PRIVATE))
-    return 0;
-  else if (pshared == PTHREAD_PROCESS_SHARED)
-    return 0;
-  else
-    return EINVAL;
-}
 
 /* Atomically wrt other futex operations on the same futex, this blocks iff
    the value *FUTEX_WORD matches the expected value.  This is

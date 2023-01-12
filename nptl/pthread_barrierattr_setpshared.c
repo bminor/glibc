@@ -17,15 +17,13 @@
 
 #include <errno.h>
 #include "pthreadP.h"
-#include <futex-internal.h>
 #include <shlib-compat.h>
 
 int
 __pthread_barrierattr_setpshared (pthread_barrierattr_t *attr, int pshared)
 {
-  int err = futex_supports_pshared (pshared);
-  if (err != 0)
-    return err;
+  if (pshared != PTHREAD_PROCESS_PRIVATE && pshared != PTHREAD_PROCESS_SHARED)
+    return EINVAL;
 
   ((struct pthread_barrierattr *) attr)->pshared = pshared;
 

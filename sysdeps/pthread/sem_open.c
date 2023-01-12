@@ -23,7 +23,6 @@
 #include "semaphoreP.h"
 #include <shm-directory.h>
 #include <sem_routines.h>
-#include <futex-internal.h>
 #include <libc-lock.h>
 #include <string.h>
 #include <shlib-compat.h>
@@ -35,14 +34,6 @@ __sem_open (const char *name, int oflag, ...)
 {
   int fd;
   sem_t *result;
-
-  /* Check that shared futexes are supported.  */
-  int err = futex_supports_pshared (PTHREAD_PROCESS_SHARED);
-  if (err != 0)
-    {
-      __set_errno (err);
-      return SEM_FAILED;
-    }
 
   struct shmdir_name dirname;
   int ret = __shm_get_name (&dirname, name, true);
