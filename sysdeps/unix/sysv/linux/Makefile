@@ -269,8 +269,7 @@ tests-clone-internal = \
   tst-align-clone-internal \
   tst-clone2-internal \
   tst-clone3-internal \
-  tst-getpid1-internal \
-  tst-misalign-clone-internal
+  tst-getpid1-internal
 tests-internal += $(tests-clone-internal)
 tests-static += $(tests-clone-internal)
 

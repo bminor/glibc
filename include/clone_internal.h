@@ -24,6 +24,11 @@ extern int __clone3 (struct clone_args *__cl_args, size_t __size,
    fall back to clone or clone2.  */
 extern int __clone_internal (struct clone_args *__cl_args,
 			     int (*__func) (void *__arg), void *__arg);
+/* The fallback code which calls clone/clone2 based on clone3 arguments.  */
+extern int __clone_internal_fallback (struct clone_args *__cl_args,
+				      int (*__func) (void *__arg),
+				      void *__arg)
+     attribute_hidden;
 
 #ifndef _ISOMAC
 libc_hidden_proto (__clone3)

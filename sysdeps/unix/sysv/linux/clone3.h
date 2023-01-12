@@ -23,6 +23,13 @@
 #include <stddef.h>
 #include <bits/types.h>
 
+
+/* Flags for the clone3 syscall.  */
+#define CLONE_CLEAR_SIGHAND 0x100000000ULL /* Clear any signal handler and
+					      reset to SIG_DFL.  */
+#define CLONE_INTO_CGROUP 0x200000000ULL /* Clone into a specific cgroup given
+					    the right permissions.  */
+
 /* The unsigned 64-bit and 8-byte aligned integer type.  */
 typedef __U64_TYPE __aligned_uint64_t __attribute__ ((__aligned__ (8)));
 

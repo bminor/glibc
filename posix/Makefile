@@ -109,7 +109,7 @@ tests		:= test-errno tstgetopt testfnm runtests runptests \
 		   tst-glob-tilde test-ssize-max tst-spawn4 bug-regex37 \
 		   bug-regex38 tst-regcomp-truncated tst-spawn-chdir \
 		   tst-wordexp-nocmd tst-execveat tst-spawn5 \
-		   tst-sched_getaffinity tst-spawn6
+		   tst-sched_getaffinity tst-spawn6 tst-spawn7
 
 # Test for the glob symbol version that was replaced in glibc 2.27.
 ifeq ($(have-GLIBC_2.26)$(build-shared),yesyes)
@@ -291,6 +291,7 @@ tst-spawn-ARGS = -- $(host-test-program-cmd)
 tst-spawn-static-ARGS = $(tst-spawn-ARGS)
 tst-spawn5-ARGS = -- $(host-test-program-cmd)
 tst-spawn6-ARGS = -- $(host-test-program-cmd)
+tst-spawn7-ARGS = -- $(host-test-program-cmd)
 tst-dir-ARGS = `pwd` `cd $(common-objdir)/$(subdir); pwd` `cd $(common-objdir); pwd` $(objpfx)tst-dir
 tst-chmod-ARGS = $(objdir)
 tst-vfork3-ARGS = --test-dir=$(objpfx)
