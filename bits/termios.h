@@ -246,7 +246,7 @@ struct termios
 # define NOKERNINFO (1 << 25)	/* Disable VSTATUS.  */
 # define PENDIN	(1 << 29)	/* Retype pending input (state).  */
 #endif
-#define	_NOFLSH	(1 << 31)	/* Disable flush after interrupt.  */
+#define	_NOFLSH	(1U << 31)	/* Disable flush after interrupt.  */
 #define	NOFLSH	_NOFLSH
 
   /* Control characters.  */
