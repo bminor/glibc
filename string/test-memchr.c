@@ -30,7 +30,6 @@
 # define MEMCHR memchr
 # define CHAR char
 # define UCHAR unsigned char
-# define SIMPLE_MEMCHR simple_memchr
 # define BIG_CHAR CHAR_MAX
 # define SMALL_CHAR 127
 #else
@@ -38,7 +37,6 @@
 # define MEMCHR wmemchr
 # define CHAR wchar_t
 # define UCHAR wchar_t
-# define SIMPLE_MEMCHR simple_wmemchr
 # define BIG_CHAR WCHAR_MAX
 # define SMALL_CHAR 1273
 #endif /* WIDE */
@@ -47,15 +45,26 @@ typedef CHAR *(*proto_t) (const CHAR *, int, size_t);
 
 IMPL (MEMCHR, 1)
 
-/* Naive implementation to verify results.  */
-CHAR *
-SIMPLE_MEMCHR (const CHAR *s, int c, size_t n)
-{
-  while (n--)
-    if (*s++ == (CHAR) c)
-      return (CHAR *) s - 1;
-  return NULL;
-}
+/* Also check the generic implementation.  */
+#undef MEMCHR
+#undef weak_alias
+#define weak_alias(a, b)
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(a)
+#undef libc_hidden_def
+#define libc_hidden_def(a)
+#undef libc_hidden_weak
+#define libc_hidden_weak(a)
+#ifndef WIDE
+# define MEMCHR __memchr_default
+# include "string/memchr.c"
+# define MEMCHR_DEFAULT MEMCHR
+#else
+# define WMEMCHR __wmemchr_default
+# include "wcsmbs/wmemchr.c"
+# define MEMCHR_DEFAULT WMEMCHR
+#endif
+IMPL (MEMCHR_DEFAULT, 1)
 
 static void
 do_one_test (impl_t *impl, const CHAR *s, int c, size_t n, CHAR *exp_res)
