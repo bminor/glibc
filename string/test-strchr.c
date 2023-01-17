@@ -35,7 +35,6 @@
 #ifndef WIDE
 # ifdef USE_FOR_STRCHRNUL
 #  define STRCHR strchrnul
-#  define simple_STRCHR simple_STRCHRNUL
 # else
 #  define STRCHR strchr
 # endif /* !USE_FOR_STRCHRNUL */
@@ -50,7 +49,6 @@
 # include <wchar.h>
 # ifdef USE_FOR_STRCHRNUL
 #  define STRCHR wcschrnul
-#  define simple_STRCHR simple_WCSCHRNUL
 # else
 #  define STRCHR wcschr
 # endif /* !USE_FOR_STRCHRNUL */
@@ -72,19 +70,40 @@
 
 typedef CHAR *(*proto_t) (const CHAR *, int);
 
-/* Naive implementation to verify results.  */
-CHAR *
-simple_STRCHR (const CHAR *s, int c)
-{
-  size_t n = STRLEN (s) + 1;
-
-  while (n--)
-    if (*s++ == (CHAR) c)
-      return (CHAR *) s - 1;
-  return NULLRET ((CHAR *) s - 1);
-}
-
 IMPL (STRCHR, 1)
+
+/* Also check the generic implementation.  */
+#undef STRCHR
+#undef weak_alias
+#define weak_alias(a, b)
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(a)
+#undef libc_hidden_def
+#define libc_hidden_def(a)
+#undef libc_hidden_weak
+#define libc_hidden_weak(a)
+#ifndef WIDE
+# define STRCHRNUL __strchrnul_default
+# include "string/strchrnul.c"
+# ifndef USE_FOR_STRCHRNUL
+#  define STRCHR __strchr_default
+#  include "string/strchr.c"
+#  define STRCHR_DEFAULT STRCHR
+# else
+#  define STRCHR_DEFAULT STRCHRNUL
+# endif
+#else
+# ifndef USE_FOR_STRCHRNUL
+#  define WCSCHR __wcschr_default
+#  include "wcsmbs/wcschr.c"
+#  define STRCHR_DEFAULT WCSCHR
+# else
+#  define WCSCHRNUL __wcschrnul_default
+#  include "wcsmbs/wcschrnul.c"
+#  define STRCHR_DEFAULT WCSCHRNUL
+# endif
+#endif
+IMPL (STRCHR_DEFAULT, 1)
 
 static int
 check_result (impl_t *impl, const CHAR *s, int c, const CHAR *exp_res)
@@ -219,7 +238,11 @@ check1 (void)
 {
   CHAR s[] __attribute__((aligned(16))) = L ("\xff");
   CHAR c = L ('\xfe');
-  CHAR *exp_result = simple_STRCHR (s, c);
+#ifndef USE_FOR_STRCHRNUL
+  CHAR *exp_result = NULL;
+#else
+  CHAR *exp_result = s + STRLEN (s);
+#endif
 
   FOR_EACH_IMPL (impl, 0)
     check_result (impl, s, c, exp_result);
