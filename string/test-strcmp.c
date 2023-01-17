@@ -101,6 +101,28 @@ typedef int (*proto_t) (const CHAR *, const CHAR *);
 
 IMPL (STRCMP, 1)
 
+/* Also check the default implementation.  */
+#undef STRCMP
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(a)
+#undef libc_hidden_def
+#define libc_hidden_def(a)
+#undef weak_alias
+#define weak_alias(a, b)
+#undef attribute_hidden
+#define attribute_hidden
+#ifndef WIDE
+# define STRCMP __strcmp_default
+# include "string/strcmp.c"
+# define STRCMP_DEFAULT STRCMP
+#else
+# define WCSCMP __wcscmp_default
+# include "wcsmbs/wcscmp.c"
+# define STRCMP_DEFAULT WCSCMP
+#endif
+IMPL (STRCMP_DEFAULT, 1)
+
+
 static int
 check_result (impl_t *impl,
 	     const CHAR *s1, const CHAR *s2,
