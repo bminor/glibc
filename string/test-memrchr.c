@@ -24,6 +24,13 @@ typedef char *(*proto_t) (const char *, int, size_t);
 
 IMPL (memrchr, 1)
 
+/* Also check the generic implementation.  */
+#undef weak_alias
+#define weak_alias(a, b)
+#define MEMRCHR __memrchr_default
+#include "string/memrchr.c"
+IMPL (__memrchr_default, 1)
+
 /* Naive implementation to verify results.  */
 char *
 simple_memrchr (const char *s, int c, size_t n)
