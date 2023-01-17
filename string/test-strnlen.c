@@ -43,17 +43,30 @@
 
 typedef size_t (*proto_t) (const CHAR *, size_t);
 
-IMPL (STRNLEN, 1)
-
-/* Naive implementation to verify results.  */
-size_t
-SIMPLE_STRNLEN (const CHAR *s, size_t maxlen)
-{
-  size_t i;
-
-  for (i = 0; i < maxlen && s[i]; ++i);
-  return i;
-}
+/* Also check the default implementation.  */
+#undef STRNLEN
+#ifndef WIDE
+# define MEMCHR __memchr_default
+# define weak_alias(a, b)
+# define libc_hidden_def(a)
+# define libc_hidden_builtin_def(a)
+# include "string/memchr.c"
+# undef STRNLEN
+# define STRNLEN __strnlen_default
+# define memchr __memchr_default
+# include "string/strnlen.c"
+IMPL (__strnlen_default, 1)
+#else
+# define WMEMCHR __wmemchr_default
+# define weak_alias(a, b)
+# define libc_hidden_def(a)
+# define libc_hidden_weak(a)
+# include "wcsmbs/wmemchr.c"
+# define WCSNLEN __wcsnlen_default
+# define wmemchr __wmemchr_default
+# include "wcsmbs/wcsnlen.c"
+IMPL (__wcsnlen_default, 1)
+#endif
 
 static void
 do_one_test (impl_t *impl, const CHAR *s, size_t maxlen, size_t exp_len)
