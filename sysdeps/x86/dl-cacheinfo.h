@@ -311,117 +311,47 @@ handle_intel (int name, const struct cpu_features *cpu_features)
 
 
 static long int __attribute__ ((noinline))
-handle_amd (int name)
+handle_amd (int name, const struct cpu_features *cpu_features)
 {
   unsigned int eax;
   unsigned int ebx;
   unsigned int ecx;
   unsigned int edx;
-  __cpuid (0x80000000, eax, ebx, ecx, edx);
+  unsigned int count = 0x1;
 
   /* No level 4 cache (yet).  */
   if (name > _SC_LEVEL3_CACHE_LINESIZE)
     return 0;
 
-  unsigned int fn = 0x80000005 + (name >= _SC_LEVEL2_CACHE_SIZE);
-  if (eax < fn)
-    return 0;
+  if (name >= _SC_LEVEL3_CACHE_SIZE)
+    count = 0x3;
+  else if (name >= _SC_LEVEL2_CACHE_SIZE)
+    count = 0x2;
+  else if (name >= _SC_LEVEL1_DCACHE_SIZE)
+    count = 0x0;
 
-  __cpuid (fn, eax, ebx, ecx, edx);
-
-  if (name < _SC_LEVEL1_DCACHE_SIZE)
-    {
-      name += _SC_LEVEL1_DCACHE_SIZE - _SC_LEVEL1_ICACHE_SIZE;
-      ecx = edx;
-    }
+  __cpuid_count (0x8000001D, count, eax, ebx, ecx, edx);
 
   switch (name)
     {
-    case _SC_LEVEL1_DCACHE_SIZE:
-      return (ecx >> 14) & 0x3fc00;
-
-    case _SC_LEVEL1_DCACHE_ASSOC:
-      ecx >>= 16;
-      if ((ecx & 0xff) == 0xff)
-	/* Fully associative.  */
-	return (ecx << 2) & 0x3fc00;
-      return ecx & 0xff;
-
-    case _SC_LEVEL1_DCACHE_LINESIZE:
-      return ecx & 0xff;
-
-    case _SC_LEVEL2_CACHE_SIZE:
-      return (ecx & 0xf000) == 0 ? 0 : (ecx >> 6) & 0x3fffc00;
-
-    case _SC_LEVEL2_CACHE_ASSOC:
-      switch ((ecx >> 12) & 0xf)
-	{
-	case 0:
-	case 1:
-	case 2:
-	case 4:
-	  return (ecx >> 12) & 0xf;
-	case 6:
-	  return 8;
-	case 8:
-	  return 16;
-	case 10:
-	  return 32;
-	case 11:
-	  return 48;
-	case 12:
-	  return 64;
-	case 13:
-	  return 96;
-	case 14:
-	  return 128;
-	case 15:
-	  return ((ecx >> 6) & 0x3fffc00) / (ecx & 0xff);
-	default:
-	  return 0;
-	}
-      /* NOTREACHED */
-
-    case _SC_LEVEL2_CACHE_LINESIZE:
-      return (ecx & 0xf000) == 0 ? 0 : ecx & 0xff;
-
-    case _SC_LEVEL3_CACHE_SIZE:
-      return (edx & 0xf000) == 0 ? 0 : (edx & 0x3ffc0000) << 1;
-
-    case _SC_LEVEL3_CACHE_ASSOC:
-      switch ((edx >> 12) & 0xf)
-	{
-	case 0:
-	case 1:
-	case 2:
-	case 4:
-	  return (edx >> 12) & 0xf;
-	case 6:
-	  return 8;
-	case 8:
-	  return 16;
-	case 10:
-	  return 32;
-	case 11:
-	  return 48;
-	case 12:
-	  return 64;
-	case 13:
-	  return 96;
-	case 14:
-	  return 128;
-	case 15:
-	  return ((edx & 0x3ffc0000) << 1) / (edx & 0xff);
-	default:
-	  return 0;
-	}
-      /* NOTREACHED */
-
-    case _SC_LEVEL3_CACHE_LINESIZE:
-      return (edx & 0xf000) == 0 ? 0 : edx & 0xff;
-
-    default:
-      assert (! "cannot happen");
+       case _SC_LEVEL1_ICACHE_ASSOC:
+       case _SC_LEVEL1_DCACHE_ASSOC:
+       case _SC_LEVEL2_CACHE_ASSOC:
+       case _SC_LEVEL3_CACHE_ASSOC:
+         return ecx?((ebx >> 22) & 0x3ff) + 1 : 0;
+       case _SC_LEVEL1_ICACHE_LINESIZE:
+       case _SC_LEVEL1_DCACHE_LINESIZE:
+       case _SC_LEVEL2_CACHE_LINESIZE:
+       case _SC_LEVEL3_CACHE_LINESIZE:
+         return ecx?(ebx & 0xfff) + 1 : 0;
+       case _SC_LEVEL1_ICACHE_SIZE:
+       case _SC_LEVEL1_DCACHE_SIZE:
+       case _SC_LEVEL2_CACHE_SIZE:
+       case _SC_LEVEL3_CACHE_SIZE:
+         return ecx?(((ebx >> 22) & 0x3ff) + 1)*((ebx & 0xfff) + 1)\
+                                                    *(ecx + 1):0;
+       default:
+         assert (! "cannot happen");
     }
   return -1;
 }
@@ -698,10 +628,6 @@ static void
 dl_init_cacheinfo (struct cpu_features *cpu_features)
 {
   /* Find out what brand of processor.  */
-  unsigned int ebx;
-  unsigned int ecx;
-  unsigned int edx;
-  int max_cpuid_ex;
   long int data = -1;
   long int shared = -1;
   long int core = -1;
@@ -771,70 +697,30 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
     }
   else if (cpu_features->basic.kind == arch_kind_amd)
     {
-      data  = handle_amd (_SC_LEVEL1_DCACHE_SIZE);
-      core = handle_amd (_SC_LEVEL2_CACHE_SIZE);
-      shared = handle_amd (_SC_LEVEL3_CACHE_SIZE);
+      data  = handle_amd (_SC_LEVEL1_DCACHE_SIZE, cpu_features);
+      core = handle_amd (_SC_LEVEL2_CACHE_SIZE, cpu_features);
+      shared = handle_amd (_SC_LEVEL3_CACHE_SIZE, cpu_features);
 
-      level1_icache_size = handle_amd (_SC_LEVEL1_ICACHE_SIZE);
-      level1_icache_linesize = handle_amd (_SC_LEVEL1_ICACHE_LINESIZE);
+      level1_icache_size = handle_amd (_SC_LEVEL1_ICACHE_SIZE, cpu_features);
+      level1_icache_linesize
+	= handle_amd (_SC_LEVEL1_ICACHE_LINESIZE, cpu_features);
       level1_dcache_size = data;
-      level1_dcache_assoc = handle_amd (_SC_LEVEL1_DCACHE_ASSOC);
-      level1_dcache_linesize = handle_amd (_SC_LEVEL1_DCACHE_LINESIZE);
+      level1_dcache_assoc
+	= handle_amd (_SC_LEVEL1_DCACHE_ASSOC, cpu_features);
+      level1_dcache_linesize
+	= handle_amd (_SC_LEVEL1_DCACHE_LINESIZE, cpu_features);
       level2_cache_size = core;
-      level2_cache_assoc = handle_amd (_SC_LEVEL2_CACHE_ASSOC);
-      level2_cache_linesize = handle_amd (_SC_LEVEL2_CACHE_LINESIZE);
+      level2_cache_assoc = handle_amd (_SC_LEVEL2_CACHE_ASSOC, cpu_features);
+      level2_cache_linesize
+	= handle_amd (_SC_LEVEL2_CACHE_LINESIZE, cpu_features);
       level3_cache_size = shared;
-      level3_cache_assoc = handle_amd (_SC_LEVEL3_CACHE_ASSOC);
-      level3_cache_linesize = handle_amd (_SC_LEVEL3_CACHE_LINESIZE);
-
-      /* Get maximum extended function. */
-      __cpuid (0x80000000, max_cpuid_ex, ebx, ecx, edx);
+      level3_cache_assoc = handle_amd (_SC_LEVEL3_CACHE_ASSOC, cpu_features);
+      level3_cache_linesize
+	= handle_amd (_SC_LEVEL3_CACHE_LINESIZE, cpu_features);
 
       if (shared <= 0)
-	/* No shared L3 cache.  All we have is the L2 cache.  */
-	shared = core;
-      else
-	{
-	  /* Figure out the number of logical threads that share L3.  */
-	  if (max_cpuid_ex >= 0x80000008)
-	    {
-	      /* Get width of APIC ID.  */
-	      __cpuid (0x80000008, max_cpuid_ex, ebx, ecx, edx);
-	      threads = 1 << ((ecx >> 12) & 0x0f);
-	    }
-
-	  if (threads == 0 || cpu_features->basic.family >= 0x17)
-	    {
-	      /* If APIC ID width is not available, use logical
-		 processor count.  */
-	      __cpuid (0x00000001, max_cpuid_ex, ebx, ecx, edx);
-
-	      if ((edx & (1 << 28)) != 0)
-		threads = (ebx >> 16) & 0xff;
-	    }
-
-	  /* Cap usage of highest cache level to the number of
-	     supported threads.  */
-	  if (threads > 0)
-	    shared /= threads;
-
-	  /* Get shared cache per ccx for Zen architectures.  */
-	  if (cpu_features->basic.family >= 0x17)
-	    {
-	      unsigned int eax;
-
-	      /* Get number of threads share the L3 cache in CCX.  */
-	      __cpuid_count (0x8000001D, 0x3, eax, ebx, ecx, edx);
-
-	      unsigned int threads_per_ccx = ((eax >> 14) & 0xfff) + 1;
-	      shared *= threads_per_ccx;
-	    }
-	  else
-	    {
-	      /* Account for exclusive L2 and L3 caches.  */
-	      shared += core;
-            }
-	}
+        /* No shared L3 cache.  All we have is the L2 cache.  */
+         shared = core;
     }
 
   cpu_features->level1_icache_size = level1_icache_size;
