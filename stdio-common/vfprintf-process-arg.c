@@ -186,11 +186,17 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
   bool octal_marker = (prec <= number_length && number.word != 0
                        && alt && base == 8);
 
-  prec = MAX (0, prec - (workend - string));
+  /* At this point prec_inc is the additional bytes required for the
+     specificed precision.  It is 0 if the precision would not have
+     required additional bytes i.e. the number of input digits is more
+     than the precision.  It is greater than zero if the precision is
+     more than the number of digits without grouping (precision only
+     considers digits).  */
+  unsigned int prec_inc = MAX (0, prec - (workend - string));
 
   if (!left)
     {
-      width -= number_length + prec;
+      width -= number_length + prec_inc;
 
       if (number.word != 0 && alt && (base == 16 || base == 2))
         /* Account for 0X, 0x, 0B or 0b hex or binary marker.  */
@@ -221,7 +227,7 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
           Xprintf_buffer_putc (buf, spec);
         }
 
-      width += prec;
+      width += prec_inc;
       Xprintf_buffer_pad (buf, L_('0'), width);
 
       if (octal_marker)
@@ -237,6 +243,8 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
     }
   else
     {
+      /* Perform left justification adjustments.  */
+
       if (is_negative)
         {
           Xprintf_buffer_putc (buf, L_('-'));
@@ -263,9 +271,13 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
       if (octal_marker)
 	--width;
 
-      width -= workend - string + prec;
+      /* Adjust the width by subtracting the number of bytes
+         required to represent the number with grouping characters
+	 (NUMBER_LENGTH) and any additional bytes required for
+	 precision.  */
+      width -= number_length + prec_inc;
 
-      Xprintf_buffer_pad (buf, L_('0'), prec);
+      Xprintf_buffer_pad (buf, L_('0'), prec_inc);
 
       if (octal_marker)
         Xprintf_buffer_putc (buf, L_('0'));
