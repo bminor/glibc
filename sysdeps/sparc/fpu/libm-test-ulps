@@ -1065,17 +1065,17 @@ double: 1
 ldouble: 1
 
 Function: "j0":
-double: 2
+double: 3
 float: 9
 ldouble: 2
 
 Function: "j0_downward":
-double: 5
+double: 6
 float: 9
 ldouble: 9
 
 Function: "j0_towardzero":
-double: 6
+double: 7
 float: 9
 ldouble: 9
 
@@ -1145,6 +1145,7 @@ float: 6
 ldouble: 8
 
 Function: "log":
+double: 1
 float: 1
 ldouble: 1
 
