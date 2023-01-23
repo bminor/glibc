@@ -37,6 +37,17 @@
 #define __need___va_list
 #include <stdarg.h>
 
+#if defined __USE_XOPEN2K || defined __USE_XOPEN2K8
+# ifdef __GNUC__
+#  ifndef _VA_LIST_DEFINED
+typedef __gnuc_va_list va_list;
+#   define _VA_LIST_DEFINED
+#  endif
+# else
+#  include <stdarg.h>
+# endif
+#endif
+
 #include <bits/wchar.h>
 #include <bits/types/wint_t.h>
 #include <bits/types/mbstate_t.h>
