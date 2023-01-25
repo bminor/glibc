@@ -45,14 +45,19 @@ __vsprintf_internal (char *string, size_t maxlen,
   if ((mode_flags & PRINTF_CHK) != 0)
     {
       string[0] = '\0';
-      __printf_buffer_init (&buf, string, maxlen,
+      /* In some cases, __sprintf_chk is called with an unknown buffer
+	 size (the special value -1).  Prevent pointer wraparound in
+	 this case and saturate to the end of the address space.  */
+      uintptr_t end;
+      if (__builtin_add_overflow ((uintptr_t) string, maxlen, &end))
+	end = -1;
+      __printf_buffer_init_end (&buf, string, (char *) end,
 			    __printf_buffer_mode_sprintf_chk);
     }
   else
-    {
-      __printf_buffer_init (&buf, string, 0, __printf_buffer_mode_sprintf);
-      buf.write_end = (char *) ~(uintptr_t) 0; /* End of address space.  */
-    }
+    /* Use end of address space.  */
+    __printf_buffer_init_end (&buf, string, (char *) ~(uintptr_t) 0,
+			      __printf_buffer_mode_sprintf);
 
   __printf_buffer (&buf, format, args, mode_flags);
 

@@ -115,17 +115,26 @@ __printf_buffer_has_failed (struct __printf_buffer *buf)
   return buf->mode == __printf_buffer_mode_failed;
 }
 
+/* Initialization of a buffer, using the memory region from [BASE,
+   END) as the initial buffer contents.  */
+static inline void
+__printf_buffer_init_end (struct __printf_buffer *buf, char *base, char *end,
+                          enum __printf_buffer_mode mode)
+{
+  buf->write_base = base;
+  buf->write_ptr = base;
+  buf->write_end = end;
+  buf->written = 0;
+  buf->mode = mode;
+}
+
 /* Initialization of a buffer, using the memory region from [BASE, BASE +LEN)
    as the initial buffer contents.  LEN can be zero.  */
 static inline void
 __printf_buffer_init (struct __printf_buffer *buf, char *base, size_t len,
                       enum __printf_buffer_mode mode)
 {
-  buf->write_base = base;
-  buf->write_ptr = base;
-  buf->write_end = base + len;
-  buf->written = 0;
-  buf->mode = mode;
+  __printf_buffer_init_end (buf, base, base + len, mode);
 }
 
 /* Called by printf_buffer_putc for a full buffer.  */
