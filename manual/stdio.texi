@@ -1845,8 +1845,9 @@ Print an integer as an unsigned hexadecimal number.  @samp{%x} uses
 lower-case letters and @samp{%X} uses upper-case.  @xref{Integer
 Conversions}, for details.
 
-@item @samp{%f}
+@item @samp{%f}, @samp{%F}
 Print a floating-point number in normal (fixed-point) notation.
+@samp{%f} uses lower-case letters and @samp{%F} uses upper-case.
 @xref{Floating-Point Conversions}, for details.
 
 @item @samp{%e}, @samp{%E}
@@ -2073,11 +2074,11 @@ various format options, using the template string:
 @subsection Floating-Point Conversions
 
 This section discusses the conversion specifications for floating-point
-numbers: the @samp{%f}, @samp{%e}, @samp{%E}, @samp{%g}, and @samp{%G}
-conversions.
+numbers: the @samp{%f}, @samp{%F}, @samp{%e}, @samp{%E}, @samp{%g}, and
+@samp{%G} conversions.
 
-The @samp{%f} conversion prints its argument in fixed-point notation,
-producing output of the form
+The @samp{%f} and @samp{%F} conversions print their argument in fixed-point
+notation, producing output of the form
 @w{[@code{-}]@var{ddd}@code{.}@var{ddd}},
 where the number of digits following the decimal point is controlled
 by the precision you specify.
@@ -2093,7 +2094,7 @@ the precision.  The exponent always contains at least two digits.  The
 The @samp{%g} and @samp{%G} conversions print the argument in the style
 of @samp{%e} or @samp{%E} (respectively) if the exponent would be less
 than -4 or greater than or equal to the precision; otherwise they use
-the @samp{%f} style.  A precision of @code{0}, is taken as 1.
+the @samp{%f} or @samp{%F} style.  A precision of @code{0}, is taken as 1.
 Trailing zeros are removed from the fractional portion of the result and
 a decimal-point character appears only if it is followed by a digit.
 
@@ -2123,7 +2124,7 @@ If the value to be printed represents infinity or a NaN, the output is
 @w{[@code{-}]@code{inf}} or @code{nan} respectively if the conversion
 specifier is @samp{%a}, @samp{%e}, @samp{%f}, or @samp{%g} and it is
 @w{[@code{-}]@code{INF}} or @code{NAN} respectively if the conversion is
-@samp{%A}, @samp{%E}, or @samp{%G}.  On some implementations, a NaN
+@samp{%A}, @samp{%E}, @samp{%F} or @samp{%G}.  On some implementations, a NaN
 may result in longer output with information about the payload of the
 NaN; ISO C2X defines a macro @code{_PRINTF_NAN_LEN_MAX} giving the
 maximum length of such output.
@@ -2162,8 +2163,8 @@ specified.
 @end table
 
 The precision specifies how many digits follow the decimal-point
-character for the @samp{%f}, @samp{%e}, and @samp{%E} conversions.  For
-these conversions, the default precision is @code{6}.  If the precision
+character for the @samp{%f}, @samp{%F}, @samp{%e}, and @samp{%E} conversions.
+For these conversions, the default precision is @code{6}.  If the precision
 is explicitly @code{0}, this suppresses the decimal point character
 entirely.  For the @samp{%g} and @samp{%G} conversions, the precision
 specifies how many significant digits to print.  Significant digits are
@@ -3535,7 +3536,7 @@ Matches an unsigned integer written in decimal radix.
 Matches an unsigned integer written in hexadecimal radix.
 @xref{Numeric Input Conversions}.
 
-@item @samp{%e}, @samp{%f}, @samp{%g}, @samp{%E}, @samp{%G}
+@item @samp{%e}, @samp{%f}, @samp{%g}, @samp{%E}, @samp{%F}, @samp{%G}
 Matches an optionally signed floating-point number.  @xref{Numeric Input
 Conversions}.
 
@@ -3691,7 +3692,7 @@ Specifies that the argument is a @code{size_t *}.
 This modifier was introduced in @w{ISO C99}.
 @end table
 
-All of the @samp{%e}, @samp{%f}, @samp{%g}, @samp{%E}, and @samp{%G}
+All of the @samp{%e}, @samp{%f}, @samp{%g}, @samp{%E}, @samp{%F} and @samp{%G}
 input conversions are interchangeable.  They all match an optionally
 signed floating point number, in the same syntax as for the
 @code{strtod} function (@pxref{Parsing of Floats}).
