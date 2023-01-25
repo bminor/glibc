@@ -5,10 +5,8 @@ case "$machine" in
 csky*)
     abi=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null |
       sed -n 's/^#define __CSKYABI__ \(.*\)/\1/p'`
-    hard_float=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null |
-      sed -n 's/^#define __CSKY_HARD_FLOAT__ \(.*\)/\1/p'`
-    hard_float_sf=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null |
-      sed -n 's/^#define __CSKY_HARD_FLOAT_FPU_SF__ \(.*\)/\1/p'`
+    soft_float=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null |
+      sed -n 's/^#define __CSKY_SOFT_FLOAT__ \(.*\)/\1/p'`
     hard_float_abi=`$CC $CFLAGS $CPPFLAGS -E -dM -xc /dev/null |
       sed -n 's/^#define __CSKY_HARD_FLOAT_ABI__ \(.*\)/\1/p'`
 
@@ -24,26 +22,39 @@ csky*)
 	;;
     esac
 
-    # __CSKY_HARD_FLOAT_ABI__ was added on gcc 11 to specify whether
-    # -mfloat-abi=hard is set.  On older gcc, the float ABI is defined solely
-    # with __CSKY_HARD_FLOAT__.  If __CSKY_HARD_FLOAT__ is set, it can be
-    # either a hard-float ABI (gcc older than 11, or gcc11 -mfloat-abi=hard
-    # (__CSKY_HARD_FLOAT_ABI__ is set) or -mfloat-abi=softfp
-    # (__CSKY_HARD_FLOAT_ABI__ is not set). To be compatible with older gcc,
-    # use __CSKY_HARD_FLOAT_FPU_SF__ identify if -mfloat-abi is supported,
-    # because it is added to gcc at the same time as -mfloat-abi.
-    if test -n "$hard_float"; then
-	if test -z "$hard_float_sf"; then
-	    with_fp_cond=1
-	else
-	    if test -n "$hard_float_abi"; then
-		with_fp_cond=1
-	    else
-		with_fp_cond=0
-	    fi
-	fi
+    # This check is for compatibility with GCC versions earlier than 11.
+    # The older versions of C-SKY GCC do not support the '-mfloat-abi=softfp' option
+    # and never define the '__CSKY_HARD_FLOAT_ABI__'.
+    # Therefore, if a check for '-mfloat-abi=softfp' is added as the expression
+    #     'defined(__CSKY_HARD_FLOAT__) && !defined(__CSKY_HARD_FLOAT_ABI__)'
+    # which is correct for newer versions of GCC will not work for those older versions.
+    # Since no expression compatible with all versions of GCC exists,
+    # a check for the '-mfloat-abi=softfp' option is added.
+    if { ac_try='${CC-cc} -S -mfloat-abi=softfp /dev/null 1>&5'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+      soft_float_abi_support=1
     else
+      soft_float_abi_support=0
+    fi
+
+    if test -n "$soft_float"; then
 	with_fp_cond=0
+	with_hard_float_abi=0
+    else
+	with_fp_cond=1
+	if test -n "$soft_float_abi_support"; then
+	    if test -n "$hard_float_abi"; then
+		with_hard_float_abi=1
+	    else
+		with_hard_float_abi=0
+	    fi
+	else
+	    with_hard_float_abi=1
+	fi
     fi
 
     base_machine=csky
@@ -55,6 +66,10 @@ _ACEOF
 
     cat >>confdefs.h <<_ACEOF
 #define CSKY_HARD_FLOAT $with_fp_cond
+_ACEOF
+
+    cat >>confdefs.h <<_ACEOF
+#define CSKY_HARD_FLOAT_ABI $with_hard_float_abi
 _ACEOF
 
     ;;

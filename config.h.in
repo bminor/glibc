@@ -123,8 +123,11 @@
 /* C-SKY ABI version.  */
 #undef CSKYABI
 
-/* C-SKY floating-point ABI.  */
+/* C-SKY floating-point instructions.  */
 #undef CSKY_HARD_FLOAT
+
+/* C-SKY floating-point ABI.  */
+#undef CSKY_HARD_FLOAT_ABI
 
 /* RISC-V integer ABI for ld.so.  */
 #undef RISCV_ABI_XLEN
