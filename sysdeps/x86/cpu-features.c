@@ -27,6 +27,16 @@
 extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
   attribute_hidden;
 
+# ifdef __LP64__
+static void
+TUNABLE_CALLBACK (set_prefer_map_32bit_exec) (tunable_val_t *valp)
+{
+  if (valp->numval)
+    GLRO(dl_x86_cpu_features).preferred[index_arch_Prefer_MAP_32BIT_EXEC]
+      |= bit_arch_Prefer_MAP_32BIT_EXEC;
+}
+# endif
+
 # if CET_ENABLED
 extern void TUNABLE_CALLBACK (set_x86_ibt) (tunable_val_t *)
   attribute_hidden;
@@ -704,6 +714,11 @@ no_cpuid:
 
 #if HAVE_TUNABLES
   TUNABLE_GET (hwcaps, tunable_val_t *, TUNABLE_CALLBACK (set_hwcaps));
+
+# ifdef __LP64__
+  TUNABLE_GET (prefer_map_32bit_exec, tunable_val_t *,
+	       TUNABLE_CALLBACK (set_prefer_map_32bit_exec));
+# endif
 
   bool disable_xsave_features = false;
 

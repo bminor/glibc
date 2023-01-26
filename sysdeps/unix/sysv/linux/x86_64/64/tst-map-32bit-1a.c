@@ -1,5 +1,5 @@
-/* Bits in the PREFERRED_FEATURE_INDEX_1 bitfield of <cpu-features.h>.
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+/* Check that LD_PREFER_MAP_32BIT_EXEC works in PDE and shared library.
+   Copyright (C) 2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,20 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-BIT (Fast_Rep_String)
-BIT (Fast_Copy_Backward)
-BIT (Slow_BSF)
-BIT (Fast_Unaligned_Load)
-BIT (Prefer_PMINUB_for_stringop)
-BIT (Fast_Unaligned_Copy)
-BIT (I586)
-BIT (I686)
-BIT (Slow_SSE4_2)
-BIT (AVX_Fast_Unaligned_Load)
-BIT (Prefer_MAP_32BIT_EXEC)
-BIT (Prefer_No_VZEROUPPER)
-BIT (Prefer_ERMS)
-BIT (Prefer_No_AVX512)
-BIT (MathVec_Prefer_No_AVX512)
-BIT (Prefer_FSRM)
-BIT (Avoid_Short_Distance_REP_MOVSB)
+#include <stdio.h>
+#include <stdint.h>
+#include <support/check.h>
+
+extern void dso_check_map_32bit (void);
+
+static int
+do_test (void)
+{
+  printf ("do_test: %p\n", do_test);
+  TEST_VERIFY ((uintptr_t) do_test < 0xffffffffUL);
+  dso_check_map_32bit ();
+  return 0;
+}
+
+#include <support/test-driver.c>

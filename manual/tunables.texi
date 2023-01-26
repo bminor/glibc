@@ -35,27 +35,32 @@ tunables with minimum and maximum values:
 @example
 $ /lib64/ld-linux-x86-64.so.2 --list-tunables
 glibc.rtld.nns: 0x4 (min: 0x1, max: 0x10)
-glibc.elision.skip_lock_after_retries: 3 (min: -2147483648, max: 2147483647)
+glibc.elision.skip_lock_after_retries: 3 (min: 0, max: 2147483647)
 glibc.malloc.trim_threshold: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.malloc.perturb: 0 (min: 0, max: 255)
 glibc.cpu.x86_shared_cache_size: 0x100000 (min: 0x0, max: 0xffffffffffffffff)
+glibc.pthread.rseq: 1 (min: 0, max: 1)
+glibc.cpu.prefer_map_32bit_exec: 0 (min: 0, max: 1)
 glibc.mem.tagging: 0 (min: 0, max: 255)
-glibc.elision.tries: 3 (min: -2147483648, max: 2147483647)
+glibc.elision.tries: 3 (min: 0, max: 2147483647)
 glibc.elision.enable: 0 (min: 0, max: 1)
-glibc.cpu.x86_rep_movsb_threshold: 0x1000 (min: 0x100, max: 0xffffffffffffffff)
+glibc.malloc.hugetlb: 0x0 (min: 0x0, max: 0xffffffffffffffff)
+glibc.cpu.x86_rep_movsb_threshold: 0x2000 (min: 0x100, max: 0xffffffffffffffff)
 glibc.malloc.mxfast: 0x0 (min: 0x0, max: 0xffffffffffffffff)
-glibc.elision.skip_lock_busy: 3 (min: -2147483648, max: 2147483647)
-glibc.malloc.top_pad: 0x0 (min: 0x0, max: 0xffffffffffffffff)
+glibc.rtld.dynamic_sort: 2 (min: 1, max: 2)
+glibc.elision.skip_lock_busy: 3 (min: 0, max: 2147483647)
+glibc.malloc.top_pad: 0x20000 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.x86_rep_stosb_threshold: 0x800 (min: 0x1, max: 0xffffffffffffffff)
-glibc.cpu.x86_non_temporal_threshold: 0xc0000 (min: 0x4040, max: 0x0fffffffffffffff)
+glibc.cpu.x86_non_temporal_threshold: 0xc0000 (min: 0x4040, max: 0xfffffffffffffff)
 glibc.cpu.x86_shstk:
+glibc.pthread.stack_cache_size: 0x2800000 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.hwcap_mask: 0x6 (min: 0x0, max: 0xffffffffffffffff)
-glibc.malloc.mmap_max: 0 (min: -2147483648, max: 2147483647)
-glibc.elision.skip_trylock_internal_abort: 3 (min: -2147483648, max: 2147483647)
+glibc.malloc.mmap_max: 0 (min: 0, max: 2147483647)
+glibc.elision.skip_trylock_internal_abort: 3 (min: 0, max: 2147483647)
 glibc.malloc.tcache_unsorted_limit: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.x86_ibt:
 glibc.cpu.hwcaps:
-glibc.elision.skip_lock_internal_abort: 3 (min: -2147483648, max: 2147483647)
+glibc.elision.skip_lock_internal_abort: 3 (min: 0, max: 2147483647)
 glibc.malloc.arena_max: 0x0 (min: 0x1, max: 0xffffffffffffffff)
 glibc.malloc.mmap_threshold: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.cpu.x86_data_cache_size: 0x8000 (min: 0x0, max: 0xffffffffffffffff)
@@ -581,6 +586,16 @@ library returns an error.  With @code{permissive}, it turns off SHSTK
 instead.
 
 This tunable is specific to i386 and x86-64.
+@end deftp
+
+@deftp Tunable glibc.cpu.prefer_map_32bit_exec
+When this tunable is set to \code{1}, shared libraries of non-setuid
+programs will be loaded below 2GB with MAP_32BIT.
+
+Note that the @env{LD_PREFER_MAP_32BIT_EXEC} environment is an alias of
+this tunable.
+
+This tunable is specific to 64-bit x86-64.
 @end deftp
 
 @node Memory Related Tunables
