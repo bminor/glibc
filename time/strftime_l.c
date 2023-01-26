@@ -159,6 +159,10 @@ extern char *tzname[];
 #ifdef _LIBC
 # define tzname __tzname
 # define tzset __tzset
+
+# define time_t __time64_t
+# define __gmtime_r(t, tp) __gmtime64_r (t, tp)
+# define mktime(tp) __mktime64 (tp)
 #endif
 
 #if !HAVE_TM_GMTOFF

@@ -54,6 +54,7 @@ The following bugs are resolved with this release:
   [29771] Restore IPC_64 support in sysvipc *ctl functions
   [29776] elf/tst-tlsopt-powerpc fails when compiled with -mcpu=power10
   [29951] time: Set daylight to 1 for matching DST/offset change
+  [30053] time: strftime %s returns -1 after 2038 on 32 bits systems
 
 Version 2.36
 
