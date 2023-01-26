@@ -50,7 +50,7 @@ tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
 	   tst-clock tst-clock2 tst-clock_nanosleep tst-cpuclock1 \
 	   tst-adjtime tst-ctime tst-difftime tst-mktime4 tst-clock_settime \
 	   tst-settimeofday tst-itimer tst-gmtime tst-timegm \
-	   tst-timespec_get tst-timespec_getres
+	   tst-timespec_get tst-timespec_getres tst-strftime4
 
 tests-time64 := \
   tst-adjtime-time64 \
@@ -65,6 +65,7 @@ tests-time64 := \
   tst-itimer-time64 \
   tst-mktime4-time64 \
   tst-settimeofday-time64 \
+  tst-strftime4-time64 \
   tst-timegm-time64 \
   tst-timespec_get-time64 \
   tst-timespec_getres-time64 \
