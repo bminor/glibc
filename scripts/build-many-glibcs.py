@@ -798,8 +798,8 @@ class Context(object):
                             'glibc': 'vcs-mainline',
                             'gmp': '6.2.1',
                             'linux': '6.1',
-                            'mpc': '1.2.1',
-                            'mpfr': '4.1.0',
+                            'mpc': '1.3.1',
+                            'mpfr': '4.2.0',
                             'mig': 'vcs-mainline',
                             'gnumach': 'vcs-mainline',
                             'hurd': 'vcs-mainline'}
