@@ -196,6 +196,9 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
         /* Account for 0X, 0x, 0B or 0b hex or binary marker.  */
         width -= 2;
 
+      if (octal_marker)
+        --width;
+
       if (is_negative || showsign || space)
         --width;
 
@@ -256,6 +259,9 @@ LABEL (unsigned_number):      /* Unsigned number of base BASE.  */
           Xprintf_buffer_putc (buf, spec);
           width -= 2;
         }
+
+      if (octal_marker)
+	--width;
 
       width -= workend - string + prec;
 

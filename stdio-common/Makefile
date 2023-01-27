@@ -206,6 +206,7 @@ tests := \
   tst-printf-bz25691 \
   tst-printf-fp-free \
   tst-printf-fp-leak \
+  tst-printf-oct \
   tst-printf-round \
   tst-printfsz \
   tst-put-error \
