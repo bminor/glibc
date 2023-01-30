@@ -23,6 +23,7 @@
 #include <shlib-compat.h>
 #include <shm-directory.h>
 #include <unistd.h>
+#include <sys/mman.h>
 
 /* Open shared memory object.  */
 int
@@ -36,6 +37,10 @@ __shm_open (const char *name, int oflag, mode_t mode)
     }
 
   oflag |= O_NOFOLLOW | O_CLOEXEC;
+#if defined (SHM_ANON) && defined (O_TMPFILE)
+  if (name == SHM_ANON)
+    oflag |= O_TMPFILE;
+#endif
 
   int fd = __open64_nocancel (dirname.name, oflag, mode);
   if (fd == -1 && __glibc_unlikely (errno == EISDIR))

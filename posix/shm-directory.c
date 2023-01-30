@@ -23,17 +23,34 @@
 #include <alloc_buffer.h>
 #include <shm-directory.h>
 #include <string.h>
+#include <sys/mman.h>
+#include <fcntl.h>
 
 int
 __shm_get_name (struct shmdir_name *result, const char *name, bool sem_prefix)
 {
+  struct alloc_buffer buffer;
+  size_t namelen;
+
+  buffer = alloc_buffer_create (result->name, sizeof (result->name));
+  alloc_buffer_copy_bytes (&buffer, SHMDIR, strlen (SHMDIR));
+
+#if defined (SHM_ANON) && defined (O_TMPFILE)
+  if (name == SHM_ANON)
+    {
+      /* For SHM_ANON, we want shm_open () to pass O_TMPFILE to open (),
+         with SHMDIR itself as the path.  So, leave it at that.  */
+      alloc_buffer_add_byte (&buffer, 0);
+      if (alloc_buffer_has_failed (&buffer))
+        return -1;
+      return 0;
+    }
+#endif
+
   while (name[0] == '/')
     ++name;
-  size_t namelen = strlen (name);
+  namelen = strlen (name);
 
-  struct alloc_buffer buffer
-    = alloc_buffer_create (result->name, sizeof (result->name));
-  alloc_buffer_copy_bytes (&buffer, SHMDIR, strlen (SHMDIR));
   if (sem_prefix)
     alloc_buffer_copy_bytes (&buffer, "sem.", strlen ("sem."));
   alloc_buffer_copy_bytes (&buffer, name, namelen + 1);
