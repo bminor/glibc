@@ -123,6 +123,10 @@
 # define O_CLOEXEC	0x00400000 /* Set FD_CLOEXEC.  */
 #endif
 
+#ifdef __USE_GNU
+# define O_TMPFILE	0x00800000 /* Make a new unnamed file.  */
+#endif
+
 
 /* Controlling terminal flags.  These are understood only by `open',
    and are not preserved once the file has been opened.  */

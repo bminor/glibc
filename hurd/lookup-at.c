@@ -29,6 +29,7 @@ __file_name_lookup_at (int fd, int at_flags,
   error_t err;
   file_t result;
   int empty = at_flags & AT_EMPTY_PATH;
+  int orig_flags;
 
   at_flags &= ~AT_EMPTY_PATH;
 
@@ -52,6 +53,10 @@ __file_name_lookup_at (int fd, int at_flags,
 
       return err ? (__hurd_dfail (fd, err), MACH_PORT_NULL) : result;
     }
+
+  orig_flags = flags;
+  if (flags & O_TMPFILE)
+    flags = O_DIRECTORY;
 
   if (fd == AT_FDCWD || file_name[0] == '/')
     {
@@ -86,6 +91,22 @@ __file_name_lookup_at (int fd, int at_flags,
       if (err)
         {
           __hurd_dfail (fd, err);
+          return MACH_PORT_NULL;
+        }
+    }
+
+  if (orig_flags & O_TMPFILE)
+    {
+      /* What we have looked up is not the file itself, but actually
+         the directory to create the file in.  Do that now.  */
+      file_t dir = result;
+
+      err = __dir_mkfile (dir, orig_flags & ~(O_TMPFILE | O_DIRECTORY),
+                          mode, &result);
+      __mach_port_deallocate (__mach_task_self (), dir);
+      if (err)
+        {
+          __hurd_fail (err);
           return MACH_PORT_NULL;
         }
     }
