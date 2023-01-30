@@ -16,6 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <hurd.h>
+#include <hurd/fd.h>
 #include <hurd/lookup.h>
 #include <string.h>
 #include <fcntl.h>
@@ -220,14 +221,7 @@ weak_alias (__hurd_directory_name_split, hurd_directory_name_split)
 file_t
 __file_name_lookup (const char *file_name, int flags, mode_t mode)
 {
-  error_t err;
-  file_t result;
-
-  err = __hurd_file_name_lookup (&_hurd_ports_use, &__getdport, 0,
-				 file_name, flags, mode & ~_hurd_umask,
-				 &result);
-
-  return err ? (__hurd_fail (err), MACH_PORT_NULL) : result;
+  return __file_name_lookup_at (AT_FDCWD, 0, file_name, flags, mode);
 }
 weak_alias (__file_name_lookup, file_name_lookup)
 
