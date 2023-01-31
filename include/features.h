@@ -57,7 +57,8 @@
 			__STRICT_ANSI__).
 
    _FORTIFY_SOURCE	Add security hardening to many library functions.
-			Set to 1 or 2; 2 performs stricter checks than 1.
+			Set to 1, 2 or 3; 3 performs stricter checks than 2, which
+			performs stricter checks than 1.
 
    _REENTRANT, _THREAD_SAFE
 			Obsolete; equivalent to _POSIX_C_SOURCE=199506L.
