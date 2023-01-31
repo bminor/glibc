@@ -73,6 +73,9 @@ committee.
 Thomas Bushnell for his contributions to Hurd.
 
 @item
+Yinyu Cai for their maintainership of the LoongArch port.
+
+@item
 Rogerio Alves Cardoso for various fixes to PowerPC.
 
 @item
@@ -136,8 +139,9 @@ locale updates and fixes.
 
 @item
 Tulio Magno Quites Machado Filho for adding a new class of installed
-headers for low-level platform-specific functionality and one such for
-PowerPC and various fixes.
+headers for low-level platform-specific functionality, including the
+low-level platform-specific headers for PowerPC, for their maintainership
+of the PowerPC port and various fixes.
 
 @item
 Olaf Flebbe and Ralf B@"achle for contributing
@@ -170,6 +174,9 @@ implementing the IEEE 128-bit floating point type for PowerPC.
 @item
 Torbj@"orn Granlund for fast implementations of many of the string
 functions (@code{memcpy}, @code{strlen}, etc.).
+
+@item
+Vineet Gupta for their maintainership of the ARC port.
 
 @item
 Michael J. Haertel for writing the merge sort function @code{qsort}
@@ -450,8 +457,9 @@ Franz Sirl for various fixes.
 Jes Sorensen for porting to Linux on IA64 (@code{ia64-@var{anything}-linux}).
 
 @item
-Rajalakshmi Srinivasaraghavan for various fixes and optimizations on PowerPC
-and for implementing the IEEE 128-bit floating point type for PowerPC.
+Rajalakshmi Srinivasaraghavan for various fixes and optimizations on PowerPC,
+for implementing the IEEE 128-bit floating point type for PowerPC., and for
+their maintainership of the PowerPC port.
 
 @item
 Richard Stallman for his contribution to the @code{getopt} function.
