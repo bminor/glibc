@@ -47,23 +47,37 @@
 # endif
 # include "test-string.h"
 # ifndef WIDE
-#  define SIMPLE_STRCPY simple_strcpy
 #  define STRCPY strcpy
 # else
-#  define SIMPLE_STRCPY simple_wcscpy
 #  define STRCPY wcscpy
 # endif
 
 IMPL (STRCPY, 1)
 
-/* Naive implementation to verify results.  */
-CHAR *
-SIMPLE_STRCPY (CHAR *dst, const CHAR *src)
-{
-  CHAR *ret = dst;
-  while ((*dst++ = *src++) != '\0');
-  return ret;
-}
+/* Also check the generic implementation.  */
+#undef STRCPY
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(a)
+#undef libc_hidden_def
+#define libc_hidden_def(a)
+#undef weak_alias
+#define weak_alias(a,b)
+#undef attribute_hidden
+#define attribute_hidden
+# ifndef WIDE
+#  define STPCPY __stpcpy_default
+#  include "string/stpcpy.c"
+#  define STRCPY __strcpy_default
+#  define __stpcpy __stpcpy_default
+#  include "string/strcpy.c"
+IMPL (__strcpy_default, 1)
+# else
+#  define __wcslen wcslen
+#  define __wmemcpy wmemcpy
+#  define WCSCPY __wcscpy_default
+#  include "wcsmbs/wcscpy.c"
+IMPL (__wcscpy_default, 1)
+# endif
 #endif
 
 typedef CHAR *(*proto_t) (CHAR *, const CHAR *);
