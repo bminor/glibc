@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.14\n"
-"POT-Creation-Date: 2022-07-29 13:00-0400\n"
+"POT-Creation-Date: 2023-01-23 08:47-0500\n"
 "PO-Revision-Date: 2011-10-08 23:43+0900\n"
 "Last-Translator: Yasuaki Taniguchi <yasuakit@gmail.com>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -70,7 +70,7 @@ msgstr "短い使用方法を表示する"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:108 catgets/gencat.c:112
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "NAME"
 msgstr "NAME"
 
@@ -120,7 +120,7 @@ msgstr "シンボル定義を含んだ C ヘッダーファイル NAME を作成
 msgid "Do not use existing catalog, force new output file"
 msgstr "既存のカタログを使用せず、強制的に新しい出力ファイルにする"
 
-#: catgets/gencat.c:112 nss/makedb.c:120
+#: catgets/gencat.c:112 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "出力をファイル NAME に書き込む"
 
@@ -141,12 +141,11 @@ msgstr ""
 "[OUTPUT-FILE [INPUT-FILE]...]"
 
 #: catgets/gencat.c:244 debug/pcprofiledump.c:224 debug/xtrace.sh:63
-#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:580
-#: nscd/nscd.c:521 nss/getent.c:87 nss/makedb.c:385 posix/getconf.c:485
-#: sysdeps/unix/sysv/linux/lddlibc4.c:67
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:386 posix/getconf.c:485
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -158,10 +157,10 @@ msgstr ""
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 
 #: catgets/gencat.c:249 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:332 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
-#: malloc/memusagestat.c:585 nscd/nscd.c:526 nss/getent.c:92 nss/makedb.c:390
+#: malloc/memusagestat.c:585 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -172,7 +171,7 @@ msgid "*standard input*"
 msgstr "*標準入力*"
 
 #: catgets/gencat.c:286 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:246
+#: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "入力ファイル`%s'を開けません"
@@ -350,56 +349,60 @@ msgstr "無効なモードです"
 msgid "invalid mode parameter"
 msgstr "無効なモードパラメータです"
 
-#: elf/cache.c:178
-msgid "unknown"
-msgstr "不明です"
-
-#: elf/cache.c:297 elf/ldconfig.c:1429
+#: elf/cache.c:293 elf/ldconfig.c:1238
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "キャッシュファイル %s を開けません\n"
 
-#: elf/cache.c:311
+#: elf/cache.c:307
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "キャッシュファイルの mmap に失敗しました。\n"
 
-#: elf/cache.c:315 elf/cache.c:329 elf/cache.c:340
+#: elf/cache.c:311 elf/cache.c:325 elf/cache.c:336
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "ファイルはキャッシュファイルではありません.\n"
 
-#: elf/cache.c:369 elf/cache.c:384
+#: elf/cache.c:365 elf/cache.c:380
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "%d 個のライブラリがキャッシュ `%s' 内で見つかりました\n"
 
-#: elf/cache.c:698
+#: elf/cache.c:682
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "一時キャッシュファイル %s を作成できません"
 
-#: elf/cache.c:706 elf/cache.c:716 elf/cache.c:720 elf/cache.c:725
-#: elf/cache.c:744
+#: elf/cache.c:690 elf/cache.c:700 elf/cache.c:704 elf/cache.c:709
+#: elf/cache.c:728
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "キャッシュデータの書込みに失敗しました"
 
-#: elf/cache.c:739
+#: elf/cache.c:723
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "%s のアクセス権限を %#o へ変更するのに失敗しました"
 
-#: elf/cache.c:748
+#: elf/cache.c:732
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "%s から %s への名前変更に失敗しました"
 
-#: elf/dl-close.c:386 elf/dl-open.c:298
+#: elf/dl-catch.c:85
+msgid "error while loading shared libraries"
+msgstr "共有ライブラリのロード中にエラーが発生しました"
+
+#: elf/dl-catch.c:118
+msgid "DYNAMIC LINKER BUG!!!"
+msgstr "ダイナミックリンカのバグです!!!"
+
+#: elf/dl-close.c:346 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "スコープリストを作成できません"
 
-#: elf/dl-close.c:815
+#: elf/dl-close.c:775
 msgid "shared object not open"
 msgstr "共有オブジェクトが開けません"
 
@@ -424,14 +427,6 @@ msgstr "依存リストを配置出来ません"
 msgid "cannot allocate symbol search list"
 msgstr "シンボル探索リストを配置出来ません"
 
-#: elf/dl-error-skeleton.c:80
-msgid "error while loading shared libraries"
-msgstr "共有ライブラリのロード中にエラーが発生しました"
-
-#: elf/dl-error-skeleton.c:113
-msgid "DYNAMIC LINKER BUG!!!"
-msgstr "ダイナミックリンカのバグです!!!"
-
 #: elf/dl-fptr.c:88 sysdeps/hppa/dl-fptr.c:96
 msgid "cannot map pages for fdesc table"
 msgstr "ファイル記述子 (fdesc) 表用のページをマップできません"
@@ -444,7 +439,7 @@ msgstr "ファイルポインタ (fptr) 表用のページをマップできま�
 msgid "internal error: symidx out of range of fptr table"
 msgstr "内部エラー: ファイルポインタ (fptr) 表のシンボル索引が範囲外です"
 
-#: elf/dl-hwcaps.c:247 elf/dl-hwcaps.c:262
+#: elf/dl-hwcaps.c:196
 msgid "cannot create capability list"
 msgstr "権限リストを作成できません"
 
@@ -596,7 +591,7 @@ msgstr "dlopen() 用の無効なモードです"
 msgid "no more namespaces available for dlmopen()"
 msgstr "dlmopen() 用にこれ以上名前空間を使用出来ません"
 
-#: elf/dl-open.c:868
+#: elf/dl-open.c:869
 msgid "invalid target namespace in dlmopen()"
 msgstr "dlmopen() 内で無効なターゲット名前空間です"
 
@@ -637,188 +632,173 @@ msgstr "バージョン検索エラーです"
 msgid "cannot allocate version reference table"
 msgstr "バージョン参照表を配置出来ません"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:124
 msgid "Print cache"
 msgstr "キャッシュを表示します"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:125
 msgid "Generate verbose messages"
 msgstr "冗長なメッセージを生成します"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:126
 msgid "Don't build cache"
 msgstr "キャッシュの構築を行いません"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:128
 msgid "Change to and use ROOT as root directory"
 msgstr "ルートディレクトリを ROOT に変更し、使用します"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:128
 msgid "ROOT"
 msgstr "ROOT"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:129
 msgid "CACHE"
 msgstr "CACHE"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:129
 msgid "Use CACHE as cache file"
 msgstr "キャッシュファイルとして CACHE を使用します"
 
-#: elf/ldconfig.c:156
+#: elf/ldconfig.c:130
 msgid "CONF"
 msgstr "CONF"
 
-#: elf/ldconfig.c:156
+#: elf/ldconfig.c:130
 msgid "Use CONF as configuration file"
 msgstr "設定ファイルとして CONF を使用します"
 
-#: elf/ldconfig.c:157
+#: elf/ldconfig.c:131
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "コマンドラインで指定されたディレクトリのみ処理します。キャッシュは作成しません。"
 
-#: elf/ldconfig.c:158
+#: elf/ldconfig.c:132
 msgid "Manually link individual libraries."
 msgstr "個々のライブラリを手動でリンクしてください。"
 
-#: elf/ldconfig.c:159
+#: elf/ldconfig.c:133
 msgid "FORMAT"
 msgstr "FORMAT"
 
-#: elf/ldconfig.c:160
+#: elf/ldconfig.c:134
 msgid "Ignore auxiliary cache file"
 msgstr "補助キャッシュファイルを無視しています"
 
-#: elf/ldconfig.c:168
+#: elf/ldconfig.c:142
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "動的リンカランタイムのバインディングを設定します。"
 
-#: elf/ldconfig.c:371
+#: elf/ldconfig.c:276
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "パス `%s' が二回以上与えられました"
 
-#: elf/ldconfig.c:487
-#, c-format
-msgid "%s is not a known library type"
-msgstr "%s は既知のライブラリ型ではありません"
-
-#: elf/ldconfig.c:519
+#: elf/ldconfig.c:405
 #, c-format
 msgid "Can't stat %s"
 msgstr "%s の情報取得 (stat) ができません"
 
-#: elf/ldconfig.c:600
+#: elf/ldconfig.c:486
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "%s の情報取得 (stat) が出来ません\n"
 
-#: elf/ldconfig.c:610
+#: elf/ldconfig.c:496
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s はシンボリックリンクではありません\n"
 
-#: elf/ldconfig.c:629
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't unlink %s"
 msgstr "%s をリンク解除できません"
 
-#: elf/ldconfig.c:635
+#: elf/ldconfig.c:521
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "%s から %s へリンクできません"
 
-#: elf/ldconfig.c:641
+#: elf/ldconfig.c:527
 msgid " (changed)\n"
 msgstr " (変更されました)\n"
 
-#: elf/ldconfig.c:643
+#: elf/ldconfig.c:529
 msgid " (SKIPPED)\n"
 msgstr " (スキップされました)\n"
 
-#: elf/ldconfig.c:698
+#: elf/ldconfig.c:584
 #, c-format
 msgid "Can't find %s"
 msgstr "%s を見つけられません"
 
-#: elf/ldconfig.c:714 elf/ldconfig.c:893 elf/ldconfig.c:953 elf/ldconfig.c:985
+#: elf/ldconfig.c:600 elf/ldconfig.c:763 elf/ldconfig.c:830
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "%s の状態取得 (lstat) が出来ません"
 
-#: elf/ldconfig.c:720
+#: elf/ldconfig.c:606
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "通常ファイルでないためファイル %s を無視しています。"
 
-#: elf/ldconfig.c:728
+#: elf/ldconfig.c:614
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "%s 用の動的ライブラリ名 (soname) が見つからないためリンクが作成されませんでした"
 
-#: elf/ldconfig.c:826
+#: elf/ldconfig.c:700
 #, c-format
 msgid "Can't open directory %s"
 msgstr "ディレクトリ %s を開けません"
 
-#: elf/ldconfig.c:911 elf/ldconfig.c:973 elf/readlib.c:95
+#: elf/ldconfig.c:780 elf/ldconfig.c:818 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "入力ファイル %s が見つかりません。\n"
 
-#: elf/ldconfig.c:918
+#: elf/ldconfig.c:787
 #, c-format
 msgid "Cannot stat %s"
 msgstr "%s の状態取得 (stat) が出来ません"
 
-#: elf/ldconfig.c:1067
-#, c-format
-msgid "libc5 library %s in wrong directory"
-msgstr "libc5 ライブラリ %s が誤ったディレクトリ内にあります"
-
-#: elf/ldconfig.c:1070
+#: elf/ldconfig.c:906
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6 ライブラリ %s が誤ったディレクトリ内にあります"
 
-#: elf/ldconfig.c:1073
-#, c-format
-msgid "libc4 library %s in wrong directory"
-msgstr "libc4 ライブラリ %s が誤ったディレクトリ内にあります"
-
-#: elf/ldconfig.c:1101
+#: elf/ldconfig.c:925
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "ディレクトリ %3$s 内にあるライブラリ %1$s と %2$s は同一の動的ライブラリ名 (soname) ですが異なった型です。"
 
-#: elf/ldconfig.c:1296
+#: elf/ldconfig.c:1117
 #, c-format
 msgid "need absolute file name for configuration file when using -r"
 msgstr "-r を使用しているときは設定ファイル名として絶対パスのファイル名が必要です"
 
-#: elf/ldconfig.c:1303 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1124 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "メモリを使い果たしました"
 
-#: elf/ldconfig.c:1336
+#: elf/ldconfig.c:1157
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: ディレクトリ %s を読み込めません"
 
-#: elf/ldconfig.c:1384
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "キャッシュ生成時に相対パス `%s' が使用されました"
 
-#: elf/ldconfig.c:1408
+#: elf/ldconfig.c:1217
 #, c-format
 msgid "Can't chdir to /"
 msgstr "/ へディレクトリ移動 (chdir) 出来ません"
 
-#: elf/ldconfig.c:1449
+#: elf/ldconfig.c:1258
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "キャッシュファイルディレクトリ %s を開けません\n"
@@ -868,7 +848,7 @@ msgstr "ファイル引数がありません"
 msgid "No such file or directory"
 msgstr "そのようなファイルやディレクトリはありません"
 
-#: elf/ldd.bash.in:150 inet/rcmd.c:481
+#: elf/ldd.bash.in:150 inet/rcmd.c:482
 msgid "not regular file"
 msgstr "通常ファイルではありません"
 
@@ -893,52 +873,52 @@ msgstr "エラー: 読み込みパーミッションがありません:"
 msgid "file %s is truncated\n"
 msgstr "ファイル %s は切り詰められました\n"
 
-#: elf/readelflib.c:64
+#: elf/readelflib.c:63
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s は 32 ビット ELF ファイルです。\n"
 
-#: elf/readelflib.c:66
+#: elf/readelflib.c:65
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s は 64 ビット ELF ファイルです。\n"
 
-#: elf/readelflib.c:68
+#: elf/readelflib.c:67
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "ファイル %s 内に不明な ELFCLASS があります。\n"
 
-#: elf/readelflib.c:75
+#: elf/readelflib.c:74
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s は共有オブジェクトファイルではありません (型: %d)。\n"
 
-#: elf/readelflib.c:103
+#: elf/readelflib.c:101
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "二つ以上の動的セグメントがあります\n"
 
-#: elf/readlib.c:101
+#: elf/readlib.c:84
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "ファイル %s の状態取得 (fstat) ができません。\n"
 
-#: elf/readlib.c:112
+#: elf/readlib.c:95
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "ファイル %s は空です。検査されません。"
 
-#: elf/readlib.c:118
+#: elf/readlib.c:101
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "ファイル %s は小さすぎます。検査されません。"
 
-#: elf/readlib.c:128
+#: elf/readlib.c:111
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "ファイル %s を mmap できません。\n"
 
-#: elf/readlib.c:167
+#: elf/readlib.c:149
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s は ELF ファイルではありません - 先頭に誤ったマジックバイトを持っています。\n"
@@ -1121,11 +1101,6 @@ msgstr "出力ファイルを開けません"
 msgid "error while closing input `%s'"
 msgstr "入力 `%s' を閉じている間にエラーが発生しました"
 
-#: iconv/iconv_charmap.c:443
-#, c-format
-msgid "illegal input sequence at position %Zd"
-msgstr "位置 %Zd に不正な入力シーケンスがあります"
-
 #: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
@@ -1280,68 +1255,68 @@ msgstr "検索木へ挿入中です"
 msgid "cannot generate output file"
 msgstr "出力ファイルを生成できません"
 
-#: inet/rcmd.c:158
+#: inet/rcmd.c:159
 msgid "rcmd: Cannot allocate memory\n"
 msgstr "rcmd: メモリを確保できません\n"
 
-#: inet/rcmd.c:175
+#: inet/rcmd.c:176
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: 全ポートが使用中です\n"
 
-#: inet/rcmd.c:203
+#: inet/rcmd.c:204
 #, c-format
 msgid "connect to address %s: "
 msgstr "アドレス %s へ接続: "
 
-#: inet/rcmd.c:216
+#: inet/rcmd.c:217
 #, c-format
 msgid "Trying %s...\n"
 msgstr "%s へ接続中...\n"
 
-#: inet/rcmd.c:252
+#: inet/rcmd.c:253
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write (標準エラー出力を設定中): %m\n"
 
-#: inet/rcmd.c:268
+#: inet/rcmd.c:269
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (標準エラー出力を設定中): %m\n"
 
-#: inet/rcmd.c:271
+#: inet/rcmd.c:272
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: 回線のセットアップ中でプロトコルが失敗しました\n"
 
-#: inet/rcmd.c:303
+#: inet/rcmd.c:304
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: 回線のセットアップ中でプロトコルが失敗しました\n"
 
-#: inet/rcmd.c:327
+#: inet/rcmd.c:328
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: 短い読込み"
 
-#: inet/rcmd.c:479
+#: inet/rcmd.c:480
 msgid "lstat failed"
 msgstr "lstat に失敗しました"
 
-#: inet/rcmd.c:486
+#: inet/rcmd.c:487
 msgid "cannot open"
 msgstr "開けません"
 
-#: inet/rcmd.c:488
+#: inet/rcmd.c:489
 msgid "fstat failed"
 msgstr "fstat に失敗しました"
 
-#: inet/rcmd.c:490
+#: inet/rcmd.c:491
 msgid "bad owner"
 msgstr "誤った所有者です"
 
-#: inet/rcmd.c:492
+#: inet/rcmd.c:493
 msgid "writeable by other than owner"
 msgstr "所有者以外が書き込みが可能です"
 
-#: inet/rcmd.c:494
+#: inet/rcmd.c:495
 msgid "hard linked somewhere"
 msgstr "どこかでハードリンクされています"
 
@@ -1684,11 +1659,6 @@ msgstr "%s: 重みはその名称として同じ省略シンボルを使用し�
 msgid "%s: too many values"
 msgstr "%s: 値が多すぎます"
 
-#: locale/programs/ld-collate.c:1062 locale/programs/ld-collate.c:1237
-#, c-format
-msgid "order for `%.*s' already defined at %s:%Zu"
-msgstr "`%.*s' 用の順序は %s:%Zu で既に定義されています"
-
 #: locale/programs/ld-collate.c:1112
 #, c-format
 msgid "%s: the start and the end symbol of a range must stand for characters"
@@ -1718,11 +1688,6 @@ msgstr "%s: シンボル範囲省略記号は`order_end'のすぐ後に続いて
 #, c-format
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "`%s' と `%.*s' はシンボル範囲用として無効な名前です"
-
-#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3731
-#, c-format
-msgid "%s: order for `%.*s' already defined at %s:%Zu"
-msgstr "%s: `%.*s' 用の順序は既に %s:%Zu で定義されています"
 
 #: locale/programs/ld-collate.c:1389
 #, c-format
@@ -2972,119 +2937,91 @@ msgstr "ディレクトリ %2$s の UID %1$d に対するローカルエント�
 msgid "UNKNOWN"
 msgstr "未知"
 
-#: nis/nis_print.c:109
-msgid "BOGUS OBJECT\n"
-msgstr "おかしなオブジェクト\n"
+#: nis/nis_print.c:69 nscd/nscd.c:117
+msgid "TABLE"
+msgstr "TABLE"
 
-#: nis/nis_print.c:112
-msgid "NO OBJECT\n"
-msgstr "オブジェクトがありません\n"
-
-#: nis/nis_print.c:115
-msgid "DIRECTORY\n"
-msgstr "ディレクトリ\n"
-
-#: nis/nis_print.c:118
-msgid "GROUP\n"
-msgstr "グループ\n"
-
-#: nis/nis_print.c:121
-msgid "TABLE\n"
-msgstr "表\n"
-
-#: nis/nis_print.c:124
-msgid "ENTRY\n"
-msgstr "エントリ\n"
-
-#: nis/nis_print.c:127
-msgid "LINK\n"
-msgstr "リンク\n"
-
-#: nis/nis_print.c:130
+#: nis/nis_print.c:75
 msgid "PRIVATE\n"
 msgstr "PRIVATE\n"
 
-#: nis/nis_print.c:133
-msgid "(Unknown object)\n"
-msgstr "(不明なオブジェクト)\n"
-
-#: nis/nis_print.c:167
+#: nis/nis_print.c:164
 #, c-format
 msgid "Name : `%s'\n"
 msgstr "名前 : `%s'\n"
 
-#: nis/nis_print.c:168
+#: nis/nis_print.c:165
 #, c-format
 msgid "Type : %s\n"
 msgstr "型   : %s\n"
 
-#: nis/nis_print.c:173
+#: nis/nis_print.c:170
 msgid "Master Server :\n"
 msgstr "マスターサーバー:\n"
 
-#: nis/nis_print.c:175
+#: nis/nis_print.c:172
 msgid "Replicate :\n"
 msgstr "複製 :\n"
 
-#: nis/nis_print.c:176
+#: nis/nis_print.c:173
 #, c-format
 msgid "\tName       : %s\n"
 msgstr "\t名前       : %s\n"
 
-#: nis/nis_print.c:177
+#: nis/nis_print.c:174
 msgid "\tPublic Key : "
 msgstr "\t公開鍵     : "
 
-#: nis/nis_print.c:181
+#: nis/nis_print.c:178
 msgid "None.\n"
 msgstr "なし。\n"
 
-#: nis/nis_print.c:184
+#: nis/nis_print.c:181
 #, c-format
 msgid "Diffie-Hellmann (%d bits)\n"
 msgstr "Diffie-Hellmann (%d ビット)\n"
 
-#: nis/nis_print.c:189
+#: nis/nis_print.c:186
 #, c-format
 msgid "RSA (%d bits)\n"
 msgstr "RSA (%d ビット)\n"
 
-#: nis/nis_print.c:192
+#: nis/nis_print.c:189
 msgid "Kerberos.\n"
 msgstr "Kerberos。\n"
 
-#: nis/nis_print.c:195
+#: nis/nis_print.c:192
 #, c-format
 msgid "Unknown (type = %d, bits = %d)\n"
 msgstr "不明 (型 = %d、ビット = %d)\n"
 
-#: nis/nis_print.c:206
+#: nis/nis_print.c:203
 #, c-format
 msgid "\tUniversal addresses (%u)\n"
 msgstr "\tユニバーサルアドレス (%u)\n"
 
-#: nis/nis_print.c:228
+#: nis/nis_print.c:225
 msgid "Time to live : "
 msgstr "生存時間 : "
 
-#: nis/nis_print.c:230
+#: nis/nis_print.c:227
 msgid "Default Access rights :\n"
 msgstr "デフォルトアクセス権限 :\n"
 
-#: nis/nis_print.c:239
+#: nis/nis_print.c:236
 #, c-format
 msgid "\tType         : %s\n"
 msgstr "\t型           : %s\n"
 
-#: nis/nis_print.c:240
+#: nis/nis_print.c:237
 msgid "\tAccess rights: "
 msgstr "\tアクセス権限 : "
 
-#: nis/nis_print.c:254
+#: nis/nis_print.c:251
 msgid "Group Flags :"
 msgstr "グループフラグ:"
 
-#: nis/nis_print.c:257
+#: nis/nis_print.c:254
 msgid ""
 "\n"
 "Group Members :\n"
@@ -3092,95 +3029,95 @@ msgstr ""
 "\n"
 "グループメンバ :\n"
 
-#: nis/nis_print.c:269
+#: nis/nis_print.c:266
 #, c-format
 msgid "Table Type          : %s\n"
 msgstr "テーブル型          : %s\n"
 
-#: nis/nis_print.c:270
+#: nis/nis_print.c:267
 #, c-format
 msgid "Number of Columns   : %d\n"
 msgstr "カラム数            : %d\n"
 
-#: nis/nis_print.c:271
+#: nis/nis_print.c:268
 #, c-format
 msgid "Character Separator : %c\n"
 msgstr "文字セパレータ      : %c\n"
 
-#: nis/nis_print.c:272
+#: nis/nis_print.c:269
 #, c-format
 msgid "Search Path         : %s\n"
 msgstr "検索パス            : %s\n"
 
-#: nis/nis_print.c:273
+#: nis/nis_print.c:270
 msgid "Columns             :\n"
 msgstr "カラム              :\n"
 
-#: nis/nis_print.c:276
+#: nis/nis_print.c:273
 #, c-format
 msgid "\t[%d]\tName          : %s\n"
 msgstr "\t[%d]\t名前          : %s\n"
 
-#: nis/nis_print.c:278
+#: nis/nis_print.c:275
 msgid "\t\tAttributes    : "
 msgstr "\t\t属性          : "
 
-#: nis/nis_print.c:280
+#: nis/nis_print.c:277
 msgid "\t\tAccess Rights : "
 msgstr "\t\tアクセス権限  : "
 
-#: nis/nis_print.c:290
+#: nis/nis_print.c:287
 msgid "Linked Object Type : "
 msgstr "リンクされたオブジェクト型 : "
 
-#: nis/nis_print.c:292
+#: nis/nis_print.c:289
 #, c-format
 msgid "Linked to : %s\n"
 msgstr "リンク先 : %s\n"
 
-#: nis/nis_print.c:302
+#: nis/nis_print.c:299
 #, c-format
 msgid "\tEntry data of type %s\n"
 msgstr "\tエントリデータの型 %s\n"
 
-#: nis/nis_print.c:305
+#: nis/nis_print.c:302
 #, c-format
 msgid "\t[%u] - [%u bytes] "
 msgstr "\t[%u] - [%uバイト] "
 
-#: nis/nis_print.c:308
+#: nis/nis_print.c:305
 msgid "Encrypted data\n"
 msgstr "暗号化データ\n"
 
-#: nis/nis_print.c:310
+#: nis/nis_print.c:307
 msgid "Binary data\n"
 msgstr "バイナリデータ\n"
 
-#: nis/nis_print.c:326
+#: nis/nis_print.c:323
 #, c-format
 msgid "Object Name   : %s\n"
 msgstr "オブジェクト名: %s\n"
 
-#: nis/nis_print.c:327
+#: nis/nis_print.c:324
 #, c-format
 msgid "Directory     : %s\n"
 msgstr "ディレクトリ  : %s\n"
 
-#: nis/nis_print.c:328
+#: nis/nis_print.c:325
 #, c-format
 msgid "Owner         : %s\n"
 msgstr "所有者        : %s\n"
 
-#: nis/nis_print.c:329
+#: nis/nis_print.c:326
 #, c-format
 msgid "Group         : %s\n"
 msgstr "グループ      : %s\n"
 
-#: nis/nis_print.c:330
+#: nis/nis_print.c:327
 msgid "Access Rights : "
 msgstr "アクセス権限  : "
 
-#: nis/nis_print.c:332
+#: nis/nis_print.c:329
 #, c-format
 msgid ""
 "\n"
@@ -3189,36 +3126,36 @@ msgstr ""
 "\n"
 "生存時間      : "
 
-#: nis/nis_print.c:335
+#: nis/nis_print.c:332
 #, c-format
 msgid "Creation Time : %s"
 msgstr "作成日時      : %s"
 
-#: nis/nis_print.c:337
+#: nis/nis_print.c:334
 #, c-format
 msgid "Mod. Time     : %s"
 msgstr "更新時刻      : %s"
 
-#: nis/nis_print.c:338
+#: nis/nis_print.c:335
 msgid "Object Type   : "
 msgstr "オブジェクト型: "
 
-#: nis/nis_print.c:358
+#: nis/nis_print.c:355
 #, c-format
 msgid "    Data Length = %u\n"
 msgstr "    データ長    = %u\n"
 
-#: nis/nis_print.c:372
+#: nis/nis_print.c:369
 #, c-format
 msgid "Status            : %s\n"
 msgstr "ステータス        : %s\n"
 
-#: nis/nis_print.c:373
+#: nis/nis_print.c:370
 #, c-format
 msgid "Number of objects : %u\n"
 msgstr "オブジェクト数    : %u\n"
 
-#: nis/nis_print.c:377
+#: nis/nis_print.c:374
 #, c-format
 msgid "Object #%d:\n"
 msgstr "オブジェクト #%d:\n"
@@ -3533,34 +3470,34 @@ msgstr "handle_request: 要求を受け取りました (バージョン = %d) �
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: 要求を受け取りました (バージョン = %d)"
 
-#: nscd/connections.c:2385
+#: nscd/connections.c:2386
 msgid "could not initialize conditional variable"
 msgstr "条件変数を初期化できませんでした"
 
-#: nscd/connections.c:2393
+#: nscd/connections.c:2394
 msgid "could not start clean-up thread; terminating"
 msgstr "クリーンアップスレッドを開始できませんでした。終了します"
 
-#: nscd/connections.c:2407
+#: nscd/connections.c:2408
 msgid "could not start any worker thread; terminating"
 msgstr "作業スレッドを全く開始できませんでした。終了します"
 
-#: nscd/connections.c:2462 nscd/connections.c:2464 nscd/connections.c:2480
-#: nscd/connections.c:2490 nscd/connections.c:2508 nscd/connections.c:2519
-#: nscd/connections.c:2529
+#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
+#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
+#: nscd/connections.c:2530
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "ユーザー '%s' で nscd を実行するのに失敗しました"
 
-#: nscd/connections.c:2482
+#: nscd/connections.c:2483
 msgid "initial getgrouplist failed"
 msgstr "getgrouplist 初期化に失敗しました"
 
-#: nscd/connections.c:2491
+#: nscd/connections.c:2492
 msgid "getgrouplist failed"
 msgstr "getgrouplistに 失敗しました"
 
-#: nscd/connections.c:2509
+#: nscd/connections.c:2510
 msgid "setgroups failed"
 msgstr "setgroups に失敗しました"
 
@@ -3619,10 +3556,6 @@ msgstr "サーバーを終了する"
 msgid "Print current configuration statistics"
 msgstr "現在の設定の統計情報を表示する"
 
-#: nscd/nscd.c:117
-msgid "TABLE"
-msgstr "TABLE"
-
 #: nscd/nscd.c:118
 msgid "Invalidate the specified cache"
 msgstr "指定したキャッシュを無効にする"
@@ -3639,7 +3572,7 @@ msgstr "ユーザごとにキャッシュを分離する"
 msgid "Name Service Cache Daemon."
 msgstr "名前サービスキャッシュデーモン。"
 
-#: nscd/nscd.c:158 nss/getent.c:986 nss/makedb.c:206
+#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:207
 #, c-format
 msgid "wrong number of arguments"
 msgstr "引数の数が間違っています"
@@ -3983,42 +3916,42 @@ msgstr "使用されるサービス設定"
 msgid "disable IDN encoding"
 msgstr "IDN エンコーディングを無効にする"
 
-#: nss/getent.c:65
+#: nss/getent.c:67
 msgid "Get entries from administrative database."
 msgstr "管理データベースからエントリを取得します。"
 
-#: nss/getent.c:149 nss/getent.c:461 nss/getent.c:508
+#: nss/getent.c:154 nss/getent.c:466 nss/getent.c:513
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "エミュレーションは %s 上ではサポートされていません\n"
 
-#: nss/getent.c:900
+#: nss/getent.c:905
 #, c-format
 msgid "Unknown database name"
 msgstr "不明なデータベース名です"
 
-#: nss/getent.c:930
+#: nss/getent.c:939
 msgid "Supported databases:\n"
 msgstr "サポートされているデータベース:\n"
 
-#: nss/getent.c:996
+#: nss/getent.c:1005
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "不明なデータベースです: %s\n"
 
-#: nss/makedb.c:119
+#: nss/makedb.c:120
 msgid "Convert key to lower case"
 msgstr "キーを小文字に変換しています"
 
-#: nss/makedb.c:122
+#: nss/makedb.c:123
 msgid "Do not print messages while building database"
 msgstr "データベース構築中にメッセージを表示しない"
 
-#: nss/makedb.c:124
+#: nss/makedb.c:125
 msgid "Print content of database file, one entry a line"
 msgstr "データベースのコンテキストを、1 エントリ 1 行で表示する"
 
-#: nss/makedb.c:134
+#: nss/makedb.c:135
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -4028,16 +3961,16 @@ msgstr ""
 "-o OUTPUT-FILE INPUT-FILE\n"
 "-u INPUT-FILE"
 
-#: nss/makedb.c:288
+#: nss/makedb.c:289
 #, c-format
 msgid "cannot create temporary file"
 msgstr "一時ファイルを作成できません"
 
-#: nss/makedb.c:556
+#: nss/makedb.c:557
 msgid "duplicate key"
 msgstr "キーが重複しています"
 
-#: nss/makedb.c:568
+#: nss/makedb.c:569
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "`%s' の読み込み中に問題が発生しました"
@@ -4089,12 +4022,12 @@ msgstr "未定義"
 msgid "Unrecognized variable `%s'"
 msgstr "認識できない変数 `%s' です"
 
-#: posix/getopt.c:620
+#: posix/getopt.c:621
 #, c-format
 msgid "%s: invalid option -- '%c'\n"
 msgstr "%s: 無効なオプション -- '%c'\n"
 
-#: posix/getopt.c:635 posix/getopt.c:681
+#: posix/getopt.c:636 posix/getopt.c:682
 #, c-format
 msgid "%s: option requires an argument -- '%c'\n"
 msgstr "%s: オプションには引数が必要です -- '%c'\n"
@@ -5409,118 +5342,122 @@ msgid "Invalid slot"
 msgstr "無効なスロットです"
 
 #: sysdeps/gnu/errlist.h:597
+msgid "File locking deadlock error"
+msgstr "ファイルロックのデッドロックエラーです"
+
+#: sysdeps/gnu/errlist.h:600
 msgid "Bad font file format"
 msgstr "不正なフォントファイル形式です"
 
-#: sysdeps/gnu/errlist.h:600
+#: sysdeps/gnu/errlist.h:603
 msgid "Machine is not on the network"
 msgstr "マシンはネットワークにつながっていません"
 
-#: sysdeps/gnu/errlist.h:603
+#: sysdeps/gnu/errlist.h:606
 msgid "Package not installed"
 msgstr "パッケージはインストールされていません"
 
-#: sysdeps/gnu/errlist.h:606
+#: sysdeps/gnu/errlist.h:609
 msgid "Advertise error"
 msgstr "Advertiseエラー"
 
-#: sysdeps/gnu/errlist.h:609
+#: sysdeps/gnu/errlist.h:612
 msgid "Srmount error"
 msgstr "Srmount エラー"
 
-#: sysdeps/gnu/errlist.h:612
+#: sysdeps/gnu/errlist.h:615
 msgid "Communication error on send"
 msgstr "送信中の通信エラー"
 
-#: sysdeps/gnu/errlist.h:615
+#: sysdeps/gnu/errlist.h:618
 msgid "RFS specific error"
 msgstr "RFS特定エラー"
 
-#: sysdeps/gnu/errlist.h:618
+#: sysdeps/gnu/errlist.h:621
 msgid "Name not unique on network"
 msgstr "名前がネットワーク上で重複しています"
 
-#: sysdeps/gnu/errlist.h:621
+#: sysdeps/gnu/errlist.h:624
 msgid "File descriptor in bad state"
 msgstr "ファイル記述子が不正の状態にあります"
 
-#: sysdeps/gnu/errlist.h:624
+#: sysdeps/gnu/errlist.h:627
 msgid "Remote address changed"
 msgstr "遠隔アドレスが変更されました"
 
-#: sysdeps/gnu/errlist.h:627
+#: sysdeps/gnu/errlist.h:630
 msgid "Can not access a needed shared library"
 msgstr "必要な共有ライブラリにアクセスできません"
 
-#: sysdeps/gnu/errlist.h:630
+#: sysdeps/gnu/errlist.h:633
 msgid "Accessing a corrupted shared library"
 msgstr "壊れた共有ライブラリにアクセスしています"
 
-#: sysdeps/gnu/errlist.h:633
+#: sysdeps/gnu/errlist.h:636
 msgid ".lib section in a.out corrupted"
 msgstr "a.out 中の .lib セクションが壊れています"
 
-#: sysdeps/gnu/errlist.h:636
+#: sysdeps/gnu/errlist.h:639
 msgid "Attempting to link in too many shared libraries"
 msgstr "あまりに多過ぎる共有ライブラリへリンクしようとしています"
 
-#: sysdeps/gnu/errlist.h:639
+#: sysdeps/gnu/errlist.h:642
 msgid "Cannot exec a shared library directly"
 msgstr "共有ライブラリは直接実行できません"
 
-#: sysdeps/gnu/errlist.h:642
+#: sysdeps/gnu/errlist.h:645
 msgid "Streams pipe error"
 msgstr "ストリームパイプエラー"
 
-#: sysdeps/gnu/errlist.h:645
+#: sysdeps/gnu/errlist.h:648
 msgid "Structure needs cleaning"
 msgstr "構造体を内容消去する必要があります"
 
-#: sysdeps/gnu/errlist.h:648
+#: sysdeps/gnu/errlist.h:651
 msgid "Not a XENIX named type file"
 msgstr "XENIX の名前付きファイルではありません"
 
-#: sysdeps/gnu/errlist.h:651
+#: sysdeps/gnu/errlist.h:654
 msgid "No XENIX semaphores available"
 msgstr "XENIX セマフォが利用できません"
 
-#: sysdeps/gnu/errlist.h:654
+#: sysdeps/gnu/errlist.h:657
 msgid "Is a named type file"
 msgstr "名前付きファイルです"
 
-#: sysdeps/gnu/errlist.h:657
+#: sysdeps/gnu/errlist.h:660
 msgid "Remote I/O error"
 msgstr "遠隔I/Oエラーです"
 
-#: sysdeps/gnu/errlist.h:660
+#: sysdeps/gnu/errlist.h:663
 msgid "No medium found"
 msgstr "メディアが見つかりません"
 
-#: sysdeps/gnu/errlist.h:663
+#: sysdeps/gnu/errlist.h:666
 msgid "Wrong medium type"
 msgstr "不正なメディア形式です"
 
-#: sysdeps/gnu/errlist.h:666
+#: sysdeps/gnu/errlist.h:669
 msgid "Required key not available"
 msgstr "要求されたキーが利用できません"
 
-#: sysdeps/gnu/errlist.h:669
+#: sysdeps/gnu/errlist.h:672
 msgid "Key has expired"
 msgstr "キーが期限切れです"
 
-#: sysdeps/gnu/errlist.h:672
+#: sysdeps/gnu/errlist.h:675
 msgid "Key has been revoked"
 msgstr "キーが破棄されています"
 
-#: sysdeps/gnu/errlist.h:675
+#: sysdeps/gnu/errlist.h:678
 msgid "Key was rejected by service"
 msgstr "キーがサービスによって拒否されました"
 
-#: sysdeps/gnu/errlist.h:678
+#: sysdeps/gnu/errlist.h:681
 msgid "Operation not possible due to RF-kill"
 msgstr "RF-kill のため操作は不可能です"
 
-#: sysdeps/gnu/errlist.h:684
+#: sysdeps/gnu/errlist.h:687
 msgid "RPC struct is bad"
 msgstr "RPC構造が不正です"
 
@@ -5529,43 +5466,43 @@ msgstr "RPC構造が不正です"
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.h:693
+#: sysdeps/gnu/errlist.h:696
 msgid "Inappropriate file type or format"
 msgstr "不適切なファイル形式かフォーマットです"
 
-#: sysdeps/gnu/errlist.h:696
+#: sysdeps/gnu/errlist.h:699
 msgid "RPC bad procedure for program"
 msgstr "プログラムに対して不正なRPCの手続きです"
 
-#: sysdeps/gnu/errlist.h:699
+#: sysdeps/gnu/errlist.h:702
 msgid "Authentication error"
 msgstr "認証エラーです"
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.h:706
+#: sysdeps/gnu/errlist.h:709
 msgid "Translator died"
 msgstr "翻訳用プログラムが死んでいます"
 
-#: sysdeps/gnu/errlist.h:709
+#: sysdeps/gnu/errlist.h:712
 msgid "RPC version wrong"
 msgstr "RPCバージョンが違います"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.h:714
+#: sysdeps/gnu/errlist.h:717
 msgid "You really blew it this time"
 msgstr "You really blew it this time"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.h:721
+#: sysdeps/gnu/errlist.h:724
 msgid "Too many processes"
 msgstr "プロセスが多すぎます"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.h:726
+#: sysdeps/gnu/errlist.h:729
 msgid "Gratuitous error"
 msgstr "不必要なエラー"
 
@@ -5581,11 +5518,11 @@ msgstr "不必要なエラー"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.h:742
+#: sysdeps/gnu/errlist.h:745
 msgid "Not supported"
 msgstr "サポートされていません"
 
-#: sysdeps/gnu/errlist.h:745
+#: sysdeps/gnu/errlist.h:748
 msgid "RPC program version wrong"
 msgstr "RPCプログラムバージョンが違います"
 
@@ -5595,7 +5532,7 @@ msgstr "RPCプログラムバージョンが違います"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.h:755
+#: sysdeps/gnu/errlist.h:758
 msgid "Inappropriate operation for background process"
 msgstr "バックグラウンドプロセスに対する不適切な操作です"
 
@@ -5613,7 +5550,7 @@ msgstr "バックグラウンドプロセスに対する不適切な操作です
 #. TRANS @c
 #. TRANS @c Translators, please do not translate this litteraly, translate it into
 #. TRANS @c an idiomatic funny way of saying that the computer died.
-#: sysdeps/gnu/errlist.h:773
+#: sysdeps/gnu/errlist.h:776
 msgid "Computer bought the farm"
 msgstr "コンピュータが「戦死」しました"
 
@@ -5622,26 +5559,26 @@ msgstr "コンピュータが「戦死」しました"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.h:782
+#: sysdeps/gnu/errlist.h:785
 msgid "Operation would block"
 msgstr "ブロックされうる操作です"
 
-#: sysdeps/gnu/errlist.h:785
+#: sysdeps/gnu/errlist.h:788
 msgid "Need authenticator"
 msgstr "認証者(authenticator)が必要です"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.h:792
+#: sysdeps/gnu/errlist.h:795
 msgid "?"
 msgstr "?"
 
-#: sysdeps/gnu/errlist.h:795
+#: sysdeps/gnu/errlist.h:798
 msgid "RPC program not available"
 msgstr "RPCプログラムは利用できません"
 
-#: sysdeps/mach/_strerror.c:43
+#: sysdeps/mach/_strerror.c:43 sysdeps/mach/xpg-strerror.c:55
 msgid "Error in unknown error system: "
 msgstr "不明なエラーシステムでのエラー:"
 
@@ -5717,25 +5654,6 @@ msgstr "パラメーター文字列が正しくエンコードされていませ
 #, c-format
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr "makecontext: 8引数以上を扱う方法がわかりません\n"
-
-#: sysdeps/unix/sysv/linux/lddlibc4.c:59
-#, c-format
-msgid ""
-"Usage: lddlibc4 FILE\n"
-"\n"
-msgstr ""
-"使用法: lddlibc4 FILE\n"
-"\n"
-
-#: sysdeps/unix/sysv/linux/lddlibc4.c:80
-#, c-format
-msgid "cannot open `%s'"
-msgstr "`%s'を開けません"
-
-#: sysdeps/unix/sysv/linux/lddlibc4.c:84
-#, c-format
-msgid "cannot read header from `%s'"
-msgstr "`%s'のヘッダーを読めません"
 
 #: sysdeps/unix/sysv/linux/x86/readelflib.c:62
 #, c-format

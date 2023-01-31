@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.2.3\n"
-"POT-Creation-Date: 2022-07-29 13:00-0400\n"
+"POT-Creation-Date: 2023-01-23 08:47-0500\n"
 "PO-Revision-Date: 2001-05-21 19:20:31+0000\n"
 "Last-Translator: Nikos Mavroyanopoulos <nmav@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -67,7 +67,7 @@ msgstr "Να δωθεί σύντομο μήνυμα χρήσης"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:108 catgets/gencat.c:112
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "NAME"
 msgstr "ΟΝΟΜΑ"
 
@@ -104,7 +104,7 @@ msgstr "Δημιουργία ΟΝΟΜΑΤΟΣ αρχείου κεφαλίδας 
 msgid "Do not use existing catalog, force new output file"
 msgstr "Να μη χρησιμοποιηθεί ο υπάρχον κατάλογος, προκάλεσε νέο αρχείο εξόδου"
 
-#: catgets/gencat.c:112 nss/makedb.c:120
+#: catgets/gencat.c:112 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "Εγγραφή εξόδου στο αρχείο ΟΝΟΜΑ"
 
@@ -117,12 +117,11 @@ msgstr ""
 "[ΑΡΧΕΙΟ-ΕΞΟΔΟΥ [ΑΡΧΕΙΟ-ΕΙΣΟΔΟΥ]...]"
 
 #: catgets/gencat.c:244 debug/pcprofiledump.c:224 debug/xtrace.sh:63
-#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:580
-#: nscd/nscd.c:521 nss/getent.c:87 nss/makedb.c:385 posix/getconf.c:485
-#: sysdeps/unix/sysv/linux/lddlibc4.c:67
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:386 posix/getconf.c:485
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -135,10 +134,10 @@ msgstr ""
 "ΚΑΠΟΙΟ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ.\n"
 
 #: catgets/gencat.c:249 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:332 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
-#: malloc/memusagestat.c:585 nscd/nscd.c:526 nss/getent.c:92 nss/makedb.c:390
+#: malloc/memusagestat.c:585 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -149,7 +148,7 @@ msgid "*standard input*"
 msgstr "*κανονική είσοδος*"
 
 #: catgets/gencat.c:286 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:246
+#: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "αδυναμία ανοίγματος αρχείου εισόδου `%s'"
@@ -210,16 +209,16 @@ msgstr "μη έγκυρη κατάσταση για την dlopen()"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "Το RTLD_NEXT που χρησιμοποιείται στον κώδικα δεν φορτώθηκε δυναμικά"
 
-#: elf/ldconfig.c:610
+#: elf/ldconfig.c:496
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "το %s δεν είναι συμβολικός σύνδεσμος\n"
 
-#: elf/ldconfig.c:641
+#: elf/ldconfig.c:527
 msgid " (changed)\n"
 msgstr " (άλλαξε)\n"
 
-#: elf/ldconfig.c:1303 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1124 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
@@ -233,11 +232,11 @@ msgstr "η μνήμη εξαντλήθηκε"
 msgid "No such file or directory"
 msgstr "Δεν υπάρχει τέτοιο αρχείο ή κατάλογος"
 
-#: elf/ldd.bash.in:150 inet/rcmd.c:481
+#: elf/ldd.bash.in:150 inet/rcmd.c:482
 msgid "not regular file"
 msgstr "δεν είναι κανονικό αρχείο"
 
-#: elf/readlib.c:128
+#: elf/readlib.c:111
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "Αδυναμία μεταφοράς στη μνήμη (mmap) του αρχείου %s.\n"
@@ -418,59 +417,59 @@ msgstr "εσωτερικό σφάλμα (ακατάλληλος περιγραφ
 msgid "unknown iconv() error %d"
 msgstr "άγνωστο σφάλμα iconv() %d"
 
-#: inet/rcmd.c:175
+#: inet/rcmd.c:176
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: Όλες οι θύρες σε χρήση\n"
 
-#: inet/rcmd.c:203
+#: inet/rcmd.c:204
 #, c-format
 msgid "connect to address %s: "
 msgstr "σύνδεση στη διεύθυνση %s: "
 
-#: inet/rcmd.c:216
+#: inet/rcmd.c:217
 #, c-format
 msgid "Trying %s...\n"
 msgstr "Δοκιμάζεται %s...\n"
 
-#: inet/rcmd.c:252
+#: inet/rcmd.c:253
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write (στήσιμο του stderr): %m\n"
 
-#: inet/rcmd.c:268
+#: inet/rcmd.c:269
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (στήσιμο του stderr): %m\n"
 
-#: inet/rcmd.c:271
+#: inet/rcmd.c:272
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: αποτυχία πρωτοκόλου στο στήσιμο κυκλώματος\n"
 
-#: inet/rcmd.c:303
+#: inet/rcmd.c:304
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: αποτυχία πρωτοκόλου στο στήσιμο κυκλώματος\n"
 
-#: inet/rcmd.c:479
+#: inet/rcmd.c:480
 msgid "lstat failed"
 msgstr "το lstat απέτυχε"
 
-#: inet/rcmd.c:486
+#: inet/rcmd.c:487
 msgid "cannot open"
 msgstr "αδυναμία ανοίγματος"
 
-#: inet/rcmd.c:488
+#: inet/rcmd.c:489
 msgid "fstat failed"
 msgstr "το fstat απέτυχε"
 
-#: inet/rcmd.c:490
+#: inet/rcmd.c:491
 msgid "bad owner"
 msgstr "κακός ιδιοκτήτης"
 
-#: inet/rcmd.c:492
+#: inet/rcmd.c:493
 msgid "writeable by other than owner"
 msgstr "το αρχείο είναι εγγράψιμο και από άλλους εκτός του ιδιοκτήτη"
 
-#: inet/rcmd.c:494
+#: inet/rcmd.c:495
 msgid "hard linked somewhere"
 msgstr "σθεναρά συνδεδεμένο κάπου"
 
@@ -1111,119 +1110,91 @@ msgstr "Η ΤΟΠΙΚΗ καταχώρηση για την ΤΑΥΤ. %d στο �
 msgid "UNKNOWN"
 msgstr "ΑΓΝΩΣΤΟ"
 
-#: nis/nis_print.c:109
-msgid "BOGUS OBJECT\n"
-msgstr "ΠΛΑΣΤΟ ΑΝΤΙΚΕΙΜΕΝΟ\n"
+#: nis/nis_print.c:69 nscd/nscd.c:117
+msgid "TABLE"
+msgstr "ΠΙΝΑΚΑΣ"
 
-#: nis/nis_print.c:112
-msgid "NO OBJECT\n"
-msgstr "ΚΑΝΕΝΑ ΑΝΤΙΚΕΙΜΕΝΟ\n"
-
-#: nis/nis_print.c:115
-msgid "DIRECTORY\n"
-msgstr "ΚΑΤΑΛΟΓΟΣ\n"
-
-#: nis/nis_print.c:118
-msgid "GROUP\n"
-msgstr "ΟΜΑΔΑ\n"
-
-#: nis/nis_print.c:121
-msgid "TABLE\n"
-msgstr "ΠΙΝΑΚΑΣ\n"
-
-#: nis/nis_print.c:124
-msgid "ENTRY\n"
-msgstr "ΚΑΤΑΧΩΡΗΣΗ\n"
-
-#: nis/nis_print.c:127
-msgid "LINK\n"
-msgstr "ΣΥΝΔΕΣΜΟΣ\n"
-
-#: nis/nis_print.c:130
+#: nis/nis_print.c:75
 msgid "PRIVATE\n"
 msgstr "ΙΔΙΩΤΙΚΟ\n"
 
-#: nis/nis_print.c:133
-msgid "(Unknown object)\n"
-msgstr "(Άγνωστο αντικείμενο)\n"
-
-#: nis/nis_print.c:167
+#: nis/nis_print.c:164
 #, c-format
 msgid "Name : `%s'\n"
 msgstr "Όνομα : `%s'\n"
 
-#: nis/nis_print.c:168
+#: nis/nis_print.c:165
 #, c-format
 msgid "Type : %s\n"
 msgstr "Τύπος: %s\n"
 
-#: nis/nis_print.c:173
+#: nis/nis_print.c:170
 msgid "Master Server :\n"
 msgstr "Κύριος Εξυπηρετητής :\n"
 
-#: nis/nis_print.c:175
+#: nis/nis_print.c:172
 msgid "Replicate :\n"
 msgstr "Αναπαραγωγή :\n"
 
-#: nis/nis_print.c:176
+#: nis/nis_print.c:173
 #, c-format
 msgid "\tName       : %s\n"
 msgstr "\tΌνομα                 : %s\n"
 
-#: nis/nis_print.c:177
+#: nis/nis_print.c:174
 msgid "\tPublic Key : "
 msgstr "\tΔημόσιο Κλειδί        :"
 
-#: nis/nis_print.c:181
+#: nis/nis_print.c:178
 msgid "None.\n"
 msgstr "Κανένα.\n"
 
-#: nis/nis_print.c:184
+#: nis/nis_print.c:181
 #, c-format
 msgid "Diffie-Hellmann (%d bits)\n"
 msgstr "Diffie-Hellmann (%d bit)\n"
 
-#: nis/nis_print.c:189
+#: nis/nis_print.c:186
 #, c-format
 msgid "RSA (%d bits)\n"
 msgstr "RSA (%d bit)\n"
 
-#: nis/nis_print.c:192
+#: nis/nis_print.c:189
 msgid "Kerberos.\n"
 msgstr "Κέρβερος.\n"
 
-#: nis/nis_print.c:195
+#: nis/nis_print.c:192
 #, c-format
 msgid "Unknown (type = %d, bits = %d)\n"
 msgstr "Άγνωστο (είδος = %d, bit = %d)\n"
 
-#: nis/nis_print.c:206
+#: nis/nis_print.c:203
 #, c-format
 msgid "\tUniversal addresses (%u)\n"
 msgstr "\tΚαθολική διεύθυνση (%u)\n"
 
-#: nis/nis_print.c:228
+#: nis/nis_print.c:225
 msgid "Time to live : "
 msgstr "Χρόνος ζωής : "
 
-#: nis/nis_print.c:230
+#: nis/nis_print.c:227
 msgid "Default Access rights :\n"
 msgstr "Εξ ορισμού δικαιώματα Προσπέλασης :\n"
 
-#: nis/nis_print.c:239
+#: nis/nis_print.c:236
 #, c-format
 msgid "\tType         : %s\n"
 msgstr "\tΤύπος                 : %s\n"
 
-#: nis/nis_print.c:240
+#: nis/nis_print.c:237
 msgid "\tAccess rights: "
 msgstr "\tΔικαιώματα προσπέλασης: "
 
-#: nis/nis_print.c:254
+#: nis/nis_print.c:251
 msgid "Group Flags :"
 msgstr "Σημαίες Ομάδας :"
 
-#: nis/nis_print.c:257
+#: nis/nis_print.c:254
 msgid ""
 "\n"
 "Group Members :\n"
@@ -1231,95 +1202,95 @@ msgstr ""
 "\n"
 "Μέλη Ομάδας  :\n"
 
-#: nis/nis_print.c:269
+#: nis/nis_print.c:266
 #, c-format
 msgid "Table Type          : %s\n"
 msgstr "Τύπος Πίνακα        : %s\n"
 
-#: nis/nis_print.c:270
+#: nis/nis_print.c:267
 #, c-format
 msgid "Number of Columns   : %d\n"
 msgstr "Αριθμός Στηλών      :%d\n"
 
-#: nis/nis_print.c:271
+#: nis/nis_print.c:268
 #, c-format
 msgid "Character Separator : %c\n"
 msgstr "Διαχωριστής Χαρακτήρων : %c\n"
 
-#: nis/nis_print.c:272
+#: nis/nis_print.c:269
 #, c-format
 msgid "Search Path         : %s\n"
 msgstr "Μονοπάτι Αναζήτησης: %s\n"
 
-#: nis/nis_print.c:273
+#: nis/nis_print.c:270
 msgid "Columns             :\n"
 msgstr "Στήλες              :\n"
 
-#: nis/nis_print.c:276
+#: nis/nis_print.c:273
 #, c-format
 msgid "\t[%d]\tName          : %s\n"
 msgstr "\t[%d]\tΌνομα         : %s\n"
 
-#: nis/nis_print.c:278
+#: nis/nis_print.c:275
 msgid "\t\tAttributes    : "
 msgstr "\t\tΙδιότητες     : "
 
-#: nis/nis_print.c:280
+#: nis/nis_print.c:277
 msgid "\t\tAccess Rights : "
 msgstr "\t\tΔικαιώματα Προσπέλασης : "
 
-#: nis/nis_print.c:290
+#: nis/nis_print.c:287
 msgid "Linked Object Type : "
 msgstr "Τύπος Συνδεδεμένου Αντικειμένου : "
 
-#: nis/nis_print.c:292
+#: nis/nis_print.c:289
 #, c-format
 msgid "Linked to : %s\n"
 msgstr "Συνδεδεμένο με : %s\n"
 
-#: nis/nis_print.c:302
+#: nis/nis_print.c:299
 #, c-format
 msgid "\tEntry data of type %s\n"
 msgstr "\tΔεδομένα εισαγωγής του τύπου %s\n"
 
-#: nis/nis_print.c:305
+#: nis/nis_print.c:302
 #, c-format
 msgid "\t[%u] - [%u bytes] "
 msgstr "\t[%u] - [%u byte]"
 
-#: nis/nis_print.c:308
+#: nis/nis_print.c:305
 msgid "Encrypted data\n"
 msgstr "Κρυπτογραφημένα δεδομένα\n"
 
-#: nis/nis_print.c:310
+#: nis/nis_print.c:307
 msgid "Binary data\n"
 msgstr "Δυαδικά δεδομένα\n"
 
-#: nis/nis_print.c:326
+#: nis/nis_print.c:323
 #, c-format
 msgid "Object Name   : %s\n"
 msgstr "Όνομα Αντικειμένου : %s\n"
 
-#: nis/nis_print.c:327
+#: nis/nis_print.c:324
 #, c-format
 msgid "Directory     : %s\n"
 msgstr "Κατάλογος     : %s\n"
 
-#: nis/nis_print.c:328
+#: nis/nis_print.c:325
 #, c-format
 msgid "Owner         : %s\n"
 msgstr "Ιδιοκτήτης   : %s\n"
 
-#: nis/nis_print.c:329
+#: nis/nis_print.c:326
 #, c-format
 msgid "Group         : %s\n"
 msgstr "Ομάδα         : %s\n"
 
-#: nis/nis_print.c:330
+#: nis/nis_print.c:327
 msgid "Access Rights : "
 msgstr "Δικαιώματα Προσπέλασης :"
 
-#: nis/nis_print.c:332
+#: nis/nis_print.c:329
 #, c-format
 msgid ""
 "\n"
@@ -1328,36 +1299,36 @@ msgstr ""
 "\n"
 "Χρόνος Ζωής  : "
 
-#: nis/nis_print.c:335
+#: nis/nis_print.c:332
 #, c-format
 msgid "Creation Time : %s"
 msgstr "Χρόνος Δημιουργίας : %s"
 
-#: nis/nis_print.c:337
+#: nis/nis_print.c:334
 #, c-format
 msgid "Mod. Time     : %s"
 msgstr "Χρόνος Τροπ. : %s"
 
-#: nis/nis_print.c:338
+#: nis/nis_print.c:335
 msgid "Object Type   : "
 msgstr "Τύπος Αντικειμένου :"
 
-#: nis/nis_print.c:358
+#: nis/nis_print.c:355
 #, c-format
 msgid "    Data Length = %u\n"
 msgstr "    Μήκος Δεδομένων = %u\n"
 
-#: nis/nis_print.c:372
+#: nis/nis_print.c:369
 #, c-format
 msgid "Status            : %s\n"
 msgstr "Κατάσταση         : %s\n"
 
-#: nis/nis_print.c:373
+#: nis/nis_print.c:370
 #, c-format
 msgid "Number of objects : %u\n"
 msgstr "Αριθμός αντικειμένων: %u\n"
 
-#: nis/nis_print.c:377
+#: nis/nis_print.c:374
 #, c-format
 msgid "Object #%d:\n"
 msgstr "Αντικείμενο #%d:\n"
@@ -1572,10 +1543,6 @@ msgstr "Έναρξη ΑΡΙΘΜΟΣ νημάτων"
 msgid "Shut the server down"
 msgstr "Διακοπή της λειτουργίας του εξυπηρετητή"
 
-#: nscd/nscd.c:117
-msgid "TABLE"
-msgstr "ΠΙΝΑΚΑΣ"
-
 #: nscd/nscd.c:118
 msgid "Invalidate the specified cache"
 msgstr "Ακύρωση των περιεχομένων της συγκεκριμένης λανθάνουσας μνήμης"
@@ -1592,7 +1559,7 @@ msgstr "Χρήση ξεχωριστής λανθάνουσας μνήμης γι
 msgid "Name Service Cache Daemon."
 msgstr "Λανθάνουσα Υπηρεσία Εξυπηρέτησης Αντιστοιχιών Ονομάτων."
 
-#: nscd/nscd.c:158 nss/getent.c:986 nss/makedb.c:206
+#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:207
 #, c-format
 msgid "wrong number of arguments"
 msgstr "λάθος αριθμός παραμέτρων"
@@ -1652,24 +1619,24 @@ msgstr ""
 msgid "database [key ...]"
 msgstr "βάση_δεδομένων [κλειδί ...]"
 
-#: nss/getent.c:996
+#: nss/getent.c:1005
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Άγνωστη βάση δεδομένων: %s\n"
 
-#: nss/makedb.c:119
+#: nss/makedb.c:120
 msgid "Convert key to lower case"
 msgstr "Μετατροπή κλειδιού σε πεζά"
 
-#: nss/makedb.c:122
+#: nss/makedb.c:123
 msgid "Do not print messages while building database"
 msgstr "Να μη εμφανίζονται μηνύματα κατά την κατασκευή της βάσης δεδομένων"
 
-#: nss/makedb.c:124
+#: nss/makedb.c:125
 msgid "Print content of database file, one entry a line"
 msgstr "Εμφάνιση του περιεχομένου του αρχείου βάσης, μια καταχώρηση τη φορά"
 
-#: nss/makedb.c:134
+#: nss/makedb.c:135
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -1679,11 +1646,11 @@ msgstr ""
 "-o ΑΡΧΕΙΟ-ΕΞΟΔΟΥ ΑΡΧΕΙΟ-ΕΙΣΟΔΟΥ\n"
 "-u ΑΡΧΕΙΟ-ΕΙΣΟΔΟΥ"
 
-#: nss/makedb.c:556
+#: nss/makedb.c:557
 msgid "duplicate key"
 msgstr "διπλό κλειδί"
 
-#: nss/makedb.c:568
+#: nss/makedb.c:569
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "προβλήματα κατά την ανάγνωση του `%s'"
@@ -2740,98 +2707,102 @@ msgid "Invalid slot"
 msgstr "Μη έγκυρη οπή"
 
 #: sysdeps/gnu/errlist.h:597
+msgid "File locking deadlock error"
+msgstr "Το κλείδωμα αρχείου κατέληξε σε σφάλμα αδιεξόδου"
+
+#: sysdeps/gnu/errlist.h:600
 msgid "Bad font file format"
 msgstr "Εσφαλμένη διαμόρφωση αρχείου γραμματοσειράς"
 
-#: sysdeps/gnu/errlist.h:600
+#: sysdeps/gnu/errlist.h:603
 msgid "Machine is not on the network"
 msgstr "Το μηχάνημα δεν είναι στο δίκτυο"
 
-#: sysdeps/gnu/errlist.h:603
+#: sysdeps/gnu/errlist.h:606
 msgid "Package not installed"
 msgstr "Το πακέτο δεν εγκαταστάθηκε"
 
-#: sysdeps/gnu/errlist.h:606
+#: sysdeps/gnu/errlist.h:609
 msgid "Advertise error"
 msgstr "Σφάλμα διαφήμισης"
 
-#: sysdeps/gnu/errlist.h:609
+#: sysdeps/gnu/errlist.h:612
 msgid "Srmount error"
 msgstr "Σφάλμα srmount"
 
-#: sysdeps/gnu/errlist.h:612
+#: sysdeps/gnu/errlist.h:615
 msgid "Communication error on send"
 msgstr "Σφάλμα επικοινωνίας κατά την αποστολή"
 
-#: sysdeps/gnu/errlist.h:615
+#: sysdeps/gnu/errlist.h:618
 msgid "RFS specific error"
 msgstr "Συγκεκριμένο με RFS σφάλμα"
 
-#: sysdeps/gnu/errlist.h:618
+#: sysdeps/gnu/errlist.h:621
 msgid "Name not unique on network"
 msgstr "Το όνομα δεν είναι μοναδικό στο δίκτυο"
 
-#: sysdeps/gnu/errlist.h:621
+#: sysdeps/gnu/errlist.h:624
 msgid "File descriptor in bad state"
 msgstr "Ο περιγραφέας αρχείου σε κακή κατάσταση"
 
-#: sysdeps/gnu/errlist.h:624
+#: sysdeps/gnu/errlist.h:627
 msgid "Remote address changed"
 msgstr "Η απομακρυσμένη διεύθυνση άλλαξε"
 
-#: sysdeps/gnu/errlist.h:627
+#: sysdeps/gnu/errlist.h:630
 msgid "Can not access a needed shared library"
 msgstr "Δεν είναι δυνατή η προσπέλαση μιας αναγκαίας διαμοιραζόμενης βιβλιοθήκης"
 
-#: sysdeps/gnu/errlist.h:630
+#: sysdeps/gnu/errlist.h:633
 msgid "Accessing a corrupted shared library"
 msgstr "Προσπελαύνεται μια κατεστραμμένη διαμοιραζόμενη βιβλιοθήκη"
 
-#: sysdeps/gnu/errlist.h:633
+#: sysdeps/gnu/errlist.h:636
 msgid ".lib section in a.out corrupted"
 msgstr "Το τμήμα .lib στο a.out είναι κατεστραμμένο"
 
-#: sysdeps/gnu/errlist.h:636
+#: sysdeps/gnu/errlist.h:639
 msgid "Attempting to link in too many shared libraries"
 msgstr "Προσπάθεια σύνδεσης σε πάρα πολλές διαμοιραζόμενες βιβλιοθήκες"
 
-#: sysdeps/gnu/errlist.h:639
+#: sysdeps/gnu/errlist.h:642
 msgid "Cannot exec a shared library directly"
 msgstr "Δεν είναι δυνατή η άμεση εκτέλεση διαμοιραζόμενης βιβλιοθήκης"
 
-#: sysdeps/gnu/errlist.h:642
+#: sysdeps/gnu/errlist.h:645
 msgid "Streams pipe error"
 msgstr "Σφάλμα σωλήνωσης ροής"
 
-#: sysdeps/gnu/errlist.h:645
+#: sysdeps/gnu/errlist.h:648
 msgid "Structure needs cleaning"
 msgstr "Η δομή χρειάζεται καθάρισμα"
 
-#: sysdeps/gnu/errlist.h:648
+#: sysdeps/gnu/errlist.h:651
 msgid "Not a XENIX named type file"
 msgstr "Δεν είναι XENIX τύπος επώνυμου αρχείου"
 
-#: sysdeps/gnu/errlist.h:651
+#: sysdeps/gnu/errlist.h:654
 msgid "No XENIX semaphores available"
 msgstr "Δεν είναι διαθέσιμοι οι XENIX σημαφόροι"
 
-#: sysdeps/gnu/errlist.h:654
+#: sysdeps/gnu/errlist.h:657
 msgid "Is a named type file"
 msgstr "Είναι ένα επώνυμο είδος αρχείου"
 
-#: sysdeps/gnu/errlist.h:657
+#: sysdeps/gnu/errlist.h:660
 msgid "Remote I/O error"
 msgstr "Απομακρυσμένο σφάλμα εισόδου/εξόδου"
 
-#: sysdeps/gnu/errlist.h:660
+#: sysdeps/gnu/errlist.h:663
 msgid "No medium found"
 msgstr "Δεν βρέθηκε μέσο"
 
-#: sysdeps/gnu/errlist.h:663
+#: sysdeps/gnu/errlist.h:666
 msgid "Wrong medium type"
 msgstr "Εσφαλμένο είδος μέσου"
 
-#: sysdeps/gnu/errlist.h:684
+#: sysdeps/gnu/errlist.h:687
 msgid "RPC struct is bad"
 msgstr "Η RPC δομή δεν είναι σωστή"
 
@@ -2840,43 +2811,43 @@ msgstr "Η RPC δομή δεν είναι σωστή"
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.h:693
+#: sysdeps/gnu/errlist.h:696
 msgid "Inappropriate file type or format"
 msgstr "Ακατάλληλο είδος αρχείου ή διαμόρφωσης"
 
-#: sysdeps/gnu/errlist.h:696
+#: sysdeps/gnu/errlist.h:699
 msgid "RPC bad procedure for program"
 msgstr "RPC κακή διαδικασία για πρόγραμμα"
 
-#: sysdeps/gnu/errlist.h:699
+#: sysdeps/gnu/errlist.h:702
 msgid "Authentication error"
 msgstr "Σφάλμα πιστοποίησης"
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.h:706
+#: sysdeps/gnu/errlist.h:709
 msgid "Translator died"
 msgstr "Ο μεταφραστής πέθανε"
 
-#: sysdeps/gnu/errlist.h:709
+#: sysdeps/gnu/errlist.h:712
 msgid "RPC version wrong"
 msgstr "Η έκδοση του RPC δεν είναι σωστή"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.h:714
+#: sysdeps/gnu/errlist.h:717
 msgid "You really blew it this time"
 msgstr "Πραγματικά την έκανες αυτή τη φορά"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.h:721
+#: sysdeps/gnu/errlist.h:724
 msgid "Too many processes"
 msgstr "Υπερβολικά πολλές διεργασίες"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.h:726
+#: sysdeps/gnu/errlist.h:729
 msgid "Gratuitous error"
 msgstr "Αδικαιολόγητο λάθος"
 
@@ -2892,11 +2863,11 @@ msgstr "Αδικαιολόγητο λάθος"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.h:742
+#: sysdeps/gnu/errlist.h:745
 msgid "Not supported"
 msgstr "Δεν υποστηρίζεται"
 
-#: sysdeps/gnu/errlist.h:745
+#: sysdeps/gnu/errlist.h:748
 msgid "RPC program version wrong"
 msgstr "Η έκδοση του RPC προγράμματος δεν είναι σωστή"
 
@@ -2906,7 +2877,7 @@ msgstr "Η έκδοση του RPC προγράμματος δεν είναι σ
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.h:755
+#: sysdeps/gnu/errlist.h:758
 msgid "Inappropriate operation for background process"
 msgstr "Ακατάλληλη λειτουργία για διεργασία παρασκηνίου"
 
@@ -2924,7 +2895,7 @@ msgstr "Ακατάλληλη λειτουργία για διεργασία πα
 #. TRANS @c
 #. TRANS @c Translators, please do not translate this litteraly, translate it into
 #. TRANS @c an idiomatic funny way of saying that the computer died.
-#: sysdeps/gnu/errlist.h:773
+#: sysdeps/gnu/errlist.h:776
 msgid "Computer bought the farm"
 msgstr "Ο υπολογιστής πήγε για βρούβες"
 
@@ -2933,26 +2904,26 @@ msgstr "Ο υπολογιστής πήγε για βρούβες"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.h:782
+#: sysdeps/gnu/errlist.h:785
 msgid "Operation would block"
 msgstr "Η λειτουργία θα έπρεπε να φράξει(block)"
 
-#: sysdeps/gnu/errlist.h:785
+#: sysdeps/gnu/errlist.h:788
 msgid "Need authenticator"
 msgstr "Χρειάζεται πιστοποιητής"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.h:792
+#: sysdeps/gnu/errlist.h:795
 msgid "?"
 msgstr "?"
 
-#: sysdeps/gnu/errlist.h:795
+#: sysdeps/gnu/errlist.h:798
 msgid "RPC program not available"
 msgstr "Το πρόγραμμα RPC δεν είναι διαθέσιμο"
 
-#: sysdeps/mach/_strerror.c:43
+#: sysdeps/mach/_strerror.c:43 sysdeps/mach/xpg-strerror.c:55
 msgid "Error in unknown error system: "
 msgstr "Σφάλμα σε άγνωστο σύστημα σφαλμάτων: "
 
@@ -2999,16 +2970,6 @@ msgstr "Το ai_socktype δεν υποστηρίζεται"
 #: sysdeps/posix/gai_strerror-strs.h:11
 msgid "System error"
 msgstr "Σφάλμα συστήματος"
-
-#: sysdeps/unix/sysv/linux/lddlibc4.c:80
-#, c-format
-msgid "cannot open `%s'"
-msgstr "αδυναμία ανοίγματος του `%s'"
-
-#: sysdeps/unix/sysv/linux/lddlibc4.c:84
-#, c-format
-msgid "cannot read header from `%s'"
-msgstr "αδυναμία ανάγνωσης κεφαλίδας από το `%s'"
 
 #: sysdeps/unix/sysv/linux/x86/readelflib.c:62
 #, c-format

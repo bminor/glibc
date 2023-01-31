@@ -14,7 +14,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3\n"
-"POT-Creation-Date: 2022-07-29 13:00-0400\n"
+"POT-Creation-Date: 2023-01-23 08:47-0500\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -27,10 +27,6 @@ msgstr ""
 #: argp/argp-help.c:1713
 msgid "Usage:"
 msgstr "Ikoresha:"
-
-#: elf/cache.c:178
-msgid "unknown"
-msgstr "itazwi"
 
 #: iconv/iconv_prog.c:62
 msgid "Information:"
@@ -79,6 +75,6 @@ msgstr "Ikosa rya Protocol"
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.h:792
+#: sysdeps/gnu/errlist.h:795
 msgid "?"
 msgstr "?"

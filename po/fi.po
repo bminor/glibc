@@ -25,7 +25,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.30.9000\n"
-"POT-Creation-Date: 2022-07-29 13:00-0400\n"
+"POT-Creation-Date: 2023-01-23 08:47-0500\n"
 "PO-Revision-Date: 2020-01-10 23:26+0200\n"
 "Last-Translator: Lauri Nurmi <lanurmi@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -88,7 +88,7 @@ msgstr "Näytä lyhyt käyttöohje"
 
 #: argp/argp-parse.c:103 catgets/gencat.c:108 catgets/gencat.c:112
 #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:106 nscd/nscd.c:110
-#: nss/makedb.c:120
+#: nss/makedb.c:121
 msgid "NAME"
 msgstr "NIMI"
 
@@ -147,7 +147,7 @@ msgstr "Luo C-otsikkotiedosto NAME, joka sisältää symbolimäärittelyt"
 msgid "Do not use existing catalog, force new output file"
 msgstr "Älä käytä olemassaolevaa katalogia, tee uusi tulostiedosto"
 
-#: catgets/gencat.c:112 nss/makedb.c:120
+#: catgets/gencat.c:112 nss/makedb.c:121
 msgid "Write output to file NAME"
 msgstr "Kirjoita tuloste tiedostoon NIMI"
 
@@ -167,12 +167,12 @@ msgstr ""
 "-o TULOSTIEDOSTO [SYÖTETIEDOSTO]...\n"
 "[TULOSTIEDOSTO [SYÖTETIEDOSTO]...]"
 
-#: catgets/gencat.c:228 debug/pcprofiledump.c:208 elf/ldconfig.c:311
+#: catgets/gencat.c:228 debug/pcprofiledump.c:208 elf/ldconfig.c:216
 #: elf/pldd.c:246 elf/sln.c:77 elf/sprof.c:371 iconv/iconv_prog.c:387
 #: iconv/iconvconfig.c:380 locale/programs/locale.c:275
 #: locale/programs/localedef.c:437 login/programs/pt_chown.c:88
-#: malloc/memusagestat.c:562 nss/getent.c:952 nss/makedb.c:369
-#: posix/getconf.c:503 sysdeps/unix/sysv/linux/lddlibc4.c:60
+#: malloc/memusagestat.c:562 nss/getent.c:961 nss/makedb.c:370
+#: posix/getconf.c:503
 #, c-format
 msgid ""
 "For bug reporting instructions, please see:\n"
@@ -182,12 +182,11 @@ msgstr ""
 "%s.\n"
 
 #: catgets/gencat.c:244 debug/pcprofiledump.c:224 debug/xtrace.sh:63
-#: elf/ldconfig.c:327 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
+#: elf/ldconfig.c:232 elf/ldd.bash.in:38 elf/pldd.c:262 elf/sotruss.sh:75
 #: elf/sprof.c:388 iconv/iconv_prog.c:404 iconv/iconvconfig.c:397
 #: locale/programs/locale.c:292 locale/programs/localedef.c:459
 #: login/programs/pt_chown.c:62 malloc/memusage.sh:70 malloc/memusagestat.c:580
-#: nscd/nscd.c:521 nss/getent.c:87 nss/makedb.c:385 posix/getconf.c:485
-#: sysdeps/unix/sysv/linux/lddlibc4.c:67
+#: nscd/nscd.c:521 nss/getent.c:92 nss/makedb.c:386 posix/getconf.c:485
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -199,10 +198,10 @@ msgstr ""
 "ole, ei edes KAUPALLISESTI HYVÄKSYTTÄVÄSTÄ LAADUSTA tai SOPIVUUDESTA TIETTYYN TARKOITUKSEEN.\n"
 
 #: catgets/gencat.c:249 debug/pcprofiledump.c:229 debug/xtrace.sh:67
-#: elf/ldconfig.c:332 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
+#: elf/ldconfig.c:237 elf/pldd.c:267 elf/sprof.c:394 iconv/iconv_prog.c:409
 #: iconv/iconvconfig.c:402 locale/programs/locale.c:297
 #: locale/programs/localedef.c:464 malloc/memusage.sh:74
-#: malloc/memusagestat.c:585 nscd/nscd.c:526 nss/getent.c:92 nss/makedb.c:390
+#: malloc/memusagestat.c:585 nscd/nscd.c:526 nss/getent.c:97 nss/makedb.c:391
 #: posix/getconf.c:490
 #, c-format
 msgid "Written by %s.\n"
@@ -213,7 +212,7 @@ msgid "*standard input*"
 msgstr "*vakiosyöte*"
 
 #: catgets/gencat.c:286 iconv/iconv_charmap.c:172 iconv/iconv_prog.c:272
-#: nss/makedb.c:246
+#: nss/makedb.c:247
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "syötetiedostoa ”%s” ei voi avata"
@@ -386,56 +385,60 @@ msgstr "virheellinen tila"
 msgid "invalid mode parameter"
 msgstr "virheellinen tilaparametri"
 
-#: elf/cache.c:178
-msgid "unknown"
-msgstr "tuntematon"
-
-#: elf/cache.c:297 elf/ldconfig.c:1429
+#: elf/cache.c:293 elf/ldconfig.c:1238
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Välimuistitiedostoa %s ei voi avata\n"
 
-#: elf/cache.c:311
+#: elf/cache.c:307
 #, c-format
 msgid "mmap of cache file failed.\n"
 msgstr "välimuistitiedoston muistikartoitus epäonnistui.\n"
 
-#: elf/cache.c:315 elf/cache.c:329 elf/cache.c:340
+#: elf/cache.c:311 elf/cache.c:325 elf/cache.c:336
 #, c-format
 msgid "File is not a cache file.\n"
 msgstr "Tiedosto ei ole välimuistitiedosto.\n"
 
-#: elf/cache.c:369 elf/cache.c:384
+#: elf/cache.c:365 elf/cache.c:380
 #, c-format
 msgid "%d libs found in cache `%s'\n"
 msgstr "Välimuistista ”%2$s” löytyi %1$d kirjastoa\n"
 
-#: elf/cache.c:698
+#: elf/cache.c:682
 #, c-format
 msgid "Can't create temporary cache file %s"
 msgstr "Tilapäistä välimuistitiedostoa %s ei voi luoda"
 
-#: elf/cache.c:706 elf/cache.c:716 elf/cache.c:720 elf/cache.c:725
-#: elf/cache.c:744
+#: elf/cache.c:690 elf/cache.c:700 elf/cache.c:704 elf/cache.c:709
+#: elf/cache.c:728
 #, c-format
 msgid "Writing of cache data failed"
 msgstr "Välimuistidatan kirjoitus epäonnistui"
 
-#: elf/cache.c:739
+#: elf/cache.c:723
 #, c-format
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Tiedoston %s oikeuksien muutos arvoon %#o epäonnistui"
 
-#: elf/cache.c:748
+#: elf/cache.c:732
 #, c-format
 msgid "Renaming of %s to %s failed"
 msgstr "Uudelleennimeäminen %s -> %s epäonnistui"
 
-#: elf/dl-close.c:386 elf/dl-open.c:298
+#: elf/dl-catch.c:85
+msgid "error while loading shared libraries"
+msgstr "virhe ladattaessa jaettuja kirjastoja"
+
+#: elf/dl-catch.c:118
+msgid "DYNAMIC LINKER BUG!!!"
+msgstr "DYNAAMISEN LINKITTIMEN OHJELMISTOVIKA!!!"
+
+#: elf/dl-close.c:346 elf/dl-open.c:298
 msgid "cannot create scope list"
 msgstr "aluelistaa ei voi luoda"
 
-#: elf/dl-close.c:815
+#: elf/dl-close.c:775
 msgid "shared object not open"
 msgstr "jaettu objekti ei ole avoin"
 
@@ -464,15 +467,7 @@ msgstr "riippuvuuslistalle ei voi varata muistia"
 msgid "cannot allocate symbol search list"
 msgstr "symbolihakulistalle ei voi varata muistia"
 
-#: elf/dl-error-skeleton.c:80
-msgid "error while loading shared libraries"
-msgstr "virhe ladattaessa jaettuja kirjastoja"
-
-#: elf/dl-error-skeleton.c:113
-msgid "DYNAMIC LINKER BUG!!!"
-msgstr "DYNAAMISEN LINKITTIMEN OHJELMISTOVIKA!!!"
-
-#: elf/dl-hwcaps.c:247 elf/dl-hwcaps.c:262
+#: elf/dl-hwcaps.c:196
 msgid "cannot create capability list"
 msgstr "kykylistaa ei voi luoda"
 
@@ -632,184 +627,169 @@ msgstr "virhe version selvittämisessä"
 msgid "cannot allocate version reference table"
 msgstr "versioviitetaulukolle ei voi varata muistia"
 
-#: elf/ldconfig.c:150
+#: elf/ldconfig.c:124
 msgid "Print cache"
 msgstr "Näytä välimuisti"
 
-#: elf/ldconfig.c:151
+#: elf/ldconfig.c:125
 msgid "Generate verbose messages"
 msgstr "Luo monisanaiset viestit"
 
-#: elf/ldconfig.c:152
+#: elf/ldconfig.c:126
 msgid "Don't build cache"
 msgstr "Älä luo välimuistia"
 
-#: elf/ldconfig.c:153
+#: elf/ldconfig.c:127
 msgid "Don't update symbolic links"
 msgstr "Älä päivitä symbolisia linkkejä"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:128
 msgid "Change to and use ROOT as root directory"
 msgstr "Siirry ja käytä ROOTia juurihakemistona"
 
-#: elf/ldconfig.c:154
+#: elf/ldconfig.c:128
 msgid "ROOT"
 msgstr "JUURI"
 
-#: elf/ldconfig.c:155
+#: elf/ldconfig.c:129
 msgid "Use CACHE as cache file"
 msgstr "Käytä CACHEa välimuistitiedostona"
 
-#: elf/ldconfig.c:156
+#: elf/ldconfig.c:130
 msgid "Use CONF as configuration file"
 msgstr "Käytä CONFia asetustiedostona"
 
-#: elf/ldconfig.c:157
+#: elf/ldconfig.c:131
 msgid "Only process directories specified on the command line.  Don't build cache."
 msgstr "Käsittele vain komentorivillä annetut hakemistot. Älä luo välimuistia."
 
-#: elf/ldconfig.c:158
+#: elf/ldconfig.c:132
 msgid "Manually link individual libraries."
 msgstr "Linkitä yksittäisiä kirjastoja käsin."
 
-#: elf/ldconfig.c:159
+#: elf/ldconfig.c:133
 msgid "FORMAT"
 msgstr "MUOTO"
 
-#: elf/ldconfig.c:160
+#: elf/ldconfig.c:134
 msgid "Ignore auxiliary cache file"
 msgstr "Jätä huomiotta apuvälimuistitiedosto"
 
-#: elf/ldconfig.c:168
+#: elf/ldconfig.c:142
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Säädä dynaamisen linkittäjän ajonaikaiset sidonnat."
 
-#: elf/ldconfig.c:371
+#: elf/ldconfig.c:276
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Polku ”%s” on annettu useammin kuin kerran"
 
-#: elf/ldconfig.c:487
-#, c-format
-msgid "%s is not a known library type"
-msgstr "%s ei ole tunnettu kirjastotyyppi"
-
-#: elf/ldconfig.c:519
+#: elf/ldconfig.c:405
 #, c-format
 msgid "Can't stat %s"
 msgstr "Tiedoston %s tilaa ei voi lukea"
 
-#: elf/ldconfig.c:600
+#: elf/ldconfig.c:486
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Tiedoston %s tilaa ei voi lukea\n"
 
-#: elf/ldconfig.c:610
+#: elf/ldconfig.c:496
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s ei ole symbolinen linkki\n"
 
-#: elf/ldconfig.c:629
+#: elf/ldconfig.c:515
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Tiedoston %s linkitystä ei voi poistaa"
 
-#: elf/ldconfig.c:635
+#: elf/ldconfig.c:521
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Linkitys %s -> %s ei onnistu"
 
-#: elf/ldconfig.c:641
+#: elf/ldconfig.c:527
 msgid " (changed)\n"
 msgstr " (muutettu)\n"
 
-#: elf/ldconfig.c:643
+#: elf/ldconfig.c:529
 msgid " (SKIPPED)\n"
 msgstr " (OHITETTU)\n"
 
-#: elf/ldconfig.c:698
+#: elf/ldconfig.c:584
 #, c-format
 msgid "Can't find %s"
 msgstr "%s ei löydy"
 
-#: elf/ldconfig.c:714 elf/ldconfig.c:893 elf/ldconfig.c:953 elf/ldconfig.c:985
+#: elf/ldconfig.c:600 elf/ldconfig.c:763 elf/ldconfig.c:830
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Tiedoston %s tilaa ei voi lukea"
 
-#: elf/ldconfig.c:720
+#: elf/ldconfig.c:606
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Tiedostoa %s ei huomioitu, koska se ei ole tavallinen tiedosto."
 
-#: elf/ldconfig.c:728
+#: elf/ldconfig.c:614
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Linkkiä ei luotu, koska tiedostolle %s ei löytynyt so-nimeä"
 
-#: elf/ldconfig.c:826
+#: elf/ldconfig.c:700
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Hakemistoa %s ei voi avata"
 
-#: elf/ldconfig.c:911 elf/ldconfig.c:973 elf/readlib.c:95
+#: elf/ldconfig.c:780 elf/ldconfig.c:818 elf/readlib.c:78
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Syötetiedostoa %s ei löydy.\n"
 
-#: elf/ldconfig.c:918
+#: elf/ldconfig.c:787
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Tiedoston %s tilaa ei voi lukea"
 
-#: elf/ldconfig.c:1067
-#, c-format
-msgid "libc5 library %s in wrong directory"
-msgstr "libc5-kirjasto %s on väärässä hakemistossa"
-
-#: elf/ldconfig.c:1070
+#: elf/ldconfig.c:906
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6-kirjasto %s on väärässä hakemistossa"
 
-#: elf/ldconfig.c:1073
-#, c-format
-msgid "libc4 library %s in wrong directory"
-msgstr "libc4-kirjasto %s on väärässä hakemistossa"
-
-#: elf/ldconfig.c:1101
+#: elf/ldconfig.c:925
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "kirjastoilla %s ja %s hakemistossa %s on sama so-nimi, mutta eri tyypit."
 
-#: elf/ldconfig.c:1229
+#: elf/ldconfig.c:1050
 #, c-format
 msgid "Warning: ignoring configuration file that cannot be opened: %s"
 msgstr "Varoitus: jätetään huomioimatta asetustiedosto, jota ei voi avata: %s"
 
-#: elf/ldconfig.c:1303 locale/programs/xasprintf.c:31
+#: elf/ldconfig.c:1124 locale/programs/xasprintf.c:31
 #: locale/programs/xmalloc.c:63 malloc/obstack.c:416 malloc/obstack.c:418
 #: posix/getconf.c:458 posix/getconf.c:697
 #, c-format
 msgid "memory exhausted"
 msgstr "muisti lopussa"
 
-#: elf/ldconfig.c:1336
+#: elf/ldconfig.c:1157
 #, c-format
 msgid "%s:%u: cannot read directory %s"
 msgstr "%s:%u: hakemistoa %s ei voi lukea"
 
-#: elf/ldconfig.c:1384
+#: elf/ldconfig.c:1195
 #, c-format
 msgid "relative path `%s' used to build cache"
 msgstr "suhteellista polkua ”%s” käytetään välimuistin luomiseen"
 
-#: elf/ldconfig.c:1408
+#: elf/ldconfig.c:1217
 #, c-format
 msgid "Can't chdir to /"
 msgstr "Juurihakemistoon / siirtyminen ei onnistu"
 
-#: elf/ldconfig.c:1449
+#: elf/ldconfig.c:1258
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Välimuistihakemistoa %s ei voi avata\n"
@@ -860,7 +840,7 @@ msgstr "tiedostoargumentit puuttuvat"
 msgid "No such file or directory"
 msgstr "Tiedostoa tai hakemistoa ei ole"
 
-#: elf/ldd.bash.in:150 inet/rcmd.c:481
+#: elf/ldd.bash.in:150 inet/rcmd.c:482
 msgid "not regular file"
 msgstr "ei ole tavallinen tiedosto"
 
@@ -929,52 +909,52 @@ msgstr "prosessi %lu ei ole ELF-ohjelma"
 msgid "file %s is truncated\n"
 msgstr "tiedosto %s on typistetty\n"
 
-#: elf/readelflib.c:64
+#: elf/readelflib.c:63
 #, c-format
 msgid "%s is a 32 bit ELF file.\n"
 msgstr "%s on 32-bittinen ELF-tiedosto.\n"
 
-#: elf/readelflib.c:66
+#: elf/readelflib.c:65
 #, c-format
 msgid "%s is a 64 bit ELF file.\n"
 msgstr "%s on 64-bittinen ELF-tiedosto.\n"
 
-#: elf/readelflib.c:68
+#: elf/readelflib.c:67
 #, c-format
 msgid "Unknown ELFCLASS in file %s.\n"
 msgstr "Tuntematon ELFCLASS tiedostossa %s.\n"
 
-#: elf/readelflib.c:75
+#: elf/readelflib.c:74
 #, c-format
 msgid "%s is not a shared object file (Type: %d).\n"
 msgstr "%s ei ole jaettu objektitiedosto (Tyyppi: %d).\n"
 
-#: elf/readelflib.c:103
+#: elf/readelflib.c:101
 #, c-format
 msgid "more than one dynamic segment\n"
 msgstr "useampi kuin yksi dynaaminen segmentti\n"
 
-#: elf/readlib.c:101
+#: elf/readlib.c:84
 #, c-format
 msgid "Cannot fstat file %s.\n"
 msgstr "Tiedoston %s tilaa ei voi lukea.\n"
 
-#: elf/readlib.c:112
+#: elf/readlib.c:95
 #, c-format
 msgid "File %s is empty, not checked."
 msgstr "Tiedosto %s on tyhjä, ei tarkastettu."
 
-#: elf/readlib.c:118
+#: elf/readlib.c:101
 #, c-format
 msgid "File %s is too small, not checked."
 msgstr "Tiedosto %s on liian pieni, ei tarkastettu."
 
-#: elf/readlib.c:128
+#: elf/readlib.c:111
 #, c-format
 msgid "Cannot mmap file %s.\n"
 msgstr "Tiedoston %s muistikartoitus epäonnistui.\n"
 
-#: elf/readlib.c:167
+#: elf/readlib.c:149
 #, c-format
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s ei ole ELF-tiedosto - sen alussa on väärät taikatavut.\n"
@@ -1157,11 +1137,6 @@ msgstr "tulostiedostoa ei voi avata"
 msgid "error while closing input `%s'"
 msgstr "virhe suljettaessa syötettä ”%s”"
 
-#: iconv/iconv_charmap.c:443
-#, c-format
-msgid "illegal input sequence at position %Zd"
-msgstr "virheellinen syötesarja kohdassa %Zd"
-
 #: iconv/iconv_charmap.c:462 iconv/iconv_prog.c:518
 #, c-format
 msgid "incomplete character or shift sequence at end of buffer"
@@ -1338,68 +1313,68 @@ msgstr "lisättäessä hakupuuhun"
 msgid "cannot generate output file"
 msgstr "tulostiedostoa ei voi luoda"
 
-#: inet/rcmd.c:158
+#: inet/rcmd.c:159
 msgid "rcmd: Cannot allocate memory\n"
 msgstr "rcmd: Muistin varaaminen ei onnistu\n"
 
-#: inet/rcmd.c:175
+#: inet/rcmd.c:176
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: Kaikki portit käytössä\n"
 
-#: inet/rcmd.c:203
+#: inet/rcmd.c:204
 #, c-format
 msgid "connect to address %s: "
 msgstr "yhdistä osoitteeseen %s: "
 
-#: inet/rcmd.c:216
+#: inet/rcmd.c:217
 #, c-format
 msgid "Trying %s...\n"
 msgstr "Yritetään %s...\n"
 
-#: inet/rcmd.c:252
+#: inet/rcmd.c:253
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write (alustetaan vakiovirhetuloste): %m\n"
 
-#: inet/rcmd.c:268
+#: inet/rcmd.c:269
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (alustetaan vakiovirhetuloste): %m\n"
 
-#: inet/rcmd.c:271
+#: inet/rcmd.c:272
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: protokollavirhe piiriasetuksissa\n"
 
-#: inet/rcmd.c:303
+#: inet/rcmd.c:304
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: protokollavirhe piiriasetuksissa\n"
 
-#: inet/rcmd.c:327
+#: inet/rcmd.c:328
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: vajaa luku"
 
-#: inet/rcmd.c:479
+#: inet/rcmd.c:480
 msgid "lstat failed"
 msgstr "tiedoston tilan luku epäonnistui"
 
-#: inet/rcmd.c:486
+#: inet/rcmd.c:487
 msgid "cannot open"
 msgstr "ei voi avata"
 
-#: inet/rcmd.c:488
+#: inet/rcmd.c:489
 msgid "fstat failed"
 msgstr "tiedoston tilan luku epäonnistui"
 
-#: inet/rcmd.c:490
+#: inet/rcmd.c:491
 msgid "bad owner"
 msgstr "virheellinen omistaja"
 
-#: inet/rcmd.c:492
+#: inet/rcmd.c:493
 msgid "writeable by other than owner"
 msgstr "kirjoitusoikeus muulla kuin omistajalla"
 
-#: inet/rcmd.c:494
+#: inet/rcmd.c:495
 msgid "hard linked somewhere"
 msgstr "kovalinkitetty johonkin"
 
@@ -1745,11 +1720,6 @@ msgstr "%s: painojen on käytettävä samaa sanankatkaisusymbolia kuin nimen"
 msgid "%s: too many values"
 msgstr "%s: liian monta arvoa"
 
-#: locale/programs/ld-collate.c:1062 locale/programs/ld-collate.c:1237
-#, c-format
-msgid "order for `%.*s' already defined at %s:%Zu"
-msgstr "järjestys ”%.*s”:lle on jo määritelty paikassa %s:%Zu"
-
 #: locale/programs/ld-collate.c:1112
 #, c-format
 msgid "%s: the start and the end symbol of a range must stand for characters"
@@ -1774,11 +1744,6 @@ msgstr "%s: symbolisen välin sanankatkaisua ei saa suoraan seurata ”order_end
 #, c-format
 msgid "`%s' and `%.*s' are not valid names for symbolic range"
 msgstr "”%s” ja ”%.*s” eivät ole kelvollisia nimiä symboliselle välille"
-
-#: locale/programs/ld-collate.c:1380 locale/programs/ld-collate.c:3731
-#, c-format
-msgid "%s: order for `%.*s' already defined at %s:%Zu"
-msgstr "%s: järjestys ”%.*s”:lle on jo määritelty kohdassa %s:%Zu"
 
 #: locale/programs/ld-collate.c:1389
 #, c-format
@@ -3027,119 +2992,91 @@ msgstr "PAIKALLINEN merkintä UID:lle %d hakemistossa %s ei ole ainutkertainen\n
 msgid "UNKNOWN"
 msgstr "TUNTEMATON"
 
-#: nis/nis_print.c:109
-msgid "BOGUS OBJECT\n"
-msgstr "VÄÄRÄ OBJEKTI\n"
+#: nis/nis_print.c:69 nscd/nscd.c:117
+msgid "TABLE"
+msgstr "TAULUKKO"
 
-#: nis/nis_print.c:112
-msgid "NO OBJECT\n"
-msgstr "EI OBJEKTIA\n"
-
-#: nis/nis_print.c:115
-msgid "DIRECTORY\n"
-msgstr "HAKEMISTO\n"
-
-#: nis/nis_print.c:118
-msgid "GROUP\n"
-msgstr "RYHMÄ\n"
-
-#: nis/nis_print.c:121
-msgid "TABLE\n"
-msgstr "TAULUKKO\n"
-
-#: nis/nis_print.c:124
-msgid "ENTRY\n"
-msgstr "MERKINTÄ\n"
-
-#: nis/nis_print.c:127
-msgid "LINK\n"
-msgstr "LINKKI\n"
-
-#: nis/nis_print.c:130
+#: nis/nis_print.c:75
 msgid "PRIVATE\n"
 msgstr "YKSITYINEN\n"
 
-#: nis/nis_print.c:133
-msgid "(Unknown object)\n"
-msgstr "(Tuntematon objekti)\n"
-
-#: nis/nis_print.c:167
+#: nis/nis_print.c:164
 #, c-format
 msgid "Name : `%s'\n"
 msgstr "Nimi : ”%s”\n"
 
-#: nis/nis_print.c:168
+#: nis/nis_print.c:165
 #, c-format
 msgid "Type : %s\n"
 msgstr "Tyyppi: %s\n"
 
-#: nis/nis_print.c:173
+#: nis/nis_print.c:170
 msgid "Master Server :\n"
 msgstr "Pääpalvelin   :\n"
 
-#: nis/nis_print.c:175
+#: nis/nis_print.c:172
 msgid "Replicate :\n"
 msgstr "Kaksoiskappale:\n"
 
-#: nis/nis_print.c:176
+#: nis/nis_print.c:173
 #, c-format
 msgid "\tName       : %s\n"
 msgstr "\tNimi       : %s\n"
 
-#: nis/nis_print.c:177
+#: nis/nis_print.c:174
 msgid "\tPublic Key : "
 msgstr "\tJulkinen avain: "
 
-#: nis/nis_print.c:181
+#: nis/nis_print.c:178
 msgid "None.\n"
 msgstr "Ei mitään.\n"
 
-#: nis/nis_print.c:184
+#: nis/nis_print.c:181
 #, c-format
 msgid "Diffie-Hellmann (%d bits)\n"
 msgstr "Diffie-Hellmann (%d bittiä)\n"
 
-#: nis/nis_print.c:189
+#: nis/nis_print.c:186
 #, c-format
 msgid "RSA (%d bits)\n"
 msgstr "RSA (%d bittiä)\n"
 
-#: nis/nis_print.c:192
+#: nis/nis_print.c:189
 msgid "Kerberos.\n"
 msgstr "Kerberos.\n"
 
-#: nis/nis_print.c:195
+#: nis/nis_print.c:192
 #, c-format
 msgid "Unknown (type = %d, bits = %d)\n"
 msgstr "Tuntematon (tyyppi = %d, bitit = %d)\n"
 
-#: nis/nis_print.c:206
+#: nis/nis_print.c:203
 #, c-format
 msgid "\tUniversal addresses (%u)\n"
 msgstr "\tYleiset osoitteet (%u)\n"
 
-#: nis/nis_print.c:228
+#: nis/nis_print.c:225
 msgid "Time to live : "
 msgstr "Elinaika     : "
 
-#: nis/nis_print.c:230
+#: nis/nis_print.c:227
 msgid "Default Access rights :\n"
 msgstr "Oletusarvoiset käyttöoikeudet: \n"
 
-#: nis/nis_print.c:239
+#: nis/nis_print.c:236
 #, c-format
 msgid "\tType         : %s\n"
 msgstr "\tTyyppi       : %s\n"
 
-#: nis/nis_print.c:240
+#: nis/nis_print.c:237
 msgid "\tAccess rights: "
 msgstr "\tKäyttöoikeus: "
 
-#: nis/nis_print.c:254
+#: nis/nis_print.c:251
 msgid "Group Flags :"
 msgstr "Ryhmäliput  :"
 
-#: nis/nis_print.c:257
+#: nis/nis_print.c:254
 msgid ""
 "\n"
 "Group Members :\n"
@@ -3147,95 +3084,95 @@ msgstr ""
 "\n"
 "Ryhmän jäsenet:\n"
 
-#: nis/nis_print.c:269
+#: nis/nis_print.c:266
 #, c-format
 msgid "Table Type          : %s\n"
 msgstr "Taulukkotyyppi      : %s\n"
 
-#: nis/nis_print.c:270
+#: nis/nis_print.c:267
 #, c-format
 msgid "Number of Columns   : %d\n"
 msgstr "Sarakkeiden määrä   : %d\n"
 
-#: nis/nis_print.c:271
+#: nis/nis_print.c:268
 #, c-format
 msgid "Character Separator : %c\n"
 msgstr "Merkkierotin        : %c\n"
 
-#: nis/nis_print.c:272
+#: nis/nis_print.c:269
 #, c-format
 msgid "Search Path         : %s\n"
 msgstr "Hakupolku           : %s\n"
 
-#: nis/nis_print.c:273
+#: nis/nis_print.c:270
 msgid "Columns             :\n"
 msgstr "Sarakkeita          :\n"
 
-#: nis/nis_print.c:276
+#: nis/nis_print.c:273
 #, c-format
 msgid "\t[%d]\tName          : %s\n"
 msgstr "\t[%d]\tNimi          : %s\n"
 
-#: nis/nis_print.c:278
+#: nis/nis_print.c:275
 msgid "\t\tAttributes    : "
 msgstr "\t\tMääreet       : "
 
-#: nis/nis_print.c:280
+#: nis/nis_print.c:277
 msgid "\t\tAccess Rights : "
 msgstr "\t\tKäyttöoikeus  : "
 
-#: nis/nis_print.c:290
+#: nis/nis_print.c:287
 msgid "Linked Object Type : "
 msgstr "Linkitetyn objektin tyyppi: "
 
-#: nis/nis_print.c:292
+#: nis/nis_print.c:289
 #, c-format
 msgid "Linked to : %s\n"
 msgstr "Linkitetty: %s\n"
 
-#: nis/nis_print.c:302
+#: nis/nis_print.c:299
 #, c-format
 msgid "\tEntry data of type %s\n"
 msgstr "\tMerkintädata tyyppiä %s\n"
 
-#: nis/nis_print.c:305
+#: nis/nis_print.c:302
 #, c-format
 msgid "\t[%u] - [%u bytes] "
 msgstr "\t[%u] - [%u tavua] "
 
-#: nis/nis_print.c:308
+#: nis/nis_print.c:305
 msgid "Encrypted data\n"
 msgstr "Salattua dataa\n"
 
-#: nis/nis_print.c:310
+#: nis/nis_print.c:307
 msgid "Binary data\n"
 msgstr "Binääridataa\n"
 
-#: nis/nis_print.c:326
+#: nis/nis_print.c:323
 #, c-format
 msgid "Object Name   : %s\n"
 msgstr "Objektin nimi : %s\n"
 
-#: nis/nis_print.c:327
+#: nis/nis_print.c:324
 #, c-format
 msgid "Directory     : %s\n"
 msgstr "Hakemisto     : %s\n"
 
-#: nis/nis_print.c:328
+#: nis/nis_print.c:325
 #, c-format
 msgid "Owner         : %s\n"
 msgstr "Omistaja      : %s\n"
 
-#: nis/nis_print.c:329
+#: nis/nis_print.c:326
 #, c-format
 msgid "Group         : %s\n"
 msgstr "Ryhmä         : %s\n"
 
-#: nis/nis_print.c:330
+#: nis/nis_print.c:327
 msgid "Access Rights : "
 msgstr "Käyttöoikeus  : "
 
-#: nis/nis_print.c:332
+#: nis/nis_print.c:329
 #, c-format
 msgid ""
 "\n"
@@ -3244,36 +3181,36 @@ msgstr ""
 "\n"
 "Elinaika      : "
 
-#: nis/nis_print.c:335
+#: nis/nis_print.c:332
 #, c-format
 msgid "Creation Time : %s"
 msgstr "Luontiaika    : %s"
 
-#: nis/nis_print.c:337
+#: nis/nis_print.c:334
 #, c-format
 msgid "Mod. Time     : %s"
 msgstr "Muutosaika    : %s"
 
-#: nis/nis_print.c:338
+#: nis/nis_print.c:335
 msgid "Object Type   : "
 msgstr "Objektin tyyppi: "
 
-#: nis/nis_print.c:358
+#: nis/nis_print.c:355
 #, c-format
 msgid "    Data Length = %u\n"
 msgstr "    Datan pituus = %u\n"
 
-#: nis/nis_print.c:372
+#: nis/nis_print.c:369
 #, c-format
 msgid "Status            : %s\n"
 msgstr "Tila              : %s\n"
 
-#: nis/nis_print.c:373
+#: nis/nis_print.c:370
 #, c-format
 msgid "Number of objects : %u\n"
 msgstr "Objektien määrä   : %u\n"
 
-#: nis/nis_print.c:377
+#: nis/nis_print.c:374
 #, c-format
 msgid "Object #%d:\n"
 msgstr "Objekti #%d:\n"
@@ -3524,30 +3461,30 @@ msgstr "handle_request: pyyntö vastaanotettu (Versio = %d)"
 msgid "monitored file `%s` was written to"
 msgstr "valvottuun tiedostoon ”%s” kirjoitettiin"
 
-#: nscd/connections.c:2393
+#: nscd/connections.c:2394
 msgid "could not start clean-up thread; terminating"
 msgstr "puhdistussäiettä ei voitu käynnistää; päätetään"
 
-#: nscd/connections.c:2407
+#: nscd/connections.c:2408
 msgid "could not start any worker thread; terminating"
 msgstr "mitään työsäiettä ei voitu käynnistää; päätetään"
 
-#: nscd/connections.c:2462 nscd/connections.c:2464 nscd/connections.c:2480
-#: nscd/connections.c:2490 nscd/connections.c:2508 nscd/connections.c:2519
-#: nscd/connections.c:2529
+#: nscd/connections.c:2463 nscd/connections.c:2465 nscd/connections.c:2481
+#: nscd/connections.c:2491 nscd/connections.c:2509 nscd/connections.c:2520
+#: nscd/connections.c:2530
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Ohjelman nscd ajaminen käyttäjän ”%s” oikeuksilla epäonnistui"
 
-#: nscd/connections.c:2482
+#: nscd/connections.c:2483
 msgid "initial getgrouplist failed"
 msgstr "alustava getgrouplist epäonnistui"
 
-#: nscd/connections.c:2491
+#: nscd/connections.c:2492
 msgid "getgrouplist failed"
 msgstr "getgrouplist epäonnistui"
 
-#: nscd/connections.c:2509
+#: nscd/connections.c:2510
 msgid "setgroups failed"
 msgstr "setgroups epäonnistui"
 
@@ -3596,10 +3533,6 @@ msgstr "Käynnistä MÄÄRÄ säiettä"
 msgid "Shut the server down"
 msgstr "Sammuta palvelin"
 
-#: nscd/nscd.c:117
-msgid "TABLE"
-msgstr "TAULUKKO"
-
 #: nscd/nscd.c:118
 msgid "Invalidate the specified cache"
 msgstr "Poista käytöstä määritelty välimuisti"
@@ -3616,7 +3549,7 @@ msgstr "Käytä erillistä välimuistia jokaiselle käyttäjälle"
 msgid "Name Service Cache Daemon."
 msgstr "Nimipalvelun välimuistidemoni."
 
-#: nscd/nscd.c:158 nss/getent.c:986 nss/makedb.c:206
+#: nscd/nscd.c:158 nss/getent.c:995 nss/makedb.c:207
 #, c-format
 msgid "wrong number of arguments"
 msgstr "väärä määrä argumentteja"
@@ -3770,42 +3703,42 @@ msgstr "tietokanta [avain ...]"
 msgid "Service configuration to be used"
 msgstr "Käytettävät palveluasetukset"
 
-#: nss/getent.c:149 nss/getent.c:461 nss/getent.c:508
+#: nss/getent.c:154 nss/getent.c:466 nss/getent.c:513
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "%s ei tue luettelemista\n"
 
-#: nss/getent.c:900
+#: nss/getent.c:905
 #, c-format
 msgid "Unknown database name"
 msgstr "Tuntematon tietokannan nimi"
 
-#: nss/getent.c:930
+#: nss/getent.c:939
 msgid "Supported databases:\n"
 msgstr "Tuetut tietokannat:\n"
 
-#: nss/getent.c:996
+#: nss/getent.c:1005
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Tuntematon tietokanta: %s\n"
 
-#: nss/makedb.c:119
+#: nss/makedb.c:120
 msgid "Convert key to lower case"
 msgstr "Muuta avain pienaakkosiksi"
 
-#: nss/makedb.c:122
+#: nss/makedb.c:123
 msgid "Do not print messages while building database"
 msgstr "Älä tulosta viestejä tietokantaa luotaessa"
 
-#: nss/makedb.c:124
+#: nss/makedb.c:125
 msgid "Print content of database file, one entry a line"
 msgstr "Tulosta tietokantatiedoston sisältö, yksi merkintä riviä kohden"
 
-#: nss/makedb.c:125
+#: nss/makedb.c:126
 msgid "CHAR"
 msgstr "MERKKI"
 
-#: nss/makedb.c:134
+#: nss/makedb.c:135
 msgid ""
 "INPUT-FILE OUTPUT-FILE\n"
 "-o OUTPUT-FILE INPUT-FILE\n"
@@ -3815,56 +3748,56 @@ msgstr ""
 "-o TULOSTIEDOSTO SYÖTETIEDOSTO\n"
 "-u SYÖTETIEDOSTO"
 
-#: nss/makedb.c:227
+#: nss/makedb.c:228
 #, c-format
 msgid "cannot open database file `%s'"
 msgstr "tietokantatiedostoa ”%s” ei voi avata"
 
-#: nss/makedb.c:282
+#: nss/makedb.c:283
 #, c-format
 msgid "cannot create temporary file name"
 msgstr "tilapäistiedoston nimeä ei voi luoda"
 
-#: nss/makedb.c:288
+#: nss/makedb.c:289
 #, c-format
 msgid "cannot create temporary file"
 msgstr "tilapäistä tiedostoa ei voi luoda"
 
-#: nss/makedb.c:304
+#: nss/makedb.c:305
 #, c-format
 msgid "cannot stat newly created file"
 msgstr "juuri luodun tiedoston tilaa ei voi lukea"
 
-#: nss/makedb.c:315
+#: nss/makedb.c:316
 #, c-format
 msgid "cannot rename temporary file"
 msgstr "tilapäistä tiedostoa ei voi nimetä uudelleen"
 
-#: nss/makedb.c:527 nss/makedb.c:550
+#: nss/makedb.c:528 nss/makedb.c:551
 #, c-format
 msgid "cannot create search tree"
 msgstr "hakupuuta ei voi luoda"
 
-#: nss/makedb.c:556
+#: nss/makedb.c:557
 msgid "duplicate key"
 msgstr "avaimen kaksoiskappale"
 
-#: nss/makedb.c:568
+#: nss/makedb.c:569
 #, c-format
 msgid "problems while reading `%s'"
 msgstr "ongelmia luettaessa tiedostoa ”%s”"
 
-#: nss/makedb.c:804
+#: nss/makedb.c:805
 #, c-format
 msgid "failed to write new database file"
 msgstr "uuden tietokantatiedoston kirjoittaminen epäonnistui"
 
-#: nss/makedb.c:821
+#: nss/makedb.c:822
 #, c-format
 msgid "cannot stat database file"
 msgstr "tietokantatiedoston tilaa ei voi lukea"
 
-#: nss/makedb.c:829
+#: nss/makedb.c:830
 #, c-format
 msgid "file not a database file"
 msgstr "tiedosto ei ole tietokantatiedosto"
@@ -3893,37 +3826,37 @@ msgstr "määrittelemätön"
 msgid "Unrecognized variable `%s'"
 msgstr "Tunnistamaton muuttuja ”%s”"
 
-#: posix/getopt.c:277
+#: posix/getopt.c:278
 #, c-format
 msgid "%s: option '%s%s' is ambiguous\n"
 msgstr "%s: valitsin ”%s%s” on moniselitteinen\n"
 
-#: posix/getopt.c:283
+#: posix/getopt.c:284
 #, c-format
 msgid "%s: option '%s%s' is ambiguous; possibilities:"
 msgstr "%s: valitsin ”%s%s” on moniselitteinen; vaihtoehdot:"
 
-#: posix/getopt.c:318
+#: posix/getopt.c:319
 #, c-format
 msgid "%s: unrecognized option '%s%s'\n"
 msgstr "%s: tunnistamaton valitsin ”%s%s”\n"
 
-#: posix/getopt.c:344
+#: posix/getopt.c:345
 #, c-format
 msgid "%s: option '%s%s' doesn't allow an argument\n"
 msgstr "%s: valitsin ”%s%s” ei salli argumenttia\n"
 
-#: posix/getopt.c:359
+#: posix/getopt.c:360
 #, c-format
 msgid "%s: option '%s%s' requires an argument\n"
 msgstr "%s: valitsin ”%s%s” vaatii argumentin\n"
 
-#: posix/getopt.c:620
+#: posix/getopt.c:621
 #, c-format
 msgid "%s: invalid option -- '%c'\n"
 msgstr "%s: virheellinen valitsin -- ”%c”\n"
 
-#: posix/getopt.c:635 posix/getopt.c:681
+#: posix/getopt.c:636 posix/getopt.c:682
 #, c-format
 msgid "%s: option requires an argument -- '%c'\n"
 msgstr "%s: valitsin vaatii argumentin -- ”%c”\n"
@@ -5204,118 +5137,122 @@ msgid "Invalid slot"
 msgstr "Virheellinen viipale"
 
 #: sysdeps/gnu/errlist.h:597
+msgid "File locking deadlock error"
+msgstr "Umpikuja tiedoston lukinnassa -virhe"
+
+#: sysdeps/gnu/errlist.h:600
 msgid "Bad font file format"
 msgstr "Virheellinen kirjasintiedoston muoto"
 
-#: sysdeps/gnu/errlist.h:600
+#: sysdeps/gnu/errlist.h:603
 msgid "Machine is not on the network"
 msgstr "Kone ei ole verkossa"
 
-#: sysdeps/gnu/errlist.h:603
+#: sysdeps/gnu/errlist.h:606
 msgid "Package not installed"
 msgstr "Pakettia ei ole asennettu"
 
-#: sysdeps/gnu/errlist.h:606
+#: sysdeps/gnu/errlist.h:609
 msgid "Advertise error"
 msgstr "Ilmoitusvirhe"
 
-#: sysdeps/gnu/errlist.h:609
+#: sysdeps/gnu/errlist.h:612
 msgid "Srmount error"
 msgstr "Srmount-virhe"
 
-#: sysdeps/gnu/errlist.h:612
+#: sysdeps/gnu/errlist.h:615
 msgid "Communication error on send"
 msgstr "Yhteysvirhe lähetettäessä"
 
-#: sysdeps/gnu/errlist.h:615
+#: sysdeps/gnu/errlist.h:618
 msgid "RFS specific error"
 msgstr "RFS:n virhe"
 
-#: sysdeps/gnu/errlist.h:618
+#: sysdeps/gnu/errlist.h:621
 msgid "Name not unique on network"
 msgstr "Nimi ei ole ainutkertainen verkossa"
 
-#: sysdeps/gnu/errlist.h:621
+#: sysdeps/gnu/errlist.h:624
 msgid "File descriptor in bad state"
 msgstr "Tiedostokahva on virheellisessä tilassa"
 
-#: sysdeps/gnu/errlist.h:624
+#: sysdeps/gnu/errlist.h:627
 msgid "Remote address changed"
 msgstr "Etäosoite muuttunut"
 
-#: sysdeps/gnu/errlist.h:627
+#: sysdeps/gnu/errlist.h:630
 msgid "Can not access a needed shared library"
 msgstr "Tarvittavaa jaettua kirjastoa ei voi käyttää"
 
-#: sysdeps/gnu/errlist.h:630
+#: sysdeps/gnu/errlist.h:633
 msgid "Accessing a corrupted shared library"
 msgstr "Käytetään turmeltunutta jaettua kirjastoa"
 
-#: sysdeps/gnu/errlist.h:633
+#: sysdeps/gnu/errlist.h:636
 msgid ".lib section in a.out corrupted"
 msgstr "a.out:in .lib-osa on turmeltunut"
 
-#: sysdeps/gnu/errlist.h:636
+#: sysdeps/gnu/errlist.h:639
 msgid "Attempting to link in too many shared libraries"
 msgstr "Yritetään linkittää liian monta jaettua kirjastoa"
 
-#: sysdeps/gnu/errlist.h:639
+#: sysdeps/gnu/errlist.h:642
 msgid "Cannot exec a shared library directly"
 msgstr "Jaettua kirjastoa ei voi käynnistää suoraan"
 
-#: sysdeps/gnu/errlist.h:642
+#: sysdeps/gnu/errlist.h:645
 msgid "Streams pipe error"
 msgstr "Virtaputkivirhe"
 
-#: sysdeps/gnu/errlist.h:645
+#: sysdeps/gnu/errlist.h:648
 msgid "Structure needs cleaning"
 msgstr "Rakenne vaatii puhdistusta"
 
-#: sysdeps/gnu/errlist.h:648
+#: sysdeps/gnu/errlist.h:651
 msgid "Not a XENIX named type file"
 msgstr "Ei ole XENIXin nimetty tyyppitiedosto"
 
-#: sysdeps/gnu/errlist.h:651
+#: sysdeps/gnu/errlist.h:654
 msgid "No XENIX semaphores available"
 msgstr "XENIX-semaforeja ei ole käytettävissä"
 
-#: sysdeps/gnu/errlist.h:654
+#: sysdeps/gnu/errlist.h:657
 msgid "Is a named type file"
 msgstr "On nimetty tyyppitiedosto"
 
-#: sysdeps/gnu/errlist.h:657
+#: sysdeps/gnu/errlist.h:660
 msgid "Remote I/O error"
 msgstr "Vastapään I/O-virhe"
 
-#: sysdeps/gnu/errlist.h:660
+#: sysdeps/gnu/errlist.h:663
 msgid "No medium found"
 msgstr "Mediaa ei löydy"
 
-#: sysdeps/gnu/errlist.h:663
+#: sysdeps/gnu/errlist.h:666
 msgid "Wrong medium type"
 msgstr "Väärä mediatyyppi"
 
-#: sysdeps/gnu/errlist.h:666
+#: sysdeps/gnu/errlist.h:669
 msgid "Required key not available"
 msgstr "Vaadittava avain ei ole saatavilla"
 
-#: sysdeps/gnu/errlist.h:669
+#: sysdeps/gnu/errlist.h:672
 msgid "Key has expired"
 msgstr "Avain vanhentunut"
 
-#: sysdeps/gnu/errlist.h:672
+#: sysdeps/gnu/errlist.h:675
 msgid "Key has been revoked"
 msgstr "Avain on kumottu"
 
-#: sysdeps/gnu/errlist.h:675
+#: sysdeps/gnu/errlist.h:678
 msgid "Key was rejected by service"
 msgstr "Palvelu hylkäsi avaimen"
 
-#: sysdeps/gnu/errlist.h:681
+#: sysdeps/gnu/errlist.h:684
 msgid "Memory page has hardware error"
 msgstr "Muistisivulla on laitteistovirhe"
 
-#: sysdeps/gnu/errlist.h:684
+#: sysdeps/gnu/errlist.h:687
 msgid "RPC struct is bad"
 msgstr "RPC-rakenne on virheellinen"
 
@@ -5324,43 +5261,43 @@ msgstr "RPC-rakenne on virheellinen"
 #. TRANS
 #. TRANS On some systems @code{chmod} returns this error if you try to set the
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
-#: sysdeps/gnu/errlist.h:693
+#: sysdeps/gnu/errlist.h:696
 msgid "Inappropriate file type or format"
 msgstr "Sopimaton tiedostotyyppi tai -muoto"
 
-#: sysdeps/gnu/errlist.h:696
+#: sysdeps/gnu/errlist.h:699
 msgid "RPC bad procedure for program"
 msgstr "RPC: väärä proseduuri ohjelmalle"
 
-#: sysdeps/gnu/errlist.h:699
+#: sysdeps/gnu/errlist.h:702
 msgid "Authentication error"
 msgstr "Todennusvirhe"
 
 #. TRANS On @gnuhurdsystems{}, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: sysdeps/gnu/errlist.h:706
+#: sysdeps/gnu/errlist.h:709
 msgid "Translator died"
 msgstr "Kääntäjä kuoli"
 
-#: sysdeps/gnu/errlist.h:709
+#: sysdeps/gnu/errlist.h:712
 msgid "RPC version wrong"
 msgstr "RPC-versio on väärä"
 
 #. TRANS You did @strong{what}?
-#: sysdeps/gnu/errlist.h:714
+#: sysdeps/gnu/errlist.h:717
 msgid "You really blew it this time"
 msgstr "Tällä kertaa todella sotkit asiat"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
-#: sysdeps/gnu/errlist.h:721
+#: sysdeps/gnu/errlist.h:724
 msgid "Too many processes"
 msgstr "Liian monta prosessia"
 
 #. TRANS This error code has no purpose.
-#: sysdeps/gnu/errlist.h:726
+#: sysdeps/gnu/errlist.h:729
 msgid "Gratuitous error"
 msgstr "Tarpeeton virhe"
 
@@ -5376,11 +5313,11 @@ msgstr "Tarpeeton virhe"
 #. TRANS
 #. TRANS If the entire function is not available at all in the implementation,
 #. TRANS it returns @code{ENOSYS} instead.
-#: sysdeps/gnu/errlist.h:742
+#: sysdeps/gnu/errlist.h:745
 msgid "Not supported"
 msgstr "Ei ole tuettu"
 
-#: sysdeps/gnu/errlist.h:745
+#: sysdeps/gnu/errlist.h:748
 msgid "RPC program version wrong"
 msgstr "RPC-ohjelman versio on väärä"
 
@@ -5390,7 +5327,7 @@ msgstr "RPC-ohjelman versio on väärä"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: sysdeps/gnu/errlist.h:755
+#: sysdeps/gnu/errlist.h:758
 msgid "Inappropriate operation for background process"
 msgstr "Taustaprosessille sopimaton toiminto"
 
@@ -5408,7 +5345,7 @@ msgstr "Taustaprosessille sopimaton toiminto"
 #. TRANS @c
 #. TRANS @c Translators, please do not translate this litteraly, translate it into
 #. TRANS @c an idiomatic funny way of saying that the computer died.
-#: sysdeps/gnu/errlist.h:773
+#: sysdeps/gnu/errlist.h:776
 msgid "Computer bought the farm"
 msgstr "Tietokone heitti veivinsä"
 
@@ -5417,26 +5354,26 @@ msgstr "Tietokone heitti veivinsä"
 #. TRANS
 #. TRANS C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
 #. TRANS separate error code.
-#: sysdeps/gnu/errlist.h:782
+#: sysdeps/gnu/errlist.h:785
 msgid "Operation would block"
 msgstr "Toiminto pysähtyisi"
 
-#: sysdeps/gnu/errlist.h:785
+#: sysdeps/gnu/errlist.h:788
 msgid "Need authenticator"
 msgstr "Tarvitaan todennin"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: sysdeps/gnu/errlist.h:792
+#: sysdeps/gnu/errlist.h:795
 msgid "?"
 msgstr "?"
 
-#: sysdeps/gnu/errlist.h:795
+#: sysdeps/gnu/errlist.h:798
 msgid "RPC program not available"
 msgstr "RPC-ohjelma ei ole käytettävissä"
 
-#: sysdeps/mach/_strerror.c:43
+#: sysdeps/mach/_strerror.c:43 sysdeps/mach/xpg-strerror.c:55
 msgid "Error in unknown error system: "
 msgstr "Virhe tuntemattomassa virhejärjestelmässä: "
 
@@ -5512,25 +5449,6 @@ msgstr "Parametrimerkkijono ei ole koodattu oikein"
 #, c-format
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr "makecontext: ei osaa käsitellä yli kahdeksaa argumenttia\n"
-
-#: sysdeps/unix/sysv/linux/lddlibc4.c:59
-#, c-format
-msgid ""
-"Usage: lddlibc4 FILE\n"
-"\n"
-msgstr ""
-"Käyttö: lddlibc4 TIEDOSTO\n"
-"\n"
-
-#: sysdeps/unix/sysv/linux/lddlibc4.c:80
-#, c-format
-msgid "cannot open `%s'"
-msgstr "tiedostoa ”%s” ei voi avata"
-
-#: sysdeps/unix/sysv/linux/lddlibc4.c:84
-#, c-format
-msgid "cannot read header from `%s'"
-msgstr "tiedoston ”%s” otsaketta ei voi lukea"
 
 #: sysdeps/unix/sysv/linux/x86/readelflib.c:62
 #, c-format
