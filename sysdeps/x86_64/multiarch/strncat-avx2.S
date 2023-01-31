@@ -66,7 +66,7 @@ ENTRY(STRNCAT)
 	salq	$2, %rdx
 # else
 	test	%rdx, %rdx
-	jl	L(zero_len)
+	jle	L(zero_len)
 # endif
 	vpxor	%VZERO_128, %VZERO_128, %VZERO_128
 
@@ -387,7 +387,7 @@ L(page_cross):
 	subl	%esi, %r8d
 	andl	$(VEC_SIZE - 1), %r8d
 	cmpq	%r8, %rdx
-	jb	L(page_cross_small)
+	jbe	L(page_cross_small)
 
 	/* Optimizing more aggressively for space as this is very cold
 	   code. This saves 2x cache lines.  */
