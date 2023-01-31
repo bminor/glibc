@@ -19,6 +19,9 @@
 #include <string.h>
 
 #undef strcpy
+/* Disable internal stpcpy optimization, otherwise the __stpcpy might it
+   generate a strcpy call.  */
+#undef __stpcpy
 
 #ifndef STRCPY
 # define STRCPY strcpy
@@ -28,6 +31,7 @@
 char *
 STRCPY (char *dest, const char *src)
 {
-  return memcpy (dest, src, strlen (src) + 1);
+  __stpcpy (dest, src);
+  return dest;
 }
 libc_hidden_builtin_def (strcpy)
