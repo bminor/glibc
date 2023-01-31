@@ -54,6 +54,7 @@ __printf_buffer_flush_dprintf (struct __printf_buffer_dprintf *buf)
 	}
       p += ret;
     }
+  buf->base.written += buf->base.write_ptr - buf->base.write_base;
   buf->base.write_ptr = buf->buf;
 }
 

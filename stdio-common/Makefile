@@ -180,6 +180,7 @@ tests := \
   tst-bz11319 \
   tst-bz11319-fortify2 \
   tst-cookie \
+  tst-dprintf-length \
   tst-fdopen \
   tst-ferror \
   tst-fgets \
