@@ -26,26 +26,36 @@
 #include "test-string.h"
 #ifndef WIDE
 # define CHAR char
-# define SIMPLE_STPCPY simple_stpcpy
 # define STPCPY stpcpy
 #else
 # include <wchar.h>
 # define CHAR wchar_t
-# define SIMPLE_STPCPY simple_wcpcpy
 # define STPCPY wcpcpy
 #endif /* !WIDE */
 
-CHAR *SIMPLE_STPCPY (CHAR *, const CHAR *);
-
-IMPL (SIMPLE_STPCPY, 0)
 IMPL (STPCPY, 1)
 
-CHAR *
-SIMPLE_STPCPY (CHAR *dst, const CHAR *src)
-{
-  while ((*dst++ = *src++) != '\0');
-  return dst - 1;
-}
+/* Also check the generic implementation.  */
+#undef STPCPY
+#undef weak_alias
+#define weak_alias(a, b)
+#undef libc_hidden_def
+#define libc_hidden_def(a)
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(a)
+#undef attribute_hidden
+#define attribute_hidden
+#ifndef WIDE
+# define STPCPY __stpcpy_default
+# include "string/stpcpy.c"
+IMPL (__stpcpy_default, 1)
+#else
+# define __wcslen wcslen
+# define __wmemcpy wmemcpy
+# define WCPCPY __wcpcpy_default
+# include "wcsmbs/wcpcpy.c"
+IMPL (__wcpcpy_default, 1)
+#endif
 
 #undef CHAR
 #include "test-strcpy.c"
