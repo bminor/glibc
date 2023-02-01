@@ -67,14 +67,15 @@ ENTRY (__memcpy_sve)
 
 	cmp	count, 128
 	b.hi	L(copy_long)
-	cmp	count, 32
-	b.hi	L(copy32_128)
-
-	whilelo p0.b, xzr, count
 	cntb	vlen
-	tbnz	vlen, 4, L(vlen128)
-	ld1b	z0.b, p0/z, [src]
-	st1b	z0.b, p0, [dstin]
+	cmp	count, vlen, lsl 1
+	b.hi	L(copy32_128)
+	whilelo p0.b, xzr, count
+	whilelo p1.b, vlen, count
+	ld1b	z0.b, p0/z, [src, 0, mul vl]
+	ld1b	z1.b, p1/z, [src, 1, mul vl]
+	st1b	z0.b, p0, [dstin, 0, mul vl]
+	st1b	z1.b, p1, [dstin, 1, mul vl]
 	ret
 
 	/* Medium copies: 33..128 bytes.  */
@@ -100,14 +101,6 @@ L(copy96):
 	stp	A_q, B_q, [dstin]
 	stp	E_q, F_q, [dstin, 32]
 	stp	C_q, D_q, [dstend, -32]
-	ret
-
-L(vlen128):
-	whilelo p1.b, vlen, count
-	ld1b	z0.b, p0/z, [src, 0, mul vl]
-	ld1b	z1.b, p1/z, [src, 1, mul vl]
-	st1b	z0.b, p0, [dstin, 0, mul vl]
-	st1b	z1.b, p1, [dstin, 1, mul vl]
 	ret
 
 	.p2align 4
@@ -158,14 +151,15 @@ ENTRY (__memmove_sve)
 
 	cmp	count, 128
 	b.hi	L(move_long)
-	cmp	count, 32
-	b.hi	L(copy32_128)
-
-	whilelo p0.b, xzr, count
 	cntb	vlen
-	tbnz	vlen, 4, L(vlen128)
-	ld1b	z0.b, p0/z, [src]
-	st1b	z0.b, p0, [dstin]
+	cmp	count, vlen, lsl 1
+	b.hi	L(copy32_128)
+	whilelo p0.b, xzr, count
+	whilelo p1.b, vlen, count
+	ld1b	z0.b, p0/z, [src, 0, mul vl]
+	ld1b	z1.b, p1/z, [src, 1, mul vl]
+	st1b	z0.b, p0, [dstin, 0, mul vl]
+	st1b	z1.b, p1, [dstin, 1, mul vl]
 	ret
 
 	.p2align 4
