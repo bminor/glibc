@@ -1,4 +1,4 @@
-/* Old-style Unix parameters and limits.  i386 Mach version.
+/* Old-style Unix parameters and limits.  x86 Mach version.
    Copyright (C) 1993-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

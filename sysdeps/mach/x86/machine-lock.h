@@ -1,4 +1,4 @@
-/* Machine-specific definition for spin locks.  i386 version.
+/* Machine-specific definition for spin locks.  x86 version.
    Copyright (C) 1994-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

@@ -16,19 +16,32 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _MACH_I386_SYSDEP_H
-#define _MACH_I386_SYSDEP_H 1
+#ifndef _MACH_X86_SYSDEP_H
+#define _MACH_X86_SYSDEP_H 1
 
-#include <sysdeps/mach/x86/sysdep.h>
+/* Defines RTLD_PRIVATE_ERRNO and USE_DL_SYSINFO.  */
+#include <dl-sysdep.h>
+#include <tls.h>
 
-#define RETURN_TO(sp, pc, retval) \
-  asm volatile ("movl %0, %%esp; jmp %*%1 # %2" \
-		: : "g" (sp), "r" (pc), "a" (retval))
+#define LOSE asm volatile ("hlt")
 
-/* This should be rearranged, but at the moment this file provides
-   the most useful definitions for assembler syntax details.  */
-#undef ENTRY
-#undef ALIGN
-#include <sysdeps/unix/i386/sysdep.h>
+#define SNARF_ARGS(entry_sp, argc, argv, envp)				      \
+  do									      \
+    {									      \
+      char **p;								      \
+      argc = (int) *entry_sp;						      \
+      argv = (char **) (entry_sp + 1);					      \
+      p = argv;								      \
+      while (*p++ != NULL)						      \
+	;								      \
+      if (p >= (char **) argv[0])					      \
+	--p;								      \
+      envp = p;							      \
+    } while (0)
 
-#endif /* mach/i386/sysdep.h */
+#define STACK_GROWTH_DOWN
+
+/* Get the machine-independent Mach definitions.  */
+#include <sysdeps/mach/sysdep.h>
+
+#endif /* mach/x86/sysdep.h */
