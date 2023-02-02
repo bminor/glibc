@@ -26,14 +26,12 @@
 
 #ifdef WIDE
 # include <wchar.h>
-# define SIMPLE_STRRCHR simple_wcsrchr
 # define STRRCHR wcsrchr
 # define CHAR wchar_t
 # define UCHAR wchar_t
 # define BIG_CHAR WCHAR_MAX
 # define SMALL_CHAR 1273
 #else
-# define SIMPLE_STRRCHR simple_strrchr
 # define STRRCHR strrchr
 # define CHAR char
 # define UCHAR unsigned char
@@ -45,18 +43,30 @@ typedef CHAR *(*proto_t) (const CHAR *, int);
 
 IMPL (STRRCHR, 1)
 
-/* Naive implementation to verify results.  */
-CHAR *
-SIMPLE_STRRCHR (const CHAR *s, int c)
-{
-  const CHAR *ret = NULL;
-
-  for (; *s != '\0'; ++s)
-    if (*s == (CHAR) c)
-      ret = s;
-
-  return (CHAR *) (c == '\0' ? s : ret);
-}
+/* Also check the generic implementation.  */
+#undef STRRCHR
+#undef weak_alias
+#define weak_alias(a, b)
+#undef libc_hidden_builtin_def
+#define libc_hidden_builtin_def(a)
+#undef libc_hidden_def
+#define libc_hidden_def(a)
+#undef libc_hidden_weak
+#define libc_hidden_weak(a)
+#ifndef WIDE
+# define STRLEN __strlen_default
+# include "string/strlen.c"
+# define MEMRCHR __memrchr_default
+# include "string/memrchr.c"
+# define STRRCHR __strrchr_default
+# include "string/strrchr.c"
+# define STRRCHR_DEFAULT __strrchr_default
+#else
+# define WCSRCHR __wcsrchr_default
+# include "wcsmbs/wcsrchr.c"
+# define STRRCHR_DEFAULT __wcsrchr_default
+#endif
+IMPL (STRRCHR_DEFAULT, 1)
 
 static void
 do_one_test (impl_t *impl, const CHAR *s, int c, CHAR *exp_res)
