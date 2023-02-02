@@ -20,6 +20,7 @@
 #define	_S390_LDSODEFS_H	1
 
 #include <elf.h>
+#include <cpu-features.h>
 
 struct La_s390_32_regs;
 struct La_s390_32_retval;

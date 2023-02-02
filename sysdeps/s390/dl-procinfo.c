@@ -21,5 +21,42 @@
 
 /* Needed by sysdeps/unix/sysv/linux/dl-vdso-setup.c (as included from
    sysdeps/generic/ldsodefs.h).  */
+
+/* All the #ifdefs in the definitions are quite irritating but
+   necessary if we want to avoid duplicating the information.  There
+   are three different modes:
+
+   - PROCINFO_DECL is defined.  This means we are only interested in
+     declarations.
+
+   - PROCINFO_DECL is not defined:
+
+     + if SHARED is defined the file is included in an array
+       initializer.  The .element = { ... } syntax is needed.
+
+     + if SHARED is not defined a normal array initialization is
+       needed.
+  */
+
+#ifndef PROCINFO_CLASS
+# define PROCINFO_CLASS
+#endif
+
+#if !IS_IN (ldconfig)
+# if !defined PROCINFO_DECL && defined SHARED
+  ._dl_s390_cpu_features
+# else
+PROCINFO_CLASS struct cpu_features _dl_s390_cpu_features
+# endif
+# ifndef PROCINFO_DECL
+= { }
+# endif
+# if !defined SHARED || defined PROCINFO_DECL
+;
+# else
+,
+# endif
+#endif
+
 #undef PROCINFO_DECL
 #undef PROCINFO_CLASS

@@ -486,7 +486,11 @@ enable CPU/ARCH feature @code{yyy}, disable CPU/ARCH feature @code{xxx}
 and @code{zzz} where the feature name is case-sensitive and has to match
 the ones in @code{sysdeps/x86/include/cpu-features.h}.
 
-This tunable is specific to i386 and x86-64.
+On s390x, the supported HWCAP and STFLE features can be found in
+@code{sysdeps/s390/cpu-features.c}.  In addition the user can also set
+a CPU arch-level like @code{z13} instead of single HWCAP and STFLE features.
+
+This tunable is specific to i386, x86-64 and s390x.
 @end deftp
 
 @deftp Tunable glibc.cpu.cached_memopt

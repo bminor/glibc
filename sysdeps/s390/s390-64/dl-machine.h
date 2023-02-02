@@ -29,6 +29,7 @@
 #include <dl-irel.h>
 #include <dl-static-tls.h>
 #include <dl-machine-rel.h>
+#include <cpu-features.c>
 
 #define ELF_MACHINE_IRELATIVE       R_390_IRELATIVE
 
@@ -220,6 +221,13 @@ dl_platform_init (void)
   if (GLRO(dl_platform) != NULL && *GLRO(dl_platform) == '\0')
     /* Avoid an empty string which would disturb us.  */
     GLRO(dl_platform) = NULL;
+
+#ifdef SHARED
+  /* init_cpu_features has been called early from __libc_start_main in
+     static executable.  */
+  init_cpu_features (&GLRO(dl_s390_cpu_features));
+#endif
+
 }
 
 static inline Elf64_Addr
