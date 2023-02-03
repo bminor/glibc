@@ -339,8 +339,7 @@ xtests += tst-eintr1
 
 test-srcs = tst-oddstacklimit
 
-gen-as-const-headers = unwindbuf.sym \
-		       pthread-pi-defines.sym
+gen-as-const-headers = unwindbuf.sym
 
 gen-py-const-headers := nptl_lock_constants.pysym
 pretty-printers := nptl-printers.py
