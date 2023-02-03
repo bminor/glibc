@@ -392,7 +392,7 @@ CFLAGS-tst-qsort.c += $(stack-align-test-flags)
 CFLAGS-tst-makecontext.c += -funwind-tables
 CFLAGS-tst-makecontext2.c += $(stack-align-test-flags)
 
-CFLAGS-testmb.c += -D_FORTIFY_SOURCE=2 -Wall -Werror
+CFLAGS-testmb.c += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -Wall -Werror
 
 
 # Run a test on the header files we use.
