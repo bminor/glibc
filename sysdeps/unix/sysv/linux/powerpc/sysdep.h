@@ -214,6 +214,7 @@
 #if defined(__PPC64__) || defined(__powerpc64__)
 #define HAVE_CLOCK_GETRES64_VSYSCALL	"__kernel_clock_getres"
 #define HAVE_CLOCK_GETTIME64_VSYSCALL	"__kernel_clock_gettime"
+#define HAVE_CLONE3_WRAPPER		1
 #else
 #define HAVE_CLOCK_GETRES_VSYSCALL	"__kernel_clock_getres"
 #define HAVE_CLOCK_GETTIME_VSYSCALL	"__kernel_clock_gettime"
