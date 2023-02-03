@@ -38,7 +38,7 @@ _IO_str_init_static_internal (_IO_strfile *sf, char *ptr, size_t size,
   char *end;
 
   if (size == 0)
-    end = __rawmemchr (ptr, '\0');
+    end = strchr (ptr, '\0');
   else if ((size_t) ptr + size > (size_t) ptr)
     end = ptr + size;
   else

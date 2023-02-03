@@ -453,14 +453,14 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
 	     struct datahead *dh)
 {
   const char *group = key;
-  key = (char *) rawmemchr (key, '\0') + 1;
+  key = strchr (key, '\0') + 1;
   size_t group_len = key - group;
   const char *host = *key++ ? key : NULL;
   if (host != NULL)
-    key = (char *) rawmemchr (key, '\0') + 1;
+    key = strchr (key, '\0') + 1;
   const char *user = *key++ ? key : NULL;
   if (user != NULL)
-    key = (char *) rawmemchr (key, '\0') + 1;
+    key = strchr (key, '\0') + 1;
   const char *domain = *key++ ? key : NULL;
 
   if (__glibc_unlikely (debug_level > 0))
@@ -538,11 +538,11 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
 	     match anything is stored in the netgroup cache.  */
 	  if (host != NULL && *triplets != '\0')
 	    success = strcmp (host, triplets) == 0;
-	  triplets = (const char *) rawmemchr (triplets, '\0') + 1;
+	  triplets = strchr (triplets, '\0') + 1;
 
 	  if (success && user != NULL && *triplets != '\0')
 	    success = strcmp (user, triplets) == 0;
-	  triplets = (const char *) rawmemchr (triplets, '\0') + 1;
+	  triplets = strchr (triplets, '\0') + 1;
 
 	  if (success && (domain == NULL || *triplets == '\0'
 			  || strcmp (domain, triplets) == 0))
@@ -550,7 +550,7 @@ addinnetgrX (struct database_dyn *db, int fd, request_header *req,
 	      dataset->resp.result = 1;
 	      break;
 	    }
-	  triplets = (const char *) rawmemchr (triplets, '\0') + 1;
+	  triplets = strchr (triplets, '\0') + 1;
 	}
     }
 

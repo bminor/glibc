@@ -1726,15 +1726,7 @@ made an error in assuming that the byte @var{c} is present in the block.
 In this case the result is unspecified.  Otherwise the return value is a
 pointer to the located byte.
 
-This function is of special interest when looking for the end of a
-string.  Since all strings are terminated by a null byte a call like
-
-@smallexample
-   rawmemchr (str, '\0')
-@end smallexample
-
-@noindent
-will never go beyond the end of the string.
+When looking for the end of a string, use @code{strchr}.
 
 This function is a GNU extension.
 @end deftypefun

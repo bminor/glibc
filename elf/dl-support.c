@@ -326,7 +326,7 @@ _dl_non_dynamic_init (void)
       while (cp < unsecure_envvars + sizeof (unsecure_envvars))
 	{
 	  __unsetenv (cp);
-	  cp = (const char *) __rawmemchr (cp, '\0') + 1;
+	  cp = strchr (cp, '\0') + 1;
 	}
 
 #if !HAVE_TUNABLES

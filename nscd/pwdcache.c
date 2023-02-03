@@ -243,7 +243,7 @@ cache_addpw (struct database_dyn *db, int fd, request_header *req,
       /* Finally the stringified UID value.  */
       memcpy (cp, buf, n);
       char *key_copy = cp + key_offset;
-      assert (key_copy == (char *) rawmemchr (cp, '\0') + 1);
+      assert (key_copy == strchr (cp, '\0') + 1);
 
       assert (cp == dataset->strdata + total - offsetof (struct dataset,
 							 strdata));

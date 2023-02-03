@@ -217,11 +217,11 @@ nscd_getnetgrent (struct __netgrent *datap, char *buffer, size_t buflen,
 
   datap->type = triple_val;
   datap->val.triple.host = get_nonempty_val (datap->cursor);
-  datap->cursor = (char *) __rawmemchr (datap->cursor, '\0') + 1;
+  datap->cursor = strchr (datap->cursor, '\0') + 1;
   datap->val.triple.user = get_nonempty_val (datap->cursor);
-  datap->cursor = (char *) __rawmemchr (datap->cursor, '\0') + 1;
+  datap->cursor = strchr (datap->cursor, '\0') + 1;
   datap->val.triple.domain = get_nonempty_val (datap->cursor);
-  datap->cursor = (char *) __rawmemchr (datap->cursor, '\0') + 1;
+  datap->cursor = strchr (datap->cursor, '\0') + 1;
 
   return NSS_STATUS_SUCCESS;
 }

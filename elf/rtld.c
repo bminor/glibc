@@ -1024,7 +1024,7 @@ ERROR: audit interface '%s' requires version %d (maximum supported version %d); 
 	newp->fptr[cnt] = NULL;
       ++cnt;
 
-      cp = rawmemchr (cp, '\0') + 1;
+      cp = strchr (cp, '\0') + 1;
     }
   while (*cp != '\0');
   assert (cnt == naudit_ifaces);
@@ -2690,8 +2690,7 @@ process_envvars (struct dl_main_state *state)
       do
 	{
 	  unsetenv (nextp);
-	  /* We could use rawmemchr but this need not be fast.  */
-	  nextp = (char *) (strchr) (nextp, '\0') + 1;
+	  nextp = strchr (nextp, '\0') + 1;
 	}
       while (*nextp != '\0');
 

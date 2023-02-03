@@ -133,7 +133,7 @@ gconv_init (struct __gconv_step *step)
 
   enum variant var = 0;
   for (const char *name = names; *name != '\0';
-       name = __rawmemchr (name, '\0') + 1)
+       name = strchr (name, '\0') + 1)
     {
       if (__strcasecmp (step->__from_name, name) == 0)
 	{

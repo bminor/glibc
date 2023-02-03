@@ -269,7 +269,7 @@ CONCAT(_nss_db_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
 			       + state.header->valstrlen);
       while (entidx < end)
 	{
-	  const char *next = rawmemchr (entidx, '\0') + 1;
+	  const char *next = strchr (entidx, '\0') + 1;
 	  size_t len = next - entidx;
 
 	  if (len > buflen)

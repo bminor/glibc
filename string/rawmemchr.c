@@ -39,7 +39,7 @@ DIAG_IGNORE_NEEDS_COMMENT (11, "-Wstringop-overread");
 void *
 RAWMEMCHR (const void *s, int c)
 {
-  if (c != '\0')
+  if ((unsigned char) c != '\0')
     return memchr (s, c, (size_t)-1);
   return (char *)s + strlen (s);
 }

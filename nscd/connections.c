@@ -1359,7 +1359,7 @@ cannot open /proc/self/cmdline: %m; disabling paranoia mode"));
   for (char *cp = cmdline; cp < cmdline + readlen;)
     {
       argv[argc++] = cp;
-      cp = (char *) rawmemchr (cp, '\0') + 1;
+      cp = strchr (cp, '\0') + 1;
     }
   argv[argc] = NULL;
 

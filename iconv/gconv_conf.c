@@ -502,8 +502,8 @@ __gconv_read_conf (void)
   do
     {
       const char *from = cp;
-      const char *to = __rawmemchr (from, '\0') + 1;
-      cp = __rawmemchr (to, '\0') + 1;
+      const char *to = strchr (from, '\0') + 1;
+      cp = strchr (to, '\0') + 1;
 
       add_alias2 (from, to, cp);
     }

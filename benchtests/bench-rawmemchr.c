@@ -30,7 +30,7 @@ typedef char *(*proto_t) (const char *, int);
 char *
 generic_rawmemchr (const char *s, int c)
 {
-  if (c != 0)
+  if ((unsigned char) c != 0)
     return memchr (s, c, PTRDIFF_MAX);
   return (char *)s + strlen (s);
 }
