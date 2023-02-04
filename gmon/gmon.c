@@ -132,6 +132,8 @@ __monstartup (u_long lowpc, u_long highpc)
   p->lowpc = ROUNDDOWN(lowpc, HISTFRACTION * sizeof(HISTCOUNTER));
   p->highpc = ROUNDUP(highpc, HISTFRACTION * sizeof(HISTCOUNTER));
   p->textsize = p->highpc - p->lowpc;
+  /* This looks like a typo, but it's here to align the p->froms
+     section.  */
   p->kcountsize = ROUNDUP(p->textsize / HISTFRACTION, sizeof(*p->froms));
   p->hashfraction = HASHFRACTION;
   p->log_hashfraction = -1;
@@ -142,7 +144,7 @@ __monstartup (u_long lowpc, u_long highpc)
 	 instead of integer division.  Precompute shift amount. */
       p->log_hashfraction = ffs(p->hashfraction * sizeof(*p->froms)) - 1;
   }
-  p->fromssize = p->textsize / HASHFRACTION;
+  p->fromssize = ROUNDUP(p->textsize / HASHFRACTION, sizeof(*p->froms));
   p->tolimit = p->textsize * ARCDENSITY / 100;
   if (p->tolimit < MINARCS)
     p->tolimit = MINARCS;
