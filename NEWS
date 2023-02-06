@@ -21,7 +21,12 @@ Changes to build and runtime requirements:
 
 Security related changes:
 
-  [Add security related changes here]
+  CVE-2023-25139: When the printf family of functions is called with a
+  format specifier that uses an <apostrophe> (enable grouping) and a
+  minimum width specifier, the resulting output could be larger than
+  reasonably expected by a caller that computed a tight bound on the
+  buffer size.  The resulting larger than expected output could result
+  in a buffer overflow in the printf family of functions.
 
 The following bugs are resolved with this release:
 
