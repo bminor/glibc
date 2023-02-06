@@ -75,5 +75,6 @@ __memrchr (const void *s, int c_in, size_t n)
   return NULL;
 }
 #ifndef MEMRCHR
+libc_hidden_def (__memrchr)
 weak_alias (__memrchr, memrchr)
 #endif

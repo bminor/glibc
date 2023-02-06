@@ -20,8 +20,10 @@
 /* Define multiple versions only for the definition in libc.  */
 #if IS_IN (libc)
 # define memrchr __redirect_memrchr
+# define __memrchr __redirect___memrchr
 # include <string.h>
 # undef memrchr
+# undef __memrchr
 
 # define SYMBOL_NAME memrchr
 # include "ifunc-sse2-bsf.h"

@@ -25,4 +25,5 @@
 
 #include "isa-default-impl.h"
 
+libc_hidden_def (__memrchr)
 weak_alias (__memrchr, memrchr)

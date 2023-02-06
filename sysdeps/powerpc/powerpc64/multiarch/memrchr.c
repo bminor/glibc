@@ -17,6 +17,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #if IS_IN (libc)
+# define memrchr __redirect_memrchr
 # include <string.h>
 # include <shlib-compat.h>
 # include "init-arch.h"
@@ -24,18 +25,17 @@
 extern __typeof (__memrchr) __memrchr_ppc attribute_hidden;
 extern __typeof (__memrchr) __memrchr_power7 attribute_hidden;
 extern __typeof (__memrchr) __memrchr_power8 attribute_hidden;
+# undef memrchr
 
 /* Avoid DWARF definition DIE on ifunc symbol so that GDB can handle
    ifunc symbol properly.  */
-libc_ifunc (__memrchr,
-	    (hwcap2 & PPC_FEATURE2_ARCH_2_07
-	     && hwcap & PPC_FEATURE_HAS_ALTIVEC)
-	    ? __memrchr_power8 :
-	      (hwcap & PPC_FEATURE_ARCH_2_06)
-	      ? __memrchr_power7
-	    : __memrchr_ppc);
-
-weak_alias (__memrchr, memrchr)
+libc_ifunc_redirected (__redirect_memrchr, memrchr,
+		       (hwcap2 & PPC_FEATURE2_ARCH_2_07
+			&& hwcap & PPC_FEATURE_HAS_ALTIVEC)
+		        ? __memrchr_power8 :
+			  (hwcap & PPC_FEATURE_ARCH_2_06)
+			  ? __memrchr_power7
+			  : __memrchr_ppc);
 #else
 #include <string/memrchr.c>
 #endif

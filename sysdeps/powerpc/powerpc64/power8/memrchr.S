@@ -332,5 +332,6 @@ L(loop_small):
 	blr
 
 END (MEMRCHR)
+libc_hidden_def (__memrchr)
 weak_alias (__memrchr, memrchr)
 libc_hidden_builtin_def (memrchr)

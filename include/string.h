@@ -119,6 +119,7 @@ extern __typeof (memmem) __memmem;
 libc_hidden_proto (__memmem)
 libc_hidden_proto (__ffs)
 libc_hidden_proto (__strerror_l)
+libc_hidden_proto (__memrchr)
 
 #if IS_IN (libc)
 /* Avoid hidden reference to IFUNC symbol __explicit_bzero_chk.  */

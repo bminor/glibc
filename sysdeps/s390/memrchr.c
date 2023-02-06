@@ -19,18 +19,20 @@
 #include <ifunc-memrchr.h>
 
 #if HAVE_MEMRCHR_IFUNC
+# define __memrchr __redirect_memrchr
 # include <string.h>
+# undef __memrchr
 # include <ifunc-resolve.h>
 
 # if HAVE_MEMRCHR_C
-extern __typeof (__memrchr) MEMRCHR_C attribute_hidden;
+extern __typeof (__redirect_memrchr) MEMRCHR_C attribute_hidden;
 # endif
 
 # if HAVE_MEMRCHR_Z13
-extern __typeof (__memrchr) MEMRCHR_Z13 attribute_hidden;
+extern __typeof (__redirect_memrchr) MEMRCHR_Z13 attribute_hidden;
 # endif
 
-s390_libc_ifunc_expr (__memrchr, __memrchr,
+s390_libc_ifunc_expr (__redirect_memrchr, __memrchr,
 		      (HAVE_MEMRCHR_Z13 && (hwcap & HWCAP_S390_VX))
 		      ? MEMRCHR_Z13
 		      : MEMRCHR_DEFAULT
