@@ -95,6 +95,7 @@ libc_hidden_proto (__rawmemchr)
 libc_hidden_proto (__strcasecmp)
 libc_hidden_proto (__strcasecmp_l)
 libc_hidden_proto (__strncasecmp_l)
+libc_hidden_proto (__strchrnul)
 extern __typeof (strncat) __strncat;
 libc_hidden_proto (__strncat)
 libc_hidden_proto (__strdup)

@@ -31,4 +31,8 @@
 libc_ifunc_redirected (__redirect_strchrnul, __strchrnul,
 		       IFUNC_SELECTOR ());
 weak_alias (__strchrnul, strchrnul)
+# ifdef SHARED
+__hidden_ver1 (__strchrnul, __GI___strchrnul, __redirect_strchrnul)
+  __attribute__((visibility ("hidden"))) __attribute_copy__ (strchrnul);
+# endif
 #endif

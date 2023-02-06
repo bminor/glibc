@@ -51,5 +51,6 @@ __strchrnul (const char *str, int c_in)
   return (char *) word_ptr + index_first_zero_eq (word, repeated_c);
 }
 #ifndef STRCHRNUL
+libc_hidden_def (__strchrnul)
 weak_alias (__strchrnul, strchrnul)
 #endif

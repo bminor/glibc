@@ -95,4 +95,5 @@ L(end):
 	ret
 
 END(__strchrnul)
+libc_hidden_def (__strchrnul)
 weak_alias (__strchrnul, strchrnul)

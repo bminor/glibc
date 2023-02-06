@@ -24,4 +24,5 @@
 
 #include "isa-default-impl.h"
 
+libc_hidden_def (__strchrnul)
 weak_alias (__strchrnul, strchrnul)

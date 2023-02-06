@@ -263,4 +263,5 @@ L(L9:)
 	rts
 END(__strchrnul)
 
+libc_hidden_def (__strchrnul)
 weak_alias (__strchrnul, strchrnul)

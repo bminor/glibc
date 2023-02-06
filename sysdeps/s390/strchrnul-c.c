@@ -21,8 +21,10 @@
 #if HAVE_STRCHRNUL_C
 # if HAVE_STRCHRNUL_IFUNC
 #  define STRCHRNUL STRCHRNUL_C
-#  define __strchrnul STRCHRNUL
 # endif
 
 # include <string/strchrnul.c>
+# if defined SHARED && IS_IN (libc)
+__hidden_ver1 (__strchrnul_c, __GI___strchrnul, __strchrnul_c);
+# endif
 #endif
