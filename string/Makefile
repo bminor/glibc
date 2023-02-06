@@ -230,6 +230,8 @@ LDFLAGS-tst-xbzero-opt = -z now
 # Called during TLS initialization.
 CFLAGS-memcpy.c += $(no-stack-protector)
 CFLAGS-wordcopy.c += $(no-stack-protector)
+# Called during static initialization
+CFLAGS-strncmp.c += $(no-stack-protector)
 
 CFLAGS-argz-next.c += $(config-cflags-wno-ignored-attributes)
 CFLAGS-basename.c += $(config-cflags-wno-ignored-attributes)
