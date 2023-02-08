@@ -626,6 +626,7 @@ ifeq ($(run-built-tests),yes)
 tests-special += \
   $(objpfx)noload-mem.out \
   $(objpfx)tst-ldconfig-X.out \
+  $(objpfx)tst-ldconfig-p.out \
   $(objpfx)tst-leaks1-mem.out \
   $(objpfx)tst-rtld-help.out \
   # tests-special
@@ -2392,6 +2393,11 @@ $(objpfx)tst-tls-manydynamic.out: \
   $(patsubst %,$(objpfx)%.so,$(tst-tls-many-dynamic-modules))
 
 $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
+	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper-env)' \
+		 '$(run-program-env)' > $@; \
+	$(evaluate-test)
+
+$(objpfx)tst-ldconfig-p.out : tst-ldconfig-p.sh $(objpfx)ldconfig
 	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper-env)' \
 		 '$(run-program-env)' > $@; \
 	$(evaluate-test)
