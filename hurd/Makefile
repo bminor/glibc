@@ -89,6 +89,9 @@ generated += $(inlines:=.c)
 # Avoid ssp before TLS is initialized.
 CFLAGS-hurdstartup.o = $(no-stack-protector)
 CFLAGS-RPC_exec_startup_get_info.o = $(no-stack-protector)
+
+# Make it simpler to unwind over INTR_MSG_TRAP
+CFLAGS-intr-msg.o = -fno-omit-frame-pointer
 
 # Make generated headers compatible with all support standards
 migheaderpipe := | sed -e 's/\<ino64_t\>/__ino64_t/' -e 's/\<loff_t\>/__loff_t/'

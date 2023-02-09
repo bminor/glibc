@@ -41,21 +41,13 @@
        "_hurd_intr_rpc_msg_do:"						      \
        /* Ok, push the mach_msg_trap arguments.  */			      \
        "				pushl 24(%4)\n"			      \
-       "				.cfi_adjust_cfa_offset 4\n"	      \
        "				pushl %2\n"			      \
-       "				.cfi_adjust_cfa_offset 4\n"	      \
        "				pushl 16(%4)\n"			      \
-       "				.cfi_adjust_cfa_offset 4\n"	      \
        "				pushl 12(%4)\n"			      \
-       "				.cfi_adjust_cfa_offset 4\n"	      \
        "				pushl 8(%4)\n"			      \
-       "				.cfi_adjust_cfa_offset 4\n"	      \
        "				pushl %1\n"			      \
-       "				.cfi_adjust_cfa_offset 4\n"	      \
        "				pushl (%4)\n"			      \
-       "				.cfi_adjust_cfa_offset 4\n"	      \
        "				pushl $0\n"			      \
-       "				.cfi_adjust_cfa_offset 4\n"	      \
        /* TODO: remove this ecx kludge, we don't need it any more */	      \
        "				movl %%esp, %%ecx\n"		      \
        "_hurd_intr_rpc_msg_cx_sp:	movl $-25, %%eax\n"		      \
@@ -63,15 +55,10 @@
        "_hurd_intr_rpc_msg_in_trap:"					      \
        /* Ok, clean the arguments and update OPTION and TIMEOUT.  */	      \
        "				addl $8, %%esp\n"		      \
-       "				.cfi_adjust_cfa_offset -8\n"	      \
        "				popl %1\n"			      \
-       "				.cfi_adjust_cfa_offset -4\n"	      \
        "				addl $12, %%esp\n"		      \
-       "				.cfi_adjust_cfa_offset -12\n"	      \
        "				popl %2\n"			      \
-       "				.cfi_adjust_cfa_offset -4\n"	      \
        "				addl $4, %%esp\n"		      \
-       "				.cfi_adjust_cfa_offset -4\n"	      \
        "_hurd_intr_rpc_msg_sp_restored:"				      \
        : "=a" (err), "+r" (option), "+r" (timeout), "=m" (*intr_port_p)	      \
        : "r" (&msg), "m" (*cancel_p), "i" (EINTR)			      \
