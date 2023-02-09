@@ -311,7 +311,7 @@ handle_intel (int name, const struct cpu_features *cpu_features)
 
 
 static long int __attribute__ ((noinline))
-handle_amd (int name, const struct cpu_features *cpu_features)
+handle_amd (int name)
 {
   unsigned int eax;
   unsigned int ebx;
@@ -334,24 +334,23 @@ handle_amd (int name, const struct cpu_features *cpu_features)
 
   switch (name)
     {
-       case _SC_LEVEL1_ICACHE_ASSOC:
-       case _SC_LEVEL1_DCACHE_ASSOC:
-       case _SC_LEVEL2_CACHE_ASSOC:
-       case _SC_LEVEL3_CACHE_ASSOC:
-         return ecx?((ebx >> 22) & 0x3ff) + 1 : 0;
-       case _SC_LEVEL1_ICACHE_LINESIZE:
-       case _SC_LEVEL1_DCACHE_LINESIZE:
-       case _SC_LEVEL2_CACHE_LINESIZE:
-       case _SC_LEVEL3_CACHE_LINESIZE:
-         return ecx?(ebx & 0xfff) + 1 : 0;
-       case _SC_LEVEL1_ICACHE_SIZE:
-       case _SC_LEVEL1_DCACHE_SIZE:
-       case _SC_LEVEL2_CACHE_SIZE:
-       case _SC_LEVEL3_CACHE_SIZE:
-         return ecx?(((ebx >> 22) & 0x3ff) + 1)*((ebx & 0xfff) + 1)\
-                                                    *(ecx + 1):0;
-       default:
-         assert (! "cannot happen");
+    case _SC_LEVEL1_ICACHE_ASSOC:
+    case _SC_LEVEL1_DCACHE_ASSOC:
+    case _SC_LEVEL2_CACHE_ASSOC:
+    case _SC_LEVEL3_CACHE_ASSOC:
+      return ecx ? ((ebx >> 22) & 0x3ff) + 1 : 0;
+    case _SC_LEVEL1_ICACHE_LINESIZE:
+    case _SC_LEVEL1_DCACHE_LINESIZE:
+    case _SC_LEVEL2_CACHE_LINESIZE:
+    case _SC_LEVEL3_CACHE_LINESIZE:
+      return ecx ? (ebx & 0xfff) + 1 : 0;
+    case _SC_LEVEL1_ICACHE_SIZE:
+    case _SC_LEVEL1_DCACHE_SIZE:
+    case _SC_LEVEL2_CACHE_SIZE:
+    case _SC_LEVEL3_CACHE_SIZE:
+      return ecx ? (((ebx >> 22) & 0x3ff) + 1) * ((ebx & 0xfff) + 1) * (ecx + 1): 0;
+    default:
+      __builtin_unreachable ();
     }
   return -1;
 }
@@ -697,30 +696,25 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
     }
   else if (cpu_features->basic.kind == arch_kind_amd)
     {
-      data  = handle_amd (_SC_LEVEL1_DCACHE_SIZE, cpu_features);
-      core = handle_amd (_SC_LEVEL2_CACHE_SIZE, cpu_features);
-      shared = handle_amd (_SC_LEVEL3_CACHE_SIZE, cpu_features);
+      data = handle_amd (_SC_LEVEL1_DCACHE_SIZE);
+      core = handle_amd (_SC_LEVEL2_CACHE_SIZE);
+      shared = handle_amd (_SC_LEVEL3_CACHE_SIZE);
 
-      level1_icache_size = handle_amd (_SC_LEVEL1_ICACHE_SIZE, cpu_features);
-      level1_icache_linesize
-	= handle_amd (_SC_LEVEL1_ICACHE_LINESIZE, cpu_features);
+      level1_icache_size = handle_amd (_SC_LEVEL1_ICACHE_SIZE);
+      level1_icache_linesize = handle_amd (_SC_LEVEL1_ICACHE_LINESIZE);
       level1_dcache_size = data;
-      level1_dcache_assoc
-	= handle_amd (_SC_LEVEL1_DCACHE_ASSOC, cpu_features);
-      level1_dcache_linesize
-	= handle_amd (_SC_LEVEL1_DCACHE_LINESIZE, cpu_features);
+      level1_dcache_assoc = handle_amd (_SC_LEVEL1_DCACHE_ASSOC);
+      level1_dcache_linesize = handle_amd (_SC_LEVEL1_DCACHE_LINESIZE);
       level2_cache_size = core;
-      level2_cache_assoc = handle_amd (_SC_LEVEL2_CACHE_ASSOC, cpu_features);
-      level2_cache_linesize
-	= handle_amd (_SC_LEVEL2_CACHE_LINESIZE, cpu_features);
+      level2_cache_assoc = handle_amd (_SC_LEVEL2_CACHE_ASSOC);
+      level2_cache_linesize = handle_amd (_SC_LEVEL2_CACHE_LINESIZE);
       level3_cache_size = shared;
-      level3_cache_assoc = handle_amd (_SC_LEVEL3_CACHE_ASSOC, cpu_features);
-      level3_cache_linesize
-	= handle_amd (_SC_LEVEL3_CACHE_LINESIZE, cpu_features);
+      level3_cache_assoc = handle_amd (_SC_LEVEL3_CACHE_ASSOC);
+      level3_cache_linesize = handle_amd (_SC_LEVEL3_CACHE_LINESIZE);
 
       if (shared <= 0)
         /* No shared L3 cache.  All we have is the L2 cache.  */
-         shared = core;
+	shared = core;
     }
 
   cpu_features->level1_icache_size = level1_icache_size;
