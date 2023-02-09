@@ -192,28 +192,12 @@ __sha512_process_bytes (const void *buffer, size_t len, struct sha512_ctx *ctx)
   /* Process available complete blocks.  */
   if (len >= 128)
     {
-#if !_STRING_ARCH_unaligned
-/* To check alignment gcc has an appropriate operator.  Other
-   compilers don't.  */
-# if __GNUC__ >= 2
-#  define UNALIGNED_P(p) (((uintptr_t) p) % __alignof__ (uint64_t) != 0)
-# else
-#  define UNALIGNED_P(p) (((uintptr_t) p) % sizeof (uint64_t) != 0)
-# endif
-      if (UNALIGNED_P (buffer))
-	while (len > 128)
-	  {
-	    __sha512_process_block (memcpy (ctx->buffer, buffer, 128), 128,
-				    ctx);
-	    buffer = (const char *) buffer + 128;
-	    len -= 128;
-	  }
-      else
-#endif
+      while (len > 128)
 	{
-	  __sha512_process_block (buffer, len & ~127, ctx);
-	  buffer = (const char *) buffer + (len & ~127);
-	  len &= 127;
+	  __sha512_process_block (memcpy (ctx->buffer, buffer, 128), 128,
+				  ctx);
+	  buffer = (const char *) buffer + 128;
+	  len -= 128;
 	}
     }
 

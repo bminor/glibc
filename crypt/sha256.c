@@ -120,13 +120,9 @@ __sha256_finish_ctx (struct sha256_ctx *ctx, void *resbuf)
   memcpy (&ctx->buffer[bytes], fillbuf, pad);
 
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
-#if _STRING_ARCH_unaligned
-  ctx->buffer64[(bytes + pad) / 8] = SWAP64 (ctx->total64 << 3);
-#else
   ctx->buffer32[(bytes + pad + 4) / 4] = SWAP (ctx->total[TOTAL64_low] << 3);
   ctx->buffer32[(bytes + pad) / 4] = SWAP ((ctx->total[TOTAL64_high] << 3)
 					   | (ctx->total[TOTAL64_low] >> 29));
-#endif
 
   /* Process last bytes.  */
   __sha256_process_block (ctx->buffer, bytes + pad + 8, ctx);
@@ -169,27 +165,11 @@ __sha256_process_bytes (const void *buffer, size_t len, struct sha256_ctx *ctx)
   /* Process available complete blocks.  */
   if (len >= 64)
     {
-#if !_STRING_ARCH_unaligned
-/* To check alignment gcc has an appropriate operator.  Other
-   compilers don't.  */
-# if __GNUC__ >= 2
-#  define UNALIGNED_P(p) (((uintptr_t) p) % __alignof__ (uint32_t) != 0)
-# else
-#  define UNALIGNED_P(p) (((uintptr_t) p) % sizeof (uint32_t) != 0)
-# endif
-      if (UNALIGNED_P (buffer))
-	while (len > 64)
-	  {
-	    __sha256_process_block (memcpy (ctx->buffer, buffer, 64), 64, ctx);
-	    buffer = (const char *) buffer + 64;
-	    len -= 64;
-	  }
-      else
-#endif
+      while (len > 64)
 	{
-	  __sha256_process_block (buffer, len & ~63, ctx);
-	  buffer = (const char *) buffer + (len & ~63);
-	  len &= 63;
+	  __sha256_process_block (memcpy (ctx->buffer, buffer, 64), 64, ctx);
+	  buffer = (const char *) buffer + 64;
+	  len -= 64;
 	}
     }
 
