@@ -58,12 +58,7 @@
 #include <libc-diag.h>
 
 #undef FCTNAME2
-#if _STRING_ARCH_unaligned || !defined DEFINE_UNALIGNED
-# define FCTNAME2(name) name
-#else
-# define FCTNAME2(name) name##_unaligned
-#endif
-#define FCTNAME(name) FCTNAME2(name)
+#define FCTNAME(name) name
 
 
 /* We need at least one byte for the next round.  */
@@ -279,20 +274,9 @@ FCTNAME (LOOPFCT) (struct __gconv_step *step,
 }
 
 
-/* Include the file a second time to define the function to handle
-   unaligned access.  */
-#if !defined DEFINE_UNALIGNED && !_STRING_ARCH_unaligned \
-    && MIN_NEEDED_INPUT != 1 && MAX_NEEDED_INPUT % MIN_NEEDED_INPUT == 0 \
-    && MIN_NEEDED_OUTPUT != 1 && MAX_NEEDED_OUTPUT % MIN_NEEDED_OUTPUT == 0
-# undef unaligned
-
-# define DEFINE_UNALIGNED
-# include "loop.c"
-# undef DEFINE_UNALIGNED
-#else
-# if MAX_NEEDED_INPUT > 1
-#  define SINGLE(fct) SINGLE2 (fct)
-#  define SINGLE2(fct) fct##_single
+#if MAX_NEEDED_INPUT > 1
+# define SINGLE(fct) SINGLE2 (fct)
+# define SINGLE2(fct) fct##_single
 static inline int
 __attribute ((always_inline))
 SINGLE(LOOPFCT) (struct __gconv_step *step,
@@ -302,37 +286,37 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
 		 size_t *irreversible EXTRA_LOOP_DECLS)
 {
   mbstate_t *state = step_data->__statep;
-#  ifdef LOOP_NEED_FLAGS
+# ifdef LOOP_NEED_FLAGS
   int flags = step_data->__flags;
-#  endif
-#  ifdef LOOP_NEED_DATA
+# endif
+# ifdef LOOP_NEED_DATA
   void *data = step->__data;
-#  endif
+# endif
   int result = __GCONV_OK;
   unsigned char bytebuf[MAX_NEEDED_INPUT];
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
   size_t inlen;
 
-#  ifdef INIT_PARAMS
+# ifdef INIT_PARAMS
   INIT_PARAMS;
-#  endif
+# endif
 
-#  ifdef UNPACK_BYTES
+# ifdef UNPACK_BYTES
   UNPACK_BYTES
-#  else
+# else
   /* Add the bytes from the state to the input buffer.  */
   assert ((state->__count & 7) <= sizeof (state->__value));
   for (inlen = 0; inlen < (size_t) (state->__count & 7); ++inlen)
     bytebuf[inlen] = state->__value.__wchb[inlen];
-#  endif
+# endif
 
   /* Are there enough bytes in the input buffer?  */
   if (MIN_NEEDED_INPUT > 1
       && __builtin_expect (inptr + (MIN_NEEDED_INPUT - inlen) > inend, 0))
     {
       *inptrp = inend;
-#  ifdef STORE_REST
+# ifdef STORE_REST
 
       /* Building with -O3 GCC emits a `array subscript is above array
 	 bounds' warning.  GCC BZ #64739 has been opened for this.  */
@@ -347,14 +331,14 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
       inend = &bytebuf[inlen];
 
       STORE_REST
-#  else
+# else
       /* We don't have enough input for another complete input
 	 character.  */
       size_t inlen_after = inlen + (inend - inptr);
       assert (inlen_after <= sizeof (state->__value.__wchb));
       for (; inlen < inlen_after; inlen++)
 	state->__value.__wchb[inlen] = *inptr++;
-#  endif
+# endif
 
       return __GCONV_INCOMPLETE_INPUT;
     }
@@ -406,11 +390,11 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
       result = __GCONV_OK;
 
       /* Clear the state buffer.  */
-#  ifdef CLEAR_STATE
+# ifdef CLEAR_STATE
       CLEAR_STATE;
-#  else
+# else
       state->__count &= ~7;
-#  endif
+# endif
     }
   else if (result == __GCONV_INCOMPLETE_INPUT)
     {
@@ -419,11 +403,11 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
       assert (inend != &bytebuf[MAX_NEEDED_INPUT]);
 
       *inptrp += inend - bytebuf - (state->__count & 7);
-#  ifdef STORE_REST
+# ifdef STORE_REST
       inptrp = &inptr;
 
       STORE_REST
-#  else
+# else
       /* We don't have enough input for another complete input
 	 character.  */
       assert (inend - inptr > (state->__count & ~7));
@@ -432,14 +416,13 @@ SINGLE(LOOPFCT) (struct __gconv_step *step,
       for (inlen = 0; inlen < inend - inptr; inlen++)
 	state->__value.__wchb[inlen] = inptr[inlen];
       inptr = inend;
-#  endif
+# endif
     }
 
   return result;
 }
-#  undef SINGLE
-#  undef SINGLE2
-# endif
+# undef SINGLE
+# undef SINGLE2
 
 
 # ifdef ONEBYTE_BODY
@@ -471,4 +454,3 @@ gconv_btowc (struct __gconv_step *step, unsigned char c)
 #undef LOOP_NEED_STATE
 #undef LOOP_NEED_FLAGS
 #undef LOOP_NEED_DATA
-#undef unaligned

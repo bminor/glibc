@@ -448,33 +448,6 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
       size_t lirreversible = 0;
       size_t *lirreversiblep = irreversible ? &lirreversible : NULL;
 
-      /* The following assumes that encodings, which have a variable length
-	 what might unalign a buffer even though it is an aligned in the
-	 beginning, either don't have the minimal number of bytes as a divisor
-	 of the maximum length or have a minimum length of 1.  This is true
-	 for all known and supported encodings.
-	 We use && instead of || to combine the subexpression for the FROM
-	 encoding and for the TO encoding, because usually one of them is
-	 INTERNAL, for which the subexpression evaluates to 1, but INTERNAL
-	 buffers are always aligned correctly.  */
-#define POSSIBLY_UNALIGNED \
-  (!_STRING_ARCH_unaligned					              \
-   && (((FROM_LOOP_MIN_NEEDED_FROM != 1					      \
-	 && FROM_LOOP_MAX_NEEDED_FROM % FROM_LOOP_MIN_NEEDED_FROM == 0)	      \
-	&& (FROM_LOOP_MIN_NEEDED_TO != 1				      \
-	    && FROM_LOOP_MAX_NEEDED_TO % FROM_LOOP_MIN_NEEDED_TO == 0))	      \
-       || ((TO_LOOP_MIN_NEEDED_FROM != 1				      \
-	    && TO_LOOP_MAX_NEEDED_FROM % TO_LOOP_MIN_NEEDED_FROM == 0)	      \
-	   && (TO_LOOP_MIN_NEEDED_TO != 1				      \
-	       && TO_LOOP_MAX_NEEDED_TO % TO_LOOP_MIN_NEEDED_TO == 0))))
-#if POSSIBLY_UNALIGNED
-      int unaligned;
-# define GEN_unaligned(name) GEN_unaligned2 (name)
-# define GEN_unaligned2(name) name##_unaligned
-#else
-# define unaligned 0
-#endif
-
 #ifdef PREPARE_LOOP
       PREPARE_LOOP
 #endif
@@ -514,18 +487,6 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	}
 #endif
 
-#if POSSIBLY_UNALIGNED
-      unaligned =
-	((FROM_DIRECTION
-	  && ((uintptr_t) inptr % FROM_LOOP_MIN_NEEDED_FROM != 0
-	      || ((data->__flags & __GCONV_IS_LAST)
-		  && (uintptr_t) outbuf % FROM_LOOP_MIN_NEEDED_TO != 0)))
-	 || (!FROM_DIRECTION
-	     && (((data->__flags & __GCONV_IS_LAST)
-		  && (uintptr_t) outbuf % TO_LOOP_MIN_NEEDED_TO != 0)
-		 || (uintptr_t) inptr % TO_LOOP_MIN_NEEDED_FROM != 0)));
-#endif
-
       while (1)
 	{
 	  /* Remember the start value for this round.  */
@@ -543,34 +504,14 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	  SAVE_RESET_STATE (1);
 #endif
 
-	  if (__glibc_likely (!unaligned))
-	    {
-	      if (FROM_DIRECTION)
-		/* Run the conversion loop.  */
-		status = FROM_LOOP (step, data, inptrp, inend, &outbuf, outend,
-				    lirreversiblep EXTRA_LOOP_ARGS);
-	      else
-		/* Run the conversion loop.  */
-		status = TO_LOOP (step, data, inptrp, inend, &outbuf, outend,
-				  lirreversiblep EXTRA_LOOP_ARGS);
-	    }
-#if POSSIBLY_UNALIGNED
+	  if (FROM_DIRECTION)
+	    /* Run the conversion loop.  */
+	    status = FROM_LOOP (step, data, inptrp, inend, &outbuf, outend,
+				lirreversiblep EXTRA_LOOP_ARGS);
 	  else
-	    {
-	      if (FROM_DIRECTION)
-		/* Run the conversion loop.  */
-		status = GEN_unaligned (FROM_LOOP) (step, data, inptrp, inend,
-						    &outbuf, outend,
-						    lirreversiblep
-						    EXTRA_LOOP_ARGS);
-	      else
-		/* Run the conversion loop.  */
-		status = GEN_unaligned (TO_LOOP) (step, data, inptrp, inend,
-						  &outbuf, outend,
-						  lirreversiblep
-						  EXTRA_LOOP_ARGS);
-	    }
-#endif
+	    /* Run the conversion loop.  */
+	    status = TO_LOOP (step, data, inptrp, inend, &outbuf, outend,
+			      lirreversiblep EXTRA_LOOP_ARGS);
 
 	  /* If we were called as part of an error handling module we
 	     don't do anything else here.  */
@@ -635,41 +576,18 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		      SAVE_RESET_STATE (0);
 #endif
 
-		      if (__glibc_likely (!unaligned))
-			{
-			  if (FROM_DIRECTION)
-			    /* Run the conversion loop.  */
-			    nstatus = FROM_LOOP (step, data, inptrp, inend,
-						 &outbuf, outerr,
-						 lirreversiblep
-						 EXTRA_LOOP_ARGS);
-			  else
-			    /* Run the conversion loop.  */
-			    nstatus = TO_LOOP (step, data, inptrp, inend,
-					       &outbuf, outerr,
-					       lirreversiblep
-					       EXTRA_LOOP_ARGS);
-			}
-#if POSSIBLY_UNALIGNED
+		      if (FROM_DIRECTION)
+			/* Run the conversion loop.  */
+			nstatus = FROM_LOOP (step, data, inptrp, inend,
+					     &outbuf, outerr,
+					     lirreversiblep
+					     EXTRA_LOOP_ARGS);
 		      else
-			{
-			  if (FROM_DIRECTION)
-			    /* Run the conversion loop.  */
-			    nstatus = GEN_unaligned (FROM_LOOP) (step, data,
-								 inptrp, inend,
-								 &outbuf,
-								 outerr,
-								 lirreversiblep
-								 EXTRA_LOOP_ARGS);
-			  else
-			    /* Run the conversion loop.  */
-			    nstatus = GEN_unaligned (TO_LOOP) (step, data,
-							       inptrp, inend,
-							       &outbuf, outerr,
-							       lirreversiblep
-							       EXTRA_LOOP_ARGS);
-			}
-#endif
+			/* Run the conversion loop.  */
+			nstatus = TO_LOOP (step, data, inptrp, inend,
+					   &outbuf, outerr,
+					   lirreversiblep
+					   EXTRA_LOOP_ARGS);
 
 		      /* We must run out of output buffer space in this
 			 rerun.  */
