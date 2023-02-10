@@ -52,10 +52,10 @@
 	    return (inptr == inend					      \
 		    ? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);	      \
 									      \
-	  if (get32u (inptr) == BOM)					      \
+	  if (get32 (inptr) == BOM)					      \
 	    /* Simply ignore the BOM character.  */			      \
 	    *inptrp = inptr += 4;					      \
-	  else if (get32u (inptr) == BOM_OE)				      \
+	  else if (get32 (inptr) == BOM_OE)				      \
 	    {								      \
 	      data->__flags |= __GCONV_SWAP;				      \
 	      *inptrp = inptr += 4;					      \
@@ -69,7 +69,7 @@
       if (__glibc_unlikely (outbuf + 4 > outend))			      \
 	return __GCONV_FULL_OUTPUT;					      \
 									      \
-      put32u (outbuf, BOM);						      \
+      put32 (outbuf, BOM);						      \
       outbuf += 4;							      \
     }									      \
   else if (__builtin_expect (data->__invocation_counter == 0, 0)	      \

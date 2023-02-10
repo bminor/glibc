@@ -51,10 +51,10 @@
 	    return (inptr == inend					      \
 		    ? __GCONV_EMPTY_INPUT : __GCONV_INCOMPLETE_INPUT);	      \
 									      \
-	  if (get16u (inptr) == BOM)					      \
+	  if (get16 (inptr) == BOM)					      \
 	    /* Simply ignore the BOM character.  */			      \
 	    *inptrp = inptr += 2;					      \
-	  else if (get16u (inptr) == BOM_OE)				      \
+	  else if (get16 (inptr) == BOM_OE)				      \
 	    {								      \
 	      data->__flags |= __GCONV_SWAP;				      \
 	      *inptrp = inptr += 2;					      \
@@ -67,7 +67,7 @@
       if (__glibc_unlikely (outbuf + 2 > outend))			      \
 	return __GCONV_FULL_OUTPUT;					      \
 									      \
-      put16u (outbuf, BOM);						      \
+      put16 (outbuf, BOM);						      \
       outbuf += 2;							      \
     }									      \
   swap = data->__flags & __GCONV_SWAP;

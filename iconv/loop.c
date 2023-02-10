@@ -57,75 +57,10 @@
 #include <stddef.h>
 #include <libc-diag.h>
 
-/* We have to provide support for machines which are not able to handled
-   unaligned memory accesses.  Some of the character encodings have
-   representations with a fixed width of 2 or 4 bytes.  But if we cannot
-   access unaligned memory we still have to read byte-wise.  */
 #undef FCTNAME2
 #if _STRING_ARCH_unaligned || !defined DEFINE_UNALIGNED
-/* We can handle unaligned memory access.  */
-# define get16(addr) *((const uint16_t *) (addr))
-# define get32(addr) *((const uint32_t *) (addr))
-
-/* We need no special support for writing values either.  */
-# define put16(addr, val) *((uint16_t *) (addr)) = (val)
-# define put32(addr, val) *((uint32_t *) (addr)) = (val)
-
 # define FCTNAME2(name) name
 #else
-/* Distinguish between big endian and little endian.  */
-# if __BYTE_ORDER == __LITTLE_ENDIAN
-#  define get16(addr) \
-     (((const unsigned char *) (addr))[1] << 8				      \
-      | ((const unsigned char *) (addr))[0])
-#  define get32(addr) \
-     (((((const unsigned char *) (addr))[3] << 8			      \
-	| ((const unsigned char *) (addr))[2]) << 8			      \
-       | ((const unsigned char *) (addr))[1]) << 8			      \
-      | ((const unsigned char *) (addr))[0])
-
-#  define put16(addr, val) \
-     ({ uint16_t __val = (val);						      \
-	((unsigned char *) (addr))[0] = __val;				      \
-	((unsigned char *) (addr))[1] = __val >> 8;			      \
-	(void) 0; })
-#  define put32(addr, val) \
-     ({ uint32_t __val = (val);						      \
-	((unsigned char *) (addr))[0] = __val;				      \
-	__val >>= 8;							      \
-	((unsigned char *) (addr))[1] = __val;				      \
-	__val >>= 8;							      \
-	((unsigned char *) (addr))[2] = __val;				      \
-	__val >>= 8;							      \
-	((unsigned char *) (addr))[3] = __val;				      \
-	(void) 0; })
-# else
-#  define get16(addr) \
-     (((const unsigned char *) (addr))[0] << 8				      \
-      | ((const unsigned char *) (addr))[1])
-#  define get32(addr) \
-     (((((const unsigned char *) (addr))[0] << 8			      \
-	| ((const unsigned char *) (addr))[1]) << 8			      \
-       | ((const unsigned char *) (addr))[2]) << 8			      \
-      | ((const unsigned char *) (addr))[3])
-
-#  define put16(addr, val) \
-     ({ uint16_t __val = (val);						      \
-	((unsigned char *) (addr))[1] = __val;				      \
-	((unsigned char *) (addr))[0] = __val >> 8;			      \
-	(void) 0; })
-#  define put32(addr, val) \
-     ({ uint32_t __val = (val);						      \
-	((unsigned char *) (addr))[3] = __val;				      \
-	__val >>= 8;							      \
-	((unsigned char *) (addr))[2] = __val;				      \
-	__val >>= 8;							      \
-	((unsigned char *) (addr))[1] = __val;				      \
-	__val >>= 8;							      \
-	((unsigned char *) (addr))[0] = __val;				      \
-	(void) 0; })
-# endif
-
 # define FCTNAME2(name) name##_unaligned
 #endif
 #define FCTNAME(name) FCTNAME2(name)
@@ -349,10 +284,6 @@ FCTNAME (LOOPFCT) (struct __gconv_step *step,
 #if !defined DEFINE_UNALIGNED && !_STRING_ARCH_unaligned \
     && MIN_NEEDED_INPUT != 1 && MAX_NEEDED_INPUT % MIN_NEEDED_INPUT == 0 \
     && MIN_NEEDED_OUTPUT != 1 && MAX_NEEDED_OUTPUT % MIN_NEEDED_OUTPUT == 0
-# undef get16
-# undef get32
-# undef put16
-# undef put32
 # undef unaligned
 
 # define DEFINE_UNALIGNED
@@ -540,8 +471,4 @@ gconv_btowc (struct __gconv_step *step, unsigned char c)
 #undef LOOP_NEED_STATE
 #undef LOOP_NEED_FLAGS
 #undef LOOP_NEED_DATA
-#undef get16
-#undef get32
-#undef put16
-#undef put32
 #undef unaligned

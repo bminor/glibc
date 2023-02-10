@@ -26,6 +26,34 @@
 
 __BEGIN_DECLS
 
+/* We have to provide support for machines which are not able to handled
+   unaligned memory accesses.  Some of the character encodings have
+   representations with a fixed width of 2 or 4 bytes.  */
+#define get16(addr)							\
+({									\
+  const struct { uint16_t r; } __attribute__ ((__packed__)) *__ptr	\
+    = (__typeof(__ptr))(addr);						\
+  __ptr->r;								\
+})
+#define get32(addr)							\
+({									\
+  const struct { uint32_t r; } __attribute__ ((__packed__)) *__ptr	\
+    = (__typeof(__ptr))(addr);						\
+  __ptr->r;								\
+})
+
+#define put16(addr, val)						\
+do {									\
+   struct { uint16_t r; } __attribute__ ((__packed__)) *__ptr		\
+    = (__typeof(__ptr))(addr);						\
+   __ptr->r = val;							\
+} while (0)
+#define put32(addr, val)						\
+do {									\
+   struct { uint32_t r; } __attribute__ ((__packed__)) *__ptr		\
+    = (__typeof(__ptr))(addr);						\
+   __ptr->r = val;							\
+} while (0)
 
 /* Structure for alias definition.  Simply two strings.  */
 struct gconv_alias

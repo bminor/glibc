@@ -211,7 +211,7 @@ gconv_end (struct __gconv_step *data)
       if (__glibc_unlikely (outbuf + 2 > outend))			\
 	return __GCONV_FULL_OUTPUT;					\
 									\
-      put16u (outbuf, BOM_UTF16);					\
+      put16 (outbuf, BOM_UTF16);					\
       outbuf += 2;							\
     }
 

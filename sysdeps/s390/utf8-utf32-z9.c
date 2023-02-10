@@ -211,7 +211,7 @@ gconv_end (struct __gconv_step *data)
       if (__glibc_unlikely (outbuf + 4 > outend))			\
 	return __GCONV_FULL_OUTPUT;					\
 									\
-      put32u (outbuf, BOM);						\
+      put32 (outbuf, BOM);						\
       outbuf += 4;							\
     }
 
