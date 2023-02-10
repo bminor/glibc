@@ -102,11 +102,8 @@ __moncontrol (int mode)
 {
   struct gmonparam *p = &_gmonparam;
 
-  /* Don't change the state if we ran into an error.  */
-  if (p->state == GMON_PROF_ERROR)
-    return;
-
-  if (mode)
+  /* Treat start request as stop if error or gmon not initialized. */
+  if (mode && p->state != GMON_PROF_ERROR && p->tos != NULL)
     {
       /* start */
       __profil((void *) p->kcount, p->kcountsize, p->lowpc, s_scale);
@@ -116,7 +113,9 @@ __moncontrol (int mode)
     {
       /* stop */
       __profil(NULL, 0, 0, 0);
-      p->state = GMON_PROF_OFF;
+      /* Don't change the state if we ran into an error. */
+      if (p->state != GMON_PROF_ERROR)
+        p->state = GMON_PROF_OFF;
     }
 }
 libc_hidden_def (__moncontrol)
@@ -145,6 +144,14 @@ __monstartup (u_long lowpc, u_long highpc)
   minarcs = MINARCS;
   maxarcs = MAXARCS;
 #endif
+
+  /*
+   * If we are incorrectly called twice in a row (without an
+   * intervening call to _mcleanup), ignore the second call to
+   * prevent leaking memory.
+   */
+  if (p->tos != NULL)
+      return;
 
   /*
    * round lowpc and highpc to multiples of the density we're using
@@ -463,9 +470,14 @@ _mcleanup (void)
 {
   __moncontrol (0);
 
-  if (_gmonparam.state != GMON_PROF_ERROR)
+  if (_gmonparam.state != GMON_PROF_ERROR && _gmonparam.tos != NULL)
     write_gmon ();
 
   /* free the memory. */
   free (_gmonparam.tos);
+
+  /* reset buffer to initial state for safety */
+  memset(&_gmonparam, 0, sizeof _gmonparam);
+  /* somewhat confusingly, ON=0, OFF=3 */
+  _gmonparam.state = GMON_PROF_OFF;
 }
