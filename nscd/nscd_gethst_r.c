@@ -185,7 +185,6 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	      goto out;
 	    }
 
-#if !_STRING_ARCH_unaligned
 	  /* The aliases_len array in the mapped database might very
 	     well be unaligned.  We will access it word-wise so on
 	     platforms which do not tolerate unaligned accesses we
@@ -199,7 +198,6 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 				    hst_resp.h_aliases_cnt
 				    * sizeof (uint32_t));
 	    }
-#endif
 	  if (type != GETHOSTBYADDR && type != GETHOSTBYNAME)
 	    {
 	      if (hst_resp.h_length == INADDRSZ)

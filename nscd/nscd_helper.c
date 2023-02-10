@@ -465,7 +465,6 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
       struct hashentry *here = (struct hashentry *) (mapped->data + work);
       ref_t here_key, here_packet;
 
-#if !_STRING_ARCH_unaligned
       /* Although during garbage collection when moving struct hashentry
 	 records around we first copy from old to new location and then
 	 adjust pointer from previous hashentry to it, there is no barrier
@@ -474,7 +473,6 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 	 application.  */
       if ((uintptr_t) here & (__alignof__ (*here) - 1))
 	return NULL;
-#endif
 
       if (type == here->type
 	  && keylen == here->len
@@ -487,10 +485,8 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 	  struct datahead *dh
 	    = (struct datahead *) (mapped->data + here_packet);
 
-#if !_STRING_ARCH_unaligned
 	  if ((uintptr_t) dh & (__alignof__ (*dh) - 1))
 	    return NULL;
-#endif
 
 	  /* See whether we must ignore the entry or whether something
 	     is wrong because garbage collection is in progress.  */
@@ -511,11 +507,9 @@ __nscd_cache_search (request_type type, const char *key, size_t keylen,
 	  struct hashentry *trailelem;
 	  trailelem = (struct hashentry *) (mapped->data + trail);
 
-#if !_STRING_ARCH_unaligned
 	  /* We have to redo the checks.  Maybe the data changed.  */
 	  if ((uintptr_t) trailelem & (__alignof__ (*trailelem) - 1))
 	    return NULL;
-#endif
 
 	  if (trail + MINIMUM_HASHENTRY_SIZE > datasize)
 	    return NULL;
