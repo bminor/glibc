@@ -55,9 +55,6 @@ extern char *__strerror_l (int __errnum, locale_t __loc);
 
 extern const char *__sigdescr_np (int __errnum);
 libc_hidden_proto (__sigdescr_np)
-
-/* Get _STRING_ARCH_unaligned.  */
-#include <string_private.h>
 #endif
 
 #include <string/string.h>
