@@ -86,10 +86,21 @@ __END_DECLS
    parentheses around EXPR.  Otherwise, those added parentheses would
    suppress warnings we'd expect to be detected by gcc's -Wparentheses.  */
 # if defined __cplusplus
+#  if defined __has_builtin
+#   if __has_builtin (__builtin_FILE)
+#    define __ASSERT_FILE __builtin_FILE ()
+#    define __ASSERT_LINE __builtin_LINE ()
+#   endif
+#  endif
+#  if !defined __ASSERT_FILE
+#   define __ASSERT_FILE __FILE__
+#   define __ASSERT_LINE __LINE__
+#  endif
 #  define assert(expr)							\
      (static_cast <bool> (expr)						\
       ? void (0)							\
-      : __assert_fail (#expr, __FILE__, __LINE__, __ASSERT_FUNCTION))
+      : __assert_fail (#expr, __ASSERT_FILE, __ASSERT_LINE,             \
+                       __ASSERT_FUNCTION))
 # elif !defined __GNUC__ || defined __STRICT_ANSI__
 #  define assert(expr)							\
     ((expr)								\
