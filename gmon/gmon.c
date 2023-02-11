@@ -46,6 +46,11 @@
 #include <libc-internal.h>
 #include <not-cancel.h>
 
+#if HAVE_TUNABLES
+# define TUNABLE_NAMESPACE gmon
+# include <elf/dl-tunables.h>
+#endif
+
 #ifdef PIC
 # include <link.h>
 
@@ -124,6 +129,22 @@ __monstartup (u_long lowpc, u_long highpc)
   int o;
   char *cp;
   struct gmonparam *p = &_gmonparam;
+  long int minarcs, maxarcs;
+
+#if HAVE_TUNABLES
+  /* Read minarcs/maxarcs tunables. */
+  minarcs = TUNABLE_GET (minarcs, int32_t, NULL);
+  maxarcs = TUNABLE_GET (maxarcs, int32_t, NULL);
+  if (maxarcs < minarcs)
+    {
+      ERR("monstartup: maxarcs < minarcs, setting maxarcs = minarcs\n");
+      maxarcs = minarcs;
+    }
+#else
+  /* No tunables, we use hardcoded defaults */
+  minarcs = MINARCS;
+  maxarcs = MAXARCS;
+#endif
 
   /*
    * round lowpc and highpc to multiples of the density we're using
@@ -146,10 +167,10 @@ __monstartup (u_long lowpc, u_long highpc)
   }
   p->fromssize = ROUNDUP(p->textsize / HASHFRACTION, sizeof(*p->froms));
   p->tolimit = p->textsize * ARCDENSITY / 100;
-  if (p->tolimit < MINARCS)
-    p->tolimit = MINARCS;
-  else if (p->tolimit > MAXARCS)
-    p->tolimit = MAXARCS;
+  if (p->tolimit < minarcs)
+    p->tolimit = minarcs;
+  else if (p->tolimit > maxarcs)
+    p->tolimit = maxarcs;
   p->tossize = p->tolimit * sizeof(struct tostruct);
 
   cp = calloc (p->kcountsize + p->fromssize + p->tossize, 1);

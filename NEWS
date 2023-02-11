@@ -18,6 +18,7 @@ Security related changes:
 
 The following bugs are resolved with this release:
 
+  [27576] gmon: improve mcount overflow handling
   [29444] gmon: Fix allocated buffer overflow (bug 29444)
   [30053] time: strftime %s returns -1 after 2038 on 32 bits systems
   [30125] dynamic-link: [regression, bisected] glibc-2.37 creates new
