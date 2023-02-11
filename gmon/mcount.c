@@ -41,6 +41,10 @@ static char sccsid[] = "@(#)mcount.c	8.1 (Berkeley) 6/4/93";
 
 #include <atomic.h>
 
+#include <not-cancel.h>
+#include <unistd.h>
+#define ERR(s) __write_nocancel (STDERR_FILENO, s, sizeof (s) - 1)
+
 /*
  * mcount is called on entry to each function compiled with the profiling
  * switch set.  _mcount(), which is declared in a machine-dependent way
@@ -170,6 +174,7 @@ done:
 	return;
 overflow:
 	p->state = GMON_PROF_ERROR;
+	ERR("mcount: call graph buffer size limit exceeded, gmon.out will not be generated\n");
 	return;
 }
 
