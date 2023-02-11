@@ -19,6 +19,7 @@ The following bugs are resolved with this release:
   [12154] Do not fail DNS resolution for CNAMEs which are not host names
   [24816] Fix tst-nss-files-hosts-long on single-stack hosts
   [25812] Libio vtable protection is sometimes only partially enforced
+  [27576] gmon: improve mcount overflow handling
   [28838] FAIL: elf/tst-p_align3
   [28846] CMSG_NXTHDR may trigger -Wstrict-overflow warning
   [28850] linux: __get_nprocs_sched reads uninitialized memory from the stack

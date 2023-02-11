@@ -25,7 +25,7 @@ include ../Makeconfig
 headers	:= sys/gmon.h sys/gmon_out.h sys/profil.h
 routines := gmon mcount profil sprofil prof-freq
 
-tests	= tst-sprofil tst-gmon
+tests	= tst-sprofil tst-gmon tst-mcount-overflow
 ifeq ($(build-profile),yes)
 tests	+= tst-profile-static
 tests-static	+= tst-profile-static
@@ -54,6 +54,18 @@ CRT-tst-gmon := $(csu-objpfx)g$(start-installed-name)
 tst-gmon-ENV := GMON_OUT_PREFIX=$(objpfx)tst-gmon.data
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-gmon-gprof.out
+endif
+
+CFLAGS-tst-mcount-overflow.c := -fno-omit-frame-pointer -pg
+tst-mcount-overflow-no-pie = yes
+CRT-tst-mcount-overflow := $(csu-objpfx)g$(start-installed-name)
+# Intentionally use invalid config where maxarcs<minarcs to check warning is printed
+tst-mcount-overflow-ENV := GMON_OUT_PREFIX=$(objpfx)tst-mcount-overflow.data \
+                           GLIBC_TUNABLES=glibc.gmon.minarcs=51:glibc.gmon.maxarcs=50
+# Send stderr into output file because we make sure expected messages are printed
+tst-mcount-overflow-ARGS := 2>&1 1>/dev/null | cat
+ifeq ($(run-built-tests),yes)
+tests-special += $(objpfx)tst-mcount-overflow-check.out
 endif
 
 CFLAGS-tst-gmon-static.c := $(PIE-ccflag) -fno-omit-frame-pointer -pg
@@ -102,6 +114,14 @@ $(noprof:%=$(objpfx)%.op): %.op: %.o
 $(objpfx)tst-gmon.out: clean-tst-gmon-data
 clean-tst-gmon-data:
 	rm -f $(objpfx)tst-gmon.data.*
+
+$(objpfx)tst-mcount-overflow.o: clean-tst-mcount-overflow-data
+clean-tst-mcount-overflow-data:
+	rm -f $(objpfx)tst-mcount-overflow.data.*
+
+$(objpfx)tst-mcount-overflow-check.out: tst-mcount-overflow-check.sh $(objpfx)tst-mcount-overflow.out
+	$(SHELL) $< $(objpfx)tst-mcount-overflow > $@; \
+	$(evaluate-test)
 
 $(objpfx)tst-gmon-gprof.out: tst-gmon-gprof.sh $(objpfx)tst-gmon.out
 	$(SHELL) $< $(GPROF) $(objpfx)tst-gmon $(objpfx)tst-gmon.data.* > $@; \
