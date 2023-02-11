@@ -170,4 +170,17 @@ glibc {
       default: 2
     }
   }
+
+  gmon {
+    minarcs {
+      type: INT_32
+      minval: 50
+      default: 50
+    }
+    maxarcs {
+      type: INT_32
+      minval: 50
+      default: 1048576
+    }
+  }
 }
