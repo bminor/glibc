@@ -99,13 +99,13 @@
    `tcflag_t', `cc_t', `speed_t' and the `TC*' constants appropriately.  */
 
 /* Type of terminal control flag masks.  */
-typedef unsigned long int tcflag_t;
+typedef unsigned int tcflag_t;
 
 /* Type of control characters.  */
 typedef unsigned char cc_t;
 
 /* Type of baud rate specifiers.  */
-typedef long int speed_t;
+typedef int speed_t;
 
 /* Terminal control structure.  */
 struct termios
