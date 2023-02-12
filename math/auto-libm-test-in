@@ -5773,6 +5773,8 @@ hypot 0x1p-16384 0x1p-16446
 hypot 0x1p-16383 0x1p-16494
 
 hypot -0x1.fa7deap+0 0x1.a761bab383ac8p+0
+# the following inputs yield an error of 1 ulp on x86_64 in binary32
+hypot -0x1.003222p-20 -0x1.6a2d58p-32
 
 j0 -1.0
 j0 0.0
