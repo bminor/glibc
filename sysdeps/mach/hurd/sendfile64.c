@@ -35,7 +35,7 @@ __sendfile64 (int out_fd, int in_fd, off64_t *offset, size_t count)
      which might blow if it's huge or address space is real tight.  */
 
   char *data = 0;
-  size_t datalen = 0;
+  mach_msg_type_number_t datalen = 0;
   error_t err = HURD_DPORT_USE (in_fd,
 				__io_read (port, &data, &datalen,
 					   offset ? *offset : (off_t) -1,

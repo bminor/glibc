@@ -60,7 +60,7 @@ _hurd_xattr_get (io_t port, const char *name, void *value, size_t *size)
   if (!strcmp (name, "translator"))
     {
       char *buf = value;
-      size_t bufsz = value ? *size : 0;
+      mach_msg_type_number_t bufsz = value ? *size : 0;
       error_t err = __file_get_translator (port, &buf, &bufsz);
       if (err)
 	return err;
@@ -144,7 +144,7 @@ _hurd_xattr_set (io_t port, const char *name, const void *value, size_t size,
 	{
 	  /* Must make sure it's already there.  */
 	  char *buf = NULL;
-	  size_t bufsz = 0;
+	  mach_msg_type_number_t bufsz = 0;
 	  error_t err = __file_get_translator (port, &buf, &bufsz);
 	  if (err)
 	    return err;

@@ -35,6 +35,7 @@ __readlinkat (int fd, const char *file_name, char *buf, size_t len)
   char retryname[1024];
   file_t file;
   char *rbuf = buf;
+  mach_msg_type_number_t nread = len;
 
   file_stat = __file_name_lookup_at (fd, 0, file_name, O_NOLINK, 0);
   if (file_stat == MACH_PORT_NULL)
@@ -59,15 +60,16 @@ __readlinkat (int fd, const char *file_name, char *buf, size_t len)
       goto out;
     }
 
-  err = __io_read (file, &rbuf, &len, 0, len);
+  err = __io_read (file, &rbuf, &nread, 0, len);
   __mach_port_deallocate (__mach_task_self (), file);
   if (err)
     goto out;
 
+  len = nread;
   if (rbuf != buf)
     {
       memcpy (buf, rbuf, len);
-      __vm_deallocate (__mach_task_self (), (vm_address_t) rbuf, len);
+      __vm_deallocate (__mach_task_self (), (vm_address_t) rbuf, nread);
     }
 
 

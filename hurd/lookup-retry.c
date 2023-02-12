@@ -162,7 +162,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 			    {
 			      char buf[1024];
 			      char *trans = buf;
-			      size_t translen = sizeof buf;
+			      mach_msg_type_number_t translen = sizeof buf;
 			      err = __file_get_translator (*result,
 							   &trans, &translen);
 			      if (!err

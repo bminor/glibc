@@ -311,7 +311,7 @@ static int
 siocgifconf (int fd, int request, struct ifconf *ifc)
 {
   error_t err;
-  size_t data_len = ifc->ifc_len;
+  mach_msg_type_number_t data_len = ifc->ifc_len;
   char *data = ifc->ifc_buf;
 
   if (data_len <= 0)

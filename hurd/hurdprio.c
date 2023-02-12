@@ -58,7 +58,7 @@ _hurd_priority_which_map (enum __priority_which which, int who,
 	  int *oldpi = pi;
 	  mach_msg_type_number_t oldpisize = pisize;
 	  char *tw = 0;
-	  size_t twsz = 0;
+	  mach_msg_type_number_t twsz = 0;
 	  err = __USEPORT (PROC, __proc_getprocinfo (port, pids[i],
 						     &pi_flags,
 						     &pi, &pisize,
