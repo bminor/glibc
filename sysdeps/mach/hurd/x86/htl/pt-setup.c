@@ -1,4 +1,4 @@
-/* Setup thread stack.  Hurd/i386 version.
+/* Setup thread stack.  Hurd/x86 version.
    Copyright (C) 2000-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -22,7 +22,7 @@
 
 #include <pt-internal.h>
 
-/* The stack layout used on the i386 is:
+/* The stack layout used on the x86 is:
 
     -----------------
    |  ARG            |
