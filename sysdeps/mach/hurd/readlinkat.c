@@ -31,38 +31,47 @@ __readlinkat (int fd, const char *file_name, char *buf, size_t len)
   error_t err;
   file_t file_stat;
   struct stat64 st;
+  enum retry_type doretry;
+  char retryname[1024];
+  file_t file;
+  char *rbuf = buf;
 
   file_stat = __file_name_lookup_at (fd, 0, file_name, O_NOLINK, 0);
   if (file_stat == MACH_PORT_NULL)
     return -1;
 
   err = __io_stat (file_stat, &st);
-  if (! err)
-    if (S_ISLNK (st.st_mode))
-      {
-	enum retry_type doretry;
-	char retryname[1024];
-	file_t file;
-	char *rbuf = buf;
-
-	err = __dir_lookup (file_stat, "", O_READ | O_NOLINK, 0, &doretry, retryname, &file);
-	if (! err && (doretry != FS_RETRY_NORMAL || retryname[0] != '\0'))
-	  err = EGRATUITOUS;
-	if (! err)
-	  {
-	    err = __io_read (file, &rbuf, &len, 0, len);
-	    if (!err && rbuf != buf)
-	      {
-		memcpy (buf, rbuf, len);
-		__vm_deallocate (__mach_task_self (), (vm_address_t)rbuf, len);
-	      }
-
-	    __mach_port_deallocate (__mach_task_self (), file);
-	  }
-      }
-    else
+  if (err)
+    goto out;
+  if (!S_ISLNK (st.st_mode))
+    {
       err = EINVAL;
+      goto out;
+    }
 
+  err = __dir_lookup (file_stat, "", O_READ | O_NOLINK,
+                      0, &doretry, retryname, &file);
+  if (err)
+    goto out;
+  if (doretry != FS_RETRY_NORMAL || retryname[0] != '\0')
+    {
+      err = EGRATUITOUS;
+      goto out;
+    }
+
+  err = __io_read (file, &rbuf, &len, 0, len);
+  __mach_port_deallocate (__mach_task_self (), file);
+  if (err)
+    goto out;
+
+  if (rbuf != buf)
+    {
+      memcpy (buf, rbuf, len);
+      __vm_deallocate (__mach_task_self (), (vm_address_t) rbuf, len);
+    }
+
+
+ out:
   __mach_port_deallocate (__mach_task_self (), file_stat);
 
   return err ? __hurd_fail (err) : len;
