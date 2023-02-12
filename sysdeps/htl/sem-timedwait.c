@@ -60,7 +60,7 @@ __sem_timedwait_internal (sem_t *restrict sem,
   int cancel_oldtype = LIBC_CANCEL_ASYNC();
 
 #if __HAVE_64B_ATOMICS
-  uint64_t d = atomic_fetch_add_relaxed (&sem->data,
+  uint64_t d = atomic_fetch_add_relaxed (&isem->data,
 		 (uint64_t) 1 << SEM_NWAITERS_SHIFT);
 
   pthread_cleanup_push (__sem_wait_cleanup, isem);
@@ -72,11 +72,11 @@ __sem_timedwait_internal (sem_t *restrict sem,
 	  /* No token, sleep.  */
 	  if (timeout)
 	    err = __lll_abstimed_wait_intr (
-		      ((unsigned int *) &sem->data) + SEM_VALUE_OFFSET,
+		      ((unsigned int *) &isem->data) + SEM_VALUE_OFFSET,
 		      0, timeout, flags, clock_id);
 	  else
 	    err = __lll_wait_intr (
-		      ((unsigned int *) &sem->data) + SEM_VALUE_OFFSET,
+		      ((unsigned int *) &isem->data) + SEM_VALUE_OFFSET,
 		      0, flags);
 
 	  if (err != 0 && err != KERN_INVALID_ARGUMENT)
@@ -92,12 +92,12 @@ __sem_timedwait_internal (sem_t *restrict sem,
 	    }
 
 	  /* Token changed */
-	  d = atomic_load_relaxed (&sem->data);
+	  d = atomic_load_relaxed (&isem->data);
 	}
       else
 	{
 	  /* Try to acquire and dequeue.  */
-	  if (atomic_compare_exchange_weak_acquire (&sem->data,
+	  if (atomic_compare_exchange_weak_acquire (&isem->data,
 	      &d, d - 1 - ((uint64_t) 1 << SEM_NWAITERS_SHIFT)))
 	    {
 	      /* Success */
