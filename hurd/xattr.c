@@ -68,7 +68,7 @@ _hurd_xattr_get (io_t port, const char *name, void *value, size_t *size)
 	{
 	  if (buf != value)
 	    __munmap (buf, bufsz);
-	  return -ERANGE;
+	  return ERANGE;
 	}
       if (buf != value && bufsz > 0)
 	{
