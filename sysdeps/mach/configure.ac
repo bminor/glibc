@@ -64,7 +64,7 @@ for ifc in mach mach4 gnumach \
 	   clock clock_priv host_priv host_security ledger lock_set \
 	   processor processor_set task task_notify thread_act vm_map \
 	   memory_object memory_object_default default_pager \
-	   i386/mach_i386 \
+	   machine/mach_i386 \
 	   ; do
   AC_CHECK_HEADER(mach/${ifc}.defs, [dnl
   mach_interface_list="$mach_interface_list $ifc"],, -)
@@ -89,7 +89,7 @@ AC_CHECK_HEADER(machine/ndr_def.h, [dnl
 
 AC_CACHE_CHECK(for i386_io_perm_modify in mach_i386.defs,
 	       libc_cv_mach_i386_ioports, [dnl
-AC_EGREP_HEADER(i386_io_perm_modify, mach/i386/mach_i386.defs,
+AC_EGREP_HEADER(i386_io_perm_modify, mach/machine/mach_i386.defs,
 		libc_cv_mach_i386_ioports=yes,
 		libc_cv_mach_i386_ioports=no)])
 if test $libc_cv_mach_i386_ioports = yes; then
@@ -98,7 +98,7 @@ fi
 
 AC_CACHE_CHECK(for i386_set_gdt in mach_i386.defs,
 	       libc_cv_mach_i386_gdt, [dnl
-AC_EGREP_HEADER(i386_set_gdt, mach/i386/mach_i386.defs,
+AC_EGREP_HEADER(i386_set_gdt, mach/machine/mach_i386.defs,
 		libc_cv_mach_i386_gdt=yes,
 		libc_cv_mach_i386_gdt=no)])
 if test $libc_cv_mach_i386_gdt = yes; then

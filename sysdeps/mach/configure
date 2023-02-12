@@ -249,7 +249,7 @@ for ifc in mach mach4 gnumach \
 	   clock clock_priv host_priv host_security ledger lock_set \
 	   processor processor_set task task_notify thread_act vm_map \
 	   memory_object memory_object_default default_pager \
-	   i386/mach_i386 \
+	   machine/mach_i386 \
 	   ; do
   as_ac_Header=`$as_echo "ac_cv_header_mach/${ifc}.defs" | $as_tr_sh`
 ac_fn_c_check_header_preproc "$LINENO" "mach/${ifc}.defs" "$as_ac_Header"
@@ -440,7 +440,7 @@ if ${libc_cv_mach_i386_ioports+:} false; then :
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#include <mach/i386/mach_i386.defs>
+#include <mach/machine/mach_i386.defs>
 
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
@@ -466,7 +466,7 @@ if ${libc_cv_mach_i386_gdt+:} false; then :
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#include <mach/i386/mach_i386.defs>
+#include <mach/machine/mach_i386.defs>
 
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
