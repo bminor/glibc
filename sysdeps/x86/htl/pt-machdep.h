@@ -1,4 +1,4 @@
-/* Machine dependent pthreads internal defenitions.  i386 version.
+/* Machine dependent pthreads internal defenitions.  x86 version.
    Copyright (C) 2000-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
