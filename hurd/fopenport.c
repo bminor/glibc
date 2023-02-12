@@ -28,9 +28,10 @@ readio (void *cookie, char *buf, size_t n)
   mach_msg_type_number_t nread;
   error_t err;
   char *bufp = buf;
+  io_t io = (io_t) (uintptr_t) cookie;
 
   nread = n;
-  if (err = __io_read ((io_t) cookie, &bufp, &nread, -1, n))
+  if (err = __io_read (io, &bufp, &nread, -1, n))
     return __hurd_fail (err);
 
   if (bufp != buf)
@@ -50,8 +51,9 @@ writeio (void *cookie, const char *buf, size_t n)
 {
   vm_size_t wrote;
   error_t err;
+  io_t io = (io_t) (uintptr_t) cookie;
 
-  if (err = __io_write ((io_t) cookie, buf, n, -1, &wrote))
+  if (err = __io_write (io, buf, n, -1, &wrote))
     return __hurd_fail (err);
 
   return wrote;
@@ -65,7 +67,8 @@ seekio (void *cookie,
 	off64_t *pos,
 	int whence)
 {
-  error_t err = __io_seek ((file_t) cookie, *pos, whence, pos);
+  io_t io = (io_t) (uintptr_t) cookie;
+  error_t err = __io_seek (io, *pos, whence, pos);
   return err ? __hurd_fail (err) : 0;
 }
 
@@ -74,8 +77,9 @@ seekio (void *cookie,
 static int
 closeio (void *cookie)
 {
+  io_t io = (io_t) (uintptr_t) cookie;
   error_t error = __mach_port_deallocate (__mach_task_self (),
-					  (mach_port_t) cookie);
+					  io);
   if (error)
     return __hurd_fail (error);
   return 0;
@@ -127,6 +131,7 @@ __fopenport (mach_port_t port, const char *mode)
       return NULL;
     }
 
-  return fopencookie ((void *) port, mode, funcsio);
+  return fopencookie ((void *) (uintptr_t) port,
+                      mode, funcsio);
 }
 weak_alias (__fopenport, fopenport)

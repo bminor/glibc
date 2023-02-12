@@ -28,7 +28,7 @@
 static ssize_t
 devstream_write (void *cookie, const char *buffer, size_t n)
 {
-  const device_t dev = (device_t) cookie;
+  const device_t dev = (device_t) (uintptr_t) cookie;
 
   int write_some (const char *p, size_t to_write)
     {
@@ -83,7 +83,7 @@ devstream_write (void *cookie, const char *buffer, size_t n)
 static ssize_t
 devstream_read (void *cookie, char *buffer, size_t to_read)
 {
-  const device_t dev = (device_t) cookie;
+  const device_t dev = (device_t) (uintptr_t) cookie;
 
   kern_return_t err;
   mach_msg_type_number_t nread = to_read;
@@ -112,7 +112,8 @@ devstream_read (void *cookie, char *buffer, size_t to_read)
 static int
 dealloc_ref (void *cookie)
 {
-  if (__mach_port_deallocate (mach_task_self (), (mach_port_t) cookie))
+  const device_t dev = (device_t) (uintptr_t) cookie;
+  if (__mach_port_deallocate (mach_task_self (), dev))
     {
       errno = EINVAL;
       return -1;
@@ -131,7 +132,7 @@ mach_open_devstream (mach_port_t dev, const char *mode)
       return NULL;
     }
 
-  stream = _IO_fopencookie ((void *) dev, mode,
+  stream = _IO_fopencookie ((void *) (uintptr_t) dev, mode,
 			    (cookie_io_functions_t) { write: devstream_write,
 						      read: devstream_read,
 						      close: dealloc_ref });
