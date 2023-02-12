@@ -1,4 +1,4 @@
-/* Internal defenitions for pthreads library.
+/* Internal definitions for pthreads library.
    Copyright (C) 2000-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
