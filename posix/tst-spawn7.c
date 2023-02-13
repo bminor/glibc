@@ -92,7 +92,7 @@ spawn_signal_test (const char *type, const posix_spawnattr_t *attr)
 }
 
 static void
-dummy_sa_handler (int)
+dummy_sa_handler (int signal)
 {
 }
 
