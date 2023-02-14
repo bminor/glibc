@@ -38,11 +38,12 @@ typedef struct
   uintptr_t stack_guard;
   uintptr_t pointer_guard;
   int gscope_flag;
-  int private_futex;
+  unsigned int feature_1;
   /* Reservation of some values for the TM ABI.  */
-  void *__private_tm[4];
+  void *__private_tm[3];
   /* GCC split stack support.  */
   void *__private_ss;
+  void *__glibc_padding1;
 
   /* Keep these fields last, so offsets of fields above can continue being
      compatible with the i386 Linux version.  */
@@ -52,6 +53,13 @@ typedef struct
   /* Used by the exception handling implementation in the dynamic loader.  */
   struct rtld_catch *rtld_catch;
 } tcbhead_t;
+
+/* GCC generates %gs:0x14 to access the stack guard.  */
+_Static_assert (offsetof (tcbhead_t, stack_guard) == 0x14,
+                "stack guard offset");
+/* libgcc uses %gs:0x30 to access the split stack pointer.  */
+_Static_assert (offsetof (tcbhead_t, __private_ss) == 0x30,
+                "split stack pointer offset");
 
 /* Return tcbhead_t from a TLS segment descriptor.  */
 # define HURD_DESC_TLS(desc)						      \
@@ -166,8 +174,25 @@ out:
 # define TLS_INIT_TP(descr) \
     _hurd_tls_init ((tcbhead_t *) (descr))
 
+# if __GNUC_PREREQ (6, 0)
+
+#  define THREAD_SELF							      \
+  (*(tcbhead_t * __seg_gs *) offsetof (tcbhead_t, tcb))
+#  define THREAD_GETMEM(descr, member)					      \
+  (*(__typeof (descr->member) __seg_gs *) offsetof (tcbhead_t, member))
+#  define THREAD_GETMEM_NC(descr, member, idx)				      \
+  (*(__typeof (descr->member[0]) __seg_gs *)				      \
+   (offsetof (tcbhead_t, member) + (idx) * sizeof (descr->member[0])))
+#  define THREAD_SETMEM(descr, member, value)				      \
+  (*(__typeof (descr->member) __seg_gs *) offsetof (tcbhead_t, member) = value)
+#  define THREAD_SETMEM_NC(descr, member, index, value)			      \
+  (*(__typeof (descr->member[0]) __seg_gs *)				      \
+   (offsetof (tcbhead_t, member) + (idx) * sizeof (descr->member[0])))
+
+# else
+
 /* Return the TCB address of the current thread.  */
-# define THREAD_SELF							      \
+#  define THREAD_SELF							      \
   ({ tcbhead_t *__tcb;							      \
      __asm__ ("movl %%gs:%c1,%0" : "=r" (__tcb)				      \
 	      : "i" (offsetof (tcbhead_t, tcb)));			      \
@@ -200,7 +225,7 @@ out:
 
 
 /* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
-# define THREAD_GETMEM_NC(descr, member, idx) \
+#  define THREAD_GETMEM_NC(descr, member, idx) \
   ({ __typeof (descr->member[0]) __value;				      \
      _Static_assert (sizeof (__value) == 1				      \
 		     || sizeof (__value) == 4				      \
@@ -229,7 +254,7 @@ out:
 
 
 /* Set member of the thread descriptor directly.  */
-# define THREAD_SETMEM(descr, member, value) \
+#  define THREAD_SETMEM(descr, member, value) \
   ({									      \
      _Static_assert (sizeof (descr->member) == 1			      \
 		     || sizeof (descr->member) == 4			      \
@@ -254,7 +279,7 @@ out:
 
 
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
-# define THREAD_SETMEM_NC(descr, member, idx, value) \
+#  define THREAD_SETMEM_NC(descr, member, idx, value) \
   ({									      \
      _Static_assert (sizeof (descr->member[0]) == 1			      \
 		     || sizeof (descr->member[0]) == 4			      \
@@ -279,6 +304,8 @@ out:
 			 "r" (idx));					      \
        }})
 
+# endif /* __GNUC_PREREQ (6, 0) */
+
 /* Return the TCB address of a thread given its state.
    Note: this is expensive.  */
 # define THREAD_TCB(thread, thread_state)				      \
@@ -295,15 +322,10 @@ out:
      HURD_DESC_TLS (___desc);})
 
 /* Install new dtv for current thread.  */
-# define INSTALL_NEW_DTV(dtvp)						      \
-  ({ asm volatile ("movl %0,%%gs:%P1"					      \
-		   : : "ir" (dtvp), "i" (offsetof (tcbhead_t, dtv))); })
+# define INSTALL_NEW_DTV(dtvp) THREAD_SETMEM (THREAD_SELF, dtv, dtvp)
 
 /* Return the address of the dtv for the current thread.  */
-# define THREAD_DTV()							      \
-  ({ dtv_t *_dtv;							      \
-     asm ("movl %%gs:%P1,%0" : "=q" (_dtv) : "i" (offsetof (tcbhead_t, dtv)));\
-     _dtv; })
+# define THREAD_DTV() THREAD_GETMEM (THREAD_SELF, dtv)
 
 
 /* Set the stack guard field in TCB head.  */
