@@ -30,6 +30,7 @@
 /* For ELF we need to add the `.type' directive to make shared libraries
    work right.  */
 #undef ENTRY
+#undef ENTRY2
 #define ENTRY(name) \
   .globl name; \
   .align ALIGN; \
