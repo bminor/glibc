@@ -30,20 +30,23 @@ struct __pthread_mutex
   int __shpid;
   int __type;
   int __flags;
-  unsigned int __reserved1;
-  unsigned int __reserved2;
+  union
+  {
+    unsigned int __reserved[2];
+    void *__pointer_aligned;
+  };
 };
 
 /* Static mutex initializers. */
 #define __PTHREAD_MUTEX_INITIALIZER   \
-  { 0, 0, 0, 0, __PTHREAD_MUTEX_TIMED, 0, 0, 0 }
+  { 0, 0, 0, 0, __PTHREAD_MUTEX_TIMED, 0, { { 0, 0 } } }
 
 /* The +1 is to mantain binary compatibility with the old
  * libpthread implementation. */
 #define __PTHREAD_ERRORCHECK_MUTEX_INITIALIZER   \
-  { 0, 0, 0, 0, __PTHREAD_MUTEX_ERRORCHECK + 1, 0, 0, 0 }
+  { 0, 0, 0, 0, __PTHREAD_MUTEX_ERRORCHECK + 1, 0, { { 0, 0 } } }
 
 #define __PTHREAD_RECURSIVE_MUTEX_INITIALIZER   \
-  { 0, 0, 0, 0, __PTHREAD_MUTEX_RECURSIVE + 1, 0, 0, 0 }
+  { 0, 0, 0, 0, __PTHREAD_MUTEX_RECURSIVE + 1, 0, { { 0, 0 } } }
 
 #endif /* bits/types/struct___pthread_mutex.h */
