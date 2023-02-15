@@ -44,6 +44,18 @@
 #define IP_ADD_MEMBERSHIP 12	/* ip_mreq; add an IP group membership */
 #define IP_DROP_MEMBERSHIP 13	/* ip_mreq; drop an IP group membership */
 
+/* IP_MTU_DISCOVER arguments.  */
+#define IP_PMTUDISC_DONT   0	/* Never send DF frames.  */
+#define IP_PMTUDISC_WANT   1	/* Use per route hints.  */
+#define IP_PMTUDISC_DO     2	/* Always DF.  */
+#define IP_PMTUDISC_PROBE  3	/* Ignore dst pmtu.  */
+/* Always use interface mtu (ignores dst pmtu) but don't set DF flag.
+   Also incoming ICMP frag_needed notifications will be ignored on
+   this socket to prevent accepting spoofed ones.  */
+#define IP_PMTUDISC_INTERFACE           4
+/* Like IP_PMTUDISC_INTERFACE but allow packets to be fragmented.  */
+#define IP_PMTUDISC_OMIT		5
+
 #ifdef __USE_MISC
 /* Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
    The `ip_dst' field is used for the first-hop gateway when using a
@@ -87,6 +99,14 @@ struct ip_opts
 #define IPV6_V6ONLY            26
 #define IPV6_JOIN_ANYCAST      27
 #define IPV6_LEAVE_ANYCAST     28
+
+/* IPV6_MTU_DISCOVER values.  */
+#define IPV6_PMTUDISC_DONT	0	/* Never send DF frames.  */
+#define IPV6_PMTUDISC_WANT	1	/* Use per route hints.  */
+#define IPV6_PMTUDISC_DO	2	/* Always DF.  */
+#define IPV6_PMTUDISC_PROBE	3	/* Ignore dst pmtu.  */
+#define IPV6_PMTUDISC_INTERFACE	4	/* See IP_PMTUDISC_INTERFACE.  */
+#define IPV6_PMTUDISC_OMIT	5	/* See IP_PMTUDISC_OMIT.  */
 
 /* Advanced API (RFC3542) (1).  */
 #define IPV6_RECVPKTINFO	49
