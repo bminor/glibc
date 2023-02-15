@@ -16,8 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _MACH_I386_THREAD_STATE_H
-#define _MACH_I386_THREAD_STATE_H 1
+#ifndef _MACH_X86_THREAD_STATE_H
+#define _MACH_X86_THREAD_STATE_H 1
 
 #include <mach/machine/thread_status.h>
 
@@ -29,9 +29,15 @@
 
 #define machine_thread_state i386_thread_state
 
+#ifdef __x86_64__
+#define PC rip
+#define SP ursp
+#define SYSRETURN rax
+#else
 #define PC eip
 #define SP uesp
 #define SYSRETURN eax
+#endif
 
 #define MACHINE_THREAD_STATE_FIX_NEW(ts) do { \
 	asm ("mov %%cs, %w0" : "=q" ((ts)->cs)); \
@@ -50,4 +56,4 @@ struct machine_thread_all_state
 
 #include <sysdeps/mach/thread_state.h>
 
-#endif /* mach/i386/thread_state.h */
+#endif /* mach/x86/thread_state.h */
