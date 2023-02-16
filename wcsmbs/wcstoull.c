@@ -22,3 +22,4 @@
 
 weak_alias (wcstoull, wcstouq)
 weak_alias (wcstoull, wcstoumax)
+weak_alias (__isoc23_wcstoull, __isoc23_wcstoumax)

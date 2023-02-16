@@ -208,6 +208,71 @@ extern unsigned long long int strtoull (const char *__restrict __nptr,
      __THROW __nonnull ((1));
 #endif /* ISO C99 or use MISC.  */
 
+/* Versions of the above functions that handle '0b' and '0B' prefixes
+   in base 0 or 2.  */
+#if __GLIBC_USE (C2X_STRTOL)
+# ifdef __REDIRECT
+extern long int __REDIRECT_NTH (strtol, (const char *__restrict __nptr,
+					 char **__restrict __endptr,
+					 int __base), __isoc23_strtol)
+     __nonnull ((1));
+extern unsigned long int __REDIRECT_NTH (strtoul,
+					 (const char *__restrict __nptr,
+					  char **__restrict __endptr,
+					  int __base), __isoc23_strtoul)
+     __nonnull ((1));
+#  ifdef __USE_MISC
+__extension__
+extern long long int __REDIRECT_NTH (strtoq, (const char *__restrict __nptr,
+					      char **__restrict __endptr,
+					      int __base), __isoc23_strtoll)
+     __nonnull ((1));
+__extension__
+extern unsigned long long int __REDIRECT_NTH (strtouq,
+					      (const char *__restrict __nptr,
+					       char **__restrict __endptr,
+					       int __base), __isoc23_strtoull)
+     __nonnull ((1));
+#  endif
+__extension__
+extern long long int __REDIRECT_NTH (strtoll, (const char *__restrict __nptr,
+					       char **__restrict __endptr,
+					       int __base), __isoc23_strtoll)
+     __nonnull ((1));
+__extension__
+extern unsigned long long int __REDIRECT_NTH (strtoull,
+					      (const char *__restrict __nptr,
+					       char **__restrict __endptr,
+					       int __base), __isoc23_strtoull)
+     __nonnull ((1));
+# else
+extern long int __isoc23_strtol (const char *__restrict __nptr,
+				 char **__restrict __endptr, int __base)
+     __THROW __nonnull ((1));
+extern unsigned long int __isoc23_strtoul (const char *__restrict __nptr,
+					   char **__restrict __endptr,
+					   int __base)
+     __THROW __nonnull ((1));
+__extension__
+extern long long int __isoc23_strtoll (const char *__restrict __nptr,
+				       char **__restrict __endptr, int __base)
+     __THROW __nonnull ((1));
+__extension__
+extern unsigned long long int __isoc23_strtoull (const char *__restrict __nptr,
+						 char **__restrict __endptr,
+						 int __base)
+     __THROW __nonnull ((1));
+#  define strtol __isoc23_strtol
+#  define strtoul __isoc23_strtoul
+#  ifdef __USE_MISC
+#   define strtoq __isoc23_strtoll
+#   define strtouq __isoc23_strtoull
+#  endif
+#  define strtoll __isoc23_strtoll
+#  define strtoull __isoc23_strtoull
+# endif
+#endif
+
 /* Convert a floating-point number to a string.  */
 #if __GLIBC_USE (IEC_60559_BFP_EXT_C2X)
 extern int strfromd (char *__dest, size_t __size, const char *__format,
@@ -292,6 +357,60 @@ extern unsigned long long int strtoull_l (const char *__restrict __nptr,
 					  char **__restrict __endptr,
 					  int __base, locale_t __loc)
      __THROW __nonnull ((1, 4));
+
+/* Versions of the above functions that handle '0b' and '0B' prefixes
+   in base 0 or 2.  */
+# if __GLIBC_USE (C2X_STRTOL)
+#  ifdef __REDIRECT
+extern long int __REDIRECT_NTH (strtol_l, (const char *__restrict __nptr,
+					   char **__restrict __endptr,
+					   int __base, locale_t __loc),
+				__isoc23_strtol_l)
+     __nonnull ((1, 4));
+extern unsigned long int __REDIRECT_NTH (strtoul_l,
+					 (const char *__restrict __nptr,
+					  char **__restrict __endptr,
+					  int __base, locale_t __loc),
+					 __isoc23_strtoul_l)
+     __nonnull ((1, 4));
+__extension__
+extern long long int __REDIRECT_NTH (strtoll_l, (const char *__restrict __nptr,
+						 char **__restrict __endptr,
+						 int __base,
+						 locale_t __loc),
+				     __isoc23_strtoll_l)
+     __nonnull ((1, 4));
+__extension__
+extern unsigned long long int __REDIRECT_NTH (strtoull_l,
+					      (const char *__restrict __nptr,
+					       char **__restrict __endptr,
+					       int __base, locale_t __loc),
+					      __isoc23_strtoull_l)
+     __nonnull ((1, 4));
+#  else
+extern long int __isoc23_strtol_l (const char *__restrict __nptr,
+				   char **__restrict __endptr, int __base,
+				   locale_t __loc) __THROW __nonnull ((1, 4));
+extern unsigned long int __isoc23_strtoul_l (const char *__restrict __nptr,
+					     char **__restrict __endptr,
+					     int __base, locale_t __loc)
+     __THROW __nonnull ((1, 4));
+__extension__
+extern long long int __isoc23_strtoll_l (const char *__restrict __nptr,
+					 char **__restrict __endptr,
+					 int __base, locale_t __loc)
+     __THROW __nonnull ((1, 4));
+__extension__
+extern unsigned long long int __isoc23_strtoull_l (const char *__restrict __nptr,
+						   char **__restrict __endptr,
+						   int __base, locale_t __loc)
+     __THROW __nonnull ((1, 4));
+#   define strtol_l __isoc23_strtol_l
+#   define strtoul_l __isoc23_strtoul_l
+#   define strtoll_l __isoc23_strtoll_l
+#   define strtoull_l __isoc23_strtoull_l
+#  endif
+# endif
 
 extern double strtod_l (const char *__restrict __nptr,
 			char **__restrict __endptr, locale_t __loc)

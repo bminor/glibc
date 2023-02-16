@@ -234,6 +234,10 @@ tests := \
   tst-strtod5 \
   tst-strtod6 \
   tst-strtol \
+  tst-strtol-binary-c11 \
+  tst-strtol-binary-c2x \
+  tst-strtol-binary-gnu11 \
+  tst-strtol-binary-gnu2x \
   tst-strtol-locale \
   tst-strtoll \
   tst-swapcontext1 \
@@ -393,6 +397,14 @@ CFLAGS-tst-makecontext.c += -funwind-tables
 CFLAGS-tst-makecontext2.c += $(stack-align-test-flags)
 
 CFLAGS-testmb.c += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -Wall -Werror
+
+# Some versions of GCC supported for building glibc do not support -std=c2x
+# or -std=gnu2x, so the tests for those versions use -std=c11 and -std=gnu11
+# and then _ISOC2X_SOURCE is defined in the test as needed.
+CFLAGS-tst-strtol-binary-c11.c += -std=c11
+CFLAGS-tst-strtol-binary-c2x.c += -std=c11
+CFLAGS-tst-strtol-binary-gnu11.c += -std=gnu11
+CFLAGS-tst-strtol-binary-gnu2x.c += -std=gnu11
 
 
 # Run a test on the header files we use.

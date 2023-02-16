@@ -88,6 +88,7 @@ routines += gai_sigqueue
 tests += \
   tst-bug18665 \
   tst-bug18665-tcp \
+  tst-inet_addr-binary \
   tst-ns_name \
   tst-ns_name_compress \
   tst-ns_name_pton \

@@ -467,6 +467,67 @@ extern unsigned long long int wcstouq (const wchar_t *__restrict __nptr,
 				       int __base) __THROW;
 #endif /* Use GNU.  */
 
+/* Versions of the above functions that handle '0b' and '0B' prefixes
+   in base 0 or 2.  */
+#if __GLIBC_USE (C2X_STRTOL)
+# ifdef __REDIRECT
+extern long int __REDIRECT_NTH (wcstol, (const wchar_t *__restrict __nptr,
+					 wchar_t **__restrict __endptr,
+					 int __base), __isoc23_wcstol);
+extern unsigned long int __REDIRECT_NTH (wcstoul,
+					 (const wchar_t *__restrict __nptr,
+					  wchar_t **__restrict __endptr,
+					  int __base), __isoc23_wcstoul);
+__extension__
+extern long long int __REDIRECT_NTH (wcstoll,
+				     (const wchar_t *__restrict __nptr,
+				      wchar_t **__restrict __endptr,
+				      int __base), __isoc23_wcstoll);
+__extension__
+extern unsigned long long int __REDIRECT_NTH (wcstoull,
+					      (const wchar_t *__restrict __nptr,
+					       wchar_t **__restrict __endptr,
+					       int __base), __isoc23_wcstoull);
+#  ifdef __USE_GNU
+__extension__
+extern long long int __REDIRECT_NTH (wcstoq, (const wchar_t *__restrict __nptr,
+					      wchar_t **__restrict __endptr,
+					      int __base), __isoc23_wcstoll);
+__extension__
+extern unsigned long long int __REDIRECT_NTH (wcstouq,
+					      (const wchar_t *__restrict __nptr,
+					       wchar_t **__restrict __endptr,
+					       int __base), __isoc23_wcstoull);
+#  endif
+# else
+extern long int __isoc23_wcstol (const wchar_t *__restrict __nptr,
+				 wchar_t **__restrict __endptr, int __base)
+     __THROW;
+extern unsigned long int __isoc23_wcstoul (const wchar_t *__restrict __nptr,
+					   wchar_t **__restrict __endptr,
+					   int __base)
+     __THROW;
+__extension__
+extern long long int __isoc23_wcstoll (const wchar_t *__restrict __nptr,
+				       wchar_t **__restrict __endptr,
+				       int __base)
+     __THROW;
+__extension__
+extern unsigned long long int __isoc23_wcstoull (const wchar_t *__restrict __nptr,
+						 wchar_t **__restrict __endptr,
+						 int __base)
+     __THROW;
+#  define wcstol __isoc23_wcstol
+#  define wcstoul __isoc23_wcstoul
+#  define wcstoll __isoc23_wcstoll
+#  define wcstoull __isoc23_wcstoull
+#  ifdef __USE_GNU
+#   define wcstoq __isoc23_wcstoll
+#   define wcstouq __isoc23_wcstoull
+#  endif
+# endif
+#endif
+
 #ifdef __USE_GNU
 /* Parallel versions of the functions above which take the locale to
    use as an additional parameter.  These are GNU extensions inspired
@@ -489,6 +550,56 @@ extern unsigned long long int wcstoull_l (const wchar_t *__restrict __nptr,
 					  wchar_t **__restrict __endptr,
 					  int __base, locale_t __loc)
      __THROW;
+
+/* Versions of the above functions that handle '0b' and '0B' prefixes
+   in base 0 or 2.  */
+# if __GLIBC_USE (C2X_STRTOL)
+#  ifdef __REDIRECT
+extern long int __REDIRECT_NTH (wcstol_l, (const wchar_t *__restrict __nptr,
+					   wchar_t **__restrict __endptr,
+					   int __base, locale_t __loc),
+				__isoc23_wcstol_l);
+extern unsigned long int __REDIRECT_NTH (wcstoul_l,
+					 (const wchar_t *__restrict __nptr,
+					  wchar_t **__restrict __endptr,
+					  int __base, locale_t __loc),
+					 __isoc23_wcstoul_l);
+__extension__
+extern long long int __REDIRECT_NTH (wcstoll_l,
+				     (const wchar_t *__restrict __nptr,
+				      wchar_t **__restrict __endptr,
+				      int __base, locale_t __loc),
+				     __isoc23_wcstoll_l);
+__extension__
+extern unsigned long long int __REDIRECT_NTH (wcstoull_l,
+					      (const wchar_t *__restrict __nptr,
+					       wchar_t **__restrict __endptr,
+					       int __base, locale_t __loc),
+					      __isoc23_wcstoull_l);
+#  else
+extern long int __isoc23_wcstol_l (const wchar_t *__restrict __nptr,
+				   wchar_t **__restrict __endptr, int __base,
+				   locale_t __loc) __THROW;
+extern unsigned long int __isoc23_wcstoul_l (const wchar_t *__restrict __nptr,
+					     wchar_t **__restrict __endptr,
+					     int __base, locale_t __loc)
+     __THROW;
+__extension__
+extern long long int __isoc23_wcstoll_l (const wchar_t *__restrict __nptr,
+					 wchar_t **__restrict __endptr,
+					 int __base, locale_t __loc)
+     __THROW;
+__extension__
+extern unsigned long long int __isoc23_wcstoull_l (const wchar_t *__restrict __nptr,
+						   wchar_t **__restrict __endptr,
+						   int __base, locale_t __loc)
+     __THROW;
+#   define wcstol_l __isoc23_wcstol_l
+#   define wcstoul_l __isoc23_wcstoul_l
+#   define wcstoll_l __isoc23_wcstoll_l
+#   define wcstoull_l __isoc23_wcstoull_l
+#  endif
+# endif
 
 extern double wcstod_l (const wchar_t *__restrict __nptr,
 			wchar_t **__restrict __endptr, locale_t __loc)

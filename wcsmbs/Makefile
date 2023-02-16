@@ -55,7 +55,11 @@ tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-wcstod-nan-sign tst-c16-surrogate tst-c32-state \
 	 test-mbrtoc8 test-c8rtomb \
 	 $(addprefix test-,$(strop-tests)) tst-mbstowcs \
-	 tst-wprintf-binary
+	 tst-wprintf-binary \
+	 tst-wcstol-binary-c11 \
+	 tst-wcstol-binary-c2x \
+	 tst-wcstol-binary-gnu11 \
+	 tst-wcstol-binary-gnu2x
 
 include ../Rules
 
@@ -122,3 +126,11 @@ CPPFLAGS-wcstold_l.c += -I../stdlib
 
 $(objpfx)tst-wcstod-nan-locale: $(libm)
 $(objpfx)tst-wcstod-nan-sign: $(libm)
+
+# Some versions of GCC supported for building glibc do not support -std=c2x
+# or -std=gnu2x, so the tests for those versions use -std=c11 and -std=gnu11
+# and then _ISOC2X_SOURCE is defined in the test as needed.
+CFLAGS-tst-wcstol-binary-c11.c += -std=c11
+CFLAGS-tst-wcstol-binary-c2x.c += -std=c11
+CFLAGS-tst-wcstol-binary-gnu11.c += -std=gnu11
+CFLAGS-tst-wcstol-binary-gnu2x.c += -std=gnu11

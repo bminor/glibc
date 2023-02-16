@@ -12,6 +12,7 @@
 # ifndef _ISOMAC
 
 #include <bits/floatn.h>
+#include <stdbool.h>
 
 extern __typeof (wcscasecmp_l) __wcscasecmp_l;
 extern __typeof (wcsncasecmp_l) __wcsncasecmp_l;
@@ -33,6 +34,45 @@ libc_hidden_proto (__wcstod_l)
 libc_hidden_proto (__wcstof_l)
 libc_hidden_proto (__wcstold_l)
 libc_hidden_proto (__wcsftime_l)
+
+extern __typeof (wcstol) __isoc23_wcstol __attribute_copy__ (wcstol);
+extern __typeof (wcstoul) __isoc23_wcstoul __attribute_copy__ (wcstoul);
+extern __typeof (wcstoll) __isoc23_wcstoll __attribute_copy__ (wcstoll);
+extern __typeof (wcstoull) __isoc23_wcstoull __attribute_copy__ (wcstoull);
+extern __typeof (wcstol_l) __isoc23_wcstol_l __attribute_copy__ (wcstol_l);
+extern __typeof (wcstoul_l) __isoc23_wcstoul_l __attribute_copy__ (wcstoul_l);
+extern __typeof (wcstoll_l) __isoc23_wcstoll_l __attribute_copy__ (wcstoll_l);
+extern __typeof (wcstoull_l) __isoc23_wcstoull_l __attribute_copy__ (wcstoull_l);
+libc_hidden_proto (__isoc23_wcstol)
+libc_hidden_proto (__isoc23_wcstoul)
+libc_hidden_proto (__isoc23_wcstoll)
+libc_hidden_proto (__isoc23_wcstoull)
+libc_hidden_proto (__isoc23_wcstol_l)
+libc_hidden_proto (__isoc23_wcstoul_l)
+libc_hidden_proto (__isoc23_wcstoll_l)
+libc_hidden_proto (__isoc23_wcstoull_l)
+
+#if __GLIBC_USE (C2X_STRTOL)
+/* Redirect internal uses of these functions to the C2X versions; the
+   redirection in the installed header does not work with
+   libc_hidden_proto.  */
+# undef wcstol
+# define wcstol __isoc23_wcstol
+# undef wcstoul
+# define wcstoul __isoc23_wcstoul
+# undef wcstoll
+# define wcstoll __isoc23_wcstoll
+# undef wcstoull
+# define wcstoull __isoc23_wcstoull
+# undef wcstol_l
+# define wcstol_l __isoc23_wcstol_l
+# undef wcstoul_l
+# define wcstoul_l __isoc23_wcstoul_l
+# undef wcstoll_l
+# define wcstoll_l __isoc23_wcstoll_l
+# undef wcstoull_l
+# define wcstoull_l __isoc23_wcstoull_l
+#endif
 
 
 extern double __wcstod_internal (const wchar_t *__restrict __nptr,
@@ -63,7 +103,7 @@ extern unsigned long long int __wcstoull_internal (const wchar_t *
 						   int __group) __THROW;
 extern unsigned long long int ____wcstoull_l_internal (const wchar_t *,
 						       wchar_t **, int, int,
-						       locale_t);
+						       bool, locale_t);
 libc_hidden_proto (__wcstof_internal)
 libc_hidden_proto (__wcstod_internal)
 libc_hidden_proto (__wcstold_internal)
@@ -86,17 +126,17 @@ extern double ____wcstod_l_internal (const wchar_t *, wchar_t **, int,
 extern long double ____wcstold_l_internal (const wchar_t *, wchar_t **,
 					   int, locale_t) attribute_hidden;
 extern long int ____wcstol_l_internal (const wchar_t *, wchar_t **, int,
-				       int, locale_t) attribute_hidden;
+				       int, bool, locale_t) attribute_hidden;
 extern unsigned long int ____wcstoul_l_internal (const wchar_t *,
 						 wchar_t **,
-						 int, int, locale_t)
+						 int, int, bool, locale_t)
      attribute_hidden;
 extern long long int ____wcstoll_l_internal (const wchar_t *, wchar_t **,
-					     int, int, locale_t)
+					     int, int, bool, locale_t)
      attribute_hidden;
 extern unsigned long long int ____wcstoull_l_internal (const wchar_t *,
 						       wchar_t **, int, int,
-						       locale_t)
+						       bool, locale_t)
      attribute_hidden;
 
 #if __HAVE_DISTINCT_FLOAT128

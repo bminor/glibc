@@ -16,6 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <features.h>
+#undef __GLIBC_USE_C2X_STRTOL
+#define __GLIBC_USE_C2X_STRTOL 0
 #include <stdlib.h>
 #include <wchar.h>
 #include <locale/localeinfo.h>
@@ -32,17 +35,21 @@
 #  ifdef QUAD
 #   define strtol wcstoull
 #   define __strtol_l __wcstoull_l
+#   define __isoc23_strtol __isoc23_wcstoull
 #  else
 #   define strtol wcstoul
 #   define __strtol_l __wcstoul_l
+#   define __isoc23_strtol __isoc23_wcstoul
 #  endif
 # else
 #  ifdef QUAD
 #   define strtol strtoull
 #   define __strtol_l __strtoull_l
+#   define __isoc23_strtol __isoc23_strtoull
 #  else
 #   define strtol strtoul
 #   define __strtol_l __strtoul_l
+#   define __isoc23_strtol __isoc23_strtoul
 #  endif
 # endif
 #else
@@ -50,14 +57,17 @@
 #  ifdef QUAD
 #   define strtol wcstoll
 #   define __strtol_l __wcstoll_l
+#   define __isoc23_strtol __isoc23_wcstoll
 #  else
 #   define strtol wcstol
 #   define __strtol_l __wcstol_l
+#   define __isoc23_strtol __isoc23_wcstol
 #  endif
 # else
 #  ifdef QUAD
 #   define strtol strtoll
 #   define __strtol_l __strtoll_l
+#   define __isoc23_strtol __isoc23_strtoll
 #  endif
 # endif
 #endif
@@ -88,14 +98,15 @@
 
 
 extern INT INTERNAL (__strtol_l) (const STRING_TYPE *, STRING_TYPE **, int,
-				  int, locale_t);
+				  int, bool, locale_t);
 
 
 INT
 INTERNAL (strtol) (const STRING_TYPE *nptr, STRING_TYPE **endptr,
 		   int base, int group)
 {
-  return INTERNAL (__strtol_l) (nptr, endptr, base, group, _NL_CURRENT_LOCALE);
+  return INTERNAL (__strtol_l) (nptr, endptr, base, group, false,
+				_NL_CURRENT_LOCALE);
 }
 libc_hidden_def (INTERNAL (strtol))
 
@@ -103,7 +114,16 @@ libc_hidden_def (INTERNAL (strtol))
 INT
 __strtol (const STRING_TYPE *nptr, STRING_TYPE **endptr, int base)
 {
-  return INTERNAL (__strtol_l) (nptr, endptr, base, 0, _NL_CURRENT_LOCALE);
+  return INTERNAL (__strtol_l) (nptr, endptr, base, 0, false,
+				_NL_CURRENT_LOCALE);
 }
 weak_alias (__strtol, strtol)
 libc_hidden_weak (strtol)
+
+INT
+__isoc23_strtol (const STRING_TYPE *nptr, STRING_TYPE **endptr, int base)
+{
+  return INTERNAL (__strtol_l) (nptr, endptr, base, 0, true,
+				_NL_CURRENT_LOCALE);
+}
+libc_hidden_def (__isoc23_strtol)

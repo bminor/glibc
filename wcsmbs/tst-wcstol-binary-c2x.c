@@ -1,5 +1,6 @@
-/* Convert string for NaN payload to corresponding NaN.  Narrow strings.
-   Copyright (C) 1997-2023 Free Software Foundation, Inc.
+/* Test wcstol functions with C2X binary integers (wide strings,
+   no extensions).
+   Copyright (C) 2022-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +17,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define STRING_TYPE char
-#define L_(Ch) Ch
-#define STRTOULL(S, E, B) ____strtoull_l_internal ((S), (E), (B), 0,	\
-						   false, _nl_C_locobj_ptr)
+/* Some versions of GCC supported for building glibc do not support
+   -std=c2x.  */
+#undef _GNU_SOURCE
+#define _ISOC2X_SOURCE
+
+#define CHAR wchar_t
+#define FNPFX wcsto
+#define L_(C) L ## C
+#define TEST_C2X 1
+#define TEST_Q 0
+#define TEST_LOCALE 0
+
+#include "../stdlib/tst-strtol-binary-main.c"

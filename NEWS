@@ -9,7 +9,12 @@ Version 2.38
 
 Major new features:
 
-  [Add new features here]
+* When C2X features are enabled and the base argument is 0 or 2, the
+  following functions support binary integers prefixed by 0b or 0B as
+  input: strtol, strtoll, strtoul, strtoull, strtol_l, strtoll_l,
+  strtoul_l, strtoull_l, strtoimax, strtoumax, strtoq, strtouq, wcstol,
+  wcstoll, wcstoul, wcstoull, wcstol_l, wcstoll_l, wcstoul_l,
+  wcstoull_l, wcstoimax, wcstoumax, wcstoq, wcstouq.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

@@ -143,6 +143,14 @@ libc {
   }
   GLIBC_2.37 {
   }
+  GLIBC_2.38 {
+    __isoc23_strtol;
+    __isoc23_strtoll;
+    __isoc23_strtoul;
+    __isoc23_strtoull;
+    __isoc23_strtoimax;
+    __isoc23_strtoumax;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.

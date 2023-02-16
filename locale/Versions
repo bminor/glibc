@@ -66,6 +66,16 @@ libc {
     wcstoll_l; wcstoul_l; wcstoull_l; wcsxfrm_l; wctype_l;
     wctrans_l; nl_langinfo_l;
   }
+  GLIBC_2.38 {
+    __isoc23_strtol_l;
+    __isoc23_strtoll_l;
+    __isoc23_strtoul_l;
+    __isoc23_strtoull_l;
+    __isoc23_wcstol_l;
+    __isoc23_wcstoll_l;
+    __isoc23_wcstoul_l;
+    __isoc23_wcstoull_l;
+  }
   GLIBC_PRIVATE {
     # global variables
     __collate_element_hash; __collate_element_strings;

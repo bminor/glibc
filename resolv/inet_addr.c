@@ -130,7 +130,7 @@ inet_aton_end (const char *cp, struct in_addr *addr, const char **endp)
 	goto ret_0;
       {
 	char *endp;
-	unsigned long ul = strtoul (cp, &endp, 0);
+	unsigned long ul = __strtoul_internal (cp, &endp, 0, 0);
 	if (ul == ULONG_MAX && errno == ERANGE)
 	  goto ret_0;
 	if (ul > 0xfffffffful)

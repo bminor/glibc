@@ -2656,12 +2656,15 @@ A nonempty sequence of digits in the radix specified by @var{base}.
 
 If @var{base} is zero, decimal radix is assumed unless the series of
 digits begins with @samp{0} (specifying octal radix), or @samp{0x} or
-@samp{0X} (specifying hexadecimal radix); in other words, the same
-syntax used for integer constants in C.
+@samp{0X} (specifying hexadecimal radix), or @samp{0b} or @samp{0B}
+(specifying binary radix; only supported when C2X features are
+enabled); in other words, the same syntax used for integer constants in C.
 
 Otherwise @var{base} must have a value between @code{2} and @code{36}.
 If @var{base} is @code{16}, the digits may optionally be preceded by
-@samp{0x} or @samp{0X}.  If base has no legal value the value returned
+@samp{0x} or @samp{0X}.  If @var{base} is @code{2}, and C2X features
+are enabled, the digits may optionally be preceded by
+@samp{0b} or @samp{0B}.  If base has no legal value the value returned
 is @code{0l} and the global variable @code{errno} is set to @code{EINVAL}.
 
 @item

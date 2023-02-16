@@ -311,6 +311,46 @@ extern uintmax_t wcstoumax (const __gwchar_t *__restrict __nptr,
 			    __gwchar_t ** __restrict __endptr, int __base)
      __THROW;
 
+/* Versions of the above functions that handle '0b' and '0B' prefixes
+   in base 0 or 2.  */
+#if __GLIBC_USE (C2X_STRTOL)
+# ifdef __REDIRECT
+extern intmax_t __REDIRECT_NTH (strtoimax, (const char *__restrict __nptr,
+					    char **__restrict __endptr,
+					    int __base), __isoc23_strtoimax);
+extern uintmax_t __REDIRECT_NTH (strtoumax, (const char *__restrict __nptr,
+					     char **__restrict __endptr,
+					     int __base), __isoc23_strtoumax);
+extern intmax_t __REDIRECT_NTH (wcstoimax,
+				(const __gwchar_t *__restrict __nptr,
+				 __gwchar_t **__restrict __endptr, int __base),
+				__isoc23_wcstoimax);
+extern uintmax_t __REDIRECT_NTH (wcstoumax,
+				 (const __gwchar_t *__restrict __nptr,
+				  __gwchar_t **__restrict __endptr, int __base),
+				 __isoc23_wcstoumax);
+# else
+extern intmax_t __isoc23_strtoimax (const char *__restrict __nptr,
+				    char **__restrict __endptr, int __base)
+     __THROW;
+extern uintmax_t __isoc23_strtoumax (const char *__restrict __nptr,
+				     char ** __restrict __endptr, int __base)
+     __THROW;
+extern intmax_t __isoc23_wcstoimax (const __gwchar_t *__restrict __nptr,
+				    __gwchar_t **__restrict __endptr,
+				    int __base)
+     __THROW;
+extern uintmax_t __isoc23_wcstoumax (const __gwchar_t *__restrict __nptr,
+				     __gwchar_t ** __restrict __endptr,
+				     int __base)
+     __THROW;
+# define strtoimax __isoc23_strtoimax
+# define strtoumax __isoc23_strtoumax
+# define wcstoimax __isoc23_wcstoimax
+# define wcstoumax __isoc23_wcstoumax
+# endif
+#endif
+
 __END_DECLS
 
 #endif /* inttypes.h */

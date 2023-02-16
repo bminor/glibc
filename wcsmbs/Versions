@@ -52,4 +52,12 @@ libc {
   GLIBC_2.36 {
     c8rtomb; mbrtoc8;
   }
+  GLIBC_2.38 {
+    __isoc23_wcstol;
+    __isoc23_wcstoll;
+    __isoc23_wcstoul;
+    __isoc23_wcstoull;
+    __isoc23_wcstoimax;
+    __isoc23_wcstoumax;
+  }
 }

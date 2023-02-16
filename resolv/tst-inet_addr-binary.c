@@ -1,5 +1,5 @@
-/* Convert string for NaN payload to corresponding NaN.  Narrow strings.
-   Copyright (C) 1997-2023 Free Software Foundation, Inc.
+/* Test inet_addr does not accept C2X binary constants.
+   Copyright (C) 2022-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define STRING_TYPE char
-#define L_(Ch) Ch
-#define STRTOULL(S, E, B) ____strtoull_l_internal ((S), (E), (B), 0,	\
-						   false, _nl_C_locobj_ptr)
+#include <arpa/inet.h>
+
+#include <support/check.h>
+
+static int
+do_test (void)
+{
+  TEST_COMPARE (inet_addr ("0b101"), (in_addr_t) -1);
+  return 0;
+}
+
+#include <support/test-driver.c>

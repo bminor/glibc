@@ -18,9 +18,13 @@
 
 #define UNSIGNED	1
 
+#include <features.h>
+#undef __GLIBC_USE_C2X_STRTOL
+#define __GLIBC_USE_C2X_STRTOL 0
 #include <locale.h>
+#include <stdbool.h>
 
 extern unsigned long int ____strtoul_l_internal (const char *, char **, int,
-						 int, locale_t);
+						 int, bool, locale_t);
 
 #include "strtol_l.c"

@@ -49,7 +49,7 @@ __inet6_scopeid_pton (const struct in6_addr *address, const char *scope,
       char *end;
       unsigned long long number
         = ____strtoull_l_internal (scope, &end, /*base */ 10, /* group */ 0,
-                                   _nl_C_locobj_ptr);
+                                   /* bin_cst */ false, _nl_C_locobj_ptr);
       if (*end == '\0' && number <= UINT32_MAX)
         {
           *result = number;

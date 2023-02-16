@@ -16,6 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <features.h>
+#undef __GLIBC_USE_C2X_STRTOL
+#define __GLIBC_USE_C2X_STRTOL 0
 
 #if HAVE_CONFIG_H
 # include <config.h>
@@ -61,28 +64,36 @@
 # ifdef USE_WIDE_CHAR
 #  ifdef QUAD
 #   define strtol_l wcstoull_l
+#   define __isoc23_strtol_l __isoc23_wcstoull_l
 #  else
 #   define strtol_l wcstoul_l
+#   define __isoc23_strtol_l __isoc23_wcstoul_l
 #  endif
 # else
 #  ifdef QUAD
 #   define strtol_l strtoull_l
+#   define __isoc23_strtol_l __isoc23_strtoull_l
 #  else
 #   define strtol_l strtoul_l
+#   define __isoc23_strtol_l __isoc23_strtoul_l
 #  endif
 # endif
 #else
 # ifdef USE_WIDE_CHAR
 #  ifdef QUAD
 #   define strtol_l wcstoll_l
+#   define __isoc23_strtol_l __isoc23_wcstoll_l
 #  else
 #   define strtol_l wcstol_l
+#   define __isoc23_strtol_l __isoc23_wcstol_l
 #  endif
 # else
 #  ifdef QUAD
 #   define strtol_l strtoll_l
+#   define __isoc23_strtol_l __isoc23_strtoll_l
 #  else
 #   define strtol_l strtol_l
+#   define __isoc23_strtol_l __isoc23_strtol_l
 #  endif
 # endif
 #endif
@@ -216,12 +227,14 @@ extern const unsigned char __strtol_ull_rem_tab[] attribute_hidden;
    If BASE is 0 the base is determined by the presence of a leading
    zero, indicating octal or a leading "0x" or "0X", indicating hexadecimal.
    If BASE is < 2 or > 36, it is reset to 10.
+   If BIN_CST is true, binary constants starting "0b" or "0B" are accepted
+   in base 0 and 2.
    If ENDPTR is not NULL, a pointer to the character after the last
    one converted is stored in *ENDPTR.  */
 
 INT
 INTERNAL (__strtol_l) (const STRING_TYPE *nptr, STRING_TYPE **endptr,
-		       int base, int group, locale_t loc)
+		       int base, int group, bool bin_cst, locale_t loc)
 {
   int negative;
   unsigned LONG int cutoff;
@@ -310,6 +323,11 @@ INTERNAL (__strtol_l) (const STRING_TYPE *nptr, STRING_TYPE **endptr,
 	{
 	  s += 2;
 	  base = 16;
+	}
+      else if (bin_cst && (base == 0 || base == 2) && TOUPPER (s[1]) == L_('B'))
+	{
+	  s += 2;
+	  base = 2;
 	}
       else if (base == 0)
 	base = 8;
@@ -543,7 +561,15 @@ weak_function
 __strtol_l (const STRING_TYPE *nptr, STRING_TYPE **endptr,
 	    int base, locale_t loc)
 {
-  return INTERNAL (__strtol_l) (nptr, endptr, base, 0, loc);
+  return INTERNAL (__strtol_l) (nptr, endptr, base, 0, false, loc);
 }
 libc_hidden_def (__strtol_l)
 weak_alias (__strtol_l, strtol_l)
+
+INT
+__isoc23_strtol_l (const STRING_TYPE *nptr, STRING_TYPE **endptr,
+		   int base, locale_t loc)
+{
+  return INTERNAL (__strtol_l) (nptr, endptr, base, 0, true, loc);
+}
+libc_hidden_def (__isoc23_strtol_l)

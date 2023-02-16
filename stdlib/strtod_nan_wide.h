@@ -19,4 +19,4 @@
 #define STRING_TYPE wchar_t
 #define L_(Ch) L##Ch
 #define STRTOULL(S, E, B) ____wcstoull_l_internal ((S), (E), (B), 0,	\
-						   _nl_C_locobj_ptr)
+						   false, _nl_C_locobj_ptr)
