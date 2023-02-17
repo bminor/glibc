@@ -101,7 +101,7 @@ extern unsigned short __init1_desc;
 
 /* Use i386-specific RPCs to arrange that %gs segment register prefix
    addresses the TCB in each thread.  */
-# include <mach/i386/mach_i386.h>
+# include <mach/machine/mach_i386.h>
 
 # ifndef HAVE_I386_SET_GDT
 #  define __i386_set_gdt(thr, sel, desc) ((void) (thr), (void) (sel), (void) (desc), MIG_BAD_ID)
