@@ -378,16 +378,25 @@ _hurd_tls_fork (thread_t child, thread_t orig, struct i386_thread_state *state)
 }
 
 static inline kern_return_t __attribute__ ((unused))
-_hurd_tls_new (thread_t child, struct i386_thread_state *state, tcbhead_t *tcb)
+_hurd_tls_new (thread_t child, tcbhead_t *tcb)
 {
+  error_t err;
+  /* Fetch the target thread's state.  */
+  struct i386_thread_state state;
+  mach_msg_type_number_t state_count = i386_THREAD_STATE_COUNT;
+  err = __thread_get_state (child, i386_REGS_SEGS_STATE,
+                            (thread_state_t) &state,
+                            &state_count);
+  if (err)
+    return err;
+  assert (state_count == i386_THREAD_STATE_COUNT);
   /* Fetch the selector set by _hurd_tls_init.  */
   int sel;
   asm ("mov %%gs, %w0" : "=q" (sel) : "0" (0));
-  if (sel == state->ds)		/* _hurd_tls_init was never called.  */
+  if (sel == state.ds)		/* _hurd_tls_init was never called.  */
     return 0;
 
   HURD_TLS_DESC_DECL (desc, tcb);
-  error_t err;
 
   tcb->tcb = tcb;
   tcb->self = child;
@@ -397,8 +406,14 @@ _hurd_tls_new (thread_t child, struct i386_thread_state *state, tcbhead_t *tcb)
   else
     err = __i386_set_gdt (child, &sel, desc);
 
-  state->gs = sel;
-  return err;
+  if (err)
+    return err;
+
+  /* Update gs to use the selector.  */
+  state.gs = sel;
+  return __thread_set_state (child, i386_REGS_SEGS_STATE,
+                             (thread_state_t) &state,
+                             state_count);
 }
 
 /* Global scope switch support.  */

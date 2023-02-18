@@ -83,25 +83,11 @@ weak_alias (__mach_setup_thread, mach_setup_thread)
 kern_return_t
 __mach_setup_tls (thread_t thread)
 {
-  kern_return_t error;
-  struct machine_thread_state ts;
-  mach_msg_type_number_t tssize = MACHINE_THREAD_STATE_COUNT;
-  tcbhead_t *tcb;
-
-  tcb = _dl_allocate_tls (NULL);
+  tcbhead_t *tcb = _dl_allocate_tls (NULL);
   if (tcb == NULL)
     return KERN_RESOURCE_SHORTAGE;
 
-  if (error = __thread_get_state (thread, MACHINE_THREAD_STATE_FLAVOR,
-			     (natural_t *) &ts, &tssize))
-    return error;
-  assert (tssize == MACHINE_THREAD_STATE_COUNT);
-
-  _hurd_tls_new (thread, &ts, tcb);
-
-  error = __thread_set_state (thread, MACHINE_THREAD_STATE_FLAVOR,
-			      (natural_t *) &ts, tssize);
-  return error;
+  return _hurd_tls_new (thread, tcb);
 }
 
 weak_alias (__mach_setup_tls, mach_setup_tls)
