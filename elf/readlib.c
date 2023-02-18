@@ -166,24 +166,5 @@ process_file (const char *real_file_name, const char *file_name,
   return ret;
 }
 
-/* Returns made up soname if lib doesn't have explicit DT_SONAME.  */
-
-char *
-implicit_soname (const char *lib, int flag)
-{
-  char *soname = xstrdup (lib);
-
-  /* Aout files don't have a soname, just return the name
-     including the major number.  */
-  char *major = strstr (soname, ".so.");
-  if (major)
-    {
-      char *dot = strstr (major + 4, ".");
-      if (dot)
-	*dot = '\0';
-    }
-  return soname;
-}
-
 /* Get architecture specific version of process_elf_file.  */
 #include <readelflib.c>

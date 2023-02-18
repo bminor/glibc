@@ -90,8 +90,6 @@ extern int process_file (const char *real_file_name, const char *file_name,
 			 const char *lib, int *flag, unsigned int *isa_level,
 			 char **soname, int is_link, struct stat *stat_buf);
 
-extern char *implicit_soname (const char *lib, int flag);
-
 /* Declared in readelflib.c.  */
 extern int process_elf_file (const char *file_name, const char *lib,
 			     int *flag, unsigned int *isa_level, char **soname,

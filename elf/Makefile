@@ -627,6 +627,7 @@ tests-special += \
   $(objpfx)noload-mem.out \
   $(objpfx)tst-ldconfig-X.out \
   $(objpfx)tst-ldconfig-p.out \
+  $(objpfx)tst-ldconfig-soname.out \
   $(objpfx)tst-leaks1-mem.out \
   $(objpfx)tst-rtld-help.out \
   # tests-special
@@ -859,6 +860,8 @@ modules-names += \
   tst-initorderb2 \
   tst-latepthreadmod \
   tst-ldconfig-ld-mod \
+  tst-ldconfig-soname-lib-with-soname \
+  tst-ldconfig-soname-lib-without-soname \
   tst-main1mod \
   tst-nodelete2mod \
   tst-nodelete-dlclose-dso \
@@ -2398,6 +2401,17 @@ $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
 	$(evaluate-test)
 
 $(objpfx)tst-ldconfig-p.out : tst-ldconfig-p.sh $(objpfx)ldconfig
+	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper-env)' \
+		 '$(run-program-env)' > $@; \
+	$(evaluate-test)
+
+LDFLAGS-tst-ldconfig-soname-lib-with-soname.so = \
+  -Wl,-soname,libtst-ldconfig-soname-lib-with-soname.so.1
+
+$(objpfx)tst-ldconfig-soname.out : tst-ldconfig-soname.sh \
+  $(objpfx)ldconfig \
+  $(objpfx)tst-ldconfig-soname-lib-with-soname.so \
+  $(objpfx)tst-ldconfig-soname-lib-without-soname.so
 	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper-env)' \
 		 '$(run-program-env)' > $@; \
 	$(evaluate-test)
