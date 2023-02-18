@@ -616,7 +616,7 @@ manual_link (char *library)
       goto out;
     }
   if (soname == NULL)
-    soname = implicit_soname (libname, flag);
+    soname = xstrdup (libname);
   create_links (real_path, path, libname, soname);
   free (soname);
 out:
@@ -849,7 +849,7 @@ search_dir (const struct dir_entry *entry)
 	}
 
       if (soname == NULL)
-	soname = implicit_soname (direntry->d_name, flag);
+	soname = xstrdup (direntry->d_name);
 
       /* A link may just point to itself.  */
       if (is_link)
