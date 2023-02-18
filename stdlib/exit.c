@@ -51,7 +51,10 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
      exit (). */
   while (true)
     {
-      struct exit_function_list *cur = *listp;
+      struct exit_function_list *cur;
+
+    restart:
+      cur = *listp;
 
       if (cur == NULL)
 	{
@@ -113,7 +116,7 @@ __run_exit_handlers (int status, struct exit_function_list **listp,
 	  if (__glibc_unlikely (new_exitfn_called != __new_exitfn_called))
 	    /* The last exit function, or another thread, has registered
 	       more exit functions.  Start the loop over.  */
-            continue;
+	    goto restart;
 	}
 
       *listp = cur->next;
