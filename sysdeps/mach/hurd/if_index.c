@@ -99,7 +99,7 @@ __if_nameindex (void)
     nifs = 0;
   else
     {
-      size_t len = sizeof data;
+      mach_msg_type_number_t len = sizeof data;
       err = __pfinet_siocgifconf (server, -1, &ifc.ifc_buf, &len);
       if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED)
 	{

@@ -430,8 +430,8 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
      receive completes immediately or aborts.  */
   abort_thread (ss, state, reply);
 
-  if (state->basic.PC >= (natural_t) &_hurd_intr_rpc_msg_about_to
-      && state->basic.PC < (natural_t) &_hurd_intr_rpc_msg_in_trap)
+  if (state->basic.PC >= (uintptr_t) &_hurd_intr_rpc_msg_about_to
+      && state->basic.PC < (uintptr_t) &_hurd_intr_rpc_msg_in_trap)
     {
       /* The thread is about to do the RPC, but hasn't yet entered
 	 mach_msg.  Mutate the thread's state so it knows not to try
@@ -442,7 +442,7 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
       state->basic.SYSRETURN = MACH_SEND_INTERRUPTED;
       *state_change = 1;
     }
-  else if (state->basic.PC == (natural_t) &_hurd_intr_rpc_msg_in_trap
+  else if (state->basic.PC == (uintptr_t) &_hurd_intr_rpc_msg_in_trap
 	   /* The thread was blocked in the system call.  After thread_abort,
 	      the return value register indicates what state the RPC was in
 	      when interrupted.  */
