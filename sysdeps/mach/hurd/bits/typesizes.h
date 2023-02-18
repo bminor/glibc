@@ -54,7 +54,7 @@
 #define __DADDR_T_TYPE		__S32_TYPE
 #define __KEY_T_TYPE		__S32_TYPE
 #define __CLOCKID_T_TYPE	__S32_TYPE
-#define __TIMER_T_TYPE		__S32_TYPE
+#define __TIMER_T_TYPE		__UWORD_TYPE
 #define __BLKSIZE_T_TYPE	__SLONGWORD_TYPE
 #define __FSID_T_TYPE		__UQUAD_TYPE
 #define __SSIZE_T_TYPE		__SWORD_TYPE
