@@ -21,7 +21,7 @@
 #include <hurd.h>
 #include <hurd/xattr.h>
 
-ssize_t
+int
 removexattr (const char *path, const char *name)
 {
   error_t err;

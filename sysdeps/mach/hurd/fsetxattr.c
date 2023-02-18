@@ -22,7 +22,7 @@
 #include <hurd/xattr.h>
 #include <hurd/fd.h>
 
-ssize_t
+int
 fsetxattr (int fd, const char *name, const void *value, size_t size, int flags)
 {
   error_t err;

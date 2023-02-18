@@ -22,7 +22,7 @@
 #include <hurd/xattr.h>
 #include <fcntl.h>
 
-ssize_t
+int
 lsetxattr (const char *path, const char *name, const void *value, size_t size,
 	   int flags)
 {

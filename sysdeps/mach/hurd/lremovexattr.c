@@ -22,7 +22,7 @@
 #include <hurd/xattr.h>
 #include <fcntl.h>
 
-ssize_t
+int
 lremovexattr (const char *path, const char *name)
 {
   error_t err;
