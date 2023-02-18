@@ -195,7 +195,7 @@ init (int *data)
   /* Call `init1' (above) with the user code as the return address, and the
      argument data immediately above that on the stack.  */
 
-  int usercode;
+  void *usercode, **ret_address;
 
   void call_init1 (void);
 
@@ -206,10 +206,11 @@ init (int *data)
      recognize that this read operation may alias the following write
      operation, and thus is free to reorder the two, clobbering the
      original return address.  */
-  usercode = *((int *) __builtin_frame_address (0) + 1);
+  ret_address = (void **) __builtin_frame_address (0) + 1;
+  usercode = *ret_address;
   /* GCC 4.4.6 also wants us to force loading USERCODE already here.  */
   asm volatile ("# %0" : : "X" (usercode));
-  *((void **) __builtin_frame_address (0) + 1) = &call_init1;
+  *ret_address = &call_init1;
   /* Force USERCODE into %eax and &init1 into %ecx, which are not
      restored by function return.  */
   asm volatile ("# a %0 c %1" : : "a" (usercode), "c" (&init1));
@@ -223,19 +224,9 @@ init (int *data)
 /* The return address of `init' above, was redirected to here, so at
    this point our stack is unwound and callers' registers restored.
    Only %ecx and %eax are call-clobbered and thus still have the
-   values we set just above.  Fetch from there the new stack pointer
-   we will run on, and jmp to the run-time address of `init1'; when it
-   returns, it will run the user code with the argument data at the
-   top of the stack.  */
-asm ("switch_stacks:\n"
-     "	movl %eax, %esp\n"
-     "	jmp *%ecx");
-
-/* As in the stack-switching case, at this point our stack is unwound
-   and callers' registers restored, and only %ecx and %eax communicate
-   values from the lines above.  In this case we have stashed in %eax
-   the user code return address.  Push it on the top of the stack so
-   it acts as init1's return address, and then jump there.  */
+   values we set just above.  We have stashed in %eax the user code
+   return address.  Push it on the top of the stack so it acts as
+   init1's return address, and then jump there.  */
 asm ("call_init1:\n"
      "	push %eax\n"
      "	jmp *%ecx\n");
