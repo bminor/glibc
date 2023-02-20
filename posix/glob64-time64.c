@@ -45,6 +45,6 @@ __glob64_time64 (const char *pattern, int flags,
 }
 libc_hidden_def (__glob64_time64)
 
-stub_warning (glob64_time64)
+stub_warning (__glob64_time64)
 
 #endif
