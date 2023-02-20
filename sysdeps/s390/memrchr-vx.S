@@ -161,6 +161,7 @@ ENTRY(MEMRCHR_Z13)
 END(MEMRCHR_Z13)
 
 # if ! HAVE_MEMRCHR_IFUNC
+libc_hidden_def (__memrchr)
 strong_alias (MEMRCHR_Z13, __memrchr)
 weak_alias (__memrchr, memrchr)
 # endif

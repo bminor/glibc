@@ -94,6 +94,7 @@ ENTRY(STRCHRNUL_Z13)
 END(STRCHRNUL_Z13)
 
 # if ! HAVE_STRCHRNUL_IFUNC
+libc_hidden_def (__strchrnul)
 strong_alias (STRCHRNUL_Z13, __strchrnul)
 weak_alias (__strchrnul, strchrnul)
 # endif
