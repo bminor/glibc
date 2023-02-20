@@ -33,7 +33,13 @@ find_zero_all (op_t x)
   /* Use unsigned saturated subtraction from 1 in each byte.
      That leaves 1 for every byte that was zero.  */
   op_t ones = repeat_bytes (0x01);
+#if __GNUC_PREREQ (10, 0)
   return __builtin_arm_uqsub8 (ones, x);
+#else
+  op_t ret;
+  asm ("uqsub8 %0,%1,%2" : "=r"(ret) : "r"(ones), "r"(x));
+  return ret;
+#endif
 }
 
 /* Identify bytes that are equal between X1 and X2.  */
