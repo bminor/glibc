@@ -47,9 +47,12 @@ def main():
         # MAP_ANON alias for MAP_ANONYMOUS.  MAP_RENAME, MAP_AUTOGROW,
         # MAP_LOCAL and MAP_AUTORSRV are in the kernel header for
         # MIPS, marked as "not used by linux"; SPARC has MAP_INHERIT
-        # in the kernel header, but does not use it.
+        # in the kernel header, but does not use it.  The kernel
+        # header for HPPA removed a define of MAP_VARIABLE to 0 in
+        # Linux 6.2.
         'MAP_HUGE_[0-9].*|MAP_UNINITIALIZED|MAP_FAILED|MAP_ANON'
-        '|MAP_RENAME|MAP_AUTOGROW|MAP_LOCAL|MAP_AUTORSRV|MAP_INHERIT',
+        '|MAP_RENAME|MAP_AUTOGROW|MAP_LOCAL|MAP_AUTORSRV|MAP_INHERIT'
+        '|MAP_VARIABLE',
         linux_version_glibc > linux_version_headers,
         linux_version_headers > linux_version_glibc))
 
