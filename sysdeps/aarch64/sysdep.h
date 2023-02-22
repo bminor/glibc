@@ -74,6 +74,13 @@ strip_pac (void *p)
 #define PACIASP		hint	25
 #define AUTIASP		hint	29
 
+/* Guarded Control Stack support.  */
+#define CHKFEAT_X16	hint	40
+#define MRS_GCSPR(x)	mrs	x, s3_3_c2_c5_1
+#define GCSPOPM(x)	sysl	x, #3, c7, c7, #1
+#define GCSSS1(x)	sys	#3, c7, c7, #2, x
+#define GCSSS2(x)	sysl	x, #3, c7, c7, #3
+
 /* GNU_PROPERTY_AARCH64_* macros from elf.h for use in asm code.  */
 #define FEATURE_1_AND 0xc0000000
 #define FEATURE_1_BTI 1
