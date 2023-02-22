@@ -41,7 +41,7 @@ typedef uint64_t hp_timing_t;
 #define HP_TIMING_DIFF(Diff, Start, End)			\
 ({  hp_timing_t freq;						\
     __asm__ __volatile__ ("mrs %0, cntfrq_el0" : "=r" (freq));	\
-   (Diff) = ((End) - (Start)) * (UINT64_C(1000000000) / freq);	\
+   (Diff) = (((End) - (Start)) * UINT64_C(1000000000 >> 6)) / (freq >> 6); \
 })
 
 #endif	/* hp-timing.h */
