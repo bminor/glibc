@@ -207,6 +207,8 @@ _dl_sysdep_start (void **start_argptr,
 	    }
 	}
 
+      _dl_init_first (argdata);
+
       {
 	extern void _dl_start_user (void);
 	/* Unwind the stack to ARGDATA and simulate a return from _dl_start
@@ -793,7 +795,7 @@ _dl_show_auxv (void)
 
 
 void weak_function
-_dl_init_first (int argc, ...)
+_dl_init_first (void *p)
 {
   /* This no-op definition only gets used if libc is not linked in.  */
 }

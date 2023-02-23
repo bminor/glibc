@@ -22,10 +22,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <sysdep.h>
+#include <dl-sysdep.h>
 #include <set-hooks.h>
 #include "hurdstartup.h"
-#include "hurdmalloc.h"		/* XXX */
-#include "../locale/localeinfo.h"
 
 #include <ldsodefs.h>
 #include <fpu_control.h>
@@ -87,68 +86,13 @@ posixland_init (int argc, char **argv, char **envp)
   __init_misc (argc, argv, envp);
 }
 
-
 static void
-init1 (int argc, char *arg0, ...)
+init (void **data)
 {
-  char **argv = &arg0;
-  char **envp = &argv[argc + 1];
-  struct hurd_startup_data *d;
-
-  while (*envp)
-    ++envp;
-  d = (void *) ++envp;
-
-  if ((void *) d == argv[0])
-    {
-      /* No Hurd data block to process.  */
-#ifndef SHARED
-      __libc_enable_secure = 0;
-#endif
-      return;
-    }
-
-#ifndef SHARED
-  __libc_enable_secure = d->flags & EXEC_SECURE;
-#endif
-
-  _hurd_init_dtable = d->dtable;
-  _hurd_init_dtablesize = d->dtablesize;
-
-  {
-    /* Check if the stack we are now on is different from
-       the one described by _hurd_stack_{base,size}.  */
-
-    char dummy;
-    const vm_address_t newsp = (vm_address_t) &dummy;
-
-    if (d->stack_size != 0 && (newsp < d->stack_base
-			       || newsp - d->stack_base > d->stack_size))
-      /* The new stack pointer does not intersect with the
-	 stack the exec server set up for us, so free that stack.  */
-      __vm_deallocate (__mach_task_self (), d->stack_base, d->stack_size);
-  }
-
-  if (d->portarray || d->intarray)
-    /* Initialize library data structures, start signal processing, etc.  */
-    _hurd_init (d->flags, argv,
-		d->portarray, d->portarraysize,
-		d->intarray, d->intarraysize);
-}
-
-
-static inline void
-init (int *data)
-{
-  /* data is the address of the argc parameter to _dl_init_first or
-     doinit1 in _hurd_stack_setup, so the array subscripts are
-     undefined.  */
-  DIAG_PUSH_NEEDS_COMMENT;
-  DIAG_IGNORE_NEEDS_COMMENT (10, "-Warray-bounds");
-
-  int argc = *data;
+  int argc = (int) *data;
   char **argv = (void *) (data + 1);
   char **envp = &argv[argc + 1];
+  struct hurd_startup_data *d;
 
   /* Since the cthreads initialization code uses malloc, and the
      malloc initialization code needs to get at the environment, make
@@ -157,18 +101,18 @@ init (int *data)
      stored.  */
   __environ = envp;
 
-#ifndef SHARED
-  struct hurd_startup_data *d;
-
   while (*envp)
     ++envp;
   d = (void *) ++envp;
+
+#ifndef SHARED
 
   /* If we are the bootstrap task started by the kernel,
      then after the environment pointers there is no Hurd
      data block; the argument strings start there.  */
   if ((void *) d == argv[0] || d->phdr == 0)
     {
+      __libc_enable_secure = 0;
       /* With a new enough linker (binutils-2.23 or better),
          the magic __ehdr_start symbol will be available and
          __libc_start_main will have done this that way already.  */
@@ -186,51 +130,25 @@ init (int *data)
     }
   else
     {
+      __libc_enable_secure = d->flags & EXEC_SECURE;
       _dl_phdr = (ElfW(Phdr) *) d->phdr;
       _dl_phnum = d->phdrsz / sizeof (ElfW(Phdr));
       assert (d->phdrsz % sizeof (ElfW(Phdr)) == 0);
     }
 #endif
 
-  /* Call `init1' (above) with the user code as the return address, and the
-     argument data immediately above that on the stack.  */
+  if ((void *) d == argv[0])
+    return;
 
-  void *usercode, **ret_address;
+  _hurd_init_dtable = d->dtable;
+  _hurd_init_dtablesize = d->dtablesize;
 
-  void call_init1 (void);
-
-  /* The argument data is just above the stack frame we will unwind by
-     returning.  Mutate our own return address to run the code below.  */
-  /* The following expression would typically be written as
-     ``__builtin_return_address (0)''.  But, for example, GCC 4.4.6 doesn't
-     recognize that this read operation may alias the following write
-     operation, and thus is free to reorder the two, clobbering the
-     original return address.  */
-  ret_address = (void **) __builtin_frame_address (0) + 1;
-  usercode = *ret_address;
-  /* GCC 4.4.6 also wants us to force loading USERCODE already here.  */
-  asm volatile ("# %0" : : "X" (usercode));
-  *ret_address = &call_init1;
-  /* Force USERCODE into %eax and &init1 into %ecx, which are not
-     restored by function return.  */
-  asm volatile ("# a %0 c %1" : : "a" (usercode), "c" (&init1));
-
-  DIAG_POP_NEEDS_COMMENT;	/* -Warray-bounds.  */
+  if (d->portarray || d->intarray)
+    /* Initialize library data structures, start signal processing, etc.  */
+    _hurd_init (d->flags, argv,
+		d->portarray, d->portarraysize,
+		d->intarray, d->intarraysize);
 }
-
-/* These bits of inline assembler used to be located inside `init'.
-   However they were optimized away by gcc 2.95.  */
-
-/* The return address of `init' above, was redirected to here, so at
-   this point our stack is unwound and callers' registers restored.
-   Only %ecx and %eax are call-clobbered and thus still have the
-   values we set just above.  We have stashed in %eax the user code
-   return address.  Push it on the top of the stack so it acts as
-   init1's return address, and then jump there.  */
-asm ("call_init1:\n"
-     "	push %eax\n"
-     "	jmp *%ecx\n");
-
 
 /* Do the first essential initializations that must precede all else.  */
 static inline void
@@ -242,7 +160,7 @@ first_init (void)
 #ifndef SHARED
   /* In the static case, we need to set up TLS early so that the stack
      protection guard can be read at gs:0x14 by the gcc-generated snippets.  */
-  _hurd_tls_init(&__init1_tcbhead);
+  _hurd_tls_init (&__init1_tcbhead);
   asm ("movw %%gs,%w0" : "=m" (__init1_desc));
 #endif
 
@@ -252,21 +170,15 @@ first_init (void)
 #ifdef SHARED
 /* This function is called specially by the dynamic linker to do early
    initialization of the shared C library before normal initializers
-   expecting a Posixoid environment can run.  It gets called with the
-   stack set up just as the user will see it, so it can switch stacks.  */
+   expecting a Posixoid environment can run.  */
 
 void
-_dl_init_first (int argc, ...)
+_dl_init_first (void *data)
 {
   first_init ();
-
-  /* If we use ``__builtin_frame_address (0) + 2'' here, GCC gets confused.  */
-  init (&argc);
+  init (data);
 }
-#endif
 
-
-#ifdef SHARED
 /* The regular posixland initialization is what goes into libc's
    normal initializer.  */
 /* NOTE!  The linker notices the magical name `_init' and sets the DT_INIT
@@ -280,9 +192,10 @@ __libc_init_first (int argc, char **argv, char **envp)
 {
   /* Everything was done in the shared library initializer, _init.  */
 }
-#else
-strong_alias (posixland_init, __libc_init_first);
 
+#else /* SHARED */
+
+strong_alias (posixland_init, __libc_init_first);
 
 /* XXX This is all a crock and I am not happy with it.
    This poorly-named function is called by static-start.S,
@@ -291,32 +204,48 @@ void
 inhibit_stack_protector
 _hurd_stack_setup (void)
 {
-  intptr_t caller = (intptr_t) __builtin_return_address (0);
+  /* This is the very first C code that runs in a statically linked
+     executable -- calling this function is the first thing that _start in
+     static-start.S does.  Once this function returns, the unusual way that it
+     does (see below), _start jumps to _start1, the regular start-up code.
+
+     _start1 expects the arguments, environment, and a Hurd data block to be
+     located at the top of the stack.  The data may already be located there,
+     or we may need to receive it from the exec server.  */
+  void *caller = __builtin_extract_return_addr (__builtin_return_address (0));
+  /* If the arguments and environment are already located on the stack, this is
+     where they are, just above our call frame.  Note that this may not be a
+     valid pointer in case we're supposed to receive the arguments from the exec
+     server, so we can not dereference it yet.  */
+  void **p = (void **) __builtin_frame_address (0) + 2;
+
+  /* Init the essential things.  */
+  first_init ();
 
   void doinit (intptr_t *data)
     {
-      /* This function gets called with the argument data at TOS.  */
-      void doinit1 (int argc, ...)
-	{
-	  /* If we use ``__builtin_frame_address (0) + 2'' here, GCC gets
-	     confused.  */
-	  init ((int *) &argc);
-	}
-
-      /* Push the user return address after the argument data, and then
-	 jump to `doinit1' (above), so it is as if __libc_init_first's
-	 caller had called `doinit1' with the argument data already on the
-	 stack.  */
-      *--data = caller;
+      init ((void **) data);
       asm volatile ("movl %0, %%esp\n" /* Switch to new outermost stack.  */
-		    "movl $0, %%ebp\n" /* Clear outermost frame pointer.  */
-		    "jmp *%1" : : "r" (data), "r" (&doinit1));
-      /* NOTREACHED */
+		    "xorl %%ebp, %%ebp\n" /* Clear outermost frame pointer.  */
+		    "jmp *%1" : : "r" (data), "r" (caller));
+      __builtin_unreachable ();
     }
 
-  first_init ();
+  /* _hurd_startup () will attempt to receive the data block from the exec
+     server; or if that is not possible, will take the data from the pointer
+     we pass it here.  The important point here is that the data
+     _hurd_startup () collects may be allocated in its stack frame (with
+     alloca), which is why _hurd_startup () does not return the normal way.
+     Instead, it invokes a callback (which is not expected to return normally
+     either).
 
-  _hurd_startup ((void **) __builtin_frame_address (0) + 2, &doinit);
+     Our callback not only passes the data pointer to init (), but also jumps
+     out of the call stack back to our caller (i.e. to _start1), while setting
+     the stack pointer to the data (which is somewhere on the current stack
+     anyway).  This way, _start1 find the data on the top of the stack, just as
+     it expects to.  */
+  _hurd_startup (p, &doinit);
+  __builtin_unreachable ();
 }
 #endif
 
