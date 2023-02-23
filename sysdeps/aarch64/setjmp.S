@@ -57,6 +57,16 @@ ENTRY (__sigsetjmp)
 	stp	d10, d11, [x0, #JB_D10<<3]
 	stp	d12, d13, [x0, #JB_D12<<3]
 	stp	d14, d15, [x0, #JB_D14<<3]
+
+	/* GCS support.  */
+	mov	x16, 1
+	CHKFEAT_X16
+	tbnz	x16, 0, L(gcs_done)
+	MRS_GCSPR (x2)
+	add	x2, x2, 8 /* GCS state right after setjmp returns.  */
+	str	x2, [x0, #JB_GCSPR]
+L(gcs_done):
+
 #ifdef PTR_MANGLE
 	mov	x4, sp
 	PTR_MANGLE (5, 4, 3, 2)

@@ -91,6 +91,36 @@ ENTRY (__longjmp)
 	ldp	d12, d13, [x0, #JB_D12<<3]
 	ldp	d14, d15, [x0, #JB_D14<<3]
 
+	/* GCS support.  */
+	mov	x16, 1
+	CHKFEAT_X16
+	tbnz	x16, 0, L(gcs_done)
+	MRS_GCSPR (x2)
+	ldr	x3, [x0, #JB_GCSPR]
+	mov	x4, x3
+	/* x2: GCSPR now.  x3, x4: target GCSPR.  x5, x6: tmp regs.  */
+L(gcs_scan):
+	cmp	x2, x4
+	b.eq	L(gcs_pop)
+	sub	x4, x4, 8
+	/* Check for a cap token.  */
+	ldr	x5, [x4]
+	and	x6, x4, 0xfffffffffffff000
+	orr	x6, x6, 1
+	cmp	x5, x6
+	b.ne	L(gcs_scan)
+L(gcs_switch):
+	add	x2, x4, 8
+	GCSSS1 (x4)
+	GCSSS2 (xzr)
+L(gcs_pop):
+	cmp	x2, x3
+	b.eq	L(gcs_done)
+	GCSPOPM (xzr)
+	add	x2, x2, 8
+	b	L(gcs_pop)
+L(gcs_done):
+
         /* Originally this was implemented with a series of
 	   .cfi_restore() directives.
 
