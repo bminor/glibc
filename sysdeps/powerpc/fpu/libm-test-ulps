@@ -1310,21 +1310,25 @@ ldouble: 11
 
 Function: "hypot":
 double: 1
+float: 1
 float128: 1
 ldouble: 1
 
 Function: "hypot_downward":
 double: 1
+float: 1
 float128: 1
 ldouble: 2
 
 Function: "hypot_towardzero":
 double: 1
+float: 1
 float128: 1
 ldouble: 2
 
 Function: "hypot_upward":
 double: 1
+float: 1
 float128: 1
 ldouble: 3
 
