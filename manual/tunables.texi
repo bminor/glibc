@@ -589,7 +589,7 @@ This tunable is specific to i386 and x86-64.
 @end deftp
 
 @deftp Tunable glibc.cpu.prefer_map_32bit_exec
-When this tunable is set to \code{1}, shared libraries of non-setuid
+When this tunable is set to @code{1}, shared libraries of non-setuid
 programs will be loaded below 2GB with MAP_32BIT.
 
 Note that the @env{LD_PREFER_MAP_32BIT_EXEC} environment is an alias of
