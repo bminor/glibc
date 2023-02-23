@@ -225,9 +225,15 @@ _hurd_stack_setup (void)
   void doinit (intptr_t *data)
     {
       init ((void **) data);
+# ifdef __x86_64__
+      asm volatile ("movq %0, %%rsp\n" /* Switch to new outermost stack.  */
+                    "xorq %%rbp, %%rbp\n" /* Clear outermost frame pointer.  */
+                    "jmp *%1" : : "r" (data), "r" (caller));
+# else
       asm volatile ("movl %0, %%esp\n" /* Switch to new outermost stack.  */
 		    "xorl %%ebp, %%ebp\n" /* Clear outermost frame pointer.  */
 		    "jmp *%1" : : "r" (data), "r" (caller));
+# endif
       __builtin_unreachable ();
     }
 
