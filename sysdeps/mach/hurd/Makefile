@@ -306,3 +306,13 @@ endif
 ifeq ($(subdir),htl)
 tests-unsupported += tst-pthread_cancel-select-loop
 endif
+
+# For bug 30168
+# (audit tests hang)
+ifeq ($(subdir),elf)
+tests-unsupported += tst-audit14
+tests-unsupported += tst-audit14a
+tests-unsupported += tst-audit15
+tests-unsupported += tst-audit16
+tests-unsupported += tst-audit17
+endif
