@@ -83,9 +83,24 @@ ENTRY(__getcontext)
 	mrs	x4, fpcr
 	str	w4, [x3, oFPCR - oFPSR]
 
-	/* Write the termination context extension header.  */
 	add	x2, x2, #FPSIMD_CONTEXT_SIZE
 
+	/* Save the GCSPR.  */
+	mov	x16, 1
+	CHKFEAT_X16
+	tbnz	x16, 0, L(gcs_done)
+	mov	w3, #(GCS_MAGIC & 0xffff)
+	movk	w3, #(GCS_MAGIC >> 16), lsl #16
+	str	w3, [x2, #oHEAD + oMAGIC]
+	mov	w3, #GCS_CONTEXT_SIZE
+	str	w3, [x2, #oHEAD + oSIZE]
+	MRS_GCSPR (x4)
+	add	x4, x4, 8 /* GCS state right after getcontext returns.  */
+	str	x4, [x2, #oGCSPR]
+	add	x2, x2, #GCS_CONTEXT_SIZE
+L(gcs_done):
+
+	/* Write the termination context extension header.  */
 	str	wzr, [x2, #oHEAD + oMAGIC]
 	str	wzr, [x2, #oHEAD + oSIZE]
 
