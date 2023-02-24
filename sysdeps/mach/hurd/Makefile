@@ -300,3 +300,9 @@ tests-unsupported += tst-malloc-thread-fail-malloc-hugetlb1
 tests-unsupported += tst-malloc-thread-fail-malloc-hugetlb2
 tests-unsupported += tst-dynarray-fail
 endif
+
+# For bug 30167
+# (select requests overflow)
+ifeq ($(subdir),htl)
+tests-unsupported += tst-pthread_cancel-select-loop
+endif
