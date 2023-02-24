@@ -130,6 +130,44 @@ ENTRY (__setcontext)
 	ldr	w4, [x3, oFPCR - oFPSR]
 	msr	fpcr, x4
 
+	/* Restore the GCS.  */
+	mov	x16, 1 /* _CHKFEAT_GCS */
+	CHKFEAT_X16
+	tbnz	x16, 0, L(gcs_done)
+	/* Get target GCS from GCS context.  */
+	ldr	w1, [x2, #oHEAD + oSIZE]
+	add	x2, x2, x1
+	mov	w3, #(GCS_MAGIC & 0xffff)
+	movk	w3, #(GCS_MAGIC >> 16), lsl #16
+	ldr	w1, [x2, #oHEAD + oMAGIC]
+	cmp	w1, w3
+	b.ne	L(gcs_done)
+	ldr	x3, [x2, #oGCSPR]
+	MRS_GCSPR (x2)
+	mov	x4, x3
+	/* x2: GCSPR now.  x3, x4: target GCSPR.  x5, x6: tmp regs.  */
+L(gcs_scan):
+	cmp	x2, x4
+	b.eq	L(gcs_pop)
+	sub	x4, x4, 8
+	/* Check for a cap token.  */
+	ldr	x5, [x4]
+	and	x6, x4, 0xfffffffffffff000
+	orr	x6, x6, 1
+	cmp	x5, x6
+	b.ne	L(gcs_scan)
+L(gcs_switch):
+	add	x2, x4, 8
+	GCSSS1 (x4)
+	GCSSS2 (xzr)
+L(gcs_pop):
+	cmp	x2, x3
+	b.eq	L(gcs_done)
+	GCSPOPM (xzr)
+	add	x2, x2, 8
+	b	L(gcs_pop)
+L(gcs_done):
+
 2:
 	ldr     x16, [x0, oPC]
 	/* Restore arg registers.  */

@@ -32,8 +32,15 @@ ENTRY(__swapcontext)
 	   And set up x1 to become the return address of the caller, so we
 	   can return there with a normal RET instead of an indirect jump.  */
 	stp	xzr, x30, [x0, oX0 +  0 * SZREG]
+
+	/* With GCS, swapcontext calls are followed by BTI J, otherwise
+	   we have to be compatible with old BTI enabled binaries.  */
+	mov	x16, 1 /* _CHKFEAT_GCS */
+	CHKFEAT_X16
+	tbz	x16, 0, L(skip_x30_redirect)
 	/* Arrange the oucp context to return to 2f.  */
 	adr	x30, 2f
+L(skip_x30_redirect):
 
 	stp	x18, x19, [x0, oX0 + 18 * SZREG]
 	stp	x20, x21, [x0, oX0 + 20 * SZREG]
@@ -72,14 +79,27 @@ ENTRY(__swapcontext)
 	mrs	x4, fpcr
 	str	w4, [x3, #oFPCR - oFPSR]
 
-	/* Write the termination context extension header.  */
 	add	x2, x2, #FPSIMD_CONTEXT_SIZE
 
+	/* Save the GCSPR.  */
+	tbnz	x16, 0, L(gcs_done)
+	mov	w3, #(GCS_MAGIC & 0xffff)
+	movk	w3, #(GCS_MAGIC >> 16), lsl #16
+	str	w3, [x2, #oHEAD + oMAGIC]
+	mov	w3, #GCS_CONTEXT_SIZE
+	str	w3, [x2, #oHEAD + oSIZE]
+	MRS_GCSPR (x4)
+	add	x4, x4, 8 /* GCSPR of the caller.  */
+	str	x4, [x2, #oGCSPR]
+	add	x2, x2, #GCS_CONTEXT_SIZE
+L(gcs_done):
+
+	/* Write the termination context extension header.  */
 	str	wzr, [x2, #oHEAD + oMAGIC]
 	str	wzr, [x2, #oHEAD + oSIZE]
 
 	/* Preserve ucp.  */
-	mov	x21, x1
+	mov	x9, x1
 
 	/* rt_sigprocmask (SIG_SETMASK, &ucp->uc_sigmask, &oucp->uc_sigmask,
 			   _NSIG8) */
@@ -93,12 +113,8 @@ ENTRY(__swapcontext)
 	svc	0
 	cbnz	x0, 1f
 
-	mov     x22, x30
-	mov	x0, x21
-	bl	JUMPTARGET (__setcontext)
-	mov     x30, x22
-	RET
-
+	mov	x0, x9
+	b	JUMPTARGET (__setcontext)
 1:
 	b	C_SYMBOL_NAME(__syscall_error)
 2:
