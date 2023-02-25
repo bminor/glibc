@@ -18,7 +18,12 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* In the Linux kernel for the hppa/parisc architecture some of the
+  MADV_XXX constants were changed to have the same values as the other
+  architectures.  New programs compiled with this glibc version and which
+  use the madvise call will require at least Linux kernel version 6.2,
+  alternatively stable kernels from versions 6.1.6, 5.15.87, 5.10.163,
+  5.4.228, 4.19.270 or 4.14.303.
 
 Changes to build and runtime requirements:
 

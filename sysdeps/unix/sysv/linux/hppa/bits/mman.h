@@ -39,11 +39,6 @@
 #define MAP_FIXED_NOREPLACE 0x100000	/* MAP_FIXED but do not unmap
 					   underlying mapping.  */
 
-/* Advice to "madvise"  */
-#ifdef __USE_MISC
-# define MADV_SOFT_OFFLINE 101	/* Soft offline page for testing.  */
-#endif
-
 #include <bits/mman-linux.h>
 
 #undef MAP_TYPE
@@ -59,26 +54,3 @@
 #define MS_ASYNC	2		/* Sync memory asynchronously */
 #undef MS_INVALIDATE
 #define MS_INVALIDATE	4		/* Invalidate the caches */
-
-/* Advice to "madvise"  */
-#ifdef __USE_MISC
-# undef MADV_MERGEABLE
-# define MADV_MERGEABLE   65	/* KSM may merge identical pages */
-# undef MADV_UNMERGEABLE
-# define MADV_UNMERGEABLE 66	/* KSM may not merge identical pages */
-# undef MADV_HUGEPAGE
-# define MADV_HUGEPAGE	 67	/* Worth backing with hugepages */
-# undef MADV_NOHUGEPAGE
-# define MADV_NOHUGEPAGE 68	/* Not worth backing with hugepages */
-# undef MADV_DONTDUMP
-# define MADV_DONTDUMP	 69	/* Explicity exclude from the core dump,
-				   overrides the coredump filter bits */
-# undef MADV_DODUMP
-# define MADV_DODUMP	 70	/* Clear the MADV_NODUMP flag */
-# undef MADV_WIPEONFORK
-# define MADV_WIPEONFORK 71	/* Zero memory on fork, child only.  */
-# undef MADV_KEEPONFORK
-# define MADV_KEEPONFORK 72	/* Undo MADV_WIPEONFORK.  */
-# undef MADV_COLLAPSE
-# define MADV_COLLAPSE   73	/* Synchronous hugepage collapse.  */
-#endif
