@@ -41,6 +41,7 @@ EOF
   libc_cv_static_pie_on_loongarch=no
   if AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -static-pie -nostdlib -fPIE -o conftest1 conftest1.S]) \
      && AC_TRY_COMMAND([LC_ALL=C $READELF -Wr conftest1 | grep -q R_LARCH_RELATIVE]) \
+     && ! AC_TRY_COMMAND([LC_ALL=C $READELF -Wl conftest1 | grep -q INTERP]) \
      && AC_TRY_COMMAND([${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -shared -fPIC -o conftest2.so conftest2.S]) \
      && AC_TRY_COMMAND([LC_ALL=C $READELF -Wr conftest2.so | grep -q 'R_LARCH_JUMP_SLOT.*external_func'])
   then
