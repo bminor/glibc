@@ -172,7 +172,7 @@ END LC_PAPER
 
 LC_NAME
 name_fmt    "%d%t%g%t%m%t%f"
-name_miss   "Fräulein"
+name_miss   "Frau"
 name_mr     "Herr"
 name_mrs    "Frau"
 name_ms     "Frau"
