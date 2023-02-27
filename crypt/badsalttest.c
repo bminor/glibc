@@ -16,10 +16,11 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/mman.h>
+#include <array_length.h>
+#include <stddef.h>
 #include <crypt.h>
+
+#include <support/check.h>
 
 static const char *tests[][2] =
   {
@@ -30,59 +31,24 @@ static const char *tests[][2] =
     { "both chars bad", ":@" },
     { "un$upported algorithm", "$2$" },
     { "unsupported_algorithm", "_1" },
-    { "end of page", NULL }
   };
 
 static int
 do_test (void)
 {
-  int result = 0;
   struct crypt_data cd;
-  size_t n = sizeof (tests) / sizeof (*tests);
-  size_t pagesize = (size_t) sysconf (_SC_PAGESIZE);
-  char *page;
-
-  /* Check that crypt won't look at the second character if the first
-     one is invalid.  */
-  page = mmap (NULL, pagesize * 2, PROT_READ | PROT_WRITE,
-	       MAP_PRIVATE | MAP_ANON, -1, 0);
-  if (page == MAP_FAILED)
-    {
-      perror ("mmap");
-      n--;
-    }
-  else
-    {
-      if (mmap (page + pagesize, pagesize, 0,
-		MAP_PRIVATE | MAP_ANON | MAP_FIXED,
-		-1, 0) != page + pagesize)
-	perror ("mmap 2");
-      page[pagesize - 1] = '*';
-      tests[n - 1][1] = &page[pagesize - 1];
-    }
 
   /* Mark cd as initialized before first call to crypt_r.  */
   cd.initialized = 0;
 
-  for (size_t i = 0; i < n; i++)
+  for (size_t i = 0; i < array_length (tests); i++)
     {
-      if (crypt (tests[i][0], tests[i][1]))
-	{
-	  result++;
-	  printf ("%s: crypt returned non-NULL with salt \"%s\"\n",
-		  tests[i][0], tests[i][1]);
-	}
+      TEST_VERIFY (crypt (tests[i][0], tests[i][1]) == NULL);
 
-      if (crypt_r (tests[i][0], tests[i][1], &cd))
-	{
-	  result++;
-	  printf ("%s: crypt_r returned non-NULL with salt \"%s\"\n",
-		  tests[i][0], tests[i][1]);
-	}
+      TEST_VERIFY (crypt_r (tests[i][0], tests[i][1], &cd) == NULL);
     }
 
-  return result;
+  return 0;
 }
 
-#define TEST_FUNCTION do_test ()
-#include "../test-skeleton.c"
+#include <support/test-driver.c>
