@@ -29,14 +29,14 @@ static void
 callback (void *closure)
 {
   int *result = closure;
-  struct stat64 before;
+  struct stat before;
   xstat ("/dev", &before);
   if (chroot ("/dev") != 0)
     {
       *result = errno;
       return;
     }
-  struct stat64 after;
+  struct stat after;
   xstat ("/", &after);
   TEST_VERIFY (before.st_dev == after.st_dev);
   TEST_VERIFY (before.st_ino == after.st_ino);
