@@ -161,15 +161,19 @@ nis_local_host (void)
 	  if (cp[-1] == '.')
 	    return __nishostname;
 
-	  if (len + strlen (nis_local_directory ()) + 1 > NIS_MAXNAMELEN)
+	  nis_name local_directory = nis_local_directory ();
+	  size_t local_directory_len = strlen (local_directory);
+	  if (len + 1 + local_directory_len > NIS_MAXNAMELEN)
 	    {
 	      __nishostname[0] = '\0';
 	      return __nishostname;
 	    }
 
+	  /* We have enough space in __nishostname with length of
+	     (NIS_MAXNAMELEN + 1) for
+	     hostname + '.' + directory-name + '\0'.  */
 	  *cp++ = '.';
-	  strncpy (cp, nis_local_directory (), NIS_MAXNAMELEN - len -1);
-	  __nishostname[NIS_MAXNAMELEN] = '\0';
+	  memcpy (cp, local_directory, local_directory_len + 1);
 	}
     }
 
