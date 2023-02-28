@@ -107,13 +107,13 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
      NOTE: the IFUNC selection may change over time.  Please check all
      multiarch implementations when experimenting.  */
 
-  const char *p = valp->strval;
+  const char *p = valp->strval, *c;
   struct cpu_features *cpu_features = &GLRO(dl_x86_cpu_features);
   size_t len;
 
   do
     {
-      const char *c, *n;
+      const char *n;
       bool disable;
       size_t nl;
 
@@ -283,7 +283,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
 	}
       p += len + 1;
     }
-  while (*p != '\0');
+  while (*c != '\0');
 }
 
 # if CET_ENABLED
