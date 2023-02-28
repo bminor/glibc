@@ -1047,6 +1047,7 @@ ldouble: 8
 
 Function: "hypot":
 double: 1
+float: 1
 ldouble: 1
 
 Function: "hypot_downward":
