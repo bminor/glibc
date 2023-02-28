@@ -26,7 +26,6 @@
 # include "init-arch.h"
 
 extern __typeof (strncmp) __strncmp_ppc attribute_hidden;
-extern __typeof (strncmp) __strncmp_power7 attribute_hidden;
 extern __typeof (strncmp) __strncmp_power8 attribute_hidden;
 # ifdef __LITTLE_ENDIAN__
 extern __typeof (strncmp) __strncmp_power9 attribute_hidden;
@@ -43,7 +42,5 @@ libc_ifunc_redirected (__redirect_strncmp, strncmp,
 # endif
 		       (hwcap2 & PPC_FEATURE2_ARCH_2_07)
 		       ? __strncmp_power8
-		       : (hwcap & PPC_FEATURE_ARCH_2_06)
-			 ? __strncmp_power7
-			 : __strncmp_ppc);
+		       : __strncmp_ppc);
 #endif
