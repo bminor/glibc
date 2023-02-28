@@ -40,7 +40,7 @@ support_descriptor_supports_holes (int fd)
       block_headroom = 32,
     };
 
-  struct stat64 st;
+  struct stat st;
   xfstat (fd, &st);
   if (!S_ISREG (st.st_mode))
     FAIL_EXIT1 ("descriptor %d does not refer to a regular file", fd);
