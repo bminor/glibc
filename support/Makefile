@@ -238,6 +238,24 @@ CFLAGS-support_paths.c = \
 CFLAGS-timespec.c += -fexcess-precision=standard
 CFLAGS-timespec-time64.c += -fexcess-precision=standard
 
+# Ensure that general support files use 64-bit time_t
+CFLAGS-delayed_exit.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-shell-container.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-support_can_chroot.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-support_copy_file.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-support_copy_file_range.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-support_descriptor_supports_holes.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-support_descriptors.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-support_process_state.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-support_stat_nanoseconds.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-support_subprocess.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-support_test_main.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-test-container.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+CFLAGS-xmkdirp.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+# This is required to get an mkstemp which can create large files on some
+# 32-bit platforms.
+CFLAGS-temp_file.c += -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64
+
 ifeq (,$(CXX))
 LINKS_DSO_PROGRAM = links-dso-program-c
 else
