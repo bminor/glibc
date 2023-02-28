@@ -69,6 +69,7 @@ SIMPLE_STRNCAT (CHAR *dst, const CHAR *src, size_t n)
 }
 
 static void
+__attribute__((noinline))
 do_one_test (impl_t *impl, CHAR *dst, const CHAR *src, size_t n)
 {
   size_t k = STRLEN (dst);
