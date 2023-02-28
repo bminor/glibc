@@ -16,8 +16,6 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define _FILE_OFFSET_BITS 64
-
 #include <array_length.h>
 #include <stdio.h>
 #include <stdlib.h>

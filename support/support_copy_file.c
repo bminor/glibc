@@ -24,7 +24,7 @@
 void
 support_copy_file (const char *from, const char *to)
 {
-  struct stat64 st;
+  struct stat st;
   xstat (from, &st);
   int fd_from = xopen (from, O_RDONLY, 0);
   mode_t mode = st.st_mode & 0777;
