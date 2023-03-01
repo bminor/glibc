@@ -202,7 +202,7 @@ _hurd_sigstate_unlock (struct hurd_sigstate *ss)
 }
 libc_hidden_def (_hurd_sigstate_set_global_rcv)
 
-/* Retreive a thread's full set of pending signals, including the global
+/* Retrieve a thread's full set of pending signals, including the global
    ones if appropriate.  SS must be locked.  */
 sigset_t
 _hurd_sigstate_pending (const struct hurd_sigstate *ss)
@@ -233,7 +233,7 @@ sigstate_clear_pending (struct hurd_sigstate *ss, int signo)
 libc_hidden_def (_hurd_sigstate_lock)
 libc_hidden_def (_hurd_sigstate_unlock)
 
-/* Retreive a thread's action vector.  SS must be locked.  */
+/* Retrieve a thread's action vector.  SS must be locked.  */
 struct sigaction *
 _hurd_sigstate_actions (struct hurd_sigstate *ss)
 {
@@ -451,54 +451,55 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
       *state_change = 1;
     }
   else if (state->basic.PC == (uintptr_t) &_hurd_intr_rpc_msg_in_trap
-	   /* The thread was blocked in the system call.  After thread_abort,
-	      the return value register indicates what state the RPC was in
-	      when interrupted.  */
-	   && state->basic.SYSRETURN == MACH_RCV_INTERRUPTED)
-      {
-	/* The RPC request message was sent and the thread was waiting for
-	   the reply message; now the message receive has been aborted, so
-	   the mach_msg call will return MACH_RCV_INTERRUPTED.  We must tell
-	   the server to interrupt the pending operation.  The thread must
-	   wait for the reply message before running the signal handler (to
-	   guarantee that the operation has finished being interrupted), so
-	   our nonzero return tells the trampoline code to finish the message
-	   receive operation before running the handler.  */
+           /* The thread was blocked in the system call.  After thread_abort,
+              the return value register indicates what state the RPC was in
+              when interrupted.  */
+           && state->basic.SYSRETURN == MACH_RCV_INTERRUPTED)
+    {
+      /* The RPC request message was sent and the thread was waiting for the
+         reply message; now the message receive has been aborted, so the
+         mach_msg call will return MACH_RCV_INTERRUPTED.  We must tell the
+         server to interrupt the pending operation.  The thread must wait for
+         the reply message before running the signal handler (to guarantee that
+         the operation has finished being interrupted), so our nonzero return
+         tells the trampoline code to finish the message receive operation
+         before running the handler.  */
 
-	mach_port_t *reply = interrupted_reply_port_location (ss->thread,
-							      state,
-							      sigthread);
-	error_t err = __interrupt_operation (intr_port, _hurdsig_interrupt_timeout);
+      mach_port_t *reply = interrupted_reply_port_location (ss->thread,
+                                                            state,
+                                                            sigthread);
+      error_t err = __interrupt_operation (intr_port,
+                                           _hurdsig_interrupt_timeout);
 
-	if (err)
-	  {
-	    if (reply)
-	      {
-		/* The interrupt didn't work.
-		   Destroy the receive right the thread is blocked on.  */
-		__mach_port_destroy (__mach_task_self (), *reply);
-		*reply = MACH_PORT_NULL;
-	      }
+      if (err)
+        {
+          if (reply)
+            {
+              /* The interrupt didn't work.
+                 Destroy the receive right the thread is blocked on.  */
+              __mach_port_destroy (__mach_task_self (), *reply);
+              *reply = MACH_PORT_NULL;
+            }
 
-	    /* The system call return value register now contains
-	       MACH_RCV_INTERRUPTED; when mach_msg resumes, it will retry the
-	       call.  Since we have just destroyed the receive right, the
-	       retry will fail with MACH_RCV_INVALID_NAME.  Instead, just
-	       change the return value here to EINTR so mach_msg will not
-	       retry and the EINTR error code will propagate up.  */
-	    state->basic.SYSRETURN = EINTR;
-	    *state_change = 1;
-	  }
-	else if (reply)
-	  rcv_port = *reply;
+          /* The system call return value register now contains
+             MACH_RCV_INTERRUPTED; when mach_msg resumes, it will retry the
+             call.  Since we have just destroyed the receive right, the retry
+             will fail with MACH_RCV_INVALID_NAME.  Instead, just change the
+             return value here to EINTR so mach_msg will not retry and the
+             EINTR error code will propagate up.  */
+          state->basic.SYSRETURN = EINTR;
+          *state_change = 1;
+	}
+      else if (reply)
+        rcv_port = *reply;
 
-	/* All threads whose RPCs were interrupted by the interrupt_operation
-	   call above will retry their RPCs unless we clear SS->intr_port.
-	   So we clear it for the thread taking a signal when SA_RESTART is
-	   clear, so that its call returns EINTR.  */
-	if (! signo || !(_hurd_sigstate_actions (ss) [signo].sa_flags & SA_RESTART))
-	  ss->intr_port = MACH_PORT_NULL;
-      }
+      /* All threads whose RPCs were interrupted by the interrupt_operation
+         call above will retry their RPCs unless we clear SS->intr_port.  So we
+         clear it for the thread taking a signal when SA_RESTART is clear, so
+         that its call returns EINTR.  */
+      if (! signo || !(_hurd_sigstate_actions (ss) [signo].sa_flags & SA_RESTART))
+        ss->intr_port = MACH_PORT_NULL;
+    }
 
   return rcv_port;
 }
