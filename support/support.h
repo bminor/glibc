@@ -107,6 +107,8 @@ extern void *xcalloc (size_t n, size_t s)
   __returns_nonnull;
 extern void *xrealloc (void *o, size_t n)
   __attribute_malloc__ __attribute_alloc_size__ ((2)) __attr_dealloc_free;
+extern void *xreallocarray (void *p, size_t n, size_t s)
+  __attribute_alloc_size__ ((2, 3)) __attr_dealloc_free;
 extern char *xstrdup (const char *) __attribute_malloc__ __attr_dealloc_free
   __returns_nonnull;
 void *xposix_memalign (size_t alignment, size_t n)
