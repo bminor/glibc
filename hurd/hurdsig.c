@@ -415,6 +415,7 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
 		     void (*reply) (void))
 {
   extern const void _hurd_intr_rpc_msg_about_to;
+  extern const void _hurd_intr_rpc_msg_setup_done;
   extern const void _hurd_intr_rpc_msg_in_trap;
   mach_port_t rcv_port = MACH_PORT_NULL;
   mach_port_t intr_port;
@@ -434,11 +435,18 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
       && state->basic.PC < (uintptr_t) &_hurd_intr_rpc_msg_in_trap)
     {
       /* The thread is about to do the RPC, but hasn't yet entered
-	 mach_msg.  Mutate the thread's state so it knows not to try
-	 the RPC.  */
-      INTR_MSG_BACK_OUT (&state->basic);
-      MACHINE_THREAD_STATE_SET_PC (&state->basic,
-				   &_hurd_intr_rpc_msg_in_trap);
+         mach_msg.  Importantly, it may have already checked ss->cancel for
+         the last time before doing the RPC, so setting that is not enough
+         to make it not enter mach_msg.  Instead, mutate the thread's state
+         so it knows not to try the RPC.
+
+         If the thread is past _hurd_intr_rpc_msg_setup_done, just make it
+         jump to after the trap, since we know it's safe to do so.  Otherwise,
+         we know that the thread is yet to check for the MACH_SEND_INTERRUPTED
+         value we set below, and will skip the trap by itself.  */
+      if (state->basic.PC >= (uintptr_t) &_hurd_intr_rpc_msg_setup_done)
+        MACHINE_THREAD_STATE_SET_PC (&state->basic,
+                                     &_hurd_intr_rpc_msg_in_trap);
       state->basic.SYSRETURN = MACH_SEND_INTERRUPTED;
       *state_change = 1;
     }

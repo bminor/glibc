@@ -89,8 +89,6 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
   void trampoline (void);
   void rpc_wait_trampoline (void);
   void firewall (void);
-  extern const void _hurd_intr_rpc_msg_cx_sp;
-  extern const void _hurd_intr_rpc_msg_sp_restored;
   void *volatile sigsp;
   struct sigcontext *scp;
   struct
@@ -145,25 +143,6 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
      We may need to reset the SP (the `uesp' slot) to avoid clobbering an
      interrupted RPC frame.  */
   state->basic.esp = state->basic.uesp;
-
-  /* This code has intimate knowledge of the special mach_msg system call
-     done in intr-msg.c; that code does (see intr-msg.h):
-					movl %esp, %ecx
-					leal ARGS, %esp
-	_hurd_intr_rpc_msg_cx_sp:	movl $-25, %eax
-	_hurd_intr_rpc_msg_do_trap:	lcall $7, $0
-	_hurd_intr_rpc_msg_in_trap:	movl %ecx, %esp
-	_hurd_intr_rpc_msg_sp_restored:
-     We must check for the window during which %esp points at the
-     mach_msg arguments.  The space below until %ecx is used by
-     the _hurd_intr_rpc_mach_msg frame, and must not be clobbered.  */
-  if (state->basic.eip >= (int) &_hurd_intr_rpc_msg_cx_sp
-      && state->basic.eip < (int) &_hurd_intr_rpc_msg_sp_restored)
-  /* The SP now points at the mach_msg args, but there is more stack
-     space used below it.  The real SP is saved in %ecx; we must push the
-     new frame below there (if not on the altstack), and restore that value as
-     the SP on sigreturn.  */
-    state->basic.uesp = state->basic.ecx;
 
   if ((action->sa_flags & SA_ONSTACK)
       && !(ss->sigaltstack.ss_flags & (SS_DISABLE|SS_ONSTACK)))

@@ -25,10 +25,13 @@
 ({									      \
   error_t err;								      \
   asm (".globl _hurd_intr_rpc_msg_about_to\n"				      \
-       ".globl _hurd_intr_rpc_msg_cx_sp\n"				      \
-       ".globl _hurd_intr_rpc_msg_do_trap\n" 				      \
+       ".globl _hurd_intr_rpc_msg_setup_done\n"				      \
        ".globl _hurd_intr_rpc_msg_in_trap\n"				      \
-       ".globl _hurd_intr_rpc_msg_sp_restored\n"			      \
+       /* Clear eax before we do the check for cancel below.  This is to
+          detect eax being set to non-zero (actually MACH_SEND_INTERRUPTED)
+          from the outside (namely, _hurdsig_abort_rpcs), which signals us
+          to skip the trap we were about to enter.  */			      \
+       "				xorl %0, %0\n"			      \
        "_hurd_intr_rpc_msg_about_to:"					      \
        /* We need to make a last check of cancel, in case we got interrupted
           right before _hurd_intr_rpc_msg_about_to.  */			      \
@@ -36,10 +39,10 @@
        "				jz _hurd_intr_rpc_msg_do\n"	      \
        /* We got interrupted, note so and return EINTR.  */		      \
        "				movl $0, %3\n"			      \
-       "				movl %6, %%eax\n"		      \
+       "				movl %6, %0\n"			      \
        "				jmp _hurd_intr_rpc_msg_sp_restored\n" \
        "_hurd_intr_rpc_msg_do:"						      \
-       /* Ok, push the mach_msg_trap arguments.  */			      \
+       /* Ok, push the mach_msg_trap arguments and a fake return address.  */ \
        "				pushl 24(%4)\n"			      \
        "				pushl %2\n"			      \
        "				pushl 16(%4)\n"			      \
@@ -48,9 +51,14 @@
        "				pushl %1\n"			      \
        "				pushl (%4)\n"			      \
        "				pushl $0\n"			      \
-       /* TODO: remove this ecx kludge, we don't need it any more */	      \
-       "				movl %%esp, %%ecx\n"		      \
-       "_hurd_intr_rpc_msg_cx_sp:	movl $-25, %%eax\n"		      \
+       "_hurd_intr_rpc_msg_setup_done:"					      \
+       /* From here on, it is safe to make us jump over the syscall.  Now
+          check if we have been told to skip the syscall while running
+          the above.  */						      \
+       "				test %0, %0\n"			      \
+       "				jnz _hurd_intr_rpc_msg_in_trap\n"     \
+       /* Do the actual syscall.  */					      \
+       "				movl $-25, %%eax\n"		      \
        "_hurd_intr_rpc_msg_do_trap:	lcall $7, $0 # status in %0\n"	      \
        "_hurd_intr_rpc_msg_in_trap:"					      \
        /* Ok, clean the arguments and update OPTION and TIMEOUT.  */	      \
@@ -60,22 +68,10 @@
        "				popl %2\n"			      \
        "				addl $4, %%esp\n"		      \
        "_hurd_intr_rpc_msg_sp_restored:"				      \
-       : "=a" (err), "+r" (option), "+r" (timeout), "=m" (*intr_port_p)	      \
-       : "r" (&msg), "m" (*cancel_p), "i" (EINTR)			      \
-       : "ecx");							      \
+       : "=&a" (err), "+r" (option), "+r" (timeout), "=m" (*intr_port_p)      \
+       : "r" (&msg), "m" (*cancel_p), "i" (EINTR));			      \
   err;									      \
 })
-
-
-static void inline
-INTR_MSG_BACK_OUT (struct i386_thread_state *state)
-{
-  extern const void _hurd_intr_rpc_msg_cx_sp;
-  if (state->eip >= (natural_t) &_hurd_intr_rpc_msg_cx_sp)
-    state->uesp = state->ecx;
-  else
-    state->ecx = state->uesp;
-}
 
 #include "hurdfault.h"
 
