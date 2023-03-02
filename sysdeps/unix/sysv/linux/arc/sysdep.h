@@ -141,6 +141,8 @@ hidden_proto (__syscall_error)
 
 # define ARC_TRAP_INSN	"trap_s 0	\n\t"
 
+# define HAVE_CLONE3_WRAPPER	1
+
 # undef INTERNAL_SYSCALL_NCS
 # define INTERNAL_SYSCALL_NCS(number, nr_args, args...)	\
   ({								\
