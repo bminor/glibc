@@ -42,6 +42,10 @@ libnldbl-calls = asprintf dprintf fprintf fscanf fwprintf fwscanf iovfscanf \
 		 isoc99_vscanf isoc99_vfscanf isoc99_vsscanf \
 		 isoc99_wscanf isoc99_fwscanf isoc99_swscanf \
 		 isoc99_vwscanf isoc99_vfwscanf isoc99_vswscanf \
+		 isoc23_scanf isoc23_fscanf isoc23_sscanf \
+		 isoc23_vscanf isoc23_vfscanf isoc23_vsscanf \
+		 isoc23_wscanf isoc23_fwscanf isoc23_swscanf \
+		 isoc23_vwscanf isoc23_vfwscanf isoc23_vswscanf \
 		 nextup nextdown totalorder totalordermag getpayload \
 		 canonicalize setpayload setpayloadsig llogb fmaxmag fminmag \
 		 roundeven fromfp ufromfp fromfpx ufromfpx fadd dadd \
@@ -220,4 +224,44 @@ $(objpfx)tst-nldbl-error.c: tst-ldbl-error.c
 
 CFLAGS-tst-nldbl-warn.c += -mlong-double-64
 CFLAGS-tst-nldbl-error.c += -mlong-double-64
+endif
+
+ifeq ($(subdir), stdio-common)
+tests += tst-nldbl-scanf-binary-c11 \
+	 tst-nldbl-scanf-binary-c2x \
+	 tst-nldbl-scanf-binary-gnu11 \
+	 tst-nldbl-scanf-binary-gnu89
+
+# Some versions of GCC supported for building glibc do not support -std=c2x, so
+# the test for that version uses -std=c11 and then _ISOC2X_SOURCE is defined in
+# the test as needed.
+CFLAGS-tst-nldbl-scanf-binary-c11.c += -mlong-double-64 -std=c11 \
+				       -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-nldbl-scanf-binary-c2x.c += -mlong-double-64 -std=c11 \
+				       -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-nldbl-scanf-binary-gnu11.c += -mlong-double-64 -std=gnu11 \
+					 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-nldbl-scanf-binary-gnu89.c += -mlong-double-64 -std=gnu89 \
+					 -DOBJPFX=\"$(objpfx)\"
+
+endif
+
+ifeq ($(subdir), wcsmbs)
+tests += tst-nldbl-wscanf-binary-c11 \
+	 tst-nldbl-wscanf-binary-c2x \
+	 tst-nldbl-wscanf-binary-gnu11 \
+	 tst-nldbl-wscanf-binary-gnu89
+
+# Some versions of GCC supported for building glibc do not support -std=c2x, so
+# the test for that version uses -std=c11 and then _ISOC2X_SOURCE is defined in
+# the test as needed.
+CFLAGS-tst-nldbl-wscanf-binary-c11.c += -mlong-double-64 -std=c11 \
+					-DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-nldbl-wscanf-binary-c2x.c += -mlong-double-64 -std=c11 \
+					-DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-nldbl-wscanf-binary-gnu11.c += -mlong-double-64 -std=gnu11 \
+					  -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-nldbl-wscanf-binary-gnu89.c += -mlong-double-64 -std=gnu89 \
+					  -DOBJPFX=\"$(objpfx)\"
+
 endif

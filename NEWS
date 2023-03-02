@@ -14,7 +14,10 @@ Major new features:
   input: strtol, strtoll, strtoul, strtoull, strtol_l, strtoll_l,
   strtoul_l, strtoull_l, strtoimax, strtoumax, strtoq, strtouq, wcstol,
   wcstoll, wcstoul, wcstoull, wcstol_l, wcstoll_l, wcstoul_l,
-  wcstoull_l, wcstoimax, wcstoumax, wcstoq, wcstouq.
+  wcstoull_l, wcstoimax, wcstoumax, wcstoq, wcstouq.  Similarly, the
+  following functions support binary integers prefixed by 0b or 0B as
+  input to the %i format: fscanf, scanf, sscanf, vscanf, vsscanf,
+  vfscanf, fwscanf, wscanf, swscanf, vfwscanf, vwscanf, vswscanf.
 
 Deprecated and removed features, and other changes affecting compatibility:
 

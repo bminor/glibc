@@ -59,5 +59,11 @@ libc {
     __isoc23_wcstoull;
     __isoc23_wcstoimax;
     __isoc23_wcstoumax;
+    __isoc23_fwscanf;
+    __isoc23_swscanf;
+    __isoc23_vfwscanf;
+    __isoc23_vswscanf;
+    __isoc23_vwscanf;
+    __isoc23_wscanf;
   }
 }

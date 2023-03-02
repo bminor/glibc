@@ -288,8 +288,24 @@ extern int __isoc99_vwscanf (const wchar_t *__restrict __format,
 extern int __isoc99_vswscanf (const wchar_t *__restrict __s,
 			      const wchar_t *__restrict __format,
 			      __gnuc_va_list __arg) __THROW;
+extern int __isoc23_fwscanf (__FILE *__restrict __stream,
+			     const wchar_t *__restrict __format, ...);
+extern int __isoc23_wscanf (const wchar_t *__restrict __format, ...);
+extern int __isoc23_swscanf (const wchar_t *__restrict __s,
+			     const wchar_t *__restrict __format, ...)
+     __THROW;
+extern int __isoc23_vfwscanf (__FILE *__restrict __s,
+			      const wchar_t *__restrict __format,
+			      __gnuc_va_list __arg);
+extern int __isoc23_vwscanf (const wchar_t *__restrict __format,
+			     __gnuc_va_list __arg);
+extern int __isoc23_vswscanf (const wchar_t *__restrict __s,
+			      const wchar_t *__restrict __format,
+			      __gnuc_va_list __arg) __THROW;
 libc_hidden_proto (__isoc99_vswscanf)
 libc_hidden_proto (__isoc99_vfwscanf)
+libc_hidden_proto (__isoc23_vswscanf)
+libc_hidden_proto (__isoc23_vfwscanf)
 
 /* Internal functions.  */
 extern size_t __mbsrtowcs_l (wchar_t *dst, const char **src, size_t len,

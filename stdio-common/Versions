@@ -63,6 +63,14 @@ libc {
   GLIBC_2.29 {
     # SHLIB_COMPAT(GLIBC_2_0, GLIBC_2_29) used in iovfscanf.c etc.
   }
+  GLIBC_2.38 {
+    __isoc23_scanf;
+    __isoc23_vscanf;
+    __isoc23_fscanf;
+    __isoc23_vfscanf;
+    __isoc23_sscanf;
+    __isoc23_vsscanf;
+  }
   GLIBC_PRIVATE {
     # global variables
     _itoa_lower_digits;

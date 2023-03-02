@@ -84,6 +84,20 @@ libc {
     __nldbl_err; __nldbl_verr; __nldbl_errx; __nldbl_verrx;
     __nldbl_error; __nldbl_error_at_line;
   }
+  GLIBC_2.38 {
+    __nldbl___isoc23_scanf;
+    __nldbl___isoc23_fscanf;
+    __nldbl___isoc23_sscanf;
+    __nldbl___isoc23_vscanf;
+    __nldbl___isoc23_vfscanf;
+    __nldbl___isoc23_vsscanf;
+    __nldbl___isoc23_wscanf;
+    __nldbl___isoc23_fwscanf;
+    __nldbl___isoc23_swscanf;
+    __nldbl___isoc23_vwscanf;
+    __nldbl___isoc23_vfwscanf;
+    __nldbl___isoc23_vswscanf;
+  }
 }
 libm {
   NLDBL_VERSION {

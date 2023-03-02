@@ -43,6 +43,8 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcsmbsload mbsrtowcs_l \
 	    isoc99_wscanf isoc99_vwscanf isoc99_fwscanf isoc99_vfwscanf \
 	    isoc99_swscanf isoc99_vswscanf \
+	    isoc23_wscanf isoc23_vwscanf isoc23_fwscanf isoc23_vfwscanf \
+	    isoc23_swscanf isoc23_vswscanf \
 	    mbrtoc8 c8rtomb mbrtoc16 c16rtomb mbrtoc32 c32rtomb
 
 strop-tests :=  wcscmp wcsncmp wmemcmp wcslen wcschr wcsrchr wcscpy wcsnlen \
@@ -59,7 +61,11 @@ tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-wcstol-binary-c11 \
 	 tst-wcstol-binary-c2x \
 	 tst-wcstol-binary-gnu11 \
-	 tst-wcstol-binary-gnu2x
+	 tst-wcstol-binary-gnu2x \
+	 tst-wscanf-binary-c11 \
+	 tst-wscanf-binary-c2x \
+	 tst-wscanf-binary-gnu11 \
+	 tst-wscanf-binary-gnu89
 
 include ../Rules
 
@@ -118,6 +124,10 @@ CFLAGS-isoc99_wscanf.c += -fexceptions
 CFLAGS-isoc99_fwscanf.c += -fexceptions
 CFLAGS-isoc99_vwscanf.c += -fexceptions
 CFLAGS-isoc99_vfwscanf.c += -fexceptions
+CFLAGS-isoc23_wscanf.c += -fexceptions
+CFLAGS-isoc23_fwscanf.c += -fexceptions
+CFLAGS-isoc23_vwscanf.c += -fexceptions
+CFLAGS-isoc23_vfwscanf.c += -fexceptions
 
 CPPFLAGS += $(libio-mtsafe)
 
@@ -134,3 +144,7 @@ CFLAGS-tst-wcstol-binary-c11.c += -std=c11
 CFLAGS-tst-wcstol-binary-c2x.c += -std=c11
 CFLAGS-tst-wcstol-binary-gnu11.c += -std=gnu11
 CFLAGS-tst-wcstol-binary-gnu2x.c += -std=gnu11
+CFLAGS-tst-wscanf-binary-c11.c += -std=c11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-wscanf-binary-c2x.c += -std=c11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-wscanf-binary-gnu11.c += -std=gnu11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-wscanf-binary-gnu89.c += -std=gnu89 -DOBJPFX=\"$(objpfx)\"

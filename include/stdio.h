@@ -94,18 +94,34 @@ extern int __isoc99_vscanf (const char *__restrict __format,
 extern int __isoc99_vsscanf (const char *__restrict __s,
 			     const char *__restrict __format,
 			     __gnuc_va_list __arg) __THROW;
+extern int __isoc23_fscanf (FILE *__restrict __stream,
+			    const char *__restrict __format, ...) __wur;
+extern int __isoc23_scanf (const char *__restrict __format, ...) __wur;
+extern int __isoc23_sscanf (const char *__restrict __s,
+			    const char *__restrict __format, ...) __THROW;
+extern int __isoc23_vfscanf (FILE *__restrict __s,
+			     const char *__restrict __format,
+			     __gnuc_va_list __arg) __wur;
+extern int __isoc23_vscanf (const char *__restrict __format,
+			    __gnuc_va_list __arg) __wur;
+extern int __isoc23_vsscanf (const char *__restrict __s,
+			     const char *__restrict __format,
+			     __gnuc_va_list __arg) __THROW;
 
 libc_hidden_proto (__isoc99_sscanf)
 libc_hidden_proto (__isoc99_vsscanf)
 libc_hidden_proto (__isoc99_vfscanf)
+libc_hidden_proto (__isoc23_sscanf)
+libc_hidden_proto (__isoc23_vsscanf)
+libc_hidden_proto (__isoc23_vfscanf)
 
-/* Internal uses of sscanf should call the C99-compliant version.
+/* Internal uses of sscanf should call the C2X-compliant version.
    Unfortunately, symbol redirection is not transitive, so the
    __REDIRECT in the public header does not link up with the above
    libc_hidden_proto.  Bridge the gap with a macro.  */
 #  if !__GLIBC_USE (DEPRECATED_SCANF)
 #   undef sscanf
-#   define sscanf __isoc99_sscanf
+#   define sscanf __isoc23_sscanf
 #  endif
 
 #  if __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 1  && IS_IN (libc)
@@ -114,12 +130,21 @@ libc_hidden_proto (__isoc99_vfscanf)
 extern __typeof (__isoc99_sscanf) ___ieee128_isoc99_sscanf __THROW;
 extern __typeof (__isoc99_vsscanf) ___ieee128_isoc99_vsscanf __THROW;
 extern __typeof (__isoc99_vfscanf) ___ieee128_isoc99_vfscanf __THROW;
+extern __typeof (__isoc23_sscanf) ___ieee128_isoc23_sscanf __THROW;
+extern __typeof (__isoc23_vsscanf) ___ieee128_isoc23_vsscanf __THROW;
+extern __typeof (__isoc23_vfscanf) ___ieee128_isoc23_vfscanf __THROW;
 libc_hidden_proto (___ieee128_isoc99_sscanf)
 libc_hidden_proto (___ieee128_isoc99_vsscanf)
 libc_hidden_proto (___ieee128_isoc99_vfscanf)
+libc_hidden_proto (___ieee128_isoc23_sscanf)
+libc_hidden_proto (___ieee128_isoc23_vsscanf)
+libc_hidden_proto (___ieee128_isoc23_vfscanf)
 #define __isoc99_sscanf ___ieee128_isoc99_sscanf
 #define __isoc99_vsscanf ___ieee128_isoc99_vsscanf
 #define __isoc99_vfscanf ___ieee128_isoc99_vfscanf
+#define __isoc23_sscanf ___ieee128_isoc23_sscanf
+#define __isoc23_vsscanf ___ieee128_isoc23_vsscanf
+#define __isoc23_vfscanf ___ieee128_isoc23_vfscanf
 #  endif
 
 /* Prototypes for compatibility functions.  */

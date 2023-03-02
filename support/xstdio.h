@@ -26,6 +26,7 @@ __BEGIN_DECLS
 
 FILE *xfopen (const char *path, const char *mode);
 void xfclose (FILE *);
+FILE *xfreopen (const char *path, const char *mode, FILE *stream);
 
 /* Read a line from FP, using getline.  *BUFFER must be NULL, or a
    heap-allocated pointer of *LENGTH bytes.  Return the number of

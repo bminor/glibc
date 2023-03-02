@@ -123,6 +123,7 @@ libsupport-routines = \
   xfclose \
   xfopen \
   xfork \
+  xfreopen \
   xftruncate \
   xgetline \
   xgetsockname \

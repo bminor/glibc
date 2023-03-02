@@ -762,9 +762,34 @@ extern int swscanf (const wchar_t *__restrict __s,
    functions are at alternative names.  When __LDBL_COMPAT or
    __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI are in effect, this is handled in
    bits/wchar-ldbl.h.  */
-#if !__GLIBC_USE (DEPRECATED_SCANF) && !defined __LDBL_COMPAT \
+# if !__GLIBC_USE (DEPRECATED_SCANF) && !defined __LDBL_COMPAT \
      && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0
-#  ifdef __REDIRECT
+#  if __GLIBC_USE (C2X_STRTOL)
+#   ifdef __REDIRECT
+extern int __REDIRECT (fwscanf, (__FILE *__restrict __stream,
+				 const wchar_t *__restrict __format, ...),
+		       __isoc23_fwscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
+extern int __REDIRECT (wscanf, (const wchar_t *__restrict __format, ...),
+		       __isoc23_wscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 1, 2))) */;
+extern int __REDIRECT_NTH (swscanf, (const wchar_t *__restrict __s,
+				     const wchar_t *__restrict __format,
+				     ...), __isoc23_swscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
+#   else
+extern int __isoc23_fwscanf (__FILE *__restrict __stream,
+			     const wchar_t *__restrict __format, ...);
+extern int __isoc23_wscanf (const wchar_t *__restrict __format, ...);
+extern int __isoc23_swscanf (const wchar_t *__restrict __s,
+			     const wchar_t *__restrict __format, ...)
+     __THROW;
+#    define fwscanf __isoc23_fwscanf
+#    define wscanf __isoc23_wscanf
+#    define swscanf __isoc23_swscanf
+#   endif
+#  else
+#   ifdef __REDIRECT
 extern int __REDIRECT (fwscanf, (__FILE *__restrict __stream,
 				 const wchar_t *__restrict __format, ...),
 		       __isoc99_fwscanf)
@@ -776,16 +801,17 @@ extern int __REDIRECT_NTH (swscanf, (const wchar_t *__restrict __s,
 				     const wchar_t *__restrict __format,
 				     ...), __isoc99_swscanf)
      /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
-#  else
+#   else
 extern int __isoc99_fwscanf (__FILE *__restrict __stream,
 			     const wchar_t *__restrict __format, ...);
 extern int __isoc99_wscanf (const wchar_t *__restrict __format, ...);
 extern int __isoc99_swscanf (const wchar_t *__restrict __s,
 			     const wchar_t *__restrict __format, ...)
      __THROW;
-#   define fwscanf __isoc99_fwscanf
-#   define wscanf __isoc99_wscanf
-#   define swscanf __isoc99_swscanf
+#    define fwscanf __isoc99_fwscanf
+#    define wscanf __isoc99_wscanf
+#    define swscanf __isoc99_swscanf
+#   endif
 #  endif
 # endif
 
@@ -818,7 +844,34 @@ extern int vswscanf (const wchar_t *__restrict __s,
      && (!defined __LDBL_COMPAT || !defined __REDIRECT) \
      && (defined __STRICT_ANSI__ || defined __USE_XOPEN2K) \
      && __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI == 0
-#  ifdef __REDIRECT
+#  if __GLIBC_USE (C2X_STRTOL)
+#   ifdef __REDIRECT
+extern int __REDIRECT (vfwscanf, (__FILE *__restrict __s,
+				  const wchar_t *__restrict __format,
+				  __gnuc_va_list __arg), __isoc23_vfwscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+extern int __REDIRECT (vwscanf, (const wchar_t *__restrict __format,
+				 __gnuc_va_list __arg), __isoc23_vwscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 1, 0))) */;
+extern int __REDIRECT_NTH (vswscanf, (const wchar_t *__restrict __s,
+				      const wchar_t *__restrict __format,
+				      __gnuc_va_list __arg), __isoc23_vswscanf)
+     /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+#   else
+extern int __isoc23_vfwscanf (__FILE *__restrict __s,
+			      const wchar_t *__restrict __format,
+			      __gnuc_va_list __arg);
+extern int __isoc23_vwscanf (const wchar_t *__restrict __format,
+			     __gnuc_va_list __arg);
+extern int __isoc23_vswscanf (const wchar_t *__restrict __s,
+			      const wchar_t *__restrict __format,
+			      __gnuc_va_list __arg) __THROW;
+#    define vfwscanf __isoc23_vfwscanf
+#    define vwscanf __isoc23_vwscanf
+#    define vswscanf __isoc23_vswscanf
+#   endif
+#  else
+#   ifdef __REDIRECT
 extern int __REDIRECT (vfwscanf, (__FILE *__restrict __s,
 				  const wchar_t *__restrict __format,
 				  __gnuc_va_list __arg), __isoc99_vfwscanf)
@@ -830,7 +883,7 @@ extern int __REDIRECT_NTH (vswscanf, (const wchar_t *__restrict __s,
 				      const wchar_t *__restrict __format,
 				      __gnuc_va_list __arg), __isoc99_vswscanf)
      /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
-#  else
+#   else
 extern int __isoc99_vfwscanf (__FILE *__restrict __s,
 			      const wchar_t *__restrict __format,
 			      __gnuc_va_list __arg);
@@ -839,9 +892,10 @@ extern int __isoc99_vwscanf (const wchar_t *__restrict __format,
 extern int __isoc99_vswscanf (const wchar_t *__restrict __s,
 			      const wchar_t *__restrict __format,
 			      __gnuc_va_list __arg) __THROW;
-#   define vfwscanf __isoc99_vfwscanf
-#   define vwscanf __isoc99_vwscanf
-#   define vswscanf __isoc99_vswscanf
+#    define vfwscanf __isoc99_vfwscanf
+#    define vwscanf __isoc99_vwscanf
+#    define vswscanf __isoc99_vswscanf
+#   endif
 #  endif
 # endif
 

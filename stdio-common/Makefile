@@ -47,6 +47,12 @@ routines := \
   isoc99_vfscanf \
   isoc99_vscanf \
   isoc99_vsscanf \
+  isoc23_fscanf \
+  isoc23_scanf \
+  isoc23_sscanf \
+  isoc23_vfscanf \
+  isoc23_vscanf \
+  isoc23_vsscanf \
   itoa-digits \
   itoa-udigits \
   itowa-digits \
@@ -214,6 +220,10 @@ tests := \
   tst-put-error \
   tst-renameat2 \
   tst-rndseek \
+  tst-scanf-binary-c11 \
+  tst-scanf-binary-c2x \
+  tst-scanf-binary-gnu11 \
+  tst-scanf-binary-gnu89 \
   tst-scanf-round \
   tst-setvbuf1 \
   tst-sprintf \
@@ -415,6 +425,10 @@ CFLAGS-isoc99_vfscanf.c += -fexceptions
 CFLAGS-isoc99_vscanf.c += -fexceptions
 CFLAGS-isoc99_fscanf.c += -fexceptions
 CFLAGS-isoc99_scanf.c += -fexceptions
+CFLAGS-isoc23_vfscanf.c += -fexceptions
+CFLAGS-isoc23_vscanf.c += -fexceptions
+CFLAGS-isoc23_fscanf.c += -fexceptions
+CFLAGS-isoc23_scanf.c += -fexceptions
 
 CFLAGS-dprintf.c += $(config-cflags-wno-ignored-attributes)
 
@@ -439,6 +453,14 @@ CFLAGS-tst-gets.c += -Wno-deprecated-declarations
 CFLAGS-tst-bz11319-fortify2.c += -D_FORTIFY_SOURCE=2
 
 CFLAGS-tst-memstream-string.c += -fno-builtin-fprintf
+
+# Some versions of GCC supported for building glibc do not support -std=c2x, so
+# the test for that version uses -std=c11 and then _ISOC2X_SOURCE is defined in
+# the test as needed.
+CFLAGS-tst-scanf-binary-c11.c += -std=c11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-scanf-binary-c2x.c += -std=c11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-scanf-binary-gnu11.c += -std=gnu11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-scanf-binary-gnu89.c += -std=gnu89 -DOBJPFX=\"$(objpfx)\"
 
 CPPFLAGS += $(libio-mtsafe)
 

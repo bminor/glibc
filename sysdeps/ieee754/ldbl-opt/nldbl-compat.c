@@ -45,6 +45,10 @@ libc_hidden_proto (__nldbl___isoc99_vsscanf)
 libc_hidden_proto (__nldbl___isoc99_vfscanf)
 libc_hidden_proto (__nldbl___isoc99_vswscanf)
 libc_hidden_proto (__nldbl___isoc99_vfwscanf)
+libc_hidden_proto (__nldbl___isoc23_vsscanf)
+libc_hidden_proto (__nldbl___isoc23_vfscanf)
+libc_hidden_proto (__nldbl___isoc23_vswscanf)
+libc_hidden_proto (__nldbl___isoc23_vfwscanf)
 
 /* Compatibility with IEEE double as long double.
    IEEE quad long double is used by default for most programs, so
@@ -987,6 +991,172 @@ __nldbl___isoc99_wscanf (const wchar_t *fmt, ...)
   va_start (ap, fmt);
   ret = __vfwscanf_internal (stdin, fmt, ap,
 			     SCANF_LDBL_IS_DBL | SCANF_ISOC99_A);
+  va_end (ap);
+
+  return ret;
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_vfscanf (FILE *s, const char *fmt, va_list ap)
+{
+  return __vfscanf_internal (s, fmt, ap,
+			     SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			     | SCANF_ISOC23_BIN_CST);
+}
+libc_hidden_def (__nldbl___isoc23_vfscanf)
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_sscanf (const char *s, const char *fmt, ...)
+{
+  _IO_strfile sf;
+  FILE *f = _IO_strfile_read (&sf, s);
+  va_list ap;
+  int ret;
+
+  va_start (ap, fmt);
+  ret = __vfscanf_internal (f, fmt, ap,
+			    SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			    | SCANF_ISOC23_BIN_CST);
+  va_end (ap);
+
+  return ret;
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_vsscanf (const char *s, const char *fmt, va_list ap)
+{
+  _IO_strfile sf;
+  FILE *f = _IO_strfile_read (&sf, s);
+
+  return __vfscanf_internal (f, fmt, ap,
+			     SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			     | SCANF_ISOC23_BIN_CST);
+}
+libc_hidden_def (__nldbl___isoc23_vsscanf)
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_vscanf (const char *fmt, va_list ap)
+{
+  return __vfscanf_internal (stdin, fmt, ap,
+			     SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			     | SCANF_ISOC23_BIN_CST);
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_fscanf (FILE *s, const char *fmt, ...)
+{
+  va_list ap;
+  int ret;
+
+  va_start (ap, fmt);
+  ret = __vfscanf_internal (s, fmt, ap,
+			    SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			    | SCANF_ISOC23_BIN_CST);
+  va_end (ap);
+
+  return ret;
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_scanf (const char *fmt, ...)
+{
+  va_list ap;
+  int ret;
+
+  va_start (ap, fmt);
+  ret = __vfscanf_internal (stdin, fmt, ap,
+			    SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			    | SCANF_ISOC23_BIN_CST);
+  va_end (ap);
+
+  return ret;
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_vfwscanf (FILE *s, const wchar_t *fmt, va_list ap)
+{
+  return __vfwscanf_internal (s, fmt, ap,
+			      SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			      | SCANF_ISOC23_BIN_CST);
+}
+libc_hidden_def (__nldbl___isoc23_vfwscanf)
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_swscanf (const wchar_t *s, const wchar_t *fmt, ...)
+{
+  _IO_strfile sf;
+  struct _IO_wide_data wd;
+  FILE *f = _IO_strfile_readw (&sf, &wd, s);
+  va_list ap;
+  int ret;
+
+  va_start (ap, fmt);
+  ret = __vfwscanf_internal (f, fmt, ap,
+			     SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			     | SCANF_ISOC23_BIN_CST);
+  va_end (ap);
+
+  return ret;
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_vswscanf (const wchar_t *s, const wchar_t *fmt, va_list ap)
+{
+  _IO_strfile sf;
+  struct _IO_wide_data wd;
+  FILE *f = _IO_strfile_readw (&sf, &wd, s);
+
+  return __vfwscanf_internal (f, fmt, ap,
+			      SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			      | SCANF_ISOC23_BIN_CST);
+}
+libc_hidden_def (__nldbl___isoc23_vswscanf)
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_vwscanf (const wchar_t *fmt, va_list ap)
+{
+  return __vfwscanf_internal (stdin, fmt, ap,
+			      SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			      | SCANF_ISOC23_BIN_CST);
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_fwscanf (FILE *s, const wchar_t *fmt, ...)
+{
+  va_list ap;
+  int ret;
+
+  va_start (ap, fmt);
+  ret = __vfwscanf_internal (s, fmt, ap,
+			     SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			     | SCANF_ISOC23_BIN_CST);
+  va_end (ap);
+
+  return ret;
+}
+
+int
+attribute_compat_text_section
+__nldbl___isoc23_wscanf (const wchar_t *fmt, ...)
+{
+  va_list ap;
+  int ret;
+
+  va_start (ap, fmt);
+  ret = __vfwscanf_internal (stdin, fmt, ap,
+			     SCANF_LDBL_IS_DBL | SCANF_ISOC99_A
+			     | SCANF_ISOC23_BIN_CST);
   va_end (ap);
 
   return ret;

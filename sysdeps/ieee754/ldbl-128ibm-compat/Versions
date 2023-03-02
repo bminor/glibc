@@ -258,4 +258,18 @@ libc {
     __qecvtieee128_r;
     __qfcvtieee128_r;
   }
+  GLIBC_2.38 {
+    __isoc23_fscanfieee128;
+    __isoc23_scanfieee128;
+    __isoc23_sscanfieee128;
+    __isoc23_vfscanfieee128;
+    __isoc23_vscanfieee128;
+    __isoc23_vsscanfieee128;
+    __isoc23_fwscanfieee128;
+    __isoc23_swscanfieee128;
+    __isoc23_wscanfieee128;
+    __isoc23_vfwscanfieee128;
+    __isoc23_vswscanfieee128;
+    __isoc23_vwscanfieee128;
+  }
 }

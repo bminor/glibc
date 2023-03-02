@@ -24,7 +24,13 @@ ldbl-extra-routines += isoc99_fwscanf \
 		       isoc99_wscanf \
 		       isoc99_vfwscanf \
 		       isoc99_vswscanf \
-		       isoc99_vwscanf
+		       isoc99_vwscanf \
+		       isoc23_fwscanf \
+		       isoc23_swscanf \
+		       isoc23_wscanf \
+		       isoc23_vfwscanf \
+		       isoc23_vswscanf \
+		       isoc23_vwscanf
 
 tests-internal += test-wcstold-ibm128 test-wcstold-ieee128
 CFLAGS-test-wcstold-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
@@ -53,7 +59,13 @@ ldbl-extra-routines += printf_size \
 		       isoc99_sscanf \
 		       isoc99_vfscanf \
 		       isoc99_vscanf \
-		       isoc99_vsscanf
+		       isoc99_vsscanf \
+		       isoc23_fscanf \
+		       isoc23_scanf \
+		       isoc23_sscanf \
+		       isoc23_vfscanf \
+		       isoc23_vscanf \
+		       isoc23_vsscanf
 
 # Printing long double values with IEEE binary128 format reuses part
 # of the internal float128 implementation (__printf_fp, __printf_fphex,
@@ -304,6 +316,78 @@ ifeq ($(subdir),math)
 # support.  Thus, they can only correctly be used with ibm128.
 CFLAGS-test-ldouble-compat_totalorder.c += -mabi=ibmlongdouble
 CFLAGS-test-ldouble-compat_totalordermag.c += -mabi=ibmlongdouble
+endif
+
+ifeq ($(subdir), stdio-common)
+tests += tst-ibm128-scanf-binary-c11 \
+	 tst-ibm128-scanf-binary-c2x \
+	 tst-ibm128-scanf-binary-gnu11 \
+	 tst-ibm128-scanf-binary-gnu89 \
+	 tst-ieee128-scanf-binary-c11 \
+	 tst-ieee128-scanf-binary-c2x \
+	 tst-ieee128-scanf-binary-gnu11 \
+	 tst-ieee128-scanf-binary-gnu89
+
+# Some versions of GCC supported for building glibc do not support -std=c2x, so
+# the test for that version uses -std=c11 and then _ISOC2X_SOURCE is defined in
+# the test as needed.
+CFLAGS-tst-ibm128-scanf-binary-c11.c += -mabi=ibmlongdouble -Wno-psabi \
+					-std=c11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ibm128-scanf-binary-c2x.c += -mabi=ibmlongdouble -Wno-psabi \
+					-std=c11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ibm128-scanf-binary-gnu11.c += -mabi=ibmlongdouble -Wno-psabi \
+					  -std=gnu11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ibm128-scanf-binary-gnu89.c += -mabi=ibmlongdouble -Wno-psabi \
+					  -std=gnu89 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ieee128-scanf-binary-c11.c += -mfloat128 -mabi=ieeelongdouble \
+					 -Wno-psabi -std=c11 \
+					 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ieee128-scanf-binary-c2x.c += -mfloat128 -mabi=ieeelongdouble \
+					 -Wno-psabi -std=c11 \
+					 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ieee128-scanf-binary-gnu11.c += -mfloat128 -mabi=ieeelongdouble \
+					   -Wno-psabi -std=gnu11 \
+					   -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ieee128-scanf-binary-gnu89.c += -mfloat128 -mabi=ieeelongdouble \
+					   -Wno-psabi -std=gnu89 \
+					   -DOBJPFX=\"$(objpfx)\"
+
+endif
+
+ifeq ($(subdir), wcsmbs)
+tests += tst-ibm128-wscanf-binary-c11 \
+	 tst-ibm128-wscanf-binary-c2x \
+	 tst-ibm128-wscanf-binary-gnu11 \
+	 tst-ibm128-wscanf-binary-gnu89 \
+	 tst-ieee128-wscanf-binary-c11 \
+	 tst-ieee128-wscanf-binary-c2x \
+	 tst-ieee128-wscanf-binary-gnu11 \
+	 tst-ieee128-wscanf-binary-gnu89
+
+# Some versions of GCC supported for building glibc do not support -std=c2x, so
+# the test for that version uses -std=c11 and then _ISOC2X_SOURCE is defined in
+# the test as needed.
+CFLAGS-tst-ibm128-wscanf-binary-c11.c += -mabi=ibmlongdouble -Wno-psabi \
+					 -std=c11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ibm128-wscanf-binary-c2x.c += -mabi=ibmlongdouble -Wno-psabi \
+					 -std=c11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ibm128-wscanf-binary-gnu11.c += -mabi=ibmlongdouble -Wno-psabi \
+					   -std=gnu11 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ibm128-wscanf-binary-gnu89.c += -mabi=ibmlongdouble -Wno-psabi \
+					   -std=gnu89 -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ieee128-wscanf-binary-c11.c += -mfloat128 -mabi=ieeelongdouble \
+					  -Wno-psabi -std=c11 \
+					  -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ieee128-wscanf-binary-c2x.c += -mfloat128 -mabi=ieeelongdouble \
+					  -Wno-psabi -std=c11 \
+					  -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ieee128-wscanf-binary-gnu11.c += -mfloat128 -mabi=ieeelongdouble \
+					    -Wno-psabi -std=gnu11 \
+					    -DOBJPFX=\"$(objpfx)\"
+CFLAGS-tst-ieee128-wscanf-binary-gnu89.c += -mfloat128 -mabi=ieeelongdouble \
+					    -Wno-psabi -std=gnu89 \
+					    -DOBJPFX=\"$(objpfx)\"
+
 endif
 
 # Add IEEE binary128 files as make targets.

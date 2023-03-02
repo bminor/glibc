@@ -1428,6 +1428,16 @@ __vfscanf_internal (FILE *s, const char *format, va_list argptr,
 		      c = inchar ();
 		    }
 		}
+	      else if ((mode_flags & SCANF_ISOC23_BIN_CST) != 0
+		       && base == 0
+		       && width != 0
+		       && TOLOWER (c) == L_('b'))
+		{
+		  base = 2;
+		  if (width > 0)
+		    --width;
+		  c = inchar ();
+		}
 	      else if (base == 0)
 		base = 8;
 	    }

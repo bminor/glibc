@@ -3624,7 +3624,8 @@ constant.  The syntax that is recognized is the same as that for the
 @code{strtol} function (@pxref{Parsing of Integers}) with the value
 @code{0} for the @var{base} argument.  (You can print integers in this
 syntax with @code{printf} by using the @samp{#} flag character with the
-@samp{%x}, @samp{%o}, or @samp{%d} conversion.  @xref{Integer Conversions}.)
+@samp{%x}, @samp{%o}, @samp{%b}, or @samp{%d} conversion.
+@xref{Integer Conversions}.)
 
 For example, any of the strings @samp{10}, @samp{0xa}, or @samp{012}
 could be read in as integers under the @samp{%i} conversion.  Each of

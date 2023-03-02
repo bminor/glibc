@@ -781,6 +781,9 @@ extern off64_t _IO_seekpos_unlocked (FILE *, off64_t, int)
    functions use.  When the flag is set to zero, automatic allocation is
    enabled.
 
+   SCANF_ISOC23_BIN_CST, when set to one, indicates the %i accepts
+   binary constants starting 0b or 0B.
+
    SCANF_LDBL_USES_FLOAT128 is used on platforms where the long double
    format used to be different from the IEC 60559 double format *and*
    also different from the Quadruple 128-bits IEC 60559 format (such as
@@ -793,7 +796,8 @@ extern off64_t _IO_seekpos_unlocked (FILE *, off64_t, int)
    as the previous format on that platform.  */
 #define SCANF_LDBL_IS_DBL		0x0001
 #define SCANF_ISOC99_A			0x0002
-#define SCANF_LDBL_USES_FLOAT128	0x0004
+#define SCANF_ISOC23_BIN_CST		0x0004
+#define SCANF_LDBL_USES_FLOAT128	0x0008
 
 extern int __vfscanf_internal (FILE *fp, const char *format, va_list argp,
 			       unsigned int flags)
