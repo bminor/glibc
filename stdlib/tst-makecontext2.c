@@ -63,7 +63,7 @@ do_test (void)
       makecontext (&ucp, (void (*) (void)) cf, 2, 78, 274);
       if (swapcontext (&ucp2, &ucp) != 0)
 	{
-	  puts ("setcontext failed");
+	  puts ("swapcontext failed");
 	  return 1;
 	}
 
