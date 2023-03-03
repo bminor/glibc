@@ -20,47 +20,14 @@
 #define TEST_NAME "strtok"
 #include "bench-string.h"
 
-char *
-oldstrtok (char *s, const char *delim)
-{
-  static char *olds;
-  char *token;
-
-  if (s == NULL)
-    s = olds;
-
-  /* Scan leading delimiters.  */
-  s += strspn (s, delim);
-  if (*s == '\0')
-    {
-      olds = s;
-      return NULL;
-    }
-
-  /* Find the end of the token.  */
-  token = s;
-  s = strpbrk (token, delim);
-  if (s == NULL)
-    /* This token finishes the string.  */
-    olds = strchr (token, '\0');
-  else
-    {
-      /* Terminate the token and make OLDS point past it.  */
-      *s = '\0';
-      olds = s + 1;
-    }
-  return token;
-}
-
 typedef char *(*proto_t) (const char *, const char *);
 
-IMPL (oldstrtok, 0)
 IMPL (strtok, 1)
 
 static void
 do_one_test (impl_t * impl, const char *s1, const char *s2)
 {
-  size_t i, iters = INNER_LOOP_ITERS_SMALL;
+  size_t i, iters = INNER_LOOP_ITERS_MEDIUM;
   timing_t start, stop, cur;
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)
@@ -74,7 +41,6 @@ do_one_test (impl_t * impl, const char *s1, const char *s2)
   TIMING_DIFF (cur, start, stop);
 
   TIMING_PRINT_MEAN ((double) cur, (double) iters);
-
 }
 
 

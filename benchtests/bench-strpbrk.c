@@ -35,30 +35,9 @@
 # endif /* WIDE */
 # include "bench-string.h"
 
-# ifndef WIDE
-#  define SIMPLE_STRPBRK simple_strpbrk
-# else
-#  define SIMPLE_STRPBRK simple_wcspbrk
-# endif /* WIDE */
-
 typedef CHAR *(*proto_t) (const CHAR *, const CHAR *);
-CHAR *SIMPLE_STRPBRK (const CHAR *, const CHAR *);
 
-IMPL (SIMPLE_STRPBRK, 0)
 IMPL (STRPBRK, 1)
-
-CHAR *
-SIMPLE_STRPBRK (const CHAR *s, const CHAR *rej)
-{
-  const CHAR *r;
-  CHAR c;
-
-  while ((c = *s++) != '\0')
-    for (r = rej; *r != '\0'; ++r)
-      if (*r == c)
-	return (CHAR *) s - 1;
-  return NULL;
-}
 
 #endif /* !STRPBRK_RESULT */
 
@@ -69,7 +48,7 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s,
              const CHAR *rej, RES_TYPE exp_res)
 {
   RES_TYPE res = CALL (impl, s, rej);
-  size_t i, iters = INNER_LOOP_ITERS;
+  size_t i, iters = INNER_LOOP_ITERS8 / CHARBYTES;
   timing_t start, stop, cur;
 
   if (res != exp_res)

@@ -20,90 +20,14 @@
 #define TEST_NAME "strsep"
 #include "bench-string.h"
 
-char *
-simple_strsep (char **s1, char *s2)
-{
-  char *begin;
-  char *s;
-  size_t j = 0;
-
-  begin = *s1;
-  s = begin;
-  if (begin == NULL)
-    return NULL;
-  ssize_t s2len = strlen (s2);
-  while (*s)
-    {
-      for (j = 0; j < s2len; j++)
-	{
-	  if (*s == s2[j])
-	    {
-	      s[0] = '\0';
-	      *s1 = s + 1;
-	      return begin;
-	    }
-	}
-      s++;
-    }
-  *s1 = NULL;
-  return begin;
-}
-
-char *
-oldstrsep (char **stringp, const char *delim)
-{
-  char *begin, *end;
-
-  begin = *stringp;
-  if (begin == NULL)
-    return NULL;
-
-  /* A frequent case is when the delimiter string contains only one
-     character.  Here we don't need to call the expensive `strpbrk'
-     function and instead work using `strchr'.  */
-  if (delim[0] == '\0' || delim[1] == '\0')
-    {
-      char ch = delim[0];
-
-      if (ch == '\0')
-	end = NULL;
-      else
-	{
-	  if (*begin == ch)
-	    end = begin;
-	  else if (*begin == '\0')
-	    end = NULL;
-	  else
-	    end = strchr (begin + 1, ch);
-	}
-    }
-  else
-    /* Find the end of the token.  */
-    end = strpbrk (begin, delim);
-
-  if (end)
-    {
-      /* Terminate the token and set *STRINGP past NUL character.  */
-      *end++ = '\0';
-      *stringp = end;
-    }
-  else
-    /* No more delimiters; this is the last token.  */
-    *stringp = NULL;
-
-  return begin;
-}
-
 typedef char *(*proto_t) (const char **, const char *);
 
-IMPL (simple_strsep, 0)
 IMPL (strsep, 1)
-IMPL (oldstrsep, 2)
 
 static void
 do_one_test (impl_t * impl, const char *s1, const char *s2)
 {
-  size_t i, iters = INNER_LOOP_ITERS_SMALL;
+  size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
