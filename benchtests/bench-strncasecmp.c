@@ -23,35 +23,14 @@
 #include "json-lib.h"
 
 typedef int (*proto_t) (const char *, const char *, size_t);
-static int simple_strncasecmp (const char *, const char *, size_t);
 
-IMPL (simple_strncasecmp, 0)
 IMPL (strncasecmp, 1)
-
-static int
-simple_strncasecmp (const char *s1, const char *s2, size_t n)
-{
-  int ret;
-
-  if (n == 0)
-    return 0;
-
-  while ((ret = ((unsigned char) tolower (*s1)
-		 - (unsigned char) tolower (*s2))) == 0
-	 && *s1++)
-    {
-      if (--n == 0)
-	return 0;
-      ++s2;
-    }
-  return ret;
-}
 
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, const char *s1,
              const char *s2, size_t n, int exp_result)
 {
-  size_t i, iters = INNER_LOOP_ITERS;
+  size_t i, iters = INNER_LOOP_ITERS8;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
