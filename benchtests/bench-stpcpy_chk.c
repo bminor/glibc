@@ -22,24 +22,11 @@
 #include "bench-string.h"
 
 extern void __attribute__ ((noreturn)) __chk_fail (void);
-char *simple_stpcpy_chk (char *, const char *, size_t);
 extern char *normal_stpcpy (char *, const char *, size_t)
   __asm ("stpcpy");
 extern char *__stpcpy_chk (char *, const char *, size_t);
 
-IMPL (simple_stpcpy_chk, 0)
 IMPL (normal_stpcpy, 1)
 IMPL (__stpcpy_chk, 2)
-
-char *
-simple_stpcpy_chk (char *dst, const char *src, size_t len)
-{
-  if (! len)
-    __chk_fail ();
-  while ((*dst++ = *src++) != '\0')
-    if (--len == 0)
-      __chk_fail ();
-  return dst - 1;
-}
 
 #include "bench-strcpy_chk.c"

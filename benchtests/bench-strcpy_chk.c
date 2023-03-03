@@ -26,26 +26,13 @@
    symbol, which is part of the public ABI and may be used
    externally. */
 extern void __attribute__ ((noreturn)) __chk_fail (void);
-char *simple_strcpy_chk (char *, const char *, size_t);
 extern char *normal_strcpy (char *, const char *, size_t)
   __asm ("strcpy");
 extern char *__strcpy_chk (char *, const char *, size_t);
 
-IMPL (simple_strcpy_chk, 0)
 IMPL (normal_strcpy, 1)
 IMPL (__strcpy_chk, 2)
 
-char *
-simple_strcpy_chk (char *dst, const char *src, size_t len)
-{
-  char *ret = dst;
-  if (! len)
-    __chk_fail ();
-  while ((*dst++ = *src++) != '\0')
-    if (--len == 0)
-      __chk_fail ();
-  return ret;
-}
 #endif
 
 #include <fcntl.h>
@@ -77,7 +64,7 @@ do_one_test (impl_t *impl, char *dst, const char *src,
 	     size_t len, size_t dlen)
 {
   char *res;
-  size_t i, iters = INNER_LOOP_ITERS8;
+  size_t i, iters = INNER_LOOP_ITERS_LARGE;
   timing_t start, stop, cur;
 
   if (dlen <= len)
