@@ -39,7 +39,6 @@
 # ifdef USE_FOR_STRCHRNUL
 #  undef STRCHR
 #  define STRCHR strchrnul
-#  define simple_STRCHR simple_STRCHRNUL
 # endif /* !USE_FOR_STRCHRNUL */
 # define MIDDLE_CHAR 127
 # define SMALL_CHAR 23
@@ -47,7 +46,6 @@
 # ifdef USE_FOR_STRCHRNUL
 #  undef STRCHR
 #  define STRCHR wcschrnul
-#  define simple_STRCHR simple_WCSCHRNUL
 # endif /* !USE_FOR_STRCHRNUL */
 # define MIDDLE_CHAR 1121
 # define SMALL_CHAR 851
@@ -67,17 +65,18 @@
 
 typedef CHAR *(*proto_t) (const CHAR *, int);
 
-CHAR *
-simple_STRCHR (const CHAR *s, int c)
-{
-  for (; *s != (CHAR) c; ++s)
-    if (*s == '\0')
-      return NULLRET ((CHAR *) s);
-  return (CHAR *) s;
-}
-
-IMPL (simple_STRCHR, 0)
 IMPL (STRCHR, 1)
+
+#ifndef WIDE
+char *generic_strchr (const char *, int);
+char *generic_strchrnul (const char *, int);
+
+# ifndef USE_FOR_STRCHRNUL
+IMPL (generic_strchr, 0)
+# else
+IMPL (generic_strchrnul, 0)
+# endif
+#endif
 
 #ifndef USE_FOR_STRCHRNUL
 /* Random benchmarks for strchr (if return is CHAR or NULL).  The
@@ -97,7 +96,7 @@ static void __attribute__ ((noinline, noclone))
 do_one_rand_plus_branch_test (json_ctx_t *json_ctx, impl_t *impl,
                               const CHAR *s, const CHAR *c)
 {
-  size_t i, iters = INNER_LOOP_ITERS_LARGE;
+  size_t i, iters = INNER_LOOP_ITERS8;
   int must_execute = 0;
   timing_t start, stop, cur;
   TIMING_NOW (start);
@@ -122,7 +121,7 @@ static void __attribute__ ((noinline, noclone))
 do_one_rand_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s,
                   const CHAR *c)
 {
-  size_t i, iters = INNER_LOOP_ITERS_LARGE;
+  size_t i, iters = INNER_LOOP_ITERS8;
   timing_t start, stop, cur;
   TIMING_NOW (start);
   for (i = 0; i < iters; ++i)
@@ -210,7 +209,7 @@ static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s, int c,
              const CHAR *exp_res)
 {
-  size_t i, iters = INNER_LOOP_ITERS_LARGE;
+  size_t i, iters = INNER_LOOP_ITERS8;
   timing_t start, stop, cur;
   const CHAR *res = CALL (impl, s, c);
   if (res != exp_res)
@@ -401,3 +400,12 @@ test_main (void)
 }
 
 #include <support/test-driver.c>
+
+#ifndef WIDE
+# undef STRCHRNUL
+# define STRCHRNUL generic_strchrnul
+# undef STRCHR
+# define STRCHR generic_strchr
+# include <string/strchrnul.c>
+# include <string/strchr.c>
+#endif

@@ -28,30 +28,20 @@
 #define BIG_CHAR MAX_CHAR
 
 #ifdef WIDE
-# define SIMPLE_STRRCHR simple_wcsrchr
 # define SMALL_CHAR 1273
 #else
-# define SIMPLE_STRRCHR simple_strrchr
 # define SMALL_CHAR 127
+
+char *
+generic_strrchr (const char *, int);
+
+IMPL (generic_strrchr, 0)
+
 #endif
 
 typedef CHAR *(*proto_t) (const CHAR *, int);
-CHAR *SIMPLE_STRRCHR (const CHAR *, int);
 
-IMPL (SIMPLE_STRRCHR, 0)
 IMPL (STRRCHR, 1)
-
-CHAR *
-SIMPLE_STRRCHR (const CHAR *s, int c)
-{
-  const CHAR *ret = NULL;
-
-  for (; *s != '\0'; ++s)
-    if (*s == (CHAR) c)
-      ret = s;
-
-  return (CHAR *) (c == '\0' ? s : ret);
-}
 
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s, int c,
@@ -237,3 +227,12 @@ test_main (void)
 }
 
 #include <support/test-driver.c>
+
+#define weak_alias(X,Y)
+#define libc_hidden_builtin_def(X)
+#ifndef WIDE
+# undef STRRCHR
+# define STRRCHR generic_strrchr
+# define __memrchr memrchr
+# include <string/strrchr.c>
+#endif
