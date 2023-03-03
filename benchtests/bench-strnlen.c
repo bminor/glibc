@@ -22,7 +22,6 @@
 #else
 # define TEST_NAME "wcsnlen"
 # define generic_strnlen generic_wcsnlen
-# define memchr_strnlen wcschr_wcsnlen
 #endif /* WIDE */
 #include "bench-string.h"
 #include "json-lib.h"
@@ -38,22 +37,14 @@
 typedef size_t (*proto_t) (const CHAR *, size_t);
 size_t generic_strnlen (const CHAR *, size_t);
 
-size_t
-memchr_strnlen (const CHAR *s, size_t maxlen)
-{
-  const CHAR *s1 = MEMCHR (s, 0, maxlen);
-  return (s1 == NULL) ? maxlen : s1 - s;
-}
-
 IMPL (STRNLEN, 1)
-IMPL (memchr_strnlen, 0)
 IMPL (generic_strnlen, 0)
 
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s, size_t maxlen,
 	     size_t exp_len)
 {
-  size_t len = CALL (impl, s, maxlen), i, iters = INNER_LOOP_ITERS_LARGE;
+  size_t len = CALL (impl, s, maxlen), i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
 
   if (len != exp_len)
