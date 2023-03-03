@@ -21,61 +21,31 @@
 # define TEST_NAME "wcsncmp"
 #else
 # define TEST_NAME "strncmp"
-#endif /* !WIDE */
+#endif
 #include "bench-string.h"
 #include "json-lib.h"
 
 #ifdef WIDE
-# define L(str) L##str
 # define STRDUP wcsdup
-# define SIMPLE_STRNCMP simple_wcsncmp
-
-/* Wcsncmp uses signed semantics for comparison, not unsigned.
-   Avoid using substraction since possible overflow.  */
-int
-simple_wcsncmp (const CHAR *s1, const CHAR *s2, size_t n)
-{
-  wchar_t c1, c2;
-
-  while (n--)
-    {
-      c1 = *s1++;
-      c2 = *s2++;
-      if (c1 == L ('\0') || c1 != c2)
-	return c1 > c2 ? 1 : (c1 < c2 ? -1 : 0);
-    }
-  return 0;
-}
-
 #else
-# define L(str) str
 # define STRDUP strdup
-# define SIMPLE_STRNCMP simple_strncmp
 
-/* Strncmp uses unsigned semantics for comparison.  */
 int
-simple_strncmp (const char *s1, const char *s2, size_t n)
-{
-  int ret = 0;
+generic_strncmp (const char *s1, const char *s2, size_t n);
 
-  while (n-- && (ret = *(unsigned char *) s1 - * (unsigned char *) s2++) == 0
-	 && *s1++);
-  return ret;
-}
+IMPL (generic_strncmp, 0)
 
-#endif /* !WIDE */
+#endif
 
 typedef int (*proto_t) (const CHAR *, const CHAR *, size_t);
 
-IMPL (SIMPLE_STRNCMP, 0)
 IMPL (STRNCMP, 1)
-
 
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s1, const CHAR
 	     *s2, size_t n, int exp_result)
 {
-  size_t i, iters = INNER_LOOP_ITERS8;
+  size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
@@ -240,7 +210,7 @@ do_test_page_boundary (json_ctx_t *json_ctx)
 	  CHAR *s1p = s1 + align1;
 	  CHAR *s2p = s2 + align2;
 	  len = (page_size / CHARBYTES) - 1 - align1;
-	  exp_result = SIMPLE_STRNCMP (s1p, s2p, s);
+	  exp_result = STRNCMP (s1p, s2p, s);
 	  do_one_test_page_boundary (json_ctx, s1p, s2p, align1, align2,
 				     len, s, exp_result);
 	}
@@ -456,3 +426,10 @@ test_main (void)
 }
 
 #include <support/test-driver.c>
+
+#ifndef WIDE
+# undef STRNCMP
+# define STRNCMP generic_strncmp
+# define libc_hidden_builtin_def(X)
+# include <string/strncmp.c>
+#endif

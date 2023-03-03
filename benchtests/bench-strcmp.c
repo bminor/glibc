@@ -23,59 +23,26 @@
 # define TEST_NAME "strcmp"
 #endif
 #include "bench-string.h"
+#include "json-lib.h"
 
 #ifdef WIDE
-# define L(str) L##str
-# define SIMPLE_STRCMP simple_wcscmp
 # define CHARBYTESLOG 2
 # define MIDCHAR 0x7fffffff
 # define LARGECHAR 0xfffffffe
-
-/* Wcscmp uses signed semantics for comparison, not unsigned */
-/* Avoid using substraction since possible overflow */
-
-int
-simple_wcscmp (const wchar_t *s1, const wchar_t *s2)
-{
-  wchar_t c1, c2;
-  do
-    {
-      c1 = *s1++;
-      c2 = *s2++;
-      if (c2 == L'\0')
-      return c1 - c2;
-    }
-  while (c1 == c2);
-
-  return c1 < c2 ? -1 : 1;
-}
-
 #else
-# include <limits.h>
-
-# define L(str) str
-# define SIMPLE_STRCMP simple_strcmp
 # define CHARBYTESLOG 0
 # define MIDCHAR 0x7f
 # define LARGECHAR 0xfe
 
-/* Strcmp uses unsigned semantics for comparison. */
 int
-simple_strcmp (const char *s1, const char *s2)
-{
-  int ret;
+generic_strcmp (const char *s1, const char *s2);
 
-  while ((ret = *(unsigned char *) s1 - *(unsigned char*) s2++) == 0 && *s1++);
-  return ret;
-}
+IMPL (generic_strcmp, 0)
 
 #endif
 
-# include "json-lib.h"
-
 typedef int (*proto_t) (const CHAR *, const CHAR *);
 
-IMPL (SIMPLE_STRCMP, 1)
 IMPL (STRCMP, 1)
 
 static void
@@ -83,7 +50,7 @@ do_one_test (json_ctx_t *json_ctx, impl_t *impl,
 	     const CHAR *s1, const CHAR *s2,
 	     int exp_result)
 {
-  size_t i, iters = INNER_LOOP_ITERS8;
+  size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
@@ -201,7 +168,7 @@ do_test_page_boundary (json_ctx_t *json_ctx)
 	  CHAR *s1p = s1 + align1;
 	  CHAR *s2p = s2 + align2;
 	  len = (page_size / CHARBYTES) - 1 - align1;
-	  exp_result = SIMPLE_STRCMP (s1p, s2p);
+	  exp_result = STRCMP (s1p, s2p);
 	  do_one_test_page_boundary (json_ctx, s1p, s2p, align1, align2,
 				     len, exp_result);
 	}
@@ -324,3 +291,9 @@ test_main (void)
 }
 
 #include <support/test-driver.c>
+
+#ifndef WIDE
+# undef STRCMP
+# define STRCMP generic_strcmp
+# include <string/strcmp.c>
+#endif
