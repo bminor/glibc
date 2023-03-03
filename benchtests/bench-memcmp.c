@@ -19,46 +19,16 @@
 #define TEST_MAIN
 #ifdef TEST_MEMCMPEQ
 # define TEST_NAME "__memcmpeq"
-# define SIMPLE_MEMCMP simple_memcmpeq
 #elif defined WIDE
 # define TEST_NAME "wmemcmp"
-# define SIMPLE_MEMCMP simple_wmemcmp
 #else
 # define TEST_NAME "memcmp"
-# define SIMPLE_MEMCMP simple_memcmp
 #endif
 #include "bench-string.h"
-#ifdef WIDE
-
-int
-SIMPLE_MEMCMP (const wchar_t *s1, const wchar_t *s2, size_t n)
-{
-  int ret = 0;
-  /* Warning!
-	wmemcmp has to use SIGNED comparison for elements.
-	memcmp has to use UNSIGNED comparison for elemnts.
-  */
-  while (n-- && (ret = *s1 < *s2 ? -1 : *s1 == *s2 ? 0 : 1) == 0) {s1++; s2++;}
-  return ret;
-}
-#else
-# include <limits.h>
-
-int
-SIMPLE_MEMCMP (const char *s1, const char *s2, size_t n)
-{
-  int ret = 0;
-
-  while (n-- && (ret = *(unsigned char *) s1++ - *(unsigned char *) s2++) == 0);
-  return ret;
-}
-#endif
-
-# include "json-lib.h"
+#include "json-lib.h"
 
 typedef int (*proto_t) (const CHAR *, const CHAR *, size_t);
 
-IMPL (SIMPLE_MEMCMP, 0)
 IMPL (MEMCMP, 1)
 
 static void
