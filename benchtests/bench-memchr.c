@@ -16,6 +16,8 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include "json-lib.h"
+
 #ifndef WIDE
 # define SMALL_CHAR 127
 #else
@@ -31,35 +33,25 @@
 # endif /* WIDE */
 # include "bench-string.h"
 
-# ifndef WIDE
-#  define SIMPLE_MEMCHR simple_memchr
-# else
-#  define SIMPLE_MEMCHR simple_wmemchr
-# endif /* WIDE */
+typedef void *(*proto_t) (const void *, int, size_t);
 
-typedef CHAR *(*proto_t) (const CHAR *, int, size_t);
-CHAR *SIMPLE_MEMCHR (const CHAR *, int, size_t);
+void *
+generic_memchr (const void *, int, size_t);
 
-IMPL (SIMPLE_MEMCHR, 0)
 IMPL (MEMCHR, 1)
 
-CHAR *
-SIMPLE_MEMCHR (const CHAR *s, int c, size_t n)
-{
-  while (n--)
-    if (*s++ == (CHAR) c)
-      return (CHAR *) s - 1;
-  return NULL;
-}
+# ifndef WIDE
+IMPL (generic_memchr, 0)
+# endif
+
 #endif /* !USE_AS_MEMRCHR */
 
-#include "json-lib.h"
 
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s, int c,
 	     size_t n)
 {
-  size_t i, iters = INNER_LOOP_ITERS_LARGE;
+  size_t i, iters = INNER_LOOP_ITERS;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
@@ -250,3 +242,15 @@ test_main (void)
 }
 
 #include <support/test-driver.c>
+
+#ifndef WIDE
+# ifndef USE_AS_MEMRCHR
+#  undef MEMCHR
+#  define MEMCHR generic_memchr
+#  include <string/memchr.c>
+# else
+#  undef MEMRCHR
+#  define MEMRCHR generic_memrchr
+#  include <string/memrchr.c>
+# endif
+#endif

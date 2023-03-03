@@ -21,20 +21,12 @@
 #include "bench-string.h"
 
 typedef char *(*proto_t) (const char *, int, size_t);
-char *simple_memrchr (const char *, int, size_t);
 
-IMPL (simple_memrchr, 0)
+void *
+generic_memrchr (const void *, int, size_t);
+
 IMPL (memrchr, 1)
-
-char *
-simple_memrchr (const char *s, int c, size_t n)
-{
-  s = s + n;
-  while (n--)
-    if (*--s == (char) c)
-      return (char *) s;
-  return NULL;
-}
+IMPL (generic_memrchr, 0)
 
 #define USE_AS_MEMRCHR
 #include "bench-memchr.c"
