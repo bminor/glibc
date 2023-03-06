@@ -39,10 +39,10 @@ def main():
         sys.exit (77)
 
     linux_version_headers = glibcsyscalls.linux_kernel_version(args.cc)
-    # Constants in glibc were updated to match Linux v6.1.  When glibc
+    # Constants in glibc were updated to match Linux v6.2.  When glibc
     # constants are updated this value should be updated to match the
     # released kernel version from which the constants were taken.
-    linux_version_glibc = (6, 1)
+    linux_version_glibc = (6, 2)
     def check(cte, exclude=None):
         return glibcextract.compare_macro_consts(
                 '#include <sys/mount.h>\n',
