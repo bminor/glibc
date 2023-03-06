@@ -1351,46 +1351,6 @@ endif
 
 endif
 
-# These will have been set by sysdeps/posix/Makefile.
-L_tmpnam  ?= 1
-TMP_MAX   ?= 0
-L_ctermid ?= 1
-L_cuserid ?= 1
-
-stdio_lim = $(common-objpfx)bits/stdio_lim.h
-
-$(stdio_lim:lim.h=%.h) $(stdio_lim:lim.h=%.d): $(stdio_lim:lim.h=%.st); @:
-$(stdio_lim:h=st): $(..)stdio-common/stdio_lim.h.in $(..)Rules \
-		   $(common-objpfx)config.make
-	$(make-target-directory)
-	{ echo '#include "$(..)posix/bits/posix1_lim.h"';		\
-	} |								\
-	$(CC) -E -dM -MD -MP -MF $(@:st=dT) -MT '$(@:st=h) $(@:st=d)' 	\
-	      $(CPPUNDEFS) $(+includes) -xc - -o $(@:st=hT)
-	sed $(sed-remove-objpfx) $(sed-remove-dotdot)			\
-	    $(@:st=dT) > $(@:st=dt)
-	mv -f $(@:st=dt) $(@:st=d)
-	fopen_max=`sed -n 's/^#define OPEN_MAX //1p' $(@:st=hT)`; 	\
-	filename_max=`sed -n 's/^#define PATH_MAX //1p' $(@:st=hT)`;	\
-	fopen_max=$${fopen_max:-16};					\
-	filename_max=$${filename_max:-1024};				\
-	sed -e "s/@FOPEN_MAX@/$$fopen_max/"				\
-	    -e "s/@FILENAME_MAX@/$$filename_max/"			\
-	    -e "s/@L_tmpnam@/$(L_tmpnam)/"				\
-	    -e "s/@TMP_MAX@/$(TMP_MAX)/"				\
-	    -e "s/@L_ctermid@/$(L_ctermid)/"				\
-	    -e "s/@L_cuserid@/$(L_cuserid)/"				\
-	    $< > $(@:st=h.new)
-	$(move-if-change) $(@:st=h.new) $(@:st=h)
-# Remove these last so that they can be examined if something went wrong.
-	rm -f $(@:st=hT) $(@:st=dT) $(@:st=dt)
-	touch $@
-# Get dependencies.
-ifndef no_deps
--include $(stdio_lim:h=d)
-endif
-common-generated += bits/stdio_lim.h bits/stdio_lim.d bits/stdio_lim.st
-
 FORCE:
 
 .PHONY: echo-headers
