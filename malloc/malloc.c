@@ -2725,8 +2725,8 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 					    mp_.hp_flags, av);
 #endif
 	  if (mbrk == MAP_FAILED)
-	    mbrk = sysmalloc_mmap_fallback (&size, nb, old_size, pagesize,
-					    MMAP_AS_MORECORE_SIZE, 0, av);
+	    mbrk = sysmalloc_mmap_fallback (&size, nb, old_size, MMAP_AS_MORECORE_SIZE,
+					    pagesize, 0, av);
 	  if (mbrk != MAP_FAILED)
 	    {
 	      /* We do not need, and cannot use, another sbrk call to find end */
