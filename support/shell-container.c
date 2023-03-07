@@ -37,6 +37,7 @@
 #include <error.h>
 
 #include <support/support.h>
+#include <support/timespec.h>
 
 /* Design considerations
 
@@ -169,6 +170,32 @@ kill_func (char **argv)
   return 0;
 }
 
+/* Emulate the "/bin/sleep" command.  No suffix support.  Options are
+   ignored.  */
+static int
+sleep_func (char **argv)
+{
+  if (argv[0] == NULL)
+    {
+      fprintf (stderr, "sleep: missing operand\n");
+      return 1;
+    }
+  char *endptr = NULL;
+  double sec = strtod (argv[0], &endptr);
+  if (endptr == argv[0] || errno == ERANGE || sec < 0)
+    {
+      fprintf (stderr, "sleep: invalid time interval '%s'\n", argv[0]);
+      return 1;
+    }
+  struct timespec ts = dtotimespec (sec);
+  if (nanosleep (&ts, NULL) < 0)
+    {
+      fprintf (stderr, "sleep: failed to nanosleep: %s\n", strerror (errno));
+      return 1;
+    }
+  return 0;
+}
+
 /* This is a list of all the built-in commands we understand.  */
 static struct {
   const char *name;
@@ -179,6 +206,7 @@ static struct {
   { "cp", copy_func },
   { "exit", exit_func },
   { "kill", kill_func },
+  { "sleep", sleep_func },
   { NULL, NULL }
 };
 
