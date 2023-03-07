@@ -32,6 +32,8 @@ libsupport-routines = \
   check_hostent \
   check_netent \
   delayed_exit \
+  dtotimespec \
+  dtotimespec-time64 \
   ignore_stderr \
   next_to_fault \
   oom_error \

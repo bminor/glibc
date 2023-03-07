@@ -179,16 +179,16 @@ do_system (const char *line)
       as if the shell had terminated using _exit(127).  */
    status = W_EXITCODE (127, 0);
 
+  /* sigaction can not fail with SIGINT/SIGQUIT used with old
+     disposition.  Same applies for sigprocmask.  */
   DO_LOCK ();
   if (SUB_REF () == 0)
     {
-      /* sigaction can not fail with SIGINT/SIGQUIT used with old
-	 disposition.  Same applies for sigprocmask.  */
       __sigaction (SIGINT, &intr, NULL);
       __sigaction (SIGQUIT, &quit, NULL);
-      __sigprocmask (SIG_SETMASK, &omask, NULL);
     }
   DO_UNLOCK ();
+  __sigprocmask (SIG_SETMASK, &omask, NULL);
 
   if (ret != 0)
     __set_errno (ret);
