@@ -1631,6 +1631,7 @@ $(objpfx)multiload.out: $(objpfx)testobj1.so
 LDFLAGS-origtest = -rdynamic
 $(objpfx)origtest.out: $(objpfx)testobj1.so
 
+$(objpfx)resolvfail.out: $(objpfx)testobj1.so
 ifeq ($(have-thread-library),yes)
 $(objpfx)resolvfail: $(shared-thread-library)
 endif
