@@ -99,6 +99,12 @@ dummy_sa_handler (int signal)
 static void
 do_test_signals (void)
 {
+  /* Ensure the initial signal disposition, ignore EINVAL for internal
+     signal such as SIGCANCEL.  */
+  for (int sig = 1; sig < _NSIG; ++sig)
+    sigaction (sig, &(struct sigaction) { .sa_handler = SIG_DFL,
+					  .sa_flags = 0 }, NULL);
+
   {
     /* Check if all signals handler are set to SIG_DFL on spawned process.  */
     spawn_signal_test ("SIG_DFL", NULL);
