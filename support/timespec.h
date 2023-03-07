@@ -57,6 +57,8 @@ int support_timespec_check_in_range (struct timespec expected,
 				     struct timespec observed,
 				     double lower_bound, double upper_bound);
 
+struct timespec dtotimespec (double sec) __attribute__((const));
+
 #else
 struct timespec __REDIRECT (timespec_add, (struct timespec, struct timespec),
 			    timespec_add_time64);
@@ -82,6 +84,8 @@ int __REDIRECT (support_timespec_check_in_range, (struct timespec expected,
 						  double lower_bound,
 						  double upper_bound),
 		support_timespec_check_in_range_time64);
+
+struct timespec __REDIRECT (dtotimespec, (double sec), dtotimespec_time64);
 #endif
 
 /* Check that the timespec on the left represents a time before the
