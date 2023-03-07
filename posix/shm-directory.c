@@ -25,6 +25,7 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <fcntl.h>
+#include <errno.h>
 
 int
 __shm_get_name (struct shmdir_name *result, const char *name, bool sem_prefix)
@@ -54,9 +55,14 @@ __shm_get_name (struct shmdir_name *result, const char *name, bool sem_prefix)
   if (sem_prefix)
     alloc_buffer_copy_bytes (&buffer, "sem.", strlen ("sem."));
   alloc_buffer_copy_bytes (&buffer, name, namelen + 1);
-  if (namelen == 0 || memchr (name, '/', namelen) != NULL
-      || alloc_buffer_has_failed (&buffer))
-    return -1;
+  if (namelen == 0 || memchr (name, '/', namelen) != NULL)
+    return EINVAL;
+  if (alloc_buffer_has_failed (&buffer))
+    {
+      if (namelen > NAME_MAX)
+        return ENAMETOOLONG;
+      return EINVAL;
+    }
   return 0;
 }
 libc_hidden_def (__shm_get_name)

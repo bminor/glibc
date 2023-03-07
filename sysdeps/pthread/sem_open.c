@@ -47,9 +47,10 @@ __sem_open (const char *name, int oflag, ...)
     }
 
   struct shmdir_name dirname;
-  if (__shm_get_name (&dirname, name, true) != 0)
+  int ret = __shm_get_name (&dirname, name, true);
+  if (ret != 0)
     {
-      __set_errno (EINVAL);
+      __set_errno (ret);
       return SEM_FAILED;
     }
 

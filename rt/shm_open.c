@@ -30,9 +30,10 @@ int
 __shm_open (const char *name, int oflag, mode_t mode)
 {
   struct shmdir_name dirname;
-  if (__shm_get_name (&dirname, name, false) != 0)
+  int ret =__shm_get_name (&dirname, name, false);
+  if (ret != 0)
     {
-      __set_errno (EINVAL);
+      __set_errno (ret);
       return -1;
     }
 
