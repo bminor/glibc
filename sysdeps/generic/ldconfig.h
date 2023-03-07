@@ -1,4 +1,4 @@
-/* Copyright (C) 1999-2023 Free Software Foundation, Inc.
+/* Copyright (C) 2022-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +45,8 @@
 #define FLAG_MIPS64_LIBN64_NAN2008	0x0e00
 #define FLAG_RISCV_FLOAT_ABI_SOFT	0x0f00
 #define FLAG_RISCV_FLOAT_ABI_DOUBLE	0x1000
+#define FLAG_LARCH_FLOAT_ABI_SOFT	0x1100
+#define FLAG_LARCH_FLOAT_ABI_DOUBLE	0x1200
 
 /* Name of auxiliary cache.  */
 #define _PATH_LDCONFIG_AUX_CACHE "/var/cache/ldconfig/aux-cache"
