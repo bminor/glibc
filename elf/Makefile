@@ -1190,6 +1190,11 @@ postclean-generated += $(objpfx)/dso-sort-tests-2.generated-makefile \
 ifeq (yes,$(have-tunables))
 $(eval $(call include_dsosort_tests,dso-sort-tests-1.def))
 $(eval $(call include_dsosort_tests,dso-sort-tests-2.def))
+
+# BZ15311 is intentionally underlinked.
+LDFLAGS-tst-bz15311-b.so += -Wl,-z,lazy
+LDFLAGS-tst-bz15311-c.so += -Wl,-z,lazy
+LDFLAGS-tst-bz15311-d.so += -Wl,-z,lazy
 endif
 
 check-abi: $(objpfx)check-abi-ld.out \
@@ -1513,6 +1518,20 @@ LDFLAGS-tst-initordera4.so = -Wl,--no-as-needed
 LDFLAGS-tst-initorderb2.so = -Wl,--no-as-needed
 LDFLAGS-tst-tlsmod5.so = -nostdlib -Wl,--no-as-needed
 LDFLAGS-tst-tlsmod6.so = -nostdlib -Wl,--no-as-needed
+
+# The following tests are underlinked, and rely on late loading.  On toolchains
+# that set -z now by default, this leads to failures to load or fix up the
+# executables being tested.
+LDFLAGS-circlemod2.so = -Wl,-z,lazy
+LDFLAGS-tst-tls20mod-bad.so = -Wl,-z,lazy
+LDFLAGS-reldep6mod1.so += -Wl,-z,lazy
+LDFLAGS-constload2.so = -Wl,-z,lazy
+LDFLAGS-constload3.so = -Wl,-z,lazy
+LDFLAGS-dblloadmod3.so = -Wl,-z,lazy
+LDFLAGS-ifuncmod6.so = -Wl,-z,lazy
+LDFLAGS-ltglobmod2.so = -Wl,-z,lazy
+LDFLAGS-testobj1.so = -Wl,-z,lazy
+LDFLAGS-testobj6.so = -Wl,-z,lazy
 
 testobj1.so-no-z-defs = yes
 testobj3.so-no-z-defs = yes
