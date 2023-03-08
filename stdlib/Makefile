@@ -281,6 +281,7 @@ LDLIBS-test-on_exit-race = $(shared-thread-library)
 LDLIBS-tst-canon-bz26341 = $(shared-thread-library)
 LDLIBS-tst-arc4random-fork = $(shared-thread-library)
 LDLIBS-tst-arc4random-thread = $(shared-thread-library)
+LDLIBS-tst-system = $(shared-thread-library)
 
 LDLIBS-test-dlclose-exit-race = $(shared-thread-library)
 LDFLAGS-test-dlclose-exit-race = $(LDFLAGS-rdynamic)
