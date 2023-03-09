@@ -26,6 +26,11 @@
 # define modes mode
 #endif
 
+/* glibc 2.12 added the 'tai' field to follow along the kernel, but it did
+   not add a compatibility symbol, instead it added __ntp_gettimex.  However
+   ntptimeval was still used in both cases, so to keep compatibility it
+   can not set all the new field.  */
+
 /* clock_adjtime64 with CLOCK_REALTIME does not trigger EINVAL,
    ENODEV, or EOPNOTSUPP.  It might still trigger EPERM.  */
 
@@ -40,7 +45,7 @@ __ntp_gettime64 (struct __ntptimeval64 *ntv)
   ntv->time = tntx.time;
   ntv->maxerror = tntx.maxerror;
   ntv->esterror = tntx.esterror;
-  ntv->tai = tntx.tai;
+
   return result;
 }
 
@@ -54,7 +59,9 @@ __ntp_gettime (struct ntptimeval *ntv)
   int result;
 
   result = __ntp_gettime64 (&ntv64);
-  *ntv = valid_ntptimeval64_to_ntptimeval (ntv64);
+  ntv->time = valid_timeval64_to_timeval (ntv64.time);
+  ntv->maxerror = ntv64.maxerror;
+  ntv->esterror = ntv64.esterror;
 
   return result;
 }
