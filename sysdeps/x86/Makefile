@@ -156,10 +156,13 @@ tests += \
   tst-cet-legacy-9-static \
   tst-cet-legacy-10 \
   tst-cet-legacy-10-static \
+  tst-cet-legacy-10a \
+  tst-cet-legacy-10a-static \
 # tests
 tests-static += \
   tst-cet-legacy-9-static \
   tst-cet-legacy-10-static \
+  tst-cet-legacy-10a-static \
 # tests-static
 tst-cet-legacy-1a-ARGS = -- $(host-test-program-cmd)
 
@@ -226,6 +229,8 @@ CFLAGS-tst-cet-legacy-mod-6c.c += -fcf-protection
 CFLAGS-tst-cet-legacy-7.c += -fcf-protection=none
 CFLAGS-tst-cet-legacy-10.c += -mshstk
 CFLAGS-tst-cet-legacy-10-static.c += -mshstk
+CFLAGS-tst-cet-legacy-10a.c += -fcf-protection=none
+CFLAGS-tst-cet-legacy-10a-static.c += -fcf-protection=none
 
 CFLAGS-tst-shstk-legacy-1a.c += -fcf-protection=none
 CFLAGS-tst-shstk-legacy-1a-static.c += -fcf-protection=none
