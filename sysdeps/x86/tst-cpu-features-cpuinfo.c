@@ -217,7 +217,10 @@ do_test (int argc, char **argv)
   fails += CHECK_PROC (pku, PKU);
   fails += CHECK_PROC (popcnt, POPCNT);
   fails += CHECK_PROC (3dnowprefetch, PREFETCHW);
+#if 0
+  /* NB: /proc/cpuinfo doesn't report this feature.  */
   fails += CHECK_PROC (prefetchwt1, PREFETCHWT1);
+#endif
 #if 0
   /* NB: /proc/cpuinfo doesn't report this feature.  */
   fails += CHECK_PROC (ptwrite, PTWRITE);
