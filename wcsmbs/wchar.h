@@ -386,42 +386,44 @@ extern long double wcstold (const wchar_t *__restrict __nptr,
 			    wchar_t **__restrict __endptr) __THROW;
 #endif /* C99 */
 
+#if __GLIBC_USE (IEC_60559_TYPES_EXT) && __GLIBC_USE (ISOC2X)
 /* Likewise for `_FloatN' and `_FloatNx' when support is enabled.  */
 
-#if __HAVE_FLOAT16 && defined __USE_GNU
+# if __HAVE_FLOAT16
 extern _Float16 wcstof16 (const wchar_t *__restrict __nptr,
 			  wchar_t **__restrict __endptr) __THROW;
-#endif
+# endif
 
-#if __HAVE_FLOAT32 && defined __USE_GNU
+# if __HAVE_FLOAT32
 extern _Float32 wcstof32 (const wchar_t *__restrict __nptr,
 			  wchar_t **__restrict __endptr) __THROW;
-#endif
+# endif
 
-#if __HAVE_FLOAT64 && defined __USE_GNU
+# if __HAVE_FLOAT64
 extern _Float64 wcstof64 (const wchar_t *__restrict __nptr,
 			  wchar_t **__restrict __endptr) __THROW;
-#endif
+# endif
 
-#if __HAVE_FLOAT128 && defined __USE_GNU
+# if __HAVE_FLOAT128
 extern _Float128 wcstof128 (const wchar_t *__restrict __nptr,
 			    wchar_t **__restrict __endptr) __THROW;
-#endif
+# endif
 
-#if __HAVE_FLOAT32X && defined __USE_GNU
+# if __HAVE_FLOAT32X
 extern _Float32x wcstof32x (const wchar_t *__restrict __nptr,
 			    wchar_t **__restrict __endptr) __THROW;
-#endif
+# endif
 
-#if __HAVE_FLOAT64X && defined __USE_GNU
+# if __HAVE_FLOAT64X
 extern _Float64x wcstof64x (const wchar_t *__restrict __nptr,
 			    wchar_t **__restrict __endptr) __THROW;
-#endif
+# endif
 
-#if __HAVE_FLOAT128X && defined __USE_GNU
+# if __HAVE_FLOAT128X
 extern _Float128x wcstof128x (const wchar_t *__restrict __nptr,
 			      wchar_t **__restrict __endptr) __THROW;
-#endif
+# endif
+#endif /* __GLIBC_USE (IEC_60559_TYPES_EXT) && __GLIBC_USE (ISOC2X) */
 
 
 /* Convert initial portion of wide string NPTR to `long int'
