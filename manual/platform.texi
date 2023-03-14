@@ -121,6 +121,12 @@ when it is not allowed, the priority is set to medium.
 @node RISC-V
 @appendixsec RISC-V-specific Facilities
 
+Functions that are lazily bound must be compatible with the standard calling
+convention. When a function is annotated with STO_RISCV_VARIANT_CC, it means
+this function is not compatible with the standard calling convention. The
+dynamic linker will directly resolve it instead of using the lazy binding
+mechanism.
+
 Cache management facilities specific to RISC-V systems that implement the Linux
 ABI are declared in @file{sys/cachectl.h}.
 
