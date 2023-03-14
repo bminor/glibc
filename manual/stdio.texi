@@ -1829,7 +1829,7 @@ output, but are different when used with @code{scanf} for input
 Print an integer as an unsigned binary number.  @samp{%b} uses
 lower-case @samp{b} with the @samp{#} flag and @samp{%B} uses
 upper-case.  @samp{%b} is an ISO C2X feature; @samp{%B} is an
-extension recommended by ISO C2X.  @xref{Integer Conversions}, for
+optional ISO C2X feature.  @xref{Integer Conversions}, for
 details.
 
 @item @samp{%o}

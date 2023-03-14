@@ -164,6 +164,45 @@ typedef wchar_t __gwchar_t;
 # define PRIxPTR	__PRIPTR_PREFIX "x"
 # define PRIXPTR	__PRIPTR_PREFIX "X"
 
+/* Binary notation.  */
+# if __GLIBC_USE (ISOC2X)
+#  define PRIb8		"b"
+#  define PRIb16	"b"
+#  define PRIb32	"b"
+#  define PRIb64	__PRI64_PREFIX "b"
+
+#  define PRIbLEAST8	"b"
+#  define PRIbLEAST16	"b"
+#  define PRIbLEAST32	"b"
+#  define PRIbLEAST64	__PRI64_PREFIX "b"
+
+#  define PRIbFAST8	"b"
+#  define PRIbFAST16	__PRIPTR_PREFIX "b"
+#  define PRIbFAST32	__PRIPTR_PREFIX "b"
+#  define PRIbFAST64	__PRI64_PREFIX "b"
+
+#  define PRIbMAX	__PRI64_PREFIX "b"
+#  define PRIbPTR	__PRIPTR_PREFIX "b"
+
+#  define PRIB8		"B"
+#  define PRIB16	"B"
+#  define PRIB32	"B"
+#  define PRIB64	__PRI64_PREFIX "B"
+
+#  define PRIBLEAST8	"B"
+#  define PRIBLEAST16	"B"
+#  define PRIBLEAST32	"B"
+#  define PRIBLEAST64	__PRI64_PREFIX "B"
+
+#  define PRIBFAST8	"B"
+#  define PRIBFAST16	__PRIPTR_PREFIX "B"
+#  define PRIBFAST32	__PRIPTR_PREFIX "B"
+#  define PRIBFAST64	__PRI64_PREFIX "B"
+
+#  define PRIBMAX	__PRI64_PREFIX "B"
+#  define PRIBPTR	__PRIPTR_PREFIX "B"
+# endif
+
 
 /* Macros for scanning format specifiers.  */
 

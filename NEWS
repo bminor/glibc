@@ -19,6 +19,8 @@ Major new features:
   input to the %i format: fscanf, scanf, sscanf, vscanf, vsscanf,
   vfscanf, fwscanf, wscanf, swscanf, vfwscanf, vwscanf, vswscanf.
 
+* PRIb* and PRIB* macros from C2X have been added to <inttypes.h>.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * In the Linux kernel for the hppa/parisc architecture some of the
