@@ -22,6 +22,7 @@
 #include <cacheinfo.h>
 #include <dl-cacheinfo.h>
 #include <dl-minsigstacksize.h>
+#include <dl-hwcap2.h>
 
 extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
   attribute_hidden;
@@ -298,6 +299,8 @@ update_active (struct cpu_features *cpu_features)
       CPU_FEATURE_SET_ACTIVE (cpu_features, KL);
       CPU_FEATURE_SET_ACTIVE (cpu_features, WIDE_KL);
     }
+
+  dl_check_hwcap2 (cpu_features);
 
   cpu_features->isa_1 = get_isa_level (cpu_features);
 }
