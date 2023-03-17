@@ -171,10 +171,13 @@ tests += \
   tst-shstk-legacy-1a-static \
   tst-shstk-legacy-1b \
   tst-shstk-legacy-1b-static \
+  tst-shstk-legacy-1c \
+  tst-shstk-legacy-1c-static \
 # tests
 tests-static += \
   tst-shstk-legacy-1a-static \
   tst-shstk-legacy-1b-static \
+  tst-shstk-legacy-1c-static \
 # tests-static
 extra-objs += \
   tst-shstk-legacy-1-extra.o \
@@ -272,6 +275,10 @@ $(objpfx)tst-shstk-legacy-1a: $(objpfx)tst-shstk-legacy-1-extra.o
 $(objpfx)tst-shstk-legacy-1a-static: $(objpfx)tst-shstk-legacy-1-extra.o
 $(objpfx)tst-shstk-legacy-1b: $(objpfx)tst-shstk-legacy-1-extra.o
 $(objpfx)tst-shstk-legacy-1b-static: $(objpfx)tst-shstk-legacy-1-extra.o
+tst-shstk-legacy-1c-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-SHSTK
+tst-shstk-legacy-1c-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-SHSTK
+$(objpfx)tst-shstk-legacy-1c: $(objpfx)tst-shstk-legacy-1-extra.o
+$(objpfx)tst-shstk-legacy-1c-static: $(objpfx)tst-shstk-legacy-1-extra.o
 endif
 
 # Add -fcf-protection to CFLAGS when CET is enabled.
