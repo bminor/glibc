@@ -464,7 +464,9 @@ class Context(object):
                                       {'arch': 'i486',
                                        'ccopts': '-m32 -march=i486'},
                                       {'arch': 'i586',
-                                       'ccopts': '-m32 -march=i586'}])
+                                       'ccopts': '-m32 -march=i586'},
+                                      {'variant': 'enable-fortify-source',
+                                       'cfg': ['--enable-fortify-source']}])
         self.add_config(arch='x86_64',
                         os_name='gnu',
                         gcc_cfg=['--disable-multilib'])

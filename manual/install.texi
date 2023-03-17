@@ -303,6 +303,14 @@ Specify the URL that users should visit if they wish to report a bug,
 to be included in @option{--help} output from programs installed with
 @theglibc{}.  The default value refers to the main bug-reporting
 information for @theglibc{}.
+
+@item --enable-fortify-source
+@itemx --enable-fortify-source=@var{LEVEL}
+Use -D_FORTIFY_SOURCE=@option{LEVEL} to control hardening in the GNU C Library.
+If not provided, @option{LEVEL} defaults to highest possible value supported by
+the build compiler.
+
+Default is to disable fortification.
 @end table
 
 To build the library and related programs, type @code{make}.  This will

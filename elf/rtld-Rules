@@ -144,6 +144,6 @@ cpp-srcs-left := $(rtld-modules:%.os=%)
 lib := rtld
 include $(patsubst %,$(..)libof-iterator.mk,$(cpp-srcs-left))
 
-rtld-CFLAGS += $(no-stack-protector)
+rtld-CFLAGS += $(no-stack-protector) $(no-fortify-source)
 
 endif

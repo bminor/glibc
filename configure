@@ -611,7 +611,10 @@ libc_cv_gcc_unwind_find_fde
 libc_extra_cppflags
 libc_extra_cflags
 libc_cv_cxx_thread_local
-CPPUNDEFS
+fortify_source
+no_fortify_source
+libc_cv_fortify_source
+enable_fortify_source
 have_selinux
 have_libcap
 have_libaudit
@@ -782,6 +785,7 @@ enable_pt_chown
 enable_mathvec
 enable_cet
 enable_scv
+enable_fortify_source
 with_cpu
 '
       ac_precious_vars='build_alias
@@ -1452,6 +1456,10 @@ Optional Features:
                           (CET), x86 only
   --disable-scv           syscalls will not use scv instruction, even if the
                           kernel supports it, powerpc only
+  --enable-fortify-source[=1|2|3]
+                          Use -D_FORTIFY_SOURCE=[1|2|3] to control code
+                          hardening, defaults to highest possible value
+                          supported by the build compiler.
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -3716,6 +3724,18 @@ if test "$use_scv" != "no"; then :
   $as_echo "#define USE_PPC_SCV 1" >>confdefs.h
 
 fi
+
+# Check whether --enable-fortify-source was given.
+if test "${enable_fortify_source+set}" = set; then :
+  enableval=$enable_fortify_source; enable_fortify_source=$enableval
+else
+  enable_fortify_source=no
+fi
+
+case "$enable_fortify_source" in
+1|2|3|no|yes) ;;
+*) as_fn_error $? "Not a valid argument for --enable-fortify-source: \"$enable_fortify_source\"" "$LINENO" 5;;
+esac
 
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
@@ -6353,38 +6373,65 @@ $as_echo "#define HAVE_LIBCAP 1" >>confdefs.h
 fi
 
 
-CPPUNDEFS=
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for _FORTIFY_SOURCE predefine" >&5
-$as_echo_n "checking for _FORTIFY_SOURCE predefine... " >&6; }
-if ${libc_cv_predef_fortify_source+:} false; then :
+no_fortify_source="-Wp,-U_FORTIFY_SOURCE"
+fortify_source="${no_fortify_source}"
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for __builtin_dynamic_object_size" >&5
+$as_echo_n "checking for __builtin_dynamic_object_size... " >&6; }
+if ${libc_cv___builtin_dynamic_object_size+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
 main ()
 {
-
-#ifdef _FORTIFY_SOURCE
-# error bogon
-#endif
+__builtin_dynamic_object_size("", 0)
   ;
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  libc_cv_predef_fortify_source=no
+if ac_fn_c_try_link "$LINENO"; then :
+  libc_cv___builtin_dynamic_object_size=yes
+         if test "$enable_fortify_source" = yes; then :
+  enable_fortify_source=3
+fi
 else
-  libc_cv_predef_fortify_source=yes
+  libc_cv___builtin_dynamic_object_size=no
+         if test "$enable_fortify_source" = yes; then :
+  enable_fortify_source=2
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv_predef_fortify_source" >&5
-$as_echo "$libc_cv_predef_fortify_source" >&6; }
-if test $libc_cv_predef_fortify_source = yes; then
-  CPPUNDEFS="${CPPUNDEFS:+$CPPUNDEFS }-U_FORTIFY_SOURCE"
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+
 fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $libc_cv___builtin_dynamic_object_size" >&5
+$as_echo "$libc_cv___builtin_dynamic_object_size" >&6; }
+
+case $enable_fortify_source in #(
+  1|2) :
+    libc_cv_fortify_source=yes ;; #(
+  3) :
+    if test "$libc_cv___builtin_dynamic_object_size" = yes; then :
+  libc_cv_fortify_source=yes
+else
+  as_fn_error $? "Compiler doesn't provide necessary support for _FORTIFY_SOURCE=3" "$LINENO" 5
+fi ;; #(
+  *) :
+    libc_cv_fortify_source=no ;;
+esac
+
+if test "$libc_cv_fortify_source" = yes; then :
+  fortify_source="${fortify_source},-D_FORTIFY_SOURCE=${enable_fortify_source}"
+
+fi
+
+
+
+
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the assembler requires one version per symbol" >&5

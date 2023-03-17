@@ -543,12 +543,13 @@ endif  # +link
 # ARM, gcc always produces different debugging symbols when invoked with
 # a -O greater than 0 than when invoked with -O0, regardless of anything else
 # we're using to suppress optimizations.  Therefore, we need to explicitly pass
-# -O0 to it through CFLAGS.
+# -O0 to it through CFLAGS. As a result, any fortification needs to be disabled
+# as it needs -O greater than 0.
 # Additionally, the build system will try to -include $(common-objpfx)/config.h
 # when compiling the tests, which will throw an error if some special macros
 # (such as __OPTIMIZE__ and IS_IN_build) aren't defined.  To avoid this, we
 # tell gcc to define IS_IN_build.
-CFLAGS-printers-tests := -O0 -ggdb3 -DIS_IN_build
+CFLAGS-printers-tests := -O0 -ggdb3 -DIS_IN_build $(no-fortify-source)
 
 ifeq (yes,$(build-shared))
 # These indicate whether to link using the built ld.so or the installed one.
@@ -901,6 +902,16 @@ define elide-stack-protector
 $(if $(filter $(@F),$(patsubst %,%$(1),$(2))), $(no-stack-protector))
 endef
 
+# We might want to compile with fortify-source
+ifneq ($(fortify-source),)
++fortify-source=$(fortify-source)
+endif
+
+# Some routine can't be fortified like the ones used by fortify
+define elide-fortify-source
+$(if $(filter $(@F),$(patsubst %,%$(1),$(2))), $(no-fortify-source))
+endef
+
 # The program that makes Emacs-style TAGS files.
 ETAGS	:= etags
 
@@ -961,6 +972,18 @@ endif	# $(+cflags) == ""
 	   $(+stack-protector) -fno-common
 +gcc-nowarn := -w
 
+# We must filter out elf because the early bootstrap of the dynamic loader
+# cannot be fortified. Likewise we exclude dlfcn because it is entangled
+# with the loader. We must filter out csu because early startup, like the
+# loader, cannot be fortified. Lastly debug is the fortification routines
+# themselves and they cannot be fortified.
+do-fortify = $(filter-out elf dlfcn csu debug,$(subdir))
+ifeq ($(do-fortify),$(subdir))
++cflags += $(+fortify-source)
+else
++cflags += $(no-fortify-source)
+endif
+
 # Each sysdeps directory can contain header files that both will be
 # used to compile and will be installed.  Each can also contain an
 # include/ subdirectory, whose header files will be used to compile
@@ -1010,7 +1033,7 @@ module-cppflags = $(if $(filter %.mk.i %.v.i,$(@F)),,$(module-cppflags-real))
 # Note that we can't use -std=* in CPPFLAGS, because it overrides
 # the implicit -lang-asm and breaks cpp behavior for .S files--notably
 # it causes cpp to stop predefining __ASSEMBLER__.
-CPPFLAGS = $(config-extra-cppflags) $(CPPUNDEFS) $(CPPFLAGS-config) \
+CPPFLAGS = $(config-extra-cppflags) $(CPPFLAGS-config) \
 	   $($(subdir)-CPPFLAGS) \
 	   $(+includes) $(defines) $(module-cppflags) \
 	   -include $(..)include/libc-symbols.h $(sysdep-CPPFLAGS) \
@@ -1049,6 +1072,8 @@ object-suffixes :=
 CPPFLAGS-.o = $(pic-default)
 # libc.a must be compiled with -fPIE/-fpie for static PIE.
 CFLAGS-.o = $(filter %frame-pointer,$(+cflags)) $(pie-default)
+CFLAGS-.o += $(call elide-fortify-source,.o,$(routines_no_fortify))
+CFLAGS-.o += $(call elide-fortify-source,_chk.o,$(routines_no_fortify))
 libtype.o := lib%.a
 object-suffixes += .o
 ifeq (yes,$(build-shared))
@@ -1058,6 +1083,8 @@ object-suffixes += .os
 pic-cppflags = -DPIC -DSHARED
 CPPFLAGS-.os = $(pic-cppflags)
 CFLAGS-.os = $(filter %frame-pointer,$(+cflags)) $(pic-ccflag)
+CFLAGS-.os += $(call elide-fortify-source,.os,$(routines_no_fortify))
+CFLAGS-.os += $(call elide-fortify-source,_chk.os,$(routines_no_fortify))
 libtype.os := lib%_pic.a
 # This can be changed by a sysdep makefile
 pic-ccflag = -fPIC
@@ -1077,6 +1104,8 @@ object-suffixes += .op
 CPPFLAGS-.op = -DPROF $(pic-default)
 # libc_p.a must be compiled with -fPIE/-fpie for static PIE.
 CFLAGS-.op = -pg $(pie-default)
+CFLAGS-.op += $(call elide-fortify-source,.op,$(routines_no_fortify))
+CFLAGS-.op += $(call elide-fortify-source,_chk.op,$(routines_no_fortify))
 libtype.op = lib%_p.a
 endif
 

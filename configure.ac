@@ -466,6 +466,17 @@ AC_ARG_ENABLE([scv],
 
 AS_IF([[test "$use_scv" != "no"]],[AC_DEFINE(USE_PPC_SCV)])
 
+dnl Build glibc with _FORTIFY_SOURCE
+AC_ARG_ENABLE(fortify-source,
+              AS_HELP_STRING([--enable-fortify-source@<:@=1|2|3@:>@],
+                             [Use -D_FORTIFY_SOURCE=[1|2|3] to control code hardening, defaults to highest possible value supported by the build compiler.]),
+              [enable_fortify_source=$enableval],
+              [enable_fortify_source=no])
+case "$enable_fortify_source" in
+1|2|3|no|yes) ;;
+*) AC_MSG_ERROR([Not a valid argument for --enable-fortify-source: "$enable_fortify_source"]);;
+esac
+
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.
@@ -1559,24 +1570,37 @@ if test "x$have_selinux" = xyes; then
 fi
 AC_SUBST(have_selinux)
 
-CPPUNDEFS=
-dnl Check for silly hacked compilers predefining _FORTIFY_SOURCE.
-dnl Since we are building the implementations of the fortified functions here,
-dnl having the macro defined interacts very badly.
-dnl _FORTIFY_SOURCE requires compiler optimization level 1 (gcc -O1)
-dnl and above (see "man FEATURE_TEST_MACROS").
-dnl So do NOT replace AC_COMPILE_IFELSE with AC_PREPROC_IFELSE.
-AC_CACHE_CHECK([for _FORTIFY_SOURCE predefine], libc_cv_predef_fortify_source,
-[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[
-#ifdef _FORTIFY_SOURCE
-# error bogon
-#endif]])],
-		[libc_cv_predef_fortify_source=no],
-		[libc_cv_predef_fortify_source=yes])])
-if test $libc_cv_predef_fortify_source = yes; then
-  CPPUNDEFS="${CPPUNDEFS:+$CPPUNDEFS }-U_FORTIFY_SOURCE"
-fi
-AC_SUBST(CPPUNDEFS)
+dnl Check if we support the requested _FORTIFY_SOURCE level
+dnl If not, then don't use it.
+dnl Note that _FORTIFY_SOURCE may have been set through FLAGS too.
+dnl _FORTIFY_SOURCE value will be selectively disabled for function that can't
+dnl support it
+no_fortify_source="-Wp,-U_FORTIFY_SOURCE"
+fortify_source="${no_fortify_source}"
+
+AC_CACHE_CHECK([for __builtin_dynamic_object_size], [libc_cv___builtin_dynamic_object_size], [
+    AC_LINK_IFELSE([AC_LANG_PROGRAM([], [__builtin_dynamic_object_size("", 0)])],
+        [libc_cv___builtin_dynamic_object_size=yes
+         AS_IF([test "$enable_fortify_source" = yes], [enable_fortify_source=3])],
+        [libc_cv___builtin_dynamic_object_size=no
+         AS_IF([test "$enable_fortify_source" = yes], [enable_fortify_source=2])])
+])
+
+AS_CASE([$enable_fortify_source],
+        [1|2], [libc_cv_fortify_source=yes],
+        [3], [AS_IF([test "$libc_cv___builtin_dynamic_object_size" = yes],
+                    [libc_cv_fortify_source=yes],
+                    [AC_MSG_ERROR([Compiler doesn't provide necessary support for _FORTIFY_SOURCE=3])])],
+        [libc_cv_fortify_source=no])
+
+AS_IF([test "$libc_cv_fortify_source" = yes],
+      [fortify_source="${fortify_source},-D_FORTIFY_SOURCE=${enable_fortify_source}"]
+      )
+
+AC_SUBST(enable_fortify_source)
+AC_SUBST(libc_cv_fortify_source)
+AC_SUBST(no_fortify_source)
+AC_SUBST(fortify_source)
 
 dnl Starting with binutils 2.35, GAS can attach multiple symbol versions
 dnl to one symbol (PR 23840).

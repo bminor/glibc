@@ -276,6 +276,14 @@ if ‘CFLAGS’ is specified it must enable optimization.  For example:
      the GNU C Library.  The default value refers to the main
      bug-reporting information for the GNU C Library.
 
+‘--enable-fortify-source’
+‘--enable-fortify-source=LEVEL’
+     Use -D_FORTIFY_SOURCE=‘LEVEL’ to control hardening in the GNU C
+     Library.  If not provided, ‘LEVEL’ defaults to highest possible
+     value supported by the build compiler.
+
+     Default is to disable fortification.
+
    To build the library and related programs, type ‘make’.  This will
 produce a lot of output, some of which may look like errors from ‘make’
 but aren’t.  Look for error messages from ‘make’ containing ‘***’.

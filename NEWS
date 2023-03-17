@@ -48,6 +48,12 @@ Major new features:
 * The strlcpy and strlcat functions have been added.  They are derived
   from OpenBSD, and are expected to be added to a future POSIX version.
 
+* A new configure option, "--enable-fortify-source", can be used to build the
+  GNU C Library with _FORTIFY_SOURCE. The level of fortification can either be
+  provided, or is set to the highest value supported by the compiler. If not
+  explicitly enabled, then fortify source is forcibly disabled so to keep
+  original behavior unchanged.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * In the Linux kernel for the hppa/parisc architecture some of the
