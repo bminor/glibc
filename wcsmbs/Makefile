@@ -121,6 +121,27 @@ routines := \
   wmemset \
   # routines
 
+# Exclude fortified routines from being built with _FORTIFY_SOURCE
+routines_no_fortify += \
+  mbsnrtowcs \
+  mbsrtowcs \
+  wcpcpy \
+  wcpncpy \
+  wcrtomb \
+  wcscat \
+  wcscpy \
+  wcslcat \
+  wcslcpy \
+  wcsncat \
+  wcsncpy \
+  wcsnrtombs \
+  wcsrtombs \
+  wmemcpy \
+  wmemmove \
+  wmempcpy \
+  wmemset \
+  # routines_no_fortify
+
 tests := \
   test-c8rtomb \
   test-char-types \
@@ -231,7 +252,7 @@ CFLAGS-wcstod_l.c += $(strtox-CFLAGS) $(config-cflags-wno-ignored-attributes)
 CFLAGS-wcstold_l.c += $(strtox-CFLAGS) $(config-cflags-wno-ignored-attributes)
 CFLAGS-wcstof128_l.c += $(strtox-CFLAGS)
 CFLAGS-wcstof_l.c += $(strtox-CFLAGS) $(config-cflags-wno-ignored-attributes)
-CPPFLAGS-tst-wchar-h.c += -D_FORTIFY_SOURCE=2
+CPPFLAGS-tst-wchar-h.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
 
 CFLAGS-wcschr.c += $(config-cflags-wno-ignored-attributes)
 CFLAGS-wmemchr.c += $(config-cflags-wno-ignored-attributes)

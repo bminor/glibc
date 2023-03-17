@@ -120,6 +120,9 @@ CFLAGS-sync_file_range.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pselect32.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=(0x80000000-sysconf(_SC_PAGESIZE))"
 
+# The test triggers FORTIFY abortion due to purposely wrong parameters
+CFLAGS-test-errno-linux.c += $(no-fortify-source)
+
 sysdep_headers += \
   bits/a.out.h \
   bits/epoll.h \

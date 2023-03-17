@@ -118,6 +118,23 @@ routines := \
   xpg-strerror \
 # routines
 
+# Exclude fortified routines from being built with _FORTIFY_SOURCE
+routines_no_fortify += \
+  explicit_bzero \
+  memcpy \
+  memmove \
+  mempcpy \
+  memset \
+  stpcpy \
+  stpncpy \
+  strcat \
+  strcpy \
+  strlcat \
+  strlcpy \
+  strncat \
+  strncpy \
+  # routines_no_fortify
+
 tests := \
   bug-envz1 \
   bug-strcoll1 \

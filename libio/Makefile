@@ -53,6 +53,21 @@ routines	:=							      \
 
 gen-as-const-headers += libio-macros.sym
 
+# Exclude fortified routines from being built with _FORTIFY_SOURCE
+routines_no_fortify += \
+  fwprintf \
+  iofgets \
+  iofgets_u \
+  iofgetws \
+  iofgetws_u \
+  swprintf \
+  vasprintf \
+  vsnprintf \
+  vswprintf \
+  vwprintf \
+  wprintf \
+  # routines_no_fortify
+
 tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst_wprintf2 tst-widetext test-fmemopen tst-ext tst-ext2 \
 	tst-fgetws tst-ungetwc1 tst-ungetwc2 tst-swscanf tst-sscanf	      \
@@ -165,11 +180,15 @@ CFLAGS-iofgets_u.c += $(config-cflags-wno-ignored-attributes)
 CFLAGS-iofputs_u.c += $(config-cflags-wno-ignored-attributes)
 # XXX Do we need filedoalloc and wfiledoalloc?  Others?
 
+# Prevent fortification as these are built with -O0
+CFLAGS-tst-bz24051.c += $(no-fortify-source)
+CFLAGS-tst-bz24153.c += $(no-fortify-source)
+
 CFLAGS-tst_putwc.c += -DOBJPFX=\"$(objpfx)\"
 
 # These test cases intentionally use overlapping arguments
-CFLAGS-tst-sprintf-ub.c += -Wno-restrict
-CFLAGS-tst-sprintf-chk-ub.c += -Wno-restrict
+CFLAGS-tst-sprintf-ub.c += -Wno-restrict $(no-fortify-source)
+CFLAGS-tst-sprintf-chk-ub.c += -Wno-restrict $(no-fortify-source)
 
 LDFLAGS-tst-bz24228 = -Wl,--version-script=tst-bz24228.map
 

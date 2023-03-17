@@ -60,6 +60,12 @@ routines := \
   socketpair \
   # routines
 
+# Exclude fortified routines from being built with _FORTIFY_SOURCE
+routines_no_fortify += \
+  recv \
+  recvfrom \
+  # routines_no_fortify
+
 tests := \
   tst-accept4 \
   tst-cmsg_cloexec \

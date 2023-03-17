@@ -117,6 +117,19 @@ routines := \
   wprintf_function_invoke \
   # routines
 
+# Exclude fortified routines from being built with _FORTIFY_SOURCE
+routines_no_fortify += \
+  asprintf \
+  dprintf \
+  fprintf \
+  printf \
+  snprintf \
+  sprintf \
+  vfprintf \
+  vfwprintf \
+  vprintf \
+  # routines_no_fortify
+
 aux := \
   errlist \
   errlist-data \
@@ -461,7 +474,7 @@ CFLAGS-tst-gets.c += -Wno-deprecated-declarations
 
 # BZ #11319 was first fixed for regular vdprintf, then reopened because
 # the fortified version had the same bug.
-CFLAGS-tst-bz11319-fortify2.c += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
+CFLAGS-tst-bz11319-fortify2.c += $(no-fortify-source),-D_FORTIFY_SOURCE=2
 
 CFLAGS-tst-memstream-string.c += -fno-builtin-fprintf
 

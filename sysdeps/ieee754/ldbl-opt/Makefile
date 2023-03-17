@@ -269,3 +269,32 @@ CFLAGS-tst-nldbl-wscanf-binary-gnu89.c += -mlong-double-64 -std=gnu89 \
 					  -DOBJPFX=\"$(objpfx)\"
 
 endif
+
+routines_no_fortify += \
+  nldbl-asprintf \
+  nldbl-dprintf \
+  nldbl-fprintf \
+  nldbl-fwprintf \
+  nldbl-obstack_printf \
+  nldbl-obstack_vprintf \
+  nldbl-printf \
+  nldbl-snprintf \
+  nldbl-sprintf \
+  nldbl-swprintf \
+  nldbl-syslog \
+  nldbl-vasprintf \
+  nldbl-vdprintf \
+  nldbl-vfprintf \
+  nldbl-vfwprintf \
+  nldbl-vprintf \
+  nldbl-vsnprintf \
+  nldbl-vsprintf \
+  nldbl-vswprintf \
+  nldbl-vsyslog \
+  nldbl-vwprintf \
+  nldbl-wprintf \
+  # routines_no_fortify
+
+# We can't rely on Makeconfig here for whatever reason
+CFLAGS-.oS += $(call elide-fortify-source,.oS,$(routines_no_fortify))
+CFLAGS-.oS += $(call elide-fortify-source,_chk.oS,$(routines_no_fortify))

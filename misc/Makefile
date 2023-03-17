@@ -205,6 +205,13 @@ routines := \
   writev \
   # routines
 
+# Exclude fortified routines from being built with _FORTIFY_SOURCE
+routines_no_fortify += \
+  getdomain \
+  gethostname \
+  syslog \
+  # routines_no_fortify
+
 generated += \
   tst-allocate_once-mem.out \
   tst-allocate_once.mtrace \

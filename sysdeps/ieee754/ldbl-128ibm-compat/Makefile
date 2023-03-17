@@ -88,13 +88,19 @@ tests-internal += test-wprintf-ieee128 test-wprintf-ibm128
 CFLAGS-test-wprintf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-test-wprintf-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
 
+# The following tests are setting _FORTIFY_SOURCE internally
 tests-internal += test-obstack-ieee128 test-obstack-ibm128
-CFLAGS-test-obstack-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
-CFLAGS-test-obstack-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+CFLAGS-test-obstack-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi \
+				 $(no-fortify-source)
+CFLAGS-test-obstack-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
+				$(no-fortify-source)
 
+# The following tests are setting _FORTIFY_SOURCE internally
 tests-internal += test-obstack-chk-ieee128 test-obstack-chk-ibm128
-CFLAGS-test-obstack-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
-CFLAGS-test-obstack-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+CFLAGS-test-obstack-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi \
+				     $(no-fortify-source)
+CFLAGS-test-obstack-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
+				    $(no-fortify-source)
 
 tests-internal += test-scanf-ieee128 test-scanf-ibm128
 CFLAGS-test-scanf-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi -std=c89 -D_GNU_SOURCE
@@ -216,25 +222,37 @@ ldbl-extra-routines += asprintf_chk \
 		       obstack_chk \
 		       vobstack_chk
 
+# The following tests are setting _FORTIFY_SOURCE internally
 tests-internal += test-printf-chk-ieee128 test-printf-chk-ibm128
-CFLAGS-test-printf-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
-CFLAGS-test-printf-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+CFLAGS-test-printf-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi \
+				    $(no-fortify-source)
+CFLAGS-test-printf-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
+				   $(no-fortify-source)
 
+# The following tests are setting _FORTIFY_SOURCE internally
 tests-internal += test-printf-chk-redir-ieee128 test-printf-chk-redir-ibm128
 CFLAGS-test-printf-chk-redir-ieee128.c += -mfloat128 -mabi=ieeelongdouble \
-					  -Wno-psabi -Wno-unused-result
+					  -Wno-psabi -Wno-unused-result \
+					  $(no-fortify-source)
 CFLAGS-test-printf-chk-redir-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
-					 -Wno-unused-result
+					 -Wno-unused-result \
+					 $(no-fortify-source)
 
+# The following tests are setting _FORTIFY_SOURCE internally
 tests-internal += test-wprintf-chk-ieee128 test-wprintf-chk-ibm128
-CFLAGS-test-wprintf-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
-CFLAGS-test-wprintf-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+CFLAGS-test-wprintf-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi \
+				     $(no-fortify-source)
+CFLAGS-test-wprintf-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
+				    $(no-fortify-source)
 
+# The following tests are setting _FORTIFY_SOURCE internally
 tests-internal += test-wprintf-chk-redir-ieee128 test-wprintf-chk-redir-ibm128
 CFLAGS-test-wprintf-chk-redir-ieee128.c += -mfloat128 -mabi=ieeelongdouble \
-					   -Wno-psabi -Wno-unused-result
+					   -Wno-psabi -Wno-unused-result \
+					   $(no-fortify-source)
 CFLAGS-test-wprintf-chk-redir-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
-					  -Wno-unused-result
+					  -Wno-unused-result \
+					  $(no-fortify-source)
 endif
 
 ifeq ($(subdir),argp)
@@ -281,13 +299,19 @@ CFLAGS-tst-ieee128-error.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-tst-ieee128-efgcvt.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 CFLAGS-tst-ieee128-errorfptr.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
 
+# The following tests are setting _FORTIFY_SOURCE internally
 tests-container += test-syslog-ieee128 test-syslog-ibm128
-CFLAGS-test-syslog-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
-CFLAGS-test-syslog-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+CFLAGS-test-syslog-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi \
+				$(no-fortify-source)
+CFLAGS-test-syslog-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
+			       $(no-fortify-source)
 
+# The following tests are setting _FORTIFY_SOURCE internally
 tests-container += test-syslog-chk-ieee128 test-syslog-chk-ibm128
-CFLAGS-test-syslog-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi
-CFLAGS-test-syslog-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi
+CFLAGS-test-syslog-chk-ieee128.c += -mfloat128 -mabi=ieeelongdouble -Wno-psabi \
+				    $(no-fortify-source)
+CFLAGS-test-syslog-chk-ibm128.c += -mabi=ibmlongdouble -Wno-psabi \
+				   $(no-fortify-source)
 endif
 
 ifeq ($(subdir),stdlib)
@@ -394,6 +418,31 @@ endif
 
 # Add IEEE binary128 files as make targets.
 routines += $(foreach r,$(ldbl-extra-routines),ieee128-$(r))
+
+routines_no_fortify += \
+  ieee128-asprintf \
+  ieee128-dprintf \
+  ieee128-fprintf \
+  ieee128-fwprintf \
+  ieee128-obstack \
+  ieee128-printf \
+  ieee128-snprintf \
+  ieee128-sprintf \
+  ieee128-swprintf \
+  ieee128-syslog \
+  ieee128-vasprintf \
+  ieee128-vdprintf \
+  ieee128-vfprintf \
+  ieee128-vfwprintf \
+  ieee128-vobstack \
+  ieee128-vprintf \
+  ieee128-vsnprintf \
+  ieee128-vsprintf \
+  ieee128-vswprintf \
+  ieee128-vsyslog \
+  ieee128-vwprintf \
+  ieee128-wprintf \
+  # routines_no_fortify
 
 # On powerpc64le, the routines responsible for converting between long
 # double and string (e.g.: printf, scanf, strtold, strfroml) default to

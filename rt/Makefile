@@ -100,6 +100,11 @@ CFLAGS-aio_suspend.c += -fexceptions
 CFLAGS-mq_timedreceive.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-mq_timedsend.c += -fexceptions -fasynchronous-unwind-tables
 
+# Exclude fortified routines from being built with _FORTIFY_SOURCE
+routines_no_fortify += \
+  mq_open \
+  # routines_no_fortify
+
 LDFLAGS-rt.so = -Wl,--enable-new-dtags,-z,nodelete
 
 $(objpfx)librt.so: $(shared-thread-library)

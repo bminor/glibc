@@ -145,6 +145,13 @@ routines := \
   xpg_basename \
   # routines
 
+# Exclude fortified routines from being built with _FORTIFY_SOURCE
+routines_no_fortify += \
+  mbstowcs \
+  wcstombs \
+  wctomb \
+  # routines_no_fortify
+
 aux = \
   grouping \
   groupingwc \

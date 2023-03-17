@@ -304,6 +304,10 @@ tests-nolibpthread += \
 CFLAGS-tst-cleanup2.c += -fno-builtin
 CFLAGS-tst-cleanupx2.c += -fno-builtin
 
+# Disable fortification due to sprintf(NULL,...)
+CFLAGS-tst-cleanup2.c += $(no-fortify-source)
+CFLAGS-tst-cleanupx2.c += $(no-fortify-source)
+
 tests += \
   tst-cancelx2 \
   tst-cancelx3 \

@@ -149,6 +149,22 @@ routines := \
   write \
   # routines
 
+# Exclude fortified routines from being built with _FORTIFY_SOURCE
+routines_no_fortify += \
+  getcwd \
+  getwd \
+  open \
+  open64 \
+  openat \
+  openat64 \
+  poll \
+  ppoll \
+  read \
+  readlink \
+  readlinkat \
+  ttyname_r \
+  # routines_no_fortify
+
 others := \
  pwd \
  # others
