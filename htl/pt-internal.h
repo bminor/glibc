@@ -165,6 +165,7 @@ __pthread_dequeue (struct __pthread *thread)
 
 /* The total number of threads currently active.  */
 extern unsigned int __pthread_total;
+libc_hidden_proto (__pthread_total)
 
 /* Concurrency hint.  */
 extern int __pthread_concurrency;

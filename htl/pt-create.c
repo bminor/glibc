@@ -36,12 +36,6 @@
 # include <locale.h>
 #endif
 
-/* The total number of pthreads currently active.  This is defined
-   here since it would be really stupid to have a threads-using
-   program that doesn't call `pthread_create'.  */
-unsigned int __pthread_total;
-
-
 /* The entry-point for new threads.  */
 static void
 entry_point (struct __pthread *self, void *(*start_routine) (void *), void *arg)

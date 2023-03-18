@@ -30,6 +30,7 @@ libc {
     __libc_alloca_cutoff;
     __libc_pthread_init;
     __pthread_cleanup_stack;
+    __pthread_total;
   }
 }
 
