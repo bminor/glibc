@@ -26,8 +26,6 @@
 #include <pt-internal.h>
 #include <pthreadP.h>
 
-__thread struct __pthread *___pthread_self;
-
 static void
 reset_pthread_total (void)
 {

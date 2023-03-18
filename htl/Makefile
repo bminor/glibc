@@ -164,7 +164,7 @@ headers :=				\
 
 distribute :=
 
-routines := forward libc_pthread_init alloca_cutoff htlfreeres pt-nthreads
+routines := forward libc_pthread_init alloca_cutoff htlfreeres pt-nthreads pt-pthread_self
 shared-only-routines = forward
 
 extra-libs := libpthread
