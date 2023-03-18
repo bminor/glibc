@@ -1,4 +1,10 @@
 libc {
+
+  GLIBC_2.12 {
+    pthread_self;
+    __pthread_self;
+  }
+
   GLIBC_2.21 {
     pthread_attr_destroy; pthread_attr_getdetachstate;
     pthread_attr_getinheritsched; pthread_attr_getschedparam;
@@ -118,9 +124,6 @@ libpthread {
 
     pthread_rwlockattr_destroy; pthread_rwlockattr_getpshared;
     pthread_rwlockattr_init; pthread_rwlockattr_setpshared;
-
-    pthread_self;
-    __pthread_self;
 
     pthread_setcancelstate; pthread_setcanceltype;
     pthread_setconcurrency; pthread_setschedparam;

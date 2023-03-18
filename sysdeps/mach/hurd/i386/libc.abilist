@@ -28,6 +28,8 @@ GLIBC_2.11 mkostemps F
 GLIBC_2.11 mkostemps64 F
 GLIBC_2.11 mkstemps F
 GLIBC_2.11 mkstemps64 F
+GLIBC_2.12 __pthread_self F
+GLIBC_2.12 pthread_self F
 GLIBC_2.13 __fentry__ F
 GLIBC_2.14 syncfs F
 GLIBC_2.15 __fdelt_chk F
