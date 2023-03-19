@@ -19,7 +19,6 @@ register int *sp asm ("%esp");
 
 #include <hurd.h>
 #include <hurd/signal.h>
-#include <hurd/threadvar.h>
 #include <hurd/msg.h>
 #include <stdlib.h>
 #include <string.h>
@@ -59,7 +58,7 @@ __sigreturn (struct sigcontext *scp)
 {
   struct hurd_sigstate *ss;
   struct hurd_userlink *link = (void *) &scp[1];
-  mach_port_t *reply_port;
+  mach_port_t reply_port;
 
   if (scp == NULL || (scp->sc_mask & _SIG_CANT_MASK))
     {
@@ -101,20 +100,10 @@ __sigreturn (struct sigcontext *scp)
 
   /* Destroy the MiG reply port used by the signal handler, and restore the
      reply port in use by the thread when interrupted.  */
-  reply_port = &__hurd_local_reply_port;
-  if (*reply_port)
-    {
-      mach_port_t port = *reply_port;
-
-      /* Assigning MACH_PORT_DEAD here tells libc's mig_get_reply_port not to
-	 get another reply port, but avoids mig_dealloc_reply_port trying to
-	 deallocate it after the receive fails (which it will, because the
-	 reply port will be bogus, whether we do this or not).  */
-      *reply_port = MACH_PORT_DEAD;
-
-      __mach_port_destroy (__mach_task_self (), port);
-    }
-  *reply_port = scp->sc_reply_port;
+  reply_port = THREAD_GETMEM (THREAD_SELF, reply_port);
+  THREAD_SETMEM (THREAD_SELF, reply_port, scp->sc_reply_port);
+  __mach_port_mod_refs (__mach_task_self (), reply_port,
+                        MACH_PORT_RIGHT_RECEIVE, -1);
 
   if (scp->sc_fpused)
     /* Restore the FPU state.  Mach conveniently stores the state
