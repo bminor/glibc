@@ -157,6 +157,7 @@ const struct base_table_t _itoa_base_table[] attribute_hidden =
 };
 #endif
 
+#if IS_IN (libc)
 char *
 _itoa_word (_ITOA_WORD_TYPE value, char *buflim,
 	    unsigned int base, int upper_case)
@@ -185,6 +186,7 @@ _itoa_word (_ITOA_WORD_TYPE value, char *buflim,
   return buflim;
 }
 #undef SPECIAL
+#endif /* IS_IN (libc) */
 
 
 #if _ITOA_NEEDED
