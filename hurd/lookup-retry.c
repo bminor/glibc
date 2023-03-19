@@ -177,7 +177,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 
 	      /* We got a successful translation.  Now apply any open-time
 		 action flags we were passed.  */
-
+#if !IS_IN (rtld)
 	      if (!err && (flags & O_TRUNC))
 		{
 		  /* Asked to truncate the file.  */
@@ -189,6 +189,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		      __file_utimens (*result, atime, mtime);
 		    }
 		}
+#endif
 
 	      if (err)
 		__mach_port_deallocate (__mach_task_self (), *result);
@@ -214,6 +215,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	      file_name = &retryname[1];
 	      break;
 
+#if !IS_IN (rtld)
 	    case 'f':
 	      if (retryname[1] == 'd' && retryname[2] == '/')
 		{
@@ -358,8 +360,9 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		goto bad_magic;
 	      break;
 
-	    default:
 	    bad_magic:
+#endif /* !IS_IN (rtld) */
+	    default:
 	      err = EGRATUITOUS;
 	      goto out;
 	    }
