@@ -197,6 +197,10 @@ ifeq (hurd, $(subdir))
 sysdep_routines += cthreads
 endif
 
+ifeq (elf, $(subdir))
+sysdep-dl-routines += dl-tls-initialized
+endif
+
 ifeq (io, $(subdir))
 sysdep_routines += f_setlk close_nocancel close_nocancel_nostatus \
 		   fcntl_nocancel open_nocancel openat_nocancel read_nocancel \

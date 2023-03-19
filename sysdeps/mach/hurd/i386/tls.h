@@ -69,18 +69,6 @@ _Static_assert (offsetof (tcbhead_t, __private_ss) == 0x30,
                   |  (desc->high_word & 0xff000000));			      \
   })
 
-/* Return 1 if TLS is not initialized yet.  */
-#ifndef SHARED
-extern unsigned short __init1_desc;
-#define __HURD_DESC_INITIAL(gs, ds) ((gs) == (ds) || (gs) == __init1_desc)
-#else
-#define __HURD_DESC_INITIAL(gs, ds) ((gs) == (ds))
-#endif
-
-#define __LIBC_NO_TLS()							      \
-  ({ unsigned short ds, gs;						      \
-     asm ("movw %%ds,%w0; movw %%gs,%w1" : "=q" (ds), "=q" (gs));	      \
-     __builtin_expect(__HURD_DESC_INITIAL(gs, ds), 0); })
 #endif
 
 /* The TCB can have any size and the memory following the address the
@@ -125,6 +113,28 @@ extern unsigned short __init1_desc;
 
 # define HURD_SEL_LDT(sel) (__builtin_expect ((sel) & 4, 0))
 
+#ifndef SHARED
+extern unsigned short __init1_desc;
+# define __HURD_DESC_INITIAL(gs, ds) ((gs) == (ds) || (gs) == __init1_desc)
+#else
+# define __HURD_DESC_INITIAL(gs, ds) ((gs) == (ds))
+#endif
+
+#if !defined (SHARED) || IS_IN (rtld)
+/* Return 1 if TLS is not initialized yet.  */
+extern inline bool __attribute__ ((unused))
+__LIBC_NO_TLS (void)
+{
+  unsigned short ds, gs;
+  asm ("movw %%ds, %w0\n"
+       "movw %%gs, %w1"
+       : "=q" (ds), "=q" (gs));
+  return __glibc_unlikely (__HURD_DESC_INITIAL (gs, ds));
+}
+
+/* Code to initially initialize the thread pointer.  This might need
+   special attention since 'errno' is not yet available and if the
+   operation can cause a failure 'errno' must not be touched.  */
 static inline bool __attribute__ ((unused))
 _hurd_tls_init (tcbhead_t *tcb)
 {
@@ -168,11 +178,10 @@ out:
   return success;
 }
 
-/* Code to initially initialize the thread pointer.  This might need
-   special attention since 'errno' is not yet available and if the
-   operation can cause a failure 'errno' must not be touched.  */
-# define TLS_INIT_TP(descr) \
-    _hurd_tls_init ((tcbhead_t *) (descr))
+# define TLS_INIT_TP(descr) _hurd_tls_init ((tcbhead_t *) (descr))
+#else /* defined (SHARED) && !IS_IN (rtld) */
+# define __LIBC_NO_TLS() 0
+#endif
 
 # if __GNUC_PREREQ (6, 0)
 
