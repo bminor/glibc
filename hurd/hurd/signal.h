@@ -166,13 +166,15 @@ extern void _hurd_sigstate_delete (thread_t thread);
 _HURD_SIGNAL_H_EXTERN_INLINE struct hurd_sigstate *
 _hurd_self_sigstate (void)
 {
-  if (THREAD_GETMEM (THREAD_SELF, _hurd_sigstate) == NULL)
+  struct hurd_sigstate *ss = THREAD_GETMEM (THREAD_SELF, _hurd_sigstate);
+  if (__glibc_unlikely (ss == NULL))
     {
       thread_t self = __mach_thread_self ();
-      THREAD_SETMEM (THREAD_SELF, _hurd_sigstate, _hurd_thread_sigstate (self));
+      ss = _hurd_thread_sigstate (self);
+      THREAD_SETMEM (THREAD_SELF, _hurd_sigstate, ss);
       __mach_port_deallocate (__mach_task_self (), self);
     }
-  return THREAD_GETMEM (THREAD_SELF, _hurd_sigstate);
+  return ss;
 }
 # endif
 #endif
