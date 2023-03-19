@@ -141,12 +141,15 @@ _hurd_tls_init (tcbhead_t *tcb)
   HURD_TLS_DESC_DECL (desc, tcb);
   thread_t self = __mach_thread_self ();
   bool success = true;
+  extern mach_port_t __hurd_reply_port0;
 
   /* This field is used by TLS accesses to get our "thread pointer"
      from the TLS point of view.  */
   tcb->tcb = tcb;
   /* We always at least start the sigthread anyway.  */
   tcb->multiple_threads = 1;
+  /* Take over the reply port we've been using.  */
+  tcb->reply_port = __hurd_reply_port0;
 
   /* Get the first available selector.  */
   int sel = -1;
@@ -172,6 +175,8 @@ _hurd_tls_init (tcbhead_t *tcb)
 
   /* Now install the new selector.  */
   asm volatile ("mov %w0, %%gs" :: "q" (sel));
+  /* This port is now owned by the TCB.  */
+  __hurd_reply_port0 = MACH_PORT_NULL;
 
 out:
   __mach_port_deallocate (__mach_task_self (), self);

@@ -177,13 +177,20 @@ _hurd_tls_init (tcbhead_t *tcb)
 {
   error_t err;
   thread_t self = __mach_thread_self ();
+  extern mach_port_t __hurd_reply_port0;
 
   /* We always at least start the sigthread anyway.  */
   tcb->multiple_threads = 1;
+  /* Take over the reply port we've been using.  */
+  tcb->reply_port = __hurd_reply_port0;
 
   err = _hurd_tls_new (self, tcb);
   if (err == 0)
-    __libc_tls_initialized = 1;
+    {
+      __libc_tls_initialized = 1;
+      /* This port is now owned by the TCB.  */
+      __hurd_reply_port0 = MACH_PORT_NULL;
+    }
   __mach_port_deallocate (__mach_task_self (), self);
   return err == 0;
 }
