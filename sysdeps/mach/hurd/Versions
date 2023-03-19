@@ -20,7 +20,7 @@ libc {
     __open_nocancel;
     __read_nocancel; __pread64_nocancel;
     __write_nocancel;
-    __libc_lock_self0; __getcwd;
+    __getcwd;
     __stat64;
 
     _dl_init_first;
@@ -61,7 +61,7 @@ ld {
     __open_nocancel;
     __read_nocancel; __pread64_nocancel;
     __write_nocancel;
-    __libc_lock_self0; __getcwd;
+    __getcwd;
     __stat64; __fstat64;
   }
 }

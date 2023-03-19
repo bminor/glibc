@@ -20,10 +20,6 @@
 #include <stdlib.h>
 #include <pthreadP.h>
 
-/* This serves as stub "self" pointer for libc locks when TLS is not initialized
-   yet.  */
-char __libc_lock_self0[0];
-
 /* Placeholder for key creation routine from Hurd cthreads library.  */
 int
 weak_function
