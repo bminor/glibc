@@ -174,14 +174,14 @@ _hurdsig_fault_init (void)
   err = __mach_port_allocate (__mach_task_self (),
 			      MACH_PORT_RIGHT_RECEIVE, &sigexc);
   assert_perror (err);
-  err = __mach_port_allocate (__mach_task_self (),
-			      MACH_PORT_RIGHT_RECEIVE, &forward_sigexc);
+  err = __mach_port_insert_right (__mach_task_self (), sigexc,
+				  sigexc, MACH_MSG_TYPE_MAKE_SEND);
   assert_perror (err);
 
   /* Allocate a port to receive the exception msgs forwarded
      from the proc server.  */
-  err = __mach_port_insert_right (__mach_task_self (), sigexc,
-				  sigexc, MACH_MSG_TYPE_MAKE_SEND);
+  err = __mach_port_allocate (__mach_task_self (),
+			      MACH_PORT_RIGHT_RECEIVE, &forward_sigexc);
   assert_perror (err);
 
   /* Set the queue limit for this port to just one.  The proc server will
