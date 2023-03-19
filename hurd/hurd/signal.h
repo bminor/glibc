@@ -51,9 +51,10 @@ struct hurd_signal_preemptor;	/* <hurd/sigpreempt.h> */
 struct hurd_signal_detail
   {
     /* Codes from origination Mach exception_raise message.  */
-    integer_t exc, exc_code, exc_subcode;
+    integer_t exc, exc_code;
+    long_integer_t exc_subcode;
     /* Sigcode as passed or computed from exception codes.  */
-    integer_t code;
+    long_integer_t code;
     /* Error code as passed or extracted from exception codes.  */
     error_t error;
   };
