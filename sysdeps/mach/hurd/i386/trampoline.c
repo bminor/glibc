@@ -270,24 +270,23 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action
 
       _hurdsig_end_catch_fault ();
 
-      state->basic.eip = (int) rpc_wait_trampoline;
+      state->basic.eip = (uintptr_t) rpc_wait_trampoline;
       /* The reply-receiving trampoline code runs initially on the original
 	 user stack.  We pass it the signal stack pointer in %ebx.  */
-      state->basic.uesp = state->basic.esp; /* Restore mach_msg syscall SP.  */
-      state->basic.ebx = (int) sigsp;
+      state->basic.ebx = (uintptr_t) sigsp;
       /* After doing the message receive, the trampoline code will need to
 	 update the %eax value to be restored by sigreturn.  To simplify
 	 the assembly code, we pass the address of its slot in SCP to the
 	 trampoline code in %ecx.  */
-      state->basic.ecx = (int) &scp->sc_eax;
+      state->basic.ecx = (uintptr_t) &scp->sc_eax;
     }
   else
     {
-      state->basic.eip = (int) trampoline;
-      state->basic.uesp = (int) sigsp;
+      state->basic.eip = (uintptr_t) trampoline;
+      state->basic.uesp = (uintptr_t) sigsp;
     }
   /* We pass the handler function to the trampoline code in %edx.  */
-  state->basic.edx = (int) handler;
+  state->basic.edx = (uintptr_t) handler;
 
   /* The x86 ABI says the DF bit is clear on entry to any function.  */
   state->basic.efl &= ~EFL_DF;
