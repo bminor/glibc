@@ -38,7 +38,6 @@
 #include <dl-fixup-attribute.h>
 #include <libc-lock.h>
 #include <hp-timing.h>
-#include <tls.h>
 #include <list_t.h>
 
 __BEGIN_DECLS
