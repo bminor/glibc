@@ -45,7 +45,7 @@ _hurdsig_fault_catch_exception_raise (mach_port_t port,
 				      mach_msg_type_number_t codeCnt
 #else				/* Vanilla Mach 3.0 interface.  */
 				      integer_t exception,
-				      integer_t code, integer_t subcode
+				      integer_t code, long_integer_t subcode
 #endif
 				      )
 {
