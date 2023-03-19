@@ -1,8 +1,5 @@
 libc {
   GLIBC_2.0 {
-    # variables used in macros & inline functions
-    __hurd_threadvar_stack_mask; __hurd_threadvar_stack_offset;
-
     # functions used in libmachuser and libhurduser
     _S_catch_exception_raise;
     _S_catch_exception_raise_state;
@@ -129,8 +126,6 @@ libc {
     _hurd_fd_error_signal; _hurd_fd_error;
     __hurd_dfail; __hurd_sockfail;
     _hurd_port_locked_set;
-    __hurd_threadvar_location_from_sp;
-    __hurd_threadvar_location;
     _hurd_userlink_link; _hurd_userlink_unlink; _hurd_userlink_clear;
   }
   GLIBC_2.29 {

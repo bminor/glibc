@@ -34,9 +34,6 @@
 extern void __mach_init (void);
 extern void __init_misc (int, char **, char **);
 
-unsigned long int __hurd_threadvar_stack_offset;
-unsigned long int __hurd_threadvar_stack_mask;
-
 extern int __libc_argc attribute_hidden;
 extern char **__libc_argv attribute_hidden;
 extern char **_dl_argv;

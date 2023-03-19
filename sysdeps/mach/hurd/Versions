@@ -33,9 +33,6 @@ libc {
 
 ld {
   GLIBC_2.0 {
-    # variables that must be shared with libc
-    __hurd_threadvar_stack_mask;  __hurd_threadvar_stack_offset;
-
     # functions that must be shared with libc
     __close; __getpid;
     __mmap; __open; __read; __sbrk; __strtoul_internal;

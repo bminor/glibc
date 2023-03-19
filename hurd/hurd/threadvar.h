@@ -22,21 +22,6 @@
 #include <features.h>
 #include <tls.h>
 
-/* The per-thread variables are found by ANDing this mask
-   with the value of the stack pointer and then adding this offset.
-
-   In the multi-threaded case, cthreads initialization sets
-   __hurd_threadvar_stack_mask to ~(cthread_stack_size - 1), a mask which
-   finds the base of the fixed-size cthreads stack; and
-   __hurd_threadvar_stack_offset to a small offset that skips the data
-   cthreads itself maintains at the base of each thread's stack.
-
-   In the single-threaded or libpthread case, __hurd_threadvar_stack_mask is
-   zero, so the stack pointer is ignored. */
-
-extern unsigned long int __hurd_threadvar_stack_mask;
-extern unsigned long int __hurd_threadvar_stack_offset;
-
 /* The variables __hurd_sigthread_stack_base and
    __hurd_sigthread_stack_end define the bounds of the stack used by the
    signal thread, so that thread can always be specifically identified.  */
