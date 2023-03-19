@@ -27,5 +27,5 @@ _hurd_longjmp_thread_state (void *state, jmp_buf env, int val)
   /* Set all the registers in *STATE to the values described by ENV and
      RETVAL.  After this, setting that thread's state to STATE should be
      just like calling `longjmp (ENV, RETVAL)'.  */
-  #error "Need to write sysdeps/mach/hurd/MACHINE/longjmp-ctx.c"
+  #error "Need to write sysdeps/mach/hurd/MACHINE/longjmp-ts.c"
 }
