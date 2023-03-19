@@ -1,4 +1,4 @@
-/* Initialization code run first thing by the ELF startup code.  For i386/Hurd.
+/* Initialization code run first thing by the ELF startup code.  For x86/Hurd.
    Copyright (C) 1995-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -92,7 +92,7 @@ posixland_init (int argc, char **argv, char **envp)
 static void
 init (void **data)
 {
-  int argc = (int) *data;
+  int argc = (int) (uintptr_t) *data;
   char **argv = (void *) (data + 1);
   char **envp = &argv[argc + 1];
   struct hurd_startup_data *d;
