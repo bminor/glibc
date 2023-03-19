@@ -26,11 +26,11 @@
    that structure.  */
 
 struct sigcontext *
-_hurd_setup_sighandler (int flags,
-			__sighandler_t handler,
-			stack_t *sigaltstack,
-			int signo, int sigcode,
-			void *state)
+_hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action,
+                        __sighandler_t handler,
+                        int signo, struct hurd_signal_detail *detail,
+                        volatile int rpc_wait,
+                        struct machine_thread_all_state *state)
 {
 #error "Need to write sysdeps/mach/hurd/MACHINE/trampoline.c"
 }
