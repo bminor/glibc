@@ -49,6 +49,7 @@ bench-math := \
   fmin \
   fminf \
   fmod \
+  fmodf \
   hypot \
   hypotf \
   ilogb \
