@@ -31,6 +31,7 @@
 #define SLLI slli.d
 #define ADDI addi.d
 #define ADD  add.d
+#define SUB  sub.d
 #define BSTRINS  bstrins.d
 #define LI  li.d
 #define FREG_L fld.d

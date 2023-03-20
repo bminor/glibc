@@ -270,10 +270,34 @@ elf_machine_runtime_setup (struct link_map *l, struct r_scope_elem *scope[],
   /* If using PLTs, fill in the first two entries of .got.plt.  */
   if (l->l_info[DT_JMPREL])
     {
-      extern void _dl_runtime_resolve (void)
-	__attribute__ ((visibility ("hidden")));
+      extern void _dl_runtime_resolve (void) attribute_hidden;
+      extern void _dl_runtime_profile (void) attribute_hidden;
+
       ElfW (Addr) *gotplt = (ElfW (Addr) *) D_PTR (l, l_info[DT_PLTGOT]);
-      gotplt[0] = (ElfW (Addr)) & _dl_runtime_resolve;
+
+      /* The got[0] entry contains the address of a function which gets
+	 called to get the address of a so far unresolved function and
+	 jump to it.  The profiling extension of the dynamic linker allows
+	 to intercept the calls to collect information.  In this case we
+	 don't store the address in the GOT so that all future calls also
+	 end in this function.  */
+      if (profile != 0)
+	{
+	   gotplt[0] = (ElfW(Addr)) &_dl_runtime_profile;
+
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
+	    /* Say that we really want profiling and the timers are
+	       started.  */
+	    GL(dl_profile_map) = l;
+	}
+      else
+	{
+	  /* This function will get called to fix up the GOT entry
+	     indicated by the offset on the stack, and then jump to
+	     the resolved address.  */
+	  gotplt[0] = (ElfW (Addr)) & _dl_runtime_resolve;
+	}
       gotplt[1] = (ElfW (Addr)) l;
     }
 #endif
