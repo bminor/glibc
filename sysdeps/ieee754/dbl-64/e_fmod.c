@@ -1,105 +1,156 @@
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+/* Floating-point remainder function.
+   Copyright (C) 2023 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-/*
- * __ieee754_fmod(x,y)
- * Return x mod y in exact arithmetic
- * Method: shift and subtract
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-#include <math.h>
-#include <math_private.h>
-#include <stdint.h>
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
 #include <libm-alias-finite.h>
+#include <math.h>
+#include "math_config.h"
 
-static const double one = 1.0, Zero[] = {0.0, -0.0,};
+/* With x = mx * 2^ex and y = my * 2^ey (mx, my, ex, ey being integers), the
+   simplest implementation is:
+
+   mx * 2^ex == 2 * mx * 2^(ex - 1)
+
+   or
+
+   while (ex > ey)
+     {
+       mx *= 2;
+       --ex;
+       mx %= my;
+     }
+
+   With the mathematical equivalence of:
+
+   r == x % y == (x % (N * y)) % y
+
+   And with mx/my being mantissa of double floating point number (which uses
+   less bits than the storage type), on each step the argument reduction can
+   be improved by 11 (which is the size of uint64_t minus MANTISSA_WIDTH plus
+   the signal bit):
+
+   mx * 2^ex == 2^11 * mx * 2^(ex - 11)
+
+   or
+
+   while (ex > ey)
+     {
+       mx << 11;
+       ex -= 11;
+       mx %= my;
+     }  */
 
 double
 __ieee754_fmod (double x, double y)
 {
-	int32_t n,ix,iy;
-	int64_t hx,hy,hz,sx,i;
+  uint64_t hx = asuint64 (x);
+  uint64_t hy = asuint64 (y);
 
-	EXTRACT_WORDS64(hx,x);
-	EXTRACT_WORDS64(hy,y);
-	sx = hx&UINT64_C(0x8000000000000000);	/* sign of x */
-	hx ^=sx;				/* |x| */
-	hy &= UINT64_C(0x7fffffffffffffff);	/* |y| */
+  uint64_t sx = hx & SIGN_MASK;
+  /* Get |x| and |y|.  */
+  hx ^= sx;
+  hy &= ~SIGN_MASK;
 
-    /* purge off exception values */
-	if(__builtin_expect(hy==0
-			    || hx >= UINT64_C(0x7ff0000000000000)
-			    || hy > UINT64_C(0x7ff0000000000000), 0))
-	  /* y=0,or x not finite or y is NaN */
-	    return (x*y)/(x*y);
-	if(__builtin_expect(hx<=hy, 0)) {
-	    if(hx<hy) return x;	/* |x|<|y| return x */
-	    return Zero[(uint64_t)sx>>63];	/* |x|=|y| return x*0*/
-	}
+  /* Special cases:
+     - If x or y is a Nan, NaN is returned.
+     - If x is an inifinity, a NaN is returned.
+     - If y is zero, Nan is returned.
+     - If x is +0/-0, and y is not zero, +0/-0 is returned.  */
+  if (__glibc_unlikely (hy == 0	|| hx >= EXPONENT_MASK || hy > EXPONENT_MASK))
+    return (x * y) / (x * y);
 
-    /* determine ix = ilogb(x) */
-	if(__builtin_expect(hx<UINT64_C(0x0010000000000000), 0)) {
-	  /* subnormal x */
-	  for (ix = -1022,i=(hx<<11); i>0; i<<=1) ix -=1;
-	} else ix = (hx>>52)-1023;
+  if (__glibc_unlikely (hx <= hy))
+    {
+      if (hx < hy)
+	return x;
+      return asdouble (sx);
+    }
 
-    /* determine iy = ilogb(y) */
-	if(__builtin_expect(hy<UINT64_C(0x0010000000000000), 0)) {	/* subnormal y */
-	  for (iy = -1022,i=(hy<<11); i>0; i<<=1) iy -=1;
-	} else iy = (hy>>52)-1023;
+  int ex = hx >> MANTISSA_WIDTH;
+  int ey = hy >> MANTISSA_WIDTH;
 
-    /* set up hx, hy and align y to x */
-	if(__builtin_expect(ix >= -1022, 1))
-	    hx = UINT64_C(0x0010000000000000)|(UINT64_C(0x000fffffffffffff)&hx);
-	else {		/* subnormal x, shift x to normal */
-	    n = -1022-ix;
-	    hx<<=n;
-	}
-	if(__builtin_expect(iy >= -1022, 1))
-	    hy = UINT64_C(0x0010000000000000)|(UINT64_C(0x000fffffffffffff)&hy);
-	else {		/* subnormal y, shift y to normal */
-	    n = -1022-iy;
-	    hy<<=n;
-	}
+  /* Common case where exponents are close: ey >= -907 and |x/y| < 2^52,  */
+  if (__glibc_likely (ey > MANTISSA_WIDTH && ex - ey <= EXPONENT_WIDTH))
+    {
+      uint64_t mx = (hx & MANTISSA_MASK) | (MANTISSA_MASK + 1);
+      uint64_t my = (hy & MANTISSA_MASK) | (MANTISSA_MASK + 1);
 
-    /* fix point fmod */
-	n = ix - iy;
-	while(n--) {
-	    hz=hx-hy;
-	    if(hz<0){hx = hx+hx;}
-	    else {
-		if(hz==0)		/* return sign(x)*0 */
-		    return Zero[(uint64_t)sx>>63];
-		hx = hz+hz;
-	    }
-	}
-	hz=hx-hy;
-	if(hz>=0) {hx=hz;}
+      uint64_t d = (ex == ey) ? (mx - my) : (mx << (ex - ey)) % my;
+      return make_double (d, ey - 1, sx);
+    }
 
-    /* convert back to floating value and restore the sign */
-	if(hx==0)			/* return sign(x)*0 */
-	    return Zero[(uint64_t)sx>>63];
-	while(hx<UINT64_C(0x0010000000000000)) {	/* normalize x */
-	    hx = hx+hx;
-	    iy -= 1;
-	}
-	if(__builtin_expect(iy>= -1022, 1)) {	/* normalize output */
-	  hx = ((hx-UINT64_C(0x0010000000000000))|((uint64_t)(iy+1023)<<52));
-	    INSERT_WORDS64(x,hx|sx);
-	} else {		/* subnormal output */
-	    n = -1022 - iy;
-	    hx>>=n;
-	    INSERT_WORDS64(x,hx|sx);
-	    x *= one;		/* create necessary signal */
-	}
-	return x;		/* exact output */
+  /* Special case, both x and y are subnormal.  */
+  if (__glibc_unlikely (ex == 0 && ey == 0))
+    return asdouble (sx | hx % hy);
+
+  /* Convert |x| and |y| to 'mx + 2^ex' and 'my + 2^ey'.  Assume that hx is
+     not subnormal by conditions above.  */
+  uint64_t mx = get_mantissa (hx) | (MANTISSA_MASK + 1);
+  ex--;
+  uint64_t my = get_mantissa (hy) | (MANTISSA_MASK + 1);
+
+  int lead_zeros_my = EXPONENT_WIDTH;
+  if (__glibc_likely (ey > 0))
+    ey--;
+  else
+    {
+      my = hy;
+      lead_zeros_my = clz_uint64 (my);
+    }
+
+  /* Assume hy != 0  */
+  int tail_zeros_my = ctz_uint64 (my);
+  int sides_zeroes = lead_zeros_my + tail_zeros_my;
+  int exp_diff = ex - ey;
+
+  int right_shift = exp_diff < tail_zeros_my ? exp_diff : tail_zeros_my;
+  my >>= right_shift;
+  exp_diff -= right_shift;
+  ey += right_shift;
+
+  int left_shift = exp_diff < EXPONENT_WIDTH ? exp_diff : EXPONENT_WIDTH;
+  mx <<= left_shift;
+  exp_diff -= left_shift;
+
+  mx %= my;
+
+  if (__glibc_unlikely (mx == 0))
+    return asdouble (sx);
+
+  if (exp_diff == 0)
+    return make_double (mx, ey, sx);
+
+  /* Assume modulo/divide operation is slow, so use multiplication with invert
+     values.  */
+  uint64_t inv_hy = UINT64_MAX / my;
+  while (exp_diff > sides_zeroes) {
+    exp_diff -= sides_zeroes;
+    uint64_t hd = (mx * inv_hy) >> (BIT_WIDTH - sides_zeroes);
+    mx <<= sides_zeroes;
+    mx -= hd * my;
+    while (__glibc_unlikely (mx > my))
+      mx -= my;
+  }
+  uint64_t hd = (mx * inv_hy) >> (BIT_WIDTH - exp_diff);
+  mx <<= exp_diff;
+  mx -= hd * my;
+  while (__glibc_unlikely (mx > my))
+    mx -= my;
+
+  return make_double (mx, ey, sx);
 }
 libm_alias_finite (__ieee754_fmod, __fmod)
