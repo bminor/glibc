@@ -1,102 +1,155 @@
-/* e_fmodf.c -- float version of e_fmod.c.
- */
+/* Floating-point remainder function.
+   Copyright (C) 2023 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-/*
- * __ieee754_fmodf(x,y)
- * Return x mod y in exact arithmetic
- * Method: shift and subtract
- */
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-#include <math.h>
-#include <math_private.h>
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
 #include <libm-alias-finite.h>
+#include <math.h>
+#include "math_config.h"
 
-static const float one = 1.0, Zero[] = {0.0, -0.0,};
+/* With x = mx * 2^ex and y = my * 2^ey (mx, my, ex, ey being integers), the
+   simplest implementation is:
+
+   mx * 2^ex == 2 * mx * 2^(ex - 1)
+
+   or
+
+   while (ex > ey)
+     {
+       mx *= 2;
+       --ex;
+       mx %= my;
+     }
+
+   With the mathematical equivalence of:
+
+   r == x % y == (x % (N * y)) % y
+
+   And with mx/my being mantissa of double floating point number (which uses
+   less bits than the storage type), on each step the argument reduction can
+   be improved by 8 (which is the size of uint32_t minus MANTISSA_WIDTH plus
+   the signal bit):
+
+   mx * 2^ex == 2^8 * mx * 2^(ex - 8)
+
+   or
+
+   while (ex > ey)
+     {
+       mx << 8;
+       ex -= 8;
+       mx %= my;
+     }  */
 
 float
 __ieee754_fmodf (float x, float y)
 {
-	int32_t n,hx,hy,hz,ix,iy,sx,i;
+  uint32_t hx = asuint (x);
+  uint32_t hy = asuint (y);
 
-	GET_FLOAT_WORD(hx,x);
-	GET_FLOAT_WORD(hy,y);
-	sx = hx&0x80000000;		/* sign of x */
-	hx ^=sx;		/* |x| */
-	hy &= 0x7fffffff;	/* |y| */
+  uint32_t sx = hx & SIGN_MASK;
+  /* Get |x| and |y|.  */
+  hx ^= sx;
+  hy &= ~SIGN_MASK;
 
-    /* purge off exception values */
-	if(hy==0||(hx>=0x7f800000)||		/* y=0,or x not finite */
-	   (hy>0x7f800000))			/* or y is NaN */
-	    return (x*y)/(x*y);
-	if(hx<hy) return x;			/* |x|<|y| return x */
-	if(hx==hy)
-	    return Zero[(uint32_t)sx>>31];	/* |x|=|y| return x*0*/
+  /* Special cases:
+     - If x or y is a Nan, NaN is returned.
+     - If x is an inifinity, a NaN is returned.
+     - If y is zero, Nan is returned.
+     - If x is +0/-0, and y is not zero, +0/-0 is returned.  */
+  if (__glibc_unlikely (hy == 0	|| hx >= EXPONENT_MASK || hy > EXPONENT_MASK))
+    return (x * y) / (x * y);
 
-    /* determine ix = ilogb(x) */
-	if(hx<0x00800000) {	/* subnormal x */
-	    for (ix = -126,i=(hx<<8); i>0; i<<=1) ix -=1;
-	} else ix = (hx>>23)-127;
+  if (__glibc_unlikely (hx <= hy))
+    {
+      if (hx < hy)
+	return x;
+      return asfloat (sx);
+    }
 
-    /* determine iy = ilogb(y) */
-	if(hy<0x00800000) {	/* subnormal y */
-	    for (iy = -126,i=(hy<<8); i>=0; i<<=1) iy -=1;
-	} else iy = (hy>>23)-127;
+  int ex = hx >> MANTISSA_WIDTH;
+  int ey = hy >> MANTISSA_WIDTH;
 
-    /* set up {hx,lx}, {hy,ly} and align y to x */
-	if(ix >= -126)
-	    hx = 0x00800000|(0x007fffff&hx);
-	else {		/* subnormal x, shift x to normal */
-	    n = -126-ix;
-	    hx = hx<<n;
-	}
-	if(iy >= -126)
-	    hy = 0x00800000|(0x007fffff&hy);
-	else {		/* subnormal y, shift y to normal */
-	    n = -126-iy;
-	    hy = hy<<n;
-	}
+  /* Common case where exponents are close: ey >= -103 and |x/y| < 2^8,  */
+  if (__glibc_likely (ey > MANTISSA_WIDTH && ex - ey <= EXPONENT_WIDTH))
+    {
+      uint64_t mx = (hx & MANTISSA_MASK) | (MANTISSA_MASK + 1);
+      uint64_t my = (hy & MANTISSA_MASK) | (MANTISSA_MASK + 1);
 
-    /* fix point fmod */
-	n = ix - iy;
-	while(n--) {
-	    hz=hx-hy;
-	    if(hz<0){hx = hx+hx;}
-	    else {
-		if(hz==0)		/* return sign(x)*0 */
-		    return Zero[(uint32_t)sx>>31];
-		hx = hz+hz;
-	    }
-	}
-	hz=hx-hy;
-	if(hz>=0) {hx=hz;}
+      uint32_t d = (ex == ey) ? (mx - my) : (mx << (ex - ey)) % my;
+      return make_float (d, ey - 1, sx);
+    }
 
-    /* convert back to floating value and restore the sign */
-	if(hx==0)			/* return sign(x)*0 */
-	    return Zero[(uint32_t)sx>>31];
-	while(hx<0x00800000) {		/* normalize x */
-	    hx = hx+hx;
-	    iy -= 1;
-	}
-	if(iy>= -126) {		/* normalize output */
-	    hx = ((hx-0x00800000)|((iy+127)<<23));
-	    SET_FLOAT_WORD(x,hx|sx);
-	} else {		/* subnormal output */
-	    n = -126 - iy;
-	    hx >>= n;
-	    SET_FLOAT_WORD(x,hx|sx);
-	    x *= one;		/* create necessary signal */
-	}
-	return x;		/* exact output */
+  /* Special case, both x and y are subnormal.  */
+  if (__glibc_unlikely (ex == 0 && ey == 0))
+    return asfloat (sx | hx % hy);
+
+  /* Convert |x| and |y| to 'mx + 2^ex' and 'my + 2^ey'.  Assume that hx is
+     not subnormal by conditions above.  */
+  uint32_t mx = get_mantissa (hx) | (MANTISSA_MASK + 1);
+  ex--;
+
+  uint32_t my = get_mantissa (hy) | (MANTISSA_MASK + 1);
+  int lead_zeros_my = EXPONENT_WIDTH;
+  if (__glibc_likely (ey > 0))
+    ey--;
+  else
+    {
+      my = hy;
+      lead_zeros_my = __builtin_clz (my);
+    }
+
+  int tail_zeros_my = __builtin_ctz (my);
+  int sides_zeroes = lead_zeros_my + tail_zeros_my;
+  int exp_diff = ex - ey;
+
+  int right_shift = exp_diff < tail_zeros_my ? exp_diff : tail_zeros_my;
+  my >>= right_shift;
+  exp_diff -= right_shift;
+  ey += right_shift;
+
+  int left_shift = exp_diff < EXPONENT_WIDTH ? exp_diff : EXPONENT_WIDTH;
+  mx <<= left_shift;
+  exp_diff -= left_shift;
+
+  mx %= my;
+
+  if (__glibc_unlikely (mx == 0))
+    return asfloat (sx);
+
+  if (exp_diff == 0)
+    return make_float (mx, ey, sx);
+
+  /* Assume modulo/divide operation is slow, so use multiplication with invert
+     values.  */
+  uint32_t inv_hy = UINT32_MAX / my;
+  while (exp_diff > sides_zeroes) {
+    exp_diff -= sides_zeroes;
+    uint32_t hd = (mx * inv_hy) >> (BIT_WIDTH - sides_zeroes);
+    mx <<= sides_zeroes;
+    mx -= hd * my;
+    while (__glibc_unlikely (mx > my))
+      mx -= my;
+  }
+  uint32_t hd = (mx * inv_hy) >> (BIT_WIDTH - exp_diff);
+  mx <<= exp_diff;
+  mx -= hd * my;
+  while (__glibc_unlikely (mx > my))
+    mx -= my;
+
+  return make_float (mx, ey, sx);
 }
 libm_alias_finite (__ieee754_fmodf, __fmodf)
