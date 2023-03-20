@@ -631,4 +631,8 @@ libm {
     # No SVID compatible error handling.
     hypotf; hypot;
   }
+  GLIBC_2.38 {
+    # No SVID compatible error handling.
+    fmod; fmodf;
+  }
 }

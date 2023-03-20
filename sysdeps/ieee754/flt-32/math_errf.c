@@ -31,6 +31,12 @@ with_errnof (float y, int e)
 # define with_errnof(x, e) (x)
 #endif
 
+attribute_hidden float
+__math_edomf (float y)
+{
+  return with_errnof (y, EDOM);
+}
+
 /* NOINLINE prevents fenv semantics breaking optimizations.  */
 NOINLINE static float
 xflowf (uint32_t sign, float y)

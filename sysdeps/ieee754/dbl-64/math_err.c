@@ -33,6 +33,12 @@ with_errno (double y, int e)
 #define with_errno(x, e) (x)
 #endif
 
+attribute_hidden double
+__math_edom (double y)
+{
+  return with_errno (y, EDOM);
+}
+
 /* NOINLINE reduces code size.  */
 NOINLINE static double
 xflow (uint32_t sign, double y)

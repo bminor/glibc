@@ -170,6 +170,9 @@ attribute_hidden double __math_invalid (double);
 
 /* Error handling using output checking, only for errno setting.  */
 
+/* Check if the result generated a demain error.  */
+attribute_hidden double __math_edom (double x);
+
 /* Check if the result overflowed to infinity.  */
 attribute_hidden double __math_check_oflow (double);
 /* Check if the result underflowed to 0.  */

@@ -16,7 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <libm-alias-double.h>
 #include <libm-alias-finite.h>
+#include <math-svid-compat.h>
 #include <math.h>
 #include "math_config.h"
 
@@ -55,7 +57,7 @@
      }  */
 
 double
-__ieee754_fmod (double x, double y)
+__fmod (double x, double y)
 {
   uint64_t hx = asuint64 (x);
   uint64_t hy = asuint64 (y);
@@ -67,11 +69,16 @@ __ieee754_fmod (double x, double y)
 
   /* Special cases:
      - If x or y is a Nan, NaN is returned.
-     - If x is an inifinity, a NaN is returned.
+     - If x is an inifinity, a NaN is returned and EDOM is set.
      - If y is zero, Nan is returned.
      - If x is +0/-0, and y is not zero, +0/-0 is returned.  */
-  if (__glibc_unlikely (hy == 0	|| hx >= EXPONENT_MASK || hy > EXPONENT_MASK))
-    return (x * y) / (x * y);
+  if (__glibc_unlikely (hy == 0
+			|| hx >= EXPONENT_MASK || hy > EXPONENT_MASK))
+    {
+      if (is_nan (hx) || is_nan (hy))
+	return (x * y) / (x * y);
+      return __math_edom ((x * y) / (x * y));
+    }
 
   if (__glibc_unlikely (hx <= hy))
     {
@@ -153,4 +160,11 @@ __ieee754_fmod (double x, double y)
 
   return make_double (mx, ey, sx);
 }
+strong_alias (__fmod, __ieee754_fmod)
 libm_alias_finite (__ieee754_fmod, __fmod)
+#if LIBM_SVID_COMPAT
+versioned_symbol (libm, __fmod, fmod, GLIBC_2_38);
+libm_alias_double_other (__fmod, fmod)
+#else
+libm_alias_double (__fmod, fmod)
+#endif

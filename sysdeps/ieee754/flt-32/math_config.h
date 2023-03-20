@@ -158,6 +158,7 @@ attribute_hidden float __math_uflowf (uint32_t);
 attribute_hidden float __math_may_uflowf (uint32_t);
 attribute_hidden float __math_divzerof (uint32_t);
 attribute_hidden float __math_invalidf (float);
+attribute_hidden float __math_edomf (float x);
 
 /* Shared between expf, exp2f, exp10f, and powf.  */
 #define EXP2F_TABLE_BITS 5
