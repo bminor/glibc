@@ -3528,6 +3528,29 @@ __libc_memalign (size_t alignment, size_t bytes)
   void *address = RETURN_ADDRESS (0);
   return _mid_memalign (alignment, bytes, address);
 }
+libc_hidden_def (__libc_memalign)
+
+/* For ISO C17.  */
+void *
+weak_function
+aligned_alloc (size_t alignment, size_t bytes)
+{
+  if (!__malloc_initialized)
+    ptmalloc_init ();
+
+/* Similar to memalign, but starting with ISO C17 the standard
+   requires an error for alignments that are not supported by the
+   implementation.  Valid alignments for the current implementation
+   are non-negative powers of two.  */
+  if (!powerof2 (alignment) || alignment == 0)
+    {
+      __set_errno (EINVAL);
+      return 0;
+    }
+
+  void *address = RETURN_ADDRESS (0);
+  return _mid_memalign (alignment, bytes, address);
+}
 
 static void *
 _mid_memalign (size_t alignment, size_t bytes, void *address)
@@ -3618,9 +3641,6 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
           ar_ptr == arena_for_chunk (mem2chunk (p)));
   return tag_new_usable (p);
 }
-/* For ISO C11.  */
-weak_alias (__libc_memalign, aligned_alloc)
-libc_hidden_def (__libc_memalign)
 
 void *
 __libc_valloc (size_t bytes)

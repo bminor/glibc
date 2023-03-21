@@ -299,7 +299,14 @@ __debug_memalign (size_t alignment, size_t bytes)
   return _debug_mid_memalign (alignment, bytes, RETURN_ADDRESS (0));
 }
 strong_alias (__debug_memalign, memalign)
-strong_alias (__debug_memalign, aligned_alloc)
+static void *
+__debug_aligned_alloc (size_t alignment, size_t bytes)
+{
+  if (!powerof2 (alignment) || alignment == 0)
+    return NULL;
+  return _debug_mid_memalign (alignment, bytes, RETURN_ADDRESS (0));
+}
+strong_alias (__debug_aligned_alloc, aligned_alloc)
 
 static void *
 __debug_pvalloc (size_t bytes)

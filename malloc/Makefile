@@ -44,11 +44,13 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-safe-linking \
 	 tst-mallocalign1 \
 	 tst-memalign-2 \
-	 tst-memalign-3
+	 tst-memalign-3 \
+	 tst-aligned-alloc
 
 tests-static := \
 	 tst-interpose-static-nothread \
-	 tst-interpose-static-thread
+	 tst-interpose-static-thread \
+	 tst-aligned-alloc-static
 
 # Test for the malloc_set_state symbol removed in glibc 2.25.
 ifeq ($(have-GLIBC_2.23)$(build-shared),yesyes)

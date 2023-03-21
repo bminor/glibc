@@ -995,7 +995,7 @@ power of two than that, use @code{aligned_alloc} or @code{posix_memalign}.
 @c Alias to memalign.
 The @code{aligned_alloc} function allocates a block of @var{size} bytes whose
 address is a multiple of @var{alignment}.  The @var{alignment} must be a
-power of two and @var{size} must be a multiple of @var{alignment}.
+power of two.
 
 The @code{aligned_alloc} function returns a null pointer on error and sets
 @code{errno} to one of the following values:
