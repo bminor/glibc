@@ -162,6 +162,21 @@ tests-static += \
   tst-cet-legacy-10-static \
 # tests-static
 tst-cet-legacy-1a-ARGS = -- $(host-test-program-cmd)
+
+tests += \
+  tst-shstk-legacy-1a \
+  tst-shstk-legacy-1a-static \
+  tst-shstk-legacy-1b \
+  tst-shstk-legacy-1b-static \
+# tests
+tests-static += \
+  tst-shstk-legacy-1a-static \
+  tst-shstk-legacy-1b-static \
+# tests-static
+extra-objs += \
+  tst-shstk-legacy-1-extra.o \
+# extra-objs
+
 tests += \
   tst-cet-legacy-4a \
   tst-cet-legacy-4b \
@@ -212,6 +227,9 @@ CFLAGS-tst-cet-legacy-7.c += -fcf-protection=none
 CFLAGS-tst-cet-legacy-10.c += -mshstk
 CFLAGS-tst-cet-legacy-10-static.c += -mshstk
 
+CFLAGS-tst-shstk-legacy-1a.c += -fcf-protection=none
+CFLAGS-tst-shstk-legacy-1a-static.c += -fcf-protection=none
+
 $(objpfx)tst-cet-legacy-1: $(objpfx)tst-cet-legacy-mod-1.so \
 		       $(objpfx)tst-cet-legacy-mod-2.so
 $(objpfx)tst-cet-legacy-1a: $(objpfx)tst-cet-legacy-mod-1.so \
@@ -244,6 +262,11 @@ $(objpfx)tst-cet-legacy-6b.out: $(objpfx)tst-cet-legacy-mod-6a.so \
 tst-cet-legacy-6b-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 tst-cet-legacy-9-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 tst-cet-legacy-9-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
+
+$(objpfx)tst-shstk-legacy-1a: $(objpfx)tst-shstk-legacy-1-extra.o
+$(objpfx)tst-shstk-legacy-1a-static: $(objpfx)tst-shstk-legacy-1-extra.o
+$(objpfx)tst-shstk-legacy-1b: $(objpfx)tst-shstk-legacy-1-extra.o
+$(objpfx)tst-shstk-legacy-1b-static: $(objpfx)tst-shstk-legacy-1-extra.o
 endif
 
 # Add -fcf-protection to CFLAGS when CET is enabled.
