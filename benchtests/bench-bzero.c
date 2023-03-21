@@ -51,7 +51,7 @@ IMPL (memset_zero, 0)
 static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, CHAR *s, size_t n)
 {
-  size_t i, iters = INNER_LOOP_ITERS_LARGE;
+  size_t i, iters = INNER_LOOP_ITERS8;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);

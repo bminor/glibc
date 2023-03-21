@@ -51,7 +51,7 @@ static void
 do_one_test (json_ctx_t *json_ctx, impl_t *impl, const CHAR *s, int c,
 	     size_t n)
 {
-  size_t i, iters = INNER_LOOP_ITERS;
+  size_t i, iters = INNER_LOOP_ITERS8 / 2;
   timing_t start, stop, cur;
 
   TIMING_NOW (start);
