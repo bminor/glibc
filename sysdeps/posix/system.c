@@ -147,6 +147,7 @@ do_system (const char *line)
   ret = __posix_spawn (&pid, SHELL_PATH, 0, &spawn_attr,
 		       (char *const[]){ (char *) SHELL_NAME,
 					(char *) "-c",
+					(char *) "--",
 					(char *) line, NULL },
 		       __environ);
   __posix_spawnattr_destroy (&spawn_attr);

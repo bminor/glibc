@@ -87,7 +87,7 @@ spawn_process (posix_spawn_file_actions_t *fa, FILE *fp, const char *command,
     }
 
   err = __posix_spawn (&((_IO_proc_file *) fp)->pid, _PATH_BSHELL, fa, 0,
-		       (char *const[]){ (char*) "sh", (char*) "-c",
+		       (char *const[]){ (char*) "sh", (char*) "-c", (char*) "--",
 		       (char *) command, NULL }, __environ);
   if (err != 0)
     return err;

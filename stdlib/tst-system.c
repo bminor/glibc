@@ -148,6 +148,20 @@ do_test (void)
 
   {
     struct support_capture_subprocess result;
+    const char *cmd = "-echo";
+    result = support_capture_subprocess (call_system,
+					 &(struct args) { cmd, 127 });
+    support_capture_subprocess_check (&result, "system", 0, sc_allow_stderr |
+			sc_allow_stdout);
+    char *returnerr = xasprintf ("%s: execing -echo failed: "
+				 "No such file or directory",
+				 basename(_PATH_BSHELL));
+    TEST_COMPARE_STRING (result.err.buffer, returnerr);
+    free (returnerr);
+  }
+
+  {
+    struct support_capture_subprocess result;
     result = support_capture_subprocess (call_system,
 					 &(struct args) { "exit 1", 1 });
     support_capture_subprocess_check (&result, "system", 0, sc_allow_none);
