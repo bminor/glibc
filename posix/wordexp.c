@@ -720,7 +720,7 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 	      ++(*offset);
 
 	      /* Go - evaluate. */
-	      if (*expr && eval_expr (expr, &numresult) != 0)
+	      if (expr && eval_expr (expr, &numresult) != 0)
 		{
 		  free (expr);
 		  return WRDE_SYNTAX;
@@ -758,7 +758,7 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 	      long int numresult = 0;
 
 	      /* Go - evaluate. */
-	      if (*expr && eval_expr (expr, &numresult) != 0)
+	      if (expr && eval_expr (expr, &numresult) != 0)
 		{
 		  free (expr);
 		  return WRDE_SYNTAX;
@@ -1790,7 +1790,7 @@ envsubst:
 	    {
 	      const char *str = pattern;
 
-	      if (str[0] == '\0')
+	      if (!str || str[0] == '\0')
 		str = _("parameter null or not set");
 
 	      __fxprintf (NULL, "%s: %s\n", env, str);
@@ -1883,10 +1883,7 @@ envsubst:
 			_itoa_word (value ? strlen (value) : 0,
 				    &param_length[20], 10, 0));
       if (free_value)
-	{
-	  assert (value != NULL);
-	  free (value);
-	}
+	free (value);
 
       return *word ? 0 : WRDE_NOSPACE;
     }

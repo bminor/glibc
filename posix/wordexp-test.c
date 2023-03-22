@@ -117,6 +117,8 @@ struct test_case_struct
     { 0, NULL, "$((010+0x10))", 0, 1, { "24" }, IFS },
     { 0, NULL, "$((-010+0x10))", 0, 1, { "8" }, IFS },
     { 0, NULL, "$((-0x10+010))", 0, 1, { "-8" }, IFS },
+    { 0, NULL, "$(())", 0, 1, { "0", }, IFS },
+    { 0, NULL, "$[]", 0, 1, { "0", }, IFS },
 
     /* Advanced parameter expansion */
     { 0, NULL, "${var:-bar}", 0, 1, { "bar", }, IFS },
@@ -138,6 +140,8 @@ struct test_case_struct
     { 0, "12345", "${#var}", 0, 1, { "5", }, IFS },
     { 0, NULL, "${var:-'}'}", 0, 1, { "}", }, IFS },
     { 0, NULL, "${var-}", 0, 0, { NULL }, IFS },
+    { 0, NULL, "${a?}", 0, 0, { NULL, }, IFS },
+    { 0, NULL, "${#a=}", 0, 1, { "0", }, IFS },
 
     { 0, "pizza", "${var#${var}}", 0, 0, { NULL }, IFS },
     { 0, "pepperoni", "${var%$(echo oni)}", 0, 1, { "pepper" }, IFS },
