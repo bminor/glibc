@@ -173,11 +173,22 @@ tests += \
   tst-shstk-legacy-1b-static \
   tst-shstk-legacy-1c \
   tst-shstk-legacy-1c-static \
+  tst-shstk-legacy-1d \
+  tst-shstk-legacy-1d-static \
+  tst-shstk-legacy-1e \
+  tst-shstk-legacy-1e-static \
+  tst-shstk-legacy-1f \
+  tst-shstk-legacy-1g \
 # tests
+modules-names += \
+  tst-shstk-legacy-mod-1 \
+# modules-names
 tests-static += \
   tst-shstk-legacy-1a-static \
   tst-shstk-legacy-1b-static \
   tst-shstk-legacy-1c-static \
+  tst-shstk-legacy-1d-static \
+  tst-shstk-legacy-1e-static \
 # tests-static
 extra-objs += \
   tst-shstk-legacy-1-extra.o \
@@ -237,6 +248,9 @@ CFLAGS-tst-cet-legacy-10a-static.c += -fcf-protection=none
 
 CFLAGS-tst-shstk-legacy-1a.c += -fcf-protection=none
 CFLAGS-tst-shstk-legacy-1a-static.c += -fcf-protection=none
+CFLAGS-tst-shstk-legacy-1d.c += -fcf-protection=none
+CFLAGS-tst-shstk-legacy-1d-static.c += -fcf-protection=none
+CFLAGS-tst-shstk-legacy-1f.c += -fcf-protection=none
 
 $(objpfx)tst-cet-legacy-1: $(objpfx)tst-cet-legacy-mod-1.so \
 		       $(objpfx)tst-cet-legacy-mod-2.so
@@ -279,6 +293,28 @@ tst-shstk-legacy-1c-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-SHSTK
 tst-shstk-legacy-1c-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-SHSTK
 $(objpfx)tst-shstk-legacy-1c: $(objpfx)tst-shstk-legacy-1-extra.o
 $(objpfx)tst-shstk-legacy-1c-static: $(objpfx)tst-shstk-legacy-1-extra.o
+$(objpfx)tst-shstk-legacy-1d: $(objpfx)tst-shstk-legacy-1-extra.o
+$(objpfx)tst-shstk-legacy-1d-static: $(objpfx)tst-shstk-legacy-1-extra.o
+$(objpfx)tst-shstk-legacy-1e: $(objpfx)tst-shstk-legacy-1-extra.o
+$(objpfx)tst-shstk-legacy-1e-static: $(objpfx)tst-shstk-legacy-1-extra.o
+$(objpfx)tst-shstk-legacy-1e.out: \
+  $(..)/sysdeps/x86/tst-shstk-legacy-1e.sh $(objpfx)tst-shstk-legacy-1e
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)' 2> $@; \
+	$(evaluate-test)
+$(objpfx)tst-shstk-legacy-1e-static.out: \
+  $(..)/sysdeps/x86/tst-shstk-legacy-1e-static.sh \
+  $(objpfx)tst-shstk-legacy-1e-static
+	$(SHELL) $< $(common-objpfx) 2> $@; \
+	$(evaluate-test)
+$(objpfx)tst-shstk-legacy-1f: $(objpfx)tst-shstk-legacy-mod-1.so
+$(objpfx)tst-shstk-legacy-mod-1.so: \
+  $(objpfx)tst-shstk-legacy-mod-1.os \
+  $(objpfx)tst-shstk-legacy-1-extra.os
+$(objpfx)tst-shstk-legacy-1g: $(objpfx)tst-shstk-legacy-mod-1.so
+$(objpfx)tst-shstk-legacy-1g.out: \
+  $(..)/sysdeps/x86/tst-shstk-legacy-1g.sh $(objpfx)tst-shstk-legacy-1g
+	$(SHELL) $< $(common-objpfx) '$(test-program-prefix)' 2> $@; \
+	$(evaluate-test)
 endif
 
 # Add -fcf-protection to CFLAGS when CET is enabled.
