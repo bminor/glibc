@@ -1483,6 +1483,10 @@ cannot enable executable stack as shared object requires");
   /* Now that the object is fully initialized add it to the object list.  */
   _dl_add_to_namespace_list (l, nsid);
 
+  /* Skip auditing and debugger notification when called from 'sprof'.  */
+  if (mode & __RTLD_SPROF)
+    return l;
+
   /* Signal that we are going to add new objects.  */
   struct r_debug *r = _dl_debug_update (nsid);
   if (r->r_state == RT_CONSISTENT)

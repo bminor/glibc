@@ -510,6 +510,7 @@ tests-container += \
 
 test-srcs = \
   tst-pathopt \
+  tst-sprof-basic \
   # tests-srcs
 
 ifeq (yes,$(have-fpie))
@@ -861,6 +862,7 @@ modules-names += \
   tst-sonamemove-linkmod1 \
   tst-sonamemove-runmod1 \
   tst-sonamemove-runmod2 \
+  tst-sprof-mod \
   tst-tls19mod1 \
   tst-tls19mod2 \
   tst-tls19mod3 \
@@ -1116,6 +1118,7 @@ tests-special += \
   $(objpfx)tst-rtld-help.out \
   $(objpfx)tst-rtld-load-self.out \
   $(objpfx)tst-rtld-preload.out \
+  $(objpfx)tst-sprof-basic.out \
   # tests-special
 endif
 tests-special += \
@@ -2986,3 +2989,11 @@ tst-audit-tlsdesc-dlopen-ENV = LD_AUDIT=$(objpfx)tst-auditmod-tlsdesc.so
 $(objpfx)tst-dlmopen-twice.out: \
   $(objpfx)tst-dlmopen-twice-mod1.so \
   $(objpfx)tst-dlmopen-twice-mod2.so
+
+LDFLAGS-tst-sprof-mod.so = -Wl,-soname,tst-sprof-mod.so
+$(objpfx)tst-sprof-basic: $(objpfx)tst-sprof-mod.so
+$(objpfx)tst-sprof-basic.out: tst-sprof-basic.sh $(objpfx)tst-sprof-basic
+	$(SHELL) $< $(common-objpfx) '$(test-wrapper-env)' \
+		 '$(run-program-env)' > $@; \
+	$(evaluate-test)
+generated += tst-sprof-mod.so.profile
