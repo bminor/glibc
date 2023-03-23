@@ -951,8 +951,6 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
   /* Initialize to keep the compiler happy.  */
   const char *errstring = NULL;
   int errval = 0;
-  struct r_debug *r = _dl_debug_update (nsid);
-  bool make_consistent = false;
 
   /* Get file information.  To match the kernel behavior, do not fill
      in this information for the executable in case of an explicit
@@ -984,14 +982,6 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 	    free ((void *) l->l_phdr);
 	  free (l);
 	  free (realname);
-
-	  if (make_consistent && r != NULL)
-	    {
-	      r->r_state = RT_CONSISTENT;
-	      _dl_debug_state ();
-	      LIBC_PROBE (map_failed, 2, nsid, r);
-	    }
-
 	  _dl_signal_error (errval, name, NULL, errstring);
 	}
 
@@ -1494,6 +1484,7 @@ cannot enable executable stack as shared object requires");
   _dl_add_to_namespace_list (l, nsid);
 
   /* Signal that we are going to add new objects.  */
+  struct r_debug *r = _dl_debug_update (nsid);
   if (r->r_state == RT_CONSISTENT)
     {
 #ifdef SHARED
@@ -1510,7 +1501,6 @@ cannot enable executable stack as shared object requires");
       r->r_state = RT_ADD;
       _dl_debug_state ();
       LIBC_PROBE (map_start, 2, nsid, r);
-      make_consistent = true;
     }
   else
     assert (r->r_state == RT_ADD);
