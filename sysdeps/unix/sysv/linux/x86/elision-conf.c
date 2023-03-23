@@ -22,9 +22,7 @@
 #include <elision-conf.h>
 #include <unistd.h>
 
-#if HAVE_TUNABLES
-# define TUNABLE_NAMESPACE elision
-#endif
+#define TUNABLE_NAMESPACE elision
 #include <elf/dl-tunables.h>
 
 /* Reasonable initial tuning values, may be revised in the future.
@@ -48,7 +46,6 @@ struct elision_config __elision_aconf =
     .skip_trylock_internal_abort = 3,
   };
 
-#if HAVE_TUNABLES
 static __always_inline void
 do_set_elision_enable (int32_t elision_enable)
 {
@@ -87,14 +84,12 @@ TUNABLE_CALLBACK_FNDECL (skip_lock_busy, int32_t);
 TUNABLE_CALLBACK_FNDECL (skip_lock_internal_abort, int32_t);
 TUNABLE_CALLBACK_FNDECL (retry_try_xbegin, int32_t);
 TUNABLE_CALLBACK_FNDECL (skip_trylock_internal_abort, int32_t);
-#endif
 
 /* Initialize elision.  */
 
 void
 __lll_elision_init (void)
 {
-#if HAVE_TUNABLES
   /* Elision depends on tunables and must be explicitly turned on by setting
      the appropriate tunable on a supported platform.  */
 
@@ -108,7 +103,6 @@ __lll_elision_init (void)
 	       TUNABLE_CALLBACK (set_elision_retry_try_xbegin));
   TUNABLE_GET (skip_trylock_internal_abort, int32_t,
 	       TUNABLE_CALLBACK (set_elision_skip_trylock_internal_abort));
-#endif
 
   if (!__pthread_force_elision)
     __elision_aconf.retry_try_xbegin = 0; /* Disable elision on rwlocks.  */

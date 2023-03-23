@@ -357,9 +357,6 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_sysinfo = DL_SYSINFO_DEFAULT,
 #endif
     ._dl_debug_fd = STDERR_FILENO,
-#if !HAVE_TUNABLES
-    ._dl_hwcap_mask = HWCAP_IMPORTANT,
-#endif
     ._dl_lazy = 1,
     ._dl_fpu_control = _FPU_DEFAULT,
     ._dl_pagesize = EXEC_PAGESIZE,
@@ -1483,7 +1480,6 @@ dl_main (const ElfW(Phdr) *phdr,
 	    _dl_argc -= 2;
 	    _dl_argv += 2;
 	  }
-#if HAVE_TUNABLES
 	else if (! strcmp (_dl_argv[1], "--list-tunables"))
 	  {
 	    state.mode = rtld_mode_list_tunables;
@@ -1491,7 +1487,6 @@ dl_main (const ElfW(Phdr) *phdr,
 	    --_dl_argc;
 	    ++_dl_argv;
 	  }
-#endif
 	else if (! strcmp (_dl_argv[1], "--list-diagnostics"))
 	  {
 	    state.mode = rtld_mode_list_diagnostics;
@@ -1519,13 +1514,11 @@ dl_main (const ElfW(Phdr) *phdr,
 	else
 	  break;
 
-#if HAVE_TUNABLES
       if (__glibc_unlikely (state.mode == rtld_mode_list_tunables))
 	{
 	  __tunables_print ();
 	  _exit (0);
 	}
-#endif
 
       if (state.mode == rtld_mode_list_diagnostics)
 	_dl_print_diagnostics (_environ);
@@ -2624,15 +2617,6 @@ process_envvars (struct dl_main_state *state)
 	    _dl_show_auxv ();
 	  break;
 
-#if !HAVE_TUNABLES
-	case 10:
-	  /* Mask for the important hardware capabilities.  */
-	  if (!__libc_enable_secure
-	      && memcmp (envline, "HWCAP_MASK", 10) == 0)
-	    GLRO(dl_hwcap_mask) = _dl_strtoul (&envline[11], NULL);
-	  break;
-#endif
-
 	case 11:
 	  /* Path where the binary is found.  */
 	  if (!__libc_enable_secure
@@ -2695,12 +2679,7 @@ process_envvars (struct dl_main_state *state)
       while (*nextp != '\0');
 
       if (__access ("/etc/suid-debug", F_OK) != 0)
-	{
-#if !HAVE_TUNABLES
-	  unsetenv ("MALLOC_CHECK_");
-#endif
-	  GLRO(dl_debug_mask) = 0;
-	}
+	GLRO(dl_debug_mask) = 0;
 
       if (state->mode != rtld_mode_normal)
 	_exit (5);

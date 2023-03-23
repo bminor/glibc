@@ -271,9 +271,6 @@
 /* PowerPC32 uses fctidz for floating point to long long conversions.  */
 #define HAVE_PPC_FCTIDZ 0
 
-/* Build glibc with tunables support.  */
-#define HAVE_TUNABLES 0
-
 /* Define if PIE is unsupported.  */
 #undef PIE_UNSUPPORTED
 

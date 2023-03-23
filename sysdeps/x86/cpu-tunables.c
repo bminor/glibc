@@ -16,31 +16,30 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if HAVE_TUNABLES
-# define TUNABLE_NAMESPACE cpu
-# include <stdbool.h>
-# include <stdint.h>
-# include <unistd.h>		/* Get STDOUT_FILENO for _dl_printf.  */
-# include <elf/dl-tunables.h>
-# include <string.h>
-# include <cpu-features.h>
-# include <ldsodefs.h>
+#define TUNABLE_NAMESPACE cpu
+#include <stdbool.h>
+#include <stdint.h>
+#include <unistd.h>		/* Get STDOUT_FILENO for _dl_printf.  */
+#include <elf/dl-tunables.h>
+#include <string.h>
+#include <cpu-features.h>
+#include <ldsodefs.h>
 
 /* We can't use IFUNC memcmp nor strlen in init_cpu_features from libc.a
    since IFUNC must be set up by init_cpu_features.  */
-# if defined USE_MULTIARCH && !defined SHARED
-#  ifdef __x86_64__
+#if defined USE_MULTIARCH && !defined SHARED
+# ifdef __x86_64__
 /* DEFAULT_MEMCMP by sysdeps/x86_64/memcmp-isa-default-impl.h.  */
-#   include <sysdeps/x86_64/memcmp-isa-default-impl.h>
-#  else
-#   define DEFAULT_MEMCMP	__memcmp_ia32
-#  endif
-extern __typeof (memcmp) DEFAULT_MEMCMP;
+#  include <sysdeps/x86_64/memcmp-isa-default-impl.h>
 # else
-#  define DEFAULT_MEMCMP	memcmp
+#  define DEFAULT_MEMCMP	__memcmp_ia32
 # endif
+extern __typeof (memcmp) DEFAULT_MEMCMP;
+#else
+# define DEFAULT_MEMCMP	memcmp
+#endif
 
-# define CHECK_GLIBC_IFUNC_CPU_OFF(f, cpu_features, name, len)		\
+#define CHECK_GLIBC_IFUNC_CPU_OFF(f, cpu_features, name, len)		\
   _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);	\
   if (!DEFAULT_MEMCMP (f, #name, len))					\
     {									\
@@ -50,7 +49,7 @@ extern __typeof (memcmp) DEFAULT_MEMCMP;
 
 /* Disable a preferred feature NAME.  We don't enable a preferred feature
    which isn't available.  */
-# define CHECK_GLIBC_IFUNC_PREFERRED_OFF(f, cpu_features, name, len)	\
+#define CHECK_GLIBC_IFUNC_PREFERRED_OFF(f, cpu_features, name, len)	\
   _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);	\
   if (!DEFAULT_MEMCMP (f, #name, len))					\
     {									\
@@ -60,7 +59,7 @@ extern __typeof (memcmp) DEFAULT_MEMCMP;
     }
 
 /* Enable/disable a preferred feature NAME.  */
-# define CHECK_GLIBC_IFUNC_PREFERRED_BOTH(f, cpu_features, name,	\
+#define CHECK_GLIBC_IFUNC_PREFERRED_BOTH(f, cpu_features, name,	\
 					  disable, len)			\
   _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);	\
   if (!DEFAULT_MEMCMP (f, #name, len))					\
@@ -74,7 +73,7 @@ extern __typeof (memcmp) DEFAULT_MEMCMP;
 
 /* Enable/disable a preferred feature NAME.  Enable a preferred feature
    only if the feature NEED is usable.  */
-# define CHECK_GLIBC_IFUNC_PREFERRED_NEED_BOTH(f, cpu_features, name,	\
+#define CHECK_GLIBC_IFUNC_PREFERRED_NEED_BOTH(f, cpu_features, name,	\
 					       need, disable, len)	\
   _Static_assert (sizeof (#name) - 1 == len, #name " != " #len);	\
   if (!DEFAULT_MEMCMP (f, #name, len))					\
@@ -286,8 +285,7 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
   while (*c != '\0');
 }
 
-# if CET_ENABLED
-
+#if CET_ENABLED
 attribute_hidden
 void
 TUNABLE_CALLBACK (set_x86_ibt) (tunable_val_t *valp)
@@ -313,5 +311,4 @@ TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *valp)
 			   sizeof ("permissive")) == 0)
     GL(dl_x86_feature_control).shstk = cet_permissive;
 }
-# endif
 #endif

@@ -53,9 +53,7 @@ __pthread_early_init (void)
   __default_pthread_attr.internal.stacksize = limit.rlim_cur;
   __default_pthread_attr.internal.guardsize = GLRO (dl_pagesize);
 
-#if HAVE_TUNABLES
   __pthread_tunables_init ();
-#endif
 }
 
 #endif  /* _PTHREAD_EARLY_INIT_H */

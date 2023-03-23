@@ -1856,14 +1856,12 @@ struct malloc_par
   INTERNAL_SIZE_T arena_test;
   INTERNAL_SIZE_T arena_max;
 
-#if HAVE_TUNABLES
   /* Transparent Large Page support.  */
   INTERNAL_SIZE_T thp_pagesize;
   /* A value different than 0 means to align mmap allocation to hp_pagesize
      add hp_flags on flags.  */
   INTERNAL_SIZE_T hp_pagesize;
   int hp_flags;
-#endif
 
   /* Memory map support */
   int n_mmaps;
@@ -1998,7 +1996,7 @@ free_perturb (char *p, size_t n)
 static inline void
 madvise_thp (void *p, INTERNAL_SIZE_T size)
 {
-#if HAVE_TUNABLES && defined (MADV_HUGEPAGE)
+#ifdef MADV_HUGEPAGE
   /* Do not consider areas smaller than a huge page or if the tunable is
      not active.  */
   if (mp_.thp_pagesize == 0 || size < mp_.thp_pagesize)
@@ -2557,7 +2555,6 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 	  && (mp_.n_mmaps < mp_.n_mmaps_max)))
     {
       char *mm;
-#if HAVE_TUNABLES
       if (mp_.hp_pagesize > 0 && nb >= mp_.hp_pagesize)
 	{
 	  /* There is no need to isse the THP madvise call if Huge Pages are
@@ -2566,7 +2563,6 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
 	  if (mm != MAP_FAILED)
 	    return mm;
 	}
-#endif
       mm = sysmalloc_mmap (nb, pagesize, 0, av);
       if (mm != MAP_FAILED)
 	return mm;
@@ -2679,7 +2675,7 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
          previous calls. Otherwise, we correct to page-align below.
        */
 
-#if HAVE_TUNABLES && defined (MADV_HUGEPAGE)
+#ifdef MADV_HUGEPAGE
       /* Defined in brk.c.  */
       extern void *__curbrk;
       if (__glibc_unlikely (mp_.thp_pagesize != 0))
@@ -2718,12 +2714,10 @@ sysmalloc (INTERNAL_SIZE_T nb, mstate av)
            */
 
 	  char *mbrk = MAP_FAILED;
-#if HAVE_TUNABLES
 	  if (mp_.hp_pagesize > 0)
 	    mbrk = sysmalloc_mmap_fallback (&size, nb, old_size,
 					    mp_.hp_pagesize, mp_.hp_pagesize,
 					    mp_.hp_flags, av);
-#endif
 	  if (mbrk == MAP_FAILED)
 	    mbrk = sysmalloc_mmap_fallback (&size, nb, old_size, MMAP_AS_MORECORE_SIZE,
 					    pagesize, 0, av);
@@ -2966,7 +2960,7 @@ systrim (size_t pad, mstate av)
     return 0;
 
   /* Release in pagesize units and round down to the nearest page.  */
-#if HAVE_TUNABLES && defined (MADV_HUGEPAGE)
+#ifdef MADV_HUGEPAGE
   if (__glibc_unlikely (mp_.thp_pagesize != 0))
     extra = ALIGN_DOWN (top_area - pad, mp_.thp_pagesize);
   else
@@ -5410,7 +5404,6 @@ do_set_mxfast (size_t value)
   return 0;
 }
 
-#if HAVE_TUNABLES
 static __always_inline int
 do_set_hugetlb (size_t value)
 {
@@ -5429,7 +5422,6 @@ do_set_hugetlb (size_t value)
 			      &mp_.hp_flags);
   return 0;
 }
-#endif
 
 int
 __libc_mallopt (int param_number, int value)

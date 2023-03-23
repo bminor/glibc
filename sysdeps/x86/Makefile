@@ -25,7 +25,6 @@ tests-static += \
   tst-ifunc-isa-1-static
 test-xfail-tst-ifunc-isa-1 = $(with-lld)
 test-xfail-tst-ifunc-isa-1-static = $(with-lld)
-ifneq ($(have-tunables),no)
 tests += \
   tst-ifunc-isa-2 \
   tst-ifunc-isa-2-static
@@ -33,7 +32,6 @@ tests-static += \
   tst-ifunc-isa-2-static
 test-xfail-tst-ifunc-isa-2 = $(with-lld)
 test-xfail-tst-ifunc-isa-2-static = $(with-lld)
-endif
 endif
 endif
 ifeq (yes,$(enable-x86-isa-level))
@@ -65,10 +63,8 @@ $(objpfx)tst-isa-level-1.out: $(objpfx)tst-isa-level-mod-1-baseline.so \
 			      $(objpfx)tst-isa-level-mod-1-v3.so \
 			      $(objpfx)tst-isa-level-mod-1-v4.so
 endif
-ifneq ($(have-tunables),no)
 tst-ifunc-isa-2-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-SSE4_2,-AVX,-AVX2,-AVX512F
 tst-ifunc-isa-2-static-ENV = $(tst-ifunc-isa-2-ENV)
-endif
 endif
 
 ifeq ($(subdir),math)
@@ -79,10 +75,8 @@ ifeq ($(subdir),setjmp)
 gen-as-const-headers += jmp_buf-ssp.sym
 sysdep_routines += __longjmp_cancel
 ifneq ($(enable-cet),no)
-ifneq ($(have-tunables),no)
 tests += tst-setjmp-cet
 tst-setjmp-cet-ENV = GLIBC_TUNABLES=glibc.cpu.x86_ibt=on:glibc.cpu.x86_shstk=on
-endif
 endif
 endif
 
@@ -135,10 +129,8 @@ tests += tst-cet-legacy-1 tst-cet-legacy-1a tst-cet-legacy-2 \
 	 tst-cet-legacy-10 tst-cet-legacy-10-static
 tests-static += tst-cet-legacy-9-static tst-cet-legacy-10-static
 tst-cet-legacy-1a-ARGS = -- $(host-test-program-cmd)
-ifneq (no,$(have-tunables))
 tests += tst-cet-legacy-4a tst-cet-legacy-4b tst-cet-legacy-4c \
 	 tst-cet-legacy-5b tst-cet-legacy-6b
-endif
 modules-names += tst-cet-legacy-mod-1 tst-cet-legacy-mod-2 \
 		 tst-cet-legacy-mod-4 tst-cet-legacy-mod-5a \
 		 tst-cet-legacy-mod-5b tst-cet-legacy-mod-5c \
@@ -195,7 +187,6 @@ $(objpfx)tst-cet-legacy-6a.out: $(objpfx)tst-cet-legacy-mod-6a.so \
 $(objpfx)tst-cet-legacy-mod-6a.so: $(objpfx)tst-cet-legacy-mod-6c.so
 $(objpfx)tst-cet-legacy-mod-6b.so: $(objpfx)tst-cet-legacy-mod-6c.so
 LDFLAGS-tst-cet-legacy-mod-6c.so = -Wl,--enable-new-dtags,-z,nodelete
-ifneq (no,$(have-tunables))
 $(objpfx)tst-cet-legacy-4a.out: $(objpfx)tst-cet-legacy-mod-4.so
 tst-cet-legacy-4a-ENV = GLIBC_TUNABLES=glibc.cpu.x86_shstk=permissive
 $(objpfx)tst-cet-legacy-4b.out: $(objpfx)tst-cet-legacy-mod-4.so
@@ -210,7 +201,6 @@ $(objpfx)tst-cet-legacy-6b.out: $(objpfx)tst-cet-legacy-mod-6a.so \
 tst-cet-legacy-6b-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 tst-cet-legacy-9-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
 tst-cet-legacy-9-static-ENV = GLIBC_TUNABLES=glibc.cpu.hwcaps=-IBT,-SHSTK
-endif
 endif
 
 # Add -fcf-protection to CFLAGS when CET is enabled.

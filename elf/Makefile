@@ -82,6 +82,7 @@ dl-routines = \
   dl-tls \
   dl-tls_init_tp \
   dl-trampoline \
+  dl-tunables \
   dl-version \
   dl-write \
   # dl-routines
@@ -89,11 +90,6 @@ dl-routines = \
 ifeq (yes,$(use-ldconfig))
 dl-routines += dl-cache
 endif
-
-ifneq (no,$(have-tunables))
-dl-routines += dl-tunables
-tunables-type = $(addprefix TUNABLES_FRONTEND_,$(have-tunables))
-CPPFLAGS-dl-tunables.c += -DTUNABLES_FRONTEND=$(tunables-type)
 
 ifeq (yesyes,$(build-shared)$(run-built-tests))
 tests-special += $(objpfx)list-tunables.out
@@ -103,7 +99,6 @@ endif
 # code paths.
 ifeq (yes,$(have-loop-to-function))
 CFLAGS-dl-tunables.c += -fno-tree-loop-distribute-patterns
-endif
 endif
 
 all-dl-routines = $(dl-routines) $(sysdep-dl-routines)
@@ -1173,7 +1168,6 @@ postclean-generated += $(objpfx)/dso-sort-tests-2.generated-makefile \
 		       $(objpfx)/dso-sort-tests-2.generated-makefile
 
 # Generate from each testcase description file
-ifeq (yes,$(have-tunables))
 $(eval $(call include_dsosort_tests,dso-sort-tests-1.def))
 $(eval $(call include_dsosort_tests,dso-sort-tests-2.def))
 
@@ -1181,7 +1175,6 @@ $(eval $(call include_dsosort_tests,dso-sort-tests-2.def))
 LDFLAGS-tst-bz15311-b.so += -Wl,-z,lazy
 LDFLAGS-tst-bz15311-c.so += -Wl,-z,lazy
 LDFLAGS-tst-bz15311-d.so += -Wl,-z,lazy
-endif
 
 check-abi: $(objpfx)check-abi-ld.out \
 	   $(objpfx)check-abi-version-libc.out

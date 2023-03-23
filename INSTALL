@@ -228,25 +228,6 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      By default for x86_64, the GNU C Library is built with the vector
      math library.  Use this option to disable the vector math library.
 
-'--enable-tunables'
-     Tunables support allows additional library parameters to be
-     customized at runtime.  This feature is enabled by default.  This
-     option can take the following values:
-
-     'yes'
-          This is the default if no option is passed to configure.  This
-          enables tunables and selects the default frontend (currently
-          'valstring').
-
-     'no'
-          This option disables tunables.
-
-     'valstring'
-          This enables tunables and selects the 'valstring' frontend for
-          tunables.  This frontend allows users to specify tunables as a
-          colon-separated list in a single environment variable
-          'GLIBC_TUNABLES'.
-
 '--disable-crypt'
      Do not install the passphrase-hashing library 'libcrypt' or the
      header file 'crypt.h'.  'unistd.h' will still declare the function

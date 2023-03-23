@@ -57,7 +57,6 @@ $(objpfx)tst-quad2pie: $(objpfx)tst-quadmod2pie.o
 CFLAGS-tst-quad1pie.c = $(PIE-ccflag)
 CFLAGS-tst-quad2pie.c = $(PIE-ccflag)
 
-ifneq (no,$(have-tunables))
 tests += tst-platform-1
 modules-names += tst-platformmod-1 x86_64/tst-platformmod-2
 extra-test-objs += tst-platformmod-2.o
@@ -71,7 +70,6 @@ $(objpfx)tst-platform-1.out: $(objpfx)x86_64/tst-platformmod-2.so
 # always set to x86_64.
 tst-platform-1-ENV = LD_PRELOAD=$(objpfx)\$$PLATFORM/tst-platformmod-2.so \
 	GLIBC_TUNABLES=glibc.cpu.hwcaps=-AVX512F,-AVX2
-endif
 
 tests += tst-audit3 tst-audit4 tst-audit5 tst-audit6 tst-audit7 \
 	 tst-audit10 tst-sse tst-avx tst-avx512

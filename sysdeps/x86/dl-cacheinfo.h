@@ -760,10 +760,8 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   else if (non_temporal_threshold > maximum_non_temporal_threshold)
     non_temporal_threshold = maximum_non_temporal_threshold;
 
-#if HAVE_TUNABLES
   /* NB: The REP MOVSB threshold must be greater than VEC_SIZE * 8.  */
   unsigned int minimum_rep_movsb_threshold;
-#endif
   /* NB: The default REP MOVSB threshold is 4096 * (VEC_SIZE / 16) for
      VEC_SIZE == 64 or 32.  For VEC_SIZE == 16, the default REP MOVSB
      threshold is 2048 * (VEC_SIZE / 16).  */
@@ -772,24 +770,18 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
       && !CPU_FEATURE_PREFERRED_P (cpu_features, Prefer_No_AVX512))
     {
       rep_movsb_threshold = 4096 * (64 / 16);
-#if HAVE_TUNABLES
       minimum_rep_movsb_threshold = 64 * 8;
-#endif
     }
   else if (CPU_FEATURE_PREFERRED_P (cpu_features,
 				    AVX_Fast_Unaligned_Load))
     {
       rep_movsb_threshold = 4096 * (32 / 16);
-#if HAVE_TUNABLES
       minimum_rep_movsb_threshold = 32 * 8;
-#endif
     }
   else
     {
       rep_movsb_threshold = 2048 * (16 / 16);
-#if HAVE_TUNABLES
       minimum_rep_movsb_threshold = 16 * 8;
-#endif
     }
   /* NB: The default REP MOVSB threshold is 2112 on processors with fast
      short REP MOVSB (FSRM).  */
@@ -799,7 +791,6 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
   /* The default threshold to use Enhanced REP STOSB.  */
   unsigned long int rep_stosb_threshold = 2048;
 
-#if HAVE_TUNABLES
   long int tunable_size;
 
   tunable_size = TUNABLE_GET (x86_data_cache_size, long int, NULL);
@@ -836,7 +827,6 @@ dl_init_cacheinfo (struct cpu_features *cpu_features)
 			   minimum_rep_movsb_threshold, SIZE_MAX);
   TUNABLE_SET_WITH_BOUNDS (x86_rep_stosb_threshold, rep_stosb_threshold, 1,
 			   SIZE_MAX);
-#endif
 
   unsigned long int rep_movsb_stop_threshold;
   /* ERMS feature is implemented from AMD Zen3 architecture and it is

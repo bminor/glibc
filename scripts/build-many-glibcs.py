@@ -445,7 +445,6 @@ class Context(object):
                                                '--disable-profile',
                                                '--disable-timezone-tools',
                                                '--disable-mathvec',
-                                               '--disable-tunables',
                                                '--disable-crypt',
                                                '--disable-build-nscd',
                                                '--disable-nscd']},

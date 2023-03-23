@@ -34,6 +34,9 @@ Deprecated and removed features, and other changes affecting compatibility:
   cache can still be disable per-application using tunables
   (glibc.malloc.tcache_count set to zero).
 
+* The configure option --enable-tunables has been removed.  The tunable
+  feature is now always enabled.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

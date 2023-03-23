@@ -2,7 +2,6 @@
 default-abi := 64
 
 ifeq ($(subdir),elf)
-ifneq ($(have-tunables),no)
 
 tests-map-32bit = \
   tst-map-32bit-1a \
@@ -23,5 +22,4 @@ $(objpfx)tst-map-32bit-1a: $(objpfx)tst-map-32bit-mod.so
 tst-map-32bit-1b-ENV = GLIBC_TUNABLES=glibc.cpu.prefer_map_32bit_exec=1
 $(objpfx)tst-map-32bit-1b: $(objpfx)tst-map-32bit-mod.so
 
-endif
 endif

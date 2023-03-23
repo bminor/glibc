@@ -19,8 +19,6 @@
    glibc.malloc.check and glibc.malloc.mmap_threshold but also retain
    glibc.malloc.mmap_threshold in an unprivileged child.  */
 
-/* This is compiled as part of the testsuite but needs to see
-   HAVE_TUNABLES. */
 #define _LIBC 1
 #include "config.h"
 #undef _LIBC
@@ -83,7 +81,6 @@ test_child (int off)
 {
   const char *val = getenv ("GLIBC_TUNABLES");
 
-#if HAVE_TUNABLES
   if (val != NULL && strcmp (val, resultstrings[off]) == 0)
     return 0;
 
@@ -91,14 +88,6 @@ test_child (int off)
     printf ("[%d] Unexpected GLIBC_TUNABLES VALUE %s\n", off, val);
 
   return 1;
-#else
-  if (val != NULL)
-    {
-      printf ("[%d] GLIBC_TUNABLES not cleared\n", off);
-      return 1;
-    }
-  return 0;
-#endif
 }
 
 static int

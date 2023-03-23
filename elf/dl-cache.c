@@ -205,7 +205,7 @@ search_cache (const char *string_table, uint32_t string_table_size,
   uint64_t platform = _dl_string_platform (GLRO (dl_platform));
   if (platform != (uint64_t) -1)
     platform = 1ULL << platform;
-  uint64_t hwcap_mask = GET_HWCAP_MASK ();
+  uint64_t hwcap_mask = TUNABLE_GET (glibc, cpu, hwcap_mask, uint64_t, NULL);
 #define _DL_HWCAP_TLS_MASK (1LL << 63)
   uint64_t hwcap_exclude = ~((GLRO (dl_hwcap) & hwcap_mask)
 			     | _DL_HWCAP_PLATFORM | _DL_HWCAP_TLS_MASK);

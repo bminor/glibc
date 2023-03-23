@@ -24,17 +24,6 @@
 
 #include <elf/dl-tunables.h>
 
-#if HAVE_TUNABLES
-# define GET_HWCAP_MASK() TUNABLE_GET (glibc, cpu, hwcap_mask, uint64_t, NULL)
-#else
-# ifdef SHARED
-#   define GET_HWCAP_MASK() GLRO(dl_hwcap_mask)
-# else
-/* HWCAP_MASK is ignored in static binaries when built without tunables.  */
-#  define GET_HWCAP_MASK() (0)
-# endif
-#endif
-
 #define GLIBC_HWCAPS_SUBDIRECTORY "glibc-hwcaps"
 #define GLIBC_HWCAPS_PREFIX GLIBC_HWCAPS_SUBDIRECTORY "/"
 

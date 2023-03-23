@@ -121,11 +121,6 @@ _dl_sort_maps_original (struct link_map **maps, unsigned int nmaps,
     }
 }
 
-#if !HAVE_TUNABLES
-/* In this case, just default to the original algorithm.  */
-strong_alias (_dl_sort_maps_original, _dl_sort_maps);
-#else
-
 /* We use a recursive function due to its better clarity and ease of
    implementation, as well as faster execution speed. We already use
    alloca() for list allocation during the breadth-first search of
@@ -314,5 +309,3 @@ _dl_sort_maps (struct link_map **maps, unsigned int nmaps,
   else
     _dl_sort_maps_dfs (maps, nmaps, force_first, for_fini);
 }
-
-#endif /* HAVE_TUNABLES.  */

@@ -23,11 +23,10 @@
 #include <dl-cacheinfo.h>
 #include <dl-minsigstacksize.h>
 
-#if HAVE_TUNABLES
 extern void TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *)
   attribute_hidden;
 
-# ifdef __LP64__
+#ifdef __LP64__
 static void
 TUNABLE_CALLBACK (set_prefer_map_32bit_exec) (tunable_val_t *valp)
 {
@@ -35,17 +34,14 @@ TUNABLE_CALLBACK (set_prefer_map_32bit_exec) (tunable_val_t *valp)
     GLRO(dl_x86_cpu_features).preferred[index_arch_Prefer_MAP_32BIT_EXEC]
       |= bit_arch_Prefer_MAP_32BIT_EXEC;
 }
-# endif
+#endif
 
-# if CET_ENABLED
+#if CET_ENABLED
 extern void TUNABLE_CALLBACK (set_x86_ibt) (tunable_val_t *)
   attribute_hidden;
 extern void TUNABLE_CALLBACK (set_x86_shstk) (tunable_val_t *)
   attribute_hidden;
-# endif
-#endif
 
-#if CET_ENABLED
 # include <dl-cet.h>
 #endif
 
@@ -712,13 +708,12 @@ no_cpuid:
 
   dl_init_cacheinfo (cpu_features);
 
-#if HAVE_TUNABLES
   TUNABLE_GET (hwcaps, tunable_val_t *, TUNABLE_CALLBACK (set_hwcaps));
 
-# ifdef __LP64__
+#ifdef __LP64__
   TUNABLE_GET (prefer_map_32bit_exec, tunable_val_t *,
 	       TUNABLE_CALLBACK (set_prefer_map_32bit_exec));
-# endif
+#endif
 
   bool disable_xsave_features = false;
 
@@ -774,13 +769,6 @@ no_cpuid:
       CPU_FEATURE_UNSET (cpu_features, FMA4);
     }
 
-#elif defined SHARED
-  /* Reuse dl_platform, dl_hwcap and dl_hwcap_mask for x86.  The
-     glibc.cpu.hwcap_mask tunable is initialized already, so no
-     need to do this.  */
-  GLRO(dl_hwcap_mask) = HWCAP_IMPORTANT;
-#endif
-
 #ifdef __x86_64__
   GLRO(dl_hwcap) = HWCAP_X86_64;
   if (cpu_features->basic.kind == arch_kind_intel)
@@ -828,12 +816,10 @@ no_cpuid:
 #endif
 
 #if CET_ENABLED
-# if HAVE_TUNABLES
   TUNABLE_GET (x86_ibt, tunable_val_t *,
 	       TUNABLE_CALLBACK (set_x86_ibt));
   TUNABLE_GET (x86_shstk, tunable_val_t *,
 	       TUNABLE_CALLBACK (set_x86_shstk));
-# endif
 
   /* Check CET status.  */
   unsigned int cet_status = get_cet_status ();

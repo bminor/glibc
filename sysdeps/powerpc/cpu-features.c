@@ -18,10 +18,7 @@
 
 #include <stdint.h>
 #include <cpu-features.h>
-
-#if HAVE_TUNABLES
-# include <elf/dl-tunables.h>
-#endif
+#include <elf/dl-tunables.h>
 
 static inline void
 init_cpu_features (struct cpu_features *cpu_features)
@@ -29,11 +26,7 @@ init_cpu_features (struct cpu_features *cpu_features)
   /* Default is to use aligned memory access on optimized function unless
      tunables is enable, since for this case user can explicit disable
      unaligned optimizations.  */
-#if HAVE_TUNABLES
   int32_t cached_memfunc = TUNABLE_GET (glibc, cpu, cached_memopt, int32_t,
 					NULL);
   cpu_features->use_cached_memopt = (cached_memfunc > 0);
-#else
-  cpu_features->use_cached_memopt = false;
-#endif
 }

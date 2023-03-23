@@ -30,7 +30,6 @@
    to see when pointer have been correctly tagged.  */
 #define MTE_ALLOWED_TAGS (0xfffe << PR_MTE_TAG_SHIFT)
 
-#if HAVE_TUNABLES
 struct cpu_list
 {
   const char *name;
@@ -59,19 +58,16 @@ get_midr_from_mcpu (const char *mcpu)
 
   return UINT64_MAX;
 }
-#endif
 
 static inline void
 init_cpu_features (struct cpu_features *cpu_features)
 {
   register uint64_t midr = UINT64_MAX;
 
-#if HAVE_TUNABLES
   /* Get the tunable override.  */
   const char *mcpu = TUNABLE_GET (glibc, cpu, name, const char *, NULL);
   if (mcpu != NULL)
     midr = get_midr_from_mcpu (mcpu);
-#endif
 
   /* If there was no useful tunable override, query the MIDR if the kernel
      allows it.  */
@@ -100,13 +96,11 @@ init_cpu_features (struct cpu_features *cpu_features)
   cpu_features->mte_state = 0;
 
 #ifdef USE_MTAG
-# if HAVE_TUNABLES
   int mte_state = TUNABLE_GET (glibc, mem, tagging, unsigned, 0);
   cpu_features->mte_state = (GLRO (dl_hwcap2) & HWCAP2_MTE) ? mte_state : 0;
   /* If we lack the MTE feature, disable the tunable, since it will
      otherwise cause instructions that won't run on this CPU to be used.  */
   TUNABLE_SET (glibc, mem, tagging, cpu_features->mte_state);
-# endif
 
   if (cpu_features->mte_state & 4)
     /* Enable choosing system-preferred faulting mode.  */

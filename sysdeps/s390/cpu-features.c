@@ -18,15 +18,12 @@
 
 #include <cpu-features.h>
 
-#if HAVE_TUNABLES
-# include <elf/dl-tunables.h>
-# include <ifunc-memcmp.h>
-# include <string.h>
+#include <elf/dl-tunables.h>
+#include <ifunc-memcmp.h>
+#include <string.h>
 extern __typeof (memcmp) MEMCMP_DEFAULT;
-#endif
 
-#if HAVE_TUNABLES
-# define S390_COPY_CPU_FEATURES(SRC_PTR, DEST_PTR)	\
+#define S390_COPY_CPU_FEATURES(SRC_PTR, DEST_PTR)	\
   (DEST_PTR)->hwcap = (SRC_PTR)->hwcap;			\
   (DEST_PTR)->stfle_bits[0] = (SRC_PTR)->stfle_bits[0];
 
@@ -205,7 +202,6 @@ TUNABLE_CALLBACK (set_hwcaps) (tunable_val_t *valp)
   cpu_features->stfle_bits[0] = cpu_features_curr.stfle_bits[0]
     & cpu_features_orig.stfle_bits[0];
 }
-#endif
 
 static inline void
 init_cpu_features (struct cpu_features *cpu_features)
@@ -233,7 +229,5 @@ init_cpu_features (struct cpu_features *cpu_features)
       cpu_features->stfle_bits[0] = 0ULL;
     }
 
-#if HAVE_TUNABLES
   TUNABLE_GET (glibc, cpu, hwcaps, tunable_val_t *, TUNABLE_CALLBACK (set_hwcaps));
-#endif
 }

@@ -1017,11 +1017,8 @@ CPPFLAGS = $(config-extra-cppflags) $(CPPUNDEFS) $(CPPFLAGS-config) \
 	   $(CPPFLAGS-$(suffix $@)) \
 	   $(foreach lib,$(libof-$(basename $(@F))) \
 			 $(libof-$(<F)) $(libof-$(@F)),$(CPPFLAGS-$(lib))) \
-	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F)))
-
-ifneq (no,$(have-tunables))
-CPPFLAGS += -DTOP_NAMESPACE=glibc
-endif
+	   $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) $(CPPFLAGS-$(basename $(@F))) \
+	   -DTOP_NAMESPACE=glibc
 
 override CFLAGS	= -std=gnu11 -fgnu89-inline $(config-extra-cflags) \
 		  $(filter-out %frame-pointer,$(+cflags)) $(+gccwarn-c) \
@@ -1203,7 +1200,6 @@ endif
 
 # Build the tunables list header early since it could be used by any module in
 # glibc.
-ifneq (no,$(have-tunables))
 before-compile += $(common-objpfx)dl-tunable-list.h
 common-generated += dl-tunable-list.h dl-tunable-list.stmp
 
@@ -1216,7 +1212,6 @@ $(common-objpfx)dl-tunable-list.stmp: \
 	$(AWK) -f $^ > ${@:stmp=T}
 	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
 	touch $@
-endif
 
 # Dump the GCC macros used by the default compiler flags to a header
 # file, so that they can be inspected when using different compiler

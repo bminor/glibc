@@ -18,9 +18,7 @@
 
 #include <stdbool.h>
 
-#if HAVE_TUNABLES
-# define TUNABLE_NAMESPACE malloc
-#endif
+#define TUNABLE_NAMESPACE malloc
 #include <elf/dl-tunables.h>
 
 /* Compile-time constants.  */
@@ -47,21 +45,13 @@
 static inline size_t
 heap_min_size (void)
 {
-#if HAVE_TUNABLES
   return mp_.hp_pagesize == 0 ? HEAP_MIN_SIZE : mp_.hp_pagesize;
-#else
-  return HEAP_MIN_SIZE;
-#endif
 }
 
 static inline size_t
 heap_max_size (void)
 {
-#if HAVE_TUNABLES
   return mp_.hp_pagesize == 0 ? HEAP_MAX_SIZE : mp_.hp_pagesize * 4;
-#else
-  return HEAP_MAX_SIZE;
-#endif
 }
 
 /***************************************************************************/
@@ -239,8 +229,7 @@ __malloc_fork_unlock_child (void)
   __libc_lock_init (list_lock);
 }
 
-#if HAVE_TUNABLES
-# define TUNABLE_CALLBACK_FNDECL(__name, __type) \
+#define TUNABLE_CALLBACK_FNDECL(__name, __type) \
 static inline int do_ ## __name (__type value);				      \
 static void									      \
 TUNABLE_CALLBACK (__name) (tunable_val_t *valp)				      \
@@ -263,42 +252,6 @@ TUNABLE_CALLBACK_FNDECL (set_tcache_unsorted_limit, size_t)
 #endif
 TUNABLE_CALLBACK_FNDECL (set_mxfast, size_t)
 TUNABLE_CALLBACK_FNDECL (set_hugetlb, size_t)
-#else
-/* Initialization routine. */
-#include <string.h>
-extern char **_environ;
-
-static char *
-next_env_entry (char ***position)
-{
-  char **current = *position;
-  char *result = NULL;
-
-  while (*current != NULL)
-    {
-      if (__builtin_expect ((*current)[0] == 'M', 0)
-          && (*current)[1] == 'A'
-          && (*current)[2] == 'L'
-          && (*current)[3] == 'L'
-          && (*current)[4] == 'O'
-          && (*current)[5] == 'C'
-          && (*current)[6] == '_')
-        {
-          result = &(*current)[7];
-
-          /* Save current position for next visit.  */
-          *position = ++current;
-
-          break;
-        }
-
-      ++current;
-    }
-
-  return result;
-}
-#endif
-
 
 #if USE_TCACHE
 static void tcache_key_initialize (void);
@@ -343,7 +296,6 @@ ptmalloc_init (void)
 
   malloc_init_state (&main_arena);
 
-#if HAVE_TUNABLES
   TUNABLE_GET (top_pad, size_t, TUNABLE_CALLBACK (set_top_pad));
   TUNABLE_GET (perturb, int32_t, TUNABLE_CALLBACK (set_perturb_byte));
   TUNABLE_GET (mmap_threshold, size_t, TUNABLE_CALLBACK (set_mmap_threshold));
@@ -363,70 +315,6 @@ ptmalloc_init (void)
     /* Force mmap for main arena instead of sbrk, so hugepages are explicitly
        used.  */
     __always_fail_morecore = true;
-#else
-  if (__glibc_likely (_environ != NULL))
-    {
-      char **runp = _environ;
-      char *envline;
-
-      while (__builtin_expect ((envline = next_env_entry (&runp)) != NULL,
-                               0))
-        {
-          size_t len = strcspn (envline, "=");
-
-          if (envline[len] != '=')
-            /* This is a "MALLOC_" variable at the end of the string
-               without a '=' character.  Ignore it since otherwise we
-               will access invalid memory below.  */
-            continue;
-
-          switch (len)
-            {
-            case 8:
-              if (!__builtin_expect (__libc_enable_secure, 0))
-                {
-                  if (memcmp (envline, "TOP_PAD_", 8) == 0)
-                    __libc_mallopt (M_TOP_PAD, strtol (&envline[9], NULL, 10));
-                  else if (memcmp (envline, "PERTURB_", 8) == 0)
-                    __libc_mallopt (M_PERTURB, strtol (&envline[9], NULL, 10));
-                }
-              break;
-            case 9:
-              if (!__builtin_expect (__libc_enable_secure, 0))
-                {
-                  if (memcmp (envline, "MMAP_MAX_", 9) == 0)
-                    __libc_mallopt (M_MMAP_MAX, strtol (&envline[10],
-							NULL, 10));
-                  else if (memcmp (envline, "ARENA_MAX", 9) == 0)
-                    __libc_mallopt (M_ARENA_MAX, strtol (&envline[10],
-							 NULL, 10));
-                }
-              break;
-            case 10:
-              if (!__builtin_expect (__libc_enable_secure, 0))
-                {
-                  if (memcmp (envline, "ARENA_TEST", 10) == 0)
-                    __libc_mallopt (M_ARENA_TEST, strtol (&envline[11],
-							  NULL, 10));
-                }
-              break;
-            case 15:
-              if (!__builtin_expect (__libc_enable_secure, 0))
-                {
-                  if (memcmp (envline, "TRIM_THRESHOLD_", 15) == 0)
-                    __libc_mallopt (M_TRIM_THRESHOLD, strtol (&envline[16],
-							      NULL, 10));
-                  else if (memcmp (envline, "MMAP_THRESHOLD_", 15) == 0)
-                    __libc_mallopt (M_MMAP_THRESHOLD, strtol (&envline[16],
-							      NULL, 10));
-                }
-              break;
-            default:
-              break;
-            }
-        }
-    }
-#endif
 }
 
 /* Managing heaps and arenas (for concurrent threads) */
@@ -561,7 +449,6 @@ alloc_new_heap  (size_t size, size_t top_pad, size_t pagesize,
 static heap_info *
 new_heap (size_t size, size_t top_pad)
 {
-#if HAVE_TUNABLES
   if (__glibc_unlikely (mp_.hp_pagesize != 0))
     {
       heap_info *h = alloc_new_heap (size, top_pad, mp_.hp_pagesize,
@@ -569,7 +456,6 @@ new_heap (size_t size, size_t top_pad)
       if (h != NULL)
 	return h;
     }
-#endif
   return alloc_new_heap (size, top_pad, GLRO (dl_pagesize), 0);
 }
 

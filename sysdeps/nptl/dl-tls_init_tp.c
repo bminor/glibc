@@ -102,9 +102,7 @@ __tls_init_tp (void)
 
   {
     bool do_rseq = true;
-#if HAVE_TUNABLES
     do_rseq = TUNABLE_GET (rseq, int, NULL);
-#endif
     if (rseq_register_current_thread (pd, do_rseq))
       {
         /* We need a writable view of the variables.  They are in

@@ -61,9 +61,7 @@ tests-internal += \
 	 tst-dynarray-fail \
 	 tst-dynarray-at-fail \
 
-ifneq (no,$(have-tunables))
 tests += tst-malloc-usable-tunables tst-mxfast
-endif
 
 tests += $(tests-static)
 test-srcs = tst-mtrace

@@ -97,14 +97,8 @@ _dl_tls_static_surplus_init (size_t naudit)
 {
   size_t nns, opt_tls;
 
-#if HAVE_TUNABLES
   nns = TUNABLE_GET (nns, size_t, NULL);
   opt_tls = TUNABLE_GET (optional_static_tls, size_t, NULL);
-#else
-  /* Default values of the tunables.  */
-  nns = DEFAULT_NNS;
-  opt_tls = OPTIONAL_TLS;
-#endif
   if (nns > DL_NNS)
     nns = DL_NNS;
   if (DL_NNS - nns < naudit)

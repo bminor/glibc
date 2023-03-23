@@ -16,8 +16,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if HAVE_TUNABLES
-# define TUNABLE_NAMESPACE pthread
+#define TUNABLE_NAMESPACE pthread
 #include <pthread_mutex_conf.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -53,4 +52,3 @@ __pthread_tunables_init (void)
   TUNABLE_GET (stack_cache_size, size_t,
                TUNABLE_CALLBACK (set_stack_cache_size));
 }
-#endif

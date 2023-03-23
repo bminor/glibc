@@ -245,11 +245,9 @@ tests-internal += \
   tst-sigcontext-get_pc \
   # tests-internal
 
-ifneq (no,$(have-tunables))
 tests-internal += \
   tst-rseq-disable \
-  # tests-internal $(have-tunables)
-endif
+  # tests-internal
 
 tests-time64 += \
   tst-adjtimex-time64 \
