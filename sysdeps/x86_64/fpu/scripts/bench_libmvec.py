@@ -396,7 +396,7 @@ def parse_file(func_types):
 
   func = func_types[-1]
   try:
-    with open('../sysdeps/x86_64/fpu/libmvec-%s-inputs' % func) as f:
+    with open('../benchtests/libmvec/%s-inputs' % func) as f:
       for line in f:
         # Look for directives and parse it if found.
         if line.startswith('##'):
