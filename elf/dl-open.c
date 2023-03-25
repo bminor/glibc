@@ -578,7 +578,9 @@ dl_open_worker_begin (void *a)
       if ((mode & RTLD_GLOBAL) && new->l_global == 0)
 	add_to_global_update (new);
 
-      assert (_dl_debug_update (args->nsid)->r_state == RT_CONSISTENT);
+      const int r_state __attribute__ ((unused))
+        = _dl_debug_update (args->nsid)->r_state;
+      assert (r_state == RT_CONSISTENT);
 
       return;
     }
@@ -927,7 +929,9 @@ no more namespaces available for dlmopen()"));
       _dl_signal_exception (errcode, &exception, NULL);
     }
 
-  assert (_dl_debug_update (args.nsid)->r_state == RT_CONSISTENT);
+  const int r_state __attribute__ ((unused))
+    = _dl_debug_update (args.nsid)->r_state;
+  assert (r_state == RT_CONSISTENT);
 
   /* Release the lock.  */
   __rtld_lock_unlock_recursive (GL(dl_load_lock));
