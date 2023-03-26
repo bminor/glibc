@@ -23,11 +23,12 @@
 # involves emulation when running ldconfig).
 
 common_objpfx=$1
-test_wrapper_env=$2
-run_program_env=$3
+sysconfdir=$2
+test_wrapper_env=$3
+run_program_env=$4
 
-if ! test -r /etc/ld.so.cache; then
-    echo "warning: /etc/ld.so.cache does not exist, test skipped"
+if ! test -r "${sysconfdir}/ld.so.cache"; then
+    echo "warning: ${sysconfdir}/ld.so.cache does not exist, test skipped"
     exit 77
 fi
 
@@ -46,7 +47,7 @@ errors=0
 case $status in
     (0)
 	if head -n 1 "$testout" | \
-		grep -q "libs found in cache \`/etc/ld.so.cache'\$" ; then
+		grep -q "libs found in cache \`${sysconfdir}/ld.so.cache'\$" ; then
 	    echo "info: initial string found" >>"$testout"
 	else
 	    echo "error: initial string not found" >>"$testout"

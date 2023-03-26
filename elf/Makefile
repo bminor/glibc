@@ -2405,7 +2405,7 @@ $(objpfx)tst-ldconfig-X.out : tst-ldconfig-X.sh $(objpfx)ldconfig
 	$(evaluate-test)
 
 $(objpfx)tst-ldconfig-p.out : tst-ldconfig-p.sh $(objpfx)ldconfig
-	$(SHELL) $< '$(common-objpfx)' '$(test-wrapper-env)' \
+	$(SHELL) $< '$(common-objpfx)' '$(sysconfdir)' '$(test-wrapper-env)' \
 		 '$(run-program-env)' > $@; \
 	$(evaluate-test)
 
