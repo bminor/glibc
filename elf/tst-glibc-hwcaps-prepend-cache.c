@@ -44,9 +44,13 @@ do_test (void)
   if (dlopen (SONAME, RTLD_NOW) != NULL)
     FAIL_EXIT1 (SONAME " is already on the search path");
 
-  /* Install the default implementation of libmarkermod1.so.  */
-  xmkdirp ("/etc", 0777);
-  support_write_file_string ("/etc/ld.so.conf", "/glibc-test/lib\n");
+  {
+    /* Install the default implementation of libmarkermod1.so.  */
+    char *conf_path = xasprintf ("%s/ld.so.conf", support_sysconfdir_prefix);
+    xmkdirp (support_sysconfdir_prefix, 0777);
+    support_write_file_string (conf_path, "/glibc-test/lib\n");
+    free (conf_path);
+  }
   xmkdirp ("/glibc-test/lib/glibc-hwcaps/prepend2", 0777);
   xmkdirp ("/glibc-test/lib/glibc-hwcaps/prepend3", 0777);
   {
