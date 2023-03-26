@@ -144,6 +144,8 @@ extern const char support_slibdir_prefix[];
 extern const char support_install_rootsbindir[];
 /* Corresponds to the install's compiled locale directory.  */
 extern const char support_complocaledir_prefix[];
+/* Corresponds to the install's etc/ directory.  */
+extern const char support_sysconfdir_prefix[];
 
 /* Copies the file at the path FROM to TO.  If TO does not exist, it
    is created.  If TO is a regular file, it is truncated before

@@ -92,3 +92,10 @@ const char support_complocaledir_prefix[] = COMPLOCALEDIR_PATH;
 #else
 # error please -DCOMPLOCALEDIR_PATH=something in the Makefile
 #endif
+
+#ifdef SYSCONFDIR_PATH
+/* Corresponds to the install's etc/ directory.  */
+const char support_sysconfdir_prefix[] = SYSCONFDIR_PATH;
+#else
+# error please -DSYSCONFDIR_PATH=something in the Makefile
+#endif

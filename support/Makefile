@@ -231,7 +231,8 @@ CFLAGS-support_paths.c = \
 		-DSBINDIR_PATH=\"$(sbindir)\" \
 		-DSLIBDIR_PATH=\"$(slibdir)\" \
 		-DROOTSBINDIR_PATH=\"$(rootsbindir)\" \
-		-DCOMPLOCALEDIR_PATH=\"$(complocaledir)\"
+		-DCOMPLOCALEDIR_PATH=\"$(complocaledir)\" \
+		-DSYSCONFDIR_PATH=\"$(sysconfdir)\"
 
 # In support_timespec_check_in_range we may be passed a very tight
 # range for which we should produce a correct result for expected
