@@ -40,7 +40,7 @@
 #define __SIZEOF_PTHREAD_RWLOCK_T 64
 #define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
 
-#define __LOCK_ALIGNMENT __attribute__ ((__aligned__(16)))
+#define __LOCK_ALIGNMENT
 #define __ONCE_ALIGNMENT
 
 #endif	/* bits/pthreadtypes.h */
