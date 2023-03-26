@@ -33,7 +33,6 @@
 
 #define DSO "libldconfig-ld-mod.so"
 #define DSO_DIR "/tmp/tst-ldconfig"
-#define CONF "/etc/ld.so.conf"
 
 
 static void
@@ -64,6 +63,8 @@ do_test (void)
 {
   struct support_capture_subprocess result;
 
+  char *conf_path = xasprintf ("%s/ld.so.conf", support_sysconfdir_prefix);
+
   /* Create the needed directories.  */
   xmkdirp ("/var/cache/ldconfig", 0777);
   xmkdirp (DSO_DIR, 0777);
@@ -82,9 +83,9 @@ do_test (void)
      is not searched.  */
   TEST_VERIFY_EXIT (dlopen (DSO, RTLD_NOW | RTLD_GLOBAL) == NULL);
 
-  FILE *fp = xfopen (CONF, "a+");
+  FILE *fp = xfopen (conf_path, "a+");
   if (!fp)
-    FAIL_EXIT1 ("creating /etc/ld.so.conf failed: %m");
+    FAIL_EXIT1 ("creating %s failed: %m", conf_path);
   xfclose (fp);
 
   /* Run ldconfig.  */
@@ -95,9 +96,9 @@ do_test (void)
   TEST_VERIFY_EXIT (dlopen (DSO, RTLD_NOW | RTLD_GLOBAL) == NULL);
 
   /* Add tst-ldconfig directory to /etc/ld.so.conf.  */
-  fp = xfopen (CONF, "w");
+  fp = xfopen (conf_path, "w");
   if (!(fwrite (DSO_DIR, 1, sizeof (DSO_DIR), fp)))
-    FAIL_EXIT1 ("updating /etc/ld.so.conf failed: %m");
+    FAIL_EXIT1 ("updating %s failed: %m", conf_path);
   xfclose (fp);
 
   /* Try to dlopen the same DSO again, we expect this to still fail.  */
@@ -110,6 +111,8 @@ do_test (void)
 
   /* Finally, we expect dlopen to pass now.  */
   TEST_VERIFY_EXIT (dlopen (DSO, RTLD_NOW | RTLD_GLOBAL) != NULL);
+
+  free (conf_path);
 
   return 0;
 }
