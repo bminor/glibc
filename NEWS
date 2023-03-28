@@ -30,6 +30,10 @@ Deprecated and removed features, and other changes affecting compatibility:
   alternatively stable kernels from versions 6.1.6, 5.15.87, 5.10.163,
   5.4.228, 4.19.270 or 4.14.303.
 
+* The --disable-experimental-malloc is no longer available.  The per-thread
+  cache can still be disable per-application using tunables
+  (glibc.malloc.tcache_count set to zero).
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]

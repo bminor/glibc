@@ -258,12 +258,6 @@ if 'CFLAGS' is specified it must enable optimization.  For example:
      independently-maintained implementations of libcrypt.  It may
      become the default in a future release.
 
-'--disable-experimental-malloc'
-     By default, a per-thread cache is enabled in 'malloc'.  While this
-     cache can be disabled on a per-application basis using tunables
-     (set glibc.malloc.tcache_count to zero), this option can be used to
-     remove it from the build completely.
-
 '--disable-scv'
      Disable using 'scv' instruction for syscalls.  All syscalls will
      use 'sc' instead, even if the kernel supports 'scv'.  PowerPC only.

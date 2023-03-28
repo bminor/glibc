@@ -300,13 +300,6 @@ AC_ARG_ENABLE([multi-arch],
 	      [multi_arch=$enableval],
 	      [multi_arch=default])
 
-AC_ARG_ENABLE([experimental-malloc],
-	      AS_HELP_STRING([--disable-experimental-malloc],
-			     [disable experimental malloc features]),
-	      [experimental_malloc=$enableval],
-	      [experimental_malloc=yes])
-AC_SUBST(experimental_malloc)
-
 AC_ARG_ENABLE([memory-tagging],
 	      AS_HELP_STRING([--enable-memory-tagging],
 			     [enable memory tagging if supported by the architecture @<:@default=no@:>@]),

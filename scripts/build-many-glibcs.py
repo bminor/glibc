@@ -447,7 +447,6 @@ class Context(object):
                                                '--disable-mathvec',
                                                '--disable-tunables',
                                                '--disable-crypt',
-                                               '--disable-experimental-malloc',
                                                '--disable-build-nscd',
                                                '--disable-nscd']},
                                       {'variant': 'no-pie',

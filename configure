@@ -671,7 +671,6 @@ libc_cv_static_nss_crypt
 libc_cv_nss_crypt
 build_crypt
 memory_tagging
-experimental_malloc
 enable_werror
 all_warnings
 force_install
@@ -774,7 +773,6 @@ enable_kernel
 enable_all_warnings
 enable_werror
 enable_multi_arch
-enable_experimental_malloc
 enable_memory_tagging
 enable_crypt
 enable_nss_crypt
@@ -1441,8 +1439,6 @@ Optional Features:
   --disable-werror        do not build with -Werror
   --enable-multi-arch     enable single DSO with optimizations for multiple
                           architectures
-  --disable-experimental-malloc
-                          disable experimental malloc features
   --enable-memory-tagging enable memory tagging if supported by the
                           architecture [default=no]
   --disable-crypt         do not build nor install the passphrase hashing
@@ -3453,15 +3449,6 @@ if test "${enable_multi_arch+set}" = set; then :
 else
   multi_arch=default
 fi
-
-
-# Check whether --enable-experimental-malloc was given.
-if test "${enable_experimental_malloc+set}" = set; then :
-  enableval=$enable_experimental_malloc; experimental_malloc=$enableval
-else
-  experimental_malloc=yes
-fi
-
 
 
 # Check whether --enable-memory-tagging was given.

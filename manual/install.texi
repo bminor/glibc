@@ -286,12 +286,6 @@ This option is for hackers and distributions experimenting with
 independently-maintained implementations of libcrypt.  It may become
 the default in a future release.
 
-@item --disable-experimental-malloc
-By default, a per-thread cache is enabled in @code{malloc}.  While
-this cache can be disabled on a per-application basis using tunables
-(set glibc.malloc.tcache_count to zero), this option can be used to
-remove it from the build completely.
-
 @item --disable-scv
 Disable using @code{scv} instruction for syscalls. All syscalls will use
 @code{sc} instead, even if the kernel supports @code{scv}. PowerPC only.
