@@ -37,11 +37,13 @@
 # pragma weak __intl_freemem
 # pragma weak __libio_freemem
 # pragma weak __libc_fstab_freemem
+#ifdef USE_NSCD
 # pragma weak __nscd_gr_map_freemem
 # pragma weak __nscd_hst_map_freemem
 # pragma weak __nscd_pw_map_freemem
 # pragma weak __nscd_serv_map_freemem
 # pragma weak __nscd_group_map_freemem
+#endif
 # pragma weak __libc_regcomp_freemem
 # pragma weak __libc_atfork_freemem
 # pragma weak __res_thread_freeres
@@ -95,11 +97,15 @@ __libc_freeres (void)
       call_function_static_weak (__intl_freemem);
       call_function_static_weak (__libio_freemem);
       call_function_static_weak (__libc_fstab_freemem);
+
+#ifdef USE_NSCD
       call_function_static_weak (__nscd_gr_map_freemem);
       call_function_static_weak (__nscd_hst_map_freemem);
       call_function_static_weak (__nscd_pw_map_freemem);
       call_function_static_weak (__nscd_serv_map_freemem);
       call_function_static_weak (__nscd_group_map_freemem);
+#endif
+
       call_function_static_weak (__libc_regcomp_freemem);
       call_function_static_weak (__libc_atfork_freemem);
       /* __res_thread_freeres deallocates the per-thread resolv_context);
