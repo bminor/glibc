@@ -219,6 +219,7 @@ CFLAGS-tst-cet-legacy-mod-1.c += -fcf-protection=none
 CFLAGS-tst-cet-legacy-mod-2.c += -fcf-protection=none
 CFLAGS-tst-cet-legacy-3.c += -fcf-protection=none
 CFLAGS-tst-cet-legacy-4.c += -fcf-protection=branch
+CPPFLAGS-tst-cet-legacy-4a.c += -DCET_IS_PERMISSIVE=1
 CFLAGS-tst-cet-legacy-4a.c += -fcf-protection
 CFLAGS-tst-cet-legacy-4b.c += -fcf-protection
 CFLAGS-tst-cet-legacy-mod-4.c += -fcf-protection=none
