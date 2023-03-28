@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/platform/x86.h>
 
 #include <support/check.h>
 
@@ -39,6 +40,10 @@ do_test (void)
 	FAIL_EXIT1 ("incorrect dlopen '%s' error: %s\n", modname, err);
       return 0;
     }
+
+#ifdef CET_IS_PERMISSIVE
+  TEST_VERIFY (!CPU_FEATURE_ACTIVE (IBT) && !CPU_FEATURE_ACTIVE (SHSTK));
+#endif
 
   fp = dlsym (h, "test");
   if (fp == NULL)
