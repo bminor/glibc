@@ -43,6 +43,7 @@ tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
 	 tst-tcfree1 tst-tcfree2 tst-tcfree3 \
 	 tst-safe-linking \
 	 tst-mallocalign1 \
+	 tst-memalign-2
 
 tests-static := \
 	 tst-interpose-static-nothread \
@@ -70,7 +71,7 @@ test-srcs = tst-mtrace
 # with MALLOC_CHECK_=3 because they expect a specific failure.
 tests-exclude-malloc-check = tst-malloc-check tst-malloc-usable \
 	tst-mxfast tst-safe-linking \
-	tst-compathooks-off tst-compathooks-on
+	tst-compathooks-off tst-compathooks-on tst-memalign-2
 
 # Run all tests with MALLOC_CHECK_=3
 tests-malloc-check = $(filter-out $(tests-exclude-malloc-check) \

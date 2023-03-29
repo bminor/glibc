@@ -3156,17 +3156,42 @@ tcache_put (mchunkptr chunk, size_t tc_idx)
 }
 
 /* Caller must ensure that we know tc_idx is valid and there's
-   available chunks to remove.  */
+   available chunks to remove.  Removes chunk from the middle of the
+   list.  */
 static __always_inline void *
-tcache_get (size_t tc_idx)
+tcache_get_n (size_t tc_idx, tcache_entry **ep)
 {
-  tcache_entry *e = tcache->entries[tc_idx];
+  tcache_entry *e;
+  if (ep == &(tcache->entries[tc_idx]))
+    e = *ep;
+  else
+    e = REVEAL_PTR (*ep);
+
   if (__glibc_unlikely (!aligned_OK (e)))
     malloc_printerr ("malloc(): unaligned tcache chunk detected");
-  tcache->entries[tc_idx] = REVEAL_PTR (e->next);
+
+  if (ep == &(tcache->entries[tc_idx]))
+      *ep = REVEAL_PTR (e->next);
+  else
+    *ep = PROTECT_PTR (ep, REVEAL_PTR (e->next));
+
   --(tcache->counts[tc_idx]);
   e->key = 0;
   return (void *) e;
+}
+
+/* Like the above, but removes from the head of the list.  */
+static __always_inline void *
+tcache_get (size_t tc_idx)
+{
+  return tcache_get_n (tc_idx, & tcache->entries[tc_idx]);
+}
+
+/* Iterates through the tcache linked list.  */
+static __always_inline tcache_entry *
+tcache_next (tcache_entry *e)
+{
+  return (tcache_entry *) REVEAL_PTR (e->next);
 }
 
 static void
@@ -3277,7 +3302,7 @@ __libc_malloc (size_t bytes)
 
   DIAG_PUSH_NEEDS_COMMENT;
   if (tc_idx < mp_.tcache_bins
-      && tcache
+      && tcache != NULL
       && tcache->counts[tc_idx] > 0)
     {
       victim = tcache_get (tc_idx);
@@ -3535,6 +3560,38 @@ _mid_memalign (size_t alignment, size_t bytes, void *address)
         a <<= 1;
       alignment = a;
     }
+
+#if USE_TCACHE
+  {
+    size_t tbytes;
+    tbytes = checked_request2size (bytes);
+    if (tbytes == 0)
+      {
+	__set_errno (ENOMEM);
+	return NULL;
+      }
+    size_t tc_idx = csize2tidx (tbytes);
+
+    if (tc_idx < mp_.tcache_bins
+	&& tcache != NULL
+	&& tcache->counts[tc_idx] > 0)
+      {
+	/* The tcache itself isn't encoded, but the chain is.  */
+	tcache_entry **tep = & tcache->entries[tc_idx];
+	tcache_entry *te = *tep;
+	while (te != NULL && !PTR_IS_ALIGNED (te, alignment))
+	  {
+	    tep = & (te->next);
+	    te = tcache_next (te);
+	  }
+	if (te != NULL)
+	  {
+	    void *victim = tcache_get_n (tc_idx, tep);
+	    return tag_new_usable (victim);
+	  }
+      }
+  }
+#endif
 
   if (SINGLE_THREAD_P)
     {
@@ -3841,7 +3898,7 @@ _int_malloc (mstate av, size_t bytes)
 	      /* While we're here, if we see other chunks of the same size,
 		 stash them in the tcache.  */
 	      size_t tc_idx = csize2tidx (nb);
-	      if (tcache && tc_idx < mp_.tcache_bins)
+	      if (tcache != NULL && tc_idx < mp_.tcache_bins)
 		{
 		  mchunkptr tc_victim;
 
@@ -3899,7 +3956,7 @@ _int_malloc (mstate av, size_t bytes)
 	  /* While we're here, if we see other chunks of the same size,
 	     stash them in the tcache.  */
 	  size_t tc_idx = csize2tidx (nb);
-	  if (tcache && tc_idx < mp_.tcache_bins)
+	  if (tcache != NULL && tc_idx < mp_.tcache_bins)
 	    {
 	      mchunkptr tc_victim;
 
@@ -3961,7 +4018,7 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
   INTERNAL_SIZE_T tcache_nb = 0;
   size_t tc_idx = csize2tidx (nb);
-  if (tcache && tc_idx < mp_.tcache_bins)
+  if (tcache != NULL && tc_idx < mp_.tcache_bins)
     tcache_nb = nb;
   int return_cached = 0;
 
@@ -4041,7 +4098,7 @@ _int_malloc (mstate av, size_t bytes)
 #if USE_TCACHE
 	      /* Fill cache first, return to user only if cache fills.
 		 We may return one of these chunks later.  */
-	      if (tcache_nb
+	      if (tcache_nb > 0
 		  && tcache->counts[tc_idx] < mp_.tcache_count)
 		{
 		  tcache_put (victim, tc_idx);
@@ -4915,6 +4972,43 @@ _int_realloc (mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
    ------------------------------ memalign ------------------------------
  */
 
+/* Returns 0 if the chunk is not and does not contain the requested
+   aligned sub-chunk, else returns the amount of "waste" from
+   trimming.  BYTES is the *user* byte size, not the chunk byte
+   size.  */
+static size_t
+chunk_ok_for_memalign (mchunkptr p, size_t alignment, size_t bytes)
+{
+  void *m = chunk2mem (p);
+  INTERNAL_SIZE_T size = memsize (p);
+  void *aligned_m = m;
+
+  if (__glibc_unlikely (misaligned_chunk (p)))
+    malloc_printerr ("_int_memalign(): unaligned chunk detected");
+
+  aligned_m = PTR_ALIGN_UP (m, alignment);
+
+  INTERNAL_SIZE_T front_extra = (intptr_t) aligned_m - (intptr_t) m;
+
+  /* We can't trim off the front as it's too small.  */
+  if (front_extra > 0 && front_extra < MINSIZE)
+    return 0;
+
+  /* If it's a perfect fit, it's an exception to the return value rule
+     (we would return zero waste, which looks like "not usable"), so
+     handle it here by returning a small non-zero value instead.  */
+  if (size == bytes && front_extra == 0)
+    return 1;
+
+  /* If the block we need fits in the chunk, calculate total waste.  */
+  if (size > bytes + front_extra)
+    return size - bytes;
+
+  /* Can't use this chunk.  */
+  return 0;
+}
+
+/* BYTES is user requested bytes, not requested chunksize bytes.  */
 static void *
 _int_memalign (mstate av, size_t alignment, size_t bytes)
 {
@@ -4928,8 +5022,7 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
   mchunkptr remainder;            /* spare room at end to split off */
   unsigned long remainder_size;   /* its size */
   INTERNAL_SIZE_T size;
-
-
+  mchunkptr victim;
 
   nb = checked_request2size (bytes);
   if (nb == 0)
@@ -4938,29 +5031,142 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
       return NULL;
     }
 
-  /*
-     Strategy: find a spot within that chunk that meets the alignment
+  /* We can't check tcache here because we hold the arena lock, which
+     tcache doesn't expect.  We expect it has been checked
+     earlier.  */
+
+  /* Strategy: search the bins looking for an existing block that
+     meets our needs.  We scan a range of bins from "exact size" to
+     "just under 2x", spanning the small/large barrier if needed.  If
+     we don't find anything in those bins, the common malloc code will
+     scan starting at 2x.  */
+
+  /* This will be set if we found a candidate chunk.  */
+  victim = NULL;
+
+  /* Fast bins are singly-linked, hard to remove a chunk from the middle
+     and unlikely to meet our alignment requirements.  We have not done
+     any experimentation with searching for aligned fastbins.  */
+
+  int first_bin_index;
+  int first_largebin_index;
+  int last_bin_index;
+
+  if (in_smallbin_range (nb))
+    first_bin_index = smallbin_index (nb);
+  else
+    first_bin_index = largebin_index (nb);
+
+  if (in_smallbin_range (nb * 2))
+    last_bin_index = smallbin_index (nb * 2);
+  else
+    last_bin_index = largebin_index (nb * 2);
+
+  first_largebin_index = largebin_index (MIN_LARGE_SIZE);
+
+  int victim_index;                 /* its bin index */
+
+  for (victim_index = first_bin_index;
+       victim_index < last_bin_index;
+       victim_index ++)
+    {
+      victim = NULL;
+
+      if (victim_index < first_largebin_index)
+    {
+      /* Check small bins.  Small bin chunks are doubly-linked despite
+	 being the same size.  */
+
+      mchunkptr fwd;                    /* misc temp for linking */
+      mchunkptr bck;                    /* misc temp for linking */
+
+      bck = bin_at (av, victim_index);
+      fwd = bck->fd;
+      while (fwd != bck)
+	{
+	  if (chunk_ok_for_memalign (fwd, alignment, bytes) > 0)
+	    {
+	      victim = fwd;
+
+	      /* Unlink it */
+	      victim->fd->bk = victim->bk;
+	      victim->bk->fd = victim->fd;
+	      break;
+	    }
+
+	  fwd = fwd->fd;
+	}
+    }
+  else
+    {
+      /* Check large bins.  */
+      mchunkptr fwd;                    /* misc temp for linking */
+      mchunkptr bck;                    /* misc temp for linking */
+      mchunkptr best = NULL;
+      size_t best_size = 0;
+
+      bck = bin_at (av, victim_index);
+      fwd = bck->fd;
+
+      while (fwd != bck)
+	{
+	  int extra;
+
+	  if (chunksize (fwd) < nb)
+	      break;
+	  extra = chunk_ok_for_memalign (fwd, alignment, bytes);
+	  if (extra > 0
+	      && (extra <= best_size || best == NULL))
+	    {
+	      best = fwd;
+	      best_size = extra;
+	    }
+
+	  fwd = fwd->fd;
+	}
+      victim = best;
+
+      if (victim != NULL)
+	{
+	  unlink_chunk (av, victim);
+	  break;
+	}
+    }
+
+      if (victim != NULL)
+	break;
+    }
+
+  /* Strategy: find a spot within that chunk that meets the alignment
      request, and then possibly free the leading and trailing space.
-   */
+     This strategy is incredibly costly and can lead to external
+     fragmentation if header and footer chunks are unused.  */
 
-  /* Call malloc with worst case padding to hit alignment. */
+  if (victim != NULL)
+    {
+      p = victim;
+      m = chunk2mem (p);
+      set_inuse (p);
+    }
+  else
+    {
+      /* Call malloc with worst case padding to hit alignment. */
 
-  m = (char *) (_int_malloc (av, nb + alignment + MINSIZE));
+      m = (char *) (_int_malloc (av, nb + alignment + MINSIZE));
 
-  if (m == 0)
-    return 0;           /* propagate failure */
+      if (m == 0)
+	return 0;           /* propagate failure */
 
-  p = mem2chunk (m);
+      p = mem2chunk (m);
+    }
 
   if ((((unsigned long) (m)) % alignment) != 0)   /* misaligned */
-
-    { /*
-                Find an aligned spot inside chunk.  Since we need to give back
-                leading space in a chunk of at least MINSIZE, if the first
-                calculation places us at a spot with less than MINSIZE leader,
-                we can move to the next aligned spot -- we've allocated enough
-                total room so that this is always possible.
-                 */
+    {
+      /* Find an aligned spot inside chunk.  Since we need to give back
+         leading space in a chunk of at least MINSIZE, if the first
+         calculation places us at a spot with less than MINSIZE leader,
+         we can move to the next aligned spot -- we've allocated enough
+         total room so that this is always possible.  */
       brk = (char *) mem2chunk (((unsigned long) (m + alignment - 1)) &
                                 - ((signed long) alignment));
       if ((unsigned long) (brk - (char *) (p)) < MINSIZE)
