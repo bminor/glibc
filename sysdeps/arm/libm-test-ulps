@@ -839,6 +839,7 @@ float: 6
 
 Function: "hypot":
 double: 1
+float: 1
 
 Function: "hypot_downward":
 double: 1
