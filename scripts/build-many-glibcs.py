@@ -1481,6 +1481,7 @@ class Config(object):
                          '--disable-threads',
                          '--disable-libatomic',
                          '--disable-decimal-float',
+                         '--disable-gcov',
                          '--disable-libffi',
                          '--disable-libgomp',
                          '--disable-libitm',
