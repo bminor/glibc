@@ -21,6 +21,7 @@ Given a string benchmark result file, print a table with comparisons with a
 baseline.  The baseline is the first function, which typically is the builtin
 function.
 """
+import math
 import matplotlib as mpl
 mpl.use('Agg')
 
@@ -83,7 +84,8 @@ def draw_graph(f, v, ifuncs, results):
     pylab.savefig('%s-%s.png' % (f, v), bbox_inches='tight')
 
 
-def process_results(results, attrs, funcs, base_func, graph, no_diff, no_header):
+def process_results(results, attrs, funcs, base_func, graph, no_diff,
+                    no_header, gmean):
     """ Process results and print them
 
     Args:
@@ -132,6 +134,8 @@ def process_results(results, attrs, funcs, base_func, graph, no_diff, no_header)
             print("%36s%s" % (' ', '\t'.join(ifuncs)))
             print("=" * 120)
 
+        mean_row = [0 for i in range(len(ifuncs))]
+        total=0
         graph_res = {}
         for res in results['functions'][f]['results']:
             try:
@@ -144,8 +148,11 @@ def process_results(results, attrs, funcs, base_func, graph, no_diff, no_header)
             key = ', '.join(attr_list)
             sys.stdout.write('%36s: ' % key)
             graph_res[key] = res['timings']
+
             for t in res['timings']:
                 if selected[i]:
+                    if gmean:
+                        mean_row[i] = mean_row[i]+math.log(t)
                     sys.stdout.write ('%12.2f' % t)
                     if not no_diff:
                         if i != base_index:
@@ -159,6 +166,12 @@ def process_results(results, attrs, funcs, base_func, graph, no_diff, no_header)
         if graph:
             draw_graph(f, v, results['functions'][f]['ifuncs'], graph_res)
 
+        if gmean:
+            print("=" * 120)
+            total = len(results['functions'][f]['results'])
+            sys.stdout.write ('Geo-mean (for %s inputs)'%total)
+            for m in mean_row:
+                sys.stdout.write ('%12.2f' % (math.exp(m/total)))
 
 def main(args):
     """Program Entry Point
@@ -180,7 +193,8 @@ def main(args):
         funcs = None
 
     results = parse_file(args.input, args.schema)
-    process_results(results, attrs, funcs, base_func, args.graph, args.no_diff, args.no_header)
+    process_results(results, attrs, funcs, base_func, args.graph, args.no_diff,
+                    args.no_header, args.gmean)
     return os.EX_OK
 
 
@@ -207,6 +221,8 @@ if __name__ == '__main__':
                         help='Do not print the difference from baseline.')
     parser.add_argument('--no-header', action='store_true',
                         help='Do not print the header.')
+    parser.add_argument('--gmean', action='store_true',
+                        help='Print the geometric mean at the end of the output.')
 
     args = parser.parse_args()
     sys.exit(main(args))
