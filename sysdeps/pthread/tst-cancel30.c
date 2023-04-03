@@ -46,9 +46,7 @@ tf (void *arg)
 
   /* Wait indefinitely for cancellation, which only works if asynchronous
      cancellation is enabled.  */
-#ifdef SYS_pause
-  syscall (SYS_pause);
-#elif defined SYS_ppoll || defined SYS_ppoll_time64
+#if defined SYS_ppoll || defined SYS_ppoll_time64
 # ifndef SYS_ppoll_time64
 #  define SYS_ppoll_time64 SYS_ppoll
 # endif
