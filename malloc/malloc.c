@@ -4974,13 +4974,13 @@ _int_realloc (mstate av, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
 
 /* Returns 0 if the chunk is not and does not contain the requested
    aligned sub-chunk, else returns the amount of "waste" from
-   trimming.  BYTES is the *user* byte size, not the chunk byte
+   trimming.  NB is the *chunk* byte size, not the user byte
    size.  */
 static size_t
-chunk_ok_for_memalign (mchunkptr p, size_t alignment, size_t bytes)
+chunk_ok_for_memalign (mchunkptr p, size_t alignment, size_t nb)
 {
   void *m = chunk2mem (p);
-  INTERNAL_SIZE_T size = memsize (p);
+  INTERNAL_SIZE_T size = chunksize (p);
   void *aligned_m = m;
 
   if (__glibc_unlikely (misaligned_chunk (p)))
@@ -4997,12 +4997,12 @@ chunk_ok_for_memalign (mchunkptr p, size_t alignment, size_t bytes)
   /* If it's a perfect fit, it's an exception to the return value rule
      (we would return zero waste, which looks like "not usable"), so
      handle it here by returning a small non-zero value instead.  */
-  if (size == bytes && front_extra == 0)
+  if (size == nb && front_extra == 0)
     return 1;
 
   /* If the block we need fits in the chunk, calculate total waste.  */
-  if (size > bytes + front_extra)
-    return size - bytes;
+  if (size > nb + front_extra)
+    return size - nb;
 
   /* Can't use this chunk.  */
   return 0;
@@ -5048,93 +5048,96 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
      and unlikely to meet our alignment requirements.  We have not done
      any experimentation with searching for aligned fastbins.  */
 
-  int first_bin_index;
-  int first_largebin_index;
-  int last_bin_index;
-
-  if (in_smallbin_range (nb))
-    first_bin_index = smallbin_index (nb);
-  else
-    first_bin_index = largebin_index (nb);
-
-  if (in_smallbin_range (nb * 2))
-    last_bin_index = smallbin_index (nb * 2);
-  else
-    last_bin_index = largebin_index (nb * 2);
-
-  first_largebin_index = largebin_index (MIN_LARGE_SIZE);
-
-  int victim_index;                 /* its bin index */
-
-  for (victim_index = first_bin_index;
-       victim_index < last_bin_index;
-       victim_index ++)
+  if (av != NULL)
     {
-      victim = NULL;
+      int first_bin_index;
+      int first_largebin_index;
+      int last_bin_index;
 
-      if (victim_index < first_largebin_index)
-    {
-      /* Check small bins.  Small bin chunks are doubly-linked despite
-	 being the same size.  */
+      if (in_smallbin_range (nb))
+	first_bin_index = smallbin_index (nb);
+      else
+	first_bin_index = largebin_index (nb);
 
-      mchunkptr fwd;                    /* misc temp for linking */
-      mchunkptr bck;                    /* misc temp for linking */
+      if (in_smallbin_range (nb * 2))
+	last_bin_index = smallbin_index (nb * 2);
+      else
+	last_bin_index = largebin_index (nb * 2);
 
-      bck = bin_at (av, victim_index);
-      fwd = bck->fd;
-      while (fwd != bck)
+      first_largebin_index = largebin_index (MIN_LARGE_SIZE);
+
+      int victim_index;                 /* its bin index */
+
+      for (victim_index = first_bin_index;
+	   victim_index < last_bin_index;
+	   victim_index ++)
 	{
-	  if (chunk_ok_for_memalign (fwd, alignment, bytes) > 0)
-	    {
-	      victim = fwd;
+	  victim = NULL;
 
-	      /* Unlink it */
-	      victim->fd->bk = victim->bk;
-	      victim->bk->fd = victim->fd;
-	      break;
+	  if (victim_index < first_largebin_index)
+	    {
+	      /* Check small bins.  Small bin chunks are doubly-linked despite
+		 being the same size.  */
+
+	      mchunkptr fwd;                    /* misc temp for linking */
+	      mchunkptr bck;                    /* misc temp for linking */
+
+	      bck = bin_at (av, victim_index);
+	      fwd = bck->fd;
+	      while (fwd != bck)
+		{
+		  if (chunk_ok_for_memalign (fwd, alignment, nb) > 0)
+		    {
+		      victim = fwd;
+
+		      /* Unlink it */
+		      victim->fd->bk = victim->bk;
+		      victim->bk->fd = victim->fd;
+		      break;
+		    }
+
+		  fwd = fwd->fd;
+		}
+	    }
+	  else
+	    {
+	      /* Check large bins.  */
+	      mchunkptr fwd;                    /* misc temp for linking */
+	      mchunkptr bck;                    /* misc temp for linking */
+	      mchunkptr best = NULL;
+	      size_t best_size = 0;
+
+	      bck = bin_at (av, victim_index);
+	      fwd = bck->fd;
+
+	      while (fwd != bck)
+		{
+		  int extra;
+
+		  if (chunksize (fwd) < nb)
+		    break;
+		  extra = chunk_ok_for_memalign (fwd, alignment, nb);
+		  if (extra > 0
+		      && (extra <= best_size || best == NULL))
+		    {
+		      best = fwd;
+		      best_size = extra;
+		    }
+
+		  fwd = fwd->fd;
+		}
+	      victim = best;
+
+	      if (victim != NULL)
+		{
+		  unlink_chunk (av, victim);
+		  break;
+		}
 	    }
 
-	  fwd = fwd->fd;
+	  if (victim != NULL)
+	    break;
 	}
-    }
-  else
-    {
-      /* Check large bins.  */
-      mchunkptr fwd;                    /* misc temp for linking */
-      mchunkptr bck;                    /* misc temp for linking */
-      mchunkptr best = NULL;
-      size_t best_size = 0;
-
-      bck = bin_at (av, victim_index);
-      fwd = bck->fd;
-
-      while (fwd != bck)
-	{
-	  int extra;
-
-	  if (chunksize (fwd) < nb)
-	      break;
-	  extra = chunk_ok_for_memalign (fwd, alignment, bytes);
-	  if (extra > 0
-	      && (extra <= best_size || best == NULL))
-	    {
-	      best = fwd;
-	      best_size = extra;
-	    }
-
-	  fwd = fwd->fd;
-	}
-      victim = best;
-
-      if (victim != NULL)
-	{
-	  unlink_chunk (av, victim);
-	  break;
-	}
-    }
-
-      if (victim != NULL)
-	break;
     }
 
   /* Strategy: find a spot within that chunk that meets the alignment
@@ -5147,6 +5150,8 @@ _int_memalign (mstate av, size_t alignment, size_t bytes)
       p = victim;
       m = chunk2mem (p);
       set_inuse (p);
+      if (av != &main_arena)
+	set_non_main_arena (p);
     }
   else
     {

@@ -19,11 +19,14 @@
 #include <errno.h>
 #include <malloc.h>
 #include <stdio.h>
+#include <pthread.h>
 #include <string.h>
 #include <unistd.h>
 #include <array_length.h>
 #include <libc-pointer-arith.h>
 #include <support/check.h>
+#include <support/xthread.h>
+
 
 typedef struct TestCase {
   size_t size;
@@ -59,16 +62,16 @@ void *p;
   if (p == NULL || !PTR_IS_ALIGNED (p, a)) \
     FAIL_EXIT1 ("NULL or misaligned memory detected.\n");
 
-static int
-do_test (void)
+static void *
+mem_test (void *closure)
 {
-  int i, j;
+  int i;
+  int j;
   int count;
   void *ptr[10];
   void *p;
 
   /* TCache test.  */
-
   for (i = 0; i < TN; ++ i)
     {
       size_t sz2;
@@ -154,6 +157,16 @@ do_test (void)
      empty/full heaps.  */
   TEST_VERIFY (count > LN / 2);
 
+  return 0;
+}
+
+static int
+do_test (void)
+{
+  pthread_t p;
+
+  p = xpthread_create (NULL, mem_test, NULL);
+  xpthread_join (p);
   return 0;
 }
 
