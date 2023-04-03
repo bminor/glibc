@@ -39,3 +39,6 @@ endif
 CFLAGS-strncase-power7.c += -mcpu=power7 -funroll-loops
 CFLAGS-strncase_l-power7.c += -mcpu=power7 -funroll-loops
 endif
+
+# Called during static initialization
+CFLAGS-strncmp-ppc64.c += $(no-stack-protector)
