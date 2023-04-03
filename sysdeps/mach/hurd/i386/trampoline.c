@@ -83,13 +83,13 @@ struct sigcontext *
 _hurd_setup_sighandler (struct hurd_sigstate *ss, const struct sigaction *action,
 			__sighandler_t handler,
 			int signo, struct hurd_signal_detail *detail,
-			volatile int rpc_wait,
+			int rpc_wait,
 			struct machine_thread_all_state *state)
 {
   void trampoline (void);
   void rpc_wait_trampoline (void);
   void firewall (void);
-  void *volatile sigsp;
+  void *sigsp;
   struct sigcontext *scp;
   struct
     {
