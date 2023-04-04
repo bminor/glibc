@@ -39,7 +39,6 @@
 # pragma weak _IO_file_close_mmap
 # pragma weak _IO_file_doallocate
 # pragma weak _IO_file_finish
-# pragma weak _IO_file_jumps_alias
 # pragma weak _IO_file_overflow
 # pragma weak _IO_file_read
 # pragma weak _IO_file_seek
@@ -65,7 +64,6 @@
 # pragma weak _IO_wfile_underflow_maybe_mmap
 # pragma weak _IO_wfile_underflow_mmap
 # pragma weak _IO_wfile_doallocate
-# pragma weak _IO_wfile_jumps_alia
 # pragma weak _IO_wfile_seekoff
 # pragma weak _IO_wfile_xsputn
 
