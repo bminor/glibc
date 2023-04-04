@@ -200,6 +200,7 @@ tests := \
   tst-getrandom \
   tst-labs \
   tst-limits \
+  tst-llabs \
   tst-makecontext \
   tst-makecontext-align \
   tst-makecontext2 \
@@ -291,6 +292,7 @@ LDLIBS-test-dlclose-exit-race-helper.so = $(libsupport) $(shared-thread-library)
 
 CFLAGS-tst-abs.c += -fno-builtin
 CFLAGS-tst-labs.c += -fno-builtin
+CFLAGS-tst-llabs.c += -fno-builtin
 
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-quick_exit.o = -std=c++11
