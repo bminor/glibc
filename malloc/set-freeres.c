@@ -51,8 +51,10 @@
 # pragma weak __libc_printf_freemem
 # pragma weak __libc_fmtmsg_freemem
 # pragma weak __libc_setenv_freemem
-# pragma weak __rpc_freemem
-# pragma weak __rpc_thread_destroy
+# if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_31)
+#  pragma weak __rpc_freemem
+#  pragma weak __rpc_thread_destroy
+# endif
 # pragma weak __libc_getaddrinfo_freemem
 # pragma weak __libc_tzset_freemem
 # pragma weak __libc_localealias_freemem
