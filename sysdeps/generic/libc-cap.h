@@ -39,5 +39,6 @@ void __libc_cap_link_error (void);
 #define __libc_cap_reserve(p) __libc_cap_fail (bool)
 #define __libc_cap_unreserve(p) __libc_cap_fail (void)
 #define __libc_cap_drop(p) __libc_cap_fail (void)
+#define __libc_cap_put_back(p, q) __libc_cap_fail (void)
 
 #endif

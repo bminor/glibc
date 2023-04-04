@@ -571,12 +571,12 @@ cap_narrow (void *p, size_t n)
 /* Used in realloc if p is already narrowed or NULL.
    Must match a previous cap_reserve call.  */
 static __always_inline bool
-cap_narrow_check (void *p, void *oldp)
+cap_narrow_check (void *p, void *oldp, void *narrow_oldp)
 {
   if (cap_narrowing_enabled)
     {
       if (p == NULL)
-	(void) __libc_cap_narrow (oldp, 0);
+	__libc_cap_put_back (oldp, narrow_oldp);
       else
 	__libc_cap_unreserve ();
     }
@@ -586,12 +586,12 @@ cap_narrow_check (void *p, void *oldp)
 /* Used in realloc if p is new allocation or NULL but not yet narrowed.
    Must match a previous cap_reserve call.  */
 static __always_inline void *
-cap_narrow_try (void *p, size_t n, void *oldp)
+cap_narrow_try (void *p, size_t n, void *oldp, void *narrow_oldp)
 {
   if (cap_narrowing_enabled)
     {
       if (p == NULL)
-	(void) __libc_cap_narrow (oldp, 0);
+	__libc_cap_put_back (oldp, narrow_oldp);
       else
 	p = __libc_cap_narrow (p, n);
     }
@@ -3588,8 +3588,9 @@ __libc_free (void *mem)
   if (mem == 0)                              /* free(0) has no effect */
     return;
 
+  void *orig_mem = mem;
   mem = cap_widen (mem);
-  cap_drop (mem);
+  cap_drop (orig_mem);
 
   /* Quickly check that the freed pointer matches the tag for the memory.
      This gives a useful double-free detection.  */
@@ -3652,6 +3653,7 @@ __libc_realloc (void *oldmem, size_t bytes)
   if (oldmem == 0)
     return __libc_malloc (bytes);
 
+  void *orig_oldmem = oldmem;
   oldmem = cap_widen (oldmem);
 
   /* Perform a quick check to ensure that the pointer's tag matches the
@@ -3692,7 +3694,7 @@ __libc_realloc (void *oldmem, size_t bytes)
   /* Every return path below should unreserve using the cap_narrow* apis.  */
   if (!cap_reserve ())
     return NULL;
-  cap_drop (oldmem);
+  cap_drop (orig_oldmem);
 
   if (chunk_is_mmapped (oldp))
     {
@@ -3717,7 +3719,7 @@ __libc_realloc (void *oldmem, size_t bytes)
 	     caller for doing this, so we might want to
 	     reconsider.  */
 	  newmem = tag_new_usable (newmem);
-	  newmem = cap_narrow_try (newmem, bytes, oldmem);
+	  newmem = cap_narrow_try (newmem, bytes, oldmem, orig_oldmem);
 	  return newmem;
 	}
 #endif
@@ -3742,7 +3744,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       else
 #endif
       newmem = __libc_malloc (bytes);
-      if (!cap_narrow_check (newmem, oldmem))
+      if (!cap_narrow_check (newmem, oldmem, orig_oldmem))
         return 0;              /* propagate failure */
 
 #ifdef __CHERI_PURE_CAPABILITY__
@@ -3760,7 +3762,7 @@ __libc_realloc (void *oldmem, size_t bytes)
     {
       /* Use memalign, copy, free.  */
       void *newmem = _mid_memalign (align, bytes, 0);
-      if (!cap_narrow_check (newmem, oldmem))
+      if (!cap_narrow_check (newmem, oldmem, orig_oldmem))
 	return newmem;
       size_t sz = memsize (oldp);
       memcpy (newmem, oldmem, sz < bytes ? sz : bytes);
@@ -3774,7 +3776,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       newp = _int_realloc (ar_ptr, oldp, oldsize, nb);
       assert (!newp || chunk_is_mmapped (mem2chunk (newp)) ||
 	      ar_ptr == arena_for_chunk (mem2chunk (newp)));
-      return cap_narrow_try (newp, bytes, oldmem);
+      return cap_narrow_try (newp, bytes, oldmem, orig_oldmem);
     }
 
   __libc_lock_lock (ar_ptr->mutex);
@@ -3790,7 +3792,7 @@ __libc_realloc (void *oldmem, size_t bytes)
       /* Try harder to allocate memory in other arenas.  */
       LIBC_PROBE (memory_realloc_retry, 2, bytes, oldmem);
       newp = __libc_malloc (bytes);
-      if (!cap_narrow_check (newp, oldmem))
+      if (!cap_narrow_check (newp, oldmem, orig_oldmem))
 	return NULL;
       size_t sz = memsize (oldp);
       memcpy (newp, oldmem, sz);

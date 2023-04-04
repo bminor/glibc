@@ -30,8 +30,7 @@
 
 struct htentry
 {
-  uint64_t key;
-  uint64_t unused;
+  void *key;
   void *value;
 };
 
@@ -48,19 +47,19 @@ struct ht
 static inline bool
 htentry_isempty (struct htentry *e)
 {
-  return e->key == 0;
+  return (uint64_t) e->key == 0;
 }
 
 static inline bool
 htentry_isdeleted (struct htentry *e)
 {
-  return e->key == -1;
+  return (uint64_t) e->key == -1;
 }
 
 static inline bool
 htentry_isused (struct htentry *e)
 {
-  return e->key != 0 && e->key != -1;
+  return !htentry_isempty (e) && !htentry_isdeleted (e);
 }
 
 static inline uint64_t
@@ -154,9 +153,10 @@ ht_resize (struct ht *ht)
     {
       if (htentry_isused (e))
 	{
-	  uint64_t hash = ht_key_hash (e->key);
+	  uint64_t k = (uint64_t) e->key;
+	  uint64_t hash = ht_key_hash (k);
 	  used--;
-	  *ht_lookup (ht, e->key, hash) = *e;
+	  *ht_lookup (ht, k, hash) = *e;
 	}
     }
   ht_tab_free (oldtab, oldlen);
@@ -191,48 +191,61 @@ ht_unreserve (struct ht *ht)
 }
 
 static bool
-ht_add (struct ht *ht, uint64_t key, void *value)
+ht_add (struct ht *ht, void *key, void *value)
 {
+  uint64_t k = (uint64_t) key;
+  uint64_t hash = ht_key_hash (k);
+  assert (k != 0 && k != -1);
+
   __libc_lock_lock (ht->mutex);
   assert (ht->reserve > 0);
   ht->reserve--;
-  uint64_t hash = ht_key_hash (key);
-  struct htentry *e = ht_lookup (ht, key, hash);
+  struct htentry *e = ht_lookup (ht, k, hash);
   bool r = false;
   if (!htentry_isused (e))
     {
       if (htentry_isempty (e))
         ht->fill++;
       ht->used++;
-      e->key = key;
       r = true;
     }
+  e->key = key;
   e->value = value;
   __libc_lock_unlock (ht->mutex);
   return r;
 }
 
 static bool
-ht_del (struct ht *ht, uint64_t key)
+ht_del (struct ht *ht, void *key)
 {
+  uint64_t k = (uint64_t) key;
+  uint64_t hash = ht_key_hash (k);
+  assert (k != 0 && k != -1);
+
   __libc_lock_lock (ht->mutex);
-  struct htentry *e = ht_lookup (ht, key, ht_key_hash (key));
+  struct htentry *e = ht_lookup (ht, k, hash);
   bool r = htentry_isused (e);
   if (r)
     {
+      r = __builtin_cheri_equal_exact(e->key, key);
       ht->used--;
-      e->key = -1;
+      e->key = (void *) -1;
+      e->value = NULL;
     }
   __libc_lock_unlock (ht->mutex);
   return r;
 }
 
 static void *
-ht_get (struct ht *ht, uint64_t key)
+ht_get (struct ht *ht, void *key)
 {
+  uint64_t k = (uint64_t) key;
+  uint64_t hash = ht_key_hash (k);
+  assert (k != 0 && k != -1);
+
   __libc_lock_lock (ht->mutex);
-  struct htentry *e = ht_lookup (ht, key, ht_key_hash (key));
-  void *v = htentry_isused (e) ? e->value : NULL;
+  struct htentry *e = ht_lookup (ht, k, hash);
+  void *v = __builtin_cheri_equal_exact(e->key, key) ? e->value : NULL;
   __libc_lock_unlock (ht->mutex);
   return v;
 }
@@ -317,10 +330,9 @@ __libc_cap_align (size_t n)
 static __always_inline void *
 __libc_cap_narrow (void *p, size_t n)
 {
-  assert (p != NULL);
-  uint64_t key = (uint64_t)(uintptr_t) p;
-  assert (ht_add (&__libc_cap_ht, key, p));
   void *narrow = __builtin_cheri_bounds_set_exact (p, n);
+  assert (__builtin_cheri_tag_get (narrow));
+  assert (ht_add (&__libc_cap_ht, narrow, p));
   return narrow;
 }
 
@@ -329,9 +341,7 @@ __libc_cap_narrow (void *p, size_t n)
 static __always_inline void *
 __libc_cap_widen (void *p)
 {
-  assert (__builtin_cheri_tag_get (p) && __builtin_cheri_offset_get (p) == 0);
-  uint64_t key = (uint64_t)(uintptr_t) p;
-  void *cap = ht_get (&__libc_cap_ht, key);
+  void *cap = ht_get (&__libc_cap_ht, p);
   assert (cap == p);
   return cap;
 }
@@ -351,9 +361,13 @@ __libc_cap_unreserve (void)
 static __always_inline void
 __libc_cap_drop (void *p)
 {
-  assert (p != NULL);
-  uint64_t key = (uint64_t)(uintptr_t) p;
-  assert (ht_del (&__libc_cap_ht, key));
+  assert (ht_del (&__libc_cap_ht, p));
+}
+
+static __always_inline void
+__libc_cap_put_back (void *p, void *narrow)
+{
+  assert (ht_add (&__libc_cap_ht, narrow, p));
 }
 
 #endif
