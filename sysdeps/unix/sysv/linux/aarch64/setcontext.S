@@ -180,7 +180,11 @@ L(gcs_done):
 PSEUDO_END (__setcontext)
 weak_alias (__setcontext, setcontext)
 
+/* makecontext start function: receives uc_link in x19 and func in x20.
+   Arguments of func, x29, x30 and sp are set up by the caller.  */
 ENTRY (__startcontext)
+	cfi_undefined (x30)
+	blr	x20
 	mov	x0, x19
 	cbnz	x0, __setcontext
 1:	b       HIDDEN_JUMPTARGET (exit)
