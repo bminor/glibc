@@ -198,6 +198,7 @@ tests := \
   tst-cxa_atexit \
   tst-environ \
   tst-getrandom \
+  tst-labs \
   tst-limits \
   tst-makecontext \
   tst-makecontext-align \
@@ -289,6 +290,7 @@ LDFLAGS-test-dlclose-exit-race = $(LDFLAGS-rdynamic)
 LDLIBS-test-dlclose-exit-race-helper.so = $(libsupport) $(shared-thread-library)
 
 CFLAGS-tst-abs.c += -fno-builtin
+CFLAGS-tst-labs.c += -fno-builtin
 
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-quick_exit.o = -std=c++11
