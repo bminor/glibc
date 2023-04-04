@@ -184,6 +184,7 @@ tests := \
   testmb2 \
   testrand \
   testsort \
+  tst-abs \
   tst-arc4random-fork \
   tst-arc4random-stats \
   tst-arc4random-thread \
@@ -286,6 +287,8 @@ LDLIBS-tst-system = $(shared-thread-library)
 LDLIBS-test-dlclose-exit-race = $(shared-thread-library)
 LDFLAGS-test-dlclose-exit-race = $(LDFLAGS-rdynamic)
 LDLIBS-test-dlclose-exit-race-helper.so = $(libsupport) $(shared-thread-library)
+
+CFLAGS-tst-abs.c += -fno-builtin
 
 ifeq ($(have-cxx-thread_local),yes)
 CFLAGS-tst-quick_exit.o = -std=c++11
