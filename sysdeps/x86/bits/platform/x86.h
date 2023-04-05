@@ -291,6 +291,7 @@ enum
   x86_cpu_RAO_INT		= x86_cpu_index_7_ecx_1_eax + 3,
   x86_cpu_AVX_VNNI		= x86_cpu_index_7_ecx_1_eax + 4,
   x86_cpu_AVX512_BF16		= x86_cpu_index_7_ecx_1_eax + 5,
+  x86_cpu_LASS			= x86_cpu_index_7_ecx_1_eax + 6,
   x86_cpu_FZLRM			= x86_cpu_index_7_ecx_1_eax + 10,
   x86_cpu_FSRS			= x86_cpu_index_7_ecx_1_eax + 11,
   x86_cpu_FSRCS			= x86_cpu_index_7_ecx_1_eax + 12,
