@@ -226,6 +226,9 @@ Leaf (EAX = 23H).
 @code{AVX_VNNI} -- The AVX-VNNI instruction extensions.
 
 @item
+@code{AVX_VNNI_INT8} -- The AVX-VNNI-INT8 instruction extensions.
+
+@item
 @code{AVX512_4FMAPS} -- The AVX512_4FMAPS instruction extensions.
 
 @item

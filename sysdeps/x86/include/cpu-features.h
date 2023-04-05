@@ -314,6 +314,9 @@ enum
 #define bit_cpu_AVX_IFMA	(1u << 23)
 #define bit_cpu_LAM		(1u << 26)
 
+/* EDX.  */
+#define bit_cpu_AVX_VNNI_INT8	(1u << 4)
+
 /* CPUID_INDEX_19.  */
 
 /* EBX.  */
@@ -552,6 +555,7 @@ enum
 #define index_cpu_HRESET	CPUID_INDEX_7_ECX_1
 #define index_cpu_AVX_IFMA	CPUID_INDEX_7_ECX_1
 #define index_cpu_LAM		CPUID_INDEX_7_ECX_1
+#define index_cpu_AVX_VNNI_INT8	CPUID_INDEX_7_ECX_1
 
 /* CPUID_INDEX_19.  */
 
@@ -791,6 +795,9 @@ enum
 #define reg_HRESET		eax
 #define reg_AVX_IFMA		eax
 #define reg_LAM			eax
+
+/* EDX.  */
+#define reg_AVX_VNNI_INT8	edx
 
 /* CPUID_INDEX_19.  */
 

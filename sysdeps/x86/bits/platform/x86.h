@@ -304,6 +304,12 @@ enum
   x86_cpu_LAM			= x86_cpu_index_7_ecx_1_eax + 26,
   x86_cpu_MSRLIST		= x86_cpu_index_7_ecx_1_eax + 27,
 
+  x86_cpu_index_7_ecx_1_edx
+    = (CPUID_INDEX_7_ECX_1 * 8 * 4 * sizeof (unsigned int)
+       + cpuid_register_index_edx * 8 * sizeof (unsigned int)),
+
+  x86_cpu_AVX_VNNI_INT8		= x86_cpu_index_7_ecx_1_edx + 4,
+
   x86_cpu_index_19_ebx
     = (CPUID_INDEX_19 * 8 * 4 * sizeof (unsigned int)
        + cpuid_register_index_ebx * 8 * sizeof (unsigned int)),

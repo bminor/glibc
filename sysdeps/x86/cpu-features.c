@@ -143,6 +143,8 @@ update_active (struct cpu_features *cpu_features)
 	      CPU_FEATURE_SET_ACTIVE (cpu_features, AVX_IFMA);
 	      /* Determine if AVX-VNNI is usable.  */
 	      CPU_FEATURE_SET_ACTIVE (cpu_features, AVX_VNNI);
+	      /* Determine if AVX-VNNI-INT8 is usable.  */
+	      CPU_FEATURE_SET_ACTIVE (cpu_features, AVX_VNNI_INT8);
 	      /* Determine if FMA is usable.  */
 	      CPU_FEATURE_SET_ACTIVE (cpu_features, FMA);
 	      /* Determine if VAES is usable.  */
