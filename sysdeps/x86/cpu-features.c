@@ -221,6 +221,8 @@ update_active (struct cpu_features *cpu_features)
 	  CPU_FEATURE_SET_ACTIVE (cpu_features, AMX_INT8);
 	  /* Determine if AMX_FP16 is usable.  */
 	  CPU_FEATURE_SET_ACTIVE (cpu_features, AMX_FP16);
+	  /* Determine if AMX_COMPLEX is usable.  */
+	  CPU_FEATURE_SET_ACTIVE (cpu_features, AMX_COMPLEX);
 	}
 
       /* These features are usable only when OSXSAVE is enabled.  */

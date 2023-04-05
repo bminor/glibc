@@ -198,6 +198,9 @@ The supported processor features are:
 @code{AMX_BF16} -- Tile computational operations on bfloat16 numbers.
 
 @item
+@code{AMX_COMPLEX} -- Tile computational operations on complex FP16 numbers.
+
+@item
 @code{AMX_INT8} -- Tile computational operations on 8-bit numbers.
 
 @item
