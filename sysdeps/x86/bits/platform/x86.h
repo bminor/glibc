@@ -300,6 +300,7 @@ enum
   x86_cpu_WRMSRNS		= x86_cpu_index_7_ecx_1_eax + 19,
   x86_cpu_AMX_FP16		= x86_cpu_index_7_ecx_1_eax + 21,
   x86_cpu_HRESET		= x86_cpu_index_7_ecx_1_eax + 22,
+  x86_cpu_AVX_IFMA		= x86_cpu_index_7_ecx_1_eax + 23,
   x86_cpu_LAM			= x86_cpu_index_7_ecx_1_eax + 26,
 
   x86_cpu_index_19_ebx

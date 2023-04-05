@@ -220,6 +220,9 @@ Leaf (EAX = 23H).
 @code{AVX2} -- The AVX2 instruction extensions.
 
 @item
+@code{AVX_IFMA} -- The AVX-IFMA instruction extensions.
+
+@item
 @code{AVX_VNNI} -- The AVX-VNNI instruction extensions.
 
 @item

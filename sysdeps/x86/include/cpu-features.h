@@ -311,6 +311,7 @@ enum
 #define bit_cpu_FSRCS		(1u << 12)
 #define bit_cpu_AMX_FP16	(1u << 21)
 #define bit_cpu_HRESET		(1u << 22)
+#define bit_cpu_AVX_IFMA	(1u << 23)
 #define bit_cpu_LAM		(1u << 26)
 
 /* CPUID_INDEX_19.  */
@@ -549,6 +550,7 @@ enum
 #define index_cpu_FSRCS		CPUID_INDEX_7_ECX_1
 #define index_cpu_AMX_FP16	CPUID_INDEX_7_ECX_1
 #define index_cpu_HRESET	CPUID_INDEX_7_ECX_1
+#define index_cpu_AVX_IFMA	CPUID_INDEX_7_ECX_1
 #define index_cpu_LAM		CPUID_INDEX_7_ECX_1
 
 /* CPUID_INDEX_19.  */
@@ -787,6 +789,7 @@ enum
 #define reg_FSRCS		eax
 #define reg_AMX_FP16		eax
 #define reg_HRESET		eax
+#define reg_AVX_IFMA		eax
 #define reg_LAM			eax
 
 /* CPUID_INDEX_19.  */

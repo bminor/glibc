@@ -139,6 +139,8 @@ update_active (struct cpu_features *cpu_features)
 		  cpu_features->preferred[index_arch_AVX_Fast_Unaligned_Load]
 		    |= bit_arch_AVX_Fast_Unaligned_Load;
 		}
+	      /* Determine if AVX-IFMA is usable.  */
+	      CPU_FEATURE_SET_ACTIVE (cpu_features, AVX_IFMA);
 	      /* Determine if AVX-VNNI is usable.  */
 	      CPU_FEATURE_SET_ACTIVE (cpu_features, AVX_VNNI);
 	      /* Determine if FMA is usable.  */
