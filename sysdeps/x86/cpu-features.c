@@ -141,6 +141,8 @@ update_active (struct cpu_features *cpu_features)
 		}
 	      /* Determine if AVX-IFMA is usable.  */
 	      CPU_FEATURE_SET_ACTIVE (cpu_features, AVX_IFMA);
+	      /* Determine if AVX-NE-CONVERT is usable.  */
+	      CPU_FEATURE_SET_ACTIVE (cpu_features, AVX_NE_CONVERT);
 	      /* Determine if AVX-VNNI is usable.  */
 	      CPU_FEATURE_SET_ACTIVE (cpu_features, AVX_VNNI);
 	      /* Determine if AVX-VNNI-INT8 is usable.  */

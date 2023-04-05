@@ -316,6 +316,7 @@ enum
 
 /* EDX.  */
 #define bit_cpu_AVX_VNNI_INT8	(1u << 4)
+#define bit_cpu_AVX_NE_CONVERT	(1u << 5)
 
 /* CPUID_INDEX_19.  */
 
@@ -556,6 +557,7 @@ enum
 #define index_cpu_AVX_IFMA	CPUID_INDEX_7_ECX_1
 #define index_cpu_LAM		CPUID_INDEX_7_ECX_1
 #define index_cpu_AVX_VNNI_INT8	CPUID_INDEX_7_ECX_1
+#define index_cpu_AVX_NE_CONVERT CPUID_INDEX_7_ECX_1
 
 /* CPUID_INDEX_19.  */
 
@@ -798,6 +800,7 @@ enum
 
 /* EDX.  */
 #define reg_AVX_VNNI_INT8	edx
+#define reg_AVX_NE_CONVERT	edx
 
 /* CPUID_INDEX_19.  */
 

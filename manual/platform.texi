@@ -223,6 +223,9 @@ Leaf (EAX = 23H).
 @code{AVX_IFMA} -- The AVX-IFMA instruction extensions.
 
 @item
+@code{AVX_NE_CONVERT} -- The AVX-NE-CONVERT instruction extensions.
+
+@item
 @code{AVX_VNNI} -- The AVX-VNNI instruction extensions.
 
 @item

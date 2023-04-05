@@ -309,6 +309,7 @@ enum
        + cpuid_register_index_edx * 8 * sizeof (unsigned int)),
 
   x86_cpu_AVX_VNNI_INT8		= x86_cpu_index_7_ecx_1_edx + 4,
+  x86_cpu_AVX_NE_CONVERT	= x86_cpu_index_7_ecx_1_edx + 5,
 
   x86_cpu_index_19_ebx
     = (CPUID_INDEX_19 * 8 * 4 * sizeof (unsigned int)
