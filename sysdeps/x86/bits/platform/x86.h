@@ -201,7 +201,7 @@ enum
        + cpuid_register_index_edx * 8 * sizeof (unsigned int)),
 
   x86_cpu_INDEX_7_EDX_0		= x86_cpu_index_7_edx,
-  x86_cpu_INDEX_7_EDX_1		= x86_cpu_index_7_edx + 1,
+  x86_cpu_SGX_KEYS		= x86_cpu_index_7_edx + 1,
   x86_cpu_AVX512_4VNNIW		= x86_cpu_index_7_edx + 2,
   x86_cpu_AVX512_4FMAPS		= x86_cpu_index_7_edx + 3,
   x86_cpu_FSRM			= x86_cpu_index_7_edx + 4,

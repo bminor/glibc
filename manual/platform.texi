@@ -552,6 +552,9 @@ capability.
 @code{SGX} -- Intel Software Guard Extensions.
 
 @item
+@code{SGX_KEYS} -- Attestation Services for SGX.
+
+@item
 @code{SGX_LC} -- SGX Launch Configuration.
 
 @item
