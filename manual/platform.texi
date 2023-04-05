@@ -207,6 +207,10 @@ The supported processor features are:
 @code{ARCH_CAPABILITIES} -- IA32_ARCH_CAPABILITIES MSR.
 
 @item
+@code{ArchPerfmonExt} -- Architectural Performance Monitoring Extended
+Leaf (EAX = 23H).
+
+@item
 @code{AVX} -- The AVX instruction extensions.
 
 @item
