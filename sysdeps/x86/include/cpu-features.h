@@ -302,6 +302,7 @@ enum
 /* CPUID_INDEX_7_ECX_1.  */
 
 /* EAX.  */
+#define bit_cpu_RAO_INT		(1u << 3)
 #define bit_cpu_AVX_VNNI	(1u << 4)
 #define bit_cpu_AVX512_BF16	(1u << 5)
 #define bit_cpu_FZLRM		(1u << 10)
@@ -537,6 +538,7 @@ enum
 /* CPUID_INDEX_7_ECX_1.  */
 
 /* EAX.  */
+#define index_cpu_RAO_INT	CPUID_INDEX_7_ECX_1
 #define index_cpu_AVX_VNNI	CPUID_INDEX_7_ECX_1
 #define index_cpu_AVX512_BF16	CPUID_INDEX_7_ECX_1
 #define index_cpu_FZLRM		CPUID_INDEX_7_ECX_1
@@ -772,6 +774,7 @@ enum
 /* CPUID_INDEX_7_ECX_1.  */
 
 /* EAX.  */
+#define reg_RAO_INT		eax
 #define reg_AVX_VNNI		eax
 #define reg_AVX512_BF16		eax
 #define reg_FZLRM		eax

@@ -517,6 +517,9 @@ extended state management using XSAVE/XRSTOR.
 @code{PTWRITE} -- PTWRITE instruction.
 
 @item
+@code{RAO_INT} -- RAO-INT instructions.
+
+@item
 @code{RDPID} -- RDPID instruction.
 
 @item

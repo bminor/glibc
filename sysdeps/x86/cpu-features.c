@@ -99,6 +99,7 @@ update_active (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_ACTIVE (cpu_features, TBM);
   CPU_FEATURE_SET_ACTIVE (cpu_features, RDTSCP);
   CPU_FEATURE_SET_ACTIVE (cpu_features, WBNOINVD);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, RAO_INT);
   CPU_FEATURE_SET_ACTIVE (cpu_features, FZLRM);
   CPU_FEATURE_SET_ACTIVE (cpu_features, FSRS);
   CPU_FEATURE_SET_ACTIVE (cpu_features, FSRCS);

@@ -288,6 +288,7 @@ enum
     = (CPUID_INDEX_7_ECX_1 * 8 * 4 * sizeof (unsigned int)
        + cpuid_register_index_eax * 8 * sizeof (unsigned int)),
 
+  x86_cpu_RAO_INT		= x86_cpu_index_7_ecx_1_eax + 3,
   x86_cpu_AVX_VNNI		= x86_cpu_index_7_ecx_1_eax + 4,
   x86_cpu_AVX512_BF16		= x86_cpu_index_7_ecx_1_eax + 5,
   x86_cpu_FZLRM			= x86_cpu_index_7_ecx_1_eax + 10,
