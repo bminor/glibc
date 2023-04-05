@@ -465,6 +465,10 @@ the indirect branch predictor barrier (IBPB).
 @code{MSR} -- Model Specific Registers RDMSR and WRMSR instructions.
 
 @item
+@code{MSRLIST} -- RDMSRLIST/WRMSRLIST instructions and IA32_BARRIER
+MSR.
+
+@item
 @code{MTRR} -- Memory Type Range Registers.
 
 @item

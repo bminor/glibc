@@ -302,6 +302,7 @@ enum
   x86_cpu_HRESET		= x86_cpu_index_7_ecx_1_eax + 22,
   x86_cpu_AVX_IFMA		= x86_cpu_index_7_ecx_1_eax + 23,
   x86_cpu_LAM			= x86_cpu_index_7_ecx_1_eax + 26,
+  x86_cpu_MSRLIST		= x86_cpu_index_7_ecx_1_eax + 27,
 
   x86_cpu_index_19_ebx
     = (CPUID_INDEX_19 * 8 * 4 * sizeof (unsigned int)
