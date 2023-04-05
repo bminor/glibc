@@ -27,11 +27,11 @@ struct __pthread_rwlock_arch_t
      next four words are all set to 1 by the Linuxthreads
      PTHREAD_RWLOCK_INITIALIZER. We ignore them in NPTL.
 
-     The 16-byte aligned lock stucture causes various pthread
-     structures to be over aligned. This causes some builds
-     to fail which assume a maximum alignment of 8 bytes.
-     Linuxthreads has been removed for 12 years, so drop
-     alignment of lock structure.  */
+     The 16-byte aligned lock stucture is not needed for NPTL.
+     It causes some package builds to fail (e.g., protobuf) and
+     issues with dynamic memory allocation in C++ versions prior
+     to C++17. Removing it allows for more efficient allocators
+     and better compatibility with other architectures.  */
   int __compat_padding[4];
   unsigned int __readers;
   unsigned int __writers;
