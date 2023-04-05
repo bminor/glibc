@@ -181,7 +181,7 @@ enum
   x86_cpu_AVX512_BITALG		= x86_cpu_index_7_ecx + 12,
   x86_cpu_INDEX_7_ECX_13	= x86_cpu_index_7_ecx + 13,
   x86_cpu_AVX512_VPOPCNTDQ	= x86_cpu_index_7_ecx + 14,
-  x86_cpu_INDEX_7_ECX_1		= x86_cpu_index_7_ecx + 15,
+  x86_cpu_INDEX_7_ECX_15	= x86_cpu_index_7_ecx + 15,
   x86_cpu_INDEX_7_ECX_16	= x86_cpu_index_7_ecx + 16,
 /* Note: Bits 17-21: The value of MAWAU used by the BNDLDX and BNDSTX
    instructions in 64-bit mode.  */
