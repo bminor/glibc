@@ -680,6 +680,9 @@ using a TSC deadline value.
 @code{WIDE_KL} -- AES wide Key Locker instructions.
 
 @item
+@code{WRMSRNS} -- WRMSRNS instruction.
+
+@item
 @code{X2APIC} -- x2APIC.
 
 @item

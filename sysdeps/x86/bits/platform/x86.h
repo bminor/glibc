@@ -297,6 +297,7 @@ enum
   x86_cpu_FZLRM			= x86_cpu_index_7_ecx_1_eax + 10,
   x86_cpu_FSRS			= x86_cpu_index_7_ecx_1_eax + 11,
   x86_cpu_FSRCS			= x86_cpu_index_7_ecx_1_eax + 12,
+  x86_cpu_WRMSRNS		= x86_cpu_index_7_ecx_1_eax + 19,
   x86_cpu_HRESET		= x86_cpu_index_7_ecx_1_eax + 22,
   x86_cpu_LAM			= x86_cpu_index_7_ecx_1_eax + 26,
 
