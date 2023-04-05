@@ -395,6 +395,9 @@ the indirect branch predictor barrier (IBPB).
 @code{L1D_FLUSH} -- IA32_FLUSH_CMD MSR.
 
 @item
+@code{LA57} -- 57-bit linear addresses and five-level paging.
+
+@item
 @code{LAHF64_SAHF64} -- LAHF/SAHF available in 64-bit mode.
 
 @item
