@@ -534,6 +534,9 @@ extended state management using XSAVE/XRSTOR.
 @code{PREFETCHWT1} -- PREFETCHWT1 instruction.
 
 @item
+@code{PREFETCHI} -- PREFETCHIT0/1 instructions.
+
+@item
 @code{PSE} -- Page Size Extension.
 
 @item

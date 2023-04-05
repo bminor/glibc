@@ -318,6 +318,7 @@ enum
 #define bit_cpu_AVX_VNNI_INT8	(1u << 4)
 #define bit_cpu_AVX_NE_CONVERT	(1u << 5)
 #define bit_cpu_AMX_COMPLEX	(1u << 8)
+#define bit_cpu_PREFETCHI	(1u << 14)
 
 /* CPUID_INDEX_19.  */
 
@@ -560,6 +561,7 @@ enum
 #define index_cpu_AVX_VNNI_INT8	CPUID_INDEX_7_ECX_1
 #define index_cpu_AVX_NE_CONVERT CPUID_INDEX_7_ECX_1
 #define index_cpu_AMX_COMPLEX	CPUID_INDEX_7_ECX_1
+#define index_cpu_PREFETCHI	CPUID_INDEX_7_ECX_1
 
 /* CPUID_INDEX_19.  */
 
@@ -804,6 +806,7 @@ enum
 #define reg_AVX_VNNI_INT8	edx
 #define reg_AVX_NE_CONVERT	edx
 #define reg_AMX_COMPLEX		edx
+#define reg_PREFETCHI		edx
 
 /* CPUID_INDEX_19.  */
 

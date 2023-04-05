@@ -104,6 +104,7 @@ update_active (struct cpu_features *cpu_features)
   CPU_FEATURE_SET_ACTIVE (cpu_features, FZLRM);
   CPU_FEATURE_SET_ACTIVE (cpu_features, FSRS);
   CPU_FEATURE_SET_ACTIVE (cpu_features, FSRCS);
+  CPU_FEATURE_SET_ACTIVE (cpu_features, PREFETCHI);
   CPU_FEATURE_SET_ACTIVE (cpu_features, PTWRITE);
 
   if (!CPU_FEATURES_CPU_P (cpu_features, RTM_ALWAYS_ABORT))
