@@ -187,7 +187,7 @@ enum
    instructions in 64-bit mode.  */
   x86_cpu_RDPID			= x86_cpu_index_7_ecx + 22,
   x86_cpu_KL			= x86_cpu_index_7_ecx + 23,
-  x86_cpu_INDEX_7_ECX_24	= x86_cpu_index_7_ecx + 24,
+  x86_cpu_BUS_LOCK_DETECT	= x86_cpu_index_7_ecx + 24,
   x86_cpu_CLDEMOTE		= x86_cpu_index_7_ecx + 25,
   x86_cpu_INDEX_7_ECX_26	= x86_cpu_index_7_ecx + 26,
   x86_cpu_MOVDIRI		= x86_cpu_index_7_ecx + 27,

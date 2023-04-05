@@ -277,6 +277,9 @@ extensions.
 @code{BMI2} -- BMI2 instructions.
 
 @item
+@code{BUS_LOCK_DETECT} -- Bus lock debug exceptions.
+
+@item
 @code{CLDEMOTE} -- CLDEMOTE instruction.
 
 @item
