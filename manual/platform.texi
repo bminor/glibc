@@ -295,6 +295,9 @@ extensions.
 @code{CMOV} -- Conditional Move instructions.
 
 @item
+@code{CMPCCXADD} -- CMPccXADD instruction.
+
+@item
 @code{CMPXCHG16B} -- CMPXCHG16B instruction.
 
 @item
