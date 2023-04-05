@@ -540,6 +540,9 @@ capability.
 @code{RTM_ALWAYS_ABORT} -- Transactions always abort, making RTM unusable.
 
 @item
+@code{RTM_FORCE_ABORT} -- TSX_FORCE_ABORT MSR.
+
+@item
 @code{SDBG} -- IA32_DEBUG_INTERFACE MSR for silicon debug.
 
 @item

@@ -213,7 +213,7 @@ enum
   x86_cpu_MD_CLEAR		= x86_cpu_index_7_edx + 10,
   x86_cpu_RTM_ALWAYS_ABORT	= x86_cpu_index_7_edx + 11,
   x86_cpu_INDEX_7_EDX_12	= x86_cpu_index_7_edx + 12,
-  x86_cpu_INDEX_7_EDX_13	= x86_cpu_index_7_edx + 13,
+  x86_cpu_RTM_FORCE_ABORT	= x86_cpu_index_7_edx + 13,
   x86_cpu_SERIALIZE		= x86_cpu_index_7_edx + 14,
   x86_cpu_HYBRID		= x86_cpu_index_7_edx + 15,
   x86_cpu_TSXLDTRK		= x86_cpu_index_7_edx + 16,
