@@ -219,7 +219,7 @@ enum
   x86_cpu_TSXLDTRK		= x86_cpu_index_7_edx + 16,
   x86_cpu_INDEX_7_EDX_17	= x86_cpu_index_7_edx + 17,
   x86_cpu_PCONFIG		= x86_cpu_index_7_edx + 18,
-  x86_cpu_INDEX_7_EDX_19	= x86_cpu_index_7_edx + 19,
+  x86_cpu_LBR			= x86_cpu_index_7_edx + 19,
   x86_cpu_IBT			= x86_cpu_index_7_edx + 20,
   x86_cpu_INDEX_7_EDX_21	= x86_cpu_index_7_edx + 21,
   x86_cpu_AMX_BF16		= x86_cpu_index_7_edx + 22,

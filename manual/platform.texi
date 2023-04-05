@@ -407,6 +407,9 @@ the indirect branch predictor barrier (IBPB).
 @code{LAM} -- Linear Address Masking.
 
 @item
+@code{LBR} -- Architectural LBR.
+
+@item
 @code{LM} -- Long mode.
 
 @item
