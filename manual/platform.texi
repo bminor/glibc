@@ -392,13 +392,13 @@ the indirect branch predictor barrier (IBPB).
 @code{KL} -- AES Key Locker instructions.
 
 @item
-@code{LAM} -- Linear Address Masking.
-
-@item
 @code{L1D_FLUSH} -- IA32_FLUSH_CMD MSR.
 
 @item
 @code{LAHF64_SAHF64} -- LAHF/SAHF available in 64-bit mode.
+
+@item
+@code{LAM} -- Linear Address Masking.
 
 @item
 @code{LM} -- Long mode.
