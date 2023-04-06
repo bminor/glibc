@@ -42,7 +42,7 @@ __BEGIN_DECLS
 #include <bits/types/FILE.h>
 #include <bits/types/struct_FILE.h>
 
-#ifdef __USE_GNU
+#ifdef __USE_MISC
 # include <bits/types/cookie_io_functions_t.h>
 #endif
 
@@ -299,7 +299,7 @@ extern FILE *fdopen (int __fd, const char *__modes) __THROW
   __attribute_malloc__ __attr_dealloc_fclose __wur;
 #endif
 
-#ifdef	__USE_GNU
+#ifdef	__USE_MISC
 /* Create a new stream that refers to the given magic cookie,
    and uses the given functions for input and output.  */
 extern FILE *fopencookie (void *__restrict __magic_cookie,
@@ -389,7 +389,7 @@ extern int vsnprintf (char *__restrict __s, size_t __maxlen,
      __THROWNL __attribute__ ((__format__ (__printf__, 3, 0)));
 #endif
 
-#if __GLIBC_USE (LIB_EXT2)
+#if defined (__USE_MISC) || __GLIBC_USE (LIB_EXT2)
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
 extern int vasprintf (char **__restrict __ptr, const char *__restrict __f,
