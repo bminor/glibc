@@ -274,7 +274,7 @@ extern char *strrchr (const char *__s, int __c)
      __THROW __attribute_pure__ __nonnull ((1));
 #endif
 
-#ifdef __USE_GNU
+#ifdef __USE_MISC
 /* This function is similar to `strchr'.  But it returns a pointer to
    the closing NUL byte in case C is not found in S.  */
 # ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
@@ -368,7 +368,7 @@ extern char *strtok_r (char *__restrict __s, const char *__restrict __delim,
      __THROW __nonnull ((2, 3));
 #endif
 
-#ifdef __USE_GNU
+#ifdef __USE_MISC
 /* Similar to `strstr' but this function ignores the case of both strings.  */
 # ifdef __CORRECT_ISO_CPP_STRING_H_PROTO
 extern "C++" char *strcasestr (char *__haystack, const char *__needle)
@@ -382,7 +382,7 @@ extern char *strcasestr (const char *__haystack, const char *__needle)
 # endif
 #endif
 
-#ifdef __USE_GNU
+#ifdef __USE_MISC
 /* Find the first occurrence of NEEDLE in HAYSTACK.
    NEEDLE is NEEDLELEN bytes long;
    HAYSTACK is HAYSTACKLEN bytes long.  */
