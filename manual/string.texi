@@ -55,7 +55,7 @@ material, you can skip this section.
 A @dfn{string} is a null-terminated array of bytes of type @code{char},
 including the terminating null byte.  String-valued
 variables are usually declared to be pointers of type @code{char *}.
-Such variables do not include space for the text of a string; that has
+Such variables do not include space for the contents of a string; that has
 to be stored somewhere else---in an array variable, a string constant,
 or dynamically allocated memory (@pxref{Memory Allocation}).  It's up to
 you to store the address of the chosen memory space into the pointer
@@ -122,7 +122,7 @@ sizes and lengths count wide characters, not bytes.
 A notorious source of program bugs is trying to put more bytes into a
 string than fit in its allocated size.  When writing code that extends
 strings or moves bytes into a pre-allocated array, you should be
-very careful to keep track of the length of the text and make explicit
+very careful to keep track of the length of the string and make explicit
 checks for overflowing the array.  Many of the library functions
 @emph{do not} do this for you!  Remember also that you need to allocate
 an extra byte to hold the null byte that marks the end of the
@@ -675,6 +675,9 @@ functions in their conventions.  @xref{Copying Strings and Arrays}.
 @samp{strcat} is declared in the header file @file{string.h} while
 @samp{wcscat} is declared in @file{wchar.h}.
 
+As noted below, these functions are problematic as their callers may
+have performance issues.
+
 @deftypefun {char *} strcat (char *restrict @var{to}, const char *restrict @var{from})
 @standards{ISO, string.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{}}
@@ -844,8 +847,10 @@ function.  The example would work for wide characters the same way.
 
 Whenever a programmer feels the need to use @code{strcat} she or he
 should think twice and look through the program to see whether the code cannot
-be rewritten to take advantage of already calculated results.  Again: it
-is almost always unnecessary to use @code{strcat}.
+be rewritten to take advantage of already calculated results.
+The related functions @code{strncat} and @code{wcscat}
+are almost always unnecessary, too.
+Again: it is almost always unnecessary to use functions like @code{strcat}.
 
 @node Truncating Strings
 @section Truncating Strings while Copying
@@ -858,6 +863,9 @@ similarly for wide strings.  They follow the string-copying functions
 in their header conventions.  @xref{Copying Strings and Arrays}.  The
 @samp{str} functions are declared in the header file @file{string.h}
 and the @samp{wc} functions are declared in the file @file{wchar.h}.
+
+As noted below, these functions are problematic as their callers may
+have truncation-related bugs and performance issues.
 
 @deftypefun {char *} strncpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
 @standards{C90, string.h}
@@ -879,7 +887,7 @@ This function was designed for now-rarely-used arrays consisting of
 non-null bytes followed by zero or more null bytes.  It needs to set
 all @var{size} bytes of the destination, even when @var{size} is much
 greater than the length of @var{from}.  As noted below, this function
-is generally a poor choice for processing text.
+is generally a poor choice for processing strings.
 @end deftypefun
 
 @deftypefun {wchar_t *} wcsncpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
@@ -903,7 +911,7 @@ The behavior of @code{wcsncpy} is undefined if the strings overlap.
 This function is the wide-character counterpart of @code{strncpy} and
 suffers from most of the problems that @code{strncpy} does.  For
 example, as noted below, this function is generally a poor choice for
-processing text.
+processing strings.
 @end deftypefun
 
 @deftypefun {char *} strndup (const char *@var{s}, size_t @var{size})
@@ -920,7 +928,7 @@ This function differs from @code{strncpy} in that it always terminates
 the destination string.
 
 As noted below, this function is generally a poor choice for
-processing text.
+processing strings.
 
 @code{strndup} is a GNU extension.
 @end deftypefun
@@ -938,7 +946,7 @@ Just as @code{strdupa} this macro also must not be used inside the
 parameter list in a function call.
 
 As noted below, this function is generally a poor choice for
-processing text.
+processing strings.
 
 @code{strndupa} is only available if GNU CC is used.
 @end deftypefn
@@ -968,7 +976,7 @@ Its behavior is undefined if the strings overlap.  The function is
 declared in @file{string.h}.
 
 As noted below, this function is generally a poor choice for
-processing text.
+processing strings.
 @end deftypefun
 
 @deftypefun {wchar_t *} wcpncpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
@@ -996,7 +1004,7 @@ developing @theglibc{} itself.
 Its behavior is undefined if the strings overlap.
 
 As noted below, this function is generally a poor choice for
-processing text.
+processing strings.
 
 @code{wcpncpy} is a GNU extension.
 @end deftypefun
@@ -1031,7 +1039,7 @@ The behavior of @code{strncat} is undefined if the strings overlap.
 As a companion to @code{strncpy}, @code{strncat} was designed for
 now-rarely-used arrays consisting of non-null bytes followed by zero
 or more null bytes.  As noted below, this function is generally a poor
-choice for processing text.  Also, this function has significant
+choice for processing strings.  Also, this function has significant
 performance issues.  @xref{Concatenating Strings}.
 @end deftypefun
 
@@ -1064,12 +1072,12 @@ wcsncat (wchar_t *restrict wto, const wchar_t *restrict wfrom,
 The behavior of @code{wcsncat} is undefined if the strings overlap.
 
 As noted below, this function is generally a poor choice for
-processing text.  Also, this function has significant performance
+processing strings.  Also, this function has significant performance
 issues.  @xref{Concatenating Strings}.
 @end deftypefun
 
 Because these functions can abruptly truncate strings or wide strings,
-they are generally poor choices for processing text.  When coping or
+they are generally poor choices for processing them.  When copying or
 concatening multibyte strings, they can truncate within a multibyte
 character so that the result is not a valid multibyte string.  When
 combining or concatenating multibyte or wide strings, they may
