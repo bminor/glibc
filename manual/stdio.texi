@@ -2439,7 +2439,10 @@ If @var{size} is zero, nothing, not even the null byte, shall be written and
 The return value is the number of characters which would be generated
 for the given input, excluding the trailing null.  If this value is
 greater than or equal to @var{size}, not all characters from the result have
-been stored in @var{s}.  You should try again with a bigger output
+been stored in @var{s}.  If this happens, you should be wary of using
+the truncated result as that could lead to security, encoding, or
+other bugs in your program (@pxref{Truncating Strings}).
+Instead, you should try again with a bigger output
 string.  Here is an example of doing this:
 
 @smallexample
