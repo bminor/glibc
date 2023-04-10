@@ -63,8 +63,7 @@ mach_interface_list=
 for ifc in mach mach4 gnumach \
 	   clock clock_priv host_priv host_security ledger lock_set \
 	   processor processor_set task task_notify thread_act vm_map \
-	   memory_object memory_object_default default_pager \
-	   machine/mach_i386 \
+	   memory_object memory_object_default machine/mach_i386 \
 	   ; do
   AC_CHECK_HEADER(mach/${ifc}.defs, [dnl
   mach_interface_list="$mach_interface_list $ifc"],, -)
