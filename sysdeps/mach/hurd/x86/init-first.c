@@ -40,6 +40,13 @@ extern char **_dl_argv;
 
 #ifndef SHARED
 static tcbhead_t __init1_tcbhead;
+# ifndef __x86_64__
+unsigned short __init1_desc;
+# endif
+#endif
+
+#ifdef __x86_64__
+unsigned char __libc_tls_initialized;
 #endif
 
 /* Things that want to be run before _hurd_init or much anything else.
@@ -159,7 +166,9 @@ first_init (void)
   _hurd_tls_init (&__init1_tcbhead);
 
   /* Make sure __LIBC_NO_TLS () keeps evaluating to 1.  */
-# ifndef __x86_64__
+# ifdef __x86_64__
+  __libc_tls_initialized = 0;
+# else
   asm ("movw %%gs,%w0" : "=m" (__init1_desc));
 # endif
 #endif

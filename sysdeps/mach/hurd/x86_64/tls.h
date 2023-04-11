@@ -68,6 +68,10 @@ _Static_assert (offsetof (tcbhead_t, stack_guard) == 0x28,
 _Static_assert (offsetof (tcbhead_t, __private_ss) == 0x70,
                 "split stack pointer offset");
 
+extern unsigned char __libc_tls_initialized;
+
+# define __LIBC_NO_TLS() __builtin_expect (!__libc_tls_initialized, 0)
+
 /* The TCB can have any size and the memory following the address the
    thread pointer points to is unspecified.  Allocate the TCB there.  */
 # define TLS_TCB_AT_TP	1
@@ -82,6 +86,8 @@ _Static_assert (offsetof (tcbhead_t, __private_ss) == 0x70,
    "Segment Base".)  On such machines, a cache line is 64 bytes.  */
 # define TCB_ALIGNMENT	64
 
+
+# define TLS_INIT_TP(descr) _hurd_tls_init ((tcbhead_t *) (descr))
 
 # define THREAD_SELF							\
   (*(tcbhead_t * __seg_fs *) offsetof (tcbhead_t, tcb))
@@ -168,10 +174,6 @@ _hurd_tls_new (thread_t child, tcbhead_t *tcb)
                              i386_FSGS_BASE_STATE_COUNT);
 }
 
-# if !defined (SHARED) || IS_IN (rtld)
-extern unsigned char __libc_tls_initialized;
-#  define __LIBC_NO_TLS() __builtin_expect (!__libc_tls_initialized, 0)
-
 static inline bool __attribute__ ((unused))
 _hurd_tls_init (tcbhead_t *tcb)
 {
@@ -194,12 +196,6 @@ _hurd_tls_init (tcbhead_t *tcb)
   __mach_port_deallocate (__mach_task_self (), self);
   return err == 0;
 }
-
-#  define TLS_INIT_TP(descr) _hurd_tls_init ((tcbhead_t *) (descr))
-# else /* defined (SHARED) && !IS_IN (rtld) */
-#  define __LIBC_NO_TLS() 0
-# endif
-
 
 
 /* Global scope switch support.  */
