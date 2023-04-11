@@ -698,7 +698,7 @@ libc_freeres_fn (free_res)
 {
   size_t row;
 
-  for (row = 0; row < pool_max_size; ++row)
+  for (row = 0; row < pool_size; ++row)
     free (pool[row]);
 
   free (pool);
