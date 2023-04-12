@@ -1947,6 +1947,33 @@ This subsection describes functions for allocating a pseudo-terminal,
 and for making this pseudo-terminal available for actual use.  These
 functions are declared in the header file @file{stdlib.h}.
 
+@deftypefun int posix_openpt (int @var{flags})
+@standards{POSIX.1, stdlib.h}
+@safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
+
+@code{posix_openpt} returns a new file descriptor for the next
+available master pseudo-terminal.  In the case of an error, it returns
+a value of @math{-1} instead, and sets @code{errno} to indicate
+the error.  @xref{Opening and Closing Files} for possible values
+of @code{errno}.
+
+@var{flags} is a bit mask created from a bitwise OR of zero or more
+of the following flags:
+
+@table @code
+@item O_RDWR
+Open the device for both reading and writing.  It is usual to specify
+this flag.
+@item O_NOCTTY
+Do not make the device the controlling terminal for the process.
+@end table
+
+These flags are defined in @file{fcntl.h}.  @xref{Access Modes}.
+
+For this function to be available, @code{_XOPEN_SOURCE} must be defined
+to a value greater than @samp{600}.  @xref{Feature Test Macros}.
+@end deftypefun
+
 @deftypefun int getpt (void)
 @standards{GNU, stdlib.h}
 @safety{@prelim{}@mtsafe{}@assafe{}@acsafe{@acsfd{}}}
@@ -1957,6 +1984,10 @@ functions are declared in the header file @file{stdlib.h}.
 @c a devfs, and returns the fd; static variables devpts_mounted and
 @c have_no_dev_ptmx are safely initialized so as to avoid repeated
 @c tests.
+
+@code{getpt} is similar to @code{posix_openpt}.  This function is a
+GNU extension and should not be used in portable programs.
+
 The @code{getpt} function returns a new file descriptor for the next
 available master pseudo-terminal.  The normal return value from
 @code{getpt} is a non-negative integer file descriptor.  In the case of
@@ -1967,8 +1998,6 @@ an error, a value of @math{-1} is returned instead.  The following
 @item ENOENT
 There are no free master pseudo-terminals available.
 @end table
-
-This function is a GNU extension.
 @end deftypefun
 
 @deftypefun int grantpt (int @var{filedes})
@@ -2118,6 +2147,7 @@ This function is a GNU extension.
 @end deftypefun
 
 Typical usage of these functions is illustrated by the following example:
+
 @smallexample
 int
 open_pty_pair (int *amaster, int *aslave)
@@ -2125,7 +2155,7 @@ open_pty_pair (int *amaster, int *aslave)
   int master, slave;
   char *name;
 
-  master = getpt ();
+  master = posix_openpt (O_RDWR | O_NOCTTY);
   if (master < 0)
     return 0;
 
