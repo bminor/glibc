@@ -102,8 +102,8 @@ __sigreturn (struct sigcontext *scp)
      reply port in use by the thread when interrupted.  */
   reply_port = THREAD_GETMEM (THREAD_SELF, reply_port);
   THREAD_SETMEM (THREAD_SELF, reply_port, scp->sc_reply_port);
-  __mach_port_mod_refs (__mach_task_self (), reply_port,
-                        MACH_PORT_RIGHT_RECEIVE, -1);
+  if (MACH_PORT_VALID (reply_port))
+    __mach_port_destroy (__mach_task_self (), reply_port);
 
   if (scp->sc_fpused)
     /* Restore the FPU state.  Mach conveniently stores the state
