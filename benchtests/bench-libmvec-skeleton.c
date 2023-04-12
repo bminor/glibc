@@ -26,6 +26,7 @@
 #include <json-lib.h>
 #include <bench-util.h>
 #include <math-tests-arch.h>
+#include <bench-libmvec-arch.h>
 
 #include <bench-util.c>
 #define D_ITERS 10000
@@ -37,24 +38,8 @@ main (int argc, char **argv)
   timing_t start, end;
   json_ctx_t json_ctx;
 
-#if defined REQUIRE_AVX
-  if (!CPU_FEATURE_ACTIVE (AVX))
-    {
-      printf ("AVX not supported.");
-      return 77;
-    }
-#elif defined REQUIRE_AVX2
-  if (!CPU_FEATURE_ACTIVE (AVX2))
-    {
-      printf ("AVX2 not supported.");
-      return 77;
-    }
-#elif defined REQUIRE_AVX512F
-  if (!CPU_FEATURE_ACTIVE (AVX512F))
-    {
-      printf ("AVX512F not supported.");
-      return 77;
-    }
+#ifdef INIT_ARCH
+  INIT_ARCH ();
 #endif
 
   bench_start ();

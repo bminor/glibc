@@ -29,6 +29,12 @@ Major new features:
 
     - x86_64-gnu
 
+* Added libmvec vector math library support to AArch64.  It requires
+  GCC version >= 10.1.0.  It can be disabled via --disable-mathvec,
+  however that is not a supported configuration as it changes the ABI.
+  The symbol names follow the AArch64 vector ABI, they are declared
+  in math.h and have to be called manually at this point.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * In the Linux kernel for the hppa/parisc architecture some of the

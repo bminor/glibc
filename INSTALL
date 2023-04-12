@@ -493,6 +493,9 @@ build the GNU C Library:
      For s390x architecture builds, GCC 7.1 or higher is needed (See gcc
      Bug 98269).
 
+     For AArch64 architecture builds with mathvec enabled, GCC 10 or
+     higher is needed due to dependency on arm_sve.h.
+
      For multi-arch support it is recommended to use a GCC which has
      been built with support for GNU indirect functions.  This ensures
      that correct debugging information is generated for functions

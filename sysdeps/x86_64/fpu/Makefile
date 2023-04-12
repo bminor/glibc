@@ -94,7 +94,7 @@ endif
 
 $(addprefix $(objpfx)bench-,$(bench-libmvec-double)): $(libmvec-benchtests)
 $(addprefix $(objpfx)bench-,$(bench-libmvec-float)): $(libmvec-benchtests)
-bench-libmvec-deps = $(..)sysdeps/x86_64/fpu/bench-libmvec-skeleton.c bench-timing.h Makefile
+bench-libmvec-deps = $(..)benchtests/bench-libmvec-skeleton.c $(..)sysdeps/x86_64/fpu/bench-libmvec-arch.h bench-timing.h Makefile
 
 $(objpfx)bench-float-%.c: $(bench-libmvec-deps)
 	{ if [ -n "$($*-INCLUDE)" ]; then \

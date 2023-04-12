@@ -1,0 +1,8 @@
+libmvec {
+  GLIBC_2.38 {
+    _ZGVnN2v_cos;
+    _ZGVnN4v_cosf;
+    _ZGVsMxv_cos;
+    _ZGVsMxv_cosf;
+  }
+}
