@@ -17,22 +17,46 @@
 
 #include <mach.h>
 #include <mach/mig_support.h>
-#include <hurd/threadvar.h>
+#include <tls.h>
 
 /* These functions are called by MiG-generated code.  */
 
+#if !defined (SHARED) || IS_IN (rtld)
 mach_port_t __hurd_reply_port0;
+#endif
+
+static mach_port_t
+get_reply_port (void)
+{
+#if !defined (SHARED) || IS_IN (rtld)
+  if (__LIBC_NO_TLS ())
+    return __hurd_reply_port0;
+#endif
+  return THREAD_GETMEM (THREAD_SELF, reply_port);
+}
+
+static void
+set_reply_port (mach_port_t port)
+{
+#if !defined (SHARED) || IS_IN (rtld)
+  if (__LIBC_NO_TLS ())
+    __hurd_reply_port0 = port;
+  else
+#endif
+    THREAD_SETMEM (THREAD_SELF, reply_port, port);
+}
 
 /* Called by MiG to get a reply port.  */
 mach_port_t
 __mig_get_reply_port (void)
 {
-  if (__hurd_local_reply_port == MACH_PORT_NULL
-      || (&__hurd_local_reply_port != &__hurd_reply_port0
-	  && __hurd_local_reply_port == __hurd_reply_port0))
-    __hurd_local_reply_port = __mach_reply_port ();
-
-  return __hurd_local_reply_port;
+  mach_port_t port = get_reply_port ();
+  if (__glibc_unlikely (port == MACH_PORT_NULL))
+    {
+      port = __mach_reply_port ();
+      set_reply_port (port);
+    }
+  return port;
 }
 weak_alias (__mig_get_reply_port, mig_get_reply_port)
 libc_hidden_def (__mig_get_reply_port)
@@ -41,12 +65,34 @@ libc_hidden_def (__mig_get_reply_port)
 void
 __mig_dealloc_reply_port (mach_port_t arg)
 {
-  mach_port_t port = __hurd_local_reply_port;
-  __hurd_local_reply_port = MACH_PORT_NULL;	/* So the mod_refs RPC won't use it.  */
+  error_t err;
+  mach_port_t port = get_reply_port ();
 
-  if (MACH_PORT_VALID (port))
-    __mach_port_mod_refs (__mach_task_self (), port,
-			  MACH_PORT_RIGHT_RECEIVE, -1);
+  set_reply_port (MACH_PORT_NULL);	/* So the mod_refs RPC won't use it.  */
+
+  /* Normally, ARG should be the same as PORT that we store.  However, if a
+     signal has interrupted the RPC, the stored PORT has been deallocated and
+     reset to MACH_PORT_NULL (or possibly MACH_PORT_DEAD).  In this case the
+     MIG routine still has the old name, which it passes to us here.  We must
+     not deallocate (or otherwise touch) it, since it may be already allocated
+     to another port right.  Fortunately MIG itself doesn't do anything with
+     the reply port on errors either, other than immediately calling this
+     function.
+
+     And so:
+     1. Assert that things are sane, i.e. and PORT is either invalid or same
+        as ARG.
+     2. Only deallocate the name if our stored PORT still names it.  In that
+        case we're sure the right has not been deallocated / the name reused.
+    */
+
+  if (!MACH_PORT_VALID (port))
+    return;
+  assert (port == arg);
+
+  err = __mach_port_mod_refs (__mach_task_self (), port,
+                              MACH_PORT_RIGHT_RECEIVE, -1);
+  assert_perror (err);
 }
 weak_alias (__mig_dealloc_reply_port, mig_dealloc_reply_port)
 libc_hidden_def (__mig_dealloc_reply_port)

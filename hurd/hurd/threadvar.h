@@ -29,11 +29,4 @@
 extern unsigned long int __hurd_sigthread_stack_base;
 extern unsigned long int __hurd_sigthread_stack_end;
 
-/* Store the MiG reply port reply port until we enable TLS.  */
-extern mach_port_t __hurd_reply_port0;
-
-/* This returns either the TLS reply port variable, or a single-thread variable
-   when TLS is not initialized yet.  */
-#define __hurd_local_reply_port (*(__LIBC_NO_TLS () ? &__hurd_reply_port0 : &THREAD_SELF->reply_port))
-
 #endif	/* hurd/threadvar.h */

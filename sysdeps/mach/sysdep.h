@@ -45,7 +45,7 @@
 
 #ifndef __ASSEMBLER__
 #define FATAL_PREPARE_INCLUDE <mach/mig_support.h>
-#define FATAL_PREPARE __mig_dealloc_reply_port (MACH_PORT_NULL)
+#define FATAL_PREPARE __mig_dealloc_reply_port (__mig_get_reply_port ())
 #endif
 
 /* sysdeps/mach/MACHINE/sysdep.h should define the following macros.  */

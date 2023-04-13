@@ -238,7 +238,7 @@ _dl_sysdep_start_cleanup (void)
   /* Deallocate the reply port and task port rights acquired by
      __mach_init.  We are done with them now, and the user will
      reacquire them for himself when he wants them.  */
-  __mig_dealloc_reply_port (MACH_PORT_NULL);
+  __mig_dealloc_reply_port (__mig_get_reply_port ());
   __mach_port_deallocate (__mach_task_self (), __mach_host_self_);
   __mach_port_deallocate (__mach_task_self (), __mach_task_self_);
 }
