@@ -316,3 +316,13 @@ tests-unsupported += tst-audit15
 tests-unsupported += tst-audit16
 tests-unsupported += tst-audit17
 endif
+
+# For bug 30341
+ifeq ($(subdir),posix)
+tests-unsupported += tst-spawn6
+endif
+
+# For bug 30342
+ifeq ($(subdir),io)
+tests-unsupported += test-lfs
+endif
