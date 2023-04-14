@@ -58,13 +58,7 @@ _S_catch_exception_raise (mach_port_t port,
   _hurd_exception2signal (&d, &signo);
 
   /* Find the sigstate structure for the faulting thread.  */
-  __mutex_lock (&_hurd_siglock);
-  for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
-    if (ss->thread == thread)
-      break;
-  __mutex_unlock (&_hurd_siglock);
-  if (ss == NULL)
-    ss = _hurd_thread_sigstate (thread); /* Allocate a fresh one.  */
+  ss = _hurd_thread_sigstate (thread);
 
   if (__spin_lock_locked (&ss->lock))
     {
